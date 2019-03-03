@@ -1,51 +1,110 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v3 10/12] hikey960: Support usb functionality of Hikey960
-Date: Mon, 4 Mar 2019 09:55:37 +0800
-Message-ID: <2708b188-d318-6758-a5fd-8573559b2e70@huawei.com>
-References: <20190302090505.65542-1-chenyu56@huawei.com>
- <20190302090505.65542-11-chenyu56@huawei.com>
- <1551664069.2210.64.camel@mhfsdcap03>
+From: David Summers <beagleboard@davidjohnsummers.uk>
+Subject: Re: [PATCH 3/3] ARM: dts: rk3288 Tinker Board (S) add bluetooth
+Date: Sun, 3 Mar 2019 20:15:31 +0000
+Message-ID: <4de2979b-0553-300c-fea5-49d68e2b3580@davidjohnsummers.uk>
+References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
+ <20190217121513.22965-4-beagleboard@davidjohnsummers.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551664069.2210.64.camel@mhfsdcap03>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: liuyu712@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190217121513.22965-4-beagleboard@davidjohnsummers.uk>
+Content-Language: en-PH
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, Johan Hedberg <johan.hedberg@gmail.com>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>, linux-rockchip@lists.infradead.org, Tony McKahan <tonymckahan@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chunfeng Yun,
-
-On 2019/3/4 9:47, Chunfeng Yun wrote:
-
->> +
->> +	hisi_hikey_usb->role_sw = usb_role_switch_get(dev);
->> +	if (!hisi_hikey_usb->role_sw)
->> +		return -EPROBE_DEFER;
-> Here return EPROBE_DEFFER means the related device_connection is
-> registered after this probe is called, right?
-> if not, use IS_ERR_OR_NULL then return PTR_ERR is enough
-Yes, the driver which register the usb_role_switch may finish probe after
-this driver is probed for the first time.
->> +	else if (IS_ERR(hisi_hikey_usb->role_sw))
->> +		return PTR_ERR(hisi_hikey_usb->role_sw);
->> +
->> +	ret = usb_role_switch_register_notifier(hisi_hikey_usb->role_sw,
->> +			&hisi_hikey_usb->nb);
->> +	if (ret) {
->> +		usb_role_switch_put(hisi_hikey_usb->role_sw);
->> +		return ret;
->> +	}
->> +
->> +	platform_set_drvdata(pdev, hisi_hikey_usb);
->> +
->> +	return 0;
->> +}
->> +
-
-> 
-> 
-> .
-> 
+RmluYWxseSBvbiB0aGUgcGF0Y2ggdG8gZ2l2ZSBhbiBvdXRsaW5lIGRlc2NyaXB0aW9uIHRvIEJs
+dWV0b290aCBvbiB0aGUgClRpbmtlciBCb2FyZHMuCgpTeW50aGVzaXMgaGVyZSBpcyBoYXJkZXIu
+CgpPbiB0aGUgb25lIGhhbmQsIGl0IGlzIG5vbiBmdW5jdGlvbmluZyAtIGJlY2F1c2UgYWx0aG91
+Z2ggaXQgZGVzY3JpYmVzIAp0aGUgaGFyZHdhcmUsIGl0IGhhcyBubyBjb21wYXRpYmxlIGZsYWcs
+IGFuZCB0aGVyZSBpcyBubyBjdXJyZW50IGRyaXZlciAKaW4gdGhlIGtlcm5lbC4KCkl0IHNob3Vs
+ZCBiZSBzYWlkIHRob3VnaCB0aGVyZSBpcyBhIHBhdGNoIGZvciBhIHByb3Bvc2VkIGRyaXZlcjoK
+Cmh0dHBzOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2xpbnV4LWJsdWV0b290aC9tc2c3ODY2MS5o
+dG1sCgpBbmQgaWYgYWNjZXB0ZWQgdGhpcyB3b3VsZCBnaXZlIHRoZSBjb21wYXRpYmxlIGZsYWcu
+IFNvIHNob3VsZCB0aGlzIApjaGFuZ2Ugd2FpdCB1bnRpbCB0aGF0IGlzIGFkZGVkPwoKQW4gYWx0
+ZXJuYXRpdmUgYXBwcm9hY2ggdGhvdWdoIGFyaXNlcyBmcm9tIHdoYXQgVG9ueSBNY0thaGFuIG9m
+IEFybWJpYW4gCndyaXRlcwoKIkZvciB0aGUgQmx1ZXRvb3RoIEkgY2FuIGNvbmZpcm0gX1JUUyBp
+cyByZXF1aXJlZCIKClNvIHRoaXMgZGV2aWNlIHRyZWUgc2VnbWVudCBpcyB1c2VmdWwgLSBpdCBj
+b3JyZWN0bHkgZGVzY3JpYmVzIHRoZSB1YXJ0IApwb3J0aW9uIG9mIHRoZSBpbnRlcmZhY2UsIGFu
+ZCB0aGF0IGlzIGhhcmQgdG8gZGV0ZXJtaW5lIGZyb20gdGhlIEFTVVMgCmR0cy4gU28gdGhpcyBp
+cyB1c2VmdWwgaW5mb3JtYXRpb24gdG8gY2FwdHVyZS4KCk9uIHRoZSBwaW5vdXQgaW5mb3JtYXRp
+b24gb2YgdGhlIHJ0bDg3MjMuIFR3byBwb2ludHM6CgoxKSBpbmZvcm1hdGlvbiBsaWtlIGNsb2Nr
+LCBhbmQgdm9sdGFnZSBzdXBwbGllcywgYXJlIGZvcm1hbGx5IGhhcmR3YXJlIApjb3JyZWN0LCBi
+dXQgcHJhY3RpY2FsbHkgd2lsbCBwcm9iYWJseSBuZXZlciBiZSBhcHBsaWVkIHZpYSBibHVldG9v
+dGguIApJbnN0ZWFkIGl0cyB0aGUgd2lmaSB0aGF0IGJyaW5ncyB0aGlzIGhhcmR3YXJlIHVwLiBT
+byBzaG91bGQgdGhlc2UgYmUgCnN1cHBsaWVkIGlmIHVubGlrbHkgdG8gYmUgdXNlZD8gSSB0aGlu
+ayB0aGV5IHNob3VsZCBhcyB0aGV5IGZvcm1hbGx5IApkZXNjcmliZSB0aGUgaGFyZHdhcmUuCgoy
+KSBDb25mdXNpb24gb3ZlciBlbmFibGUtZ3Bpb3MgdnMgcmVzZXQtZ3Bpb3MKClRoZSBzZWNvbmQg
+YXBwZWFyZWQgb24gdGhlIGJsdWV0b290aCB0aHJlYWQ6CgpodHRwczovL3d3dy5zcGluaWNzLm5l
+dC9saXN0cy9saW51eC1ibHVldG9vdGgvbXNnNzg2NTQuaHRtbAoKc2hvdWxkIHRoaXMgYmUgd3Jp
+dHRlbjoKCmVuYWJsZS1ncGlvcyA9IDwmZ3BpbzQgUktfUEQ1IEdQSU9fQUNUSVZFX0xPVz47Cgpv
+cgoKcmVzZXQtZ3Bpb3MgPSA8JmdwaW80IFJLX1BENSBHUElPX0FDVElWRV9ISUdIPjsKClRoZSBk
+YXRhc2hlZXQgKGFzIGF2YWlsYWJsZSBhcyBpdCBpcyk6IApodHRwOi8vY2l0Lm9kZXNzYS51YS9t
+ZWRpYS9wZGYvSW50ZWwtQ29tcHV0ZS1TdGljay9GTi1MaW5rX0YyM0JEU00yNS1XMS5wZGYKClNh
+eXMgaXQgaXMgQlRfUlNUIC0gQlQgUmVzZXQgSU4KCmJ1dCB0aGUgY3VycmVudCBrZXJuZWwgZHJp
+dmVyIGhjaV9oNSBzYXlzOgoKaHR0cHM6Ly9naXRodWIuY29tL3RvcnZhbGRzL2xpbnV4L2Jsb2Iv
+bWFzdGVyL2RyaXZlcnMvYmx1ZXRvb3RoL2hjaV9oNS5jI0w5ODkKCiDCoMKgwqAgeyAiZW5hYmxl
+LWdwaW9zIiwgJmJ0cnRsX2VuYWJsZV9ncGlvcywgMSB9LAoKQW5kIFJvYkggY2xlYXJseSBoYXMg
+YSB2aWV3OgoKaHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvbGludXgtYmx1ZXRvb3RoL21z
+Zzc5MTM4Lmh0bWwKClNvIHRoZXJlIGlzIHN0aWxsIHNvbWUgY29uZnVzaW9uLgoKR3Vlc3MgaXRz
+IGEgcXVlc3Rpb24gb2YgaXQgYSBwYXJ0aWFsIGhhcmR3YXJlIGRlc2NyaXB0aW9uLCB3aXRoIHBv
+c3NpYmxlIApmYXVsdHMsIGlzIGJldHRlciB0aGFuIG5vIGRldmljZSB0cmVlIGRlc2NyaXB0aW9u
+IG9mIHRoZSBoYXJkd2FyZT8KCkFueSB2aWV3cz8KCgoKT24gMTcvMDIvMjAxOSAxMjoxNSwgRGF2
+aWQgU3VtbWVycyB3cm90ZToKPiBUaGlzIHBhdGNoIGlzIHRvIGFkZCBCbHVldG9vdGggdG8gdGhl
+IEFTVVMgVGlua2VyIEJvYXJkIChTKSBkZXZpY2UKPiB0cmVlLgo+Cj4gVGhpcyBwYXRjaCBpcyBt
+b3JlIGNvbnRyYXZlcnNhbCAtIHNvIHByb2JhYmx5IHZpZXcgaXQgYXMgYSByZXF1ZXN0IGZvcgo+
+IGNvbW1lbnRzLgo+Cj4gVGhlIHJlYXNvbiBiZWhpbmQgdGhpcywgaXMgdGhpcyBwYXRjaCBkb2Vz
+IG5vdCBjdXJyZW50bHkgc2V0IEJsdWV0b290aAo+IHdvcmtpbmcgb24gdGhlIHRoZXNlIGJvYXJk
+cy4gVGhlIHByb2JsZW0gaXMgdGhhdCB0aGUKPiBibHVldG9vdGgvaGNpX2g1LmMgZHJpdmVyLCB0
+aGF0IGlzIHVzZWQgZm9yIFJlYWx0ZWsgc2VyaWFsIGRldmljZXMsCj4gZGVwZW5kcyBvbiBBQ1BJ
+LiBVbmZvcnRhbnRseSBBQ1BJIGNhbiBub3QgYmUgZW5hYmxlZCBvbiBhcm12NyBtYWNoaW5lcwo+
+IHN1Y2ggYXMgdGhlIFRCKFMpLiBBbmQgc28gdGhlIGtlcm5lbCBtb2R1bGUgZm9yIHRoZSBSVEw4
+NzIzQlMKPiBCbHVldG9vdGggY2FuIG5vdCBiZSBsb2FkZWQuCj4KPiBIb3dldmVyIHRoaXMgcGF0
+Y2ggaXMgYmVsaWV2ZWQgdG8gYmUgYW4gYWNjdXJhdGUgZGVzY3JpcHRpb24gb2YgdGhlCj4gVGlu
+a2VyIEJvYXJkIChTKSB3aXJpbmcuIEl0IGlzIHN0cm9uZ2x5IGJhc2VkIG9uIHRoZSBBU1VTIHBh
+dGNoOgo+Cj4gaHR0cHM6Ly9naXRodWIuY29tL1RpbmtlckJvYXJkL2RlYmlhbl9rZXJuZWwvY29t
+bWl0LzZhMzEyOGFkZTMzZjc1ODg4NzA0ODU3OGFkYTYxYTRiN2FiOGU2NzgKPgo+IEFzIHRoZSBC
+bHVldG9vdGggaXMgY29ubmVjdGVkIHZpYSBhIFVBUlQgYW5kIHRoaXMgaXMgd2lyZWQgaW50byB1
+YXJ0MCwKPiB0aGlzIGhhcyBiZWVuIGRlc2NyaWJlZCBhcyBhIFNlckRldi4KPgo+IFRoZSBBU1VT
+IHBhdGNoIG1lbnRpb25zIHRoZSBVQVJUX0NUUywgYnV0IG5vdCB0aGUgX1JUUy4gTm93IGFzIHRo
+ZQo+IFJUTDg3MjNCUyBoYXMgYm90aCBDVFMgYW5kIFJUUyBvbiB0aGUgdWFydCwgaXQgaGFzIGJl
+ZW4gYXNzdW1lZCBib3RoCj4gYXJlIHdpcmVkIGludG8gdWFydDAgb24gdGhlIGNwdS4KPgo+IFRo
+ZSBCbHVldG9vdGggY29ubmVjdGlvbiBoYXMgc2V2ZXJhbCB3YWtlIHVwIHBpbnMgYm90aCBkZXZp
+Y2UgYW5kIGhvc3QKPiBhbmQgYSByZXNldCBwaW4uIFRoZSB3aXJpbmcgb2YgdGhlc2UgaGFzIGJl
+ZW4gZGVzY3JpYmVkOyBob3dldmVyIGhvdwo+IHRoZSBrZXJuZWwgZHJpdmVyIHdpbGwgdXNlIHRo
+ZXNlIGlzbid0IGNsZWFyLiBFLmcuIHNob3VsZCBIT1NUX1dBS0UgYmUKPiBhbiBpbnRlcnVwdD8K
+Pgo+IFRoZSBtYWluIHJlYXNvbiBmb3IgYXNraW5nIGZvciBjb21tZW50cywgaXMgdGhhdCB3aGVu
+IGl0IGNvbWVzIHRpbWUgdG8KPiBtYWtlIHRoZSBjaGFuZ2VzIHRvIHRoZSBibHVldG9vdGggdWFy
+dCBjb2RlLCBhbmQgYWRkIGNvbXBhdGlibGUgZmxhZ3MsCj4gcm9iaCBoYXMgaW5kaWNhdGVkIHRo
+YXQgdGhpcyB3aWxsIG9ubHkgYmUgYWNjZXB0ZWQgd2l0aCBhIHZhbGlkCj4gZXhhbXBsZS4gU28g
+dGhlIGNvZGUgYmVsb3cgaXMgdGhhdCBleGFtcGxlLiBTbyBJIHdvdWxkIGxpa2UgY29tbWVudHMK
+PiB0aGF0IHRoaXMgYXBwcm9hY2ggaXMgdmFsaWQsIHdoaWNoIGNhbiBiZSB1c2VkIHdoZW4gdGhl
+IGxhdGVyCj4gc3VibWlzc2lvbiBjb21lcy4KPgo+IFNpZ25lZC1vZmYtYnk6IERhdmlkIFN1bW1l
+cnMgPGJlYWdsZWJvYXJkQGRhdmlkam9obnN1bW1lcnMudWs+Cj4gLS0tCj4gICBhcmNoL2FybS9i
+b290L2R0cy9yazMyODgtdGlua2VyLmR0c2kgfCAxMSArKysrKysrKysrKwo+ICAgMSBmaWxlIGNo
+YW5nZWQsIDExIGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0
+cy9yazMyODgtdGlua2VyLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9yazMyODgtdGlua2VyLmR0
+c2kKPiBpbmRleCBlMTc5NmYzNDBlZWYuLjkzMWI0YzY1MmZkYyAxMDA2NDQKPiAtLS0gYS9hcmNo
+L2FybS9ib290L2R0cy9yazMyODgtdGlua2VyLmR0c2kKPiArKysgYi9hcmNoL2FybS9ib290L2R0
+cy9yazMyODgtdGlua2VyLmR0c2kKPiBAQCAtNDgxLDYgKzQ4MSwxNyBAQAo+ICAgCj4gICAmdWFy
+dDAgewo+ICAgCXN0YXR1cyA9ICJva2F5IjsKPiArCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7
+Cj4gKwlwaW5jdHJsLTAgPSA8JnVhcnQwX3hmZXI+LCA8JnVhcnQwX2N0cz4sIDwmdWFydDBfcnRz
+PjsKPiArCj4gKwlibHVldG9vdGggewo+ICsJCWNsb2NrcyA9IDwmcms4MDggUks4MDhfQ0xLT1VU
+MT47Cj4gKwkJcmVzZXQtZ3Bpb3MgPSA8JmdwaW80IFJLX1BENSBHUElPX0FDVElWRV9MT1c+Owo+
+ICsJCWRldmljZS13YWtlLWdwaW9zID0gPCZncGlvNCBSS19QRDIgR1BJT19BQ1RJVkVfSElHSD47
+Cj4gKwkJaG9zdC13YWtlLWdwaW9zID0gPCZncGlvNCBSS19QRDcgR1BJT19BQ1RJVkVfSElHSD47
+Cj4gKwkJdmNjLTE4LXN1cHBseSA9IDwmdmNjXzE4PjsKPiArCQl2Y2MtaW8tc3VwcGx5ID0gPCZ2
+Y2NfaW8+Owo+ICsJfTsKPiAgIH07Cj4gICAKPiAgICZ1YXJ0MSB7CgoKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
+ZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
