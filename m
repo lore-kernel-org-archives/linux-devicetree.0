@@ -1,288 +1,122 @@
-From: Talel Shenhar <talel@amazon.com>
-Subject: [PATCH 2/2] thermal: Introduce thermal MMIO
-Date: Sun, 3 Mar 2019 10:49:26 +0200
-Message-ID: <1551602966-2334-3-git-send-email-talel@amazon.com>
-References: <1551602966-2334-1-git-send-email-talel@amazon.com>
+From: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+Subject: Re: [PATCH 1/3 v2] ARM: dts: rk3288-tinker.dtsi: Fix SD card detection
+Date: Sun, 3 Mar 2019 11:08:08 +0000
+Message-ID: <c5079feb-6549-b30a-76a6-fc9fd19a9b84@davidjohnsummers.uk>
+References: <20190217121513.22965-2-beagleboard@davidjohnsummers.uk>
+ <20190222184708.32004-1-beagleboard@davidjohnsummers.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551602966-2334-1-git-send-email-talel@amazon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: edubezval@gmail.com, rui.zhang@intel.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, talel@amazon.com, hhhawa@amazon.com, jonnyc@amazon.com, ronenk@amazon.com, hanochu@amazon.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190222184708.32004-1-beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+Content-Language: en-PH
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tony McKahan <tonymckahan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch introduces a generic thermal driver, which enables easy
-connectivity between "simple" thermal HW devices and the thermal
-subsystem.
-
-"simple" may be any system that allows temperature reading via a single
-memory-mapped read, be it register or shared memory, and that doesn't
-require any HW configuration to be done by the driver.
-Such "simple" HW is a candidate to work with this driver.
-
-Signed-off-by: Talel Shenhar <talel@amazon.com>
----
- drivers/thermal/Kconfig        |  11 +++
- drivers/thermal/Makefile       |   3 +
- drivers/thermal/thermal_mmio.c | 214 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 228 insertions(+)
- create mode 100644 drivers/thermal/thermal_mmio.c
-
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 1775d44..0033ba2 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -199,6 +199,17 @@ config THERMAL_EMULATION
- 	  because userland can easily disable the thermal policy by simply
- 	  flooding this sysfs node with low temperature values.
- 
-+config THERMAL_MMIO
-+	bool
-+	depends on OF || COMPILE_TEST
-+	prompt "mmio thermal driver"
-+	help
-+	  This option enables the generic thermal MMIO driver that will use
-+	  memory-mapped reads to get the temperature.  Any HW/System that
-+	  allows temperature reading by a single memory-mapped reading, be it
-+	  register or shared memory, is a potential candidate to work with this
-+	  driver.
-+
- config HISI_THERMAL
- 	tristate "Hisilicon thermal driver"
- 	depends on ARCH_HISI || COMPILE_TEST
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 82bb50d..beec616 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -27,6 +27,9 @@ thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
- # devfreq cooling
- thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
- 
-+# generic memory mapped thermal driver
-+thermal_sys-$(CONFIG_THERMAL_MMIO)	+= thermal_mmio.o
-+
- # platform thermal drivers
- obj-y				+= broadcom/
- obj-$(CONFIG_QCOM_SPMI_TEMP_ALARM)	+= qcom-spmi-temp-alarm.o
-diff --git a/drivers/thermal/thermal_mmio.c b/drivers/thermal/thermal_mmio.c
-new file mode 100644
-index 0000000..1119e71
---- /dev/null
-+++ b/drivers/thermal/thermal_mmio.c
-@@ -0,0 +1,214 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/thermal.h>
-+
-+#define THERMAL_MMIO_DEFAULT_SENSOR_WIDTH sizeof(u32)
-+#define THERMAL_MMIO_DEFAULT_SENSOR_FACTOR 1
-+#define THERMAL_MMIO_DEFAULT_SENSOR_BIAS 0
-+#define THERMAL_MMIO_DEFAULT_SENSOR_DIVIDER 1
-+
-+struct thermal_mmio {
-+	void __iomem *mmio_base;
-+	u32 (*read_mmio)(void __iomem *mmio_base);
-+	int width;
-+	u32 mask;
-+	int factor;
-+	int bias;
-+	int divider;
-+};
-+
-+static u32 thermal_mmio_readb(void __iomem *mmio_base)
-+{
-+	return readb(mmio_base);
-+}
-+
-+static u32 thermal_mmio_readw(void __iomem *mmio_base)
-+{
-+	return readw(mmio_base);
-+}
-+
-+static u32 thermal_mmio_readl(void __iomem *mmio_base)
-+{
-+	return readl(mmio_base);
-+}
-+
-+static int thermal_mmio_get_temperature(void *private, int *temp)
-+{
-+	int t;
-+	struct thermal_mmio *sensor =
-+		(struct thermal_mmio *)private;
-+
-+	t = sensor->read_mmio(sensor->mmio_base) & sensor->mask;
-+	t *= sensor->factor;
-+	t += sensor->bias;
-+	t /= sensor->divider;
-+
-+	*temp = t;
-+
-+	return 0;
-+}
-+
-+static struct thermal_zone_of_device_ops thermal_mmio_ops = {
-+	.get_temp = thermal_mmio_get_temperature,
-+};
-+
-+static int thermal_mmio_parse_dt(struct platform_device *pdev,
-+				 struct thermal_mmio *sensor)
-+{
-+	struct resource *resource;
-+	int ret;
-+
-+	resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (IS_ERR(resource)) {
-+		dev_err(&pdev->dev,
-+			"fail to get platform memory resource (%ld)\n",
-+			PTR_ERR(resource));
-+		return PTR_ERR(resource);
-+	}
-+
-+	sensor->mmio_base = devm_ioremap_resource(&pdev->dev, resource);
-+	if (IS_ERR(sensor->mmio_base)) {
-+		dev_err(&pdev->dev, "failed to ioremap memory (%ld)\n",
-+			PTR_ERR(sensor->mmio_base));
-+		return PTR_ERR(sensor->mmio_base);
-+	}
-+
-+	ret = of_property_read_u32(pdev->dev.of_node, "sensor-width",
-+				   &sensor->width);
-+	if (ret < 0) {
-+		sensor->width = THERMAL_MMIO_DEFAULT_SENSOR_WIDTH;
-+		dev_dbg(&pdev->dev,
-+			"sensor-width undefined (%d) - using default: %d\n",
-+			ret, sensor->width);
-+	}
-+
-+	ret = of_property_read_u32(pdev->dev.of_node, "sensor-mask",
-+				   &sensor->mask);
-+	if (ret < 0) {
-+		sensor->mask = GENMASK(sizeof(u32) * BITS_PER_BYTE - 1, 0);
-+		dev_dbg(&pdev->dev,
-+			"sensor-mask undefined (%d) - using default: 0x%x\n",
-+			ret, sensor->mask);
-+	}
-+
-+	ret = of_property_read_s32(pdev->dev.of_node, "sensor-factor",
-+				   &sensor->factor);
-+	if (ret < 0) {
-+		sensor->factor = THERMAL_MMIO_DEFAULT_SENSOR_FACTOR;
-+		dev_dbg(&pdev->dev,
-+			"sensor-factor undefined (%d) - using default: %d\n",
-+			ret, sensor->factor);
-+	}
-+
-+	ret = of_property_read_s32(pdev->dev.of_node, "sensor-bias",
-+				   &sensor->bias);
-+	if (ret < 0) {
-+		sensor->bias = THERMAL_MMIO_DEFAULT_SENSOR_BIAS;
-+		dev_dbg(&pdev->dev,
-+			"sensor-bias undefined (%d) - using default: %d\n",
-+			ret, sensor->bias);
-+	}
-+
-+	ret = of_property_read_u32(pdev->dev.of_node, "sensor-divider",
-+				   &sensor->divider);
-+	if (ret < 0) {
-+		sensor->divider = THERMAL_MMIO_DEFAULT_SENSOR_DIVIDER;
-+		dev_dbg(&pdev->dev,
-+			"sensor-divider undefined (%d) - using default: %d\n",
-+			ret, sensor->divider);
-+	}
-+
-+	/* configuration value sanity */
-+	if (sensor->width > resource_size(resource)) {
-+		dev_err(&pdev->dev,
-+			"too small MMIO size, expected (%d) < supplied (%d)\n",
-+			sensor->width, (int)resource_size(resource));
-+		return -EINVAL;
-+	}
-+
-+	dev_dbg(&pdev->dev,
-+		"width=%d, mask=0x%x factor=%d bias=%d divider=%d\n",
-+		sensor->width, sensor->mask, sensor->factor, sensor->bias,
-+		sensor->divider);
-+
-+	return 0;
-+}
-+
-+static int thermal_mmio_probe(struct platform_device *pdev)
-+{
-+	struct thermal_mmio *sensor;
-+	struct thermal_zone_device *thermal_zone;
-+	int ret;
-+	int temperature;
-+
-+	sensor = devm_kzalloc(&pdev->dev, sizeof(*sensor), GFP_KERNEL);
-+	if (!sensor)
-+		return -ENOMEM;
-+
-+	ret = thermal_mmio_parse_dt(pdev, sensor);
-+	if (ret) {
-+		dev_err(&pdev->dev, "fail to parse dt\n");
-+		return ret;
-+	}
-+
-+	switch (sensor->width) {
-+	case sizeof(u8):
-+		sensor->read_mmio = thermal_mmio_readb;
-+		break;
-+	case sizeof(u16):
-+		sensor->read_mmio = thermal_mmio_readw;
-+		break;
-+	case sizeof(u32):
-+		sensor->read_mmio = thermal_mmio_readl;
-+		break;
-+	default:
-+		dev_err(&pdev->dev, "bad sensor-width property supplied: %d\n",
-+			sensor->width);
-+		return -EINVAL;
-+	}
-+
-+	thermal_zone = devm_thermal_zone_of_sensor_register(&pdev->dev,
-+							    0,
-+							    sensor,
-+							    &thermal_mmio_ops);
-+	if (IS_ERR(thermal_zone)) {
-+		dev_err(&pdev->dev,
-+			"failed to register sensor (%ld)\n",
-+			PTR_ERR(thermal_zone));
-+		return PTR_ERR(thermal_zone);
-+	}
-+
-+	thermal_mmio_get_temperature(sensor, &temperature);
-+	dev_info(&pdev->dev,
-+		 "thermal mmio sensor %s registered, current temperature: %d\n",
-+		 pdev->name, temperature);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id thermal_mmio_id_table[] = {
-+	{ .compatible = "thermal-mmio" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, thermal_mmio_id_table);
-+
-+static struct platform_driver thermal_mmio_driver = {
-+	.probe = thermal_mmio_probe,
-+	.driver = {
-+		.name = "thermal-mmio",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(thermal_mmio_id_table),
-+	},
-+};
-+
-+module_platform_driver(thermal_mmio_driver);
-+
-+MODULE_AUTHOR("Talel Shenhar <talel@amazon.com>");
-+MODULE_DESCRIPTION("Thermal MMIO Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+RGVhciBBbGwsCgpTbyBsZXRzIGRvIGEgc3ludGhlc2lzIG9mIHdoZXJlIHdlIGFyZSwgUGVvcGxl
+IHdobyBoYXZlIGFuIGludGVyZXN0OgoKMSkgTWUKMikgSm9uYXMgS2FybG1hbiAtIGRpc2FibGUt
+d3Agc2hvdWxkIGJlIHNldCwgYW5kIFRlc3RlZC4gQnV0IGNvbW1lbnRlZCAKImZpeGVzIHJlYm9v
+dCB3aGVuIGJvb3RpbmcgZnJvbSBzZC1jYXJkIGFuZCBoYXZpbmcgZW1tYyB6ZXJvZWQgb3V0IiB3
+aGVuIApyZWd1bGF0b3ItYm9vdC1vbiBpcyBzZXQKMykgSGVpa28gU3R1Ym5lciAoUm9ja2NoaXAg
+bWFpbnRhaW5lcikgLSBhZ3JlZXMgZGlzYWJsZS13cCBzaG91bGQgc2V0CjQpIERvdWcgQW5kZXJz
+b24gLSBDYXJkIERldGVjdCBzaG91bGRuJ3QgYmUgcG93ZXIgYnkgdmNjaW9fc2QuIFNvIHRoaXMg
+CmVycm9yIGluIGJvYXJkIGNvbnN0cnVjdGlvbiwgbWVhbnMgc2hvdWxkIGRvICJicm9rZW4tY2Qi
+IGFzIENhcmQgRGV0ZWN0IApkb2Vzbid0IHdvcmsgd2hlbiB2Y2Npb19zZCBpcyBkb3duCjUpIEph
+ZWhvb24gQ2h1bmcgJiBVbGYgSGFuc3Nvbiwgbm90IHBvc3RlZCBvbiB0aGlzIHRocmVhZCAtIGJ1
+dCBNTUMgU0QgCm1haW50YWluZXIuIEluIHBhc3QgdGhyZWFkIDQtNSB5ZWFycyBhZ28sIHN0cm9u
+Z2x5IHNhaWQgdGhpcyBpcyBhIGJyb2tlbiAKY2QsIGhlbmNlIHVzZSAiYnJva2VuLWNkIgo2KSBS
+b2JpbiBNdXJwaHnCoCAtIHdobyBpZGVudGlmaWVkIHRoZSBwcm9ibGVtIHdpdGggY2FyZCBkZXRl
+Y3RlZCBwb3dlcmVkIApieSB2Y2Npb19zZC4gU28gcG93ZXIgb24gdmNjaW9fc2QgYWx3YXlzLCBi
+dXQgY2FuIGJlIHN3YXllZC4gTWF5YmUgd2UgCnNob3VsZCBoYXZlIGEgc29mdHdhcmUgY29ycmVj
+dGlvbiB0byB0aGlzIHByb2JsZW0uCjcpIFRvbnkgTWNLYWhhbiAtIGludm9sdmVkIGluIEFybWJp
+YW4sIHNvIGludGVyZXN0ZWQgaW4gVGlua2VyIEJvYXJkIFMgCnN1cHBvcnQgYnkgbWFpbmxpbmUg
+TGludXgKCkFuZCBzbyB3aGF0IHRvIGNvbmNsdWRlLgoKV2VsbCwgYWx0aG91Z2ggSmFlaG9vbiBh
+bmQgVWxmIGhhdmVuJ3QgcG9zdGVkIG9uIHRoaXMgdGhyZWFkLCB0aGUgdGhyZWFkIApmcm9tIGZv
+dXIgeWVhcnMgYWdvOgoKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4
+LWFybS1rZXJuZWwvMjAxNC1BdWd1c3QvMjgxMTUzLmh0bWwKCkFuZCBpdCBtYWtlcyBjbGVhciB0
+aGF0IGl0cyB0cmVhdGVkIGFzIGEgYnJva2VuIGNhcmQgZGV0ZWN0LCBhbmQgc28gCiJicm9rZW4t
+Y2QiIGlzIHRoZSBjb3JyZWN0IHNvbHV0aW9uLCBub3cgUm9iaW4gc2F5cyBvbiBzb21lIG1hY2hp
+bmVzIAp0aGlzIGNhdXNlcyBhIGhpZ2ggbG9hZCBkdWUgdG8gdGhlIHBvbGxpbmc7IGJ1dCB0aGlz
+IGhhc24ndCBjbGVhcmx5IGJlZW4gCnNlZW4gb24gcmszMjg4IG1hY2hpbmVzLCBlaXRoZXIgb24g
+dGhpcyB0aHJlYWQgb3Igb24gQXJjaExpbnV4IEFybS4gVG8gCm15IG1pbmQgdGhpcyBtZWFucyB0
+aGF0IFVsZiBhbmQgSmFlaG9vbiBhcyBtYWludGFpbmVycywgZXZlbiB3aXRoIGEgNCAKeWVhciBv
+bGQgcG9zdCwgdHJ1bXAgYW5kIHdpbiAtIGFuZCBzbyB3ZSBnbyB3aXRoICJicm9rZW4tY2QiIG92
+ZXIgCmVuYWJsaW5nIHRoZSByZWd1bGF0b3IgYWxsIHRoZSB0aW1lLgoKSm9uYXMgY29tbWVudCB0
+aG91Z2gsIGFib3V0IHdhcm0gcmVib290cyBvbiBzZCBjYXJkLiBTdWdnZXN0cyB3ZSBkbyBoYXZl
+IAoicmVndWxhdG9yLWJvb3Qtb24iLiBIYXZlbid0IGJlZW4gYWJsZSB0byBjb25maXJtIHRoaXM7
+IHNvIHdvdWxkIGJlIGdvb2QgCmlmIEpvbmFzIGNvdWxkIGNvbmZpcm0gdGhpcyBpcyAqZXhhY3Rs
+eSogd2hhdCBpcyBuZWVkZWQ/CgpTbyB1bmxlc3MgYW55b25lIHNheXMgYW55dGhpbmcgdG8gY29u
+dmluY2UgbWUgb3RoZXJ3aXNlLCBteSBwbGFuIGlzIHRvIApzdWJtaXQgdjMgb2YgdGhpcyBwYXRj
+aCBpbiBuZXh0IGZldyBkYXlzIHdpdGg6CgoxKSAiYnJva2VuLWNkIgoyKSAiZGlzYWJsZS13cCIK
+MykgInJlZ3VsYXRvci1ib290LW9uIgoKTm93IHF1ZXN0aW9uIGZvciBIZWlrbyBpcyB3aGF0IHNj
+aGVkdWxlIGFyZSB3ZSBsb29raW5nIGF0PyBNeSBndWVzcyBpcyAKdGhhdCB0aGUgbGludXggNS4x
+IGJvb3QgaGFzIGJlZW4gbWlzc2VkPyBTbyB3aGF0cyB0aGUgc2NoZWR1bGUgZm9yIDUuMj8KCkd1
+ZXNzIEkgc2hvdWxkIGFsc28gc2F5IHNvbWUgd29yZHMgb24gdGhlIHRhbGsgb2Ygc2hvdWxkIHRo
+ZXJlIGJlIGEgCnNvZnR3YXJlIHdvcmsgYXJvdW5kIGZvciB0aGlzIGNvbW1vbiBoYXJkd2FyZSBm
+YXVsdCwgd2hlcmUgdGhlIENEIGlzIApwb3dlcmVkIGJ5IHZjY2lvX3NkLiBBcyBJIHNlZSBpdCB3
+aXRoICJicm9rZW4tY2QiIHdoZW4gd2Ugd2FudCBzZCBzdGF0dXMgCnRoZSBrZXJuZWwgZG9lczoK
+CjEpIFBvd2VyIG9uIHZjY2lvX3NkCjIpIFBvbGwgdGhlIGNhcmQgd2l0aCB0aW1lb3V0cwozKSBQ
+b3dlciBkb3duIHRoZSB2Y2Npb19zZAoKTm93IHdpdGggYW4gYWRkaXRpb25hbCBzb2Z0d2FyZSB3
+b3JrIGFyb3VuZCwgd291bGQgaW52b2x2ZSBzdGVwIDIgCnJlcGxhY2VkIHdpdGggInRlc3QgY2Qg
+cGluIiAtIGJ1dCBzdGlsbCBuZWVkIHN0ZXBzIDEgYW5kIDMuIE5vdyB0ZXN0aW5nIAp0aGUgY2Qg
+cGluLCBzaG91bGQgYmUgbG93ZXIgbG9hZCB0aGFuIHBvbGxpbmcgYW5kIHRpbWVvdXRzIC0gYnV0
+IHN0aWxsIApoYXZlIHRoZSByZWd1bGF0b3Igb24tb2ZmIG92ZXJoZWFkLgoKQW55d2F5IEkgZG9u
+J3QgaGF2ZSB0aW1lIHJpZ2h0IG5vdyB0byBmb2xsb3cgc3VjaCBhIHNvZnR3YXJlIHdvcmsgCmFy
+b3VuZC4gU28gcGxhbiB0aGlzIHBhdGNoIHRvIGJlIGluZGVwZW5kZW50LgoKQW55IHZpZXdzIGxl
+dCBtZSBrbm93IC0gb3RoZXJ3aXNlIHYzIG9mIHRoZSBwYXRjaCB+V2VkbmVzZGF5LgoKRGF2aWQu
+CgoKT24gMjIvMDIvMjAxOSAxODo0NywgRGF2aWQgU3VtbWVycyB3cm90ZToKPiBUaGUgUHJvYmxl
+bToKPgo+IE9uIEFTVVMgVGlua2VyIEJvYXJkIFMsIHdoZW4gYm9vdGluZyBmcm9tIHRoZSBlTU1D
+LCBhbmQgdGhlcmUgaXMgbm8KPiBjYXJkIHNkIHNsb3QsIHRoZW4gdGhlcmUgYXJlIGNvbnN0YW50
+IGVycm9ycy4KPgo+IENhdXNlOgo+Cj4gVGhhbmtzIG11c3QgZ28gdG8gUm9iaW4gTXVycGh5IEAg
+QVJNIGZvciBpZGVuaWZ5aW5nIHRoZSBwcm9ibGVtLiBUaGUKPiByazgwOCBvbiB0aGUgVGlua2Vy
+IEJvYXJkIGFuZCBUaW5rZXIgQm9hcmQgUyBoYXMgbWFueSByZWd1bGF0b3JzLCBvbmUKPiB2Y2Np
+b19zZCBwb3dlcnMgdGhlIElPIGZvciB0aGUgc2QgY2FyZC4gVW5mb3J0dW5hdGx5IHRoaXMgaXMg
+YWxzbyB1c2VkCj4gaW4gdGhlIGNhcmQgZGV0ZWN0LiBOb3cgd2hlbiBubyBjYXJkIGlzIGluc3Rh
+bGwsIHRoZSByZWd1bGF0b3IgaXMKPiBwb3dlcmVkIGRvd24uIFRoaXMgbWVhbnMgdGhhdCB0aGUg
+Y2FyZCBkZXRlY3QgZmxvYXRzLCBhbmQgdGhpcyBtZWFucwo+IHJhbmRvbSBjYXJkIGRldGVjdGlv
+bi4KPgo+IFRoZSBTb2x1dGlvbjoKPgo+IE1ha2Ugc3VyZSB0aGF0IHRoZSBzZCBJTyBpcyBhbHdh
+eXMgcG93ZXJlZCwgdGhpcyBtZWFucyBjYXJkIGRldGVjdGlvbgo+IGlzIGFsd2F5cyBhY3RpdmUs
+IHdoaWNoIGlzIHdoYXQgc2hvdWxkIGJlIGRvbmUgb24gYSBib2FyZCB3aXRoIGFuIHNkCj4gc2xv
+dCwgd2hpY2ggYm90aCB0aGUgVGlua2VyIEJvYXJkIGFuZCBUaW5rZXIgQm9hcmQgUyBhcmUuIEhl
+bmNlIGNoYW5nZQo+IGlzIG1hZGUgdG8gdGhlIC5kdHNpIHdoaWNoIHRha2VzIGVmZmVjdCBvbiBh
+bGwgVGlua2VyIEJvYXJkcyBhcwo+IHJlcXVpcmVkLgo+Cj4gVGhlIGNoYW5nZSBhbHNvIGFkZHMg
+InJlZ3VsYXRvci1ib290LW9uIiB0aGUgVGlua2VyIEJvYXJkIGJvb3QgZnJvbQo+IHVib290LCBh
+bmQgdGhlIHNkIGNhcmQgaXMgYWx3YXlzIG9uZSBvcHRpb24uIEhlbmNlIHRoZSBJTyBtdXN0IGJl
+Cj4gcG93ZXJlZCBpbiB1Ym9vdCwgYW5kIHNvIHNldHRpbmcgdGhpcyBmbGFnLgo+Cj4gQWxzbyBy
+ZW1vdmVkIGlzICJkaXNhYmxlLXdwIiB0aGUgbWljcm8gc2QgY2FyZCB3aGljaCBhcmUgdXNlZCBo
+YXZlIG5vCj4gd3JpdGUgIHByb3RlY3Rpb24sIHNvIHRoZSBjb25jZXB0IGRvZXNuJ3QgbWVhbiBh
+bnl0aGluZywgYW5kIHRoZQo+IFRpbmtlciBCb2FyZHMgd29yayB3aXRob3V0IHRoaXMuIEhlbmNl
+IGl0IGlzIHJlbW92ZWQgdG8gc2ltcGx5Lgo+Cj4gVGhpcyBjaGFuZ2UgY2FtZSBmcm9tIEFyY2hM
+aW51eCBBcm0sIGJ1dCB3ZSBub3RlIGl0IGlzIHRoZSBmaXggYWxzbwo+IHVzZWQgYnkgQXJtYmlh
+bjoKPgo+IGh0dHBzOi8vZ2l0aHViLmNvbS9NaW91eW91eW91L1JvY2tNeXkvYmxvYi9tYXN0ZXIv
+cGF0Y2hlcy9rZXJuZWwvdjUuMC9EVFMvMDAxNi1BUk0tRFRTSS1yazMyODgtdGlua2VyLVNldHRp
+bmctdXAtdGhlLVNELXJlZ3VsYXRvcnMucGF0Y2gKPgo+IFNpZ25lZC1vZmYtYnk6IERhdmlkIFN1
+bW1lcnMgPGJlYWdsZWJvYXJkQGRhdmlkam9obnN1bW1lcnMudWs+Cj4gLS0tCj4gICBhcmNoL2Fy
+bS9ib290L2R0cy9yazMyODgtdGlua2VyLmR0c2kgfCAzICsrLQo+ICAgMSBmaWxlIGNoYW5nZWQs
+IDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
+L2Jvb3QvZHRzL3JrMzI4OC10aW5rZXIuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC10
+aW5rZXIuZHRzaQo+IGluZGV4IGFhMTA3ZWU0MWI4Yi4uNmI3ZTU1MDg1YjBjIDEwMDY0NAo+IC0t
+LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC10aW5rZXIuZHRzaQo+ICsrKyBiL2FyY2gvYXJt
+L2Jvb3QvZHRzL3JrMzI4OC10aW5rZXIuZHRzaQo+IEBAIC0yNTQsNiArMjU0LDggQEAKPiAgIAkJ
+CX07Cj4gICAKPiAgIAkJCXZjY2lvX3NkOiBMRE9fUkVHNSB7Cj4gKwkJCQlyZWd1bGF0b3ItYWx3
+YXlzLW9uOwo+ICsJCQkJcmVndWxhdG9yLWJvb3Qtb247Cj4gICAJCQkJcmVndWxhdG9yLW1pbi1t
+aWNyb3ZvbHQgPSA8MTgwMDAwMD47Cj4gICAJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8
+MzMwMDAwMD47Cj4gICAJCQkJcmVndWxhdG9yLW5hbWUgPSAidmNjaW9fc2QiOwo+IEBAIC00MzEs
+NyArNDMzLDYgQEAKPiAgIAljYXAtbW1jLWhpZ2hzcGVlZDsKPiAgIAljYXAtc2QtaGlnaHNwZWVk
+Owo+ICAgCWNhcmQtZGV0ZWN0LWRlbGF5ID0gPDIwMD47Cj4gLQlkaXNhYmxlLXdwOwkJCS8qIHdw
+IG5vdCBob29rZWQgdXAgKi8KPiAgIAlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+ICAgCXBp
+bmN0cmwtMCA9IDwmc2RtbWNfY2xrICZzZG1tY19jbWQgJnNkbW1jX2NkICZzZG1tY19idXM0PjsK
+PiAgIAlzdGF0dXMgPSAib2theSI7CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdApMaW51eC1yb2NrY2hp
+cEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8vbGludXgtcm9ja2NoaXAK
