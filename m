@@ -1,55 +1,82 @@
-Return-Path: <SRS0=ezLt=RQ=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v3 1/6] iio: gyro: add DT bindings to fxas21002c
-Date: Wed, 13 Mar 2019 18:39:57 +0000
-Message-Id: <20190313184002.2501-2-rui.silva@linaro.org>
-In-Reply-To: <20190313184002.2501-1-rui.silva@linaro.org>
-References: <20190313184002.2501-1-rui.silva@linaro.org>
+Return-Path: <SRS0=NNGR=RG=gmail.com=marek.vasut@kernel.org>
+Subject: Re: [PATCH] regulator: gpio: Reword the binding document
+References: <20190216174859.15738-1-marek.vasut@gmail.com>
+ <E1gv6SG-0000Jv-KB@stardust.g4.wien.funkfeuer.at>
+ <83550921-b0ec-fa34-b120-2dd159f256d8@gmail.com>
+ <E1gvNOx-0000Kc-Dc@stardust.g4.wien.funkfeuer.at>
+ <75846117-242c-6861-ace5-dccf88711208@gmail.com>
+ <E1gvSbw-0000K8-Hj@stardust.g4.wien.funkfeuer.at>
+ <7a993282-9137-caf4-ca0b-b2c01ea9959c@gmail.com>
+ <E1gvfnE-0000Il-Jo@stardust.g4.wien.funkfeuer.at>
+ <e2e9e577-b110-fc9b-c129-26f61e862fb4@gmail.com>
+ <E1gvrEx-0000K7-Ks@stardust.g4.wien.funkfeuer.at>
+ <72363317-8259-eda2-4cd8-4f336f0c155f@gmail.com>
+ <E1gw2Ll-0000MN-40@stardust.g4.wien.funkfeuer.at>
+ <fc83b1ce-52e5-b197-4679-69b576233726@gmail.com>
+ <E1h0TeF-0000Iw-72@stardust.g4.wien.funkfeuer.at>
+From: Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <4a719e8b-7d33-0370-e119-d699e0430d77@gmail.com>
+Date: Sun, 3 Mar 2019 17:08:50 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+In-Reply-To: <E1h0TeF-0000Iw-72@stardust.g4.wien.funkfeuer.at>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Harald Geyer <harald@ccbib.org>
+Cc: devicetree@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree bindings for the FXAS21002C gyroscope.
+On 3/3/19 5:07 PM, Harald Geyer wrote:
+> Marek Vasut writes:
+>> On 2/19/19 11:10 AM, Harald Geyer wrote:
+>>> Marek Vasut writes:
+>>>> On 2/18/19 11:18 PM, Harald Geyer wrote:
+>>>>> From the explanations provided by Mark it is clear that this property
+>>>>> is an artifact of the implementation in linux. I think we should document
+>>>>> is as such. How about:
+>>>>>
+>>>>> gpios-states : On operating systems, that don't support reading back gpio
+>>>>> 	       values in output mode (most notably linux), this array
+>>>>> 	       provides the state of GPIO pins set when requesting them
+>>>>> 	       from the gpio controller.
+>>>>
+>>>> That's good.
+>>>>
+>>>>> Systems, that are capable of
+>>>>> 	       preserving state when requesting the lines, are free to
+>>>>> 	       ignore this property.
+>>>>
+>>>> Are they ?
+>>>
+>>> I think so. Also this seems to be what Mark wrote yesterday:
+>>>
+>>> | With the GPIO API as it stands it is unfortunately not possible to
+>>> | preserve the state, if the API were fixed we'd preserve state.
+>>>
+>>>> I think there are systems which depend on preconfiguring the
+>>>> GPIO according to this property.
+>>>
+>>> These systems need to preconfigure the GPIOs in firmware anyway, so
+>>> they should be fine so long as the driver preserves state.
+>>>
+>>> Since the original wording doesn't give any guarantees, I think the
+>>> new wording doesn't change anything. It just makes it clearer, that
+>>> there are no guarantees and that some drivers will happily overwrite
+>>> state when this property is absent.
+>>
+>> OK, so how can we move forward with this ? We discussed a lot, but I
+>> don't know what we should do about the patch.
+> 
+> Yes, we discussed a lot. I guess most people lost track of where we
+> stand. I'd suggest you send a V2 of the patch, picking up all the proposed
+> changes. If you feel the part about `gpios-states' property is too
+> controversial, then maybe split it in two patches: The first containing
+> the non-controversial changes and the second improving `gpios-states'
+> description, so that maintainers can ACK them independently.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
----
- .../bindings/iio/gyroscope/nxp,fxas21002c.txt | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
+Well what are the proposed changes ? I don't think there was any
+agreement on them.
 
-diff --git a/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt b/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
-new file mode 100644
-index 000000000000..68b4cd283d1d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
-@@ -0,0 +1,26 @@
-+* NXP FXAS21002C Gyroscope device tree bindings
-+
-+http://www.nxp.com/products/sensors/gyroscopes/3-axis-digital-gyroscope:FXAS21002C
-+
-+Required properties:
-+  - compatible : should be "nxp,fxas21002c"
-+  - reg : the I2C address of the sensor or SPI chip select number for the
-+          device.
-+  - vdd-supply: phandle to the regulator that provides power to the sensor.
-+  - vddio-supply: phandle to the regulator that provides power to the bus.
-+
-+Optional properties:
-+  - reset-gpios : gpio used to reset the device, see gpio/gpio.txt
-+  - interrupts : device support 2 interrupts, INT1 and INT2.
-+                 See interrupt-controller/interrupts.txt
-+  - interrupt-names: should contain "INT1" or "INT2", the gyroscope interrupt
-+                     line in use.
-+
-+Example:
-+
-+gyroscope@20 {
-+	compatible = "nxp,fxas21002c";
-+	reg = <0x20>;
-+	vdd-supply = <&reg_peri_3p15v>;
-+	vddio-supply = <&reg_peri_3p15v>;
-+};
 -- 
-2.20.1
+Best regards,
+Marek Vasut
