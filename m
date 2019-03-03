@@ -1,107 +1,157 @@
-From: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH v2 3/4] mb12x2.c: add distance iio sensor with i2c
- (fwd)
-Date: Sun, 3 Mar 2019 20:33:43 +0100 (CET)
-Message-ID: <alpine.DEB.2.21.1903032032330.2540@hadrien>
+From: David Summers <beagleboard@davidjohnsummers.uk>
+Subject: Re: [PATCH 2/3] ARM: dts: rk3288 Tinker Board (S) add wi-fi
+Date: Sun, 3 Mar 2019 19:40:07 +0000
+Message-ID: <9df2e318-a459-bded-2971-90a6722e1a4f@davidjohnsummers.uk>
+References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
+ <20190217121513.22965-3-beagleboard@davidjohnsummers.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Klinger <ak@it-klinger.de>
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, kbuild-all@01.org, jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, arnd@arndb.de, davem@davemloft.net, gregkh@linuxfoundation.org, johan@kernel.org, khilman@baylibre.com, knaack.h@gmx.de, lars@metafoo.de, linux-kernel@vger.kernel.org, martin.blumenstingl@googlemail.com, mchehab+samsung@kernel.org, m.othacehe@gmail.com, nicolas.ferre@microchip.com, pmeerw@pmeerw.net, robh@kernel.org, songqiang1304521@gmail.com, treding@nvidia.com, techsupport@maxbotix.com
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190217121513.22965-3-beagleboard@davidjohnsummers.uk>
+Content-Language: en-PH
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, linux-rockchip@lists.infradead.org, Tony McKahan <tonymckahan@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+And so synthesis on where we are on the WiFi patch for the Thinker Boards.
 
-It looks like an unlock is missing before line 110.
+There have been very few comments, only really Tony McKahan from Armbian 
+- where they apply a similar patch. Tony was going to test the patch, 
+but we have heard nothing back. The patch has been tested on ArchLinux 
+Arm, and found to work.
 
-julia
+So with no further comments, I propose this is accepted as is. Heiko, 
+let me know if you want me to respin this patch to apply cleanly after 
+the sd card changes.
 
----------- Forwarded message ----------
-Date: Mon, 4 Mar 2019 03:30:02 +0800
-From: kbuild test robot <lkp@intel.com>
-To: kbuild@01.org
-Cc: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH v2 3/4] mb12x2.c: add distance iio sensor with i2c
+David.
 
-Hi Andreas,
 
-I love your patch! Perhaps something to improve:
 
-[auto build test WARNING on iio/togreg]
-[also build test WARNING on v5.0-rc8 next-20190301]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Andreas-Klinger/add-MaxBotix-I2CXL-ultrasonic-iio-driver/20190304-001520
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-:::::: branch date: 3 hours ago
-:::::: commit date: 3 hours ago
-
->> drivers/iio/proximity/mb12x2.c:110:2-8: preceding lock on line 70
-
-# https://github.com/0day-ci/linux/commit/a931c13b9c38d77e8dbf0b8aa64288a4bfcc789c
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout a931c13b9c38d77e8dbf0b8aa64288a4bfcc789c
-vim +110 drivers/iio/proximity/mb12x2.c
-
-a931c13b Andreas Klinger 2019-03-01   62
-a931c13b Andreas Klinger 2019-03-01   63  static s16 mb12x2_read_distance(struct mb12x2_data *data)
-a931c13b Andreas Klinger 2019-03-01   64  {
-a931c13b Andreas Klinger 2019-03-01   65  	struct i2c_client *client = data->client;
-a931c13b Andreas Klinger 2019-03-01   66  	int ret;
-a931c13b Andreas Klinger 2019-03-01   67  	s16 distance;
-a931c13b Andreas Klinger 2019-03-01   68  	__be16 buf;
-a931c13b Andreas Klinger 2019-03-01   69
-a931c13b Andreas Klinger 2019-03-01  @70  	mutex_lock(&data->lock);
-a931c13b Andreas Klinger 2019-03-01   71
-a931c13b Andreas Klinger 2019-03-01   72  	reinit_completion(&data->ranging);
-a931c13b Andreas Klinger 2019-03-01   73
-a931c13b Andreas Klinger 2019-03-01   74  	ret = i2c_smbus_write_byte(client, MB12X2_RANGE_COMMAND);
-a931c13b Andreas Klinger 2019-03-01   75  	if (ret < 0) {
-a931c13b Andreas Klinger 2019-03-01   76  		dev_err(&client->dev, "write command - err: %d\n", ret);
-a931c13b Andreas Klinger 2019-03-01   77  		mutex_unlock(&data->lock);
-a931c13b Andreas Klinger 2019-03-01   78  		return ret;
-a931c13b Andreas Klinger 2019-03-01   79  	}
-a931c13b Andreas Klinger 2019-03-01   80
-a931c13b Andreas Klinger 2019-03-01   81  	if (data->gpiod_status) {
-a931c13b Andreas Klinger 2019-03-01   82  		/* it cannot take more than 100 ms */
-a931c13b Andreas Klinger 2019-03-01   83  		ret = wait_for_completion_killable_timeout(&data->ranging,
-a931c13b Andreas Klinger 2019-03-01   84  									HZ/10);
-a931c13b Andreas Klinger 2019-03-01   85  		if (ret < 0) {
-a931c13b Andreas Klinger 2019-03-01   86  			mutex_unlock(&data->lock);
-a931c13b Andreas Klinger 2019-03-01   87  			return ret;
-a931c13b Andreas Klinger 2019-03-01   88  		} else if (ret == 0) {
-a931c13b Andreas Klinger 2019-03-01   89  			mutex_unlock(&data->lock);
-a931c13b Andreas Klinger 2019-03-01   90  			return -ETIMEDOUT;
-a931c13b Andreas Klinger 2019-03-01   91  		}
-a931c13b Andreas Klinger 2019-03-01   92  	} else {
-a931c13b Andreas Klinger 2019-03-01   93  		/*
-a931c13b Andreas Klinger 2019-03-01   94  		 * use simple sleep if gpio announce pin is not connected
-a931c13b Andreas Klinger 2019-03-01   95  		 */
-a931c13b Andreas Klinger 2019-03-01   96  		msleep(15);
-a931c13b Andreas Klinger 2019-03-01   97  	}
-a931c13b Andreas Klinger 2019-03-01   98
-a931c13b Andreas Klinger 2019-03-01   99  	ret = i2c_master_recv(client, (char *)&buf, sizeof(buf));
-a931c13b Andreas Klinger 2019-03-01  100  	if (ret < 0) {
-a931c13b Andreas Klinger 2019-03-01  101  		dev_err(&client->dev, "i2c_master_recv: ret=%d\n", ret);
-a931c13b Andreas Klinger 2019-03-01  102  		mutex_unlock(&data->lock);
-a931c13b Andreas Klinger 2019-03-01  103  		return ret;
-a931c13b Andreas Klinger 2019-03-01  104  	}
-a931c13b Andreas Klinger 2019-03-01  105
-a931c13b Andreas Klinger 2019-03-01  106  	distance = __be16_to_cpu(buf);
-a931c13b Andreas Klinger 2019-03-01  107  	/* check for not returning misleading error codes */
-a931c13b Andreas Klinger 2019-03-01  108  	if (distance < 0) {
-a931c13b Andreas Klinger 2019-03-01  109  		dev_err(&client->dev, "distance=%d\n", distance);
-a931c13b Andreas Klinger 2019-03-01 @110  		return -EINVAL;
-a931c13b Andreas Klinger 2019-03-01  111  	}
-a931c13b Andreas Klinger 2019-03-01  112
-a931c13b Andreas Klinger 2019-03-01  113  	mutex_unlock(&data->lock);
-a931c13b Andreas Klinger 2019-03-01  114
-a931c13b Andreas Klinger 2019-03-01  115  	return distance;
-a931c13b Andreas Klinger 2019-03-01  116  }
-a931c13b Andreas Klinger 2019-03-01  117
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+On 17/02/2019 12:15, David Summers wrote:
+> This patch adds the wifi to the ASUS Tinker Board (S) machines.
+>
+> Unfortunatly neither the Tinker Board nor the Tinker Board S schematic
+> indicate how the WiFi is wired up on these devices. The WiFi is
+> provided by the RTL8723BS device, that has sdio WiFi and UART
+> Bluetooth. This patch just adds the WiFi interface.
+>
+> With no schematic, most of the wiring has been derived from the ASUS
+> patch to Debian:
+>
+> https://github.com/TinkerBoard/debian_kernel/commit/6a3128ade33f758887048578ada61a4b7ab8e678
+>
+> In conjunction with the pin out of the RTL8723BS device:
+>
+> http://files.pine64.org/doc/datasheet/pine64/RTL8723BS.pdf
+> http://cit.odessa.ua/media/pdf/Intel-Compute-Stick/FN-Link_F23BDSM25-W1.pdf
+>
+> The only unusual part is that to bring the card up, both the pins
+> RK_PD3 and RK_PD4 need to be pulled. Why this needs to be done is not
+> clear, best explaination is that they are connected to the RTL8723BS
+> pins WL_DIS# and BT_DIS#, which the data sheet vaguely says:
+>
+> Shared with GPIO9 This Pin Can Externally Shutdown the RTL8723BS WLAN
+> function when BT_DISn is Pulled Low. When this pin deasserted, SDIO
+> interface will be disabled. This pin can also support the WLAN Ra
+> dio-off function with host interface remaining connected.
+>
+> Anyway extensive testing the TheSaint on ArchLinux Arm Forum
+>
+> https://archlinuxarm.org/forum/viewtopic.php?f=44&t=13064&start=120#p60548
+>
+> Signed-off-by: David Summers <beagleboard@davidjohnsummers.uk>
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> ---
+>   arch/arm/boot/dts/rk3288-tinker.dtsi | 39 +++++++++++++++++++++++++---
+>   1 file changed, 36 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
+> index fceaeed44e34..e1796f340eef 100644
+> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+> @@ -3,8 +3,9 @@
+>    * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
+>    */
+>   
+>   #include "rk3288.dtsi"
+>   #include <dt-bindings/input/input.h>
+> +#include <dt-bindings/clock/rockchip,rk808.h>
+>   
+>   / {
+>   	chosen {
+> @@ -98,6 +97,15 @@
+>   		startup-delay-us = <100000>;
+>   		vin-supply = <&vcc_io>;
+>   	};
+> +
+> +	sdio_pwrseq: sdio-pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		clocks = <&rk808 RK808_CLKOUT1>;
+> +		clock-names = "ext_clock";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&wifi_enable>;
+> +		reset-gpios = <&gpio4 RK_PD3 GPIO_ACTIVE_LOW>, <&gpio4 RK_PD4 GPIO_ACTIVE_LOW>;
+> +	};
+>   };
+>   
+>   &cpu0 {
+> @@ -337,8 +345,8 @@
+>   
+>   &io_domains {
+>   	status = "okay";
+> -
+>   	sdcard-supply = <&vccio_sd>;
+> +	wifi-supply = <&vcc_18>;
+>   };
+>   
+>   &pinctrl {
+> @@ -417,6 +425,12 @@
+>   			rockchip,pins = <7 8 RK_FUNC_GPIO &pcfg_pull_none>;
+>   		};
+>   	};
+> +
+> +	sdio {
+> +		wifi_enable: wifi-enable {
+> +			rockchip,pins = <4 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>, <4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+>   };
+>   
+>   &pwm0 {
+> @@ -440,6 +454,25 @@
+>   	vqmmc-supply = <&vccio_sd>;
+>   };
+>   
+> +&sdio0 {
+> +	bus-width = <4>;
+> +	cap-sd-highspeed;
+> +	cap-sdio-irq;
+> +	keep-power-in-suspend;
+> +	mmc-pwrseq = <&sdio_pwrseq>;
+> +	non-removable;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sdio0_bus4>, <&sdio0_cmd>, <&sdio0_clk>, <&sdio0_int>;
+> +	max-frequency = <50000000>;
+> +	sd-uhs-sdr12;
+> +	sd-uhs-sdr25;
+> +	sd-uhs-sdr50;
+> +	sd-uhs-ddr50;
+> +	vmmc-supply = <&vcc_io>;
+> +	vqmmc-supply = <&vcc_18>;
+> +	status = "okay";
+> +};
+> +
+>   &tsadc {
+>   	rockchip,hw-tshut-mode = <1>; /* tshut mode 0:CRU 1:GPIO */
+>   	rockchip,hw-tshut-polarity = <1>; /* tshut polarity 0:LOW 1:HIGH */
