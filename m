@@ -1,20 +1,20 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 05/10] iio: gyro: bmg160: add mount matrix support
-Date: Sun, 3 Mar 2019 15:21:34 +0000
-Message-ID: <20190303152134.23629e29@archlinux>
+Subject: Re: [PATCH v2 06/10] iio: gyro: itg3200: add mount matrix support
+Date: Sun, 3 Mar 2019 15:22:15 +0000
+Message-ID: <20190303152215.52b0504c@archlinux>
 References: <cover.1550768574.git.hns@goldelico.com>
-        <49a4b6c13b1d293050ad11bcdeb35f2694428574.1550768574.git.hns@goldelico.com>
+        <ad1f1af237439dcf2a0769280f9e7b1806d484f2.1550768574.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <49a4b6c13b1d293050ad11bcdeb35f2694428574.1550768574.git.hns@goldelico.com>
+In-Reply-To: <ad1f1af237439dcf2a0769280f9e7b1806d484f2.1550768574.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "H. Nikolaus Schaller" <hns@goldelico.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Martin Kelly <mkelly@xevo.com>, Jonathan Marek <jonathan@marek.ca>, Brian Masney <masneyb@onstation.org>, Stephan Gerhold <stephan@gerhold.net>, letux-kernel@openphoenux.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Feb 2019 18:02:50 +0100
+On Thu, 21 Feb 2019 18:02:51 +0100
 "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
 
 > This patch allows to read a mount-matrix device tree
@@ -25,60 +25,68 @@ On Thu, 21 Feb 2019 18:02:50 +0100
 Applied.
 
 Thanks,
+
+Jonathan
+
 > ---
->  drivers/iio/gyro/bmg160_core.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+>  drivers/iio/gyro/itg3200_core.c  | 20 ++++++++++++++++++++
+>  include/linux/iio/gyro/itg3200.h |  1 +
+>  2 files changed, 21 insertions(+)
 > 
-> diff --git a/drivers/iio/gyro/bmg160_core.c b/drivers/iio/gyro/bmg160_core.c
-> index 63ca31628a93..e7b38adee39a 100644
-> --- a/drivers/iio/gyro/bmg160_core.c
-> +++ b/drivers/iio/gyro/bmg160_core.c
-> @@ -102,6 +102,7 @@ struct bmg160_data {
->  	struct regmap *regmap;
->  	struct iio_trigger *dready_trig;
->  	struct iio_trigger *motion_trig;
-> +	struct iio_mount_matrix orientation;
->  	struct mutex mutex;
->  	s16 buffer[8];
->  	u32 dps_range;
-> @@ -794,6 +795,20 @@ static int bmg160_write_event_config(struct iio_dev *indio_dev,
->  	return 0;
+> diff --git a/drivers/iio/gyro/itg3200_core.c b/drivers/iio/gyro/itg3200_core.c
+> index 7adecb562c81..203a6be33b70 100644
+> --- a/drivers/iio/gyro/itg3200_core.c
+> +++ b/drivers/iio/gyro/itg3200_core.c
+> @@ -242,6 +242,20 @@ static int itg3200_initial_setup(struct iio_dev *indio_dev)
+>  	return ret;
 >  }
 >  
 > +static const struct iio_mount_matrix *
-> +bmg160_get_mount_matrix(const struct iio_dev *indio_dev,
-> +			 const struct iio_chan_spec *chan)
+> +itg3200_get_mount_matrix(const struct iio_dev *indio_dev,
+> +			  const struct iio_chan_spec *chan)
 > +{
-> +	struct bmg160_data *data = iio_priv(indio_dev);
+> +	struct itg3200 *data = iio_priv(indio_dev);
 > +
 > +	return &data->orientation;
 > +}
 > +
-> +static const struct iio_chan_spec_ext_info bmg160_ext_info[] = {
-> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, bmg160_get_mount_matrix),
+> +static const struct iio_chan_spec_ext_info itg3200_ext_info[] = {
+> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, itg3200_get_mount_matrix),
 > +	{ }
 > +};
 > +
->  static IIO_CONST_ATTR_SAMP_FREQ_AVAIL("100 200 400 1000 2000");
+>  #define ITG3200_ST						\
+>  	{ .sign = 's', .realbits = 16, .storagebits = 16, .endianness = IIO_BE }
 >  
->  static IIO_CONST_ATTR(in_anglvel_scale_available,
-> @@ -831,6 +846,7 @@ static const struct iio_event_spec bmg160_event = {
->  		.storagebits = 16,					\
->  		.endianness = IIO_LE,					\
->  	},								\
-> +	.ext_info = bmg160_ext_info,					\
->  	.event_spec = &bmg160_event,					\
->  	.num_event_specs = 1						\
+> @@ -255,6 +269,7 @@ static int itg3200_initial_setup(struct iio_dev *indio_dev)
+>  	.address = ITG3200_REG_GYRO_ ## _mod ## OUT_H, \
+>  	.scan_index = ITG3200_SCAN_GYRO_ ## _mod, \
+>  	.scan_type = ITG3200_ST, \
+> +	.ext_info = itg3200_ext_info, \
 >  }
-> @@ -1075,6 +1091,11 @@ int bmg160_core_probe(struct device *dev, struct regmap *regmap, int irq,
->  	data->irq = irq;
->  	data->regmap = regmap;
 >  
-> +	ret = iio_read_mount_matrix(dev, "mount-matrix",
-> +				&data->orientation);
+>  static const struct iio_chan_spec itg3200_channels[] = {
+> @@ -297,6 +312,11 @@ static int itg3200_probe(struct i2c_client *client,
+>  
+>  	st = iio_priv(indio_dev);
+>  
+> +	ret = iio_read_mount_matrix(&client->dev, "mount-matrix",
+> +				&st->orientation);
 > +	if (ret)
 > +		return ret;
 > +
->  	ret = bmg160_chip_init(data);
->  	if (ret < 0)
->  		return ret;
+>  	i2c_set_clientdata(client, indio_dev);
+>  	st->i2c = client;
+>  
+> diff --git a/include/linux/iio/gyro/itg3200.h b/include/linux/iio/gyro/itg3200.h
+> index 2a820850f284..0a30fddccfb3 100644
+> --- a/include/linux/iio/gyro/itg3200.h
+> +++ b/include/linux/iio/gyro/itg3200.h
+> @@ -104,6 +104,7 @@
+>  struct itg3200 {
+>  	struct i2c_client	*i2c;
+>  	struct iio_trigger	*trig;
+> +	struct iio_mount_matrix orientation;
+>  };
+>  
+>  enum ITG3200_SCAN_INDEX {
