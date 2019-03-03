@@ -1,63 +1,74 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 10/10] iio: ak8975: improve code readability
-Date: Sun, 3 Mar 2019 15:30:32 +0000
-Message-ID: <20190303153032.580537fe@archlinux>
+Subject: Re: [PATCH v2 00/10] iio mount matrix - revitalize missing bindings
+ documentation and provide code for bmc150, bmg160, bma180, itg3200, hmc584x
+Date: Sun, 3 Mar 2019 15:32:01 +0000
+Message-ID: <20190303153201.440ac325@archlinux>
 References: <cover.1550768574.git.hns@goldelico.com>
-        <8a4498a761bf63e38c16f17d437715be0399a957.1550768574.git.hns@goldelico.com>
+        <CAHp75VeMTd32S+bTgU2f1AS-NB67iuM+erT8qNJgPS7O0E1Cjg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8a4498a761bf63e38c16f17d437715be0399a957.1550768574.git.hns@goldelico.com>
+In-Reply-To: <CAHp75VeMTd32S+bTgU2f1AS-NB67iuM+erT8qNJgPS7O0E1Cjg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Martin Kelly <mkelly@xevo.com>, Jonathan Marek <jonathan@marek.ca>, Brian Masney <masneyb@onstation.org>, Stephan Gerhold <stephan@gerhold.net>, letux-kernel@openphoenux.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Martin Kelly <mkelly@xevo.com>, Jonathan Marek <jonathan@marek.ca>, Brian Masney <masneyb@onstation.org>, Stephan Gerhold <stephan@gerhold.net>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio <linux-iio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Feb 2019 18:02:55 +0100
-"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+On Fri, 22 Feb 2019 16:48:14 +0200
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-> - use temporary variable in get_mount_matrix()
-> - remove , after { }
+> On Thu, Feb 21, 2019 at 7:04 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> >
+> > Fixes V2:
+> > * make get_mount_matrix() functions more readable (use temp variable)
+> >   (suggested by Jonathan and Andy)
+> > * add these readability improvements also for ak8975 and mpu6050
+> >   (suggested by Jonathan and Andy)
+> > * squash bindings documentation into single commit for better discussion
+> >   (suggested by Linus)
+> > * FOR DISCUSSION: add some more clarifications to the bindings documentation
+> >   and an attempt to define the magnetometer orientation
+> > * add "iio: Allow to read mount matrix from ACPI" to the beginning of
+> >   the series to make it compile
+> >   (suggested by Andy)
+> > * replace of_iio_read_mount_matrix() by iio_read_mount_matrix()
+> >   (required by "iio: Allow to read mount matrix from ACPI")
+> > * drop patch to convert bma180 to devm (potential race)
+> >   (suggested by Jonathan)
+> >
+> > PATCH V1 2019-02-20 15:01:02:
+> > This patch series adds the mount-matrix to several iio sensor drivers
+> > used in handheld devices.
+> >
+> > The mount-matrix translates the quite arbitrary orientation of the sensor
+> > on some printed circuit board to user-tangible orientation in handheld
+> > devices that relates to typical screen orientation.
+> >
+> > There was a bindings documentation by Linus Walleij but the patch
+> > did not make it into mainline. Therefore I resend it here.
+> >
+> > Next I have added some clarifications (at least I hope it clarifies)
+> > in a second patch.
+> >
+> > Finally, the patch set implements the hooks for the mount matrix
+> > in several iio drivers: bmc150, bma180, bmg160, itg3200, hmc5843.
+> > This includes also one patch for the bma180 to convert it to devm API.
+> >
+> > We use them in different variants of the omap3-gta04 so a separate
+> > patch set will provide device tree additions for them.
+> >  
 > 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Applied.
+> Thank you, it looks nice.
+> FWIW,
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+
+Thanks to Linus and Andy for reviews.
+I've picked up all but they documentation patch.  I think
+it is 'very nearly there', but would like a few really minor
+tweaks.  Seemed silly to stall the other patches on that though!
 
 Thanks,
 
 Jonathan
-
-> ---
->  drivers/iio/magnetometer/ak8975.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
-> index db7214ac514c..43d08c089792 100644
-> --- a/drivers/iio/magnetometer/ak8975.c
-> +++ b/drivers/iio/magnetometer/ak8975.c
-> @@ -746,12 +746,14 @@ static const struct iio_mount_matrix *
->  ak8975_get_mount_matrix(const struct iio_dev *indio_dev,
->  			const struct iio_chan_spec *chan)
->  {
-> -	return &((struct ak8975_data *)iio_priv(indio_dev))->orientation;
-> +	struct ak8975_data *data = iio_priv(indio_dev);
-> +
-> +	return &data->orientation;
->  }
->  
->  static const struct iio_chan_spec_ext_info ak8975_ext_info[] = {
->  	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, ak8975_get_mount_matrix),
-> -	{ },
-> +	{ }
->  };
->  
->  #define AK8975_CHANNEL(axis, index)					\
-> @@ -792,7 +794,7 @@ static const struct acpi_device_id ak_acpi_match[] = {
->  	{"AK09911", AK09911},
->  	{"AKM9911", AK09911},
->  	{"AK09912", AK09912},
-> -	{ },
-> +	{ }
->  };
->  MODULE_DEVICE_TABLE(acpi, ak_acpi_match);
->  #endif
