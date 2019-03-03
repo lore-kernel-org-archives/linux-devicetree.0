@@ -1,78 +1,68 @@
-From: Renato Lui Geh <renatogeh@gmail.com>
-Subject: Re: [PATCH v4 4/9] staging:iio:ad7780: add chip ID values and mask
-Date: Sun, 3 Mar 2019 11:01:09 -0300
-Message-ID: <20190303140107.ljjo3flatwmd44ya@renatolg>
-References: <cover.1551358569.git.renatogeh@gmail.com>
- <90c573cd53bb54d49de6ac270bcff66880ccfeb5.1551358569.git.renatogeh@gmail.com>
- <190e26b19b8ed6559b92d3a000d852bbb0099a52.camel@analog.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v2] tegra2/tegra3 automotive clock init
+Date: Sun, 3 Mar 2019 17:14:40 +0300
+Message-ID: <e1fade71-03b4-1c45-efbd-26e25f66ddc7@gmail.com>
+References: <20190301153540.14954-1-kejia.hu@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <190e26b19b8ed6559b92d3a000d852bbb0099a52.camel@analog.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: "Ardelean, Alexandru" <Alex.Ardelean@analog.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "lars@metafoo.de" <lars@metafoo.de>, "Hennerich,
- Michael" <Michael.Hennerich@analog.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "giuliano.belinassi@usp.br" <giuliano.belinassi@usp.br>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "renatogeh@gmail.com" <renatogeh@gmail.com>, "Popa,
- Stefan Serban" <StefanSerban.Popa@analog.com>, "jic23@kernel.org" <jic23@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190301153540.14954-1-kejia.hu@codethink.co.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kejia Hu <kejia.hu@codethink.co.uk>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/01, Ardelean, Alexandru wrote:
->On Thu, 2019-02-28 at 11:24 -0300, Renato Lui Geh wrote:
->>
->>
->> The ad7780 supports both the ad778x and ad717x families. Each chip has
->> a corresponding ID. This patch provides a mask for extracting ID values
->> from the status bits and also macros for the correct values for the
->> ad7170, ad7171, ad7780 and ad7781.
->>
->> Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
->> ---
->>  drivers/staging/iio/adc/ad7780.c | 8 ++++++--
->>  1 file changed, 6 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/staging/iio/adc/ad7780.c
->> b/drivers/staging/iio/adc/ad7780.c
->> index 56c49e28f432..ad7617a3a141 100644
->> --- a/drivers/staging/iio/adc/ad7780.c
->> +++ b/drivers/staging/iio/adc/ad7780.c
->> @@ -26,10 +26,14 @@
->>  #define AD7780_RDY             BIT(7)
->>  #define AD7780_FILTER          BIT(6)
->>  #define AD7780_ERR             BIT(5)
->> -#define AD7780_ID1             BIT(4)
->> -#define AD7780_ID0             BIT(3)
->>  #define AD7780_GAIN            BIT(2)
->>
->> +#define AD7170_ID              0
->> +#define AD7171_ID              1
->> +#define AD7780_ID              1
->> +#define AD7781_ID              0
->> +
->> +#define AD7780_ID_MASK         (BIT(3) | BIT(4))
->
->This also doesn't have any functionality change.
->The AD7170_ID, AD7171_ID, AD7780_ID & AD7781_ID IDs are also unused (maybe
->in a later patch they are ?).
-
-They aren't. I added them following a previous review suggestion. Should
-I remove them?
->
->I would also leave the AD7780_ID1 & AD7780_ID0 definitions in place, since
->they're easier matched with the datasheet.
->
->>
->>  #define AD7780_PATTERN_GOOD    1
->>  #define AD7780_PATTERN_MASK    GENMASK(1, 0)
->> --
->> 2.21.0
->>
+MDEuMDMuMjAxOSAxODozNSwgS2VqaWEgSHUg0L/QuNGI0LXRgjoKPiBUaGlzIGlzIGEgcmUtaW1w
+bGVtZW50YXRpb24gb2YgYWRkaW5nIGNsb2NrIGluaXRpYWxpemF0aW9uIGZvcgo+IHRlZ3JhMiBh
+bmQgdGVncmEzIGF1dG9tb3RpdmUgZGV2aWNlcyBhY2Nyb2RpbmcgdG8gRG1pdHJ5IE9zaXBlbmtv
+J3MKPiBmZWVkYmFjayBvbiB2ZXJzaW9uIDFbMF0uCj4gCj4gV2UgaGF2ZSBtb3ZlZCB0aGUgaW5p
+dGlhbGl6YXRpb24gZnJvbSB0aGUgY2xvY2sgZHJpdmVyIHRvIGRldmljZQo+IHRyZWUsIGJ1dCBp
+bnN0ZWFkIG9mIHB1dHRpbmcgdGhlbSBpbnRvIGEgZHRzaSBmaWxlLCB3ZSB1c2VkCj4gZHQgb3Zl
+cmxheSB0byBwYXRjaCB0aGUgZGV2aWNlIHRyZWUgYXQgcnVudGltZSwgd2UgYmVsaWV2ZSB0aGUK
+PiBhYmlsaXR5IHRvIGR5bmFtaWNhbGx5IGRldGVjdCB0aGUgY2hpcHNldCBhbmQgYXBwbHkgdGhl
+IHJpZ2h0Cj4gc2V0dGluZ3Mgc2hvdWxkIGJlIHVzZWZ1bCBhY2NvcmRpbmcgdG8gdGhlIGRpc2N1
+c3Npb25bMV0uCj4gCj4gQ2hhbmdlcyBhZ2FpbnN0IHYxOgo+ICAgLSB1c2UgZGV2aWNlIHRyZWUg
+b3ZlcmxheSB0byBpbnRyb2R1Y2UgdGhlIGF1dG9tYXRpdmUgY2xvY2sgY29uZmlncwo+ICAgLSBl
+bmFibGUgZHQgb3ZlcmxheSBmb3IgdGVncmEyMC8zMAo+ICAgLSBtb3ZlIHRoZSBjb25kaXRpb24g
+InNvY19pc190ZWdyYV9hdXRvIiB0byBiZSBhZnRlciBhcHBsaWVkCj4gICAgIGNsb2NrIGluaXQg
+dGFibGUuCj4gCj4gWzBdIGh0dHBzOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2xpbnV4LXRlZ3Jh
+L21zZzM4MzQ3Lmh0bWwKPiBbMV0gaHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtl
+cm5lbC9tc2c2NjUzNzMuaHRtbAo+IAoKSGVsbG8gS2VqaWEsCgpUaGFuayB5b3UgdmVyeSBtdWNo
+IGZvciB5b3VyIHdvcmshIE15IHBvaW50IHdhcyB0aGF0IHRoZSBjbG9jay1hc3NpZ25tZW50cyBz
+aG91bGQgYmUgbW92ZWQgaW50byB0aGUgYm9hcmQncyBEVCBmaWxlIG91dCBmcm9tIHRoZSBrZXJu
+ZWwncyBkcml2ZXIsIGluIHRoaXMgc2VyaWVzIHlvdSdyZSBub3QgbW92aW5nIG91dCB0aGUgYm9h
+cmQtc3BlY2lmaWMgcHJvcGVydGllcyBmcm9tIHRoZSBrZXJuZWwgc291cmNlcyBhbmQgZXNzZW50
+aWFsIGRvaW5nIHRoZSBzYW1lIHRoaW5nIHRoYXQgd2FzIGluIHRoZSBwcmV2aW91cyB2ZXJzaW9u
+cyBpbiBhIGRpZmZlcmVudCB3YXkgbm93LiBQbGVhc2UgdGFrZSBhIGxvb2sgYXQgdGVncmExMjQu
+ZHRzaSAvIHRlZ3JhMTI0LW55YW4uZHRzaSAvIHRlZ3JhMTI0LW55YW4tYmlnLmR0cyBmb3IgdGhl
+IGV4YW1wbGUsIGluIHlvdXIgY2FzZSBpdCBjb3VsZCBiZSBzb21ldGhpbmcgc2ltaWxhci4uIHNv
+bWV3aGF0IGxpa2UgdGVncmEyMC5kdHNpIC8gdGVncmEyMC1hdXRvbW90aXZlLmR0c2kgLyB0ZWdy
+YTIwLWF1dG9tb3RpdmUtYm9hcmQuZHRzLiBIZW5jZSB5b3Ugd29uJ3QgbmVlZCB0byB0b3VjaCBr
+ZXJuZWwncyBjb2RlIGF0IGFsbCBhbmQgY291bGQgc3BlY2lmeSBldmVyeXRoaW5nIGluIHRoZSBk
+ZXZpY2UtdHJlZSBzb2xlbHkuCgpJZiB5b3UncmUgdHJ5aW5nIHRvIHdvcmthcm91bmQgdGhlIGNh
+c2Ugd2hlcmUgZGV2aWNlLXRyZWUgaXNuJ3QgZWFzaWx5IGNoYW5nZWFibGUsIHRoZW4gSSdtIGFm
+cmFpZCB0aGlzIGlzIG5vdCBnb2luZyB0byB3b3JrIHdlbGwgaW4gcmVnYXJkcyB0byB1cHN0cmVh
+bWluZyBiZWNhdXNlIHVwc3RyZWFtIG1haW50YWluZXJzIGhhdmUgbm8gaW50ZXJlc3QgaW4gc3Vw
+cG9ydGluZyBkb3duc3RyZWFtLiBJZiBpdCdzIG5vdCB0aGF0IGNhc2UsIHRoZW4gcGxlYXNlIHRy
+eSB0byBleHBsYWluIHdoYXQgeW91J3JlIHRyeWluZyB0byBhY2hpZXZlIGluIG1vcmUgZGV0YWls
+LgoKSW4gb3ZlcmFsbCB5b3UnbGwgbmVlZCB0bzoKCjEpIFVwc3RyZWFtIGRldmljZS10cmVlIG9m
+IHRoZSBib2FyZC4KMikgR2V0IGFsbCBvdGhlciByZXF1aXJlZCBiaXRzIG9mIGtlcm5lbCBkcml2
+ZXJzIHVwc3RyZWFtJ2VkLgozKSBJc3N1ZSBmaXJtd2FyZSB1cGRhdGUgZm9yIHRoZSBkZXZpY2Ug
+dGhhdCB3aWxsIGNvbnRhaW4gbmV3IHVwc3RyZWFtLWNvbmZvcm1hbnQgZGV2aWNlLXRyZWUgYW5k
+IHVwc3RyZWFtIGtlcm5lbCBhdCBvbmNlLiBBbHNvIG5vdGUgdGhhdCBrZXJuZWwgc3VwcG9ydHMg
+YXBwZW5kaW5nIERUQiAoY29tcGlsZWQgZGV2aWNlLXRyZWUgYmluYXJ5KSB0byB0aGUga2VybmVs
+J3MgaW1hZ2UsIGhlbmNlIHlvdSBtYXkgd29ya2Fyb3VuZCBsb2NrZWQtZG93biBib290bG9hZGVy
+IHRoYXQgZG9lc24ndCBhbGxvdyB0byByZXBsYWNlIChvciBkb2Vzbid0IHN1cHBvcnQpIGRldmlj
+ZS10cmVlLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
