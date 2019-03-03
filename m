@@ -1,42 +1,73 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 2/4] dt-bindings: Add vendor prefix for microtech
-Date: Mon,  4 Mar 2019 01:36:16 +0530
-Message-ID: <20190303200618.17581-3-jagan@amarulasolutions.com>
+Subject: [PATCH 3/4] dt-bindings: display: Add Novatek NT35596 panel documentation
+Date: Mon,  4 Mar 2019 01:36:17 +0530
+Message-ID: <20190303200618.17581-4-jagan@amarulasolutions.com>
 References: <20190303200618.17581-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190303200618.17581-1-jagan@amarulasolutions.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com
+Cc: Michael Trimarchi <michael@amarulasolutions.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHZlbmRvciBwcmVmaXggZm9yIG1pY3JvdGVjaCwga25vd24gYXMKTWljcm90ZWNoIFRlY2hu
-b2xvZ3kgQ29tcGFueSBMaW1pdGVkLiBhIGtub3duIHByb2R1Y2VyIGZvcgpMaXF1aWQgQ3J5dGFs
-IERpc3BsYXkgbW9kdWxlcyBhbmQgVG91Y2ggUGFuZWxzLgoKU2lnbmVkLW9mZi1ieTogSmFnYW4g
-VGVraSA8amFnYW5AYW1hcnVsYXNvbHV0aW9ucy5jb20+Ci0tLQogRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgfCAxICsKIDEgZmlsZSBjaGFuZ2Vk
-LCAxIGluc2VydGlvbigrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKaW5kZXggODdkNTU2NDcyNzI5Li5iODRmMjdmMDc3
-YmUgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3It
-cHJlZml4ZXMudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5k
-b3ItcHJlZml4ZXMudHh0CkBAIC0yNDIsNiArMjQyLDcgQEAgbWljcmVsCU1pY3JlbCBJbmMuCiBt
-aWNyb2NoaXAJTWljcm9jaGlwIFRlY2hub2xvZ3kgSW5jLgogbWljcm9jcnlzdGFsCU1pY3JvIENy
-eXN0YWwgQUcKIG1pY3JvbglNaWNyb24gVGVjaG5vbG9neSBJbmMuCittaWNyb3RlY2gJTWljcm90
-ZWNoIFRlY2hub2xvZ3kgQ29tcGFueSBMaW1pdGVkCiBtaWtyb2UJCU1pa3JvRWxla3Ryb25pa2Eg
-ZC5vLm8uCiBtaW5peAlNSU5JWCBUZWNobm9sb2d5IEx0ZC4KIG1pcmFtZW1zCU1pcmFNRU1TIFNl
-bnNpbmcgVGVjaG5vbG9neSBDby4sIEx0ZC4KLS0gCjIuMTguMC4zMjEuZ2ZmYzZmYTBlMwoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Novatek NT35596 is a single-chip IC solution for small or medium-sized
+LTPS TFT LCD panels. NT35596 provides  several system interfaces like
+MIPI/SPI/I2C.
+
+Microtech MTF050FHDI-03 is 1080x1920, 4-lane MIPI DSI LCD panel which
+has inbuilt NT35596 IC chip.
+
+NT35596 support several regulators on the chip, among those ony 4 regulators
+like VCI, VDDI/DVDD, AVDD, AVEE are used during power-on sequence. Since
+MTF050FHDI-03 panel do support 3-regulator based power-on sequence, this
+patch document only needful regulators and rest can be add while supporting
+new panels on the similar chip IC.
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+ .../display/panel/novatek,nt35596.txt         | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/novatek,nt35596.txt
+
+diff --git a/Documentation/devicetree/bindings/display/panel/novatek,nt35596.txt b/Documentation/devicetree/bindings/display/panel/novatek,nt35596.txt
+new file mode 100644
+index 000000000000..d336cd41e177
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/novatek,nt35596.txt
+@@ -0,0 +1,32 @@
++Novatek NT35596 based LCD panels
++
++Novatek NT35596 is a single-chip IC solution for small or medium-sized
++LTPS TFT LCD panels. NT35596 provides  several system interfaces like
++MIPI/SPI/I2C.
++
++Microtech MTF050FHDI-03 is 1080x1920, 4-lane MIPI DSI LCD panel which
++has inbuilt NT35596 IC chip.
++
++Required properties:
++- compatible: must be "novatek,nt35596" and one of
++  * "microtech,mtf050fhdi-03"
++- reset-gpios: a GPIO phandle for the reset pin
++
++Required properties for microtech,mtf050fhdi-03:
++- reg: DSI virtual channel used by that screen
++- dvdd-supply: I/O system regulator
++- avdd-supply: analog regulator for MIPI circuit
++- avee-supply: analog regulator for MIPI circuit
++
++Optional properties:
++- backlight: phandle for the backlight control.
++
++panel@0 {
++	compatible = "microtech,mtf050fhdi-03", "novatek,nt35596";
++	reg = <0>;
++	dvdd-supply = <&reg_dldo2>;	/* VCC-MIPI */
++	avdd-supply = <&reg_dc1sw>;	/* AVDD_5V0 */
++	avee-supply = <&reg_dc1sw>;	/* AVEE_5V */
++	reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
++	backlight = <&backlight>;
++};
+-- 
+2.18.0.321.gffc6fa0e3
