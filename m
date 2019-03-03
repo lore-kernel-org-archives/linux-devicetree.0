@@ -1,55 +1,49 @@
-From: Marek Behun <marek.behun@nic.cz>
-Subject: Re: [PATCH v3 bus+gpio 5/5] dt-bindings: gpio: Document GPIOs via
- Moxtet bus
-Date: Mon, 4 Mar 2019 00:17:01 +0100
-Message-ID: <20190304001701.0b1b9986@nic.cz>
-References: <20190301035852.26780-1-marek.behun@nic.cz>
-        <20190301035852.26780-6-marek.behun@nic.cz>
-        <CACRpkdYpjjpVNUXRgT=XY758FGtDYow2fvwpah37T_GjTvLauQ@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] dt: snps,dw-apb-ssi: Add clock bindings documentation
+Date: Sun, 3 Mar 2019 23:31:45 +0000
+Message-ID: <20190303233145.GN23441@sirena.org.uk>
+References: <1551360342-23981-1-git-send-email-gareth.williams.jx@renesas.com>
+ <1551360342-23981-2-git-send-email-gareth.williams.jx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Vxa5joy26gVGOrvU"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYpjjpVNUXRgT=XY758FGtDYow2fvwpah37T_GjTvLauQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1551360342-23981-2-git-send-email-gareth.williams.jx@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, Shawn Guo <shawnguo@kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Gareth Williams <gareth.williams.jx@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
 
-do you know who is responsible for merging into drivers/bus?
+--Vxa5joy26gVGOrvU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I have received reviews for this and for previous versions only from
-you and Rob.
-
-Also, please do not merge yet. I have prepared a fourth version with
-debugging over debugfs, fixed some checkpatch issues, and most
-importantnly added interrupt reading support from moxtet.
-
-I will send after proper testing is done for this new version.
-
-Marek
-
-On Fri, 1 Mar 2019 15:36:09 +0100
-Linus Walleij <linus.walleij@linaro.org> wrote:
-
-> On Fri, Mar 1, 2019 at 4:59 AM Marek Beh=C3=BAn <marek.behun@nic.cz> wrot=
-e:
+On Thu, Feb 28, 2019 at 01:25:41PM +0000, Gareth Williams wrote:
+> From: Phil Edworthy <phil.edworthy@renesas.com>
 >=20
-> > This patch adds documentation of the device tree bindings for GPIOs
-> > on the devices connected via Moxtet bus.
-> >
-> > Signed-off-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: devicetree@vger.kernel.org =20
->=20
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->=20
-> > +               compatible =3D "cznic,moxtet-gpio"; =20
->=20
-> Is cznic registered in
-> Documentation/devicetree/bindings/vendor-prefixes.txt?
->=20
-> Yours,
-> Linus Walleij
+> The driver requires a clock property, so detail it in the docs.
+> Fix a typo, 'pis' to 'pins'.
+> Add documentation for a separate, optional, interface clock.
+
+Please use subject lines matching the style for the subsystem.  This
+makes it easier for people to identify relevant patches.
+
+--Vxa5joy26gVGOrvU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlx8Y+AACgkQJNaLcl1U
+h9Axywf5ATfT/UOnBvU8MseRTp4zANwg1TdBhCNVMBtJXhAY8I/beO9iGjeT0XCR
+zDBZI2I1mnhLqoTvQON38XSaZsdDiOZ+uJsQK3T2LIam80sKEn/jTKomj/1exz3D
+f958wKv3vRW4MdzBX3K9A7kFKVrnetZnUL9a1wVETkYlZCFx0E9s9uo+FVLUvo8Y
+nAxF8kl1UCgWfNT44QnNYDbDEDpbaM7cT3rOr5OTJrHq23mwh6bH5AgrjeulJD8J
+b+J3cZOi+UqtowufhzuIhe/d1xxepIeDWGfFtIEfTmmiMrhoMz3kIch3u+t2AJCy
+9wn/BCklmV9jaTs7CAKIKs8C5XzLsQ==
+=OdOn
+-----END PGP SIGNATURE-----
+
+--Vxa5joy26gVGOrvU--
