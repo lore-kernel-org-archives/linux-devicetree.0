@@ -1,45 +1,52 @@
-From: Robert Yang <decatf@gmail.com>
-Subject: [PATCH v2 2/3] dt-bindings: iio: accel: kxcjk1013: Add device tree binding documentation
-Date: Mon,  4 Mar 2019 10:19:11 -0500
-Message-ID: <20190304151912.11485-3-decatf@gmail.com>
-References: <20190304151912.11485-1-decatf@gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2] arm64: dts: allwinner: a64-amarula-relic: Add STLM75
+ sensor
+Date: Mon, 4 Mar 2019 16:23:48 +0100
+Message-ID: <20190304152348.ye3xuk4ru6dpo6g7@flea>
+References: <20190301171051.6964-1-jagan@amarulasolutions.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="sj34vhhorsyvtgc6"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190304151912.11485-1-decatf@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190301171051.6964-1-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Robert Yang <decatf@gmail.com>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document device tree bindings for Kionix KXCJK-1013 Accelerometer driver.
 
-Signed-off-by: Robert Yang <decatf@gmail.com>
----
- .../bindings/iio/accel/kionix,kxcjk1013.txt     | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/accel/kionix,kxcjk1013.txt
+--sj34vhhorsyvtgc6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/iio/accel/kionix,kxcjk1013.txt b/Documentation/devicetree/bindings/iio/accel/kionix,kxcjk1013.txt
-new file mode 100644
-index 000000000000..eb76a02e2a82
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/accel/kionix,kxcjk1013.txt
-@@ -0,0 +1,17 @@
-+Kionix KXCJK-1013 Accelerometer device tree bindings
-+
-+Required properties:
-+
-+- compatible: Must be one of:
-+    "kionix,kxcjk1013"
-+    "kionix,kxcj91008"
-+    "kionix,kxtj21009"
-+    "kionix,kxtf9"
-+ - reg: i2c slave address
-+
-+Example:
-+
-+kxtf9@f {
-+	compatible = "kionix,kxtf9";
-+	reg = <0x0F>;
-+};
--- 
-2.17.1
+On Fri, Mar 01, 2019 at 10:40:51PM +0530, Jagan Teki wrote:
+> Amarula A64 Relic has STLM75 sensor for digital temperature
+> and thermal watchdog.
+>=20
+> Add support for it.
+>=20
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+
+Applied thanks
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--sj34vhhorsyvtgc6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXH1DAwAKCRDj7w1vZxhR
+xZMyAQD5e2kCKNeGtxZkX6lLAkVQXCc4JXnnr/Vkl6Vklg3LyAD/XRgdea0Ni5+v
+FpPItoJMYadVDXnFXw9wPFfoiRwCAAA=
+=ckXI
+-----END PGP SIGNATURE-----
+
+--sj34vhhorsyvtgc6--
