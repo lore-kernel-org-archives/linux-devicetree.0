@@ -1,52 +1,26 @@
-Return-Path: <SRS0=L7Fd=RW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46728 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfCSHkT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Mar 2019 03:40:19 -0400
-Received: by mail-lf1-f67.google.com with SMTP id y62so5529510lfc.13
-        for <devicetree@vger.kernel.org>; Tue, 19 Mar 2019 00:40:18 -0700 (PDT)
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/2 v2] rtc: x1205: Add DT bindings
-Date: Tue, 19 Mar 2019 08:40:13 +0100
-Message-Id: <20190319074014.20616-1-linus.walleij@linaro.org>
+Return-Path: <SRS0=MF8h=RH=verge.net.au=horms@kernel.org>
+Date: Mon, 4 Mar 2019 10:58:32 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a774c0-cat874: Add LEDs support
+Message-ID: <20190304095832.mvnlmtxlrwdgebld@verge.net.au>
+References: <1551438212-22013-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdU60gp+pnCuCv07y30d3Y8ggem8UK7PhPdr-DqQGzwK1Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-rtc@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdU60gp+pnCuCv07y30d3Y8ggem8UK7PhPdr-DqQGzwK1Q@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, ebiharaml@si-linux.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-This adds device tree bindings for the Xircom X1205 RTC found
-in the Linksys NSLU2.
+On Fri, Mar 01, 2019 at 02:32:41PM +0100, Geert Uytterhoeven wrote:
+> On Fri, Mar 1, 2019 at 12:03 PM Fabrizio Castro
+> <fabrizio.castro@bp.renesas.com> wrote:
+> > This patch adds LEDs support to the CAT874 board specific
+> > device tree.
+> >
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v2:
-- Rebase on v5.1-rc1
-- Resend
----
- .../devicetree/bindings/rtc/xircom,x1205.txt         | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/xircom,x1205.txt
-
-diff --git a/Documentation/devicetree/bindings/rtc/xircom,x1205.txt b/Documentation/devicetree/bindings/rtc/xircom,x1205.txt
-new file mode 100644
-index 000000000000..3e3102a32728
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/xircom,x1205.txt
-@@ -0,0 +1,12 @@
-+* Xircom X1205 I2C RTC
-+
-+Required properties:
-+- compatible: Should be "xircom,x1205"
-+- reg: I2C address
-+
-+Example:
-+
-+rtc@6f {
-+	compatible = "xicor,x1205";
-+	reg = <0x6f>;
-+};
--- 
-2.20.1
+Thanks, applied for v5.2.
