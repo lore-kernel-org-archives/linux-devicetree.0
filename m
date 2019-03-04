@@ -1,74 +1,53 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 0/5] drm/bridge: sii902x: HDMI-audio support and some
- fixes
-Date: Mon, 4 Mar 2019 18:10:15 +0200
-Message-ID: <20190304161015.GR6325@pendragon.ideasonboard.com>
-References: <cover.1551303673.git.jsarha@ti.com>
- <20190304124229.GL6325@pendragon.ideasonboard.com>
- <7a2a9503-b106-a28c-6d7b-45240f694e0a@ti.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: arm: imx: Add the soc binding for imx8mm
+Date: Mon, 4 Mar 2019 10:11:00 -0600
+Message-ID: <CAL_JsqLA+ypzHLC=mx2f5YJBs9EJooiOOqMKc-dnm3DW_GJXLw@mail.gmail.com>
+References: <1551691021-31505-1-git-send-email-ping.bai@nxp.com>
+ <1551691021-31505-2-git-send-email-ping.bai@nxp.com>
+ <CAL_JsqJFNgoAOHCOc0vdnxrwJR_T+iDddbS3nZc_d6grAC0k3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <7a2a9503-b106-a28c-6d7b-45240f694e0a@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: fabrizio.castro@bp.renesas.com, devicetree@vger.kernel.org, Songjun.Wu@atmel.com, tony@atomide.com, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, voice.shen@atmel.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqJFNgoAOHCOc0vdnxrwJR_T+iDddbS3nZc_d6grAC0k3w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacky Bai <ping.bai@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSnlyaSwKCk9uIE1vbiwgTWFyIDA0LCAyMDE5IGF0IDA0OjI5OjE3UE0gKzAyMDAsIEp5cmkg
-U2FyaGEgd3JvdGU6Cj4gT24gMDQvMDMvMjAxOSAxNDo0MiwgTGF1cmVudCBQaW5jaGFydCB3cm90
-ZToKPiA+IE9uIFdlZCwgRmViIDI3LCAyMDE5IGF0IDExOjU0OjE4UE0gKzAyMDAsIEp5cmkgU2Fy
-aGEgd3JvdGU6Cj4gPj4gQ2hhbmdlcyBzaW5jZSBmaXJzdCB2ZXJzaW9uOgo+ID4+IC0gTW92ZWQg
-cmV2aWV3ZWQgcGF0Y2hlcyB0byBmcm9udDoKPiA+PiAgIC0gZHJtL2JyaWRnZTogc2lpOTAyeDog
-YWRkIGlucHV0X2J1c19mbGFncwo+ID4+ICAgLSBkcm0vYnJpZGdlOiBzaWk5MDJ4OiBTZXQgb3V0
-cHV0IG1vZGUgdG8gSERNSSBvciBEVkkgYWNjb3JkaW5nIHRvIEVESUQKPiA+PiAgIC0gZHJtL2Jy
-aWRnZTogc2lpOTAyeDogcGl4ZWwgY2xvY2sgdW5pdCBpcyAxMGtIeiBpbnN0ZWFkIG9mIDFrSHoK
-PiA+PiAtIEFkZGVkIGEgbmV3IGZpeDoKPiA+PiAgIC0gZHJtL2JyaWRnZTogc2lpOTAyeDogU2Vs
-ZWN0IEkyQ19NVVgKPiA+PiAtIEFwcGxpZWQgc29tZSByZXZpZXcgc3VnZ2VzdGlvbnMgdG8KPiA+
-PiAgIC0gZHJtL2JyaWRnZTogc2lpOTAyeDogSW1wbGVtZW50IEhETUkgYXVkaW8gc3VwcG9ydAo+
-ID4+ICAgICAtIHVzZSBjbG9jay1uYW1lcyBwcm9wZXJ0eSB0byBuYW1lIG1jbGsKPiA+PiAgICAg
-LSBtb3ZlIGNvbW1lbnQgZGVzY3JpYmluZyBhZGRlZCBtdXRleCB0byBzdHJ1Y3Qgc2lpOTAyeCBh
-bmQgaW1wcm92ZSBpdAo+ID4+ICAgICAtIGNsZWFudXAgc2lpOTAyeF9tdXRlKCkKPiA+PiAgICAg
-LSBjbGVhbnVwIHNpaTkwMnhfc2VsZWN0X21jbGtfZGl2KCkKPiA+PiAgICAgLSBmaXggY29uZGl0
-aW9uIGZvciBjaGVja2luZyBFTkFCTEVfQklUIGZyb20gaTJzX2ZpZm9fcm91dGluZyBpbgo+ID4+
-ICAgICAgIHNpaTkwMnhfYXVkaW9fY29kZWNfaW5pdCgpCj4gPj4KPiA+PiBTdGlsbCB0byBkbwo+
-ID4+Cj4gPj4gLSBBZ3JlZSBvbiBpMnMgd2lyZXMgdG8gSERNSSBhdWRpbyBmaWZvIHJvdXRpbmcg
-aW4gZHRzLiAKPiA+Pgo+ID4+ICAgVGhlIGN1cnJlbnQgc2NoZW1lIGlzIHF1aXRlIHN0cmFpZ2h0
-IGZvcndhcmQsIGJ1dCB0aGVyZSBpcyBtYXliZQo+ID4+ICAgdGhlcmUgaXMgZXZlbiBtb3JlIHN0
-cmFpZ2h0IGZvcndhcmQgc29sdXRpb25zIGxpa2U6Cj4gPj4KPiA+PiAgIGF1ZGlvLWZpZm8tZW5h
-YmxlID0gPDEgMSAxIDE+Owo+ID4+ICAgYXVkaW8taTJzLXBpbi10by1maWZvID0gPDAgMSAyIDM+
-Owo+ID4+Cj4gPj4gICBNZWFuaW5nIHRoYXQgYWxsIGZpZm9zIGFyZSBlbmFibGVkIGFuZCBTRDAg
-aXMgcm91dGVkIHRvIGZpZm8gMCwgU0QxCj4gPj4gICB0byBmaWZvIDEsIGV0Yy4gSSBhbSBub3Qg
-c3VyZSBpZiB0aGUgY2hhbm5lbCBzd2FwIGZ1bmN0aW9uYWxpdHkKPiA+PiAgIHNob3VsZCBzaG93
-IGluIGR0cyBiaW5kaW5nLgo+ID4gCj4gPiBQbGVhc2UgZm9yZ2l2ZSBteSBsYWNrIG9mIGF1ZGlv
-IGtub3dsZWRnZSwgYnV0IGl0IHRoaXMgYSBzeXN0ZW0KPiA+IGRlc2NyaXB0aW9uIHRoYXQgc2hv
-dWxkIGJlIGVuY29kZWQgaW4gRFQsIG9yIGEgcG9saWN5IHRoYXQgc2hvdWxkIGJlCj4gPiBoYW5k
-bGVkIHB1cmVseSBpbiBzb2Z0d2FyZSAoZWl0aGVyIGZ1bGx5IGluc2lkZSB0aGUga2VybmVsIG9y
-IHdpdGggdGhlCj4gPiBoZWxwIG9mIHVzZXJzcGFjZSkgPwo+IAo+IFRoaXMgcHJvcGVydHkgZGVz
-Y3JpYmVzIGhvdyBtYW55IGkycyB3aXJlcyBhcmUgY29ubmVjdGVkIHRvIHNpaTkwMnggYW5kCj4g
-aW4gd2hhdCBvcmRlciwgc28gSSB0aGluayBpdCBiZWxvbmdzIHRvIERUUy4KClRoYXQgd291bGQg
-YmVsb25nIHRvIERULCB5ZXMuIFdlIGhhdmUgc29sdmVkIGEgc2ltaWxhciBwcm9ibGVtIHdpdGgK
-Q1NJLTIgcmVjZWl2ZXJzLCB3aGVyZSB0aGUgbnVtYmVyIG9mIGRhdGEgbGFuZXMgYW5kIHRoZWly
-IG1hcHBpbmcgY2FuCm9mdGVuIGJlIGNvbmZpZ3VyZWQuIFNlZSB0aGUgZGVmaW5pdGlvbiBvZiB0
-aGUgZGF0YS1sYW5lcyBwcm9wZXJ0eSBpbgpEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQgZm9yIG1vcmUKaW5mb3JtYXRpb24uIEhvdyBh
-Ym91dCB1c2luZyBzaW1pbGFyIGJpbmRpbmdzID8gSXQgd291bGQgYWxzbyBzb2x2ZQpBbmRyemVq
-J3MgY29uY2VybnMgdGhhdCB5b3UgZG9uJ3QgZGVzY3JpYmUgdGhlIGF1ZGlvIGNvbm5lY3Rpb24g
-aW4gRFQuCgo+IE9uZSBtaWdodCBvZiBjb3Vyc2Ugd29uZGVyIHdoeSBhbnlib2R5IHdvdWxkIHB1
-dCB0aGUgaTJzIHdpcmVzIHRvIGFueQo+IG90aGVyIG9yZGVyIHRoYW4gMCA8LT4gMCwgMSA8LT4g
-MSwgMiA8LT4gMiwgYW5kIDMgPC0+IDMsIGJ1dCB0aGVuIGEKPiBhZ2FpbiBJJ3ZlIHNlZW4gd2Vp
-cmRlciBib2FyZCBkZXNpZ25zLgoKSXQgY2FuIGJlIHVzZWZ1bCB0byBzaW1wbGlmeSBzaWduYWwg
-cm91dGluZyBvbiB0aGUgYm9hcmQuCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On Mon, Mar 4, 2019 at 9:36 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Mon, Mar 4, 2019 at 3:12 AM Jacky Bai <ping.bai@nxp.com> wrote:
+> >
+> > Add the soc & board binding for i.MX8MM.
+> >
+> > Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > index 7e2cd6a..0620896 100644
+> > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > @@ -154,6 +154,12 @@ properties:
+> >            - const: compulab,cl-som-imx7
+> >            - const: fsl,imx7d
+> >
+> > +    - description: i.MX8MM based Boards
+> > +        items:
+>
+> The indentation is wrong (and is significant). 'items' should be
+> aligned with 'description'. IOW, it should be 6 spaces.
+
+Looking again, items is correct, it is description that needs 2 more spaces.
+
+Rob
