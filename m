@@ -1,80 +1,177 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v4 6/6] usb:cdns3 Fix for stuck packets in on-chip OUT
- buffer.
-Date: Mon, 4 Mar 2019 12:25:15 +0200
-Message-ID: <70967a02-2f02-9ac8-e205-cdbfac5fbbae@ti.com>
-References: <1550173514-23573-1-git-send-email-pawell@cadence.com>
- <1550173514-23573-7-git-send-email-pawell@cadence.com>
- <67da432f-9c95-d644-65b5-dbc5b942d24c@ti.com>
- <BYAPR07MB47091C199971D677DE0FBB84DD7D0@BYAPR07MB4709.namprd07.prod.outlook.com>
- <e8616274-b0a8-6e59-b6fa-a68fed58bad7@ti.com>
- <BYAPR07MB470939C6F100336BAF6C41BFDD7D0@BYAPR07MB4709.namprd07.prod.outlook.com>
- <87va1dbokp.fsf@linux.intel.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v4 7/9] mtd: rawnand: ingenic: Add support for the
+ JZ4740
+Date: Mon, 4 Mar 2019 11:34:12 +0100
+Message-ID: <20190304113412.24b64e3d@xps13>
+References: <20190209192305.4434-1-paul@crapouillou.net>
+        <20190209192305.4434-7-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87va1dbokp.fsf@linux.intel.com>
-Content-Language: en-GB
+In-Reply-To: <20190209192305.4434-7-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <felipe.balbi@linux.intel.com>, Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Rahul Kumar <kurahul@cadence.com>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Paul,
 
-On 21/02/2019 09:14, Felipe Balbi wrote:
+Paul Cercueil <paul@crapouillou.net> wrote on Sat,  9 Feb 2019 16:23:03
+-0300:
+
+> Add support for probing the ingenic-nand driver on the JZ4740 SoC from
+> Ingenic, and the jz4740-ecc driver to support the JZ4740-specific
+> ECC hardware.
 > 
-> Hi,
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
 > 
-> (please break your emails at 80-columns)
+> Changes:
 > 
-> Pawel Laszczak <pawell@cadence.com> writes:
->>>> One more thing. Workaround has implemented algorithm that decide for which
->>>> endpoint it should be enabled.  e.g for composite device MSC+NCM+ACM it
->>>> should work only for ACM OUT endpoint.
->>>>
->>>
->>> If ACM driver didn't queue the request for ACM OUT endpoint, why does the
->>> controller accept the data at all?
->>>
->>> I didn't understand why we need a workaround for this. It should be standard
->>> behaviour to NAK data if function driver didn't request for all endpoints.
->>
->> Yes, I agree with you. Controller shouldn’t accept such packet. As I know this
->> behavior will be fixed in RTL.
->>
->> But I assume that some older version of this controller are one the market,
->> and driver should work correct with them.
->>
->> In the feature this workaround can be limited only to selected controllers.
->>
->> Even now I assume that it can be enabled/disabled by module parameter.
+> v2: New patch
 > 
-> no module parameters, please. Use revision detection in runtime.
+> v3: Also add support for the hardware ECC of the JZ4740 in this patch
+> 
+> v4: - Fix formatting issues
+>     - Add MODULE_* macros
+> 
+>  drivers/mtd/nand/raw/ingenic/Kconfig        |  10 ++
+>  drivers/mtd/nand/raw/ingenic/Makefile       |   1 +
+>  drivers/mtd/nand/raw/ingenic/ingenic_nand.c |  48 +++++--
+>  drivers/mtd/nand/raw/ingenic/jz4740_ecc.c   | 196 ++++++++++++++++++++++++++++
+>  4 files changed, 244 insertions(+), 11 deletions(-)
+>  create mode 100644 drivers/mtd/nand/raw/ingenic/jz4740_ecc.c
 > 
 
-This is about whether to enable or disable the workaround.
-By default we don't want this workaround to be enabled.
+[...]
 
-I'm debating whether we should have this workaround at all or not.
+>  	switch (chip->ecc.mode) {
+>  	case NAND_ECC_HW:
+> @@ -270,8 +279,8 @@ static int ingenic_nand_init_chip(struct platform_device *pdev,
+>  		return -ENOMEM;
+>  	mtd->dev.parent = dev;
+>  
+> -	chip->legacy.IO_ADDR_R = cs->base + OFFSET_DATA;
+> -	chip->legacy.IO_ADDR_W = cs->base + OFFSET_DATA;
+> +	chip->legacy.IO_ADDR_R = cs->base + nfc->soc_info->data_offset;
+> +	chip->legacy.IO_ADDR_W = cs->base + nfc->soc_info->data_offset;
+>  	chip->legacy.chip_delay = RB_DELAY_US;
+>  	chip->options = NAND_NO_SUBPAGE_WRITE;
+>  	chip->legacy.select_chip = ingenic_nand_select_chip;
 
-It has the following problems.
+I think Boris already asked for it, but it would be really great that
+you update this driver to not use any legacy interface anymore.
 
-1) It ACKs packets even when gadget end is not ready to accept the transfers.
-2) It stores these packets in a temporary buffer and then pushes them to the
-gadget driver whenever the gadget driver is ready to process the data.
-3) Since the gadget driver can become ready at an indefinite time in the
-future, it poses 2 problems:
- a) It is sending stale data to the sink. (problematic at next protocol level?)
- b) If this temporary buffer runs out we still hit the lock up issue.
+> diff --git a/drivers/mtd/nand/raw/ingenic/jz4740_ecc.c b/drivers/mtd/nand/raw/ingenic/jz4740_ecc.c
+> new file mode 100644
+> index 000000000000..83b42881720e
+> --- /dev/null
+> +++ b/drivers/mtd/nand/raw/ingenic/jz4740_ecc.c
+> @@ -0,0 +1,196 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * JZ4740 ECC controller driver
+> + *
+> + * Copyright (c) 2019 Paul Cercueil <paul@crapouillou.net>
+> + *
+> + * based on jz4740-nand.c
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/device.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "ingenic_ecc.h"
+> +
+> +#define JZ_REG_NAND_ECC_CTRL	0x00
+> +#define JZ_REG_NAND_DATA	0x04
+> +#define JZ_REG_NAND_PAR0	0x08
+> +#define JZ_REG_NAND_PAR1	0x0C
+> +#define JZ_REG_NAND_PAR2	0x10
+> +#define JZ_REG_NAND_IRQ_STAT	0x14
+> +#define JZ_REG_NAND_IRQ_CTRL	0x18
+> +#define JZ_REG_NAND_ERR(x)	(0x1C + ((x) << 2))
+> +
+> +#define JZ_NAND_ECC_CTRL_PAR_READY	BIT(4)
+> +#define JZ_NAND_ECC_CTRL_ENCODING	BIT(3)
+> +#define JZ_NAND_ECC_CTRL_RS		BIT(2)
+> +#define JZ_NAND_ECC_CTRL_RESET		BIT(1)
+> +#define JZ_NAND_ECC_CTRL_ENABLE		BIT(0)
+> +
+> +#define JZ_NAND_STATUS_ERR_COUNT	(BIT(31) | BIT(30) | BIT(29))
+> +#define JZ_NAND_STATUS_PAD_FINISH	BIT(4)
+> +#define JZ_NAND_STATUS_DEC_FINISH	BIT(3)
+> +#define JZ_NAND_STATUS_ENC_FINISH	BIT(2)
+> +#define JZ_NAND_STATUS_UNCOR_ERROR	BIT(1)
+> +#define JZ_NAND_STATUS_ERROR		BIT(0)
+> +
+> +static const uint8_t empty_block_ecc[] = {
+> +	0xcd, 0x9d, 0x90, 0x58, 0xf4, 0x8b, 0xff, 0xb7, 0x6f
+> +};
+> +
+> +static void jz4740_ecc_init(struct ingenic_ecc *ecc, bool encode)
+> +{
+> +	uint32_t reg;
+> +
+> +	/* Clear interrupt status */
+> +	writel(0, ecc->base + JZ_REG_NAND_IRQ_STAT);
+> +
+> +	/* Initialize and enable ECC hardware */
+> +	reg = readl(ecc->base + JZ_REG_NAND_ECC_CTRL);
+> +	reg |= JZ_NAND_ECC_CTRL_RESET;
+> +	reg |= JZ_NAND_ECC_CTRL_ENABLE;
+> +	reg |= JZ_NAND_ECC_CTRL_RS;
+> +	if (encode)
+> +		reg |= JZ_NAND_ECC_CTRL_ENCODING;
+> +	else
+> +		reg &= ~JZ_NAND_ECC_CTRL_ENCODING;
+> +
+> +	writel(reg, ecc->base + JZ_REG_NAND_ECC_CTRL);
+> +}
+> +
+> +static int jz4740_ecc_calculate(struct ingenic_ecc *ecc,
+> +				struct ingenic_ecc_params *params,
+> +				const u8 *buf, u8 *ecc_code)
+> +{
+> +	uint32_t reg, status;
+> +	unsigned int timeout = 1000;
+> +	int i;
+> +
+> +	jz4740_ecc_init(ecc, true);
+> +
+> +	do {
+> +		status = readl(ecc->base + JZ_REG_NAND_IRQ_STAT);
+> +	} while (!(status & JZ_NAND_STATUS_ENC_FINISH) && --timeout);
+> +
+> +	if (timeout == 0)
+> +		return -ETIMEDOUT;
+> +
+> +	reg = readl(ecc->base + JZ_REG_NAND_ECC_CTRL);
+> +	reg &= ~JZ_NAND_ECC_CTRL_ENABLE;
+> +	writel(reg, ecc->base + JZ_REG_NAND_ECC_CTRL);
+> +
+> +	for (i = 0; i < params->bytes; ++i)
+> +		ecc_code[i] = readb(ecc->base + JZ_REG_NAND_PAR0 + i);
+> +
+> +	/* If the written data is completely 0xff, we also want to write 0xff as
+> +	 * ecc, otherwise we will get in trouble when doing subpage writes.
+> +	 */
 
-I think the right solution is to make sure that the gadget driver is always
-reading all the enabled OUT endpoints *or* (keep the OUT endpoints disabled
-if gadget driver is not ready to process OUT transfers).
+Comment formatting
 
-cheers,
--roger
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+s/ecc/ECC/ in plain English
+
+> +	if (memcmp(ecc_code, empty_block_ecc, ARRAY_SIZE(empty_block_ecc)) == 0)
+> +		memset(ecc_code, 0xff, ARRAY_SIZE(empty_block_ecc));
+> +
+> +	return 0;
+> +}
+> +
+
+
+Thanks,
+Miquèl
