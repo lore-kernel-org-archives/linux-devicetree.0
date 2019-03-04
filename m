@@ -1,133 +1,87 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v3] dt-bindings: gpu: add bindings for the ARM Mali Bifrost GPU
-Date: Mon,  4 Mar 2019 11:58:02 +0100
-Message-ID: <20190304105802.6010-1-narmstrong@baylibre.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 0/5] add support for the new SAM9X60's PWM controller
+Date: Mon, 4 Mar 2019 11:58:49 +0100
+Message-ID: <20190304105849.GA5121@ulmo>
+References: <1551113039-937-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1551113039-937-1-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: daniel@ffwll.ch
-Cc: Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Claudiu.Beznea@microchip.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the bindings for the Bifrost family of ARM Mali GPUs.
 
-The Bifrost GPU architecture is similar to the Midgard family,
-but with a different Shader Core & Execution Engine structures.
+--J2SCkAp4GZ/dPZZf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Bindings are based on the Midgard family bindings, but the inner
-architectural changes makes it a separate family needing separate
-bindings.
+On Mon, Feb 25, 2019 at 04:44:30PM +0000, Claudiu.Beznea@microchip.com wrot=
+e:
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+>=20
+> This series adds support for PWM controller of the new SAM9X60. The diffe=
+rence
+> b/w this one and the provious AT91SAM9X5 is the counter size (32 bits com=
+pared
+> with 16 bits on the previous version) thus, allowing to generate signals =
+with
+> bigger periods and duty cycles. This series, modifies the driver to take =
+into
+> account per IP counter size by embedding this information into driver's d=
+ata.
+>=20
+> Changes in v3:
+> - collect Acked-by tags
+> - introduced patch 3/5 which changes the name of objects of type
+>   atmel_pwm_data
+> - changed a bit commit message for patches 1/5 and 2/5
+> - use mchp_sam9x60_pwm_data instead of atmel_pwm_data_v3 for SAM9X60
+>   compatible data
+>=20
+> Changes in v2:
+> - add reviewed-by tag to DT inding patch
+> - move PWM_MAXV2_PRD from patch 2/4 in patch 3/4
+> - change commit description for patch 3/4
+>=20
+> Claudiu Beznea (5):
+>   pwm: atmel: add struct atmel_pwm_data
+>   pwm: atmel: add support for controllers with 32 bit counters
+>   pwm: atmel: rename objects of type atmel_pwm_data
+>   pwm: atmel: add support for SAM9X60's PWM controller
+>   pwm: atmel: add PWM binding for SAM9X60
+>=20
+>  .../devicetree/bindings/pwm/atmel-pwm.txt          |   1 +
+>  drivers/pwm/pwm-atmel.c                            | 117 ++++++++++++++-=
+------
+>  2 files changed, 79 insertions(+), 39 deletions(-)
 
-The Bifrost GPUs are present in a number of recent SoCs, like the
-Amlogic G12A Family, and many other vendors.
-The Amlogic vendor specific compatible is added to handle the
-specific IP integration differences and dependencies.
+Applied, thanks.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../bindings/gpu/arm,mali-bifrost.txt         | 90 +++++++++++++++++++
- 1 file changed, 90 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+Thierry
 
-Changes since v2:
-- moved to a single compatible since HW is fully discoverable
+--J2SCkAp4GZ/dPZZf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
-new file mode 100644
-index 000000000000..e068fccf4ce9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
-@@ -0,0 +1,90 @@
-+ARM Mali Bifrost GPU
-+====================
-+
-+Required properties:
-+
-+- compatible :
-+  * Must contain one the following:
-+    + "arm,mali-bifrost"
-+  * which must be preceded by one of the following vendor specifics:
-+    + "amlogic,meson-g12a-mali"
-+
-+- reg : Physical base address of the device and length of the register area.
-+
-+- interrupts : Contains the three IRQ lines required by Mali Bifrost devices.
-+
-+- interrupt-names : Contains the names of IRQ resources in the order they were
-+  provided in the interrupts property. Must contain: "job", "mmu", "gpu".
-+
-+Optional properties:
-+
-+- clocks : Phandle to clock for the Mali Bifrost device.
-+
-+- mali-supply : Phandle to regulator for the Mali device. Refer to
-+  Documentation/devicetree/bindings/regulator/regulator.txt for details.
-+
-+- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
-+  for details.
-+
-+- resets : Phandle of the GPU reset line.
-+
-+Vendor-specific bindings
-+------------------------
-+
-+The Mali GPU is integrated very differently from one SoC to
-+another. In order to accomodate those differences, you have the option
-+to specify one more vendor-specific compatible, among:
-+
-+- "amlogic,meson-g12a-mali"
-+  Required properties:
-+  - resets : Should contain phandles of :
-+    + GPU reset line
-+    + GPU APB glue reset line
-+
-+Example for a Mali-G31:
-+
-+gpu@ffa30000 {
-+	compatible = "amlogic,meson-g12a-mali", "arm,mali-bifrost";
-+	reg = <0xffe40000 0x10000>;
-+	interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
-+	interrupt-names = "job", "mmu", "gpu";
-+	clocks = <&clk CLKID_MALI>;
-+	mali-supply = <&vdd_gpu>;
-+	operating-points-v2 = <&gpu_opp_table>;
-+	resets = <&reset RESET_DVALIN_CAPB3>, <&reset RESET_DVALIN>;
-+};
-+
-+gpu_opp_table: opp_table0 {
-+	compatible = "operating-points-v2";
-+
-+	opp@533000000 {
-+		opp-hz = /bits/ 64 <533000000>;
-+		opp-microvolt = <1250000>;
-+	};
-+	opp@450000000 {
-+		opp-hz = /bits/ 64 <450000000>;
-+		opp-microvolt = <1150000>;
-+	};
-+	opp@400000000 {
-+		opp-hz = /bits/ 64 <400000000>;
-+		opp-microvolt = <1125000>;
-+	};
-+	opp@350000000 {
-+		opp-hz = /bits/ 64 <350000000>;
-+		opp-microvolt = <1075000>;
-+	};
-+	opp@266000000 {
-+		opp-hz = /bits/ 64 <266000000>;
-+		opp-microvolt = <1025000>;
-+	};
-+	opp@160000000 {
-+		opp-hz = /bits/ 64 <160000000>;
-+		opp-microvolt = <925000>;
-+	};
-+	opp@100000000 {
-+		opp-hz = /bits/ 64 <100000000>;
-+		opp-microvolt = <912500>;
-+	};
-+};
--- 
-2.20.1
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlx9BOYACgkQ3SOs138+
+s6FU+A//S48LmAI/PMbxIqvim0FueiPd58rs3d5awKFxYQmsJOUbOZuYE+jlTB6H
+zQkvYuYm1X881bbfPJN3TqhYAE3UeZu/+IOr1UEXrbV2y0Df5FIPCv5OF/YjU3WX
+071mp9UBWAPyTAr72mFP0+sh9wBQV0cvnRKthVd1PdvFKDiSJQLRoPw9s1+Wcjy7
+Q5kU/4+/v0bShwM/yx0IEuwmTUCECs6LQM0y1IPV+iDBwIDCCUNO0/Yn1R+b+vcb
+IaGRp5mB6Lv4Ksl1jjJcgMQO6hWZewFnXIrxXgXnzx2GOxRJs4rKvAhBAG9cICvx
+UxuKlM6biK6/Hr6Sy474jn0toy7hM+Ud3pLFFMd9I/aecd2nTflOXXDy9922/ETf
+1fd4RKk2zTeuOZR684nofLno6uogDKDcAWeeZaADjJowNHH6UTzCazkKCKaYr9Ha
+kvuLEsjvTbttTFvfD7H9RxjMg+EIVGYEYBmJJJ3+5oQ95wcqR+JqLJ5loKN7XsM2
+j01xkwe8jbfE3v5Hu7qdTilorSgEy5hJV11O+RyDEKoGW50ZRCLtFRAj22wNj/0l
+mRjShtoTM42LWaX1rjZrCZnVsvEShEO36ai/Yx/h4Zz9cmd2Eq/WKBxvdHjRiMtP
+/gdKsiMkofCDRgIx8X9P+Mv+qISp2hza4mn4OJxo8n5xcEQu1O0=
+=5rG+
+-----END PGP SIGNATURE-----
+
+--J2SCkAp4GZ/dPZZf--
