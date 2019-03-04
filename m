@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 2/5] dt-bindings: display: armada: Rename the binding doc file
-Date: Mon,  4 Mar 2019 21:20:03 +0100
-Message-ID: <20190304202006.3863-3-lkundrak@v3.sk>
+Subject: [PATCH v2 5/5] dt-bindings: display: armada: Document bus-width property
+Date: Mon,  4 Mar 2019 21:20:06 +0100
+Message-ID: <20190304202006.3863-6-lkundrak@v3.sk>
 References: <20190304202006.3863-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -12,46 +12,39 @@ To: Russell King <linux@armlinux.org.uk>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-Use a more generic name, since it will document more compatible LCD
-controllers than just that of Dove. Also, there's no point putting it in
-a separate directory.
+This makes it possible to choose a different pixel format for the
+endpoint. Modelled after what other LCD controllers use, including
+marvell,pxa2xx-lcdc and atmel,hlcdc-display-controller and perhaps more.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-
 ---
-Changes since v1:
-- Choose a better name than armada/marvell-armada-drm.txt, since
-  there will be no display-subsystem master node and thus it will
-  only document just the LCDC.
+ .../devicetree/bindings/display/marvell,armada-lcdc.txt     | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
- .../{armada/marvell,dove-lcd.txt =3D> marvell,armada-lcdc.txt}    | 0
- MAINTAINERS                                                     | 2 +-
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename Documentation/devicetree/bindings/display/{armada/marvell,dove-lc=
-d.txt =3D> marvell,armada-lcdc.txt} (100%)
-
-diff --git a/Documentation/devicetree/bindings/display/armada/marvell,dov=
-e-lcd.txt b/Documentation/devicetree/bindings/display/marvell,armada-lcdc=
-.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/display/armada/marvell,dove=
--lcd.txt
-rename to Documentation/devicetree/bindings/display/marvell,armada-lcdc.t=
-xt
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e71aa05fef29..890cbd6e0b7b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8966,7 +8966,7 @@ T:	git git://git.armlinux.org.uk/~rmk/linux-arm.git=
- drm-armada-devel
- T:	git git://git.armlinux.org.uk/~rmk/linux-arm.git drm-armada-fixes
- F:	drivers/gpu/drm/armada/
- F:	include/uapi/drm/armada_drm.h
--F:	Documentation/devicetree/bindings/display/armada/
-+F:	Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
- F:	Documentation/devicetree/bindings/reserved-memory/marvell,armada-fram=
-ebuffer.txt
+diff --git a/Documentation/devicetree/bindings/display/marvell,armada-lcd=
+c.txt b/Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
+index 4ef66bc2845c..181548d5be93 100644
+--- a/Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
++++ b/Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
+@@ -26,6 +26,11 @@ Required child nodes:
 =20
- MARVELL CRYPTO DRIVER
+ - port: video output port with endpoints, as described by
+   Documentation/devicetree/bindings/graph.txt
++  The endpoints can optionally specify the following property:
++
++  - bus-width: recognized values are <12>, <16>, <18> and <24>, that
++    select "rgb444", "rgb565", "rgb666" or "rgb888" pixel format
++    respectively. Defaults to <24> if unspecified.
+=20
+ Example:
+=20
+@@ -38,6 +43,7 @@ Example:
+=20
+ 		lcd0_port: port {
+ 			lcd0_rgb_out: endpoint {
++				bus-width =3D <24>;
+ 				remote-endpoint =3D <&encoder_rgb_in>;
+ 			};
+ 		};
 --=20
 2.20.1
