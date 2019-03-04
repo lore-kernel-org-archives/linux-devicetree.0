@@ -1,53 +1,105 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: arm: imx: Add the soc binding for imx8mm
-Date: Mon, 4 Mar 2019 10:11:00 -0600
-Message-ID: <CAL_JsqLA+ypzHLC=mx2f5YJBs9EJooiOOqMKc-dnm3DW_GJXLw@mail.gmail.com>
-References: <1551691021-31505-1-git-send-email-ping.bai@nxp.com>
- <1551691021-31505-2-git-send-email-ping.bai@nxp.com>
- <CAL_JsqJFNgoAOHCOc0vdnxrwJR_T+iDddbS3nZc_d6grAC0k3w@mail.gmail.com>
+Subject: Re: [PATCH 1/1] of: reserved_mem: fix reserve memory leak
+Date: Mon, 4 Mar 2019 10:37:39 -0600
+Message-ID: <CAL_Jsq+wUGxeQUMJd0eu52QadvLvkkT=36q9e1Qbru2gEsUGCw@mail.gmail.com>
+References: <20190219074500.16454-1-vichy.kuo@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqJFNgoAOHCOc0vdnxrwJR_T+iDddbS3nZc_d6grAC0k3w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jacky Bai <ping.bai@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190219074500.16454-1-vichy.kuo@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: pierre Kuo <vichy.kuo@gmail.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 9:36 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Mon, Mar 4, 2019 at 3:12 AM Jacky Bai <ping.bai@nxp.com> wrote:
-> >
-> > Add the soc & board binding for i.MX8MM.
-> >
-> > Signed-off-by: Jacky Bai <ping.bai@nxp.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > index 7e2cd6a..0620896 100644
-> > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > @@ -154,6 +154,12 @@ properties:
-> >            - const: compulab,cl-som-imx7
-> >            - const: fsl,imx7d
-> >
-> > +    - description: i.MX8MM based Boards
-> > +        items:
->
-> The indentation is wrong (and is significant). 'items' should be
-> aligned with 'description'. IOW, it should be 6 spaces.
+You should Cc the author(s) of this code. I've added Marek.
 
-Looking again, items is correct, it is description that needs 2 more spaces.
+On Tue, Feb 19, 2019 at 1:47 AM pierre Kuo <vichy.kuo@gmail.com> wrote:
+>
+> The __reserved_mem_init_node will call region specific reserved memory
+> init codes, but once all compatibled init codes failed, the memory region
+> will left in memory.reserved and cause leakage.
+>
+> Take cma reserve memory DTS for example, if user declare 1MB size,
+> which is not align to (PAGE_SIZE << max(MAX_ORDER - 1,
+> pageblock_order)), rmem_cma_setup will return -EINVAL.
+> Meanwhile, rmem_dma_setup will also return -EINVAL since "reusable"
+> property is not set. If finally there is no reserved memory init pick up
+> this memory, kernel will left the 1MB leak in memory.reserved.
+>
+> This patch will remove this kind of memory from memory.reserved, only
+> when __reserved_mem_init_node return neither 0 nor -ENOENT.
 
-Rob
+I'm not sure that un-reserving memory on error is the correct
+behavior. It may be fine for something like CMA, but if it is some
+shared memory used by another processor in the system not reserving it
+would probably never be correct.
+
+>
+> Signed-off-by: pierre Kuo <vichy.kuo@gmail.com>
+> ---
+>  drivers/of/of_reserved_mem.c | 22 +++++++++++++++++-----
+>  1 file changed, 17 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> index 1977ee0adcb1..d3bde057ec46 100644
+> --- a/drivers/of/of_reserved_mem.c
+> +++ b/drivers/of/of_reserved_mem.c
+> @@ -181,6 +181,7 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
+>  {
+>         extern const struct of_device_id __reservedmem_of_table[];
+>         const struct of_device_id *i;
+> +       int ret = -ENOENT;
+>
+>         for (i = __reservedmem_of_table; i < &__rmem_of_table_sentinel; i++) {
+>                 reservedmem_of_init_fn initfn = i->data;
+> @@ -189,13 +190,14 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
+>                 if (!of_flat_dt_is_compatible(rmem->fdt_node, compat))
+>                         continue;
+>
+> -               if (initfn(rmem) == 0) {
+> +               ret = initfn(rmem);
+> +               if (ret == 0) {
+>                         pr_info("initialized node %s, compatible id %s\n",
+>                                 rmem->name, compat);
+> -                       return 0;
+> +                       break;
+>                 }
+>         }
+> -       return -ENOENT;
+> +       return ret;
+>  }
+>
+>  static int __init __rmem_cmp(const void *a, const void *b)
+> @@ -255,7 +257,9 @@ void __init fdt_init_reserved_mem(void)
+>                 int len;
+>                 const __be32 *prop;
+>                 int err = 0;
+> +               int nomap;
+>
+> +               nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
+>                 prop = of_get_flat_dt_prop(node, "phandle", &len);
+>                 if (!prop)
+>                         prop = of_get_flat_dt_prop(node, "linux,phandle", &len);
+> @@ -265,8 +269,16 @@ void __init fdt_init_reserved_mem(void)
+>                 if (rmem->size == 0)
+>                         err = __reserved_mem_alloc_size(node, rmem->name,
+>                                                  &rmem->base, &rmem->size);
+> -               if (err == 0)
+> -                       __reserved_mem_init_node(rmem);
+> +               if (err == 0) {
+> +                       err = __reserved_mem_init_node(rmem);
+> +                       if (err != 0 && err != -ENOENT) {
+> +                               pr_info("node %s compatible matching fail\n",
+> +                                       rmem->name);
+> +                               memblock_free(rmem->base, rmem->size);
+> +                               if (nomap)
+> +                                       memblock_add(rmem->base, rmem->size);
+> +                       }
+> +               }
+>         }
+>  }
+>
+> --
+> 2.17.1
+>
