@@ -1,7 +1,7 @@
 From: Bruno Thomsen <bruno.thomsen@gmail.com>
-Subject: [PATCH 5/6] ARM: dts: tq imx7s board support
-Date: Mon,  4 Mar 2019 17:56:29 +0100
-Message-ID: <20190304165630.18225-6-bruno.thomsen@gmail.com>
+Subject: [PATCH 3/6] dt-bindings: tq: add compatible for i.MX7 boards
+Date: Mon,  4 Mar 2019 17:56:27 +0100
+Message-ID: <20190304165630.18225-4-bruno.thomsen@gmail.com>
 References: <20190304165630.18225-1-bruno.thomsen@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,70 +21,57 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: devicetree@vger.kernel.org, bruno.thomsen@gmail.com, robh+dt@kernel.org, linux-imx@nxp.com, shawnguo@kernel.org, markus.niebel@tq-group.com
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the TQ TQMa7S SoM together with
-the MBa7 carrier board and it's based on the NXP i.MX7Solo SoC.
+Add documentation about the following TQ boards:
+- TQMa7S
+- TQMa7D
+- MBa7
 
 Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
 ---
- arch/arm/boot/dts/Makefile         |  1 +
- arch/arm/boot/dts/imx7s-mba7.dts   | 18 ++++++++++++++++++
- arch/arm/boot/dts/imx7s-tqma7.dtsi | 11 +++++++++++
- 3 files changed, 30 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx7s-mba7.dts
- create mode 100644 arch/arm/boot/dts/imx7s-tqma7.dtsi
+ Documentation/devicetree/bindings/arm/tq.txt | 35 ++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/tq.txt
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index bd40148a15b2..7cdb288bce6a 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -580,6 +580,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
- 	imx7d-sdb-reva.dtb \
- 	imx7d-sdb-sht11.dtb \
- 	imx7s-colibri-eval-v3.dtb \
-+	imx7s-mba7.dtb \
- 	imx7s-warp.dtb
- dtb-$(CONFIG_SOC_IMX7ULP) += \
- 	imx7ulp-evk.dtb
-diff --git a/arch/arm/boot/dts/imx7s-mba7.dts b/arch/arm/boot/dts/imx7s-mba7.dts
+diff --git a/Documentation/devicetree/bindings/arm/tq.txt b/Documentation/devicetree/bindings/arm/tq.txt
 new file mode 100644
-index 000000000000..d7d3f530f843
+index 000000000000..b0c22a22007b
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx7s-mba7.dts
-@@ -0,0 +1,18 @@
-+// SPDX-License-Identifier: GPL-2.0 OR X11
-+/*
-+ * Device Tree Source for TQ Systems TQMa7S board on MBa7 carrier board.
-+ *
-+ * Copyright (C) 2016 TQ Systems GmbH
-+ * Author: Markus Niebel <Markus.Niebel@tq-group.com>
-+ * Copyright (C) 2019 Bruno Thomsen <bruno.thomsen@gmail.com>
-+ */
++++ b/Documentation/devicetree/bindings/arm/tq.txt
+@@ -0,0 +1,35 @@
++TQ Systems GmbH Device Tree Bindings
++====================================
 +
-+/dts-v1/;
++TQMa series
++-----------
 +
-+#include "imx7s-tqma7.dtsi"
-+#include "imx7-mba7.dtsi"
++TQMa is a series of System-on-Modules (SoM) targeting industrial control
++systems due to the long-term availability and extended temperature range.
++They are available with a number of different System-on-Chips (SoC).
++The TQMa7 module can only be mounted with NXP i.MX7 Solo or Dual SoCs.
++Primary compatible strings are of the form "tq,<SoC>-<SoM>".
 +
-+/ {
-+	model = "TQ Systems TQMa7S board on MBa7 carrier board";
-+	compatible = "tq,imx7s-mba7", "tq,imx7s-tqma7", "fsl,imx7s";
-+};
-diff --git a/arch/arm/boot/dts/imx7s-tqma7.dtsi b/arch/arm/boot/dts/imx7s-tqma7.dtsi
-new file mode 100644
-index 000000000000..5f5433eb7dd7
---- /dev/null
-+++ b/arch/arm/boot/dts/imx7s-tqma7.dtsi
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0 OR X11
-+/*
-+ * Device Tree Include file for TQ Systems TQMa7S board with NXP i.MX7Solo SoC.
-+ *
-+ * Copyright (C) 2016 TQ Systems GmbH
-+ * Author: Markus Niebel <Markus.Niebel@tq-group.com>
-+ * Copyright (C) 2019 Bruno Thomsen <bruno.thomsen@gmail.com>
-+ */
++TQMa7S SoM
++Required root node properties:
++	- compatible = "tq,imx7s-tqma7", "fsl,imx7s";
 +
-+#include "imx7s.dtsi"
-+#include "imx7-tqma7.dtsi"
++TQMa7D SoM
++Required root node properties:
++	- compatible = "tq,imx7d-tqma7", "fsl,imx7d";
++
++MBa series
++----------
++
++MBa is a series of Carrier Boards / Single Board Computers (SBC) for
++evaluation of TQMa SoMs.
++The MBa7 carrier board can only interface with TQMa7 modules.
++Primary compatible strings are of the form "tq,<SoC>-<SBC>".
++
++MBa7 with TQMa7S SoM
++Required root node properties:
++	- compatible = "tq,imx7s-mba7", "tq,imx7s-tqma7", "fsl,imx7s";
++
++MBa7 with TQMa7D SoM
++Required root node properties:
++	- compatible = "tq,imx7d-mba7", "tq,imx7d-tqma7", "fsl,imx7d";
 -- 
 2.20.1
