@@ -1,51 +1,254 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH RESEND V4 1/2] dt-bindings: firmware: imx-scu: remove
- unused resources from scu resource table
-Date: Mon, 4 Mar 2019 09:40:06 +0800
-Message-ID: <20190304014005.GU26041@dragon>
-References: <1551228502-1535-1-git-send-email-Anson.Huang@nxp.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v3 10/12] hikey960: Support usb functionality of Hikey960
+Date: Mon, 4 Mar 2019 09:47:49 +0800
+Message-ID: <1551664069.2210.64.camel@mhfsdcap03>
+References: <20190302090505.65542-1-chenyu56@huawei.com>
+         <20190302090505.65542-11-chenyu56@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1551228502-1535-1-git-send-email-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190302090505.65542-11-chenyu56@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yu Chen <chenyu56@huawei.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 12:53:04AM +0000, Anson Huang wrote:
-> Removes below resources which were defined during
-> pre-silicon phase and the real silicons do NOT have
-> them, they have never been used, latest system
-> controller firmware also removed them:
+hi,
+On Sat, 2019-03-02 at 17:05 +0800, Yu Chen wrote:
+> This driver handles usb hub power on and typeC port event of HiKey960 board:
+> 1)DP&DM switching between usb hub and typeC port base on typeC port
+> state
+> 2)Control power of usb hub on Hikey960
+> 3)Control vbus of typeC port
 > 
-> 	IMX_SC_R_DC_0_CAPTURE0
-> 	IMX_SC_R_DC_0_CAPTURE1
-> 	IMX_SC_R_DC_0_INTEGRAL0
-> 	IMX_SC_R_DC_0_INTEGRAL1
-> 	IMX_SC_R_DC_0_FRAC1
-> 	IMX_SC_R_DC_1_CAPTURE0
-> 	IMX_SC_R_DC_1_CAPTURE1
-> 	IMX_SC_R_DC_1_INTEGRAL0
-> 	IMX_SC_R_DC_1_INTEGRAL1
-> 	IMX_SC_R_DC_1_FRAC1
-> 	IMX_SC_R_GPU_3_PID0
-> 	IMX_SC_R_M4_0_SIM
-> 	IMX_SC_R_M4_0_WDOG
-> 	IMX_SC_R_M4_1_SIM
-> 	IMX_SC_R_M4_1_WDOG
+> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Cc: Binghui Wang <wangbinghui@hisilicon.com>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> ---
+> v1:
+> * Using gpiod API with the gpios.
+> * Removing registering usb role switch.
+> * Registering usb role switch notifier.
+> v2:
+> * Fix license declaration.
+> * Add configuration of  gpio direction.
+> * Remove some log print.
+> v3:
+> * Remove property of "typec_vbus_enable_val".
+> * Remove gpiod_direction_output and set initial value of gpio by devm_gpiod_get.
+> ---
+> ---
+>  drivers/misc/Kconfig          |   6 ++
+>  drivers/misc/Makefile         |   1 +
+>  drivers/misc/hisi_hikey_usb.c | 167 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 174 insertions(+)
+>  create mode 100644 drivers/misc/hisi_hikey_usb.c
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-
-Applied both, thanks.
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index f417b06e11c5..8d8b717759e2 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -521,6 +521,12 @@ config PVPANIC
+>  	  a paravirtualized device provided by QEMU; it lets a virtual machine
+>  	  (guest) communicate panic events to the host.
+>  
+> +config HISI_HIKEY_USB
+> +	tristate "USB functionality of HiSilicon Hikey Platform"
+> +	depends on OF && GPIOLIB
+> +	help
+> +	  If you say yes here you get support for usb functionality of HiSilicon Hikey Platform.
+> +
+>  source "drivers/misc/c2port/Kconfig"
+>  source "drivers/misc/eeprom/Kconfig"
+>  source "drivers/misc/cb710/Kconfig"
+> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> index e39ccbbc1b3a..dc8892b13a1a 100644
+> --- a/drivers/misc/Makefile
+> +++ b/drivers/misc/Makefile
+> @@ -59,3 +59,4 @@ obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
+>  obj-$(CONFIG_OCXL)		+= ocxl/
+>  obj-y				+= cardreader/
+>  obj-$(CONFIG_PVPANIC)   	+= pvpanic.o
+> +obj-$(CONFIG_HISI_HIKEY_USB)	+= hisi_hikey_usb.o
+> diff --git a/drivers/misc/hisi_hikey_usb.c b/drivers/misc/hisi_hikey_usb.c
+> new file mode 100644
+> index 000000000000..85d6fee468c0
+> --- /dev/null
+> +++ b/drivers/misc/hisi_hikey_usb.c
+> @@ -0,0 +1,167 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Support for usb functionality of Hikey series boards
+> + * based on Hisilicon Kirin Soc.
+> + *
+> + * Copyright (C) 2017-2018 Hilisicon Electronics Co., Ltd.
+> + *		http://www.huawei.com
+> + *
+> + * Authors: Yu Chen <chenyu56@huawei.com>
+> + */
+> +
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/notifier.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/usb/role.h>
+> +
+> +#define DEVICE_DRIVER_NAME "hisi_hikey_usb"
+> +
+> +#define HUB_VBUS_POWER_ON 1
+> +#define HUB_VBUS_POWER_OFF 0
+> +#define USB_SWITCH_TO_HUB 1
+> +#define USB_SWITCH_TO_TYPEC 0
+> +#define TYPEC_VBUS_POWER_ON 1
+> +#define TYPEC_VBUS_POWER_OFF 0
+> +
+> +struct hisi_hikey_usb {
+> +	struct gpio_desc *otg_switch;
+> +	struct gpio_desc *typec_vbus;
+> +	struct gpio_desc *hub_vbus;
+> +
+> +	struct usb_role_switch *role_sw;
+> +	struct notifier_block nb;
+> +};
+> +
+> +static void hub_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb, int value)
+> +{
+> +	gpiod_set_value_cansleep(hisi_hikey_usb->hub_vbus, value);
+> +}
+> +
+> +static void usb_switch_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
+> +		int switch_to)
+> +{
+> +	gpiod_set_value_cansleep(hisi_hikey_usb->otg_switch, switch_to);
+> +}
+> +
+> +static void usb_typec_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
+> +		int value)
+> +{
+> +	gpiod_set_value_cansleep(hisi_hikey_usb->typec_vbus, value);
+> +}
+> +
+> +static int hisi_hikey_role_switch(struct notifier_block *nb,
+> +			unsigned long state, void *data)
+> +{
+> +	struct hisi_hikey_usb *hisi_hikey_usb;
+> +
+> +	hisi_hikey_usb = container_of(nb, struct hisi_hikey_usb, nb);
+> +
+> +	switch (state) {
+> +	case USB_ROLE_NONE:
+> +		usb_typec_power_ctrl(hisi_hikey_usb, TYPEC_VBUS_POWER_OFF);
+> +		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_HUB);
+> +		hub_power_ctrl(hisi_hikey_usb, HUB_VBUS_POWER_ON);
+> +		break;
+> +	case USB_ROLE_HOST:
+> +		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_TYPEC);
+> +		usb_typec_power_ctrl(hisi_hikey_usb, TYPEC_VBUS_POWER_ON);
+> +		break;
+> +	case USB_ROLE_DEVICE:
+> +		hub_power_ctrl(hisi_hikey_usb, HUB_VBUS_POWER_OFF);
+> +		usb_typec_power_ctrl(hisi_hikey_usb, TYPEC_VBUS_POWER_OFF);
+> +		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_TYPEC);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_hikey_usb_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *root = dev->of_node;
+> +	struct hisi_hikey_usb *hisi_hikey_usb;
+> +	int ret;
+> +
+> +	hisi_hikey_usb = devm_kzalloc(dev, sizeof(*hisi_hikey_usb), GFP_KERNEL);
+> +	if (!hisi_hikey_usb)
+> +		return -ENOMEM;
+> +
+> +	hisi_hikey_usb->nb.notifier_call = hisi_hikey_role_switch;
+> +
+> +	hisi_hikey_usb->typec_vbus = devm_gpiod_get(dev, "typec-vbus",
+> +			GPIOD_OUT_LOW);
+> +	if (!hisi_hikey_usb->typec_vbus)
+> +		return -ENOENT;
+> +	else if (IS_ERR(hisi_hikey_usb->typec_vbus))
+> +		return PTR_ERR(hisi_hikey_usb->typec_vbus);
+> +
+> +	hisi_hikey_usb->otg_switch = devm_gpiod_get(dev, "otg-switch",
+> +			GPIOD_OUT_HIGH);
+> +	if (!hisi_hikey_usb->otg_switch)
+> +		return -ENOENT;
+> +	else if (IS_ERR(hisi_hikey_usb->otg_switch))
+> +		return PTR_ERR(hisi_hikey_usb->otg_switch);
+> +
+> +	/* hub-vdd33-en is optional */
+> +	hisi_hikey_usb->hub_vbus = devm_gpiod_get(dev, "hub-vdd33-en",
+> +			GPIOD_OUT_HIGH);
+> +	if (IS_ERR(hisi_hikey_usb->hub_vbus))
+> +		return PTR_ERR(hisi_hikey_usb->hub_vbus);
+> +
+> +	hisi_hikey_usb->role_sw = usb_role_switch_get(dev);
+> +	if (!hisi_hikey_usb->role_sw)
+> +		return -EPROBE_DEFER;
+Here return EPROBE_DEFFER means the related device_connection is
+registered after this probe is called, right?
+if not, use IS_ERR_OR_NULL then return PTR_ERR is enough
+> +	else if (IS_ERR(hisi_hikey_usb->role_sw))
+> +		return PTR_ERR(hisi_hikey_usb->role_sw);
+> +
+> +	ret = usb_role_switch_register_notifier(hisi_hikey_usb->role_sw,
+> +			&hisi_hikey_usb->nb);
+> +	if (ret) {
+> +		usb_role_switch_put(hisi_hikey_usb->role_sw);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, hisi_hikey_usb);
+> +
+> +	return 0;
+> +}
+> +
+> +static int  hisi_hikey_usb_remove(struct platform_device *pdev)
+> +{
+> +	struct hisi_hikey_usb *hisi_hikey_usb = platform_get_drvdata(pdev);
+> +
+> +	usb_role_switch_unregister_notifier(hisi_hikey_usb->role_sw,
+> +			&hisi_hikey_usb->nb);
+> +
+> +	usb_role_switch_put(hisi_hikey_usb->role_sw);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id id_table_hisi_hikey_usb[] = {
+> +	{.compatible = "hisilicon,gpio_hubv1"},
+> +	{.compatible = "hisilicon,hikey960_usb"},
+> +	{}
+> +};
+> +
+> +static struct platform_driver hisi_hikey_usb_driver = {
+> +	.probe = hisi_hikey_usb_probe,
+> +	.remove = hisi_hikey_usb_remove,
+> +	.driver = {
+> +		.name = DEVICE_DRIVER_NAME,
+> +		.of_match_table = id_table_hisi_hikey_usb,
+> +	},
+> +};
+> +
+> +module_platform_driver(hisi_hikey_usb_driver);
+> +
+> +MODULE_AUTHOR("Yu Chen <chenyu56@huawei.com>");
+> +MODULE_DESCRIPTION("Driver Support for USB functionality of Hikey");
+> +MODULE_LICENSE("GPL v2");
