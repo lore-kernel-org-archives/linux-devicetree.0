@@ -1,58 +1,41 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 1/3] pwm: hibvt: Use individual struct per of-data.
-Date: Mon, 4 Mar 2019 11:42:34 +0100
-Message-ID: <20190304104234.GA13010@ulmo>
-References: <20190219095808.12059-1-m.othacehe@gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH] dt-bindings: reset: meson-g12a: Add missing USB2 PHY resets
+Date: Mon,  4 Mar 2019 11:49:16 +0100
+Message-ID: <20190304104916.3937-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190219095808.12059-1-m.othacehe@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Othacehe <m.othacehe@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: p.zabel@pengutronix.de
+Cc: Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The G12A Documentation lacked these 2 reset lines, but they are present and
+used for each USB 2 PHYs.
 
---Q68bSM7Ycu6FN28Q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add them to the dt-bindings for the upcoming USB support.
 
-On Tue, Feb 19, 2019 at 10:58:06AM +0100, Mathieu Othacehe wrote:
-> Split pwm-soc array in one struct per soc and point to the
-> corresponding on in of-data.
->=20
-> Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
-> ---
->  drivers/pwm/pwm-hibvt.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
+Fixes: dbfc54534dfc ("dt-bindings: reset: meson: add g12a bindings")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ include/dt-bindings/reset/amlogic,meson-g12a-reset.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Applied all three patches and, while applying, fixed up the commit
-message and comment for patch 3/3 as pointed out by Uwe.
-
-Thanks,
-Thierry
-
---Q68bSM7Ycu6FN28Q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlx9AQYACgkQ3SOs138+
-s6FXTw//XF51RJpnxjSFdJWD79GQqIIDaW0P0HjH0beD50Iy8BJjRwSN3jkV3bRU
-knxzHzyiZwxHzqwUcbCZ942hsFOFbt1q88Ho4PA2X0tHhrCjsQtT5RV+wEC1vfl4
-lvB7/cuu8b5zd1HleUaymdDd8CNih0AezUPzyucqybW23AlfXwJWt13BJLz4Jhxo
-kEze3yV6bAohB+hGWHVabuLjdOD1B/FTnzRl8iQRPejJoMWxjomPoB4k/+9zEqYk
-LIFyzO4hPBOEsFd6dbnQ9Ckif1GIz2O657HDpUC+vqcUT3XXfA1C/ieldLRcIonE
-SmpMfM5d3/9Jn1uKi1P8gwyJevRqXkSIuFtSsDGGqmCrWUMjCQsf9gGLykAYi3sn
-8sO3apKA8xyGoaQPwXXJwPCuewehvEhZWq94DjNd+5Szyc2n7a8Rv06z/IvW+7ol
-br7DQoXqAA0klVXBJmWqN5baD/ZWM9fHPqIM7poPnbpqWnrPwyAbkQC+QlVbTbDC
-L4yrj7gWQBJPswqPPzXVP5IagKpp+HtZglukz0p5dnIjqOYQvIRE8kDQRtkYVFoi
-FrfR/L/BYLZv741OH8ZJDAkA/sQtF3TNC4F3Rubq3nxsIh4JRdl1G6qvGYzXQT4P
-fNlCbyZX8olS4A7k6nQWtquHd6O6ov9gpxq/cQ06ZURCXPGD0rw=
-=mMfv
------END PGP SIGNATURE-----
-
---Q68bSM7Ycu6FN28Q--
+diff --git a/include/dt-bindings/reset/amlogic,meson-g12a-reset.h b/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
+index 8063e8314eef..6d487c5eba2c 100644
+--- a/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
++++ b/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
+@@ -51,7 +51,10 @@
+ #define RESET_SD_EMMC_A			44
+ #define RESET_SD_EMMC_B			45
+ #define RESET_SD_EMMC_C			46
+-/*					47-60 */
++/*					47	*/
++#define RESET_USB_PHY20			48
++#define RESET_USB_PHY21			49
++/*					50-60	*/
+ #define RESET_AUDIO_CODEC		61
+ /*					62-63	*/
+ /*	RESET2					*/
+-- 
+2.20.1
