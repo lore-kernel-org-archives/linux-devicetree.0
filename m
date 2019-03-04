@@ -1,7 +1,7 @@
 From: Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH 5/6] drivers/misc: xdma: Add debugfs entries
-Date: Mon,  4 Mar 2019 15:36:59 -0600
-Message-ID: <1551735420-16202-6-git-send-email-eajames@linux.ibm.com>
+Subject: [PATCH 6/6] ARM: dts: aspeed: Add XDMA engine
+Date: Mon,  4 Mar 2019 15:37:00 -0600
+Message-ID: <1551735420-16202-7-git-send-email-eajames@linux.ibm.com>
 References: <1551735420-16202-1-git-send-email-eajames@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1551735420-16202-1-git-send-email-eajames@linux.ibm.com>
@@ -10,141 +10,31 @@ To: linux-kernel@vger.kernel.org
 Cc: linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, arnd@arndb.de, gregkh@linuxfoundation.org, jk@ozlabs.org, openbmc@lists.ozlabs.org, Eddie James <eajames@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add debugfs entries for the relevant XDMA engine registers and for
-dumping the AST2500 reserved memory space.
+Add a node for the XDMA engine with all the necessary information.
 
 Signed-off-by: Eddie James <eajames@linux.ibm.com>
 ---
- drivers/misc/aspeed-xdma.c | 96 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 96 insertions(+)
+ arch/arm/boot/dts/aspeed-g5.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/misc/aspeed-xdma.c b/drivers/misc/aspeed-xdma.c
-index 0a1a093..a645a5f 100644
---- a/drivers/misc/aspeed-xdma.c
-+++ b/drivers/misc/aspeed-xdma.c
-@@ -142,6 +142,12 @@ struct aspeed_xdma {
- 	struct list_head vga_blks_free;
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index 85ed9db..a0856c7 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -234,6 +234,14 @@
+ 				reg-io-width = <4>;
+ 			};
  
- 	struct miscdevice misc;
-+	struct dentry *debugfs_dir;
++			xdma: xdma@1e6e7000 {
++				compatible = "aspeed,ast2500-xdma";
++				reg = <0x1e6e7000 0x100>;
++				resets = <&syscon ASPEED_RESET_XDMA>;
++				interrupts = <6>;
++				status = "disabled";
++			};
 +
-+#if IS_ENABLED(CONFIG_DEBUG_FS)
-+	struct debugfs_regset32 regset;
-+	struct debugfs_reg32 regs[XDMA_NUM_DEBUGFS_REGS];
-+#endif /* IS_ENABLED(CONFIG_DEBUG_FS) */
- };
- 
- struct aspeed_xdma_client {
-@@ -634,6 +640,92 @@ static int aspeed_xdma_init_mem(struct aspeed_xdma *ctx)
- 	return 0;
- }
- 
-+#if IS_ENABLED(CONFIG_DEBUG_FS)
-+static ssize_t aspeed_xdma_debugfs_vga_read(struct file *file,
-+					    char __user *buf, size_t len,
-+					    loff_t *offset)
-+{
-+	int rc;
-+	struct inode *inode = file_inode(file);
-+	struct aspeed_xdma *ctx = inode->i_private;
-+	void __iomem *vga = ioremap(ctx->vga_phys, ctx->vga_size);
-+	loff_t offs = *offset;
-+	void *tmp;
-+
-+	if (!vga)
-+		return -ENOMEM;
-+
-+	if (len + offs > ctx->vga_size) {
-+		iounmap(vga);
-+		return -EINVAL;
-+	}
-+
-+	tmp = kzalloc(len, GFP_KERNEL);
-+	if (!tmp) {
-+		iounmap(vga);
-+		return -ENOMEM;
-+	}
-+
-+	memcpy_fromio(tmp, vga + offs, len);
-+
-+	rc = copy_to_user(buf, tmp, len);
-+	if (rc) {
-+		iounmap(vga);
-+		kfree(tmp);
-+		return rc;
-+	}
-+
-+	*offset = offs + len;
-+
-+	kfree(tmp);
-+	iounmap(vga);
-+
-+	return len;
-+}
-+
-+static const struct file_operations aspeed_xdma_debugfs_vga_fops = {
-+	.owner	= THIS_MODULE,
-+	.llseek	= generic_file_llseek,
-+	.read	= aspeed_xdma_debugfs_vga_read,
-+};
-+
-+static void aspeed_xdma_init_debugfs(struct aspeed_xdma *ctx)
-+{
-+	ctx->debugfs_dir = debugfs_create_dir(DEVICE_NAME, NULL);
-+	if (IS_ERR_OR_NULL(ctx->debugfs_dir)) {
-+		dev_warn(ctx->dev, "Failed to create debugfs directory.\n");
-+		return;
-+	}
-+
-+	debugfs_create_file("vga", 0444, ctx->debugfs_dir, ctx,
-+			    &aspeed_xdma_debugfs_vga_fops);
-+
-+	ctx->regs[0].name = "addr";
-+	ctx->regs[0].offset = XDMA_BMC_CMD_QUEUE_ADDR;
-+	ctx->regs[1].name = "endp";
-+	ctx->regs[1].offset = XDMA_BMC_CMD_QUEUE_ENDP;
-+	ctx->regs[2].name = "writep";
-+	ctx->regs[2].offset = XDMA_BMC_CMD_QUEUE_WRITEP;
-+	ctx->regs[3].name = "readp";
-+	ctx->regs[3].offset = XDMA_BMC_CMD_QUEUE_READP;
-+	ctx->regs[4].name = "control";
-+	ctx->regs[4].offset = XDMA_CTRL;
-+	ctx->regs[5].name = "status";
-+	ctx->regs[5].offset = XDMA_STATUS;
-+
-+	ctx->regset.regs = ctx->regs;
-+	ctx->regset.nregs = XDMA_NUM_DEBUGFS_REGS;
-+	ctx->regset.base = ctx->base;
-+
-+	debugfs_create_regset32("regs", 0444, ctx->debugfs_dir, &ctx->regset);
-+}
-+#else
-+static void aspeed_xdma_init_debugfs(struct aspeed_xdma *ctx)
-+{
-+}
-+
-+#endif /* IS_ENABLED(CONFIG_DEBUG_FS) */
-+
- static void aspeed_xdma_free_vga_blks(struct aspeed_xdma *ctx)
- {
- 	struct aspeed_xdma_vga_blk *free;
-@@ -786,6 +878,8 @@ static int aspeed_xdma_probe(struct platform_device *pdev)
- 	device_create_file(dev, &dev_attr_use_bmc);
- 	device_create_file(dev, &dev_attr_use_vga);
- 
-+	aspeed_xdma_init_debugfs(ctx);
-+
- 	return 0;
- }
- 
-@@ -793,6 +887,8 @@ static int aspeed_xdma_remove(struct platform_device *pdev)
- {
- 	struct aspeed_xdma *ctx = platform_get_drvdata(pdev);
- 
-+	debugfs_remove_recursive(ctx->debugfs_dir);
-+
- 	device_remove_file(ctx->dev, &dev_attr_use_vga);
- 	device_remove_file(ctx->dev, &dev_attr_use_bmc);
- 
+ 			adc: adc@1e6e9000 {
+ 				compatible = "aspeed,ast2500-adc";
+ 				reg = <0x1e6e9000 0xb0>;
 -- 
 1.8.3.1
