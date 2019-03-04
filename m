@@ -1,87 +1,92 @@
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: RE: [PATCH 1/3] arm64: dts: imx: Add i.mx8mm dtsi support
-Date: Mon, 4 Mar 2019 09:46:27 +0000
-Message-ID: <VI1PR0402MB35194795B82674A5E4AFEFEC87710@VI1PR0402MB3519.eurprd04.prod.outlook.com>
-References: <1551691021-31505-1-git-send-email-ping.bai@nxp.com>
- <64515f6b211b15f54a66fd7619193c66c2822224.camel@nxp.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v4 2/9] dt-bindings: mtd: ingenic: Change 'BCH' to 'ECC'
+ in documentation
+Date: Mon, 4 Mar 2019 10:50:14 +0100
+Message-ID: <20190304105014.0cceea0a@xps13>
+References: <20190209192305.4434-1-paul@crapouillou.net>
+        <20190209192305.4434-2-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <64515f6b211b15f54a66fd7619193c66c2822224.camel@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Baluta <daniel.baluta@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190209192305.4434-2-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH 1/3] arm64: dts: imx: Add i.mx8mm dtsi support
-> 
-> Hi Ping,
-> 
-> Thanks a lot for the patch. Few comments inline:
-> 
+Hi Paul,
 
-OK, I will fix these V2.
+Paul Cercueil <paul@crapouillou.net> wrote on Sat,  9 Feb 2019 16:22:58
+-0300:
 
-BR
-Jacky Bai
-> On Mon, 2019-03-04 at 09:12 +0000, Jacky Bai wrote:
-> > +
-> > +	soc@0 {
-> > +		compatible = "simple-bus";
-> > +		#address-cells = <2>;
-> > +		#size-cells = <2>;
+> The JZ4740 ECC hardware is not BCH but Reed-Solomon, so it makes more
+> sense to use the more generic ECC term.
 > 
-> This should be  #address-cells = <1>; Look at the patches for 8MQ.
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
 > 
-> >
-> > +			sdma2: dma-controller@302c0000 {
-> > +				compatible = "fsl,imx8mq-sdma",
-> > "fsl,imx7d-sdma";
-> > +				reg = <0x0 0x302c0000 0x0 0x10000>;
-> > +				interrupts = <GIC_SPI 103
-> > IRQ_TYPE_LEVEL_HIGH>;
-> > +				clocks = <&clk IMX8MM_CLK_SDMA2_ROOT>,
-> > +					 <&clk IMX8MM_CLK_SDMA2_ROOT>;
-> > +				clock-names = "ipg", "ahb";
-> > +				#dma-cells = <3>;
-> > +				fsl,sdma-ram-script-name =
-> > "imx/sdma/sdma-imx7d.bin";
-> > +				fsl,ratio-1-1;
+> Changes:
 > 
-> This property is not in the upstream kernel. Please remove it.
+> v3: New patch
 > 
-> > +				status = "okay";
+> v4: No change
 > 
-> No need to add status okay here. It is the default option.
+>  .../devicetree/bindings/mtd/ingenic,jz4780-nand.txt    | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
 > 
-> > +			};
-> > +
-> > +			sdma3: dma-controller@302b0000 {
-> > +				compatible = "fsl,imx8mq-sdma",
-> > "fsl,imx7d-sdma";
-> > +				reg = <0x0 0x302b0000 0x0 0x10000>;
-> > +				interrupts = <GIC_SPI 34
-> > IRQ_TYPE_LEVEL_HIGH>;
-> > +				clocks = <&clk IMX8MM_CLK_SDMA3_ROOT>,
-> > +				 <&clk IMX8MM_CLK_SDMA3_ROOT>;
-> > +				clock-names = "ipg", "ahb";
-> > +				#dma-cells = <3>;
-> > +				fsl,sdma-ram-script-name =
-> > "imx/sdma/sdma-imx7d.bin";
-> > +				fsl,ratio-1-1;
-> > +				status = "okay";
-> 
-> Ditto.
-> 
-> thanks,
-> Daniel.
+> diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> index a5b940f18bf6..5a45cc54f46d 100644
+> --- a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> @@ -1,4 +1,4 @@
+> -* Ingenic JZ4780 NAND/BCH
+> +* Ingenic JZ4780 NAND/ECC
+>  
+>  This file documents the device tree bindings for NAND flash devices on the
+>  JZ4780. NAND devices are connected to the NEMC controller (described in
+> @@ -14,10 +14,10 @@ Required NAND controller device properties:
+>    an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
+>  
+>  Optional NAND controller device properties:
+> -- ingenic,bch-controller: To make use of the hardware BCH controller, this
+> -  property must contain a phandle for the BCH controller node. The required
+> +- ingenic,bch-controller: To make use of the hardware ECC controller, this
+> +  property must contain a phandle for the ECC controller node. The required
+
+I think there is already a 'ecc-engine' property used by MTK and Atmel
+NAND controllers to point to the ECC engine block. Please use this
+property instead of the ingenic specific one.
+
+>    properties for this node are described below. If this is not specified,
+> -  software BCH will be used instead.
+> +  software ECC will be used instead.
+>  
+>  Optional children nodes:
+>  - Individual NAND chips are children of the NAND controller node.
+> @@ -70,17 +70,17 @@ nemc: nemc@13410000 {
+>  	};
+>  };
+>  
+> -The BCH controller is a separate SoC component used for error correction on
+> +The ECC controller is a separate SoC component used for error correction on
+>  NAND devices. The following is a description of the device properties for a
+> -BCH controller.
+> +ECC controller.
+>  
+> -Required BCH properties:
+> +Required ECC properties:
+>  - compatible: Should be one of:
+>    * ingenic,jz4740-ecc
+>    * ingenic,jz4725b-bch
+>    * ingenic,jz4780-bch
+> -- reg: Should specify the BCH controller registers location and length.
+> -- clocks: Clock for the BCH controller.
+> +- reg: Should specify the ECC controller registers location and length.
+> +- clocks: Clock for the ECC controller.
+>  
+>  Example:
+>  
+
+Thanks,
+Miquèl
