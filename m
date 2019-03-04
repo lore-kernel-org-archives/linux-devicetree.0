@@ -1,30 +1,39 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Add on-chip OTP controller node
-Date: Mon, 4 Mar 2019 09:24:18 +0800
-Message-ID: <20190304012416.GT26041@dragon>
-References: <20190226090448.24364-1-ccaione@baylibre.com>
+From: Chen Yu <chenyu56@huawei.com>
+Subject: Re: [PATCH v3 10/12] hikey960: Support usb functionality of Hikey960
+Date: Mon, 4 Mar 2019 09:27:11 +0800
+Message-ID: <7069e483-8dbb-d0ed-dfe6-50e427574b9c@huawei.com>
+References: <20190302090505.65542-1-chenyu56@huawei.com>
+ <20190302090505.65542-11-chenyu56@huawei.com>
+ <CALAqxLVSiWB-HRJWd-aBWNZ-u3JpK4WVR84DSEKRNV1Kzom8pg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190226090448.24364-1-ccaione@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <ccaione@baylibre.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, abel.vesa@nxp.com, s.hauer@pengutronix.de, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CALAqxLVSiWB-HRJWd-aBWNZ-u3JpK4WVR84DSEKRNV1Kzom8pg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Stultz <john.stultz@linaro.org>
+Cc: liuyu712@hisilicon.com, Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, Li Pengcheng <lipengcheng8@huawei.com>, songxiaowei@hisilicon.com, YiPing Xu <xuyiping@hisilicon.com>, xuyoujun4@huawei.com, yudongbin@hisilicon.com, Zang Leigang <zangleigang@hisilicon.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>Binghui Wang <wan>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 09:04:48AM +0000, Carlo Caione wrote:
-> Add the node for the OTP controller.
-> 
-> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
 
-Applied, thanks.
+
+On 2019/3/4 4:17, John Stultz wrote:
+> On Sat, Mar 2, 2019 at 4:05 AM Yu Chen <chenyu56@huawei.com> wrote:
+>> +static int hisi_hikey_usb_probe(struct platform_device *pdev)
+>> +{
+>> +       struct device *dev = &pdev->dev;
+>> +       struct device_node *root = dev->of_node;
+> 
+> Minor nit: root is unused and generates build warnings.
+> 
+OK. Thanks!
+
+> thanks
+> -john
+> 
+> .
+> 
+
+Thanks
+Yu Chen
