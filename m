@@ -1,50 +1,67 @@
-From: Patrick Havelange <patrick.havelange@essensium.com>
-Subject: Re: [PATCH 5/8] iio/counter: add FlexTimer Module Quadrature decoder
- counter driver
-Date: Mon, 4 Mar 2019 13:36:34 +0100
-Message-ID: <CAKKE0ZFs_N+StJ4MQ0peaTy=ADufSVW_tp5zSHsyua2myvMiHQ@mail.gmail.com>
-References: <20190218140321.19166-1-patrick.havelange@essensium.com>
- <20190218140321.19166-5-patrick.havelange@essensium.com> <20190220164154.00547a77@archlinux>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 0/5] drm/bridge: sii902x: HDMI-audio support and some
+ fixes
+Date: Mon, 4 Mar 2019 14:42:29 +0200
+Message-ID: <20190304124229.GL6325@pendragon.ideasonboard.com>
+References: <cover.1551303673.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190220164154.00547a77@archlinux>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Thierry Reding <thierry.reding@gmail.com>, Esben Haabendal <esben@haabendal.dk>, William Breathitt Gray <vilhelm.gray@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1551303673.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: fabrizio.castro@bp.renesas.com, devicetree@vger.kernel.org, Songjun.Wu@atmel.com, tony@atomide.com, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, voice.shen@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 20, 2019 at 5:42 PM Jonathan Cameron <jic23@kernel.org> wrote:
-[skipped]
-> > +
-> > +struct ftm_quaddec {
-> > +     struct platform_device *pdev;
-> > +     void __iomem *ftm_base;
-> > +     bool big_endian;
->
-> I'm curious. What is the benefit of running in big endian mode?
-
-It is based on the same behaviour as in drivers/clocksource/timer-fsl-ftm.c
-The FlexTimer itself on the board I'm testing it with is working in
-big endian mode, so this mode is required.
-
-> > +static ssize_t ftm_write_reset(struct iio_dev *indio_dev,
-> > +                             uintptr_t private,
-> > +                             struct iio_chan_spec const *chan,
-> > +                             const char *buf, size_t len)
-> > +{
-> > +     struct ftm_quaddec *ftm = iio_priv(indio_dev);
-> > +
-> > +     /* Only "counter reset" is supported for now */
-> > +     if (!sysfs_streq(buf, "0")) {
-> > +             dev_warn(&ftm->pdev->dev, "Reset only accepts '0'\n");
-> > +             return -EINVAL;
->
-> Why not just make the channel attribute itself writeable given we are
-> setting it to 0?
-
-Good idea, I'll see if this can be applied in the new subsystem.
-
-[skipped]
-
-All other comments are Acked.
+SGkgSnlyaSwKCk9uIFdlZCwgRmViIDI3LCAyMDE5IGF0IDExOjU0OjE4UE0gKzAyMDAsIEp5cmkg
+U2FyaGEgd3JvdGU6Cj4gQ2hhbmdlcyBzaW5jZSBmaXJzdCB2ZXJzaW9uOgo+IC0gTW92ZWQgcmV2
+aWV3ZWQgcGF0Y2hlcyB0byBmcm9udDoKPiAgIC0gZHJtL2JyaWRnZTogc2lpOTAyeDogYWRkIGlu
+cHV0X2J1c19mbGFncwo+ICAgLSBkcm0vYnJpZGdlOiBzaWk5MDJ4OiBTZXQgb3V0cHV0IG1vZGUg
+dG8gSERNSSBvciBEVkkgYWNjb3JkaW5nIHRvIEVESUQKPiAgIC0gZHJtL2JyaWRnZTogc2lpOTAy
+eDogcGl4ZWwgY2xvY2sgdW5pdCBpcyAxMGtIeiBpbnN0ZWFkIG9mIDFrSHoKPiAtIEFkZGVkIGEg
+bmV3IGZpeDoKPiAgIC0gZHJtL2JyaWRnZTogc2lpOTAyeDogU2VsZWN0IEkyQ19NVVgKPiAtIEFw
+cGxpZWQgc29tZSByZXZpZXcgc3VnZ2VzdGlvbnMgdG8KPiAgIC0gZHJtL2JyaWRnZTogc2lpOTAy
+eDogSW1wbGVtZW50IEhETUkgYXVkaW8gc3VwcG9ydAo+ICAgICAtIHVzZSBjbG9jay1uYW1lcyBw
+cm9wZXJ0eSB0byBuYW1lIG1jbGsKPiAgICAgLSBtb3ZlIGNvbW1lbnQgZGVzY3JpYmluZyBhZGRl
+ZCBtdXRleCB0byBzdHJ1Y3Qgc2lpOTAyeCBhbmQgaW1wcm92ZSBpdAo+ICAgICAtIGNsZWFudXAg
+c2lpOTAyeF9tdXRlKCkKPiAgICAgLSBjbGVhbnVwIHNpaTkwMnhfc2VsZWN0X21jbGtfZGl2KCkK
+PiAgICAgLSBmaXggY29uZGl0aW9uIGZvciBjaGVja2luZyBFTkFCTEVfQklUIGZyb20gaTJzX2Zp
+Zm9fcm91dGluZyBpbgo+ICAgICAgIHNpaTkwMnhfYXVkaW9fY29kZWNfaW5pdCgpCj4gCj4gU3Rp
+bGwgdG8gZG8KPiAKPiAtIEFncmVlIG9uIGkycyB3aXJlcyB0byBIRE1JIGF1ZGlvIGZpZm8gcm91
+dGluZyBpbiBkdHMuIAo+IAo+ICAgVGhlIGN1cnJlbnQgc2NoZW1lIGlzIHF1aXRlIHN0cmFpZ2h0
+IGZvcndhcmQsIGJ1dCB0aGVyZSBpcyBtYXliZQo+ICAgdGhlcmUgaXMgZXZlbiBtb3JlIHN0cmFp
+Z2h0IGZvcndhcmQgc29sdXRpb25zIGxpa2U6Cj4gCj4gICBhdWRpby1maWZvLWVuYWJsZSA9IDwx
+IDEgMSAxPjsKPiAgIGF1ZGlvLWkycy1waW4tdG8tZmlmbyA9IDwwIDEgMiAzPjsKPiAKPiAgIE1l
+YW5pbmcgdGhhdCBhbGwgZmlmb3MgYXJlIGVuYWJsZWQgYW5kIFNEMCBpcyByb3V0ZWQgdG8gZmlm
+byAwLCBTRDEKPiAgIHRvIGZpZm8gMSwgZXRjLiBJIGFtIG5vdCBzdXJlIGlmIHRoZSBjaGFubmVs
+IHN3YXAgZnVuY3Rpb25hbGl0eQo+ICAgc2hvdWxkIHNob3cgaW4gZHRzIGJpbmRpbmcuCgpQbGVh
+c2UgZm9yZ2l2ZSBteSBsYWNrIG9mIGF1ZGlvIGtub3dsZWRnZSwgYnV0IGl0IHRoaXMgYSBzeXN0
+ZW0KZGVzY3JpcHRpb24gdGhhdCBzaG91bGQgYmUgZW5jb2RlZCBpbiBEVCwgb3IgYSBwb2xpY3kg
+dGhhdCBzaG91bGQgYmUKaGFuZGxlZCBwdXJlbHkgaW4gc29mdHdhcmUgKGVpdGhlciBmdWxseSBp
+bnNpZGUgdGhlIGtlcm5lbCBvciB3aXRoIHRoZQpoZWxwIG9mIHVzZXJzcGFjZSkgPwoKPiBKeXJp
+IFNhcmhhICg0KToKPiAgIGRybS9icmlkZ2U6IHNpaTkwMng6IFNldCBvdXRwdXQgbW9kZSB0byBI
+RE1JIG9yIERWSSBhY2NvcmRpbmcgdG8gRURJRAo+ICAgZHJtL2JyaWRnZTogc2lpOTAyeDogcGl4
+ZWwgY2xvY2sgdW5pdCBpcyAxMGtIeiBpbnN0ZWFkIG9mIDFrSHoKPiAgIGRybS9icmlkZ2U6IHNp
+aTkwMng6IFNlbGVjdCBJMkNfTVVYCj4gICBkcm0vYnJpZGdlOiBzaWk5MDJ4OiBJbXBsZW1lbnQg
+SERNSSBhdWRpbyBzdXBwb3J0Cj4gCj4gVG9taSBWYWxrZWluZW4gKDEpOgo+ICAgZHJtL2JyaWRn
+ZTogc2lpOTAyeDogYWRkIGlucHV0X2J1c19mbGFncwo+IAo+ICAuLi4vYmluZGluZ3MvZGlzcGxh
+eS9icmlkZ2Uvc2lpOTAyeC50eHQgICAgICAgfCAgMzYgKy0KPiAgZHJpdmVycy9ncHUvZHJtL2Jy
+aWRnZS9LY29uZmlnICAgICAgICAgICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL2Jy
+aWRnZS9zaWk5MDJ4LmMgICAgICAgICAgICAgIHwgNDcyICsrKysrKysrKysrKysrKysrLQo+ICBp
+bmNsdWRlL2R0LWJpbmRpbmdzL3NvdW5kL3NpaTkwMngtYXVkaW8uaCAgICAgfCAgMTEgKwo+ICA0
+IGZpbGVzIGNoYW5nZWQsIDUxMiBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQo+ICBjcmVh
+dGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kdC1iaW5kaW5ncy9zb3VuZC9zaWk5MDJ4LWF1ZGlvLmgK
+Ci0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydApfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWw=
