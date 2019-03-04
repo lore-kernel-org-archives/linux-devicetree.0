@@ -1,57 +1,52 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: arm: imx: Add the soc binding for imx8mm
-Date: Mon, 4 Mar 2019 09:36:56 -0600
-Message-ID: <CAL_JsqJFNgoAOHCOc0vdnxrwJR_T+iDddbS3nZc_d6grAC0k3w@mail.gmail.com>
-References: <1551691021-31505-1-git-send-email-ping.bai@nxp.com>
- <1551691021-31505-2-git-send-email-ping.bai@nxp.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 3/5] drm/bridge: sii902x: pixel clock unit is 10kHz
+ instead of 1kHz
+Date: Mon, 4 Mar 2019 17:59:39 +0200
+Message-ID: <20190304155939.GP6325@pendragon.ideasonboard.com>
+References: <cover.1551303673.git.jsarha@ti.com>
+ <f39687d0f0a321e3e3dd87d76ad790bd869a9d09.1551303673.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1551691021-31505-2-git-send-email-ping.bai@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jacky Bai <ping.bai@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <f39687d0f0a321e3e3dd87d76ad790bd869a9d09.1551303673.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: fabrizio.castro@bp.renesas.com, devicetree@vger.kernel.org, Songjun.Wu@atmel.com, tony@atomide.com, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, voice.shen@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 3:12 AM Jacky Bai <ping.bai@nxp.com> wrote:
->
-> Add the soc & board binding for i.MX8MM.
->
-> Signed-off-by: Jacky Bai <ping.bai@nxp.com>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> index 7e2cd6a..0620896 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -154,6 +154,12 @@ properties:
->            - const: compulab,cl-som-imx7
->            - const: fsl,imx7d
->
-> +    - description: i.MX8MM based Boards
-> +        items:
-
-The indentation is wrong (and is significant). 'items' should be
-aligned with 'description'. IOW, it should be 6 spaces.
-
-> +          - enum:
-> +              - fsl,imx8mm-evk           # i.MX8MM EVK Board
-> +          - const: fsl,imx8mm
-> +
->        - description: i.MX8QXP based Boards
->          items:
->            - enum:
-> --
-> 1.9.1
->
+SGkgSnlyaSwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gV2VkLCBGZWIgMjcsIDIwMTkg
+YXQgMTE6NTQ6MjFQTSArMDIwMCwgSnlyaSBTYXJoYSB3cm90ZToKPiBUaGUgcGl4ZWwgY2xvY2sg
+dW5pdCBpbiB0aGUgZmlyc3QgdHdvIHJlZ2lzdGVycyAoMHgwMCBhbmQgMHgwMSkgb2YKPiBzaWk5
+MDIyIGlzIDEwa0h6LCBub3QgMWtIeiBhcyBpbiBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZS4gRGl2
+aXNpb24gYnkKPiAxMCBmaXhlcyB0aGUgaXNzdWUuCj4gCj4gU2lnbmVkLW9mZi1ieTogSnlyaSBT
+YXJoYSA8anNhcmhhQHRpLmNvbT4KPiBSZXZpZXdlZC1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpk
+YUBzYW1zdW5nLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMg
+fCA1ICsrKy0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25z
+KC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jIGIv
+ZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMKPiBpbmRleCAwZTIxZmE0MTlkMjcuLjFl
+OTE3Nzc3ZWQ3MiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMngu
+Ywo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jCj4gQEAgLTI0OCwxMCAr
+MjQ4LDExIEBAIHN0YXRpYyB2b2lkIHNpaTkwMnhfYnJpZGdlX21vZGVfc2V0KHN0cnVjdCBkcm1f
+YnJpZGdlICpicmlkZ2UsCj4gIAlzdHJ1Y3QgcmVnbWFwICpyZWdtYXAgPSBzaWk5MDJ4LT5yZWdt
+YXA7Cj4gIAl1OCBidWZbSERNSV9JTkZPRlJBTUVfU0laRShBVkkpXTsKPiAgCXN0cnVjdCBoZG1p
+X2F2aV9pbmZvZnJhbWUgZnJhbWU7Cj4gKwl1MTYgcGl4ZWxfY2xvY2tfMTBrSHogPSBhZGotPmNs
+b2NrIC8gMTA7Cj4gIAlpbnQgcmV0Owo+ICAKPiAtCWJ1ZlswXSA9IGFkai0+Y2xvY2s7Cj4gLQli
+dWZbMV0gPSBhZGotPmNsb2NrID4+IDg7Cj4gKwlidWZbMF0gPSBwaXhlbF9jbG9ja18xMGtIeiAm
+IDB4RkY7CgpOaXRwaWNraW5nLCB3ZSB1c3VhbGx5IHVzZSBsb3dlcmNhc2UgaGV4IHZhbHVlcy4K
+CkFwYXJ0IGZyb20gdGhhdCwKClJldmlld2VkLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50
+LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+Cgo+ICsJYnVmWzFdID0gcGl4ZWxfY2xvY2tfMTBr
+SHogPj4gODsKPiAgCWJ1ZlsyXSA9IGFkai0+dnJlZnJlc2g7Cj4gIAlidWZbM10gPSAweDAwOwo+
+ICAJYnVmWzRdID0gYWRqLT5oZGlzcGxheTsKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFy
+dApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
