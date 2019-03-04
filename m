@@ -1,36 +1,35 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH] ARM: dts: bcm283x: Fix hdmi hpd gpio pull
-Date: Mon, 4 Mar 2019 23:10:05 +0100 (CET)
-Message-ID: <149506090.292981.1551737405671@email.ionos.de>
-References: <20190304214837.9045-1-helen.koike@collabora.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [RFC v4 08/17] kunit: test: add support for test abort
+Date: Mon, 4 Mar 2019 14:28:05 -0800
+Message-ID: <CAFd5g46iqZ6+r9BUzPLSrEmomJQfei=Bb0CH1Tb2ZDr3f1s0jQ@mail.gmail.com>
+References: <20190214213729.21702-1-brendanhiggins@google.com>
+ <20190214213729.21702-9-brendanhiggins@google.com> <155121334527.260864.5324117081460979741@swboyd.mtv.corp.google.com>
+ <CAFd5g46QCisA4PHQXo57-LC6sNdk=OUjBE0O1s4005uBz_Vo6Q@mail.gmail.com> <20190228135403.GD9806@kadam>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190304214837.9045-1-helen.koike@collabora.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Helen Koike <helen.koike@collabora.com>, eric@anholt.net
-Cc: devicetree@vger.kernel.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, lkundrak@v3.sk, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, kernel@collabora.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190228135403.GD9806@kadam>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Rob Herring <robh@kernel.org>, shuah@kernel.org, Greg KH <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>, Michael Ellerman <mpe@ellerman.id.au>, Joe Perches <joe@perches.com>, brakmo@fb.com, Steven Rostedt <rostedt@goodmis.org>, "Bird, Timothy" <Tim.Bird@sony.com>, Kevin Hilman <khilman@baylibre.com>, Julia Lawall <julia.lawall@lip6.fr>, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>, linux-um@lists.infra
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpzaW5jZSB0aGlzIHBhdGNoIGNoYW5nZSBvbmx5IG9uZSBib2FyZCwgdGhlIHN1YmplY3Qg
-Y291bGQgYmUgbW9yZSBzcGVjaWZpYzoKCkFSTTogZHRzOiBiY20yODM1LXJwaS1iLXJldjI6IEZp
-eCBoZG1pIGhwZCBncGlvIHB1bGwKCj4gSGVsZW4gS29pa2UgPGhlbGVuLmtvaWtlQGNvbGxhYm9y
-YS5jb20+IGhhdCBhbSA0LiBNw6RyeiAyMDE5IHVtIDIyOjQ4IGdlc2NocmllYmVuOgo+IAo+IAo+
-IFJhc3BiZXJyeSBwaSBib2FyZCBtb2RlbCBCIHJldmlzb24gMiBoYXZlIHRoZSBob3QgcGx1ZyBk
-ZXRlY3RvciBncGlvCj4gYWN0aXZlIGhpZ2ggKGFuZCBub3QgbG93IGFzIGl0IHdhcyBpbiB0aGUg
-ZHRzKS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBIZWxlbiBLb2lrZSA8aGVsZW4ua29pa2VAY29sbGFi
-b3JhLmNvbT4KPiBSZXZpZXdlZC1ieTogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KCkkg
-dGhpbmsgd2Ugc2hvdWxkIGFkZCBhIEZpeGVzIHRhZyBoZXJlLCBzbyBpdCBjb3VsZCBiZSBiYWNr
-cG9ydGVkLgoKQEVyaWM6IEZlZWwgZnJlZSB0byB0YWtlIFYyCgpUaGFua3MKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Thu, Feb 28, 2019 at 5:55 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>
+> On Thu, Feb 28, 2019 at 01:03:24AM -0800, Brendan Higgins wrote:
+> > you could do:
+> >
+> > if (IS_ERR_OR_NULL(ptr)) {
+> >         KUNIT_FAIL(test, "ptr is an errno or null: %ld", ptr);
+> >         return;
+> > }
+>
+> It's best to not mix error pointers and NULL but when we do mix them,
+> it means that NULL is a special kind of success.  Like we try to load
+> a feature and we get back:
+>
+>     valid pointer <-- success
+>     null          <-- feature is disabled.  not an error.
+>     error pointer <-- feature is broken.  fail.
+
+Thanks for pointing that out! Will fix.
