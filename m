@@ -1,68 +1,64 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [RFC v4 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Mon, 4 Mar 2019 15:01:55 -0800
-Message-ID: <CAFd5g45F3YUsAjse+Vt5hj5CLjaXrRWgr5zCZZ6CJKc0hboP6Q@mail.gmail.com>
-References: <20190214213729.21702-1-brendanhiggins@google.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH] ARM: dts: bcm283x: Fix hdmi hpd gpio pull
+Date: Mon, 04 Mar 2019 15:26:11 -0800
+Message-ID: <875zsyql0s.fsf@anholt.net>
+References: <20190304214837.9045-1-helen.koike@collabora.com> <149506090.292981.1551737405671@email.ionos.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190214213729.21702-1-brendanhiggins@google.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kees Cook <keescook@google.com>, Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org, Rob Herring <robh@kernel.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Frank Rowand <frowand.list@gmail.com>
-Cc: brakmo@fb.com, Petr Mladek <pmladek@suse.com>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, linux-kselftest@vger.kernel.org, linux-nvdimm <linux-nvdimm@lists.01.org>, Richard Weinberger <richard@nod.at>, Knut Omang <knut.omang@oracle.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, "Bird, Timothy" <Tim.Bird@sony.com>, linux-um@lists.infradead.org, Steven Rostedt <rostedt@goodmis.org>, Julia Lawall <julia.lawall@lip6.fr>, Dan Williams <dan.j.williams@intel.com>, kunit-dev@googlegroups.com, Greg KH <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Joe Perches <joe@perches.com>, Kevin Hilman <khi>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <149506090.292981.1551737405671@email.ionos.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>, Helen Koike <helen.koike@collabora.com>
+Cc: devicetree@vger.kernel.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, lkundrak@v3.sk, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, kernel@collabora.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBGZWIgMTQsIDIwMTkgYXQgMTozOCBQTSBCcmVuZGFuIEhpZ2dpbnMKPGJyZW5kYW5o
-aWdnaW5zQGdvb2dsZS5jb20+IHdyb3RlOgo+Cj4gVGhpcyBwYXRjaCBzZXQgcHJvcG9zZXMgS1Vu
-aXQsIGEgbGlnaHR3ZWlnaHQgdW5pdCB0ZXN0aW5nIGFuZCBtb2NraW5nCj4gZnJhbWV3b3JrIGZv
-ciB0aGUgTGludXgga2VybmVsLgo+Cgo8c25pcD4KCj4gIyMgTW9yZSBpbmZvcm1hdGlvbiBvbiBL
-VW5pdAo+Cj4gVGhlcmUgaXMgYSBidW5jaCBvZiBkb2N1bWVudGF0aW9uIG5lYXIgdGhlIGVuZCBv
-ZiB0aGlzIHBhdGNoIHNldCB0aGF0Cj4gZGVzY3JpYmVzIGhvdyB0byB1c2UgS1VuaXQgYW5kIGJl
-c3QgcHJhY3RpY2VzIGZvciB3cml0aW5nIHVuaXQgdGVzdHMuCj4gRm9yIGNvbnZlbmllbmNlIEkg
-YW0gaG9zdGluZyB0aGUgY29tcGlsZWQgZG9jcyBoZXJlOgo+IGh0dHBzOi8vZ29vZ2xlLmdpdGh1
-Yi5pby9rdW5pdC1kb2NzL3RoaXJkX3BhcnR5L2tlcm5lbC9kb2NzLwo+IEFkZGl0aW9uYWxseSBm
-b3IgY29udmVuaWVuY2UsIEkgaGF2ZSBhcHBsaWVkIHRoZXNlIHBhdGNoZXMgdG8gYSBicmFuY2g6
-Cj4gaHR0cHM6Ly9rdW5pdC5nb29nbGVzb3VyY2UuY29tL2xpbnV4Lysva3VuaXQvcmZjLzUuMC1y
-YzUvdjQKPiBUaGUgcmVwbyBtYXkgYmUgY2xvbmVkIHdpdGg6Cj4gZ2l0IGNsb25lIGh0dHBzOi8v
-a3VuaXQuZ29vZ2xlc291cmNlLmNvbS9saW51eAo+IFRoaXMgcGF0Y2hzZXQgaXMgb24gdGhlIGt1
-bml0L3JmYy81LjAtcmM1L3Y0IGJyYW5jaC4KPgo+ICMjIENoYW5nZXMgU2luY2UgTGFzdCBWZXJz
-aW9uCj4KPiAgLSBHb3QgS1VuaXQgd29ya2luZyBvbiAoaHlwb3RoZXRpY2FsbHkpIGFsbCBhcmNo
-aXRlY3R1cmVzICh0ZXN0ZWQgb24KPiAgICB4ODYpLCBhcyBwZXIgUm9iJ3MgKGFuZCBvdGhlcidz
-KSByZXF1ZXN0Cj4gIC0gUHVudGluZyBhbGwgS1VuaXQgZmVhdHVyZXMvcGF0Y2hlcyBkZXBlbmRp
-bmcgb24gVU1MIGZvciBub3cuCj4gIC0gQnJva2Ugb3V0IFVNTCBzcGVjaWZpYyBzdXBwb3J0IGlu
-dG8gYXJjaC91bS8qIGFzIHBlciAiW1JGQyB2MyAwMS8xOV0KPiAgICBrdW5pdDogdGVzdDogYWRk
-IEtVbml0IHRlc3QgcnVubmVyIGNvcmUiLCBhcyByZXF1ZXN0ZWQgYnkgTHVpcy4KPiAgLSBBZGRl
-ZCBzdXBwb3J0IHRvIGt1bml0X3Rvb2wgdG8gYWxsb3cgaXQgdG8gYnVpbGQga2VybmVscyBpbiBl
-eHRlcm5hbAo+ICAgIGRpcmVjdG9yaWVzLCBhcyBzdWdnZXN0ZWQgYnkgS2llcmFuLgo+ICAtIEFk
-ZGVkIGEgVU1MIGRlZmNvbmZpZywgYW5kIGEgY29uZmlnIGZyYWdtZW50IGZvciBLVW5pdCBhcyBz
-dWdnZXN0ZWQKPiAgICBieSBLaWVyYW4gYW5kIEx1aXMuCj4gIC0gQ2xlYW5lZCB1cCwgYW5kIHJl
-Zm9ybWF0dGVkIGEgYnVuY2ggb2Ygc3R1ZmYuCj4KPiAtLQo+IDIuMjEuMC5yYzAuMjU4Lmc4Nzhl
-MmNkMzBlLWdvb2cKPgoKU29tZW9uZSBzdWdnZXN0ZWQgSSBzaG91bGQgc2VuZCB0aGUgbmV4dCBy
-ZXZpc2lvbiBvdXQgYXMgIlBBVENIIgppbnN0ZWFkIG9mICJSRkMiIHNpbmNlIHRoZXJlIHNlZW1z
-IHRvIGJlIGdlbmVyYWwgY29uc2Vuc3VzIGFib3V0CmV2ZXJ5dGhpbmcgYXQgYSBoaWdoIGxldmVs
-LCB3aXRoIGEgY291cGxlIGV4Y2VwdGlvbnMuCgpBdCB0aGlzIHRpbWUgSSBhbSBwbGFubmluZyBv
-biBzZW5kaW5nIHRoZSBuZXh0IHJldmlzaW9uIG91dCBhcyAiW1BBVENICnYxIDAwL05OXSBrdW5p
-dDogaW50cm9kdWNlIEtVbml0LCB0aGUgTGludXgga2VybmVsIHVuaXQgdGVzdGluZwpmcmFtZXdv
-cmsiLiBJbml0aWFsbHkgSSB3YXNuJ3Qgc3VyZSBpZiB0aGUgbmV4dCByZXZpc2lvbiBzaG91bGQg
-YmUKIltQQVRDSCB2MSAuLi5dIiBvciAiW1BBVENIIHY1IC4uLl0iLiBQbGVhc2UgbGV0IG1lIGtu
-b3cgaWYgeW91IGhhdmUgYQpzdHJvbmcgb2JqZWN0aW9uIHRvIHRoZSBmb3JtZXIuCgpJbiB0aGUg
-bmV4dCByZXZpc2lvbiwgSSB3aWxsIGJlIGRyb3BwaW5nIHRoZSBsYXN0IHR3byBvZiB0aHJlZSBw
-YXRjaGVzCmZvciB0aGUgRFQgdW5pdCB0ZXN0cyBhcyB0aGVyZSBkb2Vzbid0IHNlZW0gdG8gYmUg
-ZW5vdWdoIGZlYXR1cmVzCmN1cnJlbnRseSBhdmFpbGFibGUgdG8ganVzdGlmeSB0aGUgaGVhdnkg
-cmVmYWN0b3JpbmcgSSBkaWQ7IGhvd2V2ZXIsIEkKd2lsbCBzdGlsbCBpbmNsdWRlIHRoZSBwYXRj
-aCB0aGF0IGp1c3QgY29udmVydHMgZXZlcnl0aGluZyBvdmVyIHRvCktVbml0IHdpdGhvdXQgcmVz
-dHJ1Y3R1cmluZyB0aGUgdGVzdCBjYXNlczoKaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTkvMi8x
-NC8xMTMzCgpJIHNob3VsZCBoYXZlIHRoZSBuZXh0IHJldmlzaW9uIG91dCBpbiBhIHdlZWsgb3Ig
-c28uCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Stefan Wahren <stefan.wahren@i2se.com> writes:
+
+> Hi,
+>
+> since this patch change only one board, the subject could be more specifi=
+c:
+>
+> ARM: dts: bcm2835-rpi-b-rev2: Fix hdmi hpd gpio pull
+>
+>> Helen Koike <helen.koike@collabora.com> hat am 4. M=C3=A4rz 2019 um 22:4=
+8 geschrieben:
+>>=20
+>>=20
+>> Raspberry pi board model B revison 2 have the hot plug detector gpio
+>> active high (and not low as it was in the dts).
+>>=20
+>> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+>> Reviewed-by: Eric Anholt <eric@anholt.net>
+>
+> I think we should add a Fixes tag here, so it could be backported.
+>
+> @Eric: Feel free to take V2
+
+Added a fixes tag, and I'll submit PRs for this and the PM fixes now.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlx9tBMACgkQtdYpNtH8
+nugVVQ//VwHm0DM9+gyxUG/5cyDfD1lUYD8nTJmzaaImO94WjHWDvGpirZyLT4KL
+JMrYDY7TBG6xnENleuLet096nAhFytK1mu0GeMct287ULaUwGAyAJ0mcjs38dPRZ
+BXTZfy4in8Fto7qu/obPKuOyS8ZSswEliO94C0bB7Gg9tMR++Kv7Z9OBzWSQM0Zg
+coA2q2vcupFnh77Et26I4ghMHqCkdBqaBVHKDIG6feYfmVkD7dvGJHZmk+2dQALH
+rup0C+Q8XCuEQKF89uL/caA3MvrK+8EQFfMzIAyv9s2qYVF2czonWZGnSedz4EFi
+usgEHbO8koI0MmlDW5z8wFoj3AqLf9QFa6QrphO7p2y28KL0Jyf2WVkdcMdhDM5d
+m3zYkiksJG3dw/HeAYgTHiTdtwLPXRo1ynxGxz5tMOrioPVq4OIN7pgcLqYYUrB4
+K2r//Z/s5JlWcyJvF1gXbG1klRsiw06/1ZprUFjLICscNDY+thj/RF3FcKO609ax
+jA1tg7rptcpuZkGWKYN4ffOHiaTbK2Eg3Mc2Yva0DjDpxdmhCH7Sxj9+wRPmL4//
+fMfTZq+ut1H/gdzj168TKvULD+0lyFBG3xm+i5Ui6JCM8KVBC9bJdHB08P4WoCEU
+cmf6GUBmtnuMydBQOBV/aofc6o6n5lpXRs9Z95CQLcRSmpjAX2k=
+=SJQz
+-----END PGP SIGNATURE-----
+--=-=-=--
