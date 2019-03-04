@@ -1,69 +1,80 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v4 2/7] dt-bindings: ti-lmu: Modify dt bindings for the
- LM3697
-Date: Mon, 4 Mar 2019 13:14:04 -0600
-Message-ID: <46624fe6-c767-1872-c8c0-06cbf9a59e05@ti.com>
-References: <20181023170623.31820-1-dmurphy@ti.com>
- <20181023170623.31820-2-dmurphy@ti.com> <20181024090421.GB24997@amd>
- <e8800c2e-8ada-7a0d-c1a6-14ddcbe1576d@ti.com> <20181024145434.GC9327@bogus>
- <beb1a6e1-8120-be94-b1a4-60ea6721765d@ti.com>
- <ade3121a-58ab-c0c3-6605-cf7d6a638da0@gmail.com> <20181026083703.GB19434@amd>
- <bdb73aa2-60d9-3356-f934-091f738e20a0@ti.com> <20190302230725.GA9225@amd>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Fix regulator supply names
+Date: Mon, 4 Mar 2019 20:23:55 +0100
+Message-ID: <20190304192355.GA13754@centauri.lan>
+References: <20181213183200.3204-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190302230725.GA9225@amd>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181213183200.3204-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, lee.jones@linaro.org, tony@atomide.com
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nicolas Dechesne <nicolas.dechesne@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Pavel
-
-On 3/2/19 5:07 PM, Pavel Machek wrote:
-> Hi!
+On Thu, Dec 13, 2018 at 10:32:00AM -0800, Bjorn Andersson wrote:
+> The regulator definition got their supply names cleaned up during
+> upstreaming, so they no longer match the driver defined names. Update
+> the supply names.
 > 
->> I just want to follow up here and let you know that I have not abandoned this.
->> I am trying to rework and fix up the ti lmu binding as asked by Pavel.  Its proving
->> to be a bit of a challenge based on looking forward to what will be the implementation.
->>
->> I also did go offline and speak with Tony.  I have a Droid 4 so I can test all of this on
->> production hardware as well.
->>
->> Updated patchset will take some time to get out.
+> Also fill out the missing voltage of SMPS 5.
 > 
-> Is there any progress here?
+> Fixes: 0b363f5b871c ("arm64: dts: qcom: qcs404: Add PMS405 RPM regulators")
+> Reported-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 28 ++++++++++++------------
+>  1 file changed, 14 insertions(+), 14 deletions(-)
 > 
-> This is needed for display on Droid 4, so it is somehow
-> important... and Milo Kim's patches are pretty reasonable.
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> index a39924efebe4..d6cc3a96530e 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> @@ -37,18 +37,18 @@
+>  	pms405-regulators {
+>  		compatible = "qcom,rpm-pms405-regulators";
+>  
+> -		vdd-s1-supply = <&vph_pwr>;
+> -		vdd-s2-supply = <&vph_pwr>;
+> -		vdd-s3-supply = <&vph_pwr>;
+> -		vdd-s4-supply = <&vph_pwr>;
+> -		vdd-s5-supply = <&vph_pwr>;
+> -		vdd-l1-l2-supply = <&vreg_s5_1p35>;
+> -		vdd-l3-l8-supply = <&vreg_s5_1p35>;
+> -		vdd-l4-supply = <&vreg_s5_1p35>;
+> -		vdd-l5-l6-supply = <&vreg_s4_1p8>;
+> -		vdd-l7-supply = <&vph_pwr>;
+> -		vdd-l9-supply = <&vreg_s5_1p35>;
+> -		vdd-l10-l11-l12-l13-supply = <&vph_pwr>;
+> +		vdd_s1-supply = <&vph_pwr>;
+> +		vdd_s2-supply = <&vph_pwr>;
+> +		vdd_s3-supply = <&vph_pwr>;
+> +		vdd_s4-supply = <&vph_pwr>;
+> +		vdd_s5-supply = <&vph_pwr>;
+> +		vdd_l1_l2-supply = <&vreg_s5_1p35>;
+> +		vdd_l3_l8-supply = <&vreg_s5_1p35>;
+> +		vdd_l4-supply = <&vreg_s5_1p35>;
+> +		vdd_l5_l6-supply = <&vreg_s4_1p8>;
+> +		vdd_l7-supply = <&vph_pwr>;
+> +		vdd_l9-supply = <&vreg_s5_1p35>;
+> +		vdd_l10_l11_l12_l13-supply = <&vph_pwr>;
+>  
+>  		vreg_s4_1p8: s4 {
+>  			regulator-min-microvolt = <1728000>;
+> @@ -56,8 +56,8 @@
+>  		};
+>  
+>  		vreg_s5_1p35: s5 {
+> -			regulator-min-microvolt = <>;
+> -			regulator-max-microvolt = <>;
+> +			regulator-min-microvolt = <1352000>;
+> +			regulator-max-microvolt = <1352000>;
+>  		};
+>  
+>  		vreg_l1_1p3: l1 {
+> -- 
+> 2.18.0
 > 
-> I still believe best way forward is to merge them, and let you submit
-> any improvements on top of them...
-> 
 
-I had looked at this a while back.  And I will pick this up again as it seems that the
-multi color framework will take longer than expected.
-
-For the Droid 4 it uses the lm3552 backlight driver, at least that is what is in the DT.
-
-There is a lm3530 backlight driver that is already available and could be upgraded to DT support and have the lm3552
-added to it but the issues are the 3532 has 3 outputs and the 3530 has 1 and the register map is a bit different.
-
-There are register differences between the two devices but the driver already has ramp support, PWM support (exponential/linear),
-ALS support and manual support already available along with user space configuration.
-
-I was working on creating a new lm3532 driver based off the lm3530 driver or adapting the 3530 to include the 3532 and
-making the driver generic to this family.
-
-Dan
-
-> Best regards,
-> 									Pavel
-> 
-
-
--- 
-------------------
-Dan Murphy
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
