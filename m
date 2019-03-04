@@ -1,688 +1,435 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [PATCH v4 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Mon, 4 Mar 2019 09:23:07 +0000
-Message-ID: <BYAPR07MB470940658CEB8885172EF896DD710@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1550173514-23573-1-git-send-email-pawell@cadence.com>
- <1550173514-23573-6-git-send-email-pawell@cadence.com>
- <20190219132403.GC20719@kroah.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v2 5/5] drm/bridge: sii902x: Implement HDMI audio support
+Date: Mon, 4 Mar 2019 10:26:33 +0100
+Message-ID: <b84244ca-b274-435b-6cde-17cb2da2f9ba@samsung.com>
+References: <cover.1551303673.git.jsarha@ti.com>
+ <CGME20190227215458epcas4p404134954b94f273045270a8e6e48d333@epcas4p4.samsung.com>
+ <21632d24b955ef7d9c29e05426224c65507202a9.1551303673.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190219132403.GC20719@kroah.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <21632d24b955ef7d9c29e05426224c65507202a9.1551303673.git.jsarha@ti.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Rahul Kumar <kurahul@cadence.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: fabrizio.castro@bp.renesas.com, Songjun.Wu@atmel.com, tony@atomide.com, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, voice.shen@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,=20
-
->
->On Thu, Feb 14, 2019 at 07:45:13PM +0000, Pawel Laszczak wrote:
->> This patch introduce new Cadence USBSS DRD driver to linux kernel.
->
->Nit, "Linux" :)
->
->> The Cadence USBSS DRD Driver is a highly configurable IP Core whichi
->
->"whichi"?
->
->> can be instantiated as Dual-Role Device (DRD), Peripheral Only and
->> Host Only (XHCI)configurations.
->>
->> The current driver has been validated with FPGA burned. We have support
->
->I can not parse that sentance, sorry.  what does "with FPGA burned"
->mean?
-
-I met with such sentence, and It's means that implementation (IP Core)=20
-Is loaded to FPGA. Maybe it was used from some historical reason,=20
-and nowadays it is not correct.=20
-
-I will replace it with ".. which is used on FPGA prototyping."
-
->
->> for PCIe bus, which is used on FPGA prototyping.
->>
->> The host side of USBSS-DRD controller is compliance with XHCI
->
->"compliant"
->
->> specification, so it works with standard XHCI linux driver.
->
->"Linux"
->
->>
->> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
->> ---
->>  drivers/usb/Kconfig                |    2 +
->>  drivers/usb/Makefile               |    2 +
->>  drivers/usb/cdns3/Kconfig          |   44 +
->>  drivers/usb/cdns3/Makefile         |   14 +
->>  drivers/usb/cdns3/cdns3-pci-wrap.c |  155 +++
->>  drivers/usb/cdns3/core.c           |  403 ++++++
->>  drivers/usb/cdns3/core.h           |  116 ++
->>  drivers/usb/cdns3/debug.h          |  168 +++
->>  drivers/usb/cdns3/debugfs.c        |  164 +++
->>  drivers/usb/cdns3/drd.c            |  365 +++++
->>  drivers/usb/cdns3/drd.h            |  162 +++
->>  drivers/usb/cdns3/ep0.c            |  907 +++++++++++++
->>  drivers/usb/cdns3/gadget-export.h  |   28 +
->>  drivers/usb/cdns3/gadget.c         | 2003 ++++++++++++++++++++++++++++
->>  drivers/usb/cdns3/gadget.h         | 1207 +++++++++++++++++
->>  drivers/usb/cdns3/host-export.h    |   28 +
->>  drivers/usb/cdns3/host.c           |   72 +
->>  drivers/usb/cdns3/trace.c          |   23 +
->>  drivers/usb/cdns3/trace.h          |  404 ++++++
->>  19 files changed, 6267 insertions(+)
->>  create mode 100644 drivers/usb/cdns3/Kconfig
->>  create mode 100644 drivers/usb/cdns3/Makefile
->>  create mode 100644 drivers/usb/cdns3/cdns3-pci-wrap.c
->>  create mode 100644 drivers/usb/cdns3/core.c
->>  create mode 100644 drivers/usb/cdns3/core.h
->>  create mode 100644 drivers/usb/cdns3/debug.h
->>  create mode 100644 drivers/usb/cdns3/debugfs.c
->>  create mode 100644 drivers/usb/cdns3/drd.c
->>  create mode 100644 drivers/usb/cdns3/drd.h
->>  create mode 100644 drivers/usb/cdns3/ep0.c
->>  create mode 100644 drivers/usb/cdns3/gadget-export.h
->>  create mode 100644 drivers/usb/cdns3/gadget.c
->>  create mode 100644 drivers/usb/cdns3/gadget.h
->>  create mode 100644 drivers/usb/cdns3/host-export.h
->>  create mode 100644 drivers/usb/cdns3/host.c
->>  create mode 100644 drivers/usb/cdns3/trace.c
->>  create mode 100644 drivers/usb/cdns3/trace.h
->>
->> diff --git a/drivers/usb/Kconfig b/drivers/usb/Kconfig
->> index 987fc5ba6321..5f9334019d04 100644
->> --- a/drivers/usb/Kconfig
->> +++ b/drivers/usb/Kconfig
->> @@ -112,6 +112,8 @@ source "drivers/usb/usbip/Kconfig"
->>
->>  endif
->>
->> +source "drivers/usb/cdns3/Kconfig"
->> +
->>  source "drivers/usb/mtu3/Kconfig"
->>
->>  source "drivers/usb/musb/Kconfig"
->> diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
->> index 7d1b8c82b208..ab125b966cac 100644
->> --- a/drivers/usb/Makefile
->> +++ b/drivers/usb/Makefile
->> @@ -12,6 +12,8 @@ obj-$(CONFIG_USB_DWC3)		+=3D dwc3/
->>  obj-$(CONFIG_USB_DWC2)		+=3D dwc2/
->>  obj-$(CONFIG_USB_ISP1760)	+=3D isp1760/
->>
->> +obj-$(CONFIG_USB_CDNS3)		+=3D cdns3/
->> +
->>  obj-$(CONFIG_USB_MON)		+=3D mon/
->>  obj-$(CONFIG_USB_MTU3)		+=3D mtu3/
->>
->> diff --git a/drivers/usb/cdns3/Kconfig b/drivers/usb/cdns3/Kconfig
->> new file mode 100644
->> index 000000000000..27cb3d8dbe3d
->> --- /dev/null
->> +++ b/drivers/usb/cdns3/Kconfig
->> @@ -0,0 +1,44 @@
->> +config USB_CDNS3
->> +	tristate "Cadence USB3 Dual-Role Controller"
->> +	depends on USB_SUPPORT && (USB || USB_GADGET) && HAS_DMA
->> +	help
->> +	  Say Y here if your system has a cadence USB3 dual-role controller.
->> +	  It supports: dual-role switch, Host-only, and Peripheral-only.
->> +
->> +	  If you choose to build this driver is a dynamically linked
->> +	  as module, the module will be called cdns3.ko.
->> +
->> +if USB_CDNS3
->> +
->> +config USB_CDNS3_GADGET
->> +        bool "Cadence USB3 device controller"
->> +        depends on USB_GADGET
->> +        help
->> +          Say Y here to enable device controller functionality of the
->> +          cadence USBSS-DEV driver.
->> +
->> +          This controller supports FF, HS and SS mode. It doesn't suppo=
-rt
->> +          LS and SSP mode.
->> +
->> +config USB_CDNS3_HOST
->> +        bool "Cadence USB3 host controller"
->> +        depends on USB_XHCI_HCD
->> +        help
->> +          Say Y here to enable host controller functionality of the
->> +          cadence driver.
->> +
->> +          Host controller is compliant with XHCI so it will use
->> +          standard XHCI driver.
->> +
->> +config USB_CDNS3_PCI_WRAP
->> +	tristate "Cadence USB3 support on PCIe-based platforms"
->> +	depends on USB_PCI && ACPI
->> +	default USB_CDNS3
->> +	help
->> +	  If you're using the USBSS Core IP with a PCIe, please say
->> +	  'Y' or 'M' here.
->> +
->> +	  If you choose to build this driver as module it will
->> +	  be dynamically linked and module will be called cdns3-pci.ko
->
->You use tabs here, but not tabs in the other options.  Please be
->uniform.
->
->
->> +
->> +endif
->> diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
->> new file mode 100644
->> index 000000000000..8f9438593375
->> --- /dev/null
->> +++ b/drivers/usb/cdns3/Makefile
->> @@ -0,0 +1,14 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +# define_trace.h needs to know how to find our header
->> +CFLAGS_trace.o				:=3D -I$(src)
->> +
->> +cdns3-y					:=3D core.o drd.o trace.o
->> +
->> +obj-$(CONFIG_USB_CDNS3)			+=3D cdns3.o
->> +ifneq ($(CONFIG_DEBUG_FS),)
->> +	cdns3-y				+=3D debugfs.o
->> +endif
->> +
->> +cdns3-$(CONFIG_USB_CDNS3_GADGET)	+=3D gadget.o ep0.o
->> +cdns3-$(CONFIG_USB_CDNS3_HOST)		+=3D host.o
->> +obj-$(CONFIG_USB_CDNS3_PCI_WRAP)	+=3D cdns3-pci-wrap.o
->> diff --git a/drivers/usb/cdns3/cdns3-pci-wrap.c b/drivers/usb/cdns3/cdns=
-3-pci-wrap.c
->> new file mode 100644
->> index 000000000000..d0b2d3d9b983
->> --- /dev/null
->> +++ b/drivers/usb/cdns3/cdns3-pci-wrap.c
->> @@ -0,0 +1,155 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Cadence USBSS PCI Glue driver
->> + *
->> + * Copyright (C) 2018 Cadence.
->> + *
->> + * Author: Pawel Laszczak <pawell@cadence.com>
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/pci.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/dma-mapping.h>
->> +#include <linux/slab.h>
->> +
->> +struct cdns3_wrap {
->> +	struct platform_device *plat_dev;
->> +	struct pci_dev *hg_dev;
->> +	struct resource dev_res[4];
->> +};
->> +
->> +struct cdns3_wrap wrap;
->> +
->> +#define RES_IRQ_ID		0
->> +#define RES_HOST_ID		1
->> +#define RES_DEV_ID		2
->> +#define RES_DRD_ID		3
->> +
->> +#define PCI_BAR_HOST		0
->> +#define PCI_BAR_DEV		2
->> +#define PCI_BAR_OTG		4
->> +
->> +#define PCI_DEV_FN_HOST_DEVICE	0
->> +#define PCI_DEV_FN_OTG		1
->> +
->> +#define PCI_DRIVER_NAME		"cdns3-pci-usbss"
->> +#define PLAT_DRIVER_NAME	"cdns-usb3"
->> +
->> +#define CDNS_VENDOR_ID 0x17cd
->
->PCI_VENDOR_ID_CDNS is already in pci_ids.h, no need to define it again
->here.
->
->> +#define CDNS_DEVICE_ID 0x0100
->
->No tabs?
-
-Corrected.=20
-
->
->> +
->> +/**
->
->kerneldoc is great, but for static functions?  Who is pulling these into
->documentation?
->
->If not, then no need for that format at all.
-
-I'm not sure I understood you correct.=20
-
-Should I remove all static function description, or should change the
-formatting style to avoid pulling description into documentation ?
-
-For example in MTU3 driver witch is quite new I found:
-
-"
-/*
- * Set or clear the halt bit of an EP.
- * A halted EP won't TX/RX any data but will queue requests.
- */
-static int mtu3_gadget_ep_set_halt(struct usb_ep *ep, int value)=20
-"
-Will it be correct if I change comment formatting from:
-/**=20
-  *
- */
-
-Into=20
-  /*
-   *
-   */
-
-?
-
-I ask because in this function the description is unnecessary, but in some =
-other
-static functions the comments could be helpful in understanding what functi=
-on does.=20
-
-Currently I have kerneldoc for many static function.=20
-
->> + * cdns3_pci_probe - Probe function for Cadence USB wrapper driver
->> + * @pdev: platform device object
->> + * @id: pci device id
->> + *
->> + * Returns 0 on success otherwise negative errno
->> + */
->> +static int cdns3_pci_probe(struct pci_dev *pdev,
->> +			   const struct pci_device_id *id)
->> +{
->> +	struct platform_device_info plat_info;
->> +	struct cdns3_wrap *wrap;
->> +	struct resource *res;
->> +	int err;
->> +
->> +	/*
->> +	 * for GADGET/HOST PCI (devfn) function number is 0,
->> +	 * for OTG PCI (devfn) function number is 1
->> +	 */
->> +	if (!id || pdev->devfn !=3D PCI_DEV_FN_HOST_DEVICE)
->> +		return -EINVAL;
->> +
->> +	err =3D pcim_enable_device(pdev);
->> +	if (err) {
->> +		dev_err(&pdev->dev, "Enabling PCI device has failed %d\n", err);
->> +		return err;
->> +	}
->> +
->> +	pci_set_master(pdev);
->> +	wrap =3D devm_kzalloc(&pdev->dev, sizeof(*wrap), GFP_KERNEL);
->> +	if (!wrap) {
->> +		dev_err(&pdev->dev, "Failed to allocate memory\n");
->
->No need to print an error again after kzalloc already printed an error.
-
-Ok, I didn't know.=20
-
->
->> +		return -ENOMEM;
->
->Did you forget to disable the pci device?
-
-Yes, I really forgot.=20
-
->> +	}
->> +
->> +	/* function 0: host(BAR_0) + device(BAR_1) + otg(BAR_2)). */
->> +	memset(wrap->dev_res, 0x00,
->> +	       sizeof(struct resource) * ARRAY_SIZE(wrap->dev_res));
->> +	dev_dbg(&pdev->dev, "Initialize Device resources\n");
->> +	res =3D wrap->dev_res;
->> +
->> +	res[RES_DEV_ID].start =3D pci_resource_start(pdev, PCI_BAR_DEV);
->> +	res[RES_DEV_ID].end =3D   pci_resource_end(pdev, PCI_BAR_DEV);
->> +	res[RES_DEV_ID].name =3D "dev";
->> +	res[RES_DEV_ID].flags =3D IORESOURCE_MEM;
->> +	dev_dbg(&pdev->dev, "USBSS-DEV physical base addr: %pa\n",
->> +		&res[RES_DEV_ID].start);
->> +
->> +	res[RES_HOST_ID].start =3D pci_resource_start(pdev, PCI_BAR_HOST);
->> +	res[RES_HOST_ID].end =3D pci_resource_end(pdev, PCI_BAR_HOST);
->> +	res[RES_HOST_ID].name =3D "xhci";
->> +	res[RES_HOST_ID].flags =3D IORESOURCE_MEM;
->> +	dev_dbg(&pdev->dev, "USBSS-XHCI physical base addr: %pa\n",
->> +		&res[RES_HOST_ID].start);
->> +
->> +	res[RES_DRD_ID].start =3D pci_resource_start(pdev, PCI_BAR_OTG);
->> +	res[RES_DRD_ID].end =3D   pci_resource_end(pdev, PCI_BAR_OTG);
->> +	res[RES_DRD_ID].name =3D "otg";
->> +	res[RES_DRD_ID].flags =3D IORESOURCE_MEM;
->> +	dev_dbg(&pdev->dev, "USBSS-DRD physical base addr: %pa\n",
->> +		&res[RES_DRD_ID].start);
->> +
->> +	/* Interrupt common for both device and XHCI */
->> +	wrap->dev_res[RES_IRQ_ID].start =3D pdev->irq;
->> +	wrap->dev_res[RES_IRQ_ID].name =3D "cdns3-irq";
->> +	wrap->dev_res[RES_IRQ_ID].flags =3D IORESOURCE_IRQ;
->> +
->> +	/* set up platform device info */
->> +	memset(&plat_info, 0, sizeof(plat_info));
->> +	plat_info.parent =3D &pdev->dev;
->> +	plat_info.fwnode =3D pdev->dev.fwnode;
->> +	plat_info.name =3D PLAT_DRIVER_NAME;
->> +	plat_info.id =3D pdev->devfn;
->> +	plat_info.res =3D wrap->dev_res;
->> +	plat_info.num_res =3D ARRAY_SIZE(wrap->dev_res);
->> +	plat_info.dma_mask =3D pdev->dma_mask;
->> +
->> +	/* register platform device */
->> +	wrap->plat_dev =3D platform_device_register_full(&plat_info);
->> +	if (IS_ERR(wrap->plat_dev))
->> +		return PTR_ERR(wrap->plat_dev);
->
->No disabling of the device?
->
->Anyway, why are you creating a platform device when you have a real PCI
->device?  That seems odd, and an abuse of the platform code.  What's
->wrong with your real PCI device here?
-
-I use PCI platform, but the most our customers use this driver as platform=
-=20
-driver.=20
-The second reason was that we use  different PCI configuration, and some of=
- them=20
-makes it impossible to use DRD driver as single driver.  For example PCI fu=
-nction
-0 contains Device/Host register, and PCI function 1 contains OTG register.=
-=20
-
->
->
->> +
->> +	pci_set_drvdata(pdev, wrap);
->> +
->> +	return err;
->> +}
->> +
->> +void cdns3_pci_remove(struct pci_dev *pdev)
->> +{
->> +	struct cdns3_wrap *wrap =3D (struct cdns3_wrap *)pci_get_drvdata(pdev)=
-;
->> +
->> +	platform_device_unregister(wrap->plat_dev);
->> +}
->> +
->> +static const struct pci_device_id cdns3_pci_ids[] =3D {
->> +	{ PCI_DEVICE(CDNS_VENDOR_ID, CDNS_DEVICE_ID), },
->> +	{ 0, }
->> +};
->> +
->> +static struct pci_driver cdns3_pci_driver =3D {
->> +	.name =3D PCI_DRIVER_NAME,
->> +	.id_table =3D cdns3_pci_ids,
->> +	.probe =3D cdns3_pci_probe,
->> +	.remove =3D cdns3_pci_remove,
->> +};
->> +
->> +module_pci_driver(cdns3_pci_driver);
->> +MODULE_DEVICE_TABLE(pci, cdns3_pci_ids);
->> +
->> +MODULE_AUTHOR("Pawel Laszczak <pawell@cadence.com>");
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_DESCRIPTION("Cadence USBSS PCI wrapperr");
->> +
->> diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
->> new file mode 100644
->> index 000000000000..aa2f63241dab
->> --- /dev/null
->> +++ b/drivers/usb/cdns3/core.c
->> @@ -0,0 +1,403 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Cadence USBSS DRD Driver.
->> + *
->> + * Copyright (C) 2018 Cadence.
->> + * Copyright (C) 2017-2018 NXP
->> + *
->> + * Author: Peter Chen <peter.chen@nxp.com>
->> + *         Pawel Laszczak <pawell@cadence.com>
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/kernel.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/io.h>
->> +#include <linux/pm_runtime.h>
->> +
->> +#include "gadget.h"
->> +#include "core.h"
->> +#include "host-export.h"
->> +#include "gadget-export.h"
->> +#include "drd.h"
->> +#include "debug.h"
->> +
->> +static inline
->> +struct cdns3_role_driver *cdns3_get_current_role_driver(struct cdns3 *c=
-dns)
->> +{
->> +	WARN_ON(cdns->role >=3D CDNS3_ROLE_END || !cdns->roles[cdns->role]);
->
->What is someone supposed to do with this?
->
-
-Generally such concept was created by Peter Chan. He has different platform=
-.=20
-Some time ago he wrote:=20
-"The current version of this IP has some issues to detect vbus status corre=
-ctly,
-we have to force vbus status accordingly, so we need a status to indicate
-vbus disconnection, and add some code to let controller know vbus
-removal, in that case, the controller's state machine can be correct.
-So, we increase one role 'CDNS3_ROLE_END' to for this purpose.
-
-CDNS3_ROLE_GADGET: gadget mode and VBUS on
-CDNS3_ROLE_HOST: host mode and VBUS on
-CDNS3_ROLE_END: VBUS off, eg either host or device cable on the port.
-
-So, we may start role from CDNS3_ROLE_END at probe when nothing is connecte=
-d,
-and need to set role as CDNS3_ROLE_END at ->stop for further handling at
-role switch routine. "
-
-So It's looks like this third state is necessary for his platform and role =
-=3D=3D CDNS3_ROLE_END
-is possible but role > CDNS3_ROLE_END is not possible.  I know that I could=
- remove this=20
-from code, but I want to be compatible with Peter Chan platform as much as =
-possible.=20
-As far as I know, his platform specific code will be upstreaming in the fut=
-ure.=20
-
->> +	return cdns->roles[cdns->role];
->> +}
->> +
->> +static int cdns3_role_start(struct cdns3 *cdns, enum cdns3_roles role)
->> +{
->> +	int ret;
->> +
->> +	if (WARN_ON(role >=3D CDNS3_ROLE_END))
->
->Same here, how can this happen?  What can I do if it does?
-
->
->> +		return 0;
->> +
->> +	if (!cdns->roles[role])
->> +		return -ENXIO;
->> +
->> +	if (cdns->roles[role]->state =3D=3D CDNS3_ROLE_STATE_ACTIVE)
->> +		return 0;
->> +
->> +	mutex_lock(&cdns->mutex);
->> +	cdns->role =3D role;
->> +	ret =3D cdns->roles[role]->start(cdns);
->> +	if (!ret)
->> +		cdns->roles[role]->state =3D CDNS3_ROLE_STATE_ACTIVE;
->> +	mutex_unlock(&cdns->mutex);
->> +	return ret;
->> +}
->> +
->> +void cdns3_role_stop(struct cdns3 *cdns)
->> +{
->> +	enum cdns3_roles role =3D cdns->role;
->> +
->> +	if (role >=3D CDNS3_ROLE_END) {
->> +		WARN_ON(role > CDNS3_ROLE_END);
->
->Again, why?
->
->> +		return;
->> +	}
->> +
->> +	if (cdns->roles[role]->state =3D=3D CDNS3_ROLE_STATE_INACTIVE)
->> +		return;
->> +
->> +	mutex_lock(&cdns->mutex);
->> +	cdns->roles[role]->stop(cdns);
->> +	cdns->roles[role]->state =3D CDNS3_ROLE_STATE_INACTIVE;
->> +	mutex_unlock(&cdns->mutex);
->> +}
->> +
->> +/*
->> + * cdns->role gets from cdns3_get_initial_role, and this API tells role=
- at the
->> + * runtime.
->> + * If both roles are supported, the role is selected based on vbus/id.
->> + * It could be read from OTG register or external connector.
->> + * If only single role is supported, only one role structure
->> + * is allocated, cdns->roles[CDNS3_ROLE_HOST] or cdns->roles[CDNS3_ROLE=
-_GADGET].
->> + */
->> +static enum cdns3_roles cdns3_get_initial_role(struct cdns3 *cdns)
->> +{
->> +	if (cdns->roles[CDNS3_ROLE_HOST] && cdns->roles[CDNS3_ROLE_GADGET]) {
->> +		if (cdns3_is_host(cdns))
->> +			return CDNS3_ROLE_HOST;
->> +		if (cdns3_is_device(cdns))
->> +			return CDNS3_ROLE_GADGET;
->> +	}
->> +	return cdns->roles[CDNS3_ROLE_HOST]
->> +		? CDNS3_ROLE_HOST
->> +		: CDNS3_ROLE_GADGET;
->> +}
->> +
->> +static void cdns3_exit_roles(struct cdns3 *cdns)
->> +{
->> +	cdns3_role_stop(cdns);
->> +	cdns3_drd_exit(cdns);
->> +}
->> +
->> +/**
->> + * cdns3_core_init_role - initialize role of operation
->> + * @cdns: Pointer to cdns3 structure
->> + *
->> + * Returns 0 on success otherwise negative errno
->> + */
->> +static int cdns3_core_init_role(struct cdns3 *cdns)
->> +{
->> +	struct device *dev =3D cdns->dev;
->> +	enum usb_dr_mode best_dr_mode;
->> +	enum usb_dr_mode dr_mode;
->> +	int ret =3D 0;
->> +
->> +	dr_mode =3D usb_get_dr_mode(dev);
->> +	cdns->role =3D CDNS3_ROLE_END;
->> +
->> +	/*
->> +	 * If driver can't read mode by means of usb_get_dr_mdoe function then
->> +	 * chooses mode according with Kernel configuration. This setting
->> +	 * can be restricted later depending on strap pin configuration.
->> +	 */
->> +	if (dr_mode =3D=3D USB_DR_MODE_UNKNOWN) {
->> +		if (IS_ENABLED(CONFIG_USB_CDNS3_HOST) &&
->> +		    IS_ENABLED(CONFIG_USB_CDNS3_GADGET))
->> +			dr_mode =3D USB_DR_MODE_OTG;
->> +		else if (IS_ENABLED(CONFIG_USB_CDNS3_HOST))
->> +			dr_mode =3D USB_DR_MODE_HOST;
->> +		else if (IS_ENABLED(CONFIG_USB_CDNS3_GADGET))
->> +			dr_mode =3D USB_DR_MODE_PERIPHERAL;
->> +	}
->> +
->> +	best_dr_mode =3D USB_DR_MODE_OTG;
->> +
->> +	if (dr_mode =3D=3D USB_DR_MODE_OTG) {
->> +		best_dr_mode =3D cdns->dr_mode;
->> +	} else if (cdns->dr_mode =3D=3D USB_DR_MODE_OTG) {
->> +		best_dr_mode =3D dr_mode;
->> +	} else if (cdns->dr_mode !=3D dr_mode) {
->> +		dev_err(dev, "Incorrect DRD configuration\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	dr_mode =3D best_dr_mode;
->> +
->> +	if (dr_mode =3D=3D USB_DR_MODE_OTG || dr_mode =3D=3D USB_DR_MODE_HOST)=
- {
->> +		ret =3D cdns3_host_init(cdns);
->> +		if (ret) {
->> +			dev_err(dev, "Host initialization failed with %d\n",
->> +				ret);
->> +			goto err;
->> +		}
->> +	}
->> +
->> +	if (dr_mode =3D=3D USB_DR_MODE_OTG || dr_mode =3D=3D USB_DR_MODE_PERIP=
-HERAL) {
->> +		ret =3D cdns3_gadget_init(cdns);
->> +		if (ret) {
->> +			dev_err(dev, "Device initialization failed with %d\n",
->> +				ret);
->> +			goto err;
->
->Do you clean up from the host init here properly?   It's hard to tell.
-
-Driver doesn't have to clean anything here from cdns3_host_init.
-=20
->
->> +		}
->> +	}
->> +
->> +	cdns->desired_dr_mode =3D dr_mode;
->> +	cdns->dr_mode =3D dr_mode;
->> +	/*
->> +	 * dr_mode could be change so DRD must update controller
->> +	 * configuration
->> +	 */
->> +	ret =3D cdns3_drd_update_mode(cdns);
->> +	if (ret)
->> +		goto err;
->> +
->> +	cdns->role =3D cdns3_get_initial_role(cdns);
->> +
->> +	ret =3D cdns3_role_start(cdns, cdns->role);
->> +	if (ret) {
->> +		dev_err(dev, "can't start %s role\n",
->> +			cdns3_get_current_role_driver(cdns)->name);
->> +		goto err;
->> +	}
->> +
->> +	return ret;
->> +err:
->> +	cdns3_exit_roles(cdns);
->> +	return ret;
->> +}
->
->thanks,
->
->greg k-h
-
-Thanks=20
-Pawel
+T24gMjcuMDIuMjAxOSAyMjo1NCwgSnlyaSBTYXJoYSB3cm90ZToKPiBJbXBsZW1lbnQgSERNSSBh
+dWRpbyBzdXBwb3J0IGJ5IHVzaW5nIEFTb0MgSERNSSBjb2RlYy4gVGhlIGNvbW1pdAo+IGltcGxl
+bWVudHMgdGhlIG5lY2Vzc2FyeSBjYWxsYmFja3MgYW5kIGNvbmZpZ3VyYXRpb24gZm9yIHRoZSBI
+RE1JCj4gY29kZWMgYW5kIHJlZ2lzdGVycyBhIHZpcnR1YWwgcGxhdGZvcm0gZGV2aWNlIGZvciB0
+aGUgY29kZWMgdG8gYXR0YWNoLgo+Cj4gU2lnbmVkLW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhh
+QHRpLmNvbT4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0
+ICAgICAgIHwgIDM2ICstCj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jICAgICAg
+ICAgICAgICB8IDQ1MyArKysrKysrKysrKysrKysrKy0KPiAgaW5jbHVkZS9kdC1iaW5kaW5ncy9z
+b3VuZC9zaWk5MDJ4LWF1ZGlvLmggICAgIHwgIDExICsKPiAgMyBmaWxlcyBjaGFuZ2VkLCA0OTMg
+aW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1
+ZGUvZHQtYmluZGluZ3Mvc291bmQvc2lpOTAyeC1hdWRpby5oCj4KPiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkw
+MngudHh0Cj4gaW5kZXggNzJkMmRjNmMzZTZiLi42NDdiMmZkODRkYjkgMTAwNjQ0Cj4gLS0tIGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngu
+dHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
+ZGdlL3NpaTkwMngudHh0Cj4gQEAgLTUsOSArNSwzMiBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+
+ICAJLSByZWc6IGkyYyBhZGRyZXNzIG9mIHRoZSBicmlkZ2UKPiAgCj4gIE9wdGlvbmFsIHByb3Bl
+cnRpZXM6Cj4gLQktIGludGVycnVwdHM6IGRlc2NyaWJlIHRoZSBpbnRlcnJ1cHQgbGluZSB1c2Vk
+IHRvIGluZm9ybSB0aGUgaG9zdCAKPiArCS0gaW50ZXJydXB0czogZGVzY3JpYmUgdGhlIGludGVy
+cnVwdCBsaW5lIHVzZWQgdG8gaW5mb3JtIHRoZSBob3N0Cj4gIAkgIGFib3V0IGhvdHBsdWcgZXZl
+bnRzLgo+ICAJLSByZXNldC1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9u
+IGZvciBSU1RfTiBwaW4uCj4gKwktIGkycy1maWZvLXJvdXRpbmc6IEFycmF5IG9mIGV4YWN0bHkg
+NCBpbnRlZ2VycyBpbmRpY2F0aW5nIGkycwo+ICsJICBwaW5zIGZvciBhdWRpbyBmaWZvIHJvdXRp
+bmcuIEZpcnN0IGludGVnZXIgZGVmaW5lcyByb3V0aW5nIHRvCj4gKwkgIGZpZm8gMCBhbmQgc2Vj
+b25kIHRvIGZpZm8gMSwgZXRjLiBJbnRlZ2VycyBjYW4gYmUgZmlsbGVkIHdpdGgKPiArCSAgZGVm
+aW5pdGlvbnMgZnJvbTogaW5jbHVkZS9kdC1iaW5kaW5ncy9zb3VuZC9zaWk5MDJ4LWF1ZGlvLmgK
+PiArCSAgVGhlIGF2YWlsYWJsZSBkZWZpbml0aW9ucyBhcmU6Cj4gKwkgIC0gRU5BQkxFX0JJVDoJ
+ZW5hYmxlIHRoaXMgYXVkaW8gZmlmbwo+ICsJICAtIENPTk5FQ1RfU0QjOiByb3V0ZSBhdWRpbyBp
+bnB1dCBmcm9tIFNEMCwgU0QxLCBTRDIsIG9yIFNEMyBpMnMKPiArCQkJIGRhdGEgaW5wdXQgcGlu
+Cj4gKwkgIC0gTEVGVF9SSUdIVF9TV0FQX0JJVDogc3dhcCBpMnMgaW5wdXQgY2hhbm5lbHMgZm9y
+IHRoaXMgZmlmbwo+ICsJICBJMlMgSERNSSBhdWRpbyBpcyBjb25maWd1cmVkIG9ubHkgaWYgdGhp
+cyBwcm9wZXJ0eSBpcyBmb3VuZC4KPiArCS0gY2xvY2tzOiBwaGFuZGxlIG1jbGsKPiArCS0gY2xv
+Y2stbmFtZXM6ICJtY2xrIgo+ICsJICAgIERlc2NyaWJlcyBTSUk5MDJ4IE1DTEsgaW5wdXQuIE1D
+TEsgaXMgdXNlZCB0byBwcm9kdWNlCj4gKwkgICAgSERNSSBhdWRpbyBDVFMgdmFsdWVzLiBUaGlz
+IHByb3BlcnR5IGlzIHJlcXVpcmVkIGlmCj4gKwkgICAgImkycy1maWZvLXJvdXRpbmciLXByb3Bl
+cnR5IGlzIHByZXNlbnQuIFRoaXMgcHJvcGVydHkgZm9sbG93cwo+ICsJICAgIERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jbG9jay1iaW5kaW5ncy50eHQKPiArCSAgICBj
+b25zdW1lciBiaW5kaW5nLgo+ICsJLSAjc291bmQtZGFpLWNlbGxzID0gPDA+OiBBU29DIGNvZGVj
+IGRhaSBhdmFpbGFibGUgZm9yIHNpbXBsZS1jYXJkCj4gKwkgICAgSWYgYXVkaW8gcHJvcGVydGll
+cyBhcmUgcHJlc2VudCBzaWk5MDJ4IHByb3ZpZGVzIGFuIEFTb0MKPiArCSAgICBjb2RlYyBjb21w
+b25lbnQgZHJpdmVyIHRoYXQgY2FuIGJlIHVzZWQgYnkgb3RoZXIgQVNvQwo+ICsJICAgIGNvbXBv
+bmVudHMgbGlrZSBzaW1wbGUtY2FyZC4gU2VlIGJpbmRpbmcgZG9jdW1lbnQgZm9yCj4gKwkgICAg
+ZGV0YWlsczoKPiArCSAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQv
+c2ltcGxlLWNhcmQudHh0CgoKSSBhbSBub3QgYW4gYXVkaW8gZXhwZXJ0LCBzbyBwbGVhc2UgZm9y
+Z2l2ZSBtZSBpZiBJIG1ha2Ugc3R1cGlkIG1pc3Rha2VzIDopCgpBcyBJIHdyb3RlIHByZXZpb3Vz
+bHksIGxhY2sgb2YgRFQgY29ubmVjdGlvbiBiZXR3ZWVuIHRoZSBicmlkZ2UgYW5kIHRoZQphdWRp
+byBwcm9kdWNlciBsb29rcyBmb3IgbWUgYXMgaW5jb21wbGV0ZSBiaW5kaW5nIC0gaGFyZHdhcmUg
+Y29ubmVjdGlvbgppcyBuZWl0aGVyIGRpc2NvdmVyYWJsZSBuZWl0aGVyIHJlcHJlc2VudGVkIGlu
+IERULiBBcyBJIHVuZGVyc3RhbmQgaXQKd29ya3MgYmVjYXVzZSB0aGVyZSBpcyB1c3VhbGx5IG9u
+bHkgb25lIHNvdW5kIHN1YnN5c3RlbSBwZXIgYm9hcmQsIGFuZAp0aGVyZSBpcyBvbmx5IG9uZSBo
+ZG1pIG91dHB1dC4gQW0gSSByaWdodD8KCkJ1dCBJIGd1ZXNzIGJvYXJkcyB3aXRoIG1vcmUgdGhh
+biBvbmUgaGRtaSBvdXRwdXQgYXJlIG5vdCB1bmNvbW1vbiwgaG93CmRvIHlvdSBkaXNjb3ZlciB0
+b3BvbG9neSBpbiBzdWNoIGNhc2U/CgoKUmVnYXJkcwoKQW5kcnplagoKCj4gIAo+ICBPcHRpb25h
+bCBzdWJub2RlczoKPiAgCS0gdmlkZW8gaW5wdXQ6IHRoaXMgc3Vibm9kZSBjYW4gY29udGFpbiBh
+IHZpZGVvIGlucHV0IHBvcnQgbm9kZQo+IEBAIC0yMSw2ICs0NCwxNyBAQCBFeGFtcGxlOgo+ICAJ
+CWNvbXBhdGlibGUgPSAic2lsLHNpaTkwMjIiOwo+ICAJCXJlZyA9IDwweDM5PjsKPiAgCQlyZXNl
+dC1ncGlvcyA9IDwmcGlvQSAxIDA+Owo+ICsKPiArCQkjc291bmQtZGFpLWNlbGxzID0gPDA+Owo+
+ICsJCWkycy1maWZvLXJvdXRpbmcgPSA8Cj4gKwkJCShFTkFCTEVfQklUfENPTk5FQ1RfU0QwKQo+
+ICsJCQkwCj4gKwkJCTAKPiArCQkJMAo+ICsJCT47Cj4gKwkJY2xvY2tzID0gPCZtY2xrPjsKPiAr
+CQljbG9jay1uYW1lcyA9ICJtY2xrIjsKPiArCj4gIAkJcG9ydHMgewo+ICAJCQkjYWRkcmVzcy1j
+ZWxscyA9IDwxPjsKPiAgCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5
+MDJ4LmMKPiBpbmRleCAxZTkxNzc3N2VkNzIuLjJiZTI3YmM1NGZiNSAxMDA2NDQKPiAtLS0gYS9k
+cml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9i
+cmlkZ2Uvc2lpOTAyeC5jCj4gQEAgLTI3LDEyICsyNywxNiBAQAo+ICAjaW5jbHVkZSA8bGludXgv
+aTJjLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L3Jl
+Z21hcC5oPgo+ICsjaW5jbHVkZSA8bGludXgvY2xrLmg+Cj4gIAo+ICAjaW5jbHVkZSA8ZHJtL2Ry
+bVAuaD4KPiAgI2luY2x1ZGUgPGRybS9kcm1fYXRvbWljX2hlbHBlci5oPgo+ICAjaW5jbHVkZSA8
+ZHJtL2RybV9jcnRjX2hlbHBlci5oPgo+ICAjaW5jbHVkZSA8ZHJtL2RybV9lZGlkLmg+Cj4gIAo+
+ICsjaW5jbHVkZSA8c291bmQvaGRtaS1jb2RlYy5oPgo+ICsjaW5jbHVkZSA8ZHQtYmluZGluZ3Mv
+c291bmQvc2lpOTAyeC1hdWRpby5oPgo+ICsKPiAgI2RlZmluZSBTSUk5MDJYX1RQSV9WSURFT19E
+QVRBCQkJMHgwCj4gIAo+ICAjZGVmaW5lIFNJSTkwMlhfVFBJX1BJWEVMX1JFUEVUSVRJT04JCTB4
+OAo+IEBAIC03NCw2ICs3OCw3NyBAQAo+ICAjZGVmaW5lIFNJSTkwMlhfQVZJX1BPV0VSX1NUQVRF
+X01TSwkJR0VOTUFTSygxLCAwKQo+ICAjZGVmaW5lIFNJSTkwMlhfQVZJX1BPV0VSX1NUQVRFX0Qo
+bCkJCSgobCkgJiBTSUk5MDJYX0FWSV9QT1dFUl9TVEFURV9NU0spCj4gIAo+ICsvKiBBdWRpbyAg
+Ki8KPiArI2RlZmluZSBTSUk5MDJYX1RQSV9JMlNfRU5BQkxFX01BUFBJTkdfUkVHCTB4MWYKPiAr
+I2RlZmluZSBTSUk5MDJYX1RQSV9JMlNfQ09ORklHX0ZJRk8wCQkJKDAgPDwgMCkKPiArI2RlZmlu
+ZSBTSUk5MDJYX1RQSV9JMlNfQ09ORklHX0ZJRk8xCQkJKDEgPDwgMCkKPiArI2RlZmluZSBTSUk5
+MDJYX1RQSV9JMlNfQ09ORklHX0ZJRk8yCQkJKDIgPDwgMCkKPiArI2RlZmluZSBTSUk5MDJYX1RQ
+SV9JMlNfQ09ORklHX0ZJRk8zCQkJKDMgPDwgMCkKPiArI2RlZmluZSBTSUk5MDJYX1RQSV9JMlNf
+TEVGVF9SSUdIVF9TV0FQCQkJKDEgPDwgMikKPiArI2RlZmluZSBTSUk5MDJYX1RQSV9JMlNfQVVU
+T19ET1dOU0FNUExFCQkJKDEgPDwgMykKPiArI2RlZmluZSBTSUk5MDJYX1RQSV9JMlNfU0VMRUNU
+X1NEMAkJCSgwIDw8IDQpCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfSTJTX1NFTEVDVF9TRDEJCQko
+MSA8PCA0KQo+ICsjZGVmaW5lIFNJSTkwMlhfVFBJX0kyU19TRUxFQ1RfU0QyCQkJKDIgPDwgNCkK
+PiArI2RlZmluZSBTSUk5MDJYX1RQSV9JMlNfU0VMRUNUX1NEMwkJCSgzIDw8IDQpCj4gKyNkZWZp
+bmUgU0lJOTAyWF9UUElfSTJTX0ZJRk9fRU5BQkxFCQkJKDEgPDwgNykKPiArCj4gKyNkZWZpbmUg
+U0lJOTAyWF9UUElfSTJTX0lOUFVUX0NPTkZJR19SRUcJMHgyMAo+ICsjZGVmaW5lIFNJSTkwMlhf
+VFBJX0kyU19GSVJTVF9CSVRfU0hJRlRfWUVTCQkoMCA8PCAwKQo+ICsjZGVmaW5lIFNJSTkwMlhf
+VFBJX0kyU19GSVJTVF9CSVRfU0hJRlRfTk8JCSgxIDw8IDApCj4gKyNkZWZpbmUgU0lJOTAyWF9U
+UElfSTJTX1NEX0RJUkVDVElPTl9NU0JfRklSU1QJCSgwIDw8IDEpCj4gKyNkZWZpbmUgU0lJOTAy
+WF9UUElfSTJTX1NEX0RJUkVDVElPTl9MU0JfRklSU1QJCSgxIDw8IDEpCj4gKyNkZWZpbmUgU0lJ
+OTAyWF9UUElfSTJTX1NEX0pVU1RJRllfTEVGVAkJCSgwIDw8IDIpCj4gKyNkZWZpbmUgU0lJOTAy
+WF9UUElfSTJTX1NEX0pVU1RJRllfUklHSFQJCSgxIDw8IDIpCj4gKyNkZWZpbmUgU0lJOTAyWF9U
+UElfSTJTX1dTX1BPTEFSSVRZX0xPVwkJCSgwIDw8IDMpCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElf
+STJTX1dTX1BPTEFSSVRZX0hJR0gJCSgxIDw8IDMpCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfSTJT
+X01DTEtfTVVMVElQTElFUl8xMjgJCSgwIDw8IDQpCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfSTJT
+X01DTEtfTVVMVElQTElFUl8yNTYJCSgxIDw8IDQpCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfSTJT
+X01DTEtfTVVMVElQTElFUl8zODQJCSgyIDw8IDQpCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfSTJT
+X01DTEtfTVVMVElQTElFUl81MTIJCSgzIDw8IDQpCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfSTJT
+X01DTEtfTVVMVElQTElFUl83NjgJCSg0IDw8IDQpCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfSTJT
+X01DTEtfTVVMVElQTElFUl8xMDI0CQkoNSA8PCA0KQo+ICsjZGVmaW5lIFNJSTkwMlhfVFBJX0ky
+U19NQ0xLX01VTFRJUExJRVJfMTE1MgkJKDYgPDwgNCkKPiArI2RlZmluZSBTSUk5MDJYX1RQSV9J
+MlNfTUNMS19NVUxUSVBMSUVSXzE5MgkJKDcgPDwgNCkKPiArI2RlZmluZSBTSUk5MDJYX1RQSV9J
+MlNfU0NLX0VER0VfRkFMTElORwkJKDAgPDwgNykKPiArI2RlZmluZSBTSUk5MDJYX1RQSV9JMlNf
+U0NLX0VER0VfUklTSU5HCQkJKDEgPDwgNykKPiArCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfSTJT
+X1NUUk1fSERSX0JBU0UJMHgyMQo+ICsjZGVmaW5lIFNJSTkwMlhfVFBJX0kyU19TVFJNX0hEUl9T
+SVpFCTUKPiArCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfQVVESU9fQ09ORklHX0JZVEUyX1JFRwkw
+eDI2Cj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfQVVESU9fQ09ESU5HX1NUUkVBTV9IRUFERVIJCSgw
+IDw8IDApCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfQVVESU9fQ09ESU5HX1BDTQkJCSgxIDw8IDAp
+Cj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfQVVESU9fQ09ESU5HX0FDMwkJCSgyIDw8IDApCj4gKyNk
+ZWZpbmUgU0lJOTAyWF9UUElfQVVESU9fQ09ESU5HX01QRUcxCQkJKDMgPDwgMCkKPiArI2RlZmlu
+ZSBTSUk5MDJYX1RQSV9BVURJT19DT0RJTkdfTVAzCQkJKDQgPDwgMCkKPiArI2RlZmluZSBTSUk5
+MDJYX1RQSV9BVURJT19DT0RJTkdfTVBFRzIJCQkoNSA8PCAwKQo+ICsjZGVmaW5lIFNJSTkwMlhf
+VFBJX0FVRElPX0NPRElOR19BQUMJCQkoNiA8PCAwKQo+ICsjZGVmaW5lIFNJSTkwMlhfVFBJX0FV
+RElPX0NPRElOR19EVFMJCQkoNyA8PCAwKQo+ICsjZGVmaW5lIFNJSTkwMlhfVFBJX0FVRElPX0NP
+RElOR19BVFJBQwkJCSg4IDw8IDApCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfQVVESU9fTVVURV9E
+SVNBQkxFCQkJKDAgPDwgNCkKPiArI2RlZmluZSBTSUk5MDJYX1RQSV9BVURJT19NVVRFX0VOQUJM
+RQkJCSgxIDw8IDQpCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfQVVESU9fTEFZT1VUXzJfQ0hBTk5F
+TFMJCSgwIDw8IDUpCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfQVVESU9fTEFZT1VUXzhfQ0hBTk5F
+TFMJCSgxIDw8IDUpCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfQVVESU9fSU5URVJGQUNFX0RJU0FC
+TEUJCSgwIDw8IDYpCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfQVVESU9fSU5URVJGQUNFX1NQRElG
+CQkoMSA8PCA2KQo+ICsjZGVmaW5lIFNJSTkwMlhfVFBJX0FVRElPX0lOVEVSRkFDRV9JMlMJCQko
+MiA8PCA2KQo+ICsKPiArI2RlZmluZSBTSUk5MDJYX1RQSV9BVURJT19DT05GSUdfQllURTNfUkVH
+CTB4MjcKPiArI2RlZmluZSBTSUk5MDJYX1RQSV9BVURJT19GUkVRX1NUUkVBTQkJCSgwIDw8IDMp
+Cj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfQVVESU9fRlJFUV8zMktIWgkJCSgxIDw8IDMpCj4gKyNk
+ZWZpbmUgU0lJOTAyWF9UUElfQVVESU9fRlJFUV80NEtIWgkJCSgyIDw8IDMpCj4gKyNkZWZpbmUg
+U0lJOTAyWF9UUElfQVVESU9fRlJFUV80OEtIWgkJCSgzIDw8IDMpCj4gKyNkZWZpbmUgU0lJOTAy
+WF9UUElfQVVESU9fRlJFUV84OEtIWgkJCSg0IDw8IDMpCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElf
+QVVESU9fRlJFUV85NktIWgkJCSg1IDw8IDMpCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfQVVESU9f
+RlJFUV8xNzZLSFoJCQkoNiA8PCAzKQo+ICsjZGVmaW5lIFNJSTkwMlhfVFBJX0FVRElPX0ZSRVFf
+MTkyS0haCQkJKDcgPDwgMykKPiArI2RlZmluZSBTSUk5MDJYX1RQSV9BVURJT19TQU1QTEVfU0la
+RV9TVFJFQU0JCSgwIDw8IDYpCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfQVVESU9fU0FNUExFX1NJ
+WkVfMTYJCSgxIDw8IDYpCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfQVVESU9fU0FNUExFX1NJWkVf
+MjAJCSgyIDw8IDYpCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfQVVESU9fU0FNUExFX1NJWkVfMjQJ
+CSgzIDw8IDYpCj4gKwo+ICsjZGVmaW5lIFNJSTkwMlhfVFBJX0FVRElPX0NPTkZJR19CWVRFNF9S
+RUcJMHgyOAo+ICsKPiAgI2RlZmluZSBTSUk5MDJYX0lOVF9FTkFCTEUJCQkweDNjCj4gICNkZWZp
+bmUgU0lJOTAyWF9JTlRfU1RBVFVTCQkJMHgzZAo+ICAjZGVmaW5lIFNJSTkwMlhfSE9UUExVR19F
+VkVOVAkJCUJJVCgwKQo+IEBAIC04MSw2ICsxNTYsMTYgQEAKPiAgCj4gICNkZWZpbmUgU0lJOTAy
+WF9SRUdfVFBJX1JRQgkJCTB4YzcKPiAgCj4gKy8qIEluZGlyZWN0IGludGVybmFsIHJlZ2lzdGVy
+IGFjY2VzcyAqLwo+ICsjZGVmaW5lIFNJSTkwMlhfSU5EX1NFVF9QQUdFCQkJMHhiYwo+ICsjZGVm
+aW5lIFNJSTkwMlhfSU5EX09GRlNFVAkJCTB4YmQKPiArI2RlZmluZSBTSUk5MDJYX0lORF9WQUxV
+RQkJCTB4YmUKPiArCj4gKyNkZWZpbmUgU0lJOTAyWF9UUElfTUlTQ19JTkZPRlJBTUVfQkFTRQkJ
+MHhiZgo+ICsjZGVmaW5lIFNJSTkwMlhfVFBJX01JU0NfSU5GT0ZSQU1FX0VORAkJMHhkZQo+ICsj
+ZGVmaW5lIFNJSTkwMlhfVFBJX01JU0NfSU5GT0ZSQU1FX1NJWkUJXAo+ICsJKFNJSTkwMlhfVFBJ
+X01JU0NfSU5GT0ZSQU1FX0VORCAtIFNJSTkwMlhfVFBJX01JU0NfSU5GT0ZSQU1FX0JBU0UpCj4g
+Kwo+ICAjZGVmaW5lIFNJSTkwMlhfSTJDX0JVU19BQ1FVSVNJVElPTl9USU1FT1VUX01TCTUwMAo+
+ICAKPiAgc3RydWN0IHNpaTkwMnggewo+IEBAIC05MCw2ICsxNzUsMTYgQEAgc3RydWN0IHNpaTkw
+Mnggewo+ICAJc3RydWN0IGRybV9jb25uZWN0b3IgY29ubmVjdG9yOwo+ICAJc3RydWN0IGdwaW9f
+ZGVzYyAqcmVzZXRfZ3BpbzsKPiAgCXN0cnVjdCBpMmNfbXV4X2NvcmUgKmkyY211eDsKPiArCS8q
+Cj4gKwkgKiBNdXRleCBwcm90ZWN0cyBhdWRpbyBhbmQgdmlkZW8gZnVuY3Rpb25zIGZyb20gaW50
+ZXJmZXJpbmcKPiArCSAqIGVhY2ggb3RoZXIsIGJ5IGtlZXBpbmcgdGhlaXIgaTJjIGNvbW1hbmQg
+c2VxdWVuY2VzIGF0b21pYy4KPiArCSAqLwo+ICsJc3RydWN0IG11dGV4IG11dGV4Owo+ICsJc3Ry
+dWN0IHNpaTkwMnhfYXVkaW8gewo+ICsJCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXY7Cj4g
+KwkJc3RydWN0IGNsayAqbWNsazsKPiArCQl1MzIgaTJzX2ZpZm9fcm91dGluZ1s0XTsKPiArCX0g
+YXVkaW87Cj4gIH07Cj4gIAo+ICBzdGF0aWMgaW50IHNpaTkwMnhfcmVhZF91bmxvY2tlZChzdHJ1
+Y3QgaTJjX2NsaWVudCAqaTJjLCB1OCByZWcsIHU4ICp2YWwpCj4gQEAgLTE2MSw4ICsyNTYsMTIg
+QEAgc2lpOTAyeF9jb25uZWN0b3JfZGV0ZWN0KHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0
+b3IsIGJvb2wgZm9yY2UpCj4gIAlzdHJ1Y3Qgc2lpOTAyeCAqc2lpOTAyeCA9IGNvbm5lY3Rvcl90
+b19zaWk5MDJ4KGNvbm5lY3Rvcik7Cj4gIAl1bnNpZ25lZCBpbnQgc3RhdHVzOwo+ICAKPiArCW11
+dGV4X2xvY2soJnNpaTkwMngtPm11dGV4KTsKPiArCj4gIAlyZWdtYXBfcmVhZChzaWk5MDJ4LT5y
+ZWdtYXAsIFNJSTkwMlhfSU5UX1NUQVRVUywgJnN0YXR1cyk7Cj4gIAo+ICsJbXV0ZXhfdW5sb2Nr
+KCZzaWk5MDJ4LT5tdXRleCk7Cj4gKwo+ICAJcmV0dXJuIChzdGF0dXMgJiBTSUk5MDJYX1BMVUdH
+RURfU1RBVFVTKSA/Cj4gIAkgICAgICAgY29ubmVjdG9yX3N0YXR1c19jb25uZWN0ZWQgOiBjb25u
+ZWN0b3Jfc3RhdHVzX2Rpc2Nvbm5lY3RlZDsKPiAgfQo+IEBAIC0xODQsNiArMjgzLDggQEAgc3Rh
+dGljIGludCBzaWk5MDJ4X2dldF9tb2RlcyhzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9y
+KQo+ICAJdTggb3V0cHV0X21vZGUgPSBTSUk5MDJYX1NZU19DVFJMX09VVFBVVF9EVkk7Cj4gIAlp
+bnQgbnVtID0gMCwgcmV0Owo+ICAKPiArCW11dGV4X2xvY2soJnNpaTkwMngtPm11dGV4KTsKPiAr
+Cj4gIAllZGlkID0gZHJtX2dldF9lZGlkKGNvbm5lY3Rvciwgc2lpOTAyeC0+aTJjbXV4LT5hZGFw
+dGVyWzBdKTsKPiAgCWRybV9jb25uZWN0b3JfdXBkYXRlX2VkaWRfcHJvcGVydHkoY29ubmVjdG9y
+LCBlZGlkKTsKPiAgCWlmIChlZGlkKSB7Cj4gQEAgLTE5NywxNCArMjk4LDE5IEBAIHN0YXRpYyBp
+bnQgc2lpOTAyeF9nZXRfbW9kZXMoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPiAg
+CXJldCA9IGRybV9kaXNwbGF5X2luZm9fc2V0X2J1c19mb3JtYXRzKCZjb25uZWN0b3ItPmRpc3Bs
+YXlfaW5mbywKPiAgCQkJCQkgICAgICAgJmJ1c19mb3JtYXQsIDEpOwo+ICAJaWYgKHJldCkKPiAt
+CQlyZXR1cm4gcmV0Owo+ICsJCWdvdG8gZXJyb3Jfb3V0Owo+ICAKPiAgCXJldCA9IHJlZ21hcF91
+cGRhdGVfYml0cyhzaWk5MDJ4LT5yZWdtYXAsIFNJSTkwMlhfU1lTX0NUUkxfREFUQSwKPiAgCQkJ
+CSBTSUk5MDJYX1NZU19DVFJMX09VVFBVVF9NT0RFLCBvdXRwdXRfbW9kZSk7Cj4gIAlpZiAocmV0
+KQo+IC0JCXJldHVybiByZXQ7Cj4gKwkJZ290byBlcnJvcl9vdXQ7Cj4gKwo+ICsJcmV0ID0gbnVt
+Owo+ICsKPiArZXJyb3Jfb3V0Ogo+ICsJbXV0ZXhfdW5sb2NrKCZzaWk5MDJ4LT5tdXRleCk7Cj4g
+IAo+IC0JcmV0dXJuIG51bTsKPiArCXJldHVybiByZXQ7Cj4gIH0KPiAgCj4gIHN0YXRpYyBlbnVt
+IGRybV9tb2RlX3N0YXR1cyBzaWk5MDJ4X21vZGVfdmFsaWQoc3RydWN0IGRybV9jb25uZWN0b3Ig
+KmNvbm5lY3RvciwKPiBAQCAtMjI0LDIwICszMzAsMjggQEAgc3RhdGljIHZvaWQgc2lpOTAyeF9i
+cmlkZ2VfZGlzYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+ICB7Cj4gIAlzdHJ1Y3Qg
+c2lpOTAyeCAqc2lpOTAyeCA9IGJyaWRnZV90b19zaWk5MDJ4KGJyaWRnZSk7Cj4gIAo+ICsJbXV0
+ZXhfbG9jaygmc2lpOTAyeC0+bXV0ZXgpOwo+ICsKPiAgCXJlZ21hcF91cGRhdGVfYml0cyhzaWk5
+MDJ4LT5yZWdtYXAsIFNJSTkwMlhfU1lTX0NUUkxfREFUQSwKPiAgCQkJICAgU0lJOTAyWF9TWVNf
+Q1RSTF9QV1JfRFdOLAo+ICAJCQkgICBTSUk5MDJYX1NZU19DVFJMX1BXUl9EV04pOwo+ICsKPiAr
+CW11dGV4X3VubG9jaygmc2lpOTAyeC0+bXV0ZXgpOwo+ICB9Cj4gIAo+ICBzdGF0aWMgdm9pZCBz
+aWk5MDJ4X2JyaWRnZV9lbmFibGUoc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkKPiAgewo+ICAJ
+c3RydWN0IHNpaTkwMnggKnNpaTkwMnggPSBicmlkZ2VfdG9fc2lpOTAyeChicmlkZ2UpOwo+ICAK
+PiArCW11dGV4X2xvY2soJnNpaTkwMngtPm11dGV4KTsKPiArCj4gIAlyZWdtYXBfdXBkYXRlX2Jp
+dHMoc2lpOTAyeC0+cmVnbWFwLCBTSUk5MDJYX1BXUl9TVEFURV9DVFJMLAo+ICAJCQkgICBTSUk5
+MDJYX0FWSV9QT1dFUl9TVEFURV9NU0ssCj4gIAkJCSAgIFNJSTkwMlhfQVZJX1BPV0VSX1NUQVRF
+X0QoMCkpOwo+ICAJcmVnbWFwX3VwZGF0ZV9iaXRzKHNpaTkwMngtPnJlZ21hcCwgU0lJOTAyWF9T
+WVNfQ1RSTF9EQVRBLAo+ICAJCQkgICBTSUk5MDJYX1NZU19DVFJMX1BXUl9EV04sIDApOwo+ICsK
+PiArCW11dGV4X3VubG9jaygmc2lpOTAyeC0+bXV0ZXgpOwo+ICB9Cj4gIAo+ICBzdGF0aWMgdm9p
+ZCBzaWk5MDJ4X2JyaWRnZV9tb2RlX3NldChzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlLAo+IEBA
+IC0yNjQsMjYgKzM3OCwzMSBAQCBzdGF0aWMgdm9pZCBzaWk5MDJ4X2JyaWRnZV9tb2RlX3NldChz
+dHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlLAo+ICAJYnVmWzldID0gU0lJOTAyWF9UUElfQVZJX0lO
+UFVUX1JBTkdFX0FVVE8gfAo+ICAJCSBTSUk5MDJYX1RQSV9BVklfSU5QVVRfQ09MT1JTUEFDRV9S
+R0I7Cj4gIAo+ICsJbXV0ZXhfbG9jaygmc2lpOTAyeC0+bXV0ZXgpOwo+ICsKPiAgCXJldCA9IHJl
+Z21hcF9idWxrX3dyaXRlKHJlZ21hcCwgU0lJOTAyWF9UUElfVklERU9fREFUQSwgYnVmLCAxMCk7
+Cj4gIAlpZiAocmV0KQo+IC0JCXJldHVybjsKPiArCQlnb3RvIG91dDsKPiAgCj4gIAlyZXQgPSBk
+cm1faGRtaV9hdmlfaW5mb2ZyYW1lX2Zyb21fZGlzcGxheV9tb2RlKCZmcmFtZSwgYWRqLCBmYWxz
+ZSk7Cj4gIAlpZiAocmV0IDwgMCkgewo+ICAJCURSTV9FUlJPUigiY291bGRuJ3QgZmlsbCBBVkkg
+aW5mb2ZyYW1lXG4iKTsKPiAtCQlyZXR1cm47Cj4gKwkJZ290byBvdXQ7Cj4gIAl9Cj4gIAo+ICAJ
+cmV0ID0gaGRtaV9hdmlfaW5mb2ZyYW1lX3BhY2soJmZyYW1lLCBidWYsIHNpemVvZihidWYpKTsK
+PiAgCWlmIChyZXQgPCAwKSB7Cj4gIAkJRFJNX0VSUk9SKCJmYWlsZWQgdG8gcGFjayBBVkkgaW5m
+b2ZyYW1lOiAlZFxuIiwgcmV0KTsKPiAtCQlyZXR1cm47Cj4gKwkJZ290byBvdXQ7Cj4gIAl9Cj4g
+IAo+ICAJLyogRG8gbm90IHNlbmQgdGhlIGluZm9mcmFtZSBoZWFkZXIsIGJ1dCBrZWVwIHRoZSBD
+UkMgZmllbGQuICovCj4gIAlyZWdtYXBfYnVsa193cml0ZShyZWdtYXAsIFNJSTkwMlhfVFBJX0FW
+SV9JTkZPRlJBTUUsCj4gIAkJCSAgYnVmICsgSERNSV9JTkZPRlJBTUVfSEVBREVSX1NJWkUgLSAx
+LAo+ICAJCQkgIEhETUlfQVZJX0lORk9GUkFNRV9TSVpFICsgMSk7Cj4gKwo+ICtvdXQ6Cj4gKwlt
+dXRleF91bmxvY2soJnNpaTkwMngtPm11dGV4KTsKPiAgfQo+ICAKPiAgc3RhdGljIGludCBzaWk5
+MDJ4X2JyaWRnZV9hdHRhY2goc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkKPiBAQCAtMzI0LDYg
+KzQ0MywzMjMgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fYnJpZGdlX2Z1bmNzIHNpaTkwMnhf
+YnJpZGdlX2Z1bmNzID0gewo+ICAJLmVuYWJsZSA9IHNpaTkwMnhfYnJpZGdlX2VuYWJsZSwKPiAg
+fTsKPiAgCj4gK3N0YXRpYyBpbnQgc2lpOTAyeF9tdXRlKHN0cnVjdCBzaWk5MDJ4ICpzaWk5MDJ4
+LCBib29sIG11dGUpCj4gK3sKPiArCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZzaWk5MDJ4LT5pMmMt
+PmRldjsKPiArCXVuc2lnbmVkIGludCB2YWwgPSBtdXRlID8gU0lJOTAyWF9UUElfQVVESU9fTVVU
+RV9FTkFCTEUgOgo+ICsJCVNJSTkwMlhfVFBJX0FVRElPX01VVEVfRElTQUJMRTsKPiArCj4gKwlk
+ZXZfZGJnKGRldiwgIiVzOiAlc1xuIiwgX19mdW5jX18sIG11dGUgPyAiTXV0ZWQiIDogIlVubXV0
+ZWQiKTsKPiArCj4gKwlyZXR1cm4gcmVnbWFwX3VwZGF0ZV9iaXRzKHNpaTkwMngtPnJlZ21hcCwK
+PiArCQkJCSAgU0lJOTAyWF9UUElfQVVESU9fQ09ORklHX0JZVEUyX1JFRywKPiArCQkJCSAgU0lJ
+OTAyWF9UUElfQVVESU9fTVVURV9FTkFCTEUsIHZhbCk7Cj4gK30KPiArCj4gK3N0YXRpYyBjb25z
+dCB1bnNpZ25lZCBpbnQgc2lpOTAyeF9tY2xrX2Rpdl90YWJsZVtdID0gewo+ICsJMTI4LCAyNTYs
+IDM4NCwgNTEyLCA3NjgsIDEwMjQsIDExNTIsIDE5MiB9Owo+ICsKPiArc3RhdGljIGludCBzaWk5
+MDJ4X3NlbGVjdF9tY2xrX2Rpdih1OCAqaTJzX2NvbmZpZ19yZWcsIHVuc2lnbmVkIGludCByYXRl
+LAo+ICsJCQkJICAgdW5zaWduZWQgaW50IG1jbGspCj4gK3sKPiArCXVuc2lnbmVkIGludCBkaXYg
+PSBtY2xrIC8gcmF0ZTsKPiArCWludCBkaXN0YW5jZSA9IDEwMDAwMDsKPiArCXU4IGksIG5lYXJl
+c3QgPSAwOwo+ICsKPiArCWZvciAoaSA9IDA7IGkgPCBBUlJBWV9TSVpFKHNpaTkwMnhfbWNsa19k
+aXZfdGFibGUpOyBpKyspIHsKPiArCQl1bnNpZ25lZCBpbnQgZCA9IGFicyhkaXYgLSBzaWk5MDJ4
+X21jbGtfZGl2X3RhYmxlW2ldKTsKPiArCj4gKwkJaWYgKGQgPj0gZGlzdGFuY2UpCj4gKwkJCWNv
+bnRpbnVlOwo+ICsKPiArCQluZWFyZXN0ID0gaTsKPiArCQlkaXN0YW5jZSA9IGQ7Cj4gKwkJaWYg
+KGQgPT0gMCkKPiArCQkJYnJlYWs7Cj4gKwl9Cj4gKwo+ICsJKmkyc19jb25maWdfcmVnIHw9IG5l
+YXJlc3QgPDwgNDsKPiArCj4gKwlpZiAoZGlzdGFuY2UgIT0gMCkKPiArCQlyZXR1cm4gc2lpOTAy
+eF9tY2xrX2Rpdl90YWJsZVtuZWFyZXN0XTsKPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiAr
+c3RhdGljIGNvbnN0IHN0cnVjdCBzaWk5MDJ4X3NhbXBsZV9mcmVxIHsKPiArCXUzMiBmcmVxOwo+
+ICsJdTggdmFsOwo+ICt9IHNpaTkwMnhfc2FtcGxlX2ZyZXFbXSA9IHsKPiArCXsgLmZyZXEgPSAz
+MjAwMCwJLnZhbCA9IFNJSTkwMlhfVFBJX0FVRElPX0ZSRVFfMzJLSFogfSwKPiArCXsgLmZyZXEg
+PSA0NDAwMCwJLnZhbCA9IFNJSTkwMlhfVFBJX0FVRElPX0ZSRVFfNDRLSFogfSwKPiArCXsgLmZy
+ZXEgPSA0ODAwMCwJLnZhbCA9IFNJSTkwMlhfVFBJX0FVRElPX0ZSRVFfNDhLSFogfSwKPiArCXsg
+LmZyZXEgPSA4ODAwMCwJLnZhbCA9IFNJSTkwMlhfVFBJX0FVRElPX0ZSRVFfODhLSFogfSwKPiAr
+CXsgLmZyZXEgPSA5NjAwMCwJLnZhbCA9IFNJSTkwMlhfVFBJX0FVRElPX0ZSRVFfOTZLSFogfSwK
+PiArCXsgLmZyZXEgPSAxNzYwMDAsCS52YWwgPSBTSUk5MDJYX1RQSV9BVURJT19GUkVRXzE3NktI
+WiB9LAo+ICsJeyAuZnJlcSA9IDE5MjAwMCwJLnZhbCA9IFNJSTkwMlhfVFBJX0FVRElPX0ZSRVFf
+MTkyS0haIH0sCj4gK307Cj4gKwo+ICtzdGF0aWMgaW50IHNpaTkwMnhfYXVkaW9faHdfcGFyYW1z
+KHN0cnVjdCBkZXZpY2UgKmRldiwgdm9pZCAqZGF0YSwKPiArCQkJCSAgIHN0cnVjdCBoZG1pX2Nv
+ZGVjX2RhaWZtdCAqZGFpZm10LAo+ICsJCQkJICAgc3RydWN0IGhkbWlfY29kZWNfcGFyYW1zICpw
+YXJhbXMpCj4gK3sKPiArCXN0cnVjdCBzaWk5MDJ4ICpzaWk5MDJ4ID0gZGV2X2dldF9kcnZkYXRh
+KGRldik7Cj4gKwl1OCBpMnNfY29uZmlnX3JlZyA9IFNJSTkwMlhfVFBJX0kyU19TRF9ESVJFQ1RJ
+T05fTVNCX0ZJUlNUOwo+ICsJdTggY29uZmlnX2J5dGUyX3JlZyA9IChTSUk5MDJYX1RQSV9BVURJ
+T19JTlRFUkZBQ0VfSTJTIHwKPiArCQkJICAgICAgIFNJSTkwMlhfVFBJX0FVRElPX01VVEVfRU5B
+QkxFIHwKPiArCQkJICAgICAgIFNJSTkwMlhfVFBJX0FVRElPX0NPRElOR19QQ00pOwo+ICsJdTgg
+Y29uZmlnX2J5dGUzX3JlZyA9IDA7Cj4gKwl1OCBpbmZvZnJhbWVfYnVmW0hETUlfSU5GT0ZSQU1F
+X1NJWkUoQVVESU8pXTsKPiArCXVuc2lnbmVkIGxvbmcgbWNsa19yYXRlOwo+ICsJaW50IGksIHJl
+dDsKPiArCj4gKwlpZiAoZGFpZm10LT5iaXRfY2xrX21hc3RlciB8fCBkYWlmbXQtPmZyYW1lX2Ns
+a19tYXN0ZXIpIHsKPiArCQlkZXZfZGJnKGRldiwgIiVzOiBJMlMgbWFzdGVyIG1vZGUgbm90IHN1
+cHBvcnRlZFxuIiwgX19mdW5jX18pOwo+ICsJCXJldHVybiAtRUlOVkFMOwo+ICsJfQo+ICsKPiAr
+CXN3aXRjaCAoZGFpZm10LT5mbXQpIHsKPiArCWNhc2UgSERNSV9JMlM6Cj4gKwkJaTJzX2NvbmZp
+Z19yZWcgfD0gU0lJOTAyWF9UUElfSTJTX0ZJUlNUX0JJVF9TSElGVF9ZRVMgfAo+ICsJCQlTSUk5
+MDJYX1RQSV9JMlNfU0RfSlVTVElGWV9MRUZUOwo+ICsJCWJyZWFrOwo+ICsJY2FzZSBIRE1JX1JJ
+R0hUX0o6Cj4gKwkJaTJzX2NvbmZpZ19yZWcgfD0gU0lJOTAyWF9UUElfSTJTX1NEX0pVU1RJRllf
+UklHSFQ7Cj4gKwkJYnJlYWs7Cj4gKwljYXNlIEhETUlfTEVGVF9KOgo+ICsJCWkyc19jb25maWdf
+cmVnIHw9IFNJSTkwMlhfVFBJX0kyU19TRF9KVVNUSUZZX0xFRlQ7Cj4gKwkJYnJlYWs7Cj4gKwlk
+ZWZhdWx0Ogo+ICsJCWRldl9kYmcoZGV2LCAiJXM6IFVuc3VwcG9ydGVkIGkycyBmb3JtYXQgJXVc
+biIsIF9fZnVuY19fLAo+ICsJCQlkYWlmbXQtPmZtdCk7Cj4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4g
+Kwl9Cj4gKwo+ICsJaWYgKGRhaWZtdC0+Yml0X2Nsa19pbnYpCj4gKwkJaTJzX2NvbmZpZ19yZWcg
+fD0gU0lJOTAyWF9UUElfSTJTX1NDS19FREdFX0ZBTExJTkc7Cj4gKwllbHNlCj4gKwkJaTJzX2Nv
+bmZpZ19yZWcgfD0gU0lJOTAyWF9UUElfSTJTX1NDS19FREdFX1JJU0lORzsKPiArCj4gKwlpZiAo
+ZGFpZm10LT5mcmFtZV9jbGtfaW52KQo+ICsJCWkyc19jb25maWdfcmVnIHw9IFNJSTkwMlhfVFBJ
+X0kyU19XU19QT0xBUklUWV9MT1c7Cj4gKwllbHNlCj4gKwkJaTJzX2NvbmZpZ19yZWcgfD0gU0lJ
+OTAyWF9UUElfSTJTX1dTX1BPTEFSSVRZX0hJR0g7Cj4gKwo+ICsJaWYgKHBhcmFtcy0+Y2hhbm5l
+bHMgPiAyKQo+ICsJCWNvbmZpZ19ieXRlMl9yZWcgfD0gU0lJOTAyWF9UUElfQVVESU9fTEFZT1VU
+XzhfQ0hBTk5FTFM7Cj4gKwllbHNlCj4gKwkJY29uZmlnX2J5dGUyX3JlZyB8PSBTSUk5MDJYX1RQ
+SV9BVURJT19MQVlPVVRfMl9DSEFOTkVMUzsKPiArCj4gKwlzd2l0Y2ggKHBhcmFtcy0+c2FtcGxl
+X3dpZHRoKSB7Cj4gKwljYXNlIDE2Ogo+ICsJCWNvbmZpZ19ieXRlM19yZWcgfD0gU0lJOTAyWF9U
+UElfQVVESU9fU0FNUExFX1NJWkVfMTY7Cj4gKwkJYnJlYWs7Cj4gKwljYXNlIDIwOgo+ICsJCWNv
+bmZpZ19ieXRlM19yZWcgfD0gU0lJOTAyWF9UUElfQVVESU9fU0FNUExFX1NJWkVfMjA7Cj4gKwkJ
+YnJlYWs7Cj4gKwljYXNlIDI0Ogo+ICsJY2FzZSAzMjoKPiArCQljb25maWdfYnl0ZTNfcmVnIHw9
+IFNJSTkwMlhfVFBJX0FVRElPX1NBTVBMRV9TSVpFXzI0Owo+ICsJCWJyZWFrOwo+ICsJZGVmYXVs
+dDoKPiArCQlkZXZfZXJyKGRldiwgIiVzOiBVbnN1cHBvcnRlZCBzYW1wbGUgd2lkdGggJXVcbiIs
+IF9fZnVuY19fLAo+ICsJCQlwYXJhbXMtPnNhbXBsZV93aWR0aCk7Cj4gKwkJcmV0dXJuIC1FSU5W
+QUw7Cj4gKwl9Cj4gKwo+ICsJZm9yIChpID0gMDsgaSA8IEFSUkFZX1NJWkUoc2lpOTAyeF9zYW1w
+bGVfZnJlcSk7IGkrKykgewo+ICsJCWlmIChwYXJhbXMtPnNhbXBsZV9yYXRlID09IHNpaTkwMnhf
+c2FtcGxlX2ZyZXFbaV0uZnJlcSkgewo+ICsJCQljb25maWdfYnl0ZTNfcmVnIHw9IHNpaTkwMnhf
+c2FtcGxlX2ZyZXFbaV0udmFsOwo+ICsJCQlicmVhazsKPiArCQl9Cj4gKwl9Cj4gKwo+ICsJbWNs
+a19yYXRlID0gY2xrX2dldF9yYXRlKHNpaTkwMngtPmF1ZGlvLm1jbGspOwo+ICsKPiArCXJldCA9
+IHNpaTkwMnhfc2VsZWN0X21jbGtfZGl2KCZpMnNfY29uZmlnX3JlZywgcGFyYW1zLT5zYW1wbGVf
+cmF0ZSwKPiArCQkJCSAgICAgIG1jbGtfcmF0ZSk7Cj4gKwlpZiAocmV0KQo+ICsJCWRldl9kYmco
+ZGV2LCAiSW5hY2N1cmF0ZSByZWZlcmVuY2UgY2xvY2sgKCVsZC8lZCAhPSAldSlcbiIsCj4gKwkJ
+CW1jbGtfcmF0ZSwgcmV0LCBwYXJhbXMtPnNhbXBsZV9yYXRlKTsKPiArCj4gKwlyZXQgPSBjbGtf
+cHJlcGFyZV9lbmFibGUoc2lpOTAyeC0+YXVkaW8ubWNsayk7Cj4gKwlpZiAocmV0KSB7Cj4gKwkJ
+ZGV2X2VycihkZXYsICJFbmFibGluZyBtY2xrIGZhaWxlZDogJWRcbiIsIHJldCk7Cj4gKwkJcmV0
+dXJuIHJldDsKPiArCX0KPiArCj4gKwltdXRleF9sb2NrKCZzaWk5MDJ4LT5tdXRleCk7Cj4gKwo+
+ICsJcmV0ID0gcmVnbWFwX3dyaXRlKHNpaTkwMngtPnJlZ21hcCwKPiArCQkJICAgU0lJOTAyWF9U
+UElfQVVESU9fQ09ORklHX0JZVEUyX1JFRywKPiArCQkJICAgY29uZmlnX2J5dGUyX3JlZyk7Cj4g
+KwlpZiAocmV0IDwgMCkKPiArCQlnb3RvIG91dDsKPiArCj4gKwlyZXQgPSByZWdtYXBfd3JpdGUo
+c2lpOTAyeC0+cmVnbWFwLCBTSUk5MDJYX1RQSV9JMlNfSU5QVVRfQ09ORklHX1JFRywKPiArCQkJ
+ICAgaTJzX2NvbmZpZ19yZWcpOwo+ICsJaWYgKHJldCkKPiArCQlnb3RvIG91dDsKPiArCj4gKwlm
+b3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShzaWk5MDJ4LT5hdWRpby5pMnNfZmlmb19yb3V0aW5n
+KTsgaSsrKQo+ICsJCXJlZ21hcF93cml0ZShzaWk5MDJ4LT5yZWdtYXAsCj4gKwkJCSAgICAgU0lJ
+OTAyWF9UUElfSTJTX0VOQUJMRV9NQVBQSU5HX1JFRywKPiArCQkJICAgICBzaWk5MDJ4LT5hdWRp
+by5pMnNfZmlmb19yb3V0aW5nW2ldKTsKPiArCj4gKwlyZXQgPSByZWdtYXBfd3JpdGUoc2lpOTAy
+eC0+cmVnbWFwLCBTSUk5MDJYX1RQSV9BVURJT19DT05GSUdfQllURTNfUkVHLAo+ICsJCQkgICBj
+b25maWdfYnl0ZTNfcmVnKTsKPiArCWlmIChyZXQpCj4gKwkJZ290byBvdXQ7Cj4gKwo+ICsJcmV0
+ID0gcmVnbWFwX2J1bGtfd3JpdGUoc2lpOTAyeC0+cmVnbWFwLCBTSUk5MDJYX1RQSV9JMlNfU1RS
+TV9IRFJfQkFTRSwKPiArCQkJCXBhcmFtcy0+aWVjLnN0YXR1cywKPiArCQkJCW1pbigoc2l6ZV90
+KSBTSUk5MDJYX1RQSV9JMlNfU1RSTV9IRFJfU0laRSwKPiArCQkJCSAgICBzaXplb2YocGFyYW1z
+LT5pZWMuc3RhdHVzKSkpOwo+ICsJaWYgKHJldCkKPiArCQlnb3RvIG91dDsKPiArCj4gKwlyZXQg
+PSBoZG1pX2F1ZGlvX2luZm9mcmFtZV9wYWNrKCZwYXJhbXMtPmNlYSwgaW5mb2ZyYW1lX2J1ZiwK
+PiArCQkJCQlzaXplb2YoaW5mb2ZyYW1lX2J1ZikpOwo+ICsJaWYgKHJldCA8IDApIHsKPiArCQlk
+ZXZfZXJyKGRldiwgIiVzOiBGYWlsZWQgdG8gcGFjayBhdWRpbyBpbmZvZnJhbWU6ICVkXG4iLAo+
+ICsJCQlfX2Z1bmNfXywgcmV0KTsKPiArCQlnb3RvIG91dDsKPiArCX0KPiArCj4gKwlyZXQgPSBy
+ZWdtYXBfYnVsa193cml0ZShzaWk5MDJ4LT5yZWdtYXAsCj4gKwkJCQlTSUk5MDJYX1RQSV9NSVND
+X0lORk9GUkFNRV9CQVNFLAo+ICsJCQkJaW5mb2ZyYW1lX2J1ZiwKPiArCQkJCW1pbihyZXQsIFNJ
+STkwMlhfVFBJX01JU0NfSU5GT0ZSQU1FX1NJWkUpKTsKPiArCWlmIChyZXQpCj4gKwkJZ290byBv
+dXQ7Cj4gKwo+ICsJLyogRGVjb2RlIExldmVsIDAgUGFja2V0cyAqLwo+ICsJcmV0ID0gcmVnbWFw
+X3dyaXRlKHNpaTkwMngtPnJlZ21hcCwgU0lJOTAyWF9JTkRfU0VUX1BBR0UsIDB4MDIpOwo+ICsJ
+aWYgKHJldCkKPiArCQlnb3RvIG91dDsKPiArCj4gKwlyZXQgPSByZWdtYXBfd3JpdGUoc2lpOTAy
+eC0+cmVnbWFwLCBTSUk5MDJYX0lORF9PRkZTRVQsIDB4MjQpOwo+ICsJaWYgKHJldCkKPiArCQln
+b3RvIG91dDsKPiArCj4gKwlyZXQgPSByZWdtYXBfd3JpdGUoc2lpOTAyeC0+cmVnbWFwLCBTSUk5
+MDJYX0lORF9WQUxVRSwgMHgwMik7Cj4gKwlpZiAocmV0KQo+ICsJCWdvdG8gb3V0Owo+ICsKPiAr
+CWRldl9kYmcoZGV2LCAiJXM6IGhkbWkgYXVkaW8gZW5hYmxlZFxuIiwgX19mdW5jX18pOwo+ICtv
+dXQ6Cj4gKwltdXRleF91bmxvY2soJnNpaTkwMngtPm11dGV4KTsKPiArCj4gKwlpZiAocmV0KSB7
+Cj4gKwkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHNpaTkwMngtPmF1ZGlvLm1jbGspOwo+ICsJCWRl
+dl9lcnIoZGV2LCAiJXM6IGhkbWkgYXVkaW8gZW5hYmxlIGZhaWxlZDogJWRcbiIsIF9fZnVuY19f
+LAo+ICsJCQlyZXQpOwo+ICsJfQo+ICsKPiArCXJldHVybiByZXQ7Cj4gK30KPiArCj4gK3N0YXRp
+YyB2b2lkIHNpaTkwMnhfYXVkaW9fc2h1dGRvd24oc3RydWN0IGRldmljZSAqZGV2LCB2b2lkICpk
+YXRhKQo+ICt7Cj4gKwlzdHJ1Y3Qgc2lpOTAyeCAqc2lpOTAyeCA9IGRldl9nZXRfZHJ2ZGF0YShk
+ZXYpOwo+ICsKPiArCW11dGV4X2xvY2soJnNpaTkwMngtPm11dGV4KTsKPiArCj4gKwlyZWdtYXBf
+d3JpdGUoc2lpOTAyeC0+cmVnbWFwLCBTSUk5MDJYX1RQSV9BVURJT19DT05GSUdfQllURTJfUkVH
+LAo+ICsJCSAgICAgU0lJOTAyWF9UUElfQVVESU9fSU5URVJGQUNFX0RJU0FCTEUpOwo+ICsKPiAr
+CW11dGV4X3VubG9jaygmc2lpOTAyeC0+bXV0ZXgpOwo+ICsKPiArCWNsa19kaXNhYmxlX3VucHJl
+cGFyZShzaWk5MDJ4LT5hdWRpby5tY2xrKTsKPiArfQo+ICsKPiAraW50IHNpaTkwMnhfYXVkaW9f
+ZGlnaXRhbF9tdXRlKHN0cnVjdCBkZXZpY2UgKmRldiwgdm9pZCAqZGF0YSwgYm9vbCBlbmFibGUp
+Cj4gK3sKPiArCXN0cnVjdCBzaWk5MDJ4ICpzaWk5MDJ4ID0gZGV2X2dldF9kcnZkYXRhKGRldik7
+Cj4gKwo+ICsJbXV0ZXhfbG9jaygmc2lpOTAyeC0+bXV0ZXgpOwo+ICsKPiArCXNpaTkwMnhfbXV0
+ZShzaWk5MDJ4LCBlbmFibGUpOwo+ICsKPiArCW11dGV4X3VubG9jaygmc2lpOTAyeC0+bXV0ZXgp
+Owo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IHNpaTkwMnhfYXVkaW9f
+Z2V0X2VsZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHZvaWQgKmRhdGEsCj4gKwkJCQkgdWludDhfdCAq
+YnVmLCBzaXplX3QgbGVuKQo+ICt7Cj4gKwlzdHJ1Y3Qgc2lpOTAyeCAqc2lpOTAyeCA9IGRldl9n
+ZXRfZHJ2ZGF0YShkZXYpOwo+ICsKPiArCW11dGV4X2xvY2soJnNpaTkwMngtPm11dGV4KTsKPiAr
+Cj4gKwltZW1jcHkoYnVmLCBzaWk5MDJ4LT5jb25uZWN0b3IuZWxkLAo+ICsJICAgICAgIG1pbihz
+aXplb2Yoc2lpOTAyeC0+Y29ubmVjdG9yLmVsZCksIGxlbikpOwo+ICsKPiArCW11dGV4X3VubG9j
+aygmc2lpOTAyeC0+bXV0ZXgpOwo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICtzdGF0aWMg
+Y29uc3Qgc3RydWN0IGhkbWlfY29kZWNfb3BzIHNpaTkwMnhfYXVkaW9fY29kZWNfb3BzID0gewo+
+ICsJLmh3X3BhcmFtcyA9IHNpaTkwMnhfYXVkaW9faHdfcGFyYW1zLAo+ICsJLmF1ZGlvX3NodXRk
+b3duID0gc2lpOTAyeF9hdWRpb19zaHV0ZG93biwKPiArCS5kaWdpdGFsX211dGUgPSBzaWk5MDJ4
+X2F1ZGlvX2RpZ2l0YWxfbXV0ZSwKPiArCS5nZXRfZWxkID0gc2lpOTAyeF9hdWRpb19nZXRfZWxk
+LAo+ICt9Owo+ICsKPiArc3RhdGljIGludCBzaWk5MDJ4X2F1ZGlvX2NvZGVjX2luaXQoc3RydWN0
+IHNpaTkwMnggKnNpaTkwMngsCj4gKwkJCQkgICAgc3RydWN0IGRldmljZSAqZGV2KQo+ICt7Cj4g
+KwlzdGF0aWMgY29uc3QgdTggaTJzX2ZpZm9fZGVmYXVsdHNbXSA9IHsKPiArCQlTSUk5MDJYX1RQ
+SV9JMlNfQ09ORklHX0ZJRk8wLAo+ICsJCVNJSTkwMlhfVFBJX0kyU19DT05GSUdfRklGTzEsCj4g
+KwkJU0lJOTAyWF9UUElfSTJTX0NPTkZJR19GSUZPMiwKPiArCQlTSUk5MDJYX1RQSV9JMlNfQ09O
+RklHX0ZJRk8zLAo+ICsJfTsKPiArCXN0cnVjdCBoZG1pX2NvZGVjX3BkYXRhIGNvZGVjX2RhdGEg
+PSB7Cj4gKwkJLm9wcyA9ICZzaWk5MDJ4X2F1ZGlvX2NvZGVjX29wcywKPiArCQkuaTJzID0gMSwg
+LyogT25seSBpMnMgc3VwcG9ydCBmb3Igbm93LiAqLwo+ICsJCS5zcGRpZiA9IDAsCj4gKwkJLm1h
+eF9pMnNfY2hhbm5lbHMgPSAwLAo+ICsJfTsKPiArCWludCByZXQsIGk7Cj4gKwo+ICsJcmV0ID0g
+b2ZfcHJvcGVydHlfcmVhZF91MzJfYXJyYXkoZGV2LT5vZl9ub2RlLCAiaTJzLWZpZm8tcm91dGlu
+ZyIsCj4gKwkJCQkJIHNpaTkwMngtPmF1ZGlvLmkyc19maWZvX3JvdXRpbmcsCj4gKwkJCQkJIEFS
+UkFZX1NJWkUoc2lpOTAyeC0+YXVkaW8uaTJzX2ZpZm9fcm91dGluZykpOwo+ICsKPiArCWlmIChy
+ZXQgIT0gMCkgewo+ICsJCWlmIChyZXQgPT0gLUVJTlZBTCkKPiArCQkJZGV2X2RiZyhkZXYsICIl
+czogTm8gXCJpMnMtZmlmby1yb3V0aW5nXCIsIG5vIGF1ZGlvXG4iLAo+ICsJCQlfX2Z1bmNfXyk7
+Cj4gKwkJZWxzZQo+ICsJCQlkZXZfZXJyKGRldiwKPiArCQkJCSIlczogRXJyb3IgZ2V0dGluIFwi
+aTJzLWZpZm8tcm91dGluZ1wiOiAlZFxuIiwKPiArCQkJCV9fZnVuY19fLCByZXQpOwo+ICsJCXJl
+dHVybiAwOwo+ICsJfQo+ICsKPiArCXNpaTkwMngtPmF1ZGlvLm1jbGsgPSBkZXZtX2Nsa19nZXQo
+ZGV2LCAibWNsayIpOwo+ICsJaWYgKElTX0VSUihzaWk5MDJ4LT5hdWRpby5tY2xrKSkgewo+ICsJ
+CWRldl9lcnIoZGV2LCAiJXM6IE5vIGNsb2NrIChhdWRpbyBtY2xrKSBmb3VuZDogJWxkXG4iLAo+
+ICsJCQlfX2Z1bmNfXywgUFRSX0VSUihzaWk5MDJ4LT5hdWRpby5tY2xrKSk7Cj4gKwkJcmV0dXJu
+IDA7Cj4gKwl9Cj4gKwo+ICsJZm9yIChpID0gMDsgaSA8IEFSUkFZX1NJWkUoc2lpOTAyeC0+YXVk
+aW8uaTJzX2ZpZm9fcm91dGluZyk7IGkrKykgewo+ICsJCWlmIChzaWk5MDJ4LT5hdWRpby5pMnNf
+Zmlmb19yb3V0aW5nW2ldICYgRU5BQkxFX0JJVCkKPiArCQkJY29kZWNfZGF0YS5tYXhfaTJzX2No
+YW5uZWxzICs9IDI7Cj4gKwkJc2lpOTAyeC0+YXVkaW8uaTJzX2ZpZm9fcm91dGluZ1tpXSB8PSBp
+MnNfZmlmb19kZWZhdWx0c1tpXTsKPiArCX0KPiArCj4gKwlzaWk5MDJ4LT5hdWRpby5wZGV2ID0g
+cGxhdGZvcm1fZGV2aWNlX3JlZ2lzdGVyX2RhdGEoCj4gKwkJZGV2LCBIRE1JX0NPREVDX0RSVl9O
+QU1FLCBQTEFURk9STV9ERVZJRF9BVVRPLAo+ICsJCSZjb2RlY19kYXRhLCBzaXplb2YoY29kZWNf
+ZGF0YSkpOwo+ICsKPiArCXJldHVybiBQVFJfRVJSX09SX1pFUk8oc2lpOTAyeC0+YXVkaW8ucGRl
+dik7Cj4gK30KPiArCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcmVnbWFwX3JhbmdlIHNpaTkwMnhf
+dm9sYXRpbGVfcmFuZ2VzW10gPSB7Cj4gIAl7IC5yYW5nZV9taW4gPSAwLCAucmFuZ2VfbWF4ID0g
+MHhmZiB9LAo+ICB9Owo+IEBAIC0zMzYsNiArNzcyLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBy
+ZWdtYXBfYWNjZXNzX3RhYmxlIHNpaTkwMnhfdm9sYXRpbGVfdGFibGUgPSB7Cj4gIHN0YXRpYyBj
+b25zdCBzdHJ1Y3QgcmVnbWFwX2NvbmZpZyBzaWk5MDJ4X3JlZ21hcF9jb25maWcgPSB7Cj4gIAku
+cmVnX2JpdHMgPSA4LAo+ICAJLnZhbF9iaXRzID0gOCwKPiArCS5tYXhfcmVnaXN0ZXIgPSBTSUk5
+MDJYX1RQSV9NSVNDX0lORk9GUkFNRV9FTkQsCj4gIAkudm9sYXRpbGVfdGFibGUgPSAmc2lpOTAy
+eF92b2xhdGlsZV90YWJsZSwKPiAgCS5jYWNoZV90eXBlID0gUkVHQ0FDSEVfTk9ORSwKPiAgfTsK
+PiBAQCAtNTA4LDYgKzk0NSw4IEBAIHN0YXRpYyBpbnQgc2lpOTAyeF9wcm9iZShzdHJ1Y3QgaTJj
+X2NsaWVudCAqY2xpZW50LAo+ICAJCXJldHVybiBQVFJfRVJSKHNpaTkwMngtPnJlc2V0X2dwaW8p
+Owo+ICAJfQo+ICAKPiArCW11dGV4X2luaXQoJnNpaTkwMngtPm11dGV4KTsKPiArCj4gIAlzaWk5
+MDJ4X3Jlc2V0KHNpaTkwMngpOwo+ICAKPiAgCXJldCA9IHJlZ21hcF93cml0ZShzaWk5MDJ4LT5y
+ZWdtYXAsIFNJSTkwMlhfUkVHX1RQSV9SUUIsIDB4MCk7Cj4gQEAgLTU0OCw2ICs5ODcsOCBAQCBz
+dGF0aWMgaW50IHNpaTkwMnhfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwKPiAgCXNp
+aTkwMngtPmJyaWRnZS50aW1pbmdzID0gJmRlZmF1bHRfc2lpOTAyeF90aW1pbmdzOwo+ICAJZHJt
+X2JyaWRnZV9hZGQoJnNpaTkwMngtPmJyaWRnZSk7Cj4gIAo+ICsJc2lpOTAyeF9hdWRpb19jb2Rl
+Y19pbml0KHNpaTkwMngsIGRldik7Cj4gKwo+ICAJaTJjX3NldF9jbGllbnRkYXRhKGNsaWVudCwg
+c2lpOTAyeCk7Cj4gIAo+ICAJc2lpOTAyeC0+aTJjbXV4ID0gaTJjX211eF9hbGxvYyhjbGllbnQt
+PmFkYXB0ZXIsIGRldiwKPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9zb3VuZC9z
+aWk5MDJ4LWF1ZGlvLmggYi9pbmNsdWRlL2R0LWJpbmRpbmdzL3NvdW5kL3NpaTkwMngtYXVkaW8u
+aAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi4zMmU1MGE5MjZi
+NmYKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9zb3VuZC9zaWk5
+MDJ4LWF1ZGlvLmgKPiBAQCAtMCwwICsxLDExIEBACj4gKyNpZm5kZWYgX19EVF9TSUk5MDIyX0FV
+RElPX0gKPiArI2RlZmluZSBfX0RUX1NJSTkwMjJfQVVESU9fSAo+ICsKPiArI2RlZmluZSBFTkFC
+TEVfQklUCQkJMHg4MAo+ICsjZGVmaW5lIENPTk5FQ1RfU0QwCQkJMHgwMAo+ICsjZGVmaW5lIENP
+Tk5FQ1RfU0QxCQkJMHgxMAo+ICsjZGVmaW5lIENPTk5FQ1RfU0QyCQkJMHgyMAo+ICsjZGVmaW5l
+IENPTk5FQ1RfU0QzCQkJMHgzMAo+ICsjZGVmaW5lIExFRlRfUklHSFRfU1dBUF9CSVQJCTB4MDQK
+PiArCj4gKyNlbmRpZiAvKiBfX0RUX1NJSTkwMjJfQVVESU9fSCAqLwoKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
