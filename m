@@ -1,185 +1,259 @@
-From: Johan Jonker <jbx6244@gmail.com>
-Subject: Re: [PATCH v3 1/4] drm: rockchip: introduce rk3066 hdmi
-Date: Mon, 4 Mar 2019 23:48:30 +0100
-Message-ID: <b6b818d5-8c24-e01a-572e-97c1754c80e8@gmail.com>
-References: <20190302104116.1535-1-jbx6244@gmail.com>
- <20190302104116.1535-2-jbx6244@gmail.com>
- <20190303202308.GD13157@ravnborg.org>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 2/2] watchdog: orion_wdt: use timer1 as a pretimeout
+Date: Tue,  5 Mar 2019 11:51:52 +1300
+Message-ID: <20190304225152.26831-3-chris.packham@alliedtelesis.co.nz>
+References: <20190227230707.GA28635@roeck-us.net>
+ <20190304225152.26831-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190303202308.GD13157@ravnborg.org>
-Content-Language: en-US
+In-Reply-To: <20190304225152.26831-1-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: heiko@sntech.de, mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux@roeck-us.net, andrew@lunn.ch, gregory.clement@bootlin.com, jason@lakedaemon.net
+Cc: linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the useful review comments.
+The orion watchdog can either reset the CPU or generate an interrupt.
+The interrupt would be useful for debugging as it provides panic()
+output about the watchdog expiry, however if the interrupt is used the
+watchdog can't reset the CPU in the event of being stuck in a loop with
+interrupts disabled or if the CPU is prevented from accessing memory
+(e.g. an unterminated DMA).
 
-With regard to the bugs something between rc1 and rc8 results
-in a freeze on poweroff. Power domain doesn't seem to turn off
-the vop and hdmi in rc8.
-For testing only.
+All of the orion based CPU cores (at least back as far as Kirkwood) have
+spare timers that aren't currently used by the Linux kernel. We can use
+timer1 to provide a pre-timeout ahead of the watchdog timer and provide
+the possibility of gathering debug before the reset triggers.
 
-Forgot to ask rob+dt the prefered document name for "rockchip,rk3066-hdmi"
-Please advise if this is OK? "rockchip_rk3066-hdmi.txt"
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ arch/arm/boot/dts/armada-38x.dtsi |  1 +
+ drivers/watchdog/orion_wdt.c      | 58 ++++++++++++++++++++-----------
+ 2 files changed, 39 insertions(+), 20 deletions(-)
 
-On 3/3/19 9:23 PM, Sam Ravnborg wrote:> Hi Johan.
->
-> Thanks for this nive driver.
-> A few review comments follows.
->
-> 	Sam
->
-> On Sat, Mar 02, 2019 at 11:41:13AM +0100, Johan Jonker wrote:
->> From: Zheng Yang <zhengyang@rock-chips.com>
->>
->> Introduce rk3066 hdmi.
-> A little more info would be good here.
-> Do not assume all reader knows as much as you do.
-
-Will add more text in V4.
-
->> +#include <linux/clk.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/regmap.h>
->> +
->> +#include <drm/drm_of.h>
->> +#include <drm/drmP.h>
->> +#include <drm/drm_probe_helper.h>
-> Please do not use drmP.h in new files. The usage of drmP.h is deprecated.
-> Also please sort the include files, but keep the nice grouping.
-
-You try to get rid of it and now I add one more to it ...
-Thank you for letting me know.
-The file drmP.h is used for:
-to_platform_device, platform_get_resource, platform_get_irq
-Replaced <drm/drmP.h> by <linux/platform_device.h>
-
->> +	int vic;
-> vic is used so much. It deserves an explanation.
-
-Is this OK?
-	int vic; // pointer to the current cea mode in the edid_cea_modes array
-
-hdmi->hdmi_data.vic = drm_match_cea_mode(mode);
-
->> +	unsigned int enc_in_format;
->
-> enc_in_format is in this patch only assinged.
-> aybe drop it (if not used in later patches)
-
-Will drop it. Possible leftover when they reused
-the inno-hdmi driver as template?
-
->> +	u8 ddc_addr;
->> +	u8 segment_addr;
-> The two members above are only used in rk3066_hdmi_i2c_write()
-> Maybe they can be made local variables?
-
-ddc_addr and segment_addr only get a value in the condition below and
-are reused.
-Should remain global.
-
-	if (msgs->addr == DDC_SEGMENT_ADDR)
-		hdmi->i2c->segment_addr = msgs->buf[0];
-	if (msgs->addr == DDC_ADDR)
-		hdmi->i2c->ddc_addr = msgs->buf[0];
-
->> +	struct mutex lock; /*for i2c operation*/
-> Name the lock after what is protects, to avoid mis-use.
-
-Will change the name to i2c_lock.
-
->> +	struct completion cmp;
->
-> cmp is shorthand for "compare" - as we have a command named so.
-> Find a better name.
-
-Agree.
-
->> +	struct drm_device *drm_dev;
-> The new way to do this is to embed the device.
-> See latest patches by Noralf in drm-misc-next, which include a nice
-example.
-
-That sounds more like a job for the Rockchip maintainers and
-not for a individual. With this driver they have 8 more to go ...
-
-	ADD_ROCKCHIP_SUB_DRIVER(vop_platform_driver, CONFIG_DRM_ROCKCHIP);
-	ADD_ROCKCHIP_SUB_DRIVER(rockchip_lvds_driver,
-				CONFIG_ROCKCHIP_LVDS);
-	ADD_ROCKCHIP_SUB_DRIVER(rockchip_dp_driver,
-				CONFIG_ROCKCHIP_ANALOGIX_DP);
-	ADD_ROCKCHIP_SUB_DRIVER(cdn_dp_driver, CONFIG_ROCKCHIP_CDN_DP);
-	ADD_ROCKCHIP_SUB_DRIVER(dw_hdmi_rockchip_pltfm_driver,
-				CONFIG_ROCKCHIP_DW_HDMI);
-	ADD_ROCKCHIP_SUB_DRIVER(dw_mipi_dsi_rockchip_driver,
-				CONFIG_ROCKCHIP_DW_MIPI_DSI);
-	ADD_ROCKCHIP_SUB_DRIVER(inno_hdmi_driver, CONFIG_ROCKCHIP_INNO_HDMI);
-	ADD_ROCKCHIP_SUB_DRIVER(rk3066_hdmi_driver,
-				CONFIG_ROCKCHIP_RK3066_HDMI);
-
->> +	struct regmap *regmap;
-> +1 for using regmap.
-> But then there is still several readl_relaxed() writel_relaxed() calls?
-> They are in hdmi_readb() and hdmi_writeb(). Should a regmap had been
-used here too?
-
-Will rename hdmi->regmap to hdmi->grf_regmap to make it look more different
-between hdmi devm_ioremap and grf syscon_regmap.
-
->> +	value |= vsync_offset << 4;
-> Replace 4 with HDMI_VIDEO_VSYNC_OFFSET_SHIFT??
-
-Looks like it. That's something only the author can tell.
-
->> +	hdmi->regmap =
->> +		syscon_regmap_lookup_by_phandle(hdmi->dev->of_node,
->> +						"rockchip,grf");
->
-> dev->of_node would be fine here. No reason to go via hdmi->
-
-Will replace the other hdmi->dev in this function by dev as well.
-
->> +	hdmi->connector.funcs->destroy(&hdmi->connector);
->> +	hdmi->encoder.funcs->destroy(&hdmi->encoder);
-> I think the destroy() function should not be called directly.
-
-Don't know what should be used instead. Please advise.
-
->> +static const struct of_device_id rk3066_hdmi_dt_ids[] = {
->> +	{ .compatible = "rockchip,rk3066-hdmi",
->> +	},
-> MAke this a one-liner.
->
->> +	{},
-> Us { /* sentinal */ }, like most other drivers.
-
-Agree. But I prefere sentinel ...
-
-{ .compatible = "rockchip,rk3066-hdmi"},
-{ /* sentinel */ },
-
->> +	.driver = {
->> +		.name = "rockchip-rk3066hdmi",
-> Different naming are used for the driver in this file.
-> Coniser using a macro to align the naming.
-
-"rockchip,rk3066-hdmi" is related to "rockchip,rk3066-vop"
-
-"rockchip-rk3066hdmi" should remain in line with the other debug messages,
-else it gets a mess if you do a dmesg | grep ...
-
-[    0.576237] rockchip-pm-domain 20004000.pmu:power-controller:
-rockchip_pm_domain_probe
-[    1.198354] rockchip-vop 1010c000.vop: attaching to power domain 'pd_vio'
-[    1.437444] rockchip-drm display-subsystem: bound 10116000.hdmi (ops
-0xc0842d38)
-[    0.397567] rockchip-rk3066hdmi 10116000.hdmi: registered RK3066 HDMI
-I2C bus driver
-
-Not so good example.
-[   12.726332] dwmmc_rockchip 10214000.dwmmc: Using external DMA controller.
+diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada=
+-38x.dtsi
+index 929459c42760..fd0caa9714f2 100644
+--- a/arch/arm/boot/dts/armada-38x.dtsi
++++ b/arch/arm/boot/dts/armada-38x.dtsi
+@@ -376,6 +376,7 @@
+ 				reg =3D <0x20300 0x34>, <0x20704 0x4>, <0x18260 0x4>;
+ 				clocks =3D <&coreclk 2>, <&refclk>;
+ 				clock-names =3D "nbclk", "fixed";
++				interrupts-extended =3D <&gic  GIC_SPI  9 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
+=20
+ 			cpurst: cpurst@20800 {
+diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
+index 8b259c712c52..bf1dc75c2045 100644
+--- a/drivers/watchdog/orion_wdt.c
++++ b/drivers/watchdog/orion_wdt.c
+@@ -46,6 +46,10 @@
+ #define WDT_AXP_FIXED_ENABLE_BIT BIT(10)
+ #define WDT_A370_EXPIRED	BIT(31)
+=20
++#define TIMER1_VAL_OFF		0x001c
++#define TIMER1_ENABLE_BIT	BIT(2)
++#define TIMER1_FIXED_ENABLE_BIT	BIT(12)
++
+ static bool nowayout =3D WATCHDOG_NOWAYOUT;
+ static int heartbeat =3D -1;		/* module parameter (seconds) */
+=20
+@@ -118,6 +122,7 @@ static int armada375_wdt_clock_init(struct platform_d=
+evice *pdev,
+ 				    struct orion_watchdog *dev)
+ {
+ 	int ret;
++	u32 val;
+=20
+ 	dev->clk =3D of_clk_get_by_name(pdev->dev.of_node, "fixed");
+ 	if (!IS_ERR(dev->clk)) {
+@@ -127,9 +132,8 @@ static int armada375_wdt_clock_init(struct platform_d=
+evice *pdev,
+ 			return ret;
+ 		}
+=20
+-		atomic_io_modify(dev->reg + TIMER_CTRL,
+-				WDT_AXP_FIXED_ENABLE_BIT,
+-				WDT_AXP_FIXED_ENABLE_BIT);
++		val =3D WDT_AXP_FIXED_ENABLE_BIT | TIMER1_FIXED_ENABLE_BIT;
++		atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
+ 		dev->clk_rate =3D clk_get_rate(dev->clk);
+=20
+ 		return 0;
+@@ -158,6 +162,7 @@ static int armadaxp_wdt_clock_init(struct platform_de=
+vice *pdev,
+ 				   struct orion_watchdog *dev)
+ {
+ 	int ret;
++	u32 val;
+=20
+ 	dev->clk =3D of_clk_get_by_name(pdev->dev.of_node, "fixed");
+ 	if (IS_ERR(dev->clk))
+@@ -169,38 +174,46 @@ static int armadaxp_wdt_clock_init(struct platform_=
+device *pdev,
+ 	}
+=20
+ 	/* Enable the fixed watchdog clock input */
+-	atomic_io_modify(dev->reg + TIMER_CTRL,
+-			 WDT_AXP_FIXED_ENABLE_BIT,
+-			 WDT_AXP_FIXED_ENABLE_BIT);
++	val =3D WDT_AXP_FIXED_ENABLE_BIT | TIMER1_FIXED_ENABLE_BIT;
++	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
+=20
+ 	dev->clk_rate =3D clk_get_rate(dev->clk);
++
++
+ 	return 0;
+ }
+=20
+ static int orion_wdt_ping(struct watchdog_device *wdt_dev)
+ {
+ 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
++
+ 	/* Reload watchdog duration */
+ 	writel(dev->clk_rate * wdt_dev->timeout,
+ 	       dev->reg + dev->data->wdt_counter_offset);
++	writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
++	       dev->reg + TIMER1_VAL_OFF);
++
+ 	return 0;
+ }
+=20
+ static int armada375_start(struct watchdog_device *wdt_dev)
+ {
+ 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
+-	u32 reg;
++	u32 reg, val;
+=20
+ 	/* Set watchdog duration */
+ 	writel(dev->clk_rate * wdt_dev->timeout,
+ 	       dev->reg + dev->data->wdt_counter_offset);
++	if (wdt_dev->pretimeout)
++		writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
++		       dev->reg + TIMER1_VAL_OFF);
+=20
+ 	/* Clear the watchdog expiration bit */
+ 	atomic_io_modify(dev->reg + TIMER_A370_STATUS, WDT_A370_EXPIRED, 0);
+=20
+ 	/* Enable watchdog timer */
+-	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit,
+-						dev->data->wdt_enable_bit);
++	val =3D dev->data->wdt_enable_bit | TIMER1_ENABLE_BIT;
++	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
+=20
+ 	/* Enable reset on watchdog */
+ 	reg =3D readl(dev->rstout);
+@@ -214,7 +227,7 @@ static int armada375_start(struct watchdog_device *wd=
+t_dev)
+ static int armada370_start(struct watchdog_device *wdt_dev)
+ {
+ 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
+-	u32 reg;
++	u32 reg, val;
+=20
+ 	/* Set watchdog duration */
+ 	writel(dev->clk_rate * wdt_dev->timeout,
+@@ -224,8 +237,8 @@ static int armada370_start(struct watchdog_device *wd=
+t_dev)
+ 	atomic_io_modify(dev->reg + TIMER_A370_STATUS, WDT_A370_EXPIRED, 0);
+=20
+ 	/* Enable watchdog timer */
+-	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit,
+-						dev->data->wdt_enable_bit);
++	val =3D dev->data->wdt_enable_bit | TIMER1_ENABLE_BIT;
++	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
+=20
+ 	/* Enable reset on watchdog */
+ 	reg =3D readl(dev->rstout);
+@@ -237,14 +250,15 @@ static int armada370_start(struct watchdog_device *=
+wdt_dev)
+ static int orion_start(struct watchdog_device *wdt_dev)
+ {
+ 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
++	u32 val;
+=20
+ 	/* Set watchdog duration */
+ 	writel(dev->clk_rate * wdt_dev->timeout,
+ 	       dev->reg + dev->data->wdt_counter_offset);
+=20
+ 	/* Enable watchdog timer */
+-	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit,
+-						dev->data->wdt_enable_bit);
++	val =3D dev->data->wdt_enable_bit | TIMER1_ENABLE_BIT;
++	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
+=20
+ 	/* Enable reset on watchdog */
+ 	atomic_io_modify(dev->rstout, dev->data->rstout_enable_bit,
+@@ -264,12 +278,14 @@ static int orion_wdt_start(struct watchdog_device *=
+wdt_dev)
+ static int orion_stop(struct watchdog_device *wdt_dev)
+ {
+ 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
++	u32 mask;
+=20
+ 	/* Disable reset on watchdog */
+ 	atomic_io_modify(dev->rstout, dev->data->rstout_enable_bit, 0);
+=20
+ 	/* Disable watchdog timer */
+-	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit, 0);
++	mask =3D dev->data->wdt_enable_bit | TIMER1_ENABLE_BIT;
++	atomic_io_modify(dev->reg + TIMER_CTRL, mask, 0);
+=20
+ 	return 0;
+ }
+@@ -277,7 +293,7 @@ static int orion_stop(struct watchdog_device *wdt_dev=
+)
+ static int armada375_stop(struct watchdog_device *wdt_dev)
+ {
+ 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
+-	u32 reg;
++	u32 reg, mask;
+=20
+ 	/* Disable reset on watchdog */
+ 	atomic_io_modify(dev->rstout_mask, dev->data->rstout_mask_bit,
+@@ -287,7 +303,8 @@ static int armada375_stop(struct watchdog_device *wdt=
+_dev)
+ 	writel(reg, dev->rstout);
+=20
+ 	/* Disable watchdog timer */
+-	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit, 0);
++	mask =3D dev->data->wdt_enable_bit | TIMER1_ENABLE_BIT;
++	atomic_io_modify(dev->reg + TIMER_CTRL, mask, 0);
+=20
+ 	return 0;
+ }
+@@ -295,7 +312,7 @@ static int armada375_stop(struct watchdog_device *wdt=
+_dev)
+ static int armada370_stop(struct watchdog_device *wdt_dev)
+ {
+ 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
+-	u32 reg;
++	u32 reg, mask;
+=20
+ 	/* Disable reset on watchdog */
+ 	reg =3D readl(dev->rstout);
+@@ -303,7 +320,8 @@ static int armada370_stop(struct watchdog_device *wdt=
+_dev)
+ 	writel(reg, dev->rstout);
+=20
+ 	/* Disable watchdog timer */
+-	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit, 0);
++	mask =3D dev->data->wdt_enable_bit | TIMER1_ENABLE_BIT;
++	atomic_io_modify(dev->reg + TIMER_CTRL, mask, 0);
+=20
+ 	return 0;
+ }
+@@ -350,7 +368,7 @@ static unsigned int orion_wdt_get_timeleft(struct wat=
+chdog_device *wdt_dev)
+ }
+=20
+ static const struct watchdog_info orion_wdt_info =3D {
+-	.options =3D WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
++	.options =3D WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE =
+| WDIOF_PRETIMEOUT,
+ 	.identity =3D "Orion Watchdog",
+ };
+=20
+--=20
+2.21.0
