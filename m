@@ -1,254 +1,47 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH v3 10/12] hikey960: Support usb functionality of Hikey960
-Date: Mon, 4 Mar 2019 09:47:49 +0800
-Message-ID: <1551664069.2210.64.camel@mhfsdcap03>
-References: <20190302090505.65542-1-chenyu56@huawei.com>
-         <20190302090505.65542-11-chenyu56@huawei.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] arm64: dts: ls1028a: add pmu dt nodes
+Date: Mon, 4 Mar 2019 09:48:40 +0800
+Message-ID: <20190304014838.GV26041@dragon>
+References: <20190227015752.18342-1-alison.wang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190302090505.65542-11-chenyu56@huawei.com>
+Content-Disposition: inline
+In-Reply-To: <20190227015752.18342-1-alison.wang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yu Chen <chenyu56@huawei.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Alison Wang <alison.wang@nxp.com>
+Cc: leoyang.li@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-hi,
-On Sat, 2019-03-02 at 17:05 +0800, Yu Chen wrote:
-> This driver handles usb hub power on and typeC port event of HiKey960 board:
-> 1)DP&DM switching between usb hub and typeC port base on typeC port
-> state
-> 2)Control power of usb hub on Hikey960
-> 3)Control vbus of typeC port
+On Wed, Feb 27, 2019 at 09:57:52AM +0800, Alison Wang wrote:
+> This patch adds pmu dt nodes for LS1028A.
 > 
-> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: John Stultz <john.stultz@linaro.org>
-> Cc: Binghui Wang <wangbinghui@hisilicon.com>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> Signed-off-by: Alison Wang <alison.wang@nxp.com>
 > ---
-> v1:
-> * Using gpiod API with the gpios.
-> * Removing registering usb role switch.
-> * Registering usb role switch notifier.
-> v2:
-> * Fix license declaration.
-> * Add configuration of  gpio direction.
-> * Remove some log print.
-> v3:
-> * Remove property of "typec_vbus_enable_val".
-> * Remove gpiod_direction_output and set initial value of gpio by devm_gpiod_get.
-> ---
-> ---
->  drivers/misc/Kconfig          |   6 ++
->  drivers/misc/Makefile         |   1 +
->  drivers/misc/hisi_hikey_usb.c | 167 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 174 insertions(+)
->  create mode 100644 drivers/misc/hisi_hikey_usb.c
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |    5 +++++
+>  1 files changed, 5 insertions(+), 0 deletions(-)
 > 
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index f417b06e11c5..8d8b717759e2 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -521,6 +521,12 @@ config PVPANIC
->  	  a paravirtualized device provided by QEMU; it lets a virtual machine
->  	  (guest) communicate panic events to the host.
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index a8cf92a..36ef9c5 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -89,6 +89,11 @@
+>  					  IRQ_TYPE_LEVEL_LOW)>;
+>  	};
 >  
-> +config HISI_HIKEY_USB
-> +	tristate "USB functionality of HiSilicon Hikey Platform"
-> +	depends on OF && GPIOLIB
-> +	help
-> +	  If you say yes here you get support for usb functionality of HiSilicon Hikey Platform.
+> +	pmu {
+> +		compatible = "arm,armv8-pmuv3";
+
+Shouldn't we use "arm,cortex-a72-pmu" as compatible for better?
+
+Shawn
+
+> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
 > +
->  source "drivers/misc/c2port/Kconfig"
->  source "drivers/misc/eeprom/Kconfig"
->  source "drivers/misc/cb710/Kconfig"
-> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-> index e39ccbbc1b3a..dc8892b13a1a 100644
-> --- a/drivers/misc/Makefile
-> +++ b/drivers/misc/Makefile
-> @@ -59,3 +59,4 @@ obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
->  obj-$(CONFIG_OCXL)		+= ocxl/
->  obj-y				+= cardreader/
->  obj-$(CONFIG_PVPANIC)   	+= pvpanic.o
-> +obj-$(CONFIG_HISI_HIKEY_USB)	+= hisi_hikey_usb.o
-> diff --git a/drivers/misc/hisi_hikey_usb.c b/drivers/misc/hisi_hikey_usb.c
-> new file mode 100644
-> index 000000000000..85d6fee468c0
-> --- /dev/null
-> +++ b/drivers/misc/hisi_hikey_usb.c
-> @@ -0,0 +1,167 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Support for usb functionality of Hikey series boards
-> + * based on Hisilicon Kirin Soc.
-> + *
-> + * Copyright (C) 2017-2018 Hilisicon Electronics Co., Ltd.
-> + *		http://www.huawei.com
-> + *
-> + * Authors: Yu Chen <chenyu56@huawei.com>
-> + */
-> +
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/notifier.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/usb/role.h>
-> +
-> +#define DEVICE_DRIVER_NAME "hisi_hikey_usb"
-> +
-> +#define HUB_VBUS_POWER_ON 1
-> +#define HUB_VBUS_POWER_OFF 0
-> +#define USB_SWITCH_TO_HUB 1
-> +#define USB_SWITCH_TO_TYPEC 0
-> +#define TYPEC_VBUS_POWER_ON 1
-> +#define TYPEC_VBUS_POWER_OFF 0
-> +
-> +struct hisi_hikey_usb {
-> +	struct gpio_desc *otg_switch;
-> +	struct gpio_desc *typec_vbus;
-> +	struct gpio_desc *hub_vbus;
-> +
-> +	struct usb_role_switch *role_sw;
-> +	struct notifier_block nb;
-> +};
-> +
-> +static void hub_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb, int value)
-> +{
-> +	gpiod_set_value_cansleep(hisi_hikey_usb->hub_vbus, value);
-> +}
-> +
-> +static void usb_switch_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
-> +		int switch_to)
-> +{
-> +	gpiod_set_value_cansleep(hisi_hikey_usb->otg_switch, switch_to);
-> +}
-> +
-> +static void usb_typec_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
-> +		int value)
-> +{
-> +	gpiod_set_value_cansleep(hisi_hikey_usb->typec_vbus, value);
-> +}
-> +
-> +static int hisi_hikey_role_switch(struct notifier_block *nb,
-> +			unsigned long state, void *data)
-> +{
-> +	struct hisi_hikey_usb *hisi_hikey_usb;
-> +
-> +	hisi_hikey_usb = container_of(nb, struct hisi_hikey_usb, nb);
-> +
-> +	switch (state) {
-> +	case USB_ROLE_NONE:
-> +		usb_typec_power_ctrl(hisi_hikey_usb, TYPEC_VBUS_POWER_OFF);
-> +		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_HUB);
-> +		hub_power_ctrl(hisi_hikey_usb, HUB_VBUS_POWER_ON);
-> +		break;
-> +	case USB_ROLE_HOST:
-> +		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_TYPEC);
-> +		usb_typec_power_ctrl(hisi_hikey_usb, TYPEC_VBUS_POWER_ON);
-> +		break;
-> +	case USB_ROLE_DEVICE:
-> +		hub_power_ctrl(hisi_hikey_usb, HUB_VBUS_POWER_OFF);
-> +		usb_typec_power_ctrl(hisi_hikey_usb, TYPEC_VBUS_POWER_OFF);
-> +		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_TYPEC);
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int hisi_hikey_usb_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *root = dev->of_node;
-> +	struct hisi_hikey_usb *hisi_hikey_usb;
-> +	int ret;
-> +
-> +	hisi_hikey_usb = devm_kzalloc(dev, sizeof(*hisi_hikey_usb), GFP_KERNEL);
-> +	if (!hisi_hikey_usb)
-> +		return -ENOMEM;
-> +
-> +	hisi_hikey_usb->nb.notifier_call = hisi_hikey_role_switch;
-> +
-> +	hisi_hikey_usb->typec_vbus = devm_gpiod_get(dev, "typec-vbus",
-> +			GPIOD_OUT_LOW);
-> +	if (!hisi_hikey_usb->typec_vbus)
-> +		return -ENOENT;
-> +	else if (IS_ERR(hisi_hikey_usb->typec_vbus))
-> +		return PTR_ERR(hisi_hikey_usb->typec_vbus);
-> +
-> +	hisi_hikey_usb->otg_switch = devm_gpiod_get(dev, "otg-switch",
-> +			GPIOD_OUT_HIGH);
-> +	if (!hisi_hikey_usb->otg_switch)
-> +		return -ENOENT;
-> +	else if (IS_ERR(hisi_hikey_usb->otg_switch))
-> +		return PTR_ERR(hisi_hikey_usb->otg_switch);
-> +
-> +	/* hub-vdd33-en is optional */
-> +	hisi_hikey_usb->hub_vbus = devm_gpiod_get(dev, "hub-vdd33-en",
-> +			GPIOD_OUT_HIGH);
-> +	if (IS_ERR(hisi_hikey_usb->hub_vbus))
-> +		return PTR_ERR(hisi_hikey_usb->hub_vbus);
-> +
-> +	hisi_hikey_usb->role_sw = usb_role_switch_get(dev);
-> +	if (!hisi_hikey_usb->role_sw)
-> +		return -EPROBE_DEFER;
-Here return EPROBE_DEFFER means the related device_connection is
-registered after this probe is called, right?
-if not, use IS_ERR_OR_NULL then return PTR_ERR is enough
-> +	else if (IS_ERR(hisi_hikey_usb->role_sw))
-> +		return PTR_ERR(hisi_hikey_usb->role_sw);
-> +
-> +	ret = usb_role_switch_register_notifier(hisi_hikey_usb->role_sw,
-> +			&hisi_hikey_usb->nb);
-> +	if (ret) {
-> +		usb_role_switch_put(hisi_hikey_usb->role_sw);
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, hisi_hikey_usb);
-> +
-> +	return 0;
-> +}
-> +
-> +static int  hisi_hikey_usb_remove(struct platform_device *pdev)
-> +{
-> +	struct hisi_hikey_usb *hisi_hikey_usb = platform_get_drvdata(pdev);
-> +
-> +	usb_role_switch_unregister_notifier(hisi_hikey_usb->role_sw,
-> +			&hisi_hikey_usb->nb);
-> +
-> +	usb_role_switch_put(hisi_hikey_usb->role_sw);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id id_table_hisi_hikey_usb[] = {
-> +	{.compatible = "hisilicon,gpio_hubv1"},
-> +	{.compatible = "hisilicon,hikey960_usb"},
-> +	{}
-> +};
-> +
-> +static struct platform_driver hisi_hikey_usb_driver = {
-> +	.probe = hisi_hikey_usb_probe,
-> +	.remove = hisi_hikey_usb_remove,
-> +	.driver = {
-> +		.name = DEVICE_DRIVER_NAME,
-> +		.of_match_table = id_table_hisi_hikey_usb,
-> +	},
-> +};
-> +
-> +module_platform_driver(hisi_hikey_usb_driver);
-> +
-> +MODULE_AUTHOR("Yu Chen <chenyu56@huawei.com>");
-> +MODULE_DESCRIPTION("Driver Support for USB functionality of Hikey");
-> +MODULE_LICENSE("GPL v2");
+>  	gic: interrupt-controller@6000000 {
+>  		compatible= "arm,gic-v3";
+>  		#address-cells = <2>;
+> -- 
+> 1.7.1
+> 
