@@ -1,68 +1,72 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v3 10/12] hikey960: Support usb functionality of Hikey960
-Date: Mon, 4 Mar 2019 15:31:21 +0800
-Message-ID: <c1d606aa-e281-4767-5715-679460f5ce60@huawei.com>
-References: <20190302090505.65542-1-chenyu56@huawei.com>
- <20190302090505.65542-11-chenyu56@huawei.com>
- <CAHp75VdaNn4OQAQt1cU8CZ+Cton90kxmwQSG5Du7KUzPR3hSCg@mail.gmail.com>
- <386ac0cf-cee7-bc1b-d22c-80dedff391cf@huawei.com>
- <CAHp75VcjQjBV8xsuJyZ1RBnNQAV_k8z9Hp-3S_JnYDRpJZ2UXw@mail.gmail.com>
+From: "Ardelean, Alexandru" <Alex.Ardelean@analog.com>
+Subject: Re: [PATCH v4 4/9] staging:iio:ad7780: add chip ID values and mask
+Date: Mon, 4 Mar 2019 07:33:51 +0000
+Message-ID: <13ef212f8aeebd0c893be253cb4834a3e4d741b8.camel@analog.com>
+References: <cover.1551358569.git.renatogeh@gmail.com>
+         <90c573cd53bb54d49de6ac270bcff66880ccfeb5.1551358569.git.renatogeh@gmail.com>
+         <190e26b19b8ed6559b92d3a000d852bbb0099a52.camel@analog.com>
+         <20190303140107.ljjo3flatwmd44ya@renatolg>
+         <20190303145347.41d49646@archlinux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcjQjBV8xsuJyZ1RBnNQAV_k8z9Hp-3S_JnYDRpJZ2UXw@mail.gmail.com>
+In-Reply-To: <20190303145347.41d49646@archlinux>
 Content-Language: en-US
+Content-ID: <52538811362BBA4E81667CF748E8D63D@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: liuyu712@hisilicon.com, USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, wanghu17@hisilicon.com, butao@hisilicon.com, Yao Chen <chenyao11@huawei.com>, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei <songxiaowei@hisilicon.com>, xu yiping <xuyiping@hisilicon.com>, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Chunfeng Yun <chunfeng.yun@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>, Heikki Krogerus <heikki.krogerus@linux.in>
+To: "renatogeh@gmail.com" <renatogeh@gmail.com>, "jic23@kernel.org" <jic23@kernel.org>
+Cc: "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>, "lars@metafoo.de" <lars@metafoo.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "giuliano.belinassi@usp.br" <giuliano.belinassi@usp.br>, "Ardelean, Alexandru" <Alex.Ardelean@analog.com>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2019/3/4 14:55, Andy Shevchenko wrote:
-> On Mon, Mar 4, 2019 at 4:35 AM Chen Yu <chenyu56@huawei.com> wrote:
->> On 2019/3/3 0:01, Andy Shevchenko wrote:
->>> On Sat, Mar 2, 2019 at 11:05 AM Yu Chen <chenyu56@huawei.com> wrote:
-> 
->>>> +config HISI_HIKEY_USB
->>>> +       tristate "USB functionality of HiSilicon Hikey Platform"
->>>> +       depends on OF && GPIOLIB
->>>> +       help
->>>> +         If you say yes here you get support for usb functionality of HiSilicon Hikey Platform.
->>>
->>>> +#include <linux/of.h>
->>>
->>> It's hard to see why this have
->>> depends on OF followed by above header inclusion.
->>>
->> This driver depends on devicetree, so I add "depends on OF".
->> But is seems that "#include <linux/of.h>" can be removed after "of_" API
->> have been removed. Thanks for your reminder!
-> 
-> So, it means that technically there is no such dependency, rather
-> administratively.
-> 
-OK. I will remove the dependent next version.
->>>> +       hisi_hikey_usb->typec_vbus = devm_gpiod_get(dev, "typec-vbus",
->>>> +                       GPIOD_OUT_LOW);
->>>
->>>> +       if (!hisi_hikey_usb->typec_vbus)
->>>> +               return -ENOENT;
->>>
->>> Hmm... Is it possible to get NULL pointer from gpiod_get() at all?
->>>
->>>> +       if (!hisi_hikey_usb->otg_switch)
->>>> +               return -ENOENT;
->>>
->>> Ditto.
->>>
->> I check the comments of devm_gpio_get API, it will not return NULL pointer.
->> But is it more safe to keep the NULL checking? What is your advice?
-> 
-> Why do we need dead code?
-> 
-OK.I will remove it.
-
-Thanks
-Yu Chen
+T24gU3VuLCAyMDE5LTAzLTAzIGF0IDE0OjUzICswMDAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
+Og0KPiBbRXh0ZXJuYWxdDQo+IA0KPiANCj4gT24gU3VuLCAzIE1hciAyMDE5IDExOjAxOjA5IC0w
+MzAwDQo+IFJlbmF0byBMdWkgR2VoIDxyZW5hdG9nZWhAZ21haWwuY29tPiB3cm90ZToNCj4gDQo+
+ID4gT24gMDMvMDEsIEFyZGVsZWFuLCBBbGV4YW5kcnUgd3JvdGU6DQo+ID4gPiBPbiBUaHUsIDIw
+MTktMDItMjggYXQgMTE6MjQgLTAzMDAsIFJlbmF0byBMdWkgR2VoIHdyb3RlOg0KPiA+ID4gPiAN
+Cj4gPiA+ID4gDQo+ID4gPiA+IFRoZSBhZDc3ODAgc3VwcG9ydHMgYm90aCB0aGUgYWQ3Nzh4IGFu
+ZCBhZDcxN3ggZmFtaWxpZXMuIEVhY2ggY2hpcA0KPiA+ID4gPiBoYXMNCj4gPiA+ID4gYSBjb3Jy
+ZXNwb25kaW5nIElELiBUaGlzIHBhdGNoIHByb3ZpZGVzIGEgbWFzayBmb3IgZXh0cmFjdGluZyBJ
+RA0KPiA+ID4gPiB2YWx1ZXMNCj4gPiA+ID4gZnJvbSB0aGUgc3RhdHVzIGJpdHMgYW5kIGFsc28g
+bWFjcm9zIGZvciB0aGUgY29ycmVjdCB2YWx1ZXMgZm9yIHRoZQ0KPiA+ID4gPiBhZDcxNzAsIGFk
+NzE3MSwgYWQ3NzgwIGFuZCBhZDc3ODEuDQo+ID4gPiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5
+OiBSZW5hdG8gTHVpIEdlaCA8cmVuYXRvZ2VoQGdtYWlsLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4g
+PiA+ICBkcml2ZXJzL3N0YWdpbmcvaWlvL2FkYy9hZDc3ODAuYyB8IDggKysrKysrLS0NCj4gPiA+
+ID4gIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4g
+PiA+IA0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL2lpby9hZGMvYWQ3Nzgw
+LmMNCj4gPiA+ID4gYi9kcml2ZXJzL3N0YWdpbmcvaWlvL2FkYy9hZDc3ODAuYw0KPiA+ID4gPiBp
+bmRleCA1NmM0OWUyOGY0MzIuLmFkNzYxN2EzYTE0MSAxMDA2NDQNCj4gPiA+ID4gLS0tIGEvZHJp
+dmVycy9zdGFnaW5nL2lpby9hZGMvYWQ3NzgwLmMNCj4gPiA+ID4gKysrIGIvZHJpdmVycy9zdGFn
+aW5nL2lpby9hZGMvYWQ3NzgwLmMNCj4gPiA+ID4gQEAgLTI2LDEwICsyNiwxNCBAQA0KPiA+ID4g
+PiAgI2RlZmluZSBBRDc3ODBfUkRZICAgICAgICAgICAgIEJJVCg3KQ0KPiA+ID4gPiAgI2RlZmlu
+ZSBBRDc3ODBfRklMVEVSICAgICAgICAgIEJJVCg2KQ0KPiA+ID4gPiAgI2RlZmluZSBBRDc3ODBf
+RVJSICAgICAgICAgICAgIEJJVCg1KQ0KPiA+ID4gPiAtI2RlZmluZSBBRDc3ODBfSUQxICAgICAg
+ICAgICAgIEJJVCg0KQ0KPiA+ID4gPiAtI2RlZmluZSBBRDc3ODBfSUQwICAgICAgICAgICAgIEJJ
+VCgzKQ0KPiA+ID4gPiAgI2RlZmluZSBBRDc3ODBfR0FJTiAgICAgICAgICAgIEJJVCgyKQ0KPiA+
+ID4gPiANCj4gPiA+ID4gKyNkZWZpbmUgQUQ3MTcwX0lEICAgICAgICAgICAgICAwDQo+ID4gPiA+
+ICsjZGVmaW5lIEFENzE3MV9JRCAgICAgICAgICAgICAgMQ0KPiA+ID4gPiArI2RlZmluZSBBRDc3
+ODBfSUQgICAgICAgICAgICAgIDENCj4gPiA+ID4gKyNkZWZpbmUgQUQ3NzgxX0lEICAgICAgICAg
+ICAgICAwDQo+ID4gPiA+ICsNCj4gPiA+ID4gKyNkZWZpbmUgQUQ3NzgwX0lEX01BU0sgICAgICAg
+ICAoQklUKDMpIHwgQklUKDQpKQ0KPiA+ID4gDQo+ID4gPiBUaGlzIGFsc28gZG9lc24ndCBoYXZl
+IGFueSBmdW5jdGlvbmFsaXR5IGNoYW5nZS4NCj4gPiA+IFRoZSBBRDcxNzBfSUQsIEFENzE3MV9J
+RCwgQUQ3NzgwX0lEICYgQUQ3NzgxX0lEIElEcyBhcmUgYWxzbyB1bnVzZWQNCj4gPiA+IChtYXli
+ZQ0KPiA+ID4gaW4gYSBsYXRlciBwYXRjaCB0aGV5IGFyZSA/KS4NCj4gPiANCj4gPiBUaGV5IGFy
+ZW4ndC4gSSBhZGRlZCB0aGVtIGZvbGxvd2luZyBhIHByZXZpb3VzIHJldmlldyBzdWdnZXN0aW9u
+Lg0KPiA+IFNob3VsZA0KPiA+IEkgcmVtb3ZlIHRoZW0/DQo+IA0KPiBDYW4gd2UgY2hlY2sgdGhl
+bT8gIEl0J3MgYWx3YXlzIHVzZWZ1bCB0byBjb25maXJtIHRoYXQgdGhlIGRldmljZSBpcw0KPiB0
+aGUgb25lIHlvdSB0aGluayBpdCBpcy4gIFRoZW4gd2UgY2FuIGVpdGhlciB1c2Ugd2hhdCBpcyB0
+aGVyZQ0KPiB3aXRoIGEgc3VpdGFibGUgd2FybmluZywgb3IgaWYgdGhhdCBpcyB0cmlja3kganVz
+dCBmYXVsdCBvdXQgYXMgdGhlDQo+IGR0IGlzIGdpdmluZyB1cyB0aGUgd3JvbmcgcGFydCBudW1i
+ZXIuDQo+IA0KPiBKDQoNCkkgZ3Vlc3MgYGRldl93YXJuX3JhdGVsaW1pdGVkKClgIGNvdWxkIGJl
+IHVzZWQgdG8gbWFrZSBzdXJlIHN5c2xvZyBpc24ndA0Kc3BhbW1lZC10by1kZWF0aCB3aGVuIGRv
+aW5nIG11bHRpcGxlIGNvbnZlcnNpb25zLCBhbmQgdGhlIElEIGlzbid0IGNvcnJlY3QuDQpTaW5j
+ZSB0aGVzZSBJRHMgYXJlIHJlYWQgYWZ0ZXIgeW91IGdldCBhIHNhbXBsZSwgSSdtIGEgYml0IGZl
+YXJmdWwgb2YgbG9nLQ0Kc3BhbS4NCg0KSSB3b3VsZG4ndCB0aHJvdyBhbiBlcnJvciBpbiB0aGUg
+YWQ3NzgwX3Bvc3Rwcm9jZXNzX3NhbXBsZSgpIGZvciB0aGlzLCBidXQNCndhcm5pbmcgW3dpdGgg
+cmF0ZS1saW1pdF0gc291bmRzIHJlYXNvbmFibGUuDQoNCj4gDQo+ID4gPiANCj4gPiA+IEkgd291
+bGQgYWxzbyBsZWF2ZSB0aGUgQUQ3NzgwX0lEMSAmIEFENzc4MF9JRDAgZGVmaW5pdGlvbnMgaW4g
+cGxhY2UsDQo+ID4gPiBzaW5jZQ0KPiA+ID4gdGhleSdyZSBlYXNpZXIgbWF0Y2hlZCB3aXRoIHRo
+ZSBkYXRhc2hlZXQuDQo+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiA+ICAjZGVmaW5lIEFENzc4MF9Q
+QVRURVJOX0dPT0QgICAgMQ0KPiA+ID4gPiAgI2RlZmluZSBBRDc3ODBfUEFUVEVSTl9NQVNLICAg
+IEdFTk1BU0soMSwgMCkNCj4gPiA+ID4gLS0NCj4gPiA+ID4gMi4yMS4wDQo+ID4gPiA+IA0KPiAN
+Cj4gDQo=
