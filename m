@@ -1,105 +1,75 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/1] of: reserved_mem: fix reserve memory leak
-Date: Mon, 4 Mar 2019 10:37:39 -0600
-Message-ID: <CAL_Jsq+wUGxeQUMJd0eu52QadvLvkkT=36q9e1Qbru2gEsUGCw@mail.gmail.com>
-References: <20190219074500.16454-1-vichy.kuo@gmail.com>
+From: Bruno Thomsen <bruno.thomsen@gmail.com>
+Subject: [PATCH 0/6] ARM: dts: tq imx7 evaluation board
+Date: Mon,  4 Mar 2019 17:56:24 +0100
+Message-ID: <20190304165630.18225-1-bruno.thomsen@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190219074500.16454-1-vichy.kuo@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: pierre Kuo <vichy.kuo@gmail.com>, Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, bruno.thomsen@gmail.com, robh+dt@kernel.org, linux-imx@nxp.com, shawnguo@kernel.org, markus.niebel@tq-group.com
 List-Id: devicetree@vger.kernel.org
 
-You should Cc the author(s) of this code. I've added Marek.
+This patch series is an effort to get mainline kernel support for TQ
+boards with i.MX7 SoCs and is based on the vendor BSP. Products based
+on these TQMa7 modules such as smart grid infrastructure will be sold
+for many years with an expected field lifetime of up to two decades.
+During this long lifetime they need to receive security patches and
+new in-kernel security features. The typical device of this type does
+not use audio and video, so it has not been a focus area. This however
+could be worked on in the future if someone desire that functionality.
 
-On Tue, Feb 19, 2019 at 1:47 AM pierre Kuo <vichy.kuo@gmail.com> wrote:
->
-> The __reserved_mem_init_node will call region specific reserved memory
-> init codes, but once all compatibled init codes failed, the memory region
-> will left in memory.reserved and cause leakage.
->
-> Take cma reserve memory DTS for example, if user declare 1MB size,
-> which is not align to (PAGE_SIZE << max(MAX_ORDER - 1,
-> pageblock_order)), rmem_cma_setup will return -EINVAL.
-> Meanwhile, rmem_dma_setup will also return -EINVAL since "reusable"
-> property is not set. If finally there is no reserved memory init pick up
-> this memory, kernel will left the 1MB leak in memory.reserved.
->
-> This patch will remove this kind of memory from memory.reserved, only
-> when __reserved_mem_init_node return neither 0 nor -ENOENT.
+The following device trees has been tested on a 4.19 mainline kernel
+together with U-Boot 2019.01.
 
-I'm not sure that un-reserving memory on error is the correct
-behavior. It may be fine for something like CMA, but if it is some
-shared memory used by another processor in the system not reserving it
-would probably never be correct.
+Working/tested:
+USB
+Ethernet
+SD
+Console
+Buttons
 
->
-> Signed-off-by: pierre Kuo <vichy.kuo@gmail.com>
-> ---
->  drivers/of/of_reserved_mem.c | 22 +++++++++++++++++-----
->  1 file changed, 17 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index 1977ee0adcb1..d3bde057ec46 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -181,6 +181,7 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
->  {
->         extern const struct of_device_id __reservedmem_of_table[];
->         const struct of_device_id *i;
-> +       int ret = -ENOENT;
->
->         for (i = __reservedmem_of_table; i < &__rmem_of_table_sentinel; i++) {
->                 reservedmem_of_init_fn initfn = i->data;
-> @@ -189,13 +190,14 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
->                 if (!of_flat_dt_is_compatible(rmem->fdt_node, compat))
->                         continue;
->
-> -               if (initfn(rmem) == 0) {
-> +               ret = initfn(rmem);
-> +               if (ret == 0) {
->                         pr_info("initialized node %s, compatible id %s\n",
->                                 rmem->name, compat);
-> -                       return 0;
-> +                       break;
->                 }
->         }
-> -       return -ENOENT;
-> +       return ret;
->  }
->
->  static int __init __rmem_cmp(const void *a, const void *b)
-> @@ -255,7 +257,9 @@ void __init fdt_init_reserved_mem(void)
->                 int len;
->                 const __be32 *prop;
->                 int err = 0;
-> +               int nomap;
->
-> +               nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
->                 prop = of_get_flat_dt_prop(node, "phandle", &len);
->                 if (!prop)
->                         prop = of_get_flat_dt_prop(node, "linux,phandle", &len);
-> @@ -265,8 +269,16 @@ void __init fdt_init_reserved_mem(void)
->                 if (rmem->size == 0)
->                         err = __reserved_mem_alloc_size(node, rmem->name,
->                                                  &rmem->base, &rmem->size);
-> -               if (err == 0)
-> -                       __reserved_mem_init_node(rmem);
-> +               if (err == 0) {
-> +                       err = __reserved_mem_init_node(rmem);
-> +                       if (err != 0 && err != -ENOENT) {
-> +                               pr_info("node %s compatible matching fail\n",
-> +                                       rmem->name);
-> +                               memblock_free(rmem->base, rmem->size);
-> +                               if (nomap)
-> +                                       memblock_add(rmem->base, rmem->size);
-> +                       }
-> +               }
->         }
->  }
->
-> --
-> 2.17.1
->
+Not working/tested:
+Sound
+Video
+
+No changes to MAINTAINERS are needed IMHO.
+
+Bruno Thomsen (6):
+  dt-bindings: add vendor prefix for TQ Systems GmbH
+  dt-bindings: fsl: add compatible for i.MX7S generic board
+  dt-bindings: tq: add compatible for i.MX7 boards
+  ARM: dts: tq imx7 common board support
+  ARM: dts: tq imx7s board support
+  ARM: dts: tq imx7d board support
+
+ Documentation/devicetree/bindings/arm/fsl.txt |   4 +
+ Documentation/devicetree/bindings/arm/tq.txt  |  35 ++
+ .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+ arch/arm/boot/dts/Makefile                    |   2 +
+ arch/arm/boot/dts/imx7-mba7.dtsi              | 586 ++++++++++++++++++
+ arch/arm/boot/dts/imx7-tqma7.dtsi             | 232 +++++++
+ arch/arm/boot/dts/imx7d-mba7.dts              | 122 ++++
+ arch/arm/boot/dts/imx7d-tqma7.dtsi            |  11 +
+ arch/arm/boot/dts/imx7s-mba7.dts              |  18 +
+ arch/arm/boot/dts/imx7s-tqma7.dtsi            |  11 +
+ 10 files changed, 1022 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/tq.txt
+ create mode 100644 arch/arm/boot/dts/imx7-mba7.dtsi
+ create mode 100644 arch/arm/boot/dts/imx7-tqma7.dtsi
+ create mode 100644 arch/arm/boot/dts/imx7d-mba7.dts
+ create mode 100644 arch/arm/boot/dts/imx7d-tqma7.dtsi
+ create mode 100644 arch/arm/boot/dts/imx7s-mba7.dts
+ create mode 100644 arch/arm/boot/dts/imx7s-tqma7.dtsi
+
+-- 
+2.20.1
