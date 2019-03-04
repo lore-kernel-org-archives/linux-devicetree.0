@@ -1,259 +1,68 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 2/2] watchdog: orion_wdt: use timer1 as a pretimeout
-Date: Tue,  5 Mar 2019 11:51:52 +1300
-Message-ID: <20190304225152.26831-3-chris.packham@alliedtelesis.co.nz>
-References: <20190227230707.GA28635@roeck-us.net>
- <20190304225152.26831-1-chris.packham@alliedtelesis.co.nz>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [RFC v4 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Mon, 4 Mar 2019 15:01:55 -0800
+Message-ID: <CAFd5g45F3YUsAjse+Vt5hj5CLjaXrRWgr5zCZZ6CJKc0hboP6Q@mail.gmail.com>
+References: <20190214213729.21702-1-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190304225152.26831-1-chris.packham@alliedtelesis.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux@roeck-us.net, andrew@lunn.ch, gregory.clement@bootlin.com, jason@lakedaemon.net
-Cc: linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190214213729.21702-1-brendanhiggins@google.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kees Cook <keescook@google.com>, Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org, Rob Herring <robh@kernel.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Frank Rowand <frowand.list@gmail.com>
+Cc: brakmo@fb.com, Petr Mladek <pmladek@suse.com>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, linux-kselftest@vger.kernel.org, linux-nvdimm <linux-nvdimm@lists.01.org>, Richard Weinberger <richard@nod.at>, Knut Omang <knut.omang@oracle.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, "Bird, Timothy" <Tim.Bird@sony.com>, linux-um@lists.infradead.org, Steven Rostedt <rostedt@goodmis.org>, Julia Lawall <julia.lawall@lip6.fr>, Dan Williams <dan.j.williams@intel.com>, kunit-dev@googlegroups.com, Greg KH <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Joe Perches <joe@perches.com>, Kevin Hilman <khi>
 List-Id: devicetree@vger.kernel.org
 
-The orion watchdog can either reset the CPU or generate an interrupt.
-The interrupt would be useful for debugging as it provides panic()
-output about the watchdog expiry, however if the interrupt is used the
-watchdog can't reset the CPU in the event of being stuck in a loop with
-interrupts disabled or if the CPU is prevented from accessing memory
-(e.g. an unterminated DMA).
-
-All of the orion based CPU cores (at least back as far as Kirkwood) have
-spare timers that aren't currently used by the Linux kernel. We can use
-timer1 to provide a pre-timeout ahead of the watchdog timer and provide
-the possibility of gathering debug before the reset triggers.
-
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- arch/arm/boot/dts/armada-38x.dtsi |  1 +
- drivers/watchdog/orion_wdt.c      | 58 ++++++++++++++++++++-----------
- 2 files changed, 39 insertions(+), 20 deletions(-)
-
-diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada=
--38x.dtsi
-index 929459c42760..fd0caa9714f2 100644
---- a/arch/arm/boot/dts/armada-38x.dtsi
-+++ b/arch/arm/boot/dts/armada-38x.dtsi
-@@ -376,6 +376,7 @@
- 				reg =3D <0x20300 0x34>, <0x20704 0x4>, <0x18260 0x4>;
- 				clocks =3D <&coreclk 2>, <&refclk>;
- 				clock-names =3D "nbclk", "fixed";
-+				interrupts-extended =3D <&gic  GIC_SPI  9 IRQ_TYPE_LEVEL_HIGH>;
- 			};
-=20
- 			cpurst: cpurst@20800 {
-diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-index 8b259c712c52..bf1dc75c2045 100644
---- a/drivers/watchdog/orion_wdt.c
-+++ b/drivers/watchdog/orion_wdt.c
-@@ -46,6 +46,10 @@
- #define WDT_AXP_FIXED_ENABLE_BIT BIT(10)
- #define WDT_A370_EXPIRED	BIT(31)
-=20
-+#define TIMER1_VAL_OFF		0x001c
-+#define TIMER1_ENABLE_BIT	BIT(2)
-+#define TIMER1_FIXED_ENABLE_BIT	BIT(12)
-+
- static bool nowayout =3D WATCHDOG_NOWAYOUT;
- static int heartbeat =3D -1;		/* module parameter (seconds) */
-=20
-@@ -118,6 +122,7 @@ static int armada375_wdt_clock_init(struct platform_d=
-evice *pdev,
- 				    struct orion_watchdog *dev)
- {
- 	int ret;
-+	u32 val;
-=20
- 	dev->clk =3D of_clk_get_by_name(pdev->dev.of_node, "fixed");
- 	if (!IS_ERR(dev->clk)) {
-@@ -127,9 +132,8 @@ static int armada375_wdt_clock_init(struct platform_d=
-evice *pdev,
- 			return ret;
- 		}
-=20
--		atomic_io_modify(dev->reg + TIMER_CTRL,
--				WDT_AXP_FIXED_ENABLE_BIT,
--				WDT_AXP_FIXED_ENABLE_BIT);
-+		val =3D WDT_AXP_FIXED_ENABLE_BIT | TIMER1_FIXED_ENABLE_BIT;
-+		atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
- 		dev->clk_rate =3D clk_get_rate(dev->clk);
-=20
- 		return 0;
-@@ -158,6 +162,7 @@ static int armadaxp_wdt_clock_init(struct platform_de=
-vice *pdev,
- 				   struct orion_watchdog *dev)
- {
- 	int ret;
-+	u32 val;
-=20
- 	dev->clk =3D of_clk_get_by_name(pdev->dev.of_node, "fixed");
- 	if (IS_ERR(dev->clk))
-@@ -169,38 +174,46 @@ static int armadaxp_wdt_clock_init(struct platform_=
-device *pdev,
- 	}
-=20
- 	/* Enable the fixed watchdog clock input */
--	atomic_io_modify(dev->reg + TIMER_CTRL,
--			 WDT_AXP_FIXED_ENABLE_BIT,
--			 WDT_AXP_FIXED_ENABLE_BIT);
-+	val =3D WDT_AXP_FIXED_ENABLE_BIT | TIMER1_FIXED_ENABLE_BIT;
-+	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
-=20
- 	dev->clk_rate =3D clk_get_rate(dev->clk);
-+
-+
- 	return 0;
- }
-=20
- static int orion_wdt_ping(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
-+
- 	/* Reload watchdog duration */
- 	writel(dev->clk_rate * wdt_dev->timeout,
- 	       dev->reg + dev->data->wdt_counter_offset);
-+	writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
-+	       dev->reg + TIMER1_VAL_OFF);
-+
- 	return 0;
- }
-=20
- static int armada375_start(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
--	u32 reg;
-+	u32 reg, val;
-=20
- 	/* Set watchdog duration */
- 	writel(dev->clk_rate * wdt_dev->timeout,
- 	       dev->reg + dev->data->wdt_counter_offset);
-+	if (wdt_dev->pretimeout)
-+		writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
-+		       dev->reg + TIMER1_VAL_OFF);
-=20
- 	/* Clear the watchdog expiration bit */
- 	atomic_io_modify(dev->reg + TIMER_A370_STATUS, WDT_A370_EXPIRED, 0);
-=20
- 	/* Enable watchdog timer */
--	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit,
--						dev->data->wdt_enable_bit);
-+	val =3D dev->data->wdt_enable_bit | TIMER1_ENABLE_BIT;
-+	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
-=20
- 	/* Enable reset on watchdog */
- 	reg =3D readl(dev->rstout);
-@@ -214,7 +227,7 @@ static int armada375_start(struct watchdog_device *wd=
-t_dev)
- static int armada370_start(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
--	u32 reg;
-+	u32 reg, val;
-=20
- 	/* Set watchdog duration */
- 	writel(dev->clk_rate * wdt_dev->timeout,
-@@ -224,8 +237,8 @@ static int armada370_start(struct watchdog_device *wd=
-t_dev)
- 	atomic_io_modify(dev->reg + TIMER_A370_STATUS, WDT_A370_EXPIRED, 0);
-=20
- 	/* Enable watchdog timer */
--	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit,
--						dev->data->wdt_enable_bit);
-+	val =3D dev->data->wdt_enable_bit | TIMER1_ENABLE_BIT;
-+	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
-=20
- 	/* Enable reset on watchdog */
- 	reg =3D readl(dev->rstout);
-@@ -237,14 +250,15 @@ static int armada370_start(struct watchdog_device *=
-wdt_dev)
- static int orion_start(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
-+	u32 val;
-=20
- 	/* Set watchdog duration */
- 	writel(dev->clk_rate * wdt_dev->timeout,
- 	       dev->reg + dev->data->wdt_counter_offset);
-=20
- 	/* Enable watchdog timer */
--	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit,
--						dev->data->wdt_enable_bit);
-+	val =3D dev->data->wdt_enable_bit | TIMER1_ENABLE_BIT;
-+	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
-=20
- 	/* Enable reset on watchdog */
- 	atomic_io_modify(dev->rstout, dev->data->rstout_enable_bit,
-@@ -264,12 +278,14 @@ static int orion_wdt_start(struct watchdog_device *=
-wdt_dev)
- static int orion_stop(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
-+	u32 mask;
-=20
- 	/* Disable reset on watchdog */
- 	atomic_io_modify(dev->rstout, dev->data->rstout_enable_bit, 0);
-=20
- 	/* Disable watchdog timer */
--	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit, 0);
-+	mask =3D dev->data->wdt_enable_bit | TIMER1_ENABLE_BIT;
-+	atomic_io_modify(dev->reg + TIMER_CTRL, mask, 0);
-=20
- 	return 0;
- }
-@@ -277,7 +293,7 @@ static int orion_stop(struct watchdog_device *wdt_dev=
-)
- static int armada375_stop(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
--	u32 reg;
-+	u32 reg, mask;
-=20
- 	/* Disable reset on watchdog */
- 	atomic_io_modify(dev->rstout_mask, dev->data->rstout_mask_bit,
-@@ -287,7 +303,8 @@ static int armada375_stop(struct watchdog_device *wdt=
-_dev)
- 	writel(reg, dev->rstout);
-=20
- 	/* Disable watchdog timer */
--	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit, 0);
-+	mask =3D dev->data->wdt_enable_bit | TIMER1_ENABLE_BIT;
-+	atomic_io_modify(dev->reg + TIMER_CTRL, mask, 0);
-=20
- 	return 0;
- }
-@@ -295,7 +312,7 @@ static int armada375_stop(struct watchdog_device *wdt=
-_dev)
- static int armada370_stop(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
--	u32 reg;
-+	u32 reg, mask;
-=20
- 	/* Disable reset on watchdog */
- 	reg =3D readl(dev->rstout);
-@@ -303,7 +320,8 @@ static int armada370_stop(struct watchdog_device *wdt=
-_dev)
- 	writel(reg, dev->rstout);
-=20
- 	/* Disable watchdog timer */
--	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit, 0);
-+	mask =3D dev->data->wdt_enable_bit | TIMER1_ENABLE_BIT;
-+	atomic_io_modify(dev->reg + TIMER_CTRL, mask, 0);
-=20
- 	return 0;
- }
-@@ -350,7 +368,7 @@ static unsigned int orion_wdt_get_timeleft(struct wat=
-chdog_device *wdt_dev)
- }
-=20
- static const struct watchdog_info orion_wdt_info =3D {
--	.options =3D WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.options =3D WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE =
-| WDIOF_PRETIMEOUT,
- 	.identity =3D "Orion Watchdog",
- };
-=20
---=20
-2.21.0
+T24gVGh1LCBGZWIgMTQsIDIwMTkgYXQgMTozOCBQTSBCcmVuZGFuIEhpZ2dpbnMKPGJyZW5kYW5o
+aWdnaW5zQGdvb2dsZS5jb20+IHdyb3RlOgo+Cj4gVGhpcyBwYXRjaCBzZXQgcHJvcG9zZXMgS1Vu
+aXQsIGEgbGlnaHR3ZWlnaHQgdW5pdCB0ZXN0aW5nIGFuZCBtb2NraW5nCj4gZnJhbWV3b3JrIGZv
+ciB0aGUgTGludXgga2VybmVsLgo+Cgo8c25pcD4KCj4gIyMgTW9yZSBpbmZvcm1hdGlvbiBvbiBL
+VW5pdAo+Cj4gVGhlcmUgaXMgYSBidW5jaCBvZiBkb2N1bWVudGF0aW9uIG5lYXIgdGhlIGVuZCBv
+ZiB0aGlzIHBhdGNoIHNldCB0aGF0Cj4gZGVzY3JpYmVzIGhvdyB0byB1c2UgS1VuaXQgYW5kIGJl
+c3QgcHJhY3RpY2VzIGZvciB3cml0aW5nIHVuaXQgdGVzdHMuCj4gRm9yIGNvbnZlbmllbmNlIEkg
+YW0gaG9zdGluZyB0aGUgY29tcGlsZWQgZG9jcyBoZXJlOgo+IGh0dHBzOi8vZ29vZ2xlLmdpdGh1
+Yi5pby9rdW5pdC1kb2NzL3RoaXJkX3BhcnR5L2tlcm5lbC9kb2NzLwo+IEFkZGl0aW9uYWxseSBm
+b3IgY29udmVuaWVuY2UsIEkgaGF2ZSBhcHBsaWVkIHRoZXNlIHBhdGNoZXMgdG8gYSBicmFuY2g6
+Cj4gaHR0cHM6Ly9rdW5pdC5nb29nbGVzb3VyY2UuY29tL2xpbnV4Lysva3VuaXQvcmZjLzUuMC1y
+YzUvdjQKPiBUaGUgcmVwbyBtYXkgYmUgY2xvbmVkIHdpdGg6Cj4gZ2l0IGNsb25lIGh0dHBzOi8v
+a3VuaXQuZ29vZ2xlc291cmNlLmNvbS9saW51eAo+IFRoaXMgcGF0Y2hzZXQgaXMgb24gdGhlIGt1
+bml0L3JmYy81LjAtcmM1L3Y0IGJyYW5jaC4KPgo+ICMjIENoYW5nZXMgU2luY2UgTGFzdCBWZXJz
+aW9uCj4KPiAgLSBHb3QgS1VuaXQgd29ya2luZyBvbiAoaHlwb3RoZXRpY2FsbHkpIGFsbCBhcmNo
+aXRlY3R1cmVzICh0ZXN0ZWQgb24KPiAgICB4ODYpLCBhcyBwZXIgUm9iJ3MgKGFuZCBvdGhlcidz
+KSByZXF1ZXN0Cj4gIC0gUHVudGluZyBhbGwgS1VuaXQgZmVhdHVyZXMvcGF0Y2hlcyBkZXBlbmRp
+bmcgb24gVU1MIGZvciBub3cuCj4gIC0gQnJva2Ugb3V0IFVNTCBzcGVjaWZpYyBzdXBwb3J0IGlu
+dG8gYXJjaC91bS8qIGFzIHBlciAiW1JGQyB2MyAwMS8xOV0KPiAgICBrdW5pdDogdGVzdDogYWRk
+IEtVbml0IHRlc3QgcnVubmVyIGNvcmUiLCBhcyByZXF1ZXN0ZWQgYnkgTHVpcy4KPiAgLSBBZGRl
+ZCBzdXBwb3J0IHRvIGt1bml0X3Rvb2wgdG8gYWxsb3cgaXQgdG8gYnVpbGQga2VybmVscyBpbiBl
+eHRlcm5hbAo+ICAgIGRpcmVjdG9yaWVzLCBhcyBzdWdnZXN0ZWQgYnkgS2llcmFuLgo+ICAtIEFk
+ZGVkIGEgVU1MIGRlZmNvbmZpZywgYW5kIGEgY29uZmlnIGZyYWdtZW50IGZvciBLVW5pdCBhcyBz
+dWdnZXN0ZWQKPiAgICBieSBLaWVyYW4gYW5kIEx1aXMuCj4gIC0gQ2xlYW5lZCB1cCwgYW5kIHJl
+Zm9ybWF0dGVkIGEgYnVuY2ggb2Ygc3R1ZmYuCj4KPiAtLQo+IDIuMjEuMC5yYzAuMjU4Lmc4Nzhl
+MmNkMzBlLWdvb2cKPgoKU29tZW9uZSBzdWdnZXN0ZWQgSSBzaG91bGQgc2VuZCB0aGUgbmV4dCBy
+ZXZpc2lvbiBvdXQgYXMgIlBBVENIIgppbnN0ZWFkIG9mICJSRkMiIHNpbmNlIHRoZXJlIHNlZW1z
+IHRvIGJlIGdlbmVyYWwgY29uc2Vuc3VzIGFib3V0CmV2ZXJ5dGhpbmcgYXQgYSBoaWdoIGxldmVs
+LCB3aXRoIGEgY291cGxlIGV4Y2VwdGlvbnMuCgpBdCB0aGlzIHRpbWUgSSBhbSBwbGFubmluZyBv
+biBzZW5kaW5nIHRoZSBuZXh0IHJldmlzaW9uIG91dCBhcyAiW1BBVENICnYxIDAwL05OXSBrdW5p
+dDogaW50cm9kdWNlIEtVbml0LCB0aGUgTGludXgga2VybmVsIHVuaXQgdGVzdGluZwpmcmFtZXdv
+cmsiLiBJbml0aWFsbHkgSSB3YXNuJ3Qgc3VyZSBpZiB0aGUgbmV4dCByZXZpc2lvbiBzaG91bGQg
+YmUKIltQQVRDSCB2MSAuLi5dIiBvciAiW1BBVENIIHY1IC4uLl0iLiBQbGVhc2UgbGV0IG1lIGtu
+b3cgaWYgeW91IGhhdmUgYQpzdHJvbmcgb2JqZWN0aW9uIHRvIHRoZSBmb3JtZXIuCgpJbiB0aGUg
+bmV4dCByZXZpc2lvbiwgSSB3aWxsIGJlIGRyb3BwaW5nIHRoZSBsYXN0IHR3byBvZiB0aHJlZSBw
+YXRjaGVzCmZvciB0aGUgRFQgdW5pdCB0ZXN0cyBhcyB0aGVyZSBkb2Vzbid0IHNlZW0gdG8gYmUg
+ZW5vdWdoIGZlYXR1cmVzCmN1cnJlbnRseSBhdmFpbGFibGUgdG8ganVzdGlmeSB0aGUgaGVhdnkg
+cmVmYWN0b3JpbmcgSSBkaWQ7IGhvd2V2ZXIsIEkKd2lsbCBzdGlsbCBpbmNsdWRlIHRoZSBwYXRj
+aCB0aGF0IGp1c3QgY29udmVydHMgZXZlcnl0aGluZyBvdmVyIHRvCktVbml0IHdpdGhvdXQgcmVz
+dHJ1Y3R1cmluZyB0aGUgdGVzdCBjYXNlczoKaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTkvMi8x
+NC8xMTMzCgpJIHNob3VsZCBoYXZlIHRoZSBuZXh0IHJldmlzaW9uIG91dCBpbiBhIHdlZWsgb3Ig
+c28uCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
