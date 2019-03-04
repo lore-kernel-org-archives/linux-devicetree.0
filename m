@@ -1,68 +1,58 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: ls1088a: add one more thermal zone node
-Date: Mon, 4 Mar 2019 14:53:03 +0800
-Message-ID: <20190304065302.GD26041@dragon>
-References: <20190304032111.21770-1-andy.tang@nxp.com>
- <20190304062115.GB26041@dragon>
- <VI1PR04MB433386B86A5E6AA804E9C3B5F3710@VI1PR04MB4333.eurprd04.prod.outlook.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 10/12] hikey960: Support usb functionality of Hikey960
+Date: Mon, 4 Mar 2019 08:55:30 +0200
+Message-ID: <CAHp75VcjQjBV8xsuJyZ1RBnNQAV_k8z9Hp-3S_JnYDRpJZ2UXw@mail.gmail.com>
+References: <20190302090505.65542-1-chenyu56@huawei.com> <20190302090505.65542-11-chenyu56@huawei.com>
+ <CAHp75VdaNn4OQAQt1cU8CZ+Cton90kxmwQSG5Du7KUzPR3hSCg@mail.gmail.com> <386ac0cf-cee7-bc1b-d22c-80dedff391cf@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <VI1PR04MB433386B86A5E6AA804E9C3B5F3710@VI1PR04MB4333.eurprd04.prod.outlook.com>
+In-Reply-To: <386ac0cf-cee7-bc1b-d22c-80dedff391cf@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Tang <andy.tang@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Chen Yu <chenyu56@huawei.com>
+Cc: liuyu712@hisilicon.com, USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, wanghu17@hisilicon.com, butao@hisilicon.com, Yao Chen <chenyao11@huawei.com>, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei <songxiaowei@hisilicon.com>, xu yiping <xuyiping@hisilicon.com>, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Chunfeng Yun <chunfeng.yun@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 06:46:32AM +0000, Andy Tang wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Shawn Guo <shawnguo@kernel.org>
-> > Sent: 2019年3月4日 14:21
-> > To: Andy Tang <andy.tang@nxp.com>
-> > Cc: Leo Li <leoyang.li@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
-> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> > linux-kernel@vger.kernel.org; linux-pm@vger.kernel.org;
-> > daniel.lezcano@linaro.org; rui.zhang@intel.com; edubezval@gmail.com
-> > Subject: Re: [PATCH v2] arm64: dts: ls1088a: add one more thermal zone node
-> > 
-> > On Mon, Mar 04, 2019 at 11:21:11AM +0800, Yuantian Tang wrote:
-> > > Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core
-> > > cluster sensor is used to monitor the temperature of core and SoC
-> > > platform is for platform. The current dts only support the first sensor.
-> > > This patch adds the second sensor node to dts to enable it.
-> > >
-> > > Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
-> > > ---
-> > > v2:
-> > > 	- Add more information about sensors to description
-> > > PS: In order to keep consistency to the first thermal-zone node, there
-> > > will be "WARNING: line over 80 characters" warnings.
-> > >
-> > >  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   43
-> > +++++++++++++++++++++--
-> > >  1 files changed, 39 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > > b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > > index 661137f..9f52bc9 100644
-> > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > > @@ -129,19 +129,19 @@
-> > >  	};
-> > >
-> > >  	thermal-zones {
-> > > -		cpu_thermal: cpu-thermal {
-> > > +		ccu {
-> > 
-> > Is this change really necessary?  What does 'ccu' stand for?
-> I think so. ccu stands for core cluster unit. cpu is too general.
-> On some platforms, there are more than one core clusters.
-> At least we should change it to "core cluster" if short form is not appropriate.
+On Mon, Mar 4, 2019 at 4:35 AM Chen Yu <chenyu56@huawei.com> wrote:
+> On 2019/3/3 0:01, Andy Shevchenko wrote:
+> > On Sat, Mar 2, 2019 at 11:05 AM Yu Chen <chenyu56@huawei.com> wrote:
 
-Yes, please give it a more descriptive name.
+> >> +config HISI_HIKEY_USB
+> >> +       tristate "USB functionality of HiSilicon Hikey Platform"
+> >> +       depends on OF && GPIOLIB
+> >> +       help
+> >> +         If you say yes here you get support for usb functionality of HiSilicon Hikey Platform.
+> >
+> >> +#include <linux/of.h>
+> >
+> > It's hard to see why this have
+> > depends on OF followed by above header inclusion.
+> >
+> This driver depends on devicetree, so I add "depends on OF".
+> But is seems that "#include <linux/of.h>" can be removed after "of_" API
+> have been removed. Thanks for your reminder!
 
-Shawn
+So, it means that technically there is no such dependency, rather
+administratively.
+
+> >> +       hisi_hikey_usb->typec_vbus = devm_gpiod_get(dev, "typec-vbus",
+> >> +                       GPIOD_OUT_LOW);
+> >
+> >> +       if (!hisi_hikey_usb->typec_vbus)
+> >> +               return -ENOENT;
+> >
+> > Hmm... Is it possible to get NULL pointer from gpiod_get() at all?
+> >
+> >> +       if (!hisi_hikey_usb->otg_switch)
+> >> +               return -ENOENT;
+> >
+> > Ditto.
+> >
+> I check the comments of devm_gpio_get API, it will not return NULL pointer.
+> But is it more safe to keep the NULL checking? What is your advice?
+
+Why do we need dead code?
+
+-- 
+With Best Regards,
+Andy Shevchenko
