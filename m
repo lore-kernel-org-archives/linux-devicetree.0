@@ -1,109 +1,88 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v2] dts: arm64: add CoreSight trace support for hi3660
-Date: Mon, 4 Mar 2019 17:29:22 +0000
-Message-ID: <9109e498-0cd9-0b81-15a0-2208d4282359@arm.com>
-References: <6496F4728C09F6479CFF21A8E67D33D568F32660@dggema525-mbx.china.huawei.com>
- <20190302125955.GA11385@leoy-ThinkPad-X240s>
- <CANLsYkzakXjuMR+=ncVpcohE8n-uF60Qa6EAN+Xh=FKBoJtrgg@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 4/6] dt-bindings: display: armada: Add display subsystem
+ binding
+Date: Mon, 4 Mar 2019 11:35:33 -0600
+Message-ID: <CAL_JsqJ8rovEM4RtkJKwTeDrRotVr59EmU-_1ApR+c9yxB8k2Q@mail.gmail.com>
+References: <20190120172534.24617-1-lkundrak@v3.sk>
+ <20190120172534.24617-5-lkundrak@v3.sk>
+ <CAL_JsqLT7jEdwi7o7RR_3OcbMTxeNXmSzif8Ez2psjhu24No5Q@mail.gmail.com>
+ <b92426e9f5c50c71fa89ea5b53396c1885cc396f.camel@v3.sk>
+ <CAL_JsqJsfwC4fAJaVEvKwtZkZwapu5jojEFn6Ddx34a6jZ_dSQ@mail.gmail.com>
+ <4e89406842c4821d590dc6518076cfe6f19cc6b9.camel@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANLsYkzakXjuMR+=ncVpcohE8n-uF60Qa6EAN+Xh=FKBoJtrgg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: mathieu.poirier@linaro.org, leo.yan@linaro.org
-Cc: shiwanglai@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, john.stultz@linaro.org, xuwei5@huawei.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, coresight@lists.linaro.org, suzhuangluan@hisilicon.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <4e89406842c4821d590dc6518076cfe6f19cc6b9.camel@v3.sk>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 04/03/2019 17:18, Mathieu Poirier wrote:
-> On Sat, 2 Mar 2019 at 06:00, Leo Yan <leo.yan@linaro.org> wrote:
->>
->> On Sat, Mar 02, 2019 at 09:45:22AM +0000, Shiwanglai wrote:
->>
->> [...]
->>
->>>> +           /* Top internals */
->>>> +           funnel@ec031000 {
->>>> +                   compatible = "arm,coresight-funnel", "arm,primecell";
->>>> +                   reg = <0 0xec031000 0 0x1000>;
->>>> +                   clocks = <&crg_ctrl HI3660_PCLK>;
->>>> +                   clock-names = "apb_pclk";
->>>> +
->>>> +                   out-ports {
->>>> +                           port {
->>>> +                                   top_funnel_out: endpoint {
->>>> +                                           remote-endpoint =
->>>> +                                                   <&top_etf_in>;
->>>> +                                   };
->>>> +                           };
->>>> +                   };
->>>> +
->>>> +                   in-ports {
->>>> +                           #address-cells = <1>;
->>>> +                           #size-cells = <0>;
->>>> +
->>>> +                           port@0 {
->>>> +                                   reg = <0>;
->>>> +                                   top_funnel_in0: endpoint {
->>>> +                                           remote-endpoint =
->>>> +                                                   <&cluster0_etf_out>;
->>>> +                                   };
->>>> +                           };
->>>> +
->>>> +                           port@1 {
->>>> +                                   reg = <0>;
->>>
->>> Here should s/<0>/<1>; otherwise DTC will complain warning for mismatching between 'port@1' and 'reg = <0>'.
->>
->>> -- if reg set to 1, then there's no data output from cluster 1 to top.
->>
->> Thanks for the info, Wanglai.  Now I see why write as it is.
->>
->> I can confirm if directly use your patch with perf with mainline
->> kernel I can capture CoreSight trace data successfully on Hikey960
->> board.
->>
->> But since this DT binding will introduce DTC warning, I personally
->> think we can improve for this with below method:
->>
->> We can create a funnel node named "funnel_combo", and we don't need to
->> specify register address range for it; and cluster 0 and cluster 1 will
->> output to "funnel_combo" and "funnel_combo" will output to the top
->> funnel.  Thus the DT binding will write as below.
->>
->> To support for a funnel without any register address range (we have
->> support replicator like this mode), we also need to extend the driver
->> drivers/hwtracing/coresight/coresight-funnel.c.
->>
->> Mathieu, Mike, Suzuki, could you help confirm this is the right
->> direction we should move forward to?
-> 
-> Leo, thanks for testing this out.  Shiwanglai, please add Suzuki and
-> myself to future revision of this set - this will help you getting a
-> timely response for your work.
-> 
-> As Leo pointed out we already have support for replicators that don't
-> have a register map and the same thing should be done in this case.
-> But contrary to what was done for replicators, I think we should keep
-> the drivers in the same file as Russell did here[1].  That way we can
-> keep all things funnel at the same place and reduce the amount of
-> kernel configuration options.
-
-I back that. I have already merged the static and programmable replicators
-into one and this should be out here soon. So, I back the single driver
-approach for funnels.
-
-Cheers
-Suzuki
-
-
-> 
-> Regards,
-> Mathieu
-> 
-> [1]. https://elixir.bootlin.com/linux/latest/source/drivers/tty/serial/amba-pl011.c#L2819
-> 
->>
+T24gU3VuLCBGZWIgMjQsIDIwMTkgYXQgMTA6MTUgQU0gTHVib21pciBSaW50ZWwgPGxrdW5kcmFr
+QHYzLnNrPiB3cm90ZToKPgo+IE9uIEZyaSwgMjAxOS0wMi0yMiBhdCAxNDoyMyAtMDYwMCwgUm9i
+IEhlcnJpbmcgd3JvdGU6Cj4gPiBPbiBXZWQsIEZlYiAxMywgMjAxOSBhdCA0OjM3IFBNIEx1Ym9t
+aXIgUmludGVsIDxsa3VuZHJha0B2My5zaz4gd3JvdGU6Cj4gPiA+IE9uIE1vbiwgMjAxOS0wMS0y
+MSBhdCAwOTozNSAtMDYwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPiA+ID4gT24gU3VuLCBKYW4g
+MjAsIDIwMTkgYXQgMTE6MjYgQU0gTHVib21pciBSaW50ZWwgPGxrdW5kcmFrQHYzLnNrPiB3cm90
+ZToKPiA+ID4gPiA+IFRoZSBNYXJ2ZWxsIEFybWFkYSBEUk0gbWFzdGVyIGRldmljZSBpcyBhIHZp
+cnR1YWwgZGV2aWNlIG5lZWRlZCB0byBsaXN0IGFsbAo+ID4gPiA+ID4gbm9kZXMgdGhhdCBjb21w
+cmlzZSB0aGUgZ3JhcGhpY3Mgc3Vic3lzdGVtLgo+ID4gPiA+ID4KPiA+ID4gPiA+IFNpZ25lZC1v
+ZmYtYnk6IEx1Ym9taXIgUmludGVsIDxsa3VuZHJha0B2My5zaz4KPiA+ID4gPiA+IC0tLQo+ID4g
+PiA+ID4gIC4uLi9kaXNwbGF5L2FybWFkYS9tYXJ2ZWxsLWFybWFkYS1kcm0udHh0ICAgICB8IDI0
+ICsrKysrKysrKysrKysrKysrKysKPiA+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjQgaW5zZXJ0
+aW9ucygrKQo+ID4gPiA+ID4KPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm1hZGEvbWFydmVsbC1hcm1hZGEtZHJtLnR4dCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybWFkYS9tYXJ2ZWxs
+LWFybWFkYS1kcm0udHh0Cj4gPiA+ID4gPiBpbmRleCBkZTRjY2E5NDMyYzguLjNkYmZhODA0N2Yw
+YiAxMDA2NDQKPiA+ID4gPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2FybWFkYS9tYXJ2ZWxsLWFybWFkYS1kcm0udHh0Cj4gPiA+ID4gPiArKysgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm1hZGEvbWFydmVsbC1h
+cm1hZGEtZHJtLnR4dAo+ID4gPiA+ID4gQEAgLTEsMyArMSwyNyBAQAo+ID4gPiA+ID4gK01hcnZl
+bGwgQXJtYWRhIERSTSBtYXN0ZXIgZGV2aWNlCj4gPiA+ID4gPiArPT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT0KPiA+ID4gPiA+ICsKPiA+ID4gPiA+ICtUaGUgTWFydmVsbCBBcm1hZGEg
+RFJNIG1hc3RlciBkZXZpY2UgaXMgYSB2aXJ0dWFsIGRldmljZSBuZWVkZWQgdG8gbGlzdCBhbGwK
+PiA+ID4gPiA+ICtub2RlcyB0aGF0IGNvbXByaXNlIHRoZSBncmFwaGljcyBzdWJzeXN0ZW0uCj4g
+PiA+ID4gPiArCj4gPiA+ID4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ID4gPiA+ICsKPiA+
+ID4gPiA+ICsgLSBjb21wYXRpYmxlOiB2YWx1ZSBzaG91bGQgYmUgIm1hcnZlbGwsZG92ZS1kaXNw
+bGF5LXN1YnN5c3RlbSIsCj4gPiA+ID4gPiArICAgIm1hcnZlbGwsYXJtYWRhLWRpc3BsYXktc3Vi
+c3lzdGVtIgo+ID4gPiA+ID4gKyAtIHBvcnRzOiBhIGxpc3Qgb2YgcGhhbmRsZXMgcG9pbnRpbmcg
+dG8gZGlzcGxheSBpbnRlcmZhY2UgcG9ydHMgb2YgQ1JUQwo+ID4gPiA+ID4gKyAgIGRldmljZXMK
+PiA+ID4gPiA+ICsgLSBtZW1vcnktcmVnaW9uOiBwaGFuZGxlIHRvIGEgbm9kZSBkZXNjcmliaW5n
+IG1lbW9yeSB0byBiZSB1c2VkIGZvciB0aGUKPiA+ID4gPiA+ICsgICBmcmFtZWJ1ZmZlcgo+ID4g
+PiA+ID4gKwo+ID4gPiA+ID4gK0V4YW1wbGU6Cj4gPiA+ID4gPiArCj4gPiA+ID4gPiArICAgICAg
+IGRpc3BsYXktc3Vic3lzdGVtIHsKPiA+ID4gPiA+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxl
+ID0gIm1hcnZlbGwsZG92ZS1kaXNwbGF5LXN1YnN5c3RlbSIsCj4gPiA+ID4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICJtYXJ2ZWxsLGFybWFkYS1kaXNwbGF5LXN1YnN5c3RlbSI7Cj4g
+PiA+ID4gPiArICAgICAgICAgICAgICAgbWVtb3J5LXJlZ2lvbiA9IDwmZGlzcGxheV9yZXNlcnZl
+ZD47Cj4gPiA+ID4gPiArICAgICAgICAgICAgICAgcG9ydHMgPSA8JmxjZDBfcG9ydD47Cj4gPiA+
+ID4KPiA+ID4gPiBJZiB0aGVyZSBpcyBvbmx5IG9uZSBkZXZpY2UsIHlvdSBkb24ndCBuZWVkIHRo
+aXMgdmlydHVhbCBub2RlLgo+ID4gPgo+ID4gPiBCZWZvcmUgSSBmb2xsb3cgdXAgb24gdGhpcyBh
+bmQgc3VibWl0IGEgdmVyc2lvbiB3aXRob3V0IHRoZSB2aXJ0dWFsCj4gPiA+IG5vZGUsIEknbSB3
+b25kZXJpbmc6IGlzIGl0IG9rYXkgdGhhdCB0aGUgYmluZGluZ3MgZm9yIHRoZSBMQ0RDIGFuZCB0
+aGUKPiA+ID4gZnJhbWVidWZmZXIgYXJlIGluIHRoZSBzYW1lIGZpbGUsIG9yIHdvdWxkIGl0IGJl
+IHByZWZlcnJhYmxlIGlmIHRoZXkKPiA+ID4gd2VyZSBzZXBhcmF0ZT8gQm90aCBzdHlsZXMgc2Vl
+bSB0byBiZSB1c2VkIGZvciB0aGUgZGlzcGxheSBiaW5kaW5ncy4KPiA+Cj4gPiBmcmFtZWJ1ZmZl
+ciBhcyBpbiB0aGUga2VybmVsIGZiZGV2PyBSZWFsbHksIHRoYXQgc2hvdWxkIGJlIHRoZSBzYW1l
+Cj4gPiBiaW5kaW5nLiBJdCdzIHRoZSBzYW1lIGgvdyBhZnRlciBhbGwuIEhvd2V2ZXIsIHRoZXJl
+IGhhdmUgYmVlbiBjYXNlcwo+ID4gd2hlcmUgdGhpbmdzIGRldmlhdGVkLiBTbyBJIGRvbid0IGhh
+dmUgYSBnb29kIGFuc3dlci4KPgo+IE5vLCBub3QgdGhlIGZiZGV2IGRldmljZSwgdGhhdCBvbmUg
+aXMgbWFuYWdlZCBieSBkcm1mYiBhbmQgaXMgbm90Cj4gZXhwcmVzc2VkIGluIERULiBJIG1lYW50
+IHRoZSByZXNlcnZlZC1tZW1vcnkgbm9kZSB0aGF0IHNldHMgYXNpZGUKPiBtZW1vcnkgZm9yIHRo
+ZSBmcmFtZWJ1ZmZlcnMuCj4KPiBTZWUgcGF0Y2ggIltSRkMgMDMvMTZdIGR0LWJpbmRpbmdzOiBk
+aXNwbGF5OiBhcm1hZGE6IEFkZCBmcmFtZWJ1ZmZlcgo+IHJlc2VydmVkLW1lbSBiaW5kaW5nIi4g
+UGVyaGFwcyB0aGF0IHBhcnQgc2hvdWxkIGV2ZW4gZ28gdG8KPiBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5Ly4KCk9rYXkuCgpBIHNlcGFyYXRlIGZpbGUg
+d2lsbCBiZSBiZXR0ZXIgYW5kIHByb2JhYmx5CkRvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9yZXNlcnZlZC1tZW1vcnkvIGlzIHRoZSBiZXN0CmxvY2F0aW9uLgoKUm9iCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
