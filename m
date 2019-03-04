@@ -1,61 +1,35 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 2/5] drm/bridge: sii902x: Set output mode to HDMI or
- DVI according to EDID
-Date: Mon, 4 Mar 2019 14:52:01 +0200
-Message-ID: <20190304125201.GN6325@pendragon.ideasonboard.com>
-References: <cover.1551303673.git.jsarha@ti.com>
- <08d50e5eec760273a3b3699ea98732f5ec66ad25.1551303673.git.jsarha@ti.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 1/2] clk: meson-g12a: add cpu clock bindings
+Date: Mon,  4 Mar 2019 14:11:28 +0100
+Message-ID: <20190304131129.7762-2-narmstrong@baylibre.com>
+References: <20190304131129.7762-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <08d50e5eec760273a3b3699ea98732f5ec66ad25.1551303673.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: fabrizio.castro@bp.renesas.com, devicetree@vger.kernel.org, Songjun.Wu@atmel.com, tony@atomide.com, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, voice.shen@atmel.com
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190304131129.7762-1-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jbrunet@baylibre.com, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSnlyaSwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgpPbiBXZWQsIEZlYiAyNywgMjAxOSBh
-dCAxMTo1NDoyMFBNICswMjAwLCBKeXJpIFNhcmhhIHdyb3RlOgo+IFNldCBvdXRwdXQgbW9kZSB0
-byBIRE1JIG9yIERWSSBhY2NvcmRpbmcgdG8gRURJRCBIRE1JIHNpZ25hdHVyZS4KPiAKPiBTaWdu
-ZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxqc2FyaGFAdGkuY29tPgo+IFJldmlld2VkLWJ5OiBBbmRy
-emVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0v
-YnJpZGdlL3NpaTkwMnguYyB8IDkgKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2Vy
-dGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4
-LmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYwo+IGluZGV4IDFhZmEwMDAxNDFk
-NS4uMGUyMWZhNDE5ZDI3IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lp
-OTAyeC5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMKPiBAQCAtMTgx
-LDExICsxODEsMTUgQEAgc3RhdGljIGludCBzaWk5MDJ4X2dldF9tb2RlcyhzdHJ1Y3QgZHJtX2Nv
-bm5lY3RvciAqY29ubmVjdG9yKQo+ICAJc3RydWN0IHNpaTkwMnggKnNpaTkwMnggPSBjb25uZWN0
-b3JfdG9fc2lpOTAyeChjb25uZWN0b3IpOwo+ICAJdTMyIGJ1c19mb3JtYXQgPSBNRURJQV9CVVNf
-Rk1UX1JHQjg4OF8xWDI0Owo+ICAJc3RydWN0IGVkaWQgKmVkaWQ7Cj4gKwl1OCBvdXRwdXRfbW9k
-ZSA9IFNJSTkwMlhfU1lTX0NUUkxfT1VUUFVUX0RWSTsKCkknZCBtb3ZlIHRoaXMgb25lIGxpbmUg
-dXAsIGJ1dCB0aGF0J3MgY2VydGFpbmx5IGEgbWF0dGVyIG9mIHRhc3RlIDotKQo+ICAJaW50IG51
-bSA9IDAsIHJldDsKPiAgCj4gIAllZGlkID0gZHJtX2dldF9lZGlkKGNvbm5lY3Rvciwgc2lpOTAy
-eC0+aTJjbXV4LT5hZGFwdGVyWzBdKTsKPiAgCWRybV9jb25uZWN0b3JfdXBkYXRlX2VkaWRfcHJv
-cGVydHkoY29ubmVjdG9yLCBlZGlkKTsKPiAgCWlmIChlZGlkKSB7Cj4gKwkgICAgICAgIGlmIChk
-cm1fZGV0ZWN0X2hkbWlfbW9uaXRvcihlZGlkKSkKPiArCQkJb3V0cHV0X21vZGUgPSBTSUk5MDJY
-X1NZU19DVFJMX09VVFBVVF9IRE1JOwo+ICsKPiAgCQludW0gPSBkcm1fYWRkX2VkaWRfbW9kZXMo
-Y29ubmVjdG9yLCBlZGlkKTsKPiAgCQlrZnJlZShlZGlkKTsKPiAgCX0KPiBAQCAtMTk1LDYgKzE5
-OSwxMSBAQCBzdGF0aWMgaW50IHNpaTkwMnhfZ2V0X21vZGVzKHN0cnVjdCBkcm1fY29ubmVjdG9y
-ICpjb25uZWN0b3IpCj4gIAlpZiAocmV0KQo+ICAJCXJldHVybiByZXQ7Cj4gIAo+ICsJcmV0ID0g
-cmVnbWFwX3VwZGF0ZV9iaXRzKHNpaTkwMngtPnJlZ21hcCwgU0lJOTAyWF9TWVNfQ1RSTF9EQVRB
-LAo+ICsJCQkJIFNJSTkwMlhfU1lTX0NUUkxfT1VUUFVUX01PREUsIG91dHB1dF9tb2RlKTsKPiAr
-CWlmIChyZXQpCj4gKwkJcmV0dXJuIHJldDsKPiArCgpJcyB0aGlzIHRoZSByaWdodCBwbGFjZSB0
-byB1cGRhdGUgdGhlIHJlZ2lzdGVyLCBzaG91bGRuJ3QgdGhpcyBiZSBkb25lCmluIHNpaTkwMnhf
-YnJpZGdlX2VuYWJsZSgpIGluc3RlYWQgPyBJIGNvdWxkIGZvcmVzZWUgY2FzZXMgd2hlcmUgdGhl
-CmNoaXAgY291bGQgYmUgcG93ZXJlZCBkb3duIGJldHdlZW4gZ2V0X21vZGVzKCkgYW5kIGVuYWJs
-ZSgpLCBsb3NpbmcgaXRzCmludGVybmFsIHN0YXRlLgoKPiAgCXJldHVybiBudW07Cj4gIH0KPiAg
-CgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVs
+Add Amlogic G12A Family CPU clocks bindings, only export CPU_CLK since
+it should be the only ID used.
+
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ include/dt-bindings/clock/g12a-clkc.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
+index 83b657038d1e..d7bf0830c87d 100644
+--- a/include/dt-bindings/clock/g12a-clkc.h
++++ b/include/dt-bindings/clock/g12a-clkc.h
+@@ -131,5 +131,6 @@
+ #define CLKID_MALI_1				174
+ #define CLKID_MALI				175
+ #define CLKID_MPLL_5OM				177
++#define CLKID_CPU_CLK				187
+ 
+ #endif /* __G12A_CLKC_H */
+-- 
+2.20.1
