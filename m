@@ -1,68 +1,27 @@
-From: =?utf-8?B?6ZmG5pyx5Lyf?= <alex_lu@realsil.com.cn>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggMy84XSBkdC1iaW5kaW5nczogbmV0OiBibHVldG9v?= =?utf-8?Q?th:_Add_rtl8723bs-bluetooth?=
-Date: Mon, 4 Mar 2019 05:17:45 +0000
-Message-ID: <0551C926975A174EA8972327741C7889EE6B1490@RS-MBS01.realsil.com.cn>
-References: <CA+E=qVdsU7sBkOQUmMprhD-Sdw7TdFnwFdGCv=4iRe++y1AwOg@mail.gmail.com>
- <20190301201519.21953-1-martin.blumenstingl@googlemail.com>
- <0551C926975A174EA8972327741C7889EE6B1008@RS-MBS01.realsil.com.cn>
- <CAFBinCDFY+fZs2unV1T5Mhh_VVSUfxK75zZXKdanLKG+arRX5g@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 0/3] arm: dts: imx8mq: Add cpufreq support
+Date: Mon, 4 Mar 2019 13:25:30 +0800
+Message-ID: <20190304052528.GW26041@dragon>
+References: <1551390149-15443-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCDFY+fZs2unV1T5Mhh_VVSUfxK75zZXKdanLKG+arRX5g@mail.gmail.com>
-Content-Language: zh-CN
-Sender: netdev-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: "anarsoul@gmail.com" <anarsoul@gmail.com>, "beagleboard@davidjohnsummers.uk" <beagleboard@davidjohnsummers.uk>, "davem@davemloft.net" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "johan.hedberg@gmail.com" <johan.hedberg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, "marcel@holtmann.org" <marcel@holtmann.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "wens@csie.org" <wens@csie.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1551390149-15443-1-git-send-email-abel.vesa@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Abel Vesa <abel.vesa@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mike Turquette <mturquette@baylibre.com>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Angus Ainslie <angus.ainslie@puri.sm>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFydGluLA0KWW91J3JlIHJpZ2h0IGFib3V0IHRoZSBjb25maWcgYmxvYi4NClRoYW5rcyBm
-b3IgeW91ciBpbnZpdGF0aW9uIHRvIHRoZSBkaXNjdXNzaW9uLg0KSW4gbXkgb3B0aW9uLCBzcGVj
-aWZ5aW5nIHRoZSBwcm9wZXJ0aWVzIG9mIHRoZSBjb25uZWN0aW9uIHRvIHRoZSBjaGlwIHdvdWxk
-IGJlIGJldHRlci4NCg0KVGhhbmtzLA0KQlJzLA0KQWxleCBMdS4NCg0KLS0tLS3pgq7ku7bljp/k
-u7YtLS0tLQ0K5Y+R5Lu25Lq6OiBNYXJ0aW4gQmx1bWVuc3RpbmdsIFttYWlsdG86bWFydGluLmJs
-dW1lbnN0aW5nbEBnb29nbGVtYWlsLmNvbV0gDQrlj5HpgIHml7bpl7Q6IDIwMTnlubQz5pyIM+aX
-pSAwOjQ0DQrmlLbku7bkuro6IOmZhuacseS8nw0K5oqE6YCBOiBhbmFyc291bEBnbWFpbC5jb207
-IGJlYWdsZWJvYXJkQGRhdmlkam9obnN1bW1lcnMudWs7IGRhdmVtQGRhdmVtbG9mdC5uZXQ7IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBqb2hhbi5oZWRiZXJnQGdtYWlsLmNvbTsgbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1ibHVldG9vdGhAdmdlci5rZXJu
-ZWwub3JnOyBtYXJjZWxAaG9sdG1hbm4ub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbWF4aW1l
-LnJpcGFyZEBib290bGluLmNvbTsgbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgcm9iaEBrZXJuZWwu
-b3JnOyBzdGVmYW4ud2FocmVuQGkyc2UuY29tOyB3ZW5zQGNzaWUub3JnDQrkuLvpopg6IFJlOiBb
-UEFUQ0ggMy84XSBkdC1iaW5kaW5nczogbmV0OiBibHVldG9vdGg6IEFkZCBydGw4NzIzYnMtYmx1
-ZXRvb3RoDQoNCkhpIEFsZXgsDQoNCk9uIFNhdCwgTWFyIDIsIDIwMTkgYXQgMTA6MzAgQU0g6ZmG
-5pyx5LyfIDxhbGV4X2x1QHJlYWxzaWwuY29tLmNuPiB3cm90ZToNCj4NCj4gSGkgTWFydGluLA0K
-PiBUaGFua3MgZm9yIHlvdXIgaW5mb3JtYXRpb24uDQp0aGFuayB5b3UgZm9yIHRoZSBxdWljayBy
-ZXBseSENCg0KPiBUaGUgY29uZmlnIGlzIHJlbGF0ZWQgdG8gZUZ1c2UgaW4gY2hpcHMuIEknbSBz
-b3JyeSB0aGF0IHRoZSBkZXRhaWxzIGNhbid0IGJlIG9wZW4uDQo+IE9ubHkgc29tZSBzcGVjaWFs
-IGNvbmZpZ3VyYXRpb25zIGFyZSByZWxhdGVkIHRvIHRoZSBob3N0IHBsYXRmb3Jtcywgc3VjaCBh
-cyBVQVJUIHdvcmtpbmcgYmF1ZHJhdGUsIGhhcmR3YXJlIGZsb3cgY29udHJvbCwgUENNIHNldHRp
-bmdzLCBldGMuIFRoZXNlIGFyZSB0aGUgc2V0dGluZ3MgZm9yIEhDSSBVQVJUIGFuZCBQQ00gSW50
-ZXJmYWNlLg0KPiBNb3N0IG9mIGNvbmZpZ3VyYXRpb25zIGFyZSBvbmx5IHJlbGV2YW50IHRvIGNo
-aXBzLg0KcGxlYXNlIGxldCBtZSByZXBlYXQgdGhpcyB3aXRoIG15IG93biB3b3JkcyB0byBzZWUg
-aWYgSSB1bmRlcnN0YW5kIHRoZQ0KImNvbmZpZyBibG9iIiBjb3JyZWN0bHkuIEZlZWwgZnJlZSB0
-byBjb3JyZWN0IG1lIGlmIGFueXRoaW5nIGlzIHdyb25nOg0KLSB0aGUgZGF0YSBpbiB0aGUgY29u
-ZmlnIGJsb2IgInBhdGNoZXMiIGVGdXNlIHZhbHVlcyBhdCBydW50aW1lIChub24tcGVyc2lzdGVu
-dCkNCi0gd2Uga25vdyB0aGUgb2Zmc2V0cyBvZiB0aGUgVUFSVF9DT05GSUcsIFBDTV9TRVRUSU5H
-IGFuZCBCRF9BRERSIC0NCnRoZXNlIGNhbiBiZSAiYm9hcmQgc3BlY2lmaWMiIChsaWtlIGJhdWQg
-cmF0ZSwgZmxvdyBjb250cm9sLCAuLi4pDQotIG1vc3Qgb3RoZXIgdmFsdWVzIGZyb20gdGhlICJj
-b25maWcgYmxvYiIgYXJlICJjaGlwIHNwZWNpZmljIiAtDQptZWFuaW5nIHRoZXkgYXJlIGlkZW50
-aWNhbCBmb3IgZWFjaCBib2FyZCBhbmQgdGhleSBvbmx5IGRlcGVuZCBvbiB0aGUNCmNoaXANCg0K
-ZG8geW91IGhhdmUgYW55IHN1Z2dlc3Rpb25zIGhvdyB3ZSBjYW4gc3VwcG9ydCBtdWx0aXBsZSBi
-b2FyZHMgKHRoZQ0KbWFpbiBnb2FsIG9mIHRoaXMgd2hvbGUgZGlzY3Vzc2lvbiBpczogaG93IHRv
-IGRvIHRoaXMgImNvcnJlY3QiKT8NCnNvIGZhciBkaWZmZXJlbnQgYXBwcm9hY2hlcyB3ZXJlIGRp
-c2N1c3NlZCAobm90IG9ubHkgaW4gdGhpcyB0aHJlYWQsDQpidXQgYWxzbyBpbiB0aGUgcGFzdCk6
-DQotIHVzZSBhIHNlcGFyYXRlIGNvbmZpZyBibG9iIGZvciBlYWNoIGJvYXJkLiB0aGlzIG1lYW5z
-IHRoYXQgd2hlbmV2ZXINCmEgbmV3IGJvYXJkIGlzIHN1cHBvcnRlZCAoZm9yIGV4YW1wbGUgYnkg
-YWRkaW5nIGEgLmR0cyBmb3IgaXQgdG8gdGhlDQptYWlubGluZSBrZXJuZWwpIHRoZW4gQmx1ZXRv
-b3RoIHdvbid0IHdvcmsgb3V0LW9mLXRoZS1ib3ggdW5sZXNzIGENCmNvbmZpZyBpcyBwcm92aWRl
-ZC4NCi0gc3BlY2lmeSB0aGUgcHJvcGVydGllcyBvZiB0aGUgY29ubmVjdGlvbiB0byB0aGUgY2hp
-cCAoZm9yIGV4YW1wbGUgYnkNCmFkZGluZyBhIGRldmljZS10cmVlIHByb3BlcnR5IGZvciB0aGUg
-c3BlZWQsIGZsb3cgY29udHJvbCwgLi4uKSBhbmQNCmdlbmVyYXRlIHRoZSBjb25maWcgYmFzZWQg
-b24gdGhlIGRldmljZS10cmVlIHByb3BlcnRpZXMuDQotIChJIGFtIG9wZW4gZm9yIG90aGVyIHN1
-Z2dlc3Rpb25zLCBwbGVhc2UgbGV0IHVzIGtub3cgaWYgeW91IGhhdmUgYW55KQ0KDQpJIHdvdWxk
-IGxpa2UgdG8gaGVhciB5b3VyIG9waW5pb24gb24gdGhpcyB0b3BpYyBhbmQgZXNwZWNpYWxseSB0
-aGUNCnJlYXNvbnMgYmVoaW5kIHlvdXIgc3VnZ2VzdGlvbnMuDQoNCg0KQmVzdCByZWdhcmRzDQpN
-YXJ0aW4NCg0KLS0tLS0tUGxlYXNlIGNvbnNpZGVyIHRoZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJp
-bnRpbmcgdGhpcyBlLW1haWwuDQo=
+On Thu, Feb 28, 2019 at 09:42:43PM +0000, Abel Vesa wrote:
+> Changes since v2:
+>  * renamed the regulator
+>  * removed the useless enable-active-high from the regulator 
+>  * renamed a53_0_opp_table to a53_opp_table
+> 
+> Abel Vesa (3):
+>   arm64: dts: imx8mq: Add the clocks and the latencies for the A53 cores
+>   arm64: dts: imx8mq: Add the buck vdd_arm regulator
+>   arm64: dts: imx8mq: Add the opp table and cores opp properties
+
+Applied all, thanks.
