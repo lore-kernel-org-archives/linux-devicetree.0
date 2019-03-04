@@ -1,26 +1,32 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 bus+gpio 5/5] dt-bindings: gpio: Document GPIOs via
- Moxtet bus
-Date: Mon, 4 Mar 2019 10:53:26 +0100
-Message-ID: <CACRpkdYqRzRSdu+xhO2NAt7NYovvkxoE6SCJCq5_UqfD4bY-zg@mail.gmail.com>
-References: <20190301035852.26780-1-marek.behun@nic.cz> <20190301035852.26780-6-marek.behun@nic.cz>
- <CACRpkdYpjjpVNUXRgT=XY758FGtDYow2fvwpah37T_GjTvLauQ@mail.gmail.com> <20190304001701.0b1b9986@nic.cz>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH  0/5] mmc: mmci: add get_datactrl_cfg callback
+Date: Mon, 4 Mar 2019 11:17:00 +0100
+Message-ID: <1551694625-6414-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190304001701.0b1b9986@nic.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Behun <marek.behun@nic.cz>
-Cc: Tony Lindgren <tony@atomide.com>, Shawn Guo <shawnguo@kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: srinivas.kandagatla@linaro.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 12:17 AM Marek Behun <marek.behun@nic.cz> wrote:
+From: Ludovic Barre <ludovic.barre@st.com>
 
-> do you know who is responsible for merging into drivers/bus?
+This patch series adds get_datactrl_cfg callback in mmci_host_ops
+to allow to get datactrl configuration specific at variant.
 
-Usually the ARM SoC maintainers arm@kernel.org merge drivers
-there. You should just send them a pull request and explain the
-situation I think. Else they know who should deal with it.
+Ludovic Barre (5):
+  mmc: mmci: add get_datactrl_cfg callback
+  mmc: mmci: define get_dctrl_cfg for legacy variant
+  mmc: mmci: qcom: define get_dctrl_cfg
+  mmc: mmci: stm32: define get_dctrl_cfg
+  mmc: mmci: replace blksz_datactrlXX by get_datactrl_cfg callback
 
-Yours,
-Linus Walleij
+ drivers/mmc/host/mmci.c             | 51 ++++++++++++++++++++++++-------------
+ drivers/mmc/host/mmci.h             | 11 ++++----
+ drivers/mmc/host/mmci_qcom_dml.c    |  8 ++++++
+ drivers/mmc/host/mmci_stm32_sdmmc.c | 21 +++++++++++++++
+ 4 files changed, 68 insertions(+), 23 deletions(-)
+
+-- 
+2.7.4
