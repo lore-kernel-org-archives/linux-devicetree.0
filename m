@@ -1,61 +1,109 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: //Re: [PATCH v3 06/12] usb: dwc3: Increase timeout for CmdAct cleared
- by device controller
-Date: Mon, 4 Mar 2019 10:53:41 +0800
-Message-ID: <7bbe9516-cb16-09a9-554f-0b8177c6f535@huawei.com>
-References: <20190302090505.65542-1-chenyu56@huawei.com>
- <20190302090505.65542-7-chenyu56@huawei.com>
- <CAHp75Vd+wPU_QvaWHanpG6hjnUj6==4Y3YiOtZnWpk0kyFUQ4A@mail.gmail.com>
+From: Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH v2] arm64: dts: ls1088a: add one more thermal zone node
+Date: Mon,  4 Mar 2019 11:21:11 +0800
+Message-ID: <20190304032111.21770-1-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vd+wPU_QvaWHanpG6hjnUj6==4Y3YiOtZnWpk0kyFUQ4A@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, "zhangfei (AC)" <zhangfei28@huawei.com>
-Cc: liuyu712@hisilicon.com, USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, wanghu17@hisilicon.com, butao@hisilicon.com, Yao Chen <chenyao11@huawei.com>, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei <songxiaowei@hisilicon.com>, xu yiping <xuyiping@hisilicon.com>, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>, linux-pm@vger.kernel.org, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, leoyang.li@nxp.com, edubezval@gmail.com, robh+dt@kernel.org, rui.zhang@intel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Zhang Fei,
+Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core cluster
+sensor is used to monitor the temperature of core and SoC platform is for
+platform. The current dts only support the first sensor.
+This patch adds the second sensor node to dts to enable it.
 
-On 2019/3/2 23:47, Andy Shevchenko wrote:
-> On Sat, Mar 2, 2019 at 11:06 AM Yu Chen <chenyu56@huawei.com> wrote:
->>
->> It needs more time for the device controller to clear the CmdAct of
->> DEPCMD on Hisilicon Kirin Soc.
->>
-> 
-> 5x times more? Can you provide more specific details on that?
-> 
-Can you explain the details about the timeout expansion on Hisilicon Kirin Soc?
-Thanks!
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+---
+v2:
+	- Add more information about sensors to description
+PS: In order to keep consistency to the first thermal-zone node, there will
+be "WARNING: line over 80 characters" warnings.
 
->> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
->> Cc: Felipe Balbi <balbi@kernel.org>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: John Stultz <john.stultz@linaro.org>
->> Cc: Binghui Wang <wangbinghui@hisilicon.com>
->> Signed-off-by: Yu Chen <chenyu56@huawei.com>
->> ---
->>  drivers/usb/dwc3/gadget.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
->> index 6c9b76bcc2e1..84d701b37171 100644
->> --- a/drivers/usb/dwc3/gadget.c
->> +++ b/drivers/usb/dwc3/gadget.c
->> @@ -270,7 +270,7 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
->>  {
->>         const struct usb_endpoint_descriptor *desc = dep->endpoint.desc;
->>         struct dwc3             *dwc = dep->dwc;
->> -       u32                     timeout = 1000;
->> +       u32                     timeout = 5000;
->>         u32                     saved_config = 0;
->>         u32                     reg;
->>
->> --
->> 2.15.0-rc2
->>
-> 
-> 
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   43 +++++++++++++++++++++--
+ 1 files changed, 39 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index 661137f..9f52bc9 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -129,19 +129,19 @@
+ 	};
+ 
+ 	thermal-zones {
+-		cpu_thermal: cpu-thermal {
++		ccu {
+ 			polling-delay-passive = <1000>;
+ 			polling-delay = <5000>;
+ 			thermal-sensors = <&tmu 0>;
+ 
+ 			trips {
+-				cpu_alert: cpu-alert {
++				ccu_alert: ccu-alert {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+ 
+-				cpu_crit: cpu-crit {
++				ccu_crit: ccu-crit {
+ 					temperature = <95000>;
+ 					hysteresis = <2000>;
+ 					type = "critical";
+@@ -150,7 +150,42 @@
+ 
+ 			cooling-maps {
+ 				map0 {
+-					trip = <&cpu_alert>;
++					trip = <&ccu_alert>;
++					cooling-device =
++						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++
++		plt {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++			thermal-sensors = <&tmu 1>;
++
++			trips {
++				plt_alert: plt-alert {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				plt_crit: plt-crit {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				map0 {
++					trip = <&plt_alert>;
+ 					cooling-device =
+ 						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+ 						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-- 
+1.7.1
