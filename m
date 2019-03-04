@@ -1,65 +1,28 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v2 0/5] drm/bridge: sii902x: HDMI-audio support and some
- fixes
-Date: Mon, 4 Mar 2019 16:29:17 +0200
-Message-ID: <7a2a9503-b106-a28c-6d7b-45240f694e0a@ti.com>
-References: <cover.1551303673.git.jsarha@ti.com>
- <20190304124229.GL6325@pendragon.ideasonboard.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190304124229.GL6325@pendragon.ideasonboard.com>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: fabrizio.castro@bp.renesas.com, devicetree@vger.kernel.org, Songjun.Wu@atmel.com, tony@atomide.com, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, voice.shen@atmel.com
+From: Robert Yang <decatf@gmail.com>
+Subject: [PATCH v2 0/3] Add device tree support for kxcjk1013 accelerometer
+Date: Mon,  4 Mar 2019 10:19:09 -0500
+Message-ID: <20190304151912.11485-1-decatf@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Robert Yang <decatf@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDQvMDMvMjAxOSAxNDo0MiwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiBIaSBKeXJpLAo+
-IAo+IE9uIFdlZCwgRmViIDI3LCAyMDE5IGF0IDExOjU0OjE4UE0gKzAyMDAsIEp5cmkgU2FyaGEg
-d3JvdGU6Cj4+IENoYW5nZXMgc2luY2UgZmlyc3QgdmVyc2lvbjoKPj4gLSBNb3ZlZCByZXZpZXdl
-ZCBwYXRjaGVzIHRvIGZyb250Ogo+PiAgIC0gZHJtL2JyaWRnZTogc2lpOTAyeDogYWRkIGlucHV0
-X2J1c19mbGFncwo+PiAgIC0gZHJtL2JyaWRnZTogc2lpOTAyeDogU2V0IG91dHB1dCBtb2RlIHRv
-IEhETUkgb3IgRFZJIGFjY29yZGluZyB0byBFRElECj4+ICAgLSBkcm0vYnJpZGdlOiBzaWk5MDJ4
-OiBwaXhlbCBjbG9jayB1bml0IGlzIDEwa0h6IGluc3RlYWQgb2YgMWtIego+PiAtIEFkZGVkIGEg
-bmV3IGZpeDoKPj4gICAtIGRybS9icmlkZ2U6IHNpaTkwMng6IFNlbGVjdCBJMkNfTVVYCj4+IC0g
-QXBwbGllZCBzb21lIHJldmlldyBzdWdnZXN0aW9ucyB0bwo+PiAgIC0gZHJtL2JyaWRnZTogc2lp
-OTAyeDogSW1wbGVtZW50IEhETUkgYXVkaW8gc3VwcG9ydAo+PiAgICAgLSB1c2UgY2xvY2stbmFt
-ZXMgcHJvcGVydHkgdG8gbmFtZSBtY2xrCj4+ICAgICAtIG1vdmUgY29tbWVudCBkZXNjcmliaW5n
-IGFkZGVkIG11dGV4IHRvIHN0cnVjdCBzaWk5MDJ4IGFuZCBpbXByb3ZlIGl0Cj4+ICAgICAtIGNs
-ZWFudXAgc2lpOTAyeF9tdXRlKCkKPj4gICAgIC0gY2xlYW51cCBzaWk5MDJ4X3NlbGVjdF9tY2xr
-X2RpdigpCj4+ICAgICAtIGZpeCBjb25kaXRpb24gZm9yIGNoZWNraW5nIEVOQUJMRV9CSVQgZnJv
-bSBpMnNfZmlmb19yb3V0aW5nIGluCj4+ICAgICAgIHNpaTkwMnhfYXVkaW9fY29kZWNfaW5pdCgp
-Cj4+Cj4+IFN0aWxsIHRvIGRvCj4+Cj4+IC0gQWdyZWUgb24gaTJzIHdpcmVzIHRvIEhETUkgYXVk
-aW8gZmlmbyByb3V0aW5nIGluIGR0cy4gCj4+Cj4+ICAgVGhlIGN1cnJlbnQgc2NoZW1lIGlzIHF1
-aXRlIHN0cmFpZ2h0IGZvcndhcmQsIGJ1dCB0aGVyZSBpcyBtYXliZQo+PiAgIHRoZXJlIGlzIGV2
-ZW4gbW9yZSBzdHJhaWdodCBmb3J3YXJkIHNvbHV0aW9ucyBsaWtlOgo+Pgo+PiAgIGF1ZGlvLWZp
-Zm8tZW5hYmxlID0gPDEgMSAxIDE+Owo+PiAgIGF1ZGlvLWkycy1waW4tdG8tZmlmbyA9IDwwIDEg
-MiAzPjsKPj4KPj4gICBNZWFuaW5nIHRoYXQgYWxsIGZpZm9zIGFyZSBlbmFibGVkIGFuZCBTRDAg
-aXMgcm91dGVkIHRvIGZpZm8gMCwgU0QxCj4+ICAgdG8gZmlmbyAxLCBldGMuIEkgYW0gbm90IHN1
-cmUgaWYgdGhlIGNoYW5uZWwgc3dhcCBmdW5jdGlvbmFsaXR5Cj4+ICAgc2hvdWxkIHNob3cgaW4g
-ZHRzIGJpbmRpbmcuCj4gUGxlYXNlIGZvcmdpdmUgbXkgbGFjayBvZiBhdWRpbyBrbm93bGVkZ2Us
-IGJ1dCBpdCB0aGlzIGEgc3lzdGVtCj4gZGVzY3JpcHRpb24gdGhhdCBzaG91bGQgYmUgZW5jb2Rl
-ZCBpbiBEVCwgb3IgYSBwb2xpY3kgdGhhdCBzaG91bGQgYmUKPiBoYW5kbGVkIHB1cmVseSBpbiBz
-b2Z0d2FyZSAoZWl0aGVyIGZ1bGx5IGluc2lkZSB0aGUga2VybmVsIG9yIHdpdGggdGhlCj4gaGVs
-cCBvZiB1c2Vyc3BhY2UpID8KPiAKClRoaXMgcHJvcGVydHkgZGVzY3JpYmVzIGhvdyBtYW55IGky
-cyB3aXJlcyBhcmUgY29ubmVjdGVkIHRvIHNpaTkwMnggYW5kCmluIHdoYXQgb3JkZXIsIHNvIEkg
-dGhpbmsgaXQgYmVsb25ncyB0byBEVFMuCgpPbmUgbWlnaHQgb2YgY291cnNlIHdvbmRlciB3aHkg
-YW55Ym9keSB3b3VsZCBwdXQgdGhlIGkycyB3aXJlcyB0byBhbnkKb3RoZXIgb3JkZXIgdGhhbiAw
-IDwtPiAwLCAxIDwtPiAxLCAyIDwtPiAyLCBhbmQgMyA8LT4gMywgYnV0IHRoZW4gYQphZ2FpbiBJ
-J3ZlIHNlZW4gd2VpcmRlciBib2FyZCBkZXNpZ25zLgoKQmVzdCByZWdhcmRzLApKeXJpCgoKLS0g
-ClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhl
-bHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWlj
-aWxlOiBIZWxzaW5raQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWw=
+- Add a vendor prefix for Kionix Inc. to device tree bindings.
+  There is already one other Kionix accelerometer (kxsd9) with device tree
+  bindings but this vendor prefix hasn't been documented.
+- Document the kxcjk1013 device tree bindings.
+- Add device tree support for Kionix kxcjk1013 accelerometer sensors.
+
+Changelog:
+
+v2:     - Remove SMO8500 because it's an ACPI binding.
+
+ .../bindings/iio/accel/kionix,kxcjk1013.txt     | 17 +++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt     |  1 +
+ drivers/iio/accel/kxcjk-1013.c                  | 10 ++++++++++
+ 3 files changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/kionix,kxcjk1013.txt
+
+-- 
+2.17.1
