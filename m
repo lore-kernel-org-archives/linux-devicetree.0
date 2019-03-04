@@ -1,51 +1,36 @@
-From: Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH 1/6] dt-bindings: misc: Add Aspeed XDMA engine binding documentation
-Date: Mon,  4 Mar 2019 15:36:55 -0600
-Message-ID: <1551735420-16202-2-git-send-email-eajames@linux.ibm.com>
-References: <1551735420-16202-1-git-send-email-eajames@linux.ibm.com>
+From: Helen Koike <helen.koike@collabora.com>
+Subject: [PATCH] ARM: dts: bcm283x: Fix hdmi hpd gpio pull
+Date: Mon,  4 Mar 2019 18:48:37 -0300
+Message-ID: <20190304214837.9045-1-helen.koike@collabora.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551735420-16202-1-git-send-email-eajames@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, arnd@arndb.de, gregkh@linuxfoundation.org, jk@ozlabs.org, openbmc@lists.ozlabs.org, Eddie James <eajames@linux.ibm.com>
+To: eric@anholt.net
+Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stefan.wahren@i2se.com, linus.walleij@linaro.org, lkundrak@v3.sk, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-Document the bindings.
+Raspberry pi board model B revison 2 have the hot plug detector gpio
+active high (and not low as it was in the dts).
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Reviewed-by: Eric Anholt <eric@anholt.net>
 ---
- .../devicetree/bindings/misc/aspeed,xdma.txt       | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/aspeed,xdma.txt
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/misc/aspeed,xdma.txt b/Documentation/devicetree/bindings/misc/aspeed,xdma.txt
-new file mode 100644
-index 0000000..85e82ea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/aspeed,xdma.txt
-@@ -0,0 +1,23 @@
-+* Device tree bindings for the Aspeed XDMA engine
-+
-+The XDMA Engine embedded in the AST2500 SOC can perform automatic DMA
-+operations over PCI between the AST2500 (acting as a BMC) and a host processor.
-+
-+Required properties:
-+
-+ - compatible		"aspeed,ast2500-xdma"
-+ - reg			contains the offset and length of the memory region
-+			assigned to the XDMA registers
-+ - resets		reset specifier for the syscon reset associated with
-+			the XDMA engine
-+ - interrupts		the interrupt associated with the XDMA engine on this
-+			platform
-+
-+Example:
-+
-+    xdma@1e6e7000 {
-+        compatible = "aspeed,ast2500-xdma";
-+        reg = <0x1e6e7000 0x100>;
-+        resets = <&syscon ASPEED_RESET_XDMA>;
-+        interrupts = <6>;
-+    };
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+index 5641d162dfdb..28e7513ce617 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+@@ -93,7 +93,7 @@
+ };
+ 
+ &hdmi {
+-	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
++	hpd-gpios = <&gpio 46 GPIO_ACTIVE_HIGH>;
+ };
+ 
+ &pwm {
 -- 
-1.8.3.1
+2.20.1
