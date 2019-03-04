@@ -1,116 +1,137 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v4 2/9] dt-bindings: mtd: ingenic: Change 'BCH' to 'ECC'
- in documentation
-Date: Mon, 04 Mar 2019 19:23:50 +0100
-Message-ID: <1551723830.4932.3@crapouillou.net>
+Subject: Re: [PATCH v4 6/9] mtd: rawnand: ingenic: Separate top-level and SoC
+ specific code
+Date: Mon, 04 Mar 2019 19:26:08 +0100
+Message-ID: <1551723968.4932.4@crapouillou.net>
 References: <20190209192305.4434-1-paul@crapouillou.net>
-        <20190209192305.4434-2-paul@crapouillou.net> <20190304105014.0cceea0a@xps13>
+        <20190209192305.4434-6-paul@crapouillou.net> <20190304112058.67cd5194@xps13>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190304105014.0cceea0a@xps13>
+In-Reply-To: <20190304112058.67cd5194@xps13>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Miquel Raynal <miquel.raynal@bootlin.com>
 Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Mon, Mar 4, 2019 at 10:50 AM, Miquel Raynal=20
+On Mon, Mar 4, 2019 at 11:20 AM, Miquel Raynal=20
 <miquel.raynal@bootlin.com> wrote:
 > Hi Paul,
 >=20
 > Paul Cercueil <paul@crapouillou.net <mailto:paul@crapouillou.net>>=20
-> wrote on Sat,  9 Feb 2019 16:22:58
+> wrote on Sat,  9 Feb 2019 16:23:02
 > -0300:
 >=20
->>  The JZ4740 ECC hardware is not BCH but Reed-Solomon, so it makes=20
->> more
->>  sense to use the more generic ECC term.
+>>  The ingenic-nand driver uses an API provided by the jz4780-bch=20
+>> driver.
+>>  This makes it difficult to support other SoCs in the jz4780-bch=20
+>> driver.
+>>  To work around this, we separate the API functions from the=20
+>> SoC-specific
+>>  code, so that these API functions are SoC-agnostic.
 >>=20
+>=20
+> I like the idea, actually I am working on this separation (see
+> [1]) and I would really appreciate that you try to implement the
+> interface when it will be available (v2 is coming this week, I think=20
+> v3
+> will be the one to test when raw NAND devices will be properly
+> supported). I will add you in Cc: if you want to follow/review.
+>=20
+> [1]=20
+> <http://lists.infradead.org/pipermail/linux-mtd/2019-February/087815.html=
+>
+
+Do you think this will be ready for 5.2?
+
+You can add me in Cc:.
+
 >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net=20
 >> <mailto:paul@crapouillou.net>>
 >>  ---
 >>=20
->>  Changes:
+>>  v2: Add an optional .probe() callback. It is used for instance to=20
+>> set
+>>      the clock rate in the JZ4780 backend.
 >>=20
->>  v3: New patch
+>>  v3: The common code is now inside the ingenic-ecc module. Each
+>>      SoC-specific ECC code is now in its own module, which leaves to=20
+>> the
+>>      user the choice of which (if any) ECC code should be supported.
 >>=20
 >>  v4: No change
 >>=20
->>   .../devicetree/bindings/mtd/ingenic,jz4780-nand.txt    | 18=20
->> +++++++++---------
->>   1 file changed, 9 insertions(+), 9 deletions(-)
+>>   drivers/mtd/nand/raw/ingenic/Kconfig        |  17 +++
+>>   drivers/mtd/nand/raw/ingenic/Makefile       |   5 +-
+>>   drivers/mtd/nand/raw/ingenic/ingenic_ecc.c  | 157=20
+>> +++++++++++++++++++++++++
+>>   drivers/mtd/nand/raw/ingenic/ingenic_ecc.h  |  84 ++++++++++++++
+>>   drivers/mtd/nand/raw/ingenic/ingenic_nand.c |  38 +++----
+>>   drivers/mtd/nand/raw/ingenic/jz4780_bch.c   | 170=20
+>> +++++-----------------------
+>>   drivers/mtd/nand/raw/ingenic/jz4780_bch.h   |  40 -------
+>>   7 files changed, 308 insertions(+), 203 deletions(-)
+>>   create mode 100644 drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
+>>   create mode 100644 drivers/mtd/nand/raw/ingenic/ingenic_ecc.h
+>>   delete mode 100644 drivers/mtd/nand/raw/ingenic/jz4780_bch.h
 >>=20
->>  diff --git=20
->> a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt=20
->> b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
->>  index a5b940f18bf6..5a45cc54f46d 100644
->>  --- a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
->>  +++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
->>  @@ -1,4 +1,4 @@
->>  -* Ingenic JZ4780 NAND/BCH
->>  +* Ingenic JZ4780 NAND/ECC
->>=20
->>   This file documents the device tree bindings for NAND flash=20
->> devices on the
->>   JZ4780. NAND devices are connected to the NEMC controller=20
->> (described in
->>  @@ -14,10 +14,10 @@ Required NAND controller device properties:
->>     an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC=20
->> bank).
->>=20
->>   Optional NAND controller device properties:
->>  -- ingenic,bch-controller: To make use of the hardware BCH=20
->> controller, this
->>  -  property must contain a phandle for the BCH controller node. The=20
->> required
->>  +- ingenic,bch-controller: To make use of the hardware ECC=20
->> controller, this
->>  +  property must contain a phandle for the ECC controller node. The=20
->> required
 >=20
-> I think there is already a 'ecc-engine' property used by MTK and Atmel
-> NAND controllers to point to the ECC engine block. Please use this
-> property instead of the ingenic specific one.
+> [...]
+>=20
+>>  diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c=20
+>> b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
+>>  index 8c73f7c5be9a..0f51fd15fe79 100644
+>>  --- a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
+>>  +++ b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
+>>  @@ -22,7 +22,7 @@
+>>=20
+>>   #include <linux/jz4780-nemc.h>
+>>=20
+>>  -#include "jz4780_bch.h"
+>>  +#include "ingenic_ecc.h"
+>>=20
+>>   #define DRV_NAME	"ingenic-nand"
+>>=20
+>>  @@ -40,7 +40,7 @@ struct ingenic_nand_cs {
+>>=20
+>>   struct ingenic_nfc {
+>>   	struct device *dev;
+>>  -	struct jz4780_bch *bch;
+>>  +	struct ingenic_ecc *ecc;
+>>   	struct nand_controller controller;
+>>   	unsigned int num_banks;
+>>   	struct list_head chips;
+>>  @@ -124,10 +124,10 @@ static int ingenic_nand_ecc_calculate(struct=20
+>> nand_chip *chip, const u8 *dat,
+>>   {
+>>   	struct ingenic_nand *nand =3D to_ingenic_nand(nand_to_mtd(chip));
+>>   	struct ingenic_nfc *nfc =3D to_ingenic_nfc(nand->chip.controller);
+>>  -	struct jz4780_bch_params params;
+>>  +	struct ingenic_ecc_params params;
+>>=20
+>>   	/*
+>>  -	 * Don't need to generate the ECC when reading, BCH does it for=20
+>> us as
+>>  +	 * Don't need to generate the ECC when reading, ECC does it for=20
+>> us as
+>=20
+> "the ECC engine does it for us" would be more meaningful.
 
-ingenic,bch-controller is already in the devicetree ABI. I can't change=20
-it now...
+OK.
 
->>     properties for this node are described below. If this is not=20
->> specified,
->>  -  software BCH will be used instead.
->>  +  software ECC will be used instead.
+>>   	 * part of decoding/correction.
+>>   	 */
+>>   	if (nand->reading)
+>>  @@ -137,7 +137,7 @@ static int ingenic_nand_ecc_calculate(struct=20
+>> nand_chip *chip, const u8 *dat,
+>>   	params.bytes =3D nand->chip.ecc.bytes;
+>>   	params.strength =3D nand->chip.ecc.strength;
 >>=20
->>   Optional children nodes:
->>   - Individual NAND chips are children of the NAND controller node.
->>  @@ -70,17 +70,17 @@ nemc: nemc@13410000 {
->>   	};
->>   };
->>=20
->>  -The BCH controller is a separate SoC component used for error=20
->> correction on
->>  +The ECC controller is a separate SoC component used for error=20
->> correction on
->>   NAND devices. The following is a description of the device=20
->> properties for a
->>  -BCH controller.
->>  +ECC controller.
->>=20
->>  -Required BCH properties:
->>  +Required ECC properties:
->>   - compatible: Should be one of:
->>     * ingenic,jz4740-ecc
->>     * ingenic,jz4725b-bch
->>     * ingenic,jz4780-bch
->>  -- reg: Should specify the BCH controller registers location and=20
->> length.
->>  -- clocks: Clock for the BCH controller.
->>  +- reg: Should specify the ECC controller registers location and=20
->> length.
->>  +- clocks: Clock for the ECC controller.
->>=20
->>   Example:
+>>  -	return jz4780_bch_calculate(nfc->bch, &params, dat, ecc_code);
+>>  +	return ingenic_ecc_calculate(nfc->ecc, &params, dat, ecc_code);
+>>   }
 >>=20
 >=20
 > Thanks,
