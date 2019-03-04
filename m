@@ -1,31 +1,35 @@
-From: Andreas Schwab <schwab@suse.de>
-Subject: Re: [PATCH v8 0/2] PWM support for HiFive Unleashed
-Date: Mon, 04 Mar 2019 12:09:57 +0100
-Message-ID: <mvmfts228vu.fsf@suse.de>
-References: <1551437599-29509-1-git-send-email-yash.shah@sifive.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 1/2] dt-bindings: iio: adc: document the Meson G12A support
+Date: Mon,  4 Mar 2019 12:12:16 +0100
+Message-ID: <20190304111217.882-2-narmstrong@baylibre.com>
+References: <20190304111217.882-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551437599-29509-1-git-send-email-yash.shah@sifive.com> (Yash
-        Shah's message of "Fri, 1 Mar 2019 16:23:17 +0530")
+In-Reply-To: <20190304111217.882-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yash Shah <yash.shah@sifive.com>
-Cc: palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, paul.walmsley@sifive.com
+To: linux-iio@vger.kernel.org, martin.blumenstingl@googlemail.com, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mär 01 2019, Yash Shah <yash.shah@sifive.com> wrote:
+Update the documentation to expicitly support the Meson-G12A SoC.
 
-> This patch series adds a PWM driver and DT documentation
-> for HiFive Unleashed board. The patches are mostly based on
-> Wesley's patch.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../devicetree/bindings/iio/adc/amlogic,meson-saradc.txt         | 1 +
+ 1 file changed, 1 insertion(+)
 
-That doesn't appear to work with the heartbeat trigger, the led doesn't
-flash.
-
-Andreas.
-
+diff --git a/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt b/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
+index 325090e43ce6..0d134e0ac600 100644
+--- a/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
+@@ -9,6 +9,7 @@ Required properties:
+ 			- "amlogic,meson-gxl-saradc" for GXL
+ 			- "amlogic,meson-gxm-saradc" for GXM
+ 			- "amlogic,meson-axg-saradc" for AXG
++			- "amlogic,meson-g12a-saradc" for AXG
+ 		along with the generic "amlogic,meson-saradc"
+ - reg:		the physical base address and length of the registers
+ - interrupts:	the interrupt indicating end of sampling
 -- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+2.20.1
