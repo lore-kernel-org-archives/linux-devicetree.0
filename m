@@ -1,92 +1,26 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v4 2/9] dt-bindings: mtd: ingenic: Change 'BCH' to 'ECC'
- in documentation
-Date: Mon, 4 Mar 2019 10:50:14 +0100
-Message-ID: <20190304105014.0cceea0a@xps13>
-References: <20190209192305.4434-1-paul@crapouillou.net>
-        <20190209192305.4434-2-paul@crapouillou.net>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 bus+gpio 5/5] dt-bindings: gpio: Document GPIOs via
+ Moxtet bus
+Date: Mon, 4 Mar 2019 10:53:26 +0100
+Message-ID: <CACRpkdYqRzRSdu+xhO2NAt7NYovvkxoE6SCJCq5_UqfD4bY-zg@mail.gmail.com>
+References: <20190301035852.26780-1-marek.behun@nic.cz> <20190301035852.26780-6-marek.behun@nic.cz>
+ <CACRpkdYpjjpVNUXRgT=XY758FGtDYow2fvwpah37T_GjTvLauQ@mail.gmail.com> <20190304001701.0b1b9986@nic.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190209192305.4434-2-paul@crapouillou.net>
+In-Reply-To: <20190304001701.0b1b9986@nic.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Marek Behun <marek.behun@nic.cz>
+Cc: Tony Lindgren <tony@atomide.com>, Shawn Guo <shawnguo@kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+On Mon, Mar 4, 2019 at 12:17 AM Marek Behun <marek.behun@nic.cz> wrote:
 
-Paul Cercueil <paul@crapouillou.net> wrote on Sat,  9 Feb 2019 16:22:58
--0300:
+> do you know who is responsible for merging into drivers/bus?
 
-> The JZ4740 ECC hardware is not BCH but Reed-Solomon, so it makes more
-> sense to use the more generic ECC term.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Changes:
-> 
-> v3: New patch
-> 
-> v4: No change
-> 
->  .../devicetree/bindings/mtd/ingenic,jz4780-nand.txt    | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> index a5b940f18bf6..5a45cc54f46d 100644
-> --- a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> @@ -1,4 +1,4 @@
-> -* Ingenic JZ4780 NAND/BCH
-> +* Ingenic JZ4780 NAND/ECC
->  
->  This file documents the device tree bindings for NAND flash devices on the
->  JZ4780. NAND devices are connected to the NEMC controller (described in
-> @@ -14,10 +14,10 @@ Required NAND controller device properties:
->    an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
->  
->  Optional NAND controller device properties:
-> -- ingenic,bch-controller: To make use of the hardware BCH controller, this
-> -  property must contain a phandle for the BCH controller node. The required
-> +- ingenic,bch-controller: To make use of the hardware ECC controller, this
-> +  property must contain a phandle for the ECC controller node. The required
+Usually the ARM SoC maintainers arm@kernel.org merge drivers
+there. You should just send them a pull request and explain the
+situation I think. Else they know who should deal with it.
 
-I think there is already a 'ecc-engine' property used by MTK and Atmel
-NAND controllers to point to the ECC engine block. Please use this
-property instead of the ingenic specific one.
-
->    properties for this node are described below. If this is not specified,
-> -  software BCH will be used instead.
-> +  software ECC will be used instead.
->  
->  Optional children nodes:
->  - Individual NAND chips are children of the NAND controller node.
-> @@ -70,17 +70,17 @@ nemc: nemc@13410000 {
->  	};
->  };
->  
-> -The BCH controller is a separate SoC component used for error correction on
-> +The ECC controller is a separate SoC component used for error correction on
->  NAND devices. The following is a description of the device properties for a
-> -BCH controller.
-> +ECC controller.
->  
-> -Required BCH properties:
-> +Required ECC properties:
->  - compatible: Should be one of:
->    * ingenic,jz4740-ecc
->    * ingenic,jz4725b-bch
->    * ingenic,jz4780-bch
-> -- reg: Should specify the BCH controller registers location and length.
-> -- clocks: Clock for the BCH controller.
-> +- reg: Should specify the ECC controller registers location and length.
-> +- clocks: Clock for the ECC controller.
->  
->  Example:
->  
-
-Thanks,
-Miquèl
+Yours,
+Linus Walleij
