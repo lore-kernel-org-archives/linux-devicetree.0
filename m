@@ -1,46 +1,49 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v4 1/9] dt-bindings: mtd: ingenic: Add compatible
- strings for JZ4740 and JZ4725B
-Date: Mon, 4 Mar 2019 19:51:49 +0100
-Message-ID: <20190304195149.7cca9c64@xps13>
-References: <20190209192305.4434-1-paul@crapouillou.net>
-        <20190304104554.09be4cd4@xps13>
-        <1551723742.4932.2@crapouillou.net>
+From: Helen Koike <helen.koike@collabora.com>
+Subject: rpi-b-rev2 can't detect hdmi display due to wrong hpd gpio pull in dts
+Date: Mon,  4 Mar 2019 15:54:54 -0300
+Message-ID: <20190304185454.18043-1-helen.koike@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551723742.4932.2@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: eric@anholt.net
+Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stefan.wahren@i2se.com, linus.walleij@linaro.org, lkundrak@v3.sk, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+Hello,
 
-> >>  --- a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> >>  +++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> >>  @@ -6,7 +6,10 @@ memory-controllers/ingenic,jz4780-nemc.txt), and >> thus NAND device nodes must
-> >>   be children of the NEMC node.  
-> >> >>   Required NAND controller device properties:  
-> >>  -- compatible: Should be set to "ingenic,jz4780-nand".
-> >>  +- compatible: Should be one of:
-> >>  +  * ingenic,jz4740-nand
-> >>  +  * ingenic,jz4725b-nand
-> >>  +  * ingenic,jz4780-nand  
-> > 
-> > Wouldn't "-nand-controller" suffix be better? Of course in the driver
-> > you should still check for jz4780-nand.  
-> 
-> So I would be compatible with:
-> * ingenic,jz4740-nand-controller
-> * ingenic,jz4725b-nand-controller
-> * ingenic,jz4780-nand
-> ?
+I have a rpi-b-rev2 (two holes, 512M) and when I was trying to test vc4
+driver, the HDMI wans't being detected.
 
->From a driver POV I would even prefer ingenic,jz4780-nand-controller. I
-don't know what's best here. Maybe Boris or Rob can help?
+So I changed the hpd-gpios from ACTIVE_LOW to ACTIVE_HIGH and now it
+works correctly. I can see that modeprint from libdrm detects correctly
+when the display is plugged and when it is unpluggled.
 
+So I was wondering if this is just in my board or if there is an error
+in the dts (which I think it's unlikely).
 
-Thanks,
-Miquèl
+In any case I am dropping this email here in case anyone else see this
+problem, if you do, try appliying the patch below.
+
+Regards,
+Helen
+
+---
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+index 5641d162dfdb..28e7513ce617 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+@@ -93,7 +93,7 @@
+ };
+ 
+ &hdmi {
+-	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
++	hpd-gpios = <&gpio 46 GPIO_ACTIVE_HIGH>;
+ };
+ 
+ &pwm {
+-- 
+2.20.1
