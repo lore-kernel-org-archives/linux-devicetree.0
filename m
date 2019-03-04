@@ -1,140 +1,78 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 1/6] soc/tegra: initial tegra-automotive detection
-Date: Mon, 4 Mar 2019 14:19:56 +0100
-Message-ID: <20190304131956.GJ9040@ulmo>
-References: <20190301153540.14954-1-kejia.hu@codethink.co.uk>
- <20190301153540.14954-2-kejia.hu@codethink.co.uk>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v2 2/5] drm/bridge: sii902x: Set output mode to HDMI or
+ DVI according to EDID
+Date: Mon, 4 Mar 2019 16:15:51 +0200
+Message-ID: <1c42145e-f2ba-7d3e-b117-6ec83878dc9e@ti.com>
+References: <cover.1551303673.git.jsarha@ti.com>
+ <08d50e5eec760273a3b3699ea98732f5ec66ad25.1551303673.git.jsarha@ti.com>
+ <20190304125201.GN6325@pendragon.ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1089446718941155943=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190301153540.14954-2-kejia.hu@codethink.co.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kejia Hu <kejia.hu@codethink.co.uk>
-Cc: devicetree@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>, Thomas Preston <thomas.preston@codethink.co.uk>, linux-tegra@vger.kernel.org, digetx@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190304125201.GN6325@pendragon.ideasonboard.com>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: fabrizio.castro@bp.renesas.com, devicetree@vger.kernel.org, Songjun.Wu@atmel.com, tony@atomide.com, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, voice.shen@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-
---===============1089446718941155943==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7AwgMNpd3VkAVXjS"
-Content-Disposition: inline
-
-
---7AwgMNpd3VkAVXjS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Mar 01, 2019 at 03:35:35PM +0000, Kejia Hu wrote:
-> From: Ben Dooks <ben.dooks@codethink.co.uk>
->=20
-> Add an initial soc_is_tegra_auto() with detection
-> via a change in the device-tree.
->=20
-> Also print the path taken through soc_is_tegra_auto() to
-> allow debugging. Only print when debug is enabled as this
-> function may be be called from multiple places, resulting
-> in duplicated messages in production.
->=20
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
-> Signed-off-by: Kejia Hu <kejia.hu@codethink.co.uk>
-> ---
->  drivers/soc/tegra/common.c             | 23 +++++++++++++++++++++++
->  drivers/soc/tegra/fuse/tegra-apbmisc.c |  2 ++
->  include/soc/tegra/common.h             |  1 +
->  include/soc/tegra/fuse.h               |  1 +
->  4 files changed, 27 insertions(+)
->=20
-> diff --git a/drivers/soc/tegra/common.c b/drivers/soc/tegra/common.c
-> index 7bfb154d6fa5..a10bd26fb5df 100644
-> --- a/drivers/soc/tegra/common.c
-> +++ b/drivers/soc/tegra/common.c
-> @@ -9,6 +9,7 @@
->  #include <linux/of.h>
-> =20
->  #include <soc/tegra/common.h>
-> +#include <soc/tegra/fuse.h>
-> =20
->  static const struct of_device_id tegra_machine_match[] =3D {
->  	{ .compatible =3D "nvidia,tegra20", },
-> @@ -34,3 +35,25 @@ bool soc_is_tegra(void)
-> =20
->  	return match !=3D NULL;
->  }
-> +
-> +static const struct of_device_id tegra_machine_match_auto[] =3D {
-> +	{ .compatible =3D "nvidia,tegra20auto", },
-> +	{ .compatible =3D "nvidia,tegra30auto", },
-> +	{ },
-> +};
-> +
-> +bool soc_is_tegra_auto(void)
-> +{
-> +	struct device_node *root;
-> +	bool id_match  =3D false;
-> +
-> +	root =3D of_find_node_by_path("/");
-> +
-> +	if (root && of_match_node(tegra_machine_match_auto, root))
-> +		id_match =3D true;
-> +
-> +	pr_debug("%s of_device_id match %d, tegra_sku_info.is_automotive %d\n",
-> +			__func__, id_match, tegra_sku_info.is_automotive);
-> +
-> +	return id_match || tegra_sku_info.is_automotive;
-> +}
-
-Why do we need two ways of specifying the same thing? If we can read
-this information from fuses, I don't think we need the extra compatible
-string matching.
-
-Also, if you're going to use this exclusively for clock setup, then the
-alternative is to do that as part of the board's device tree, as Dmitry
-pointed out.
-
-Thierry
-
---7AwgMNpd3VkAVXjS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlx9JfoACgkQ3SOs138+
-s6ERjQ/6Ay3gZcRVoP/6DVVhcgS4TqaXaB7C2xvQpSxVmfzlRxNiAONrM8q3akzx
-Hth+ZyvTcroPMLAyzPX5vkHa4ai4XgOnjJrKFvI40NjtZ3+VLss03KLIX70LHwQk
-tWHX+G1m98hX8oAMHNzufTofd7BGiaqStMXZYbb75wJh/Lx+utoreJo9QOmMOmZv
-lo9yScTvlXrSsxwK9m4AToIpaY5ml41SptoXtBXvUcSUu8326koGqWFfm5PUUkqJ
-pSiwwMA2duOKfpVSD4K8fBARQAigbatsTXUX5Oh8BqFu2jOywwiezegJq2b6XEgY
-xzI5eXTQ3R4lOgThv5DQ8m6K9rcDdc8gFiFir0iNF1xd/sbZ9GrRfExRcAo+mB3E
-Lh/L16KBvmn437ALkeFce6Y59trp4fy4Afn46D2IrJnfq5gc4OAP1sEUsvGNNgnH
-pmrBHYJMzskpaMh5CI3UwoTHzCiwYEBu2RiQoM6TDVDkcfy2QEVsI4SS+qOoGE8U
-pYE9uOQfv5x81qKwv2amSr8ttotaGf8Dcz23b31EcMDVmrb34v0av8CBiHSz1U5E
-Y116gTthzhoqfvUjBL9iarcNYnEn2UQ+5CMTIjz55htOzAn9D4i9pM5j2hPjKX0z
-KAw/iK02FLhWAzZIPl8yM7oUYtN098nGDXQNoswSMdSN4jQsDV8=
-=KOLS
------END PGP SIGNATURE-----
-
---7AwgMNpd3VkAVXjS--
-
-
---===============1089446718941155943==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1089446718941155943==--
+T24gMDQvMDMvMjAxOSAxNDo1MiwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiBIaSBKeXJpLAo+
+IAo+IFRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgo+IE9uIFdlZCwgRmViIDI3LCAyMDE5IGF0IDEx
+OjU0OjIwUE0gKzAyMDAsIEp5cmkgU2FyaGEgd3JvdGU6Cj4+IFNldCBvdXRwdXQgbW9kZSB0byBI
+RE1JIG9yIERWSSBhY2NvcmRpbmcgdG8gRURJRCBIRE1JIHNpZ25hdHVyZS4KPj4KPj4gU2lnbmVk
+LW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KPj4gUmV2aWV3ZWQtYnk6IEFuZHJ6
+ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+Cj4+IC0tLQo+PiAgZHJpdmVycy9ncHUvZHJt
+L2JyaWRnZS9zaWk5MDJ4LmMgfCA5ICsrKysrKysrKwo+PiAgMSBmaWxlIGNoYW5nZWQsIDkgaW5z
+ZXJ0aW9ucygrKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5
+MDJ4LmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYwo+PiBpbmRleCAxYWZhMDAw
+MTQxZDUuLjBlMjFmYTQxOWQyNyAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRn
+ZS9zaWk5MDJ4LmMKPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMKPj4g
+QEAgLTE4MSwxMSArMTgxLDE1IEBAIHN0YXRpYyBpbnQgc2lpOTAyeF9nZXRfbW9kZXMoc3RydWN0
+IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPj4gIAlzdHJ1Y3Qgc2lpOTAyeCAqc2lpOTAyeCA9
+IGNvbm5lY3Rvcl90b19zaWk5MDJ4KGNvbm5lY3Rvcik7Cj4+ICAJdTMyIGJ1c19mb3JtYXQgPSBN
+RURJQV9CVVNfRk1UX1JHQjg4OF8xWDI0Owo+PiAgCXN0cnVjdCBlZGlkICplZGlkOwo+PiArCXU4
+IG91dHB1dF9tb2RlID0gU0lJOTAyWF9TWVNfQ1RSTF9PVVRQVVRfRFZJOwo+IAo+IEknZCBtb3Zl
+IHRoaXMgb25lIGxpbmUgdXAsIGJ1dCB0aGF0J3MgY2VydGFpbmx5IGEgbWF0dGVyIG9mIHRhc3Rl
+IDotKQoKSSB1c3VhbGx5IHNvcnQgdGhlIGxvY2FsIHZhcmlhYmxlcyBieSBsZW5ndGggdG9vLiBJ
+IHdvbmRlciB3aHkgSSBkaWQgbm90CmRvIGl0IHRoaXMgdGltZS4uLiBJJ2xsIGZpeCBpdCA6KS4K
+Cj4+ICAJaW50IG51bSA9IDAsIHJldDsKPj4gIAo+PiAgCWVkaWQgPSBkcm1fZ2V0X2VkaWQoY29u
+bmVjdG9yLCBzaWk5MDJ4LT5pMmNtdXgtPmFkYXB0ZXJbMF0pOwo+PiAgCWRybV9jb25uZWN0b3Jf
+dXBkYXRlX2VkaWRfcHJvcGVydHkoY29ubmVjdG9yLCBlZGlkKTsKPj4gIAlpZiAoZWRpZCkgewo+
+PiArCSAgICAgICAgaWYgKGRybV9kZXRlY3RfaGRtaV9tb25pdG9yKGVkaWQpKQo+PiArCQkJb3V0
+cHV0X21vZGUgPSBTSUk5MDJYX1NZU19DVFJMX09VVFBVVF9IRE1JOwo+PiArCj4+ICAJCW51bSA9
+IGRybV9hZGRfZWRpZF9tb2Rlcyhjb25uZWN0b3IsIGVkaWQpOwo+PiAgCQlrZnJlZShlZGlkKTsK
+Pj4gIAl9Cj4+IEBAIC0xOTUsNiArMTk5LDExIEBAIHN0YXRpYyBpbnQgc2lpOTAyeF9nZXRfbW9k
+ZXMoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPj4gIAlpZiAocmV0KQo+PiAgCQly
+ZXR1cm4gcmV0Owo+PiAgCj4+ICsJcmV0ID0gcmVnbWFwX3VwZGF0ZV9iaXRzKHNpaTkwMngtPnJl
+Z21hcCwgU0lJOTAyWF9TWVNfQ1RSTF9EQVRBLAo+PiArCQkJCSBTSUk5MDJYX1NZU19DVFJMX09V
+VFBVVF9NT0RFLCBvdXRwdXRfbW9kZSk7Cj4+ICsJaWYgKHJldCkKPj4gKwkJcmV0dXJuIHJldDsK
+Pj4gKwo+IAo+IElzIHRoaXMgdGhlIHJpZ2h0IHBsYWNlIHRvIHVwZGF0ZSB0aGUgcmVnaXN0ZXIs
+IHNob3VsZG4ndCB0aGlzIGJlIGRvbmUKPiBpbiBzaWk5MDJ4X2JyaWRnZV9lbmFibGUoKSBpbnN0
+ZWFkID8gSSBjb3VsZCBmb3Jlc2VlIGNhc2VzIHdoZXJlIHRoZQo+IGNoaXAgY291bGQgYmUgcG93
+ZXJlZCBkb3duIGJldHdlZW4gZ2V0X21vZGVzKCkgYW5kIGVuYWJsZSgpLCBsb3NpbmcgaXRzCj4g
+aW50ZXJuYWwgc3RhdGUuCj4gCgpJIGhhdmUgYSBzcGVjICh1bmZvcnR1bmF0ZWx5IEkgY2FuIG5v
+dCBzaGFyZSBpdCkgdGhhdCBkZXNjcmliZXMgdGhlCnNlcXVlbmNlIG9mIGhhbmRsaW5nIGEgaG90
+IHBsdWcgZXZlbnQgb24gc2lpOTAyMi4gVGhlcmUgaXQgaXMgc2FpZCB0aGF0CnRoZSBIRE1JIG1v
+ZGUsIGlmIEhETUkgc2lnbmF0dXJlIGlzIGZvdW5kLCBzaG91bGQgYmUgc2V0IGF0IHRoZSBzYW1l
+CnRpbWUgd2hpbGUgcmVsZWFzaW5nIHRoZSBEQ0MgYWNjZXNzIGJ5IHNldHRpbmcgU0lJOTAyWF9T
+WVNfQ1RSTF9EQVRBCmJpdHMgIzEgYW5kICMyIHRvIHplcm8uCgpIb3dldmVyLCBJIGRpZCBub3Qg
+ZGFyZSB0byBjaGFuZ2Ugc2lpOTAyeF9pMmNfYnlwYXNzX2Rlc2VsZWN0KCkKZnVuY3Rpb24sIHNv
+IEkgc2V0IHRoZSBIRE1JIG1vZGUgcmlnaHQgYWZ0ZXIgdGhlIERDQyBwYXNzIHRyb3VnaCBtb2Rl
+IGlzCmRpc2FibGVkLgoKSGF2aW5nIGl0IHRoZXJlIGlzIGxvZ2ljYWwgdG9vLCBzaW5jZSB0aGUg
+SERNSS9EVkktbW9kZSBzaG91bGQgbm90CmNoYW5nZSB3aXRob3V0IGEgaG90IHBsdWcgZXZlbnQu
+IEluIHByYWN0aWNlIHNpaTkwMjIgZG9lcyBub3QgYXBwZWFyIHRvCmJlIHRvbyBwaWNreSB3aGVu
+IHRoZSBiaXQgaXMgc2V0LgoKPj4gIAlyZXR1cm4gbnVtOwo+PiAgfQo+PiAgCj4gCgoKLS0gClRl
+eGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNp
+bmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxl
+OiBIZWxzaW5raQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
