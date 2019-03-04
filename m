@@ -1,7 +1,7 @@
 From: Bruno Thomsen <bruno.thomsen@gmail.com>
-Subject: [PATCH 1/6] dt-bindings: add vendor prefix for TQ Systems GmbH
-Date: Mon,  4 Mar 2019 17:56:25 +0100
-Message-ID: <20190304165630.18225-2-bruno.thomsen@gmail.com>
+Subject: [PATCH 2/6] dt-bindings: fsl: add compatible for i.MX7S generic board
+Date: Mon,  4 Mar 2019 17:56:26 +0100
+Message-ID: <20190304165630.18225-3-bruno.thomsen@gmail.com>
 References: <20190304165630.18225-1-bruno.thomsen@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,24 +21,27 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: devicetree@vger.kernel.org, bruno.thomsen@gmail.com, robh+dt@kernel.org, linux-imx@nxp.com, shawnguo@kernel.org, markus.niebel@tq-group.com
 List-Id: devicetree@vger.kernel.org
 
-TQ is a German embedded System-on-Module manufacture.
+This patch adds missing compatible for i.MX7Solo boards.
 
 Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/arm/fsl.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 389508584f48..bf6f9c80c627 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -403,6 +403,7 @@ toumaz	Toumaz
- tpk	TPK U.S.A. LLC
- tplink	TP-LINK Technologies Co., Ltd.
- tpo	TPO
-+tq	TQ Systems GmbH
- tronfy	Tronfy
- tronsmart	Tronsmart
- truly	Truly Semiconductors Limited
+diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+index 7fbc42484001..c90058b621bc 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.txt
++++ b/Documentation/devicetree/bindings/arm/fsl.txt
+@@ -127,6 +127,10 @@ i.MX6q generic board
+ Required root node properties:
+     - compatible = "fsl,imx6q";
+ 
++i.MX7S generic board
++Required root node properties:
++    - compatible = "fsl,imx7s";
++
+ i.MX7ULP generic board
+ Required root node properties:
+     - compatible = "fsl,imx7ulp";
 -- 
 2.20.1
