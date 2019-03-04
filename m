@@ -1,47 +1,50 @@
 From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH v2] arm64: dts: qcs404: evb: Fix voltage for l3
-Date: Mon, 4 Mar 2019 20:40:45 +0100
-Message-ID: <20190304194045.GA14044@centauri.lan>
-References: <20190219063222.15656-1-bjorn.andersson@linaro.org>
+Subject: [PATCH] arm64: dts: qcom: qcs404-evb: Change the compatible to distinguish platforms
+Date: Mon,  4 Mar 2019 21:14:24 +0100
+Message-ID: <20190304201424.16951-1-niklas.cassel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190219063222.15656-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2019 at 10:32:22PM -0800, Bjorn Andersson wrote:
-> PMS405 L3 is outside the acceptable range, causing PCIe to fail. Fix
-> this.
-> 
-> Fixes: 0b363f5b871c ("arm64: dts: qcom: qcs404: Add PMS405 RPM regulators")
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Changes since v1:
-> - Rebased upon https://lore.kernel.org/lkml/20181213183200.3204-1-bjorn.andersson@linaro.org/
-> 
->  arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> index 3a7f0d42e35a..6146f3577961 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> @@ -87,7 +87,7 @@
->  		};
->  
->  		vreg_l3_1p05: l3 {
-> -			regulator-min-microvolt = <976000>;
-> +			regulator-min-microvolt = <1048000>;
->  			regulator-max-microvolt = <1160000>;
->  		};
->  
-> -- 
-> 2.18.0
-> 
+From: Khasim Syed Mohammed <khasim.mohammed@linaro.org>
 
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+The compatible flag should be different for each board to match
+with the dtb and to let the bootloader pick the appropriate dtb.
+
+Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@linaro.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/qcs404-evb-1000.dts | 3 ++-
+ arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb-1000.dts b/arch/arm64/boot/dts/qcom/qcs404-evb-1000.dts
+index 2c14903d808e..937eb4555ffe 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb-1000.dts
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb-1000.dts
+@@ -7,5 +7,6 @@
+ 
+ / {
+ 	model = "Qualcomm Technologies, Inc. QCS404 EVB 1000";
+-	compatible = "qcom,qcs404-evb";
++	compatible = "qcom,qcs404-evb-1000", "qcom,qcs404-evb",
++		     "qcom,qcs404";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts b/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
+index 11269ad3de0d..da4ac896b56f 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
+@@ -7,5 +7,6 @@
+ 
+ / {
+ 	model = "Qualcomm Technologies, Inc. QCS404 EVB 4000";
+-	compatible = "qcom,qcs404-evb";
++	compatible = "qcom,qcs404-evb-4000", "qcom,qcs404-evb",
++		     "qcom,qcs404";
+ };
+-- 
+2.20.1
