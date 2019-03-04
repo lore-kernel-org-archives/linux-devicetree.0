@@ -1,39 +1,51 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v3 10/12] hikey960: Support usb functionality of Hikey960
-Date: Mon, 4 Mar 2019 09:27:11 +0800
-Message-ID: <7069e483-8dbb-d0ed-dfe6-50e427574b9c@huawei.com>
-References: <20190302090505.65542-1-chenyu56@huawei.com>
- <20190302090505.65542-11-chenyu56@huawei.com>
- <CALAqxLVSiWB-HRJWd-aBWNZ-u3JpK4WVR84DSEKRNV1Kzom8pg@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH RESEND V4 1/2] dt-bindings: firmware: imx-scu: remove
+ unused resources from scu resource table
+Date: Mon, 4 Mar 2019 09:40:06 +0800
+Message-ID: <20190304014005.GU26041@dragon>
+References: <1551228502-1535-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CALAqxLVSiWB-HRJWd-aBWNZ-u3JpK4WVR84DSEKRNV1Kzom8pg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: liuyu712@hisilicon.com, Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, Li Pengcheng <lipengcheng8@huawei.com>, songxiaowei@hisilicon.com, YiPing Xu <xuyiping@hisilicon.com>, xuyoujun4@huawei.com, yudongbin@hisilicon.com, Zang Leigang <zangleigang@hisilicon.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>Binghui Wang <wan>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1551228502-1535-1-git-send-email-Anson.Huang@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2019/3/4 4:17, John Stultz wrote:
-> On Sat, Mar 2, 2019 at 4:05 AM Yu Chen <chenyu56@huawei.com> wrote:
->> +static int hisi_hikey_usb_probe(struct platform_device *pdev)
->> +{
->> +       struct device *dev = &pdev->dev;
->> +       struct device_node *root = dev->of_node;
+On Wed, Feb 27, 2019 at 12:53:04AM +0000, Anson Huang wrote:
+> Removes below resources which were defined during
+> pre-silicon phase and the real silicons do NOT have
+> them, they have never been used, latest system
+> controller firmware also removed them:
 > 
-> Minor nit: root is unused and generates build warnings.
+> 	IMX_SC_R_DC_0_CAPTURE0
+> 	IMX_SC_R_DC_0_CAPTURE1
+> 	IMX_SC_R_DC_0_INTEGRAL0
+> 	IMX_SC_R_DC_0_INTEGRAL1
+> 	IMX_SC_R_DC_0_FRAC1
+> 	IMX_SC_R_DC_1_CAPTURE0
+> 	IMX_SC_R_DC_1_CAPTURE1
+> 	IMX_SC_R_DC_1_INTEGRAL0
+> 	IMX_SC_R_DC_1_INTEGRAL1
+> 	IMX_SC_R_DC_1_FRAC1
+> 	IMX_SC_R_GPU_3_PID0
+> 	IMX_SC_R_M4_0_SIM
+> 	IMX_SC_R_M4_0_WDOG
+> 	IMX_SC_R_M4_1_SIM
+> 	IMX_SC_R_M4_1_WDOG
 > 
-OK. Thanks!
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-> thanks
-> -john
-> 
-> .
-> 
-
-Thanks
-Yu Chen
+Applied both, thanks.
