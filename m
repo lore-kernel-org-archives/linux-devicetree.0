@@ -1,29 +1,26 @@
 From: Helen Koike <helen.koike@collabora.com>
 Subject: Re: rpi-b-rev2 can't detect hdmi display due to wrong hpd gpio pull
  in dts
-Date: Mon, 4 Mar 2019 18:52:52 -0300
-Message-ID: <969f5b77-9b4f-f91d-40c0-07ca93d68cb9@collabora.com>
+Date: Mon, 4 Mar 2019 18:54:00 -0300
+Message-ID: <b488f43d-2fe3-6e1d-bed0-94ed9d033129@collabora.com>
 References: <20190304185454.18043-1-helen.koike@collabora.com>
- <1194402400.301453.1551730542978@email.ionos.de>
+ <8736o2tmg0.fsf@anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1194402400.301453.1551730542978@email.ionos.de>
+In-Reply-To: <8736o2tmg0.fsf@anholt.net>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, lkundrak@v3.sk, bcm-kernel-feedback-list@broadcom.com, eric@anholt.net, devicetree@vger.kernel.org, kernel@collabora.com
+To: Eric Anholt <eric@anholt.net>
+Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stefan.wahren@i2se.com, linus.walleij@linaro.org, lkundrak@v3.sk, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 3/4/19 5:15 PM, Stefan Wahren wrote:
-> Hi Helen,
+On 3/4/19 5:27 PM, Eric Anholt wrote:
+> Helen Koike <helen.koike@collabora.com> writes:
 > 
->> Helen Koike <helen.koike@collabora.com> hat am 4. März 2019 um 19:54 geschrieben:
->>
->>
 >> Hello,
 >>
 >> I have a rpi-b-rev2 (two holes, 512M) and when I was trying to test vc4
@@ -39,43 +36,16 @@ On 3/4/19 5:15 PM, Stefan Wahren wrote:
 >> In any case I am dropping this email here in case anyone else see this
 >> problem, if you do, try appliying the patch below.
 > 
-> thanks for your report and the patch. I verified your change against dt-blob.dts / downstream file and it's correct.
-> 
-> I'm sorry but i cannot apply your patch because it doesn't have the proper format.
-> 
-> Should i take care of this?
-> Can i add your Signed-off-by including your mail address?
+> We even have the GPIO labeled as "HDMI_HPD_P" above, and dt-blob.dts
+> agrees.
 
-I just resent it in a proper format, please check.
+You are right, I didn't notice it.
 
-Thanks!
+> 
+> Reviewed-by: Eric Anholt <eric@anholt.net>
+> Thanks!  If Stefan doesn't pick this up shortly, I can.
+> 
+
+Thanks for reviewing!
 
 Helen
-
-> 
-> Stefan
-> 
->>
->> Regards,
->> Helen
->>
->> ---
->>  arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
->> index 5641d162dfdb..28e7513ce617 100644
->> --- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
->> +++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
->> @@ -93,7 +93,7 @@
->>  };
->>  
->>  &hdmi {
->> -	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
->> +	hpd-gpios = <&gpio 46 GPIO_ACTIVE_HIGH>;
->>  };
->>  
->>  &pwm {
->> -- 
->> 2.20.1
->>
