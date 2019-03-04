@@ -1,72 +1,100 @@
-From: "Ardelean, Alexandru" <Alex.Ardelean@analog.com>
-Subject: Re: [PATCH v4 4/9] staging:iio:ad7780: add chip ID values and mask
-Date: Mon, 4 Mar 2019 07:33:51 +0000
-Message-ID: <13ef212f8aeebd0c893be253cb4834a3e4d741b8.camel@analog.com>
-References: <cover.1551358569.git.renatogeh@gmail.com>
-         <90c573cd53bb54d49de6ac270bcff66880ccfeb5.1551358569.git.renatogeh@gmail.com>
-         <190e26b19b8ed6559b92d3a000d852bbb0099a52.camel@analog.com>
-         <20190303140107.ljjo3flatwmd44ya@renatolg>
-         <20190303145347.41d49646@archlinux>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH v3] arm64: dts: ls1088a: add one more thermal zone node
+Date: Mon,  4 Mar 2019 15:50:50 +0800
+Message-ID: <20190304075050.33432-1-andy.tang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190303145347.41d49646@archlinux>
-Content-Language: en-US
-Content-ID: <52538811362BBA4E81667CF748E8D63D@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "renatogeh@gmail.com" <renatogeh@gmail.com>, "jic23@kernel.org" <jic23@kernel.org>
-Cc: "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>, "lars@metafoo.de" <lars@metafoo.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "giuliano.belinassi@usp.br" <giuliano.belinassi@usp.br>, "Ardelean, Alexandru" <Alex.Ardelean@analog.com>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>
+To: shawnguo@kernel.org
+Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, daniel.lezcano@linaro.org, rui.zhang@intel.com, edubezval@gmail.com, Yuantian Tang <andy.tang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCAyMDE5LTAzLTAzIGF0IDE0OjUzICswMDAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
-Og0KPiBbRXh0ZXJuYWxdDQo+IA0KPiANCj4gT24gU3VuLCAzIE1hciAyMDE5IDExOjAxOjA5IC0w
-MzAwDQo+IFJlbmF0byBMdWkgR2VoIDxyZW5hdG9nZWhAZ21haWwuY29tPiB3cm90ZToNCj4gDQo+
-ID4gT24gMDMvMDEsIEFyZGVsZWFuLCBBbGV4YW5kcnUgd3JvdGU6DQo+ID4gPiBPbiBUaHUsIDIw
-MTktMDItMjggYXQgMTE6MjQgLTAzMDAsIFJlbmF0byBMdWkgR2VoIHdyb3RlOg0KPiA+ID4gPiAN
-Cj4gPiA+ID4gDQo+ID4gPiA+IFRoZSBhZDc3ODAgc3VwcG9ydHMgYm90aCB0aGUgYWQ3Nzh4IGFu
-ZCBhZDcxN3ggZmFtaWxpZXMuIEVhY2ggY2hpcA0KPiA+ID4gPiBoYXMNCj4gPiA+ID4gYSBjb3Jy
-ZXNwb25kaW5nIElELiBUaGlzIHBhdGNoIHByb3ZpZGVzIGEgbWFzayBmb3IgZXh0cmFjdGluZyBJ
-RA0KPiA+ID4gPiB2YWx1ZXMNCj4gPiA+ID4gZnJvbSB0aGUgc3RhdHVzIGJpdHMgYW5kIGFsc28g
-bWFjcm9zIGZvciB0aGUgY29ycmVjdCB2YWx1ZXMgZm9yIHRoZQ0KPiA+ID4gPiBhZDcxNzAsIGFk
-NzE3MSwgYWQ3NzgwIGFuZCBhZDc3ODEuDQo+ID4gPiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5
-OiBSZW5hdG8gTHVpIEdlaCA8cmVuYXRvZ2VoQGdtYWlsLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4g
-PiA+ICBkcml2ZXJzL3N0YWdpbmcvaWlvL2FkYy9hZDc3ODAuYyB8IDggKysrKysrLS0NCj4gPiA+
-ID4gIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4g
-PiA+IA0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL2lpby9hZGMvYWQ3Nzgw
-LmMNCj4gPiA+ID4gYi9kcml2ZXJzL3N0YWdpbmcvaWlvL2FkYy9hZDc3ODAuYw0KPiA+ID4gPiBp
-bmRleCA1NmM0OWUyOGY0MzIuLmFkNzYxN2EzYTE0MSAxMDA2NDQNCj4gPiA+ID4gLS0tIGEvZHJp
-dmVycy9zdGFnaW5nL2lpby9hZGMvYWQ3NzgwLmMNCj4gPiA+ID4gKysrIGIvZHJpdmVycy9zdGFn
-aW5nL2lpby9hZGMvYWQ3NzgwLmMNCj4gPiA+ID4gQEAgLTI2LDEwICsyNiwxNCBAQA0KPiA+ID4g
-PiAgI2RlZmluZSBBRDc3ODBfUkRZICAgICAgICAgICAgIEJJVCg3KQ0KPiA+ID4gPiAgI2RlZmlu
-ZSBBRDc3ODBfRklMVEVSICAgICAgICAgIEJJVCg2KQ0KPiA+ID4gPiAgI2RlZmluZSBBRDc3ODBf
-RVJSICAgICAgICAgICAgIEJJVCg1KQ0KPiA+ID4gPiAtI2RlZmluZSBBRDc3ODBfSUQxICAgICAg
-ICAgICAgIEJJVCg0KQ0KPiA+ID4gPiAtI2RlZmluZSBBRDc3ODBfSUQwICAgICAgICAgICAgIEJJ
-VCgzKQ0KPiA+ID4gPiAgI2RlZmluZSBBRDc3ODBfR0FJTiAgICAgICAgICAgIEJJVCgyKQ0KPiA+
-ID4gPiANCj4gPiA+ID4gKyNkZWZpbmUgQUQ3MTcwX0lEICAgICAgICAgICAgICAwDQo+ID4gPiA+
-ICsjZGVmaW5lIEFENzE3MV9JRCAgICAgICAgICAgICAgMQ0KPiA+ID4gPiArI2RlZmluZSBBRDc3
-ODBfSUQgICAgICAgICAgICAgIDENCj4gPiA+ID4gKyNkZWZpbmUgQUQ3NzgxX0lEICAgICAgICAg
-ICAgICAwDQo+ID4gPiA+ICsNCj4gPiA+ID4gKyNkZWZpbmUgQUQ3NzgwX0lEX01BU0sgICAgICAg
-ICAoQklUKDMpIHwgQklUKDQpKQ0KPiA+ID4gDQo+ID4gPiBUaGlzIGFsc28gZG9lc24ndCBoYXZl
-IGFueSBmdW5jdGlvbmFsaXR5IGNoYW5nZS4NCj4gPiA+IFRoZSBBRDcxNzBfSUQsIEFENzE3MV9J
-RCwgQUQ3NzgwX0lEICYgQUQ3NzgxX0lEIElEcyBhcmUgYWxzbyB1bnVzZWQNCj4gPiA+IChtYXli
-ZQ0KPiA+ID4gaW4gYSBsYXRlciBwYXRjaCB0aGV5IGFyZSA/KS4NCj4gPiANCj4gPiBUaGV5IGFy
-ZW4ndC4gSSBhZGRlZCB0aGVtIGZvbGxvd2luZyBhIHByZXZpb3VzIHJldmlldyBzdWdnZXN0aW9u
-Lg0KPiA+IFNob3VsZA0KPiA+IEkgcmVtb3ZlIHRoZW0/DQo+IA0KPiBDYW4gd2UgY2hlY2sgdGhl
-bT8gIEl0J3MgYWx3YXlzIHVzZWZ1bCB0byBjb25maXJtIHRoYXQgdGhlIGRldmljZSBpcw0KPiB0
-aGUgb25lIHlvdSB0aGluayBpdCBpcy4gIFRoZW4gd2UgY2FuIGVpdGhlciB1c2Ugd2hhdCBpcyB0
-aGVyZQ0KPiB3aXRoIGEgc3VpdGFibGUgd2FybmluZywgb3IgaWYgdGhhdCBpcyB0cmlja3kganVz
-dCBmYXVsdCBvdXQgYXMgdGhlDQo+IGR0IGlzIGdpdmluZyB1cyB0aGUgd3JvbmcgcGFydCBudW1i
-ZXIuDQo+IA0KPiBKDQoNCkkgZ3Vlc3MgYGRldl93YXJuX3JhdGVsaW1pdGVkKClgIGNvdWxkIGJl
-IHVzZWQgdG8gbWFrZSBzdXJlIHN5c2xvZyBpc24ndA0Kc3BhbW1lZC10by1kZWF0aCB3aGVuIGRv
-aW5nIG11bHRpcGxlIGNvbnZlcnNpb25zLCBhbmQgdGhlIElEIGlzbid0IGNvcnJlY3QuDQpTaW5j
-ZSB0aGVzZSBJRHMgYXJlIHJlYWQgYWZ0ZXIgeW91IGdldCBhIHNhbXBsZSwgSSdtIGEgYml0IGZl
-YXJmdWwgb2YgbG9nLQ0Kc3BhbS4NCg0KSSB3b3VsZG4ndCB0aHJvdyBhbiBlcnJvciBpbiB0aGUg
-YWQ3NzgwX3Bvc3Rwcm9jZXNzX3NhbXBsZSgpIGZvciB0aGlzLCBidXQNCndhcm5pbmcgW3dpdGgg
-cmF0ZS1saW1pdF0gc291bmRzIHJlYXNvbmFibGUuDQoNCj4gDQo+ID4gPiANCj4gPiA+IEkgd291
-bGQgYWxzbyBsZWF2ZSB0aGUgQUQ3NzgwX0lEMSAmIEFENzc4MF9JRDAgZGVmaW5pdGlvbnMgaW4g
-cGxhY2UsDQo+ID4gPiBzaW5jZQ0KPiA+ID4gdGhleSdyZSBlYXNpZXIgbWF0Y2hlZCB3aXRoIHRo
-ZSBkYXRhc2hlZXQuDQo+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiA+ICAjZGVmaW5lIEFENzc4MF9Q
-QVRURVJOX0dPT0QgICAgMQ0KPiA+ID4gPiAgI2RlZmluZSBBRDc3ODBfUEFUVEVSTl9NQVNLICAg
-IEdFTk1BU0soMSwgMCkNCj4gPiA+ID4gLS0NCj4gPiA+ID4gMi4yMS4wDQo+ID4gPiA+IA0KPiAN
-Cj4gDQo=
+Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core cluster
+sensor is used to monitor the temperature of core and SoC platform is for
+platform. The current dts only support the first sensor.
+This patch adds the second sensor node to dts to enable it.
+
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+---
+v3:
+	- use more descriptive name for each zone
+v2:
+	- Add more information about sensors to description
+PS: In order to keep consistency to the first thermal-zone node, there will
+be "WARNING: line over 80 characters" warnings.
+
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   43 +++++++++++++++++++++--
+ 1 files changed, 39 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index 661137f..54f973b 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -129,19 +129,19 @@
+ 	};
+ 
+ 	thermal-zones {
+-		cpu_thermal: cpu-thermal {
++		core_cluster_thermal {
+ 			polling-delay-passive = <1000>;
+ 			polling-delay = <5000>;
+ 			thermal-sensors = <&tmu 0>;
+ 
+ 			trips {
+-				cpu_alert: cpu-alert {
++				core_cluster_alert: core_cluster-alert {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+ 
+-				cpu_crit: cpu-crit {
++				core_cluster_crit: core_cluster-crit {
+ 					temperature = <95000>;
+ 					hysteresis = <2000>;
+ 					type = "critical";
+@@ -150,7 +150,42 @@
+ 
+ 			cooling-maps {
+ 				map0 {
+-					trip = <&cpu_alert>;
++					trip = <&core_cluster_alert>;
++					cooling-device =
++						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++
++		platform-thermal {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++			thermal-sensors = <&tmu 1>;
++
++			trips {
++				platform_alert: platform-alert {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				platform_crit: platform-crit {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				map0 {
++					trip = <&platform_alert>;
+ 					cooling-device =
+ 						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+ 						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-- 
+1.7.1
