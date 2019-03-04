@@ -1,94 +1,57 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v4 8/9] mtd: rawnand: ingenic: Add support for the
- JZ4725B
-Date: Mon, 4 Mar 2019 11:35:19 +0100
-Message-ID: <20190304113519.2e102b25@xps13>
-References: <20190209192305.4434-1-paul@crapouillou.net>
-        <20190209192305.4434-8-paul@crapouillou.net>
+From: Viorel Suman <viorel.suman@nxp.com>
+Subject: [PATCH RESEND v5 0/3] Add NXP AUDMIX device and machine drivers
+Date: Mon, 4 Mar 2019 10:36:23 +0000
+Message-ID: <1551695748-21541-1-git-send-email-viorel.suman@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190209192305.4434-8-paul@crapouillou.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>, Nicolin Chen <nicoleotsuka@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Viorel Suman <viorel.suman@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>
+Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+The patchset adds NXP Audio Mixer (AUDMIX) device and machine
+drivers and related DT bindings documentation.
 
-Paul Cercueil <paul@crapouillou.net> wrote on Sat,  9 Feb 2019 16:23:04
--0300:
+Changes since V4:
+1. Removed "model" attribute from device driver DT bindings documentation
+   as suggested by Nicolin.
 
-> The boot ROM of the JZ4725B SoC expects a specific OOB layout on the
-> NAND, so we use it unconditionally in the ingenic-nand driver.
-> 
-> Also add the jz4725b-bch driver to support the JZ4725B-specific BCH
-> hardware.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Changes:
-> 
-> v2: Instead of forcing the OOB layout, leave it to the board code or
->     devicetree to decide if the jz4725b-specific layout should be used
->     or not.
-> 
-> v3: - Revert the change in v2, as the previous behaviour was correct.
->     - Also add support for the hardware BCH of the JZ4725B in this
->       patch.
-> 
-> v4: - Add MODULE_* macros
->     - Add tweaks suggested by upstream feedback
-> 
->  drivers/mtd/nand/raw/ingenic/Kconfig        |  10 +
->  drivers/mtd/nand/raw/ingenic/Makefile       |   1 +
->  drivers/mtd/nand/raw/ingenic/ingenic_nand.c |  48 ++++-
->  drivers/mtd/nand/raw/ingenic/jz4725b_bch.c  | 292 ++++++++++++++++++++++++++++
->  4 files changed, 350 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/mtd/nand/raw/ingenic/jz4725b_bch.c
-> 
+Changes since V3:
+1. Removed machine driver DT bindings documentation.
+2. Trigger machine driver probe from device driver as suggested by Nicolin.
 
-[...]
+Changes since V2:
+1. Moved "dais" node from machine driver DTS node to device driver DTS node
+  as suggested by Rob.
 
-> +static int jz4725b_calculate(struct ingenic_ecc *bch,
-> +			     struct ingenic_ecc_params *params,
-> +			     const u8 *buf, u8 *ecc_code)
-> +{
-> +	int ret;
-> +
-> +	mutex_lock(&bch->lock);
-> +	ret = jz4725b_bch_init(bch, params, true);
+Changes since V1:
+1. Original patch split into distinct patches for the device driver and
+  DT binding documentation.
+2. Replaced AMIX with AUDMIX in both code and file names as it looks more
+  RM-compliant.
+3. Removed polarity control from CPU DAI driver as suggested by Nicolin.
+4. Added machine driver and related DT binding documentation.
 
-I really don't like this bch_init name. A BCH initialization is what is
-supposed to be done only once (probably at boot time), can you find a
-better name or a better organization of the correct/calculate path?
+Viorel Suman (3):
+  ASoC: fsl: Add Audio Mixer CPU DAI driver
+  ASoC: add fsl_audmix DT binding documentation
+  ASoC: fsl: Add Audio Mixer machine driver
 
-> +	if (ret) {
-> +		dev_err(bch->dev, "Unable to init BCH with given parameters\n");
-> +		goto out_disable;
-> +	}
-> +
-> +	jz4725b_bch_write_data(bch, buf, params->size);
-> +
-> +	ret = jz4725b_bch_wait_complete(bch, BCH_BHINT_ENCF, NULL);
-> +	if (ret) {
-> +		dev_err(bch->dev, "timed out while calculating ECC\n");
-> +		goto out_disable;
-> +	}
-> +
-> +	jz4725b_bch_read_parity(bch, ecc_code, params->bytes);
-> +
-> +out_disable:
-> +	jz4725b_bch_disable(bch);
-> +	mutex_unlock(&bch->lock);
-> +
-> +	return ret;
-> +}
-> +
+ .../devicetree/bindings/sound/fsl,audmix.txt       |  50 ++
+ sound/soc/fsl/Kconfig                              |  16 +
+ sound/soc/fsl/Makefile                             |   5 +
+ sound/soc/fsl/fsl_audmix.c                         | 578 +++++++++++++++++=
+++++
+ sound/soc/fsl/fsl_audmix.h                         | 102 ++++
+ sound/soc/fsl/imx-audmix.c                         | 327 ++++++++++++
+ 6 files changed, 1078 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,audmix.txt
+ create mode 100644 sound/soc/fsl/fsl_audmix.c
+ create mode 100644 sound/soc/fsl/fsl_audmix.h
+ create mode 100644 sound/soc/fsl/imx-audmix.c
 
-[...]
-
-Thanks,
-Miquèl
+--=20
+2.7.4
