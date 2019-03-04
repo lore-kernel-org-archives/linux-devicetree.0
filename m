@@ -1,50 +1,69 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: qcs404-evb: Change the compatible to distinguish platforms
-Date: Mon,  4 Mar 2019 21:14:24 +0100
-Message-ID: <20190304201424.16951-1-niklas.cassel@linaro.org>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: rpi-b-rev2 can't detect hdmi display due to wrong hpd gpio pull
+ in dts
+Date: Mon, 4 Mar 2019 21:15:42 +0100 (CET)
+Message-ID: <1194402400.301453.1551730542978@email.ionos.de>
+References: <20190304185454.18043-1-helen.koike@collabora.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190304185454.18043-1-helen.koike@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Helen Koike <helen.koike@collabora.com>
+Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, lkundrak@v3.sk, bcm-kernel-feedback-list@broadcom.com, eric@anholt.net, devicetree@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-From: Khasim Syed Mohammed <khasim.mohammed@linaro.org>
+Hi Helen,
 
-The compatible flag should be different for each board to match
-with the dtb and to let the bootloader pick the appropriate dtb.
+> Helen Koike <helen.koike@collabora.com> hat am 4. März 2019 um 19:54 geschrieben:
+> 
+> 
+> Hello,
+> 
+> I have a rpi-b-rev2 (two holes, 512M) and when I was trying to test vc4
+> driver, the HDMI wans't being detected.
+> 
+> So I changed the hpd-gpios from ACTIVE_LOW to ACTIVE_HIGH and now it
+> works correctly. I can see that modeprint from libdrm detects correctly
+> when the display is plugged and when it is unpluggled.
+> 
+> So I was wondering if this is just in my board or if there is an error
+> in the dts (which I think it's unlikely).
+> 
+> In any case I am dropping this email here in case anyone else see this
+> problem, if you do, try appliying the patch below.
 
-Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404-evb-1000.dts | 3 ++-
- arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+thanks for your report and the patch. I verified your change against dt-blob.dts / downstream file and it's correct.
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb-1000.dts b/arch/arm64/boot/dts/qcom/qcs404-evb-1000.dts
-index 2c14903d808e..937eb4555ffe 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb-1000.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb-1000.dts
-@@ -7,5 +7,6 @@
- 
- / {
- 	model = "Qualcomm Technologies, Inc. QCS404 EVB 1000";
--	compatible = "qcom,qcs404-evb";
-+	compatible = "qcom,qcs404-evb-1000", "qcom,qcs404-evb",
-+		     "qcom,qcs404";
- };
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts b/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
-index 11269ad3de0d..da4ac896b56f 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
-@@ -7,5 +7,6 @@
- 
- / {
- 	model = "Qualcomm Technologies, Inc. QCS404 EVB 4000";
--	compatible = "qcom,qcs404-evb";
-+	compatible = "qcom,qcs404-evb-4000", "qcom,qcs404-evb",
-+		     "qcom,qcs404";
- };
--- 
-2.20.1
+I'm sorry but i cannot apply your patch because it doesn't have the proper format.
+
+Should i take care of this?
+Can i add your Signed-off-by including your mail address?
+
+Stefan
+
+> 
+> Regards,
+> Helen
+> 
+> ---
+>  arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+> index 5641d162dfdb..28e7513ce617 100644
+> --- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+> +++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+> @@ -93,7 +93,7 @@
+>  };
+>  
+>  &hdmi {
+> -	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
+> +	hpd-gpios = <&gpio 46 GPIO_ACTIVE_HIGH>;
+>  };
+>  
+>  &pwm {
+> -- 
+> 2.20.1
+>
