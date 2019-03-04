@@ -1,49 +1,71 @@
-From: Helen Koike <helen.koike@collabora.com>
-Subject: rpi-b-rev2 can't detect hdmi display due to wrong hpd gpio pull in dts
-Date: Mon,  4 Mar 2019 15:54:54 -0300
-Message-ID: <20190304185454.18043-1-helen.koike@collabora.com>
+From: Patrick Venture <venture@google.com>
+Subject: [PATCH v6 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Date: Mon,  4 Mar 2019 10:55:36 -0800
+Message-ID: <20190304185536.211084-1-venture@google.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: eric@anholt.net
-Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stefan.wahren@i2se.com, linus.walleij@linaro.org, lkundrak@v3.sk, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, kernel@collabora.com
+To: venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, gregkh@linuxfoundation.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
 
-I have a rpi-b-rev2 (two holes, 512M) and when I was trying to test vc4
-driver, the HDMI wans't being detected.
-
-So I changed the hpd-gpios from ACTIVE_LOW to ACTIVE_HIGH and now it
-works correctly. I can see that modeprint from libdrm detects correctly
-when the display is plugged and when it is unpluggled.
-
-So I was wondering if this is just in my board or if there is an error
-in the dts (which I think it's unlikely).
-
-In any case I am dropping this email here in case anyone else see this
-problem, if you do, try appliying the patch below.
-
-Regards,
-Helen
-
+Signed-off-by: Patrick Venture <venture@google.com>
 ---
- arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes for v6:
+- None
+Changes for v5:
+- None
+Changes for v4:
+- None
+Changes for v3:
+- None
+Changes for v2:
+- Added comment about syscon required parameter.
+---
+ .../bindings/misc/aspeed-p2a-ctrl.txt         | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-index 5641d162dfdb..28e7513ce617 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-@@ -93,7 +93,7 @@
- };
- 
- &hdmi {
--	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
-+	hpd-gpios = <&gpio 46 GPIO_ACTIVE_HIGH>;
- };
- 
- &pwm {
+diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+new file mode 100644
+index 000000000000..1092d62d1c92
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+@@ -0,0 +1,32 @@
++======================================================================
++Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
++======================================================================
++
++The bridge is available on platforms with the VGA enabled on the Aspeed device.
++In this case, the host has access to a 64KiB window into all of the BMC's
++memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
++has read access to all the regions of memory, however the host only has read
++and write access depending on a register controlled by the BMC.
++
++Required properties:
++===================
++
++ - compatible: must be one of:
++	- "aspeed,ast2400-p2a-ctrl"
++	- "aspeed,ast2500-p2a-ctrl"
++
++ - syscon: handle to syscon device node controlling PCI.
++
++Optional properties:
++===================
++
++- memory-region: A phandle to a reserved_memory region to be used for the PCI
++		to AHB mapping
++
++Example:
++
++p2a: p2a-control@1e6e2000 {
++	compatible = "aspeed,ast2400-p2a-ctrl";
++	memory-region = <&reserved_memory>;
++	syscon = <&syscon>;
++};
 -- 
-2.20.1
+2.21.0.352.gf09ad66450-goog
