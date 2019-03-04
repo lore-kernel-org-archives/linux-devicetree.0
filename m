@@ -1,88 +1,79 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 4/6] dt-bindings: display: armada: Add display subsystem
- binding
-Date: Mon, 4 Mar 2019 11:35:33 -0600
-Message-ID: <CAL_JsqJ8rovEM4RtkJKwTeDrRotVr59EmU-_1ApR+c9yxB8k2Q@mail.gmail.com>
-References: <20190120172534.24617-1-lkundrak@v3.sk>
- <20190120172534.24617-5-lkundrak@v3.sk>
- <CAL_JsqLT7jEdwi7o7RR_3OcbMTxeNXmSzif8Ez2psjhu24No5Q@mail.gmail.com>
- <b92426e9f5c50c71fa89ea5b53396c1885cc396f.camel@v3.sk>
- <CAL_JsqJsfwC4fAJaVEvKwtZkZwapu5jojEFn6Ddx34a6jZ_dSQ@mail.gmail.com>
- <4e89406842c4821d590dc6518076cfe6f19cc6b9.camel@v3.sk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/6] dt-bindings: usb: musb: Add support for MediaTek
+ musb controller
+Date: Mon, 4 Mar 2019 11:42:58 -0600
+Message-ID: <CAL_JsqKb_afdZFaOoB5yvs2hX-T9HPVy_d30zu7f7yiqaRPaLg@mail.gmail.com>
+References: <1550561795-31132-1-git-send-email-min.guo@mediatek.com>
+ <1550561795-31132-2-git-send-email-min.guo@mediatek.com> <20190222164923.GA26413@bogus>
+ <1551058604.12020.34.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <4e89406842c4821d590dc6518076cfe6f19cc6b9.camel@v3.sk>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1551058604.12020.34.camel@mhfsdcap03>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Min Guo <min.guo@mediatek.com>
+Cc: Bin Liu <b-liu@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Tony Lindgren <tony@atomide.com>, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBGZWIgMjQsIDIwMTkgYXQgMTA6MTUgQU0gTHVib21pciBSaW50ZWwgPGxrdW5kcmFr
-QHYzLnNrPiB3cm90ZToKPgo+IE9uIEZyaSwgMjAxOS0wMi0yMiBhdCAxNDoyMyAtMDYwMCwgUm9i
-IEhlcnJpbmcgd3JvdGU6Cj4gPiBPbiBXZWQsIEZlYiAxMywgMjAxOSBhdCA0OjM3IFBNIEx1Ym9t
-aXIgUmludGVsIDxsa3VuZHJha0B2My5zaz4gd3JvdGU6Cj4gPiA+IE9uIE1vbiwgMjAxOS0wMS0y
-MSBhdCAwOTozNSAtMDYwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPiA+ID4gT24gU3VuLCBKYW4g
-MjAsIDIwMTkgYXQgMTE6MjYgQU0gTHVib21pciBSaW50ZWwgPGxrdW5kcmFrQHYzLnNrPiB3cm90
-ZToKPiA+ID4gPiA+IFRoZSBNYXJ2ZWxsIEFybWFkYSBEUk0gbWFzdGVyIGRldmljZSBpcyBhIHZp
-cnR1YWwgZGV2aWNlIG5lZWRlZCB0byBsaXN0IGFsbAo+ID4gPiA+ID4gbm9kZXMgdGhhdCBjb21w
-cmlzZSB0aGUgZ3JhcGhpY3Mgc3Vic3lzdGVtLgo+ID4gPiA+ID4KPiA+ID4gPiA+IFNpZ25lZC1v
-ZmYtYnk6IEx1Ym9taXIgUmludGVsIDxsa3VuZHJha0B2My5zaz4KPiA+ID4gPiA+IC0tLQo+ID4g
-PiA+ID4gIC4uLi9kaXNwbGF5L2FybWFkYS9tYXJ2ZWxsLWFybWFkYS1kcm0udHh0ICAgICB8IDI0
-ICsrKysrKysrKysrKysrKysrKysKPiA+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjQgaW5zZXJ0
-aW9ucygrKQo+ID4gPiA+ID4KPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm1hZGEvbWFydmVsbC1hcm1hZGEtZHJtLnR4dCBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybWFkYS9tYXJ2ZWxs
-LWFybWFkYS1kcm0udHh0Cj4gPiA+ID4gPiBpbmRleCBkZTRjY2E5NDMyYzguLjNkYmZhODA0N2Yw
-YiAxMDA2NDQKPiA+ID4gPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L2FybWFkYS9tYXJ2ZWxsLWFybWFkYS1kcm0udHh0Cj4gPiA+ID4gPiArKysgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm1hZGEvbWFydmVsbC1h
-cm1hZGEtZHJtLnR4dAo+ID4gPiA+ID4gQEAgLTEsMyArMSwyNyBAQAo+ID4gPiA+ID4gK01hcnZl
-bGwgQXJtYWRhIERSTSBtYXN0ZXIgZGV2aWNlCj4gPiA+ID4gPiArPT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT0KPiA+ID4gPiA+ICsKPiA+ID4gPiA+ICtUaGUgTWFydmVsbCBBcm1hZGEg
-RFJNIG1hc3RlciBkZXZpY2UgaXMgYSB2aXJ0dWFsIGRldmljZSBuZWVkZWQgdG8gbGlzdCBhbGwK
-PiA+ID4gPiA+ICtub2RlcyB0aGF0IGNvbXByaXNlIHRoZSBncmFwaGljcyBzdWJzeXN0ZW0uCj4g
-PiA+ID4gPiArCj4gPiA+ID4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ID4gPiA+ICsKPiA+
-ID4gPiA+ICsgLSBjb21wYXRpYmxlOiB2YWx1ZSBzaG91bGQgYmUgIm1hcnZlbGwsZG92ZS1kaXNw
-bGF5LXN1YnN5c3RlbSIsCj4gPiA+ID4gPiArICAgIm1hcnZlbGwsYXJtYWRhLWRpc3BsYXktc3Vi
-c3lzdGVtIgo+ID4gPiA+ID4gKyAtIHBvcnRzOiBhIGxpc3Qgb2YgcGhhbmRsZXMgcG9pbnRpbmcg
-dG8gZGlzcGxheSBpbnRlcmZhY2UgcG9ydHMgb2YgQ1JUQwo+ID4gPiA+ID4gKyAgIGRldmljZXMK
-PiA+ID4gPiA+ICsgLSBtZW1vcnktcmVnaW9uOiBwaGFuZGxlIHRvIGEgbm9kZSBkZXNjcmliaW5n
-IG1lbW9yeSB0byBiZSB1c2VkIGZvciB0aGUKPiA+ID4gPiA+ICsgICBmcmFtZWJ1ZmZlcgo+ID4g
-PiA+ID4gKwo+ID4gPiA+ID4gK0V4YW1wbGU6Cj4gPiA+ID4gPiArCj4gPiA+ID4gPiArICAgICAg
-IGRpc3BsYXktc3Vic3lzdGVtIHsKPiA+ID4gPiA+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxl
-ID0gIm1hcnZlbGwsZG92ZS1kaXNwbGF5LXN1YnN5c3RlbSIsCj4gPiA+ID4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICJtYXJ2ZWxsLGFybWFkYS1kaXNwbGF5LXN1YnN5c3RlbSI7Cj4g
-PiA+ID4gPiArICAgICAgICAgICAgICAgbWVtb3J5LXJlZ2lvbiA9IDwmZGlzcGxheV9yZXNlcnZl
-ZD47Cj4gPiA+ID4gPiArICAgICAgICAgICAgICAgcG9ydHMgPSA8JmxjZDBfcG9ydD47Cj4gPiA+
-ID4KPiA+ID4gPiBJZiB0aGVyZSBpcyBvbmx5IG9uZSBkZXZpY2UsIHlvdSBkb24ndCBuZWVkIHRo
-aXMgdmlydHVhbCBub2RlLgo+ID4gPgo+ID4gPiBCZWZvcmUgSSBmb2xsb3cgdXAgb24gdGhpcyBh
-bmQgc3VibWl0IGEgdmVyc2lvbiB3aXRob3V0IHRoZSB2aXJ0dWFsCj4gPiA+IG5vZGUsIEknbSB3
-b25kZXJpbmc6IGlzIGl0IG9rYXkgdGhhdCB0aGUgYmluZGluZ3MgZm9yIHRoZSBMQ0RDIGFuZCB0
-aGUKPiA+ID4gZnJhbWVidWZmZXIgYXJlIGluIHRoZSBzYW1lIGZpbGUsIG9yIHdvdWxkIGl0IGJl
-IHByZWZlcnJhYmxlIGlmIHRoZXkKPiA+ID4gd2VyZSBzZXBhcmF0ZT8gQm90aCBzdHlsZXMgc2Vl
-bSB0byBiZSB1c2VkIGZvciB0aGUgZGlzcGxheSBiaW5kaW5ncy4KPiA+Cj4gPiBmcmFtZWJ1ZmZl
-ciBhcyBpbiB0aGUga2VybmVsIGZiZGV2PyBSZWFsbHksIHRoYXQgc2hvdWxkIGJlIHRoZSBzYW1l
-Cj4gPiBiaW5kaW5nLiBJdCdzIHRoZSBzYW1lIGgvdyBhZnRlciBhbGwuIEhvd2V2ZXIsIHRoZXJl
-IGhhdmUgYmVlbiBjYXNlcwo+ID4gd2hlcmUgdGhpbmdzIGRldmlhdGVkLiBTbyBJIGRvbid0IGhh
-dmUgYSBnb29kIGFuc3dlci4KPgo+IE5vLCBub3QgdGhlIGZiZGV2IGRldmljZSwgdGhhdCBvbmUg
-aXMgbWFuYWdlZCBieSBkcm1mYiBhbmQgaXMgbm90Cj4gZXhwcmVzc2VkIGluIERULiBJIG1lYW50
-IHRoZSByZXNlcnZlZC1tZW1vcnkgbm9kZSB0aGF0IHNldHMgYXNpZGUKPiBtZW1vcnkgZm9yIHRo
-ZSBmcmFtZWJ1ZmZlcnMuCj4KPiBTZWUgcGF0Y2ggIltSRkMgMDMvMTZdIGR0LWJpbmRpbmdzOiBk
-aXNwbGF5OiBhcm1hZGE6IEFkZCBmcmFtZWJ1ZmZlcgo+IHJlc2VydmVkLW1lbSBiaW5kaW5nIi4g
-UGVyaGFwcyB0aGF0IHBhcnQgc2hvdWxkIGV2ZW4gZ28gdG8KPiBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5Ly4KCk9rYXkuCgpBIHNlcGFyYXRlIGZpbGUg
-d2lsbCBiZSBiZXR0ZXIgYW5kIHByb2JhYmx5CkRvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9yZXNlcnZlZC1tZW1vcnkvIGlzIHRoZSBiZXN0CmxvY2F0aW9uLgoKUm9iCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
-IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Sun, Feb 24, 2019 at 7:36 PM Min Guo <min.guo@mediatek.com> wrote:
+>
+> Hi Rob,
+> On Fri, 2019-02-22 at 10:49 -0600, Rob Herring wrote:
+> > On Tue, Feb 19, 2019 at 03:36:30PM +0800, min.guo@mediatek.com wrote:
+> > > From: Min Guo <min.guo@mediatek.com>
+> > >
+> > > This adds support for MediaTek musb controller in
+> > > host, peripheral and otg mode.
+> > >
+> > > Signed-off-by: Min Guo <min.guo@mediatek.com>
+> > > ---
+> > > changes in v5:
+> > > suggested by Rob:
+> > > 1. Modify compatible as
+> > > - compatible : should be one of:
+> > >                "mediatek,mt-2701"
+> > >                ...
+> > >                followed by "mediatek,mtk-musb"
+> > > 2. Add usb connector child node
+> > >
+> > > changes in v4:
+> > > suggested by Sergei:
+> > > 1. String alignment
+> > >
+> > > changes in v3:
+> > > 1. no changes
+> > >
+> > > changes in v2:
+> > > suggested by Bin:
+> > > 1. Modify DRC to DRD
+> > > suggested by Rob:
+> > > 2. Drop the "<soc-model>-musb" in compatible
+> > > 3. Remove phy-names
+> > > 4. Add space after comma in clock-names
+> > > ---
+> > >  .../devicetree/bindings/usb/mediatek,musb.txt      | 54 ++++++++++++++++++++++
+> > >  1 file changed, 54 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> > > new file mode 100644
+> > > index 0000000..0632e6e
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> > > @@ -0,0 +1,54 @@
+> > > +MediaTek musb DRD/OTG controller
+> > > +-------------------------------------------
+> > > +
+> > > +Required properties:
+> > > + - compatible      : should be one of:
+> > > +                     "mediatek,mt-2701"
+> >
+> > That looks like a top-level SoC compatible and doesn't match the
+> > example.
+> "mediatek,mt-2701" is an example, just to describe a specific SOC.
+> May I modify compatibel like:
+> compatible : should be "mediatek,mtk-musb"
+
+No, you should fix the example adding "mediatek,mtk-musb".
+
+Rob
