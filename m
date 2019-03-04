@@ -1,138 +1,264 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/6] dt-bindings: Add a binding for Mediatek SCP
-Date: Mon, 4 Mar 2019 11:51:55 -0600
-Message-ID: <CAL_Jsq+rqeJX9LHOvVi7rPUzCeWhM2QjicJXyJyn23-gBo=Qcg@mail.gmail.com>
-References: <20190221084729.101784-1-pihsun@chromium.org> <20190221084729.101784-2-pihsun@chromium.org>
- <20190222144316.GA19284@bogus> <CANdKZ0d+2CqbVEwruW+pbqUeRMBwzXV7tFC7Cp7i+98CWiB_4w@mail.gmail.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v10 04/27] clocksource: Add a new timer-ingenic driver
+Date: Mon, 04 Mar 2019 19:13:05 +0100
+Message-ID: <1551723186.4932.0@crapouillou.net>
+References: <20190302233413.14813-1-paul@crapouillou.net>
+        <20190302233413.14813-5-paul@crapouillou.net> <20190304122250.GC9040@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANdKZ0d+2CqbVEwruW+pbqUeRMBwzXV7tFC7Cp7i+98CWiB_4w@mail.gmail.com>
+In-Reply-To: <20190304122250.GC9040@ulmo>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pi-Hsun Shih <pihsun@chromium.org>
-Cc: Erin Lo <erin.lo@mediatek.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Mathieu Malaterre <malat@debian.org>, od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 25, 2019 at 12:15 AM Pi-Hsun Shih <pihsun@chromium.org> wrote:
->
-> On Fri, Feb 22, 2019 at 10:43 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Thu, Feb 21, 2019 at 04:47:24PM +0800, Pi-Hsun Shih wrote:
-> > > From: Erin Lo <erin.lo@mediatek.com>
-> > >
-> > > Add a DT binding documentation of SCP for the
-> > > MT8183 SoC from Mediatek.
-> > >
-> > > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> > > ---
-> > > Changes from v4:
-> > >  - Add detail of more properties.
-> > >  - Document the usage of mtk,rpmsg-name in subnode from the new design.
-> > >
-> > > Changes from v3:
-> > >  - No change.
-> > >
-> > > Changes from v2:
-> > >  - No change. I realized that for this patch series, there's no need to
-> > >    add anything under the mt8183-scp node (neither the mt8183-rpmsg or
-> > >    the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
-> > >    directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
-> > >    created by SCP name service.
-> > >
-> > > Changes from v1:
-> > >  - No change.
-> > > ---
-> > >  .../bindings/remoteproc/mtk,scp.txt           | 37 +++++++++++++++++++
-> > >  1 file changed, 37 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-> > > new file mode 100644
-> > > index 00000000000000..8cf8b0e0d98a4c
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-> > > @@ -0,0 +1,37 @@
-> > > +Mediatek SCP Bindings
-> > > +----------------------------------------
-> > > +
-> > > +This binding provides support for ARM Cortex M4 Co-processor found on some
-> > > +Mediatek SoCs.
-> > > +
-> > > +Required properties:
-> > > +- compatible         Should be "mediatek,mt8183-scp"
-> > > +- reg                        Should contain the address ranges for the two memory
-> > > +                     regions, SRAM and CFG.
-> > > +- reg-names          Contains the corresponding names for the two memory
-> > > +                     regions. These should be named "sram" & "cfg".
-> > > +- clocks             Clock for co-processor (See: ../clock/clock-bindings.txt)
-> > > +- clock-names                Contains the corresponding name for the clock. This
-> > > +                     should be named "main".
-> > > +
-> > > +Subnodes
-> > > +--------
-> > > +
-> > > +When CONFIG_RPMSG_MTK_SCP is enabled, subnodes of the SCP represent rpmsg
-> >
-> > Bindings can't depend on kernel config options.
-> >
->
-> What's the recommendation here if the subnode only has effect when the
-> config is enabled? Should I just skip the sentence "When ... is
-> enabled"?
+Hi Thierry,
 
-Sure.
+On Mon, Mar 4, 2019 at 1:22 PM, Thierry Reding 
+<thierry.reding@gmail.com> wrote:
+> On Sat, Mar 02, 2019 at 08:33:50PM -0300, Paul Cercueil wrote:
+> [...]
+>>  diff --git a/drivers/clocksource/ingenic-timer.c 
+>> b/drivers/clocksource/ingenic-timer.c
+> [...]
+>>  +struct ingenic_tcu {
+>>  +	const struct ingenic_soc_info *soc_info;
+>>  +	struct regmap *map;
+>>  +	struct clk *clk, *timer_clk, *cs_clk;
+>>  +
+>>  +	struct irq_domain *domain;
+>>  +	unsigned int nb_parent_irqs;
+>>  +	u32 parent_irqs[3];
+>>  +
+>>  +	struct clk_hw_onecell_data *clocks;
+>>  +
+>>  +	unsigned int timer_channel, cs_channel;
+>>  +	struct clock_event_device cevt;
+>>  +	struct clocksource cs;
+>>  +	char name[4];
+>>  +
+>>  +	unsigned long pwm_channels_mask;
+>>  +};
+>>  +
+>>  +static struct ingenic_tcu *ingenic_tcu;
+> 
+> Is there really a need for this? Seems like the only two reasons for 
+> why
+> you keep this around are as pointed out below.
+> 
+>>  +void __iomem *ingenic_tcu_base;
+>>  +EXPORT_SYMBOL_GPL(ingenic_tcu_base);
+> 
+> Same here.
+> 
+>>  +static u64 notrace ingenic_tcu_timer_read(void)
+>>  +{
+>>  +	unsigned int channel = ingenic_tcu->cs_channel;
+>>  +	u16 count;
+>>  +
+>>  +	count = readw(ingenic_tcu_base + TCU_REG_TCNTc(channel));
+> 
+> Can't yo do this via the regmap?
 
->
-> > > +devices. The names of the devices are not important. The properties of these
-> > > +nodes are defined by the individual bindings for the rpmsg devices - but must
-> > > +contain the following property:
-> > > +
-> > > +- mtk,rpmsg-name     Contains the name for the rpmsg device. Used to match
-> > > +                     the subnode to rpmsg device announced by SCP.
-> >
-> > I don't think this belongs in DT, but without some examples I'm not
-> > really sure.
-> >
->
-> This is similar to the qcom,smd-channels property in
-> Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt, a example DT
-> for this:
+I could, but for the sched_clock to be precise the function must return
+as fast as possible. That's the rationale behind the use of readw() 
+here.
 
-QCom has lots of strange buses and communication channels. Probably
-not the best place for inspiration.
+That's also the reason why ingenic_tcu_base is global and exported, so
+that the OS Timer driver can use it as well.
 
-> scp {
->         compatible = "mediatek,mt8183-scp";
->         ...
->         cros_ec {
->                 compatible = "google,cros-ec-rpmsg";
->                 mtk,rpmsg-name = "cros-ec-rpmsg";
+>>  +
+>>  +	return count;
+>>  +}
+>>  +
+>>  +static u64 notrace ingenic_tcu_timer_cs_read(struct clocksource 
+>> *cs)
+>>  +{
+>>  +	return ingenic_tcu_timer_read();
+>>  +}
+> 
+> And here you've got access to the struct clocksource *, from which you
+> should be able to get at struct ingenic_tcu * using container_of.
+> 
+> [...]
+>>  +static int __init ingenic_tcu_init(struct device_node *np)
+>>  +{
+>>  +	const struct of_device_id *id = 
+>> of_match_node(ingenic_tcu_of_match, np);
+>>  +	const struct ingenic_soc_info *soc_info = id->data;
+>>  +	struct ingenic_tcu *tcu;
+>>  +	struct resource res;
+>>  +	void __iomem *base;
+>>  +	long rate;
+>>  +	int ret;
+>>  +
+>>  +	of_node_clear_flag(np, OF_POPULATED);
+>>  +
+>>  +	tcu = kzalloc(sizeof(*tcu), GFP_KERNEL);
+>>  +	if (!tcu)
+>>  +		return -ENOMEM;
+>>  +
+>>  +	/* Enable all TCU channels for PWM use by default except channel 0
+>>  +	 * and channel 1.
+>>  +	 */
+>>  +	tcu->pwm_channels_mask = GENMASK(soc_info->num_channels - 1, 2);
+>>  +	of_property_read_u32(np, "ingenic,pwm-channels-mask",
+>>  +			     (u32 *)&tcu->pwm_channels_mask);
+>>  +
+>>  +	/* Verify that we have at least two free channels */
+>>  +	if (hweight8(tcu->pwm_channels_mask) > soc_info->num_channels - 
+>> 2) {
+>>  +		pr_crit("ingenic-tcu: Invalid PWM channel mask: 0x%02lx\n",
+>>  +			tcu->pwm_channels_mask);
+>>  +		return -EINVAL;
+>>  +	}
+>>  +
+>>  +	tcu->soc_info = soc_info;
+>>  +	ingenic_tcu = tcu;
+>>  +
+>>  +	tcu->timer_channel = find_first_zero_bit(&tcu->pwm_channels_mask,
+>>  +						 soc_info->num_channels);
+>>  +	tcu->cs_channel = find_next_zero_bit(&tcu->pwm_channels_mask,
+>>  +					     soc_info->num_channels,
+>>  +					     tcu->timer_channel + 1);
+>>  +
+>>  +	base = of_io_request_and_map(np, 0, NULL);
+>>  +	if (IS_ERR(base)) {
+>>  +		ret = PTR_ERR(base);
+>>  +		goto err_free_ingenic_tcu;
+>>  +	}
+>>  +
+>>  +	of_address_to_resource(np, 0, &res);
+>>  +
+>>  +	ingenic_tcu_base = base;
+>>  +
+>>  +	tcu->map = regmap_init_mmio(NULL, base, 
+>> &ingenic_tcu_regmap_config);
+>>  +	if (IS_ERR(tcu->map)) {
+>>  +		ret = PTR_ERR(tcu->map);
+>>  +		goto err_iounmap;
+>>  +	}
+>>  +
+>>  +	tcu->clk = of_clk_get_by_name(np, "tcu");
+>>  +	if (IS_ERR(tcu->clk)) {
+>>  +		ret = PTR_ERR(tcu->clk);
+>>  +		pr_crit("ingenic-tcu: Unable to find TCU clock: %i\n", ret);
+>>  +		goto err_free_regmap;
+>>  +	}
+>>  +
+>>  +	ret = clk_prepare_enable(tcu->clk);
+>>  +	if (ret) {
+>>  +		pr_crit("ingenic-tcu: Unable to enable TCU clock: %i\n", ret);
+>>  +		goto err_clk_put;
+>>  +	}
+>>  +
+>>  +	ret = ingenic_tcu_intc_init(tcu, np);
+>>  +	if (ret)
+>>  +		goto err_clk_disable;
+>>  +
+>>  +	ret = ingenic_tcu_clk_init(tcu, np);
+>>  +	if (ret)
+>>  +		goto err_tcu_intc_cleanup;
+>>  +
+>>  +	ret = ingenic_tcu_clocksource_init(tcu);
+>>  +	if (ret)
+>>  +		goto err_tcu_clk_cleanup;
+>>  +
+>>  +	ret = ingenic_tcu_timer_init(tcu);
+>>  +	if (ret)
+>>  +		goto err_tcu_clocksource_cleanup;
+>>  +
+>>  +	// Register the sched_clock at the very end as there's no way to 
+>> undo it
+>>  +	rate = clk_get_rate(tcu->cs_clk);
+>>  +	sched_clock_register(ingenic_tcu_timer_read, 16, rate);
+> 
+> Oh wow... so you managed to nicely encapsulate everything and now this
+> seems to be the only reason why you need to rely on global variables.
+> 
+> That's unfortunate. I suppose we could go and add a void *data 
+> parameter
+> to sched_clock_register() and pass that to the read() function. That 
+> way
+> you could make this completely independent of global variables, but
+> there are 73 callers of sched_clock_register() and they are spread all
+> over the place, so sounds a bit daunting to me.
 
-Why do we need the same string twice? It's just the compatible string
-minus the vendor prefix.
+Yes, that's the main reason behind the use of a global variables.
+Is there a way we could introduce another callback, e.g. .read_value(),
+that would receive a void *param? Then the current .read() callback
+can be deprecated and the 73 callers can be migrated later.
 
->
->                 cros_ec_codec {
->                         compatible = "google,cros-ec-codec";
->                         ...
+>>  +
+>>  +	return 0;
+>>  +
+>>  +err_tcu_clocksource_cleanup:
+>>  +	ingenic_tcu_clocksource_cleanup(tcu);
+>>  +err_tcu_clk_cleanup:
+>>  +	ingenic_tcu_clk_cleanup(tcu, np);
+>>  +err_tcu_intc_cleanup:
+>>  +	ingenic_tcu_intc_cleanup(tcu);
+>>  +err_clk_disable:
+>>  +	clk_disable_unprepare(tcu->clk);
+>>  +err_clk_put:
+>>  +	clk_put(tcu->clk);
+>>  +err_free_regmap:
+>>  +	regmap_exit(tcu->map);
+>>  +err_iounmap:
+>>  +	iounmap(base);
+>>  +	release_mem_region(res.start, resource_size(&res));
+>>  +err_free_ingenic_tcu:
+>>  +	kfree(tcu);
+>>  +	return ret;
+>>  +}
+>>  +
+>>  +TIMER_OF_DECLARE(jz4740_tcu_intc,  "ingenic,jz4740-tcu",  
+>> ingenic_tcu_init);
+>>  +TIMER_OF_DECLARE(jz4725b_tcu_intc, "ingenic,jz4725b-tcu", 
+>> ingenic_tcu_init);
+>>  +TIMER_OF_DECLARE(jz4770_tcu_intc,  "ingenic,jz4770-tcu",  
+>> ingenic_tcu_init);
+>>  +
+>>  +
+>>  +static int __init ingenic_tcu_probe(struct platform_device *pdev)
+>>  +{
+>>  +	platform_set_drvdata(pdev, ingenic_tcu);
+> 
+> Then there's also this. Oh well... nevermind then.
 
-What's this? I can't review bindings piece by piece.
+The content of ingenic_tcu_platform_init() could be moved inside
+ingenic_tcu_init(). But can we get a hold of the struct device before 
+the
+probe function is called? That would allow to set the drvdata and regmap
+without relying on global state.
 
->                 };
->         };
-> };
->
-> > > +
-> > > +Example:
-> > > +
-> > > +     scp: scp@10500000 {
-> > > +             compatible = "mediatek,mt8183-scp";
-> > > +             reg = <0 0x10500000 0 0x80000>,
-> > > +                   <0 0x105c0000 0 0x5000>;
-> > > +             reg-names = "sram", "cfg";
-> > > +             clocks = <&infracfg CLK_INFRA_SCPSYS>;
-> > > +             clock-names = "main";
-> > > +     };
-> > > --
-> > > 2.21.0.rc0.258.g878e2cd30e-goog
-> > >
+>>  +bool ingenic_tcu_pwm_can_use_chn(unsigned int channel)
+>>  +{
+>>  +	return !!(ingenic_tcu->pwm_channels_mask & BIT(channel));
+>>  +}
+>>  +EXPORT_SYMBOL_GPL(ingenic_tcu_pwm_can_use_chn);
+> 
+> I wonder if we could make this slightly nicer, though. Judging by the
+> name, this one seems like it would only ever be used by the PWM. If 
+> the
+> PWM is a child of the TCU, could it not pass in a struct device * that
+> points to its parent into this? Or perhaps pass its own struct device 
+> *
+> and have this function look up the struct ingenic_tcu from that? 
+> Should
+> be something trivial as:
+> 
+> 	bool ingenic_tcu_pwm_can_use_channel(struct device *dev, unsigned 
+> int channel)
+> 	{
+> 		struct ingenic_tcu *tcu = dev_get_drvdata(dev->parent);
+> 
+> 		return !!(tcu->pwm_channels_mask & BIT(channel));
+> 	}
+> 
+> Thierry
+
+Yes, that definitely looks better. Thanks for the hint.
+
+-Paul
