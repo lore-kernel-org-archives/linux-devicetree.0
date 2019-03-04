@@ -1,56 +1,63 @@
-Return-Path: <SRS0=tBRz=RN=nxp.com=jun.li@kernel.org>
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH 1/2] Documentation: usb: dwc3: add power down clock scale
- property
-Date: Sun, 10 Mar 2019 23:41:52 +0000
-Message-ID: 
- <VI1PR04MB45580D87C6F64E51A61AB3B8894F0@VI1PR04MB4558.eurprd04.prod.outlook.com>
-References: <1548152179-19472-1-git-send-email-jun.li@nxp.com>
- <20190223003246.GA20964@bogus>
-In-Reply-To: <20190223003246.GA20964@bogus>
-Content-Language: en-US
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=7+V5=RH=linux.intel.com=sakari.ailus@kernel.org>
+Date: Mon, 4 Mar 2019 20:18:11 +0200
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH 3/3] media: tc358746: update MAINTAINERS file
+Message-ID: <20190304181810.2eyjkn4e2g6ntngb@kekkonen.localdomain>
+References: <20181218141240.3056-1-m.felsch@pengutronix.de>
+ <20181218141240.3056-4-m.felsch@pengutronix.de>
+ <20190218114608.qvoeyxlaw4yjrnnh@paasikivi.fi.intel.com>
+ <20190304173151.zwrwuwrepzeegfa3@pengutronix.de>
 MIME-Version: 1.0
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "balbi@kernel.org" <balbi@kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190304173151.zwrwuwrepzeegfa3@pengutronix.de>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: hans.verkuil@cisco.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, graphics@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIDxyb2Jo
-QGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMTnE6jLUwjIzyNUgODozMw0KPiBUbzogSnVuIExpIDxq
-dW4ubGlAbnhwLmNvbT4NCj4gQ2M6IG1hcmsucnV0bGFuZEBhcm0uY29tOyBiYWxiaUBrZXJuZWwu
-b3JnOyBsaW51eC11c2JAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQ
-QVRDSCAxLzJdIERvY3VtZW50YXRpb246IHVzYjogZHdjMzogYWRkIHBvd2VyIGRvd24gY2xvY2sg
-c2NhbGUNCj4gcHJvcGVydHkNCj4gDQo+IE9uIFR1ZSwgSmFuIDIyLCAyMDE5IGF0IDEwOjM3OjE3
-QU0gKzAwMDAsIEp1biBMaSB3cm90ZToNCj4gPiBUaGUgVVNCMyBzdXNwZW5kX2NsayBpbnB1dCBy
-ZXBsYWNlcyBwaXBlM19yeF9wY2xrIGFzIGEgY2xvY2sgc291cmNlIHRvDQo+ID4gYSBzbWFsbCBw
-YXJ0IG9mIHRoZSBVU0IzIGNvcmUgdGhhdCBvcGVyYXRlcyB3aGVuIHRoZSBTUyBQSFkgaXMgaW4g
-aXRzDQo+ID4gbG93ZXN0IHBvd2VyKFAzKSBzdGF0ZSwgYW5kIHRoZXJlZm9yZSBkb2VzIG5vdCBw
-cm92aWRlIGEgY2xvY2suIFRoZQ0KPiA+IHBvd2VyIGRvd24gc2NhbGUgc3BlY2lmaWVzIGhvdyBt
-YW55IHN1c3BlbmRfY2xrIHBlcmlvZHMgZml0IGludG8gYSAxNg0KPiA+IEtIeiBjbG9jayBwZXJp
-b2QsIGRldGFpbHMgY2FuIHNlZSBEV0MzIGRhdGFib29rIHJlZ2lzdGVyDQo+ID4gR0NUTC5QV1JE
-TlNDQUxFLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTGkgSnVuIDxqdW4ubGlAbnhwLmNvbT4N
-Cj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2Mz
-LnR4dCB8IDYgKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKykNCj4g
-Pg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNi
-L2R3YzMudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2R3
-YzMudHh0DQo+ID4gaW5kZXggM2U0YzM4Yi4uZDFjOGI2MiAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2R3YzMudHh0DQo+ID4gKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MzLnR4dA0KPiA+IEBAIC0xMDIs
-NiArMTAyLDEyIEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gIAkJCW1vcmUgdGhhbiBvbmUg
-dmFsdWUsIHdoaWNoIG1lYW5zIHVuZGVmaW5lZCBsZW5ndGggSU5DUiBidXJzdCB0eXBlDQo+ID4g
-IAkJCWVuYWJsZWQuIFRoZSB2YWx1ZXMgY2FuIGJlIDEsIDQsIDgsIDE2LCAzMiwgNjQsIDEyOCBh
-bmQgMjU2Lg0KPiA+DQo+ID4gKyAtIHNucHMscG93ZXItZG93bi1zY2FsZTogUG93ZXIgZG93biBz
-Y2FsZSBmaWVsZCBzcGVjaWZpZXMgaG93IG1hbnkNCj4gc3VzcGVuZF9jbGsNCj4gPiArCQkJcGVy
-aW9kcyBmaXQgaW50byBhIDE2IEtoeiBjbG9jayBwZXJpb2QuIFdoZW4gcGVyZm9ybWluZw0KPiA+
-ICsJCQl0aGUgZGl2aXNpb24sIHJvdW5kIHVwIHRoZSByZW1haW5kZXIuIFN1c3BlbmQgY2xvY2sg
-aXMNCj4gPiArCQkJZnJvbSAzMmtIeiB0byAxMjVNSHosIG1lYW5zIHRoZSB2YWx1ZSByYW5nZSBp
-cyAyfjgwMDAuDQo+ID4gKwkJCShkZXRhaWxzIHNlZSBEV0NfdXNiMyBkYXRhYm9vayByZWdpc3Rl
-ciBHQ1RMLlBXUkROU0NBTEUpLg0KPiA+ICsNCj4gDQo+IFNvdW5kcyBsaWtlIHRoZSBzdXNwZW5k
-X2NsayBzaG91bGQgYmUgcHJvdmlkZWQgYXMgYSBjbG9jayBpbnB1dCBzbyB5b3UgY2FuDQo+IGNh
-bGN1bGF0ZSB0aGlzIHZhbHVlLg0KDQpZZXMsIEkgd2lsbCBnbyB0aGlzIGFwcHJvYWNoIGJ5IHVw
-ZGF0ZSBkdHMgd2l0aCBzdXNwZW5kX2NsayBvZiBkd2MzDQoNClRoYW5rcw0KTGkgSnVuIA0KPiAN
-Cj4gPiAgIC0gaW4gYWRkaXRpb24gYWxsIHByb3BlcnRpZXMgZnJvbSB1c2IteGhjaS50eHQgZnJv
-bSB0aGUgY3VycmVudCBkaXJlY3RvcnkgYXJlDQo+ID4gICAgIHN1cHBvcnRlZCBhcyB3ZWxsDQo+
-ID4NCj4gPiAtLQ0KPiA+IDIuNy40DQo+ID4NCg==
+On Mon, Mar 04, 2019 at 06:31:51PM +0100, Marco Felsch wrote:
+> Hi Sakari,
+> 
+> On 19-02-18 13:46, Sakari Ailus wrote:
+> > Hi Marco,
+> > 
+> > On Tue, Dec 18, 2018 at 03:12:40PM +0100, Marco Felsch wrote:
+> > > Add me as partial maintainer, others are welcome too.
+> > > 
+> > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > ---
+> > >  MAINTAINERS | 7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> > > 
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 546f8d936589..f97dedbe545c 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -15230,6 +15230,13 @@ S:	Maintained
+> > >  F:	drivers/media/i2c/tc358743*
+> > >  F:	include/media/i2c/tc358743.h
+> > >  
+> > > +TOSHIBA TC358746 DRIVER
+> > > +M:	Marco Felsch <kernel@pengutronix.de>
+> > > +L:	linux-media@vger.kernel.org
+> > > +S:	Odd Fixes
+> > > +F:	drivers/media/i2c/tc358746*
+> > > +F:	Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
+> > > +
+> > >  TOSHIBA WMI HOTKEYS DRIVER
+> > >  M:	Azael Avalos <coproscefalo@gmail.com>
+> > >  L:	platform-driver-x86@vger.kernel.org
+> > 
+> > This should go together with the DT bindings, in the same patch.
+> > 
+> > I'd expect a new driver to be listed as "Maintained". "Odd Fixes" suggests
+> > no-one is particularly looking after it, and it's not nice if a new driver
+> > starts off like that. :-I
+> 
+> Okay, I will squash it in the v2 and set the status to "Maintained".
+
+Thanks!
+
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
