@@ -1,47 +1,51 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: ls1028a: add pmu dt nodes
-Date: Mon, 4 Mar 2019 09:48:40 +0800
-Message-ID: <20190304014838.GV26041@dragon>
-References: <20190227015752.18342-1-alison.wang@nxp.com>
+From: Chen Yu <chenyu56@huawei.com>
+Subject: Re: [PATCH v3 10/12] hikey960: Support usb functionality of Hikey960
+Date: Mon, 4 Mar 2019 09:55:37 +0800
+Message-ID: <2708b188-d318-6758-a5fd-8573559b2e70@huawei.com>
+References: <20190302090505.65542-1-chenyu56@huawei.com>
+ <20190302090505.65542-11-chenyu56@huawei.com>
+ <1551664069.2210.64.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190227015752.18342-1-alison.wang@nxp.com>
+In-Reply-To: <1551664069.2210.64.camel@mhfsdcap03>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alison Wang <alison.wang@nxp.com>
-Cc: leoyang.li@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: liuyu712@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 09:57:52AM +0800, Alison Wang wrote:
-> This patch adds pmu dt nodes for LS1028A.
+Hi Chunfeng Yun,
+
+On 2019/3/4 9:47, Chunfeng Yun wrote:
+
+>> +
+>> +	hisi_hikey_usb->role_sw = usb_role_switch_get(dev);
+>> +	if (!hisi_hikey_usb->role_sw)
+>> +		return -EPROBE_DEFER;
+> Here return EPROBE_DEFFER means the related device_connection is
+> registered after this probe is called, right?
+> if not, use IS_ERR_OR_NULL then return PTR_ERR is enough
+Yes, the driver which register the usb_role_switch may finish probe after
+this driver is probed for the first time.
+>> +	else if (IS_ERR(hisi_hikey_usb->role_sw))
+>> +		return PTR_ERR(hisi_hikey_usb->role_sw);
+>> +
+>> +	ret = usb_role_switch_register_notifier(hisi_hikey_usb->role_sw,
+>> +			&hisi_hikey_usb->nb);
+>> +	if (ret) {
+>> +		usb_role_switch_put(hisi_hikey_usb->role_sw);
+>> +		return ret;
+>> +	}
+>> +
+>> +	platform_set_drvdata(pdev, hisi_hikey_usb);
+>> +
+>> +	return 0;
+>> +}
+>> +
+
 > 
-> Signed-off-by: Alison Wang <alison.wang@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |    5 +++++
->  1 files changed, 5 insertions(+), 0 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index a8cf92a..36ef9c5 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -89,6 +89,11 @@
->  					  IRQ_TYPE_LEVEL_LOW)>;
->  	};
->  
-> +	pmu {
-> +		compatible = "arm,armv8-pmuv3";
-
-Shouldn't we use "arm,cortex-a72-pmu" as compatible for better?
-
-Shawn
-
-> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
->  	gic: interrupt-controller@6000000 {
->  		compatible= "arm,gic-v3";
->  		#address-cells = <2>;
-> -- 
-> 1.7.1
+> .
 > 
