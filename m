@@ -1,71 +1,68 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH v4 00/10] Add basic support for Socionext Milbeaut M10V
- SoC
-Date: Mon, 4 Mar 2019 14:18:11 +0900
-Message-ID: <e1da21a8-f369-a620-c149-521f10b7535e@socionext.com>
-References: <1551243056-10521-1-git-send-email-sugaya.taichi@socionext.com>
- <CAK8P3a2oLYWR7uXcg-aL5MR0U24yk0ftoBahVuVCoq5Z3NyoAA@mail.gmail.com>
+From: =?utf-8?B?6ZmG5pyx5Lyf?= <alex_lu@realsil.com.cn>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggMy84XSBkdC1iaW5kaW5nczogbmV0OiBibHVldG9v?= =?utf-8?Q?th:_Add_rtl8723bs-bluetooth?=
+Date: Mon, 4 Mar 2019 05:17:45 +0000
+Message-ID: <0551C926975A174EA8972327741C7889EE6B1490@RS-MBS01.realsil.com.cn>
+References: <CA+E=qVdsU7sBkOQUmMprhD-Sdw7TdFnwFdGCv=4iRe++y1AwOg@mail.gmail.com>
+ <20190301201519.21953-1-martin.blumenstingl@googlemail.com>
+ <0551C926975A174EA8972327741C7889EE6B1008@RS-MBS01.realsil.com.cn>
+ <CAFBinCDFY+fZs2unV1T5Mhh_VVSUfxK75zZXKdanLKG+arRX5g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a2oLYWR7uXcg-aL5MR0U24yk0ftoBahVuVCoq5Z3NyoAA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: DTML <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, soc@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAFBinCDFY+fZs2unV1T5Mhh_VVSUfxK75zZXKdanLKG+arRX5g@mail.gmail.com>
+Content-Language: zh-CN
+Sender: netdev-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: "anarsoul@gmail.com" <anarsoul@gmail.com>, "beagleboard@davidjohnsummers.uk" <beagleboard@davidjohnsummers.uk>, "davem@davemloft.net" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "johan.hedberg@gmail.com" <johan.hedberg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, "marcel@holtmann.org" <marcel@holtmann.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "wens@csie.org" <wens@csie.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2019/03/01 23:34, Arnd Bergmann wrote:
-> On Wed, Feb 27, 2019 at 5:51 AM Sugaya Taichi
-> <sugaya.taichi@socionext.com> wrote:
->>
->> Hi,
->>
->> Here is the series of patches the initial support for SC2000(M10V) of
->> Milbeaut SoCs. "M10V" is the internal name of SC2000, so commonly used in
->> source code.
->>
->> SC2000 is a SoC of the Milbeaut series. equipped with a DSP optimized for
->> computer vision. It also features advanced functionalities such as 360-degree,
->> real-time spherical stitching with multi cameras, image stabilization for
->> without mechanical gimbals, and rolling shutter correction. More detail is
->> below:
->> https://www.socionext.com/en/products/assp/milbeaut/SC2000.html
->>
->> Specifications for developers are below:
->>   - Quad-core 32bit Cortex-A7 on ARMv7-A architecture
->>   - NEON support
->>   - DSP
->>   - GPU
->>   - MAX 3GB DDR3
->>   - Cortex-M0 for power control
->>   - NAND Flash Interface
->>   - SD UHS-I
->>   - SD UHS-II
->>   - SDIO
->>   - USB2.0 HOST / Device
->>   - USB3.0 HOST / Device
->>   - PCI express Gen2
->>   - Ethernet Engine
->>   - I2C
->>   - UART
->>   - SPI
->>   - PWM
->>
->> Support is quite minimal for now, since it only includes timer, clock,
->> pictrl and serial controller drivers, so we can only boot to userspace
->> through initramfs. Support for the other peripherals  will come eventually.
-> 
-> I've merged these all into the arm/newsoc branch now, with the
-> exception of the patch that Greg has already taken.
-> 
-> I'll do a little more build testing before that branch will be sent,
-> but I expect it will be fine.
-> 
->       Arnd
-> 
-
-Thanks a lot!
+SGkgTWFydGluLA0KWW91J3JlIHJpZ2h0IGFib3V0IHRoZSBjb25maWcgYmxvYi4NClRoYW5rcyBm
+b3IgeW91ciBpbnZpdGF0aW9uIHRvIHRoZSBkaXNjdXNzaW9uLg0KSW4gbXkgb3B0aW9uLCBzcGVj
+aWZ5aW5nIHRoZSBwcm9wZXJ0aWVzIG9mIHRoZSBjb25uZWN0aW9uIHRvIHRoZSBjaGlwIHdvdWxk
+IGJlIGJldHRlci4NCg0KVGhhbmtzLA0KQlJzLA0KQWxleCBMdS4NCg0KLS0tLS3pgq7ku7bljp/k
+u7YtLS0tLQ0K5Y+R5Lu25Lq6OiBNYXJ0aW4gQmx1bWVuc3RpbmdsIFttYWlsdG86bWFydGluLmJs
+dW1lbnN0aW5nbEBnb29nbGVtYWlsLmNvbV0gDQrlj5HpgIHml7bpl7Q6IDIwMTnlubQz5pyIM+aX
+pSAwOjQ0DQrmlLbku7bkuro6IOmZhuacseS8nw0K5oqE6YCBOiBhbmFyc291bEBnbWFpbC5jb207
+IGJlYWdsZWJvYXJkQGRhdmlkam9obnN1bW1lcnMudWs7IGRhdmVtQGRhdmVtbG9mdC5uZXQ7IGRl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBqb2hhbi5oZWRiZXJnQGdtYWlsLmNvbTsgbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1ibHVldG9vdGhAdmdlci5rZXJu
+ZWwub3JnOyBtYXJjZWxAaG9sdG1hbm4ub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbWF4aW1l
+LnJpcGFyZEBib290bGluLmNvbTsgbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgcm9iaEBrZXJuZWwu
+b3JnOyBzdGVmYW4ud2FocmVuQGkyc2UuY29tOyB3ZW5zQGNzaWUub3JnDQrkuLvpopg6IFJlOiBb
+UEFUQ0ggMy84XSBkdC1iaW5kaW5nczogbmV0OiBibHVldG9vdGg6IEFkZCBydGw4NzIzYnMtYmx1
+ZXRvb3RoDQoNCkhpIEFsZXgsDQoNCk9uIFNhdCwgTWFyIDIsIDIwMTkgYXQgMTA6MzAgQU0g6ZmG
+5pyx5LyfIDxhbGV4X2x1QHJlYWxzaWwuY29tLmNuPiB3cm90ZToNCj4NCj4gSGkgTWFydGluLA0K
+PiBUaGFua3MgZm9yIHlvdXIgaW5mb3JtYXRpb24uDQp0aGFuayB5b3UgZm9yIHRoZSBxdWljayBy
+ZXBseSENCg0KPiBUaGUgY29uZmlnIGlzIHJlbGF0ZWQgdG8gZUZ1c2UgaW4gY2hpcHMuIEknbSBz
+b3JyeSB0aGF0IHRoZSBkZXRhaWxzIGNhbid0IGJlIG9wZW4uDQo+IE9ubHkgc29tZSBzcGVjaWFs
+IGNvbmZpZ3VyYXRpb25zIGFyZSByZWxhdGVkIHRvIHRoZSBob3N0IHBsYXRmb3Jtcywgc3VjaCBh
+cyBVQVJUIHdvcmtpbmcgYmF1ZHJhdGUsIGhhcmR3YXJlIGZsb3cgY29udHJvbCwgUENNIHNldHRp
+bmdzLCBldGMuIFRoZXNlIGFyZSB0aGUgc2V0dGluZ3MgZm9yIEhDSSBVQVJUIGFuZCBQQ00gSW50
+ZXJmYWNlLg0KPiBNb3N0IG9mIGNvbmZpZ3VyYXRpb25zIGFyZSBvbmx5IHJlbGV2YW50IHRvIGNo
+aXBzLg0KcGxlYXNlIGxldCBtZSByZXBlYXQgdGhpcyB3aXRoIG15IG93biB3b3JkcyB0byBzZWUg
+aWYgSSB1bmRlcnN0YW5kIHRoZQ0KImNvbmZpZyBibG9iIiBjb3JyZWN0bHkuIEZlZWwgZnJlZSB0
+byBjb3JyZWN0IG1lIGlmIGFueXRoaW5nIGlzIHdyb25nOg0KLSB0aGUgZGF0YSBpbiB0aGUgY29u
+ZmlnIGJsb2IgInBhdGNoZXMiIGVGdXNlIHZhbHVlcyBhdCBydW50aW1lIChub24tcGVyc2lzdGVu
+dCkNCi0gd2Uga25vdyB0aGUgb2Zmc2V0cyBvZiB0aGUgVUFSVF9DT05GSUcsIFBDTV9TRVRUSU5H
+IGFuZCBCRF9BRERSIC0NCnRoZXNlIGNhbiBiZSAiYm9hcmQgc3BlY2lmaWMiIChsaWtlIGJhdWQg
+cmF0ZSwgZmxvdyBjb250cm9sLCAuLi4pDQotIG1vc3Qgb3RoZXIgdmFsdWVzIGZyb20gdGhlICJj
+b25maWcgYmxvYiIgYXJlICJjaGlwIHNwZWNpZmljIiAtDQptZWFuaW5nIHRoZXkgYXJlIGlkZW50
+aWNhbCBmb3IgZWFjaCBib2FyZCBhbmQgdGhleSBvbmx5IGRlcGVuZCBvbiB0aGUNCmNoaXANCg0K
+ZG8geW91IGhhdmUgYW55IHN1Z2dlc3Rpb25zIGhvdyB3ZSBjYW4gc3VwcG9ydCBtdWx0aXBsZSBi
+b2FyZHMgKHRoZQ0KbWFpbiBnb2FsIG9mIHRoaXMgd2hvbGUgZGlzY3Vzc2lvbiBpczogaG93IHRv
+IGRvIHRoaXMgImNvcnJlY3QiKT8NCnNvIGZhciBkaWZmZXJlbnQgYXBwcm9hY2hlcyB3ZXJlIGRp
+c2N1c3NlZCAobm90IG9ubHkgaW4gdGhpcyB0aHJlYWQsDQpidXQgYWxzbyBpbiB0aGUgcGFzdCk6
+DQotIHVzZSBhIHNlcGFyYXRlIGNvbmZpZyBibG9iIGZvciBlYWNoIGJvYXJkLiB0aGlzIG1lYW5z
+IHRoYXQgd2hlbmV2ZXINCmEgbmV3IGJvYXJkIGlzIHN1cHBvcnRlZCAoZm9yIGV4YW1wbGUgYnkg
+YWRkaW5nIGEgLmR0cyBmb3IgaXQgdG8gdGhlDQptYWlubGluZSBrZXJuZWwpIHRoZW4gQmx1ZXRv
+b3RoIHdvbid0IHdvcmsgb3V0LW9mLXRoZS1ib3ggdW5sZXNzIGENCmNvbmZpZyBpcyBwcm92aWRl
+ZC4NCi0gc3BlY2lmeSB0aGUgcHJvcGVydGllcyBvZiB0aGUgY29ubmVjdGlvbiB0byB0aGUgY2hp
+cCAoZm9yIGV4YW1wbGUgYnkNCmFkZGluZyBhIGRldmljZS10cmVlIHByb3BlcnR5IGZvciB0aGUg
+c3BlZWQsIGZsb3cgY29udHJvbCwgLi4uKSBhbmQNCmdlbmVyYXRlIHRoZSBjb25maWcgYmFzZWQg
+b24gdGhlIGRldmljZS10cmVlIHByb3BlcnRpZXMuDQotIChJIGFtIG9wZW4gZm9yIG90aGVyIHN1
+Z2dlc3Rpb25zLCBwbGVhc2UgbGV0IHVzIGtub3cgaWYgeW91IGhhdmUgYW55KQ0KDQpJIHdvdWxk
+IGxpa2UgdG8gaGVhciB5b3VyIG9waW5pb24gb24gdGhpcyB0b3BpYyBhbmQgZXNwZWNpYWxseSB0
+aGUNCnJlYXNvbnMgYmVoaW5kIHlvdXIgc3VnZ2VzdGlvbnMuDQoNCg0KQmVzdCByZWdhcmRzDQpN
+YXJ0aW4NCg0KLS0tLS0tUGxlYXNlIGNvbnNpZGVyIHRoZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJp
+bnRpbmcgdGhpcyBlLW1haWwuDQo=
