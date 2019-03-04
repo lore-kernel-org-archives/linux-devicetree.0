@@ -1,74 +1,61 @@
-From: Andy Tang <andy.tang@nxp.com>
-Subject: RE: [PATCH] arm64: dts: ls1088a: add one more thermal zone node
-Date: Mon, 4 Mar 2019 02:47:49 +0000
-Message-ID: <VI1PR04MB4333637E16596E72E3F340EFF3710@VI1PR04MB4333.eurprd04.prod.outlook.com>
-References: <20190225030049.20401-1-andy.tang@nxp.com>
- <20190301133805.GQ26041@dragon>
+From: Chen Yu <chenyu56@huawei.com>
+Subject: //Re: [PATCH v3 06/12] usb: dwc3: Increase timeout for CmdAct cleared
+ by device controller
+Date: Mon, 4 Mar 2019 10:53:41 +0800
+Message-ID: <7bbe9516-cb16-09a9-554f-0b8177c6f535@huawei.com>
+References: <20190302090505.65542-1-chenyu56@huawei.com>
+ <20190302090505.65542-7-chenyu56@huawei.com>
+ <CAHp75Vd+wPU_QvaWHanpG6hjnUj6==4Y3YiOtZnWpk0kyFUQ4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190301133805.GQ26041@dragon>
+In-Reply-To: <CAHp75Vd+wPU_QvaWHanpG6hjnUj6==4Y3YiOtZnWpk0kyFUQ4A@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, "zhangfei (AC)" <zhangfei28@huawei.com>
+Cc: liuyu712@hisilicon.com, USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, wanghu17@hisilicon.com, butao@hisilicon.com, Yao Chen <chenyao11@huawei.com>, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei <songxiaowei@hisilicon.com>, xu yiping <xuyiping@hisilicon.com>, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIDxzaGF3
-bmd1b0BrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE5xOoz1MIxyNUgMjE6MzgNCj4gVG86IEFuZHkg
-VGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+IENjOiBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNv
-bT47IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
-DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBtQHZnZXIua2VybmVsLm9y
-ZzsNCj4gZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZzsgcnVpLnpoYW5nQGludGVsLmNvbTsgZWR1
-YmV6dmFsQGdtYWlsLmNvbQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBhcm02NDogZHRzOiBsczEw
-ODhhOiBhZGQgb25lIG1vcmUgdGhlcm1hbCB6b25lIG5vZGUNCj4gDQo+IE9uIE1vbiwgRmViIDI1
-LCAyMDE5IGF0IDExOjAwOjQ5QU0gKzA4MDAsIFl1YW50aWFuIFRhbmcgd3JvdGU6DQo+ID4gTHMx
-MDg4YSBoYXMgMiB0aGVybWFsIHNlbnNvcnMuIFRoaXMgcGF0Y2ggYWRkcyB0aGUgc2Vjb25kIG5v
-ZGUgdG8gZHRzDQo+ID4gdG8gZW5hYmxlIGl0Lg0KPiANCj4gQ2FuIHlvdSBlbGFib3JhdGUgb24g
-dGhlc2UgMiB0aGVybWFsIHNlbnNvcnMvem9uZXMsIGNjdSBhbmQgcGx0Pw0KPiANCk9LLCB0aGFu
-a3MuDQoNCkJSLA0KQW5keSAgDQoNCj4gU2hhd24NCj4gDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5
-OiBZdWFudGlhbiBUYW5nIDxhbmR5LnRhbmdAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgYXJjaC9h
-cm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA4OGEuZHRzaSB8ICAgNDMNCj4gKysrKysr
-KysrKysrKysrKysrKysrLS0NCj4gPiAgMSBmaWxlcyBjaGFuZ2VkLCAzOSBpbnNlcnRpb25zKCsp
-LCA0IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9k
-dHMvZnJlZXNjYWxlL2ZzbC1sczEwODhhLmR0c2kNCj4gPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-ZnJlZXNjYWxlL2ZzbC1sczEwODhhLmR0c2kNCj4gPiBpbmRleCA2NjExMzdmLi45ZjUyYmM5IDEw
-MDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwODhh
-LmR0c2kNCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDg4
-YS5kdHNpDQo+ID4gQEAgLTEyOSwxOSArMTI5LDE5IEBADQo+ID4gIAl9Ow0KPiA+DQo+ID4gIAl0
-aGVybWFsLXpvbmVzIHsNCj4gPiAtCQljcHVfdGhlcm1hbDogY3B1LXRoZXJtYWwgew0KPiA+ICsJ
-CWNjdSB7DQo+ID4gIAkJCXBvbGxpbmctZGVsYXktcGFzc2l2ZSA9IDwxMDAwPjsNCj4gPiAgCQkJ
-cG9sbGluZy1kZWxheSA9IDw1MDAwPjsNCj4gPiAgCQkJdGhlcm1hbC1zZW5zb3JzID0gPCZ0bXUg
-MD47DQo+ID4NCj4gPiAgCQkJdHJpcHMgew0KPiA+IC0JCQkJY3B1X2FsZXJ0OiBjcHUtYWxlcnQg
-ew0KPiA+ICsJCQkJY2N1X2FsZXJ0OiBjY3UtYWxlcnQgew0KPiA+ICAJCQkJCXRlbXBlcmF0dXJl
-ID0gPDg1MDAwPjsNCj4gPiAgCQkJCQloeXN0ZXJlc2lzID0gPDIwMDA+Ow0KPiA+ICAJCQkJCXR5
-cGUgPSAicGFzc2l2ZSI7DQo+ID4gIAkJCQl9Ow0KPiA+DQo+ID4gLQkJCQljcHVfY3JpdDogY3B1
-LWNyaXQgew0KPiA+ICsJCQkJY2N1X2NyaXQ6IGNjdS1jcml0IHsNCj4gPiAgCQkJCQl0ZW1wZXJh
-dHVyZSA9IDw5NTAwMD47DQo+ID4gIAkJCQkJaHlzdGVyZXNpcyA9IDwyMDAwPjsNCj4gPiAgCQkJ
-CQl0eXBlID0gImNyaXRpY2FsIjsNCj4gPiBAQCAtMTUwLDcgKzE1MCw0MiBAQA0KPiA+DQo+ID4g
-IAkJCWNvb2xpbmctbWFwcyB7DQo+ID4gIAkJCQltYXAwIHsNCj4gPiAtCQkJCQl0cmlwID0gPCZj
-cHVfYWxlcnQ+Ow0KPiA+ICsJCQkJCXRyaXAgPSA8JmNjdV9hbGVydD47DQo+ID4gKwkJCQkJY29v
-bGluZy1kZXZpY2UgPQ0KPiA+ICsJCQkJCQk8JmNwdTAgVEhFUk1BTF9OT19MSU1JVA0KPiBUSEVS
-TUFMX05PX0xJTUlUPiwNCj4gPiArCQkJCQkJPCZjcHUxIFRIRVJNQUxfTk9fTElNSVQNCj4gVEhF
-Uk1BTF9OT19MSU1JVD4sDQo+ID4gKwkJCQkJCTwmY3B1MiBUSEVSTUFMX05PX0xJTUlUDQo+IFRI
-RVJNQUxfTk9fTElNSVQ+LA0KPiA+ICsJCQkJCQk8JmNwdTMgVEhFUk1BTF9OT19MSU1JVA0KPiBU
-SEVSTUFMX05PX0xJTUlUPiwNCj4gPiArCQkJCQkJPCZjcHU0IFRIRVJNQUxfTk9fTElNSVQNCj4g
-VEhFUk1BTF9OT19MSU1JVD4sDQo+ID4gKwkJCQkJCTwmY3B1NSBUSEVSTUFMX05PX0xJTUlUDQo+
-IFRIRVJNQUxfTk9fTElNSVQ+LA0KPiA+ICsJCQkJCQk8JmNwdTYgVEhFUk1BTF9OT19MSU1JVA0K
-PiBUSEVSTUFMX05PX0xJTUlUPiwNCj4gPiArCQkJCQkJPCZjcHU3IFRIRVJNQUxfTk9fTElNSVQN
-Cj4gVEhFUk1BTF9OT19MSU1JVD47DQo+ID4gKwkJCQl9Ow0KPiA+ICsJCQl9Ow0KPiA+ICsJCX07
-DQo+ID4gKw0KPiA+ICsJCXBsdCB7DQo+ID4gKwkJCXBvbGxpbmctZGVsYXktcGFzc2l2ZSA9IDwx
-MDAwPjsNCj4gPiArCQkJcG9sbGluZy1kZWxheSA9IDw1MDAwPjsNCj4gPiArCQkJdGhlcm1hbC1z
-ZW5zb3JzID0gPCZ0bXUgMT47DQo+ID4gKw0KPiA+ICsJCQl0cmlwcyB7DQo+ID4gKwkJCQlwbHRf
-YWxlcnQ6IHBsdC1hbGVydCB7DQo+ID4gKwkJCQkJdGVtcGVyYXR1cmUgPSA8ODUwMDA+Ow0KPiA+
-ICsJCQkJCWh5c3RlcmVzaXMgPSA8MjAwMD47DQo+ID4gKwkJCQkJdHlwZSA9ICJwYXNzaXZlIjsN
-Cj4gPiArCQkJCX07DQo+ID4gKw0KPiA+ICsJCQkJcGx0X2NyaXQ6IHBsdC1jcml0IHsNCj4gPiAr
-CQkJCQl0ZW1wZXJhdHVyZSA9IDw5NTAwMD47DQo+ID4gKwkJCQkJaHlzdGVyZXNpcyA9IDwyMDAw
-PjsNCj4gPiArCQkJCQl0eXBlID0gImNyaXRpY2FsIjsNCj4gPiArCQkJCX07DQo+ID4gKwkJCX07
-DQo+ID4gKw0KPiA+ICsJCQljb29saW5nLW1hcHMgew0KPiA+ICsJCQkJbWFwMCB7DQo+ID4gKwkJ
-CQkJdHJpcCA9IDwmcGx0X2FsZXJ0PjsNCj4gPiAgCQkJCQljb29saW5nLWRldmljZSA9DQo+ID4g
-IAkJCQkJCTwmY3B1MCBUSEVSTUFMX05PX0xJTUlUDQo+IFRIRVJNQUxfTk9fTElNSVQ+LA0KPiA+
-ICAJCQkJCQk8JmNwdTEgVEhFUk1BTF9OT19MSU1JVA0KPiBUSEVSTUFMX05PX0xJTUlUPiwNCj4g
-PiAtLQ0KPiA+IDEuNy4xDQo+ID4NCg==
+Hi Zhang Fei,
+
+On 2019/3/2 23:47, Andy Shevchenko wrote:
+> On Sat, Mar 2, 2019 at 11:06 AM Yu Chen <chenyu56@huawei.com> wrote:
+>>
+>> It needs more time for the device controller to clear the CmdAct of
+>> DEPCMD on Hisilicon Kirin Soc.
+>>
+> 
+> 5x times more? Can you provide more specific details on that?
+> 
+Can you explain the details about the timeout expansion on Hisilicon Kirin Soc?
+Thanks!
+
+>> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+>> Cc: Felipe Balbi <balbi@kernel.org>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: John Stultz <john.stultz@linaro.org>
+>> Cc: Binghui Wang <wangbinghui@hisilicon.com>
+>> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+>> ---
+>>  drivers/usb/dwc3/gadget.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+>> index 6c9b76bcc2e1..84d701b37171 100644
+>> --- a/drivers/usb/dwc3/gadget.c
+>> +++ b/drivers/usb/dwc3/gadget.c
+>> @@ -270,7 +270,7 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
+>>  {
+>>         const struct usb_endpoint_descriptor *desc = dep->endpoint.desc;
+>>         struct dwc3             *dwc = dep->dwc;
+>> -       u32                     timeout = 1000;
+>> +       u32                     timeout = 5000;
+>>         u32                     saved_config = 0;
+>>         u32                     reg;
+>>
+>> --
+>> 2.15.0-rc2
+>>
+> 
+> 
