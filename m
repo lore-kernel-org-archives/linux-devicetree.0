@@ -1,15 +1,15 @@
 From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [RFC PATCH V0 7/7] [media] platform: mtk-isp: Add Mediatek FD
- driver
-Date: Tue, 5 Mar 2019 16:48:54 +0900
-Message-ID: <CAAFQd5CfQVa-qU1qiapc07Ey2KNDEO+MOq6v98ZCVP8w8u=C4Q@mail.gmail.com>
-References: <1550648893-42050-1-git-send-email-Jerry-Ch.chen@mediatek.com>
- <1550648893-42050-8-git-send-email-Jerry-Ch.chen@mediatek.com>
+Subject: Re: [RFC PATCH V0 1/4] media: platform: mtk-isp: Add Mediatek sensor
+ interface driver
+Date: Tue, 5 Mar 2019 16:51:23 +0900
+Message-ID: <CAAFQd5CVVPjBks=FVPviguvUp5d9Sxh9B--2213vcDnQY+S0wA@mail.gmail.com>
+References: <1550733718-31702-1-git-send-email-louis.kuo@mediatek.com>
+ <1550733718-31702-2-git-send-email-louis.kuo@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1550648893-42050-8-git-send-email-Jerry-Ch.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1550733718-31702-2-git-send-email-louis.kuo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
  <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
@@ -19,61 +19,60 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
  <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
 Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Jerry-ch Chen <Jerry-Ch.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <Sean.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <Rynn.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?Q2hyaXN0aWUgWXUgKOa4uOmbheaDoCk=?= <christie.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, =?UTF-8?B?SG9sbWVzIENoaW91ICjpgrHmjLop?= <holmes.chiou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Shik Chen <shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Keiichi Watanabe <keiichiw-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sj Huang <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, =?UTF-8?B?RnJlZGVyaWMgQ2hlbiAo6Zmz5L+K5YWDKQ==?= <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVE
+To: Louis Kuo <louis.kuo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Shik Chen <shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <Sean.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <Rynn.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?Q2hyaXN0aWUgWXUgKOa4uOmbheaDoCk=?= <christie.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, =?UTF-8?B?SG9sbWVzIENoaW91ICjpgrHmjLop?= <holmes.chiou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Keiichi Watanabe <keiichiw-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sj Huang <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, =?UTF-8?B?RnJlZGVyaWMgQ2hlbiAo6Zmz5L+K5YWDKQ==?= <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mauro Carvalho Chehab <mc>
 List-Id: devicetree@vger.kernel.org
 
 +CC Shik and Keiichi
 
-On Wed, Feb 20, 2019 at 4:53 PM Jerry-ch Chen
-<Jerry-Ch.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+On Thu, Feb 21, 2019 at 4:22 PM Louis Kuo <louis.kuo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
 >
-> This patch adds the driver of Face Detection (FD) unit in
-> Mediatek camera system, providing face detection function.
+> This patch adds Mediatek's sensor interface driver. Sensor interface driver
+> is a MIPI-CSI2 host driver, namely, a HW camera interface controller.
+> It support a widely adopted, simple, high-speed protocol primarily intended
+> for point-to-point image and video transmission between cameras and host
+> devices.
 >
-> The mtk-isp directory will contain drivers for multiple IP
-> blocks found in Mediatek ISP system. It will include ISP Pass 1
-> driver (CAM), sensor interface driver, DIP driver and face
-> detection driver.
+> The mtk-isp directory will contain drivers for multiple IP blocks found in
+> Mediatek ISP system. It will include ISP Pass 1 driver, sensor interface
+> driver, DIP driver and face detection driver.
 >
-> Signed-off-by: Jerry-ch Chen <jerry-ch.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Louis Kuo <louis.kuo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  drivers/media/platform/mtk-isp/Makefile            |   16 +
->  drivers/media/platform/mtk-isp/fd/Makefile         |   38 +
->  drivers/media/platform/mtk-isp/fd/mtk_fd-core.h    |  157 +++
->  drivers/media/platform/mtk-isp/fd/mtk_fd-ctx.h     |  299 ++++++
->  .../platform/mtk-isp/fd/mtk_fd-dev-ctx-core.c      |  912 +++++++++++++++++
->  drivers/media/platform/mtk-isp/fd/mtk_fd-dev.c     |  355 +++++++
->  drivers/media/platform/mtk-isp/fd/mtk_fd-dev.h     |  198 ++++
->  .../media/platform/mtk-isp/fd/mtk_fd-smem-drv.c    |  452 +++++++++
->  drivers/media/platform/mtk-isp/fd/mtk_fd-smem.h    |   25 +
->  .../media/platform/mtk-isp/fd/mtk_fd-v4l2-util.c   | 1046 ++++++++++++++++++++
->  drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.c    |  114 +++
->  drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.h    |   36 +
->  drivers/media/platform/mtk-isp/fd/mtk_fd.c         |  730 ++++++++++++++
->  drivers/media/platform/mtk-isp/fd/mtk_fd.h         |  127 +++
->  14 files changed, 4505 insertions(+)
+>  drivers/media/platform/Makefile                    |    2 +
+>  drivers/media/platform/mtk-isp/Makefile            |   14 +
+>  drivers/media/platform/mtk-isp/isp_50/Makefile     |   17 +
+>  .../media/platform/mtk-isp/isp_50/seninf/Makefile  |    4 +
+>  .../platform/mtk-isp/isp_50/seninf/mtk_seninf.c    | 1339 ++++++++++++++++++++
+>  .../mtk-isp/isp_50/seninf/seninf_drv_def.h         |  201 +++
+>  .../platform/mtk-isp/isp_50/seninf/seninf_reg.h    |  992 +++++++++++++++
+>  7 files changed, 2569 insertions(+)
 >  create mode 100644 drivers/media/platform/mtk-isp/Makefile
->  create mode 100644 drivers/media/platform/mtk-isp/fd/Makefile
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-core.h
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-ctx.h
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-dev-ctx-core.c
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-dev.c
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-dev.h
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-smem-drv.c
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-smem.h
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2-util.c
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.c
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.h
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd.c
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd.h
+>  create mode 100644 drivers/media/platform/mtk-isp/isp_50/Makefile
+>  create mode 100644 drivers/media/platform/mtk-isp/isp_50/seninf/Makefile
+>  create mode 100644 drivers/media/platform/mtk-isp/isp_50/seninf/mtk_seninf.c
+>  create mode 100644 drivers/media/platform/mtk-isp/isp_50/seninf/seninf_drv_def.h
+>  create mode 100644 drivers/media/platform/mtk-isp/isp_50/seninf/seninf_reg.h
 >
+> diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+> index e6deb25..9fef94f 100644
+> --- a/drivers/media/platform/Makefile
+> +++ b/drivers/media/platform/Makefile
+> @@ -75,6 +75,8 @@ obj-$(CONFIG_VIDEO_ROCKCHIP_RGA)      += rockchip/rga/
+>
+>  obj-y  += omap/
+>
+> +obj-y  += mtk-isp/
+> +
+>  obj-$(CONFIG_VIDEO_AM437X_VPFE)                += am437x/
+>
+>  obj-$(CONFIG_VIDEO_XILINX)             += xilinx/
 > diff --git a/drivers/media/platform/mtk-isp/Makefile b/drivers/media/platform/mtk-isp/Makefile
 > new file mode 100644
-> index 0000000..5e3a9aa
+> index 0000000..9d245f0
 > --- /dev/null
 > +++ b/drivers/media/platform/mtk-isp/Makefile
-> @@ -0,0 +1,16 @@
+> @@ -0,0 +1,14 @@
 > +#
 > +# Copyright (C) 2018 MediaTek Inc.
 > +#
@@ -87,225 +86,50 @@ On Wed, Feb 20, 2019 at 4:53 PM Jerry-ch Chen
 > +# GNU General Public License for more details.
 > +#
 > +
-> +ifeq ($(CONFIG_VIDEO_MEDIATEK_FD_SUPPORT),y)
-> +obj-y += fd/
+> +obj-y += isp_50/
+> \ No newline at end of file
+> diff --git a/drivers/media/platform/mtk-isp/isp_50/Makefile b/drivers/media/platform/mtk-isp/isp_50/Makefile
+> new file mode 100644
+> index 0000000..bd8cd19
+> --- /dev/null
+> +++ b/drivers/media/platform/mtk-isp/isp_50/Makefile
+> @@ -0,0 +1,17 @@
+> +#
+> +# Copyright (C) 2018 MediaTek Inc.
+> +#
+> +# This program is free software: you can redistribute it and/or modify
+> +# it under the terms of the GNU General Public License version 2 as
+> +# published by the Free Software Foundation.
+> +#
+> +# This program is distributed in the hope that it will be useful,
+> +# but WITHOUT ANY WARRANTY; without even the implied warranty of
+> +# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> +# GNU General Public License for more details.
+> +#
+> +
+> +ifeq ($(CONFIG_MTK_SENINF),y)
+> +obj-y += seninf/
 > +endif
-> diff --git a/drivers/media/platform/mtk-isp/fd/Makefile b/drivers/media/platform/mtk-isp/fd/Makefile
+> +
+> diff --git a/drivers/media/platform/mtk-isp/isp_50/seninf/Makefile b/drivers/media/platform/mtk-isp/isp_50/seninf/Makefile
 > new file mode 100644
-> index 0000000..ac168c1
+> index 0000000..f1b2e2d
 > --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/fd/Makefile
-> @@ -0,0 +1,38 @@
-> +#
-> +# Copyright (C) 2018 MediaTek Inc.
-> +#
-> +# This program is free software: you can redistribute it and/or modify
-> +# it under the terms of the GNU General Public License version 2 as
-> +# published by the Free Software Foundation.
-> +#
-> +# This program is distributed in the hope that it will be useful,
-> +# but WITHOUT ANY WARRANTY; without even the implied warranty of
-> +# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> +# GNU General Public License for more details.
-> +#
+> +++ b/drivers/media/platform/mtk-isp/isp_50/seninf/Makefile
+> @@ -0,0 +1,4 @@
+> +MODULE         = mtk_seninf
+> +LIB_FILES      = mtk_seninf
 > +
-> +$(info "FD: makefile start srctree: $(srctree)")
-> +ccflags-y += -I$(srctree)/drivers/media/platform/mtk-vpu
-> +ccflags-y += -I$(srctree)/drivers/media/platform/mtk-isp/fd
-> +#ccflags-y += -I$(srctree)/drivers/media/platform/mtk-isp/common
-> +
-> +obj-y += mtk_fd.o
-> +obj-y += mtk_fd-v4l2.o
-> +
-> +# To provide alloc context managing memory shared
-> +# between CPU and FD coprocessor
-> +mtk_fd_smem-objs := \
-> +mtk_fd-smem-drv.o
-> +
-> +obj-y += mtk_fd_smem.o
-> +
-> +# Utilits to provide frame-based streaming model
-> +# with v4l2 user interfaces
-> +mtk_fd_util-objs := \
-> +mtk_fd-dev.o \
-> +mtk_fd-v4l2-util.o \
-> +mtk_fd-dev-ctx-core.o
-> +
-> +obj-y += mtk_fd_util.o
-> +
-> +$(info "FD: makefile end")
-> diff --git a/drivers/media/platform/mtk-isp/fd/mtk_fd-core.h b/drivers/media/platform/mtk-isp/fd/mtk_fd-core.h
+> +obj-$(CONFIG_MTK_SENINF) += mtk_seninf.o
+> diff --git a/drivers/media/platform/mtk-isp/isp_50/seninf/mtk_seninf.c b/drivers/media/platform/mtk-isp/isp_50/seninf/mtk_seninf.c
 > new file mode 100644
-> index 0000000..a7c1e1d
+> index 0000000..7ac8a4a
 > --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/fd/mtk_fd-core.h
-> @@ -0,0 +1,157 @@
-> +/* SPDX-License-Identifier: GPL-2.0
-> + * Copyright (C) 2015 MediaTek Inc.
-> + *
-> + * This program is free software: you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#ifndef __MTK_FD_CORE_H__
-> +#define __MTK_FD_CORE_H__
-> +
-> +#define SIG_ERESTARTSYS 512
-> +
-> +#ifndef CONFIG_MTK_CLKMGR
-> +#include <linux/clk.h>
-> +#endif
-> +
-> +#ifdef CONFIG_MTK_CLKMGR
-> +#include <mach/mt_clkmgr.h>
-> +#endif
-> +
-> +#include "mtk_fd-dev.h"
-> +#include "mtk_fd-ctx.h"
-> +
-> +#include <linux/io.h>
-> +
-> +#define FD_WR32(v, a) \
-> +do { \
-> +       __raw_writel((v), (void __force __iomem *)((a))); \
-> +       mb(); /* ensure written */ \
-> +} while (0)
-> +
-> +#define FD_RD32(addr)                  ioread32((void *)addr)
-> +
-> +#define        FD_INT_EN       (0x15c)
-> +#define        FD_INT          (0x168)
-> +#define        FD_RESULT       (0x178)
-> +#define FD_IRQ_MASK    (0x001)
-> +
-> +#define RS_BUF_SIZE_MAX        (2288788)
-> +#define VA_OFFSET      (0xffff000000000000)
-> +
-> +enum fd_irq {
-> +       FD_IRQ_IDX = 0,
-> +       FD_IRQ_IDX_NUM
-> +};
-> +
-> +enum fd_state {
-> +       FD_INI,
-> +       FD_ENQ,
-> +       FD_CBD,
-> +};
-> +
-> +enum stream_stat {
-> +       STREAM_OFF,
-> +       STREAM_ON,
-> +};
-> +
-> +struct ipi_fd_enq_param {
-> +       u8 source_img_fmt;
-> +       struct fd_buffer output_addr;
-> +       struct fd_buffer src_y;
-> +       struct fd_buffer src_uv;
-> +       struct fd_buffer config_addr;
-> +} __packed;
-> +
-> +struct fd_manager_ctx {
-> +       struct fd_buffer learn_data_buf[2][LEARNDATA_NUM];
-> +       struct fd_buffer fd_config;
-> +       struct fd_buffer rs_config;
-> +       struct fd_buffer fd_result;
-> +       struct fd_buffer rs_result;
-> +       struct fd_buffer src_img;
-> +} __packed;
-> +
-> +struct mtk_fd_drv_ctx {
-> +       struct sg_table sgtable;
-> +       u32 frame_id;
-> +       struct fd_buffer rs_result;
-> +       struct fd_buffer scp_mem;
-> +       struct platform_device *vpu_pdev;
-> +
-> +       atomic_t fd_enque_cnt;
-> +       atomic_t fd_stream_cnt;
-> +       atomic_t fd_user_cnt;
-> +};
-> +
-> +struct mtk_fd_drv_dev {
-> +       struct platform_device *pdev;
-> +
-> +       dev_t fd_devno;
-> +       struct cdev   fd_cdev;
-> +       struct class *fd_class;
-> +       struct mtk_fd_drv_ctx fd_ctx;
-> +
-> +       struct device *larb_dev;
-> +       struct clk *fd_clk;
-> +       enum fd_state state;
-> +       enum stream_stat streaming;
-> +
-> +       wait_queue_head_t wq;
-> +       u32 fd_irq_result;
-> +
-> +       void __iomem *fd_base;
-> +};
-> +
-> +struct mtk_isp_fd_drv_data {
-> +       struct mtk_fd_dev fd_dev;
-> +       struct mtk_fd_drv_dev fd_hw_dev;
-> +} __packed;
-> +
-> +static inline struct mtk_fd_drv_dev *get_fd_hw_device(struct device *dev)
-> +{
-> +       struct mtk_isp_fd_drv_data *drv_data =
-> +               dev_get_drvdata(dev);
-> +       if (drv_data)
-> +               return &drv_data->fd_hw_dev;
-> +       else
-> +               return NULL;
-> +}
-> +
-> +#define mtk_fd_us_to_jiffies(us) \
-> +       ((((unsigned long)(us) / 1000) * HZ + 512) >> 10)
-> +
-> +#define mtk_fd_hw_dev_to_drv(__fd_hw_dev) \
-> +       container_of(__fd_hw_dev, \
-> +       struct mtk_isp_fd_drv_data, fd_hw_dev)
-> +
-> +#define mtk_fd_ctx_to_drv(__fd_ctx) \
-> +       container_of(__fd_ctx, \
-> +       struct mtk_isp_fd_drv_data, fd_hw_dev.fd_ctx)
-> +
-> +enum fd_scp_cmd {
-> +       FD_CMD_INIT,
-> +       FD_CMD_ENQ,
-> +       FD_CMD_EXIT,
-> +};
-> +
-> +enum fd_clk {
-> +       clock_off = 0,
-> +       clock_on,
-> +};
-> +
-> +struct ipi_message {
-> +       u8 cmd_id;
-> +       union {
-> +               struct fd_buffer fd_manager;
-> +               struct v4l2_fd_param fd_param;
-> +       };
-> +} __packed;
-> +
-> +#endif/*__MTK_FD_CORE_H__*/
-> diff --git a/drivers/media/platform/mtk-isp/fd/mtk_fd-ctx.h b/drivers/media/platform/mtk-isp/fd/mtk_fd-ctx.h
-> new file mode 100644
-> index 0000000..d78a3af
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/fd/mtk_fd-ctx.h
-> @@ -0,0 +1,299 @@
-> +/* SPDX-License-Identifier: GPL-2.0
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> +++ b/drivers/media/platform/mtk-isp/isp_50/seninf/mtk_seninf.c
+> @@ -0,0 +1,1339 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2016 MediaTek Inc.
 > + *
 > + * This program is free software; you can redistribute it and/or modify
 > + * it under the terms of the GNU General Public License version 2 as
@@ -313,4224 +137,1343 @@ On Wed, Feb 20, 2019 at 4:53 PM Jerry-ch Chen
 > + *
 > + * This program is distributed in the hope that it will be useful,
 > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+> + * See http://www.gnu.org/licenses/gpl-2.0.html for more details.
 > + */
-> +
-> +#ifndef __MTK_FD_CTX_H__
-> +#define __MTK_FD_CTX_H__
 > +
 > +#include <linux/types.h>
-> +#include <linux/videodev2.h>
-> +#include <media/v4l2-ctrls.h>
-> +#include <media/videobuf2-core.h>
-> +#include <media/v4l2-subdev.h>
-> +
-> +#define MTK_FD_CTX_QUEUES (16)
-> +#define MTK_FD_CTX_FRAME_BUNDLE_BUFFER_MAX (MTK_FD_CTX_QUEUES)
-> +#define MTK_FD_CTX_DESC_MAX (MTK_FD_CTX_QUEUES)
-> +
-> +#define MTK_FD_CTX_MODE_DEBUG_OFF (0)
-> +#define MTK_FD_CTX_MODE_DEBUG_BYPASS_JOB_TRIGGER (1)
-> +#define MTK_FD_CTX_MODE_DEBUG_BYPASS_ALL (2)
-> +
-> +#define MTK_FD_GET_CTX_ID_FROM_SEQUENCE(sequence) \
-> +       ((sequence) >> 16 & 0x0000FFFF)
-> +
-> +#define MTK_FD_CTX_META_BUF_DEFAULT_SIZE (1110 * 1024)
-> +
-> +struct mtk_fd_ctx;
-> +struct mtk_fd_ctx_finish_param;
-> +
-> +/**
-> + * Attributes setup by device context owner
-> + */
-> +struct mtk_fd_ctx_queue_desc {
-> +       int id;
-> +       /* id of the context queue */
-> +       char *name;
-> +       /* Will be exported to media entity name */
-> +       int capture;
-> +       /**
-> +        * 1 for capture queue (device to user),
-> +        * 0 for output queue (from user to device)
-> +        */
-> +       int image;
-> +       /* 1 for image, 0 for meta data */
-> +       unsigned int dma_port;
-> +       /*The dma port associated to the buffer*/
-> +       struct mtk_fd_ctx_format *fmts;
-> +       int num_fmts;
-> +       /* Default format of this queue */
-> +       int default_fmt_idx;
-> +};
-> +
-> +/**
-> + * Supported format and the information used for
-> + * size calculation
-> + */
-> +struct mtk_fd_ctx_meta_format {
-> +       u32 dataformat;
-> +       u32 max_buffer_size;
-> +       u8 flags;
-> +};
-> +
-> +/**
-> + * MDP module's private format definitation
-> + * (the same as struct mdp_format)
-> + * It will be removed and changed to MDP's external interface
-> + * after the integration with MDP module.
-> + */
-> +struct mtk_fd_ctx_mdp_format {
-> +       u32     pixelformat;
-> +       u32     mdp_color;
-> +       u8      depth[VIDEO_MAX_PLANES];
-> +       u8      row_depth[VIDEO_MAX_PLANES];
-> +       u8      num_planes;
-> +       u8      walign;
-> +       u8      halign;
-> +       u8      salign;
-> +       u32     flags;
-> +};
-> +
-> +struct mtk_fd_ctx_format {
-> +       union {
-> +               struct mtk_fd_ctx_meta_format meta;
-> +               struct mtk_fd_ctx_mdp_format img;
-> +       } fmt;
-> +};
-> +
-> +union mtk_v4l2_fmt {
-> +       struct v4l2_pix_format_mplane pix_mp;
-> +       struct v4l2_meta_format meta;
-> +};
-> +
-> +/* Attributes setup by device context owner */
-> +struct mtk_fd_ctx_queues_setting {
-> +       int master;
-> +       /* The master input node to trigger the frame data enqueue */
-> +       struct mtk_fd_ctx_queue_desc *output_queue_descs;
-> +       int total_output_queues;
-> +       struct mtk_fd_ctx_queue_desc *capture_queue_descs;
-> +       int total_capture_queues;
-> +};
-> +
-> +struct mtk_fd_ctx_queue_attr {
-> +       int master;
-> +       int input_offset;
-> +       int total_num;
-> +};
-> +
-> +/**
-> + * Video node context. Since we use
-> + * mtk_fd_ctx_frame_bundle to manage enqueued
-> + * buffers by frame now, we don't use bufs filed of
-> + * mtk_fd_ctx_queue now
-> + */
-> +struct mtk_fd_ctx_queue {
-> +       union mtk_v4l2_fmt fmt;
-> +       struct mtk_fd_ctx_format *ctx_fmt;
-> +
-> +       unsigned int width_pad;
-> +       /* bytesperline, reserved */
-> +       struct mtk_fd_ctx_queue_desc desc;
-> +       unsigned int buffer_usage;
-> +       /* Current buffer usage of the queue */
-> +       int rotation;
-> +       struct list_head bufs;
-> +       /* Reserved, not used now */
-> +};
-> +
-> +enum mtk_fd_ctx_frame_bundle_state {
-> +       MTK_FD_CTX_FRAME_NEW,
-> +       /* Not allocated */
-> +       MTK_FD_CTX_FRAME_PREPARED,
-> +       /* Allocated but has not be processed */
-> +       MTK_FD_CTX_FRAME_PROCESSING,
-> +       /* Queued, waiting to be filled */
-> +};
-> +
-> +/**
-> + * The definiation is compatible with FD driver's state definiation
-> + * currently and will be decoupled after further integration
-> + */
-> +enum mtk_fd_ctx_frame_data_state {
-> +       MTK_FD_CTX_FRAME_DATA_EMPTY = 0, /* FRAME_STATE_INIT */
-> +       MTK_FD_CTX_FRAME_DATA_DONE = 3, /* FRAME_STATE_DONE */
-> +       MTK_FD_CTX_FRAME_DATA_STREAMOFF_DONE = 4, /*FRAME_STATE_STREAMOFF*/
-> +       MTK_FD_CTX_FRAME_DATA_ERROR = 5, /*FRAME_STATE_ERROR*/
-> +};
-> +
-> +struct mtk_fd_ctx_frame_bundle {
-> +       struct mtk_fd_ctx_buffer*
-> +               buffers[MTK_FD_CTX_FRAME_BUNDLE_BUFFER_MAX];
-> +       int id;
-> +       int num_img_capture_bufs;
-> +       int num_img_output_bufs;
-> +       int num_meta_capture_bufs;
-> +       int num_meta_output_bufs;
-> +       int last_index;
-> +       int state;
-> +       struct list_head list;
-> +};
-> +
-> +struct mtk_fd_ctx_frame_bundle_list {
-> +       struct list_head list;
-> +};
-> +
-> +struct mtk_fd_ctx {
-> +       struct platform_device *pdev;
-> +       struct platform_device *smem_device;
-> +       unsigned short ctx_id;
-> +       char device_name[12];
-> +       const struct mtk_fd_ctx_ops *ops;
-> +       struct mtk_fd_dev_node_mapping *mtk_fd_dev_node_map;
-> +       unsigned int dev_node_num;
-> +       struct mtk_fd_ctx_queue queue[MTK_FD_CTX_QUEUES];
-> +       struct mtk_fd_ctx_queue_attr queues_attr;
-> +       atomic_t frame_param_sequence;
-> +       int streaming;
-> +       void *img_vb2_alloc_ctx;
-> +       void *smem_vb2_alloc_ctx;
-> +       struct v4l2_subdev_fh *fh;
-> +       struct mtk_fd_ctx_frame_bundle frame_bundles[VB2_MAX_FRAME];
-> +       struct mtk_fd_ctx_frame_bundle_list processing_frames;
-> +       struct mtk_fd_ctx_frame_bundle_list free_frames;
-> +       int enabled_dma_ports;
-> +       int num_frame_bundle;
-> +       int mode; /* Reserved for debug */
-> +       spinlock_t qlock;
-> +};
-> +
-> +enum mtk_fd_ctx_buffer_state {
-> +       MTK_FD_CTX_BUFFER_NEW,
-> +       MTK_FD_CTX_BUFFER_PROCESSING,
-> +       MTK_FD_CTX_BUFFER_DONE,
-> +       MTK_FD_CTX_BUFFER_FAILED,
-> +};
-> +
-> +struct mtk_fd_ctx_buffer {
-> +       union mtk_v4l2_fmt fmt;
-> +       struct mtk_fd_ctx_format *ctx_fmt;
-> +       int capture;
-> +       int image;
-> +       int frame_id;
-> +       int user_sequence; /* Sequence number assigned by user */
-> +       dma_addr_t daddr;
-> +       void *vaddr;
-> +       phys_addr_t paddr;
-> +       unsigned int queue;
-> +       unsigned int buffer_usage;
-> +       enum mtk_fd_ctx_buffer_state state;
-> +       int rotation;
-> +       struct list_head list;
-> +};
-> +
-> +struct mtk_fd_ctx_desc {
-> +       char *proc_dev_phandle;
-> +       /* The context device's compatble string name in device tree*/
-> +       int (*init)(struct mtk_fd_ctx *ctx);
-> +       /* configure the core functions of the device context */
-> +};
-> +
-> +struct mtk_fd_ctx_init_table {
-> +       int total_dev_ctx;
-> +       struct mtk_fd_ctx_desc *ctx_desc_tbl;
-> +};
-> +
-> +struct mtk_fd_ctx_finish_param {
-> +       unsigned int frame_id;
-> +       u64 timestamp;
-> +       unsigned int state;
-> +};
-> +
-> +bool mtk_fd_ctx_is_streaming(struct mtk_fd_ctx *ctx);
-> +
-> +int mtk_fd_ctx_core_job_finish(struct mtk_fd_ctx *ctx,
-> +                              struct mtk_fd_ctx_finish_param *param);
-> +
-> +int mtk_fd_ctx_core_init(struct mtk_fd_ctx *ctx,
-> +                        struct platform_device *pdev, int ctx_id,
-> +                        struct mtk_fd_ctx_desc *ctx_desc,
-> +                        struct platform_device *proc_pdev,
-> +                        struct platform_device *smem_pdev);
-> +
-> +int mtk_fd_ctx_core_exit(struct mtk_fd_ctx *ctx);
-> +
-> +void mtk_fd_ctx_buf_init(struct mtk_fd_ctx_buffer *b, unsigned int queue,
-> +                        dma_addr_t daddr);
-> +
-> +enum mtk_fd_ctx_buffer_state
-> +       mtk_fd_ctx_get_buffer_state(struct mtk_fd_ctx_buffer *b);
-> +
-> +int mtk_fd_ctx_next_global_frame_sequence(struct mtk_fd_ctx *ctx, int locked);
-> +
-> +int mtk_fd_ctx_core_queue_setup
-> +       (struct mtk_fd_ctx *ctx,
-> +        struct mtk_fd_ctx_queues_setting *queues_setting);
-> +
-> +int mtk_fd_ctx_core_finish_param_init(void *param, int frame_id, int state);
-> +
-> +int mtk_fd_ctx_finish_frame(struct mtk_fd_ctx *dev_ctx,
-> +                           struct mtk_fd_ctx_frame_bundle *frame_bundle,
-> +                           int done);
-> +
-> +int mtk_fd_ctx_frame_bundle_init(struct mtk_fd_ctx_frame_bundle *frame_bundle);
-> +
-> +void mtk_fd_ctx_frame_bundle_add(struct mtk_fd_ctx *ctx,
-> +                                struct mtk_fd_ctx_frame_bundle *bundle,
-> +                                struct mtk_fd_ctx_buffer *ctx_buf);
-> +
-> +int mtk_fd_ctx_trigger_job(struct mtk_fd_ctx *dev_ctx,
-> +                          struct mtk_fd_ctx_frame_bundle *bundle_data);
-> +
-> +int mtk_fd_ctx_fmt_set_img(struct mtk_fd_ctx *dev_ctx, int queue_id,
-> +                          struct v4l2_pix_format_mplane *user_fmt,
-> +                          struct v4l2_pix_format_mplane *node_fmt);
-> +
-> +int mtk_fd_ctx_fmt_set_meta(struct mtk_fd_ctx *dev_ctx, int queue_id,
-> +                           struct v4l2_meta_format *user_fmt,
-> +                           struct v4l2_meta_format *node_fmt);
-> +
-> +int mtk_fd_ctx_format_load_default_fmt(struct mtk_fd_ctx_queue *queue,
-> +                                      struct v4l2_format *fmt_to_fill);
-> +
-> +int mtk_fd_ctx_streamon(struct mtk_fd_ctx *dev_ctx);
-> +int mtk_fd_ctx_streamoff(struct mtk_fd_ctx *dev_ctx);
-> +int mtk_fd_ctx_release(struct mtk_fd_ctx *dev_ctx);
-> +int mtk_fd_ctx_open(struct mtk_fd_ctx *dev_ctx);
-> +int mtk_fd_ctx_fd_init(struct mtk_fd_ctx *ctx);
-> +
-> +#endif /*__MTK_FD_CTX_H__*/
-> diff --git a/drivers/media/platform/mtk-isp/fd/mtk_fd-dev-ctx-core.c b/drivers/media/platform/mtk-isp/fd/mtk_fd-dev-ctx-core.c
-> new file mode 100644
-> index 0000000..7314436
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/fd/mtk_fd-dev-ctx-core.c
-> @@ -0,0 +1,912 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/device.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
 > +#include <linux/platform_device.h>
-> +#include <media/videobuf2-dma-contig.h>
-> +#include <linux/dma-mapping.h>
-> +
-> +#include "mtk_fd.h"
-> +#include "mtk_fd-dev.h"
-> +#include "mtk_fd-smem.h"
-> +#include "mtk_fd-v4l2.h"
-> +
-> +#if KERNEL_VERSION(4, 8, 0) >= MTK_FD_KERNEL_BASE_VERSION
-> +#include <linux/dma-attrs.h>
+> +#include <linux/slab.h>
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/clk.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_address.h>
+> +#include <linux/vmalloc.h>
+> +#ifdef CONFIG_COMPAT
+> +#include <linux/compat.h>
 > +#endif
+> +#include <linux/videodev2.h>
+> +#include <media/v4l2-common.h>
+> +#include <media/v4l2-dev.h>
+> +#include <media/v4l2-device.h>
+> +#include <media/v4l2-subdev.h>
+> +#include <media/v4l2-fwnode.h>
+> +#include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-async.h>
+> +#include <media/media-entity.h>
+> +#include "seninf_reg.h"
+> +#include "seninf_drv_def.h"
 > +
-> +struct vb2_v4l2_buffer *mtk_fd_ctx_buffer_get_vb2_v4l2_buffer
-> +(struct mtk_fd_ctx_buffer *ctx_buf)
+> +#define IS_4D1C (csi_info->port < CFG_CSI_PORT_0A)
+> +#define IS_CDPHY_COMBO (csi_info->port == CFG_CSI_PORT_0A ||\
+> +       csi_info->port == CFG_CSI_PORT_0B ||\
+> +       csi_info->port == CFG_CSI_PORT_0)
+> +
+> +static struct seninf_csi_info SENINF_CSI_INFO[CFG_CSI_PORT_MAX_NUM] = {
+> +       {CFG_CSI_PORT_0,  SENINF_1},
+> +       {CFG_CSI_PORT_1,  SENINF_3},
+> +       {CFG_CSI_PORT_2,  SENINF_5},
+> +       {CFG_CSI_PORT_0A, SENINF_1},
+> +       {CFG_CSI_PORT_0B, SENINF_2},
+> +};
+> +
+> +static struct sensor_vc_info_struct SENSOR_VC_INFO[2] = {
+> +       /* Preview mode setting */
+> +       {
+> +               0x02, 0x0A, 0x00, 0x08, 0x40, 0x00,
+> +               0x00, 0x2B, 0x0500, 0x02D0, 0x00, 0x00, 0x0000, 0x0000,
+> +               0x00, 0x00, 0x0000, 0x0000, 0x00, 0x00, 0x0000, 0x0000
+> +       },
+> +       /* Capture mode setting */
+> +       {
+> +               0x02, 0x0A, 0x00, 0x08, 0x40, 0x00,
+> +               0x00, 0x2B, 0x1080, 0x0C40, 0x00, 0x00, 0x0000, 0x0000,
+> +               0x01, 0x2B, 0x0100, 0x0300, 0x00, 0x00, 0x0000, 0x0000
+> +       }
+> +};
+> +
+> +struct _seninf {
+> +       struct v4l2_subdev subdev;
+> +       struct device *dev;
+> +       struct v4l2_fwnode_endpoint ep[2];
+> +       struct v4l2_ctrl_handler ctrl_handler;
+> +       struct v4l2_ctrl *test_pattern;
+> +       struct media_pad pads[NUM_PADS];
+> +       struct clk *cam_clk, *top_mux_clk;
+> +       unsigned int port;
+> +       int format;
+> +       int dpcm;
+> +       int mux_select;
+> +       void __iomem *base_reg;
+> +       void __iomem *rx_reg;
+> +       unsigned char *seninf_hw;
+> +       unsigned char *seninf_ctrl[SENINF_NUM];
+> +       unsigned char *seninf_mux[SENINF_MUX_NUM];
+> +       unsigned char *csi2_rx[CFG_CSI_PORT_MAX_NUM];
+> +       unsigned char *csi_rx_conf[SENINF_NUM];
+> +};
+> +
+> +static int set_top_mux_ctrl(struct _seninf *priv,
+> +                           unsigned int mux_idx, unsigned int seninf_src
+> +)
 > +{
-> +       struct mtk_fd_dev_buffer *dev_buf = NULL;
+> +       int ret = 0;
+> +       void *pseninf = priv->seninf_hw;
 > +
-> +       if (!ctx_buf) {
-> +               pr_err("Failed to convert ctx_buf to dev_buf: Null pointer\n");
-> +               return NULL;
+> +       seninf_write_reg(pseninf, SENINF_TOP_MUX_CTRL,
+> +                        ((seninf_read_reg(pseninf, SENINF_TOP_MUX_CTRL) &
+> +                        (~(0xF << (mux_idx * 4)))) | ((seninf_src & 0xF)
+> +                        << (mux_idx * 4))));
+> +       return ret;
+> +}
+> +
+> +static int __attribute__((unused))
+> +       set_tg_mux_ctrl(struct _seninf *priv,
+> +                       unsigned int target_tg, unsigned int mux_src
+> +)
+> +{
+> +       int ret = 0;
+> +       void *pseninf = priv->seninf_hw;
+> +
+> +       seninf_write_reg(pseninf, SENINF_TOP_CAM_MUX_CTRL,
+> +                        ((seninf_read_reg(pseninf,
+> +                        SENINF_TOP_CAM_MUX_CTRL) &
+> +                        (~(0xF << (target_tg * 4)))) | ((mux_src & 0xF)
+> +                        << (target_tg * 4))));
+> +       return ret;
+> +}
+> +
+> +static int set_virtual_channel(struct _seninf *priv, unsigned int seninf_sel,
+> +                              unsigned int vc0_id, unsigned int vc1_id,
+> +                              unsigned int vc2_id, unsigned int vc3_id,
+> +                              unsigned int vc4_id, unsigned int vc5_id)
+> +{
+> +       int ret = 0;
+> +       void *pseninf =  NULL;
+> +
+> +       return 0; /* todo: support virtual channel */
+> +
+> +       pseninf = priv->seninf_ctrl[seninf_sel];
+> +
+> +       /* General Long Packet Data Types: 0x10-0x17 */
+> +       if ((0x10 <= (vc0_id >> 2) && (vc0_id >> 2) <= 0x17) ||
+> +           (0x10 <= (vc1_id >> 2) && (vc1_id >> 2) <= 0x17) ||
+> +           (0x10 <= (vc2_id >> 2) && (vc2_id >> 2) <= 0x17) ||
+> +           (0x10 <= (vc3_id >> 2) && (vc3_id >> 2) <= 0x17) ||
+> +           (0x10 <= (vc4_id >> 2) && (vc4_id >> 2) <= 0x17) ||
+> +           (0x10 <= (vc5_id >> 2) && (vc5_id >> 2) <= 0x17))
+> +               write_master(pseninf, SENINF1_CSI2_CTL,
+> +                            (1 << 12), 0x00001000);
+> +
+> +       pr_debug("VC Data set :0x%x 0x%x\n", ((vc3_id) << 24) | ((vc2_id) << 16)
+> +                | ((vc1_id) << 8) | (vc0_id), (vc5_id << 8) | (vc4_id));
+> +
+> +       /* 0x1a04_0a3c for VC0~VC3 */
+> +       seninf_write_reg(pseninf, SENINF1_CSI2_DI, ((vc3_id) << 24) |
+> +                        ((vc2_id) << 16) | ((vc1_id) << 8) | (vc0_id));
+> +       /* 0x1a04_0af0 for VC4~VC5 */
+> +       seninf_write_reg(pseninf, SENINF1_CSI2_DI_EXT,
+> +                        (vc5_id << 8) | (vc4_id));
+> +       /* Clear */
+> +       seninf_write_reg(pseninf, SENINF1_CSI2_DI_CTRL, 0x00);
+> +       seninf_write_reg(pseninf, SENINF1_CSI2_DI_CTRL_EXT, 0x00);
+> +       if (vc0_id == 0 && vc1_id == 0 && vc2_id == 0 &&
+> +           vc3_id == 0  && vc4_id == 0 && vc5_id == 0)
+> +               return ret;
+> +
+> +       if ((vc0_id & 0xfc) != 0)
+> +               write_master(pseninf, SENINF1_CSI2_DI_CTRL,
+> +                            ((1 << 0) | (1 << 1)), 0x00000007);
+> +       if ((vc1_id & 0xfc) != 0)
+> +               write_master(pseninf, SENINF1_CSI2_DI_CTRL,
+> +                            ((1 << 8) | (1 << 9)), 0x00000700);
+> +       if ((vc2_id & 0xfc) != 0)
+> +               write_master(pseninf, SENINF1_CSI2_DI_CTRL,
+> +                            ((1 << 16) | (1 << 17)), 0x00070000);
+> +       if ((vc3_id & 0xfc) != 0)
+> +               write_master(pseninf, SENINF1_CSI2_DI_CTRL,
+> +                            ((1 << 24) | (1 << 25)), 0x07000000);
+> +       if ((vc4_id & 0xfc) != 0)
+> +               write_master(pseninf, SENINF1_CSI2_DI_CTRL_EXT,
+> +                            ((1 << 0) | (1 << 1)), 0x00000007);
+> +       if ((vc5_id & 0xfc) != 0)
+> +               write_master(pseninf, SENINF1_CSI2_DI_CTRL_EXT,
+> +                            ((1 << 8) | (1 << 9)), 0x00000700);
+> +
+> +       pr_debug("VC Data(0x%x,0x%x), VC Ctrl(0x%x,0x%x)",
+> +                seninf_read_reg(pseninf, SENINF1_CSI2_DI),
+> +                seninf_read_reg(pseninf, SENINF1_CSI2_DI_EXT),
+> +                seninf_read_reg(pseninf, SENINF1_CSI2_DI_CTRL),
+> +                seninf_read_reg(pseninf, SENINF1_CSI2_DI_CTRL_EXT));
+> +       return ret;
+> +}
+> +
+> +static int set_mux_ctrl(struct _seninf *priv,
+> +                       unsigned int mux, unsigned int hs_pol,
+> +                       unsigned int vs_pol, unsigned int src_type_sel,
+> +                       unsigned int input_data_type, unsigned int pixel_mode
+> +)
+> +{
+> +       int ret = 0;
+> +       void *pseninf = priv->seninf_mux[mux];
+> +
+> +       unsigned int temp = 0;
+> +
+> +       write_master(pseninf, SENINF1_MUX_CTRL,
+> +                    (src_type_sel << 12), 0x0000F000);
+> +       temp = (src_type_sel == TEST_MODEL) ? 0 : 1;
+> +       write_master(pseninf, SENINF1_MUX_CTRL_EXT,
+> +                    (temp << 0), 0x00000003);
+> +       if (pixel_mode == 1) { /*2 Pixel*/
+> +               write_master(pseninf, SENINF1_MUX_CTRL_EXT,
+> +                            (0 << 4), 0x00000010);
+> +               write_master(pseninf, SENINF1_MUX_CTRL,
+> +                            (1 << 8), 0x00000100);
+> +
+> +       } else if (pixel_mode == 2) { /* 4 Pixel*/
+> +               write_master(pseninf, SENINF1_MUX_CTRL_EXT,
+> +                            (1 << 4), 0x00000010);
+> +               write_master(pseninf, SENINF1_MUX_CTRL,
+> +                            (0 << 8), 0x00000100);
+> +       } else { /* 1 pixel*/
+> +               write_master(pseninf, SENINF1_MUX_CTRL_EXT,
+> +                            (0 << 4), 0x00000010);
+> +               write_master(pseninf, SENINF1_MUX_CTRL,
+> +                            (0 << 8), 0x00000100);
 > +       }
 > +
-> +       dev_buf = mtk_fd_ctx_buf_to_dev_buf(ctx_buf);
+> +       if (input_data_type != JPEG_FMT)
+> +               write_master(pseninf, SENINF1_MUX_CTRL,
+> +                            (2 << 28), 0x30000000);
+> +       else
+> +               write_master(pseninf, SENINF1_MUX_CTRL,
+> +                            (0 << 28), 0x30000000);
 > +
-> +       return &dev_buf->m2m2_buf.vbb;
-> +}
-> +
-> +int mtk_fd_ctx_core_queue_setup(struct mtk_fd_ctx *ctx,
-> +                               struct mtk_fd_ctx_queues_setting *
-> +                               queues_setting)
-> +{
-> +       int queue_idx = 0;
-> +       int i = 0;
-> +
-> +       for (i = 0; i < queues_setting->total_output_queues; i++) {
-> +               struct mtk_fd_ctx_queue_desc *queue_desc =
-> +                       &queues_setting->output_queue_descs[i];
-> +               ctx->queue[queue_idx].desc = *queue_desc;
-> +               queue_idx++;
-> +       }
-> +
-> +       /* Setup the capture queue */
-> +       for (i = 0; i < queues_setting->total_capture_queues; i++) {
-> +               struct mtk_fd_ctx_queue_desc *queue_desc =
-> +                       &queues_setting->capture_queue_descs[i];
-> +               ctx->queue[queue_idx].desc = *queue_desc;
-> +               queue_idx++;
-> +       }
-> +
-> +       ctx->queues_attr.master = queues_setting->master;
-> +       ctx->queues_attr.total_num = queue_idx;
-> +       ctx->dev_node_num = ctx->queues_attr.total_num;
-> +       strcpy(ctx->device_name, MTK_FD_DEV_NAME);
-> +       return 0;
-> +}
-> +
-> +/* Mediatek FD context core initialization */
-> +int mtk_fd_ctx_core_init(struct mtk_fd_ctx *ctx,
-> +                        struct platform_device *pdev, int ctx_id,
-> +                        struct mtk_fd_ctx_desc *ctx_desc,
-> +                        struct platform_device *proc_pdev,
-> +                        struct platform_device *smem_pdev)
-> +{
-> +       /* Initialize main data structure */
-> +       int r = 0;
-> +
-> +#if KERNEL_VERSION(4, 8, 0) >= MTK_FD_KERNEL_BASE_VERSION
-> +       ctx->smem_vb2_alloc_ctx =
-> +               vb2_dma_contig_init_ctx(&smem_pdev->dev);
-> +       ctx->img_vb2_alloc_ctx =
-> +               vb2_dma_contig_init_ctx(&pdev->dev);
-> +#else
-> +       ctx->smem_vb2_alloc_ctx = &smem_pdev->dev;
-> +       ctx->img_vb2_alloc_ctx = &pdev->dev;
-> +#endif
-> +       if (IS_ERR((__force void *)ctx->smem_vb2_alloc_ctx))
-> +               pr_err("Failed to alloc vb2 dma context: smem_vb2_alloc_ctx");
-> +
-> +       if (IS_ERR((__force void *)ctx->img_vb2_alloc_ctx))
-> +               pr_err("Failed to alloc vb2 dma context: img_vb2_alloc_ctx");
-> +
-> +       ctx->pdev = pdev;
-> +       ctx->ctx_id = ctx_id;
-> +       /* keep th smem pdev to use related iommu functions */
-> +       ctx->smem_device = smem_pdev;
-> +
-> +       /* Will set default enabled after passing the unit test */
-> +       ctx->mode = MTK_FD_CTX_MODE_DEBUG_OFF;
-> +
-> +       /* initialized the global frame index of the device context */
-> +       atomic_set(&ctx->frame_param_sequence, 0);
-> +       spin_lock_init(&ctx->qlock);
-> +
-> +       /* setup the core operation of the device context */
-> +       if (ctx_desc && ctx_desc->init)
-> +               r = ctx_desc->init(ctx);
-> +
-> +       return r;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_ctx_core_init);
-> +
-> +int mtk_fd_ctx_core_exit(struct mtk_fd_ctx *ctx)
-> +{
-> +#if KERNEL_VERSION(4, 8, 0) >= MTK_FD_KERNEL_BASE_VERSION
-> +       vb2_dma_contig_cleanup_ctx(ctx->smem_vb2_alloc_ctx);
-> +       vb2_dma_contig_cleanup_ctx(ctx->img_vb2_alloc_ctx);
-> +#else
-> +       ctx->smem_vb2_alloc_ctx = NULL;
-> +       ctx->img_vb2_alloc_ctx = NULL;
-> +#endif
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_ctx_core_exit);
-> +
-> +int mtk_fd_ctx_next_global_frame_sequence(struct mtk_fd_ctx *ctx, int locked)
-> +{
-> +       int global_frame_sequence =
-> +               atomic_inc_return(&ctx->frame_param_sequence);
-> +
-> +       if (!locked)
-> +               spin_lock(&ctx->qlock);
-> +
-> +       global_frame_sequence =
-> +               (global_frame_sequence & 0x0000FFFF) | (ctx->ctx_id << 16);
-> +
-> +       if (!locked)
-> +               spin_unlock(&ctx->qlock);
-> +
-> +       return global_frame_sequence;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_ctx_next_global_frame_sequence);
-> +
-> +static void mtk_fd_ctx_buffer_done
-> +       (struct mtk_fd_ctx_buffer *ctx_buf, int state)
-> +{
-> +               if (!ctx_buf || state != MTK_FD_CTX_BUFFER_DONE ||
-> +                   state != MTK_FD_CTX_BUFFER_FAILED)
-> +                       return;
-> +
-> +               ctx_buf->state = state;
-> +}
-> +
-> +struct mtk_fd_ctx_frame_bundle *mtk_fd_ctx_get_processing_frame
-> +(struct mtk_fd_ctx *dev_ctx, int frame_id)
-> +{
-> +       struct mtk_fd_ctx_frame_bundle *frame_bundle = NULL;
-> +
-> +       spin_lock(&dev_ctx->qlock);
-> +
-> +       list_for_each_entry(frame_bundle,
-> +                           &dev_ctx->processing_frames.list, list) {
-> +               if (frame_bundle->id == frame_id) {
-> +                       spin_unlock(&dev_ctx->qlock);
-> +                       return frame_bundle;
-> +               }
-> +       }
-> +
-> +       spin_unlock(&dev_ctx->qlock);
-> +
-> +       return NULL;
-> +}
-> +
-> +/**
-> + * structure mtk_fd_ctx_finish_param must be the first elemt of param
-> + * So that the buffer can be return to vb2 queue successfully
-> + */
-> +int mtk_fd_ctx_core_finish_param_init(void *param, int frame_id, int state)
-> +{
-> +       struct mtk_fd_ctx_finish_param *fram_param =
-> +               (struct mtk_fd_ctx_finish_param *)param;
-> +       fram_param->frame_id = frame_id;
-> +       fram_param->state = state;
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_ctx_core_finish_param_init);
-> +
-> +void mtk_fd_ctx_frame_bundle_add(struct mtk_fd_ctx *ctx,
-> +                                struct mtk_fd_ctx_frame_bundle *bundle,
-> +                                struct mtk_fd_ctx_buffer *ctx_buf)
-> +{
-> +       int queue_id = 0;
-> +       struct mtk_fd_ctx_queue *ctx_queue = NULL;
-> +
-> +       if (!bundle || !ctx_buf) {
-> +               pr_warn("Add buffer to frame bundle failed, bundle(%llx),buf(%llx)\n",
-> +                       (long long)bundle, (long long)ctx_buf);
-> +               return;
-> +       }
-> +
-> +       queue_id = ctx_buf->queue;
-> +
-> +       if (bundle->buffers[queue_id])
-> +               pr_warn("Queue(%d) buffer has alreay in this bundle, overwrite happen\n",
-> +                       queue_id);
-> +
-> +       pr_debug("Add queue(%d) buffer%llx\n",
-> +                queue_id, (unsigned long long)ctx_buf);
-> +                bundle->buffers[queue_id] = ctx_buf;
-> +
-> +       /* Fill context queue related information */
-> +       ctx_queue = &ctx->queue[queue_id];
-> +
-> +       if (!ctx_queue) {
-> +               pr_err("Can't find ctx queue (%d)\n", queue_id);
-> +               return;
-> +       }
-> +
-> +       if (ctx->queue[ctx_buf->queue].desc.image) {
-> +               if (ctx->queue[ctx_buf->queue].desc.capture)
-> +                       bundle->num_img_capture_bufs++;
+> +       if (src_type_sel == CSI2 || src_type_sel >= MIPI_SENSOR) {
+> +               /*Need to use Default for New design*/
+> +               if (input_data_type != JPEG_FMT)
+> +                       write_master(pseninf, SENINF1_MUX_CTRL,
+> +                                    ((0x1B << 22) | (0x1F << 16)),
+> +                                    0x0FFF0000);
 > +               else
-> +                       bundle->num_img_output_bufs++;
-> +       } else {
-> +               if (ctx->queue[ctx_buf->queue].desc.capture)
-> +                       bundle->num_meta_capture_bufs++;
-> +               else
-> +                       bundle->num_meta_output_bufs++;
+> +                       write_master(pseninf, SENINF1_MUX_CTRL,
+> +                                    ((0x18 << 22) | (0x1E << 16)),
+> +                                    0x0FFF0000);
 > +       }
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_ctx_frame_bundle_add);
 > +
-> +void mtk_fd_ctx_buf_init(struct mtk_fd_ctx_buffer *b,
-> +                        unsigned int queue, dma_addr_t daddr)
-> +{
-> +       b->state = MTK_FD_CTX_BUFFER_NEW;
-> +       b->queue = queue;
-> +       b->daddr = daddr;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_ctx_buf_init);
+> +       write_master(pseninf, SENINF1_MUX_CTRL,
+> +                    ((hs_pol << 10) | (vs_pol << 9)), 0x00000600);
 > +
-> +enum mtk_fd_ctx_buffer_state
-> +       mtk_fd_ctx_get_buffer_state(struct mtk_fd_ctx_buffer *b)
-> +{
-> +       return b->state;
+> +       temp = seninf_read_reg(pseninf, SENINF1_MUX_CTRL);
+> +       seninf_write_reg(pseninf, SENINF1_MUX_CTRL, temp | 0x3);
+> +       seninf_write_reg(pseninf, SENINF1_MUX_CTRL, temp & 0xFFFFFFFC);
+> +
+> +       return ret;
 > +}
 > +
-> +bool mtk_fd_ctx_is_streaming(struct mtk_fd_ctx *ctx)
+> +static int enable_mux(struct _seninf *priv, unsigned int mux)
 > +{
-> +       return ctx->streaming;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_ctx_is_streaming);
+> +       void *pseninf = priv->seninf_mux[mux];
 > +
-> +static int mtk_fd_ctx_free_frame(struct mtk_fd_ctx *dev_ctx,
-> +                                struct mtk_fd_ctx_frame_bundle *frame_bundle)
-> +{
-> +       spin_lock(&dev_ctx->qlock);
-> +
-> +       frame_bundle->state = MTK_FD_CTX_FRAME_NEW;
-> +       list_del(&frame_bundle->list);
-> +       list_add_tail(&frame_bundle->list, &dev_ctx->free_frames.list);
-> +
-> +       spin_unlock(&dev_ctx->qlock);
-> +
+> +       write_master(pseninf, SENINF1_MUX_CTRL, (1 << 31), 0x80000000);
 > +       return 0;
 > +}
 > +
-> +int mtk_fd_ctx_core_job_finish(struct mtk_fd_ctx *dev_ctx,
-> +                              struct mtk_fd_ctx_finish_param *param)
-> +{
-> +       int i = 0;
-> +       struct platform_device *pdev = dev_ctx->pdev;
-> +       struct mtk_fd_ctx_finish_param *fram_param =
-> +               (struct mtk_fd_ctx_finish_param *)param;
-> +       struct mtk_fd_dev *fd_dev = NULL;
-> +       struct mtk_fd_ctx_frame_bundle *frame = NULL;
-> +       enum vb2_buffer_state vbf_state = VB2_BUF_STATE_DONE;
-> +       enum mtk_fd_ctx_buffer_state ctxf_state =
-> +               MTK_FD_CTX_BUFFER_DONE;
-> +       int user_sequence = 0;
-> +
-> +       const int ctx_id =
-> +               MTK_FD_GET_CTX_ID_FROM_SEQUENCE(fram_param->frame_id);
-> +       u64 timestamp = 0;
-> +
-> +       pr_debug("mtk_fd_ctx_core_job_finish_cb: param (%llx), platform_device(%llx)\n",
-> +                (unsigned long long)param, (unsigned long long)pdev);
-> +
-> +       if (!dev_ctx)
-> +               pr_err("dev_ctx can't be null, can't release the frame\n");
-> +
-> +       fd_dev = mtk_fd_ctx_to_dev(dev_ctx);
-> +
-> +       if (fram_param) {
-> +               dev_info(&fd_dev->pdev->dev,
-> +                        "CB recvied from ctx(%d), frame(%d), state(%d), fd_dev(%llx)\n",
-> +                        ctx_id, fram_param->frame_id,
-> +                        fram_param->state, (long long)fd_dev);
-> +       } else {
-> +               dev_err(&fd_dev->pdev->dev,
-> +                       "CB recvied from ctx(%d), frame param is NULL\n",
-> +                       ctx_id);
-> +                       return -EINVAL;
-> +       }
-> +
-> +       /* Get the buffers of the processed frame */
-> +       frame = mtk_fd_ctx_get_processing_frame(&fd_dev->ctx,
-> +                                               fram_param->frame_id);
-> +
-> +       if (!frame) {
-> +               pr_err("Can't find the frame boundle, Frame(%d)\n",
-> +                      fram_param->frame_id);
-> +               return -EINVAL;
-> +       }
-> +
-> +       if (fram_param->state == MTK_FD_CTX_FRAME_DATA_ERROR) {
-> +               vbf_state = VB2_BUF_STATE_ERROR;
-> +               ctxf_state = MTK_FD_CTX_BUFFER_FAILED;
-> +       }
-> +
-> +       /**
-> +        * Set the buffer's VB2 status so that
-> +        * the user can dequeue the buffer
-> +        */
-> +       timestamp = ktime_get_ns();
-> +       for (i = 0; i <= frame->last_index; i++) {
-> +               struct mtk_fd_ctx_buffer *ctx_buf = frame->buffers[i];
-> +
-> +               if (!ctx_buf) {
-> +                       dev_dbg(&fd_dev->pdev->dev,
-> +                               "ctx_buf(queue id= %d) of frame(%d)is NULL\n",
-> +                               i, fram_param->frame_id);
-> +                       continue;
-> +               } else {
-> +                       struct vb2_v4l2_buffer *b =
-> +                               mtk_fd_ctx_buffer_get_vb2_v4l2_buffer(ctx_buf);
-> +                       b->vb2_buf.timestamp = ktime_get_ns();
-> +                       user_sequence = ctx_buf->user_sequence;
-> +                       mtk_fd_ctx_buffer_done(ctx_buf, ctxf_state);
-> +                       mtk_fd_v4l2_buffer_done(&b->vb2_buf, vbf_state);
-> +               }
-> +       }
-> +
-> +       mtk_fd_ctx_free_frame(&fd_dev->ctx, frame);
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_ctx_core_job_finish);
-> +
-> +int mtk_fd_ctx_finish_frame(struct mtk_fd_ctx *dev_ctx,
-> +                           struct mtk_fd_ctx_frame_bundle *frame_bundle,
-> +                           int done)
-> +{
-> +       spin_lock(&dev_ctx->qlock);
-> +       frame_bundle->state = MTK_FD_CTX_FRAME_PROCESSING;
-> +       list_add_tail(&frame_bundle->list, &dev_ctx->processing_frames.list);
-> +       spin_unlock(&dev_ctx->qlock);
-> +       return 0;
-> +}
-> +
-> +static void set_img_fmt(struct v4l2_pix_format_mplane *mfmt_to_fill,
-> +                       struct mtk_fd_ctx_format *ctx_fmt)
-> +{
-> +       int i = 0;
-> +
-> +       mfmt_to_fill->pixelformat = ctx_fmt->fmt.img.pixelformat;
-> +       mfmt_to_fill->num_planes = ctx_fmt->fmt.img.num_planes;
-> +
-> +       pr_info("%s: Fmt(%d),w(%d),h(%d)\n",
-> +               __func__,
-> +               mfmt_to_fill->pixelformat,
-> +               mfmt_to_fill->width,
-> +               mfmt_to_fill->height);
-> +
-> +       /**
-> +        * The implementation wil be adjust after integrating MDP module
-> +        * since it provides the common format suppporting function
-> +        */
-> +       for (i = 0 ; i < mfmt_to_fill->num_planes; ++i) {
-> +               int bpl = (mfmt_to_fill->width *
-> +                          ctx_fmt->fmt.img.row_depth[i]) / 8;
-> +               int sizeimage = (mfmt_to_fill->width * mfmt_to_fill->height *
-> +                                ctx_fmt->fmt.img.depth[i]) / 8;
-> +
-> +               mfmt_to_fill->plane_fmt[i].bytesperline = bpl;
-> +               mfmt_to_fill->plane_fmt[i].sizeimage = sizeimage;
-> +               pr_info("plane(%d):bpl(%d),sizeimage(%u)\n",
-> +                       i, bpl, mfmt_to_fill->plane_fmt[i].sizeimage);
-> +       }
-> +}
-> +
-> +static void set_meta_fmt(struct v4l2_meta_format *metafmt_to_fill,
-> +                        struct mtk_fd_ctx_format *ctx_fmt)
-> +{
-> +       metafmt_to_fill->dataformat = ctx_fmt->fmt.meta.dataformat;
-> +
-> +       if (ctx_fmt->fmt.meta.max_buffer_size <= 0 ||
-> +           ctx_fmt->fmt.meta.max_buffer_size >
-> +           MTK_FD_CTX_META_BUF_DEFAULT_SIZE) {
-> +               pr_warn("buf size of meta(%u) can't be 0, use default %u\n",
-> +                       ctx_fmt->fmt.meta.dataformat,
-> +                       MTK_FD_CTX_META_BUF_DEFAULT_SIZE);
-> +               metafmt_to_fill->buffersize = MTK_FD_CTX_META_BUF_DEFAULT_SIZE;
-> +       } else {
-> +               pr_info("Load the meta size setting %u\n",
-> +                       ctx_fmt->fmt.meta.max_buffer_size);
-> +               metafmt_to_fill->buffersize = ctx_fmt->fmt.meta.max_buffer_size;
-> +       }
-> +}
-> +
-> +/* Get the default format setting */
-> +int mtk_fd_ctx_format_load_default_fmt(struct mtk_fd_ctx_queue *queue,
-> +                                      struct v4l2_format *fmt_to_fill)
-> +{
-> +       struct mtk_fd_ctx_format *ctx_fmt = NULL;
-> +
-> +       if (queue->desc.num_fmts == 0)
-> +               return 0; /* no format support list associated to this queue */
-> +
-> +       if (queue->desc.default_fmt_idx >= queue->desc.num_fmts) {
-> +               pr_warn("Queue(%s) err: default idx(%d) must < num_fmts(%d)\n",
-> +                       queue->desc.name, queue->desc.default_fmt_idx,
-> +                       queue->desc.num_fmts);
-> +               queue->desc.default_fmt_idx = 0;
-> +               pr_warn("Queue(%s) : reset default idx(%d)\n",
-> +                       queue->desc.name, queue->desc.default_fmt_idx);
-> +       }
-> +
-> +       ctx_fmt = &queue->desc.fmts[queue->desc.default_fmt_idx];
-> +
-> +       /* Check the type of the buffer */
-> +       if (queue->desc.image) {
-> +               struct v4l2_pix_format_mplane *node_fmt =
-> +                       &fmt_to_fill->fmt.pix_mp;
-> +
-> +               if (queue->desc.capture) {
-> +                       fmt_to_fill->type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
-> +                       node_fmt->width = MTK_FD_OUTPUT_MAX_WIDTH;
-> +                       node_fmt->height = MTK_FD_OUTPUT_MAX_HEIGHT;
-> +               } else {
-> +                       fmt_to_fill->type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
-> +                       node_fmt->width = MTK_FD_INPUT_MAX_WIDTH;
-> +                       node_fmt->height = MTK_FD_INPUT_MAX_HEIGHT;
-> +               }
-> +               set_img_fmt(node_fmt, ctx_fmt);
-> +       }       else {
-> +               /* meta buffer type */
-> +               struct v4l2_meta_format *node_fmt = &fmt_to_fill->fmt.meta;
-> +
-> +               if (queue->desc.capture)
-> +                       fmt_to_fill->type = V4L2_BUF_TYPE_META_CAPTURE;
-> +               else
-> +                       fmt_to_fill->type = V4L2_BUF_TYPE_META_OUTPUT;
-> +
-> +               set_meta_fmt(node_fmt, ctx_fmt);
-> +       }
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_ctx_format_load_default_fmt);
-> +
-> +static struct mtk_fd_ctx_format *mtk_fd_ctx_find_fmt
-> +       (struct mtk_fd_ctx_queue *queue, u32 format)
+> +static struct seninf_csi_info *get_csi_info(struct _seninf *priv,
+> +                                           unsigned int mipi_port)
 > +{
 > +       int i;
-> +       struct mtk_fd_ctx_format *ctx_fmt;
 > +
-> +       for (i = 0; i < queue->desc.num_fmts; i++) {
-> +               ctx_fmt = &queue->desc.fmts[i];
-> +               if (queue->desc.image) {
-> +                       pr_debug("idx(%d), pixelformat(%x), fmt(%x)\n",
-> +                                i, ctx_fmt->fmt.img.pixelformat, format);
-> +                       if (ctx_fmt->fmt.img.pixelformat == format)
-> +                               return ctx_fmt;
-> +               } else {
-> +                       if (ctx_fmt->fmt.meta.dataformat == format)
-> +                               return ctx_fmt;
-> +               }
+> +       for (i = 0; i < CFG_CSI_PORT_MAX_NUM; i++) {
+> +               if (SENINF_CSI_INFO[i].port == mipi_port)
+> +                       return &SENINF_CSI_INFO[i];
 > +       }
+> +
 > +       return NULL;
 > +}
 > +
-> +int mtk_fd_ctx_fmt_set_meta(struct mtk_fd_ctx *dev_ctx, int queue_id,
-> +                           struct v4l2_meta_format *user_fmt,
-> +                           struct v4l2_meta_format *node_fmt)
-> +{
-> +       struct mtk_fd_ctx_queue *queue = NULL;
-> +       struct mtk_fd_ctx_format *ctx_fmt;
-> +
-> +       if (queue_id >= dev_ctx->queues_attr.total_num) {
-> +               pr_err("Invalid queue id:%d\n", queue_id);
-> +               return -EINVAL;
-> +       }
-> +
-> +       queue = &dev_ctx->queue[queue_id];
-> +       if (!user_fmt || !node_fmt)
-> +               return -EINVAL;
-> +
-> +       ctx_fmt = mtk_fd_ctx_find_fmt(queue, user_fmt->dataformat);
-> +       if (!ctx_fmt)
-> +               return -EINVAL;
-> +
-> +       queue->ctx_fmt = ctx_fmt;
-> +       set_meta_fmt(node_fmt, ctx_fmt);
-> +       *user_fmt = *node_fmt;
-> +
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_ctx_fmt_set_meta);
-> +
-> +int mtk_fd_ctx_fmt_set_img(struct mtk_fd_ctx *dev_ctx, int queue_id,
-> +                          struct v4l2_pix_format_mplane *user_fmt,
-> +                          struct v4l2_pix_format_mplane *node_fmt)
-> +{
-> +       struct mtk_fd_ctx_queue *queue = NULL;
-> +       struct mtk_fd_ctx_format *ctx_fmt;
-> +
-> +       if (queue_id >= dev_ctx->queues_attr.total_num) {
-> +               pr_err("Invalid queue id:%d\n", queue_id);
-> +               return -EINVAL;
-> +       }
-> +
-> +       queue = &dev_ctx->queue[queue_id];
-> +       if (!user_fmt || !node_fmt)
-> +               return -EINVAL;
-> +
-> +       ctx_fmt = mtk_fd_ctx_find_fmt(queue, user_fmt->pixelformat);
-> +       if (!ctx_fmt)
-> +               return -EINVAL;
-> +
-> +       queue->ctx_fmt = ctx_fmt;
-> +       node_fmt->width = user_fmt->width;
-> +       node_fmt->height = user_fmt->height;
-> +
-> +       set_img_fmt(node_fmt, ctx_fmt);
-> +
-> +       *user_fmt = *node_fmt;
-> +
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_ctx_fmt_set_img);
-> +
-> +int mtk_fd_ctx_streamon(struct mtk_fd_ctx *dev_ctx)
+> +static int set_csi_mipi(struct _seninf *priv,
+> +                       struct seninf_csi_mipi *pcsi_mipi)
 > +{
 > +       int ret = 0;
+> +       void *pseninf = NULL;
+> +       void *seninf_base = priv->seninf_hw;
+> +       void *pmipi_rx = NULL;
+> +       void *pmipi_rx_base = priv->csi2_rx[CFG_CSI_PORT_0];
+> +       void *pmipi_rx_conf = NULL;
+> +       struct seninf_csi_info *csi_info = pcsi_mipi->csi_info;
+> +       unsigned int cal_sel;
+> +       unsigned int temp = 0;
 > +
-> +       if (dev_ctx->streaming) {
-> +               pr_warn("stream on failed, pdev(%llx), ctx(%d) already stream on\n",
-> +                       (long long)dev_ctx->pdev, dev_ctx->ctx_id);
-> +               return -EBUSY;
-> +       }
+> +       pr_debug("IS_4D1C %d csi_type %d port %d enable %d\n",
+> +                IS_4D1C, pcsi_mipi->csi_type, csi_info->port,
+> +                pcsi_mipi->enable);
 > +
-> +       ret = mtk_fd_streamon(dev_ctx->pdev, dev_ctx->ctx_id);
-> +       if (ret) {
-> +               pr_err("streamon: ctx(%d) failed, notified by context\n",
-> +                      dev_ctx->ctx_id);
-> +               return -EBUSY;
-> +       }
+> +       pmipi_rx = priv->csi2_rx[csi_info->port];
+> +       pseninf = priv->seninf_ctrl[csi_info->seninf];
+> +       pmipi_rx_conf = priv->csi_rx_conf[csi_info->seninf];
 > +
-> +       dev_ctx->streaming = true;
-> +       ret = mtk_fd_dev_queue_buffers(mtk_fd_ctx_to_dev(dev_ctx), true);
-> +       if (ret)
-> +               pr_err("failed to queue initial buffers (%d)", ret);
-> +
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_ctx_streamon);
-> +
-> +int mtk_fd_ctx_streamoff(struct mtk_fd_ctx *dev_ctx)
-> +{
-> +       int ret = 0;
-> +
-> +       if (!dev_ctx->streaming) {
-> +               pr_warn("Do nothing, pdev(%llx), ctx(%d) is already stream off\n",
-> +                       (long long)dev_ctx->pdev, dev_ctx->ctx_id);
-> +               return -EBUSY;
-> +       }
-> +
-> +       ret = mtk_fd_streamoff(dev_ctx->pdev, dev_ctx->ctx_id);
-> +       if (ret) {
-> +               pr_warn("streamoff: ctx(%d) failed, notified by context\n",
-> +                       dev_ctx->ctx_id);
-> +               return -EBUSY;
-> +       }
-> +
-> +       dev_ctx->streaming = false;
-> +
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_ctx_streamoff);
-> +
-> +int mtk_fd_ctx_init_frame_bundles(struct mtk_fd_ctx *dev_ctx)
-> +{
-> +       int i = 0;
-> +
-> +       dev_ctx->num_frame_bundle = VB2_MAX_FRAME;
-> +
-> +       spin_lock(&dev_ctx->qlock);
-> +
-> +       /* Reset the queue*/
-> +       INIT_LIST_HEAD(&dev_ctx->processing_frames.list);
-> +       INIT_LIST_HEAD(&dev_ctx->free_frames.list);
-> +
-> +       for (i = 0; i < dev_ctx->num_frame_bundle; i++) {
-> +               struct mtk_fd_ctx_frame_bundle *frame_bundle =
-> +                       &dev_ctx->frame_bundles[i];
-> +               frame_bundle->state = MTK_FD_CTX_FRAME_NEW;
-> +               list_add_tail(&frame_bundle->list, &dev_ctx->free_frames.list);
-> +       }
-> +
-> +       spin_unlock(&dev_ctx->qlock);
-> +
-> +       return 0;
-> +}
-> +
-> +int mtk_fd_ctx_open(struct mtk_fd_ctx *dev_ctx)
-> +{
-> +       struct mtk_fd_dev *fd_dev = mtk_fd_ctx_to_dev(dev_ctx);
-> +       unsigned int enabled_dma_ports = 0;
-> +       int i = 0;
-> +
-> +       if (!dev_ctx)
-> +               return -EINVAL;
-> +
-> +       /* Get the enabled DMA ports */
-> +       for (i = 0; i < fd_dev->mem2mem2.num_nodes; i++) {
-> +               if (fd_dev->mem2mem2.nodes[i].enabled)
-> +                       enabled_dma_ports |= dev_ctx->queue[i].desc.dma_port;
-> +       }
-> +
-> +       dev_ctx->enabled_dma_ports = enabled_dma_ports;
-> +
-> +       dev_dbg(&fd_dev->pdev->dev, "open device: (%llx)\n",
-> +               (long long)&fd_dev->pdev->dev);
-> +
-> +       /* Workaround for SCP EMI access */
-> +       mtk_fd_smem_enable_mpu(&dev_ctx->smem_device->dev);
-> +
-> +       /* Init the frame bundle pool */
-> +       mtk_fd_ctx_init_frame_bundles(dev_ctx);
-> +
-> +       return mtk_fd_open(dev_ctx->pdev);
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_ctx_open);
-> +
-> +int mtk_fd_ctx_release(struct mtk_fd_ctx *dev_ctx)
-> +{
-> +       return mtk_fd_release(dev_ctx->pdev);
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_ctx_release);
-> +
-> +static int mtk_fd_ctx_core_job_start(struct mtk_fd_ctx *dev_ctx,
-> +                                    struct mtk_fd_ctx_frame_bundle *bundle)
-> +{
-> +       struct platform_device *pdev = dev_ctx->pdev;
-> +       int ret = 0;
-> +       struct v4l2_fd_param fd_param;
-> +       struct mtk_fd_ctx_buffer *ctx_buf_yuv_in = NULL;
-> +       struct mtk_fd_ctx_buffer *ctx_buf_meta_in = NULL;
-> +       struct mtk_fd_ctx_buffer *ctx_buf_meta_out = NULL;
-> +
-> +       if (!pdev || !bundle) {
-> +               dev_err(&pdev->dev,
-> +                       "pdev(%llx) and param(%llx) in start can't be NULL\n",
-> +                       (long long)pdev, (long long)bundle);
-> +               return -EINVAL;
-> +       }
-> +       memset(&fd_param, 0, sizeof(struct v4l2_fd_param));
-> +       fd_param.frame_id = bundle->id;
-> +
-> +       /* Img-in buffer */
-> +       ctx_buf_yuv_in = bundle->buffers[MTK_FD_CTX_FD_YUV_IN];
-> +       if (ctx_buf_yuv_in) {
-> +               fd_param.src_img.iova = (uint32_t)ctx_buf_yuv_in->daddr;
-> +               fd_param.src_img.va = (uint64_t)ctx_buf_yuv_in->vaddr;
-> +               fd_param.src_img_h =
-> +                       (uint16_t)ctx_buf_yuv_in->fmt.pix_mp.height;
-> +               fd_param.src_img_w =
-> +                       (uint16_t)ctx_buf_yuv_in->fmt.pix_mp.width;
-> +       }
-> +
-> +       /* Meta-in buffer */
-> +       ctx_buf_meta_in = bundle->buffers[MTK_FD_CTX_FD_CONFIG_IN];
-> +       if (ctx_buf_meta_in) {
-> +               fd_param.fd_user_param.va = (uint64_t)ctx_buf_meta_in->vaddr;
-> +               fd_param.fd_user_param.pa = (uint32_t)ctx_buf_meta_in->paddr;
-> +               fd_param.fd_user_param.iova = (uint32_t)ctx_buf_meta_in->daddr;
+> +       if (csi_info->port == CFG_CSI_PORT_1) {
+> +               write_master(seninf_base, SENINF_TOP_PHY_SENINF_CTL_CSI1,
+> +                            ((0 << 0) | (2 << 8) |
+> +                            (pcsi_mipi->enable << 31)), 0x80000701);
+> +               cal_sel = 1;
+> +       } else if (csi_info->port == CFG_CSI_PORT_2) {
+> +               write_master(seninf_base, SENINF_TOP_PHY_SENINF_CTL_CSI2,
+> +                            ((0 << 0) | (2 << 8) |
+> +                            (pcsi_mipi->enable << 31)), 0x80000701);
+> +               cal_sel = 2;
+> +       } else if (csi_info->port == CFG_CSI_PORT_0) {
+> +               cal_sel = 0;
+> +               write_master(seninf_base, SENINF_TOP_PHY_SENINF_CTL_CSI0,
+> +                            ((0 << 0) | (2 << 8) |
+> +                            (pcsi_mipi->enable << 31)), 0x80000701);
+> +       } else if (csi_info->port == CFG_CSI_PORT_0A) {
+> +               cal_sel = 0;
+> +               write_master(seninf_base, SENINF_TOP_PHY_SENINF_CTL_CSI0,
+> +                            ((0 << 1) | (1 << 8) | (1 << 12) |
+> +                            (pcsi_mipi->enable << 31)), 0x80003701);
+> +       } else if (csi_info->port == CFG_CSI_PORT_0B) {
+> +               cal_sel = 0;
+> +               write_master(seninf_base, SENINF_TOP_PHY_SENINF_CTL_CSI0,
+> +                            ((0 << 1) | (1 << 8) | (1 << 12) |
+> +                            (pcsi_mipi->enable << 31)), 0x80003701);
 > +       } else {
-> +               dev_err(&pdev->dev, "meta in is null!\n");
-> +               fd_param.fd_user_param.pa = 0;
-> +               fd_param.fd_user_param.va = 0;
-> +               fd_param.fd_user_param.iova = 0;
+> +               pr_err("unsupported CSI configuration\n");
+> +               cal_sel = 0;
+> +               write_master(seninf_base, SENINF_TOP_PHY_SENINF_CTL_CSI0,
+> +                            ((0 << 0) | (2 << 8) |
+> +                            (pcsi_mipi->enable << 31)), 0x80000701);
 > +       }
 > +
-> +       /* Meta-out buffer */
-> +       ctx_buf_meta_out = bundle->buffers[MTK_FD_CTX_FD_OUT];
-> +       if (ctx_buf_meta_out) {
-> +               fd_param.fd_user_result.va = (uint64_t)ctx_buf_meta_out->vaddr;
-> +               fd_param.fd_user_result.pa = (uint32_t)ctx_buf_meta_out->paddr;
-> +               fd_param.fd_user_result.iova =
-> +                                       (uint32_t)ctx_buf_meta_out->daddr;
-> +       } else {
-> +               dev_err(&pdev->dev, "meta out is null!\n");
-> +               fd_param.fd_user_result.pa = 0;
-> +               fd_param.fd_user_result.va = 0;
-> +               fd_param.fd_user_result.iova = 0;
+> +       /*First Enable Sensor interface and select pad (0x1a04_0200)*/
+> +       write_master(pseninf, SENINF1_CTRL,
+> +                    pcsi_mipi->enable << 0, 0x00000001);
+> +       write_master(pseninf, SENINF1_CTRL,
+> +                    pcsi_mipi->pad_sel << 28, 0x70000000);
+> +
+> +       if (pcsi_mipi->csi_type == CSI2_1_5G ||
+> +           pcsi_mipi->csi_type == CSI2_2_5G) {
+> +               write_master(pseninf, SENINF1_CTRL, 0 << 12, 0x0000F000);
+> +               write_master(pseninf, SENINF1_CTRL_EXT,
+> +                            (pcsi_mipi->enable << 6) | (0 << 5), 0x00000060);
+> +       }
+> +       if (!pcsi_mipi->enable) {
+> +               seninf_write_reg(pseninf, SENINF1_CSI2_CTL,
+> +                                seninf_read_reg(pseninf, SENINF1_CSI2_CTL) &
+> +                                0xFFFFFFE0);
+> +               /* disable mipi BG */
+> +               write_master(pmipi_rx, MIPI_RX_ANA00_CSI0A,
+> +                            (0 << 3) | (0 << 2), 0x0000000C);
+> +               write_master(pmipi_rx, MIPI_RX_ANA00_CSI0B,
+> +                            (0 << 3) | (0 << 2), 0x0000000C);
+> +               return ret;
 > +       }
 > +
-> +       dev_info(&pdev->dev,
-> +                "Delegate job to mtk_fd_enqueue: pdev(0x%llx), frame(%d)\n",
-> +                (long long)pdev, bundle->id);
-> +       ret = mtk_fd_enqueue(pdev, &fd_param);
-> +
-> +       if (ret) {
-> +               dev_warn(&pdev->dev, "mtk_fd_enqueue failed: %d\n", ret);
-> +               return -EBUSY;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static void debug_bundle(struct mtk_fd_ctx_frame_bundle *bundle_data)
-> +{
-> +       int i = 0;
-> +
-> +       if (!bundle_data) {
-> +               pr_warn("bundle_data is NULL\n");
-> +               return;
-> +       }
-> +
-> +       pr_debug("bundle buf nums (%d, %d,%d,%d)\n",
-> +                bundle_data->num_img_capture_bufs,
-> +                bundle_data->num_img_output_bufs,
-> +                bundle_data->num_meta_capture_bufs,
-> +                bundle_data->num_meta_output_bufs);
-> +
-> +       for (i = 0; i < 16 ; i++) {
-> +               pr_debug("Bundle, buf[%d] = %llx\n",
-> +                        i,
-> +                        (unsigned long long)bundle_data->buffers[i]);
-> +       }
-> +
-> +       pr_debug("Bundle last idx: %d\n", bundle_data->last_index);
-> +}
-> +
-> +static struct mtk_fd_ctx_frame_bundle *mtk_fd_ctx_get_free_frame
-> +       (struct mtk_fd_ctx *dev_ctx)
-> +{
-> +       struct mtk_fd_ctx_frame_bundle *frame_bundle = NULL;
-> +
-> +       spin_lock(&dev_ctx->qlock);
-> +       list_for_each_entry(frame_bundle,
-> +                           &dev_ctx->free_frames.list, list){
-> +               pr_debug("Check frame: state %d, new should be %d\n",
-> +                        frame_bundle->state, MTK_FD_CTX_FRAME_NEW);
-> +               if (frame_bundle->state == MTK_FD_CTX_FRAME_NEW) {
-> +                       frame_bundle->state = MTK_FD_CTX_FRAME_PREPARED;
-> +                       pr_debug("Found free frame\n");
-> +                       spin_unlock(&dev_ctx->qlock);
-> +                       return frame_bundle;
-> +               }
-> +       }
-> +       spin_unlock(&dev_ctx->qlock);
-> +       pr_err("Can't found any bundle is MTK_FD_CTX_FRAME_NEW\n");
-> +       return NULL;
-> +}
-> +
-> +static int mtk_fd_ctx_process_frame
-> +       (struct mtk_fd_ctx *dev_ctx,
-> +        struct mtk_fd_ctx_frame_bundle *frame_bundle)
-> +{
-> +       spin_lock(&dev_ctx->qlock);
-> +
-> +       frame_bundle->state = MTK_FD_CTX_FRAME_PROCESSING;
-> +       list_del(&frame_bundle->list);
-> +       list_add_tail(&frame_bundle->list, &dev_ctx->processing_frames.list);
-> +
-> +       spin_unlock(&dev_ctx->qlock);
-> +       return 0;
-> +}
-> +
-> +int mtk_fd_ctx_trigger_job(struct mtk_fd_ctx  *dev_ctx,
-> +                          struct mtk_fd_ctx_frame_bundle *bundle_data)
-> +{
-> +       /* Scan all buffers and filled the ipi frame data*/
-> +       int i = 0;
-> +       struct mtk_fd_ctx_finish_param fram_param;
-> +
-> +       struct mtk_fd_ctx_frame_bundle *bundle =
-> +               mtk_fd_ctx_get_free_frame(dev_ctx);
-> +
-> +       pr_debug("Bundle data: , ctx id:%d\n",
-> +                dev_ctx->ctx_id);
-> +
-> +       debug_bundle(bundle_data);
-> +
-> +       if (!bundle) {
-> +               pr_err("bundle can't be NULL\n");
-> +               goto FAILE_JOB_NOT_TRIGGER;
-> +       }
-> +       if (!bundle_data) {
-> +               pr_err("bundle_data can't be NULL\n");
-> +               goto FAILE_JOB_NOT_TRIGGER;
-> +       }
-> +
-> +       pr_debug("Copy bundle_data->buffers to bundle->buffers\n");
-> +       memcpy(bundle->buffers, bundle_data->buffers,
-> +              sizeof(struct mtk_fd_ctx_buffer *) *
-> +              MTK_FD_CTX_FRAME_BUNDLE_BUFFER_MAX);
-> +
-> +       pr_debug("bundle setup (%d, %d,%d,%d)\n",
-> +                bundle_data->num_img_capture_bufs,
-> +                bundle_data->num_img_output_bufs,
-> +                bundle_data->num_meta_capture_bufs,
-> +                bundle_data->num_meta_output_bufs);
-> +
-> +       bundle->num_img_capture_bufs = bundle_data->num_img_capture_bufs;
-> +       bundle->num_img_output_bufs = bundle_data->num_img_output_bufs;
-> +       bundle->num_meta_capture_bufs = bundle_data->num_meta_capture_bufs;
-> +       bundle->num_meta_output_bufs = bundle_data->num_meta_output_bufs;
-> +       bundle->id = mtk_fd_ctx_next_global_frame_sequence(dev_ctx,
-> +                                                          dev_ctx->ctx_id);
-> +       bundle->last_index = dev_ctx->queues_attr.total_num - 1;
-> +
-> +       debug_bundle(bundle);
-> +
-> +       pr_debug("Fill Address data\n");
-> +       for (i = 0; i <= bundle->last_index; i++) {
-> +               struct mtk_fd_ctx_buffer *ctx_buf = bundle->buffers[i];
-> +               struct vb2_v4l2_buffer *b = NULL;
-> +
-> +               pr_debug("Process queue[%d], ctx_buf:(%llx)\n",
-> +                        i, (unsigned long long)ctx_buf);
-> +
-> +               if (!ctx_buf) {
-> +                       pr_warn("queue[%d], ctx_buf is NULL!!\n", i);
-> +                       continue;
-> +               }
-> +
-> +               pr_debug("Get VB2 V4L2 buffer\n");
-> +               b = mtk_fd_ctx_buffer_get_vb2_v4l2_buffer(ctx_buf);
-> +
-> +               ctx_buf->image = dev_ctx->queue[ctx_buf->queue].desc.image;
-> +               ctx_buf->capture = dev_ctx->queue[ctx_buf->queue].desc.capture;
-> +               /* copy the fmt setting for queue's fmt*/
-> +               ctx_buf->fmt = dev_ctx->queue[ctx_buf->queue].fmt;
-> +               ctx_buf->ctx_fmt = dev_ctx->queue[ctx_buf->queue].ctx_fmt;
-> +                       ctx_buf->frame_id = bundle->id;
-> +               ctx_buf->daddr =
-> +                       vb2_dma_contig_plane_dma_addr(&b->vb2_buf, 0);
-> +               pr_debug("%s:vb2_buf: type(%d),idx(%d),mem(%d)\n",
-> +                        __func__,
-> +                        b->vb2_buf.type,
-> +                        b->vb2_buf.index,
-> +                        b->vb2_buf.memory);
-> +               ctx_buf->vaddr = vb2_plane_vaddr(&b->vb2_buf, 0);
-> +               ctx_buf->buffer_usage = dev_ctx->queue[i].buffer_usage;
-> +               ctx_buf->rotation = dev_ctx->queue[i].rotation;
-> +               pr_debug("Buf: queue(%d), vaddr(%llx), daddr(%llx)",
-> +                        ctx_buf->queue, (unsigned long long)ctx_buf->vaddr,
-> +                        (unsigned long long)ctx_buf->daddr);
-> +
-> +               if (!ctx_buf->image) {
-> +                       ctx_buf->paddr =
-> +                               mtk_fd_smem_iova_to_phys
-> +                                       (&dev_ctx->smem_device->dev,
-> +                                        ctx_buf->daddr);
-> +               } else {
-> +                       pr_debug("No pa: it is a image buffer\n");
-> +                       ctx_buf->paddr = 0;
-> +               }
-> +               ctx_buf->state = MTK_FD_CTX_BUFFER_PROCESSING;
-> +       }
-> +
-> +       if (mtk_fd_ctx_process_frame(dev_ctx, bundle)) {
-> +               pr_err("mtk_fd_ctx_process_frame failed: frame(%d)\n",
-> +                      bundle->id);
-> +               goto FAILE_JOB_NOT_TRIGGER;
-> +       }
-> +
-> +       if (dev_ctx->mode == MTK_FD_CTX_MODE_DEBUG_BYPASS_JOB_TRIGGER) {
-> +               memset(&fram_param, 0, sizeof(struct mtk_fd_ctx_finish_param));
-> +               fram_param.frame_id = bundle->id;
-> +               fram_param.state = MTK_FD_CTX_FRAME_DATA_DONE;
-> +               pr_debug("Ctx(%d) in HW bypass mode, will not trigger hw\n",
-> +                        dev_ctx->ctx_id);
-> +
-> +               mtk_fd_ctx_core_job_finish(dev_ctx,     (void *)&fram_param);
-> +               return 0;
-> +       }
-> +
-> +       if (mtk_fd_ctx_core_job_start(dev_ctx, bundle))
-> +               goto FAILE_JOB_NOT_TRIGGER;
-> +       return 0;
-> +
-> +FAILE_JOB_NOT_TRIGGER:
-> +       pr_debug("FAILE_JOB_NOT_TRIGGER: init fram_param: %llx\n",
-> +                (unsigned long long)&fram_param);
-> +       memset(&fram_param, 0, sizeof(struct mtk_fd_ctx_finish_param));
-> +       fram_param.frame_id = bundle->id;
-> +       fram_param.state = MTK_FD_CTX_FRAME_DATA_ERROR;
-> +       pr_debug("Call mtk_fd_ctx_core_job_finish_cb: fram_param: %llx",
-> +                (unsigned long long)&fram_param);
-> +       mtk_fd_ctx_core_job_finish(dev_ctx, (void *)&fram_param);
-> +
-> +       return -EINVAL;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_ctx_trigger_job);
-> diff --git a/drivers/media/platform/mtk-isp/fd/mtk_fd-dev.c b/drivers/media/platform/mtk-isp/fd/mtk_fd-dev.c
-> new file mode 100644
-> index 0000000..7e3acf7
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/fd/mtk_fd-dev.c
-> @@ -0,0 +1,355 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 Mediatek Corporation.
-> + * Copyright (c) 2017 Intel Corporation.
-> + * Copyright (C) 2017 Google, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License version
-> + * 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * MTK_FD-dev is highly based on Intel IPU 3 chrome driver
-> + *
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <media/videobuf2-dma-contig.h>
-> +#include "mtk_fd-dev.h"
-> +
-> +static struct platform_device *mtk_fd_dev_of_find_smem_dev
-> +       (struct platform_device *pdev);
-> +
-> +/* Initliaze a mtk_fd_dev representing a completed HW FD */
-> +/* device */
-> +int mtk_fd_dev_init(struct mtk_fd_dev *fd_dev,
-> +                   struct platform_device *pdev,
-> +                   struct media_device *media_dev,
-> +                   struct v4l2_device *v4l2_dev)
-> +{
-> +       int r = 0;
-> +
-> +       fd_dev->pdev = pdev;
-> +
-> +       mutex_init(&fd_dev->lock);
-> +       atomic_set(&fd_dev->qbuf_barrier, 0);
-> +       init_waitqueue_head(&fd_dev->buf_drain_wq);
-> +
-> +       /* v4l2 sub-device registration */
-> +       r = mtk_fd_dev_mem2mem2_init(fd_dev, media_dev, v4l2_dev);
-> +
-> +       if (r) {
-> +               dev_err(&fd_dev->pdev->dev,
-> +                       "failed to create V4L2 devices (%d)\n", r);
-> +               goto failed_mem2mem2;
-> +       }
-> +
-> +       return 0;
-> +
-> +failed_mem2mem2:
-> +       mutex_destroy(&fd_dev->lock);
-> +       return r;
-> +}
-> +
-> +int mtk_fd_dev_get_total_node(struct mtk_fd_dev *mtk_fd_dev)
-> +{
-> +       return mtk_fd_dev->ctx.queues_attr.total_num;
-> +}
-> +
-> +int mtk_fd_dev_mem2mem2_init(struct mtk_fd_dev *fd_dev,
-> +                            struct media_device *media_dev,
-> +                            struct v4l2_device *v4l2_dev)
-> +{
-> +       int r, i;
-> +       const int queue_master = fd_dev->ctx.queues_attr.master;
-> +
-> +       pr_info("mem2mem2.name: %s\n", fd_dev->ctx.device_name);
-> +       fd_dev->mem2mem2.name = fd_dev->ctx.device_name;
-> +       fd_dev->mem2mem2.model = fd_dev->ctx.device_name;
-> +       fd_dev->mem2mem2.num_nodes =
-> +               mtk_fd_dev_get_total_node(fd_dev);
-> +       fd_dev->mem2mem2.vb2_mem_ops = &vb2_dma_contig_memops;
-> +       fd_dev->mem2mem2.buf_struct_size =
-> +               sizeof(struct mtk_fd_dev_buffer);
-> +
-> +       fd_dev->mem2mem2.nodes = fd_dev->mem2mem2_nodes;
-> +       fd_dev->mem2mem2.dev = &fd_dev->pdev->dev;
-> +
-> +       for (i = 0; i < fd_dev->ctx.dev_node_num; i++) {
-> +               fd_dev->mem2mem2.nodes[i].name =
-> +                       mtk_fd_dev_get_node_name(fd_dev, i);
-> +               fd_dev->mem2mem2.nodes[i].output =
-> +                               (!fd_dev->ctx.queue[i].desc.capture);
-> +               fd_dev->mem2mem2.nodes[i].immutable = false;
-> +               fd_dev->mem2mem2.nodes[i].enabled = false;
-> +               atomic_set(&fd_dev->mem2mem2.nodes[i].sequence, 0);
-> +       }
-> +
-> +       /* Master queue is always enabled */
-> +       fd_dev->mem2mem2.nodes[queue_master].immutable = true;
-> +       fd_dev->mem2mem2.nodes[queue_master].enabled = true;
-> +
-> +       pr_info("register v4l2 for %llx\n",
-> +               (unsigned long long)fd_dev);
-> +       r = mtk_fd_mem2mem2_v4l2_register(fd_dev, media_dev, v4l2_dev);
-> +
-> +       if (r) {
-> +               pr_err("v4l2 init failed, dev(ctx:%d)\n", fd_dev->ctx.ctx_id);
-> +               return r;
-> +       }
-> +
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_dev_mem2mem2_init);
-> +
-> +void mtk_fd_dev_mem2mem2_exit(struct mtk_fd_dev *fd_dev)
-> +{
-> +       mtk_fd_v4l2_unregister(fd_dev);
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_dev_mem2mem2_exit);
-> +
-> +char *mtk_fd_dev_get_node_name
-> +       (struct mtk_fd_dev *fd_dev, int node)
-> +{
-> +       struct mtk_fd_ctx_queue_desc *mapped_queue_desc =
-> +               &fd_dev->ctx.queue[node].desc;
-> +
-> +       return mapped_queue_desc->name;
-> +}
-> +
-> +/* Get a free buffer from a video node */
-> +static struct mtk_fd_ctx_buffer __maybe_unused *mtk_fd_dev_queue_getbuf
-> +       (struct mtk_fd_dev *fd_dev, int node)
-> +{
-> +       struct mtk_fd_dev_buffer *buf;
-> +       int queue = -1;
-> +
-> +       if (node > fd_dev->ctx.dev_node_num || node < 0) {
-> +               dev_err(&fd_dev->pdev->dev, "Invalid mtk_fd_dev node.\n");
-> +               return NULL;
-> +       }
-> +
-> +       /* Get the corrosponding queue id of the video node */
-> +       /* Currently the queue id is the same as the node number */
-> +       queue = node;
-> +
-> +       if (queue < 0) {
-> +               dev_err(&fd_dev->pdev->dev, "Invalid mtk_fd_dev node.\n");
-> +               return NULL;
-> +       }
-> +
-> +       /* Find first free buffer from the node */
-> +       list_for_each_entry(buf, &fd_dev->mem2mem2.nodes[node].buffers,
-> +                           m2m2_buf.list) {
-> +               if (mtk_fd_ctx_get_buffer_state(&buf->ctx_buf)
-> +                       == MTK_FD_CTX_BUFFER_NEW)
-> +                       return &buf->ctx_buf;
-> +       }
-> +
-> +       /* There were no free buffers*/
-> +       return NULL;
-> +}
-> +
-> +int mtk_fd_dev_get_queue_id_of_dev_node(struct mtk_fd_dev *fd_dev,
-> +                                       struct mtk_fd_dev_video_device *node)
-> +{
-> +       return (node - fd_dev->mem2mem2.nodes);
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_dev_get_queue_id_of_dev_node);
-> +
-> +int mtk_fd_dev_queue_buffers(struct mtk_fd_dev *fd_dev,
-> +                            bool initial)
-> +{
-> +       unsigned int node;
-> +       int r = 0;
-> +       struct mtk_fd_dev_buffer *ibuf;
-> +       struct mtk_fd_ctx_frame_bundle bundle;
-> +       const int mtk_fd_dev_node_num = mtk_fd_dev_get_total_node(fd_dev);
-> +       const int queue_master = fd_dev->ctx.queues_attr.master;
-> +
-> +       memset(&bundle, 0, sizeof(struct mtk_fd_ctx_frame_bundle));
-> +
-> +       pr_info("%s, init(%d)\n", __func__, initial);
-> +
-> +       if (!mtk_fd_ctx_is_streaming(&fd_dev->ctx)) {
-> +               pr_info("%s: stream off, no hw enqueue triggered\n", __func__);
-> +               return 0;
-> +       }
-> +
-> +       mutex_lock(&fd_dev->lock);
-> +
-> +       /* Buffer set is queued to background driver (e.g. DIP, FD, and P1) */
-> +       /* only when master input buffer is ready */
-> +       if (!mtk_fd_dev_queue_getbuf(fd_dev, queue_master)) {
-> +               mutex_unlock(&fd_dev->lock);
-> +               return 0;
-> +       }
-> +
-> +       /* Check all node from the node after the master node */
-> +       for (node = (queue_master + 1) % mtk_fd_dev_node_num;
-> +               1; node = (node + 1) % mtk_fd_dev_node_num) {
-> +               pr_info("Check node(%d), queue enabled(%d), node enabled(%d)\n",
-> +                       node, fd_dev->queue_enabled[node],
-> +                       fd_dev->mem2mem2.nodes[node].enabled);
-> +
-> +               /* May skip some node according the scenario in the future */
-> +               if (fd_dev->queue_enabled[node] ||
-> +                   fd_dev->mem2mem2.nodes[node].enabled) {
-> +                       struct mtk_fd_ctx_buffer *buf =
-> +                               mtk_fd_dev_queue_getbuf(fd_dev, node);
-> +                       char *node_name =
-> +                               mtk_fd_dev_get_node_name(fd_dev, node);
-> +
-> +                       if (!buf) {
-> +                               dev_dbg(&fd_dev->pdev->dev,
-> +                                       "No free buffer of enabled node %s\n",
-> +                                       node_name);
-> +                               break;
+> +       if (pcsi_mipi->csi_type != CSI2_2_5G_CPHY) { /* Dphy */
+> +               /* set analog phy mode to DPHY */
+> +               if (IS_CDPHY_COMBO)
+> +                       write_master(pmipi_rx, MIPI_RX_ANA00_CSI0A,
+> +                                    (0 << 0), 0x00000001);
+> +
+> +               if (IS_4D1C) /* 4D1C (MIPIRX_ANALOG_A_BASE) = 0x00001A42 */
+> +                       write_master(pmipi_rx, MIPI_RX_ANA00_CSI0A,
+> +                                    (0 << 5) | (1 << 6) | (0 << 8) |
+> +                                    (1 << 9) | (1 << 11) | (1 << 12),
+> +                                    0x00001B60);
+> +               else /*(MIPIRX_ANALOG_BASE) = 0x102;*/
+> +                       write_master(pmipi_rx, MIPI_RX_ANA00_CSI0A,
+> +                                    (0 << 5) | (0 << 6) | (1 << 8) |
+> +                                    (0 << 9) | (0 << 11) | (0 << 12),
+> +                                    0x00001B60);
+> +
+> +               if (IS_CDPHY_COMBO)
+> +                       write_master(pmipi_rx, MIPI_RX_ANA00_CSI0B,
+> +                                    (0 << 0), 0x00000001);
+> +
+> +               /*only 4d1c need set CSIB (MIPIRX_ANALOG_B_BASE) = 0x00001242*/
+> +               if (IS_4D1C)
+> +                       write_master(pmipi_rx, MIPI_RX_ANA00_CSI0B,
+> +                                    (0 << 5) | (1 << 6) | (0 << 8) |
+> +                                    (1 << 9) | (0 << 11) | (1 << 12),
+> +                                    0x00001B60);
+> +               else /*(MIPIRX_ANALOG_BASE) = 0x102;*/
+> +                       write_master(pmipi_rx, MIPI_RX_ANA00_CSI0B,
+> +                                    (0 << 6) | (1 << 8) | (1 << 9) |
+> +                                    (0 << 11) | (0 << 12),
+> +                                    0x00001B40);
+> +
+> +               /* byte clock invert*/
+> +               write_master(pmipi_rx, MIPI_RX_ANAA8_CSI0A,
+> +                            (1 << 0) | (1 << 1) | (1 << 2), 0x00000007);
+> +               if (IS_4D1C)
+> +                       write_master(pmipi_rx, MIPI_RX_ANAA8_CSI0B,
+> +                                    (1 << 0) | (1 << 1) | (1 << 2),
+> +                                    0x00000007);
+> +
+> +               /*start ANA EQ tuning*/
+> +               if (IS_CDPHY_COMBO) {
+> +                       write_master(pmipi_rx, MIPI_RX_ANA18_CSI0A,
+> +                                    (1 << 4) | (1 << 6), 0x000000F0);
+> +                       write_master(pmipi_rx, MIPI_RX_ANA1C_CSI0A,
+> +                                    (1 << 20) | (1 << 22), 0x00F00000);
+> +                       write_master(pmipi_rx, MIPI_RX_ANA20_CSI0A,
+> +                                    (1 << 20) | (1 << 22), 0x00F00000);
+> +
+> +                       if (IS_4D1C) { /* 4d1c */
+> +                               write_master(pmipi_rx, MIPI_RX_ANA18_CSI0B,
+> +                                            (1 << 4) | (1 << 6), 0x000000F0);
+> +                               write_master(pmipi_rx, MIPI_RX_ANA1C_CSI0B,
+> +                                            (1 << 20) | (1 << 22),
+> +                                            0x00F00000);
+> +                               write_master(pmipi_rx, MIPI_RX_ANA20_CSI0B,
+> +                                            (1 << 20) | (1 << 22),
+> +                                            0x00F00000);
 > +                       }
+> +               } else {
+> +                       void *pdhy_ana_base = pmipi_rx;
 > +
-> +                       /* To show the debug message */
-> +                       ibuf = container_of(buf,
-> +                                           struct mtk_fd_dev_buffer, ctx_buf);
-> +                       dev_dbg(&fd_dev->pdev->dev,
-> +                               "may queue user %s buffer idx(%d) to ctx\n",
-> +                               node_name,
-> +                               ibuf->m2m2_buf.vbb.vb2_buf.index);
-> +                       mtk_fd_ctx_frame_bundle_add(&fd_dev->ctx,
-> +                                                   &bundle, buf);
-> +               }
+> +                       write_master(pdhy_ana_base, MIPI_RX_ANA18_CSI1A,
+> +                                    (1 << 4) | (1 << 6) | (1 << 20) |
+> +                                    (1 << 22), 0x00F000F0);
+> +                       write_master(pdhy_ana_base, MIPI_RX_ANA1C_CSI1A,
+> +                                    (1 << 4) | (1 << 6), 0x000000F0);
 > +
-> +               /* Stop if there is no free buffer in master input node */
-> +               if (node == queue_master) {
-> +                       if (mtk_fd_dev_queue_getbuf(fd_dev, queue_master)) {
-> +                               /* Has collected all buffer required */
-> +                               mtk_fd_ctx_trigger_job(&fd_dev->ctx, &bundle);
-> +                       } else {
-> +                               pr_debug("no new buffer found in master node, not trigger job\n");
-> +                               break;
+> +                       if (IS_4D1C) { /* 4d1c */
+> +                               write_master(pdhy_ana_base,
+> +                                            MIPI_RX_ANA18_CSI1B, (1 << 4) |
+> +                                            (1 << 6) | (1 << 20) |
+> +                                            (1 << 22), 0x00F000F0);
+> +                               write_master(pdhy_ana_base,
+> +                                            MIPI_RX_ANA1C_CSI1B, (1 << 4) |
+> +                                            (1 << 6), 0x000000F0);
 > +                       }
 > +               }
-> +       }
-> +       mutex_unlock(&fd_dev->lock);
+> +               /*end ANA EQ tuning*/
+> +               seninf_write_reg(pmipi_rx_base, MIPI_RX_ANA40_CSI0A, 0x90);
+> +               write_master(pmipi_rx, MIPI_RX_ANA24_CSI0A,
+> +                            (0x40 << 24), 0xFF000000);
+> +               if (IS_4D1C)
+> +                       write_master(pmipi_rx, MIPI_RX_ANA24_CSI0B,
+> +                                    (0x40 << 24), 0xFF000000);
+> +               write_master(pmipi_rx, MIPI_RX_WRAPPER80_CSI0A,
+> +                            (0 << 16), 0x00030000);
+> +               if (IS_4D1C)
+> +                       write_master(pmipi_rx, MIPI_RX_WRAPPER80_CSI0B,
+> +                                    (0 << 16), 0x00030000);
+> +               /*ANA power on*/
+> +               write_master(pmipi_rx, MIPI_RX_ANA00_CSI0A,
+> +                            (1 << 3), 0x00000008);
+> +               if (IS_4D1C)
+> +                       write_master(pmipi_rx, MIPI_RX_ANA00_CSI0B,
+> +                                    (1 << 3), 0x00000008);
+> +               usleep_range(20, 40);
+> +               write_master(pmipi_rx, MIPI_RX_ANA00_CSI0A,
+> +                            (1 << 3), 0x00000008);
+> +               if (IS_4D1C)
+> +                       write_master(pmipi_rx, MIPI_RX_ANA00_CSI0B,
+> +                                    (1 << 2), 0x00000004);
+> +               udelay(1);
+> +#ifdef CSI2_SW_OFFSET_CAL
+> +               pr_debug("CSI offset calibration start");
+> +               if (IS_CDPHY_COMBO) {
+> +                       write_master(pmipi_rx, MIPI_RX_ANA18_CSI0A,
+> +                                    (1 << 0), 0x00000001);
+> +                       write_master(pmipi_rx, MIPI_RX_ANA1C_CSI0A,
+> +                                    (1 << 0), 0x00000001);
+> +                       write_master(pmipi_rx, MIPI_RX_ANA20_CSI0A,
+> +                                    (1 << 0), 0x00000001);
 > +
-> +       if (r && r != -EBUSY)
-> +               goto failed;
+> +                       if (IS_4D1C) {
+> +                               write_master(pmipi_rx, MIPI_RX_ANA18_CSI0B,
+> +                                            (1 << 0), 0x00000001);
+> +                               write_master(pmipi_rx, MIPI_RX_ANA1C_CSI0B,
+> +                                            (1 << 0), 0x00000001);
+> +                               write_master(pmipi_rx, MIPI_RX_ANA20_CSI0B,
+> +                                            (1 << 0), 0x00000001);
+> +                       }
+> +               } else {
+> +                       void *pdhy_ana_base = pmipi_rx;
 > +
-> +       return 0;
-> +
-> +failed:
-> +       /*
-> +        * On error, mark all buffers as failed which are not
-> +        * yet queued to CSS
-> +        */
-> +       dev_err(&fd_dev->pdev->dev,
-> +               "failed to queue buffer to ctx on queue %i (%d)\n",
-> +               node, r);
-> +
-> +       if (initial)
-> +               /* If we were called from streamon(), no need to finish bufs */
-> +               return r;
-> +
-> +       for (node = 0; node < mtk_fd_dev_node_num; node++) {
-> +               struct mtk_fd_dev_buffer *buf, *buf0;
-> +
-> +               if (!fd_dev->queue_enabled[node])
-> +                       continue;       /* Skip disabled queues */
-> +
-> +               mutex_lock(&fd_dev->lock);
-> +               list_for_each_entry_safe
-> +                       (buf, buf0,
-> +                        &fd_dev->mem2mem2.nodes[node].buffers,
-> +                        m2m2_buf.list) {
-> +                       if (mtk_fd_ctx_get_buffer_state(&buf->ctx_buf) ==
-> +                               MTK_FD_CTX_BUFFER_PROCESSING)
-> +                               continue;       /* Was already queued, skip */
-> +
-> +                       mtk_fd_v4l2_buffer_done(&buf->m2m2_buf.vbb.vb2_buf,
-> +                                               VB2_BUF_STATE_ERROR);
+> +                       write_master(pdhy_ana_base, MIPI_RX_ANA18_CSI1A,
+> +                                    (1 << 0) | (1 << 16), 0x00010001);
+> +                       write_master(pdhy_ana_base, MIPI_RX_ANA1C_CSI1A,
+> +                                    (1 << 0), 0x00000001);
+> +                       if (IS_4D1C) {
+> +                               write_master(pdhy_ana_base, MIPI_RX_ANA18_CSI1B,
+> +                                            (1 << 0) | (1 << 16), 0x00010001);
+> +                               write_master(pdhy_ana_base, MIPI_RX_ANA1C_CSI1B,
+> +                                            (1 << 0), 0x00000001);
+> +                       }
 > +               }
-> +               mutex_unlock(&fd_dev->lock);
-> +       }
-> +
-> +       return r;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_dev_queue_buffers);
-> +
-> +int mtk_fd_dev_core_init(struct platform_device *pdev,
-> +                        struct mtk_fd_dev *fd_dev,
-> +                        struct mtk_fd_ctx_desc *ctx_desc)
-> +{
-> +       return mtk_fd_dev_core_init_ext(pdev,
-> +               fd_dev, ctx_desc, NULL, NULL);
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_dev_core_init);
-> +
-> +int mtk_fd_dev_core_init_ext(struct platform_device *pdev,
-> +                            struct mtk_fd_dev *fd_dev,
-> +                            struct mtk_fd_ctx_desc *ctx_desc,
-> +                            struct media_device *media_dev,
-> +                            struct v4l2_device *v4l2_dev)
-> +{
-> +       int r;
-> +       struct platform_device *smem_dev = NULL;
-> +
-> +       smem_dev = mtk_fd_dev_of_find_smem_dev(pdev);
-> +
-> +       if (!smem_dev)
-> +               dev_err(&pdev->dev, "failed to find smem_dev\n");
-> +
-> +       /* Device context must be initialized before device instance */
-> +       r = mtk_fd_ctx_core_init(&fd_dev->ctx, pdev,
-> +                                0, ctx_desc, pdev, smem_dev);
-> +
-> +       dev_info(&pdev->dev, "init fd_dev: %llx\n",
-> +                (unsigned long long)fd_dev);
-> +       /* init other device level members */
-> +       mtk_fd_dev_init(fd_dev, pdev, media_dev, v4l2_dev);
-> +
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_dev_core_init_ext);
-> +
-> +int mtk_fd_dev_core_release(struct platform_device *pdev,
-> +                           struct mtk_fd_dev *fd_dev)
-> +{
-> +       mtk_fd_dev_mem2mem2_exit(fd_dev);
-> +       mtk_fd_ctx_core_exit(&fd_dev->ctx);
-> +       mutex_destroy(&fd_dev->lock);
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_dev_core_release);
-> +
-> +static struct platform_device *mtk_fd_dev_of_find_smem_dev
-> +       (struct platform_device *pdev)
-> +{
-> +       struct device_node *smem_dev_node = NULL;
-> +
-> +       if (!pdev) {
-> +               pr_err("Find_smem_dev failed, pdev can't be NULL\n");
-> +               return NULL;
-> +       }
-> +
-> +       smem_dev_node = of_parse_phandle(pdev->dev.of_node,
-> +                                        "smem_device", 0);
-> +
-> +       if (!smem_dev_node) {
-> +               dev_err(&pdev->dev,
-> +                       "failed to find isp smem device for (%s)\n",
-> +                       pdev->name);
-> +               return NULL;
-> +       }
-> +
-> +       dev_dbg(&pdev->dev, "smem of node found, try to discovery device\n");
-> +       return of_find_device_by_node(smem_dev_node);
-> +}
-> +
-> diff --git a/drivers/media/platform/mtk-isp/fd/mtk_fd-dev.h b/drivers/media/platform/mtk-isp/fd/mtk_fd-dev.h
-> new file mode 100644
-> index 0000000..d2b7d77
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/fd/mtk_fd-dev.h
-> @@ -0,0 +1,198 @@
-> +/* SPDX-License-Identifier: GPL-2.0
-> + * Copyright (c) 2018 Mediatek Corporation.
-> + * Copyright (c) 2017 Intel Corporation.
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License version
-> + * 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * MTK_FD-dev is highly based on Intel IPU 3 chrome driver
-> + *
-> + */
-> +
-> +#ifndef __MTK_FD_DEV_H__
-> +#define __MTK_FD_DEV_H__
-> +
-> +#include <linux/platform_device.h>
-> +#include <linux/version.h>
-> +#include <media/v4l2-device.h>
-> +#include <media/videobuf2-v4l2.h>
-> +#include "mtk_fd-ctx.h"
-> +
-> +/* Added the macro for early stage verification */
-> +/* based on kernel 4.4 environment. */
-> +/* I will remove the version check after getting */
-> +/* the devlopment platform based on 4.14 */
-> +#define MTK_FD_KERNEL_BASE_VERSION KERNEL_VERSION(4, 14, 0)
-> +
-> +#define MTK_FD_DEV_NODE_MAX                    (MTK_FD_CTX_QUEUES)
-> +
-> +#define MTK_FD_INPUT_MIN_WIDTH         0U
-> +#define MTK_FD_INPUT_MIN_HEIGHT                0U
-> +#define MTK_FD_INPUT_MAX_WIDTH         480U
-> +#define MTK_FD_INPUT_MAX_HEIGHT                640U
-> +#define MTK_FD_OUTPUT_MIN_WIDTH                2U
-> +#define MTK_FD_OUTPUT_MIN_HEIGHT               2U
-> +#define MTK_FD_OUTPUT_MAX_WIDTH                480U
-> +#define MTK_FD_OUTPUT_MAX_HEIGHT               640U
-> +
-> +#define file_to_mtk_fd_node(__file) \
-> +       container_of(video_devdata(__file),\
-> +       struct mtk_fd_dev_video_device, vdev)
-> +
-> +#define mtk_fd_ctx_to_dev(__ctx) \
-> +       container_of(__ctx,\
-> +       struct mtk_fd_dev, ctx)
-> +
-> +#define mtk_fd_m2m_to_dev(__m2m) \
-> +       container_of(__m2m,\
-> +       struct mtk_fd_dev, mem2mem2)
-> +
-> +#define mtk_fd_subdev_to_dev(__sd) \
-> +       container_of(__sd, \
-> +       struct mtk_fd_dev, mem2mem2.subdev)
-> +
-> +#define mtk_fd_vbq_to_isp_node(__vq) \
-> +       container_of(__vq, \
-> +       struct mtk_fd_dev_video_device, vbq)
-> +
-> +#define mtk_fd_ctx_buf_to_dev_buf(__ctx_buf) \
-> +       container_of(__ctx_buf, \
-> +       struct mtk_fd_dev_buffer, ctx_buf)
-> +
-> +#define mtk_fd_vb2_buf_to_dev_buf(__vb) \
-> +       container_of(vb, \
-> +       struct mtk_fd_dev_buffer, \
-> +       m2m2_buf.vbb.vb2_buf)
-> +
-> +#define mtk_fd_vb2_buf_to_m2m_buf(__vb) \
-> +       container_of(__vb, \
-> +       struct mtk_fd_mem2mem2_buffer, \
-> +       vbb.vb2_buf)
-> +
-> +#define mtk_fd_subdev_to_m2m(__sd) \
-> +       container_of(__sd, \
-> +       struct mtk_fd_mem2mem2_device, subdev)
-> +
-> +struct mtk_fd_mem2mem2_device;
-> +
-> +struct mtk_fd_mem2mem2_buffer {
-> +       struct vb2_v4l2_buffer vbb;
-> +       struct list_head list;
-> +};
-> +
-> +struct mtk_fd_dev_buffer {
-> +       struct mtk_fd_mem2mem2_buffer m2m2_buf;
-> +       /* Intenal part */
-> +       struct mtk_fd_ctx_buffer ctx_buf;
-> +};
-> +
-> +struct mtk_fd_dev_video_device {
-> +       const char *name;
-> +       int output;
-> +       int immutable;
-> +       int enabled;
-> +       int queued;
-> +       struct v4l2_format vdev_fmt;
-> +       struct video_device vdev;
-> +       struct media_pad vdev_pad;
-> +       struct v4l2_mbus_framefmt pad_fmt;
-> +       struct vb2_queue vbq;
-> +       struct list_head buffers;
-> +       struct mutex lock; /* Protect node data */
-> +       atomic_t sequence;
-> +};
-> +
-> +struct mtk_fd_mem2mem2_device {
-> +       const char *name;
-> +       const char *model;
-> +       struct device *dev;
-> +       int num_nodes;
-> +       struct mtk_fd_dev_video_device *nodes;
-> +       const struct vb2_mem_ops *vb2_mem_ops;
-> +       unsigned int buf_struct_size;
-> +       int streaming;
-> +       struct v4l2_device *v4l2_dev;
-> +       struct media_device *media_dev;
-> +       struct media_pipeline pipeline;
-> +       struct v4l2_subdev subdev;
-> +       struct media_pad *subdev_pads;
-> +       struct v4l2_file_operations v4l2_file_ops;
-> +       const struct file_operations fops;
-> +};
-> +
-> +struct mtk_fd_dev {
-> +       struct platform_device *pdev;
-> +       struct mtk_fd_dev_video_device mem2mem2_nodes[MTK_FD_DEV_NODE_MAX];
-> +       int queue_enabled[MTK_FD_DEV_NODE_MAX];
-> +       struct mtk_fd_mem2mem2_device mem2mem2;
-> +       struct v4l2_device v4l2_dev;
-> +       struct media_device media_dev;
-> +       struct mtk_fd_ctx ctx;
-> +       struct mutex lock; /* queue protection */
-> +       atomic_t qbuf_barrier;
-> +       struct {
-> +               struct v4l2_rect eff;
-> +               struct v4l2_rect bds;
-> +               struct v4l2_rect gdc;
-> +       } rect;
-> +       int suspend_in_stream;
-> +       wait_queue_head_t buf_drain_wq;
-> +};
-> +
-> +int mtk_fd_media_register(struct device *dev,
-> +                         struct media_device *media_dev,
-> +                         const char *model);
-> +
-> +int mtk_fd_v4l2_register(struct device *dev,
-> +                        struct media_device *media_dev,
-> +                        struct v4l2_device *v4l2_dev);
-> +
-> +int mtk_fd_v4l2_unregister(struct mtk_fd_dev *dev);
-> +
-> +int mtk_fd_mem2mem2_v4l2_register(struct mtk_fd_dev *dev,
-> +                                 struct media_device *media_dev,
-> +                                 struct v4l2_device *v4l2_dev);
-> +
-> +void mtk_fd_v4l2_buffer_done(struct vb2_buffer *vb,
-> +                            enum vb2_buffer_state state);
-> +
-> +int mtk_fd_dev_queue_buffers(struct mtk_fd_dev *dev, bool initial);
-> +
-> +int mtk_fd_dev_get_total_node(struct mtk_fd_dev *mtk_fd_dev);
-> +
-> +char *mtk_fd_dev_get_node_name(struct mtk_fd_dev *mtk_fd_dev_obj, int node);
-> +
-> +int mtk_fd_dev_init(struct mtk_fd_dev *fd_dev,
-> +                   struct platform_device *pdev,
-> +                   struct media_device *media_dev,
-> +                   struct v4l2_device *v4l2_dev);
-> +
-> +void mtk_fd_dev_mem2mem2_exit(struct mtk_fd_dev *mtk_fd_dev_obj);
-> +
-> +int mtk_fd_dev_mem2mem2_init(struct mtk_fd_dev *fd_dev,
-> +                            struct media_device *media_dev,
-> +                            struct v4l2_device *v4l2_dev);
-> +
-> +int mtk_fd_dev_get_queue_id_of_dev_node(struct mtk_fd_dev *mtk_fd_dev_obj,
-> +                                       struct mtk_fd_dev_video_device *node);
-> +
-> +int mtk_fd_dev_core_init(struct platform_device *pdev,
-> +                        struct mtk_fd_dev *fd_dev,
-> +                        struct mtk_fd_ctx_desc *ctx_desc);
-> +
-> +int mtk_fd_dev_core_init_ext(struct platform_device *pdev,
-> +                            struct mtk_fd_dev *fd_dev,
-> +                            struct mtk_fd_ctx_desc *ctx_desc,
-> +                            struct media_device *media_dev,
-> +                            struct v4l2_device *v4l2_dev);
-> +
-> +int mtk_fd_dev_core_release(struct platform_device *pdev,
-> +                           struct mtk_fd_dev *fd_dev);
-> +
-> +#endif /* __MTK_FD_DEV_H__ */
-> diff --git a/drivers/media/platform/mtk-isp/fd/mtk_fd-smem-drv.c b/drivers/media/platform/mtk-isp/fd/mtk_fd-smem-drv.c
-> new file mode 100644
-> index 0000000..99a852d
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/fd/mtk_fd-smem-drv.c
-> @@ -0,0 +1,452 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/of.h>
-> +#include <linux/of_fdt.h>
-> +#include <linux/of_reserved_mem.h>
-> +#include <linux/dma-contiguous.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/slab.h>
-> +#include <linux/err.h>
-> +#include <linux/iommu.h>
-> +#include <asm/cacheflush.h>
-> +
-> +#define MTK_FD_SMEM_DEV_NAME "MTK-FD-SMEM"
-> +
-> +struct mtk_fd_smem_drv {
-> +       struct platform_device *pdev;
-> +       struct sg_table sgt;
-> +       struct page **smem_pages;
-> +       int num_smem_pages;
-> +       phys_addr_t smem_base;
-> +       dma_addr_t smem_dma_base;
-> +       int smem_size;
-> +};
-> +
-> +static struct reserved_mem *isp_reserved_smem;
-> +
-> +static int mtk_fd_smem_setup_dma_ops(struct device *smem_dev,
-> +                                    const struct dma_map_ops *smem_ops);
-> +
-> +static int mtk_fd_smem_get_sgtable(struct device *dev,
-> +                                  struct sg_table *sgt,
-> +                                  void *cpu_addr, dma_addr_t dma_addr,
-> +                                  size_t size, unsigned long attrs);
-> +
-> +static const struct dma_map_ops smem_dma_ops = {
-> +       .get_sgtable = mtk_fd_smem_get_sgtable,
-> +};
-> +
-> +static int mtk_fd_smem_init(struct mtk_fd_smem_drv **mtk_fd_smem_drv_out,
-> +                           struct platform_device *pdev)
-> +{
-> +       struct mtk_fd_smem_drv *isp_sys = NULL;
-> +       struct device *dev = &pdev->dev;
-> +
-> +       isp_sys = devm_kzalloc(dev,
-> +                              sizeof(*isp_sys), GFP_KERNEL);
-> +
-> +       isp_sys->pdev = pdev;
-> +
-> +       *mtk_fd_smem_drv_out = isp_sys;
-> +
-> +       return 0;
-> +}
-> +
-> +static int mtk_fd_smem_drv_probe(struct platform_device *pdev)
-> +{
-> +       struct mtk_fd_smem_drv *smem_drv = NULL;
-> +       int r = 0;
-> +       struct device *dev = &pdev->dev;
-> +
-> +       dev_dbg(dev, "probe mtk_fd_smem_drv\n");
-> +
-> +       r = mtk_fd_smem_init(&smem_drv, pdev);
-> +
-> +       if (!smem_drv)
-> +               return -ENOMEM;
-> +
-> +       dev_set_drvdata(dev, smem_drv);
-> +
-> +       if (isp_reserved_smem) {
-> +               dma_addr_t dma_addr;
-> +               phys_addr_t addr;
-> +               struct iommu_domain *smem_dom;
+> +               udelay(1);
+> +               int status = 0;
 > +               int i = 0;
-> +               int size_align = 0;
-> +               struct page **pages = NULL;
-> +               int n_pages = 0;
-> +               struct sg_table *sgt = &smem_drv->sgt;
 > +
-> +               size_align = round_down(isp_reserved_smem->size,
-> +                                       PAGE_SIZE);
-> +               n_pages = size_align >> PAGE_SHIFT;
+> +               while (1) {
+> +                       status = seninf_read_reg(pmipi_rx, MIPI_RX_ANA48_CSI0A);
+> +                       if ((IS_CDPHY_COMBO) && (status & (1 << 0)) &&
+> +                           (status & (1 << 3)) && (status & (1 << 5)))
+> +                               break;
+> +                       else if ((status & (1 << 3)) && (status & (1 << 4)) &&
+> +                                (status & (1 << 5)))
+> +                               break;
 > +
-> +               pages = kmalloc_array(n_pages, sizeof(struct page *),
-> +                                     GFP_KERNEL);
+> +                       pr_debug("CSIA offset calibration ongoing");
+> +                       i++;
+> +                       if (i > 100) {
+> +                               pr_debug("CSIA offset calibration timeout");
+> +                               break;
+> +                       }
+> +                       usleep_range(20, 40);
+> +               }
+> +               if (IS_4D1C) {
+> +                       i = 0;
+> +                       status = 0;
 > +
-> +               if (!pages)
-> +                       return -ENOMEM;
+> +                       while (1) {
+> +                               status = seninf_read_reg(pmipi_rx,
+> +                                                        MIPI_RX_ANA48_CSI0B);
+> +                               if ((IS_CDPHY_COMBO) && (status & (1 << 0)) &&
+> +                                   (status & (1 << 3)) && (status & (1 << 5)))
+> +                                       break;
+> +                               else if ((status & (1 << 3)) && (status &
+> +                                        (1 << 4)) && (status & (1 << 5)))
+> +                                       break;
 > +
-> +               for (i = 0; i < n_pages; i++)
-> +                       pages[i] = phys_to_page(isp_reserved_smem->base
-> +                                               + i * PAGE_SIZE);
+> +                               pr_debug("CSIB offset calibration ongoing");
+> +                               i++;
+> +                               if (i > 100) {
+> +                                       pr_debug("offset calibration timeout");
+> +                                       break;
+> +                               }
+> +                               usleep_range(20, 40);
+> +                       }
+> +               }
+> +               pr_debug("CSI offset calibration end 0x%x, 0x%x",
+> +                        seninf_read_reg(pmipi_rx, MIPI_RX_ANA48_CSI0A),
+> +                        seninf_read_reg(pmipi_rx, MIPI_RX_ANA48_CSI0B));
+> +#endif
+> +               if (IS_4D1C) { /* 4d1c (MIPIRX_CONFIG_CSI_BASE) =0xC9000000; */
+> +                       write_master(pmipi_rx_conf, MIPI_RX_CON24_CSI0,
+> +                                    (1 << 24) | (2 << 26) | (0 << 28) |
+> +                                    (3 << 30), 0xFF000000);
+> +               } else { /* 2d1c (MIPIRX_CONFIG_CSI_BASE) =0xE4000000; */
+> +                       write_master(pmipi_rx_conf, MIPI_RX_CON24_CSI0,
+> +                                    (0 << 24) | (1 << 26) | (2 << 28) |
+> +                                    (3 << 30), 0xFF000000);
+> +               }
+> +               pr_debug("pcsi_mipi->CSI2_IP %d, MIPI_RX_CON24_CSI0 0x%x",
+> +                        csi_info->port,
+> +                        seninf_read_reg(pmipi_rx_conf, MIPI_RX_CON24_CSI0));
+> +               usleep_range(20, 40);
+> +               /*D-PHY SW Delay Line calibration*/
+> +       } else { /*Cphy  setting for CSI0 */
+> +               /* byte clock invert*/
+> +               int status = 0;
+> +               int i = 0;
 > +
-> +               r = sg_alloc_table_from_pages(sgt, pages, n_pages, 0,
-> +                                             size_align, GFP_KERNEL);
+> +               write_master(pmipi_rx, MIPI_RX_ANAA8_CSI0A,
+> +                            (1 << 0) | (1 << 2), 0x00000005);
+> +               write_master(pmipi_rx, MIPI_RX_ANAA8_CSI0B,
+> +                            (1 << 0) | (1 << 2), 0x00000005);
+> +               /*EQ Power to Enhance Speed*/
+> +               write_master(pmipi_rx, MIPI_RX_ANA18_CSI0A,
+> +                            (1 << 6) | (1 << 22), 0x00C000C0);
+> +               write_master(pmipi_rx, MIPI_RX_ANA1C_CSI0A,
+> +                            (1 << 6) | (1 << 22), 0x00C000C0);
+> +               write_master(pmipi_rx, MIPI_RX_ANA20_CSI0A,
+> +                            (1 << 6) | (1 << 22), 0x00C000C0);
+> +               write_master(pmipi_rx, MIPI_RX_ANA18_CSI0B,
+> +                            (1 << 6) | (1 << 22), 0x00C000C0);
+> +               write_master(pmipi_rx, MIPI_RX_ANA1C_CSI0B,
+> +                            (1 << 6) | (1 << 22), 0x00C000C0);
+> +               write_master(pmipi_rx, MIPI_RX_ANA20_CSI0B,
+> +                            (1 << 6) | (1 << 22), 0x00C000C0);
 > +
-> +               if (r) {
-> +                       dev_err(dev, "failed to get alloca sg table\n");
-> +                       return -ENOMEM;
+> +               /*CDR register setting*/
+> +
+> +               *((int *)(priv->csi2_rx[csi_info->port] + 0x30)) = 0x06040404;
+> +               *((int *)(priv->csi2_rx[csi_info->port] + 0x3c)) = 0x06040404;
+> +               *((int *)(priv->csi2_rx[csi_info->port] + 0x34)) = 0x1;
+> +               *((int *)(priv->csi2_rx[csi_info->port] + 0x28)) = 0x1;
+> +
+> +               *((int *)(priv->csi2_rx[csi_info->port] + 0x1030)) =
+> +                       0x06040404;
+> +               *((int *)(priv->csi2_rx[csi_info->port] + 0x103c)) =
+> +                       0x06040404;
+> +               *((int *)(priv->csi2_rx[csi_info->port] + 0x1034)) = 0x1;
+> +               *((int *)(priv->csi2_rx[csi_info->port] + 0x1028)) = 0x1;
+> +
+> +               write_master(pmipi_rx, MIPI_RX_ANA00_CSI0A,
+> +                            (1 << 0) | (0 << 5) | (0 << 6) | (0 << 8) |
+> +                            (0 << 9) | (0 < 11) | (0 < 12), 0x00001B61);
+> +               write_master(pmipi_rx, MIPI_RX_ANA00_CSI0B,
+> +                            (1 << 0) | (0 << 5) | (0 << 6) | (0 << 8) |
+> +                            (0 << 9) | (0 < 11) | (0 < 12), 0x00001B61);
+> +               /*Power on DPHY*/
+> +               write_master(pmipi_rx, MIPI_RX_ANA00_CSI0A,
+> +                            (1 << 3), 0x00000008);
+> +               write_master(pmipi_rx, MIPI_RX_ANA00_CSI0B,
+> +                            (1 << 3), 0x00000008);
+> +               usleep_range(20, 40);
+> +               /*Enable LPF*/
+> +               write_master(pmipi_rx, MIPI_RX_ANA00_CSI0A,
+> +                            (1 << 2), 0x00000004);
+> +               write_master(pmipi_rx, MIPI_RX_ANA00_CSI0B,
+> +                            (1 << 2), 0x00000004);
+> +               udelay(1);
+> +               /*offset calibration*/
+> +               write_master(pmipi_rx, MIPI_RX_ANA18_CSI0A,
+> +                            (1 << 0) | (1 << 16), 0x00010001);
+> +               write_master(pmipi_rx, MIPI_RX_ANA1C_CSI0A,
+> +                            (1 << 0) | (1 << 16), 0x00010001);
+> +               write_master(pmipi_rx, MIPI_RX_ANA20_CSI0A,
+> +                            (1 << 0) | (1 << 16), 0x00010001);
+> +               write_master(pmipi_rx, MIPI_RX_ANA18_CSI0B,
+> +                            (1 << 0) | (1 << 16), 0x00010001);
+> +               write_master(pmipi_rx, MIPI_RX_ANA1C_CSI0B,
+> +                            (1 << 0) | (1 << 16), 0x00010001);
+> +               write_master(pmipi_rx, MIPI_RX_ANA20_CSI0B,
+> +                            (1 << 0) | (1 << 16), 0x00010001);
+> +               udelay(1);
+> +               while (1) {
+> +                       status = seninf_read_reg(pmipi_rx,
+> +                                                MIPI_RX_ANA48_CSI0A);
+> +                       if ((status & 0x3f) == 0x3f)
+> +                               break;
+> +                       i++;
+> +                       if (i > 100) {
+> +                               pr_debug("CSIA offset calibration timeout");
+> +                               break;
+> +                       }
+> +                       usleep_range(20, 40);
 > +               }
 > +
-> +               dma_map_sg_attrs(dev, sgt->sgl, sgt->nents,
-> +                                DMA_BIDIRECTIONAL,
-> +                                DMA_ATTR_SKIP_CPU_SYNC);
-> +
-> +               dma_addr = sg_dma_address(sgt->sgl);
-> +               smem_dom = iommu_get_domain_for_dev(dev);
-> +               addr = iommu_iova_to_phys(smem_dom, dma_addr);
-> +
-> +               if (addr != isp_reserved_smem->base)
-> +                       dev_err(dev,
-> +                               "incorrect pa(%llx) from iommu_iova_to_phys, should be %llx\n",
-> +                       (unsigned long long)addr,
-> +                       (unsigned long long)isp_reserved_smem->base);
-> +
-> +               r = dma_declare_coherent_memory(dev,
-> +                                               isp_reserved_smem->base,
-> +                       dma_addr, size_align, DMA_MEMORY_EXCLUSIVE);
-> +
-> +               dev_dbg(dev,
-> +                       "Coherent mem base(%llx,%llx),size(%lx),ret(%d)\n",
-> +                       isp_reserved_smem->base,
-> +                       dma_addr, size_align, r);
-> +
-> +               smem_drv->smem_base = isp_reserved_smem->base;
-> +               smem_drv->smem_size = size_align;
-> +               smem_drv->smem_pages = pages;
-> +               smem_drv->num_smem_pages = n_pages;
-> +               smem_drv->smem_dma_base = dma_addr;
-> +
-> +               dev_dbg(dev, "smem_drv setting (%llx,%lx,%llx,%d)\n",
-> +                       smem_drv->smem_base, smem_drv->smem_size,
-> +                       (unsigned long long)smem_drv->smem_pages,
-> +                       smem_drv->num_smem_pages);
-> +       }
-> +
-> +       r = mtk_fd_smem_setup_dma_ops(dev, &smem_dma_ops);
-> +
-> +       return r;
-> +}
-> +
-> +phys_addr_t mtk_fd_smem_iova_to_phys(struct device *dev,
-> +                                    dma_addr_t iova)
-> +{
-> +               struct iommu_domain *smem_dom;
-> +               phys_addr_t addr;
-> +               phys_addr_t limit;
-> +               struct mtk_fd_smem_drv *smem_dev =
-> +                       dev_get_drvdata(dev);
-> +
-> +               if (!smem_dev)
-> +                       return 0;
-> +
-> +               smem_dom = iommu_get_domain_for_dev(dev);
-> +
-> +               if (!smem_dom)
-> +                       return 0;
-> +
-> +               addr = iommu_iova_to_phys(smem_dom, iova);
-> +
-> +               limit = smem_dev->smem_base + smem_dev->smem_size;
-> +
-> +               if (addr < smem_dev->smem_base || addr >= limit) {
-> +                       dev_err(dev,
-> +                               "Unexpected paddr %pa (must >= %pa and <%pa)\n",
-> +                               &addr, &smem_dev->smem_base, &limit);
-> +                       return 0;
+> +               i = 0;
+> +               status = 0;
+> +               while (1) {
+> +                       status = seninf_read_reg(pmipi_rx,
+> +                                                MIPI_RX_ANA48_CSI0B);
+> +                       if ((status & 0x3f) == 0x3f)
+> +                               break;
+> +                       i++;
+> +                       if (i > 100) {
+> +                               pr_debug("CSIB offset calibration timeout");
+> +                               break;
+> +                       }
+> +                       usleep_range(20, 40);
 > +               }
-> +               dev_dbg(dev, "Pa verifcation pass: %pa(>=%pa, <%pa)\n",
-> +                       &addr, &smem_dev->smem_base, &limit);
-> +               return addr;
-> +}
+> +       }
+> +       /* End of CSI MIPI */
+> +       /* DPCM Enable */
+> +       seninf_write_reg(pseninf, SENINF1_CSI2_DPCM,
+> +                        1 << ((pcsi_mipi->dpcm == 0x2a)
+> +                        ? 15 : ((pcsi_mipi->dpcm & 0xF) + 7)));
 > +
-> +static int mtk_fd_smem_drv_remove(struct platform_device *pdev)
-> +{
-> +       struct mtk_fd_smem_drv *smem_drv =
-> +               dev_get_drvdata(&pdev->dev);
+> +       pr_debug("CSI2-%d cnt:%d LaneNum:%d CSI2_EN:%d HeadOrder:%d dpcm:%d\n",
+> +                cal_sel, SENINF_SETTLE_DELAY,
+> +                (int)(pcsi_mipi->data_lane_num + 1), (int)pcsi_mipi->enable,
+> +                (int)pcsi_mipi->data_header_order, (int)pcsi_mipi->dpcm);
 > +
-> +       kfree(smem_drv->smem_pages);
-> +       return 0;
-> +}
+> +       /*Settle delay*/
+> +       write_master(pseninf, SENINF1_CSI2_LNRD_TIMING,
+> +                    (SENINF_SETTLE_DELAY << 8), 0x0000FF00);
+> +       /*CSI2 control*/
+> +       if (pcsi_mipi->csi_type != CSI2_2_5G_CPHY) { /*DPhy*/
+> +               seninf_write_reg(pseninf, SENINF1_CSI2_CTL,
+> +                                (seninf_read_reg(pseninf, SENINF1_CSI2_CTL) |
+> +                                (pcsi_mipi->data_header_order << 16) |
+> +                                (pcsi_mipi->enable << 4) |
+> +                                (((1 << (pcsi_mipi->data_lane_num + 1)) - 1)
+> +                                )));
+> +               write_master(pseninf, SENINF1_CSI2_RESYNC_MERGE_CTL,
+> +                            (0 << 10) | (0 << 11) | (3 << 0), 0x00000C07);
+> +               write_master(pseninf, SENINF1_CSI2_MODE,
+> +                            (0 << 0) | (0 << 8), 0x000007FF);
+> +               write_master(pseninf, SENINF1_CSI2_DPHY_SYNC,
+> +                            (0xff00 << 0) | (0x001d << 16), 0xFFFFFFFF);
+> +               seninf_write_reg(pseninf, SENINF1_CSI2_SPARE0,
+> +                                seninf_read_reg(pseninf, SENINF1_CSI2_SPARE0)
+> +                                & 0xFFFFFFFE);
+> +       } else { /*CPhy*/
+> +               write_master(pseninf, SENINF1_CSI2_LNRD_TIMING,
+> +                            (0 << 0), 0x000000FF);
+> +               seninf_write_reg(pseninf, SENINF1_CSI2_CTL,
+> +                                (seninf_read_reg(pseninf, SENINF1_CSI2_CTL) |
+> +                                pcsi_mipi->data_header_order << 16));
+> +               temp = (pcsi_mipi->data_lane_num == SENSOR_MIPI_1_LANE) ? 1 :
+> +                       (pcsi_mipi->data_lane_num == SENSOR_MIPI_2_LANE) ? 2 :
+> +                       (pcsi_mipi->data_lane_num == SENSOR_MIPI_3_LANE) ?
+> +                       4 : 5;
+> +               write_master(pseninf, SENINF1_CSI2_MODE,
+> +                            (temp << 8), 0x00000700);
+> +               temp = pcsi_mipi->data_lane_num >= SENSOR_MIPI_1_LANE;
+> +               write_master(pseninf, SENINF1_CSI2_CTRL_TRIO_CON,
+> +                            (temp << 0), 0x00000001);
+> +               temp = pcsi_mipi->data_lane_num >= SENSOR_MIPI_2_LANE;
+> +               write_master(pseninf, SENINF1_CSI2_CTRL_TRIO_CON,
+> +                            (temp << 2), 0x00000004);
+> +               temp = pcsi_mipi->data_lane_num >= SENSOR_MIPI_3_LANE;
+> +               write_master(pseninf, SENINF1_CSI2_CTRL_TRIO_CON,
+> +                            (temp << 4), 0x00000010);
+> +               temp = pcsi_mipi->data_lane_num >= SENSOR_MIPI_4_LANE;
+> +               write_master(pseninf, SENINF1_CSI2_CTRL_TRIO_CON,
+> +                            (temp << 6), 0x00000040);
+> +               write_master(pseninf, SENINF1_CSI2_MODE,
+> +                            (0x2 << 0), 0x000000FF);
+> +               write_master(pseninf, SENINF1_CSI2_RESYNC_MERGE_CTL,
+> +                            (3 << 0) | (0 << 10) | (1 << 11), 0x00000C07);
+> +               write_master(pseninf, SENINF1_SYNC_RESYNC_CTL,
+> +                            (1 << 0), 0x00000007);
+> +               write_master(pseninf, SENINF1_POST_DETECT_CTL,
+> +                            (1 << 1), 0x00000002);
 > +
-> +static int mtk_fd_smem_drv_suspend(struct device *dev)
-> +{
-> +       return 0;
-> +}
-> +
-> +static int mtk_fd_smem_drv_resume(struct device *dev)
-> +{
-> +       return 0;
-> +}
-> +
-> +static int mtk_fd_smem_drv_dummy_cb(struct device *dev)
-> +{
-> +       return 0;
-> +}
-> +
-> +static const struct dev_pm_ops mtk_fd_smem_drv_pm_ops = {
-> +       SET_RUNTIME_PM_OPS(&mtk_fd_smem_drv_dummy_cb,
-> +                          &mtk_fd_smem_drv_dummy_cb, NULL)
-> +       SET_SYSTEM_SLEEP_PM_OPS
-> +               (&mtk_fd_smem_drv_suspend, &mtk_fd_smem_drv_resume)
-> +};
-> +
-> +static const struct of_device_id mtk_fd_smem_drv_of_match[] = {
-> +       {
-> +               .compatible = "mediatek,fd_smem",
-> +       },
-> +       {},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, mtk_fd_smem_drv_of_match);
-> +
-> +static struct platform_driver mtk_fd_smem_driver = {
-> +       .probe = mtk_fd_smem_drv_probe,
-> +       .remove = mtk_fd_smem_drv_remove,
-> +       .driver = {
-> +               .name = MTK_FD_SMEM_DEV_NAME,
-> +               .of_match_table =
-> +                       of_match_ptr(mtk_fd_smem_drv_of_match),
-> +               .pm = &mtk_fd_smem_drv_pm_ops,
-> +       },
-> +};
-> +
-> +static int __init mtk_fd_smem_dma_setup(struct reserved_mem
-> +                                       *rmem)
-> +{
-> +       unsigned long node = rmem->fdt_node;
-> +
-> +       if (of_get_flat_dt_prop(node, "reusable", NULL))
-> +               return -EINVAL;
-> +
-> +       if (!of_get_flat_dt_prop(node, "no-map", NULL)) {
-> +               pr_err("Reserved memory: regions without no-map are not yet supported\n");
-> +               return -EINVAL;
+> +               seninf_write_reg(pseninf, SENINF1_CSI2_SPARE0,
+> +                                seninf_read_reg(pseninf, SENINF1_CSI2_SPARE0)
+> +                                | 0x1);
 > +       }
 > +
-> +       isp_reserved_smem = rmem;
+> +       write_master(pseninf, SENINF1_CSI2_CTL, (0 << 27) | (0 << 7) |
+> +                    (1 << 25), 0x0A000080);
+> +       write_master(pseninf, SENINF1_CSI2_HS_TRAIL,
+> +                    (SENINF_HS_TRAIL_PARAMETER << 0), 0x000000FF);
 > +
-> +       pr_debug("Reserved memory: created DMA memory pool at %pa, size %ld MiB\n",
-> +                &rmem->base, (unsigned long)rmem->size / SZ_1M);
-> +       return 0;
-> +}
+> +       /* set debug port to output packet number */
+> +       seninf_write_reg(pseninf, SENINF1_CSI2_DGB_SEL, 0x8000001A);
+> +       /*Enable CSI2 IRQ mask*/
+> +       /* turn on all interrupt */
+> +       seninf_write_reg(pseninf, SENINF1_CSI2_INT_EN, 0xFFFFFFFF);
+> +       /*write clear CSI2 IRQ*/
+> +       seninf_write_reg(pseninf, SENINF1_CSI2_INT_STATUS, 0xFFFFFFFF);
+> +       /*Enable CSI2 Extend IRQ mask*/
+> +       /* turn on all interrupt */
+> +       seninf_write_reg(pseninf, SENINF1_CSI2_INT_EN_EXT, 0x0000001f);
 > +
-> +RESERVEDMEM_OF_DECLARE(mtk_fd_smem,
-> +                      "mediatek,reserve-memory-fd_smem",
-> +                      mtk_fd_smem_dma_setup);
-> +
-> +int __init mtk_fd_smem_drv_init(void)
-> +{
-> +       int ret = 0;
-> +
-> +       pr_debug("platform_driver_register: mtk_fd_smem_driver\n");
-> +       ret = platform_driver_register(&mtk_fd_smem_driver);
-> +
-> +       if (ret)
-> +               pr_warn("fd smem drv init failed, driver didn't probe\n");
-> +
-> +       return ret;
-> +}
-> +subsys_initcall(mtk_fd_smem_drv_init);
-> +
-> +void __exit mtk_fd_smem_drv_ext(void)
-> +{
-> +       platform_driver_unregister(&mtk_fd_smem_driver);
-> +}
-> +module_exit(mtk_fd_smem_drv_ext);
-> +
-> +/********************************************
-> + * MTK FD SMEM DMA ops *
-> + ********************************************/
-> +
-> +struct dma_coherent_mem {
-> +       void            *virt_base;
-> +       dma_addr_t      device_base;
-> +       unsigned long   pfn_base;
-> +       int             size;
-> +       int             flags;
-> +       unsigned long   *bitmap;
-> +       spinlock_t      spinlock; /* protect the members in dma_coherent_mem */
-> +       bool            use_dev_dma_pfn_offset;
-> +};
-> +
-> +static struct dma_coherent_mem *dev_get_coherent_memory(struct device *dev)
-> +{
-> +       if (dev && dev->dma_mem)
-> +               return dev->dma_mem;
-> +       return NULL;
-> +}
-> +
-> +static int mtk_fd_smem_get_sgtable(struct device *dev,
-> +                                  struct sg_table *sgt,
-> +       void *cpu_addr, dma_addr_t dma_addr,
-> +       size_t size, unsigned long attrs)
-> +{
-> +       struct mtk_fd_smem_drv *smem_dev = dev_get_drvdata(dev);
-> +       int n_pages_align = 0;
-> +       int size_align = 0;
-> +       int page_start = 0;
-> +       unsigned long long offset_p = 0;
-> +       unsigned long long offset_d = 0;
-> +
-> +       phys_addr_t paddr = mtk_fd_smem_iova_to_phys(dev, dma_addr);
-> +
-> +       offset_d = (unsigned long long)dma_addr -
-> +               (unsigned long long)smem_dev->smem_dma_base;
-> +
-> +       offset_p = (unsigned long long)paddr -
-> +               (unsigned long long)smem_dev->smem_base;
-> +
-> +       dev_dbg(dev, "%s:dma_addr:%llx,cpu_addr:%llx,pa:%llx,size:%d\n",
-> +               __func__,
-> +               (unsigned long long)dma_addr,
-> +               (unsigned long long)cpu_addr,
-> +               (unsigned long long)paddr,
-> +               size
-> +               );
-> +
-> +       dev_dbg(dev, "%s:offset p:%llx,offset d:%llx\n",
-> +               __func__,
-> +               (unsigned long long)offset_p,
-> +               (unsigned long long)offset_d
-> +               );
-> +
-> +       size_align = round_up(size, PAGE_SIZE);
-> +       n_pages_align = size_align >> PAGE_SHIFT;
-> +       page_start = offset_p >> PAGE_SHIFT;
-> +
-> +       dev_dbg(dev,
-> +               "%s:page idx:%d,page pa:%llx,pa:%llx, aligned size:%d\n",
-> +               __func__,
-> +               page_start,
-> +               (unsigned long long)page_to_phys(*(smem_dev->smem_pages
-> +                       + page_start)),
-> +               (unsigned long long)paddr,
-> +               size_align
-> +               );
-> +
-> +       if (!smem_dev) {
-> +               dev_err(dev, "can't get sgtable from smem_dev\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       dev_dbg(dev, "get sgt of the smem: %d pages\n", n_pages_align);
-> +
-> +       return sg_alloc_table_from_pages(sgt,
-> +               smem_dev->smem_pages + page_start,
-> +               n_pages_align,
-> +               0, size_align, GFP_KERNEL);
-> +}
-> +
-> +static void *mtk_fd_smem_get_cpu_addr(struct mtk_fd_smem_drv *smem_dev,
-> +                                     struct scatterlist *sg)
-> +{
-> +       struct device *dev = &smem_dev->pdev->dev;
-> +       struct dma_coherent_mem *dma_mem =
-> +               dev_get_coherent_memory(dev);
-> +
-> +       phys_addr_t addr = (phys_addr_t)sg_phys(sg);
-> +
-> +       if (addr < smem_dev->smem_base ||
-> +           addr > smem_dev->smem_base + smem_dev->smem_size) {
-> +               dev_err(dev, "Invalid paddr 0x%llx from sg\n", addr);
-> +               return NULL;
-> +       }
-> +
-> +       return dma_mem->virt_base + (addr - smem_dev->smem_base);
-> +}
-> +
-> +static void mtk_fd_smem_sync_sg_for_cpu(struct device *dev,
-> +                                       struct scatterlist *sgl, int nelems,
-> +                                       enum dma_data_direction dir)
-> +{
-> +       struct mtk_fd_smem_drv *smem_dev =
-> +               dev_get_drvdata(dev);
-> +       void *cpu_addr;
-> +
-> +       cpu_addr = mtk_fd_smem_get_cpu_addr(smem_dev, sgl);
-> +
-> +       dev_dbg(dev,
-> +               "__dma_unmap_area:paddr(0x%llx),vaddr(0x%llx),size(%d)\n",
-> +               (unsigned long long)sg_phys(sgl),
-> +               (unsigned long long)cpu_addr,
-> +               sgl->length);
-> +
-> +       __dma_unmap_area(cpu_addr, sgl->length, dir);
-> +}
-> +
-> +static void mtk_fd_smem_sync_sg_for_device(struct device *dev,
-> +                                          struct scatterlist *sgl, int nelems,
-> +                                          enum dma_data_direction dir)
-> +{
-> +       struct mtk_fd_smem_drv *smem_dev =
-> +                       dev_get_drvdata(dev);
-> +       void *cpu_addr;
-> +
-> +       cpu_addr = mtk_fd_smem_get_cpu_addr(smem_dev, sgl);
-> +
-> +       dev_dbg(dev,
-> +               "__dma_map_area:paddr(0x%llx),vaddr(0x%llx),size(%d)\n",
-> +               (unsigned long long)sg_phys(sgl),
-> +               (unsigned long long)cpu_addr,
-> +               sgl->length);
-> +
-> +       __dma_map_area(cpu_addr, sgl->length, dir);
-> +}
-> +
-> +static int mtk_fd_smem_setup_dma_ops(struct device *dev,
-> +                                    const struct dma_map_ops *smem_ops)
-> +{
-> +       if (!dev->dma_ops)
-> +               return -EINVAL;
-> +
-> +       memcpy((void *)smem_ops, dev->dma_ops, sizeof(*smem_ops));
-> +
-> +       ((struct dma_map_ops *)smem_ops)->get_sgtable =
-> +               mtk_fd_smem_get_sgtable;
-> +       ((struct dma_map_ops *)smem_ops)->sync_sg_for_device =
-> +               mtk_fd_smem_sync_sg_for_device;
-> +       ((struct dma_map_ops *)smem_ops)->sync_sg_for_cpu =
-> +               mtk_fd_smem_sync_sg_for_cpu;
-> +
-> +       dev->dma_ops = smem_ops;
-> +
-> +       return 0;
-> +}
-> +
-> +void mtk_fd_smem_enable_mpu(struct device *dev)
-> +{
-> +       dev_warn(dev, "MPU enabling func is not ready now\n");
-> +}
-> +
-> +MODULE_AUTHOR("Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("Mediatek FD shared memory driver");
-> diff --git a/drivers/media/platform/mtk-isp/fd/mtk_fd-smem.h b/drivers/media/platform/mtk-isp/fd/mtk_fd-smem.h
-> new file mode 100644
-> index 0000000..a19fc37
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/fd/mtk_fd-smem.h
-> @@ -0,0 +1,25 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#ifndef __MTK_FD_SMEM_H__
-> +#define __MTK_FD_SMEM_H__
-> +
-> +#include <linux/dma-mapping.h>
-> +
-> +phys_addr_t mtk_fd_smem_iova_to_phys(struct device *smem_dev,
-> +                                    dma_addr_t iova);
-> +void mtk_fd_smem_enable_mpu(struct device *smem_dev);
-> +
-> +#endif /*__MTK_FD_SMEM_H__*/
-> diff --git a/drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2-util.c b/drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2-util.c
-> new file mode 100644
-> index 0000000..ab85aea
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2-util.c
-> @@ -0,0 +1,1046 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 Mediatek Corporation.
-> + * Copyright (c) 2017 Intel Corporation.
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License version
-> + * 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * MTK_FD-v4l2 is highly based on Intel IPU 3 chrome driver
-> + *
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/videodev2.h>
-> +#include <media/v4l2-ioctl.h>
-> +#include <media/videobuf2-dma-contig.h>
-> +#include <media/v4l2-subdev.h>
-> +#include <media/v4l2-event.h>
-> +#include <linux/device.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "mtk_fd-dev.h"
-> +
-> +static u32 mtk_fd_node_get_v4l2_cap
-> +       (struct mtk_fd_ctx_queue *node_ctx);
-> +
-> +static int mtk_fd_videoc_s_meta_fmt(struct file *file, void *fh,
-> +                                   struct v4l2_format *f);
-> +
-> +static int mtk_fd_subdev_open(struct v4l2_subdev *sd,
-> +                             struct v4l2_subdev_fh *fh)
-> +{
-> +       struct mtk_fd_dev *fd_dev = mtk_fd_subdev_to_dev(sd);
-> +
-> +       fd_dev->ctx.fh = fh;
-> +
-> +       return mtk_fd_ctx_open(&fd_dev->ctx);
-> +}
-> +
-> +static int mtk_fd_subdev_close(struct v4l2_subdev *sd,
-> +                              struct v4l2_subdev_fh *fh)
-> +{
-> +       struct mtk_fd_dev *fd_dev = mtk_fd_subdev_to_dev(sd);
-> +
-> +       return mtk_fd_ctx_release(&fd_dev->ctx);
-> +}
-> +
-> +static int mtk_fd_subdev_s_stream(struct v4l2_subdev *sd, int enable)
-> +{
-> +       int ret = 0;
-> +
-> +       struct mtk_fd_dev *fd_dev = mtk_fd_subdev_to_dev(sd);
-> +
-> +       if (enable) {
-> +               ret = mtk_fd_ctx_streamon(&fd_dev->ctx);
-> +
-> +               if (!ret)
-> +                       ret = mtk_fd_dev_queue_buffers
-> +                               (mtk_fd_ctx_to_dev(&fd_dev->ctx), true);
-> +               if (ret)
-> +                       pr_err("failed to queue initial buffers (%d)", ret);
-> +       }       else {
-> +               ret = mtk_fd_ctx_streamoff(&fd_dev->ctx);
-> +       }
-> +
-> +       if (!ret)
-> +               fd_dev->mem2mem2.streaming = enable;
+> +       write_master(pseninf, SENINF1_CTRL, (1 << 7), 0x00000080);
+> +       udelay(1);
+> +       write_master(pseninf, SENINF1_CTRL, (0 << 7), 0x00000080);
 > +
 > +       return ret;
 > +}
 > +
-> +static int mtk_fd_link_setup(struct media_entity *entity,
+> +static int power_off(struct _seninf *priv, void *pcsi)
+> +{
+> +       int ret = 0;
+> +       struct seninf_csi_mipi *pcsi_mipi = (struct seninf_csi_mipi *)pcsi;
+> +       struct seninf_csi_info *csi_info = pcsi_mipi->csi_info;
+> +       void *pmipi_rx = priv->csi2_rx[csi_info->port];
+> +       void *pseninf = priv->seninf_ctrl[csi_info->seninf];
+> +
+> +       /* disable CSI2(2.5G) first*/
+> +       seninf_write_reg(pseninf, SENINF1_CSI2_CTL,
+> +                        seninf_read_reg(pseninf, SENINF1_CSI2_CTL)
+> +                        & 0xFFFFFFE0);
+> +       /* disable mipi BG */
+> +       switch (csi_info->port) {
+> +       case CFG_CSI_PORT_0A:
+> +               write_master(pmipi_rx, MIPI_RX_ANA00_CSI0A,
+> +                            (0 << 3) | (0 << 2), 0x0000000C);
+> +               break;
+> +       case CFG_CSI_PORT_0B:
+> +               write_master(pmipi_rx, MIPI_RX_ANA00_CSI0B,
+> +                            (0 << 3) | (0 << 2), 0x0000000C);
+> +               break;
+> +       default:
+> +               write_master(pmipi_rx, MIPI_RX_ANA00_CSI0A,
+> +                            (0 << 3) | (0 << 2), 0x0000000C);
+> +               write_master(pmipi_rx, MIPI_RX_ANA00_CSI0B,
+> +                            (0 << 3) | (0 << 2), 0x0000000C);
+> +               break;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static int map_fmt(struct _seninf *priv)
+> +{
+> +       int fmtidx = 0;
+> +
+> +       switch (priv->format) {
+> +       case MEDIA_BUS_FMT_SBGGR8_1X8:
+> +       case MEDIA_BUS_FMT_SGBRG8_1X8:
+> +       case MEDIA_BUS_FMT_SGRBG8_1X8:
+> +       case MEDIA_BUS_FMT_SRGGB8_1X8:
+> +               fmtidx = 0;
+> +               priv->dpcm = 0;
+> +               break;
+> +       case MEDIA_BUS_FMT_SGRBG10_1X10:
+> +       case MEDIA_BUS_FMT_SRGGB10_1X10:
+> +       case MEDIA_BUS_FMT_SBGGR10_1X10:
+> +       case MEDIA_BUS_FMT_SGBRG10_1X10:
+> +               fmtidx = 1;
+> +               priv->dpcm = 0;
+> +               break;
+> +       case MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8:
+> +       case MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8:
+> +       case MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8:
+> +       case MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8:
+> +               fmtidx = 1;
+> +               priv->dpcm = 1;
+> +               break;
+> +       case MEDIA_BUS_FMT_SBGGR12_1X12:
+> +       case MEDIA_BUS_FMT_SGBRG12_1X12:
+> +       case MEDIA_BUS_FMT_SGRBG12_1X12:
+> +       case MEDIA_BUS_FMT_SRGGB12_1X12:
+> +               fmtidx = 2;
+> +               priv->dpcm = 0;
+> +               break;
+> +       case MEDIA_BUS_FMT_UYVY8_1X16:
+> +       case MEDIA_BUS_FMT_VYUY8_1X16:
+> +       case MEDIA_BUS_FMT_YUYV8_1X16:
+> +       case MEDIA_BUS_FMT_YVYU8_1X16:
+> +               fmtidx = 3;
+> +               priv->dpcm = 0;
+> +               break;
+> +       default:
+> +               WARN(1, "CSI2: pixel format %08x unsupported!\n",
+> +                    priv->format);
+> +       }
+> +       return fmtidx;
+> +}
+> +
+> +static int seninf_set_fmt(struct v4l2_subdev *sd,
+> +                         struct v4l2_subdev_pad_config *cfg,
+> +                         struct v4l2_subdev_format *fmt)
+> +{
+> +       struct _seninf *priv = container_of(sd, struct _seninf, subdev);
+> +
+> +       priv->format = fmt->format.code;
+> +       pr_debug("priv->format 0x%x", priv->format);
+> +       return 0;
+> +}
+> +
+> +static int seninf_s_stream(struct v4l2_subdev *sd, int on)
+> +{
+> +       struct _seninf *priv = container_of(sd, struct _seninf, subdev);
+> +       int ret = 0;
+> +       struct seninf_csi_mipi csi_mipi;
+> +       unsigned int input_data_type = RAW_10BIT_FMT;
+> +       struct sensor_vc_info_struct vc_info;
+> +       unsigned int mux_select = 0;
+> +       unsigned int pixel_mode = ONE_PIXEL_MODE;
+> +       struct seninf_csi_info *csi_info;
+> +       unsigned int port;
+> +       unsigned int seninf_src;
+> +
+> +       unsigned char sensor_hsync_polarity = SENSOR_CLOCK_POLARITY_LOW;
+> +       unsigned char sensor_vsync_polarity = SENSOR_CLOCK_POLARITY_LOW;
+> +       unsigned char sensor_packet_ecc_order = 1;
+> +       unsigned char sensor_mipi_lane_num =
+> +               priv->ep[priv->port].bus.mipi_csi2.num_data_lanes;
+> +       unsigned int mipi_sensor_type = MIPI_OPHY_NCSI2;
+> +       void *pseninf = priv->seninf_hw;
+> +
+> +       priv->mux_select = mux_select; /* seninfMUXArbitration */
+> +       port = priv->port;
+> +       csi_info = get_csi_info(priv, port);
+> +       seninf_src = csi_info->seninf;
+> +
+> +       pr_debug("seninf csi_info->seninf(%d) port(%d)\n",
+> +                csi_info->seninf, csi_info->port);
+> +
+> +       /*configureMipi*/
+> +       csi_mipi.enable = 1;
+> +       csi_mipi.data_header_order = sensor_packet_ecc_order;
+> +       csi_mipi.data_lane_num = sensor_mipi_lane_num - 1;
+> +       csi_mipi.csi_type = (mipi_sensor_type == MIPI_CPHY)
+> +               ? CSI2_2_5G_CPHY : CSI2_2_5G;
+> +       csi_mipi.csi_info = csi_info;
+> +
+> +       csi_mipi.pad_sel = PAD_10BIT;
+> +       csi_mipi.dpcm = 0;
+> +       input_data_type = (unsigned int)map_fmt(priv);
+> +       csi_mipi.dpcm = priv->dpcm;
+> +
+> +       if (on) {
+> +               /* Configure timestamp */
+> +               write_master(pseninf, SENINF1_CTRL, (1 << 0), 0x00000001);
+> +               write_master(pseninf, SENINF1_CTRL_EXT, (1 << 6), 0x00000040);
+> +               seninf_write_reg(pseninf, SENINF_TG1_TM_STP,
+> +                                SENINF_TIMESTAMP_STEP);
+> +               memcpy((void *)&vc_info, (void *)&SENSOR_VC_INFO[0],
+> +                      sizeof(struct sensor_vc_info_struct));
+> +
+> +               ret = set_virtual_channel(priv, csi_info->seninf,
+> +                                         (vc_info.vc0_data_type << 2) |
+> +                                         (vc_info.VC0_ID & 0x03),
+> +                                         (vc_info.vc1_data_type << 2) |
+> +                                         (vc_info.VC1_ID & 0x03),
+> +                                         (vc_info.vc2_data_type << 2) |
+> +                                         (vc_info.VC2_ID & 0x03),
+> +                                         (vc_info.vc3_data_type << 2) |
+> +                                         (vc_info.VC3_ID & 0x03),
+> +                                         (vc_info.vc4_data_type << 2) |
+> +                                         (vc_info.VC4_ID & 0x03),
+> +                                         (vc_info.vc5_data_type << 2) |
+> +                                         (vc_info.VC5_ID & 0x03));
+> +
+> +               set_csi_mipi(priv, (struct seninf_csi_mipi *)&csi_mipi);
+> +
+> +               enable_mux(priv, mux_select);
+> +               set_mux_ctrl(priv, mux_select, sensor_hsync_polarity ? 0 : 1,
+> +                            sensor_vsync_polarity ? 0 : 1,
+> +                            MIPI_SENSOR, input_data_type, pixel_mode);
+> +
+> +               set_top_mux_ctrl(priv, mux_select, seninf_src);
+> +               seninf_write_reg(pseninf, SENINF_TOP_CAM_MUX_CTRL, 0x0);
+> +       } else {
+> +               power_off(priv, &csi_mipi);
+> +       }
+> +       return 0;
+> +};
+> +
+> +static const struct v4l2_subdev_pad_ops seninf_subdev_pad_ops = {
+> +       .set_fmt = seninf_set_fmt,
+> +};
+> +
+> +static const struct v4l2_subdev_video_ops seninf_subdev_video_ops = {
+> +       .s_stream = seninf_s_stream,
+> +};
+> +
+> +static struct v4l2_subdev_ops seninf_subdev_ops = {
+> +       .video  = &seninf_subdev_video_ops,
+> +       .pad    = &seninf_subdev_pad_ops,
+> +};
+> +
+> +static int seninf_link_setup(struct media_entity *entity,
 > +                            const struct media_pad *local,
 > +                            const struct media_pad *remote, u32 flags)
 > +{
-> +       struct mtk_fd_mem2mem2_device *m2m2 =
-> +               container_of(entity, struct mtk_fd_mem2mem2_device,
-> +                            subdev.entity);
-> +       struct mtk_fd_dev *fd_dev =
-> +               container_of(m2m2, struct mtk_fd_dev, mem2mem2);
+> +       struct v4l2_subdev *sd;
+> +       struct _seninf *priv;
 > +
-> +       u32 pad = local->index;
+> +       sd = media_entity_to_v4l2_subdev(entity);
+> +       priv = v4l2_get_subdevdata(sd);
+> +       pr_debug("mtk_seninf: remote %d-%d, local %d-%d",
+> +                remote->entity->graph_obj.id, remote->index,
+> +                local->entity->graph_obj.id, local->index);
+> +       pr_debug("local->flags %d flags %d", local->flags, flags);
+> +       //link seninf-p1
+> +       if ((local->flags & MEDIA_PAD_FL_SOURCE) &&
+> +           (flags & MEDIA_LNK_FL_ENABLED)) {
+> +               pr_debug("set seninf port %d", local->index);
+> +               priv->mux_select = local->index;
+> +               //switch(local->index)  //select TG Mux
+> +       }
 > +
-> +       pr_info("link setup: %d --> %d\n", pad, remote->index);
-> +
-> +#if KERNEL_VERSION(4, 5, 0) >= MTK_FD_KERNEL_BASE_VERSION
-> +       WARN_ON(entity->type != MEDIA_ENT_T_V4L2_SUBDEV);
-> +#else
-> +       WARN_ON(entity->obj_type != MEDIA_ENTITY_TYPE_V4L2_SUBDEV);
-> +#endif
-> +
-> +       WARN_ON(pad >= m2m2->num_nodes);
-> +
-> +       m2m2->nodes[pad].enabled = !!(flags & MEDIA_LNK_FL_ENABLED);
-> +
-> +       /**
-> +        * queue_enable can be phase out in the future since
-> +        * we don't have internal queue of each node in
-> +        * v4l2 common module
-> +        */
-> +       fd_dev->queue_enabled[pad] = m2m2->nodes[pad].enabled;
+> +       if ((local->flags & MEDIA_PAD_FL_SINK) &&
+> +           (flags & MEDIA_LNK_FL_ENABLED)) {
+> +               pr_debug("link sensor-seninf");
+> +               priv->port = local->index;
+> +       }
+> +       //seninf internal use force enable create link
 > +
 > +       return 0;
 > +}
 > +
-> +static void mtk_fd_vb2_buf_queue(struct vb2_buffer *vb)
-> +{
-> +       struct mtk_fd_mem2mem2_device *m2m2 = vb2_get_drv_priv(vb->vb2_queue);
-> +       struct mtk_fd_dev *mtk_fd_dev = mtk_fd_m2m_to_dev(m2m2);
-> +       struct device *dev = &mtk_fd_dev->pdev->dev;
-> +       struct mtk_fd_dev_buffer *buf = NULL;
-> +       struct vb2_v4l2_buffer *v4l2_buf = NULL;
-> +       struct mtk_fd_dev_video_device *node =
-> +               mtk_fd_vbq_to_isp_node(vb->vb2_queue);
-> +       int queue = mtk_fd_dev_get_queue_id_of_dev_node(mtk_fd_dev, node);
-> +
-> +       dev_dbg(dev,
-> +               "queue vb2_buf: Node(%s) queue id(%d)\n",
-> +               node->name,
-> +               queue);
-> +
-> +       if (queue < 0) {
-> +               dev_err(m2m2->dev, "Invalid mtk_fd_dev node.\n");
-> +               return;
-> +       }
-> +
-> +       if (mtk_fd_dev->ctx.mode == MTK_FD_CTX_MODE_DEBUG_BYPASS_ALL) {
-> +               dev_dbg(m2m2->dev, "By pass mode, just loop back the buffer\n");
-> +               vb2_buffer_done(vb, VB2_BUF_STATE_DONE);
-> +               return;
-> +       }
-> +
-> +       if (!vb)
-> +               pr_err("VB can't be null\n");
-> +
-> +       buf = mtk_fd_vb2_buf_to_dev_buf(vb);
-> +
-> +       if (!buf)
-> +               pr_err("buf can't be null\n");
-> +
-> +       v4l2_buf = to_vb2_v4l2_buffer(vb);
-> +
-> +       if (!v4l2_buf)
-> +               pr_err("v4l2_buf can't be null\n");
-> +
-> +       mutex_lock(&mtk_fd_dev->lock);
-> +
-> +       pr_err("init  mtk_fd_ctx_buf_init, sequence(%d)\n", v4l2_buf->sequence);
-> +
-> +       /* the dma address will be filled in later frame buffer handling*/
-> +       mtk_fd_ctx_buf_init(&buf->ctx_buf, queue, (dma_addr_t)0);
-> +       pr_info("set mtk_fd_ctx_buf_init: user seq=%d\n",
-> +               buf->ctx_buf.user_sequence);
-> +
-> +       /* Added the buffer into the tracking list */
-> +       list_add_tail(&buf->m2m2_buf.list,
-> +                     &m2m2->nodes[node - m2m2->nodes].buffers);
-> +       mutex_unlock(&mtk_fd_dev->lock);
-> +
-> +       /* Enqueue the buffer */
-> +       if (mtk_fd_dev->mem2mem2.streaming) {
-> +               pr_info("%s: mtk_fd_dev_queue_buffers\n", node->name);
-> +               mtk_fd_dev_queue_buffers(mtk_fd_dev, false);
-> +       }
-> +}
-> +
-> +#if KERNEL_VERSION(4, 5, 0) >= MTK_FD_KERNEL_BASE_VERSION
-> +static int mtk_fd_vb2_queue_setup(struct vb2_queue *vq,
-> +                                 const void *parg,
-> +                                 unsigned int *num_buffers,
-> +                                 unsigned int *num_planes,
-> +                                 unsigned int sizes[], void *alloc_ctxs[])
-> +#else
-> +static int mtk_fd_vb2_queue_setup(struct vb2_queue *vq,
-> +                                 unsigned int *num_buffers,
-> +                                 unsigned int *num_planes,
-> +                                 unsigned int sizes[],
-> +                                 struct device *alloc_devs[])
-> +#endif
-> +{
-> +       struct mtk_fd_mem2mem2_device *m2m2 = vb2_get_drv_priv(vq);
-> +       struct mtk_fd_dev_video_device *node = mtk_fd_vbq_to_isp_node(vq);
-> +       struct mtk_fd_dev *fd_dev = mtk_fd_m2m_to_dev(m2m2);
-> +       void *buf_alloc_ctx = NULL;
-> +       int queue = mtk_fd_dev_get_queue_id_of_dev_node(fd_dev, node);
-> +       /* Get V4L2 format with the following method */
-> +       const struct v4l2_format *fmt = &node->vdev_fmt;
-> +
-> +       *num_planes = 1;
-> +       *num_buffers = clamp_val(*num_buffers, 1, VB2_MAX_FRAME);
-> +
-> +       vq->dma_attrs |= DMA_ATTR_NON_CONSISTENT;
-> +       pr_info("queue(%d): cached mmap enabled\n", queue);
-> +
-> +       if (vq->type == V4L2_BUF_TYPE_META_CAPTURE ||
-> +           vq->type == V4L2_BUF_TYPE_META_OUTPUT) {
-> +               sizes[0] = fmt->fmt.meta.buffersize;
-> +               buf_alloc_ctx = fd_dev->ctx.smem_vb2_alloc_ctx;
-> +               pr_info("Select smem_vb2_alloc_ctx(%llx)\n",
-> +                       (unsigned long long)buf_alloc_ctx);
-> +       } else {
-> +               sizes[0] = fmt->fmt.pix_mp.plane_fmt[0].sizeimage;
-> +               buf_alloc_ctx = fd_dev->ctx.img_vb2_alloc_ctx;
-> +               pr_info("Select img_vb2_alloc_ctx(%llx)\n",
-> +                       (unsigned long long)buf_alloc_ctx);
-> +       }
-> +
-> +#if KERNEL_VERSION(4, 5, 0) >= MTK_FD_KERNEL_BASE_VERSION
-> +       alloc_ctxs[0] = buf_alloc_ctx;
-> +#else
-> +       alloc_devs[0] = (struct device *)buf_alloc_ctx;
-> +#endif
-> +
-> +       pr_info("mtk_fd_vb2_queue_setup:type(%d),size(%d),ctx(%llx)\n",
-> +               vq->type, sizes[0], (unsigned long long)buf_alloc_ctx);
-> +
-> +       /* Initialize buffer queue */
-> +       INIT_LIST_HEAD(&node->buffers);
-> +
-> +       return 0;
-> +}
-> +
-> +static bool mtk_fd_all_nodes_streaming(struct mtk_fd_mem2mem2_device *m2m2,
-> +                                      struct mtk_fd_dev_video_device *except)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < m2m2->num_nodes; i++) {
-> +               struct mtk_fd_dev_video_device *node = &m2m2->nodes[i];
-> +
-> +               if (node == except)
-> +                       continue;
-> +               if (node->enabled && !vb2_start_streaming_called(&node->vbq))
-> +                       return false;
-> +       }
-> +
-> +       return true;
-> +}
-> +
-> +static void mtk_fd_return_all_buffers(struct mtk_fd_mem2mem2_device *m2m2,
-> +                                     struct mtk_fd_dev_video_device *node,
-> +                                     enum vb2_buffer_state state)
-> +{
-> +       struct mtk_fd_dev *mtk_fd_dev = mtk_fd_m2m_to_dev(m2m2);
-> +       struct mtk_fd_mem2mem2_buffer *b, *b0;
-> +
-> +       /* Return all buffers */
-> +       mutex_lock(&mtk_fd_dev->lock);
-> +       list_for_each_entry_safe(b, b0, &node->buffers, list) {
-> +               list_del(&b->list);
-> +               vb2_buffer_done(&b->vbb.vb2_buf, state);
-> +       }
-> +       mutex_unlock(&mtk_fd_dev->lock);
-> +}
-> +
-> +static int mtk_fd_vb2_start_streaming(struct vb2_queue *vq, unsigned int count)
-> +{
-> +       struct mtk_fd_mem2mem2_device *m2m2 = vb2_get_drv_priv(vq);
-> +       struct mtk_fd_dev_video_device *node =
-> +               mtk_fd_vbq_to_isp_node(vq);
-> +       int r;
-> +
-> +       if (m2m2->streaming) {
-> +               r = -EBUSY;
-> +               goto fail_return_bufs;
-> +       }
-> +
-> +       if (!node->enabled) {
-> +               pr_err("Node (%ld) is not enable\n", node - m2m2->nodes);
-> +               r = -EINVAL;
-> +               goto fail_return_bufs;
-> +       }
-> +#if KERNEL_VERSION(4, 5, 0) >= MTK_FD_KERNEL_BASE_VERSION
-> +       r = media_entity_pipeline_start(&node->vdev.entity, &m2m2->pipeline);
-> +#else
-> +       r = media_pipeline_start(&node->vdev.entity, &m2m2->pipeline);
-> +#endif
-> +       if (r < 0) {
-> +               pr_err("Node (%ld) media_pipeline_start failed\n",
-> +                      node - m2m2->nodes);
-> +               goto fail_return_bufs;
-> +       }
-> +
-> +       if (!mtk_fd_all_nodes_streaming(m2m2, node))
-> +               return 0;
-> +
-> +       /* Start streaming of the whole pipeline now */
-> +
-> +       r = v4l2_subdev_call(&m2m2->subdev, video, s_stream, 1);
-> +       if (r < 0) {
-> +               pr_err("Node (%ld) v4l2_subdev_call s_stream failed\n",
-> +                      node - m2m2->nodes);
-> +               goto fail_stop_pipeline;
-> +       }
-> +       return 0;
-> +
-> +fail_stop_pipeline:
-> +#if KERNEL_VERSION(4, 5, 0) >= MTK_FD_KERNEL_BASE_VERSION
-> +       media_entity_pipeline_stop(&node->vdev.entity);
-> +#else
-> +       media_pipeline_stop(&node->vdev.entity);
-> +#endif
-> +fail_return_bufs:
-> +       mtk_fd_return_all_buffers(m2m2, node, VB2_BUF_STATE_QUEUED);
-> +
-> +       return r;
-> +}
-> +
-> +static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
-> +{
-> +       struct mtk_fd_mem2mem2_device *m2m2 = vb2_get_drv_priv(vq);
-> +       struct mtk_fd_dev_video_device *node =
-> +               mtk_fd_vbq_to_isp_node(vq);
-> +       int r;
-> +
-> +       WARN_ON(!node->enabled);
-> +
-> +       /* Was this the first node with streaming disabled? */
-> +       if (mtk_fd_all_nodes_streaming(m2m2, node)) {
-> +               /* Yes, really stop streaming now */
-> +               r = v4l2_subdev_call(&m2m2->subdev, video, s_stream, 0);
-> +               if (r)
-> +                       dev_err(m2m2->dev, "failed to stop streaming\n");
-> +       }
-> +
-> +       mtk_fd_return_all_buffers(m2m2, node, VB2_BUF_STATE_ERROR);
-> +#if KERNEL_VERSION(4, 5, 0) >= MTK_FD_KERNEL_BASE_VERSION
-> +       media_entity_pipeline_stop(&node->vdev.entity);
-> +#else
-> +       media_pipeline_stop(&node->vdev.entity);
-> +#endif
-> +}
-> +
-> +static int mtk_fd_videoc_querycap(struct file *file, void *fh,
-> +                                 struct v4l2_capability *cap)
-> +{
-> +       struct mtk_fd_mem2mem2_device *m2m2 = video_drvdata(file);
-> +       struct mtk_fd_dev_video_device *node = file_to_mtk_fd_node(file);
-> +       struct mtk_fd_dev *fd_dev = mtk_fd_m2m_to_dev(m2m2);
-> +       int queue_id =
-> +               mtk_fd_dev_get_queue_id_of_dev_node(fd_dev, node);
-> +       struct mtk_fd_ctx_queue *node_ctx = &fd_dev->ctx.queue[queue_id];
-> +
-> +       strlcpy(cap->driver, m2m2->name, sizeof(cap->driver));
-> +       strlcpy(cap->card, m2m2->model, sizeof(cap->card));
-> +       snprintf(cap->bus_info, sizeof(cap->bus_info),
-> +                "platform:%s", node->name);
-> +
-> +       cap->device_caps =
-> +               mtk_fd_node_get_v4l2_cap(node_ctx) | V4L2_CAP_STREAMING;
-> +       cap->capabilities = cap->device_caps | V4L2_CAP_DEVICE_CAPS;
-> +
-> +       return 0;
-> +}
-> +
-> +/* Propagate forward always the format from the CIO2 subdev */
-> +static int mtk_fd_videoc_g_fmt(struct file *file, void *fh,
-> +                              struct v4l2_format *f)
-> +{
-> +       struct mtk_fd_dev_video_device *node = file_to_mtk_fd_node(file);
-> +
-> +       f->fmt = node->vdev_fmt.fmt;
-> +
-> +       return 0;
-> +}
-> +
-> +static int mtk_fd_videoc_try_fmt(struct file *file, void *fh,
-> +                                struct v4l2_format *f)
-> +{
-> +       struct mtk_fd_mem2mem2_device *m2m2 = video_drvdata(file);
-> +       struct mtk_fd_dev *fd_dev = mtk_fd_m2m_to_dev(m2m2);
-> +       struct mtk_fd_ctx *dev_ctx = &fd_dev->ctx;
-> +       struct mtk_fd_dev_video_device *node = file_to_mtk_fd_node(file);
-> +       int queue_id =
-> +               mtk_fd_dev_get_queue_id_of_dev_node(fd_dev, node);
-> +       int ret = 0;
-> +
-> +       ret = mtk_fd_ctx_fmt_set_img(dev_ctx, queue_id, &f->fmt.pix_mp,
-> +                                    &node->vdev_fmt.fmt.pix_mp);
-> +
-> +       /* Simply set the format to the node context in the initial version */
-> +       if (ret) {
-> +               pr_warn("Fmt(%d) not support for queue(%d), load default fmt\n",
-> +                       f->fmt.pix_mp.pixelformat, queue_id);
-> +
-> +               ret = mtk_fd_ctx_format_load_default_fmt
-> +                       (&dev_ctx->queue[queue_id], f);
-> +       }
-> +
-> +       if (!ret) {
-> +               node->vdev_fmt.fmt.pix_mp = f->fmt.pix_mp;
-> +               dev_ctx->queue[queue_id].fmt.pix_mp = node->vdev_fmt.fmt.pix_mp;
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static int mtk_fd_videoc_s_fmt(struct file *file, void *fh,
-> +                              struct v4l2_format *f)
-> +{
-> +       struct mtk_fd_mem2mem2_device *m2m2 = video_drvdata(file);
-> +       struct mtk_fd_dev *fd_dev = mtk_fd_m2m_to_dev(m2m2);
-> +       struct mtk_fd_ctx *dev_ctx = &fd_dev->ctx;
-> +       struct mtk_fd_dev_video_device *node = file_to_mtk_fd_node(file);
-> +       int queue_id = mtk_fd_dev_get_queue_id_of_dev_node(fd_dev, node);
-> +       int ret = 0;
-> +
-> +       ret = mtk_fd_ctx_fmt_set_img(dev_ctx, queue_id, &f->fmt.pix_mp,
-> +                                    &node->vdev_fmt.fmt.pix_mp);
-> +
-> +       /* Simply set the format to the node context in the initial version */
-> +       if (!ret)
-> +               dev_ctx->queue[queue_id].fmt.pix_mp = node->vdev_fmt.fmt.pix_mp;
-> +       else
-> +               dev_warn(&fd_dev->pdev->dev, "s_fmt, format not support\n");
-> +
-> +       return ret;
-> +}
-> +
-> +static int mtk_fd_meta_enum_format(struct file *file, void *fh,
-> +                                  struct v4l2_fmtdesc *f)
-> +{
-> +       struct mtk_fd_dev_video_device *node = file_to_mtk_fd_node(file);
-> +
-> +       if (f->index > 0 || f->type != node->vbq.type)
-> +               return -EINVAL;
-> +
-> +       f->pixelformat = node->vdev_fmt.fmt.meta.dataformat;
-> +
-> +       return 0;
-> +}
-> +
-> +static int mtk_fd_videoc_s_meta_fmt(struct file *file, void *fh,
-> +                                   struct v4l2_format *f)
-> +{
-> +       struct mtk_fd_mem2mem2_device *m2m2 = video_drvdata(file);
-> +       struct mtk_fd_dev *fd_dev = mtk_fd_m2m_to_dev(m2m2);
-> +       struct mtk_fd_ctx *dev_ctx = &fd_dev->ctx;
-> +       struct mtk_fd_dev_video_device *node = file_to_mtk_fd_node(file);
-> +       int queue_id = mtk_fd_dev_get_queue_id_of_dev_node(fd_dev, node);
-> +
-> +       int ret = 0;
-> +
-> +       if (f->type != node->vbq.type)
-> +               return -EINVAL;
-> +
-> +       ret = mtk_fd_ctx_format_load_default_fmt(&dev_ctx->queue[queue_id], f);
-> +
-> +       if (!ret) {
-> +               node->vdev_fmt.fmt.meta = f->fmt.meta;
-> +               dev_ctx->queue[queue_id].fmt.meta = node->vdev_fmt.fmt.meta;
-> +       } else {
-> +               dev_warn(&fd_dev->pdev->dev,
-> +                        "s_meta_fm failed, format not support\n");
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static int mtk_fd_videoc_g_meta_fmt(struct file *file, void *fh,
-> +                                   struct v4l2_format *f)
-> +{
-> +       struct mtk_fd_dev_video_device *node = file_to_mtk_fd_node(file);
-> +
-> +       if (f->type != node->vbq.type)
-> +               return -EINVAL;
-> +
-> +       f->fmt = node->vdev_fmt.fmt;
-> +
-> +       return 0;
-> +}
-> +
-> +int mtk_fd_videoc_qbuf(struct file *file, void *priv, struct v4l2_buffer *p)
-> +{
-> +       struct video_device *vdev = video_devdata(file);
-> +       struct vb2_buffer *vb;
-> +       struct mtk_fd_dev_buffer *db;
-> +       int r = 0;
-> +
-> +       /* check if vb2 queue is busy */
-> +       if (vdev->queue->owner && vdev->queue->owner != file->private_data)
-> +               return -EBUSY;
-> +
-> +       /**
-> +        * Keep the value of sequence in v4l2_buffer
-> +        * in ctx buf since vb2_qbuf will set it to 0
-> +        */
-> +       vb = vdev->queue->bufs[p->index];
-> +
-> +       if (vb) {
-> +               db = mtk_fd_vb2_buf_to_dev_buf(vb);
-> +               pr_info("qbuf: p:%llx,vb:%llx, db:%llx\n",
-> +                       (unsigned long long)p,
-> +                       (unsigned long long)vb,
-> +                       (unsigned long long)db);
-> +               db->ctx_buf.user_sequence = p->sequence;
-> +       }
-> +       r = vb2_qbuf(vdev->queue, vdev->v4l2_dev->mdev, p);
-> +       if (r)
-> +               pr_err("vb2_qbuf failed(err=%d): buf idx(%d)\n", r, p->index);
-> +       return r;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_videoc_qbuf);
-> +
-> +/******************** function pointers ********************/
-> +
-> +/* subdev internal operations */
-> +static const struct v4l2_subdev_internal_ops mtk_fd_subdev_internal_ops = {
-> +       .open = mtk_fd_subdev_open,
-> +       .close = mtk_fd_subdev_close,
-> +};
-> +
-> +static const struct v4l2_subdev_core_ops mtk_fd_subdev_core_ops = {
-> +#if KERNEL_VERSION(4, 5, 0) >= MTK_FD_KERNEL_BASE_VERSION
-> +       .g_ext_ctrls = v4l2_subdev_g_ext_ctrls,
-> +       .try_ext_ctrls = v4l2_subdev_try_ext_ctrls,
-> +       .s_ext_ctrls = v4l2_subdev_s_ext_ctrls,
-> +       .g_ctrl = v4l2_subdev_g_ctrl,
-> +       .s_ctrl = v4l2_subdev_s_ctrl,
-> +       .queryctrl = v4l2_subdev_queryctrl,
-> +       .querymenu = v4l2_subdev_querymenu,
-> +#endif
-> +};
-> +
-> +static const struct v4l2_subdev_video_ops mtk_fd_subdev_video_ops = {
-> +       .s_stream = mtk_fd_subdev_s_stream,
-> +};
-> +
-> +static const struct v4l2_subdev_ops mtk_fd_subdev_ops = {
-> +       .core = &mtk_fd_subdev_core_ops,
-> +       .video = &mtk_fd_subdev_video_ops,
-> +};
-> +
-> +static const struct media_entity_operations mtk_fd_media_ops = {
-> +       .link_setup = mtk_fd_link_setup,
+> +static const struct media_entity_operations seninf_media_ops = {
+> +       .link_setup = seninf_link_setup,
 > +       .link_validate = v4l2_subdev_link_validate,
 > +};
 > +
-> +static const struct vb2_ops mtk_fd_vb2_ops = {
-> +       .buf_queue = mtk_fd_vb2_buf_queue,
-> +       .queue_setup = mtk_fd_vb2_queue_setup,
-> +       .start_streaming = mtk_fd_vb2_start_streaming,
-> +       .stop_streaming = mtk_fd_vb2_stop_streaming,
-> +       .wait_prepare = vb2_ops_wait_prepare,
-> +       .wait_finish = vb2_ops_wait_finish,
-> +};
-> +
-> +static const struct v4l2_file_operations mtk_fd_v4l2_fops = {
-> +       .unlocked_ioctl = video_ioctl2,
-> +       .open = v4l2_fh_open,
-> +       .release = vb2_fop_release,
-> +       .poll = vb2_fop_poll,
-> +       .mmap = vb2_fop_mmap,
-> +#ifdef CONFIG_COMPAT
-> +       .compat_ioctl32 = v4l2_compat_ioctl32,
-> +#endif
-> +};
-> +
-> +static const struct v4l2_ioctl_ops mtk_fd_v4l2_ioctl_ops = {
-> +       .vidioc_querycap = mtk_fd_videoc_querycap,
-> +
-> +       .vidioc_g_fmt_vid_cap_mplane = mtk_fd_videoc_g_fmt,
-> +       .vidioc_s_fmt_vid_cap_mplane = mtk_fd_videoc_s_fmt,
-> +       .vidioc_try_fmt_vid_cap_mplane = mtk_fd_videoc_try_fmt,
-> +
-> +       .vidioc_g_fmt_vid_out_mplane = mtk_fd_videoc_g_fmt,
-> +       .vidioc_s_fmt_vid_out_mplane = mtk_fd_videoc_s_fmt,
-> +       .vidioc_try_fmt_vid_out_mplane = mtk_fd_videoc_try_fmt,
-> +
-> +       /* buffer queue management */
-> +       .vidioc_reqbufs = vb2_ioctl_reqbufs,
-> +       .vidioc_create_bufs = vb2_ioctl_create_bufs,
-> +       .vidioc_prepare_buf = vb2_ioctl_prepare_buf,
-> +       .vidioc_querybuf = vb2_ioctl_querybuf,
-> +       .vidioc_qbuf = mtk_fd_videoc_qbuf,
-> +       .vidioc_dqbuf = vb2_ioctl_dqbuf,
-> +       .vidioc_streamon = vb2_ioctl_streamon,
-> +       .vidioc_streamoff = vb2_ioctl_streamoff,
-> +       .vidioc_expbuf = vb2_ioctl_expbuf,
-> +};
-> +
-> +static const struct v4l2_ioctl_ops mtk_fd_v4l2_meta_ioctl_ops = {
-> +       .vidioc_querycap = mtk_fd_videoc_querycap,
-> +
-> +       .vidioc_enum_fmt_meta_cap = mtk_fd_meta_enum_format,
-> +       .vidioc_g_fmt_meta_cap = mtk_fd_videoc_g_meta_fmt,
-> +       .vidioc_s_fmt_meta_cap = mtk_fd_videoc_s_meta_fmt,
-> +       .vidioc_try_fmt_meta_cap = mtk_fd_videoc_g_meta_fmt,
-> +
-> +       .vidioc_enum_fmt_meta_out = mtk_fd_meta_enum_format,
-> +       .vidioc_g_fmt_meta_out = mtk_fd_videoc_g_meta_fmt,
-> +       .vidioc_s_fmt_meta_out = mtk_fd_videoc_s_meta_fmt,
-> +       .vidioc_try_fmt_meta_out = mtk_fd_videoc_g_meta_fmt,
-> +
-> +       .vidioc_reqbufs = vb2_ioctl_reqbufs,
-> +       .vidioc_create_bufs = vb2_ioctl_create_bufs,
-> +       .vidioc_prepare_buf = vb2_ioctl_prepare_buf,
-> +       .vidioc_querybuf = vb2_ioctl_querybuf,
-> +       .vidioc_qbuf = mtk_fd_videoc_qbuf,
-> +       .vidioc_dqbuf = vb2_ioctl_dqbuf,
-> +       .vidioc_streamon = vb2_ioctl_streamon,
-> +       .vidioc_streamoff = vb2_ioctl_streamoff,
-> +       .vidioc_expbuf = vb2_ioctl_expbuf,
-> +};
-> +
-> +static u32 mtk_fd_node_get_v4l2_cap(struct mtk_fd_ctx_queue *node_ctx)
+> +#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
+> +static int seninf_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
 > +{
-> +       u32 cap = 0;
-> +
-> +       if (node_ctx->desc.capture)
-> +               if (node_ctx->desc.image)
-> +                       cap = V4L2_CAP_VIDEO_CAPTURE_MPLANE;
-> +               else
-> +                       cap = V4L2_CAP_META_CAPTURE;
-> +       else
-> +               if (node_ctx->desc.image)
-> +                       cap = V4L2_CAP_VIDEO_OUTPUT_MPLANE;
-> +               else
-> +                       cap = V4L2_CAP_META_OUTPUT;
-> +
-> +       return cap;
-> +}
-> +
-> +static u32 mtk_fd_node_get_format_type(struct mtk_fd_ctx_queue *node_ctx)
-> +{
-> +       u32 type;
-> +
-> +       if (node_ctx->desc.capture)
-> +               if (node_ctx->desc.image)
-> +                       type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
-> +               else
-> +                       type = V4L2_BUF_TYPE_META_CAPTURE;
-> +       else
-> +               if (node_ctx->desc.image)
-> +                       type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
-> +               else
-> +                       type = V4L2_BUF_TYPE_META_OUTPUT;
-> +
-> +       return type;
-> +}
-> +
-> +static const struct v4l2_ioctl_ops *mtk_fd_node_get_ioctl_ops
-> +       (struct mtk_fd_ctx_queue *node_ctx)
-> +{
-> +       const struct v4l2_ioctl_ops *ops = NULL;
-> +
-> +       if (node_ctx->desc.image)
-> +               ops = &mtk_fd_v4l2_ioctl_ops;
-> +       else
-> +               ops = &mtk_fd_v4l2_meta_ioctl_ops;
-> +       return ops;
-> +}
-> +
-> +/**
-> + * Config node's video properties
-> + * according to the device context requirement
-> + */
-> +static void mtk_fd_node_to_v4l2(struct mtk_fd_dev *fd_dev, u32 node,
-> +                               struct video_device *vdev,
-> +                               struct v4l2_format *f)
-> +{
-> +       u32 cap;
-> +       struct mtk_fd_ctx *device_ctx = &fd_dev->ctx;
-> +       struct mtk_fd_ctx_queue *node_ctx = &device_ctx->queue[node];
-> +
-> +       WARN_ON(node >= mtk_fd_dev_get_total_node(fd_dev));
-> +       WARN_ON(!node_ctx);
-> +
-> +       /* set cap of the node */
-> +       cap = mtk_fd_node_get_v4l2_cap(node_ctx);
-> +       f->type = mtk_fd_node_get_format_type(node_ctx);
-> +       vdev->ioctl_ops = mtk_fd_node_get_ioctl_ops(node_ctx);
-> +
-> +       if (mtk_fd_ctx_format_load_default_fmt(&device_ctx->queue[node], f)) {
-> +               dev_err(&fd_dev->pdev->dev,
-> +                       "Can't load default for node (%d): (%s)",
-> +                       node, device_ctx->queue[node].desc.name);
-> +       } else {
-> +               if (device_ctx->queue[node].desc.image) {
-> +                       dev_dbg(&fd_dev->pdev->dev,
-> +                               "Node (%d): (%s), dfmt (f:0x%x w:%d: h:%d s:%d)\n",
-> +                               node, device_ctx->queue[node].desc.name,
-> +                               f->fmt.pix_mp.pixelformat,
-> +                               f->fmt.pix_mp.width,
-> +                               f->fmt.pix_mp.height,
-> +                               f->fmt.pix_mp.plane_fmt[0].sizeimage);
-> +                       node_ctx->fmt.pix_mp = f->fmt.pix_mp;
-> +               } else {
-> +                       dev_info(&fd_dev->pdev->dev,
-> +                                "Node (%d): (%s), dfmt (f:0x%x s:%u)\n",
-> +                                node, device_ctx->queue[node].desc.name,
-> +                                f->fmt.meta.dataformat,
-> +                                f->fmt.meta.buffersize);
-> +                       node_ctx->fmt.meta = f->fmt.meta;
-> +               }
-> +       }
-> +
-> +#if KERNEL_VERSION(4, 7, 0) < MTK_FD_KERNEL_BASE_VERSION
-> +       /* device_caps was supported after 4.7 */
-> +       vdev->device_caps = V4L2_CAP_STREAMING | cap;
-> +#endif
-> +}
-> +
-> +int mtk_fd_media_register(struct device *dev, struct media_device *media_dev,
-> +                         const char *model)
-> +{
-> +       int r = 0;
-> +
-> +       media_dev->dev = dev;
-> +       dev_info(dev, "setup media_dev.dev: %llx\n",
-> +                (unsigned long long)media_dev->dev);
-> +
-> +       strlcpy(media_dev->model, model, sizeof(media_dev->model));
-> +       dev_info(dev, "setup media_dev.model: %s\n",
-> +                media_dev->model);
-> +
-> +       snprintf(media_dev->bus_info, sizeof(media_dev->bus_info),
-> +                "%s", dev_name(dev));
-> +       dev_info(dev, "setup media_dev.bus_info: %s\n",
-> +                media_dev->bus_info);
-> +
-> +       media_dev->hw_revision = 0;
-> +       dev_info(dev, "setup media_dev.hw_revision: %d\n",
-> +                media_dev->hw_revision);
-> +
-> +#if KERNEL_VERSION(4, 5, 0) <= MTK_FD_KERNEL_BASE_VERSION
-> +       dev_info(dev, "media_device_init: media_dev:%llx\n",
-> +                (unsigned long long)media_dev);
-> +       media_device_init(media_dev);
-> +#endif
-> +
-> +       pr_info("Register media device: %s, %llx",
-> +               media_dev->model,
-> +               (unsigned long long)media_dev);
-> +
-> +       r = media_device_register(media_dev);
-> +
-> +       if (r) {
-> +               dev_err(dev, "failed to register media device (%d)\n", r);
-> +               goto fail_v4l2_dev;
-> +       }
-> +       return 0;
-> +
-> +fail_v4l2_dev:
-> +       media_device_unregister(media_dev);
-> +#if KERNEL_VERSION(4, 5, 0) <= MTK_FD_KERNEL_BASE_VERSION
-> +       media_device_cleanup(media_dev);
-> +#endif
-> +
-> +       return r;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_media_register);
-> +
-> +int mtk_fd_v4l2_register(struct device *dev,
-> +                        struct media_device *media_dev,
-> +                        struct v4l2_device *v4l2_dev)
-> +{
-> +       int r = 0;
-> +       /* Set up v4l2 device */
-> +       v4l2_dev->mdev = media_dev;
-> +       dev_info(dev, "setup v4l2_dev->mdev: %llx",
-> +                (unsigned long long)v4l2_dev->mdev);
-> +
-> +       dev_info(dev, "Register v4l2 device: %llx",
-> +                (unsigned long long)v4l2_dev);
-> +
-> +       r = v4l2_device_register(dev, v4l2_dev);
-> +
-> +       if (r) {
-> +               dev_err(dev, "failed to register V4L2 device (%d)\n", r);
-> +               goto fail_v4l2_dev;
-> +       }
-> +
-> +       return 0;
-> +
-> +fail_v4l2_dev:
-> +       media_device_unregister(media_dev);
-> +#if KERNEL_VERSION(4, 5, 0) <= MTK_FD_KERNEL_BASE_VERSION
-> +       media_device_cleanup(media_dev);
-> +#endif
-> +
-> +       return r;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_v4l2_register);
-> +
-> +int mtk_fd_mem2mem2_v4l2_register(struct mtk_fd_dev *dev,
-> +                                 struct media_device *media_dev,
-> +                                 struct v4l2_device *v4l2_dev)
-> +{
-> +       struct mtk_fd_mem2mem2_device *m2m2 = &dev->mem2mem2;
-> +
-> +       int i, r;
-> +
-> +       /**
-> +        * If media_dev or v4l2_dev is not set,
-> +        * use the default one in mtk_fd_dev
-> +        */
-> +       if (!media_dev) {
-> +               m2m2->media_dev = &dev->media_dev;
-> +               r = mtk_fd_media_register(&dev->pdev->dev, m2m2->media_dev,
-> +                                         m2m2->model);
-> +
-> +       if (r) {
-> +               dev_err(m2m2->dev, "failed to register media device (%d)\n", r);
-> +               goto fail_media_dev;
-> +       }
-> +       } else {
-> +               m2m2->media_dev = media_dev;
-> +       }
-> +
-> +       if (!v4l2_dev) {
-> +               m2m2->v4l2_dev = &dev->v4l2_dev;
-> +               r = mtk_fd_v4l2_register(&dev->pdev->dev,
-> +                                        m2m2->media_dev,
-> +                                        m2m2->v4l2_dev);
-> +       if (r) {
-> +               dev_err(m2m2->dev, "failed to register V4L2 device (%d)\n", r);
-> +               goto fail_v4l2_dev;
-> +       }
-> +       } else {
-> +               m2m2->v4l2_dev = v4l2_dev;
-> +       }
-> +
-> +       /* Initialize miscellaneous variables */
-> +       m2m2->streaming = false;
-> +       m2m2->v4l2_file_ops = mtk_fd_v4l2_fops;
-> +
-> +       /* Initialize subdev media entity */
-> +       m2m2->subdev_pads = kcalloc(m2m2->num_nodes, sizeof(*m2m2->subdev_pads),
-> +                                   GFP_KERNEL);
-> +       if (!m2m2->subdev_pads) {
-> +               r = -ENOMEM;
-> +               goto fail_subdev_pads;
-> +       }
-> +#if KERNEL_VERSION(4, 5, 0) >= MTK_FD_KERNEL_BASE_VERSION
-> +       r = media_entity_init(&m2m2->subdev.entity, m2m2->num_nodes,
-> +                             m2m2->subdev_pads, 0);
-> +#else
-> +       r = media_entity_pads_init(&m2m2->subdev.entity, m2m2->num_nodes,
-> +                                  m2m2->subdev_pads);
-> +#endif
-> +       if (r) {
-> +               dev_err(m2m2->dev,
-> +                       "failed initialize subdev media entity (%d)\n", r);
-> +               goto fail_media_entity;
-> +       }
-> +
-> +       /* Initialize subdev */
-> +       v4l2_subdev_init(&m2m2->subdev, &mtk_fd_subdev_ops);
-> +
-> +       m2m2->subdev.entity.function =
-> +               MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER;
-> +
-> +       m2m2->subdev.entity.ops = &mtk_fd_media_ops;
-> +
-> +       for (i = 0; i < m2m2->num_nodes; i++) {
-> +               m2m2->subdev_pads[i].flags = m2m2->nodes[i].output ?
-> +                       MEDIA_PAD_FL_SINK : MEDIA_PAD_FL_SOURCE;
-> +       }
-> +
-> +       m2m2->subdev.flags =
-> +               V4L2_SUBDEV_FL_HAS_DEVNODE | V4L2_SUBDEV_FL_HAS_EVENTS;
-> +       snprintf(m2m2->subdev.name, sizeof(m2m2->subdev.name),
-> +                "%s", m2m2->name);
-> +       v4l2_set_subdevdata(&m2m2->subdev, m2m2);
-> +       m2m2->subdev.internal_ops = &mtk_fd_subdev_internal_ops;
-> +
-> +       pr_info("register subdev: %s\n", m2m2->subdev.name);
-> +       r = v4l2_device_register_subdev(m2m2->v4l2_dev, &m2m2->subdev);
-> +       if (r) {
-> +               dev_err(m2m2->dev, "failed initialize subdev (%d)\n", r);
-> +               goto fail_subdev;
-> +       }
-> +       r = v4l2_device_register_subdev_nodes(m2m2->v4l2_dev);
-> +       if (r) {
-> +               dev_err(m2m2->dev, "failed to register subdevs (%d)\n", r);
-> +               goto fail_subdevs;
-> +       }
-> +
-> +       /* Create video nodes and links */
-> +       for (i = 0; i < m2m2->num_nodes; i++) {
-> +               struct mtk_fd_dev_video_device *node = &m2m2->nodes[i];
-> +               struct video_device *vdev = &node->vdev;
-> +               struct vb2_queue *vbq = &node->vbq;
-> +               u32 flags;
-> +
-> +               /* Initialize miscellaneous variables */
-> +               mutex_init(&node->lock);
-> +               INIT_LIST_HEAD(&node->buffers);
-> +
-> +               /* Initialize formats to default values */
-> +               mtk_fd_node_to_v4l2(dev, i, vdev, &node->vdev_fmt);
-> +
-> +               /* Initialize media entities */
-> +#if KERNEL_VERSION(4, 5, 0) >= MTK_FD_KERNEL_BASE_VERSION
-> +               r = media_entity_init(&vdev->entity, 1, &node->vdev_pad, 0);
-> +#else
-> +               r = media_entity_pads_init(&vdev->entity, 1, &node->vdev_pad);
-> +#endif
-> +               if (r) {
-> +                       dev_err(m2m2->dev,
-> +                               "failed initialize media entity (%d)\n", r);
-> +                       goto fail_vdev_media_entity;
-> +               }
-> +               node->vdev_pad.flags = node->output ?
-> +                       MEDIA_PAD_FL_SOURCE : MEDIA_PAD_FL_SINK;
-> +               vdev->entity.ops = NULL;
-> +
-> +               /* Initialize vbq */
-> +               vbq->type = node->vdev_fmt.type;
-> +               vbq->io_modes = VB2_MMAP | VB2_DMABUF;
-> +               vbq->ops = &mtk_fd_vb2_ops;
-> +               vbq->mem_ops = m2m2->vb2_mem_ops;
-> +               m2m2->buf_struct_size = sizeof(struct mtk_fd_dev_buffer);
-> +               vbq->buf_struct_size = m2m2->buf_struct_size;
-> +               vbq->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
-> +               vbq->min_buffers_needed = 0;    /* Can streamon w/o buffers */
-> +               /* Put the process hub sub device in the vb2 private data*/
-> +               vbq->drv_priv = m2m2;
-> +               vbq->lock = &node->lock;
-> +               r = vb2_queue_init(vbq);
-> +               if (r) {
-> +                       dev_err(m2m2->dev,
-> +                               "failed to initialize video queue (%d)\n", r);
-> +                       goto fail_vdev;
-> +               }
-> +
-> +               /* Initialize vdev */
-> +               snprintf(vdev->name, sizeof(vdev->name), "%s %s",
-> +                        m2m2->name, node->name);
-> +               vdev->release = video_device_release_empty;
-> +               vdev->fops = &m2m2->v4l2_file_ops;
-> +               vdev->lock = &node->lock;
-> +               vdev->v4l2_dev = m2m2->v4l2_dev;
-> +               vdev->queue = &node->vbq;
-> +               vdev->vfl_dir = node->output ? VFL_DIR_TX : VFL_DIR_RX;
-> +               video_set_drvdata(vdev, m2m2);
-> +               pr_info("register vdev: %s\n", vdev->name);
-> +               r = video_register_device(vdev, VFL_TYPE_GRABBER, -1);
-> +               if (r) {
-> +                       dev_err(m2m2->dev,
-> +                               "failed to register video device (%d)\n", r);
-> +                       goto fail_vdev;
-> +               }
-> +
-> +               /* Create link between video node and the subdev pad */
-> +               flags = 0;
-> +               if (node->enabled)
-> +                       flags |= MEDIA_LNK_FL_ENABLED;
-> +               if (node->immutable)
-> +                       flags |= MEDIA_LNK_FL_IMMUTABLE;
-> +               if (node->output) {
-> +#if KERNEL_VERSION(4, 5, 0) >= MTK_FD_KERNEL_BASE_VERSION
-> +                       r = media_entity_create_link
-> +#else
-> +                       r = media_create_pad_link
-> +#endif
-> +                                               (&vdev->entity, 0,
-> +                                                &m2m2->subdev.entity,
-> +                                                i, flags);
-> +               } else {
-> +#if KERNEL_VERSION(4, 5, 0) >= MTK_FD_KERNEL_BASE_VERSION
-> +                       r = media_entity_create_link
-> +#else
-> +                       r = media_create_pad_link
-> +#endif
-> +                                               (&m2m2->subdev.entity,
-> +                                                i, &vdev->entity, 0,
-> +                                                flags);
-> +               }
-> +               if (r)
-> +                       goto fail_link;
-> +       }
-> +
-> +       return 0;
-> +
-> +       for (; i >= 0; i--) {
-> +fail_link:
-> +               video_unregister_device(&m2m2->nodes[i].vdev);
-> +fail_vdev:
-> +               media_entity_cleanup(&m2m2->nodes[i].vdev.entity);
-> +fail_vdev_media_entity:
-> +               mutex_destroy(&m2m2->nodes[i].lock);
-> +       }
-> +fail_subdevs:
-> +       v4l2_device_unregister_subdev(&m2m2->subdev);
-> +fail_subdev:
-> +       media_entity_cleanup(&m2m2->subdev.entity);
-> +fail_media_entity:
-> +       kfree(m2m2->subdev_pads);
-> +fail_subdev_pads:
-> +       v4l2_device_unregister(m2m2->v4l2_dev);
-> +fail_v4l2_dev:
-> +fail_media_dev:
-> +       pr_err("fail_v4l2_dev: media_device_unregister and clenaup:%llx",
-> +              (unsigned long long)m2m2->media_dev);
-> +       media_device_unregister(m2m2->media_dev);
-> +#if KERNEL_VERSION(4, 5, 0) <= MTK_FD_KERNEL_BASE_VERSION
-> +       media_device_cleanup(m2m2->media_dev);
-> +#endif
-> +
-> +       return r;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_mem2mem2_v4l2_register);
-> +
-> +int mtk_fd_v4l2_unregister(struct mtk_fd_dev *dev)
-> +{
-> +       struct mtk_fd_mem2mem2_device *m2m2 = &dev->mem2mem2;
-> +       unsigned int i;
-> +
-> +       for (i = 0; i < m2m2->num_nodes; i++) {
-> +               video_unregister_device(&m2m2->nodes[i].vdev);
-> +               media_entity_cleanup(&m2m2->nodes[i].vdev.entity);
-> +               mutex_destroy(&m2m2->nodes[i].lock);
-> +       }
-> +
-> +       v4l2_device_unregister_subdev(&m2m2->subdev);
-> +       media_entity_cleanup(&m2m2->subdev.entity);
-> +       kfree(m2m2->subdev_pads);
-> +       v4l2_device_unregister(m2m2->v4l2_dev);
-> +       media_device_unregister(m2m2->media_dev);
-> +#if KERNEL_VERSION(4, 5, 0) <= MTK_FD_KERNEL_BASE_VERSION
-> +       media_device_cleanup(m2m2->media_dev);
-> +#endif
-> +
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_v4l2_unregister);
-> +
-> +void mtk_fd_v4l2_buffer_done(struct vb2_buffer *vb,
-> +                            enum vb2_buffer_state state)
-> +{
-> +       struct mtk_fd_mem2mem2_buffer *b =
-> +               container_of(vb, struct mtk_fd_mem2mem2_buffer, vbb.vb2_buf);
-> +
-> +       list_del(&b->list);
-> +       vb2_buffer_done(&b->vbb.vb2_buf, state);
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_v4l2_buffer_done);
-> diff --git a/drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.c b/drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.c
-> new file mode 100644
-> index 0000000..bd447b7
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.c
-> @@ -0,0 +1,114 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/platform_device.h>
-> +#include "mtk_fd.h"
-> +#include "mtk_fd-ctx.h"
-> +#include "mtk_fd-v4l2.h"
-> +
-> +static struct mtk_fd_ctx_format fd_param_fmts[] = {
-> +       {
-> +               .fmt.meta = {
-> +               .dataformat = V4L2_META_FMT_MTISP_PARAMS,
-> +               .max_buffer_size = 1024 * 30,
-> +               },
-> +       },
-> +};
-> +
-> +static struct mtk_fd_ctx_format in_fmts[] = {
-> +       {
-> +               .fmt.img = {
-> +                       .pixelformat  = V4L2_PIX_FMT_VYUY,
-> +                       .depth    = { 16 },
-> +                       .row_depth  = { 16 },
-> +                       .num_planes = 1,
-> +               },
-> +       },
-> +       {
-> +               .fmt.img = {
-> +                       .pixelformat  = V4L2_PIX_FMT_YUYV,
-> +                       .depth    = { 16 },
-> +                       .row_depth  = { 16 },
-> +                       .num_planes = 1,
-> +               },
-> +       },
-> +       {
-> +               .fmt.img = {
-> +                       .pixelformat  = V4L2_PIX_FMT_YVYU,
-> +                       .depth    = { 16 },
-> +                       .row_depth  = { 16 },
-> +                       .num_planes = 1,
-> +               },
-> +       },
-> +       {
-> +               .fmt.img = {
-> +                       .pixelformat  = V4L2_PIX_FMT_UYVY,
-> +                       .depth    = { 16 },
-> +                       .row_depth  = { 16 },
-> +                       .num_planes = 1,
-> +               },
-> +       },
-> +};
-> +
-> +static struct mtk_fd_ctx_queue_desc
-> +output_queues[MTK_FD_CTX_FD_TOTAL_OUTPUT] = {
-> +       {
-> +               .id = MTK_FD_CTX_FD_YUV_IN,
-> +               .name = "FDInput",
-> +               .capture = 0,
-> +               .image = 1,
-> +               .fmts = in_fmts,
-> +               .num_fmts = ARRAY_SIZE(in_fmts),
-> +               .default_fmt_idx = 1,
-> +       },
-> +       {
-> +               .id = MTK_FD_CTX_FD_CONFIG_IN,
-> +               .name = "FDConfig",
-> +               .capture = 0,
-> +               .image = 0,
-> +               .fmts = fd_param_fmts,
-> +               .num_fmts = 1,
-> +               .default_fmt_idx = 0,
-> +       },
-> +};
-> +
-> +static struct mtk_fd_ctx_queue_desc
-> +capture_queues[MTK_FD_CTX_FD_TOTAL_CAPTURE] = {
-> +       {
-> +               .id = MTK_FD_CTX_FD_OUT,
-> +               .name = "FDOutput",
-> +               .capture = 1,
-> +               .image = 0,
-> +               .fmts = fd_param_fmts,
-> +               .num_fmts = 1,
-> +               .default_fmt_idx = 0,
-> +       },
-> +};
-> +
-> +static struct mtk_fd_ctx_queues_setting queues_setting = {
-> +       .master = MTK_FD_CTX_FD_OUT,
-> +       .output_queue_descs = output_queues,
-> +       .total_output_queues = MTK_FD_CTX_FD_TOTAL_OUTPUT,
-> +       .capture_queue_descs = capture_queues,
-> +       .total_capture_queues = MTK_FD_CTX_FD_TOTAL_CAPTURE,
-> +};
-> +
-> +int mtk_fd_ctx_fd_init(struct mtk_fd_ctx *ctx)
-> +{
-> +       /* Initialize main data structure */
-> +       return mtk_fd_ctx_core_queue_setup(ctx, &queues_setting);
-> +}
-> +EXPORT_SYMBOL_GPL(mtk_fd_ctx_fd_init);
-> diff --git a/drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.h b/drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.h
-> new file mode 100644
-> index 0000000..0702abc
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.h
-> @@ -0,0 +1,36 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#ifndef __MTK_FD_V4L2__
-> +#define __MTK_FD_V4L2__
-> +
-> +#include <linux/types.h>
-> +#include "mtk_fd-ctx.h"
-> +
-> +#define MTK_FD_DEV_NAME     "MTK-FD-V4L2"
-> +
-> +/* Input: YUV image */
-> +#define MTK_FD_CTX_FD_YUV_IN           0
-> +/* Input: FD Configuration */
-> +#define MTK_FD_CTX_FD_CONFIG_IN                1
-> +#define MTK_FD_CTX_FD_TOTAL_OUTPUT     2
-> +
-> +/* OUT: FD output devices*/
-> +#define MTK_FD_CTX_FD_OUT              2
-> +#define MTK_FD_CTX_FD_TOTAL_CAPTURE    1
-> +
-> +int mtk_fd_ctx_fd_init(struct mtk_fd_ctx *ctx);
-> +
-> +#endif /*__MTK_FD_V4L2__*/
-> diff --git a/drivers/media/platform/mtk-isp/fd/mtk_fd.c b/drivers/media/platform/mtk-isp/fd/mtk_fd.c
-> new file mode 100644
-> index 0000000..7e2fd00
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/fd/mtk_fd.c
-> @@ -0,0 +1,730 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2015 MediaTek Inc.
-> + *
-> + * This program is free software: you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/types.h>
-> +#include <linux/device.h>
-> +#include <linux/kdev_t.h>
-> +
-> +#include <linux/platform_device.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/mm_types.h>
-> +#include <linux/mm.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/sched.h>
-> +#include <linux/uaccess.h>
-> +#include <asm/page.h>
-> +#include <linux/vmalloc.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/wait.h>
-> +
-> +#include <linux/of_platform.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +
-> +#include "mtk_fd.h"
-> +#include "mtk_fd-core.h"
-> +
-> +#include "mtk_vpu.h"
-> +
-> +#include <linux/pm_runtime.h>
-> +#include <linux/clk.h>
-> +
-> +#ifdef CONFIG_PM_WAKELOCKS
-> +#include <linux/pm_wakeup.h>
-> +#else
-> +#include <linux/wakelock.h>
-> +#endif
-> +
-> +#define FD_DRVNAME     "mtk-fd"
-> +
-> +static const struct of_device_id mtk_fd_of_ids[] = {
-> +       /* Remider: Add this device node manually in .dtsi */
-> +       { .compatible = "mediatek,fd", },
-> +       {}
-> +};
-> +MODULE_DEVICE_TABLE(of, mtk_fd_of_ids);
-> +
-> +static void mtk_fd_prepare_enable_ccf_clock(struct mtk_fd_drv_dev *fd_hw_dev)
-> +{
-> +       int ret;
-> +
-> +       pm_runtime_get_sync(fd_hw_dev->larb_dev);
-> +       ret = clk_prepare_enable(fd_hw_dev->fd_clk);
-> +       if (ret)
-> +               dev_err(&fd_hw_dev->pdev->dev,
-> +                       "cannot prepare and enable CG_IMGSYS_FD clock\n");
-> +}
-> +
-> +static void mtk_fd_disable_unprepare_ccf_clock(struct mtk_fd_drv_dev *fd_hw_dev)
-> +{
-> +       clk_disable_unprepare(fd_hw_dev->fd_clk);
-> +}
-> +
-> +static int mtk_fd_clk_ctrl(struct mtk_fd_drv_dev *fd_hw_dev, int en)
-> +{
-> +       if (en)
-> +               mtk_fd_prepare_enable_ccf_clock(fd_hw_dev);
-> +       else
-> +               mtk_fd_disable_unprepare_ccf_clock(fd_hw_dev);
-> +
-> +       dev_dbg(&fd_hw_dev->pdev->dev, "clock en: %d\n", en);
-> +
+> +       struct _seninf *priv = container_of(sd, struct _seninf, subdev);
+> +       int ret = 0;
+> +
+> +       ret = pm_runtime_get_sync(priv->dev);
+> +       if (ret < 0)
+> +               dev_err(priv->dev, "Failed to pm_runtime_get_sync: %d\n", ret);
+> +
+> +       clk_prepare_enable(priv->cam_clk);
+> +       clk_prepare_enable(priv->top_mux_clk);
 > +       return 0;
 > +}
 > +
-> +static int mtk_fd_wait_irq(struct mtk_fd_drv_dev *fd_hw_dev)
+> +static int seninf_close(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
 > +{
-> +       int timeout;
+> +       struct _seninf *priv = container_of(sd, struct _seninf, subdev);
 > +
-> +       timeout = wait_event_interruptible_timeout
-> +               (fd_hw_dev->wq,
-> +                (fd_hw_dev->fd_irq_result & FD_IRQ_MASK),
-> +                mtk_fd_us_to_jiffies(1 * 1000000));
-> +
-> +       if (timeout == 0) {
-> +               dev_err(&fd_hw_dev->pdev->dev,
-> +                       "%s timeout, %d\n",
-> +                       __func__, fd_hw_dev->fd_irq_result);
-> +               return -EAGAIN;
-> +       }
-> +
-> +       dev_dbg(&fd_hw_dev->pdev->dev, "irq_res: 0x%8x\n",
-> +               fd_hw_dev->fd_irq_result);
-> +
-> +       if (timeout != 0 && !(fd_hw_dev->fd_irq_result & FD_IRQ_MASK)) {
-> +               dev_err(&fd_hw_dev->pdev->dev,
-> +                       "%s interrupted by system signal, return value(%d)\n",
-> +                       __func__, timeout);
-> +               return -ERESTARTSYS;
-> +       }
-> +
-> +       if (!(fd_hw_dev->fd_irq_result & FD_IRQ_MASK)) {
-> +               dev_err(&fd_hw_dev->pdev->dev,
-> +                       "%s Not FD, %d\n",
-> +                       __func__, fd_hw_dev->fd_irq_result);
-> +               return -1;
-> +       }
-> +
-> +       fd_hw_dev->fd_irq_result = 0;
-> +
+> +       clk_disable_unprepare(priv->top_mux_clk);
+> +       clk_disable_unprepare(priv->cam_clk);
+> +       pm_runtime_put(priv->dev);
 > +       return 0;
 > +}
+> +#endif
 > +
-> +static int mtk_fd_send_ipi_init(struct platform_device *pdev,
-> +                               struct fd_buffer *scp_mem)
+> +#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
+> +static const struct v4l2_subdev_internal_ops seninf_internal_ops = {
+> +       .open = seninf_open,
+> +       .close = seninf_close,
+> +};
+> +#endif
+> +
+> +static irqreturn_t seninf_irq(int irq, void *device_id)
 > +{
-> +       struct ipi_message fd_init_msg;
-> +
-> +       fd_init_msg.cmd_id = FD_CMD_INIT;
-> +       fd_init_msg.fd_manager = *scp_mem;
-> +
-> +       vpu_ipi_send(pdev, IPI_FD_CMD, &fd_init_msg, sizeof(fd_init_msg));
-> +
-> +       return 0;
-> +}
-> +
-> +static int mtk_fd_send_ipi_cmd(struct platform_device *pdev,
-> +                              struct v4l2_fd_param *fd_param)
-> +{
-> +       struct ipi_message fd_ipi_msg;
-> +
-> +       fd_ipi_msg.cmd_id = FD_CMD_ENQ;
-> +       fd_ipi_msg.fd_param = *fd_param;
-> +
-> +       vpu_ipi_send_sync_async(pdev, IPI_FD_CMD, &fd_ipi_msg,
-> +                               sizeof(fd_ipi_msg), 0);
-> +       return 0;
-> +}
-> +
-> +static irqreturn_t mtk_fd_irq(int irq, void *dev_addr)
-> +{
-> +       struct mtk_fd_drv_dev *fd_hw_dev;
-> +
-> +       fd_hw_dev = (struct mtk_fd_drv_dev *)dev_addr;
-> +       fd_hw_dev->fd_irq_result = FD_RD32(fd_hw_dev->fd_base + FD_INT);
-> +       wake_up_interruptible(&fd_hw_dev->wq);
-> +
 > +       return IRQ_HANDLED;
 > +}
 > +
-> +static int mtk_fd_do_callback(struct mtk_fd_drv_dev *fd_hw_dev,
-> +                             unsigned int frame_state)
+> +static int seninf_enable_test_pattern(struct _seninf *priv, u32 pattern)
 > +{
-> +       struct mtk_fd_ctx_finish_param fparam;
-> +       struct mtk_isp_fd_drv_data *drv_data;
-> +       struct device *dev;
+> +       void *pseninf = priv->seninf_hw;
+> +
+> +       switch (pattern) {
+> +       case TEST_DISABLED:
+> +       case TEST_PATTERN_MODE:
+> +               break;
+> +       case TEST_DEBUG_MODE:
+> +               /*Sensor Interface Control */
+> +               pr_debug("SENINF_CSI2_CTL SENINF1:0x%x, 2:0x%x, 3:0x%x, 5:0x%x\n",
+> +                        seninf_read_reg(pseninf, SENINF1_CSI2_CTL),
+> +                        seninf_read_reg(pseninf, SENINF2_CSI2_CTL),
+> +                        seninf_read_reg(pseninf, SENINF3_CSI2_CTL),
+> +                        seninf_read_reg(pseninf, SENINF5_CSI2_CTL));
+> +               /*read width/height*/
+> +               /*read interrupt status*/
+> +               pr_debug("SENINF1_IRQ:0x%x, 2:0x%x, 3:0x%x, 5:0x%x\n",
+> +                        seninf_read_reg(pseninf, SENINF1_CSI2_INT_STATUS),
+> +                        seninf_read_reg(pseninf, SENINF2_CSI2_INT_STATUS),
+> +                        seninf_read_reg(pseninf, SENINF3_CSI2_INT_STATUS),
+> +                        seninf_read_reg(pseninf, SENINF5_CSI2_INT_STATUS));
+> +               /*Mux1 */
+> +               pr_debug("SENINF1_MUX_CTRL:0x%x, INTSTA:0x%x, DEBUG_2(0x%x)\n",
+> +                        seninf_read_reg(pseninf, SENINF1_MUX_CTRL),
+> +                        seninf_read_reg(pseninf, SENINF1_MUX_INTSTA),
+> +                        seninf_read_reg(pseninf, SENINF1_MUX_DEBUG_2));
+> +               if (seninf_read_reg(pseninf, SENINF1_MUX_INTSTA) & 0x1) {
+> +                       seninf_write_reg(pseninf, SENINF1_MUX_INTSTA,
+> +                                        0xffffffff);
+> +                       udelay(SENINF_DRV_DEBUG_DELAY);
+> +                       pr_debug("overrun CTRL:%x INTSTA:%x DEBUG_2:%x\n",
+> +                                seninf_read_reg(pseninf, SENINF1_MUX_CTRL),
+> +                                seninf_read_reg(pseninf, SENINF1_MUX_INTSTA),
+> +                                seninf_read_reg(pseninf, SENINF1_MUX_DEBUG_2));
+> +               }
+> +               break;
+> +       default:
+> +               dev_warn(priv->dev, "%s Unhandled testcase:%d\n",
+> +                        __func__, pattern);
+> +               break;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int seninf_set_ctrl(struct v4l2_ctrl *ctrl)
+> +{
+> +       struct _seninf *priv = container_of(ctrl->handler,
+> +                                            struct _seninf, ctrl_handler);
 > +       int ret = 0;
 > +
-> +       drv_data = mtk_fd_hw_dev_to_drv(fd_hw_dev);
-> +       dev = &drv_data->fd_hw_dev.pdev->dev;
+> +       switch (ctrl->id) {
+> +       case V4L2_CID_TEST_PATTERN:
+> +               ret = seninf_enable_test_pattern(priv, ctrl->val);
+> +               break;
+> +       default:
+> +               dev_warn(priv->dev, "%s Unhandled id:0x%x, val:0x%x\n",
+> +                        __func__, ctrl->id, ctrl->val);
+> +               break;
+> +       }
+> +       return ret;
+> +}
 > +
-> +       fparam.state = frame_state;
-> +       fparam.frame_id = fd_hw_dev->fd_ctx.frame_id;
-> +       dev_dbg(dev, "frame_id(%d)\n", fparam.frame_id);
+> +static const struct v4l2_ctrl_ops seninf_ctrl_ops = {
+> +       .s_ctrl = seninf_set_ctrl,
+> +};
 > +
-> +       ret = mtk_fd_ctx_core_job_finish(&drv_data->fd_dev.ctx, &fparam);
+> +static const char * const seninf_test_pattern_menu[] = {
+> +       "Disabled",
+> +       "test_pattern_mode",
+> +       "test_debug_mode",
+> +};
+> +
+> +static int seninf_initialize_controls(struct _seninf *priv)
+> +{
+> +       struct v4l2_ctrl_handler *handler;
+> +       int ret = 0;
+> +
+> +       handler = &priv->ctrl_handler;
+> +       ret = v4l2_ctrl_handler_init(handler, 2);
 > +       if (ret)
-> +               dev_err(dev, "frame_id(%d), finish op failed: %d\n",
-> +                       fparam.frame_id, ret);
-> +       else
-> +               fd_hw_dev->state = FD_CBD;
-> +
-> +       return ret;
-> +}
-> +
-> +static int mtk_fd_dequeue(struct mtk_fd_drv_dev *fd_hw_dev,
-> +                         struct v4l2_fd_param *fd_param)
-> +{
-> +       struct mtk_isp_fd_drv_data *drv_data;
-> +       struct fd_user_output *fd_output;
-> +       u32 num = 0, i = 0;
-> +
-> +       dev_dbg(&fd_hw_dev->pdev->dev, "-E. %s.\n", __func__);
-> +
-> +       if ((uint64_t)fd_hw_dev->fd_base < VA_OFFSET) {
-> +               dev_info(&fd_hw_dev->pdev->dev,
-> +                        "-X. %s. fd_base_error: %p\n",
-> +                        __func__, fd_hw_dev->fd_base);
-> +               return -1;
-> +       }
-> +
-> +       num = FD_RD32(fd_hw_dev->fd_base + FD_RESULT);
-> +       FD_WR32(0x0, fd_hw_dev->fd_base + FD_INT_EN);
-> +       fd_output = (struct fd_user_output *)fd_param->fd_user_result.va;
-> +       fd_output->face_number = num;
-> +
-> +       drv_data = mtk_fd_hw_dev_to_drv(fd_hw_dev);
-> +       if ((uint64_t)drv_data < VA_OFFSET) {
-> +               dev_dbg(&fd_hw_dev->pdev->dev,
-> +                       "-X. %s. fd_base_error\n", __func__);
-> +               return -1;
-> +       }
-> +       mtk_fd_do_callback(fd_hw_dev, MTK_FD_CTX_FRAME_DATA_DONE);
-> +
-> +       for (i = 0; i < num; i++) {
-> +               dev_dbg(&fd_hw_dev->pdev->dev,
-> +                       "id:%d, typ:%d, x0:%d, y0:%d, x1:%d, y1:%d, fcv:0x%x\n",
-> +                       fd_output->face[i].face_idx,
-> +                       fd_output->face[i].type,
-> +                       fd_output->face[i].x0,
-> +                       fd_output->face[i].y0,
-> +                       fd_output->face[i].x1,
-> +                       fd_output->face[i].y1,
-> +                       fd_output->face[i].fcv);
-> +       }
-> +       dev_dbg(&fd_hw_dev->pdev->dev, "-X. %s.\n", __func__);
-> +       return 0;
-> +}
-> +
-> +static int mtk_fd_manager_buf_init(struct mtk_fd_drv_dev *fd_hw_dev)
-> +{
-> +       struct fd_manager_ctx *manager_ctx;
-> +
-> +       manager_ctx = (struct fd_manager_ctx *)fd_hw_dev->fd_ctx.scp_mem.va;
-> +       manager_ctx->rs_result = fd_hw_dev->fd_ctx.rs_result;
-> +
-> +       return 0;
-> +}
-> +
-> +static int mtk_fd_alloc_rs_buf(struct mtk_fd_drv_dev *fd_hw_dev)
-> +{
-> +       u64 va = 0;
-> +       dma_addr_t dma_handle = 0;
-> +       u32 size = RS_BUF_SIZE_MAX;
-> +
-> +       va = (uint64_t)dma_alloc_coherent(&fd_hw_dev->pdev->dev, size,
-> +       &dma_handle, GFP_KERNEL);
-> +
-> +       dev_dbg(&fd_hw_dev->pdev->dev, "rsbuffer size: %u\n", size);
-> +       dev_dbg(&fd_hw_dev->pdev->dev, "va = 0x%llx, iova = 0x%x\n", va,
-> +               dma_handle);
-> +
-> +       if (va == 0) {
-> +               dev_err(&fd_hw_dev->pdev->dev, "dma_alloc null va!\n");
-> +               return -1;
-> +       }
-> +
-> +       memset((uint8_t *)va, 0, size);
-> +
-> +       fd_hw_dev->fd_ctx.rs_result.va = va;
-> +       fd_hw_dev->fd_ctx.rs_result.iova = dma_handle;
-> +
-> +       return 0;
-> +}
-> +
-> +static int mtk_fd_get_reserve_mem(struct mtk_fd_drv_dev *fd_hw_dev)
-> +{
-> +       phys_addr_t scp_mem_pa;
-> +       u64 scp_mem_va;
-> +       u32 scp_mem_iova;
-> +       u32 size = 0, size_align = 0;
-> +       struct sg_table *sgt;
-> +       int n_pages = 0, i = 0, ret = 0;
-> +       struct page **pages = NULL;
-> +       struct mtk_fd_drv_ctx *fd_ctx;
-> +       struct platform_device *pdev = fd_hw_dev->pdev;
-> +
-> +       fd_ctx = &fd_hw_dev->fd_ctx;
-> +
-> +       scp_mem_iova = 0;
-> +       scp_mem_va = vpu_get_reserve_mem_virt(FD_MEM_ID);
-> +       scp_mem_pa = vpu_get_reserve_mem_phys(FD_MEM_ID);
-> +       size = (u32)vpu_get_reserve_mem_size(FD_MEM_ID);
-> +
-> +       dev_dbg(&pdev->dev, "fd_scp_mem va: 0x%llx, pa: 0x%llx, sz:0x%x\n",
-> +               scp_mem_va, (u64)scp_mem_pa, size);
-> +
-> +       if (scp_mem_va != 0 && size > 0)
-> +               memset((void *)scp_mem_va, 0, size);
-> +
-> +       /* get iova */
-> +       sgt = &fd_ctx->sgtable;
-> +       sg_alloc_table(sgt, 1, GFP_KERNEL);
-> +
-> +       size_align = round_up(size, PAGE_SIZE);
-> +       n_pages = size_align >> PAGE_SHIFT;
-> +
-> +       pages = kmalloc_array(n_pages, sizeof(struct page *), GFP_KERNEL);
-> +
-> +       for (i = 0; i < n_pages; i++)
-> +               pages[i] = phys_to_page(scp_mem_pa + i * PAGE_SIZE);
-> +       ret = sg_alloc_table_from_pages(sgt, pages, n_pages,
-> +                                       0, size_align, GFP_KERNEL);
-> +
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "failed to get allocate sg table\n");
-> +               kfree(pages);
 > +               return ret;
+> +       priv->test_pattern =
+> +       v4l2_ctrl_new_std_menu_items(handler, &seninf_ctrl_ops,
+> +                                    V4L2_CID_TEST_PATTERN,
+> +                                    ARRAY_SIZE(seninf_test_pattern_menu) - 1,
+> +                                    0, 0, seninf_test_pattern_menu);
+> +
+> +       if (handler->error) {
+> +               ret = handler->error;
+> +               dev_err(priv->dev,
+> +                       "Failed to init controls(%d)\n", ret);
+> +               goto err_free_handler;
 > +       }
 > +
-> +       dma_map_sg_attrs(&pdev->dev, sgt->sgl, sgt->nents,
-> +                        DMA_BIDIRECTIONAL, DMA_ATTR_SKIP_CPU_SYNC);
-> +       scp_mem_iova = sg_dma_address(sgt->sgl);
-> +       kfree(pages);
-> +
-> +       dev_dbg(&fd_hw_dev->pdev->dev, "scpmem size:%u,0x%X\n", size, size);
-> +       dev_dbg(&fd_hw_dev->pdev->dev, "pa:0x%08X\n", (u32)scp_mem_pa);
-> +       dev_dbg(&fd_hw_dev->pdev->dev, "va:0x%16llX\n", (u64)scp_mem_va);
-> +       dev_dbg(&fd_hw_dev->pdev->dev, "iova:0x%08X\n", (u32)scp_mem_iova);
-> +
-> +       fd_ctx->scp_mem.pa = scp_mem_pa;
-> +       fd_ctx->scp_mem.va = scp_mem_va;
-> +       fd_ctx->scp_mem.iova = scp_mem_iova;
+> +       priv->subdev.ctrl_handler = handler;
 > +
 > +       return 0;
-> +}
 > +
-> +static int mtk_fd_load_vpu(struct mtk_fd_drv_dev *fd_hw_dev)
-> +{
-> +       struct mtk_fd_drv_ctx *fd_ctx;
-> +       int ret = 0;
-> +
-> +       fd_ctx = &fd_hw_dev->fd_ctx;
-> +
-> +       /* init vpu */
-> +       fd_ctx->vpu_pdev = vpu_get_plat_device(fd_hw_dev->pdev);
-> +
-> +       if (!fd_ctx->vpu_pdev) {
-> +               dev_err(&fd_hw_dev->pdev->dev,
-> +                       "Failed to get VPU device\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       ret = vpu_load_firmware(fd_ctx->vpu_pdev);
-> +       if (ret < 0) {
-> +               /**
-> +                * Return 0 if downloading firmware successfully,
-> +                * otherwise it is failed
-> +                */
-> +               dev_err(&fd_hw_dev->pdev->dev,
-> +                       "vpu_load_firmware failed!");
-> +               return -EINVAL;
-> +       }
-> +       return ret;
-> +}
-> +
-> +static int mtk_fd_open_context(struct mtk_fd_drv_dev *fd_hw_dev)
-> +{
-> +       struct mtk_fd_drv_ctx *fd_ctx;
-> +
-> +       fd_ctx = &fd_hw_dev->fd_ctx;
-> +
-> +       mtk_fd_load_vpu(fd_hw_dev);
-> +
-> +       mtk_fd_get_reserve_mem(fd_hw_dev);
-> +       mtk_fd_alloc_rs_buf(fd_hw_dev);
-> +       mtk_fd_manager_buf_init(fd_hw_dev);
-> +
-> +       mtk_fd_send_ipi_init(fd_ctx->vpu_pdev, &fd_ctx->scp_mem);
-> +       return 0;
-> +}
-> +
-> +static int mtk_fd_release_context(struct mtk_fd_drv_dev *fd_hw_dev)
-> +{
-> +       struct mtk_fd_drv_ctx *fd_ctx;
-> +
-> +       fd_ctx = &fd_hw_dev->fd_ctx;
-> +
-> +       atomic_set(&fd_ctx->fd_user_cnt, 0);
-> +       atomic_set(&fd_ctx->fd_stream_cnt, 0);
-> +       atomic_set(&fd_ctx->fd_enque_cnt, 0);
-> +       sg_free_table(&fd_ctx->sgtable);
-> +
-> +       return 0;
-> +}
-> +
-> +int mtk_fd_open(struct platform_device *pdev)
-> +{
-> +       int ret = 0;
-> +       s32 usercount;
-> +       struct mtk_fd_drv_dev *fd_hw_dev;
-> +       struct mtk_isp_fd_drv_data *fd_drv;
-> +       struct mtk_fd_drv_ctx *fd_ctx;
-> +
-> +       dev_dbg(&pdev->dev, "- E. %s.\n", __func__);
-> +
-> +       if (!pdev) {
-> +               dev_err(&fd_hw_dev->pdev->dev, "platform device is NULL\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       fd_drv = dev_get_drvdata(&pdev->dev);
-> +       fd_hw_dev = &fd_drv->fd_hw_dev;
-> +       fd_ctx = &fd_hw_dev->fd_ctx;
-> +       dev_dbg(&fd_hw_dev->pdev->dev, "open fd_hw_dev = 0x%p\n", fd_hw_dev);
-> +       dev_dbg(&fd_hw_dev->pdev->dev, "open fd_drv = 0x%p\n", fd_drv);
-> +
-> +       usercount = atomic_inc_return(&fd_hw_dev->fd_ctx.fd_user_cnt);
-> +
-> +       if (usercount == 1) {
-> +               /* Enable clock */
-> +               pm_runtime_get_sync(&fd_hw_dev->pdev->dev);
-> +
-> +               mtk_fd_open_context(fd_hw_dev);
-> +               fd_hw_dev->state = FD_INI;
-> +               fd_hw_dev->streaming = STREAM_OFF;
-> +       }
-> +
-> +       dev_dbg(&fd_hw_dev->pdev->dev, "usercount = %d",
-> +               atomic_read(&fd_ctx->fd_user_cnt));
-> +
-> +       dev_dbg(&fd_hw_dev->pdev->dev, "X. %s\n", __func__);
+> +err_free_handler:
+> +       v4l2_ctrl_handler_free(handler);
 > +
 > +       return ret;
 > +}
-> +EXPORT_SYMBOL(mtk_fd_open);
 > +
-> +int mtk_fd_streamon(struct platform_device *pdev, u16 id)
+> +static int seninf_probe(struct platform_device *pdev)
 > +{
+> +       struct resource *res;
+> +       unsigned int irq;
+> +       int i = 0;
 > +       int ret = 0;
-> +       struct mtk_fd_drv_dev *fd_hw_dev;
-> +       struct mtk_isp_fd_drv_data *fd_drv;
+> +       struct _seninf *priv;
+> +       struct v4l2_subdev *sd;
+> +       struct device_node *endpoint = NULL;
+> +       struct device *dev = &pdev->dev;
+> +       struct media_pad *pads;
+> +       unsigned int irq_info[3];
 > +
-> +       fd_drv = dev_get_drvdata(&pdev->dev);
-> +       fd_hw_dev = &fd_drv->fd_hw_dev;
-> +
-> +       dev_dbg(&pdev->dev, "- E. %s\n", __func__);
-> +       fd_hw_dev->streaming = STREAM_ON;
-> +       atomic_inc_return(&fd_hw_dev->fd_ctx.fd_stream_cnt);
-> +
-> +       dev_dbg(&pdev->dev, "- X. %s\n", __func__);
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL(mtk_fd_streamon);
-> +
-> +int mtk_fd_enqueue(struct platform_device *pdev,
-> +                  struct v4l2_fd_param *fd_param)
-> +{
-> +       struct mtk_fd_drv_dev *fd_hw_dev;
-> +       struct mtk_fd_drv_ctx *fd_ctx;
-> +       struct mtk_isp_fd_drv_data *fd_drv;
-> +
-> +       dev_dbg(&pdev->dev, "- E. %s\n", __func__);
-> +       fd_drv = dev_get_drvdata(&pdev->dev);
-> +       fd_hw_dev = &fd_drv->fd_hw_dev;
-> +       fd_ctx = &fd_hw_dev->fd_ctx;
-> +
-> +       fd_ctx->frame_id = fd_param->frame_id;
-> +
-> +       if (fd_hw_dev->streaming == STREAM_OFF || fd_hw_dev->state == FD_ENQ) {
-> +               dev_err(&fd_hw_dev->pdev->dev, "enqueue before stream on!\n");
-> +               return mtk_fd_do_callback(fd_hw_dev,
-> +                                               MTK_FD_CTX_FRAME_DATA_ERROR);
-> +       }
-> +
-> +       fd_hw_dev->state = FD_ENQ;
-> +       atomic_inc_return(&fd_ctx->fd_enque_cnt);
-> +
-> +       if (mtk_fd_send_ipi_cmd(fd_ctx->vpu_pdev, fd_param))
-> +               return -2;
-> +
-> +       if (mtk_fd_wait_irq(fd_hw_dev))
-> +               return mtk_fd_do_callback(fd_hw_dev,
-> +                                               MTK_FD_CTX_FRAME_DATA_ERROR);
-> +
-> +       mtk_fd_dequeue(fd_hw_dev, fd_param);
-> +
-> +       dev_dbg(&pdev->dev, "- E. %s\n", __func__);
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL(mtk_fd_enqueue);
-> +
-> +int mtk_fd_release(struct platform_device *pdev)
-> +{
-> +       int ret = 0;
-> +       struct mtk_fd_drv_dev *fd_hw_dev;
-> +       struct mtk_isp_fd_drv_data *fd_drv;
-> +
-> +       fd_drv = dev_get_drvdata(&pdev->dev);
-> +       fd_hw_dev = &fd_drv->fd_hw_dev;
-> +       dev_dbg(&fd_hw_dev->pdev->dev, "- E. %s\n", __func__);
-> +
-> +       if (!pdev) {
-> +               dev_err(&fd_hw_dev->pdev->dev, "platform device is NULL\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       dev_info(&fd_hw_dev->pdev->dev, "release fd_hw_dev: 0x%p\n", fd_hw_dev);
-> +
-> +       if (atomic_dec_and_test(&fd_hw_dev->fd_ctx.fd_user_cnt)) {
-> +               if (fd_hw_dev->state == FD_ENQ)
-> +                       mtk_fd_wait_irq(fd_hw_dev);
-> +
-> +               mtk_fd_release_context(fd_hw_dev);
-> +
-> +               pm_runtime_put_sync(&fd_hw_dev->pdev->dev);
-> +       }
-> +       dev_info(&fd_hw_dev->pdev->dev, "usercount = %d\n",
-> +                atomic_read(&fd_hw_dev->fd_ctx.fd_user_cnt));
-> +
-> +       dev_dbg(&fd_hw_dev->pdev->dev, "- X. %s\n", __func__);
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL(mtk_fd_release);
-> +
-> +int mtk_fd_streamoff(struct platform_device *pdev, u16 id)
-> +{
-> +       int ret = 0;
-> +       struct mtk_fd_drv_dev *fd_hw_dev;
-> +       struct mtk_isp_fd_drv_data *fd_drv;
-> +
-> +       fd_drv = dev_get_drvdata(&pdev->dev);
-> +       fd_hw_dev = &fd_drv->fd_hw_dev;
-> +
-> +       dev_dbg(&pdev->dev, "- E. %s\n", __func__);
-> +
-> +       if (fd_hw_dev->state == FD_ENQ)
-> +               mtk_fd_wait_irq(fd_hw_dev);
-> +
-> +       fd_hw_dev->streaming = STREAM_OFF;
-> +       atomic_dec_return(&fd_hw_dev->fd_ctx.fd_stream_cnt);
-> +
-> +       dev_dbg(&pdev->dev, "- X. %s\n", __func__);
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL(mtk_fd_streamoff);
-> +
-> +static struct mtk_fd_ctx_desc mtk_isp_ctx_desc_fd = {
-> +       "proc_device_fd", mtk_fd_ctx_fd_init,};
-> +
-> +static int mtk_fd_probe(struct platform_device *pdev)
-> +{
-> +       struct mtk_isp_fd_drv_data *fd_drv;
-> +       struct mtk_fd_drv_dev *fd_hw_dev;
-> +       struct mtk_fd_drv_ctx *fd_ctx;
-> +       struct device_node *node;
-> +       struct platform_device *larb_pdev;
-> +       int irq_num = 0;
-> +       int ret = 0;
-> +
-> +       dev_info(&pdev->dev, "E. %s.\n", __func__);
-> +
-> +       fd_drv = devm_kzalloc(&pdev->dev, sizeof(*fd_drv), GFP_KERNEL);
-> +
-> +       if (!fd_drv)
+> +       dev_dbg(dev, "seninf probe +\n");
+> +       priv = devm_kzalloc(&pdev->dev, sizeof(struct _seninf), GFP_KERNEL);
+> +       if (!priv)
 > +               return -ENOMEM;
+> +       memset(priv, 0, sizeof(struct _seninf));
+> +       priv->dev = &pdev->dev;
+> +       sd = &priv->subdev;
+> +       pads = priv->pads;
+> +       /* cam0 <reg 0> */
+> +       /* cam1 <reg 1> */
+> +       for (i = 0; i < 2; i++) { /* support upto 2 senosrs */
+> +               endpoint = of_graph_get_endpoint_by_regs(dev->of_node, i, i);
+> +               if (!endpoint) {
+> +                       dev_err(dev, "endpoint node not found\n");
+> +                       return -EINVAL;
+> +               }
+> +               ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(endpoint),
+> +                                                &priv->ep[i]);
+> +               of_node_put(endpoint);
 > +
-> +       dev_set_drvdata(&pdev->dev, fd_drv);
-> +       fd_hw_dev = &fd_drv->fd_hw_dev;
-> +
-> +       if (!fd_hw_dev) {
-> +               dev_err(&pdev->dev, "Unable to allocate fd_hw_dev\n");
-> +               return -ENOMEM;
+> +               if (ret < 0) {
+> +                       pr_err("parsing endpoint node failed\n");
+> +                       return ret;
+> +               }
+> +               if (priv->ep[i].bus_type != V4L2_MBUS_CSI2) {
+> +                       pr_err("invalid bus type, must be CSI2\n");
+> +                       return -EINVAL;
+> +               }
+> +               pr_debug("bus.mipi_csi2.num_data_lanes %d\n",
+> +                        priv->ep[i].bus.mipi_csi2.num_data_lanes);
 > +       }
+> +       /* get IRQ ID and request IRQ */
+> +       irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
 > +
-> +       dev_info(&pdev->dev, "open fd_hw_dev = 0x%p\n", fd_hw_dev);
-> +       dev_info(&pdev->dev, "open fd_drv = 0x%p\n", fd_drv);
-> +
-> +       fd_hw_dev->pdev = pdev;
-> +       fd_ctx = &fd_hw_dev->fd_ctx;
-> +
-> +       irq_num = irq_of_parse_and_map(pdev->dev.of_node, FD_IRQ_IDX);
-> +       ret = request_irq(irq_num, (irq_handler_t)mtk_fd_irq,
-> +                         IRQF_TRIGGER_NONE, FD_DRVNAME, fd_hw_dev);
-> +       if (ret) {
-> +               dev_info(&pdev->dev, "%s request_irq fail, irq=%d\n",
-> +                        __func__, irq_num);
-> +               return ret;
-> +       }
-> +       dev_info(&pdev->dev, "irq_num=%d\n", irq_num);
-> +
-> +       node = of_parse_phandle(pdev->dev.of_node, "mediatek,larb", 0);
-> +       if (!node) {
-> +               dev_err(&pdev->dev, "no mediatek, larb found");
-> +               return -EINVAL;
-> +       }
-> +       larb_pdev = of_find_device_by_node(node);
-> +       if (!larb_pdev) {
-> +               dev_err(&pdev->dev, "no mediatek, larb device found");
-> +               return -EINVAL;
-> +       }
-> +       fd_hw_dev->larb_dev = &larb_pdev->dev;
-> +
-> +       node = of_find_compatible_node(NULL, NULL, "mediatek,fd");
-> +       if (!node) {
-> +               dev_err(&pdev->dev, "find fd node failed!!!\n");
-> +               return -ENODEV;
-> +       }
-> +       fd_hw_dev->fd_base = of_iomap(node, 0);
-> +       if (!fd_hw_dev->fd_base) {
-> +               dev_err(&pdev->dev, "unable to map fd node!!!\n");
-> +               return -ENODEV;
-> +       }
-> +       dev_info(&pdev->dev, "fd_hw_dev->fd_base: %lx\n",
-> +                (unsigned long)fd_hw_dev->fd_base);
-> +
-> +       /* CCF: Grab clock pointer (struct clk*) */
-> +       fd_hw_dev->fd_clk = devm_clk_get(&pdev->dev, "FD_CLK_IMG_FD");
-> +       if (IS_ERR(fd_hw_dev->fd_clk)) {
-> +               dev_err(&pdev->dev, "cannot get FD_CLK_IMG_FD clock\n");
-> +               return PTR_ERR(fd_hw_dev->fd_clk);
-> +       }
-> +
-> +       pm_runtime_enable(&pdev->dev);
-> +
-> +       atomic_set(&fd_ctx->fd_user_cnt, 0);
-> +       atomic_set(&fd_ctx->fd_stream_cnt, 0);
-> +       atomic_set(&fd_ctx->fd_enque_cnt, 0);
-> +
-> +       init_waitqueue_head(&fd_hw_dev->wq);
-> +
-> +       fd_hw_dev->fd_irq_result = 0;
-> +       fd_hw_dev->streaming = STREAM_OFF;
-> +
-> +       ret = mtk_fd_dev_core_init(pdev, &fd_drv->fd_dev, &mtk_isp_ctx_desc_fd);
-> +
-> +       if (ret)
-> +               dev_err(&pdev->dev, "v4l2 init failed: %d\n", ret);
-> +
-> +       dev_info(&pdev->dev, "X. FD driver probe.\n");
-> +
-> +       return 0;
-> +}
-> +
-> +static int mtk_fd_remove(struct platform_device *pdev)
-> +{
-> +       int i4IRQ = 0;
-> +       struct mtk_fd_drv_dev *fd_hw_dev = NULL;
-> +       struct mtk_isp_fd_drv_data *drv_data = dev_get_drvdata(&pdev->dev);
-> +
-> +       dev_info(&fd_hw_dev->pdev->dev, "-E. %s\n", __func__);
-> +       if (drv_data) {
-> +               mtk_fd_dev_core_release(pdev, &drv_data->fd_dev);
-> +               fd_hw_dev = &drv_data->fd_hw_dev;
+> +       if (irq > 0) {
+> +               /* Get IRQ Flag from device node */
+> +               if (of_property_read_u32_array(pdev->dev.of_node,
+> +                                              "interrupts", irq_info,
+> +                                              ARRAY_SIZE(irq_info))) {
+> +                       dev_err(dev, "get irq flags from DTS fail!!\n");
+> +                       return -ENODEV;
+> +               }
+> +               ret = request_irq(irq, (irq_handler_t)seninf_irq,
+> +                                 irq_info[2], "SENINF", NULL);
+> +               if (ret) {
+> +                       dev_err(dev, "request_irq fail\n");
+> +                       return ret;
+> +               }
+> +               pr_debug("seninf devnode:%s, irq=%d\n",
+> +                        pdev->dev.of_node->name, irq);
 > +       } else {
-> +               dev_err(&pdev->dev, "Can't find fd driver data\n");
+> +               pr_debug("No IRQ!!\n");
+> +       }
+> +
+> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "base_reg");
+> +       priv->base_reg = devm_ioremap_resource(dev, res);
+> +       if (IS_ERR(priv->base_reg))
+> +               return PTR_ERR(priv->base_reg);
+> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rx_reg");
+> +       priv->rx_reg = devm_ioremap_resource(dev, res);
+> +       if (IS_ERR(priv->rx_reg))
+> +               return PTR_ERR(priv->rx_reg);
+> +
+> +       priv->csi2_rx[CFG_CSI_PORT_0]  = priv->rx_reg;
+> +       priv->csi2_rx[CFG_CSI_PORT_0A] = priv->rx_reg;
+> +       priv->csi2_rx[CFG_CSI_PORT_0B] = priv->rx_reg + 0x1000;
+> +       priv->csi2_rx[CFG_CSI_PORT_1]  = priv->rx_reg + 0x2000;
+> +       priv->csi2_rx[CFG_CSI_PORT_2]  = priv->rx_reg + 0x4000;
+> +
+> +       priv->seninf_hw = priv->base_reg;
+> +       for (i = 0; i < SENINF_NUM; i++)
+> +               priv->seninf_ctrl[i] =  priv->base_reg + 0x1000 * i;
+> +       for (i = 0; i < SENINF_MUX_NUM; i++)
+> +               priv->seninf_mux[i] =  priv->base_reg + 0x1000 * i;
+> +       for (i = 0; i < SENINF_NUM; i++)
+> +               priv->csi_rx_conf[i] =  priv->base_reg + 0x1000 * i;
+> +
+> +       priv->cam_clk = devm_clk_get(dev, "CLK_CAM_SENINF");
+> +       if (IS_ERR(priv->cam_clk)) {
+> +               dev_err(dev, "Failed to get cam_clk\n");
 > +               return -EINVAL;
 > +       }
 > +
-> +       mtk_fd_clk_ctrl(fd_hw_dev, clock_off);
-> +       pm_runtime_disable(&pdev->dev);
-> +
-> +       i4IRQ = platform_get_irq(pdev, 0);
-> +       free_irq(i4IRQ, NULL);
-> +       kfree(fd_hw_dev);
-> +
-> +       dev_info(&fd_hw_dev->pdev->dev, "-X. %s\n", __func__);
-> +       return 0;
-> +}
-> +
-> +static int mtk_fd_suspend(struct device *dev)
-> +{
-> +       struct mtk_isp_fd_drv_data *fd_drv;
-> +       struct platform_device *pdev;
-> +       struct mtk_fd_drv_dev *fd_hw_dev;
-> +
-> +       if (pm_runtime_suspended(dev))
-> +               return 0;
-> +
-> +       fd_drv = dev_get_drvdata(dev);
-> +       fd_hw_dev = &fd_drv->fd_hw_dev;
-> +       pdev = fd_hw_dev->pdev;
-> +
-> +       dev_info(&pdev->dev, "E.%s\n", __func__);
-> +
-> +       if (atomic_read(&fd_hw_dev->fd_ctx.fd_user_cnt) > 0) {
-> +               mtk_fd_clk_ctrl(fd_hw_dev, clock_off);
-> +               dev_info(&pdev->dev, "Disable clock\n");
+> +       priv->top_mux_clk = devm_clk_get(dev, "CLK_TOP_MUX_SENINF");
+> +       if (IS_ERR(priv->top_mux_clk)) {
+> +               dev_err(dev, "Failed to get top_mux_clk\n");
+> +               return -EINVAL;
 > +       }
 > +
-> +       dev_info(&pdev->dev, "X.%s\n", __func__);
-> +       return 0;
-> +}
+> +       v4l2_subdev_init(sd, &seninf_subdev_ops);
 > +
-> +static int mtk_fd_resume(struct device *dev)
-> +{
-> +       struct mtk_isp_fd_drv_data *fd_drv;
-> +       struct platform_device *pdev;
-> +       struct mtk_fd_drv_dev *fd_hw_dev;
-> +
-> +       if (pm_runtime_suspended(dev))
-> +               return 0;
-> +
-> +       fd_drv = dev_get_drvdata(dev);
-> +       fd_hw_dev = &fd_drv->fd_hw_dev;
-> +       pdev = fd_hw_dev->pdev;
-> +
-> +       dev_info(&pdev->dev, "E.%s\n", __func__);
-> +
-> +       if (atomic_read(&fd_hw_dev->fd_ctx.fd_user_cnt) > 0) {
-> +               mtk_fd_clk_ctrl(fd_hw_dev, clock_on);
-> +               dev_info(&pdev->dev, "Enable clock\n");
+> +       ret = seninf_initialize_controls(priv);
+> +       if (ret) {
+> +               dev_err(dev, "Failed to initialize controls\n");
+> +               return ret;
 > +       }
+> +#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
+> +       sd->internal_ops = &seninf_internal_ops;
+> +       sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> +#endif
+> +       priv->subdev.dev = &pdev->dev;
+> +       snprintf(sd->name, V4L2_SUBDEV_NAME_SIZE, "%s.mipi-csi",
+> +                dev_name(&pdev->dev));
+> +       v4l2_set_subdevdata(sd, priv);
+> +#if defined(CONFIG_MEDIA_CONTROLLER)
+> +       sd->entity.function = MEDIA_ENT_F_CAM_SENSOR;
+> +       sd->entity.ops = &seninf_media_ops;
+> +       for (i = 0; i < 4; i++)
+> +               pads[i].flags = MEDIA_PAD_FL_SINK;
+> +       for (i = 4; i < NUM_PADS; i++)
+> +               pads[i].flags = MEDIA_PAD_FL_SOURCE;
+> +       ret = media_entity_pads_init(&sd->entity, NUM_PADS, pads);
+> +       if (ret < 0)
+> +               goto err_free_handler;
+> +#endif
+> +       ret = v4l2_async_register_subdev(sd);
+> +       if (ret < 0) {
+> +               dev_err(dev, "v4l2 async register subdev failed\n");
+> +               goto err_clean_entity;
+> +       }
+> +       pm_runtime_set_active(dev);
+> +       pm_runtime_enable(dev);
+> +       pm_runtime_idle(dev);
+> +       dev_dbg(dev, "seninf probe -\n");
+> +       return 0;
 > +
-> +       dev_info(&pdev->dev, "X.%s\n", __func__);
+> +err_clean_entity:
+> +#if defined(CONFIG_MEDIA_CONTROLLER)
+> +       media_entity_cleanup(&sd->entity);
+> +#endif
+> +err_free_handler:
+> +       v4l2_ctrl_handler_free(&priv->ctrl_handler);
+> +
+> +       return ret;
+> +}
+> +
+> +static int seninf_pm_suspend(struct device *dev)
+> +{
+> +       pr_debug("seninf_runtime_suspend\n");
 > +       return 0;
 > +}
 > +
-> +static const struct dev_pm_ops mtk_fd_pm_ops = {
-> +       SET_SYSTEM_SLEEP_PM_OPS(mtk_fd_suspend, mtk_fd_resume)
-> +       SET_RUNTIME_PM_OPS(mtk_fd_suspend, mtk_fd_resume, NULL)
+> +static int seninf_pm_resume(struct device *dev)
+> +{
+> +       pr_debug("seninf_runtime_resume\n");
+> +       return 0;
+> +}
+> +
+> +static const struct dev_pm_ops runtime_pm_ops = {
+> +       SET_RUNTIME_PM_OPS(seninf_pm_suspend,
+> +                          seninf_pm_resume,
+> +                          NULL)
 > +};
 > +
-> +static struct platform_driver mtk_fd_driver = {
-> +       .probe   = mtk_fd_probe,
-> +       .remove  = mtk_fd_remove,
-> +       .driver  = {
-> +               .name  = FD_DRVNAME,
-> +               .of_match_table = mtk_fd_of_ids,
-> +               .pm = &mtk_fd_pm_ops,
-> +       }
-> +};
-> +module_platform_driver(mtk_fd_driver);
+> +static int seninf_remove(struct platform_device *pdev)
+> +{
+> +       struct v4l2_subdev *subdev = platform_get_drvdata(pdev);
+> +       struct _seninf *priv = container_of(subdev, struct _seninf, subdev);
 > +
-> +MODULE_DESCRIPTION("Mediatek FD driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/media/platform/mtk-isp/fd/mtk_fd.h b/drivers/media/platform/mtk-isp/fd/mtk_fd.h
+> +       v4l2_async_unregister_subdev(&priv->subdev);
+> +       pm_runtime_disable(priv->dev);
+> +       return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id mtk_seninf_of_match[] = {
+> +       {.compatible = "mediatek,mt8183-seninf"},
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, mtk_seninf_of_match);
+> +#endif
+> +
+> +static int seninf_suspend(struct platform_device *pdev, pm_message_t mesg)
+> +{
+> +       return 0;
+> +}
+> +
+> +static int seninf_resume(struct platform_device *pdev)
+> +{
+> +       return 0;
+> +}
+> +
+> +static struct platform_driver seninf_pdrv = {
+> +       .probe  = seninf_probe,
+> +       .remove = seninf_remove,
+> +       .suspend = seninf_suspend,
+> +       .resume = seninf_resume,
+> +       .driver = {
+> +               .name   = "seninf_0",
+> +               .owner  = THIS_MODULE,
+> +#ifdef CONFIG_OF
+> +               .of_match_table = mtk_seninf_of_match,
+> +#endif
+> +               .pm  = &runtime_pm_ops,
+> +       },
+> +};
+> +
+> +static int __init mtk_seninf_init(void)
+> +{
+> +       int ret;
+> +
+> +       pr_debug("seninf Init\n");
+> +       ret = platform_driver_register(&seninf_pdrv);
+> +       if (ret) {
+> +               pr_err("Failed to register platform driver\n");
+> +               return ret;
+> +       }
+> +       return 0;
+> +}
+> +
+> +static void __exit mtk_seninf_exit(void)
+> +{
+> +       pr_debug("seninf Exit\n");
+> +       platform_driver_unregister(&seninf_pdrv);
+> +}
+> +
+> +late_initcall(mtk_seninf_init);
+> +module_exit(mtk_seninf_exit);
+> +
+> +MODULE_DESCRIPTION("MTK seninf driver");
+> +MODULE_AUTHOR("Louis Kuo <louis.kuo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("MTK:mtk_seninf");
+> diff --git a/drivers/media/platform/mtk-isp/isp_50/seninf/seninf_drv_def.h b/drivers/media/platform/mtk-isp/isp_50/seninf/seninf_drv_def.h
 > new file mode 100644
-> index 0000000..6cae440
+> index 0000000..6280ae4
 > --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/fd/mtk_fd.h
-> @@ -0,0 +1,127 @@
-> +/* SPDX-License-Identifier: GPL-2.0
+> +++ b/drivers/media/platform/mtk-isp/isp_50/seninf/seninf_drv_def.h
+> @@ -0,0 +1,201 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
 > + * Copyright (C) 2015 MediaTek Inc.
 > + *
 > + * This program is free software: you can redistribute it and/or modify
@@ -4543,120 +1486,1191 @@ On Wed, Feb 20, 2019 at 4:53 PM Jerry-ch Chen
 > + * GNU General Public License for more details.
 > + */
 > +
-> +#ifndef __MTK_FD_H__
-> +#define __MTK_FD_H__
+> +#ifndef __SENINF_DRV_DEF_H__
+> +#define __SENINF_DRV_DEF_H__
 > +
-> +#define MTK_FD_MAX_NO          (1024)
-> +#define MAX_FACE_SEL_NUM       (MTK_FD_MAX_NO + 2)
+> +#if defined(SENINF_CLK_208M)
+> +#define SENINF_TIMESTAMP_STEP     0x67
+> +#define SENINF_SETTLE_DELAY       0x15
+> +#define SENINF_HS_TRAIL_PARAMETER 0x8
+> +#elif defined(SENINF_CLK_312M)
+> +#define SENINF_TIMESTAMP_STEP     0x9b
+> +#define SENINF_SETTLE_DELAY       0x20
+> +#define SENINF_HS_TRAIL_PARAMETER 0xa
+> +#else
+> +#define SENINF_TIMESTAMP_STEP     0x67
+> +#define SENINF_SETTLE_DELAY       0x15
+> +#define SENINF_HS_TRAIL_PARAMETER 0x8
+> +#endif
 > +
-> +/* The max number of face sizes could be detected, for feature scaling */
-> +#define FACE_SIZE_NUM_MAX      (14)
+> +#define SENINF_DRV_DEBUG_DELAY 1000
 > +
-> +/* FACE_SIZE_NUM_MAX + 1, first scale for input image W/H */
-> +#define FD_SCALE_NUM           (15)
+> +#define SENSOR_CLOCK_POLARITY_HIGH     0
+> +#define SENSOR_CLOCK_POLARITY_LOW      1
+> +#define NUM_PADS       12
 > +
-> +/* Number of Learning data sets */
-> +#define LEARNDATA_NUM          (18)
-> +
-> +struct fd_buffer {
-> +       __u64 va;       /* used by APMCU access */
-> +       __u32 pa;       /* used by CM4 access */
-> +       __u32 iova;     /* used by HW access */
-> +} __packed;
-> +
-> +enum fd_img_format {
-> +       FMT_VYUY = 2,
-> +       FMT_UYVY,
-> +       FMT_YVYU,
-> +       FMT_YUYV,
+> +enum {
+> +       MIPI_OPHY_NCSI2 = 0,
+> +       MIPI_OPHY_CSI2  = 1,
+> +       MIPI_CPHY       = 2,
 > +};
 > +
-> +enum fd_mode {
-> +       FDMODE,
-> +       SDMODE,
-> +       VFB,
-> +       CFB,
+> +struct sensor_vc_info_struct {
+> +       unsigned short vc_num;
+> +       unsigned short vc_pixel_num;
+> +       unsigned short mode_select;   /* 0: auto mode, 1:direct mode  */
+> +       unsigned short expo_ratio;   /* 1/1, 1/2, 1/4, 1/8 */
+> +       unsigned short od_value;      /* OD Value */
+> +       unsigned short RG_STATSMODE; /* 0: 16x16, 1:8x8, 2:4x4, 3:1x1*/
+> +       unsigned short VC0_ID;
+> +       unsigned short vc0_data_type;
+> +       unsigned short VC0_SIZEH;
+> +       unsigned short VC0_SIZEV;
+> +       unsigned short VC1_ID;
+> +       unsigned short vc1_data_type;
+> +       unsigned short VC1_SIZEH;
+> +       unsigned short VC1_SIZEV;
+> +       unsigned short VC2_ID;
+> +       unsigned short vc2_data_type;
+> +       unsigned short VC2_SIZEH;
+> +       unsigned short VC2_SIZEV;
+> +       unsigned short VC3_ID;
+> +       unsigned short vc3_data_type;
+> +       unsigned short VC3_SIZEH;
+> +       unsigned short VC3_SIZEV;
+> +       unsigned short VC4_ID;
+> +       unsigned short vc4_data_type;
+> +       unsigned short VC4_SIZEH;
+> +       unsigned short VC4_SIZEV;
+> +       unsigned short VC5_ID;
+> +       unsigned short vc5_data_type;
+> +       unsigned short VC5_SIZEH;
+> +       unsigned short VC5_SIZEV;
 > +};
 > +
-> +struct fd_face_result {
-> +       __u64 face_idx:12, type:1, x0:10, y0:10, x1:10, y1:10,
-> +               fcv:18, rip_dir:4, rop_dir:3, det_size:5;
+> +enum {
+> +       TEST_DISABLED = 0X0,
+> +       TEST_PATTERN_MODE,
+> +       TEST_DEBUG_MODE,
 > +};
 > +
-> +struct fd_user_output {
-> +       struct fd_face_result face[MAX_FACE_SEL_NUM];
-> +       __u16 face_number;
+> +enum {
+> +       CFG_CSI_PORT_0 = 0x0,/* 4D1C */
+> +       CFG_CSI_PORT_1,      /* 4D1C */
+> +       CFG_CSI_PORT_2,      /* 4D1C */
+> +       CFG_CSI_PORT_0A,     /* 2D1C */
+> +       CFG_CSI_PORT_0B,     /* 2D1C */
+> +       CFG_CSI_PORT_MAX_NUM,
+> +       CFG_CSI_PORT_NONE    /*for non-MIPI sensor */
 > +};
 > +
-> +struct v4l2_fd_param {
-> +       u32 frame_id;
-> +       u16 src_img_h;
-> +       u16 src_img_w;
-> +       struct fd_buffer src_img;
-> +       struct fd_buffer fd_user_param;
-> +       struct fd_buffer fd_user_result;
-> +} __packed;
+> +enum {
+> +       ONE_PIXEL_MODE  = 0x0,
+> +       TWO_PIXEL_MODE  = 0x1,
+> +       FOUR_PIXEL_MODE = 0x2,
+> +};
 > +
-> +/**
-> + * mtk_fd_enqueue - enqueue to fd driver
+> +#define SENINF_CAM_MUX_MIN      SENINF_MUX1
+> +#define SENINF_CAM_MUX_MAX      SENINF_MUX3
+> +#define SENINF_CAMSV_MUX_MIN    SENINF_MUX3
+> +#define SENINF_CAMSV_MUX_MAX    SENINF_MUX_NUM
+> +
+> +#define SENINF_PIXEL_MODE_CAM   TWO_PIXEL_MODE
+> +#define SENINF_PIXEL_MODE_CAMSV FOUR_PIXEL_MODE
+> +
+> +#define SENINF_TIMESTAMP_CLK    1000
+> +
+> +enum {
+> +       SENSOR_MIPI_1_LANE = 0,
+> +       SENSOR_MIPI_2_LANE,
+> +       SENSOR_MIPI_3_LANE,
+> +       SENSOR_MIPI_4_LANE
+> +};
+> +
+> +enum {
+> +       SENINF_MUX1 = 0x0,
+> +       SENINF_MUX2 = 0x1,
+> +       SENINF_MUX3 = 0x2,
+> +       SENINF_MUX4 = 0x3,
+> +       SENINF_MUX5 = 0x4,
+> +       SENINF_MUX6 = 0x5,
+> +       SENINF_MUX_NUM,
+> +       SENINF_MUX_ERROR = -1,
+> +};
+> +
+> +enum {
+> +       SENINF_1 = 0x0,
+> +       SENINF_2 = 0x1,
+> +       SENINF_3 = 0x2,
+> +       SENINF_4 = 0x3,
+> +       SENINF_5 = 0x4,
+> +       SENINF_NUM,
+> +};
+> +
+> +enum {
+> +       PAD_10BIT       = 0x0,
+> +       PAD_8BIT_7_0    = 0x3,
+> +       PAD_8BIT_9_2    = 0x4,
+> +};
+> +
+> +enum { /* 0:CSI2(2.5G), 3: parallel, 8:NCSI2(1.5G) */
+> +       CSI2            = 0x0, /* 2.5G support */
+> +       TEST_MODEL      = 0x1,
+> +       CCIR656         = 0x2,
+> +       PARALLEL_SENSOR = 0x3,
+> +       SERIAL_SENSOR   = 0x4,
+> +       HD_TV           = 0x5,
+> +       EXT_CSI2_OUT1   = 0x6,
+> +       EXT_CSI2_OUT2   = 0x7,
+> +       MIPI_SENSOR     = 0x8,/* 1.5G support */
+> +       VIRTUAL_CHANNEL_1  = 0x9,
+> +       VIRTUAL_CHANNEL_2  = 0xA,
+> +       VIRTUAL_CHANNEL_3  = 0xB,
+> +       VIRTUAL_CHANNEL_4  = 0xC,
+> +       VIRTUAL_CHANNEL_5  = 0xD,
+> +       VIRTUAL_CHANNEL_6  = 0xE,
+> +};
+> +
+> +enum { /* 0:CSI2(2.5G), 1:NCSI2(1.5G) */
+> +       CSI2_1_5G           = 0x0, /* 1.5G support */
+> +       CSI2_2_5G           = 0x1, /* 2.5G support*/
+> +       CSI2_2_5G_CPHY      = 0x2, /* 2.5G support*/
+> +};
+> +
+> +enum {
+> +       RAW_8BIT_FMT        = 0x0,
+> +       RAW_10BIT_FMT       = 0x1,
+> +       RAW_12BIT_FMT       = 0x2,
+> +       YUV422_FMT          = 0x3,
+> +       RAW_14BIT_FMT       = 0x4,
+> +       RGB565_MIPI_FMT     = 0x5,
+> +       RGB888_MIPI_FMT     = 0x6,
+> +       JPEG_FMT            = 0x7
+> +};
+> +
+> +enum {
+> +       CMD_SENINF_GET_SENINF_ADDR,
+> +       CMD_SENINF_DEBUG_TASK,
+> +       CMD_SENINF_DEBUG_TASK_CAMSV,
+> +       CMD_SENINF_DEBUG_PIXEL_METER,
+> +       CMD_SENINF_MAX
+> +};
+> +
+> +/* MIPI sensor pad usage */
+> +struct seninf_csi_info {
+> +       unsigned int port;
+> +       unsigned int         seninf;
+> +};
+> +
+> +struct seninf_csi_mipi {
+> +       unsigned int     enable;
+> +       struct seninf_csi_info  *csi_info;
+> +       unsigned int csi_type;
+> +       unsigned int     data_lane_num;
+> +       unsigned int     dpcm;
+> +       unsigned int     data_header_order;
+> +       unsigned int     pad_sel;
+> +};
+> +
+> +#endif /*__SENINF_DRV_DEF_H__ */
+> diff --git a/drivers/media/platform/mtk-isp/isp_50/seninf/seninf_reg.h b/drivers/media/platform/mtk-isp/isp_50/seninf/seninf_reg.h
+> new file mode 100644
+> index 0000000..7402630
+> --- /dev/null
+> +++ b/drivers/media/platform/mtk-isp/isp_50/seninf/seninf_reg.h
+> @@ -0,0 +1,992 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2015 MediaTek Inc.
 > + *
-> + * @pdev: FD platform device
-> + * @fdvtconfig: frame parameters from V4L2 common Framework
+> + * This program is free software: you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
 > + *
-> + * Enqueue a frame to fd driver.
-> + *
-> + * Return: Return 0 if successfully, otherwise it is failed.
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
 > + */
-> +int mtk_fd_enqueue(struct platform_device *pdev,
-> +                  struct v4l2_fd_param *fd_param);
 > +
-> +/**
-> + * mtk_fd_open -
-> + *
-> + * @pdev: FD platform device
-> + *
-> + * Open the FD device driver
-> + *
-> + * Return: Return 0 if success, otherwise it is failed.
-> + */
-> +int mtk_fd_open(struct platform_device *pdev);
+> +#ifndef _SENINF_REG_H_
+> +#define _SENINF_REG_H_
 > +
-> +/**
-> + * mtk_fd_release -
-> + *
-> + * @pdev: FD platform device
-> + *
-> + * Enqueue a frame to FD driver.
-> + *
-> + * Return: Return 0 if success, otherwise it is failed.
-> + */
-> +int mtk_fd_release(struct platform_device *pdev);
+> +#define mt_reg_sync_writel(v, a) \
+> +       do {    \
+> +               __raw_writel((v), (void __force __iomem *)((a)));       \
+> +               /* add memory barrier */ \
+> +               mb();  \
+> +       } while (0)
 > +
-> +/**
-> + * mtk_fd_streamon -
-> + *
-> + * @pdev: FD platform device
-> + * @id: device context id
-> + *
-> + * Stream on
-> + *
-> + * Return: Return 0 if success, otherwise it is failed.
-> + */
-> +int mtk_fd_streamon(struct platform_device *pdev, u16 id);
+> +#define seninf_read_reg(reg_base, reg_name) \
+> +       ((unsigned int)ioread32((reg_base) + (reg_name)))
+> +#define seninf_write_reg(reg_base, reg_name, value) \
+> +       mt_reg_sync_writel(value, (reg_base) + (reg_name))
+> +#define write_master(reg_base, reg_name, value, mask)  \
+> +       mt_reg_sync_writel(ioread32((reg_base) + (reg_name)) \
+> +                          & (~(mask)) | (value), (reg_base) + (reg_name))
 > +
-> +/**
-> + * mtk_fd_streamoff -
-> + *
-> + * @pdev: FD platform device
-> + * @id: device context id
-> + *
-> + * Stream off
-> + *
-> + * Return: Return 0 if success, otherwise it is failed.
-> + */
-> +int mtk_fd_streamoff(struct platform_device *pdev, u16 id);
+> +/* 0x11C80000..0x11C850AC */
+> +#define MIPI_RX_ANA00_CSI0A           0x0000
+> +#define MIPI_RX_ANA04_CSI0A           0x0004
+> +#define MIPI_RX_ANA08_CSI0A           0x0008
+> +#define MIPI_RX_ANA0C_CSI0A           0x000C
+> +#define MIPI_RX_ANA10_CSI0A           0x0010
+> +#define MIPI_RX_ANA14_CSI0A           0x0014
+> +#define MIPI_RX_ANA18_CSI0A           0x0018
+> +#define MIPI_RX_ANA1C_CSI0A           0x001C
+> +#define MIPI_RX_ANA20_CSI0A           0x0020
+> +#define MIPI_RX_ANA24_CSI0A           0x0024
+> +#define MIPI_RX_ANA28_CSI0A           0x0028
+> +#define MIPI_RX_ANA2C_CSI0A           0x002C
+> +#define rsv_0030                      0x0030
+> +#define MIPI_RX_ANA34_CSI0A           0x0034
+> +#define MIPI_RX_ANA38_CSI0A           0x0038
+> +#define rsv_003C                      0x003C
+> +#define MIPI_RX_ANA40_CSI0A           0x0040
+> +#define rsv_0044                      0x0044
+> +#define MIPI_RX_ANA48_CSI0A           0x0048
+> +#define rsv_004C_13                   0x004C
+> +#define MIPI_RX_WRAPPER80_CSI0A       0x0080
+> +#define MIPI_RX_WRAPPER84_CSI0A       0x0084
+> +#define MIPI_RX_WRAPPER88_CSI0A       0x0088
+> +#define MIPI_RX_WRAPPER8C_CSI0A       0x008C
+> +#define MIPI_RX_WRAPPER90_CSI0A       0x0090
+> +#define MIPI_RX_WRAPPER94_CSI0A       0x0094
+> +#define MIPI_RX_WRAPPER98_CSI0A       0x0098
+> +#define MIPI_RX_WRAPPER9C_CSI0A       0x009C
+> +#define rsv_00A0                      0x00A0
+> +#define MIPI_RX_ANAA4_CSI0A           0x00A4
+> +#define MIPI_RX_ANAA8_CSI0A           0x00A8
+> +#define rsv_00AC_981                  0x00AC
+> +#define MIPI_RX_ANA00_CSI0B           0x1000
+> +#define MIPI_RX_ANA04_CSI0B           0x1004
+> +#define MIPI_RX_ANA08_CSI0B           0x1008
+> +#define MIPI_RX_ANA0C_CSI0B           0x100C
+> +#define MIPI_RX_ANA10_CSI0B           0x1010
+> +#define MIPI_RX_ANA14_CSI0B           0x1014
+> +#define MIPI_RX_ANA18_CSI0B           0x1018
+> +#define MIPI_RX_ANA1C_CSI0B           0x101C
+> +#define MIPI_RX_ANA20_CSI0B           0x1020
+> +#define MIPI_RX_ANA24_CSI0B           0x1024
+> +#define MIPI_RX_ANA28_CSI0B           0x1028
+> +#define MIPI_RX_ANA2C_CSI0B           0x102C
+> +#define rsv_1030                      0x1030
+> +#define MIPI_RX_ANA34_CSI0B           0x1034
+> +#define MIPI_RX_ANA38_CSI0B           0x1038
+> +#define rsv_103C_3                    0x103C
+> +#define MIPI_RX_ANA48_CSI0B           0x1048
+> +#define rsv_104C_13                   0x104C
+> +#define MIPI_RX_WRAPPER80_CSI0B       0x1080
+> +#define MIPI_RX_WRAPPER84_CSI0B       0x1084
+> +#define MIPI_RX_WRAPPER88_CSI0B       0x1088
+> +#define MIPI_RX_WRAPPER8C_CSI0B       0x108C
+> +#define MIPI_RX_WRAPPER90_CSI0B       0x1090
+> +#define MIPI_RX_WRAPPER94_CSI0B       0x1094
+> +#define MIPI_RX_WRAPPER98_CSI0B       0x1098
+> +#define MIPI_RX_WRAPPER9C_CSI0B       0x109C
+> +#define rsv_10A0                      0x10A0
+> +#define MIPI_RX_ANAA4_CSI0B           0x10A4
+> +#define MIPI_RX_ANAA8_CSI0B           0x10A8
+> +#define rsv_10AC_981                  0x10AC
+> +#define MIPI_RX_ANA00_CSI1A           0x2000
+> +#define MIPI_RX_ANA04_CSI1A           0x2004
+> +#define MIPI_RX_ANA08_CSI1A           0x2008
+> +#define MIPI_RX_ANA0C_CSI1A           0x200C
+> +#define MIPI_RX_ANA10_CSI1A           0x2010
+> +#define rsv_2014                      0x2014
+> +#define MIPI_RX_ANA18_CSI1A           0x2018
+> +#define MIPI_RX_ANA1C_CSI1A           0x201C
+> +#define rsv_2020                      0x2020
+> +#define MIPI_RX_ANA24_CSI1A           0x2024
+> +#define rsv_2028_8                    0x2028
+> +#define MIPI_RX_ANA48_CSI1A           0x2048
+> +#define rsv_204C_13                   0x204C
+> +#define MIPI_RX_WRAPPER80_CSI1A       0x2080
+> +#define MIPI_RX_WRAPPER84_CSI1A       0x2084
+> +#define MIPI_RX_WRAPPER88_CSI1A       0x2088
+> +#define MIPI_RX_WRAPPER8C_CSI1A       0x208C
+> +#define MIPI_RX_WRAPPER90_CSI1A       0x2090
+> +#define MIPI_RX_WRAPPER94_CSI1A       0x2094
+> +#define MIPI_RX_WRAPPER98_CSI1A       0x2098
+> +#define MIPI_RX_WRAPPER9C_CSI1A       0x209C
+> +#define rsv_20A0                      0x20A0
+> +#define MIPI_RX_ANAA4_CSI1A           0x20A4
+> +#define MIPI_RX_ANAA8_CSI1A           0x20A8
+> +#define rsv_20AC_981                  0x20AC
+> +#define MIPI_RX_ANA00_CSI1B           0x3000
+> +#define MIPI_RX_ANA04_CSI1B           0x3004
+> +#define MIPI_RX_ANA08_CSI1B           0x3008
+> +#define MIPI_RX_ANA0C_CSI1B           0x300C
+> +#define MIPI_RX_ANA10_CSI1B           0x3010
+> +#define rsv_3014                      0x3014
+> +#define MIPI_RX_ANA18_CSI1B           0x3018
+> +#define MIPI_RX_ANA1C_CSI1B           0x301C
+> +#define rsv_3020                      0x3020
+> +#define MIPI_RX_ANA24_CSI1B           0x3024
+> +#define rsv_3028_8                    0x3028
+> +#define MIPI_RX_ANA48_CSI1B           0x3048
+> +#define rsv_304C_13                   0x304C
+> +#define MIPI_RX_WRAPPER80_CSI1B       0x3080
+> +#define MIPI_RX_WRAPPER84_CSI1B       0x3084
+> +#define MIPI_RX_WRAPPER88_CSI1B       0x3088
+> +#define MIPI_RX_WRAPPER8C_CSI1B       0x308C
+> +#define MIPI_RX_WRAPPER90_CSI1B       0x3090
+> +#define MIPI_RX_WRAPPER94_CSI1B       0x3094
+> +#define MIPI_RX_WRAPPER98_CSI1B       0x3098
+> +#define MIPI_RX_WRAPPER9C_CSI1B       0x309C
+> +#define rsv_30A0                      0x30A0
+> +#define MIPI_RX_ANAA4_CSI1B           0x30A4
+> +#define MIPI_RX_ANAA8_CSI1B           0x30A8
+> +#define rsv_30AC_981                  0x30AC
+> +#define MIPI_RX_ANA00_CSI2A           0x4000
+> +#define MIPI_RX_ANA04_CSI2A           0x4004
+> +#define MIPI_RX_ANA08_CSI2A           0x4008
+> +#define MIPI_RX_ANA0C_CSI2A           0x400C
+> +#define MIPI_RX_ANA10_CSI2A           0x4010
+> +#define rsv_4014                      0x4014
+> +#define MIPI_RX_ANA18_CSI2A           0x4018
+> +#define MIPI_RX_ANA1C_CSI2A           0x401C
+> +#define rsv_4020                      0x4020
+> +#define MIPI_RX_ANA24_CSI2A           0x4024
+> +#define rsv_4028_8                    0x4028
+> +#define MIPI_RX_ANA48_CSI2A           0x4048
+> +#define rsv_404C_13                   0x404C
+> +#define MIPI_RX_WRAPPER80_CSI2A       0x4080
+> +#define MIPI_RX_WRAPPER84_CSI2A       0x4084
+> +#define MIPI_RX_WRAPPER88_CSI2A       0x4088
+> +#define MIPI_RX_WRAPPER8C_CSI2A       0x408C
+> +#define MIPI_RX_WRAPPER90_CSI2A       0x4090
+> +#define MIPI_RX_WRAPPER94_CSI2A       0x4094
+> +#define MIPI_RX_WRAPPER98_CSI2A       0x4098
+> +#define MIPI_RX_WRAPPER9C_CSI2A       0x409C
+> +#define rsv_40A0                      0x40A0
+> +#define MIPI_RX_ANAA4_CSI2A           0x40A4
+> +#define MIPI_RX_ANAA8_CSI2A           0x40A8
+> +#define rsv_40AC_981                  0x40AC
+> +#define MIPI_RX_ANA00_CSI2B           0x5000
+> +#define MIPI_RX_ANA04_CSI2B           0x5004
+> +#define MIPI_RX_ANA08_CSI2B           0x5008
+> +#define MIPI_RX_ANA0C_CSI2B           0x500C
+> +#define MIPI_RX_ANA10_CSI2B           0x5010
+> +#define rsv_5014                      0x5014
+> +#define MIPI_RX_ANA18_CSI2B           0x5018
+> +#define MIPI_RX_ANA1C_CSI2B           0x501C
+> +#define rsv_5020                      0x5020
+> +#define MIPI_RX_ANA24_CSI2B           0x5024
+> +#define rsv_5028_8                    0x5028
+> +#define MIPI_RX_ANA48_CSI2B           0x5048
+> +#define rsv_504C_13                   0x504C
+> +#define MIPI_RX_WRAPPER80_CSI2B       0x5080
+> +#define MIPI_RX_WRAPPER84_CSI2B       0x5084
+> +#define MIPI_RX_WRAPPER88_CSI2B       0x5088
+> +#define MIPI_RX_WRAPPER8C_CSI2B       0x508C
+> +#define MIPI_RX_WRAPPER90_CSI2B       0x5090
+> +#define MIPI_RX_WRAPPER94_CSI2B       0x5094
+> +#define MIPI_RX_WRAPPER98_CSI2B       0x5098
+> +#define MIPI_RX_WRAPPER9C_CSI2B       0x509C
+> +#define rsv_50A0                      0x50A0
+> +#define MIPI_RX_ANAA4_CSI2B           0x50A4
+> +#define MIPI_RX_ANAA8_CSI2B           0x50A8
+> +#define rsv_50AC_20                   0x50AC
 > +
-> +#endif/*__MTK_FD_H__*/
+> +/* 0x1A040000..0x1A047D40 */
+> +#define SENINF_TOP_CTRL                        0x0000
+> +#define SENINF_TOP_CMODEL_PAR                  0x0004
+> +#define SENINF_TOP_MUX_CTRL                    0x0008
+> +#define rsv_000C                               0x000C
+> +#define SENINF_TOP_CAM_MUX_CTRL                0x0010
+> +#define SENINF_TOP_N3D_A_CTL                   0x0014
+> +#define SENINF_TOP_N3D_B_CTL                   0x0018
+> +#define SENINF_TOP_PHY_SENINF_CTL_CSI0         0x001C
+> +#define SENINF_TOP_PHY_SENINF_CTL_CSI1         0x0020
+> +#define SENINF_TOP_PHY_SENINF_CTL_CSI2         0x0024
+> +#define rsv_0028_54                            0x0028
+> +#define SENINF_N3D_A_CTL                       0x0100
+> +#define SENINF_N3D_A_POS                       0x0104
+> +#define SENINF_N3D_A_TRIG                      0x0108
+> +#define SENINF_N3D_A_INT                       0x010C
+> +#define SENINF_N3D_A_CNT0                      0x0110
+> +#define SENINF_N3D_A_CNT1                      0x0114
+> +#define SENINF_N3D_A_DBG                       0x0118
+> +#define SENINF_N3D_A_DIFF_THR                  0x011C
+> +#define SENINF_N3D_A_DIFF_CNT                  0x0120
+> +#define SENINF_N3D_A_DBG_1                     0x0124
+> +#define SENINF_N3D_A_VALID_TG_CNT              0x0128
+> +#define SENINF_N3D_A_SYNC_A_PERIOD             0x012C
+> +#define SENINF_N3D_A_SYNC_B_PERIOD             0x0130
+> +#define SENINF_N3D_A_SYNC_A_PULSE_LEN          0x0134
+> +#define SENINF_N3D_A_SYNC_B_PULSE_LEN          0x0138
+> +#define SENINF_N3D_A_SUB_CNT                   0x013C
+> +#define SENINF_N3D_A_VSYNC_CNT                 0x0140
+> +#define rsv_0144_47                            0x0144
+> +#define SENINF1_CTRL                           0x0200
+> +#define SENINF1_CTRL_EXT                       0x0204
+> +#define SENINF1_ASYNC_CTRL                     0x0208
+> +#define rsv_020C_253                           0x020C
+> +#define SENINF_TG1_PH_CNT                      0x0600
+> +#define SENINF_TG1_SEN_CK                      0x0604
+> +#define SENINF_TG1_TM_CTL                      0x0608
+> +#define SENINF_TG1_TM_SIZE                     0x060C
+> +#define SENINF_TG1_TM_CLK                      0x0610
+> +#define SENINF_TG1_TM_STP                      0x0614
+> +#define rsv_0618_131                           0x0618
+> +#define MIPI_RX_CON24_CSI0                     0x0824
+> +#define MIPI_RX_CON28_CSI0                     0x0828
+> +#define rsv_082C_2                             0x082C
+> +#define MIPI_RX_CON34_CSI0                     0x0834
+> +#define MIPI_RX_CON38_CSI0                     0x0838
+> +#define MIPI_RX_CON3C_CSI0                     0x083C
+> +#define rsv_0840_15                            0x0840
+> +#define MIPI_RX_CON7C_CSI0                     0x087C
+> +#define MIPI_RX_CON80_CSI0                     0x0880
+> +#define MIPI_RX_CON84_CSI0                     0x0884
+> +#define MIPI_RX_CON88_CSI0                     0x0888
+> +#define MIPI_RX_CON8C_CSI0                     0x088C
+> +#define MIPI_RX_CON90_CSI0                     0x0890
+> +#define MIPI_RX_CON94_CSI0                     0x0894
+> +#define MIPI_RX_CON98_CSI0                     0x0898
+> +#define rsv_089C                               0x089C
+> +#define MIPI_RX_CONA0_CSI0                     0x08A0
+> +#define rsv_08A4_3                             0x08A4
+> +#define MIPI_RX_CONB0_CSI0                     0x08B0
+> +#define MIPI_RX_CONB4_CSI0                     0x08B4
+> +#define MIPI_RX_CONB8_CSI0                     0x08B8
+> +#define MIPI_RX_CONBC_CSI0                     0x08BC
+> +#define MIPI_RX_CONC0_CSI0                     0x08C0
+> +#define MIPI_RX_CONC4_CSI0                     0x08C4
+> +#define MIPI_RX_CONC8_CSI0                     0x08C8
+> +#define MIPI_RX_CONCC_CSI0                     0x08CC
+> +#define MIPI_RX_COND0_CSI0                     0x08D0
+> +#define rsv_08D4_75                            0x08D4
+> +#define SENINF1_CSI2_CTL                       0x0A00
+> +#define SENINF1_CSI2_LNRC_TIMING               0x0A04
+> +#define SENINF1_CSI2_LNRD_TIMING               0x0A08
+> +#define SENINF1_CSI2_DPCM                      0x0A0C
+> +#define SENINF1_CSI2_INT_EN                    0x0A10
+> +#define SENINF1_CSI2_INT_STATUS                0x0A14
+> +#define SENINF1_CSI2_DGB_SEL                   0x0A18
+> +#define SENINF1_CSI2_DBG_PORT                  0x0A1C
+> +#define SENINF1_CSI2_SPARE0                    0x0A20
+> +#define SENINF1_CSI2_SPARE1                    0x0A24
+> +#define SENINF1_CSI2_LNRC_FSM                  0x0A28
+> +#define SENINF1_CSI2_LNRD_FSM                  0x0A2C
+> +#define SENINF1_CSI2_FRAME_LINE_NUM            0x0A30
+> +#define SENINF1_CSI2_GENERIC_SHORT             0x0A34
+> +#define SENINF1_CSI2_HSRX_DBG                  0x0A38
+> +#define SENINF1_CSI2_DI                        0x0A3C
+> +#define SENINF1_CSI2_HS_TRAIL                  0x0A40
+> +#define SENINF1_CSI2_DI_CTRL                   0x0A44
+> +#define rsv_0A48                               0x0A48
+> +#define SENINF1_CSI2_DETECT_CON1               0x0A4C
+> +#define SENINF1_CSI2_DETECT_CON2               0x0A50
+> +#define SENINF1_CSI2_DETECT_CON3               0x0A54
+> +#define SENINF1_CSI2_RLR0_CON0                 0x0A58
+> +#define SENINF1_CSI2_RLR1_CON0                 0x0A5C
+> +#define SENINF1_CSI2_RLR2_CON0                 0x0A60
+> +#define SENINF1_CSI2_RLR_CON0                  0x0A64
+> +#define SENINF1_CSI2_MUX_CON                   0x0A68
+> +#define SENINF1_CSI2_DETECT_DBG0               0x0A6C
+> +#define SENINF1_CSI2_DETECT_DBG1               0x0A70
+> +#define SENINF1_CSI2_RESYNC_MERGE_CTL          0x0A74
+> +#define SENINF1_CSI2_CTRL_TRIO_MUX             0x0A78
+> +#define SENINF1_CSI2_CTRL_TRIO_CON             0x0A7C
+> +#define SENINF1_FIX_ADDR_CPHY0_DBG             0x0A80
+> +#define SENINF1_FIX_ADDR_CPHY1_DBG             0x0A84
+> +#define SENINF1_FIX_ADDR_CPHY2_DBG             0x0A88
+> +#define SENINF1_FIX_ADDR_DBG                   0x0A8C
+> +#define SENINF1_WIRE_STATE_DECODE_CPHY0_DBG0   0x0A90
+> +#define SENINF1_WIRE_STATE_DECODE_CPHY0_DBG1   0x0A94
+> +#define SENINF1_WIRE_STATE_DECODE_CPHY1_DBG0   0x0A98
+> +#define SENINF1_WIRE_STATE_DECODE_CPHY1_DBG1   0x0A9C
+> +#define SENINF1_WIRE_STATE_DECODE_CPHY2_DBG0   0x0AA0
+> +#define SENINF1_WIRE_STATE_DECODE_CPHY2_DBG1   0x0AA4
+> +#define SENINF1_SYNC_RESYNC_CTL                0x0AA8
+> +#define SENINF1_POST_DETECT_CTL                0x0AAC
+> +#define SENINF1_WIRE_STATE_DECODE_CONFIG       0x0AB0
+> +#define SENINF1_CSI2_CPHY_LNRD_FSM             0x0AB4
+> +#define SENINF1_FIX_ADDR_CPHY0_DBG0            0x0AB8
+> +#define SENINF1_FIX_ADDR_CPHY0_DBG1            0x0ABC
+> +#define SENINF1_FIX_ADDR_CPHY0_DBG2            0x0AC0
+> +#define SENINF1_FIX_ADDR_CPHY1_DBG0            0x0AC4
+> +#define SENINF1_FIX_ADDR_CPHY1_DBG1            0x0AC8
+> +#define SENINF1_FIX_ADDR_CPHY1_DBG2            0x0ACC
+> +#define SENINF1_FIX_ADDR_CPHY2_DBG0            0x0AD0
+> +#define SENINF1_FIX_ADDR_CPHY2_DBG1            0x0AD4
+> +#define SENINF1_FIX_ADDR_CPHY2_DBG2            0x0AD8
+> +#define SENINF1_FIX_ADDR_DBG0                  0x0ADC
+> +#define SENINF1_FIX_ADDR_DBG1                  0x0AE0
+> +#define SENINF1_FIX_ADDR_DBG2                  0x0AE4
+> +#define SENINF1_CSI2_MODE                      0x0AE8
+> +#define rsv_0AEC                               0x0AEC
+> +#define SENINF1_CSI2_DI_EXT                    0x0AF0
+> +#define SENINF1_CSI2_DI_CTRL_EXT               0x0AF4
+> +#define SENINF1_CSI2_CPHY_LOOPBACK             0x0AF8
+> +#define rsv_0AFC                               0x0AFC
+> +#define SENINF1_CSI2_PROGSEQ_0                 0x0B00
+> +#define SENINF1_CSI2_PROGSEQ_1                 0x0B04
+> +#define rsv_0B08_2                             0x0B08
+> +#define SENINF1_CSI2_INT_EN_EXT                0x0B10
+> +#define SENINF1_CSI2_INT_STATUS_EXT            0x0B14
+> +#define SENINF1_CSI2_CPHY_FIX_POINT_RST        0x0B18
+> +#define SENINF1_CSI2_RLR3_CON0                 0x0B1C
+> +#define SENINF1_CSI2_DPHY_SYNC                 0x0B20
+> +#define SENINF1_CSI2_DESKEW_SYNC               0x0B24
+> +#define SENINF1_CSI2_DETECT_DBG2               0x0B28
+> +#define rsv_0B2C                               0x0B2C
+> +#define SENINF1_FIX_ADDR_CPHY3_DBG0            0x0B30
+> +#define SENINF1_FIX_ADDR_CPHY3_DBG1            0x0B34
+> +#define SENINF1_FIX_ADDR_CPHY3_DBG2            0x0B38
+> +#define SENINF1_CSI2_DI_EXT_2                  0x0B3C
+> +#define SENINF1_CSI2_DI_CTRL_EXT_2             0x0B40
+> +#define SENINF1_WIRE_STATE_DECODE_CPHY3_DBG0   0x0B44
+> +#define SENINF1_WIRE_STATE_DECODE_CPHY3_DBG1   0x0B48
+> +#define rsv_0B4C_109                           0x0B4C
+> +#define SENINF1_MUX_CTRL                       0x0D00
+> +#define SENINF1_MUX_INTEN                      0x0D04
+> +#define SENINF1_MUX_INTSTA                     0x0D08
+> +#define SENINF1_MUX_SIZE                       0x0D0C
+> +#define SENINF1_MUX_DEBUG_1                    0x0D10
+> +#define SENINF1_MUX_DEBUG_2                    0x0D14
+> +#define SENINF1_MUX_DEBUG_3                    0x0D18
+> +#define SENINF1_MUX_DEBUG_4                    0x0D1C
+> +#define SENINF1_MUX_DEBUG_5                    0x0D20
+> +#define SENINF1_MUX_DEBUG_6                    0x0D24
+> +#define SENINF1_MUX_DEBUG_7                    0x0D28
+> +#define SENINF1_MUX_SPARE                      0x0D2C
+> +#define SENINF1_MUX_DATA                       0x0D30
+> +#define SENINF1_MUX_DATA_CNT                   0x0D34
+> +#define SENINF1_MUX_CROP                       0x0D38
+> +#define SENINF1_MUX_CTRL_EXT                   0x0D3C
+> +#define rsv_0D40_240                           0x0D40
+> +#define SENINF_N3D_B_CTL                       0x1100
+> +#define SENINF_N3D_B_POS                       0x1104
+> +#define SENINF_N3D_B_TRIG                      0x1108
+> +#define SENINF_N3D_B_INT                       0x110C
+> +#define SENINF_N3D_B_CNT0                      0x1110
+> +#define SENINF_N3D_B_CNT1                      0x1114
+> +#define SENINF_N3D_B_DBG                       0x1118
+> +#define SENINF_N3D_B_DIFF_THR                  0x111C
+> +#define SENINF_N3D_B_DIFF_CNT                  0x1120
+> +#define SENINF_N3D_B_DBG_1                     0x1124
+> +#define SENINF_N3D_B_VALID_TG_CNT              0x1128
+> +#define SENINF_N3D_B_SYNC_A_PERIOD             0x112C
+> +#define SENINF_N3D_B_SYNC_B_PERIOD             0x1130
+> +#define SENINF_N3D_B_SYNC_A_PULSE_LEN          0x1134
+> +#define SENINF_N3D_B_SYNC_B_PULSE_LEN          0x1138
+> +#define SENINF_N3D_B_SUB_CNT                   0x113C
+> +#define SENINF_N3D_B_VSYNC_CNT                 0x1140
+> +#define rsv_1144_47                            0x1144
+> +#define SENINF2_CTRL                           0x1200
+> +#define SENINF2_CTRL_EXT                       0x1204
+> +#define SENINF2_ASYNC_CTRL                     0x1208
+> +#define rsv_120C_253                           0x120C
+> +#define SENINF_TG2_PH_CNT                      0x1600
+> +#define SENINF_TG2_SEN_CK                      0x1604
+> +#define SENINF_TG2_TM_CTL                      0x1608
+> +#define SENINF_TG2_TM_SIZE                     0x160C
+> +#define SENINF_TG2_TM_CLK                      0x1610
+> +#define SENINF_TG2_TM_STP                      0x1614
+> +#define rsv_1618_131                           0x1618
+> +#define MIPI_RX_CON24_CSI1                     0x1824
+> +#define MIPI_RX_CON28_CSI1                     0x1828
+> +#define rsv_182C_2                             0x182C
+> +#define MIPI_RX_CON34_CSI1                     0x1834
+> +#define MIPI_RX_CON38_CSI1                     0x1838
+> +#define MIPI_RX_CON3C_CSI1                     0x183C
+> +#define rsv_1840_15                            0x1840
+> +#define MIPI_RX_CON7C_CSI1                     0x187C
+> +#define MIPI_RX_CON80_CSI1                     0x1880
+> +#define MIPI_RX_CON84_CSI1                     0x1884
+> +#define MIPI_RX_CON88_CSI1                     0x1888
+> +#define MIPI_RX_CON8C_CSI1                     0x188C
+> +#define MIPI_RX_CON90_CSI1                     0x1890
+> +#define MIPI_RX_CON94_CSI1                     0x1894
+> +#define MIPI_RX_CON98_CSI1                     0x1898
+> +#define rsv_189C                               0x189C
+> +#define MIPI_RX_CONA0_CSI1                     0x18A0
+> +#define rsv_18A4_3                             0x18A4
+> +#define MIPI_RX_CONB0_CSI1                     0x18B0
+> +#define MIPI_RX_CONB4_CSI1                     0x18B4
+> +#define MIPI_RX_CONB8_CSI1                     0x18B8
+> +#define MIPI_RX_CONBC_CSI1                     0x18BC
+> +#define MIPI_RX_CONC0_CSI1                     0x18C0
+> +#define MIPI_RX_CONC4_CSI1                     0x18C4
+> +#define MIPI_RX_CONC8_CSI1                     0x18C8
+> +#define MIPI_RX_CONCC_CSI1                     0x18CC
+> +#define MIPI_RX_COND0_CSI1                     0x18D0
+> +#define rsv_18D4_75                            0x18D4
+> +#define SENINF2_CSI2_CTL                       0x1A00
+> +#define SENINF2_CSI2_LNRC_TIMING               0x1A04
+> +#define SENINF2_CSI2_LNRD_TIMING               0x1A08
+> +#define SENINF2_CSI2_DPCM                      0x1A0C
+> +#define SENINF2_CSI2_INT_EN                    0x1A10
+> +#define SENINF2_CSI2_INT_STATUS                0x1A14
+> +#define SENINF2_CSI2_DGB_SEL                   0x1A18
+> +#define SENINF2_CSI2_DBG_PORT                  0x1A1C
+> +#define SENINF2_CSI2_SPARE0                    0x1A20
+> +#define SENINF2_CSI2_SPARE1                    0x1A24
+> +#define SENINF2_CSI2_LNRC_FSM                  0x1A28
+> +#define SENINF2_CSI2_LNRD_FSM                  0x1A2C
+> +#define SENINF2_CSI2_FRAME_LINE_NUM            0x1A30
+> +#define SENINF2_CSI2_GENERIC_SHORT             0x1A34
+> +#define SENINF2_CSI2_HSRX_DBG                  0x1A38
+> +#define SENINF2_CSI2_DI                        0x1A3C
+> +#define SENINF2_CSI2_HS_TRAIL                  0x1A40
+> +#define SENINF2_CSI2_DI_CTRL                   0x1A44
+> +#define rsv_1A48                               0x1A48
+> +#define SENINF2_CSI2_DETECT_CON1               0x1A4C
+> +#define SENINF2_CSI2_DETECT_CON2               0x1A50
+> +#define SENINF2_CSI2_DETECT_CON3               0x1A54
+> +#define SENINF2_CSI2_RLR0_CON0                 0x1A58
+> +#define SENINF2_CSI2_RLR1_CON0                 0x1A5C
+> +#define SENINF2_CSI2_RLR2_CON0                 0x1A60
+> +#define SENINF2_CSI2_RLR_CON0                  0x1A64
+> +#define SENINF2_CSI2_MUX_CON                   0x1A68
+> +#define SENINF2_CSI2_DETECT_DBG0               0x1A6C
+> +#define SENINF2_CSI2_DETECT_DBG1               0x1A70
+> +#define SENINF2_CSI2_RESYNC_MERGE_CTL          0x1A74
+> +#define SENINF2_CSI2_CTRL_TRIO_MUX             0x1A78
+> +#define SENINF2_CSI2_CTRL_TRIO_CON             0x1A7C
+> +#define SENINF2_FIX_ADDR_CPHY0_DBG             0x1A80
+> +#define SENINF2_FIX_ADDR_CPHY1_DBG             0x1A84
+> +#define SENINF2_FIX_ADDR_CPHY2_DBG             0x1A88
+> +#define SENINF2_FIX_ADDR_DBG                   0x1A8C
+> +#define SENINF2_WIRE_STATE_DECODE_CPHY0_DBG0   0x1A90
+> +#define SENINF2_WIRE_STATE_DECODE_CPHY0_DBG1   0x1A94
+> +#define SENINF2_WIRE_STATE_DECODE_CPHY1_DBG0   0x1A98
+> +#define SENINF2_WIRE_STATE_DECODE_CPHY1_DBG1   0x1A9C
+> +#define SENINF2_WIRE_STATE_DECODE_CPHY2_DBG0   0x1AA0
+> +#define SENINF2_WIRE_STATE_DECODE_CPHY2_DBG1   0x1AA4
+> +#define SENINF2_SYNC_RESYNC_CTL                0x1AA8
+> +#define SENINF2_POST_DETECT_CTL                0x1AAC
+> +#define SENINF2_WIRE_STATE_DECODE_CONFIG       0x1AB0
+> +#define SENINF2_CSI2_CPHY_LNRD_FSM             0x1AB4
+> +#define SENINF2_FIX_ADDR_CPHY0_DBG0            0x1AB8
+> +#define SENINF2_FIX_ADDR_CPHY0_DBG1            0x1ABC
+> +#define SENINF2_FIX_ADDR_CPHY0_DBG2            0x1AC0
+> +#define SENINF2_FIX_ADDR_CPHY1_DBG0            0x1AC4
+> +#define SENINF2_FIX_ADDR_CPHY1_DBG1            0x1AC8
+> +#define SENINF2_FIX_ADDR_CPHY1_DBG2            0x1ACC
+> +#define SENINF2_FIX_ADDR_CPHY2_DBG0            0x1AD0
+> +#define SENINF2_FIX_ADDR_CPHY2_DBG1            0x1AD4
+> +#define SENINF2_FIX_ADDR_CPHY2_DBG2            0x1AD8
+> +#define SENINF2_FIX_ADDR_DBG0                  0x1ADC
+> +#define SENINF2_FIX_ADDR_DBG1                  0x1AE0
+> +#define SENINF2_FIX_ADDR_DBG2                  0x1AE4
+> +#define SENINF2_CSI2_MODE                      0x1AE8
+> +#define rsv_1AEC                               0x1AEC
+> +#define SENINF2_CSI2_DI_EXT                    0x1AF0
+> +#define SENINF2_CSI2_DI_CTRL_EXT               0x1AF4
+> +#define SENINF2_CSI2_CPHY_LOOPBACK             0x1AF8
+> +#define rsv_1AFC                               0x1AFC
+> +#define SENINF2_CSI2_PROGSEQ_0                 0x1B00
+> +#define SENINF2_CSI2_PROGSEQ_1                 0x1B04
+> +#define rsv_1B08_2                             0x1B08
+> +#define SENINF2_CSI2_INT_EN_EXT                0x1B10
+> +#define SENINF2_CSI2_INT_STATUS_EXT            0x1B14
+> +#define SENINF2_CSI2_CPHY_FIX_POINT_RST        0x1B18
+> +#define SENINF2_CSI2_RLR3_CON0                 0x1B1C
+> +#define SENINF2_CSI2_DPHY_SYNC                 0x1B20
+> +#define SENINF2_CSI2_DESKEW_SYNC               0x1B24
+> +#define SENINF2_CSI2_DETECT_DBG2               0x1B28
+> +#define rsv_1B2C                               0x1B2C
+> +#define SENINF2_FIX_ADDR_CPHY3_DBG0            0x1B30
+> +#define SENINF2_FIX_ADDR_CPHY3_DBG1            0x1B34
+> +#define SENINF2_FIX_ADDR_CPHY3_DBG2            0x1B38
+> +#define SENINF2_CSI2_DI_EXT_2                  0x1B3C
+> +#define SENINF2_CSI2_DI_CTRL_EXT_2             0x1B40
+> +#define SENINF2_WIRE_STATE_DECODE_CPHY3_DBG0   0x1B44
+> +#define SENINF2_WIRE_STATE_DECODE_CPHY3_DBG1   0x1B48
+> +#define rsv_1B4C_109                           0x1B4C
+> +#define SENINF2_MUX_CTRL                       0x1D00
+> +#define SENINF2_MUX_INTEN                      0x1D04
+> +#define SENINF2_MUX_INTSTA                     0x1D08
+> +#define SENINF2_MUX_SIZE                       0x1D0C
+> +#define SENINF2_MUX_DEBUG_1                    0x1D10
+> +#define SENINF2_MUX_DEBUG_2                    0x1D14
+> +#define SENINF2_MUX_DEBUG_3                    0x1D18
+> +#define SENINF2_MUX_DEBUG_4                    0x1D1C
+> +#define SENINF2_MUX_DEBUG_5                    0x1D20
+> +#define SENINF2_MUX_DEBUG_6                    0x1D24
+> +#define SENINF2_MUX_DEBUG_7                    0x1D28
+> +#define SENINF2_MUX_SPARE                      0x1D2C
+> +#define SENINF2_MUX_DATA                       0x1D30
+> +#define SENINF2_MUX_DATA_CNT                   0x1D34
+> +#define SENINF2_MUX_CROP                       0x1D38
+> +#define SENINF2_MUX_CTRL_EXT                   0x1D3C
+> +#define rsv_1D40_304                           0x1D40
+> +#define SENINF3_CTRL                           0x2200
+> +#define SENINF3_CTRL_EXT                       0x2204
+> +#define SENINF3_ASYNC_CTRL                     0x2208
+> +#define rsv_220C_253                           0x220C
+> +#define SENINF_TG3_PH_CNT                      0x2600
+> +#define SENINF_TG3_SEN_CK                      0x2604
+> +#define SENINF_TG3_TM_CTL                      0x2608
+> +#define SENINF_TG3_TM_SIZE                     0x260C
+> +#define SENINF_TG3_TM_CLK                      0x2610
+> +#define SENINF_TG3_TM_STP                      0x2614
+> +#define rsv_2618_131                           0x2618
+> +#define MIPI_RX_CON24_CSI2                     0x2824
+> +#define MIPI_RX_CON28_CSI2                     0x2828
+> +#define rsv_282C_2                             0x282C
+> +#define MIPI_RX_CON34_CSI2                     0x2834
+> +#define MIPI_RX_CON38_CSI2                     0x2838
+> +#define MIPI_RX_CON3C_CSI2                     0x283C
+> +#define rsv_2840_15                            0x2840
+> +#define MIPI_RX_CON7C_CSI2                     0x287C
+> +#define MIPI_RX_CON80_CSI2                     0x2880
+> +#define MIPI_RX_CON84_CSI2                     0x2884
+> +#define MIPI_RX_CON88_CSI2                     0x2888
+> +#define MIPI_RX_CON8C_CSI2                     0x288C
+> +#define MIPI_RX_CON90_CSI2                     0x2890
+> +#define MIPI_RX_CON94_CSI2                     0x2894
+> +#define MIPI_RX_CON98_CSI2                     0x2898
+> +#define rsv_289C                               0x289C
+> +#define MIPI_RX_CONA0_CSI2                     0x28A0
+> +#define rsv_28A4_3                             0x28A4
+> +#define MIPI_RX_CONB0_CSI2                     0x28B0
+> +#define MIPI_RX_CONB4_CSI2                     0x28B4
+> +#define MIPI_RX_CONB8_CSI2                     0x28B8
+> +#define MIPI_RX_CONBC_CSI2                     0x28BC
+> +#define MIPI_RX_CONC0_CSI2                     0x28C0
+> +#define MIPI_RX_CONC4_CSI2                     0x28C4
+> +#define MIPI_RX_CONC8_CSI2                     0x28C8
+> +#define MIPI_RX_CONCC_CSI2                     0x28CC
+> +#define MIPI_RX_COND0_CSI2                     0x28D0
+> +#define rsv_28D4_75                            0x28D4
+> +#define SENINF3_CSI2_CTL                       0x2A00
+> +#define SENINF3_CSI2_LNRC_TIMING               0x2A04
+> +#define SENINF3_CSI2_LNRD_TIMING               0x2A08
+> +#define SENINF3_CSI2_DPCM                      0x2A0C
+> +#define SENINF3_CSI2_INT_EN                    0x2A10
+> +#define SENINF3_CSI2_INT_STATUS                0x2A14
+> +#define SENINF3_CSI2_DGB_SEL                   0x2A18
+> +#define SENINF3_CSI2_DBG_PORT                  0x2A1C
+> +#define SENINF3_CSI2_SPARE0                    0x2A20
+> +#define SENINF3_CSI2_SPARE1                    0x2A24
+> +#define SENINF3_CSI2_LNRC_FSM                  0x2A28
+> +#define SENINF3_CSI2_LNRD_FSM                  0x2A2C
+> +#define SENINF3_CSI2_FRAME_LINE_NUM            0x2A30
+> +#define SENINF3_CSI2_GENERIC_SHORT             0x2A34
+> +#define SENINF3_CSI2_HSRX_DBG                  0x2A38
+> +#define SENINF3_CSI2_DI                        0x2A3C
+> +#define SENINF3_CSI2_HS_TRAIL                  0x2A40
+> +#define SENINF3_CSI2_DI_CTRL                   0x2A44
+> +#define rsv_2A48                               0x2A48
+> +#define SENINF3_CSI2_DETECT_CON1               0x2A4C
+> +#define SENINF3_CSI2_DETECT_CON2               0x2A50
+> +#define SENINF3_CSI2_DETECT_CON3               0x2A54
+> +#define SENINF3_CSI2_RLR0_CON0                 0x2A58
+> +#define SENINF3_CSI2_RLR1_CON0                 0x2A5C
+> +#define SENINF3_CSI2_RLR2_CON0                 0x2A60
+> +#define SENINF3_CSI2_RLR_CON0                  0x2A64
+> +#define SENINF3_CSI2_MUX_CON                   0x2A68
+> +#define SENINF3_CSI2_DETECT_DBG0               0x2A6C
+> +#define SENINF3_CSI2_DETECT_DBG1               0x2A70
+> +#define SENINF3_CSI2_RESYNC_MERGE_CTL          0x2A74
+> +#define SENINF3_CSI2_CTRL_TRIO_MUX             0x2A78
+> +#define SENINF3_CSI2_CTRL_TRIO_CON             0x2A7C
+> +#define SENINF3_FIX_ADDR_CPHY0_DBG             0x2A80
+> +#define SENINF3_FIX_ADDR_CPHY1_DBG             0x2A84
+> +#define SENINF3_FIX_ADDR_CPHY2_DBG             0x2A88
+> +#define SENINF3_FIX_ADDR_DBG                   0x2A8C
+> +#define SENINF3_WIRE_STATE_DECODE_CPHY0_DBG0   0x2A90
+> +#define SENINF3_WIRE_STATE_DECODE_CPHY0_DBG1   0x2A94
+> +#define SENINF3_WIRE_STATE_DECODE_CPHY1_DBG0   0x2A98
+> +#define SENINF3_WIRE_STATE_DECODE_CPHY1_DBG1   0x2A9C
+> +#define SENINF3_WIRE_STATE_DECODE_CPHY2_DBG0   0x2AA0
+> +#define SENINF3_WIRE_STATE_DECODE_CPHY2_DBG1   0x2AA4
+> +#define SENINF3_SYNC_RESYNC_CTL                0x2AA8
+> +#define SENINF3_POST_DETECT_CTL                0x2AAC
+> +#define SENINF3_WIRE_STATE_DECODE_CONFIG       0x2AB0
+> +#define SENINF3_CSI2_CPHY_LNRD_FSM             0x2AB4
+> +#define SENINF3_FIX_ADDR_CPHY0_DBG0            0x2AB8
+> +#define SENINF3_FIX_ADDR_CPHY0_DBG1            0x2ABC
+> +#define SENINF3_FIX_ADDR_CPHY0_DBG2            0x2AC0
+> +#define SENINF3_FIX_ADDR_CPHY1_DBG0            0x2AC4
+> +#define SENINF3_FIX_ADDR_CPHY1_DBG1            0x2AC8
+> +#define SENINF3_FIX_ADDR_CPHY1_DBG2            0x2ACC
+> +#define SENINF3_FIX_ADDR_CPHY2_DBG0            0x2AD0
+> +#define SENINF3_FIX_ADDR_CPHY2_DBG1            0x2AD4
+> +#define SENINF3_FIX_ADDR_CPHY2_DBG2            0x2AD8
+> +#define SENINF3_FIX_ADDR_DBG0                  0x2ADC
+> +#define SENINF3_FIX_ADDR_DBG1                  0x2AE0
+> +#define SENINF3_FIX_ADDR_DBG2                  0x2AE4
+> +#define SENINF3_CSI2_MODE                      0x2AE8
+> +#define rsv_2AEC                               0x2AEC
+> +#define SENINF3_CSI2_DI_EXT                    0x2AF0
+> +#define SENINF3_CSI2_DI_CTRL_EXT               0x2AF4
+> +#define SENINF3_CSI2_CPHY_LOOPBACK             0x2AF8
+> +#define rsv_2AFC                               0x2AFC
+> +#define SENINF3_CSI2_PROGSEQ_0                 0x2B00
+> +#define SENINF3_CSI2_PROGSEQ_1                 0x2B04
+> +#define rsv_2B08_2                             0x2B08
+> +#define SENINF3_CSI2_INT_EN_EXT                0x2B10
+> +#define SENINF3_CSI2_INT_STATUS_EXT            0x2B14
+> +#define SENINF3_CSI2_CPHY_FIX_POINT_RST        0x2B18
+> +#define SENINF3_CSI2_RLR3_CON0                 0x2B1C
+> +#define SENINF3_CSI2_DPHY_SYNC                 0x2B20
+> +#define SENINF3_CSI2_DESKEW_SYNC               0x2B24
+> +#define SENINF3_CSI2_DETECT_DBG2               0x2B28
+> +#define rsv_2B2C                               0x2B2C
+> +#define SENINF3_FIX_ADDR_CPHY3_DBG0            0x2B30
+> +#define SENINF3_FIX_ADDR_CPHY3_DBG1            0x2B34
+> +#define SENINF3_FIX_ADDR_CPHY3_DBG2            0x2B38
+> +#define SENINF3_CSI2_DI_EXT_2                  0x2B3C
+> +#define SENINF3_CSI2_DI_CTRL_EXT_2             0x2B40
+> +#define SENINF3_WIRE_STATE_DECODE_CPHY3_DBG0   0x2B44
+> +#define SENINF3_WIRE_STATE_DECODE_CPHY3_DBG1   0x2B48
+> +#define rsv_2B4C_109                           0x2B4C
+> +#define SENINF3_MUX_CTRL                       0x2D00
+> +#define SENINF3_MUX_INTEN                      0x2D04
+> +#define SENINF3_MUX_INTSTA                     0x2D08
+> +#define SENINF3_MUX_SIZE                       0x2D0C
+> +#define SENINF3_MUX_DEBUG_1                    0x2D10
+> +#define SENINF3_MUX_DEBUG_2                    0x2D14
+> +#define SENINF3_MUX_DEBUG_3                    0x2D18
+> +#define SENINF3_MUX_DEBUG_4                    0x2D1C
+> +#define SENINF3_MUX_DEBUG_5                    0x2D20
+> +#define SENINF3_MUX_DEBUG_6                    0x2D24
+> +#define SENINF3_MUX_DEBUG_7                    0x2D28
+> +#define SENINF3_MUX_SPARE                      0x2D2C
+> +#define SENINF3_MUX_DATA                       0x2D30
+> +#define SENINF3_MUX_DATA_CNT                   0x2D34
+> +#define SENINF3_MUX_CROP                       0x2D38
+> +#define SENINF3_MUX_CTRL_EXT                   0x2D3C
+> +#define rsv_2D40_304                           0x2D40
+> +#define SENINF4_CTRL                           0x3200
+> +#define SENINF4_CTRL_EXT                       0x3204
+> +#define SENINF4_ASYNC_CTRL                     0x3208
+> +#define rsv_320C_253                           0x320C
+> +#define SENINF_TG4_PH_CNT                      0x3600
+> +#define SENINF_TG4_SEN_CK                      0x3604
+> +#define SENINF_TG4_TM_CTL                      0x3608
+> +#define SENINF_TG4_TM_SIZE                     0x360C
+> +#define SENINF_TG4_TM_CLK                      0x3610
+> +#define SENINF_TG4_TM_STP                      0x3614
+> +#define rsv_3618_131                           0x3618
+> +#define MIPI_RX_CON24_CSI3                     0x3824
+> +#define MIPI_RX_CON28_CSI3                     0x3828
+> +#define rsv_382C_2                             0x382C
+> +#define MIPI_RX_CON34_CSI3                     0x3834
+> +#define MIPI_RX_CON38_CSI3                     0x3838
+> +#define MIPI_RX_CON3C_CSI3                     0x383C
+> +#define rsv_3840_15                            0x3840
+> +#define MIPI_RX_CON7C_CSI3                     0x387C
+> +#define MIPI_RX_CON80_CSI3                     0x3880
+> +#define MIPI_RX_CON84_CSI3                     0x3884
+> +#define MIPI_RX_CON88_CSI3                     0x3888
+> +#define MIPI_RX_CON8C_CSI3                     0x388C
+> +#define MIPI_RX_CON90_CSI3                     0x3890
+> +#define MIPI_RX_CON94_CSI3                     0x3894
+> +#define MIPI_RX_CON98_CSI3                     0x3898
+> +#define rsv_389C                               0x389C
+> +#define MIPI_RX_CONA0_CSI3                     0x38A0
+> +#define rsv_38A4_3                             0x38A4
+> +#define MIPI_RX_CONB0_CSI3                     0x38B0
+> +#define MIPI_RX_CONB4_CSI3                     0x38B4
+> +#define MIPI_RX_CONB8_CSI3                     0x38B8
+> +#define MIPI_RX_CONBC_CSI3                     0x38BC
+> +#define MIPI_RX_CONC0_CSI3                     0x38C0
+> +#define MIPI_RX_CONC4_CSI3                     0x38C4
+> +#define MIPI_RX_CONC8_CSI3                     0x38C8
+> +#define MIPI_RX_CONCC_CSI3                     0x38CC
+> +#define MIPI_RX_COND0_CSI3                     0x38D0
+> +#define rsv_38D4_75                            0x38D4
+> +#define SENINF4_CSI2_CTL                       0x3A00
+> +#define SENINF4_CSI2_LNRC_TIMING               0x3A04
+> +#define SENINF4_CSI2_LNRD_TIMING               0x3A08
+> +#define SENINF4_CSI2_DPCM                      0x3A0C
+> +#define SENINF4_CSI2_INT_EN                    0x3A10
+> +#define SENINF4_CSI2_INT_STATUS                0x3A14
+> +#define SENINF4_CSI2_DGB_SEL                   0x3A18
+> +#define SENINF4_CSI2_DBG_PORT                  0x3A1C
+> +#define SENINF4_CSI2_SPARE0                    0x3A20
+> +#define SENINF4_CSI2_SPARE1                    0x3A24
+> +#define SENINF4_CSI2_LNRC_FSM                  0x3A28
+> +#define SENINF4_CSI2_LNRD_FSM                  0x3A2C
+> +#define SENINF4_CSI2_FRAME_LINE_NUM            0x3A30
+> +#define SENINF4_CSI2_GENERIC_SHORT             0x3A34
+> +#define SENINF4_CSI2_HSRX_DBG                  0x3A38
+> +#define SENINF4_CSI2_DI                        0x3A3C
+> +#define SENINF4_CSI2_HS_TRAIL                  0x3A40
+> +#define SENINF4_CSI2_DI_CTRL                   0x3A44
+> +#define rsv_3A48                               0x3A48
+> +#define SENINF4_CSI2_DETECT_CON1               0x3A4C
+> +#define SENINF4_CSI2_DETECT_CON2               0x3A50
+> +#define SENINF4_CSI2_DETECT_CON3               0x3A54
+> +#define SENINF4_CSI2_RLR0_CON0                 0x3A58
+> +#define SENINF4_CSI2_RLR1_CON0                 0x3A5C
+> +#define SENINF4_CSI2_RLR2_CON0                 0x3A60
+> +#define SENINF4_CSI2_RLR_CON0                  0x3A64
+> +#define SENINF4_CSI2_MUX_CON                   0x3A68
+> +#define SENINF4_CSI2_DETECT_DBG0               0x3A6C
+> +#define SENINF4_CSI2_DETECT_DBG1               0x3A70
+> +#define SENINF4_CSI2_RESYNC_MERGE_CTL          0x3A74
+> +#define SENINF4_CSI2_CTRL_TRIO_MUX             0x3A78
+> +#define SENINF4_CSI2_CTRL_TRIO_CON             0x3A7C
+> +#define SENINF4_FIX_ADDR_CPHY0_DBG             0x3A80
+> +#define SENINF4_FIX_ADDR_CPHY1_DBG             0x3A84
+> +#define SENINF4_FIX_ADDR_CPHY2_DBG             0x3A88
+> +#define SENINF4_FIX_ADDR_DBG                   0x3A8C
+> +#define SENINF4_WIRE_STATE_DECODE_CPHY0_DBG0   0x3A90
+> +#define SENINF4_WIRE_STATE_DECODE_CPHY0_DBG1   0x3A94
+> +#define SENINF4_WIRE_STATE_DECODE_CPHY1_DBG0   0x3A98
+> +#define SENINF4_WIRE_STATE_DECODE_CPHY1_DBG1   0x3A9C
+> +#define SENINF4_WIRE_STATE_DECODE_CPHY2_DBG0   0x3AA0
+> +#define SENINF4_WIRE_STATE_DECODE_CPHY2_DBG1   0x3AA4
+> +#define SENINF4_SYNC_RESYNC_CTL                0x3AA8
+> +#define SENINF4_POST_DETECT_CTL                0x3AAC
+> +#define SENINF4_WIRE_STATE_DECODE_CONFIG       0x3AB0
+> +#define SENINF4_CSI2_CPHY_LNRD_FSM             0x3AB4
+> +#define SENINF4_FIX_ADDR_CPHY0_DBG0            0x3AB8
+> +#define SENINF4_FIX_ADDR_CPHY0_DBG1            0x3ABC
+> +#define SENINF4_FIX_ADDR_CPHY0_DBG2            0x3AC0
+> +#define SENINF4_FIX_ADDR_CPHY1_DBG0            0x3AC4
+> +#define SENINF4_FIX_ADDR_CPHY1_DBG1            0x3AC8
+> +#define SENINF4_FIX_ADDR_CPHY1_DBG2            0x3ACC
+> +#define SENINF4_FIX_ADDR_CPHY2_DBG0            0x3AD0
+> +#define SENINF4_FIX_ADDR_CPHY2_DBG1            0x3AD4
+> +#define SENINF4_FIX_ADDR_CPHY2_DBG2            0x3AD8
+> +#define SENINF4_FIX_ADDR_DBG0                  0x3ADC
+> +#define SENINF4_FIX_ADDR_DBG1                  0x3AE0
+> +#define SENINF4_FIX_ADDR_DBG2                  0x3AE4
+> +#define SENINF4_CSI2_MODE                      0x3AE8
+> +#define rsv_3AEC                               0x3AEC
+> +#define SENINF4_CSI2_DI_EXT                    0x3AF0
+> +#define SENINF4_CSI2_DI_CTRL_EXT               0x3AF4
+> +#define SENINF4_CSI2_CPHY_LOOPBACK             0x3AF8
+> +#define rsv_3AFC                               0x3AFC
+> +#define SENINF4_CSI2_PROGSEQ_0                 0x3B00
+> +#define SENINF4_CSI2_PROGSEQ_1                 0x3B04
+> +#define rsv_3B08_2                             0x3B08
+> +#define SENINF4_CSI2_INT_EN_EXT                0x3B10
+> +#define SENINF4_CSI2_INT_STATUS_EXT            0x3B14
+> +#define SENINF4_CSI2_CPHY_FIX_POINT_RST        0x3B18
+> +#define SENINF4_CSI2_RLR3_CON0                 0x3B1C
+> +#define SENINF4_CSI2_DPHY_SYNC                 0x3B20
+> +#define SENINF4_CSI2_DESKEW_SYNC               0x3B24
+> +#define SENINF4_CSI2_DETECT_DBG2               0x3B28
+> +#define rsv_3B2C                               0x3B2C
+> +#define SENINF4_FIX_ADDR_CPHY3_DBG0            0x3B30
+> +#define SENINF4_FIX_ADDR_CPHY3_DBG1            0x3B34
+> +#define SENINF4_FIX_ADDR_CPHY3_DBG2            0x3B38
+> +#define SENINF4_CSI2_DI_EXT_2                  0x3B3C
+> +#define SENINF4_CSI2_DI_CTRL_EXT_2             0x3B40
+> +#define SENINF4_WIRE_STATE_DECODE_CPHY3_DBG0   0x3B44
+> +#define SENINF4_WIRE_STATE_DECODE_CPHY3_DBG1   0x3B48
+> +#define rsv_3B4C_109                           0x3B4C
+> +#define SENINF4_MUX_CTRL                       0x3D00
+> +#define SENINF4_MUX_INTEN                      0x3D04
+> +#define SENINF4_MUX_INTSTA                     0x3D08
+> +#define SENINF4_MUX_SIZE                       0x3D0C
+> +#define SENINF4_MUX_DEBUG_1                    0x3D10
+> +#define SENINF4_MUX_DEBUG_2                    0x3D14
+> +#define SENINF4_MUX_DEBUG_3                    0x3D18
+> +#define SENINF4_MUX_DEBUG_4                    0x3D1C
+> +#define SENINF4_MUX_DEBUG_5                    0x3D20
+> +#define SENINF4_MUX_DEBUG_6                    0x3D24
+> +#define SENINF4_MUX_DEBUG_7                    0x3D28
+> +#define SENINF4_MUX_SPARE                      0x3D2C
+> +#define SENINF4_MUX_DATA                       0x3D30
+> +#define SENINF4_MUX_DATA_CNT                   0x3D34
+> +#define SENINF4_MUX_CROP                       0x3D38
+> +#define SENINF4_MUX_CTRL_EXT                   0x3D3C
+> +#define rsv_3D40_304                           0x3D40
+> +#define SENINF5_CTRL                           0x4200
+> +#define SENINF5_CTRL_EXT                       0x4204
+> +#define SENINF5_ASYNC_CTRL                     0x4208
+> +#define rsv_420C_253                           0x420C
+> +#define SENINF_TG5_PH_CNT                      0x4600
+> +#define SENINF_TG5_SEN_CK                      0x4604
+> +#define SENINF_TG5_TM_CTL                      0x4608
+> +#define SENINF_TG5_TM_SIZE                     0x460C
+> +#define SENINF_TG5_TM_CLK                      0x4610
+> +#define SENINF_TG5_TM_STP                      0x4614
+> +#define rsv_4618_131                           0x4618
+> +#define MIPI_RX_CON24_CSI4                     0x4824
+> +#define MIPI_RX_CON28_CSI4                     0x4828
+> +#define rsv_482C_2                             0x482C
+> +#define MIPI_RX_CON34_CSI4                     0x4834
+> +#define MIPI_RX_CON38_CSI4                     0x4838
+> +#define MIPI_RX_CON3C_CSI4                     0x483C
+> +#define rsv_4840_15                            0x4840
+> +#define MIPI_RX_CON7C_CSI4                     0x487C
+> +#define MIPI_RX_CON80_CSI4                     0x4880
+> +#define MIPI_RX_CON84_CSI4                     0x4884
+> +#define MIPI_RX_CON88_CSI4                     0x4888
+> +#define MIPI_RX_CON8C_CSI4                     0x488C
+> +#define MIPI_RX_CON90_CSI4                     0x4890
+> +#define MIPI_RX_CON94_CSI4                     0x4894
+> +#define MIPI_RX_CON98_CSI4                     0x4898
+> +#define rsv_489C                               0x489C
+> +#define MIPI_RX_CONA0_CSI4                     0x48A0
+> +#define rsv_48A4_3                             0x48A4
+> +#define MIPI_RX_CONB0_CSI4                     0x48B0
+> +#define MIPI_RX_CONB4_CSI4                     0x48B4
+> +#define MIPI_RX_CONB8_CSI4                     0x48B8
+> +#define MIPI_RX_CONBC_CSI4                     0x48BC
+> +#define MIPI_RX_CONC0_CSI4                     0x48C0
+> +#define MIPI_RX_CONC4_CSI4                     0x48C4
+> +#define MIPI_RX_CONC8_CSI4                     0x48C8
+> +#define MIPI_RX_CONCC_CSI4                     0x48CC
+> +#define MIPI_RX_COND0_CSI4                     0x48D0
+> +#define rsv_48D4_75                            0x48D4
+> +#define SENINF5_CSI2_CTL                       0x4A00
+> +#define SENINF5_CSI2_LNRC_TIMING               0x4A04
+> +#define SENINF5_CSI2_LNRD_TIMING               0x4A08
+> +#define SENINF5_CSI2_DPCM                      0x4A0C
+> +#define SENINF5_CSI2_INT_EN                    0x4A10
+> +#define SENINF5_CSI2_INT_STATUS                0x4A14
+> +#define SENINF5_CSI2_DGB_SEL                   0x4A18
+> +#define SENINF5_CSI2_DBG_PORT                  0x4A1C
+> +#define SENINF5_CSI2_SPARE0                    0x4A20
+> +#define SENINF5_CSI2_SPARE1                    0x4A24
+> +#define SENINF5_CSI2_LNRC_FSM                  0x4A28
+> +#define SENINF5_CSI2_LNRD_FSM                  0x4A2C
+> +#define SENINF5_CSI2_FRAME_LINE_NUM            0x4A30
+> +#define SENINF5_CSI2_GENERIC_SHORT             0x4A34
+> +#define SENINF5_CSI2_HSRX_DBG                  0x4A38
+> +#define SENINF5_CSI2_DI                        0x4A3C
+> +#define SENINF5_CSI2_HS_TRAIL                  0x4A40
+> +#define SENINF5_CSI2_DI_CTRL                   0x4A44
+> +#define rsv_4A48                               0x4A48
+> +#define SENINF5_CSI2_DETECT_CON1               0x4A4C
+> +#define SENINF5_CSI2_DETECT_CON2               0x4A50
+> +#define SENINF5_CSI2_DETECT_CON3               0x4A54
+> +#define SENINF5_CSI2_RLR0_CON0                 0x4A58
+> +#define SENINF5_CSI2_RLR1_CON0                 0x4A5C
+> +#define SENINF5_CSI2_RLR2_CON0                 0x4A60
+> +#define SENINF5_CSI2_RLR_CON0                  0x4A64
+> +#define SENINF5_CSI2_MUX_CON                   0x4A68
+> +#define SENINF5_CSI2_DETECT_DBG0               0x4A6C
+> +#define SENINF5_CSI2_DETECT_DBG1               0x4A70
+> +#define SENINF5_CSI2_RESYNC_MERGE_CTL          0x4A74
+> +#define SENINF5_CSI2_CTRL_TRIO_MUX             0x4A78
+> +#define SENINF5_CSI2_CTRL_TRIO_CON             0x4A7C
+> +#define SENINF5_FIX_ADDR_CPHY0_DBG             0x4A80
+> +#define SENINF5_FIX_ADDR_CPHY1_DBG             0x4A84
+> +#define SENINF5_FIX_ADDR_CPHY2_DBG             0x4A88
+> +#define SENINF5_FIX_ADDR_DBG                   0x4A8C
+> +#define SENINF5_WIRE_STATE_DECODE_CPHY0_DBG0   0x4A90
+> +#define SENINF5_WIRE_STATE_DECODE_CPHY0_DBG1   0x4A94
+> +#define SENINF5_WIRE_STATE_DECODE_CPHY1_DBG0   0x4A98
+> +#define SENINF5_WIRE_STATE_DECODE_CPHY1_DBG1   0x4A9C
+> +#define SENINF5_WIRE_STATE_DECODE_CPHY2_DBG0   0x4AA0
+> +#define SENINF5_WIRE_STATE_DECODE_CPHY2_DBG1   0x4AA4
+> +#define SENINF5_SYNC_RESYNC_CTL                0x4AA8
+> +#define SENINF5_POST_DETECT_CTL                0x4AAC
+> +#define SENINF5_WIRE_STATE_DECODE_CONFIG       0x4AB0
+> +#define SENINF5_CSI2_CPHY_LNRD_FSM             0x4AB4
+> +#define SENINF5_FIX_ADDR_CPHY0_DBG0            0x4AB8
+> +#define SENINF5_FIX_ADDR_CPHY0_DBG1            0x4ABC
+> +#define SENINF5_FIX_ADDR_CPHY0_DBG2            0x4AC0
+> +#define SENINF5_FIX_ADDR_CPHY1_DBG0            0x4AC4
+> +#define SENINF5_FIX_ADDR_CPHY1_DBG1            0x4AC8
+> +#define SENINF5_FIX_ADDR_CPHY1_DBG2            0x4ACC
+> +#define SENINF5_FIX_ADDR_CPHY2_DBG0            0x4AD0
+> +#define SENINF5_FIX_ADDR_CPHY2_DBG1            0x4AD4
+> +#define SENINF5_FIX_ADDR_CPHY2_DBG2            0x4AD8
+> +#define SENINF5_FIX_ADDR_DBG0                  0x4ADC
+> +#define SENINF5_FIX_ADDR_DBG1                  0x4AE0
+> +#define SENINF5_FIX_ADDR_DBG2                  0x4AE4
+> +#define SENINF5_CSI2_MODE                      0x4AE8
+> +#define rsv_4AEC                               0x4AEC
+> +#define SENINF5_CSI2_DI_EXT                    0x4AF0
+> +#define SENINF5_CSI2_DI_CTRL_EXT               0x4AF4
+> +#define SENINF5_CSI2_CPHY_LOOPBACK             0x4AF8
+> +#define rsv_4AFC                               0x4AFC
+> +#define SENINF5_CSI2_PROGSEQ_0                 0x4B00
+> +#define SENINF5_CSI2_PROGSEQ_1                 0x4B04
+> +#define rsv_4B08_2                             0x4B08
+> +#define SENINF5_CSI2_INT_EN_EXT                0x4B10
+> +#define SENINF5_CSI2_INT_STATUS_EXT            0x4B14
+> +#define SENINF5_CSI2_CPHY_FIX_POINT_RST        0x4B18
+> +#define SENINF5_CSI2_RLR3_CON0                 0x4B1C
+> +#define SENINF5_CSI2_DPHY_SYNC                 0x4B20
+> +#define SENINF5_CSI2_DESKEW_SYNC               0x4B24
+> +#define SENINF5_CSI2_DETECT_DBG2               0x4B28
+> +#define rsv_4B2C                               0x4B2C
+> +#define SENINF5_FIX_ADDR_CPHY3_DBG0            0x4B30
+> +#define SENINF5_FIX_ADDR_CPHY3_DBG1            0x4B34
+> +#define SENINF5_FIX_ADDR_CPHY3_DBG2            0x4B38
+> +#define SENINF5_CSI2_DI_EXT_2                  0x4B3C
+> +#define SENINF5_CSI2_DI_CTRL_EXT_2             0x4B40
+> +#define SENINF5_WIRE_STATE_DECODE_CPHY3_DBG0   0x4B44
+> +#define SENINF5_WIRE_STATE_DECODE_CPHY3_DBG1   0x4B48
+> +#define rsv_4B4C_109                           0x4B4C
+> +#define SENINF5_MUX_CTRL                       0x4D00
+> +#define SENINF5_MUX_INTEN                      0x4D04
+> +#define SENINF5_MUX_INTSTA                     0x4D08
+> +#define SENINF5_MUX_SIZE                       0x4D0C
+> +#define SENINF5_MUX_DEBUG_1                    0x4D10
+> +#define SENINF5_MUX_DEBUG_2                    0x4D14
+> +#define SENINF5_MUX_DEBUG_3                    0x4D18
+> +#define SENINF5_MUX_DEBUG_4                    0x4D1C
+> +#define SENINF5_MUX_DEBUG_5                    0x4D20
+> +#define SENINF5_MUX_DEBUG_6                    0x4D24
+> +#define SENINF5_MUX_DEBUG_7                    0x4D28
+> +#define SENINF5_MUX_SPARE                      0x4D2C
+> +#define SENINF5_MUX_DATA                       0x4D30
+> +#define SENINF5_MUX_DATA_CNT                   0x4D34
+> +#define SENINF5_MUX_CROP                       0x4D38
+> +#define SENINF5_MUX_CTRL_EXT                   0x4D3C
+> +#define rsv_4D40_1008                          0x4D40
+> +#define SENINF6_MUX_CTRL                       0x5D00
+> +#define SENINF6_MUX_INTEN                      0x5D04
+> +#define SENINF6_MUX_INTSTA                     0x5D08
+> +#define SENINF6_MUX_SIZE                       0x5D0C
+> +#define SENINF6_MUX_DEBUG_1                    0x5D10
+> +#define SENINF6_MUX_DEBUG_2                    0x5D14
+> +#define SENINF6_MUX_DEBUG_3                    0x5D18
+> +#define SENINF6_MUX_DEBUG_4                    0x5D1C
+> +#define SENINF6_MUX_DEBUG_5                    0x5D20
+> +#define SENINF6_MUX_DEBUG_6                    0x5D24
+> +#define SENINF6_MUX_DEBUG_7                    0x5D28
+> +#define SENINF6_MUX_SPARE                      0x5D2C
+> +#define SENINF6_MUX_DATA                       0x5D30
+> +#define SENINF6_MUX_DATA_CNT                   0x5D34
+> +#define SENINF6_MUX_CROP                       0x5D38
+> +#define SENINF6_MUX_CTRL_EXT                   0x5D3C
+> +#define rsv_5D40_1008                          0x5D40
+> +#define SENINF7_MUX_CTRL                       0x6D00
+> +#define SENINF7_MUX_INTEN                      0x6D04
+> +#define SENINF7_MUX_INTSTA                     0x6D08
+> +#define SENINF7_MUX_SIZE                       0x6D0C
+> +#define SENINF7_MUX_DEBUG_1                    0x6D10
+> +#define SENINF7_MUX_DEBUG_2                    0x6D14
+> +#define SENINF7_MUX_DEBUG_3                    0x6D18
+> +#define SENINF7_MUX_DEBUG_4                    0x6D1C
+> +#define SENINF7_MUX_DEBUG_5                    0x6D20
+> +#define SENINF7_MUX_DEBUG_6                    0x6D24
+> +#define SENINF7_MUX_DEBUG_7                    0x6D28
+> +#define SENINF7_MUX_SPARE                      0x6D2C
+> +#define SENINF7_MUX_DATA                       0x6D30
+> +#define SENINF7_MUX_DATA_CNT                   0x6D34
+> +#define SENINF7_MUX_CROP                       0x6D38
+> +#define SENINF7_MUX_CTRL_EXT                   0x6D3C
+> +#define rsv_6D40_1008                          0x6D40
+> +#define SENINF8_MUX_CTRL                       0x7D00
+> +#define SENINF8_MUX_INTEN                      0x7D04
+> +#define SENINF8_MUX_INTSTA                     0x7D08
+> +#define SENINF8_MUX_SIZE                       0x7D0C
+> +#define SENINF8_MUX_DEBUG_1                    0x7D10
+> +#define SENINF8_MUX_DEBUG_2                    0x7D14
+> +#define SENINF8_MUX_DEBUG_3                    0x7D18
+> +#define SENINF8_MUX_DEBUG_4                    0x7D1C
+> +#define SENINF8_MUX_DEBUG_5                    0x7D20
+> +#define SENINF8_MUX_DEBUG_6                    0x7D24
+> +#define SENINF8_MUX_DEBUG_7                    0x7D28
+> +#define SENINF8_MUX_SPARE                      0x7D2C
+> +#define SENINF8_MUX_DATA                       0x7D30
+> +#define SENINF8_MUX_DATA_CNT                   0x7D34
+> +#define SENINF8_MUX_CROP                       0x7D38
+> +#define SENINF8_MUX_CTRL_EXT                   0x7D3C
+> +#define rsv_7D40_20                            0x7D40
+> +
+> +#endif /* _SENINF_REG_H_ */
 > --
 > 1.9.1
 >
