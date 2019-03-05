@@ -1,116 +1,69 @@
 From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 5/7] drm/sun4i: Rely on dma interconnect for our RAM
- offset
-Date: Tue, 5 Mar 2019 16:11:58 +0000
-Message-ID: <7f089cc2-8d39-80e8-ee81-67372de618b8@arm.com>
+Subject: Re: [PATCH v3 1/7] dt-bindings: interconnect: Add a dma interconnect
+ name
+Date: Tue, 5 Mar 2019 16:14:26 +0000
+Message-ID: <0e72fbf7-b100-ddc5-3c19-32f71c37f76f@arm.com>
 References: <cover.f2e5fbb4d21384168973fa32377a33d627768146.1549897336.git-series.maxime.ripard@bootlin.com>
- <dfbdedf89c6a36f6fe5564e7c518664fa9e828c0.1549897336.git-series.maxime.ripard@bootlin.com>
- <16cb9f67-6b10-fbc3-6222-5364e718721b@arm.com>
- <20190213154144.5m5qxbfh2qmzwatn@flea>
- <5540eb65-d33c-ddca-8636-f567e84fb24a@arm.com>
- <20190219105551.hyq3nefz6iueyjt3@flea>
+ <43eeca13733faefe62f9facc25b8e88f7e593f61.1549897336.git-series.maxime.ripard@bootlin.com>
+ <553c987c-da9a-1f85-fb16-4b9fe17dd14b@linaro.org>
+ <20190305155337.glfvgyddvnkv774m@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190219105551.hyq3nefz6iueyjt3@flea>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190305155337.glfvgyddvnkv774m@flea>
 Content-Language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yong Deng <yong.deng@magewell.com>, Arnd Bergmann <arnd@arndb.de>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel@lists.freedesktop.org, Dave Martin <dave.martin@arm.com>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, Georgi Djakov <georgi.djakov@linaro.org>, linux-arm-kernel@lists.infradead.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Georgi Djakov <georgi.djakov@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Yong Deng <yong.deng@magewell.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTkvMDIvMjAxOSAxMDo1NSwgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBIaSBSb2JpbiwKPiAK
-PiBPbiBXZWQsIEZlYiAxMywgMjAxOSBhdCAwNDo0MDoxMVBNICswMDAwLCBSb2JpbiBNdXJwaHkg
-d3JvdGU6Cj4+IE9uIDEzLzAyLzIwMTkgMTU6NDEsIE1heGltZSBSaXBhcmQgd3JvdGU6Cj4+PiBI
-aSBSb2JpbiwKPj4+Cj4+PiBUaGFua3MgZm9yIHlvdXIgZmVlZGJhY2shCj4+Pgo+Pj4gT24gVHVl
-LCBGZWIgMTIsIDIwMTkgYXQgMDY6NDY6NDBQTSArMDAwMCwgUm9iaW4gTXVycGh5IHdyb3RlOgo+
-Pj4+IE9uIDExLzAyLzIwMTkgMTU6MDIsIE1heGltZSBSaXBhcmQgd3JvdGU6Cj4+Pj4+IE5vdyB0
-aGF0IHdlIGNhbiBleHByZXNzIG91ciBETUEgdG9wb2xvZ3ksIHJlbHkgb24gdGhvc2UgcHJvcGVy
-dHkgaW5zdGVhZCBvZgo+Pj4+PiBoYXJkY29kaW5nIGFuIG9mZnNldCBmcm9tIHRoZSBkbWFfYWRk
-cl90IHdoaWNoIHdhc24ndCByZWFsbHkgZ3JlYXQuCj4+Pj4+Cj4+Pj4+IFdlIHN0aWxsIG5lZWQg
-dG8gYWRkIHNvbWUgY29kZSB0byBkZWFsIHdpdGggdGhlIG9sZCBEVCB0aGF0IHdvdWxkIGxhY2sg
-dGhhdAo+Pj4+PiBwcm9wZXJ0eSwgYnV0IHdlIG1vdmUgdGhlIG9mZnNldCB0byB0aGUgRFJNIGRl
-dmljZSBkbWFfcGZuX29mZnNldCB0byBiZQo+Pj4+PiBhYmxlIHRvIHJlbHkgb24ganVzdCB0aGUg
-ZG1hX2FkZHJfdCBhc3NvY2lhdGVkIHRvIHRoZSBHRU0gb2JqZWN0Lgo+Pj4+Pgo+Pj4+PiBBY2tl
-ZC1ieTogRGFuaWVsIFZldHRlciA8ZGFuaWVsLnZldHRlckBmZndsbC5jaD4KPj4+Pj4gU2lnbmVk
-LW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBib290bGluLmNvbT4KPj4+Pj4g
-LS0tCj4+Pj4+ICAgICBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfYmFja2VuZC5jIHwgMjgg
-KysrKysrKysrKysrKysrKysrKysrLS0tLS0tLQo+Pj4+PiAgICAgMSBmaWxlIGNoYW5nZWQsIDIx
-IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pCj4+Pj4+Cj4+Pj4+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfYmFja2VuZC5jIGIvZHJpdmVycy9ncHUvZHJtL3N1
-bjRpL3N1bjRpX2JhY2tlbmQuYwo+Pj4+PiBpbmRleCA5ZTkyNTVlZTU5Y2QuLjE4NDZhMWIzMGZl
-YSAxMDA2NDQKPj4+Pj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2JhY2tlbmQu
-Ywo+Pj4+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfYmFja2VuZC5jCj4+Pj4+
-IEBAIC0zODMsMTMgKzM4Myw2IEBAIGludCBzdW40aV9iYWNrZW5kX3VwZGF0ZV9sYXllcl9idWZm
-ZXIoc3RydWN0IHN1bjRpX2JhY2tlbmQgKmJhY2tlbmQsCj4+Pj4+ICAgICAJcGFkZHIgPSBkcm1f
-ZmJfY21hX2dldF9nZW1fYWRkcihmYiwgc3RhdGUsIDApOwo+Pj4+PiAgICAgCURSTV9ERUJVR19E
-UklWRVIoIlNldHRpbmcgYnVmZmVyIGFkZHJlc3MgdG8gJXBhZFxuIiwgJnBhZGRyKTsKPj4+Pj4g
-LQkvKgo+Pj4+PiAtCSAqIGJhY2tlbmQgRE1BIGFjY2Vzc2VzIERSQU0gZGlyZWN0bHksIGJ5cGFz
-c2luZyB0aGUgc3lzdGVtCj4+Pj4+IC0JICogYnVzLiBBcyBzdWNoLCB0aGUgYWRkcmVzcyByYW5n
-ZSBpcyBkaWZmZXJlbnQgYW5kIHRoZSBidWZmZXIKPj4+Pj4gLQkgKiBhZGRyZXNzIG5lZWRzIHRv
-IGJlIGNvcnJlY3RlZC4KPj4+Pj4gLQkgKi8KPj4+Pj4gLQlwYWRkciAtPSBQSFlTX09GRlNFVDsK
-Pj4+Pj4gLQo+Pj4+PiAgICAgCWlmIChmYi0+Zm9ybWF0LT5pc195dXYpCj4+Pj4+ICAgICAJCXJl
-dHVybiBzdW40aV9iYWNrZW5kX3VwZGF0ZV95dXZfYnVmZmVyKGJhY2tlbmQsIGZiLCBwYWRkcik7
-Cj4+Pj4+IEBAIC04MzUsNiArODI4LDI3IEBAIHN0YXRpYyBpbnQgc3VuNGlfYmFja2VuZF9iaW5k
-KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAo+Pj4+PiAgICAgCWRl
-dl9zZXRfZHJ2ZGF0YShkZXYsIGJhY2tlbmQpOwo+Pj4+PiAgICAgCXNwaW5fbG9ja19pbml0KCZi
-YWNrZW5kLT5mcm9udGVuZF9sb2NrKTsKPj4+Pj4gKwlpZiAob2ZfZmluZF9wcm9wZXJ0eShkZXYt
-Pm9mX25vZGUsICJpbnRlcmNvbm5lY3RzIiwgTlVMTCkpIHsKPj4+Pj4gKwkJLyoKPj4+Pj4gKwkJ
-ICogVGhpcyBhc3N1bWUgd2UgaGF2ZSB0aGUgc2FtZSBETUEgY29uc3RyYWludHMgZm9yIGFsbCBv
-dXIgdGhlCj4+Pj4+ICsJCSAqIGRldmljZXMgaW4gb3VyIHBpcGVsaW5lIChhbGwgdGhlIGJhY2tl
-bmRzLCBidXQgYWxzbyB0aGUKPj4+Pj4gKwkJICogZnJvbnRlbmRzKS4gVGhpcyBzb3VuZHMgYmFk
-LCBidXQgaXQgaGFzIGFsd2F5cyBiZWVuIHRoZSBjYXNlCj4+Pj4+ICsJCSAqIGZvciB1cywgYW5k
-IERSTSBkb2Vzbid0IGRvIHBlci1kZXZpY2UgYWxsb2NhdGlvbiBlaXRoZXIsIHNvCj4+Pj4+ICsJ
-CSAqIHdlIHdvdWxkIG5lZWQgdG8gZml4IERSTSBmaXJzdC4uLgo+Pj4+PiArCQkgKi8KPj4+Pj4g
-KwkJcmV0ID0gb2ZfZG1hX2NvbmZpZ3VyZShkcm0tPmRldiwgZGV2LT5vZl9ub2RlLCB0cnVlKTsK
-Pj4+Pgo+Pj4+IEl0IHdvdWxkIGJlIGV2ZW4gbmljZXIgaWYgd2UgY291bGQgZW5zdXJlIHRoYXQg
-ZHJtLT5kZXYgb3JpZ2luYXRlcyBmcm9tIGEgRFQKPj4+PiBub2RlIHdoaWNoIGhhcyB0aGUgYXBw
-cm9wcmlhdGUgaW50ZXJjb25uZWN0cyBwcm9wZXJ0eSBpdHNlbGYsIHN1Y2ggdGhhdCB3ZQo+Pj4+
-IGNhbiBhc3N1bWUgaXQncyBhbHJlYWR5IGNvbmZpZ3VyZWQgY29ycmVjdGx5Lgo+Pj4KPj4+IFRo
-ZSB0aGluZyBpcyBkcm0tPmRldiBjb21lcyBmcm9tIGEgbm9kZSBpbiB0aGUgRFQgdGhhdCBpcyBh
-IHZpcnR1YWwKPj4+IG5vZGUsIGFuZCB0aGVyZWZvcmUgZG9lc24ndCBoYXZlIGFueSByZXNvdXJj
-ZXMgYXR0YWNoZWQsIHNvIEknbSBub3QKPj4+IHN1cmUgd2UgaGF2ZSBhbnkgb3RoZXIgd2F5LCB1
-bmZvcnR1bmF0ZWx5Lgo+Pgo+PiBSaWdodCwgSSBhcHByZWNpYXRlIHRoYXQgaXQgbWF5IG5vdCBi
-ZSBmZWFzaWJsZSB0byBzd2l6emxlIGRybS0+ZGV2IGZvciBvbmUKPj4gb2YgdGhlICdyZWFsJyBj
-b21wb25lbnQgZGV2aWNlcywgYnV0IHdoYXQgSSB3YXMgYWxzbyB0aGlua2luZyB3YXMgdGhhdCBz
-aW5jZQo+PiB0aGUgdmlydHVhbCBkZXZpY2Ugbm9kZSBlZmZlY3RpdmVseSByZXByZXNlbnRzIHRo
-ZSBhZ2dyZWdhdGlvbiBvZiB0aGUgb3RoZXIKPj4gY29tcG9uZW50IGRldmljZXMsIHdlIGNvdWxk
-IGp1c3Qgc2F5IHRoYXQgaXQgYWxzbyBoYXMgdG8gaGF2ZSBpdHMgb3duIGxpbmsKPj4gdG8gdGhl
-IE1CVVMgaW50ZXJjb25uZWN0ICh3aXRoIHRoZSBJRCBvZiB0aGUgcGlwZWxpbmUgZW50cnlwb2lu
-dCBpdCdzCj4+IGFzc29jaWF0ZWQgd2l0aCwgSSBndWVzcykuIFRoYXQgb3VnaHQgdG8gYmUgZW5v
-dWdoIHRvIGdldCBkbWFfY29uZmlndXJlKCkgdG8KPj4gZG8gdGhlIGpvYiwgYW5kIGluIGZhaXJu
-ZXNzIGlzIG5vICpsZXNzKiBhY2N1cmF0ZSBhIGRlc2NyaXB0aW9uIG9mIHRoZQo+PiBoYXJkd2Fy
-ZSwgZXZlbiBpZiBtaWdodCBsb29rIGEgbGl0dGxlIGZ1bmt5IHRvIHNvbWUuCj4gCj4gVGhhdCB2
-aXJ0dWFsIGRldmljZSBob3dldmVyIGNhbiB3b3JrIHdpdGggdXAgdG8gNCBkZXZpY2VzIHRoYXQg
-Y2FuCj4gcGVyZm9ybSBETUEgb3BlcmF0aW9ucywgYWxsIG9mIHRoZW0gZ29pbmcgdGhyb3VnaCBh
-IGRpZmZlcmVudCBwb3J0IG9mCj4gdGhlIE1CVVMgY29udHJvbGxlciB0aGF0IGNhbiBhY2NvdW50
-IGZvciBETUEgdXNhZ2Ugb24gYSBwZXItbWFzdGVyCj4gYmFzaXMuCj4gCj4gRXZlbnR1YWxseSwg
-d2Ugc2hvdWxkIHN1cHBvcnQgdGhhdCBmZWF0dXJlIGFzIHdlbGwsIGJ1dCB0aGUgcG9pbnQgaXMK
-PiB0aGF0IGZyb20gYSBEVCBwb2ludCBvZiB2aWV3LCB0aGVyZSdzIG5vdCBhIHNpbmdsZSBwb2lu
-dCBvZiBETUEgYWNjZXNzCj4gZm9yIHRoYXQgcGFydGljdWxhciBkZXZpY2UgYnV0IG1vcmUgbGlr
-ZWx5IDItNCBwb2ludHMsIGVhY2ggd2l0aCBhCj4gZGlmZmVyZW50IGFyZ3VtZW50IHRvIHRoZSBw
-aGFuZGxlLgo+IAo+IFdlIGNvdWxkIG9mIGNvdXJzZSBoYXZlIGEgaGFjayBhbmQgdXNlIG9ubHkg
-b25lIG9mIHRoZW0sIGJ1dCB0aGF0Cj4gd291bGQgYmUgbGVzcyBhY2N1cmF0ZSB0aGFuIHdoYXQg
-d2UgY3VycmVudGx5IGhhdmUuIFBsdXMsIHRoaXMgaXMKPiByZWFsbHkgZHVlIHRvIGEgcmVzdHJp
-Y3Rpb24gb24gdGhlIERSTSBzaWRlLCB0aGF0IGNvdWxkIGNoYW5nZSBpbiB0aGUKPiBmdXR1cmUg
-KGV2ZW4gdGhvdWdoIGl0J3MgdW5saWtlbHkpLiBGaXhpbmcgdGhhdCByZXN0cmljdGlvbiB3b3Vs
-ZCBtYWtlCj4gdGhhdCBwcm9wZXJ0eSBjb21wbGV0ZWx5IHVzZWxlc3MsIGNvbmZ1c2luZyBhbmQg
-d3JvbmcgZnJvbSBhbiBoYXJkd2FyZQo+IFBvVi4KClRoYW5rcyBmb3IgdGhlIGNsYXJpZmljYXRp
-b24uIE11Y2ggYXMgSSdkIGxpa2UgdG8ga2VlcCAKb2ZfZG1hX2NvbmZpZ3VyZSgpIG91dCBvZiBk
-cml2ZXJzIGFzIG11Y2ggYXMgcG9zc2libGUsIEkgYWdyZWUgdGhhdCBpdCdzIApub3Qgc3VmZmlj
-aWVudCBqdXN0aWZpY2F0aW9uIGZvciAoYWIpdXNpbmcgRFQgdG8gc2lkZXN0ZXAgYSAKTGludXgt
-c3BlY2lmaWMgaXNzdWUgd2hpY2ggbWlnaHQgZXZlbnR1YWxseSBnZXQgcHJvcGVybHkgZml4ZWQg
-YW55d2F5LiAKSSdtIHN1cmUgdGhlIGxhc3QgdGhpbmcgc3VueGkgbmVlZHMgaXMgYW55IG1vcmUg
-YXdrd2FyZCBEVCBBQkkgY29uY2VybnMgOikKClJvYmluLgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On 05/03/2019 15:53, Maxime Ripard wrote:
+> Hi,
+> 
+> On Fri, Mar 01, 2019 at 07:48:15PM +0200, Georgi Djakov wrote:
+>> On 2/11/19 17:02, Maxime Ripard wrote:
+>>> The current DT bindings assume that the DMA will be performed by the
+>>> devices through their parent DT node, and rely on that assumption for the
+>>> address translation using dma-ranges.
+>>>
+>>> However, some SoCs have devices that will perform DMA through another bus,
+>>> with separate address translation rules. We therefore need to express that
+>>> relationship, through the special interconnect name "dma".
+>>>
+>>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/interconnect/interconnect.txt | 3 +++
+>>>   1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+>>> index 5a3c575b387a..e69fc2d992c3 100644
+>>> --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
+>>> +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+>>> @@ -51,6 +51,9 @@ interconnect-names : List of interconnect path name strings sorted in the same
+>>>   		     interconnect-names to match interconnect paths with interconnect
+>>>   		     specifier pairs.
+>>>   
+>>> +                     Reserved interconnect names:
+>>> +                         * dma: Path from the device to the main memory of the system
+>>
+>> Bikeshed: As it's from the device to the main memory, maybe here we can
+>> also denote this my calling the path dma-mem or dma-memory. For other
+>> paths, we are trying to mention both the source and the destination and
+>> maybe it would be good to be consistent although this is special one.
+> 
+> I'm not sure I understand what you mean. You'd like two interconnect
+> names, one called dma-memory, and one memory-dma?
+
+Hmm, yes, it's not like "dma" describes an actual source or destination 
+either :/
+
+Robin.
