@@ -1,88 +1,53 @@
-From: Min Guo <min.guo@mediatek.com>
-Subject: Re: [PATCH v5 1/6] dt-bindings: usb: musb: Add support for MediaTek
- musb controller
-Date: Tue, 5 Mar 2019 09:19:31 +0800
-Message-ID: <1551748771.12020.36.camel@mhfsdcap03>
-References: <1550561795-31132-1-git-send-email-min.guo@mediatek.com>
-         <1550561795-31132-2-git-send-email-min.guo@mediatek.com>
-         <20190222164923.GA26413@bogus> <1551058604.12020.34.camel@mhfsdcap03>
-         <CAL_JsqKb_afdZFaOoB5yvs2hX-T9HPVy_d30zu7f7yiqaRPaLg@mail.gmail.com>
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: RE: [PATCH 3/3] arm64: dts: imx: Add i.mx8mm evk basic dts support
+Date: Tue, 5 Mar 2019 01:25:23 +0000
+Message-ID: <VI1PR0402MB3519CBE560D306A1A884EE6187720@VI1PR0402MB3519.eurprd04.prod.outlook.com>
+References: <1551691021-31505-1-git-send-email-ping.bai@nxp.com>
+ <1551691021-31505-3-git-send-email-ping.bai@nxp.com>
+ <CAGUNXRRerSaEW_2nbK8bOgLM+SQLyhk9+HuL1tAZbtLD8=optw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKb_afdZFaOoB5yvs2hX-T9HPVy_d30zu7f7yiqaRPaLg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Bin Liu <b-liu@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Tony Lindgren <tony@atomide.com>, Hans de Goede <hdegoede@redhat.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAGUNXRRerSaEW_2nbK8bOgLM+SQLyhk9+HuL1tAZbtLD8=optw@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chris Spencer <spencercw@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Mon, 2019-03-04 at 11:42 -0600, Rob Herring wrote:
-> On Sun, Feb 24, 2019 at 7:36 PM Min Guo <min.guo@mediatek.com> wrote:
-> >
-> > Hi Rob,
-> > On Fri, 2019-02-22 at 10:49 -0600, Rob Herring wrote:
-> > > On Tue, Feb 19, 2019 at 03:36:30PM +0800, min.guo@mediatek.com wrote:
-> > > > From: Min Guo <min.guo@mediatek.com>
-> > > >
-> > > > This adds support for MediaTek musb controller in
-> > > > host, peripheral and otg mode.
-> > > >
-> > > > Signed-off-by: Min Guo <min.guo@mediatek.com>
-> > > > ---
-> > > > changes in v5:
-> > > > suggested by Rob:
-> > > > 1. Modify compatible as
-> > > > - compatible : should be one of:
-> > > >                "mediatek,mt-2701"
-> > > >                ...
-> > > >                followed by "mediatek,mtk-musb"
-> > > > 2. Add usb connector child node
-> > > >
-> > > > changes in v4:
-> > > > suggested by Sergei:
-> > > > 1. String alignment
-> > > >
-> > > > changes in v3:
-> > > > 1. no changes
-> > > >
-> > > > changes in v2:
-> > > > suggested by Bin:
-> > > > 1. Modify DRC to DRD
-> > > > suggested by Rob:
-> > > > 2. Drop the "<soc-model>-musb" in compatible
-> > > > 3. Remove phy-names
-> > > > 4. Add space after comma in clock-names
-> > > > ---
-> > > >  .../devicetree/bindings/usb/mediatek,musb.txt      | 54 ++++++++++++++++++++++
-> > > >  1 file changed, 54 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> > > > new file mode 100644
-> > > > index 0000000..0632e6e
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> > > > @@ -0,0 +1,54 @@
-> > > > +MediaTek musb DRD/OTG controller
-> > > > +-------------------------------------------
-> > > > +
-> > > > +Required properties:
-> > > > + - compatible      : should be one of:
-> > > > +                     "mediatek,mt-2701"
-> > >
-> > > That looks like a top-level SoC compatible and doesn't match the
-> > > example.
-> > "mediatek,mt-2701" is an example, just to describe a specific SOC.
-> > May I modify compatibel like:
-> > compatible : should be "mediatek,mtk-musb"
+> Subject: Re: [PATCH 3/3] arm64: dts: imx: Add i.mx8mm evk basic dts support
 > 
-> No, you should fix the example adding "mediatek,mtk-musb".
-OK.
+> Hi Jacky,
+> 
+> On Mon, 4 Mar 2019 at 09:13, Jacky Bai <ping.bai@nxp.com> wrote:
+> > diff --git a/arch/arm64/boot/dts/freescale/Makefile
+> b/arch/arm64/boot/dts/freescale/Makefile
+> > index 13604e5..27286f6 100644
+> > --- a/arch/arm64/boot/dts/freescale/Makefile
+> > +++ b/arch/arm64/boot/dts/freescale/Makefile
+> > @@ -22,3 +22,5 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) +=
+> fsl-lx2160a-rdb.dtb
+> >
+> >  dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
+> >  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
+> > +dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
+> > +dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
+> 
+> You have duplicated the imx8mq-evk line here.
+> 
 
-> Rob
+Sorry, it is my fault when resolve the rebase conflict. Will fix it in v2.
 
-Regards,
-Min.
+BR
+Jacky Bai
+> Thanks,
+> Chris
