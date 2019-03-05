@@ -1,52 +1,58 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 1/3] ARM: dts: armada-38x: add interrupts for watchdog
-Date: Tue, 5 Mar 2019 13:30:07 -0800
-Message-ID: <20190305213007.GA2825@roeck-us.net>
-References: <20190305201924.14853-1-chris.packham@alliedtelesis.co.nz>
- <20190305201924.14853-2-chris.packham@alliedtelesis.co.nz>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 2/8] dt-bindings: phy: Add Amlogic G12A USB3+PCIE Combo
+ PHY Bindings
+Date: Tue, 5 Mar 2019 22:42:39 +0100
+Message-ID: <CAFBinCCp+bME0fnWRJx0L1E5aazUh1Hw-svsP7+D_QU4dP08nw@mail.gmail.com>
+References: <20190304103846.2060-1-narmstrong@baylibre.com> <20190304103846.2060-3-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190305201924.14853-2-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20190304103846.2060-3-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 09:19:22AM +1300, Chris Packham wrote:
-> The first interrupt is for the regular watchdog timeout. Normally the
-> RSTOUT line will trigger a reset before this interrupt fires but on
-> systems with a non-standard reset it may still trigger.
-> 
-> The second interrupt is for a timer1 which is used as a pre-timeout for
-> the watchdog.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Hi Neil,
+
+On Mon, Mar 4, 2019 at 11:38 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Add the Amlogic G12A Family USB3 + PCIE Combo PHY Bindings.
+>
+> This PHY can provide exclusively USB3 or PCIE support on shared I/Os.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
-> Changes in v2:
-> - new, split out from "watchdog: orion_wdt: use timer1 as a pretimeout"
-> 
->  arch/arm/boot/dts/armada-38x.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-> index 929459c42760..fc550c640ca8 100644
-> --- a/arch/arm/boot/dts/armada-38x.dtsi
-> +++ b/arch/arm/boot/dts/armada-38x.dtsi
-> @@ -376,6 +376,8 @@
->  				reg = <0x20300 0x34>, <0x20704 0x4>, <0x18260 0x4>;
->  				clocks = <&coreclk 2>, <&refclk>;
->  				clock-names = "nbclk", "fixed";
-> +				interrupts-extended = <&gic GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
-> +						      <&gic GIC_SPI  9 IRQ_TYPE_LEVEL_HIGH>;
+>  .../bindings/phy/meson-g12a-usb3-pcie-phy.txt | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
+>
+> diff --git a/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt b/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
+> new file mode 100644
+> index 000000000000..7cfc17e2df31
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
+> @@ -0,0 +1,22 @@
+> +* Amlogic G12A USB3 + PCIE Combo PHY binding
+> +
+> +Required properties:
+> +- compatible:  Should be "amlogic,meson-g12a-usb3-pcie-phy"
+> +- #phys-cells: must be 1. The cell number is used to select the phy mode
+> +  as defined in <dt-bindings/phy/phy.h> between PHY_TYPE_USB3 and PHY_TYPE_PCIE
+> +- reg:         The base address and length of the registers
+> +- clocks:      a phandle to the 100MHz reference clock of this PHY
+> +- clock-names: must be "ref_clk"
+> +- resets:      phandle to the reset lines for the PHY control
+> +- reset-names: must be "phy"
+one question on the resets:
+- in v1 you had three reset lines: RESET_PCIE_CTRL_A, RESET_PCIE_PHY,
+RESET_PCIE_APB
+- in v2 you only have the "phy" reset line.
+is this because the other two are connected to the PCIe controller
+(Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt) instead
+of the PHY?
 
-This will need to be documented, possibly including the use of
-interrupts-extended (currently only interrupts is documented in
-Documentation/devicetree/bindings/watchdog/marvel.txt).
 
-Also, how would it be handled if the primary interrupt is not specified ?
-After all, it is optional.
-
-Thanks,
-Guenter
+Regards
+Martin
