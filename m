@@ -1,312 +1,63 @@
-From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH] dt-bindings: clock: imx8mq: Fix numbering overlaps and gaps
-Date: Tue, 5 Mar 2019 09:49:16 +0000
-Message-ID: <1551779342-2640-1-git-send-email-abel.vesa@nxp.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: [PATCH v2 0/7] add LCD support for SAM9X60
+Date: Tue, 5 Mar 2019 10:07:34 +0000
+Message-ID: <1551780434-4580-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Patrick Wildt <patrick@blueri.se>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, bbrezillon@kernel.org, airlied@linux.ie, daniel@ffwll.ch, thierry.reding@gmail.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, Claudiu.Beznea@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-IMX8MQ_CLK_USB_PHY_REF changes from 163 to 153, this way removing the gap.
-All the following clock ids are now decreased by 10 to keep the numbering
-right. Doing this, the IMX8MQ_CLK_CSI2_CORE is not overlapped with
-IMX8MQ_CLK_GPT1 anymore. IMX8MQ_CLK_GPT1_ROOT changes from 193 to 183 and
-all the following ids are updated accordingly.
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-Reported-by: Patrick Wildt <patrick@blueri.se>
-Fixes: 1cf3817b ("dt-bindings: Add binding for i.MX8MQ CCM")
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
----
- include/dt-bindings/clock/imx8mq-clock.h | 220 +++++++++++++++----------------
- 1 file changed, 110 insertions(+), 110 deletions(-)
+Hi,
 
-diff --git a/include/dt-bindings/clock/imx8mq-clock.h b/include/dt-bindings/clock/imx8mq-clock.h
-index b58cc64..6677e92 100644
---- a/include/dt-bindings/clock/imx8mq-clock.h
-+++ b/include/dt-bindings/clock/imx8mq-clock.h
-@@ -245,160 +245,160 @@
- /* USB_CORE_REF */
- #define IMX8MQ_CLK_USB_CORE_REF		152
- /* USB_PHY_REF */
--#define IMX8MQ_CLK_USB_PHY_REF		163
-+#define IMX8MQ_CLK_USB_PHY_REF		153
- /* ECSPI1 */
--#define IMX8MQ_CLK_ECSPI1		164
-+#define IMX8MQ_CLK_ECSPI1		154
- /* ECSPI2 */
--#define IMX8MQ_CLK_ECSPI2		165
-+#define IMX8MQ_CLK_ECSPI2		155
- /* PWM1 */
--#define IMX8MQ_CLK_PWM1			166
-+#define IMX8MQ_CLK_PWM1			156
- /* PWM2 */
--#define IMX8MQ_CLK_PWM2			167
-+#define IMX8MQ_CLK_PWM2			157
- /* PWM3 */
--#define IMX8MQ_CLK_PWM3			168
-+#define IMX8MQ_CLK_PWM3			158
- /* PWM4 */
--#define IMX8MQ_CLK_PWM4			169
-+#define IMX8MQ_CLK_PWM4			159
- /* GPT1 */
--#define IMX8MQ_CLK_GPT1			170
-+#define IMX8MQ_CLK_GPT1			160
- /* WDOG */
--#define IMX8MQ_CLK_WDOG			171
-+#define IMX8MQ_CLK_WDOG			161
- /* WRCLK */
--#define IMX8MQ_CLK_WRCLK		172
-+#define IMX8MQ_CLK_WRCLK		162
- /* DSI_CORE */
--#define IMX8MQ_CLK_DSI_CORE		173
-+#define IMX8MQ_CLK_DSI_CORE		163
- /* DSI_PHY */
--#define IMX8MQ_CLK_DSI_PHY_REF		174
-+#define IMX8MQ_CLK_DSI_PHY_REF		164
- /* DSI_DBI */
--#define IMX8MQ_CLK_DSI_DBI		175
-+#define IMX8MQ_CLK_DSI_DBI		165
- /*DSI_ESC */
--#define IMX8MQ_CLK_DSI_ESC		176
-+#define IMX8MQ_CLK_DSI_ESC		166
- /* CSI1_CORE */
--#define IMX8MQ_CLK_CSI1_CORE		177
-+#define IMX8MQ_CLK_CSI1_CORE		167
- /* CSI1_PHY */
--#define IMX8MQ_CLK_CSI1_PHY_REF		178
-+#define IMX8MQ_CLK_CSI1_PHY_REF		168
- /* CSI_ESC */
--#define IMX8MQ_CLK_CSI1_ESC		179
-+#define IMX8MQ_CLK_CSI1_ESC		169
- /* CSI2_CORE */
- #define IMX8MQ_CLK_CSI2_CORE		170
- /* CSI2_PHY */
--#define IMX8MQ_CLK_CSI2_PHY_REF		181
-+#define IMX8MQ_CLK_CSI2_PHY_REF		171
- /* CSI2_ESC */
--#define IMX8MQ_CLK_CSI2_ESC		182
-+#define IMX8MQ_CLK_CSI2_ESC		172
- /* PCIE2_CTRL */
--#define IMX8MQ_CLK_PCIE2_CTRL		183
-+#define IMX8MQ_CLK_PCIE2_CTRL		173
- /* PCIE2_PHY */
--#define IMX8MQ_CLK_PCIE2_PHY		184
-+#define IMX8MQ_CLK_PCIE2_PHY		174
- /* PCIE2_AUX */
--#define IMX8MQ_CLK_PCIE2_AUX		185
-+#define IMX8MQ_CLK_PCIE2_AUX		175
- /* ECSPI3 */
--#define IMX8MQ_CLK_ECSPI3		186
-+#define IMX8MQ_CLK_ECSPI3		176
- 
- /* CCGR clocks */
--#define IMX8MQ_CLK_A53_ROOT			187
--#define IMX8MQ_CLK_DRAM_ROOT			188
--#define IMX8MQ_CLK_ECSPI1_ROOT			189
-+#define IMX8MQ_CLK_A53_ROOT			177
-+#define IMX8MQ_CLK_DRAM_ROOT			178
-+#define IMX8MQ_CLK_ECSPI1_ROOT			179
- #define IMX8MQ_CLK_ECSPI2_ROOT			180
- #define IMX8MQ_CLK_ECSPI3_ROOT			181
- #define IMX8MQ_CLK_ENET1_ROOT			182
--#define IMX8MQ_CLK_GPT1_ROOT			193
--#define IMX8MQ_CLK_I2C1_ROOT			194
--#define IMX8MQ_CLK_I2C2_ROOT			195
--#define IMX8MQ_CLK_I2C3_ROOT			196
--#define IMX8MQ_CLK_I2C4_ROOT			197
--#define IMX8MQ_CLK_M4_ROOT			198
--#define IMX8MQ_CLK_PCIE1_ROOT			199
--#define IMX8MQ_CLK_PCIE2_ROOT			200
--#define IMX8MQ_CLK_PWM1_ROOT			201
--#define IMX8MQ_CLK_PWM2_ROOT			202
--#define IMX8MQ_CLK_PWM3_ROOT			203
--#define IMX8MQ_CLK_PWM4_ROOT			204
--#define IMX8MQ_CLK_QSPI_ROOT			205
--#define IMX8MQ_CLK_SAI1_ROOT			206
--#define IMX8MQ_CLK_SAI2_ROOT			207
--#define IMX8MQ_CLK_SAI3_ROOT			208
--#define IMX8MQ_CLK_SAI4_ROOT			209
--#define IMX8MQ_CLK_SAI5_ROOT			210
--#define IMX8MQ_CLK_SAI6_ROOT			212
--#define IMX8MQ_CLK_UART1_ROOT			213
--#define IMX8MQ_CLK_UART2_ROOT			214
--#define IMX8MQ_CLK_UART3_ROOT			215
--#define IMX8MQ_CLK_UART4_ROOT			216
--#define IMX8MQ_CLK_USB1_CTRL_ROOT		217
--#define IMX8MQ_CLK_USB2_CTRL_ROOT		218
--#define IMX8MQ_CLK_USB1_PHY_ROOT		219
--#define IMX8MQ_CLK_USB2_PHY_ROOT		220
--#define IMX8MQ_CLK_USDHC1_ROOT			221
--#define IMX8MQ_CLK_USDHC2_ROOT			222
--#define IMX8MQ_CLK_WDOG1_ROOT			223
--#define IMX8MQ_CLK_WDOG2_ROOT			224
--#define IMX8MQ_CLK_WDOG3_ROOT			225
--#define IMX8MQ_CLK_GPU_ROOT			226
--#define IMX8MQ_CLK_HEVC_ROOT			227
--#define IMX8MQ_CLK_AVC_ROOT			228
--#define IMX8MQ_CLK_VP9_ROOT			229
--#define IMX8MQ_CLK_HEVC_INTER_ROOT		230
--#define IMX8MQ_CLK_DISP_ROOT			231
--#define IMX8MQ_CLK_HDMI_ROOT			232
--#define IMX8MQ_CLK_HDMI_PHY_ROOT		233
--#define IMX8MQ_CLK_VPU_DEC_ROOT			234
--#define IMX8MQ_CLK_CSI1_ROOT			235
--#define IMX8MQ_CLK_CSI2_ROOT			236
--#define IMX8MQ_CLK_RAWNAND_ROOT			237
--#define IMX8MQ_CLK_SDMA1_ROOT			238
--#define IMX8MQ_CLK_SDMA2_ROOT			239
--#define IMX8MQ_CLK_VPU_G1_ROOT			240
--#define IMX8MQ_CLK_VPU_G2_ROOT			241
-+#define IMX8MQ_CLK_GPT1_ROOT			183
-+#define IMX8MQ_CLK_I2C1_ROOT			184
-+#define IMX8MQ_CLK_I2C2_ROOT			185
-+#define IMX8MQ_CLK_I2C3_ROOT			186
-+#define IMX8MQ_CLK_I2C4_ROOT			187
-+#define IMX8MQ_CLK_M4_ROOT			188
-+#define IMX8MQ_CLK_PCIE1_ROOT			189
-+#define IMX8MQ_CLK_PCIE2_ROOT			190
-+#define IMX8MQ_CLK_PWM1_ROOT			191
-+#define IMX8MQ_CLK_PWM2_ROOT			192
-+#define IMX8MQ_CLK_PWM3_ROOT			193
-+#define IMX8MQ_CLK_PWM4_ROOT			194
-+#define IMX8MQ_CLK_QSPI_ROOT			195
-+#define IMX8MQ_CLK_SAI1_ROOT			196
-+#define IMX8MQ_CLK_SAI2_ROOT			197
-+#define IMX8MQ_CLK_SAI3_ROOT			198
-+#define IMX8MQ_CLK_SAI4_ROOT			199
-+#define IMX8MQ_CLK_SAI5_ROOT			200
-+#define IMX8MQ_CLK_SAI6_ROOT			201
-+#define IMX8MQ_CLK_UART1_ROOT			202
-+#define IMX8MQ_CLK_UART2_ROOT			203
-+#define IMX8MQ_CLK_UART3_ROOT			204
-+#define IMX8MQ_CLK_UART4_ROOT			205
-+#define IMX8MQ_CLK_USB1_CTRL_ROOT		206
-+#define IMX8MQ_CLK_USB2_CTRL_ROOT		207
-+#define IMX8MQ_CLK_USB1_PHY_ROOT		208
-+#define IMX8MQ_CLK_USB2_PHY_ROOT		209
-+#define IMX8MQ_CLK_USDHC1_ROOT			210
-+#define IMX8MQ_CLK_USDHC2_ROOT			211
-+#define IMX8MQ_CLK_WDOG1_ROOT			212
-+#define IMX8MQ_CLK_WDOG2_ROOT			213
-+#define IMX8MQ_CLK_WDOG3_ROOT			214
-+#define IMX8MQ_CLK_GPU_ROOT			215
-+#define IMX8MQ_CLK_HEVC_ROOT			216
-+#define IMX8MQ_CLK_AVC_ROOT			217
-+#define IMX8MQ_CLK_VP9_ROOT			218
-+#define IMX8MQ_CLK_HEVC_INTER_ROOT		219
-+#define IMX8MQ_CLK_DISP_ROOT			220
-+#define IMX8MQ_CLK_HDMI_ROOT			221
-+#define IMX8MQ_CLK_HDMI_PHY_ROOT		222
-+#define IMX8MQ_CLK_VPU_DEC_ROOT			223
-+#define IMX8MQ_CLK_CSI1_ROOT			224
-+#define IMX8MQ_CLK_CSI2_ROOT			225
-+#define IMX8MQ_CLK_RAWNAND_ROOT			226
-+#define IMX8MQ_CLK_SDMA1_ROOT			227
-+#define IMX8MQ_CLK_SDMA2_ROOT			228
-+#define IMX8MQ_CLK_VPU_G1_ROOT			229
-+#define IMX8MQ_CLK_VPU_G2_ROOT			230
- 
- /* SCCG PLL GATE */
--#define IMX8MQ_SYS1_PLL_OUT			242
--#define IMX8MQ_SYS2_PLL_OUT			243
--#define IMX8MQ_SYS3_PLL_OUT			244
--#define IMX8MQ_DRAM_PLL_OUT			245
--
--#define IMX8MQ_GPT_3M_CLK			246
--
--#define IMX8MQ_CLK_IPG_ROOT			247
--#define IMX8MQ_CLK_IPG_AUDIO_ROOT		248
--#define IMX8MQ_CLK_SAI1_IPG			249
--#define IMX8MQ_CLK_SAI2_IPG			250
--#define IMX8MQ_CLK_SAI3_IPG			251
--#define IMX8MQ_CLK_SAI4_IPG			252
--#define IMX8MQ_CLK_SAI5_IPG			253
--#define IMX8MQ_CLK_SAI6_IPG			254
-+#define IMX8MQ_SYS1_PLL_OUT			231
-+#define IMX8MQ_SYS2_PLL_OUT			232
-+#define IMX8MQ_SYS3_PLL_OUT			233
-+#define IMX8MQ_DRAM_PLL_OUT			234
-+
-+#define IMX8MQ_GPT_3M_CLK			235
-+
-+#define IMX8MQ_CLK_IPG_ROOT			236
-+#define IMX8MQ_CLK_IPG_AUDIO_ROOT		237
-+#define IMX8MQ_CLK_SAI1_IPG			238
-+#define IMX8MQ_CLK_SAI2_IPG			239
-+#define IMX8MQ_CLK_SAI3_IPG			240
-+#define IMX8MQ_CLK_SAI4_IPG			241
-+#define IMX8MQ_CLK_SAI5_IPG			242
-+#define IMX8MQ_CLK_SAI6_IPG			243
- 
- /* DSI AHB/IPG clocks */
- /* rxesc clock */
--#define IMX8MQ_CLK_DSI_AHB			255
-+#define IMX8MQ_CLK_DSI_AHB			244
- /* txesc clock */
--#define IMX8MQ_CLK_DSI_IPG_DIV                  256
-+#define IMX8MQ_CLK_DSI_IPG_DIV                  245
- 
--#define IMX8MQ_CLK_TMU_ROOT			257
-+#define IMX8MQ_CLK_TMU_ROOT			246
- 
- /* Display root clocks */
--#define IMX8MQ_CLK_DISP_AXI_ROOT		258
--#define IMX8MQ_CLK_DISP_APB_ROOT		259
--#define IMX8MQ_CLK_DISP_RTRM_ROOT		260
-+#define IMX8MQ_CLK_DISP_AXI_ROOT		247
-+#define IMX8MQ_CLK_DISP_APB_ROOT		248
-+#define IMX8MQ_CLK_DISP_RTRM_ROOT		249
- 
--#define IMX8MQ_CLK_OCOTP_ROOT			261
-+#define IMX8MQ_CLK_OCOTP_ROOT			250
- 
--#define IMX8MQ_CLK_DRAM_ALT_ROOT		262
--#define IMX8MQ_CLK_DRAM_CORE			263
-+#define IMX8MQ_CLK_DRAM_ALT_ROOT		251
-+#define IMX8MQ_CLK_DRAM_CORE			252
- 
--#define IMX8MQ_CLK_MU_ROOT			264
--#define IMX8MQ_VIDEO2_PLL_OUT			265
-+#define IMX8MQ_CLK_MU_ROOT			253
-+#define IMX8MQ_VIDEO2_PLL_OUT			254
- 
--#define IMX8MQ_CLK_CLKO2			266
-+#define IMX8MQ_CLK_CLKO2			255
- 
--#define IMX8MQ_CLK_NAND_USDHC_BUS_RAWNAND_CLK	267
-+#define IMX8MQ_CLK_NAND_USDHC_BUS_RAWNAND_CLK	256
- 
--#define IMX8MQ_CLK_CLKO1			268
--#define IMX8MQ_CLK_ARM				269
-+#define IMX8MQ_CLK_CLKO1			257
-+#define IMX8MQ_CLK_ARM				258
- 
--#define IMX8MQ_CLK_GPIO1_ROOT			270
--#define IMX8MQ_CLK_GPIO2_ROOT			271
--#define IMX8MQ_CLK_GPIO3_ROOT			272
--#define IMX8MQ_CLK_GPIO4_ROOT			273
--#define IMX8MQ_CLK_GPIO5_ROOT			274
-+#define IMX8MQ_CLK_GPIO1_ROOT			259
-+#define IMX8MQ_CLK_GPIO2_ROOT			260
-+#define IMX8MQ_CLK_GPIO3_ROOT			261
-+#define IMX8MQ_CLK_GPIO4_ROOT			262
-+#define IMX8MQ_CLK_GPIO5_ROOT			263
- 
--#define IMX8MQ_CLK_END				275
-+#define IMX8MQ_CLK_END				264
- #endif /* __DT_BINDINGS_CLOCK_IMX8MQ_H */
--- 
+These patches adds support for SAM9X60's LCD controller.
+
+First patches add option to specify if controller clock source is fixed.
+Second patch avoid a variable initialization in atmel_hlcdc_crtc_mode_set_n=
+ofb().
+The 3rd one adds specific bindings for SAM9X60 LCD controller.
+The 4th and 5th add compatibles in the driver.
+The 6th patch enables sys_clk in probe since SAM9X60 needs this.
+Specific support was added also in suspend/resume hooks.
+The work in the 6th patch was done based on support added in 1st patch.
+The 7th patch adds SAM9X60's LCD configuration and enabled it.=20
+
+I kept a big series including PWM, MFD, LCD changes due to shared DT
+bindings. If you prefer, I'm available to send them separately. Please let
+me know.
+
+Thank you,
+Claudiu Beznea
+
+Changes in v2:
+- use "|" operator in patch 1/7 to set ATMEL_HLCDC_CLKSEL on cfg
+- collect Acked-by, Reviewed-by tags
+
+Claudiu Beznea (5):
+  drm: atmel-hlcdc: add config option for clock selection
+  drm: atmel-hlcdc: avoid initializing cfg with zero
+  dt-bindings: mfd: add bindings for SAM9X60 HLCD controller
+  mfd: atmel-hlcdc: add compatible for SAM9X60 HLCD controller
+  pwm: atmel-hlcdc: add compatible for SAM9X60 HLCDC's PWM
+
+Sandeep Sheriker Mallikarjun (2):
+  drm: atmel-hlcdc: enable sys_clk during initalization.
+  drm: atmel-hlcdc: add sam9x60 LCD controller
+
+ .../devicetree/bindings/mfd/atmel-hlcdc.txt        |   1 +
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c     |  18 ++--
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c       | 120 +++++++++++++++++=
++++-
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h       |   2 +
+ drivers/mfd/atmel-hlcdc.c                          |   1 +
+ drivers/pwm/pwm-atmel-hlcdc.c                      |   3 +
+ 6 files changed, 135 insertions(+), 10 deletions(-)
+
+--=20
 2.7.4
