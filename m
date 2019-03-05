@@ -1,133 +1,41 @@
-From: Christophe Roullier <christophe.roullier@st.com>
-Subject: [PATCH V3 6/6] ARM: dts: stm32: Add Ethernet support on stm32h7 SOC and activate it for eval and disco boards
-Date: Tue, 5 Mar 2019 09:29:28 +0100
-Message-ID: <1551774568-11732-7-git-send-email-christophe.roullier@st.com>
-References: <1551774568-11732-1-git-send-email-christophe.roullier@st.com>
+From: Andreas Schwab <schwab@suse.de>
+Subject: Re: [PATCH v8 0/2] PWM support for HiFive Unleashed
+Date: Tue, 05 Mar 2019 09:32:06 +0100
+Message-ID: <mvmlg1tzpq1.fsf@suse.de>
+References: <1551437599-29509-1-git-send-email-yash.shah@sifive.com>
+        <mvmfts228vu.fsf@suse.de>
+        <CAJ2_jOE=8_c6aN2FTQVt0wTpBAkL8BYyF3UFaMmqdvWYWAAmvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551774568-11732-1-git-send-email-christophe.roullier@st.com>
+In-Reply-To: <CAJ2_jOE=8_c6aN2FTQVt0wTpBAkL8BYyF3UFaMmqdvWYWAAmvg@mail.gmail.com>
+        (Yash Shah's message of "Tue, 5 Mar 2019 13:55:41 +0530")
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org, davem@davemloft.net, joabreu@synopsys.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, peppe.cavallaro@st.com
-Cc: linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, christophe.roullier@st.com, andrew@lunn.ch
+To: Yash Shah <yash.shah@sifive.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Synopsys GMAC 4.10 is used. And Phy mode for eval and disco is RMII
-with PHY SMSC LAN8742
+On Mär 05 2019, Yash Shah <yash.shah@sifive.com> wrote:
 
-Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
----
- arch/arm/boot/dts/stm32h743-pinctrl.dtsi | 15 +++++++++++++++
- arch/arm/boot/dts/stm32h743.dtsi         | 13 +++++++++++++
- arch/arm/boot/dts/stm32h743i-disco.dts   | 17 +++++++++++++++++
- arch/arm/boot/dts/stm32h743i-eval.dts    | 17 +++++++++++++++++
- 4 files changed, 62 insertions(+)
+> On Mon, Mar 4, 2019 at 4:39 PM Andreas Schwab <schwab@suse.de> wrote:
+>>
+>> On Mär 01 2019, Yash Shah <yash.shah@sifive.com> wrote:
+>>
+>> > This patch series adds a PWM driver and DT documentation
+>> > for HiFive Unleashed board. The patches are mostly based on
+>> > Wesley's patch.
+>>
+>> That doesn't appear to work with the heartbeat trigger, the led doesn't
+>> flash.
+>
+> Make sure you modify the DTS file
 
-diff --git a/arch/arm/boot/dts/stm32h743-pinctrl.dtsi b/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
-index 24be8e6..980b276 100644
---- a/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
-@@ -173,6 +173,21 @@
- 				};
- 			};
- 
-+			ethernet_rmii: rmii@0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('G', 11, AF11)>,
-+						 <STM32_PINMUX('G', 13, AF11)>,
-+						 <STM32_PINMUX('G', 12, AF11)>,
-+						 <STM32_PINMUX('C', 4, AF11)>,
-+						 <STM32_PINMUX('C', 5, AF11)>,
-+						 <STM32_PINMUX('A', 7, AF11)>,
-+						 <STM32_PINMUX('C', 1, AF11)>,
-+						 <STM32_PINMUX('A', 2, AF11)>,
-+						 <STM32_PINMUX('A', 1, AF11)>;
-+					slew-rate = <2>;
-+				};
-+			};
-+
- 			usart1_pins: usart1@0 {
- 				pins1 {
- 					pinmux = <STM32_PINMUX('B', 14, AF4)>; /* USART1_TX */
-diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
-index cbdd69c..e103b29 100644
---- a/arch/arm/boot/dts/stm32h743.dtsi
-+++ b/arch/arm/boot/dts/stm32h743.dtsi
-@@ -511,6 +511,19 @@
- 				status = "disabled";
- 			};
- 		};
-+
-+		mac: ethernet@40028000 {
-+			compatible = "st,stm32-dwmac", "snps,dwmac-4.10a";
-+			reg = <0x40028000 0x8000>;
-+			reg-names = "stmmaceth";
-+			interrupts = <61>;
-+			interrupt-names = "macirq";
-+			clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
-+			clocks = <&rcc ETH1MAC_CK>, <&rcc ETH1TX_CK>, <&rcc ETH1RX_CK>;
-+			st,syscon = <&syscfg 0x4>;
-+			snps,pbl = <8>;
-+			status = "disabled";
-+		};
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/stm32h743i-disco.dts b/arch/arm/boot/dts/stm32h743i-disco.dts
-index 45e088c..83ef63d 100644
---- a/arch/arm/boot/dts/stm32h743i-disco.dts
-+++ b/arch/arm/boot/dts/stm32h743i-disco.dts
-@@ -66,6 +66,23 @@
- 	clock-frequency = <25000000>;
- };
- 
-+&mac {
-+	status = "disabled";
-+	pinctrl-0	= <&ethernet_rmii>;
-+	pinctrl-names	= "default";
-+	phy-mode	= "rmii";
-+	phy-handle	= <&phy0>;
-+
-+	mdio0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "snps,dwmac-mdio";
-+		phy0: ethernet-phy@0 {
-+			reg = <0>;
-+		};
-+	};
-+};
-+
- &usart2 {
- 	pinctrl-0 = <&usart2_pins>;
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/stm32h743i-eval.dts b/arch/arm/boot/dts/stm32h743i-eval.dts
-index 3f8e0c4..383c5bb 100644
---- a/arch/arm/boot/dts/stm32h743i-eval.dts
-+++ b/arch/arm/boot/dts/stm32h743i-eval.dts
-@@ -104,6 +104,23 @@
- 	status = "okay";
- };
- 
-+&mac {
-+	status = "disabled";
-+	pinctrl-0	= <&ethernet_rmii>;
-+	pinctrl-names	= "default";
-+	phy-mode	= "rmii";
-+	phy-handle	= <&phy0>;
-+
-+	mdio0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "snps,dwmac-mdio";
-+		phy0: ethernet-phy@0 {
-+			reg = <0>;
-+		};
-+	};
-+};
-+
- &usart1 {
- 	pinctrl-0 = <&usart1_pins>;
- 	pinctrl-names = "default";
+Which DTS file?
+
+Andreas.
+
 -- 
-2.7.4
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
