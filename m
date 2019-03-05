@@ -1,50 +1,61 @@
-From: Yash Shah <yash.shah@sifive.com>
-Subject: Re: [PATCH v8 0/2] PWM support for HiFive Unleashed
-Date: Tue, 5 Mar 2019 13:55:41 +0530
-Message-ID: <CAJ2_jOE=8_c6aN2FTQVt0wTpBAkL8BYyF3UFaMmqdvWYWAAmvg@mail.gmail.com>
-References: <1551437599-29509-1-git-send-email-yash.shah@sifive.com> <mvmfts228vu.fsf@suse.de>
+From: Christophe Roullier <christophe.roullier@st.com>
+Subject: [PATCH V3 0/6] stmmac: add some fixes for stm32
+Date: Tue, 5 Mar 2019 09:29:22 +0100
+Message-ID: <1551774568-11732-1-git-send-email-christophe.roullier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <mvmfts228vu.fsf@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Schwab <schwab@suse.de>
-Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh@kernel.org, davem@davemloft.net, joabreu@synopsys.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, peppe.cavallaro@st.com
+Cc: devicetree@vger.kernel.org, andrew@lunn.ch, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, christophe.roullier@st.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 4:39 PM Andreas Schwab <schwab@suse.de> wrote:
->
-> On M=C3=A4r 01 2019, Yash Shah <yash.shah@sifive.com> wrote:
->
-> > This patch series adds a PWM driver and DT documentation
-> > for HiFive Unleashed board. The patches are mostly based on
-> > Wesley's patch.
->
-> That doesn't appear to work with the heartbeat trigger, the led doesn't
-> flash.
+For common stmmac:
+	- Add support to set CSR Clock range selection in DT
+For stm32mpu:
+	- Glue codes to support magic packet
+	- Glue codes to support all PHY config :
+		PHY_MODE (MII,GMII, RMII, RGMII) and in normal,
+		PHY wo crystal (25Mhz),
+		PHY wo crystal (50Mhz), No 125Mhz from PHY config
+For stm32mcu:
+	- Add Ethernet support for stm32h7
 
-Make sure you modify the DTS file since with this patch the period is
-now passed through the conventional way.
-Example:
-pwmleds {
-    compatible =3D "pwm-leds";
-    heartbeat {
-        pwms =3D <&L45 0 100000 0>;
-        max-brightness =3D <255>;
-        linux,default-trigger =3D "heartbeat";
-    };
-};
-
-I have tested the heartbeat trigger on HiFive Unleashed board and it's
-working with this PWM patch.
+Changes in V3:
+	- Reverse for syscfg management because it is manage by these patches
+	  https://lkml.org/lkml/2018/12/12/133
+	  https://lkml.org/lkml/2018/12/12/134
+	  https://lkml.org/lkml/2018/12/12/131
+	  https://lkml.org/lkml/2018/12/12/132
 
 
->
-> Andreas.
->
-> --
-> Andreas Schwab, SUSE Labs, schwab@suse.de
-> GPG Key fingerprint =3D 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D=
-7
-> "And now for something completely different."
+Christophe Roullier (6):
+  net: ethernet: stmmac: manage Ethernet WoL for stm32mp157c.
+  net: ethernet: stmmac: update to support all PHY config for
+    stm32mp157c.
+  dt-bindings: net: stmmac: add phys config properties
+  net: ethernet: stmmac: add management of clk_csr property
+  dt-bindings: net: stmmac: remove syscfg clock property
+  ARM: dts: stm32: Add Ethernet support on stm32h7 SOC and activate it
+    for eval and disco boards
+
+ .../devicetree/bindings/net/stm32-dwmac.txt        |   9 +-
+ arch/arm/boot/dts/stm32h743-pinctrl.dtsi           |  15 +++
+ arch/arm/boot/dts/stm32h743.dtsi                   |  13 ++
+ arch/arm/boot/dts/stm32h743i-disco.dts             |  17 +++
+ arch/arm/boot/dts/stm32h743i-eval.dts              |  17 +++
+ drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c  | 135 +++++++++++++++++----
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   3 +
+ 7 files changed, 183 insertions(+), 26 deletions(-)
+
+-- 
+2.7.4
