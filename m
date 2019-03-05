@@ -1,156 +1,83 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: [PATCH v2 7/7] drm: atmel-hlcdc: add sam9x60 LCD controller
-Date: Tue, 5 Mar 2019 10:08:11 +0000
-Message-ID: <1551780434-4580-8-git-send-email-claudiu.beznea@microchip.com>
-References: <1551780434-4580-1-git-send-email-claudiu.beznea@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v5 0/8] Exynos5 Dynamic Memory Controller driver
+Date: Tue,  5 Mar 2019 11:19:03 +0100
+Message-ID: <1551781151-5562-1-git-send-email-l.luba@partner.samsung.com>
+References: <CGME20190305101924eucas1p24a058fcc034cc95bc33888087412ab48@eucas1p2.samsung.com>
+Content-Type: text/plain; charset="utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551780434-4580-1-git-send-email-claudiu.beznea@microchip.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, bbrezillon@kernel.org, airlied@linux.ie, daniel@ffwll.ch, thierry.reding@gmail.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, Sandeep.Sheriker@microchip.com, Claudiu.Beznea@microchip.com
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, Lukasz Luba <l.luba@partner.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.c=
-om>
+Hi all,
 
-Add the LCD controller for SAM9X60.
+This is v5 of the patch set which adds support of Dynamic Memory Controller
+for Exynos5422 SoC.
+The driver supports Dynamic Voltage and Frequency Scalling
+for the DMC and DRAM. It also provides needed timings for different
+speed operations of the DRAM memory.
 
-Signed-off-by: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@mi=
-crochip.com>
-[claudiu.beznea@microchip.com: add fixed_clksrc option to
- atmel_hlcdc_dc_sam9x60]
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c | 101 +++++++++++++++++++++++=
-++++
- 1 file changed, 101 insertions(+)
+changes:
+v5:
+- removed unneeded wrapper functions i.e. for regulator_set_voltage
+- removed unused defines
+- removed direct access to clock register base and used CCF for
+  pause and timing set usage
+- switched to OPP coming from DT according to Chanowoo's comments
+- switched to timings coming from DT, added parsing function
+- extended dt-binding with description of OPPs and timings
+- according to Rob Herring comment, moved dt-binding file before driver code
+  in the patch set.
+- re-based on top of v5.0
+v4:
+- removed unneeded DPLL and G3D clocks IDs
+- changed names of parent clocks for mout_mx_mspll_ccore_phy_p
+  and added one more parent: mout_sclk_epll
+- removed 933Mhz and 138MHz from the BPLL ratio table
+v3:
+- in DTS align to proper indent the clocks and clock-names entries
+v2:
+- changed file name exynos5-dmc.c -> exynos5422-dmc.c
+  and related entries in other files
+- changed dt-binding file name
+- changed config entry to CONFIG_ARM_EXYNOS5422_DMC_DEVFREQ
+- removed sysfs and print info messages (print only one line)
+- removed function exynos5_read_chip_info and compact code
+- changed dt-binding patch and move it up in the patch set
+- new entries in MAINTAINERS are added with the driver c code
+- clean-up in DTS file: renamed nodes to 'ppmu' and 'memory-controller',
+  entries moved to suggested location (before nocp nodes or after),
+  moved according to alfabetical order, compacted clocks names with right indent.
 
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c b/drivers/gpu/drm=
-/atmel-hlcdc/atmel_hlcdc_dc.c
-index 8bf51f853721..fb2e7646daeb 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
-@@ -364,6 +364,103 @@ static const struct atmel_hlcdc_dc_desc atmel_hlcdc_d=
-c_sama5d4 =3D {
- 	.nlayers =3D ARRAY_SIZE(atmel_hlcdc_sama5d4_layers),
- 	.layers =3D atmel_hlcdc_sama5d4_layers,
- };
-+
-+static const struct atmel_hlcdc_layer_desc atmel_hlcdc_sam9x60_layers[] =
-=3D {
-+	{
-+		.name =3D "base",
-+		.formats =3D &atmel_hlcdc_plane_rgb_formats,
-+		.regs_offset =3D 0x60,
-+		.id =3D 0,
-+		.type =3D ATMEL_HLCDC_BASE_LAYER,
-+		.cfgs_offset =3D 0x2c,
-+		.layout =3D {
-+			.xstride =3D { 2 },
-+			.default_color =3D 3,
-+			.general_config =3D 4,
-+			.disc_pos =3D 5,
-+			.disc_size =3D 6,
-+		},
-+		.clut_offset =3D 0x600,
-+	},
-+	{
-+		.name =3D "overlay1",
-+		.formats =3D &atmel_hlcdc_plane_rgb_formats,
-+		.regs_offset =3D 0x160,
-+		.id =3D 1,
-+		.type =3D ATMEL_HLCDC_OVERLAY_LAYER,
-+		.cfgs_offset =3D 0x2c,
-+		.layout =3D {
-+			.pos =3D 2,
-+			.size =3D 3,
-+			.xstride =3D { 4 },
-+			.pstride =3D { 5 },
-+			.default_color =3D 6,
-+			.chroma_key =3D 7,
-+			.chroma_key_mask =3D 8,
-+			.general_config =3D 9,
-+		},
-+		.clut_offset =3D 0xa00,
-+	},
-+	{
-+		.name =3D "overlay2",
-+		.formats =3D &atmel_hlcdc_plane_rgb_formats,
-+		.regs_offset =3D 0x260,
-+		.id =3D 2,
-+		.type =3D ATMEL_HLCDC_OVERLAY_LAYER,
-+		.cfgs_offset =3D 0x2c,
-+		.layout =3D {
-+			.pos =3D 2,
-+			.size =3D 3,
-+			.xstride =3D { 4 },
-+			.pstride =3D { 5 },
-+			.default_color =3D 6,
-+			.chroma_key =3D 7,
-+			.chroma_key_mask =3D 8,
-+			.general_config =3D 9,
-+		},
-+		.clut_offset =3D 0xe00,
-+	},
-+	{
-+		.name =3D "high-end-overlay",
-+		.formats =3D &atmel_hlcdc_plane_rgb_and_yuv_formats,
-+		.regs_offset =3D 0x360,
-+		.id =3D 3,
-+		.type =3D ATMEL_HLCDC_OVERLAY_LAYER,
-+		.cfgs_offset =3D 0x4c,
-+		.layout =3D {
-+			.pos =3D 2,
-+			.size =3D 3,
-+			.memsize =3D 4,
-+			.xstride =3D { 5, 7 },
-+			.pstride =3D { 6, 8 },
-+			.default_color =3D 9,
-+			.chroma_key =3D 10,
-+			.chroma_key_mask =3D 11,
-+			.general_config =3D 12,
-+			.scaler_config =3D 13,
-+			.phicoeffs =3D {
-+				.x =3D 17,
-+				.y =3D 33,
-+			},
-+			.csc =3D 14,
-+		},
-+		.clut_offset =3D 0x1200,
-+	},
-+};
-+
-+static const struct atmel_hlcdc_dc_desc atmel_hlcdc_dc_sam9x60 =3D {
-+	.min_width =3D 0,
-+	.min_height =3D 0,
-+	.max_width =3D 2048,
-+	.max_height =3D 2048,
-+	.max_spw =3D 0xff,
-+	.max_vpw =3D 0xff,
-+	.max_hpw =3D 0x3ff,
-+	.fixed_clksrc =3D true,
-+	.nlayers =3D ARRAY_SIZE(atmel_hlcdc_sam9x60_layers),
-+	.layers =3D atmel_hlcdc_sam9x60_layers,
-+};
-+
- static const struct of_device_id atmel_hlcdc_of_match[] =3D {
- 	{
- 		.compatible =3D "atmel,at91sam9n12-hlcdc",
-@@ -385,6 +482,10 @@ static const struct of_device_id atmel_hlcdc_of_match[=
-] =3D {
- 		.compatible =3D "atmel,sama5d4-hlcdc",
- 		.data =3D &atmel_hlcdc_dc_sama5d4,
- 	},
-+	{
-+		.compatible =3D "microchip,sam9x60-hlcdc",
-+		.data =3D &atmel_hlcdc_dc_sam9x60,
-+	},
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, atmel_hlcdc_of_match);
---=20
+Regards,
+Lukasz Luba
+
+
+Lukasz Luba (8):
+  clk: samsung: add needed IDs for DMC clocks in Exynos5420
+  clk: samsung: add new clocks for DMC for Exynos5422 SoC
+  clk: samsung: add BPLL rate table for Exynos 5422 SoC
+  dt-bindings: devfreq: add Exynos5422 DMC device description
+  drivers: devfreq: add DMC driver for Exynos5422
+  DT: arm: exynos: add DMC device for exynos5422
+  drivers: devfreq: events: add Exynos PPMU new events
+  ARM: exynos_defconfig: enable DMC driver
+
+ .../devicetree/bindings/devfreq/exynos5422-dmc.txt |  177 +++
+ MAINTAINERS                                        |    8 +
+ arch/arm/boot/dts/exynos5420.dtsi                  |   83 ++
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi      |   87 ++
+ arch/arm/configs/exynos_defconfig                  |    1 +
+ drivers/clk/samsung/clk-exynos5420.c               |   67 +-
+ drivers/devfreq/Kconfig                            |   13 +
+ drivers/devfreq/Makefile                           |    1 +
+ drivers/devfreq/event/exynos-ppmu.c                |    6 +
+ drivers/devfreq/exynos5422-dmc.c                   | 1154 ++++++++++++++++++++
+ include/dt-bindings/clock/exynos5420.h             |   18 +-
+ 11 files changed, 1609 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/devfreq/exynos5422-dmc.txt
+ create mode 100644 drivers/devfreq/exynos5422-dmc.c
+
+-- 
 2.7.4
