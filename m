@@ -1,112 +1,56 @@
-From: Eddie James <eajames@linux.ibm.com>
-Subject: Re: [PATCH 2/6] drivers/misc: Add Aspeed XDMA engine driver
-Date: Tue, 5 Mar 2019 15:45:12 -0600
-Message-ID: <84551e54-0382-6042-48cb-842d79214a98@linux.ibm.com>
-References: <1551735420-16202-1-git-send-email-eajames@linux.ibm.com>
- <1551735420-16202-3-git-send-email-eajames@linux.ibm.com>
- <CAK8P3a0eS11_T9wk4iLRT7A94Lh9gSf5QNGH4--pdA5HdEGMCw@mail.gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH] dt-bindings: reset: meson-g12a: Add missing USB2 PHY resets
+Date: Tue, 5 Mar 2019 23:02:45 +0100
+Message-ID: <CAFBinCAkMSeMuXj++cWBYP4WFwAMEwm-EFHtLA5X85oe6kekTw@mail.gmail.com>
+References: <20190304104916.3937-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a0eS11_T9wk4iLRT7A94Lh9gSf5QNGH4--pdA5HdEGMCw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190304104916.3937-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, gregkh <gregkh@linuxfoundation.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: p.zabel@pengutronix.de, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 3/5/19 2:01 AM, Arnd Bergmann wrote:
-> On Mon, Mar 4, 2019 at 10:37 PM Eddie James <eajames@linux.ibm.com> wrote:
->> The XDMA engine embedded in the AST2500 SOC performs PCI DMA operations
->> between the SOC (acting as a BMC) and a host processor in a server.
->>
->> This commit adds a driver to control the XDMA engine and adds functions
->> to initialize the hardware and memory and start DMA operations.
->>
->> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> Hi Eddie,
+On Mon, Mar 4, 2019 at 11:49 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> Thanks for your submission! Overall this looks well-implemented, but
-> I fear we already have too many ways of doing the same thing at
-> the moment, and I would hope to avoid adding yet another user space
-> interface for a specific hardware that does this.
+> The G12A Documentation lacked these 2 reset lines, but they are present and
+> used for each USB 2 PHYs.
 >
-> Your interface appears to be a fairly low-level variant, just doing
-> single DMA transfers through ioctls, but configuring the PCIe
-> endpoint over sysfs.
-
-Hi, thanks for the quick response!
-
-There is actually no PCIe configuration done in this driver. The two 
-sysfs entries control the system control unit (SCU) on the AST2500 
-purely to enable and disable entire PCIe devices. It might be possible 
-to control those devices more finely with a PCI endpoint driver, but 
-there is no need to do so. The XDMA engine does that by itself to 
-perform DMA fairly automatically.
-
-If the sysfs entries are really troublesome, we can probably remove 
-those and find another way to control the SCU.
-
+> Add them to the dt-bindings for the upcoming USB support.
 >
-> Please have a look at the drivers/pci/endpoint framework first
-> and see if you can work on top of that interface instead.
-> Even if it doesn't quite do what you need here, we may be
-> able to extend it in a way that works for you, and lets others
-> use the same user interface extensions in the future.
+> Fixes: dbfc54534dfc ("dt-bindings: reset: meson: add g12a bindings")
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+
+> ---
+>  include/dt-bindings/reset/amlogic,meson-g12a-reset.h | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 >
-> It may also be necessary to split out the DMA engine portion
-> into a regular drivers/dma/ back-end to make that fit in with
-> the PCIe endpoint framework.
+> diff --git a/include/dt-bindings/reset/amlogic,meson-g12a-reset.h b/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
+> index 8063e8314eef..6d487c5eba2c 100644
+> --- a/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
+> +++ b/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
+> @@ -51,7 +51,10 @@
+>  #define RESET_SD_EMMC_A                        44
+>  #define RESET_SD_EMMC_B                        45
+>  #define RESET_SD_EMMC_C                        46
+> -/*                                     47-60 */
+> +/*                                     47      */
+> +#define RESET_USB_PHY20                        48
+> +#define RESET_USB_PHY21                        49
+because it's always hard to look up, here's the reference to that
+information Amlogic's buildroot kernel
+(buildroot_openlinux_kernel_4.9_fbdev_20180706):
+kernel/aml-4.9/drivers/amlogic/usb/phy/phy-aml-new-usb2-v2.c uses:
+writel((val | (0x3 << 16)), (void __iomem *) ((unsigned
+long)phy->reset_regs + (0x21 * 4 - 0x8)));
 
-Right, I did look into the normal DMA framework. There were a couple of 
-problems. First and foremost, the "device" (really, host processor) 
-address that we use is 64 bit, but the AST2500 is of course 32 bit. So I 
-couldn't find a good way to get the address through the DMA API into the 
-driver. It's entirely possible I missed something there though.
+this translates to:
+- (0x21 * 4 - 0x8) = RESET1 register / reset line ID 32 and above
+(reset line 0 is at "0x20 * 4 - 0x08")
+- bits 16 and 17 = add 32 to that gives us reset IDs 48 and 49
 
-The other issue was that the vast majority of the DMA framework was 
-unused, resulting in a large amount of boilerplate that did nothing 
-except satisfy the API... I thought simplicity would be better in this case.
 
-Let me know what you think... I could certainly switch to ioctl instead 
-of the write() if that's better. Or if you really think the DMA 
-framework is required here, let me know.
-
-Thanks,
-
-Eddie
-
->
-> If you have already tried this without success, please let us
-> know in the description what problems you have hit, and why you
-> decided to create a new framework instead.
->
->> +/*
->> + * aspeed_xdma_op
->> + *
->> + * upstream: boolean indicating the direction of the DMA operation; upstream
->> + *           means a transfer from the BMC to the host
->> + *
->> + * host_addr: the DMA address on the host side, typically configured by PCI
->> + *            subsystem
->> + *
->> + * len: the size of the transfer in bytes; it should be a multiple of 16 bytes
->> + */
->> +struct aspeed_xdma_op {
->> +       __u8 upstream;
->> +       __u64 host_addr;
->> +       __u32 len;
->> +} __packed;
-> Side-note: packed structures are generally not great user space
-> interfaces. Regardless of where we end up with this, I'd recommend
-> naturally aligning each member inside of the structure, and using
-> explicit padding here.
-
-Understood, thanks.
-
->
->
->       Arnd
->
+Regards
+Martin
