@@ -1,57 +1,54 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 2/2] watchdog: orion_wdt: use timer1 as a pretimeout
-Date: Tue, 5 Mar 2019 01:57:10 +0100
-Message-ID: <20190305005710.GL26378@lunn.ch>
-References: <20190227230707.GA28635@roeck-us.net>
- <20190304225152.26831-1-chris.packham@alliedtelesis.co.nz>
- <20190304225152.26831-3-chris.packham@alliedtelesis.co.nz>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v2] dts: arm64: add CoreSight trace support for hi3660
+Date: Tue, 5 Mar 2019 09:07:07 +0800
+Message-ID: <20190305010707.GA9544@leoy-ThinkPad-X240s>
+References: <6496F4728C09F6479CFF21A8E67D33D568F32660@dggema525-mbx.china.huawei.com>
+ <20190302125955.GA11385@leoy-ThinkPad-X240s>
+ <CANLsYkzakXjuMR+=ncVpcohE8n-uF60Qa6EAN+Xh=FKBoJtrgg@mail.gmail.com>
+ <9109e498-0cd9-0b81-15a0-2208d4282359@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190304225152.26831-3-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <9109e498-0cd9-0b81-15a0-2208d4282359@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: linux@roeck-us.net, gregory.clement@bootlin.com, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, devicetree@vger.kernel.org
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: mathieu.poirier@linaro.org, shiwanglai@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, john.stultz@linaro.org, xuwei5@huawei.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, coresight@lists.linaro.org, suzhuangluan@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 05, 2019 at 11:51:52AM +1300, Chris Packham wrote:
-> The orion watchdog can either reset the CPU or generate an interrupt.
-> The interrupt would be useful for debugging as it provides panic()
-> output about the watchdog expiry, however if the interrupt is used the
-> watchdog can't reset the CPU in the event of being stuck in a loop with
-> interrupts disabled or if the CPU is prevented from accessing memory
-> (e.g. an unterminated DMA).
+On Mon, Mar 04, 2019 at 05:29:22PM +0000, Suzuki K Poulose wrote:
+
+[...]
+
+> > > To support for a funnel without any register address range (we have
+> > > support replicator like this mode), we also need to extend the driver
+> > > drivers/hwtracing/coresight/coresight-funnel.c.
+> > > 
+> > > Mathieu, Mike, Suzuki, could you help confirm this is the right
+> > > direction we should move forward to?
+> > 
+> > Leo, thanks for testing this out.  Shiwanglai, please add Suzuki and
+> > myself to future revision of this set - this will help you getting a
+> > timely response for your work.
+
+Yeah, I didn't give a good example for this; just remind to Wanglai,
+usually we can add maintainers' email address in the "To:" list so
+this will be more friendly for email filters.
+
+> > As Leo pointed out we already have support for replicators that don't
+> > have a register map and the same thing should be done in this case.
+> > But contrary to what was done for replicators, I think we should keep
+> > the drivers in the same file as Russell did here[1].  That way we can
+> > keep all things funnel at the same place and reduce the amount of
+> > kernel configuration options.
 > 
-> All of the orion based CPU cores (at least back as far as Kirkwood) have
-> spare timers that aren't currently used by the Linux kernel. We can use
-> timer1 to provide a pre-timeout ahead of the watchdog timer and provide
-> the possibility of gathering debug before the reset triggers.
+> I back that. I have already merged the static and programmable replicators
+> into one and this should be out here soon. So, I back the single driver
+> approach for funnels.
 
-Hi Chris
+That's great!  Thanks for advices, Mathieu & Suzuki.
 
-I had a quick look at other drivers implementing pre-timeout. They
-seem to call watchdog_notify_pretimeout(). I don't see that here? What
-happens when timer1 fires?
+Will sync with you offline for proceeding.
 
-> @@ -169,38 +174,46 @@ static int armadaxp_wdt_clock_init(struct platform_device *pdev,
->  	}
->  
->  	/* Enable the fixed watchdog clock input */
-> -	atomic_io_modify(dev->reg + TIMER_CTRL,
-> -			 WDT_AXP_FIXED_ENABLE_BIT,
-> -			 WDT_AXP_FIXED_ENABLE_BIT);
-> +	val = WDT_AXP_FIXED_ENABLE_BIT | TIMER1_FIXED_ENABLE_BIT;
-> +	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
->  
->  	dev->clk_rate = clk_get_rate(dev->clk);
-> +
-> +
-
-One blank line is sufficient,
-
-
->  	return 0;
->  }
-
-   Andrew
+Thanks,
+Leo Yan
