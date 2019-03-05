@@ -1,7 +1,7 @@
 From: Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH 5/8] ARM: dts: stm32: declare copro reserved memories on STM32MP157c-ed1
-Date: Tue, 5 Mar 2019 15:24:06 +0100
-Message-ID: <1551795849-13672-6-git-send-email-fabien.dessenne@st.com>
+Subject: [PATCH 2/8] dt-bindings: remoteproc: add bindings for stm32 remote processor driver
+Date: Tue, 5 Mar 2019 15:24:03 +0100
+Message-ID: <1551795849-13672-3-git-send-email-fabien.dessenne@st.com>
 References: <1551795849-13672-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,66 +12,86 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxim
 Cc: Fabien Dessenne <fabien.dessenne@st.com>, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Ludovic Barre <ludovic.barre@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Declare reserved memories shared by the processors for STM32MP157c-ed1
-board.
+Add the device tree bindings document for the stm32 remoteproc devices.
 
 Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c-ed1.dts | 42 +++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ .../devicetree/bindings/remoteproc/stm32-rproc.txt | 67 ++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-index 626ceb3..acfc5cd 100644
---- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-@@ -21,6 +21,48 @@
- 		reg = <0xC0000000 0x40000000>;
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
+diff --git a/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt b/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+new file mode 100644
+index 0000000..cc90c88
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+@@ -0,0 +1,67 @@
++STMicroelectronics STM32 Remoteproc
++-----------------------------------
++This document defines the binding for the remoteproc component that loads and
++boots firmwares on the ST32MP family chipset.
 +
-+		mcuram2: mcuram2@10000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10000000 0x40000>;
-+			no-map;
-+		};
++Required properties:
++- compatible:	Must be "st,stm32mp1-rproc"
++- reg:		Address ranges of the remote processor dedicated memories.
++		The parent node should provide an appropriate ranges property
++		for properly translating these into bus addresses.
++- resets:	Reference to a reset controller asserting the remote processor.
++- reset-names:	Must be "mcu_rst"
++- st,syscfg-holdboot: Reference to the system configuration which holds the
++		remote processor reset hold boot
++	1st cell: phandle of syscon block
++	2nd cell: register offset containing the hold boot setting
++	3rd cell: register bitmask for the hold boot field
++- st,syscfg-tz: Reference to the system configuration which holds the RCC trust
++		zone mode
++	1st cell: phandle to syscon block
++	2nd cell: register offset containing the RCC trust zone mode setting
++	3rd cell: register bitmask for the RCC trust zone mode bit
 +
-+		vdev0vring0: vdev0vring0@10040000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10040000 0x1000>;
-+			no-map;
-+		};
++Optional properties:
++- interrupt-parent: phandle to the interrupt controller node.
++- interrupts:	Should contain the watchdog interrupt
++- interrupt-names: Must be "wdg"
++- mboxes:	List of phandle and mailbox channel specifiers:
++		- a channel (a) used to communicate through virtqueues with the
++		  remote proc.
++		  Bi-directional channel:
++		      - from local to remote = send message
++		      - from remote to local = send message ack
++		- a channel (b) working the opposite direction of channel (a)
++		- a channel (c) used by the local proc to notify the remote proc
++		  that it is about to be shut down.
++		  Mono-directional channel:
++		      - from local to remote, where ACK from the remote means
++		        that it is ready for shutdown
++- mbox-names:	This property is required if the mboxes property is used.
++		- must be "vq0" for channel (a)
++		- must be "vq1" for channel (b)
++		- must be "shutdown" for channel (c)
++- memory-region: list of phandles to the reserved memory regions associated with
++		the remoteproc device
++		(see ../reserved-memory/reserved-memory.txt)
++- st,syscfg-pdds: Reference to the system configuration which holds the remote
++		processor deep sleep setting
++	1st cell: phandle to syscon block
++	2nd cell: register offset containing the deep sleep setting
++	3rd cell: register bitmask for the deep sleep bit
++- auto_boot:	If defined, when remoteproc is probed, it looks for a default
++		firmware and if it finds some, it loads the firmware and starts
++		the remote processor.
++- recovery:	If defined, remoteproc enables the crash recovery process.
 +
-+		vdev0vring1: vdev0vring1@10041000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10041000 0x1000>;
-+			no-map;
-+		};
-+
-+		vdev0buffer: vdev0buffer@10042000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10042000 0x4000>;
-+			no-map;
-+		};
-+
-+		mcuram: mcuram@30000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x30000000 0x40000>;
-+			no-map;
-+		};
-+
-+		retram: retram@38000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x38000000 0x10000>;
-+			no-map;
-+		};
++Example:
++	m4_rproc: m4@0 {
++		compatible = "st,stm32mp1-rproc";
++		reg = <0x00000000 0x10000>,
++		      <0x10000000 0x40000>,
++		      <0x30000000 0x40000>;
++		resets = <&rcc MCU_R>;
++		reset-names = "mcu_rst";
++		st,syscfg-holdboot = <&rcc 0x10C 0x1>;
++		st,syscfg-tz = <&rcc 0x000 0x1>;
 +	};
-+
- 	aliases {
- 		serial0 = &uart4;
- 	};
 -- 
 2.7.4
