@@ -1,83 +1,158 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 1/7] dt-bindings: interconnect: Add a dma interconnect
- name
-Date: Tue, 5 Mar 2019 16:53:37 +0100
-Message-ID: <20190305155337.glfvgyddvnkv774m@flea>
-References: <cover.f2e5fbb4d21384168973fa32377a33d627768146.1549897336.git-series.maxime.ripard@bootlin.com>
- <43eeca13733faefe62f9facc25b8e88f7e593f61.1549897336.git-series.maxime.ripard@bootlin.com>
- <553c987c-da9a-1f85-fb16-4b9fe17dd14b@linaro.org>
+Subject: Re: [PATCH 2/2] arm64: allwinner: a64: Add Oceanic A64-5inMFD
+ initial support
+Date: Tue, 5 Mar 2019 16:59:19 +0100
+Message-ID: <20190305155919.cm3yrve3vqp7jimh@flea>
+References: <20190226060240.8783-1-jagan@amarulasolutions.com>
+ <20190226060240.8783-2-jagan@amarulasolutions.com>
+ <20190227153346.dwd3stsbsvf7rwly@flea>
+ <CAMty3ZDSZvaxMjcQJLNaTDJQ5OjJ9NbjpOJKWMUE5PhRCzYvqw@mail.gmail.com>
+ <20190301145724.vhvyoqkkxdflg2g7@flea>
+ <CAMty3ZCUSsN71Q5h_nj6de0Smhqht1S5zq0pLKUqpwq=85XqXw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0808111697=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <553c987c-da9a-1f85-fb16-4b9fe17dd14b@linaro.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, dri-devel@lists.freedesktop.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Yong Deng <yong.deng@magewell.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="iy7ufcb2rlgsdx6i"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZCUSsN71Q5h_nj6de0Smhqht1S5zq0pLKUqpwq=85XqXw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryan Pannell <ryan@osukl.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-amarula@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
 
---===============0808111697==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cksvmpp7zr6b4jhf"
-Content-Disposition: inline
-
-
---cksvmpp7zr6b4jhf
+--iy7ufcb2rlgsdx6i
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Fri, Mar 01, 2019 at 07:48:15PM +0200, Georgi Djakov wrote:
-> On 2/11/19 17:02, Maxime Ripard wrote:
-> > The current DT bindings assume that the DMA will be performed by the
-> > devices through their parent DT node, and rely on that assumption for t=
-he
-> > address translation using dma-ranges.
-> >=20
-> > However, some SoCs have devices that will perform DMA through another b=
-us,
-> > with separate address translation rules. We therefore need to express t=
-hat
-> > relationship, through the special interconnect name "dma".
-> >=20
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > ---
-> >  Documentation/devicetree/bindings/interconnect/interconnect.txt | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/interconnect/interconnec=
-t.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > index 5a3c575b387a..e69fc2d992c3 100644
-> > --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > @@ -51,6 +51,9 @@ interconnect-names : List of interconnect path name s=
-trings sorted in the same
-> >  		     interconnect-names to match interconnect paths with interconnect
-> >  		     specifier pairs.
-> > =20
-> > +                     Reserved interconnect names:
-> > +                         * dma: Path from the device to the main memor=
-y of the system
+On Fri, Mar 01, 2019 at 10:27:14PM +0530, Jagan Teki wrote:
+> On Fri, Mar 1, 2019 at 8:27 PM Maxime Ripard <maxime.ripard@bootlin.com> =
+wrote:
+> >
+> > On Wed, Feb 27, 2019 at 09:49:23PM +0530, Jagan Teki wrote:
+> > > On Wed, Feb 27, 2019 at 9:03 PM Maxime Ripard <maxime.ripard@bootlin.=
+com> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Tue, Feb 26, 2019 at 11:32:40AM +0530, Jagan Teki wrote:
+> > > > > Oceanic A64-5inMFD is a 5 inch Multi function display baseboard
+> > > > > designed to mount SoPine SOM.
+> > > > >
+> > > > > Key features:
+> > > > > - Allwinner A64 Cortex-A53
+> > > > > - Mali-400MP2 GPU
+> > > > > - AXP803 PMIC
+> > > > > - 2GB DDR3 RAM
+> > > > > - SD Slot
+> > > > > - SPI-NOR flash
+> > > > > - EMAC, RTL8211E
+> > > > > - MCP2515 CAN
+> > > > > - MIPI-DSI
+> > > > > - Goodix 911 CTP
+> > > > > - USB Host
+> > > > > - 12V DC power supply
+> > > > >
+> > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > ---
+> > > > >  arch/arm64/boot/dts/allwinner/Makefile        |  1 +
+> > > > >  .../allwinner/sun50i-a64-oceanic-5inmfd.dts   | 46 +++++++++++++=
+++++++
+> > > > >  2 files changed, 47 insertions(+)
+> > > > >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-ocea=
+nic-5inmfd.dts
+> > > > >
+> > > > > diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/=
+boot/dts/allwinner/Makefile
+> > > > > index a5fb1eaa8acf..ec39fe856117 100644
+> > > > > --- a/arch/arm64/boot/dts/allwinner/Makefile
+> > > > > +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> > > > > @@ -2,6 +2,7 @@
+> > > > >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-amarula-relic.dtb
+> > > > >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-bananapi-m64.dtb sun50i=
+-a64-bananapi-m64-icn6211.dtb
+> > > > >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-nanopi-a64.dtb
+> > > > > +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-oceanic-5inmfd.dtb
+> > > > >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-olinuxino.dtb
+> > > > >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-orangepi-win.dtb
+> > > > >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-pine64-lts.dtb
+> > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5in=
+mfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5inmfd.dts
+> > > > > new file mode 100644
+> > > > > index 000000000000..d73d1f55acb9
+> > > > > --- /dev/null
+> > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5inmfd.dts
+> > > > > @@ -0,0 +1,46 @@
+> > > > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > > > > +/*
+> > > > > + * Copyright (C) 2019 Oceanic Systems (UK) Ltd.
+> > > > > + * Copyright (C) 2019 Amarula Solutions B.V.
+> > > > > + * Author: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > + */
+> > > > > +
+> > > > > +/dts-v1/;
+> > > > > +
+> > > > > +#include "sun50i-a64-sopine.dtsi"
+> > > > > +
+> > > > > +/ {
+> > > > > +     model =3D "Oceanic A64-5inMFD";
+> > > > > +     compatible =3D "oceanic,a64-5inmfd", "allwinner,sun50i-a64";
+> > > >
+> > > > The name of the DT is Oceanic 5inMFD, while you call the board
+> > > > A64-5inMFD here, which name is the actual name?
+> > >
+> > > Yes, this is something that we discussed during "Amarula A64-Relic"
+> > > naming convention.
+> > >
+> > > Since these boards are not famous like teres-i we agreed to add vendor
+> > > name after sun50i-a64- followed by real board name.
+> > >
+> > > Here A64 already covered during sun50i-a64- so the dts name simply the
+> > > <vendor_name>-<real_board_name>
+> >
+> > For the DT name, yeah, we want that pattern.
+> >
+> > For the compatible and model, we want to use the model name.
 >=20
-> Bikeshed: As it's from the device to the main memory, maybe here we can
-> also denote this my calling the path dma-mem or dma-memory. For other
-> paths, we are trying to mention both the source and the destination and
-> maybe it would be good to be consistent although this is special one.
+> Entire model name after <vendor_name>, ?
+>=20
+> model =3D "Oceanic A64-5inMFD";
+> compatible =3D "oceanic,a64-5inmfd", "allwinner,sun50i-a64";
+>=20
+> is this not sufficient?
+>=20
+> Let me understand with respective few existing stuff.
+>=20
+> model =3D "Amarula A64-Relic";
+> compatible =3D "amarula,a64-relic", "allwinner,sun50i-a64";
+>=20
+> model =3D "Olimex A64 Teres-I"
+> compatible =3D "olimex,a64-teres-i", "allwinner,sun50i-a64";
 
-I'm not sure I understand what you mean. You'd like two interconnect
-names, one called dma-memory, and one memory-dma?
+This one is called the TERES-A64:
+https://www.olimex.com/Products/DIY-Laptop/KITS/TERES-A64-WHITE/open-source=
+-hardware
 
-Thanks!
+The laptop is the Teres-I, it can have an A64
+
+> model =3D "FriendlyARM NanoPi A64";
+> compatible =3D "friendlyarm,nanopi-a64", "allwinner,sun50i-a64";
+
+NanoPi A64 is the name of the board: http://nanopi.io/nanopi-a64.html
+
+> model =3D "Olimex A64-Olinuxino";
+> compatible =3D "olimex,a64-olinuxino", "allwinner,sun50i-a64"
+
+A64-Olinuxino is the name of the board too:
+https://www.olimex.com/Products/OLinuXino/A64/A64-OLinuXino/open-source-har=
+dware
+
+> Would you comment, what is the different with respect to my change?
+
+If the name of the product is 5inMFD, then the model should be Oceanic
+5inMFD, and its compatible oceanic,5inmfd
+
 Maxime
 
 --=20
@@ -85,27 +160,15 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---cksvmpp7zr6b4jhf
+--iy7ufcb2rlgsdx6i
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXH6bgQAKCRDj7w1vZxhR
-xThCAQD6PHnyKDoKrnJEYd0OjuOIJThkCCKFBjXXscGqXBnrggD/eFCzZGMEyleu
-iG1PCRKn4Bp6bl8xBlfk3QB8wSEBWAw=
-=KfvE
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXH6c1wAKCRDj7w1vZxhR
+xROYAQC8deU5A9vhREAQQrK6Q7EOCuKH8mkLTmcsFAk0ZXrG7gEA8fUEhN3hVdvx
+tEyVxtyE6hiw+XrLTXBDiyaxBl7aPgk=
+=tDgf
 -----END PGP SIGNATURE-----
 
---cksvmpp7zr6b4jhf--
-
---===============0808111697==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============0808111697==--
+--iy7ufcb2rlgsdx6i--
