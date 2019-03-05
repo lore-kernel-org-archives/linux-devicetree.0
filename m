@@ -1,59 +1,158 @@
-From: pierre kuo <vichy.kuo@gmail.com>
-Subject: Re: [PATCH 1/1] of: reserved_mem: fix reserve memory leak
-Date: Tue, 5 Mar 2019 11:36:01 +0800
-Message-ID: <CAOVJa8HUx-8Ok8yMm91UmXpo39KAipt6C1BsfOL1c0Q_kqs1Vg@mail.gmail.com>
-References: <20190219074500.16454-1-vichy.kuo@gmail.com> <CAL_Jsq+wUGxeQUMJd0eu52QadvLvkkT=36q9e1Qbru2gEsUGCw@mail.gmail.com>
+From: Pi-Hsun Shih <pihsun@chromium.org>
+Subject: Re: [PATCH v5 1/6] dt-bindings: Add a binding for Mediatek SCP
+Date: Tue, 5 Mar 2019 11:53:00 +0800
+Message-ID: <CANdKZ0dg_yXPh8VJOnN3v4zf_XAWjK4qTXv_o16rTVYrhTqvGw@mail.gmail.com>
+References: <20190221084729.101784-1-pihsun@chromium.org> <20190221084729.101784-2-pihsun@chromium.org>
+ <20190222144316.GA19284@bogus> <CANdKZ0d+2CqbVEwruW+pbqUeRMBwzXV7tFC7Cp7i+98CWiB_4w@mail.gmail.com>
+ <CAL_Jsq+rqeJX9LHOvVi7rPUzCeWhM2QjicJXyJyn23-gBo=Qcg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+wUGxeQUMJd0eu52QadvLvkkT=36q9e1Qbru2gEsUGCw@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+rqeJX9LHOvVi7rPUzCeWhM2QjicJXyJyn23-gBo=Qcg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Erin Lo <erin.lo@mediatek.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> You should Cc the author(s) of this code. I've added Marek.
-Thanks ^^
-The cc lists I got were from get_maintainer.pl, no matter running with
-of_reserved_mem.c or patch file.
-
-(with file)
-$ perl scripts/get_maintainer.pl --separator ,   --norolestats
-drivers/of/of_reserved_mem.c
-Rob Herring <robh+dt@kernel.org>,Frank Rowand
-<frowand.list@gmail.com>,devicetree@vger.kernel.org,linux-kernel@vger.kernel.org
-
-(with patch)
-$ perl scripts/get_maintainer.pl --separator , --norolestats
-0001-of-reserved_mem-fix-reserve-memory-leak.patch
-Rob Herring <robh+dt@kernel.org>,Frank Rowand
-<frowand.list@gmail.com>,devicetree@vger.kernel.org,linux-kernel@vger.kernel.org
-
-> > The __reserved_mem_init_node will call region specific reserved memory
-> > init codes, but once all compatibled init codes failed, the memory region
-> > will left in memory.reserved and cause leakage.
-> >
-> > Take cma reserve memory DTS for example, if user declare 1MB size,
-> > which is not align to (PAGE_SIZE << max(MAX_ORDER - 1,
-> > pageblock_order)), rmem_cma_setup will return -EINVAL.
-> > Meanwhile, rmem_dma_setup will also return -EINVAL since "reusable"
-> > property is not set. If finally there is no reserved memory init pick up
-> > this memory, kernel will left the 1MB leak in memory.reserved.
-> >
-> > This patch will remove this kind of memory from memory.reserved, only
-> > when __reserved_mem_init_node return neither 0 nor -ENOENT.
+On Tue, Mar 5, 2019 at 1:52 AM Rob Herring <robh@kernel.org> wrote:
 >
-> I'm not sure that un-reserving memory on error is the correct
-> behavior. It may be fine for something like CMA, but if it is some
-> shared memory used by another processor in the system not reserving it
-> would probably never be correct.
+> On Mon, Feb 25, 2019 at 12:15 AM Pi-Hsun Shih <pihsun@chromium.org> wrote:
+> >
+> > On Fri, Feb 22, 2019 at 10:43 PM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Thu, Feb 21, 2019 at 04:47:24PM +0800, Pi-Hsun Shih wrote:
+> > > > From: Erin Lo <erin.lo@mediatek.com>
+> > > >
+> > > > Add a DT binding documentation of SCP for the
+> > > > MT8183 SoC from Mediatek.
+> > > >
+> > > > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> > > > ---
+> > > > Changes from v4:
+> > > >  - Add detail of more properties.
+> > > >  - Document the usage of mtk,rpmsg-name in subnode from the new design.
+> > > >
+> > > > Changes from v3:
+> > > >  - No change.
+> > > >
+> > > > Changes from v2:
+> > > >  - No change. I realized that for this patch series, there's no need to
+> > > >    add anything under the mt8183-scp node (neither the mt8183-rpmsg or
+> > > >    the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
+> > > >    directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
+> > > >    created by SCP name service.
+> > > >
+> > > > Changes from v1:
+> > > >  - No change.
+> > > > ---
+> > > >  .../bindings/remoteproc/mtk,scp.txt           | 37 +++++++++++++++++++
+> > > >  1 file changed, 37 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+> > > > new file mode 100644
+> > > > index 00000000000000..8cf8b0e0d98a4c
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+> > > > @@ -0,0 +1,37 @@
+> > > > +Mediatek SCP Bindings
+> > > > +----------------------------------------
+> > > > +
+> > > > +This binding provides support for ARM Cortex M4 Co-processor found on some
+> > > > +Mediatek SoCs.
+> > > > +
+> > > > +Required properties:
+> > > > +- compatible         Should be "mediatek,mt8183-scp"
+> > > > +- reg                        Should contain the address ranges for the two memory
+> > > > +                     regions, SRAM and CFG.
+> > > > +- reg-names          Contains the corresponding names for the two memory
+> > > > +                     regions. These should be named "sram" & "cfg".
+> > > > +- clocks             Clock for co-processor (See: ../clock/clock-bindings.txt)
+> > > > +- clock-names                Contains the corresponding name for the clock. This
+> > > > +                     should be named "main".
+> > > > +
+> > > > +Subnodes
+> > > > +--------
+> > > > +
+> > > > +When CONFIG_RPMSG_MTK_SCP is enabled, subnodes of the SCP represent rpmsg
+> > >
+> > > Bindings can't depend on kernel config options.
+> > >
+> >
+> > What's the recommendation here if the subnode only has effect when the
+> > config is enabled? Should I just skip the sentence "When ... is
+> > enabled"?
+>
+> Sure.
 
-In this patch, we un-reserving memory ONLY if explicit compatible matching fail.
-That mean driver found something wrong while matching and let OS know.
-(But reserved-memory without compatible property will not be affected.)
+Ok would change this in next version.
 
-So per ur explaination, there would be cases that driver reported
-matching memory fail,
-but the memory is still needed by another processor?
+>
+> >
+> > > > +devices. The names of the devices are not important. The properties of these
+> > > > +nodes are defined by the individual bindings for the rpmsg devices - but must
+> > > > +contain the following property:
+> > > > +
+> > > > +- mtk,rpmsg-name     Contains the name for the rpmsg device. Used to match
+> > > > +                     the subnode to rpmsg device announced by SCP.
+> > >
+> > > I don't think this belongs in DT, but without some examples I'm not
+> > > really sure.
+> > >
+> >
+> > This is similar to the qcom,smd-channels property in
+> > Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt, a example DT
+> > for this:
+>
+> QCom has lots of strange buses and communication channels. Probably
+> not the best place for inspiration.
+>
+> > scp {
+> >         compatible = "mediatek,mt8183-scp";
+> >         ...
+> >         cros_ec {
+> >                 compatible = "google,cros-ec-rpmsg";
+> >                 mtk,rpmsg-name = "cros-ec-rpmsg";
+>
+> Why do we need the same string twice? It's just the compatible string
+> minus the vendor prefix.
 
-Appreciate ur kind help,
+What I was thinking is that compatible string is used to match what
+driver should be used, and mtk,rpmsg-name is used to match the node to
+the rpmsg device SCP announced. It's possible (although not in the
+device tree we use) that multiple subnodes of SCP node use the same
+driver, and they would have different mtk,rpmsg-name and corresponds
+to different rpmsg device from SCP.
+
+>
+> >
+> >                 cros_ec_codec {
+> >                         compatible = "google,cros-ec-codec";
+> >                         ...
+>
+> What's this? I can't review bindings piece by piece.
+>
+
+This is a example of subnode that can be under the cros_ec binding,
+and is not directly related to this particular binding document. I
+just wanted to show that there's possible subnode for the cros_ec
+node, sorry for the confusion.
+
+> >                 };
+> >         };
+> > };
+> >
+> > > > +
+> > > > +Example:
+> > > > +
+> > > > +     scp: scp@10500000 {
+> > > > +             compatible = "mediatek,mt8183-scp";
+> > > > +             reg = <0 0x10500000 0 0x80000>,
+> > > > +                   <0 0x105c0000 0 0x5000>;
+> > > > +             reg-names = "sram", "cfg";
+> > > > +             clocks = <&infracfg CLK_INFRA_SCPSYS>;
+> > > > +             clock-names = "main";
+> > > > +     };
+> > > > --
+> > > > 2.21.0.rc0.258.g878e2cd30e-goog
+> > > >
