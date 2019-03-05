@@ -1,58 +1,112 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v2 2/8] dt-bindings: phy: Add Amlogic G12A USB3+PCIE Combo
- PHY Bindings
-Date: Tue, 5 Mar 2019 22:42:39 +0100
-Message-ID: <CAFBinCCp+bME0fnWRJx0L1E5aazUh1Hw-svsP7+D_QU4dP08nw@mail.gmail.com>
-References: <20190304103846.2060-1-narmstrong@baylibre.com> <20190304103846.2060-3-narmstrong@baylibre.com>
+From: Eddie James <eajames@linux.ibm.com>
+Subject: Re: [PATCH 2/6] drivers/misc: Add Aspeed XDMA engine driver
+Date: Tue, 5 Mar 2019 15:45:12 -0600
+Message-ID: <84551e54-0382-6042-48cb-842d79214a98@linux.ibm.com>
+References: <1551735420-16202-1-git-send-email-eajames@linux.ibm.com>
+ <1551735420-16202-3-git-send-email-eajames@linux.ibm.com>
+ <CAK8P3a0eS11_T9wk4iLRT7A94Lh9gSf5QNGH4--pdA5HdEGMCw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190304103846.2060-3-narmstrong@baylibre.com>
+In-Reply-To: <CAK8P3a0eS11_T9wk4iLRT7A94Lh9gSf5QNGH4--pdA5HdEGMCw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, gregkh <gregkh@linuxfoundation.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
 
-On Mon, Mar 4, 2019 at 11:38 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On 3/5/19 2:01 AM, Arnd Bergmann wrote:
+> On Mon, Mar 4, 2019 at 10:37 PM Eddie James <eajames@linux.ibm.com> wrote:
+>> The XDMA engine embedded in the AST2500 SOC performs PCI DMA operations
+>> between the SOC (acting as a BMC) and a host processor in a server.
+>>
+>> This commit adds a driver to control the XDMA engine and adds functions
+>> to initialize the hardware and memory and start DMA operations.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> Hi Eddie,
 >
-> Add the Amlogic G12A Family USB3 + PCIE Combo PHY Bindings.
+> Thanks for your submission! Overall this looks well-implemented, but
+> I fear we already have too many ways of doing the same thing at
+> the moment, and I would hope to avoid adding yet another user space
+> interface for a specific hardware that does this.
 >
-> This PHY can provide exclusively USB3 or PCIE support on shared I/Os.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  .../bindings/phy/meson-g12a-usb3-pcie-phy.txt | 22 +++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
->
-> diff --git a/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt b/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
-> new file mode 100644
-> index 000000000000..7cfc17e2df31
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
-> @@ -0,0 +1,22 @@
-> +* Amlogic G12A USB3 + PCIE Combo PHY binding
-> +
-> +Required properties:
-> +- compatible:  Should be "amlogic,meson-g12a-usb3-pcie-phy"
-> +- #phys-cells: must be 1. The cell number is used to select the phy mode
-> +  as defined in <dt-bindings/phy/phy.h> between PHY_TYPE_USB3 and PHY_TYPE_PCIE
-> +- reg:         The base address and length of the registers
-> +- clocks:      a phandle to the 100MHz reference clock of this PHY
-> +- clock-names: must be "ref_clk"
-> +- resets:      phandle to the reset lines for the PHY control
-> +- reset-names: must be "phy"
-one question on the resets:
-- in v1 you had three reset lines: RESET_PCIE_CTRL_A, RESET_PCIE_PHY,
-RESET_PCIE_APB
-- in v2 you only have the "phy" reset line.
-is this because the other two are connected to the PCIe controller
-(Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt) instead
-of the PHY?
+> Your interface appears to be a fairly low-level variant, just doing
+> single DMA transfers through ioctls, but configuring the PCIe
+> endpoint over sysfs.
 
+Hi, thanks for the quick response!
 
-Regards
-Martin
+There is actually no PCIe configuration done in this driver. The two 
+sysfs entries control the system control unit (SCU) on the AST2500 
+purely to enable and disable entire PCIe devices. It might be possible 
+to control those devices more finely with a PCI endpoint driver, but 
+there is no need to do so. The XDMA engine does that by itself to 
+perform DMA fairly automatically.
+
+If the sysfs entries are really troublesome, we can probably remove 
+those and find another way to control the SCU.
+
+>
+> Please have a look at the drivers/pci/endpoint framework first
+> and see if you can work on top of that interface instead.
+> Even if it doesn't quite do what you need here, we may be
+> able to extend it in a way that works for you, and lets others
+> use the same user interface extensions in the future.
+>
+> It may also be necessary to split out the DMA engine portion
+> into a regular drivers/dma/ back-end to make that fit in with
+> the PCIe endpoint framework.
+
+Right, I did look into the normal DMA framework. There were a couple of 
+problems. First and foremost, the "device" (really, host processor) 
+address that we use is 64 bit, but the AST2500 is of course 32 bit. So I 
+couldn't find a good way to get the address through the DMA API into the 
+driver. It's entirely possible I missed something there though.
+
+The other issue was that the vast majority of the DMA framework was 
+unused, resulting in a large amount of boilerplate that did nothing 
+except satisfy the API... I thought simplicity would be better in this case.
+
+Let me know what you think... I could certainly switch to ioctl instead 
+of the write() if that's better. Or if you really think the DMA 
+framework is required here, let me know.
+
+Thanks,
+
+Eddie
+
+>
+> If you have already tried this without success, please let us
+> know in the description what problems you have hit, and why you
+> decided to create a new framework instead.
+>
+>> +/*
+>> + * aspeed_xdma_op
+>> + *
+>> + * upstream: boolean indicating the direction of the DMA operation; upstream
+>> + *           means a transfer from the BMC to the host
+>> + *
+>> + * host_addr: the DMA address on the host side, typically configured by PCI
+>> + *            subsystem
+>> + *
+>> + * len: the size of the transfer in bytes; it should be a multiple of 16 bytes
+>> + */
+>> +struct aspeed_xdma_op {
+>> +       __u8 upstream;
+>> +       __u64 host_addr;
+>> +       __u32 len;
+>> +} __packed;
+> Side-note: packed structures are generally not great user space
+> interfaces. Regardless of where we end up with this, I'd recommend
+> naturally aligning each member inside of the structure, and using
+> explicit padding here.
+
+Understood, thanks.
+
+>
+>
+>       Arnd
+>
