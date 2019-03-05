@@ -1,69 +1,111 @@
-From: Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH 1/8] dt-bindings: stm32: add bindings for ML-AHB interconnect
-Date: Tue, 5 Mar 2019 15:24:02 +0100
-Message-ID: <1551795849-13672-2-git-send-email-fabien.dessenne@st.com>
-References: <1551795849-13672-1-git-send-email-fabien.dessenne@st.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 1/7] dt-bindings: interconnect: Add a dma interconnect
+ name
+Date: Tue, 5 Mar 2019 16:53:37 +0100
+Message-ID: <20190305155337.glfvgyddvnkv774m@flea>
+References: <cover.f2e5fbb4d21384168973fa32377a33d627768146.1549897336.git-series.maxime.ripard@bootlin.com>
+ <43eeca13733faefe62f9facc25b8e88f7e593f61.1549897336.git-series.maxime.ripard@bootlin.com>
+ <553c987c-da9a-1f85-fb16-4b9fe17dd14b@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1551795849-13672-1-git-send-email-fabien.dessenne@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
-Cc: Ludovic Barre <ludovic.barre@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Loic Pallardy <loic.pallardy@st.com>, Fabien Dessenne <fabien.dessenne@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
+Content-Type: multipart/mixed; boundary="===============0808111697=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <553c987c-da9a-1f85-fb16-4b9fe17dd14b@linaro.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, dri-devel@lists.freedesktop.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Yong Deng <yong.deng@magewell.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Document the ML-AHB interconnect for stm32 SoCs.
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
----
- .../devicetree/bindings/arm/stm32/mlahb.txt        | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+--===============0808111697==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="cksvmpp7zr6b4jhf"
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/arm/stm32/mlahb.txt b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
-new file mode 100644
-index 0000000..880cb38
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
-@@ -0,0 +1,30 @@
-+ML-AHB interconnect bindings
-+
-+These bindings describe the STM32 SoCs ML-AHB interconnect bus which connects
-+a Cortex-M subsystem with dedicated memories.
-+
-+Required properties:
-+- compatible: should be "simple-bus"
-+- ranges: describes memory addresses translation between the local CPU and the
-+	   remote Cortex-M processor. Each memory region, is declared with 3
-+	   parameters:
-+		 - param 1: device base address (Cortex-M processor address)
-+		 - param 2: physical base address (local CPU address)
-+		 - param 3: size of the memory region.
-+
-+The Cortex-M remote processor accessed via the mlahb interconnect is described
-+by a child node.
-+
-+Example:
-+mlahb: mlahb@0 {
-+	compatible = "simple-bus";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges = <0x00000000 0x38000000 0x10000>,
-+		 <0x10000000 0x10000000 0x60000>,
-+		 <0x30000000 0x30000000 0x60000>;
-+
-+	m4_rproc: m4@0 {
-+		...
-+	};
-+};
--- 
-2.7.4
+
+--cksvmpp7zr6b4jhf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Fri, Mar 01, 2019 at 07:48:15PM +0200, Georgi Djakov wrote:
+> On 2/11/19 17:02, Maxime Ripard wrote:
+> > The current DT bindings assume that the DMA will be performed by the
+> > devices through their parent DT node, and rely on that assumption for t=
+he
+> > address translation using dma-ranges.
+> >=20
+> > However, some SoCs have devices that will perform DMA through another b=
+us,
+> > with separate address translation rules. We therefore need to express t=
+hat
+> > relationship, through the special interconnect name "dma".
+> >=20
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > ---
+> >  Documentation/devicetree/bindings/interconnect/interconnect.txt | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/interconnect/interconnec=
+t.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> > index 5a3c575b387a..e69fc2d992c3 100644
+> > --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> > +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> > @@ -51,6 +51,9 @@ interconnect-names : List of interconnect path name s=
+trings sorted in the same
+> >  		     interconnect-names to match interconnect paths with interconnect
+> >  		     specifier pairs.
+> > =20
+> > +                     Reserved interconnect names:
+> > +                         * dma: Path from the device to the main memor=
+y of the system
+>=20
+> Bikeshed: As it's from the device to the main memory, maybe here we can
+> also denote this my calling the path dma-mem or dma-memory. For other
+> paths, we are trying to mention both the source and the destination and
+> maybe it would be good to be consistent although this is special one.
+
+I'm not sure I understand what you mean. You'd like two interconnect
+names, one called dma-memory, and one memory-dma?
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--cksvmpp7zr6b4jhf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXH6bgQAKCRDj7w1vZxhR
+xThCAQD6PHnyKDoKrnJEYd0OjuOIJThkCCKFBjXXscGqXBnrggD/eFCzZGMEyleu
+iG1PCRKn4Bp6bl8xBlfk3QB8wSEBWAw=
+=KfvE
+-----END PGP SIGNATURE-----
+
+--cksvmpp7zr6b4jhf--
+
+--===============0808111697==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+
+--===============0808111697==--
