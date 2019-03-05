@@ -1,7 +1,7 @@
 From: Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH 8/8] ARM: dts: stm32: enable m4 coprocessor support on STM32MP157a-dk1
-Date: Tue, 5 Mar 2019 15:24:09 +0100
-Message-ID: <1551795849-13672-9-git-send-email-fabien.dessenne@st.com>
+Subject: [PATCH 6/8] ARM: dts: stm32: enable m4 coprocessor support on STM32MP157c-ed1
+Date: Tue, 5 Mar 2019 15:24:07 +0100
+Message-ID: <1551795849-13672-7-git-send-email-fabien.dessenne@st.com>
 References: <1551795849-13672-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,18 +12,18 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxim
 Cc: Fabien Dessenne <fabien.dessenne@st.com>, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Ludovic Barre <ludovic.barre@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable m4 coprocessor for STM32MP157a-dk1 board.
+Enable m4 coprocessor for STM32MP157c-ed1 board.
 
 Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- arch/arm/boot/dts/stm32mp157a-dk1.dts | 12 ++++++++++++
+ arch/arm/boot/dts/stm32mp157c-ed1.dts | 12 ++++++++++++
  1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-index 26ce8de..818a979 100644
---- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -116,6 +116,18 @@
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+index acfc5cd..c0b4cca 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -134,6 +134,18 @@
  	status = "okay";
  };
  
