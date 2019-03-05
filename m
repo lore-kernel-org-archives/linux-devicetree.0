@@ -1,19 +1,11 @@
-From: Nava kishore Manne <navam@xilinx.com>
-Subject: RE: [PATCH v3 6/6] dt-bindings: fpga: Add bindings for ZynqMP fpga
- driver
-Date: Tue, 5 Mar 2019 09:42:27 +0000
-Message-ID: <BYAPR02MB471068180BA4592779B0C2CEC2720@BYAPR02MB4710.namprd02.prod.outlook.com>
-References: <20190121173835.21173-1-nava.manne@xilinx.com>
- <20190121173835.21173-7-nava.manne@xilinx.com> <20190121154928.GA32129@bogus>
- <BYAPR02MB4710D1404CF2816599623363C2980@BYAPR02MB4710.namprd02.prod.outlook.com>
- <CAL_JsqKy0DB+nt+q307d2HHuuf1OCdCe-Ro-5covdTibBwQw8A@mail.gmail.com>
- <BYAPR02MB4710216D63D98A56ABD99E67C2710@BYAPR02MB4710.namprd02.prod.outlook.com>
- <CAL_JsqLn8LrO_qHkXK0hgwjvsedMCAEL0MTYXBLrke2cgri3+g@mail.gmail.com>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH] dt-bindings: clock: imx8mq: Fix numbering overlaps and gaps
+Date: Tue, 5 Mar 2019 09:49:16 +0000
+Message-ID: <1551779342-2640-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqLn8LrO_qHkXK0hgwjvsedMCAEL0MTYXBLrke2cgri3+g@mail.gmail.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -24,223 +16,297 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Moritz Fischer <moritz.fischer@ettus.com>, Alan Tull <atull@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jolly Shah <JOLLYS@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>, Michal Simek <michals@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>
+To: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Patrick Wildt <patrick@blueri.se>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+IMX8MQ_CLK_USB_PHY_REF changes from 163 to 153, this way removing the gap.
+All the following clock ids are now decreased by 10 to keep the numbering
+right. Doing this, the IMX8MQ_CLK_CSI2_CORE is not overlapped with
+IMX8MQ_CLK_GPT1 anymore. IMX8MQ_CLK_GPT1_ROOT changes from 193 to 183 and
+all the following ids are updated accordingly.
 
-Thanks for the quick response.
-Please find my response inline.
+Reported-by: Patrick Wildt <patrick@blueri.se>
+Fixes: 1cf3817b ("dt-bindings: Add binding for i.MX8MQ CCM")
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+---
+ include/dt-bindings/clock/imx8mq-clock.h | 220 +++++++++++++++----------------
+ 1 file changed, 110 insertions(+), 110 deletions(-)
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Monday, March 4, 2019 10:57 PM
-> To: Nava kishore Manne <navam@xilinx.com>
-> Cc: mark.rutland@arm.com; Michal Simek <michals@xilinx.com>; Rajan Vaja
-> <RAJANV@xilinx.com>; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; devicetree@vger.kernel.org; Jolly Shah
-> <JOLLYS@xilinx.com>; chinnikishore369@gmail.com
-> Subject: Re: [PATCH v3 6/6] dt-bindings: fpga: Add bindings for ZynqMP fpga
-> driver
-> 
-> On Mon, Mar 4, 2019 at 5:35 AM Nava kishore Manne <navam@xilinx.com>
-> wrote:
-> >
-> > Hi Rob,
-> >
-> >  Thanks for providing the review comments..
-> > Please find my response inline.
-> >
-> > > -----Original Message-----
-> > > From: Rob Herring [mailto:robh@kernel.org]
-> > > Sent: Saturday, February 23, 2019 2:01 AM
-> > > To: Nava kishore Manne <navam@xilinx.com>
-> > > Cc: mark.rutland@arm.com; Michal Simek <michals@xilinx.com>; Rajan
-> > > Vaja <RAJANV@xilinx.com>; linux-arm-kernel@lists.infradead.org;
-> > > linux- kernel@vger.kernel.org; devicetree@vger.kernel.org; Jolly
-> > > Shah <JOLLYS@xilinx.com>; chinnikishore369@gmail.com
-> > > Subject: Re: [PATCH v3 6/6] dt-bindings: fpga: Add bindings for
-> > > ZynqMP fpga driver
-> > >
-> > > On Wed, Jan 23, 2019 at 2:46 PM Nava kishore Manne
-> > > <navam@xilinx.com>
-> > > wrote:
-> > > >
-> > > > Hi Rob,
-> > > >
-> > > >
-> > > >
-> > > > Thanks for providing the comments...
-> > >
-> > > Please fix your mailer to send plain text emails to mail lists.
-> > >
-> > Thanks for pointing it..
-> >
-> > >
-> > > > > -----Original Message-----
-> > > >
-> > > > > From: Rob Herring [mailto:robh@kernel.org]
-> > > >
-> > > > > Sent: Monday, January 21, 2019 9:19 PM
-> > > >
-> > > > > To: Nava kishore Manne <navam@xilinx.com>
-> > > >
-> > > > > Cc: mark.rutland@arm.com; Michal Simek <michals@xilinx.com>;
-> > > > > Rajan Vaja
-> > > >
-> > > > > <RAJANV@xilinx.com>; linux-arm-kernel@lists.infradead.org;
-> > > > > linux-
-> > > >
-> > > > > kernel@vger.kernel.org; devicetree@vger.kernel.org; Jolly Shah
-> > > >
-> > > > > <JOLLYS@xilinx.com>; chinnikishore369@gmail.com
-> > > >
-> > > > > Subject: Re: [PATCH v3 6/6] dt-bindings: fpga: Add bindings for
-> > > > > ZynqMP fpga
-> > > >
-> > > > > driver
-> > > >
-> > > > >
-> > > >
-> > > > > On Mon, Jan 21, 2019 at 11:08:35PM +0530, Nava kishore Manne wrote:
-> > > >
-> > > > > > Add documentation to describe Xilinx ZynqMP fpga driver bindings.
-> > > >
-> > > > > >
-> > > >
-> > > > > > Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
-> > > >
-> > > > > > ---
-> > > >
-> > > > > > Changes for v3:
-> > > >
-> > > > > >                         -Removed PCAP as a child node to the
-> > > > > > FW and Created
-> > > >
-> > > > > >                         an independent node since PCAP driver
-> > > > > > is a consumer
-> > > >
-> > > > > >                         not a provider.
-> > > >
-> > > > > >
-> > > >
-> > > > > >  .../bindings/fpga/xlnx,zynqmp-pcap-fpga.txt         | 13 +++++++++++++
-> > > >
-> > > > > >  1 file changed, 13 insertions(+)
-> > > >
-> > > > > >  create mode 100644
-> > > >
-> > > > > > Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.t
-> > > > > > xt
-> > > >
-> > > > > >
-> > > >
-> > > > > > diff --git
-> > > >
-> > > > > > a/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga
-> > > > > > .txt
-> > > >
-> > > > > > b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga
-> > > > > > .txt
-> > > >
-> > > > > > new file mode 100644
-> > > >
-> > > > > > index 000000000000..1f6f58872311
-> > > >
-> > > > > > --- /dev/null
-> > > >
-> > > > > > +++ b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-
-> > > > > > +++ fpga
-> > > > > > +++ .txt
-> > > >
-> > > > > > @@ -0,0 +1,13 @@
-> > > >
-> > > > > > +Device Tree zynqmp-fpga bindings for the Zynq Ultrascale+
-> > > > > > +MPSoC
-> > > >
-> > > > > > +controlled using ZynqMP SoC firmware interface For Bitstream
-> > > >
-> > > > > > +configuration on ZynqMp Soc uses processor configuration
-> > > >
-> > > > > > +port(PCAP) to configure the programmable logic(PL) through PS
-> > > > > > +by
-> > > >
-> > > > > > +using FW interface.
-> > > >
-> > > > > > +
-> > > >
-> > > > > > +Required properties:
-> > > >
-> > > > > > +- compatible: should contain "xlnx,zynqmp-pcap-fpga"
-> > > >
-> > > > > > +
-> > > >
-> > > > > > +Example:
-> > > >
-> > > > > > +      zynqmp_pcap: pcap {
-> > > >
-> > > > > > +                     compatible = "xlnx,zynqmp-pcap-fpga";
-> > > >
-> > > > > > +      };
-> > > >
-> > > > >
-> > > >
-> > > > > There's no need for a DT node. Just make the firware driver
-> > > > > create a platform
-> > > >
-> > > > > device for pcap.
-> > > >
-> > > > >
-> > > >
-> > > >
-> > > >
-> > > > This driver being used by the FPGA manager framework(fpga-region)
-> > > > to apply
-> > > overlay's so this node is needed AFAIK.
-> > >
-> > > The binding says nothing about child nodes and what they are. Please
-> > > define that.
-> > >
-> > Do you mean I need to add the example usage of the pcap node like as below
-> in the binding doc?
-> 
-> You can have an example, but no, I meant you need say something like "The
-> pcap node may have 1 or more child nodes which have an 'fpga-region'
-> compatible.
-> >
-> > Device Tree Example for Full Reconfiguration
-> > ============================================
-> >
-> > Live Device Tree contains:
-> >
-> >         zynqmp_pcap: pcap {
-> >                 compatible = "xlnx,zynqmp-pcap-fpga";
-> >         };
-> >
-> >         fpga_region0: fpga-region0 {
-> 
-> This should be a child of pcap.
-> 
-AFAIK we can't put the fpga-region as a child of pcap as both are independent and they refered to each other using phandlers
-I have made this changes by looking into the below reference doc.
-https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/fpga/fpga-region.txt 
-
-> >                 compatible = "fpga-region";
-> >                 fpga-mgr = <&zynqmp_pcap>;
-> >                 #address-cells = <0x1>;
-> >                 #size-cells = <0x1>;
-> >                 ranges;
-> >         };
-> >
-> > DT Overlay contains:
-> 
-> Don't show overlays in examples. Just show a final tree (i.e. base with overlay
-> applied).
-
-To get a better picture for the users i have added this example node with overlays
-I feel it's good to have this info because it will not impact the functionality of PCAP node.
-Please let me know if you still  want me to make this example without overlay node.
-
-Regards,
-Navakishore.
+diff --git a/include/dt-bindings/clock/imx8mq-clock.h b/include/dt-bindings/clock/imx8mq-clock.h
+index b58cc64..6677e92 100644
+--- a/include/dt-bindings/clock/imx8mq-clock.h
++++ b/include/dt-bindings/clock/imx8mq-clock.h
+@@ -245,160 +245,160 @@
+ /* USB_CORE_REF */
+ #define IMX8MQ_CLK_USB_CORE_REF		152
+ /* USB_PHY_REF */
+-#define IMX8MQ_CLK_USB_PHY_REF		163
++#define IMX8MQ_CLK_USB_PHY_REF		153
+ /* ECSPI1 */
+-#define IMX8MQ_CLK_ECSPI1		164
++#define IMX8MQ_CLK_ECSPI1		154
+ /* ECSPI2 */
+-#define IMX8MQ_CLK_ECSPI2		165
++#define IMX8MQ_CLK_ECSPI2		155
+ /* PWM1 */
+-#define IMX8MQ_CLK_PWM1			166
++#define IMX8MQ_CLK_PWM1			156
+ /* PWM2 */
+-#define IMX8MQ_CLK_PWM2			167
++#define IMX8MQ_CLK_PWM2			157
+ /* PWM3 */
+-#define IMX8MQ_CLK_PWM3			168
++#define IMX8MQ_CLK_PWM3			158
+ /* PWM4 */
+-#define IMX8MQ_CLK_PWM4			169
++#define IMX8MQ_CLK_PWM4			159
+ /* GPT1 */
+-#define IMX8MQ_CLK_GPT1			170
++#define IMX8MQ_CLK_GPT1			160
+ /* WDOG */
+-#define IMX8MQ_CLK_WDOG			171
++#define IMX8MQ_CLK_WDOG			161
+ /* WRCLK */
+-#define IMX8MQ_CLK_WRCLK		172
++#define IMX8MQ_CLK_WRCLK		162
+ /* DSI_CORE */
+-#define IMX8MQ_CLK_DSI_CORE		173
++#define IMX8MQ_CLK_DSI_CORE		163
+ /* DSI_PHY */
+-#define IMX8MQ_CLK_DSI_PHY_REF		174
++#define IMX8MQ_CLK_DSI_PHY_REF		164
+ /* DSI_DBI */
+-#define IMX8MQ_CLK_DSI_DBI		175
++#define IMX8MQ_CLK_DSI_DBI		165
+ /*DSI_ESC */
+-#define IMX8MQ_CLK_DSI_ESC		176
++#define IMX8MQ_CLK_DSI_ESC		166
+ /* CSI1_CORE */
+-#define IMX8MQ_CLK_CSI1_CORE		177
++#define IMX8MQ_CLK_CSI1_CORE		167
+ /* CSI1_PHY */
+-#define IMX8MQ_CLK_CSI1_PHY_REF		178
++#define IMX8MQ_CLK_CSI1_PHY_REF		168
+ /* CSI_ESC */
+-#define IMX8MQ_CLK_CSI1_ESC		179
++#define IMX8MQ_CLK_CSI1_ESC		169
+ /* CSI2_CORE */
+ #define IMX8MQ_CLK_CSI2_CORE		170
+ /* CSI2_PHY */
+-#define IMX8MQ_CLK_CSI2_PHY_REF		181
++#define IMX8MQ_CLK_CSI2_PHY_REF		171
+ /* CSI2_ESC */
+-#define IMX8MQ_CLK_CSI2_ESC		182
++#define IMX8MQ_CLK_CSI2_ESC		172
+ /* PCIE2_CTRL */
+-#define IMX8MQ_CLK_PCIE2_CTRL		183
++#define IMX8MQ_CLK_PCIE2_CTRL		173
+ /* PCIE2_PHY */
+-#define IMX8MQ_CLK_PCIE2_PHY		184
++#define IMX8MQ_CLK_PCIE2_PHY		174
+ /* PCIE2_AUX */
+-#define IMX8MQ_CLK_PCIE2_AUX		185
++#define IMX8MQ_CLK_PCIE2_AUX		175
+ /* ECSPI3 */
+-#define IMX8MQ_CLK_ECSPI3		186
++#define IMX8MQ_CLK_ECSPI3		176
+ 
+ /* CCGR clocks */
+-#define IMX8MQ_CLK_A53_ROOT			187
+-#define IMX8MQ_CLK_DRAM_ROOT			188
+-#define IMX8MQ_CLK_ECSPI1_ROOT			189
++#define IMX8MQ_CLK_A53_ROOT			177
++#define IMX8MQ_CLK_DRAM_ROOT			178
++#define IMX8MQ_CLK_ECSPI1_ROOT			179
+ #define IMX8MQ_CLK_ECSPI2_ROOT			180
+ #define IMX8MQ_CLK_ECSPI3_ROOT			181
+ #define IMX8MQ_CLK_ENET1_ROOT			182
+-#define IMX8MQ_CLK_GPT1_ROOT			193
+-#define IMX8MQ_CLK_I2C1_ROOT			194
+-#define IMX8MQ_CLK_I2C2_ROOT			195
+-#define IMX8MQ_CLK_I2C3_ROOT			196
+-#define IMX8MQ_CLK_I2C4_ROOT			197
+-#define IMX8MQ_CLK_M4_ROOT			198
+-#define IMX8MQ_CLK_PCIE1_ROOT			199
+-#define IMX8MQ_CLK_PCIE2_ROOT			200
+-#define IMX8MQ_CLK_PWM1_ROOT			201
+-#define IMX8MQ_CLK_PWM2_ROOT			202
+-#define IMX8MQ_CLK_PWM3_ROOT			203
+-#define IMX8MQ_CLK_PWM4_ROOT			204
+-#define IMX8MQ_CLK_QSPI_ROOT			205
+-#define IMX8MQ_CLK_SAI1_ROOT			206
+-#define IMX8MQ_CLK_SAI2_ROOT			207
+-#define IMX8MQ_CLK_SAI3_ROOT			208
+-#define IMX8MQ_CLK_SAI4_ROOT			209
+-#define IMX8MQ_CLK_SAI5_ROOT			210
+-#define IMX8MQ_CLK_SAI6_ROOT			212
+-#define IMX8MQ_CLK_UART1_ROOT			213
+-#define IMX8MQ_CLK_UART2_ROOT			214
+-#define IMX8MQ_CLK_UART3_ROOT			215
+-#define IMX8MQ_CLK_UART4_ROOT			216
+-#define IMX8MQ_CLK_USB1_CTRL_ROOT		217
+-#define IMX8MQ_CLK_USB2_CTRL_ROOT		218
+-#define IMX8MQ_CLK_USB1_PHY_ROOT		219
+-#define IMX8MQ_CLK_USB2_PHY_ROOT		220
+-#define IMX8MQ_CLK_USDHC1_ROOT			221
+-#define IMX8MQ_CLK_USDHC2_ROOT			222
+-#define IMX8MQ_CLK_WDOG1_ROOT			223
+-#define IMX8MQ_CLK_WDOG2_ROOT			224
+-#define IMX8MQ_CLK_WDOG3_ROOT			225
+-#define IMX8MQ_CLK_GPU_ROOT			226
+-#define IMX8MQ_CLK_HEVC_ROOT			227
+-#define IMX8MQ_CLK_AVC_ROOT			228
+-#define IMX8MQ_CLK_VP9_ROOT			229
+-#define IMX8MQ_CLK_HEVC_INTER_ROOT		230
+-#define IMX8MQ_CLK_DISP_ROOT			231
+-#define IMX8MQ_CLK_HDMI_ROOT			232
+-#define IMX8MQ_CLK_HDMI_PHY_ROOT		233
+-#define IMX8MQ_CLK_VPU_DEC_ROOT			234
+-#define IMX8MQ_CLK_CSI1_ROOT			235
+-#define IMX8MQ_CLK_CSI2_ROOT			236
+-#define IMX8MQ_CLK_RAWNAND_ROOT			237
+-#define IMX8MQ_CLK_SDMA1_ROOT			238
+-#define IMX8MQ_CLK_SDMA2_ROOT			239
+-#define IMX8MQ_CLK_VPU_G1_ROOT			240
+-#define IMX8MQ_CLK_VPU_G2_ROOT			241
++#define IMX8MQ_CLK_GPT1_ROOT			183
++#define IMX8MQ_CLK_I2C1_ROOT			184
++#define IMX8MQ_CLK_I2C2_ROOT			185
++#define IMX8MQ_CLK_I2C3_ROOT			186
++#define IMX8MQ_CLK_I2C4_ROOT			187
++#define IMX8MQ_CLK_M4_ROOT			188
++#define IMX8MQ_CLK_PCIE1_ROOT			189
++#define IMX8MQ_CLK_PCIE2_ROOT			190
++#define IMX8MQ_CLK_PWM1_ROOT			191
++#define IMX8MQ_CLK_PWM2_ROOT			192
++#define IMX8MQ_CLK_PWM3_ROOT			193
++#define IMX8MQ_CLK_PWM4_ROOT			194
++#define IMX8MQ_CLK_QSPI_ROOT			195
++#define IMX8MQ_CLK_SAI1_ROOT			196
++#define IMX8MQ_CLK_SAI2_ROOT			197
++#define IMX8MQ_CLK_SAI3_ROOT			198
++#define IMX8MQ_CLK_SAI4_ROOT			199
++#define IMX8MQ_CLK_SAI5_ROOT			200
++#define IMX8MQ_CLK_SAI6_ROOT			201
++#define IMX8MQ_CLK_UART1_ROOT			202
++#define IMX8MQ_CLK_UART2_ROOT			203
++#define IMX8MQ_CLK_UART3_ROOT			204
++#define IMX8MQ_CLK_UART4_ROOT			205
++#define IMX8MQ_CLK_USB1_CTRL_ROOT		206
++#define IMX8MQ_CLK_USB2_CTRL_ROOT		207
++#define IMX8MQ_CLK_USB1_PHY_ROOT		208
++#define IMX8MQ_CLK_USB2_PHY_ROOT		209
++#define IMX8MQ_CLK_USDHC1_ROOT			210
++#define IMX8MQ_CLK_USDHC2_ROOT			211
++#define IMX8MQ_CLK_WDOG1_ROOT			212
++#define IMX8MQ_CLK_WDOG2_ROOT			213
++#define IMX8MQ_CLK_WDOG3_ROOT			214
++#define IMX8MQ_CLK_GPU_ROOT			215
++#define IMX8MQ_CLK_HEVC_ROOT			216
++#define IMX8MQ_CLK_AVC_ROOT			217
++#define IMX8MQ_CLK_VP9_ROOT			218
++#define IMX8MQ_CLK_HEVC_INTER_ROOT		219
++#define IMX8MQ_CLK_DISP_ROOT			220
++#define IMX8MQ_CLK_HDMI_ROOT			221
++#define IMX8MQ_CLK_HDMI_PHY_ROOT		222
++#define IMX8MQ_CLK_VPU_DEC_ROOT			223
++#define IMX8MQ_CLK_CSI1_ROOT			224
++#define IMX8MQ_CLK_CSI2_ROOT			225
++#define IMX8MQ_CLK_RAWNAND_ROOT			226
++#define IMX8MQ_CLK_SDMA1_ROOT			227
++#define IMX8MQ_CLK_SDMA2_ROOT			228
++#define IMX8MQ_CLK_VPU_G1_ROOT			229
++#define IMX8MQ_CLK_VPU_G2_ROOT			230
+ 
+ /* SCCG PLL GATE */
+-#define IMX8MQ_SYS1_PLL_OUT			242
+-#define IMX8MQ_SYS2_PLL_OUT			243
+-#define IMX8MQ_SYS3_PLL_OUT			244
+-#define IMX8MQ_DRAM_PLL_OUT			245
+-
+-#define IMX8MQ_GPT_3M_CLK			246
+-
+-#define IMX8MQ_CLK_IPG_ROOT			247
+-#define IMX8MQ_CLK_IPG_AUDIO_ROOT		248
+-#define IMX8MQ_CLK_SAI1_IPG			249
+-#define IMX8MQ_CLK_SAI2_IPG			250
+-#define IMX8MQ_CLK_SAI3_IPG			251
+-#define IMX8MQ_CLK_SAI4_IPG			252
+-#define IMX8MQ_CLK_SAI5_IPG			253
+-#define IMX8MQ_CLK_SAI6_IPG			254
++#define IMX8MQ_SYS1_PLL_OUT			231
++#define IMX8MQ_SYS2_PLL_OUT			232
++#define IMX8MQ_SYS3_PLL_OUT			233
++#define IMX8MQ_DRAM_PLL_OUT			234
++
++#define IMX8MQ_GPT_3M_CLK			235
++
++#define IMX8MQ_CLK_IPG_ROOT			236
++#define IMX8MQ_CLK_IPG_AUDIO_ROOT		237
++#define IMX8MQ_CLK_SAI1_IPG			238
++#define IMX8MQ_CLK_SAI2_IPG			239
++#define IMX8MQ_CLK_SAI3_IPG			240
++#define IMX8MQ_CLK_SAI4_IPG			241
++#define IMX8MQ_CLK_SAI5_IPG			242
++#define IMX8MQ_CLK_SAI6_IPG			243
+ 
+ /* DSI AHB/IPG clocks */
+ /* rxesc clock */
+-#define IMX8MQ_CLK_DSI_AHB			255
++#define IMX8MQ_CLK_DSI_AHB			244
+ /* txesc clock */
+-#define IMX8MQ_CLK_DSI_IPG_DIV                  256
++#define IMX8MQ_CLK_DSI_IPG_DIV                  245
+ 
+-#define IMX8MQ_CLK_TMU_ROOT			257
++#define IMX8MQ_CLK_TMU_ROOT			246
+ 
+ /* Display root clocks */
+-#define IMX8MQ_CLK_DISP_AXI_ROOT		258
+-#define IMX8MQ_CLK_DISP_APB_ROOT		259
+-#define IMX8MQ_CLK_DISP_RTRM_ROOT		260
++#define IMX8MQ_CLK_DISP_AXI_ROOT		247
++#define IMX8MQ_CLK_DISP_APB_ROOT		248
++#define IMX8MQ_CLK_DISP_RTRM_ROOT		249
+ 
+-#define IMX8MQ_CLK_OCOTP_ROOT			261
++#define IMX8MQ_CLK_OCOTP_ROOT			250
+ 
+-#define IMX8MQ_CLK_DRAM_ALT_ROOT		262
+-#define IMX8MQ_CLK_DRAM_CORE			263
++#define IMX8MQ_CLK_DRAM_ALT_ROOT		251
++#define IMX8MQ_CLK_DRAM_CORE			252
+ 
+-#define IMX8MQ_CLK_MU_ROOT			264
+-#define IMX8MQ_VIDEO2_PLL_OUT			265
++#define IMX8MQ_CLK_MU_ROOT			253
++#define IMX8MQ_VIDEO2_PLL_OUT			254
+ 
+-#define IMX8MQ_CLK_CLKO2			266
++#define IMX8MQ_CLK_CLKO2			255
+ 
+-#define IMX8MQ_CLK_NAND_USDHC_BUS_RAWNAND_CLK	267
++#define IMX8MQ_CLK_NAND_USDHC_BUS_RAWNAND_CLK	256
+ 
+-#define IMX8MQ_CLK_CLKO1			268
+-#define IMX8MQ_CLK_ARM				269
++#define IMX8MQ_CLK_CLKO1			257
++#define IMX8MQ_CLK_ARM				258
+ 
+-#define IMX8MQ_CLK_GPIO1_ROOT			270
+-#define IMX8MQ_CLK_GPIO2_ROOT			271
+-#define IMX8MQ_CLK_GPIO3_ROOT			272
+-#define IMX8MQ_CLK_GPIO4_ROOT			273
+-#define IMX8MQ_CLK_GPIO5_ROOT			274
++#define IMX8MQ_CLK_GPIO1_ROOT			259
++#define IMX8MQ_CLK_GPIO2_ROOT			260
++#define IMX8MQ_CLK_GPIO3_ROOT			261
++#define IMX8MQ_CLK_GPIO4_ROOT			262
++#define IMX8MQ_CLK_GPIO5_ROOT			263
+ 
+-#define IMX8MQ_CLK_END				275
++#define IMX8MQ_CLK_END				264
+ #endif /* __DT_BINDINGS_CLOCK_IMX8MQ_H */
+-- 
+2.7.4
