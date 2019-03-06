@@ -1,85 +1,51 @@
-From: Patrick Havelange <patrick.havelange@essensium.com>
-Subject: [PATCH v2 2/7] drivers/pwm: pwm-fsl-ftm: use common header for FlexTimer #defines
-Date: Wed,  6 Mar 2019 12:12:03 +0100
-Message-ID: <20190306111208.7454-3-patrick.havelange@essensium.com>
-References: <20190306111208.7454-1-patrick.havelange@essensium.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH 04/11] usb: mtu3: rebuild the code of getting vbus regulator
+Date: Wed, 6 Mar 2019 19:46:16 +0800
+Message-ID: <1551872783-13707-5-git-send-email-chunfeng.yun@mediatek.com>
+References: <1551872783-13707-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190306111208.7454-1-patrick.havelange@essensium.com>
+In-Reply-To: <1551872783-13707-1-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: William Breathitt Gray <vilhelm.gray@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Thierry Reding <thierry.reding@gmail.com>, Esben Haabendal <esben@haabendal.dk>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Jonathan Cameron <jic23@kernel.org>
-Cc: Patrick Havelange <patrick.havelange@essensium.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This also fixes the wrong value for the previously defined
-FTM_MODE_INIT macro (it was not used).
+Remove local variable @vbus and use @dev instead of @pdev->dev
 
-Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
-Reviewed-by: Esben Haabendal <esben@haabendal.dk>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
-Changes v2
-     - None
----
- drivers/pwm/pwm-fsl-ftm.c | 44 +--------------------------------------
- 1 file changed, 1 insertion(+), 43 deletions(-)
+ drivers/usb/mtu3/mtu3_plat.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pwm/pwm-fsl-ftm.c b/drivers/pwm/pwm-fsl-ftm.c
-index 883378d055c6..f21ea1b97116 100644
---- a/drivers/pwm/pwm-fsl-ftm.c
-+++ b/drivers/pwm/pwm-fsl-ftm.c
-@@ -22,51 +22,9 @@
- #include <linux/pwm.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
-+#include <linux/fsl/ftm.h>
+diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
+index 3a4a80f15957..a326b1d6006a 100644
+--- a/drivers/usb/mtu3/mtu3_plat.c
++++ b/drivers/usb/mtu3/mtu3_plat.c
+@@ -228,7 +228,6 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+ 	struct device_node *node = pdev->dev.of_node;
+ 	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
+ 	struct device *dev = &pdev->dev;
+-	struct regulator *vbus;
+ 	struct resource *res;
+ 	int i;
+ 	int ret;
+@@ -299,12 +298,11 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+ 	of_property_read_u32(node, "mediatek,u3p-dis-msk",
+ 			     &ssusb->u3p_dis_msk);
  
--#define FTM_SC		0x00
--#define FTM_SC_CLK_MASK_SHIFT	3
--#define FTM_SC_CLK_MASK	(3 << FTM_SC_CLK_MASK_SHIFT)
- #define FTM_SC_CLK(c)	(((c) + 1) << FTM_SC_CLK_MASK_SHIFT)
--#define FTM_SC_PS_MASK	0x7
--
--#define FTM_CNT		0x04
--#define FTM_MOD		0x08
--
--#define FTM_CSC_BASE	0x0C
--#define FTM_CSC_MSB	BIT(5)
--#define FTM_CSC_MSA	BIT(4)
--#define FTM_CSC_ELSB	BIT(3)
--#define FTM_CSC_ELSA	BIT(2)
--#define FTM_CSC(_channel)	(FTM_CSC_BASE + ((_channel) * 8))
--
--#define FTM_CV_BASE	0x10
--#define FTM_CV(_channel)	(FTM_CV_BASE + ((_channel) * 8))
--
--#define FTM_CNTIN	0x4C
--#define FTM_STATUS	0x50
--
--#define FTM_MODE	0x54
--#define FTM_MODE_FTMEN	BIT(0)
--#define FTM_MODE_INIT	BIT(2)
--#define FTM_MODE_PWMSYNC	BIT(3)
--
--#define FTM_SYNC	0x58
--#define FTM_OUTINIT	0x5C
--#define FTM_OUTMASK	0x60
--#define FTM_COMBINE	0x64
--#define FTM_DEADTIME	0x68
--#define FTM_EXTTRIG	0x6C
--#define FTM_POL		0x70
--#define FTM_FMS		0x74
--#define FTM_FILTER	0x78
--#define FTM_FLTCTRL	0x7C
--#define FTM_QDCTRL	0x80
--#define FTM_CONF	0x84
--#define FTM_FLTPOL	0x88
--#define FTM_SYNCONF	0x8C
--#define FTM_INVCTRL	0x90
--#define FTM_SWOCTRL	0x94
--#define FTM_PWMLOAD	0x98
+-	vbus = devm_regulator_get(&pdev->dev, "vbus");
+-	if (IS_ERR(vbus)) {
++	otg_sx->vbus = devm_regulator_get(dev, "vbus");
++	if (IS_ERR(otg_sx->vbus)) {
+ 		dev_err(dev, "failed to get vbus\n");
+-		return PTR_ERR(vbus);
++		return PTR_ERR(otg_sx->vbus);
+ 	}
+-	otg_sx->vbus = vbus;
  
- enum fsl_pwm_clk {
- 	FSL_PWM_CLK_SYS,
+ 	if (ssusb->dr_mode == USB_DR_MODE_HOST)
+ 		goto out;
 -- 
-2.19.1
+2.20.1
