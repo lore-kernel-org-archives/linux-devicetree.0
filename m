@@ -1,55 +1,55 @@
-From: Ryan Pannell <ryan@osukl.com>
-Subject: RE: [PATCH 2/2] arm64: allwinner: a64: Add Oceanic A64-5inMFD
- initial support
-Date: Wed, 6 Mar 2019 10:18:18 +0000
-Message-ID: <7AB137701821F94BAF7B06C1747BA691011A3FE164@OS01.os.local>
-References: <20190226060240.8783-1-jagan@amarulasolutions.com>
- <20190226060240.8783-2-jagan@amarulasolutions.com>
- <20190227153346.dwd3stsbsvf7rwly@flea>
- <CAMty3ZDSZvaxMjcQJLNaTDJQ5OjJ9NbjpOJKWMUE5PhRCzYvqw@mail.gmail.com>
- <20190301145724.vhvyoqkkxdflg2g7@flea>
- <CAMty3ZCUSsN71Q5h_nj6de0Smhqht1S5zq0pLKUqpwq=85XqXw@mail.gmail.com>
- <20190305155919.cm3yrve3vqp7jimh@flea>
- <CAMty3ZD6Bsu7B6phhf4h7jreoM1uvM-ZQNCaUZKKa=1DNOtb8A@mail.gmail.com>
- <7AB137701821F94BAF7B06C1747BA691011A3FE123@OS01.os.local>
- <20190306092708.2pjc7uz6wvku4hkb@flea>
- <CAMty3ZDRAqV10u7QkujxkXtJYOUX8zbxkKtb5oxJMt+2jUbaHg@mail.gmail.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v2 03/10] dt-bindings: ata: Update ahci bindings with possible
+ per-port interrupts
+Date: Wed,  6 Mar 2019 11:21:39 +0100
+Message-ID: <20190306102146.13005-4-miquel.raynal@bootlin.com>
+References: <20190306102146.13005-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMty3ZDRAqV10u7QkujxkXtJYOUX8zbxkKtb5oxJMt+2jUbaHg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-amarula@amarulasolutions.com" <linux-amarula@amarulasolutions.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190306102146.13005-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jens Axboe <axboe@kernel.dk>, Hans de Goede <hdegoede@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SmFnYW4sDQoNClRoZSBjb21wYXRpYmxlIGlzIGZvciB0aGUgcmVhbCBoYXJkd2FyZSBuYW1lIGFz
-IE1heGltZSBwcmV2aW91c2x5IGV4cGxhaW5lZC4gVGhlIHBsYXRmb3JtIGlzIGRlc2NyaWJlZCBp
-biB0aGUgbGF0dGVyIHBhcnQuDQpQbGVhc2UgdXNlOg0KY29tcGF0aWJsZSA9ICJvY2VhbmljLDUy
-MDUtNWlubWZkIiwgImFsbHdpbm5lcixzdW41MGktYTY0IjsNCg0KVGhhbmtzLA0KUnlhbiBQYW5u
-ZWxsDQpEZXZlbG9wbWVudCBUZWFtIExlYWQNCk9jZWFuaWMgU3lzdGVtcyAoVUspIEx0ZA0KDQot
-LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogSmFnYW4gVGVraSA8amFnYW5AYW1hcnVs
-YXNvbHV0aW9ucy5jb20+IA0KU2VudDogMDYgTWFyY2ggMjAxOSAwOTozNg0KVG86IE1heGltZSBS
-aXBhcmQgPG1heGltZS5yaXBhcmRAYm9vdGxpbi5jb20+DQpDYzogUnlhbiBQYW5uZWxsIDxyeWFu
-QG9zdWtsLmNvbT47IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz47IFJvYiBIZXJyaW5nIDxy
-b2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsg
-TWljaGFlbCBUcmltYXJjaGkgPG1pY2hhZWxAYW1hcnVsYXNvbHV0aW9ucy5jb20+OyBsaW51eC1h
-cm0ta2VybmVsIDxsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBkZXZpY2V0
-cmVlIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LWtlcm5lbCA8bGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LWFtYXJ1bGFAYW1hcnVsYXNvbHV0aW9ucy5jb20N
-ClN1YmplY3Q6IFJlOiBbUEFUQ0ggMi8yXSBhcm02NDogYWxsd2lubmVyOiBhNjQ6IEFkZCBPY2Vh
-bmljIEE2NC01aW5NRkQgaW5pdGlhbCBzdXBwb3J0DQoNCk9uIFdlZCwgTWFyIDYsIDIwMTkgYXQg
-Mjo1NyBQTSBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29tPiB3cm90ZToN
-Cj4NCj4gT24gVHVlLCBNYXIgMDUsIDIwMTkgYXQgMDQ6MzU6MDRQTSArMDAwMCwgUnlhbiBQYW5u
-ZWxsIHdyb3RlOg0KPiA+IFdlIGRvbid0IG1pbmQgaWYgaXQgaGFzIHRvIGJlOg0KPiA+IGNvbXBh
-dGlibGUgPSAib2NlYW5pYyw1aW5tZmQiLCAiYWxsd2lubmVyLHN1bjUwaS1hNjQiOw0KPiA+DQo+
-ID4gSG93ZXZlciwgdG8gYXZvaWQgY29uZnVzaW9uLCBtaWdodCBpdCBiZSB3b3J0aCBpbmNsdWRp
-bmcgdGhlIHBhcnQgbnVtYmVyIChXZSBsaXN0IHRoaXMgYXMgJzUyMDUgNSIgTUZEJykgc28gdGhp
-cyB3b3VsZCBiZWNvbWU6DQo+ID4gY29tcGF0aWJsZSA9ICJvY2VhbmljLDUyMDUtNWlubWZkIiwg
-ImFsbHdpbm5lcixzdW41MGktYTY0IjsNCj4gPg0KPiA+IFBlcmhhcHMgdGhpcyBzb2x2ZXMgdGhl
-IGlzc3VlLiBQbGVhc2UgbGV0IG1lIGtub3cgdGhvdWdodHMuDQo+DQo+IFllcCwgdGhhdCB3b3Jr
-cyBmb3IgbWUNCg0KQTY0IGluc3RlYWQgb2YgcGFydC1udW1iZXIgNTIwNSBzZWVtcyBsZXNzIGNv
-bmZ1c2VkIGlzbid0IGl0PyBvciB3ZSBuZWVkIHRvIGdpdmUgbW9yZSBwcmlvcml0eSB3aXRoIHJl
-YWwgaGFyZHdhcmUgZGVmaW5pdGlvbj8NCg==
+Update bindings to reflect the fact that a SATA IP can either have:
+- only one interrupt: in this case an 'interrupts' property is
+  declared at the root of the node;
+or
+- each SATA port can have their own interrupt: in this case there is
+  one 'interrupts' property per port/sub-node and none at the root.
+
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ Documentation/devicetree/bindings/ata/ahci-platform.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+index e30fd106df4f..80261e2845b0 100644
+--- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
++++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+@@ -53,6 +53,12 @@ And at least one of the following properties:
+ - phys		    : reference to the SATA PHY node
+ - target-supply     : regulator for SATA target power
+ 
++Sub-nodes optional properties:
++- interrupts        : <interrupt mapping for SATA ports IRQ>, please
++                      note that either the root SATA node has the
++                      interrupts property, or there is one per SATA
++                      port, but not both at the same time.
++
+ Examples:
+         sata@ffe08000 {
+ 		compatible = "snps,spear-ahci";
+-- 
+2.19.1
