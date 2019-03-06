@@ -1,7 +1,7 @@
 From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v2 03/10] dt-binding: gce: add binding for gce subsys property
-Date: Wed, 6 Mar 2019 17:50:28 +0800
-Message-ID: <1551865835-50974-4-git-send-email-bibby.hsieh@mediatek.com>
+Subject: [PATCH v2 05/10] soc: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
+Date: Wed, 6 Mar 2019 17:50:30 +0800
+Message-ID: <1551865835-50974-6-git-send-email-bibby.hsieh@mediatek.com>
 References: <1551865835-50974-1-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,50 +12,67 @@ To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.
 Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com, Frederic Chen <Frederic.Chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-cmdq driver provide a function that get the relationship
-of sub system number from device node for client.
-add specification for #subsys-cells, mediatek,gce-subsys.
+The interrupt mask and thread number has positive correlation,
+so we move the CMDQ_IRQ_MASK into cmdq driver data and calculate
+it by thread number.
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 ---
- Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/mailbox/mtk-cmdq-mailbox.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-index 812698f..07b2adf 100644
---- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-+++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-@@ -26,6 +26,13 @@ Required properties:
- 	phandle: Label name of a gce node.
- 	event_number: the event number defined in 'dt-bindings/gce/mt8173-gce.h'
- 		      or 'dt-binding/gce/mt8183-gce.h'.
-+#subsys-cells: Should be 2.
-+	<&phandle register_base_address subsys_number>
-+	phandle: Label name of a gce node.
-+	register_base_address: the register base address that client
-+			       want to write or read.
-+	subsys_number: specify the sub-system id which is corresponding
-+		       to the register address.
+diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+index 909eb23..6db1e2d 100644
+--- a/drivers/mailbox/mtk-cmdq-mailbox.c
++++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+@@ -17,7 +17,6 @@
+ #include <linux/of_device.h>
  
- Required properties for a client device:
- - mboxes: Client use mailbox to communicate with GCE, it should have this
-@@ -50,6 +57,7 @@ Example:
- 		thread-num = CMDQ_THR_MAX_COUNT;
- 		#mbox-cells = <3>;
- 		#event-cells = <1>;
-+		#subsys-cells = <2>;
- 	};
+ #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
+-#define CMDQ_IRQ_MASK			0xffff
+ #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
  
- Example for a client device:
-@@ -58,7 +66,8 @@ Example for a client device:
- 		compatible = "mediatek,mt8173-mmsys";
- 		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
- 			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
--		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
-+		mediatek,gce-subsys = <&gce 0x14000000 SUBSYS_1400XXXX>,
-+				      <&gce 0x14010000 SUBSYS_1401XXXX>;
- 		mediatek,gce-event-names = "rdma0_sof",
- 					   "rsz0_sof";
- 		mediatek,gce-events = <&gce CMDQ_EVENT_MDP_RDMA0_SOF>,
+ #define CMDQ_CURR_IRQ_STATUS		0x10
+@@ -71,6 +70,7 @@ struct cmdq {
+ 	void __iomem		*base;
+ 	u32			irq;
+ 	u32			thread_nr;
++	u32			irq_mask;
+ 	struct cmdq_thread	*thread;
+ 	struct clk		*clock;
+ 	bool			suspended;
+@@ -284,11 +284,11 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
+ 	unsigned long irq_status, flags = 0L;
+ 	int bit;
+ 
+-	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
+-	if (!(irq_status ^ CMDQ_IRQ_MASK))
++	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & cmdq->irq_mask;
++	if (!(irq_status ^ cmdq->irq_mask))
+ 		return IRQ_NONE;
+ 
+-	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
++	for_each_clear_bit(bit, &irq_status, cmdq->thread_nr) {
+ 		struct cmdq_thread *thread = &cmdq->thread[bit];
+ 
+ 		spin_lock_irqsave(&thread->chan->lock, flags);
+@@ -472,6 +472,9 @@ static int cmdq_probe(struct platform_device *pdev)
+ 		dev_err(dev, "failed to get irq\n");
+ 		return -EINVAL;
+ 	}
++
++	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
++	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
+ 	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
+ 			       "mtk_cmdq", cmdq);
+ 	if (err < 0) {
+@@ -488,7 +491,6 @@ static int cmdq_probe(struct platform_device *pdev)
+ 		return PTR_ERR(cmdq->clock);
+ 	}
+ 
+-	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
+ 	cmdq->mbox.dev = dev;
+ 	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
+ 					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
 -- 
 1.9.1
