@@ -1,81 +1,70 @@
-From: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] scsi: ufs-mediatek: Add UFS support for Mediatek
- SoC chips
-Date: Wed, 6 Mar 2019 09:32:00 +0800
-Message-ID: <1551835920.30977.29.camel@mtkswgap22>
-References: <1551252192-535-1-git-send-email-stanley.chu@mediatek.com>
- <1551252192-535-2-git-send-email-stanley.chu@mediatek.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] drm: support gpu aliases defined in DT data
+Date: Wed, 6 Mar 2019 03:41:24 +0200
+Message-ID: <20190306014124.GC30262@pendragon.ideasonboard.com>
+References: <20190117111918.31759-1-tomi.valkeinen@ti.com>
+ <20190117123320.GD3271@phenom.ffwll.local>
+ <a96c03af-4a01-4c85-f8ab-9e4d52822cf1@ti.com>
+ <CAKMK7uEUhPtmyujMGb-YNbrhYM9tqVc2S+=cJFWQvQOeSRaSnw@mail.gmail.com>
+ <CAL_JsqLRPyxX2WDo-87mvXSC-SKTEnF6rR8OA1wd0hs-w4ohdw@mail.gmail.com>
+ <e5513293-416c-f4aa-a6ab-7c4e762753ed@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1551252192-535-2-git-send-email-stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chun-hung.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, avri.altman-Sjgp3cTcYWE@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, pedrom.sousa-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <e5513293-416c-f4aa-a6ab-7c4e762753ed@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Gentle ping for 2 dt-bindings documents patch in this series.
-
-On Wed, 2019-02-27 at 15:23 +0800, Stanley Chu wrote:
-> Hello,
-> 
-> This patch series adds UFS M-PHY and UFS host driver support in MediaTek chipsets.
-> 
-> In the meantime, re-factors ufshcd_get_pwr_dev_param in vendors' drivers. This function is for vendors to decide finally agreed attributes for power mode change if vendors define
-> their host capability in struct ufs_dev_params. Because it is using by both ufs-qcom and ufs-hisi and also used in ufs-mediatek in this serious, simply re-factor it and then every vendors can reuse it.
-> 
-> Changes since v2:
-> -	Fix header style with SPDX-License-Identifier declaration used.
-> -	Simplify ufs-phy-mtk to single source file since we has one MPHY version now, and do fixes according to Chunfeng Yun's comments.
-> -	Add dt-bindings of ufs-phy-mtk.
-> 
-> Changes since v1:
-> -	Re-factor ufshcd_get_pwr_dev_param in mediatek/qcom/hisi vendor drivers.
-> -	Introduce ufs-phy-mtk to have a good extension capability for different power control flows in future different MPHY versions.
-> -	Bind ufs-phy-mtk and hook suitable callbacks in ufs-mediatek driver.
-> -	Use PA_LOCAL_TX_LCC_ENABLE attribute defined in unipro.h instead.
-> -	Do some minor format fixes.
-> 
-> Stanley Chu (7):
->   scsi: ufs: Introduce ufshcd_get_pwr_dev_param
->   scsi: ufs-qcom: Re-factor ufshcd_get_pwr_dev_param
->   scsi: ufs-hisi: Re-factor ufshcd_get_pwr_dev_param
->   dt-bindings: phy: Add document for phy-mtk-ufs
->   dt-bindings: scsi: ufs: Add document for ufs-mediatek
->   phy: mediatek: Add UFS M-PHY driver
->   scsi: ufs-mediatek: Add UFS support for Mediatek SoC chips
-> 
->  .../devicetree/bindings/phy/phy-mtk-ufs.txt   |  35 ++
->  .../devicetree/bindings/ufs/ufs-mediatek.txt  |  47 +++
->  drivers/phy/mediatek/Kconfig                  |   9 +
->  drivers/phy/mediatek/Makefile                 |   1 +
->  drivers/phy/mediatek/phy-mtk-ufs.c            | 239 ++++++++++++
->  drivers/scsi/ufs/Kconfig                      |  14 +
->  drivers/scsi/ufs/Makefile                     |   1 +
->  drivers/scsi/ufs/ufs-hisi.c                   | 109 +-----
->  drivers/scsi/ufs/ufs-mediatek.c               | 368 ++++++++++++++++++
->  drivers/scsi/ufs/ufs-mediatek.h               |  54 +++
->  drivers/scsi/ufs/ufs-qcom.c                   | 106 +----
->  drivers/scsi/ufs/ufshcd-pltfrm.c              |  98 +++++
->  drivers/scsi/ufs/ufshcd-pltfrm.h              |  21 +
->  13 files changed, 895 insertions(+), 207 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
->  create mode 100644 Documentation/devicetree/bindings/ufs/ufs-mediatek.txt
->  create mode 100644 drivers/phy/mediatek/phy-mtk-ufs.c
->  create mode 100644 drivers/scsi/ufs/ufs-mediatek.c
->  create mode 100644 drivers/scsi/ufs/ufs-mediatek.h
-> 
-
-Thanks,
-Stanley
+SGkgVG9taSwKCk9uIEZyaSwgSmFuIDE4LCAyMDE5IGF0IDEwOjI5OjMzQU0gKzAyMDAsIFRvbWkg
+VmFsa2VpbmVuIHdyb3RlOgo+IE9uIDE4LzAxLzE5IDAwOjA0LCBSb2IgSGVycmluZyB3cm90ZToK
+PiAKPiA+IE1lc2EvbGliZHJtIGFscmVhZHkgaGFzIGxvdHMgb2YgY29kZSB0byBvcGVuIHRoZSBj
+b3JyZWN0IGRldmljZXMgYW5kCj4gPiBub3QgY2FyZSBhYm91dCBtaW5vciBudW1iZXJzLiBXaGF0
+J3MgdGhlIHByb2JsZW0gaGVyZT8KPiAKPiBXZWxsLCBtYXliZSB0aGUgcHJvYmxlbSBpcyB0aGF0
+IEkgZG9uJ3Qga25vdyBob3cgdG8gZG8gdGhpcyA9KS4KPiAKPiBTbywgaWYgd2UgaGF2ZSBtdWx0
+aXBsZSBEUk0gZGV2aWNlcywgaG93IGRvZXMgb25lIG1hbmFnZSB0aG9zZT8KPiBJdGVyYXRpbmcg
+b3ZlciB0aGVtIGFuZCBsb29raW5nIGZvciBrbXMtY2FwYWJsZSBvbmVzIGlzIGVhc3kgZW5vdWdo
+LiBCdXQKPiBpZiB0aGVyZSBhcmUgbXVsdGlwbGUga21zLWNhcGFibGUgb25lcywgaG93IHNob3Vs
+ZCB0aGUgdXNlcnNwYWNlIGNob29zZQo+IGJldHdlZW4gdGhvc2U/Cj4gCj4gSSBzZWUgdGhhdCB1
+ZGV2IGNyZWF0ZXMgL2Rldi9kcmkvYnktcGF0aC8gbGlua3MgdG8gdGhlIGNhcmRzLCBzaG91bGQg
+dGhlCj4gdXNlcnNwYWNlIHVzZSB0aG9zZSB0byBoYXZlIGEgcGVyc2lzdGVudCBsaW5rIHRvIHRo
+ZSBjYXJkPyBFLmcuIGZpcnN0Cj4gdGltZSB0aGUgYXBwIGlzIHJhbiwgaXQnbGwgY29sbGVjdCBh
+bGwgdGhlIGttcy1jYXBhYmxlIGNhcmRzLCBhbmQgc3RvcmUKPiB0aGUgYnktcGF0aCBuYW1lcyBz
+b21ld2hlcmUsIGFuZCBpbiBzdWJzZXF1ZW50IHJ1bnMgaXQgd2lsbCBpbnN0ZWFkIHVzZQo+IHRo
+ZSBieS1wYXRoIG5hbWVzIHRvIGtlZXAgdGhlIG9yZGVyIHRoZSBzYW1lLgo+IAo+IElmIEkgaGF2
+ZSBhIHByb2R1Y3Qgd2l0aCB0d28gZGlzcGxheSBjb250cm9sbGVycywgYW5kIG9uZSBvZiB0aGVt
+IGhhcwo+IHRoZSBtYWluIGRpc3BsYXkgY29ubmVjdGVkLCBob3cgZG9lcyBteSBjdXN0b20gYXBw
+IGtub3cgd2hpY2ggY2FyZCB0bwo+IHVzZT8gSGFyZGNvZGluZyB0aGUgYnktcGF0aCBpbiB0aGUg
+YXBwPwoKSSB0aGluayBpdCBkZXBlbmRzIG9uIGhvdyB5b3UgZGVmaW5lICJtYWluIGRpc3BsYXki
+LiBXZSBoYXZlIGEgc2ltaWxhcgpwcm9ibGVtIHdpdGggY2FtZXJhcyB3aGVyZSBhIHN5c3RlbSBz
+dWNoIGFzIGEgcGhvbmUgb3IgdGFibGV0IHdpdGggYQpmcm9udCBjYW1lcmEgYW5kIGEgYmFjayBj
+YW1lcmEgaGFzIG5vIGdvb2Qgd2F5IHRvIGNvbnZleSB0aGUgcm9sZSBvZgplYWNoIGNhbWVyYSBh
+bGwgdGhlIHdheSB0byBhcHBsaWNhdGlvbnMuIFRoZSBpbmZvcm1hdGlvbiBiZWxvbmdzIHRvCnN5
+c3RlbSBmaXJtd2FyZSBpbiBteSBvcGluaW9uIChhbmQgdGh1cyBEVCBpbiB0aGlzIGNhc2UpLCBi
+dXQgcHJvYmFibHkKbm90IGluIHRoZSBmb3JtIG9mIGFsaWFzZXMuIEl0IHdvdWxkIG1ha2Ugc2Vu
+c2UgdG8gdGFnIGNvbm5lY3RvciBhbmQKcGFuZWxzIHdpdGggc29tZSBraW5kIG9mIHJvbGUgKHN1
+Y2ggYXMgbWFpbiBkaXNwbGF5LCB2YXJpb3VzIGtpbmQgb2YKYXV4aWxpYXJ5IGRpc3BsYXlzLCAu
+Li4pLCBwYXJzZSB0aGF0IGluZm9ybWF0aW9uIGluIGRyaXZlcnMsIGFuZCByZXBvcnQKaXQgdG8g
+dXNlcnNwYWNlIChpZGVhbGx5IHRocm91Z2ggc3RhbmRhcmQgQVBJcykuCgo+IElmIHVkZXYvc3lz
+dGVtZCBpcyBub3QgYXZhaWxhYmxlLCBob3cgZG9lcyB0aGUgdXNlcnNwYWNlIGRvIHRoaXM/IEkK
+PiB0cmllZCB0byBzZWUgaWYgb25lIGNhbiBnZXQgZW5vdWdoIGluZm9ybWF0aW9uIGZyb20gdGhl
+IGNhcmQgZGV2aWNlIHdpdGgKPiBpb2N0bHMgdG8gZmlndXJlIHRoZXNlIHRoaW5ncyBvdXQsIGJ1
+dCBJIGRpZG4ndCBmaWd1cmUgdGhpcyBvdXQuIFNob3VsZAo+IHRoZSBkcm1HZXRCdXNpZCgpIHJl
+dHVybiBzb21ldGhpbmcgZm9yIHBsYXRmb3JtIGRldmljZXMgdG9vPyBNYXliZSBJJ3ZlCj4gZ290
+IHNvbWV0aGluZyBtaXNzaW5nIGZyb20gdGhlIGRpc3BsYXkgZHJpdmVyLCBhbmQgZHJtR2V0QnVz
+aWQoKSBzaG91bGQKPiByZXR1cm4gc29tZXRoaW5nIHNpbWlsYXIgYXMgd2hhdCBpcyBpbiB0aGUg
+YnktcGF0aCBuYW1lLgoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0Cl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
