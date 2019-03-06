@@ -1,56 +1,85 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH] Document: dt: binding: imx: Fix PAD_CTL_DSE_X*
-Date: Wed, 6 Mar 2019 13:36:42 +0000
-Message-ID: <AM0PR04MB42118ED0DB09896BB860AF7C80730@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190222170038.9669-1-cquast@hanoverdisplays.com>
- <VI1PR04MB42227AA158BA1FCBF314AA27807B0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <db6c2755e80e41f7c169406c213a40e8@agner.ch>
- <AM0PR04MB4211737BF7A85E15090636BD80720@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <VI1PR04MB504036C9FA56673680279BB190730@VI1PR04MB5040.eurprd04.prod.outlook.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RESEND PATCH v2] of: fix kmemleak crash caused by imbalance in
+ early memory reservation
+Date: Wed, 6 Mar 2019 07:39:16 -0600
+Message-ID: <CAL_JsqKhhZuPi8vWXZLTip_=kLVvknvQxzVXMaKD3BB0YHOA7A@mail.gmail.com>
+References: <3c886941-bf9d-f040-b568-ee7a8eba9a04@free.fr> <CGME20190123055509epcas3p18a6d66fa08412f2308cb2c1997328ea8@epcas3p1.samsung.com>
+ <20190123055414.GA4747@rapoport-lnx> <78f4ea8a-996d-038e-9e33-5ff02fa2c43f@samsung.com>
+ <20190123123143.GE4747@rapoport-lnx> <4b8f82c4-7f8f-b814-c1ec-9902e43963f6@free.fr>
+ <617e0d57-342d-4162-bd21-ece18e481d87@free.fr> <CAL_JsqKbCg-rGmLoA3mPv54=LMuQBfevfzL8f2QPVyjN-sNk8w@mail.gmail.com>
+ <20190213085028.6199594b@canb.auug.org.au> <CAL_JsqK-cC6oVZ9MkP+ExOGjCRhA0XxGSgqGKL3W9bFF3rKAgA@mail.gmail.com>
+ <20190306021248.GA17298@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB504036C9FA56673680279BB190730@VI1PR04MB5040.eurprd04.prod.outlook.com>
-Content-Language: en-US
+In-Reply-To: <20190306021248.GA17298@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: BOUGH CHEN <haibo.chen@nxp.com>, Stefan Agner <stefan@agner.ch>
-Cc: Christina Quast <cquast@hanoverdisplays.com>, "festevam@gmail.com" <festevam@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Frank Rowand <frowand.list@gmail.com>, Mike Rapoport <rppt@linux.ibm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Prateek Patel <prpatel@nvidia.com>, DT <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-[...]
-
-> > > Btw, I saw that imx7d-sdb.dts (and probably other i.MX 7 boards too)
-> > > use three different settings for usdhc pinctrl: 0x59, 0x5a and 0x5b
-> > > (for default, 100MHz and 200MHz respectively). One would expect that
-> > > higher frequency use higher driver strength (and this is the case for=
- i.MX 6).
-> > > But with this new/corrected pad values this means we use x4, x2 and
-> > > x6 for default, 100MHz and 200MHz respectively. This hardly seems rig=
-ht..?
-> > > Probably needs fixing too?
+On Tue, Mar 5, 2019 at 8:12 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On Tue, Feb 12, 2019 at 04:12:24PM -0600, Rob Herring wrote:
+> > On Tue, Feb 12, 2019 at 3:50 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 > > >
+> > > Hi all,
+> > >
+> > > On Tue, 12 Feb 2019 10:03:09 -0600 Rob Herring <robh+dt@kernel.org> wrote:
+> > > >
+> > > > On Mon, Feb 11, 2019 at 10:47 AM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
+> > > > >
+> > > > > On 04/02/2019 15:37, Marc Gonzalez wrote:
+> > > > >
+> > > > > > Cc: stable@vger.kernel.org # 3.15+
+> > > > > > Fixes: 3f0c820664483 ("drivers: of: add initialization code for dynamic reserved memory")
+> > > > > > Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > > > > Acked-by: Prateek Patel <prpatel@nvidia.com>
+> > > > > > Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> > > > > > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > > > > > ---
+> > > > > > Resend with DT CCed to reach robh's patch queue
+> > > > > > I added CC: stable, Fixes, and Prateek's ack
+> > > > > > Trim recipients list to minimize inconvenience
+> > > > >
+> > > > > I'm confused over commit 3532b3b554a216f30edb841d29eef48521bdc592 in linux-next
+> > > > > "memblock: drop __memblock_alloc_base()"
+> > > > >
+> > > > > It's definitely going to conflict with the proposed patch
+> > > > > over drivers/of/of_reserved_mem.c
+> > > > >
+> > > > > Rob, what's the next step then?
+> > > >
+> > > > Rebase it on top of what's in linux-next and apply it to the tree
+> > > > which has the above dependency. I'm guessing that is Andrew Morton's
+> > > > tree.
+> > >
+> > > Yeah, that is in Andrew's "post linux-next" patch series, so if you
+> > > rebase it on top of linux-next and then send it to Andrew with some
+> > > explanation.
+> > >
+> > > ...
+> > >
+> > > Actually, if it is intended for the stable trees, then presumably it is
+> > > intended to go to Linus for the current release?  In which case, the
+> > > patch in Andrew's tree will have to be changed to cope after your patch
+> > > appears in Linus' tree (and therefore, linux-next).
 > >
-> > Yes, that's true.
-> > Especially 100Mhz setting should be updated.
+> > At this point in the cycle, I wasn't planning to send this for 5.0.
+> > It's not fixing something introduced in 5.0 and it is a debug feature.
 > >
-> > Haibo,
-> > Can you please help double check if X2 for 50Mhz and X4 for 100Mhz can
-> > work stably on MX7D SDB?
-> > If yes, we'd like to update the pad setting according to new RM version=
-.
-> >
->=20
-> X2 for high speed and x4 for ddr50/ddr52 can work stable on MX7D SDB.
-> I think all the 7D related dts need to fix this. Not sure whether 7S need=
- this fix,
-> can you confirm?
->=20
+> Hi Rob,
+>
+> this may be a debug feature, but we do test our kernels with it enabled,
+> and the problem does affect our 4.19 branch (chromeos-4.19). Are you
+> suggesting that we should backport the fix into our branch and not send
+> the backport to -stable ?
 
-Yes, please make a patch to test board maintainer.
+No, not at all. Just that I wasn't going to add it to the probable
+last 5.0-rc and would wait.
 
-Regards
-Dong Aisheng
+However, it's complicated by other memblock changes in 5.1 and not a
+trivial backport. One of the versions on the list should be easier to
+backport than what's in mainline (or going to be).
 
-> Best Regards
-> Haibo Chen
+Rob
