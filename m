@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 07/11] usb: mtu3: supports new QMU format
-Date: Wed, 6 Mar 2019 19:46:19 +0800
-Message-ID: <1551872783-13707-8-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH 06/11] usb: mtu3: rebuild qmu_gpd struct to prepare to support new QMU format
+Date: Wed, 6 Mar 2019 19:46:18 +0800
+Message-ID: <1551872783-13707-7-git-send-email-chunfeng.yun@mediatek.com>
 References: <1551872783-13707-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,257 +12,239 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@
 Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In order to support U3gen2 ISOC transfer upto 96DPs, extend
-the data buffer length.
+To support USB3 Gen2 ISOC, the data buffer length need be extended,
+it's hard to make the current qmu_gpd struct compatible, so here
+rebuild qmu_gpd struct and make easy to support new QMU format
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/mtu3/mtu3.h         | 11 +++---
- drivers/usb/mtu3/mtu3_core.c    |  5 +++
- drivers/usb/mtu3/mtu3_gadget.c  |  6 ++--
- drivers/usb/mtu3/mtu3_hw_regs.h |  1 +
- drivers/usb/mtu3/mtu3_qmu.c     | 64 +++++++++++++++++++++++++--------
- drivers/usb/mtu3/mtu3_qmu.h     |  1 +
- 6 files changed, 66 insertions(+), 22 deletions(-)
+ drivers/usb/mtu3/mtu3.h     | 45 +++++++++++------------------
+ drivers/usb/mtu3/mtu3_qmu.c | 56 +++++++++++++++++--------------------
+ 2 files changed, 42 insertions(+), 59 deletions(-)
 
 diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
-index 4dda7ed6e24e..76ecf12fdf62 100644
+index e3143f81b6a0..4dda7ed6e24e 100644
 --- a/drivers/usb/mtu3/mtu3.h
 +++ b/drivers/usb/mtu3/mtu3.h
-@@ -148,22 +148,23 @@ struct mtu3_fifo_info {
+@@ -144,45 +144,32 @@ struct mtu3_fifo_info {
+  *	The format of TX GPD is a little different from RX one.
+  *	And the size of GPD is 16 bytes.
+  *
+- * @flag:
++ * @dw0_info:
   *	bit0: Hardware Own (HWO)
   *	bit1: Buffer Descriptor Present (BDP), always 0, BD is not supported
   *	bit2: Bypass (BPS), 1: HW skips this GPD if HWO = 1
-+ *	bit6: [EL] Zero Length Packet (ZLP), moved from @dw3_info[29]
   *	bit7: Interrupt On Completion (IOC)
-- *	bit[31:16]: allow data buffer length (RX ONLY),
-+ *	bit[31:16]: ([EL] bit[31:12]) allow data buffer length (RX ONLY),
-  *		the buffer length of the data to receive
-- *	bit[23:16]: extension address (TX ONLY),
-+ *	bit[23:16]: ([EL] bit[31:24]) extension address (TX ONLY),
-  *		lower 4 bits are extension bits of @buffer,
-  *		upper 4 bits are extension bits of @next_gpd
+- * @chksum: This is used to validate the contents of this GPD;
+- *	If TXQ_CS_EN / RXQ_CS_EN bit is set, an interrupt is issued
+- *	when checksum validation fails;
+- *	Checksum value is calculated over the 16 bytes of the GPD by default;
+- * @data_buf_len (RX ONLY): This value indicates the length of
+- *	the assigned data buffer
+- * @tx_ext_addr (TX ONLY): [3:0] are 4 extension bits of @buffer,
+- *	[7:4] are 4 extension bits of @next_gpd
++ *	bit[31:16]: allow data buffer length (RX ONLY),
++ *		the buffer length of the data to receive
++ *	bit[23:16]: extension address (TX ONLY),
++ *		lower 4 bits are extension bits of @buffer,
++ *		upper 4 bits are extension bits of @next_gpd
   * @next_gpd: Physical address of the next GPD
   * @buffer: Physical address of the data buffer
-  * @dw3_info:
-- *	bit[15:0]: data buffer length,
-+ *	bit[15:0]: ([EL] bit[19:0]) data buffer length,
-  *		(TX): the buffer length of the data to transmit
-  *		(RX): The total length of data received
-- *	bit[23:16]: extension address (RX ONLY),
-+ *	bit[23:16]: ([EL] bit[31:24]) extension address (RX ONLY),
-  *		lower 4 bits are extension bits of @buffer,
-  *		upper 4 bits are extension bits of @next_gpd
-- *	bit29: Zero Length Packet (ZLP) (TX ONLY)
-+ *	bit29: ([EL] abandoned) Zero Length Packet (ZLP) (TX ONLY)
+- * @buf_len:
+- *	(TX): This value indicates the length of the assigned data buffer
+- *	(RX): The total length of data received
+- * @ext_len: reserved
+- * @rx_ext_addr(RX ONLY): [3:0] are 4 extension bits of @buffer,
+- *	[7:4] are 4 extension bits of @next_gpd
+- * @ext_flag:
+- *	bit5 (TX ONLY): Zero Length Packet (ZLP),
++ * @dw3_info:
++ *	bit[15:0]: data buffer length,
++ *		(TX): the buffer length of the data to transmit
++ *		(RX): The total length of data received
++ *	bit[23:16]: extension address (RX ONLY),
++ *		lower 4 bits are extension bits of @buffer,
++ *		upper 4 bits are extension bits of @next_gpd
++ *	bit29: Zero Length Packet (ZLP) (TX ONLY)
   */
  struct qmu_gpd {
- 	__le32 dw0_info;
-diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
-index ef27c2052ad6..d354f5c3805a 100644
---- a/drivers/usb/mtu3/mtu3_core.c
-+++ b/drivers/usb/mtu3/mtu3_core.c
-@@ -601,6 +601,10 @@ static void mtu3_regs_init(struct mtu3 *mtu)
- 	mtu3_clrbits(mbase, U3D_MISC_CTRL, VBUS_FRC_EN | VBUS_ON);
- 	/* enable automatical HWRW from L1 */
- 	mtu3_setbits(mbase, U3D_POWER_MANAGEMENT, LPM_HRWE);
-+
-+	/* use new QMU format when HW version >= 0x1003 */
-+	if (mtu->gen2cp)
-+		mtu3_writel(mbase, U3D_QFCR, ~0x0);
- }
+-	__u8 flag;
+-	__u8 chksum;
+-	union {
+-		__le16 data_buf_len;
+-		__le16 tx_ext_addr;
+-	};
++	__le32 dw0_info;
+ 	__le32 next_gpd;
+ 	__le32 buffer;
+-	__le16 buf_len;
+-	union {
+-		__u8 ext_len;
+-		__u8 rx_ext_addr;
+-	};
+-	__u8 ext_flag;
++	__le32 dw3_info;
+ } __packed;
  
- static irqreturn_t mtu3_link_isr(struct mtu3 *mtu)
-@@ -755,6 +759,7 @@ static int mtu3_hw_init(struct mtu3 *mtu)
- 
- 	value = mtu3_readl(mtu->ippc_base, U3D_SSUSB_IP_TRUNK_VERS);
- 	mtu->hw_version = IP_TRUNK_VERS(value);
-+	mtu->gen2cp = !!(mtu->hw_version >= MTU3_TRUNK_VERS_1003);
- 
- 	value = mtu3_readl(mtu->ippc_base, U3D_SSUSB_IP_DEV_CAP);
- 	mtu->is_u3_ip = !!SSUSB_IP_DEV_U3_PORT_NUM(value);
-diff --git a/drivers/usb/mtu3/mtu3_gadget.c b/drivers/usb/mtu3/mtu3_gadget.c
-index bbcd3332471d..fe798b94a357 100644
---- a/drivers/usb/mtu3/mtu3_gadget.c
-+++ b/drivers/usb/mtu3/mtu3_gadget.c
-@@ -278,10 +278,12 @@ static int mtu3_gadget_queue(struct usb_ep *ep,
- 		__func__, mep->is_in ? "TX" : "RX", mreq->epnum, ep->name,
- 		mreq, ep->maxpacket, mreq->request.length);
- 
--	if (req->length > GPD_BUF_SIZE) {
-+	if (req->length > GPD_BUF_SIZE ||
-+	    (mtu->gen2cp && req->length > GPD_BUF_SIZE_EL)) {
- 		dev_warn(mtu->dev,
- 			"req length > supported MAX:%d requested:%d\n",
--			GPD_BUF_SIZE, req->length);
-+			mtu->gen2cp ? GPD_BUF_SIZE_EL : GPD_BUF_SIZE,
-+			req->length);
- 		return -EOPNOTSUPP;
- 	}
- 
-diff --git a/drivers/usb/mtu3/mtu3_hw_regs.h b/drivers/usb/mtu3/mtu3_hw_regs.h
-index fae3b8de1092..bf70ea2426a9 100644
---- a/drivers/usb/mtu3/mtu3_hw_regs.h
-+++ b/drivers/usb/mtu3/mtu3_hw_regs.h
-@@ -49,6 +49,7 @@
- #define U3D_QCR1		(SSUSB_DEV_BASE + 0x0404)
- #define U3D_QCR2		(SSUSB_DEV_BASE + 0x0408)
- #define U3D_QCR3		(SSUSB_DEV_BASE + 0x040C)
-+#define U3D_QFCR		(SSUSB_DEV_BASE + 0x0428)
- #define U3D_TXQHIAR1		(SSUSB_DEV_BASE + 0x0484)
- #define U3D_RXQHIAR1		(SSUSB_DEV_BASE + 0x04C4)
- 
+ /**
 diff --git a/drivers/usb/mtu3/mtu3_qmu.c b/drivers/usb/mtu3/mtu3_qmu.c
-index 7a1919fc9f9e..9f017aa8fbeb 100644
+index f4b5431264c1..7a1919fc9f9e 100644
 --- a/drivers/usb/mtu3/mtu3_qmu.c
 +++ b/drivers/usb/mtu3/mtu3_qmu.c
-@@ -28,14 +28,42 @@
- #define GPD_FLAGS_HWO	BIT(0)
+@@ -29,10 +29,13 @@
  #define GPD_FLAGS_BDP	BIT(1)
  #define GPD_FLAGS_BPS	BIT(2)
-+#define GPD_FLAGS_ZLP	BIT(6)
  #define GPD_FLAGS_IOC	BIT(7)
- #define GET_GPD_HWO(gpd)	(le32_to_cpu((gpd)->dw0_info) & GPD_FLAGS_HWO)
++#define GET_GPD_HWO(gpd)	(le32_to_cpu((gpd)->dw0_info) & GPD_FLAGS_HWO)
  
--#define GPD_RX_BUF_LEN(x)	(((x) & 0xffff) << 16)
--#define GPD_DATA_LEN(x)		((x) & 0xffff)
-+#define GPD_RX_BUF_LEN_OG(x)	(((x) & 0xffff) << 16)
-+#define GPD_RX_BUF_LEN_EL(x)	(((x) & 0xfffff) << 12)
-+#define GPD_RX_BUF_LEN(mtu, x)	\
-+({				\
-+	typeof(x) x_ = (x);	\
-+	((mtu)->gen2cp) ? GPD_RX_BUF_LEN_EL(x_) : GPD_RX_BUF_LEN_OG(x_); \
-+})
-+
-+#define GPD_DATA_LEN_OG(x)	((x) & 0xffff)
-+#define GPD_DATA_LEN_EL(x)	((x) & 0xfffff)
-+#define GPD_DATA_LEN(mtu, x)	\
-+({				\
-+	typeof(x) x_ = (x);	\
-+	((mtu)->gen2cp) ? GPD_DATA_LEN_EL(x_) : GPD_DATA_LEN_OG(x_); \
-+})
-+
- #define GPD_EXT_FLAG_ZLP	BIT(29)
--#define GPD_EXT_NGP(x)		(((x) & 0xf) << 20)
--#define GPD_EXT_BUF(x)		(((x) & 0xf) << 16)
-+#define GPD_EXT_NGP_OG(x)	(((x) & 0xf) << 20)
-+#define GPD_EXT_BUF_OG(x)	(((x) & 0xf) << 16)
-+#define GPD_EXT_NGP_EL(x)	(((x) & 0xf) << 28)
-+#define GPD_EXT_BUF_EL(x)	(((x) & 0xf) << 24)
-+#define GPD_EXT_NGP(mtu, x)	\
-+({				\
-+	typeof(x) x_ = (x);	\
-+	((mtu)->gen2cp) ? GPD_EXT_NGP_EL(x_) : GPD_EXT_NGP_OG(x_); \
-+})
-+
-+#define GPD_EXT_BUF(mtu, x)	\
-+({				\
-+	typeof(x) x_ = (x);	\
-+	((mtu)->gen2cp) ? GPD_EXT_BUF_EL(x_) : GPD_EXT_BUF_OG(x_); \
-+})
+-#define GPD_EXT_FLAG_ZLP	BIT(5)
+-#define GPD_EXT_NGP(x)		(((x) & 0xf) << 4)
+-#define GPD_EXT_BUF(x)		(((x) & 0xf) << 0)
++#define GPD_RX_BUF_LEN(x)	(((x) & 0xffff) << 16)
++#define GPD_DATA_LEN(x)		((x) & 0xffff)
++#define GPD_EXT_FLAG_ZLP	BIT(29)
++#define GPD_EXT_NGP(x)		(((x) & 0xf) << 20)
++#define GPD_EXT_BUF(x)		(((x) & 0xf) << 16)
  
  #define HILO_GEN64(hi, lo) (((u64)(hi) << 32) + (lo))
  #define HILO_DMA(hi, lo)	\
-@@ -217,13 +245,14 @@ static int mtu3_prepare_tx_gpd(struct mtu3_ep *mep, struct mtu3_request *mreq)
- 	struct mtu3_gpd_ring *ring = &mep->gpd_ring;
+@@ -125,7 +128,7 @@ static void reset_gpd_list(struct mtu3_ep *mep)
+ 	struct qmu_gpd *gpd = ring->start;
+ 
+ 	if (gpd) {
+-		gpd->flag &= ~GPD_FLAGS_HWO;
++		gpd->dw0_info &= cpu_to_le32(~GPD_FLAGS_HWO);
+ 		gpd_ring_init(ring, gpd);
+ 	}
+ }
+@@ -215,15 +218,12 @@ static int mtu3_prepare_tx_gpd(struct mtu3_ep *mep, struct mtu3_request *mreq)
  	struct qmu_gpd *gpd = ring->enqueue;
  	struct usb_request *req = &mreq->request;
-+	struct mtu3 *mtu = mep->mtu;
  	dma_addr_t enq_dma;
- 	u32 ext_addr;
+-	u16 ext_addr;
+-
+-	/* set all fields to zero as default value */
+-	memset(gpd, 0, sizeof(*gpd));
++	u32 ext_addr;
  
- 	gpd->dw0_info = 0;	/* SW own it */
++	gpd->dw0_info = 0;	/* SW own it */
  	gpd->buffer = cpu_to_le32(lower_32_bits(req->dma));
--	ext_addr = GPD_EXT_BUF(upper_32_bits(req->dma));
--	gpd->dw3_info = cpu_to_le32(GPD_DATA_LEN(req->length));
-+	ext_addr = GPD_EXT_BUF(mtu, upper_32_bits(req->dma));
-+	gpd->dw3_info = cpu_to_le32(GPD_DATA_LEN(mtu, req->length));
+ 	ext_addr = GPD_EXT_BUF(upper_32_bits(req->dma));
+-	gpd->buf_len = cpu_to_le16(req->length);
+-	gpd->flag |= GPD_FLAGS_IOC;
++	gpd->dw3_info = cpu_to_le32(GPD_DATA_LEN(req->length));
  
  	/* get the next GPD */
  	enq = advance_enq_gpd(ring);
-@@ -233,11 +262,15 @@ static int mtu3_prepare_tx_gpd(struct mtu3_ep *mep, struct mtu3_request *mreq)
+@@ -231,15 +231,15 @@ static int mtu3_prepare_tx_gpd(struct mtu3_ep *mep, struct mtu3_request *mreq)
+ 	dev_dbg(mep->mtu->dev, "TX-EP%d queue gpd=%p, enq=%p, qdma=%pad\n",
+ 		mep->epnum, gpd, enq, &enq_dma);
  
- 	enq->dw0_info &= cpu_to_le32(~GPD_FLAGS_HWO);
+-	enq->flag &= ~GPD_FLAGS_HWO;
++	enq->dw0_info &= cpu_to_le32(~GPD_FLAGS_HWO);
  	gpd->next_gpd = cpu_to_le32(lower_32_bits(enq_dma));
--	ext_addr |= GPD_EXT_NGP(upper_32_bits(enq_dma));
-+	ext_addr |= GPD_EXT_NGP(mtu, upper_32_bits(enq_dma));
- 	gpd->dw0_info = cpu_to_le32(ext_addr);
+ 	ext_addr |= GPD_EXT_NGP(upper_32_bits(enq_dma));
+-	gpd->tx_ext_addr = cpu_to_le16(ext_addr);
++	gpd->dw0_info = cpu_to_le32(ext_addr);
  
--	if (req->zero)
--		gpd->dw3_info |= cpu_to_le32(GPD_EXT_FLAG_ZLP);
-+	if (req->zero) {
-+		if (mtu->gen2cp)
-+			gpd->dw0_info |= cpu_to_le32(GPD_FLAGS_ZLP);
-+		else
-+			gpd->dw3_info |= cpu_to_le32(GPD_EXT_FLAG_ZLP);
-+	}
+ 	if (req->zero)
+-		gpd->ext_flag |= GPD_EXT_FLAG_ZLP;
++		gpd->dw3_info |= cpu_to_le32(GPD_EXT_FLAG_ZLP);
  
- 	gpd->dw0_info |= cpu_to_le32(GPD_FLAGS_IOC | GPD_FLAGS_HWO);
+-	gpd->flag |= GPD_FLAGS_HWO;
++	gpd->dw0_info |= cpu_to_le32(GPD_FLAGS_IOC | GPD_FLAGS_HWO);
  
-@@ -252,13 +285,14 @@ static int mtu3_prepare_rx_gpd(struct mtu3_ep *mep, struct mtu3_request *mreq)
- 	struct mtu3_gpd_ring *ring = &mep->gpd_ring;
+ 	mreq->gpd = gpd;
+ 
+@@ -253,15 +253,12 @@ static int mtu3_prepare_rx_gpd(struct mtu3_ep *mep, struct mtu3_request *mreq)
  	struct qmu_gpd *gpd = ring->enqueue;
  	struct usb_request *req = &mreq->request;
-+	struct mtu3 *mtu = mep->mtu;
  	dma_addr_t enq_dma;
- 	u32 ext_addr;
+-	u16 ext_addr;
+-
+-	/* set all fields to zero as default value */
+-	memset(gpd, 0, sizeof(*gpd));
++	u32 ext_addr;
  
- 	gpd->dw0_info = 0;	/* SW own it */
++	gpd->dw0_info = 0;	/* SW own it */
  	gpd->buffer = cpu_to_le32(lower_32_bits(req->dma));
--	ext_addr = GPD_EXT_BUF(upper_32_bits(req->dma));
--	gpd->dw0_info = cpu_to_le32(GPD_RX_BUF_LEN(req->length));
-+	ext_addr = GPD_EXT_BUF(mtu, upper_32_bits(req->dma));
-+	gpd->dw0_info = cpu_to_le32(GPD_RX_BUF_LEN(mtu, req->length));
+ 	ext_addr = GPD_EXT_BUF(upper_32_bits(req->dma));
+-	gpd->data_buf_len = cpu_to_le16(req->length);
+-	gpd->flag |= GPD_FLAGS_IOC;
++	gpd->dw0_info = cpu_to_le32(GPD_RX_BUF_LEN(req->length));
  
  	/* get the next GPD */
  	enq = advance_enq_gpd(ring);
-@@ -268,7 +302,7 @@ static int mtu3_prepare_rx_gpd(struct mtu3_ep *mep, struct mtu3_request *mreq)
+@@ -269,11 +266,11 @@ static int mtu3_prepare_rx_gpd(struct mtu3_ep *mep, struct mtu3_request *mreq)
+ 	dev_dbg(mep->mtu->dev, "RX-EP%d queue gpd=%p, enq=%p, qdma=%pad\n",
+ 		mep->epnum, gpd, enq, &enq_dma);
  
- 	enq->dw0_info &= cpu_to_le32(~GPD_FLAGS_HWO);
+-	enq->flag &= ~GPD_FLAGS_HWO;
++	enq->dw0_info &= cpu_to_le32(~GPD_FLAGS_HWO);
  	gpd->next_gpd = cpu_to_le32(lower_32_bits(enq_dma));
--	ext_addr |= GPD_EXT_NGP(upper_32_bits(enq_dma));
-+	ext_addr |= GPD_EXT_NGP(mtu, upper_32_bits(enq_dma));
- 	gpd->dw3_info = cpu_to_le32(ext_addr);
- 	gpd->dw0_info |= cpu_to_le32(GPD_FLAGS_IOC | GPD_FLAGS_HWO);
+ 	ext_addr |= GPD_EXT_NGP(upper_32_bits(enq_dma));
+-	gpd->rx_ext_addr = cpu_to_le16(ext_addr);
+-	gpd->flag |= GPD_FLAGS_HWO;
++	gpd->dw3_info = cpu_to_le32(ext_addr);
++	gpd->dw0_info |= cpu_to_le32(GPD_FLAGS_IOC | GPD_FLAGS_HWO);
  
-@@ -391,7 +425,7 @@ static void qmu_tx_zlp_error_handler(struct mtu3 *mtu, u8 epnum)
+ 	mreq->gpd = gpd;
+ 
+@@ -394,7 +391,7 @@ static void qmu_tx_zlp_error_handler(struct mtu3 *mtu, u8 epnum)
  	cur_gpd_dma = read_txq_cur_addr(mbase, epnum);
  	gpd_current = gpd_dma_to_virt(ring, cur_gpd_dma);
  
--	if (GPD_DATA_LEN(le32_to_cpu(gpd_current->dw3_info)) != 0) {
-+	if (GPD_DATA_LEN(mtu, le32_to_cpu(gpd_current->dw3_info)) != 0) {
+-	if (le16_to_cpu(gpd_current->buf_len) != 0) {
++	if (GPD_DATA_LEN(le32_to_cpu(gpd_current->dw3_info)) != 0) {
  		dev_err(mtu->dev, "TX EP%d buffer length error(!=0)\n", epnum);
  		return;
  	}
-@@ -451,7 +485,7 @@ static void qmu_done_tx(struct mtu3 *mtu, u8 epnum)
+@@ -412,8 +409,7 @@ static void qmu_tx_zlp_error_handler(struct mtu3 *mtu, u8 epnum)
+ 	mtu3_setbits(mbase, MU3D_EP_TXCR0(mep->epnum), TX_TXPKTRDY);
+ 
+ 	/* by pass the current GDP */
+-	gpd_current->flag |= GPD_FLAGS_BPS;
+-	gpd_current->flag |= GPD_FLAGS_HWO;
++	gpd_current->dw0_info |= cpu_to_le32(GPD_FLAGS_BPS | GPD_FLAGS_HWO);
+ 
+ 	/*enable DMAREQEN, switch back to QMU mode */
+ 	mtu3_setbits(mbase, MU3D_EP_TXCR0(mep->epnum), TX_DMAREQEN);
+@@ -445,7 +441,7 @@ static void qmu_done_tx(struct mtu3 *mtu, u8 epnum)
+ 	dev_dbg(mtu->dev, "%s EP%d, last=%p, current=%p, enq=%p\n",
+ 		__func__, epnum, gpd, gpd_current, ring->enqueue);
+ 
+-	while (gpd != gpd_current && !(gpd->flag & GPD_FLAGS_HWO)) {
++	while (gpd != gpd_current && !GET_GPD_HWO(gpd)) {
+ 
+ 		mreq = next_request(mep);
+ 
+@@ -455,7 +451,7 @@ static void qmu_done_tx(struct mtu3 *mtu, u8 epnum)
  		}
  
  		request = &mreq->request;
--		request->actual = GPD_DATA_LEN(le32_to_cpu(gpd->dw3_info));
-+		request->actual = GPD_DATA_LEN(mtu, le32_to_cpu(gpd->dw3_info));
+-		request->actual = le16_to_cpu(gpd->buf_len);
++		request->actual = GPD_DATA_LEN(le32_to_cpu(gpd->dw3_info));
  		mtu3_req_complete(mep, request, 0);
  
  		gpd = advance_deq_gpd(ring);
-@@ -489,7 +523,7 @@ static void qmu_done_rx(struct mtu3 *mtu, u8 epnum)
+@@ -483,7 +479,7 @@ static void qmu_done_rx(struct mtu3 *mtu, u8 epnum)
+ 	dev_dbg(mtu->dev, "%s EP%d, last=%p, current=%p, enq=%p\n",
+ 		__func__, epnum, gpd, gpd_current, ring->enqueue);
+ 
+-	while (gpd != gpd_current && !(gpd->flag & GPD_FLAGS_HWO)) {
++	while (gpd != gpd_current && !GET_GPD_HWO(gpd)) {
+ 
+ 		mreq = next_request(mep);
+ 
+@@ -493,7 +489,7 @@ static void qmu_done_rx(struct mtu3 *mtu, u8 epnum)
  		}
  		req = &mreq->request;
  
--		req->actual = GPD_DATA_LEN(le32_to_cpu(gpd->dw3_info));
-+		req->actual = GPD_DATA_LEN(mtu, le32_to_cpu(gpd->dw3_info));
+-		req->actual = le16_to_cpu(gpd->buf_len);
++		req->actual = GPD_DATA_LEN(le32_to_cpu(gpd->dw3_info));
  		mtu3_req_complete(mep, req, 0);
  
  		gpd = advance_deq_gpd(ring);
-diff --git a/drivers/usb/mtu3/mtu3_qmu.h b/drivers/usb/mtu3/mtu3_qmu.h
-index 81f5151a55ed..9cfde201db63 100644
---- a/drivers/usb/mtu3/mtu3_qmu.h
-+++ b/drivers/usb/mtu3/mtu3_qmu.h
-@@ -15,6 +15,7 @@
- #define QMU_GPD_RING_SIZE	(MAX_GPD_NUM * QMU_GPD_SIZE)
- 
- #define GPD_BUF_SIZE		65532
-+#define GPD_BUF_SIZE_EL		1048572
- 
- void mtu3_qmu_stop(struct mtu3_ep *mep);
- int mtu3_qmu_start(struct mtu3_ep *mep);
 -- 
 2.20.1
