@@ -1,113 +1,62 @@
-From: Ludovic BARRE <ludovic.barre@st.com>
-Subject: Re: [PATCH 1/4] mmc: mmci: avoid fake busy polling
-Date: Wed, 6 Mar 2019 10:04:21 +0100
-Message-ID: <5b531f55-b8a0-5a83-4a7c-727013a66820@st.com>
-References: <1551802205-32188-1-git-send-email-ludovic.Barre@st.com>
- <1551802205-32188-2-git-send-email-ludovic.Barre@st.com>
- <CAPDyKFo_O36=N9wM2jFnUvkga1TFjPMibr+0MRU6bLOpq7nH7g@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 2/2] arm64: allwinner: a64: Add Oceanic A64-5inMFD
+ initial support
+Date: Wed, 6 Mar 2019 10:27:08 +0100
+Message-ID: <20190306092708.2pjc7uz6wvku4hkb@flea>
+References: <20190226060240.8783-1-jagan@amarulasolutions.com>
+ <20190226060240.8783-2-jagan@amarulasolutions.com>
+ <20190227153346.dwd3stsbsvf7rwly@flea>
+ <CAMty3ZDSZvaxMjcQJLNaTDJQ5OjJ9NbjpOJKWMUE5PhRCzYvqw@mail.gmail.com>
+ <20190301145724.vhvyoqkkxdflg2g7@flea>
+ <CAMty3ZCUSsN71Q5h_nj6de0Smhqht1S5zq0pLKUqpwq=85XqXw@mail.gmail.com>
+ <20190305155919.cm3yrve3vqp7jimh@flea>
+ <CAMty3ZD6Bsu7B6phhf4h7jreoM1uvM-ZQNCaUZKKa=1DNOtb8A@mail.gmail.com>
+ <7AB137701821F94BAF7B06C1747BA691011A3FE123@OS01.os.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zu35ekksle4uxccu"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFo_O36=N9wM2jFnUvkga1TFjPMibr+0MRU6bLOpq7nH7g@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <7AB137701821F94BAF7B06C1747BA691011A3FE123@OS01.os.local>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: Ryan Pannell <ryan@osukl.com>
+Cc: Jagan Teki <jagan@amarulasolutions.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-amarula@amarulasolutions.com" <linux-amarula@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf
 
-On 3/6/19 10:00 AM, Ulf Hansson wrote:
-> On Tue, 5 Mar 2019 at 17:10, Ludovic Barre <ludovic.Barre@st.com> wrote:
->>
->> From: Ludovic Barre <ludovic.barre@st.com>
->>
->> The busy status bit could occurred even if no busy response is
->> expected (example cmd11). On sdmmc variant, the busy_detect_flag
->> reflects inverted value of d0 state, it's sampled at the end of a
->> CMD response and a second time 2 clk cycles after the CMD response.
->> To avoid a fake busy, the busy status could be checked and polled
->> only if the command has RSP_BUSY flag.
->>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> 
-> Before I review this, can you tell what HW you have tested this on?
+--zu35ekksle4uxccu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I tested on stm32mp157c (stm32_sdmmc variant)
+On Tue, Mar 05, 2019 at 04:35:04PM +0000, Ryan Pannell wrote:
+> We don't mind if it has to be:
+> compatible =3D "oceanic,5inmfd", "allwinner,sun50i-a64";
+>=20
+> However, to avoid confusion, might it be worth including the part number =
+(We list this as '5205 5" MFD') so this would become:
+> compatible =3D "oceanic,5205-5inmfd", "allwinner,sun50i-a64";
+>=20
+> Perhaps this solves the issue. Please let me know thoughts.
 
-> 
-> Kind regards
-> Uffe
-> 
->> ---
->>   drivers/mmc/host/mmci.c | 19 +++++++++++++------
->>   1 file changed, 13 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
->> index 387ff14..4901b73 100644
->> --- a/drivers/mmc/host/mmci.c
->> +++ b/drivers/mmc/host/mmci.c
->> @@ -1220,12 +1220,13 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->>               unsigned int status)
->>   {
->>          void __iomem *base = host->base;
->> -       bool sbc;
->> +       bool sbc, busy_resp;
->>
->>          if (!cmd)
->>                  return;
->>
->>          sbc = (cmd == host->mrq->sbc);
->> +       busy_resp = !!(cmd->flags & MMC_RSP_BUSY);
->>
->>          /*
->>           * We need to be one of these interrupts to be considered worth
->> @@ -1239,8 +1240,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->>          /*
->>           * ST Micro variant: handle busy detection.
->>           */
->> -       if (host->variant->busy_detect) {
->> -               bool busy_resp = !!(cmd->flags & MMC_RSP_BUSY);
->> +       if (busy_resp && host->variant->busy_detect) {
->>
->>                  /* We are busy with a command, return */
->>                  if (host->busy_status &&
->> @@ -1253,7 +1253,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->>                   * that the special busy status bit is still set before
->>                   * proceeding.
->>                   */
->> -               if (!host->busy_status && busy_resp &&
->> +               if (!host->busy_status &&
->>                      !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) &&
->>                      (readl(base + MMCISTATUS) & host->variant->busy_detect_flag)) {
->>
->> @@ -1508,6 +1508,7 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->>   {
->>          struct mmci_host *host = dev_id;
->>          u32 status;
->> +       bool busy_resp;
->>          int ret = 0;
->>
->>          spin_lock(&host->lock);
->> @@ -1550,9 +1551,15 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->>                  }
->>
->>                  /*
->> -                * Don't poll for busy completion in irq context.
->> +                * Don't poll for:
->> +                * -busy completion in irq context.
->> +                * -no busy response expected.
->>                   */
->> -               if (host->variant->busy_detect && host->busy_status)
->> +               busy_resp = host->cmd ?
->> +                       !!(host->cmd->flags & MMC_RSP_BUSY) : false;
->> +
->> +               if (host->variant->busy_detect &&
->> +                   (!busy_resp || host->busy_status))
->>                          status &= ~host->variant->busy_detect_flag;
->>
->>                  ret = 1;
->> --
->> 2.7.4
->>
+Yep, that works for me
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--zu35ekksle4uxccu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXH+SbAAKCRDj7w1vZxhR
+xaCjAQDOfnwVi6nDufhbnd/fMht+7H+wUX0WkLNVOE9IzsRNagEA0KPa+PX96a5n
+mJTjNUJrY+tuNcSuBhLyhTz8dOc5kAQ=
+=BkSZ
+-----END PGP SIGNATURE-----
+
+--zu35ekksle4uxccu--
