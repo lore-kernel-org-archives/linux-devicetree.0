@@ -1,75 +1,57 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v2 1/5] i2c: mux: pca9541: use the BIT macro
-Date: Wed, 6 Mar 2019 23:15:35 +0000
-Message-ID: <20190306231521.29367-2-peda@axentia.se>
-References: <20190306231521.29367-1-peda@axentia.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] dt-bindings: remoteproc: Rename qcom,adsp binding document
+Date: Wed,  6 Mar 2019 15:22:20 -0800
+Message-ID: <20190306232220.32722-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190306231521.29367-1-peda@axentia.se>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Guenter Roeck <linux@roeck-us.net>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ken Chen <chen.kenyy@inventec.com>, Pradeep Srinivasan <pradeeps@cumulusnetworks.com>
+To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Because it looks nice!
+The qcom,adsp binding document has evolved to cover the mechanism to
+load and boot firmware on a range of different Hexagon based remote
+subsystems. Rename the binding and update the description to better
+capture this.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
-Signed-off-by: Peter Rosin <peda@axentia.se>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/i2c/muxes/i2c-mux-pca9541.c | 29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+ .../{qcom,adsp.txt => qcom,q6v5-pas.txt}          | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
+ rename Documentation/devicetree/bindings/remoteproc/{qcom,adsp.txt => qcom,q6v5-pas.txt} (88%)
 
-diff --git a/drivers/i2c/muxes/i2c-mux-pca9541.c b/drivers/i2c/muxes/i2c-mu=
-x-pca9541.c
-index 9e75d6b9140b..30cabf482985 100644
---- a/drivers/i2c/muxes/i2c-mux-pca9541.c
-+++ b/drivers/i2c/muxes/i2c-mux-pca9541.c
-@@ -16,6 +16,7 @@
-  * warranty of any kind, whether express or implied.
-  */
-=20
-+#include <linux/bitops.h>
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/i2c.h>
-@@ -43,20 +44,20 @@
- #define PCA9541_CONTROL		0x01
- #define PCA9541_ISTAT		0x02
-=20
--#define PCA9541_CTL_MYBUS	(1 << 0)
--#define PCA9541_CTL_NMYBUS	(1 << 1)
--#define PCA9541_CTL_BUSON	(1 << 2)
--#define PCA9541_CTL_NBUSON	(1 << 3)
--#define PCA9541_CTL_BUSINIT	(1 << 4)
--#define PCA9541_CTL_TESTON	(1 << 6)
--#define PCA9541_CTL_NTESTON	(1 << 7)
--
--#define PCA9541_ISTAT_INTIN	(1 << 0)
--#define PCA9541_ISTAT_BUSINIT	(1 << 1)
--#define PCA9541_ISTAT_BUSOK	(1 << 2)
--#define PCA9541_ISTAT_BUSLOST	(1 << 3)
--#define PCA9541_ISTAT_MYTEST	(1 << 6)
--#define PCA9541_ISTAT_NMYTEST	(1 << 7)
-+#define PCA9541_CTL_MYBUS	BIT(0)
-+#define PCA9541_CTL_NMYBUS	BIT(1)
-+#define PCA9541_CTL_BUSON	BIT(2)
-+#define PCA9541_CTL_NBUSON	BIT(3)
-+#define PCA9541_CTL_BUSINIT	BIT(4)
-+#define PCA9541_CTL_TESTON	BIT(6)
-+#define PCA9541_CTL_NTESTON	BIT(7)
-+
-+#define PCA9541_ISTAT_INTIN	BIT(0)
-+#define PCA9541_ISTAT_BUSINIT	BIT(1)
-+#define PCA9541_ISTAT_BUSOK	BIT(2)
-+#define PCA9541_ISTAT_BUSLOST	BIT(3)
-+#define PCA9541_ISTAT_MYTEST	BIT(6)
-+#define PCA9541_ISTAT_NMYTEST	BIT(7)
-=20
- #define BUSON		(PCA9541_CTL_BUSON | PCA9541_CTL_NBUSON)
- #define MYBUS		(PCA9541_CTL_MYBUS | PCA9541_CTL_NMYBUS)
---=20
-2.11.0
+diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5-pas.txt
+similarity index 88%
+rename from Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+rename to Documentation/devicetree/bindings/remoteproc/qcom,q6v5-pas.txt
+index 292dfda9770d..bbe9c7465a2c 100644
+--- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
++++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5-pas.txt
+@@ -1,7 +1,8 @@
+-Qualcomm ADSP Peripheral Image Loader
++Qualcomm TrustZone based Peripheral Image Loader
+ 
+-This document defines the binding for a component that loads and boots firmware
+-on the Qualcomm ADSP Hexagon core.
++This document defines the binding for the TrustZone based "Peripheral
++Authentication Service" (PAS) interface for loading and booting firmware on the
++Qualcomm Hexagon cores.
+ 
+ - compatible:
+ 	Usage: required
+@@ -85,10 +86,10 @@ on the Qualcomm ADSP Hexagon core.
+ 
+ 
+ = SUBNODES
+-The adsp node may have an subnode named either "smd-edge" or "glink-edge" that
+-describes the communication edge, channels and devices related to the ADSP.
+-See ../soc/qcom/qcom,smd.txt and ../soc/qcom/qcom,glink.txt for details on how
+-to describe these.
++The remoteproc node may have an subnode named either "smd-edge" or "glink-edge"
++that describes the communication edge, channels and devices related to the
++remoteproc.  See ../soc/qcom/qcom,smd.txt and ../soc/qcom/qcom,glink.txt for
++details on how to describe these.
+ 
+ 
+ = EXAMPLE
+-- 
+2.18.0
