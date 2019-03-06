@@ -1,39 +1,132 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 1/2] dt-bindings: Add vendor prefix for oceanic
-Date: Wed,  6 Mar 2019 22:31:09 +0530
-Message-ID: <20190306170110.27342-1-jagan@amarulasolutions.com>
+Subject: [PATCH v2 2/2] arm64: allwinner: a64: Add Oceanic 5205 5inMFD initial support
+Date: Wed,  6 Mar 2019 22:31:10 +0530
+Message-ID: <20190306170110.27342-2-jagan@amarulasolutions.com>
+References: <20190306170110.27342-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190306170110.27342-1-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: Ryan Pannell <ryan@osukl.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Add oceanic vendor prefix.
+Oceanic 5205 5inMFD is a 5 inch Multi function display baseboard
+designed to mount SoPine SOM.
 
-Oceanic Systems (UK) Ltd design and manufacture world-class marine
-systems for control and monitoring vessels.
+Key features:
+- Allwinner A64 Cortex-A53
+- Mali-400MP2 GPU
+- AXP803 PMIC
+- 2GB DDR3 RAM
+- SD Slot
+- SPI-NOR flash
+- EMAC, RTL8211E
+- MCP2515 CAN
+- 4-lane, MIPI-DSI panel
+- Goodix 911 CTP
+- USB Host
+- 12V DC power supply
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v2:
-- none
+- rename model to "Oceanic 5205 5inMFD"
+- rename compatible to "oceanic,5205-5inmfd"
+- rename dts to sun50i-a64-oceanic-5205-5inmfd.dts
+- add emac node
 
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/allwinner/Makefile        |  1 +
+ .../sun50i-a64-oceanic-5205-5inmfd.dts        | 68 +++++++++++++++++++
+ 2 files changed, 69 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index bb6f6e8a2eee..e32d460408dc 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -287,6 +287,7 @@ nuvoton	Nuvoton Technology Corporation
- nvd	New Vision Display
- nvidia	NVIDIA
- nxp	NXP Semiconductors
-+oceanic	Oceanic Systems (UK) Ltd.
- okaya	Okaya Electric America, Inc.
- oki	Oki Electric Industry Co., Ltd.
- olimex	OLIMEX Ltd.
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+index 0b0917111099..e4dce2f6fa3a 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -2,6 +2,7 @@
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-amarula-relic.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-bananapi-m64.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-nanopi-a64.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-oceanic-5205-5inmfd.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-olinuxino.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-orangepi-win.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-lts.dtb
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+new file mode 100644
+index 000000000000..6a2154525d1e
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+@@ -0,0 +1,68 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (C) 2019 Oceanic Systems (UK) Ltd.
++ * Copyright (C) 2019 Amarula Solutions B.V.
++ * Author: Jagan Teki <jagan@amarulasolutions.com>
++ */
++
++/dts-v1/;
++
++#include "sun50i-a64-sopine.dtsi"
++
++/ {
++	model = "Oceanic 5205 5inMFD";
++	compatible = "oceanic,5205-5inmfd", "allwinner,sun50i-a64";
++
++	aliases {
++		ethernet0 = &emac;
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&rgmii_pins>;
++	phy-mode = "rgmii";
++	phy-handle = <&ext_rgmii_phy>;
++	phy-supply = <&reg_dc1sw>;
++	allwinner,tx-delay-ps = <600>;
++	status = "okay";
++};
++
++&mdio {
++	ext_rgmii_phy: ethernet-phy@1 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <1>;
++	};
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&reg_dc1sw {
++	regulator-name = "vcc-phy";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pb_pins>;
++	status = "okay";
++};
++
++&usb_otg {
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usbphy {
++	status = "okay";
++};
 -- 
 2.18.0.321.gffc6fa0e3
