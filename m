@@ -1,65 +1,49 @@
-Return-Path: <SRS0=7e2E=RH=pengutronix.de=mfe@kernel.org>
-Date: Mon, 4 Mar 2019 18:31:51 +0100
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH 3/3] media: tc358746: update MAINTAINERS file
-Message-ID: <20190304173151.zwrwuwrepzeegfa3@pengutronix.de>
-References: <20181218141240.3056-1-m.felsch@pengutronix.de>
- <20181218141240.3056-4-m.felsch@pengutronix.de>
- <20190218114608.qvoeyxlaw4yjrnnh@paasikivi.fi.intel.com>
+Return-Path: <SRS0=dceb=RJ=verge.net.au=horms@kernel.org>
+Date: Wed, 6 Mar 2019 14:13:47 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/4] Add USB-HOST support to cat874
+Message-ID: <20190306131346.shp4hzcelplfzeeb@verge.net.au>
+References: <1551438348-22119-1-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190218114608.qvoeyxlaw4yjrnnh@paasikivi.fi.intel.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: hans.verkuil@cisco.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, graphics@pengutronix.de
+In-Reply-To: <1551438348-22119-1-git-send-email-fabrizio.castro@bp.renesas.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, ebiharaml@si-linux.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Sakari,
-
-On 19-02-18 13:46, Sakari Ailus wrote:
-> Hi Marco,
+On Fri, Mar 01, 2019 at 11:05:44AM +0000, Fabrizio Castro wrote:
+> While trying to add USB-HOST support to the cat874 board,
+> it came up that of_usb_get_dr_mode_by_phy was selecting
+> the wrong DT node to use for dr_mode.
+> Also, drivers/phy/renesas/phy-rcar-gen3-usb2.c was registering
+> IRQs, no matter the dr_mode.
 > 
-> On Tue, Dec 18, 2018 at 03:12:40PM +0100, Marco Felsch wrote:
-> > Add me as partial maintainer, others are welcome too.
-> > 
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > ---
-> >  MAINTAINERS | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 546f8d936589..f97dedbe545c 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -15230,6 +15230,13 @@ S:	Maintained
-> >  F:	drivers/media/i2c/tc358743*
-> >  F:	include/media/i2c/tc358743.h
-> >  
-> > +TOSHIBA TC358746 DRIVER
-> > +M:	Marco Felsch <kernel@pengutronix.de>
-> > +L:	linux-media@vger.kernel.org
-> > +S:	Odd Fixes
-> > +F:	drivers/media/i2c/tc358746*
-> > +F:	Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
-> > +
-> >  TOSHIBA WMI HOTKEYS DRIVER
-> >  M:	Azael Avalos <coproscefalo@gmail.com>
-> >  L:	platform-driver-x86@vger.kernel.org
+> This series adds all that is required to add USB-HOST support
+> to the cat874 board, and also removes the hsusb from Draak's DT
+> as not necessary anymore.
 > 
-> This should go together with the DT bindings, in the same patch.
+> Thanks,
+> Fab
 > 
-> I'd expect a new driver to be listed as "Maintained". "Odd Fixes" suggests
-> no-one is particularly looking after it, and it's not nice if a new driver
-> starts off like that. :-I
+> Fabrizio Castro (4):
+>   usb: common: Consider only available nodes for dr_mode
+>   phy: renesas: rcar-gen3-usb2: No need to request IRQ for non-OTG
 
-Okay, I will squash it in the v2 and set the status to "Maintained".
+Hi Fabrizio,
 
-Regards,
-Marco
- 
+I am marking the patches below deferred pending acceptance of the patches
+above.
+
+>   arm64: dts: renesas: r8a774c0-cat874: Add USB-HOST support
+>   arm64: dts: renesas: r8a77995: draak: Remove hsusb node
+> 
+>  arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 15 ++++++++++++++
+>  arch/arm64/boot/dts/renesas/r8a77995-draak.dts  |  5 -----
+>  drivers/phy/renesas/phy-rcar-gen3-usb2.c        | 26 ++++++++++++-------------
+>  drivers/usb/common/common.c                     |  2 ++
+>  4 files changed, 30 insertions(+), 18 deletions(-)
+> 
 > -- 
-> Kind regards,
-> 
-> Sakari Ailus
-> sakari.ailus@linux.intel.com
+> 2.7.4
 > 
