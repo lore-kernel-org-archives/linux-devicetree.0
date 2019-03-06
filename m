@@ -1,100 +1,126 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/6] drivers/misc: Add Aspeed XDMA engine driver
-Date: Wed, 6 Mar 2019 11:48:49 +0100
-Message-ID: <CAK8P3a2kcaVGXifqrBLt9PfD1n2M6WCBxDDcaF8d7EdYxGRvVg@mail.gmail.com>
-References: <1551735420-16202-1-git-send-email-eajames@linux.ibm.com>
- <1551735420-16202-3-git-send-email-eajames@linux.ibm.com> <CAK8P3a0eS11_T9wk4iLRT7A94Lh9gSf5QNGH4--pdA5HdEGMCw@mail.gmail.com>
- <84551e54-0382-6042-48cb-842d79214a98@linux.ibm.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
+Subject: Re: [PATCH v5 3/5] i2c: mediatek: Add arb clock in i2c driver
+Date: Wed, 6 Mar 2019 18:49:10 +0800
+Message-ID: <CANMq1KBt7LeR=Od2LmswUSZMV_XZE+zn2LbnqU+SzywKqmDP7w@mail.gmail.com>
+References: <1551186660-16902-1-git-send-email-qii.wang@mediatek.com>
+ <1551186660-16902-4-git-send-email-qii.wang@mediatek.com> <CANMq1KArROL7F+KDWktg6vzZyXifZrKCO8khf_QGRoiLkfDegw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <84551e54-0382-6042-48cb-842d79214a98@linux.ibm.com>
+In-Reply-To: <CANMq1KArROL7F+KDWktg6vzZyXifZrKCO8khf_QGRoiLkfDegw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.ibm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, gregkh <gregkh@linuxfoundation.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+To: Qii Wang <qii.wang@mediatek.com>
+Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Leilk Liu <leilk.liu@mediatek.com>, xinping.qian@mediatek.com, liguo.zhang@mediatek.com, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 10:45 PM Eddie James <eajames@linux.ibm.com> wrote:
-> On 3/5/19 2:01 AM, Arnd Bergmann wrote:
-> > On Mon, Mar 4, 2019 at 10:37 PM Eddie James <eajames@linux.ibm.com> wrote:
-> >> The XDMA engine embedded in the AST2500 SOC performs PCI DMA operations
-> >> between the SOC (acting as a BMC) and a host processor in a server.
-> >>
-> >> This commit adds a driver to control the XDMA engine and adds functions
-> >> to initialize the hardware and memory and start DMA operations.
-> >>
-> >> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> > Hi Eddie,
+One thing I missed from Matthias' comment on v4:
+https://patchwork.kernel.org/patch/10822083/
+
+On Wed, Mar 6, 2019 at 6:44 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> On Tue, Feb 26, 2019 at 9:11 PM Qii Wang <qii.wang@mediatek.com> wrote:
 > >
-> > Thanks for your submission! Overall this looks well-implemented, but
-> > I fear we already have too many ways of doing the same thing at
-> > the moment, and I would hope to avoid adding yet another user space
-> > interface for a specific hardware that does this.
+> > When two i2c controllers are internally connected to the same
+> > GPIO pins, the arb clock is needed to ensure that the waveforms
+> > do not interfere with each other.
 > >
-> > Your interface appears to be a fairly low-level variant, just doing
-> > single DMA transfers through ioctls, but configuring the PCIe
-> > endpoint over sysfs.
+> > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
 >
-> Hi, thanks for the quick response!
+> Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
 >
-> There is actually no PCIe configuration done in this driver. The two
-> sysfs entries control the system control unit (SCU) on the AST2500
-> purely to enable and disable entire PCIe devices. It might be possible
-> to control those devices more finely with a PCI endpoint driver, but
-> there is no need to do so. The XDMA engine does that by itself to
-> perform DMA fairly automatically.
->
-> If the sysfs entries are really troublesome, we can probably remove
-> those and find another way to control the SCU.
-
-I think the main advantage of tying this to a PCIe endpoint driver
-is that this would give us a logical object in the kernel that we
-can add the user space interface to, and have the protocol on
-top of it be portable between different SoCs.
-
-> > Please have a look at the drivers/pci/endpoint framework first
-> > and see if you can work on top of that interface instead.
-> > Even if it doesn't quite do what you need here, we may be
-> > able to extend it in a way that works for you, and lets others
-> > use the same user interface extensions in the future.
+> > ---
+> >  drivers/i2c/busses/i2c-mt65xx.c |   25 ++++++++++++++++++++++---
+> >  1 file changed, 22 insertions(+), 3 deletions(-)
 > >
-> > It may also be necessary to split out the DMA engine portion
-> > into a regular drivers/dma/ back-end to make that fit in with
-> > the PCIe endpoint framework.
->
-> Right, I did look into the normal DMA framework. There were a couple of
-> problems. First and foremost, the "device" (really, host processor)
-> address that we use is 64 bit, but the AST2500 is of course 32 bit. So I
-> couldn't find a good way to get the address through the DMA API into the
-> driver. It's entirely possible I missed something there though.
+> > diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+> > index 428ac99..14d6b38 100644
+> > --- a/drivers/i2c/busses/i2c-mt65xx.c
+> > +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> > @@ -35,6 +35,7 @@
+> >  #include <linux/slab.h>
+> >
+> >  #define I2C_RS_TRANSFER                        (1 << 4)
+> > +#define I2C_ARB_LOST                   (1 << 3)
+> >  #define I2C_HS_NACKERR                 (1 << 2)
+> >  #define I2C_ACKERR                     (1 << 1)
+> >  #define I2C_TRANSAC_COMP               (1 << 0)
+> > @@ -181,6 +182,7 @@ struct mtk_i2c {
+> >         struct clk *clk_main;           /* main clock for i2c bus */
+> >         struct clk *clk_dma;            /* DMA clock for i2c via DMA */
+> >         struct clk *clk_pmic;           /* PMIC clock for i2c from PMIC */
+> > +       struct clk *clk_arb;            /* Arbitrator clock for i2c */
+> >         bool have_pmic;                 /* can use i2c pins from PMIC */
+> >         bool use_push_pull;             /* IO config push-pull mode */
+> >
+> > @@ -299,8 +301,18 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
+> >                 if (ret)
+> >                         goto err_pmic;
+> >         }
+> > +
+> > +       if (i2c->clk_arb) {
+> > +               ret = clk_prepare_enable(i2c->clk_arb);
+> > +               if (ret)
+> > +                       goto err_arb;
+> > +       }
+> > +
+> >         return 0;
+> >
+> > +err_arb:
+> > +       if (i2c->have_pmic)
+> > +               clk_disable_unprepare(i2c->clk_pmic);
+> >  err_pmic:
+> >         clk_disable_unprepare(i2c->clk_main);
+> >  err_main:
+> > @@ -311,6 +323,9 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
+> >
+> >  static void mtk_i2c_clock_disable(struct mtk_i2c *i2c)
+> >  {
+> > +       if (i2c->clk_arb)
+> > +               clk_disable_unprepare(i2c->clk_arb);
+> > +
+> >         if (i2c->have_pmic)
+> >                 clk_disable_unprepare(i2c->clk_pmic);
+> >
+> > @@ -519,13 +534,13 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+> >
+> >         /* Clear interrupt status */
+> >         mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
+> > -              I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
+> > +                           I2C_ARB_LOST | I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
 
-32-bit ARM SoCs can be built with a 64-bit dma_addr_t. Would that
-help you here?
+Is it ok to set I2C_ARB_LOST on _all_ SoC that this driver supports?
+If so, please at least say so in the commit message.
 
-> The other issue was that the vast majority of the DMA framework was
-> unused, resulting in a large amount of boilerplate that did nothing
-> except satisfy the API... I thought simplicity would be better in this case.
-
-Simplicity is important indeed, but we have to weigh it against
-having a consistent interface. What the dmaengine driver would
-give us in combination with the PCIe endpoint driver is that it abstracts
-the hardware from the protocol on top, which could then be done
-in a way that is not specific to an AST2xxx chip.
-
-> Let me know what you think... I could certainly switch to ioctl instead
-> of the write() if that's better. Or if you really think the DMA
-> framework is required here, let me know.
-
-I don't think that replacing the ioctl() with a write() call specifically
-would make much of a difference here. The question I'd like to
-discuss further is what high-level user space interface you actually
-need in order to implement what kind of functionality. We can then
-look at whether this interface can be implemented on top of a
-PCIe endpoint and a dmaengine driver in a portable way. If all
-of those are true, then I'd definitely go with the modular approach
-of having two standard drivers for the PCIe endpoint (should be
-a trivial wrapper) and the dma engine (not trivial, but there are
-many examples), plus a generic front-end in
-drivers/pci/endpoint/functions/.
-
-     Arnd
+> >
+> >         mtk_i2c_writew(i2c, I2C_FIFO_ADDR_CLR, OFFSET_FIFO_ADDR_CLR);
+> >
+> >         /* Enable interrupt */
+> >         mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
+> > -              I2C_TRANSAC_COMP, OFFSET_INTR_MASK);
+> > +                           I2C_ARB_LOST | I2C_TRANSAC_COMP, OFFSET_INTR_MASK);
+> >
+> >         /* Set transfer and transaction len */
+> >         if (i2c->op == I2C_MASTER_WRRD) {
+> > @@ -659,7 +674,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+> >
+> >         /* Clear interrupt mask */
+> >         mtk_i2c_writew(i2c, ~(restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
+> > -              I2C_TRANSAC_COMP), OFFSET_INTR_MASK);
+> > +                           I2C_ARB_LOST | I2C_TRANSAC_COMP), OFFSET_INTR_MASK);
+> >
+> >         if (i2c->op == I2C_MASTER_WR) {
+> >                 dma_unmap_single(i2c->dev, wpaddr,
+> > @@ -884,6 +899,10 @@ static int mtk_i2c_probe(struct platform_device *pdev)
+> >                 return PTR_ERR(i2c->clk_dma);
+> >         }
+> >
+> > +       i2c->clk_arb = devm_clk_get(&pdev->dev, "arb");
+> > +       if (IS_ERR(i2c->clk_arb))
+> > +               i2c->clk_arb = NULL;
+> > +
+> >         clk = i2c->clk_main;
+> >         if (i2c->have_pmic) {
+> >                 i2c->clk_pmic = devm_clk_get(&pdev->dev, "pmic");
+> > --
+> > 1.7.9.5
+> >
