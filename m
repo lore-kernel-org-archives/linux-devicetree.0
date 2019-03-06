@@ -1,163 +1,51 @@
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: [PATCH] spi: spi-fsl-spi: support use of the SPISEL_BOOT signal on
- MPC8309
-Date: Wed, 6 Mar 2019 10:32:05 +0000
-Message-ID: <20190306103156.19897-1-rasmus.villemoes@prevas.dk>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 10/10] arm64: dts: marvell: armada-cp110: Switch to
+ per-port SATA interrupts
+Date: Wed, 6 Mar 2019 11:34:31 +0100
+Message-ID: <20190306113431.3ea27949@xps13>
+References: <20190306102146.13005-1-miquel.raynal@bootlin.com>
+ <20190306102146.13005-11-miquel.raynal@bootlin.com>
+ <20190306103039.35cfzanu3mprlcja@sapphire.tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Esben Haabendal <esben@geanix.com>, Fabio Estevam <festevam@gmail.com>, Per Christensen <pnc@deif.com>, Rasmus Villemoes <Rasmus.Villemoes@prevas.se>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190306103039.35cfzanu3mprlcja@sapphire.tkos.co.il>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-ide@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Antoine Tenart <antoine.tenart@bootlin.com>, Jens Axboe <axboe@kernel.dk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The MPC8309 has a dedicated signal, SPISEL_BOOT, usually used as chip
-select for the flash device from which the bootloader is loaded. It is
-not an ordinary gpio, but is simply controlled via the SPI_CS register
-in the system configuration.
-
-To allow accessing such a spi slave, we need to teach
-fsl_spi_cs_control() how to control the SPISEL_BOOT signal. To
-distinguish the gpio-controlled slaves, continue to have those use
-chip_select values of 0..ngpios-1, and use chip_select =3D=3D ngpios for
-the boot flash.
-
-I'm not too happy with all the ifdeffery, but it seems to be necessary
-for guarding the sysdev/fsl_soc.h and use of
-get_immrbase() (spi-fsl-lib.c already contains similar ifdeffery).
-
-Googling suggests that the MPC8306 is similar, with the SPI_CS
-register at the same offset.
-
-Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
----
- .../devicetree/bindings/spi/fsl-spi.txt       |  4 ++
- drivers/spi/spi-fsl-lib.h                     |  2 +
- drivers/spi/spi-fsl-spi.c                     | 40 ++++++++++++++++---
- 3 files changed, 41 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/fsl-spi.txt b/Documentat=
-ion/devicetree/bindings/spi/fsl-spi.txt
-index 8854004a1d3a..411375eac54d 100644
---- a/Documentation/devicetree/bindings/spi/fsl-spi.txt
-+++ b/Documentation/devicetree/bindings/spi/fsl-spi.txt
-@@ -18,6 +18,10 @@ Optional properties:
- - gpios : specifies the gpio pins to be used for chipselects.
-   The gpios will be referred to as reg =3D <index> in the SPI child nodes.
-   If unspecified, a single SPI device without a chip select can be used.
-+- fsl,spisel_boot : for the MPC8306 and MPC8309, specifies that the
-+  SPISEL_BOOT signal is used as chip select for a slave device. Use
-+  reg =3D <number of gpios> in the corresponding child node, i.e. 0 if
-+  the gpios property is not present.
-=20
- Example:
- 	spi@4c0 {
-diff --git a/drivers/spi/spi-fsl-lib.h b/drivers/spi/spi-fsl-lib.h
-index f303f306b38e..483734bc1b1e 100644
---- a/drivers/spi/spi-fsl-lib.h
-+++ b/drivers/spi/spi-fsl-lib.h
-@@ -95,8 +95,10 @@ static inline u32 mpc8xxx_spi_read_reg(__be32 __iomem *r=
-eg)
-=20
- struct mpc8xxx_spi_probe_info {
- 	struct fsl_spi_platform_data pdata;
-+	int ngpios;
- 	int *gpios;
- 	bool *alow_flags;
-+	__be32 __iomem *immr_spi_cs;
- };
-=20
- extern u32 mpc8xxx_spi_tx_buf_u8(struct mpc8xxx_spi *mpc8xxx_spi);
-diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
-index 8f2e97857e8b..3d7b50c65f36 100644
---- a/drivers/spi/spi-fsl-spi.c
-+++ b/drivers/spi/spi-fsl-spi.c
-@@ -39,6 +39,14 @@
- #include <linux/spi/spi_bitbang.h>
- #include <linux/types.h>
-=20
-+#ifdef CONFIG_FSL_SOC
-+#include <sysdev/fsl_soc.h>
-+#endif
-+
-+/* Specific to the MPC8306/MPC8309 */
-+#define IMMR_SPI_CS_OFFSET 0x14c
-+#define SPI_BOOT_SEL_BIT   0x80000000
-+
- #include "spi-fsl-lib.h"
- #include "spi-fsl-cpm.h"
- #include "spi-fsl-spi.h"
-@@ -701,10 +709,17 @@ static void fsl_spi_cs_control(struct spi_device *spi=
-, bool on)
- 	struct fsl_spi_platform_data *pdata =3D dev_get_platdata(dev);
- 	struct mpc8xxx_spi_probe_info *pinfo =3D to_of_pinfo(pdata);
- 	u16 cs =3D spi->chip_select;
--	int gpio =3D pinfo->gpios[cs];
--	bool alow =3D pinfo->alow_flags[cs];
-=20
--	gpio_set_value(gpio, on ^ alow);
-+	if (cs < pinfo->ngpios) {
-+		int gpio =3D pinfo->gpios[cs];
-+		bool alow =3D pinfo->alow_flags[cs];
-+
-+		gpio_set_value(gpio, on ^ alow);
-+	} else {
-+		if (WARN_ON_ONCE(cs > pinfo->ngpios || !pinfo->immr_spi_cs))
-+			return;
-+		iowrite32be(on ? SPI_BOOT_SEL_BIT : 0, pinfo->immr_spi_cs);
-+	}
- }
-=20
- static int of_fsl_spi_get_chipselects(struct device *dev)
-@@ -712,12 +727,15 @@ static int of_fsl_spi_get_chipselects(struct device *=
-dev)
- 	struct device_node *np =3D dev->of_node;
- 	struct fsl_spi_platform_data *pdata =3D dev_get_platdata(dev);
- 	struct mpc8xxx_spi_probe_info *pinfo =3D to_of_pinfo(pdata);
-+	bool spisel_boot =3D IS_ENABLED(CONFIG_FSL_SOC) &&
-+		of_property_read_bool(np, "fsl,spisel_boot");
- 	int ngpios;
- 	int i =3D 0;
- 	int ret;
-=20
- 	ngpios =3D of_gpio_count(np);
--	if (ngpios <=3D 0) {
-+	ngpios =3D max(ngpios, 0);
-+	if (ngpios =3D=3D 0 && !spisel_boot) {
- 		/*
- 		 * SPI w/o chip-select line. One SPI device is still permitted
- 		 * though.
-@@ -726,6 +744,7 @@ static int of_fsl_spi_get_chipselects(struct device *de=
-v)
- 		return 0;
- 	}
-=20
-+	pinfo->ngpios =3D ngpios;
- 	pinfo->gpios =3D kmalloc_array(ngpios, sizeof(*pinfo->gpios),
- 				     GFP_KERNEL);
- 	if (!pinfo->gpios)
-@@ -769,7 +788,18 @@ static int of_fsl_spi_get_chipselects(struct device *d=
-ev)
- 		}
- 	}
-=20
--	pdata->max_chipselect =3D ngpios;
-+#if IS_ENABLED(CONFIG_FSL_SOC)
-+	if (spisel_boot) {
-+		pinfo->immr_spi_cs =3D ioremap(get_immrbase() + IMMR_SPI_CS_OFFSET, 4);
-+		if (!pinfo->immr_spi_cs) {
-+			ret =3D -ENOMEM;
-+			i =3D ngpios - 1;
-+			goto err_loop;
-+		}
-+	}
-+#endif
-+
-+	pdata->max_chipselect =3D ngpios + spisel_boot;
- 	pdata->cs_control =3D fsl_spi_cs_control;
-=20
- 	return 0;
---=20
-2.20.1
+SGkgQmFydWNoLAoKQmFydWNoIFNpYWNoIDxiYXJ1Y2hAdGtvcy5jby5pbD4gd3JvdGUgb24gV2Vk
+LCA2IE1hciAyMDE5IDEyOjMwOjM5CiswMjAwOgoKPiBIaSBNaXF1ZWwsCj4gCj4gT24gV2VkLCBN
+YXIgMDYsIDIwMTkgYXQgMTE6MjE6NDZBTSArMDEwMCwgTWlxdWVsIFJheW5hbCB3cm90ZToKPiA+
+IEZyb206IFRob21hcyBQZXRhenpvbmkgPHRob21hcy5wZXRhenpvbmlAYm9vdGxpbi5jb20+Cj4g
+PiAKPiA+IFRoZXJlIGFyZSB0d28gU0FUQSBwb3J0cyBwZXIgQ1AxMTAuIEVhY2ggb2YgdGhlbSBo
+YXMgYSBkZWRpY2F0ZWQKPiA+IGludGVycnVwdC4gRGVzY3JpYmUgdGhlIHJlYWwgaGFyZHdhcmUg
+YnkgYWRkaW5nIHR3byBTQVRBIHBvcnRzIHRvIHRoZQo+ID4gQ1AxMTAgU0FUQSBub2RlIGFuZCBl
+bmFibGluZyB0aGVtIGluIGFsbCB0aGUgRFRzIGluY2x1ZGluZyBpdAo+ID4gKDcwNDAtZGIvODA0
+MC1kYi84MDQwLWNsZWFyZm9nKS4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogVGhvbWFzIFBldGF6
+em9uaSA8dGhvbWFzLnBldGF6em9uaUBib290bGluLmNvbT4KPiA+IFNpZ25lZC1vZmYtYnk6IE1p
+cXVlbCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9vdGxpbi5jb20+Cj4gPiAtLS0KPiA+ICBhcmNo
+L2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTcwNDAtZGIuZHRzICAgfCAgNyArKysrKyst
+Cj4gPiAgLi4uL2R0cy9tYXJ2ZWxsL2FybWFkYS04MDQwLWNsZWFyZm9nLWd0LThrLmR0cyAgIHwg
+IDUgKysrKy0KPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTgwNDAtZGIu
+ZHRzICAgfCAxNCArKysrKysrKysrKystLQo+ID4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVs
+bC9hcm1hZGEtY3AxMTAuZHRzaSAgICB8IDE2ICsrKysrKysrKysrKysrLS0gIAo+IAo+IFdoYXQg
+YWJvdXQgYXJtYWRhLTgwNDAtbWNiaW4uZHRzaT8KPiAKCkkgb25seSBjaGVja2VkIGZpbmFsIC5k
+dHMgZmlsZXMgYnV0IGluZGVlZCB0aGUgU0FUQSBub2RlIGlzIGVuYWJsZWQgaW4KdGhlIG1jYmlu
+IC5kdHNpLiBJIHdpbGwgd2FpdCBhIGJpdCBmb3Igb3RoZXIgcmV2aWV3cywgaWYgdGhlcmUgaXMg
+bm8KbmVlZCB0byBzZW5kIGEgdjMgZm9yIHRoZSBTQVRBIHBhdGNoZXMgSSB3aWxsIGp1c3QgcmVz
+ZW5kIHRoZSBEVApwYXRjaGVzIGZvciBHcmVnb3J5IGluIGEgdjMuCgoKVGhhbmtzLApNaXF1w6hs
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
+cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
+a2VybmVsCg==
