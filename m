@@ -1,7 +1,7 @@
 From: Johan Jonker <jbx6244@gmail.com>
-Subject: [PATCH v4 4/4] dt-bindings: display: rockchip: add document for rk3066 hdmi
-Date: Wed,  6 Mar 2019 23:41:13 +0100
-Message-ID: <20190306224113.24853-5-jbx6244@gmail.com>
+Subject: [PATCH v4 3/4] ARM: dts: rockchip: rk3066a-mk808: enable vop0 and hdmi nodes
+Date: Wed,  6 Mar 2019 23:41:12 +0100
+Message-ID: <20190306224113.24853-4-jbx6244@gmail.com>
 References: <20190306224113.24853-1-jbx6244@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190306224113.24853-1-jbx6244@gmail.com>
@@ -10,92 +10,67 @@ To: heiko@sntech.de
 Cc: hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a binding that describes the HDMI controller for
-rk3066.
+This patch enables the vop0 and hdmi nodes
+for a MK808 with rk3066 processor.
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- .../display/rockchip/rockchip,rk3066-hdmi.txt      | 72 ++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
+ arch/arm/boot/dts/rk3066a-mk808.dts | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
-new file mode 100644
-index 000000000..d1ad31bca
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
-@@ -0,0 +1,72 @@
-+Rockchip specific extensions for rk3066 HDMI
-+============================================
+diff --git a/arch/arm/boot/dts/rk3066a-mk808.dts b/arch/arm/boot/dts/rk3066a-mk808.dts
+index 9d2216d71..8bc259d3e 100644
+--- a/arch/arm/boot/dts/rk3066a-mk808.dts
++++ b/arch/arm/boot/dts/rk3066a-mk808.dts
+@@ -30,6 +30,17 @@
+ 		};
+ 	};
+ 
++	hdmi_con {
++		compatible = "hdmi-connector";
++		type = "c";
 +
-+Required properties:
-+- compatible:
-+	"rockchip,rk3066-hdmi";
-+- reg:
-+	Physical base address and length of the controller's registers.
-+- clocks, clock-names:
-+	Phandle to HDMI controller clock, name should be "hclk".
-+- interrupts:
-+	HDMI interrupt number.
-+- power-domains:
-+	Phandle to the RK3066_PD_VIO power domain.
-+- rockchip,grf:
-+	This soc uses GRF regs to switch the HDMI TX input between vop0 and vop1.
-+- ports:
-+	Contains one port node with two endpoints, numbered 0 and 1,
-+	connected respectively to vop0 and vop1.
-+	Contains one port node with one endpoint
-+	connected to a hdmi-connector node.
-+- pinctrl-0, pinctrl-name:
-+	Switch the iomux for the HPD/I2C pins to HDMI function.
-+
-+Example:
-+	hdmi: hdmi@10116000 {
-+		compatible = "rockchip,rk3066-hdmi";
-+		reg = <0x10116000 0x2000>;
-+		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_HDMI>;
-+		clock-names = "hclk";
-+		power-domains = <&power RK3066_PD_VIO>;
-+		rockchip,grf = <&grf>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			hdmi_in: port@0 {
-+				reg = <0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				hdmi_in_vop0: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&vop0_out_hdmi>;
-+				};
-+				hdmi_in_vop1: endpoint@1 {
-+					reg = <1>;
-+					remote-endpoint = <&vop1_out_hdmi>;
-+				};
-+			};
-+			hdmi_out: port@1 {
-+				reg = <1>;
-+				hdmi_out_con: endpoint {
-+					remote-endpoint = <&hdmi_con_in>;
-+				};
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
 +			};
 +		};
 +	};
 +
-+&pinctrl {
-+		hdmi {
-+			hdmi_hpd: hdmi-hpd {
-+				rockchip,pins = <0 RK_PA0 1 &pcfg_pull_default>;
-+			};
-+			hdmii2c_xfer: hdmii2c-xfer {
-+				rockchip,pins = <0 RK_PA1 1 &pcfg_pull_none>,
-+						<0 RK_PA2 1 &pcfg_pull_none>;
-+			};
-+		};
+ 	vcc_io: vcc-io {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vcc_io";
+@@ -91,6 +102,20 @@
+ 	};
+ };
+ 
++&hdmi {
++	status = "okay";
 +};
++
++&hdmi_in_vop1 {
++	status = "disabled";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &mmc0 {
+ 	bus-width = <4>;
+ 	cap-mmc-highspeed;
+@@ -150,6 +175,10 @@
+ 	status = "okay";
+ };
+ 
++&vop0 {
++	status = "okay";
++};
++
+ &wdt {
+ 	status = "okay";
+ };
 -- 
 2.11.0
