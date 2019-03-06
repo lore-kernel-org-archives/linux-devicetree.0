@@ -1,51 +1,36 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v10 0/9] support ROHM BD70528 PMIC
-Date: Wed, 6 Mar 2019 12:38:16 +0200
-Message-ID: <20190306103816.GA23959@localhost.localdomain>
-References: <cover.1550148989.git.matti.vaittinen@fi.rohmeurope.com>
- <20190228070450.GB3773@localhost.localdomain>
- <20190228114026.GA6802@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH] ARM: dts: exynos: Fix audio routing on exynos5422-odroidxu3
+Date: Wed, 06 Mar 2019 11:40:56 +0100
+Message-ID: <20190306104056.7603-1-s.nawrocki@samsung.com>
+References: <CGME20190306104113epcas1p4a12ebf1aac63883cbd80b2750be76d06@epcas1p4.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190228114026.GA6802@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: mazziesaccount@gmail.com, Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, bogdan-petru.chircu-mare@nxp.com
+To: krzk@kernel.org
+Cc: kgene@kernel.org, robh+dt@kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 11:40:26AM +0000, Mark Brown wrote:
-> On Thu, Feb 28, 2019 at 09:04:50AM +0200, Matti Vaittinen wrote:
-> > On Thu, Feb 14, 2019 at 03:02:37PM +0200, Matti Vaittinen wrote:
-> 
-> >> Patch series introducing support for ROHM BD70528 PMIC
-> > 
-> > I was wondering if there is anything that could be done to allow the MFD
-> > part of this series to end up in upstream without having to wait the
-> > regmap-irq changes
-> > (https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git/commit/?h=topic/irq)
-> >  to be merged from Linus' tree to MFD tree? If I see it correctly, the
-> > regmap-irq (main-irq-reg support) changes are not targeted to linux 5.1.
-> > To me it looks like getting them to MFD via Linus' tree will take a while.
-> 
-> They're targeted for v5.1 and I sent a pull request to Lee for that
-> branch IIRC.
-Thanks Mark. I think I have misunderstood how you deliver changes to 5.1
-- or then I have done some other mistake. I thought these changes were
-  not going to 5.1 as I did not see them in your for-5.1 branch. But I
-probably did some error there. Thanks for explaining this :)
+Add missing audio routing entry for the capture stream, this change
+is required to fix audio recording on Odroid XU3.
 
-Br,
-	Matti Vaittinen
+Fixes: 885b005d232c ("ARM: dts: exynos: Add support for secondary DAI to Odroid XU3")
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+---
+ arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-
-
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
+index 51a843bd65ed..3a37267e6134 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
+@@ -26,7 +26,8 @@
+ 			"Speakers", "SPKL",
+ 			"Speakers", "SPKR",
+ 			"I2S Playback", "Mixer DAI TX",
+-			"HiFi Playback", "Mixer DAI TX";
++			"HiFi Playback", "Mixer DAI TX",
++			"Mixer DAI RX", "HiFi Capture";
+ 
+ 		assigned-clocks = <&clock CLK_MOUT_EPLL>,
+ 				<&clock CLK_MOUT_MAU_EPLL>,
 -- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+2.17.1
