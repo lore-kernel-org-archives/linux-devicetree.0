@@ -1,58 +1,77 @@
-From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v2 00/10] support gce on mt8183 platform
-Date: Wed, 6 Mar 2019 17:50:25 +0800
-Message-ID: <1551865835-50974-1-git-send-email-bibby.hsieh@mediatek.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: Re: [PATCH v2 1/8] mmc: sdhci: Get rid of finish_tasklet
+Date: Wed, 6 Mar 2019 15:30:06 +0530
+Message-ID: <8d72ff93-e07f-52b9-da85-acd54f046694@ti.com>
+References: <20190215192033.24203-1-faiz_abbas@ti.com>
+ <20190215192033.24203-2-faiz_abbas@ti.com>
+ <abcc1506-cd38-5ff4-aaeb-57e9a9622e90@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <abcc1506-cd38-5ff4-aaeb-57e9a9622e90@intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com, Frederic Chen <Frederic.Chen@mediatek.com>
+To: Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, zhang.chunyan@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Changes since v1:
- - add prefix "cmdq" in the commit subject
- - add dt-binding document for get event and subsys function
- - add fix up tag in fixup patch
- - fix up some coding style (alignment)
+Adrian,
 
-MTK will support gce function on mt8183 platform.
-	dt-binding: gce: add gce header file for mt8183
-	soc: mediatek: cmdq: add mt8183 compatible name
+On 25/02/19 1:47 PM, Adrian Hunter wrote:
+> On 15/02/19 9:20 PM, Faiz Abbas wrote:
+>> sdhci.c has two bottom halves implemented. A threaded_irq for handling
+>> card insert/remove operations and a tasklet for finishing mmc requests.
+>> With the addition of external dma support, dmaengine APIs need to
+>> terminate in non-atomic context before unmapping the dma buffers.
+>>
+>> To facilitate this, remove the finish_tasklet and move the call of
+>> sdhci_request_done() to the threaded_irq() callback.
+> 
+> The irq thread has a higher latency than the tasklet.  The performance drop
+> is measurable on the system I tried:
+> 
+> Before:
+> 
+> # dd if=/dev/mmcblk1 of=/dev/null bs=1G count=1 &
+> 1+0 records in
+> 1+0 records out
+> 1073741824 bytes (1.1 GB) copied, 4.44502 s, 242 MB/s
+> 
+> After:
+> 
+> # dd if=/dev/mmcblk1 of=/dev/null bs=1G count=1 &
+> 1+0 records in
+> 1+0 records out
+> 1073741824 bytes (1.1 GB) copied, 4.50898 s, 238 MB/s
+> 
+> So we only want to resort to the thread for the error case.
+> 
 
-Besides above patches, we refine gce driver on those patches.
-	soc: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
-	soc: mediatek: cmdq: clear the event in cmdq initial flow
+Sorry for the late response here, but this is about 1.6% decrease. I
+tried out the same commands on a dra7xx board here (with about 5
+consecutive dd of 1GB) and the average decrease was 0.3%. I believe you
+will also find a lesser percentage change if you average over multiple
+dd commands.
 
-In ordet to enhance the convenience of gce usage, we add new helper
-functions and refine the method of instruction combining. 
-	dt-binding: gce: add binding for gce event property
-	dt-binding: gce: add binding for gce subsys property
-	soc: mediatek: cmdq: add packet encoder function
-	soc: mediatek: cmdq: add polling function
-	soc: mediatek: cmdq: add cmdq_dev_get_subsys function
-	soc: mediatek: cmdq: add cmdq_dev_get_event function
+Is this really so significant that we have to maintain two different
+bottom halves and keep having difficulty with adding APIs that can sleep?
 
-Bibby Hsieh (10):
-  dt-binding: gce: add gce header file for mt8183
-  dt-binding: gce: add binding for gce event property
-  dt-binding: gce: add binding for gce subsys property
-  soc: mediatek: cmdq: add mt8183 compatible name
-  soc: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
-  soc: mediatek: cmdq: clear the event in cmdq initial flow
-  soc: mediatek: cmdq: add packet encoder function
-  soc: mediatek: cmdq: add polling function
-  soc: mediatek: cmdq: add cmdq_dev_get_subsys function
-  soc: mediatek: cmdq: add cmdq_dev_get_event function
+Also I am not sure how to implement only the error handling part in the
+threaded_irq. We need to enter sdhci_request_done() and get the current
+mrq before we can check for error conditions like I've done in patch 2:
 
- .../devicetree/bindings/mailbox/mtk-gce.txt        |  33 +++-
- drivers/mailbox/mtk-cmdq-mailbox.c                 |  18 +-
- drivers/soc/mediatek/mtk-cmdq-helper.c             | 202 +++++++++++++++++----
- include/dt-bindings/gce/mt8183-gce.h               | 177 ++++++++++++++++++
- include/linux/mailbox/mtk-cmdq-mailbox.h           |   5 +
- include/linux/soc/mediatek/mtk-cmdq.h              |  61 ++++++-
- 6 files changed, 439 insertions(+), 57 deletions(-)
- create mode 100644 include/dt-bindings/gce/mt8183-gce.h
+/* Terminate and synchronize dma in case of an error */
+if (data && (mrq->cmd->error || data->error) &&
+    host->use_external_dma) {
+	struct dma_chan *chan = sdhci_external_dma_channel(host, data);
+	dmaengine_terminate_sync(chan);
+}
 
--- 
-1.9.1
+On a related note, do we really need to protect everything in
+sdhci_request_done() with spinlocks? In patch 2 I have only removed lock
+for the terminate_sync() parts that I added but the whole
+dma_unmap/dma_sync parts should be left unprotected IMO.
+
+Thanks,
+Faiz
