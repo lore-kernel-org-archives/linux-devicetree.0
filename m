@@ -1,59 +1,52 @@
-From: "Andrew Jeffery" <andrew@aj.id.au>
-Subject: Re: [PATCH 2/6] drivers/misc: Add Aspeed XDMA engine driver
-Date: Tue, 05 Mar 2019 19:00:05 -0500
-Message-ID: <e889a254-ec7e-49f5-bdb0-1d8d8a9063a6@www.fastmail.com>
-References: <1551735420-16202-1-git-send-email-eajames@linux.ibm.com>
- <1551735420-16202-3-git-send-email-eajames@linux.ibm.com>
- <CAK8P3a0eS11_T9wk4iLRT7A94Lh9gSf5QNGH4--pdA5HdEGMCw@mail.gmail.com>
- <84551e54-0382-6042-48cb-842d79214a98@linux.ibm.com>
-Content-Type: text/plain
+From: Brian Masney <masneyb@onstation.org>
+Subject: [PATCH 0/8] qcom: spmi/ssbi gpio: correct gpio hogging
+Date: Tue,  5 Mar 2019 19:53:08 -0500
+Message-ID: <20190306005316.12232-1-masneyb@onstation.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <84551e54-0382-6042-48cb-842d79214a98@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+To: andy.gross@linaro.org
+Cc: david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Here are some patches that fix gpio hogging for all boards that use
+spmi-gpio and ssbi-gpio. These depend on the following two patches
+that were merged in 4.20-rc1:
 
+commit 149a96047237 ("pinctrl: qcom: spmi-gpio: fix gpio-hog related
+boot issues")
 
-On Wed, 6 Mar 2019, at 08:15, Eddie James wrote:
-> 
-> On 3/5/19 2:01 AM, Arnd Bergmann wrote:
-> > On Mon, Mar 4, 2019 at 10:37 PM Eddie James <eajames@linux.ibm.com> wrote:
-> >> The XDMA engine embedded in the AST2500 SOC performs PCI DMA operations
-> >> between the SOC (acting as a BMC) and a host processor in a server.
-> >>
-> >> This commit adds a driver to control the XDMA engine and adds functions
-> >> to initialize the hardware and memory and start DMA operations.
-> >>
-> >> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> > Hi Eddie,
-> >
-> > Thanks for your submission! Overall this looks well-implemented, but
-> > I fear we already have too many ways of doing the same thing at
-> > the moment, and I would hope to avoid adding yet another user space
-> > interface for a specific hardware that does this.
-> >
-> > Your interface appears to be a fairly low-level variant, just doing
-> > single DMA transfers through ioctls, but configuring the PCIe
-> > endpoint over sysfs.
-> 
-> Hi, thanks for the quick response!
-> 
-> There is actually no PCIe configuration done in this driver. The two 
-> sysfs entries control the system control unit (SCU) on the AST2500 
-> purely to enable and disable entire PCIe devices. It might be possible 
-> to control those devices more finely with a PCI endpoint driver, but 
-> there is no need to do so. The XDMA engine does that by itself to 
-> perform DMA fairly automatically.
+commit 7ed078557738 ("pinctrl: qcom: ssbi-gpio: fix gpio-hog related
+boot issues")
 
-I had a series a while back to expose random bits from devices in sysfs. It got
-shot down pretty well, but the main contention was over the devicetree
-bindings.
+I've already fixed pm8941 for the Nexus 5 and that fix is queued to go
+into v5.1 during this merge window:
 
-I think we could revive it as a library-type thing that drivers can use to expose
-bits like what you're describing without putting the grubby details in the
-devicetree. The we would have a consistent approach to exposing otherwise
-hard to describe functions (which is what a lot of a BMC turns out to be).
+https://lore.kernel.org/lkml/20181101001149.13453-7-masneyb@onstation.org/
 
-Andrew
+Andy: You may want to consider submitting these post rc1 as a fix for
+v5.1 and possibly marking these for stable.
+
+Brian Masney (8):
+  ARM: dts: qcom: apq8064: add gpio-ranges
+  ARM: dts: qcom: mdm9615: add gpio-ranges
+  ARM: dts: qcom: msm8660: add gpio-ranges
+  ARM: dts: qcom: pma8084: add gpio-ranges
+  arm64: dts: qcom: pm8005: add gpio-ranges
+  arm64: dts: qcom: pm8998: add gpio-ranges
+  arm64: dts: qcom: pmi8994: add gpio-ranges
+  arm64: dts: qcom: pmi8998: add gpio-ranges
+
+ arch/arm/boot/dts/qcom-apq8064.dtsi   | 1 +
+ arch/arm/boot/dts/qcom-mdm9615.dtsi   | 1 +
+ arch/arm/boot/dts/qcom-msm8660.dtsi   | 1 +
+ arch/arm/boot/dts/qcom-pma8084.dtsi   | 1 +
+ arch/arm64/boot/dts/qcom/pm8005.dtsi  | 1 +
+ arch/arm64/boot/dts/qcom/pm8998.dtsi  | 1 +
+ arch/arm64/boot/dts/qcom/pmi8994.dtsi | 1 +
+ arch/arm64/boot/dts/qcom/pmi8998.dtsi | 1 +
+ 8 files changed, 8 insertions(+)
+
+-- 
+2.20.1
