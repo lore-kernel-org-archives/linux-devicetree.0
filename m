@@ -1,51 +1,55 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH] dt-bindings: usb: dwc2: document the vbus-supply property
-Date: Wed,  6 Mar 2019 22:24:31 +0100
-Message-ID: <20190306212431.5779-1-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 4/8] dt-bindings: usb: dwc3: Add Amlogic G12A DWC3 Glue Bindings
+Date: Wed, 6 Mar 2019 22:27:29 +0100
+Message-ID: <CAFBinCDthrw1zM8ryLOV4FDVvZecG8q8hGnNJVy8HOjTQRpFzg@mail.gmail.com>
+References: <20190304103846.2060-1-narmstrong@baylibre.com> <20190304103846.2060-5-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190304103846.2060-5-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: hminas@synopsys.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, amelie.delaunay@st.com, felipe.balbi@linux.intel.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Various boards have an external VBUS supply regulator. This regulator
-depends on the current mode of the controller which is defined as:
-- dr_mode set to either "host" or "peripheral" (fixed value)
-- dr_mode set to "otg", based on the OTG status the dwc2 controller
-  internally switches between "host" and "peripheral" mode (selection
-  happens at runtime)
+Hi Neil,
 
-Based on the current mode the regulator has to be enabled or disabled:
-- host: provide power to the connected USB device, thus the regulator
-  has to be enabled
-- peripheral: the host device to which the controller is connected
-  provides power, thus the regulator has to be disabled
+On Mon, Mar 4, 2019 at 11:40 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Adds the bindings for the Amlogic G12A USB Glue HW.
+>
+> The Amlogic G12A SoC Family embeds 2 USB Controllers :
+> - a DWC3 IP configured as Host for USB2 and USB3
+> - a DWC2 IP configured as Peripheral USB2 Only
+>
+> A glue connects these both controllers to 2 USB2 PHYs,
+> and optionnally to an USB3+PCIE Combo PHY shared with the PCIE controller.
+>
+> The Glue configures the UTMI 8bit interfaces for the USB2 PHYs, including
+> routing of the OTG PHY between the DWC3 and DWC2 controllers, and
+> setups the on-chip OTG mode selection for this PHY.
+>
+> The PHYs phandles are passed  to the Glue node since the Glue controls the
+> interface with the PHY, not the DWC3 controller.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Add the dt-bindings documentation for this property so .dts authors know
-that this property exists and how it behaves.
+[...]
+> +                       dwc3: usb@ff500000 {
+> +                               compatible = "snps,dwc3";
+> +                               reg = <0x0 0xff500000 0x0 0x100000>;
+> +                               interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+> +                               dr_mode = "host";
+> +                               snps,dis_u2_susphy_quirk;
+> +                               snps,quirk-frame-length-adjustment;
+> +                       };
+in v1 of the patch I asked whether we should pass the PHYs which are
+connected to the dwc3 controller here as well (instead of only passing
+them to the USBCTRL node).
+we can still do this later on, the important part is: USBCTRL
+interfaces with the PHYs -> that is already part of the binding.
 
-Fixes: 531ef5ebea9639 ("usb: dwc2: add support for host mode external vbus supply")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- Documentation/devicetree/bindings/usb/dwc2.txt | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-index 6dc3c4a34483..1e8a775a0e72 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-@@ -31,6 +31,10 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
- Optional properties:
- - phys: phy provider specifier
- - phy-names: shall be "usb2-phy"
-+- vbus-supply: reference to the VBUS regulator. Depending on the current mode
-+  this is enabled (in "host" mode") or disabled (in "peripheral" mode). The
-+  regulator is updated if the controller is configured in "otg" mode and the
-+  status changes between "host" and "peripheral".
- Refer to phy/phy-bindings.txt for generic phy consumer properties
- - dr_mode: shall be one of "host", "peripheral" and "otg"
-   Refer to usb/generic.txt
--- 
-2.21.0
+Regards
+Martin
