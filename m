@@ -1,70 +1,84 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] drm: support gpu aliases defined in DT data
-Date: Wed, 6 Mar 2019 03:41:24 +0200
-Message-ID: <20190306014124.GC30262@pendragon.ideasonboard.com>
-References: <20190117111918.31759-1-tomi.valkeinen@ti.com>
- <20190117123320.GD3271@phenom.ffwll.local>
- <a96c03af-4a01-4c85-f8ab-9e4d52822cf1@ti.com>
- <CAKMK7uEUhPtmyujMGb-YNbrhYM9tqVc2S+=cJFWQvQOeSRaSnw@mail.gmail.com>
- <CAL_JsqLRPyxX2WDo-87mvXSC-SKTEnF6rR8OA1wd0hs-w4ohdw@mail.gmail.com>
- <e5513293-416c-f4aa-a6ab-7c4e762753ed@ti.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [RESEND PATCH v2] of: fix kmemleak crash caused by imbalance in
+ early memory reservation
+Date: Tue, 5 Mar 2019 18:12:48 -0800
+Message-ID: <20190306021248.GA17298@roeck-us.net>
+References: <3c886941-bf9d-f040-b568-ee7a8eba9a04@free.fr>
+ <CGME20190123055509epcas3p18a6d66fa08412f2308cb2c1997328ea8@epcas3p1.samsung.com>
+ <20190123055414.GA4747@rapoport-lnx>
+ <78f4ea8a-996d-038e-9e33-5ff02fa2c43f@samsung.com>
+ <20190123123143.GE4747@rapoport-lnx>
+ <4b8f82c4-7f8f-b814-c1ec-9902e43963f6@free.fr>
+ <617e0d57-342d-4162-bd21-ece18e481d87@free.fr>
+ <CAL_JsqKbCg-rGmLoA3mPv54=LMuQBfevfzL8f2QPVyjN-sNk8w@mail.gmail.com>
+ <20190213085028.6199594b@canb.auug.org.au>
+ <CAL_JsqK-cC6oVZ9MkP+ExOGjCRhA0XxGSgqGKL3W9bFF3rKAgA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <stable-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <e5513293-416c-f4aa-a6ab-7c4e762753ed@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
+In-Reply-To: <CAL_JsqK-cC6oVZ9MkP+ExOGjCRhA0XxGSgqGKL3W9bFF3rKAgA@mail.gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Frank Rowand <frowand.list@gmail.com>, Mike Rapoport <rppt@linux.ibm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Prateek Patel <prpatel@nvidia.com>, DT <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVG9taSwKCk9uIEZyaSwgSmFuIDE4LCAyMDE5IGF0IDEwOjI5OjMzQU0gKzAyMDAsIFRvbWkg
-VmFsa2VpbmVuIHdyb3RlOgo+IE9uIDE4LzAxLzE5IDAwOjA0LCBSb2IgSGVycmluZyB3cm90ZToK
-PiAKPiA+IE1lc2EvbGliZHJtIGFscmVhZHkgaGFzIGxvdHMgb2YgY29kZSB0byBvcGVuIHRoZSBj
-b3JyZWN0IGRldmljZXMgYW5kCj4gPiBub3QgY2FyZSBhYm91dCBtaW5vciBudW1iZXJzLiBXaGF0
-J3MgdGhlIHByb2JsZW0gaGVyZT8KPiAKPiBXZWxsLCBtYXliZSB0aGUgcHJvYmxlbSBpcyB0aGF0
-IEkgZG9uJ3Qga25vdyBob3cgdG8gZG8gdGhpcyA9KS4KPiAKPiBTbywgaWYgd2UgaGF2ZSBtdWx0
-aXBsZSBEUk0gZGV2aWNlcywgaG93IGRvZXMgb25lIG1hbmFnZSB0aG9zZT8KPiBJdGVyYXRpbmcg
-b3ZlciB0aGVtIGFuZCBsb29raW5nIGZvciBrbXMtY2FwYWJsZSBvbmVzIGlzIGVhc3kgZW5vdWdo
-LiBCdXQKPiBpZiB0aGVyZSBhcmUgbXVsdGlwbGUga21zLWNhcGFibGUgb25lcywgaG93IHNob3Vs
-ZCB0aGUgdXNlcnNwYWNlIGNob29zZQo+IGJldHdlZW4gdGhvc2U/Cj4gCj4gSSBzZWUgdGhhdCB1
-ZGV2IGNyZWF0ZXMgL2Rldi9kcmkvYnktcGF0aC8gbGlua3MgdG8gdGhlIGNhcmRzLCBzaG91bGQg
-dGhlCj4gdXNlcnNwYWNlIHVzZSB0aG9zZSB0byBoYXZlIGEgcGVyc2lzdGVudCBsaW5rIHRvIHRo
-ZSBjYXJkPyBFLmcuIGZpcnN0Cj4gdGltZSB0aGUgYXBwIGlzIHJhbiwgaXQnbGwgY29sbGVjdCBh
-bGwgdGhlIGttcy1jYXBhYmxlIGNhcmRzLCBhbmQgc3RvcmUKPiB0aGUgYnktcGF0aCBuYW1lcyBz
-b21ld2hlcmUsIGFuZCBpbiBzdWJzZXF1ZW50IHJ1bnMgaXQgd2lsbCBpbnN0ZWFkIHVzZQo+IHRo
-ZSBieS1wYXRoIG5hbWVzIHRvIGtlZXAgdGhlIG9yZGVyIHRoZSBzYW1lLgo+IAo+IElmIEkgaGF2
-ZSBhIHByb2R1Y3Qgd2l0aCB0d28gZGlzcGxheSBjb250cm9sbGVycywgYW5kIG9uZSBvZiB0aGVt
-IGhhcwo+IHRoZSBtYWluIGRpc3BsYXkgY29ubmVjdGVkLCBob3cgZG9lcyBteSBjdXN0b20gYXBw
-IGtub3cgd2hpY2ggY2FyZCB0bwo+IHVzZT8gSGFyZGNvZGluZyB0aGUgYnktcGF0aCBpbiB0aGUg
-YXBwPwoKSSB0aGluayBpdCBkZXBlbmRzIG9uIGhvdyB5b3UgZGVmaW5lICJtYWluIGRpc3BsYXki
-LiBXZSBoYXZlIGEgc2ltaWxhcgpwcm9ibGVtIHdpdGggY2FtZXJhcyB3aGVyZSBhIHN5c3RlbSBz
-dWNoIGFzIGEgcGhvbmUgb3IgdGFibGV0IHdpdGggYQpmcm9udCBjYW1lcmEgYW5kIGEgYmFjayBj
-YW1lcmEgaGFzIG5vIGdvb2Qgd2F5IHRvIGNvbnZleSB0aGUgcm9sZSBvZgplYWNoIGNhbWVyYSBh
-bGwgdGhlIHdheSB0byBhcHBsaWNhdGlvbnMuIFRoZSBpbmZvcm1hdGlvbiBiZWxvbmdzIHRvCnN5
-c3RlbSBmaXJtd2FyZSBpbiBteSBvcGluaW9uIChhbmQgdGh1cyBEVCBpbiB0aGlzIGNhc2UpLCBi
-dXQgcHJvYmFibHkKbm90IGluIHRoZSBmb3JtIG9mIGFsaWFzZXMuIEl0IHdvdWxkIG1ha2Ugc2Vu
-c2UgdG8gdGFnIGNvbm5lY3RvciBhbmQKcGFuZWxzIHdpdGggc29tZSBraW5kIG9mIHJvbGUgKHN1
-Y2ggYXMgbWFpbiBkaXNwbGF5LCB2YXJpb3VzIGtpbmQgb2YKYXV4aWxpYXJ5IGRpc3BsYXlzLCAu
-Li4pLCBwYXJzZSB0aGF0IGluZm9ybWF0aW9uIGluIGRyaXZlcnMsIGFuZCByZXBvcnQKaXQgdG8g
-dXNlcnNwYWNlIChpZGVhbGx5IHRocm91Z2ggc3RhbmRhcmQgQVBJcykuCgo+IElmIHVkZXYvc3lz
-dGVtZCBpcyBub3QgYXZhaWxhYmxlLCBob3cgZG9lcyB0aGUgdXNlcnNwYWNlIGRvIHRoaXM/IEkK
-PiB0cmllZCB0byBzZWUgaWYgb25lIGNhbiBnZXQgZW5vdWdoIGluZm9ybWF0aW9uIGZyb20gdGhl
-IGNhcmQgZGV2aWNlIHdpdGgKPiBpb2N0bHMgdG8gZmlndXJlIHRoZXNlIHRoaW5ncyBvdXQsIGJ1
-dCBJIGRpZG4ndCBmaWd1cmUgdGhpcyBvdXQuIFNob3VsZAo+IHRoZSBkcm1HZXRCdXNpZCgpIHJl
-dHVybiBzb21ldGhpbmcgZm9yIHBsYXRmb3JtIGRldmljZXMgdG9vPyBNYXliZSBJJ3ZlCj4gZ290
-IHNvbWV0aGluZyBtaXNzaW5nIGZyb20gdGhlIGRpc3BsYXkgZHJpdmVyLCBhbmQgZHJtR2V0QnVz
-aWQoKSBzaG91bGQKPiByZXR1cm4gc29tZXRoaW5nIHNpbWlsYXIgYXMgd2hhdCBpcyBpbiB0aGUg
-YnktcGF0aCBuYW1lLgoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0Cl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Tue, Feb 12, 2019 at 04:12:24PM -0600, Rob Herring wrote:
+> On Tue, Feb 12, 2019 at 3:50 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Hi all,
+> >
+> > On Tue, 12 Feb 2019 10:03:09 -0600 Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Mon, Feb 11, 2019 at 10:47 AM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
+> > > >
+> > > > On 04/02/2019 15:37, Marc Gonzalez wrote:
+> > > >
+> > > > > Cc: stable@vger.kernel.org # 3.15+
+> > > > > Fixes: 3f0c820664483 ("drivers: of: add initialization code for dynamic reserved memory")
+> > > > > Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > > > Acked-by: Prateek Patel <prpatel@nvidia.com>
+> > > > > Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> > > > > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > > > > ---
+> > > > > Resend with DT CCed to reach robh's patch queue
+> > > > > I added CC: stable, Fixes, and Prateek's ack
+> > > > > Trim recipients list to minimize inconvenience
+> > > >
+> > > > I'm confused over commit 3532b3b554a216f30edb841d29eef48521bdc592 in linux-next
+> > > > "memblock: drop __memblock_alloc_base()"
+> > > >
+> > > > It's definitely going to conflict with the proposed patch
+> > > > over drivers/of/of_reserved_mem.c
+> > > >
+> > > > Rob, what's the next step then?
+> > >
+> > > Rebase it on top of what's in linux-next and apply it to the tree
+> > > which has the above dependency. I'm guessing that is Andrew Morton's
+> > > tree.
+> >
+> > Yeah, that is in Andrew's "post linux-next" patch series, so if you
+> > rebase it on top of linux-next and then send it to Andrew with some
+> > explanation.
+> >
+> > ...
+> >
+> > Actually, if it is intended for the stable trees, then presumably it is
+> > intended to go to Linus for the current release?  In which case, the
+> > patch in Andrew's tree will have to be changed to cope after your patch
+> > appears in Linus' tree (and therefore, linux-next).
+> 
+> At this point in the cycle, I wasn't planning to send this for 5.0.
+> It's not fixing something introduced in 5.0 and it is a debug feature.
+> 
+Hi Rob,
+
+this may be a debug feature, but we do test our kernels with it enabled,
+and the problem does affect our 4.19 branch (chromeos-4.19). Are you
+suggesting that we should backport the fix into our branch and not send
+the backport to -stable ?
+
+No problem, just trying to avoid wasting our time.
+
+Thanks,
+Guenter
