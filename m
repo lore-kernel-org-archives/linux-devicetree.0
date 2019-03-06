@@ -1,7 +1,7 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH 5/8] arm64: dts: qcom: pm8005: add gpio-ranges
-Date: Tue,  5 Mar 2019 19:53:13 -0500
-Message-ID: <20190306005316.12232-6-masneyb@onstation.org>
+Subject: [PATCH 7/8] arm64: dts: qcom: pmi8994: add gpio-ranges
+Date: Tue,  5 Mar 2019 19:53:15 -0500
+Message-ID: <20190306005316.12232-8-masneyb@onstation.org>
 References: <20190306005316.12232-1-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -21,18 +21,18 @@ change was tested on qcom-pm8941 using a LG Nexus 5 (hammerhead) phone.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
- arch/arm64/boot/dts/qcom/pm8005.dtsi | 1 +
+ arch/arm64/boot/dts/qcom/pmi8994.dtsi | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8005.dtsi b/arch/arm64/boot/dts/qcom/pm8005.dtsi
-index c0ddf128136c..3f97607d8baa 100644
---- a/arch/arm64/boot/dts/qcom/pm8005.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8005.dtsi
-@@ -15,6 +15,7 @@
- 			compatible = "qcom,pm8005-gpio", "qcom,spmi-gpio";
+diff --git a/arch/arm64/boot/dts/qcom/pmi8994.dtsi b/arch/arm64/boot/dts/qcom/pmi8994.dtsi
+index 3aee10e3f921..21e05215abe4 100644
+--- a/arch/arm64/boot/dts/qcom/pmi8994.dtsi
++++ b/arch/arm64/boot/dts/qcom/pmi8994.dtsi
+@@ -14,6 +14,7 @@
+ 			compatible = "qcom,pmi8994-gpio", "qcom,spmi-gpio";
  			reg = <0xc000>;
  			gpio-controller;
-+			gpio-ranges = <&pm8005_gpio 0 0 4>;
++			gpio-ranges = <&pmi8994_gpios 0 0 10>;
  			#gpio-cells = <2>;
  			interrupt-controller;
  			#interrupt-cells = <2>;
