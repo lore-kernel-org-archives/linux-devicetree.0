@@ -1,75 +1,53 @@
-Return-Path: <SRS0=QSCE=RW=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH] arm64: dts: renesas: r8a774c0: Add CANFD support
-Date: Tue, 19 Mar 2019 11:16:36 +0000
-Message-ID: 
- <TY1PR01MB17701F90AC74BA91D68B1ABDC0400@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+Return-Path: <SRS0=dceb=RJ=verge.net.au=horms@kernel.org>
+Date: Wed, 6 Mar 2019 13:54:00 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a774c0: Add CANFD support
+Message-ID: <20190306125359.xqtuq35ccwfbbk5q@verge.net.au>
 References: <1551438256-22065-1-git-send-email-fabrizio.castro@bp.renesas.com>
  <CAMuHMdWNqFkSRnX9kGGFOCMTEHguQtsD=JfqLaHUpB=kgETPWA@mail.gmail.com>
  <20190304095856.uqqwhw46oueb2vtf@verge.net.au>
  <TY1PR01MB1770F48284CA48C991052263C0710@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <20190306125359.xqtuq35ccwfbbk5q@verge.net.au>
-In-Reply-To: <20190306125359.xqtuq35ccwfbbk5q@verge.net.au>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-To: Simon Horman <horms@verge.net.au>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TY1PR01MB1770F48284CA48C991052263C0710@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello Simon,
-
-> From: Simon Horman <horms@verge.net.au>
-> Sent: 06 March 2019 12:54
-> Subject: Re: [PATCH] arm64: dts: renesas: r8a774c0: Add CANFD support
->=20
-> On Mon, Mar 04, 2019 at 10:10:49AM +0000, Fabrizio Castro wrote:
-> > Hello Simon,
-> >
-> > Thank you for your feedback!
-> >
-> > > From: Simon Horman <horms@verge.net.au>
-> > > Sent: 04 March 2019 09:59
-> > > To: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>; Rob Herring <ro=
-bh+dt@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>;
-> > > Magnus Damm <magnus.damm@gmail.com>; Linux-Renesas <linux-renesas-soc=
-@vger.kernel.org>; open list:OPEN FIRMWARE
-> AND
-> > > FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>; Chris Pa=
-terson <Chris.Paterson2@renesas.com>; Biju Das
-> > > <biju.das@bp.renesas.com>
-> > > Subject: Re: [PATCH] arm64: dts: renesas: r8a774c0: Add CANFD support
-> > >
-> > > On Fri, Mar 01, 2019 at 02:38:53PM +0100, Geert Uytterhoeven wrote:
-> > > > On Fri, Mar 1, 2019 at 12:04 PM Fabrizio Castro
-> > > > <fabrizio.castro@bp.renesas.com> wrote:
-> > > > > The CANFD implementation on the RZ/G2E (a.k.a. r8a774c0) is
-> > > > > identical to the one found on the r8a77990.
-> > > > >
-> > > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+On Mon, Mar 04, 2019 at 10:10:49AM +0000, Fabrizio Castro wrote:
+> Hello Simon,
+> 
+> Thank you for your feedback!
+> 
+> > From: Simon Horman <horms@verge.net.au>
+> > Sent: 04 March 2019 09:59
+> > To: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>; Rob Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
+> > Magnus Damm <magnus.damm@gmail.com>; Linux-Renesas <linux-renesas-soc@vger.kernel.org>; open list:OPEN FIRMWARE AND
+> > FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>; Chris Paterson <Chris.Paterson2@renesas.com>; Biju Das
+> > <biju.das@bp.renesas.com>
+> > Subject: Re: [PATCH] arm64: dts: renesas: r8a774c0: Add CANFD support
+> > 
+> > On Fri, Mar 01, 2019 at 02:38:53PM +0100, Geert Uytterhoeven wrote:
+> > > On Fri, Mar 1, 2019 at 12:04 PM Fabrizio Castro
+> > > <fabrizio.castro@bp.renesas.com> wrote:
+> > > > The CANFD implementation on the RZ/G2E (a.k.a. r8a774c0) is
+> > > > identical to the one found on the r8a77990.
 > > > >
-> > > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 > > >
-> > > Thanks, applied.
-> >
-> > The patch that adds R8A774C0_CLK_CANFD (https://patchwork.kernel.org/pa=
-tch/10766867/)
-> > Isn't in a release candidate just yet, therefore I was expecting this p=
-atch to be deferred to
-> > to when R8A774C0_CLK_CANFD is finally available, similarly to:
-> > https://www.spinics.net/lists/netdev/msg547320.html
-> >
-> > Was I wrong?
->=20
-> No, I was wrong in sending out the email above.
->=20
-> The patch is still deferred.
+> > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > 
+> > Thanks, applied.
+> 
+> The patch that adds R8A774C0_CLK_CANFD (https://patchwork.kernel.org/patch/10766867/)
+> Isn't in a release candidate just yet, therefore I was expecting this patch to be deferred to
+> to when R8A774C0_CLK_CANFD is finally available, similarly to:
+> https://www.spinics.net/lists/netdev/msg547320.html
+> 
+> Was I wrong?
 
-My understanding is that this patch can be taken now, and it still applies =
-neatly.
+No, I was wrong in sending out the email above.
 
-Thanks,
-Fab
+The patch is still deferred.
