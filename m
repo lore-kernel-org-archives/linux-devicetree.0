@@ -1,84 +1,52 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [RESEND PATCH v2] of: fix kmemleak crash caused by imbalance in
- early memory reservation
-Date: Tue, 5 Mar 2019 18:12:48 -0800
-Message-ID: <20190306021248.GA17298@roeck-us.net>
-References: <3c886941-bf9d-f040-b568-ee7a8eba9a04@free.fr>
- <CGME20190123055509epcas3p18a6d66fa08412f2308cb2c1997328ea8@epcas3p1.samsung.com>
- <20190123055414.GA4747@rapoport-lnx>
- <78f4ea8a-996d-038e-9e33-5ff02fa2c43f@samsung.com>
- <20190123123143.GE4747@rapoport-lnx>
- <4b8f82c4-7f8f-b814-c1ec-9902e43963f6@free.fr>
- <617e0d57-342d-4162-bd21-ece18e481d87@free.fr>
- <CAL_JsqKbCg-rGmLoA3mPv54=LMuQBfevfzL8f2QPVyjN-sNk8w@mail.gmail.com>
- <20190213085028.6199594b@canb.auug.org.au>
- <CAL_JsqK-cC6oVZ9MkP+ExOGjCRhA0XxGSgqGKL3W9bFF3rKAgA@mail.gmail.com>
+From: Samuel Holland <samuel@sholland.org>
+Subject: Re: [PATCH v3 07/15] ARM: dts: sunxi: h3/h5: Add msgbox node
+Date: Tue, 5 Mar 2019 21:39:26 -0600
+Message-ID: <f1e7b836-412f-0d6c-c7cf-2c41c871758e@sholland.org>
+References: <20190302042951.53671-1-samuel@sholland.org>
+ <20190302042951.53671-8-samuel@sholland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <stable-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqK-cC6oVZ9MkP+ExOGjCRhA0XxGSgqGKL3W9bFF3rKAgA@mail.gmail.com>
-Sender: stable-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Frank Rowand <frowand.list@gmail.com>, Mike Rapoport <rppt@linux.ibm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Prateek Patel <prpatel@nvidia.com>, DT <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190302042951.53671-8-samuel@sholland.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Jassi Brar <jassisinghbrar@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 12, 2019 at 04:12:24PM -0600, Rob Herring wrote:
-> On Tue, Feb 12, 2019 at 3:50 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > Hi all,
-> >
-> > On Tue, 12 Feb 2019 10:03:09 -0600 Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Mon, Feb 11, 2019 at 10:47 AM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
-> > > >
-> > > > On 04/02/2019 15:37, Marc Gonzalez wrote:
-> > > >
-> > > > > Cc: stable@vger.kernel.org # 3.15+
-> > > > > Fixes: 3f0c820664483 ("drivers: of: add initialization code for dynamic reserved memory")
-> > > > > Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > > > Acked-by: Prateek Patel <prpatel@nvidia.com>
-> > > > > Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> > > > > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> > > > > ---
-> > > > > Resend with DT CCed to reach robh's patch queue
-> > > > > I added CC: stable, Fixes, and Prateek's ack
-> > > > > Trim recipients list to minimize inconvenience
-> > > >
-> > > > I'm confused over commit 3532b3b554a216f30edb841d29eef48521bdc592 in linux-next
-> > > > "memblock: drop __memblock_alloc_base()"
-> > > >
-> > > > It's definitely going to conflict with the proposed patch
-> > > > over drivers/of/of_reserved_mem.c
-> > > >
-> > > > Rob, what's the next step then?
-> > >
-> > > Rebase it on top of what's in linux-next and apply it to the tree
-> > > which has the above dependency. I'm guessing that is Andrew Morton's
-> > > tree.
-> >
-> > Yeah, that is in Andrew's "post linux-next" patch series, so if you
-> > rebase it on top of linux-next and then send it to Andrew with some
-> > explanation.
-> >
-> > ...
-> >
-> > Actually, if it is intended for the stable trees, then presumably it is
-> > intended to go to Linus for the current release?  In which case, the
-> > patch in Andrew's tree will have to be changed to cope after your patch
-> > appears in Linus' tree (and therefore, linux-next).
+On 03/01/19 22:29, Samuel Holland wrote:
+> The H3 and H5 SoCs contain a message box that can be used to send
+> messages and interrupts back and forth between the ARM application CPUs
+> and the ARISC coprocessor. Add a device tree node for it.
 > 
-> At this point in the cycle, I wasn't planning to send this for 5.0.
-> It's not fixing something introduced in 5.0 and it is a debug feature.
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> ---
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-Hi Rob,
+> diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> index a4c757c0b741..a42fd3f9739e 100644
+> --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> @@ -227,6 +227,16 @@
+>  			#size-cells = <0>;
+>  		};
+>  
+> +		msgbox: mailbox@1c17000 {
+> +			compatible = "allwinner,sun8i-h3-msgbox",
+> +				     "allwinner,sun6i-a31-msgbox";
+> +			reg = <0x01c17000 0x1000>;
+> +			clocks = <&ccu CLK_BUS_MSGBOX>;
+> +			resets = <&ccu RST_BUS_MSGBOX>;
+> +			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +			#mbox-cells = <2>;
 
-this may be a debug feature, but we do test our kernels with it enabled,
-and the problem does affect our 4.19 branch (chromeos-4.19). Are you
-suggesting that we should backport the fix into our branch and not send
-the backport to -stable ?
+This should be 1. And it was caught by the new DTB schema validation :)
 
-No problem, just trying to avoid wasting our time.
-
-Thanks,
-Guenter
+> +		};
+> +
+>  		usb_otg: usb@1c19000 {
+>  			compatible = "allwinner,sun8i-h3-musb";
+>  			reg = <0x01c19000 0x400>;
+> 
