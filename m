@@ -1,82 +1,51 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: qcs404: Update memory map to v3
-Date: Wed,  6 Mar 2019 09:51:20 -0800
-Message-ID: <20190306175120.22544-1-bjorn.andersson@linaro.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH] dt-bindings: usb: dwc2: document the vbus-supply property
+Date: Wed,  6 Mar 2019 22:24:31 +0100
+Message-ID: <20190306212431.5779-1-martin.blumenstingl@googlemail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: hminas@synopsys.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, amelie.delaunay@st.com, felipe.balbi@linux.intel.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Update the reserved-memory map to version 3, to adjust to changes in the
-remoteprocs.
+Various boards have an external VBUS supply regulator. This regulator
+depends on the current mode of the controller which is defined as:
+- dr_mode set to either "host" or "peripheral" (fixed value)
+- dr_mode set to "otg", based on the OTG status the dwc2 controller
+  internally switches between "host" and "peripheral" mode (selection
+  happens at runtime)
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Based on the current mode the regulator has to be enabled or disabled:
+- host: provide power to the connected USB device, thus the regulator
+  has to be enabled
+- peripheral: the host device to which the controller is connected
+  provides power, thus the regulator has to be disabled
+
+Add the dt-bindings documentation for this property so .dts authors know
+that this property exists and how it behaves.
+
+Fixes: 531ef5ebea9639 ("usb: dwc2: add support for host mode external vbus supply")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 30 ++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+ Documentation/devicetree/bindings/usb/dwc2.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index d6a91c31986a..298a6053c3e0 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -179,8 +179,13 @@
- 		#size-cells = <2>;
- 		ranges;
- 
--		memory@85600000 {
--			reg = <0 0x85600000 0 0x90000>;
-+		tz_apps_mem: memory@85900000 {
-+			reg = <0 0x85900000 0 0x500000>;
-+			no-map;
-+		};
-+
-+		xbl_mem: memory@85e00000 {
-+			reg = <0 0x85e00000 0 0x100000>;
- 			no-map;
- 		};
- 
-@@ -189,28 +194,33 @@
- 			no-map;
- 		};
- 
--		memory@86100000 {
-+		tz_mem: memory@86100000 {
- 			reg = <0 0x86100000 0 0x300000>;
- 			no-map;
- 		};
- 
- 		wlan_fw_mem: memory@86400000 {
--			reg = <0 0x86400000 0 0x1c00000>;
-+			reg = <0 0x86400000 0 0x1100000>;
-+			no-map;
-+		};
-+
-+		adsp_fw_mem: memory@87500000 {
-+			reg = <0 0x87500000 0 0x1a00000>;
- 			no-map;
- 		};
- 
--		adsp_fw_mem: memory@88000000 {
--			reg = <0 0x88000000 0 0x1a00000>;
-+		cdsp_fw_mem: memory@88f00000 {
-+			reg = <0 0x88f00000 0 0x600000>;
- 			no-map;
- 		};
- 
--		cdsp_fw_mem: memory@89a00000 {
--			reg = <0 0x89a00000 0 0x600000>;
-+		wlan_msa_mem: memory@89500000 {
-+			reg = <0 0x89500000 0 0x100000>;
- 			no-map;
- 		};
- 
--		wlan_msa_mem: memory@8a000000 {
--			reg = <0 0x8a000000 0 0x100000>;
-+		uefi_mem: memory@9f800000 {
-+			reg = <0 0x9f800000 0 0x800000>;
- 			no-map;
- 		};
- 	};
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+index 6dc3c4a34483..1e8a775a0e72 100644
+--- a/Documentation/devicetree/bindings/usb/dwc2.txt
++++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+@@ -31,6 +31,10 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
+ Optional properties:
+ - phys: phy provider specifier
+ - phy-names: shall be "usb2-phy"
++- vbus-supply: reference to the VBUS regulator. Depending on the current mode
++  this is enabled (in "host" mode") or disabled (in "peripheral" mode). The
++  regulator is updated if the controller is configured in "otg" mode and the
++  status changes between "host" and "peripheral".
+ Refer to phy/phy-bindings.txt for generic phy consumer properties
+ - dr_mode: shall be one of "host", "peripheral" and "otg"
+   Refer to usb/generic.txt
 -- 
-2.18.0
+2.21.0
