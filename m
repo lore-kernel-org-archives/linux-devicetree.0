@@ -1,80 +1,81 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v5 3/8] clk: samsung: add BPLL rate table for Exynos
- 5422 SoC
-Date: Wed, 6 Mar 2019 10:31:20 +0900
-Message-ID: <a35136da-79b1-17fe-3c97-8eb06da39cd6@samsung.com>
-References: <1551781151-5562-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190305101926eucas1p158d6241bd6851b3d98ed9aae6cba502c@eucas1p1.samsung.com>
-        <1551781151-5562-4-git-send-email-l.luba@partner.samsung.com>
+From: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 0/7] scsi: ufs-mediatek: Add UFS support for Mediatek
+ SoC chips
+Date: Wed, 6 Mar 2019 09:32:00 +0800
+Message-ID: <1551835920.30977.29.camel@mtkswgap22>
+References: <1551252192-535-1-git-send-email-stanley.chu@mediatek.com>
+ <1551252192-535-2-git-send-email-stanley.chu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551781151-5562-4-git-send-email-l.luba@partner.samsung.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1551252192-535-2-git-send-email-stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chun-hung.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, avri.altman-Sjgp3cTcYWE@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, pedrom.sousa-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
+Hi Rob,
 
-I'm talking about it repeatedly. How many times already, I mentioned
-that you have to resend the patch after completed the discussion.
+Gentle ping for 2 dt-bindings documents patch in this series.
 
-
-I replied this v3 patch[2]. But, you didn't reply or answer anything
-and then just send the same patch without any consent.
-
-- Re: [PATCH v3 3/8] clk: samsung: add BPLL rate table for Exynos 5422 SoC
-[2] https://lkml.org/lkml/2019/2/11/198
-
-
-
-On 19. 3. 5. 오후 7:19, Lukasz Luba wrote:
-> Add new table rate for BPLL for Exynos5422 SoC supporting Dynamic Memory
-> Controller frequencies for driver's DRAM timings.
+On Wed, 2019-02-27 at 15:23 +0800, Stanley Chu wrote:
+> Hello,
 > 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  drivers/clk/samsung/clk-exynos5420.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+> This patch series adds UFS M-PHY and UFS host driver support in MediaTek chipsets.
 > 
-> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-> index 6da5875..6f5db70 100644
-> --- a/drivers/clk/samsung/clk-exynos5420.c
-> +++ b/drivers/clk/samsung/clk-exynos5420.c
-> @@ -1331,6 +1331,17 @@ static const struct samsung_pll_rate_table exynos5420_pll2550x_24mhz_tbl[] __ini
->  	PLL_35XX_RATE(24 * MHZ, 200000000,  200, 3, 3),
->  };
->  
-> +static const struct samsung_pll_rate_table exynos5422_bpll_rate_table[] = {
-> +	PLL_35XX_RATE(24 * MHZ, 825000000, 275, 4, 1),
-> +	PLL_35XX_RATE(24 * MHZ, 728000000, 182, 3, 1),
-> +	PLL_35XX_RATE(24 * MHZ, 633000000, 211, 4, 1),
-> +	PLL_35XX_RATE(24 * MHZ, 543000000, 181, 2, 2),
-> +	PLL_35XX_RATE(24 * MHZ, 413000000, 413, 6, 2),
-> +	PLL_35XX_RATE(24 * MHZ, 275000000, 275, 3, 3),
-> +	PLL_35XX_RATE(24 * MHZ, 206000000, 206, 3, 3),
-> +	PLL_35XX_RATE(24 * MHZ, 165000000, 110, 2, 3),
-> +};
-> +
->  static const struct samsung_pll_rate_table exynos5420_epll_24mhz_tbl[] = {
->  	PLL_36XX_RATE(24 * MHZ, 600000000U, 100, 2, 1, 0),
->  	PLL_36XX_RATE(24 * MHZ, 400000000U, 200, 3, 2, 0),
-> @@ -1473,7 +1484,7 @@ static void __init exynos5x_clk_init(struct device_node *np,
->  		exynos5x_plls[apll].rate_table = exynos5420_pll2550x_24mhz_tbl;
->  		exynos5x_plls[epll].rate_table = exynos5420_epll_24mhz_tbl;
->  		exynos5x_plls[kpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
-> -		exynos5x_plls[bpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
-> +		exynos5x_plls[bpll].rate_table = exynos5422_bpll_rate_table;
->  	}
->  
->  	samsung_clk_register_pll(ctx, exynos5x_plls, ARRAY_SIZE(exynos5x_plls),
+> In the meantime, re-factors ufshcd_get_pwr_dev_param in vendors' drivers. This function is for vendors to decide finally agreed attributes for power mode change if vendors define
+> their host capability in struct ufs_dev_params. Because it is using by both ufs-qcom and ufs-hisi and also used in ufs-mediatek in this serious, simply re-factor it and then every vendors can reuse it.
+> 
+> Changes since v2:
+> -	Fix header style with SPDX-License-Identifier declaration used.
+> -	Simplify ufs-phy-mtk to single source file since we has one MPHY version now, and do fixes according to Chunfeng Yun's comments.
+> -	Add dt-bindings of ufs-phy-mtk.
+> 
+> Changes since v1:
+> -	Re-factor ufshcd_get_pwr_dev_param in mediatek/qcom/hisi vendor drivers.
+> -	Introduce ufs-phy-mtk to have a good extension capability for different power control flows in future different MPHY versions.
+> -	Bind ufs-phy-mtk and hook suitable callbacks in ufs-mediatek driver.
+> -	Use PA_LOCAL_TX_LCC_ENABLE attribute defined in unipro.h instead.
+> -	Do some minor format fixes.
+> 
+> Stanley Chu (7):
+>   scsi: ufs: Introduce ufshcd_get_pwr_dev_param
+>   scsi: ufs-qcom: Re-factor ufshcd_get_pwr_dev_param
+>   scsi: ufs-hisi: Re-factor ufshcd_get_pwr_dev_param
+>   dt-bindings: phy: Add document for phy-mtk-ufs
+>   dt-bindings: scsi: ufs: Add document for ufs-mediatek
+>   phy: mediatek: Add UFS M-PHY driver
+>   scsi: ufs-mediatek: Add UFS support for Mediatek SoC chips
+> 
+>  .../devicetree/bindings/phy/phy-mtk-ufs.txt   |  35 ++
+>  .../devicetree/bindings/ufs/ufs-mediatek.txt  |  47 +++
+>  drivers/phy/mediatek/Kconfig                  |   9 +
+>  drivers/phy/mediatek/Makefile                 |   1 +
+>  drivers/phy/mediatek/phy-mtk-ufs.c            | 239 ++++++++++++
+>  drivers/scsi/ufs/Kconfig                      |  14 +
+>  drivers/scsi/ufs/Makefile                     |   1 +
+>  drivers/scsi/ufs/ufs-hisi.c                   | 109 +-----
+>  drivers/scsi/ufs/ufs-mediatek.c               | 368 ++++++++++++++++++
+>  drivers/scsi/ufs/ufs-mediatek.h               |  54 +++
+>  drivers/scsi/ufs/ufs-qcom.c                   | 106 +----
+>  drivers/scsi/ufs/ufshcd-pltfrm.c              |  98 +++++
+>  drivers/scsi/ufs/ufshcd-pltfrm.h              |  21 +
+>  13 files changed, 895 insertions(+), 207 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
+>  create mode 100644 Documentation/devicetree/bindings/ufs/ufs-mediatek.txt
+>  create mode 100644 drivers/phy/mediatek/phy-mtk-ufs.c
+>  create mode 100644 drivers/scsi/ufs/ufs-mediatek.c
+>  create mode 100644 drivers/scsi/ufs/ufs-mediatek.h
 > 
 
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Thanks,
+Stanley
