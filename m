@@ -1,51 +1,51 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 10/10] arm64: dts: marvell: armada-cp110: Switch to
- per-port SATA interrupts
-Date: Wed, 6 Mar 2019 11:34:31 +0100
-Message-ID: <20190306113431.3ea27949@xps13>
-References: <20190306102146.13005-1-miquel.raynal@bootlin.com>
- <20190306102146.13005-11-miquel.raynal@bootlin.com>
- <20190306103039.35cfzanu3mprlcja@sapphire.tkos.co.il>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v10 0/9] support ROHM BD70528 PMIC
+Date: Wed, 6 Mar 2019 12:38:16 +0200
+Message-ID: <20190306103816.GA23959@localhost.localdomain>
+References: <cover.1550148989.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190228070450.GB3773@localhost.localdomain>
+ <20190228114026.GA6802@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190306103039.35cfzanu3mprlcja@sapphire.tkos.co.il>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-ide@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Antoine Tenart <antoine.tenart@bootlin.com>, Jens Axboe <axboe@kernel.dk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190228114026.GA6802@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: mazziesaccount@gmail.com, Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, bogdan-petru.chircu-mare@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmFydWNoLAoKQmFydWNoIFNpYWNoIDxiYXJ1Y2hAdGtvcy5jby5pbD4gd3JvdGUgb24gV2Vk
-LCA2IE1hciAyMDE5IDEyOjMwOjM5CiswMjAwOgoKPiBIaSBNaXF1ZWwsCj4gCj4gT24gV2VkLCBN
-YXIgMDYsIDIwMTkgYXQgMTE6MjE6NDZBTSArMDEwMCwgTWlxdWVsIFJheW5hbCB3cm90ZToKPiA+
-IEZyb206IFRob21hcyBQZXRhenpvbmkgPHRob21hcy5wZXRhenpvbmlAYm9vdGxpbi5jb20+Cj4g
-PiAKPiA+IFRoZXJlIGFyZSB0d28gU0FUQSBwb3J0cyBwZXIgQ1AxMTAuIEVhY2ggb2YgdGhlbSBo
-YXMgYSBkZWRpY2F0ZWQKPiA+IGludGVycnVwdC4gRGVzY3JpYmUgdGhlIHJlYWwgaGFyZHdhcmUg
-YnkgYWRkaW5nIHR3byBTQVRBIHBvcnRzIHRvIHRoZQo+ID4gQ1AxMTAgU0FUQSBub2RlIGFuZCBl
-bmFibGluZyB0aGVtIGluIGFsbCB0aGUgRFRzIGluY2x1ZGluZyBpdAo+ID4gKDcwNDAtZGIvODA0
-MC1kYi84MDQwLWNsZWFyZm9nKS4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogVGhvbWFzIFBldGF6
-em9uaSA8dGhvbWFzLnBldGF6em9uaUBib290bGluLmNvbT4KPiA+IFNpZ25lZC1vZmYtYnk6IE1p
-cXVlbCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9vdGxpbi5jb20+Cj4gPiAtLS0KPiA+ICBhcmNo
-L2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTcwNDAtZGIuZHRzICAgfCAgNyArKysrKyst
-Cj4gPiAgLi4uL2R0cy9tYXJ2ZWxsL2FybWFkYS04MDQwLWNsZWFyZm9nLWd0LThrLmR0cyAgIHwg
-IDUgKysrKy0KPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTgwNDAtZGIu
-ZHRzICAgfCAxNCArKysrKysrKysrKystLQo+ID4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVs
-bC9hcm1hZGEtY3AxMTAuZHRzaSAgICB8IDE2ICsrKysrKysrKysrKysrLS0gIAo+IAo+IFdoYXQg
-YWJvdXQgYXJtYWRhLTgwNDAtbWNiaW4uZHRzaT8KPiAKCkkgb25seSBjaGVja2VkIGZpbmFsIC5k
-dHMgZmlsZXMgYnV0IGluZGVlZCB0aGUgU0FUQSBub2RlIGlzIGVuYWJsZWQgaW4KdGhlIG1jYmlu
-IC5kdHNpLiBJIHdpbGwgd2FpdCBhIGJpdCBmb3Igb3RoZXIgcmV2aWV3cywgaWYgdGhlcmUgaXMg
-bm8KbmVlZCB0byBzZW5kIGEgdjMgZm9yIHRoZSBTQVRBIHBhdGNoZXMgSSB3aWxsIGp1c3QgcmVz
-ZW5kIHRoZSBEVApwYXRjaGVzIGZvciBHcmVnb3J5IGluIGEgdjMuCgoKVGhhbmtzLApNaXF1w6hs
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
-cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCg==
+On Thu, Feb 28, 2019 at 11:40:26AM +0000, Mark Brown wrote:
+> On Thu, Feb 28, 2019 at 09:04:50AM +0200, Matti Vaittinen wrote:
+> > On Thu, Feb 14, 2019 at 03:02:37PM +0200, Matti Vaittinen wrote:
+> 
+> >> Patch series introducing support for ROHM BD70528 PMIC
+> > 
+> > I was wondering if there is anything that could be done to allow the MFD
+> > part of this series to end up in upstream without having to wait the
+> > regmap-irq changes
+> > (https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git/commit/?h=topic/irq)
+> >  to be merged from Linus' tree to MFD tree? If I see it correctly, the
+> > regmap-irq (main-irq-reg support) changes are not targeted to linux 5.1.
+> > To me it looks like getting them to MFD via Linus' tree will take a while.
+> 
+> They're targeted for v5.1 and I sent a pull request to Lee for that
+> branch IIRC.
+Thanks Mark. I think I have misunderstood how you deliver changes to 5.1
+- or then I have done some other mistake. I thought these changes were
+  not going to 5.1 as I did not see them in your for-5.1 branch. But I
+probably did some error there. Thanks for explaining this :)
+
+Br,
+	Matti Vaittinen
+
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
