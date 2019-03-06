@@ -1,53 +1,82 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 2/3] clk: qcom: branch: Add AON clock ops
-Date: Wed,  6 Mar 2019 09:47:57 -0800
-Message-ID: <20190306174758.22462-3-bjorn.andersson@linaro.org>
-References: <20190306174758.22462-1-bjorn.andersson@linaro.org>
+Subject: [PATCH] arm64: dts: qcom: qcs404: Update memory map to v3
+Date: Wed,  6 Mar 2019 09:51:20 -0800
+Message-ID: <20190306175120.22544-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190306174758.22462-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some clocks can only be turned on by resetting the block containing
-them, provide a clock type that allow us to reference these clocks and
-have the client drivers enable and "disable" them.
+Update the reserved-memory map to version 3, to adjust to changes in the
+remoteprocs.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/clk/qcom/clk-branch.c | 6 ++++++
- drivers/clk/qcom/clk-branch.h | 1 +
- 2 files changed, 7 insertions(+)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 30 ++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/clk/qcom/clk-branch.c b/drivers/clk/qcom/clk-branch.c
-index 99446bf630aa..f869fc6aaed6 100644
---- a/drivers/clk/qcom/clk-branch.c
-+++ b/drivers/clk/qcom/clk-branch.c
-@@ -146,6 +146,12 @@ const struct clk_ops clk_branch2_ops = {
- };
- EXPORT_SYMBOL_GPL(clk_branch2_ops);
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index d6a91c31986a..298a6053c3e0 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -179,8 +179,13 @@
+ 		#size-cells = <2>;
+ 		ranges;
  
-+const struct clk_ops clk_branch2_aon_ops = {
-+	.enable = clk_branch2_enable,
-+	.is_enabled = clk_is_enabled_regmap,
-+};
-+EXPORT_SYMBOL_GPL(clk_branch2_aon_ops);
+-		memory@85600000 {
+-			reg = <0 0x85600000 0 0x90000>;
++		tz_apps_mem: memory@85900000 {
++			reg = <0 0x85900000 0 0x500000>;
++			no-map;
++		};
 +
- const struct clk_ops clk_branch_simple_ops = {
- 	.enable = clk_enable_regmap,
- 	.disable = clk_disable_regmap,
-diff --git a/drivers/clk/qcom/clk-branch.h b/drivers/clk/qcom/clk-branch.h
-index b3561e0a3984..17a58119165e 100644
---- a/drivers/clk/qcom/clk-branch.h
-+++ b/drivers/clk/qcom/clk-branch.h
-@@ -40,6 +40,7 @@ struct clk_branch {
- extern const struct clk_ops clk_branch_ops;
- extern const struct clk_ops clk_branch2_ops;
- extern const struct clk_ops clk_branch_simple_ops;
-+extern const struct clk_ops clk_branch2_aon_ops;
++		xbl_mem: memory@85e00000 {
++			reg = <0 0x85e00000 0 0x100000>;
+ 			no-map;
+ 		};
  
- #define to_clk_branch(_hw) \
- 	container_of(to_clk_regmap(_hw), struct clk_branch, clkr)
+@@ -189,28 +194,33 @@
+ 			no-map;
+ 		};
+ 
+-		memory@86100000 {
++		tz_mem: memory@86100000 {
+ 			reg = <0 0x86100000 0 0x300000>;
+ 			no-map;
+ 		};
+ 
+ 		wlan_fw_mem: memory@86400000 {
+-			reg = <0 0x86400000 0 0x1c00000>;
++			reg = <0 0x86400000 0 0x1100000>;
++			no-map;
++		};
++
++		adsp_fw_mem: memory@87500000 {
++			reg = <0 0x87500000 0 0x1a00000>;
+ 			no-map;
+ 		};
+ 
+-		adsp_fw_mem: memory@88000000 {
+-			reg = <0 0x88000000 0 0x1a00000>;
++		cdsp_fw_mem: memory@88f00000 {
++			reg = <0 0x88f00000 0 0x600000>;
+ 			no-map;
+ 		};
+ 
+-		cdsp_fw_mem: memory@89a00000 {
+-			reg = <0 0x89a00000 0 0x600000>;
++		wlan_msa_mem: memory@89500000 {
++			reg = <0 0x89500000 0 0x100000>;
+ 			no-map;
+ 		};
+ 
+-		wlan_msa_mem: memory@8a000000 {
+-			reg = <0 0x8a000000 0 0x100000>;
++		uefi_mem: memory@9f800000 {
++			reg = <0 0x9f800000 0 0x800000>;
+ 			no-map;
+ 		};
+ 	};
 -- 
 2.18.0
