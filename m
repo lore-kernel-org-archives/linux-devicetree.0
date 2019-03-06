@@ -1,139 +1,58 @@
-From: Ludovic BARRE <ludovic.barre@st.com>
-Subject: Re: [PATCH 1/4] mmc: mmci: avoid fake busy polling
-Date: Wed, 6 Mar 2019 11:08:57 +0100
-Message-ID: <15ce68e6-136f-7e9b-553c-968a0653a9b8@st.com>
-References: <1551802205-32188-1-git-send-email-ludovic.Barre@st.com>
- <1551802205-32188-2-git-send-email-ludovic.Barre@st.com>
- <CAPDyKFo_O36=N9wM2jFnUvkga1TFjPMibr+0MRU6bLOpq7nH7g@mail.gmail.com>
- <5b531f55-b8a0-5a83-4a7c-727013a66820@st.com>
- <CAPDyKFp=AO27hmG9u8JHrRa3JW7RNMbxC8+vMb2y_qGo=mLWQg@mail.gmail.com>
+From: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH] arm64: dts: add gce node for mt8183
+Date: Wed, 6 Mar 2019 18:10:24 +0800
+Message-ID: <1551867024-52951-1-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFp=AO27hmG9u8JHrRa3JW7RNMbxC8+vMb2y_qGo=mLWQg@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com, Frederic Chen <Frederic.Chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf
+This patch need based on v5.0-rc1 and these series
+http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017570.html
+http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017320.html
+http://lists.infradead.org/pipermail/linux-mediatek/2019-January/017196.html
+http://lists.infradead.org/pipermail/linux-mediatek/2019-March/018005.html
 
-I could have a snowball board, I don't remember if it a ux500v1 or v2?
-This board has been removed of u-boot mainline, do you have a specific
-repository for snowball or what branch do you advise?
-do you have a snowball wiki (up-to-date) for flashing...
+add gce device node for mt8183
 
-BR
-Ludo
-On 3/6/19 10:49 AM, Ulf Hansson wrote:
-> On Wed, 6 Mar 2019 at 10:04, Ludovic BARRE <ludovic.barre@st.com> wrote:
->>
->> Hi Ulf
->>
->> On 3/6/19 10:00 AM, Ulf Hansson wrote:
->>> On Tue, 5 Mar 2019 at 17:10, Ludovic Barre <ludovic.Barre@st.com> wrote:
->>>>
->>>> From: Ludovic Barre <ludovic.barre@st.com>
->>>>
->>>> The busy status bit could occurred even if no busy response is
->>>> expected (example cmd11). On sdmmc variant, the busy_detect_flag
->>>> reflects inverted value of d0 state, it's sampled at the end of a
->>>> CMD response and a second time 2 clk cycles after the CMD response.
->>>> To avoid a fake busy, the busy status could be checked and polled
->>>> only if the command has RSP_BUSY flag.
->>>>
->>>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->>>
->>> Before I review this, can you tell what HW you have tested this on?
->>
->> I tested on stm32mp157c (stm32_sdmmc variant)
-> 
-> Okay, I see. So we need to get this tested for the ux500v2 variant as
-> well. I try to get some time to do that, soon.
-> 
-> However it seems like you could benefit from having one of those
-> boards yourself. It would speed up the process, as you wouldn't have
-> to rely on me doing the test. :-) Is there a chance of you could dig
-> up some of these old boards from somewhere?
-> 
-> Kind regards
-> Uffe
-> 
->>
->>>
->>> Kind regards
->>> Uffe
->>>
->>>> ---
->>>>    drivers/mmc/host/mmci.c | 19 +++++++++++++------
->>>>    1 file changed, 13 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
->>>> index 387ff14..4901b73 100644
->>>> --- a/drivers/mmc/host/mmci.c
->>>> +++ b/drivers/mmc/host/mmci.c
->>>> @@ -1220,12 +1220,13 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->>>>                unsigned int status)
->>>>    {
->>>>           void __iomem *base = host->base;
->>>> -       bool sbc;
->>>> +       bool sbc, busy_resp;
->>>>
->>>>           if (!cmd)
->>>>                   return;
->>>>
->>>>           sbc = (cmd == host->mrq->sbc);
->>>> +       busy_resp = !!(cmd->flags & MMC_RSP_BUSY);
->>>>
->>>>           /*
->>>>            * We need to be one of these interrupts to be considered worth
->>>> @@ -1239,8 +1240,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->>>>           /*
->>>>            * ST Micro variant: handle busy detection.
->>>>            */
->>>> -       if (host->variant->busy_detect) {
->>>> -               bool busy_resp = !!(cmd->flags & MMC_RSP_BUSY);
->>>> +       if (busy_resp && host->variant->busy_detect) {
->>>>
->>>>                   /* We are busy with a command, return */
->>>>                   if (host->busy_status &&
->>>> @@ -1253,7 +1253,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->>>>                    * that the special busy status bit is still set before
->>>>                    * proceeding.
->>>>                    */
->>>> -               if (!host->busy_status && busy_resp &&
->>>> +               if (!host->busy_status &&
->>>>                       !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) &&
->>>>                       (readl(base + MMCISTATUS) & host->variant->busy_detect_flag)) {
->>>>
->>>> @@ -1508,6 +1508,7 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->>>>    {
->>>>           struct mmci_host *host = dev_id;
->>>>           u32 status;
->>>> +       bool busy_resp;
->>>>           int ret = 0;
->>>>
->>>>           spin_lock(&host->lock);
->>>> @@ -1550,9 +1551,15 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->>>>                   }
->>>>
->>>>                   /*
->>>> -                * Don't poll for busy completion in irq context.
->>>> +                * Don't poll for:
->>>> +                * -busy completion in irq context.
->>>> +                * -no busy response expected.
->>>>                    */
->>>> -               if (host->variant->busy_detect && host->busy_status)
->>>> +               busy_resp = host->cmd ?
->>>> +                       !!(host->cmd->flags & MMC_RSP_BUSY) : false;
->>>> +
->>>> +               if (host->variant->busy_detect &&
->>>> +                   (!busy_resp || host->busy_status))
->>>>                           status &= ~host->variant->busy_detect_flag;
->>>>
->>>>                   ret = 1;
->>>> --
->>>> 2.7.4
->>>>
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 165b859..5006368 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -8,6 +8,7 @@
+ #include <dt-bindings/clock/mt8183-clk.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/gce/mt8183-gce.h>
+ #include "mt8183-pinfunc.h"
+ 
+ / {
+@@ -238,6 +239,18 @@
+ 			clock-names = "spi", "wrap";
+ 		};
+ 
++		gce: gce@10238000 {
++			compatible = "mediatek,mt8183-gce";
++			reg = <0 0x10238000 0 0x4000>;
++			interrupts = <GIC_SPI 162 IRQ_TYPE_LEVEL_LOW>;
++			thread-num = <CMDQ_THR_MAX_COUNT>;
++			#mbox-cells = <3>;
++			#gce-event-cells = <1>;
++			#gce-subsys-cells = <2>;
++			clocks = <&infracfg CLK_INFRA_GCE>;
++			clock-names = "gce";
++		};
++
+ 		uart0: serial@11002000 {
+ 			compatible = "mediatek,mt8183-uart",
+ 				     "mediatek,mt6577-uart";
+-- 
+1.9.1
