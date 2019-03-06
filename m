@@ -1,125 +1,61 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 1/4] mmc: mmci: avoid fake busy polling
-Date: Wed, 6 Mar 2019 10:49:37 +0100
-Message-ID: <CAPDyKFp=AO27hmG9u8JHrRa3JW7RNMbxC8+vMb2y_qGo=mLWQg@mail.gmail.com>
-References: <1551802205-32188-1-git-send-email-ludovic.Barre@st.com>
- <1551802205-32188-2-git-send-email-ludovic.Barre@st.com> <CAPDyKFo_O36=N9wM2jFnUvkga1TFjPMibr+0MRU6bLOpq7nH7g@mail.gmail.com>
- <5b531f55-b8a0-5a83-4a7c-727013a66820@st.com>
+From: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH v2 03/10] dt-binding: gce: add binding for gce subsys property
+Date: Wed, 6 Mar 2019 17:50:28 +0800
+Message-ID: <1551865835-50974-4-git-send-email-bibby.hsieh@mediatek.com>
+References: <1551865835-50974-1-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5b531f55-b8a0-5a83-4a7c-727013a66820@st.com>
+In-Reply-To: <1551865835-50974-1-git-send-email-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic BARRE <ludovic.barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com, Frederic Chen <Frederic.Chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 6 Mar 2019 at 10:04, Ludovic BARRE <ludovic.barre@st.com> wrote:
->
-> Hi Ulf
->
-> On 3/6/19 10:00 AM, Ulf Hansson wrote:
-> > On Tue, 5 Mar 2019 at 17:10, Ludovic Barre <ludovic.Barre@st.com> wrote:
-> >>
-> >> From: Ludovic Barre <ludovic.barre@st.com>
-> >>
-> >> The busy status bit could occurred even if no busy response is
-> >> expected (example cmd11). On sdmmc variant, the busy_detect_flag
-> >> reflects inverted value of d0 state, it's sampled at the end of a
-> >> CMD response and a second time 2 clk cycles after the CMD response.
-> >> To avoid a fake busy, the busy status could be checked and polled
-> >> only if the command has RSP_BUSY flag.
-> >>
-> >> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> >
-> > Before I review this, can you tell what HW you have tested this on?
->
-> I tested on stm32mp157c (stm32_sdmmc variant)
+cmdq driver provide a function that get the relationship
+of sub system number from device node for client.
+add specification for #subsys-cells, mediatek,gce-subsys.
 
-Okay, I see. So we need to get this tested for the ux500v2 variant as
-well. I try to get some time to do that, soon.
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+---
+ Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-However it seems like you could benefit from having one of those
-boards yourself. It would speed up the process, as you wouldn't have
-to rely on me doing the test. :-) Is there a chance of you could dig
-up some of these old boards from somewhere?
-
-Kind regards
-Uffe
-
->
-> >
-> > Kind regards
-> > Uffe
-> >
-> >> ---
-> >>   drivers/mmc/host/mmci.c | 19 +++++++++++++------
-> >>   1 file changed, 13 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> >> index 387ff14..4901b73 100644
-> >> --- a/drivers/mmc/host/mmci.c
-> >> +++ b/drivers/mmc/host/mmci.c
-> >> @@ -1220,12 +1220,13 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
-> >>               unsigned int status)
-> >>   {
-> >>          void __iomem *base = host->base;
-> >> -       bool sbc;
-> >> +       bool sbc, busy_resp;
-> >>
-> >>          if (!cmd)
-> >>                  return;
-> >>
-> >>          sbc = (cmd == host->mrq->sbc);
-> >> +       busy_resp = !!(cmd->flags & MMC_RSP_BUSY);
-> >>
-> >>          /*
-> >>           * We need to be one of these interrupts to be considered worth
-> >> @@ -1239,8 +1240,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
-> >>          /*
-> >>           * ST Micro variant: handle busy detection.
-> >>           */
-> >> -       if (host->variant->busy_detect) {
-> >> -               bool busy_resp = !!(cmd->flags & MMC_RSP_BUSY);
-> >> +       if (busy_resp && host->variant->busy_detect) {
-> >>
-> >>                  /* We are busy with a command, return */
-> >>                  if (host->busy_status &&
-> >> @@ -1253,7 +1253,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
-> >>                   * that the special busy status bit is still set before
-> >>                   * proceeding.
-> >>                   */
-> >> -               if (!host->busy_status && busy_resp &&
-> >> +               if (!host->busy_status &&
-> >>                      !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) &&
-> >>                      (readl(base + MMCISTATUS) & host->variant->busy_detect_flag)) {
-> >>
-> >> @@ -1508,6 +1508,7 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
-> >>   {
-> >>          struct mmci_host *host = dev_id;
-> >>          u32 status;
-> >> +       bool busy_resp;
-> >>          int ret = 0;
-> >>
-> >>          spin_lock(&host->lock);
-> >> @@ -1550,9 +1551,15 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
-> >>                  }
-> >>
-> >>                  /*
-> >> -                * Don't poll for busy completion in irq context.
-> >> +                * Don't poll for:
-> >> +                * -busy completion in irq context.
-> >> +                * -no busy response expected.
-> >>                   */
-> >> -               if (host->variant->busy_detect && host->busy_status)
-> >> +               busy_resp = host->cmd ?
-> >> +                       !!(host->cmd->flags & MMC_RSP_BUSY) : false;
-> >> +
-> >> +               if (host->variant->busy_detect &&
-> >> +                   (!busy_resp || host->busy_status))
-> >>                          status &= ~host->variant->busy_detect_flag;
-> >>
-> >>                  ret = 1;
-> >> --
-> >> 2.7.4
-> >>
+diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+index 812698f..07b2adf 100644
+--- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
++++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+@@ -26,6 +26,13 @@ Required properties:
+ 	phandle: Label name of a gce node.
+ 	event_number: the event number defined in 'dt-bindings/gce/mt8173-gce.h'
+ 		      or 'dt-binding/gce/mt8183-gce.h'.
++#subsys-cells: Should be 2.
++	<&phandle register_base_address subsys_number>
++	phandle: Label name of a gce node.
++	register_base_address: the register base address that client
++			       want to write or read.
++	subsys_number: specify the sub-system id which is corresponding
++		       to the register address.
+ 
+ Required properties for a client device:
+ - mboxes: Client use mailbox to communicate with GCE, it should have this
+@@ -50,6 +57,7 @@ Example:
+ 		thread-num = CMDQ_THR_MAX_COUNT;
+ 		#mbox-cells = <3>;
+ 		#event-cells = <1>;
++		#subsys-cells = <2>;
+ 	};
+ 
+ Example for a client device:
+@@ -58,7 +66,8 @@ Example for a client device:
+ 		compatible = "mediatek,mt8173-mmsys";
+ 		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+ 			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+-		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
++		mediatek,gce-subsys = <&gce 0x14000000 SUBSYS_1400XXXX>,
++				      <&gce 0x14010000 SUBSYS_1401XXXX>;
+ 		mediatek,gce-event-names = "rdma0_sof",
+ 					   "rsz0_sof";
+ 		mediatek,gce-events = <&gce CMDQ_EVENT_MDP_RDMA0_SOF>,
+-- 
+1.9.1
