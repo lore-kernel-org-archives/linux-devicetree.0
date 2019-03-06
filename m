@@ -1,65 +1,32 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v6 0/4] input: touchscreen: Add goodix GT5553 CTP support
-Date: Wed, 6 Mar 2019 22:47:26 +0530
-Message-ID: <CAMty3ZB3o1Np7_H7rmCgpUWPk7BRqHRm7gxRpgAq_YyeCUKgaw@mail.gmail.com>
-References: <20190219101629.15977-1-jagan@amarulasolutions.com> <CAMty3ZDpy5YX3V+6e=UtY=a9Lgiw-NEP1JPQn4_LKL3mYFtrvQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 0/3] Qualcomm QCS404 Turing Clock Controller
+Date: Wed,  6 Mar 2019 09:47:55 -0800
+Message-ID: <20190306174758.22462-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMty3ZDpy5YX3V+6e=UtY=a9Lgiw-NEP1JPQn4_LKL3mYFtrvQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Rob Herring <robh+dt@kernel.org>
-Cc: Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
+The turing clock controller provides clocks necessary to run the compute
+subsystem in QCS404.
 
-On Tue, Feb 26, 2019 at 11:43 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> Hi Dmitry,
->
-> On Tue, Feb 19, 2019 at 3:46 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> >
-> > This is v6 patchset for supporting goodix GT5553 CTP. Here is the
-> > previous version[1]
-> >
-> > Changes for v5:
-> > - document bindings for required regulators, which are need during
-> >   power-on sequence
-> > - enable, disable required regulators as described in power-on sequence
-> >   using normal regulator calls
-> > - update the proper commi messages
-> > Changes for v4:
-> > - document AVDD22, DVDD12, VDDIO as optional properties
-> > - use regulator bulk calls, for get, enable and disable functionalities
-> > Changes for v4:
-> > - devm_add_action_or_reset for disabling regulator
-> > Changes for v3:
-> > - add cover-letter
-> > - s/ADVV28/AVDD28 on commit head
-> > - fix few typo
-> > Changes for v2:
-> > - Rename vcc-supply with AVDD28-supply
-> > - disable regulator in remove
-> > - fix to setup regulator in probe code
-> > - add chipdata
-> > - drop example node in dt-bindings
-> >
-> > [1] https://patchwork.kernel.org/cover/10816901/
-> >
-> > Jagan Teki (4):
-> >   dt-bindings: input: touchscreen: goodix: Document regulator properties
-> >   Input: goodix - Add regulators suppot
-> >   dt-bindings: input: touchscreen: goodix: Add GT5663 compatible
-> >   Input: goodix - Add GT5663 CTP support
-> >
-> >  .../bindings/input/touchscreen/goodix.txt     |  3 +
-> >  drivers/input/touchscreen/goodix.c            | 60 +++++++++++++++++++
-> >  2 files changed, 63 insertions(+)
->
-> Let me know if you have any further comments on regulator patch, fyi
-> Rob reviewed it already.
+Bjorn Andersson (3):
+  dt-bindings: clock: Introduce Qualcomm Turing Clock controller
+  clk: qcom: branch: Add AON clock ops
+  clk: qcom: Add QCS404 TuringCC
 
-Would you comment on this? few dts changes are pending for this to support.
+ .../bindings/clock/qcom,turingcc.txt          |  19 ++
+ drivers/clk/qcom/Kconfig                      |   6 +
+ drivers/clk/qcom/Makefile                     |   1 +
+ drivers/clk/qcom/clk-branch.c                 |   6 +
+ drivers/clk/qcom/clk-branch.h                 |   1 +
+ drivers/clk/qcom/turingcc-qcs404.c            | 170 ++++++++++++++++++
+ .../dt-bindings/clock/qcom,turingcc-qcs404.h  |  15 ++
+ 7 files changed, 218 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,turingcc.txt
+ create mode 100644 drivers/clk/qcom/turingcc-qcs404.c
+ create mode 100644 include/dt-bindings/clock/qcom,turingcc-qcs404.h
 
-Jagan.
+-- 
+2.18.0
