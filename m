@@ -1,99 +1,39 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [RESEND PATCH v2] of: fix kmemleak crash caused by imbalance in
- early memory reservation
-Date: Wed, 6 Mar 2019 08:18:13 -0800
-Message-ID: <48ccaa25-725d-e72c-391a-5a078e1c7f77@roeck-us.net>
-References: <3c886941-bf9d-f040-b568-ee7a8eba9a04@free.fr>
- <CGME20190123055509epcas3p18a6d66fa08412f2308cb2c1997328ea8@epcas3p1.samsung.com>
- <20190123055414.GA4747@rapoport-lnx>
- <78f4ea8a-996d-038e-9e33-5ff02fa2c43f@samsung.com>
- <20190123123143.GE4747@rapoport-lnx>
- <4b8f82c4-7f8f-b814-c1ec-9902e43963f6@free.fr>
- <617e0d57-342d-4162-bd21-ece18e481d87@free.fr>
- <CAL_JsqKbCg-rGmLoA3mPv54=LMuQBfevfzL8f2QPVyjN-sNk8w@mail.gmail.com>
- <20190213085028.6199594b@canb.auug.org.au>
- <CAL_JsqK-cC6oVZ9MkP+ExOGjCRhA0XxGSgqGKL3W9bFF3rKAgA@mail.gmail.com>
- <20190306021248.GA17298@roeck-us.net>
- <CAL_JsqKhhZuPi8vWXZLTip_=kLVvknvQxzVXMaKD3BB0YHOA7A@mail.gmail.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v2 1/2] dt-bindings: Add vendor prefix for oceanic
+Date: Wed,  6 Mar 2019 22:31:09 +0530
+Message-ID: <20190306170110.27342-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKhhZuPi8vWXZLTip_=kLVvknvQxzVXMaKD3BB0YHOA7A@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Frank Rowand <frowand.list@gmail.com>, Mike Rapoport <rppt@linux.ibm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Prateek Patel <prpatel@nvidia.com>, DT <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Ryan Pannell <ryan@osukl.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On 3/6/19 5:39 AM, Rob Herring wrote:
-> On Tue, Mar 5, 2019 at 8:12 PM Guenter Roeck <linux@roeck-us.net> wrote:
->>
->> On Tue, Feb 12, 2019 at 04:12:24PM -0600, Rob Herring wrote:
->>> On Tue, Feb 12, 2019 at 3:50 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->>>>
->>>> Hi all,
->>>>
->>>> On Tue, 12 Feb 2019 10:03:09 -0600 Rob Herring <robh+dt@kernel.org> wrote:
->>>>>
->>>>> On Mon, Feb 11, 2019 at 10:47 AM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
->>>>>>
->>>>>> On 04/02/2019 15:37, Marc Gonzalez wrote:
->>>>>>
->>>>>>> Cc: stable@vger.kernel.org # 3.15+
->>>>>>> Fixes: 3f0c820664483 ("drivers: of: add initialization code for dynamic reserved memory")
->>>>>>> Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>>>>>> Acked-by: Prateek Patel <prpatel@nvidia.com>
->>>>>>> Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
->>>>>>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
->>>>>>> ---
->>>>>>> Resend with DT CCed to reach robh's patch queue
->>>>>>> I added CC: stable, Fixes, and Prateek's ack
->>>>>>> Trim recipients list to minimize inconvenience
->>>>>>
->>>>>> I'm confused over commit 3532b3b554a216f30edb841d29eef48521bdc592 in linux-next
->>>>>> "memblock: drop __memblock_alloc_base()"
->>>>>>
->>>>>> It's definitely going to conflict with the proposed patch
->>>>>> over drivers/of/of_reserved_mem.c
->>>>>>
->>>>>> Rob, what's the next step then?
->>>>>
->>>>> Rebase it on top of what's in linux-next and apply it to the tree
->>>>> which has the above dependency. I'm guessing that is Andrew Morton's
->>>>> tree.
->>>>
->>>> Yeah, that is in Andrew's "post linux-next" patch series, so if you
->>>> rebase it on top of linux-next and then send it to Andrew with some
->>>> explanation.
->>>>
->>>> ...
->>>>
->>>> Actually, if it is intended for the stable trees, then presumably it is
->>>> intended to go to Linus for the current release?  In which case, the
->>>> patch in Andrew's tree will have to be changed to cope after your patch
->>>> appears in Linus' tree (and therefore, linux-next).
->>>
->>> At this point in the cycle, I wasn't planning to send this for 5.0.
->>> It's not fixing something introduced in 5.0 and it is a debug feature.
->>>
->> Hi Rob,
->>
->> this may be a debug feature, but we do test our kernels with it enabled,
->> and the problem does affect our 4.19 branch (chromeos-4.19). Are you
->> suggesting that we should backport the fix into our branch and not send
->> the backport to -stable ?
-> 
-> No, not at all. Just that I wasn't going to add it to the probable
-> last 5.0-rc and would wait.
-> 
-> However, it's complicated by other memblock changes in 5.1 and not a
-> trivial backport. One of the versions on the list should be easier to
-> backport than what's in mainline (or going to be).
-> 
+Add oceanic vendor prefix.
 
-We went ahead and applied a backport of an older version of the patch series
-to chromeos-4.19. We'll see how well that works, but so far it looks like
-it fixes our problem.
+Oceanic Systems (UK) Ltd design and manufacture world-class marine
+systems for control and monitoring vessels.
 
-Guenter
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Changes for v2:
+- none
+
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index bb6f6e8a2eee..e32d460408dc 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -287,6 +287,7 @@ nuvoton	Nuvoton Technology Corporation
+ nvd	New Vision Display
+ nvidia	NVIDIA
+ nxp	NXP Semiconductors
++oceanic	Oceanic Systems (UK) Ltd.
+ okaya	Okaya Electric America, Inc.
+ oki	Oki Electric Industry Co., Ltd.
+ olimex	OLIMEX Ltd.
+-- 
+2.18.0.321.gffc6fa0e3
