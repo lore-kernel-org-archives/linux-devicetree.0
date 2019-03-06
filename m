@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 01/11] usb: mtu3: check return value of devm_extcon_register_notifier()
-Date: Wed, 6 Mar 2019 19:46:13 +0800
-Message-ID: <1551872783-13707-2-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH 03/11] usb: mtu3: remove unnecessary local variable @req
+Date: Wed, 6 Mar 2019 19:46:15 +0800
+Message-ID: <1551872783-13707-4-git-send-email-chunfeng.yun@mediatek.com>
 References: <1551872783-13707-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,85 +12,44 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@
 Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Check the return value of devm_extcon_register_notifier() and
-add error handling.
+The local variable @req is unnecessary in qmu_tx_zlp_error_handler,
+so remove it.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/mtu3/mtu3_dr.c   | 13 +++++++++----
- drivers/usb/mtu3/mtu3_plat.c |  8 +++++++-
- 2 files changed, 16 insertions(+), 5 deletions(-)
+ drivers/usb/mtu3/mtu3_qmu.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/mtu3/mtu3_dr.c b/drivers/usb/mtu3/mtu3_dr.c
-index ac60e9c8564e..61694c40e101 100644
---- a/drivers/usb/mtu3/mtu3_dr.c
-+++ b/drivers/usb/mtu3/mtu3_dr.c
-@@ -238,14 +238,18 @@ static int ssusb_extcon_register(struct otg_switch_mtk *otg_sx)
- 	otg_sx->vbus_nb.notifier_call = ssusb_vbus_notifier;
- 	ret = devm_extcon_register_notifier(ssusb->dev, edev, EXTCON_USB,
- 					&otg_sx->vbus_nb);
--	if (ret < 0)
-+	if (ret < 0) {
- 		dev_err(ssusb->dev, "failed to register notifier for USB\n");
-+		return ret;
-+	}
+diff --git a/drivers/usb/mtu3/mtu3_qmu.c b/drivers/usb/mtu3/mtu3_qmu.c
+index 09f19f70fe8f..f4b5431264c1 100644
+--- a/drivers/usb/mtu3/mtu3_qmu.c
++++ b/drivers/usb/mtu3/mtu3_qmu.c
+@@ -382,16 +382,13 @@ static void qmu_tx_zlp_error_handler(struct mtu3 *mtu, u8 epnum)
+ 	struct mtu3_gpd_ring *ring = &mep->gpd_ring;
+ 	void __iomem *mbase = mtu->mac_base;
+ 	struct qmu_gpd *gpd_current = NULL;
+-	struct usb_request *req = NULL;
+ 	struct mtu3_request *mreq;
+ 	dma_addr_t cur_gpd_dma;
+ 	u32 txcsr = 0;
+ 	int ret;
  
- 	otg_sx->id_nb.notifier_call = ssusb_id_notifier;
- 	ret = devm_extcon_register_notifier(ssusb->dev, edev, EXTCON_USB_HOST,
- 					&otg_sx->id_nb);
--	if (ret < 0)
-+	if (ret < 0) {
- 		dev_err(ssusb->dev, "failed to register notifier for USB-HOST\n");
-+		return ret;
-+	}
+ 	mreq = next_request(mep);
+-	if (mreq && mreq->request.length == 0)
+-		req = &mreq->request;
+-	else
++	if (mreq && mreq->request.length != 0)
+ 		return;
  
- 	dev_dbg(ssusb->dev, "EXTCON_USB: %d, EXTCON_USB_HOST: %d\n",
- 		extcon_get_state(edev, EXTCON_USB),
-@@ -415,6 +419,7 @@ void ssusb_set_force_mode(struct ssusb_mtk *ssusb,
- int ssusb_otg_switch_init(struct ssusb_mtk *ssusb)
- {
- 	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
-+	int ret = 0;
+ 	cur_gpd_dma = read_txq_cur_addr(mbase, epnum);
+@@ -402,7 +399,7 @@ static void qmu_tx_zlp_error_handler(struct mtu3 *mtu, u8 epnum)
+ 		return;
+ 	}
  
- 	INIT_WORK(&otg_sx->id_work, ssusb_id_work);
- 	INIT_WORK(&otg_sx->vbus_work, ssusb_vbus_work);
-@@ -422,9 +427,9 @@ int ssusb_otg_switch_init(struct ssusb_mtk *ssusb)
- 	if (otg_sx->manual_drd_enabled)
- 		ssusb_debugfs_init(ssusb);
- 	else
--		ssusb_extcon_register(otg_sx);
-+		ret = ssusb_extcon_register(otg_sx);
+-	dev_dbg(mtu->dev, "%s send ZLP for req=%p\n", __func__, req);
++	dev_dbg(mtu->dev, "%s send ZLP for req=%p\n", __func__, mreq);
  
--	return 0;
-+	return ret;
- }
+ 	mtu3_clrbits(mbase, MU3D_EP_TXCR0(mep->epnum), TX_DMAREQEN);
  
- void ssusb_otg_switch_exit(struct ssusb_mtk *ssusb)
-diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
-index e086630e41a9..dee31d5eefe1 100644
---- a/drivers/usb/mtu3/mtu3_plat.c
-+++ b/drivers/usb/mtu3/mtu3_plat.c
-@@ -401,7 +401,11 @@ static int mtu3_probe(struct platform_device *pdev)
- 			goto gadget_exit;
- 		}
- 
--		ssusb_otg_switch_init(ssusb);
-+		ret = ssusb_otg_switch_init(ssusb);
-+		if (ret) {
-+			dev_err(dev, "failed to initialize switch\n");
-+			goto host_exit;
-+		}
- 		break;
- 	default:
- 		dev_err(dev, "unsupported mode: %d\n", ssusb->dr_mode);
-@@ -411,6 +415,8 @@ static int mtu3_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
-+host_exit:
-+	ssusb_host_exit(ssusb);
- gadget_exit:
- 	ssusb_gadget_exit(ssusb);
- comm_exit:
 -- 
 2.20.1
