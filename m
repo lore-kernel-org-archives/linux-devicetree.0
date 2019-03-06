@@ -1,7 +1,7 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH 4/8] ARM: dts: qcom: pma8084: add gpio-ranges
-Date: Tue,  5 Mar 2019 19:53:12 -0500
-Message-ID: <20190306005316.12232-5-masneyb@onstation.org>
+Subject: [PATCH 1/8] ARM: dts: qcom: apq8064: add gpio-ranges
+Date: Tue,  5 Mar 2019 19:53:09 -0500
+Message-ID: <20190306005316.12232-2-masneyb@onstation.org>
 References: <20190306005316.12232-1-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -21,20 +21,20 @@ change was tested on qcom-pm8941 using a LG Nexus 5 (hammerhead) phone.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
- arch/arm/boot/dts/qcom-pma8084.dtsi | 1 +
+ arch/arm/boot/dts/qcom-apq8064.dtsi | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/qcom-pma8084.dtsi b/arch/arm/boot/dts/qcom-pma8084.dtsi
-index 8f5ea7add20f..ea1ca166165c 100644
---- a/arch/arm/boot/dts/qcom-pma8084.dtsi
-+++ b/arch/arm/boot/dts/qcom-pma8084.dtsi
-@@ -31,6 +31,7 @@
- 			compatible = "qcom,pma8084-gpio", "qcom,spmi-gpio";
- 			reg = <0xc000>;
- 			gpio-controller;
-+			gpio-ranges = <&pma8084_gpios 0 0 22>;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index bd6907db615b..8ca89c79bd0e 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -714,6 +714,7 @@
+ 					interrupt-controller;
+ 					#interrupt-cells = <2>;
+ 					gpio-controller;
++					gpio-ranges = <&pm8921_gpio 0 0 44>;
+ 					#gpio-cells = <2>;
+ 
+ 				};
 -- 
 2.20.1
