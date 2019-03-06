@@ -1,7 +1,7 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH 3/8] ARM: dts: qcom: msm8660: add gpio-ranges
-Date: Tue,  5 Mar 2019 19:53:11 -0500
-Message-ID: <20190306005316.12232-4-masneyb@onstation.org>
+Subject: [PATCH 2/8] ARM: dts: qcom: mdm9615: add gpio-ranges
+Date: Tue,  5 Mar 2019 19:53:10 -0500
+Message-ID: <20190306005316.12232-3-masneyb@onstation.org>
 References: <20190306005316.12232-1-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -21,20 +21,20 @@ change was tested on qcom-pm8941 using a LG Nexus 5 (hammerhead) phone.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
- arch/arm/boot/dts/qcom-msm8660.dtsi | 1 +
+ arch/arm/boot/dts/qcom-mdm9615.dtsi | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/qcom-msm8660.dtsi b/arch/arm/boot/dts/qcom-msm8660.dtsi
-index 65a994f0e09b..ec5cbc468bd3 100644
---- a/arch/arm/boot/dts/qcom-msm8660.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8660.dtsi
-@@ -295,6 +295,7 @@
+diff --git a/arch/arm/boot/dts/qcom-mdm9615.dtsi b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+index 02afc6a42005..356e9535f7a6 100644
+--- a/arch/arm/boot/dts/qcom-mdm9615.dtsi
++++ b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+@@ -326,6 +326,7 @@
  					interrupt-controller;
  					#interrupt-cells = <2>;
  					gpio-controller;
-+					gpio-ranges = <&pm8058_gpio 0 0 44>;
++					gpio-ranges = <&pmicgpio 0 0 6>;
  					#gpio-cells = <2>;
- 
  				};
+ 			};
 -- 
 2.20.1
