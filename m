@@ -1,41 +1,42 @@
 From: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Subject: [PATCH v2 4/4] arm64: dts: rockchip: Decrease emmc-phy's drive impedance on rk3399-puma
-Date: Thu,  7 Mar 2019 09:41:56 +0100
-Message-ID: <20190307084159.25236-4-christoph.muellner@theobroma-systems.com>
-References: <20190307084159.25236-1-christoph.muellner@theobroma-systems.com>
+Subject: [PATCH v2 1/3] mmc: sdhci-of-arasan: Add DTS property to disable DCMDs.
+Date: Thu,  7 Mar 2019 09:43:26 +0100
+Message-ID: <20190307084329.25416-1-christoph.muellner@theobroma-systems.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190307084159.25236-1-christoph.muellner@theobroma-systems.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, shawn.lin@rock-chips.com
-Cc: Christoph Muellner <christoph.muellner@theobroma-systems.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Kishon Vijay Abraham I <kishon@ti.com>, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <mbrugger@suse.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Vicente Bergas <vicencb@gmail.com>, Ezequiel Garcia <ezequiel@collabora.com>, Lin Huang <hl@rock-chips.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.o
+To: robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, shawn.lin@rock-chips.com, ulf.hansson@linaro.org, adrian.hunter@intel.com
+Cc: Christoph Muellner <christoph.muellner@theobroma-systems.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Michal Simek <michal.simek@xilinx.com>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Viresh Kumar <viresh.kumar@linaro.org>, Emil Renner Berthing <kernel@esmil.dk>, Lin Huang <hl@rock-chips.com>, Tony Xie <tony.xie@rock-chips.com>, Randy Li <ayaka@soulik.info>, Vicente Bergas <vicencb@gmail.com>, Ezequiel Garcia <ezequiel@collabora.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The RK3399-Q7 (Puma) requires 33 Ohm drive strength to ensure signal
-integrity at HS-400 (200MHz clock, DDR signalling).
+Direct commands (DCMDs) are an optional feature of eMMC 5.1's command
+queue engine (CQE). The Arasan eMMC 5.1 controller uses the CQHCI,
+which exposes a control register bit to enable the feature.
+The current implementation sets this bit unconditionally.
 
-A repeated EMC testing run validates that this increase does not
-negatively impact EMC compliance (emissions have ample distance to
-the regulatory limits).
+This patch allows to suppress the feature activation,
+by specifying the property disable-cqe-dcmd.
 
 Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
 Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-Tested-by: Jakob Unterwurzacher <jakob.unterwurzacher@theobroma-systems.com>
-Tested-by: Klaus Goger <klaus.goger@theobroma-systems.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mmc/host/sdhci-of-arasan.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-index 0130b9f98c9d..4f75bb6b2f14 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-@@ -146,6 +146,7 @@
+diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+index c9e3e050ccc8..88dc3f00a5be 100644
+--- a/drivers/mmc/host/sdhci-of-arasan.c
++++ b/drivers/mmc/host/sdhci-of-arasan.c
+@@ -832,7 +832,10 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+ 		host->mmc_host_ops.start_signal_voltage_switch =
+ 					sdhci_arasan_voltage_switch;
+ 		sdhci_arasan->has_cqe = true;
+-		host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
++		host->mmc->caps2 |= MMC_CAP2_CQE;
++
++		if (!of_property_read_bool(np, "disable-cqe-dcmd"))
++			host->mmc->caps2 |= MMC_CAP2_CQE_DCMD;
+ 	}
  
- &emmc_phy {
- 	status = "okay";
-+	drive-impedance-ohm = <33>;
- };
- 
- &gmac {
+ 	ret = sdhci_arasan_add_host(sdhci_arasan);
 -- 
 2.11.0
