@@ -1,53 +1,48 @@
-From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH] i2c: i2c-stm32f7: improve loopback in timing algorithm
-Date: Thu, 7 Mar 2019 11:22:25 +0100
-Message-ID: <04076973-8512-e4bc-21d9-28f04006c7f6@st.com>
-References: <1551885142-22365-1-git-send-email-bich.hemon@st.com>
+From: Patrick Havelange <patrick.havelange@essensium.com>
+Subject: [PATCH v6 1/4] dt-bindings: iio/temperature: Add thermocouple types
+Date: Thu,  7 Mar 2019 11:34:06 +0100
+Message-ID: <20190307103409.24174-1-patrick.havelange@essensium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551885142-22365-1-git-send-email-bich.hemon@st.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bich HEMON <bich.hemon@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matt Weber <matthew.weber@rockwellcollins.com>, Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Patrick Havelange <patrick.havelange@essensium.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+This patch introduces common thermocouple types used by various
+temperature sensors.
 
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
+---
+Changes v6
+ - Add this file
+---
+ .../dt-bindings/iio/temperature/thermocouple.h   | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 include/dt-bindings/iio/temperature/thermocouple.h
 
-Thanks
-
-On 3/6/19 4:12 PM, Bich HEMON wrote:
-> From: Nicolas Le Bayon <nicolas.le.bayon@st.com>
-> 
-> This avoids useless loops inside the I2C timing algorithm.
-> Actually, we support only one possible solution per prescaler value.
-> So after finding a solution with a prescaler, the algorithm can
-> switch directly to the next prescaler value.
-> 
-> Signed-off-by: Nicolas Le Bayon <nicolas.le.bayon@st.com>
-> Signed-off-by: Bich Hemon <bich.hemon@st.com>
-> ---
->  drivers/i2c/busses/i2c-stm32f7.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-> index 4284fc9..48337be 100644
-> --- a/drivers/i2c/busses/i2c-stm32f7.c
-> +++ b/drivers/i2c/busses/i2c-stm32f7.c
-> @@ -476,8 +476,12 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
->  
->  					list_add_tail(&v->node,
->  						      &solutions);
-> +					break;
->  				}
->  			}
-> +
-> +			if (p_prev == p)
-> +				break;
->  		}
->  	}
->  
-> 
+diff --git a/include/dt-bindings/iio/temperature/thermocouple.h b/include/dt-bindings/iio/temperature/thermocouple.h
+new file mode 100644
+index 000000000000..ce037f5238ac
+--- /dev/null
++++ b/include/dt-bindings/iio/temperature/thermocouple.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef _DT_BINDINGS_TEMPERATURE_THERMOCOUPLE_H
++#define _DT_BINDINGS_TEMPERATURE_THERMOCOUPLE_H
++
++
++#define THERMOCOUPLE_TYPE_B	0x00
++#define THERMOCOUPLE_TYPE_E	0x01
++#define THERMOCOUPLE_TYPE_J	0x02
++#define THERMOCOUPLE_TYPE_K	0x03
++#define THERMOCOUPLE_TYPE_N	0x04
++#define THERMOCOUPLE_TYPE_R	0x05
++#define THERMOCOUPLE_TYPE_S	0x06
++#define THERMOCOUPLE_TYPE_T	0x07
++
++#endif /* _DT_BINDINGS_TEMPERATURE_THERMOCOUPLE_H */
+-- 
+2.19.1
