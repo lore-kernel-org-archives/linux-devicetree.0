@@ -1,116 +1,196 @@
-From: Liang Yang <liang.yang@amlogic.com>
-Subject: Re: [RFC PATCH nand-next 0/2] meson-nand: support for older SoCs
-Date: Thu, 7 Mar 2019 21:36:36 +0800
-Message-ID: <c507cbf2-5b68-7ac1-dd5d-75df2fe8407c@amlogic.com>
-References: <20190301182922.8309-1-martin.blumenstingl@googlemail.com>
- <98776767-c4d7-1207-6d42-97105f289bec@amlogic.com>
- <CAFBinCC7P40sqrDGTuM8M=jVOFTgZLDUK6rGdNpigFoepyCASw@mail.gmail.com>
- <20190307140959.10092d45@xps13>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v5 4/8] dt-bindings: devfreq: add Exynos5422 DMC device
+ description
+Date: Thu, 07 Mar 2019 14:40:57 +0100
+Message-ID: <921009e2-ab0b-b024-4400-b60e96eab81b@samsung.com>
+References: <1551781151-5562-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190305101926eucas1p2eee36b9cb50cbcf511fab7bae59e24bb@eucas1p2.samsung.com>
+        <1551781151-5562-5-git-send-email-l.luba@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190307140959.10092d45@xps13>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jianxin.pan@amlogic.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1551781151-5562-5-git-send-email-l.luba@partner.samsung.com>
+Content-language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lukasz Luba <l.luba@partner.samsung.com>, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, myungjoo.ham@samsung.com, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFydGluLAoKT24gMjAxOS8zLzcgMjE6MDksIE1pcXVlbCBSYXluYWwgd3JvdGU6Cj4gSGVs
-bG8sCj4gCj4gTWFydGluIEJsdW1lbnN0aW5nbCA8bWFydGluLmJsdW1lbnN0aW5nbEBnb29nbGVt
-YWlsLmNvbT4gd3JvdGUgb24gVHVlLAo+IDUgTWFyIDIwMTkgMjM6MTI6NTEgKzAxMDA6Cj4gCj4+
-IEhpIExpYW5nLAo+Pgo+PiBPbiBNb24sIE1hciA0LCAyMDE5IGF0IDU6NTUgQU0gTGlhbmcgWWFu
-ZyA8bGlhbmcueWFuZ0BhbWxvZ2ljLmNvbT4gd3JvdGU6Cj4+Pgo+Pj4gSGVsbG8gTWFydGluLAo+
-Pj4KPj4+IE9uIDIwMTkvMy8yIDI6MjksIE1hcnRpbiBCbHVtZW5zdGluZ2wgd3JvdGU6Cj4+Pj4g
-SGkgTGlhbmcsCj4+Pj4KPj4+PiBJIGFtIHRyeWluZyB0byBhZGQgc3VwcG9ydCBmb3Igb2xkZXIg
-U29DcyB0byB0aGUgbWVzb24tbmFuZCBkcml2ZXIuCj4+Pj4gQmFjayB3aGVuIHRoZSBkcml2ZXIg
-d2FzIGluIGRldmVsb3BtZW50IEkgdXNlZCBhbiBlYXJseSByZXZpc2lvbiAob2YKPj4+PiB5b3Vy
-IGRyaXZlcikgYW5kIGRpZCBzb21lIG1vZGlmaWNhdGlvbnMgdG8gbWFrZSBpdCB3b3JrIG9uIG9s
-ZGVyIFNvQ3MuCj4+Pj4KPj4+PiBOb3cgdGhhdCB0aGUgZHJpdmVyIGlzIHVwc3RyZWFtIEkgd2Fu
-dGVkIHRvIGdpdmUgaXQgYW5vdGhlciB0cnkgYW5kCj4+Pj4gbWFrZSBhIHJlYWwgcGF0Y2ggb3V0
-IG9mIGl0LiBVbmZvcnR1bmF0ZWx5IGl0J3Mgbm90IHdvcmtpbmcgYW55bW9yZS4KPj4+Pgo+Pj4+
-IEFzIGZhciBhcyBJIGtub3cgdGhlIE5GQyBJUCBibG9jayByZXZpc2lvbiBvbiBHWEwgaXMgc2lt
-aWxhciAob3IgZXZlbgo+Pj4+IHRoZSBzYW1lPykgYXMgb24gYWxsIG9sZGVyIFNvQ3MuIEFzIGZh
-ciBhcyBJIGNhbiB0ZWxsIG9ubHkgdGhlIGNsb2NrCj4+Pj4gc2V0dXAgaXMgZGlmZmVyZW50IG9u
-IHRoZSBvbGRlciBTb0NzICh3aGljaCBoYXZlIGEgZGVkaWNhdGVkIE5BTkQKPj4+PiBjbG9jayk6
-Cj4+Pj4gLSB3ZSBkb24ndCBuZWVkIHRoZSAiYW1sb2dpYyxtbWMtc3lzY29uIiBwcm9wZXJ0eSBv
-biB0aGUgb2xkZXIgU29Dcwo+Pj4+ICAgICBiZWNhdXNlIHdlIGRvbid0IG5lZWQgdG8gc2V0dXAg
-YW55IG11eGluZyAoY29tbW9uIGNsb2NrIGZyYW1ld29yawo+Pj4+ICAgICB3aWxsIGRvIGV2ZXJ5
-dGhpbmcgZm9yIHVzKQo+Pj4+IC0gInJ4IiBhbmQgInR4IiBjbG9ja3MgZG9uJ3QgZXhpc3QKPj4+
-PiAtIEkgY291bGQgbm90IGZpbmQgYW55IG90aGVyIGRpZmZlcmVuY2VzIGJldHdlZW4gTWVzb244
-LCBNZXNvbjhiLAo+Pj4+ICAgICBNZXNvbjhtMiwgR1hCQiBhbmQgR1hMCj4+Pj4gICAKPj4+IFRo
-YXQgaXMgcmlnaHQuIHRoZSBzZXJpYWxzIE5GQyBpcyBhbG1vc3QgdGhlIHNhbWUgZXhjZXB0Ogo+
-Pj4gMSkgVGhlIGNsb2NrIGNvbnRyb2wgYW5kIHNvdXJjZSB0aGF0IE04LXNlcmlhbHMgYXJlIG5v
-dCBzaGFyZSB3aXRoIEVNTUMuCj4+PiAyKSBUaGUgYmFzZSByZWdpc3RlciBhZGRyZXNzCj4+PiAz
-KSBETUEgZW5jcnlwdGlvbiBvcHRpb24gd2hpY2ggd2UgZG9uJ3QgY2FyZSBvbiBORkMgZHJpdmVy
-Lgo+PiBncmVhdCwgdGhhbmsgeW91IGZvciBjb25maXJtaW5nIHRoaXMhCj4+Cj4+Pj4gSW4gdGhp
-cyBzZXJpZXMgSSdtIHNlbmRpbmcgdHdvIHBhdGNoZXMgd2hpY2ggYWRkIHN1cHBvcnQgZm9yIHRo
-ZSBvbGRlcgo+Pj4+IFNvQ3MuCj4+Pj4KPj4+PiBVbmZvcnR1bmF0ZWx5IHRoZXNlIHBhdGNoZXMg
-YXJlIGN1cnJlbnRseSBub3Qgd29ya2luZyBmb3IgbWUgKGhlbmNlIHRoZQo+Pj4+ICJSRkMiIHBy
-ZWZpeCkuIEkgZ2V0IGEgKHN0cmFuZ2UpIGNyYXNoIHdoaWNoIGlzIHRyaWdnZXJlZCBieSB0aGUK
-Pj4+PiBremFsbG9jKCkgaW4gbWVzb25fbmZjX3JlYWRfYnVmKCkgLSBzZWUgYmVsb3cgZm9yIG1v
-cmUgZGV0YWlscy4KPj4+Pgo+Pj4+IENhbiB5b3UgcGxlYXNlIGhlbHAgbWUgb24gdGhpcyBvbmU/
-IEknZCBsaWtlIHRvIGtub3cgd2hldGhlcjoKPj4+PiAtIHRoZSBtZXNvbi1uYW5kIGRyaXZlciB3
-b3JrcyBmb3IgeW91IG9uIEdYTCBvciBBWEcgb24gbGludXgtbmV4dD8KPj4+PiAgICAgKEkgd2Fz
-IHJ1bm5pbmcgdGhlc2UgcGF0Y2hlcyBvbiB0b3Agb2YgbmV4dC0yMDE5MDMwMSBvbiBteSBNOFMK
-Pj4+PiAgICAgYm9hcmQgd2hpY2ggdXNlcyBhIDMyLWJpdCBNZXNvbjhtMiBTb0MuIEkgZG9uJ3Qg
-aGF2ZSBhbnkgYm9hcmQgdXNpbmcKPj4+PiAgICAgYSBHWEwgU29DIHdoaWNoIGFsc28gaGFzIE5B
-TkQpCj4+PiBZZXMsIGl0IHdvcmtzIG9uIEFYRyBwbGF0Zm9ybSB1c2luZyBhIE1YSUMgc2xjIG5h
-bmQgZmxhc2goTVgzMExGNEcpOyBidXQKPj4+IGkgYW4gbm90IHN1cmUgaXQgcnVucyB0aGUgc2Ft
-ZSBmbG93IHdpdGggeW91cnMuIGJlY2F1c2UgaSBzZWUgdGhlIHByaW50Cj4+PiAiQ291bmxkIG5v
-dCBmaW5kIGEgdmFsaWQgT05GSSBwYXJhbWV0ZXIgcGFnZSwgLi4uLiIgaW4geW91cnMuIGkgd2ls
-bCB0cnkKPj4+IHRvIHJlcHJvZHVjZSBpdCBvbiBBWEcoaSBkb24ndCBoYXZlIGEgTTggcGxhdGZv
-cm0gbm93KS4KPj4gSSdtIGxvb2tpbmcgZm9yd2FyZCB0byBoZWFyIGFib3V0IHRoZSB0ZXN0IHJl
-c3VsdHMgb24geW91ciBBWEcgYm9hcmRzCj4+IGZvciByZWZlcmVuY2U6IG15IGJvYXJkIGhhcyBh
-IFNLIEh5bml4IEgyN1VDRzhUMkIgKElEIGJ5dGVzOiAweGFkIDB4ZGUKPj4gMHg5NCAweGViIDB4
-NzQgMHg0NCwgMjBubSBNTEMpCj4+IEkgaGF2ZSBhbm90aGVyIGJvYXJkICh3aGVyZSBJIGhhdmVu
-J3QgdGVzdGVkIHRoZSBORkMgZHJpdmVyIHlldCkgd2l0aAo+PiBhIFNLIEh5bml4IEgyN1VDRzhU
-MkUgKElEIGJ5dGVzOiAweGFkIDB4ZGUgMHgxNCAweGE3IDB4NDIgMHg0YSwgMVlubQo+PiBNTEMp
-LiBpZiBpdCBoZWxwcyB3aXRoIHlvdXIgYW5hbHlzaXMgSSBjYW4gdGVzdCBvbiB0aGF0IGJvYXJk
-IGFzIHdlbGwKPiAKPiBMaWFuZywgeW91IGp1c3QgaGF2ZSB0byBmYWtlIHRoZSBvdXRwdXQgb2Yg
-dGhlIE9ORkkgcGFnZSBkZXRlY3Rpb24gYW5kCj4geW91IHdpbGwgcHJvYmFibHkgcnVuIGludG8g
-dGhpcyBlcnJvciB3aGljaCB3aWxsIHRoZW4gYmUgZWFzeSB0bwo+IHJlcHJvZHVjZS4KPgoKSSBo
-YXZlIHRlc3RlZCBpdCBvbiBBWEcgcGxhdGZvcm07IEkgZmluZCBNWDMwTEY0RyBhbHNvIGVudGVy
-IHRoaXMgZmxvdyAsIApidXQgaXQgZG9lc24ndCBjcmFzaC4gbG9nIGFzIGZvbGxvdzoKWyAgICAx
-LjAxODA1Nl0gQ291bGQgbm90IGZpbmQgYSB2YWxpZCBPTkZJIHBhcmFtZXRlciBwYWdlLCB0cnlp
-bmcgCmJpdC13aXNlIG1ham9yaXR5IHRvIHJlY292ZXIgaXQKWyAgICAxLjAyMTA1N10gT05GSSBw
-YXJhbWV0ZXIgcmVjb3ZlcnkgZmFpbGVkLCBhYm9ydGluZwpbICAgIDEuMDI1OTY2XSBuYW5kOiBk
-ZXZpY2UgZm91bmQsIE1hbnVmYWN0dXJlciBJRDogMHhjMiwgQ2hpcCBJRDogMHhkYwpbICAgIDEu
-MDMyMjM3XSBuYW5kOiBNYWNyb25peCBOQU5EIDUxMk1pQiAzLDNWIDgtYml0ClsgICAgMS4wMzY4
-ODldIG5hbmQ6IDUxMiBNaUIsIFNMQywgZXJhc2Ugc2l6ZTogMTI4IEtpQiwgcGFnZSBzaXplOiAy
-MDQ4LCAKT09CIHNpemU6IDY0ClsgICAgMS4wNDU3NDFdIEJhZCBibG9jayB0YWJsZSBub3QgZm91
-bmQgZm9yIGNoaXAgMApbICAgIDEuMDUwMDc3XSBCYWQgYmxvY2sgdGFibGUgbm90IGZvdW5kIGZv
-ciBjaGlwIDAKWyAgICAxLjA1MzUzOF0gU2Nhbm5pbmcgZGV2aWNlIGZvciBiYWQgYmxvY2tzClsg
-ICAgMS4wNjkwOTRdIEJhZCBlcmFzZWJsb2NrIDIwIGF0IDB4MDAwMDAwMjgwMDAwClsgICAgMS4w
-NzEwNzRdIEJhZCBlcmFzZWJsb2NrIDI0IGF0IDB4MDAwMDAwMzAwMDAwClsgICAgMS4xMjc0OTRd
-IHJhbmRvbTogZmFzdCBpbml0IGRvbmUKWyAgICAxLjM0ODc1NF0gQmFkIGVyYXNlYmxvY2sgNTE5
-IGF0IDB4MDAwMDA0MGUwMDAwClsgICAgMS42MzI4MTldIEJhZCBlcmFzZWJsb2NrIDEwMjggYXQg
-MHgwMDAwMDgwODAwMDAKWyAgICAyLjQwNTQyMF0gQmFkIGVyYXNlYmxvY2sgMjQxMSBhdCAweDAw
-MDAxMmQ2MDAwMApbICAgIDMuMzQ5Mjc2XSBCYWQgYmxvY2sgdGFibGUgd3JpdHRlbiB0byAweDAw
-MDAxZmZlMDAwMCwgdmVyc2lvbiAweDAxClsgICAgMy4zNTA5NjddIEJhZCBibG9jayB0YWJsZSB3
-cml0dGVuIHRvIDB4MDAwMDFmZmMwMDAwLCB2ZXJzaW9uIDB4MDEKWyAgICAzLjM1NjQyOV0gNSBm
-aXhlZC1wYXJ0aXRpb25zIHBhcnRpdGlvbnMgZm91bmQgb24gTVREIGRldmljZSAKZmZlMDc4MDAu
-bmZjClsgICAgMy4zNjI5MjVdIENyZWF0aW5nIDUgTVREIHBhcnRpdGlvbnMgb24gImZmZTA3ODAw
-Lm5mYyI6ClsgICAgMy4zNjgxODhdIDB4MDAwMDAwMDAwMDAwLTB4MDAwMDAwMjAwMDAwIDogImJv
-b3QiClsgICAgMy4zNzM5NzBdIDB4MDAwMDAwMjAwMDAwLTB4MDAwMDAwNjAwMDAwIDogImVudiIK
-WyAgICAzLjM3ODU2NF0gMHgwMDAwMDA2MDAwMDAtMHgwMDAwMDEwMDAwMDAgOiAic3lzdGVtIgpb
-ICAgIDMuMzgzNTExXSAweDAwMDAwMTAwMDAwMC0weDAwMDAwNDAwMDAwMCA6ICJyb290ZnMiClsg
-ICAgMy4zODg1MjVdIDB4MDAwMDA0MDAwMDAwLTB4MDAwMDBjMDAwMDAwIDogIm1lZGlhIgoKSSBh
-bSBsb29raW5nIGZvcndhcmQgdG8gYSBIeW5peCBuYW5kIGZsYXNoIHRvIHRlc3Qgb24gR1hMIHBs
-YXRmb3JtLCBhbmQgCnRoZXJlIHNob3VsZCBiZSBzb21ldGhpbmcgZGlmZmVyZW50IGZyb20gTVhJ
-QyBmbGFzaCBvbiBPTkZJIHBhZ2UgCmRldGVjdGlvbi4gSSB3aWxsIHVwZGF0ZSB0aGUgcmVzdWx0
-IGFzYXAgbmV0IHdlZWsuCkRvIHlvdSBoYXZlIGFub3RoZXIgdHlwZSBvZiBuYW5kIGZsYXNoIHRv
-IHRlc3Qgb24gTTggcGxhdGZvcm0gPwo+IAo+IFRoYW5rcywKPiBNaXF1w6hsCj4gCj4gLgo+IAoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
-LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
-cm5lbAo=
+(Adding DT maintainers at Cc)
+
+On 3/5/19 11:19, Lukasz Luba wrote:
+> The patch adds description for DT binding for a new Exynos5422 Dynamic
+> Memory Controller device.
+> 
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  .../devicetree/bindings/devfreq/exynos5422-dmc.txt | 177 +++++++++++++++++++++
+>  1 file changed, 177 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/exynos5422-dmc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/devfreq/exynos5422-dmc.txt b/Documentation/devicetree/bindings/devfreq/exynos5422-dmc.txt
+> new file mode 100644
+> index 0000000..0e73e98
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/devfreq/exynos5422-dmc.txt
+> @@ -0,0 +1,177 @@
+> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
+> +
+> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
+> +memory chips are connected. The driver is to monitor the controller in runtime
+> +and switch frequency and voltage. To monitor the usage of the controller in
+> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
+> +is able to measure the current load of the memory.
+> +When 'userspace' governor is used for the driver, an application is able to
+> +switch the DMC frequency.
+
+I would avoid talking about "driver" and would focus more on describing actual
+hardware here. 
+
+> +Required properties for DMC device for Exynos5422:
+> +- compatible: Should be "samsung,exynos5422-bus".
+> +- clock-names : the name of clock used by the bus, "bus".
+> +- clocks : phandles for clock specified in "clock-names" property.
+> +- devfreq-events : phandles for PPMU devices connected to this DMC.
+
+Couldn't this simply be arm,ppmus or samsung,ppmus? devfreq-events sounds like
+a Linux or software specific term rather than a hardware description.
+
+> +The example definition of a DMC and PPMU devices declared in DT is shown below:
+> +
+> +	ppmu_dmc0_0: ppmu@10d00000 {
+> +		compatible = "samsung,exynos-ppmu";
+> +		reg = <0x10d00000 0x2000>;
+> +		clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
+> +		clock-names = "ppmu";
+> +		status = "okay";
+> +		events {
+> +			ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
+> +				event-name = "ppmu-event3-dmc0_0";
+> +			};
+> +		};
+> +	};
+> +
+
+> +	dmc: memory-controller@10c20000 {
+> +		compatible = "samsung,exynos5422-dmc";
+> +		reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>,
+> +			<0x10000000 0x1000>;
+> +		clocks = 	<&clock CLK_FOUT_SPLL>,
+> +				<&clock CLK_MOUT_SCLK_SPLL>,
+> +				<&clock CLK_FF_DOUT_SPLL2>,
+> +				<&clock CLK_FOUT_BPLL>,
+> +				<&clock CLK_MOUT_BPLL>,
+> +				<&clock CLK_SCLK_BPLL>,
+> +				<&clock CLK_MOUT_MX_MSPLL_CCORE>,
+> +				<&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
+> +				<&clock CLK_MOUT_MCLK_CDREX>,
+> +				<&clock CLK_DOUT_CLK2X_PHY0>,
+> +				<&clock CLK_CLKM_PHY0>,
+> +				<&clock CLK_CLKM_PHY1>,
+> +				<&clock CLK_CDREX_PAUSE>,
+> +				<&clock CLK_CDREX_TIMING_SET>;
+> +		clock-names =	"fout_spll",
+> +				"mout_sclk_spll",
+> +				"ff_dout_spll2",
+> +				"fout_bpll",
+> +				"mout_bpll",
+> +				"sclk_bpll",
+> +				"mout_mx_mspll_ccore",
+> +				"mout_mx_mspll_ccore_phy",
+> +				"mout_mclk_cdrex",
+> +				"dout_clk2x_phy0",
+> +				"clkm_phy0",
+> +			        "clkm_phy1",
+> +			        "clk_cdrex_pause",
+> +			        "clk_cdrex_timing_set";
+> +		status = "okay";
+> +		operating-points-v2 = <&dmc_opp_table>;
+> +		devfreq-events = <&ppmu_dmc0_0>, <&ppmu_dmc0_1>,
+> +				<&ppmu_dmc1_0>, <&ppmu_dmc1_1>;
+> +	};
+> +
+> +The needed timings of DRAM memory are stored in dedicated nodes.
+> +There are two nodes with regular timings and for bypass mode.
+> +
+> +	dmc_bypass_mode: bypass_mode {
+> +		compatible = "samsung,dmc-bypass-mode";
+> +
+> +		freq-hz = <400000000>;
+> +		volt-uv = <887500>;
+> +		dram-timing-row = <0x365a9713>;
+> +		dram-timing-data = <0x4740085e>;
+> +		dram-timing-power = <0x543a0446>;
+> +	};
+
+Couldn't this "bypass" case be included on the list within the "timing node"
+(row/data/power values) and (freq-hz, volt-uv) as an OPP in dmc_opp_table
+or new table?
+
+> +	dram_timing: timing {
+> +		compatible = "samsung,dram-timing";
+> +
+> +		dram-timing-names = "165MHz", "206MHz", "275MHz", "413MHz",
+> +				    "543MHz", "633MHz", "728MHz", "825MHz";
+> +		dram-timing-row = <0x11223185>, <0x112331C6>, <0x12244287>,
+> +				  <0x1B35538A>, <0x244764CD>, <0x2A48758F>,
+> +				  <0x30598651>, <0x365A9713>;
+> +		dram-timing-data = <0x2720085E>, <0x2720085E>, <0x2720085E>,
+> +				   <0x2720085E>, <0x3730085E>, <0x3730085E>,
+> +				   <0x3730085E>, <0x4740085E>;
+> +		dram-timing-power = <0x140C0225>, <0x180F0225>, <0x1C140225>,
+> +				    <0x2C1D0225>, <0x38270335>, <0x402D0335>,
+> +				    <0x4C330336>, <0x543A0446>;
+> +	};
+
+We should have the meaning of each property described here and as these are
+vendor specific properties there should be vendor prefix in the names.
+
+However, I would rather see real DRAM timing parameters listed in DT and 
+the driver deriving those register values from such parameters. Until that's
+possible it might be better to keep this raw data in the driver and avoid 
+pushing it to DT.
+
+> +The frequencies supported by the DMC are stored in OPP table v2.
+> +
+> +	dmc_opp_table: opp_table2 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <165000000>;
+> +			opp-microvolt = <875000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <206000000>;
+> +			opp-microvolt = <875000>;
+> +		};
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <275000000>;
+> +			opp-microvolt = <875000>;
+> +		};
+> +		opp03 {
+> +			opp-hz = /bits/ 64 <413000000>;
+> +			opp-microvolt = <887500>;
+> +		};
+> +		opp04 {
+> +			opp-hz = /bits/ 64 <543000000>;
+> +			opp-microvolt = <937500>;
+> +		};
+> +		opp05 {
+> +			opp-hz = /bits/ 64 <633000000>;
+> +			opp-microvolt = <1012500>;
+> +		};
+> +		opp06 {
+> +			opp-hz = /bits/ 64 <728000000>;
+> +			opp-microvolt = <1037500>;
+> +		};
+> +		opp07 {
+> +			opp-hz = /bits/ 64 <825000000>;
+> +			opp-microvolt = <1050000>;
+> +		};
+> +	};
+
+--
+Regards, 
+Sylwester
