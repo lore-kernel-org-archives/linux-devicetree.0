@@ -1,85 +1,116 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Liang Yang <liang.yang@amlogic.com>
 Subject: Re: [RFC PATCH nand-next 0/2] meson-nand: support for older SoCs
-Date: Thu, 7 Mar 2019 14:09:59 +0100
-Message-ID: <20190307140959.10092d45@xps13>
+Date: Thu, 7 Mar 2019 21:36:36 +0800
+Message-ID: <c507cbf2-5b68-7ac1-dd5d-75df2fe8407c@amlogic.com>
 References: <20190301182922.8309-1-martin.blumenstingl@googlemail.com>
-        <98776767-c4d7-1207-6d42-97105f289bec@amlogic.com>
-        <CAFBinCC7P40sqrDGTuM8M=jVOFTgZLDUK6rGdNpigFoepyCASw@mail.gmail.com>
+ <98776767-c4d7-1207-6d42-97105f289bec@amlogic.com>
+ <CAFBinCC7P40sqrDGTuM8M=jVOFTgZLDUK6rGdNpigFoepyCASw@mail.gmail.com>
+ <20190307140959.10092d45@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCC7P40sqrDGTuM8M=jVOFTgZLDUK6rGdNpigFoepyCASw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Liang Yang <liang.yang@amlogic.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, jianxin.pan@amlogic.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190307140959.10092d45@xps13>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jianxin.pan@amlogic.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote on Tue,
-5 Mar 2019 23:12:51 +0100:
-
-> Hi Liang,
-> 
-> On Mon, Mar 4, 2019 at 5:55 AM Liang Yang <liang.yang@amlogic.com> wrote:
-> >
-> > Hello Martin,
-> >
-> > On 2019/3/2 2:29, Martin Blumenstingl wrote:  
-> > > Hi Liang,
-> > >
-> > > I am trying to add support for older SoCs to the meson-nand driver.
-> > > Back when the driver was in development I used an early revision (of
-> > > your driver) and did some modifications to make it work on older SoCs.
-> > >
-> > > Now that the driver is upstream I wanted to give it another try and
-> > > make a real patch out of it. Unfortunately it's not working anymore.
-> > >
-> > > As far as I know the NFC IP block revision on GXL is similar (or even
-> > > the same?) as on all older SoCs. As far as I can tell only the clock
-> > > setup is different on the older SoCs (which have a dedicated NAND
-> > > clock):
-> > > - we don't need the "amlogic,mmc-syscon" property on the older SoCs
-> > >    because we don't need to setup any muxing (common clock framework
-> > >    will do everything for us)
-> > > - "rx" and "tx" clocks don't exist
-> > > - I could not find any other differences between Meson8, Meson8b,
-> > >    Meson8m2, GXBB and GXL
-> > >  
-> > That is right. the serials NFC is almost the same except:
-> > 1) The clock control and source that M8-serials are not share with EMMC.
-> > 2) The base register address
-> > 3) DMA encryption option which we don't care on NFC driver.  
-> great, thank you for confirming this!
-> 
-> > > In this series I'm sending two patches which add support for the older
-> > > SoCs.
-> > >
-> > > Unfortunately these patches are currently not working for me (hence the
-> > > "RFC" prefix). I get a (strange) crash which is triggered by the
-> > > kzalloc() in meson_nfc_read_buf() - see below for more details.
-> > >
-> > > Can you please help me on this one? I'd like to know whether:
-> > > - the meson-nand driver works for you on GXL or AXG on linux-next?
-> > >    (I was running these patches on top of next-20190301 on my M8S
-> > >    board which uses a 32-bit Meson8m2 SoC. I don't have any board using
-> > >    a GXL SoC which also has NAND)  
-> > Yes, it works on AXG platform using a MXIC slc nand flash(MX30LF4G); but
-> > i an not sure it runs the same flow with yours. because i see the print
-> > "Counld not find a valid ONFI parameter page, ...." in yours. i will try
-> > to reproduce it on AXG(i don't have a M8 platform now).  
-> I'm looking forward to hear about the test results on your AXG boards
-> for reference: my board has a SK Hynix H27UCG8T2B (ID bytes: 0xad 0xde
-> 0x94 0xeb 0x74 0x44, 20nm MLC)
-> I have another board (where I haven't tested the NFC driver yet) with
-> a SK Hynix H27UCG8T2E (ID bytes: 0xad 0xde 0x14 0xa7 0x42 0x4a, 1Ynm
-> MLC). if it helps with your analysis I can test on that board as well
-
-Liang, you just have to fake the output of the ONFI page detection and
-you will probably run into this error which will then be easy to
-reproduce.
-
-
-Thanks,
-Miquèl
+SGkgTWFydGluLAoKT24gMjAxOS8zLzcgMjE6MDksIE1pcXVlbCBSYXluYWwgd3JvdGU6Cj4gSGVs
+bG8sCj4gCj4gTWFydGluIEJsdW1lbnN0aW5nbCA8bWFydGluLmJsdW1lbnN0aW5nbEBnb29nbGVt
+YWlsLmNvbT4gd3JvdGUgb24gVHVlLAo+IDUgTWFyIDIwMTkgMjM6MTI6NTEgKzAxMDA6Cj4gCj4+
+IEhpIExpYW5nLAo+Pgo+PiBPbiBNb24sIE1hciA0LCAyMDE5IGF0IDU6NTUgQU0gTGlhbmcgWWFu
+ZyA8bGlhbmcueWFuZ0BhbWxvZ2ljLmNvbT4gd3JvdGU6Cj4+Pgo+Pj4gSGVsbG8gTWFydGluLAo+
+Pj4KPj4+IE9uIDIwMTkvMy8yIDI6MjksIE1hcnRpbiBCbHVtZW5zdGluZ2wgd3JvdGU6Cj4+Pj4g
+SGkgTGlhbmcsCj4+Pj4KPj4+PiBJIGFtIHRyeWluZyB0byBhZGQgc3VwcG9ydCBmb3Igb2xkZXIg
+U29DcyB0byB0aGUgbWVzb24tbmFuZCBkcml2ZXIuCj4+Pj4gQmFjayB3aGVuIHRoZSBkcml2ZXIg
+d2FzIGluIGRldmVsb3BtZW50IEkgdXNlZCBhbiBlYXJseSByZXZpc2lvbiAob2YKPj4+PiB5b3Vy
+IGRyaXZlcikgYW5kIGRpZCBzb21lIG1vZGlmaWNhdGlvbnMgdG8gbWFrZSBpdCB3b3JrIG9uIG9s
+ZGVyIFNvQ3MuCj4+Pj4KPj4+PiBOb3cgdGhhdCB0aGUgZHJpdmVyIGlzIHVwc3RyZWFtIEkgd2Fu
+dGVkIHRvIGdpdmUgaXQgYW5vdGhlciB0cnkgYW5kCj4+Pj4gbWFrZSBhIHJlYWwgcGF0Y2ggb3V0
+IG9mIGl0LiBVbmZvcnR1bmF0ZWx5IGl0J3Mgbm90IHdvcmtpbmcgYW55bW9yZS4KPj4+Pgo+Pj4+
+IEFzIGZhciBhcyBJIGtub3cgdGhlIE5GQyBJUCBibG9jayByZXZpc2lvbiBvbiBHWEwgaXMgc2lt
+aWxhciAob3IgZXZlbgo+Pj4+IHRoZSBzYW1lPykgYXMgb24gYWxsIG9sZGVyIFNvQ3MuIEFzIGZh
+ciBhcyBJIGNhbiB0ZWxsIG9ubHkgdGhlIGNsb2NrCj4+Pj4gc2V0dXAgaXMgZGlmZmVyZW50IG9u
+IHRoZSBvbGRlciBTb0NzICh3aGljaCBoYXZlIGEgZGVkaWNhdGVkIE5BTkQKPj4+PiBjbG9jayk6
+Cj4+Pj4gLSB3ZSBkb24ndCBuZWVkIHRoZSAiYW1sb2dpYyxtbWMtc3lzY29uIiBwcm9wZXJ0eSBv
+biB0aGUgb2xkZXIgU29Dcwo+Pj4+ICAgICBiZWNhdXNlIHdlIGRvbid0IG5lZWQgdG8gc2V0dXAg
+YW55IG11eGluZyAoY29tbW9uIGNsb2NrIGZyYW1ld29yawo+Pj4+ICAgICB3aWxsIGRvIGV2ZXJ5
+dGhpbmcgZm9yIHVzKQo+Pj4+IC0gInJ4IiBhbmQgInR4IiBjbG9ja3MgZG9uJ3QgZXhpc3QKPj4+
+PiAtIEkgY291bGQgbm90IGZpbmQgYW55IG90aGVyIGRpZmZlcmVuY2VzIGJldHdlZW4gTWVzb244
+LCBNZXNvbjhiLAo+Pj4+ICAgICBNZXNvbjhtMiwgR1hCQiBhbmQgR1hMCj4+Pj4gICAKPj4+IFRo
+YXQgaXMgcmlnaHQuIHRoZSBzZXJpYWxzIE5GQyBpcyBhbG1vc3QgdGhlIHNhbWUgZXhjZXB0Ogo+
+Pj4gMSkgVGhlIGNsb2NrIGNvbnRyb2wgYW5kIHNvdXJjZSB0aGF0IE04LXNlcmlhbHMgYXJlIG5v
+dCBzaGFyZSB3aXRoIEVNTUMuCj4+PiAyKSBUaGUgYmFzZSByZWdpc3RlciBhZGRyZXNzCj4+PiAz
+KSBETUEgZW5jcnlwdGlvbiBvcHRpb24gd2hpY2ggd2UgZG9uJ3QgY2FyZSBvbiBORkMgZHJpdmVy
+Lgo+PiBncmVhdCwgdGhhbmsgeW91IGZvciBjb25maXJtaW5nIHRoaXMhCj4+Cj4+Pj4gSW4gdGhp
+cyBzZXJpZXMgSSdtIHNlbmRpbmcgdHdvIHBhdGNoZXMgd2hpY2ggYWRkIHN1cHBvcnQgZm9yIHRo
+ZSBvbGRlcgo+Pj4+IFNvQ3MuCj4+Pj4KPj4+PiBVbmZvcnR1bmF0ZWx5IHRoZXNlIHBhdGNoZXMg
+YXJlIGN1cnJlbnRseSBub3Qgd29ya2luZyBmb3IgbWUgKGhlbmNlIHRoZQo+Pj4+ICJSRkMiIHBy
+ZWZpeCkuIEkgZ2V0IGEgKHN0cmFuZ2UpIGNyYXNoIHdoaWNoIGlzIHRyaWdnZXJlZCBieSB0aGUK
+Pj4+PiBremFsbG9jKCkgaW4gbWVzb25fbmZjX3JlYWRfYnVmKCkgLSBzZWUgYmVsb3cgZm9yIG1v
+cmUgZGV0YWlscy4KPj4+Pgo+Pj4+IENhbiB5b3UgcGxlYXNlIGhlbHAgbWUgb24gdGhpcyBvbmU/
+IEknZCBsaWtlIHRvIGtub3cgd2hldGhlcjoKPj4+PiAtIHRoZSBtZXNvbi1uYW5kIGRyaXZlciB3
+b3JrcyBmb3IgeW91IG9uIEdYTCBvciBBWEcgb24gbGludXgtbmV4dD8KPj4+PiAgICAgKEkgd2Fz
+IHJ1bm5pbmcgdGhlc2UgcGF0Y2hlcyBvbiB0b3Agb2YgbmV4dC0yMDE5MDMwMSBvbiBteSBNOFMK
+Pj4+PiAgICAgYm9hcmQgd2hpY2ggdXNlcyBhIDMyLWJpdCBNZXNvbjhtMiBTb0MuIEkgZG9uJ3Qg
+aGF2ZSBhbnkgYm9hcmQgdXNpbmcKPj4+PiAgICAgYSBHWEwgU29DIHdoaWNoIGFsc28gaGFzIE5B
+TkQpCj4+PiBZZXMsIGl0IHdvcmtzIG9uIEFYRyBwbGF0Zm9ybSB1c2luZyBhIE1YSUMgc2xjIG5h
+bmQgZmxhc2goTVgzMExGNEcpOyBidXQKPj4+IGkgYW4gbm90IHN1cmUgaXQgcnVucyB0aGUgc2Ft
+ZSBmbG93IHdpdGggeW91cnMuIGJlY2F1c2UgaSBzZWUgdGhlIHByaW50Cj4+PiAiQ291bmxkIG5v
+dCBmaW5kIGEgdmFsaWQgT05GSSBwYXJhbWV0ZXIgcGFnZSwgLi4uLiIgaW4geW91cnMuIGkgd2ls
+bCB0cnkKPj4+IHRvIHJlcHJvZHVjZSBpdCBvbiBBWEcoaSBkb24ndCBoYXZlIGEgTTggcGxhdGZv
+cm0gbm93KS4KPj4gSSdtIGxvb2tpbmcgZm9yd2FyZCB0byBoZWFyIGFib3V0IHRoZSB0ZXN0IHJl
+c3VsdHMgb24geW91ciBBWEcgYm9hcmRzCj4+IGZvciByZWZlcmVuY2U6IG15IGJvYXJkIGhhcyBh
+IFNLIEh5bml4IEgyN1VDRzhUMkIgKElEIGJ5dGVzOiAweGFkIDB4ZGUKPj4gMHg5NCAweGViIDB4
+NzQgMHg0NCwgMjBubSBNTEMpCj4+IEkgaGF2ZSBhbm90aGVyIGJvYXJkICh3aGVyZSBJIGhhdmVu
+J3QgdGVzdGVkIHRoZSBORkMgZHJpdmVyIHlldCkgd2l0aAo+PiBhIFNLIEh5bml4IEgyN1VDRzhU
+MkUgKElEIGJ5dGVzOiAweGFkIDB4ZGUgMHgxNCAweGE3IDB4NDIgMHg0YSwgMVlubQo+PiBNTEMp
+LiBpZiBpdCBoZWxwcyB3aXRoIHlvdXIgYW5hbHlzaXMgSSBjYW4gdGVzdCBvbiB0aGF0IGJvYXJk
+IGFzIHdlbGwKPiAKPiBMaWFuZywgeW91IGp1c3QgaGF2ZSB0byBmYWtlIHRoZSBvdXRwdXQgb2Yg
+dGhlIE9ORkkgcGFnZSBkZXRlY3Rpb24gYW5kCj4geW91IHdpbGwgcHJvYmFibHkgcnVuIGludG8g
+dGhpcyBlcnJvciB3aGljaCB3aWxsIHRoZW4gYmUgZWFzeSB0bwo+IHJlcHJvZHVjZS4KPgoKSSBo
+YXZlIHRlc3RlZCBpdCBvbiBBWEcgcGxhdGZvcm07IEkgZmluZCBNWDMwTEY0RyBhbHNvIGVudGVy
+IHRoaXMgZmxvdyAsIApidXQgaXQgZG9lc24ndCBjcmFzaC4gbG9nIGFzIGZvbGxvdzoKWyAgICAx
+LjAxODA1Nl0gQ291bGQgbm90IGZpbmQgYSB2YWxpZCBPTkZJIHBhcmFtZXRlciBwYWdlLCB0cnlp
+bmcgCmJpdC13aXNlIG1ham9yaXR5IHRvIHJlY292ZXIgaXQKWyAgICAxLjAyMTA1N10gT05GSSBw
+YXJhbWV0ZXIgcmVjb3ZlcnkgZmFpbGVkLCBhYm9ydGluZwpbICAgIDEuMDI1OTY2XSBuYW5kOiBk
+ZXZpY2UgZm91bmQsIE1hbnVmYWN0dXJlciBJRDogMHhjMiwgQ2hpcCBJRDogMHhkYwpbICAgIDEu
+MDMyMjM3XSBuYW5kOiBNYWNyb25peCBOQU5EIDUxMk1pQiAzLDNWIDgtYml0ClsgICAgMS4wMzY4
+ODldIG5hbmQ6IDUxMiBNaUIsIFNMQywgZXJhc2Ugc2l6ZTogMTI4IEtpQiwgcGFnZSBzaXplOiAy
+MDQ4LCAKT09CIHNpemU6IDY0ClsgICAgMS4wNDU3NDFdIEJhZCBibG9jayB0YWJsZSBub3QgZm91
+bmQgZm9yIGNoaXAgMApbICAgIDEuMDUwMDc3XSBCYWQgYmxvY2sgdGFibGUgbm90IGZvdW5kIGZv
+ciBjaGlwIDAKWyAgICAxLjA1MzUzOF0gU2Nhbm5pbmcgZGV2aWNlIGZvciBiYWQgYmxvY2tzClsg
+ICAgMS4wNjkwOTRdIEJhZCBlcmFzZWJsb2NrIDIwIGF0IDB4MDAwMDAwMjgwMDAwClsgICAgMS4w
+NzEwNzRdIEJhZCBlcmFzZWJsb2NrIDI0IGF0IDB4MDAwMDAwMzAwMDAwClsgICAgMS4xMjc0OTRd
+IHJhbmRvbTogZmFzdCBpbml0IGRvbmUKWyAgICAxLjM0ODc1NF0gQmFkIGVyYXNlYmxvY2sgNTE5
+IGF0IDB4MDAwMDA0MGUwMDAwClsgICAgMS42MzI4MTldIEJhZCBlcmFzZWJsb2NrIDEwMjggYXQg
+MHgwMDAwMDgwODAwMDAKWyAgICAyLjQwNTQyMF0gQmFkIGVyYXNlYmxvY2sgMjQxMSBhdCAweDAw
+MDAxMmQ2MDAwMApbICAgIDMuMzQ5Mjc2XSBCYWQgYmxvY2sgdGFibGUgd3JpdHRlbiB0byAweDAw
+MDAxZmZlMDAwMCwgdmVyc2lvbiAweDAxClsgICAgMy4zNTA5NjddIEJhZCBibG9jayB0YWJsZSB3
+cml0dGVuIHRvIDB4MDAwMDFmZmMwMDAwLCB2ZXJzaW9uIDB4MDEKWyAgICAzLjM1NjQyOV0gNSBm
+aXhlZC1wYXJ0aXRpb25zIHBhcnRpdGlvbnMgZm91bmQgb24gTVREIGRldmljZSAKZmZlMDc4MDAu
+bmZjClsgICAgMy4zNjI5MjVdIENyZWF0aW5nIDUgTVREIHBhcnRpdGlvbnMgb24gImZmZTA3ODAw
+Lm5mYyI6ClsgICAgMy4zNjgxODhdIDB4MDAwMDAwMDAwMDAwLTB4MDAwMDAwMjAwMDAwIDogImJv
+b3QiClsgICAgMy4zNzM5NzBdIDB4MDAwMDAwMjAwMDAwLTB4MDAwMDAwNjAwMDAwIDogImVudiIK
+WyAgICAzLjM3ODU2NF0gMHgwMDAwMDA2MDAwMDAtMHgwMDAwMDEwMDAwMDAgOiAic3lzdGVtIgpb
+ICAgIDMuMzgzNTExXSAweDAwMDAwMTAwMDAwMC0weDAwMDAwNDAwMDAwMCA6ICJyb290ZnMiClsg
+ICAgMy4zODg1MjVdIDB4MDAwMDA0MDAwMDAwLTB4MDAwMDBjMDAwMDAwIDogIm1lZGlhIgoKSSBh
+bSBsb29raW5nIGZvcndhcmQgdG8gYSBIeW5peCBuYW5kIGZsYXNoIHRvIHRlc3Qgb24gR1hMIHBs
+YXRmb3JtLCBhbmQgCnRoZXJlIHNob3VsZCBiZSBzb21ldGhpbmcgZGlmZmVyZW50IGZyb20gTVhJ
+QyBmbGFzaCBvbiBPTkZJIHBhZ2UgCmRldGVjdGlvbi4gSSB3aWxsIHVwZGF0ZSB0aGUgcmVzdWx0
+IGFzYXAgbmV0IHdlZWsuCkRvIHlvdSBoYXZlIGFub3RoZXIgdHlwZSBvZiBuYW5kIGZsYXNoIHRv
+IHRlc3Qgb24gTTggcGxhdGZvcm0gPwo+IAo+IFRoYW5rcywKPiBNaXF1w6hsCj4gCj4gLgo+IAoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
+LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
+cm5lbAo=
