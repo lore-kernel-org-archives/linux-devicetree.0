@@ -1,78 +1,68 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v2 03/10] dt-binding: gce: add binding for gce subsys
- property
-Date: Thu, 7 Mar 2019 09:39:56 +0800
-Message-ID: <1551922796.20144.7.camel@mtksdaap41>
-References: <1551865835-50974-1-git-send-email-bibby.hsieh@mediatek.com>
-         <1551865835-50974-4-git-send-email-bibby.hsieh@mediatek.com>
+From: Long Cheng <long.cheng@mediatek.com>
+Subject: [PATCH v11 0/4] add uart DMA function
+Date: Thu, 7 Mar 2019 09:45:31 +0800
+Message-ID: <1551923135-32479-1-git-send-email-long.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551865835-50974-4-git-send-email-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com
+To: Vinod Koul <vkoul@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Nicolas Boichat <drinkcat@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Zhenbao Liu <zhenbao.liu@mediatek.com>, Long Cheng <long.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Bibby:
+In Mediatek SOCs, the uart can support DMA function.
+Base on DMA engine formwork, we add the DMA code to support uart. And put the code under drivers/dma/mediatek.
 
-On Wed, 2019-03-06 at 17:50 +0800, Bibby Hsieh wrote:
-> cmdq driver provide a function that get the relationship
-> of sub system number from device node for client.
-> add specification for #subsys-cells, mediatek,gce-subsys.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> index 812698f..07b2adf 100644
-> --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> @@ -26,6 +26,13 @@ Required properties:
->  	phandle: Label name of a gce node.
->  	event_number: the event number defined in 'dt-bindings/gce/mt8173-gce.h'
->  		      or 'dt-binding/gce/mt8183-gce.h'.
-> +#subsys-cells: Should be 2.
-> +	<&phandle register_base_address subsys_number>
-> +	phandle: Label name of a gce node.
-> +	register_base_address: the register base address that client
-> +			       want to write or read.
+This series contains document bindings, Kconfig to control the function enable or not,
+device tree including interrupt and dma device node, the code of UART DMA
 
-This look like the same as 'reg' property. I would prefer use
-already-defined property, for example:
+Changes compared to v10
+-modify DMA tx status function
+-modify 8250_mtk for DMA rx
+-add notes to binding Document.
+Changes compared to v9
+-rename dt-bindings file
+-remove direction from device_config
+-simplified code
+Changes compared to v8
+-revise missing items
+Changes compared to v7:
+-modify apdma uart tx
+Changes compared to v6:
+-Correct spelling
+Changes compared to v5:
+-move 'requst irqs' to alloc channel
+-remove tasklet.
+Changes compared to v4:
+-modify Kconfig depends on.
+Changes compared to v3:
+-fix CONFIG_PM, will cause build fail
+Changes compared to v2:
+-remove unimportant parameters
+-instead of cookie, use APIs of virtual channel.
+-use of_dma_xlate_by_chan_id.
+Changes compared to v1:
+-mian revised file, 8250_mtk_dma.c
+--parameters renamed for standard
+--remove atomic operation
 
-		mmsys: clock-controller@14000000 {
-			compatible = "mediatek,mt8173-mmsys", "syscon";
-			reg = <0 0x14000000 0 0x1000>;
-			mediatek,gce-subsys = <&gce SUBSYS_1400XXXX>;
-		};
+Long Cheng (4):
+  dmaengine: 8250_mtk_dma: add MediaTek uart DMA support
+  arm: dts: mt2712: add uart APDMA to device tree
+  dt-bindings: dma: uart: rename binding
+  serial: 8250-mtk: modify uart DMA rx
 
-Regards,
-CK
+ .../devicetree/bindings/dma/8250_mtk_dma.txt       |   33 -
+ .../devicetree/bindings/dma/mtk-uart-apdma.txt     |   55 ++
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi          |   51 ++
+ drivers/dma/mediatek/Kconfig                       |   11 +
+ drivers/dma/mediatek/Makefile                      |    1 +
+ drivers/dma/mediatek/mtk-uart-apdma.c              |  660 ++++++++++++++++++++
+ drivers/tty/serial/8250/8250_mtk.c                 |   53 +-
+ 7 files changed, 801 insertions(+), 63 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/8250_mtk_dma.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
+ create mode 100644 drivers/dma/mediatek/mtk-uart-apdma.c
 
-> +	subsys_number: specify the sub-system id which is corresponding
-> +		       to the register address.
->  
->  Required properties for a client device:
->  - mboxes: Client use mailbox to communicate with GCE, it should have this
-> @@ -50,6 +57,7 @@ Example:
->  		thread-num = CMDQ_THR_MAX_COUNT;
->  		#mbox-cells = <3>;
->  		#event-cells = <1>;
-> +		#subsys-cells = <2>;
->  	};
->  
->  Example for a client device:
-> @@ -58,7 +66,8 @@ Example for a client device:
->  		compatible = "mediatek,mt8173-mmsys";
->  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
->  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
-> -		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
-> +		mediatek,gce-subsys = <&gce 0x14000000 SUBSYS_1400XXXX>,
-> +				      <&gce 0x14010000 SUBSYS_1401XXXX>;
->  		mediatek,gce-event-names = "rdma0_sof",
->  					   "rsz0_sof";
->  		mediatek,gce-events = <&gce CMDQ_EVENT_MDP_RDMA0_SOF>,
+-- 
+1.7.9.5
