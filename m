@@ -1,86 +1,116 @@
-From: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Subject: [PATCH v2 3/3] arm64: dts: rockchip: Disable DCMDs on RK3399's eMMC controller.
-Date: Thu,  7 Mar 2019 09:43:28 +0100
-Message-ID: <20190307084329.25416-3-christoph.muellner@theobroma-systems.com>
-References: <20190307084329.25416-1-christoph.muellner@theobroma-systems.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v4 6/6] usb:cdns3 Fix for stuck packets in on-chip OUT
+ buffer.
+Date: Thu, 7 Mar 2019 11:13:40 +0200
+Message-ID: <11e29bea-98c1-03c4-a7d5-c529df2cc341@ti.com>
+References: <1550173514-23573-1-git-send-email-pawell@cadence.com>
+ <1550173514-23573-7-git-send-email-pawell@cadence.com>
+ <67da432f-9c95-d644-65b5-dbc5b942d24c@ti.com>
+ <BYAPR07MB47091C199971D677DE0FBB84DD7D0@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <e8616274-b0a8-6e59-b6fa-a68fed58bad7@ti.com>
+ <BYAPR07MB470939C6F100336BAF6C41BFDD7D0@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <87va1dbokp.fsf@linux.intel.com>
+ <70967a02-2f02-9ac8-e205-cdbfac5fbbae@ti.com>
+ <BYAPR07MB4709F449E09AD352BA06CBA7DD4C0@BYAPR07MB4709.namprd07.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190307084329.25416-1-christoph.muellner@theobroma-systems.com>
+In-Reply-To: <BYAPR07MB4709F449E09AD352BA06CBA7DD4C0@BYAPR07MB4709.namprd07.prod.outlook.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, shawn.lin@rock-chips.com, ulf.hansson@linaro.org, adrian.hunter@intel.com
-Cc: Christoph Muellner <christoph.muellner@theobroma-systems.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Michal Simek <michal.simek@xilinx.com>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Viresh Kumar <viresh.kumar@linaro.org>, Tomasz Figa <tfiga@chromium.org>, Tony Xie <tony.xie@rock-chips.com>, Shunqian Zheng <zhengsq@rock-chips.com>, Randy Li <ayaka@soulik.info>, Vicente Bergas <vicencb@gmail.com>, Ezequiel Garcia <ezequiel@collabora.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Lin Huang <hl@rock-chips.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+To: Pawel Laszczak <pawell@cadence.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-When using direct commands (DCMDs) on an RK3399, we get spurious
-CQE completion interrupts for the DCMD transaction slot (#31):
+On 07/03/2019 09:06, Pawel Laszczak wrote:
+> Hi,
+> 
+>> Hi,
+>>
+>> On 21/02/2019 09:14, Felipe Balbi wrote:
+>>>
+>>> Hi,
+>>>
+>>> (please break your emails at 80-columns)
+>>>
+>>> Pawel Laszczak <pawell@cadence.com> writes:
+>>>>>> One more thing. Workaround has implemented algorithm that decide for which
+>>>>>> endpoint it should be enabled.  e.g for composite device MSC+NCM+ACM it
+>>>>>> should work only for ACM OUT endpoint.
+>>>>>>
+>>>>>
+>>>>> If ACM driver didn't queue the request for ACM OUT endpoint, why does the
+>>>>> controller accept the data at all?
+>>>>>
+>>>>> I didn't understand why we need a workaround for this. It should be standard
+>>>>> behaviour to NAK data if function driver didn't request for all endpoints.
+>>>>
+>>>> Yes, I agree with you. Controller shouldn’t accept such packet. As I know this
+>>>> behavior will be fixed in RTL.
+>>>>
+>>>> But I assume that some older version of this controller are one the market,
+>>>> and driver should work correct with them.
+>>>>
+>>>> In the feature this workaround can be limited only to selected controllers.
+>>>>
+>>>> Even now I assume that it can be enabled/disabled by module parameter.
+>>>
+>>> no module parameters, please. Use revision detection in runtime.
+>>>
+>>
+>> This is about whether to enable or disable the workaround.
+>> By default we don't want this workaround to be enabled.
+>>
+>> I'm debating whether we should have this workaround at all or not.
+>>
+>> It has the following problems.
+>>
+>> 1) It ACKs packets even when gadget end is not ready to accept the transfers.
+>> 2) It stores these packets in a temporary buffer and then pushes them to the
+>> gadget driver whenever the gadget driver is ready to process the data.
+>> 3) Since the gadget driver can become ready at an indefinite time in the
+>> future, it poses 2 problems:
+>> a) It is sending stale data to the sink. (problematic at next protocol level?)
+>> b) If this temporary buffer runs out we still hit the lock up issue.
+>>
+>> I think the right solution is to make sure that the gadget driver is always
+>> reading all the enabled OUT endpoints *or* (keep the OUT endpoints disabled
+>> if gadget driver is not ready to process OUT transfers).
+> 
+> If driver disable endpoint then it not answer for packets from host. 
+> It will result that host reset the device, so I can't disable such endpoints. 
+> 
+> Other good solution is to change ACM driver in a way that it sends requests 
+> to controller driver after enabling endpoint. The class driver could decide 
 
-[  931.196520] ------------[ cut here ]------------
-[  931.201702] mmc1: cqhci: spurious TCN for tag 31
-[  931.206906] WARNING: CPU: 0 PID: 1433 at
-/usr/src/kernel/drivers/mmc/host/cqhci.c:725 cqhci_irq+0x2e4/0x490
-[  931.206909] Modules linked in:
-[  931.206918] CPU: 0 PID: 1433 Comm: irq/29-mmc1 Not tainted
-4.19.8-rt6-funkadelic #1
-[  931.206920] Hardware name: Theobroma Systems RK3399-Q7 SoM (DT)
-[  931.206924] pstate: 40000005 (nZcv daif -PAN -UAO)
-[  931.206927] pc : cqhci_irq+0x2e4/0x490
-[  931.206931] lr : cqhci_irq+0x2e4/0x490
-[  931.206933] sp : ffff00000e54bc80
-[  931.206934] x29: ffff00000e54bc80 x28: 0000000000000000
-[  931.206939] x27: 0000000000000001 x26: ffff000008f217e8
-[  931.206944] x25: ffff8000f02ef030 x24: ffff0000091417b0
-[  931.206948] x23: ffff0000090aa000 x22: ffff8000f008b000
-[  931.206953] x21: 0000000000000002 x20: 000000000000001f
-[  931.206957] x19: ffff8000f02ef018 x18: ffffffffffffffff
-[  931.206961] x17: 0000000000000000 x16: 0000000000000000
-[  931.206966] x15: ffff0000090aa6c8 x14: 0720072007200720
-[  931.206970] x13: 0720072007200720 x12: 0720072007200720
-[  931.206975] x11: 0720072007200720 x10: 0720072007200720
-[  931.206980] x9 : 0720072007200720 x8 : 0720072007200720
-[  931.206984] x7 : 0720073107330720 x6 : 00000000000005a0
-[  931.206988] x5 : ffff00000860d4b0 x4 : 0000000000000000
-[  931.206993] x3 : 0000000000000001 x2 : 0000000000000001
-[  931.206997] x1 : 1bde3a91b0d4d900 x0 : 0000000000000000
-[  931.207001] Call trace:
-[  931.207005]  cqhci_irq+0x2e4/0x490
-[  931.207009]  sdhci_arasan_cqhci_irq+0x5c/0x90
-[  931.207013]  sdhci_irq+0x98/0x930
-[  931.207019]  irq_forced_thread_fn+0x2c/0xa0
-[  931.207023]  irq_thread+0x114/0x1c0
-[  931.207027]  kthread+0x128/0x130
-[  931.207032]  ret_from_fork+0x10/0x20
-[  931.207035] ---[ end trace 0000000000000002 ]---
+The ACM driver is doing exactly that. However, there is a large delay (depending
+on when user opens the ttyACM) between endpoint enable and request queue and
+that's the issue for this controller.
 
-The driver shows this message only for the first spurious interrupt
-by using WARN_ONCE(). Changing this to WARN() shows, that this is
-happening quite frequently (up to once a second).
+The endpoint is enabled whenever the host sends a SET_INTERFACE
+[acm_set_alt()->gserial_connect()]
+but the first request is queued only when user opens the ttyACM
+[gs_open()->gs_start_io()->gs_start_rx()].
 
-Since the eMMC 5.1 specification, where CQE and CQHCI are specified,
-does not mention that spurious TCN interrupts for DCMDs can be simply
-ignored, we must assume that using this feature is not working reliably.
+I'm don't think this sequence can be changed.
+What happens if you defer gserial_connect() to be done at gs_open()?
 
-The current implementation uses DCMD for REQ_OP_FLUSH only, and
-I could not see any performance/power impact when disabling
-this optional feature for RK3399.
+> what should do with such not expected packets. It could delete all or e.g 
+> keep only few last packets. 
+> 
+> This issue will be fixed in RTL but maybe driver should be compatible with previous 
+> controller’s version.
+> 
+> By default, this workaround will be disabled or will depend on controller version.  
+>>
+> 
+> Cheers,
+> Pawel
+> 
 
-Therefore this patch disables DCMDs for RK3399.
-
-Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
----
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 6cc1c9fa4ea6..1bbf0da4e01d 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -333,6 +333,7 @@
- 		phys = <&emmc_phy>;
- 		phy-names = "phy_arasan";
- 		power-domains = <&power RK3399_PD_EMMC>;
-+		disable-cqe-dcmd;
- 		status = "disabled";
- 	};
- 
 -- 
-2.11.0
+cheers,
+-roger
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
