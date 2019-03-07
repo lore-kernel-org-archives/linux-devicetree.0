@@ -1,47 +1,76 @@
-From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 10/11] drm/panel: simple: Add NewEast
- Optoelectronics CO., LTD WJFH116008A panel support
-Date: Wed, 6 Mar 2019 22:12:14 -0800
-Message-ID: <CA+E=qVdmq=TurodsKEuGD5tE8qMvwVBWTc=ay5QerB8c6LuvVw@mail.gmail.com>
-References: <20190215050957.20755-1-anarsoul@gmail.com> <20190215050957.20755-11-anarsoul@gmail.com>
- <20190218183301.GA5480@bogus> <CA+E=qVcdDQJvssZgu23gM_gKvz2G5GAWcmjFBokE_V=WGJ4h6A@mail.gmail.com>
- <CAL_Jsq+pyAd_kMMz+yKjqY=asAi1X1XguM58VjfVhPwD-xi-2w@mail.gmail.com>
- <CA+E=qVcmLnr9sL7UjG2PSC0Ji5PhW=xOLQHGvRUG3yMMZW1hnw@mail.gmail.com> <20190222183716.GA7627@bogus>
-Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [PATCH v4 6/6] usb:cdns3 Fix for stuck packets in on-chip OUT
+ buffer.
+Date: Thu, 7 Mar 2019 07:06:26 +0000
+Message-ID: <BYAPR07MB4709F449E09AD352BA06CBA7DD4C0@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1550173514-23573-1-git-send-email-pawell@cadence.com>
+ <1550173514-23573-7-git-send-email-pawell@cadence.com>
+ <67da432f-9c95-d644-65b5-dbc5b942d24c@ti.com>
+ <BYAPR07MB47091C199971D677DE0FBB84DD7D0@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <e8616274-b0a8-6e59-b6fa-a68fed58bad7@ti.com>
+ <BYAPR07MB470939C6F100336BAF6C41BFDD7D0@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <87va1dbokp.fsf@linux.intel.com>
+ <70967a02-2f02-9ac8-e205-cdbfac5fbbae@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDV3B667TUHBBWPMQLSAKGQE2ZBB37I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190222183716.GA7627@bogus>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <70967a02-2f02-9ac8-e205-cdbfac5fbbae@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 22, 2019 at 10:37 AM Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-
-> There is not any simple panel binding really. This originated I think
-> from a 'simple-panel' compatible that was originally attempted. What we
-> have is a collection of common properties for panels which panel
-> bindings can use. And we have some common panel docs too. I've been
-> meaning to clean-up and unify all this.
-
-I'm afraid I'm not right person to clean it up. My understanding of
-what different kind of panels and connectors need is pretty limited.
-Moreover I'm doing pinebook hacking in my spare time which is few
-hours a week and major panel/connector bindings clean up is not
-something I want to invest my time in.
-
-Since it seems to be a blocker I'll wait for someone to clean up
-panel/connector bindings and then respin the series. Meanwhile it'll
-live in my github.
-
-Thanks for review and sharing your ideas.
-
-Regards,
-Vasily
+SGksDQoNCj5IaSwNCj4NCj5PbiAyMS8wMi8yMDE5IDA5OjE0LCBGZWxpcGUgQmFsYmkgd3JvdGU6
+DQo+Pg0KPj4gSGksDQo+Pg0KPj4gKHBsZWFzZSBicmVhayB5b3VyIGVtYWlscyBhdCA4MC1jb2x1
+bW5zKQ0KPj4NCj4+IFBhd2VsIExhc3pjemFrIDxwYXdlbGxAY2FkZW5jZS5jb20+IHdyaXRlczoN
+Cj4+Pj4+IE9uZSBtb3JlIHRoaW5nLiBXb3JrYXJvdW5kIGhhcyBpbXBsZW1lbnRlZCBhbGdvcml0
+aG0gdGhhdCBkZWNpZGUgZm9yIHdoaWNoDQo+Pj4+PiBlbmRwb2ludCBpdCBzaG91bGQgYmUgZW5h
+YmxlZC4gIGUuZyBmb3IgY29tcG9zaXRlIGRldmljZSBNU0MrTkNNK0FDTSBpdA0KPj4+Pj4gc2hv
+dWxkIHdvcmsgb25seSBmb3IgQUNNIE9VVCBlbmRwb2ludC4NCj4+Pj4+DQo+Pj4+DQo+Pj4+IElm
+IEFDTSBkcml2ZXIgZGlkbid0IHF1ZXVlIHRoZSByZXF1ZXN0IGZvciBBQ00gT1VUIGVuZHBvaW50
+LCB3aHkgZG9lcyB0aGUNCj4+Pj4gY29udHJvbGxlciBhY2NlcHQgdGhlIGRhdGEgYXQgYWxsPw0K
+Pj4+Pg0KPj4+PiBJIGRpZG4ndCB1bmRlcnN0YW5kIHdoeSB3ZSBuZWVkIGEgd29ya2Fyb3VuZCBm
+b3IgdGhpcy4gSXQgc2hvdWxkIGJlIHN0YW5kYXJkDQo+Pj4+IGJlaGF2aW91ciB0byBOQUsgZGF0
+YSBpZiBmdW5jdGlvbiBkcml2ZXIgZGlkbid0IHJlcXVlc3QgZm9yIGFsbCBlbmRwb2ludHMuDQo+
+Pj4NCj4+PiBZZXMsIEkgYWdyZWUgd2l0aCB5b3UuIENvbnRyb2xsZXIgc2hvdWxkbuKAmXQgYWNj
+ZXB0IHN1Y2ggcGFja2V0LiBBcyBJIGtub3cgdGhpcw0KPj4+IGJlaGF2aW9yIHdpbGwgYmUgZml4
+ZWQgaW4gUlRMLg0KPj4+DQo+Pj4gQnV0IEkgYXNzdW1lIHRoYXQgc29tZSBvbGRlciB2ZXJzaW9u
+IG9mIHRoaXMgY29udHJvbGxlciBhcmUgb25lIHRoZSBtYXJrZXQsDQo+Pj4gYW5kIGRyaXZlciBz
+aG91bGQgd29yayBjb3JyZWN0IHdpdGggdGhlbS4NCj4+Pg0KPj4+IEluIHRoZSBmZWF0dXJlIHRo
+aXMgd29ya2Fyb3VuZCBjYW4gYmUgbGltaXRlZCBvbmx5IHRvIHNlbGVjdGVkIGNvbnRyb2xsZXJz
+Lg0KPj4+DQo+Pj4gRXZlbiBub3cgSSBhc3N1bWUgdGhhdCBpdCBjYW4gYmUgZW5hYmxlZC9kaXNh
+YmxlZCBieSBtb2R1bGUgcGFyYW1ldGVyLg0KPj4NCj4+IG5vIG1vZHVsZSBwYXJhbWV0ZXJzLCBw
+bGVhc2UuIFVzZSByZXZpc2lvbiBkZXRlY3Rpb24gaW4gcnVudGltZS4NCj4+DQo+DQo+VGhpcyBp
+cyBhYm91dCB3aGV0aGVyIHRvIGVuYWJsZSBvciBkaXNhYmxlIHRoZSB3b3JrYXJvdW5kLg0KPkJ5
+IGRlZmF1bHQgd2UgZG9uJ3Qgd2FudCB0aGlzIHdvcmthcm91bmQgdG8gYmUgZW5hYmxlZC4NCj4N
+Cj5JJ20gZGViYXRpbmcgd2hldGhlciB3ZSBzaG91bGQgaGF2ZSB0aGlzIHdvcmthcm91bmQgYXQg
+YWxsIG9yIG5vdC4NCj4NCj5JdCBoYXMgdGhlIGZvbGxvd2luZyBwcm9ibGVtcy4NCj4NCj4xKSBJ
+dCBBQ0tzIHBhY2tldHMgZXZlbiB3aGVuIGdhZGdldCBlbmQgaXMgbm90IHJlYWR5IHRvIGFjY2Vw
+dCB0aGUgdHJhbnNmZXJzLg0KPjIpIEl0IHN0b3JlcyB0aGVzZSBwYWNrZXRzIGluIGEgdGVtcG9y
+YXJ5IGJ1ZmZlciBhbmQgdGhlbiBwdXNoZXMgdGhlbSB0byB0aGUNCj5nYWRnZXQgZHJpdmVyIHdo
+ZW5ldmVyIHRoZSBnYWRnZXQgZHJpdmVyIGlzIHJlYWR5IHRvIHByb2Nlc3MgdGhlIGRhdGEuDQo+
+MykgU2luY2UgdGhlIGdhZGdldCBkcml2ZXIgY2FuIGJlY29tZSByZWFkeSBhdCBhbiBpbmRlZmlu
+aXRlIHRpbWUgaW4gdGhlDQo+ZnV0dXJlLCBpdCBwb3NlcyAyIHByb2JsZW1zOg0KPiBhKSBJdCBp
+cyBzZW5kaW5nIHN0YWxlIGRhdGEgdG8gdGhlIHNpbmsuIChwcm9ibGVtYXRpYyBhdCBuZXh0IHBy
+b3RvY29sIGxldmVsPykNCj4gYikgSWYgdGhpcyB0ZW1wb3JhcnkgYnVmZmVyIHJ1bnMgb3V0IHdl
+IHN0aWxsIGhpdCB0aGUgbG9jayB1cCBpc3N1ZS4NCj4NCj5JIHRoaW5rIHRoZSByaWdodCBzb2x1
+dGlvbiBpcyB0byBtYWtlIHN1cmUgdGhhdCB0aGUgZ2FkZ2V0IGRyaXZlciBpcyBhbHdheXMNCj5y
+ZWFkaW5nIGFsbCB0aGUgZW5hYmxlZCBPVVQgZW5kcG9pbnRzICpvciogKGtlZXAgdGhlIE9VVCBl
+bmRwb2ludHMgZGlzYWJsZWQNCj5pZiBnYWRnZXQgZHJpdmVyIGlzIG5vdCByZWFkeSB0byBwcm9j
+ZXNzIE9VVCB0cmFuc2ZlcnMpLg0KDQpJZiBkcml2ZXIgZGlzYWJsZSBlbmRwb2ludCB0aGVuIGl0
+IG5vdCBhbnN3ZXIgZm9yIHBhY2tldHMgZnJvbSBob3N0LiANCkl0IHdpbGwgcmVzdWx0IHRoYXQg
+aG9zdCByZXNldCB0aGUgZGV2aWNlLCBzbyBJIGNhbid0IGRpc2FibGUgc3VjaCBlbmRwb2ludHMu
+IA0KDQpPdGhlciBnb29kIHNvbHV0aW9uIGlzIHRvIGNoYW5nZSBBQ00gZHJpdmVyIGluIGEgd2F5
+IHRoYXQgaXQgc2VuZHMgcmVxdWVzdHMgDQp0byBjb250cm9sbGVyIGRyaXZlciBhZnRlciBlbmFi
+bGluZyBlbmRwb2ludC4gVGhlIGNsYXNzIGRyaXZlciBjb3VsZCBkZWNpZGUgDQp3aGF0IHNob3Vs
+ZCBkbyB3aXRoIHN1Y2ggbm90IGV4cGVjdGVkIHBhY2tldHMuIEl0IGNvdWxkIGRlbGV0ZSBhbGwg
+b3IgZS5nIA0Ka2VlcCBvbmx5IGZldyBsYXN0IHBhY2tldHMuIA0KDQpUaGlzIGlzc3VlIHdpbGwg
+YmUgZml4ZWQgaW4gUlRMIGJ1dCBtYXliZSBkcml2ZXIgc2hvdWxkIGJlIGNvbXBhdGlibGUgd2l0
+aCBwcmV2aW91cyANCmNvbnRyb2xsZXLigJlzIHZlcnNpb24uDQoNCkJ5IGRlZmF1bHQsIHRoaXMg
+d29ya2Fyb3VuZCB3aWxsIGJlIGRpc2FibGVkIG9yIHdpbGwgZGVwZW5kIG9uIGNvbnRyb2xsZXIg
+dmVyc2lvbi4gIA0KPg0KPmNoZWVycywNCj4tcm9nZXINCj4tLQ0KPlRleGFzIEluc3RydW1lbnRz
+IEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLg0KPlktdHVubnVz
+L0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpDQoN
+CkNoZWVycywNClBhd2VsDQo=
