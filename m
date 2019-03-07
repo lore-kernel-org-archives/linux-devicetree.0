@@ -1,54 +1,38 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v2 08/10] ata: ahci: mvebu: Add support for A8k legacy
- bindings
-Date: Thu, 7 Mar 2019 16:31:48 +0000
-Message-ID: <634bb5cc-aab9-eecb-cba9-8c7762e888c9@arm.com>
-References: <20190306102146.13005-1-miquel.raynal@bootlin.com>
- <20190306102146.13005-9-miquel.raynal@bootlin.com>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH V2 1/6] mmc: mmci: add get_datactrl_cfg callback
+Date: Thu, 7 Mar 2019 17:38:57 +0100
+Message-ID: <1551976742-4358-2-git-send-email-ludovic.Barre@st.com>
+References: <1551976742-4358-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190306102146.13005-9-miquel.raynal@bootlin.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jens Axboe <axboe@kernel.dk>, Hans de Goede <hdegoede@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1551976742-4358-1-git-send-email-ludovic.Barre@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: srinivas.kandagatla@linaro.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2019 10:21, Miquel Raynal wrote:
-> The CP110 SATA unit has 2 ports, and a dedicated ICU entry per
-> port. In the past, the AHCI SATA driver only supported one interrupt
-> per SATA unit. To solve this conflict, the 2 SATA wired interrupts in
-> the South-Bridge got configured as 1 GIC interrupt in the
-> North-Bridge, regardless of the number of SATA ports actually
-> enabled/in use, and the bindings only referenced the interrupt of one
-> port.
-> 
-> Since then, this limitation has been addressed and this patch ensures
-> backward compatibility with old DTs not describing SATA ports
-> correctly directly from the AHCI MVEBU driver. This way, we will be
-> able to drop the hack from the ICU driver. IOW, when the A8k
-> compatible string is used and there is no sub-nodes in the DT, we
-> fake the creation and mapping of the second (missing) interrupt.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Ludovic Barre <ludovic.barre@st.com>
 
-It'd be good to add that all these hacks only exist for the purpose of
-DT. The same HW booting with ACPI doesn't require any of this because
-the firmware abstracts stuff that the kernel shouldn't be concerned with
-the first place.
+This patch adds get_datactrl_cfg callback in mmci_host_ops
+to allow to get datactrl configuration specific at variant.
 
-Thanks,
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+---
+ drivers/mmc/host/mmci.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-	M.
+diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+index 6bde28c..a59049b 100644
+--- a/drivers/mmc/host/mmci.h
++++ b/drivers/mmc/host/mmci.h
+@@ -362,6 +362,7 @@ struct mmci_host_ops {
+ 			 bool next);
+ 	void (*unprep_data)(struct mmci_host *host, struct mmc_data *data,
+ 			    int err);
++	u32 (*get_datactrl_cfg)(struct mmci_host *host);
+ 	void (*get_next_data)(struct mmci_host *host, struct mmc_data *data);
+ 	int (*dma_setup)(struct mmci_host *host);
+ 	void (*dma_release)(struct mmci_host *host);
 -- 
-Jazz is not dead. It just smells funny...
+2.7.4
