@@ -1,46 +1,69 @@
-From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH] i2c: i2c-stm32f7: Fix SDADEL minimum formula
-Date: Thu, 7 Mar 2019 09:29:57 +0100
-Message-ID: <3a2ceff7-5634-6305-5d54-356af524de7a@st.com>
-References: <1551885125-22295-1-git-send-email-bich.hemon@st.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 2/8] dt-bindings: phy: Add Amlogic G12A USB3+PCIE Combo
+ PHY Bindings
+Date: Thu, 7 Mar 2019 09:35:08 +0100
+Message-ID: <77d8681b-d270-5928-ff67-b58b4813f100@baylibre.com>
+References: <20190304103846.2060-1-narmstrong@baylibre.com>
+ <20190304103846.2060-3-narmstrong@baylibre.com>
+ <CAFBinCCp+bME0fnWRJx0L1E5aazUh1Hw-svsP7+D_QU4dP08nw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551885125-22295-1-git-send-email-bich.hemon@st.com>
+In-Reply-To: <CAFBinCCp+bME0fnWRJx0L1E5aazUh1Hw-svsP7+D_QU4dP08nw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bich HEMON <bich.hemon@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
-
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-
-Thanks
-
-On 3/6/19 4:12 PM, Bich HEMON wrote:
-> From: Nicolas Le Bayon <nicolas.le.bayon@st.com>
+On 05/03/2019 22:42, Martin Blumenstingl wrote:
+> Hi Neil,
 > 
-> It conforms with Reference Manual I2C timing section.
+> On Mon, Mar 4, 2019 at 11:38 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> Add the Amlogic G12A Family USB3 + PCIE Combo PHY Bindings.
+>>
+>> This PHY can provide exclusively USB3 or PCIE support on shared I/Os.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>> ---
+>>  .../bindings/phy/meson-g12a-usb3-pcie-phy.txt | 22 +++++++++++++++++++
+>>  1 file changed, 22 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt b/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
+>> new file mode 100644
+>> index 000000000000..7cfc17e2df31
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
+>> @@ -0,0 +1,22 @@
+>> +* Amlogic G12A USB3 + PCIE Combo PHY binding
+>> +
+>> +Required properties:
+>> +- compatible:  Should be "amlogic,meson-g12a-usb3-pcie-phy"
+>> +- #phys-cells: must be 1. The cell number is used to select the phy mode
+>> +  as defined in <dt-bindings/phy/phy.h> between PHY_TYPE_USB3 and PHY_TYPE_PCIE
+>> +- reg:         The base address and length of the registers
+>> +- clocks:      a phandle to the 100MHz reference clock of this PHY
+>> +- clock-names: must be "ref_clk"
+>> +- resets:      phandle to the reset lines for the PHY control
+>> +- reset-names: must be "phy"
+> one question on the resets:
+> - in v1 you had three reset lines: RESET_PCIE_CTRL_A, RESET_PCIE_PHY,
+> RESET_PCIE_APB
+> - in v2 you only have the "phy" reset line.
+> is this because the other two are connected to the PCIe controller
+> (Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt) instead
+> of the PHY?
+
+Indeed, it was wrong, only the RESET_PCIE_PHY is needed for the PHY
+
+Neil
+
 > 
-> Signed-off-by: Nicolas Le Bayon <nicolas.le.bayon@st.com>
-> Signed-off-by: Bich Hemon <bich.hemon@st.com>
-> ---
->  drivers/i2c/busses/i2c-stm32f7.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-> index 13e1213..4284fc9 100644
-> --- a/drivers/i2c/busses/i2c-stm32f7.c
-> +++ b/drivers/i2c/busses/i2c-stm32f7.c
-> @@ -432,7 +432,7 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
->  		 STM32F7_I2C_ANALOG_FILTER_DELAY_MAX : 0);
->  	dnf_delay = setup->dnf * i2cclk;
->  
-> -	sdadel_min = setup->fall_time - i2c_specs[setup->speed].hddat_min -
-> +	sdadel_min = i2c_specs[setup->speed].hddat_min + setup->fall_time -
->  		af_delay_min - (setup->dnf + 3) * i2cclk;
->  
->  	sdadel_max = i2c_specs[setup->speed].vddat_max - setup->rise_time -
+> Regards
+> Martin
 > 
