@@ -1,366 +1,74 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v2 02/10] iio: document bindings for mounting matrices
-Date: Thu, 7 Mar 2019 13:53:50 +0100
-Message-ID: <B4B3C161-1F74-483A-9761-EC751618B7FD@goldelico.com>
-References: <cover.1550768574.git.hns@goldelico.com> <32025b2a8ccc97cc01f8115ee962529eb5990f00.1550768574.git.hns@goldelico.com> <20190303151911.1e134bd4@archlinux>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 2/3] clk: imx8mq: add hdmi_phy_27m clock as pll's
+ reference clock
+Date: Thu, 7 Mar 2019 12:56:04 +0000
+Message-ID: <DB3PR0402MB391694C610CA6B7027376E4CF54C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1551929772-22633-1-git-send-email-Anson.Huang@nxp.com>
+         <1551929772-22633-2-git-send-email-Anson.Huang@nxp.com>
+ <1551960333.9298.37.camel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190303151911.1e134bd4@archlinux>
+In-Reply-To: <1551960333.9298.37.camel@pengutronix.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Martin Kelly <mkelly@xevo.com>, Jonathan Marek <jonathan@marek.ca>, Brian Masney <masneyb@onstation.org>, Stephan Gerhold <stephan@gerhold.net>, letux-kernel@openphoenux.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gregor Boirie <gregor.boirie@parrot.com>, Sebastian Reichel <sre@kernel.org>
+To: Lucas Stach <l.stach@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Abel Vesa <abel.vesa@nxp.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
-
-> Am 03.03.2019 um 16:19 schrieb Jonathan Cameron <jic23@kernel.org>:
->=20
-> On Thu, 21 Feb 2019 18:02:47 +0100
-> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
->=20
->> From: Linus Walleij <linus.walleij@linaro.org>
->>=20
->> The mounting matrix for sensors was introduced in
->> commit dfc57732ad38 ("iio:core: mounting matrix support")
->>=20
->> However the device tree bindings are very terse and since this is
->> a widely applicable property, we need a proper binding for it
->> that the other bindings can reference. This will also be useful
->> for other operating systems and sensor engineering at large.
->>=20
->> I think all 3D sensors should support it, the current situation
->> is probably that the mounting information is confined in magic
->> userspace components rather than using the mounting matrix, which
->> is not good for portability and reuse.
->>=20
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Cc: Gregor Boirie <gregor.boirie@parrot.com>
->> Cc: Sebastian Reichel <sre@kernel.org>
->> Cc: Samu Onkalo <samu.onkalo@intel.com>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Hi Nikolaus
->=20
-> A few minor notes inline.
-
->=20
->> ---
->> .../devicetree/bindings/iio/mount-matrix.txt  | 204 =
-++++++++++++++++++
->> 1 file changed, 204 insertions(+)
->> create mode 100644 =
-Documentation/devicetree/bindings/iio/mount-matrix.txt
->>=20
->> diff --git a/Documentation/devicetree/bindings/iio/mount-matrix.txt =
-b/Documentation/devicetree/bindings/iio/mount-matrix.txt
->> new file mode 100644
->> index 000000000000..1b64c8b1f689
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/mount-matrix.txt
->> @@ -0,0 +1,204 @@
->> +For discussion. Unclear are:
->> +* is the definition of +/- values practical or counterintuitive?
->> +* are the definitions unambiguous and easy to follow?
->> +* are the examples correct?
->> +* should we have HOWTO engineer a correct matrix for a new device =
-(without comparing to a different one)?
->> +
->> +=3D=3D=3D=3D
->> +
->> +
->> +Mounting matrix
->> +
->> +The mounting matrix is a device tree property used to orient any IIO =
-device
->=20
-> Minor, but DT bindings are in theory not Linux specific and IIO is, so
-> should be "any device"
->=20
->> +that produce three-dimensional data in relation to the world where =
-it is
->> +deployed.
->> +
->> +The purpose of the mounting matrix is to translate the sensor frame =
-of
->> +reference into the device frame of reference using a translation =
-matrix as
->> +defined in linear algebra.
->> +
->> +The typical usecase is that where a component has an internal =
-representation
->> +of the (x,y,z) triplets, such as different registers to read these =
-coordinates,
->> +and thus implying that the component should be mounted in a certain =
-orientation
->> +relative to some specific device frame of reference.
->> +
->> +For example a device with some kind of screen, where the user is =
-supposed to
->> +interact with the environment using an accelerometer, gyroscope or =
-magnetometer
->> +mounted on the same chassis as this screen, will likely take the =
-screen as
->> +reference to (x,y,z) orientation, with (x,y) corresponding to these =
-axes on the
->> +screen and (z) being depth, the axis perpendicular to the screen.
->> +
->> +For a screen you probably want (x) coordinates to go from negative =
-on the left
->> +to positive on the right, (y) from negative on the bottom to =
-positive on top
->> +and (z) depth to be negative under the screen and positive in front =
-of it,
->> +toward the face of the user.
->> +
->> +A sensor can be mounted in any angle along the axes relative to the =
-frame of
->> +reference. This means that the sensor may be flipped upside-down, =
-left-right,
->> +or tilted at any angle relative to the frame of reference.
->> +
->> +Another frame of reference is how the device with its sensor relates =
-to the
->> +external world, the environment where the device is deployed. =
-Usually the data
->> +from the sensor is used to figure out how the device is oriented =
-with respect
->> +to this world. When using the mounting matrix, the sensor and device =
-orientation
->> +becomes identical and we can focus on the data as it relates to the =
-surrounding
->> +world.
->> +
->> +Device-to-world examples for some three-dimensional sensor types:
->> +
->> +- Accelerometers have their world frame of reference toward the =
-center of
->> +  gravity, usually to the core of the planet. A reading of the =
-(x,y,z) values
->> +  from the sensor will give a projection of the gravity vector =
-through the
->> +  device relative to the center of the planet, i.e. relative to its =
-surface at
->> +  this point. Up and down in the world relative to the device frame =
-of
->> +  reference can thus be determined. and users would likely expect a =
-value of
->> +  9.81 m/s^2 upwards along the (z) axis, i.e. out of the screen when =
-the device
->> +  is held with its screen flat on the planets surface and 0 on the =
-other axes,
->> +  as the gravity vector is projected 1:1 onto the sensors (z)-axis.
->=20
-> Nitpick: Screen is face down or face up?  Someone might think a screen =
-is
-> flat when looking up at them from the floor or the other way up.
-> I 'think' it's face down in the following...
->=20
->=20
->> +
->> +  If you tilt the device, the g vector virtually coming out of the =
-display
->> +  is projected onto the (x,y) plane of the display panel.
->> +
->> +  Example:
->> +
->=20
-> space after > for z. Or making it consistent anyway.
-> Hmm.=20
->=20
->> +         ^ z: +g                   ^ z: >0
->> +         !                        /!
->> +         ! x=3Dy=3D0                 / ! x: > 0
->> +     +--------+             +--------+
->> +     !        !             !        !
->> +     +--------+             +--------+
->> +         !                    /
->> +         !                   /
->> +         v                  v
->> +      center of         center of
->> +       gravity           gravity
->> +
->> +
->> +  If the device is tilted to the left, you get a positive x value. =
-If you point
->> +  its top towards surface, you get a negative y axis.
->> +
->> +     (---------)
->> +     !         !           y: -g
->> +     !         !             ^
->> +     !         !             !
->> +     !         !
->> +     !         !  x: +g <- z: +g  -> x: -g
->> +     ! 1  2  3 !
->> +     ! 4  5  6 !             !
->> +     ! 7  8  9 !             v
->> +     ! *  0  # !           y: +g
->> +     (---------)
->> +
->> +
->> +- Magnetometers (compasses) have their world frame of reference =
-relative to the
->> +  geomagnetic field. The system orientation vis-a-vis the world is =
-defined with
->> +  respect to the local earth geomagnetic reference frame where (y) =
-is in the
->> +  ground plane and positive towards magnetic North, (x) is in the =
-ground plane,
->> +  perpendicular to the North axis and positive towards the East and =
-(z) is
->> +  perpendicular to the ground plane and positive upwards.
->> +
->> +
->> +     ^^^ North: y > 0
->> +
->> +     (---------)
->> +     !         !
->> +     !         !
->> +     !         !
->> +     !         !  >
->> +     !         !  > North: x > 0
->> +     ! 1  2  3 !  >
->> +     ! 4  5  6 !
->> +     ! 7  8  9 !
->> +     ! *  0  # !
->> +     (---------)
->> +
->> +  Since the geomagnetic field is not uniform this definition fails =
-if we come
->> +  closer to the poles.
->> +
->> +  Sensors and driver can not and should not take care of this =
-because there
->> +  are complex calculations and empirical data to be taken care of. =
-We leave
->> +  this up to user space.
->> +
->> +  The definition we take:
->> +
->> +  If the device is placed at the equator and the top is pointing =
-north, the
->> +  display is readable by a person standing upright on the earth =
-surface, this
->> +  defines a positive y value.
-> Nice definition. <wonders how consistent it is at the equator - meh =
-close enough :)>
->> +
->> +
->> +- Gyroscopes detects the movement relative the device itself. The =
-angular
->> +  velocity is defined as orthogonal to the plane of rotation, so if =
-you put the
->> +  device on a flat surface and spin it around the z axis (such as =
-rotating a
->> +  device with a screen lying flat on a table), you should get a =
-negative value
->> +  along the (z) axis if rotated clockwise, and a positive value if =
-rotated
->> +  counter-clockwise according to the right-hand rule.
->> +
->> +
->> +     (---------)     y > 0
->> +     !         !     v---\
->> +     !         !
->> +     !         !
->> +     !         !      <--\
->> +     !         !         ! z > 0
->> +     ! 1  2  3 !       --/
->> +     ! 4  5  6 !
->> +     ! 7  8  9 !
->> +     ! *  0  # !
->> +     (---------)
->> +
->> +
->> +So unless the sensor is ideally mounted, we need a means to indicate =
-the
->> +relative orientation of any given sensor of this type with respect =
-to the
->> +frame of reference.
->> +
->> +To achieve this, use the device tree property "mount-matrix" for the =
-sensor.
->> +
->> +This supplies a 3x3 rotation matrix in the strict linear algebraic =
-sense,
->> +to orient the senor axes relative to a desired point of reference. =
-This means
->> +the resulting values from the sensor, after scaling to proper units, =
-should be
->> +multiplied by this matrix to give the proper vectors values in =
-three-dimensional
->> +space, relative to the device or world point of reference.
->> +
->> +For more information, consult:
->> +https://en.wikipedia.org/wiki/Rotation_matrix
->> +
->> +The mounting matrix has the layout:
->> +
->> + (mxx, myx, mzx)
->> + (mxy, myy, mzy)
->> + (mxz, myz, mzz)
->> +
->> +Values are intended to be multiplied as:
->> +
->> +  x' =3D mxx * x + myx * y + mzx * z
->> +  y' =3D mxy * x + myy * y + mzy * z
->> +  z' =3D mxz * x + myz * y + mzz * z
->> +
->> +It is represented as an array of strings containing the real values =
-for
->> +producing the transformation matrix. The real values use a decimal =
-point and
->> +a minus (-) to indicate a negative value.
->=20
-> I'd drop the decimal point and negative as both fairly obvious and =
-this
-> sentence can currently be read as a decimal point is necessary for a =
-negative.
->=20
->> +
->> +Examples:
->> +
->> +Identity matrix (nothing happens to the coordinates, which means the =
-device was
->> +mechanically mounted in an ideal way and we need no transformation):
->> +
->> +mount-matrix =3D "1", "0", "0",
->> +               "0", "1", "0",
->> +               "0", "0", "1";
->> +
->> +The sensor is mounted 30 degrees (Pi/6 radians) tilted along the X =
-axis, so we
->> +compensate by performing a -30 degrees rotation around the X axis:
->> +
->> +mount-matrix =3D "1", "0", "0",
->> +               "0", "0.866", "0.5",
->> +               "0", "-0.5", "0.866";
->> +
->> +The sensor is flipped 180 degrees (Pi radians) around the Z axis, =
-i.e. mounted
->> +upside-down:
->> +
->> +mount-matrix =3D "0.998", "0.054", "0",
->> +               "-0.054", "0.998", "0",
->> +               "0", "0", "1";
->> +
->> +???: this does not match "180 degrees" - factors indicate ca. 3 =
-degrees compensation
-> Yes. Good to say this.
->=20
-> Very nice indeed, just these little tidy ups and I'm very happy with =
-the
-> result!
->=20
-> Jonathan
-
-
-Thanks for pushing the other patches forwards.
-
-Yes, I know this needs more discussion. So I'll go through your comments =
-in a few days and post an update just for this.
-
-BR and thanks,
-Nikolaus
+SGksIEx1Y2FzDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTHVjYXMgU3RhY2ggW21haWx0bzpsLnN0YWNoQHBlbmd1
+dHJvbml4LmRlXQ0KPiBTZW50OiAyMDE55bm0M+aciDfml6UgMjA6MDYNCj4gVG86IEFuc29uIEh1
+YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPjsgc2hhd25ndW9Aa2VybmVsLm9yZzsNCj4gcy5oYXVl
+ckBwZW5ndXRyb25peC5kZTsga2VybmVsQHBlbmd1dHJvbml4LmRlOyBGYWJpbyBFc3RldmFtDQo+
+IDxmYWJpby5lc3RldmFtQG54cC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFu
+ZEBhcm0uY29tOw0KPiBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsgc2JveWRAa2VybmVsLm9yZzsg
+QWJlbCBWZXNhDQo+IDxhYmVsLnZlc2FAbnhwLmNvbT47IGFneEBzaWd4Y3B1Lm9yZzsgbGludXgt
+YXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1jbGtAdmdlci5r
+ZXJuZWwub3JnDQo+IENjOiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJq
+ZWN0OiBSZTogW1BBVENIIDIvM10gY2xrOiBpbXg4bXE6IGFkZCBoZG1pX3BoeV8yN20gY2xvY2sg
+YXMgcGxsJ3MNCj4gcmVmZXJlbmNlIGNsb2NrDQo+IA0KPiBBbSBEb25uZXJzdGFnLCBkZW4gMDcu
+MDMuMjAxOSwgMDM6NDEgKzAwMDAgc2NocmllYiBBbnNvbiBIdWFuZzoNCj4gPiBUaGVyZSBpcyBh
+bm90aGVyIDI3TUh6IE9TQyBpbnNpZGUgaS5NWDhNUSdzIGRpc3BsYXkgYmxvY2sgYW5kIGl0IGNh
+bg0KPiA+IGJlIG9uZSBvZiByZWZlcmVuY2UgY2xvY2tzIG9mIGFsbCBQTExzLCBhZGQgaXQgaW50
+byBjbG9jayB0cmVlIGFuZA0KPiA+IGFsc28gYWRkIGl0IGFzIFBMTCdzIHJlZmVyZW5jZSBjbG9j
+ay4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAu
+Y29tPg0KPiA+IC0tLQ0KPiA+IMKgZHJpdmVycy9jbGsvaW14L2Nsay1pbXg4bXEuYyB8IDMgKyst
+DQo+ID4gwqAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+
+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg4bXEuYw0KPiA+IGIv
+ZHJpdmVycy9jbGsvaW14L2Nsay1pbXg4bXEuYyBpbmRleCBhOWIzODg4Li5iYjFiZjliIDEwMDY0
+NA0KPiA+IC0tLSBhL2RyaXZlcnMvY2xrL2lteC9jbGstaW14OG1xLmMNCj4gPiArKysgYi9kcml2
+ZXJzL2Nsay9pbXgvY2xrLWlteDhtcS5jDQo+ID4gQEAgLTI2LDcgKzI2LDcgQEAgc3RhdGljIHUz
+MiBzaGFyZV9jb3VudF9uYW5kOw0KPiA+DQo+ID4gwqBzdGF0aWMgc3RydWN0IGNsayAqY2xrc1tJ
+TVg4TVFfQ0xLX0VORF07DQo+ID4NCj4gPiAtc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCBwbGxf
+cmVmX3NlbHNbXSA9IHsgIm9zY18yNW0iLCAib3NjXzI3bSIsDQo+ID4gImR1bW15IiwgImR1bW15
+IiwgfTsNCj4gPiArc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCBwbGxfcmVmX3NlbHNbXSA9IHsg
+Im9zY18yNW0iLCAib3NjXzI3bSIsDQo+ID4gKyJvc2NfaGRtaV9waHlfMjdtIiwgImR1bW15Iiwg
+fTsNCj4gPiDCoHN0YXRpYyBjb25zdCBjaGFyICogY29uc3QgYXJtX3BsbF9ieXBhc3Nfc2Vsc1td
+ID0geyJhcm1fcGxsIiwNCj4gPiAiYXJtX3BsbF9yZWZfc2VsIiwgfTsNCj4gPiDCoHN0YXRpYyBj
+b25zdCBjaGFyICogY29uc3QgZ3B1X3BsbF9ieXBhc3Nfc2Vsc1tdID0geyJncHVfcGxsIiwNCj4g
+PiAiZ3B1X3BsbF9yZWZfc2VsIiwgfTsNCj4gPiDCoHN0YXRpYyBjb25zdCBjaGFyICogY29uc3Qg
+dnB1X3BsbF9ieXBhc3Nfc2Vsc1tdID0geyJ2cHVfcGxsIiwNCj4gPiAidnB1X3BsbF9yZWZfc2Vs
+IiwgfTsgQEAgLTI4MSw2ICsyODEsNyBAQCBzdGF0aWMgaW50DQo+IGlteDhtcV9jbG9ja3NfcHJv
+YmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiDCoAljbGtzW0lNWDhNUV9DTEtf
+MzJLXSA9IG9mX2Nsa19nZXRfYnlfbmFtZShucCwgImNraWwiKTsNCj4gPiDCoAljbGtzW0lNWDhN
+UV9DTEtfMjVNXSA9IG9mX2Nsa19nZXRfYnlfbmFtZShucCwgIm9zY18yNW0iKTsNCj4gPiDCoAlj
+bGtzW0lNWDhNUV9DTEtfMjdNXSA9IG9mX2Nsa19nZXRfYnlfbmFtZShucCwgIm9zY18yN20iKTsN
+Cj4gPiArCWNsa3NbSU1YOE1RX0NMS19IRE1JX1BIWV8yN01dID0gb2ZfY2xrX2dldF9ieV9uYW1l
+KG5wLA0KPiA+ICsib3NjX2hkbWlfcGh5XzI3bSIpOw0KPiANCj4gVGhpcyBpcyBub3QgYWNjZXB0
+YWJsZS4gVGhpcyBhZGRzIGEgbmV3IHJlcXVpcmVkIGNsb2NrIGlucHV0LCB3aXRob3V0DQo+IGJv
+dGhlcmluZyB0byBhZGQgdGhlIGNvcnJlc3BvbmRpbmcgYmluZGluZyBpbmZvcm1hdGlvbiBvciB0
+aGlua2luZyBhYm91dA0KPiBiYWNrd2FyZHMgY29tcGF0aWJpbGl0eS4gQXQgdGhpcyBwb2ludCB0
+aGVyZSBhcmUgZXhpc3RpbmcgRFRzIG91dCB0aGVyZSwgd2hpY2gNCj4gZG9uJ3QgcHJvdmlkZSB0
+aGlzIHJlcXVpcmVkIGNsb2NrLCB3aGljaCB3aWxsIGNhdXNlIGEgZnVsbCBib290IHJlZ3Jlc3Np
+b24uIFRoaXMNCj4gY2FuIG9ubHkgYmUgYW4gb3B0aW9uYWwgY2xvY2sgaW5wdXQgYXQgdGhpcyBw
+b2ludC4NCg0KV2hhdCBkbyB5b3UgdGhpbmsgaWYgd2UgZG9uJ3QgZ2V0IHN1Y2ggY2xvY2sgZnJv
+bSBEVD8gSnVzdCByZWdpc3RlciB0aGlzIGZpeGVkIGNsb2NrDQppbiBjbG9jayBkcml2ZXIgZGly
+ZWN0bHksIHRoZW4gdGhlcmUgd2lsbCBiZSBubyBkZXBlbmRlbmN5IG9mIERULg0KDQpBbnNvbi4N
+Cg0KPiANCj4gUmVnYXJkcywNCj4gTHVjYXMNCj4gDQo+ID4gwqAJY2xrc1tJTVg4TVFfQ0xLX0VY
+VDFdID0gb2ZfY2xrX2dldF9ieV9uYW1lKG5wLCAiY2xrX2V4dDEiKTsNCj4gPiDCoAljbGtzW0lN
+WDhNUV9DTEtfRVhUMl0gPSBvZl9jbGtfZ2V0X2J5X25hbWUobnAsICJjbGtfZXh0MiIpOw0KPiA+
+IMKgCWNsa3NbSU1YOE1RX0NMS19FWFQzXSA9IG9mX2Nsa19nZXRfYnlfbmFtZShucCwgImNsa19l
+eHQzIik7DQo=
