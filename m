@@ -1,68 +1,173 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v5 2/7] x86, olpc: Use a correct version when making up a
- battery node
-Date: Wed, 6 Mar 2019 21:01:00 -0800
-Message-ID: <20190307050100.GA44339@wrath>
-References: <20190110174005.1202564-1-lkundrak@v3.sk>
- <20190110174005.1202564-3-lkundrak@v3.sk>
+From: Qii Wang <qii.wang@mediatek.com>
+Subject: Re: [PATCH v5 5/5] i2c: mediatek: Add i2c support for MediaTek
+ MT8183
+Date: Thu, 7 Mar 2019 13:01:31 +0800
+Message-ID: <1551934891.30363.58.camel@mhfsdcap03>
+References: <1551186660-16902-1-git-send-email-qii.wang@mediatek.com>
+         <1551186660-16902-6-git-send-email-qii.wang@mediatek.com>
+         <CANMq1KBMwWEegui9439q2wVVLRyp6XT8=Om8H7EYGCR6bJw=eg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190110174005.1202564-3-lkundrak@v3.sk>
+In-Reply-To: <CANMq1KBMwWEegui9439q2wVVLRyp6XT8=Om8H7EYGCR6bJw=eg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, x86@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
+To: Nicolas Boichat <drinkcat@chromium.org>
+Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Leilk Liu <leilk.liu@mediatek.com>, xinping.qian@mediatek.com, liguo.zhang@mediatek.com, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 10, 2019 at 06:40:00PM +0100, Lubomir Rintel wrote:
-> The XO-1 and XO-1.5 batteries apparently differ in an ability to report
-> ambient temperature. Add a different compatible string to the 1.5
-> battery.
+On Wed, 2019-03-06 at 18:52 +0800, Nicolas Boichat wrote:
+> On Tue, Feb 26, 2019 at 9:11 PM Qii Wang <qii.wang@mediatek.com> wrote:
+> >
+> > Add i2c compatible for MT8183. Compare to MT2712 i2c controller,
+> > MT8183 has different register offsets. Ltiming_reg is added to
+> > adjust low width of SCL. Arb clock and dma_sync are needed.
+> >
+> > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> > ---
+> >  drivers/i2c/busses/i2c-mt65xx.c |   53 +++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 51 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+> > index 75d88e1..82eedbd 100644
+> > --- a/drivers/i2c/busses/i2c-mt65xx.c
+> > +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> > @@ -133,6 +133,8 @@ enum I2C_REGS_OFFSET {
+> >         OFFSET_DEBUGCTRL,
+> >         OFFSET_TRANSFER_LEN_AUX,
+> >         OFFSET_CLOCK_DIV,
+> > +       /* MT8183 only regs */
+> > +       OFFSET_LTIMING,
+> >  };
+> >
+> >  static const u16 mt_i2c_regs_v1[] = {
+> > @@ -162,6 +164,32 @@ enum I2C_REGS_OFFSET {
+> >         [OFFSET_CLOCK_DIV] = 0x70,
+> >  };
+> >
+> > +static const u16 mt_i2c_regs_v2[] = {
+> > +       [OFFSET_DATA_PORT] = 0x0,
+> > +       [OFFSET_SLAVE_ADDR] = 0x4,
+> > +       [OFFSET_INTR_MASK] = 0x8,
+> > +       [OFFSET_INTR_STAT] = 0xc,
+> > +       [OFFSET_CONTROL] = 0x10,
+> > +       [OFFSET_TRANSFER_LEN] = 0x14,
+> > +       [OFFSET_TRANSAC_LEN] = 0x18,
+> > +       [OFFSET_DELAY_LEN] = 0x1c,
+> > +       [OFFSET_TIMING] = 0x20,
+> > +       [OFFSET_START] = 0x24,
+> > +       [OFFSET_EXT_CONF] = 0x28,
+> > +       [OFFSET_LTIMING] = 0x2c,
+> > +       [OFFSET_HS] = 0x30,
+> > +       [OFFSET_IO_CONFIG] = 0x34,
+> > +       [OFFSET_FIFO_ADDR_CLR] = 0x38,
+> > +       [OFFSET_TRANSFER_LEN_AUX] = 0x44,
+> > +       [OFFSET_CLOCK_DIV] = 0x48,
+> > +       [OFFSET_SOFTRESET] = 0x50,
+> > +       [OFFSET_DEBUGSTAT] = 0xe0,
+> > +       [OFFSET_DEBUGCTRL] = 0xe8,
+> > +       [OFFSET_FIFO_STAT] = 0xf4,
+> > +       [OFFSET_FIFO_THRESH] = 0xf8,
+> > +       [OFFSET_DCM_EN] = 0xf88,
+> > +};
+> > +
+> >  struct mtk_i2c_compatible {
+> >         const struct i2c_adapter_quirks *quirks;
+> >         const u16 *regs;
+> > @@ -195,6 +223,7 @@ struct mtk_i2c {
+> >         enum mtk_trans_op op;
+> >         u16 timing_reg;
+> >         u16 high_speed_reg;
+> > +       u16 ltiming_reg;
+> >         unsigned char auto_restart;
+> >         bool ignore_restart_irq;
+> >         const struct mtk_i2c_compatible *dev_comp;
+> > @@ -271,12 +300,24 @@ struct mtk_i2c {
+> >         .dma_sync = 0,
+> >  };
+> >
+> > +static const struct mtk_i2c_compatible mt8183_compat = {
+> > +       .regs = mt_i2c_regs_v2,
+> > +       .pmic_i2c = 0,
+> > +       .dcm = 0,
+> > +       .auto_restart = 1,
+> > +       .aux_len_reg = 1,
+> > +       .support_33bits = 1,
+> > +       .timing_adjust = 1,
+> > +       .dma_sync = 1,
+> > +};
+> > +
+> >  static const struct of_device_id mtk_i2c_of_match[] = {
+> >         { .compatible = "mediatek,mt2712-i2c", .data = &mt2712_compat },
+> >         { .compatible = "mediatek,mt6577-i2c", .data = &mt6577_compat },
+> >         { .compatible = "mediatek,mt6589-i2c", .data = &mt6589_compat },
+> >         { .compatible = "mediatek,mt7622-i2c", .data = &mt7622_compat },
+> >         { .compatible = "mediatek,mt8173-i2c", .data = &mt8173_compat },
+> > +       { .compatible = "mediatek,mt8183-i2c", .data = &mt8183_compat },
+> >         {}
+> >  };
+> >  MODULE_DEVICE_TABLE(of, mtk_i2c_of_match);
+> > @@ -361,6 +402,8 @@ static void mtk_i2c_init_hw(struct mtk_i2c *i2c)
+> >
+> >         mtk_i2c_writew(i2c, i2c->timing_reg, OFFSET_TIMING);
+> >         mtk_i2c_writew(i2c, i2c->high_speed_reg, OFFSET_HS);
+> > +       if (i2c->dev_comp->regs == mt_i2c_regs_v2)
+> > +               mtk_i2c_writew(i2c, i2c->ltiming_reg, OFFSET_LTIMING);
+> 
+> Matthias wasn't super happy with this. One way is to add another field
+> in the compatible string. Another may be to have
+> mt_i2c_regs_v1[OFFSET_LTIMING] point at, say 0xffff (#define this as
+> I2C_REG_INVALID or something), and test for that?
+> 
+> Either way would scale better if we end up with more than 2 versions
+> of the register set in the future.
+> 
 
-Hi Lubomir,
+ok, I will add a flag(ltiming_adjust) in mtk_i2c_compatible.
 
-Thanks for the recent Cc and pointer to here. In general, I have no
-problem with the net changes. I do have some concerns from a
-reviewability and change documentation perspective.
-
-You document your intent above, but you also made several other changes
-to get there which aren't documented, so when reviewing they stand out
-as "why is this here?".
-
->From what I can tell, this change contains:
-
-1) Cleanup of olpc_dt_interpret() calls to avoid splitting string
-literals (noted in the patch history, but not called out as an
-intentional change)
-
-2) Refactoring of logic and breaking out the check for the compatible
-property into olpc_dt_compatible_match
-
-3) Addition of "we're running very old firmware if this is missing"
-checks - I'm not sure how this relates to the stated problem and
-the intended fix.
-
-4) The addition of the xo1.5 compatible property.
-
-All the other things makes it very difficult to determine if this patch
-does what you describe - and only what you describe.
-
-In general please:
-a) Cleanup code
-b) Refactor code
-c) Change functionality
-
-In that order - that way the new functionality is what show up when
-someone does a git blame on the file (rather than a cleanup patch, which
-isn't as useful in defect analysis).
-
-And always document in your commit messages the approach you take to fix
-the reported issue.
-
-Thanks,
-
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+> >         /* If use i2c pin from PMIC mt6397 side, need set PATH_DIR first */
+> >         if (i2c->have_pmic)
+> > @@ -460,6 +503,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
+> >         unsigned int clk_src;
+> >         unsigned int step_cnt;
+> >         unsigned int sample_cnt;
+> > +       unsigned int l_step_cnt;
+> > +       unsigned int l_sample_cnt;
+> >         unsigned int target_speed;
+> >         int ret;
+> >
+> > @@ -469,11 +514,11 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
+> >         if (target_speed > MAX_FS_MODE_SPEED) {
+> >                 /* Set master code speed register */
+> >                 ret = mtk_i2c_calculate_speed(i2c, clk_src, MAX_FS_MODE_SPEED,
+> > -                                             &step_cnt, &sample_cnt);
+> > +                                             &l_step_cnt, &l_sample_cnt);
+> >                 if (ret < 0)
+> >                         return ret;
+> >
+> > -               i2c->timing_reg = (sample_cnt << 8) | step_cnt;
+> > +               i2c->timing_reg = (l_sample_cnt << 8) | l_step_cnt;
+> >
+> >                 /* Set the high speed mode register */
+> >                 ret = mtk_i2c_calculate_speed(i2c, clk_src, target_speed,
+> > @@ -483,6 +528,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
+> >
+> >                 i2c->high_speed_reg = I2C_TIME_DEFAULT_VALUE |
+> >                         (sample_cnt << 12) | (step_cnt << 8);
+> > +               i2c->ltiming_reg = (l_sample_cnt << 6) | l_step_cnt |
+> > +                                  (sample_cnt << 12) | (step_cnt << 9);
+> >         } else {
+> >                 ret = mtk_i2c_calculate_speed(i2c, clk_src, target_speed,
+> >                                               &step_cnt, &sample_cnt);
+> > @@ -493,6 +540,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
+> >
+> >                 /* Disable the high speed transaction */
+> >                 i2c->high_speed_reg = I2C_TIME_CLR_VALUE;
+> > +
+> > +               i2c->ltiming_reg = (sample_cnt << 6) | step_cnt;
+> >         }
+> >
+> >         return 0;
+> > --
+> > 1.7.9.5
+> >
