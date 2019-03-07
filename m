@@ -1,59 +1,49 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 2/3] clk: imx8mq: add hdmi_phy_27m clock as pll's
- reference clock
-Date: Thu, 07 Mar 2019 13:05:33 +0100
-Message-ID: <1551960333.9298.37.camel@pengutronix.de>
-References: <1551929772-22633-1-git-send-email-Anson.Huang@nxp.com>
-         <1551929772-22633-2-git-send-email-Anson.Huang@nxp.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH RESEND V2 1/4] dt-bindings: fsl: scu: add watchdog binding
+Date: Thu, 7 Mar 2019 12:22:32 +0000
+Message-ID: <AM0PR04MB4211EAEA6F03465D372B0B4F804C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
+ <1550472539-16590-2-git-send-email-Anson.Huang@nxp.com>
+ <20190222195217.GA22194@bogus>
+ <bb19470c-1590-f8dd-72e6-b382444d7902@roeck-us.net>
+ <DB3PR0402MB3916912A64AF0837A9649913F5790@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <96932b3e-87f1-d8f2-95bc-0e9a8d5d45ed@roeck-us.net>
+ <DB3PR0402MB391659B6A466B1D85114E9C9F57A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAL_JsqJV9NxpOJi3Jh2Uk-TOmOL4rWwqZp3sodxsRinAHZ3m3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551929772-22633-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <CAL_JsqJV9NxpOJi3Jh2Uk-TOmOL4rWwqZp3sodxsRinAHZ3m3w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Abel Vesa <abel.vesa@nxp.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Rob Herring <robh@kernel.org>, Anson Huang <anson.huang@nxp.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "festevam@gmail.com" <festevam@gmail.com>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, Andy Gross <andy.gross@linaro.org>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, enri
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 07.03.2019, 03:41 +0000 schrieb Anson Huang:
-> There is another 27MHz OSC inside i.MX8MQ's display block and
-> it can be one of reference clocks of all PLLs, add it into clock
-> tree and also add it as PLL's reference clock.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  drivers/clk/imx/clk-imx8mq.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
-> index a9b3888..bb1bf9b 100644
-> --- a/drivers/clk/imx/clk-imx8mq.c
-> +++ b/drivers/clk/imx/clk-imx8mq.c
-> @@ -26,7 +26,7 @@ static u32 share_count_nand;
->  
->  static struct clk *clks[IMX8MQ_CLK_END];
->  
-> -static const char * const pll_ref_sels[] = { "osc_25m", "osc_27m", "dummy", "dummy", };
-> +static const char * const pll_ref_sels[] = { "osc_25m", "osc_27m", "osc_hdmi_phy_27m", "dummy", };
->  static const char * const arm_pll_bypass_sels[] = {"arm_pll", "arm_pll_ref_sel", };
->  static const char * const gpu_pll_bypass_sels[] = {"gpu_pll", "gpu_pll_ref_sel", };
->  static const char * const vpu_pll_bypass_sels[] = {"vpu_pll", "vpu_pll_ref_sel", };
-> @@ -281,6 +281,7 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
->  	clks[IMX8MQ_CLK_32K] = of_clk_get_by_name(np, "ckil");
->  	clks[IMX8MQ_CLK_25M] = of_clk_get_by_name(np, "osc_25m");
->  	clks[IMX8MQ_CLK_27M] = of_clk_get_by_name(np, "osc_27m");
-> +	clks[IMX8MQ_CLK_HDMI_PHY_27M] = of_clk_get_by_name(np, "osc_hdmi_phy_27m");
-
-This is not acceptable. This adds a new required clock input, without
-bothering to add the corresponding binding information or thinking
-about backwards compatibility. At this point there are existing DTs out
-there, which don't provide this required clock, which will cause a full
-boot regression. This can only be an optional clock input at this
-point.
-
-Regards,
-Lucas
-
->  	clks[IMX8MQ_CLK_EXT1] = of_clk_get_by_name(np, "clk_ext1");
->  	clks[IMX8MQ_CLK_EXT2] = of_clk_get_by_name(np, "clk_ext2");
->  	clks[IMX8MQ_CLK_EXT3] = of_clk_get_by_name(np, "clk_ext3");
+SGkgUm9iLA0KDQo+ID4gPiBJIHRoaW5rIFJvYiBzdWdnZXN0ZWQgdGhhdCB0aGUgU0NVIHBhcmVu
+dCBkcml2ZXIgc2hvdWxkIGluc3RhbnRpYXRlDQo+ID4gPiB0aGUgd2F0Y2hkb2cgd2l0aG91dCBl
+eHBsaWNpdCB3YXRjaGRvZyBub2RlLiBUaGF0IHdvdWxkIGJlIHBvc3NpYmxlLA0KPiA+ID4gYnV0
+IGl0IGN1cnJlbnRseSB1c2VzDQo+ID4gPiBkZXZtX29mX3BsYXRmb3JtX3BvcHVsYXRlKCkgdG8g
+ZG8gdGhlIGluc3RhbnRpYXRpb24sIGFuZCBjaGFuZ2luZw0KPiA+ID4gdGhhdCB3b3VsZCBiZSBh
+IG1lc3MuIEJlc2lkZXMsIGl0IGRvZXMgc2VtIHRvIG1lIHRoYXQgeW91ciBzdWdnZXN0ZWQNCj4g
+PiA+IG5vZGUgd291bGQgZGVzY3JpYmUgdGhlIGhhcmR3YXJlLCBzbyBJIGFtIG5vdCBzdXJlIEkg
+dW5kZXJzdGFuZCB0aGUNCj4gcmVhc29uaW5nLg0KPiANCj4gSXQgd291bGQganVzdCBiZSBhIGNh
+bGwgdG8gY3JlYXRlIGEgcGxhdGZvcm0gZGV2aWNlIGluc3RlYWQuIEhvdyBpcyB0aGF0IGEgbWVz
+cz8NCj4gDQo+IEl0J3MgZGVzY3JpYmluZyBmaXJtd2FyZS4gV2UgaGF2ZSBEVCBmb3IgZGVzY3Jp
+YmluZyBoL3cgd2UndmUgZmFpbGVkIHRvIG1ha2UNCj4gZGlzY292ZXJhYmxlLiBXZSBzaG91bGQg
+bm90IHJlcGVhdCB0aGF0IGFuZCBqdXN0IGRlc2NyaWJlIGZpcm13YXJlIGluIERULg0KPiBNYWtl
+IHRoZSBmaXJtd2FyZSBkaXNjb3ZlcmFibGUhIFRob3VnaCB0aGVyZSBhcmUgY2FzZXMgbGlrZSBm
+aXJtd2FyZQ0KPiBwcm92aWRlZCBjbG9ja3Mgd2hlcmUgd2Ugc3RpbGwgbmVlZCBzb21ldGhpbmcg
+aW4gRFQsIGJ1dCB0aGlzIGlzIG5vdCBvbmUgb2YNCj4gdGhlbS4NCj4gDQoNClRoZSB3YXRjaGRv
+ZyBub2RlIGhlcmUgaW4gcXVlc3Rpb24gYWN0dWFsbHkgaXMgbm90IHVzaW5nIFNDVSBmaXJtd2Fy
+ZSBjYWxsLg0KRHVlIHRvIHNlY3VyaXR5IHJlcXVpcmVtZW50IGJ5IFNDVSwgd2F0Y2hkb2cgY2Fu
+IG9ubHkgYmUgYWNjZXNzZWQgaW4NCnNlY3VyaXR5IG1vZGUsIGZvciBJTVggY2FzZSwgdmlhIEFS
+TSBUcnVzdCBGaXJtd2FyZS4gVGhhdCBtZWFucyB0aGUNCndhdGNoZG9nIHVzZWQgaW4gTGludXgg
+YWN0dWFsbHkgaXMgdXNpbmcgQVJNIFNNQyBjYWxsIGFuZCBkb2VzIG5vdA0KZGVwZW5kIFNDVSBk
+cml2ZXIuIFNvIEl0IHdvdWxkIGJlIHN0cmFuZ2UgZm9yIFNDVSBkcml2ZXIgdG8gaW5zdGFudGlh
+dGUgaXQuDQoNCkZvciB0aGlzIHNpdHVhdGlvbiwgZG8geW91IHRoaW5rIHdlIGNhbiBtb3ZlIHdh
+dGNoZG9nIG91dCBvZiBzY3Ugbm9kZT8NCk1heWJlIHJlbmFtZSB0aGUgY29tcGF0aWJsZSBzdHJp
+bmcgbGlrZSAiZnNsLGlteDhxeHAtc2lwLXdhdGNoZG9nIg0KYmVjYXVzZSBpdCdzIGFjdHVhbGx5
+IGEgd2F0Y2hkb2cgc2VydmljZWQgYnkgQVRGIGZpcm13YXJlLg0KDQpSZWdhcmRzDQpEb25nIEFp
+c2hlbmcNCg==
