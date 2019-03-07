@@ -1,168 +1,85 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 2/2] arm64: dts: bitmain: Add GPIO Line names for Sophon
- Edge board
-Date: Thu, 7 Mar 2019 22:55:01 +0530
-Message-ID: <20190307172501.GB9268@Mani-XPS-13-9360>
-References: <20190226115022.19022-1-manivannan.sadhasivam@linaro.org>
- <20190226115022.19022-2-manivannan.sadhasivam@linaro.org>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: RE: [PATCH V1 07/11] mmc: cqhci: add quirk for setting DCMD
+ CMD_TIMING
+Date: Thu, 7 Mar 2019 18:16:08 +0000
+Message-ID: <BYAPR12MB33984D80A404EF919F3A86A0C24C0@BYAPR12MB3398.namprd12.prod.outlook.com>
+References: <1551504025-3541-1-git-send-email-skomatineni@nvidia.com>
+ <1551504025-3541-7-git-send-email-skomatineni@nvidia.com>
+ <a320c841-7e58-4d3e-5df6-61e10520d9d8@intel.com>
+ <a544bc6d-7b23-53e8-16d0-ee0eaf576eb2@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190226115022.19022-2-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <a544bc6d-7b23-53e8-16d0-ee0eaf576eb2@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, amit.kucheria@linaro.org, linux-gpio@vger.kernel.org
+To: Ritesh Harjani <riteshh@codeaurora.org>, Adrian Hunter <adrian.hunter@intel.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Asutosh Das <asutoshd@codeaurora.org>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Aniruddha Tvs Rao <anrao@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 05:20:22PM +0530, Manivannan Sadhasivam wrote:
-> Add GPIO line names for Sophon Edge board based on BM1880 SoC from
-> Bitmain. Line names are based on the board schematics as well as the
-> 96Boards Consumer Edition specification v1.0.
-> 
-
-Applied for v5.2 with Linus's Reviewed-by tag.
-
-Thanks,
-Mani
-
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  .../boot/dts/bitmain/bm1880-sophon-edge.dts   | 114 ++++++++++++++++++
->  1 file changed, 114 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts b/arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts
-> index 6a3255597138..6bdf4c101c61 100644
-> --- a/arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts
-> +++ b/arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts
-> @@ -8,6 +8,28 @@
->  
->  #include "bm1880.dtsi"
->  
-> +/*
-> + * GPIO name legend: proper name = the GPIO line is used as GPIO
-> + *         NC = not connected (pin out but not routed from the chip to
-> + *              anything the board)
-> + *         "[PER]" = pin is muxed for [peripheral] (not GPIO)
-> + *         LSEC = Low Speed External Connector
-> + *         HSEC = High Speed External Connector
-> + *
-> + * Line names are taken from the schematic "sophon-edge-schematics"
-> + * version, 1.0210.
-> + *
-> + * For the lines routed to the external connectors the
-> + * lines are named after the 96Boards CE Specification 1.0,
-> + * Appendix "Expansion Connector Signal Description".
-> + *
-> + * When the 96Board naming of a line and the schematic name of
-> + * the same line are in conflict, the 96Board specification
-> + * takes precedence. This is only for the informational
-> + * lines i.e. "[FOO]", the GPIO named lines "GPIO-A" thru "GPIO-L"
-> + * are the only ones actually used for GPIO.
-> + */
-> +
->  / {
->  	compatible = "bitmain,sophon-edge", "bitmain,bm1880";
->  	model = "Sophon Edge";
-> @@ -32,6 +54,98 @@
->  		clock-frequency = <500000000>;
->  		#clock-cells = <0>;
->  	};
-> +
-> +	soc {
-> +		gpio0: gpio@50027000 {
-> +			porta: gpio-controller@0 {
-> +				gpio-line-names =
-> +					"GPIO-A", /* GPIO0, LSEC pin 23 */
-> +					"GPIO-C", /* GPIO1, LSEC pin 25 */
-> +					"[GPIO2_PHY0_RST]", /* GPIO2 */
-> +					"GPIO-E", /* GPIO3, LSEC pin 27 */
-> +					"[USB_DET]", /* GPIO4 */
-> +					"[EN_P5V]", /* GPIO5 */
-> +					"[VDDIO_MS1_SEL]", /* GPIO6 */
-> +					"GPIO-G", /* GPIO7, LSEC pin 29 */
-> +					"[BM_TUSB_RST_L]", /* GPIO8 */
-> +					"[EN_P5V_USBHUB]", /* GPIO9 */
-> +					"NC",
-> +					"LED_WIFI", /* GPIO11 */
-> +					"LED_BT", /* GPIO12 */
-> +					"[BM_BLM8221_EN_L]", /* GPIO13 */
-> +					"NC", /* GPIO14 */
-> +					"NC", /* GPIO15 */
-> +					"NC", /* GPIO16 */
-> +					"NC", /* GPIO17 */
-> +					"NC", /* GPIO18 */
-> +					"NC", /* GPIO19 */
-> +					"NC", /* GPIO20 */
-> +					"NC", /* GPIO21 */
-> +					"NC", /* GPIO22 */
-> +					"NC", /* GPIO23 */
-> +					"NC", /* GPIO24 */
-> +					"NC", /* GPIO25 */
-> +					"NC", /* GPIO26 */
-> +					"NC", /* GPIO27 */
-> +					"NC", /* GPIO28 */
-> +					"NC", /* GPIO29 */
-> +					"NC", /* GPIO30 */
-> +					"NC"; /* GPIO31 */
-> +			};
-> +		};
-> +
-> +		gpio1: gpio@50027400 {
-> +			portb: gpio-controller@0 {
-> +				gpio-line-names =
-> +					"NC", /* GPIO32 */
-> +					"NC", /* GPIO33 */
-> +					"[I2C0_SDA]", /* GPIO34, LSEC pin 17 */
-> +					"[I2C0_SCL]", /* GPIO35, LSEC pin 15 */
-> +					"[JTAG0_TDO]", /* GPIO36 */
-> +					"[JTAG0_TCK]", /* GPIO37 */
-> +					"[JTAG0_TDI]", /* GPIO38 */
-> +					"[JTAG0_TMS]", /* GPIO39 */
-> +					"[JTAG0_TRST_X]", /* GPIO40 */
-> +					"[JTAG1_TDO]", /* GPIO41 */
-> +					"[JTAG1_TCK]", /* GPIO42 */
-> +					"[JTAG1_TDI]", /* GPIO43 */
-> +					"[CPU_TX]", /* GPIO44 */
-> +					"[CPU_RX]", /* GPIO45 */
-> +					"[UART1_TXD]", /* GPIO46 */
-> +					"[UART1_RXD]", /* GPIO47 */
-> +					"[UART0_TXD]", /* GPIO48 */
-> +					"[UART0_RXD]", /* GPIO49 */
-> +					"GPIO-I", /* GPIO50, LSEC pin 31 */
-> +					"GPIO-K", /* GPIO51, LSEC pin 33 */
-> +					"USER_LED2", /* GPIO52 */
-> +					"USER_LED1", /* GPIO53 */
-> +					"[UART0_RTS]", /* GPIO54 */
-> +					"[UART0_CTS]", /* GPIO55 */
-> +					"USER_LED4", /* GPIO56, JTAG1_TRST_X */
-> +					"USER_LED3", /* GPIO57, JTAG1_TMS */
-> +					"[I2S0_SCLK]", /* GPIO58 */
-> +					"[I2S0_FS]", /* GPIO59 */
-> +					"[I2S0_SDI]", /* GPIO60 */
-> +					"[I2S0_SDO]", /* GPIO61 */
-> +					"GPIO-B", /* GPIO62, LSEC pin 24 */
-> +					"GPIO-F"; /* GPIO63, I2S1_SCLK, LSEC pin 28 */
-> +			};
-> +		};
-> +
-> +		gpio2: gpio@50027800 {
-> +			portc: gpio-controller@0 {
-> +				gpio-line-names =
-> +					"GPIO-D", /* GPIO64, I2S1_FS, LSEC pin 26 */
-> +					"GPIO-J", /* GPIO65, I2S1_SDI, LSEC pin 32 */
-> +					"GPIO-H", /* GPIO66, I2S1_SDO, LSEC pin 30 */
-> +					"GPIO-L", /* GPIO67, LSEC pin 34 */
-> +					"[SPI0_CS]", /* GPIO68, SPI1_CS, LSEC pin 12 */
-> +					"[SPI0_DIN]", /* GPIO69, SPI1_SDI, LSEC pin 10 */
-> +					"[SPI0_DOUT]", /* GPIO70, SPI1_SDO, LSEC pin 14 */
-> +					"[SPI0_SCLK]"; /* GPIO71, SPI1_SCK, LSEC pin 8 */
-> +			};
-> +		};
-> +	};
->  };
->  
->  &uart0 {
-> -- 
-> 2.17.1
-> 
+DQo+IE9uIDMvNi8yMDE5IDY6MzAgUE0sIEFkcmlhbiBIdW50ZXIgd3JvdGU6DQo+PiBPbiAyLzAz
+LzE5IDc6MjAgQU0sIFNvd2phbnlhIEtvbWF0aW5lbmkgd3JvdGU6DQo+Pj4gVGhpcyBwYXRjaCBh
+ZGRzIGEgcXVpcmsgZm9yIHNldHRpbmcgQ01EX1RJTUlORyB0byAxIGluIGRlc2NyaXB0b3IgZm9y
+IA0KPj4+IERDTUQgd2l0aCBSMUIgcmVzcG9uc2UgdHlwZSB0byBhbGxvdyB0aGUgY29tbWFuZCB0
+byBiZSBzZW50IHRvIGRldmljZSANCj4+PiBkdXJpbmcgZGF0YSBhY3Rpdml0eSBvciBidXN5IHRp
+bWUuDQo+Pj4NCj4+PiBUZWdyYTE4NiBDUUhDSSBob3N0IGhhcyBidWcgd2hlcmUgaXQgc2VsZWN0
+cyBEQVRBX1BSRVNFTlRfU0VMRUNUIHRvIDEgDQo+Pj4gYnkgQ1FIQ0kgY29udHJvbGxlciBmb3Ig
+RENNRHMgd2l0aCBSMUIgcmVzcG9uc2UgdHlwZSBhbmQgc2luY2UgRENNRCANCj4+PiBkb2VzIG5v
+dCB0cmlnZ2VyIGFueSBkYXRhIHRyYW5zZmVyLCBEQ01EIHRhc2sgY29tcGxldGUgaGFwcGVucyAN
+Cj4+PiBsZWF2aW5nIHRoZSBEQVRBIEZTTSBvZiBob3N0IGNvbnRyb2xsZXIgaW4gd2FpdCBzdGF0
+ZSBmb3IgZGF0YS4NCj4+Pg0KPj4+IFRoaXMgZWZmZWN0cyB0aGUgZGF0YSB0cmFuc2ZlciB0YXNr
+IGlzc3VlZCBhZnRlciBSMUIgRENNRCB0YXNrIGFuZCBubyANCj4+PiBpbnRlcnJ1cHQgaXMgZ2Vu
+ZXJhdGVkIGZvciB0aGUgZGF0YSB0cmFuc2ZlciB0YXNrLg0KPj4+DQo+Pj4gU1cgV0FSIGZvciB0
+aGlzIGlzc3VlIGlzIHRvIHNldCBDTURfVElNSU5HIGJpdCB0byAxIGluIERDTUQgdGFzayANCj4+
+PiBkZXNjcmlwdG9yIGFuZCBhcyBEQ01EIHRhc2sgZGVzY3JpcHRvciBwcmVwYXJhdGlvbiBpcyBk
+b25lIGJ5IGNxaGNpIA0KPj4+IGRyaXZlciwgdGhpcyBwYXRjaCBhZGRzIGNxZXF1aXJrIHRvIGhh
+bmRsZSB0aGlzLg0KPj4+DQo+Pj4gU2lnbmVkLW9mZi1ieTogU293amFueWEgS29tYXRpbmVuaSA8
+c2tvbWF0aW5lbmlAbnZpZGlhLmNvbT4NCj4+PiAtLS0NCj4+PiAgIGRyaXZlcnMvbW1jL2hvc3Qv
+Y3FoY2kuYyB8IDUgKysrKy0NCj4+PiAgIGRyaXZlcnMvbW1jL2hvc3QvY3FoY2kuaCB8IDEgKw0K
+Pj4+ICAgMiBmaWxlcyBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4+
+Pg0KPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21tYy9ob3N0L2NxaGNpLmMgYi9kcml2ZXJzL21t
+Yy9ob3N0L2NxaGNpLmMgDQo+Pj4gaW5kZXggYThhZjY4MmE5MTgyLi5iMzRjMDcxMjVmMzIgMTAw
+NjQ0DQo+Pj4gLS0tIGEvZHJpdmVycy9tbWMvaG9zdC9jcWhjaS5jDQo+Pj4gKysrIGIvZHJpdmVy
+cy9tbWMvaG9zdC9jcWhjaS5jDQo+Pj4gQEAgLTUyMSw3ICs1MjEsMTAgQEAgc3RhdGljIHZvaWQg
+Y3FoY2lfcHJlcF9kY21kX2Rlc2Moc3RydWN0IG1tY19ob3N0ICptbWMsDQo+Pj4gICAJfSBlbHNl
+IHsNCj4+PiAgIAkJaWYgKG1ycS0+Y21kLT5mbGFncyAmIE1NQ19SU1BfUjFCKSB7DQo+Pj4gICAJ
+CQlyZXNwX3R5cGUgPSAweDM7DQo+Pj4gLQkJCXRpbWluZyA9IDB4MDsNCj4+PiArCQkJaWYgKGNx
+X2hvc3QtPnF1aXJrcyAmIENRSENJX1FVSVJLX0NNRF9USU1JTkdfUjFCX0RDTUQpDQo+Pj4gKwkJ
+CQl0aW1pbmcgPSAweDE7DQo+Pj4gKwkJCWVsc2UNCj4+PiArCQkJCXRpbWluZyA9IDB4MDsNCj4+
+IEkgd2FzIHRoaW5raW5nIGl0IHdvdWxkIGJlIG5pY2UgaWYgdGhlcmUgd2FzIGEgZ2VuZXJpYyB3
+YXkgZm9yIGRyaXZlcnMgDQo+PiB0byBtYWtlIGNoYW5nZXMgdG8gZGVzY3JpcHRvcnMgYmVmb3Jl
+IGEgdGFzayBpcyBzdGFydGVkLiAgQ3VycmVudGx5IA0KPj4gdGhlcmUgaXMNCj4+IGhvc3QtPm9w
+cy0+d3JpdGVfbCgpIHdoaWNoIHdvdWxkIG1ha2UgaXQgcG9zc2libGUgYnkgY2hlY2tpbmcgZm9y
+IA0KPj4gaG9zdC0+b3BzLT5DUUhDSV9UREJSDQo+PiByZWdpc3RlciBhbmQsIGluIHRoaXMgY2Fz
+ZSwgdGhlIERDTUQgdGFnLiAgV2Ugd291bGQgbmVlZCB0byBleHBvcnQgDQo+PiBnZXRfZGVzYygp
+LCBwZXJoYXBzIHJlbmFtZSBpdCBjcWhjaV9nZXRfZGVzYygpIGFuZCBwdXQgaXQgaW4gY3FoY2ku
+aCANCj4+IHNpbmNlIGl0IGlzIGFuIGlubGluZSBmdW5jdGlvbi4NCj4NCj5XZSB0YWtlIHNwaW5f
+bG9ja19pcnFzYXZlIGFmdGVyIHRoZSBkZXNjcmlwdG9yIGlzIHByZXBhcmVkIGFuZCBiZWZvcmUg
+d3JpdGluZyB0byBUREJSLg0KPk5vdCBzdXJlIGJ1dCB0b21vcnJvdyB0aGlzIG1heSBiZWNvbWUg
+YSBsaW1pdGF0aW9uIGZvciBkcml2ZXJzIHRvIG1ha2UgY2hhbmdlcyB0byBkZXNjcmlwdG9ycyBp
+ZiB0aGV5IGVkaXQgZGVzY3JpcHRvcnMgaW4gaG9zdC0+b3BzLT53cml0ZV9sKCkgY2FsbC4NCj5U
+aG91Z2ggaW4gdGhpcyBjYXNlIGl0IGlzIG5vdCByZXF1aXJlZCBoZXJlLg0KPg0KPj4NCj4+IEFs
+dGVybmF0aXZlbHkgd2UgY291bGQgYWRkIGhvc3QtPm9wcyBmb3IgZGVzY3JpcHRvciBwcmVwYXJh
+dGlvbi4NCj4NCj5Cb3RoIHdheXMgc291bmRzIGdvb2QgdG8gbWUuDQo+QnV0IG1heWJlIGFkZGlu
+ZyBhIGhvc3QtPm9wcyBmb3IgZGVzY3JpcHRvciBwcmVwYXJhdGlvbiBpcyBiZXR0ZXIgd2F5IHRv
+IGdvLA0KPnNpbmNlIHRoYXQgd2lsbCBiZSB0aGUgcmlnaHQgaW50ZXJmYWNlIGV4cG9zZWQgdG8g
+bWFrZSBjaGFuZ2VzIHRvIA0KPmRlc2NyaXB0b3JzLg0KPg0KDQpEQ01EIGRlc2NyaXB0b3IgYXR0
+cmlidXRlcyByZW1haW4gc2FtZSBmb3IgYW55IGhvc3QgYW5kIGFsc28gdGFzayBwYXJhbWV0ZXJz
+IGFzIFFCUiBuZWVkIHRvIGJlIGVuYWJsZWQgd2l0aCBEQ01ELg0KU28gSSBiZWxpZXZlIGl0IHNo
+b3VsZCBiZSBvayBpZiB3ZSBqdXN0IGFkZCBjYWxsYmFjayB0byBhbGxvdyBob3N0cyB0byB1cGRh
+dGUgY29tbWFuZCBwYXJhbWV0ZXJzIG9mIERDTUQgZGVzY3JpcHRvciBvbmx5IHRocnUgY3FoY2lf
+aG9zdF9vcHMuDQoNCkFsc28sIGRvbuKAmXQgc2VlIGFueSByZXF1aXJlbWVudCBmb3IgaG9zdCBz
+cGVjaWZpYyBUYXNrIHBhcmFtZXRlciB1cGRhdGVzIGluIFRhc2sgZGVzY3JpcHRvciBzbyBub3Qg
+c3VyZSBpZiB0aGVyZSBpcyBhbnkgbmVlZCB0byBwcm92aWRlIGNhbGxiYWNrIGZvciB0YXNrIGRl
+c2NyaXB0b3IgZGF0YSBwcmVwYXJhdGlvbiB0byBob3N0cy4NClBsZWFzZSBjb25maXJtLg0KDQo+
+Pg0KPj4gV2hhdCBkbyBwZW9wbGUgdGhpbms/DQo+Pg0KPj4+ICAgCQl9IGVsc2Ugew0KPj4+ICAg
+CQkJcmVzcF90eXBlID0gMHgyOw0KPj4+ICAgCQkJdGltaW5nID0gMHgxOw0KPj4+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL21tYy9ob3N0L2NxaGNpLmggYi9kcml2ZXJzL21tYy9ob3N0L2NxaGNpLmgN
+Cj4+PiBpbmRleCA5ZTY4Mjg2YTA3YjQuLmY5NmQ4NTY1Y2MwNyAxMDA2NDQNCj4+PiAtLS0gYS9k
+cml2ZXJzL21tYy9ob3N0L2NxaGNpLmgNCj4+PiArKysgYi9kcml2ZXJzL21tYy9ob3N0L2NxaGNp
+LmgNCj4+PiBAQCAtMTcwLDYgKzE3MCw3IEBAIHN0cnVjdCBjcWhjaV9ob3N0IHsNCj4+PiAgIA0K
+Pj4+ICAgCXUzMiBxdWlya3M7DQo+Pj4gICAjZGVmaW5lIENRSENJX1FVSVJLX1NIT1JUX1RYRlJf
+REVTQ19TWgkweDENCj4+PiArI2RlZmluZSBDUUhDSV9RVUlSS19DTURfVElNSU5HX1IxQl9EQ01E
+CTB4Mg0KPj4+ICAgDQo+Pj4gICAJYm9vbCBlbmFibGVkOw0KPj4+ICAgCWJvb2wgaGFsdGVkOw0K
+Pj4+DQo=
