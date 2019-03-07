@@ -1,116 +1,105 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v4 6/6] usb:cdns3 Fix for stuck packets in on-chip OUT
- buffer.
-Date: Thu, 7 Mar 2019 11:13:40 +0200
-Message-ID: <11e29bea-98c1-03c4-a7d5-c529df2cc341@ti.com>
-References: <1550173514-23573-1-git-send-email-pawell@cadence.com>
- <1550173514-23573-7-git-send-email-pawell@cadence.com>
- <67da432f-9c95-d644-65b5-dbc5b942d24c@ti.com>
- <BYAPR07MB47091C199971D677DE0FBB84DD7D0@BYAPR07MB4709.namprd07.prod.outlook.com>
- <e8616274-b0a8-6e59-b6fa-a68fed58bad7@ti.com>
- <BYAPR07MB470939C6F100336BAF6C41BFDD7D0@BYAPR07MB4709.namprd07.prod.outlook.com>
- <87va1dbokp.fsf@linux.intel.com>
- <70967a02-2f02-9ac8-e205-cdbfac5fbbae@ti.com>
- <BYAPR07MB4709F449E09AD352BA06CBA7DD4C0@BYAPR07MB4709.namprd07.prod.outlook.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v2] arm64: dts: ls1088a: add one more thermal zone node
+Date: Thu, 7 Mar 2019 10:14:44 +0100
+Message-ID: <dc94e884-f5eb-fe07-27ef-6a94c3174acb@linaro.org>
+References: <20190304032111.21770-1-andy.tang@nxp.com>
+ <20190304062115.GB26041@dragon>
+ <VI1PR04MB433386B86A5E6AA804E9C3B5F3710@VI1PR04MB4333.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB4709F449E09AD352BA06CBA7DD4C0@BYAPR07MB4709.namprd07.prod.outlook.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Rahul Kumar <kurahul@cadence.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <VI1PR04MB433386B86A5E6AA804E9C3B5F3710@VI1PR04MB4333.eurprd04.prod.outlook.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andy Tang <andy.tang@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/03/2019 09:06, Pawel Laszczak wrote:
-> Hi,
-> 
->> Hi,
->>
->> On 21/02/2019 09:14, Felipe Balbi wrote:
->>>
->>> Hi,
->>>
->>> (please break your emails at 80-columns)
->>>
->>> Pawel Laszczak <pawell@cadence.com> writes:
->>>>>> One more thing. Workaround has implemented algorithm that decide for which
->>>>>> endpoint it should be enabled.  e.g for composite device MSC+NCM+ACM it
->>>>>> should work only for ACM OUT endpoint.
->>>>>>
->>>>>
->>>>> If ACM driver didn't queue the request for ACM OUT endpoint, why does the
->>>>> controller accept the data at all?
->>>>>
->>>>> I didn't understand why we need a workaround for this. It should be standard
->>>>> behaviour to NAK data if function driver didn't request for all endpoints.
->>>>
->>>> Yes, I agree with you. Controller shouldn’t accept such packet. As I know this
->>>> behavior will be fixed in RTL.
->>>>
->>>> But I assume that some older version of this controller are one the market,
->>>> and driver should work correct with them.
->>>>
->>>> In the feature this workaround can be limited only to selected controllers.
->>>>
->>>> Even now I assume that it can be enabled/disabled by module parameter.
->>>
->>> no module parameters, please. Use revision detection in runtime.
->>>
->>
->> This is about whether to enable or disable the workaround.
->> By default we don't want this workaround to be enabled.
->>
->> I'm debating whether we should have this workaround at all or not.
->>
->> It has the following problems.
->>
->> 1) It ACKs packets even when gadget end is not ready to accept the transfers.
->> 2) It stores these packets in a temporary buffer and then pushes them to the
->> gadget driver whenever the gadget driver is ready to process the data.
->> 3) Since the gadget driver can become ready at an indefinite time in the
->> future, it poses 2 problems:
->> a) It is sending stale data to the sink. (problematic at next protocol level?)
->> b) If this temporary buffer runs out we still hit the lock up issue.
->>
->> I think the right solution is to make sure that the gadget driver is always
->> reading all the enabled OUT endpoints *or* (keep the OUT endpoints disabled
->> if gadget driver is not ready to process OUT transfers).
-> 
-> If driver disable endpoint then it not answer for packets from host. 
-> It will result that host reset the device, so I can't disable such endpoints. 
-> 
-> Other good solution is to change ACM driver in a way that it sends requests 
-> to controller driver after enabling endpoint. The class driver could decide 
-
-The ACM driver is doing exactly that. However, there is a large delay (depending
-on when user opens the ttyACM) between endpoint enable and request queue and
-that's the issue for this controller.
-
-The endpoint is enabled whenever the host sends a SET_INTERFACE
-[acm_set_alt()->gserial_connect()]
-but the first request is queued only when user opens the ttyACM
-[gs_open()->gs_start_io()->gs_start_rx()].
-
-I'm don't think this sequence can be changed.
-What happens if you defer gserial_connect() to be done at gs_open()?
-
-> what should do with such not expected packets. It could delete all or e.g 
-> keep only few last packets. 
-> 
-> This issue will be fixed in RTL but maybe driver should be compatible with previous 
-> controller’s version.
-> 
-> By default, this workaround will be disabled or will depend on controller version.  
->>
-> 
-> Cheers,
-> Pawel
-> 
-
--- 
-cheers,
--roger
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+T24gMDQvMDMvMjAxOSAwNzo0NiwgQW5keSBUYW5nIHdyb3RlOgo+IAo+IAo+PiAtLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLQo+PiBGcm9tOiBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5lbC5vcmc+
+Cj4+IFNlbnQ6IDIwMTnE6jPUwjTI1SAxNDoyMQo+PiBUbzogQW5keSBUYW5nIDxhbmR5LnRhbmdA
+bnhwLmNvbT4KPj4gQ2M6IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgcm9iaCtkdEBrZXJu
+ZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsKPj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsKPj4gbGludXgta2VybmVs
+QHZnZXIua2VybmVsLm9yZzsgbGludXgtcG1Admdlci5rZXJuZWwub3JnOwo+PiBkYW5pZWwubGV6
+Y2Fub0BsaW5hcm8ub3JnOyBydWkuemhhbmdAaW50ZWwuY29tOyBlZHViZXp2YWxAZ21haWwuY29t
+Cj4+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjJdIGFybTY0OiBkdHM6IGxzMTA4OGE6IGFkZCBvbmUg
+bW9yZSB0aGVybWFsIHpvbmUgbm9kZQo+Pgo+PiBPbiBNb24sIE1hciAwNCwgMjAxOSBhdCAxMToy
+MToxMUFNICswODAwLCBZdWFudGlhbiBUYW5nIHdyb3RlOgo+Pj4gTHMxMDg4YSBoYXMgMiB0aGVy
+bWFsIHNlbnNvcnMsIGNvcmUgY2x1c3RlciBhbmQgU29DIHBsYXRmb3JtLiBDb3JlCj4+PiBjbHVz
+dGVyIHNlbnNvciBpcyB1c2VkIHRvIG1vbml0b3IgdGhlIHRlbXBlcmF0dXJlIG9mIGNvcmUgYW5k
+IFNvQwo+Pj4gcGxhdGZvcm0gaXMgZm9yIHBsYXRmb3JtLiBUaGUgY3VycmVudCBkdHMgb25seSBz
+dXBwb3J0IHRoZSBmaXJzdCBzZW5zb3IuCj4+PiBUaGlzIHBhdGNoIGFkZHMgdGhlIHNlY29uZCBz
+ZW5zb3Igbm9kZSB0byBkdHMgdG8gZW5hYmxlIGl0Lgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IFl1
+YW50aWFuIFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPgo+Pj4gLS0tCj4+PiB2MjoKPj4+IAktIEFk
+ZCBtb3JlIGluZm9ybWF0aW9uIGFib3V0IHNlbnNvcnMgdG8gZGVzY3JpcHRpb24KPj4+IFBTOiBJ
+biBvcmRlciB0byBrZWVwIGNvbnNpc3RlbmN5IHRvIHRoZSBmaXJzdCB0aGVybWFsLXpvbmUgbm9k
+ZSwgdGhlcmUKPj4+IHdpbGwgYmUgIldBUk5JTkc6IGxpbmUgb3ZlciA4MCBjaGFyYWN0ZXJzIiB3
+YXJuaW5ncy4KPj4+Cj4+PiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA4
+OGEuZHRzaSB8ICAgNDMKPj4gKysrKysrKysrKysrKysrKysrKysrLS0KPj4+ICAxIGZpbGVzIGNo
+YW5nZWQsIDM5IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4+Pgo+Pj4gZGlmZiAtLWdp
+dCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwODhhLmR0c2kKPj4+IGIv
+YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA4OGEuZHRzaQo+Pj4gaW5kZXgg
+NjYxMTM3Zi4uOWY1MmJjOSAxMDA2NDQKPj4+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
+ZXNjYWxlL2ZzbC1sczEwODhhLmR0c2kKPj4+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
+ZXNjYWxlL2ZzbC1sczEwODhhLmR0c2kKPj4+IEBAIC0xMjksMTkgKzEyOSwxOSBAQAo+Pj4gIAl9
+Owo+Pj4KPj4+ICAJdGhlcm1hbC16b25lcyB7Cj4+PiAtCQljcHVfdGhlcm1hbDogY3B1LXRoZXJt
+YWwgewo+Pj4gKwkJY2N1IHsKPj4KPj4gSXMgdGhpcyBjaGFuZ2UgcmVhbGx5IG5lY2Vzc2FyeT8g
+IFdoYXQgZG9lcyAnY2N1JyBzdGFuZCBmb3I/Cj4gSSB0aGluayBzby4gY2N1IHN0YW5kcyBmb3Ig
+Y29yZSBjbHVzdGVyIHVuaXQuIGNwdSBpcyB0b28gZ2VuZXJhbC4KPiBPbiBzb21lIHBsYXRmb3Jt
+cywgdGhlcmUgYXJlIG1vcmUgdGhhbiBvbmUgY29yZSBjbHVzdGVycy4KPiBBdCBsZWFzdCB3ZSBz
+aG91bGQgY2hhbmdlIGl0IHRvICJjb3JlIGNsdXN0ZXIiIGlmIHNob3J0IGZvcm0gaXMgbm90IGFw
+cHJvcHJpYXRlLgoKSWYgdGhlIHNlbnNvciBpcyBhIHRoZSBjbHVzdGVyIGxldmVsLCAnY2x1c3Rl
+cicgaXMgZW5vdWdoLiBJTUhPLCBubyBuZWVkCnRvIGdpdmUgYSBkZXNjcmlwdGlvbiBvZiB3aGF0
+IGNvbnRhaW5zIHRoZSBjbHVzdGVyLCBvdGhlcndpc2UgeW91IHdpbGwKZW5kIHVwIHdpdGggYSAn
+Y29yZS1ncHUtY2x1c3Rlci1sMicgbmFtZS4KCj4+Cj4+PiAgCQkJcG9sbGluZy1kZWxheS1wYXNz
+aXZlID0gPDEwMDA+Owo+Pj4gIAkJCXBvbGxpbmctZGVsYXkgPSA8NTAwMD47Cj4+PiAgCQkJdGhl
+cm1hbC1zZW5zb3JzID0gPCZ0bXUgMD47Cj4+Pgo+Pj4gIAkJCXRyaXBzIHsKPj4+IC0JCQkJY3B1
+X2FsZXJ0OiBjcHUtYWxlcnQgewo+Pj4gKwkJCQljY3VfYWxlcnQ6IGNjdS1hbGVydCB7Cj4+PiAg
+CQkJCQl0ZW1wZXJhdHVyZSA9IDw4NTAwMD47Cj4+PiAgCQkJCQloeXN0ZXJlc2lzID0gPDIwMDA+
+Owo+Pj4gIAkJCQkJdHlwZSA9ICJwYXNzaXZlIjsKPj4+ICAJCQkJfTsKPj4+Cj4+PiAtCQkJCWNw
+dV9jcml0OiBjcHUtY3JpdCB7Cj4+PiArCQkJCWNjdV9jcml0OiBjY3UtY3JpdCB7Cj4+PiAgCQkJ
+CQl0ZW1wZXJhdHVyZSA9IDw5NTAwMD47Cj4+PiAgCQkJCQloeXN0ZXJlc2lzID0gPDIwMDA+Owo+
+Pj4gIAkJCQkJdHlwZSA9ICJjcml0aWNhbCI7Cj4+PiBAQCAtMTUwLDcgKzE1MCw0MiBAQAo+Pj4K
+Pj4+ICAJCQljb29saW5nLW1hcHMgewo+Pj4gIAkJCQltYXAwIHsKPj4+IC0JCQkJCXRyaXAgPSA8
+JmNwdV9hbGVydD47Cj4+PiArCQkJCQl0cmlwID0gPCZjY3VfYWxlcnQ+Owo+Pj4gKwkJCQkJY29v
+bGluZy1kZXZpY2UgPQo+Pj4gKwkJCQkJCTwmY3B1MCBUSEVSTUFMX05PX0xJTUlUCj4+IFRIRVJN
+QUxfTk9fTElNSVQ+LAo+Pj4gKwkJCQkJCTwmY3B1MSBUSEVSTUFMX05PX0xJTUlUCj4+IFRIRVJN
+QUxfTk9fTElNSVQ+LAo+Pj4gKwkJCQkJCTwmY3B1MiBUSEVSTUFMX05PX0xJTUlUCj4+IFRIRVJN
+QUxfTk9fTElNSVQ+LAo+Pj4gKwkJCQkJCTwmY3B1MyBUSEVSTUFMX05PX0xJTUlUCj4+IFRIRVJN
+QUxfTk9fTElNSVQ+LAo+Pj4gKwkJCQkJCTwmY3B1NCBUSEVSTUFMX05PX0xJTUlUCj4+IFRIRVJN
+QUxfTk9fTElNSVQ+LAo+Pj4gKwkJCQkJCTwmY3B1NSBUSEVSTUFMX05PX0xJTUlUCj4+IFRIRVJN
+QUxfTk9fTElNSVQ+LAo+Pj4gKwkJCQkJCTwmY3B1NiBUSEVSTUFMX05PX0xJTUlUCj4+IFRIRVJN
+QUxfTk9fTElNSVQ+LAo+Pj4gKwkJCQkJCTwmY3B1NyBUSEVSTUFMX05PX0xJTUlUCj4+IFRIRVJN
+QUxfTk9fTElNSVQ+Owo+Pj4gKwkJCQl9Owo+Pj4gKwkJCX07Cj4+PiArCQl9Owo+Pj4gKwo+Pj4g
+KwkJcGx0IHsKPj4KPj4gV2hhdCBhYm91dCAncGxhdGZvcm0tdGhlcm1hbCcgZm9yIG5vZGUgbmFt
+ZSwgcGxhdGZvcm0tYWxlcnQgYW5kIHBsYXRmb3JtLWNyaXQKPj4gZm9yIHRyaXAgbm9kZXMgYmVs
+b3c/Cj4gT0ssIHdpbGwgdXNlIGxvbmcgbmFtZSBmb3JtLgo+IAo+IEJSLAo+IEFuZHkKPj4KPj4g
+U2hhd24KPj4KPj4+ICsJCQlwb2xsaW5nLWRlbGF5LXBhc3NpdmUgPSA8MTAwMD47Cj4+PiArCQkJ
+cG9sbGluZy1kZWxheSA9IDw1MDAwPjsKPj4+ICsJCQl0aGVybWFsLXNlbnNvcnMgPSA8JnRtdSAx
+PjsKPj4+ICsKPj4+ICsJCQl0cmlwcyB7Cj4+PiArCQkJCXBsdF9hbGVydDogcGx0LWFsZXJ0IHsK
+Pj4+ICsJCQkJCXRlbXBlcmF0dXJlID0gPDg1MDAwPjsKPj4+ICsJCQkJCWh5c3RlcmVzaXMgPSA8
+MjAwMD47Cj4+PiArCQkJCQl0eXBlID0gInBhc3NpdmUiOwo+Pj4gKwkJCQl9Owo+Pj4gKwo+Pj4g
+KwkJCQlwbHRfY3JpdDogcGx0LWNyaXQgewo+Pj4gKwkJCQkJdGVtcGVyYXR1cmUgPSA8OTUwMDA+
+Owo+Pj4gKwkJCQkJaHlzdGVyZXNpcyA9IDwyMDAwPjsKPj4+ICsJCQkJCXR5cGUgPSAiY3JpdGlj
+YWwiOwo+Pj4gKwkJCQl9Owo+Pj4gKwkJCX07Cj4+PiArCj4+PiArCQkJY29vbGluZy1tYXBzIHsK
+Pj4+ICsJCQkJbWFwMCB7Cj4+PiArCQkJCQl0cmlwID0gPCZwbHRfYWxlcnQ+Owo+Pj4gIAkJCQkJ
+Y29vbGluZy1kZXZpY2UgPQo+Pj4gIAkJCQkJCTwmY3B1MCBUSEVSTUFMX05PX0xJTUlUCj4+IFRI
+RVJNQUxfTk9fTElNSVQ+LAo+Pj4gIAkJCQkJCTwmY3B1MSBUSEVSTUFMX05PX0xJTUlUCj4+IFRI
+RVJNQUxfTk9fTElNSVQ+LAo+Pj4gLS0KPj4+IDEuNy4xCj4+PgoKCi0tIAogPGh0dHA6Ly93d3cu
+bGluYXJvLm9yZy8+IExpbmFyby5vcmcgqaYgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBT
+b0NzCgpGb2xsb3cgTGluYXJvOiAgPGh0dHA6Ly93d3cuZmFjZWJvb2suY29tL3BhZ2VzL0xpbmFy
+bz4gRmFjZWJvb2sgfAo8aHR0cDovL3R3aXR0ZXIuY29tLyMhL2xpbmFyb29yZz4gVHdpdHRlciB8
+CjxodHRwOi8vd3d3LmxpbmFyby5vcmcvbGluYXJvLWJsb2cvPiBCbG9nCgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
+aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
