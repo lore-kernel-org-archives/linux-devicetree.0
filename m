@@ -1,20 +1,16 @@
-From: Chen-Yu Tsai <wens@kernel.org>
-Subject: Re: [PATCH v3 1/7] dt-bindings: interconnect: Add a dma interconnect
- name
-Date: Fri, 8 Mar 2019 00:09:47 +0800
-Message-ID: <CAGb2v666u1c1OE3FnN=Y_kZe7TgNKvtA6=GYiHuWycJ2ooQhxw@mail.gmail.com>
-References: <cover.f2e5fbb4d21384168973fa32377a33d627768146.1549897336.git-series.maxime.ripard@bootlin.com>
- <43eeca13733faefe62f9facc25b8e88f7e593f61.1549897336.git-series.maxime.ripard@bootlin.com>
- <553c987c-da9a-1f85-fb16-4b9fe17dd14b@linaro.org>
- <20190305155337.glfvgyddvnkv774m@flea>
- <0e72fbf7-b100-ddc5-3c19-32f71c37f76f@arm.com>
- <477995b0-9ac3-b6ca-f5f2-856e4af926f1@linaro.org>
- <20190307154755.5kgc7oh4b5bhg2fj@flea>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v2 01/10] ata: libahci: Ensure the host interrupt status
+ bits are cleared
+Date: Thu, 7 Mar 2019 16:25:02 +0000
+Message-ID: <57c2d67c-7411-0fca-933e-a76379f3165c@arm.com>
+References: <20190306102146.13005-1-miquel.raynal@bootlin.com>
+ <20190306102146.13005-2-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190307154755.5kgc7oh4b5bhg2fj@flea>
+In-Reply-To: <20190306102146.13005-2-miquel.raynal@bootlin.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,75 +20,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Dave Martin <dave.martin@arm.com>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Yong Deng <yong.deng@magewell.com>, Frank Rowand <frowand.list@gmail.com>, Georgi Djakov <georgi.djakov@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jens Axboe <axboe@kernel.dk>, Hans de Goede <hdegoede@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 11:48 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Thu, Mar 07, 2019 at 05:15:20PM +0200, Georgi Djakov wrote:
-> > Hi,
-> >
-> > On 3/5/19 18:14, Robin Murphy wrote:
-> > > On 05/03/2019 15:53, Maxime Ripard wrote:
-> > >> Hi,
-> > >>
-> > >> On Fri, Mar 01, 2019 at 07:48:15PM +0200, Georgi Djakov wrote:
-> > >>> On 2/11/19 17:02, Maxime Ripard wrote:
-> > >>>> The current DT bindings assume that the DMA will be performed by the
-> > >>>> devices through their parent DT node, and rely on that assumption
-> > >>>> for the
-> > >>>> address translation using dma-ranges.
-> > >>>>
-> > >>>> However, some SoCs have devices that will perform DMA through
-> > >>>> another bus,
-> > >>>> with separate address translation rules. We therefore need to
-> > >>>> express that
-> > >>>> relationship, through the special interconnect name "dma".
-> > >>>>
-> > >>>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > >>>> ---
-> > >>>>   Documentation/devicetree/bindings/interconnect/interconnect.txt |
-> > >>>> 3 +++
-> > >>>>   1 file changed, 3 insertions(+)
-> > >>>>
-> > >>>> diff --git
-> > >>>> a/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > >>>> b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > >>>> index 5a3c575b387a..e69fc2d992c3 100644
-> > >>>> --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > >>>> +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > >>>> @@ -51,6 +51,9 @@ interconnect-names : List of interconnect path
-> > >>>> name strings sorted in the same
-> > >>>>                interconnect-names to match interconnect paths with
-> > >>>> interconnect
-> > >>>>                specifier pairs.
-> > >>>>   +                     Reserved interconnect names:
-> > >>>> +                         * dma: Path from the device to the main
-> > >>>> memory of the system
-> > >>>
-> > >>> Bikeshed: As it's from the device to the main memory, maybe here we can
-> > >>> also denote this my calling the path dma-mem or dma-memory. For other
-> > >>> paths, we are trying to mention both the source and the destination and
-> > >>> maybe it would be good to be consistent although this is special one.
-> > >>
-> > >> I'm not sure I understand what you mean. You'd like two interconnect
-> > >> names, one called dma-memory, and one memory-dma?
-> > >
-> > > Hmm, yes, it's not like "dma" describes an actual source or destination
-> > > either :/
-> >
-> > IIUC, it's a path (bus) that a dma device use to access some memory
-> > (read or/and write). So i have used source-destination above more in the
-> > sense of initiator-target or master-slave. My suggestion was just to
-> > change the reserved interconnect name from "dma" to "dma-mem" or
-> > "dma-memory".
->
-> If dma is an issue in itself, maybe we can call it "device-memory" ?
+On 06/03/2019 10:21, Miquel Raynal wrote:
+> ahci_multi_irqs_intr_hard() is going to be used as interrupt handler
+> to support SATA per-port interrupts. The current logic is to check and
+> clear the SATA port interrupt status register only. To avoid spurious
+> IRQs and interrupt storms, it will be needed to clear the port
+> interrupt bit in the host interrupt status register as well.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  drivers/ata/libahci.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+> index b5f57c69c487..66d4906a5013 100644
+> --- a/drivers/ata/libahci.c
+> +++ b/drivers/ata/libahci.c
+> @@ -1912,7 +1912,10 @@ static void ahci_port_intr(struct ata_port *ap)
+>  static irqreturn_t ahci_multi_irqs_intr_hard(int irq, void *dev_instance)
+>  {
+>  	struct ata_port *ap = dev_instance;
+> +	struct ata_host *host = ap->host;
+> +	struct ahci_host_priv *hpriv = host->private_data;
+>  	void __iomem *port_mmio = ahci_port_base(ap);
+> +	void __iomem *mmio = hpriv->mmio;
+>  	u32 status;
+>  
+>  	VPRINTK("ENTER\n");
+> @@ -1924,6 +1927,10 @@ static irqreturn_t ahci_multi_irqs_intr_hard(int irq, void *dev_instance)
+>  	ahci_handle_port_interrupt(ap, port_mmio, status);
+>  	spin_unlock(ap->lock);
+>  
+> +	spin_lock(&host->lock);
+> +	writel(BIT(ap->port_no), mmio + HOST_IRQ_STAT);
+> +	spin_unlock(&host->lock);
 
-Might I ask what happens if the device can both DMA to and from memory?
+What's not clear here is under which circumstances this is required.
+This write should be atomic (if it isn't, you have bigger problems), and
+it is at best unclear what you're avoiding by taking the host lock.
 
-IIRC the display frontends, backends, and mixers all have writeback
-capability, using the same interconnect port.
+Thanks,
 
-ChenYu
+	M.
+-- 
+Jazz is not dead. It just smells funny...
