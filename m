@@ -1,44 +1,50 @@
-Return-Path: <SRS0=1xCY=RG=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:57208 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbfCCQMZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 3 Mar 2019 11:12:25 -0500
-Date: Sun, 3 Mar 2019 16:12:20 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: iio: imu: st_lsm6dsx: add asm330lhh
- device bindings
-Message-ID: <20190303161220.6416e777@archlinux>
-In-Reply-To: <1df29add6d5a0fcdd51594f8cf4366c9086f6fc9.1550753006.git.lorenzo@kernel.org>
-References: <cover.1550753006.git.lorenzo@kernel.org>
-        <1df29add6d5a0fcdd51594f8cf4366c9086f6fc9.1550753006.git.lorenzo@kernel.org>
+Return-Path: <SRS0=Wpk1=RK=ragnatech.se=niklas.soderlund@kernel.org>
+Date: Thu, 7 Mar 2019 01:44:43 +0100
+From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH 1/5] media: dt-bindings: media: rcar-csi2: Add r8a774a1
+ support
+Message-ID: <20190307004443.GO9239@bigcity.dyn.berto.se>
+References: <1536589878-26218-1-git-send-email-biju.das@bp.renesas.com>
+ <1536589878-26218-2-git-send-email-biju.das@bp.renesas.com>
+ <TYXPR01MB1775F18270FB477D010C180EC0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+ <8a5429a0-b4c5-a208-3e56-406bd031b01b@xs4all.nl>
+ <20190301130613.GB32244@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Sender: devicetree-owner@vger.kernel.org
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, mario.tesi@st.com, lorenzo.bianconi@redhat.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190301130613.GB32244@pendragon.ideasonboard.com>
+To: Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Biju Das <biju.das@bp.renesas.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, 21 Feb 2019 16:20:21 +0100
-Lorenzo Bianconi <lorenzo@kernel.org> wrote:
+Hi Hans, Laurent,
 
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Applied.  Thanks,
-
-Jonathan
-> ---
->  Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt | 1 +
->  1 file changed, 1 insertion(+)
+On 2019-03-01 15:06:13 +0200, Laurent Pinchart wrote:
+> Hi Hans,
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
-> index 69d53d98d0f0..8f1b09e39c72 100644
-> --- a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
-> +++ b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
-> @@ -8,6 +8,7 @@ Required properties:
->    "st,lsm6dsm"
->    "st,ism330dlc"
->    "st,lsm6dso"
-> +  "st,asm330lhh"
->  - reg: i2c address of the sensor / spi cs line
->  
->  Optional properties:
+> On Fri, Mar 01, 2019 at 01:55:53PM +0100, Hans Verkuil wrote:
+> > Hi Fabrizio,
+> > 
+> > It looks like this series fell through the cracks.
+> > 
+> > I looked at it and the main problem is that it is missing a Reviewed-by
+> > from Rob Herring (devicetree maintainer). It's a bit surprising since he
+> > is usually fairly prompt.
+> > 
+> > I recommend that you rebase and repost it and I'll delegate the v2 series
+> > to me so we can hopefully get it in for 5.2 (5.1 is likely too late) once
+> > Rob reviews it.
+> > 
+> > BTW, I'm the one who usually processes rcar patches. But it was delegated in
+> > patchwork to Laurent, so I never saw it.
+> 
+> I handle the VSP and FDP patches. I propose delegating the CSI-2 and VIN
+> to Niklas.
+
+I be more then happy to collect patches for R-Car VIN and CSI-2 and send
+PRs for them to you Hans. Would that work for you Hans?
+
+-- 
+Regards,
+Niklas S�derlund
