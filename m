@@ -1,93 +1,46 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 02/10] ata: ahci: Support per-port interrupts
-Date: Thu, 7 Mar 2019 08:58:48 +0100
-Message-ID: <20190307085848.777e62ff@xps13>
-References: <20190306102146.13005-1-miquel.raynal@bootlin.com>
- <20190306102146.13005-3-miquel.raynal@bootlin.com>
- <cd3e733d-110f-7fa0-a637-6d4bd4475142@redhat.com>
+From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: Re: [PATCH] i2c: i2c-stm32f7: Fix SDADEL minimum formula
+Date: Thu, 7 Mar 2019 09:29:57 +0100
+Message-ID: <3a2ceff7-5634-6305-5d54-356af524de7a@st.com>
+References: <1551885125-22295-1-git-send-email-bich.hemon@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cd3e733d-110f-7fa0-a637-6d4bd4475142@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Baruch Siach <baruch@tkos.co.il>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Antoine Tenart <antoine.tenart@bootlin.com>, Jens Axboe <axboe@kernel.dk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1551885125-22295-1-git-send-email-bich.hemon@st.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bich HEMON <bich.hemon@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGFucywKCkhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJlZGhhdC5jb20+IHdyb3RlIG9uIFdl
-ZCwgNiBNYXIgMjAxOSAxNjowMToxNgorMDEwMDoKCj4gPiAgIC8qKgo+ID4gICAgKiBhaGNpX3Bs
-YXRmb3JtX2VuYWJsZV9jbGtzIC0gRW5hYmxlIHBsYXRmb3JtIGNsb2Nrcwo+ID4gICAgKiBAaHBy
-aXY6IGhvc3QgcHJpdmF0ZSBhcmVhIHRvIHN0b3JlIGNvbmZpZyB2YWx1ZXMKPiA+IEBAIC0zODUs
-NiArMzk0LDcgQEAgc3RhdGljIGludCBhaGNpX3BsYXRmb3JtX2dldF9yZWd1bGF0b3Ioc3RydWN0
-IGFoY2lfaG9zdF9wcml2ICpocHJpdiwgdTMyIHBvcnQsCj4gPiAgICAqICAgIG9yIGZvciBub24g
-ZGV2aWNldHJlZSBlbmFibGVkIHBsYXRmb3JtcyBhIHNpbmdsZSBjbG9jawo+ID4gICAgKiA0KSBy
-ZXNldHMsIGlmIGZsYWdzIGhhcyBBSENJX1BMQVRGT1JNX0dFVF9SRVNFVFMgKG9wdGlvbmFsKQo+
-ID4gICAgKiA1KSBwaHlzIChvcHRpb25hbCkKPiA+ICsgKiA2KSBpbnRlcnJ1cHQocykKPiA+ICAg
-ICoKPiA+ICAgICogUkVUVVJOUzoKPiA+ICAgICogVGhlIGFsbG9jYXRlZCBhaGNpX2hvc3RfcHJp
-diBvbiBzdWNjZXNzLCBvdGhlcndpc2UgYW4gRVJSX1BUUiB2YWx1ZQo+ID4gQEAgLTM5Niw3ICs0
-MDYsNyBAQCBzdHJ1Y3QgYWhjaV9ob3N0X3ByaXYgKmFoY2lfcGxhdGZvcm1fZ2V0X3Jlc291cmNl
-cyhzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LAo+ID4gICAJc3RydWN0IGFoY2lfaG9zdF9w
-cml2ICpocHJpdjsKPiA+ICAgCXN0cnVjdCBjbGsgKmNsazsKPiA+ICAgCXN0cnVjdCBkZXZpY2Vf
-bm9kZSAqY2hpbGQ7Cj4gPiAtCWludCBpLCBlbmFibGVkX3BvcnRzID0gMCwgcmMgPSAtRU5PTUVN
-LCBjaGlsZF9ub2RlczsKPiA+ICsJaW50IGksIGVuYWJsZWRfcG9ydHMgPSAwLCByYyA9IC1FTk9N
-RU0sIGNoaWxkX25vZGVzLCBjdHJsX2lycTsKPiA+ICAgCXUzMiBtYXNrX3BvcnRfbWFwID0gMDsg
-IAo+ID4gICA+ICAgCWlmICghZGV2cmVzX29wZW5fZ3JvdXAoZGV2LCBOVUxMLCBHRlBfS0VSTkVM
-KSkgIAo+ID4gQEAgLTQ4OSwxMCArNDk5LDMwIEBAIHN0cnVjdCBhaGNpX2hvc3RfcHJpdiAqYWhj
-aV9wbGF0Zm9ybV9nZXRfcmVzb3VyY2VzKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCj4g
-PiAgIAkJZ290byBlcnJfb3V0Owo+ID4gICAJfSAgCj4gPiAgID4gKwlocHJpdi0+aXJxcyA9IGRl
-dm1fa3phbGxvYyhkZXYsIHNpemVvZigqaHByaXYtPmlycXMpICogaHByaXYtPm5wb3J0cywgIAo+
-ID4gKwkJCQkgICBHRlBfS0VSTkVMKTsKPiA+ICsJaWYgKCFocHJpdi0+aXJxcykgewo+ID4gKwkJ
-cmMgPSAtRU5PTUVNOwo+ID4gKwkJZ290byBlcnJfb3V0Owo+ID4gKwl9Cj4gPiArCj4gPiArCWN0
-cmxfaXJxID0gcGxhdGZvcm1fZ2V0X2lycShwZGV2LCAwKTsKPiA+ICsJaWYgKGN0cmxfaXJxIDwg
-MCkgewo+ID4gKwkJaWYgKGN0cmxfaXJxID09IC1FUFJPQkVfREVGRVIpIHsKPiA+ICsJCQlyYyA9
-IGN0cmxfaXJxOwo+ID4gKwkJCWdvdG8gZXJyX291dDsKPiA+ICsJCX0KPiA+ICsJCWN0cmxfaXJx
-ID0gMDsKPiA+ICsJfQo+ID4gKwo+ID4gKwlpZiAoY3RybF9pcnEgPiAwKQo+ID4gKwkJaHByaXYt
-PmlycXNbMF0gPSBjdHJsX2lycTsKPiA+ICsKPiA+ICAgCWlmIChjaGlsZF9ub2Rlcykgewo+ID4g
-ICAJCWZvcl9lYWNoX2NoaWxkX29mX25vZGUoZGV2LT5vZl9ub2RlLCBjaGlsZCkgewo+ID4gICAJ
-CQl1MzIgcG9ydDsKPiA+ICAgCQkJc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcG9ydF9kZXYgX19t
-YXliZV91bnVzZWQ7Cj4gPiArCQkJaW50IHBvcnRfaXJxOyAgCj4gPiAgID4gICAJCQlpZiAoIW9m
-X2RldmljZV9pc19hdmFpbGFibGUoY2hpbGQpKSAgCj4gPiAgIAkJCQljb250aW51ZTsKPiA+IEBA
-IC01MjEsNiArNTUxLDE4IEBAIHN0cnVjdCBhaGNpX2hvc3RfcHJpdiAqYWhjaV9wbGF0Zm9ybV9n
-ZXRfcmVzb3VyY2VzKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCj4gPiAgIAkJCX0KPiA+
-ICAgI2VuZGlmICAKPiA+ICAgPiArCQkJaWYgKCFjdHJsX2lycSkgeyAgCj4gPiArCQkJCXBvcnRf
-aXJxID0gb2ZfaXJxX2dldChjaGlsZCwgMCk7Cj4gPiArCQkJCWlmICghcG9ydF9pcnEpCj4gPiAr
-CQkJCQlwb3J0X2lycSA9IC1FSU5WQUw7Cj4gPiArCQkJCWlmIChwb3J0X2lycSA8IDApIHsKPiA+
-ICsJCQkJCXJjID0gcG9ydF9pcnE7Cj4gPiArCQkJCQlnb3RvIGVycl9vdXQ7Cj4gPiArCQkJCX0K
-PiA+ICsKPiA+ICsJCQkJaHByaXYtPmlycXNbcG9ydF0gPSBwb3J0X2lycTsKPiA+ICsJCQl9Cj4g
-PiArCj4gPiAgIAkJCXJjID0gYWhjaV9wbGF0Zm9ybV9nZXRfcGh5KGhwcml2LCBwb3J0LCBkZXYs
-IGNoaWxkKTsKPiA+ICAgCQkJaWYgKHJjKQo+ID4gICAJCQkJZ290byBlcnJfb3V0Owo+ID4gQEAg
-LTU0OCw2ICs1OTAsMTggQEAgc3RydWN0IGFoY2lfaG9zdF9wcml2ICphaGNpX3BsYXRmb3JtX2dl
-dF9yZXNvdXJjZXMoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwKPiA+ICAgCQlpZiAocmMg
-PT0gLUVQUk9CRV9ERUZFUikKPiA+ICAgCQkJZ290byBlcnJfb3V0Owo+ID4gICAJfQo+ID4gKwo+
-ID4gKwlpZiAoIWN0cmxfaXJxICYmICFlbmFibGVkX3BvcnRzKSB7Cj4gPiArCQlkZXZfZXJyKCZw
-ZGV2LT5kZXYsICJObyBJUlEgZGVmaW5lZFxuIik7Cj4gPiArCQlyYyA9IC1FTk9ERVY7Cj4gPiAr
-CQlnb3RvIGVycl9vdXQ7Cj4gPiArCX0KPiA+ICsKPiA+ICsJaWYgKGVuYWJsZWRfcG9ydHMgPiAx
-KSB7Cj4gPiArCQlocHJpdi0+ZmxhZ3MgfD0gQUhDSV9IRkxBR19NVUxUSV9NU0k7Cj4gPiArCQlo
-cHJpdi0+Z2V0X2lycV92ZWN0b3IgPSBhaGNpX2dldF9wZXJfcG9ydF9pcnFfdmVjdG9yOwo+ID4g
-Kwl9Cj4gPiArICAKPiAKPiBJIGJlbGlldmUgdGhhdCB0aGUgImlmIChlbmFibGVkX3BvcnRzID4g
-MSkiIGhlcmUgbmVlZHMgdG8gYmU6Cj4gCj4gCWlmICghY3RybF9pcnEgJiYgZW5hYmxlZF9wb3J0
-cyA+IDEpIHsKPiAKPiBPdGhlcndpc2UgZXhpc3RpbmcgYm9hcmRzIHdoaWNoIHVzZSBhIHNpbmds
-ZSBpcnEgZGVmaW5lZCBhdCB0aGUKPiBtYWluIG9mX25vZGUgbGV2ZWwgZm9yIHRoZSBkZXZpY2Ug
-YW5kIGhhdmUgZGVmaW5lZCBtb3JlIHRoZW4gMQo+IGNoaWxkLW5vZGUgaW4gdGhlaXIgRFRCIHdp
-bGwgbm93IGdldCBBSENJX0hGTEFHX01VTFRJX01TSSBzZXQsCj4gYnV0IHRoZXkgd2lsbCBvbmx5
-IGhhdmUgaHByaXYtPmlycXNbMF0gc2V0IHRvIHRoZSBjdHJsX2lycQo+IGxlYWRpbmcgdG8gcmV0
-dXJuaW5nIG9mIDAgYXMgaXJxIGZyb20gYWhjaV9nZXRfcGVyX3BvcnRfaXJxX3ZlY3Rvcgo+IGZv
-ciB0aGUgb3RoZXIgcG9ydHMsIHdoaWNoIGlzIHdyb25nLgo+IAo+IE90aGVyd2lzZSB0aGlzIHBh
-dGNoIGxvb2tzIGdvb2QgdG8gbWUsIHNvIHdpdGggdGhpcyBmaXhlZAo+IChhc3N1bWluZyB5b3Ug
-YWdyZWUpIHlvdSBtYXkgYWRkIG15Ogo+IAo+IFJldmlld2VkLWJ5OiBIYW5zIGRlIEdvZWRlIDxo
-ZGVnb2VkZUByZWRoYXQuY29tPgo+IAo+IHRvIHRoZSBuZXh0IHZlcnNpb24gb2YgdGhpcyBwYXRj
-aC4KCllvdSBhcmUgY29tcGxldGVseSByaWdodCwgdGhpcyBpcyBhIG1pc3Rha2UsIEkgd2lsbCBm
-aXggaXQgaW4gdjMuIEkKd2lsbCBqdXN0IHdhaXQgZm9yIHRoZSByZXZpZXcgb2YgdGhlIG90aGVy
-IGFoY2lfbXZlYnUgcGF0Y2hlcy4KCgpUaGFua3MsCk1pcXXDqGwKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
-aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi
+
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+
+Thanks
+
+On 3/6/19 4:12 PM, Bich HEMON wrote:
+> From: Nicolas Le Bayon <nicolas.le.bayon@st.com>
+> 
+> It conforms with Reference Manual I2C timing section.
+> 
+> Signed-off-by: Nicolas Le Bayon <nicolas.le.bayon@st.com>
+> Signed-off-by: Bich Hemon <bich.hemon@st.com>
+> ---
+>  drivers/i2c/busses/i2c-stm32f7.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+> index 13e1213..4284fc9 100644
+> --- a/drivers/i2c/busses/i2c-stm32f7.c
+> +++ b/drivers/i2c/busses/i2c-stm32f7.c
+> @@ -432,7 +432,7 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
+>  		 STM32F7_I2C_ANALOG_FILTER_DELAY_MAX : 0);
+>  	dnf_delay = setup->dnf * i2cclk;
+>  
+> -	sdadel_min = setup->fall_time - i2c_specs[setup->speed].hddat_min -
+> +	sdadel_min = i2c_specs[setup->speed].hddat_min + setup->fall_time -
+>  		af_delay_min - (setup->dnf + 3) * i2cclk;
+>  
+>  	sdadel_max = i2c_specs[setup->speed].vddat_max - setup->rise_time -
+> 
