@@ -1,68 +1,39 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 4/8] dt-bindings: usb: dwc3: Add Amlogic G12A DWC3 Glue
- Bindings
-Date: Thu, 7 Mar 2019 09:36:27 +0100
-Message-ID: <6d68648d-d1a6-1352-b787-ee04a49f4eaa@baylibre.com>
-References: <20190304103846.2060-1-narmstrong@baylibre.com>
- <20190304103846.2060-5-narmstrong@baylibre.com>
- <CAFBinCDthrw1zM8ryLOV4FDVvZecG8q8hGnNJVy8HOjTQRpFzg@mail.gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v4 4/8] drivers: devfreq: add DMC driver for Exynos5422
+Date: Thu, 07 Mar 2019 09:41:00 +0100
+Message-ID: <84c06add-8375-55a6-01d6-ebbc6af011a9@samsung.com>
+References: <CGME20190201164720eucas1p13aac6550399d240b261a2cbe489d3dfc@eucas1p1.samsung.com>
+        <1549039612-28905-1-git-send-email-l.luba@partner.samsung.com>
+        <1549039612-28905-5-git-send-email-l.luba@partner.samsung.com>
+        <CAGTfZH0o6dHQj00vHwZBn05AT-Z_oAWHfBX0eATQ12NPmfw4fg@mail.gmail.com>
+        <94e169cf-4dc2-82ec-1385-852bc7853931@samsung.com>
+        <4bbc0f61-952e-bcdb-4645-2644a122ac99@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCDthrw1zM8ryLOV4FDVvZecG8q8hGnNJVy8HOjTQRpFzg@mail.gmail.com>
-Content-Language: en-US
+In-reply-to: <4bbc0f61-952e-bcdb-4645-2644a122ac99@samsung.com>
+Content-language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: cwchoi00@gmail.com, Lukasz Luba <l.luba@partner.samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2019 22:27, Martin Blumenstingl wrote:
-> Hi Neil,
-> 
-> On Mon, Mar 4, 2019 at 11:40 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> Adds the bindings for the Amlogic G12A USB Glue HW.
->>
->> The Amlogic G12A SoC Family embeds 2 USB Controllers :
->> - a DWC3 IP configured as Host for USB2 and USB3
->> - a DWC2 IP configured as Peripheral USB2 Only
->>
->> A glue connects these both controllers to 2 USB2 PHYs,
->> and optionnally to an USB3+PCIE Combo PHY shared with the PCIE controller.
->>
->> The Glue configures the UTMI 8bit interfaces for the USB2 PHYs, including
->> routing of the OTG PHY between the DWC3 and DWC2 controllers, and
->> setups the on-chip OTG mode selection for this PHY.
->>
->> The PHYs phandles are passed  to the Glue node since the Glue controls the
->> interface with the PHY, not the DWC3 controller.
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> 
-> [...]
->> +                       dwc3: usb@ff500000 {
->> +                               compatible = "snps,dwc3";
->> +                               reg = <0x0 0xff500000 0x0 0x100000>;
->> +                               interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
->> +                               dr_mode = "host";
->> +                               snps,dis_u2_susphy_quirk;
->> +                               snps,quirk-frame-length-adjustment;
->> +                       };
-> in v1 of the patch I asked whether we should pass the PHYs which are
-> connected to the dwc3 controller here as well (instead of only passing
-> them to the USBCTRL node).
-> we can still do this later on, the important part is: USBCTRL
-> interfaces with the PHYs -> that is already part of the binding.
+Hi Chanwoo,
 
-Indeed, it's not part of this binding doc, and we can do it if needed.
-But since the OTG setup is not handled by DWC3, there is no real use.
+On 3/7/19 02:10, Chanwoo Choi wrote:
+> This patch has the another quetion about the clocks in
+> exynos5_dmc_init_clks(). This functions used 'clk_set_parent'
+> to make the hierarchy between clocks. I think it is possible to make
+> the relation of clocks in DT by using the 'assigned-clocks'.
 
-Neil
+I'm fine either way, AFAICS it is a matter of setting parent of just
+one clock - "mout_mx_mspll_ccore".  The driver needs to get that clock
+anyway to enable/disable it as required.  So we will not gain much from
+using assigned-clocks I'd say. I don't really have a strong opinion here
+as I don't know detailed requirements of the DMC clock configuration
+sequence. I'm inclined to keep it in driver as it would be more flexible.
 
-> 
-> 
-> Regards
-> Martin
-> 
+-- 
+Regards,
+Sylwester
