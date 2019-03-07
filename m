@@ -1,78 +1,92 @@
-From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH 2/2] dt-bindings: iio: imu: adis16480: Document external clock
-Date: Thu, 7 Mar 2019 17:29:19 +0200
-Message-ID: <1551972559-15148-1-git-send-email-stefan.popa@analog.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v3 1/7] dt-bindings: interconnect: Add a dma interconnect
+ name
+Date: Thu, 7 Mar 2019 17:15:20 +0200
+Message-ID: <477995b0-9ac3-b6ca-f5f2-856e4af926f1@linaro.org>
+References: <cover.f2e5fbb4d21384168973fa32377a33d627768146.1549897336.git-series.maxime.ripard@bootlin.com>
+ <43eeca13733faefe62f9facc25b8e88f7e593f61.1549897336.git-series.maxime.ripard@bootlin.com>
+ <553c987c-da9a-1f85-fb16-4b9fe17dd14b@linaro.org>
+ <20190305155337.glfvgyddvnkv774m@flea>
+ <0e72fbf7-b100-ddc5-3c19-32f71c37f76f@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <0e72fbf7-b100-ddc5-3c19-32f71c37f76f@arm.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Yong Deng <yong.deng@magewell.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for optional use of external clock. All devices
-supported by this driver can work with an external clock in sync mode.
-Another mode, called Pulse Per Second (PPS) is supported only by adis1649x
-devices. The mode is selected by using the "clock-names" property.
+Hi,
 
-The pin which is used as external clock input is selected by using a
-custom optional property called "adi,ext-clk-pin". If this field is left
-empty, DIO2 is assigned as default external clock input pin.
+On 3/5/19 18:14, Robin Murphy wrote:
+> On 05/03/2019 15:53, Maxime Ripard wrote:
+>> Hi,
+>>
+>> On Fri, Mar 01, 2019 at 07:48:15PM +0200, Georgi Djakov wrote:
+>>> On 2/11/19 17:02, Maxime Ripard wrote:
+>>>> The current DT bindings assume that the DMA will be performed by the
+>>>> devices through their parent DT node, and rely on that assumption
+>>>> for the
+>>>> address translation using dma-ranges.
+>>>>
+>>>> However, some SoCs have devices that will perform DMA through
+>>>> another bus,
+>>>> with separate address translation rules. We therefore need to
+>>>> express that
+>>>> relationship, through the special interconnect name "dma".
+>>>>
+>>>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>>>> ---
+>>>> =A0 Documentation/devicetree/bindings/interconnect/interconnect.txt |
+>>>> 3 +++
+>>>> =A0 1 file changed, 3 insertions(+)
+>>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/interconnect/interconnect.txt
+>>>> b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+>>>> index 5a3c575b387a..e69fc2d992c3 100644
+>>>> --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
+>>>> +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+>>>> @@ -51,6 +51,9 @@ interconnect-names : List of interconnect path
+>>>> name strings sorted in the same
+>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 interconnect-names to match=
+ interconnect paths with
+>>>> interconnect
+>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 specifier pairs.
+>>>> =A0 +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 Rese=
+rved interconnect names:
+>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0 * dma: Path from the device to the main
+>>>> memory of the system
+>>>
+>>> Bikeshed: As it's from the device to the main memory, maybe here we can
+>>> also denote this my calling the path dma-mem or dma-memory. For other
+>>> paths, we are trying to mention both the source and the destination and
+>>> maybe it would be good to be consistent although this is special one.
+>>
+>> I'm not sure I understand what you mean. You'd like two interconnect
+>> names, one called dma-memory, and one memory-dma?
+> =
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
----
- .../devicetree/bindings/iio/imu/adi,adis16480.txt  | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+> Hmm, yes, it's not like "dma" describes an actual source or destination
+> either :/
 
-diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
-index 39ab016..9e2fcd4 100644
---- a/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
-+++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
-@@ -34,6 +34,37 @@ Optional properties:
- 	signal.
- - reset-gpios: must be the device tree identifier of the RESET pin. As the line
- 	is active low, it should be marked GPIO_ACTIVE_LOW.
-+- clocks: phandle to the external clock. Should be set according to
-+	"clock-names".
-+	If this field is left empty, the internal clock is used.
-+- clock-names: The name of the external clock to be used. Valid values are:
-+	* sync: In sync mode, the internal clock is disabled and the frequency
-+		of the external clock signal establishes therate of data
-+		collection and processing. See Fig 14 and 15 in the datasheet.
-+		The clock-frequency must be:
-+		* 3000 to 4500 Hz for adis1649x devices.
-+		* 700 to 2400 Hz for adis1648x devices.
-+	* pps: In Pulse Per Second (PPS) Mode, the rate of data collection and
-+	       production is equal to the product of the external clock
-+	       frequency and the scale factor in the SYNC_SCALE register, see
-+	       Table 154 in the datasheet.
-+	       The clock-frequency must be:
-+	       * 1 to 128 Hz for adis1649x devices.
-+	       * This mode is not supported by adis1648x devices.
-+	If this field is left empty, the internal clock is used.
-+- adi,ext-clk-pin: The DIOx line to be used as an external clock input.
-+	Valid values are:
-+	* DIO1
-+	* DIO2
-+	* DIO3
-+	* DIO4
-+	Each DIOx pin supports only one function at a time (data ready line
-+	selection or external clock input). When a single pin has two
-+	two assignments, the enable bit for the lower priority function
-+	automatically resets to zero (disabling the lower priority function).
-+	Data ready has highest priority.
-+	If this field is left empty, DIO2 is assigned as default external clock
-+	input pin.
- 
- Example:
- 
-@@ -46,4 +77,7 @@ Example:
- 		interrupts = <25 IRQF_TRIGGER_FALLING>;
- 		interrupt-parent = <&gpio>;
- 		interrupt-names = "DIO2";
-+		clocks = <&adis16495_sync>;
-+		clock-names = "sync";
-+		adi,ext-clk-pin = "DIO1";
- 	};
--- 
-2.7.4
+IIUC, it's a path (bus) that a dma device use to access some memory
+(read or/and write). So i have used source-destination above more in the
+sense of initiator-target or master-slave. My suggestion was just to
+change the reserved interconnect name from "dma" to "dma-mem" or
+"dma-memory".
+
+Thanks,
+Georgi
