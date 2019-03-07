@@ -1,40 +1,51 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v1 0/2] Enable Bluetooth functionality for wcn3998.
-Date: Thu, 7 Mar 2019 11:18:40 -0800
-Message-ID: <20190307191840.GC138592@google.com>
-References: <1551961012-23898-1-git-send-email-c-hbandi@codeaurora.org>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH v1 2/3] spi: pxa2xx: Introduce dma-burst-sz property
+ support
+Date: Thu, 07 Mar 2019 20:24:24 +0100
+Message-ID: <87ef7i5vyv.fsf@belgarion.home>
+References: <20190226092441.49198-1-andriy.shevchenko@linux.intel.com>
+ <20190226092441.49198-2-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1551961012-23898-1-git-send-email-c-hbandi@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Harish Bandi <c-hbandi@codeaurora.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, anubhavg@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190226092441.49198-2-andriy.shevchenko@linux.intel.com> (Andy
+ Shevchenko's message of "Tue, 26 Feb 2019 12:24:40 +0300")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, linux-arm-kernel@lists.infradead.org, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-+ device tree folks
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
 
-On Thu, Mar 07, 2019 at 05:46:50PM +0530, Harish Bandi wrote:
-> This patch series we add support for wcn3998 BT chip set. This new chipset
-> is based from the wcn3990 with minimal power numbers. So here in this patch
-> The major difference between wcn3990 and wcn3998 is only power numbers. where
-> as init process and fw download is same with wcn3990.So we are leveraging the 
-> existing code of wcn3990 along with readiing the voltages from the dts file. 
+> @@ -1512,6 +1513,7 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
+>  	const struct acpi_device_id *adev_id = NULL;
+>  	const struct pci_device_id *pcidev_id = NULL;
+>  	const struct of_device_id *of_id = NULL;
+> +	struct device *dev = &pdev->dev;
+>  	enum pxa_ssp_type type;
+>  
+>  	adev = ACPI_COMPANION(&pdev->dev);
+> @@ -1566,9 +1568,10 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
+>  	ssp->pdev = pdev;
+>  	ssp->port_id = pxa2xx_spi_get_port_id(adev);
+>  
+> -	pdata->is_slave = of_property_read_bool(pdev->dev.of_node, "spi-slave");
+> +	pdata->is_slave = device_property_read_bool(dev, "spi-slave");
+Isn't this an unrelated change to the introduction of dma-burst-sz ?
 
-About how many different variants are we talking?
+Other than this :
+Reviewed-by: Robert Jarzmik <robert.jarzmik@free.fr>
 
-Couldn't you just use a different compatible string for each variant
-and specify the voltage/current limits in the hci_qca.c driver, as
-currently done for the WCN3990? I understand that it requires touching
-the driver for each new variant, but it might be preferable to specify
-these static values in a single location, instead of repeating them in
-the DT snippets of every device that uses such a controller, with the
-possiblity of configuration errors.
+Cheers.
 
-The DT folks can probably provide guidance on what is typically done
-in cases like this.
-
-Thanks
-
-Matthias
+-- 
+Robert
