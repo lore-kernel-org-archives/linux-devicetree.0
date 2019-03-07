@@ -1,197 +1,91 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 2/2] remoteproc: qcom: qdsp6-adsp: Add support for QCS404 CDSP
-Date: Wed,  6 Mar 2019 16:03:18 -0800
-Message-ID: <20190307000318.1750-3-bjorn.andersson@linaro.org>
-References: <20190307000318.1750-1-bjorn.andersson@linaro.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v4 4/8] drivers: devfreq: add DMC driver for Exynos5422
+Date: Thu, 7 Mar 2019 10:10:15 +0900
+Message-ID: <4bbc0f61-952e-bcdb-4645-2644a122ac99@samsung.com>
+References: <CGME20190201164720eucas1p13aac6550399d240b261a2cbe489d3dfc@eucas1p1.samsung.com>
+        <1549039612-28905-1-git-send-email-l.luba@partner.samsung.com>
+        <1549039612-28905-5-git-send-email-l.luba@partner.samsung.com>
+        <CAGTfZH0o6dHQj00vHwZBn05AT-Z_oAWHfBX0eATQ12NPmfw4fg@mail.gmail.com>
+        <94e169cf-4dc2-82ec-1385-852bc7853931@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190307000318.1750-1-bjorn.andersson@linaro.org>
+In-Reply-To: <94e169cf-4dc2-82ec-1385-852bc7853931@samsung.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>, cwchoi00@gmail.com, Lukasz Luba <l.luba@partner.samsung.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Move the clock list to adsp_pil_data, make the pdc_reset optional and
-make the driver directly enable the xo, sleep and core clocks.
+Hi Sylwester,
 
-The three clocks are previously toggled through the clock controller,
-but that means the same hardware block needs to be mapped in both
-drivers. Making the remoteproc driver enable the clocks is a nop when
-using the clock controller, but allow us to remove the clocks from the
-clock controller.
+On 19. 3. 6. 오후 10:44, Sylwester Nawrocki wrote:
+> Hi,
+> 
+> On 2/3/19 13:23, Chanwoo Choi wrote:
+> 
+>> 2019년 2월 2일 (토) 오전 2:42, Lukasz Luba <l.luba@partner.samsung.com>님이 작성:
+> 
+>>> +/**
+>>> + * exynos5_dmc_pause_on_switching() - Controls a pause feature in DMC
+>>> + * @dmc:       device which is used for changing this feature
+>>> + * @set:       a boolean state passing enable/disable request
+>>> + *
+>>> + * There is a need of pausing DREX DMC when divider or MUX in clock tree
+>>> + * changes its configuration. In such situation access to the memory is blocked
+>>> + * in DMC automatically. This feature is used when clock frequency change
+>>> + * request appears and touches clock tree.
+>>> + */
+>>> +static int exynos5_dmc_pause_on_switching(struct exynos5_dmc *dmc, bool set)
+>>
+>> Don't need to make it as the separate function. It is only used on
+>> probe() function.
+> 
+> It seems fine to me to have this functionality in a separate function, 
+> it's self-contained and it's now pretty well documented.
+> 
+>>> +{
+>>> +       unsigned int val;
+>>> +
+>>> +       val = readl(dmc->base_clk + DMC_PAUSE_CTRL);
+>>> +       if (set)
+>>> +               val |= DMC_PAUSE_ENABLE;
+>>> +       else
+>>> +               val &= ~DMC_PAUSE_ENABLE;
+>>> +       writel(val, dmc->base_clk + DMC_PAUSE_CTRL);
+>>
+>> The dt-binding file doesn't explain the 'reg' property for 'base_clk'.
+>> You are missing.
+>> When I tried to find what are the base address, it is the register map
+>> of clock-controller.
+>> This driver accesed the register of clock controller without any
+>> functions of CCF
+>> (common clock framework). It is wrong.
+>>
+>> If you need to get the some information of clock, must have to use the CCF.
+> We talked a little about this issue with Lukasz in person and it looks
+> like there are some DMC related registers in the clock controller register 
+> region, I'd say those registers are better handled by the DMC driver rather
+> than the clocks controller driver. Moreover, we should avoid abusing clk API
+> for not strictly clocks related functionality as it appears to be above.
+> It might be more appropriate to add in the dmc DT node a phandle to a regmap
+> exposed by the clock-controller node. It seems there will be even no single
+> register that would be shared between the DMC and the clock controller.
+> 
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/remoteproc/qcom_q6v5_adsp.c | 73 ++++++++++++++++++++++-------
- 1 file changed, 55 insertions(+), 18 deletions(-)
+I agree to share the regmap instance of clock controller
+with syscon_regmap_lookup_by_phandle() and then add the detailed
+description about this to dt-binding documentation.
 
-diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
-index 1f3ef9ee493c..e953886b2eb7 100644
---- a/drivers/remoteproc/qcom_q6v5_adsp.c
-+++ b/drivers/remoteproc/qcom_q6v5_adsp.c
-@@ -46,11 +46,9 @@
- #define LPASS_PWR_ON_REG		0x10
- #define LPASS_HALTREQ_REG		0x0
- 
--/* list of clocks required by ADSP PIL */
--static const char * const adsp_clk_id[] = {
--	"sway_cbcr", "lpass_ahbs_aon_cbcr", "lpass_ahbm_aon_cbcr",
--	"qdsp6ss_xo", "qdsp6ss_sleep", "qdsp6ss_core",
--};
-+#define QDSP6SS_XO_CBCR		0x38
-+#define QDSP6SS_CORE_CBCR	0x20
-+#define QDSP6SS_SLEEP_CBCR	0x3c
- 
- struct adsp_pil_data {
- 	int crash_reason_smem;
-@@ -59,6 +57,9 @@ struct adsp_pil_data {
- 	const char *ssr_name;
- 	const char *sysmon_name;
- 	int ssctl_id;
-+
-+	const char **clk_ids;
-+	int num_clks;
- };
- 
- struct qcom_adsp {
-@@ -75,7 +76,7 @@ struct qcom_adsp {
- 	void __iomem *qdsp6ss_base;
- 
- 	struct reset_control *pdc_sync_reset;
--	struct reset_control *cc_lpass_restart;
-+	struct reset_control *restart;
- 
- 	struct regmap *halt_map;
- 	unsigned int halt_lpass;
-@@ -143,7 +144,7 @@ static int qcom_adsp_shutdown(struct qcom_adsp *adsp)
- 	/* Assert the LPASS PDC Reset */
- 	reset_control_assert(adsp->pdc_sync_reset);
- 	/* Place the LPASS processor into reset */
--	reset_control_assert(adsp->cc_lpass_restart);
-+	reset_control_assert(adsp->restart);
- 	/* wait after asserting subsystem restart from AOSS */
- 	usleep_range(200, 300);
- 
-@@ -153,7 +154,7 @@ static int qcom_adsp_shutdown(struct qcom_adsp *adsp)
- 	/* De-assert the LPASS PDC Reset */
- 	reset_control_deassert(adsp->pdc_sync_reset);
- 	/* Remove the LPASS reset */
--	reset_control_deassert(adsp->cc_lpass_restart);
-+	reset_control_deassert(adsp->restart);
- 	/* wait after de-asserting subsystem restart from AOSS */
- 	usleep_range(200, 300);
- 
-@@ -192,6 +193,15 @@ static int adsp_start(struct rproc *rproc)
- 		goto disable_power_domain;
- 	}
- 
-+	/* Enable the XO clock */
-+	writel(1, adsp->qdsp6ss_base + QDSP6SS_XO_CBCR);
-+
-+	/* Enable the QDSP6SS sleep clock */
-+	writel(1, adsp->qdsp6ss_base + QDSP6SS_SLEEP_CBCR);
-+
-+	/* Enable the QDSP6 core clock */
-+	writel(1, adsp->qdsp6ss_base + QDSP6SS_CORE_CBCR);
-+
- 	/* Program boot address */
- 	writel(adsp->mem_phys >> 4, adsp->qdsp6ss_base + RST_EVB_REG);
- 
-@@ -280,8 +290,9 @@ static const struct rproc_ops adsp_ops = {
- 	.load = adsp_load,
- };
- 
--static int adsp_init_clock(struct qcom_adsp *adsp)
-+static int adsp_init_clock(struct qcom_adsp *adsp, const char **clk_ids)
- {
-+	int num_clks = 0;
- 	int i, ret;
- 
- 	adsp->xo = devm_clk_get(adsp->dev, "xo");
-@@ -292,32 +303,39 @@ static int adsp_init_clock(struct qcom_adsp *adsp)
- 		return ret;
- 	}
- 
--	adsp->num_clks = ARRAY_SIZE(adsp_clk_id);
-+	for (i = 0; clk_ids[i]; i++)
-+		num_clks++;
-+
-+	adsp->num_clks = num_clks;
- 	adsp->clks = devm_kcalloc(adsp->dev, adsp->num_clks,
- 				sizeof(*adsp->clks), GFP_KERNEL);
- 	if (!adsp->clks)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < adsp->num_clks; i++)
--		adsp->clks[i].id = adsp_clk_id[i];
-+		adsp->clks[i].id = clk_ids[i];
- 
- 	return devm_clk_bulk_get(adsp->dev, adsp->num_clks, adsp->clks);
- }
- 
- static int adsp_init_reset(struct qcom_adsp *adsp)
- {
--	adsp->pdc_sync_reset = devm_reset_control_get_exclusive(adsp->dev,
-+	adsp->pdc_sync_reset = devm_reset_control_get_optional_exclusive(adsp->dev,
- 			"pdc_sync");
- 	if (IS_ERR(adsp->pdc_sync_reset)) {
- 		dev_err(adsp->dev, "failed to acquire pdc_sync reset\n");
- 		return PTR_ERR(adsp->pdc_sync_reset);
- 	}
- 
--	adsp->cc_lpass_restart = devm_reset_control_get_exclusive(adsp->dev,
--			"cc_lpass");
--	if (IS_ERR(adsp->cc_lpass_restart)) {
--		dev_err(adsp->dev, "failed to acquire cc_lpass restart\n");
--		return PTR_ERR(adsp->cc_lpass_restart);
-+	adsp->restart = devm_reset_control_get_optional_exclusive(adsp->dev, "restart");
-+
-+	/* Fall back to the  old "cc_lpass" if "restart" is absent */
-+	if (!adsp->restart)
-+		adsp->restart = devm_reset_control_get_exclusive(adsp->dev, "cc_lpass");
-+
-+	if (IS_ERR(adsp->restart)) {
-+		dev_err(adsp->dev, "failed to acquire restart\n");
-+		return PTR_ERR(adsp->restart);
- 	}
- 
- 	return 0;
-@@ -415,7 +433,7 @@ static int adsp_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
--	ret = adsp_init_clock(adsp);
-+	ret = adsp_init_clock(adsp, desc->clk_ids);
- 	if (ret)
- 		goto free_rproc;
- 
-@@ -479,9 +497,28 @@ static const struct adsp_pil_data adsp_resource_init = {
- 	.ssr_name = "lpass",
- 	.sysmon_name = "adsp",
- 	.ssctl_id = 0x14,
-+	.clk_ids = (const char*[]) {
-+		"sway_cbcr", "lpass_ahbs_aon_cbcr", "lpass_ahbm_aon_cbcr",
-+		"qdsp6ss_xo", "qdsp6ss_sleep", "qdsp6ss_core", NULL
-+	},
-+	.num_clks = 7,
-+};
-+
-+static const struct adsp_pil_data cdsp_resource_init = {
-+	.crash_reason_smem = 601,
-+	.firmware_name = "cdsp.mdt",
-+	.ssr_name = "cdsp",
-+	.sysmon_name = "cdsp",
-+	.ssctl_id = 0x17,
-+	.clk_ids = (const char*[]) {
-+		"sway", "tbu", "bimc", "ahb_aon", "q6ss_slave", "q6ss_master",
-+		"q6_axim", NULL
-+	},
-+	.num_clks = 7,
- };
- 
- static const struct of_device_id adsp_of_match[] = {
-+	{ .compatible = "qcom,qcs404-cdsp-pil", .data = &cdsp_resource_init },
- 	{ .compatible = "qcom,sdm845-adsp-pil", .data = &adsp_resource_init },
- 	{ },
- };
+
+And,
+This patch has the another quetion about the clocks in
+exynos5_dmc_init_clks(). This functions used 'clk_set_parent'
+to make the hierarchy between clocks. I think it is possible to make
+the relation of clocks in DT by using the 'assigned-clocks'.
+
 -- 
-2.18.0
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
