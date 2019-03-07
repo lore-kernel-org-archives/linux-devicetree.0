@@ -1,143 +1,213 @@
-From: Luca Ceresoli <luca@lucaceresoli.net>
-Subject: [PATCH 1/2] ASoC: axi-i2s: let both capture and playback be optional
-Date: Thu,  7 Mar 2019 22:44:55 +0100
-Message-ID: <20190307214456.16445-1-luca@lucaceresoli.net>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH 1/4] dt: lm3532: Add lm3532 dt doc and update ti_lmu doc
+Date: Thu, 7 Mar 2019 16:09:44 -0600
+Message-ID: <20190307220947.20057-1-dmurphy@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc: Luca Ceresoli <luca@lucaceresoli.net>, Lars-Peter Clausen <lars@metafoo.de>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org
+To: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, tony@atomide.com, lee.jones@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Both the capture and playback channels are optional in the axi_i2s IP
-block. Reflect this in the driver by enabling only the channel(s) that
-have a DMA.
+Add the lm3532 device tree documentation.
+Remove lm3532 device tree reference from the ti_lmu devicetree
+documentation.
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+With the addition of the dedicated lm3532 documentation the device
+can be removed from the ti_lmu.txt.
+
+The reason for this is that the lm3532 dt documentation now defines
+the ability to control LED output strings against different control
+banks or groups multiple strings to be controlled by a single control
+bank.
+
+Another addition was for ALS lighting control and configuration.  The
+LM3532 has a feature that can take in the ALS reading from 2 separate
+ALS devices and adjust the brightness on the strings that are configured
+to support this feature.
+
+Finally the device specific properties were moved to the parent node as these
+properties are not control bank configurable.  These include the runtime ramp
+and the ALS configuration.
+
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- sound/soc/adi/axi-i2s.c | 68 +++++++++++++++++++++++++++++------------
- 1 file changed, 48 insertions(+), 20 deletions(-)
+ .../devicetree/bindings/leds/leds-lm3532.txt  | 113 ++++++++++++++++++
+ .../devicetree/bindings/mfd/ti-lmu.txt        |  20 ----
+ 2 files changed, 113 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3532.txt
 
-diff --git a/sound/soc/adi/axi-i2s.c b/sound/soc/adi/axi-i2s.c
-index 4c23381727a1..273c543e8ff3 100644
---- a/sound/soc/adi/axi-i2s.c
-+++ b/sound/soc/adi/axi-i2s.c
-@@ -43,6 +43,9 @@ struct axi_i2s {
- 	struct clk *clk;
- 	struct clk *clk_ref;
- 
-+	bool   has_capture;
-+	bool   has_playback;
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3532.txt b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
+new file mode 100644
+index 000000000000..7cf6739eafe0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
+@@ -0,0 +1,113 @@
++* Texas Instruments - lm3532 White LED driver with ambient light sensing
++capability.
 +
- 	struct snd_soc_dai_driver dai_driver;
- 
- 	struct snd_dmaengine_dai_dma_data capture_dma_data;
-@@ -136,8 +139,10 @@ static int axi_i2s_dai_probe(struct snd_soc_dai *dai)
- {
- 	struct axi_i2s *i2s = snd_soc_dai_get_drvdata(dai);
- 
--	snd_soc_dai_init_dma_data(dai, &i2s->playback_dma_data,
--		&i2s->capture_dma_data);
-+	snd_soc_dai_init_dma_data(
-+		dai,
-+		i2s->has_playback ? &i2s->playback_dma_data : NULL,
-+		i2s->has_capture  ? &i2s->capture_dma_data  : NULL);
- 
- 	return 0;
- }
-@@ -151,18 +156,6 @@ static const struct snd_soc_dai_ops axi_i2s_dai_ops = {
- 
- static struct snd_soc_dai_driver axi_i2s_dai = {
- 	.probe = axi_i2s_dai_probe,
--	.playback = {
--		.channels_min = 2,
--		.channels_max = 2,
--		.rates = SNDRV_PCM_RATE_KNOT,
--		.formats = SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE,
--	},
--	.capture = {
--		.channels_min = 2,
--		.channels_max = 2,
--		.rates = SNDRV_PCM_RATE_KNOT,
--		.formats = SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE,
--	},
- 	.ops = &axi_i2s_dai_ops,
- 	.symmetric_rates = 1,
- };
-@@ -178,6 +171,19 @@ static const struct regmap_config axi_i2s_regmap_config = {
- 	.max_register = AXI_I2S_REG_STATUS,
- };
- 
-+static void axi_i2s_parse_of(struct axi_i2s *i2s, const struct device_node *np)
-+{
-+	struct property *dma_names;
-+	const char *dma_name;
++The LM3532 provides the 3 high-voltage, low-side current sinks. The device is
++programmable over an I2C-compatible interface and has independent
++current control for all three channels. The adaptive current regulation
++method allows for different LED currents in each current sink thus allowing
++for a wide variety of backlight and keypad applications.
 +
-+	of_property_for_each_string(np, "dma-names", dma_names, dma_name) {
-+		if (strcmp(dma_name, "rx") == 0)
-+			i2s->has_capture = true;
-+		if (strcmp(dma_name, "tx") == 0)
-+			i2s->has_playback = true;
-+	}
-+}
++The main features of the LM3532 include dual ambient light sensor inputs
++each with 32 internal voltage setting resistors, 8-bit logarithmic and linear
++brightness control, dual external PWM brightness control inputs, and up to
++1000:1 dimming ratio with programmable fade in and fade out settings.
 +
- static int axi_i2s_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
-@@ -191,6 +197,8 @@ static int axi_i2s_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, i2s);
- 
-+	axi_i2s_parse_of(i2s, pdev->dev.of_node);
++Required properties:
++	- compatible : "ti,lm3532"
++	- reg : I2C slave address
++	- #address-cells : 1
++	- #size-cells : 0
 +
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(base))
-@@ -213,13 +221,29 @@ static int axi_i2s_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	i2s->playback_dma_data.addr = res->start + AXI_I2S_REG_TX_FIFO;
--	i2s->playback_dma_data.addr_width = 4;
--	i2s->playback_dma_data.maxburst = 1;
-+	if (i2s->has_playback) {
-+		axi_i2s_dai.playback.channels_min = 2;
-+		axi_i2s_dai.playback.channels_max = 2;
-+		axi_i2s_dai.playback.rates = SNDRV_PCM_RATE_KNOT;
-+		axi_i2s_dai.playback.formats =
-+			SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE;
++Required child properties:
++	- reg : Indicates control bank the LED string is controlled by
++	- led-sources : see Documentation/devicetree/bindings/leds/common.txt
++	- ti,led-mode : Defines if the LED strings are manually controlled or
++			if the LED strings are controlled by the ALS
 +
-+		i2s->playback_dma_data.addr = res->start + AXI_I2S_REG_TX_FIFO;
-+		i2s->playback_dma_data.addr_width = 4;
-+		i2s->playback_dma_data.maxburst = 1;
-+	}
++Optional child properties if ALS mode is used:
++	- als-vmin - Minimum ALS voltage defined in Volts
++	- als-vmax - Maximum ALS voltage defined in Volts
 +
-+	if (i2s->has_capture) {
-+		axi_i2s_dai.capture.channels_min = 2;
-+		axi_i2s_dai.capture.channels_max = 2;
-+		axi_i2s_dai.capture.rates = SNDRV_PCM_RATE_KNOT;
-+		axi_i2s_dai.capture.formats =
-+			SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE;
- 
--	i2s->capture_dma_data.addr = res->start + AXI_I2S_REG_RX_FIFO;
--	i2s->capture_dma_data.addr_width = 4;
--	i2s->capture_dma_data.maxburst = 1;
-+		i2s->capture_dma_data.addr = res->start + AXI_I2S_REG_RX_FIFO;
-+		i2s->capture_dma_data.addr_width = 4;
-+		i2s->capture_dma_data.maxburst = 1;
-+	}
- 
- 	i2s->ratnum.num = clk_get_rate(i2s->clk_ref) / 2 / AXI_I2S_BITS_PER_FRAME;
- 	i2s->ratnum.den_step = 1;
-@@ -240,6 +264,10 @@ static int axi_i2s_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_clk_disable;
- 
-+	dev_info(&pdev->dev, "probed, capture %s, playback %s\n",
-+		 i2s->has_capture ? "enabled" : "disabled",
-+		 i2s->has_playback ? "enabled" : "disabled");
++The values for each of the following can be found in the
++include/dt-bindings/leds/leds-lm3532.h
 +
- 	return 0;
++	- als1-imp-sel - ALS1 impedance resistor selection
++	- als2-imp-sel - ALS2 impedance resistor selection
++	- als-avrg-time - Determines the length of time the device needs to
++			  average the two ALS inputs.  This is only used if
++			  the input mode is LM3532_ALS_INPUT_AVRG.
++	- als-input-mode - Determines how the device uses the attached ALS
++			   devices.
++
++Optional LED child properties:
++	- label : see Documentation/devicetree/bindings/leds/common.txt
++	- linux,default-trigger :
++	   see Documentation/devicetree/bindings/leds/common.txt
++
++Example:
++#include <dt-bindings/leds/leds-lm3532.h>
++
++led-controller@38 {
++	compatible = "ti,lm3532";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	reg = <0x38>;
++
++	enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
++	ramp-up-ms = <LM3532_RAMP_1024us>;
++	ramp-down-ms = <LM3532_RAMP_65536us>;
++
++	lcd_backlight: led@0 {
++		reg = <0>;
++		led-sources = <2>;
++		ti,led-mode = <LM3532_BL_MODE_MANUAL>;
++		label = "backlight";
++		linux,default-trigger = "backlight";
++	};
++
++	led@1 {
++		reg = <1>;
++		led-sources = <1>;
++		ti,led-mode = <LM3532_BL_MODE_MANUAL>;
++		label = "keypad";
++	};
++};
++
++Example with ALS
++#include <dt-bindings/leds/leds-lm3532.h>
++
++led-controller@38 {
++	compatible = "ti,lm3532";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	reg = <0x38>;
++
++	enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
++	ramp-up-ms = <LM3532_RAMP_1024us>;
++	ramp-down-ms = <LM3532_RAMP_65536us>;
++
++	als-vmin = <0>;
++	als-vmax = <2000>;
++	als1-imp-sel = <LM3532_IMP_4_11K>;
++	als2-imp-sel = <LM3532_IMP_2_18K>;
++	als-avrg-time = <LM3532_ALS_AVRG_TIME_17_92ms>;
++	als-input-mode = <LM3532_ALS_INPUT_AVRG>;
++
++	lcd_backlight: led@0 {
++		reg = <0>;
++		led-sources = <2>;
++		ti,led-mode = <LM3532_BL_MODE_ALS>;
++		label = "backlight";
++		linux,default-trigger = "backlight";
++	};
++
++	led@1 {
++		reg = <1>;
++		led-sources = <1>;
++		ti,led-mode = <LM3532_BL_MODE_MANUAL>;
++		label = "keypad";
++	};
++};
++
++For more product information please see the links below:
++http://www.ti.com/product/LM3532
+diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+index c885cf89b8ce..980394d701a7 100644
+--- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
++++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+@@ -4,7 +4,6 @@ TI LMU driver supports lighting devices below.
  
- err_clk_disable:
+    Name                  Child nodes
+   ------      ---------------------------------
+-  LM3532       Backlight
+   LM3631       Backlight and regulator
+   LM3632       Backlight and regulator
+   LM3633       Backlight, LED and fault monitor
+@@ -13,7 +12,6 @@ TI LMU driver supports lighting devices below.
+ 
+ Required properties:
+   - compatible: Should be one of:
+-                "ti,lm3532"
+                 "ti,lm3631"
+                 "ti,lm3632"
+                 "ti,lm3633"
+@@ -23,7 +21,6 @@ Required properties:
+          0x11 for LM3632
+          0x29 for LM3631
+          0x36 for LM3633, LM3697
+-         0x38 for LM3532
+          0x63 for LM3695
+ 
+ Optional property:
+@@ -47,23 +44,6 @@ Optional nodes:
+ [2] ../leds/leds-lm3633.txt
+ [3] ../regulator/lm363x-regulator.txt
+ 
+-lm3532@38 {
+-	compatible = "ti,lm3532";
+-	reg = <0x38>;
+-
+-	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
+-
+-	backlight {
+-		compatible = "ti,lm3532-backlight";
+-
+-		lcd {
+-			led-sources = <0 1 2>;
+-			ramp-up-msec = <30>;
+-			ramp-down-msec = <0>;
+-		};
+-	};
+-};
+-
+ lm3631@29 {
+ 	compatible = "ti,lm3631";
+ 	reg = <0x29>;
 -- 
-2.17.1
+2.20.1.390.gb5101f9297
