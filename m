@@ -1,517 +1,490 @@
-From: Patrick Havelange <patrick.havelange@essensium.com>
-Subject: [PATCH v6 4/4] iio:temperature: Add MAX31856 thermocouple support
-Date: Thu,  7 Mar 2019 11:34:09 +0100
-Message-ID: <20190307103409.24174-4-patrick.havelange@essensium.com>
-References: <20190307103409.24174-1-patrick.havelange@essensium.com>
+From: William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: Re: [PATCH v2 5/7] counter: add FlexTimer Module Quadrature decoder
+ counter driver
+Date: Thu, 7 Mar 2019 20:32:25 +0900
+Message-ID: <20190307113147.GA7851@icarus>
+References: <20190306111208.7454-1-patrick.havelange@essensium.com>
+ <20190306111208.7454-6-patrick.havelange@essensium.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190307103409.24174-1-patrick.havelange@essensium.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matt Weber <matthew.weber@rockwellcollins.com>, Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Patrick Havelange <patrick.havelange@essensium.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190306111208.7454-6-patrick.havelange@essensium.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Patrick Havelange <patrick.havelange@essensium.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Esben Haabendal <esben@haabendal.dk>
 List-Id: devicetree@vger.kernel.org
 
-From: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
+On Wed, Mar 06, 2019 at 12:12:06PM +0100, Patrick Havelange wrote:
+> This driver exposes the counter for the quadrature decoder of the
+> FlexTimer Module, present in the LS1021A soc.
+> 
+> Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
+> ---
+> Changes v2
+>  - Rebased on new counter subsystem
+>  - Cleaned up included headers
+>  - Use devm_ioremap()
+>  - Correct order of devm_ and unmanaged resources
+> ---
+>  drivers/counter/Kconfig       |   9 +
+>  drivers/counter/Makefile      |   1 +
+>  drivers/counter/ftm-quaddec.c | 356 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 366 insertions(+)
+>  create mode 100644 drivers/counter/ftm-quaddec.c
 
-This patch adds support for Maxim MAX31856 thermocouple
-temperature sensor support.
+Overall, I think you utilized the Generic Counter interface correctly.
+So good job on the conversion from your initial patch. :-)
 
-More information can be found in:
-https://www.maximintegrated.com/en/ds/MAX31856.pdf
+Some minor inline suggestions/comments follow.
 
-NOTE: Driver support only Comparator Mode.
+> 
+> diff --git a/drivers/counter/Kconfig b/drivers/counter/Kconfig
+> index 87c491a19c63..233ac305d878 100644
+> --- a/drivers/counter/Kconfig
+> +++ b/drivers/counter/Kconfig
+> @@ -48,4 +48,13 @@ config STM32_LPTIMER_CNT
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called stm32-lptimer-cnt.
+>  
+> +config FTM_QUADDEC
+> +	tristate "Flex Timer Module Quadrature decoder driver"
+> +	help
+> +	  Select this option to enable the Flex Timer Quadrature decoder
+> +	  driver.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called ftm-quaddec.
+> +
+>  endif # COUNTER
+> diff --git a/drivers/counter/Makefile b/drivers/counter/Makefile
+> index 5589976d37f8..0c9e622a6bea 100644
+> --- a/drivers/counter/Makefile
+> +++ b/drivers/counter/Makefile
+> @@ -7,3 +7,4 @@ obj-$(CONFIG_COUNTER) += counter.o
+>  obj-$(CONFIG_104_QUAD_8)	+= 104-quad-8.o
+>  obj-$(CONFIG_STM32_TIMER_CNT)	+= stm32-timer-cnt.o
+>  obj-$(CONFIG_STM32_LPTIMER_CNT)	+= stm32-lptimer-cnt.o
+> +obj-$(CONFIG_FTM_QUADDEC)	+= ftm-quaddec.o
+> diff --git a/drivers/counter/ftm-quaddec.c b/drivers/counter/ftm-quaddec.c
+> new file mode 100644
+> index 000000000000..1bc9e075a386
+> --- /dev/null
+> +++ b/drivers/counter/ftm-quaddec.c
+> @@ -0,0 +1,356 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Flex Timer Module Quadrature decoder
+> + *
+> + * This module implements a driver for decoding the FTM quadrature
+> + * of ex. a LS1021A
+> + */
+> +
+> +#include <linux/fsl/ftm.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of.h>
+> +#include <linux/io.h>
+> +#include <linux/mutex.h>
+> +#include <linux/counter.h>
+> +
+> +struct ftm_quaddec {
+> +	struct counter_device counter;
+> +	struct platform_device *pdev;
+> +	void __iomem *ftm_base;
+> +	bool big_endian;
+> +	struct mutex ftm_quaddec_mutex;
+> +};
+> +
+> +static void ftm_read(struct ftm_quaddec *ftm, uint32_t offset, uint32_t *data)
+> +{
+> +	if (ftm->big_endian)
+> +		*data = ioread32be(ftm->ftm_base + offset);
+> +	else
+> +		*data = ioread32(ftm->ftm_base + offset);
+> +}
+> +
+> +static void ftm_write(struct ftm_quaddec *ftm, uint32_t offset, uint32_t data)
+> +{
+> +	if (ftm->big_endian)
+> +		iowrite32be(data, ftm->ftm_base + offset);
+> +	else
+> +		iowrite32(data, ftm->ftm_base + offset);
+> +}
+> +
+> +/*
+> + * take mutex
+> + * call ftm_clear_write_protection
+> + * update settings
+> + * call ftm_set_write_protection
+> + * release mutex
+> + */
 
-Signed-off-by: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
-Signed-off-by: Matt Weber <matthew.weber@rockwellcollins.com>
-Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
----
-Changes
-v1 -> v2
-[Peter
-	1. Fixed all space & 'return' related comments
-	2. Removed 'sysfs_create_group' api  because
-	   iio_device_register function is handling sysfs entry
-	3. Return -EIO if there is any fault
-	4. Added check for 'read_size' before spi read call
-	5. Removed license text from the source file
-	6. Added .o file in alphabetic order
-	7. Used #defines instead of magic bits
+Jonathan mentioned it before in the previous review, and I think I agree
+too, that this comment block is superfluous: the context of this code is
+simple enough that the function call order is naturally obvious (i.e.
+write protection must be cleared before settings are modified).
 
-v2 -> v3
-[Jonathan
-	1. Used bool for fault_oc and fault_ovuv
-	2. Changed 'max31856_read' function and use byte array to
-	   store registers value.
-	3. Used 'GENMASK' where required
-        4. Changed logic 'max31856_thermocouple_read' function. Used
-	   array to read registers value.
-	5. Used 'devm_iio_device_register' and removed 'max31856_remove'.
-	6. Fixed other cosmetic changes.
-	7. Added 'sysfs-bus-iio-temperature-max31856' file and updated
-	   'MAINTAINERS' file.
+The only important thing to mention here is that the mutex must be held
+before the write protection state is modified so a comment along the
+following lines should suffice:
 
-v3 -> v4
-[Jonathan
-	1. Removed unwanted logic
-	2. Updated code to handle return value of max31856_read call
-	3. Added devicetree id table
-	4. Removed one-shot support from driver as this support was not
-	   implemented with correct design.
+/* hold mutex before modifying write protection state */
 
-v4 -> v5
-[Patrick
-	1. Rename thermocouple type to maxim,thermocouple-type for DT entry
-	2. Don't cache values from the Fault Status Register
-	3. Simplify a bit max31856_init()
-	4. Use IIO_NO_MOD in switch case + default error case
-	5. Use dev_*() instead of pr_*()
-	6. Fix missing space in comments
-	7. Removed iio_info.driver_module assignment as no longer present
-	8. Don't keep read/write buffer into the internal driver struct
-	9. Updated kernel version, add missing space in documentation
-       10. Updated (c) year
-       11. Removed linux/init.h #include
-       12. More use of BIT() macro
-       13. Removed iio_chan_spec.address assignment as not used
-       14. In max31856_thermocouple_read(), same switch case order as
-	   channels definition
-       15. Refactor show_fault_*() functions
-       16. Use u8 as register type in max31856_{read,write}()
+> +static void ftm_clear_write_protection(struct ftm_quaddec *ftm)
+> +{
+> +	uint32_t flag;
+> +
+> +	/* First see if it is enabled */
+> +	ftm_read(ftm, FTM_FMS, &flag);
+> +
+> +	if (flag & FTM_FMS_WPEN) {
+> +		ftm_read(ftm, FTM_MODE, &flag);
+> +		ftm_write(ftm, FTM_MODE, flag | FTM_MODE_WPDIS);
+> +	}
+> +}
+> +
+> +static void ftm_set_write_protection(struct ftm_quaddec *ftm)
+> +{
+> +	ftm_write(ftm, FTM_FMS, FTM_FMS_WPEN);
+> +}
+> +
+> +static void ftm_reset_counter(struct ftm_quaddec *ftm)
+> +{
+> +	/* Reset hardware counter to CNTIN */
+> +	ftm_write(ftm, FTM_CNT, 0x0);
+> +}
+> +
+> +static void ftm_quaddec_init(struct ftm_quaddec *ftm)
+> +{
+> +	ftm_clear_write_protection(ftm);
+> +
+> +	/*
+> +	 * Do not write in the region from the CNTIN register through the
+> +	 * PWMLOAD register when FTMEN = 0.
+> +	 */
+> +	ftm_write(ftm, FTM_MODE, FTM_MODE_FTMEN);
+> +	ftm_write(ftm, FTM_CNTIN, 0x0000);
+> +	ftm_write(ftm, FTM_MOD, 0xffff);
+> +	ftm_write(ftm, FTM_CNT, 0x0);
+> +	ftm_write(ftm, FTM_SC, FTM_SC_PS_1);
+> +
+> +	/* Select quad mode */
+> +	ftm_write(ftm, FTM_QDCTRL, FTM_QDCTRL_QUADEN);
+> +
+> +	/* Unused features and reset to default section */
+> +	ftm_write(ftm, FTM_POL, 0x0);
+> +	ftm_write(ftm, FTM_FLTCTRL, 0x0);
+> +	ftm_write(ftm, FTM_SYNCONF, 0x0);
+> +	ftm_write(ftm, FTM_SYNC, 0xffff);
+> +
+> +	/* Lock the FTM */
+> +	ftm_set_write_protection(ftm);
+> +}
+> +
+> +static void ftm_quaddec_disable(struct ftm_quaddec *ftm)
+> +{
+> +	ftm_write(ftm, FTM_MODE, 0);
+> +}
 
-v5 -> v6
-[Patrick
-	1. Use generic thermocouple-type property
-	2. Fix doc for fault_ovuv entry
-	3. Add check for supported thermocouple-types in probe()
----
- .../sysfs-bus-iio-temperature-max31856        |  24 ++
- drivers/iio/temperature/Kconfig               |  10 +
- drivers/iio/temperature/Makefile              |   1 +
- drivers/iio/temperature/max31856.c            | 353 ++++++++++++++++++
- 4 files changed, 388 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-temperature-max31856
- create mode 100644 drivers/iio/temperature/max31856.c
+The ftm_quaddec_disable function is only used for cleanup when the
+driver is being removed. Is disabling the FTM counter on removal
+actually something we need to do?
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-temperature-max31856 b/Documentation/ABI/testing/sysfs-bus-iio-temperature-max31856
-new file mode 100644
-index 000000000000..3b3509a3ef2f
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-temperature-max31856
-@@ -0,0 +1,24 @@
-+What:		/sys/bus/iio/devices/iio:deviceX/fault_oc
-+KernelVersion:	5.1
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Open-circuit fault. The detection of open-circuit faults,
-+		such as those caused by broken thermocouple wires.
-+		Reading returns either '1' or '0'.
-+		'1' = An open circuit such as broken thermocouple wires
-+		      has been detected.
-+		'0' = No open circuit or broken thermocouple wires are detected
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/fault_ovuv
-+KernelVersion:	5.1
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Overvoltage or Undervoltage Input Fault. The internal circuitry
-+		is protected from excessive voltages applied to the thermocouple
-+		cables by integrated MOSFETs at the T+ and T- inputs, and the
-+		BIAS output. These MOSFETs turn off when the input voltage is
-+		negative or greater than VDD.
-+		Reading returns either '1' or '0'.
-+		'1' = The input voltage is negative or greater than VDD.
-+		'0' = The input voltage is positive and less than VDD (normal
-+		state).
-diff --git a/drivers/iio/temperature/Kconfig b/drivers/iio/temperature/Kconfig
-index 82e4a62745e2..c66eeb23615b 100644
---- a/drivers/iio/temperature/Kconfig
-+++ b/drivers/iio/temperature/Kconfig
-@@ -97,4 +97,14 @@ config TSYS02D
- 	  This driver can also be built as a module. If so, the module will
- 	  be called tsys02d.
- 
-+config MAX31856
-+	tristate "MAX31856 thermocouple sensor"
-+	depends on SPI
-+	help
-+	  If you say yes here you get support for MAX31856
-+	  thermocouple sensor chip connected via SPI.
-+
-+	  This driver can also be built as a module.  If so, the module
-+	  will be called max31856.
-+
- endmenu
-diff --git a/drivers/iio/temperature/Makefile b/drivers/iio/temperature/Makefile
-index 34a31db0bb63..baca4776ca0d 100644
---- a/drivers/iio/temperature/Makefile
-+++ b/drivers/iio/temperature/Makefile
-@@ -5,6 +5,7 @@
- 
- obj-$(CONFIG_HID_SENSOR_TEMP) += hid-sensor-temperature.o
- obj-$(CONFIG_MAXIM_THERMOCOUPLE) += maxim_thermocouple.o
-+obj-$(CONFIG_MAX31856) += max31856.o
- obj-$(CONFIG_MLX90614) += mlx90614.o
- obj-$(CONFIG_MLX90632) += mlx90632.o
- obj-$(CONFIG_TMP006) += tmp006.o
-diff --git a/drivers/iio/temperature/max31856.c b/drivers/iio/temperature/max31856.c
-new file mode 100644
-index 000000000000..6b67d6b95cf9
---- /dev/null
-+++ b/drivers/iio/temperature/max31856.c
-@@ -0,0 +1,353 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* max31856.c
-+ *
-+ * Maxim MAX31856 thermocouple sensor driver
-+ *
-+ * Copyright (C) 2018-2019 Rockwell Collins
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/err.h>
-+#include <linux/spi/spi.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <dt-bindings/iio/temperature/thermocouple.h>
-+/*
-+ * The MSB of the register value determines whether the following byte will
-+ * be written or read. If it is 0, one or more byte reads will follow.
-+ */
-+#define MAX31856_RD_WR_BIT         BIT(7)
-+
-+#define MAX31856_CR0_AUTOCONVERT   BIT(7)
-+#define MAX31856_CR0_1SHOT         BIT(6)
-+#define MAX31856_CR0_OCFAULT       BIT(4)
-+#define MAX31856_CR0_OCFAULT_MASK  GENMASK(5, 4)
-+#define MAX31856_TC_TYPE_MASK      GENMASK(3, 0)
-+#define MAX31856_FAULT_OVUV        BIT(1)
-+#define MAX31856_FAULT_OPEN        BIT(0)
-+
-+/* The MAX31856 registers */
-+#define MAX31856_CR0_REG           0x00
-+#define MAX31856_CR1_REG           0x01
-+#define MAX31856_MASK_REG          0x02
-+#define MAX31856_CJHF_REG          0x03
-+#define MAX31856_CJLF_REG          0x04
-+#define MAX31856_LTHFTH_REG        0x05
-+#define MAX31856_LTHFTL_REG        0x06
-+#define MAX31856_LTLFTH_REG        0x07
-+#define MAX31856_LTLFTL_REG        0x08
-+#define MAX31856_CJTO_REG          0x09
-+#define MAX31856_CJTH_REG          0x0A
-+#define MAX31856_CJTL_REG          0x0B
-+#define MAX31856_LTCBH_REG         0x0C
-+#define MAX31856_LTCBM_REG         0x0D
-+#define MAX31856_LTCBL_REG         0x0E
-+#define MAX31856_SR_REG            0x0F
-+
-+static const struct iio_chan_spec max31856_channels[] = {
-+	{	/* Thermocouple Temperature */
-+		.type = IIO_TEMP,
-+		.info_mask_separate =
-+			BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
-+	},
-+	{	/* Cold Junction Temperature */
-+		.type = IIO_TEMP,
-+		.channel2 = IIO_MOD_TEMP_AMBIENT,
-+		.modified = 1,
-+		.info_mask_separate =
-+			BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
-+	},
-+};
-+
-+struct max31856_data {
-+	struct spi_device *spi;
-+	u32 thermocouple_type;
-+};
-+
-+static int max31856_read(struct max31856_data *data, u8 reg,
-+			 u8 val[], unsigned int read_size)
-+{
-+	return spi_write_then_read(data->spi, &reg, 1, val, read_size);
-+}
-+
-+static int max31856_write(struct max31856_data *data, u8 reg,
-+			  unsigned int val)
-+{
-+	u8 buf[2];
-+
-+	buf[0] = reg | (MAX31856_RD_WR_BIT);
-+	buf[1] = val;
-+
-+	return spi_write(data->spi, buf, 2);
-+}
-+
-+static int max31856_init(struct max31856_data *data)
-+{
-+	int ret;
-+	u8 reg_cr0_val, reg_cr1_val;
-+
-+	/* Start by changing to Off mode before making changes as
-+	 * some settings are recommended to be set only when the device
-+	 * is off
-+	 */
-+	ret = max31856_read(data, MAX31856_CR0_REG, &reg_cr0_val, 1);
-+	if (ret)
-+		return ret;
-+
-+	reg_cr0_val &= ~MAX31856_CR0_AUTOCONVERT;
-+	ret = max31856_write(data, MAX31856_CR0_REG, reg_cr0_val);
-+	if (ret)
-+		return ret;
-+
-+	/* Set thermocouple type based on dts property */
-+	ret = max31856_read(data, MAX31856_CR1_REG, &reg_cr1_val, 1);
-+	if (ret)
-+		return ret;
-+
-+	reg_cr1_val &= ~MAX31856_TC_TYPE_MASK;
-+	reg_cr1_val |= data->thermocouple_type;
-+	ret = max31856_write(data, MAX31856_CR1_REG, reg_cr1_val);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Enable Open circuit fault detection
-+	 * Read datasheet for more information: Table 4.
-+	 * Value 01 means : Enabled (Once every 16 conversions)
-+	 */
-+	reg_cr0_val &= ~MAX31856_CR0_OCFAULT_MASK;
-+	reg_cr0_val |= MAX31856_CR0_OCFAULT;
-+
-+	/* Set Auto Conversion Mode */
-+	reg_cr0_val &= ~MAX31856_CR0_1SHOT;
-+	reg_cr0_val |= MAX31856_CR0_AUTOCONVERT;
-+
-+	return max31856_write(data, MAX31856_CR0_REG, reg_cr0_val);
-+}
-+
-+static int max31856_thermocouple_read(struct max31856_data *data,
-+				      struct iio_chan_spec const *chan,
-+				      int *val)
-+{
-+	int ret, offset_cjto;
-+	u8 reg_val[3];
-+
-+	switch (chan->channel2) {
-+	case IIO_NO_MOD:
-+		/*
-+		 * Multibyte Read
-+		 * MAX31856_LTCBH_REG, MAX31856_LTCBM_REG, MAX31856_LTCBL_REG
-+		 */
-+		ret = max31856_read(data, MAX31856_LTCBH_REG, reg_val, 3);
-+		if (ret)
-+			return ret;
-+		/* Skip last 5 dead bits of LTCBL */
-+		*val = (reg_val[0] << 16 | reg_val[1] << 8 | reg_val[2]) >> 5;
-+		/* Check 7th bit of LTCBH reg. value for sign*/
-+		if (reg_val[0] & 0x80)
-+			*val -= 0x80000;
-+		break;
-+
-+	case IIO_MOD_TEMP_AMBIENT:
-+		/*
-+		 * Multibyte Read
-+		 * MAX31856_CJTO_REG, MAX31856_CJTH_REG, MAX31856_CJTL_REG
-+		 */
-+		ret = max31856_read(data, MAX31856_CJTO_REG, reg_val, 3);
-+		if (ret)
-+			return ret;
-+		/* Get Cold Junction Temp. offset register value */
-+		offset_cjto = reg_val[0];
-+		/* Get CJTH and CJTL value and skip last 2 dead bits of CJTL */
-+		*val = (reg_val[1] << 8 | reg_val[2]) >> 2;
-+		/* As per datasheet add offset into CJTH and CJTL */
-+		*val += offset_cjto;
-+		/* Check 7th bit of CJTH reg. value for sign */
-+		if (reg_val[1] & 0x80)
-+			*val -= 0x4000;
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = max31856_read(data, MAX31856_SR_REG, reg_val, 1);
-+	if (ret)
-+		return ret;
-+	/* Check for over/under voltage or open circuit fault */
-+	if (reg_val[0] & (MAX31856_FAULT_OVUV | MAX31856_FAULT_OPEN))
-+		return -EIO;
-+
-+	return ret;
-+}
-+
-+static int max31856_read_raw(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan,
-+			     int *val, int *val2, long mask)
-+{
-+	struct max31856_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = max31856_thermocouple_read(data, chan, val);
-+		if (ret)
-+			return ret;
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		switch (chan->channel2) {
-+		case IIO_MOD_TEMP_AMBIENT:
-+			/* Cold junction Temp. Data resolution is 0.015625 */
-+			*val = 15;
-+			*val2 = 625000; /* 1000 * 0.015625 */
-+			ret = IIO_VAL_INT_PLUS_MICRO;
-+			break;
-+		default:
-+			/* Thermocouple Temp. Data resolution is 0.0078125 */
-+			*val = 7;
-+			*val2 = 812500; /* 1000 * 0.0078125) */
-+			return IIO_VAL_INT_PLUS_MICRO;
-+		}
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static ssize_t show_fault(struct device *dev, u8 faultbit, char *buf)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct max31856_data *data = iio_priv(indio_dev);
-+	u8 reg_val;
-+	int ret;
-+	bool fault;
-+
-+	ret = max31856_read(data, MAX31856_SR_REG, &reg_val, 1);
-+	if (ret)
-+		return ret;
-+
-+	fault = reg_val & faultbit;
-+
-+	return sprintf(buf, "%d\n", fault);
-+}
-+
-+static ssize_t show_fault_ovuv(struct device *dev,
-+			       struct device_attribute *attr,
-+			       char *buf)
-+{
-+	return show_fault(dev, MAX31856_FAULT_OVUV, buf);
-+}
-+
-+static ssize_t show_fault_oc(struct device *dev,
-+			     struct device_attribute *attr,
-+			     char *buf)
-+{
-+	return show_fault(dev, MAX31856_FAULT_OPEN, buf);
-+}
-+
-+static IIO_DEVICE_ATTR(fault_ovuv, 0444, show_fault_ovuv, NULL, 0);
-+static IIO_DEVICE_ATTR(fault_oc, 0444, show_fault_oc, NULL, 0);
-+
-+static struct attribute *max31856_attributes[] = {
-+	&iio_dev_attr_fault_ovuv.dev_attr.attr,
-+	&iio_dev_attr_fault_oc.dev_attr.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group max31856_group = {
-+	.attrs = max31856_attributes,
-+};
-+
-+static const struct iio_info max31856_info = {
-+	.read_raw = max31856_read_raw,
-+	.attrs = &max31856_group,
-+};
-+
-+static int max31856_probe(struct spi_device *spi)
-+{
-+	const struct spi_device_id *id = spi_get_device_id(spi);
-+	struct iio_dev *indio_dev;
-+	struct max31856_data *data;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	data = iio_priv(indio_dev);
-+	data->spi = spi;
-+
-+	spi_set_drvdata(spi, indio_dev);
-+
-+	indio_dev->info = &max31856_info;
-+	indio_dev->name = id->name;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = max31856_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(max31856_channels);
-+
-+	ret = of_property_read_u32(spi->dev.of_node, "thermocouple-type",
-+				   &data->thermocouple_type);
-+
-+	if (ret) {
-+		dev_info(&spi->dev,
-+			 "Could not read thermocouple type DT property, configuring as a K-Type\n");
-+		data->thermocouple_type = THERMOCOUPLE_TYPE_K;
-+	}
-+
-+	/*
-+	 * no need to translate values as the supported types
-+	 * have the same value as the #defines
-+	 */
-+	switch (data->thermocouple_type) {
-+	case THERMOCOUPLE_TYPE_B:
-+	case THERMOCOUPLE_TYPE_E:
-+	case THERMOCOUPLE_TYPE_J:
-+	case THERMOCOUPLE_TYPE_K:
-+	case THERMOCOUPLE_TYPE_N:
-+	case THERMOCOUPLE_TYPE_R:
-+	case THERMOCOUPLE_TYPE_S:
-+	case THERMOCOUPLE_TYPE_T:
-+		break;
-+	default:
-+		dev_err(&spi->dev,
-+			"error: thermocouple-type %u not supported by max31856\n"
-+			, data->thermocouple_type);
-+		return -EINVAL;
-+	}
-+
-+	ret = max31856_init(data);
-+	if (ret) {
-+		dev_err(&spi->dev, "error: Failed to configure max31856\n");
-+		return ret;
-+	}
-+
-+	return devm_iio_device_register(&spi->dev, indio_dev);
-+}
-+
-+static const struct spi_device_id max31856_id[] = {
-+	{ "max31856", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(spi, max31856_id);
-+
-+static const struct of_device_id max31856_of_match[] = {
-+	{ .compatible = "maxim,max31856" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, max31856_of_match);
-+
-+static struct spi_driver max31856_driver = {
-+	.driver = {
-+		.name = "max31856",
-+		.of_match_table = max31856_of_match,
-+	},
-+	.probe = max31856_probe,
-+	.id_table = max31856_id,
-+};
-+module_spi_driver(max31856_driver);
-+
-+MODULE_AUTHOR("Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>");
-+MODULE_AUTHOR("Patrick Havelange <patrick.havelange@essensium.com>");
-+MODULE_DESCRIPTION("Maxim MAX31856 thermocouple sensor driver");
-+MODULE_LICENSE("GPL");
--- 
-2.19.1
+While it's true that the register will keep updating, since the driver
+is no longer loaded, we don't care about that register value. Once we
+take control of the hardware again (by reloading our driver or via a new
+one), we reinitialize the counter and set the count value back to 0
+anyway -- so whatever value the register had no longer matters.
+
+> +
+> +static int ftm_quaddec_get_prescaler(struct counter_device *counter,
+> +				     struct counter_count *count,
+> +				     size_t *cnt_mode)
+> +{
+> +	struct ftm_quaddec *ftm = counter->priv;
+> +	uint32_t scflags;
+> +
+> +	ftm_read(ftm, FTM_SC, &scflags);
+> +
+> +	*cnt_mode = scflags & FTM_SC_PS_MASK;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ftm_quaddec_set_prescaler(struct counter_device *counter,
+> +				     struct counter_count *count,
+> +				     size_t cnt_mode)
+> +{
+> +	struct ftm_quaddec *ftm = counter->priv;
+> +
+> +	uint32_t scflags;
+> +
+> +	mutex_lock(&ftm->ftm_quaddec_mutex);
+> +
+> +	ftm_read(ftm, FTM_SC, &scflags);
+> +
+> +	scflags &= ~FTM_SC_PS_MASK;
+> +	cnt_mode &= FTM_SC_PS_MASK; /*just to be 100% sure*/
+> +
+> +	scflags |= cnt_mode;
+> +
+> +	/* Write */
+> +	ftm_clear_write_protection(ftm);
+> +	ftm_write(ftm, FTM_SC, scflags);
+> +	ftm_set_write_protection(ftm);
+> +
+> +	/* Also resets the counter as it is undefined anyway now */
+> +	ftm_reset_counter(ftm);
+> +
+> +	mutex_unlock(&ftm->ftm_quaddec_mutex);
+> +	return 0;
+> +}
+> +
+> +static const char * const ftm_quaddec_prescaler[] = {
+> +	"1", "2", "4", "8", "16", "32", "64", "128"
+> +};
+> +
+> +static struct counter_count_enum_ext ftm_quaddec_prescaler_enum = {
+> +	.items = ftm_quaddec_prescaler,
+> +	.num_items = ARRAY_SIZE(ftm_quaddec_prescaler),
+> +	.get = ftm_quaddec_get_prescaler,
+> +	.set = ftm_quaddec_set_prescaler
+> +};
+> +
+> +enum ftm_quaddec_synapse_action {
+> +	FTM_QUADDEC_SYNAPSE_ACTION_BOTH_EDGES,
+> +};
+> +
+> +static enum counter_synapse_action ftm_quaddec_synapse_actions[] = {
+> +	[FTM_QUADDEC_SYNAPSE_ACTION_BOTH_EDGES] =
+> +	COUNTER_SYNAPSE_ACTION_BOTH_EDGES
+> +};
+> +
+> +enum ftm_quaddec_count_function {
+> +	FTM_QUADDEC_COUNT_ENCODER_MODE_1,
+> +};
+
+The FlexTimer Module supports more than just a quadrature counter mode
+doesn't it?
+
+We should keep this initial patch simple since we are still introducing
+the Counter subsystem, but it'll be nice to add support in the future
+for the other counter modes such as single-edge capture.
+
+> +
+> +static const enum counter_count_function ftm_quaddec_count_functions[] = {
+> +	[FTM_QUADDEC_COUNT_ENCODER_MODE_1] =
+> +	COUNTER_COUNT_FUNCTION_QUADRATURE_X4
+> +};
+> +
+> +static int ftm_quaddec_count_read(struct counter_device *counter,
+> +				  struct counter_count *count,
+> +				  struct counter_count_read_value *val)
+> +{
+> +	struct ftm_quaddec *const ftm = counter->priv;
+> +	uint32_t cntval;
+> +
+> +	ftm_read(ftm, FTM_CNT, &cntval);
+> +
+> +	counter_count_read_value_set(val, COUNTER_COUNT_POSITION, &cntval);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ftm_quaddec_count_write(struct counter_device *counter,
+> +				   struct counter_count *count,
+> +				   struct counter_count_write_value *val)
+> +{
+> +	struct ftm_quaddec *const ftm = counter->priv;
+> +	u32 cnt;
+> +	int err;
+> +
+> +	err = counter_count_write_value_get(&cnt, COUNTER_COUNT_POSITION, val);
+> +	if (err)
+> +		return err;
+> +
+> +	if (cnt != 0) {
+> +		dev_warn(&ftm->pdev->dev, "Can only accept '0' as new counter value\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ftm_reset_counter(ftm);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ftm_quaddec_count_function_get(struct counter_device *counter,
+> +					  struct counter_count *count,
+> +					  size_t *function)
+> +{
+> +	*function = FTM_QUADDEC_COUNT_ENCODER_MODE_1;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ftm_quaddec_action_get(struct counter_device *counter,
+> +				  struct counter_count *count,
+> +				  struct counter_synapse *synapse,
+> +				  size_t *action)
+> +{
+> +	*action = FTM_QUADDEC_SYNAPSE_ACTION_BOTH_EDGES;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct counter_ops ftm_quaddec_cnt_ops = {
+> +	.count_read = ftm_quaddec_count_read,
+> +	.count_write = ftm_quaddec_count_write,
+> +	.function_get = ftm_quaddec_count_function_get,
+> +	.action_get = ftm_quaddec_action_get,
+> +};
+> +
+> +static struct counter_signal ftm_quaddec_signals[] = {
+> +	{
+> +		.id = 0,
+> +		.name = "Channel 1 Quadrature A"
+> +	},
+> +	{
+> +		.id = 1,
+> +		.name = "Channel 1 Quadrature B"
+> +	}
+> +};
+
+If possible, these names should match the FTM datasheet naming
+convention. The reason is to make it easier for users to match the
+input signals described in the datasheet with the Signal data provided
+by the Generic Counter interface.
+
+I think the FTM datasheet describes these signals as "Phase A" and
+"Phase B", so perhaps "Channel 1 Phase A" and "Channel 1 Phase B" may be
+more appropriate names in this case.
+
+> +
+> +static struct counter_synapse ftm_quaddec_count_synapses[] = {
+> +	{
+> +		.actions_list = ftm_quaddec_synapse_actions,
+> +		.num_actions = ARRAY_SIZE(ftm_quaddec_synapse_actions),
+> +		.signal = &ftm_quaddec_signals[0]
+> +	},
+> +	{
+> +		.actions_list = ftm_quaddec_synapse_actions,
+> +		.num_actions = ARRAY_SIZE(ftm_quaddec_synapse_actions),
+> +		.signal = &ftm_quaddec_signals[1]
+> +	}
+> +};
+> +
+> +static const struct counter_count_ext ftm_quaddec_count_ext[] = {
+> +	COUNTER_COUNT_ENUM("prescaler", &ftm_quaddec_prescaler_enum),
+> +	COUNTER_COUNT_ENUM_AVAILABLE("prescaler", &ftm_quaddec_prescaler_enum),
+> +};
+> +
+> +static struct counter_count ftm_quaddec_counts = {
+> +	.id = 0,
+> +	.name = "Channel 1 Count",
+> +	.functions_list = ftm_quaddec_count_functions,
+> +	.num_functions = ARRAY_SIZE(ftm_quaddec_count_functions),
+> +	.synapses = ftm_quaddec_count_synapses,
+> +	.num_synapses = ARRAY_SIZE(ftm_quaddec_count_synapses),
+> +	.ext = ftm_quaddec_count_ext,
+> +	.num_ext = ARRAY_SIZE(ftm_quaddec_count_ext)
+> +};
+> +
+> +static int ftm_quaddec_probe(struct platform_device *pdev)
+> +{
+> +	struct ftm_quaddec *ftm;
+> +
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct resource *io;
+> +	int ret;
+> +
+> +	ftm = devm_kzalloc(&pdev->dev, sizeof(*ftm), GFP_KERNEL);
+> +	if (!ftm)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, ftm);
+> +
+> +	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!io) {
+> +		dev_err(&pdev->dev, "Failed to get memory region\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	ftm->pdev = pdev;
+> +	ftm->big_endian = of_property_read_bool(node, "big-endian");
+> +	ftm->ftm_base = devm_ioremap(&pdev->dev, io->start, resource_size(io));
+> +
+> +	if (!ftm->ftm_base) {
+> +		dev_err(&pdev->dev, "Failed to map memory region\n");
+> +		return -EINVAL;
+> +	}
+> +	ftm->counter.name = dev_name(&pdev->dev);
+> +	ftm->counter.parent = &pdev->dev;
+> +	ftm->counter.ops = &ftm_quaddec_cnt_ops;
+> +	ftm->counter.counts = &ftm_quaddec_counts;
+> +	ftm->counter.num_counts = 1;
+> +	ftm->counter.signals = ftm_quaddec_signals;
+> +	ftm->counter.num_signals = ARRAY_SIZE(ftm_quaddec_signals);
+> +	ftm->counter.priv = ftm;
+> +
+> +	mutex_init(&ftm->ftm_quaddec_mutex);
+> +
+> +	ftm_quaddec_init(ftm);
+> +
+> +	ret = counter_register(&ftm->counter);
+> +	if (ret)
+> +		ftm_quaddec_disable(ftm);
+> +
+> +	return ret;
+> +}
+> +
+> +static int ftm_quaddec_remove(struct platform_device *pdev)
+> +{
+> +	struct ftm_quaddec *ftm = platform_get_drvdata(pdev);
+> +
+> +	counter_unregister(&ftm->counter);
+> +
+> +	ftm_quaddec_disable(ftm);
+> +
+> +	return 0;
+> +}
+
+If the ftm_quaddec_disable is not necessary, then we can eliminate the
+ftm_quaddec_remove function as well by replacing the counter_register
+call with a devm_counter_register call.
+
+William Breathitt Gray
+
+> +
+> +static const struct of_device_id ftm_quaddec_match[] = {
+> +	{ .compatible = "fsl,ftm-quaddec" },
+> +	{},
+> +};
+> +
+> +static struct platform_driver ftm_quaddec_driver = {
+> +	.driver = {
+> +		.name = "ftm-quaddec",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = ftm_quaddec_match,
+> +	},
+> +	.probe = ftm_quaddec_probe,
+> +	.remove = ftm_quaddec_remove,
+> +};
+> +
+> +module_platform_driver(ftm_quaddec_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Kjeld Flarup <kfa@deif.com");
+> +MODULE_AUTHOR("Patrick Havelange <patrick.havelange@essensium.com");
+> -- 
+> 2.19.1
+> 
