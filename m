@@ -1,272 +1,394 @@
-Return-Path: <SRS0=iz5u=RS=nxp.com=anson.huang@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V8 2/4] watchdog: imx_sc: Add i.MX system controller watchdog
- support
-Date: Fri, 15 Mar 2019 06:17:25 +0000
-Message-ID: <1552630331-32068-3-git-send-email-Anson.Huang@nxp.com>
-References: <1552630331-32068-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1552630331-32068-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=Lyec=RL=intel.com=adrian.hunter@kernel.org>
+Subject: Re: [PATCH V1 04/11] mmc: tegra: update hw tuning process
+References: <1551504025-3541-1-git-send-email-skomatineni@nvidia.com>
+ <1551504025-3541-4-git-send-email-skomatineni@nvidia.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Message-ID: <bfcec0dc-9065-26ce-93a1-638fbe0f4a30@intel.com>
+Date: Fri, 8 Mar 2019 14:07:44 +0200
 MIME-Version: 1.0
-To: "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, Andy Gross <andy.gross@linaro.org>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+In-Reply-To: <1551504025-3541-4-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, riteshh@codeaurora.org
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, anrao@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
-inside, the system controller is in charge of controlling power,
-clock and watchdog etc..
+On 2/03/19 7:20 AM, Sowjanya Komatineni wrote:
+> This patch includes below HW tuning related fixes.
+> - configures tuning parameters as per Tegra TRM
+> - WAR fix for manual tap change
+> - HW auto-tuning post process
+> 
+> As per Tegra TRM, SDR50 mode tuning execution takes upto maximum
+> of 256 tuning iterations and SDR104/HS200/HS400 modes tuning
+> execution takes upto maximum of 128 tuning iterations.
+> 
+> This patch programs tuning control register with maximum tuning
+> iterations needed based on the timing along with the start tap,
+> multiplier, and step size used by the HW tuning.
+> 
+> Tegra210 has a known issue of glitch on trimmer output when the
+> tap value is changed with the trimmer input clock running and the
+> WAR is to disable card clock before sending tuning command and
+> after sending tuning command wait for 1usec and issue SW reset
+> followed by enabling card clock.
+> 
+> This WAR is applicable when changing tap value manually as well.
+> Tegra SDHCI driver has this implemented correctly for manual tap
+> change but missing SW reset before enabling card clock during
+> sending tuning command.
+> 
+> Issuing SW reset during tuning command as a part of WAR and is
+> applicable in cases where tuning is performed with single step size
+> for more iterations. This patch includes this fix.
+> 
+> HW auto-tuning finds the best largest passing window and sets the
+> tap at the middle of the window. With some devices like sandisk
+> eMMC driving fast edges and due to high tap to tap delay in the
+> Tegra chipset, auto-tuning does not detect falling tap between the
+> valid windows resulting in a parital window or a merged window and
+> the best tap is set at the signal transition which is actually the
+> worst tap location.
+> 
+> Recommended SW solution is to detect if the best passing window
+> picked by the HW tuning is a partial or a merged window based on
+> min and max tap delays found from chip characterization across
+> PVT and perform tuning correction to pick the best tap.
+> 
+> This patch has this implemention of post tuning and uses tuned tap
+> delay.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
 
-This patch adds i.MX system controller watchdog driver support,
-watchdog operation needs to be done in secure EL3 mode via
-ARM-Trusted-Firmware, using SMC call, CPU will trap into
-ARM-Trusted-Firmware and then it will request system controller
-to do watchdog operation via IPC.
+This looks fine, but will need to be adjusted for changes to patches 2 and 3.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V7:
-	- remove the dependence of IMX_SCU as it does NOT call SCU API directly;
-	- add more detail info into the help section of how this module works;
-	- add back device id table since now we have watchdog node in DT.
----
- drivers/watchdog/Kconfig      |  16 ++++
- drivers/watchdog/Makefile     |   1 +
- drivers/watchdog/imx_sc_wdt.c | 182 ++++++++++++++++++++++++++++++++++++++=
-++++
- 3 files changed, 199 insertions(+)
- create mode 100644 drivers/watchdog/imx_sc_wdt.c
-
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 242eea8..44a3158 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -641,6 +641,22 @@ config IMX2_WDT
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called imx2_wdt.
-=20
-+config IMX_SC_WDT
-+	tristate "IMX SC Watchdog"
-+	depends on HAVE_ARM_SMCCC
-+	select WATCHDOG_CORE
-+	help
-+	  This is the driver for the system controller watchdog
-+	  on the NXP i.MX SoCs with system controller inside, the
-+	  watchdog driver will call ARM SMC API and trap into
-+	  ARM-Trusted-Firmware for operations, ARM-Trusted-Firmware
-+	  will request system controller to execute the operations.
-+	  If you have one of these processors and wish to have
-+	  watchdog support enabled, say Y, otherwise say N.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called imx_sc_wdt.
-+
- config UX500_WATCHDOG
- 	tristate "ST-Ericsson Ux500 watchdog"
- 	depends on MFD_DB8500_PRCMU
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index ba930e4..136d9f0 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -68,6 +68,7 @@ obj-$(CONFIG_NUC900_WATCHDOG) +=3D nuc900_wdt.o
- obj-$(CONFIG_TS4800_WATCHDOG) +=3D ts4800_wdt.o
- obj-$(CONFIG_TS72XX_WATCHDOG) +=3D ts72xx_wdt.o
- obj-$(CONFIG_IMX2_WDT) +=3D imx2_wdt.o
-+obj-$(CONFIG_IMX_SC_WDT) +=3D imx_sc_wdt.o
- obj-$(CONFIG_UX500_WATCHDOG) +=3D ux500_wdt.o
- obj-$(CONFIG_RETU_WATCHDOG) +=3D retu_wdt.o
- obj-$(CONFIG_BCM2835_WDT) +=3D bcm2835_wdt.o
-diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
-new file mode 100644
-index 0000000..c8a087a
---- /dev/null
-+++ b/drivers/watchdog/imx_sc_wdt.c
-@@ -0,0 +1,182 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2018-2019 NXP.
-+ */
-+
-+#include <linux/arm-smccc.h>
-+#include <linux/io.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/moduleparam.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+#include <linux/watchdog.h>
-+
-+#define DEFAULT_TIMEOUT 60
-+/*
-+ * Software timer tick implemented in scfw side, support 10ms to 0xfffffff=
-f ms
-+ * in theory, but for normal case, 1s~128s is enough, you can change this =
-max
-+ * value in case it's not enough.
-+ */
-+#define MAX_TIMEOUT 128
-+
-+#define IMX_SIP_TIMER			0xC2000002
-+#define IMX_SIP_TIMER_START_WDOG		0x01
-+#define IMX_SIP_TIMER_STOP_WDOG		0x02
-+#define IMX_SIP_TIMER_SET_WDOG_ACT	0x03
-+#define IMX_SIP_TIMER_PING_WDOG		0x04
-+#define IMX_SIP_TIMER_SET_TIMEOUT_WDOG	0x05
-+#define IMX_SIP_TIMER_GET_WDOG_STAT	0x06
-+#define IMX_SIP_TIMER_SET_PRETIME_WDOG	0x07
-+
-+#define SC_TIMER_WDOG_ACTION_PARTITION	0
-+
-+static bool nowayout =3D WATCHDOG_NOWAYOUT;
-+module_param(nowayout, bool, 0000);
-+MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (defau=
-lt=3D"
-+		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-+
-+static unsigned int timeout =3D DEFAULT_TIMEOUT;
-+module_param(timeout, uint, 0000);
-+MODULE_PARM_DESC(timeout, "Watchdog timeout in seconds (default=3D"
-+		 __MODULE_STRING(DEFAULT_TIMEOUT) ")");
-+
-+static int imx_sc_wdt_ping(struct watchdog_device *wdog)
-+{
-+	struct arm_smccc_res res;
-+
-+	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_PING_WDOG,
-+		      0, 0, 0, 0, 0, 0, &res);
-+
-+	return 0;
-+}
-+
-+static int imx_sc_wdt_start(struct watchdog_device *wdog)
-+{
-+	struct arm_smccc_res res;
-+
-+	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_START_WDOG,
-+		      0, 0, 0, 0, 0, 0, &res);
-+	if (res.a0)
-+		return -EACCES;
-+
-+	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_SET_WDOG_ACT,
-+		      SC_TIMER_WDOG_ACTION_PARTITION,
-+		      0, 0, 0, 0, 0, &res);
-+	return res.a0 ? -EACCES : 0;
-+}
-+
-+static int imx_sc_wdt_stop(struct watchdog_device *wdog)
-+{
-+	struct arm_smccc_res res;
-+
-+	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_STOP_WDOG,
-+		      0, 0, 0, 0, 0, 0, &res);
-+
-+	return res.a0 ? -EACCES : 0;
-+}
-+
-+static int imx_sc_wdt_set_timeout(struct watchdog_device *wdog,
-+				unsigned int timeout)
-+{
-+	struct arm_smccc_res res;
-+
-+	wdog->timeout =3D timeout;
-+	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_SET_TIMEOUT_WDOG,
-+		      timeout * 1000, 0, 0, 0, 0, 0, &res);
-+
-+	return res.a0 ? -EACCES : 0;
-+}
-+
-+static const struct watchdog_ops imx_sc_wdt_ops =3D {
-+	.owner =3D THIS_MODULE,
-+	.start =3D imx_sc_wdt_start,
-+	.stop  =3D imx_sc_wdt_stop,
-+	.ping  =3D imx_sc_wdt_ping,
-+	.set_timeout =3D imx_sc_wdt_set_timeout,
-+};
-+
-+static const struct watchdog_info imx_sc_wdt_info =3D {
-+	.identity	=3D "i.MX SC watchdog timer",
-+	.options	=3D WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
-+			  WDIOF_MAGICCLOSE | WDIOF_PRETIMEOUT,
-+};
-+
-+static int imx_sc_wdt_probe(struct platform_device *pdev)
-+{
-+	struct watchdog_device *imx_sc_wdd;
-+	int ret;
-+
-+	imx_sc_wdd =3D devm_kzalloc(&pdev->dev, sizeof(*imx_sc_wdd), GFP_KERNEL);
-+	if (!imx_sc_wdd)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, imx_sc_wdd);
-+
-+	imx_sc_wdd->info =3D &imx_sc_wdt_info;
-+	imx_sc_wdd->ops =3D &imx_sc_wdt_ops;
-+	imx_sc_wdd->min_timeout =3D 1;
-+	imx_sc_wdd->max_timeout =3D MAX_TIMEOUT;
-+	imx_sc_wdd->parent =3D &pdev->dev;
-+	imx_sc_wdd->timeout =3D DEFAULT_TIMEOUT;
-+
-+	ret =3D watchdog_init_timeout(imx_sc_wdd, timeout, &pdev->dev);
-+	if (ret)
-+		dev_warn(&pdev->dev, "Failed to set timeout value, using default\n");
-+
-+	watchdog_stop_on_reboot(imx_sc_wdd);
-+	watchdog_stop_on_unregister(imx_sc_wdd);
-+
-+	ret =3D devm_watchdog_register_device(&pdev->dev, imx_sc_wdd);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register watchdog device\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused imx_sc_wdt_suspend(struct device *dev)
-+{
-+	struct watchdog_device *imx_sc_wdd =3D dev_get_drvdata(dev);
-+
-+	if (watchdog_active(imx_sc_wdd))
-+		imx_sc_wdt_stop(imx_sc_wdd);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused imx_sc_wdt_resume(struct device *dev)
-+{
-+	struct watchdog_device *imx_sc_wdd =3D dev_get_drvdata(dev);
-+
-+	if (watchdog_active(imx_sc_wdd))
-+		imx_sc_wdt_start(imx_sc_wdd);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(imx_sc_wdt_pm_ops,
-+			 imx_sc_wdt_suspend, imx_sc_wdt_resume);
-+
-+static const struct of_device_id imx_sc_wdt_dt_ids[] =3D {
-+	{ .compatible =3D "fsl,imx-sc-wdt", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, imx_sc_wdt_dt_ids);
-+
-+static struct platform_driver imx_sc_wdt_driver =3D {
-+	.probe		=3D imx_sc_wdt_probe,
-+	.driver		=3D {
-+		.name	=3D "imx-sc-wdt",
-+		.of_match_table =3D imx_sc_wdt_dt_ids,
-+		.pm	=3D &imx_sc_wdt_pm_ops,
-+	},
-+};
-+module_platform_driver(imx_sc_wdt_driver);
-+
-+MODULE_AUTHOR("Robin Gong <yibin.gong@nxp.com>");
-+MODULE_DESCRIPTION("NXP i.MX system controller watchdog driver");
-+MODULE_LICENSE("GPL v2");
---=20
-2.7.4
+>  drivers/mmc/host/sdhci-tegra.c | 218 ++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 217 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+> index 46086dd43bfb..2086e0eced88 100644
+> --- a/drivers/mmc/host/sdhci-tegra.c
+> +++ b/drivers/mmc/host/sdhci-tegra.c
+> @@ -66,6 +66,23 @@
+>  
+>  #define SDHCI_VNDR_TUN_CTRL0_0				0x1c0
+>  #define SDHCI_VNDR_TUN_CTRL0_TUN_HW_TAP			0x20000
+> +#define SDHCI_VNDR_TUN_CTRL0_START_TAP_VAL_MASK		0x03fc0000
+> +#define SDHCI_VNDR_TUN_CTRL0_START_TAP_VAL_SHIFT	18
+> +#define SDHCI_VNDR_TUN_CTRL0_MUL_M_MASK			0x00001fc0
+> +#define SDHCI_VNDR_TUN_CTRL0_MUL_M_SHIFT		6
+> +#define SDHCI_VNDR_TUN_CTRL0_TUN_ITER_MASK		0x000e000
+> +#define SDHCI_VNDR_TUN_CTRL0_TUN_ITER_SHIFT		13
+> +#define TRIES_40					0
+> +#define TRIES_128					2
+> +#define TRIES_256					4
+> +#define SDHCI_VNDR_TUN_CTRL0_TUN_WORD_SEL_MASK		0x7
+> +
+> +#define SDHCI_TEGRA_VNDR_TUN_CTRL1_0			0x1c4
+> +#define SDHCI_TEGRA_VNDR_TUN_STATUS0			0x1C8
+> +#define SDHCI_TEGRA_VNDR_TUN_STATUS1			0x1CC
+> +#define SDHCI_TEGRA_VNDR_TUN_STATUS1_TAP_MASK		0xFF
+> +#define SDHCI_TEGRA_VNDR_TUN_STATUS1_END_TAP_SHIFT	0x8
+> +#define TUNING_WORD_BIT_SIZE				32
+>  
+>  #define SDHCI_TEGRA_AUTO_CAL_CONFIG			0x1e4
+>  #define SDHCI_AUTO_CAL_START				BIT(31)
+> @@ -97,6 +114,8 @@
+>  struct sdhci_tegra_soc_data {
+>  	const struct sdhci_pltfm_data *pdata;
+>  	u32 nvquirks;
+> +	u8 min_tap_delay;
+> +	u8 max_tap_delay;
+>  };
+>  
+>  /* Magic pull up and pull down pad calibration offsets */
+> @@ -136,6 +155,8 @@ struct sdhci_tegra {
+>  	u32 default_trim;
+>  	u32 dqs_trim;
+>  	bool enable_hwcq;
+> +	unsigned long curr_clk_rate;
+> +	u8 tuned_tap_delay;
+>  };
+>  
+>  static u16 tegra_sdhci_readw(struct sdhci_host *host, int reg)
+> @@ -241,6 +262,7 @@ static void tegra210_sdhci_writew(struct sdhci_host *host, u16 val, int reg)
+>  
+>  	if (is_tuning_cmd) {
+>  		udelay(1);
+> +		sdhci_reset(host, SDHCI_RESET_CMD | SDHCI_RESET_DATA);
+>  		tegra_sdhci_configure_card_clk(host, clk_enabled);
+>  	}
+>  }
+> @@ -722,6 +744,7 @@ static void tegra_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+>  	 */
+>  	host_clk = tegra_host->ddr_signaling ? clock * 2 : clock;
+>  	clk_set_rate(pltfm_host->clk, host_clk);
+> +	tegra_host->curr_clk_rate = host_clk;
+>  	if (tegra_host->ddr_signaling)
+>  		host->max_clk = host_clk;
+>  	else
+> @@ -770,6 +793,162 @@ static void tegra_sdhci_hs400_dll_cal(struct sdhci_host *host)
+>  			"HS400 delay line calibration timed out\n");
+>  }
+>  
+> +static int tegra_sdhci_get_max_tuning_loop(struct sdhci_host *host)
+> +{
+> +	u32 val;
+> +
+> +	val = sdhci_readl(host, SDHCI_VNDR_TUN_CTRL0_0);
+> +	val &= SDHCI_VNDR_TUN_CTRL0_TUN_ITER_MASK;
+> +	val = val >> SDHCI_VNDR_TUN_CTRL0_TUN_ITER_SHIFT;
+> +	if (val == TRIES_128)
+> +		return 128;
+> +	else if (val == TRIES_256)
+> +		return 256;
+> +	else
+> +		return 40;
+> +}
+> +
+> +static void tegra_sdhci_tap_correction(struct sdhci_host *host, u8 num_iter,
+> +				       u8 thd_up, u8 thd_low, u8 fixed_tap)
+> +{
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
+> +	u32 val, tun_status;
+> +	u8 word, bit, edge1, tap, window;
+> +	bool tap_result;
+> +	bool start_fail = false;
+> +	bool start_pass = false;
+> +	bool end_pass = false;
+> +	bool first_fail = false;
+> +	bool first_pass = false;
+> +	u8 start_pass_tap = 0;
+> +	u8 end_pass_tap = 0;
+> +	u8 first_fail_tap = 0;
+> +	u8 first_pass_tap = 0;
+> +	u8 total_tuning_words = num_iter / TUNING_WORD_BIT_SIZE;
+> +
+> +	/*
+> +	 * Read auto-tuned results and extract good valid passing window by
+> +	 * filtering out un-wanted bubble/partial/merged windows.
+> +	 */
+> +	for (word = 0; word < total_tuning_words; word++) {
+> +		val = sdhci_readl(host, SDHCI_VNDR_TUN_CTRL0_0);
+> +		val &= ~SDHCI_VNDR_TUN_CTRL0_TUN_WORD_SEL_MASK;
+> +		val |= word;
+> +		sdhci_writel(host, val, SDHCI_VNDR_TUN_CTRL0_0);
+> +		tun_status = sdhci_readl(host, SDHCI_TEGRA_VNDR_TUN_STATUS0);
+> +		bit = 0;
+> +		while (bit < TUNING_WORD_BIT_SIZE) {
+> +			tap = word * TUNING_WORD_BIT_SIZE + bit;
+> +			tap_result = tun_status & (1 << bit);
+> +			if (!tap_result && !start_fail) {
+> +				start_fail = true;
+> +				if (!first_fail) {
+> +					first_fail_tap = tap;
+> +					first_fail = true;
+> +				}
+> +
+> +			} else if (tap_result && start_fail && !start_pass) {
+> +				start_pass_tap = tap;
+> +				start_pass = true;
+> +				if (!first_pass) {
+> +					first_pass_tap = tap;
+> +					first_pass = true;
+> +				}
+> +
+> +			} else if (!tap_result && start_fail && start_pass &&
+> +				   !end_pass) {
+> +				end_pass_tap = tap - 1;
+> +				end_pass = true;
+> +			} else if (tap_result && start_pass && start_fail &&
+> +				   end_pass) {
+> +				window = end_pass_tap - start_pass_tap;
+> +				/* discard merged window and bubble window */
+> +				if (window >= thd_up || window < thd_low) {
+> +					start_pass_tap = tap;
+> +					end_pass = false;
+> +				} else {
+> +					/* set tap at middle of valid window */
+> +					tap = start_pass_tap + window / 2;
+> +					tegra_host->tuned_tap_delay = tap;
+> +					return;
+> +				}
+> +			}
+> +
+> +			bit++;
+> +		}
+> +	}
+> +
+> +	if (!first_fail) {
+> +		WARN_ON("no edge detected, continue with hw tuned delay.\n");
+> +	} else if (first_pass) {
+> +		/* set tap location at fixed tap relative to the first edge */
+> +		edge1 = first_fail_tap + (first_pass_tap - first_fail_tap) / 2;
+> +		if (edge1 - 1 > fixed_tap)
+> +			tegra_host->tuned_tap_delay = edge1 - fixed_tap;
+> +		else
+> +			tegra_host->tuned_tap_delay = edge1 + fixed_tap;
+> +	}
+> +}
+> +
+> +static void tegra_sdhci_post_tuning(struct sdhci_host *host)
+> +{
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
+> +	const struct sdhci_tegra_soc_data *soc_data = tegra_host->soc_data;
+> +	u32 avg_tap_dly, val, min_tap_dly, max_tap_dly;
+> +	u8 fixed_tap, start_tap, end_tap, window_width;
+> +	u8 thdupper, thdlower;
+> +	u8 num_iter;
+> +	u32 clk_rate_mhz, period_ps, bestcase, worstcase;
+> +
+> +	/* retain HW tuned tap to use incase if no correction is needed */
+> +	val = sdhci_readl(host, SDHCI_TEGRA_VENDOR_CLOCK_CTRL);
+> +	tegra_host->tuned_tap_delay = (val & SDHCI_CLOCK_CTRL_TAP_MASK) >>
+> +				      SDHCI_CLOCK_CTRL_TAP_SHIFT;
+> +	if (soc_data->min_tap_delay && soc_data->max_tap_delay) {
+> +		min_tap_dly = soc_data->min_tap_delay;
+> +		max_tap_dly = soc_data->max_tap_delay;
+> +		clk_rate_mhz = tegra_host->curr_clk_rate / USEC_PER_SEC;
+> +		period_ps = USEC_PER_SEC / clk_rate_mhz;
+> +		bestcase = period_ps / min_tap_dly;
+> +		worstcase = period_ps / max_tap_dly;
+> +		/*
+> +		 * Upper and Lower bound thresholds used to detect merged and
+> +		 * bubble windows
+> +		 */
+> +		thdupper = (2 * worstcase + bestcase) / 2;
+> +		thdlower = worstcase / 4;
+> +		/*
+> +		 * fixed tap is used when HW tuning result contains single edge
+> +		 * and tap is set at fixed tap delay relative to the first edge
+> +		 */
+> +		avg_tap_dly = (period_ps * 2) / (min_tap_dly + max_tap_dly);
+> +		fixed_tap = avg_tap_dly / 2;
+> +
+> +		val = sdhci_readl(host, SDHCI_TEGRA_VNDR_TUN_STATUS1);
+> +		start_tap = val & SDHCI_TEGRA_VNDR_TUN_STATUS1_TAP_MASK;
+> +		end_tap = (val >> SDHCI_TEGRA_VNDR_TUN_STATUS1_END_TAP_SHIFT) &
+> +			  SDHCI_TEGRA_VNDR_TUN_STATUS1_TAP_MASK;
+> +		window_width = end_tap - start_tap;
+> +		num_iter = tegra_sdhci_get_max_tuning_loop(host);
+> +		/*
+> +		 * partial window includes edges of the tuning range.
+> +		 * merged window includes more taps so window width is higher
+> +		 * than upper threshold.
+> +		 */
+> +		if (start_tap == 0 || (end_tap == (num_iter - 1)) ||
+> +		    (end_tap == num_iter - 2) || window_width >= thdupper) {
+> +			pr_debug("%s: Apply tuning correction\n",
+> +				 mmc_hostname(host->mmc));
+> +			tegra_sdhci_tap_correction(host, num_iter, thdupper,
+> +						   thdlower, fixed_tap);
+> +		}
+> +	}
+> +
+> +	tegra_sdhci_set_tap(host, tegra_host->tuned_tap_delay);
+> +}
+> +
+>  static void tegra_sdhci_set_uhs_signaling(struct sdhci_host *host,
+>  					  unsigned timing)
+>  {
+> @@ -778,17 +957,22 @@ static void tegra_sdhci_set_uhs_signaling(struct sdhci_host *host,
+>  	bool set_default_tap = false;
+>  	bool set_dqs_trim = false;
+>  	bool do_hs400_dll_cal = false;
+> +	u8 iter = TRIES_256;
+> +	u32 val;
+>  
+>  	tegra_host->ddr_signaling = false;
+>  	switch (timing) {
+>  	case MMC_TIMING_UHS_SDR50:
+> +		break;
+>  	case MMC_TIMING_UHS_SDR104:
+>  	case MMC_TIMING_MMC_HS200:
+>  		/* Don't set default tap on tunable modes. */
+> +		iter = TRIES_128;
+>  		break;
+>  	case MMC_TIMING_MMC_HS400:
+>  		set_dqs_trim = true;
+>  		do_hs400_dll_cal = true;
+> +		iter = TRIES_128;
+>  		break;
+>  	case MMC_TIMING_MMC_DDR52:
+>  	case MMC_TIMING_UHS_DDR50:
+> @@ -800,11 +984,23 @@ static void tegra_sdhci_set_uhs_signaling(struct sdhci_host *host,
+>  		break;
+>  	}
+>  
+> +	val = sdhci_readl(host, SDHCI_VNDR_TUN_CTRL0_0);
+> +	val &= ~(SDHCI_VNDR_TUN_CTRL0_TUN_ITER_MASK |
+> +		 SDHCI_VNDR_TUN_CTRL0_START_TAP_VAL_MASK |
+> +		 SDHCI_VNDR_TUN_CTRL0_MUL_M_MASK);
+> +	val |= (iter << SDHCI_VNDR_TUN_CTRL0_TUN_ITER_SHIFT |
+> +		0 << SDHCI_VNDR_TUN_CTRL0_START_TAP_VAL_SHIFT |
+> +		1 << SDHCI_VNDR_TUN_CTRL0_MUL_M_SHIFT);
+> +	sdhci_writel(host, val, SDHCI_VNDR_TUN_CTRL0_0);
+> +	sdhci_writel(host, 0, SDHCI_TEGRA_VNDR_TUN_CTRL1_0);
+> +
+>  	sdhci_set_uhs_signaling(host, timing);
+>  
+>  	tegra_sdhci_pad_autocalib(host);
+>  
+> -	if (set_default_tap)
+> +	if (tegra_host->tuned_tap_delay && !set_default_tap)
+> +		tegra_sdhci_set_tap(host, tegra_host->tuned_tap_delay);
+> +	else
+>  		tegra_sdhci_set_tap(host, tegra_host->default_tap);
+>  
+>  	if (set_dqs_trim)
+> @@ -1090,6 +1286,8 @@ static const struct sdhci_ops tegra210_sdhci_ops = {
+>  	.set_uhs_signaling = tegra_sdhci_set_uhs_signaling,
+>  	.voltage_switch = tegra_sdhci_voltage_switch,
+>  	.get_max_clock = tegra_sdhci_get_max_clock,
+> +	.get_max_tuning_loop_count = tegra_sdhci_get_max_tuning_loop,
+> +	.post_tuning = tegra_sdhci_post_tuning,
+>  };
+>  
+>  static const struct sdhci_pltfm_data sdhci_tegra210_pdata = {
+> @@ -1110,6 +1308,8 @@ static const struct sdhci_tegra_soc_data soc_data_tegra210 = {
+>  		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
+>  		    NVQUIRK_ENABLE_SDR50 |
+>  		    NVQUIRK_ENABLE_SDR104,
+> +	.min_tap_delay = 106,
+> +	.max_tap_delay = 185,
+>  };
+>  
+>  static const struct sdhci_ops tegra186_sdhci_ops = {
+> @@ -1121,6 +1321,8 @@ static const struct sdhci_ops tegra186_sdhci_ops = {
+>  	.set_uhs_signaling = tegra_sdhci_set_uhs_signaling,
+>  	.voltage_switch = tegra_sdhci_voltage_switch,
+>  	.get_max_clock = tegra_sdhci_get_max_clock,
+> +	.get_max_tuning_loop_count = tegra_sdhci_get_max_tuning_loop,
+> +	.post_tuning = tegra_sdhci_post_tuning,
+>  	.irq = sdhci_tegra_cqhci_irq,
+>  };
+>  
+> @@ -1150,9 +1352,23 @@ static const struct sdhci_tegra_soc_data soc_data_tegra186 = {
+>  		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
+>  		    NVQUIRK_ENABLE_SDR50 |
+>  		    NVQUIRK_ENABLE_SDR104,
+> +	.min_tap_delay = 84,
+> +	.max_tap_delay = 136,
+> +};
+> +
+> +static const struct sdhci_tegra_soc_data soc_data_tegra194 = {
+> +	.pdata = &sdhci_tegra186_pdata,
+> +	.nvquirks = NVQUIRK_NEEDS_PAD_CONTROL |
+> +		    NVQUIRK_HAS_PADCALIB |
+> +		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
+> +		    NVQUIRK_ENABLE_SDR50 |
+> +		    NVQUIRK_ENABLE_SDR104,
+> +	.min_tap_delay = 96,
+> +	.max_tap_delay = 139,
+>  };
+>  
+>  static const struct of_device_id sdhci_tegra_dt_match[] = {
+> +	{ .compatible = "nvidia,tegra194-sdhci", .data = &soc_data_tegra194 },
+>  	{ .compatible = "nvidia,tegra186-sdhci", .data = &soc_data_tegra186 },
+>  	{ .compatible = "nvidia,tegra210-sdhci", .data = &soc_data_tegra210 },
+>  	{ .compatible = "nvidia,tegra124-sdhci", .data = &soc_data_tegra124 },
+> 
