@@ -1,52 +1,31 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 2/4] ARM: dts: omap4-droid4: Update backlight dt
- properties
-Date: Fri, 8 Mar 2019 15:08:16 -0600
-Message-ID: <9e0a5485-d338-e4e8-5333-cac873158a93@ti.com>
-References: <20190307220947.20057-1-dmurphy@ti.com>
- <20190307220947.20057-2-dmurphy@ti.com> <20190308151422.GA10378@amd>
- <6d9a5821-a634-8ea2-4fe3-0603af757668@ti.com> <20190308210649.GC17626@amd>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/3] dt-bindings: Add doc for the ingenic-drm driver
+Date: Fri, 8 Mar 2019 23:23:33 +0100
+Message-ID: <CACRpkdbtnuHC6Ob-soewxKbH_AR+ijg-zkc_w2ZTBg8qBPkoZw@mail.gmail.com>
+References: <20190228220756.20262-1-paul@crapouillou.net> <20190228220756.20262-2-paul@crapouillou.net>
+ <20190301201624.GA22317@ravnborg.org> <1551480042.1526.0@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190308210649.GC17626@amd>
-Content-Language: en-US
+In-Reply-To: <1551480042.1526.0@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, tony@atomide.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Pavel
+On Fri, Mar 1, 2019 at 11:41 PM Paul Cercueil <paul@crapouillou.net> wrote:
 
-On 3/8/19 3:06 PM, Pavel Machek wrote:
-> 
->>>> +		led@1 {
->>>> +			reg = <1>;
->>>> +			led-sources = <1>;
->>>> +			ti,led-mode = <LM3532_BL_MODE_MANUAL>;
->>>> +			label = "keypad";
->>>
->>> I guess best variant would be inputX::backlight here, but that might
->>> be tricky to implement.
->>>
->>
->> Yeah because we don't know what input the keyboard would be on.
->> Unless there are APIs to retrieve that info.  I have not looked at the input
->> framework in a while.
-> 
-> Lets just make it "platform::kbd_backlight". *:kbd_backlight is
-> already used by quite a few drivers.
-> 
+> I also have a board with a "smart" panel (ili9331)
+> that needs a special configuration in the IP. There is nothing in
+> the drm_panel interface that tells me what mode I should use for what
+> panel...
 
-Sounds fine to me.  I will update in v3 as I posted v2 with a lot of deltas
+Is the ILI9331 anything similar to ILI9322 that I have a driver
+for in drivers/gpu/drm/panel/panel-ilitek-ili9322.c?
+I was hoping they would be similar and we =E1=BA=83ould be able
+to just reuse that driver for more of them but I might be
+mistaken.
 
-Dan
-
-> 									Pavel
-> 
-
-
--- 
-------------------
-Dan Murphy
+Yours,
+Linus Walleij
