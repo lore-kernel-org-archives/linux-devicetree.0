@@ -1,120 +1,119 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 2/4] ARM: dts: omap4-droid4: Update backlight dt
- properties
-Date: Fri, 8 Mar 2019 09:45:11 -0600
-Message-ID: <6d9a5821-a634-8ea2-4fe3-0603af757668@ti.com>
-References: <20190307220947.20057-1-dmurphy@ti.com>
- <20190307220947.20057-2-dmurphy@ti.com> <20190308151422.GA10378@amd>
+From: Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH/RFC 05/15] dt-bindings: display: bridge: thc63lvd1024:
+ Document dual-link operation
+Date: Fri, 8 Mar 2019 17:49:25 +0100
+Message-ID: <20190308164925.jwgq4rdqh6mmwwtf@uno.localdomain>
+References: <20190306232345.23052-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20190306232345.23052-6-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190308151422.GA10378@amd>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, tony@atomide.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0996303141=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190306232345.23052-6-laurent.pinchart+renesas@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Pavel
 
-Thanks for the review.
-
-On 3/8/19 9:14 AM, Pavel Machek wrote:
-> Hi!
-> 
->> Update the properties for the lm3532 device node for droid4.
->> With this change the backlight LED string and the keypad
->> LED strings will be controlled separately.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>  arch/arm/boot/dts/omap4-droid4-xt894.dts | 27 +++++++++++++++++-------
->>  1 file changed, 19 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
->> index e21ec929f096..94e3d53dbcf3 100644
->> --- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
->> +++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
->> @@ -6,6 +6,7 @@
->>  /dts-v1/;
->>  
->>  #include <dt-bindings/input/input.h>
->> +#include <dt-bindings/leds/leds-lm3532.h>
->>  #include "omap443x.dtsi"
->>  #include "motorola-cpcap-mapphone.dtsi"
->>  
->> @@ -383,20 +384,30 @@
->>  };
->>  
->>  &i2c1 {
->> -	lm3532@38 {
->> +	led-controller@38 {
->>  		compatible = "ti,lm3532";
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->>  		reg = <0x38>;
->>  
->>  		enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
->>  
->> -		lcd_backlight: backlight {
->> -			compatible = "ti,lm3532-backlight";
->> +		ramp-up-ms = <LM3532_RAMP_1024us>;
->> +		ramp-down-ms = <LM3532_RAMP_65536us>;
-> 
-> I guess dt people will have some comments here. I'd expect
-> 
-> ramp-up-us = <1024> would be more natural.
-> 
-
-Actually ramp-up-us/ramp-down-us is more correct this is an error in this dt definition
-and will be fixed in v2
+--===============0996303141==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fmhj6g4gxg4ka2nj"
+Content-Disposition: inline
 
 
->> +		lcd_backlight: led@0 {
->> +			reg = <0>;
->> +			led-sources = <2>;
->> +			ti,led-mode = <LM3532_BL_MODE_MANUAL>;
->> +			label = "backlight";
-> 
-> Ok, so we'll have lm3532::backlight. That is not too useful, as it
-> does not tell userland what kaclight it is.
-> 
-> main_display::backlight ?
-> 
-> OTOH this one is not too important as backlight subsystem should
-> handle this.
-> 
+--fmhj6g4gxg4ka2nj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-For Droid4 I am not particular to any specific label.
+Hi Laurent,
 
-And if the series in https://lkml.org/lkml/2018/11/7/144
-is ever implemented then the label may change as well.
+On Thu, Mar 07, 2019 at 01:23:35AM +0200, Laurent Pinchart wrote:
+> The THC63LVD1024 LVDS decoder can operate in two modes, single-link or
+> dual-link. In dual-link mode both input ports are used to carry even-
+> and odd-numbered pixels separately. Document this in the DT bindings,
+> along with the related rules governing port and usage.
+>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> ---
+>  .../bindings/display/bridge/thine,thc63lvd1024.txt         | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+> index 37f0c04d5a28..4ff6eb9bbc19 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+> +++ b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+> @@ -28,6 +28,13 @@ Optional video port nodes:
+>  - port@1: Second LVDS input port
+>  - port@3: Second digital CMOS/TTL parallel output
+>
+> +The device can operate in single-link mode or dual-link mode. In single-link
+> +mode, all pixels are received on port@0, and port@1 shall not contain any
+> +endpoint. In dual-link mode, even-numbered pixels are received on port@0 and
+> +odd-numbered pixels on port@1, and both port@0 and port@1 shall contain
+> +endpoints.
 
-The driver forces the lm3532 string to be part of the label.
+You know, I'm not sure this is helpful, as if we have to go and
+describe what the chip supports, a paragraph for dual ouput mode would
+be required as well. The bindings already document that the chip
+supports single/dual input/output modes, maybe you can just add rules
+that prescribes how to populate the endpoints, for both input and
+output modes?
 
-This was a discussion a while back with Jacek when I submitted other drivers.
+> +
+> +
 
->> +		led@1 {
->> +			reg = <1>;
->> +			led-sources = <1>;
->> +			ti,led-mode = <LM3532_BL_MODE_MANUAL>;
->> +			label = "keypad";
-> 
-> I guess best variant would be inputX::backlight here, but that might
-> be tricky to implement.
-> 
+You can drop this empty line.
 
-Yeah because we don't know what input the keyboard would be on.
-Unless there are APIs to retrieve that info.  I have not looked at the input
-framework in a while.
+Thanks
+   j
 
-Dan
+>  Example:
+>  --------
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
 
-> 									Pavel
-> 
+--fmhj6g4gxg4ka2nj
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
--- 
-------------------
-Dan Murphy
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAlyCnRUACgkQcjQGjxah
+VjwEow/+LflqXWN5RKHsIxOibqt3qnn6ImaFNTUP4lfnovmstG4bvZWHW0gi56Cu
+bDFnDHicpDEplvJ68BFY0LGAaIowY/4jnE/tuUt3FwCg/nzrluLt69Dg7wVucaet
+HjSm2MhW9DXXscGWKqH3rPtCAX2nLHZJzim5HAWkJ+ImJTYINxJmArYclBLONvFU
+b2zLHjYM8QZnqMwP0pNuXgRPuqnTRWBIB23acJ0sMinnQLxkXnMpR2zvN0xU6Pbq
+yfDlNaKIWZ1Snz3rjqMlivI7J9/iNSNCYS77S4vqRjLIhfkMtvrogim6fOtTZGYg
+1fCofTtneM9uP8kQdjPC7Rfbg/3Udmg/PG1VCjhtxQsPRS/1Xxo5rFp1IkV8vFoq
+X5er4gZGsu8dfhBu4ZThKp4OrIE4nMgpVEngytxPrjp3Yf9XinjlW1nhIulOsjCz
+TS4gSC5EbfQdb8tW4triqIpj8JeJBbCu84hzJH+23iqRAMm7QefqIAqUt5y87+4X
+aOeBBSnyi+IDpdU8KiQSyorsioeIDmokmgAaUDJpwmVLHk8lsbuvIPuUT5bbf07d
+BqhrvgD9loWc3GwInfu/TlCfWQ/gq5ZE5gC1ClBxVi+AR3ahtAJ859ykml3bkAtV
+o661bRkWEXk+4dAmLjLn6+UA+ZeQS7uLeczePS7/YmCAZ1rBKjI=
+=ifmn
+-----END PGP SIGNATURE-----
+
+--fmhj6g4gxg4ka2nj--
+
+--===============0996303141==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+
+--===============0996303141==--
