@@ -1,24 +1,27 @@
 From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6qdl: Enable fsl,sec-v4.0-pwrkey
-Date: Fri, 8 Mar 2019 07:27:37 -0300
-Message-ID: <CAOMZO5BNxC4e9X0ZKk4sENa98KKf8_pvJnrMYnev9hrpCj3xUw@mail.gmail.com>
-References: <20190308010148.9000-1-aford173@gmail.com>
+Subject: Re: [PATCH v4 5/5] arm64: dts: imx8mq-evk: Enable wm8524 codec
+Date: Fri, 8 Mar 2019 07:32:45 -0300
+Message-ID: <CAOMZO5COQNvpbdxG808aRSfMhMHznorPzoCD-Kp7rB6e8jz4Ng@mail.gmail.com>
+References: <20190227063737.24445-1-daniel.baluta@nxp.com> <20190227063737.24445-6-daniel.baluta@nxp.com>
+ <CAOMZO5AY--Q7FDwK-k8u=mkR-9bxz0XWXN3HNZb4Pb+MESZ6Dg@mail.gmail.com> <CAEnQRZCyUG33SbwhPkE95tuaBdJ7Lo9WbVfJz06ZB1-X9ZbKww@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190308010148.9000-1-aford173@gmail.com>
+In-Reply-To: <CAEnQRZCyUG33SbwhPkE95tuaBdJ7Lo9WbVfJz06ZB1-X9ZbKww@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+To: Daniel Baluta <daniel.baluta@gmail.com>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-li
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 10:02 PM Adam Ford <aford173@gmail.com> wrote:
->
-> The imx6q Technical reference manual shows the interrupt is
-> available to wake from sleep using the power button. The driver
-> has been available for quite some time, and other variants of the
-> i.MX6 have it enabled, so this implements it much like the others.
->
-> Signed-off-by: Adam Ford <aford173@gmail.com>
+Hi Daniel,
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+On Fri, Mar 1, 2019 at 12:53 PM Daniel Baluta <daniel.baluta@gmail.com> wrote:
+
+> They are used by simple-card.c machine driver.
+>
+> asoc_simple_card_parse_clk
+> -> /* Parse dai->sysclk come from "clocks = <&xxx>" */
+> clk = devm_get_clk_from_child(dev, node, NULL);
+
+The simple-card looks for the "clocks" properties inside the
+simple-card node, not inside the codec node, right?
