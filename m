@@ -1,7 +1,7 @@
 From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH  2/2] ARM: dts: stm32: add jedec compatible for nor flash on stm32mp157c-ev1
-Date: Fri, 8 Mar 2019 16:10:23 +0100
-Message-ID: <1552057823-10876-3-git-send-email-ludovic.Barre@st.com>
+Subject: [PATCH  1/2] ARM: dts: stm32: add pinctrl sleep config for qspi on stm32mp157c-ev1
+Date: Fri, 8 Mar 2019 16:10:22 +0100
+Message-ID: <1552057823-10876-2-git-send-email-ludovic.Barre@st.com>
 References: <1552057823-10876-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,33 +14,79 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ludovic Barre <ludovic.barre@st.com>
 
-This patch adds jedec compatible for spi-nor flash
-on stm32mp157c-ev1 (needed with new spi-mem interface).
+This patch adds pinctrl sleep config for qspi on stm32mp157c-ev1
 
 Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c-ev1.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 26 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/stm32mp157c-ev1.dts     |  3 ++-
+ 2 files changed, 28 insertions(+), 1 deletion(-)
 
+diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+index 9ec4694..5520f65 100644
+--- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+@@ -289,6 +289,12 @@
+ 				};
+ 			};
+ 
++			qspi_clk_sleep_pins_a: qspi-clk-sleep-0 {
++				pins {
++					pinmux = <STM32_PINMUX('F', 10, ANALOG)>; /* QSPI_CLK */
++				};
++			};
++
+ 			qspi_bk1_pins_a: qspi-bk1-0 {
+ 				pins1 {
+ 					pinmux = <STM32_PINMUX('F', 8, AF10)>, /* QSPI_BK1_IO0 */
+@@ -307,6 +313,16 @@
+ 				};
+ 			};
+ 
++			qspi_bk1_sleep_pins_a: qspi-bk1-sleep-0 {
++				pins {
++					pinmux = <STM32_PINMUX('F', 8, ANALOG)>, /* QSPI_BK1_IO0 */
++						 <STM32_PINMUX('F', 9, ANALOG)>, /* QSPI_BK1_IO1 */
++						 <STM32_PINMUX('F', 7, ANALOG)>, /* QSPI_BK1_IO2 */
++						 <STM32_PINMUX('F', 6, ANALOG)>, /* QSPI_BK1_IO3 */
++						 <STM32_PINMUX('B', 6, ANALOG)>; /* QSPI_BK1_NCS */
++				};
++			};
++
+ 			qspi_bk2_pins_a: qspi-bk2-0 {
+ 				pins1 {
+ 					pinmux = <STM32_PINMUX('H', 2, AF9)>, /* QSPI_BK2_IO0 */
+@@ -325,6 +341,16 @@
+ 				};
+ 			};
+ 
++			qspi_bk2_sleep_pins_a: qspi-bk2-sleep-0 {
++				pins {
++					pinmux = <STM32_PINMUX('H', 2, ANALOG)>, /* QSPI_BK2_IO0 */
++						 <STM32_PINMUX('H', 3, ANALOG)>, /* QSPI_BK2_IO1 */
++						 <STM32_PINMUX('G', 10, ANALOG)>, /* QSPI_BK2_IO2 */
++						 <STM32_PINMUX('G', 7, ANALOG)>, /* QSPI_BK2_IO3 */
++						 <STM32_PINMUX('C', 0, ANALOG)>; /* QSPI_BK2_NCS */
++				};
++			};
++
+ 			uart4_pins_a: uart4-0 {
+ 				pins1 {
+ 					pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
 diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-index 7fef155..cae88d9 100644
+index b6aca40..7fef155 100644
 --- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
 +++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-@@ -140,6 +140,7 @@
- 	status = "okay";
+@@ -131,8 +131,9 @@
+ };
  
- 	flash0: mx66l51235l@0 {
-+		compatible = "jedec,spi-nor";
- 		reg = <0>;
- 		spi-rx-bus-width = <4>;
- 		spi-max-frequency = <108000000>;
-@@ -148,6 +149,7 @@
- 	};
- 
- 	flash1: mx66l51235l@1 {
-+		compatible = "jedec,spi-nor";
- 		reg = <1>;
- 		spi-rx-bus-width = <4>;
- 		spi-max-frequency = <108000000>;
+ &qspi {
+-	pinctrl-names = "default";
++	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&qspi_clk_pins_a &qspi_bk1_pins_a &qspi_bk2_pins_a>;
++	pinctrl-1 = <&qspi_clk_sleep_pins_a &qspi_bk1_sleep_pins_a &qspi_bk2_sleep_pins_a>;
+ 	reg = <0x58003000 0x1000>, <0x70000000 0x4000000>;
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
 -- 
 2.7.4
