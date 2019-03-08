@@ -1,82 +1,43 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 1/5] dt-bindings: connector: add optional properties for
- Type-B
-Date: Fri, 8 Mar 2019 13:07:38 +0100
-Message-ID: <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
-References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
- <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH V1 09/11] mmc: cqhci: add CQHCI_SSC1 register CBC field
+ mask
+Date: Fri, 8 Mar 2019 14:14:36 +0200
+Message-ID: <47d5ee65-4614-59e3-4b23-b67030b2f5d2@intel.com>
+References: <1551504025-3541-1-git-send-email-skomatineni@nvidia.com>
+ <1551504025-3541-9-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <1551504025-3541-9-git-send-email-skomatineni@nvidia.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, riteshh@codeaurora.org
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, anrao@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 08-03-19 07:13, Chunfeng Yun wrote:
-> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
-> usb-b-connector
+On 2/03/19 7:20 AM, Sowjanya Komatineni wrote:
+> This patch adds define for CBC field mask of the register
+> CQHCI_SSC1.
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
 > ---
->   .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
->   1 file changed, 10 insertions(+)
+>  drivers/mmc/host/cqhci.h | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> index a9a2f2fc44f2..7a07b0f4f973 100644
-> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
-> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> @@ -17,6 +17,16 @@ Optional properties:
->   - self-powered: Set this property if the usb device that has its own power
->     source.
->   
-> +Optional properties for usb-b-connector:
-> +- id-gpios: gpio for USB ID pin.
-
-What about boards where the ID pin is *not* connected to a GPIO,
-but e.g. to a special pin on the PMIC which can also detect
-an ACA adapter ? Currently this case is handled by extcon
-drivers, but we have no way to set e.g. vbus-supply for the
-connector. Maybe in this case the usb-connector node should
-be a child of the PMIC node ?
-
-And in many cases there also is a mux to switch the datalines
-between the host and device(gadget) controllers, how should
-that be described in this model?  See the new usb-role-switch
-code under drivers/usb/roles
-
-In some cases the mux is controlled through a gpio, so we
-may want to add a "mux-gpios" here in which case we also
-need to define what 0/1 means.
-
-> +- vbus-gpios: gpio for USB VBUS pin.
-> +  see gpio/gpio.txt.
-> +- vbus-supply: reference to the VBUS regulator, needed when supports
-> +  dual-role mode.
-
-I think this needs some text that there can be either a vbus-gpio or
-a vbus-supply. Oh wait reading:
-
-https://patchwork.kernel.org/patch/10819377/
-
-I see that this GPIO is for detecting vbus presence, not for driving/enabling
-5v to Vbus from the board, that needs to be described more clearly.
-
-> +- pinctrl-names : a pinctrl state named "default" is optional
-> +- pinctrl-0 : pin control group
-> +  see pinctrl/pinctrl-bindings.txt
-> +
->   Optional properties for usb-c-connector:
->   - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
->     connector has power support.
+> diff --git a/drivers/mmc/host/cqhci.h b/drivers/mmc/host/cqhci.h
+> index f96d8565cc07..f1dc48c7436f 100644
+> --- a/drivers/mmc/host/cqhci.h
+> +++ b/drivers/mmc/host/cqhci.h
+> @@ -88,6 +88,7 @@
+>  
+>  /* send status config 1 */
+>  #define CQHCI_SSC1			0x40
+> +#define CQHCI_SSC1_CBC_MASK		GENMASK(19, 16)
+>  
+>  /* send status config 2 */
+>  #define CQHCI_SSC2			0x44
 > 
-
-
-Regards,
-
-Hans
