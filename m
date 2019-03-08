@@ -1,114 +1,151 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH] arm64: dts: rockchip: Add Nanopi NEO4 initial support
-Date: Fri,  8 Mar 2019 23:42:02 +0530
-Message-ID: <20190308181202.11607-1-jagan@amarulasolutions.com>
+From: Vishal Sagar <vsagar@xilinx.com>
+Subject: RE: [PATCH v4 0/2] Add support for Xilinx CSI2 Receiver Subsystem
+Date: Fri, 8 Mar 2019 18:13:22 +0000
+Message-ID: <CY4PR02MB27098D65DA1F1903DB8854E0A74D0@CY4PR02MB2709.namprd02.prod.outlook.com>
+References: <1552066288-58404-1-git-send-email-vishal.sagar@xilinx.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>, Akash Gajjar <akash@openedev.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1552066288-58404-1-git-send-email-vishal.sagar@xilinx.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vishal Sagar <vishal.sagar@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dinesh Kumar <dineshk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-FriendlyElec NanoPi NEO4 is known to be a revision 4 based
-NanoPi4 series of boards.
+Hi all,
 
-Most of know peripherals are shared between Nanopi M4 vs NEO4, except
-- 1GB DDR3
-- USB Host ports
-- Missing DSI port
-- USB 2.0 Host with USB2PHY0 (no USB2PH1)
+Please ignore this patch series as I missed addressing some comments in this patch.
+I will address them in the next series. 
 
-Add support for it, by reusing existing rk3399-nanopi4.dtsi
+Regards
+Vishal Sagar
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-Signed-off-by: Akash Gajjar <akash@openedev.com>
----
- .../devicetree/bindings/arm/rockchip.yaml     |  1 +
- arch/arm64/boot/dts/rockchip/Makefile         |  1 +
- .../boot/dts/rockchip/rk3399-nanopi-neo4.dts  | 50 +++++++++++++++++++
- 3 files changed, 52 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi-neo4.dts
-
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index 061a03edf9c8..543237b7b297 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -97,6 +97,7 @@ properties:
-           - enum:
-               - friendlyarm,nanopc-t4
-               - friendlyarm,nanopi-m4
-+              - friendlyarm,nanopi-neo4
-           - const: rockchip,rk3399
- 
-       - description: GeekBuying GeekBox
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 1b28fa72ea0b..186281fb70dd 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -18,6 +18,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-scarlet-inx.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-scarlet-kd.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopc-t4.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-m4.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-neo4.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-neo4.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-neo4.dts
-new file mode 100644
-index 000000000000..195410b089b9
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-neo4.dts
-@@ -0,0 +1,50 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2019 Amarula Solutions B.V.
-+ * Author: Jagan Teki <jagan@amarulasolutions.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "rk3399-nanopi4.dtsi"
-+
-+/ {
-+	model = "FriendlyARM NanoPi NEO4";
-+	compatible = "friendlyarm,nanopi-neo4", "rockchip,rk3399";
-+
-+	vdd_5v: vdd-5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_5v";
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	vcc5v0_core: vcc5v0-core {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_core";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vdd_5v>;
-+	};
-+
-+	vcc5v0_usb1: vcc5v0-usb1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_usb1";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+};
-+
-+&vcc3v3_sys {
-+	vin-supply = <&vcc5v0_core>;
-+};
-+
-+&u2phy0_host {
-+	phy-supply = <&vcc5v0_usb1>;
-+};
-+
-+&vbus_typec {
-+	regulator-always-on;
-+	vin-supply = <&vdd_5v>;
-+};
--- 
-2.18.0.321.gffc6fa0e3
+> -----Original Message-----
+> From: Vishal Sagar [mailto:vishal.sagar@xilinx.com]
+> Sent: Friday, March 08, 2019 11:01 PM
+> To: Hyun Kwon <hyunk@xilinx.com>; laurent.pinchart@ideasonboard.com;
+> mchehab@kernel.org; robh+dt@kernel.org; mark.rutland@arm.com; Michal
+> Simek <michals@xilinx.com>; linux-media@vger.kernel.org;
+> devicetree@vger.kernel.org; sakari.ailus@linux.intel.com;
+> hans.verkuil@cisco.com; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; Dinesh Kumar <dineshk@xilinx.com>; Sandip Kothari
+> <sandipk@xilinx.com>
+> Cc: Vishal Sagar <vishal.sagar@xilinx.com>
+> Subject: [PATCH v4 0/2] Add support for Xilinx CSI2 Receiver Subsystem
+> 
+> Xilinx MIPI CSI-2 Receiver Subsystem
+> ------------------------------------
+> 
+> The Xilinx MIPI CSI-2 Receiver Subsystem Soft IP consists of a DPHY which
+> gets the data, an optional I2C, a CSI-2 Receiver which parses the data and
+> converts it into AXIS data.
+> This stream output maybe connected to a Xilinx Video Format Bridge.
+> The maximum number of lanes supported is fixed in the design.
+> The number of active lanes can be programmed.
+> For e.g. the design may set maximum lanes as 4 but if the camera sensor has
+> only 1 lane then the active lanes shall be set as 1.
+> 
+> The pixel format set in design acts as a filter allowing only the selected
+> data type or RAW8 data packets. The D-PHY register access can be gated in
+> the design. The base address of the DPHY depends on whether the internal
+> Xilinx I2C controller is enabled or not in design.
+> 
+> The device driver registers the MIPI CSI2 Rx Subsystem as a V4L2 sub device
+> having 2 pads. The sink pad is connected to the MIPI camera sensor and
+> output pad is connected to the video node.
+> Refer to xlnx,csi2rxss.txt for device tree node details.
+> 
+> This driver helps configure the number of active lanes to be set, setting
+> and handling interrupts and IP core enable. It logs the number of events
+> occurring according to their type between streaming ON and OFF.
+> It generates a v4l2 event for each short packet data received.
+> The application can then dequeue this event and get the requisite data
+> from the event structure.
+> 
+> It adds new V4L2 controls which are used to get the event counter values
+> and reset the subsystem.
+> 
+> The Xilinx CSI-2 Rx Subsystem outputs an AXI4 Stream data which can be
+> used for image processing. This data follows the video formats mentioned
+> in Xilinx UG934 when the Video Format Bridge.
+> 
+> v4
+> - 1/2
+>   - Added reviewed by Hyun Kwon
+> - 2/2
+>   - Removed irq member from core structure
+>   - Consolidated IP config prints in xcsi2rxss_log_ipconfig()
+>   - Return -EINVAL in case of invalid ioctl
+>   - Code formatting
+>   - Added reviewed by Hyun Kwon
+> 
+> v3
+> - 1/2
+>   - removed interrupt parent as suggested by Rob
+>   - removed dphy clock
+>   - moved vfb to optional properties
+>   - Added required and optional port properties section
+>   - Added endpoint property section
+> - 2/2
+>  - Fixed comments given by Hyun.
+>  - Removed DPHY 200 MHz clock. This will be controlled by DPHY driver
+>  - Minor code formatting
+>  - en_csi_v20 and vfb members removed from struct and made local to dt
+> parsing
+>  - lock description updated
+>  - changed to ratelimited type for all dev prints in irq handler
+>  - Removed YUV 422 10bpc media format
+> 
+> v2
+> - 1/2
+>   - updated the compatible string to latest version supported
+>   - removed DPHY related parameters
+>   - added CSI v2.0 related property (including VCX for supporting upto 16
+>     virtual channels).
+>   - modified csi-pxl-format from string to unsigned int type where the value
+>     is as per the CSI specification
+>   - Defined port 0 and port 1 as sink and source ports.
+>   - Removed max-lanes property as suggested by Rob and Sakari
+> 
+> - 2/2
+>   - Fixed comments given by Hyun and Sakari.
+>   - Made all bitmask using BIT() and GENMASK()
+>   - Removed unused definitions
+>   - Removed DPHY access. This will be done by separate DPHY PHY driver.
+>   - Added support for CSI v2.0 for YUV 422 10bpc, RAW16, RAW20 and extra
+>     virtual channels
+>   - Fixed the ports as sink and source
+>   - Now use the v4l2fwnode API to get number of data-lanes
+>   - Added clock framework support
+>   - Removed the close() function
+>   - updated the set format function
+>   - Support only VFB enabled config
+> 
+> Vishal Sagar (2):
+>   media: dt-bindings: media: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem
+>   media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem driver
+> 
+>  .../bindings/media/xilinx/xlnx,csi2rxss.txt        |  123 ++
+>  drivers/media/platform/xilinx/Kconfig              |   10 +
+>  drivers/media/platform/xilinx/Makefile             |    1 +
+>  drivers/media/platform/xilinx/xilinx-csi2rxss.c    | 1557
+> ++++++++++++++++++++
+>  include/uapi/linux/xilinx-v4l2-controls.h          |   14 +
+>  include/uapi/linux/xilinx-v4l2-events.h            |   25 +
+>  6 files changed, 1730 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+>  create mode 100644 drivers/media/platform/xilinx/xilinx-csi2rxss.c
+>  create mode 100644 include/uapi/linux/xilinx-v4l2-events.h
+> 
+> --
+> 2.7.4
