@@ -1,80 +1,46 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 3/4] mfd: ti-lmu: Remove LM3532 backlight driver references
-Date: Thu, 7 Mar 2019 16:09:46 -0600
-Message-ID: <20190307220947.20057-3-dmurphy@ti.com>
-References: <20190307220947.20057-1-dmurphy@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Adam Ford <aford173@gmail.com>
+Subject: [PATCH] ARM: dts: imx6qdl: Enable fsl,sec-v4.0-pwrkey
+Date: Thu,  7 Mar 2019 19:01:48 -0600
+Message-ID: <20190308010148.9000-1-aford173@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190307220947.20057-1-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, tony@atomide.com, lee.jones@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Adam Ford <aford173@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Remove the LM3532 backlight driver references from the ti-lmu
-code as dedicated driver support is available.
+The imx6q Technical reference manual shows the interrupt is
+available to wake from sleep using the power button. The driver
+has been available for quite some time, and other variants of the
+i.MX6 have it enabled, so this implements it much like the others.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/mfd/ti-lmu.c       | 11 -----------
- include/linux/mfd/ti-lmu.h |  1 -
- 2 files changed, 12 deletions(-)
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-diff --git a/drivers/mfd/ti-lmu.c b/drivers/mfd/ti-lmu.c
-index 37d0bdb291c3..b06cb908d1aa 100644
---- a/drivers/mfd/ti-lmu.c
-+++ b/drivers/mfd/ti-lmu.c
-@@ -54,14 +54,6 @@ static void ti_lmu_disable_hw(void *data)
- 		gpiod_set_value(lmu->en_gpio, 0);
- }
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index fe17a3405edc..6b3e48d2e5ec 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -4,6 +4,7 @@
+ // Copyright 2011 Linaro Ltd.
  
--static const struct mfd_cell lm3532_devices[] = {
--	{
--		.name          = "ti-lmu-backlight",
--		.id            = LM3532,
--		.of_compatible = "ti,lm3532-backlight",
--	},
--};
--
- #define LM363X_REGULATOR(_id)			\
- {						\
- 	.name          = "lm363x-regulator",	\
-@@ -141,7 +133,6 @@ static const struct ti_lmu_data chip##_data =	\
- 	.max_register = max_reg,		\
- }						\
+ #include <dt-bindings/clock/imx6qdl-clock.h>
++#include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
  
--TI_LMU_DATA(lm3532, LM3532_MAX_REG);
- TI_LMU_DATA(lm3631, LM3631_MAX_REG);
- TI_LMU_DATA(lm3632, LM3632_MAX_REG);
- TI_LMU_DATA(lm3633, LM3633_MAX_REG);
-@@ -211,7 +202,6 @@ static int ti_lmu_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- }
+ / {
+@@ -833,6 +834,14 @@
+ 					status = "disabled";
+ 				};
  
- static const struct of_device_id ti_lmu_of_match[] = {
--	{ .compatible = "ti,lm3532", .data = &lm3532_data },
- 	{ .compatible = "ti,lm3631", .data = &lm3631_data },
- 	{ .compatible = "ti,lm3632", .data = &lm3632_data },
- 	{ .compatible = "ti,lm3633", .data = &lm3633_data },
-@@ -222,7 +212,6 @@ static const struct of_device_id ti_lmu_of_match[] = {
- MODULE_DEVICE_TABLE(of, ti_lmu_of_match);
- 
- static const struct i2c_device_id ti_lmu_ids[] = {
--	{ "lm3532", LM3532 },
- 	{ "lm3631", LM3631 },
- 	{ "lm3632", LM3632 },
- 	{ "lm3633", LM3633 },
-diff --git a/include/linux/mfd/ti-lmu.h b/include/linux/mfd/ti-lmu.h
-index 1ef51ed36be5..7762c1bce55d 100644
---- a/include/linux/mfd/ti-lmu.h
-+++ b/include/linux/mfd/ti-lmu.h
-@@ -22,7 +22,6 @@
- #define LMU_EVENT_MONITOR_DONE		0x01
- 
- enum ti_lmu_id {
--	LM3532,
- 	LM3631,
- 	LM3632,
- 	LM3633,
++				snvs_pwrkey: snvs-powerkey {
++					compatible = "fsl,sec-v4.0-pwrkey";
++					regmap = <&snvs>;
++					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
++					linux,keycode = <KEY_POWER>;
++					wakeup-source;
++				};
++
+ 				snvs_lpgpr: snvs-lpgpr {
+ 					compatible = "fsl,imx6q-snvs-lpgpr";
+ 				};
 -- 
-2.20.1.390.gb5101f9297
+2.17.1
