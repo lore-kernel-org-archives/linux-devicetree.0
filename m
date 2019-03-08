@@ -1,66 +1,114 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH/RFC 05/15] dt-bindings: display: bridge: thc63lvd1024:
- Document dual-link operation
-Date: Fri, 8 Mar 2019 19:57:39 +0200
-Message-ID: <20190308175739.GA11318@pendragon.ideasonboard.com>
-References: <20190306232345.23052-1-laurent.pinchart+renesas@ideasonboard.com>
- <20190306232345.23052-6-laurent.pinchart+renesas@ideasonboard.com>
- <20190308164925.jwgq4rdqh6mmwwtf@uno.localdomain>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH] arm64: dts: rockchip: Add Nanopi NEO4 initial support
+Date: Fri,  8 Mar 2019 23:42:02 +0530
+Message-ID: <20190308181202.11607-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190308164925.jwgq4rdqh6mmwwtf@uno.localdomain>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jacopo Mondi <jacopo@jmondi.org>
-Cc: devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>, Akash Gajjar <akash@openedev.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLAoKT24gRnJpLCBNYXIgMDgsIDIwMTkgYXQgMDU6NDk6MjVQTSArMDEwMCwgSmFj
-b3BvIE1vbmRpIHdyb3RlOgo+IE9uIFRodSwgTWFyIDA3LCAyMDE5IGF0IDAxOjIzOjM1QU0gKzAy
-MDAsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPiBUaGUgVEhDNjNMVkQxMDI0IExWRFMgZGVj
-b2RlciBjYW4gb3BlcmF0ZSBpbiB0d28gbW9kZXMsIHNpbmdsZS1saW5rIG9yCj4gPiBkdWFsLWxp
-bmsuIEluIGR1YWwtbGluayBtb2RlIGJvdGggaW5wdXQgcG9ydHMgYXJlIHVzZWQgdG8gY2Fycnkg
-ZXZlbi0KPiA+IGFuZCBvZGQtbnVtYmVyZWQgcGl4ZWxzIHNlcGFyYXRlbHkuIERvY3VtZW50IHRo
-aXMgaW4gdGhlIERUIGJpbmRpbmdzLAo+ID4gYWxvbmcgd2l0aCB0aGUgcmVsYXRlZCBydWxlcyBn
-b3Zlcm5pbmcgcG9ydCBhbmQgdXNhZ2UuCj4gPgo+ID4gU2lnbmVkLW9mZi1ieTogTGF1cmVudCBQ
-aW5jaGFydCA8bGF1cmVudC5waW5jaGFydCtyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+Cj4gPiAt
-LS0KPiA+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4
-dCAgICAgICAgIHwgNyArKysrKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygr
-KQo+ID4KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4g
-PiBpbmRleCAzN2YwYzA0ZDVhMjguLjRmZjZlYjliYmMxOSAxMDA2NDQKPiA+IC0tLSBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2
-ZDEwMjQudHh0Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dAo+ID4gQEAgLTI4LDYgKzI4LDEzIEBA
-IE9wdGlvbmFsIHZpZGVvIHBvcnQgbm9kZXM6Cj4gPiAgLSBwb3J0QDE6IFNlY29uZCBMVkRTIGlu
-cHV0IHBvcnQKPiA+ICAtIHBvcnRAMzogU2Vjb25kIGRpZ2l0YWwgQ01PUy9UVEwgcGFyYWxsZWwg
-b3V0cHV0Cj4gPgo+ID4gK1RoZSBkZXZpY2UgY2FuIG9wZXJhdGUgaW4gc2luZ2xlLWxpbmsgbW9k
-ZSBvciBkdWFsLWxpbmsgbW9kZS4gSW4gc2luZ2xlLWxpbmsKPiA+ICttb2RlLCBhbGwgcGl4ZWxz
-IGFyZSByZWNlaXZlZCBvbiBwb3J0QDAsIGFuZCBwb3J0QDEgc2hhbGwgbm90IGNvbnRhaW4gYW55
-Cj4gPiArZW5kcG9pbnQuIEluIGR1YWwtbGluayBtb2RlLCBldmVuLW51bWJlcmVkIHBpeGVscyBh
-cmUgcmVjZWl2ZWQgb24gcG9ydEAwIGFuZAo+ID4gK29kZC1udW1iZXJlZCBwaXhlbHMgb24gcG9y
-dEAxLCBhbmQgYm90aCBwb3J0QDAgYW5kIHBvcnRAMSBzaGFsbCBjb250YWluCj4gPiArZW5kcG9p
-bnRzLgo+IAo+IFlvdSBrbm93LCBJJ20gbm90IHN1cmUgdGhpcyBpcyBoZWxwZnVsLCBhcyBpZiB3
-ZSBoYXZlIHRvIGdvIGFuZAo+IGRlc2NyaWJlIHdoYXQgdGhlIGNoaXAgc3VwcG9ydHMsIGEgcGFy
-YWdyYXBoIGZvciBkdWFsIG91cHV0IG1vZGUgd291bGQKPiBiZSByZXF1aXJlZCBhcyB3ZWxsLiBU
-aGUgYmluZGluZ3MgYWxyZWFkeSBkb2N1bWVudCB0aGF0IHRoZSBjaGlwCj4gc3VwcG9ydHMgc2lu
-Z2xlL2R1YWwgaW5wdXQvb3V0cHV0IG1vZGVzLCBtYXliZSB5b3UgY2FuIGp1c3QgYWRkIHJ1bGVz
-Cj4gdGhhdCBwcmVzY3JpYmVzIGhvdyB0byBwb3B1bGF0ZSB0aGUgZW5kcG9pbnRzLCBmb3IgYm90
-aCBpbnB1dCBhbmQKPiBvdXRwdXQgbW9kZXM/CgpUaGF0J3Mgd2hhdCBJIHdhcyB0cnlpbmcgdG8g
-ZG8gOi0pIEhvdyBlbHNlIHdvdWxkIHlvdSBsaWtlIHRvIHNlZSBpdApkZXNjcmliZWQgPwoKPiA+
-ICsKPiA+ICsKPiAKPiBZb3UgY2FuIGRyb3AgdGhpcyBlbXB0eSBsaW5lLgo+IAo+ID4gIEV4YW1w
-bGU6Cj4gPiAgLS0tLS0tLS0KPiA+CgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+FriendlyElec NanoPi NEO4 is known to be a revision 4 based
+NanoPi4 series of boards.
+
+Most of know peripherals are shared between Nanopi M4 vs NEO4, except
+- 1GB DDR3
+- USB Host ports
+- Missing DSI port
+- USB 2.0 Host with USB2PHY0 (no USB2PH1)
+
+Add support for it, by reusing existing rk3399-nanopi4.dtsi
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Signed-off-by: Akash Gajjar <akash@openedev.com>
+---
+ .../devicetree/bindings/arm/rockchip.yaml     |  1 +
+ arch/arm64/boot/dts/rockchip/Makefile         |  1 +
+ .../boot/dts/rockchip/rk3399-nanopi-neo4.dts  | 50 +++++++++++++++++++
+ 3 files changed, 52 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi-neo4.dts
+
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 061a03edf9c8..543237b7b297 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -97,6 +97,7 @@ properties:
+           - enum:
+               - friendlyarm,nanopc-t4
+               - friendlyarm,nanopi-m4
++              - friendlyarm,nanopi-neo4
+           - const: rockchip,rk3399
+ 
+       - description: GeekBuying GeekBox
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index 1b28fa72ea0b..186281fb70dd 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -18,6 +18,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-scarlet-inx.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-scarlet-kd.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopc-t4.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-m4.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-neo4.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4.dtb
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-neo4.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-neo4.dts
+new file mode 100644
+index 000000000000..195410b089b9
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-neo4.dts
+@@ -0,0 +1,50 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (C) 2019 Amarula Solutions B.V.
++ * Author: Jagan Teki <jagan@amarulasolutions.com>
++ */
++
++/dts-v1/;
++
++#include "rk3399-nanopi4.dtsi"
++
++/ {
++	model = "FriendlyARM NanoPi NEO4";
++	compatible = "friendlyarm,nanopi-neo4", "rockchip,rk3399";
++
++	vdd_5v: vdd-5v {
++		compatible = "regulator-fixed";
++		regulator-name = "vdd_5v";
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	vcc5v0_core: vcc5v0-core {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc5v0_core";
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vdd_5v>;
++	};
++
++	vcc5v0_usb1: vcc5v0-usb1 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc5v0_usb1";
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc5v0_sys>;
++	};
++};
++
++&vcc3v3_sys {
++	vin-supply = <&vcc5v0_core>;
++};
++
++&u2phy0_host {
++	phy-supply = <&vcc5v0_usb1>;
++};
++
++&vbus_typec {
++	regulator-always-on;
++	vin-supply = <&vdd_5v>;
++};
+-- 
+2.18.0.321.gffc6fa0e3
