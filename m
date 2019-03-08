@@ -1,92 +1,112 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH  1/2] ARM: dts: stm32: add pinctrl sleep config for qspi on stm32mp157c-ev1
-Date: Fri, 8 Mar 2019 16:10:22 +0100
-Message-ID: <1552057823-10876-2-git-send-email-ludovic.Barre@st.com>
-References: <1552057823-10876-1-git-send-email-ludovic.Barre@st.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 2/4] ARM: dts: omap4-droid4: Update backlight dt
+ properties
+Date: Fri, 8 Mar 2019 16:14:22 +0100
+Message-ID: <20190308151422.GA10378@amd>
+References: <20190307220947.20057-1-dmurphy@ti.com>
+ <20190307220947.20057-2-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552057823-10876-1-git-send-email-ludovic.Barre@st.com>
+Content-Disposition: inline
+In-Reply-To: <20190307220947.20057-2-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Ludovic Barre <ludovic.barre@st.com>
+To: Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, tony@atomide.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
 
-This patch adds pinctrl sleep config for qspi on stm32mp157c-ev1
+--rwEMma7ioTxnRzrJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 26 ++++++++++++++++++++++++++
- arch/arm/boot/dts/stm32mp157c-ev1.dts     |  3 ++-
- 2 files changed, 28 insertions(+), 1 deletion(-)
+Hi!
 
-diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-index 9ec4694..5520f65 100644
---- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-@@ -289,6 +289,12 @@
- 				};
- 			};
- 
-+			qspi_clk_sleep_pins_a: qspi-clk-sleep-0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('F', 10, ANALOG)>; /* QSPI_CLK */
-+				};
-+			};
-+
- 			qspi_bk1_pins_a: qspi-bk1-0 {
- 				pins1 {
- 					pinmux = <STM32_PINMUX('F', 8, AF10)>, /* QSPI_BK1_IO0 */
-@@ -307,6 +313,16 @@
- 				};
- 			};
- 
-+			qspi_bk1_sleep_pins_a: qspi-bk1-sleep-0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('F', 8, ANALOG)>, /* QSPI_BK1_IO0 */
-+						 <STM32_PINMUX('F', 9, ANALOG)>, /* QSPI_BK1_IO1 */
-+						 <STM32_PINMUX('F', 7, ANALOG)>, /* QSPI_BK1_IO2 */
-+						 <STM32_PINMUX('F', 6, ANALOG)>, /* QSPI_BK1_IO3 */
-+						 <STM32_PINMUX('B', 6, ANALOG)>; /* QSPI_BK1_NCS */
-+				};
-+			};
-+
- 			qspi_bk2_pins_a: qspi-bk2-0 {
- 				pins1 {
- 					pinmux = <STM32_PINMUX('H', 2, AF9)>, /* QSPI_BK2_IO0 */
-@@ -325,6 +341,16 @@
- 				};
- 			};
- 
-+			qspi_bk2_sleep_pins_a: qspi-bk2-sleep-0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('H', 2, ANALOG)>, /* QSPI_BK2_IO0 */
-+						 <STM32_PINMUX('H', 3, ANALOG)>, /* QSPI_BK2_IO1 */
-+						 <STM32_PINMUX('G', 10, ANALOG)>, /* QSPI_BK2_IO2 */
-+						 <STM32_PINMUX('G', 7, ANALOG)>, /* QSPI_BK2_IO3 */
-+						 <STM32_PINMUX('C', 0, ANALOG)>; /* QSPI_BK2_NCS */
-+				};
-+			};
-+
- 			uart4_pins_a: uart4-0 {
- 				pins1 {
- 					pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
-diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-index b6aca40..7fef155 100644
---- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-@@ -131,8 +131,9 @@
- };
- 
- &qspi {
--	pinctrl-names = "default";
-+	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&qspi_clk_pins_a &qspi_bk1_pins_a &qspi_bk2_pins_a>;
-+	pinctrl-1 = <&qspi_clk_sleep_pins_a &qspi_bk1_sleep_pins_a &qspi_bk2_sleep_pins_a>;
- 	reg = <0x58003000 0x1000>, <0x70000000 0x4000000>;
- 	#address-cells = <1>;
- 	#size-cells = <0>;
--- 
-2.7.4
+> Update the properties for the lm3532 device node for droid4.
+> With this change the backlight LED string and the keypad
+> LED strings will be controlled separately.
+>=20
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  arch/arm/boot/dts/omap4-droid4-xt894.dts | 27 +++++++++++++++++-------
+>  1 file changed, 19 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts=
+/omap4-droid4-xt894.dts
+> index e21ec929f096..94e3d53dbcf3 100644
+> --- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
+> +++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+> @@ -6,6 +6,7 @@
+>  /dts-v1/;
+> =20
+>  #include <dt-bindings/input/input.h>
+> +#include <dt-bindings/leds/leds-lm3532.h>
+>  #include "omap443x.dtsi"
+>  #include "motorola-cpcap-mapphone.dtsi"
+> =20
+> @@ -383,20 +384,30 @@
+>  };
+> =20
+>  &i2c1 {
+> -	lm3532@38 {
+> +	led-controller@38 {
+>  		compatible =3D "ti,lm3532";
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+>  		reg =3D <0x38>;
+> =20
+>  		enable-gpios =3D <&gpio6 12 GPIO_ACTIVE_HIGH>;
+> =20
+> -		lcd_backlight: backlight {
+> -			compatible =3D "ti,lm3532-backlight";
+> +		ramp-up-ms =3D <LM3532_RAMP_1024us>;
+> +		ramp-down-ms =3D <LM3532_RAMP_65536us>;
+
+I guess dt people will have some comments here. I'd expect
+
+ramp-up-us =3D <1024> would be more natural.
+
+> +		lcd_backlight: led@0 {
+> +			reg =3D <0>;
+> +			led-sources =3D <2>;
+> +			ti,led-mode =3D <LM3532_BL_MODE_MANUAL>;
+> +			label =3D "backlight";
+
+Ok, so we'll have lm3532::backlight. That is not too useful, as it
+does not tell userland what kaclight it is.
+
+main_display::backlight ?
+
+OTOH this one is not too important as backlight subsystem should
+handle this.
+
+> +		led@1 {
+> +			reg =3D <1>;
+> +			led-sources =3D <1>;
+> +			ti,led-mode =3D <LM3532_BL_MODE_MANUAL>;
+> +			label =3D "keypad";
+
+I guess best variant would be inputX::backlight here, but that might
+be tricky to implement.
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--rwEMma7ioTxnRzrJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyChs4ACgkQMOfwapXb+vIv/ACgr+bHsUANQodAGVuN1nwjp+Hk
+EsQAn3mJlgxw10AjQts0YNXx0d/CPN7q
+=E/DJ
+-----END PGP SIGNATURE-----
+
+--rwEMma7ioTxnRzrJ--
