@@ -1,79 +1,116 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH] drm/panel: panel-simple: Support panel-dpi
-Date: Fri, 8 Mar 2019 18:12:12 +0100
-Message-ID: <20190308171212.GA22502@ravnborg.org>
-References: <20190307101030.3822-1-maxime.ripard@bootlin.com>
- <20190308094457.GA22655@ulmo> <20190308130148.GA21068@ravnborg.org>
- <20190308133924.GA2559@ulmo>
+From: Vishal Sagar <vishal.sagar@xilinx.com>
+Subject: [PATCH v4 0/2] Add support for Xilinx CSI2 Receiver Subsystem
+Date: Fri, 8 Mar 2019 23:01:26 +0530
+Message-ID: <1552066288-58404-1-git-send-email-vishal.sagar@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190308133924.GA2559@ulmo>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, eben@raspberrypi.org, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel@lists.freedesktop.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hyun Kwon <hyunk@xilinx.com>, laurent.pinchart@ideasonboard.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dinesh Kumar <dineshk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>
+Cc: Vishal Sagar <vishal.sagar@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhpZXJyeS4KT24gRnJpLCBNYXIgMDgsIDIwMTkgYXQgMDI6Mzk6MjRQTSArMDEwMCwgVGhp
-ZXJyeSBSZWRpbmcgd3JvdGU6Cj4gT24gRnJpLCBNYXIgMDgsIDIwMTkgYXQgMDI6MDE6NDhQTSAr
-MDEwMCwgU2FtIFJhdm5ib3JnIHdyb3RlOgo+ID4gPiBPbmUgdGhpbmcgdGhhdCdzIG5vdCBjbGVh
-ciB0byBtZSBpcyB3aGV0aGVyIG9yIG5vdCB3ZSB3YW50IHRvIGFsbG93Cj4gPiA+IHZpZGVvIHRp
-bWluZ3MgdG8gYmUgc3BlY2lmaWVkIGluIERULiBJIHVzZWQgdG8gdGhpbmsgdGhhdCB3ZSBkaWRu
-J3QsCj4gPiA+IGJlY2F1c2UgdGhlIHZpZGVvIHRpbWluZ3MgYXJlIGltcGxpZWQgYnkgdGhlIHNw
-ZWNpZmljIGNvbXBhdGlibGUgc3RyaW5nCj4gPiA+ICh3aGljaCB3ZSBhbHJlYWR5IGRldGVybWlu
-ZWQgaXMgbWFuZGF0b3J5IGFueXdheSksCj4gPiAKPiA+IFdlIG9mdGVuIGhhdmUgdHdvIHVzZXJz
-IG9mIHRoZSB0aW1pbmdzIGZvciBhIHNpbXBsZSBwYW5lbC4KPiA+IEZpcnN0IHdlIGhhdmUgdGhl
-IGJvb3Rsb2FkZXIgdGhhdCBtYXkgcHJlc2VudCBzb21ldGhpbmcgb24gdGhlCj4gPiBwYW5lbCAt
-IG5leHQgc3RlcCBpdCB0aGVuIHRoZSBrZXJuZWwuCj4gPiAKPiA+IEJvb3Rsb2FkZXJzIHN1Y2gg
-YXMgVS1ib290IGFuZCBiYXJlYm94IHN1cHBvcnRzIGRldmljZXRyZWUuCj4gPiBTbyB3aXRoIHRo
-ZSB0aW1pbmdzIHNwZWNpZmllZCBpbiB0aGUgZGV2aWNldHJlZSB0aGVyZSBhcmUgdGhyZWUKPiA+
-IHVzZXJzIHRoYXQgY2FuIHVzZSB0aGUgdGltaW5ncywgYW5kIGl0IGlzIHNpbXBsZSB0byBzaGFy
-ZSB0aGUKPiA+IHRpbWluZyBzcGVjaWZpY2F0aW9ucy4KPiAKPiBJIHRoaW5rIHRoaXMgaXMgbm90
-IHRydWUgaW4gcHJhY3RpY2UuIEFzIGZhciBhcyBJIGtub3cgVS1Cb290IGFuZCBMaW51eAo+IGRv
-bid0IHNoYXJlIHRoZSBkZXZpY2UgdHJlZS4gU28gd2Ugd291bGRuJ3QgYWN0dWFsbHkgYmUgc2hh
-cmluZyB0aGUKPiB2aWRlbyB0aW1pbmdzLCB3ZSdkIGJlIGR1cGxpY2F0aW5nIHRoZW0uIEFuZCB3
-aGV0aGVyIHdlIGR1cGxpY2F0ZSB0aGVtCj4gaW4gY29kZSBvciBEVCBpc24ndCByZWFsbHkgYWxs
-IHRoYXQgZGlmZmVyZW50LgpVLWJvb3QgY29waWVzIHNlbGVjdGVkIERUIGZpbGVzIGZyb20gdGhl
-IGtlcm5lbCB0byBVLWJvb3QuCmJhcmVib3ggaGFzIGEgKHNhbml0aXplZD8pIHNldCBvZiBEVCBm
-aWxlcyBmcm9tIHRoZSBrZXJuZWwsIHdpdGgKYmFyZWJveCBzcGVjaWZpY3MgYWRkZWQgb24gdG9w
-IG9mIGl0LiBUaGlzIHJlY2VpdmVzIHVwZGF0ZXMgZnJvbSB0aGUga2VybmVsCm1vcmUgb3IgbGVz
-cyBmb3IgZWFjaCBrZXJuZWwgcmMuClRoZSBvcmlnaW4gb2YgdGhlIERUIGZpbGVzIGFyZSB0aGUg
-a2VybmVsLCBidXQgdGhleSBrZWVwIGNvcGllcwpmb3IgdmFyaW91cyByZWFzb25zLiBBbmQgdGhl
-aXIgdXBkYXRlIHByb2Nlc3MgZnJvbSB0aGUga2VybmVsIGRpZmZlcnMuCgpJbiBvdGhlciB3b3Jk
-cyAtIGJhcmVib3ggdXNlcyB0aGUga2VybmVsIERUIGZpbGVzIGluIHByYWN0aWNlLgpVLWJvb3Qg
-aW4gcHJhY3RpY2UgaGF2ZSB0aGVpciBvd24gY29weSAoYXMgSSBzZWUgaXQgLSBkaWQgbm90IGxv
-b2sgdG8gY2xvc2UpCgo+ID4gQXMgaXQgaXMgbm93IG9uZSBoYXMgdG8gcGF0Y2ggdGhlIGtlcm5l
-bCB0byBhZGQgYSBwYW5lbCB0byBwYW5lbC1zaW1wbGUsCj4gPiBhbmQgYWRkIHRpbWluZyB0byBk
-ZXZpY2UgdHJlZSB0byBsZXQgYmFyZWJveCB1c2UgaXQuCj4gPiAKPiA+IFNvIGl0IHdvdWxkIGJl
-IGdvb2Qgb25jZSBhbmQgZm9yIGFsbCB0byBoYXZlIHRoZSBydWxlcyBzcGVjaWZpZWQuCj4gPiBB
-bmQgdGhlIHByZWZlcnJlZCBzb2x1dGlvbiBpcyB0byBoYXZlIHRpbWluZyBpbiB0aGUgZGV2aWNl
-dHJlZQo+ID4gc28gd2UgY2FuIHVzZSBpdCBib3RoIGluIHRoZSBrZXJuZWwgYW5kIGluIHRoZSBi
-b290bG9hZGVycy4KPiAKPiBUaGlzIGlzICpleGFjdGx5KiB0aGUgc2FtZSBhcmd1bWVudCB0aGF0
-IEkndmUgaGVhcmQgbWFueSB0aW1lcyBiZWZvcmUuCj4gQW5kIGl0IGlzIHN0aWxsIG92ZXJseSBz
-aW1wbGlzdGljLiBWaWRlbyB0aW1pbmdzIGFyZSBqdXN0IG9uZSBwYXJ0IG9mCj4gdGhlIGRlc2Ny
-aXB0aW9uIG9mIHRoZSBwYW5lbC4gSW4gbW9zdCBjYXNlcyB5b3UgbmVlZCBhdCBsZWFzdCBhbHNv
-IGEKPiBwb3dlciBzZXF1ZW5jZS4KVGhlcmUgYXJlIHBhbmVscyB0aGF0IGFyZSBjb21wYXRpYmUg
-d2l0aCBwYW5lbC1zaW1wbGUgYW5kIHRoZXJlIGFyZSB0aGUKb3RoZXIgcGFuZWxzLgpNeSBjb21t
-ZW50IGlzIHNvbGVseSBmb3IgdGhlIHBhbmVsLXNpbXBsZSBjb21wYXRpYmxlIHBhbmVscywgd2hl
-cmUKd2UgYWxyZWFkeSBrbm93IHN0dWZmIGxpa2UgcG93ZXIgc2VxdWVuY2UgYW5kIHN1Y2guCgpU
-aGVyZSBhcmUgdG9kYXkgYSBsb3Qgb2YgcGFuZWxzIGluIHRoYXQgZ3JvdXAgYW5kIGluIG15IHRy
-ZWUgdGhlcmUKaXMgcGF0Y2hlcyB3YWl0aW5nIHRvIGFkZCBhbm90aGVyIHRocmVlIHBhbmVscy4K
-VGhpcyBpcyBwYW5lbHMgdGhhdCAianVzdCB3b3JrcyIgd2l0aCBiYXJlYm94IHdpdGggdGltaW5n
-cygqKSBzcGVjaWZpZWQKaW4gdGhlIERUIGFuZCBmb3IgdGhlIGtlcm5lbCByZXF1aXJlcyBhIHBh
-dGNoIHRvIHBhbmxlLXNpbXBsZS4KClRoZXJlIGFyZSBvYnZpb3VzbHkgYSBsb3Qgb2YgcGFuZWxz
-IHRoYXQgaGF2ZSBhZGRpdGlvYW5sIHJlcXVpcmVtZW50cywKYnV0IHRoZW4gdGhpcyBpcyBub3Qg
-InBhbmxlLXNpbXBsZSIgY29tcGF0aWJsZSBwYW5lbHMgYW5kIG91dHNpZGUgdGhlCnNjb3BlIG9m
-IG15IHJlcXVlc3QuCgpJIGhvcGUgdGhpcyBjbGFyaWZpZXMgaXQuCgoJU2FtCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+Xilinx MIPI CSI-2 Receiver Subsystem
+------------------------------------
+
+The Xilinx MIPI CSI-2 Receiver Subsystem Soft IP consists of a DPHY which
+gets the data, an optional I2C, a CSI-2 Receiver which parses the data and
+converts it into AXIS data.
+This stream output maybe connected to a Xilinx Video Format Bridge.
+The maximum number of lanes supported is fixed in the design.
+The number of active lanes can be programmed.
+For e.g. the design may set maximum lanes as 4 but if the camera sensor has
+only 1 lane then the active lanes shall be set as 1.
+
+The pixel format set in design acts as a filter allowing only the selected
+data type or RAW8 data packets. The D-PHY register access can be gated in
+the design. The base address of the DPHY depends on whether the internal
+Xilinx I2C controller is enabled or not in design.
+
+The device driver registers the MIPI CSI2 Rx Subsystem as a V4L2 sub device
+having 2 pads. The sink pad is connected to the MIPI camera sensor and
+output pad is connected to the video node.
+Refer to xlnx,csi2rxss.txt for device tree node details.
+
+This driver helps configure the number of active lanes to be set, setting
+and handling interrupts and IP core enable. It logs the number of events
+occurring according to their type between streaming ON and OFF.
+It generates a v4l2 event for each short packet data received.
+The application can then dequeue this event and get the requisite data
+from the event structure.
+
+It adds new V4L2 controls which are used to get the event counter values
+and reset the subsystem.
+
+The Xilinx CSI-2 Rx Subsystem outputs an AXI4 Stream data which can be
+used for image processing. This data follows the video formats mentioned
+in Xilinx UG934 when the Video Format Bridge.
+
+v4
+- 1/2
+  - Added reviewed by Hyun Kwon
+- 2/2
+  - Removed irq member from core structure
+  - Consolidated IP config prints in xcsi2rxss_log_ipconfig()
+  - Return -EINVAL in case of invalid ioctl
+  - Code formatting
+  - Added reviewed by Hyun Kwon
+
+v3
+- 1/2
+  - removed interrupt parent as suggested by Rob
+  - removed dphy clock
+  - moved vfb to optional properties
+  - Added required and optional port properties section
+  - Added endpoint property section
+- 2/2
+ - Fixed comments given by Hyun.
+ - Removed DPHY 200 MHz clock. This will be controlled by DPHY driver
+ - Minor code formatting
+ - en_csi_v20 and vfb members removed from struct and made local to dt parsing
+ - lock description updated
+ - changed to ratelimited type for all dev prints in irq handler
+ - Removed YUV 422 10bpc media format
+
+v2
+- 1/2
+  - updated the compatible string to latest version supported
+  - removed DPHY related parameters
+  - added CSI v2.0 related property (including VCX for supporting upto 16
+    virtual channels).
+  - modified csi-pxl-format from string to unsigned int type where the value
+    is as per the CSI specification
+  - Defined port 0 and port 1 as sink and source ports.
+  - Removed max-lanes property as suggested by Rob and Sakari
+
+- 2/2
+  - Fixed comments given by Hyun and Sakari.
+  - Made all bitmask using BIT() and GENMASK()
+  - Removed unused definitions
+  - Removed DPHY access. This will be done by separate DPHY PHY driver.
+  - Added support for CSI v2.0 for YUV 422 10bpc, RAW16, RAW20 and extra
+    virtual channels
+  - Fixed the ports as sink and source
+  - Now use the v4l2fwnode API to get number of data-lanes
+  - Added clock framework support
+  - Removed the close() function
+  - updated the set format function
+  - Support only VFB enabled config
+
+Vishal Sagar (2):
+  media: dt-bindings: media: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem
+  media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem driver
+
+ .../bindings/media/xilinx/xlnx,csi2rxss.txt        |  123 ++
+ drivers/media/platform/xilinx/Kconfig              |   10 +
+ drivers/media/platform/xilinx/Makefile             |    1 +
+ drivers/media/platform/xilinx/xilinx-csi2rxss.c    | 1557 ++++++++++++++++++++
+ include/uapi/linux/xilinx-v4l2-controls.h          |   14 +
+ include/uapi/linux/xilinx-v4l2-events.h            |   25 +
+ 6 files changed, 1730 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+ create mode 100644 drivers/media/platform/xilinx/xilinx-csi2rxss.c
+ create mode 100644 include/uapi/linux/xilinx-v4l2-events.h
+
+-- 
+2.7.4
