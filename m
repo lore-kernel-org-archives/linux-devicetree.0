@@ -1,107 +1,103 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v2 06/10] soc: mediatek: cmdq: clear the event in cmdq
- initial flow
-Date: Fri, 8 Mar 2019 13:05:53 +0800
-Message-ID: <1552021553.2863.18.camel@mtksdaap41>
-References: <1551865835-50974-1-git-send-email-bibby.hsieh@mediatek.com>
- <1551865835-50974-7-git-send-email-bibby.hsieh@mediatek.com>
+From: Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [RFC v1 0/4] media: mediatek: support mdp3 on mt8183 platform
+Date: Fri, 8 Mar 2019 13:49:16 +0800
+Message-ID: <1552024160-33055-1-git-send-email-daoyuan.huang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1551865835-50974-7-git-send-email-bibby.hsieh@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, srv_heupstream@mediatek.com, kendrick.hsu@mediatek.com, Daoyuan Huang <daoyuan.huang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org, Daniel Kurtz <djkurtz@chromium.org>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Houlong Wei <houlong.wei@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Frederic Chen <Frederic.Chen@mediatek.com>, linux-arm-kernel@lists.infradead.org, ginny.chen@mediatek.com
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rynn.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, daoyuan huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, holmes.chiou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ping-hsun.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, christie.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Bibby:
+From: daoyuan huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-On Wed, 2019-03-06 at 17:50 +0800, Bibby Hsieh wrote:
-> GCE hardware stored event information in own internal sysram,
-> if the initial value in those sysram is not zero value
-> it will cause a situation that gce can wait the event immediately
-> after client ask gce to wait event but not really trigger the
-> corresponding hardware.
-> 
-> In order to make sure that the wait event function is
-> exactly correct, we need to clear the sysram value in
-> cmdq initial flow.
-> 
-> Fixup commit 623a6143a845 ("mailbox: mediatek: Add Mediatek CMDQ driver")
+This is the first version of RFC patch for Media Data Path 3 (MDP3),
+MDP3 is used for scaling and color format conversion.
+support using GCE to write register in critical time limitation.
+support V4L2 m2m device control.
 
-Please refer to [1] for the fix tag.
+---
+Based on v5.0-rc1 and these series:
+device tree:
+http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017570.html
+clock control:
+http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017320.html
+system control processor (SCP):
+http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017774.html
+global command engine (GCE):
+http://lists.infradead.org/pipermail/linux-mediatek/2019-January/017143.html
+---
 
-[1] https://www.kernel.org/doc/html/v5.0/process/submitting-patches.html
+daoyuan huang (4):
+  dt-binding: mt8183: Add Mediatek MDP3 dt-bindings
+  dts: arm64: mt8183: Add Mediatek MDP3 nodes
+  media: platform: Add Mediatek MDP3 driver KConfig
+  media: platform: mtk-mdp3: Add Mediatek MDP3 driver
 
-Regards,
-CK
+ .../bindings/media/mediatek,mt8183-mdp3.txt        |  217 ++++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi           |  109 ++
+ drivers/media/platform/Kconfig                     |   18 +
+ drivers/media/platform/Makefile                    |    2 +
+ drivers/media/platform/mtk-mdp3/Makefile           |    9 +
+ drivers/media/platform/mtk-mdp3/isp_reg.h          |   38 +
+ drivers/media/platform/mtk-mdp3/mdp-platform.h     |   67 ++
+ drivers/media/platform/mtk-mdp3/mdp_reg_ccorr.h    |   76 ++
+ drivers/media/platform/mtk-mdp3/mdp_reg_rdma.h     |  207 ++++
+ drivers/media/platform/mtk-mdp3/mdp_reg_rsz.h      |  110 ++
+ drivers/media/platform/mtk-mdp3/mdp_reg_wdma.h     |  126 +++
+ drivers/media/platform/mtk-mdp3/mdp_reg_wrot.h     |  116 ++
+ drivers/media/platform/mtk-mdp3/mmsys_config.h     |  189 ++++
+ drivers/media/platform/mtk-mdp3/mmsys_mutex.h      |   36 +
+ drivers/media/platform/mtk-mdp3/mmsys_reg_base.h   |   39 +
+ drivers/media/platform/mtk-mdp3/mtk-img-ipi.h      |  272 +++++
+ drivers/media/platform/mtk-mdp3/mtk-mdp3-cmdq.c    |  407 +++++++
+ drivers/media/platform/mtk-mdp3/mtk-mdp3-cmdq.h    |   52 +
+ drivers/media/platform/mtk-mdp3/mtk-mdp3-comp.c    | 1180 ++++++++++++++++++++
+ drivers/media/platform/mtk-mdp3/mtk-mdp3-comp.h    |  176 +++
+ drivers/media/platform/mtk-mdp3/mtk-mdp3-core.c    |  257 +++++
+ drivers/media/platform/mtk-mdp3/mtk-mdp3-core.h    |   89 ++
+ drivers/media/platform/mtk-mdp3/mtk-mdp3-m2m.c     |  784 +++++++++++++
+ drivers/media/platform/mtk-mdp3/mtk-mdp3-m2m.h     |   52 +
+ drivers/media/platform/mtk-mdp3/mtk-mdp3-regs.c    |  778 +++++++++++++
+ drivers/media/platform/mtk-mdp3/mtk-mdp3-regs.h    |  382 +++++++
+ drivers/media/platform/mtk-mdp3/mtk-mdp3-vpu.c     |  277 +++++
+ drivers/media/platform/mtk-mdp3/mtk-mdp3-vpu.h     |   90 ++
+ 28 files changed, 6155 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-mdp3.txt
+ create mode 100644 drivers/media/platform/mtk-mdp3/Makefile
+ create mode 100644 drivers/media/platform/mtk-mdp3/isp_reg.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mdp-platform.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_ccorr.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_rdma.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_rsz.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_wdma.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_wrot.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mmsys_config.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mmsys_mutex.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mmsys_reg_base.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-img-ipi.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-cmdq.c
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-cmdq.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-comp.c
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-comp.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-core.c
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-core.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-m2m.c
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-m2m.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-regs.c
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-regs.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-vpu.c
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-vpu.h
 
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/mailbox/mtk-cmdq-mailbox.c       | 5 +++++
->  include/linux/mailbox/mtk-cmdq-mailbox.h | 2 ++
->  include/linux/soc/mediatek/mtk-cmdq.h    | 3 ---
->  3 files changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-> index 6db1e2d..4e744cf 100644
-> --- a/drivers/mailbox/mtk-cmdq-mailbox.c
-> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-> @@ -33,6 +33,7 @@
->  #define CMDQ_THR_END_ADDR		0x24
->  #define CMDQ_THR_WAIT_TOKEN		0x30
->  #define CMDQ_THR_PRIORITY		0x40
-> +#define CMDQ_SYNC_TOKEN_UPDATE		0x68
->  
->  #define CMDQ_THR_ACTIVE_SLOT_CYCLES	0x3200
->  #define CMDQ_THR_ENABLED		0x1
-> @@ -103,8 +104,12 @@ static void cmdq_thread_resume(struct cmdq_thread *thread)
->  
->  static void cmdq_init(struct cmdq *cmdq)
->  {
-> +	int i;
-> +
->  	WARN_ON(clk_enable(cmdq->clock) < 0);
->  	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
-> +	for (i = 0; i <= CMDQ_MAX_EVENT; i++)
-> +		writel(i, cmdq->base + CMDQ_SYNC_TOKEN_UPDATE);
->  	clk_disable(cmdq->clock);
->  }
->  
-> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> index ccb7342..911475da 100644
-> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> @@ -19,6 +19,8 @@
->  #define CMDQ_WFE_UPDATE			BIT(31)
->  #define CMDQ_WFE_WAIT			BIT(15)
->  #define CMDQ_WFE_WAIT_VALUE		0x1
-> +/** cmdq event maximum */
-> +#define CMDQ_MAX_EVENT			0x3ff
->  
->  /*
->   * CMDQ_CODE_MASK:
-> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index 54ade13..4e88999 100644
-> --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -13,9 +13,6 @@
->  
->  #define CMDQ_NO_TIMEOUT		0xffffffffu
->  
-> -/** cmdq event maximum */
-> -#define CMDQ_MAX_EVENT				0x3ff
-> -
->  struct cmdq_pkt;
->  
->  struct cmdq_client {
+-- 
+1.9.1
