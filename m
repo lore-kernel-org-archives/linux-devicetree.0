@@ -1,90 +1,37 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] drm/panel: panel-simple: Support panel-dpi
-Date: Fri, 8 Mar 2019 14:11:42 -0600
-Message-ID: <CAL_JsqKKXM31A=MioE1xKLGhwyYs20m7WEearmbGzcwTt_RQtw@mail.gmail.com>
-References: <20190307101030.3822-1-maxime.ripard@bootlin.com>
- <20190308094457.GA22655@ulmo> <20190308130148.GA21068@ravnborg.org>
- <20190308133924.GA2559@ulmo> <20190308171212.GA22502@ravnborg.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: Add Nanopi NEO4 initial support
+Date: Fri, 8 Mar 2019 14:13:10 -0600
+Message-ID: <CAL_JsqLkyfd0Tvuxn_i-24gCReo=CNhtb65zG6xxqVYJasDZrQ@mail.gmail.com>
+References: <20190308181202.11607-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190308171212.GA22502@ravnborg.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: devicetree@vger.kernel.org, Eben Upton <eben@raspberrypi.org>, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel <dri-devel@lists.freedesktop.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190308181202.11607-1-jagan@amarulasolutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Akash Gajjar <akash@openedev.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBNYXIgOCwgMjAxOSBhdCAxMToxMiBBTSBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9y
-Zy5vcmc+IHdyb3RlOgo+Cj4gSGkgVGhpZXJyeS4KPiBPbiBGcmksIE1hciAwOCwgMjAxOSBhdCAw
-MjozOToyNFBNICswMTAwLCBUaGllcnJ5IFJlZGluZyB3cm90ZToKPiA+IE9uIEZyaSwgTWFyIDA4
-LCAyMDE5IGF0IDAyOjAxOjQ4UE0gKzAxMDAsIFNhbSBSYXZuYm9yZyB3cm90ZToKPiA+ID4gPiBP
-bmUgdGhpbmcgdGhhdCdzIG5vdCBjbGVhciB0byBtZSBpcyB3aGV0aGVyIG9yIG5vdCB3ZSB3YW50
-IHRvIGFsbG93Cj4gPiA+ID4gdmlkZW8gdGltaW5ncyB0byBiZSBzcGVjaWZpZWQgaW4gRFQuIEkg
-dXNlZCB0byB0aGluayB0aGF0IHdlIGRpZG4ndCwKPiA+ID4gPiBiZWNhdXNlIHRoZSB2aWRlbyB0
-aW1pbmdzIGFyZSBpbXBsaWVkIGJ5IHRoZSBzcGVjaWZpYyBjb21wYXRpYmxlIHN0cmluZwo+ID4g
-PiA+ICh3aGljaCB3ZSBhbHJlYWR5IGRldGVybWluZWQgaXMgbWFuZGF0b3J5IGFueXdheSksCj4g
-PiA+Cj4gPiA+IFdlIG9mdGVuIGhhdmUgdHdvIHVzZXJzIG9mIHRoZSB0aW1pbmdzIGZvciBhIHNp
-bXBsZSBwYW5lbC4KPiA+ID4gRmlyc3Qgd2UgaGF2ZSB0aGUgYm9vdGxvYWRlciB0aGF0IG1heSBw
-cmVzZW50IHNvbWV0aGluZyBvbiB0aGUKPiA+ID4gcGFuZWwgLSBuZXh0IHN0ZXAgaXQgdGhlbiB0
-aGUga2VybmVsLgo+ID4gPgo+ID4gPiBCb290bG9hZGVycyBzdWNoIGFzIFUtYm9vdCBhbmQgYmFy
-ZWJveCBzdXBwb3J0cyBkZXZpY2V0cmVlLgo+ID4gPiBTbyB3aXRoIHRoZSB0aW1pbmdzIHNwZWNp
-ZmllZCBpbiB0aGUgZGV2aWNldHJlZSB0aGVyZSBhcmUgdGhyZWUKPiA+ID4gdXNlcnMgdGhhdCBj
-YW4gdXNlIHRoZSB0aW1pbmdzLCBhbmQgaXQgaXMgc2ltcGxlIHRvIHNoYXJlIHRoZQo+ID4gPiB0
-aW1pbmcgc3BlY2lmaWNhdGlvbnMuCj4gPgo+ID4gSSB0aGluayB0aGlzIGlzIG5vdCB0cnVlIGlu
-IHByYWN0aWNlLiBBcyBmYXIgYXMgSSBrbm93IFUtQm9vdCBhbmQgTGludXgKPiA+IGRvbid0IHNo
-YXJlIHRoZSBkZXZpY2UgdHJlZS4gU28gd2Ugd291bGRuJ3QgYWN0dWFsbHkgYmUgc2hhcmluZyB0
-aGUKPiA+IHZpZGVvIHRpbWluZ3MsIHdlJ2QgYmUgZHVwbGljYXRpbmcgdGhlbS4gQW5kIHdoZXRo
-ZXIgd2UgZHVwbGljYXRlIHRoZW0KPiA+IGluIGNvZGUgb3IgRFQgaXNuJ3QgcmVhbGx5IGFsbCB0
-aGF0IGRpZmZlcmVudC4KPiBVLWJvb3QgY29waWVzIHNlbGVjdGVkIERUIGZpbGVzIGZyb20gdGhl
-IGtlcm5lbCB0byBVLWJvb3QuCj4gYmFyZWJveCBoYXMgYSAoc2FuaXRpemVkPykgc2V0IG9mIERU
-IGZpbGVzIGZyb20gdGhlIGtlcm5lbCwgd2l0aAo+IGJhcmVib3ggc3BlY2lmaWNzIGFkZGVkIG9u
-IHRvcCBvZiBpdC4gVGhpcyByZWNlaXZlcyB1cGRhdGVzIGZyb20gdGhlIGtlcm5lbAo+IG1vcmUg
-b3IgbGVzcyBmb3IgZWFjaCBrZXJuZWwgcmMuCj4gVGhlIG9yaWdpbiBvZiB0aGUgRFQgZmlsZXMg
-YXJlIHRoZSBrZXJuZWwsIGJ1dCB0aGV5IGtlZXAgY29waWVzCj4gZm9yIHZhcmlvdXMgcmVhc29u
-cy4gQW5kIHRoZWlyIHVwZGF0ZSBwcm9jZXNzIGZyb20gdGhlIGtlcm5lbCBkaWZmZXJzLgo+Cj4g
-SW4gb3RoZXIgd29yZHMgLSBiYXJlYm94IHVzZXMgdGhlIGtlcm5lbCBEVCBmaWxlcyBpbiBwcmFj
-dGljZS4KPiBVLWJvb3QgaW4gcHJhY3RpY2UgaGF2ZSB0aGVpciBvd24gY29weSAoYXMgSSBzZWUg
-aXQgLSBkaWQgbm90IGxvb2sgdG8gY2xvc2UpCgpXaGlsZSBiYXJlYm94IGRvZXMgYSBtb3JlIGF1
-dG9tYXRlZCBzeW5jLCB1LWJvb3QgZG9lcyBkbyBhZC1ob2MKY29weWluZyBvZiBkdHMgZmlsZXMg
-ZnJvbSB0aGUga2VybmVsLiBBbmQgd2hpbGUgaXQncyB0eXBpY2FsbHkgYSBkdGIKZm9yIHUtYm9v
-dCBhbmQgYSBkdGIgZm9yIHRoZSBrZXJuZWwsIHRoZXJlIGlzIGVmZm9ydCB0byBtYWtlIHRoYXQg
-YmUKdGhlIHNhbWUgZHRiLgoKPiA+ID4gQXMgaXQgaXMgbm93IG9uZSBoYXMgdG8gcGF0Y2ggdGhl
-IGtlcm5lbCB0byBhZGQgYSBwYW5lbCB0byBwYW5lbC1zaW1wbGUsCj4gPiA+IGFuZCBhZGQgdGlt
-aW5nIHRvIGRldmljZSB0cmVlIHRvIGxldCBiYXJlYm94IHVzZSBpdC4KPiA+ID4KPiA+ID4gU28g
-aXQgd291bGQgYmUgZ29vZCBvbmNlIGFuZCBmb3IgYWxsIHRvIGhhdmUgdGhlIHJ1bGVzIHNwZWNp
-ZmllZC4KPiA+ID4gQW5kIHRoZSBwcmVmZXJyZWQgc29sdXRpb24gaXMgdG8gaGF2ZSB0aW1pbmcg
-aW4gdGhlIGRldmljZXRyZWUKPiA+ID4gc28gd2UgY2FuIHVzZSBpdCBib3RoIGluIHRoZSBrZXJu
-ZWwgYW5kIGluIHRoZSBib290bG9hZGVycy4KPiA+Cj4gPiBUaGlzIGlzICpleGFjdGx5KiB0aGUg
-c2FtZSBhcmd1bWVudCB0aGF0IEkndmUgaGVhcmQgbWFueSB0aW1lcyBiZWZvcmUuCj4gPiBBbmQg
-aXQgaXMgc3RpbGwgb3Zlcmx5IHNpbXBsaXN0aWMuIFZpZGVvIHRpbWluZ3MgYXJlIGp1c3Qgb25l
-IHBhcnQgb2YKPiA+IHRoZSBkZXNjcmlwdGlvbiBvZiB0aGUgcGFuZWwuIEluIG1vc3QgY2FzZXMg
-eW91IG5lZWQgYXQgbGVhc3QgYWxzbyBhCj4gPiBwb3dlciBzZXF1ZW5jZS4KPiBUaGVyZSBhcmUg
-cGFuZWxzIHRoYXQgYXJlIGNvbXBhdGliZSB3aXRoIHBhbmVsLXNpbXBsZSBhbmQgdGhlcmUgYXJl
-IHRoZQo+IG90aGVyIHBhbmVscy4KPiBNeSBjb21tZW50IGlzIHNvbGVseSBmb3IgdGhlIHBhbmVs
-LXNpbXBsZSBjb21wYXRpYmxlIHBhbmVscywgd2hlcmUKPiB3ZSBhbHJlYWR5IGtub3cgc3R1ZmYg
-bGlrZSBwb3dlciBzZXF1ZW5jZSBhbmQgc3VjaC4KPgo+IFRoZXJlIGFyZSB0b2RheSBhIGxvdCBv
-ZiBwYW5lbHMgaW4gdGhhdCBncm91cCBhbmQgaW4gbXkgdHJlZSB0aGVyZQo+IGlzIHBhdGNoZXMg
-d2FpdGluZyB0byBhZGQgYW5vdGhlciB0aHJlZSBwYW5lbHMuCj4gVGhpcyBpcyBwYW5lbHMgdGhh
-dCAianVzdCB3b3JrcyIgd2l0aCBiYXJlYm94IHdpdGggdGltaW5ncygqKSBzcGVjaWZpZWQKPiBp
-biB0aGUgRFQgYW5kIGZvciB0aGUga2VybmVsIHJlcXVpcmVzIGEgcGF0Y2ggdG8gcGFubGUtc2lt
-cGxlLgo+Cj4gVGhlcmUgYXJlIG9idmlvdXNseSBhIGxvdCBvZiBwYW5lbHMgdGhhdCBoYXZlIGFk
-ZGl0aW9hbmwgcmVxdWlyZW1lbnRzLAo+IGJ1dCB0aGVuIHRoaXMgaXMgbm90ICJwYW5sZS1zaW1w
-bGUiIGNvbXBhdGlibGUgcGFuZWxzIGFuZCBvdXRzaWRlIHRoZQo+IHNjb3BlIG9mIG15IHJlcXVl
-c3QuCgpQYXJ0IG9mIHRoZSBwcm9ibGVtIHdpdGggcGFuZWwtc2ltcGxlIGlzIHRoYXQgaXQgd29y
-a3MgYXQgdGhlCmJlZ2lubmluZyBhbmQgbm90IGFzIGEgcGxhdGZvcm0gcHJvZ3Jlc3Nlcy4gSW5p
-dGlhbGx5IHBlcmhhcHMgdGhlcmUgaXMKbm8gcG93ZXIgY29udHJvbCwgYnV0IHRoZW4gdGhhdCdz
-IGFkZGVkIGxhdGVyLiBJJ3ZlIHNlZW4gYWxsIHRvIG9mdGVuCmZvbGtzIGNsYWltaW5nIHBhbmVs
-cyAiZm9sbG93IHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZyIgYW5kIHlldCBpdAp0dXJucyBvdXQg
-dGhhdCB0aGUgcGFuZWwgaGFzIG11bHRpcGxlIHBvd2VyIHJhaWxzLgoKUm9iCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Fri, Mar 8, 2019 at 12:12 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+>
+> FriendlyElec NanoPi NEO4 is known to be a revision 4 based
+> NanoPi4 series of boards.
+>
+> Most of know peripherals are shared between Nanopi M4 vs NEO4, except
+> - 1GB DDR3
+> - USB Host ports
+> - Missing DSI port
+> - USB 2.0 Host with USB2PHY0 (no USB2PH1)
+>
+> Add support for it, by reusing existing rk3399-nanopi4.dtsi
+>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> Signed-off-by: Akash Gajjar <akash@openedev.com>
+> ---
+>  .../devicetree/bindings/arm/rockchip.yaml     |  1 +
+>  arch/arm64/boot/dts/rockchip/Makefile         |  1 +
+>  .../boot/dts/rockchip/rk3399-nanopi-neo4.dts  | 50 +++++++++++++++++++
+>  3 files changed, 52 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi-neo4.dts
+
+Reviewed-by: Rob Herring <robh@kernel.org>
