@@ -1,73 +1,89 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH V1 03/11] mmc: sdhci: add support for post tuning process
-Date: Fri, 8 Mar 2019 13:55:11 +0200
-Message-ID: <d3fa9c16-0561-e708-dec2-12d2526027cd@intel.com>
-References: <1551504025-3541-1-git-send-email-skomatineni@nvidia.com>
- <1551504025-3541-3-git-send-email-skomatineni@nvidia.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v8 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
+Date: Fri, 8 Mar 2019 12:57:26 +0100
+Message-ID: <20190308115726.smgooacsr37fmxwg@pengutronix.de>
+References: <1551437599-29509-1-git-send-email-yash.shah@sifive.com>
+ <1551437599-29509-3-git-send-email-yash.shah@sifive.com>
+ <20190307152745.kaiv6q4ygf2apmuv@pengutronix.de>
+ <CAJ2_jOFvr=sw7mWR53JbzMJa1jxwjhJSTibCsKYsxrht+PLPWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551504025-3541-3-git-send-email-skomatineni@nvidia.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAJ2_jOFvr=sw7mWR53JbzMJa1jxwjhJSTibCsKYsxrht+PLPWw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, riteshh@codeaurora.org
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, anrao@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
+To: Yash Shah <yash.shah@sifive.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 2/03/19 7:20 AM, Sowjanya Komatineni wrote:
-> This patch adds support for post tuning process needed for some hosts
-> to perform after successful completion of HW tuning.
+Hello,
+
+On Fri, Mar 08, 2019 at 04:59:36PM +0530, Yash Shah wrote:
+> On Thu, Mar 7, 2019 at 8:57 PM Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > > +static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *dev,
+> > > +                         struct pwm_state *state)
+> > > +{
+> > > +     struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
+> > > +     unsigned int duty_cycle, x;
+> > > +     u32 frac;
+> > > +     struct pwm_state cur_state;
+> > > +     bool enabled;
+> > > +     int ret = 0;
+> > > +     unsigned long num;
+> > > +
+> > > +     if (state->polarity != PWM_POLARITY_INVERSED)
+> > > +             return -EINVAL;
+> > > +
+> > > +     mutex_lock(&pwm->lock);
+> > > +     pwm_get_state(dev, &cur_state);
+> > > +     enabled = cur_state.enabled;
+> > > +
+> > > +     if (state->period != cur_state.period) {
+> >
+> > Did you test this with more than one consumer? For sure the following
+> > should work:
+> >
+> >         pwm1 = pwm_get(.. the first ..);
+> >         pwm_apply_state(pwm1, { .enabled = true, .period = 10000000, .... });
+> >
+> >         pwm2 = pwm_get(.. the second ..);
+> >         pwm_apply_state(pwm2, { .enabled = true, .period = 10000000, .... });
+> >
+> > but for the second pwm_apply_state() run state->period is likely not
+> > exactly 10000000.
 > 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/mmc/host/sdhci.c | 6 +++++-
->  drivers/mmc/host/sdhci.h | 1 +
->  2 files changed, 6 insertions(+), 1 deletion(-)
+> Yes, I have tested multiple consumers using sysfs interface. It is working.
+
+Can you provide details about your testing here? What is the parent clk
+rate? Which settings did you test? Can you confirm my claim that the
+above sequence would fail or point out my error in reasoning?
+
+> > > +     x = 1U << PWM_SIFIVE_CMPWIDTH;
+> > > +     num = (u64)duty_cycle * x + x / 2;
+> > > +     frac = div_u64(num, state->period);
+> >
+> > I don't understand the "+ x / 2" part. Should this better be
+> > "+ state->period / 2"? Something like
 > 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index e9e919218006..976d4d1e2400 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -2392,8 +2392,12 @@ static int __sdhci_execute_tuning(struct sdhci_host *host, u32 opcode)
->  
->  		ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
->  		if (!(ctrl & SDHCI_CTRL_EXEC_TUNING)) {
-> -			if (ctrl & SDHCI_CTRL_TUNED_CLK)
-> +			if (ctrl & SDHCI_CTRL_TUNED_CLK) {
-> +				if (host->ops->post_tuning)
-> +					host->ops->post_tuning(host);
->  				return 0; /* Success! */
+> This eqn is as per your comments against v5 of this patch series.
+>  frac = (duty_cycle * (1 << PWM_SIFIVE_CMPWIDTH) + (1 <<
+> PWM_SIFIVE_CMPWIDTH) / 2) / period;
 
-I think you can hook .execute_tuning and just check if the return value is
-zero before doing post tuning. i.e. something like:
+OK, then not only the code is wrong, but also my suggestion was. :-)
 
-	host->mmc_host_ops.execute_tuning = tegra_sdhci_execute_tuning;
+> > #define div_u64_round(a, b) ({typeof(b) __b = b; div_u64(a + __b / 2, __b)})
+> >
+> > would make this less error prone.
 
-int tegra_sdhci_execute_tuning(blah)
-{
-	int err;
+This still stands. It makes it easier to get the code right and makes it
+easier to understand.
 
-	err = sdhci_execute_tuning(blah);
-	if (!err)
-		tegra_sdhci_post_tuning(host);
-}
+Best regards
+Uwe
 
-> +			}
-> +
->  			break;
->  		}
->  
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index c80e0d6f9b10..236d67778645 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -639,6 +639,7 @@ struct sdhci_ops {
->  	void		(*reset)(struct sdhci_host *host, u8 mask);
->  	int	(*platform_execute_tuning)(struct sdhci_host *host, u32 opcode);
->  	int	(*get_max_tuning_loop_count)(struct sdhci_host *host);
-> +	void	(*post_tuning)(struct sdhci_host *host);
->  	void	(*set_uhs_signaling)(struct sdhci_host *host, unsigned int uhs);
->  	void	(*hw_reset)(struct sdhci_host *host);
->  	void    (*adma_workaround)(struct sdhci_host *host, u32 intmask);
-> 
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
