@@ -1,33 +1,82 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v6 4/4] arm64: dts: imx8mq-evk: Enable audio codec wm8952
-Date: Fri, 8 Mar 2019 09:06:37 -0300
-Message-ID: <CAOMZO5CXyV9PEbyW7Z0yxsTOk94Qu=PqQC4ijiUXOAPDR2nvgA@mail.gmail.com>
-References: <20190308120141.3698-1-daniel.baluta@nxp.com> <20190308120141.3698-5-daniel.baluta@nxp.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 1/5] dt-bindings: connector: add optional properties for
+ Type-B
+Date: Fri, 8 Mar 2019 13:07:38 +0100
+Message-ID: <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
+References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190308120141.3698-5-daniel.baluta@nxp.com>
+In-Reply-To: <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 8, 2019 at 9:02 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
->
-> The main Audio DAC used on the EVK board is wm8952.
-> The EVK provides the MCLK to wm8952.
->
-> Digital interface is SAI2 which includes three signals:
-> SYNC_CLK, BCLK and DACDAT.
->
-> This patch sets:
->         * SAI2 pinctrl configuration
->         * clock hierarchy
->         * wm8960 codec
->
-> Then uses simple-card machine driver to connect them
-> into a sound card.
->
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Hi,
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+On 08-03-19 07:13, Chunfeng Yun wrote:
+> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+> usb-b-connector
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+>   .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
+>   1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> index a9a2f2fc44f2..7a07b0f4f973 100644
+> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> @@ -17,6 +17,16 @@ Optional properties:
+>   - self-powered: Set this property if the usb device that has its own power
+>     source.
+>   
+> +Optional properties for usb-b-connector:
+> +- id-gpios: gpio for USB ID pin.
+
+What about boards where the ID pin is *not* connected to a GPIO,
+but e.g. to a special pin on the PMIC which can also detect
+an ACA adapter ? Currently this case is handled by extcon
+drivers, but we have no way to set e.g. vbus-supply for the
+connector. Maybe in this case the usb-connector node should
+be a child of the PMIC node ?
+
+And in many cases there also is a mux to switch the datalines
+between the host and device(gadget) controllers, how should
+that be described in this model?  See the new usb-role-switch
+code under drivers/usb/roles
+
+In some cases the mux is controlled through a gpio, so we
+may want to add a "mux-gpios" here in which case we also
+need to define what 0/1 means.
+
+> +- vbus-gpios: gpio for USB VBUS pin.
+> +  see gpio/gpio.txt.
+> +- vbus-supply: reference to the VBUS regulator, needed when supports
+> +  dual-role mode.
+
+I think this needs some text that there can be either a vbus-gpio or
+a vbus-supply. Oh wait reading:
+
+https://patchwork.kernel.org/patch/10819377/
+
+I see that this GPIO is for detecting vbus presence, not for driving/enabling
+5v to Vbus from the board, that needs to be described more clearly.
+
+> +- pinctrl-names : a pinctrl state named "default" is optional
+> +- pinctrl-0 : pin control group
+> +  see pinctrl/pinctrl-bindings.txt
+> +
+>   Optional properties for usb-c-connector:
+>   - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
+>     connector has power support.
+> 
+
+
+Regards,
+
+Hans
