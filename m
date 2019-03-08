@@ -1,31 +1,77 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: Add doc for the ingenic-drm driver
-Date: Fri, 8 Mar 2019 23:23:33 +0100
-Message-ID: <CACRpkdbtnuHC6Ob-soewxKbH_AR+ijg-zkc_w2ZTBg8qBPkoZw@mail.gmail.com>
-References: <20190228220756.20262-1-paul@crapouillou.net> <20190228220756.20262-2-paul@crapouillou.net>
- <20190301201624.GA22317@ravnborg.org> <1551480042.1526.0@crapouillou.net>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 1/2] arm64: dts: marvell: Change core numbering in AP806
+ thermal-node
+Date: Fri,  8 Mar 2019 23:28:09 +0100
+Message-ID: <20190308222810.5926-2-miquel.raynal@bootlin.com>
+References: <20190308222810.5926-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551480042.1526.0@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190308222810.5926-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 1, 2019 at 11:41 PM Paul Cercueil <paul@crapouillou.net> wrote:
+When adding thermal nodes, the CPUs have been named from 1 to 4 while
+usually everywhere else they are referred as 0-3. Let's change this to
+be consistent with later changes when we will use CPUfreq and CPU
+phandles as cooling devices to avoid inconsistencies in the nodes
+numbering.
 
-> I also have a board with a "smart" panel (ili9331)
-> that needs a special configuration in the IP. There is nothing in
-> the drm_panel interface that tells me what mode I should use for what
-> panel...
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Is the ILI9331 anything similar to ILI9322 that I have a driver
-for in drivers/gpu/drm/panel/panel-ilitek-ili9322.c?
-I was hoping they would be similar and we =E1=BA=83ould be able
-to just reuse that driver for more of them but I might be
-mistaken.
-
-Yours,
-Linus Walleij
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+index 2d12b3ca1853..1029ff7d7c49 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+@@ -307,7 +307,7 @@
+ 			cooling-maps { };
+ 		};
+ 
+-		ap_thermal_cpu1: ap-thermal-cpu1 {
++		ap_thermal_cpu0: ap-thermal-cpu0 {
+ 			polling-delay-passive = <1000>;
+ 			polling-delay = <1000>;
+ 
+@@ -317,7 +317,7 @@
+ 			cooling-maps { };
+ 		};
+ 
+-		ap_thermal_cpu2: ap-thermal-cpu2 {
++		ap_thermal_cpu1: ap-thermal-cpu1 {
+ 			polling-delay-passive = <1000>;
+ 			polling-delay = <1000>;
+ 
+@@ -327,7 +327,7 @@
+ 			cooling-maps { };
+ 		};
+ 
+-		ap_thermal_cpu3: ap-thermal-cpu3 {
++		ap_thermal_cpu2: ap-thermal-cpu2 {
+ 			polling-delay-passive = <1000>;
+ 			polling-delay = <1000>;
+ 
+@@ -337,7 +337,7 @@
+ 			cooling-maps { };
+ 		};
+ 
+-		ap_thermal_cpu4: ap-thermal-cpu4 {
++		ap_thermal_cpu3: ap-thermal-cpu3 {
+ 			polling-delay-passive = <1000>;
+ 			polling-delay = <1000>;
+ 
+-- 
+2.19.1
