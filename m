@@ -1,14 +1,16 @@
-From: Jacopo Mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH/RFC 05/15] dt-bindings: display: bridge: thc63lvd1024:
- Document dual-link operation
-Date: Fri, 8 Mar 2019 17:49:25 +0100
-Message-ID: <20190308164925.jwgq4rdqh6mmwwtf@uno.localdomain>
-References: <20190306232345.23052-1-laurent.pinchart+renesas@ideasonboard.com>
- <20190306232345.23052-6-laurent.pinchart+renesas@ideasonboard.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH] drm/panel: panel-simple: Support panel-dpi
+Date: Fri, 8 Mar 2019 18:12:12 +0100
+Message-ID: <20190308171212.GA22502@ravnborg.org>
+References: <20190307101030.3822-1-maxime.ripard@bootlin.com>
+ <20190308094457.GA22655@ulmo> <20190308130148.GA21068@ravnborg.org>
+ <20190308133924.GA2559@ulmo>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0996303141=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190306232345.23052-6-laurent.pinchart+renesas@ideasonboard.com>
+Content-Disposition: inline
+In-Reply-To: <20190308133924.GA2559@ulmo>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -18,102 +20,60 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, dri-devel@lists.freedesktop.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, eben@raspberrypi.org, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel@lists.freedesktop.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-
---===============0996303141==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="fmhj6g4gxg4ka2nj"
-Content-Disposition: inline
-
-
---fmhj6g4gxg4ka2nj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Laurent,
-
-On Thu, Mar 07, 2019 at 01:23:35AM +0200, Laurent Pinchart wrote:
-> The THC63LVD1024 LVDS decoder can operate in two modes, single-link or
-> dual-link. In dual-link mode both input ports are used to carry even-
-> and odd-numbered pixels separately. Document this in the DT bindings,
-> along with the related rules governing port and usage.
->
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> ---
->  .../bindings/display/bridge/thine,thc63lvd1024.txt         | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
-> index 37f0c04d5a28..4ff6eb9bbc19 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
-> +++ b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
-> @@ -28,6 +28,13 @@ Optional video port nodes:
->  - port@1: Second LVDS input port
->  - port@3: Second digital CMOS/TTL parallel output
->
-> +The device can operate in single-link mode or dual-link mode. In single-link
-> +mode, all pixels are received on port@0, and port@1 shall not contain any
-> +endpoint. In dual-link mode, even-numbered pixels are received on port@0 and
-> +odd-numbered pixels on port@1, and both port@0 and port@1 shall contain
-> +endpoints.
-
-You know, I'm not sure this is helpful, as if we have to go and
-describe what the chip supports, a paragraph for dual ouput mode would
-be required as well. The bindings already document that the chip
-supports single/dual input/output modes, maybe you can just add rules
-that prescribes how to populate the endpoints, for both input and
-output modes?
-
-> +
-> +
-
-You can drop this empty line.
-
-Thanks
-   j
-
->  Example:
->  --------
->
-> --
-> Regards,
->
-> Laurent Pinchart
->
-
---fmhj6g4gxg4ka2nj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAlyCnRUACgkQcjQGjxah
-VjwEow/+LflqXWN5RKHsIxOibqt3qnn6ImaFNTUP4lfnovmstG4bvZWHW0gi56Cu
-bDFnDHicpDEplvJ68BFY0LGAaIowY/4jnE/tuUt3FwCg/nzrluLt69Dg7wVucaet
-HjSm2MhW9DXXscGWKqH3rPtCAX2nLHZJzim5HAWkJ+ImJTYINxJmArYclBLONvFU
-b2zLHjYM8QZnqMwP0pNuXgRPuqnTRWBIB23acJ0sMinnQLxkXnMpR2zvN0xU6Pbq
-yfDlNaKIWZ1Snz3rjqMlivI7J9/iNSNCYS77S4vqRjLIhfkMtvrogim6fOtTZGYg
-1fCofTtneM9uP8kQdjPC7Rfbg/3Udmg/PG1VCjhtxQsPRS/1Xxo5rFp1IkV8vFoq
-X5er4gZGsu8dfhBu4ZThKp4OrIE4nMgpVEngytxPrjp3Yf9XinjlW1nhIulOsjCz
-TS4gSC5EbfQdb8tW4triqIpj8JeJBbCu84hzJH+23iqRAMm7QefqIAqUt5y87+4X
-aOeBBSnyi+IDpdU8KiQSyorsioeIDmokmgAaUDJpwmVLHk8lsbuvIPuUT5bbf07d
-BqhrvgD9loWc3GwInfu/TlCfWQ/gq5ZE5gC1ClBxVi+AR3ahtAJ859ykml3bkAtV
-o661bRkWEXk+4dAmLjLn6+UA+ZeQS7uLeczePS7/YmCAZ1rBKjI=
-=ifmn
------END PGP SIGNATURE-----
-
---fmhj6g4gxg4ka2nj--
-
---===============0996303141==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============0996303141==--
+SGkgVGhpZXJyeS4KT24gRnJpLCBNYXIgMDgsIDIwMTkgYXQgMDI6Mzk6MjRQTSArMDEwMCwgVGhp
+ZXJyeSBSZWRpbmcgd3JvdGU6Cj4gT24gRnJpLCBNYXIgMDgsIDIwMTkgYXQgMDI6MDE6NDhQTSAr
+MDEwMCwgU2FtIFJhdm5ib3JnIHdyb3RlOgo+ID4gPiBPbmUgdGhpbmcgdGhhdCdzIG5vdCBjbGVh
+ciB0byBtZSBpcyB3aGV0aGVyIG9yIG5vdCB3ZSB3YW50IHRvIGFsbG93Cj4gPiA+IHZpZGVvIHRp
+bWluZ3MgdG8gYmUgc3BlY2lmaWVkIGluIERULiBJIHVzZWQgdG8gdGhpbmsgdGhhdCB3ZSBkaWRu
+J3QsCj4gPiA+IGJlY2F1c2UgdGhlIHZpZGVvIHRpbWluZ3MgYXJlIGltcGxpZWQgYnkgdGhlIHNw
+ZWNpZmljIGNvbXBhdGlibGUgc3RyaW5nCj4gPiA+ICh3aGljaCB3ZSBhbHJlYWR5IGRldGVybWlu
+ZWQgaXMgbWFuZGF0b3J5IGFueXdheSksCj4gPiAKPiA+IFdlIG9mdGVuIGhhdmUgdHdvIHVzZXJz
+IG9mIHRoZSB0aW1pbmdzIGZvciBhIHNpbXBsZSBwYW5lbC4KPiA+IEZpcnN0IHdlIGhhdmUgdGhl
+IGJvb3Rsb2FkZXIgdGhhdCBtYXkgcHJlc2VudCBzb21ldGhpbmcgb24gdGhlCj4gPiBwYW5lbCAt
+IG5leHQgc3RlcCBpdCB0aGVuIHRoZSBrZXJuZWwuCj4gPiAKPiA+IEJvb3Rsb2FkZXJzIHN1Y2gg
+YXMgVS1ib290IGFuZCBiYXJlYm94IHN1cHBvcnRzIGRldmljZXRyZWUuCj4gPiBTbyB3aXRoIHRo
+ZSB0aW1pbmdzIHNwZWNpZmllZCBpbiB0aGUgZGV2aWNldHJlZSB0aGVyZSBhcmUgdGhyZWUKPiA+
+IHVzZXJzIHRoYXQgY2FuIHVzZSB0aGUgdGltaW5ncywgYW5kIGl0IGlzIHNpbXBsZSB0byBzaGFy
+ZSB0aGUKPiA+IHRpbWluZyBzcGVjaWZpY2F0aW9ucy4KPiAKPiBJIHRoaW5rIHRoaXMgaXMgbm90
+IHRydWUgaW4gcHJhY3RpY2UuIEFzIGZhciBhcyBJIGtub3cgVS1Cb290IGFuZCBMaW51eAo+IGRv
+bid0IHNoYXJlIHRoZSBkZXZpY2UgdHJlZS4gU28gd2Ugd291bGRuJ3QgYWN0dWFsbHkgYmUgc2hh
+cmluZyB0aGUKPiB2aWRlbyB0aW1pbmdzLCB3ZSdkIGJlIGR1cGxpY2F0aW5nIHRoZW0uIEFuZCB3
+aGV0aGVyIHdlIGR1cGxpY2F0ZSB0aGVtCj4gaW4gY29kZSBvciBEVCBpc24ndCByZWFsbHkgYWxs
+IHRoYXQgZGlmZmVyZW50LgpVLWJvb3QgY29waWVzIHNlbGVjdGVkIERUIGZpbGVzIGZyb20gdGhl
+IGtlcm5lbCB0byBVLWJvb3QuCmJhcmVib3ggaGFzIGEgKHNhbml0aXplZD8pIHNldCBvZiBEVCBm
+aWxlcyBmcm9tIHRoZSBrZXJuZWwsIHdpdGgKYmFyZWJveCBzcGVjaWZpY3MgYWRkZWQgb24gdG9w
+IG9mIGl0LiBUaGlzIHJlY2VpdmVzIHVwZGF0ZXMgZnJvbSB0aGUga2VybmVsCm1vcmUgb3IgbGVz
+cyBmb3IgZWFjaCBrZXJuZWwgcmMuClRoZSBvcmlnaW4gb2YgdGhlIERUIGZpbGVzIGFyZSB0aGUg
+a2VybmVsLCBidXQgdGhleSBrZWVwIGNvcGllcwpmb3IgdmFyaW91cyByZWFzb25zLiBBbmQgdGhl
+aXIgdXBkYXRlIHByb2Nlc3MgZnJvbSB0aGUga2VybmVsIGRpZmZlcnMuCgpJbiBvdGhlciB3b3Jk
+cyAtIGJhcmVib3ggdXNlcyB0aGUga2VybmVsIERUIGZpbGVzIGluIHByYWN0aWNlLgpVLWJvb3Qg
+aW4gcHJhY3RpY2UgaGF2ZSB0aGVpciBvd24gY29weSAoYXMgSSBzZWUgaXQgLSBkaWQgbm90IGxv
+b2sgdG8gY2xvc2UpCgo+ID4gQXMgaXQgaXMgbm93IG9uZSBoYXMgdG8gcGF0Y2ggdGhlIGtlcm5l
+bCB0byBhZGQgYSBwYW5lbCB0byBwYW5lbC1zaW1wbGUsCj4gPiBhbmQgYWRkIHRpbWluZyB0byBk
+ZXZpY2UgdHJlZSB0byBsZXQgYmFyZWJveCB1c2UgaXQuCj4gPiAKPiA+IFNvIGl0IHdvdWxkIGJl
+IGdvb2Qgb25jZSBhbmQgZm9yIGFsbCB0byBoYXZlIHRoZSBydWxlcyBzcGVjaWZpZWQuCj4gPiBB
+bmQgdGhlIHByZWZlcnJlZCBzb2x1dGlvbiBpcyB0byBoYXZlIHRpbWluZyBpbiB0aGUgZGV2aWNl
+dHJlZQo+ID4gc28gd2UgY2FuIHVzZSBpdCBib3RoIGluIHRoZSBrZXJuZWwgYW5kIGluIHRoZSBi
+b290bG9hZGVycy4KPiAKPiBUaGlzIGlzICpleGFjdGx5KiB0aGUgc2FtZSBhcmd1bWVudCB0aGF0
+IEkndmUgaGVhcmQgbWFueSB0aW1lcyBiZWZvcmUuCj4gQW5kIGl0IGlzIHN0aWxsIG92ZXJseSBz
+aW1wbGlzdGljLiBWaWRlbyB0aW1pbmdzIGFyZSBqdXN0IG9uZSBwYXJ0IG9mCj4gdGhlIGRlc2Ny
+aXB0aW9uIG9mIHRoZSBwYW5lbC4gSW4gbW9zdCBjYXNlcyB5b3UgbmVlZCBhdCBsZWFzdCBhbHNv
+IGEKPiBwb3dlciBzZXF1ZW5jZS4KVGhlcmUgYXJlIHBhbmVscyB0aGF0IGFyZSBjb21wYXRpYmUg
+d2l0aCBwYW5lbC1zaW1wbGUgYW5kIHRoZXJlIGFyZSB0aGUKb3RoZXIgcGFuZWxzLgpNeSBjb21t
+ZW50IGlzIHNvbGVseSBmb3IgdGhlIHBhbmVsLXNpbXBsZSBjb21wYXRpYmxlIHBhbmVscywgd2hl
+cmUKd2UgYWxyZWFkeSBrbm93IHN0dWZmIGxpa2UgcG93ZXIgc2VxdWVuY2UgYW5kIHN1Y2guCgpU
+aGVyZSBhcmUgdG9kYXkgYSBsb3Qgb2YgcGFuZWxzIGluIHRoYXQgZ3JvdXAgYW5kIGluIG15IHRy
+ZWUgdGhlcmUKaXMgcGF0Y2hlcyB3YWl0aW5nIHRvIGFkZCBhbm90aGVyIHRocmVlIHBhbmVscy4K
+VGhpcyBpcyBwYW5lbHMgdGhhdCAianVzdCB3b3JrcyIgd2l0aCBiYXJlYm94IHdpdGggdGltaW5n
+cygqKSBzcGVjaWZpZWQKaW4gdGhlIERUIGFuZCBmb3IgdGhlIGtlcm5lbCByZXF1aXJlcyBhIHBh
+dGNoIHRvIHBhbmxlLXNpbXBsZS4KClRoZXJlIGFyZSBvYnZpb3VzbHkgYSBsb3Qgb2YgcGFuZWxz
+IHRoYXQgaGF2ZSBhZGRpdGlvYW5sIHJlcXVpcmVtZW50cywKYnV0IHRoZW4gdGhpcyBpcyBub3Qg
+InBhbmxlLXNpbXBsZSIgY29tcGF0aWJsZSBwYW5lbHMgYW5kIG91dHNpZGUgdGhlCnNjb3BlIG9m
+IG15IHJlcXVlc3QuCgpJIGhvcGUgdGhpcyBjbGFyaWZpZXMgaXQuCgoJU2FtCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
