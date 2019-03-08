@@ -1,46 +1,84 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: [PATCH] ARM: dts: imx6qdl: Enable fsl,sec-v4.0-pwrkey
-Date: Thu,  7 Mar 2019 19:01:48 -0600
-Message-ID: <20190308010148.9000-1-aford173@gmail.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v2 03/10] dt-binding: gce: add binding for gce subsys
+ property
+Date: Fri, 8 Mar 2019 09:41:23 +0800
+Message-ID: <1552009283.2863.12.camel@mtksdaap41>
+References: <1551865835-50974-1-git-send-email-bibby.hsieh@mediatek.com>
+         <1551865835-50974-4-git-send-email-bibby.hsieh@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1551865835-50974-4-git-send-email-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Adam Ford <aford173@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-The imx6q Technical reference manual shows the interrupt is
-available to wake from sleep using the power button. The driver
-has been available for quite some time, and other variants of the
-i.MX6 have it enabled, so this implements it much like the others.
+Hi, Bibby:
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+On Wed, 2019-03-06 at 17:50 +0800, Bibby Hsieh wrote:
+> cmdq driver provide a function that get the relationship
+> of sub system number from device node for client.
+> add specification for #subsys-cells, mediatek,gce-subsys.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> index 812698f..07b2adf 100644
+> --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> @@ -26,6 +26,13 @@ Required properties:
+>  	phandle: Label name of a gce node.
+>  	event_number: the event number defined in 'dt-bindings/gce/mt8173-gce.h'
+>  		      or 'dt-binding/gce/mt8183-gce.h'.
+> +#subsys-cells: Should be 2.
+> +	<&phandle register_base_address subsys_number>
+> +	phandle: Label name of a gce node.
+> +	register_base_address: the register base address that client
+> +			       want to write or read.
+> +	subsys_number: specify the sub-system id which is corresponding
+> +		       to the register address.
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index fe17a3405edc..6b3e48d2e5ec 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -4,6 +4,7 @@
- // Copyright 2011 Linaro Ltd.
- 
- #include <dt-bindings/clock/imx6qdl-clock.h>
-+#include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
- / {
-@@ -833,6 +834,14 @@
- 					status = "disabled";
- 				};
- 
-+				snvs_pwrkey: snvs-powerkey {
-+					compatible = "fsl,sec-v4.0-pwrkey";
-+					regmap = <&snvs>;
-+					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+					linux,keycode = <KEY_POWER>;
-+					wakeup-source;
-+				};
-+
- 				snvs_lpgpr: snvs-lpgpr {
- 					compatible = "fsl,imx6q-snvs-lpgpr";
- 				};
--- 
-2.17.1
+I would like this description similar to 'reg' property. For example:
+
+If a client want GCE to access register from 0x14002000 ~ 0x14002fff,
+in the view of GCE, it would access register from SUBSYS_1400XXXX with
+an offset 0x2000 to SUBSYS_1400XXXX with an offset 0x2fff
+So the description could be:
+
+mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x2000 0x1000>
+
+the second parameter is subsys, the third parameter is start offset, and
+the fourth parameter is the size.
+
+I change the property name to 'mediatek,gce-client-reg' because this
+whole property describe the range GCE access rather than the subsys. 
+
+Regards,
+CK
+
+>  
+>  Required properties for a client device:
+>  - mboxes: Client use mailbox to communicate with GCE, it should have this
+> @@ -50,6 +57,7 @@ Example:
+>  		thread-num = CMDQ_THR_MAX_COUNT;
+>  		#mbox-cells = <3>;
+>  		#event-cells = <1>;
+> +		#subsys-cells = <2>;
+>  	};
+>  
+>  Example for a client device:
+> @@ -58,7 +66,8 @@ Example for a client device:
+>  		compatible = "mediatek,mt8173-mmsys";
+>  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+>  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+> -		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
+> +		mediatek,gce-subsys = <&gce 0x14000000 SUBSYS_1400XXXX>,
+> +				      <&gce 0x14010000 SUBSYS_1401XXXX>;
+>  		mediatek,gce-event-names = "rdma0_sof",
+>  					   "rsz0_sof";
+>  		mediatek,gce-events = <&gce CMDQ_EVENT_MDP_RDMA0_SOF>,
