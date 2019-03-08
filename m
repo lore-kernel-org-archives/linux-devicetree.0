@@ -1,37 +1,106 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: Add Nanopi NEO4 initial support
-Date: Fri, 8 Mar 2019 14:13:10 -0600
-Message-ID: <CAL_JsqLkyfd0Tvuxn_i-24gCReo=CNhtb65zG6xxqVYJasDZrQ@mail.gmail.com>
-References: <20190308181202.11607-1-jagan@amarulasolutions.com>
+From: Rob Herring <robh@kernel.org>
+Subject: [GIT PULL] Devicetree for 5.1
+Date: Fri, 8 Mar 2019 14:37:47 -0600
+Message-ID: <CAL_JsqLkW7OYJEaONK3Uh9Ly0iXaaOMpwKPgP8EpdBCc9i3UJA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190308181202.11607-1-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Akash Gajjar <akash@openedev.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 8, 2019 at 12:12 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> FriendlyElec NanoPi NEO4 is known to be a revision 4 based
-> NanoPi4 series of boards.
->
-> Most of know peripherals are shared between Nanopi M4 vs NEO4, except
-> - 1GB DDR3
-> - USB Host ports
-> - Missing DSI port
-> - USB 2.0 Host with USB2PHY0 (no USB2PH1)
->
-> Add support for it, by reusing existing rk3399-nanopi4.dtsi
->
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> Signed-off-by: Akash Gajjar <akash@openedev.com>
-> ---
->  .../devicetree/bindings/arm/rockchip.yaml     |  1 +
->  arch/arm64/boot/dts/rockchip/Makefile         |  1 +
->  .../boot/dts/rockchip/rk3399-nanopi-neo4.dts  | 50 +++++++++++++++++++
->  3 files changed, 52 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi-neo4.dts
+Linus,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Please pull DT updates for 5.1.
+
+Rob
+
+The following changes since commit 1c7fc5cbc33980acd13d668f1c8f0313d6ae9fd8:
+
+  Linux 5.0-rc2 (2019-01-14 10:41:12 +1200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-for-5.1
+
+for you to fetch changes up to 935665c1a117f34662549f01e1c9bc5ea7132556:
+
+  of: unittest: unflatten device tree on UML when testing (2019-02-28
+11:50:10 -0600)
+
+----------------------------------------------------------------
+Devicetree updates for v5.1:
+
+- Fix a unittest failure on UML. Preparation for converting to
+  kunit test framework.
+
+- Add annotations to dtx_diff output
+
+- Fix unittest reporting of expected error
+
+- Move DMA configuration for virtual devices into the driver that
+  needs it (s5p-mfc)
+
+- Vendor prefixes for feiyang and techstar
+
+- Convert ARM GIC, GICv3, and L2x0 to DT schema
+
+- Add r8a7778/9 HSCIF serial bindings
+
+----------------------------------------------------------------
+Akinobu Mita (1):
+      dt-bindings: display: add missing semicolon in example
+
+Brendan Higgins (1):
+      of: unittest: unflatten device tree on UML when testing
+
+Christoph Hellwig (1):
+      of: mark early_init_dt_alloc_reserved_memory_arch static
+
+Frank Rowand (3):
+      of: unittest: remove report of expected error
+      of: unittest: add caution to function header comment
+      of: add dtc annotations functionality to dtx_diff
+
+Jagan Teki (2):
+      dt-bindings: Add vendor prefix for techstar
+      dt-bindings: Add vendor prefix for feiyang
+
+Rob Herring (3):
+      dt-bindings: arm: l2x0: Convert L2 cache to json-schema
+      dt-bindings: interrupt-controller: Convert ARM GIC to json-schema
+      dt-bindings: interrupt-controller: Convert ARM GICv3 to json-schema
+
+Robin Murphy (1):
+      media: s5p-mfc: Fix memdev DMA configuration
+
+Ulrich Hecht (1):
+      dt-bindings: serial: sh-sci: Document r8a7778/9 HSCIF bindings
+
+ Documentation/devicetree/bindings/arm/l2c2x0.txt   | 114 ---------
+ Documentation/devicetree/bindings/arm/l2c2x0.yaml  | 248 ++++++++++++++++++
+ .../bindings/display/sitronix,st7735r.txt          |   2 +-
+ .../bindings/interrupt-controller/arm,gic-v3.txt   | 175 -------------
+ .../bindings/interrupt-controller/arm,gic-v3.yaml  | 279 +++++++++++++++++++++
+ .../bindings/interrupt-controller/arm,gic.txt      | 171 -------------
+ .../bindings/interrupt-controller/arm,gic.yaml     | 223 ++++++++++++++++
+ .../bindings/serial/renesas,sci-serial.txt         |   2 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   2 +
+ drivers/media/platform/s5p-mfc/s5p_mfc.c           |   7 +
+ drivers/of/of_reserved_mem.c                       |   6 +-
+ drivers/of/unittest.c                              |  15 +-
+ include/linux/of_reserved_mem.h                    |   7 -
+ scripts/dtc/dtx_diff                               |  13 +-
+ 14 files changed, 788 insertions(+), 476 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/l2c2x0.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/l2c2x0.yaml
+ delete mode 100644
+Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+ create mode 100644
+Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
+ delete mode 100644
+Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
+ create mode 100644
+Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml
