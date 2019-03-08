@@ -1,123 +1,86 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 0/4] mwifiex PCI/wake-up interrupt fixes
-Date: Fri, 8 Mar 2019 09:02:11 +0000
-Message-ID: <15c00f9e-58df-e885-f3b0-2c57e9fadb11@arm.com>
-References: <20190224140426.3267-1-marc.zyngier@arm.com>
- <87ef7hai0e.fsf@codeaurora.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v2] arm64: dts: ls1088a: add one more thermal zone node
+Date: Fri, 8 Mar 2019 10:28:12 +0100
+Message-ID: <cb262e2c-7115-86a5-01ce-4a12d45ee019@linaro.org>
+References: <20190304032111.21770-1-andy.tang@nxp.com>
+ <20190304062115.GB26041@dragon>
+ <VI1PR04MB433386B86A5E6AA804E9C3B5F3710@VI1PR04MB4333.eurprd04.prod.outlook.com>
+ <dc94e884-f5eb-fe07-27ef-6a94c3174acb@linaro.org>
+ <VI1PR04MB43330C6FAAD0D8EAE901C56FF34D0@VI1PR04MB4333.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87ef7hai0e.fsf@codeaurora.org>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <VI1PR04MB43330C6FAAD0D8EAE901C56FF34D0@VI1PR04MB4333.eurprd04.prod.outlook.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kalle Valo <kvalo@codeaurora.org>
-Cc: Amitkumar Karwar <amitkarwar@gmail.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Ganapathi Bhat <gbhat@marvell.com>, Heiko Stuebner <heiko@sntech.de>, Nishant Sarmukadam <nishants@marvell.com>, Rob Herring <robh+dt@kernel.org>, Xinming Hu <huxinming820@gmail.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andy Tang <andy.tang@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/03/2019 08:26, Kalle Valo wrote:
-> Marc Zyngier <marc.zyngier@arm.com> writes:
-> 
->> For quite some time, I wondered why the PCI mwifiex device built in my
->> Chromebook was unable to use the good old legacy interrupts. But as MSIs
->> were working fine, I never really bothered investigating. I finally had a
->> look, and the result isn't very pretty.
->>
->> On this machine (rk3399-based kevin), the wake-up interrupt is described as
->> such:
->>
->> &pci_rootport {
->> 	mvl_wifi: wifi@0,0 {
->> 		compatible = "pci1b4b,2b42";
->> 		reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
->> 		       0x83010000 0x0 0x00100000 0x0 0x00100000>;
->> 		interrupt-parent = <&gpio0>;
->> 		interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
->> 		pinctrl-names = "default";
->> 		pinctrl-0 = <&wlan_host_wake_l>;
->> 		wakeup-source;
->> 	};
->> };
->>
->> Note how the interrupt is part of the properties directly attached to the
->> PCI node. And yet, this interrupt has nothing to do with a PCI legacy
->> interrupt, as it is attached to the wake-up widget that bypasses the PCIe RC
->> altogether (Yay for the broken design!). This is in total violation of the
->> IEEE Std 1275-1994 spec[1], which clearly documents that such interrupt
->> specifiers describe the PCI device interrupts, and must obey the
->> INT-{A,B,C,D} mapping. Oops!
->>
->> The net effect of the above is that Linux tries to do something vaguely
->> sensible, and uses the same interrupt for both the wake-up widget and the
->> PCI device. This doesn't work for two reasons: (1) the wake-up widget grabs
->> the interrupt in exclusive mode, and (2) the PCI interrupt is still routed
->> to the RC, leading to a screaming interrupt. This simply cannot work.
->>
->> To sort out this mess, we need to lift the confusion between the two
->> interrupts. This is done by extending the DT binding to allow the wake-up
->> interrupt to be described in a 'wake-up' subnode, sidestepping the issue
->> completely. On my Chromebook, it now looks like this:
->>
->> &pci_rootport {
->> 	mvl_wifi: wifi@0,0 {
->> 		compatible = "pci1b4b,2b42";
->> 		reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
->> 		       0x83010000 0x0 0x00100000 0x0 0x00100000>;
->> 		pinctrl-names = "default";
->> 		pinctrl-0 = <&wlan_host_wake_l>;
->> 		wake-up {
->> 			interrupt-parent = <&gpio0>;
->> 			interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
->> 			wakeup-source;
->> 		};
->> 	};
->> };
->>
->> The driver is then updated to look for this subnode first, and fallback to
->> the original, broken behaviour (spitting out a warning in the offending
->> configuration).
->>
->> For good measure, there are two additional patches:
->>
->> - The wake-up interrupt requesting is horribly racy, and could lead to
->>   unpredictable behaviours. Let's fix that properly.
->>
->> - A final patch implementing the above transformation for the whole
->>   RK3399-based Chromebook range, which all use the same broken
->>   configuration.
->>
->> With all that, I finally have PCI legacy interrupts working with the mwifiex
->> driver on my Chromebook.
->>
->> [1] http://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
->>
->> Marc Zyngier (4):
->>   dt-bindings/marvell-8xxx: Allow wake-up interrupt to be placed in a
->>     separate node
->>   mwifiex: Fetch wake-up interrupt from 'wake-up' subnode when it exists
->>   mwifiex: Flag wake-up interrupt as IRQ_NOAUTOEN rather than disabling
->>     it too late
->>   arm64: dts: rockchip: gru: Move wifi wake-up interrupt into its own
->>     subnode
->>
->>  .../bindings/net/wireless/marvell-8xxx.txt    | 23 ++++++++++++++++++-
->>  .../dts/rockchip/rk3399-gru-chromebook.dtsi   |  8 ++++---
->>  drivers/net/wireless/marvell/mwifiex/main.c   | 13 +++++++++--
->>  3 files changed, 38 insertions(+), 6 deletions(-)
-> 
-> I didn't read the discussion in detail, but I understanding is that I
-> should drop this series and wait for a new version. Please correct me if
-> I misunderstood.
-
-I indeed plan to resend the series with a slightly different approach,
-removing support for the wake-up interrupt on mwifiex PCI devices
-altogether.
-
-Note that patch #3 is a fairly independent fix, which could be applied
-right now.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+T24gMDgvMDMvMjAxOSAwMzowNywgQW5keSBUYW5nIHdyb3RlOgo+IAo+IAo+PiAtLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLQo+PiBGcm9tOiBEYW5pZWwgTGV6Y2FubyA8ZGFuaWVsLmxlemNhbm9A
+bGluYXJvLm9yZz4KPj4gU2VudDogMjAxOcTqM9TCN8jVIDE3OjE1Cj4+IFRvOiBBbmR5IFRhbmcg
+PGFuZHkudGFuZ0BueHAuY29tPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPgo+PiBD
+YzogTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsu
+cnV0bGFuZEBhcm0uY29tOwo+PiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7
+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOwo+PiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
+b3JnOyBsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmc7IHJ1aS56aGFuZ0BpbnRlbC5jb207Cj4+IGVk
+dWJlenZhbEBnbWFpbC5jb20KPj4gU3ViamVjdDogUmU6IFtQQVRDSCB2Ml0gYXJtNjQ6IGR0czog
+bHMxMDg4YTogYWRkIG9uZSBtb3JlIHRoZXJtYWwgem9uZSBub2RlCj4+Cj4+Pj4+IFBTOiBJbiBv
+cmRlciB0byBrZWVwIGNvbnNpc3RlbmN5IHRvIHRoZSBmaXJzdCB0aGVybWFsLXpvbmUgbm9kZSwK
+Pj4+Pj4gdGhlcmUgd2lsbCBiZSAiV0FSTklORzogbGluZSBvdmVyIDgwIGNoYXJhY3RlcnMiIHdh
+cm5pbmdzLgo+Pj4+Pgo+Pj4+PiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxz
+MTA4OGEuZHRzaSB8ICAgNDMKPj4+PiArKysrKysrKysrKysrKysrKysrKystLQo+Pj4+PiAgMSBm
+aWxlcyBjaGFuZ2VkLCAzOSBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQo+Pj4+Pgo+Pj4+
+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA4OGEu
+ZHRzaQo+Pj4+PiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwODhhLmR0
+c2kKPj4+Pj4gaW5kZXggNjYxMTM3Zi4uOWY1MmJjOSAxMDA2NDQKPj4+Pj4gLS0tIGEvYXJjaC9h
+cm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA4OGEuZHRzaQo+Pj4+PiArKysgYi9hcmNo
+L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDg4YS5kdHNpCj4+Pj4+IEBAIC0xMjks
+MTkgKzEyOSwxOSBAQAo+Pj4+PiAgCX07Cj4+Pj4+Cj4+Pj4+ICAJdGhlcm1hbC16b25lcyB7Cj4+
+Pj4+IC0JCWNwdV90aGVybWFsOiBjcHUtdGhlcm1hbCB7Cj4+Pj4+ICsJCWNjdSB7Cj4+Pj4KPj4+
+PiBJcyB0aGlzIGNoYW5nZSByZWFsbHkgbmVjZXNzYXJ5PyAgV2hhdCBkb2VzICdjY3UnIHN0YW5k
+IGZvcj8KPj4+IEkgdGhpbmsgc28uIGNjdSBzdGFuZHMgZm9yIGNvcmUgY2x1c3RlciB1bml0LiBj
+cHUgaXMgdG9vIGdlbmVyYWwuCj4+PiBPbiBzb21lIHBsYXRmb3JtcywgdGhlcmUgYXJlIG1vcmUg
+dGhhbiBvbmUgY29yZSBjbHVzdGVycy4KPj4+IEF0IGxlYXN0IHdlIHNob3VsZCBjaGFuZ2UgaXQg
+dG8gImNvcmUgY2x1c3RlciIgaWYgc2hvcnQgZm9ybSBpcyBub3QgYXBwcm9wcmlhdGUuCj4+Cj4+
+IElmIHRoZSBzZW5zb3IgaXMgYSB0aGUgY2x1c3RlciBsZXZlbCwgJ2NsdXN0ZXInIGlzIGVub3Vn
+aC4gSU1ITywgbm8gbmVlZCB0byBnaXZlIGEKPj4gZGVzY3JpcHRpb24gb2Ygd2hhdCBjb250YWlu
+cyB0aGUgY2x1c3Rlciwgb3RoZXJ3aXNlIHlvdSB3aWxsIGVuZCB1cCB3aXRoIGEKPj4gJ2NvcmUt
+Z3B1LWNsdXN0ZXItbDInIG5hbWUuCj4gSWYgY2x1c3RlciBpcyBzcGVjaWZpYyB0byBjb3JlLCB3
+ZSBjYW4gdXNlIGNsdXN0ZXIgaW5zdGVhZC4gQnV0IEkgZG9uJ3QgdGhpbmsgc28uCj4gQ2x1c3Rl
+ciBtYXkgcmVmZXIgdG8gImNvcmUgY2x1c3RlciIsICJHUFUgY2x1c3RlciIgZXRjLgo+IFNvLCBJ
+IHRoaW5rICJjb3JlLWNsdXN0ZXIiIGlzIG9rLgo+IElmIGNvcmUgd2FzIGRpdmlkZWQgdG8gc2V2
+ZXJhbCBjbHVzdGVycywgd2UgY2FuIG5hbWUgaXQgYXMgImNvcmUtY2x1c3RlcjEiLCAiY29yZS1j
+bHVzdGVyMiIgZXRjLgo+IElmIEdQVSB3YXMgZGl2aWRlZCB0byBzZXZlcmFsIGNsdXN0ZXJzIHdl
+IGNhbiBuYW1lIGl0IGFzICJncHUtY2x1c3RlcjEiLCAiZ3B1LWNsdXN0ZXIyIiBldGMuIAoKCkhp
+IEFuZHksCgpJIHRoaW5rIHRoZXJlIGlzIGEgY29uZnVzaW9uIGFyb3VuZCB0aGUgJ2NwdScgdGVy
+bSBhbmQgJ2NsdXN0ZXInLgoKQVJNIHdvdWxkIGxpa2UgdG8gc2VlIHRoZSAnY2x1c3Rlcicgd29y
+ZCB0byBkaXNhcHBlYXIsIHNvIHdoZW5ldmVyCnBvc3NpYmxlIHdlIHNob3VsZCBhdm9pZCBpdC4K
+CkZyb20gdGhlIGhhcmR3YXJlIHNpZGUsICdDUFUnIGlzIHVzdWFsbHkgdXNlZCB0byBkZXNjcmli
+ZSB0aGUgcGh5c2ljYWwKY2hpcCBjb250YWluaW5nIHRoZSBjb3JlcytjYWNoZS4KCkZyb20gdGhl
+IHNvZnR3YXJlIHNpZGUsICdDUFUnIGlzIHVzdWFsbHkgdXNlZCB0byBkZXNjcmliZSB0aGUgbG9n
+aWNhbApwcm9jZXNzIHVuaXQsIGFrYSBhIGNvcmUgb3IgYSBoeXBlci10aHJlYWQuCgpBcyB3ZSBh
+cmUgaW4gdGhlIERULCBzbyBkZXNjcmliaW5nIHRoZSBoYXJkd2FyZSwgdGhlIENQVSByZWZlcnMg
+dG8gdGhlCmdyb3VwIGNvcmVzK2NhY2hlcy4KCkZyb20gbXkgUE9WLCB1c2luZyAnY3B1JyBmb3Ig
+dGhlIGdyb3VwIG9mIGNvcmVzIGFuZCAnZ3B1JyBmb3IgdGhlCmdyYXBoaWMgc291bmRzIG9rLCBh
+bmQgc28gZmFyIHRoYXQgaXMgd2hhdCBpcyB1c2VkIGZvciB0aGUgb3RoZXIgcGxhdGZvcm1zLgoK
+SWYgeW91IGNoYW5nZSB0aGUgbmFtZSwgdGhhdCBtYXkgZ2l2ZSB0aGUgZmVlbGluZyB0aGVyZSBp
+cyBzb21ldGhpbmcKc3BlY2lhbCB3aXRoIHRob3NlIHRoZXJtYWwgem9uZXMuCgoKCgotLSAKIDxo
+dHRwOi8vd3d3LmxpbmFyby5vcmcvPiBMaW5hcm8ub3JnIKmmIE9wZW4gc291cmNlIHNvZnR3YXJl
+IGZvciBBUk0gU29DcwoKRm9sbG93IExpbmFybzogIDxodHRwOi8vd3d3LmZhY2Vib29rLmNvbS9w
+YWdlcy9MaW5hcm8+IEZhY2Vib29rIHwKPGh0dHA6Ly90d2l0dGVyLmNvbS8jIS9saW5hcm9vcmc+
+IFR3aXR0ZXIgfAo8aHR0cDovL3d3dy5saW5hcm8ub3JnL2xpbmFyby1ibG9nLz4gQmxvZwoKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
+ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
+ZWwK
