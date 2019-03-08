@@ -1,151 +1,27 @@
-From: Vishal Sagar <vsagar@xilinx.com>
-Subject: RE: [PATCH v4 0/2] Add support for Xilinx CSI2 Receiver Subsystem
-Date: Fri, 8 Mar 2019 18:13:22 +0000
-Message-ID: <CY4PR02MB27098D65DA1F1903DB8854E0A74D0@CY4PR02MB2709.namprd02.prod.outlook.com>
-References: <1552066288-58404-1-git-send-email-vishal.sagar@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1552066288-58404-1-git-send-email-vishal.sagar@xilinx.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vishal Sagar <vishal.sagar@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dinesh Kumar <dineshk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v6 3/3] arm64: dts: stingray: Add Stingray Thermal DT support.
+Date: Fri,  8 Mar 2019 10:43:22 -0800
+Message-ID: <20190308184322.14451-1-f.fainelli@gmail.com>
+References: <1546505734-24527-1-git-send-email-srinath.mannam@broadcom.com> <1546505734-24527-4-git-send-email-srinath.mannam@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1546505734-24527-4-git-send-email-srinath.mannam@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bcm-kernel-feedback-list@broadcom.com, Srinath Mannam <srinath.mannam@broadcom.com>, daniel.lezcano@linaro.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Thu,  3 Jan 2019 14:25:34 +0530, Srinath Mannam <srinath.mannam@broadcom.com> wrote:
+> From: Pramod Kumar <pramod.kumar@broadcom.com>
+> 
+> Add DT nodes for thermal zones memory base address
+> to read temperature.
+> 
+> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+> ---
 
-Please ignore this patch series as I missed addressing some comments in this patch.
-I will address them in the next series. 
-
-Regards
-Vishal Sagar
-
-> -----Original Message-----
-> From: Vishal Sagar [mailto:vishal.sagar@xilinx.com]
-> Sent: Friday, March 08, 2019 11:01 PM
-> To: Hyun Kwon <hyunk@xilinx.com>; laurent.pinchart@ideasonboard.com;
-> mchehab@kernel.org; robh+dt@kernel.org; mark.rutland@arm.com; Michal
-> Simek <michals@xilinx.com>; linux-media@vger.kernel.org;
-> devicetree@vger.kernel.org; sakari.ailus@linux.intel.com;
-> hans.verkuil@cisco.com; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; Dinesh Kumar <dineshk@xilinx.com>; Sandip Kothari
-> <sandipk@xilinx.com>
-> Cc: Vishal Sagar <vishal.sagar@xilinx.com>
-> Subject: [PATCH v4 0/2] Add support for Xilinx CSI2 Receiver Subsystem
-> 
-> Xilinx MIPI CSI-2 Receiver Subsystem
-> ------------------------------------
-> 
-> The Xilinx MIPI CSI-2 Receiver Subsystem Soft IP consists of a DPHY which
-> gets the data, an optional I2C, a CSI-2 Receiver which parses the data and
-> converts it into AXIS data.
-> This stream output maybe connected to a Xilinx Video Format Bridge.
-> The maximum number of lanes supported is fixed in the design.
-> The number of active lanes can be programmed.
-> For e.g. the design may set maximum lanes as 4 but if the camera sensor has
-> only 1 lane then the active lanes shall be set as 1.
-> 
-> The pixel format set in design acts as a filter allowing only the selected
-> data type or RAW8 data packets. The D-PHY register access can be gated in
-> the design. The base address of the DPHY depends on whether the internal
-> Xilinx I2C controller is enabled or not in design.
-> 
-> The device driver registers the MIPI CSI2 Rx Subsystem as a V4L2 sub device
-> having 2 pads. The sink pad is connected to the MIPI camera sensor and
-> output pad is connected to the video node.
-> Refer to xlnx,csi2rxss.txt for device tree node details.
-> 
-> This driver helps configure the number of active lanes to be set, setting
-> and handling interrupts and IP core enable. It logs the number of events
-> occurring according to their type between streaming ON and OFF.
-> It generates a v4l2 event for each short packet data received.
-> The application can then dequeue this event and get the requisite data
-> from the event structure.
-> 
-> It adds new V4L2 controls which are used to get the event counter values
-> and reset the subsystem.
-> 
-> The Xilinx CSI-2 Rx Subsystem outputs an AXI4 Stream data which can be
-> used for image processing. This data follows the video formats mentioned
-> in Xilinx UG934 when the Video Format Bridge.
-> 
-> v4
-> - 1/2
->   - Added reviewed by Hyun Kwon
-> - 2/2
->   - Removed irq member from core structure
->   - Consolidated IP config prints in xcsi2rxss_log_ipconfig()
->   - Return -EINVAL in case of invalid ioctl
->   - Code formatting
->   - Added reviewed by Hyun Kwon
-> 
-> v3
-> - 1/2
->   - removed interrupt parent as suggested by Rob
->   - removed dphy clock
->   - moved vfb to optional properties
->   - Added required and optional port properties section
->   - Added endpoint property section
-> - 2/2
->  - Fixed comments given by Hyun.
->  - Removed DPHY 200 MHz clock. This will be controlled by DPHY driver
->  - Minor code formatting
->  - en_csi_v20 and vfb members removed from struct and made local to dt
-> parsing
->  - lock description updated
->  - changed to ratelimited type for all dev prints in irq handler
->  - Removed YUV 422 10bpc media format
-> 
-> v2
-> - 1/2
->   - updated the compatible string to latest version supported
->   - removed DPHY related parameters
->   - added CSI v2.0 related property (including VCX for supporting upto 16
->     virtual channels).
->   - modified csi-pxl-format from string to unsigned int type where the value
->     is as per the CSI specification
->   - Defined port 0 and port 1 as sink and source ports.
->   - Removed max-lanes property as suggested by Rob and Sakari
-> 
-> - 2/2
->   - Fixed comments given by Hyun and Sakari.
->   - Made all bitmask using BIT() and GENMASK()
->   - Removed unused definitions
->   - Removed DPHY access. This will be done by separate DPHY PHY driver.
->   - Added support for CSI v2.0 for YUV 422 10bpc, RAW16, RAW20 and extra
->     virtual channels
->   - Fixed the ports as sink and source
->   - Now use the v4l2fwnode API to get number of data-lanes
->   - Added clock framework support
->   - Removed the close() function
->   - updated the set format function
->   - Support only VFB enabled config
-> 
-> Vishal Sagar (2):
->   media: dt-bindings: media: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem
->   media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem driver
-> 
->  .../bindings/media/xilinx/xlnx,csi2rxss.txt        |  123 ++
->  drivers/media/platform/xilinx/Kconfig              |   10 +
->  drivers/media/platform/xilinx/Makefile             |    1 +
->  drivers/media/platform/xilinx/xilinx-csi2rxss.c    | 1557
-> ++++++++++++++++++++
->  include/uapi/linux/xilinx-v4l2-controls.h          |   14 +
->  include/uapi/linux/xilinx-v4l2-events.h            |   25 +
->  6 files changed, 1730 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
->  create mode 100644 drivers/media/platform/xilinx/xilinx-csi2rxss.c
->  create mode 100644 include/uapi/linux/xilinx-v4l2-events.h
-> 
-> --
-> 2.7.4
+Applied to devicetree-arm64/next, thanks!
+--
+Florian
