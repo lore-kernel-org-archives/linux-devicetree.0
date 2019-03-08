@@ -1,220 +1,558 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] drm/panel: panel-simple: Support panel-dpi
-Date: Fri, 8 Mar 2019 13:14:30 +0200
-Message-ID: <20190308111430.GB4802@pendragon.ideasonboard.com>
-References: <20190307101030.3822-1-maxime.ripard@bootlin.com>
- <20190308094457.GA22655@ulmo>
+From: Yash Shah <yash.shah@sifive.com>
+Subject: Re: [PATCH v8 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
+Date: Fri, 8 Mar 2019 16:59:36 +0530
+Message-ID: <CAJ2_jOFvr=sw7mWR53JbzMJa1jxwjhJSTibCsKYsxrht+PLPWw@mail.gmail.com>
+References: <1551437599-29509-1-git-send-email-yash.shah@sifive.com>
+ <1551437599-29509-3-git-send-email-yash.shah@sifive.com> <20190307152745.kaiv6q4ygf2apmuv@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190308094457.GA22655@ulmo>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, eben@raspberrypi.org, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel@lists.freedesktop.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190307152745.kaiv6q4ygf2apmuv@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhpZXJyeSwKCk9uIEZyaSwgTWFyIDA4LCAyMDE5IGF0IDEwOjQ0OjU3QU0gKzAxMDAsIFRo
-aWVycnkgUmVkaW5nIHdyb3RlOgo+IE9uIFRodSwgTWFyIDA3LCAyMDE5IGF0IDExOjEwOjMwQU0g
-KzAxMDAsIE1heGltZSBSaXBhcmQgd3JvdGU6Cj4gPiBUaGUga2VybmVsIGhhcyBhIGRldmljZSB0
-cmVlIGJpbmRpbmcgZm9yIHBhbmVsLWRwaSB3aGljaCBhbGxvd3MgZm9yIHRoZQo+ID4gcGFuZWwg
-dGltaW5ncyB0byBiZSBkZXNjcmliZWQgaW4gdGhlIGRldmljZS10cmVlLCBob3dldmVyIGl0IHdh
-c24ndAo+ID4gc3VwcG9ydGVkIHNvIGZhciBleGNlcHQgaW4gYSAoc21hbGwpIG51bWJlciBvZiBL
-TVMgZHJpdmVycyB0aGF0IGhhZCBhbgo+ID4gYWQtaG9jIHNvbHV0aW9uIGZvciB0aGlzIChvbWFw
-ZHJtIGZvciBleGFtcGxlKS4KPiAKPiBJJ20gZ3Jvd2luZyByZWFsbHkgdGlyZWQgb2YgaGF2aW5n
-IHRvIHJlcGVhdCB0aGVzZSBkaXNjdXNzaW9ucy4uLgo+IAo+IEFzIGZhciBhcyBJIGNhbiB0ZWxs
-LCB0aGlzIGJpbmRpbmcgd2FzIG5ldmVyIHJldmlld2VkIGJ5IGRldmljZSB0cmVlCj4gbWFpbnRh
-aW5lcnMsIHNvIEknbSBub3Qgc3VyZSB3aGV0aGVyIHRoZXJlJ3MgY29uY2Vuc3VzIHRoYXQgdGhp
-cyBzaG91bGQKPiBiZSBwcm9saWZlcmF0ZWQuIEFkZGluZyBSb2IgYW5kIHRoZSBkZXZpY2UgdHJl
-ZSBtYWlsaW5nIGxpc3QgZm9yIGEgd2lkZXIKPiBhdWRpZW5jZS4KClRoZSBoaXN0b3J5IGluZGVl
-ZCBzaG93cyBhIGxlc3MgdGhhbiBpZGVhbCBzaXR1YXRpb24uIEkgZG9uJ3Qgd2FudCBvcgpwbGFu
-IHRvIHVzZSBvbWFwZHJtIGFzIGEgcHJlY2VkZW50IHRvIHB1c2ggZm9yIHRoaXMsIGJ1dCBhcyBw
-YXJ0IG9mIGFuCmVmZm9ydCB0byByZW1vdmUgdGhlIG9tYXBkcm0tc3BlY2lmaWMgcGFuZWwtZHBp
-IGRyaXZlciwgSSdtIHRyeWluZyB0bwpmaW5kIGEgc29sdXRpb24uIEkgYWRkZWQgc3VwcG9ydCB0
-byB0aGUgcGFuZWwtc2ltcGxlIGRyaXZlciBmb3Igb25lCnBhcnRpY3VsYXIgcGFuZWwgdXNlZCBi
-eSBvbmUgcGFydGljdWxhciBPTUFQIGJvYXJkIGluIG9yZGVyIHRvIHBvcnQgaXQKYXdheSBmcm9t
-IHRoZSBvbWFwZHJtLXNwZWNpZmljIHBhbmVsIGNvZGUsIGJ1dCB0aGF0IHdpbGwgaGF2ZSBhIGhh
-cmQKdGltZSBzY2FsaW5nLiBJJ20gdGh1cyBpbnRlcmVzdGVkIGluIHRoZSBvdXRjb21lIG9mIHRo
-aXMgZGlzY3Vzc2lvbi4KCj4gPiBKdXN0IGxpa2Ugd2UndmUgc2VlbiB3aXRoIHBhbmVsLWx2ZHMs
-IGFuZCBldmVuIHRob3VnaCB0aGUgY3VycmVudCBkb2dtYSBpcwo+ID4gdG8gc2V0IHRoZSB0aW1p
-bmdzIHdpdGhpbiB0aGUgZHJpdmVyLCBoYXZpbmcgdGhlbSBpbiB0aGUgZGV2aWNlIHRyZWUKPiA+
-IHByb3ZpZGVzIGEgbnVtYmVyIG9mIGJlbmVmaXRzLgo+IAo+IEkgZG9uJ3QgdGhpbmsgdGhlcmUg
-d2FzIGNvbmNlbnN1cyBvbiB0aGF0LiBCdXQgUm9iIGFja2VkIGl0LCBzbyBJIGd1ZXNzCj4gaGUg
-dGhvdWdodCBpdCB3YXMgYWNjZXB0YWJsZS4KPiAKPiBSb2IsIGNhbiB3ZSB1c2UgdGhpcyB0aHJl
-YWQgYXMgYW4gb3Bwb3J0dW5pdHkgdG8gd3JpdGUgZG93biBzb21lIG9mIHRoZQo+IHJ1bGVzIHJl
-Z2FyZGluZyB0aGlzPyBXZSd2ZSBkaXNjdXNzZWQgdGhpcyBudW1lcm91cyB0aW1lcyBpbiB0aGUg
-cGFzdAo+IGJ1dCB0aGVyZSBzdGlsbCBkb2Vzbid0IHNlZW0gdG8gYmUgY29uY2Vuc3VzLgoKVGhh
-dCdzIGEgZ29vZCBpZGVhLCB0aGFuayB5b3UgZm9yIHByb3Bvc2luZyBpdC4gTGV0J3MgdHJ5IHRv
-IHJlYWNoIGFuCmFncmVlbWVudCBhbmQgZG9jdW1lbnQgaXQgdG8gYXZvaWQgcmVwZWF0aW5nIHRo
-ZSBzYW1lIHN0b3J5IGluIDYgbW9udGhzLgoKPiBJIGtub3cgeW91J3JlIHZlcnkgdGlyZWQgb2Yg
-dGhpcyBhcyB3ZWxsLCBidXQgcGVyaGFwcyB3ZSBjYW4gYml0ZSB0aGUKPiBidWxsZXQgbm93IGFu
-ZCBwcm9kdWNlIGNsZWFyIGRvY3VtZW50YXRpb24gYW5kIGd1aWRlbGluZXMgdGhhdCB3ZSBjYW4K
-PiBwb2ludCBwZW9wbGUgYXQgKG9yIHB1dCBpbiBhbiBvYnZpb3VzIGxvY2F0aW9uIHNvIHRoYXQg
-cGVvcGxlIGZpbmQgaXQKPiB0aGVtc2VsdmVzKSBpbiB0aGUgZnV0dXJlLCBzbyB0aGF0IHdlIGRv
-bid0IGhhdmUgdG8ga2VlcCBoYXZpbmcgdGhpcwo+IGRpc2N1c3Npb24uCj4gCj4gU3VtbWFyaXpp
-bmcgd2hhdCBvdXIgbGF0ZXN0IGRpc2N1c3Npb24gb24gdGhpcyB3YXM6Cj4gCj4gICAqIEdlbmVy
-aWMgY29tcGF0aWJsZSBzdHJpbmdzIHNob3VsZCB0eXBpY2FsbHkgYmUgdXNlZCBhcyBhIGZhbGxi
-YWNrCj4gICAgIG9ubHkuIEV4Y2VwdGlvbnMgY291bGQgYmUgbWFkZSBpZiB0aGVyZSdzIGEgc3Bl
-Y2lmaWMgc3RhbmRhcmQgdGhhdAo+ICAgICBpcyBzdWZmaWNpZW50bHkgc3RyaWN0IHRvIG5vdCBy
-ZXF1aXJlIGFueSBxdWlya3MsIGFuZCBoZW5jZSBhdm9pZAo+ICAgICB0aGUgbmVlZCBmb3IgcGFu
-ZWwtc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmdzLgo+IAo+ICAgKiBTbyBpbiBnZW5lcmFsIGRl
-dmljZSB0cmVlIG5vZGVzIGZvciBwYW5lbHMgbmVlZCB0byBoYXZlIGEgc3BlY2lmaWMKPiAgICAg
-Y29tcGF0aWJsZSBzdHJpbmcgdGhhdCB1bmlxdWVseSBpZGVudGlmaWVzIHRoYXQgcGFuZWwuIFRo
-aXMgaXMgaW4KPiAgICAgbGluZSB3aXRoIGV4aXN0aW5nIHByYWN0aWNlIGZvciBvdGhlciBkZXZp
-Y2VzIGFuZCBhIGdvb2QgaWRlYSBpbgo+ICAgICBnZW5lcmFsIHNvIHRoYXQgd2UgY2FuIGltcGxl
-bWVudCBxdWlya3MgaWYgbmVjZXNzYXJ5Lgo+IAo+ICAgKiBQYW5lbCBub2RlcyBjYW4gb3B0aW9u
-YWxseSBhbHNvIGxpc3QgYSBnZW5lcmljIGNvbXBhdGlibGUgc3RyaW5nLCBpbgo+ICAgICBhZGRp
-dGlvbiB0byB0aGUgc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmcsIHRoYXQgZHJpdmVycyBjb3Vs
-ZCBtYXRjaAo+ICAgICB0byBzdXBwb3J0IGRldmljZXMgd2hpY2ggYXJlIG5vdCBzcGVjaWZpY2Fs
-bHkgc3VwcG9ydGVkIHlldCBidXQgdGhhdAo+ICAgICBtYXkgYWxyZWFkeSB3b3JrIGFueXdheS4K
-PiAKPiAgICAgSSdtIG5vdCBzdXJlIHRoYXQncyByZWFsbHkgcHJhY3RpY2FsLiBJbiB0aGUgcGFz
-dCB3ZSd2ZSBzZWVuIHRoYXQgYQo+ICAgICBwYW5lbCBjYW4gd29yayBmaW5lIG9uIG9uZSBib2Fy
-ZCBidXQgYnJlYWsgb24gYW5vdGhlciBiZWNhdXNlIHRoZQo+ICAgICBydW50aW1lIGV4ZWN1dGlv
-biB0aW1pbmcgaXMgc3VjaCB0aGF0IG5lY2Vzc2FyeSBkZWxheXMgaW4gdGhlIHBvd2VyCj4gICAg
-IHNlcXVlbmNlIGFyZSBub3RpY2VhYmxlIG9uIG9uZSBidXQgbm90IGFub3RoZXIuIEkgYWxzbyBz
-dXNwZWN0IHRoYXQKPiAgICAgaW4gc29tZSBjYXNlcyBzaG9ydGN1dHMgd2VyZSB0YWtlbiBiZWNh
-dXNlIHRoaW5ncyBoYXBwZW5lZCB0byB3b3JrLAo+ICAgICBldmVuIGlmIHBlcmhhcHMgdGhlcmUg
-d2FzIGludGVybWl0dGVudCBnYXJiYWdlIG9uIHRoZSBzY3JlZW4gYmVjYXVzZQo+ICAgICB0aGUg
-cG93ZXIgc2VxdWVuY2Ugd2Fzbid0IHJlc3BlY3RlZC4KCkknZCBzYXkgbW9zdCBjYXNlcyBpbnN0
-ZWFkIG9mIHNvbWUgY2FzZXMgOi0pIFdlIGhhdmUgbG90cyBvZiBwYW5lbHMgZm9yCndoaWNoIG5v
-IHB1YmxpYyBkYXRhc2hlZXQgaXMgYXZhaWxhYmxlLCBhbmQgdGhlIHRpbWluZ3MgYWRkZWQgdG8K
-cGFuZWwtc2ltcGxlIHdlcmUganVzdCBjb3BpZWQgZnJvbSByYW5kb20gZGV2aWNlIHRyZWUgc291
-cmNlcyBwYXJ0IG9mCm9ic2N1cmUgQlNQcy4gSXQncyB0aGVuIGhhcmQgdG8gZG8gYmV0dGVyIHRo
-YW4gImlmIGl0IHdvcmtzLCBzaGlwIGl0Igo6LSgKCj4gICAqIE1lY2hhbmlzbXMgdGhhdCBwcm9i
-ZSBpbmZvcm1hdGlvbiBmcm9tIGEgcGFuZWwgYXQgcnVudGltZSAoc3VjaCBhcwo+ICAgICBFRElE
-KSBhcmUgdG8gc2VlIHByZWZlcmVudGlhbCB0cmVhdG1lbnQuIEluIG90aGVyIHdvcmRzLCBpZiBh
-IEREQwo+ICAgICBjaGFubmVsIGV4aXN0cyB0byBhIHBhbmVsLCB0aGUgZHJpdmVyIHNob3VsZCBw
-YXJzZSB2aWRlbyB0aW1pbmdzCj4gICAgIGZyb20gdGhlIEVESUQuCj4gCj4gT25lIHRoaW5nIHRo
-YXQncyBub3QgY2xlYXIgdG8gbWUgaXMgd2hldGhlciBvciBub3Qgd2Ugd2FudCB0byBhbGxvdwo+
-IHZpZGVvIHRpbWluZ3MgdG8gYmUgc3BlY2lmaWVkIGluIERULiBJIHVzZWQgdG8gdGhpbmsgdGhh
-dCB3ZSBkaWRuJ3QsCj4gYmVjYXVzZSB0aGUgdmlkZW8gdGltaW5ncyBhcmUgaW1wbGllZCBieSB0
-aGUgc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmcKPiAod2hpY2ggd2UgYWxyZWFkeSBkZXRlcm1p
-bmVkIGlzIG1hbmRhdG9yeSBhbnl3YXkpLCBidXQgdGhlIHBhbmVsLWx2ZHMKPiBiaW5kaW5ncyBz
-dWdnZXN0IHRoYXQgZnJvbSBhIGRldmljZSB0cmVlIHBlcnNwZWN0aXZlIHRoaXMgd291bGQgYmUg
-ZmluZT8KPiBJIGFsc28gbm90aWNlIHRoYXQgdGhlIHBhbmVsLWx2ZHMgZG9lc24ndCBtYWtlIGFu
-eSBwcm92aXNpb25zIGZvciBwb3dlcgo+IHNlcXVlbmNlcy4gVGhlIHNhbWUgaXMgdHJ1ZSBmb3Ig
-cGFuZWwtZHBpLiBBcmUgYm90aCBMVkRTIGFuZCBEUEkgcGFuZWxzCj4gYWx3YXlzIGd1YXJhbnRl
-ZWQgbm90IHRvIG5lZWQgYW55IHNwZWNpZmljIHBvd2VyIHNlcXVlbmNlcz8KClRoZXkncmUgbm90
-LCBhbmQgaWYgYSBwb3dlciBzZXF1ZW5jZSBpcyBuZWVkZWQsIHdlIG5lZWQgY3VzdG9tIGNvZGUK
-bWF0Y2hpbmcgYSBzcGVjaWZpYyBjb21wYXRpYmxlIHN0cmluZy4KCj4gSWYgdWx0aW1hdGVseSB3
-ZSBkZWNpZGUgdGhhdCB2aWRlbyB0aW1pbmdzIGluIERUIGFyZSBva2F5LCB0aGVuIGhvdyBhcmUK
-PiB3ZSBnb2luZyB0byByZWNvbmNpbGUgdGhhdCB3aXRoIGV4aXN0aW5nIGJpbmRpbmdzPyBCeSBk
-ZWZpbml0aW9uIHRoZQo+IHZpZGVvIHRpbWluZ3Mgd291bGQgaGF2ZSB0byBiZSBvcHRpb25hbCwg
-b3RoZXJ3aXNlIHdlJ2QgYmUgYnJlYWtpbmcgQUJJCj4gZm9yIGV4aXN0aW5nIGRldmljZSB0cmVl
-cy4gQnV0IGlmIHRoZXkgYXJlIG9wdGlvbmFsLCB0aGVuIHdlJ3JlIGJhY2sgdG8KPiBzcXVhcmUg
-b25lLCBiZWNhdXNlIHdlIG5lZWQgdG8gcmVseSBvbiB0aGUgc3BlY2lmaWMgY29tcGF0aWJsZSBz
-dHJpbmcKPiB0byBnZXQgdGhlIGJpbmRpbmdzIGlmIHRoZXkgYXJlbid0IHByZXNlbnQgaW4gRFQu
-IEFuZCB0aGVuIGhhdmluZyB0aGVtCj4gaW4gRFQgaXMgcmVhbGx5IGp1c3QgcmVkdW5kYW50LiBF
-eGNlcHQgcGVyaGFwcyBpbiBvcmRlciB0byBzdXBwb3J0IHRoZQo+IGNhc2VzIHRoYXQgTWF4aW1l
-IGRlc2NyaWJlZCB3aGVyZSB5b3Ugd2FudCB0byBkbyBzb21lIHJlYWxseSBmaW5lIHR1bmluZwo+
-IHRvIG1lZXQgRU1JIHJlcXVpcmVtZW50cyBvciBzb21lIHN1Y2guCj4gCj4gPiBUaGUgZmlyc3Qg
-aXMgdGhhdCBpdCBhbGxvd3MgdGhpcmQgcGFydHkgdXNlcnMgdG8gZW5hYmxlIGEgcmFuZG9tIHBh
-bmVsCj4gPiB3aXRob3V0IGhhdmluZyB0byBtb2RpZnkgYW5kIHJlY29tcGlsZSB0aGVpciBrZXJu
-ZWwgb2YgY2hvaWNlLiBUaGlzIG1pZ2h0Cj4gPiBzb3VuZCBsaWtlIHdoYXQgd2UncmUgdHJ5aW5n
-IHRvIGF2b2lkIGluIHRoZSBmaXJzdCBwbGFjZSwgYnV0IGl0Cj4gPiBzaWduaWZpY2FudGx5IGxv
-d2VycyB0aGUgYmFycmllciBvZiBlbnRyeSwgYm90aCB0ZWNobmljYWwgYW5kIHByYWN0aWNhbC4K
-PiAKPiBJIHRoaW5rIHlvdSdyZSBleGFnZ2VyYXRpbmcuIE1vZGlmeWluZyB0aGUga2VybmVsIGFu
-ZCByZWJ1aWxkaW5nIGl0IGlzCj4gbm90IHNpZ25pZmljYW50bHkgbW9yZSBkaWZmaWN1bHQgdGhh
-biBkb2luZyB0aGUgc2FtZSBmb3IgYSBEVEIuCj4gCj4gPiBJbmRlZWQsIHVzZXJzIG1pZ2h0IG5v
-dCBoYXZlIHRoZSBrbm93bGVkZ2Ugb24gaG93IHRvIHJlY29tcGlsZSBhbmQgbW9kaWZ5IGEKPiA+
-IGtlcm5lbCBieSB0aGVpciBvd24sIG9yIG1pZ2h0IG5vdCBoYXZlIGFueSBkb2N1bWVudGF0aW9u
-IG9uIHRoZSBwYW5lbAo+ID4gaXRzZWxmIHdoaWNoIHdvdWxkIHByZXZlbnQgYW55IGluY2x1c2lv
-bi4KPiAKPiBJZiB5b3UgZG9uJ3QgaGF2ZSBkb2N1bWVudGF0aW9uLCBob3cgYXJlIHlvdSBnb2lu
-ZyB0byBrbm93IHdoYXQgdGhlCj4gdmlkZW8gdGltaW5ncyBhcmU/IE9yIGhvdyB3aWxsIHlvdSBr
-bm93IGhvdyB0byB3aXJlIHRoZSBib2FyZCB1cCB0byB5b3VyCj4gYm9hcmQsIG9yIHdoYXQgdGhl
-IHBvd2VyIHNlcXVlbmNlIGlzIHRoYXQgeW91IG5lZWQgdG8gZm9sbG93LgoKQXMgZXhwbGFpbmVk
-IGFib3ZlLCB3ZSBvZnRlbiBnZXQgdGhlbSBmcm9tIHJhbmRvbSBkZXZpY2UgdHJlZSBzb3VyY2Vz
-LApvciBwb3NzaWJseSByYW5kb20gZm9ya3Mgb2YgcGFuZWwtc2ltcGxlIGluIEJTUHMuIFRob3Nl
-IHdpbGwgY29udGFpbiBhCnBhcnRpY3VsYXIgdGltaW5nIHRoYXQgaGFwcGVucyB0byB3b3JrIHdp
-dGggdGhlIHN5c3RlbSBhdCBoYW5kLiBBZGRpbmcKdGhlbSB0byBwYW5lbC1zaW1wbGUgaXNuJ3Qg
-dmVyeSBkaWZmaWN1bHQsIGJ1dCB3aGVuIGEgZGlmZmVyZW50IHN5c3RlbQp3aWxsIHRyeSB0byB1
-c2UgdGhlIHNhbWUgcGFuZWwsIGl0IG1heSBmaW5kIG91dCB0aGF0IHRoZSB0aW1pbmdzIHRoZW4K
-YXZhaWxhYmxlIGluIHBhbmVsLXNpbXBsZSBkb24ndCB3b3JrLCBiZWNhdXNlIHRoZSB0d28gc3lz
-dGVtcyByZXF1aXJlCmRpZmZlcmVudCB0aW1pbmdzIGJvdGggd2l0aGluIHRoZSByYW5nZSBvZiB0
-aW1pbmdzIHN1cHBwb3J0ZWQgYnkgdGhlCnBhbmVsLiBQYXRjaGluZyB0aGUgdGltaW5ncyBpbiBw
-YW5lbC1zaW1wbGUgd2l0aCB0aGUgdmFsdWVzIG9idGFpbmVkCmZyb20gdGhlIEJTUCBmb3IgdGhl
-IHNlY29uZCBzeXN0ZW0gd2lsbCBzb2x2ZSB0aGUgcHJvYmxlbSwgYnV0CnBvdGVudGlhbGx5IGJy
-ZWFrIHRoZSBmaXJzdCBzeXN0ZW0uCgpUaGUgcHJvYmxlbSByZWFsbHkgc3RlbXMgZnJvbSB0aGUg
-ZmFjdCB0aGF0IGRvY3VtZW50YXRpb24gaXMgbWlzc2luZy4KTW92aW5nIHRpbWluZ3MgdG8gRFQg
-aXMgYSB3YXkgdG8gd29yayBhcm91bmQgdGhhdCwgYnV0IGl0IGNsZWFybHkgbW9yZSBhCndvcmth
-cm91bmQgdGhhbiBhIHNvbHV0aW9uIGZvciB0aGlzIHNwZWNpZmljIGlzc3VlLiBUaGUgcXVlc3Rp
-b24gaXMgaWYKd2UgY2FuIGZpbmQgYSBiZXR0ZXIgc29sdXRpb24sIG9yIGEgYmV0dGVyIHdvcmth
-cm91bmQuCgo+ID4gQnV0IG1vZGVybnMgc3lzdGVtcyBhbHNvIHRlbmQgdG8gbW92ZSB0byBtZWNo
-YW5pc21zIGxpa2Ugc2VjdXJlIGJvb3Qgd2hpY2gKPiA+IHdvdWxkIHByZXZlbnQgdGhhdCBrZXJu
-ZWwsIHByb3ZpZGVkIHRoYXQgdGhlIGtlcm5lbCB3YXMgYWJsZSB0byBkbyB0aGF0LAo+ID4gZnJv
-bSBydW5uaW5nIGluIHRoZSBzeXN0ZW0sIHVubGVzcyB5b3Ugd291bGQga25vdyBob3cgKGFuZCBi
-ZSBhYmxlKSB0bwo+ID4gaW5zdGFsbCBjdXN0b20ga2V5cyBpbnRvIHlvdXIgc3lzdGVtLgo+ID4g
-Cj4gPiBXaGlsZSB0aGUgRFQgaXRzZWxmIG1pZ2h0IGhhdmUgdGhlIHNhbWUgY29uc3RyYWludHMs
-IG1lY2hhbmlzbXMgbGlrZSB0aGUKPiA+IG92ZXJsYXlzIGFsbG93cyB0byBjaXJjdW12ZW50IGl0
-Lgo+IAo+IEknbSBub3Qgc3VyZSBzZWN1cmUgYm9vdCBpcyBhIHZlcnkgZ29vZCBhcmd1bWVudC4g
-WW91IHVzdWFsbHkgc2VlIHRoYXQKPiBvbiBjbG9zZWQgZGV2aWNlcywgYW5kIHRob3NlIGFyZSBu
-b3QgdHlwaWNhbGx5IGRldmljZXMgd2hlcmUgeW91IGNhbiBnbwo+IGFuZCBzd2FwIG91dCB0aGUg
-cGFuZWwgd2l0aCBhbm90aGVyIHJhbmRvbSBvbmUuCj4gCj4gPiBBbm90aGVyIHRoaW5nIHRoYXQg
-cGFuZWwtZHBpIGFsbG93cyB0byBhZGRyZXNzIGlzIEVNQywgd2hlcmUgZXZlbiB0aG91Z2gKPiA+
-IHRoZSB0aW1pbmdzIGRlc2NyaWJlZCBpbiB0aGUgZHJpdmVyIGNvdWxkIGJlIGZ1bmN0aW9uYWwg
-b24gdGhlIGJvYXJkIGFuZAo+ID4gZm9yIHRoZSBwYW5lbCwgaXQgd291bGQgYmUgYmV0dGVyIHRv
-IHVzZSBhbm90aGVyIGFyYml0cmFyeSBmcmVxdWVuY3kgb24gYQo+ID4gcGFydGljdWxhciBib2Fy
-ZCB0byBpbmNyZWFzZSB0aGUgc3ByZWFkIG9mIHRoZSBFTSBlbWlzc2lvbnMuCj4gCj4gVGhhdCdz
-IGEgdmFsaWQgcG9pbnQsIGFuZCB0aGVyZSBoYXZlIGJlZW4gcHJvcG9zYWxzIGluIHRoZSBwYXN0
-IHRvIGFsbG93Cj4gdGltaW5ncyB0byBiZSBvdmVycmlkZGVuIGJ5IERUIHRvIGFsbG93IHN1Y2gg
-ZmluZSB0dW5pbmcuIEkgdGhpbmsgc3VjaCBhCj4gbWVjaGFuaXNtIGlzIGdlbmVyYWxseSBmaW5l
-LCBidXQgaXQgYWxzbyBpbXBsaWVzIHRoYXQgdGhlIHZpZGVvIHRpbWluZ3MKPiBpbiBEVCB3b3Vs
-ZCBiZSBvcHRpb25hbCwgc28gaXQgdXN1YWxseSBkb2Vzbid0IGdpdmUgcGVvcGxlIHdoYXQgdGhl
-eQo+IHJlYWxseSB3YW50LCB3aGljaCBpcyB0byBhZGQgc3VwcG9ydCBmb3IgYXJiaXRyYXJ5IHBh
-bmVscyB0byB0aGUga2VybmVsLgoKSSB0aGluayB3ZSBuZWVkIHN1Y2ggYSBtZWNoYW5pc20uIFdl
-IG1heSBub3QgbmVlZCBhIGZ1bGwgb3ZlcnJpZGUKdGhvdWdoLCBwb3NzaWJseSBqdXN0IGEgcmVz
-dHJpY3RlZCByYW5nZSBvZiBwaXhlbCBjbG9jayBmcmVxdWVuY2llcy4gSQpjYW4ndCB0ZWxsIHll
-dCB3aGF0IHdvdWxkIGJlIG5lZWRlZCBleGFjdGx5LCBidXQgRU1DIGlzIGEgdmFsaWQgY29uY2Vy
-biwKYW5kIHdlIGhhZCB0byBhZGQgZXhwbGljaXQgcGl4ZWwgY2xvY2sgZnJlcXVlbmNpZXMgZm9y
-IGNhbWVyYXMgaW4gRFRzCmZvciB0aGlzIHJlYXNvbi4gTGV0J3Mga2VlcCB0aGlzIGluIG1pbmQg
-aW4gb3VyIGRlc2lnbi4KCj4gSSB3YW50IHRvIGV4cGxhaW4gd2h5IEknbSBiZWluZyBzbyByZWx1
-Y3RhbnQgdG8gbWVyZ2Ugc3VwcG9ydCBmb3IgdGhpcywKPiBzbyB0aGF0IHBlcmhhcHMgcGVvcGxl
-IGJldHRlciB1bmRlcnN0YW5kIHdoZXJlIHRoaXMgaXMgY29taW5nIGZyb20uIElmCj4gd2UgYWxs
-b3cgYXJiaXRyYXJ5IHBhbmVscyB0byBiZSBzdXBwb3J0ZWQgaW4gdGhpcyB3YXksIHdlIGNhbiBn
-ZXQgaW50byBhCj4gc2l0dWF0aW9uIHdoZXJlIHNvbWVvbmUgbWFrZXMgYSBkZXZpY2UsIHVwc3Ry
-ZWFtcyBzdXBwb3J0IGZvciBpdCwgdXNpbmcKPiB2aWRlbyB0aW1pbmdzIHNwZWNpZmllZCBpbiBE
-VCB3aXRob3V0IGEgc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmcgZm9yCj4gdGhlIHBhbmVsIG5v
-ZGUgYW5kIHRoZW4gYnVybiB0aGF0IERUQiBpbnRvIGEgUk9NIG9uIHRoZSBkZXZpY2UgYW5kIHNo
-aXAKPiBpdC4gTm93IGNvbnNpZGVyIHdoYXQgd291bGQgaGFwcGVuIGlmIHNvbWUgdGltZSBkb3du
-IHRoZSByb2FkIHdlIGdldCBhCj4gYnVnIHJlcG9ydCB0aGF0IHRoZSBwYW5lbCBvbiB0aGF0IGRl
-dmljZSBubyBsb25nZXIgd29ya3MuIFdlJ3ZlIG5pY2VseQo+IHBhaW50ZWQgb3Vyc2VsdmVzIGlu
-dG8gYSBjb3JuZXIsIGJlY2F1c2Ugd2UgY2FuJ3QgdGVsbCBwZW9wbGUgdG8gZml4IHRoZQo+IERU
-QiAoaXQncyBpbiBhIFJPTSkgYW5kIHdlIGNhbid0IGFkZCBhIHF1aXJrIGluIHRoZSBrZXJuZWwg
-YmVjYXVzZSB3ZQo+IGRvbid0IGhhdmUgYSB3YXkgb2YgaWRlbnRpZnlpbmcgdGhlIHBhbmVsLiBT
-byB3aGF0IGRvIHdlIHRlbGwgdGhlbT8KPiBUb3VnaCBsdWNrPwoKQ291bGQgdGhlIHBhbmVsLXNp
-bXBsZSAob3IgcGFuZWwtZHBpKSBkcml2ZXIgcmVqZWN0IHBhbmVscyB0aGF0IGhhdmUgYQpzaW5n
-bGUgY29tcGF0aWJsZSBzdHJpbmcsIGZvcmNpbmcgdGhlIERUIGF1dGhvciB0byBhZGQgYSBzcGVj
-aWZpYyBvbmUgPwpPZiBjb3Vyc2UgdGhhdCB3b3VsZG4ndCBwcmV2ZW50IHNvbWVvbmUgZnJvbSB3
-cml0aW5nCgoJLyogRG9uJ3QgcmVtb3ZlIGZvbyxiYXIgb3IgdGhlIGRyaXZlciB3aWxsIG5vdCB3
-b3JrICovCgljb21wYXRpYmxlID0gImZvbyxiYXIiLCAicGFuZWwtZHBpIjsKCj4gVGhlIHJvb3Qg
-Y2F1c2UgaGVyZSBpcyB0aGF0IHRoZXJlIGFyZSBubyBzdGFuZGFyZHMgYW5kIGRlc2lnbmVycyBq
-dXN0IGRvCj4gd2hhdGV2ZXIgdGhleSB3YW50IGJlY2F1c2Ugc29tZWJvZHkgd2lsbCBzb21laG93
-IG1ha2UgdGhpbmdzIHdvcmsuIFdoaWxlCj4gdGhhdCBtYXkgd29yayBmaW5lIGZvciBwcm9kdWN0
-cyB3aGVyZSB0aGUgT0VNIHByb3ZpZGVzIGEgY3VzdG9tIGtlcm5lbCwKPiBpdCdzIGEgbWFpbnRl
-bmFuY2UgbmlnaHRtYXJlIGZvciB1cHN0cmVhbS4gU28gSSB0aGluayB3ZSBuZWVkIHRvIGJlIG1v
-cmUKPiBzdHJpY3QgaW4gd2hhdCB3ZSBhY2NlcHQgYW5kIHBlcmhhcHMgZXZlbiBoZWxwIHNoYXBl
-IHNvbWUgZm9ybSBvZgo+IHN0YW5kYXJkIHRoYXQgd2lsbCBhdm9pZCBhbnkgb2YgdGhlIGNvbW1v
-biBwaXRmYWxscyB3ZSBrbm93IGFib3V0LgoKSSBhZ3JlZSB3aXRoIHlvdSwgYnV0IEkgd291bGQg
-YXJndWUgdGhhdCBoYXZpbmcgdGltaW5ncyBpbiBDIGNvZGUgY2FuCmFsc28gYmVjb21lcyBhIG1h
-aW50ZW5hbmNlIG5pZ2h0bWFyZSB3aGVuIHRoZSBzYW1lIHBhbmVsIGlzIHVzZWQgb24KbXVsdGlw
-bGUgc3lzdGVtcywgYXMgZXhwbGFpbmVkIGFib3ZlLgoKPiBJJ2QgYmUgaW50ZXJlc3RlZCB0byBr
-bm93IHdoZXRoZXIgdGhpcyBwcm9ibGVtIGV4aXN0cyBvbiBhbnkgb2YgdGhlCj4gb3RoZXIgYXJj
-aGl0ZWN0dXJlcywgYmVjYXVzZSB0aGlzIHNlZW1zIHRvIG1lIHRvIGJlIHNwZWNpZmljIHRvIHRo
-ZSBBUk0KPiBlY29zeXN0ZW0uIFRoZXJlJ3MgYSBteXJpYWQgb2YgeDg2IHN5c3RlbXMgb3V0IHRo
-ZXJlIHRoYXQgdXNlIHBhbmVscywgc28KPiBJIHdvbmRlciBob3cgd2Ugc29sdmUgdGhlc2UgcHJv
-YmxlbXMgZm9yIHRob3NlLCBvciB3aGV0aGVyIHRoZXkgc2ltcGx5Cj4gZG9uJ3QgZXhpc3QgdGhl
-cmUgYmVjYXVzZSBwZW9wbGUgaGF2ZSBwdXQgbW9yZSB0aG91Z2h0IGludG8gc3lzdGVtCj4gZGVz
-aWducz8KCkFyZW4ndCB0aW1pbmdzIHN0b3JlZCBpbiBBQ1BJLCBhdCBsZWFzdCBpbiBzb21lIGNh
-c2VzID8KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydApfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Thu, Mar 7, 2019 at 8:57 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello,
+>
+> On Fri, Mar 01, 2019 at 04:23:19PM +0530, Yash Shah wrote:
+> > Adds a PWM driver for PWM chip present in SiFive's HiFive Unleashed SoC=
+.
+> >
+> > Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> > [Atish: Various fixes and code cleanup]
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> > ---
+> >  drivers/pwm/Kconfig      |  11 ++
+> >  drivers/pwm/Makefile     |   1 +
+> >  drivers/pwm/pwm-sifive.c | 345 +++++++++++++++++++++++++++++++++++++++=
+++++++++
+> >  3 files changed, 357 insertions(+)
+> >  create mode 100644 drivers/pwm/pwm-sifive.c
+> >
+> > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> > index a8f47df..4a61d1a 100644
+> > --- a/drivers/pwm/Kconfig
+> > +++ b/drivers/pwm/Kconfig
+> > @@ -380,6 +380,17 @@ config PWM_SAMSUNG
+> >         To compile this driver as a module, choose M here: the module
+> >         will be called pwm-samsung.
+> >
+> > +config PWM_SIFIVE
+> > +     tristate "SiFive PWM support"
+> > +     depends on OF
+> > +     depends on COMMON_CLK
+> > +     depends on RISCV || COMPILE_TEST
+> > +     help
+> > +       Generic PWM framework driver for SiFive SoCs.
+> > +
+> > +       To compile this driver as a module, choose M here: the module
+> > +       will be called pwm-sifive.
+> > +
+> >  config PWM_SPEAR
+> >       tristate "STMicroelectronics SPEAr PWM support"
+> >       depends on PLAT_SPEAR
+> > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> > index 9c676a0..30089ca 100644
+> > --- a/drivers/pwm/Makefile
+> > +++ b/drivers/pwm/Makefile
+> > @@ -37,6 +37,7 @@ obj-$(CONFIG_PWM_RCAR)              +=3D pwm-rcar.o
+> >  obj-$(CONFIG_PWM_RENESAS_TPU)        +=3D pwm-renesas-tpu.o
+> >  obj-$(CONFIG_PWM_ROCKCHIP)   +=3D pwm-rockchip.o
+> >  obj-$(CONFIG_PWM_SAMSUNG)    +=3D pwm-samsung.o
+> > +obj-$(CONFIG_PWM_SIFIVE)     +=3D pwm-sifive.o
+> >  obj-$(CONFIG_PWM_SPEAR)              +=3D pwm-spear.o
+> >  obj-$(CONFIG_PWM_STI)                +=3D pwm-sti.o
+> >  obj-$(CONFIG_PWM_STM32)              +=3D pwm-stm32.o
+> > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+> > new file mode 100644
+> > index 0000000..6679ec7
+> > --- /dev/null
+> > +++ b/drivers/pwm/pwm-sifive.c
+> > @@ -0,0 +1,345 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2017-2018 SiFive
+> > + * For SiFive's PWM IP block documentation please refer Chapter 14 of
+> > + * Reference Manual : https://static.dev.sifive.com/FU540-C000-v1.0.pd=
+f
+> > + *
+> > + * Limitations:
+> > + * - When changing both duty cycle and period, we cannot prevent in
+> > + *   software that the output might produce a period with mixed
+> > + *   settings (new period length and old duty cycle).
+> > + * - The hardware cannot generate a 100% duty cycle.
+> > + * - The hardware generates only inverted output.
+> > + */
+> > +#include <linux/clk.h>
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/pwm.h>
+> > +#include <linux/slab.h>
+> > +
+> > +/* Register offsets */
+> > +#define PWM_SIFIVE_PWMCFG            0x0
+> > +#define PWM_SIFIVE_PWMCOUNT          0x8
+> > +#define PWM_SIFIVE_PWMS                      0x10
+> > +#define PWM_SIFIVE_PWMCMP0           0x20
+> > +
+> > +/* PWMCFG fields */
+> > +#define PWM_SIFIVE_PWMCFG_SCALE              0
+> > +#define PWM_SIFIVE_PWMCFG_STICKY     8
+> > +#define PWM_SIFIVE_PWMCFG_ZERO_CMP   9
+> > +#define PWM_SIFIVE_PWMCFG_DEGLITCH   10
+> > +#define PWM_SIFIVE_PWMCFG_EN_ALWAYS  BIT(12)
+> > +#define PWM_SIFIVE_PWMCFG_EN_ONCE    13
+> > +#define PWM_SIFIVE_PWMCFG_CENTER     16
+> > +#define PWM_SIFIVE_PWMCFG_GANG               24
+> > +#define PWM_SIFIVE_PWMCFG_IP         28
+>
+> It's a bit inconsistent to have one of them use BIT and the others not.
+> For consistency please use BIT for all defines. (They are unused
+> anyhow.) For PWM_SIFIVE_PWMCFG_SCALE use:
+>
+>         #define PWM_SIFIVE_PWMCFG_SCALE GENMASK(3, 0)
+>
+> and then FIELD_GET and FIELD_PREP to access the values.
+
+Sure will do that.
+
+>
+> > +/* PWM_SIFIVE_SIZE_PWMCMP is used to calculate offset for pwmcmpX regi=
+sters */
+> > +#define PWM_SIFIVE_SIZE_PWMCMP               4
+> > +#define PWM_SIFIVE_CMPWIDTH          16
+> > +#define PWM_SIFIVE_DEFAULT_PERIOD    10000000
+> > +
+> > +struct pwm_sifive_ddata {
+> > +     struct pwm_chip chip;
+> > +     struct mutex lock; /* lock to protect user_count */
+> > +     struct notifier_block notifier;
+> > +     struct clk *clk;
+> > +     void __iomem *regs;
+> > +     unsigned int real_period;
+> > +     int user_count;
+> > +};
+> > +
+> > +static inline
+> > +struct pwm_sifive_ddata *pwm_sifive_chip_to_ddata(struct pwm_chip *c)
+> > +{
+> > +     return container_of(c, struct pwm_sifive_ddata, chip);
+> > +}
+> > +
+> > +static int pwm_sifive_request(struct pwm_chip *chip, struct pwm_device=
+ *dev)
+> > +{
+> > +     struct pwm_sifive_ddata *pwm =3D pwm_sifive_chip_to_ddata(chip);
+> > +
+> > +     mutex_lock(&pwm->lock);
+> > +     pwm->user_count++;
+> > +     mutex_unlock(&pwm->lock);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void pwm_sifive_free(struct pwm_chip *chip, struct pwm_device *=
+dev)
+> > +{
+> > +     struct pwm_sifive_ddata *pwm =3D pwm_sifive_chip_to_ddata(chip);
+> > +
+> > +     mutex_lock(&pwm->lock);
+> > +     pwm->user_count--;
+> > +     mutex_unlock(&pwm->lock);
+> > +}
+> > +
+> > +static void pwm_sifive_update_clock(struct pwm_sifive_ddata *pwm,
+> > +                                 unsigned long rate)
+> > +{
+> > +     u32 val;
+> > +     unsigned long long num;
+> > +     /* (1 << (PWM_SIFIVE_CMPWIDTH+scale)) * 10^9/rate =3D real_period=
+ */
+> > +     unsigned long scale_pow =3D
+> > +                     div64_ul(pwm->real_period * (u64)rate, NSEC_PER_S=
+EC);
+> > +     int scale =3D clamp(ilog2(scale_pow) - PWM_SIFIVE_CMPWIDTH, 0, 0x=
+f);
+>
+> I tried for some time to verify the code here and this would have been
+> easier with a more verbose comment. Something like:
+>
+> /*
+>  * The PWM unit is used with pwmzerocmp=3D0, so the only way to modify th=
+e
+>  * period length is using pwmscale which provides the number of bits the
+>  * counter is shifted before being feed to the comparators. A period
+>  * lasts (1 << (PWM_SIFIVE_CMPWIDTH + pwmscale)) clock ticks.
+>  */
+
+Ok, will add this.
+
+>
+> There is a bad rounding effect here. I don't know the machine's details,
+> and so will consider a parent clock running at 250 MHz. So one clock tick
+> is 4 ns long and the smallest period length is 4 ns << 16 =3D=3D 262144 n=
+s.
+> Consider further an initial target period of 10000000 ns (which is
+> PWM_SIFIVE_DEFAULT_PERIOD).
+>
+> The calculation here results in scale_pow =3D 2500000 and so scale =3D 5.
+>
+> > +     val =3D PWM_SIFIVE_PWMCFG_EN_ALWAYS | (scale << PWM_SIFIVE_PWMCFG=
+_SCALE);
+> > +     writel(val, pwm->regs + PWM_SIFIVE_PWMCFG);
+> > +
+> > +     /* As scale <=3D 15 the shift operation cannot overflow. */
+> > +     num =3D 1000000000ULL << (PWM_SIFIVE_CMPWIDTH + scale);
+> > +     pwm->real_period =3D div64_ul(num, rate);
+> > +     dev_dbg(pwm->chip.dev, "New real_period =3D %u ns\n", pwm->real_p=
+eriod);
+> > +}
+>
+> Then real_period ends up being 8388608 ns. If now the input clk increases
+> to 750 MHz it is 8388608 ns which is being used as target period length
+> and the calculation results in:
+>
+>         scale_pow =3D 6291456
+>         scale =3D 6
+>         real_period =3D 5592405
+>
+> I'd claim it would be better to use scale =3D 7 here which results in
+> 11184810 which is nearer to the initially targeted 10000000 ns. (But we
+> cannot be sure as there is no rounding guide for the PWM framework.)
+>
+> But worse than that is that if the input clock goes back to 250 MHz we
+> start with real_period =3D 5592405 and we get
+>
+>         scale_pow =3D 1398101
+>         scale =3D 4
+>         real_period =3D 4194304
+>
+> so we're not going back to the state we had when the clk was initially
+> running at 250 MHz.
+>
+> To get the result independent of the prior configuration you better use
+> the real targeted period length as input instead of the last configured
+> approximation.
+
+Sure. will change it.
+
+>
+> > +static void pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_dev=
+ice *dev,
+> > +                              struct pwm_state *state)
+> > +{
+> > +     struct pwm_sifive_ddata *pwm =3D pwm_sifive_chip_to_ddata(chip);
+> > +     u32 duty, val;
+> > +     unsigned long long num;
+> > +     int ret;
+> > +
+> > +     ret =3D clk_enable(pwm->clk);
+> > +     if (ret)
+> > +             return;
+>
+> Ideally we'd report state->enabled =3D 0 if the clk was off. I don't know
+> how this could be done reliably though.
+>
+> > +     duty =3D readl(pwm->regs + PWM_SIFIVE_PWMCMP0 +
+> > +                  dev->hwpwm * PWM_SIFIVE_SIZE_PWMCMP);
+> > +
+> > +     state->enabled =3D duty > 0;
+>
+> If duty is bigger than 0 but PWM_SIFIVE_PWMCFG_EN_ALWAYS isn't set you
+> should report enabled =3D false, too.
+
+Will add this.
+
+>
+> > +     val =3D readl(pwm->regs + PWM_SIFIVE_PWMCFG);
+> > +     val &=3D 0x0F;
+>
+> Maybe name that "scale" instead of "val"?
+
+Yes, will change it.
+
+>
+> > +     num =3D 1000000000ULL << (PWM_SIFIVE_CMPWIDTH + val);
+>
+> Is this (unsigned long long)NSEC_PER_SEC? (Ditto above in
+> pwm_sifive_update_clock().)
+
+Yes, will change this too.
+
+>
+> > +     pwm->real_period =3D div64_ul(num, clk_get_rate(pwm->clk));
+> > +
+> > +     state->period =3D pwm->real_period;
+> > +     state->duty_cycle =3D
+> > +             (u64)duty * pwm->real_period >> PWM_SIFIVE_CMPWIDTH;
+> > +     state->polarity =3D PWM_POLARITY_INVERSED;
+> > +
+> > +     clk_disable(pwm->clk);
+> > +}
+> > +
+> > +static int pwm_sifive_enable(struct pwm_chip *chip, bool enable)
+> > +{
+> > +     struct pwm_sifive_ddata *pwm =3D pwm_sifive_chip_to_ddata(chip);
+> > +     int ret;
+> > +
+> > +     if (enable) {
+> > +             ret =3D clk_enable(pwm->clk);
+> > +             if (ret) {
+> > +                     dev_err(pwm->chip.dev, "Enable clk failed:%d\n", =
+ret);
+> > +                     return ret;
+> > +             }
+> > +     }
+> > +
+> > +     if (!enable)
+> > +             clk_disable(pwm->clk);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *=
+dev,
+> > +                         struct pwm_state *state)
+> > +{
+> > +     struct pwm_sifive_ddata *pwm =3D pwm_sifive_chip_to_ddata(chip);
+> > +     unsigned int duty_cycle, x;
+> > +     u32 frac;
+> > +     struct pwm_state cur_state;
+> > +     bool enabled;
+> > +     int ret =3D 0;
+> > +     unsigned long num;
+> > +
+> > +     if (state->polarity !=3D PWM_POLARITY_INVERSED)
+> > +             return -EINVAL;
+> > +
+> > +     mutex_lock(&pwm->lock);
+> > +     pwm_get_state(dev, &cur_state);
+> > +     enabled =3D cur_state.enabled;
+> > +
+> > +     if (state->period !=3D cur_state.period) {
+>
+> Did you test this with more than one consumer? For sure the following
+> should work:
+>
+>         pwm1 =3D pwm_get(.. the first ..);
+>         pwm_apply_state(pwm1, { .enabled =3D true, .period =3D 10000000, =
+.... });
+>
+>         pwm2 =3D pwm_get(.. the second ..);
+>         pwm_apply_state(pwm2, { .enabled =3D true, .period =3D 10000000, =
+.... });
+>
+> but for the second pwm_apply_state() run state->period is likely not
+> exactly 10000000.
+
+Yes, I have tested multiple consumers using sysfs interface. It is working.
+
+>
+> > +             if (pwm->user_count !=3D 1) {
+> > +                     ret =3D -EINVAL;
+>
+> EBUSY?
+
+ok
+
+>
+> > +                     goto exit;
+> > +             }
+> > +             pwm->real_period =3D state->period;
+> > +             pwm_sifive_update_clock(pwm, clk_get_rate(pwm->clk));
+>
+> It's not ensured that pwm->clk is enabled here which is a pre-condition
+> to be allowed to call clk_get_rate().
+
+Will fix this
+
+>
+> > +     }
+> > +
+> > +     duty_cycle =3D state->duty_cycle;
+> > +     if (!state->enabled)
+> > +             duty_cycle =3D 0;
+> > +
+> > +     x =3D 1U << PWM_SIFIVE_CMPWIDTH;
+>
+> "x" is a bad name.
+>
+> > +     num =3D (u64)duty_cycle * x + x / 2;
+> > +     frac =3D div_u64(num, state->period);
+>
+> I don't understand the "+ x / 2" part. Should this better be
+> "+ state->period / 2"? Something like
+
+This eqn is as per your comments against v5 of this patch series.
+ frac =3D (duty_cycle * (1 << PWM_SIFIVE_CMPWIDTH) + (1 <<
+PWM_SIFIVE_CMPWIDTH) / 2) / period;
+
+>
+> #define div_u64_round(a, b) ({typeof(b) __b =3D b; div_u64(a + __b / 2, _=
+_b)})
+>
+> would make this less error prone.
+>
+> > +     /* The hardware cannot generate a 100% duty cycle */
+> > +     frac =3D min(frac, x - 1);
+> > +
+> > +     writel(frac, pwm->regs + PWM_SIFIVE_PWMCMP0 +
+> > +            dev->hwpwm * PWM_SIFIVE_SIZE_PWMCMP);
+> > +
+> > +     if (!state->enabled && enabled) {
+> > +             ret =3D pwm_sifive_enable(chip, false);
+> > +             if (ret)
+> > +                     goto exit;
+> > +             enabled =3D false;
+> > +     }
+> > +
+> > +     if (state->enabled && !enabled) {
+> > +             ret =3D pwm_sifive_enable(chip, state->enabled);
+> > +             if (ret)
+> > +                     goto exit;
+> > +     }
+>
+> These two ifs can be combined to:
+>
+>         if (state->enabled !=3D enabled)
+>                 ret =3D pwm_sifive_enable(chip, state->enabled);
+
+Ok, will do that
+
+>
+> > +
+> > +exit:
+> > +     mutex_unlock(&pwm->lock);
+> > +     return ret;
+> > +}
+> > +
+> > +static const struct pwm_ops pwm_sifive_ops =3D {
+> > +     .request =3D pwm_sifive_request,
+> > +     .free =3D pwm_sifive_free,
+> > +     .get_state =3D pwm_sifive_get_state,
+> > +     .apply =3D pwm_sifive_apply,
+> > +     .owner =3D THIS_MODULE,
+> > +};
+> > +
+> > +static int pwm_sifive_clock_notifier(struct notifier_block *nb,
+> > +                                  unsigned long event, void *data)
+> > +{
+> > +     struct clk_notifier_data *ndata =3D data;
+> > +     struct pwm_sifive_ddata *pwm =3D
+> > +             container_of(nb, struct pwm_sifive_ddata, notifier);
+> > +
+> > +     if (event =3D=3D POST_RATE_CHANGE)
+> > +             pwm_sifive_update_clock(pwm, ndata->new_rate);
+> > +
+> > +     return NOTIFY_OK;
+> > +}
+> > +
+> > +static int pwm_sifive_probe(struct platform_device *pdev)
+> > +{
+> > +     struct device *dev =3D &pdev->dev;
+> > +     struct pwm_sifive_ddata *pwm;
+> > +     struct pwm_chip *chip;
+> > +     struct resource *res;
+> > +     int ret, ch;
+> > +     bool is_enabled =3D false;
+> > +
+> > +     pwm =3D devm_kzalloc(dev, sizeof(*pwm), GFP_KERNEL);
+> > +     if (!pwm)
+> > +             return -ENOMEM;
+> > +
+> > +     mutex_init(&pwm->lock);
+> > +     chip =3D &pwm->chip;
+> > +     chip->dev =3D dev;
+> > +     chip->ops =3D &pwm_sifive_ops;
+> > +     chip->of_pwm_n_cells =3D 3;
+> > +     chip->base =3D -1;
+> > +     chip->npwm =3D 4;
+> > +
+> > +     res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +     pwm->regs =3D devm_ioremap_resource(dev, res);
+> > +     if (IS_ERR(pwm->regs)) {
+> > +             dev_err(dev, "Unable to map IO resources\n");
+> > +             return PTR_ERR(pwm->regs);
+> > +     }
+> > +
+> > +     pwm->clk =3D devm_clk_get(dev, NULL);
+> > +     if (IS_ERR(pwm->clk)) {
+> > +             if (PTR_ERR(pwm->clk) !=3D -EPROBE_DEFER)
+> > +                     dev_err(dev, "Unable to find controller clock\n")=
+;
+> > +             return PTR_ERR(pwm->clk);
+> > +     }
+> > +
+> > +     ret =3D clk_prepare_enable(pwm->clk);
+> > +     if (ret) {
+> > +             dev_err(dev, "failed to enable clock for pwm: %d\n", ret)=
+;
+> > +             return ret;
+> > +     }
+> > +
+> > +     /* Watch for changes to underlying clock frequency */
+> > +     pwm->notifier.notifier_call =3D pwm_sifive_clock_notifier;
+> > +     ret =3D clk_notifier_register(pwm->clk, &pwm->notifier);
+> > +     if (ret) {
+> > +             dev_err(dev, "failed to register clock notifier: %d\n", r=
+et);
+> > +             goto disable_clk;
+> > +     }
+> > +
+> > +     ret =3D pwmchip_add(chip);
+> > +     if (ret < 0) {
+> > +             dev_err(dev, "cannot register PWM: %d\n", ret);
+> > +             goto unregister_clk;
+> > +     }
+>
+> After pwmchip_add is called the first consumer might appear...
+>
+> > +     /* Initialize PWM */
+> > +     pwm->real_period =3D PWM_SIFIVE_DEFAULT_PERIOD;
+> > +     pwm_sifive_update_clock(pwm, clk_get_rate(pwm->clk));
+> > +
+> > +     for (ch =3D 0; ch < pwm->chip.npwm; ch++) {
+> > +             if (pwm_is_enabled(&pwm->chip.pwms[ch])) {
+> > +                     is_enabled =3D true;
+> > +                     break;
+> > +             }
+> > +     }
+> > +     if (!is_enabled)
+> > +             clk_disable(pwm->clk);
+>
+> ... so this should better be called after these initialisations.
+> (This also means you must not use pwm_is_enabled(), but I'd consider that
+> an upside, because this function is for PWM consumers, not
+> implementors.)
+
+Ok, will change the sequence.
+
+>
+> > +     platform_set_drvdata(pdev, pwm);
+> > +     dev_dbg(dev, "SiFive PWM chip registered %d PWMs\n", chip->npwm);
+> > +
+> > +     return 0;
+> > +
+> > +unregister_clk:
+> > +     clk_notifier_unregister(pwm->clk, &pwm->notifier);
+> > +disable_clk:
+> > +     clk_disable_unprepare(pwm->clk);
+> > +
+> > +     return ret;
+> > +}
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
