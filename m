@@ -1,108 +1,110 @@
-From: Martin Schiller <ms@dev.tdt.de>
-Subject: [PATCH] power: reset: syscon-reboot: add a mask property
-Date: Fri,  8 Mar 2019 08:49:30 +0100
-Message-ID: <20190308074930.15270-1-ms@dev.tdt.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, fkan@apm.com
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 0/4] mwifiex PCI/wake-up interrupt fixes
+Date: Fri, 08 Mar 2019 10:26:57 +0200
+Message-ID: <87ef7hai0e.fsf@codeaurora.org>
+References: <20190224140426.3267-1-marc.zyngier@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20190224140426.3267-1-marc.zyngier-5wv7dgnIgG8@public.gmane.org> (Marc Zyngier's
+        message of "Sun, 24 Feb 2019 14:04:22 +0000")
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Amitkumar Karwar <amitkarwar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Ganapathi Bhat <gbhat-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Xinming Hu <huxinming820-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Make the syscon-reboot driver accept value and mask instead of
-just value.
+Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> writes:
 
-Prior to this patch, the property name for the value was 'mask'. If
-only the mask property is defined on a node, maintain compatibility
-by using it as the value.
+> For quite some time, I wondered why the PCI mwifiex device built in my
+> Chromebook was unable to use the good old legacy interrupts. But as MSIs
+> were working fine, I never really bothered investigating. I finally had a
+> look, and the result isn't very pretty.
+>
+> On this machine (rk3399-based kevin), the wake-up interrupt is described as
+> such:
+>
+> &pci_rootport {
+> 	mvl_wifi: wifi@0,0 {
+> 		compatible = "pci1b4b,2b42";
+> 		reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
+> 		       0x83010000 0x0 0x00100000 0x0 0x00100000>;
+> 		interrupt-parent = <&gpio0>;
+> 		interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
+> 		pinctrl-names = "default";
+> 		pinctrl-0 = <&wlan_host_wake_l>;
+> 		wakeup-source;
+> 	};
+> };
+>
+> Note how the interrupt is part of the properties directly attached to the
+> PCI node. And yet, this interrupt has nothing to do with a PCI legacy
+> interrupt, as it is attached to the wake-up widget that bypasses the PCIe RC
+> altogether (Yay for the broken design!). This is in total violation of the
+> IEEE Std 1275-1994 spec[1], which clearly documents that such interrupt
+> specifiers describe the PCI device interrupts, and must obey the
+> INT-{A,B,C,D} mapping. Oops!
+>
+> The net effect of the above is that Linux tries to do something vaguely
+> sensible, and uses the same interrupt for both the wake-up widget and the
+> PCI device. This doesn't work for two reasons: (1) the wake-up widget grabs
+> the interrupt in exclusive mode, and (2) the PCI interrupt is still routed
+> to the RC, leading to a screaming interrupt. This simply cannot work.
+>
+> To sort out this mess, we need to lift the confusion between the two
+> interrupts. This is done by extending the DT binding to allow the wake-up
+> interrupt to be described in a 'wake-up' subnode, sidestepping the issue
+> completely. On my Chromebook, it now looks like this:
+>
+> &pci_rootport {
+> 	mvl_wifi: wifi@0,0 {
+> 		compatible = "pci1b4b,2b42";
+> 		reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
+> 		       0x83010000 0x0 0x00100000 0x0 0x00100000>;
+> 		pinctrl-names = "default";
+> 		pinctrl-0 = <&wlan_host_wake_l>;
+> 		wake-up {
+> 			interrupt-parent = <&gpio0>;
+> 			interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
+> 			wakeup-source;
+> 		};
+> 	};
+> };
+>
+> The driver is then updated to look for this subnode first, and fallback to
+> the original, broken behaviour (spitting out a warning in the offending
+> configuration).
+>
+> For good measure, there are two additional patches:
+>
+> - The wake-up interrupt requesting is horribly racy, and could lead to
+>   unpredictable behaviours. Let's fix that properly.
+>
+> - A final patch implementing the above transformation for the whole
+>   RK3399-based Chromebook range, which all use the same broken
+>   configuration.
+>
+> With all that, I finally have PCI legacy interrupts working with the mwifiex
+> driver on my Chromebook.
+>
+> [1] http://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+>
+> Marc Zyngier (4):
+>   dt-bindings/marvell-8xxx: Allow wake-up interrupt to be placed in a
+>     separate node
+>   mwifiex: Fetch wake-up interrupt from 'wake-up' subnode when it exists
+>   mwifiex: Flag wake-up interrupt as IRQ_NOAUTOEN rather than disabling
+>     it too late
+>   arm64: dts: rockchip: gru: Move wifi wake-up interrupt into its own
+>     subnode
+>
+>  .../bindings/net/wireless/marvell-8xxx.txt    | 23 ++++++++++++++++++-
+>  .../dts/rockchip/rk3399-gru-chromebook.dtsi   |  8 ++++---
+>  drivers/net/wireless/marvell/mwifiex/main.c   | 13 +++++++++--
+>  3 files changed, 38 insertions(+), 6 deletions(-)
 
-This patch is based on commit
-f2c199db477e ("power: reset: syscon-poweroff: add a mask property")
-and does the same change for the syscon-reboot driver.
+I didn't read the discussion in detail, but I understanding is that I
+should drop this series and wait for a new version. Please correct me if
+I misunderstood.
 
-Signed-off-by: Martin Schiller <ms@dev.tdt.de>
----
- .../devicetree/bindings/power/reset/syscon-reboot.txt | 11 +++++++++--
- drivers/power/reset/syscon-reboot.c                   | 19 +++++++++++++++++--
- 2 files changed, 26 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
-index 11906316b43d..e23dea8344f8 100644
---- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
-+++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
-@@ -3,13 +3,20 @@ Generic SYSCON mapped register reset driver
- This is a generic reset driver using syscon to map the reset register.
- The reset is generally performed with a write to the reset register
- defined by the register map pointed by syscon reference plus the offset
--with the mask defined in the reboot node.
-+with the value and mask defined in the reboot node.
- 
- Required properties:
- - compatible: should contain "syscon-reboot"
- - regmap: this is phandle to the register map node
- - offset: offset in the register map for the reboot register (in bytes)
--- mask: the reset value written to the reboot register (32 bit access)
-+- value: the reset value written to the reboot register (32 bit access)
-+
-+Optional properties:
-+- mask: update only the register bits defined by the mask (32 bit)
-+
-+Legacy usage:
-+If a node doesn't contain a value property but contains a mask property, the
-+mask property is used as the value.
- 
- Default will be little endian mode, 32 bit access only.
- 
-diff --git a/drivers/power/reset/syscon-reboot.c b/drivers/power/reset/syscon-reboot.c
-index 7d0d269a0837..5a6bb638c331 100644
---- a/drivers/power/reset/syscon-reboot.c
-+++ b/drivers/power/reset/syscon-reboot.c
-@@ -27,6 +27,7 @@
- struct syscon_reboot_context {
- 	struct regmap *map;
- 	u32 offset;
-+	u32 value;
- 	u32 mask;
- 	struct notifier_block restart_handler;
- };
-@@ -39,7 +40,7 @@ static int syscon_restart_handle(struct notifier_block *this,
- 					restart_handler);
- 
- 	/* Issue the reboot */
--	regmap_write(ctx->map, ctx->offset, ctx->mask);
-+	regmap_update_bits(ctx->map, ctx->offset, ctx->mask, ctx->value);
- 
- 	mdelay(1000);
- 
-@@ -51,6 +52,7 @@ static int syscon_reboot_probe(struct platform_device *pdev)
- {
- 	struct syscon_reboot_context *ctx;
- 	struct device *dev = &pdev->dev;
-+	int mask_err, value_err;
- 	int err;
- 
- 	ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
-@@ -64,8 +66,21 @@ static int syscon_reboot_probe(struct platform_device *pdev)
- 	if (of_property_read_u32(pdev->dev.of_node, "offset", &ctx->offset))
- 		return -EINVAL;
- 
--	if (of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask))
-+	value_err = of_property_read_u32(pdev->dev.of_node, "value", &ctx->value);
-+	mask_err = of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask);
-+	if (value_err && mask_err) {
-+		dev_err(dev, "unable to read 'value' and 'mask'");
- 		return -EINVAL;
-+	}
-+
-+	if (value_err) {
-+		/* support old binding */
-+		ctx->value = ctx->mask;
-+		ctx->mask = 0xFFFFFFFF;
-+	} else if (mask_err) {
-+		/* support value without mask*/
-+		ctx->mask = 0xFFFFFFFF;
-+	}
- 
- 	ctx->restart_handler.notifier_call = syscon_restart_handle;
- 	ctx->restart_handler.priority = 192;
 -- 
-2.11.0
+Kalle Valo
