@@ -1,84 +1,131 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v2 03/10] dt-binding: gce: add binding for gce subsys
- property
-Date: Fri, 8 Mar 2019 09:41:23 +0800
-Message-ID: <1552009283.2863.12.camel@mtksdaap41>
-References: <1551865835-50974-1-git-send-email-bibby.hsieh@mediatek.com>
-         <1551865835-50974-4-git-send-email-bibby.hsieh@mediatek.com>
+From: Andy Tang <andy.tang@nxp.com>
+Subject: RE: [PATCH v2] arm64: dts: ls1088a: add one more thermal zone node
+Date: Fri, 8 Mar 2019 02:07:30 +0000
+Message-ID: <VI1PR04MB43330C6FAAD0D8EAE901C56FF34D0@VI1PR04MB4333.eurprd04.prod.outlook.com>
+References: <20190304032111.21770-1-andy.tang@nxp.com>
+ <20190304062115.GB26041@dragon>
+ <VI1PR04MB433386B86A5E6AA804E9C3B5F3710@VI1PR04MB4333.eurprd04.prod.outlook.com>
+ <dc94e884-f5eb-fe07-27ef-6a94c3174acb@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551865835-50974-4-git-send-email-bibby.hsieh@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <dc94e884-f5eb-fe07-27ef-6a94c3174acb@linaro.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Shawn Guo <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Bibby:
-
-On Wed, 2019-03-06 at 17:50 +0800, Bibby Hsieh wrote:
-> cmdq driver provide a function that get the relationship
-> of sub system number from device node for client.
-> add specification for #subsys-cells, mediatek,gce-subsys.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> index 812698f..07b2adf 100644
-> --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> @@ -26,6 +26,13 @@ Required properties:
->  	phandle: Label name of a gce node.
->  	event_number: the event number defined in 'dt-bindings/gce/mt8173-gce.h'
->  		      or 'dt-binding/gce/mt8183-gce.h'.
-> +#subsys-cells: Should be 2.
-> +	<&phandle register_base_address subsys_number>
-> +	phandle: Label name of a gce node.
-> +	register_base_address: the register base address that client
-> +			       want to write or read.
-> +	subsys_number: specify the sub-system id which is corresponding
-> +		       to the register address.
-
-I would like this description similar to 'reg' property. For example:
-
-If a client want GCE to access register from 0x14002000 ~ 0x14002fff,
-in the view of GCE, it would access register from SUBSYS_1400XXXX with
-an offset 0x2000 to SUBSYS_1400XXXX with an offset 0x2fff
-So the description could be:
-
-mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x2000 0x1000>
-
-the second parameter is subsys, the third parameter is start offset, and
-the fourth parameter is the size.
-
-I change the property name to 'mediatek,gce-client-reg' because this
-whole property describe the range GCE access rather than the subsys. 
-
-Regards,
-CK
-
->  
->  Required properties for a client device:
->  - mboxes: Client use mailbox to communicate with GCE, it should have this
-> @@ -50,6 +57,7 @@ Example:
->  		thread-num = CMDQ_THR_MAX_COUNT;
->  		#mbox-cells = <3>;
->  		#event-cells = <1>;
-> +		#subsys-cells = <2>;
->  	};
->  
->  Example for a client device:
-> @@ -58,7 +66,8 @@ Example for a client device:
->  		compatible = "mediatek,mt8173-mmsys";
->  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
->  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
-> -		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
-> +		mediatek,gce-subsys = <&gce 0x14000000 SUBSYS_1400XXXX>,
-> +				      <&gce 0x14010000 SUBSYS_1401XXXX>;
->  		mediatek,gce-event-names = "rdma0_sof",
->  					   "rsz0_sof";
->  		mediatek,gce-events = <&gce CMDQ_EVENT_MDP_RDMA0_SOF>,
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGFuaWVsIExlemNhbm8g
+PGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc+DQo+IFNlbnQ6IDIwMTnE6jPUwjfI1SAxNzoxNQ0K
+PiBUbzogQW5keSBUYW5nIDxhbmR5LnRhbmdAbnhwLmNvbT47IFNoYXduIEd1byA8c2hhd25ndW9A
+a2VybmVsLm9yZz4NCj4gQ2M6IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgcm9iaCtkdEBr
+ZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtcG1Admdlci5rZXJuZWwub3JnOyBydWkuemhhbmdA
+aW50ZWwuY29tOw0KPiBlZHViZXp2YWxAZ21haWwuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+djJdIGFybTY0OiBkdHM6IGxzMTA4OGE6IGFkZCBvbmUgbW9yZSB0aGVybWFsIHpvbmUgbm9kZQ0K
+PiANCj4gPj4+IFBTOiBJbiBvcmRlciB0byBrZWVwIGNvbnNpc3RlbmN5IHRvIHRoZSBmaXJzdCB0
+aGVybWFsLXpvbmUgbm9kZSwNCj4gPj4+IHRoZXJlIHdpbGwgYmUgIldBUk5JTkc6IGxpbmUgb3Zl
+ciA4MCBjaGFyYWN0ZXJzIiB3YXJuaW5ncy4NCj4gPj4+DQo+ID4+PiAgYXJjaC9hcm02NC9ib290
+L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA4OGEuZHRzaSB8ICAgNDMNCj4gPj4gKysrKysrKysrKysr
+KysrKysrKysrLS0NCj4gPj4+ICAxIGZpbGVzIGNoYW5nZWQsIDM5IGluc2VydGlvbnMoKyksIDQg
+ZGVsZXRpb25zKC0pDQo+ID4+Pg0KPiA+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9k
+dHMvZnJlZXNjYWxlL2ZzbC1sczEwODhhLmR0c2kNCj4gPj4+IGIvYXJjaC9hcm02NC9ib290L2R0
+cy9mcmVlc2NhbGUvZnNsLWxzMTA4OGEuZHRzaQ0KPiA+Pj4gaW5kZXggNjYxMTM3Zi4uOWY1MmJj
+OSAxMDA2NDQNCj4gPj4+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1s
+czEwODhhLmR0c2kNCj4gPj4+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2Zz
+bC1sczEwODhhLmR0c2kNCj4gPj4+IEBAIC0xMjksMTkgKzEyOSwxOSBAQA0KPiA+Pj4gIAl9Ow0K
+PiA+Pj4NCj4gPj4+ICAJdGhlcm1hbC16b25lcyB7DQo+ID4+PiAtCQljcHVfdGhlcm1hbDogY3B1
+LXRoZXJtYWwgew0KPiA+Pj4gKwkJY2N1IHsNCj4gPj4NCj4gPj4gSXMgdGhpcyBjaGFuZ2UgcmVh
+bGx5IG5lY2Vzc2FyeT8gIFdoYXQgZG9lcyAnY2N1JyBzdGFuZCBmb3I/DQo+ID4gSSB0aGluayBz
+by4gY2N1IHN0YW5kcyBmb3IgY29yZSBjbHVzdGVyIHVuaXQuIGNwdSBpcyB0b28gZ2VuZXJhbC4N
+Cj4gPiBPbiBzb21lIHBsYXRmb3JtcywgdGhlcmUgYXJlIG1vcmUgdGhhbiBvbmUgY29yZSBjbHVz
+dGVycy4NCj4gPiBBdCBsZWFzdCB3ZSBzaG91bGQgY2hhbmdlIGl0IHRvICJjb3JlIGNsdXN0ZXIi
+IGlmIHNob3J0IGZvcm0gaXMgbm90IGFwcHJvcHJpYXRlLg0KPiANCj4gSWYgdGhlIHNlbnNvciBp
+cyBhIHRoZSBjbHVzdGVyIGxldmVsLCAnY2x1c3RlcicgaXMgZW5vdWdoLiBJTUhPLCBubyBuZWVk
+IHRvIGdpdmUgYQ0KPiBkZXNjcmlwdGlvbiBvZiB3aGF0IGNvbnRhaW5zIHRoZSBjbHVzdGVyLCBv
+dGhlcndpc2UgeW91IHdpbGwgZW5kIHVwIHdpdGggYQ0KPiAnY29yZS1ncHUtY2x1c3Rlci1sMicg
+bmFtZS4NCklmIGNsdXN0ZXIgaXMgc3BlY2lmaWMgdG8gY29yZSwgd2UgY2FuIHVzZSBjbHVzdGVy
+IGluc3RlYWQuIEJ1dCBJIGRvbid0IHRoaW5rIHNvLg0KQ2x1c3RlciBtYXkgcmVmZXIgdG8gImNv
+cmUgY2x1c3RlciIsICJHUFUgY2x1c3RlciIgZXRjLg0KU28sIEkgdGhpbmsgImNvcmUtY2x1c3Rl
+ciIgaXMgb2suDQpJZiBjb3JlIHdhcyBkaXZpZGVkIHRvIHNldmVyYWwgY2x1c3RlcnMsIHdlIGNh
+biBuYW1lIGl0IGFzICJjb3JlLWNsdXN0ZXIxIiwgImNvcmUtY2x1c3RlcjIiIGV0Yy4NCklmIEdQ
+VSB3YXMgZGl2aWRlZCB0byBzZXZlcmFsIGNsdXN0ZXJzIHdlIGNhbiBuYW1lIGl0IGFzICJncHUt
+Y2x1c3RlcjEiLCAiZ3B1LWNsdXN0ZXIyIiBldGMuIA0KDQpCUiwNCkFuZHkNCj4gDQo+ID4+DQo+
+ID4+PiAgCQkJcG9sbGluZy1kZWxheS1wYXNzaXZlID0gPDEwMDA+Ow0KPiA+Pj4gIAkJCXBvbGxp
+bmctZGVsYXkgPSA8NTAwMD47DQo+ID4+PiAgCQkJdGhlcm1hbC1zZW5zb3JzID0gPCZ0bXUgMD47
+DQo+ID4+Pg0KPiA+Pj4gIAkJCXRyaXBzIHsNCj4gPj4+IC0JCQkJY3B1X2FsZXJ0OiBjcHUtYWxl
+cnQgew0KPiA+Pj4gKwkJCQljY3VfYWxlcnQ6IGNjdS1hbGVydCB7DQo+ID4+PiAgCQkJCQl0ZW1w
+ZXJhdHVyZSA9IDw4NTAwMD47DQo+ID4+PiAgCQkJCQloeXN0ZXJlc2lzID0gPDIwMDA+Ow0KPiA+
+Pj4gIAkJCQkJdHlwZSA9ICJwYXNzaXZlIjsNCj4gPj4+ICAJCQkJfTsNCj4gPj4+DQo+ID4+PiAt
+CQkJCWNwdV9jcml0OiBjcHUtY3JpdCB7DQo+ID4+PiArCQkJCWNjdV9jcml0OiBjY3UtY3JpdCB7
+DQo+ID4+PiAgCQkJCQl0ZW1wZXJhdHVyZSA9IDw5NTAwMD47DQo+ID4+PiAgCQkJCQloeXN0ZXJl
+c2lzID0gPDIwMDA+Ow0KPiA+Pj4gIAkJCQkJdHlwZSA9ICJjcml0aWNhbCI7DQo+ID4+PiBAQCAt
+MTUwLDcgKzE1MCw0MiBAQA0KPiA+Pj4NCj4gPj4+ICAJCQljb29saW5nLW1hcHMgew0KPiA+Pj4g
+IAkJCQltYXAwIHsNCj4gPj4+IC0JCQkJCXRyaXAgPSA8JmNwdV9hbGVydD47DQo+ID4+PiArCQkJ
+CQl0cmlwID0gPCZjY3VfYWxlcnQ+Ow0KPiA+Pj4gKwkJCQkJY29vbGluZy1kZXZpY2UgPQ0KPiA+
+Pj4gKwkJCQkJCTwmY3B1MCBUSEVSTUFMX05PX0xJTUlUDQo+ID4+IFRIRVJNQUxfTk9fTElNSVQ+
+LA0KPiA+Pj4gKwkJCQkJCTwmY3B1MSBUSEVSTUFMX05PX0xJTUlUDQo+ID4+IFRIRVJNQUxfTk9f
+TElNSVQ+LA0KPiA+Pj4gKwkJCQkJCTwmY3B1MiBUSEVSTUFMX05PX0xJTUlUDQo+ID4+IFRIRVJN
+QUxfTk9fTElNSVQ+LA0KPiA+Pj4gKwkJCQkJCTwmY3B1MyBUSEVSTUFMX05PX0xJTUlUDQo+ID4+
+IFRIRVJNQUxfTk9fTElNSVQ+LA0KPiA+Pj4gKwkJCQkJCTwmY3B1NCBUSEVSTUFMX05PX0xJTUlU
+DQo+ID4+IFRIRVJNQUxfTk9fTElNSVQ+LA0KPiA+Pj4gKwkJCQkJCTwmY3B1NSBUSEVSTUFMX05P
+X0xJTUlUDQo+ID4+IFRIRVJNQUxfTk9fTElNSVQ+LA0KPiA+Pj4gKwkJCQkJCTwmY3B1NiBUSEVS
+TUFMX05PX0xJTUlUDQo+ID4+IFRIRVJNQUxfTk9fTElNSVQ+LA0KPiA+Pj4gKwkJCQkJCTwmY3B1
+NyBUSEVSTUFMX05PX0xJTUlUDQo+ID4+IFRIRVJNQUxfTk9fTElNSVQ+Ow0KPiA+Pj4gKwkJCQl9
+Ow0KPiA+Pj4gKwkJCX07DQo+ID4+PiArCQl9Ow0KPiA+Pj4gKw0KPiA+Pj4gKwkJcGx0IHsNCj4g
+Pj4NCj4gPj4gV2hhdCBhYm91dCAncGxhdGZvcm0tdGhlcm1hbCcgZm9yIG5vZGUgbmFtZSwgcGxh
+dGZvcm0tYWxlcnQgYW5kDQo+ID4+IHBsYXRmb3JtLWNyaXQgZm9yIHRyaXAgbm9kZXMgYmVsb3c/
+DQo+ID4gT0ssIHdpbGwgdXNlIGxvbmcgbmFtZSBmb3JtLg0KPiA+DQo+ID4gQlIsDQo+ID4gQW5k
+eQ0KPiA+Pg0KPiA+PiBTaGF3bg0KPiA+Pg0KPiA+Pj4gKwkJCXBvbGxpbmctZGVsYXktcGFzc2l2
+ZSA9IDwxMDAwPjsNCj4gPj4+ICsJCQlwb2xsaW5nLWRlbGF5ID0gPDUwMDA+Ow0KPiA+Pj4gKwkJ
+CXRoZXJtYWwtc2Vuc29ycyA9IDwmdG11IDE+Ow0KPiA+Pj4gKw0KPiA+Pj4gKwkJCXRyaXBzIHsN
+Cj4gPj4+ICsJCQkJcGx0X2FsZXJ0OiBwbHQtYWxlcnQgew0KPiA+Pj4gKwkJCQkJdGVtcGVyYXR1
+cmUgPSA8ODUwMDA+Ow0KPiA+Pj4gKwkJCQkJaHlzdGVyZXNpcyA9IDwyMDAwPjsNCj4gPj4+ICsJ
+CQkJCXR5cGUgPSAicGFzc2l2ZSI7DQo+ID4+PiArCQkJCX07DQo+ID4+PiArDQo+ID4+PiArCQkJ
+CXBsdF9jcml0OiBwbHQtY3JpdCB7DQo+ID4+PiArCQkJCQl0ZW1wZXJhdHVyZSA9IDw5NTAwMD47
+DQo+ID4+PiArCQkJCQloeXN0ZXJlc2lzID0gPDIwMDA+Ow0KPiA+Pj4gKwkJCQkJdHlwZSA9ICJj
+cml0aWNhbCI7DQo+ID4+PiArCQkJCX07DQo+ID4+PiArCQkJfTsNCj4gPj4+ICsNCj4gPj4+ICsJ
+CQljb29saW5nLW1hcHMgew0KPiA+Pj4gKwkJCQltYXAwIHsNCj4gPj4+ICsJCQkJCXRyaXAgPSA8
+JnBsdF9hbGVydD47DQo+ID4+PiAgCQkJCQljb29saW5nLWRldmljZSA9DQo+ID4+PiAgCQkJCQkJ
+PCZjcHUwIFRIRVJNQUxfTk9fTElNSVQNCj4gPj4gVEhFUk1BTF9OT19MSU1JVD4sDQo+ID4+PiAg
+CQkJCQkJPCZjcHUxIFRIRVJNQUxfTk9fTElNSVQNCj4gPj4gVEhFUk1BTF9OT19MSU1JVD4sDQo+
+ID4+PiAtLQ0KPiA+Pj4gMS43LjENCj4gPj4+DQo+IA0KPiANCj4gLS0NCj4gDQo+IDxodHRwczov
+L2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYl
+MkZ3d3cubA0KPiBpbmFyby5vcmclMkYmYW1wO2RhdGE9MDIlN0MwMSU3Q2FuZHkudGFuZyU0MG54
+cC5jb20lN0M1OTczODEwNWUyMw0KPiAyNDM2ZTBjODgwOGQ2YTJkZDU4M2IlN0M2ODZlYTFkM2Jj
+MmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MwDQo+ICU3QzYzNjg3NTQ2ODg4MjEyMDM1NyZh
+bXA7c2RhdGE9anhZWFloYzNUYzQwN2ExMFdnT2NieUlYN09DbDFlU2NvSg0KPiBkZXV0WCUyQnRu
+ayUzRCZhbXA7cmVzZXJ2ZWQ9MD4gTGluYXJvLm9yZyCppiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBm
+b3INCj4gQVJNIFNvQ3MNCj4gDQo+IEZvbGxvdyBMaW5hcm86DQo+IDxodHRwczovL2VtZWEwMS5z
+YWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZ3d3cuDQo+
+IGZhY2Vib29rLmNvbSUyRnBhZ2VzJTJGTGluYXJvJmFtcDtkYXRhPTAyJTdDMDElN0NhbmR5LnRh
+bmclNDBueHAuYw0KPiBvbSU3QzU5NzM4MTA1ZTIzMjQzNmUwYzg4MDhkNmEyZGQ1ODNiJTdDNjg2
+ZWExZDNiYzJiNGM2ZmE5MmNkOTljNQ0KPiBjMzAxNjM1JTdDMCU3QzAlN0M2MzY4NzU0Njg4ODIx
+MjAzNTcmYW1wO3NkYXRhPXZpa0VtN1lyViUyRjhSdlENCj4gJTJGR3NYaDNPMzYxSFpSM1JxRGNk
+dnE0dVRnQjU4dyUzRCZhbXA7cmVzZXJ2ZWQ9MD4gRmFjZWJvb2sgfA0KPiA8aHR0cHM6Ly9lbWVh
+MDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGdHdp
+dHRlDQo+IHIuY29tJTJGJTIzISUyRmxpbmFyb29yZyZhbXA7ZGF0YT0wMiU3QzAxJTdDYW5keS50
+YW5nJTQwbnhwLmNvbSU3DQo+IEM1OTczODEwNWUyMzI0MzZlMGM4ODA4ZDZhMmRkNTgzYiU3QzY4
+NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNg0KPiAzNSU3QzAlN0MwJTdDNjM2ODc1NDY4ODgy
+MTIwMzU3JmFtcDtzZGF0YT1kQmRDZ0Zmc082dUZTJTJGTGw1bE5IDQo+IGFZQjJtT3JlZG05V2R0
+ZjFhV1Q4U2k4JTNEJmFtcDtyZXNlcnZlZD0wPiBUd2l0dGVyIHwNCj4gPGh0dHBzOi8vZW1lYTAx
+LnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRnd3dy5s
+DQo+IGluYXJvLm9yZyUyRmxpbmFyby1ibG9nJTJGJmFtcDtkYXRhPTAyJTdDMDElN0NhbmR5LnRh
+bmclNDBueHAuY29tJTcNCj4gQzU5NzM4MTA1ZTIzMjQzNmUwYzg4MDhkNmEyZGQ1ODNiJTdDNjg2
+ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2DQo+IDM1JTdDMCU3QzAlN0M2MzY4NzU0Njg4ODIx
+MjAzNTcmYW1wO3NkYXRhPUZDYmRrYndkVVBWeUNqUGR4Y1U1VQ0KPiBnVWZGVlp6TUV4ZGFPcHNa
+RDNTQ21RJTNEJmFtcDtyZXNlcnZlZD0wPiBCbG9nDQoNCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
