@@ -1,231 +1,90 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v2 1/4] dt: lm3532: Add lm3532 dt doc and update ti_lmu doc
-Date: Fri, 8 Mar 2019 14:09:09 -0600
-Message-ID: <20190308200912.28163-1-dmurphy@ti.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] drm/panel: panel-simple: Support panel-dpi
+Date: Fri, 8 Mar 2019 14:11:42 -0600
+Message-ID: <CAL_JsqKKXM31A=MioE1xKLGhwyYs20m7WEearmbGzcwTt_RQtw@mail.gmail.com>
+References: <20190307101030.3822-1-maxime.ripard@bootlin.com>
+ <20190308094457.GA22655@ulmo> <20190308130148.GA21068@ravnborg.org>
+ <20190308133924.GA2559@ulmo> <20190308171212.GA22502@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, tony@atomide.com, lee.jones@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190308171212.GA22502@ravnborg.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: devicetree@vger.kernel.org, Eben Upton <eben@raspberrypi.org>, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel <dri-devel@lists.freedesktop.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the lm3532 device tree documentation.
-Remove lm3532 device tree reference from the ti_lmu devicetree
-documentation.
-
-With the addition of the dedicated lm3532 documentation the device
-can be removed from the ti_lmu.txt.
-
-The reason for this is that the lm3532 dt documentation now defines
-the ability to control LED output strings against different control
-banks or groups multiple strings to be controlled by a single control
-bank.
-
-Another addition was for ALS lighting control and configuration.  The
-LM3532 has a feature that can take in the ALS reading from 2 separate
-ALS devices and adjust the brightness on the strings that are configured
-to support this feature.
-
-Finally the device specific properties were moved to the parent node as these
-properties are not control bank configurable.  These include the runtime ramp
-and the ALS configuration.
-
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
-
-v2 - Fixed ramp-up and ramp-down properties, removed hard coded property values,
-added ranges for variable properties, I did not change the label - https://lore.kernel.org/patchwork/patch/1048805/
-
- .../devicetree/bindings/leds/leds-lm3532.txt  | 127 ++++++++++++++++++
- .../devicetree/bindings/mfd/ti-lmu.txt        |  20 ---
- 2 files changed, 127 insertions(+), 20 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3532.txt
-
-diff --git a/Documentation/devicetree/bindings/leds/leds-lm3532.txt b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
-new file mode 100644
-index 000000000000..b267d696b511
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
-@@ -0,0 +1,127 @@
-+* Texas Instruments - lm3532 White LED driver with ambient light sensing
-+capability.
-+
-+The LM3532 provides the 3 high-voltage, low-side current sinks. The device is
-+programmable over an I2C-compatible interface and has independent
-+current control for all three channels. The adaptive current regulation
-+method allows for different LED currents in each current sink thus allowing
-+for a wide variety of backlight and keypad applications.
-+
-+The main features of the LM3532 include dual ambient light sensor inputs
-+each with 32 internal voltage setting resistors, 8-bit logarithmic and linear
-+brightness control, dual external PWM brightness control inputs, and up to
-+1000:1 dimming ratio with programmable fade in and fade out settings.
-+
-+Required properties:
-+	- compatible : "ti,lm3532"
-+	- reg : I2C slave address
-+	- #address-cells : 1
-+	- #size-cells : 0
-+
-+Required child properties:
-+	- reg : Indicates control bank the LED string is controlled by
-+	- led-sources : see Documentation/devicetree/bindings/leds/common.txt
-+	- ti,led-mode : Defines if the LED strings are manually controlled or
-+			if the LED strings are controlled by the ALS.
-+			0x00 - LED strings are I2C controlled via full scale
-+			       brightness control register
-+			0x01 - LED strings are ALS controlled
-+
-+Optional child properties:
-+	Range for ramp settings: 8us - 65536us
-+	- ramp-up-us - The Run time ramp rates/step are from one current
-+		       set-point to another after the device has reached its
-+		       initial target set point from turn-on
-+	- ramp-down-us - The Run time ramp rates/step are from one current
-+			 set-point to another after the device has reached its
-+			 initial target set point from turn-on
-+
-+Optional child properties if ALS mode is used:
-+	- als-vmin - Minimum ALS voltage defined in Volts
-+	- als-vmax - Maximum ALS voltage defined in Volts
-+	Per the data sheet the max ALS voltage is 2V and the min is 0V
-+
-+	- als1-imp-sel - ALS1 impedance resistor selection in Ohms
-+	- als2-imp-sel - ALS2 impedance resistor selection in Ohms
-+	Range for impedance select: 37000 Ohms - 1190 Ohms
-+	Values above 37kohms will be set to the "High Impedance" setting
-+
-+	- als-avrg-time-us - Determines the length of time the device needs to
-+			  average the two ALS inputs.  This is only used if
-+			  the input mode is LM3532_ALS_INPUT_AVRG.
-+			     Range: 17920us - 2293760us
-+	- als-input-mode - Determines how the device uses the attached ALS
-+			   devices.
-+			   0x00 - ALS1 and ALS2 input average
-+			   0x01 - ALS1 Input
-+			   0x02 - ALS2 Input
-+			   0x03 - Max of ALS1 and ALS2
-+
-+Optional LED child properties:
-+	- label : see Documentation/devicetree/bindings/leds/common.txt
-+	- linux,default-trigger :
-+	   see Documentation/devicetree/bindings/leds/common.txt
-+
-+Example:
-+led-controller@38 {
-+	compatible = "ti,lm3532";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	reg = <0x38>;
-+
-+	enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
-+	ramp-up-ms = <1024>;
-+	ramp-down-ms = <65536>;
-+
-+	lcd_backlight: led@0 {
-+		reg = <0>;
-+		led-sources = <2>;
-+		ti,led-mode = <0>;
-+		label = "backlight";
-+		linux,default-trigger = "backlight";
-+	};
-+
-+	led@1 {
-+		reg = <1>;
-+		led-sources = <1>;
-+		ti,led-mode = <0>;
-+		label = "keypad";
-+	};
-+};
-+
-+Example with ALS:
-+led-controller@38 {
-+	compatible = "ti,lm3532";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	reg = <0x38>;
-+
-+	enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
-+	ramp-up-ms = <1024>;
-+	ramp-down-ms = <65536>;
-+
-+	als-vmin = <0>;
-+	als-vmax = <2000>;
-+	als1-imp-sel = <4110>;
-+	als2-imp-sel = <2180>;
-+	als-avrg-time-us = <17920>;
-+	als-input-mode = <0x00>;
-+
-+	lcd_backlight: led@0 {
-+		reg = <0>;
-+		led-sources = <2>;
-+		ti,led-mode = <1>;
-+		label = "backlight";
-+		linux,default-trigger = "backlight";
-+	};
-+
-+	led@1 {
-+		reg = <1>;
-+		led-sources = <1>;
-+		ti,led-mode = <0>;
-+		label = "keypad";
-+	};
-+};
-+
-+For more product information please see the links below:
-+http://www.ti.com/product/LM3532
-diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-index c885cf89b8ce..980394d701a7 100644
---- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-+++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-@@ -4,7 +4,6 @@ TI LMU driver supports lighting devices below.
- 
-    Name                  Child nodes
-   ------      ---------------------------------
--  LM3532       Backlight
-   LM3631       Backlight and regulator
-   LM3632       Backlight and regulator
-   LM3633       Backlight, LED and fault monitor
-@@ -13,7 +12,6 @@ TI LMU driver supports lighting devices below.
- 
- Required properties:
-   - compatible: Should be one of:
--                "ti,lm3532"
-                 "ti,lm3631"
-                 "ti,lm3632"
-                 "ti,lm3633"
-@@ -23,7 +21,6 @@ Required properties:
-          0x11 for LM3632
-          0x29 for LM3631
-          0x36 for LM3633, LM3697
--         0x38 for LM3532
-          0x63 for LM3695
- 
- Optional property:
-@@ -47,23 +44,6 @@ Optional nodes:
- [2] ../leds/leds-lm3633.txt
- [3] ../regulator/lm363x-regulator.txt
- 
--lm3532@38 {
--	compatible = "ti,lm3532";
--	reg = <0x38>;
--
--	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
--
--	backlight {
--		compatible = "ti,lm3532-backlight";
--
--		lcd {
--			led-sources = <0 1 2>;
--			ramp-up-msec = <30>;
--			ramp-down-msec = <0>;
--		};
--	};
--};
--
- lm3631@29 {
- 	compatible = "ti,lm3631";
- 	reg = <0x29>;
--- 
-2.20.1.390.gb5101f9297
+T24gRnJpLCBNYXIgOCwgMjAxOSBhdCAxMToxMiBBTSBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9y
+Zy5vcmc+IHdyb3RlOgo+Cj4gSGkgVGhpZXJyeS4KPiBPbiBGcmksIE1hciAwOCwgMjAxOSBhdCAw
+MjozOToyNFBNICswMTAwLCBUaGllcnJ5IFJlZGluZyB3cm90ZToKPiA+IE9uIEZyaSwgTWFyIDA4
+LCAyMDE5IGF0IDAyOjAxOjQ4UE0gKzAxMDAsIFNhbSBSYXZuYm9yZyB3cm90ZToKPiA+ID4gPiBP
+bmUgdGhpbmcgdGhhdCdzIG5vdCBjbGVhciB0byBtZSBpcyB3aGV0aGVyIG9yIG5vdCB3ZSB3YW50
+IHRvIGFsbG93Cj4gPiA+ID4gdmlkZW8gdGltaW5ncyB0byBiZSBzcGVjaWZpZWQgaW4gRFQuIEkg
+dXNlZCB0byB0aGluayB0aGF0IHdlIGRpZG4ndCwKPiA+ID4gPiBiZWNhdXNlIHRoZSB2aWRlbyB0
+aW1pbmdzIGFyZSBpbXBsaWVkIGJ5IHRoZSBzcGVjaWZpYyBjb21wYXRpYmxlIHN0cmluZwo+ID4g
+PiA+ICh3aGljaCB3ZSBhbHJlYWR5IGRldGVybWluZWQgaXMgbWFuZGF0b3J5IGFueXdheSksCj4g
+PiA+Cj4gPiA+IFdlIG9mdGVuIGhhdmUgdHdvIHVzZXJzIG9mIHRoZSB0aW1pbmdzIGZvciBhIHNp
+bXBsZSBwYW5lbC4KPiA+ID4gRmlyc3Qgd2UgaGF2ZSB0aGUgYm9vdGxvYWRlciB0aGF0IG1heSBw
+cmVzZW50IHNvbWV0aGluZyBvbiB0aGUKPiA+ID4gcGFuZWwgLSBuZXh0IHN0ZXAgaXQgdGhlbiB0
+aGUga2VybmVsLgo+ID4gPgo+ID4gPiBCb290bG9hZGVycyBzdWNoIGFzIFUtYm9vdCBhbmQgYmFy
+ZWJveCBzdXBwb3J0cyBkZXZpY2V0cmVlLgo+ID4gPiBTbyB3aXRoIHRoZSB0aW1pbmdzIHNwZWNp
+ZmllZCBpbiB0aGUgZGV2aWNldHJlZSB0aGVyZSBhcmUgdGhyZWUKPiA+ID4gdXNlcnMgdGhhdCBj
+YW4gdXNlIHRoZSB0aW1pbmdzLCBhbmQgaXQgaXMgc2ltcGxlIHRvIHNoYXJlIHRoZQo+ID4gPiB0
+aW1pbmcgc3BlY2lmaWNhdGlvbnMuCj4gPgo+ID4gSSB0aGluayB0aGlzIGlzIG5vdCB0cnVlIGlu
+IHByYWN0aWNlLiBBcyBmYXIgYXMgSSBrbm93IFUtQm9vdCBhbmQgTGludXgKPiA+IGRvbid0IHNo
+YXJlIHRoZSBkZXZpY2UgdHJlZS4gU28gd2Ugd291bGRuJ3QgYWN0dWFsbHkgYmUgc2hhcmluZyB0
+aGUKPiA+IHZpZGVvIHRpbWluZ3MsIHdlJ2QgYmUgZHVwbGljYXRpbmcgdGhlbS4gQW5kIHdoZXRo
+ZXIgd2UgZHVwbGljYXRlIHRoZW0KPiA+IGluIGNvZGUgb3IgRFQgaXNuJ3QgcmVhbGx5IGFsbCB0
+aGF0IGRpZmZlcmVudC4KPiBVLWJvb3QgY29waWVzIHNlbGVjdGVkIERUIGZpbGVzIGZyb20gdGhl
+IGtlcm5lbCB0byBVLWJvb3QuCj4gYmFyZWJveCBoYXMgYSAoc2FuaXRpemVkPykgc2V0IG9mIERU
+IGZpbGVzIGZyb20gdGhlIGtlcm5lbCwgd2l0aAo+IGJhcmVib3ggc3BlY2lmaWNzIGFkZGVkIG9u
+IHRvcCBvZiBpdC4gVGhpcyByZWNlaXZlcyB1cGRhdGVzIGZyb20gdGhlIGtlcm5lbAo+IG1vcmUg
+b3IgbGVzcyBmb3IgZWFjaCBrZXJuZWwgcmMuCj4gVGhlIG9yaWdpbiBvZiB0aGUgRFQgZmlsZXMg
+YXJlIHRoZSBrZXJuZWwsIGJ1dCB0aGV5IGtlZXAgY29waWVzCj4gZm9yIHZhcmlvdXMgcmVhc29u
+cy4gQW5kIHRoZWlyIHVwZGF0ZSBwcm9jZXNzIGZyb20gdGhlIGtlcm5lbCBkaWZmZXJzLgo+Cj4g
+SW4gb3RoZXIgd29yZHMgLSBiYXJlYm94IHVzZXMgdGhlIGtlcm5lbCBEVCBmaWxlcyBpbiBwcmFj
+dGljZS4KPiBVLWJvb3QgaW4gcHJhY3RpY2UgaGF2ZSB0aGVpciBvd24gY29weSAoYXMgSSBzZWUg
+aXQgLSBkaWQgbm90IGxvb2sgdG8gY2xvc2UpCgpXaGlsZSBiYXJlYm94IGRvZXMgYSBtb3JlIGF1
+dG9tYXRlZCBzeW5jLCB1LWJvb3QgZG9lcyBkbyBhZC1ob2MKY29weWluZyBvZiBkdHMgZmlsZXMg
+ZnJvbSB0aGUga2VybmVsLiBBbmQgd2hpbGUgaXQncyB0eXBpY2FsbHkgYSBkdGIKZm9yIHUtYm9v
+dCBhbmQgYSBkdGIgZm9yIHRoZSBrZXJuZWwsIHRoZXJlIGlzIGVmZm9ydCB0byBtYWtlIHRoYXQg
+YmUKdGhlIHNhbWUgZHRiLgoKPiA+ID4gQXMgaXQgaXMgbm93IG9uZSBoYXMgdG8gcGF0Y2ggdGhl
+IGtlcm5lbCB0byBhZGQgYSBwYW5lbCB0byBwYW5lbC1zaW1wbGUsCj4gPiA+IGFuZCBhZGQgdGlt
+aW5nIHRvIGRldmljZSB0cmVlIHRvIGxldCBiYXJlYm94IHVzZSBpdC4KPiA+ID4KPiA+ID4gU28g
+aXQgd291bGQgYmUgZ29vZCBvbmNlIGFuZCBmb3IgYWxsIHRvIGhhdmUgdGhlIHJ1bGVzIHNwZWNp
+ZmllZC4KPiA+ID4gQW5kIHRoZSBwcmVmZXJyZWQgc29sdXRpb24gaXMgdG8gaGF2ZSB0aW1pbmcg
+aW4gdGhlIGRldmljZXRyZWUKPiA+ID4gc28gd2UgY2FuIHVzZSBpdCBib3RoIGluIHRoZSBrZXJu
+ZWwgYW5kIGluIHRoZSBib290bG9hZGVycy4KPiA+Cj4gPiBUaGlzIGlzICpleGFjdGx5KiB0aGUg
+c2FtZSBhcmd1bWVudCB0aGF0IEkndmUgaGVhcmQgbWFueSB0aW1lcyBiZWZvcmUuCj4gPiBBbmQg
+aXQgaXMgc3RpbGwgb3Zlcmx5IHNpbXBsaXN0aWMuIFZpZGVvIHRpbWluZ3MgYXJlIGp1c3Qgb25l
+IHBhcnQgb2YKPiA+IHRoZSBkZXNjcmlwdGlvbiBvZiB0aGUgcGFuZWwuIEluIG1vc3QgY2FzZXMg
+eW91IG5lZWQgYXQgbGVhc3QgYWxzbyBhCj4gPiBwb3dlciBzZXF1ZW5jZS4KPiBUaGVyZSBhcmUg
+cGFuZWxzIHRoYXQgYXJlIGNvbXBhdGliZSB3aXRoIHBhbmVsLXNpbXBsZSBhbmQgdGhlcmUgYXJl
+IHRoZQo+IG90aGVyIHBhbmVscy4KPiBNeSBjb21tZW50IGlzIHNvbGVseSBmb3IgdGhlIHBhbmVs
+LXNpbXBsZSBjb21wYXRpYmxlIHBhbmVscywgd2hlcmUKPiB3ZSBhbHJlYWR5IGtub3cgc3R1ZmYg
+bGlrZSBwb3dlciBzZXF1ZW5jZSBhbmQgc3VjaC4KPgo+IFRoZXJlIGFyZSB0b2RheSBhIGxvdCBv
+ZiBwYW5lbHMgaW4gdGhhdCBncm91cCBhbmQgaW4gbXkgdHJlZSB0aGVyZQo+IGlzIHBhdGNoZXMg
+d2FpdGluZyB0byBhZGQgYW5vdGhlciB0aHJlZSBwYW5lbHMuCj4gVGhpcyBpcyBwYW5lbHMgdGhh
+dCAianVzdCB3b3JrcyIgd2l0aCBiYXJlYm94IHdpdGggdGltaW5ncygqKSBzcGVjaWZpZWQKPiBp
+biB0aGUgRFQgYW5kIGZvciB0aGUga2VybmVsIHJlcXVpcmVzIGEgcGF0Y2ggdG8gcGFubGUtc2lt
+cGxlLgo+Cj4gVGhlcmUgYXJlIG9idmlvdXNseSBhIGxvdCBvZiBwYW5lbHMgdGhhdCBoYXZlIGFk
+ZGl0aW9hbmwgcmVxdWlyZW1lbnRzLAo+IGJ1dCB0aGVuIHRoaXMgaXMgbm90ICJwYW5sZS1zaW1w
+bGUiIGNvbXBhdGlibGUgcGFuZWxzIGFuZCBvdXRzaWRlIHRoZQo+IHNjb3BlIG9mIG15IHJlcXVl
+c3QuCgpQYXJ0IG9mIHRoZSBwcm9ibGVtIHdpdGggcGFuZWwtc2ltcGxlIGlzIHRoYXQgaXQgd29y
+a3MgYXQgdGhlCmJlZ2lubmluZyBhbmQgbm90IGFzIGEgcGxhdGZvcm0gcHJvZ3Jlc3Nlcy4gSW5p
+dGlhbGx5IHBlcmhhcHMgdGhlcmUgaXMKbm8gcG93ZXIgY29udHJvbCwgYnV0IHRoZW4gdGhhdCdz
+IGFkZGVkIGxhdGVyLiBJJ3ZlIHNlZW4gYWxsIHRvIG9mdGVuCmZvbGtzIGNsYWltaW5nIHBhbmVs
+cyAiZm9sbG93IHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZyIgYW5kIHlldCBpdAp0dXJucyBvdXQg
+dGhhdCB0aGUgcGFuZWwgaGFzIG11bHRpcGxlIHBvd2VyIHJhaWxzLgoKUm9iCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
