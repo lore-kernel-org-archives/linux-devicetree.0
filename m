@@ -1,26 +1,29 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH  0/2] spi: spi-mem: stm32-qspi: add suspend support and fix
-Date: Fri, 8 Mar 2019 14:12:19 +0100
-Message-ID: <1552050741-27739-1-git-send-email-ludovic.Barre@st.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 armsoc/drivers/bus+gpio 5/5] dt-bindings: gpio:
+ Document GPIOs via Moxtet bus
+Date: Fri, 8 Mar 2019 14:12:37 +0100
+Message-ID: <CACRpkda2S0sR-kydVXGLmvh9_FOjT-1-xiYgrOOuxnnyu51r5Q@mail.gmail.com>
+References: <20190307125251.724-1-marek.behun@nic.cz> <20190307125251.724-6-marek.behun@nic.cz>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190307125251.724-6-marek.behun@nic.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
+To: =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>
+Cc: Tony Lindgren <tony@atomide.com>, Shawn Guo <shawnguo@kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+On Thu, Mar 7, 2019 at 1:53 PM Marek Beh=C3=BAn <marek.behun@nic.cz> wrote:
 
-This patch series adds suspend support and fix a nor memory
-corruption due to timeout counter issue.
+> This patch adds documentation of the device tree bindings for GPIOs
+> on the devices connected via Moxtet bus.
+>
+> Signed-off-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
 
-Ludovic Barre (2):
-  spi: spi-mem: stm32-qspi: avoid memory corruption at low frequency
-  spi: spi-mem: stm32-qspi: add suspend/resume support
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
- drivers/spi/spi-stm32-qspi.c | 41 +++++++++++++++++++++++++++++++++++------
- 1 file changed, 35 insertions(+), 6 deletions(-)
-
--- 
-2.7.4
+Yours,
+Linus Walleij
