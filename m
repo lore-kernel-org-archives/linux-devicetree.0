@@ -1,99 +1,123 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v2 02/10] dt-binding: gce: add binding for gce event
- property
-Date: Fri, 8 Mar 2019 16:47:38 +0800
-Message-ID: <1552034858.2863.25.camel@mtksdaap41>
-References: <1551865835-50974-1-git-send-email-bibby.hsieh@mediatek.com>
- <1551865835-50974-3-git-send-email-bibby.hsieh@mediatek.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 0/4] mwifiex PCI/wake-up interrupt fixes
+Date: Fri, 8 Mar 2019 09:02:11 +0000
+Message-ID: <15c00f9e-58df-e885-f3b0-2c57e9fadb11@arm.com>
+References: <20190224140426.3267-1-marc.zyngier@arm.com>
+ <87ef7hai0e.fsf@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1551865835-50974-3-git-send-email-bibby.hsieh@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, srv_heupstream@mediatek.com, kendrick.hsu@mediatek.com, Daoyuan Huang <daoyuan.huang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org, Daniel Kurtz <djkurtz@chromium.org>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Houlong Wei <houlong.wei@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Frederic Chen <Frederic.Chen@mediatek.com>, linux-arm-kernel@lists.infradead.org, ginny.chen@mediatek.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87ef7hai0e.fsf@codeaurora.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kalle Valo <kvalo@codeaurora.org>
+Cc: Amitkumar Karwar <amitkarwar@gmail.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Ganapathi Bhat <gbhat@marvell.com>, Heiko Stuebner <heiko@sntech.de>, Nishant Sarmukadam <nishants@marvell.com>, Rob Herring <robh+dt@kernel.org>, Xinming Hu <huxinming820@gmail.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Bibby:
-
-On Wed, 2019-03-06 at 17:50 +0800, Bibby Hsieh wrote:
-> cmdq driver provide a function that get event number
-> from device node for client.
-
-I think device tree is based on the view of hardware design, so you need
-not to mention how the driver design. 
-
-Client hardware would send event to GCE hardware, so this property
-present this event.
-
-
-> add specification for #event-cells,
-> mediatek,gce-event-names, mediatek,gce-events.
+On 08/03/2019 08:26, Kalle Valo wrote:
+> Marc Zyngier <marc.zyngier@arm.com> writes:
 > 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
+>> For quite some time, I wondered why the PCI mwifiex device built in my
+>> Chromebook was unable to use the good old legacy interrupts. But as MSIs
+>> were working fine, I never really bothered investigating. I finally had a
+>> look, and the result isn't very pretty.
+>>
+>> On this machine (rk3399-based kevin), the wake-up interrupt is described as
+>> such:
+>>
+>> &pci_rootport {
+>> 	mvl_wifi: wifi@0,0 {
+>> 		compatible = "pci1b4b,2b42";
+>> 		reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
+>> 		       0x83010000 0x0 0x00100000 0x0 0x00100000>;
+>> 		interrupt-parent = <&gpio0>;
+>> 		interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
+>> 		pinctrl-names = "default";
+>> 		pinctrl-0 = <&wlan_host_wake_l>;
+>> 		wakeup-source;
+>> 	};
+>> };
+>>
+>> Note how the interrupt is part of the properties directly attached to the
+>> PCI node. And yet, this interrupt has nothing to do with a PCI legacy
+>> interrupt, as it is attached to the wake-up widget that bypasses the PCIe RC
+>> altogether (Yay for the broken design!). This is in total violation of the
+>> IEEE Std 1275-1994 spec[1], which clearly documents that such interrupt
+>> specifiers describe the PCI device interrupts, and must obey the
+>> INT-{A,B,C,D} mapping. Oops!
+>>
+>> The net effect of the above is that Linux tries to do something vaguely
+>> sensible, and uses the same interrupt for both the wake-up widget and the
+>> PCI device. This doesn't work for two reasons: (1) the wake-up widget grabs
+>> the interrupt in exclusive mode, and (2) the PCI interrupt is still routed
+>> to the RC, leading to a screaming interrupt. This simply cannot work.
+>>
+>> To sort out this mess, we need to lift the confusion between the two
+>> interrupts. This is done by extending the DT binding to allow the wake-up
+>> interrupt to be described in a 'wake-up' subnode, sidestepping the issue
+>> completely. On my Chromebook, it now looks like this:
+>>
+>> &pci_rootport {
+>> 	mvl_wifi: wifi@0,0 {
+>> 		compatible = "pci1b4b,2b42";
+>> 		reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
+>> 		       0x83010000 0x0 0x00100000 0x0 0x00100000>;
+>> 		pinctrl-names = "default";
+>> 		pinctrl-0 = <&wlan_host_wake_l>;
+>> 		wake-up {
+>> 			interrupt-parent = <&gpio0>;
+>> 			interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
+>> 			wakeup-source;
+>> 		};
+>> 	};
+>> };
+>>
+>> The driver is then updated to look for this subnode first, and fallback to
+>> the original, broken behaviour (spitting out a warning in the offending
+>> configuration).
+>>
+>> For good measure, there are two additional patches:
+>>
+>> - The wake-up interrupt requesting is horribly racy, and could lead to
+>>   unpredictable behaviours. Let's fix that properly.
+>>
+>> - A final patch implementing the above transformation for the whole
+>>   RK3399-based Chromebook range, which all use the same broken
+>>   configuration.
+>>
+>> With all that, I finally have PCI legacy interrupts working with the mwifiex
+>> driver on my Chromebook.
+>>
+>> [1] http://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+>>
+>> Marc Zyngier (4):
+>>   dt-bindings/marvell-8xxx: Allow wake-up interrupt to be placed in a
+>>     separate node
+>>   mwifiex: Fetch wake-up interrupt from 'wake-up' subnode when it exists
+>>   mwifiex: Flag wake-up interrupt as IRQ_NOAUTOEN rather than disabling
+>>     it too late
+>>   arm64: dts: rockchip: gru: Move wifi wake-up interrupt into its own
+>>     subnode
+>>
+>>  .../bindings/net/wireless/marvell-8xxx.txt    | 23 ++++++++++++++++++-
+>>  .../dts/rockchip/rk3399-gru-chromebook.dtsi   |  8 ++++---
+>>  drivers/net/wireless/marvell/mwifiex/main.c   | 13 +++++++++--
+>>  3 files changed, 38 insertions(+), 6 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> index 9c0d982..812698f 100644
-> --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> @@ -21,12 +21,20 @@ Required properties:
->  	priority: Priority of GCE thread.
->  	atomic_exec: GCE processing continuous packets of commands in atomic
->  		way.
-> +- #event-cells: Should be 1.
-> +	<&phandle event_number>
-> +	phandle: Label name of a gce node.
-> +	event_number: the event number defined in 'dt-bindings/gce/mt8173-gce.h'
-> +		      or 'dt-binding/gce/mt8183-gce.h'.
->  
->  Required properties for a client device:
->  - mboxes: Client use mailbox to communicate with GCE, it should have this
->    property and list of phandle, mailbox specifiers.
->  - mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
->    to the register address.
-> +- mediatek,gce-event-names: the event name can be defined by user.
-> +- mediatek,gce-events: u32, the event number defined in
-> +  'dt-bindings/gce/mt8173-gce.h' or 'dt-binding/gce/mt8183-gce.h'.
+> I didn't read the discussion in detail, but I understanding is that I
+> should drop this series and wait for a new version. Please correct me if
+> I misunderstood.
 
-I think both gce-subsys and gce-event are optional and depend on the
-hardware design.
+I indeed plan to resend the series with a slightly different approach,
+removing support for the wake-up interrupt on mwifiex PCI devices
+altogether.
 
-Regards,
-CK
+Note that patch #3 is a fairly independent fix, which could be applied
+right now.
 
->  
->  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
->  or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
-> @@ -41,6 +49,7 @@ Example:
->  		clock-names = "gce";
->  		thread-num = CMDQ_THR_MAX_COUNT;
->  		#mbox-cells = <3>;
-> +		#event-cells = <1>;
->  	};
->  
->  Example for a client device:
-> @@ -50,8 +59,9 @@ Example for a client device:
->  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
->  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
->  		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
-> -		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
-> -				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
-> -
-> +		mediatek,gce-event-names = "rdma0_sof",
-> +					   "rsz0_sof";
-> +		mediatek,gce-events = <&gce CMDQ_EVENT_MDP_RDMA0_SOF>,
-> +				      <&gce CMDQ_EVENT_MDP_RSZ0_SOF>;
->  		...
->  	};
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
