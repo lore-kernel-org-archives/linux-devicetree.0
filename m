@@ -1,89 +1,66 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v8 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
-Date: Fri, 8 Mar 2019 12:57:26 +0100
-Message-ID: <20190308115726.smgooacsr37fmxwg@pengutronix.de>
-References: <1551437599-29509-1-git-send-email-yash.shah@sifive.com>
- <1551437599-29509-3-git-send-email-yash.shah@sifive.com>
- <20190307152745.kaiv6q4ygf2apmuv@pengutronix.de>
- <CAJ2_jOFvr=sw7mWR53JbzMJa1jxwjhJSTibCsKYsxrht+PLPWw@mail.gmail.com>
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH v6 0/4] Enable wm8524 on i.MX8MQ-EVK
+Date: Fri, 8 Mar 2019 12:02:21 +0000
+Message-ID: <20190308120141.3698-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ2_jOFvr=sw7mWR53JbzMJa1jxwjhJSTibCsKYsxrht+PLPWw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yash Shah <yash.shah@sifive.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, kernel@pengutronix.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "baruch@tkos.co.il" <baruch@tkos.co.il>, Abel Vesa <abel.vesa@nxp.com>, "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "spencercw@gmail.com" <spencercw@gmail.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On i.MX8MQ EVK we can start the party using the wm8524 codec
+which gets it's data through the SAI2 interface.
 
-On Fri, Mar 08, 2019 at 04:59:36PM +0530, Yash Shah wrote:
-> On Thu, Mar 7, 2019 at 8:57 PM Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > > +static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *dev,
-> > > +                         struct pwm_state *state)
-> > > +{
-> > > +     struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-> > > +     unsigned int duty_cycle, x;
-> > > +     u32 frac;
-> > > +     struct pwm_state cur_state;
-> > > +     bool enabled;
-> > > +     int ret = 0;
-> > > +     unsigned long num;
-> > > +
-> > > +     if (state->polarity != PWM_POLARITY_INVERSED)
-> > > +             return -EINVAL;
-> > > +
-> > > +     mutex_lock(&pwm->lock);
-> > > +     pwm_get_state(dev, &cur_state);
-> > > +     enabled = cur_state.enabled;
-> > > +
-> > > +     if (state->period != cur_state.period) {
-> >
-> > Did you test this with more than one consumer? For sure the following
-> > should work:
-> >
-> >         pwm1 = pwm_get(.. the first ..);
-> >         pwm_apply_state(pwm1, { .enabled = true, .period = 10000000, .... });
-> >
-> >         pwm2 = pwm_get(.. the second ..);
-> >         pwm_apply_state(pwm2, { .enabled = true, .period = 10000000, .... });
-> >
-> > but for the second pwm_apply_state() run state->period is likely not
-> > exactly 10000000.
-> 
-> Yes, I have tested multiple consumers using sysfs interface. It is working.
+In order to make it work this patch series enables the SDMA nodes,
+sets the correct pinctrl configuration and uses the simple card
+machine driver to put everything together.
 
-Can you provide details about your testing here? What is the parent clk
-rate? Which settings did you test? Can you confirm my claim that the
-above sequence would fail or point out my error in reasoning?
+Changes since v5:
+	- remove clocks and clock-names properties from wm8524
+	code node as they are not used.
 
-> > > +     x = 1U << PWM_SIFIVE_CMPWIDTH;
-> > > +     num = (u64)duty_cycle * x + x / 2;
-> > > +     frac = div_u64(num, state->period);
-> >
-> > I don't understand the "+ x / 2" part. Should this better be
-> > "+ state->period / 2"? Something like
-> 
-> This eqn is as per your comments against v5 of this patch series.
->  frac = (duty_cycle * (1 << PWM_SIFIVE_CMPWIDTH) + (1 <<
-> PWM_SIFIVE_CMPWIDTH) / 2) / period;
+Changes since v4 (after Fabio's review)
+	- removed mclk0 from sai2 node because it is not yet supported
+	  by SAI driver
+	- s/audio-codec-0/audio-codec
+	- squashed patches 4 and 5
 
-OK, then not only the code is wrong, but also my suggestion was. :-)
+Changes since v3:
+	- use "arm64: dts: imx8mq-evk" prefix for patches specific to
+	  8MQ-EVK
+	- squash together patches for setting up SAI (previous 3/5 and
+	  4/5)
+	- add back and document "fsl, imx8mq-sdma" compatbile string
 
-> > #define div_u64_round(a, b) ({typeof(b) __b = b; div_u64(a + __b / 2, __b)})
-> >
-> > would make this less error prone.
+Changes since v2:
+        - s/QM/MQ after Chris comments
 
-This still stands. It makes it easier to get the code right and makes it
-easier to understand.
+Changes since v1:
+        - added cover letter
+        - remove "fsl,imx8mq-sdma" compatible for sdma.
 
-Best regards
-Uwe
+Daniel Baluta (4):
+  arm64: dts: imx8mq: Add SDMA nodes
+  bindings: fsl-imx-sdma: Document fsl,imx8mq-sdma compatbile string
+  arm64: dts: imx8mq: Add SAI2 node
+  arm64: dts: imx8mq-evk: Enable audio codec wm8952
+
+ .../devicetree/bindings/dma/fsl-imx-sdma.txt  |  1 +
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts  | 46 +++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     | 37 +++++++++++++++
+ 3 files changed, 84 insertions(+)
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.17.1
