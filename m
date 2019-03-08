@@ -1,103 +1,160 @@
-From: Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [RFC v1 0/4] media: mediatek: support mdp3 on mt8183 platform
-Date: Fri, 8 Mar 2019 13:49:16 +0800
-Message-ID: <1552024160-33055-1-git-send-email-daoyuan.huang@mediatek.com>
+From: Daoyuan Huang <daoyuan.huang@mediatek.com>
+Subject: [RFC v1 2/4] dts: arm64: mt8183: Add Mediatek MDP3 nodes
+Date: Fri, 8 Mar 2019 13:49:18 +0800
+Message-ID: <1552024160-33055-3-git-send-email-daoyuan.huang@mediatek.com>
+References: <1552024160-33055-1-git-send-email-daoyuan.huang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rynn.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, daoyuan huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, holmes.chiou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ping-hsun.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, christie.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1552024160-33055-1-git-send-email-daoyuan.huang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, tfiga@chromium.org, matthias.bgg@gmail.com, mchehab@kernel.org
+Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, daoyuan huang <daoyuan.huang@mediatek.com>, holmes.chiou@mediatek.com, Jerry-ch.Chen@mediatek.com, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, ping-hsun.wu@mediatek.com, zwisler@chromium.org, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: daoyuan huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: daoyuan huang <daoyuan.huang@mediatek.com>
 
-This is the first version of RFC patch for Media Data Path 3 (MDP3),
-MDP3 is used for scaling and color format conversion.
-support using GCE to write register in critical time limitation.
-support V4L2 m2m device control.
+Add device nodes for Media Data Path 3 (MDP3) modules.
 
+Signed-off-by: Ping-Hsun Wu <ping-hsun.wu@mediatek.com>
+Signed-off-by: daoyuan huang <daoyuan.huang@mediatek.com>
 ---
-Based on v5.0-rc1 and these series:
-device tree:
-http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017570.html
-clock control:
-http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017320.html
-system control processor (SCP):
-http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017774.html
-global command engine (GCE):
-http://lists.infradead.org/pipermail/linux-mediatek/2019-January/017143.html
----
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 109 +++++++++++++++++++++++++++++++
+ 1 file changed, 109 insertions(+)
 
-daoyuan huang (4):
-  dt-binding: mt8183: Add Mediatek MDP3 dt-bindings
-  dts: arm64: mt8183: Add Mediatek MDP3 nodes
-  media: platform: Add Mediatek MDP3 driver KConfig
-  media: platform: mtk-mdp3: Add Mediatek MDP3 driver
-
- .../bindings/media/mediatek,mt8183-mdp3.txt        |  217 ++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi           |  109 ++
- drivers/media/platform/Kconfig                     |   18 +
- drivers/media/platform/Makefile                    |    2 +
- drivers/media/platform/mtk-mdp3/Makefile           |    9 +
- drivers/media/platform/mtk-mdp3/isp_reg.h          |   38 +
- drivers/media/platform/mtk-mdp3/mdp-platform.h     |   67 ++
- drivers/media/platform/mtk-mdp3/mdp_reg_ccorr.h    |   76 ++
- drivers/media/platform/mtk-mdp3/mdp_reg_rdma.h     |  207 ++++
- drivers/media/platform/mtk-mdp3/mdp_reg_rsz.h      |  110 ++
- drivers/media/platform/mtk-mdp3/mdp_reg_wdma.h     |  126 +++
- drivers/media/platform/mtk-mdp3/mdp_reg_wrot.h     |  116 ++
- drivers/media/platform/mtk-mdp3/mmsys_config.h     |  189 ++++
- drivers/media/platform/mtk-mdp3/mmsys_mutex.h      |   36 +
- drivers/media/platform/mtk-mdp3/mmsys_reg_base.h   |   39 +
- drivers/media/platform/mtk-mdp3/mtk-img-ipi.h      |  272 +++++
- drivers/media/platform/mtk-mdp3/mtk-mdp3-cmdq.c    |  407 +++++++
- drivers/media/platform/mtk-mdp3/mtk-mdp3-cmdq.h    |   52 +
- drivers/media/platform/mtk-mdp3/mtk-mdp3-comp.c    | 1180 ++++++++++++++++++++
- drivers/media/platform/mtk-mdp3/mtk-mdp3-comp.h    |  176 +++
- drivers/media/platform/mtk-mdp3/mtk-mdp3-core.c    |  257 +++++
- drivers/media/platform/mtk-mdp3/mtk-mdp3-core.h    |   89 ++
- drivers/media/platform/mtk-mdp3/mtk-mdp3-m2m.c     |  784 +++++++++++++
- drivers/media/platform/mtk-mdp3/mtk-mdp3-m2m.h     |   52 +
- drivers/media/platform/mtk-mdp3/mtk-mdp3-regs.c    |  778 +++++++++++++
- drivers/media/platform/mtk-mdp3/mtk-mdp3-regs.h    |  382 +++++++
- drivers/media/platform/mtk-mdp3/mtk-mdp3-vpu.c     |  277 +++++
- drivers/media/platform/mtk-mdp3/mtk-mdp3-vpu.h     |   90 ++
- 28 files changed, 6155 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-mdp3.txt
- create mode 100644 drivers/media/platform/mtk-mdp3/Makefile
- create mode 100644 drivers/media/platform/mtk-mdp3/isp_reg.h
- create mode 100644 drivers/media/platform/mtk-mdp3/mdp-platform.h
- create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_ccorr.h
- create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_rdma.h
- create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_rsz.h
- create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_wdma.h
- create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_wrot.h
- create mode 100644 drivers/media/platform/mtk-mdp3/mmsys_config.h
- create mode 100644 drivers/media/platform/mtk-mdp3/mmsys_mutex.h
- create mode 100644 drivers/media/platform/mtk-mdp3/mmsys_reg_base.h
- create mode 100644 drivers/media/platform/mtk-mdp3/mtk-img-ipi.h
- create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-cmdq.c
- create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-cmdq.h
- create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-comp.c
- create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-comp.h
- create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-core.c
- create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-core.h
- create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-m2m.c
- create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-m2m.h
- create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-regs.c
- create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-regs.h
- create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-vpu.c
- create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-vpu.h
-
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index c3a516e..4bc7d70 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -421,11 +421,120 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		mdp_camin@14000000 {
++			compatible = "mediatek,mt8183-mdp-dl";
++			mediatek,mdp-id = <0>;
++			reg = <0 0x14000000 0 0x1000>;
++			clocks = <&mmsys CLK_MM_MDP_DL_TXCK>,
++				<&mmsys CLK_MM_MDP_DL_RX>;
++		};
++
++		mdp_camin2@14000000 {
++			compatible = "mediatek,mt8183-mdp-dl";
++			mediatek,mdp-id = <1>;
++			reg = <0 0x14000000 0 0x1000>;
++			clocks = <&mmsys CLK_MM_IPU_DL_TXCK>,
++				<&mmsys CLK_MM_IPU_DL_RX>;
++		};
++
++		mdp_rdma0: mdp_rdma0@14001000 {
++			compatible = "mediatek,mt8183-mdp-rdma",
++				     "mediatek,mt8183-mdp3";
++			mediatek,mdp-id = <0>;
++			reg = <0 0x14001000 0 0x1000>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_MDP_RDMA0>,
++				<&mmsys CLK_MM_MDP_RSZ1>;
++			mediatek,mmsys = <&mmsys>;
++			gce-event-names = "rdma0_sof",
++				"rsz0_sof",
++				"rsz1_sof",
++				"tdshp0_sof",
++				"wrot0_sof",
++				"wdma0_sof",
++				"rdma0_done",
++				"wrot0_done",
++				"wdma0_done",
++				"isp_p2_0_done",
++				"isp_p2_1_done",
++				"isp_p2_2_done",
++				"isp_p2_3_done",
++				"isp_p2_4_done",
++				"isp_p2_5_done",
++				"isp_p2_6_done",
++				"isp_p2_7_done",
++				"isp_p2_8_done",
++				"isp_p2_9_done",
++				"isp_p2_10_done",
++				"isp_p2_11_done",
++				"isp_p2_12_done",
++				"isp_p2_13_done",
++				"isp_p2_14_done",
++				"wpe_done",
++				"wpe_b_done";
++		};
++
++		mdp_imgi@15020000 {
++			compatible = "mediatek,mt8183-mdp-imgi";
++			mediatek,mdp-id = <0>;
++			reg = <0 0x15020000 0 0x1000>;
++		};
++
++		mdp_img2o@15020000 {
++			compatible = "mediatek,mt8183-mdp-exto";
++			mediatek,mdp-id = <1>;
++		};
++
++		mdp_rsz0: mdp_rsz0@14003000 {
++			compatible = "mediatek,mt8183-mdp-rsz";
++			mediatek,mdp-id = <0>;
++			reg = <0 0x14003000 0 0x1000>;
++			clocks = <&mmsys CLK_MM_MDP_RSZ0>;
++		};
++
++		mdp_rsz1: mdp_rsz1@14004000 {
++			compatible = "mediatek,mt8183-mdp-rsz";
++			mediatek,mdp-id = <1>;
++			reg = <0 0x14004000 0 0x1000>;
++			clocks = <&mmsys CLK_MM_MDP_RSZ1>;
++		};
++
++		mdp_wrot0: mdp_wrot0@14005000 {
++			compatible = "mediatek,mt8183-mdp-wrot";
++			mediatek,mdp-id = <0>;
++			reg = <0 0x14005000 0 0x1000>;
++			clocks = <&mmsys CLK_MM_MDP_WROT0>;
++		};
++
++		mdp_path0_sout@14005000 {
++			compatible = "mediatek,mt8183-mdp-path";
++			mediatek,mdp-id = <0>;
++		};
++
++		mdp_wdma: mdp_wdma@14006000 {
++			compatible = "mediatek,mt8183-mdp-wdma";
++			mediatek,mdp-id = <0>;
++			reg = <0 0x14006000 0 0x1000>;
++			clocks = <&mmsys CLK_MM_MDP_WDMA0>;
++		};
++
++		mdp_path1_sout@14006000 {
++			compatible = "mediatek,mt8183-mdp-path";
++			mediatek,mdp-id = <1>;
++		};
++
+ 		smi_common: smi@14019000 {
+ 			compatible = "mediatek,mt8183-smi-common", "syscon";
+ 			reg = <0 0x14019000 0 0x1000>;
+ 		};
+ 
++		mdp_ccorr: mdp_ccorr@1401c000 {
++			compatible = "mediatek,mt8183-mdp-ccorr";
++			mediatek,mdp-id = <0>;
++			reg = <0 0x1401c000 0 0x1000>;
++			clocks = <&mmsys CLK_MM_MDP_CCORR>;
++		};
++
+ 		imgsys: syscon@15020000 {
+ 			compatible = "mediatek,mt8183-imgsys", "syscon";
+ 			reg = <0 0x15020000 0 0x1000>;
 -- 
 1.9.1
