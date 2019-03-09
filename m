@@ -1,197 +1,119 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH] drm/panel: panel-simple: Support panel-dpi
-Date: Fri, 08 Mar 2019 15:05:51 -0800
-Message-ID: <87mum59dbk.fsf@anholt.net>
-References: <20190307101030.3822-1-maxime.ripard@bootlin.com>
- <20190308094457.GA22655@ulmo>
- <CAL_JsqLEuFG2TLvr+fJ3TU=ch1+VADc+x4+sSwrRofQOWM0Tgw@mail.gmail.com>
+From: Renato Lui Geh <renatogeh@gmail.com>
+Subject: Re: [PATCH v4 4/9] staging:iio:ad7780: add chip ID values and mask
+Date: Fri, 8 Mar 2019 21:19:29 -0300
+Message-ID: <20190309001928.uhwia4ujvqqwawlg@renatolg>
+References: <cover.1551358569.git.renatogeh@gmail.com>
+ <90c573cd53bb54d49de6ac270bcff66880ccfeb5.1551358569.git.renatogeh@gmail.com>
+ <190e26b19b8ed6559b92d3a000d852bbb0099a52.camel@analog.com>
+ <20190303140107.ljjo3flatwmd44ya@renatolg>
+ <20190303145347.41d49646@archlinux>
+ <13ef212f8aeebd0c893be253cb4834a3e4d741b8.camel@analog.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0987966376=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqLEuFG2TLvr+fJ3TU=ch1+VADc+x4+sSwrRofQOWM0Tgw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, Eben Upton <eben@raspberrypi.org>, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel <dri-devel@lists.freedesktop.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <13ef212f8aeebd0c893be253cb4834a3e4d741b8.camel@analog.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: "Ardelean, Alexandru" <Alex.Ardelean@analog.com>
+Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, "Hennerich,
+ Michael" <Michael.Hennerich@analog.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "giuliano.belinassi@usp.br" <giuliano.belinassi@usp.br>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "renatogeh@gmail.com" <renatogeh@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Popa,
+ Stefan Serban" <StefanSerban.Popa@analog.com>, "jic23@kernel.org" <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---===============0987966376==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-
---=-=-=
-Content-Type: text/plain
-
-Rob Herring <robh+dt@kernel.org> writes:
-
-> On Fri, Mar 8, 2019 at 3:45 AM Thierry Reding <thierry.reding@gmail.com> wrote:
+On 03/04, Ardelean, Alexandru wrote:
+>On Sun, 2019-03-03 at 14:53 +0000, Jonathan Cameron wrote:
+>> [External]
 >>
->> On Thu, Mar 07, 2019 at 11:10:30AM +0100, Maxime Ripard wrote:
->> > The kernel has a device tree binding for panel-dpi which allows for the
->> > panel timings to be described in the device-tree, however it wasn't
->> > supported so far except in a (small) number of KMS drivers that had an
->> > ad-hoc solution for this (omapdrm for example).
 >>
->> I'm growing really tired of having to repeat these discussions...
+>> On Sun, 3 Mar 2019 11:01:09 -0300
+>> Renato Lui Geh <renatogeh@gmail.com> wrote:
 >>
->> As far as I can tell, this binding was never reviewed by device tree
->> maintainers, so I'm not sure whether there's concensus that this should
->> be proliferated. Adding Rob and the device tree mailing list for a wider
->> audience.
+>> > On 03/01, Ardelean, Alexandru wrote:
+>> > > On Thu, 2019-02-28 at 11:24 -0300, Renato Lui Geh wrote:
+>> > > >
+>> > > >
+>> > > > The ad7780 supports both the ad778x and ad717x families. Each chip
+>> > > > has
+>> > > > a corresponding ID. This patch provides a mask for extracting ID
+>> > > > values
+>> > > > from the status bits and also macros for the correct values for the
+>> > > > ad7170, ad7171, ad7780 and ad7781.
+>> > > >
+>> > > > Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
+>> > > > ---
+>> > > >  drivers/staging/iio/adc/ad7780.c | 8 ++++++--
+>> > > >  1 file changed, 6 insertions(+), 2 deletions(-)
+>> > > >
+>> > > > diff --git a/drivers/staging/iio/adc/ad7780.c
+>> > > > b/drivers/staging/iio/adc/ad7780.c
+>> > > > index 56c49e28f432..ad7617a3a141 100644
+>> > > > --- a/drivers/staging/iio/adc/ad7780.c
+>> > > > +++ b/drivers/staging/iio/adc/ad7780.c
+>> > > > @@ -26,10 +26,14 @@
+>> > > >  #define AD7780_RDY             BIT(7)
+>> > > >  #define AD7780_FILTER          BIT(6)
+>> > > >  #define AD7780_ERR             BIT(5)
+>> > > > -#define AD7780_ID1             BIT(4)
+>> > > > -#define AD7780_ID0             BIT(3)
+>> > > >  #define AD7780_GAIN            BIT(2)
+>> > > >
+>> > > > +#define AD7170_ID              0
+>> > > > +#define AD7171_ID              1
+>> > > > +#define AD7780_ID              1
+>> > > > +#define AD7781_ID              0
+>> > > > +
+>> > > > +#define AD7780_ID_MASK         (BIT(3) | BIT(4))
+>> > >
+>> > > This also doesn't have any functionality change.
+>> > > The AD7170_ID, AD7171_ID, AD7780_ID & AD7781_ID IDs are also unused
+>> > > (maybe
+>> > > in a later patch they are ?).
+>> >
+>> > They aren't. I added them following a previous review suggestion.
+>> > Should
+>> > I remove them?
 >>
->> > Just like we've seen with panel-lvds, and even though the current dogma is
->> > to set the timings within the driver, having them in the device tree
->> > provides a number of benefits.
+>> Can we check them?  It's always useful to confirm that the device is
+>> the one you think it is.  Then we can either use what is there
+>> with a suitable warning, or if that is tricky just fault out as the
+>> dt is giving us the wrong part number.
 >>
->> I don't think there was concensus on that. But Rob acked it, so I guess
->> he thought it was acceptable.
->>
->> Rob, can we use this thread as an opportunity to write down some of the
->> rules regarding this? We've discussed this numerous times in the past
->> but there still doesn't seem to be concensus.
->>
->> I know you're very tired of this as well, but perhaps we can bite the
->> bullet now and produce clear documentation and guidelines that we can
->> point people at (or put in an obvious location so that people find it
->> themselves) in the future, so that we don't have to keep having this
->> discussion.
->>
->> Summarizing what our latest discussion on this was:
->>
->>   * Generic compatible strings should typically be used as a fallback
->>     only. Exceptions could be made if there's a specific standard that
->>     is sufficiently strict to not require any quirks, and hence avoid
->>     the need for panel-specific compatible strings.
->>
->>   * So in general device tree nodes for panels need to have a specific
->>     compatible string that uniquely identifies that panel. This is in
->>     line with existing practice for other devices and a good idea in
->>     general so that we can implement quirks if necessary.
->>
->>   * Panel nodes can optionally also list a generic compatible string, in
->>     addition to the specific compatible string, that drivers could match
->>     to support devices which are not specifically supported yet but that
->>     may already work anyway.
->>
->>     I'm not sure that's really practical. In the past we've seen that a
->>     panel can work fine on one board but break on another because the
->>     runtime execution timing is such that necessary delays in the power
->>     sequence are noticeable on one but not another. I also suspect that
->>     in some cases shortcuts were taken because things happened to work,
->>     even if perhaps there was intermittent garbage on the screen because
->>     the power sequence wasn't respected.
+>> J
 >
-> If there's some problem with a panel working, then we just use the
-> more specific compatible and deal with it in the driver. What's the
-> issue here?
+>I guess `dev_warn_ratelimited()` could be used to make sure syslog isn't
+>spammed-to-death when doing multiple conversions, and the ID isn't correct.
+>Since these IDs are read after you get a sample, I'm a bit fearful of log-
+>spam.
 >
-> A bigger issue is if later you need to tweak the timings, do you
-> update the timings in DT or add timings to kernel?
+>I wouldn't throw an error in the ad7780_postprocess_sample() for this, but
+>warning [with rate-limit] sounds reasonable.
+
+Looking at dev_warn_ratelimited's definition (and its use in other parts
+of the kernel), I see that we'd need the device to be stored somewhere
+(perhaps in ad7780_state?) in order for us to pass it as argument to
+dev_warn from within postprocess_sample. Should this be stored in
+ad7780_state?  Or can I get the spi_device some other way?
 >
->>   * Mechanisms that probe information from a panel at runtime (such as
->>     EDID) are to see preferential treatment. In other words, if a DDC
->>     channel exists to a panel, the driver should parse video timings
->>     from the EDID.
->
-> That pretty well summarizes things.
-
-I love how EDID keeps getting brought up in discussions how how to
-handle non-EDID devices.  If anyone had EDIDs, we'd use them because
-that's easy, but we don't.
-
->> One thing that's not clear to me is whether or not we want to allow
->> video timings to be specified in DT. I used to think that we didn't,
->> because the video timings are implied by the specific compatible string
->> (which we already determined is mandatory anyway), but the panel-lvds
->> bindings suggest that from a device tree perspective this would be fine?
->> I also notice that the panel-lvds doesn't make any provisions for power
->> sequences. The same is true for panel-dpi. Are both LVDS and DPI panels
->> always guaranteed not to need any specific power sequences?
->
-> As long as the specific compatible is there, I'd don't really care
-> that much. I think we've found over time with the LVDS binding that
-> the specific compatible ends up being needed.
->
-> I'm fine with timings in DT, but I'm on the fence whether a
-> 'panel-dpi' compatible is a good thing or not. At least with LVDS,
-> that implies something about the interface. For DPI, there is no
-> standard really (MIPI does define something, but following MIPI is
-> pretty optional). There's lots of ways to wire up the data lines. It
-> could be a continual addition of timing flags which I don't want to
-> see. My controller has fine grained clock controls and I need to
-> control the duty cycle or delay the pixel clock some number of ns, for
-> example. I think most of that goes away with LVDS.
-
-I think now that we have 85 struct panel_desc in panel-simple.c, we can
-just go look at what's actually needed to drive panels.  Detailed power
-timing requirements are infrequently needed, being specified for 23 of
-those.  I keep hearing that more detailed timing is necessary, so I
-looked at the other non-DSI, non-SPI panels in tree (since those should
-always require a driver for their register writes) and found a total of:
-
-- panel-arm-versatile: has register writes to a syscon
-- olinuxino: reads modes from an eeprom.
-- seiko-43wvf1g: has two power rails to manage
-- panel-lvds: is basically doing the thing people are asking panel-dpi
-  to do but for lvds.
-
-If DT is supposed to "describe the hardware" as people keep telling me,
-then I think we have strong evidence of commonality between hardware
-that could be described in data instead of code, using panel-simple's
-data structures as the model.
-
->> If ultimately we decide that video timings in DT are okay, then how are
->> we going to reconcile that with existing bindings? By definition the
->> video timings would have to be optional, otherwise we'd be breaking ABI
->> for existing device trees. But if they are optional, then we're back to
->> square one, because we need to rely on the specific compatible string
->> to get the bindings if they aren't present in DT. And then having them
->> in DT is really just redundant. Except perhaps in order to support the
->> cases that Maxime described where you want to do some really fine tuning
->> to meet EMI requirements or some such.
->
-> For existing compatibles, they'd have to remain optional. For new
-> compatibles, it would be by choice. I don't want to see a bunch of
-> let's move the timing info to DT and remove from the driver patches.
-
-Of course.  (and same for requiring a panel-specific compatible)
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlyC9U8ACgkQtdYpNtH8
-nug5yQ//dHFvsaY4ANH+X9V82XrIOlDyfOLB/zF5XO4FAsV6FFrvDTFw3qiKZkNV
-v0LhQ/802O9y6ZTeYE/oe0jxxO8c/lVBhKv8QR/M7YU2poeNdItd3wIK0eep7Rzr
-ABKsVoCo6DLSXSb6WJRLOaPbzwEAvjC46vxZoMAK8Z2LWJ2OEr7yA3vuvv7wMjPT
-b+Mhlc1yeDGTKDXuGJotWUUZ67b3hh6iuFQqlDLaTirCeviUWSAFI0A/Lz1pxG5Q
-b/SfqBMwhKu24Klo6IbL5uIK8khuwFG39MVhspCfI+0mGehsvlKUpwiW23r3JBal
-XaMwkzZrwrP+PVouh88z+ZdTP+zsWQACEwDxgycF+TYXGGnYs69bgSVSa6JWjmIE
-YqqfNdWmm6rtj6UC61y5OQJfsW3A98t7g53H6+KDzlThTJMyjloMWigft0eqdZ34
-OKz87c6aZpXgI7zF15bZmm7mwZtJrcFETUjQlDdbl+gk4Yl34WM6peJFBAxEDwdc
-khj/dM6onMtcb3S20Fo5YriYbx5edb+DnCJY23g/IjiYn2islDFPb/lfjLOlsJNl
-B8E2QblauW7kVetKva9YotYP9fNzcYyzo17LC8SK2u3FG9dGksrCos1VVienJVQk
-qlAe6dYpJi/d3gSFH7VEmoM7Z+HnVnHjOf2hVgdzpkuT+enw6i8=
-=V5+7
------END PGP SIGNATURE-----
---=-=-=--
-
---===============0987966376==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============0987966376==--
+>>
+>> > >
+>> > > I would also leave the AD7780_ID1 & AD7780_ID0 definitions in place,
+>> > > since
+>> > > they're easier matched with the datasheet.
+>> > >
+>> > > >
+>> > > >  #define AD7780_PATTERN_GOOD    1
+>> > > >  #define AD7780_PATTERN_MASK    GENMASK(1, 0)
+>> > > > --
+>> > > > 2.21.0
+>> > > >
+>>
+>>
