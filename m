@@ -1,58 +1,107 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] i2c: i2c-stm32f7: Fix SDADEL minimum formula
-Date: Sat, 9 Mar 2019 11:50:21 +0100
-Message-ID: <20190309105021.GI1340@kunai>
-References: <1551885125-22295-1-git-send-email-bich.hemon@st.com>
- <20190309101340.GH1340@kunai>
+From: Harini Katakam <harini.katakam@xilinx.com>
+Subject: [PATCH] arm64: zynqmp: dt: Add TI PHY quirk
+Date: Sat, 9 Mar 2019 16:46:58 +0530
+Message-ID: <1552130218-21505-1-git-send-email-harini.katakam@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="IbA9xpzOQlG26JSn"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190309101340.GH1340@kunai>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bich HEMON <bich.hemon@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Pierre Yves MORDRET <pierre-yves.mordret@st.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, =mark.rutland@arm.com, michal.simek@xilinx.com, harini.katakam@xilinx.com, sudeep.holla@arm.com
+Cc: devicetree@vger.kernel.org, harinikatakamlinux@gmail.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Add TI PHY strap ctrl quirk for all the HW where applicable.
 
---IbA9xpzOQlG26JSn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
+---
+ arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts | 1 +
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts      | 1 +
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts      | 1 +
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts      | 1 +
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts      | 1 +
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts      | 1 +
+ 6 files changed, 6 insertions(+)
 
-On Sat, Mar 09, 2019 at 11:13:40AM +0100, Wolfram Sang wrote:
-> On Wed, Mar 06, 2019 at 03:12:16PM +0000, Bich HEMON wrote:
-> > From: Nicolas Le Bayon <nicolas.le.bayon@st.com>
-> >=20
-> > It conforms with Reference Manual I2C timing section.
-> >=20
-> > Signed-off-by: Nicolas Le Bayon <nicolas.le.bayon@st.com>
-> > Signed-off-by: Bich Hemon <bich.hemon@st.com>
->=20
-> Applied to for-current, thanks!
-
-Do you have a Fixes tag for this?
-
-
---IbA9xpzOQlG26JSn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyDmmkACgkQFA3kzBSg
-KbZ14A/8DS8m/KjL3vcELMb1q2uDQBQb88nif3mIzMCfNWVu6U5lvTnazqIDISIU
-jLlmGHuKPvPChJK6+w+gzPn95RZjbFIgsuXItM9d0KZKrNTb2tW3Nl47mzTpTzj8
-+ECctJh7WiQw6Ys79Q9PPXKrtw2PEeuxdrA+T7PvBG8qIUF/02gkHafoLzK8gXH6
-u+iIQCY7Wef6nX7ff/1NMIIrm+pcHFbMaBtMEOxdv/lJuFsNRvg9GauWIgFRDebV
-YP+EZRfBRt/1KifnrR2Zxpmzz95vKZsoaFkawuuHwR8SCPjJkglsPrc+F6PoqLaY
-nwWMc664qBo3dsg1OyKrkbjk4WRrqtJ9LCnLO4lwfNYnovQh0FyOO8MdLOu2ODSL
-7bzCYs42QdlUyMRlU7sOGuSA74sYFW2n7gM1sL2LjvlQm/1S0WLnkk4pMIVTlgzd
-dq9cv4DkqXoiLe1Avza3GY+4zng/MEm69fSCkUmFJCn97J/0+P62FYPM067RCOaM
-/Avz+RTjGujvsGFTgzL9aB7UWdNmM4huUFb9amFhyr6cv0fzNj4kkp3C44sfOCuV
-X65Jv+intqvAj/XRJDosdB3lw+5aetMvSCv9bBGpzHDq7Y9SxqG3CfMXRAtGXS7E
-VkDP3KJ4QpKV5PuertmA9qNm3HJ5jrOTPeEa5rq3UWQ7/ADBXvc=
-=5Ir8
------END PGP SIGNATURE-----
-
---IbA9xpzOQlG26JSn--
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
+index 11cc671..2421ec7 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
+@@ -89,6 +89,7 @@
+ 		ti,rx-internal-delay = <0x8>;
+ 		ti,tx-internal-delay = <0xa>;
+ 		ti,fifo-depth = <0x1>;
++		ti,dp83867-rxctrl-strap-quirk;
+ 	};
+ };
+ 
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+index cef8167..2a3b665 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+@@ -110,6 +110,7 @@
+ 		ti,rx-internal-delay = <0x8>;
+ 		ti,tx-internal-delay = <0xa>;
+ 		ti,fifo-depth = <0x1>;
++		ti,dp83867-rxctrl-strap-quirk;
+ 	};
+ };
+ 
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
+index af4d868..1780ed2 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
+@@ -21,6 +21,7 @@
+ 		ti,rx-internal-delay = <0x8>;
+ 		ti,tx-internal-delay = <0xa>;
+ 		ti,fifo-depth = <0x1>;
++		ti,dp83867-rxctrl-strap-quirk;
+ 	};
+ 	/* Cleanup from RevA */
+ 	/delete-node/ phy@21;
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
+index d4ad19a..8f45614 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
+@@ -55,6 +55,7 @@
+ 		ti,rx-internal-delay = <0x8>;
+ 		ti,tx-internal-delay = <0xa>;
+ 		ti,fifo-depth = <0x1>;
++		ti,dp83867-rxctrl-strap-quirk;
+ 	};
+ };
+ 
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
+index 94cf509..93ce7eb 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
+@@ -111,6 +111,7 @@
+ 		ti,rx-internal-delay = <0x8>;
+ 		ti,tx-internal-delay = <0xa>;
+ 		ti,fifo-depth = <0x1>;
++		ti,dp83867-rxctrl-strap-quirk;
+ 	};
+ };
+ 
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
+index 460adc3..8bb0001 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
+@@ -106,6 +106,7 @@
+ 		ti,rx-internal-delay = <0x8>;
+ 		ti,tx-internal-delay = <0xa>;
+ 		ti,fifo-depth = <0x1>;
++		ti,dp83867-rxctrl-strap-quirk;
+ 	};
+ };
+ 
+-- 
+2.7.4
