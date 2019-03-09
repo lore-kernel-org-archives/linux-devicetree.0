@@ -1,119 +1,155 @@
-From: Renato Lui Geh <renatogeh@gmail.com>
-Subject: Re: [PATCH v4 4/9] staging:iio:ad7780: add chip ID values and mask
-Date: Fri, 8 Mar 2019 21:19:29 -0300
-Message-ID: <20190309001928.uhwia4ujvqqwawlg@renatolg>
-References: <cover.1551358569.git.renatogeh@gmail.com>
- <90c573cd53bb54d49de6ac270bcff66880ccfeb5.1551358569.git.renatogeh@gmail.com>
- <190e26b19b8ed6559b92d3a000d852bbb0099a52.camel@analog.com>
- <20190303140107.ljjo3flatwmd44ya@renatolg>
- <20190303145347.41d49646@archlinux>
- <13ef212f8aeebd0c893be253cb4834a3e4d741b8.camel@analog.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] drm/panel: panel-simple: Support panel-dpi
+Date: Fri, 8 Mar 2019 18:21:06 -0600
+Message-ID: <CAL_JsqJw1Goj93FJHE4usjaM9Zm80s+XLVwukLNFdvjDECD_oQ@mail.gmail.com>
+References: <20190307101030.3822-1-maxime.ripard@bootlin.com>
+ <20190308094457.GA22655@ulmo>
+ <CAL_JsqLEuFG2TLvr+fJ3TU=ch1+VADc+x4+sSwrRofQOWM0Tgw@mail.gmail.com>
+ <87mum59dbk.fsf@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <13ef212f8aeebd0c893be253cb4834a3e4d741b8.camel@analog.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: "Ardelean, Alexandru" <Alex.Ardelean@analog.com>
-Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, "Hennerich,
- Michael" <Michael.Hennerich@analog.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "giuliano.belinassi@usp.br" <giuliano.belinassi@usp.br>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "renatogeh@gmail.com" <renatogeh@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Popa,
- Stefan Serban" <StefanSerban.Popa@analog.com>, "jic23@kernel.org" <jic23@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <87mum59dbk.fsf@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: devicetree@vger.kernel.org, Eben Upton <eben@raspberrypi.org>, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel <dri-devel@lists.freedesktop.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/04, Ardelean, Alexandru wrote:
->On Sun, 2019-03-03 at 14:53 +0000, Jonathan Cameron wrote:
->> [External]
->>
->>
->> On Sun, 3 Mar 2019 11:01:09 -0300
->> Renato Lui Geh <renatogeh@gmail.com> wrote:
->>
->> > On 03/01, Ardelean, Alexandru wrote:
->> > > On Thu, 2019-02-28 at 11:24 -0300, Renato Lui Geh wrote:
->> > > >
->> > > >
->> > > > The ad7780 supports both the ad778x and ad717x families. Each chip
->> > > > has
->> > > > a corresponding ID. This patch provides a mask for extracting ID
->> > > > values
->> > > > from the status bits and also macros for the correct values for the
->> > > > ad7170, ad7171, ad7780 and ad7781.
->> > > >
->> > > > Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
->> > > > ---
->> > > >  drivers/staging/iio/adc/ad7780.c | 8 ++++++--
->> > > >  1 file changed, 6 insertions(+), 2 deletions(-)
->> > > >
->> > > > diff --git a/drivers/staging/iio/adc/ad7780.c
->> > > > b/drivers/staging/iio/adc/ad7780.c
->> > > > index 56c49e28f432..ad7617a3a141 100644
->> > > > --- a/drivers/staging/iio/adc/ad7780.c
->> > > > +++ b/drivers/staging/iio/adc/ad7780.c
->> > > > @@ -26,10 +26,14 @@
->> > > >  #define AD7780_RDY             BIT(7)
->> > > >  #define AD7780_FILTER          BIT(6)
->> > > >  #define AD7780_ERR             BIT(5)
->> > > > -#define AD7780_ID1             BIT(4)
->> > > > -#define AD7780_ID0             BIT(3)
->> > > >  #define AD7780_GAIN            BIT(2)
->> > > >
->> > > > +#define AD7170_ID              0
->> > > > +#define AD7171_ID              1
->> > > > +#define AD7780_ID              1
->> > > > +#define AD7781_ID              0
->> > > > +
->> > > > +#define AD7780_ID_MASK         (BIT(3) | BIT(4))
->> > >
->> > > This also doesn't have any functionality change.
->> > > The AD7170_ID, AD7171_ID, AD7780_ID & AD7781_ID IDs are also unused
->> > > (maybe
->> > > in a later patch they are ?).
->> >
->> > They aren't. I added them following a previous review suggestion.
->> > Should
->> > I remove them?
->>
->> Can we check them?  It's always useful to confirm that the device is
->> the one you think it is.  Then we can either use what is there
->> with a suitable warning, or if that is tricky just fault out as the
->> dt is giving us the wrong part number.
->>
->> J
->
->I guess `dev_warn_ratelimited()` could be used to make sure syslog isn't
->spammed-to-death when doing multiple conversions, and the ID isn't correct.
->Since these IDs are read after you get a sample, I'm a bit fearful of log-
->spam.
->
->I wouldn't throw an error in the ad7780_postprocess_sample() for this, but
->warning [with rate-limit] sounds reasonable.
-
-Looking at dev_warn_ratelimited's definition (and its use in other parts
-of the kernel), I see that we'd need the device to be stored somewhere
-(perhaps in ad7780_state?) in order for us to pass it as argument to
-dev_warn from within postprocess_sample. Should this be stored in
-ad7780_state?  Or can I get the spi_device some other way?
->
->>
->> > >
->> > > I would also leave the AD7780_ID1 & AD7780_ID0 definitions in place,
->> > > since
->> > > they're easier matched with the datasheet.
->> > >
->> > > >
->> > > >  #define AD7780_PATTERN_GOOD    1
->> > > >  #define AD7780_PATTERN_MASK    GENMASK(1, 0)
->> > > > --
->> > > > 2.21.0
->> > > >
->>
->>
+T24gRnJpLCBNYXIgOCwgMjAxOSBhdCA1OjA1IFBNIEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5u
+ZXQ+IHdyb3RlOgo+Cj4gUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4gd3JpdGVzOgo+
+Cj4gPiBPbiBGcmksIE1hciA4LCAyMDE5IGF0IDM6NDUgQU0gVGhpZXJyeSBSZWRpbmcgPHRoaWVy
+cnkucmVkaW5nQGdtYWlsLmNvbT4gd3JvdGU6Cj4gPj4KPiA+PiBPbiBUaHUsIE1hciAwNywgMjAx
+OSBhdCAxMToxMDozMEFNICswMTAwLCBNYXhpbWUgUmlwYXJkIHdyb3RlOgo+ID4+ID4gVGhlIGtl
+cm5lbCBoYXMgYSBkZXZpY2UgdHJlZSBiaW5kaW5nIGZvciBwYW5lbC1kcGkgd2hpY2ggYWxsb3dz
+IGZvciB0aGUKPiA+PiA+IHBhbmVsIHRpbWluZ3MgdG8gYmUgZGVzY3JpYmVkIGluIHRoZSBkZXZp
+Y2UtdHJlZSwgaG93ZXZlciBpdCB3YXNuJ3QKPiA+PiA+IHN1cHBvcnRlZCBzbyBmYXIgZXhjZXB0
+IGluIGEgKHNtYWxsKSBudW1iZXIgb2YgS01TIGRyaXZlcnMgdGhhdCBoYWQgYW4KPiA+PiA+IGFk
+LWhvYyBzb2x1dGlvbiBmb3IgdGhpcyAob21hcGRybSBmb3IgZXhhbXBsZSkuCj4gPj4KPiA+PiBJ
+J20gZ3Jvd2luZyByZWFsbHkgdGlyZWQgb2YgaGF2aW5nIHRvIHJlcGVhdCB0aGVzZSBkaXNjdXNz
+aW9ucy4uLgo+ID4+Cj4gPj4gQXMgZmFyIGFzIEkgY2FuIHRlbGwsIHRoaXMgYmluZGluZyB3YXMg
+bmV2ZXIgcmV2aWV3ZWQgYnkgZGV2aWNlIHRyZWUKPiA+PiBtYWludGFpbmVycywgc28gSSdtIG5v
+dCBzdXJlIHdoZXRoZXIgdGhlcmUncyBjb25jZW5zdXMgdGhhdCB0aGlzIHNob3VsZAo+ID4+IGJl
+IHByb2xpZmVyYXRlZC4gQWRkaW5nIFJvYiBhbmQgdGhlIGRldmljZSB0cmVlIG1haWxpbmcgbGlz
+dCBmb3IgYSB3aWRlcgo+ID4+IGF1ZGllbmNlLgo+ID4+Cj4gPj4gPiBKdXN0IGxpa2Ugd2UndmUg
+c2VlbiB3aXRoIHBhbmVsLWx2ZHMsIGFuZCBldmVuIHRob3VnaCB0aGUgY3VycmVudCBkb2dtYSBp
+cwo+ID4+ID4gdG8gc2V0IHRoZSB0aW1pbmdzIHdpdGhpbiB0aGUgZHJpdmVyLCBoYXZpbmcgdGhl
+bSBpbiB0aGUgZGV2aWNlIHRyZWUKPiA+PiA+IHByb3ZpZGVzIGEgbnVtYmVyIG9mIGJlbmVmaXRz
+Lgo+ID4+Cj4gPj4gSSBkb24ndCB0aGluayB0aGVyZSB3YXMgY29uY2Vuc3VzIG9uIHRoYXQuIEJ1
+dCBSb2IgYWNrZWQgaXQsIHNvIEkgZ3Vlc3MKPiA+PiBoZSB0aG91Z2h0IGl0IHdhcyBhY2NlcHRh
+YmxlLgo+ID4+Cj4gPj4gUm9iLCBjYW4gd2UgdXNlIHRoaXMgdGhyZWFkIGFzIGFuIG9wcG9ydHVu
+aXR5IHRvIHdyaXRlIGRvd24gc29tZSBvZiB0aGUKPiA+PiBydWxlcyByZWdhcmRpbmcgdGhpcz8g
+V2UndmUgZGlzY3Vzc2VkIHRoaXMgbnVtZXJvdXMgdGltZXMgaW4gdGhlIHBhc3QKPiA+PiBidXQg
+dGhlcmUgc3RpbGwgZG9lc24ndCBzZWVtIHRvIGJlIGNvbmNlbnN1cy4KPiA+Pgo+ID4+IEkga25v
+dyB5b3UncmUgdmVyeSB0aXJlZCBvZiB0aGlzIGFzIHdlbGwsIGJ1dCBwZXJoYXBzIHdlIGNhbiBi
+aXRlIHRoZQo+ID4+IGJ1bGxldCBub3cgYW5kIHByb2R1Y2UgY2xlYXIgZG9jdW1lbnRhdGlvbiBh
+bmQgZ3VpZGVsaW5lcyB0aGF0IHdlIGNhbgo+ID4+IHBvaW50IHBlb3BsZSBhdCAob3IgcHV0IGlu
+IGFuIG9idmlvdXMgbG9jYXRpb24gc28gdGhhdCBwZW9wbGUgZmluZCBpdAo+ID4+IHRoZW1zZWx2
+ZXMpIGluIHRoZSBmdXR1cmUsIHNvIHRoYXQgd2UgZG9uJ3QgaGF2ZSB0byBrZWVwIGhhdmluZyB0
+aGlzCj4gPj4gZGlzY3Vzc2lvbi4KPiA+Pgo+ID4+IFN1bW1hcml6aW5nIHdoYXQgb3VyIGxhdGVz
+dCBkaXNjdXNzaW9uIG9uIHRoaXMgd2FzOgo+ID4+Cj4gPj4gICAqIEdlbmVyaWMgY29tcGF0aWJs
+ZSBzdHJpbmdzIHNob3VsZCB0eXBpY2FsbHkgYmUgdXNlZCBhcyBhIGZhbGxiYWNrCj4gPj4gICAg
+IG9ubHkuIEV4Y2VwdGlvbnMgY291bGQgYmUgbWFkZSBpZiB0aGVyZSdzIGEgc3BlY2lmaWMgc3Rh
+bmRhcmQgdGhhdAo+ID4+ICAgICBpcyBzdWZmaWNpZW50bHkgc3RyaWN0IHRvIG5vdCByZXF1aXJl
+IGFueSBxdWlya3MsIGFuZCBoZW5jZSBhdm9pZAo+ID4+ICAgICB0aGUgbmVlZCBmb3IgcGFuZWwt
+c3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmdzLgo+ID4+Cj4gPj4gICAqIFNvIGluIGdlbmVyYWwg
+ZGV2aWNlIHRyZWUgbm9kZXMgZm9yIHBhbmVscyBuZWVkIHRvIGhhdmUgYSBzcGVjaWZpYwo+ID4+
+ICAgICBjb21wYXRpYmxlIHN0cmluZyB0aGF0IHVuaXF1ZWx5IGlkZW50aWZpZXMgdGhhdCBwYW5l
+bC4gVGhpcyBpcyBpbgo+ID4+ICAgICBsaW5lIHdpdGggZXhpc3RpbmcgcHJhY3RpY2UgZm9yIG90
+aGVyIGRldmljZXMgYW5kIGEgZ29vZCBpZGVhIGluCj4gPj4gICAgIGdlbmVyYWwgc28gdGhhdCB3
+ZSBjYW4gaW1wbGVtZW50IHF1aXJrcyBpZiBuZWNlc3NhcnkuCj4gPj4KPiA+PiAgICogUGFuZWwg
+bm9kZXMgY2FuIG9wdGlvbmFsbHkgYWxzbyBsaXN0IGEgZ2VuZXJpYyBjb21wYXRpYmxlIHN0cmlu
+ZywgaW4KPiA+PiAgICAgYWRkaXRpb24gdG8gdGhlIHNwZWNpZmljIGNvbXBhdGlibGUgc3RyaW5n
+LCB0aGF0IGRyaXZlcnMgY291bGQgbWF0Y2gKPiA+PiAgICAgdG8gc3VwcG9ydCBkZXZpY2VzIHdo
+aWNoIGFyZSBub3Qgc3BlY2lmaWNhbGx5IHN1cHBvcnRlZCB5ZXQgYnV0IHRoYXQKPiA+PiAgICAg
+bWF5IGFscmVhZHkgd29yayBhbnl3YXkuCj4gPj4KPiA+PiAgICAgSSdtIG5vdCBzdXJlIHRoYXQn
+cyByZWFsbHkgcHJhY3RpY2FsLiBJbiB0aGUgcGFzdCB3ZSd2ZSBzZWVuIHRoYXQgYQo+ID4+ICAg
+ICBwYW5lbCBjYW4gd29yayBmaW5lIG9uIG9uZSBib2FyZCBidXQgYnJlYWsgb24gYW5vdGhlciBi
+ZWNhdXNlIHRoZQo+ID4+ICAgICBydW50aW1lIGV4ZWN1dGlvbiB0aW1pbmcgaXMgc3VjaCB0aGF0
+IG5lY2Vzc2FyeSBkZWxheXMgaW4gdGhlIHBvd2VyCj4gPj4gICAgIHNlcXVlbmNlIGFyZSBub3Rp
+Y2VhYmxlIG9uIG9uZSBidXQgbm90IGFub3RoZXIuIEkgYWxzbyBzdXNwZWN0IHRoYXQKPiA+PiAg
+ICAgaW4gc29tZSBjYXNlcyBzaG9ydGN1dHMgd2VyZSB0YWtlbiBiZWNhdXNlIHRoaW5ncyBoYXBw
+ZW5lZCB0byB3b3JrLAo+ID4+ICAgICBldmVuIGlmIHBlcmhhcHMgdGhlcmUgd2FzIGludGVybWl0
+dGVudCBnYXJiYWdlIG9uIHRoZSBzY3JlZW4gYmVjYXVzZQo+ID4+ICAgICB0aGUgcG93ZXIgc2Vx
+dWVuY2Ugd2Fzbid0IHJlc3BlY3RlZC4KPiA+Cj4gPiBJZiB0aGVyZSdzIHNvbWUgcHJvYmxlbSB3
+aXRoIGEgcGFuZWwgd29ya2luZywgdGhlbiB3ZSBqdXN0IHVzZSB0aGUKPiA+IG1vcmUgc3BlY2lm
+aWMgY29tcGF0aWJsZSBhbmQgZGVhbCB3aXRoIGl0IGluIHRoZSBkcml2ZXIuIFdoYXQncyB0aGUK
+PiA+IGlzc3VlIGhlcmU/Cj4gPgo+ID4gQSBiaWdnZXIgaXNzdWUgaXMgaWYgbGF0ZXIgeW91IG5l
+ZWQgdG8gdHdlYWsgdGhlIHRpbWluZ3MsIGRvIHlvdQo+ID4gdXBkYXRlIHRoZSB0aW1pbmdzIGlu
+IERUIG9yIGFkZCB0aW1pbmdzIHRvIGtlcm5lbD8KPiA+Cj4gPj4gICAqIE1lY2hhbmlzbXMgdGhh
+dCBwcm9iZSBpbmZvcm1hdGlvbiBmcm9tIGEgcGFuZWwgYXQgcnVudGltZSAoc3VjaCBhcwo+ID4+
+ICAgICBFRElEKSBhcmUgdG8gc2VlIHByZWZlcmVudGlhbCB0cmVhdG1lbnQuIEluIG90aGVyIHdv
+cmRzLCBpZiBhIEREQwo+ID4+ICAgICBjaGFubmVsIGV4aXN0cyB0byBhIHBhbmVsLCB0aGUgZHJp
+dmVyIHNob3VsZCBwYXJzZSB2aWRlbyB0aW1pbmdzCj4gPj4gICAgIGZyb20gdGhlIEVESUQuCj4g
+Pgo+ID4gVGhhdCBwcmV0dHkgd2VsbCBzdW1tYXJpemVzIHRoaW5ncy4KPgo+IEkgbG92ZSBob3cg
+RURJRCBrZWVwcyBnZXR0aW5nIGJyb3VnaHQgdXAgaW4gZGlzY3Vzc2lvbnMgaG93IGhvdyB0bwo+
+IGhhbmRsZSBub24tRURJRCBkZXZpY2VzLiAgSWYgYW55b25lIGhhZCBFRElEcywgd2UnZCB1c2Ug
+dGhlbSBiZWNhdXNlCj4gdGhhdCdzIGVhc3ksIGJ1dCB3ZSBkb24ndC4KClRoaXMgaXMgbWFpbmx5
+IGluIHJlZmVyZW5jZSB0byByZWNlbnQgZGlzY3Vzc2lvbnMgb24gZURQIHBhbmVscyB3aGljaApk
+byBoYXZlIEVESUQgYW5kIGV2ZW4gYSBzdGFuZGFyZCBjb25uZWN0b3IgaW5jbHVkaW5nIHBvd2Vy
+ICh0aG91Z2ggSSdkCmd1ZXNzIG5vdCByZXF1aXJlZCkuIFNvIGEgZ2VuZXJpYy1pc2ggY29tcGF0
+aWJsZSBtYWtlcyBzZW5zZSBpbiB0aGF0CmNvbnRleHQgYXMgaXQgaGFzIHNvbWUgbWVhbmluZyBi
+ZWhpbmQgaXQuCgo+ID4+IE9uZSB0aGluZyB0aGF0J3Mgbm90IGNsZWFyIHRvIG1lIGlzIHdoZXRo
+ZXIgb3Igbm90IHdlIHdhbnQgdG8gYWxsb3cKPiA+PiB2aWRlbyB0aW1pbmdzIHRvIGJlIHNwZWNp
+ZmllZCBpbiBEVC4gSSB1c2VkIHRvIHRoaW5rIHRoYXQgd2UgZGlkbid0LAo+ID4+IGJlY2F1c2Ug
+dGhlIHZpZGVvIHRpbWluZ3MgYXJlIGltcGxpZWQgYnkgdGhlIHNwZWNpZmljIGNvbXBhdGlibGUg
+c3RyaW5nCj4gPj4gKHdoaWNoIHdlIGFscmVhZHkgZGV0ZXJtaW5lZCBpcyBtYW5kYXRvcnkgYW55
+d2F5KSwgYnV0IHRoZSBwYW5lbC1sdmRzCj4gPj4gYmluZGluZ3Mgc3VnZ2VzdCB0aGF0IGZyb20g
+YSBkZXZpY2UgdHJlZSBwZXJzcGVjdGl2ZSB0aGlzIHdvdWxkIGJlIGZpbmU/Cj4gPj4gSSBhbHNv
+IG5vdGljZSB0aGF0IHRoZSBwYW5lbC1sdmRzIGRvZXNuJ3QgbWFrZSBhbnkgcHJvdmlzaW9ucyBm
+b3IgcG93ZXIKPiA+PiBzZXF1ZW5jZXMuIFRoZSBzYW1lIGlzIHRydWUgZm9yIHBhbmVsLWRwaS4g
+QXJlIGJvdGggTFZEUyBhbmQgRFBJIHBhbmVscwo+ID4+IGFsd2F5cyBndWFyYW50ZWVkIG5vdCB0
+byBuZWVkIGFueSBzcGVjaWZpYyBwb3dlciBzZXF1ZW5jZXM/Cj4gPgo+ID4gQXMgbG9uZyBhcyB0
+aGUgc3BlY2lmaWMgY29tcGF0aWJsZSBpcyB0aGVyZSwgSSdkIGRvbid0IHJlYWxseSBjYXJlCj4g
+PiB0aGF0IG11Y2guIEkgdGhpbmsgd2UndmUgZm91bmQgb3ZlciB0aW1lIHdpdGggdGhlIExWRFMg
+YmluZGluZyB0aGF0Cj4gPiB0aGUgc3BlY2lmaWMgY29tcGF0aWJsZSBlbmRzIHVwIGJlaW5nIG5l
+ZWRlZC4KPiA+Cj4gPiBJJ20gZmluZSB3aXRoIHRpbWluZ3MgaW4gRFQsIGJ1dCBJJ20gb24gdGhl
+IGZlbmNlIHdoZXRoZXIgYQo+ID4gJ3BhbmVsLWRwaScgY29tcGF0aWJsZSBpcyBhIGdvb2QgdGhp
+bmcgb3Igbm90LiBBdCBsZWFzdCB3aXRoIExWRFMsCj4gPiB0aGF0IGltcGxpZXMgc29tZXRoaW5n
+IGFib3V0IHRoZSBpbnRlcmZhY2UuIEZvciBEUEksIHRoZXJlIGlzIG5vCj4gPiBzdGFuZGFyZCBy
+ZWFsbHkgKE1JUEkgZG9lcyBkZWZpbmUgc29tZXRoaW5nLCBidXQgZm9sbG93aW5nIE1JUEkgaXMK
+PiA+IHByZXR0eSBvcHRpb25hbCkuIFRoZXJlJ3MgbG90cyBvZiB3YXlzIHRvIHdpcmUgdXAgdGhl
+IGRhdGEgbGluZXMuIEl0Cj4gPiBjb3VsZCBiZSBhIGNvbnRpbnVhbCBhZGRpdGlvbiBvZiB0aW1p
+bmcgZmxhZ3Mgd2hpY2ggSSBkb24ndCB3YW50IHRvCj4gPiBzZWUuIE15IGNvbnRyb2xsZXIgaGFz
+IGZpbmUgZ3JhaW5lZCBjbG9jayBjb250cm9scyBhbmQgSSBuZWVkIHRvCj4gPiBjb250cm9sIHRo
+ZSBkdXR5IGN5Y2xlIG9yIGRlbGF5IHRoZSBwaXhlbCBjbG9jayBzb21lIG51bWJlciBvZiBucywg
+Zm9yCj4gPiBleGFtcGxlLiBJIHRoaW5rIG1vc3Qgb2YgdGhhdCBnb2VzIGF3YXkgd2l0aCBMVkRT
+Lgo+Cj4gSSB0aGluayBub3cgdGhhdCB3ZSBoYXZlIDg1IHN0cnVjdCBwYW5lbF9kZXNjIGluIHBh
+bmVsLXNpbXBsZS5jLCB3ZSBjYW4KPiBqdXN0IGdvIGxvb2sgYXQgd2hhdCdzIGFjdHVhbGx5IG5l
+ZWRlZCB0byBkcml2ZSBwYW5lbHMuICBEZXRhaWxlZCBwb3dlcgo+IHRpbWluZyByZXF1aXJlbWVu
+dHMgYXJlIGluZnJlcXVlbnRseSBuZWVkZWQsIGJlaW5nIHNwZWNpZmllZCBmb3IgMjMgb2YKPiB0
+aG9zZS4KCk9uZSB0aGluZyB0byBjb25zaWRlciBpcyB3aGV0aGVyIHBvd2VyIHRpbWluZyB3YXMg
+YWRkZWQgbGF0ZXIgb3IgaW4KZ2VuZXJhbCBpZiB0aGUgcGFuZWxzJyBkYXRhIGNoYW5nZWQgYXQg
+YWxsLiBIYXZpbmcgaW5jb21wbGV0ZSBiaW5kaW5ncwp0aGF0IGhhdmUgdG8gZXZvbHZlIGlzIG9u
+ZSBwYXJ0IG9mIHdoYXQgd2UgdHJ5IHRvIGF2b2lkLgoKQW5kIGRvIGFueSBvZiB0aGUgb3RoZXJz
+IChub3QgMjMpIGp1c3Qgbm90IGhhdmUgcG93ZXIgY29udHJvbCBhdCBhbGwKKGJlY2F1c2UgZmly
+bXdhcmUgdHVybnMgb24gcG93ZXIgb3IgdGhlIHBsYXRmb3JtIGRvZXNuJ3QgaGF2ZSBwb3dlcgpj
+b250cm9sIHlldCk/Cgo+IEkga2VlcCBoZWFyaW5nIHRoYXQgbW9yZSBkZXRhaWxlZCB0aW1pbmcg
+aXMgbmVjZXNzYXJ5LCBzbyBJCj4gbG9va2VkIGF0IHRoZSBvdGhlciBub24tRFNJLCBub24tU1BJ
+IHBhbmVscyBpbiB0cmVlIChzaW5jZSB0aG9zZSBzaG91bGQKPiBhbHdheXMgcmVxdWlyZSBhIGRy
+aXZlciBmb3IgdGhlaXIgcmVnaXN0ZXIgd3JpdGVzKSBhbmQgZm91bmQgYSB0b3RhbCBvZjoKPgo+
+IC0gcGFuZWwtYXJtLXZlcnNhdGlsZTogaGFzIHJlZ2lzdGVyIHdyaXRlcyB0byBhIHN5c2Nvbgo+
+IC0gb2xpbnV4aW5vOiByZWFkcyBtb2RlcyBmcm9tIGFuIGVlcHJvbS4KPiAtIHNlaWtvLTQzd3Zm
+MWc6IGhhcyB0d28gcG93ZXIgcmFpbHMgdG8gbWFuYWdlCj4gLSBwYW5lbC1sdmRzOiBpcyBiYXNp
+Y2FsbHkgZG9pbmcgdGhlIHRoaW5nIHBlb3BsZSBhcmUgYXNraW5nIHBhbmVsLWRwaQo+ICAgdG8g
+ZG8gYnV0IGZvciBsdmRzLgo+Cj4gSWYgRFQgaXMgc3VwcG9zZWQgdG8gImRlc2NyaWJlIHRoZSBo
+YXJkd2FyZSIgYXMgcGVvcGxlIGtlZXAgdGVsbGluZyBtZSwKPiB0aGVuIEkgdGhpbmsgd2UgaGF2
+ZSBzdHJvbmcgZXZpZGVuY2Ugb2YgY29tbW9uYWxpdHkgYmV0d2VlbiBoYXJkd2FyZQo+IHRoYXQg
+Y291bGQgYmUgZGVzY3JpYmVkIGluIGRhdGEgaW5zdGVhZCBvZiBjb2RlLCB1c2luZyBwYW5lbC1z
+aW1wbGUncwo+IGRhdGEgc3RydWN0dXJlcyBhcyB0aGUgbW9kZWwuCgoiZGVzY3JpYmUgdGhlIGgv
+dyIgYWxzbyBtZWFucyB0aGUgaC93IGRlc2NyaXB0aW9uIGRvZXNuJ3QgZXZvbHZlCmJlY2F1c2Ug
+dGhlIGgvdyBpdHNlbGYgZG9lc24ndCBldm9sdmUuCgpUaGF0IGJlaW5nIHNhaWQsIEknbSBub3Qg
+YWdhaW5zdCBtb3ZpbmcgdGhpbmdzIHRvIERUIGlmIHRoYXQncyB0aGUKcmlnaHQgYW5zd2VyLiBT
+b21ldGltZXMgd2UgZG9uJ3Qga25vdyBhbmQgaXQgaXMgYmV0dGVyIHRvIHB1dCBkYXRhIGluCnRo
+ZSBrZXJuZWwgdW50aWwgaXQgaXMgY2xlYXIgd2hhdCBzaG91bGQgYW5kIHNob3VsZG4ndCBnbyBp
+biBEVC4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
