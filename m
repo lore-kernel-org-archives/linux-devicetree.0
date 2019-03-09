@@ -1,16 +1,19 @@
-From: Jacopo Mondi <jacopo@jmondi.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Subject: Re: [PATCH/RFC 05/15] dt-bindings: display: bridge: thc63lvd1024:
  Document dual-link operation
-Date: Sat, 9 Mar 2019 12:23:08 +0100
-Message-ID: <20190309112308.rbuqwvvvxgihmj7d@uno.localdomain>
+Date: Sat, 9 Mar 2019 13:51:28 +0200
+Message-ID: <20190309115128.GC4924@pendragon.ideasonboard.com>
 References: <20190306232345.23052-1-laurent.pinchart+renesas@ideasonboard.com>
  <20190306232345.23052-6-laurent.pinchart+renesas@ideasonboard.com>
  <20190308164925.jwgq4rdqh6mmwwtf@uno.localdomain>
  <20190308175739.GA11318@pendragon.ideasonboard.com>
+ <20190309112308.rbuqwvvvxgihmj7d@uno.localdomain>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0864398012=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190308175739.GA11318@pendragon.ideasonboard.com>
+Content-Disposition: inline
+In-Reply-To: <20190309112308.rbuqwvvvxgihmj7d@uno.localdomain>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -20,125 +23,67 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Jacopo Mondi <jacopo@jmondi.org>
 Cc: devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============0864398012==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="wrhg5c4tjjfmcuvy"
-Content-Disposition: inline
-
-
---wrhg5c4tjjfmcuvy
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-HI Laurent,
-
-On Fri, Mar 08, 2019 at 07:57:39PM +0200, Laurent Pinchart wrote:
-> Hi Jacopo,
->
-> On Fri, Mar 08, 2019 at 05:49:25PM +0100, Jacopo Mondi wrote:
-> > On Thu, Mar 07, 2019 at 01:23:35AM +0200, Laurent Pinchart wrote:
-> > > The THC63LVD1024 LVDS decoder can operate in two modes, single-link or
-> > > dual-link. In dual-link mode both input ports are used to carry even-
-> > > and odd-numbered pixels separately. Document this in the DT bindings,
-> > > along with the related rules governing port and usage.
-> > >
-> > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > > ---
-> > >  .../bindings/display/bridge/thine,thc63lvd1024.txt         | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
-> > > index 37f0c04d5a28..4ff6eb9bbc19 100644
-> > > --- a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
-> > > +++ b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
-> > > @@ -28,6 +28,13 @@ Optional video port nodes:
-> > >  - port@1: Second LVDS input port
-> > >  - port@3: Second digital CMOS/TTL parallel output
-> > >
-> > > +The device can operate in single-link mode or dual-link mode. In single-link
-> > > +mode, all pixels are received on port@0, and port@1 shall not contain any
-> > > +endpoint. In dual-link mode, even-numbered pixels are received on port@0 and
-> > > +odd-numbered pixels on port@1, and both port@0 and port@1 shall contain
-> > > +endpoints.
-> >
-> > You know, I'm not sure this is helpful, as if we have to go and
-> > describe what the chip supports, a paragraph for dual ouput mode would
-> > be required as well. The bindings already document that the chip
-> > supports single/dual input/output modes, maybe you can just add rules
-> > that prescribes how to populate the endpoints, for both input and
-> > output modes?
->
-> That's what I was trying to do :-) How else would you like to see it
-> described ?
->
-
-I wonder if it won't be enough to expand the Optional endpoint
-properties description as in:
-
- - port@1: Second LVDS input port, to be used for dual-input mode
- - port@3: Second digital CMOS/TTL parallel output, to be used for
-   dual-output mode.
-
-If you prefer providing more context, it's fine what you had, just
-keep in mind there's also dual-output mode and not just the dual-input
-one.
-
-Up to you, feel free to add my
-Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-if relevant.
-
-Thanks
-  j
-
-> > > +
-> > > +
-> >
-> > You can drop this empty line.
-> >
-> > >  Example:
-> > >  --------
-> > >
->
-> --
-> Regards,
->
-> Laurent Pinchart
-
---wrhg5c4tjjfmcuvy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAlyDohwACgkQcjQGjxah
-VjztpQ/9F5yBiWZaYawkngfnWMnB9ivF8Y4K6Xu1WfD7xp2QWQgtf6jBcmG0yuu1
-+5ZxdM9K94Ontuj9mCxxwy4gYtd5FPNkSuZpqvfov0mWCqFfcuMDoXDhaCydIIEq
-ZRtV0VkyHnVqHGr57TlhaLZfaA83C6etJ1cqxk/BgLMYv2INbEUQiLoJUAEk0fry
-WniCuhymfOl1ZiDO4ipYbHHsQIfSLqRaoS0J2vW2h/PgKMBSaYJNtc6UCnI9r6oK
-be6SzuiPZyS8OIJQKC4Wt54YZJUpbYKKa7hqIgmO84LXqv5W3JUdY0KxaKuf9SwD
-osdxinDiUk0WZ45XLkq8csPZPmvEWxsNaZILC0V+39kAtPuzW8pIO6skN9JucZOj
-h3c4CFrdfMXGKjMh5wDJU/DYKqUA0RTMFKLMTg5dEUOTQW/8132YhwGHLDPHatOj
-2obiudSTbpwctt0J1rbEgvYV6QDlw9n9so+OLyiLZqKIo4ryTS/ZCiyhU9LbZVLd
-bHuYeb5KHekeZZ0TLE/3mk77ArNYOCvqRWx7XG80mlkv1Id6wB4SIIUdc9ajWEB7
-GVYPh02ekI2t+3QRs9DMRxrPX0ODVaExvXPY13JVqTAvYLrdw4rPm45UtjUMW8ms
-HkVrsowjogpxY37g5/vKgTVwn0/uTFIqMEijm10EdtimB4/+bhg=
-=ZGvw
------END PGP SIGNATURE-----
-
---wrhg5c4tjjfmcuvy--
-
---===============0864398012==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============0864398012==--
+SGkgSmFjb3BvLAoKT24gU2F0LCBNYXIgMDksIDIwMTkgYXQgMTI6MjM6MDhQTSArMDEwMCwgSmFj
+b3BvIE1vbmRpIHdyb3RlOgo+IE9uIEZyaSwgTWFyIDA4LCAyMDE5IGF0IDA3OjU3OjM5UE0gKzAy
+MDAsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPiBPbiBGcmksIE1hciAwOCwgMjAxOSBhdCAw
+NTo0OToyNVBNICswMTAwLCBKYWNvcG8gTW9uZGkgd3JvdGU6Cj4gPj4gT24gVGh1LCBNYXIgMDcs
+IDIwMTkgYXQgMDE6MjM6MzVBTSArMDIwMCwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiA+Pj4g
+VGhlIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIgY2FuIG9wZXJhdGUgaW4gdHdvIG1vZGVzLCBz
+aW5nbGUtbGluayBvcgo+ID4+PiBkdWFsLWxpbmsuIEluIGR1YWwtbGluayBtb2RlIGJvdGggaW5w
+dXQgcG9ydHMgYXJlIHVzZWQgdG8gY2FycnkgZXZlbi0KPiA+Pj4gYW5kIG9kZC1udW1iZXJlZCBw
+aXhlbHMgc2VwYXJhdGVseS4gRG9jdW1lbnQgdGhpcyBpbiB0aGUgRFQgYmluZGluZ3MsCj4gPj4+
+IGFsb25nIHdpdGggdGhlIHJlbGF0ZWQgcnVsZXMgZ292ZXJuaW5nIHBvcnQgYW5kIHVzYWdlLgo+
+ID4+Pgo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNo
+YXJ0K3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPiA+Pj4gLS0tCj4gPj4+ICAuLi4vYmluZGlu
+Z3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dCAgICAgICAgIHwgNyArKysr
+KysrCj4gPj4+ICAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspCj4gPj4+Cj4gPj4+IGRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlk
+Z2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4gPj4+IGluZGV4IDM3
+ZjBjMDRkNWEyOC4uNGZmNmViOWJiYzE5IDEwMDY0NAo+ID4+PiAtLS0gYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4
+dAo+ID4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
+cmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dAo+ID4+PiBAQCAtMjgsNiArMjgsMTMgQEAgT3B0
+aW9uYWwgdmlkZW8gcG9ydCBub2RlczoKPiA+Pj4gIC0gcG9ydEAxOiBTZWNvbmQgTFZEUyBpbnB1
+dCBwb3J0Cj4gPj4+ICAtIHBvcnRAMzogU2Vjb25kIGRpZ2l0YWwgQ01PUy9UVEwgcGFyYWxsZWwg
+b3V0cHV0Cj4gPj4+Cj4gPj4+ICtUaGUgZGV2aWNlIGNhbiBvcGVyYXRlIGluIHNpbmdsZS1saW5r
+IG1vZGUgb3IgZHVhbC1saW5rIG1vZGUuIEluIHNpbmdsZS1saW5rCj4gPj4+ICttb2RlLCBhbGwg
+cGl4ZWxzIGFyZSByZWNlaXZlZCBvbiBwb3J0QDAsIGFuZCBwb3J0QDEgc2hhbGwgbm90IGNvbnRh
+aW4gYW55Cj4gPj4+ICtlbmRwb2ludC4gSW4gZHVhbC1saW5rIG1vZGUsIGV2ZW4tbnVtYmVyZWQg
+cGl4ZWxzIGFyZSByZWNlaXZlZCBvbiBwb3J0QDAgYW5kCj4gPj4+ICtvZGQtbnVtYmVyZWQgcGl4
+ZWxzIG9uIHBvcnRAMSwgYW5kIGJvdGggcG9ydEAwIGFuZCBwb3J0QDEgc2hhbGwgY29udGFpbgo+
+ID4+PiArZW5kcG9pbnRzLgo+ID4+Cj4gPj4gWW91IGtub3csIEknbSBub3Qgc3VyZSB0aGlzIGlz
+IGhlbHBmdWwsIGFzIGlmIHdlIGhhdmUgdG8gZ28gYW5kCj4gPj4gZGVzY3JpYmUgd2hhdCB0aGUg
+Y2hpcCBzdXBwb3J0cywgYSBwYXJhZ3JhcGggZm9yIGR1YWwgb3VwdXQgbW9kZSB3b3VsZAo+ID4+
+IGJlIHJlcXVpcmVkIGFzIHdlbGwuIFRoZSBiaW5kaW5ncyBhbHJlYWR5IGRvY3VtZW50IHRoYXQg
+dGhlIGNoaXAKPiA+PiBzdXBwb3J0cyBzaW5nbGUvZHVhbCBpbnB1dC9vdXRwdXQgbW9kZXMsIG1h
+eWJlIHlvdSBjYW4ganVzdCBhZGQgcnVsZXMKPiA+PiB0aGF0IHByZXNjcmliZXMgaG93IHRvIHBv
+cHVsYXRlIHRoZSBlbmRwb2ludHMsIGZvciBib3RoIGlucHV0IGFuZAo+ID4+IG91dHB1dCBtb2Rl
+cz8KPiA+Cj4gPiBUaGF0J3Mgd2hhdCBJIHdhcyB0cnlpbmcgdG8gZG8gOi0pIEhvdyBlbHNlIHdv
+dWxkIHlvdSBsaWtlIHRvIHNlZSBpdAo+ID4gZGVzY3JpYmVkID8KPiAKPiBJIHdvbmRlciBpZiBp
+dCB3b24ndCBiZSBlbm91Z2ggdG8gZXhwYW5kIHRoZSBPcHRpb25hbCBlbmRwb2ludAo+IHByb3Bl
+cnRpZXMgZGVzY3JpcHRpb24gYXMgaW46Cj4gCj4gIC0gcG9ydEAxOiBTZWNvbmQgTFZEUyBpbnB1
+dCBwb3J0LCB0byBiZSB1c2VkIGZvciBkdWFsLWlucHV0IG1vZGUKPiAgLSBwb3J0QDM6IFNlY29u
+ZCBkaWdpdGFsIENNT1MvVFRMIHBhcmFsbGVsIG91dHB1dCwgdG8gYmUgdXNlZCBmb3IKPiAgICBk
+dWFsLW91dHB1dCBtb2RlLgoKSSB0aGluayBpdCdzIHVzZWZ1bCB0byBleHBsYWluIHRoZSBjb25z
+dHJhaW50cyByZWdhcmRpbmcgcHJlc2VuY2UgKG9yCmFic2VuY2UpIG9mIGVuZHBvaW50cyBmb3Ig
+cG9ydHMgMCBhbmQgMSBkZXBlbmRpbmcgb24gd2hpY2ggbW9kZSB0aGUKZGV2aWNlIG9wZXJhdGVz
+IHVuZGVyLCBub3QganVzdCB3aGF0IHRoZSBwb3J0cyBhcmUgdXNlZCBmb3IuCgo+IElmIHlvdSBw
+cmVmZXIgcHJvdmlkaW5nIG1vcmUgY29udGV4dCwgaXQncyBmaW5lIHdoYXQgeW91IGhhZCwganVz
+dAo+IGtlZXAgaW4gbWluZCB0aGVyZSdzIGFsc28gZHVhbC1vdXRwdXQgbW9kZSBhbmQgbm90IGp1
+c3QgdGhlIGR1YWwtaW5wdXQKPiBvbmUuCgpBYnNvbHV0ZWx5LiBUaGUgcmVhc29uIHdoeSBJIGhh
+dmVuJ3QgZXhwYW5kZWQgdGhlIGJpbmRpbmdzIHRvIGRvY3VtZW50CmR1YWwtb3V0cHV0IG1vZGUg
+aXMgdGhhdCBJIGhhdmUgbm8gd2F5IHRvIHRlc3QgaXQsIGFuZCBJIGRvbid0IHRoaW5rCnVudGVz
+dGVkIGJpbmRpbmdzIChtZWFuaW5nIHdpdGhvdXQgYSB0ZXN0YWJsZSBlbmQtdG8tZW5kIGltcGxl
+bWVudGF0aW9uKQphcmUgYSBnb29kIGlkZWEuCgo+IFVwIHRvIHlvdSwgZmVlbCBmcmVlIHRvIGFk
+ZCBteQo+IFJldmlld2VkLWJ5OiBKYWNvcG8gTW9uZGkgPGphY29wbytyZW5lc2FzQGptb25kaS5v
+cmc+Cj4gaWYgcmVsZXZhbnQuCj4gCj4gPj4+ICsKPiA+Pj4gKwo+ID4+Cj4gPj4gWW91IGNhbiBk
+cm9wIHRoaXMgZW1wdHkgbGluZS4KPiA+Pgo+ID4+PiAgRXhhbXBsZToKPiA+Pj4gIC0tLS0tLS0t
+Cj4gPj4+CgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
