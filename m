@@ -1,36 +1,50 @@
-From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: document the Meson G12A
- support
-Date: Sat, 9 Mar 2019 18:05:35 +0000
-Message-ID: <20190309180535.070a82de@archlinux>
-References: <20190304111217.882-1-narmstrong@baylibre.com>
-        <20190304111217.882-2-narmstrong@baylibre.com>
-        <CAFBinCA_bGFDOA5sLt26z++=LCtD_3xuaChQWDYJY2D0s2nHZQ@mail.gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: Add vendor prefix for Kionix, Inc.
+Date: Sat, 9 Mar 2019 18:13:54 +0000
+Message-ID: <20190309181354.4b455353@archlinux>
+References: <20190304151912.11485-1-decatf@gmail.com>
+        <20190304151912.11485-2-decatf@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCA_bGFDOA5sLt26z++=LCtD_3xuaChQWDYJY2D0s2nHZQ@mail.gmail.com>
+In-Reply-To: <20190304151912.11485-2-decatf@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Robert Yang <decatf@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 5 Mar 2019 22:01:38 +0100
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+On Mon,  4 Mar 2019 10:19:10 -0500
+Robert Yang <decatf@gmail.com> wrote:
 
-> On Mon, Mar 4, 2019 at 12:12 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >
-> > Update the documentation to expicitly support the Meson-G12A SoC.  
-> typo: explicitly
+> Kionix manufactured MEMs sensors. There are Kionix acceleromoter sensor
+> drivers which can be used with device tree.
 > 
-> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>  
-> apart from that:
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Signed-off-by: Robert Yang <decatf@gmail.com>
+I'll apply these now before I forget them but if a DT person
+wants to comment I won't be pushing out as non rebasing for
+at least a week so plenty of time!
 
-Applied to the togreg branch of iio.git and pushed out
-as testing to be completely ignored ;)
+Applied to the togreg branch of iio.git but pushed out for
+now as testing for the autobuilders to play with it.
 
 Thanks,
 
 Jonathan
+
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index bb6f6e8a2eee..e389904ee9bf 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -210,6 +210,7 @@ kiebackpeter    Kieback & Peter GmbH
+>  kinetic Kinetic Technologies
+>  kingdisplay	King & Display Technology Co., Ltd.
+>  kingnovel	Kingnovel Technology Co., Ltd.
+> +kionix	Kionix, Inc.
+>  koe	Kaohsiung Opto-Electronics Inc.
+>  kosagi	Sutajio Ko-Usagi PTE Ltd.
+>  kyo	Kyocera Corporation
