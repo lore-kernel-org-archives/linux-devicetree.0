@@ -1,36 +1,27 @@
-From: Johan Jonker <jbx6244@gmail.com>
-Subject: [PATCH v2] ARM: dts: rockchip: remove disable-wp from rv1108-elgin-r1 emmc node
-Date: Sun, 10 Mar 2019 16:19:28 +0100
-Message-ID: <20190310151928.2344-1-jbx6244@gmail.com>
-References: <20190219130317.2817-1-jbx6244@gmail.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH 00/10] Add support for XO 1.75 to OLPC battery driver
+Date: Sun, 10 Mar 2019 17:24:09 +0100
+Message-ID: <20190310162419.11861-1-lkundrak@v3.sk>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190219130317.2817-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Darren Hart <dvhart@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, x86@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The mmc.txt didn't explicitly say disable-wp is for SD card slot only,
-but that is what it was designed for in the first place.
-Remove all disable-wp from emmc or sdio controllers.
+Hello!
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
----
- arch/arm/boot/dts/rv1108-elgin-r1.dts | 1 -
- 1 file changed, 1 deletion(-)
+This patch set modifies the OLPC battery driver so that it could eventual=
+ly
+be used on an Arm-based OLPC XO 1.75 machine.
 
-diff --git a/arch/arm/boot/dts/rv1108-elgin-r1.dts b/arch/arm/boot/dts/rv1108-elgin-r1.dts
-index 1c4507b66..b1db92471 100644
---- a/arch/arm/boot/dts/rv1108-elgin-r1.dts
-+++ b/arch/arm/boot/dts/rv1108-elgin-r1.dts
-@@ -37,7 +37,6 @@
- &emmc {
- 	bus-width = <8>;
- 	cap-mmc-highspeed;
--	disable-wp;
- 	no-sd;
- 	no-sdio;
- 	non-removable;
--- 
-2.11.0
+Compared to the previous version, it splits the x86 platform patch into
+three so that it's hopefully easier to review.
+
+Patch 10/10 ("power: supply: olpc_battery: Have the framework register
+sysfs files for us") is new. The review comments are addressed, details
+in individual patches.
+
+Thank you,
+Lubo
