@@ -1,112 +1,56 @@
-Return-Path: <SRS0=/CI9=RE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from imap1.codethink.co.uk ([176.9.8.82]:34196 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387538AbfCAPwv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Mar 2019 10:52:51 -0500
-From: Kejia Hu <kejia.hu@codethink.co.uk>
-Subject: [PATCH v2 1/6] soc/tegra: initial tegra-automotive detection
-Date: Fri,  1 Mar 2019 15:35:35 +0000
-Message-Id: <20190301153540.14954-2-kejia.hu@codethink.co.uk>
-In-Reply-To: <20190301153540.14954-1-kejia.hu@codethink.co.uk>
-References: <20190301153540.14954-1-kejia.hu@codethink.co.uk>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, digetx@gmail.com
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Thomas Preston <thomas.preston@codethink.co.uk>, Kejia Hu <kejia.hu@codethink.co.uk>
+Return-Path: <SRS0=tBRz=RN=nxp.com=jun.li@kernel.org>
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH 1/2] Documentation: usb: dwc3: add power down clock scale
+ property
+Date: Sun, 10 Mar 2019 23:41:52 +0000
+Message-ID: 
+ <VI1PR04MB45580D87C6F64E51A61AB3B8894F0@VI1PR04MB4558.eurprd04.prod.outlook.com>
+References: <1548152179-19472-1-git-send-email-jun.li@nxp.com>
+ <20190223003246.GA20964@bogus>
+In-Reply-To: <20190223003246.GA20964@bogus>
+Content-Language: en-US
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "balbi@kernel.org" <balbi@kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-
-Add an initial soc_is_tegra_auto() with detection
-via a change in the device-tree.
-
-Also print the path taken through soc_is_tegra_auto() to
-allow debugging. Only print when debug is enabled as this
-function may be be called from multiple places, resulting
-in duplicated messages in production.
-
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
-Signed-off-by: Kejia Hu <kejia.hu@codethink.co.uk>
----
- drivers/soc/tegra/common.c             | 23 +++++++++++++++++++++++
- drivers/soc/tegra/fuse/tegra-apbmisc.c |  2 ++
- include/soc/tegra/common.h             |  1 +
- include/soc/tegra/fuse.h               |  1 +
- 4 files changed, 27 insertions(+)
-
-diff --git a/drivers/soc/tegra/common.c b/drivers/soc/tegra/common.c
-index 7bfb154d6fa5..a10bd26fb5df 100644
---- a/drivers/soc/tegra/common.c
-+++ b/drivers/soc/tegra/common.c
-@@ -9,6 +9,7 @@
- #include <linux/of.h>
- 
- #include <soc/tegra/common.h>
-+#include <soc/tegra/fuse.h>
- 
- static const struct of_device_id tegra_machine_match[] = {
- 	{ .compatible = "nvidia,tegra20", },
-@@ -34,3 +35,25 @@ bool soc_is_tegra(void)
- 
- 	return match != NULL;
- }
-+
-+static const struct of_device_id tegra_machine_match_auto[] = {
-+	{ .compatible = "nvidia,tegra20auto", },
-+	{ .compatible = "nvidia,tegra30auto", },
-+	{ },
-+};
-+
-+bool soc_is_tegra_auto(void)
-+{
-+	struct device_node *root;
-+	bool id_match  = false;
-+
-+	root = of_find_node_by_path("/");
-+
-+	if (root && of_match_node(tegra_machine_match_auto, root))
-+		id_match = true;
-+
-+	pr_debug("%s of_device_id match %d, tegra_sku_info.is_automotive %d\n",
-+			__func__, id_match, tegra_sku_info.is_automotive);
-+
-+	return id_match || tegra_sku_info.is_automotive;
-+}
-diff --git a/drivers/soc/tegra/fuse/tegra-apbmisc.c b/drivers/soc/tegra/fuse/tegra-apbmisc.c
-index e5a4d8f98b10..b2727afad24b 100644
---- a/drivers/soc/tegra/fuse/tegra-apbmisc.c
-+++ b/drivers/soc/tegra/fuse/tegra-apbmisc.c
-@@ -110,6 +110,8 @@ void __init tegra_init_revision(void)
- 
- 	tegra_sku_info.revision = rev;
- 
-+	tegra_sku_info.is_automotive = false;
-+
- 	tegra_sku_info.sku_id = tegra_fuse_read_early(FUSE_SKU_INFO);
- }
- 
-diff --git a/include/soc/tegra/common.h b/include/soc/tegra/common.h
-index fc13a9a134e9..8dd178ddc6a6 100644
---- a/include/soc/tegra/common.h
-+++ b/include/soc/tegra/common.h
-@@ -10,5 +10,6 @@
- #define __SOC_TEGRA_COMMON_H__
- 
- bool soc_is_tegra(void);
-+bool soc_is_tegra_auto(void);
- 
- #endif /* __SOC_TEGRA_COMMON_H__ */
-diff --git a/include/soc/tegra/fuse.h b/include/soc/tegra/fuse.h
-index 8fb2f8a87339..ea4caf6f0cf7 100644
---- a/include/soc/tegra/fuse.h
-+++ b/include/soc/tegra/fuse.h
-@@ -56,6 +56,7 @@ struct tegra_sku_info {
- 	int gpu_speedo_id;
- 	int gpu_speedo_value;
- 	enum tegra_revision revision;
-+	bool is_automotive;
- };
- 
- u32 tegra_read_straps(void);
--- 
-2.11.0
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIDxyb2Jo
+QGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMTnE6jLUwjIzyNUgODozMw0KPiBUbzogSnVuIExpIDxq
+dW4ubGlAbnhwLmNvbT4NCj4gQ2M6IG1hcmsucnV0bGFuZEBhcm0uY29tOyBiYWxiaUBrZXJuZWwu
+b3JnOyBsaW51eC11c2JAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZzsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQ
+QVRDSCAxLzJdIERvY3VtZW50YXRpb246IHVzYjogZHdjMzogYWRkIHBvd2VyIGRvd24gY2xvY2sg
+c2NhbGUNCj4gcHJvcGVydHkNCj4gDQo+IE9uIFR1ZSwgSmFuIDIyLCAyMDE5IGF0IDEwOjM3OjE3
+QU0gKzAwMDAsIEp1biBMaSB3cm90ZToNCj4gPiBUaGUgVVNCMyBzdXNwZW5kX2NsayBpbnB1dCBy
+ZXBsYWNlcyBwaXBlM19yeF9wY2xrIGFzIGEgY2xvY2sgc291cmNlIHRvDQo+ID4gYSBzbWFsbCBw
+YXJ0IG9mIHRoZSBVU0IzIGNvcmUgdGhhdCBvcGVyYXRlcyB3aGVuIHRoZSBTUyBQSFkgaXMgaW4g
+aXRzDQo+ID4gbG93ZXN0IHBvd2VyKFAzKSBzdGF0ZSwgYW5kIHRoZXJlZm9yZSBkb2VzIG5vdCBw
+cm92aWRlIGEgY2xvY2suIFRoZQ0KPiA+IHBvd2VyIGRvd24gc2NhbGUgc3BlY2lmaWVzIGhvdyBt
+YW55IHN1c3BlbmRfY2xrIHBlcmlvZHMgZml0IGludG8gYSAxNg0KPiA+IEtIeiBjbG9jayBwZXJp
+b2QsIGRldGFpbHMgY2FuIHNlZSBEV0MzIGRhdGFib29rIHJlZ2lzdGVyDQo+ID4gR0NUTC5QV1JE
+TlNDQUxFLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTGkgSnVuIDxqdW4ubGlAbnhwLmNvbT4N
+Cj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2Mz
+LnR4dCB8IDYgKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKykNCj4g
+Pg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNi
+L2R3YzMudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2R3
+YzMudHh0DQo+ID4gaW5kZXggM2U0YzM4Yi4uZDFjOGI2MiAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2R3YzMudHh0DQo+ID4gKysrIGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MzLnR4dA0KPiA+IEBAIC0xMDIs
+NiArMTAyLDEyIEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gIAkJCW1vcmUgdGhhbiBvbmUg
+dmFsdWUsIHdoaWNoIG1lYW5zIHVuZGVmaW5lZCBsZW5ndGggSU5DUiBidXJzdCB0eXBlDQo+ID4g
+IAkJCWVuYWJsZWQuIFRoZSB2YWx1ZXMgY2FuIGJlIDEsIDQsIDgsIDE2LCAzMiwgNjQsIDEyOCBh
+bmQgMjU2Lg0KPiA+DQo+ID4gKyAtIHNucHMscG93ZXItZG93bi1zY2FsZTogUG93ZXIgZG93biBz
+Y2FsZSBmaWVsZCBzcGVjaWZpZXMgaG93IG1hbnkNCj4gc3VzcGVuZF9jbGsNCj4gPiArCQkJcGVy
+aW9kcyBmaXQgaW50byBhIDE2IEtoeiBjbG9jayBwZXJpb2QuIFdoZW4gcGVyZm9ybWluZw0KPiA+
+ICsJCQl0aGUgZGl2aXNpb24sIHJvdW5kIHVwIHRoZSByZW1haW5kZXIuIFN1c3BlbmQgY2xvY2sg
+aXMNCj4gPiArCQkJZnJvbSAzMmtIeiB0byAxMjVNSHosIG1lYW5zIHRoZSB2YWx1ZSByYW5nZSBp
+cyAyfjgwMDAuDQo+ID4gKwkJCShkZXRhaWxzIHNlZSBEV0NfdXNiMyBkYXRhYm9vayByZWdpc3Rl
+ciBHQ1RMLlBXUkROU0NBTEUpLg0KPiA+ICsNCj4gDQo+IFNvdW5kcyBsaWtlIHRoZSBzdXNwZW5k
+X2NsayBzaG91bGQgYmUgcHJvdmlkZWQgYXMgYSBjbG9jayBpbnB1dCBzbyB5b3UgY2FuDQo+IGNh
+bGN1bGF0ZSB0aGlzIHZhbHVlLg0KDQpZZXMsIEkgd2lsbCBnbyB0aGlzIGFwcHJvYWNoIGJ5IHVw
+ZGF0ZSBkdHMgd2l0aCBzdXNwZW5kX2NsayBvZiBkd2MzDQoNClRoYW5rcw0KTGkgSnVuIA0KPiAN
+Cj4gPiAgIC0gaW4gYWRkaXRpb24gYWxsIHByb3BlcnRpZXMgZnJvbSB1c2IteGhjaS50eHQgZnJv
+bSB0aGUgY3VycmVudCBkaXJlY3RvcnkgYXJlDQo+ID4gICAgIHN1cHBvcnRlZCBhcyB3ZWxsDQo+
+ID4NCj4gPiAtLQ0KPiA+IDIuNy40DQo+ID4NCg==
