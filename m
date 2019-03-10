@@ -1,178 +1,209 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v14 08/13] ARM: dts: imx7: Add video mux, csi and
- mipi_csi and connections
-Date: Sun, 10 Mar 2019 23:41:02 +0200
-Message-ID: <20190310214102.GA7578@pendragon.ideasonboard.com>
-References: <20190206151328.21629-1-rui.silva@linaro.org>
- <20190206151328.21629-9-rui.silva@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <20190206151328.21629-9-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil@xs4all.nl>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org
+From: Eric Nelson <eric@nelint.com>
+Subject: [PATCH] clk: imx6q: remove unsupported pll4_audio_div
+Date: Sun, 10 Mar 2019 16:18:50 -0700
+Message-ID: <1552259930-27786-1-git-send-email-eric@nelint.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org
+Cc: anson.huang@nxp.com, clement.peron@devialet.com, colin.didier@devialet.com, devicetree@vger.kernel.org, festevam@gmail.com, kernel@pengutronix.de, l.stach@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, s.hauer@pengutronix.de, sboyd@kernel.org, shawnguo@kernel.org, tiny.windzz@gmail.com, Eric Nelson <eric@nelint.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rui,
+The pll4_audio_div attempted to reflect one bit of a two-bit
+divisor (AUDIO_DIV_LSB) in the CCM_ANALOG_MISC2 register.
 
-Thank you for the patch.
+Unfortunately, this divisor is non-functional at least on the
+latest silicon revisions and has been removed from the reference
+manual.
 
-On Wed, Feb 06, 2019 at 03:13:23PM +0000, Rui Miguel Silva wrote:
-> This patch adds the device tree nodes for csi, video multiplexer and
-> mipi-csi besides the graph connecting the necessary endpoints to make
-> the media capture entities to work in imx7 Warp board.
-> 
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> ---
->  arch/arm/boot/dts/imx7s-warp.dts | 51 ++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/imx7s.dtsi     | 27 +++++++++++++++++
+This is discussed in this NXP Community thread:
 
-I would have split this in two patches to make backporting easier, but
-it's not a big deal.
+    https://community.nxp.com/thread/462806
 
-Please see below for a few additional comments.
+Remove the definition of pll4_audio_div to reflect this and
+reparent the ssi, cko1, and ESAI/ASRC/SPDIF clocks to the
+pll4_post_div clock.
 
->  2 files changed, 78 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
-> index 23431faecaf4..358bcae7ebaf 100644
-> --- a/arch/arm/boot/dts/imx7s-warp.dts
-> +++ b/arch/arm/boot/dts/imx7s-warp.dts
-> @@ -277,6 +277,57 @@
->  	status = "okay";
->  };
->  
-> +&gpr {
-> +	csi_mux {
-> +		compatible = "video-mux";
-> +		mux-controls = <&mux 0>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@1 {
-> +			reg = <1>;
-> +
-> +			csi_mux_from_mipi_vc0: endpoint {
-> +				remote-endpoint = <&mipi_vc0_to_csi_mux>;
-> +			};
-> +		};
-> +
-> +		port@2 {
-> +			reg = <2>;
-> +
-> +			csi_mux_to_csi: endpoint {
-> +				remote-endpoint = <&csi_from_csi_mux>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&csi {
-> +	status = "okay";
-> +
-> +	port {
-> +		csi_from_csi_mux: endpoint {
-> +			remote-endpoint = <&csi_mux_to_csi>;
-> +		};
-> +	};
-> +};
+Signed-off-by: Eric Nelson <eric@nelint.com>
+---
+ drivers/clk/imx/clk-imx6q.c               |   7 +-
+ include/dt-bindings/clock/imx6qdl-clock.h | 127 +++++++++++++++---------------
+ 2 files changed, 66 insertions(+), 68 deletions(-)
 
-Shouldn't these two nodes, as well as port@1 of the mipi_csi node, be
-moved to imx7d.dtsi ?
-
-> +
-> +&mipi_csi {
-> +	clock-frequency = <166000000>;
-> +	status = "okay";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	fsl,csis-hs-settle = <3>;
-
-Shouldn't this be an endpoint property ? Different sensors connected
-through different endpoints could have different timing requirements.
-
-> +
-> +	port@1 {
-> +		reg = <1>;
-> +
-> +		mipi_vc0_to_csi_mux: endpoint {
-> +			remote-endpoint = <&csi_mux_from_mipi_vc0>;
-> +		};
-> +	};
-> +};
-> +
->  &wdog1 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_wdog>;
-> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-> index 792efcd2caa1..01962f85cab6 100644
-> --- a/arch/arm/boot/dts/imx7s.dtsi
-> +++ b/arch/arm/boot/dts/imx7s.dtsi
-> @@ -8,6 +8,7 @@
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/input/input.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/reset/imx7-reset.h>
->  #include "imx7d-pinfunc.h"
->  
->  / {
-> @@ -709,6 +710,17 @@
->  				status = "disabled";
->  			};
->  
-> +			csi: csi@30710000 {
-> +				compatible = "fsl,imx7-csi";
-> +				reg = <0x30710000 0x10000>;
-> +				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clks IMX7D_CLK_DUMMY>,
-> +						<&clks IMX7D_CSI_MCLK_ROOT_CLK>,
-> +						<&clks IMX7D_CLK_DUMMY>;
-> +				clock-names = "axi", "mclk", "dcic";
-> +				status = "disabled";
-> +			};
-> +
->  			lcdif: lcdif@30730000 {
->  				compatible = "fsl,imx7d-lcdif", "fsl,imx28-lcdif";
->  				reg = <0x30730000 0x10000>;
-> @@ -718,6 +730,21 @@
->  				clock-names = "pix", "axi";
->  				status = "disabled";
->  			};
-> +
-> +			mipi_csi: mipi-csi@30750000 {
-> +				compatible = "fsl,imx7-mipi-csi2";
-> +				reg = <0x30750000 0x10000>;
-> +				interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clks IMX7D_IPG_ROOT_CLK>,
-> +					<&clks IMX7D_MIPI_CSI_ROOT_CLK>,
-> +					<&clks IMX7D_MIPI_DPHY_ROOT_CLK>;
-> +				clock-names = "pclk", "wrap", "phy";
-> +				power-domains = <&pgc_mipi_phy>;
-> +				phy-supply = <&reg_1p0d>;
-> +				resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
-> +				reset-names = "mrst";
-> +				status = "disabled";
-
-How about already declaring port@0 here too (but obviously without any
-endoint) ?
-
-> +			};
->  		};
->  
->  		aips3: aips-bus@30800000 {
-
+diff --git a/drivers/clk/imx/clk-imx6q.c b/drivers/clk/imx/clk-imx6q.c
+index 708e7c5..56d6ebb 100644
+--- a/drivers/clk/imx/clk-imx6q.c
++++ b/drivers/clk/imx/clk-imx6q.c
+@@ -32,7 +32,7 @@ static const char *periph2_clk2_sels[]	= { "pll3_usb_otg", "pll2_bus", };
+ static const char *periph_sels[]	= { "periph_pre", "periph_clk2", };
+ static const char *periph2_sels[]	= { "periph2_pre", "periph2_clk2", };
+ static const char *axi_sels[]		= { "periph", "pll2_pfd2_396m", "periph", "pll3_pfd1_540m", };
+-static const char *audio_sels[]	= { "pll4_audio_div", "pll3_pfd2_508m", "pll3_pfd3_454m", "pll3_usb_otg", };
++static const char *audio_sels[]	= { "pll4_post_div", "pll3_pfd2_508m", "pll3_pfd3_454m", "pll3_usb_otg", };
+ static const char *gpu_axi_sels[]	= { "axi", "ahb", };
+ static const char *pre_axi_sels[]	= { "axi", "ahb", };
+ static const char *gpu2d_core_sels[]	= { "axi", "pll3_usb_otg", "pll2_pfd0_352m", "pll2_pfd2_396m", };
+@@ -52,7 +52,7 @@ static const char *ipu2_di0_sels_2[]	= { "ipu2_di0_pre", "dummy", "dummy", "ldb_
+ static const char *ipu2_di1_sels_2[]	= { "ipu2_di1_pre", "dummy", "dummy", "ldb_di0_podf", "ldb_di1_podf", };
+ static const char *hsi_tx_sels[]	= { "pll3_120m", "pll2_pfd2_396m", };
+ static const char *pcie_axi_sels[]	= { "axi", "ahb", };
+-static const char *ssi_sels[]		= { "pll3_pfd2_508m", "pll3_pfd3_454m", "pll4_audio_div", };
++static const char *ssi_sels[]		= { "pll3_pfd2_508m", "pll3_pfd3_454m", "pll4_post_div", };
+ static const char *usdhc_sels[]	= { "pll2_pfd2_396m", "pll2_pfd0_352m", };
+ static const char *enfc_sels[]	= { "pll2_pfd0_352m", "pll2_bus", "pll3_usb_otg", "pll2_pfd2_396m", };
+ static const char *enfc_sels_2[] = {"pll2_pfd0_352m", "pll2_bus", "pll3_usb_otg", "pll2_pfd2_396m", "pll3_pfd3_454m", "dummy", };
+@@ -66,7 +66,7 @@ static const char *ecspi_sels[] = { "pll3_60m", "osc", };
+ static const char *can_sels[] = { "pll3_60m", "osc", "pll3_80m", };
+ static const char *cko1_sels[]	= { "pll3_usb_otg", "pll2_bus", "pll1_sys", "pll5_video_div",
+ 				    "video_27m", "axi", "enfc", "ipu1_di0", "ipu1_di1", "ipu2_di0",
+-				    "ipu2_di1", "ahb", "ipg", "ipg_per", "ckil", "pll4_audio_div", };
++				    "ipu2_di1", "ahb", "ipg", "ipg_per", "ckil", "pll4_post_div", };
+ static const char *cko2_sels[] = {
+ 	"mmdc_ch0_axi", "mmdc_ch1_axi", "usdhc4", "usdhc1",
+ 	"gpu2d_axi", "dummy", "ecspi_root", "gpu3d_axi",
+@@ -607,7 +607,6 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
+ 	}
+ 
+ 	clk[IMX6QDL_CLK_PLL4_POST_DIV] = clk_register_divider_table(NULL, "pll4_post_div", "pll4_audio", CLK_SET_RATE_PARENT, base + 0x70, 19, 2, 0, post_div_table, &imx_ccm_lock);
+-	clk[IMX6QDL_CLK_PLL4_AUDIO_DIV] = clk_register_divider(NULL, "pll4_audio_div", "pll4_post_div", CLK_SET_RATE_PARENT, base + 0x170, 15, 1, 0, &imx_ccm_lock);
+ 	clk[IMX6QDL_CLK_PLL5_POST_DIV] = clk_register_divider_table(NULL, "pll5_post_div", "pll5_video", CLK_SET_RATE_PARENT, base + 0xa0, 19, 2, 0, post_div_table, &imx_ccm_lock);
+ 	clk[IMX6QDL_CLK_PLL5_VIDEO_DIV] = clk_register_divider_table(NULL, "pll5_video_div", "pll5_post_div", CLK_SET_RATE_PARENT, base + 0x170, 30, 2, 0, video_div_table, &imx_ccm_lock);
+ 
+diff --git a/include/dt-bindings/clock/imx6qdl-clock.h b/include/dt-bindings/clock/imx6qdl-clock.h
+index b3cef29..dea23a9 100644
+--- a/include/dt-bindings/clock/imx6qdl-clock.h
++++ b/include/dt-bindings/clock/imx6qdl-clock.h
+@@ -213,69 +213,68 @@
+ #define IMX6QDL_CLK_CKO2			200
+ #define IMX6QDL_CLK_CKO				201
+ #define IMX6QDL_CLK_VDOA			202
+-#define IMX6QDL_CLK_PLL4_AUDIO_DIV		203
+-#define IMX6QDL_CLK_LVDS1_SEL			204
+-#define IMX6QDL_CLK_LVDS2_SEL			205
+-#define IMX6QDL_CLK_LVDS1_GATE			206
+-#define IMX6QDL_CLK_LVDS2_GATE			207
+-#define IMX6QDL_CLK_ESAI_IPG			208
+-#define IMX6QDL_CLK_ESAI_MEM			209
+-#define IMX6QDL_CLK_ASRC_IPG			210
+-#define IMX6QDL_CLK_ASRC_MEM			211
+-#define IMX6QDL_CLK_LVDS1_IN			212
+-#define IMX6QDL_CLK_LVDS2_IN			213
+-#define IMX6QDL_CLK_ANACLK1			214
+-#define IMX6QDL_CLK_ANACLK2			215
+-#define IMX6QDL_PLL1_BYPASS_SRC			216
+-#define IMX6QDL_PLL2_BYPASS_SRC			217
+-#define IMX6QDL_PLL3_BYPASS_SRC			218
+-#define IMX6QDL_PLL4_BYPASS_SRC			219
+-#define IMX6QDL_PLL5_BYPASS_SRC			220
+-#define IMX6QDL_PLL6_BYPASS_SRC			221
+-#define IMX6QDL_PLL7_BYPASS_SRC			222
+-#define IMX6QDL_CLK_PLL1			223
+-#define IMX6QDL_CLK_PLL2			224
+-#define IMX6QDL_CLK_PLL3			225
+-#define IMX6QDL_CLK_PLL4			226
+-#define IMX6QDL_CLK_PLL5			227
+-#define IMX6QDL_CLK_PLL6			228
+-#define IMX6QDL_CLK_PLL7			229
+-#define IMX6QDL_PLL1_BYPASS			230
+-#define IMX6QDL_PLL2_BYPASS			231
+-#define IMX6QDL_PLL3_BYPASS			232
+-#define IMX6QDL_PLL4_BYPASS			233
+-#define IMX6QDL_PLL5_BYPASS			234
+-#define IMX6QDL_PLL6_BYPASS			235
+-#define IMX6QDL_PLL7_BYPASS			236
+-#define IMX6QDL_CLK_GPT_3M			237
+-#define IMX6QDL_CLK_VIDEO_27M			238
+-#define IMX6QDL_CLK_MIPI_CORE_CFG		239
+-#define IMX6QDL_CLK_MIPI_IPG			240
+-#define IMX6QDL_CLK_CAAM_MEM			241
+-#define IMX6QDL_CLK_CAAM_ACLK			242
+-#define IMX6QDL_CLK_CAAM_IPG			243
+-#define IMX6QDL_CLK_SPDIF_GCLK			244
+-#define IMX6QDL_CLK_UART_SEL			245
+-#define IMX6QDL_CLK_IPG_PER_SEL			246
+-#define IMX6QDL_CLK_ECSPI_SEL			247
+-#define IMX6QDL_CLK_CAN_SEL			248
+-#define IMX6QDL_CLK_MMDC_CH1_AXI_CG		249
+-#define IMX6QDL_CLK_PRE0			250
+-#define IMX6QDL_CLK_PRE1			251
+-#define IMX6QDL_CLK_PRE2			252
+-#define IMX6QDL_CLK_PRE3			253
+-#define IMX6QDL_CLK_PRG0_AXI			254
+-#define IMX6QDL_CLK_PRG1_AXI			255
+-#define IMX6QDL_CLK_PRG0_APB			256
+-#define IMX6QDL_CLK_PRG1_APB			257
+-#define IMX6QDL_CLK_PRE_AXI			258
+-#define IMX6QDL_CLK_MLB_SEL			259
+-#define IMX6QDL_CLK_MLB_PODF			260
+-#define IMX6QDL_CLK_EPIT1			261
+-#define IMX6QDL_CLK_EPIT2			262
+-#define IMX6QDL_CLK_MMDC_P0_IPG			263
+-#define IMX6QDL_CLK_DCIC1			264
+-#define IMX6QDL_CLK_DCIC2			265
+-#define IMX6QDL_CLK_END				266
++#define IMX6QDL_CLK_LVDS1_SEL			203
++#define IMX6QDL_CLK_LVDS2_SEL			204
++#define IMX6QDL_CLK_LVDS1_GATE			205
++#define IMX6QDL_CLK_LVDS2_GATE			206
++#define IMX6QDL_CLK_ESAI_IPG			207
++#define IMX6QDL_CLK_ESAI_MEM			208
++#define IMX6QDL_CLK_ASRC_IPG			209
++#define IMX6QDL_CLK_ASRC_MEM			210
++#define IMX6QDL_CLK_LVDS1_IN			211
++#define IMX6QDL_CLK_LVDS2_IN			212
++#define IMX6QDL_CLK_ANACLK1			213
++#define IMX6QDL_CLK_ANACLK2			214
++#define IMX6QDL_PLL1_BYPASS_SRC			215
++#define IMX6QDL_PLL2_BYPASS_SRC			216
++#define IMX6QDL_PLL3_BYPASS_SRC			217
++#define IMX6QDL_PLL4_BYPASS_SRC			218
++#define IMX6QDL_PLL5_BYPASS_SRC			219
++#define IMX6QDL_PLL6_BYPASS_SRC			220
++#define IMX6QDL_PLL7_BYPASS_SRC			221
++#define IMX6QDL_CLK_PLL1			222
++#define IMX6QDL_CLK_PLL2			223
++#define IMX6QDL_CLK_PLL3			224
++#define IMX6QDL_CLK_PLL4			225
++#define IMX6QDL_CLK_PLL5			226
++#define IMX6QDL_CLK_PLL6			227
++#define IMX6QDL_CLK_PLL7			228
++#define IMX6QDL_PLL1_BYPASS			229
++#define IMX6QDL_PLL2_BYPASS			230
++#define IMX6QDL_PLL3_BYPASS			231
++#define IMX6QDL_PLL4_BYPASS			232
++#define IMX6QDL_PLL5_BYPASS			233
++#define IMX6QDL_PLL6_BYPASS			234
++#define IMX6QDL_PLL7_BYPASS			235
++#define IMX6QDL_CLK_GPT_3M			236
++#define IMX6QDL_CLK_VIDEO_27M			237
++#define IMX6QDL_CLK_MIPI_CORE_CFG		238
++#define IMX6QDL_CLK_MIPI_IPG			239
++#define IMX6QDL_CLK_CAAM_MEM			240
++#define IMX6QDL_CLK_CAAM_ACLK			241
++#define IMX6QDL_CLK_CAAM_IPG			242
++#define IMX6QDL_CLK_SPDIF_GCLK			243
++#define IMX6QDL_CLK_UART_SEL			244
++#define IMX6QDL_CLK_IPG_PER_SEL			245
++#define IMX6QDL_CLK_ECSPI_SEL			246
++#define IMX6QDL_CLK_CAN_SEL			247
++#define IMX6QDL_CLK_MMDC_CH1_AXI_CG		248
++#define IMX6QDL_CLK_PRE0			249
++#define IMX6QDL_CLK_PRE1			250
++#define IMX6QDL_CLK_PRE2			251
++#define IMX6QDL_CLK_PRE3			252
++#define IMX6QDL_CLK_PRG0_AXI			253
++#define IMX6QDL_CLK_PRG1_AXI			254
++#define IMX6QDL_CLK_PRG0_APB			255
++#define IMX6QDL_CLK_PRG1_APB			256
++#define IMX6QDL_CLK_PRE_AXI			257
++#define IMX6QDL_CLK_MLB_SEL			258
++#define IMX6QDL_CLK_MLB_PODF			259
++#define IMX6QDL_CLK_EPIT1			260
++#define IMX6QDL_CLK_EPIT2			261
++#define IMX6QDL_CLK_MMDC_P0_IPG			262
++#define IMX6QDL_CLK_DCIC1			263
++#define IMX6QDL_CLK_DCIC2			264
++#define IMX6QDL_CLK_END				265
+ 
+ #endif /* __DT_BINDINGS_CLOCK_IMX6QDL_H */
 -- 
-Regards,
-
-Laurent Pinchart
+2.7.4
