@@ -1,781 +1,323 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 4/4] leds: lm3532: Introduce the lm3532 LED driver
-Date: Sun, 10 Mar 2019 20:49:14 +0100
-Message-ID: <8ac4d84f-c792-893d-fbae-fac88fac8631@gmail.com>
-References: <20190307220947.20057-1-dmurphy@ti.com>
- <20190307220947.20057-4-dmurphy@ti.com>
+From: Oleh Kravchenko <oleg@kaa.org.ua>
+Subject: Re: [PATCH 01/25] leds: class: Improve LED and LED flash class
+ registration API
+Date: Sun, 10 Mar 2019 22:18:04 +0200
+Message-ID: <24877e3e-51ec-5c1a-3d2d-b3104b09189d@kaa.org.ua>
+References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
+ <20190310182836.20841-2-jacek.anaszewski@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190307220947.20057-4-dmurphy@ti.com>
-Content-Language: en-US
+In-Reply-To: <20190310182836.20841-2-jacek.anaszewski@gmail.com>
+Content-Language: uk-UA
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, pavel@ucw.cz, tony@atomide.com, lee.jones@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
+Thanks for patches :)
 
-Thank your for the patch.
-
-I have some comments below, please take a look.
-
-On 3/7/19 11:09 PM, Dan Murphy wrote:
-> Introduce the Texas Instruments LM3532 White LED driver.
-> The driver supports ALS configurability or manual brightness
-> control.
+10.03.19 20:28, Jacek Anaszewski пише:
+> Replace of_led_classdev_register() with led_classdev_register_ext(), which
+> accepts easily extendable struct led_init_data, instead of the fixed
+> struct device_node argument. The latter can be now passed in a fwnode
+> property of the struct led_init_data.
 > 
-> The driver also supports associating LED strings with specific
-> control banks in a group or as individually controlled strings.
+> The modification is driven by the need for passing another argument
+> to the LED class initialization function - a LED class device name.
+> Currently it is conveyed in the "name" char pointer property of
+> struct led_classdev, which is semantically and functionally incorrect
+> since it is needed only on LED class device registration, but persists
+> in system memory throughout the whole LED class device lifetime.
 > 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Whereas in case of the name strings coming from DT "label" property or
+> statically initialized ones the cost is only the pointer size, it grows
+> to LED_MAX_NAME_SIZE (64) with the advent of a new LED class device naming
+> scheme, where color and function properties come from separate board
+> firmware properties and the name needs to be constructed in a new buffer.
+> 
+> The change will not break any existing clients since the patch alters
+> also existing led_classdev{_flash}_register() macro wrappers, that pass
+> NULL in place of init_data, which leads to using legacy name
+> initialization path basing on the struct led_classdev's "name" property.
+> 
+> Two existing users of devm_of_led_classdev_registers() are modified
+> to use devm_led_classdev_register(), which will not impact their
+> operation since they in fact didn't need to pass struct device_node on
+> registration from the beginning.
+> 
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Tested-by: Baolin Wang <baolin.wang@linaro.org>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Acked-by: Dan Murphy <dmurphy@ti.com>
+> Cc: Daniel Mack <daniel@zonque.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Simon Shields <simon@lineageos.org>
 > ---
->   drivers/leds/Kconfig                   |  10 +
->   drivers/leds/Makefile                  |   1 +
->   drivers/leds/leds-lm3532.c             | 595 +++++++++++++++++++++++++
->   include/dt-bindings/leds/leds-lm3532.h |  72 +++
->   4 files changed, 678 insertions(+)
->   create mode 100644 drivers/leds/leds-lm3532.c
->   create mode 100644 include/dt-bindings/leds/leds-lm3532.h
+>  drivers/leds/led-class-flash.c  |  9 +++++----
+>  drivers/leds/led-class.c        | 34 ++++++++++++++++++++++------------
+>  drivers/leds/leds-cr0014114.c   |  3 +--
+>  drivers/leds/leds-gpio.c        |  2 +-
+>  include/linux/led-class-flash.h | 15 ++++++++++-----
+>  include/linux/leds.h            | 37 +++++++++++++++++++++++++++----------
+>  6 files changed, 66 insertions(+), 34 deletions(-)
 > 
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index a72f97fca57b..da00b9ed5a5c 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -138,6 +138,16 @@ config LEDS_LM3530
->   	  controlled manually or using PWM input or using ambient
->   	  light automatically.
->   
-> +config LEDS_LM3532
-> +	tristate "LCD Backlight driver for LM3532"
-> +	depends on LEDS_CLASS
-> +	depends on I2C
-> +	help
-> +	  This option enables support for the LCD backlight using
-> +	  LM3532 ambient light sensor chip. This ALS chip can be
-> +	  controlled manually or using PWM input or using ambient
-> +	  light automatically.
+> diff --git a/drivers/leds/led-class-flash.c b/drivers/leds/led-class-flash.c
+> index cf398275a53c..8d1c1177bb9a 100644
+> --- a/drivers/leds/led-class-flash.c
+> +++ b/drivers/leds/led-class-flash.c
+> @@ -285,8 +285,9 @@ static void led_flash_init_sysfs_groups(struct led_classdev_flash *fled_cdev)
+>  	led_cdev->groups = flash_groups;
+>  }
+>  
+> -int led_classdev_flash_register(struct device *parent,
+> -				struct led_classdev_flash *fled_cdev)
+> +int led_classdev_flash_register_ext(struct device *parent,
+> +				    struct led_classdev_flash *fled_cdev,
+> +				    struct led_init_data *init_data)
+>  {
+>  	struct led_classdev *led_cdev;
+>  	const struct led_flash_ops *ops;
+> @@ -312,13 +313,13 @@ int led_classdev_flash_register(struct device *parent,
+>  	}
+>  
+>  	/* Register led class device */
+> -	ret = led_classdev_register(parent, led_cdev);
+> +	ret = led_classdev_register_ext(parent, led_cdev, init_data);
+>  	if (ret < 0)
+>  		return ret;
+>  
+>  	return 0;
+>  }
+> -EXPORT_SYMBOL_GPL(led_classdev_flash_register);
+> +EXPORT_SYMBOL_GPL(led_classdev_flash_register_ext);
+>  
+>  void led_classdev_flash_unregister(struct led_classdev_flash *fled_cdev)
+>  {
+> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> index 3c7e3487b373..a8337e0e02ea 100644
+> --- a/drivers/leds/led-class.c
+> +++ b/drivers/leds/led-class.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/leds.h>
+>  #include <linux/list.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+>  #include <linux/slab.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/timer.h>
+> @@ -244,18 +245,25 @@ static int led_classdev_next_name(const char *init_name, char *name,
+>  }
+>  
+>  /**
+> - * of_led_classdev_register - register a new object of led_classdev class.
+> + * led_classdev_register_ext - register a new object of led_classdev class
+> + *			       with init data.
+>   *
+>   * @parent: parent of LED device
+>   * @led_cdev: the led_classdev structure for this device.
+> - * @np: DT node describing this LED
+> + * @init_data: LED class device initialization data
+>   */
+> -int of_led_classdev_register(struct device *parent, struct device_node *np,
+> -			    struct led_classdev *led_cdev)
+> +int led_classdev_register_ext(struct device *parent,
+> +			      struct led_classdev *led_cdev,
+> +			      struct led_init_data *init_data)
+>  {
+>  	char name[LED_MAX_NAME_SIZE];
+>  	int ret;
+>  
+> +	if (init_data && init_data->name)
+> +		led_cdev->name = init_data->name;
+> +	else
+> +		dev_info(parent, "init_data not available");
 > +
->   config LEDS_LM3533
->   	tristate "LED support for LM3533"
->   	depends on LEDS_CLASS
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index 4c1b0054f379..7a8b1f55d459 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -18,6 +18,7 @@ obj-$(CONFIG_LEDS_BD2802)		+= leds-bd2802.o
->   obj-$(CONFIG_LEDS_CPCAP)		+= leds-cpcap.o
->   obj-$(CONFIG_LEDS_LOCOMO)		+= leds-locomo.o
->   obj-$(CONFIG_LEDS_LM3530)		+= leds-lm3530.o
-> +obj-$(CONFIG_LEDS_LM3532)		+= leds-lm3532.o
->   obj-$(CONFIG_LEDS_LM3533)		+= leds-lm3533.o
->   obj-$(CONFIG_LEDS_LM3642)		+= leds-lm3642.o
->   obj-$(CONFIG_LEDS_MIKROTIK_RB532)	+= leds-rb532.o
-> diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
-> new file mode 100644
-> index 000000000000..005478359d06
-> --- /dev/null
-> +++ b/drivers/leds/leds-lm3532.c
-> @@ -0,0 +1,595 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// TI LM3532 LED driver
-> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+>  	ret = led_classdev_next_name(led_cdev->name, name, sizeof(name));
+>  	if (ret < 0)
+>  		return ret;
+> @@ -268,7 +276,8 @@ int of_led_classdev_register(struct device *parent, struct device_node *np,
+>  		mutex_unlock(&led_cdev->led_access);
+>  		return PTR_ERR(led_cdev->dev);
+>  	}
+> -	led_cdev->dev->of_node = np;
+> +	if (init_data && init_data->fwnode)
+> +		led_cdev->dev->of_node = to_of_node(init_data->fwnode);
+>  
+>  	if (ret)
+>  		dev_warn(parent, "Led %s renamed to %s due to name collision",
+> @@ -313,7 +322,7 @@ int of_led_classdev_register(struct device *parent, struct device_node *np,
+>  
+>  	return 0;
+>  }
+> -EXPORT_SYMBOL_GPL(of_led_classdev_register);
+> +EXPORT_SYMBOL_GPL(led_classdev_register_ext);
+>  
+>  /**
+>   * led_classdev_unregister - unregisters a object of led_properties class.
+> @@ -358,14 +367,15 @@ static void devm_led_classdev_release(struct device *dev, void *res)
+>  }
+>  
+>  /**
+> - * devm_of_led_classdev_register - resource managed led_classdev_register()
+> + * devm_led_classdev_register_ext - resource managed led_classdev_register_ext()
+>   *
+>   * @parent: parent of LED device
+>   * @led_cdev: the led_classdev structure for this device.
+> + * @init_data: LED class device initialization data
+>   */
+> -int devm_of_led_classdev_register(struct device *parent,
+> -				  struct device_node *np,
+> -				  struct led_classdev *led_cdev)
+> +int devm_led_classdev_register_ext(struct device *parent,
+> +				   struct led_classdev *led_cdev,
+> +				   struct led_init_data *init_data)
+>  {
+>  	struct led_classdev **dr;
+>  	int rc;
+> @@ -374,7 +384,7 @@ int devm_of_led_classdev_register(struct device *parent,
+>  	if (!dr)
+>  		return -ENOMEM;
+>  
+> -	rc = of_led_classdev_register(parent, np, led_cdev);
+> +	rc = led_classdev_register_ext(parent, led_cdev, init_data);
+>  	if (rc) {
+>  		devres_free(dr);
+>  		return rc;
+> @@ -385,7 +395,7 @@ int devm_of_led_classdev_register(struct device *parent,
+>  
+>  	return 0;
+>  }
+> -EXPORT_SYMBOL_GPL(devm_of_led_classdev_register);
+> +EXPORT_SYMBOL_GPL(devm_led_classdev_register_ext);
+>  
+>  static int devm_led_classdev_match(struct device *dev, void *res, void *data)
+>  {
+> diff --git a/drivers/leds/leds-cr0014114.c b/drivers/leds/leds-cr0014114.c
+> index 0e4262462cb9..1c82152764d2 100644
+> --- a/drivers/leds/leds-cr0014114.c
+> +++ b/drivers/leds/leds-cr0014114.c
+> @@ -207,8 +207,7 @@ static int cr0014114_probe_dt(struct cr0014114 *priv)
+>  		led->ldev.max_brightness	  = CR_MAX_BRIGHTNESS;
+>  		led->ldev.brightness_set_blocking = cr0014114_set_sync;
+>  
+> -		ret = devm_of_led_classdev_register(priv->dev, np,
+> -						    &led->ldev);
+> +		ret = devm_led_classdev_register(priv->dev, &led->ldev);
+>  		if (ret) {
+>  			dev_err(priv->dev,
+>  				"failed to register LED device %s, err %d",
+> diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
+> index 998f2ff6914d..b26cf78993d1 100644
+> --- a/drivers/leds/leds-gpio.c
+> +++ b/drivers/leds/leds-gpio.c
+> @@ -112,7 +112,7 @@ static int create_gpio_led(const struct gpio_led *template,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	return devm_of_led_classdev_register(parent, np, &led_dat->cdev);
+> +	return devm_led_classdev_register(parent, &led_dat->cdev);
+>  }
+>  
+>  struct gpio_leds_priv {
+> diff --git a/include/linux/led-class-flash.h b/include/linux/led-class-flash.h
+> index 700efaa9e115..ded8d9fa6149 100644
+> --- a/include/linux/led-class-flash.h
+> +++ b/include/linux/led-class-flash.h
+> @@ -90,15 +90,20 @@ static inline struct led_classdev_flash *lcdev_to_flcdev(
+>  }
+>  
+>  /**
+> - * led_classdev_flash_register - register a new object of led_classdev class
+> - *				 with support for flash LEDs
+> - * @parent: the flash LED to register
+> + * led_classdev_flash_register_ext - register a new object of LED class with
+> + *				     init data and with support for flash LEDs
+> + * @parent: LED flash controller device this flash LED is driven by
+>   * @fled_cdev: the led_classdev_flash structure for this device
+> + * @init_data: the LED class flash device initialization data
+>   *
+>   * Returns: 0 on success or negative error value on failure
+>   */
+> -extern int led_classdev_flash_register(struct device *parent,
+> -				struct led_classdev_flash *fled_cdev);
+> +extern int led_classdev_flash_register_ext(struct device *parent,
+> +					struct led_classdev_flash *fled_cdev,
+> +					struct led_init_data *init_data);
 > +
-> +#include <linux/i2c.h>
-> +#include <linux/leds.h>
-> +#include <linux/slab.h>
-> +#include <linux/regmap.h>
-> +#include <linux/input.h>
-> +#include <linux/types.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/module.h>
+> +#define led_classdev_flash_register(parent, fled_cdev)		\
+> +	led_classdev_flash_register_ext(parent, fled_cdev, NULL)
+>  
+>  /**
+>   * led_classdev_flash_unregister - unregisters an object of led_classdev class
+> diff --git a/include/linux/leds.h b/include/linux/leds.h
+> index 5263f87e1d2c..bffb4315fd66 100644
+> --- a/include/linux/leds.h
+> +++ b/include/linux/leds.h
+> @@ -20,6 +20,7 @@
+>  #include <linux/spinlock.h>
+>  #include <linux/timer.h>
+>  #include <linux/workqueue.h>
 > +#include <uapi/linux/uleds.h>
-> +#include <linux/gpio/consumer.h>
-> +
-> +#include <dt-bindings/leds/leds-lm3532.h>
-> +
-> +#define LM3532_NAME "lm3532-led"
-> +
-> +#define LM3532_REG_OUTPUT_CFG	0x10
-> +#define LM3532_REG_STARTSHUT_RAMP	0x11
-> +#define LM3532_REG_RT_RAMP	0x12
-> +#define LM3532_REG_PWM_A_CFG	0x13
-> +#define LM3532_REG_PWM_B_CFG	0x14
-> +#define LM3532_REG_PWM_C_CFG	0x15
-> +#define LM3532_REG_ZONE_CFG_A	0x16
-> +#define LM3532_REG_CTRL_A_BRT	0x17
-> +#define LM3532_REG_ZONE_CFG_B	0x18
-> +#define LM3532_REG_CTRL_B_BRT	0x19
-> +#define LM3532_REG_ZONE_CFG_C	0x1a
-> +#define LM3532_REG_CTRL_C_BRT	0x1b
-> +#define LM3532_REG_ENABLE	0x1d
-> +#define LM3532_ALS_CONFIG	0x23
-> +#define LM3532_REG_ZN_0_HI	0x60
-> +#define LM3532_REG_ZN_0_LO	0x61
-> +#define LM3532_REG_ZN_1_HI	0x62
-> +#define LM3532_REG_ZN_1_LO	0x63
-> +#define LM3532_REG_ZN_2_HI	0x64
-> +#define LM3532_REG_ZN_2_LO	0x65
-> +#define LM3532_REG_ZN_3_HI	0x66
-> +#define LM3532_REG_ZN_3_LO	0x67
-> +#define LM3532_REG_MAX		0x7e
-> +
-> +/* Contorl Enable */
-> +#define LM3532_CTRL_A_ENABLE	BIT(0)
-> +#define LM3532_CTRL_B_ENABLE	BIT(1)
-> +#define LM3532_CTRL_C_ENABLE	BIT(2)
-> +
-> +/* PWM Zone Control */
-> +#define LM3532_PWM_ZONE_MASK	0x7c
-> +#define LM3532_PWM_ZONE_0_EN	BIT(2)
-> +#define LM3532_PWM_ZONE_1_EN	BIT(3)
-> +#define LM3532_PWM_ZONE_2_EN	BIT(4)
-> +#define LM3532_PWM_ZONE_3_EN	BIT(5)
-> +#define LM3532_PWM_ZONE_4_EN	BIT(6)
-> +
-> +/* Brightness Configuration */
-> +#define LM3532_I2C_CTRL		BIT(0)
-> +#define LM3532_LINEAR_MAP	BIT(1)
-> +#define LM3532_ZONE_MASK	(BIT(2) | BIT(3) | BIT(4))
-> +#define LM3532_ZONE_0		0
-> +#define LM3532_ZONE_1		BIT(2)
-> +#define LM3532_ZONE_2		BIT(3)
-> +#define LM3532_ZONE_3		(BIT(2) | BIT(3))
-> +#define LM3532_ZONE_4		BIT(4)
-> +
-> +#define LM3532_ENABLE_ALS	BIT(3)
-> +#define LM3532_ALS_SEL_SHIFT	6
-> +
-> +/* Zone Boundary Register */
-> +#define LM3532_ALS_WINDOW_mV	2000
-> +#define LM3532_ALS_ZB_MAX	4
-> +#define LM3532_ALS_OFFSET_mV	2
-> +
-> +#define LM3532_CONTROL_A	0
-> +#define LM3532_CONTROL_B	1
-> +#define LM3532_CONTROL_C	2
-> +#define LM3532_MAX_CONTROL_BANKS 3
-> +#define LM3532_MAX_LED_STRINGS	3
-> +
-> +#define LM3532_OUTPUT_CFG_MASK	0x3
-> +#define LM3532_BRT_VAL_ADJUST	8
-> +#define LM3532_RAMP_DOWN_SHIFT	3
-> +
-> +/*
-> + * struct lm3532_als_data
-> + * @config - value of ALS configuration register
-> + * @als1_imp_sel - value of ALS1 resistor select register
-> + * @als2_imp_sel - value of ALS2 resistor select register
-> + * @als_avrg_time - ALS averaging time
-> + * @als_input_mode - ALS input mode for brightness control
-> + * @als_vmin - Minimum ALS voltage
-> + * @als_vmax - Maximum ALS voltage
-> + * @zone_lo - values of ALS lo ZB(Zone Boundary) registers
-> + * @zone_hi - values of ALS hi ZB(Zone Boundary) registers
-> + */
-> +struct lm3532_als_data {
-> +	u8 config;
-> +	u8 als1_imp_sel;
-> +	u8 als2_imp_sel;
-> +	u8 als_avrg_time;
-> +	u8 als_input_mode;
-> +	u32 als_vmin;
-> +	u32 als_vmax;
-> +	u8 zones_lo[LM3532_ALS_ZB_MAX];
-> +	u8 zones_hi[LM3532_ALS_ZB_MAX];
+>  
+>  struct device;
+>  struct led_pattern;
+> @@ -34,6 +35,13 @@ enum led_brightness {
+>  	LED_FULL	= 255,
+>  };
+>  
+> +struct led_init_data {
+> +	/* Device fwnode handle */
+> +	struct fwnode_handle *fwnode;
+> +	/* Requested LED class device name */
+> +	char name[LED_MAX_NAME_SIZE];
 > +};
 > +
+>  struct led_classdev {
+>  	const char		*name;
+>  	enum led_brightness	 brightness;
+> @@ -129,16 +137,25 @@ struct led_classdev {
+>  	struct mutex		led_access;
+>  };
+>  
+> -extern int of_led_classdev_register(struct device *parent,
+> -				    struct device_node *np,
+> -				    struct led_classdev *led_cdev);
+> -#define led_classdev_register(parent, led_cdev)				\
+> -	of_led_classdev_register(parent, NULL, led_cdev)
+> -extern int devm_of_led_classdev_register(struct device *parent,
+> -					 struct device_node *np,
+> -					 struct led_classdev *led_cdev);
+> -#define devm_led_classdev_register(parent, led_cdev)			\
+> -	devm_of_led_classdev_register(parent, NULL, led_cdev)
 > +/**
-> + * struct lm3532_led
-> + * @led_dev: led class device
-> + * @priv - Pointer the device data structure
-> + * @control_bank - Control bank the LED is associated to
-> + * @mode - Mode of the LED string
-> + * @num_leds - Number of LED strings are supported in this array
-> + * @led_strings - The LED strings supported in this array
-> + * @label - LED label
+> + * led_classdev_register_ext - register a new object of LED class with
+> + *			       init data
+> + * @parent: LED controller device this LED is driven by
+> + * @led_cdev: the led_classdev structure for this device
+> + * @init_data: the LED class device initialization data
+> + *
+> + * Returns: 0 on success or negative error value on failure
 > + */
-> +struct lm3532_led {
-> +	struct led_classdev led_dev;
-> +	struct lm3532_data *priv;
-> +
-> +	int control_bank;
-> +	int mode;
-> +	int num_leds;
-> +	u32 led_strings[LM3532_MAX_CONTROL_BANKS];
-> +	char label[LED_MAX_NAME_SIZE];
-> +};
-> +
-> +/**
-> + * struct lm3532_data
-> + * @enable_gpio - Hardware enable gpio
-> + * @regulator: regulator
-> + * @client: i2c client
-> + * @regmap - Devices register map
-> + * @dev - Pointer to the devices device struct
-> + * @lock - Lock for reading/writing the device
-> + * @als_data - Pointer to the als data struct
-> + * @runtime_ramp_up - Runtime ramp up setting
-> + * @runtime_ramp_down - Runtime ramp down setting
-> + * @leds - Array of LED strings
-> + */
-> +struct lm3532_data {
-> +	struct gpio_desc *enable_gpio;
-> +	struct regulator *regulator;
-> +	struct i2c_client *client;
-> +	struct regmap *regmap;
-> +	struct device *dev;
-> +	struct mutex lock;
-> +
-> +	struct lm3532_als_data *als_data;
-> +
-> +	u32 runtime_ramp_up;
-> +	u32 runtime_ramp_down;
-> +
-> +	struct lm3532_led leds[];
-> +};
-> +
-> +static const struct reg_default lm3532_reg_defs[] = {
-> +	{LM3532_REG_OUTPUT_CFG, 0xe4},
-> +	{LM3532_REG_STARTSHUT_RAMP, 0xc0},
-> +	{LM3532_REG_RT_RAMP, 0xc0},
-> +	{LM3532_REG_PWM_A_CFG, 0x82},
-> +	{LM3532_REG_PWM_B_CFG, 0x82},
-> +	{LM3532_REG_PWM_C_CFG, 0x82},
-> +	{LM3532_REG_ZONE_CFG_A, 0xf1},
-> +	{LM3532_REG_CTRL_A_BRT, 0xf3},
-> +	{LM3532_REG_ZONE_CFG_B, 0xf1},
-> +	{LM3532_REG_CTRL_B_BRT, 0xf3},
-> +	{LM3532_REG_ZONE_CFG_C, 0xf1},
-> +	{LM3532_REG_CTRL_C_BRT, 0xf3},
-> +	{LM3532_REG_ENABLE, 0xf8},
-> +	{LM3532_ALS_CONFIG, 0x44},
-> +	{LM3532_REG_ZN_0_HI, 0x35},
-> +	{LM3532_REG_ZN_0_LO, 0x33},
-> +	{LM3532_REG_ZN_1_HI, 0x6a},
-> +	{LM3532_REG_ZN_1_LO, 0x66},
-> +	{LM3532_REG_ZN_2_HI, 0xa1},
-> +	{LM3532_REG_ZN_2_LO, 0x99},
-> +	{LM3532_REG_ZN_3_HI, 0xdc},
-> +	{LM3532_REG_ZN_3_LO, 0xcc},
-> +};
-> +
-> +static const struct regmap_config lm3532_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +
-> +	.max_register = LM3532_REG_MAX,
-> +	.reg_defaults = lm3532_reg_defs,
-> +	.num_reg_defaults = ARRAY_SIZE(lm3532_reg_defs),
-> +	.cache_type = REGCACHE_FLAT,
-> +};
-> +
-> +static int lm3532_led_enable(struct lm3532_led *led_data)
-> +{
-> +	int ctrl_en_val;
-> +	int ret;
-> +
-> +	switch (led_data->control_bank) {
-> +	case LM3532_CONTROL_A:
-> +		ctrl_en_val = LM3532_CTRL_A_ENABLE;
-> +		break;
-> +	case LM3532_CONTROL_B:
-> +		ctrl_en_val = LM3532_CTRL_B_ENABLE;
-> +		break;
-> +	case LM3532_CONTROL_C:
-> +		ctrl_en_val = LM3532_CTRL_C_ENABLE;
-> +		break;
-> +	default:
-> +		dev_err(led_data->priv->dev, "Invalid control bank\n");
-
-If control_bank was validated in lm3532_parse_node(), then you wouldn't
-have to take into account this option here.
-
-Besides, you don't need this switch statement, but can easily calculate
-ctrl_en_val:
-
-#define LM3532_GET_CTRL_BANK_EN_VAL(bank_id) BIT(bank_id)
-
-> +		return -EINVAL;
-> +	};
-> +
-> +	ret = regmap_update_bits(led_data->priv->regmap, LM3532_REG_ENABLE,
-> +					 ctrl_en_val, ctrl_en_val);
-> +	if (ret) {
-> +		dev_err(led_data->priv->dev, "Failed to set ctrl:%d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return regulator_enable(led_data->priv->regulator);
-> +}
-> +
-> +static int lm3532_led_disable(struct lm3532_led *led_data)
-> +{
-> +	int ctrl_en_val;
-> +	int ret;
-> +
-> +	switch (led_data->control_bank) {
-> +	case LM3532_CONTROL_A:
-> +		ctrl_en_val = LM3532_CTRL_A_ENABLE;
-> +		break;
-> +	case LM3532_CONTROL_B:
-> +		ctrl_en_val = LM3532_CTRL_B_ENABLE;
-> +		break;
-> +	case LM3532_CONTROL_C:
-> +		ctrl_en_val = LM3532_CTRL_C_ENABLE;
-> +		break;
-> +	default:
-> +		dev_err(led_data->priv->dev, "Invalid control bank\n");
-> +		return -EINVAL;
-> +	};
-
-Ditto.
-
-> +
-> +	ret = regmap_update_bits(led_data->priv->regmap, LM3532_REG_ENABLE,
-> +					 ctrl_en_val, ~ctrl_en_val);
-> +	if (ret) {
-> +		dev_err(led_data->priv->dev, "Failed to set ctrl:%d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return regulator_disable(led_data->priv->regulator);
-> +}
-> +
-> +static int lm3532_brightness_set(struct led_classdev *led_cdev,
-> +				 enum led_brightness brt_val)
-> +{
-> +	struct lm3532_led *led =
-> +			container_of(led_cdev, struct lm3532_led, led_dev);
-> +	u8 brightnes_reg;
-> +	int ret;
-> +
-> +	mutex_lock(&led->priv->lock);
-> +
-> +	if (led->mode == LM3532_BL_MODE_ALS) {
-> +		ret = 0;
-> +		goto unlock;
-> +	}
-> +
-> +	switch (led->control_bank) {
-> +	case LM3532_CONTROL_A:
-> +		brightnes_reg = LM3532_REG_CTRL_A_BRT;
-> +		break;
-> +	case LM3532_CONTROL_B:
-> +		brightnes_reg = LM3532_REG_CTRL_B_BRT;
-> +		break;
-> +	case LM3532_CONTROL_C:
-> +		brightnes_reg = LM3532_REG_CTRL_C_BRT;
-> +		break;
-> +	default:
-> +		dev_err(led->priv->dev, "Invalid control bank\n");
-> +		ret = -EINVAL;
-> +		goto unlock;
-> +	};
-
-Similarly here. use following macro:
-
-#define LM3532_GET_CTRL_BANK_BRT_REG (bank_id) 
-BIT((LM3532_REG_CTRL_A_BRT + bank_id*2))
-
-> +	if (brt_val == LED_OFF) {
-> +		ret = lm3532_led_disable(led);
-> +		goto unlock;
-> +	}
-> +
-> +	lm3532_led_enable(led);
-> +	brt_val = brt_val / LM3532_BRT_VAL_ADJUST;
-> +
-> +	ret = regmap_write(led->priv->regmap, brightnes_reg, brt_val);
-> +
-> +unlock:
-> +	mutex_unlock(&led->priv->lock);
-> +	return ret;
-> +}
-> +
-> +static int lm3532_init_registers(struct lm3532_led *led)
-> +{
-> +	struct lm3532_data *drvdata = led->priv;
-> +	unsigned int runtime_ramp_val;
-> +	unsigned int output_cfg_val = 0;
-> +	unsigned int output_cfg_shift = 0;
-> +	unsigned int output_cfg_mask = 0;
-> +	int ret, i;
-> +
-> +	for (i = 0; i < led->num_leds; i++) {
-> +		output_cfg_shift = led->led_strings[i] * 2;
-> +		output_cfg_val |= (led->control_bank << output_cfg_shift);
-> +		output_cfg_mask |= LM3532_OUTPUT_CFG_MASK << output_cfg_shift;
-> +	}
-> +
-> +	ret = regmap_update_bits(drvdata->regmap, LM3532_REG_OUTPUT_CFG,
-> +				 output_cfg_mask, output_cfg_val);
-> +
-> +	runtime_ramp_val = drvdata->runtime_ramp_up |
-> +			 (drvdata->runtime_ramp_down << LM3532_RAMP_DOWN_SHIFT);
-> +
-> +	return regmap_write(drvdata->regmap, LM3532_REG_RT_RAMP,
-> +			    runtime_ramp_val);
-> +}
-> +
-> +static int lm3532_als_configure(struct lm3532_data *priv)
-> +{
-> +	struct lm3532_als_data *als = priv->als_data;
-> +	u32 als_vmin, als_vmax, als_vstep;
-> +	int zone_reg = LM3532_REG_ZN_0_HI;
-> +	int ret;
-> +	int i;
-> +
-> +	als_vmin = als->als_vmin;
-> +	als_vmax = als->als_vmax;
-> +
-> +	als_vstep = (als_vmax - als_vmin) / ((LM3532_ALS_ZB_MAX + 1) * 2);
-> +
-> +	for (i = 0; i < LM3532_ALS_ZB_MAX; i++) {
-> +		als->zones_lo[i] = ((als_vmin + als_vstep + (i * als_vstep)) *
-> +				LED_FULL) / 1000;
-> +		als->zones_hi[i] = ((als_vmin + LM3532_ALS_OFFSET_mV +
-> +				als_vstep + (i * als_vstep)) * LED_FULL) / 1000;
-> +
-> +		zone_reg = LM3532_REG_ZN_0_HI + i * 2;
-> +		ret = regmap_write(priv->regmap, zone_reg, als->zones_lo[i]);
-> +		if (ret)
-> +			return ret;
-> +
-> +		zone_reg += 1;
-> +		ret = regmap_write(priv->regmap, zone_reg, als->zones_hi[i]);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	als->config = (als->als_avrg_time | (LM3532_ENABLE_ALS) |
-> +		(als->als_input_mode << LM3532_ALS_SEL_SHIFT));
-> +
-> +	return regmap_write(priv->regmap, LM3532_ALS_CONFIG, als->config);
-> +}
-> +
-> +static int lm3532_parse_als(struct lm3532_data *priv)
-> +{
-> +	struct lm3532_als_data *als;
-> +	int ret;
-> +
-> +	als = devm_kzalloc(priv->dev, sizeof(*als), GFP_KERNEL);
-> +	if (als == NULL)
-> +		return -ENOMEM;
-> +
-> +	ret = device_property_read_u32(&priv->client->dev, "als-vmin",
-> +				       &als->als_vmin);
-> +	if (ret)
-> +		als->als_vmin = 0;
-> +
-> +	ret = device_property_read_u32(&priv->client->dev, "als-vmax",
-> +				       &als->als_vmax);
-> +	if (ret)
-> +		als->als_vmax = LM3532_ALS_WINDOW_mV;
-> +
-> +	ret = device_property_read_u8(&priv->client->dev, "als1-imp-sel",
-> +				      &als->als1_imp_sel);
-> +	if (ret)
-> +		als->als1_imp_sel = 0;
-> +
-> +	ret = device_property_read_u8(&priv->client->dev, "als2-imp-sel",
-> +				      &als->als2_imp_sel);
-> +	if (ret)
-> +		als->als2_imp_sel = 0;
-> +
-> +	ret = device_property_read_u8(&priv->client->dev, "als-avrg-time",
-> +				      &als->als_avrg_time);
-> +	if (ret)
-> +		als->als_avrg_time = 0;
-> +
-> +	ret = device_property_read_u8(&priv->client->dev, "als-input-mode",
-> +				      &als->als_input_mode);
-> +	if (ret)
-> +		als->als_input_mode = 0;
-> +
-> +	priv->als_data = als;
-> +
-> +	return ret;
-> +}
-> +
-> +static int lm3532_parse_node(struct lm3532_data *priv)
-> +{
-> +	struct fwnode_handle *child = NULL;
-> +	struct lm3532_led *led;
-> +	const char *name;
-> +	int control_bank;
-> +	size_t i = 0;
-> +	int ret;
-> +
-> +	priv->enable_gpio = devm_gpiod_get_optional(&priv->client->dev,
-> +						   "enable", GPIOD_OUT_LOW);
-> +	if (IS_ERR(priv->enable_gpio))
-> +		priv->enable_gpio = NULL;
-> +
-> +	priv->regulator = devm_regulator_get(&priv->client->dev, "vin");
-> +	if (IS_ERR(priv->regulator))
-> +		priv->regulator = NULL;
-> +
-> +	ret = device_property_read_u32(&priv->client->dev, "ramp-down-ms",
-> +				       &priv->runtime_ramp_up);
-> +	if (ret)
-> +		dev_info(&priv->client->dev, "ramp-down-ms property missing\n");
-> +
-> +	ret = device_property_read_u32(&priv->client->dev, "ramp-down-ms",
-> +				       &priv->runtime_ramp_down);
-> +	if (ret)
-> +		dev_info(&priv->client->dev, "ramp-down-ms property missing\n");
-> +
-> +	device_for_each_child_node(priv->dev, child) {
-> +		led = &priv->leds[i];
-> +
-> +		ret = fwnode_property_read_u32(child, "reg", &control_bank);
-> +		if (ret) {
-> +			dev_err(&priv->client->dev, "reg property missing\n");
-> +			fwnode_handle_put(child);
-> +			goto child_out;
-> +		}
-> +
-> +		if (control_bank > LM3532_CONTROL_C) {
-> +			dev_err(&priv->client->dev, "Control bank invalid\n");
-> +			continue;
-> +		}
-> +
-> +		led->control_bank = control_bank;
-> +
-> +		ret = fwnode_property_read_u32(child, "ti,led-mode",
-> +					       &led->mode);
-> +		if (ret) {
-> +			dev_err(&priv->client->dev, "ti,led-mode property missing\n");
-> +			fwnode_handle_put(child);
-> +			goto child_out;
-> +		}
-> +
-> +		if (led->mode == LM3532_BL_MODE_ALS) {
-> +			ret = lm3532_parse_als(priv);
-> +			if (ret)
-> +				dev_err(&priv->client->dev, "Failed to parse als\n");
-> +			else
-> +				lm3532_als_configure(priv);
-> +		}
-> +
-> +		led->num_leds = fwnode_property_read_u32_array(child,
-> +							       "led-sources",
-> +							       NULL, 0);
-> +
-> +		if (led->num_leds > LM3532_MAX_LED_STRINGS) {
-> +			dev_err(&priv->client->dev, "To many LED string defined\n");
-> +			continue;
-> +		}
-> +
-> +		ret = fwnode_property_read_u32_array(child, "led-sources",
-> +						    led->led_strings,
-> +						    led->num_leds);
-> +		if (ret) {
-> +			dev_err(&priv->client->dev, "led-sources property missing\n");
-> +			fwnode_handle_put(child);
-> +			goto child_out;
-> +		}
-> +
-> +		fwnode_property_read_string(child, "linux,default-trigger",
-> +					    &led->led_dev.default_trigger);
-> +
-> +		ret = fwnode_property_read_string(child, "label", &name);
-> +		if (ret)
-> +			snprintf(led->label, sizeof(led->label),
-> +				"%s::", priv->client->name);
-> +		else
-> +			snprintf(led->label, sizeof(led->label),
-> +				 "%s:%s", priv->client->name, name);
-> +
-> +		led->priv = priv;
-> +		led->led_dev.name = led->label;
-> +		led->led_dev.brightness_set_blocking = lm3532_brightness_set;
-> +
-> +		ret = devm_led_classdev_register(priv->dev, &led->led_dev);
-> +		if (ret) {
-> +			dev_err(&priv->client->dev, "led register err: %d\n",
-> +				ret);
-> +			fwnode_handle_put(child);
-> +			goto child_out;
-> +		}
-> +
-> +		lm3532_init_registers(led);
-> +
-> +		i++;
-> +	}
-> +
-> +child_out:
-> +	return ret;
-> +}
-> +
-> +static int lm3532_probe(struct i2c_client *client,
-> +			   const struct i2c_device_id *id)
-> +{
-> +	struct lm3532_data *drvdata;
-> +	int ret = 0;
-> +	int count;
-> +
-> +	count = device_get_child_node_count(&client->dev);
-> +	if (!count) {
-> +		dev_err(&client->dev, "LEDs are not defined in device tree!");
-> +		return -ENODEV;
-> +	}
-> +
-> +	drvdata = devm_kzalloc(&client->dev, struct_size(drvdata, leds, count),
-> +			   GFP_KERNEL);
-> +	if (drvdata == NULL)
-> +		return -ENOMEM;
-> +
-> +	drvdata->client = client;
-> +	drvdata->dev = &client->dev;
-> +
-> +	drvdata->regmap = devm_regmap_init_i2c(client, &lm3532_regmap_config);
-> +	if (IS_ERR(drvdata->regmap)) {
-> +		ret = PTR_ERR(drvdata->regmap);
-> +		dev_err(&client->dev, "Failed to allocate register map: %d\n",
-> +			ret);
-> +		return ret;
-> +	}
-> +
-> +	mutex_init(&drvdata->lock);
-> +	i2c_set_clientdata(client, drvdata);
-> +
-> +	ret = lm3532_parse_node(drvdata);
-> +	if (ret) {
-> +		dev_err(&client->dev, "Failed to parse node\n");
-> +		return ret;
-> +	}
-> +
-> +	if (drvdata->enable_gpio)
-> +		gpiod_direction_output(drvdata->enable_gpio, 1);
-> +
-> +	return ret;
-> +}
-> +
-> +static int lm3532_remove(struct i2c_client *client)
-> +{
-> +	struct lm3532_data *drvdata = i2c_get_clientdata(client);
-
-mutex_destroy() is missing here.
-
-> +	if (drvdata->enable_gpio)
-> +		gpiod_direction_output(drvdata->enable_gpio, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id of_lm3532_leds_match[] = {
-> +	{ .compatible = "ti,lm3532", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, of_lm3532_leds_match);
-> +
-> +static const struct i2c_device_id lm3532_id[] = {
-> +	{LM3532_NAME, 0},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, lm3532_id);
-> +
-> +static struct i2c_driver lm3532_i2c_driver = {
-> +	.probe = lm3532_probe,
-> +	.remove = lm3532_remove,
-> +	.id_table = lm3532_id,
-> +	.driver = {
-> +		.name = LM3532_NAME,
-> +		.of_match_table = of_lm3532_leds_match,
-> +	},
-> +};
-> +module_i2c_driver(lm3532_i2c_driver);
-> +
-> +MODULE_DESCRIPTION("Back Light driver for LM3532");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Dan Murphy <dmurphy@ti.com>");
-> diff --git a/include/dt-bindings/leds/leds-lm3532.h b/include/dt-bindings/leds/leds-lm3532.h
-> new file mode 100644
-> index 000000000000..724dbc0cb395
-> --- /dev/null
-> +++ b/include/dt-bindings/leds/leds-lm3532.h
-
-This should go in a separate patch, with DT bindings - see checkpatch.pl
-complaint.
-
-> @@ -0,0 +1,72 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* TI LM3532 LED driver
-> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-> + */
-> +
-> +#ifndef __DT_BINDINGS_LEDS_LM3532_H
-> +#define __DT_BINDINGS_LEDS_LM3532_H
-> +
-> +#define LM3532_BL_MODE_MANUAL	0x00 /* "man" */
-> +#define LM3532_BL_MODE_ALS	0x01 /* "als" */
-> +
-> +/* ALS Resistor Select */
-> +#define LM3532_IMP_HIGH		0x00
-> +#define LM3532_IMP_37K		0x01
-> +#define LM3532_IMP_18_5K	0x02
-> +#define LM3532_IMP_12_33K	0x03
-> +#define LM3532_IMP_9_25K	0x04
-> +#define LM3532_IMP_7_4K		0x05
-> +#define LM3532_IMP_6_17K	0x06
-> +#define LM3532_IMP_5_29K	0x07
-> +#define LM3532_IMP_4_63K	0x08
-> +#define LM3532_IMP_4_11K	0x09
-> +#define LM3532_IMP_3_7K		0x0a
-> +#define LM3532_IMP_3_36K	0x0b
-> +#define LM3532_IMP_3_08K	0x0c
-> +#define LM3532_IMP_2_85K	0x0d
-> +#define LM3532_IMP_2_64K	0x0e
-> +#define LM3532_IMP_2_44K	0x0f
-> +#define LM3532_IMP_2_31K	0x10
-> +#define LM3532_IMP_2_18K	0x11
-> +#define LM3532_IMP_2_06K	0x12
-> +#define LM3532_IMP_1_95K	0x13
-> +#define LM3532_IMP_1_85K	0x14
-> +#define LM3532_IMP_1_76K	0x15
-> +#define LM3532_IMP_1_68K	0x16
-> +#define LM3532_IMP_1_61K	0x17
-> +#define LM3532_IMP_1_54K	0x18
-> +#define LM3532_IMP_1_48K	0x19
-> +#define LM3532_IMP_1_42K	0x1a
-> +#define LM3532_IMP_1_37K	0x1b
-> +#define LM3532_IMP_1_32K	0x1c
-> +#define LM3532_IMP_1_28K	0x1d
-> +#define LM3532_IMP_1_23K	0x1e
-> +#define LM3532_IMP_1_19K	0x1f
-> +
-> +/* ALS Averaging Time */
-> +#define LM3532_ALS_AVRG_TIME_17_92ms	0x00
-> +#define LM3532_ALS_AVRG_TIME_35_84ms	0x01
-> +#define LM3532_ALS_AVRG_TIME_71_68ms	0x02
-> +#define LM3532_ALS_AVRG_TIME_143_36ms	0x03
-> +#define LM3532_ALS_AVRG_TIME_286_72ms	0x04
-> +#define LM3532_ALS_AVRG_TIME_573_44ms	0x05
-> +#define LM3532_ALS_AVRG_TIME_1146_88ms	0x06
-> +#define LM3532_ALS_AVRG_TIME_2293_76ms	0x07
-> +
-> +/* ALS input select */
-> +#define LM3532_ALS_INPUT_AVRG	0x00 /* ALS1 and ALS2 input average */
-> +#define LM3532_ALS_INPUT_ALS1	0x01 /* ALS1 Input */
-> +#define LM3532_ALS_INPUT_ALS2	0x02 /* ALS2 Input */
-> +#define LM3532_ALS_INPUT_CEIL	0x03 /* Max of ALS1 and ALS2 */
-> +
-> +/* Ramp Times */
-> +#define LM3532_RAMP_8us		0x00
-> +#define LM3532_RAMP_1024us	0x01
-> +#define LM3532_RAMP_2048us	0x02
-> +#define LM3532_RAMP_4096us	0x03
-> +#define LM3532_RAMP_8192us	0x04
-> +#define LM3532_RAMP_16384us	0x05
-> +#define LM3532_RAMP_32768us	0x06
-> +#define LM3532_RAMP_65536us	0x07
-> +
-> +#endif /* __DT_BINDINGS_LEDS_LM3532_H */
+> +extern int led_classdev_register_ext(struct device *parent,
+> +				     struct led_classdev *led_cdev,
+> +				     struct led_init_data *init_data);
+> +#define led_classdev_register(parent, led_cdev)			\
+> +	led_classdev_register_ext(parent, led_cdev, NULL)
+> +extern int devm_led_classdev_register_ext(struct device *parent,
+> +					  struct led_classdev *led_cdev,
+> +					  struct led_init_data *init_data);
+> +#define devm_led_classdev_register(parent, led_cdev)		\
+> +	devm_led_classdev_register_ext(parent, led_cdev, NULL)
+>  extern void led_classdev_unregister(struct led_classdev *led_cdev);
+>  extern void devm_led_classdev_unregister(struct device *parent,
+>  					 struct led_classdev *led_cdev);
 > 
 
 -- 
 Best regards,
-Jacek Anaszewski
+Oleh Kravchenko
+Phone: +380972763224 | oleg@kaa.org.ua | Skype: oleg_krava
