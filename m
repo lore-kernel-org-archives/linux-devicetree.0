@@ -1,527 +1,731 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v6 4/4] iio:temperature: Add MAX31856 thermocouple
- support
-Date: Sun, 10 Mar 2019 09:51:54 +0000
-Message-ID: <20190310095154.2ac64c21@archlinux>
-References: <20190307103409.24174-1-patrick.havelange@essensium.com>
-        <20190307103409.24174-4-patrick.havelange@essensium.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
+Subject: Re: [PATCH v11 1/4] dmaengine: 8250_mtk_dma: add MediaTek uart DMA support
+Date: Sun, 10 Mar 2019 19:15:39 +0800
+Message-ID: <CANMq1KBvr9cTBdjX9UD83QuHYb7c9Le6299w8yTBw+-b9pz6ew@mail.gmail.com>
+References: <1551923135-32479-1-git-send-email-long.cheng@mediatek.com> <1551923135-32479-2-git-send-email-long.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190307103409.24174-4-patrick.havelange@essensium.com>
+In-Reply-To: <1551923135-32479-2-git-send-email-long.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick Havelange <patrick.havelange@essensium.com>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matt Weber <matthew.weber@rockwellcollins.com>, Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Long Cheng <long.cheng@mediatek.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, Yingjoe Chen <yingjoe.chen@medi>
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  7 Mar 2019 11:34:09 +0100
-Patrick Havelange <patrick.havelange@essensium.com> wrote:
-
-> From: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
-> 
-> This patch adds support for Maxim MAX31856 thermocouple
-> temperature sensor support.
-> 
-> More information can be found in:
-> https://www.maximintegrated.com/en/ds/MAX31856.pdf
-> 
-> NOTE: Driver support only Comparator Mode.
-> 
-> Signed-off-by: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
-> Signed-off-by: Matt Weber <matthew.weber@rockwellcollins.com>
-> Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
-Looks good to me. I'll just wait on the DT parts getting reviewed.
-
-Thanks,
-
-Jonathan
-
+On Thu, Mar 7, 2019 at 9:45 AM Long Cheng <long.cheng@mediatek.com> wrote:
+>
+> In DMA engine framework, add 8250 uart dma to support MediaTek uart.
+> If MediaTek uart enabled(SERIAL_8250_MT6577), and want to improve
+> the performance, can enable the function.
+>
+> Signed-off-by: Long Cheng <long.cheng@mediatek.com>
 > ---
-> Changes
-> v1 -> v2
-> [Peter
-> 	1. Fixed all space & 'return' related comments
-> 	2. Removed 'sysfs_create_group' api  because
-> 	   iio_device_register function is handling sysfs entry
-> 	3. Return -EIO if there is any fault
-> 	4. Added check for 'read_size' before spi read call
-> 	5. Removed license text from the source file
-> 	6. Added .o file in alphabetic order
-> 	7. Used #defines instead of magic bits
-> 
-> v2 -> v3
-> [Jonathan
-> 	1. Used bool for fault_oc and fault_ovuv
-> 	2. Changed 'max31856_read' function and use byte array to
-> 	   store registers value.
-> 	3. Used 'GENMASK' where required
->         4. Changed logic 'max31856_thermocouple_read' function. Used
-> 	   array to read registers value.
-> 	5. Used 'devm_iio_device_register' and removed 'max31856_remove'.
-> 	6. Fixed other cosmetic changes.
-> 	7. Added 'sysfs-bus-iio-temperature-max31856' file and updated
-> 	   'MAINTAINERS' file.
-> 
-> v3 -> v4
-> [Jonathan
-> 	1. Removed unwanted logic
-> 	2. Updated code to handle return value of max31856_read call
-> 	3. Added devicetree id table
-> 	4. Removed one-shot support from driver as this support was not
-> 	   implemented with correct design.
-> 
-> v4 -> v5
-> [Patrick
-> 	1. Rename thermocouple type to maxim,thermocouple-type for DT entry
-> 	2. Don't cache values from the Fault Status Register
-> 	3. Simplify a bit max31856_init()
-> 	4. Use IIO_NO_MOD in switch case + default error case
-> 	5. Use dev_*() instead of pr_*()
-> 	6. Fix missing space in comments
-> 	7. Removed iio_info.driver_module assignment as no longer present
-> 	8. Don't keep read/write buffer into the internal driver struct
-> 	9. Updated kernel version, add missing space in documentation
->        10. Updated (c) year
->        11. Removed linux/init.h #include
->        12. More use of BIT() macro
->        13. Removed iio_chan_spec.address assignment as not used
->        14. In max31856_thermocouple_read(), same switch case order as
-> 	   channels definition
->        15. Refactor show_fault_*() functions
->        16. Use u8 as register type in max31856_{read,write}()
-> 
-> v5 -> v6
-> [Patrick
-> 	1. Use generic thermocouple-type property
-> 	2. Fix doc for fault_ovuv entry
-> 	3. Add check for supported thermocouple-types in probe()
-> ---
->  .../sysfs-bus-iio-temperature-max31856        |  24 ++
->  drivers/iio/temperature/Kconfig               |  10 +
->  drivers/iio/temperature/Makefile              |   1 +
->  drivers/iio/temperature/max31856.c            | 353 ++++++++++++++++++
->  4 files changed, 388 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-temperature-max31856
->  create mode 100644 drivers/iio/temperature/max31856.c
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-temperature-max31856 b/Documentation/ABI/testing/sysfs-bus-iio-temperature-max31856
+>  drivers/dma/mediatek/Kconfig          |   11 +
+>  drivers/dma/mediatek/Makefile         |    1 +
+>  drivers/dma/mediatek/mtk-uart-apdma.c |  660 +++++++++++++++++++++++++++++++++
+>  3 files changed, 672 insertions(+)
+>  create mode 100644 drivers/dma/mediatek/mtk-uart-apdma.c
+>
+> diff --git a/drivers/dma/mediatek/Kconfig b/drivers/dma/mediatek/Kconfig
+> index 680fc05..ac49eb6 100644
+> --- a/drivers/dma/mediatek/Kconfig
+> +++ b/drivers/dma/mediatek/Kconfig
+> @@ -24,3 +24,14 @@ config MTK_CQDMA
+>
+>           This controller provides the channels which is dedicated to
+>           memory-to-memory transfer to offload from CPU.
+> +
+> +config MTK_UART_APDMA
+> +       tristate "MediaTek SoCs APDMA support for UART"
+> +       depends on OF && SERIAL_8250_MT6577
+> +       select DMA_ENGINE
+> +       select DMA_VIRTUAL_CHANNELS
+> +       help
+> +         Support for the UART DMA engine found on MediaTek MTK SoCs.
+> +         When SERIAL_8250_MT6577 is enabled, and if you want to use DMA,
+> +         you can enable the config. The DMA engine can only be used
+> +         with MediaTek SoCs.
+> diff --git a/drivers/dma/mediatek/Makefile b/drivers/dma/mediatek/Makefile
+> index 41bb381..61a6d29 100644
+> --- a/drivers/dma/mediatek/Makefile
+> +++ b/drivers/dma/mediatek/Makefile
+> @@ -1,2 +1,3 @@
+> +obj-$(CONFIG_MTK_UART_APDMA) += mtk-uart-apdma.o
+>  obj-$(CONFIG_MTK_HSDMA) += mtk-hsdma.o
+>  obj-$(CONFIG_MTK_CQDMA) += mtk-cqdma.o
+> diff --git a/drivers/dma/mediatek/mtk-uart-apdma.c b/drivers/dma/mediatek/mtk-uart-apdma.c
 > new file mode 100644
-> index 000000000000..3b3509a3ef2f
+> index 0000000..9ed7a49
 > --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-temperature-max31856
-> @@ -0,0 +1,24 @@
-> +What:		/sys/bus/iio/devices/iio:deviceX/fault_oc
-> +KernelVersion:	5.1
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Open-circuit fault. The detection of open-circuit faults,
-> +		such as those caused by broken thermocouple wires.
-> +		Reading returns either '1' or '0'.
-> +		'1' = An open circuit such as broken thermocouple wires
-> +		      has been detected.
-> +		'0' = No open circuit or broken thermocouple wires are detected
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/fault_ovuv
-> +KernelVersion:	5.1
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Overvoltage or Undervoltage Input Fault. The internal circuitry
-> +		is protected from excessive voltages applied to the thermocouple
-> +		cables by integrated MOSFETs at the T+ and T- inputs, and the
-> +		BIAS output. These MOSFETs turn off when the input voltage is
-> +		negative or greater than VDD.
-> +		Reading returns either '1' or '0'.
-> +		'1' = The input voltage is negative or greater than VDD.
-> +		'0' = The input voltage is positive and less than VDD (normal
-> +		state).
-> diff --git a/drivers/iio/temperature/Kconfig b/drivers/iio/temperature/Kconfig
-> index 82e4a62745e2..c66eeb23615b 100644
-> --- a/drivers/iio/temperature/Kconfig
-> +++ b/drivers/iio/temperature/Kconfig
-> @@ -97,4 +97,14 @@ config TSYS02D
->  	  This driver can also be built as a module. If so, the module will
->  	  be called tsys02d.
->  
-> +config MAX31856
-> +	tristate "MAX31856 thermocouple sensor"
-> +	depends on SPI
-> +	help
-> +	  If you say yes here you get support for MAX31856
-> +	  thermocouple sensor chip connected via SPI.
-> +
-> +	  This driver can also be built as a module.  If so, the module
-> +	  will be called max31856.
-> +
->  endmenu
-> diff --git a/drivers/iio/temperature/Makefile b/drivers/iio/temperature/Makefile
-> index 34a31db0bb63..baca4776ca0d 100644
-> --- a/drivers/iio/temperature/Makefile
-> +++ b/drivers/iio/temperature/Makefile
-> @@ -5,6 +5,7 @@
->  
->  obj-$(CONFIG_HID_SENSOR_TEMP) += hid-sensor-temperature.o
->  obj-$(CONFIG_MAXIM_THERMOCOUPLE) += maxim_thermocouple.o
-> +obj-$(CONFIG_MAX31856) += max31856.o
->  obj-$(CONFIG_MLX90614) += mlx90614.o
->  obj-$(CONFIG_MLX90632) += mlx90632.o
->  obj-$(CONFIG_TMP006) += tmp006.o
-> diff --git a/drivers/iio/temperature/max31856.c b/drivers/iio/temperature/max31856.c
-> new file mode 100644
-> index 000000000000..6b67d6b95cf9
-> --- /dev/null
-> +++ b/drivers/iio/temperature/max31856.c
-> @@ -0,0 +1,353 @@
+> +++ b/drivers/dma/mediatek/mtk-uart-apdma.c
+> @@ -0,0 +1,660 @@
 > +// SPDX-License-Identifier: GPL-2.0
-> +/* max31856.c
-> + *
-> + * Maxim MAX31856 thermocouple sensor driver
-> + *
-> + * Copyright (C) 2018-2019 Rockwell Collins
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/err.h>
-> +#include <linux/spi/spi.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <dt-bindings/iio/temperature/thermocouple.h>
 > +/*
-> + * The MSB of the register value determines whether the following byte will
-> + * be written or read. If it is 0, one or more byte reads will follow.
+> + * MediaTek Uart APDMA driver.
+> + *
+> + * Copyright (c) 2018 MediaTek Inc.
+> + * Author: Long Cheng <long.cheng@mediatek.com>
 > + */
-> +#define MAX31856_RD_WR_BIT         BIT(7)
 > +
-> +#define MAX31856_CR0_AUTOCONVERT   BIT(7)
-> +#define MAX31856_CR0_1SHOT         BIT(6)
-> +#define MAX31856_CR0_OCFAULT       BIT(4)
-> +#define MAX31856_CR0_OCFAULT_MASK  GENMASK(5, 4)
-> +#define MAX31856_TC_TYPE_MASK      GENMASK(3, 0)
-> +#define MAX31856_FAULT_OVUV        BIT(1)
-> +#define MAX31856_FAULT_OPEN        BIT(0)
+> +#include <linux/clk.h>
+> +#include <linux/dmaengine.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/kernel.h>
+> +#include <linux/list.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_dma.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
 > +
-> +/* The MAX31856 registers */
-> +#define MAX31856_CR0_REG           0x00
-> +#define MAX31856_CR1_REG           0x01
-> +#define MAX31856_MASK_REG          0x02
-> +#define MAX31856_CJHF_REG          0x03
-> +#define MAX31856_CJLF_REG          0x04
-> +#define MAX31856_LTHFTH_REG        0x05
-> +#define MAX31856_LTHFTL_REG        0x06
-> +#define MAX31856_LTLFTH_REG        0x07
-> +#define MAX31856_LTLFTL_REG        0x08
-> +#define MAX31856_CJTO_REG          0x09
-> +#define MAX31856_CJTH_REG          0x0A
-> +#define MAX31856_CJTL_REG          0x0B
-> +#define MAX31856_LTCBH_REG         0x0C
-> +#define MAX31856_LTCBM_REG         0x0D
-> +#define MAX31856_LTCBL_REG         0x0E
-> +#define MAX31856_SR_REG            0x0F
+> +#include "../virt-dma.h"
 > +
-> +static const struct iio_chan_spec max31856_channels[] = {
-> +	{	/* Thermocouple Temperature */
-> +		.type = IIO_TEMP,
-> +		.info_mask_separate =
-> +			BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
-> +	},
-> +	{	/* Cold Junction Temperature */
-> +		.type = IIO_TEMP,
-> +		.channel2 = IIO_MOD_TEMP_AMBIENT,
-> +		.modified = 1,
-> +		.info_mask_separate =
-> +			BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
-> +	},
+> +/* The default number of virtual channel */
+> +#define MTK_UART_APDMA_NR_VCHANS       8
+> +
+> +#define VFF_EN_B               BIT(0)
+> +#define VFF_STOP_B             BIT(0)
+> +#define VFF_FLUSH_B            BIT(0)
+> +#define VFF_4G_SUPPORT_B       BIT(0)
+> +#define VFF_RX_INT_EN0_B       BIT(0)  /* rx valid size >=  vff thre */
+> +#define VFF_RX_INT_EN1_B       BIT(1)
+> +#define VFF_TX_INT_EN_B                BIT(0)  /* tx left size >= vff thre */
+> +#define VFF_WARM_RST_B         BIT(0)
+> +#define VFF_RX_INT_CLR_B       (BIT(0) | BIT(1))
+> +#define VFF_TX_INT_CLR_B       0
+> +#define VFF_STOP_CLR_B         0
+> +#define VFF_INT_EN_CLR_B       0
+> +#define VFF_4G_SUPPORT_CLR_B   0
+> +
+> +/* interrupt trigger level for tx */
+> +#define VFF_TX_THRE(n)         ((n) * 7 / 8)
+> +/* interrupt trigger level for rx */
+> +#define VFF_RX_THRE(n)         ((n) * 3 / 4)
+> +
+> +#define VFF_RING_SIZE  0xffffU
+
+Drop the U, it's not very useful (there are a a few more below, grep
+for [0-9a-f]U).
+
+> +/* invert this bit when wrap ring head again */
+> +#define VFF_RING_WRAP  0x10000U
+> +
+> +#define VFF_INT_FLAG           0x00
+> +#define VFF_INT_EN             0x04
+> +#define VFF_EN                 0x08
+> +#define VFF_RST                        0x0c
+> +#define VFF_STOP               0x10
+> +#define VFF_FLUSH              0x14
+> +#define VFF_ADDR               0x1c
+> +#define VFF_LEN                        0x24
+> +#define VFF_THRE               0x28
+> +#define VFF_WPT                        0x2c
+> +#define VFF_RPT                        0x30
+> +/* TX: the buffer size HW can read. RX: the buffer size SW can read. */
+> +#define VFF_VALID_SIZE         0x3c
+> +/* TX: the buffer size SW can write. RX: the buffer size HW can write. */
+> +#define VFF_LEFT_SIZE          0x40
+> +#define VFF_DEBUG_STATUS       0x50
+> +#define VFF_4G_SUPPORT         0x54
+> +
+> +struct mtk_uart_apdmadev {
+> +       struct dma_device ddev;
+> +       struct clk *clk;
+> +       bool support_33bits;
+> +       unsigned int dma_requests;
+> +       unsigned int *dma_irq;
 > +};
 > +
-> +struct max31856_data {
-> +	struct spi_device *spi;
-> +	u32 thermocouple_type;
+> +struct mtk_uart_apdma_desc {
+> +       struct virt_dma_desc vd;
+> +
+> +       unsigned int avail_len;
 > +};
 > +
-> +static int max31856_read(struct max31856_data *data, u8 reg,
-> +			 u8 val[], unsigned int read_size)
-> +{
-> +	return spi_write_then_read(data->spi, &reg, 1, val, read_size);
-> +}
+> +struct mtk_chan {
+> +       struct virt_dma_chan vc;
+> +       struct dma_slave_config cfg;
+> +       void __iomem *base;
+> +       struct mtk_uart_apdma_desc *desc;
 > +
-> +static int max31856_write(struct max31856_data *data, u8 reg,
-> +			  unsigned int val)
-> +{
-> +	u8 buf[2];
+> +       enum dma_transfer_direction dir;
 > +
-> +	buf[0] = reg | (MAX31856_RD_WR_BIT);
-> +	buf[1] = val;
+> +       bool requested;
 > +
-> +	return spi_write(data->spi, buf, 2);
-> +}
-> +
-> +static int max31856_init(struct max31856_data *data)
-> +{
-> +	int ret;
-> +	u8 reg_cr0_val, reg_cr1_val;
-> +
-> +	/* Start by changing to Off mode before making changes as
-> +	 * some settings are recommended to be set only when the device
-> +	 * is off
-> +	 */
-> +	ret = max31856_read(data, MAX31856_CR0_REG, &reg_cr0_val, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	reg_cr0_val &= ~MAX31856_CR0_AUTOCONVERT;
-> +	ret = max31856_write(data, MAX31856_CR0_REG, reg_cr0_val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Set thermocouple type based on dts property */
-> +	ret = max31856_read(data, MAX31856_CR1_REG, &reg_cr1_val, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	reg_cr1_val &= ~MAX31856_TC_TYPE_MASK;
-> +	reg_cr1_val |= data->thermocouple_type;
-> +	ret = max31856_write(data, MAX31856_CR1_REG, reg_cr1_val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * Enable Open circuit fault detection
-> +	 * Read datasheet for more information: Table 4.
-> +	 * Value 01 means : Enabled (Once every 16 conversions)
-> +	 */
-> +	reg_cr0_val &= ~MAX31856_CR0_OCFAULT_MASK;
-> +	reg_cr0_val |= MAX31856_CR0_OCFAULT;
-> +
-> +	/* Set Auto Conversion Mode */
-> +	reg_cr0_val &= ~MAX31856_CR0_1SHOT;
-> +	reg_cr0_val |= MAX31856_CR0_AUTOCONVERT;
-> +
-> +	return max31856_write(data, MAX31856_CR0_REG, reg_cr0_val);
-> +}
-> +
-> +static int max31856_thermocouple_read(struct max31856_data *data,
-> +				      struct iio_chan_spec const *chan,
-> +				      int *val)
-> +{
-> +	int ret, offset_cjto;
-> +	u8 reg_val[3];
-> +
-> +	switch (chan->channel2) {
-> +	case IIO_NO_MOD:
-> +		/*
-> +		 * Multibyte Read
-> +		 * MAX31856_LTCBH_REG, MAX31856_LTCBM_REG, MAX31856_LTCBL_REG
-> +		 */
-> +		ret = max31856_read(data, MAX31856_LTCBH_REG, reg_val, 3);
-> +		if (ret)
-> +			return ret;
-> +		/* Skip last 5 dead bits of LTCBL */
-> +		*val = (reg_val[0] << 16 | reg_val[1] << 8 | reg_val[2]) >> 5;
-> +		/* Check 7th bit of LTCBH reg. value for sign*/
-> +		if (reg_val[0] & 0x80)
-> +			*val -= 0x80000;
-> +		break;
-> +
-> +	case IIO_MOD_TEMP_AMBIENT:
-> +		/*
-> +		 * Multibyte Read
-> +		 * MAX31856_CJTO_REG, MAX31856_CJTH_REG, MAX31856_CJTL_REG
-> +		 */
-> +		ret = max31856_read(data, MAX31856_CJTO_REG, reg_val, 3);
-> +		if (ret)
-> +			return ret;
-> +		/* Get Cold Junction Temp. offset register value */
-> +		offset_cjto = reg_val[0];
-> +		/* Get CJTH and CJTL value and skip last 2 dead bits of CJTL */
-> +		*val = (reg_val[1] << 8 | reg_val[2]) >> 2;
-> +		/* As per datasheet add offset into CJTH and CJTL */
-> +		*val += offset_cjto;
-> +		/* Check 7th bit of CJTH reg. value for sign */
-> +		if (reg_val[1] & 0x80)
-> +			*val -= 0x4000;
-> +		break;
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = max31856_read(data, MAX31856_SR_REG, reg_val, 1);
-> +	if (ret)
-> +		return ret;
-> +	/* Check for over/under voltage or open circuit fault */
-> +	if (reg_val[0] & (MAX31856_FAULT_OVUV | MAX31856_FAULT_OPEN))
-> +		return -EIO;
-> +
-> +	return ret;
-> +}
-> +
-> +static int max31856_read_raw(struct iio_dev *indio_dev,
-> +			     struct iio_chan_spec const *chan,
-> +			     int *val, int *val2, long mask)
-> +{
-> +	struct max31856_data *data = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		ret = max31856_thermocouple_read(data, chan, val);
-> +		if (ret)
-> +			return ret;
-> +		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_SCALE:
-> +		switch (chan->channel2) {
-> +		case IIO_MOD_TEMP_AMBIENT:
-> +			/* Cold junction Temp. Data resolution is 0.015625 */
-> +			*val = 15;
-> +			*val2 = 625000; /* 1000 * 0.015625 */
-> +			ret = IIO_VAL_INT_PLUS_MICRO;
-> +			break;
-> +		default:
-> +			/* Thermocouple Temp. Data resolution is 0.0078125 */
-> +			*val = 7;
-> +			*val2 = 812500; /* 1000 * 0.0078125) */
-> +			return IIO_VAL_INT_PLUS_MICRO;
-> +		}
-> +		break;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static ssize_t show_fault(struct device *dev, u8 faultbit, char *buf)
-> +{
-> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> +	struct max31856_data *data = iio_priv(indio_dev);
-> +	u8 reg_val;
-> +	int ret;
-> +	bool fault;
-> +
-> +	ret = max31856_read(data, MAX31856_SR_REG, &reg_val, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	fault = reg_val & faultbit;
-> +
-> +	return sprintf(buf, "%d\n", fault);
-> +}
-> +
-> +static ssize_t show_fault_ovuv(struct device *dev,
-> +			       struct device_attribute *attr,
-> +			       char *buf)
-> +{
-> +	return show_fault(dev, MAX31856_FAULT_OVUV, buf);
-> +}
-> +
-> +static ssize_t show_fault_oc(struct device *dev,
-> +			     struct device_attribute *attr,
-> +			     char *buf)
-> +{
-> +	return show_fault(dev, MAX31856_FAULT_OPEN, buf);
-> +}
-> +
-> +static IIO_DEVICE_ATTR(fault_ovuv, 0444, show_fault_ovuv, NULL, 0);
-> +static IIO_DEVICE_ATTR(fault_oc, 0444, show_fault_oc, NULL, 0);
-> +
-> +static struct attribute *max31856_attributes[] = {
-> +	&iio_dev_attr_fault_ovuv.dev_attr.attr,
-> +	&iio_dev_attr_fault_oc.dev_attr.attr,
-> +	NULL,
+> +       unsigned int rx_status;
 > +};
 > +
-> +static const struct attribute_group max31856_group = {
-> +	.attrs = max31856_attributes,
-> +};
-> +
-> +static const struct iio_info max31856_info = {
-> +	.read_raw = max31856_read_raw,
-> +	.attrs = &max31856_group,
-> +};
-> +
-> +static int max31856_probe(struct spi_device *spi)
+> +static inline struct mtk_uart_apdmadev *
+> +to_mtk_uart_apdma_dev(struct dma_device *d)
 > +{
-> +	const struct spi_device_id *id = spi_get_device_id(spi);
-> +	struct iio_dev *indio_dev;
-> +	struct max31856_data *data;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*data));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	data = iio_priv(indio_dev);
-> +	data->spi = spi;
-> +
-> +	spi_set_drvdata(spi, indio_dev);
-> +
-> +	indio_dev->info = &max31856_info;
-> +	indio_dev->name = id->name;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->channels = max31856_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(max31856_channels);
-> +
-> +	ret = of_property_read_u32(spi->dev.of_node, "thermocouple-type",
-> +				   &data->thermocouple_type);
-> +
-> +	if (ret) {
-> +		dev_info(&spi->dev,
-> +			 "Could not read thermocouple type DT property, configuring as a K-Type\n");
-> +		data->thermocouple_type = THERMOCOUPLE_TYPE_K;
-> +	}
-> +
-> +	/*
-> +	 * no need to translate values as the supported types
-> +	 * have the same value as the #defines
-> +	 */
-> +	switch (data->thermocouple_type) {
-> +	case THERMOCOUPLE_TYPE_B:
-> +	case THERMOCOUPLE_TYPE_E:
-> +	case THERMOCOUPLE_TYPE_J:
-> +	case THERMOCOUPLE_TYPE_K:
-> +	case THERMOCOUPLE_TYPE_N:
-> +	case THERMOCOUPLE_TYPE_R:
-> +	case THERMOCOUPLE_TYPE_S:
-> +	case THERMOCOUPLE_TYPE_T:
-> +		break;
-> +	default:
-> +		dev_err(&spi->dev,
-> +			"error: thermocouple-type %u not supported by max31856\n"
-> +			, data->thermocouple_type);
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = max31856_init(data);
-> +	if (ret) {
-> +		dev_err(&spi->dev, "error: Failed to configure max31856\n");
-> +		return ret;
-> +	}
-> +
-> +	return devm_iio_device_register(&spi->dev, indio_dev);
+> +       return container_of(d, struct mtk_uart_apdmadev, ddev);
 > +}
 > +
-> +static const struct spi_device_id max31856_id[] = {
-> +	{ "max31856", 0 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(spi, max31856_id);
+> +static inline struct mtk_chan *to_mtk_uart_apdma_chan(struct dma_chan *c)
+> +{
+> +       return container_of(c, struct mtk_chan, vc.chan);
+> +}
 > +
-> +static const struct of_device_id max31856_of_match[] = {
-> +	{ .compatible = "maxim,max31856" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, max31856_of_match);
+> +static inline struct mtk_uart_apdma_desc *to_mtk_uart_apdma_desc
+> +       (struct dma_async_tx_descriptor *t)
+> +{
+> +       return container_of(t, struct mtk_uart_apdma_desc, vd.tx);
+> +}
 > +
-> +static struct spi_driver max31856_driver = {
-> +	.driver = {
-> +		.name = "max31856",
-> +		.of_match_table = max31856_of_match,
-> +	},
-> +	.probe = max31856_probe,
-> +	.id_table = max31856_id,
-> +};
-> +module_spi_driver(max31856_driver);
+> +static void mtk_uart_apdma_write(struct mtk_chan *c,
+> +                              unsigned int reg, unsigned int val)
+> +{
+> +       writel(val, c->base + reg);
+> +}
 > +
-> +MODULE_AUTHOR("Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>");
-> +MODULE_AUTHOR("Patrick Havelange <patrick.havelange@essensium.com>");
-> +MODULE_DESCRIPTION("Maxim MAX31856 thermocouple sensor driver");
-> +MODULE_LICENSE("GPL");
+> +static unsigned int mtk_uart_apdma_read(struct mtk_chan *c, unsigned int reg)
+> +{
+> +       return readl(c->base + reg);
+> +}
+> +
+> +static void mtk_uart_apdma_desc_free(struct virt_dma_desc *vd)
+> +{
+> +       struct dma_chan *chan = vd->tx.chan;
+> +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> +
+> +       kfree(c->desc);
+> +}
+> +
+> +static void mtk_uart_apdma_start_tx(struct mtk_chan *c)
+> +{
+> +       unsigned int len, send, left, wpt, d_wpt, tmp;
+> +       int ret;
+> +
+> +       left = mtk_uart_apdma_read(c, VFF_LEFT_SIZE);
+> +       if (!left) {
+> +               mtk_uart_apdma_write(c, VFF_INT_EN, VFF_TX_INT_EN_B);
+> +               return;
+> +       }
+> +
+> +       /* Wait 1sec for flush, can't sleep */
+> +       ret = readx_poll_timeout(readl, c->base + VFF_FLUSH, tmp,
+> +                       tmp != VFF_FLUSH_B, 0, 1000000);
+> +       if (ret)
+> +               dev_warn(c->vc.chan.device->dev, "tx: fail, debug=0x%x\n",
+> +                       mtk_uart_apdma_read(c, VFF_DEBUG_STATUS));
+> +
+> +       send = min_t(unsigned int, left, c->desc->avail_len);
+> +       wpt = mtk_uart_apdma_read(c, VFF_WPT);
+> +       len = c->cfg.dst_port_window_size;
+> +
+> +       d_wpt = wpt + send;
+> +       if ((d_wpt & VFF_RING_SIZE) >= len) {
+> +               d_wpt = d_wpt - len;
+> +               d_wpt = d_wpt ^ VFF_RING_WRAP;
+> +       }
+> +       mtk_uart_apdma_write(c, VFF_WPT, d_wpt);
+> +
+> +       c->desc->avail_len -= send;
+> +
+> +       mtk_uart_apdma_write(c, VFF_INT_EN, VFF_TX_INT_EN_B);
+> +       if (mtk_uart_apdma_read(c, VFF_FLUSH) == 0U)
+> +               mtk_uart_apdma_write(c, VFF_FLUSH, VFF_FLUSH_B);
+> +}
+> +
+> +static void mtk_uart_apdma_start_rx(struct mtk_chan *c)
+> +{
+> +       struct mtk_uart_apdma_desc *d = c->desc;
+> +       unsigned int len, wg, rg;
+> +       int cnt;
+> +
+> +       if ((mtk_uart_apdma_read(c, VFF_VALID_SIZE) == 0U) ||
+> +               !d || !vchan_next_desc(&c->vc))
+> +               return;
+> +
+> +       len = c->cfg.src_port_window_size;
+> +       rg = mtk_uart_apdma_read(c, VFF_RPT);
+> +       wg = mtk_uart_apdma_read(c, VFF_WPT);
+> +       cnt = (wg & VFF_RING_SIZE) - (rg & VFF_RING_SIZE);
+> +       /*
+> +        * The buffer is ring buffer. If wrap bit different,
+> +        * represents the start of the next cycle for WPT
+> +        */
+> +       if ((rg ^ wg) & VFF_RING_WRAP)
+> +               cnt += len;
+> +
+> +       c->rx_status = d->avail_len - cnt;
+> +       mtk_uart_apdma_write(c, VFF_RPT, wg);
+> +
+> +       list_del(&d->vd.node);
+> +       vchan_cookie_complete(&d->vd);
+> +}
+> +
+> +static irqreturn_t mtk_uart_apdma_irq_handler(int irq, void *dev_id)
+> +{
+> +       struct dma_chan *chan = (struct dma_chan *)dev_id;
+> +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> +       struct mtk_uart_apdma_desc *d;
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&c->vc.lock, flags);
+> +       if (c->dir == DMA_DEV_TO_MEM) {
+> +               mtk_uart_apdma_write(c, VFF_INT_FLAG, VFF_RX_INT_CLR_B);
+> +               mtk_uart_apdma_start_rx(c);
+> +       } else if (c->dir == DMA_MEM_TO_DEV) {
+> +               d = c->desc;
+> +
+> +               mtk_uart_apdma_write(c, VFF_INT_FLAG, VFF_TX_INT_CLR_B);
+> +
+> +               if (d->avail_len != 0U) {
+> +                       mtk_uart_apdma_start_tx(c);
+> +               } else {
+> +                       list_del(&d->vd.node);
+> +                       vchan_cookie_complete(&d->vd);
+> +               }
+> +       }
+> +       spin_unlock_irqrestore(&c->vc.lock, flags);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int mtk_uart_apdma_alloc_chan_resources(struct dma_chan *chan)
+> +{
+> +       struct mtk_uart_apdmadev *mtkd = to_mtk_uart_apdma_dev(chan->device);
+> +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> +       unsigned int tmp;
+> +       int ret;
+> +
+> +       pm_runtime_get_sync(mtkd->ddev.dev);
+> +
+> +       mtk_uart_apdma_write(c, VFF_ADDR, 0);
+> +       mtk_uart_apdma_write(c, VFF_THRE, 0);
+> +       mtk_uart_apdma_write(c, VFF_LEN, 0);
+> +       mtk_uart_apdma_write(c, VFF_RST, VFF_WARM_RST_B);
+> +
+> +       ret = readx_poll_timeout(readl, c->base + VFF_EN, tmp, !tmp, 10, 100);
+> +       if (ret) {
+> +               dev_err(chan->device->dev, "dma reset: fail, timeout\n");
+> +               return ret;
+> +       }
+> +
+> +       if (!c->requested) {
+> +               c->requested = true;
+> +               ret = request_irq(mtkd->dma_irq[chan->chan_id],
+> +                                 mtk_uart_apdma_irq_handler, IRQF_TRIGGER_NONE,
+> +                                 KBUILD_MODNAME, chan);
+> +               if (ret < 0) {
+> +                       dev_err(chan->device->dev, "Can't request dma IRQ\n");
+> +                       return -EINVAL;
+> +               }
+> +       }
+> +
+> +       if (mtkd->support_33bits)
+> +               mtk_uart_apdma_write(c, VFF_4G_SUPPORT, VFF_4G_SUPPORT_CLR_B);
+> +
+> +       return ret;
+> +}
+> +
+> +static void mtk_uart_apdma_free_chan_resources(struct dma_chan *chan)
+> +{
+> +       struct mtk_uart_apdmadev *mtkd = to_mtk_uart_apdma_dev(chan->device);
+> +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> +
+> +       if (c->requested) {
+> +               c->requested = false;
+> +               free_irq(mtkd->dma_irq[chan->chan_id], chan);
+> +       }
+> +
+> +       tasklet_kill(&c->vc.task);
+> +
+> +       vchan_free_chan_resources(&c->vc);
+> +
+> +       pm_runtime_put_sync(mtkd->ddev.dev);
+> +}
+> +
+> +static enum dma_status mtk_uart_apdma_tx_status(struct dma_chan *chan,
+> +                                        dma_cookie_t cookie,
+> +                                        struct dma_tx_state *txstate)
+> +{
+> +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> +       enum dma_status ret;
+> +
+> +       ret = dma_cookie_status(chan, cookie, txstate);
+> +
+> +       dma_set_residue(txstate, c->rx_status);
+> +
+> +       return ret;
+> +}
+> +
+> +static void mtk_uart_apdma_config_write(struct dma_chan *chan,
+> +                              struct dma_slave_config *cfg,
+> +                              enum dma_transfer_direction dir)
+> +{
+> +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> +       struct mtk_uart_apdmadev *mtkd =
+> +                               to_mtk_uart_apdma_dev(c->vc.chan.device);
+> +       unsigned int tmp;
+> +
+> +       if (mtk_uart_apdma_read(c, VFF_EN) == VFF_EN_B)
+> +               return;
+> +
+> +       c->dir = dir;
+> +
+> +       if (dir == DMA_DEV_TO_MEM) {
+> +               tmp = cfg->src_port_window_size;
+> +
+> +               mtk_uart_apdma_write(c, VFF_ADDR, cfg->src_addr);
+> +               mtk_uart_apdma_write(c, VFF_LEN, tmp);
+> +               mtk_uart_apdma_write(c, VFF_THRE, VFF_RX_THRE(tmp));
+> +               mtk_uart_apdma_write(c, VFF_INT_EN,
+> +                               VFF_RX_INT_EN0_B | VFF_RX_INT_EN1_B);
+> +               mtk_uart_apdma_write(c, VFF_RPT, 0);
+> +               mtk_uart_apdma_write(c, VFF_INT_FLAG, VFF_RX_INT_CLR_B);
+> +       } else if (dir == DMA_MEM_TO_DEV)       {
+> +               tmp = cfg->dst_port_window_size;
+> +
+> +               mtk_uart_apdma_write(c, VFF_ADDR, cfg->dst_addr);
+> +               mtk_uart_apdma_write(c, VFF_LEN, tmp);
+> +               mtk_uart_apdma_write(c, VFF_THRE, VFF_TX_THRE(tmp));
+> +               mtk_uart_apdma_write(c, VFF_WPT, 0);
+> +               mtk_uart_apdma_write(c, VFF_INT_FLAG, VFF_TX_INT_CLR_B);
+> +       }
+> +
+> +       mtk_uart_apdma_write(c, VFF_EN, VFF_EN_B);
+> +
+> +       if (mtkd->support_33bits)
+> +               mtk_uart_apdma_write(c, VFF_4G_SUPPORT, VFF_4G_SUPPORT_B);
+> +
+> +       if (mtk_uart_apdma_read(c, VFF_EN) != VFF_EN_B)
+> +               dev_err(chan->device->dev, "dir[%d] fail\n", dir);
+> +}
+> +
+> +/*
+> + * dmaengine_prep_slave_single will call the function. and sglen is 1.
+> + * 8250 uart using one ring buffer, and deal with one sg.
+> + */
+> +static struct dma_async_tx_descriptor *mtk_uart_apdma_prep_slave_sg
+> +       (struct dma_chan *chan, struct scatterlist *sgl,
+> +       unsigned int sglen, enum dma_transfer_direction dir,
+> +       unsigned long tx_flags, void *context)
+> +{
+> +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> +       struct mtk_uart_apdma_desc *d;
+> +
+> +       if (!is_slave_direction(dir))
+> +               return NULL;
+> +
+> +       mtk_uart_apdma_config_write(chan, &c->cfg, dir);
+> +
+> +       /* Now allocate and setup the descriptor */
+> +       d = kzalloc(sizeof(*d), GFP_ATOMIC);
+> +       if (!d)
+> +               return NULL;
+> +
+> +       /* sglen is 1 */
+> +       d->avail_len = sg_dma_len(sgl);
+> +       c->rx_status = d->avail_len;
+> +
+> +       return vchan_tx_prep(&c->vc, &d->vd, tx_flags);
+> +}
+> +
+> +static void mtk_uart_apdma_issue_pending(struct dma_chan *chan)
+> +{
+> +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> +       struct virt_dma_desc *vd;
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&c->vc.lock, flags);
+> +       if (vchan_issue_pending(&c->vc)) {
+> +               vd = vchan_next_desc(&c->vc);
+> +               c->desc = to_mtk_uart_apdma_desc(&vd->tx);
+> +       }
+> +
+> +       if (c->dir == DMA_DEV_TO_MEM)
+> +               mtk_uart_apdma_start_rx(c);
+> +       else if (c->dir == DMA_MEM_TO_DEV)
+> +               mtk_uart_apdma_start_tx(c);
+> +
+> +       spin_unlock_irqrestore(&c->vc.lock, flags);
+> +}
+> +
+> +static int mtk_uart_apdma_slave_config(struct dma_chan *chan,
+> +                                  struct dma_slave_config *config)
+> +{
+> +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> +
+> +       memcpy(&c->cfg, config, sizeof(*config));
+> +
+> +       return 0;
+> +}
+> +
+> +static int mtk_uart_apdma_terminate_all(struct dma_chan *chan)
+> +{
+> +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> +       unsigned long flags;
+> +       unsigned int tmp;
+> +       int ret;
+> +
+> +       spin_lock_irqsave(&c->vc.lock, flags);
+> +
+> +       mtk_uart_apdma_write(c, VFF_FLUSH, VFF_FLUSH_B);
+> +       /* Wait 1sec for flush, can't sleep */
+> +       ret = readx_poll_timeout(readl, c->base + VFF_FLUSH, tmp,
+> +                       tmp != VFF_FLUSH_B, 0, 1000000);
+> +       if (ret)
+> +               dev_err(c->vc.chan.device->dev, "flush: fail, debug=0x%x\n",
+> +                       mtk_uart_apdma_read(c, VFF_DEBUG_STATUS));
+> +
+> +       /* set stop as 1 -> wait until en is 0 -> set stop as 0 */
+> +       mtk_uart_apdma_write(c, VFF_STOP, VFF_STOP_B);
+> +       ret = readx_poll_timeout(readl, c->base + VFF_EN, tmp, !tmp, 10, 100);
+> +       if (ret)
+> +               dev_err(c->vc.chan.device->dev, "stop: fail, debug=0x%x\n",
+> +                       mtk_uart_apdma_read(c, VFF_DEBUG_STATUS));
+> +
+> +       mtk_uart_apdma_write(c, VFF_STOP, VFF_STOP_CLR_B);
+> +       mtk_uart_apdma_write(c, VFF_INT_EN, VFF_INT_EN_CLR_B);
+> +
+> +       if (c->dir == DMA_DEV_TO_MEM)
+> +               mtk_uart_apdma_write(c, VFF_INT_FLAG, VFF_RX_INT_CLR_B);
+> +       else if (c->dir == DMA_MEM_TO_DEV)
+> +               mtk_uart_apdma_write(c, VFF_INT_FLAG, VFF_TX_INT_CLR_B);
+> +
+> +       spin_unlock_irqrestore(&c->vc.lock, flags);
+> +
+> +       return 0;
+> +}
+> +
+> +static int mtk_uart_apdma_device_pause(struct dma_chan *chan)
+> +{
+> +       /* just for check caps pass */
+> +       dev_err(chan->device->dev, "Pause can't support\n");
+> +
+> +       return 0;
+> +}
+
+I think we've said repeatedly that leaving this stub function is incorrect.
+
+> +
+> +static void mtk_uart_apdma_free(struct mtk_uart_apdmadev *mtkd)
+> +{
+> +       while (!list_empty(&mtkd->ddev.channels)) {
+> +               struct mtk_chan *c = list_first_entry(&mtkd->ddev.channels,
+> +                       struct mtk_chan, vc.chan.device_node);
+> +
+> +               list_del(&c->vc.chan.device_node);
+> +               tasklet_kill(&c->vc.task);
+> +       }
+> +}
+> +
+> +static const struct of_device_id mtk_uart_apdma_match[] = {
+> +       { .compatible = "mediatek,mt6577-uart-dma", },
+> +       { /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, mtk_uart_apdma_match);
+> +
+> +static int mtk_uart_apdma_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *np = pdev->dev.of_node;
+> +       struct mtk_uart_apdmadev *mtkd;
+> +       struct resource *res;
+> +       struct mtk_chan *c;
+> +       int bit_mask = 32, rc;
+> +       unsigned int i;
+> +
+> +       mtkd = devm_kzalloc(&pdev->dev, sizeof(*mtkd), GFP_KERNEL);
+> +       if (!mtkd)
+> +               return -ENOMEM;
+> +
+> +       mtkd->clk = devm_clk_get(&pdev->dev, NULL);
+> +       if (IS_ERR(mtkd->clk)) {
+> +               dev_err(&pdev->dev, "No clock specified\n");
+> +               rc = PTR_ERR(mtkd->clk);
+> +               return rc;
+> +       }
+> +
+> +       if (of_property_read_bool(np, "mediatek,dma-33bits"))
+> +               mtkd->support_33bits = true;
+> +
+> +       if (mtkd->support_33bits)
+> +               bit_mask = 33;
+> +
+> +       rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(bit_mask));
+> +       if (rc)
+> +               return rc;
+> +
+> +       dma_cap_set(DMA_SLAVE, mtkd->ddev.cap_mask);
+> +       mtkd->ddev.device_alloc_chan_resources =
+> +                               mtk_uart_apdma_alloc_chan_resources;
+> +       mtkd->ddev.device_free_chan_resources =
+> +                               mtk_uart_apdma_free_chan_resources;
+> +       mtkd->ddev.device_tx_status = mtk_uart_apdma_tx_status;
+> +       mtkd->ddev.device_issue_pending = mtk_uart_apdma_issue_pending;
+> +       mtkd->ddev.device_prep_slave_sg = mtk_uart_apdma_prep_slave_sg;
+> +       mtkd->ddev.device_config = mtk_uart_apdma_slave_config;
+> +       mtkd->ddev.device_pause = mtk_uart_apdma_device_pause;
+> +       mtkd->ddev.device_terminate_all = mtk_uart_apdma_terminate_all;
+> +       mtkd->ddev.src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE);
+> +       mtkd->ddev.dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE);
+> +       mtkd->ddev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+> +       mtkd->ddev.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
+> +       mtkd->ddev.dev = &pdev->dev;
+> +       INIT_LIST_HEAD(&mtkd->ddev.channels);
+> +
+> +       mtkd->dma_requests = MTK_UART_APDMA_NR_VCHANS;
+> +       if (of_property_read_u32(np, "dma-requests", &mtkd->dma_requests)) {
+> +               dev_info(&pdev->dev,
+> +                        "Using %u as missing dma-requests property\n",
+> +                        MTK_UART_APDMA_NR_VCHANS);
+> +       }
+> +
+> +       mtkd->dma_irq = devm_kcalloc(&pdev->dev, mtkd->dma_requests,
+> +                                sizeof(*mtkd->dma_irq), GFP_KERNEL);
+> +       if (!mtkd->dma_irq)
+> +               return -ENOMEM;
+> +
+> +       for (i = 0; i < mtkd->dma_requests; i++) {
+> +               c = devm_kzalloc(mtkd->ddev.dev, sizeof(*c), GFP_KERNEL);
+> +               if (!c) {
+> +                       rc = -ENODEV;
+> +                       goto err_no_dma;
+> +               }
+> +
+> +               res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+> +               if (!res) {
+> +                       rc = -ENODEV;
+> +                       goto err_no_dma;
+> +               }
+> +
+> +               c->base = devm_ioremap_resource(&pdev->dev, res);
+> +               if (IS_ERR(c->base)) {
+> +                       rc = PTR_ERR(c->base);
+> +                       goto err_no_dma;
+> +               }
+> +               c->requested = false;
+> +               c->vc.desc_free = mtk_uart_apdma_desc_free;
+> +               vchan_init(&c->vc, &mtkd->ddev);
+> +
+> +               mtkd->dma_irq[i] = platform_get_irq(pdev, i);
+> +               if ((int)mtkd->dma_irq[i] < 0) {
+> +                       dev_err(&pdev->dev, "failed to get IRQ[%d]\n", i);
+> +                       rc = -EINVAL;
+> +                       goto err_no_dma;
+> +               }
+> +       }
+> +
+> +       pm_runtime_enable(&pdev->dev);
+> +       pm_runtime_set_active(&pdev->dev);
+> +
+> +       rc = dma_async_device_register(&mtkd->ddev);
+> +       if (rc)
+> +               goto rpm_disable;
+> +
+> +       platform_set_drvdata(pdev, mtkd);
+> +
+> +       /* Device-tree DMA controller registration */
+> +       rc = of_dma_controller_register(np, of_dma_xlate_by_chan_id, mtkd);
+> +       if (rc)
+> +               goto dma_remove;
+> +
+> +       return rc;
+> +
+> +dma_remove:
+> +       dma_async_device_unregister(&mtkd->ddev);
+> +rpm_disable:
+> +       pm_runtime_disable(&pdev->dev);
+> +err_no_dma:
+> +       mtk_uart_apdma_free(mtkd);
+> +       return rc;
+> +}
+> +
+> +static int mtk_uart_apdma_remove(struct platform_device *pdev)
+> +{
+> +       struct mtk_uart_apdmadev *mtkd = platform_get_drvdata(pdev);
+> +
+> +       if (pdev->dev.of_node)
+> +               of_dma_controller_free(pdev->dev.of_node);
+> +
+> +       pm_runtime_disable(&pdev->dev);
+> +       pm_runtime_put_noidle(&pdev->dev);
+> +
+> +       dma_async_device_unregister(&mtkd->ddev);
+> +       mtk_uart_apdma_free(mtkd);
+> +
+> +       return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int mtk_uart_apdma_suspend(struct device *dev)
+> +{
+> +       struct mtk_uart_apdmadev *mtkd = dev_get_drvdata(dev);
+> +
+> +       if (!pm_runtime_suspended(dev))
+> +               clk_disable_unprepare(mtkd->clk);
+> +
+> +       return 0;
+> +}
+> +
+> +static int mtk_uart_apdma_resume(struct device *dev)
+> +{
+> +       int ret;
+> +       struct mtk_uart_apdmadev *mtkd = dev_get_drvdata(dev);
+> +
+> +       if (!pm_runtime_suspended(dev)) {
+> +               ret = clk_prepare_enable(mtkd->clk);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +#endif /* CONFIG_PM_SLEEP */
+> +
+> +#ifdef CONFIG_PM
+> +static int mtk_uart_apdma_runtime_suspend(struct device *dev)
+> +{
+> +       struct mtk_uart_apdmadev *mtkd = dev_get_drvdata(dev);
+> +
+> +       clk_disable_unprepare(mtkd->clk);
+> +
+> +       return 0;
+> +}
+> +
+> +static int mtk_uart_apdma_runtime_resume(struct device *dev)
+> +{
+> +       int ret;
+> +       struct mtk_uart_apdmadev *mtkd = dev_get_drvdata(dev);
+> +
+> +       ret = clk_prepare_enable(mtkd->clk);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return 0;
+> +}
+> +#endif /* CONFIG_PM */
+> +
+> +static const struct dev_pm_ops mtk_uart_apdma_pm_ops = {
+> +       SET_SYSTEM_SLEEP_PM_OPS(mtk_uart_apdma_suspend, mtk_uart_apdma_resume)
+> +       SET_RUNTIME_PM_OPS(mtk_uart_apdma_runtime_suspend,
+> +                          mtk_uart_apdma_runtime_resume, NULL)
+> +};
+> +
+> +static struct platform_driver mtk_uart_apdma_driver = {
+> +       .probe  = mtk_uart_apdma_probe,
+> +       .remove = mtk_uart_apdma_remove,
+> +       .driver = {
+> +               .name           = KBUILD_MODNAME,
+> +               .pm             = &mtk_uart_apdma_pm_ops,
+> +               .of_match_table = of_match_ptr(mtk_uart_apdma_match),
+> +       },
+> +};
+> +
+> +module_platform_driver(mtk_uart_apdma_driver);
+> +
+> +MODULE_DESCRIPTION("MediaTek UART APDMA Controller Driver");
+> +MODULE_AUTHOR("Long Cheng <long.cheng@mediatek.com>");
+> +MODULE_LICENSE("GPL v2");
+> +
+> --
+> 1.7.9.5
+>
