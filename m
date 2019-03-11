@@ -1,7 +1,8 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv4 10/28] PCI: mobiveil: fix the INTx process error
-Date: Mon, 11 Mar 2019 09:31:16 +0000
-Message-ID: <20190311093130.7209-11-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv4 14/28] PCI: mobiveil: initialize
+ Primary/Secondary/Subordinate bus number
+Date: Mon, 11 Mar 2019 09:31:48 +0000
+Message-ID: <20190311093130.7209-15-Zhiqiang.Hou@nxp.com>
 References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -16,16 +17,9 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-In the loop block, there is not code change the loop key,
-this patch updated the loop key by re-read the INTx status
-register.
+The reset value is all zero, so set a workable value for Primary,
+Secondary and Subordinate bus numbers.
 
-This patch also change to clear the handled INTx status.
-
-Note: Need MV to test this fix.
-
-Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host
-Bridge IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
@@ -33,42 +27,27 @@ Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 V4:
  - no change
 
- drivers/pci/controller/pcie-mobiveil.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controlle=
 r/pcie-mobiveil.c
-index 4ba458474e42..78e575e71f4d 100644
+index db7ecb021c63..9210165fe8c0 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -361,6 +361,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
- 	/* Handle INTx */
- 	if (intr_status & PAB_INTP_INTX_MASK) {
- 		shifted_status =3D csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-+		shifted_status &=3D PAB_INTP_INTX_MASK;
- 		shifted_status >>=3D PAB_INTX_START;
- 		do {
- 			for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
-@@ -372,12 +373,16 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
- 					dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n",
- 							    bit);
+@@ -582,6 +582,12 @@ static int mobiveil_host_init(struct mobiveil_pcie *pc=
+ie)
+ 	u32 value, pab_ctrl, type;
+ 	struct resource_entry *win;
 =20
--				/* clear interrupt */
--				csr_writel(pcie,
--					   shifted_status << PAB_INTX_START,
-+				/* clear interrupt handled */
-+				csr_writel(pcie, 1 << (PAB_INTX_START + bit),
- 					   PAB_INTP_AMBA_MISC_STAT);
- 			}
--		} while ((shifted_status >> PAB_INTX_START) !=3D 0);
++	/* setup bus numbers */
++	value =3D csr_readl(pcie, PCI_PRIMARY_BUS);
++	value &=3D 0xff000000;
++	value |=3D 0x00ff0100;
++	csr_writel(pcie, value, PCI_PRIMARY_BUS);
 +
-+			shifted_status =3D csr_readl(pcie,
-+						   PAB_INTP_AMBA_MISC_STAT);
-+			shifted_status &=3D PAB_INTP_INTX_MASK;
-+			shifted_status >>=3D PAB_INTX_START;
-+		} while (shifted_status !=3D 0);
- 	}
-=20
- 	/* read extra MSI status register */
+ 	/*
+ 	 * program Bus Master Enable Bit in Command Register in PAB Config
+ 	 * Space
 --=20
 2.17.1
