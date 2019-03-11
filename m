@@ -1,70 +1,80 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 04/25] dt-bindings: leds: Add LED_COLOR_NAME definitions
-Date: Mon, 11 Mar 2019 18:23:04 +0100
-Message-ID: <7151f59e-4413-8e27-4120-c5acfcf9b919@gmail.com>
-References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
- <20190310182836.20841-5-jacek.anaszewski@gmail.com>
- <4b4b5109-2da3-a74f-7e77-c4ab4d34ecbc@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: axi-i2s: make both "rx" and "tx" optional" to the asoc tree
+Date: Mon, 11 Mar 2019 17:23:16 +0000 (GMT)
+Message-ID: <20190311172316.2C2DB1128896@debutante.sirena.org.uk>
+References: <20190307214456.16445-2-luca@lucaceresoli.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4b4b5109-2da3-a74f-7e77-c4ab4d34ecbc@ti.com>
-Content-Language: en-US
+In-Reply-To: <20190307214456.16445-2-luca@lucaceresoli.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
+To: Luca Ceresoli <luca@lucaceresoli.net>
+Cc: Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>Mark Brown <broonie@kernel.org>alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Dan,
+The patch
 
-On 3/11/19 1:23 PM, Dan Murphy wrote:
-> Jacek
-> 
-> On 3/10/19 1:28 PM, Jacek Anaszewski wrote:
->> Add common LED color name definitions for use in Device Tree.
->>
->> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->> Cc: Baolin Wang <baolin.wang@linaro.org>
->> Cc: Daniel Mack <daniel@zonque.org>
->> Cc: Dan Murphy <dmurphy@ti.com>
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
->> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
->> Cc: Simon Shields <simon@lineageos.org>
->> ---
->>   include/dt-bindings/leds/common.h | 9 +++++++++
->>   1 file changed, 9 insertions(+)
->>
->> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
->> index ffcd46317307..0e986bb59391 100644
->> --- a/include/dt-bindings/leds/common.h
->> +++ b/include/dt-bindings/leds/common.h
->> @@ -57,4 +57,13 @@
->>   #define LED_FUNCTION_WLAN "wlan"
->>   #define LED_FUNCTION_WPS "wps"
->>   
->> +/* Standard LED colors */
->> +#define LED_COLOR_NAME_WHITE    "white"
->> +#define LED_COLOR_NAME_RED      "red"
->> +#define LED_COLOR_NAME_GREEN    "green"
->> +#define LED_COLOR_NAME_BLUE     "blue"
->> +#define LED_COLOR_NAME_AMBER    "amber"
->> +#define LED_COLOR_NAME_VIOLET   "violet"
->> +#define LED_COLOR_NAME_YELLOW   "yellow"
->> +
-> 
-> #define LED_COLOR_NAME_INFRARED	"ir"
+   ASoC: axi-i2s: make both "rx" and "tx" optional
 
-Ack.
+has been applied to the asoc tree at
 
-> Dan
-> 
->>   #endif /* __DT_BINDINGS_LEDS_H */
->>
-> 
-> 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From fa225400758dfc7ccddebf4d990f991a435f7921 Mon Sep 17 00:00:00 2001
+From: Luca Ceresoli <luca@lucaceresoli.net>
+Date: Thu, 7 Mar 2019 22:44:56 +0100
+Subject: [PATCH] ASoC: axi-i2s: make both "rx" and "tx" optional
+
+Both the capture and playback channels are optional in the axi_i2s IP
+block. Document how to tell the driver which channels are
+instantiated.
+
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/adi,axi-i2s.txt | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt b/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
+index 4248b662deff..229ad1392cdc 100644
+--- a/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
++++ b/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
+@@ -1,5 +1,8 @@
+ ADI AXI-I2S controller
+ 
++The core can be generated with transmit (playback), only receive
++(capture) or both directions enabled.
++
+ Required properties:
+  - compatible : Must be "adi,axi-i2s-1.00.a"
+  - reg : Must contain I2S core's registers location and length
+@@ -9,8 +12,8 @@ Required properties:
+  - clock-names : "axi" for the clock to the AXI interface, "ref" for the sample
+    rate reference clock.
+  - dmas: Pairs of phandle and specifier for the DMA channels that are used by
+-   the core. The core expects two dma channels, one for transmit and one for
+-   receive.
++   the core. The core expects two dma channels if both transmit and receive are
++   enabled, one channel otherwise.
+  - dma-names : "tx" for the transmit channel, "rx" for the receive channel.
+ 
+ For more details on the 'dma', 'dma-names', 'clock' and 'clock-names' properties
 -- 
-Best regards,
-Jacek Anaszewski
+2.20.1
