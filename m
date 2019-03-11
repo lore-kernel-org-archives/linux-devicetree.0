@@ -1,51 +1,108 @@
-From: Luca Ceresoli <luca@lucaceresoli.net>
-Subject: Re: [PATCH v3 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI
- CSI-2 Rx Subsystem
-Date: Mon, 11 Mar 2019 13:08:06 +0100
-Message-ID: <1f698576-89b2-e264-387e-6db4c5a4713a@lucaceresoli.net>
-References: <1549025766-135037-1-git-send-email-vishal.sagar@xilinx.com>
- <1549025766-135037-2-git-send-email-vishal.sagar@xilinx.com>
- <fe975327-2746-28d4-1340-5ad1e71858f1@lucaceresoli.net>
- <CY4PR02MB27098AB5D144C74AE6553699A74D0@CY4PR02MB2709.namprd02.prod.outlook.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH 03/25] dt-bindings: leds: Add LED_FUNCTION definitions
+Date: Mon, 11 Mar 2019 07:22:17 -0500
+Message-ID: <ac860282-af12-8a1f-5d85-2f587856d669@ti.com>
+References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
+ <20190310182836.20841-4-jacek.anaszewski@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CY4PR02MB27098AB5D144C74AE6553699A74D0@CY4PR02MB2709.namprd02.prod.outlook.com>
+In-Reply-To: <20190310182836.20841-4-jacek.anaszewski@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vishal Sagar <vsagar@xilinx.com>, Vishal Sagar <vishal.sagar@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dinesh Kumar <dineshk@xilinx.com>Sa
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vishal,
+Jacek
 
-On 08/03/19 20:04, Vishal Sagar wrote:
->>> +Optional properties:
->>> +--------------------
->>> +- xlnx,vfb: This is present when Video Format Bridge is enabled.
->>> +  Without this property the driver won't be loaded as IP won't be able to
->> generate
->>> +  media bus format compliant stream output.
->>> +- xlnx,en-csi-v2-0: Present if CSI v2 is enabled in IP configuration.
->>> +- xlnx,en-vcx: When present, there are maximum 16 virtual channels, else
->>> +  only 4. This is present only if xlnx,en-csi-v2-0 is present.
->>> +- xlnx,en-active-lanes: Enable Active lanes configuration in Protocol
->>> +  Configuration Register.
->>
->> This doesn't seem very clear to me. According to my understanding of the
->> IP and driver, I'd rather rephrase as:
->>
->> - xlnx,en-active-lanes: present if the number of active lanes can be
->>   reconfigured at runtime in the Protocol Configuration Register.
->>   If present, the V4L2_CID_XILINX_MIPICSISS_ACT_LANES is added.
->>   Otherwise all lanes are always active.
->>
+On 3/10/19 1:28 PM, Jacek Anaszewski wrote:
+> Add common LED function definitions for use in Device Tree.
+> The function names were extracted from existing dts files
+> after eliminating oddities.
 > 
-> Your description is better. I will update with this in next version.
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Baolin Wang <baolin.wang@linaro.org>
+> Cc: Daniel Mack <daniel@zonque.org>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Simon Shields <simon@lineageos.org>
+> ---
+>  include/dt-bindings/leds/common.h | 38 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+> index e171d0a6beb2..ffcd46317307 100644
+> --- a/include/dt-bindings/leds/common.h
+> +++ b/include/dt-bindings/leds/common.h
+> @@ -19,4 +19,42 @@
+>  #define LEDS_BOOST_ADAPTIVE	1
+>  #define LEDS_BOOST_FIXED	2
+>  
+> +/* Standard LED functions */
+> +#define LED_FUNCTION_ACTIVITY "activity"
+> +#define LED_FUNCTION_ADSL "adsl"
+> +#define LED_FUNCTION_ALARM "alarm"
+> +#define LED_FUNCTION_BACKLIGHT "backlight"
+> +#define LED_FUNCTION_BLUETOOTH "bluetooth"
+> +#define LED_FUNCTION_BOOT "boot"
+> +#define LED_FUNCTION_CHRG "chrg"
 
-Ok, thanks. But I just noticed an error in my own words...
-"V4L2_CID_XILINX_MIPICSISS_ACT_LANES is added" ->
-"V4L2_CID_XILINX_MIPICSISS_ACT_LANES control is added".
+Why not spell out charge?
+
+
+> +#define LED_FUNCTION_DEBUG "debug"
+> +#define LED_FUNCTION_DISK "disk"
+> +#define LED_FUNCTION_DISK_READ "disk-read"
+> +#define LED_FUNCTION_DISK_WRITE "disk-write"
+> +#define LED_FUNCTION_FAULT "fault"
+> +#define LED_FUNCTION_FLASH "flash"
+> +#define LED_FUNCTION_HDDERR "hdderr"
+> +#define LED_FUNCTION_HEARTBEAT "heartbeat"
+> +#define LED_FUNCTION_INDICATOR "indicator"
+> +#define LED_FUNCTION_INFO "info"
+> +#define LED_FUNCTION_INTERNET "internet"
+
+LEDs function can be for keyboards and keypads.
+
+Keypad for hand held devices
+
+#define LED_FUNCTION_KEYBOARD "keyboard"
+#define LED_FUNCTION_KEYPAD "keypad"
+
+
+> +#define LED_FUNCTION_LAN "lan"
+> +#define LED_FUNCTION_MMC "mmc"
+> +#define LED_FUNCTION_NAND "nand"
+> +#define LED_FUNCTION_ON "on"
+> +#define LED_FUNCTION_PROGRAMMING "programming"
+> +#define LED_FUNCTION_PWR "pwr"
+
+Same comment as above on chrg
+
+> +#define LED_FUNCTION_RX "rx"
+> +#define LED_FUNCTION_SD "sd"
+> +#define LED_FUNCTION_SLEEP "sleep"
+> +#define LED_FUNCTION_STANDBY "standby"
+> +#define LED_FUNCTION_STATUS "status"
+> +#define LED_FUNCTION_TORCH "torch"
+> +#define LED_FUNCTION_TV "tv"
+> +#define LED_FUNCTION_TX "tx"
+> +#define LED_FUNCTION_USB "usb"
+> +#define LED_FUNCTION_WAN "wan"
+> +#define LED_FUNCTION_WLAN "wlan"
+> +#define LED_FUNCTION_WPS "wps"
+> +
+
+Dan
+
+>  #endif /* __DT_BINDINGS_LEDS_H */
+> 
+
 
 -- 
-Luca
+------------------
+Dan Murphy
