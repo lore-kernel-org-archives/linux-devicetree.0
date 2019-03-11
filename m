@@ -1,178 +1,165 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: axi-i2s: let both capture and playback be optional" to the asoc tree
-Date: Mon, 11 Mar 2019 17:23:18 +0000 (GMT)
-Message-ID: <20190311172318.508771128896@debutante.sirena.org.uk>
-References: <20190307214456.16445-1-luca@lucaceresoli.net>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 05/25] dt-bindings: leds: Add function and color
+ properties
+Date: Mon, 11 Mar 2019 18:24:10 +0100
+Message-ID: <796a13a7-fb8c-9b5b-6bd5-dfb7458731fe@gmail.com>
+References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
+ <20190310182836.20841-6-jacek.anaszewski@gmail.com>
+ <98c1a41e-77bb-5ffd-b5b3-772a28c0f0a6@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190307214456.16445-1-luca@lucaceresoli.net>
+In-Reply-To: <98c1a41e-77bb-5ffd-b5b3-772a28c0f0a6@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luca Ceresoli <luca@lucaceresoli.net>
-Cc: Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>Mark Brown <broonie@kernel.org>alsa-devel@alsa-project.org
+To: Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Dan,
 
-   ASoC: axi-i2s: let both capture and playback be optional
+On 3/11/19 1:26 PM, Dan Murphy wrote:
+> On 3/10/19 1:28 PM, Jacek Anaszewski wrote:
+>> Introduce dedicated properties for conveying information about
+>> LED function and color. Mark old "label" property as deprecated.
+>>
+>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>> Cc: Baolin Wang <baolin.wang@linaro.org>
+>> Cc: Daniel Mack <daniel@zonque.org>
+>> Cc: Dan Murphy <dmurphy@ti.com>
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+>> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> Cc: Simon Shields <simon@lineageos.org>
+>> ---
+>>   Documentation/devicetree/bindings/leds/common.txt | 55 +++++++++++++++++++----
+>>   1 file changed, 47 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+>> index aa1399814a2a..3402b0e1cec9 100644
+>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>> @@ -10,14 +10,23 @@ can influence the way of the LED device initialization, the LED components
+>>   have to be tightly coupled with the LED device binding. They are represented
+>>   by child nodes of the parent LED device binding.
+>>   
+>> +
+>>   Optional properties for child nodes:
+>>   - led-sources : List of device current outputs the LED is connected to. The
+>>   		outputs are identified by the numbers that must be defined
+>>   		in the LED device binding documentation.
+>> +- function: LED functon. Use one of the LED_FUNCTION_* prefixed definitions
+>> +	    from the header include/dt-bindings/leds/common.h.
+>> +	    If there is no matching LED_FUNCTION available, add a new one.
+>> +- color : Color of the LED. Use one of the LED_COLOR_NAME_* prefixed definitions
+>> +	    from the header include/dt-bindings/leds/common.h.
+>> +	    If there is no matching LED_COLOR_NAME available, add a new one.
+>> +
+> 
+> I am assuming multi color can re-use this property as well?
 
-has been applied to the asoc tree at
+I intended it to be a string, but indeed it would be better if we will
+make it an integer to be consistent with the discussed LED multi color
+design.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+>>   - label : The label for this LED. If omitted, the label is taken from the node
+>>   	  name (excluding the unit address). It has to uniquely identify
+>>   	  a device, i.e. no other LED class device can be assigned the same
+>> -	  label.
+>> +	  label. This property is deprecated - use 'function' and 'color'
+>> +	  properties instead.
+>>   
+>>   - default-state : The initial state of the LED. Valid values are "on", "off",
+>>     and "keep". If the LED is already on or off and the default-state property is
+>> @@ -87,29 +96,59 @@ Required properties for trigger source:
+>>   
+>>   * Examples
+>>   
+>> -gpio-leds {
+>> +#include <dt-bindings/leds/common.h>
+>> +
+>> +led-controller@0 {
+>>   	compatible = "gpio-leds";
+>>   
+>> -	system-status {
+>> -		label = "Status";
+>> +	led0 {
+>> +		function = LED_FUNCTION_STATUS;
+> 
+> Missing color for example unless there is a reason to omit it for GPIO LEDs
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+It is on purpose - to show that it is an optional property for
+monochrome LEDs.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> 
+> Also missing reg here
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Also on purpose. leds-gpio bindings don't require reg here.
+And when reg is absent the unit address in the node name should
+be omitted as Rob stated in one of recent reviews.
 
-Thanks,
-Mark
+>>   		linux,default-trigger = "heartbeat";
+>>   		gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
+>>   	};
+>>   
+>> -	usb {
+>> +	led1 {
+>> +		function = LED_FUNCTION_USB;
+> 
+> Same as above
+> Also missing reg here
+>>   		gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
+>>   		trigger-sources = <&ohci_port1>, <&ehci_port1>;
+>>   	};
+>>   };
+>>   
+>> -max77693-led {
+>> +led-controller@0 {
+>>   	compatible = "maxim,max77693-led";
+>>   
+>> -	camera-flash {
+>> -		label = "Flash";
+>> +	led {
+>> +		function = LED_FUNCTION_FLASH;
+>> +		color = LED_COLOR_NAME_WHITE;
+>>   		led-sources = <0>, <1>;
+>>   		led-max-microamp = <50000>;
+>>   		flash-max-microamp = <320000>;
+>>   		flash-max-timeout-us = <500000>;
+>>   	};
+>>   };
+>> +
+>> +led-controller@30 {
+>> +        compatible = "panasonic,an30259a";
+>> +        reg = <0x30>;
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        led@1 {
+>> +                reg = <1>;
+>> +                linux,default-trigger = "heartbeat";
+>> +                function = LED_FUNCTION_INDICATOR;
+>> +                color = LED_COLOR_NAME_RED;
+>> +        };
+>> +
+>> +        led@2 {
+>> +                reg = <2>;
+>> +                function = LED_FUNCTION_INDICATOR;
+>> +                color = LED_COLOR_NAME_GREEN;
+>> +        };
+>> +
+>> +        led@3 {
+>> +                reg = <3>;
+>> +                function = LED_FUNCTION_INDICATOR;
+>> +                color = LED_COLOR_NAME_BLUE;
+>> +        };
+>> +};
+>>
+> 
+> 
 
->From 7bf7d0554890c53478ec04d3d4bfced0c881f6c8 Mon Sep 17 00:00:00 2001
-From: Luca Ceresoli <luca@lucaceresoli.net>
-Date: Thu, 7 Mar 2019 22:44:55 +0100
-Subject: [PATCH] ASoC: axi-i2s: let both capture and playback be optional
-
-Both the capture and playback channels are optional in the axi_i2s IP
-block. Reflect this in the driver by enabling only the channel(s) that
-have a DMA.
-
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/adi/axi-i2s.c | 68 +++++++++++++++++++++++++++++------------
- 1 file changed, 48 insertions(+), 20 deletions(-)
-
-diff --git a/sound/soc/adi/axi-i2s.c b/sound/soc/adi/axi-i2s.c
-index 4c23381727a1..273c543e8ff3 100644
---- a/sound/soc/adi/axi-i2s.c
-+++ b/sound/soc/adi/axi-i2s.c
-@@ -43,6 +43,9 @@ struct axi_i2s {
- 	struct clk *clk;
- 	struct clk *clk_ref;
- 
-+	bool   has_capture;
-+	bool   has_playback;
-+
- 	struct snd_soc_dai_driver dai_driver;
- 
- 	struct snd_dmaengine_dai_dma_data capture_dma_data;
-@@ -136,8 +139,10 @@ static int axi_i2s_dai_probe(struct snd_soc_dai *dai)
- {
- 	struct axi_i2s *i2s = snd_soc_dai_get_drvdata(dai);
- 
--	snd_soc_dai_init_dma_data(dai, &i2s->playback_dma_data,
--		&i2s->capture_dma_data);
-+	snd_soc_dai_init_dma_data(
-+		dai,
-+		i2s->has_playback ? &i2s->playback_dma_data : NULL,
-+		i2s->has_capture  ? &i2s->capture_dma_data  : NULL);
- 
- 	return 0;
- }
-@@ -151,18 +156,6 @@ static const struct snd_soc_dai_ops axi_i2s_dai_ops = {
- 
- static struct snd_soc_dai_driver axi_i2s_dai = {
- 	.probe = axi_i2s_dai_probe,
--	.playback = {
--		.channels_min = 2,
--		.channels_max = 2,
--		.rates = SNDRV_PCM_RATE_KNOT,
--		.formats = SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE,
--	},
--	.capture = {
--		.channels_min = 2,
--		.channels_max = 2,
--		.rates = SNDRV_PCM_RATE_KNOT,
--		.formats = SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE,
--	},
- 	.ops = &axi_i2s_dai_ops,
- 	.symmetric_rates = 1,
- };
-@@ -178,6 +171,19 @@ static const struct regmap_config axi_i2s_regmap_config = {
- 	.max_register = AXI_I2S_REG_STATUS,
- };
- 
-+static void axi_i2s_parse_of(struct axi_i2s *i2s, const struct device_node *np)
-+{
-+	struct property *dma_names;
-+	const char *dma_name;
-+
-+	of_property_for_each_string(np, "dma-names", dma_names, dma_name) {
-+		if (strcmp(dma_name, "rx") == 0)
-+			i2s->has_capture = true;
-+		if (strcmp(dma_name, "tx") == 0)
-+			i2s->has_playback = true;
-+	}
-+}
-+
- static int axi_i2s_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
-@@ -191,6 +197,8 @@ static int axi_i2s_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, i2s);
- 
-+	axi_i2s_parse_of(i2s, pdev->dev.of_node);
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(base))
-@@ -213,13 +221,29 @@ static int axi_i2s_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	i2s->playback_dma_data.addr = res->start + AXI_I2S_REG_TX_FIFO;
--	i2s->playback_dma_data.addr_width = 4;
--	i2s->playback_dma_data.maxburst = 1;
-+	if (i2s->has_playback) {
-+		axi_i2s_dai.playback.channels_min = 2;
-+		axi_i2s_dai.playback.channels_max = 2;
-+		axi_i2s_dai.playback.rates = SNDRV_PCM_RATE_KNOT;
-+		axi_i2s_dai.playback.formats =
-+			SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE;
-+
-+		i2s->playback_dma_data.addr = res->start + AXI_I2S_REG_TX_FIFO;
-+		i2s->playback_dma_data.addr_width = 4;
-+		i2s->playback_dma_data.maxburst = 1;
-+	}
-+
-+	if (i2s->has_capture) {
-+		axi_i2s_dai.capture.channels_min = 2;
-+		axi_i2s_dai.capture.channels_max = 2;
-+		axi_i2s_dai.capture.rates = SNDRV_PCM_RATE_KNOT;
-+		axi_i2s_dai.capture.formats =
-+			SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE;
- 
--	i2s->capture_dma_data.addr = res->start + AXI_I2S_REG_RX_FIFO;
--	i2s->capture_dma_data.addr_width = 4;
--	i2s->capture_dma_data.maxburst = 1;
-+		i2s->capture_dma_data.addr = res->start + AXI_I2S_REG_RX_FIFO;
-+		i2s->capture_dma_data.addr_width = 4;
-+		i2s->capture_dma_data.maxburst = 1;
-+	}
- 
- 	i2s->ratnum.num = clk_get_rate(i2s->clk_ref) / 2 / AXI_I2S_BITS_PER_FRAME;
- 	i2s->ratnum.den_step = 1;
-@@ -240,6 +264,10 @@ static int axi_i2s_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_clk_disable;
- 
-+	dev_info(&pdev->dev, "probed, capture %s, playback %s\n",
-+		 i2s->has_capture ? "enabled" : "disabled",
-+		 i2s->has_playback ? "enabled" : "disabled");
-+
- 	return 0;
- 
- err_clk_disable:
 -- 
-2.20.1
+Best regards,
+Jacek Anaszewski
