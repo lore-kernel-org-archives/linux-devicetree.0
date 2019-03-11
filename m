@@ -1,173 +1,202 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v4 6/6] usb:cdns3 Fix for stuck packets in on-chip OUT buffer.
-Date: Mon, 11 Mar 2019 16:15:09 +0800
-Message-ID: <CAL411-pC6VdaYyv4_rjanc3WgkJ+Ebcs0jUFims-7CUdv0pvpA@mail.gmail.com>
-References: <1550173514-23573-1-git-send-email-pawell@cadence.com>
- <1550173514-23573-7-git-send-email-pawell@cadence.com> <67da432f-9c95-d644-65b5-dbc5b942d24c@ti.com>
- <BYAPR07MB47091C199971D677DE0FBB84DD7D0@BYAPR07MB4709.namprd07.prod.outlook.com>
- <e8616274-b0a8-6e59-b6fa-a68fed58bad7@ti.com> <BYAPR07MB470939C6F100336BAF6C41BFDD7D0@BYAPR07MB4709.namprd07.prod.outlook.com>
- <87va1dbokp.fsf@linux.intel.com> <70967a02-2f02-9ac8-e205-cdbfac5fbbae@ti.com>
- <BYAPR07MB4709F449E09AD352BA06CBA7DD4C0@BYAPR07MB4709.namprd07.prod.outlook.com>
- <11e29bea-98c1-03c4-a7d5-c529df2cc341@ti.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
+Subject: Re: [PATCH v2 5/9] mfd: Add support for the MediaTek MT6358 PMIC
+Date: Mon, 11 Mar 2019 16:22:05 +0800
+Message-ID: <CANMq1KDPPuDC4O3W1EjqoLAzfwitx-pqX0Aq8zycomsigcHLFw@mail.gmail.com>
+References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1552275991-34648-6-git-send-email-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <11e29bea-98c1-03c4-a7d5-c529df2cc341@ti.com>
+In-Reply-To: <1552275991-34648-6-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Pawel Laszczak <pawell@cadence.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Rahul
+To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Eddie Huang <eddie.huang@mediatek.com>, Marc Zyngier <marc.zyngier@arm.com>, srv_heupstream <srv_heupstream@mediatek.com>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-rtc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Mar 11, 2019 at 11:48 AM Hsin-Hsiung Wang
+<hsin-hsiung.wang@mediatek.com> wrote:
 >
-> On 07/03/2019 09:06, Pawel Laszczak wrote:
-> > Hi,
-> >
-> >> Hi,
-> >>
-> >> On 21/02/2019 09:14, Felipe Balbi wrote:
-> >>>
-> >>> Hi,
-> >>>
-> >>> (please break your emails at 80-columns)
-> >>>
-> >>> Pawel Laszczak <pawell@cadence.com> writes:
-> >>>>>> One more thing. Workaround has implemented algorithm that decide f=
-or which
-> >>>>>> endpoint it should be enabled.  e.g for composite device MSC+NCM+A=
-CM it
-> >>>>>> should work only for ACM OUT endpoint.
-> >>>>>>
-> >>>>>
-> >>>>> If ACM driver didn't queue the request for ACM OUT endpoint, why do=
-es the
-> >>>>> controller accept the data at all?
-> >>>>>
-> >>>>> I didn't understand why we need a workaround for this. It should be=
- standard
-> >>>>> behaviour to NAK data if function driver didn't request for all end=
-points.
-> >>>>
-> >>>> Yes, I agree with you. Controller shouldn=E2=80=99t accept such pack=
-et. As I know this
-> >>>> behavior will be fixed in RTL.
-> >>>>
-> >>>> But I assume that some older version of this controller are one the =
-market,
-> >>>> and driver should work correct with them.
-> >>>>
-> >>>> In the feature this workaround can be limited only to selected contr=
-ollers.
-> >>>>
-> >>>> Even now I assume that it can be enabled/disabled by module paramete=
-r.
-> >>>
-> >>> no module parameters, please. Use revision detection in runtime.
-> >>>
-> >>
-> >> This is about whether to enable or disable the workaround.
-> >> By default we don't want this workaround to be enabled.
-> >>
-> >> I'm debating whether we should have this workaround at all or not.
-> >>
-> >> It has the following problems.
-> >>
-> >> 1) It ACKs packets even when gadget end is not ready to accept the tra=
-nsfers.
-> >> 2) It stores these packets in a temporary buffer and then pushes them =
-to the
-> >> gadget driver whenever the gadget driver is ready to process the data.
-> >> 3) Since the gadget driver can become ready at an indefinite time in t=
-he
-> >> future, it poses 2 problems:
-> >> a) It is sending stale data to the sink. (problematic at next protocol=
- level?)
-> >> b) If this temporary buffer runs out we still hit the lock up issue.
-> >>
-> >> I think the right solution is to make sure that the gadget driver is a=
-lways
-> >> reading all the enabled OUT endpoints *or* (keep the OUT endpoints dis=
-abled
-> >> if gadget driver is not ready to process OUT transfers).
-> >
-> > If driver disable endpoint then it not answer for packets from host.
-> > It will result that host reset the device, so I can't disable such endp=
-oints.
-> >
-> > Other good solution is to change ACM driver in a way that it sends requ=
-ests
-> > to controller driver after enabling endpoint. The class driver could de=
-cide
+> This adds support for the MediaTek MT6358 PMIC. This is a
+> multifunction device with the following sub modules:
 >
-> The ACM driver is doing exactly that. However, there is a large delay (de=
-pending
-> on when user opens the ttyACM) between endpoint enable and request queue =
-and
-> that's the issue for this controller.
+> - Regulator
+> - RTC
+> - Codec
+> - Interrupt
 >
-> The endpoint is enabled whenever the host sends a SET_INTERFACE
-> [acm_set_alt()->gserial_connect()]
-> but the first request is queued only when user opens the ttyACM
-> [gs_open()->gs_start_io()->gs_start_rx()].
+> It is interfaced to the host controller using SPI interface
+> by a proprietary hardware called PMIC wrapper or pwrap.
+> MT6358 MFD is a child device of the pwrap.
 >
-> I'm don't think this sequence can be changed.
-> What happens if you defer gserial_connect() to be done at gs_open()?
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  drivers/mfd/Makefile                 |    2 +-
+>  drivers/mfd/mt6358-irq.c             |  236 +++++
+>  drivers/mfd/mt6397-core.c            |   63 +-
+>  include/linux/mfd/mt6358/core.h      |  158 +++
+>  include/linux/mfd/mt6358/registers.h | 1926 ++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/mt6397/core.h      |    3 +
+>  6 files changed, 2386 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/mfd/mt6358-irq.c
+>  create mode 100644 include/linux/mfd/mt6358/core.h
+>  create mode 100644 include/linux/mfd/mt6358/registers.h
 >
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 088e249..50be021 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -230,7 +230,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)        += intel-soc-pmic.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)     += intel_soc_pmic_bxtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)     += intel_soc_pmic_chtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)  += intel_soc_pmic_chtdc_ti.o
+> -obj-$(CONFIG_MFD_MT6397)       += mt6397-core.o mt6397-irq.o
+> +obj-$(CONFIG_MFD_MT6397)       += mt6397-core.o mt6397-irq.o mt6358-irq.o
+>
+>  obj-$(CONFIG_MFD_ALTERA_A10SR) += altera-a10sr.o
+>  obj-$(CONFIG_MFD_SUN4I_GPADC)  += sun4i-gpadc.o
+> diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
+> new file mode 100644
+> index 0000000..2941d87
+> --- /dev/null
+> +++ b/drivers/mfd/mt6358-irq.c
+> @@ -0,0 +1,236 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (c) 2019 MediaTek Inc.
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/mt6358/core.h>
+> +#include <linux/mfd/mt6358/registers.h>
+> +#include <linux/mfd/mt6397/core.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +static struct irq_top_t mt6358_ints[] = {
+> +       MT6358_TOP_GEN(BUCK),
+> +       MT6358_TOP_GEN(LDO),
+> +       MT6358_TOP_GEN(PSC),
+> +       MT6358_TOP_GEN(SCK),
+> +       MT6358_TOP_GEN(BM),
+> +       MT6358_TOP_GEN(HK),
+> +       MT6358_TOP_GEN(AUD),
+> +       MT6358_TOP_GEN(MISC),
+> +};
+> +
+> +static int parsing_hwirq_to_top_group(unsigned int hwirq)
 
-The host controller receives error due to there is no NAK either ACK
-for endpoint
-which should have already enabled. The host may send bus reset due to
-the response
-timeout for specific endpoint.
+I think mka@ already told you that, but I'd rename to something like
+get_hwirq_top_group.
 
-This issue only affects multiple OUT use case, we run this issue after
-configuring gadget
-as ACM + NCM, NCM can't work (always responds NAKs for OUT) due to ACM endp=
-oint
-receives host's data but the user doesn't receive it, since all OUT
-endpoints share the same FIFOs.
+> +{
+> +       int top_group;
+> +
 
-So, if we do not enable this workaround, the multiple OUT endpoints
-use case may not
-work well since one OUT endpoint may affect other OUT endpoints due to
-it occupies the
-common OUT FIFO.
+Should we also add this? (I know that MT6358_TOP_GEN(BUCK).hwirq_base
+== 0, but nothing really guarantees that.
+if (mt6358_ints[0].hwirq_base < hwirq)
+   return -1;
 
-If we enable this workaround, for your below question:
+> +       for (top_group = 1; top_group < ARRAY_SIZE(mt6358_ints); top_group++) {
+> +               if (mt6358_ints[top_group].hwirq_base > hwirq) {
+> +                       top_group--;
+> +                       break;
 
-> >> It has the following problems.
-> >>
-> >> 1) It ACKs packets even when gadget end is not ready to accept the tra=
-nsfers.
+More simply:
+return top_group-1;
 
-This can't be controlled by software, HW does it automatically once we
-enable endpoint.
+> +               }
+> +       }
+> +       return top_group;
 
-> >> 2) It stores these packets in a temporary buffer and then pushes them =
-to the
-> >> gadget driver whenever the gadget driver is ready to process the data.
-> >> 3) Since the gadget driver can become ready at an indefinite time in t=
-he
-> >> future, it poses 2 problems:
-> >> a) It is sending stale data to the sink. (problematic at next protocol=
- level?)
+return -1 on error, and check for errors in the code below. If you
+don't do that, you run the risk of accessing some array out of bounds.
 
-Maybe. The protocol may be recovered after several talks, eg, the device fi=
-nds
-the stale data, and let the host re-send.
+> +}
+> +
+> +static void pmic_irq_enable(struct irq_data *data)
+> +{
+> +       unsigned int hwirq = irqd_to_hwirq(data);
+> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
+> +       struct pmic_irq_data *irqd = chip->irq_data;
+> +
+> +       irqd->enable_hwirq[hwirq] = true;
+> +}
+> +
+> +static void pmic_irq_disable(struct irq_data *data)
+> +{
+> +       unsigned int hwirq = irqd_to_hwirq(data);
+> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
+> +       struct pmic_irq_data *irqd = chip->irq_data;
+> +
+> +       irqd->enable_hwirq[hwirq] = false;
+> +}
+> +
+> +static void pmic_irq_lock(struct irq_data *data)
+> +{
+> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
+> +
+> +       mutex_lock(&chip->irqlock);
+> +}
+> +
+> +static void pmic_irq_sync_unlock(struct irq_data *data)
+> +{
+> +       unsigned int i, top_gp, en_reg, int_regs, shift;
+> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
+> +       struct pmic_irq_data *irqd = chip->irq_data;
+> +
+> +       for (i = 0; i < irqd->num_pmic_irqs; i++) {
+> +               if (irqd->enable_hwirq[i] ==
+> +                               irqd->cache_hwirq[i])
 
-> >> b) If this temporary buffer runs out we still hit the lock up issue.
-> >>
+I think this fits in 80 chars.
 
-It can be improved, if the temporary buffer is full, we could discard
-some oldest data.
+> +                       continue;
+> +
+> +               top_gp = parsing_hwirq_to_top_group(i);
 
-So, if not enable this workaround, the USB function is affected due to
-physical data can't
-be received, else, we may receive the stale data for some specific use
-cases, it only affect
-its own OUT endpoint, it may be recovered by protocol layer.  I prefer
-enabling it by default
-if this workaround is well tested.
+This is quite inefficient: you keep going through mt6358_ints for all
+i. Can you just figure out (and remember) which group we are currently
+in in this loop?
 
-Peter
+outside the loop:
+top_gp = 0;
+
+here:
+while ((top_gp+1) < ARRAY_SIZE(mt6358_ints) && i >=
+mt6358_ints[top_gp+1].hwirq_base)
+   top_gp++;
+
+> +               int_regs = mt6358_ints[top_gp].num_int_bits / MT6358_REG_WIDTH;
+> +               en_reg = mt6358_ints[top_gp].en_reg +
+> +                       mt6358_ints[top_gp].en_reg_shift * int_regs;
+> +               shift = (i - mt6358_ints[top_gp].hwirq_base) % MT6358_REG_WIDTH;
+> +               regmap_update_bits(chip->regmap, en_reg, BIT(shift),
+> +                                  irqd->enable_hwirq[i] << shift);
+> +               irqd->cache_hwirq[i] = irqd->enable_hwirq[i];
+> +       }
+> +       mutex_unlock(&chip->irqlock);
+> +}
+> +
+> +static int pmic_irq_set_type(struct irq_data *data, unsigned int type)
+> +{
+> +       return 0;
+> +}
+
+Why do you need to stub this function out? I think the core will
+already check if the irq_chip supports this function or not. I think
+you can just leave it as NULL in the struct below.
+
+> +
+> +static struct irq_chip mt6358_irq_chip = {
+> +       .name = "mt6358-irq",
+> +       .irq_enable = pmic_irq_enable,
+> +       .irq_disable = pmic_irq_disable,
+> +       .irq_bus_lock = pmic_irq_lock,
+> +       .irq_bus_sync_unlock = pmic_irq_sync_unlock,
+> +       .irq_set_type = pmic_irq_set_type,
+> +};
+> +
+[snip]
