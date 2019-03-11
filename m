@@ -1,49 +1,59 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v2 0/9] Add Support for MediaTek PMIC MT6358
-Date: Mon, 11 Mar 2019 22:21:23 +0100
-Message-ID: <20190311212123.GD1637@piout.net>
-References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RESEND V2 1/4] dt-bindings: fsl: scu: add watchdog binding
+Date: Mon, 11 Mar 2019 16:26:16 -0500
+Message-ID: <CAL_JsqJiKx8UvZ8qu-YaaPooLbSMKANSX=YZQO=Nm_anD2v9gw@mail.gmail.com>
+References: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
+ <1550472539-16590-2-git-send-email-Anson.Huang@nxp.com> <20190222195217.GA22194@bogus>
+ <bb19470c-1590-f8dd-72e6-b382444d7902@roeck-us.net> <DB3PR0402MB3916912A64AF0837A9649913F5790@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <96932b3e-87f1-d8f2-95bc-0e9a8d5d45ed@roeck-us.net> <DB3PR0402MB391659B6A466B1D85114E9C9F57A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAL_JsqJV9NxpOJi3Jh2Uk-TOmOL4rWwqZp3sodxsRinAHZ3m3w@mail.gmail.com> <AM0PR04MB4211EAEA6F03465D372B0B4F804C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <AM0PR04MB4211EAEA6F03465D372B0B4F804C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Eddie Huang <eddie.huang@mediatek.com>, Marc Zyngier <marc.zyngier@arm.com>, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>
+To: Aisheng Dong <aisheng.dong@nxp.com>
+Cc: Anson Huang <anson.huang@nxp.com>, Guenter Roeck <linux@roeck-us.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "festevam@gmail.com" <festevam@gmail.com>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, Andy Gross <andy.gross@linaro.org>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, s.hauer@pengutronix.
 List-Id: devicetree@vger.kernel.org
 
-Hello,
++Jens W
 
-On 11/03/2019 11:46:22+0800, Hsin-Hsiung Wang wrote:
-> This patchset including refactoring interrupt add support to MT6358 PMIC.
-> MT6358 is the primary PMIC for MT8183 platform.
-> 
-> changes since v1:
-> - refine for better code quality.
-> - remove of_match_table in the MT6358 regulator driver.
-> - some minor bug fix of mfd driver, like getting pmic id flow.
-> - add support for the MediaTek MT6358 RTC.
-> 
-> Hsin-Hsiung Wang (7):
->   mfd: mt6397: clean up code
->   mfd: mt6397: extract irq related code from core driver
->   dt-bindings: mfd: Add compatible for the MediaTek MT6358 PMIC
->   regulator: Add document for MT6358 regulator
->   mfd: Add support for the MediaTek MT6358 PMIC
->   regulator: mt6358: Add support for MT6358 regulator
->   arm64: dts: mt6358: add PMIC MT6358 related nodes
-> 
-> Ran Bi (2):
->   rtc: mt6397: fix alarm register overwrite
->   rtc: Add support for the MediaTek MT6358 RTC
-> 
+On Thu, Mar 7, 2019 at 6:22 AM Aisheng Dong <aisheng.dong@nxp.com> wrote:
+>
+> Hi Rob,
+>
+> > > > I think Rob suggested that the SCU parent driver should instantiate
+> > > > the watchdog without explicit watchdog node. That would be possible,
+> > > > but it currently uses
+> > > > devm_of_platform_populate() to do the instantiation, and changing
+> > > > that would be a mess. Besides, it does sem to me that your suggested
+> > > > node would describe the hardware, so I am not sure I understand the
+> > reasoning.
+> >
+> > It would just be a call to create a platform device instead. How is that a mess?
+> >
+> > It's describing firmware. We have DT for describing h/w we've failed to make
+> > discoverable. We should not repeat that and just describe firmware in DT.
+> > Make the firmware discoverable! Though there are cases like firmware
+> > provided clocks where we still need something in DT, but this is not one of
+> > them.
+> >
+>
+> The watchdog node here in question actually is not using SCU firmware call.
+> Due to security requirement by SCU, watchdog can only be accessed in
+> security mode, for IMX case, via ARM Trust Firmware. That means the
+> watchdog used in Linux actually is using ARM SMC call and does not
+> depend SCU driver. So It would be strange for SCU driver to instantiate it.
+>
+> For this situation, do you think we can move watchdog out of scu node?
+> Maybe rename the compatible string like "fsl,imx8qxp-sip-watchdog"
+> because it's actually a watchdog serviced by ATF firmware.
 
-It seems that those two patches are quite independent from the other
-changes. How do you expect those to be merged?
+Yes, but that creates more questions. What exactly does ATF talk to
+for the watchdog? The SCU firmware?
 
+Maybe ATF should define and provide a standard watchdog interface? It
+is still a question of making the firmware discoverable rather than
+trying to describe the firmware in DT.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Rob
