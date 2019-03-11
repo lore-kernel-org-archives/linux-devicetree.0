@@ -1,133 +1,38 @@
-From: Vishal Sagar <vishal.sagar@xilinx.com>
-Subject: [PATCH v5 0/2] Add support for Xilinx CSI2 Receiver Subsystem
-Date: Mon, 11 Mar 2019 15:10:55 +0530
-Message-ID: <1552297257-145919-1-git-send-email-vishal.sagar@xilinx.com>
+From: <Nicolas.Ferre@microchip.com>
+Subject: Re: [PATCH] ARM: dts: at91: Fix typo in ISC_D0 on PC9
+Date: Mon, 11 Mar 2019 09:52:41 +0000
+Message-ID: <48221283-f5c8-2c03-db40-11c581911434@microchip.com>
+References: <20190311075742.23320-1-david.engraf@sysgo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hyun Kwon <hyunk@xilinx.com>, laurent.pinchart@ideasonboard.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dinesh Kumar <dineshk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>
-Cc: Vishal Sagar <vishal.sagar@xilinx.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190311075742.23320-1-david.engraf@sysgo.com>
+Content-Language: en-US
+Content-ID: <17D5149D6D1C4D45A281AFFF5AA264CC@namprd11.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: david.engraf@sysgo.com, robh+dt@kernel.org, mark.rutland@arm.com, Ludovic.Desroches@microchip.com, alexandre.belloni@bootlin.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Xilinx MIPI CSI-2 Receiver Subsystem
-------------------------------------
-
-The Xilinx MIPI CSI-2 Receiver Subsystem Soft IP consists of a DPHY which
-gets the data, an optional I2C, a CSI-2 Receiver which parses the data and
-converts it into AXIS data.
-This stream output maybe connected to a Xilinx Video Format Bridge.
-The maximum number of lanes supported is fixed in the design.
-The number of active lanes can be programmed.
-For e.g. the design may set maximum lanes as 4 but if the camera sensor has
-only 1 lane then the active lanes shall be set as 1.
-
-The pixel format set in design acts as a filter allowing only the selected
-data type or RAW8 data packets. The D-PHY register access can be gated in
-the design. The base address of the DPHY depends on whether the internal
-Xilinx I2C controller is enabled or not in design.
-
-The device driver registers the MIPI CSI2 Rx Subsystem as a V4L2 sub device
-having 2 pads. The sink pad is connected to the MIPI camera sensor and
-output pad is connected to the video node.
-Refer to xlnx,csi2rxss.txt for device tree node details.
-
-This driver helps configure the number of active lanes to be set, setting
-and handling interrupts and IP core enable. It logs the number of events
-occurring according to their type between streaming ON and OFF.
-It generates a v4l2 event for each short packet data received.
-The application can then dequeue this event and get the requisite data
-from the event structure.
-
-It adds new V4L2 controls which are used to get the event counter values
-and reset the subsystem.
-
-The Xilinx CSI-2 Rx Subsystem outputs an AXI4 Stream data which can be
-used for image processing. This data follows the video formats mentioned
-in Xilinx UG934 when the Video Format Bridge is enabled.
-
-v5
-- 1/2
-  - Removed the DPHY clock description and dt node.
-  - removed bayer pattern as CSI doesn't deal with it.
-- 2/2
-  - removed bayer pattern as CSI doesn't deal with it.
-  - add YUV422 10bpc media bus format.
-
-v4
-- 1/2
-  - Added reviewed by Hyun Kwon
-- 2/2
-  - Removed irq member from core structure
-  - Consolidated IP config prints in xcsi2rxss_log_ipconfig()
-  - Return -EINVAL in case of invalid ioctl
-  - Code formatting
-  - Added reviewed by Hyun Kwon
-
-v3
-- 1/2
-  - removed interrupt parent as suggested by Rob
-  - removed dphy clock
-  - moved vfb to optional properties
-  - Added required and optional port properties section
-  - Added endpoint property section
-- 2/2
- - Fixed comments given by Hyun.
- - Removed DPHY 200 MHz clock. This will be controlled by DPHY driver
- - Minor code formatting
- - en_csi_v20 and vfb members removed from struct and made local to dt parsing
- - lock description updated
- - changed to ratelimited type for all dev prints in irq handler
- - Removed YUV 422 10bpc media format
-
-v2
-- 1/2
-  - updated the compatible string to latest version supported
-  - removed DPHY related parameters
-  - added CSI v2.0 related property (including VCX for supporting upto 16
-    virtual channels).
-  - modified csi-pxl-format from string to unsigned int type where the value
-    is as per the CSI specification
-  - Defined port 0 and port 1 as sink and source ports.
-  - Removed max-lanes property as suggested by Rob and Sakari
-
-- 2/2
-  - Fixed comments given by Hyun and Sakari.
-  - Made all bitmask using BIT() and GENMASK()
-  - Removed unused definitions
-  - Removed DPHY access. This will be done by separate DPHY PHY driver.
-  - Added support for CSI v2.0 for YUV 422 10bpc, RAW16, RAW20 and extra
-    virtual channels
-  - Fixed the ports as sink and source
-  - Now use the v4l2fwnode API to get number of data-lanes
-  - Added clock framework support
-  - Removed the close() function
-  - updated the set format function
-  - Support only VFB enabled config
-
-Vishal Sagar (2):
-  media: dt-bindings: media: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem
-  media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem driver
-
- .../bindings/media/xilinx/xlnx,csi2rxss.txt        |  118 ++
- drivers/media/platform/xilinx/Kconfig              |   10 +
- drivers/media/platform/xilinx/Makefile             |    1 +
- drivers/media/platform/xilinx/xilinx-csi2rxss.c    | 1465 ++++++++++++++++++++
- include/uapi/linux/xilinx-v4l2-controls.h          |   14 +
- include/uapi/linux/xilinx-v4l2-events.h            |   25 +
- 6 files changed, 1633 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
- create mode 100644 drivers/media/platform/xilinx/xilinx-csi2rxss.c
- create mode 100644 include/uapi/linux/xilinx-v4l2-events.h
-
--- 
-2.7.4
+T24gMTEvMDMvMjAxOSBhdCAwODo1NywgRGF2aWQgRW5ncmFmIHdyb3RlOg0KPiBUaGUgZnVuY3Rp
+b24gYXJndW1lbnQgZm9yIHRoZSBJU0NfRDAgb24gUEM5IHdhcyBpbmNvcnJlY3QuIEFjY29yZGlu
+ZyB0bw0KPiB0aGUgZG9jdW1lbnRhdGlvbiBpdCBzaG91bGQgYmUgJ0MnIGFrYSAzLg0KPiANCj4g
+U2lnbmVkLW9mZi1ieTogRGF2aWQgRW5ncmFmIDxkYXZpZC5lbmdyYWZAc3lzZ28uY29tPg0KDQpS
+ZXZpZXdlZC1ieTogTmljb2xhcyBGZXJyZSA8bmljb2xhcy5mZXJyZUBtaWNyb2NoaXAuY29tPg0K
+DQpGaXhlczogN2YxNmNiNjc2YzAwICgiQVJNOiBhdDkxL2R0OiBhZGQgc2FtYTVkMiBwaW5tdXgi
+KQ0KQ2M6IDxzdGFibGVAdmdlci5rZXJuZWwub3JnPiAjIHY0LjQrDQoNCj4gLS0tDQo+ICAgYXJj
+aC9hcm0vYm9vdC9kdHMvc2FtYTVkMi1waW5mdW5jLmggfCAyICstDQo+ICAgMSBmaWxlIGNoYW5n
+ZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm0vYm9vdC9kdHMvc2FtYTVkMi1waW5mdW5jLmggYi9hcmNoL2FybS9ib290L2R0cy9zYW1h
+NWQyLXBpbmZ1bmMuaA0KPiBpbmRleCAxYzAxYTZmODQzZDguLjI4YTJlNDU3NTJmZSAxMDA2NDQN
+Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc2FtYTVkMi1waW5mdW5jLmgNCj4gKysrIGIvYXJj
+aC9hcm0vYm9vdC9kdHMvc2FtYTVkMi1waW5mdW5jLmgNCj4gQEAgLTUxOCw3ICs1MTgsNyBAQA0K
+PiAgICNkZWZpbmUgUElOX1BDOV9fR1BJTwkJCVBJTk1VWF9QSU4oUElOX1BDOSwgMCwgMCkNCj4g
+ICAjZGVmaW5lIFBJTl9QQzlfX0ZJUQkJCVBJTk1VWF9QSU4oUElOX1BDOSwgMSwgMykNCj4gICAj
+ZGVmaW5lIFBJTl9QQzlfX0dUU1VDT01QCQlQSU5NVVhfUElOKFBJTl9QQzksIDIsIDEpDQo+IC0j
+ZGVmaW5lIFBJTl9QQzlfX0lTQ19EMAkJCVBJTk1VWF9QSU4oUElOX1BDOSwgMiwgMSkNCj4gKyNk
+ZWZpbmUgUElOX1BDOV9fSVNDX0QwCQkJUElOTVVYX1BJTihQSU5fUEM5LCAzLCAxKQ0KPiAgICNk
+ZWZpbmUgUElOX1BDOV9fVElPQTQJCQlQSU5NVVhfUElOKFBJTl9QQzksIDQsIDIpDQo+ICAgI2Rl
+ZmluZSBQSU5fUEMxMAkJCTc0DQo+ICAgI2RlZmluZSBQSU5fUEMxMF9fR1BJTwkJCVBJTk1VWF9Q
+SU4oUElOX1BDMTAsIDAsIDApDQo+IA0KDQoNCi0tIA0KTmljb2xhcyBGZXJyZQ0K
