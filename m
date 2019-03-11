@@ -1,92 +1,49 @@
 From: Pi-Hsun Shih <pihsun@chromium.org>
-Subject: [PATCH v6 1/7] dt-bindings: Add a binding for Mediatek SCP
-Date: Mon, 11 Mar 2019 14:34:52 +0800
-Message-ID: <20190311063458.137473-2-pihsun@chromium.org>
+Subject: [PATCH v6 5/7] dt-bindings: Add binding for cros-ec-rpmsg.
+Date: Mon, 11 Mar 2019 14:34:56 +0800
+Message-ID: <20190311063458.137473-6-pihsun@chromium.org>
 References: <20190311063458.137473-1-pihsun@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190311063458.137473-1-pihsun@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Pi-Hsun Shih <pihsun@chromium.org>, Erin Lo <erin.lo@mediatek.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:REMOTE PROCESSOR
-        REMOTEPROC SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC
-        support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC
-        support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Pi-Hsun Shih <pihsun@chromium.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Guenter Roeck <groeck@chromium.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Erin Lo <erin.lo@mediatek.com>
+Add a DT binding documentation for ChromeOS EC driver over rpmsg.
 
-Add a DT binding documentation of SCP for the
-MT8183 SoC from Mediatek.
-
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
 ---
 Changes from v5:
- - Remove dependency on CONFIG_RPMSG_MTK_SCP.
-
-Changes from v4:
- - Add detail of more properties.
- - Document the usage of mtk,rpmsg-name in subnode from the new design.
-
-Changes from v3:
- - No change.
-
-Changes from v2:
- - No change. I realized that for this patch series, there's no need to
-   add anything under the mt8183-scp node (neither the mt8183-rpmsg or
-   the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
-   directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
-   created by SCP name service.
-
-Changes from v1:
- - No change.
+ - New patch.
 ---
- .../bindings/remoteproc/mtk,scp.txt           | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+ Documentation/devicetree/bindings/mfd/cros-ec.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-new file mode 100644
-index 000000000000..3ba668bab14b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-@@ -0,0 +1,36 @@
-+Mediatek SCP Bindings
-+----------------------------------------
+diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
+index 6245c9b1a68b..4860eabd0f72 100644
+--- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
++++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
+@@ -3,7 +3,7 @@ ChromeOS Embedded Controller
+ Google's ChromeOS EC is a Cortex-M device which talks to the AP and
+ implements various function such as keyboard and battery charging.
+ 
+-The EC can be connect through various means (I2C, SPI, LPC) and the
++The EC can be connect through various means (I2C, SPI, LPC, RPMSG) and the
+ compatible string used depends on the interface. Each connection method has
+ its own driver which connects to the top level interface-agnostic EC driver.
+ Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connect to
+@@ -17,6 +17,9 @@ Required properties (SPI):
+ - compatible: "google,cros-ec-spi"
+ - reg: SPI chip select
+ 
++Required properties (RPMSG):
++- compatible: "google,cros-ec-rpmsg"
 +
-+This binding provides support for ARM Cortex M4 Co-processor found on some
-+Mediatek SoCs.
-+
-+Required properties:
-+- compatible		Should be "mediatek,mt8183-scp"
-+- reg			Should contain the address ranges for the two memory
-+			regions, SRAM and CFG.
-+- reg-names		Contains the corresponding names for the two memory
-+			regions. These should be named "sram" & "cfg".
-+- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
-+- clock-names		Contains the corresponding name for the clock. This
-+			should be named "main".
-+
-+Subnodes
-+--------
-+
-+Subnodes of the SCP represent rpmsg devices. The names of the devices are not
-+important. The properties of these nodes are defined by the individual bindings
-+for the rpmsg devices - but must contain the following property:
-+
-+- mtk,rpmsg-name	Contains the name for the rpmsg device. Used to match
-+			the subnode to rpmsg device announced by SCP.
-+
-+Example:
-+
-+	scp: scp@10500000 {
-+		compatible = "mediatek,mt8183-scp";
-+		reg = <0 0x10500000 0 0x80000>,
-+		      <0 0x105c0000 0 0x5000>;
-+		reg-names = "sram", "cfg";
-+		clocks = <&infracfg CLK_INFRA_SCPSYS>;
-+		clock-names = "main";
-+	};
+ Optional properties (SPI):
+ - google,cros-ec-spi-pre-delay: Some implementations of the EC need a little
+   time to wake up from sleep before they can receive SPI transfers at a high
 -- 
 2.21.0.360.g471c308f928-goog
