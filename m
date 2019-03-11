@@ -1,46 +1,36 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH 5/5] ARM: dts: imx7ulp-evk: Add backlight support
-Date: Mon, 11 Mar 2019 07:16:37 +0000
-Message-ID: <1552288273-31028-6-git-send-email-Anson.Huang@nxp.com>
-References: <1552288273-31028-1-git-send-email-Anson.Huang@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+From: Peng Ma <peng.ma@nxp.com>
+Subject: [PATCH 1/3] dt-bindings: ahci-fsl-qoriq: add ls1028a chip name to the list
+Date: Mon, 11 Mar 2019 15:20:12 +0800
+Message-ID: <20190311072014.36565-1-peng.ma@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552288273-31028-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "stefan@agner.ch" <stefan@agner.ch>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, Leonard Crestez <leonard.crestez@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, Robin Gong <yibin.gong@nxp.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: axboe@kernel.dk, robh+dt@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com
+Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, andy.tang@nxp.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Peng Ma <peng.ma@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds i.MX7ULP EVK board MIPI-DSI backlight
-support.
+Add ls1028a compatible to bindings documentation.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Peng Ma <peng.ma@nxp.com>
 ---
- arch/arm/boot/dts/imx7ulp-evk.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+depends on:
+	- http://patchwork.ozlabs.org/patch/1045217/
 
-diff --git a/arch/arm/boot/dts/imx7ulp-evk.dts b/arch/arm/boot/dts/imx7ulp-=
-evk.dts
-index 002b0c5..f5b9828 100644
---- a/arch/arm/boot/dts/imx7ulp-evk.dts
-+++ b/arch/arm/boot/dts/imx7ulp-evk.dts
-@@ -22,6 +22,14 @@
- 		reg =3D <0x60000000 0x40000000>;
- 	};
-=20
-+	backlight {
-+		compatible =3D "pwm-backlight";
-+		pwms =3D <&pwm0 1 50000>;
-+		brightness-levels =3D <0 20 25 30 35 40 100>;
-+		default-brightness-level =3D <6>;
-+		status =3D "okay";
-+	};
-+
- 	reg_vsd_3v3: regulator-vsd-3v3 {
- 		compatible =3D "regulator-fixed";
- 		regulator-name =3D "VSD_3V3";
---=20
-2.7.4
+ .../devicetree/bindings/ata/ahci-fsl-qoriq.txt     |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/ata/ahci-fsl-qoriq.txt b/Documentation/devicetree/bindings/ata/ahci-fsl-qoriq.txt
+index 9ecc019..72fdeef 100644
+--- a/Documentation/devicetree/bindings/ata/ahci-fsl-qoriq.txt
++++ b/Documentation/devicetree/bindings/ata/ahci-fsl-qoriq.txt
+@@ -3,7 +3,8 @@ Binding for Freescale QorIQ AHCI SATA Controller
+ Required properties:
+   - reg: Physical base address and size of the controller's register area.
+   - compatible: Compatibility string. Must be 'fsl,<chip>-ahci', where
+-    chip could be ls1021a, ls1043a, ls1046a, ls1088a, ls2080a, lx2160a, etc.
++    chip could be ls1021a, ls1028a, ls1043a, ls1046a, ls1088a, ls2080a,
++    lx2160a, etc.
+   - clocks: Input clock specifier. Refer to common clock bindings.
+   - interrupts: Interrupt specifier. Refer to interrupt binding.
+ 
+-- 
+1.7.1
