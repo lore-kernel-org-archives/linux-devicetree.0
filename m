@@ -1,445 +1,147 @@
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH v2 5/7] counter: add FlexTimer Module Quadrature decoder
- counter driver
-Date: Mon, 11 Mar 2019 12:24:04 +0000
-Message-ID: <20190311122404.0000546f@huawei.com>
-References: <20190306111208.7454-1-patrick.havelange@essensium.com>
-        <20190306111208.7454-6-patrick.havelange@essensium.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH 05/25] dt-bindings: leds: Add function and color
+ properties
+Date: Mon, 11 Mar 2019 07:26:43 -0500
+Message-ID: <98c1a41e-77bb-5ffd-b5b3-772a28c0f0a6@ti.com>
+References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
+ <20190310182836.20841-6-jacek.anaszewski@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190306111208.7454-6-patrick.havelange@essensium.com>
+In-Reply-To: <20190310182836.20841-6-jacek.anaszewski@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick Havelange <patrick.havelange@essensium.com>
-Cc: William Breathitt Gray <vilhelm.gray@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Thierry Reding <thierry.reding@gmail.com>, Esben Haabendal <esben@haabendal.dk>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Jonathan Cameron <jic23@kernel.org>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 6 Mar 2019 12:12:06 +0100
-Patrick Havelange <patrick.havelange@essensium.com> wrote:
-
-> This driver exposes the counter for the quadrature decoder of the
-> FlexTimer Module, present in the LS1021A soc.
+On 3/10/19 1:28 PM, Jacek Anaszewski wrote:
+> Introduce dedicated properties for conveying information about
+> LED function and color. Mark old "label" property as deprecated.
 > 
-> Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
-A few really trivial bits inline to add to William's feedback.
-
-Otherwise I'm happy enough,
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Baolin Wang <baolin.wang@linaro.org>
+> Cc: Daniel Mack <daniel@zonque.org>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Simon Shields <simon@lineageos.org>
 > ---
-> Changes v2
->  - Rebased on new counter subsystem
->  - Cleaned up included headers
->  - Use devm_ioremap()
->  - Correct order of devm_ and unmanaged resources
-> ---
->  drivers/counter/Kconfig       |   9 +
->  drivers/counter/Makefile      |   1 +
->  drivers/counter/ftm-quaddec.c | 356 ++++++++++++++++++++++++++++++++++
->  3 files changed, 366 insertions(+)
->  create mode 100644 drivers/counter/ftm-quaddec.c
+>  Documentation/devicetree/bindings/leds/common.txt | 55 +++++++++++++++++++----
+>  1 file changed, 47 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/counter/Kconfig b/drivers/counter/Kconfig
-> index 87c491a19c63..233ac305d878 100644
-> --- a/drivers/counter/Kconfig
-> +++ b/drivers/counter/Kconfig
-> @@ -48,4 +48,13 @@ config STM32_LPTIMER_CNT
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called stm32-lptimer-cnt.
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index aa1399814a2a..3402b0e1cec9 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -10,14 +10,23 @@ can influence the way of the LED device initialization, the LED components
+>  have to be tightly coupled with the LED device binding. They are represented
+>  by child nodes of the parent LED device binding.
 >  
-> +config FTM_QUADDEC
-> +	tristate "Flex Timer Module Quadrature decoder driver"
-> +	help
-> +	  Select this option to enable the Flex Timer Quadrature decoder
-> +	  driver.
 > +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called ftm-quaddec.
+>  Optional properties for child nodes:
+>  - led-sources : List of device current outputs the LED is connected to. The
+>  		outputs are identified by the numbers that must be defined
+>  		in the LED device binding documentation.
+> +- function: LED functon. Use one of the LED_FUNCTION_* prefixed definitions
+> +	    from the header include/dt-bindings/leds/common.h.
+> +	    If there is no matching LED_FUNCTION available, add a new one.
+> +- color : Color of the LED. Use one of the LED_COLOR_NAME_* prefixed definitions
+> +	    from the header include/dt-bindings/leds/common.h.
+> +	    If there is no matching LED_COLOR_NAME available, add a new one.
 > +
->  endif # COUNTER
-> diff --git a/drivers/counter/Makefile b/drivers/counter/Makefile
-> index 5589976d37f8..0c9e622a6bea 100644
-> --- a/drivers/counter/Makefile
-> +++ b/drivers/counter/Makefile
-> @@ -7,3 +7,4 @@ obj-$(CONFIG_COUNTER) += counter.o
->  obj-$(CONFIG_104_QUAD_8)	+= 104-quad-8.o
->  obj-$(CONFIG_STM32_TIMER_CNT)	+= stm32-timer-cnt.o
->  obj-$(CONFIG_STM32_LPTIMER_CNT)	+= stm32-lptimer-cnt.o
-> +obj-$(CONFIG_FTM_QUADDEC)	+= ftm-quaddec.o
-> diff --git a/drivers/counter/ftm-quaddec.c b/drivers/counter/ftm-quaddec.c
-> new file mode 100644
-> index 000000000000..1bc9e075a386
-> --- /dev/null
-> +++ b/drivers/counter/ftm-quaddec.c
-> @@ -0,0 +1,356 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Flex Timer Module Quadrature decoder
-> + *
-> + * This module implements a driver for decoding the FTM quadrature
-> + * of ex. a LS1021A
-> + */
-> +
-> +#include <linux/fsl/ftm.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/io.h>
-> +#include <linux/mutex.h>
-> +#include <linux/counter.h>
-> +
-> +struct ftm_quaddec {
-> +	struct counter_device counter;
-> +	struct platform_device *pdev;
-> +	void __iomem *ftm_base;
-> +	bool big_endian;
-> +	struct mutex ftm_quaddec_mutex;
-> +};
-> +
-> +static void ftm_read(struct ftm_quaddec *ftm, uint32_t offset, uint32_t *data)
-> +{
-> +	if (ftm->big_endian)
-> +		*data = ioread32be(ftm->ftm_base + offset);
-> +	else
-> +		*data = ioread32(ftm->ftm_base + offset);
-> +}
-> +
-> +static void ftm_write(struct ftm_quaddec *ftm, uint32_t offset, uint32_t data)
-> +{
-> +	if (ftm->big_endian)
-> +		iowrite32be(data, ftm->ftm_base + offset);
-> +	else
-> +		iowrite32(data, ftm->ftm_base + offset);
-> +}
-> +
-> +/*
-> + * take mutex
-> + * call ftm_clear_write_protection
-> + * update settings
-> + * call ftm_set_write_protection
-> + * release mutex
-> + */
-> +static void ftm_clear_write_protection(struct ftm_quaddec *ftm)
-> +{
-> +	uint32_t flag;
-> +
-> +	/* First see if it is enabled */
-> +	ftm_read(ftm, FTM_FMS, &flag);
-> +
-> +	if (flag & FTM_FMS_WPEN) {
-> +		ftm_read(ftm, FTM_MODE, &flag);
-> +		ftm_write(ftm, FTM_MODE, flag | FTM_MODE_WPDIS);
-> +	}
-> +}
-> +
-> +static void ftm_set_write_protection(struct ftm_quaddec *ftm)
-> +{
-> +	ftm_write(ftm, FTM_FMS, FTM_FMS_WPEN);
-> +}
-> +
-> +static void ftm_reset_counter(struct ftm_quaddec *ftm)
-> +{
-> +	/* Reset hardware counter to CNTIN */
-> +	ftm_write(ftm, FTM_CNT, 0x0);
-> +}
-> +
-> +static void ftm_quaddec_init(struct ftm_quaddec *ftm)
-> +{
-> +	ftm_clear_write_protection(ftm);
-> +
-> +	/*
-> +	 * Do not write in the region from the CNTIN register through the
-> +	 * PWMLOAD register when FTMEN = 0.
-> +	 */
-> +	ftm_write(ftm, FTM_MODE, FTM_MODE_FTMEN);
-> +	ftm_write(ftm, FTM_CNTIN, 0x0000);
-> +	ftm_write(ftm, FTM_MOD, 0xffff);
-> +	ftm_write(ftm, FTM_CNT, 0x0);
-> +	ftm_write(ftm, FTM_SC, FTM_SC_PS_1);
-> +
-> +	/* Select quad mode */
-> +	ftm_write(ftm, FTM_QDCTRL, FTM_QDCTRL_QUADEN);
-> +
-> +	/* Unused features and reset to default section */
-> +	ftm_write(ftm, FTM_POL, 0x0);
-> +	ftm_write(ftm, FTM_FLTCTRL, 0x0);
-> +	ftm_write(ftm, FTM_SYNCONF, 0x0);
-> +	ftm_write(ftm, FTM_SYNC, 0xffff);
-> +
-> +	/* Lock the FTM */
-> +	ftm_set_write_protection(ftm);
-> +}
-> +
-> +static void ftm_quaddec_disable(struct ftm_quaddec *ftm)
-> +{
-> +	ftm_write(ftm, FTM_MODE, 0);
-> +}
-> +
-> +static int ftm_quaddec_get_prescaler(struct counter_device *counter,
-> +				     struct counter_count *count,
-> +				     size_t *cnt_mode)
-> +{
-> +	struct ftm_quaddec *ftm = counter->priv;
-> +	uint32_t scflags;
-> +
-> +	ftm_read(ftm, FTM_SC, &scflags);
-> +
-> +	*cnt_mode = scflags & FTM_SC_PS_MASK;
 
-FIELD_GET and FIELD_PREP are a tidy way of doing these sorts of
-accesses. Helpfully they also save a reviewer having to sanity
-check that the offset is 0 as it is here.
+I am assuming multi color can re-use this property as well?
+
+>  - label : The label for this LED. If omitted, the label is taken from the node
+>  	  name (excluding the unit address). It has to uniquely identify
+>  	  a device, i.e. no other LED class device can be assigned the same
+> -	  label.
+> +	  label. This property is deprecated - use 'function' and 'color'
+> +	  properties instead.
+>  
+>  - default-state : The initial state of the LED. Valid values are "on", "off",
+>    and "keep". If the LED is already on or off and the default-state property is
+> @@ -87,29 +96,59 @@ Required properties for trigger source:
+>  
+>  * Examples
+>  
+> -gpio-leds {
+> +#include <dt-bindings/leds/common.h>
+> +
+> +led-controller@0 {
+>  	compatible = "gpio-leds";
+>  
+> -	system-status {
+> -		label = "Status";
+> +	led0 {
+> +		function = LED_FUNCTION_STATUS;
+
+Missing color for example unless there is a reason to omit it for GPIO LEDs
+
+Also missing reg here
+
+>  		linux,default-trigger = "heartbeat";
+>  		gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
+>  	};
+>  
+> -	usb {
+> +	led1 {
+> +		function = LED_FUNCTION_USB;
+
+Same as above
+Also missing reg here
+>  		gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
+>  		trigger-sources = <&ohci_port1>, <&ehci_port1>;
+>  	};
+>  };
+>  
+> -max77693-led {
+> +led-controller@0 {
+>  	compatible = "maxim,max77693-led";
+>  
+> -	camera-flash {
+> -		label = "Flash";
+> +	led {
+> +		function = LED_FUNCTION_FLASH;
+> +		color = LED_COLOR_NAME_WHITE;
+>  		led-sources = <0>, <1>;
+>  		led-max-microamp = <50000>;
+>  		flash-max-microamp = <320000>;
+>  		flash-max-timeout-us = <500000>;
+>  	};
+>  };
+> +
+> +led-controller@30 {
+> +        compatible = "panasonic,an30259a";
+> +        reg = <0x30>;
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        led@1 {
+> +                reg = <1>;
+> +                linux,default-trigger = "heartbeat";
+> +                function = LED_FUNCTION_INDICATOR;
+> +                color = LED_COLOR_NAME_RED;
+> +        };
+> +
+> +        led@2 {
+> +                reg = <2>;
+> +                function = LED_FUNCTION_INDICATOR;
+> +                color = LED_COLOR_NAME_GREEN;
+> +        };
+> +
+> +        led@3 {
+> +                reg = <3>;
+> +                function = LED_FUNCTION_INDICATOR;
+> +                color = LED_COLOR_NAME_BLUE;
+> +        };
+> +};
+> 
 
 
-> +
-> +	return 0;
-> +}
-> +
-> +static int ftm_quaddec_set_prescaler(struct counter_device *counter,
-> +				     struct counter_count *count,
-> +				     size_t cnt_mode)
-> +{
-> +	struct ftm_quaddec *ftm = counter->priv;
-> +
-> +	uint32_t scflags;
-> +
-> +	mutex_lock(&ftm->ftm_quaddec_mutex);
-> +
-> +	ftm_read(ftm, FTM_SC, &scflags);
-> +
-> +	scflags &= ~FTM_SC_PS_MASK;
-> +	cnt_mode &= FTM_SC_PS_MASK; /*just to be 100% sure*/
-
-nitpick: Comment syntax is /* just to be 100% sure */
-
-> +
-> +	scflags |= cnt_mode;
-> +
-> +	/* Write */
-> +	ftm_clear_write_protection(ftm);
-> +	ftm_write(ftm, FTM_SC, scflags);
-> +	ftm_set_write_protection(ftm);
-> +
-> +	/* Also resets the counter as it is undefined anyway now */
-> +	ftm_reset_counter(ftm);
-> +
-> +	mutex_unlock(&ftm->ftm_quaddec_mutex);
-> +	return 0;
-> +}
-> +
-> +static const char * const ftm_quaddec_prescaler[] = {
-> +	"1", "2", "4", "8", "16", "32", "64", "128"
-> +};
-> +
-> +static struct counter_count_enum_ext ftm_quaddec_prescaler_enum = {
-> +	.items = ftm_quaddec_prescaler,
-> +	.num_items = ARRAY_SIZE(ftm_quaddec_prescaler),
-> +	.get = ftm_quaddec_get_prescaler,
-> +	.set = ftm_quaddec_set_prescaler
-> +};
-> +
-> +enum ftm_quaddec_synapse_action {
-> +	FTM_QUADDEC_SYNAPSE_ACTION_BOTH_EDGES,
-> +};
-> +
-> +static enum counter_synapse_action ftm_quaddec_synapse_actions[] = {
-> +	[FTM_QUADDEC_SYNAPSE_ACTION_BOTH_EDGES] =
-> +	COUNTER_SYNAPSE_ACTION_BOTH_EDGES
-> +};
-> +
-> +enum ftm_quaddec_count_function {
-> +	FTM_QUADDEC_COUNT_ENCODER_MODE_1,
-> +};
-> +
-> +static const enum counter_count_function ftm_quaddec_count_functions[] = {
-> +	[FTM_QUADDEC_COUNT_ENCODER_MODE_1] =
-> +	COUNTER_COUNT_FUNCTION_QUADRATURE_X4
-> +};
-> +
-> +static int ftm_quaddec_count_read(struct counter_device *counter,
-> +				  struct counter_count *count,
-> +				  struct counter_count_read_value *val)
-> +{
-> +	struct ftm_quaddec *const ftm = counter->priv;
-> +	uint32_t cntval;
-> +
-> +	ftm_read(ftm, FTM_CNT, &cntval);
-> +
-> +	counter_count_read_value_set(val, COUNTER_COUNT_POSITION, &cntval);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ftm_quaddec_count_write(struct counter_device *counter,
-> +				   struct counter_count *count,
-> +				   struct counter_count_write_value *val)
-> +{
-> +	struct ftm_quaddec *const ftm = counter->priv;
-> +	u32 cnt;
-> +	int err;
-> +
-> +	err = counter_count_write_value_get(&cnt, COUNTER_COUNT_POSITION, val);
-> +	if (err)
-> +		return err;
-> +
-> +	if (cnt != 0) {
-> +		dev_warn(&ftm->pdev->dev, "Can only accept '0' as new counter value\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ftm_reset_counter(ftm);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ftm_quaddec_count_function_get(struct counter_device *counter,
-> +					  struct counter_count *count,
-> +					  size_t *function)
-> +{
-> +	*function = FTM_QUADDEC_COUNT_ENCODER_MODE_1;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ftm_quaddec_action_get(struct counter_device *counter,
-> +				  struct counter_count *count,
-> +				  struct counter_synapse *synapse,
-> +				  size_t *action)
-> +{
-> +	*action = FTM_QUADDEC_SYNAPSE_ACTION_BOTH_EDGES;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct counter_ops ftm_quaddec_cnt_ops = {
-> +	.count_read = ftm_quaddec_count_read,
-> +	.count_write = ftm_quaddec_count_write,
-> +	.function_get = ftm_quaddec_count_function_get,
-> +	.action_get = ftm_quaddec_action_get,
-> +};
-> +
-> +static struct counter_signal ftm_quaddec_signals[] = {
-> +	{
-> +		.id = 0,
-> +		.name = "Channel 1 Quadrature A"
-> +	},
-> +	{
-> +		.id = 1,
-> +		.name = "Channel 1 Quadrature B"
-> +	}
-> +};
-> +
-> +static struct counter_synapse ftm_quaddec_count_synapses[] = {
-> +	{
-> +		.actions_list = ftm_quaddec_synapse_actions,
-> +		.num_actions = ARRAY_SIZE(ftm_quaddec_synapse_actions),
-> +		.signal = &ftm_quaddec_signals[0]
-> +	},
-> +	{
-> +		.actions_list = ftm_quaddec_synapse_actions,
-> +		.num_actions = ARRAY_SIZE(ftm_quaddec_synapse_actions),
-> +		.signal = &ftm_quaddec_signals[1]
-> +	}
-> +};
-> +
-> +static const struct counter_count_ext ftm_quaddec_count_ext[] = {
-> +	COUNTER_COUNT_ENUM("prescaler", &ftm_quaddec_prescaler_enum),
-> +	COUNTER_COUNT_ENUM_AVAILABLE("prescaler", &ftm_quaddec_prescaler_enum),
-> +};
-> +
-> +static struct counter_count ftm_quaddec_counts = {
-> +	.id = 0,
-> +	.name = "Channel 1 Count",
-> +	.functions_list = ftm_quaddec_count_functions,
-> +	.num_functions = ARRAY_SIZE(ftm_quaddec_count_functions),
-> +	.synapses = ftm_quaddec_count_synapses,
-> +	.num_synapses = ARRAY_SIZE(ftm_quaddec_count_synapses),
-> +	.ext = ftm_quaddec_count_ext,
-> +	.num_ext = ARRAY_SIZE(ftm_quaddec_count_ext)
-> +};
-> +
-> +static int ftm_quaddec_probe(struct platform_device *pdev)
-> +{
-> +	struct ftm_quaddec *ftm;
-> +
-> +	struct device_node *node = pdev->dev.of_node;
-> +	struct resource *io;
-> +	int ret;
-> +
-> +	ftm = devm_kzalloc(&pdev->dev, sizeof(*ftm), GFP_KERNEL);
-> +	if (!ftm)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, ftm);
-> +
-> +	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!io) {
-> +		dev_err(&pdev->dev, "Failed to get memory region\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	ftm->pdev = pdev;
-> +	ftm->big_endian = of_property_read_bool(node, "big-endian");
-> +	ftm->ftm_base = devm_ioremap(&pdev->dev, io->start, resource_size(io));
-> +
-> +	if (!ftm->ftm_base) {
-> +		dev_err(&pdev->dev, "Failed to map memory region\n");
-> +		return -EINVAL;
-> +	}
-> +	ftm->counter.name = dev_name(&pdev->dev);
-> +	ftm->counter.parent = &pdev->dev;
-> +	ftm->counter.ops = &ftm_quaddec_cnt_ops;
-> +	ftm->counter.counts = &ftm_quaddec_counts;
-> +	ftm->counter.num_counts = 1;
-> +	ftm->counter.signals = ftm_quaddec_signals;
-> +	ftm->counter.num_signals = ARRAY_SIZE(ftm_quaddec_signals);
-> +	ftm->counter.priv = ftm;
-> +
-> +	mutex_init(&ftm->ftm_quaddec_mutex);
-> +
-> +	ftm_quaddec_init(ftm);
-> +
-> +	ret = counter_register(&ftm->counter);
-> +	if (ret)
-> +		ftm_quaddec_disable(ftm);
-> +
-> +	return ret;
-> +}
-> +
-> +static int ftm_quaddec_remove(struct platform_device *pdev)
-> +{
-> +	struct ftm_quaddec *ftm = platform_get_drvdata(pdev);
-> +
-> +	counter_unregister(&ftm->counter);
-> +
-> +	ftm_quaddec_disable(ftm);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id ftm_quaddec_match[] = {
-> +	{ .compatible = "fsl,ftm-quaddec" },
-> +	{},
-> +};
-> +
-> +static struct platform_driver ftm_quaddec_driver = {
-> +	.driver = {
-> +		.name = "ftm-quaddec",
-> +		.owner = THIS_MODULE,
-No need to set this, the call to __platform_driver_register
-that comes from the module_platform_driver macro below
-will deal with this for you.
-
-> +		.of_match_table = ftm_quaddec_match,
-> +	},
-> +	.probe = ftm_quaddec_probe,
-> +	.remove = ftm_quaddec_remove,
-> +};
-> +
-> +module_platform_driver(ftm_quaddec_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Kjeld Flarup <kfa@deif.com");
-> +MODULE_AUTHOR("Patrick Havelange <patrick.havelange@essensium.com");
+-- 
+------------------
+Dan Murphy
