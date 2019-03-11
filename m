@@ -1,37 +1,85 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH] ARM: dts: exynos: Fix audio (microphone) routing on Odroid
- XU3
-Date: Mon, 11 Mar 2019 16:50:12 +0100
-Message-ID: <20190311155012.15797-1-s.nawrocki@samsung.com>
-References: <CGME20190311155023epcas2p428a025925f6442554b50e14e328a6d04@epcas2p4.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: krzk@kernel.org
-Cc: kgene@kernel.org, robh+dt@kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, stable@vger.kernel.org
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH v8 01/15] drm/sun4i: dsi: Fix video start delay computation
+Date: Mon, 11 Mar 2019 21:31:11 +0530
+Message-ID: <CAMty3ZDDARP02qMJZ9CXeiMv=kghoiUHgEAV9b4q+SrbLss40Q@mail.gmail.com>
+References: <20190311133637.18334-1-jagan@amarulasolutions.com>
+ <20190311133637.18334-2-jagan@amarulasolutions.com>
+ <20190311153734.izg44ijwqqh2vpxc@flea>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190311153734.izg44ijwqqh2vpxc@flea>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The name of CODEC input widget to which microphone is connected through
-the "Headphone" jack is "IN12" not "IN1". This fixes microphone support
-on Odroid XU3.
-
-Cc: <stable@vger.kernel.org> # v4.14+
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
-index e84544b220b9..b90cea8b7368 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
-@@ -22,7 +22,7 @@
- 			"Headphone Jack", "HPL",
- 			"Headphone Jack", "HPR",
- 			"Headphone Jack", "MICBIAS",
--			"IN1", "Headphone Jack",
-+			"IN12", "Headphone Jack",
- 			"Speakers", "SPKL",
- 			"Speakers", "SPKR";
- 
--- 
-2.17.1
+T24gTW9uLCBNYXIgMTEsIDIwMTkgYXQgOTowNyBQTSBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlw
+YXJkQGJvb3RsaW4uY29tPiB3cm90ZToKPgo+IE9uIE1vbiwgTWFyIDExLCAyMDE5IGF0IDA3OjA2
+OjIzUE0gKzA1MzAsIEphZ2FuIFRla2kgd3JvdGU6Cj4gPiBWZXJ0aWNhbCB2aWRlbyBzdGFydCBk
+ZWxheSBpcyBjb21wdXRlZCBieSBleGNsdWRpbmcgdmVydGljYWwgZnJvbnQKPiA+IHBvcmNoIHZh
+bHVlIGZyb20gdG90YWwgdmVydGljYWwgdGltaW5ncy4KPiA+Cj4gPiBUaGlzIGNsZWFybHkgY29u
+ZmlybWVkIGZyb20gQlNQIGNvZGUgYW5kIGhlcmUgaG93IGl0IGNvbXB1dGVkLAo+ID4KPiA+IChk
+cml2ZXJzL3ZpZGVvL3N1bnhpL2Rpc3AyL2Rpc3AvZGUvbG93bGV2ZWxfc3VuNTBpdzEvZGVfZHNp
+LmMpCj4gPiB1MzIgdmZwID0gcGFuZWwtPmxjZF92dCAtIHBhbmVsLT5sY2RfeSAtIHBhbmVsLT5s
+Y2RfdmJwOwo+ID4gPT4gKHBhbmVsLT5sY2RfdnQpIC0gcGFuZWwtPmxjZF95IC0gKHBhbmVsLT5s
+Y2RfdmJwKQo+ID4gPT4gKHRpbW1pbmdzLT52ZXJfZnJvbnRfcG9yY2ggKyBwYW5lbC0+bGNkX3Zi
+cCArIHBhbmVsLT5sY2RfeSkKPiA+ICAgIC0gcGFuZWwtPmxjZF95IC0gKHBhbmVsLT5sY2RfdmJw
+KQo+ID4gPT4gdGltbWluZ3MtPnZlcl9mcm9udF9wb3JjaCArIHBhbmVsLT5sY2RfdmJwICsgcGFu
+ZWwtPmxjZF95Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAtIHBhbmVsLT5sY2RfeSAt
+IHBhbmVsLT5sY2RfdmJwCj4gPiA9PiB0aW1taW5ncy0+dmVyX2Zyb250X3BvcmNoCj4gPgo+ID4g
+QnV0IHRoZSBjdXJyZW50IGRyaXZlciBpcyBhc3N1bWluZyBpdCBjYW4gZXhjbHVkZSB2ZXJ0aWNh
+bCBmcm9udAo+ID4gcG9yY2ggYWxvbmcgd2l0aCB2ZXJ0aWNhbCBzeW5jIHZhbHVlcyBmcm9tIHRv
+dGFsIHZlcnRpY2FsIHRpbWluZ3MsCj4gPiB3aGljaCByZXN1bHRpbmcgd3Jvbmcgc3RhcnQgZGVs
+YXkgaW5kZWVkIHdyb25nIHBpY3R1cmUgcmVuZGVyaW5nCj4gPiBpbiB0aGUgcGFuZWwuCj4KPiBT
+YW1lIHN0b3J5IGhlcmU6IHdoaWNoIHBhbmVsLCB3aGljaCBkYXRhc2hlZXQsIHdoaWNoICJ3cm9u
+ZyBwaWN0dXJlCj4gcmVuZGVyaW5nIj8KCkl0J3MgYmFuYW5hcGksczA3MHd2MjAtY3QxNiBEU0kK
+Cj4KPiA+IEV4YW1wbGU6IHRpbWluZ3MsIHdoZXJlIGl0IHByb2R1Y2VzIHRoZSBpc3N1ZS4KPiA+
+IHsKPiA+ICAgICAgIC52ZGlzcGxheSAgICAgICA9IDYwMCwKPiA+ICAgICAgIC52c3luY19zdGFy
+dCAgICA9IDYwMCArIDEyLAo+ID4gICAgICAgLnZzeW5jX2VuZCAgICAgID0gNjAwICsgMTIgKyAy
+LAo+ID4gICAgICAgLnZ0b3RhbCAgICAgICAgID0gNjAwICsgMTIgKyAyICsgMjEsCj4gPiB9Cj4K
+PiBDYW4geW91IDEwMCUgdHJ1c3QgdGhvc2UgdGltaW5ncz8KCmllLiByZWFzb24sIEkgaGF2ZSBn
+aXZlbiB0aGUgTWFpbmxpbmUgdGltaW5ncyBbMV0uIFRoZSBhYm92ZSB0aW1pbmdzCmFyZSB3cm9u
+Z2x5IG1lbnRpb25lZCBhY3R1YWwgdGltaW5ncyBhcmUgZnJvbSBbMV0KCj4KPiA+IEl0IHByb2R1
+Y2VzIHRoZSBkZXNpcmVkIHN0YXJ0IGRlbGF5IHZhbHVlIGFzIDE5IGJ1dCB0aGUgY29ycmVjdCB3
+b3JraW5nCj4gPiB2YWx1ZSBzaG91bGQgYmUgNTEzLgo+ID4KPiA+IFNvLCBGaXggaXQgYnkgY29t
+cHV0aW5nIHByb3BlciB2aWRlbyBzdGFydCBkZWxheS4KPiA+Cj4gPiBGaXhlczogNjkwMDZlZjBl
+Y2IxICgiZHJtL3N1bjRpOiBkc2k6IENoYW5nZSB0aGUgc3RhcnQgZGVsYXkgY2FsY3VsYXRpb24i
+KQo+ID4gU2lnbmVkLW9mZi1ieTogSmFnYW4gVGVraSA8amFnYW5AYW1hcnVsYXNvbHV0aW9ucy5j
+b20+Cj4gPiAtLS0KPiA+ICBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNmlfbWlwaV9kc2kuYyB8
+IDEwICsrKysrKysrLS0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCAyIGRl
+bGV0aW9ucygtKQo+ID4KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3Vu
+NmlfbWlwaV9kc2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW42aV9taXBpX2RzaS5jCj4g
+PiBpbmRleCA2MmE1MDg0MjAyMjcuLjhkNjI5MmMwMTU4YiAxMDA2NDQKPiA+IC0tLSBhL2RyaXZl
+cnMvZ3B1L2RybS9zdW40aS9zdW42aV9taXBpX2RzaS5jCj4gPiArKysgYi9kcml2ZXJzL2dwdS9k
+cm0vc3VuNGkvc3VuNmlfbWlwaV9kc2kuYwo+ID4gQEAgLTM2NCw4ICszNjQsMTQgQEAgc3RhdGlj
+IHZvaWQgc3VuNmlfZHNpX2luc3RfaW5pdChzdHJ1Y3Qgc3VuNmlfZHNpICpkc2ksCj4gPiAgc3Rh
+dGljIHUxNiBzdW42aV9kc2lfZ2V0X3ZpZGVvX3N0YXJ0X2RlbGF5KHN0cnVjdCBzdW42aV9kc2kg
+KmRzaSwKPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0
+IGRybV9kaXNwbGF5X21vZGUgKm1vZGUpCj4gPiAgewo+ID4gLSAgICAgdTE2IHN0YXJ0ID0gY2xh
+bXAobW9kZS0+dnRvdGFsIC0gbW9kZS0+dmRpc3BsYXkgLSAxMCwgOCwgMTAwKTsKPiA+IC0gICAg
+IHUxNiBkZWxheSA9IG1vZGUtPnZ0b3RhbCAtIChtb2RlLT52c3luY19lbmQgLSBtb2RlLT52ZGlz
+cGxheSkgKyBzdGFydDsKPiA+ICsgICAgIHUxNiBkZWxheSA9IG1vZGUtPnZ0b3RhbCAtIChtb2Rl
+LT52c3luY19zdGFydCAtIG1vZGUtPnZkaXNwbGF5KTsKPiA+ICsKPiA+ICsgICAgIC8qKgo+ID4g
+KyAgICAgICogQlNQIGNvbW1lbnQ6Cj4gPiArICAgICAgKiBwdXQgc3RhcnRfZGVsYXkgdG8gdGNv
+bi4gc2V0IHJlYWR5IHN5bmMgZWFybHkgdG8gZHJhbWZyZXEsCj4gPiArICAgICAgKiBzbyBzZXQg
+c3RhcnRfZGVsYXkgMQo+ID4gKyAgICAgICovCj4KPiBUaGF0IGRvZXNuJ3QgbWFrZSBhbnkgc2Vu
+c2UgdG8gbWUuLi4gV2hhdCBkb2VzIGl0IG1lYW4/CgpXaGljaCBpcyBtZWFuaW5nIGFzIGFib3Zl
+IHN0YXRlZCBhcyAiQlNQIGNvbW1lbnQiIGZyb20gaGVyZVsyXQoKWzFdIGh0dHBzOi8vZ2l0Lmtl
+cm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L25leHQvbGludXgtbmV4dC5naXQvY29t
+bWl0L2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYz9pZD03YWQ4YjQxY2Q4ZjVj
+Mjg0MjY0NmQwMWNkZDU3NjY2M2NhZWUwNGE3ClsyXSBodHRwczovL2dpdGh1Yi5jb20vbG9uZ3Ns
+ZWVwL2xpbnV4LXBpbmU2NC9ibG9iL3BpbmU2NC1oYWNrcy0xLjIvZHJpdmVycy92aWRlby9zdW54
+aS9kaXNwMi9kaXNwL2RlL2xvd2xldmVsX3N1bjUwaXcxL2RlX2RzaS5jI0w3MjkKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
