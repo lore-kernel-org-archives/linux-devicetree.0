@@ -1,43 +1,42 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv4 28/28] arm64: defconfig: Enable CONFIG_PCI_LAYERSCAPE_GEN4
-Date: Mon, 11 Mar 2019 09:33:48 +0000
-Message-ID: <20190311093130.7209-29-Zhiqiang.Hou@nxp.com>
-References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
+From: Bich HEMON <bich.hemon@st.com>
+Subject: Re: [PATCH] i2c: i2c-stm32f7: Fix SDADEL minimum formula
+Date: Mon, 11 Mar 2019 09:34:00 +0000
+Message-ID: <36e0aec2-8fb8-d584-daee-1b3427f1067e@st.com>
+References: <1551885125-22295-1-git-send-email-bich.hemon@st.com>
+ <20190309101340.GH1340@kunai> <20190309105021.GI1340@kunai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <20190309105021.GI1340@kunai>
 Content-Language: en-US
+Content-ID: <CAB849C8628AE3419068CD4964787227@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>
-Cc: Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Pierre Yves MORDRET <pierre-yves.mordret@st.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On 3/9/19 11:50 AM, Wolfram Sang wrote:
+> On Sat, Mar 09, 2019 at 11:13:40AM +0100, Wolfram Sang wrote:
+>> On Wed, Mar 06, 2019 at 03:12:16PM +0000, Bich HEMON wrote:
+>>> From: Nicolas Le Bayon <nicolas.le.bayon@st.com>
+>>>
+>>> It conforms with Reference Manual I2C timing section.
+>>>
+>>> Signed-off-by: Nicolas Le Bayon <nicolas.le.bayon@st.com>
+>>> Signed-off-by: Bich Hemon <bich.hemon@st.com>
+>>
+>> Applied to for-current, thanks!
+> 
+> Do you have a Fixes tag for this?
+> 
+Hi Wolfram,
 
-Enable the PCIe Gen4 controller driver for Layerscape SoCs.
+Fixes: aeb068c57214858b638d5ee627bb4a831f98771e ("i2c: i2c-stm32f7: add 
+driver")
 
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
----
-V4:
- - no change
+Will you change the commit message or do you want me to resend the patch?
 
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+BR,
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 2d9c39033c1a..e294978aad5d 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -82,6 +82,7 @@ CONFIG_PCI_HOST_THUNDER_PEM=3Dy
- CONFIG_PCI_HOST_THUNDER_ECAM=3Dy
- CONFIG_PCIE_ROCKCHIP_HOST=3Dm
- CONFIG_PCI_LAYERSCAPE=3Dy
-+CONFIG_PCI_LAYERSCAPE_GEN4=3Dy
- CONFIG_PCI_HISI=3Dy
- CONFIG_PCIE_QCOM=3Dy
- CONFIG_PCIE_ARMADA_8K=3Dy
---=20
-2.17.1
+Bich
