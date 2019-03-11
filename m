@@ -1,7 +1,8 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv4 04/28] PCI: mobiveil: remove flag MSI_FLAG_MULTI_PCI_MSI
-Date: Mon, 11 Mar 2019 09:30:27 +0000
-Message-ID: <20190311093130.7209-5-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv4 07/28] PCI: mobiveil: use WIN_NUM_0 explicitly for CFG
+ outbound window
+Date: Mon, 11 Mar 2019 09:30:51 +0000
+Message-ID: <20190311093130.7209-8-Zhiqiang.Hou@nxp.com>
 References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -16,32 +17,37 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-The current code does not support multiple MSIs, so remove
-the corresponding flag from the msi_domain_info structure.
+As the .map_bus() use the WIN_NUM_0 for CFG transactions,
+it's better passing WIN_NUM_0 explicitly when initialize
+the CFG outbound window.
 
-Fixes: 1e913e58335f ("PCI: mobiveil: Add MSI support")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 ---
 V4:
  - no change
 
- drivers/pci/controller/pcie-mobiveil.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/pcie-mobiveil.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controlle=
 r/pcie-mobiveil.c
-index 563210e731d3..a0dd337c6214 100644
+index b2cc9c097fc9..df71c11b4810 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -703,7 +703,7 @@ static struct irq_chip mobiveil_msi_irq_chip =3D {
+@@ -612,9 +612,8 @@ static int mobiveil_host_init(struct mobiveil_pcie *pci=
+e)
+ 	 */
 =20
- static struct msi_domain_info mobiveil_msi_domain_info =3D {
- 	.flags	=3D (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
--		   MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
-+		   MSI_FLAG_PCI_MSIX),
- 	.chip	=3D &mobiveil_msi_irq_chip,
- };
+ 	/* config outbound translation window */
+-	program_ob_windows(pcie, pcie->ob_wins_configured,
+-			   pcie->ob_io_res->start, 0, CFG_WINDOW_TYPE,
+-			   resource_size(pcie->ob_io_res));
++	program_ob_windows(pcie, WIN_NUM_0, pcie->ob_io_res->start, 0,
++			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
 =20
+ 	/* memory inbound translation window */
+ 	program_ib_windows(pcie, WIN_NUM_1, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
 --=20
 2.17.1
