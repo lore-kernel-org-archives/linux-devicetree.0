@@ -1,34 +1,103 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: Re: [PATCH v2 8/9] rtc: mt6397: fix alarm register overwrite
-Date: Mon, 11 Mar 2019 14:05:02 +0800
-Message-ID: <1552284302.19917.2.camel@mtksdaap41>
-References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1552275991-34648-9-git-send-email-hsin-hsiung.wang@mediatek.com>
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH 1/5] dt-bindings: connector: add optional properties for
+ Type-B
+Date: Mon, 11 Mar 2019 06:06:52 +0000
+Message-ID: <VI1PR04MB45586752BAEEDBB3F979E0BB89480@VI1PR04MB4558.eurprd04.prod.outlook.com>
+References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
+         <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
+ <1552282383.10179.21.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552275991-34648-9-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <1552282383.10179.21.camel@mhfsdcap03>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, srv_heupstream <srv_heupstream@mediatek.com>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sean Wang <Sean.Wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Hans de Goede <hdegoede@redhat.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Badhri Jagan Sridharan <badhri@google.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-03-11 at 11:46 +0800, Hsin-Hsiung Wang wrote:
-> From: Ran Bi <ran.bi@mediatek.com>
-> 
-> Alarm registers high byte was reserved for other functions.
-> This add mask in alarm registers operation functions.
-> This also fix error condition in interrupt handler.
-> 
-> Fixes: fc2979118f3f ("rtc: mediatek: Add MT6397 RTC driver")
-> 
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> ---
->  drivers/rtc/rtc-mt6397.c | 47 +++++++++++++++++++++++++++++++++--------------
->  1 file changed, 33 insertions(+), 14 deletions(-)
-> 
-
-Thanks your interrupt and race condition fix
-
-Acked-by: Eddie Huang <eddie.huang@mediatek.com>
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ2h1bmZlbmcgWXVuIDxj
+aHVuZmVuZy55dW5AbWVkaWF0ZWsuY29tPg0KPiBTZW50OiAyMDE55bm0M+aciDEx5pelIDEzOjMz
+DQo+IFRvOiBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQuY29tPg0KPiBDYzogUm9iIEhl
+cnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IEdyZWcgS3JvYWgtSGFydG1hbg0KPiA8Z3JlZ2to
+QGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBIZWlra2kgS3JvZ2VydXMNCj4gPGhlaWtraS5rcm9nZXJ1
+c0BsaW51eC5pbnRlbC5jb20+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsN
+Cj4gTWF0dGhpYXMgQnJ1Z2dlciA8bWF0dGhpYXMuYmdnQGdtYWlsLmNvbT47IEFkYW0gVGhvbXNv
+bg0KPiA8QWRhbS5UaG9tc29uLk9wZW5zb3VyY2VAZGlhc2VtaS5jb20+OyBKdW4gTGkgPGp1bi5s
+aUBueHAuY29tPjsgQmFkaHJpDQo+IEphZ2FuIFNyaWRoYXJhbiA8YmFkaHJpQGdvb2dsZS5jb20+
+OyBBbmR5IFNoZXZjaGVua28NCj4gPGFuZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+OyBNaW4gR3Vv
+IDxtaW4uZ3VvQG1lZGlhdGVrLmNvbT47DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBs
+aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC11c2JAdmdlci5rZXJuZWwub3Jn
+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4LW1lZGlhdGVr
+QGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzVdIGR0LWJpbmRp
+bmdzOiBjb25uZWN0b3I6IGFkZCBvcHRpb25hbCBwcm9wZXJ0aWVzIGZvcg0KPiBUeXBlLUINCj4g
+DQo+IEhpLA0KPiANCj4gT24gRnJpLCAyMDE5LTAzLTA4IGF0IDEzOjA3ICswMTAwLCBIYW5zIGRl
+IEdvZWRlIHdyb3RlOg0KPiA+IEhpLA0KPiA+DQo+ID4gT24gMDgtMDMtMTkgMDc6MTMsIENodW5m
+ZW5nIFl1biB3cm90ZToNCj4gPiA+IEFkZCBpZC1ncGlvcywgdmJ1cy1ncGlvcywgdmJ1cy1zdXBw
+bHkgYW5kIHBpbmN0cmwgcHJvcGVydGllcyBmb3INCj4gPiA+IHVzYi1iLWNvbm5lY3Rvcg0KPiA+
+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IENodW5mZW5nIFl1biA8Y2h1bmZlbmcueXVuQG1lZGlh
+dGVrLmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9jb25u
+ZWN0b3IvdXNiLWNvbm5lY3Rvci50eHQgICAgfCAxMCArKysrKysrKysrDQo+ID4gPiAgIDEgZmls
+ZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspDQo+ID4gPg0KPiA+ID4gZGlmZiAtLWdpdA0KPiA+
+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY29ubmVjdG9yL3VzYi1jb25u
+ZWN0b3IudHh0DQo+ID4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jb25u
+ZWN0b3IvdXNiLWNvbm5lY3Rvci50eHQNCj4gPiA+IGluZGV4IGE5YTJmMmZjNDRmMi4uN2EwN2Iw
+ZjRmOTczIDEwMDY0NA0KPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Nvbm5lY3Rvci91c2ItY29ubmVjdG9yLnR4dA0KPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nvbm5lY3Rvci91c2ItY29ubmVjdG9yLnR4dA0KPiA+ID4g
+QEAgLTE3LDYgKzE3LDE2IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gPiAgIC0gc2VsZi1w
+b3dlcmVkOiBTZXQgdGhpcyBwcm9wZXJ0eSBpZiB0aGUgdXNiIGRldmljZSB0aGF0IGhhcyBpdHMg
+b3duIHBvd2VyDQo+ID4gPiAgICAgc291cmNlLg0KPiA+ID4NCj4gPiA+ICtPcHRpb25hbCBwcm9w
+ZXJ0aWVzIGZvciB1c2ItYi1jb25uZWN0b3I6DQo+ID4gPiArLSBpZC1ncGlvczogZ3BpbyBmb3Ig
+VVNCIElEIHBpbi4NCj4gPg0KPiA+IFdoYXQgYWJvdXQgYm9hcmRzIHdoZXJlIHRoZSBJRCBwaW4g
+aXMgKm5vdCogY29ubmVjdGVkIHRvIGEgR1BJTywgYnV0DQo+ID4gZS5nLiB0byBhIHNwZWNpYWwg
+cGluIG9uIHRoZSBQTUlDIHdoaWNoIGNhbiBhbHNvIGRldGVjdCBhbiBBQ0EgYWRhcHRlcg0KPiA+
+ID8gQ3VycmVudGx5IHRoaXMgY2FzZSBpcyBoYW5kbGVkIGJ5IGV4dGNvbiBkcml2ZXJzLCBidXQg
+d2UgaGF2ZSBubyB3YXkNCj4gPiB0byBzZXQgZS5nLiB2YnVzLXN1cHBseSBmb3IgdGhlIGNvbm5l
+Y3Rvci4gTWF5YmUgaW4gdGhpcyBjYXNlIHRoZQ0KPiA+IHVzYi1jb25uZWN0b3Igbm9kZSBzaG91
+bGQgYmUgYSBjaGlsZCBvZiB0aGUgUE1JQyBub2RlID8NCj4gWWVzLCBpdCB3b3VsZCBiZSwgUE1J
+QyBpcyBpbiBjaGFyZ2VyIG9mIGRldGVjdGluZyB0aGUgc3RhdHVzIG9mIElEIHBpbg0KPiA+DQo+
+ID4gQW5kIGluIG1hbnkgY2FzZXMgdGhlcmUgYWxzbyBpcyBhIG11eCB0byBzd2l0Y2ggdGhlIGRh
+dGFsaW5lcyBiZXR3ZWVuDQo+ID4gdGhlIGhvc3QgYW5kIGRldmljZShnYWRnZXQpIGNvbnRyb2xs
+ZXJzLCBob3cgc2hvdWxkIHRoYXQgYmUgZGVzY3JpYmVkDQo+ID4gaW4gdGhpcyBtb2RlbD8gIFNl
+ZSB0aGUgbmV3IHVzYi1yb2xlLXN3aXRjaCBjb2RlIHVuZGVyDQo+ID4gZHJpdmVycy91c2Ivcm9s
+ZXMNCj4gPg0KPiA+IEluIHNvbWUgY2FzZXMgdGhlIG11eCBpcyBjb250cm9sbGVkIHRocm91Z2gg
+YSBncGlvLCBzbyB3ZSBtYXkgd2FudCB0bw0KPiA+IGFkZCBhICJtdXgtZ3Bpb3MiIGhlcmUgaW4g
+d2hpY2ggY2FzZSB3ZSBhbHNvIG5lZWQgdG8gZGVmaW5lIHdoYXQgMC8xDQo+ID4gbWVhbnMuDQo+
+IEknbSBub3Qgc3VyZSwgdGhlIG11eCBzZWVtcyBub3QgYmVsb25nIHRvIHRoaXMgY29ubmVjdG9y
+LCBhbmQgbWF5IG5lZWQgYW5vdGhlcg0KPiBkcml2ZXIgdG8gcmVnaXN0ZXIgdXNiLXJvbGUtc3dp
+dGNoLCBzaW1pbGFyIHRvOg0KPiANCj4gW3YyLDIvMl0gdXNiOiB0eXBlYzogYWRkIHR5cGVjIHN3
+aXRjaCB2aWEgR1BJTyBjb250cm9sDQo+IGh0dHBzOi8vZW1lYTAxLnNhZmVsaW5rcy5wcm90ZWN0
+aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZwYXRjaHdvcmsNCj4gLmtlcm5lbC5v
+cmclMkZwYXRjaCUyRjEwODM0MzI3JTJGJmFtcDtkYXRhPTAyJTdDMDElN0NqdW4ubGklNDBueHAu
+Y28NCj4gbSU3Qzk2M2RmNjJlMTVlZDRiZWRiMTRkMDhkNmE1ZTMwZGUyJTdDNjg2ZWExZDNiYzJi
+NGM2ZmE5MmNkOTljNQ0KPiBjMzAxNjM1JTdDMCU3QzAlN0M2MzY4Nzg3OTE5NTMxMjI3NjAmYW1w
+O3NkYXRhPWdyUElzMk1iZGFhclRhMTdkcg0KPiBwQVNWa0dweVc3VEFleEIyNGlnT0pvcEdVJTNE
+JmFtcDtyZXNlcnZlZD0wDQo+IA0KDQpObywgdGhpcyBpcyBub3QgZm9yIHVzYiByb2xlIHN3aXRj
+aCwgdGhpcyBpcyBhIHR5cGVjIHN3aXRjaCBkcml2ZXIgdG8gc2VsZWN0IHRoZSBzdXBlciBzcGVl
+ZA0KYWN0aXZlIGNoYW5uZWwgYnkgb3JpZW50YXRpb24oQ0MxL0NDMikuDQoNCkxpIEp1bg0KPiAN
+Cj4gPg0KPiA+ID4gKy0gdmJ1cy1ncGlvczogZ3BpbyBmb3IgVVNCIFZCVVMgcGluLg0KPiA+ID4g
+KyAgc2VlIGdwaW8vZ3Bpby50eHQuDQo+ID4gPiArLSB2YnVzLXN1cHBseTogcmVmZXJlbmNlIHRv
+IHRoZSBWQlVTIHJlZ3VsYXRvciwgbmVlZGVkIHdoZW4NCj4gPiA+ICtzdXBwb3J0cw0KPiA+ID4g
+KyAgZHVhbC1yb2xlIG1vZGUuDQo+ID4NCj4gPiBJIHRoaW5rIHRoaXMgbmVlZHMgc29tZSB0ZXh0
+IHRoYXQgdGhlcmUgY2FuIGJlIGVpdGhlciBhIHZidXMtZ3BpbyBvciBhDQo+ID4gdmJ1cy1zdXBw
+bHkuIE9oIHdhaXQgcmVhZGluZzoNCj4gPg0KPiA+IGh0dHBzOi8vZW1lYTAxLnNhZmVsaW5rcy5w
+cm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZwYXQNCj4gPg0KPiBjaHdv
+cmsua2VybmVsLm9yZyUyRnBhdGNoJTJGMTA4MTkzNzclMkYmYW1wO2RhdGE9MDIlN0MwMSU3Q2p1
+bi5saSU0DQo+IDBueA0KPiA+DQo+IHAuY29tJTdDOTYzZGY2MmUxNWVkNGJlZGIxNGQwOGQ2YTVl
+MzBkZTIlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5DQo+IDljNWMzDQo+ID4NCj4gMDE2MzUlN0Mw
+JTdDMCU3QzYzNjg3ODc5MTk1MzEyMjc2MCZhbXA7c2RhdGE9SnVkejdnZHdRVE9DN0poODQNCj4g
+NTdONHgyMWENCj4gPiBmV2NpJTJGRUg3OUFScVdaemJYOCUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPiA+
+DQo+ID4gSSBzZWUgdGhhdCB0aGlzIEdQSU8gaXMgZm9yIGRldGVjdGluZyB2YnVzIHByZXNlbmNl
+LCBub3QgZm9yDQo+ID4gZHJpdmluZy9lbmFibGluZyA1diB0byBWYnVzIGZyb20gdGhlIGJvYXJk
+LCB0aGF0IG5lZWRzIHRvIGJlIGRlc2NyaWJlZCBtb3JlDQo+IGNsZWFybHkuDQo+IE9rDQo+IA0K
+PiBUaGFua3MgYSBsb3QNCj4gPg0KPiA+ID4gKy0gcGluY3RybC1uYW1lcyA6IGEgcGluY3RybCBz
+dGF0ZSBuYW1lZCAiZGVmYXVsdCIgaXMgb3B0aW9uYWwNCj4gPiA+ICstIHBpbmN0cmwtMCA6IHBp
+biBjb250cm9sIGdyb3VwDQo+ID4gPiArICBzZWUgcGluY3RybC9waW5jdHJsLWJpbmRpbmdzLnR4
+dA0KPiA+ID4gKw0KPiA+ID4gICBPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciB1c2ItYy1jb25uZWN0
+b3I6DQo+ID4gPiAgIC0gcG93ZXItcm9sZTogc2hvdWxkIGJlIG9uZSBvZiAic291cmNlIiwgInNp
+bmsiIG9yICJkdWFsIihEUlApIGlmIHR5cGVjDQo+ID4gPiAgICAgY29ubmVjdG9yIGhhcyBwb3dl
+ciBzdXBwb3J0Lg0KPiA+ID4NCj4gPg0KPiA+DQo+ID4gUmVnYXJkcywNCj4gPg0KPiA+IEhhbnMN
+Cj4gDQoNCg==
