@@ -1,33 +1,114 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCHv4 10/28] PCI: mobiveil: fix the INTx process error
-Date: Mon, 11 Mar 2019 09:08:03 -0500
-Message-ID: <20190311140803.GF214730@google.com>
-References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
- <20190311093130.7209-11-Zhiqiang.Hou@nxp.com>
+From: Chen-Yu Tsai <wens@kernel.org>
+Subject: Re: [PATCH v3 1/7] dt-bindings: interconnect: Add a dma interconnect
+ name
+Date: Mon, 11 Mar 2019 22:11:20 +0800
+Message-ID: <CAGb2v661DtDmoHuA6YO5aN06knOy6KmwZx2s6v=XaEnzXWvDnw@mail.gmail.com>
+References: <cover.f2e5fbb4d21384168973fa32377a33d627768146.1549897336.git-series.maxime.ripard@bootlin.com>
+ <43eeca13733faefe62f9facc25b8e88f7e593f61.1549897336.git-series.maxime.ripard@bootlin.com>
+ <553c987c-da9a-1f85-fb16-4b9fe17dd14b@linaro.org>
+ <20190305155337.glfvgyddvnkv774m@flea>
+ <0e72fbf7-b100-ddc5-3c19-32f71c37f76f@arm.com>
+ <477995b0-9ac3-b6ca-f5f2-856e4af926f1@linaro.org>
+ <20190307154755.5kgc7oh4b5bhg2fj@flea>
+ <CAGb2v666u1c1OE3FnN=Y_kZe7TgNKvtA6=GYiHuWycJ2ooQhxw@mail.gmail.com>
+ <20190311101130.7t7rctxlqly3uqmt@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190311093130.7209-11-Zhiqiang.Hou@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190311101130.7t7rctxlqly3uqmt@flea>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Dave Martin <dave.martin@arm.com>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Yong Deng <yong.deng@magewell.com>, Chen-Yu Tsai <wens@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Georgi Djakov <georgi.djakov@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 09:31:16AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> In the loop block, there is not code change the loop key,
-> this patch updated the loop key by re-read the INTx status
-> register.
-> 
-> This patch also change to clear the handled INTx status.
-> 
-> Note: Need MV to test this fix.
-> 
-> Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host
-> Bridge IP driver")
+On Mon, Mar 11, 2019 at 6:11 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Fri, Mar 08, 2019 at 12:09:47AM +0800, Chen-Yu Tsai wrote:
+> > On Thu, Mar 7, 2019 at 11:48 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > On Thu, Mar 07, 2019 at 05:15:20PM +0200, Georgi Djakov wrote:
+> > > > Hi,
+> > > >
+> > > > On 3/5/19 18:14, Robin Murphy wrote:
+> > > > > On 05/03/2019 15:53, Maxime Ripard wrote:
+> > > > >> Hi,
+> > > > >>
+> > > > >> On Fri, Mar 01, 2019 at 07:48:15PM +0200, Georgi Djakov wrote:
+> > > > >>> On 2/11/19 17:02, Maxime Ripard wrote:
+> > > > >>>> The current DT bindings assume that the DMA will be performed by the
+> > > > >>>> devices through their parent DT node, and rely on that assumption
+> > > > >>>> for the
+> > > > >>>> address translation using dma-ranges.
+> > > > >>>>
+> > > > >>>> However, some SoCs have devices that will perform DMA through
+> > > > >>>> another bus,
+> > > > >>>> with separate address translation rules. We therefore need to
+> > > > >>>> express that
+> > > > >>>> relationship, through the special interconnect name "dma".
+> > > > >>>>
+> > > > >>>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > > > >>>> ---
+> > > > >>>>   Documentation/devicetree/bindings/interconnect/interconnect.txt |
+> > > > >>>> 3 +++
+> > > > >>>>   1 file changed, 3 insertions(+)
+> > > > >>>>
+> > > > >>>> diff --git
+> > > > >>>> a/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> > > > >>>> b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> > > > >>>> index 5a3c575b387a..e69fc2d992c3 100644
+> > > > >>>> --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> > > > >>>> +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> > > > >>>> @@ -51,6 +51,9 @@ interconnect-names : List of interconnect path
+> > > > >>>> name strings sorted in the same
+> > > > >>>>                interconnect-names to match interconnect paths with
+> > > > >>>> interconnect
+> > > > >>>>                specifier pairs.
+> > > > >>>>   +                     Reserved interconnect names:
+> > > > >>>> +                         * dma: Path from the device to the main
+> > > > >>>> memory of the system
+> > > > >>>
+> > > > >>> Bikeshed: As it's from the device to the main memory, maybe here we can
+> > > > >>> also denote this my calling the path dma-mem or dma-memory. For other
+> > > > >>> paths, we are trying to mention both the source and the destination and
+> > > > >>> maybe it would be good to be consistent although this is special one.
+> > > > >>
+> > > > >> I'm not sure I understand what you mean. You'd like two interconnect
+> > > > >> names, one called dma-memory, and one memory-dma?
+> > > > >
+> > > > > Hmm, yes, it's not like "dma" describes an actual source or destination
+> > > > > either :/
+> > > >
+> > > > IIUC, it's a path (bus) that a dma device use to access some memory
+> > > > (read or/and write). So i have used source-destination above more in the
+> > > > sense of initiator-target or master-slave. My suggestion was just to
+> > > > change the reserved interconnect name from "dma" to "dma-mem" or
+> > > > "dma-memory".
+> > >
+> > > If dma is an issue in itself, maybe we can call it "device-memory" ?
+> >
+> > Might I ask what happens if the device can both DMA to and from memory?
+>
+> We can create another one called memory-device if that's needed?
 
-The "Fixes:" line should be all on one line, without a newline in the
-middle, even if it exceeds 80 columns.  That's just to make it easier for
-programs to parse the logs.
+Works for me as long as it doesn't get confusing. BTW I think it should be
+X-to-Y, instead of X-Y, as the latter can be taken as a noun-phrase.
+
+> > IIRC the display frontends, backends, and mixers all have writeback
+> > capability, using the same interconnect port.
+>
+> I think in both cases it's the same path. The camera driver also need
+> to have that offset, even though it's a producer and not a consumer,
+> and the VPU does too.
+
+Yeah. The VPU is the obvious bi-directional example.
+
+ChenYu
