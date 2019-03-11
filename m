@@ -1,97 +1,104 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v8 09/15] drm/sun4i: sun6i_mipi_dsi: Add
- has_mod_clk quirk
-Date: Mon, 11 Mar 2019 19:06:31 +0530
-Message-ID: <20190311133637.18334-10-jagan@amarulasolutions.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v8 10/15] drm/sun4i: sun6i_mipi_dsi: Add has_mod_clk quirk
+Date: Mon, 11 Mar 2019 19:06:32 +0530
+Message-ID: <20190311133637.18334-11-jagan@amarulasolutions.com>
 References: <20190311133637.18334-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBOGJTHSAKGQEZTF7WRY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190311133637.18334-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190311133637.18334-1-jagan@amarulasolutions.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-As per the user manual, look like mod clock is not mandatory
-for all Allwinner MIPI DSI controllers, it is connected to
-CLK_DSI_SCLK for A31 and not available in A64.
-
-So add has_mod_clk quirk and process the clk accordingly.
-
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Tested-by: Merlijn Wajer <merlijn-tF0PIh4TN3odnm+yROfE0A@public.gmane.org>
----
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 14 ++++++++++++++
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  3 +++
- 2 files changed, 17 insertions(+)
-
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 388e1161974c..f42ea806f6c8 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -1134,6 +1134,12 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
- 		return PTR_ERR(base);
- 	}
- 
-+	dsi->regulator = devm_regulator_get(dev, "vcc-dsi");
-+	if (IS_ERR(dsi->regulator)) {
-+		dev_err(dev, "Couldn't get VCC-DSI supply\n");
-+		return PTR_ERR(dsi->regulator);
-+	}
-+
- 	dsi->regs = devm_regmap_init_mmio_clk(dev, "bus", base,
- 					      &sun6i_dsi_regmap_config);
- 	if (IS_ERR(dsi->regs)) {
-@@ -1207,6 +1213,13 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
- static int __maybe_unused sun6i_dsi_runtime_resume(struct device *dev)
- {
- 	struct sun6i_dsi *dsi = dev_get_drvdata(dev);
-+	int err;
-+
-+	err = regulator_enable(dsi->regulator);
-+	if (err) {
-+		dev_err(dsi->dev, "failed to enable VCC-DSI supply: %d\n", err);
-+		return err;
-+	}
- 
- 	reset_control_deassert(dsi->reset);
- 	clk_prepare_enable(dsi->mod_clk);
-@@ -1239,6 +1252,7 @@ static int __maybe_unused sun6i_dsi_runtime_suspend(struct device *dev)
- 
- 	clk_disable_unprepare(dsi->mod_clk);
- 	reset_control_assert(dsi->reset);
-+	regulator_disable(dsi->regulator);
- 
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-index 747c451a9a20..c570f2b3868f 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-@@ -13,6 +13,8 @@
- #include <drm/drm_encoder.h>
- #include <drm/drm_mipi_dsi.h>
- 
-+#include <linux/regulator/consumer.h>
-+
- struct sun6i_dsi {
- 	struct drm_connector	connector;
- 	struct drm_encoder	encoder;
-@@ -21,6 +23,7 @@ struct sun6i_dsi {
- 	struct clk		*bus_clk;
- 	struct clk		*mod_clk;
- 	struct regmap		*regs;
-+	struct regulator	*regulator;
- 	struct reset_control	*reset;
- 	struct phy		*dphy;
- 
--- 
-2.18.0.321.gffc6fa0e3
+QXMgcGVyIHRoZSB1c2VyIG1hbnVhbCwgbG9vayBsaWtlIG1vZCBjbG9jayBpcyBub3QgbWFuZGF0
+b3J5CmZvciBhbGwgQWxsd2lubmVyIE1JUEkgRFNJIGNvbnRyb2xsZXJzLCBpdCBpcyBjb25uZWN0
+ZWQgdG8KQ0xLX0RTSV9TQ0xLIGZvciBBMzEgYW5kIG5vdCBhdmFpbGFibGUgaW4gQTY0LgoKU28g
+YWRkIGhhc19tb2RfY2xrIHF1aXJrIGFuZCBwcm9jZXNzIHRoZSBjbGsgYWNjb3JkaW5nbHkuCgpT
+aWduZWQtb2ZmLWJ5OiBKYWdhbiBUZWtpIDxqYWdhbkBhbWFydWxhc29sdXRpb25zLmNvbT4KVGVz
+dGVkLWJ5OiBNZXJsaWpuIFdhamVyIDxtZXJsaWpuQHdpenp1cC5vcmc+Ci0tLQogZHJpdmVycy9n
+cHUvZHJtL3N1bjRpL3N1bjZpX21pcGlfZHNpLmMgfCAzOCArKysrKysrKysrKysrKysrKystLS0t
+LS0tLQogZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjZpX21pcGlfZHNpLmggfCAgNSArKysrCiAy
+IGZpbGVzIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKyksIDExIGRlbGV0aW9ucygtKQoKZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW42aV9taXBpX2RzaS5jIGIvZHJpdmVycy9n
+cHUvZHJtL3N1bjRpL3N1bjZpX21pcGlfZHNpLmMKaW5kZXggZjQyZWE4MDZmNmM4Li4yYTYzZTk2
+YWFmZjkgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW42aV9taXBpX2RzaS5j
+CisrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW42aV9taXBpX2RzaS5jCkBAIC0xMCw2ICsx
+MCw3IEBACiAjaW5jbHVkZSA8bGludXgvY29tcG9uZW50Lmg+CiAjaW5jbHVkZSA8bGludXgvY3Jj
+LWNjaXR0Lmg+CiAjaW5jbHVkZSA8bGludXgvb2ZfYWRkcmVzcy5oPgorI2luY2x1ZGUgPGxpbnV4
+L29mX2RldmljZS5oPgogI2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRpbWUuaD4KICNpbmNsdWRlIDxs
+aW51eC9yZWdtYXAuaD4KICNpbmNsdWRlIDxsaW51eC9yZXNldC5oPgpAQCAtMTEyNiw2ICsxMTI3
+LDcgQEAgc3RhdGljIGludCBzdW42aV9kc2lfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAq
+cGRldikKIAlkc2ktPmRldiA9IGRldjsKIAlkc2ktPmhvc3Qub3BzID0gJnN1bjZpX2RzaV9ob3N0
+X29wczsKIAlkc2ktPmhvc3QuZGV2ID0gZGV2OworCWRzaS0+dmFyaWFudCA9IG9mX2RldmljZV9n
+ZXRfbWF0Y2hfZGF0YShkZXYpOwogCiAJcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYs
+IElPUkVTT1VSQ0VfTUVNLCAwKTsKIAliYXNlID0gZGV2bV9pb3JlbWFwX3Jlc291cmNlKGRldiwg
+cmVzKTsKQEAgLTExNTMsMTcgKzExNTUsMjAgQEAgc3RhdGljIGludCBzdW42aV9kc2lfcHJvYmUo
+c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKIAkJcmV0dXJuIFBUUl9FUlIoZHNpLT5yZXNl
+dCk7CiAJfQogCi0JZHNpLT5tb2RfY2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgIm1vZCIpOwotCWlm
+IChJU19FUlIoZHNpLT5tb2RfY2xrKSkgewotCQlkZXZfZXJyKGRldiwgIkNvdWxkbid0IGdldCB0
+aGUgRFNJIG1vZCBjbG9ja1xuIik7Ci0JCXJldHVybiBQVFJfRVJSKGRzaS0+bW9kX2Nsayk7CisJ
+aWYgKGRzaS0+dmFyaWFudC0+aGFzX21vZF9jbGspIHsKKwkJZHNpLT5tb2RfY2xrID0gZGV2bV9j
+bGtfZ2V0KGRldiwgIm1vZCIpOworCQlpZiAoSVNfRVJSKGRzaS0+bW9kX2NsaykpIHsKKwkJCWRl
+dl9lcnIoZGV2LCAiQ291bGRuJ3QgZ2V0IHRoZSBEU0kgbW9kIGNsb2NrXG4iKTsKKwkJCXJldHVy
+biBQVFJfRVJSKGRzaS0+bW9kX2Nsayk7CisJCX0KIAl9CiAKIAkvKgogCSAqIEluIG9yZGVyIHRv
+IG9wZXJhdGUgcHJvcGVybHksIHRoYXQgY2xvY2sgc2VlbXMgdG8gYmUgYWx3YXlzCiAJICogc2V0
+IHRvIDI5N01Iei4KIAkgKi8KLQljbGtfc2V0X3JhdGVfZXhjbHVzaXZlKGRzaS0+bW9kX2Nsaywg
+Mjk3MDAwMDAwKTsKKwlpZiAoZHNpLT52YXJpYW50LT5oYXNfbW9kX2NsaykKKwkJY2xrX3NldF9y
+YXRlX2V4Y2x1c2l2ZShkc2ktPm1vZF9jbGssIDI5NzAwMDAwMCk7CiAKIAlkc2ktPmRwaHkgPSBk
+ZXZtX3BoeV9nZXQoZGV2LCAiZHBoeSIpOwogCWlmIChJU19FUlIoZHNpLT5kcGh5KSkgewpAQCAt
+MTE5Myw3ICsxMTk4LDggQEAgc3RhdGljIGludCBzdW42aV9kc2lfcHJvYmUoc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldikKIGVycl9wbV9kaXNhYmxlOgogCXBtX3J1bnRpbWVfZGlzYWJsZShk
+ZXYpOwogZXJyX3VucHJvdGVjdF9jbGs6Ci0JY2xrX3JhdGVfZXhjbHVzaXZlX3B1dChkc2ktPm1v
+ZF9jbGspOworCWlmIChkc2ktPnZhcmlhbnQtPmhhc19tb2RfY2xrKQorCQljbGtfcmF0ZV9leGNs
+dXNpdmVfcHV0KGRzaS0+bW9kX2Nsayk7CiAJcmV0dXJuIHJldDsKIH0KIApAQCAtMTIwNSw3ICsx
+MjExLDggQEAgc3RhdGljIGludCBzdW42aV9kc2lfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
+Y2UgKnBkZXYpCiAJY29tcG9uZW50X2RlbCgmcGRldi0+ZGV2LCAmc3VuNmlfZHNpX29wcyk7CiAJ
+bWlwaV9kc2lfaG9zdF91bnJlZ2lzdGVyKCZkc2ktPmhvc3QpOwogCXBtX3J1bnRpbWVfZGlzYWJs
+ZShkZXYpOwotCWNsa19yYXRlX2V4Y2x1c2l2ZV9wdXQoZHNpLT5tb2RfY2xrKTsKKwlpZiAoZHNp
+LT52YXJpYW50LT5oYXNfbW9kX2NsaykKKwkJY2xrX3JhdGVfZXhjbHVzaXZlX3B1dChkc2ktPm1v
+ZF9jbGspOwogCiAJcmV0dXJuIDA7CiB9CkBAIC0xMjIyLDcgKzEyMjksOCBAQCBzdGF0aWMgaW50
+IF9fbWF5YmVfdW51c2VkIHN1bjZpX2RzaV9ydW50aW1lX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpk
+ZXYpCiAJfQogCiAJcmVzZXRfY29udHJvbF9kZWFzc2VydChkc2ktPnJlc2V0KTsKLQljbGtfcHJl
+cGFyZV9lbmFibGUoZHNpLT5tb2RfY2xrKTsKKwlpZiAoZHNpLT52YXJpYW50LT5oYXNfbW9kX2Ns
+aykKKwkJY2xrX3ByZXBhcmVfZW5hYmxlKGRzaS0+bW9kX2Nsayk7CiAKIAkvKgogCSAqIEVuYWJs
+ZSB0aGUgRFNJIGJsb2NrLgpAQCAtMTI1MCw3ICsxMjU4LDggQEAgc3RhdGljIGludCBfX21heWJl
+X3VudXNlZCBzdW42aV9kc2lfcnVudGltZV9zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikKIHsK
+IAlzdHJ1Y3Qgc3VuNmlfZHNpICpkc2kgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKIAotCWNsa19k
+aXNhYmxlX3VucHJlcGFyZShkc2ktPm1vZF9jbGspOworCWlmIChkc2ktPnZhcmlhbnQtPmhhc19t
+b2RfY2xrKQorCQljbGtfZGlzYWJsZV91bnByZXBhcmUoZHNpLT5tb2RfY2xrKTsKIAlyZXNldF9j
+b250cm9sX2Fzc2VydChkc2ktPnJlc2V0KTsKIAlyZWd1bGF0b3JfZGlzYWJsZShkc2ktPnJlZ3Vs
+YXRvcik7CiAKQEAgLTEyNjMsOSArMTI3MiwxNiBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGRldl9w
+bV9vcHMgc3VuNmlfZHNpX3BtX29wcyA9IHsKIAkJCSAgIE5VTEwpCiB9OwogCitzdGF0aWMgY29u
+c3Qgc3RydWN0IHN1bjZpX2RzaV92YXJpYW50IHN1bjZpX2EzMV9taXBpX2RzaSA9IHsKKwkuaGFz
+X21vZF9jbGsgPSB0cnVlLAorfTsKKwogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
+c3VuNmlfZHNpX29mX3RhYmxlW10gPSB7Ci0JeyAuY29tcGF0aWJsZSA9ICJhbGx3aW5uZXIsc3Vu
+NmktYTMxLW1pcGktZHNpIiB9LAotCXsgfQorCXsKKwkJLmNvbXBhdGlibGUgPSAiYWxsd2lubmVy
+LHN1bjZpLWEzMS1taXBpLWRzaSIsCisJCS5kYXRhID0gJnN1bjZpX2EzMV9taXBpX2RzaSwKKwl9
+LAorCXsgLyogc2VudGluZWwgKi8gfQogfTsKIE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIHN1bjZp
+X2RzaV9vZl90YWJsZSk7CiAKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW42
+aV9taXBpX2RzaS5oIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjZpX21pcGlfZHNpLmgKaW5k
+ZXggYzU3MGYyYjM4NjhmLi41YzQ5ODMyMTJmODkgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS9zdW40aS9zdW42aV9taXBpX2RzaS5oCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW42
+aV9taXBpX2RzaS5oCkBAIC0xNSw2ICsxNSwxMCBAQAogCiAjaW5jbHVkZSA8bGludXgvcmVndWxh
+dG9yL2NvbnN1bWVyLmg+CiAKK3N0cnVjdCBzdW42aV9kc2lfdmFyaWFudCB7CisJYm9vbAkJCWhh
+c19tb2RfY2xrOworfTsKKwogc3RydWN0IHN1bjZpX2RzaSB7CiAJc3RydWN0IGRybV9jb25uZWN0
+b3IJY29ubmVjdG9yOwogCXN0cnVjdCBkcm1fZW5jb2RlcgllbmNvZGVyOwpAQCAtMzIsNiArMzYs
+NyBAQCBzdHJ1Y3Qgc3VuNmlfZHNpIHsKIAlzdHJ1Y3Qgc3VuNGlfdGNvbgkqdGNvbjsKIAlzdHJ1
+Y3QgbWlwaV9kc2lfZGV2aWNlCSpkZXZpY2U7CiAJc3RydWN0IGRybV9wYW5lbAkqcGFuZWw7CisJ
+Y29uc3Qgc3RydWN0IHN1bjZpX2RzaV92YXJpYW50CSp2YXJpYW50OwogfTsKIAogc3RhdGljIGlu
+bGluZSBzdHJ1Y3Qgc3VuNmlfZHNpICpob3N0X3RvX3N1bjZpX2RzaShzdHJ1Y3QgbWlwaV9kc2lf
+aG9zdCAqaG9zdCkKLS0gCjIuMTguMC4zMjEuZ2ZmYzZmYTBlMwoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
