@@ -1,53 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/9] dt-bindings: mfd: Add compatible for the MediaTek
- MT6358 PMIC
-Date: Mon, 11 Mar 2019 17:06:30 -0500
-Message-ID: <20190311220630.GA4082@bogus>
-References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1552275991-34648-4-git-send-email-hsin-hsiung.wang@mediatek.com>
- <CAGp9LzrWawWy+mX5VpLeqdV85f0iEdRv6JtJbjS5pamN5xfKjA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/8] clk: samsung: add needed IDs for DMC clocks in
+  Exynos5420
+Date: Mon, 11 Mar 2019 17:06:50 -0500
+Message-ID: <20190311220650.GB4082@bogus>
+References: <1551781151-5562-1-git-send-email-l.luba@partner.samsung.com>
+ <CGME20190305101924eucas1p1147e3895a89a72c9db7d128d90dd3daa@eucas1p1.samsung.com>
+ <1551781151-5562-2-git-send-email-l.luba@partner.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAGp9LzrWawWy+mX5VpLeqdV85f0iEdRv6JtJbjS5pamN5xfKjA@mail.gmail.com>
+In-Reply-To: <1551781151-5562-2-git-send-email-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@kernel.org>
-Cc: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Eddie Huang <eddie.huang@mediatek.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, srv_heupstream <srv_heupstream@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Marc Zyngier <marc.zyngier@arm.com>, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-mediatek@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, Lukasz Luba <l.luba@partner.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 12:19:32PM -0700, Sean Wang wrote:
-> Hi,
+On Tue,  5 Mar 2019 11:19:04 +0100, Lukasz Luba wrote:
+> Define new IDs for clocks used by Dynamic Memory Controller in
+> Exynos5422 SoC.
 > 
-> Always put the patches about dt-binding changes at the head of the
-> series to let the related maintainer more easily find them.
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  include/dt-bindings/clock/exynos5420.h | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
 > 
-> On Sun, Mar 10, 2019 at 8:48 PM Hsin-Hsiung Wang
-> <hsin-hsiung.wang@mediatek.com> wrote:
-> >
-> > This adds compatible for the MediaTek MT6358 PMIC.
-> >
-> > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/mt6397.txt | 11 ++++++++---
-> >  1 file changed, 8 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
-> > index 0ebd08a..62f1c17 100644
-> > --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
-> > @@ -17,22 +17,27 @@ Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> >  This document describes the binding for MFD device and its sub module.
-> >
-> >  Required properties:
-> > -compatible: "mediatek,mt6397" or "mediatek,mt6323"
-> > +compatible:
-> > +       "mediatek,mt6323" for PMIC MT6323
-> > +       "mediatek,mt6358" for PMIC MT6358
-> > +       "mediatek,mt6397" for PMIC MT6397
-> 
-> don't change anything not related MT6358
 
-Reformatting like this is preferred.
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-Rob
+If a tag was not added on purpose, please state why and what changed.
