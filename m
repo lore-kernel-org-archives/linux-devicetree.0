@@ -1,77 +1,117 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v8 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
-Date: Mon, 11 Mar 2019 14:29:22 +0100
-Message-ID: <20190311132922.iowselp7qvmroiaa@pengutronix.de>
-References: <1551437599-29509-1-git-send-email-yash.shah@sifive.com>
- <1551437599-29509-3-git-send-email-yash.shah@sifive.com>
- <20190307152745.kaiv6q4ygf2apmuv@pengutronix.de>
- <CAJ2_jOFvr=sw7mWR53JbzMJa1jxwjhJSTibCsKYsxrht+PLPWw@mail.gmail.com>
- <20190308115726.smgooacsr37fmxwg@pengutronix.de>
- <CAJ2_jOFtg2_MAUYkTQM-=6KE2RN+FMxfEhLjZZfzM0k3A5RQiA@mail.gmail.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCHv4 00/28] PCI: refactor Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Date: Mon, 11 Mar 2019 08:33:10 -0500
+Message-ID: <20190311133310.GE214730@google.com>
+References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJ2_jOFtg2_MAUYkTQM-=6KE2RN+FMxfEhLjZZfzM0k3A5RQiA@mail.gmail.com>
+In-Reply-To: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yash Shah <yash.shah@sifive.com>
-Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi,
 
-On Mon, Mar 11, 2019 at 05:10:17PM +0530, Yash Shah wrote:
-> On Fri, Mar 8, 2019 at 5:27 PM Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Fri, Mar 08, 2019 at 04:59:36PM +0530, Yash Shah wrote:
-> > > On Thu, Mar 7, 2019 at 8:57 PM Uwe Kleine-König
-> > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > > +     if (state->period != cur_state.period) {
-> > > >
-> > > > Did you test this with more than one consumer? For sure the following
-> > > > should work:
-> > > >
-> > > >         pwm1 = pwm_get(.. the first ..);
-> > > >         pwm_apply_state(pwm1, { .enabled = true, .period = 10000000, .... });
-> > > >
-> > > >         pwm2 = pwm_get(.. the second ..);
-> > > >         pwm_apply_state(pwm2, { .enabled = true, .period = 10000000, .... });
-> > > >
-> > > > but for the second pwm_apply_state() run state->period is likely not
-> > > > exactly 10000000.
-> > >
-> > > Yes, I have tested multiple consumers using sysfs interface. It is working.
-> >
-> > Can you provide details about your testing here? What is the parent clk
-> > rate? Which settings did you test? Can you confirm my claim that the
-> > above sequence would fail or point out my error in reasoning?
-> >
+On Mon, Mar 11, 2019 at 09:29:54AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> I have tested on HiFive Unleashed board using sysfs interface.
-> Parent clk rate is around 512 Mhz.
-> I have tested scenarios as you mentioned above with various period and
-> duty_cycle values.
+> This patch set is aim to refactor the Mobiveil driver and add
+> PCIe support for NXP Layerscape series SoCs integrated Mobiveil's
+> PCIe Gen4 controller.
 > 
-> After considering your below suggestion,
->  | To get the result independent of the prior configuration you better use
->  | the real targeted period length as input instead of the last configured
->  | approximation
-> I will introduce approx_period feild, which will be used as the
-> targeted period length.
-> Also, in pwm_sifive_get_state, I will make below change
-> - state->period = pwm->real_period;
-> + state->period = pwm->approx_period.
-> So with this change in place, I believe the cur_state.period for the
-> second pwm_apply_state() above (pwm2) will be exactly 10000000
+> Hou Zhiqiang (28):
+>   PCI: mobiveil: uniform the register accessors
 
-I don't understand your intention completely. Just send a new patch
-round, then I will gladly take another look.
+"uniform" is not a verb.  Maybe "Unify register accessors"?
 
-Best regards
-Uwe
+>   PCI: mobiveil: format the code without function change
+>   PCI: mobiveil: correct the returned error number
+>   PCI: mobiveil: remove flag MSI_FLAG_MULTI_PCI_MSI
+>   PCI: mobiveil: correct PCI base address in MEM/IO outbound windows
+>   PCI: mobiveil: replace the resource list iteration function
+>   PCI: mobiveil: use WIN_NUM_0 explicitly for CFG outbound window
+>   PCI: mobiveil: use the 1st inbound window for MEM inbound transactions
+>   PCI: mobiveil: correct inbound/outbound window setup routines
+>   PCI: mobiveil: fix the INTx process error
+>   PCI: mobiveil: only fix up the Class Code field
+>   PCI: mobiveil: move out the link up waiting from mobiveil_host_init
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Add parens for function names, e.g., "mobiveil_host_init()".  This
+occurs several more times, including both subject lines and changelogs.
+
+>   PCI: mobiveil: move irq chained handler setup out of DT parse
+
+Capitalize acronyms in English text (subject lines, changelogs,
+comments), e.g., s/irq/IRQ/
+
+>   PCI: mobiveil: initialize Primary/Secondary/Subordinate bus number
+>   dt-bindings: pci: mobiveil: change gpio_slave and apb_csr to optional
+>   PCI: mobiveil: refactor Mobiveil PCIe Host Bridge IP driver
+
+This should give a hint about the purpose of refactoring.  Sounds like
+it's to make it easier to support both host and endpoint mode?
+
+>   PCI: mobiveil: fix the checking of valid device
+>   PCI: mobiveil: add link up condition check
+>   PCI: mobiveil: continue to initialize the host upon no PCIe link
+>   PCI: mobiveil: disabled IB and OB windows set by bootloader
+>   PCI: mobiveil: add Byte and Half-Word width register accessors
+
+"Byte" and "Half-Word" do not need to be capitalized.  Also, the
+changelog has a typo: "Half-Work" for "half-word".
+
+>   PCI: mobiveil: make mobiveil_host_init can be used to re-init host
+
+Here's another of the places that need parens after the function name.
+
+>   dt-bindings: pci: Add NXP Layerscape SoCs PCIe Gen4 controller
+>   PCI: mobiveil: add PCIe Gen4 RC driver for NXP Layerscape SoCs
+>   PCI: mobiveil: ls_pcie_g4: add Workaround for A-011577
+>   PCI: mobiveil: ls_pcie_g4: add Workaround for A-011451
+
+The reader of these changelogs likely doesn't know what internal
+identifiers like "A-011577" mean, but *does* want a hint about what
+problem is being fixed and what platforms are affected.  So instead of
+the "ls_pcie_g4:" prefix, use something like:
+
+  PCI: mobiveil: Work around LX2160A r1.0 config access erratum
+  PCI: mobiveil: Work around LX2160A r1.0 split completion erratum
+
+and mention the erratum ID (A-011577) in the changelog.  If you can
+include the actual erratum text in the changelog, that would be even
+better.
+
+s/ERRATA/errata/ in the changelogs.
+
+>   arm64: dts: freescale: lx2160a: add pcie DT nodes
+
+"PCIe"
+
+>   arm64: defconfig: Enable CONFIG_PCI_LAYERSCAPE_GEN4
+
+I already asked you once [1] to:
+
+  please pay attention to the changelog conventions, e.g., capitalize the
+  first word of the sentence ("Remove flag ...", "Correct PCI base address
+  ...", etc), capitalize acronyms like "PCI" and "IRQ", use parentheses
+  after function names, etc.  You can see the conventions by running "git
+  log --oneline drivers/pci/controller".
+
+For example, instead of this:
+
+  PCI: mobiveil: add link up condition check
+
+it should be this:
+
+  PCI: mobiveil: Add link up condition check
+
+Please wait at least a few days before posting a v5 in case there are
+other comments.
+
+Bjorn
+
+[1] https://lore.kernel.org/linux-pci/20190130153447.GB229773@google.com
