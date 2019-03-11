@@ -1,40 +1,38 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: [PATCH V2 05/10] arm64: tegra: fix default tap and trim values
-Date: Mon, 11 Mar 2019 11:02:34 -0700
-Message-ID: <1552327359-8036-5-git-send-email-skomatineni@nvidia.com>
-References: <1552327359-8036-1-git-send-email-skomatineni@nvidia.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH 3/3] arm64: dts: rockchip: rk3399: rock960: Add missing
+ GPIO for vcc5v0_host
+Date: Mon, 11 Mar 2019 23:40:57 +0530
+Message-ID: <CAMty3ZCS8G+dT4bHihovrug-2CCncA+BMg=Q2YYcsyjonSQPiQ@mail.gmail.com>
+References: <20190311150332.19492-1-jagan@amarulasolutions.com> <20190311150332.19492-3-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552327359-8036-1-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <20190311150332.19492-3-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, riteshh@codeaurora.org
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, anrao@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>, linux-amarula@amarulasolutions.com, Akash Gajjar <akash@openedev.com>
 List-Id: devicetree@vger.kernel.org
 
-Default tap and trim values are incorrect for Tegra186 SDMMC4.
-This patch fixes it.
+On Mon, Mar 11, 2019 at 8:33 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+>
+> vcc5v0_host on rock960 is bound to have GPIO4_PD1.
+>
+> Add support for it.
+>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> Signed-off-by: Akash Gajjar <akash@openedev.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+> index 68ca3bf9ea2f..c3d3343d6dde 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+> @@ -68,6 +68,7 @@
+>         vcc5v0_host: vcc5v0-host-regulator {
+>                 compatible = "regulator-fixed";
+>                 enable-active-high;
+> +               gpio = <&gpio4 RK_PD1 GPIO_ACTIVE_HIGH>;
 
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra186.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-index 97aeb946ed5e..472f55fe9488 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-@@ -317,8 +317,8 @@
- 		nvidia,pad-autocal-pull-down-offset-1v8-timeout = <0x0a>;
- 		nvidia,pad-autocal-pull-up-offset-3v3-timeout = <0x0a>;
- 		nvidia,pad-autocal-pull-down-offset-3v3-timeout = <0x0a>;
--		nvidia,default-tap = <0x5>;
--		nvidia,default-trim = <0x9>;
-+		nvidia,default-tap = <0x9>;
-+		nvidia,default-trim = <0x5>;
- 		nvidia,dqs-trim = <63>;
- 		mmc-hs400-1_8v;
- 		status = "disabled";
--- 
-2.7.4
+This is already present in dts file, sorry for the noise. please ignore.
