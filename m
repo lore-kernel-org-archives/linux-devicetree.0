@@ -1,455 +1,109 @@
-From: Maxime Jourdan <mjourdan@baylibre.com>
-Subject: [PATCH 2/2] drm/meson: exclusively use the canvas provider module
-Date: Mon, 11 Mar 2019 11:51:44 +0100
-Message-ID: <20190311105144.7276-3-mjourdan@baylibre.com>
-References: <20190311105144.7276-1-mjourdan@baylibre.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 1/5] dt-bindings: connector: add optional properties for
+ Type-B
+Date: Mon, 11 Mar 2019 12:00:10 +0100
+Message-ID: <3684aa62-68ad-13ef-7c6e-2b57f7cd62b8@redhat.com>
+References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
+ <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
+ <1552282383.10179.21.camel@mhfsdcap03>
+ <c8084259-74d3-c85f-1275-854826c935a0@redhat.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190311105144.7276-1-mjourdan@baylibre.com>
+In-Reply-To: <c8084259-74d3-c85f-1275-854826c935a0@redhat.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Maxime Jourdan <mjourdan@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Now that the DMC register range is no longer in the bindings, remove any
-mention towards it and exclusively use the meson-canvas module.
+Hi,
 
-Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
----
- drivers/gpu/drm/meson/Makefile        |  2 +-
- drivers/gpu/drm/meson/meson_canvas.c  | 73 -----------------------
- drivers/gpu/drm/meson/meson_canvas.h  | 51 ----------------
- drivers/gpu/drm/meson/meson_crtc.c    | 84 ++++++++-------------------
- drivers/gpu/drm/meson/meson_drv.c     | 68 ++++++++--------------
- drivers/gpu/drm/meson/meson_drv.h     |  1 -
- drivers/gpu/drm/meson/meson_overlay.c |  8 ---
- drivers/gpu/drm/meson/meson_plane.c   |  6 +-
- drivers/gpu/drm/meson/meson_viu.c     |  1 -
- 9 files changed, 51 insertions(+), 243 deletions(-)
- delete mode 100644 drivers/gpu/drm/meson/meson_canvas.c
- delete mode 100644 drivers/gpu/drm/meson/meson_canvas.h
+On 11-03-19 09:06, Hans de Goede wrote:
+> Hi,
+> 
+> On 11-03-19 06:33, Chunfeng Yun wrote:
+>> Hi,
+>>
+>> On Fri, 2019-03-08 at 13:07 +0100, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 08-03-19 07:13, Chunfeng Yun wrote:
+>>>> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+>>>> usb-b-connector
+>>>>
+>>>> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+>>>> ---
+>>>>    .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
+>>>>    1 file changed, 10 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+>>>> index a9a2f2fc44f2..7a07b0f4f973 100644
+>>>> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+>>>> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+>>>> @@ -17,6 +17,16 @@ Optional properties:
+>>>>    - self-powered: Set this property if the usb device that has its own power
+>>>>      source.
+>>>> +Optional properties for usb-b-connector:
+>>>> +- id-gpios: gpio for USB ID pin.
+>>>
+>>> What about boards where the ID pin is *not* connected to a GPIO,
+>>> but e.g. to a special pin on the PMIC which can also detect
+>>> an ACA adapter ? Currently this case is handled by extcon
+>>> drivers, but we have no way to set e.g. vbus-supply for the
+>>> connector. Maybe in this case the usb-connector node should
+>>> be a child of the PMIC node ?
+>> Yes, it would be, PMIC is in charger of detecting the status of ID pin
+> 
+> Ok, then I think this should be documented too.
+> 
+>>> And in many cases there also is a mux to switch the datalines
+>>> between the host and device(gadget) controllers, how should
+>>> that be described in this model?  See the new usb-role-switch
+>>> code under drivers/usb/roles
+>>>
+>>> In some cases the mux is controlled through a gpio, so we
+>>> may want to add a "mux-gpios" here in which case we also
+>>> need to define what 0/1 means.
+>> I'm not sure, the mux seems not belong to this connector,
+>> and may need another driver to register usb-role-switch,
+>> similar to:
+>>
+>> [v2,2/2] usb: typec: add typec switch via GPIO control
+>> https://patchwork.kernel.org/patch/10834327/
+> 
+> Right the mux/role-switch will need a driver, but the "owner"
+> of the usb_connector, e.g. the PMIC or the owner of the
+> id GPIO pin needs to know which device is the role-switch so
+> that it can set the role correctly based on the id-pin.
+> 
+> Your binding already contains Vbus info, allowing the owner
+> of the usb_connector to enable/disable Vbus based on the id-pin,
+> but the owner will also be responsible for setting the role-switch.
+> 
+> Note we cannot simply assume there will be only one role-switch,
+> we really need some link from the usb_connector to the role-switch
+> (or if it is a GPIO driven role-switch simply a role-switch-gpios
+> member in the usb_connector).
 
-diff --git a/drivers/gpu/drm/meson/Makefile b/drivers/gpu/drm/meson/Makefile
-index 7709f2fbb9f7..d4ea82fc493b 100644
---- a/drivers/gpu/drm/meson/Makefile
-+++ b/drivers/gpu/drm/meson/Makefile
-@@ -1,5 +1,5 @@
- meson-drm-y := meson_drv.o meson_plane.o meson_crtc.o meson_venc_cvbs.o
--meson-drm-y += meson_viu.o meson_vpp.o meson_venc.o meson_vclk.o meson_canvas.o meson_overlay.o
-+meson-drm-y += meson_viu.o meson_vpp.o meson_venc.o meson_vclk.o meson_overlay.o
- 
- obj-$(CONFIG_DRM_MESON) += meson-drm.o
- obj-$(CONFIG_DRM_MESON_DW_HDMI) += meson_dw_hdmi.o
-diff --git a/drivers/gpu/drm/meson/meson_canvas.c b/drivers/gpu/drm/meson/meson_canvas.c
-deleted file mode 100644
-index 5de11aa7c775..000000000000
---- a/drivers/gpu/drm/meson/meson_canvas.c
-+++ /dev/null
-@@ -1,73 +0,0 @@
--/*
-- * Copyright (C) 2016 BayLibre, SAS
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
-- * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
-- * Copyright (C) 2014 Endless Mobile
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation; either version 2 of the
-- * License, or (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, see <http://www.gnu.org/licenses/>.
-- */
--
--#include <linux/kernel.h>
--#include <linux/module.h>
--#include "meson_drv.h"
--#include "meson_canvas.h"
--#include "meson_registers.h"
--
--/**
-- * DOC: Canvas
-- *
-- * CANVAS is a memory zone where physical memory frames information
-- * are stored for the VIU to scanout.
-- */
--
--/* DMC Registers */
--#define DMC_CAV_LUT_DATAL	0x48 /* 0x12 offset in data sheet */
--#define CANVAS_WIDTH_LBIT	29
--#define CANVAS_WIDTH_LWID       3
--#define DMC_CAV_LUT_DATAH	0x4c /* 0x13 offset in data sheet */
--#define CANVAS_WIDTH_HBIT       0
--#define CANVAS_HEIGHT_BIT       9
--#define CANVAS_BLKMODE_BIT      24
--#define CANVAS_ENDIAN_BIT	26
--#define DMC_CAV_LUT_ADDR	0x50 /* 0x14 offset in data sheet */
--#define CANVAS_LUT_WR_EN        (0x2 << 8)
--#define CANVAS_LUT_RD_EN        (0x1 << 8)
--
--void meson_canvas_setup(struct meson_drm *priv,
--			uint32_t canvas_index, uint32_t addr,
--			uint32_t stride, uint32_t height,
--			unsigned int wrap,
--			unsigned int blkmode,
--			unsigned int endian)
--{
--	unsigned int val;
--
--	regmap_write(priv->dmc, DMC_CAV_LUT_DATAL,
--		(((addr + 7) >> 3)) |
--		(((stride + 7) >> 3) << CANVAS_WIDTH_LBIT));
--
--	regmap_write(priv->dmc, DMC_CAV_LUT_DATAH,
--		((((stride + 7) >> 3) >> CANVAS_WIDTH_LWID) <<
--						CANVAS_WIDTH_HBIT) |
--		(height << CANVAS_HEIGHT_BIT) |
--		(wrap << 22) |
--		(blkmode << CANVAS_BLKMODE_BIT) |
--		(endian << CANVAS_ENDIAN_BIT));
--
--	regmap_write(priv->dmc, DMC_CAV_LUT_ADDR,
--			CANVAS_LUT_WR_EN | canvas_index);
--
--	/* Force a read-back to make sure everything is flushed. */
--	regmap_read(priv->dmc, DMC_CAV_LUT_DATAH, &val);
--}
-diff --git a/drivers/gpu/drm/meson/meson_canvas.h b/drivers/gpu/drm/meson/meson_canvas.h
-deleted file mode 100644
-index 85dbf26e2826..000000000000
---- a/drivers/gpu/drm/meson/meson_canvas.h
-+++ /dev/null
-@@ -1,51 +0,0 @@
--/*
-- * Copyright (C) 2016 BayLibre, SAS
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
-- * Copyright (C) 2014 Endless Mobile
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation; either version 2 of the
-- * License, or (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, see <http://www.gnu.org/licenses/>.
-- */
--
--/* Canvas LUT Memory */
--
--#ifndef __MESON_CANVAS_H
--#define __MESON_CANVAS_H
--
--#define MESON_CANVAS_ID_OSD1	0x4e
--#define MESON_CANVAS_ID_VD1_0	0x60
--#define MESON_CANVAS_ID_VD1_1	0x61
--#define MESON_CANVAS_ID_VD1_2	0x62
--
--/* Canvas configuration. */
--#define MESON_CANVAS_WRAP_NONE	0x00
--#define	MESON_CANVAS_WRAP_X	0x01
--#define	MESON_CANVAS_WRAP_Y	0x02
--
--#define	MESON_CANVAS_BLKMODE_LINEAR	0x00
--#define	MESON_CANVAS_BLKMODE_32x32	0x01
--#define	MESON_CANVAS_BLKMODE_64x64	0x02
--
--#define MESON_CANVAS_ENDIAN_SWAP16	0x1
--#define MESON_CANVAS_ENDIAN_SWAP32	0x3
--#define MESON_CANVAS_ENDIAN_SWAP64	0x7
--#define MESON_CANVAS_ENDIAN_SWAP128	0xf
--
--void meson_canvas_setup(struct meson_drm *priv,
--			uint32_t canvas_index, uint32_t addr,
--			uint32_t stride, uint32_t height,
--			unsigned int wrap,
--			unsigned int blkmode,
--			unsigned int endian);
--
--#endif /* __MESON_CANVAS_H */
-diff --git a/drivers/gpu/drm/meson/meson_crtc.c b/drivers/gpu/drm/meson/meson_crtc.c
-index 4f5c67f70c4d..37c70641bcdf 100644
---- a/drivers/gpu/drm/meson/meson_crtc.c
-+++ b/drivers/gpu/drm/meson/meson_crtc.c
-@@ -37,7 +37,6 @@
- #include "meson_venc.h"
- #include "meson_vpp.h"
- #include "meson_viu.h"
--#include "meson_canvas.h"
- #include "meson_registers.h"
- 
- /* CRTC definition */
-@@ -214,13 +213,7 @@ void meson_crtc_irq(struct meson_drm *priv)
- 		writel_relaxed(priv->viu.osd_sc_v_ctrl0,
- 				priv->io_base + _REG(VPP_OSD_VSC_CTRL0));
- 
--		if (priv->canvas)
--			meson_canvas_config(priv->canvas, priv->canvas_id_osd1,
--				priv->viu.osd1_addr, priv->viu.osd1_stride,
--				priv->viu.osd1_height, MESON_CANVAS_WRAP_NONE,
--				MESON_CANVAS_BLKMODE_LINEAR, 0);
--		else
--			meson_canvas_setup(priv, MESON_CANVAS_ID_OSD1,
-+		meson_canvas_config(priv->canvas, priv->canvas_id_osd1,
- 				priv->viu.osd1_addr, priv->viu.osd1_stride,
- 				priv->viu.osd1_height, MESON_CANVAS_WRAP_NONE,
- 				MESON_CANVAS_BLKMODE_LINEAR, 0);
-@@ -237,61 +230,34 @@ void meson_crtc_irq(struct meson_drm *priv)
- 
- 		switch (priv->viu.vd1_planes) {
- 		case 3:
--			if (priv->canvas)
--				meson_canvas_config(priv->canvas,
--						    priv->canvas_id_vd1_2,
--						    priv->viu.vd1_addr2,
--						    priv->viu.vd1_stride2,
--						    priv->viu.vd1_height2,
--						    MESON_CANVAS_WRAP_NONE,
--						    MESON_CANVAS_BLKMODE_LINEAR,
--						    MESON_CANVAS_ENDIAN_SWAP64);
--			else
--				meson_canvas_setup(priv, MESON_CANVAS_ID_VD1_2,
--						   priv->viu.vd1_addr2,
--						   priv->viu.vd1_stride2,
--						   priv->viu.vd1_height2,
--						   MESON_CANVAS_WRAP_NONE,
--						   MESON_CANVAS_BLKMODE_LINEAR,
--						   MESON_CANVAS_ENDIAN_SWAP64);
-+			meson_canvas_config(priv->canvas,
-+					    priv->canvas_id_vd1_2,
-+					    priv->viu.vd1_addr2,
-+					    priv->viu.vd1_stride2,
-+					    priv->viu.vd1_height2,
-+					    MESON_CANVAS_WRAP_NONE,
-+					    MESON_CANVAS_BLKMODE_LINEAR,
-+					    MESON_CANVAS_ENDIAN_SWAP64);
- 		/* fallthrough */
- 		case 2:
--			if (priv->canvas)
--				meson_canvas_config(priv->canvas,
--						    priv->canvas_id_vd1_1,
--						    priv->viu.vd1_addr1,
--						    priv->viu.vd1_stride1,
--						    priv->viu.vd1_height1,
--						    MESON_CANVAS_WRAP_NONE,
--						    MESON_CANVAS_BLKMODE_LINEAR,
--						    MESON_CANVAS_ENDIAN_SWAP64);
--			else
--				meson_canvas_setup(priv, MESON_CANVAS_ID_VD1_1,
--						   priv->viu.vd1_addr2,
--						   priv->viu.vd1_stride2,
--						   priv->viu.vd1_height2,
--						   MESON_CANVAS_WRAP_NONE,
--						   MESON_CANVAS_BLKMODE_LINEAR,
--						   MESON_CANVAS_ENDIAN_SWAP64);
-+			meson_canvas_config(priv->canvas,
-+					    priv->canvas_id_vd1_1,
-+					    priv->viu.vd1_addr1,
-+					    priv->viu.vd1_stride1,
-+					    priv->viu.vd1_height1,
-+					    MESON_CANVAS_WRAP_NONE,
-+					    MESON_CANVAS_BLKMODE_LINEAR,
-+					    MESON_CANVAS_ENDIAN_SWAP64);
- 		/* fallthrough */
- 		case 1:
--			if (priv->canvas)
--				meson_canvas_config(priv->canvas,
--						    priv->canvas_id_vd1_0,
--						    priv->viu.vd1_addr0,
--						    priv->viu.vd1_stride0,
--						    priv->viu.vd1_height0,
--						    MESON_CANVAS_WRAP_NONE,
--						    MESON_CANVAS_BLKMODE_LINEAR,
--						    MESON_CANVAS_ENDIAN_SWAP64);
--			else
--				meson_canvas_setup(priv, MESON_CANVAS_ID_VD1_0,
--						   priv->viu.vd1_addr2,
--						   priv->viu.vd1_stride2,
--						   priv->viu.vd1_height2,
--						   MESON_CANVAS_WRAP_NONE,
--						   MESON_CANVAS_BLKMODE_LINEAR,
--						   MESON_CANVAS_ENDIAN_SWAP64);
-+			meson_canvas_config(priv->canvas,
-+					    priv->canvas_id_vd1_0,
-+					    priv->viu.vd1_addr0,
-+					    priv->viu.vd1_stride0,
-+					    priv->viu.vd1_height0,
-+					    MESON_CANVAS_WRAP_NONE,
-+					    MESON_CANVAS_BLKMODE_LINEAR,
-+					    MESON_CANVAS_ENDIAN_SWAP64);
- 		};
- 
- 		writel_relaxed(priv->viu.vd1_if0_gen_reg,
-diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
-index 12ff47b13668..7913983f2981 100644
---- a/drivers/gpu/drm/meson/meson_drv.c
-+++ b/drivers/gpu/drm/meson/meson_drv.c
-@@ -48,7 +48,6 @@
- #include "meson_vpp.h"
- #include "meson_viu.h"
- #include "meson_venc.h"
--#include "meson_canvas.h"
- #include "meson_registers.h"
- 
- #define DRIVER_NAME "meson"
-@@ -214,50 +213,31 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
- 	}
- 
- 	priv->canvas = meson_canvas_get(dev);
--	if (!IS_ERR(priv->canvas)) {
--		ret = meson_canvas_alloc(priv->canvas, &priv->canvas_id_osd1);
--		if (ret)
--			goto free_drm;
--		ret = meson_canvas_alloc(priv->canvas, &priv->canvas_id_vd1_0);
--		if (ret) {
--			meson_canvas_free(priv->canvas, priv->canvas_id_osd1);
--			goto free_drm;
--		}
--		ret = meson_canvas_alloc(priv->canvas, &priv->canvas_id_vd1_1);
--		if (ret) {
--			meson_canvas_free(priv->canvas, priv->canvas_id_osd1);
--			meson_canvas_free(priv->canvas, priv->canvas_id_vd1_0);
--			goto free_drm;
--		}
--		ret = meson_canvas_alloc(priv->canvas, &priv->canvas_id_vd1_2);
--		if (ret) {
--			meson_canvas_free(priv->canvas, priv->canvas_id_osd1);
--			meson_canvas_free(priv->canvas, priv->canvas_id_vd1_0);
--			meson_canvas_free(priv->canvas, priv->canvas_id_vd1_1);
--			goto free_drm;
--		}
--	} else {
--		priv->canvas = NULL;
--
--		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dmc");
--		if (!res) {
--			ret = -EINVAL;
--			goto free_drm;
--		}
--		/* Simply ioremap since it may be a shared register zone */
--		regs = devm_ioremap(dev, res->start, resource_size(res));
--		if (!regs) {
--			ret = -EADDRNOTAVAIL;
--			goto free_drm;
--		}
-+	if (IS_ERR(priv->canvas)) {
-+		ret = PTR_ERR(priv->canvas);
-+		goto free_drm;
-+	}
- 
--		priv->dmc = devm_regmap_init_mmio(dev, regs,
--						  &meson_regmap_config);
--		if (IS_ERR(priv->dmc)) {
--			dev_err(&pdev->dev, "Couldn't create the DMC regmap\n");
--			ret = PTR_ERR(priv->dmc);
--			goto free_drm;
--		}
-+	ret = meson_canvas_alloc(priv->canvas, &priv->canvas_id_osd1);
-+	if (ret)
-+		goto free_drm;
-+	ret = meson_canvas_alloc(priv->canvas, &priv->canvas_id_vd1_0);
-+	if (ret) {
-+		meson_canvas_free(priv->canvas, priv->canvas_id_osd1);
-+		goto free_drm;
-+	}
-+	ret = meson_canvas_alloc(priv->canvas, &priv->canvas_id_vd1_1);
-+	if (ret) {
-+		meson_canvas_free(priv->canvas, priv->canvas_id_osd1);
-+		meson_canvas_free(priv->canvas, priv->canvas_id_vd1_0);
-+		goto free_drm;
-+	}
-+	ret = meson_canvas_alloc(priv->canvas, &priv->canvas_id_vd1_2);
-+	if (ret) {
-+		meson_canvas_free(priv->canvas, priv->canvas_id_osd1);
-+		meson_canvas_free(priv->canvas, priv->canvas_id_vd1_0);
-+		meson_canvas_free(priv->canvas, priv->canvas_id_vd1_1);
-+		goto free_drm;
- 	}
- 
- 	priv->vsync_irq = platform_get_irq(pdev, 0);
-diff --git a/drivers/gpu/drm/meson/meson_drv.h b/drivers/gpu/drm/meson/meson_drv.h
-index 4dccf4cd042a..214a7cb18ce2 100644
---- a/drivers/gpu/drm/meson/meson_drv.h
-+++ b/drivers/gpu/drm/meson/meson_drv.h
-@@ -29,7 +29,6 @@ struct meson_drm {
- 	struct device *dev;
- 	void __iomem *io_base;
- 	struct regmap *hhi;
--	struct regmap *dmc;
- 	int vsync_irq;
- 
- 	struct meson_canvas *canvas;
-diff --git a/drivers/gpu/drm/meson/meson_overlay.c b/drivers/gpu/drm/meson/meson_overlay.c
-index 691a9fd16b36..b54a22e483b9 100644
---- a/drivers/gpu/drm/meson/meson_overlay.c
-+++ b/drivers/gpu/drm/meson/meson_overlay.c
-@@ -22,7 +22,6 @@
- #include "meson_overlay.h"
- #include "meson_vpp.h"
- #include "meson_viu.h"
--#include "meson_canvas.h"
- #include "meson_registers.h"
- 
- /* VD1_IF0_GEN_REG */
-@@ -350,13 +349,6 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
- 
- 	DRM_DEBUG_DRIVER("\n");
- 
--	/* Fallback is canvas provider is not available */
--	if (!priv->canvas) {
--		priv->canvas_id_vd1_0 = MESON_CANVAS_ID_VD1_0;
--		priv->canvas_id_vd1_1 = MESON_CANVAS_ID_VD1_1;
--		priv->canvas_id_vd1_2 = MESON_CANVAS_ID_VD1_2;
--	}
--
- 	interlace_mode = state->crtc->mode.flags & DRM_MODE_FLAG_INTERLACE;
- 
- 	spin_lock_irqsave(&priv->drm->event_lock, flags);
-diff --git a/drivers/gpu/drm/meson/meson_plane.c b/drivers/gpu/drm/meson/meson_plane.c
-index 6119a0224278..b7786218cb10 100644
---- a/drivers/gpu/drm/meson/meson_plane.c
-+++ b/drivers/gpu/drm/meson/meson_plane.c
-@@ -38,7 +38,6 @@
- #include "meson_plane.h"
- #include "meson_vpp.h"
- #include "meson_viu.h"
--#include "meson_canvas.h"
- #include "meson_registers.h"
- 
- /* OSD_SCI_WH_M1 */
-@@ -148,10 +147,7 @@ static void meson_plane_atomic_update(struct drm_plane *plane,
- 				   (0xFF << OSD_GLOBAL_ALPHA_SHIFT) |
- 				   OSD_BLK0_ENABLE;
- 
--	if (priv->canvas)
--		canvas_id_osd1 = priv->canvas_id_osd1;
--	else
--		canvas_id_osd1 = MESON_CANVAS_ID_OSD1;
-+	canvas_id_osd1 = priv->canvas_id_osd1;
- 
- 	/* Set up BLK0 to point to the right canvas */
- 	priv->viu.osd1_blk0_cfg[0] = ((canvas_id_osd1 << OSD_CANVAS_SEL) |
-diff --git a/drivers/gpu/drm/meson/meson_viu.c b/drivers/gpu/drm/meson/meson_viu.c
-index e46e05f50bad..ac0f3687e09a 100644
---- a/drivers/gpu/drm/meson/meson_viu.c
-+++ b/drivers/gpu/drm/meson/meson_viu.c
-@@ -25,7 +25,6 @@
- #include "meson_viu.h"
- #include "meson_vpp.h"
- #include "meson_venc.h"
--#include "meson_canvas.h"
- #include "meson_registers.h"
- 
- /**
--- 
-2.21.0
+I see now in your "[PATCH v3 1/2] dt-bindings: usb: add documentation for
+typec switch via GPIO" that you plan to use a
+Documentation/devicetree/bindings/graph.txt style binding for this,
+adding a remote-endpoint to the orientation-switch (in that patch), or
+to the role-switch.
+
+But a Type-C port can have both an orientation-switch and a role-switch
+(and a mux if it supports e.g. DP-altmode), how is the driver driving
+the device which has the actual usb_c_connecter child-node to which
+the remote-endpoints for both the orientation- and the role-switch points
+supposed to figure out which is which ?
+
+Also it feels the wrong-way around to me to have the orientation-switch
+point to the usb_c_connector, to me it would make more sense to have
+the usb_c_connector point to a port on the orientation-switch.
+
+Regards,
+
+Hans
