@@ -1,202 +1,121 @@
 From: Nicolas Boichat <drinkcat@chromium.org>
-Subject: Re: [PATCH v2 5/9] mfd: Add support for the MediaTek MT6358 PMIC
-Date: Mon, 11 Mar 2019 16:22:05 +0800
-Message-ID: <CANMq1KDPPuDC4O3W1EjqoLAzfwitx-pqX0Aq8zycomsigcHLFw@mail.gmail.com>
-References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1552275991-34648-6-git-send-email-hsin-hsiung.wang@mediatek.com>
+Subject: Re: [PATCH v6 3/6] i2c: mediatek: Add arb clock in i2c driver
+Date: Mon, 11 Mar 2019 16:28:26 +0800
+Message-ID: <CANMq1KBKbGUgDGKp=vHq9g-46sN+4_CjPh-7Tc4NzfKk+ckpsQ@mail.gmail.com>
+References: <1552282840-12778-1-git-send-email-qii.wang@mediatek.com> <1552282840-12778-4-git-send-email-qii.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552275991-34648-6-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <1552282840-12778-4-git-send-email-qii.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Eddie Huang <eddie.huang@mediatek.com>, Marc Zyngier <marc.zyngier@arm.com>, srv_heupstream <srv_heupstream@mediatek.com>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-rtc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Qii Wang <qii.wang@mediatek.com>
+Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Leilk Liu <leilk.liu@mediatek.com>, xinping.qian@mediatek.com, liguo.zhang@mediatek.com, Rob Herring <robh@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 11:48 AM Hsin-Hsiung Wang
-<hsin-hsiung.wang@mediatek.com> wrote:
+On Mon, Mar 11, 2019 at 1:41 PM Qii Wang <qii.wang@mediatek.com> wrote:
 >
-> This adds support for the MediaTek MT6358 PMIC. This is a
-> multifunction device with the following sub modules:
+> When two i2c controllers are internally connected to the same
+> GPIO pins, the arb clock is needed to ensure that the waveforms
+> do not interfere with each other. And we also need to enable
+> the interrupt to find arb lost, old i2c controllers also have
+> the bit.
 >
-> - Regulator
-> - RTC
-> - Codec
-> - Interrupt
->
-> It is interfaced to the host controller using SPI interface
-> by a proprietary hardware called PMIC wrapper or pwrap.
-> MT6358 MFD is a child device of the pwrap.
->
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+
+I'll let Matthias comment too (I think the comment above is just
+enough), but otherwise:
+
+Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+
 > ---
->  drivers/mfd/Makefile                 |    2 +-
->  drivers/mfd/mt6358-irq.c             |  236 +++++
->  drivers/mfd/mt6397-core.c            |   63 +-
->  include/linux/mfd/mt6358/core.h      |  158 +++
->  include/linux/mfd/mt6358/registers.h | 1926 ++++++++++++++++++++++++++++++++++
->  include/linux/mfd/mt6397/core.h      |    3 +
->  6 files changed, 2386 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/mfd/mt6358-irq.c
->  create mode 100644 include/linux/mfd/mt6358/core.h
->  create mode 100644 include/linux/mfd/mt6358/registers.h
+>  drivers/i2c/busses/i2c-mt65xx.c |   25 ++++++++++++++++++++++---
+>  1 file changed, 22 insertions(+), 3 deletions(-)
 >
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 088e249..50be021 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -230,7 +230,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)        += intel-soc-pmic.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)     += intel_soc_pmic_bxtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)     += intel_soc_pmic_chtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)  += intel_soc_pmic_chtdc_ti.o
-> -obj-$(CONFIG_MFD_MT6397)       += mt6397-core.o mt6397-irq.o
-> +obj-$(CONFIG_MFD_MT6397)       += mt6397-core.o mt6397-irq.o mt6358-irq.o
+> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+> index be36018..1a7235e 100644
+> --- a/drivers/i2c/busses/i2c-mt65xx.c
+> +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> @@ -35,6 +35,7 @@
+>  #include <linux/slab.h>
 >
->  obj-$(CONFIG_MFD_ALTERA_A10SR) += altera-a10sr.o
->  obj-$(CONFIG_MFD_SUN4I_GPADC)  += sun4i-gpadc.o
-> diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
-> new file mode 100644
-> index 0000000..2941d87
-> --- /dev/null
-> +++ b/drivers/mfd/mt6358-irq.c
-> @@ -0,0 +1,236 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (c) 2019 MediaTek Inc.
+>  #define I2C_RS_TRANSFER                        (1 << 4)
+> +#define I2C_ARB_LOST                   (1 << 3)
+>  #define I2C_HS_NACKERR                 (1 << 2)
+>  #define I2C_ACKERR                     (1 << 1)
+>  #define I2C_TRANSAC_COMP               (1 << 0)
+> @@ -181,6 +182,7 @@ struct mtk_i2c {
+>         struct clk *clk_main;           /* main clock for i2c bus */
+>         struct clk *clk_dma;            /* DMA clock for i2c via DMA */
+>         struct clk *clk_pmic;           /* PMIC clock for i2c from PMIC */
+> +       struct clk *clk_arb;            /* Arbitrator clock for i2c */
+>         bool have_pmic;                 /* can use i2c pins from PMIC */
+>         bool use_push_pull;             /* IO config push-pull mode */
+>
+> @@ -299,8 +301,18 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
+>                 if (ret)
+>                         goto err_pmic;
+>         }
 > +
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/mt6358/core.h>
-> +#include <linux/mfd/mt6358/registers.h>
-> +#include <linux/mfd/mt6397/core.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +static struct irq_top_t mt6358_ints[] = {
-> +       MT6358_TOP_GEN(BUCK),
-> +       MT6358_TOP_GEN(LDO),
-> +       MT6358_TOP_GEN(PSC),
-> +       MT6358_TOP_GEN(SCK),
-> +       MT6358_TOP_GEN(BM),
-> +       MT6358_TOP_GEN(HK),
-> +       MT6358_TOP_GEN(AUD),
-> +       MT6358_TOP_GEN(MISC),
-> +};
-> +
-> +static int parsing_hwirq_to_top_group(unsigned int hwirq)
-
-I think mka@ already told you that, but I'd rename to something like
-get_hwirq_top_group.
-
-> +{
-> +       int top_group;
-> +
-
-Should we also add this? (I know that MT6358_TOP_GEN(BUCK).hwirq_base
-== 0, but nothing really guarantees that.
-if (mt6358_ints[0].hwirq_base < hwirq)
-   return -1;
-
-> +       for (top_group = 1; top_group < ARRAY_SIZE(mt6358_ints); top_group++) {
-> +               if (mt6358_ints[top_group].hwirq_base > hwirq) {
-> +                       top_group--;
-> +                       break;
-
-More simply:
-return top_group-1;
-
-> +               }
+> +       if (i2c->clk_arb) {
+> +               ret = clk_prepare_enable(i2c->clk_arb);
+> +               if (ret)
+> +                       goto err_arb;
 > +       }
-> +       return top_group;
-
-return -1 on error, and check for errors in the code below. If you
-don't do that, you run the risk of accessing some array out of bounds.
-
-> +}
 > +
-> +static void pmic_irq_enable(struct irq_data *data)
-> +{
-> +       unsigned int hwirq = irqd_to_hwirq(data);
-> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +       struct pmic_irq_data *irqd = chip->irq_data;
+>         return 0;
+>
+> +err_arb:
+> +       if (i2c->have_pmic)
+> +               clk_disable_unprepare(i2c->clk_pmic);
+>  err_pmic:
+>         clk_disable_unprepare(i2c->clk_main);
+>  err_main:
+> @@ -311,6 +323,9 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
+>
+>  static void mtk_i2c_clock_disable(struct mtk_i2c *i2c)
+>  {
+> +       if (i2c->clk_arb)
+> +               clk_disable_unprepare(i2c->clk_arb);
 > +
-> +       irqd->enable_hwirq[hwirq] = true;
-> +}
+>         if (i2c->have_pmic)
+>                 clk_disable_unprepare(i2c->clk_pmic);
+>
+> @@ -519,13 +534,13 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>
+>         /* Clear interrupt status */
+>         mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
+> -              I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
+> +                           I2C_ARB_LOST | I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
+>
+>         mtk_i2c_writew(i2c, I2C_FIFO_ADDR_CLR, OFFSET_FIFO_ADDR_CLR);
+>
+>         /* Enable interrupt */
+>         mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
+> -              I2C_TRANSAC_COMP, OFFSET_INTR_MASK);
+> +                           I2C_ARB_LOST | I2C_TRANSAC_COMP, OFFSET_INTR_MASK);
+>
+>         /* Set transfer and transaction len */
+>         if (i2c->op == I2C_MASTER_WRRD) {
+> @@ -659,7 +674,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>
+>         /* Clear interrupt mask */
+>         mtk_i2c_writew(i2c, ~(restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
+> -              I2C_TRANSAC_COMP), OFFSET_INTR_MASK);
+> +                           I2C_ARB_LOST | I2C_TRANSAC_COMP), OFFSET_INTR_MASK);
+>
+>         if (i2c->op == I2C_MASTER_WR) {
+>                 dma_unmap_single(i2c->dev, wpaddr,
+> @@ -884,6 +899,10 @@ static int mtk_i2c_probe(struct platform_device *pdev)
+>                 return PTR_ERR(i2c->clk_dma);
+>         }
+>
+> +       i2c->clk_arb = devm_clk_get(&pdev->dev, "arb");
+> +       if (IS_ERR(i2c->clk_arb))
+> +               i2c->clk_arb = NULL;
 > +
-> +static void pmic_irq_disable(struct irq_data *data)
-> +{
-> +       unsigned int hwirq = irqd_to_hwirq(data);
-> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +       struct pmic_irq_data *irqd = chip->irq_data;
-> +
-> +       irqd->enable_hwirq[hwirq] = false;
-> +}
-> +
-> +static void pmic_irq_lock(struct irq_data *data)
-> +{
-> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +
-> +       mutex_lock(&chip->irqlock);
-> +}
-> +
-> +static void pmic_irq_sync_unlock(struct irq_data *data)
-> +{
-> +       unsigned int i, top_gp, en_reg, int_regs, shift;
-> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +       struct pmic_irq_data *irqd = chip->irq_data;
-> +
-> +       for (i = 0; i < irqd->num_pmic_irqs; i++) {
-> +               if (irqd->enable_hwirq[i] ==
-> +                               irqd->cache_hwirq[i])
-
-I think this fits in 80 chars.
-
-> +                       continue;
-> +
-> +               top_gp = parsing_hwirq_to_top_group(i);
-
-This is quite inefficient: you keep going through mt6358_ints for all
-i. Can you just figure out (and remember) which group we are currently
-in in this loop?
-
-outside the loop:
-top_gp = 0;
-
-here:
-while ((top_gp+1) < ARRAY_SIZE(mt6358_ints) && i >=
-mt6358_ints[top_gp+1].hwirq_base)
-   top_gp++;
-
-> +               int_regs = mt6358_ints[top_gp].num_int_bits / MT6358_REG_WIDTH;
-> +               en_reg = mt6358_ints[top_gp].en_reg +
-> +                       mt6358_ints[top_gp].en_reg_shift * int_regs;
-> +               shift = (i - mt6358_ints[top_gp].hwirq_base) % MT6358_REG_WIDTH;
-> +               regmap_update_bits(chip->regmap, en_reg, BIT(shift),
-> +                                  irqd->enable_hwirq[i] << shift);
-> +               irqd->cache_hwirq[i] = irqd->enable_hwirq[i];
-> +       }
-> +       mutex_unlock(&chip->irqlock);
-> +}
-> +
-> +static int pmic_irq_set_type(struct irq_data *data, unsigned int type)
-> +{
-> +       return 0;
-> +}
-
-Why do you need to stub this function out? I think the core will
-already check if the irq_chip supports this function or not. I think
-you can just leave it as NULL in the struct below.
-
-> +
-> +static struct irq_chip mt6358_irq_chip = {
-> +       .name = "mt6358-irq",
-> +       .irq_enable = pmic_irq_enable,
-> +       .irq_disable = pmic_irq_disable,
-> +       .irq_bus_lock = pmic_irq_lock,
-> +       .irq_bus_sync_unlock = pmic_irq_sync_unlock,
-> +       .irq_set_type = pmic_irq_set_type,
-> +};
-> +
-[snip]
+>         clk = i2c->clk_main;
+>         if (i2c->have_pmic) {
+>                 i2c->clk_pmic = devm_clk_get(&pdev->dev, "pmic");
+> --
+> 1.7.9.5
+>
