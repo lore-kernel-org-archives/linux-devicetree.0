@@ -1,103 +1,58 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: phy: Add Stingray USB PHY binding document
-Date: Mon, 11 Mar 2019 09:02:33 +0530
-Message-ID: <CABe79T7LQFf9J67P=eo0sAn6oJ10ovciR4o3_Z_K=6NLjtyr3A@mail.gmail.com>
-References: <1550658842-19167-1-git-send-email-srinath.mannam@broadcom.com>
- <1550658842-19167-2-git-send-email-srinath.mannam@broadcom.com>
- <20190222172042.GA6792@bogus> <CABe79T5SqQJhF0GY06-+-aSCV-ya-RODEeV0DLg0Poupjeq+fA@mail.gmail.com>
- <CAL_JsqKyYoc3wLWGhbBdQxn=1NLhGbxfB2sUZUXm13_YTEyTGw@mail.gmail.com>
+From: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Subject: [PATCH v2 3/9] dt-bindings: mfd: Add compatible for the MediaTek MT6358 PMIC
+Date: Mon, 11 Mar 2019 11:46:25 +0800
+Message-ID: <1552275991-34648-4-git-send-email-hsin-hsiung.wang@mediatek.com>
+References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKyYoc3wLWGhbBdQxn=1NLhGbxfB2sUZUXm13_YTEyTGw@mail.gmail.com>
+In-Reply-To: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Tejun Heo <tj@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Eddie Huang <eddie.huang@mediatek.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+This adds compatible for the MediaTek MT6358 PMIC.
 
-Please find my comments below,
+Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+---
+ Documentation/devicetree/bindings/mfd/mt6397.txt | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-On Sat, Feb 23, 2019 at 1:05 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Feb 22, 2019 at 11:29 AM Srinath Mannam
-> <srinath.mannam@broadcom.com> wrote:
-> >
-> > Hi Rob,
-> >
-> > Thanks for the review, Please find my comments below in line.
-> >
-> > On Fri, Feb 22, 2019 at 10:50 PM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Wed, Feb 20, 2019 at 04:04:00PM +0530, Srinath Mannam wrote:
-> > > > Add DT binding document for Stingray USB PHY.
-> > > >
-> > > > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> > > > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> > > > Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> > > > ---
-> > > >  .../bindings/phy/brcm,stingray-usb-phy.txt         | 62 ++++++++++++++++++++++
-> > > >  1 file changed, 62 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
-> > > > new file mode 100644
-> > > > index 0000000..da19236
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
-> > > > @@ -0,0 +1,62 @@
-> > > > +Broadcom Stingray USB PHY
-> > > > +
-> > > > +Required properties:
-> > > > + - compatible : should be one of the listed compatibles
-> > > > +     - "brcm,sr-usb-combo-phy" is a combo PHY has one SS PHY and one HS PHY.
-> > > > +     - "brcm,sr-usb-hs-phy" has a single HS PHY.
-> > > > + - reg: offset and length of the PHY blocks registers
-> > > > + - address-cells: should be 1
-> > > > + - size-cells: should be 0
-> > > > +
-> > > > +Sub-nodes:
-> > > > +  brcm,sr-usb-combo-phy have two sub-nodes for one SS PHY and one HS PHY.
-> > > > +
-> > > > +Sub-nodes required properties:
-> > > > + - reg: required for brcm,sr-usb-phy model PHY.
-> > > > +     reg value 0 is HS PHY and 1 is SS PHY.
-> > > > + - phy-cells: generic PHY binding; must be 0
-> > > > +
-> > > > +Refer to phy/phy-bindings.txt for the generic PHY binding properties
-> > > > +
-> > > > +Example:
-> > > > +     usbphy0: usb-phy@0 {
-> > > > +             compatible = "brcm,sr-usb-combo-phy";
-> > > > +             reg = <0x00000000 0x100>;
-> > > > +             #address-cells = <1>;
-> > > > +             #size-cells = <0>;
-> > > > +
-> > > > +             usb0_phy0: phy@0 {
-> > > > +                     reg = <0>;
-> > > > +                     #phy-cells = <0>;
-> > > > +             };
-> > > > +
-> > > > +             usb0_phy1: phy@1 {
-> > > > +                     reg = <1>;
-> > > > +                     #phy-cells = <0>;
-> > > > +             };
-> > >
-> > > Again, you don't need child nodes here. There are not any per child
-> > > resources. Clients can refer to <&usbphy0 1> just as easily as
-> > > <&usb0_phy1>. This is why we have #phy-cells.
-> > This phy controller is combo PHY it has one Super Speed USB PHY and
-> > one High Speed USB PHY.
-> > We required to create two PHY devices inside driver to initialize and
-> > service(reset) both SS and HS PHYs separately.
-> > That is the reason we used two child nodes.
->
-> What you do in the driver is your business. That is independent of the
-> binding. Go look at other phy drivers which use #phy-cells=1.
-> .of_xlate() function is what converts the phy cells to a struct phy.
->
-I have followed exactly same pattern available in open source.
-ex: Documentation/devicetree/bindings/phy/brcm-sata-phy.txt
-In this also, two child nodes are used with #phy-cells 0.
-> Rob
+diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
+index 0ebd08a..62f1c17 100644
+--- a/Documentation/devicetree/bindings/mfd/mt6397.txt
++++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
+@@ -17,22 +17,27 @@ Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+ This document describes the binding for MFD device and its sub module.
+ 
+ Required properties:
+-compatible: "mediatek,mt6397" or "mediatek,mt6323"
++compatible:
++	"mediatek,mt6323" for PMIC MT6323
++	"mediatek,mt6358" for PMIC MT6358
++	"mediatek,mt6397" for PMIC MT6397
+ 
+ Optional subnodes:
+ 
+ - rtc
+ 	Required properties:
+-		- compatible: "mediatek,mt6397-rtc"
++		- compatible: "mediatek,mt6397-rtc" or "mediatek,mt6358-rtc"
+ - regulators
+ 	Required properties:
+ 		- compatible: "mediatek,mt6397-regulator"
+ 	see Documentation/devicetree/bindings/regulator/mt6397-regulator.txt
++		- compatible: "mediatek,mt6358-regulator"
++	see Documentation/devicetree/bindings/regulator/mt6358-regulator.txt
+ 		- compatible: "mediatek,mt6323-regulator"
+ 	see Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
+ - codec
+ 	Required properties:
+-		- compatible: "mediatek,mt6397-codec"
++		- compatible: "mediatek,mt6397-codec" or "mediatek,mt6358-sound"
+ - clk
+ 	Required properties:
+ 		- compatible: "mediatek,mt6397-clk"
+-- 
+1.9.1
