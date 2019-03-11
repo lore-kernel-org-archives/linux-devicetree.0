@@ -1,38 +1,74 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv4 23/28] dt-bindings: pci: Add NXP Layerscape SoCs PCIe
- Gen4  controller
-Date: Mon, 11 Mar 2019 17:11:42 -0500
-Message-ID: <20190311221142.GA11898@bogus>
-References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
- <20190311093130.7209-24-Zhiqiang.Hou@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: thor.thayer@linux.intel.com
+Subject: [RESEND PATCHv4 0/6] Add SOCFPGA System Manager
+Date: Mon, 11 Mar 2019 17:18:02 -0500
+Message-ID: <1552342688-6663-1-git-send-email-thor.thayer@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190311093130.7209-24-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei
+To: lee.jones@linaro.org, arnd@arndb.de, dinguyen@kernel.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, olof@lixom.net
+Cc: davem@davemloft.net, mcoquelin.stm32@gmail.com, mchehab+samsung@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Thor Thayer <thor.thayer@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 11 Mar 2019 09:33:05 +0000, "Z.q. Hou" wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> Add PCIe Gen4 controller DT bindings of NXP Layerscape SoCs.
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> ---
-> V4:
->  - no change
-> 
->  .../bindings/pci/layerscape-pci-gen4.txt      | 52 +++++++++++++++++++
->  MAINTAINERS                                   |  8 +++
->  2 files changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/layerscape-pci-gen4.txt
-> 
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Add MFD driver for SOCFPGA System Manager to handle
+System Manager calls differently for ARM32 vs ARM64.
+The SOCFPGA System Manager includes registers from several
+SOC peripherals.
 
-If a tag was not added on purpose, please state why and what changed.
+On ARM32, syscon handles this aggregated register grouping.
+Implement System Manager calls as regmap_mmio similar to syscon
+for ARM32 SOCFPGA systems.
+
+The ARM64 System Manager can only be accessed from priority
+level EL3 so this new MFD driver handles the calls to EL3.
+
+v2 Changes:
+Change socfpga_is_s10() to check compatible string.
+Add new compatible string for Stratix10 in bindings
+    and add proper detection method.
+Replace base cast with resource_size_t member.
+Change s10_sysmgr_regmap_cfg to altr_sysmgr_regmap_cfg to
+    be generic.
+Always use 4 byte width.
+Initialize the .reg_read and .reg_write in S10 case only.
+Remove call to syscon in 32bit ARM case and handle both
+    ARM32 and ARM64 in of_sysmgr_register().
+Replace IS_ERR_OR_NULL() with IS_ERR().
+Remove compatible check functions except phandle function.
+
+v3 Changes:
+Create and register regmap in probe().
+Lookup functions find registered regmap.
+Cleanup of header file.
+Fix copyright dates.
+Replace global pointer with traditional probe() methodology.
+
+v4 Changes:
+Add missing of_node_put().
+Add Reviewed-by from v2 for devicetree patch
+Add Acked-by for net patch
+
+Thor Thayer (6):
+  mfd: altera-sysmgr: Add SOCFPGA System Manager
+  Documentation: dt: socfpga: Add S10 System Manager binding
+  ARM: socfpga_defconfig: Enable CONFIG_MTD_ALTERA_SYSMGR
+  arm64: defconfig: Enable CONFIG_MTD_ALTERA_SYSMGR
+  net: stmmac: socfpga: Use shared System Manager driver
+  arm64: dts: stratix10: New System Manager compatible
+
+ .../bindings/arm/altera/socfpga-system.txt         |  12 ++
+ MAINTAINERS                                        |   6 +
+ arch/arm/configs/socfpga_defconfig                 |   1 +
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |   2 +-
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/mfd/Kconfig                                |  10 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/altera-sysmgr.c                        | 211 +++++++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    |   5 +-
+ include/linux/mfd/altera-sysmgr.h                  |  29 +++
+ 10 files changed, 275 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/mfd/altera-sysmgr.c
+ create mode 100644 include/linux/mfd/altera-sysmgr.h
+
+-- 
+2.7.4
