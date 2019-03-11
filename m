@@ -1,68 +1,78 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 13/52] ARM: dts: Configure clock parent for pwm vibra
-Date: Mon, 11 Mar 2019 15:54:37 -0400
-Message-ID: <20190311195516.137772-13-sashal@kernel.org>
-References: <20190311195516.137772-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 08/44] arm64: dts: rockchip: fix graph_port warning on rk3399 bob kevin and excavator
+Date: Mon, 11 Mar 2019 15:56:24 -0400
+Message-ID: <20190311195700.138462-8-sashal@kernel.org>
+References: <20190311195700.138462-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
+In-Reply-To: <20190311195700.138462-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Tony Lindgren <tony@atomide.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "H . Nikolaus Schaller" <hns@goldelico.com>, Keerthy <j-keerthy@ti.com>, Ladislav Michl <ladis@linux-mips.org>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Tero Kristo <t-kristo@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Heiko Stuebner <heiko@sntech.de>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-[ Upstream commit 0840242e887586268f665bf58d5e1a7d6ebf35ed ]
+[ Upstream commit 26cd8657c7e745686a4c54a5cccf721ede208a25 ]
 
-Commit 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe
-them with ti-sysc") moved some omap4 timers to probe with ti-sysc
-interconnect target module. Turns out this broke pwm-omap-dmtimer
-for reparenting of the timer clock.
+Ports are described by child 'port' nodes contained in the device node.
+'ports' is optional and is used to group all 'port' nodes which is not
+the case here.
 
-With ti-sysc, we can now configure the clock sources in the dts with
-assigned-clocks and assigned-clock-parents.
+This patch fixes the following warnings:
 
-Fixes: 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe them with ti-sysc")
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Ladislav Michl <ladis@linux-mips.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: Tero Kristo <t-kristo@ti.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts:25.9-29.5: Warning (graph_port): /edp-panel/ports: graph port node name should be 'port'
+arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts:46.9-50.5: Warningi (graph_port): /edp-panel/ports: graph port node name should be 'port'
+arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts:94.9-98.5: Warning (graph_port): /edp-panel/ports: graph port node name should be 'port'
+
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap4-droid4-xt894.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts            | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts          | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-index 04758a2a87f0..67d77eee9433 100644
---- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
-+++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-@@ -644,6 +644,17 @@
- 	};
- };
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts
+index 1ee0dc0d9f10..d1cf404b8708 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts
+@@ -22,7 +22,7 @@
+ 		backlight = <&backlight>;
+ 		power-supply = <&pp3300_disp>;
  
-+/* Configure pwm clock source for timers 8 & 9 */
-+&timer8 {
-+	assigned-clocks = <&abe_clkctrl OMAP4_TIMER8_CLKCTRL 24>;
-+	assigned-clock-parents = <&sys_clkin_ck>;
-+};
-+
-+&timer9 {
-+	assigned-clocks = <&l4_per_clkctrl OMAP4_TIMER9_CLKCTRL 24>;
-+	assigned-clock-parents = <&sys_clkin_ck>;
-+};
-+
- /*
-  * As uart1 is wired to mdm6600 with rts and cts, we can use the cts pin for
-  * uart1 wakeirq.
+-		ports {
++		port {
+ 			panel_in_edp: endpoint {
+ 				remote-endpoint = <&edp_out_panel>;
+ 			};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+index 2cc7c47d6a85..65637a5a4b21 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+@@ -43,7 +43,7 @@
+ 		backlight = <&backlight>;
+ 		power-supply = <&pp3300_disp>;
+ 
+-		ports {
++		port {
+ 			panel_in_edp: endpoint {
+ 				remote-endpoint = <&edp_out_panel>;
+ 			};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts b/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
+index fef2c0608999..b14d83919f14 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
+@@ -50,7 +50,7 @@
+ 		pinctrl-0 = <&lcd_panel_reset>;
+ 		power-supply = <&vcc3v3_s0>;
+ 
+-		ports {
++		port {
+ 			panel_in_edp: endpoint {
+ 				remote-endpoint = <&edp_out_panel>;
+ 			};
 -- 
 2.19.1
