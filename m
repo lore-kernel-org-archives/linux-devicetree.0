@@ -1,81 +1,107 @@
-Return-Path: <SRS0=mwoK=RP=nxp.com=jun.li@kernel.org>
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v3 1/2] dt-bindings: usb: add documentation for typec
+Return-Path: <SRS0=qV72=RO=redhat.com=hdegoede@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: usb: add documentation for typec
  switch via GPIO
-Date: Tue, 12 Mar 2019 10:32:00 +0000
-Message-ID: 
- <AM0PR04MB454795707E40FDDBB61DD12D89490@AM0PR04MB4547.eurprd04.prod.outlook.com>
+From: Hans de Goede <hdegoede@redhat.com>
 References: <1552299557-6306-1-git-send-email-jun.li@nxp.com>
  <afcbc9c0-d3f6-98ff-f7bc-9919cda6a034@redhat.com>
-In-Reply-To: <afcbc9c0-d3f6-98ff-f7bc-9919cda6a034@redhat.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Message-ID: <7f40955a-7a70-7d8a-0e0d-32ad8bb50420@redhat.com>
+Date: Mon, 11 Mar 2019 12:12:08 +0100
 MIME-Version: 1.0
-To: Hans de Goede <hdegoede@redhat.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>
+In-Reply-To: <afcbc9c0-d3f6-98ff-f7bc-9919cda6a034@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To: Jun Li <jun.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>
 Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgSGFucw0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBIYW5zIGRlIEdv
-ZWRlIDxoZGVnb2VkZUByZWRoYXQuY29tPg0KPiBTZW50OiAyMDE55bm0M+aciDEx5pelIDE5OjAz
-DQo+IFRvOiBKdW4gTGkgPGp1bi5saUBueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOyBoZWlr
-a2kua3JvZ2VydXNAbGludXguaW50ZWwuY29tDQo+IENjOiBncmVna2hAbGludXhmb3VuZGF0aW9u
-Lm9yZzsgYW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbTsNCj4gbGludXgtdXNiQHZnZXIua2VybmVs
-Lm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteA0KPiA8bGludXgt
-aW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMS8yXSBkdC1iaW5kaW5nczog
-dXNiOiBhZGQgZG9jdW1lbnRhdGlvbiBmb3IgdHlwZWMgc3dpdGNoDQo+IHZpYSBHUElPDQo+IA0K
-PiBIaSwNCj4gDQo+IE9uIDExLTAzLTE5IDExOjQwLCBKdW4gTGkgd3JvdGU6DQo+ID4gU29tZSB0
-eXBlYyBzdXBlciBzcGVlZCBhY3RpdmUgY2hhbm5lbCBzd2l0Y2ggY2FuIGJlIGNvbnRyb2xsZWQg
-dmlhIGENCj4gPiBHUElPLCB0aGlzIGJpbmRpbmcgY2FuIGJlIHVzZWQgdG8gc3BlY2lmeSB0aGUg
-c3dpdGNoIG5vZGUgYnkgYSBHUElPDQo+ID4gYW5kIHRoZSByZW1vdGUgZW5kcG9pbnQgb2YgaXRz
-IGNvbnN1bWVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTGkgSnVuIDxqdW4ubGlAbnhwLmNv
-bT4NCj4gPiAtLS0NCj4gPiAgIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi90eXBlYy1zd2l0
-Y2gtZ3Bpby50eHQgIHwgMzANCj4gKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAgMSBmaWxl
-IGNoYW5nZWQsIDMwIGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQNCj4gPiBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvdHlwZWMtc3dpdGNoLWdwaW8udHh0
-DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3R5cGVjLXN3aXRj
-aC1ncGlvLnR4dA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4u
-NGVmNzZjZg0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvdXNiL3R5cGVjLXN3aXRjaC1ncGlvLnR4dA0KPiA+IEBAIC0wLDAgKzEs
-MzAgQEANCj4gPiArVHlwZWMgb3JpZW50YXRpb24gc3dpdGNoIHZpYSBhIEdQSU8NCj4gPiArLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiArDQo+ID4gK1JlcXVpcmVkIHBy
-b3BlcnRpZXM6DQo+ID4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlIHNldCBvbmUgb2YgZm9sbG93
-aW5nOg0KPiA+ICsJLSAibnhwLHB0bjM2MDQzIiBmb3IgTlhQIFR5cGUtQyBTdXBlclNwZWVkIGFj
-dGl2ZSBzd2l0Y2guDQo+ID4gKw0KPiA+ICstIGdwaW9zOiB0aGUgR1BJTyB1c2VkIHRvIHN3aXRj
-aCB0aGUgc3VwZXIgc3BlZWQgYWN0aXZlIGNoYW5uZWwsDQo+ID4gKwkJR1BJT19BQ1RJVkVfSElH
-SDogR1BJTyBzdGF0ZSBoaWdoIGZvciBjYzE7DQo+ID4gKwkJR1BJT19BQ1RJVkVfTE9XOiAgR1BJ
-TyBzdGF0ZSBsb3cgZm9yIGNjMS4NCj4gPiArLSBvcmllbnRhdGlvbi1zd2l0Y2g6IG11c3QgYmUg
-cHJlc2VudC4NCj4gDQo+IFNob3VsZG4ndCB0aGlzIGhhdmUgdXNiLWMgaW4gdGhlIHByb3Blcnkg
-bmFtZSwgZS5nLjoNCj4gdXNiLWMtb3JpZW50YXRpb24tc3dpdGNoICA/DQoNClRoaXMgaXMgZGVj
-aWRlZCBieSBkcml2ZXJzL3VzYi90eXBlYy9tdXguYzozNg0KLyoNCiAqIFdpdGggT0YgZ3JhcGgg
-dGhlIG11eCBub2RlIG11c3QgaGF2ZSBhIGJvb2xlYW4gZGV2aWNlIHByb3BlcnR5IG5hbWVkDQog
-KiAib3JpZW50YXRpb24tc3dpdGNoIi4NCiAqLw0KPiANCj4gPiArDQo+ID4gK1JlcXVpcmVkIHN1
-Yi1ub2RlOg0KPiA+ICstIHBvcnQ6IHNwZWNpZnkgdGhlIHJlbW90ZSBlbmRwb2ludCBvZiB0eXBl
-YyBzd2l0Y2ggY29uc3VtZXIuDQo+ID4gKw0KPiA+ICtFeGFtcGxlOg0KPiA+ICsNCj4gPiArcHRu
-MzYwNDMgew0KPiA+ICsJY29tcGF0aWJsZSA9ICJueHAscHRuMzYwNDMiOw0KPiA+ICsJcGluY3Ry
-bC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiArCXBpbmN0cmwtMCA9IDwmcGluY3RybF9zc19zZWw+
-Ow0KPiA+ICsJZ3Bpb3MgPSA8JmdwaW8zIDE1IEdQSU9fQUNUSVZFX0hJR0g+Ow0KPiA+ICsJb3Jp
-ZW50YXRpb24tc3dpdGNoOw0KPiA+ICsNCj4gPiArCXBvcnQgew0KPiA+ICsJCXVzYjNfZGF0YV9z
-czogZW5kcG9pbnQgew0KPiA+ICsJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnR5cGVjX2Nvbl9zcz47
-DQo+IA0KPiANCj4gSXNuJ3QgdGhpcyB0aGUgd3Jvbmcgd2F5IGFyb3VuZCwgc2hvdWxkbid0IHRo
-ZSAidXNiLWMtY29ubmVjdG9yIg0KPiBjb21wYXRpYmxlIHBvcnQgYmUgcG9pbnRpbmcgdG8gdGhl
-IG9yaWVudGF0aW9uIHN3aXRjaCwgcmF0aGVyIHRoZW4gdGhlIG90aGVyIHdheQ0KPiBhcm91bmQ/
-ICANCg0KSSBhbSBub3Qgc3VyZSBJIGFtIGdldHRpbmcgeW91ciBwb2ludCwgInVzYi1jLWNvbm5l
-Y3RvciIgaXMgdGhlIHVzZXIgb2YgdHlwZWMgc3dpdGNoLA0KeWVzLCBpdCBpcyBwb2ludGluZyB0
-byB0aGUgb3JpZW50YXRpb24gc3dpdGNoIHByb3ZpZGVyKGkuZSwgdGhpcyBleGFtcGxlIG5vZGUp
-Lg0KDQo+Qm90aCB3aWxsIHdvcmsgaW4gdGhlIGVuZC4gYnV0IHRvIG1lIGl0IGZlZWxzIG1vcmUg
-bmF0dXJhbCB0byBncm91cCBhbGwgdGhlDQo+IGluZm8gYWJvdXQgdGhlIHR5cGUtYyBjb25uZWN0
-b3IgdG9nZXRoZXIgaW4gdGhlICJ1c2ItYy1jb25uZWN0b3IiIGNvbXBhdGlibGUgcG9ydA0KPg0K
-DQogICAgICAgIHB0bjM2MDQzIHsNCiAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gIm54cCxw
-dG4zNjA0MyI7DQogICAgICAgICAgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCiAg
-ICAgICAgICAgICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0cmxfc3Nfc2VsPjsNCiAgICAgICAgICAg
-ICAgICBncGlvcyA9IDwmZ3BpbzMgMTUgR1BJT19BQ1RJVkVfSElHSD47DQogICAgICAgICAgICAg
-ICAgb3JpZW50YXRpb24tc3dpdGNoOw0KDQogICAgICAgICAgICAgICAgcG9ydCB7DQogICAgICAg
-ICAgICAgICAgICAgICAgICB1c2IzX2RhdGFfc3M6IGVuZHBvaW50IHsNCiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZ0eXBlY19jb25fc3M+Ow0KICAg
-ICAgICAgICAgICAgICAgICAgICAgfTsNCiAgICAgICAgICAgICAgICB9Ow0KICAgICAgICB9Ow0K
-DQp1c2JfY29uOiBjb25uZWN0b3Igew0KCWNvbXBhdGlibGUgPSAidXNiLWMtY29ubmVjdG9yIjsN
-CgkuLi4NCglwb3J0cyB7DQoJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KCQkjc2l6ZS1jZWxscyA9
-IDwwPjsNCg0KCQlwb3J0QDEgew0KCQkJcmVnID0gPDE+Ow0KCQkJdHlwZWNfY29uX3NzOiBlbmRw
-b2ludCB7DQoJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ1c2IzX2RhdGFfc3M+Ow0KCQkJfTsNCgkJ
-fTsNCgl9Ow0KfTsNCg0KUmVnYXJkcw0KSnVuDQo+IFJlZ2FyZHMsDQo+IA0KPiBIYW5zDQoNCg==
+Hi,
+
+On 11-03-19 12:02, Hans de Goede wrote:
+> Hi,
+> 
+> On 11-03-19 11:40, Jun Li wrote:
+>> Some typec super speed active channel switch can be controlled via
+>> a GPIO, this binding can be used to specify the switch node by
+>> a GPIO and the remote endpoint of its consumer.
+>>
+>> Signed-off-by: Li Jun <jun.li@nxp.com>
+>> ---
+>>   .../devicetree/bindings/usb/typec-switch-gpio.txt  | 30 ++++++++++++++++++++++
+>>   1 file changed, 30 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/typec-switch-gpio.txt b/Documentation/devicetree/bindings/usb/typec-switch-gpio.txt
+>> new file mode 100644
+>> index 0000000..4ef76cf
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/typec-switch-gpio.txt
+>> @@ -0,0 +1,30 @@
+>> +Typec orientation switch via a GPIO
+>> +-----------------------------------
+>> +
+>> +Required properties:
+>> +- compatible: should be set one of following:
+>> +    - "nxp,ptn36043" for NXP Type-C SuperSpeed active switch.
+
+Hmm, it seems that this binding should work fine with
+other orientation-switches as well, so I think this needs
+a generic compatible string.
+
+>> +
+>> +- gpios: the GPIO used to switch the super speed active channel,
+>> +        GPIO_ACTIVE_HIGH: GPIO state high for cc1;
+>> +        GPIO_ACTIVE_LOW:  GPIO state low for cc1.
+>> +- orientation-switch: must be present.
+> 
+> Shouldn't this have usb-c in the propery name, e.g.:
+> usb-c-orientation-switch  ?
+
+Also perhaps it would be better to use an additional compatible
+string for this, rather then a boolean property, because what you
+are trying to say is that this device is compatible with some
+(to be written) generic usb-c-orientation-switch binding.
+
+So I think you may want to use an extra compatible for this
+and describe the port/graph usage linking the usb-c-connector port
+and the port on the orientation-switch together in a new
+usb-c-orientation-switch binding document.
+
+This new binding will then document the port usage which is
+mostly undocumented in your typec-switch-gpio.txt binding and
+this port usage documentation can then be re-used for other
+orientation-switch bindings.
+
+Regards,
+
+Hans
+
+
+> 
+>> +
+>> +Required sub-node:
+>> +- port: specify the remote endpoint of typec switch consumer.
+>> +
+>> +Example:
+>> +
+>> +ptn36043 {
+>> +    compatible = "nxp,ptn36043";
+>> +    pinctrl-names = "default";
+>> +    pinctrl-0 = <&pinctrl_ss_sel>;
+>> +    gpios = <&gpio3 15 GPIO_ACTIVE_HIGH>;
+>> +    orientation-switch;
+>> +
+>> +    port {
+>> +        usb3_data_ss: endpoint {
+>> +            remote-endpoint = <&typec_con_ss>;
+> 
+> 
+> Isn't this the wrong way around, shouldn't the "usb-c-connector"
+> compatible port be pointing to the orientation switch, rather then
+> the other way around?  Both will work in the end. but to me it
+> feels more natural to group all the info about the type-c connector
+> together in the "usb-c-connector" compatible port
+> 
+> Regards,
+> 
+> Hans
+> 
