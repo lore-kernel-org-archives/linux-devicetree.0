@@ -1,101 +1,102 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v8 12/15] arm64: dts: allwinner: a64: Add MIPI
- DSI pipeline
-Date: Mon, 11 Mar 2019 19:06:34 +0530
-Message-ID: <20190311133637.18334-13-jagan@amarulasolutions.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v8 13/15] arm64: dts: allwinner: a64-amarula-relic: Add Techstar TS8550B MIPI-DSI panel
+Date: Mon, 11 Mar 2019 19:06:35 +0530
+Message-ID: <20190311133637.18334-14-jagan@amarulasolutions.com>
 References: <20190311133637.18334-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBSOJTHSAKGQEZYCK5RQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190311133637.18334-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190311133637.18334-1-jagan@amarulasolutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Add MIPI DSI pipeline for Allwinner A64.
+Amarula A64-Relic board by default bound with Techstar TS8550B
+MIPI-DSI panel, add support for it.
 
-- dsi node, with A64 compatible since it doesn't support
-  DSI_SCLK gating unlike A33
-- dphy node, with A64 compatible with A33 fallback since
-  DPHY on A64 and A33 is similar
-- finally, attach the dsi_in to tcon0 for complete MIPI DSI
+DSI panel connected via board DSI port with,
+- DLDO2 as VCC supply
+- DLDO2 as IOVCC supply
+- DLDO1 as VCC-DSI supply
+- PD24 gpio for reset pin
+- PD23 gpio for backlight enable pin
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Tested-by: Merlijn Wajer <merlijn-tF0PIh4TN3odnm+yROfE0A@public.gmane.org>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ .../allwinner/sun50i-a64-amarula-relic.dts    | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index e628d063931b..5525fc571fc6 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -360,6 +360,12 @@
- 					#address-cells = <1>;
- 					#size-cells = <0>;
- 					reg = <1>;
-+
-+					tcon0_out_dsi: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&dsi_in_tcon0>;
-+						allwinner,tcon-channel = <1>;
-+					};
- 				};
- 			};
- 		};
-@@ -946,6 +952,45 @@
- 			status = "disabled";
- 		};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+index 6cb2b7f0c817..f85ed0b99942 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+@@ -9,6 +9,7 @@
+ #include "sun50i-a64.dtsi"
  
-+		dsi: dsi@1ca0000 {
-+			compatible = "allwinner,sun50i-a64-mipi-dsi";
-+			reg = <0x01ca0000 0x1000>;
-+			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_MIPI_DSI>;
-+			clock-names = "bus";
-+			resets = <&ccu RST_BUS_MIPI_DSI>;
-+			phys = <&dphy>;
-+			phy-names = "dphy";
-+			status = "disabled";
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pwm/pwm.h>
+ 
+ / {
+ 	model = "Amarula A64-Relic";
+@@ -18,6 +19,14 @@
+ 		serial0 = &uart0;
+ 	};
+ 
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
++		brightness-levels = <1 2 4 8 16 32 64 128 512>;
++		default-brightness-level = <2>;
++		enable-gpios = <&pio 3 23 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PD23 */
++	};
 +
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+@@ -30,6 +39,30 @@
+ 	};
+ };
+ 
++&de {
++	status = "okay";
++};
 +
-+				port@0 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <0>;
++&dphy {
++	status = "okay";
++};
 +
-+					dsi_in_tcon0: endpoint {
-+						remote-endpoint = <&tcon0_out_dsi>;
-+					};
-+				};
-+			};
-+		};
++&dsi {
++	vcc-dsi-supply = <&reg_dldo1>;		/* VCC3V3-DSI */
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
 +
-+		dphy: d-phy@1ca1000 {
-+			compatible = "allwinner,sun50i-a64-mipi-dphy",
-+				     "allwinner,sun6i-a31-mipi-dphy";
-+			reg = <0x01ca1000 0x1000>;
-+			clocks = <&ccu CLK_BUS_MIPI_DSI>,
-+				 <&ccu CLK_DSI_DPHY>;
-+			clock-names = "bus", "mod";
-+			resets = <&ccu RST_BUS_MIPI_DSI>;
-+			status = "disabled";
-+			#phy-cells = <0>;
-+		};
++	panel@0 {
++		compatible = "techstar,ts8550b", "sitronix,st7701";
++		reg = <0>;
++		VCC-supply = <&reg_dldo2>;	/* VCC-LCD */
++		IOVCC-supply = <&reg_dldo2>;	/* VCC-LCD */
++		reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
++		backlight = <&backlight>;
++	};
++};
 +
- 		hdmi: hdmi@1ee0000 {
- 			compatible = "allwinner,sun50i-a64-dw-hdmi",
- 				     "allwinner,sun8i-a83t-dw-hdmi";
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -72,6 +105,12 @@
+ 	status = "okay";
+ };
+ 
++&pwm {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm_pin>;
++	status = "okay";
++};
++
+ &r_rsb {
+ 	status = "okay";
+ 
 -- 
 2.18.0.321.gffc6fa0e3
