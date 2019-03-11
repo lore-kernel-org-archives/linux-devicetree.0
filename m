@@ -1,59 +1,35 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v8 02/15] drm/sun4i: tcon: Compute DCLK dividers based on
- format, lanes
-Date: Mon, 11 Mar 2019 21:36:27 +0530
-Message-ID: <CAMty3ZChz=s7gdQyX9KnsAp1t5FrpouXGK74-r0SKJ89yJN67Q@mail.gmail.com>
-References: <20190311133637.18334-1-jagan@amarulasolutions.com>
- <20190311133637.18334-3-jagan@amarulasolutions.com> <20190311153847.oz6ruqmptaq2befn@flea>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [V2 1/2] clk: imx6q: remove unsupported pll4_audio_div
+Date: Mon, 11 Mar 2019 13:38:48 -0300
+Message-ID: <CAOMZO5B9rYwRu=xa4W1+oB=zbjyMOuqrKxRDqwcviCF_94ebXA@mail.gmail.com>
+References: <1552304271.2453.12.camel@pengutronix.de> <1552319997-24622-1-git-send-email-eric@nelint.com>
+ <1552319997-24622-2-git-send-email-eric@nelint.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190311153847.oz6ruqmptaq2befn@flea>
+In-Reply-To: <1552319997-24622-2-git-send-email-eric@nelint.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-sunxi <linux-sunxi@googlegroups.com>
+To: Eric Nelson <eric@nelint.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Yongcai Huang <anson.huang@nxp.com>, Colin Didier <colin.didier@devialet.com>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, NXP Linux Team <linux-imx@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>, tiny.windzz@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 9:08 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+On Mon, Mar 11, 2019 at 1:02 PM Eric Nelson <eric@nelint.com> wrote:
 >
-> On Mon, Mar 11, 2019 at 07:06:24PM +0530, Jagan Teki wrote:
-> > pll-video => pll-mipi => tcon0 => tcon0-pixel-clock is the typical
-> > MIPI clock topology in Allwinner DSI controller.
-> >
-> > TCON dotclock driver is computing the desired DCLK divider based on
-> > panel pixel clock along with input DCLK min, max divider values from
-> > tcon driver and that would eventually set the pll-mipi clock rate.
-> >
-> > The current code allows the TCON clock divider to have a default 4
-> > for min, max ranges that would fail to compute the desired pll-mipi
-> > rate while supporting new panels.
-> >
-> > So, add the computation logic 'format/lanes' to dclk min and max dividers
-> > and instead of default 4. This computation logic align with Allwinner A64
-> > BSP, hoping that would work even for A33.
+> The pll4_audio_div attempted to reflect one bit of a two-bit
+> divisor (AUDIO_DIV_LSB) in the CCM_ANALOG_MISC2 register.
 >
-> Last time we discussed this, we found out that this wasn't the case,
-> even in the BSP.
-
-This was the case for BSP to compute pll-mipi not for TCON_DSI clock
-register, SUN4I_TCON0_DCLK_REG, which marked the divider 4 by default.
-
+> Unfortunately, this divisor is non-functional at least on the
+> latest silicon revisions and has been removed from the reference
+> manual.
 >
-> What compelling evidence have you found that makes you say otherwise?
+> This is discussed in this NXP Community thread:
+>
+>     https://community.nxp.com/thread/462806
+>
+> Remove the definition of pll4_audio_div to reflect this and
+> reparent the ssi, cko1, and ESAI/ASRC/SPDIF clocks to the
+> pll4_post_div clock.
+>
+> Signed-off-by: Eric Nelson <eric@nelint.com>
 
-divider 4 isn't worked, this I would mentioned before as well.
-
-Tested this on 4 different panels, and below are the desired divider values
-and pll-mipi clock rate with respect to pixel clock frequency.
-
-- 55MHz pixel clock with 4-lane panel, and the desired DSI clock divider
-  is 6 with the output parent clock rate of 330MHz.
-- 30MHz pixel clock with 4-lane panel, and the desired DSI clock divider
-  is 6 with parent clock rate of 180MHz.
-- 27.5Mhz pixel clock with 2-lane pane, and the desired DSI clock divider
-  is 12 with the output parent clock rate of 330MHz.
-- 147MHz pixel clock with 4-lane panel, and the desired DSI clock divider
-  is 6 with the output parent clock rate of 882MHz.
-
-BSP trying to use this format/lane to compute dsi divider that in-turn
-using pll-mipi set_rate but TCON0_DCLK_REG keep constant 4.
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
