@@ -1,97 +1,41 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH 1/5] dt-bindings: connector: add optional properties for
- Type-B
-Date: Mon, 11 Mar 2019 13:33:03 +0800
-Message-ID: <1552282383.10179.21.camel@mhfsdcap03>
+Subject: Re: [PATCH 3/5] usb: roles: add API to get usb_role_switch by node
+Date: Mon, 11 Mar 2019 13:36:55 +0800
+Message-ID: <1552282615.10179.25.camel@mhfsdcap03>
 References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
-         <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
+         <1552025622-15582-4-git-send-email-chunfeng.yun@mediatek.com>
+         <CAHp75VeW+NoaGQCnfMcZSz67V68ykRMO=BG9_U6NFODJ5g=1FA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
+In-Reply-To: <CAHp75VeW+NoaGQCnfMcZSz67V68ykRMO=BG9_U6NFODJ5g=1FA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Min Guo <min.guo@mediatek.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, USB <linux-usb@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Fri, 2019-03-08 at 13:07 +0100, Hans de Goede wrote:
-> Hi,
+On Fri, 2019-03-08 at 08:52 +0200, Andy Shevchenko wrote:
+> On Fri, Mar 8, 2019 at 8:14 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+> >
+> > Add usb_role_switch_get_by_node() to make easier to get
+> > usb_role_switch by node which register it.
+> > It's useful when there is not device_connection registered
+> > between two drivers and only knows the node which register
+> > usb_role_switch.
 > 
-> On 08-03-19 07:13, Chunfeng Yun wrote:
-> > Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
-> > usb-b-connector
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> >   .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
-> >   1 file changed, 10 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> > index a9a2f2fc44f2..7a07b0f4f973 100644
-> > --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
-> > +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> > @@ -17,6 +17,16 @@ Optional properties:
-> >   - self-powered: Set this property if the usb device that has its own power
-> >     source.
-> >   
-> > +Optional properties for usb-b-connector:
-> > +- id-gpios: gpio for USB ID pin.
+> > +static int __switch_match_node(struct device *dev, const void *node)
+> > +{
+> > +       return dev->parent->of_node == (const struct device_node *)node;
+> > +}
 > 
-> What about boards where the ID pin is *not* connected to a GPIO,
-> but e.g. to a special pin on the PMIC which can also detect
-> an ACA adapter ? Currently this case is handled by extcon
-> drivers, but we have no way to set e.g. vbus-supply for the
-> connector. Maybe in this case the usb-connector node should
-> be a child of the PMIC node ?
-Yes, it would be, PMIC is in charger of detecting the status of ID pin
+> Hmm... Shouldn't be slightly better to compare fwnode instead?
 > 
-> And in many cases there also is a mux to switch the datalines
-> between the host and device(gadget) controllers, how should
-> that be described in this model?  See the new usb-role-switch
-> code under drivers/usb/roles
-> 
-> In some cases the mux is controlled through a gpio, so we
-> may want to add a "mux-gpios" here in which case we also
-> need to define what 0/1 means.
-I'm not sure, the mux seems not belong to this connector,
-and may need another driver to register usb-role-switch,
-similar to:
+Using fwnode is indeed suitable for more cases,
+I find that there are many functions named xx_by_node using node, but
+not fwnode, is there any rules about choice between device_node and
+fwnode_handle?
 
-[v2,2/2] usb: typec: add typec switch via GPIO control
-https://patchwork.kernel.org/patch/10834327/
-
-
-> 
-> > +- vbus-gpios: gpio for USB VBUS pin.
-> > +  see gpio/gpio.txt.
-> > +- vbus-supply: reference to the VBUS regulator, needed when supports
-> > +  dual-role mode.
-> 
-> I think this needs some text that there can be either a vbus-gpio or
-> a vbus-supply. Oh wait reading:
-> 
-> https://patchwork.kernel.org/patch/10819377/
-> 
-> I see that this GPIO is for detecting vbus presence, not for driving/enabling
-> 5v to Vbus from the board, that needs to be described more clearly.
-Ok
-
-Thanks a lot
-> 
-> > +- pinctrl-names : a pinctrl state named "default" is optional
-> > +- pinctrl-0 : pin control group
-> > +  see pinctrl/pinctrl-bindings.txt
-> > +
-> >   Optional properties for usb-c-connector:
-> >   - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
-> >     connector has power support.
-> > 
-> 
-> 
-> Regards,
-> 
-> Hans
+Thanks
