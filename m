@@ -1,42 +1,33 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [5.2][PATCH 0/3] Ingenic JZ47xx KMS driver
-Date: Mon, 11 Mar 2019 12:45:05 +0100
-Message-ID: <1552304705.1929.0@crapouillou.net>
-References: <20190228220756.20262-1-paul@crapouillou.net>
-        <fce3f17981cda6a263abcce6b2902591e7984fa4.camel@collabora.com>
+From: Gareth Williams <gareth.williams.jx@renesas.com>
+Subject: RE: [PATCH 1/2] dt: snps,dw-apb-ssi: Add clock bindings documentation
+Date: Mon, 11 Mar 2019 11:50:55 +0000
+Message-ID: <TYAPR01MB401574D8B0996378DCD5DC97DF480@TYAPR01MB4015.jpnprd01.prod.outlook.com>
+References: <1551360342-23981-1-git-send-email-gareth.williams.jx@renesas.com>
+ <1551360342-23981-2-git-send-email-gareth.williams.jx@renesas.com>
+ <20190303233145.GN23441@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fce3f17981cda6a263abcce6b2902591e7984fa4.camel@collabora.com>
+In-Reply-To: <20190303233145.GN23441@sirena.org.uk>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel@collabora.com>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ezequiel,
+> On Sat, Mar 03, 2019 at 23:32 +0100, Mark Brown wrote:
+> > On Thu, Feb 28, 2019 at 01:25:41PM +0000, Gareth Williams wrote:
+> > From: Phil Edworthy <phil.edworthy@renesas.com>
+> >
+> > The driver requires a clock property, so detail it in the docs.
+> > Fix a typo, 'pis' to 'pins'.
+> > Add documentation for a separate, optional, interface clock.
+>=20
+> Please use subject lines matching the style for the subsystem.  This make=
+s it
+> easier for people to identify relevant patches.
 
-On Mon, Mar 11, 2019 at 1:02 AM, Ezequiel Garcia 
-<ezequiel@collabora.com> wrote:
-> On Thu, 2019-02-28 at 19:07 -0300, Paul Cercueil wrote:
->>  Hi,
->> 
->>  This is a first attempt at a KMS driver for the JZ47xx MIPS SoCs by
->>  Ingenic. It is aimed to replace the aging jz4740-fb driver.
->> 
->>  The driver will later be updated with new features (overlays, TV-out
->>  etc.), that's why I didn't go with the simple/tiny DRM driver.
->> 
->>  The driver has been tested on the Ben Nanonote (JZ4740) and the
->>  RetroMini RS-90 (JZ4725B) handheld gaming console.
->> 
-> 
-> Does this support JZ4780? Or otherwise,
-> is there any similarity with JZ4780 display controller?
-> 
-> Thanks,
-> Eze
-
-The JZ4780 LCD controller would in theory work with this driver, but
-to test on the CI20 you'd need to add support for HDMI first.
-
--Paul
+Thanks for the feedback Mark.
+I will wait another week to see if there is any other feedback before sendi=
+ng an updated version of this patch series.
