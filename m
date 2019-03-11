@@ -1,49 +1,117 @@
-From: Pi-Hsun Shih <pihsun@chromium.org>
-Subject: [PATCH v6 5/7] dt-bindings: Add binding for cros-ec-rpmsg.
-Date: Mon, 11 Mar 2019 14:34:56 +0800
-Message-ID: <20190311063458.137473-6-pihsun@chromium.org>
-References: <20190311063458.137473-1-pihsun@chromium.org>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: RE: [PATCH 1/5] dt-bindings: connector: add optional properties for
+ Type-B
+Date: Mon, 11 Mar 2019 14:43:36 +0800
+Message-ID: <1552286616.10179.29.camel@mhfsdcap03>
+References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
+ <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
+ <1552282383.10179.21.camel@mhfsdcap03>
+ <VI1PR04MB45586752BAEEDBB3F979E0BB89480@VI1PR04MB4558.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190311063458.137473-1-pihsun@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Pi-Hsun Shih <pihsun@chromium.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Guenter Roeck <groeck@chromium.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <VI1PR04MB45586752BAEEDBB3F979E0BB89480@VI1PR04MB4558.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jun Li <jun.li@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Badhri Jagan Sridharan <badhri@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Min Guo <min.guo@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a DT binding documentation for ChromeOS EC driver over rpmsg.
-
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
----
-Changes from v5:
- - New patch.
----
- Documentation/devicetree/bindings/mfd/cros-ec.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-index 6245c9b1a68b..4860eabd0f72 100644
---- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
-+++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-@@ -3,7 +3,7 @@ ChromeOS Embedded Controller
- Google's ChromeOS EC is a Cortex-M device which talks to the AP and
- implements various function such as keyboard and battery charging.
- 
--The EC can be connect through various means (I2C, SPI, LPC) and the
-+The EC can be connect through various means (I2C, SPI, LPC, RPMSG) and the
- compatible string used depends on the interface. Each connection method has
- its own driver which connects to the top level interface-agnostic EC driver.
- Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connect to
-@@ -17,6 +17,9 @@ Required properties (SPI):
- - compatible: "google,cros-ec-spi"
- - reg: SPI chip select
- 
-+Required properties (RPMSG):
-+- compatible: "google,cros-ec-rpmsg"
-+
- Optional properties (SPI):
- - google,cros-ec-spi-pre-delay: Some implementations of the EC need a little
-   time to wake up from sleep before they can receive SPI transfers at a high
--- 
-2.21.0.360.g471c308f928-goog
+SGkgSnVuLApPbiBNb24sIDIwMTktMDMtMTEgYXQgMDY6MDYgKzAwMDAsIEp1biBMaSB3cm90ZToK
+PiAKPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4gPiBGcm9tOiBDaHVuZmVuZyBZdW4g
+PGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+Cj4gPiBTZW50OiAyMDE55bm0M+aciDEx5pelIDEz
+OjMzCj4gPiBUbzogSGFucyBkZSBHb2VkZSA8aGRlZ29lZGVAcmVkaGF0LmNvbT4KPiA+IENjOiBS
+b2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgR3JlZyBLcm9haC1IYXJ0bWFuCj4gPiA8
+Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBIZWlra2kgS3JvZ2VydXMKPiA+IDxoZWlra2ku
+a3JvZ2VydXNAbGludXguaW50ZWwuY29tPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJt
+LmNvbT47Cj4gPiBNYXR0aGlhcyBCcnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPjsgQWRh
+bSBUaG9tc29uCj4gPiA8QWRhbS5UaG9tc29uLk9wZW5zb3VyY2VAZGlhc2VtaS5jb20+OyBKdW4g
+TGkgPGp1bi5saUBueHAuY29tPjsgQmFkaHJpCj4gPiBKYWdhbiBTcmlkaGFyYW4gPGJhZGhyaUBn
+b29nbGUuY29tPjsgQW5keSBTaGV2Y2hlbmtvCj4gPiA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNv
+bT47IE1pbiBHdW8gPG1pbi5ndW9AbWVkaWF0ZWsuY29tPjsKPiA+IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOwo+ID4gbGludXgtdXNiQHZn
+ZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOwo+ID4g
+bGludXgtbWVkaWF0ZWtAbGlzdHMuaW5mcmFkZWFkLm9yZwo+ID4gU3ViamVjdDogUmU6IFtQQVRD
+SCAxLzVdIGR0LWJpbmRpbmdzOiBjb25uZWN0b3I6IGFkZCBvcHRpb25hbCBwcm9wZXJ0aWVzIGZv
+cgo+ID4gVHlwZS1CCj4gPiAKPiA+IEhpLAo+ID4gCj4gPiBPbiBGcmksIDIwMTktMDMtMDggYXQg
+MTM6MDcgKzAxMDAsIEhhbnMgZGUgR29lZGUgd3JvdGU6Cj4gPiA+IEhpLAo+ID4gPgo+ID4gPiBP
+biAwOC0wMy0xOSAwNzoxMywgQ2h1bmZlbmcgWXVuIHdyb3RlOgo+ID4gPiA+IEFkZCBpZC1ncGlv
+cywgdmJ1cy1ncGlvcywgdmJ1cy1zdXBwbHkgYW5kIHBpbmN0cmwgcHJvcGVydGllcyBmb3IKPiA+
+ID4gPiB1c2ItYi1jb25uZWN0b3IKPiA+ID4gPgo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IENodW5m
+ZW5nIFl1biA8Y2h1bmZlbmcueXVuQG1lZGlhdGVrLmNvbT4KPiA+ID4gPiAtLS0KPiA+ID4gPiAg
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nvbm5lY3Rvci91c2ItY29ubmVjdG9yLnR4dCAgICB8
+IDEwICsrKysrKysrKysKPiA+ID4gPiAgIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCsp
+Cj4gPiA+ID4KPiA+ID4gPiBkaWZmIC0tZ2l0Cj4gPiA+ID4gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvY29ubmVjdG9yL3VzYi1jb25uZWN0b3IudHh0Cj4gPiA+ID4gYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY29ubmVjdG9yL3VzYi1jb25uZWN0b3IudHh0
+Cj4gPiA+ID4gaW5kZXggYTlhMmYyZmM0NGYyLi43YTA3YjBmNGY5NzMgMTAwNjQ0Cj4gPiA+ID4g
+LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nvbm5lY3Rvci91c2ItY29u
+bmVjdG9yLnR4dAo+ID4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9jb25uZWN0b3IvdXNiLWNvbm5lY3Rvci50eHQKPiA+ID4gPiBAQCAtMTcsNiArMTcsMTYgQEAg
+T3B0aW9uYWwgcHJvcGVydGllczoKPiA+ID4gPiAgIC0gc2VsZi1wb3dlcmVkOiBTZXQgdGhpcyBw
+cm9wZXJ0eSBpZiB0aGUgdXNiIGRldmljZSB0aGF0IGhhcyBpdHMgb3duIHBvd2VyCj4gPiA+ID4g
+ICAgIHNvdXJjZS4KPiA+ID4gPgo+ID4gPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciB1c2It
+Yi1jb25uZWN0b3I6Cj4gPiA+ID4gKy0gaWQtZ3Bpb3M6IGdwaW8gZm9yIFVTQiBJRCBwaW4uCj4g
+PiA+Cj4gPiA+IFdoYXQgYWJvdXQgYm9hcmRzIHdoZXJlIHRoZSBJRCBwaW4gaXMgKm5vdCogY29u
+bmVjdGVkIHRvIGEgR1BJTywgYnV0Cj4gPiA+IGUuZy4gdG8gYSBzcGVjaWFsIHBpbiBvbiB0aGUg
+UE1JQyB3aGljaCBjYW4gYWxzbyBkZXRlY3QgYW4gQUNBIGFkYXB0ZXIKPiA+ID4gPyBDdXJyZW50
+bHkgdGhpcyBjYXNlIGlzIGhhbmRsZWQgYnkgZXh0Y29uIGRyaXZlcnMsIGJ1dCB3ZSBoYXZlIG5v
+IHdheQo+ID4gPiB0byBzZXQgZS5nLiB2YnVzLXN1cHBseSBmb3IgdGhlIGNvbm5lY3Rvci4gTWF5
+YmUgaW4gdGhpcyBjYXNlIHRoZQo+ID4gPiB1c2ItY29ubmVjdG9yIG5vZGUgc2hvdWxkIGJlIGEg
+Y2hpbGQgb2YgdGhlIFBNSUMgbm9kZSA/Cj4gPiBZZXMsIGl0IHdvdWxkIGJlLCBQTUlDIGlzIGlu
+IGNoYXJnZXIgb2YgZGV0ZWN0aW5nIHRoZSBzdGF0dXMgb2YgSUQgcGluCj4gPiA+Cj4gPiA+IEFu
+ZCBpbiBtYW55IGNhc2VzIHRoZXJlIGFsc28gaXMgYSBtdXggdG8gc3dpdGNoIHRoZSBkYXRhbGlu
+ZXMgYmV0d2Vlbgo+ID4gPiB0aGUgaG9zdCBhbmQgZGV2aWNlKGdhZGdldCkgY29udHJvbGxlcnMs
+IGhvdyBzaG91bGQgdGhhdCBiZSBkZXNjcmliZWQKPiA+ID4gaW4gdGhpcyBtb2RlbD8gIFNlZSB0
+aGUgbmV3IHVzYi1yb2xlLXN3aXRjaCBjb2RlIHVuZGVyCj4gPiA+IGRyaXZlcnMvdXNiL3JvbGVz
+Cj4gPiA+Cj4gPiA+IEluIHNvbWUgY2FzZXMgdGhlIG11eCBpcyBjb250cm9sbGVkIHRocm91Z2gg
+YSBncGlvLCBzbyB3ZSBtYXkgd2FudCB0bwo+ID4gPiBhZGQgYSAibXV4LWdwaW9zIiBoZXJlIGlu
+IHdoaWNoIGNhc2Ugd2UgYWxzbyBuZWVkIHRvIGRlZmluZSB3aGF0IDAvMQo+ID4gPiBtZWFucy4K
+PiA+IEknbSBub3Qgc3VyZSwgdGhlIG11eCBzZWVtcyBub3QgYmVsb25nIHRvIHRoaXMgY29ubmVj
+dG9yLCBhbmQgbWF5IG5lZWQgYW5vdGhlcgo+ID4gZHJpdmVyIHRvIHJlZ2lzdGVyIHVzYi1yb2xl
+LXN3aXRjaCwgc2ltaWxhciB0bzoKPiA+IAo+ID4gW3YyLDIvMl0gdXNiOiB0eXBlYzogYWRkIHR5
+cGVjIHN3aXRjaCB2aWEgR1BJTyBjb250cm9sCj4gPiBodHRwczovL2VtZWEwMS5zYWZlbGlua3Mu
+cHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGcGF0Y2h3b3JrCj4gPiAu
+a2VybmVsLm9yZyUyRnBhdGNoJTJGMTA4MzQzMjclMkYmYW1wO2RhdGE9MDIlN0MwMSU3Q2p1bi5s
+aSU0MG54cC5jbwo+ID4gbSU3Qzk2M2RmNjJlMTVlZDRiZWRiMTRkMDhkNmE1ZTMwZGUyJTdDNjg2
+ZWExZDNiYzJiNGM2ZmE5MmNkOTljNQo+ID4gYzMwMTYzNSU3QzAlN0MwJTdDNjM2ODc4NzkxOTUz
+MTIyNzYwJmFtcDtzZGF0YT1nclBJczJNYmRhYXJUYTE3ZHIKPiA+IHBBU1ZrR3B5VzdUQWV4QjI0
+aWdPSm9wR1UlM0QmYW1wO3Jlc2VydmVkPTAKPiA+IAo+IAo+IE5vLCB0aGlzIGlzIG5vdCBmb3Ig
+dXNiIHJvbGUgc3dpdGNoLCB0aGlzIGlzIGEgdHlwZWMgc3dpdGNoIGRyaXZlciB0byBzZWxlY3Qg
+dGhlIHN1cGVyIHNwZWVkCj4gYWN0aXZlIGNoYW5uZWwgYnkgb3JpZW50YXRpb24oQ0MxL0NDMiku
+CkdvdCBpdCwgaXQncyBqdXN0IGFuIGFuYWxvZ3k6KQo+IAo+IExpIEp1bgo+ID4gCj4gPiA+Cj4g
+PiA+ID4gKy0gdmJ1cy1ncGlvczogZ3BpbyBmb3IgVVNCIFZCVVMgcGluLgo+ID4gPiA+ICsgIHNl
+ZSBncGlvL2dwaW8udHh0Lgo+ID4gPiA+ICstIHZidXMtc3VwcGx5OiByZWZlcmVuY2UgdG8gdGhl
+IFZCVVMgcmVndWxhdG9yLCBuZWVkZWQgd2hlbgo+ID4gPiA+ICtzdXBwb3J0cwo+ID4gPiA+ICsg
+IGR1YWwtcm9sZSBtb2RlLgo+ID4gPgo+ID4gPiBJIHRoaW5rIHRoaXMgbmVlZHMgc29tZSB0ZXh0
+IHRoYXQgdGhlcmUgY2FuIGJlIGVpdGhlciBhIHZidXMtZ3BpbyBvciBhCj4gPiA+IHZidXMtc3Vw
+cGx5LiBPaCB3YWl0IHJlYWRpbmc6Cj4gPiA+Cj4gPiA+IGh0dHBzOi8vZW1lYTAxLnNhZmVsaW5r
+cy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZwYXQKPiA+ID4KPiA+
+IGNod29yay5rZXJuZWwub3JnJTJGcGF0Y2glMkYxMDgxOTM3NyUyRiZhbXA7ZGF0YT0wMiU3QzAx
+JTdDanVuLmxpJTQKPiA+IDBueAo+ID4gPgo+ID4gcC5jb20lN0M5NjNkZjYyZTE1ZWQ0YmVkYjE0
+ZDA4ZDZhNWUzMGRlMiU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDkKPiA+IDljNWMzCj4gPiA+Cj4g
+PiAwMTYzNSU3QzAlN0MwJTdDNjM2ODc4NzkxOTUzMTIyNzYwJmFtcDtzZGF0YT1KdWR6N2dkd1FU
+T0M3Smg4NAo+ID4gNTdONHgyMWEKPiA+ID4gZldjaSUyRkVINzlBUnFXWnpiWDglM0QmYW1wO3Jl
+c2VydmVkPTAKPiA+ID4KPiA+ID4gSSBzZWUgdGhhdCB0aGlzIEdQSU8gaXMgZm9yIGRldGVjdGlu
+ZyB2YnVzIHByZXNlbmNlLCBub3QgZm9yCj4gPiA+IGRyaXZpbmcvZW5hYmxpbmcgNXYgdG8gVmJ1
+cyBmcm9tIHRoZSBib2FyZCwgdGhhdCBuZWVkcyB0byBiZSBkZXNjcmliZWQgbW9yZQo+ID4gY2xl
+YXJseS4KPiA+IE9rCj4gPiAKPiA+IFRoYW5rcyBhIGxvdAo+ID4gPgo+ID4gPiA+ICstIHBpbmN0
+cmwtbmFtZXMgOiBhIHBpbmN0cmwgc3RhdGUgbmFtZWQgImRlZmF1bHQiIGlzIG9wdGlvbmFsCj4g
+PiA+ID4gKy0gcGluY3RybC0wIDogcGluIGNvbnRyb2wgZ3JvdXAKPiA+ID4gPiArICBzZWUgcGlu
+Y3RybC9waW5jdHJsLWJpbmRpbmdzLnR4dAo+ID4gPiA+ICsKPiA+ID4gPiAgIE9wdGlvbmFsIHBy
+b3BlcnRpZXMgZm9yIHVzYi1jLWNvbm5lY3RvcjoKPiA+ID4gPiAgIC0gcG93ZXItcm9sZTogc2hv
+dWxkIGJlIG9uZSBvZiAic291cmNlIiwgInNpbmsiIG9yICJkdWFsIihEUlApIGlmIHR5cGVjCj4g
+PiA+ID4gICAgIGNvbm5lY3RvciBoYXMgcG93ZXIgc3VwcG9ydC4KPiA+ID4gPgo+ID4gPgo+ID4g
+Pgo+ID4gPiBSZWdhcmRzLAo+ID4gPgo+ID4gPiBIYW5zCj4gPiAKPiAKCgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
+aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
