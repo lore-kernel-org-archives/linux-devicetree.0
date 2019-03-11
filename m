@@ -1,59 +1,110 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RESEND V2 1/4] dt-bindings: fsl: scu: add watchdog binding
-Date: Mon, 11 Mar 2019 16:26:16 -0500
-Message-ID: <CAL_JsqJiKx8UvZ8qu-YaaPooLbSMKANSX=YZQO=Nm_anD2v9gw@mail.gmail.com>
-References: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
- <1550472539-16590-2-git-send-email-Anson.Huang@nxp.com> <20190222195217.GA22194@bogus>
- <bb19470c-1590-f8dd-72e6-b382444d7902@roeck-us.net> <DB3PR0402MB3916912A64AF0837A9649913F5790@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <96932b3e-87f1-d8f2-95bc-0e9a8d5d45ed@roeck-us.net> <DB3PR0402MB391659B6A466B1D85114E9C9F57A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAL_JsqJV9NxpOJi3Jh2Uk-TOmOL4rWwqZp3sodxsRinAHZ3m3w@mail.gmail.com> <AM0PR04MB4211EAEA6F03465D372B0B4F804C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: phy: Add Stingray USB PHY binding document
+Date: Mon, 11 Mar 2019 16:30:24 -0500
+Message-ID: <CAL_JsqLnuERhPXFuLcBpUMn-g4=nQU5T6fNed6jxF1kY5WBzRw@mail.gmail.com>
+References: <1550658842-19167-1-git-send-email-srinath.mannam@broadcom.com>
+ <1550658842-19167-2-git-send-email-srinath.mannam@broadcom.com>
+ <20190222172042.GA6792@bogus> <CABe79T5SqQJhF0GY06-+-aSCV-ya-RODEeV0DLg0Poupjeq+fA@mail.gmail.com>
+ <CAL_JsqKyYoc3wLWGhbBdQxn=1NLhGbxfB2sUZUXm13_YTEyTGw@mail.gmail.com> <CABe79T7LQFf9J67P=eo0sAn6oJ10ovciR4o3_Z_K=6NLjtyr3A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM0PR04MB4211EAEA6F03465D372B0B4F804C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+In-Reply-To: <CABe79T7LQFf9J67P=eo0sAn6oJ10ovciR4o3_Z_K=6NLjtyr3A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aisheng Dong <aisheng.dong@nxp.com>
-Cc: Anson Huang <anson.huang@nxp.com>, Guenter Roeck <linux@roeck-us.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "festevam@gmail.com" <festevam@gmail.com>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, Andy Gross <andy.gross@linaro.org>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, s.hauer@pengutronix.
+To: Srinath Mannam <srinath.mannam@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Tejun Heo <tj@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-+Jens W
-
-On Thu, Mar 7, 2019 at 6:22 AM Aisheng Dong <aisheng.dong@nxp.com> wrote:
+On Sun, Mar 10, 2019 at 10:32 PM Srinath Mannam
+<srinath.mannam@broadcom.com> wrote:
 >
 > Hi Rob,
 >
-> > > > I think Rob suggested that the SCU parent driver should instantiate
-> > > > the watchdog without explicit watchdog node. That would be possible,
-> > > > but it currently uses
-> > > > devm_of_platform_populate() to do the instantiation, and changing
-> > > > that would be a mess. Besides, it does sem to me that your suggested
-> > > > node would describe the hardware, so I am not sure I understand the
-> > reasoning.
-> >
-> > It would just be a call to create a platform device instead. How is that a mess?
-> >
-> > It's describing firmware. We have DT for describing h/w we've failed to make
-> > discoverable. We should not repeat that and just describe firmware in DT.
-> > Make the firmware discoverable! Though there are cases like firmware
-> > provided clocks where we still need something in DT, but this is not one of
-> > them.
-> >
+> Please find my comments below,
 >
-> The watchdog node here in question actually is not using SCU firmware call.
-> Due to security requirement by SCU, watchdog can only be accessed in
-> security mode, for IMX case, via ARM Trust Firmware. That means the
-> watchdog used in Linux actually is using ARM SMC call and does not
-> depend SCU driver. So It would be strange for SCU driver to instantiate it.
->
-> For this situation, do you think we can move watchdog out of scu node?
-> Maybe rename the compatible string like "fsl,imx8qxp-sip-watchdog"
-> because it's actually a watchdog serviced by ATF firmware.
+> On Sat, Feb 23, 2019 at 1:05 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Fri, Feb 22, 2019 at 11:29 AM Srinath Mannam
+> > <srinath.mannam@broadcom.com> wrote:
+> > >
+> > > Hi Rob,
+> > >
+> > > Thanks for the review, Please find my comments below in line.
+> > >
+> > > On Fri, Feb 22, 2019 at 10:50 PM Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > On Wed, Feb 20, 2019 at 04:04:00PM +0530, Srinath Mannam wrote:
+> > > > > Add DT binding document for Stingray USB PHY.
+> > > > >
+> > > > > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> > > > > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> > > > > Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+> > > > > ---
+> > > > >  .../bindings/phy/brcm,stingray-usb-phy.txt         | 62 ++++++++++++++++++++++
+> > > > >  1 file changed, 62 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> > > > > new file mode 100644
+> > > > > index 0000000..da19236
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> > > > > @@ -0,0 +1,62 @@
+> > > > > +Broadcom Stingray USB PHY
+> > > > > +
+> > > > > +Required properties:
+> > > > > + - compatible : should be one of the listed compatibles
+> > > > > +     - "brcm,sr-usb-combo-phy" is a combo PHY has one SS PHY and one HS PHY.
+> > > > > +     - "brcm,sr-usb-hs-phy" has a single HS PHY.
+> > > > > + - reg: offset and length of the PHY blocks registers
+> > > > > + - address-cells: should be 1
+> > > > > + - size-cells: should be 0
+> > > > > +
+> > > > > +Sub-nodes:
+> > > > > +  brcm,sr-usb-combo-phy have two sub-nodes for one SS PHY and one HS PHY.
+> > > > > +
+> > > > > +Sub-nodes required properties:
+> > > > > + - reg: required for brcm,sr-usb-phy model PHY.
+> > > > > +     reg value 0 is HS PHY and 1 is SS PHY.
+> > > > > + - phy-cells: generic PHY binding; must be 0
+> > > > > +
+> > > > > +Refer to phy/phy-bindings.txt for the generic PHY binding properties
+> > > > > +
+> > > > > +Example:
+> > > > > +     usbphy0: usb-phy@0 {
+> > > > > +             compatible = "brcm,sr-usb-combo-phy";
+> > > > > +             reg = <0x00000000 0x100>;
+> > > > > +             #address-cells = <1>;
+> > > > > +             #size-cells = <0>;
+> > > > > +
+> > > > > +             usb0_phy0: phy@0 {
+> > > > > +                     reg = <0>;
+> > > > > +                     #phy-cells = <0>;
+> > > > > +             };
+> > > > > +
+> > > > > +             usb0_phy1: phy@1 {
+> > > > > +                     reg = <1>;
+> > > > > +                     #phy-cells = <0>;
+> > > > > +             };
+> > > >
+> > > > Again, you don't need child nodes here. There are not any per child
+> > > > resources. Clients can refer to <&usbphy0 1> just as easily as
+> > > > <&usb0_phy1>. This is why we have #phy-cells.
+> > > This phy controller is combo PHY it has one Super Speed USB PHY and
+> > > one High Speed USB PHY.
+> > > We required to create two PHY devices inside driver to initialize and
+> > > service(reset) both SS and HS PHYs separately.
+> > > That is the reason we used two child nodes.
+> >
+> > What you do in the driver is your business. That is independent of the
+> > binding. Go look at other phy drivers which use #phy-cells=1.
+> > .of_xlate() function is what converts the phy cells to a struct phy.
+> >
+> I have followed exactly same pattern available in open source.
+> ex: Documentation/devicetree/bindings/phy/brcm-sata-phy.txt
+> In this also, two child nodes are used with #phy-cells 0.
 
-Yes, but that creates more questions. What exactly does ATF talk to
-for the watchdog? The SCU firmware?
-
-Maybe ATF should define and provide a standard watchdog interface? It
-is still a question of making the firmware discoverable rather than
-trying to describe the firmware in DT.
+You'll notice DT maintainers did not review that binding (only changes
+to it). There's no shortage of DT examples of how not to do things.
 
 Rob
