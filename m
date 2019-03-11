@@ -1,91 +1,77 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 2/3] clk: imx8mq: add hdmi_phy_27m clock as pll's
- reference clock
-Date: Mon, 11 Mar 2019 14:02:06 +0100
-Message-ID: <1552309326.2453.14.camel@pengutronix.de>
-References: <1551929772-22633-1-git-send-email-Anson.Huang@nxp.com>
-         <1551929772-22633-2-git-send-email-Anson.Huang@nxp.com>
-         <1551960333.9298.37.camel@pengutronix.de>
-         <DB3PR0402MB391694C610CA6B7027376E4CF54C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v8 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
+Date: Mon, 11 Mar 2019 14:29:22 +0100
+Message-ID: <20190311132922.iowselp7qvmroiaa@pengutronix.de>
+References: <1551437599-29509-1-git-send-email-yash.shah@sifive.com>
+ <1551437599-29509-3-git-send-email-yash.shah@sifive.com>
+ <20190307152745.kaiv6q4ygf2apmuv@pengutronix.de>
+ <CAJ2_jOFvr=sw7mWR53JbzMJa1jxwjhJSTibCsKYsxrht+PLPWw@mail.gmail.com>
+ <20190308115726.smgooacsr37fmxwg@pengutronix.de>
+ <CAJ2_jOFtg2_MAUYkTQM-=6KE2RN+FMxfEhLjZZfzM0k3A5RQiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB391694C610CA6B7027376E4CF54C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <CAJ2_jOFtg2_MAUYkTQM-=6KE2RN+FMxfEhLjZZfzM0k3A5RQiA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Abel Vesa <abel.vesa@nxp.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Yash Shah <yash.shah@sifive.com>
+Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 07.03.2019, 12:56 +0000 schrieb Anson Huang:
-> Hi, Lucas
-> 
-> Best Regards!
-> Anson Huang
-> 
-> > -----Original Message-----
-> > > > From: Lucas Stach [mailto:l.stach@pengutronix.de]
-> > Sent: 2019年3月7日 20:06
-> > > > > > To: Anson Huang <anson.huang@nxp.com>; shawnguo@kernel.org;
-> > > > s.hauer@pengutronix.de; kernel@pengutronix.de; Fabio Estevam
-> > > > > > > > <fabio.estevam@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
-> > > > mturquette@baylibre.com; sboyd@kernel.org; Abel Vesa
-> > > > > > <abel.vesa@nxp.com>; agx@sigxcpu.org; linux-arm-
-> > > > kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; linux-clk@vger.kernel.org
-> > > > Cc: dl-linux-imx <linux-imx@nxp.com>
-> > Subject: Re: [PATCH 2/3] clk: imx8mq: add hdmi_phy_27m clock as pll's
-> > reference clock
-> > 
-> > Am Donnerstag, den 07.03.2019, 03:41 +0000 schrieb Anson Huang:
-> > > There is another 27MHz OSC inside i.MX8MQ's display block and it can
-> > > be one of reference clocks of all PLLs, add it into clock tree and
-> > > also add it as PLL's reference clock.
-> > > 
-> > > > > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > ---
-> > >  drivers/clk/imx/clk-imx8mq.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/clk/imx/clk-imx8mq.c
-> > > b/drivers/clk/imx/clk-imx8mq.c index a9b3888..bb1bf9b 100644
-> > > --- a/drivers/clk/imx/clk-imx8mq.c
-> > > +++ b/drivers/clk/imx/clk-imx8mq.c
-> > > @@ -26,7 +26,7 @@ static u32 share_count_nand;
-> > > 
-> > >  static struct clk *clks[IMX8MQ_CLK_END];
-> > > 
-> > > -static const char * const pll_ref_sels[] = { "osc_25m", "osc_27m",
-> > > "dummy", "dummy", };
-> > > +static const char * const pll_ref_sels[] = { "osc_25m", "osc_27m",
-> > > +"osc_hdmi_phy_27m", "dummy", };
-> > >  static const char * const arm_pll_bypass_sels[] = {"arm_pll",
-> > > "arm_pll_ref_sel", };
-> > >  static const char * const gpu_pll_bypass_sels[] = {"gpu_pll",
-> > > "gpu_pll_ref_sel", };
-> > >  static const char * const vpu_pll_bypass_sels[] = {"vpu_pll",
-> > > "vpu_pll_ref_sel", }; @@ -281,6 +281,7 @@ static int
-> > 
-> > imx8mq_clocks_probe(struct platform_device *pdev)
-> > > > > >  	clks[IMX8MQ_CLK_32K] = of_clk_get_by_name(np, "ckil");
-> > > > > >  	clks[IMX8MQ_CLK_25M] = of_clk_get_by_name(np, "osc_25m");
-> > > > > >  	clks[IMX8MQ_CLK_27M] = of_clk_get_by_name(np, "osc_27m");
-> > > > > > +	clks[IMX8MQ_CLK_HDMI_PHY_27M] = of_clk_get_by_name(np,
-> > > +"osc_hdmi_phy_27m");
-> > 
-> > This is not acceptable. This adds a new required clock input, without
-> > bothering to add the corresponding binding information or thinking about
-> > backwards compatibility. At this point there are existing DTs out there, which
-> > don't provide this required clock, which will cause a full boot regression. This
-> > can only be an optional clock input at this point.
-> 
-> What do you think if we don't get such clock from DT? Just register this fixed clock
-> in clock driver directly, then there will be no dependency of DT.
+Hello,
 
-I don't think that's a good idea, as there can probably be use-cases
-where having the XTAL unpopulated is actually a valid system
-configuration, so not having this clock must be valid for the CCM
-driver.
+On Mon, Mar 11, 2019 at 05:10:17PM +0530, Yash Shah wrote:
+> On Fri, Mar 8, 2019 at 5:27 PM Uwe Kleine-K�nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Fri, Mar 08, 2019 at 04:59:36PM +0530, Yash Shah wrote:
+> > > On Thu, Mar 7, 2019 at 8:57 PM Uwe Kleine-K�nig
+> > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > > +     if (state->period != cur_state.period) {
+> > > >
+> > > > Did you test this with more than one consumer? For sure the following
+> > > > should work:
+> > > >
+> > > >         pwm1 = pwm_get(.. the first ..);
+> > > >         pwm_apply_state(pwm1, { .enabled = true, .period = 10000000, .... });
+> > > >
+> > > >         pwm2 = pwm_get(.. the second ..);
+> > > >         pwm_apply_state(pwm2, { .enabled = true, .period = 10000000, .... });
+> > > >
+> > > > but for the second pwm_apply_state() run state->period is likely not
+> > > > exactly 10000000.
+> > >
+> > > Yes, I have tested multiple consumers using sysfs interface. It is working.
+> >
+> > Can you provide details about your testing here? What is the parent clk
+> > rate? Which settings did you test? Can you confirm my claim that the
+> > above sequence would fail or point out my error in reasoning?
+> >
+> 
+> I have tested on HiFive Unleashed board using sysfs interface.
+> Parent clk rate is around 512 Mhz.
+> I have tested scenarios as you mentioned above with various period and
+> duty_cycle values.
+> 
+> After considering your below suggestion,
+>  | To get the result independent of the prior configuration you better use
+>  | the real targeted period length as input instead of the last configured
+>  | approximation
+> I will introduce approx_period feild, which will be used as the
+> targeted period length.
+> Also, in pwm_sifive_get_state, I will make below change
+> - state->period = pwm->real_period;
+> + state->period = pwm->approx_period.
+> So with this change in place, I believe the cur_state.period for the
+> second pwm_apply_state() above (pwm2) will be exactly 10000000
 
-Regards,
-Lucas
+I don't understand your intention completely. Just send a new patch
+round, then I will gladly take another look.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-K�nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
