@@ -1,51 +1,57 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 3/4] iio:temperature:max31856:Add device tree bind info
-Date: Mon, 11 Mar 2019 17:28:41 -0500
-Message-ID: <20190311222841.GA6024@bogus>
-References: <20190307103409.24174-1-patrick.havelange@essensium.com>
- <20190307103409.24174-3-patrick.havelange@essensium.com>
+Subject: Re: [PATCH v5 1/2] media: dt-bindings: media: xilinx: Add Xilinx
+ MIPI CSI-2 Rx Subsystem
+Date: Mon, 11 Mar 2019 17:41:40 -0500
+Message-ID: <20190311224140.GA23484@bogus>
+References: <1552297257-145919-1-git-send-email-vishal.sagar@xilinx.com>
+ <1552297257-145919-2-git-send-email-vishal.sagar@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190307103409.24174-3-patrick.havelange@essensium.com>
+In-Reply-To: <1552297257-145919-2-git-send-email-vishal.sagar@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, Matt Weber <matthew.weber@rockwellcollins.com>, Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Patrick Havelange <patrick.havelange@essensium.com>
+Cc: Hyun Kwon <hyunk@xilinx.com>, laurent.pinchart@ideasonboard.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dinesh Kumar <dineshk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>, Vishal Sagar <vishal.sagar@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  7 Mar 2019 11:34:08 +0100, Patrick Havelange wrote:
-> From: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
+On Mon, 11 Mar 2019 15:10:56 +0530, Vishal Sagar wrote:
+> Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
 > 
-> This patch added device tree binding info for MAX31856 driver.
+> The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
+> DPHY in Rx mode, an optional I2C controller and a Video Format Bridge.
 > 
-> Signed-off-by: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
-> Signed-off-by: Matt Weber <matthew.weber@rockwellcollins.com>
-> Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
+> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
 > ---
-> Changes
-> v1 -> v2
-> [Matt
->  - Removed comment block and added possibilities of
->    thermocouple type in device tree binding doc.
+> v5
+> - Incorporated comments by Luca Cersoli
+> - Removed DPHY clock from description and example
+> - Removed bayer pattern from device tree MIPI CSI IP
+>   doesn't deal with bayer pattern.
 > 
-> v2 -> v3
->  - Rebased
+> v4
+> - Added reviewed by Hyun Kwon
 > 
-> v3 -> v4
->  - Removed one-shot property related information.
->  - Used standard name 'temp-sensor'
+> v3
+> - removed interrupt parent as suggested by Rob
+> - removed dphy clock
+> - moved vfb to optional properties
+> - Added required and optional port properties section
+> - Added endpoint property section
 > 
-> v4 -> v5
-> [Patrick
->  - Rename thermocouple type to maxim,thermocouple-type for DT entry
+> v2
+> - updated the compatible string to latest version supported
+> - removed DPHY related parameters
+> - added CSI v2.0 related property (including VCX for supporting upto 16
+>   virtual channels).
+> - modified csi-pxl-format from string to unsigned int type where the value
+>   is as per the CSI specification
+> - Defined port 0 and port 1 as sink and source ports.
+> - Removed max-lanes property as suggested by Rob and Sakari
 > 
-> v5 -> v6
-> [Patrick
->  - use generic thermocouple-type for DT entry
-> ---
->  .../bindings/iio/temperature/max31856.txt     | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/temperature/max31856.txt
+>  .../bindings/media/xilinx/xlnx,csi2rxss.txt        | 118 +++++++++++++++++++++
+>  1 file changed, 118 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
