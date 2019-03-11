@@ -1,49 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 1/7] dt-bindings: Add a binding for Mediatek SCP
-Date: Mon, 11 Mar 2019 17:09:53 -0500
-Message-ID: <20190311220953.GA8432@bogus>
-References: <20190311063458.137473-1-pihsun@chromium.org>
- <20190311063458.137473-2-pihsun@chromium.org>
+Subject: Re: [PATCHv4 23/28] dt-bindings: pci: Add NXP Layerscape SoCs PCIe
+ Gen4  controller
+Date: Mon, 11 Mar 2019 17:11:42 -0500
+Message-ID: <20190311221142.GA11898@bogus>
+References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
+ <20190311093130.7209-24-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190311063458.137473-2-pihsun@chromium.org>
+In-Reply-To: <20190311093130.7209-24-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Pi-Hsun Shih <pihsun@chromium.org>, Erin Lo <erin.lo@mediatek.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 11 Mar 2019 14:34:52 +0800, Pi-Hsun Shih wrote:
-> From: Erin Lo <erin.lo@mediatek.com>
+On Mon, 11 Mar 2019 09:33:05 +0000, "Z.q. Hou" wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> Add a DT binding documentation of SCP for the
-> MT8183 SoC from Mediatek.
+> Add PCIe Gen4 controller DT bindings of NXP Layerscape SoCs.
 > 
-> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > ---
-> Changes from v5:
->  - Remove dependency on CONFIG_RPMSG_MTK_SCP.
+> V4:
+>  - no change
 > 
-> Changes from v4:
->  - Add detail of more properties.
->  - Document the usage of mtk,rpmsg-name in subnode from the new design.
-> 
-> Changes from v3:
->  - No change.
-> 
-> Changes from v2:
->  - No change. I realized that for this patch series, there's no need to
->    add anything under the mt8183-scp node (neither the mt8183-rpmsg or
->    the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
->    directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
->    created by SCP name service.
-> 
-> Changes from v1:
->  - No change.
-> ---
->  .../bindings/remoteproc/mtk,scp.txt           | 36 +++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+>  .../bindings/pci/layerscape-pci-gen4.txt      | 52 +++++++++++++++++++
+>  MAINTAINERS                                   |  8 +++
+>  2 files changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/layerscape-pci-gen4.txt
 > 
 
 Please add Acked-by/Reviewed-by tags when posting new versions. However,
