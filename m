@@ -1,64 +1,36 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v8 02/15] drm/sun4i: tcon: Compute DCLK dividers based on
- format, lanes
-Date: Mon, 11 Mar 2019 16:38:47 +0100
-Message-ID: <20190311153847.oz6ruqmptaq2befn@flea>
-References: <20190311133637.18334-1-jagan@amarulasolutions.com>
- <20190311133637.18334-3-jagan@amarulasolutions.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="unl66vzthkbzxsc5"
+From: Eric Nelson <eric@nelint.com>
+Subject: [V2 0/2] ARM: imx6qdl: remove PLL4_AUDIO_DIV clock
+Date: Mon, 11 Mar 2019 08:39:50 -0700
+Message-ID: <1552318792-22565-1-git-send-email-eric@nelint.com>
+References: <1552304271.2453.12.camel@pengutronix.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190311133637.18334-3-jagan@amarulasolutions.com>
+In-Reply-To: <1552304271.2453.12.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-sunxi@googlegroups.com
+To: devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: anson.huang@nxp.com, colin.didier@devialet.com, festevam@gmail.com, kernel@pengutronix.de, l.stach@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, s.hauer@pengutronix.de, sboyd@kernel.org, shawnguo@kernel.org, tiny.windzz@gmail.com, Eric Nelson <eric@nelint.com>
 List-Id: devicetree@vger.kernel.org
 
+This series removes the unsupported PLL4_AUDIO_DIV clock which appeared
+in early versions of the i.MX6DQ reference manual, but doesn't function
+as described in the current clock driver (i.e., it's a divide-by-1).
 
---unl66vzthkbzxsc5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Since the clock node is also used to control the topology of the clock
+tree, the PLL4_POST_DIV node is used to control parenting of downstream
+SSI, CKO1, and ESAI/ASRC/SPDIF peripherals.
 
-On Mon, Mar 11, 2019 at 07:06:24PM +0530, Jagan Teki wrote:
-> pll-video =3D> pll-mipi =3D> tcon0 =3D> tcon0-pixel-clock is the typical
-> MIPI clock topology in Allwinner DSI controller.
->=20
-> TCON dotclock driver is computing the desired DCLK divider based on
-> panel pixel clock along with input DCLK min, max divider values from
-> tcon driver and that would eventually set the pll-mipi clock rate.
->=20
-> The current code allows the TCON clock divider to have a default 4
-> for min, max ranges that would fail to compute the desired pll-mipi
-> rate while supporting new panels.
->=20
-> So, add the computation logic 'format/lanes' to dclk min and max dividers
-> and instead of default 4. This computation logic align with Allwinner A64
-> BSP, hoping that would work even for A33.
+The first patch removes the clock, and the second updates several
+device tree files to use PLL4_POST_DIV to select proper parents.
 
-Last time we discussed this, we found out that this wasn't the case,
-even in the BSP.
+Eric Nelson (2):
+  clk: imx6q: remove unsupported pll4_audio_div
+  ARM: dts: imx6q: remove references to PLL4_AUDIO_DIV
 
-What compelling evidence have you found that makes you say otherwise?
+ arch/arm/boot/dts/imx6q-cm-fx6.dts        |  4 ++--
+ arch/arm/boot/dts/imx6q-novena.dts        |  2 +-
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi  |  2 +-
+ drivers/clk/imx/clk-imx6q.c               |  7 +++----
+ include/dt-bindings/clock/imx6qdl-clock.h | 10 +++++++++-
+ 5 files changed, 16 insertions(+), 9 deletions(-)
 
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---unl66vzthkbzxsc5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXIaBBwAKCRDj7w1vZxhR
-xQmDAP0fEPwWNXxHnuOzc2Hp56CvHmpJBy1gADfKKVXjLURIdwD+Mwmlmq8ey7vM
-b5JlVu2kucnFP5+EM9iGeaCILBsREw0=
-=4Bo1
------END PGP SIGNATURE-----
-
---unl66vzthkbzxsc5--
+-- 
+2.7.4
