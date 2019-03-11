@@ -1,140 +1,76 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 11/25] leds: lp8860: Use led_compose_name()
-Date: Mon, 11 Mar 2019 07:28:50 -0500
-Message-ID: <cf42384b-cdbc-3ad7-468f-c4036579652f@ti.com>
-References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
- <20190310182836.20841-12-jacek.anaszewski@gmail.com>
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: Re: [PATCH v2 6/7] counter: ftm-quaddec: Documentation: Add
+ specific counter sysfs documentation
+Date: Mon, 11 Mar 2019 12:36:26 +0000
+Message-ID: <20190311123626.00004f70@huawei.com>
+References: <20190306111208.7454-1-patrick.havelange@essensium.com>
+        <20190306111208.7454-7-patrick.havelange@essensium.com>
+        <20190307114216.GB7851@icarus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190310182836.20841-12-jacek.anaszewski@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190307114216.GB7851@icarus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org
+To: William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc: Patrick Havelange <patrick.havelange@essensium.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Thierry Reding <thierry.reding@gmail.com>, Esben Haabendal <esben@haabendal.dk>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3/10/19 1:28 PM, Jacek Anaszewski wrote:
-> Switch to using generic LED support for composing LED class
-> device name.
+On Thu, 7 Mar 2019 20:42:16 +0900
+William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+
+> On Wed, Mar 06, 2019 at 12:12:07PM +0100, Patrick Havelange wrote:
+> > This adds documentation for the specific prescaler entry.
+> > 
+> > Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
+> > ---
+> > Changes v2
+> >  - Add doc for prescaler entry
+> > ---
+> >  .../ABI/testing/sysfs-bus-counter-ftm-quaddec    | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-counter-ftm-quaddec
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-counter-ftm-quaddec b/Documentation/ABI/testing/sysfs-bus-counter-ftm-quaddec
+> > new file mode 100644
+> > index 000000000000..2da629d6d485
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-bus-counter-ftm-quaddec
+> > @@ -0,0 +1,16 @@
+> > +What:		/sys/bus/counter/devices/counterX/countY/prescaler_available
+> > +KernelVersion:	5.1
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Discrete set of available values for the respective Count Y
+> > +		configuration are listed in this file. Values are delimited by
+> > +		newline characters.
+> > +
+> > +What:		/sys/bus/counter/devices/counterX/countY/prescaler
+> > +KernelVersion:	5.1
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Configure the prescaler value associated with Count Y.
+> > +		On the FlexTimer, the counter clock source passes through a
+> > +		prescaler that is a 7-bit counter. This acts like a clock
+> > +		divider.
+> > -- 
+> > 2.19.1  
 > 
-> While at it, avoid iterating through available child of nodes
-> in favor of obtaining single expected child node using single
-> call to of_get_next_available_child().
+> Hmm, prescalers seem common enough among counter devices to permit these
+> attributes to be listed in the sysfs-bus-counter documentation file.
+> However, I'd like to wait until we get another counter driver for a
+> device with a prescaler before we make that move. From there, we'll have
+> a better vantage point to determine a fitting standard prescaler
+> attribute behavior.
 > 
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> ---
->  drivers/leds/leds-lp8860.c | 38 +++++++++++++++++++-------------------
->  1 file changed, 19 insertions(+), 19 deletions(-)
+> So for now, we'll keep these attributes documented here in the
+> sysfs-bus-counter-ftm-quaddec file, until the time comes to broach the
+> discussion again.
+Agreed. As long as the definition is sufficiently non-specific so it can be
+moved later.  I'm not sure for example that the docs need to say that it is
+a 7 bit counter. That should be apparent from prescaler_available - or at
+least possible values should be which is all we need to know.
+
+Jonathan
 > 
-> diff --git a/drivers/leds/leds-lp8860.c b/drivers/leds/leds-lp8860.c
-> index 39c72a908f3b..7c12ccdc1f2f 100644
-> --- a/drivers/leds/leds-lp8860.c
-> +++ b/drivers/leds/leds-lp8860.c
-> @@ -22,7 +22,6 @@
->  #include <linux/of_gpio.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/slab.h>
-> -#include <uapi/linux/uleds.h>
->  
->  #define LP8860_DISP_CL1_BRT_MSB		0x00
->  #define LP8860_DISP_CL1_BRT_LSB		0x01
-> @@ -87,6 +86,8 @@
->  
->  #define LP8860_CLEAR_FAULTS		0x01
->  
-> +#define LP8860_NAME			"lp8860"
-> +
->  /**
->   * struct lp8860_led -
->   * @lock - Lock for reading/writing the device
-> @@ -96,7 +97,6 @@
->   * @eeprom_regmap - EEPROM register map
->   * @enable_gpio - VDDIO/EN gpio to enable communication interface
->   * @regulator - LED supply regulator pointer
-> - * @label - LED label
->   */
->  struct lp8860_led {
->  	struct mutex lock;
-> @@ -106,7 +106,6 @@ struct lp8860_led {
->  	struct regmap *eeprom_regmap;
->  	struct gpio_desc *enable_gpio;
->  	struct regulator *regulator;
-> -	char label[LED_MAX_NAME_SIZE];
->  };
->  
->  struct lp8860_eeprom_reg {
-> @@ -387,25 +386,26 @@ static int lp8860_probe(struct i2c_client *client,
->  	struct lp8860_led *led;
->  	struct device_node *np = client->dev.of_node;
->  	struct device_node *child_node;
-> -	const char *name;
-> +	struct led_init_data init_data;
->  
->  	led = devm_kzalloc(&client->dev, sizeof(*led), GFP_KERNEL);
->  	if (!led)
->  		return -ENOMEM;
->  
-> -	for_each_available_child_of_node(np, child_node) {
-> -		led->led_dev.default_trigger = of_get_property(child_node,
-> -						    "linux,default-trigger",
-> -						    NULL);
-> -
-> -		ret = of_property_read_string(child_node, "label", &name);
-> -		if (!ret)
-> -			snprintf(led->label, sizeof(led->label), "%s:%s",
-> -				 id->name, name);
-> -		else
-> -			snprintf(led->label, sizeof(led->label),
-> -				"%s::display_cluster", id->name);
-> -	}
-> +	child_node = of_get_next_available_child(np, NULL);
-
-Again this device has multiple outputs that can be banked or separated.
-
-I would prefer to leave the iteration and just change the name generation.
-
-Dan
-
-> +	if (!child_node)
-> +		return -EINVAL;
-> +
-> +	init_data.fwnode = of_fwnode_handle(child_node),
-> +
-> +	led->led_dev.default_trigger = of_get_property(child_node,
-> +					    "linux,default-trigger",
-> +					    NULL);
-> +
-> +	ret = led_compose_name(init_data.fwnode, LP8860_NAME,
-> +			       ":display_cluster", init_data.name);
-> +	if (ret)
-> +		return ret;
->  
->  	led->enable_gpio = devm_gpiod_get_optional(&client->dev,
->  						   "enable", GPIOD_OUT_LOW);
-> @@ -420,7 +420,6 @@ static int lp8860_probe(struct i2c_client *client,
->  		led->regulator = NULL;
->  
->  	led->client = client;
-> -	led->led_dev.name = led->label;
->  	led->led_dev.brightness_set_blocking = lp8860_brightness_set;
->  
->  	mutex_init(&led->lock);
-> @@ -447,7 +446,8 @@ static int lp8860_probe(struct i2c_client *client,
->  	if (ret)
->  		return ret;
->  
-> -	ret = devm_led_classdev_register(&client->dev, &led->led_dev);
-> +	ret = devm_led_classdev_register_ext(&client->dev, &led->led_dev,
-> +					     &init_data);
->  	if (ret) {
->  		dev_err(&client->dev, "led register err: %d\n", ret);
->  		return ret;
-> 
-
-
--- 
-------------------
-Dan Murphy
+> William Breathitt Gray
