@@ -1,37 +1,60 @@
 From: thor.thayer@linux.intel.com
-Subject: [RESEND PATCHv4 4/6] arm64: defconfig: Enable CONFIG_MTD_ALTERA_SYSMGR
-Date: Mon, 11 Mar 2019 17:18:06 -0500
-Message-ID: <1552342688-6663-5-git-send-email-thor.thayer@linux.intel.com>
+Subject: [RESEND PATCHv4 2/6] Documentation: dt: socfpga: Add S10 System
+ Manager binding
+Date: Mon, 11 Mar 2019 17:18:04 -0500
+Message-ID: <1552342688-6663-3-git-send-email-thor.thayer@linux.intel.com>
 References: <1552342688-6663-1-git-send-email-thor.thayer@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1552342688-6663-1-git-send-email-thor.thayer@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: lee.jones@linaro.org, arnd@arndb.de, dinguyen@kernel.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, olof@lixom.net
-Cc: davem@davemloft.net, mcoquelin.stm32@gmail.com, mchehab+samsung@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Thor Thayer <thor.thayer@linux.intel.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Thor Thayer <thor.thayer@linux.intel.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, mcoquelin.stm32@gmail.com, mchehab+samsung@kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Enable the Stratix10 System Manager by default.
+Add the device tree bindings for the Stratix10 System Manager.
 
 Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-v2-4  No change
+v2  New compatible string and usage for Stratix10
+v3  No change
+v4  Add Reviewed-by from v2.
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/arm/altera/socfpga-system.txt        | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index c8432e24207e..48a312126cf7 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -417,6 +417,7 @@ CONFIG_MESON_WATCHDOG=m
- CONFIG_RENESAS_WDT=y
- CONFIG_UNIPHIER_WATCHDOG=y
- CONFIG_BCM2835_WDT=y
-+CONFIG_MFD_ALTERA_SYSMGR=y
- CONFIG_MFD_BD9571MWV=y
- CONFIG_MFD_AXP20X_I2C=y
- CONFIG_MFD_AXP20X_RSB=y
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-system.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-system.txt
+index f4d04a067282..82edbaaa3f85 100644
+--- a/Documentation/devicetree/bindings/arm/altera/socfpga-system.txt
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-system.txt
+@@ -11,3 +11,15 @@ Example:
+ 		reg = <0xffd08000 0x1000>;
+ 		cpu1-start-addr = <0xffd080c4>;
+ 	};
++
++ARM64 - Stratix10
++Required properties:
++- compatible : "altr,sys-mgr-s10"
++- reg : Should contain 1 register range(address and length)
++        for system manager register.
++
++Example:
++	 sysmgr@ffd12000 {
++		compatible = "altr,sys-mgr-s10";
++		reg = <0xffd12000 0x228>;
++	};
 -- 
 2.7.4
