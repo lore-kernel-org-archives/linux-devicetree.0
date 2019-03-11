@@ -1,127 +1,38 @@
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH] arm64: dts: fsl: imx8mq: enable the thermal management unit (TMU)
-Date: Mon, 11 Mar 2019 14:31:24 -0700
-Message-ID: <20190311213124.29325-1-angus@akkea.ca>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [v6 1/3] dt-bindings: ahci-fsl-qoriq: add lx2160a chip name to
+ the list
+Date: Mon, 11 Mar 2019 16:39:36 -0500
+Message-ID: <CAL_Jsq+tBSw0d6=A6CS3=tWn7k4WX-KAeLBaoJ6019uGc-PRUg@mail.gmail.com>
+References: <20190220085607.31582-1-peng.ma@nxp.com> <20190222143931.GA17132@bogus>
+ <VI1PR04MB44312525A43E259CE9CC45F9ED480@VI1PR04MB4431.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <VI1PR04MB44312525A43E259CE9CC45F9ED480@VI1PR04MB4431.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>, kernel@pengutronix.de, Lucas Stach <l.stach@pengutronix.de>, abel.vesa@nxp.com, daniel.baluta@nxp.com, agx@sigxcpu.org, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Angus Ainslie (Purism)" <angus@akkea.ca>
+To: Peng Ma <peng.ma@nxp.com>
+Cc: "axboe@kernel.dk" <axboe@kernel.dk>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Andy Tang <andy.tang@nxp.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mian Yousaf Kaukab <yousaf.kaukab@suse.com>
 List-Id: devicetree@vger.kernel.org
 
-These are the TMU nodes from the NXP vendor kernel
+On Mon, Mar 11, 2019 at 1:57 AM Peng Ma <peng.ma@nxp.com> wrote:
+>
+> Hi Rob,
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 83 +++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
+Please don't top post to mail lists.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 9155bd4784eb..087620c6e17f 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/power/imx8mq-power.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/thermal/thermal.h>
- #include "imx8mq-pinfunc.h"
- 
- / {
-@@ -89,6 +90,7 @@
- 			reg = <0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_1: cpu@1 {
-@@ -210,6 +212,87 @@
- 				#interrupt-cells = <2>;
- 			};
- 
-+			tmu: tmu@30260000 {
-+				compatible = "fsl,imx8mq-tmu";
-+				reg = <0x30260000 0x10000>;
-+				interrupt = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+				little-endian;
-+				fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
-+				fsl,tmu-calibration = <0x00000000 0x00000023
-+						       0x00000001 0x00000029
-+						       0x00000002 0x0000002f
-+						       0x00000003 0x00000035
-+						       0x00000004 0x0000003d
-+						       0x00000005 0x00000043
-+						       0x00000006 0x0000004b
-+						       0x00000007 0x00000051
-+						       0x00000008 0x00000057
-+						       0x00000009 0x0000005f
-+						       0x0000000a 0x00000067
-+						       0x0000000b 0x0000006f
-+
-+						       0x00010000 0x0000001b
-+						       0x00010001 0x00000023
-+						       0x00010002 0x0000002b
-+						       0x00010003 0x00000033
-+						       0x00010004 0x0000003b
-+						       0x00010005 0x00000043
-+						       0x00010006 0x0000004b
-+						       0x00010007 0x00000055
-+						       0x00010008 0x0000005d
-+						       0x00010009 0x00000067
-+						       0x0001000a 0x00000070
-+
-+						       0x00020000 0x00000017
-+						       0x00020001 0x00000023
-+						       0x00020002 0x0000002d
-+						       0x00020003 0x00000037
-+						       0x00020004 0x00000041
-+						       0x00020005 0x0000004b
-+						       0x00020006 0x00000057
-+						       0x00020007 0x00000063
-+						       0x00020008 0x0000006f
-+
-+						       0x00030000 0x00000015
-+						       0x00030001 0x00000021
-+						       0x00030002 0x0000002d
-+						       0x00030003 0x00000039
-+						       0x00030004 0x00000045
-+						       0x00030005 0x00000053
-+						       0x00030006 0x0000005f
-+						       0x00030007 0x00000071>;
-+				#thermal-sensor-cells =  <0>;
-+			};
-+
-+			thermal-zones {
-+				cpu-thermal {
-+					polling-delay-passive = <250>;
-+					polling-delay = <2000>;
-+					thermal-sensors = <&tmu>;
-+
-+					trips {
-+						cpu_alert0: trip0 {
-+							temperature = <85000>;
-+							hysteresis = <2000>;
-+							type = "passive";
-+						};
-+
-+						cpu_crit0: trip1 {
-+							temperature = <95000>;
-+							hysteresis = <2000>;
-+							type = "critical";
-+						};
-+					};
-+
-+					cooling-maps {
-+						map0 {
-+							trip = <&cpu_alert0>;
-+							cooling-device = <&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+						};
-+					};
-+				};
-+			};
-+
- 			wdog1: watchdog@30280000 {
- 				compatible = "fsl,imx8mq-wdt", "fsl,imx21-wdt";
- 				reg = <0x30280000 0x10000>;
--- 
-2.17.1
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+A: Top-posting.
+Q: What is the most annoying thing in e-mail?
+
+>
+> Thanks for your comments, I don't understand what you said.
+> This patch is one of the series patchs(http://patchwork.ozlabs.org/project/linux-ide/list/?series=93099&archive=both&state=*) for review.
+> There is not changed for 6th version of this patch.
+
+I reviewed v5 and gave my Reviewed-by. When you posted v6, you should
+have added the tag so the maintainer applying this series doesn't have
+to look at prior versions to collect tags and so I don't have to
+review this again and can ignore it.
+
+Rob
