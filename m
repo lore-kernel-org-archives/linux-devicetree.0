@@ -1,36 +1,33 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH] arm64: dts: sdm845: Include the interconnect resources DT header
-Date: Mon, 11 Mar 2019 16:06:02 +0200
-Message-ID: <20190311140602.12160-1-georgi.djakov@linaro.org>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCHv4 10/28] PCI: mobiveil: fix the INTx process error
+Date: Mon, 11 Mar 2019 09:08:03 -0500
+Message-ID: <20190311140803.GF214730@google.com>
+References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
+ <20190311093130.7209-11-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190311093130.7209-11-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, bjorn.andersson@linaro.org
-Cc: daidavid1@codeaurora.org, evgreen@chromium.org, dianders@chromium.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Georgi Djakov <georgi.djakov@linaro.org>
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Include the device tree header for the on-chip interconnect endpoint
-resources on sdm845 devices. This will allow using the "interconnects"
-property in DT nodes to describe the interconnect path resources they use.
+On Mon, Mar 11, 2019 at 09:31:16AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> In the loop block, there is not code change the loop key,
+> this patch updated the loop key by re-read the INTx status
+> register.
+> 
+> This patch also change to clear the handled INTx status.
+> 
+> Note: Need MV to test this fix.
+> 
+> Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host
+> Bridge IP driver")
 
-The sdm845 interconnect provider DT node is already present, but the
-header file with the resources is not included, so let's fix this.
-
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 5308f1671824..be4d4c5859c0 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -11,6 +11,7 @@
- #include <dt-bindings/clock/qcom,lpass-sdm845.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/clock/qcom,videocc-sdm845.h>
-+#include <dt-bindings/interconnect/qcom,sdm845.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/phy/phy-qcom-qusb2.h>
- #include <dt-bindings/reset/qcom,sdm845-aoss.h>
+The "Fixes:" line should be all on one line, without a newline in the
+middle, even if it exceeds 80 columns.  That's just to make it easier for
+programs to parse the logs.
