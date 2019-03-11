@@ -1,8 +1,8 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv4 13/28] PCI: mobiveil: move irq chained handler setup out of
- DT parse
-Date: Mon, 11 Mar 2019 09:31:39 +0000
-Message-ID: <20190311093130.7209-14-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv4 15/28] dt-bindings: pci: mobiveil: change gpio_slave and
+ apb_csr to optional
+Date: Mon, 11 Mar 2019 09:31:54 +0000
+Message-ID: <20190311093130.7209-16-Zhiqiang.Hou@nxp.com>
 References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -17,42 +17,37 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Move irq_set_chained_handler_and_data() out of DT parse function.
+Change the "gpio_slave" and "apb_csr" to optional, the "gpio_slave"
+is not used in current code, and "apb_csr" is not used by some
+platforms.
 
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Acked-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Acked-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 ---
 V4:
  - no change
 
- drivers/pci/controller/pcie-mobiveil.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/pci/mobiveil-pcie.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controlle=
-r/pcie-mobiveil.c
-index c2848c22b466..db7ecb021c63 100644
---- a/drivers/pci/controller/pcie-mobiveil.c
-+++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -460,8 +460,6 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie =
-*pcie)
- 		return -ENODEV;
- 	}
+diff --git a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt b/Docu=
+mentation/devicetree/bindings/pci/mobiveil-pcie.txt
+index a618d4787dd7..64156993e052 100644
+--- a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+@@ -10,8 +10,10 @@ Required properties:
+ 	interrupt source. The value must be 1.
+ - compatible: Should contain "mbvl,gpex40-pcie"
+ - reg: Should contain PCIe registers location and length
++	Mandatory:
+ 	"config_axi_slave": PCIe controller registers
+ 	"csr_axi_slave"	  : Bridge config registers
++	Optional:
+ 	"gpio_slave"	  : GPIO registers to control slot power
+ 	"apb_csr"	  : MSI registers
 =20
--	irq_set_chained_handler_and_data(pcie->irq, mobiveil_pcie_isr, pcie);
--
- 	return 0;
- }
-=20
-@@ -902,6 +900,8 @@ static int mobiveil_pcie_probe(struct platform_device *=
-pdev)
- 		goto error;
- 	}
-=20
-+	irq_set_chained_handler_and_data(pcie->irq, mobiveil_pcie_isr, pcie);
-+
- 	ret =3D devm_request_pci_bus_resources(dev, &pcie->resources);
- 	if (ret)
- 		goto error;
 --=20
 2.17.1
