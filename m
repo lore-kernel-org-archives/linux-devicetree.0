@@ -1,8 +1,7 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv4 08/28] PCI: mobiveil: use the 1st inbound window for MEM
- inbound transactions
-Date: Mon, 11 Mar 2019 09:31:00 +0000
-Message-ID: <20190311093130.7209-9-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv4 11/28] PCI: mobiveil: only fix up the Class Code field
+Date: Mon, 11 Mar 2019 09:31:23 +0000
+Message-ID: <20190311093130.7209-12-Zhiqiang.Hou@nxp.com>
 References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -17,9 +16,11 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-The inbound windows have different register set with outbound windows.
-This patch change the MEM inbound window to the first one.
+Fix up the Class Code to PCI bridge, do not change the Revision ID.
+And move the fixup to mobiveil_host_init function.
 
+Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge
+IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
@@ -27,23 +28,38 @@ Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 V4:
  - no change
 
- drivers/pci/controller/pcie-mobiveil.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/pcie-mobiveil.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controlle=
 r/pcie-mobiveil.c
-index df71c11b4810..e88afc792a5c 100644
+index 78e575e71f4d..8eee1ab7ee24 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -616,7 +616,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pci=
-e)
- 			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
+@@ -653,6 +653,12 @@ static int mobiveil_host_init(struct mobiveil_pcie *pc=
+ie)
+ 				   type, resource_size(win->res));
+ 	}
 =20
- 	/* memory inbound translation window */
--	program_ib_windows(pcie, WIN_NUM_1, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
-+	program_ib_windows(pcie, WIN_NUM_0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
++	/* fixup for PCIe class register */
++	value =3D csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
++	value &=3D 0xff;
++	value |=3D (PCI_CLASS_BRIDGE_PCI << 16);
++	csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
++
+ 	/* setup MSI hardware registers */
+ 	mobiveil_pcie_enable_msi(pcie);
 =20
- 	/* Get the I/O and memory ranges from DT */
- 	resource_list_for_each_entry(win, &pcie->resources) {
+@@ -896,9 +902,6 @@ static int mobiveil_pcie_probe(struct platform_device *=
+pdev)
+ 		goto error;
+ 	}
+=20
+-	/* fixup for PCIe class register */
+-	csr_writel(pcie, 0x060402ab, PAB_INTP_AXI_PIO_CLASS);
+-
+ 	/* initialize the IRQ domains */
+ 	ret =3D mobiveil_pcie_init_irq_domain(pcie);
+ 	if (ret) {
 --=20
 2.17.1
