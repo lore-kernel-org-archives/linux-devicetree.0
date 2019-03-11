@@ -1,28 +1,49 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/8] clk: samsung: add needed IDs for DMC clocks in
-  Exynos5420
-Date: Mon, 11 Mar 2019 17:06:50 -0500
-Message-ID: <20190311220650.GB4082@bogus>
-References: <1551781151-5562-1-git-send-email-l.luba@partner.samsung.com>
- <CGME20190305101924eucas1p1147e3895a89a72c9db7d128d90dd3daa@eucas1p1.samsung.com>
- <1551781151-5562-2-git-send-email-l.luba@partner.samsung.com>
+Subject: Re: [PATCH v6 1/7] dt-bindings: Add a binding for Mediatek SCP
+Date: Mon, 11 Mar 2019 17:09:53 -0500
+Message-ID: <20190311220953.GA8432@bogus>
+References: <20190311063458.137473-1-pihsun@chromium.org>
+ <20190311063458.137473-2-pihsun@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1551781151-5562-2-git-send-email-l.luba@partner.samsung.com>
+In-Reply-To: <20190311063458.137473-2-pihsun@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, Lukasz Luba <l.luba@partner.samsung.com>
+Cc: Pi-Hsun Shih <pihsun@chromium.org>, Erin Lo <erin.lo@mediatek.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  5 Mar 2019 11:19:04 +0100, Lukasz Luba wrote:
-> Define new IDs for clocks used by Dynamic Memory Controller in
-> Exynos5422 SoC.
+On Mon, 11 Mar 2019 14:34:52 +0800, Pi-Hsun Shih wrote:
+> From: Erin Lo <erin.lo@mediatek.com>
 > 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> Add a DT binding documentation of SCP for the
+> MT8183 SoC from Mediatek.
+> 
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
 > ---
->  include/dt-bindings/clock/exynos5420.h | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
+> Changes from v5:
+>  - Remove dependency on CONFIG_RPMSG_MTK_SCP.
+> 
+> Changes from v4:
+>  - Add detail of more properties.
+>  - Document the usage of mtk,rpmsg-name in subnode from the new design.
+> 
+> Changes from v3:
+>  - No change.
+> 
+> Changes from v2:
+>  - No change. I realized that for this patch series, there's no need to
+>    add anything under the mt8183-scp node (neither the mt8183-rpmsg or
+>    the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
+>    directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
+>    created by SCP name service.
+> 
+> Changes from v1:
+>  - No change.
+> ---
+>  .../bindings/remoteproc/mtk,scp.txt           | 36 +++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
 > 
 
 Please add Acked-by/Reviewed-by tags when posting new versions. However,
