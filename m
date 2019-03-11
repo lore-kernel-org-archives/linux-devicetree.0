@@ -1,117 +1,96 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCHv4 00/28] PCI: refactor Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Date: Mon, 11 Mar 2019 08:33:10 -0500
-Message-ID: <20190311133310.GE214730@google.com>
-References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v8 00/15] drm/sun4i: Allwinner A64 MIPI-DSI support
+Date: Mon, 11 Mar 2019 19:06:22 +0530
+Message-ID: <20190311133637.18334-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Here is next version, v8 changes for Allwinner A64 MIPI-DSI support.
+It depends on DSI fixes/update series [1]
 
-On Mon, Mar 11, 2019 at 09:29:54AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> This patch set is aim to refactor the Mobiveil driver and add
-> PCIe support for NXP Layerscape series SoCs integrated Mobiveil's
-> PCIe Gen4 controller.
-> 
-> Hou Zhiqiang (28):
->   PCI: mobiveil: uniform the register accessors
+Changes for v8:
+- rebased on drm-misc change along with linux-next
+- reworked video start delay patch
+- tested on 4 different dsi panels
+- reworked commit messages
+Changes for v7:
+- moved vcc-dsi binding to required filed.
+- drop quotes on fallback dphy bindings.
+- drop min_rate clock pll-mipi patches.
+- introduce dclk divider computation as like A64 BSP.
+- add A64 DSI quark patches.
+- fixed A64 DSI pipeline.
+- add proper commit messages.
+- collect Merlijn Wajer Tested-by credits.
+Changes for v6:
+- dropped unneeded changes, patches
+- fixed all burst mode patches as per previous version comments
+- rebase on master
+- update proper commit message
+- dropped unneeded comments
+- order the patches that make review easy
+Changes for v5:
+- collect Rob, Acked-by
+- droped "Fix VBP size calculation" patch
+- updated vblk timing calculation.
+- droped techstar, bananapi dsi panel drivers which may require
+  bridge or other setup. it's under discussion.
+Changes for v4:
+- droppoed untested CCU_FEATURE_FIXED_POSTDIV check code in
+  nkm min, max rate patches
+- create two patches for "Add Allwinner A64 MIPI DSI support"
+  one for has_mod_clk quirk and other one for A64 support
+- use existing driver code construct for hblk computation
+- dropped "Increase hfp packet overhead" patch [2], though BSP added
+  this but we have no issues as of now.
+  (no issues on panel side w/o this change)
+- create separate function for vblk computation 
+- enable vcc-dsi regulator in dsi_runtime_resume
+- collect Rob, Acked-by
+- update MAINTAINERS file for panel drivers
+- cleanup commit messages
+- fixed checkpatch warnings/errors
 
-"uniform" is not a verb.  Maybe "Unify register accessors"?
+[1] https://patchwork.kernel.org/cover/10837163/
 
->   PCI: mobiveil: format the code without function change
->   PCI: mobiveil: correct the returned error number
->   PCI: mobiveil: remove flag MSI_FLAG_MULTI_PCI_MSI
->   PCI: mobiveil: correct PCI base address in MEM/IO outbound windows
->   PCI: mobiveil: replace the resource list iteration function
->   PCI: mobiveil: use WIN_NUM_0 explicitly for CFG outbound window
->   PCI: mobiveil: use the 1st inbound window for MEM inbound transactions
->   PCI: mobiveil: correct inbound/outbound window setup routines
->   PCI: mobiveil: fix the INTx process error
->   PCI: mobiveil: only fix up the Class Code field
->   PCI: mobiveil: move out the link up waiting from mobiveil_host_init
+Any inputs?
+Jagan.
 
-Add parens for function names, e.g., "mobiveil_host_init()".  This
-occurs several more times, including both subject lines and changelogs.
+Jagan Teki (15):
+  drm/sun4i: dsi: Fix video start delay computation
+  drm/sun4i: tcon: Compute DCLK dividers based on format, lanes
+  drm/sun4i: tcon: Export get tcon0 routine
+  drm/sun4i: dsi: Probe tcon0 during dsi_bind
+  drm/sun4i: dsi: Get tcon0_div at runtime
+  dt-bindings: sun6i-dsi: Add VCC-DSI supply property
+  dt-bindings: sun6i-dsi: Add A64 MIPI-DSI compatible
+  dt-bindings: sun6i-dsi: Add A64 DPHY compatible (w/ A31 fallback)
+  drm/sun4i: sun6i_mipi_dsi: Add has_mod_clk quirk
+  drm/sun4i: sun6i_mipi_dsi: Add has_mod_clk quirk
+  drm/sun4i: sun6i_mipi_dsi: Add Allwinner A64 MIPI DSI support
+  arm64: dts: allwinner: a64: Add MIPI DSI pipeline
+  arm64: dts: allwinner: a64-amarula-relic: Add Techstar TS8550B
+    MIPI-DSI panel
+  [DO NOT MERGE] arm64: dts: allwinner: a64-pine64-lts: Enable Feiyang FY07024DI26A30-D
+    DSI panel
+  [DO NOT MERGE] arm64: dts: allwinner: bananapi-m64: Enable Bananapi S070WV20-CT16 DSI
+    panel
 
->   PCI: mobiveil: move irq chained handler setup out of DT parse
+ .../bindings/display/sunxi/sun6i-dsi.txt      |  3 +
+ .../allwinner/sun50i-a64-amarula-relic.dts    | 39 +++++++++
+ .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 44 ++++++++++
+ .../dts/allwinner/sun50i-a64-pine64-lts.dts   | 39 +++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 45 ++++++++++
+ drivers/gpu/drm/sun4i/sun4i_tcon.c            |  7 +-
+ drivers/gpu/drm/sun4i/sun4i_tcon.h            |  1 +
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c        | 83 +++++++++++++++----
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h        |  9 +-
+ 9 files changed, 252 insertions(+), 18 deletions(-)
 
-Capitalize acronyms in English text (subject lines, changelogs,
-comments), e.g., s/irq/IRQ/
-
->   PCI: mobiveil: initialize Primary/Secondary/Subordinate bus number
->   dt-bindings: pci: mobiveil: change gpio_slave and apb_csr to optional
->   PCI: mobiveil: refactor Mobiveil PCIe Host Bridge IP driver
-
-This should give a hint about the purpose of refactoring.  Sounds like
-it's to make it easier to support both host and endpoint mode?
-
->   PCI: mobiveil: fix the checking of valid device
->   PCI: mobiveil: add link up condition check
->   PCI: mobiveil: continue to initialize the host upon no PCIe link
->   PCI: mobiveil: disabled IB and OB windows set by bootloader
->   PCI: mobiveil: add Byte and Half-Word width register accessors
-
-"Byte" and "Half-Word" do not need to be capitalized.  Also, the
-changelog has a typo: "Half-Work" for "half-word".
-
->   PCI: mobiveil: make mobiveil_host_init can be used to re-init host
-
-Here's another of the places that need parens after the function name.
-
->   dt-bindings: pci: Add NXP Layerscape SoCs PCIe Gen4 controller
->   PCI: mobiveil: add PCIe Gen4 RC driver for NXP Layerscape SoCs
->   PCI: mobiveil: ls_pcie_g4: add Workaround for A-011577
->   PCI: mobiveil: ls_pcie_g4: add Workaround for A-011451
-
-The reader of these changelogs likely doesn't know what internal
-identifiers like "A-011577" mean, but *does* want a hint about what
-problem is being fixed and what platforms are affected.  So instead of
-the "ls_pcie_g4:" prefix, use something like:
-
-  PCI: mobiveil: Work around LX2160A r1.0 config access erratum
-  PCI: mobiveil: Work around LX2160A r1.0 split completion erratum
-
-and mention the erratum ID (A-011577) in the changelog.  If you can
-include the actual erratum text in the changelog, that would be even
-better.
-
-s/ERRATA/errata/ in the changelogs.
-
->   arm64: dts: freescale: lx2160a: add pcie DT nodes
-
-"PCIe"
-
->   arm64: defconfig: Enable CONFIG_PCI_LAYERSCAPE_GEN4
-
-I already asked you once [1] to:
-
-  please pay attention to the changelog conventions, e.g., capitalize the
-  first word of the sentence ("Remove flag ...", "Correct PCI base address
-  ...", etc), capitalize acronyms like "PCI" and "IRQ", use parentheses
-  after function names, etc.  You can see the conventions by running "git
-  log --oneline drivers/pci/controller".
-
-For example, instead of this:
-
-  PCI: mobiveil: add link up condition check
-
-it should be this:
-
-  PCI: mobiveil: Add link up condition check
-
-Please wait at least a few days before posting a v5 in case there are
-other comments.
-
-Bjorn
-
-[1] https://lore.kernel.org/linux-pci/20190130153447.GB229773@google.com
+-- 
+2.18.0.321.gffc6fa0e3
