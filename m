@@ -1,199 +1,114 @@
-From: Qii Wang <qii.wang@mediatek.com>
-Subject: [PATCH v6 5/6] i2c: mediatek: Add i2c support for MediaTek MT8183
-Date: Mon, 11 Mar 2019 13:40:39 +0800
-Message-ID: <1552282840-12778-6-git-send-email-qii.wang@mediatek.com>
-References: <1552282840-12778-1-git-send-email-qii.wang@mediatek.com>
+From: Chen-Yu Tsai <wens@kernel.org>
+Subject: Re: [PATCH 2/6] dmaengine: sun6i: Add a quirk for additional mbus clock
+Date: Mon, 11 Mar 2019 13:47:43 +0800
+Message-ID: <CAGb2v65GNtmDdmnixfdFg6Lt4Rzq_MrUf==fiV=wtgk+uR6WzA@mail.gmail.com>
+References: <20190307165829.9086-1-jernej.skrabec@siol.net> <20190307165829.9086-3-jernej.skrabec@siol.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552282840-12778-1-git-send-email-qii.wang@mediatek.com>
+In-Reply-To: <20190307165829.9086-3-jernej.skrabec@siol.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, qii.wang@mediatek.com, xinping.qian@mediatek.com, liguo.zhang@mediatek.com, robh@kernel.org
+To: Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, vkoul@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-Add i2c compatible for MT8183. Compare to MT2712 i2c controller,
-MT8183 has different register offsets. Ltiming_reg is added to
-adjust low width of SCL. Arb clock and dma_sync are needed.
+On Fri, Mar 8, 2019 at 12:58 AM Jernej Skrabec <jernej.skrabec@siol.net> wrote:
+>
+> H6 DMA controller needs additional mbus clock to be enabled.
+>
+> Add a quirk for it and handle it accordingly.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  drivers/dma/sun6i-dma.c | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+> index 0cd13f17fc11..761555080325 100644
+> --- a/drivers/dma/sun6i-dma.c
+> +++ b/drivers/dma/sun6i-dma.c
+> @@ -129,6 +129,7 @@ struct sun6i_dma_config {
+>         u32 dst_burst_lengths;
+>         u32 src_addr_widths;
+>         u32 dst_addr_widths;
+> +       bool mbus_clk;
 
-Signed-off-by: Qii Wang <qii.wang@mediatek.com>
----
- drivers/i2c/busses/i2c-mt65xx.c |   62 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 60 insertions(+), 2 deletions(-)
+Nit: has_mbus_clk. Be explicit. Leave nothing to assumptions.
 
-diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-index 6137ad7..745b0d0 100644
---- a/drivers/i2c/busses/i2c-mt65xx.c
-+++ b/drivers/i2c/busses/i2c-mt65xx.c
-@@ -133,6 +133,7 @@ enum I2C_REGS_OFFSET {
- 	OFFSET_DEBUGCTRL,
- 	OFFSET_TRANSFER_LEN_AUX,
- 	OFFSET_CLOCK_DIV,
-+	OFFSET_LTIMING,
- };
- 
- static const u16 mt_i2c_regs_v1[] = {
-@@ -162,6 +163,32 @@ enum I2C_REGS_OFFSET {
- 	[OFFSET_CLOCK_DIV] = 0x70,
- };
- 
-+static const u16 mt_i2c_regs_v2[] = {
-+	[OFFSET_DATA_PORT] = 0x0,
-+	[OFFSET_SLAVE_ADDR] = 0x4,
-+	[OFFSET_INTR_MASK] = 0x8,
-+	[OFFSET_INTR_STAT] = 0xc,
-+	[OFFSET_CONTROL] = 0x10,
-+	[OFFSET_TRANSFER_LEN] = 0x14,
-+	[OFFSET_TRANSAC_LEN] = 0x18,
-+	[OFFSET_DELAY_LEN] = 0x1c,
-+	[OFFSET_TIMING] = 0x20,
-+	[OFFSET_START] = 0x24,
-+	[OFFSET_EXT_CONF] = 0x28,
-+	[OFFSET_LTIMING] = 0x2c,
-+	[OFFSET_HS] = 0x30,
-+	[OFFSET_IO_CONFIG] = 0x34,
-+	[OFFSET_FIFO_ADDR_CLR] = 0x38,
-+	[OFFSET_TRANSFER_LEN_AUX] = 0x44,
-+	[OFFSET_CLOCK_DIV] = 0x48,
-+	[OFFSET_SOFTRESET] = 0x50,
-+	[OFFSET_DEBUGSTAT] = 0xe0,
-+	[OFFSET_DEBUGCTRL] = 0xe8,
-+	[OFFSET_FIFO_STAT] = 0xf4,
-+	[OFFSET_FIFO_THRESH] = 0xf8,
-+	[OFFSET_DCM_EN] = 0xf88,
-+};
-+
- struct mtk_i2c_compatible {
- 	const struct i2c_adapter_quirks *quirks;
- 	const u16 *regs;
-@@ -172,6 +199,7 @@ struct mtk_i2c_compatible {
- 	unsigned char support_33bits: 1;
- 	unsigned char timing_adjust: 1;
- 	unsigned char dma_sync: 1;
-+	unsigned char ltiming_adjust: 1;
- };
- 
- struct mtk_i2c {
-@@ -195,6 +223,7 @@ struct mtk_i2c {
- 	enum mtk_trans_op op;
- 	u16 timing_reg;
- 	u16 high_speed_reg;
-+	u16 ltiming_reg;
- 	unsigned char auto_restart;
- 	bool ignore_restart_irq;
- 	const struct mtk_i2c_compatible *dev_comp;
-@@ -222,6 +251,7 @@ struct mtk_i2c {
- 	.support_33bits = 1,
- 	.timing_adjust = 1,
- 	.dma_sync = 0,
-+	.ltiming_adjust = 0,
- };
- 
- static const struct mtk_i2c_compatible mt6577_compat = {
-@@ -234,6 +264,7 @@ struct mtk_i2c {
- 	.support_33bits = 0,
- 	.timing_adjust = 0,
- 	.dma_sync = 0,
-+	.ltiming_adjust = 0,
- };
- 
- static const struct mtk_i2c_compatible mt6589_compat = {
-@@ -246,6 +277,7 @@ struct mtk_i2c {
- 	.support_33bits = 0,
- 	.timing_adjust = 0,
- 	.dma_sync = 0,
-+	.ltiming_adjust = 0,
- };
- 
- static const struct mtk_i2c_compatible mt7622_compat = {
-@@ -258,6 +290,7 @@ struct mtk_i2c {
- 	.support_33bits = 0,
- 	.timing_adjust = 0,
- 	.dma_sync = 0,
-+	.ltiming_adjust = 0,
- };
- 
- static const struct mtk_i2c_compatible mt8173_compat = {
-@@ -269,6 +302,19 @@ struct mtk_i2c {
- 	.support_33bits = 1,
- 	.timing_adjust = 0,
- 	.dma_sync = 0,
-+	.ltiming_adjust = 0,
-+};
-+
-+static const struct mtk_i2c_compatible mt8183_compat = {
-+	.regs = mt_i2c_regs_v2,
-+	.pmic_i2c = 0,
-+	.dcm = 0,
-+	.auto_restart = 1,
-+	.aux_len_reg = 1,
-+	.support_33bits = 1,
-+	.timing_adjust = 1,
-+	.dma_sync = 1,
-+	.ltiming_adjust = 1,
- };
- 
- static const struct of_device_id mtk_i2c_of_match[] = {
-@@ -277,6 +323,7 @@ struct mtk_i2c {
- 	{ .compatible = "mediatek,mt6589-i2c", .data = &mt6589_compat },
- 	{ .compatible = "mediatek,mt7622-i2c", .data = &mt7622_compat },
- 	{ .compatible = "mediatek,mt8173-i2c", .data = &mt8173_compat },
-+	{ .compatible = "mediatek,mt8183-i2c", .data = &mt8183_compat },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, mtk_i2c_of_match);
-@@ -361,6 +408,8 @@ static void mtk_i2c_init_hw(struct mtk_i2c *i2c)
- 
- 	mtk_i2c_writew(i2c, i2c->timing_reg, OFFSET_TIMING);
- 	mtk_i2c_writew(i2c, i2c->high_speed_reg, OFFSET_HS);
-+	if (i2c->dev_comp->ltiming_adjust)
-+		mtk_i2c_writew(i2c, i2c->ltiming_reg, OFFSET_LTIMING);
- 
- 	/* If use i2c pin from PMIC mt6397 side, need set PATH_DIR first */
- 	if (i2c->have_pmic)
-@@ -460,6 +509,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
- 	unsigned int clk_src;
- 	unsigned int step_cnt;
- 	unsigned int sample_cnt;
-+	unsigned int l_step_cnt;
-+	unsigned int l_sample_cnt;
- 	unsigned int target_speed;
- 	int ret;
- 
-@@ -469,11 +520,11 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
- 	if (target_speed > MAX_FS_MODE_SPEED) {
- 		/* Set master code speed register */
- 		ret = mtk_i2c_calculate_speed(i2c, clk_src, MAX_FS_MODE_SPEED,
--					      &step_cnt, &sample_cnt);
-+					      &l_step_cnt, &l_sample_cnt);
- 		if (ret < 0)
- 			return ret;
- 
--		i2c->timing_reg = (sample_cnt << 8) | step_cnt;
-+		i2c->timing_reg = (l_sample_cnt << 8) | l_step_cnt;
- 
- 		/* Set the high speed mode register */
- 		ret = mtk_i2c_calculate_speed(i2c, clk_src, target_speed,
-@@ -483,6 +534,10 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
- 
- 		i2c->high_speed_reg = I2C_TIME_DEFAULT_VALUE |
- 			(sample_cnt << 12) | (step_cnt << 8);
-+
-+		if (i2c->dev_comp->ltiming_adjust)
-+			i2c->ltiming_reg = (l_sample_cnt << 6) | l_step_cnt |
-+					   (sample_cnt << 12) | (step_cnt << 9);
- 	} else {
- 		ret = mtk_i2c_calculate_speed(i2c, clk_src, target_speed,
- 					      &step_cnt, &sample_cnt);
-@@ -493,6 +548,9 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
- 
- 		/* Disable the high speed transaction */
- 		i2c->high_speed_reg = I2C_TIME_CLR_VALUE;
-+
-+		if (i2c->dev_comp->ltiming_adjust)
-+			i2c->ltiming_reg = (sample_cnt << 6) | step_cnt;
- 	}
- 
- 	return 0;
--- 
-1.7.9.5
+>  };
+>
+>  /*
+> @@ -182,6 +183,7 @@ struct sun6i_dma_dev {
+>         struct dma_device       slave;
+>         void __iomem            *base;
+>         struct clk              *clk;
+> +       struct clk              *clk_mbus;
+>         int                     irq;
+>         spinlock_t              lock;
+>         struct reset_control    *rstc;
+> @@ -1208,6 +1210,14 @@ static int sun6i_dma_probe(struct platform_device *pdev)
+>                 return PTR_ERR(sdc->clk);
+>         }
+>
+> +       if (sdc->cfg->mbus_clk) {
+> +               sdc->clk_mbus = devm_clk_get(&pdev->dev, "mbus");
+> +               if (IS_ERR(sdc->clk_mbus)) {
+> +                       dev_err(&pdev->dev, "No mbus clock specified\n");
+> +                       return PTR_ERR(sdc->clk_mbus);
+> +               }
+> +       }
+> +
+>         sdc->rstc = devm_reset_control_get(&pdev->dev, NULL);
+>         if (IS_ERR(sdc->rstc)) {
+>                 dev_err(&pdev->dev, "No reset controller specified\n");
+> @@ -1312,11 +1322,19 @@ static int sun6i_dma_probe(struct platform_device *pdev)
+>                 goto err_reset_assert;
+>         }
+>
+> +       if (sdc->cfg->mbus_clk) {
+> +               ret = clk_prepare_enable(sdc->clk_mbus);
+
+The clk API checks for NULL pointer, so you could just drop the
+conditional here.
+
+> +               if (ret) {
+> +                       dev_err(&pdev->dev, "Couldn't enable mbus clock\n");
+> +                       goto err_clk_disable;
+> +               }
+> +       }
+> +
+>         ret = devm_request_irq(&pdev->dev, sdc->irq, sun6i_dma_interrupt, 0,
+>                                dev_name(&pdev->dev), sdc);
+>         if (ret) {
+>                 dev_err(&pdev->dev, "Cannot request IRQ\n");
+> -               goto err_clk_disable;
+> +               goto err_mbus_clk_disable;
+>         }
+>
+>         ret = dma_async_device_register(&sdc->slave);
+> @@ -1341,6 +1359,8 @@ static int sun6i_dma_probe(struct platform_device *pdev)
+>         dma_async_device_unregister(&sdc->slave);
+>  err_irq_disable:
+>         sun6i_kill_tasklet(sdc);
+> +err_mbus_clk_disable:
+> +       clk_disable_unprepare(sdc->clk_mbus);
+
+Since you aren't using it here either.
+
+ChenYu
+
+
+>  err_clk_disable:
+>         clk_disable_unprepare(sdc->clk);
+>  err_reset_assert:
+> @@ -1359,6 +1379,7 @@ static int sun6i_dma_remove(struct platform_device *pdev)
+>
+>         sun6i_kill_tasklet(sdc);
+>
+> +       clk_disable_unprepare(sdc->clk_mbus);
+>         clk_disable_unprepare(sdc->clk);
+>         reset_control_assert(sdc->rstc);
+>
+> --
+> 2.21.0
+>
