@@ -1,8 +1,8 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv4 20/28] PCI: mobiveil: disabled IB and OB windows set by
- bootloader
-Date: Mon, 11 Mar 2019 09:32:40 +0000
-Message-ID: <20190311093130.7209-21-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv4 21/28] PCI: mobiveil: add Byte and Half-Word width register
+ accessors
+Date: Mon, 11 Mar 2019 09:32:49 +0000
+Message-ID: <20190311093130.7209-22-Zhiqiang.Hou@nxp.com>
 References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -17,8 +17,9 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Disabled all inbound and outbound windows before set up the windows
-in kernel, in case transactions match the window set by bootloader.
+As there are some Byte and Half-Work width registers in PCIe
+configuration space, add Byte and Half-Word width register
+accessors.
 
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
@@ -27,73 +28,47 @@ Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 V4:
  - no change
 
- .../controller/mobiveil/pcie-mobiveil-host.c   |  7 +++++++
- .../pci/controller/mobiveil/pcie-mobiveil.c    | 18 ++++++++++++++++++
- .../pci/controller/mobiveil/pcie-mobiveil.h    |  2 ++
- 3 files changed, 27 insertions(+)
+ .../pci/controller/mobiveil/pcie-mobiveil.h   | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c b/drivers=
-/pci/controller/mobiveil/pcie-mobiveil-host.c
-index d1765d572f44..d028cdf31d0e 100644
---- a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-+++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-@@ -221,6 +221,13 @@ static int mobiveil_host_init(struct mobiveil_pcie *pc=
-ie)
- {
- 	u32 value, pab_ctrl, type;
- 	struct resource_entry *win;
-+	int i;
-+
-+	/* Disable all inbound/outbound windows */
-+	for (i =3D 0; i < pcie->apio_wins; i++)
-+		mobiveil_pcie_disable_ob_win(pcie, i);
-+	for (i =3D 0; i < pcie->ppio_wins; i++)
-+		mobiveil_pcie_disable_ib_win(pcie, i);
-=20
- 	/* setup bus numbers */
- 	value =3D csr_readl(pcie, PCI_PRIMARY_BUS);
-diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.c b/drivers/pci/=
-controller/mobiveil/pcie-mobiveil.c
-index 370658d6546d..49d471b75925 100644
---- a/drivers/pci/controller/mobiveil/pcie-mobiveil.c
-+++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.c
-@@ -226,3 +226,21 @@ int mobiveil_bringup_link(struct mobiveil_pcie *pcie)
-=20
- 	return -ETIMEDOUT;
- }
-+
-+void mobiveil_pcie_disable_ib_win(struct mobiveil_pcie *pci, int win_num)
-+{
-+	u32 val;
-+
-+	val =3D csr_readl(pci, PAB_PEX_AMAP_CTRL(win_num));
-+	val &=3D ~(1 << AMAP_CTRL_EN_SHIFT);
-+	csr_writel(pci, val, PAB_PEX_AMAP_CTRL(win_num));
-+}
-+
-+void mobiveil_pcie_disable_ob_win(struct mobiveil_pcie *pci, int win_num)
-+{
-+	u32 val;
-+
-+	val =3D csr_readl(pci, PAB_AXI_AMAP_CTRL(win_num));
-+	val &=3D ~(1 << WIN_ENABLE_SHIFT);
-+	csr_writel(pci, val, PAB_AXI_AMAP_CTRL(win_num));
-+}
 diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/=
 controller/mobiveil/pcie-mobiveil.h
-index eb4cb61291a8..81685840b378 100644
+index 81685840b378..933c2f34bc52 100644
 --- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
 +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-@@ -171,6 +171,8 @@ void program_ob_windows(struct mobiveil_pcie *pcie, int=
- win_num, u64 cpu_addr,
- 			u64 pci_addr, u32 type, u64 size);
- void program_ib_windows(struct mobiveil_pcie *pcie, int win_num, u64 cpu_a=
-ddr,
- 			u64 pci_addr, u32 type, u64 size);
-+void mobiveil_pcie_disable_ob_win(struct mobiveil_pcie *pci, int win_num);
-+void mobiveil_pcie_disable_ib_win(struct mobiveil_pcie *pci, int win_num);
- u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size);
- void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size);
+@@ -181,9 +181,29 @@ static inline u32 csr_readl(struct mobiveil_pcie *pcie=
+, u32 off)
+ 	return csr_read(pcie, off, 0x4);
+ }
 =20
++static inline u32 csr_readw(struct mobiveil_pcie *pcie, u32 off)
++{
++	return csr_read(pcie, off, 0x2);
++}
++
++static inline u32 csr_readb(struct mobiveil_pcie *pcie, u32 off)
++{
++	return csr_read(pcie, off, 0x1);
++}
++
+ static inline void csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off=
+)
+ {
+ 	csr_write(pcie, val, off, 0x4);
+ }
+=20
++static inline void csr_writew(struct mobiveil_pcie *pcie, u32 val, u32 off=
+)
++{
++	csr_write(pcie, val, off, 0x2);
++}
++
++static inline void csr_writeb(struct mobiveil_pcie *pcie, u32 val, u32 off=
+)
++{
++	csr_write(pcie, val, off, 0x1);
++}
++
+ #endif /* _PCIE_MOBIVEIL_H */
 --=20
 2.17.1
