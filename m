@@ -1,131 +1,156 @@
-From: Sean Wang <sean.wang@kernel.org>
-Subject: Re: [PATCH v2 8/9] rtc: mt6397: fix alarm register overwrite
-Date: Mon, 11 Mar 2019 13:50:21 -0700
-Message-ID: <CAGp9Lzq4D56PbivbHkQd41-TCoGACTiBqLz+Jyiqiog=YMvEbQ@mail.gmail.com>
-References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1552275991-34648-9-git-send-email-hsin-hsiung.wang@mediatek.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v10 04/27] clocksource: Add a new timer-ingenic driver
+Date: Mon, 11 Mar 2019 17:52:07 -0300
+Message-ID: <1552337527.24876.0@crapouillou.net>
+References: <20190302233413.14813-1-paul@crapouillou.net>
+        <20190302233413.14813-5-paul@crapouillou.net> <20190304122250.GC9040@ulmo>
+        <1551723186.4932.0@crapouillou.net> <20190308102225.GC22655@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552275991-34648-9-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <20190308102225.GC22655@ulmo>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Eddie Huang <eddie.huang@mediatek.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, srv_heupstream <srv_heupstream@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Marc Zyngier <marc.zyngier@arm.com>, Ran Bi <ran.bi@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-mediatek@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Mathieu Malaterre <malat@debian.org>, od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Thierry,
 
-On Sun, Mar 10, 2019 at 8:49 PM Hsin-Hsiung Wang
-<hsin-hsiung.wang@mediatek.com> wrote:
->
-> From: Ran Bi <ran.bi@mediatek.com>
->
-> Alarm registers high byte was reserved for other functions.
-> This add mask in alarm registers operation functions.
-> This also fix error condition in interrupt handler.
->
-> Fixes: fc2979118f3f ("rtc: mediatek: Add MT6397 RTC driver")
->
+Le ven. 8 mars 2019 =E0 7:22, Thierry Reding <thierry.reding@gmail.com>=20
+a =E9crit :
+> On Mon, Mar 04, 2019 at 07:13:05PM +0100, Paul Cercueil wrote:
+>>  Hi Thierry,
+>>=20
+>>  On Mon, Mar 4, 2019 at 1:22 PM, Thierry Reding=20
+>> <thierry.reding@gmail.com>
+>>  wrote:
+>>  > On Sat, Mar 02, 2019 at 08:33:50PM -0300, Paul Cercueil wrote:
+>>  > [...]
+>>  > >  diff --git a/drivers/clocksource/ingenic-timer.c
+>>  > > b/drivers/clocksource/ingenic-timer.c
+> [...]
+>>  > >  +static u64 notrace ingenic_tcu_timer_read(void)
+>>  > >  +{
+>>  > >  +	unsigned int channel =3D ingenic_tcu->cs_channel;
+>>  > >  +	u16 count;
+>>  > >  +
+>>  > >  +	count =3D readw(ingenic_tcu_base + TCU_REG_TCNTc(channel));
+>>  >
+>>  > Can't yo do this via the regmap?
+>>=20
+>>  I could, but for the sched_clock to be precise the function must=20
+>> return
+>>  as fast as possible. That's the rationale behind the use of readw()=20
+>> here.
+>>=20
+>>  That's also the reason why ingenic_tcu_base is global and exported,=20
+>> so
+>>  that the OS Timer driver can use it as well.
+>=20
+> Is the path through the regmap really significantly slower than the
+> direct register access? Anyway, if you need the global anyway, might=20
+> as
+> well use it.
 
-add a  Cc: stable@vger.kernel.org  here to apply to all stable kernels
-for the critical fixup patch.
+About 10% slower.
 
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> ---
->  drivers/rtc/rtc-mt6397.c | 47 +++++++++++++++++++++++++++++++++--------------
->  1 file changed, 33 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index e9a25ec..f85f1fc 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -55,6 +55,14 @@
->
->  #define RTC_AL_SEC             0x0018
->
-> +#define RTC_AL_SEC_MASK                0x003f
-> +#define RTC_AL_MIN_MASK                0x003f
-> +#define RTC_AL_HOU_MASK                0x001f
-> +#define RTC_AL_DOM_MASK                0x001f
-> +#define RTC_AL_DOW_MASK                0x0007
-> +#define RTC_AL_MTH_MASK                0x000f
-> +#define RTC_AL_YEA_MASK                0x007f
-> +
->  #define RTC_PDN2               0x002e
->  #define RTC_PDN2_PWRON_ALARM   BIT(4)
->
-> @@ -111,7 +119,7 @@ static irqreturn_t mtk_rtc_irq_handler_thread(int irq, void *data)
->                 irqen = irqsta & ~RTC_IRQ_EN_AL;
->                 mutex_lock(&rtc->lock);
->                 if (regmap_write(rtc->regmap, rtc->addr_base + RTC_IRQ_EN,
-> -                                irqen) < 0)
-> +                                irqen) == 0)
->                         mtk_rtc_write_trigger(rtc);
->                 mutex_unlock(&rtc->lock);
->
-> @@ -233,12 +241,12 @@ static int mtk_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
->         alm->pending = !!(pdn2 & RTC_PDN2_PWRON_ALARM);
->         mutex_unlock(&rtc->lock);
->
-> -       tm->tm_sec = data[RTC_OFFSET_SEC];
-> -       tm->tm_min = data[RTC_OFFSET_MIN];
-> -       tm->tm_hour = data[RTC_OFFSET_HOUR];
-> -       tm->tm_mday = data[RTC_OFFSET_DOM];
-> -       tm->tm_mon = data[RTC_OFFSET_MTH];
-> -       tm->tm_year = data[RTC_OFFSET_YEAR];
-> +       tm->tm_sec = data[RTC_OFFSET_SEC] & RTC_AL_SEC_MASK;
-> +       tm->tm_min = data[RTC_OFFSET_MIN] & RTC_AL_MIN_MASK;
-> +       tm->tm_hour = data[RTC_OFFSET_HOUR] & RTC_AL_HOU_MASK;
-> +       tm->tm_mday = data[RTC_OFFSET_DOM] & RTC_AL_DOM_MASK;
-> +       tm->tm_mon = data[RTC_OFFSET_MTH] & RTC_AL_MTH_MASK;
-> +       tm->tm_year = data[RTC_OFFSET_YEAR] & RTC_AL_YEA_MASK;
->
->         tm->tm_year += RTC_MIN_YEAR_OFFSET;
->         tm->tm_mon--;
-> @@ -259,14 +267,25 @@ static int mtk_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
->         tm->tm_year -= RTC_MIN_YEAR_OFFSET;
->         tm->tm_mon++;
->
-> -       data[RTC_OFFSET_SEC] = tm->tm_sec;
-> -       data[RTC_OFFSET_MIN] = tm->tm_min;
-> -       data[RTC_OFFSET_HOUR] = tm->tm_hour;
-> -       data[RTC_OFFSET_DOM] = tm->tm_mday;
-> -       data[RTC_OFFSET_MTH] = tm->tm_mon;
-> -       data[RTC_OFFSET_YEAR] = tm->tm_year;
-> -
->         mutex_lock(&rtc->lock);
-> +       ret = regmap_bulk_read(rtc->regmap, rtc->addr_base + RTC_AL_SEC,
-> +                              data, RTC_OFFSET_COUNT);
-> +       if (ret < 0)
-> +               goto exit;
-> +
+> [...]
+>>  > >  +	// Register the sched_clock at the very end as there's no=20
+>> way to
+>>  > > undo it
+>>  > >  +	rate =3D clk_get_rate(tcu->cs_clk);
+>>  > >  +	sched_clock_register(ingenic_tcu_timer_read, 16, rate);
+>>  >
+>>  > Oh wow... so you managed to nicely encapsulate everything and now=20
+>> this
+>>  > seems to be the only reason why you need to rely on global=20
+>> variables.
+>>  >
+>>  > That's unfortunate. I suppose we could go and add a void *data=20
+>> parameter
+>>  > to sched_clock_register() and pass that to the read() function.=20
+>> That way
+>>  > you could make this completely independent of global variables,=20
+>> but
+>>  > there are 73 callers of sched_clock_register() and they are=20
+>> spread all
+>>  > over the place, so sounds a bit daunting to me.
+>>=20
+>>  Yes, that's the main reason behind the use of a global variables.
+>>  Is there a way we could introduce another callback, e.g.=20
+>> .read_value(),
+>>  that would receive a void *param? Then the current .read() callback
+>>  can be deprecated and the 73 callers can be migrated later.
+>=20
+> Yeah, I suppose that would be possible. I'll defer to Daniel and=20
+> Thomas
+> on this. They may not consider this important enough.
+>=20
+>>  > >  +
+>>  > >  +	return 0;
+>>  > >  +
+>>  > >  +err_tcu_clocksource_cleanup:
+>>  > >  +	ingenic_tcu_clocksource_cleanup(tcu);
+>>  > >  +err_tcu_clk_cleanup:
+>>  > >  +	ingenic_tcu_clk_cleanup(tcu, np);
+>>  > >  +err_tcu_intc_cleanup:
+>>  > >  +	ingenic_tcu_intc_cleanup(tcu);
+>>  > >  +err_clk_disable:
+>>  > >  +	clk_disable_unprepare(tcu->clk);
+>>  > >  +err_clk_put:
+>>  > >  +	clk_put(tcu->clk);
+>>  > >  +err_free_regmap:
+>>  > >  +	regmap_exit(tcu->map);
+>>  > >  +err_iounmap:
+>>  > >  +	iounmap(base);
+>>  > >  +	release_mem_region(res.start, resource_size(&res));
+>>  > >  +err_free_ingenic_tcu:
+>>  > >  +	kfree(tcu);
+>>  > >  +	return ret;
+>>  > >  +}
+>>  > >  +
+>>  > >  +TIMER_OF_DECLARE(jz4740_tcu_intc,  "ingenic,jz4740-tcu",
+>>  > > ingenic_tcu_init);
+>>  > >  +TIMER_OF_DECLARE(jz4725b_tcu_intc, "ingenic,jz4725b-tcu",
+>>  > > ingenic_tcu_init);
+>>  > >  +TIMER_OF_DECLARE(jz4770_tcu_intc,  "ingenic,jz4770-tcu",
+>>  > > ingenic_tcu_init);
+>>  > >  +
+>>  > >  +
+>>  > >  +static int __init ingenic_tcu_probe(struct platform_device=20
+>> *pdev)
+>>  > >  +{
+>>  > >  +	platform_set_drvdata(pdev, ingenic_tcu);
+>>  >
+>>  > Then there's also this. Oh well... nevermind then.
+>>=20
+>>  The content of ingenic_tcu_platform_init() could be moved inside
+>>  ingenic_tcu_init(). But can we get a hold of the struct device=20
+>> before the
+>>  probe function is called? That would allow to set the drvdata and=20
+>> regmap
+>>  without relying on global state.
+>=20
+> I'm not sure if the driver core is ready at this point. It's likely it
+> isn't, otherwise there'd be no need for TIMER_OF_DECLARE(), really. I
+> also vaguely recall looking into this a few years ago because of some
+> similar work I was but I eventually gave up because I couldn't find a
+> way that would allow both the code to execute early enough and still
+> use the regular driver model.
+>=20
+> Platform device become available at arch_initcall_sync (3s), while the
+> TIMER_OF_DECLARE code runs way earlier than any of the initcalls, so I
+> don't think there's a way to do it. Unless perhaps if the timers can
+> be initialized later. I'm not sure if that's possible, and might not=20
+> be
+> worth it just for the sake of being pedantic.
+>=20
+> Thierry
 
-Why did we need an additional regmap_bulk_read here? I would suppose
-data[RTC_OFFSET_*] & ~(RTC_AL_*_MASK) is always equal to 0.
+I think for the time being I can't really go around using the global=20
+variables.
+Hopefully that's something that can be fixed in the future.
 
-It might be another fixup since change is not being mentioned in the
-git message.
-
-> +       data[RTC_OFFSET_SEC] = ((data[RTC_OFFSET_SEC] & ~(RTC_AL_SEC_MASK)) |
-> +                               (tm->tm_sec & RTC_AL_SEC_MASK));
-> +       data[RTC_OFFSET_MIN] = ((data[RTC_OFFSET_MIN] & ~(RTC_AL_MIN_MASK)) |
-> +                               (tm->tm_min & RTC_AL_MIN_MASK));
-> +       data[RTC_OFFSET_HOUR] = ((data[RTC_OFFSET_HOUR] & ~(RTC_AL_HOU_MASK)) |
-> +                               (tm->tm_hour & RTC_AL_HOU_MASK));
-> +       data[RTC_OFFSET_DOM] = ((data[RTC_OFFSET_DOM] & ~(RTC_AL_DOM_MASK)) |
-> +                               (tm->tm_mday & RTC_AL_DOM_MASK));
-> +       data[RTC_OFFSET_MTH] = ((data[RTC_OFFSET_MTH] & ~(RTC_AL_MTH_MASK)) |
-> +                               (tm->tm_mon & RTC_AL_MTH_MASK));
-> +       data[RTC_OFFSET_YEAR] = ((data[RTC_OFFSET_YEAR] & ~(RTC_AL_YEA_MASK)) |
-> +                               (tm->tm_year & RTC_AL_YEA_MASK));
-> +
->         if (alm->enabled) {
->                 ret = regmap_bulk_write(rtc->regmap,
->                                         rtc->addr_base + RTC_AL_SEC,
-> --
-> 1.9.1
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+-Paul
+=
