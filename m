@@ -1,81 +1,97 @@
-From: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Subject: [PATCH v2 9/9] rtc: Add support for the MediaTek MT6358 RTC
-Date: Mon, 11 Mar 2019 11:46:31 +0800
-Message-ID: <1552275991-34648-10-git-send-email-hsin-hsiung.wang@mediatek.com>
-References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH 1/5] dt-bindings: connector: add optional properties for
+ Type-B
+Date: Mon, 11 Mar 2019 13:33:03 +0800
+Message-ID: <1552282383.10179.21.camel@mhfsdcap03>
+References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
+         <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Eddie Huang <eddie.huang@mediatek.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Ran Bi <ran.bi@mediatek.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ran Bi <ran.bi@mediatek.com>
+Hi,
 
-This add support for the MediaTek MT6358 RTC. MT6397 mfd will pass
-RTC_WRTGR address offset to RTC driver.
+On Fri, 2019-03-08 at 13:07 +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 08-03-19 07:13, Chunfeng Yun wrote:
+> > Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+> > usb-b-connector
+> > 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > ---
+> >   .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
+> >   1 file changed, 10 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> > index a9a2f2fc44f2..7a07b0f4f973 100644
+> > --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+> > +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> > @@ -17,6 +17,16 @@ Optional properties:
+> >   - self-powered: Set this property if the usb device that has its own power
+> >     source.
+> >   
+> > +Optional properties for usb-b-connector:
+> > +- id-gpios: gpio for USB ID pin.
+> 
+> What about boards where the ID pin is *not* connected to a GPIO,
+> but e.g. to a special pin on the PMIC which can also detect
+> an ACA adapter ? Currently this case is handled by extcon
+> drivers, but we have no way to set e.g. vbus-supply for the
+> connector. Maybe in this case the usb-connector node should
+> be a child of the PMIC node ?
+Yes, it would be, PMIC is in charger of detecting the status of ID pin
+> 
+> And in many cases there also is a mux to switch the datalines
+> between the host and device(gadget) controllers, how should
+> that be described in this model?  See the new usb-role-switch
+> code under drivers/usb/roles
+> 
+> In some cases the mux is controlled through a gpio, so we
+> may want to add a "mux-gpios" here in which case we also
+> need to define what 0/1 means.
+I'm not sure, the mux seems not belong to this connector,
+and may need another driver to register usb-role-switch,
+similar to:
 
-Signed-off-by: Ran Bi <ran.bi@mediatek.com>
----
- drivers/rtc/rtc-mt6397.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+[v2,2/2] usb: typec: add typec switch via GPIO control
+https://patchwork.kernel.org/patch/10834327/
 
-diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-index f85f1fc..c8a0090 100644
---- a/drivers/rtc/rtc-mt6397.c
-+++ b/drivers/rtc/rtc-mt6397.c
-@@ -27,7 +27,7 @@
- #define RTC_BBPU		0x0000
- #define RTC_BBPU_CBUSY		BIT(6)
- 
--#define RTC_WRTGR		0x003c
-+#define RTC_WRTGR_DEFAULT	0x003c
- 
- #define RTC_IRQ_STA		0x0002
- #define RTC_IRQ_STA_AL		BIT(0)
-@@ -78,6 +78,7 @@ struct mt6397_rtc {
- 	struct regmap		*regmap;
- 	int			irq;
- 	u32			addr_base;
-+	u32			wrtgr_offset;
- };
- 
- static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
-@@ -86,7 +87,8 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
- 	int ret;
- 	u32 data;
- 
--	ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
-+	ret = regmap_write(rtc->regmap,
-+			   rtc->addr_base + rtc->wrtgr_offset, 1);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -341,6 +343,15 @@ static int mtk_rtc_probe(struct platform_device *pdev)
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	rtc->addr_base = res->start;
- 
-+	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
-+	if (res) {
-+		rtc->wrtgr_offset = res->start;
-+		dev_info(&pdev->dev, "register offset:%d\n", rtc->wrtgr_offset);
-+	} else {
-+		rtc->wrtgr_offset = RTC_WRTGR_DEFAULT;
-+		dev_err(&pdev->dev, "Failed to get register offset\n");
-+	}
-+
- 	rtc->irq = platform_get_irq(pdev, 0);
- 	if (rtc->irq < 0)
- 		return rtc->irq;
-@@ -420,6 +431,7 @@ static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
- 			mt6397_rtc_resume);
- 
- static const struct of_device_id mt6397_rtc_of_match[] = {
-+	{ .compatible = "mediatek,mt6358-rtc", },
- 	{ .compatible = "mediatek,mt6397-rtc", },
- 	{ }
- };
--- 
-1.9.1
+
+> 
+> > +- vbus-gpios: gpio for USB VBUS pin.
+> > +  see gpio/gpio.txt.
+> > +- vbus-supply: reference to the VBUS regulator, needed when supports
+> > +  dual-role mode.
+> 
+> I think this needs some text that there can be either a vbus-gpio or
+> a vbus-supply. Oh wait reading:
+> 
+> https://patchwork.kernel.org/patch/10819377/
+> 
+> I see that this GPIO is for detecting vbus presence, not for driving/enabling
+> 5v to Vbus from the board, that needs to be described more clearly.
+Ok
+
+Thanks a lot
+> 
+> > +- pinctrl-names : a pinctrl state named "default" is optional
+> > +- pinctrl-0 : pin control group
+> > +  see pinctrl/pinctrl-bindings.txt
+> > +
+> >   Optional properties for usb-c-connector:
+> >   - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
+> >     connector has power support.
+> > 
+> 
+> 
+> Regards,
+> 
+> Hans
