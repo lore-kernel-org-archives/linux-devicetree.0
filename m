@@ -1,40 +1,179 @@
-Return-Path: <SRS0=ezLt=RQ=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v3 5/6] ARM: dts: imx7s-warp: add fxas21002c gyroscope
-Date: Wed, 13 Mar 2019 18:40:01 +0000
-Message-Id: <20190313184002.2501-6-rui.silva@linaro.org>
-In-Reply-To: <20190313184002.2501-1-rui.silva@linaro.org>
-References: <20190313184002.2501-1-rui.silva@linaro.org>
+Return-Path: <SRS0=8nMF=RO=nxp.com=jun.li@kernel.org>
+From: Jun Li <jun.li@nxp.com>
+Subject: [PATCH v3 2/2] usb: typec: add typec switch via GPIO control
+Date: Mon, 11 Mar 2019 10:40:12 +0000
+Message-ID: <1552299557-6306-2-git-send-email-jun.li@nxp.com>
+References: <1552299557-6306-1-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1552299557-6306-1-git-send-email-jun.li@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add entry to enable the fxas21002c gyroscope in the warp7 board.
+This patch adds a simple typec switch driver which only needs
+a GPIO to switch the super speed active channel according to
+typec orientation.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- arch/arm/boot/dts/imx7s-warp.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
-index 58d1a89ee3e3..bf853707b104 100644
---- a/arch/arm/boot/dts/imx7s-warp.dts
-+++ b/arch/arm/boot/dts/imx7s-warp.dts
-@@ -238,6 +238,13 @@
- 		compatible = "fsl,mpl3115";
- 		reg = <0x60>;
- 	};
+Change for v3:
+- Remove file name in driver description.
+- Add Andy Shevchenko's Reviewed-by tag.
+
+Changes for v2:
+- Use the correct head files for gpio api and of_device_id:
+  #include <linux/gpio/consumer.h>
+  #include <linux/mod_devicetable.h>
+- Add driver dependency on GPIOLIB
+
+ drivers/usb/typec/mux/Kconfig       |   7 +++
+ drivers/usb/typec/mux/Makefile      |   1 +
+ drivers/usb/typec/mux/gpio-switch.c | 105 ++++++++++++++++++++++++++++++++=
+++++
+ 3 files changed, 113 insertions(+)
+
+diff --git a/drivers/usb/typec/mux/Kconfig b/drivers/usb/typec/mux/Kconfig
+index 01ed0d5..27120e6 100644
+--- a/drivers/usb/typec/mux/Kconfig
++++ b/drivers/usb/typec/mux/Kconfig
+@@ -9,4 +9,11 @@ config TYPEC_MUX_PI3USB30532
+ 	  Say Y or M if your system has a Pericom PI3USB30532 Type-C cross
+ 	  switch / mux chip found on some devices with a Type-C port.
+=20
++config TYPEC_SWITCH_GPIO
++	tristate "Simple Super Speed Active Switch via GPIO"
++	depends on GPIOLIB
++	help
++	  Say Y or M if your system has a typec super speed channel
++	  switch via a simple GPIO control.
 +
-+	gyroscope@20 {
-+		compatible = "nxp,fxas21002c";
-+		reg = <0x20>;
-+		vdd-supply = <&reg_peri_3p15v>;
-+		vddio-supply = <&reg_peri_3p15v>;
-+	};
- };
- 
- &sai1 {
--- 
-2.20.1
+ endmenu
+diff --git a/drivers/usb/typec/mux/Makefile b/drivers/usb/typec/mux/Makefil=
+e
+index 1332e46..e29377c 100644
+--- a/drivers/usb/typec/mux/Makefile
++++ b/drivers/usb/typec/mux/Makefile
+@@ -1,3 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+=20
+ obj-$(CONFIG_TYPEC_MUX_PI3USB30532)	+=3D pi3usb30532.o
++obj-$(CONFIG_TYPEC_SWITCH_GPIO)		+=3D gpio-switch.o
+diff --git a/drivers/usb/typec/mux/gpio-switch.c b/drivers/usb/typec/mux/gp=
+io-switch.c
+new file mode 100644
+index 0000000..9ccfefe
+--- /dev/null
++++ b/drivers/usb/typec/mux/gpio-switch.c
+@@ -0,0 +1,105 @@
++// SPDX-License-Identifier: GPL-2.0
++/**
++ * Typec switch via a simple GPIO control driver.
++ *
++ * Copyright 2019 NXP
++ * Author: Jun Li <jun.li@nxp.com>
++ *
++ */
++
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/kernel.h>
++#include <linux/platform_device.h>
++#include <linux/gpio/consumer.h>
++#include <linux/mod_devicetable.h>
++#include <linux/usb/typec_mux.h>
++
++struct gpio_typec_switch {
++	struct typec_switch sw;
++	struct mutex lock;
++	struct gpio_desc *ss_sel;
++};
++
++static int switch_gpio_set(struct typec_switch *sw,
++			   enum typec_orientation orientation)
++{
++	struct gpio_typec_switch *gpio_sw =3D container_of(sw,
++				struct gpio_typec_switch, sw);
++
++	mutex_lock(&gpio_sw->lock);
++
++	switch (orientation) {
++	case TYPEC_ORIENTATION_NORMAL:
++		gpiod_set_value_cansleep(gpio_sw->ss_sel, 1);
++		break;
++	case TYPEC_ORIENTATION_REVERSE:
++		gpiod_set_value_cansleep(gpio_sw->ss_sel, 0);
++		break;
++	case TYPEC_ORIENTATION_NONE:
++		break;
++	}
++
++	mutex_unlock(&gpio_sw->lock);
++
++	return 0;
++}
++
++static int typec_switch_gpio_probe(struct platform_device *pdev)
++{
++	struct gpio_typec_switch	*gpio_sw;
++	struct device			*dev =3D &pdev->dev;
++	int				ret;
++
++	gpio_sw =3D devm_kzalloc(dev, sizeof(*gpio_sw), GFP_KERNEL);
++	if (!gpio_sw)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, gpio_sw);
++
++	gpio_sw->sw.dev =3D dev;
++	gpio_sw->sw.set =3D switch_gpio_set;
++	mutex_init(&gpio_sw->lock);
++
++	/* Get the super speed active channel selection GPIO */
++	gpio_sw->ss_sel =3D devm_gpiod_get(dev, NULL, GPIOD_OUT_LOW);
++	if (IS_ERR(gpio_sw->ss_sel))
++		return PTR_ERR(gpio_sw->ss_sel);
++
++	ret =3D typec_switch_register(&gpio_sw->sw);
++	if (ret) {
++		dev_err(dev, "Error registering typec switch: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int typec_switch_gpio_remove(struct platform_device *pdev)
++{
++	struct gpio_typec_switch *gpio_sw =3D platform_get_drvdata(pdev);
++
++	typec_switch_unregister(&gpio_sw->sw);
++
++	return 0;
++}
++
++static const struct of_device_id of_typec_switch_gpio_match[] =3D {
++	{ .compatible =3D "nxp,ptn36043" },
++	{ /* Sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, of_typec_switch_gpio_match);
++
++static struct platform_driver typec_switch_gpio_driver =3D {
++	.probe		=3D typec_switch_gpio_probe,
++	.remove		=3D typec_switch_gpio_remove,
++	.driver		=3D {
++		.name	=3D "typec-switch-gpio",
++		.of_match_table =3D of_typec_switch_gpio_match,
++	},
++};
++
++module_platform_driver(typec_switch_gpio_driver);
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("TypeC Super Speed Switch GPIO driver");
++MODULE_AUTHOR("Jun Li <jun.li@nxp.com>");
+--=20
+2.7.4
