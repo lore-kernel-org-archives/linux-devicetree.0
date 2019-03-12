@@ -1,140 +1,318 @@
 From: Vishal Sagar <vsagar@xilinx.com>
-Subject: RE: [PATCH v6 0/2] Add support for Xilinx CSI2 Receiver Subsystem
-Date: Tue, 12 Mar 2019 14:44:32 +0000
-Message-ID: <DM5PR02MB27135A7940D4A40E8BD31FBAA7490@DM5PR02MB2713.namprd02.prod.outlook.com>
+Subject: RE: [PATCH v6 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI
+ CSI-2 Rx Subsystem
+Date: Tue, 12 Mar 2019 14:45:06 +0000
+Message-ID: <DM5PR02MB2713DB568A4AD713BE3B2621A7490@DM5PR02MB2713.namprd02.prod.outlook.com>
 References: <1552365330-21155-1-git-send-email-vishal.sagar@xilinx.com>
- <096f280c-6a84-b116-4bee-60013728e59c@microchip.com>
+ <1552365330-21155-2-git-send-email-vishal.sagar@xilinx.com>
+ <20190312102118.6ianedkzscr7gdba@kekkonen.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <096f280c-6a84-b116-4bee-60013728e59c@microchip.com>
+In-Reply-To: <20190312102118.6ianedkzscr7gdba@kekkonen.localdomain>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>, "vishal.sagar@xilinx.com" <vishal.sagar@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dines
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, Vishal Sagar <vishal.sagar@xilinx.com>
+Cc: Hyun Kwon <hyunk@xilinx.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dinesh Kumar <dineshk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-DQpIaSBFdWdlbiwNCg0KVGhhbmtzIGZvciByZWFjaGluZyBvdXQuDQoNCj4gLS0tLS1PcmlnaW5h
-bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRXVnZW4uSHJpc3RldkBtaWNyb2NoaXAuY29tIFttYWls
-dG86RXVnZW4uSHJpc3RldkBtaWNyb2NoaXAuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBNYXJjaCAx
-MiwgMjAxOSA0OjMwIFBNDQo+IFRvOiB2aXNoYWwuc2FnYXJAeGlsaW54LmNvbTsgSHl1biBLd29u
-IDxoeXVua0B4aWxpbnguY29tPjsNCj4gbGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29t
-OyBtY2hlaGFiQGtlcm5lbC5vcmc7DQo+IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5k
-QGFybS5jb207IE1pY2hhbCBTaW1law0KPiA8bWljaGFsc0B4aWxpbnguY29tPjsgbGludXgtbWVk
-aWFAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgc2FrYXJp
-LmFpbHVzQGxpbnV4LmludGVsLmNvbTsNCj4gaGFucy52ZXJrdWlsQGNpc2NvLmNvbTsgbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2Vy
-bmVsLm9yZzsgRGluZXNoIEt1bWFyIDxkaW5lc2hrQHhpbGlueC5jb20+OyBTYW5kaXAgS290aGFy
-aQ0KPiA8c2FuZGlwa0B4aWxpbnguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY2IDAvMl0g
-QWRkIHN1cHBvcnQgZm9yIFhpbGlueCBDU0kyIFJlY2VpdmVyIFN1YnN5c3RlbQ0KPiANCj4gRVhU
-RVJOQUwgRU1BSUwNCj4gDQo+IE9uIDEyLjAzLjIwMTkgMDY6MzUsIFZpc2hhbCBTYWdhciB3cm90
-ZToNCj4gPiBYaWxpbnggTUlQSSBDU0ktMiBSZWNlaXZlciBTdWJzeXN0ZW0NCj4gPiAtLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPg0KPiA+IFRoZSBYaWxpbnggTUlQSSBD
-U0ktMiBSZWNlaXZlciBTdWJzeXN0ZW0gU29mdCBJUCBjb25zaXN0cyBvZiBhIERQSFkgd2hpY2gN
-Cj4gPiBnZXRzIHRoZSBkYXRhLCBhbiBvcHRpb25hbCBJMkMsIGEgQ1NJLTIgUmVjZWl2ZXIgd2hp
-Y2ggcGFyc2VzIHRoZSBkYXRhIGFuZA0KPiA+IGNvbnZlcnRzIGl0IGludG8gQVhJUyBkYXRhLg0K
-PiA+IFRoaXMgc3RyZWFtIG91dHB1dCBtYXliZSBjb25uZWN0ZWQgdG8gYSBYaWxpbnggVmlkZW8g
-Rm9ybWF0IEJyaWRnZS4NCj4gPiBUaGUgbWF4aW11bSBudW1iZXIgb2YgbGFuZXMgc3VwcG9ydGVk
-IGlzIGZpeGVkIGluIHRoZSBkZXNpZ24uDQo+ID4gVGhlIG51bWJlciBvZiBhY3RpdmUgbGFuZXMg
-Y2FuIGJlIHByb2dyYW1tZWQuDQo+ID4gRm9yIGUuZy4gdGhlIGRlc2lnbiBtYXkgc2V0IG1heGlt
-dW0gbGFuZXMgYXMgNCBidXQgaWYgdGhlIGNhbWVyYSBzZW5zb3IgaGFzDQo+ID4gb25seSAxIGxh
-bmUgdGhlbiB0aGUgYWN0aXZlIGxhbmVzIHNoYWxsIGJlIHNldCBhcyAxLg0KPiA+DQo+ID4gVGhl
-IHBpeGVsIGZvcm1hdCBzZXQgaW4gZGVzaWduIGFjdHMgYXMgYSBmaWx0ZXIgYWxsb3dpbmcgb25s
-eSB0aGUgc2VsZWN0ZWQNCj4gPiBkYXRhIHR5cGUgb3IgUkFXOCBkYXRhIHBhY2tldHMuIFRoZSBE
-LVBIWSByZWdpc3RlciBhY2Nlc3MgY2FuIGJlIGdhdGVkIGluDQo+ID4gdGhlIGRlc2lnbi4gVGhl
-IGJhc2UgYWRkcmVzcyBvZiB0aGUgRFBIWSBkZXBlbmRzIG9uIHdoZXRoZXIgdGhlIGludGVybmFs
-DQo+ID4gWGlsaW54IEkyQyBjb250cm9sbGVyIGlzIGVuYWJsZWQgb3Igbm90IGluIGRlc2lnbi4N
-Cj4gDQo+IEhpIFZpc2hhbCwNCj4gDQo+IERvIHlvdSBhbHNvIGluY2x1ZGUgYSBkcml2ZXIgZm9y
-IHRoZSBEUEhZID8gTmFtZWx5IEkgYW0gaW50ZXJlc3RlZCBpbg0KPiBzb21ldGhpbmcgd2hpY2gg
-Y2FuIGNvbXBseSB0byB0aGUgUEhZIHN1YnN5c3RlbSBzcGVjaWZpY2F0aW9ucywgc28gaXQNCj4g
-Y2FuIGJlIHJlZmVyZW5jZWQgYnkgcG9zc2libHkgb3RoZXIgbm9kZXMgPw0KPg0KDQpObyB0aGUg
-RFBIWSBkcml2ZXIgaXNuJ3QgaW5jbHVkZWQgbm93IGFzIHRoZSBEUEhZIHJlZ2lzdGVyIGludGVy
-ZmFjZSBjYW4gYmUgb3B0aW9uYWxseSBlbmFibGVkLg0KQnV0IHRoZSBpZGVhIGlzIHRvIGFkZCB0
-aGF0IGtpbmQgb2Ygc3VwcG9ydCBpbiBmdXR1cmUuDQoNCj4gU29tZXRoaW5nIGxpa2UgdGhpczoN
-Cj4gDQo+IHhpbGlueF9kcGh5OiBkcGh5QDQwMDAwIHsNCj4gICAgICAgICAgICAgICAgICAgICAg
-ICAgIGNvbXBhdGlibGUgPSAieGxueCxkcGh5IjsNCj4gDQo+ICAgICAgICAgICAgICAgICAgICAg
-ICAgICAjcGh5LWNlbGxzID0gPDA+Ow0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgIHJl
-ZyA9IDwweDQwMDAwIDB4MTAwPjsNCj4gDQo+ICAgICAgICAgICAgICAgICAgfTsNCj4gDQo+ICBG
-cm9tIG15IHVuZGVyc3RhbmRpbmcgeW91ciBSWCBzeXN0ZW0gY2FuIGJlIHJlZmVyZW5jZWQgYXMg
-YSB3aG9sZSwNCj4gd2l0aG91dCBiZWluZyBhYmxlIHRvIGhhdmUgdGhlIFBIWSBhcyBzZXBhcmF0
-ZSBub2RlLCBhbmQgY3JlYXRpbmcNCj4gcmVmZXJlbmNlcyBtYXliZSBsaWtlIDoNCj4gDQo+IHBo
-eXMgPSA8JnhpbGlueF9kcGh5PjsNCj4gDQoNClRydWUuIEN1cnJlbnRseSB0aGlzIGlzIGhvdyBp
-dCBpcyBpbXBsZW1lbnRlZCB3aXRob3V0IHRoZSBwaHlzIGR0IGVudHJ5Lg0KDQpSZWdhcmRzDQpW
-aXNoYWwgU2FnYXINCg0KPiANCj4gVGhhbmtzLA0KPiANCj4gRXVnZW4NCj4gDQo+IA0KPiANCj4g
-Pg0KPiA+IFRoZSBkZXZpY2UgZHJpdmVyIHJlZ2lzdGVycyB0aGUgTUlQSSBDU0kyIFJ4IFN1YnN5
-c3RlbSBhcyBhIFY0TDIgc3ViIGRldmljZQ0KPiA+IGhhdmluZyAyIHBhZHMuIFRoZSBzaW5rIHBh
-ZCBpcyBjb25uZWN0ZWQgdG8gdGhlIE1JUEkgY2FtZXJhIHNlbnNvciBhbmQNCj4gPiBvdXRwdXQg
-cGFkIGlzIGNvbm5lY3RlZCB0byB0aGUgdmlkZW8gbm9kZS4NCj4gPiBSZWZlciB0byB4bG54LGNz
-aTJyeHNzLnR4dCBmb3IgZGV2aWNlIHRyZWUgbm9kZSBkZXRhaWxzLg0KPiA+DQo+ID4gVGhpcyBk
-cml2ZXIgaGVscHMgY29uZmlndXJlIHRoZSBudW1iZXIgb2YgYWN0aXZlIGxhbmVzIHRvIGJlIHNl
-dCwgc2V0dGluZw0KPiA+IGFuZCBoYW5kbGluZyBpbnRlcnJ1cHRzIGFuZCBJUCBjb3JlIGVuYWJs
-ZS4gSXQgbG9ncyB0aGUgbnVtYmVyIG9mIGV2ZW50cw0KPiA+IG9jY3VycmluZyBhY2NvcmRpbmcg
-dG8gdGhlaXIgdHlwZSBiZXR3ZWVuIHN0cmVhbWluZyBPTiBhbmQgT0ZGLg0KPiA+IEl0IGdlbmVy
-YXRlcyBhIHY0bDIgZXZlbnQgZm9yIGVhY2ggc2hvcnQgcGFja2V0IGRhdGEgcmVjZWl2ZWQuDQo+
-ID4gVGhlIGFwcGxpY2F0aW9uIGNhbiB0aGVuIGRlcXVldWUgdGhpcyBldmVudCBhbmQgZ2V0IHRo
-ZSByZXF1aXNpdGUgZGF0YQ0KPiA+IGZyb20gdGhlIGV2ZW50IHN0cnVjdHVyZS4NCj4gPg0KPiA+
-IEl0IGFkZHMgbmV3IFY0TDIgY29udHJvbHMgd2hpY2ggYXJlIHVzZWQgdG8gZ2V0IHRoZSBldmVu
-dCBjb3VudGVyIHZhbHVlcw0KPiA+IGFuZCByZXNldCB0aGUgc3Vic3lzdGVtLg0KPiA+DQo+ID4g
-VGhlIFhpbGlueCBDU0ktMiBSeCBTdWJzeXN0ZW0gb3V0cHV0cyBhbiBBWEk0IFN0cmVhbSBkYXRh
-IHdoaWNoIGNhbiBiZQ0KPiA+IHVzZWQgZm9yIGltYWdlIHByb2Nlc3NpbmcuIFRoaXMgZGF0YSBm
-b2xsb3dzIHRoZSB2aWRlbyBmb3JtYXRzIG1lbnRpb25lZA0KPiA+IGluIFhpbGlueCBVRzkzNCB3
-aGVuIHRoZSBWaWRlbyBGb3JtYXQgQnJpZGdlIGlzIGVuYWJsZWQuDQo+ID4NCj4gPiB2Ng0KPiA+
-IC0gMS8yDQo+ID4gICAgLSBBZGRlZCBtaW5vciBjb21tZW50IGJ5IEx1Y2ENCj4gPiAgICAtIEFk
-ZGVkIFJldmlld2VkIGJ5IFJvYiBIZXJyaW5nDQo+ID4gLSAyLzINCj4gPiAgICAtIE5vIGNoYW5n
-ZQ0KPiA+DQo+ID4gdjUNCj4gPiAtIDEvMg0KPiA+ICAgIC0gUmVtb3ZlZCB0aGUgRFBIWSBjbG9j
-ayBkZXNjcmlwdGlvbiBhbmQgZHQgbm9kZS4NCj4gPiAgICAtIHJlbW92ZWQgYmF5ZXIgcGF0dGVy
-biBhcyBDU0kgZG9lc24ndCBkZWFsIHdpdGggaXQuDQo+ID4gLSAyLzINCj4gPiAgICAtIHJlbW92
-ZWQgYmF5ZXIgcGF0dGVybiBhcyBDU0kgZG9lc24ndCBkZWFsIHdpdGggaXQuDQo+ID4gICAgLSBh
-ZGQgWVVWNDIyIDEwYnBjIG1lZGlhIGJ1cyBmb3JtYXQuDQo+ID4NCj4gPiB2NA0KPiA+IC0gMS8y
-DQo+ID4gICAgLSBBZGRlZCByZXZpZXdlZCBieSBIeXVuIEt3b24NCj4gPiAtIDIvMg0KPiA+ICAg
-IC0gUmVtb3ZlZCBpcnEgbWVtYmVyIGZyb20gY29yZSBzdHJ1Y3R1cmUNCj4gPiAgICAtIENvbnNv
-bGlkYXRlZCBJUCBjb25maWcgcHJpbnRzIGluIHhjc2kycnhzc19sb2dfaXBjb25maWcoKQ0KPiA+
-ICAgIC0gUmV0dXJuIC1FSU5WQUwgaW4gY2FzZSBvZiBpbnZhbGlkIGlvY3RsDQo+ID4gICAgLSBD
-b2RlIGZvcm1hdHRpbmcNCj4gPiAgICAtIEFkZGVkIHJldmlld2VkIGJ5IEh5dW4gS3dvbg0KPiA+
-DQo+ID4gdjMNCj4gPiAtIDEvMg0KPiA+ICAgIC0gcmVtb3ZlZCBpbnRlcnJ1cHQgcGFyZW50IGFz
-IHN1Z2dlc3RlZCBieSBSb2INCj4gPiAgICAtIHJlbW92ZWQgZHBoeSBjbG9jaw0KPiA+ICAgIC0g
-bW92ZWQgdmZiIHRvIG9wdGlvbmFsIHByb3BlcnRpZXMNCj4gPiAgICAtIEFkZGVkIHJlcXVpcmVk
-IGFuZCBvcHRpb25hbCBwb3J0IHByb3BlcnRpZXMgc2VjdGlvbg0KPiA+ICAgIC0gQWRkZWQgZW5k
-cG9pbnQgcHJvcGVydHkgc2VjdGlvbg0KPiA+IC0gMi8yDQo+ID4gICAtIEZpeGVkIGNvbW1lbnRz
-IGdpdmVuIGJ5IEh5dW4uDQo+ID4gICAtIFJlbW92ZWQgRFBIWSAyMDAgTUh6IGNsb2NrLiBUaGlz
-IHdpbGwgYmUgY29udHJvbGxlZCBieSBEUEhZIGRyaXZlcg0KPiA+ICAgLSBNaW5vciBjb2RlIGZv
-cm1hdHRpbmcNCj4gPiAgIC0gZW5fY3NpX3YyMCBhbmQgdmZiIG1lbWJlcnMgcmVtb3ZlZCBmcm9t
-IHN0cnVjdCBhbmQgbWFkZSBsb2NhbCB0byBkdA0KPiBwYXJzaW5nDQo+ID4gICAtIGxvY2sgZGVz
-Y3JpcHRpb24gdXBkYXRlZA0KPiA+ICAgLSBjaGFuZ2VkIHRvIHJhdGVsaW1pdGVkIHR5cGUgZm9y
-IGFsbCBkZXYgcHJpbnRzIGluIGlycSBoYW5kbGVyDQo+ID4gICAtIFJlbW92ZWQgWVVWIDQyMiAx
-MGJwYyBtZWRpYSBmb3JtYXQNCj4gPg0KPiA+IHYyDQo+ID4gLSAxLzINCj4gPiAgICAtIHVwZGF0
-ZWQgdGhlIGNvbXBhdGlibGUgc3RyaW5nIHRvIGxhdGVzdCB2ZXJzaW9uIHN1cHBvcnRlZA0KPiA+
-ICAgIC0gcmVtb3ZlZCBEUEhZIHJlbGF0ZWQgcGFyYW1ldGVycw0KPiA+ICAgIC0gYWRkZWQgQ1NJ
-IHYyLjAgcmVsYXRlZCBwcm9wZXJ0eSAoaW5jbHVkaW5nIFZDWCBmb3Igc3VwcG9ydGluZyB1cHRv
-IDE2DQo+ID4gICAgICB2aXJ0dWFsIGNoYW5uZWxzKS4NCj4gPiAgICAtIG1vZGlmaWVkIGNzaS1w
-eGwtZm9ybWF0IGZyb20gc3RyaW5nIHRvIHVuc2lnbmVkIGludCB0eXBlIHdoZXJlIHRoZSB2YWx1
-ZQ0KPiA+ICAgICAgaXMgYXMgcGVyIHRoZSBDU0kgc3BlY2lmaWNhdGlvbg0KPiA+ICAgIC0gRGVm
-aW5lZCBwb3J0IDAgYW5kIHBvcnQgMSBhcyBzaW5rIGFuZCBzb3VyY2UgcG9ydHMuDQo+ID4gICAg
-LSBSZW1vdmVkIG1heC1sYW5lcyBwcm9wZXJ0eSBhcyBzdWdnZXN0ZWQgYnkgUm9iIGFuZCBTYWth
-cmkNCj4gPg0KPiA+IC0gMi8yDQo+ID4gICAgLSBGaXhlZCBjb21tZW50cyBnaXZlbiBieSBIeXVu
-IGFuZCBTYWthcmkuDQo+ID4gICAgLSBNYWRlIGFsbCBiaXRtYXNrIHVzaW5nIEJJVCgpIGFuZCBH
-RU5NQVNLKCkNCj4gPiAgICAtIFJlbW92ZWQgdW51c2VkIGRlZmluaXRpb25zDQo+ID4gICAgLSBS
-ZW1vdmVkIERQSFkgYWNjZXNzLiBUaGlzIHdpbGwgYmUgZG9uZSBieSBzZXBhcmF0ZSBEUEhZIFBI
-WSBkcml2ZXIuDQo+ID4gICAgLSBBZGRlZCBzdXBwb3J0IGZvciBDU0kgdjIuMCBmb3IgWVVWIDQy
-MiAxMGJwYywgUkFXMTYsIFJBVzIwIGFuZCBleHRyYQ0KPiA+ICAgICAgdmlydHVhbCBjaGFubmVs
-cw0KPiA+ICAgIC0gRml4ZWQgdGhlIHBvcnRzIGFzIHNpbmsgYW5kIHNvdXJjZQ0KPiA+ICAgIC0g
-Tm93IHVzZSB0aGUgdjRsMmZ3bm9kZSBBUEkgdG8gZ2V0IG51bWJlciBvZiBkYXRhLWxhbmVzDQo+
-ID4gICAgLSBBZGRlZCBjbG9jayBmcmFtZXdvcmsgc3VwcG9ydA0KPiA+ICAgIC0gUmVtb3ZlZCB0
-aGUgY2xvc2UoKSBmdW5jdGlvbg0KPiA+ICAgIC0gdXBkYXRlZCB0aGUgc2V0IGZvcm1hdCBmdW5j
-dGlvbg0KPiA+ICAgIC0gU3VwcG9ydCBvbmx5IFZGQiBlbmFibGVkIGNvbmZpZw0KPiA+DQo+ID4g
-VmlzaGFsIFNhZ2FyICgyKToNCj4gPiAgICBtZWRpYTogZHQtYmluZGluZ3M6IG1lZGlhOiB4aWxp
-bng6IEFkZCBYaWxpbnggTUlQSSBDU0ktMiBSeCBTdWJzeXN0ZW0NCj4gPiAgICBtZWRpYTogdjRs
-OiB4aWxpbng6IEFkZCBYaWxpbnggTUlQSSBDU0ktMiBSeCBTdWJzeXN0ZW0gZHJpdmVyDQo+ID4N
-Cj4gPiAgIC4uLi9iaW5kaW5ncy9tZWRpYS94aWxpbngveGxueCxjc2kycnhzcy50eHQgICAgICAg
-IHwgIDExOCArKw0KPiA+ICAgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS94aWxpbngvS2NvbmZpZyAg
-ICAgICAgICAgICAgfCAgIDEwICsNCj4gPiAgIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0veGlsaW54
-L01ha2VmaWxlICAgICAgICAgICAgIHwgICAgMSArDQo+ID4gICBkcml2ZXJzL21lZGlhL3BsYXRm
-b3JtL3hpbGlueC94aWxpbngtY3NpMnJ4c3MuYyAgICB8IDE0NjUNCj4gKysrKysrKysrKysrKysr
-KysrKysNCj4gPiAgIGluY2x1ZGUvdWFwaS9saW51eC94aWxpbngtdjRsMi1jb250cm9scy5oICAg
-ICAgICAgIHwgICAxNCArDQo+ID4gICBpbmNsdWRlL3VhcGkvbGludXgveGlsaW54LXY0bDItZXZl
-bnRzLmggICAgICAgICAgICB8ICAgMjUgKw0KPiA+ICAgNiBmaWxlcyBjaGFuZ2VkLCAxNjMzIGlu
-c2VydGlvbnMoKykNCj4gPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvbWVkaWEveGlsaW54L3hsbngsY3NpMnJ4c3MudHh0DQo+ID4gICBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS94aWxpbngveGlsaW54LWNz
-aTJyeHNzLmMNCj4gPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL3VhcGkvbGludXgveGls
-aW54LXY0bDItZXZlbnRzLmgNCj4gPg0K
+
+Hi Sakari,
+
+Thanks for reviewing this.
+
+> -----Original Message-----
+> From: linux-media-owner@vger.kernel.org [mailto:linux-media-
+> owner@vger.kernel.org] On Behalf Of Sakari Ailus
+> Sent: Tuesday, March 12, 2019 3:51 PM
+> To: Vishal Sagar <vishal.sagar@xilinx.com>
+> Cc: Hyun Kwon <hyunk@xilinx.com>; laurent.pinchart@ideasonboard.com;
+> mchehab@kernel.org; robh+dt@kernel.org; mark.rutland@arm.com; Michal
+> Simek <michals@xilinx.com>; linux-media@vger.kernel.org;
+> devicetree@vger.kernel.org; hans.verkuil@cisco.com; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Dinesh Kumar
+> <dineshk@xilinx.com>; Sandip Kothari <sandipk@xilinx.com>
+> Subject: Re: [PATCH v6 1/2] media: dt-bindings: media: xilinx: Add Xilinx=
+ MIPI
+> CSI-2 Rx Subsystem
+>=20
+> EXTERNAL EMAIL
+>=20
+> Hi Vishal,
+>=20
+> Thanks for the update. This looks pretty good, please see a few comments
+> below.
+>=20
+> On Tue, Mar 12, 2019 at 10:05:29AM +0530, Vishal Sagar wrote:
+> > Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
+> >
+> > The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
+> > DPHY in Rx mode, an optional I2C controller and a Video Format Bridge.
+> >
+> > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> > Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> > v6
+> > - Added "control" after V4L2_CID_XILINX_MIPICSISS_ACT_LANES as suggeste=
+d
+> by Luca
+> > - Added reviewed by Rob Herring
+> >
+> > v5
+> > - Incorporated comments by Luca Cersoli
+> > - Removed DPHY clock from description and example
+> > - Removed bayer pattern from device tree MIPI CSI IP
+> >   doesn't deal with bayer pattern.
+> >
+> > v4
+> > - Added reviewed by Hyun Kwon
+> >
+> > v3
+> > - removed interrupt parent as suggested by Rob
+> > - removed dphy clock
+> > - moved vfb to optional properties
+> > - Added required and optional port properties section
+> > - Added endpoint property section
+> >
+> > v2
+> > - updated the compatible string to latest version supported
+> > - removed DPHY related parameters
+> > - added CSI v2.0 related property (including VCX for supporting upto 16
+> >   virtual channels).
+> > - modified csi-pxl-format from string to unsigned int type where the va=
+lue
+> >   is as per the CSI specification
+> > - Defined port 0 and port 1 as sink and source ports.
+> > - Removed max-lanes property as suggested by Rob and Sakari
+> >
+> >  .../bindings/media/xilinx/xlnx,csi2rxss.txt        | 118
+> +++++++++++++++++++++
+> >  1 file changed, 118 insertions(+)
+> >  create mode 100644
+> Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rx=
+ss.txt
+> b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+> > new file mode 100644
+> > index 0000000..5b8170f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+> > @@ -0,0 +1,118 @@
+> > +Xilinx MIPI CSI2 Receiver Subsystem Device Tree Bindings
+> > +--------------------------------------------------------
+> > +
+> > +The Xilinx MIPI CSI2 Receiver Subsystem is used to capture MIPI CSI2 t=
+raffic
+> > +from compliant camera sensors and send the output as AXI4 Stream video
+> data
+> > +for image processing.
+> > +
+> > +The subsystem consists of a MIPI DPHY in slave mode which captures the
+> > +data packets. This is passed along the MIPI CSI2 Rx IP which extracts =
+the
+> > +packet data. The optional Video Format Bridge (VFB) converts this data=
+ to
+> > +AXI4 Stream video data.
+> > +
+> > +For more details, please refer to PG232 Xilinx MIPI CSI-2 Receiver Sub=
+system.
+> > +
+> > +Required properties:
+> > +--------------------
+> > +- compatible: Must contain "xlnx,mipi-csi2-rx-subsystem-4.0".
+> > +- reg: Physical base address and length of the registers set for the d=
+evice.
+> > +- interrupts: Property with a value describing the interrupt number.
+> > +- clocks: List of phandles to AXI Lite and Video clocks.
+> > +- clock-names: Must contain "lite_aclk" and "video_aclk" in the same o=
+rder
+> > +  as clocks listed in clocks property.
+> > +- xlnx,csi-pxl-format: This denotes the CSI Data type selected in hw d=
+esign.
+> > +  Packets other than this data type (except for RAW8 and User defined =
+data
+> > +  types) will be filtered out. Possible values are as below -
+> > +  0x1E - YUV4228B
+> > +  0x1F - YUV42210B
+> > +  0x20 - RGB444
+> > +  0x21 - RGB555
+> > +  0x22 - RGB565
+> > +  0x23 - RGB666
+> > +  0x24 - RGB888
+> > +  0x28 - RAW6
+> > +  0x29 - RAW7
+> > +  0x2A - RAW8
+> > +  0x2B - RAW10
+> > +  0x2C - RAW12
+> > +  0x2D - RAW14
+> > +  0x2E - RAW16
+> > +  0x2F - RAW20
+> > +
+> > +
+> > +Optional properties:
+> > +--------------------
+> > +- xlnx,vfb: This is present when Video Format Bridge is enabled.
+> > +  Without this property the driver won't be loaded as IP won't be able=
+ to
+> generate
+> > +  media bus format compliant stream output.
+>=20
+> What's the use case for this? I read in an earlier thread that this is
+> used to prevent the driver from loading.
+>=20
+
+This property ensures that the data being sent on the media bus complies wi=
+th
+existing formats. If Video Format Bridge (VFB) is disabled, then the data i=
+s sent on the bus in the
+same way as it is received. For e.g. with RAW10 with bus width of 32 bits, =
+the first clock
+cycle will contain the MSB 8bits of 4 pixels.
+The lower 2 bits of each pixel will be sent on the next clock.
+
+When VFB is enabled, the input data stream is processed based on the CSI Da=
+ta Type and
+Pixels per clock selected in design and then sent out.
+For e.g. for RAW10 with 2 pixels per clock and VFB enabled, the bus will ha=
+ve pixel 0 data=20
+on 9:0 and pixel 1 data on 19:10. Upper bits on the bus will be zeros.
+
+> > +- xlnx,en-csi-v2-0: Present if CSI v2 is enabled in IP configuration.
+> > +- xlnx,en-vcx: When present, there are maximum 16 virtual channels, el=
+se
+> > +  only 4. This is present only if xlnx,en-csi-v2-0 is present.
+> > +- xlnx,en-active-lanes: present if the number of active lanes can be
+> > +  reconfigured at runtime in the Protocol Configuration Register.
+> > +  If present, the V4L2_CID_XILINX_MIPICSISS_ACT_LANES control is added=
+.
+> > +  Otherwise all lanes, as set in IP configuration, are always active.
+>=20
+> The bindings document hardware, therefore a V4L2 control name doesn't
+> belong here.
+>=20
+Ok. I will remove this and revert to original description as below -
+
+xlnx,en-active-lanes: present if the number of active lanes can be
+re-configured at runtime in the Protocol Configuration Register
+
+> If you want to set the number of lanes at runtime, the frame descriptors
+> are probably the best way to do that. The patchset will be merged in the
+> near future. Jacopo sent the last iteration of it recently. I'd leave tha=
+t
+> feature out for now though: few transmitter drivers support the feature
+> (using an old API).
+>=20
+
+I had a look at Jacopo's patch set
+
+[PATCH v3 15/31] v4l: Add bus type to frame descriptors
+[PATCH v3 16/31] v4l: Add CSI-2 bus configuration to frame descriptors
+[PATCH v3 17/31] v4l: Add stream to frame descriptor
+[PATCH v3 29/31] rcar-csi2: use frame description information to configure =
+CSI-2 bus
+
++/**
++ * struct v4l2_mbus_frame_desc_entry_csi2
++ *
++ * @channel: CSI-2 virtual channel
++ * @data_type: CSI-2 data type ID
++ */
++struct v4l2_mbus_frame_desc_entry_csi2 {
++       u8 channel;
++       u8 data_type;
++};
+
+It looks like this patch set is trying to add support for virtual channel n=
+umber and data type association.
+This is different from controlling number of lanes on which CSI Rx will rec=
+eive data.
+Please correct my understanding if not right.
+
+> > +
+> > +Ports
+> > +-----
+> > +The device node shall contain two 'port' child nodes as defined in
+> > +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > +
+> > +The port@0 is a sink port and shall connect to CSI2 source like camera=
+.
+> > +It must have the data-lanes property.
+> > +
+> > +The port@1 is a source port and can be connected to any video processi=
+ng IP
+> > +which can work with AXI4 Stream data.
+> > +
+> > +Required port properties:
+> > +--------------------
+> > +- reg: 0 - for sink port.
+> > +       1 - for source port.
+> > +
+> > +Optional endpoint property:
+> > +---------------------------
+> > +- data-lanes: specifies MIPI CSI-2 data lanes as covered in video-
+> interfaces.txt.
+> > +  This should be in the sink port endpoint which connects to MIPI CSI2=
+ source
+> > +  like sensor. The possible values are:
+> > +  1       - For 1 lane enabled in IP.
+> > +  1 2     - For 2 lanes enabled in IP.
+> > +  1 2 3   - For 3 lanes enabled in IP.
+> > +  1 2 3 4 - For 4 lanes enabled in IP.
+> > +
+> > +Example:
+> > +
+> > +     csiss_1: csiss@a0020000 {
+>=20
+> The node name should be generic, a Cadence device uses csi2rx which seems
+> like a good fit here, too.
+>=20
+
+Ok. I will change it to xcsi2rxss_1:csi2rx@a0020000.=20
+
+> > +             compatible =3D "xlnx,mipi-csi2-rx-subsystem-4.0";
+> > +             reg =3D <0x0 0xa0020000 0x0 0x10000>;
+> > +             interrupt-parent =3D <&gic>;
+> > +             interrupts =3D <0 95 4>;
+> > +             xlnx,csi-pxl-format =3D <0x2a>;
+> > +             xlnx,vfb;
+> > +             xlnx,en-active-lanes;
+> > +             xlnx,en-csi-v2-0;
+> > +             xlnx,en-vcx;
+> > +             clock-names =3D "lite_aclk", "video_aclk";
+> > +             clocks =3D <&misc_clk_0>, <&misc_clk_1>;
+> > +
+> > +             ports {
+> > +                     #address-cells =3D <1>;
+> > +                     #size-cells =3D <0>;
+> > +
+> > +                     port@0 {
+> > +                             /* Sink port */
+> > +                             reg =3D <0>;
+> > +                             csiss_in: endpoint {
+> > +                                     data-lanes =3D <1 2 3 4>;
+> > +                                     /* MIPI CSI2 Camera handle */
+> > +                                     remote-endpoint =3D <&camera_out>=
+;
+> > +                             };
+> > +                     };
+> > +                     port@1 {
+> > +                             /* Source port */
+> > +                             reg =3D <1>;
+> > +                             csiss_out: endpoint {
+> > +                                     remote-endpoint =3D <&vproc_in>;
+> > +                             };
+> > +                     };
+> > +             };
+> > +     };
+>=20
+> --
+> Kind regards,
+>=20
+> Sakari Ailus
+> sakari.ailus@linux.intel.com
+
+Regards
+Vishal Sagar
