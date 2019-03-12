@@ -1,21 +1,71 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 3/3] arm64: librem5-devkit: Add defconfig for the Librem5 devkit
-Date: Mon, 11 Mar 2019 21:11:19 -0300
-Message-ID: <CAOMZO5AqbJg4LgSR5TWGKAJjwUgDcbeVhqNCD9qMZM1A2GPu9w@mail.gmail.com>
-References: <20190311234655.30357-1-angus@akkea.ca> <20190311234655.30357-4-angus@akkea.ca>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V4 1/3] dt-bindings: memory-controllers: freescale: add
+ MMDC binding doc
+Date: Tue, 12 Mar 2019 01:43:34 +0000
+Message-ID: <DB3PR0402MB3916F5563191799BB34384D7F5490@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1551403185-16314-1-git-send-email-Anson.Huang@nxp.com>
+ <20190311225309.GA32334@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190311234655.30357-4-angus@akkea.ca>
+In-Reply-To: <20190311225309.GA32334@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, NXP Linux Team <linux-imx@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 8:47 PM Angus Ainslie (Purism) <angus@akkea.ca> wrote:
->
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-
-No commit log?
-
-Not sure if we want to add a new defconfig for a single board.
+SGksIFJvYg0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3Jn
+XQ0KPiBTZW50OiAyMDE5xOoz1MIxMsjVIDY6NTMNCj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5o
+dWFuZ0BueHAuY29tPg0KPiBDYzogbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5l
+bC5vcmc7DQo+IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsg
+ZmVzdGV2YW1AZ21haWwuY29tOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgt
+a2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZzsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6
+IFtQQVRDSCBWNCAxLzNdIGR0LWJpbmRpbmdzOiBtZW1vcnktY29udHJvbGxlcnM6IGZyZWVzY2Fs
+ZTogYWRkDQo+IE1NREMgYmluZGluZyBkb2MNCj4gDQo+IE9uIEZyaSwgTWFyIDAxLCAyMDE5IGF0
+IDAxOjI0OjE4QU0gKzAwMDAsIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+IEZyZWVzY2FsZSBNTURD
+IChNdWx0aSBNb2RlIEREUiBDb250cm9sbGVyKSBkcml2ZXIgaXMgc3VwcG9ydGVkIHNpbmNlDQo+
+ID4gaS5NWDZRLCBidXQgbm90IHlldCBkb2N1bWVudGVkLCB0aGlzIHBhdGNoIGFkZHMgYmluZGlu
+ZyBkb2MgZm9yIE1NREMNCj4gPiBtb2R1bGUgZHJpdmVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
+eTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gQ2hhbmdl
+cyBzaW5jZSBWMzoNCj4gPiAJLSBhZGQgaS5NWDZRUCBjb21wYXRpYmxlIG5hbWUuDQo+ID4gLS0t
+DQo+ID4gIC4uLi9iaW5kaW5ncy9tZW1vcnktY29udHJvbGxlcnMvZnNsL21tZGMudHh0ICAgICAg
+IHwgMzMNCj4gKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMzMg
+aW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJzL2ZzbC9tbWRjLnR4dA0KPiA+
+DQo+ID4gZGlmZiAtLWdpdA0KPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L21lbW9yeS1jb250cm9sbGVycy9mc2wvbW1kYy50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9tZW1vcnktY29udHJvbGxlcnMvZnNsL21tZGMudHh0DQo+ID4gbmV3
+IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi5lNGUwYjUwDQo+ID4gLS0tIC9k
+ZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1v
+cnktDQo+IGNvbnRyb2xsZXJzL2ZzbC9tbWRjLnR4DQo+ID4gKysrIHQNCj4gPiBAQCAtMCwwICsx
+LDMzIEBADQo+ID4gK0ZyZWVzY2FsZSBNdWx0aSBNb2RlIEREUiBjb250cm9sbGVyIChNTURDKQ0K
+PiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllcyA6DQo+ID4gKy0gY29tcGF0aWJsZSA6IHNo
+b3VsZCBiZSBvbmUgb2YgZm9sbG93aW5nOg0KPiA+ICsJZm9yIGkuTVg2US9pLk1YNkRMOg0KPiA+
+ICsJLSAiZnNsLGlteDZxLW1tZGMiOw0KPiA+ICsJZm9yIGkuTVg2UVA6DQo+ID4gKwktICJmc2ws
+aW14NnFwLW1tZGMiLCAiZnNsLGlteDZxLW1tZGMiOw0KPiA+ICsJZm9yIGkuTVg2U0w6DQo+ID4g
+KwktICJmc2wsaW14NnNsLW1tZGMiLCAiZnNsLGlteDZxLW1tZGMiOw0KPiA+ICsJZm9yIGkuTVg2
+U0xMOg0KPiA+ICsJLSAiZnNsLGlteDZzbGwtbW1kYyIsICJmc2wsaW14NnEtbW1kYyI7DQo+ID4g
+Kwlmb3IgaS5NWDZTWDoNCj4gPiArCS0gImZzbCxpbXg2c3gtbW1kYyIsICJmc2wsaW14NnEtbW1k
+YyI7DQo+ID4gKwlmb3IgaS5NWDZVTC9pLk1YNlVMTC9pLk1YNlVMWjoNCj4gPiArCS0gImZzbCxp
+bXg2dWwtbW1kYyIsICJmc2wsaW14NnEtbW1kYyI7DQo+ID4gKwlmb3IgaS5NWDdVTFA6DQo+ID4g
+KwktICJmc2wsaW14N3VscC1tbWRjIiwgImZzbCxpbXg2cS1tbWRjIjsNCj4gPiArLSByZWcgOiBh
+ZGRyZXNzIGFuZCBzaXplIG9mIE1NREMgRERSIGNvbnRyb2xsZXIgcmVnaXN0ZXJzDQo+ID4gKw0K
+PiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzIDoNCj4gPiArLSBjbG9ja3MgOiB0aGUgY2xvY2sgcHJv
+dmlkZWQgYnkgdGhlIFNvQyB0byBhY2Nlc3MgdGhlIE1NREMgcmVnaXN0ZXJzDQo+ID4gKw0KPiA+
+ICtFeGFtcGxlIDoNCj4gPiArCW1tZGMwOiBtZW1vcnktY29udHJvbGxlckAyMWIwMDAwIHsgLyog
+TU1EQzAgKi8NCj4gPiArCQljb21wYXRpYmxlID0gImZzbCxpbXg2cS1tbWRjIjsNCj4gPiArCQly
+ZWcgPSA8MHgwMjFiMDAwMCAweDQwMDA+Ow0KPiA+ICsJCWNsb2NrcyA9IDwmY2xrcyBJTVg2UURM
+X0NMS19NTURDX1AwX0lQRz47DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJbW1kYzE6IG1lbW9yeS1j
+b250cm9sbGVyQDIxYjQwMDAgeyAvKiBNTURDMSAqLw0KPiA+ICsJCXJlZyA9IDwweDAyMWI0MDAw
+IDB4NDAwMD47DQo+IA0KPiBXaGF0IGlzIHRoaXMgbm9kZT8gTm8gY29tcGF0aWJsZSBoZXJlIHNo
+b3VsZCBiZSBjb25zaWRlcmVkIGludmFsaWQuDQo+IA0KPiBTZWVtcyBsaWtlIG1heWJlIHRoZSAx
+c3Qgbm9kZSBzaG91bGQgaGF2ZSAyIHJlZ2lzdGVyIHJhbmdlcyBpZiB5b3Ugd2FudCBhDQo+IHNp
+bmdsZSBkZXZpY2UuDQoNCkkgdGhpbmsgbW1kYzEncyBjb21wYXRpYmxlIGlzIG1pc3NlZCBmcm9t
+IGJlZ2lubmluZywgSSB3aWxsIGFkZCBhIHNlcGFyYXRlIHBhdGNoIGZvciBpdA0KYW5kIG1ha2Ug
+aXRzIHN0YXR1cyBhcyBkaXNhYmxlZCBieSBkZWZhdWx0LCBzaW5jZSBtb3N0IG9mIGkuTVg2IHBs
+YXRmb3JtcyBPTkxZIHVzZXMNCm1tZGMwLCBPTkxZIHZlcnkgZmV3IHNwZWNpYWwgcGxhdGZvcm1z
+IHVzZSBkdWFsIGNoYW5uZWxzLg0KDQpUaGFua3MsDQpBbnNvbi4NCg0KPiANCj4gUm9iDQo=
