@@ -1,27 +1,30 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v3 11/11] ARM: davinci: remove legacy timer support
-Date: Tue, 12 Mar 2019 13:46:50 -0500
-Message-ID: <b4b86dbe-db2e-3fd3-d48f-a3529530852c@lechnology.com>
-References: <20190226120633.18200-1-brgl@bgdev.pl>
- <20190226120633.18200-12-brgl@bgdev.pl>
+From: Johan Jonker <jbx6244@gmail.com>
+Subject: Re: [PATCH v4 1/4] drm: rockchip: introduce rk3066 hdmi
+Date: Tue, 12 Mar 2019 19:49:08 +0100
+Message-ID: <CA+z=w3XtC-_rJsE5oYKzQdiXteHyCYM2ya1Q+unRO2UBDz9BHw@mail.gmail.com>
+References: <20190306224113.24853-1-jbx6244@gmail.com> <20190306224113.24853-2-jbx6244@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190226120633.18200-12-brgl@bgdev.pl>
-Content-Language: en-US
+In-Reply-To: <20190306224113.24853-2-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: heiko@sntech.de
+Cc: hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/26/19 6:06 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> All platforms have now been switched to the new clocksource driver.
-> Remove the old code and various no longer needed bits and pieces.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
+Hi,
 
-Reviewed-by: David Lechner <david@lechnology.com>
+Would like to add some "Tested-by:" tags.
+Is Rockchip or someone with RK3066 hardware able to test this patch
+with a HDMI TV or DVI monitor and give a report?
+
+Power domain doesn't seem to turn off the vop and hdmi in v5.0-rc8.
+The bug is due to a patch revert earlier this year.
+To shutdown MK808 one can continue to use the patch at the link below until this
+issue is fixed by them.
+
+drm/rockchip: shutdown drm subsystem on shutdown
+https://patchwork.kernel.org/patch/10556151/
+
+[for-4.20] Revert "drm/rockchip: Allow driver to be shutdown on reboot/kexec"
+https://patchwork.kernel.org/patch/10714725/
