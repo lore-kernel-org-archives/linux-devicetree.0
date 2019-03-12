@@ -1,100 +1,90 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 02/25] leds: core: Add support for composing LED class
- device names
-Date: Tue, 12 Mar 2019 17:56:34 +0100
-Message-ID: <26d94535-cd45-9826-da24-113b8128f4e9@gmail.com>
-References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
- <20190310182836.20841-3-jacek.anaszewski@gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: net: bluetooth: Add device tree
+ bindings for QTI chip wcn3998
+Date: Tue, 12 Mar 2019 09:59:28 -0700
+Message-ID: <20190312165928.GD200579@google.com>
+References: <1552393379-26330-1-git-send-email-c-hbandi@codeaurora.org>
+ <1552393379-26330-3-git-send-email-c-hbandi@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190310182836.20841-3-jacek.anaszewski@gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1552393379-26330-3-git-send-email-c-hbandi@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Harish Bandi <c-hbandi@codeaurora.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, anubhavg@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Two auto corrections:
++DT folks
 
-On 3/10/19 7:28 PM, Jacek Anaszewski wrote:
-> Add public led_compose_name() API for composing LED class device
-> name basing on fwnode_handle data. The function composes device name
-> according to either a new <color:function> pattern or the legacy
-> <devicename:color:function> pattern. The decision on using the
-> particular pattern is made basing on whether fwnode contains new
-> "function" and "color" properties, or the legacy "label" proeprty.
-> 
-> Backwards compatibility with in-driver hard-coded LED class device
-> names is assured thanks to the default_desc argument.
-> 
-> In case none of the aforementioned properties was found, then, for OF
-> nodes, the node name is adopted for LED class device name.
-> 
-> Alongside these changes added is a new tool - tools/leds/get_led_device_info.sh.
-> The tool allows retrieving details of a LED class device's parent device,
-> which proves that getting rid of a devicename section from LED name pattern
-> is justified since this information is already available in sysfs.
-> 
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Baolin Wang <baolin.wang@linaro.org>
-> Cc: Daniel Mack <daniel@zonque.org>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Please add them in future versions (script/scripts/get_maintainer.pl
+<patches> should have listed them)
+
+On Tue, Mar 12, 2019 at 05:52:59PM +0530, Harish Bandi wrote:
+> This patch enables regulators for the Qualcomm Bluetooth wcn3998
+> controller.
+
+No, it doesn't.
+
+The next version should probably say something like "Add compatible
+string for the Qualcomm WCN3998 Bluetooth controller.
+
+Is there any particular reason why QCA drivers folks use 'wcn' instead
+of 'WCN'? The QCA documentations calls it WCN399x, so I'd suggest to
+consistently use the uppercase name in comments and documentation (and
+log messages?).
+
+> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
 > ---
->   Documentation/leds/leds-class.txt | 20 +++++++++-
->   drivers/leds/led-core.c           | 82 +++++++++++++++++++++++++++++++++++++++
->   include/linux/leds.h              | 31 +++++++++++++++
->   tools/leds/get_led_device_info.sh | 81 ++++++++++++++++++++++++++++++++++++++
->   4 files changed, 213 insertions(+), 1 deletion(-)
->   create mode 100755 tools/leds/get_led_device_info.sh
+> changes in v3:
+> - updated to latest code base.
+
+This comment is useless, please describe what changed wrt the previous
+version.
+
+> ---
+>  .../devicetree/bindings/net/qualcomm-bluetooth.txt        | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
-> diff --git a/Documentation/leds/leds-class.txt b/Documentation/leds/leds-class.txt
-> index 8b39cc6b03ee..866fe87063d4 100644
-> --- a/Documentation/leds/leds-class.txt
-> +++ b/Documentation/leds/leds-class.txt
-> @@ -43,7 +43,22 @@ LED Device Naming
->   
->   Is currently of the form:
->   
-> -"devicename:colour:function"
-> +"colour:function"
+> diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> index 824c0e2..1221535 100644
+> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> @@ -53,3 +53,18 @@ serial@898000 {
+>  		max-speed = <3200000>;
+>  	};
+>  };
 > +
-> +There might be still LED class drivers around using "devicename:colour:function"
-> +naming pattern, but the "devicename" section is now deprecated since it used
-> +to convey information that was already available in the sysfs, like product
-> +name. There is a tool (tools/leds/get_led_device_info.sh) available for
-> +retrieving that information per a LED class device.
+> +&blsp1_uart3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&blsp1_uart3_default>;
+> +	status = "okay";
 > +
-> +Associations with other devices, like network ones, should be defined
-> +via LED triggr mechanism. This approach is applied by some of wireless
+> +	bluetooth: wcn3998-bt {
+> +		compatible = "qcom,wcn3998-bt";
+> +		vddio-supply = <&vreg_l6_1p8>;
+> +		vddxo-supply = <&vreg_l5_1p8>;
+> +		vddrf-supply = <&vreg_s5_1p35>;
+> +		vddch0-supply = <&vdd_ch0_3p3>;
+> +		max-speed = <3200000>;
+> +	};
+> +};
+> \ No newline at end of file
 
-s/triggr/trigger/
+I think the example isn't really needed since it's essentially the
+same as the one for 'qcom,wcn3990-bt'.
 
-> +network drivers that create triggers dynamically and incorporate phy
-> +name into its name. On the other hand input subsystem offers LED - input
+But the important part is missing: add the new compatible string under
+´Required properties´. You also want to update the documentation that
+mentiones 'qcom,wcn3990-bt' to 'qcom,wcn399x-bt' (assuming for now
+that other possible WCN399x chips would be similar).
 
-s/its name/the trigger name/
+You mentioned in an earlier version of the series that there are
+multiple WCN3998 variants with different requirements for
+voltage/current. This seems to suggests that multiple compatible
+strings are needed to distinguish between them.
 
-> +bridge (drivers/input/input-leds.c) for exposing keyboard LEDs as LED class
-> +devices. The get_led_device_info.sh script has support for retrieving related
-> +input device node name. Should it support discovery of associations between
-> +LEDs and other subsystems, please don't hesitate to submit a relevant patch.
->   
->   There have been calls for LED properties such as colour to be exported as
->   individual led class attributes. As a solution which doesn't incur as much
-> @@ -51,6 +66,9 @@ overhead, I suggest these become part of the device name. The naming scheme
->   above leaves scope for further attributes should they be needed. If sections
->   of the name don't apply, just leave that section blank.
->   
-> +Please also keep in mind that LED subsystem has a protection against LED name
-> +conflict. It adds numerical suffix (e.g. "_1", "_2", "_3" etc.) to the requested
-> +LED class device name in case it is already in use.
+Thanks
 
-
--- 
-Best regards,
-Jacek Anaszewski
+Matthias
