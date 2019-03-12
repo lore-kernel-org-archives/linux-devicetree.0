@@ -1,27 +1,43 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2] ARM: dts: rockchip: remove disable-wp from rv1108-elgin-r1 emmc node
-Date: Tue, 12 Mar 2019 09:29:21 +0100
-Message-ID: <8230885.i9KLFSsvLL@phil>
-References: <20190219130317.2817-1-jbx6244@gmail.com> <20190310151928.2344-1-jbx6244@gmail.com>
+From: Chuanhong Guo <gch981213@gmail.com>
+Subject: [PATCH] arm64: dts: meson-gxl-s905d-phicomm-n1: add status LED
+Date: Tue, 12 Mar 2019 16:33:26 +0800
+Message-ID: <20190312083326.18029-1-gch981213@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190310151928.2344-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Jonker <jbx6244@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Sonntag, 10. März 2019, 16:19:28 CET schrieb Johan Jonker:
-> The mmc.txt didn't explicitly say disable-wp is for SD card slot only,
-> but that is what it was designed for in the first place.
-> Remove all disable-wp from emmc or sdio controllers.
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
+There is a white LED on the front panel behind the logo and the
+manufacturer uses that LED to indicate network and USB drive status.
 
-applied for 5.2
+Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+---
+ .../boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts    | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Thanks
-Heiko
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
+index 9a8a8a7e4b53..b5667f1fb2c8 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
+@@ -14,6 +14,16 @@
+ 	cvbs-connector {
+ 		status = "disabled";
+ 	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		status {
++			label = "n1:white:status";
++			gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++	};
+ };
+ 
+ &cvbs_vdac_port {
+-- 
+2.20.1
