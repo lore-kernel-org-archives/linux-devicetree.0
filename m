@@ -1,60 +1,114 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/7] dt-bindings: counter: ftm-quaddec
-Date: Tue, 12 Mar 2019 14:09:52 -0500
-Message-ID: <20190312190952.GA18547@bogus>
-References: <20190306111208.7454-1-patrick.havelange@essensium.com>
- <20190306111208.7454-5-patrick.havelange@essensium.com>
+From: Thor Thayer <thor.thayer@linux.intel.com>
+Subject: Re: [PATCHv2 1/5] Documentation: dt: edac: Fix Stratix10 IRQ bindings
+Date: Tue, 12 Mar 2019 14:15:47 -0500
+Message-ID: <8b18501b-e120-97f2-f6b5-4771dc0f613f@linux.intel.com>
+References: <1551288445-22335-1-git-send-email-thor.thayer@linux.intel.com>
+ <1551288445-22335-2-git-send-email-thor.thayer@linux.intel.com>
+ <20190312160057.GA31306@bogus>
+Reply-To: thor.thayer@linux.intel.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190306111208.7454-5-patrick.havelange@essensium.com>
+In-Reply-To: <20190312160057.GA31306@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick Havelange <patrick.havelange@essensium.com>
-Cc: William Breathitt Gray <vilhelm.gray@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Thierry Reding <thierry.reding@gmail.com>, Esben Haabendal <esben@haabendal.dk>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Jonathan Cameron <jic23@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: bp@alien8.de, dinguyen@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 12:12:05PM +0100, Patrick Havelange wrote:
-> FlexTimer quadrature decoder driver.
-> 
-> Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
-> Reviewed-by: Esben Haabendal <esben@haabendal.dk>
-> ---
-> Changes v2
->      - None
-> ---
->  .../bindings/counter/ftm-quaddec.txt           | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/counter/ftm-quaddec.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/counter/ftm-quaddec.txt b/Documentation/devicetree/bindings/counter/ftm-quaddec.txt
-> new file mode 100644
-> index 000000000000..4d18cd722074
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/counter/ftm-quaddec.txt
-> @@ -0,0 +1,18 @@
-> +FlexTimer Quadrature decoder counter
-> +
-> +This driver exposes a simple counter for the quadrature decoder mode.
+Hi Rob,
 
-Seems like this is more a mode of a h/w block than describing a h/w 
-block. Bindings should do the latter.
+On 3/12/19 11:00 AM, Rob Herring wrote:
+> On Wed, Feb 27, 2019 at 11:27:21AM -0600, thor.thayer@linux.intel.com wrote:
+>> From: Thor Thayer <thor.thayer@linux.intel.com>
+>>
+>> Fix Stratix10 ECC bindings to specify only the single
+>> bit error. On Stratix10 double bit errors are handled
+>> as SErrors instead of interrupts.
+>> Indicate the differences between the ARM64 and ARM32
+>> EDAC architecture in the bindings.
+>>
+>> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+>> ---
+>> v2 No change
+>> ---
+>>   .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 23 +++++++++++++++-------
+>>   1 file changed, 16 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+>> index 5626560a6cfd..a0ac50e15912 100644
+>> --- a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+>> +++ b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+>> @@ -236,33 +236,42 @@ Stratix10 SoCFPGA ECC Manager
+>>   The Stratix10 SoC ECC Manager handles the IRQs for each peripheral
+>>   in a shared register similar to the Arria10. However, ECC requires
+>>   access to registers that can only be read from Secure Monitor with
+>> -SMC calls. Therefore the device tree is slightly different.
+>> +SMC calls. Therefore the device tree is slightly different. Note that
+>> +only 1 interrupt is sent because the double bit errors are treated as
+>> +SErrors instead of IRQ.
+>>   
+>>   Required Properties:
+>>   - compatible : Should be "altr,socfpga-s10-ecc-manager"
+>> -- interrupts : Should be single bit error interrupt, then double bit error
+>> -	interrupt.
+>> +- altr,sysgr-syscon : phandle to Stratix10 System Manager Block
+>> +	              containing the ECC manager registers.
+> 
+> Seems this was already in use, but why not just make this node a child
+> of the System Manager Block and remove this phandle?
+> 
+Yes, this was already in use but I'm trying to fix that oversight with 
+this patch.
 
-> +
-> +Required properties:
-> +- compatible:		Must be "fsl,ftm-quaddec".
-> +- reg:			Must be set to the memory region of the flextimer.
-> +
-> +Optional property:
-> +- big-endian:		Access the device registers in big-endian mode.
-> +
-> +Example:
-> +		counter0: counter@29d0000 {
-> +			compatible = "fsl,ftm-quaddec";
-> +			reg = <0x0 0x29d0000 0x0 0x10000>;
-> +			big-endian;
-> +			status = "disabled";
-> +		};
-> -- 
-> 2.19.1
+The System Manager is a collection of registers used by different 
+peripherals including EMAC and ECC.
+
+I view ECC Manager as a separate entity as is the Ethernet MAC which is 
+why I have it separate. Using the phandle also follows the convention 
+established with the Arria10 ECC Manager.
+
+Thanks for the comments and for reviewing!
+
+Thor
+
+>> +- interrupts : Should be single bit error interrupt.
+>>   - interrupt-controller : boolean indicator that ECC Manager is an interrupt controller
+>>   - #interrupt-cells : must be set to 2.
+>> +- #address-cells: must be 1
+>> +- #size-cells: must be 1
+>> +- ranges : standard definition, should translate from local addresses
+>>   
+>>   Subcomponents:
+>>   
+>>   SDRAM ECC
+>>   Required Properties:
+>>   - compatible : Should be "altr,sdram-edac-s10"
+>> -- interrupts : Should be single bit error interrupt, then double bit error
+>> -	interrupt, in this order.
+>> +- interrupts : Should be single bit error interrupt.
+>>   
+>>   Example:
+>>   
+>>   	eccmgr {
+>>   		compatible = "altr,socfpga-s10-ecc-manager";
+>> -		interrupts = <0 15 4>, <0 95 4>;
+>> +		altr,sysmgr-syscon = <&sysmgr>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		interrupts = <0 15 4>;
+>>   		interrupt-controller;
+>>   		#interrupt-cells = <2>;
+>> +		ranges;
+>>   
+>>   		sdramedac {
+>>   			compatible = "altr,sdram-edac-s10";
+>> -			interrupts = <16 4>, <48 4>;
+>> +			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
+>>   		};
+>>   	};
+>> -- 
+>> 2.7.4
+>>
 > 
