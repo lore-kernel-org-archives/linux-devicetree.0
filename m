@@ -1,68 +1,141 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v5 1/8] clk: samsung: add needed IDs for DMC clocks in
- Exynos5420
-Date: Tue, 12 Mar 2019 10:18:14 +0100
-Message-ID: <a8eafa27-1dc5-f4cf-9c1d-b4cbce80ec62@partner.samsung.com>
-References: <1551781151-5562-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190305101924eucas1p1147e3895a89a72c9db7d128d90dd3daa@eucas1p1.samsung.com>
-        <1551781151-5562-2-git-send-email-l.luba@partner.samsung.com>
-        <20190311220650.GB4082@bogus>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v9 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
+Date: Tue, 12 Mar 2019 10:17:39 +0100
+Message-ID: <20190312091739.fhv2hb2ll2eamdsn@pengutronix.de>
+References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
+ <1552378289-27245-3-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190311220650.GB4082@bogus>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1552378289-27245-3-git-send-email-yash.shah@sifive.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Yash Shah <yash.shah@sifive.com>
+Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, palmer@sifive.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, sachin.ghadi@sifive.com, thierry.reding@gmail.com, paul.walmsley@sifive.com, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hello,
 
-On 3/11/19 11:06 PM, Rob Herring wrote:
-> On Tue,  5 Mar 2019 11:19:04 +0100, Lukasz Luba wrote:
->> Define new IDs for clocks used by Dynamic Memory Controller in
->> Exynos5422 SoC.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   include/dt-bindings/clock/exynos5420.h | 18 +++++++++++++++++-
->>   1 file changed, 17 insertions(+), 1 deletion(-)
->>
-> 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
-> 
-> If a tag was not added on purpose, please state why and what changed.
-I have skipped your ACK because of the hack which is implemented in v5
-clocks. Chanwoo refused the driver code because it uses 2 registers from
-the clock register set without Common Clock Framework API.
-He said that he will not accept this code and I have to figure out new
-approach using CCF.
-Thus, I have modeled these two registers as 'gates', but these registers
-are for Dynamic Memory Controller PAUSE feature (which stops
-transactions) and the other is for switching between
-two set of registers with timings for the LPDDR3 memory (normal
-operation and alternative clock source operation aka 'bypass').
-These registers should be (in my opinion) in the DMC registers and not
-in the clocks.
+there are just a few minor things left I commented below.
 
-Sylwester pointed out offline that it could be done using regmap.
-These are the problematic clocks added in v5:
-+#define CLK_CDREX_PAUSE		531
-+#define CLK_CDREX_TIMING_SET	532
+On Tue, Mar 12, 2019 at 01:41:29PM +0530, Yash Shah wrote:
+> +#define div_u64_round(a, b) \
+> +	({typeof(b) __b =3D b; div_u64((a) + __b / 2, __b); })
 
-I have mentioned about it in the cover letter, but you are right I could
-also add a comment for this particular patch that I have skipped your
-ACK.
-Thank you for sharing the information about the process.
-I will keep it in mind next time and will add a comment below the commit
-message for a particular patch and explicit information in cover letter
-that I am not including an ACK.
+Parenthesis around b please. I guess I didn't had them in my suggestion
+either, sorry for that.
 
-Regards,
-Lukasz
-> 
-> 
+> +static int pwm_sifive_enable(struct pwm_chip *chip, bool enable)
+> +{
+> +	struct pwm_sifive_ddata *pwm =3D pwm_sifive_chip_to_ddata(chip);
+> +	int ret;
+> +
+> +	if (enable) {
+> +		ret =3D clk_enable(pwm->clk);
+> +		if (ret) {
+> +			dev_err(pwm->chip.dev, "Enable clk failed:%d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	if (!enable)
+> +		clk_disable(pwm->clk);
+> +
+> +	return 0;
+> +}
+
+There is only a single caller for this function. I wonder if it is
+trivial enough to fold it into pwm_sifive_apply.
+
+> +static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *de=
+v,
+> +			    struct pwm_state *state)
+> +{
+> +	struct pwm_sifive_ddata *pwm =3D pwm_sifive_chip_to_ddata(chip);
+> +	unsigned int duty_cycle;
+> +	u32 frac;
+> +	struct pwm_state cur_state;
+> +	bool enabled;
+> +	int ret =3D 0;
+> +	unsigned long num;
+> +
+> +	if (state->polarity !=3D PWM_POLARITY_INVERSED)
+> +		return -EINVAL;
+> +
+> +	ret =3D clk_enable(pwm->clk);
+> +	if (ret) {
+> +		dev_err(pwm->chip.dev, "Enable clk failed:%d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	mutex_lock(&pwm->lock);
+> +	pwm_get_state(dev, &cur_state);
+> +
+> +	enabled =3D cur_state.enabled;
+> +
+> +	if (state->period !=3D pwm->approx_period) {
+> +		if (pwm->user_count !=3D 1) {
+> +			ret =3D -EBUSY;
+> +			goto exit;
+> +		}
+> +		pwm->approx_period =3D state->period;
+> +		pwm_sifive_update_clock(pwm, clk_get_rate(pwm->clk));
+> +	}
+> +
+> +	duty_cycle =3D state->duty_cycle;
+> +	if (!state->enabled)
+> +		duty_cycle =3D 0;
+> +
+> +	num =3D (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
+> +	frac =3D div_u64_round(num, state->period);
+> +	/* The hardware cannot generate a 100% duty cycle */
+> +	frac =3D min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
+> +
+> +	writel(frac, pwm->regs + PWM_SIFIVE_PWMCMP0 +
+> +	       dev->hwpwm * PWM_SIFIVE_SIZE_PWMCMP);
+> +
+> +	if (state->enabled !=3D enabled) {
+> +		ret =3D pwm_sifive_enable(chip, state->enabled);
+> +		if (ret)
+> +			goto exit;
+
+This goto is a noop.
+
+> +	}
+> +
+> +exit:
+> +	clk_disable(pwm->clk);
+> +	mutex_unlock(&pwm->lock);
+> +	return ret;
+> +}
+
+There are a few other things that could be improved, but I think they
+could be addressed later. For some of these I don't even know what to
+suggest, for some Thierry might not agree it is worth fixing:
+
+ - rounding
+   how to round? When should a request declined, when is rounding ok?
+   There is still "if (state->period !=3D pwm->approx_period) return -EBUSY"
+   in this driver. This is better than before, but if state-period =3D=3D
+   pwm->approx_period + 1 the result (if accepted) might be the same as
+   without the +1 and so returning -EBUSY for one case and accepting the
+   other is strange.
+ - don't call PWM API functions designed for consumers (here: pwm_get_state)
+ - Move div_u64_round to include/linux/math64.h
+
+Best regards
+Uwe
+
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
