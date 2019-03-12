@@ -1,159 +1,51 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2 2/5] Documentation: dt: edac: Add Stratix10 Peripheral
- bindings
-Date: Tue, 12 Mar 2019 11:04:45 -0500
-Message-ID: <20190312160445.GA8802@bogus>
-References: <1551288445-22335-1-git-send-email-thor.thayer@linux.intel.com>
- <1551288445-22335-3-git-send-email-thor.thayer@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH v5 0/3] Stingray USB PHY driver support
+Date: Tue, 12 Mar 2019 21:36:18 +0530
+Message-ID: <1552406781-5180-1-git-send-email-srinath.mannam@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1551288445-22335-3-git-send-email-thor.thayer@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thor.thayer@linux.intel.com
-Cc: bp@alien8.de, dinguyen@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Tejun Heo <tj@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Srinath Mannam <srinath.mannam@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 11:27:22AM -0600, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
-> 
-> Add peripheral bindings for Stratix10 EDAC to capture
-> the differences between the ARM64 and ARM32 architecture.
+These patches add Stingray USB PHY driver and its corresponding
+DT nodes with documentation.
 
-What's the difference? Sounds like 2 different chips, so Stratix10 or 
-s10 is not specific enough perhaps.
+This patch set is based on Linux-5.0-rc2.
 
-> 
-> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-> ---
-> v2 No change
-> ---
->  .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 106 +++++++++++++++++++++
->  1 file changed, 106 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-> index a0ac50e15912..a0fa80c53d2a 100644
-> --- a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-> +++ b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-> @@ -258,6 +258,49 @@ Required Properties:
->  - compatible : Should be "altr,sdram-edac-s10"
->  - interrupts : Should be single bit error interrupt.
->  
-> +On-Chip RAM ECC
-> +Required Properties:
-> +- compatible      : Should be "altr,socfpga-s10-ocram-ecc"
-> +- reg             : Address and size for ECC block registers.
-> +- altr,ecc-parent : phandle to parent OCRAM node.
-> +- interrupts      : Should be single bit error interrupt.
-> +
-> +Ethernet FIFO ECC
-> +Required Properties:
-> +- compatible      : Should be "altr,socfpga-s10-eth-mac-ecc"
-> +- reg             : Address and size for ECC block registers.
-> +- altr,ecc-parent : phandle to parent Ethernet node.
-> +- interrupts      : Should be single bit error interrupt.
-> +
-> +NAND FIFO ECC
-> +Required Properties:
-> +- compatible      : Should be "altr,socfpga-s10-nand-ecc"
-> +- reg             : Address and size for ECC block registers.
-> +- altr,ecc-parent : phandle to parent NAND node.
-> +- interrupts      : Should be single bit error interrupt.
-> +
-> +DMA FIFO ECC
-> +Required Properties:
-> +- compatible      : Should be "altr,socfpga-s10-dma-ecc"
-> +- reg             : Address and size for ECC block registers.
-> +- altr,ecc-parent : phandle to parent DMA node.
-> +- interrupts      : Should be single bit error interrupt.
-> +
-> +USB FIFO ECC
-> +Required Properties:
-> +- compatible      : Should be "altr,socfpga-s10-usb-ecc"
-> +- reg             : Address and size for ECC block registers.
-> +- altr,ecc-parent : phandle to parent USB node.
-> +- interrupts      : Should be single bit error interrupt.
-> +
-> +SDMMC FIFO ECC
-> +Required Properties:
-> +- compatible      : Should be "altr,socfpga-s10-sdmmc-ecc"
-> +- reg             : Address and size for ECC block registers.
-> +- altr,ecc-parent : phandle to parent SD/MMC node.
-> +- interrupts      : Should be single bit error interrupt for port A
-> +		    and then single bit error interrupt for port B.
-> +
->  Example:
->  
->  	eccmgr {
-> @@ -274,4 +317,67 @@ Example:
->  			compatible = "altr,sdram-edac-s10";
->  			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
->  		};
-> +
-> +		ocram-ecc@ff8cc000 {
-> +			compatible = "altr,socfpga-s10-ocram-ecc";
-> +			reg = <ff8cc000 0x100>;
-> +			altr,ecc-parent = <&ocram>;
-> +			interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		emac0-rx-ecc@ff8c0000 {
-> +			compatible = "altr,socfpga-s10-eth-mac-ecc";
-> +			reg = <0xff8c0000 0x100>;
-> +			altr,ecc-parent = <&gmac0>;
-> +			interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		emac0-tx-ecc@ff8c0400 {
-> +			compatible = "altr,socfpga-s10-eth-mac-ecc";
-> +			reg = <0xff8c0400 0x100>;
-> +			altr,ecc-parent = <&gmac0>;
-> +			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>'
-> +		};
-> +
-> +		nand-buf-ecc@ff8c8000 {
-> +			compatible = "altr,socfpga-s10-nand-ecc";
-> +			reg = <0xff8c8000 0x100>;
-> +			altr,ecc-parent = <&nand>;
-> +			interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		nand-rd-ecc@ff8c8400 {
-> +			compatible = "altr,socfpga-s10-nand-ecc";
-> +			reg = <0xff8c8400 0x100>;
-> +			altr,ecc-parent = <&nand>;
-> +			interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		nand-wr-ecc@ff8c8800 {
-> +			compatible = "altr,socfpga-s10-nand-ecc";
-> +			reg = <0xff8c8800 0x100>;
-> +			altr,ecc-parent = <&nand>;
-> +			interrupts = <12 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		dma-ecc@ff8c9000 {
-> +			compatible = "altr,socfpga-s10-dma-ecc";
-> +			reg = <0xff8c9000 0x100>;
-> +			altr,ecc-parent = <&pdma>;
-> +			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +		usb0-ecc@ff8c4000 {
-> +			compatible = "altr,socfpga-s10-usb-ecc";
-> +			reg = <0xff8c4000 0x100>;
-> +			altr,ecc-parent = <&usb0>;
-> +			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		sdmmc-ecc@ff8c8c00 {
-> +			compatible = "altr,socfpga-s10-sdmmc-ecc";
-> +			reg = <0xff8c8c00 0x100>;
-> +			altr,ecc-parent = <&mmc>;
-> +			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <15 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
->  	};
-> -- 
-> 2.7.4
-> 
+Changes from v4:
+  - Addressed Rob Herring review comments
+     - Removed child nodes and added #phy-cells 1
+     - Added xlate function to get phy using phandle argument.
+
+Changes from v3:
+  - Addressed Rob Herring review comments
+     - Changed compatible strings.
+     - updated driver based on new compatible strings.
+
+Changes from v2:
+  - Addressed Kishon review comments
+  - Updated patchset to Linux-5.0-rc2
+
+Changes from v1:
+  - Addressed Kishon review comments
+  - phy init call return value handle
+  
+Srinath Mannam (3):
+  dt-bindings: phy: Add Stingray USB PHY binding document
+  phy: sr-usb: Add Stingray USB PHY driver
+  arm64: dts: Add USB DT nodes for Stingray SoC
+
+ .../bindings/phy/brcm,stingray-usb-phy.txt         |  40 +++
+ .../boot/dts/broadcom/stingray/stingray-usb.dtsi   |  78 ++++
+ .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   1 +
+ drivers/phy/broadcom/Kconfig                       |  11 +
+ drivers/phy/broadcom/Makefile                      |   1 +
+ drivers/phy/broadcom/phy-bcm-sr-usb.c              | 393 +++++++++++++++++++++
+ 6 files changed, 524 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+ create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
+ create mode 100644 drivers/phy/broadcom/phy-bcm-sr-usb.c
+
+-- 
+2.7.4
