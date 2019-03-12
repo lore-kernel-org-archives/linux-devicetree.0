@@ -1,141 +1,76 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v9 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
-Date: Tue, 12 Mar 2019 10:17:39 +0100
-Message-ID: <20190312091739.fhv2hb2ll2eamdsn@pengutronix.de>
-References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
- <1552378289-27245-3-git-send-email-yash.shah@sifive.com>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCHv4 11/28] PCI: mobiveil: only fix up the Class Code field
+Date: Tue, 12 Mar 2019 09:17:53 +0000
+Message-ID: <AM6PR04MB5781498315C6B69EB2586B9D84490@AM6PR04MB5781.eurprd04.prod.outlook.com>
+References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
+ <20190311093130.7209-12-Zhiqiang.Hou@nxp.com>
+ <20190311141401.GG214730@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1552378289-27245-3-git-send-email-yash.shah@sifive.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Yash Shah <yash.shah@sifive.com>
-Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, palmer@sifive.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, sachin.ghadi@sifive.com, thierry.reding@gmail.com, paul.walmsley@sifive.com, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190311141401.GG214730@google.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-there are just a few minor things left I commented below.
-
-On Tue, Mar 12, 2019 at 01:41:29PM +0530, Yash Shah wrote:
-> +#define div_u64_round(a, b) \
-> +	({typeof(b) __b =3D b; div_u64((a) + __b / 2, __b); })
-
-Parenthesis around b please. I guess I didn't had them in my suggestion
-either, sorry for that.
-
-> +static int pwm_sifive_enable(struct pwm_chip *chip, bool enable)
-> +{
-> +	struct pwm_sifive_ddata *pwm =3D pwm_sifive_chip_to_ddata(chip);
-> +	int ret;
-> +
-> +	if (enable) {
-> +		ret =3D clk_enable(pwm->clk);
-> +		if (ret) {
-> +			dev_err(pwm->chip.dev, "Enable clk failed:%d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (!enable)
-> +		clk_disable(pwm->clk);
-> +
-> +	return 0;
-> +}
-
-There is only a single caller for this function. I wonder if it is
-trivial enough to fold it into pwm_sifive_apply.
-
-> +static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *de=
-v,
-> +			    struct pwm_state *state)
-> +{
-> +	struct pwm_sifive_ddata *pwm =3D pwm_sifive_chip_to_ddata(chip);
-> +	unsigned int duty_cycle;
-> +	u32 frac;
-> +	struct pwm_state cur_state;
-> +	bool enabled;
-> +	int ret =3D 0;
-> +	unsigned long num;
-> +
-> +	if (state->polarity !=3D PWM_POLARITY_INVERSED)
-> +		return -EINVAL;
-> +
-> +	ret =3D clk_enable(pwm->clk);
-> +	if (ret) {
-> +		dev_err(pwm->chip.dev, "Enable clk failed:%d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	mutex_lock(&pwm->lock);
-> +	pwm_get_state(dev, &cur_state);
-> +
-> +	enabled =3D cur_state.enabled;
-> +
-> +	if (state->period !=3D pwm->approx_period) {
-> +		if (pwm->user_count !=3D 1) {
-> +			ret =3D -EBUSY;
-> +			goto exit;
-> +		}
-> +		pwm->approx_period =3D state->period;
-> +		pwm_sifive_update_clock(pwm, clk_get_rate(pwm->clk));
-> +	}
-> +
-> +	duty_cycle =3D state->duty_cycle;
-> +	if (!state->enabled)
-> +		duty_cycle =3D 0;
-> +
-> +	num =3D (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
-> +	frac =3D div_u64_round(num, state->period);
-> +	/* The hardware cannot generate a 100% duty cycle */
-> +	frac =3D min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
-> +
-> +	writel(frac, pwm->regs + PWM_SIFIVE_PWMCMP0 +
-> +	       dev->hwpwm * PWM_SIFIVE_SIZE_PWMCMP);
-> +
-> +	if (state->enabled !=3D enabled) {
-> +		ret =3D pwm_sifive_enable(chip, state->enabled);
-> +		if (ret)
-> +			goto exit;
-
-This goto is a noop.
-
-> +	}
-> +
-> +exit:
-> +	clk_disable(pwm->clk);
-> +	mutex_unlock(&pwm->lock);
-> +	return ret;
-> +}
-
-There are a few other things that could be improved, but I think they
-could be addressed later. For some of these I don't even know what to
-suggest, for some Thierry might not agree it is worth fixing:
-
- - rounding
-   how to round? When should a request declined, when is rounding ok?
-   There is still "if (state->period !=3D pwm->approx_period) return -EBUSY"
-   in this driver. This is better than before, but if state-period =3D=3D
-   pwm->approx_period + 1 the result (if accepted) might be the same as
-   without the +1 and so returning -EBUSY for one case and accepting the
-   other is strange.
- - don't call PWM API functions designed for consumers (here: pwm_get_state)
- - Move div_u64_round to include/linux/math64.h
-
-Best regards
-Uwe
-
--- =
-
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+SGkgQmpvcm4sDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIFttYWlsdG86aGVsZ2Fh
+c0BrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE5xOoz1MIxMcjVIDIyOjE0DQo+IFRvOiBaLnEuIEhv
+dSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3Jn
+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiByb2JoK2R0QGtl
+cm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNv
+LmluOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47
+DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOw0K
+PiB3aWxsLmRlYWNvbkBhcm0uY29tOyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBN
+LmguIExpYW4NCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IFhpYW93ZWkgQmFvIDx4aWFvd2Vp
+LmJhb0BueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIdjQgMTEvMjhdIFBDSTogbW9iaXZl
+aWw6IG9ubHkgZml4IHVwIHRoZSBDbGFzcyBDb2RlIGZpZWxkDQo+IA0KPiBPbiBNb24sIE1hciAx
+MSwgMjAxOSBhdCAwOTozMToyM0FNICswMDAwLCBaLnEuIEhvdSB3cm90ZToNCj4gPiBGcm9tOiBI
+b3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+DQo+ID4gRml4IHVwIHRoZSBD
+bGFzcyBDb2RlIHRvIFBDSSBicmlkZ2UsIGRvIG5vdCBjaGFuZ2UgdGhlIFJldmlzaW9uIElELg0K
+PiA+IEFuZCBtb3ZlIHRoZSBmaXh1cCB0byBtb2JpdmVpbF9ob3N0X2luaXQgZnVuY3Rpb24uDQo+
+IA0KPiBBZGQgcGFyZW5zIGFmdGVyIGZ1bmN0aW9uIG5hbWUuDQo+IA0KPiBQbGVhc2UgZXhwbGFp
+biB3aHkgdGhpcyBjaGFuZ2UgaXMgbmVlZGVkLiAgRG9lcyBpdCBmaXggYSBidWc/DQo+IA0KPiBE
+b2VzIHRoaXMgZml4IHRoZSBwcm9ibGVtIHRoYXQgdGhlIFBDSSBjb3JlIGRpZG4ndCBjb3JyZWN0
+bHkgaWRlbnRpZnkgdGhlIGRldmljZQ0KPiBhcyBhIGJyaWRnZSBiZWNhdXNlIGl0IGlkZW50aWZp
+ZWQgYnJpZGdlcyBieSBjbGFzcyBjb2RlIGluc3RlYWQgb2YgaGVhZGVyIHR5cGU/DQo+IA0KPiBU
+aGF0IHByb2JsZW0gKnNob3VsZCogYmUgZml4ZWQgYnkgYjJmYjVjYzU3NDY5ICgiUENJOiBSZWx5
+IG9uIGNvbmZpZyBzcGFjZQ0KPiBoZWFkZXIgdHlwZSwgbm90IGNsYXNzIGNvZGUiKSwgd2hpY2gg
+aXMgbm93IHVwc3RyZWFtLg0KPiANCj4gWW91IG1pZ2h0IHN0aWxsIHdhbnQgdGhpcyBjbGFzcyBj
+b2RlIGNoYW5nZSBzbyB0aGF0IGxzcGNpIHNob3dzIHRoZSBjb3JyZWN0DQo+IHRoaW5nLiAgVGhh
+dCdzIGZpbmUsIGJ1dCB0aGUgY2hhbmdlbG9nIHNob3VsZCBzYXkgd2h5IHdlJ3JlIGRvaW5nIGl0
+Lg0KPg0KDQpTdWJyYWhtYW55YSdzIG9yaWdpbmFsIHBhdGNoIGlzIHRvIGZpeHVwICdDbGFzcyBD
+b2RlJyBmaWVsZCwgYnV0IGl0IGFsc28gZml4ZWQgdGhlICdSZXZpc2lvbiBJRCcgZmllbGQuIFRo
+aXMgcGF0Y2ggaXMgcGF0Y2ggaXMgdG8gcmVtb3ZlIHRoZSBmaXh1cCBvZiAnUmV2aXNpb24gSUQn
+IGZpZWxkLg0KDQo+ID4gRml4ZXM6IDlhZjZiY2IxMWUxMiAoIlBDSTogbW9iaXZlaWw6IEFkZCBN
+b2JpdmVpbCBQQ0llIEhvc3QgQnJpZGdlIElQDQo+ID4gZHJpdmVyIikNCj4gDQo+IE1ha2UgdGhp
+cyAiRml4ZXM6IiBsaW5lIGEgc2luZ2xlIGxpbmUgYWdhaW4uDQo+IA0KPiA+IFNpZ25lZC1vZmYt
+Ynk6IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6
+IE1pbmdodWFuIExpYW4gPE1pbmdodWFuLkxpYW5AbnhwLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTog
+U3VicmFobWFueWEgTGluZ2FwcGEgPGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28uaW4+DQo+ID4g
+LS0tDQo+ID4gVjQ6DQo+ID4gIC0gbm8gY2hhbmdlDQo+ID4NCj4gPiAgZHJpdmVycy9wY2kvY29u
+dHJvbGxlci9wY2llLW1vYml2ZWlsLmMgfCA5ICsrKysrKy0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdl
+ZCwgNiBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jDQo+ID4gYi9kcml2ZXJzL3Bj
+aS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0KPiA+IGluZGV4IDc4ZTU3NWU3MWY0ZC4uOGVl
+ZTFhYjdlZTI0IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1t
+b2JpdmVpbC5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2ZWls
+LmMNCj4gPiBAQCAtNjUzLDYgKzY1MywxMiBAQCBzdGF0aWMgaW50IG1vYml2ZWlsX2hvc3RfaW5p
+dChzdHJ1Y3QgbW9iaXZlaWxfcGNpZQ0KPiAqcGNpZSkNCj4gPiAgCQkJCSAgIHR5cGUsIHJlc291
+cmNlX3NpemUod2luLT5yZXMpKTsNCj4gPiAgCX0NCj4gPg0KPiA+ICsJLyogZml4dXAgZm9yIFBD
+SWUgY2xhc3MgcmVnaXN0ZXIgKi8NCj4gPiArCXZhbHVlID0gY3NyX3JlYWRsKHBjaWUsIFBBQl9J
+TlRQX0FYSV9QSU9fQ0xBU1MpOw0KPiA+ICsJdmFsdWUgJj0gMHhmZjsNCj4gPiArCXZhbHVlIHw9
+IChQQ0lfQ0xBU1NfQlJJREdFX1BDSSA8PCAxNik7DQo+ID4gKwljc3Jfd3JpdGVsKHBjaWUsIHZh
+bHVlLCBQQUJfSU5UUF9BWElfUElPX0NMQVNTKTsNCj4gPiArDQo+ID4gIAkvKiBzZXR1cCBNU0kg
+aGFyZHdhcmUgcmVnaXN0ZXJzICovDQo+ID4gIAltb2JpdmVpbF9wY2llX2VuYWJsZV9tc2kocGNp
+ZSk7DQo+ID4NCj4gPiBAQCAtODk2LDkgKzkwMiw2IEBAIHN0YXRpYyBpbnQgbW9iaXZlaWxfcGNp
+ZV9wcm9iZShzdHJ1Y3QNCj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICAJCWdvdG8gZXJy
+b3I7DQo+ID4gIAl9DQo+ID4NCj4gPiAtCS8qIGZpeHVwIGZvciBQQ0llIGNsYXNzIHJlZ2lzdGVy
+ICovDQo+ID4gLQljc3Jfd3JpdGVsKHBjaWUsIDB4MDYwNDAyYWIsIFBBQl9JTlRQX0FYSV9QSU9f
+Q0xBU1MpOw0KPiA+IC0NCj4gPiAgCS8qIGluaXRpYWxpemUgdGhlIElSUSBkb21haW5zICovDQo+
+ID4gIAlyZXQgPSBtb2JpdmVpbF9wY2llX2luaXRfaXJxX2RvbWFpbihwY2llKTsNCj4gPiAgCWlm
+IChyZXQpIHsNCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQoNClRoYW5rcywNClpoaXFpYW5nDQo=
