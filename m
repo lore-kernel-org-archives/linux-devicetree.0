@@ -1,43 +1,45 @@
-From: Chuanhong Guo <gch981213@gmail.com>
-Subject: [PATCH] arm64: dts: meson-gxl-s905d-phicomm-n1: add status LED
-Date: Tue, 12 Mar 2019 16:33:26 +0800
-Message-ID: <20190312083326.18029-1-gch981213@gmail.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: rk3288: fix missing grf reference in
+ tsadc node
+Date: Tue, 12 Mar 2019 09:42:33 +0100
+Message-ID: <1950463.k8Yvi4fDWQ@phil>
+References: <AM3PR03MB0966E8AA93CC1B7CA355CECEAC790@AM3PR03MB0966.eurprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <AM3PR03MB0966E8AA93CC1B7CA355CECEAC790-XQTXrJX/giFAc9da7WRX18eAHadYHfrlvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There is a white LED on the front panel behind the logo and the
-manufacturer uses that LED to indicate network and USB drive status.
+Am Sonntag, 24. Februar 2019, 22:52:00 CET schrieb Jonas Karlman:
+> The following message can be seen during boot:
+> 
+>   rockchip-thermal ff280000.tsadc: Missing rockchip,grf property
+> 
+> Fix this by adding rockchip,grf property to tsadc node.
+> 
+> Fixes: b67d6bc38823 ("ARM: dts: rockchip: add main thermal info to rk3288")
+> Signed-off-by: Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>
 
-Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
----
- .../boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts    | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+applied for 5.2
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
-index 9a8a8a7e4b53..b5667f1fb2c8 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
-@@ -14,6 +14,16 @@
- 	cvbs-connector {
- 		status = "disabled";
- 	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		status {
-+			label = "n1:white:status";
-+			gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+	};
- };
- 
- &cvbs_vdac_port {
--- 
-2.20.1
+The warning doesn't affect rk3288 (v2 tsadc) and the grf requirement
+only got introduced later on after the rk3288 tsadc node, so I've dropped
+the Fixes tag, also reducing the workload of the stable poeple
+
+In general it looks like driver quality of the tsadc deteriorated over time,
+as it shouldn't warn about missing GRF references on platforms not
+needing it in the first place. And GRF locations should of course also
+live in the per-soc data structures as GRF register never are stable
+like the constants currently suggest.
