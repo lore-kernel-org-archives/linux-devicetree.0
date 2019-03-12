@@ -1,16 +1,15 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] arm: dts: rk3288-tinker.dtsi: Fix SD card detection
-Date: Tue, 12 Mar 2019 14:17:39 +0000
-Message-ID: <d12c29af-147a-34b5-f660-98b3d85c7126@arm.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] arm: dts: rk3288-tinker.dtsi: Enable WiFi
+Date: Tue, 12 Mar 2019 15:18:33 +0100
+Message-ID: <1822354.MXcUDnUBre@phil>
 References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
  <20190309153923.22806-1-beagleboard@davidjohnsummers.uk>
- <10436027.DUyLE1RSiR@phil>
+ <20190309153923.22806-2-beagleboard@davidjohnsummers.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <10436027.DUyLE1RSiR@phil>
-Content-Language: en-GB
+In-Reply-To: <20190309153923.22806-2-beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
@@ -20,63 +19,160 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
 Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Tony McKahan <tonymckahan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOS0wMy0xMiAyOjA4IHBtLCBIZWlrbyBTdHVlYm5lciB3cm90ZToKPiBBbSBTYW1zdGFn
-LCA5LiBNw6RyeiAyMDE5LCAxNjozOToyMSBDRVQgc2NocmllYiBEYXZpZCBTdW1tZXJzOgo+PiBU
-aGUgUHJvYmxlbToKPj4KPj4gT24gQVNVUyBUaW5rZXIgQm9hcmQgUywgd2hlbiBib290aW5nIGZy
-b20gdGhlIGVNTUMsIGFuZCB0aGVyZSBpcyBjYXJkCj4+IGluIHRoZSBzZCBzbG90LCB0aGVyZSBh
-cmUgY29uc3RhbnQgZXJyb3JzLgo+Pgo+PiBBbHNvIHdoZW4gd2FybSByZWJvb3QsIHVib290IGNh
-biBub3QgYWNjZXNzIHRoZSBzZCBzbG90Cj4+Cj4+IENhdXNlOgo+Pgo+PiBJZGVudGlmaWVkIGJ5
-IFJvYmluIE11cnBoeSBAIEFSTS4gVGhlIENhcmQgRGV0ZWN0IG9uIHJrMzI4OAo+PiBkZXZpY2Vz
-IGlzIHB1bGxlZCB1cCBieSB2Y2Npby1zZDsgc28gd2hlbiB0aGUgcmVndWxhdG9yIHBvd2VycyB0
-aGlzCj4+IG9mZiwgY2FyZCBkZXRlY3QgZ2l2ZXMgc3B1cmlvdXMgZXJyb3JzLiBBIHNlY29uZCBw
-cm9ibGVtLCBpcyBkdXJpbmcKPj4gcG93ZXIgZG93biwgdmNjaW8tc2QgYXBwcmVhcnMgdG8gYmUg
-cG93ZXJlZCBkb3duLiBUaGlzIGNhdXNlcyBhCj4+IHByb2JsZW0gd2hlbiB3YXJtIHJlYm9vdGlu
-ZyBmcm9tIHRoZSBzZCBjYXJkLiBUaGlzIHdhcyBpZGVudGlmaWVkIGJ5Cj4+IEpvbmFzIEthcmxt
-YW4uCj4+Cj4+IEhpc3Rvcnk6Cj4+Cj4+IEEgY29tbW9uIGZhdWx0IG9uIHRoZXNlIHJrMzI4OCBi
-b2FyZCwgd2hpY2ggaW1wbGltZW50IHRoZSByZWZlcmVuY2UKPj4gZGVzaWduLgo+Pgo+PiBXaGVu
-IHRoaXMgYXJvc2UgYmVmb3JlOgo+Pgo+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBl
-cm1haWwvbGludXgtYXJtLWtlcm5lbC8yMDE0LUF1Z3VzdC8yODExNTMuaHRtbAo+Pgo+PiBBbmQg
-VWxmIGFuZCBKYWVob29uIGNsZWFybHkgc2FpZCB0aGlzIHdhcyBhIGJyb2tlbiBjYXJkIGRldGVj
-dCBkZXNpZ24sCj4+IHdoaWNoIHNob3VsZCBiZSBzb2x2ZWQgdmlhIHBvbGxpbmcKPj4KPj4gU29s
-dXRpb246Cj4+Cj4+IEhlbmNlIGJyb2tlbi1jZCBpcyBzZXQgYXMgYSBwcm9wZXJ0eS4gVGhpcyBj
-dXJlcyB0aGUgZXJyb3JzLiBUaGUKPj4gcG93ZXJpbmcgZG93biBvZiB2Y2Npby1zZCBkdXJpbmcg
-cmVib290IGlzIGN1cmVkIGJ5IGFkZGluZwo+PiByZWd1bGF0b3ItYm9vdC1vbi4KPj4KPj4gVGhp
-cyBzb2x1dGlvbnMgaGFzIGJlZW4gZmFpcmx5IHdpZGVseSByZXZpZXdlZCBhbmQgdGVzdGVkLgo+
-Pgo+PiBTaWduZWQtb2ZmLWJ5OiBEYXZpZCBTdW1tZXJzIDxiZWFnbGVib2FyZEBkYXZpZGpvaG5z
-dW1tZXJzLnVrPgo+PiBSZXZpZXdlZCBieTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJt
-LmNvbT4KPj4gUmV2aWV3ZWQgYnk6IEpvbmFzIEthcmxtYW4gPGpvbmFzQGt3aWJvby5zZT4KPj4g
-VGVzdCBieTogVGhlU2FpbnQgQCBBcmNoTGludXggQXJtCj4gCj4gcGxlYXNlIGZvbGxvdyBwYXRj
-aCBzdWJtaXNzaW9uIGd1aWRlbGluZXMsIGhlcmUgaXQgd291bGQgYmUKPiBUZXN0ZWQtYnk6IC4u
-LiB3aXRoIGFuIGFjdHVhbCBOYW1lICsgbWFpbCBhZGRyZXNzCj4gCj4gQWxzbyBJIGRpZCB0cnkg
-dG8gZ28gdGhyb3VnaCB0aGUgd2F5IGJpZyBtYWlsIHRocmVhZCBidXQgZGlkbid0Cj4gZmluZCBh
-biBhY3R1YWwgIlJldmlld2VkLWJ5IiBmcm9tIFJvYmluIE11cnBoeSwgc2ltaWxhciB0byB3aGF0
-Cj4gaGUgcG9pbnRlZCBvdXQgaW4gcGF0Y2gyCgpBaCwgSSBkaWRuJ3QgZ2V0IGEgZGlyZWN0IEND
-IG9mIHRoaXMgcGF0Y2ggc28gSSBoYWRuJ3Qgc3BvdHRlZCB0aGF0IC0gCkZXSVcgdGhvdWdoLCBJ
-J20gaGFwcHkgd2l0aCBEb3VnJ3MgcmVhc29uaW5nIGZvciAiYnJva2VuLWNkIiBiZWluZyB0aGUg
-Cm1vc3Qgcm9idXN0IHNvbHV0aW9uIGZvciBub3csIHNvIGZlZWwgZnJlZSB0byBrZWVwCgpSZXZp
-ZXdlZC1ieTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4KCmZvciB0aGlzIG9u
-ZS4KCkNoZWVycywKUm9iaW4uCgo+IAo+IE90aGVyIHRoYW4gdGhhdCBhbmQgaW5jbHVkaW5nIHRo
-ZSBwYXN0IGRpc2N1c3Npb25zLCB0aGlzIGxvb2tzIGdvb2QuCj4gCj4gCj4gSGVpa28KPiAKPj4g
-LS0tCj4+ICAgYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LXRpbmtlci5kdHNpIHwgMyArKy0KPj4g
-ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4+Cj4+IGRp
-ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yazMyODgtdGlua2VyLmR0c2kgYi9hcmNoL2Fy
-bS9ib290L2R0cy9yazMyODgtdGlua2VyLmR0c2kKPj4gaW5kZXggYWExMDdlZTQxYjhiLi5lZjY1
-M2MzMjA5YmMgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC10aW5rZXIu
-ZHRzaQo+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9yazMyODgtdGlua2VyLmR0c2kKPj4gQEAg
-LTI1NCw2ICsyNTQsNyBAQAo+PiAgIAkJCX07Cj4+ICAgCj4+ICAgCQkJdmNjaW9fc2Q6IExET19S
-RUc1IHsKPj4gKwkJCQlyZWd1bGF0b3ItYm9vdC1vbjsKPj4gICAJCQkJcmVndWxhdG9yLW1pbi1t
-aWNyb3ZvbHQgPSA8MTgwMDAwMD47Cj4+ICAgCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0g
-PDMzMDAwMDA+Owo+PiAgIAkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2Y2Npb19zZCI7Cj4+IEBAIC00
-MzAsNyArNDMxLDcgQEAKPj4gICAJYnVzLXdpZHRoID0gPDQ+Owo+PiAgIAljYXAtbW1jLWhpZ2hz
-cGVlZDsKPj4gICAJY2FwLXNkLWhpZ2hzcGVlZDsKPj4gLQljYXJkLWRldGVjdC1kZWxheSA9IDwy
-MDA+Owo+PiArCWJyb2tlbi1jZDsKPj4gICAJZGlzYWJsZS13cDsJCQkvKiB3cCBub3QgaG9va2Vk
-IHVwICovCj4+ICAgCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4+ICAgCXBpbmN0cmwtMCA9
-IDwmc2RtbWNfY2xrICZzZG1tY19jbWQgJnNkbW1jX2NkICZzZG1tY19idXM0PjsKPj4KPiAKPiAK
-PiAKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxp
-bnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9j
-a2NoaXAK
+Am Samstag, 9. M=E4rz 2019, 16:39:22 CET schrieb David Summers:
+> This patch adds wifi support to the ASUS Tinker Board (S) machines.
+> =
+
+> This is provided by an wifi card (RTL8723BS) wired into the sdio interfac=
+e.
+> =
+
+> It requires certain pins pulled, to enable the WiFi.
+> =
+
+> The schematics for these board do not show the WiFi connection, so the
+> connections have been taken from:
+> =
+
+> https://github.com/TinkerBoard/debian_kernel/blob/develop/arch/arm/boot/d=
+ts/rk3288-miniarm.dts
+> =
+
+> In particular the pulling of two pins.
+> =
+
+> This patch is almost identical to v1. A few additional line breaks for
+> readability. On Armbian, they did not use sd-uhs-ddr50, so this has
+> been removed. It does not change functionality. The ASUS patch set
+> sd-uhs-sdr104;.
+> =
+
+> Signed-off-by: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+
+trying to understand the relationship here, is that a
+"Co-developed-by: Stefan Wahren <...>" case?
+
+Because individual Signed-off-bys would be (1) author, (2) sender
+and (3) me and Stefan obviously didn't send the patch :-)
+
+> Tested-by: Tony McKahan <tonymckahan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> =
+
+> Test-by: TheSaint @ ArchLinux ARM =
+
+
+Same comment about Tested-by with an actual name+mail please.
+
+Other than that bit of bureaucracy this looks good, minus some
+reordering. If you need to resend for whatever reason, please try to
+order devicetree nodes and properties alphabetical if they don't have
+an address in the name (otherwise obviously by address).
+
+But I can do that reordering myself and also drop the Review-tag naming
+Robin above, if you clear up the "paperwork" above :-).
+
+Heiko
+Heiko
+
+
+
+> =
+
+> ---
+>  arch/arm/boot/dts/rk3288-tinker.dtsi | 40 +++++++++++++++++++++++++++-
+>  1 file changed, 39 insertions(+), 1 deletion(-)
+> =
+
+> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3=
+288-tinker.dtsi
+> index ef653c3209bc..0ffab1b7c940 100644
+> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+> @@ -5,6 +5,7 @@
+>  =
+
+>  #include "rk3288.dtsi"
+>  #include <dt-bindings/input/input.h>
+> +#include <dt-bindings/clock/rockchip,rk808.h>
+>  =
+
+>  / {
+>  	chosen {
+> @@ -96,6 +97,17 @@
+>  		startup-delay-us =3D <100000>;
+>  		vin-supply =3D <&vcc_io>;
+>  	};
+> +
+> +	sdio_pwrseq: sdio-pwrseq {
+> +		compatible =3D "mmc-pwrseq-simple";
+> +		clocks =3D <&rk808 RK808_CLKOUT1>;
+> +		clock-names =3D "ext_clock";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&wifi_enable>;
+> +		reset-gpios =3D <&gpio4 RK_PD3 GPIO_ACTIVE_LOW>,
+> +			<&gpio4 RK_PD4 GPIO_ACTIVE_LOW>;
+> +	};
+> +
+>  };
+>  =
+
+>  &cpu0 {
+> @@ -336,7 +348,7 @@
+>  =
+
+>  &io_domains {
+>  	status =3D "okay";
+> -
+> +	wifi-supply =3D <&vcc_18>;
+>  	sdcard-supply =3D <&vccio_sd>;
+>  };
+>  =
+
+> @@ -416,6 +428,13 @@
+>  			rockchip,pins =3D <7 8 RK_FUNC_GPIO &pcfg_pull_none>;
+>  		};
+>  	};
+> +
+> +	sdio {
+> +		wifi_enable: wifi-enable {
+> +			rockchip,pins =3D <4 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>,
+> +				<4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+>  };
+>  =
+
+>  &pwm0 {
+> @@ -440,6 +459,25 @@
+>  	vqmmc-supply =3D <&vccio_sd>;
+>  };
+>  =
+
+> +&sdio0 {
+> +	bus-width =3D <4>;
+> +	cap-sd-highspeed;
+> +	cap-sdio-irq;
+> +	keep-power-in-suspend;
+> +	mmc-pwrseq =3D <&sdio_pwrseq>;
+> +	non-removable;
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&sdio0_bus4>, <&sdio0_cmd>, <&sdio0_clk>, <&sdio0_int>;
+> +	max-frequency =3D <50000000>;
+> +	sd-uhs-sdr12;
+> +	sd-uhs-sdr25;
+> +	sd-uhs-sdr50;
+> +	vmmc-supply =3D <&vcc_io>;
+> +	vqmmc-supply =3D <&vcc_18>;
+> +	status =3D "okay";
+> +};
+> +
+> +
+>  &tsadc {
+>  	rockchip,hw-tshut-mode =3D <1>; /* tshut mode 0:CRU 1:GPIO */
+>  	rockchip,hw-tshut-polarity =3D <1>; /* tshut polarity 0:LOW 1:HIGH */
+> =
