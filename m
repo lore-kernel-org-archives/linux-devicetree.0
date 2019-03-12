@@ -1,119 +1,124 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: phy: Add Stingray USB PHY binding document
-Date: Tue, 12 Mar 2019 09:24:02 +0530
-Message-ID: <CABe79T7vV9eMLDDSaow29SVq-MmLkCkOd3ht5Yqv2m_G2yperg@mail.gmail.com>
-References: <1550658842-19167-1-git-send-email-srinath.mannam@broadcom.com>
- <1550658842-19167-2-git-send-email-srinath.mannam@broadcom.com>
- <20190222172042.GA6792@bogus> <CABe79T5SqQJhF0GY06-+-aSCV-ya-RODEeV0DLg0Poupjeq+fA@mail.gmail.com>
- <CAL_JsqKyYoc3wLWGhbBdQxn=1NLhGbxfB2sUZUXm13_YTEyTGw@mail.gmail.com>
- <CABe79T7LQFf9J67P=eo0sAn6oJ10ovciR4o3_Z_K=6NLjtyr3A@mail.gmail.com> <CAL_JsqLnuERhPXFuLcBpUMn-g4=nQU5T6fNed6jxF1kY5WBzRw@mail.gmail.com>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCHv4 00/28] PCI: refactor Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Date: Tue, 12 Mar 2019 04:18:24 +0000
+Message-ID: <AM6PR04MB57813B6051962E12B629331E84490@AM6PR04MB5781.eurprd04.prod.outlook.com>
+References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
+ <20190311133310.GE214730@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLnuERhPXFuLcBpUMn-g4=nQU5T6fNed6jxF1kY5WBzRw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Tejun Heo <tj@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190311133310.GE214730@google.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h.
+ Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thank you, I will send next patch set with the changes as you suggested.
-
-Regards,
-Srinath.
-On Tue, Mar 12, 2019 at 3:00 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Sun, Mar 10, 2019 at 10:32 PM Srinath Mannam
-> <srinath.mannam@broadcom.com> wrote:
-> >
-> > Hi Rob,
-> >
-> > Please find my comments below,
-> >
-> > On Sat, Feb 23, 2019 at 1:05 AM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Fri, Feb 22, 2019 at 11:29 AM Srinath Mannam
-> > > <srinath.mannam@broadcom.com> wrote:
-> > > >
-> > > > Hi Rob,
-> > > >
-> > > > Thanks for the review, Please find my comments below in line.
-> > > >
-> > > > On Fri, Feb 22, 2019 at 10:50 PM Rob Herring <robh@kernel.org> wrote:
-> > > > >
-> > > > > On Wed, Feb 20, 2019 at 04:04:00PM +0530, Srinath Mannam wrote:
-> > > > > > Add DT binding document for Stingray USB PHY.
-> > > > > >
-> > > > > > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> > > > > > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> > > > > > Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> > > > > > ---
-> > > > > >  .../bindings/phy/brcm,stingray-usb-phy.txt         | 62 ++++++++++++++++++++++
-> > > > > >  1 file changed, 62 insertions(+)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
-> > > > > > new file mode 100644
-> > > > > > index 0000000..da19236
-> > > > > > --- /dev/null
-> > > > > > +++ b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
-> > > > > > @@ -0,0 +1,62 @@
-> > > > > > +Broadcom Stingray USB PHY
-> > > > > > +
-> > > > > > +Required properties:
-> > > > > > + - compatible : should be one of the listed compatibles
-> > > > > > +     - "brcm,sr-usb-combo-phy" is a combo PHY has one SS PHY and one HS PHY.
-> > > > > > +     - "brcm,sr-usb-hs-phy" has a single HS PHY.
-> > > > > > + - reg: offset and length of the PHY blocks registers
-> > > > > > + - address-cells: should be 1
-> > > > > > + - size-cells: should be 0
-> > > > > > +
-> > > > > > +Sub-nodes:
-> > > > > > +  brcm,sr-usb-combo-phy have two sub-nodes for one SS PHY and one HS PHY.
-> > > > > > +
-> > > > > > +Sub-nodes required properties:
-> > > > > > + - reg: required for brcm,sr-usb-phy model PHY.
-> > > > > > +     reg value 0 is HS PHY and 1 is SS PHY.
-> > > > > > + - phy-cells: generic PHY binding; must be 0
-> > > > > > +
-> > > > > > +Refer to phy/phy-bindings.txt for the generic PHY binding properties
-> > > > > > +
-> > > > > > +Example:
-> > > > > > +     usbphy0: usb-phy@0 {
-> > > > > > +             compatible = "brcm,sr-usb-combo-phy";
-> > > > > > +             reg = <0x00000000 0x100>;
-> > > > > > +             #address-cells = <1>;
-> > > > > > +             #size-cells = <0>;
-> > > > > > +
-> > > > > > +             usb0_phy0: phy@0 {
-> > > > > > +                     reg = <0>;
-> > > > > > +                     #phy-cells = <0>;
-> > > > > > +             };
-> > > > > > +
-> > > > > > +             usb0_phy1: phy@1 {
-> > > > > > +                     reg = <1>;
-> > > > > > +                     #phy-cells = <0>;
-> > > > > > +             };
-> > > > >
-> > > > > Again, you don't need child nodes here. There are not any per child
-> > > > > resources. Clients can refer to <&usbphy0 1> just as easily as
-> > > > > <&usb0_phy1>. This is why we have #phy-cells.
-> > > > This phy controller is combo PHY it has one Super Speed USB PHY and
-> > > > one High Speed USB PHY.
-> > > > We required to create two PHY devices inside driver to initialize and
-> > > > service(reset) both SS and HS PHYs separately.
-> > > > That is the reason we used two child nodes.
-> > >
-> > > What you do in the driver is your business. That is independent of the
-> > > binding. Go look at other phy drivers which use #phy-cells=1.
-> > > .of_xlate() function is what converts the phy cells to a struct phy.
-> > >
-> > I have followed exactly same pattern available in open source.
-> > ex: Documentation/devicetree/bindings/phy/brcm-sata-phy.txt
-> > In this also, two child nodes are used with #phy-cells 0.
->
-> You'll notice DT maintainers did not review that binding (only changes
-> to it). There's no shortage of DT examples of how not to do things.
->
-> Rob
+SGkgQmpvcm4sDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIFttYWlsdG86aGVsZ2Fh
+c0BrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE5xOoz1MIxMcjVIDIxOjMzDQo+IFRvOiBaLnEuIEhv
+dSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3Jn
+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiByb2JoK2R0QGtl
+cm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNv
+LmluOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47
+DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOw0K
+PiB3aWxsLmRlYWNvbkBhcm0uY29tOyBNLmguIExpYW4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47
+IFhpYW93ZWkgQmFvDQo+IDx4aWFvd2VpLmJhb0BueHAuY29tPjsgTWluZ2thaSBIdSA8bWluZ2th
+aS5odUBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIdjQgMDAvMjhdIFBDSTogcmVmYWN0
+b3IgTW9iaXZlaWwgZHJpdmVyIGFuZCBhZGQgUENJZSBHZW40DQo+IGRyaXZlciBmb3IgTlhQIExh
+eWVyc2NhcGUgU29Dcw0KPiANCj4gSGksDQo+IA0KPiBPbiBNb24sIE1hciAxMSwgMjAxOSBhdCAw
+OToyOTo1NEFNICswMDAwLCBaLnEuIEhvdSB3cm90ZToNCj4gPiBGcm9tOiBIb3UgWmhpcWlhbmcg
+PFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBzZXQgaXMgYWltIHRv
+IHJlZmFjdG9yIHRoZSBNb2JpdmVpbCBkcml2ZXIgYW5kIGFkZCBQQ0llDQo+ID4gc3VwcG9ydCBm
+b3IgTlhQIExheWVyc2NhcGUgc2VyaWVzIFNvQ3MgaW50ZWdyYXRlZCBNb2JpdmVpbCdzIFBDSWUg
+R2VuNA0KPiA+IGNvbnRyb2xsZXIuDQo+ID4NCj4gPiBIb3UgWmhpcWlhbmcgKDI4KToNCj4gPiAg
+IFBDSTogbW9iaXZlaWw6IHVuaWZvcm0gdGhlIHJlZ2lzdGVyIGFjY2Vzc29ycw0KPiANCj4gInVu
+aWZvcm0iIGlzIG5vdCBhIHZlcmIuICBNYXliZSAiVW5pZnkgcmVnaXN0ZXIgYWNjZXNzb3JzIj8N
+Cj4gDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBmb3JtYXQgdGhlIGNvZGUgd2l0aG91dCBmdW5jdGlv
+biBjaGFuZ2UNCj4gPiAgIFBDSTogbW9iaXZlaWw6IGNvcnJlY3QgdGhlIHJldHVybmVkIGVycm9y
+IG51bWJlcg0KPiA+ICAgUENJOiBtb2JpdmVpbDogcmVtb3ZlIGZsYWcgTVNJX0ZMQUdfTVVMVElf
+UENJX01TSQ0KPiA+ICAgUENJOiBtb2JpdmVpbDogY29ycmVjdCBQQ0kgYmFzZSBhZGRyZXNzIGlu
+IE1FTS9JTyBvdXRib3VuZCB3aW5kb3dzDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiByZXBsYWNlIHRo
+ZSByZXNvdXJjZSBsaXN0IGl0ZXJhdGlvbiBmdW5jdGlvbg0KPiA+ICAgUENJOiBtb2JpdmVpbDog
+dXNlIFdJTl9OVU1fMCBleHBsaWNpdGx5IGZvciBDRkcgb3V0Ym91bmQgd2luZG93DQo+ID4gICBQ
+Q0k6IG1vYml2ZWlsOiB1c2UgdGhlIDFzdCBpbmJvdW5kIHdpbmRvdyBmb3IgTUVNIGluYm91bmQN
+Cj4gdHJhbnNhY3Rpb25zDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBjb3JyZWN0IGluYm91bmQvb3V0
+Ym91bmQgd2luZG93IHNldHVwIHJvdXRpbmVzDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBmaXggdGhl
+IElOVHggcHJvY2VzcyBlcnJvcg0KPiA+ICAgUENJOiBtb2JpdmVpbDogb25seSBmaXggdXAgdGhl
+IENsYXNzIENvZGUgZmllbGQNCj4gPiAgIFBDSTogbW9iaXZlaWw6IG1vdmUgb3V0IHRoZSBsaW5r
+IHVwIHdhaXRpbmcgZnJvbSBtb2JpdmVpbF9ob3N0X2luaXQNCj4gDQo+IEFkZCBwYXJlbnMgZm9y
+IGZ1bmN0aW9uIG5hbWVzLCBlLmcuLCAibW9iaXZlaWxfaG9zdF9pbml0KCkiLiAgVGhpcyBvY2N1
+cnMNCj4gc2V2ZXJhbCBtb3JlIHRpbWVzLCBpbmNsdWRpbmcgYm90aCBzdWJqZWN0IGxpbmVzIGFu
+ZCBjaGFuZ2Vsb2dzLg0KPiANCj4gPiAgIFBDSTogbW9iaXZlaWw6IG1vdmUgaXJxIGNoYWluZWQg
+aGFuZGxlciBzZXR1cCBvdXQgb2YgRFQgcGFyc2UNCj4gDQo+IENhcGl0YWxpemUgYWNyb255bXMg
+aW4gRW5nbGlzaCB0ZXh0IChzdWJqZWN0IGxpbmVzLCBjaGFuZ2Vsb2dzLCBjb21tZW50cyksIGUu
+Zy4sDQo+IHMvaXJxL0lSUS8NCj4gDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBpbml0aWFsaXplIFBy
+aW1hcnkvU2Vjb25kYXJ5L1N1Ym9yZGluYXRlIGJ1cyBudW1iZXINCj4gPiAgIGR0LWJpbmRpbmdz
+OiBwY2k6IG1vYml2ZWlsOiBjaGFuZ2UgZ3Bpb19zbGF2ZSBhbmQgYXBiX2NzciB0byBvcHRpb25h
+bA0KPiA+ICAgUENJOiBtb2JpdmVpbDogcmVmYWN0b3IgTW9iaXZlaWwgUENJZSBIb3N0IEJyaWRn
+ZSBJUCBkcml2ZXINCj4gDQo+IFRoaXMgc2hvdWxkIGdpdmUgYSBoaW50IGFib3V0IHRoZSBwdXJw
+b3NlIG9mIHJlZmFjdG9yaW5nLiAgU291bmRzIGxpa2UgaXQncyB0bw0KPiBtYWtlIGl0IGVhc2ll
+ciB0byBzdXBwb3J0IGJvdGggaG9zdCBhbmQgZW5kcG9pbnQgbW9kZT8NCj4gDQo+ID4gICBQQ0k6
+IG1vYml2ZWlsOiBmaXggdGhlIGNoZWNraW5nIG9mIHZhbGlkIGRldmljZQ0KPiA+ICAgUENJOiBt
+b2JpdmVpbDogYWRkIGxpbmsgdXAgY29uZGl0aW9uIGNoZWNrDQo+ID4gICBQQ0k6IG1vYml2ZWls
+OiBjb250aW51ZSB0byBpbml0aWFsaXplIHRoZSBob3N0IHVwb24gbm8gUENJZSBsaW5rDQo+ID4g
+ICBQQ0k6IG1vYml2ZWlsOiBkaXNhYmxlZCBJQiBhbmQgT0Igd2luZG93cyBzZXQgYnkgYm9vdGxv
+YWRlcg0KPiA+ICAgUENJOiBtb2JpdmVpbDogYWRkIEJ5dGUgYW5kIEhhbGYtV29yZCB3aWR0aCBy
+ZWdpc3RlciBhY2Nlc3NvcnMNCj4gDQo+ICJCeXRlIiBhbmQgIkhhbGYtV29yZCIgZG8gbm90IG5l
+ZWQgdG8gYmUgY2FwaXRhbGl6ZWQuICBBbHNvLCB0aGUgY2hhbmdlbG9nDQo+IGhhcyBhIHR5cG86
+ICJIYWxmLVdvcmsiIGZvciAiaGFsZi13b3JkIi4NCj4gDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBt
+YWtlIG1vYml2ZWlsX2hvc3RfaW5pdCBjYW4gYmUgdXNlZCB0byByZS1pbml0IGhvc3QNCj4gDQo+
+IEhlcmUncyBhbm90aGVyIG9mIHRoZSBwbGFjZXMgdGhhdCBuZWVkIHBhcmVucyBhZnRlciB0aGUg
+ZnVuY3Rpb24gbmFtZS4NCj4gDQo+ID4gICBkdC1iaW5kaW5nczogcGNpOiBBZGQgTlhQIExheWVy
+c2NhcGUgU29DcyBQQ0llIEdlbjQgY29udHJvbGxlcg0KPiA+ICAgUENJOiBtb2JpdmVpbDogYWRk
+IFBDSWUgR2VuNCBSQyBkcml2ZXIgZm9yIE5YUCBMYXllcnNjYXBlIFNvQ3MNCj4gPiAgIFBDSTog
+bW9iaXZlaWw6IGxzX3BjaWVfZzQ6IGFkZCBXb3JrYXJvdW5kIGZvciBBLTAxMTU3Nw0KPiA+ICAg
+UENJOiBtb2JpdmVpbDogbHNfcGNpZV9nNDogYWRkIFdvcmthcm91bmQgZm9yIEEtMDExNDUxDQo+
+IA0KPiBUaGUgcmVhZGVyIG9mIHRoZXNlIGNoYW5nZWxvZ3MgbGlrZWx5IGRvZXNuJ3Qga25vdyB3
+aGF0IGludGVybmFsIGlkZW50aWZpZXJzDQo+IGxpa2UgIkEtMDExNTc3IiBtZWFuLCBidXQgKmRv
+ZXMqIHdhbnQgYSBoaW50IGFib3V0IHdoYXQgcHJvYmxlbSBpcyBiZWluZw0KPiBmaXhlZCBhbmQg
+d2hhdCBwbGF0Zm9ybXMgYXJlIGFmZmVjdGVkLiAgU28gaW5zdGVhZCBvZiB0aGUgImxzX3BjaWVf
+ZzQ6IiBwcmVmaXgsDQo+IHVzZSBzb21ldGhpbmcgbGlrZToNCj4gDQo+ICAgUENJOiBtb2JpdmVp
+bDogV29yayBhcm91bmQgTFgyMTYwQSByMS4wIGNvbmZpZyBhY2Nlc3MgZXJyYXR1bQ0KPiAgIFBD
+STogbW9iaXZlaWw6IFdvcmsgYXJvdW5kIExYMjE2MEEgcjEuMCBzcGxpdCBjb21wbGV0aW9uIGVy
+cmF0dW0NCj4gDQo+IGFuZCBtZW50aW9uIHRoZSBlcnJhdHVtIElEIChBLTAxMTU3NykgaW4gdGhl
+IGNoYW5nZWxvZy4gIElmIHlvdSBjYW4gaW5jbHVkZQ0KPiB0aGUgYWN0dWFsIGVycmF0dW0gdGV4
+dCBpbiB0aGUgY2hhbmdlbG9nLCB0aGF0IHdvdWxkIGJlIGV2ZW4gYmV0dGVyLg0KPiANCj4gcy9F
+UlJBVEEvZXJyYXRhLyBpbiB0aGUgY2hhbmdlbG9ncy4NCj4gDQo+ID4gICBhcm02NDogZHRzOiBm
+cmVlc2NhbGU6IGx4MjE2MGE6IGFkZCBwY2llIERUIG5vZGVzDQo+IA0KPiAiUENJZSINCj4gDQo+
+ID4gICBhcm02NDogZGVmY29uZmlnOiBFbmFibGUgQ09ORklHX1BDSV9MQVlFUlNDQVBFX0dFTjQN
+Cj4gDQo+IEkgYWxyZWFkeSBhc2tlZCB5b3Ugb25jZSBbMV0gdG86DQo+IA0KPiAgIHBsZWFzZSBw
+YXkgYXR0ZW50aW9uIHRvIHRoZSBjaGFuZ2Vsb2cgY29udmVudGlvbnMsIGUuZy4sIGNhcGl0YWxp
+emUgdGhlDQo+ICAgZmlyc3Qgd29yZCBvZiB0aGUgc2VudGVuY2UgKCJSZW1vdmUgZmxhZyAuLi4i
+LCAiQ29ycmVjdCBQQ0kgYmFzZSBhZGRyZXNzDQo+ICAgLi4uIiwgZXRjKSwgY2FwaXRhbGl6ZSBh
+Y3JvbnltcyBsaWtlICJQQ0kiIGFuZCAiSVJRIiwgdXNlIHBhcmVudGhlc2VzDQo+ICAgYWZ0ZXIg
+ZnVuY3Rpb24gbmFtZXMsIGV0Yy4gIFlvdSBjYW4gc2VlIHRoZSBjb252ZW50aW9ucyBieSBydW5u
+aW5nICJnaXQNCj4gICBsb2cgLS1vbmVsaW5lIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIiLg0KPiAN
+Cj4gRm9yIGV4YW1wbGUsIGluc3RlYWQgb2YgdGhpczoNCj4gDQo+ICAgUENJOiBtb2JpdmVpbDog
+YWRkIGxpbmsgdXAgY29uZGl0aW9uIGNoZWNrDQo+IA0KPiBpdCBzaG91bGQgYmUgdGhpczoNCj4g
+DQo+ICAgUENJOiBtb2JpdmVpbDogQWRkIGxpbmsgdXAgY29uZGl0aW9uIGNoZWNrDQo+IA0KPiBQ
+bGVhc2Ugd2FpdCBhdCBsZWFzdCBhIGZldyBkYXlzIGJlZm9yZSBwb3N0aW5nIGEgdjUgaW4gY2Fz
+ZSB0aGVyZSBhcmUgb3RoZXINCj4gY29tbWVudHMuDQoNClRoYW5rcyBmb3IgeW91ciBwYXRpZW5j
+ZSBhbmQgd2lsbCBmaXggdGhlbSBpbiB2NS4NCg0KPiANCj4gQmpvcm4NCj4gDQo+IFsxXQ0KPiBo
+dHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBz
+JTNBJTJGJTJGbG9yZS4NCj4ga2VybmVsLm9yZyUyRmxpbnV4LXBjaSUyRjIwMTkwMTMwMTUzNDQ3
+LkdCMjI5NzczJTQwZ29vZ2xlLmNvbSZhbXA7DQo+IGRhdGE9MDIlN0MwMSU3Q3poaXFpYW5nLmhv
+dSU0MG54cC5jb20lN0M1OTFiN2MxMjlmMGQ0MmNhZjNiOTA4ZDYNCj4gYTYyNjFkMzklN0M2ODZl
+YTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM2ODc5MA0KPiA3OTk2ODg4
+MTcyOSZhbXA7c2RhdGE9MW53eWNwbVQ5cDFWaGRyWjFmZFFYazBVUTRpaUtWSUVmRGUzSUdZZ1gN
+Cj4gbkklM0QmYW1wO3Jlc2VydmVkPTANCg0KVGhhbmtzLA0KWmhpcWlhbmcNCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
+bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
