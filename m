@@ -1,28 +1,28 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v3 08/11] ARM: davinci: dm365: switch to using the
- clocksource driver
-Date: Tue, 12 Mar 2019 13:43:38 -0500
-Message-ID: <3cdd50f7-4921-3625-098a-7595f6191d50@lechnology.com>
-References: <20190226120633.18200-1-brgl@bgdev.pl>
- <20190226120633.18200-9-brgl@bgdev.pl>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/7] dt-bindings: mfd: add bindings for SAM9X60 HLCD
+  controller
+Date: Tue, 12 Mar 2019 13:44:15 -0500
+Message-ID: <20190312184415.GA15124@bogus>
+References: <1551780434-4580-1-git-send-email-claudiu.beznea@microchip.com>
+ <1551780434-4580-4-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190226120633.18200-9-brgl@bgdev.pl>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1551780434-4580-4-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, bbrezillon@kernel.org, airlied@linux.ie, daniel@ffwll.ch, thierry.reding@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, Claudiu.Beznea@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On 2/26/19 6:06 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, 5 Mar 2019 10:07:47 +0000, <Claudiu.Beznea@microchip.com> wrote:
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
 > 
-> We now have a proper clocksource driver for davinci. Switch the dm365
-> platform to using it.
+> Add new compatible string for the HLCD controller on SAM9X60 SoC.
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 > ---
+>  Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Reviewed-by: David Lechner <david@lechnology.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
