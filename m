@@ -1,30 +1,29 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v3 02/11] ARM: davinci: enable the clocksource driver for
- DT mode
-Date: Tue, 12 Mar 2019 13:19:55 -0500
-Message-ID: <4a8b2bec-b67d-e198-0df4-e2ed1f24926c@lechnology.com>
-References: <20190226120633.18200-1-brgl@bgdev.pl>
- <20190226120633.18200-3-brgl@bgdev.pl>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/4] dt-bindings: serial: sprd: Add dma properties to
+ support DMA mode
+Date: Tue, 12 Mar 2019 13:22:02 -0500
+Message-ID: <20190312182202.GA10396@bogus>
+References: <cover.1551689518.git.baolin.wang@linaro.org>
+ <5ef1bbcf1d78829f28377a599d81d0adc7d61ef1.1551689518.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190226120633.18200-3-brgl@bgdev.pl>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <5ef1bbcf1d78829f28377a599d81d0adc7d61ef1.1551689518.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: gregkh@linuxfoundation.org, jslaby@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang@linaro.org, broonie@kernel.org, lanqing.liu@unisoc.com, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/26/19 6:06 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Mon,  4 Mar 2019 16:58:23 +0800, Baolin Wang wrote:
+> From: Lanqing Liu <lanqing.liu@unisoc.com>
 > 
-> Switch all davinci boards supporting device tree to using the new
-> clocksource driver: remove the previous OF_TIMER_DECLARE() from
-> mach-davinci and select davinci-timer for ARCH_DAVINCI.
+> This patch adds dmas and dma-names properties for the UART DMA mode.
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Lanqing Liu <lanqing.liu@unisoc.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 > ---
+>  .../devicetree/bindings/serial/sprd-uart.txt       |    6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
 
-
-Reviewed-by: David Lechner <david@lechnology.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
