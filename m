@@ -1,440 +1,101 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v8 2/2] arm64: dts: Add Mediatek SoC MT8183 and evaluation
- board dts and Makefile
-Date: Tue, 12 Mar 2019 13:22:06 +0100
-Message-ID: <d81e9ae0-f571-a890-75e7-be8242ad3879@gmail.com>
-References: <1552294472-32929-1-git-send-email-erin.lo@mediatek.com>
- <1552294472-32929-3-git-send-email-erin.lo@mediatek.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 1/5] dt-bindings: connector: add optional properties for
+ Type-B
+Date: Tue, 12 Mar 2019 13:45:44 +0100
+Message-ID: <464f1021-4c5e-9137-489d-65fd578575d3@redhat.com>
+References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
+ <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
+ <1552282383.10179.21.camel@mhfsdcap03>
+ <c8084259-74d3-c85f-1275-854826c935a0@redhat.com>
+ <1552360688.10179.55.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552294472-32929-3-git-send-email-erin.lo@mediatek.com>
+In-Reply-To: <1552360688.10179.55.camel@mhfsdcap03>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org, zhiyong.tao@mediatek.com, Mengqi.Zhang@mediatek.com, Ben Ho <Ben.Ho@mediatek.com>, Seiya Wang <seiya.wang@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+On 12-03-19 04:18, Chunfeng Yun wrote:
+> Hi,
+> On Mon, 2019-03-11 at 09:06 +0100, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 11-03-19 06:33, Chunfeng Yun wrote:
+>>> Hi,
+>>>
+>>> On Fri, 2019-03-08 at 13:07 +0100, Hans de Goede wrote:
+>>>> Hi,
+>>>>
+>>>> On 08-03-19 07:13, Chunfeng Yun wrote:
+>>>>> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+>>>>> usb-b-connector
+>>>>>
+>>>>> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+>>>>> ---
+>>>>>     .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
+>>>>>     1 file changed, 10 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+>>>>> index a9a2f2fc44f2..7a07b0f4f973 100644
+>>>>> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+>>>>> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+>>>>> @@ -17,6 +17,16 @@ Optional properties:
+>>>>>     - self-powered: Set this property if the usb device that has its own power
+>>>>>       source.
+>>>>>     
+>>>>> +Optional properties for usb-b-connector:
+>>>>> +- id-gpios: gpio for USB ID pin.
+>>>>
+>>>> What about boards where the ID pin is *not* connected to a GPIO,
+>>>> but e.g. to a special pin on the PMIC which can also detect
+>>>> an ACA adapter ? Currently this case is handled by extcon
+>>>> drivers, but we have no way to set e.g. vbus-supply for the
+>>>> connector. Maybe in this case the usb-connector node should
+>>>> be a child of the PMIC node ?
+>>> Yes, it would be, PMIC is in charger of detecting the status of ID pin
+>>
+>> Ok, then I think this should be documented too.
+>>
+>>>> And in many cases there also is a mux to switch the datalines
+>>>> between the host and device(gadget) controllers, how should
+>>>> that be described in this model?  See the new usb-role-switch
+>>>> code under drivers/usb/roles
+>>>>
+>>>> In some cases the mux is controlled through a gpio, so we
+>>>> may want to add a "mux-gpios" here in which case we also
+>>>> need to define what 0/1 means.
+>>> I'm not sure, the mux seems not belong to this connector,
+>>> and may need another driver to register usb-role-switch,
+>>> similar to:
+>>>
+>>> [v2,2/2] usb: typec: add typec switch via GPIO control
+>>> https://patchwork.kernel.org/patch/10834327/
+>>
+>> Right the mux/role-switch will need a driver, but the "owner"
+>> of the usb_connector, e.g. the PMIC or the owner of the
+>> id GPIO pin needs to know which device is the role-switch so
+>> that it can set the role correctly based on the id-pin.
+>>
+>> Your binding already contains Vbus info, allowing the owner
+>> of the usb_connector to enable/disable Vbus based on the id-pin,
+>> but the owner will also be responsible for setting the role-switch.
+> In this patch series, I make usb_connector driver enable/disable Vbus,
+> but not the parent(USB controller) of usb_connector which registers a
+> usb-role-switch, which way do you think it is better?
 
-On 11/03/2019 09:54, Erin Lo wrote:
-> From: Ben Ho <Ben.Ho@mediatek.com>
-> 
-> Add basic chip support for Mediatek 8183, include
-> uart node with correct uart clocks, pwrap device
-> 
-> Add clock controller nodes, include topckgen, infracfg,
-> apmixedsys and subsystem.
-> 
-> Signed-off-by: Ben Ho <Ben.Ho@mediatek.com>
-> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
-> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/Makefile       |   1 +
->  arch/arm64/boot/dts/mediatek/mt8183-evb.dts |  31 +++
->  arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 335 ++++++++++++++++++++++++++++
->  3 files changed, 367 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-evb.dts
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-> index e8f952f..458bbc4 100644
-> --- a/arch/arm64/boot/dts/mediatek/Makefile
-> +++ b/arch/arm64/boot/dts/mediatek/Makefile
-> @@ -7,3 +7,4 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
-> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-evb.dtb
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> new file mode 100644
-> index 0000000..9b52559
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> @@ -0,0 +1,31 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Ben Ho <ben.ho@mediatek.com>
-> + *	   Erin Lo <erin.lo@mediatek.com>
-> + */
-> +
-> +/dts-v1/;
-> +#include "mt8183.dtsi"
-> +
-> +/ {
-> +	model = "MediaTek MT8183 evaluation board";
-> +	compatible = "mediatek,mt8183-evb", "mediatek,mt8183";
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	memory@40000000 {
-> +		device_type = "memory";
-> +		reg = <0 0x40000000 0 0x80000000>;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:921600n8";
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> new file mode 100644
-> index 0000000..64f8bd6
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> @@ -0,0 +1,335 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Ben Ho <ben.ho@mediatek.com>
-> + *	   Erin Lo <erin.lo@mediatek.com>
-> + */
-> +
-> +#include <dt-bindings/clock/mt8183-clk.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +/ {
-> +	compatible = "mediatek,mt8183";
-> +	interrupt-parent = <&sysirq>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu-map {
-> +			cluster0 {
-> +				core0 {
-> +					cpu = <&cpu0>;
-> +				};
-> +				core1 {
-> +					cpu = <&cpu1>;
-> +				};
-> +				core2 {
-> +					cpu = <&cpu2>;
-> +				};
-> +				core3 {
-> +					cpu = <&cpu3>;
-> +				};
-> +			};
-> +
-> +			cluster1 {
-> +				core0 {
-> +					cpu = <&cpu4>;
-> +				};
-> +				core1 {
-> +					cpu = <&cpu5>;
-> +				};
-> +				core2 {
-> +					cpu = <&cpu6>;
-> +				};
-> +				core3 {
-> +					cpu = <&cpu7>;
-> +				};
-> +			};
-> +		};
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53";
-> +			reg = <0x000>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53";
-> +			reg = <0x001>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu2: cpu@2 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53";
-> +			reg = <0x002>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu3: cpu@3 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53";
-> +			reg = <0x003>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu4: cpu@100 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a73";
-> +			reg = <0x100>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu5: cpu@101 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a73";
-> +			reg = <0x101>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu6: cpu@102 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a73";
-> +			reg = <0x102>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu7: cpu@103 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a73";
-> +			reg = <0x103>;
-> +			enable-method = "psci";
-> +		};
-> +	};
-> +
-> +	pmu-a53 {
-> +		compatible = "arm,cortex-a53-pmu";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &ppi_cluster0>;
-> +	};
-> +
-> +	pmu-a73 {
-> +		compatible = "arm,cortex-a73-pmu";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &ppi_cluster1>;
-> +	};
-> +
-> +	psci {
-> +		compatible      = "arm,psci-1.0";
-> +		method          = "smc";
-> +	};
-> +
-> +	clk26m: oscillator {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <26000000>;
-> +		clock-output-names = "clk26m";
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW 0>,
-> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW 0>,
-> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW 0>,
-> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW 0>;
-> +	};
-> +
-> +	soc {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		compatible = "simple-bus";
-> +		ranges;
-> +
-> +		gic: interrupt-controller@c000000 {
-> +			compatible = "arm,gic-v3";
-> +			#interrupt-cells = <4>;
-> +			interrupt-parent = <&gic>;
-> +			interrupt-controller;
-> +			reg = <0 0x0c000000 0 0x40000>,  /* GICD */
-> +			      <0 0x0c100000 0 0x200000>, /* GICR */
-> +			      <0 0x0c400000 0 0x2000>,   /* GICC */
-> +			      <0 0x0c410000 0 0x1000>,   /* GICH */
-> +			      <0 0x0c420000 0 0x2000>;   /* GICV */
-> +
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH 0>;
-> +			ppi-partitions {
-> +				ppi_cluster0: interrupt-partition-0 {
-> +					affinity = <&cpu0 &cpu1 &cpu2 &cpu3>;
-> +				};
-> +				ppi_cluster1: interrupt-partition-1 {
-> +					affinity = <&cpu4 &cpu5 &cpu6 &cpu7>;
-> +				};
-> +			};
-> +		};
-> +
-> +		mcucfg: syscon@c530000 {
-> +			compatible = "mediatek,mt8183-mcucfg", "syscon";
+IMHO there should not be a driver for the usb_connector child-node,
+only for the parent-device of that child-node.
 
-Binding is not documented. I found some other bindings not documented as well.
-Please update the binding documentation to add this compatible, otherwise I
-won't be able to take this patch.
+There are going to be too many specific setups surrounding PMICs to
+be able to do a single generic driver for the connector.
 
 Regards,
-Matthias
 
-> +			reg = <0 0x0c530000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		sysirq: interrupt-controller@c530a80 {
-> +			compatible = "mediatek,mt8183-sysirq",
-> +				     "mediatek,mt6577-sysirq";
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			interrupt-parent = <&gic>;
-> +			reg = <0 0x0c530a80 0 0x50>;
-> +		};
-> +
-> +		topckgen: syscon@10000000 {
-> +			compatible = "mediatek,mt8183-topckgen", "syscon";
-> +			reg = <0 0x10000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		infracfg: syscon@10001000 {
-> +			compatible = "mediatek,mt8183-infracfg", "syscon";
-> +			reg = <0 0x10001000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		pio: pinctrl@10005000 {
-> +			compatible = "mediatek,mt8183-pinctrl";
-> +			reg = <0 0x10005000 0 0x1000>,
-> +			      <0 0x11f20000 0 0x1000>,
-> +			      <0 0x11e80000 0 0x1000>,
-> +			      <0 0x11e70000 0 0x1000>,
-> +			      <0 0x11e90000 0 0x1000>,
-> +			      <0 0x11d30000 0 0x1000>,
-> +			      <0 0x11d20000 0 0x1000>,
-> +			      <0 0x11c50000 0 0x1000>,
-> +			      <0 0x11f30000 0 0x1000>,
-> +			      <0 0x1000b000 0 0x1000>;
-> +			reg-names = "iocfg0", "iocfg1", "iocfg2",
-> +				    "iocfg3", "iocfg4", "iocfg5",
-> +				    "iocfg6", "iocfg7", "iocfg8",
-> +				    "eint";
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pio 0 0 192>;
-> +			interrupt-controller;
-> +			interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
-> +			#interrupt-cells = <3>;
-> +		};
-> +
-> +		apmixedsys: syscon@1000c000 {
-> +			compatible = "mediatek,mt8183-apmixedsys", "syscon";
-> +			reg = <0 0x1000c000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		pwrap: pwrap@1000d000 {
-> +			compatible = "mediatek,mt8183-pwrap";
-> +			reg = <0 0x1000d000 0 0x1000>;
-> +			reg-names = "pwrap";
-> +			interrupts = <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&topckgen CLK_TOP_MUX_PMICSPI>,
-> +				 <&infracfg CLK_INFRA_PMIC_AP>;
-> +			clock-names = "spi", "wrap";
-> +		};
-> +
-> +		uart0: serial@11002000 {
-> +			compatible = "mediatek,mt8183-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11002000 0 0x1000>;
-> +			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&clk26m>, <&infracfg CLK_INFRA_UART0>;
-> +			clock-names = "baud", "bus";
-> +			status = "disabled";
-> +		};
-> +
-> +		uart1: serial@11003000 {
-> +			compatible = "mediatek,mt8183-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11003000 0 0x1000>;
-> +			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&clk26m>, <&infracfg CLK_INFRA_UART1>;
-> +			clock-names = "baud", "bus";
-> +			status = "disabled";
-> +		};
-> +
-> +		uart2: serial@11004000 {
-> +			compatible = "mediatek,mt8183-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11004000 0 0x1000>;
-> +			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&clk26m>, <&infracfg CLK_INFRA_UART2>;
-> +			clock-names = "baud", "bus";
-> +			status = "disabled";
-> +		};
-> +
-> +		audiosys: syscon@11220000 {
-> +			compatible = "mediatek,mt8183-audiosys", "syscon";
-> +			reg = <0 0x11220000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		mfgcfg: syscon@13000000 {
-> +			compatible = "mediatek,mt8183-mfgcfg", "syscon";
-> +			reg = <0 0x13000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		mmsys: syscon@14000000 {
-> +			compatible = "mediatek,mt8183-mmsys", "syscon";
-> +			reg = <0 0x14000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		imgsys: syscon@15020000 {
-> +			compatible = "mediatek,mt8183-imgsys", "syscon";
-> +			reg = <0 0x15020000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		vdecsys: syscon@16000000 {
-> +			compatible = "mediatek,mt8183-vdecsys", "syscon";
-> +			reg = <0 0x16000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		vencsys: syscon@17000000 {
-> +			compatible = "mediatek,mt8183-vencsys", "syscon";
-> +			reg = <0 0x17000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		ipu_conn: syscon@19000000 {
-> +			compatible = "mediatek,mt8183-ipu_conn", "syscon";
-> +			reg = <0 0x19000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		ipu_adl: syscon@19010000 {
-> +			compatible = "mediatek,mt8183-ipu_adl", "syscon";
-> +			reg = <0 0x19010000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		ipu_core0: syscon@19180000 {
-> +			compatible = "mediatek,mt8183-ipu_core0", "syscon";
-> +			reg = <0 0x19180000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		ipu_core1: syscon@19280000 {
-> +			compatible = "mediatek,mt8183-ipu_core1", "syscon";
-> +			reg = <0 0x19280000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		camsys: syscon@1a000000 {
-> +			compatible = "mediatek,mt8183-camsys", "syscon";
-> +			reg = <0 0x1a000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +	};
-> +};
-> 
+Hans
