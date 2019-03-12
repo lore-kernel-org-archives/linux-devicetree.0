@@ -1,188 +1,58 @@
-From: Thor Thayer <thor.thayer@linux.intel.com>
-Subject: Re: [PATCHv2 2/5] Documentation: dt: edac: Add Stratix10 Peripheral
- bindings
-Date: Tue, 12 Mar 2019 14:30:20 -0500
-Message-ID: <8b671f75-8488-1e06-a020-5f7d95166918@linux.intel.com>
-References: <1551288445-22335-1-git-send-email-thor.thayer@linux.intel.com>
- <1551288445-22335-3-git-send-email-thor.thayer@linux.intel.com>
- <20190312160445.GA8802@bogus>
-Reply-To: thor.thayer@linux.intel.com
+From: Angus Ainslie <angus@akkea.ca>
+Subject: Re: [PATCH] arm64: dts: fsl: imx8mq: enable the thermal management  unit (TMU)
+Date: Tue, 12 Mar 2019 13:18:59 -0700
+Message-ID: <9f25fb1a0acb35539dcd802502c49058@www.akkea.ca>
+References: <20190311213124.29325-1-angus@akkea.ca>
+ <CAHQ1cqEHr1mB2EH3-fJPrYa+nkcWPPjmCTjSt-XsDnJp-SCf+w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190312160445.GA8802@bogus>
-Content-Language: en-US
+In-Reply-To: <CAHQ1cqEHr1mB2EH3-fJPrYa+nkcWPPjmCTjSt-XsDnJp-SCf+w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: bp@alien8.de, dinguyen@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, daniel.baluta@nxp.com, agx@sigxcpu.org, dl-linux-imx <linux-imx@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Andrey,
 
-On 3/12/19 11:04 AM, Rob Herring wrote:
-> On Wed, Feb 27, 2019 at 11:27:22AM -0600, thor.thayer@linux.intel.com wrote:
->> From: Thor Thayer <thor.thayer@linux.intel.com>
->>
->> Add peripheral bindings for Stratix10 EDAC to capture
->> the differences between the ARM64 and ARM32 architecture.
+On 2019-03-11 19:35, Andrey Smirnov wrote:
+> On Mon, Mar 11, 2019 at 2:35 PM Angus Ainslie (Purism) <angus@akkea.ca> 
+> wrote:
+>> 
+>> These are the TMU nodes from the NXP vendor kernel
+>> 
 > 
-> What's the difference? Sounds like 2 different chips, so Stratix10 or
-> s10 is not specific enough perhaps.
+> Hey Angus,
+> 
+> TMU block supports multiple thermal zones and vendor kernel doesn't
+> really account for that (see below). Latest version of the driver in
+> thermal tree now actually supports that feature (mulit-sensor), so I
+> think the code in DT should reflect that as well. I recently submitted
+> a series adding HWMON integration for TMU
+> (https://lore.kernel.org/lkml/20190222200508.26325-1-andrew.smirnov@gmail.com/T/#u)
+
+I tried applying those to linux-next. They don't apply very cleanly 
+there so I gave up.
+
+> and this is my take on this patch:
+> 
+> https://github.com/ndreys/linux/commit/09931e3d60af0a74377307b433db97da1be31570
+> 
+> All of the code there is up for grabs, if you feel like using it.
 > 
 
-Yes, our ARM32 chips are the Cyclone5 and Arria10. The Stratix10 is 
-ARM64 and I'm using S10 as shorthand for the Stratix10.
+I followed that and I have a version that works with linux-next that 
+does not include the GPU
+and VPU parts.
 
-The ECC blocks are very similar between Arria10 and Stratix10 but there 
-are differences as a result of the ARM32 vs ARM64 architecture 
-differences. The major difference is how Double Bit Errors are handled. 
-In the ARM32, the DBE is mapped to an IRQ. On ARM64, the DBE is mapped 
-to a SError.
+I also tested a version with the GPU and VPU parts and it "works" but 
+creates 2 useless
+paths in /sys/class/thermal .
 
-I had started out re-using the Arria10 bindings for Stratix10 since they 
-were very similar. Dinh pointed out that having separate bindings for 
-ARM64 would allow separation between the architectures and make future 
-changes easier.
+Should I wait for your changes to get into linux-next or resubmit a 
+version that works with the current one ?
 
-I'm unclear on the comment about being specific enough. Are you 
-suggesting that I use arm64 in the binding name instead of s10? Or is 
-there a better naming convention I should follow?
-
-Thanks for your comments and for reviewing!
-
-Thor
->>
->> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
->> ---
->> v2 No change
->> ---
->>   .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 106 +++++++++++++++++++++
->>   1 file changed, 106 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
->> index a0ac50e15912..a0fa80c53d2a 100644
->> --- a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
->> +++ b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
->> @@ -258,6 +258,49 @@ Required Properties:
->>   - compatible : Should be "altr,sdram-edac-s10"
->>   - interrupts : Should be single bit error interrupt.
->>   
->> +On-Chip RAM ECC
->> +Required Properties:
->> +- compatible      : Should be "altr,socfpga-s10-ocram-ecc"
->> +- reg             : Address and size for ECC block registers.
->> +- altr,ecc-parent : phandle to parent OCRAM node.
->> +- interrupts      : Should be single bit error interrupt.
->> +
->> +Ethernet FIFO ECC
->> +Required Properties:
->> +- compatible      : Should be "altr,socfpga-s10-eth-mac-ecc"
->> +- reg             : Address and size for ECC block registers.
->> +- altr,ecc-parent : phandle to parent Ethernet node.
->> +- interrupts      : Should be single bit error interrupt.
->> +
->> +NAND FIFO ECC
->> +Required Properties:
->> +- compatible      : Should be "altr,socfpga-s10-nand-ecc"
->> +- reg             : Address and size for ECC block registers.
->> +- altr,ecc-parent : phandle to parent NAND node.
->> +- interrupts      : Should be single bit error interrupt.
->> +
->> +DMA FIFO ECC
->> +Required Properties:
->> +- compatible      : Should be "altr,socfpga-s10-dma-ecc"
->> +- reg             : Address and size for ECC block registers.
->> +- altr,ecc-parent : phandle to parent DMA node.
->> +- interrupts      : Should be single bit error interrupt.
->> +
->> +USB FIFO ECC
->> +Required Properties:
->> +- compatible      : Should be "altr,socfpga-s10-usb-ecc"
->> +- reg             : Address and size for ECC block registers.
->> +- altr,ecc-parent : phandle to parent USB node.
->> +- interrupts      : Should be single bit error interrupt.
->> +
->> +SDMMC FIFO ECC
->> +Required Properties:
->> +- compatible      : Should be "altr,socfpga-s10-sdmmc-ecc"
->> +- reg             : Address and size for ECC block registers.
->> +- altr,ecc-parent : phandle to parent SD/MMC node.
->> +- interrupts      : Should be single bit error interrupt for port A
->> +		    and then single bit error interrupt for port B.
->> +
->>   Example:
->>   
->>   	eccmgr {
->> @@ -274,4 +317,67 @@ Example:
->>   			compatible = "altr,sdram-edac-s10";
->>   			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
->>   		};
->> +
->> +		ocram-ecc@ff8cc000 {
->> +			compatible = "altr,socfpga-s10-ocram-ecc";
->> +			reg = <ff8cc000 0x100>;
->> +			altr,ecc-parent = <&ocram>;
->> +			interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
->> +		};
->> +
->> +		emac0-rx-ecc@ff8c0000 {
->> +			compatible = "altr,socfpga-s10-eth-mac-ecc";
->> +			reg = <0xff8c0000 0x100>;
->> +			altr,ecc-parent = <&gmac0>;
->> +			interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
->> +		};
->> +
->> +		emac0-tx-ecc@ff8c0400 {
->> +			compatible = "altr,socfpga-s10-eth-mac-ecc";
->> +			reg = <0xff8c0400 0x100>;
->> +			altr,ecc-parent = <&gmac0>;
->> +			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>'
->> +		};
->> +
->> +		nand-buf-ecc@ff8c8000 {
->> +			compatible = "altr,socfpga-s10-nand-ecc";
->> +			reg = <0xff8c8000 0x100>;
->> +			altr,ecc-parent = <&nand>;
->> +			interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
->> +		};
->> +
->> +		nand-rd-ecc@ff8c8400 {
->> +			compatible = "altr,socfpga-s10-nand-ecc";
->> +			reg = <0xff8c8400 0x100>;
->> +			altr,ecc-parent = <&nand>;
->> +			interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
->> +		};
->> +
->> +		nand-wr-ecc@ff8c8800 {
->> +			compatible = "altr,socfpga-s10-nand-ecc";
->> +			reg = <0xff8c8800 0x100>;
->> +			altr,ecc-parent = <&nand>;
->> +			interrupts = <12 IRQ_TYPE_LEVEL_HIGH>;
->> +		};
->> +
->> +		dma-ecc@ff8c9000 {
->> +			compatible = "altr,socfpga-s10-dma-ecc";
->> +			reg = <0xff8c9000 0x100>;
->> +			altr,ecc-parent = <&pdma>;
->> +			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
->> +
->> +		usb0-ecc@ff8c4000 {
->> +			compatible = "altr,socfpga-s10-usb-ecc";
->> +			reg = <0xff8c4000 0x100>;
->> +			altr,ecc-parent = <&usb0>;
->> +			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
->> +		};
->> +
->> +		sdmmc-ecc@ff8c8c00 {
->> +			compatible = "altr,socfpga-s10-sdmmc-ecc";
->> +			reg = <0xff8c8c00 0x100>;
->> +			altr,ecc-parent = <&mmc>;
->> +			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <15 IRQ_TYPE_LEVEL_HIGH>;
->> +		};
->>   	};
->> -- 
->> 2.7.4
->>
-> 
+Thanks
+Angus
