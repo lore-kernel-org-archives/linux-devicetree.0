@@ -1,191 +1,59 @@
-From: Angus Ainslie <angus@akkea.ca>
-Subject: Re: [PATCH] arm64: dts: fsl: imx8mq: enable the thermal management  unit (TMU)
-Date: Tue, 12 Mar 2019 05:54:53 -0700
-Message-ID: <6c12636f6ff8aa6109e48ee4b4e7e41f@www.akkea.ca>
-References: <20190311213124.29325-1-angus@akkea.ca>
- <CAHQ1cqEHr1mB2EH3-fJPrYa+nkcWPPjmCTjSt-XsDnJp-SCf+w@mail.gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] i2c: i2c-stm32f7: Fix SDADEL minimum formula
+Date: Tue, 12 Mar 2019 14:00:51 +0100
+Message-ID: <20190312130051.kngknb26tikzsm7j@ninjato>
+References: <1551885125-22295-1-git-send-email-bich.hemon@st.com>
+ <20190309101340.GH1340@kunai>
+ <20190309105021.GI1340@kunai>
+ <36e0aec2-8fb8-d584-daee-1b3427f1067e@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="is76gvcv4mjw7ial"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHQ1cqEHr1mB2EH3-fJPrYa+nkcWPPjmCTjSt-XsDnJp-SCf+w@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <36e0aec2-8fb8-d584-daee-1b3427f1067e@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, daniel.baluta@nxp.com, agx@sigxcpu.org, dl-linux-imx <linux-imx@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Bich HEMON <bich.hemon@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Pierre Yves MORDRET <pierre-yves.mordret@st.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-03-11 19:35, Andrey Smirnov wrote:
-> On Mon, Mar 11, 2019 at 2:35 PM Angus Ainslie (Purism) <angus@akkea.ca> 
-> wrote:
->> 
->> These are the TMU nodes from the NXP vendor kernel
->> 
-> 
-> Hey Angus,
-> 
-> TMU block supports multiple thermal zones and vendor kernel doesn't
-> really account for that (see below). Latest version of the driver in
-> thermal tree now actually supports that feature (mulit-sensor), so I
-> think the code in DT should reflect that as well. I recently submitted
-> a series adding HWMON integration for TMU
-> (https://lore.kernel.org/lkml/20190222200508.26325-1-andrew.smirnov@gmail.com/T/#u)
-> and this is my take on this patch:
-> 
-> https://github.com/ndreys/linux/commit/09931e3d60af0a74377307b433db97da1be31570
-> 
-> All of the code there is up for grabs, if you feel like using it.
 
-Thanks, I would prefer to use the multi sensor code but I assumed it 
-wasn't in yet so I followed
+--is76gvcv4mjw7ial
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
 
-I'll try some testing with the DT fragment you suggested.
+> > Do you have a Fixes tag for this?
+> >=20
+>=20
+> Fixes: aeb068c57214858b638d5ee627bb4a831f98771e ("i2c: i2c-stm32f7: add=
+=20
+> driver")
+>=20
+> Will you change the commit message or do you want me to resend the patch?
 
-> 
->> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
->> ---
->>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 83 
->> +++++++++++++++++++++++
->>  1 file changed, 83 insertions(+)
->> 
->> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi 
->> b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
->> index 9155bd4784eb..087620c6e17f 100644
->> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
->> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
->> @@ -8,6 +8,7 @@
->>  #include <dt-bindings/power/imx8mq-power.h>
->>  #include <dt-bindings/gpio/gpio.h>
->>  #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +#include <dt-bindings/thermal/thermal.h>
->>  #include "imx8mq-pinfunc.h"
->> 
->>  / {
->> @@ -89,6 +90,7 @@
->>                         reg = <0x0>;
->>                         enable-method = "psci";
->>                         next-level-cache = <&A53_L2>;
->> +                       #cooling-cells = <2>;
->>                 };
->> 
->>                 A53_1: cpu@1 {
->> @@ -210,6 +212,87 @@
->>                                 #interrupt-cells = <2>;
->>                         };
->> 
->> +                       tmu: tmu@30260000 {
->> +                               compatible = "fsl,imx8mq-tmu";
->> +                               reg = <0x30260000 0x10000>;
->> +                               interrupt = <GIC_SPI 49 
->> IRQ_TYPE_LEVEL_HIGH>;
->> +                               little-endian;
->> +                               fsl,tmu-range = <0xb0000 0xa0026 
->> 0x80048 0x70061>;
->> +                               fsl,tmu-calibration = <0x00000000 
->> 0x00000023
->> +                                                      0x00000001 
->> 0x00000029
->> +                                                      0x00000002 
->> 0x0000002f
->> +                                                      0x00000003 
->> 0x00000035
->> +                                                      0x00000004 
->> 0x0000003d
->> +                                                      0x00000005 
->> 0x00000043
->> +                                                      0x00000006 
->> 0x0000004b
->> +                                                      0x00000007 
->> 0x00000051
->> +                                                      0x00000008 
->> 0x00000057
->> +                                                      0x00000009 
->> 0x0000005f
->> +                                                      0x0000000a 
->> 0x00000067
->> +                                                      0x0000000b 
->> 0x0000006f
->> +
->> +                                                      0x00010000 
->> 0x0000001b
->> +                                                      0x00010001 
->> 0x00000023
->> +                                                      0x00010002 
->> 0x0000002b
->> +                                                      0x00010003 
->> 0x00000033
->> +                                                      0x00010004 
->> 0x0000003b
->> +                                                      0x00010005 
->> 0x00000043
->> +                                                      0x00010006 
->> 0x0000004b
->> +                                                      0x00010007 
->> 0x00000055
->> +                                                      0x00010008 
->> 0x0000005d
->> +                                                      0x00010009 
->> 0x00000067
->> +                                                      0x0001000a 
->> 0x00000070
->> +
->> +                                                      0x00020000 
->> 0x00000017
->> +                                                      0x00020001 
->> 0x00000023
->> +                                                      0x00020002 
->> 0x0000002d
->> +                                                      0x00020003 
->> 0x00000037
->> +                                                      0x00020004 
->> 0x00000041
->> +                                                      0x00020005 
->> 0x0000004b
->> +                                                      0x00020006 
->> 0x00000057
->> +                                                      0x00020007 
->> 0x00000063
->> +                                                      0x00020008 
->> 0x0000006f
->> +
->> +                                                      0x00030000 
->> 0x00000015
->> +                                                      0x00030001 
->> 0x00000021
->> +                                                      0x00030002 
->> 0x0000002d
->> +                                                      0x00030003 
->> 0x00000039
->> +                                                      0x00030004 
->> 0x00000045
->> +                                                      0x00030005 
->> 0x00000053
->> +                                                      0x00030006 
->> 0x0000005f
->> +                                                      0x00030007 
->> 0x00000071>;
->> +                               #thermal-sensor-cells =  <0>;
-> 
-> As per #thermal-sensor-cells must be 1 (see
-> Documentation/devicetree/bindings/thermal/qoriq-thermal.txt), since as
-> I mentioned above there are multiple thermal zones (CPU, GPU, VPU).
+I'll fix it. Thanks for this info!
 
-Thanks I missed that bringing it over.
 
-Angus Ainslie
+--is76gvcv4mjw7ial
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
->> +                       };
->> +
->> +                       thermal-zones {
->> +                               cpu-thermal {
->> +                                       polling-delay-passive = <250>;
->> +                                       polling-delay = <2000>;
->> +                                       thermal-sensors = <&tmu>;
-> 
-> Ditto.
-> 
-> Thanks,
-> Andrey Smirnov
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyHrYMACgkQFA3kzBSg
+KbZT1g//bRBMzXRZ84ILbD3iczv55pWU32XqytQZVYE0B4meki6Az4h3se4n4AmM
+z8jL7OxLEmXzA22MbqRxhXvI3e3U3yBh65PGD2855Fv/Q9n/R7NxDEesvCU3aI+y
+O7eKUXMMqaOc1DcgiPw2dpxxsneUEYTtk7EE+1lYCOXK9BkXA9ZX7VQLg493bQxj
+RHRK/5+YK/Sj+mdaJktY73k3NZiB3qJ4gK9EoMVu+/W6wBpSHpknuSmFxPNUxUSF
+8UKETR0DvY0TOqYqpNdRLI8jR+UM2wTIe+yBLXK6oBSMFFkk3hanyfYt78VjVxlG
+lUnStJ18G7orGmwOpmf2xNX7kNgtz6CLgMFLX//AL9qouw8hhf2/SzNft+j4TDKx
+i3TcCGRV5tjGk/NMAHVhIPD9Qfbhs998uaNPFa91flnOALfGAL7Sjp8dT7I5APIG
+QB9qhQrBsQlg0pkm419Sa9A9F0PNWe1mwhP7rXBNpYU1S3fRPnyp0SPg4iSSIve0
+l4U+doq+3biw0Mb5WRhx28WrePKYXHe57PRx5Fm6wNHEkP401HeblF83Xo/bM+Zi
+y2SNRSNHWqVndxSiRt3/uQ543p+xzOQvwFuO3DTezJ+iizI6ukIGnWZAnQloTVIt
+P+HA478TJktkWOT7vXeS2b+hM5hFQbxoQ2yqnHcWuXn03vN6jEU=
+=WcWM
+-----END PGP SIGNATURE-----
+
+--is76gvcv4mjw7ial--
