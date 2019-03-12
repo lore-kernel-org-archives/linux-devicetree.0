@@ -1,85 +1,49 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
-Date: Mon, 11 Mar 2019 21:38:41 -0500
-Message-ID: <CAL_Jsq+M2P8eEkwS9-mLXfoA3LC6K-_WHUns5sH75E6h6qC2fA@mail.gmail.com>
-References: <20190304185536.211084-1-venture@google.com> <20190311222007.GA16254@bogus>
- <CAO=notzjsdOxJSf+p+OqB71N5-c1QPCcfd9OVAV8ft18e+SngQ@mail.gmail.com>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCHv4 23/28] dt-bindings: pci: Add NXP Layerscape SoCs PCIe
+ Gen4  controller
+Date: Tue, 12 Mar 2019 03:17:03 +0000
+Message-ID: <AM6PR04MB5781CBCE876031C73D0A4E3B84490@AM6PR04MB5781.eurprd04.prod.outlook.com>
+References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
+ <20190311093130.7209-24-Zhiqiang.Hou@nxp.com> <20190311221142.GA11898@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAO=notzjsdOxJSf+p+OqB71N5-c1QPCcfd9OVAV8ft18e+SngQ@mail.gmail.com>
+In-Reply-To: <20190311221142.GA11898@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick Venture <venture@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Greg KH <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 6:49 PM Patrick Venture <venture@google.com> wrote:
->
-> On Mon, Mar 11, 2019 at 3:20 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Mon, Mar 04, 2019 at 10:55:36AM -0800, Patrick Venture wrote:
-> > > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
-> > >
-> > > Signed-off-by: Patrick Venture <venture@google.com>
-> > > ---
-> > > Changes for v6:
-> > > - None
-> > > Changes for v5:
-> > > - None
-> > > Changes for v4:
-> > > - None
-> > > Changes for v3:
-> > > - None
-> > > Changes for v2:
-> > > - Added comment about syscon required parameter.
-> > > ---
-> > >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 32 +++++++++++++++++++
-> > >  1 file changed, 32 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> > > new file mode 100644
-> > > index 000000000000..1092d62d1c92
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> > > @@ -0,0 +1,32 @@
-> > > +======================================================================
-> > > +Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
-> > > +======================================================================
-> > > +
-> > > +The bridge is available on platforms with the VGA enabled on the Aspeed device.
-> > > +In this case, the host has access to a 64KiB window into all of the BMC's
-> > > +memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
-> > > +has read access to all the regions of memory, however the host only has read
-> > > +and write access depending on a register controlled by the BMC.
-> > > +
-> > > +Required properties:
-> > > +===================
-> > > +
-> > > + - compatible: must be one of:
-> > > +     - "aspeed,ast2400-p2a-ctrl"
-> > > +     - "aspeed,ast2500-p2a-ctrl"
-> > > +
-> > > + - syscon: handle to syscon device node controlling PCI.
-> > > +
-> > > +Optional properties:
-> > > +===================
-> > > +
-> > > +- memory-region: A phandle to a reserved_memory region to be used for the PCI
-> > > +             to AHB mapping
-> > > +
-> > > +Example:
-> > > +
-> > > +p2a: p2a-control@1e6e2000 {
-> > > +     compatible = "aspeed,ast2400-p2a-ctrl";
-> > > +     memory-region = <&reserved_memory>;
-> > > +     syscon = <&syscon>;
-> >
-> > Make this node a child of what you are pointing to instead if this the
-> > only control interface.
->
-> You're suggesting I make this a child of the syscon?
-
-Yes.
-
-Rob
+SGkgUm9iLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJy
+aW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE5xOoz1MIxMsjVIDY6MTIN
+Cj4gVG86IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2
+Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4g
+ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
+DQo+IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5k
+QGFybS5jb207DQo+IGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28uaW47IHNoYXduZ3VvQGtlcm5l
+bC5vcmc7IExlbyBMaQ0KPiA8bGVveWFuZy5saUBueHAuY29tPjsgbG9yZW56by5waWVyYWxpc2lA
+YXJtLmNvbTsNCj4gY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwuZGVhY29uQGFybS5jb207
+IE1pbmdrYWkgSHUNCj4gPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0uaC4gTGlhbiA8bWluZ2h1YW4u
+bGlhbkBueHAuY29tPjsgWGlhb3dlaSBCYW8NCj4gPHhpYW93ZWkuYmFvQG54cC5jb20+OyBaLnEu
+IEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NCAyMy8y
+OF0gZHQtYmluZGluZ3M6IHBjaTogQWRkIE5YUCBMYXllcnNjYXBlIFNvQ3MgUENJZQ0KPiBHZW40
+IGNvbnRyb2xsZXINCj4gDQo+IE9uIE1vbiwgMTEgTWFyIDIwMTkgMDk6MzM6MDUgKzAwMDAsICJa
+LnEuIEhvdSIgd3JvdGU6DQo+ID4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhw
+LmNvbT4NCj4gPg0KPiA+IEFkZCBQQ0llIEdlbjQgY29udHJvbGxlciBEVCBiaW5kaW5ncyBvZiBO
+WFAgTGF5ZXJzY2FwZSBTb0NzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogSG91IFpoaXFpYW5n
+IDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBWNDoNCj4gPiAgLSBubyBjaGFu
+Z2UNCj4gPg0KPiA+ICAuLi4vYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLWdlbjQudHh0ICAg
+ICAgfCA1Mg0KPiArKysrKysrKysrKysrKysrKysrDQo+ID4gIE1BSU5UQUlORVJTICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICA4ICsrKw0KPiA+ICAyIGZpbGVzIGNoYW5nZWQs
+IDYwIGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaS1nZW40LnR4dA0KPiA+
+DQo+IA0KPiBQbGVhc2UgYWRkIEFja2VkLWJ5L1Jldmlld2VkLWJ5IHRhZ3Mgd2hlbiBwb3N0aW5n
+IG5ldyB2ZXJzaW9ucy4gSG93ZXZlciwNCj4gdGhlcmUncyBubyBuZWVkIHRvIHJlcG9zdCBwYXRj
+aGVzICpvbmx5KiB0byBhZGQgdGhlIHRhZ3MuIFRoZSB1cHN0cmVhbQ0KPiBtYWludGFpbmVyIHdp
+bGwgZG8gdGhhdCBmb3IgYWNrcyByZWNlaXZlZCBvbiB0aGUgdmVyc2lvbiB0aGV5IGFwcGx5Lg0K
+PiANCj4gSWYgYSB0YWcgd2FzIG5vdCBhZGRlZCBvbiBwdXJwb3NlLCBwbGVhc2Ugc3RhdGUgd2h5
+IGFuZCB3aGF0IGNoYW5nZWQuDQoNClNvcnJ5LCBJIG1pc3NlZCB5b3VyIFJldmlld2VkLWJ5IHRh
+ZyBpbiB0aGlzIHBhdGNoLCB3aWxsIHJlLXNlbmQgdGhpcyBwYXRjaCBhZGRpbmcgdGhlIGxvc3Qg
+dGFnLg0KDQpUaGFua3MsDQpaaGlxaWFuZw0K
