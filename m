@@ -1,32 +1,28 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/5] dt-bindings: display: armada: Improve the LCDC
- documentation
-Date: Tue, 12 Mar 2019 13:42:52 -0500
-Message-ID: <20190312184252.GA12611@bogus>
-References: <20190304202006.3863-1-lkundrak@v3.sk>
- <20190304202006.3863-4-lkundrak@v3.sk>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v3 07/11] ARM: davinci: dm355: switch to using the
+ clocksource driver
+Date: Tue, 12 Mar 2019 13:43:00 -0500
+Message-ID: <5ee788d9-791f-2179-f606-5a18f0524720@lechnology.com>
+References: <20190226120633.18200-1-brgl@bgdev.pl>
+ <20190226120633.18200-8-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190304202006.3863-4-lkundrak@v3.sk>
+In-Reply-To: <20190226120633.18200-8-brgl@bgdev.pl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  4 Mar 2019 21:20:04 +0100, Lubomir Rintel wrote:
-> The port is a child, not a property. And should be accompanied by an
-> example. Plus a pair of cosmetic changes that don't seem to deserve a
-> separate commit.
+On 2/26/19 6:06 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> We now have a proper clocksource driver for davinci. Switch the dm355
+> platform to using it.
 > 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
-> Changes since v1:
-> - Minor adjustments to the commit message wording.
-> 
->  .../bindings/display/marvell,armada-lcdc.txt     | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: David Lechner <david@lechnology.com>
