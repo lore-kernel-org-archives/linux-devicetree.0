@@ -1,43 +1,60 @@
-From: Johan Jonker <jbx6244@gmail.com>
-Subject: Re: [PATCH v3 1/4] drm: rockchip: introduce rk3066 hdmi
-Date: Tue, 12 Mar 2019 19:10:33 +0100
-Message-ID: <d53892e0-17f9-1c7f-b7d3-2794fad09207@gmail.com>
-References: <20190302104116.1535-1-jbx6244@gmail.com>
- <20190302104116.1535-2-jbx6244@gmail.com>
- <20190303202308.GD13157@ravnborg.org>
- <b6b818d5-8c24-e01a-572e-97c1754c80e8@gmail.com>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v1 0/4] drm/msm/a6xx: Add support for zap shader
+Date: Tue, 12 Mar 2019 12:13:38 -0600
+Message-ID: <1552414422-9568-1-git-send-email-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <b6b818d5-8c24-e01a-572e-97c1754c80e8@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, heiko@sntech.de, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sharat Masetty <smasetty-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Marek <jonathan-eSc4qw6YbEQ@public.gmane.org>, Thomas Zimmermann <tzimmermann-l3A5Bk7waGM@public.gmane.org>, Mamta Shukla <mamtashukla555-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3/4/19 11:48 PM, Johan Jonker wrote:
->
-> With regard to the bugs something between rc1 and rc8 results
-> in a freeze on poweroff. Power domain doesn't seem to turn off
-> the vop and hdmi in rc8.
-
-The bug is due to a patch revert earlier this year.
-To shutdown MK808 one can continue to use the patch at the link below
-until this issue is fix by them.
-
-drm/rockchip: shutdown drm subsystem on shutdown
-https://patchwork.kernel.org/patch/10556151/
-
-[for-4.20] Revert "drm/rockchip: Allow driver to be shutdown on
-reboot/kexec"
-https://patchwork.kernel.org/patch/10714725/
+ClRoaXMgcGF0Y2ggc2VyaWVzIGFkZHMgc3VwcG9ydCBmb3IgbG9hZGluZyB0aGUgemFwIHNoYWRl
+ciBvbiBhNnh4IGFuZCB1c2luZyBpdAp0byBnZXQgdGhlIEdQVSBvdXQgb2Ygc2VjdXJlIG1vZGUu
+CgpUaGUgQWRyZW5vIGE1eHggYW5kIGE2eHggR1BVcyBib290IGluICJzZWN1cmUiIG1vZGUgd2hp
+Y2ggcmVzdHJpY3RzIHRoZSBtZW1vcnkKdGhlIEdQVSBpcyBhbGxvd2VkIHRvIHVzZS4gVG8gZ2V0
+IHRoZSBHUFUgb3V0IG9mIHNlY3VyZSBtb2RlIHdlIG5lZWQgdG8gd3JpdGUKdG8gYSByZWdpc3Rl
+ci4gSG93ZXZlciBzb21lIGJvb3Rsb2FkZXJzIGJsb2NrIGFjY2VzcyB0byB0aGlzIHJlZ2lzdGVy
+IGFuZApyZXF1aXJlIHRoYXQgdGhlIEdQVSBpbnN0ZWFkIHBlcmZvcm0gYSBzZXF1ZW5jZSB0byBw
+dWxsIHRoZSBHUFUgb3V0IG9mIHNlY3VyZQptb2RlLiBUaGlzIHNlcXVlbmNlIHJlcXVpcmVzIGEg
+c3BlY2lhbCAiemFwIiBzaGFkZXIgdGhhdCB3aWxsIGV4ZWN1dGUgaW4Kc2VjdXJlIG1vZGUsIGNs
+ZWFyIG91dCBhbGwgdGhlIGludGVybmFsIEdQVSBzZXR0aW5ncyBhbmQgdGhlbiB0cmFuc2l0aW9u
+IHRvCmluLXNlY3VyZSBtb2RlLgoKVGhpcyBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBsb2FkaW5n
+IGFuZCB1c2luZyB0aGUgemFwIHNoYWRlciBvbiBhNnh4IGFzc3VtaW5nCnRoYXQgdGhlIHNoYWRl
+ciBleGlzdHMgYW5kIHRoYXQgdGhlIGJvb3Rsb2FkZXIgc3VwcG9ydHMgdGhlIHNlY3VyZSBtb2Rl
+LiBJZiBhbnkKcGFydCBvZiB0aGUgc2VxdWVuY2UgZmFpbHMgdGhlbiBmYWxsIGJhY2sgdG8gd3Jp
+dGluZyB0aGUgcmVnaXN0ZXIuIElmIHdlIGdldCBpdAp3cm9uZywgdGhlbiB3cml0aW5nIHRvIHRo
+ZSByZWdpc3RlciB3aWxsIHRyaWdnZXIgYSBwcm90ZWN0aW9uIG1vZGUgZXJyb3IgYW5kCnRoZSBz
+eXN0ZW0gd2lsbCBnbyBkb3duLgoKVGhlIGFjdHVhbCB6YXAgc2hhZGVyIHdvcmtzIGFsbW9zdCBp
+ZGVudGljYWxseSB0byB0aGUgb25lIG9uIDV4eCBvdXRzaWRlIG9mCmEgbWlub3Igd29ya2Fyb3Vu
+ZCBmb3Igc3lzdGVtIHJlc3VtZS4gVGhlIGZpcnN0IHBhdGNoIG1vdmVzIHRoZSBhNXh4IHNwZWNp
+ZmljCnN1cHBvcnQgdG8gdGhlIGdlbmVyaWMgYWRyZW5vIGRyaXZlci4gVGhlIHNlY29uZCBwYXRj
+aCBhZGQgc3VwcG9ydCBmb3IgdGhlCnphcCBzaGFkZXIgYW5kIHRoZSBmaW5hbCB0d28gcGF0Y2hl
+cyBhZGQgdGhlIERUIGJpbmRpbmdzIGFuZCBEVCBzZXR0aW5ncyBmb3IKc2V0dGluZyB1cCB0aGUg
+cmVzZXJ2ZWQgbWVtb3J5IHRoYXQgdGhlIHNoYWRlciByZXF1aXJlcy4KCgpKb3JkYW4gQ3JvdXNl
+ICg0KToKICBkcm0vbXNtL2dwdTogTW92ZSB6YXAgc2hhZGVyIGxvYWRpbmcgdG8gYWRyZW5vCiAg
+ZHJtL21zbS9hNnh4OiBBZGQgemFwIHNoYWRlciBsb2FkCiAgZHQtYmluZGluZ3M6IGRybS9tc20v
+Z3B1OiBEb2N1bWVudCBhNXh4IC8gYTZ4eCB6YXAgc2hhZGVyIHJlZ2lvbgogIGFybTY0OiBkdHM6
+IHNkbTg0NTogQWRkIHphcCBzaGFkZXIgcmVnaW9uIGZvciBHUFUKCiAuLi4vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L21zbS9ncHUudHh0ICAgICAgICB8ICAgNyArKwogYXJjaC9hcm02NC9i
+b290L2R0cy9xY29tL3NkbTg0NS5kdHNpICAgICAgICAgICAgICAgfCAgMTEgKysKIGRyaXZlcnMv
+Z3B1L2RybS9tc20vYWRyZW5vL2E1eHhfZ3B1LmMgICAgICAgICAgICAgIHwgMTA5ICstLS0tLS0t
+LS0tLS0tLS0tLS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hNnh4X2dwdS5jICAgICAg
+ICAgICAgICB8ICAzOCArKysrKystCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hZHJlbm9f
+ZGV2aWNlLmMgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hZHJl
+bm9fZ3B1LmMgICAgICAgICAgICB8IDExMyArKysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMv
+Z3B1L2RybS9tc20vYWRyZW5vL2FkcmVub19ncHUuaCAgICAgICAgICAgIHwgICA2ICsrCiA3IGZp
+bGVzIGNoYW5nZWQsIDE3NiBpbnNlcnRpb25zKCspLCAxMDkgZGVsZXRpb25zKC0pCgotLSAKMi43
+LjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVk
+cmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubw==
