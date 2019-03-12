@@ -1,30 +1,29 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/8] dt-bindings: phy: Add Amlogic G12A USB3+PCIE
- Combo PHY  Bindings
-Date: Tue, 12 Mar 2019 13:23:12 -0500
-Message-ID: <20190312182312.GA12396@bogus>
-References: <20190304103846.2060-1-narmstrong@baylibre.com>
- <20190304103846.2060-3-narmstrong@baylibre.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v3 03/11] ARM: davinci: WARN_ON() if clk_get() fails
+Date: Tue, 12 Mar 2019 13:23:59 -0500
+Message-ID: <4292798d-444c-9eb1-2ea3-434909bce9b0@lechnology.com>
+References: <20190226120633.18200-1-brgl@bgdev.pl>
+ <20190226120633.18200-4-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190304103846.2060-3-narmstrong@baylibre.com>
+In-Reply-To: <20190226120633.18200-4-brgl@bgdev.pl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  4 Mar 2019 11:38:40 +0100, Neil Armstrong wrote:
-> Add the Amlogic G12A Family USB3 + PCIE Combo PHY Bindings.
+On 2/26/19 6:06 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> This PHY can provide exclusively USB3 or PCIE support on shared I/Os.
+> Currently the timer code checks if the clock pointer passed to it is
+> good (!IS_ERR(clk)). The new clocksource driver expects the clock to
+> be functional and doesn't perform any checks so emit a warning if
+> clk_get() fails. Apply this to all davinci platforms.
 > 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->  .../bindings/phy/meson-g12a-usb3-pcie-phy.txt | 22 +++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: David Lechner <david@lechnology.com>
