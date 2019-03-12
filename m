@@ -1,109 +1,71 @@
-From: "Rizvi, Mohammad Faiz Abbas" <faiz_abbas@ti.com>
-Subject: Re: [PATCH v2 1/8] mmc: sdhci: Get rid of finish_tasklet
-Date: Tue, 12 Mar 2019 23:00:38 +0530
-Message-ID: <842caafd-1547-1ea6-faf0-27a85a912622@ti.com>
-References: <20190215192033.24203-1-faiz_abbas@ti.com>
- <20190215192033.24203-2-faiz_abbas@ti.com>
- <abcc1506-cd38-5ff4-aaeb-57e9a9622e90@intel.com>
- <8d72ff93-e07f-52b9-da85-acd54f046694@ti.com>
- <63b6631d-86e7-b8ef-ffaf-40e7d4e96cfb@intel.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 093/135] DTS: CI20: Fix bugs in ci20s device tree.
+Date: Tue, 12 Mar 2019 10:09:00 -0700
+Message-ID: <20190312170349.760389664@linuxfoundation.org>
+References: <20190312170341.127810985@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <63b6631d-86e7-b8ef-ffaf-40e7d4e96cfb@intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, zhang.chunyan@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Zhou Yanjie <zhouyanjie@cduestc.edu.cn>, Paul Burton <paul.burton@mips.com>, linux-mips <linux-mips@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, ralf@linux-mips.org, jhogan@kernel.org, mark.rutland@arm.com, malat@debian.org, ezequiel@collabora.co.uk, ulf.hansson@linaro.org, syq <syq@debian.org>, "jiaxun.yang" <jiaxun.yang@flygoat.com>, Sasha Levin <sashal@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Adrian,
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
-On 3/8/2019 7:06 PM, Adrian Hunter wrote:
-> On 6/03/19 12:00 PM, Faiz Abbas wrote:
->> Adrian,
->>
->> On 25/02/19 1:47 PM, Adrian Hunter wrote:
->>> On 15/02/19 9:20 PM, Faiz Abbas wrote:
->>>> sdhci.c has two bottom halves implemented. A threaded_irq for handling
->>>> card insert/remove operations and a tasklet for finishing mmc requests.
->>>> With the addition of external dma support, dmaengine APIs need to
->>>> terminate in non-atomic context before unmapping the dma buffers.
->>>>
->>>> To facilitate this, remove the finish_tasklet and move the call of
->>>> sdhci_request_done() to the threaded_irq() callback.
->>>
->>> The irq thread has a higher latency than the tasklet.  The performance drop
->>> is measurable on the system I tried:
->>>
->>> Before:
->>>
->>> # dd if=/dev/mmcblk1 of=/dev/null bs=1G count=1 &
->>> 1+0 records in
->>> 1+0 records out
->>> 1073741824 bytes (1.1 GB) copied, 4.44502 s, 242 MB/s
->>>
->>> After:
->>>
->>> # dd if=/dev/mmcblk1 of=/dev/null bs=1G count=1 &
->>> 1+0 records in
->>> 1+0 records out
->>> 1073741824 bytes (1.1 GB) copied, 4.50898 s, 238 MB/s
->>>
->>> So we only want to resort to the thread for the error case.
->>>
->>
->> Sorry for the late response here, but this is about 1.6% decrease. I
->> tried out the same commands on a dra7xx board here (with about 5
->> consecutive dd of 1GB) and the average decrease was 0.3%. I believe you
->> will also find a lesser percentage change if you average over multiple
->> dd commands.
->>
->> Is this really so significant that we have to maintain two different
->> bottom halves and keep having difficulty with adding APIs that can sleep?
-> 
-> It is a performance drop that can be avoided, so it might as well be.
-> Splitting the success path from the failure path is common for I/O drivers
-> for similar reasons as here: the success path can be optimized whereas the
-> failure path potentially needs to sleep.
+------------------
 
-Understood. You wanna keep the success path as fast as possible.
-> 
->>
->> Also I am not sure how to implement only the error handling part in the
->> threaded_irq. We need to enter sdhci_request_done() and get the current
->> mrq before we can check for error conditions like I've done in patch 2:
->>
->> /* Terminate and synchronize dma in case of an error */
->> if (data && (mrq->cmd->error || data->error) &&
->>     host->use_external_dma) {
->> 	struct dma_chan *chan = sdhci_external_dma_channel(host, data);
->> 	dmaengine_terminate_sync(chan);
->> }
->>
->> On a related note, do we really need to protect everything in
->> sdhci_request_done() with spinlocks?
->>                                      In patch 2 I have only removed lock
->> for the terminate_sync() parts that I added but the whole
->> dma_unmap/dma_sync parts should be left unprotected IMO.
-> 
-> As it is written, synchronization is needed to stop the same mrq being
-> finished twice.
-> 
-> I suggest doing the dmaengine_terminate_sync() before calling
-> sdhci_request_done().  Perhaps you could record the channel that needs to be
-> sync'd and then do:
-> 
-> 	struct dma_chan *chan = READ_ONCE(host->sync_chan);
-> 
-> 	if (chan) {
-> 		dmaengine_terminate_sync(chan);
-> 		host->sync_chan = NULL;
-> 	}
-> 
+[ Upstream commit 1ca1c87f91d9dc50d6a38e2177b2032996e7901c ]
 
-Will try this out and send next version.
+According to the Schematic, the hardware of ci20 leads to uart3,
+but not to uart2. Uart2 is miswritten in the original code.
 
-Thanks,
-Faiz
+Signed-off-by: Zhou Yanjie <zhouyanjie@cduestc.edu.cn>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips <linux-mips@vger.kernel.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org
+Cc: ralf@linux-mips.org
+Cc: jhogan@kernel.org
+Cc: mark.rutland@arm.com
+Cc: malat@debian.org
+Cc: ezequiel@collabora.co.uk
+Cc: ulf.hansson@linaro.org
+Cc: syq <syq@debian.org>
+Cc: jiaxun.yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/mips/boot/dts/ingenic/ci20.dts | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index a4cc52214dbd..dad4aa0ebdd8 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -54,7 +54,7 @@
+ 	status = "okay";
+ 
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pins_uart2>;
++	pinctrl-0 = <&pins_uart3>;
+ };
+ 
+ &uart4 {
+@@ -174,9 +174,9 @@
+ 		bias-disable;
+ 	};
+ 
+-	pins_uart2: uart2 {
+-		function = "uart2";
+-		groups = "uart2-data", "uart2-hwflow";
++	pins_uart3: uart3 {
++		function = "uart3";
++		groups = "uart3-data", "uart3-hwflow";
+ 		bias-disable;
+ 	};
+ 
+-- 
+2.19.1
