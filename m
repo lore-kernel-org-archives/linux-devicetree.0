@@ -1,14 +1,14 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.20 156/171] arm64: dts: hikey: Revert "Enable HS200 mode on
+Subject: [PATCH 4.19 130/149] arm64: dts: hikey: Revert "Enable HS200 mode on
  eMMC"
-Date: Tue, 12 Mar 2019 10:08:56 -0700
-Message-ID: <20190312170400.911136900@linuxfoundation.org>
-References: <20190312170347.868927101@linuxfoundation.org>
+Date: Tue, 12 Mar 2019 10:09:08 -0700
+Message-ID: <20190312170400.288034872@linuxfoundation.org>
+References: <20190312170349.421581206@linuxfoundation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
+In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,7 +22,7 @@ To: linux-kernel@vger.kernel.org
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ryan Grachek <ryan@edited.us>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alistair Strachan <astrachan@google.com>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, stable@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-4.20-stable review patch.  If anyone has any objections, please let me know.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
