@@ -1,116 +1,30 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv4 23/28] dt-bindings: pci: Add NXP Layerscape SoCs PCIe
- Gen4 controller
-Date: Tue, 12 Mar 2019 09:42:36 +0000
-Message-ID: <AM6PR04MB57811882B16E9DA956A515E684490@AM6PR04MB5781.eurprd04.prod.outlook.com>
-References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
- <20190311093130.7209-24-Zhiqiang.Hou@nxp.com>
+From: Andreas Schwab <schwab@suse.de>
+Subject: Re: [PATCH v9 0/2] PWM support for HiFive Unleashed
+Date: Tue, 12 Mar 2019 11:14:15 +0100
+Message-ID: <mvmimwotn60.fsf@suse.de>
+References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190311093130.7209-24-Zhiqiang.Hou@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>
-Cc: "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1552378289-27245-1-git-send-email-yash.shah@sifive.com> (Yash
+        Shah's message of "Tue, 12 Mar 2019 13:41:27 +0530")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yash Shah <yash.shah@sifive.com>
+Cc: palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, paul.walmsley@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgQWxsLA0KDQpQbGVhc2UgaWdub3JlIHRoaXMsIGhhcyByZS1zZW50IGl0IGFkZGluZyBsb3N0
-IFJldmlld2VkLWJ5IHRhZy4NCg0KVGhhbmtzLA0KWmhpcWlhbmcNCg0KPiAtLS0tLU9yaWdpbmFs
-IE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBaLnEuIEhvdQ0KPiBTZW50OiAyMDE5xOoz1MIxMcjVIDE3
-OjMzDQo+IFRvOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0QGtl
-cm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiBsLnN1YnJhaG1hbnlhQG1vYml2ZWls
-LmNvLmluOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhwLmNv
-bT47IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207DQo+IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29t
-OyB3aWxsLmRlYWNvbkBhcm0uY29tDQo+IENjOiBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5j
-b20+OyBNLmguIExpYW4NCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IFhpYW93ZWkgQmFvIDx4
-aWFvd2VpLmJhb0BueHAuY29tPjsgWi5xLiBIb3UNCj4gPHpoaXFpYW5nLmhvdUBueHAuY29tPg0K
-PiBTdWJqZWN0OiBbUEFUQ0h2NCAyMy8yOF0gZHQtYmluZGluZ3M6IHBjaTogQWRkIE5YUCBMYXll
-cnNjYXBlIFNvQ3MgUENJZQ0KPiBHZW40IGNvbnRyb2xsZXINCj4gDQo+IEZyb206IEhvdSBaaGlx
-aWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+IA0KPiBBZGQgUENJZSBHZW40IGNvbnRyb2xs
-ZXIgRFQgYmluZGluZ3Mgb2YgTlhQIExheWVyc2NhcGUgU29Dcy4NCj4gDQo+IFNpZ25lZC1vZmYt
-Ynk6IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+IC0tLQ0KPiBWNDoNCj4g
-IC0gbm8gY2hhbmdlDQo+IA0KPiAgLi4uL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaS1nZW40
-LnR4dCAgICAgIHwgNTIgKysrKysrKysrKysrKysrKysrKw0KPiAgTUFJTlRBSU5FUlMgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDggKysrDQo+ICAyIGZpbGVzIGNoYW5nZWQs
-IDYwIGluc2VydGlvbnMoKykNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLWdlbjQudHh0DQo+IA0KPiBk
-aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNj
-YXBlLXBjaS1nZW40LnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
-Y2kvbGF5ZXJzY2FwZS1wY2ktZ2VuNC50eHQNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5k
-ZXggMDAwMDAwMDAwMDAwLi5iNDBmYjVkMTVkM2QNCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLWdlbjQu
-dHh0DQo+IEBAIC0wLDAgKzEsNTIgQEANCj4gK05YUCBMYXllcnNjYXBlIFBDSWUgR2VuNCBjb250
-cm9sbGVyDQo+ICsNCj4gK1RoaXMgUENJZSBjb250cm9sbGVyIGlzIGJhc2VkIG9uIHRoZSBNb2Jp
-dmVpbCBQQ0llIElQIGFuZCB0aHVzIGluaGVyaXRzDQo+ICthbGwgdGhlIGNvbW1vbiBwcm9wZXJ0
-aWVzIGRlZmluZWQgaW4gbW9iaXZlaWwtcGNpZS50eHQuDQo+ICsNCj4gK1JlcXVpcmVkIHByb3Bl
-cnRpZXM6DQo+ICstIGNvbXBhdGlibGU6IHNob3VsZCBjb250YWluIHRoZSBwbGF0Zm9ybSBpZGVu
-dGlmaWVyIHN1Y2ggYXM6DQo+ICsgICJmc2wsbHgyMTYwYS1wY2llIg0KPiArLSByZWc6IGJhc2Ug
-YWRkcmVzc2VzIGFuZCBsZW5ndGhzIG9mIHRoZSBQQ0llIGNvbnRyb2xsZXIgcmVnaXN0ZXIgYmxv
-Y2tzLg0KPiArICAiY3NyX2F4aV9zbGF2ZSI6IEJyaWRnZSBjb25maWcgcmVnaXN0ZXJzDQo+ICsg
-ICJjb25maWdfYXhpX3NsYXZlIjogUENJZSBjb250cm9sbGVyIHJlZ2lzdGVycw0KPiArLSBpbnRl
-cnJ1cHRzOiBBIGxpc3Qgb2YgaW50ZXJydXB0IG91dHB1dHMgb2YgdGhlIGNvbnRyb2xsZXIuIE11
-c3QNCj4gK2NvbnRhaW4gYW4NCj4gKyAgZW50cnkgZm9yIGVhY2ggZW50cnkgaW4gdGhlIGludGVy
-cnVwdC1uYW1lcyBwcm9wZXJ0eS4NCj4gKy0gaW50ZXJydXB0LW5hbWVzOiBJdCBjb3VsZCBpbmNs
-dWRlIHRoZSBmb2xsb3dpbmcgZW50cmllczoNCj4gKyAgImludHIiOiBUaGUgaW50ZXJydXB0IHRo
-YXQgaXMgYXNzZXJ0ZWQgZm9yIGNvbnRyb2xsZXIgaW50ZXJydXB0cw0KPiArICAiYWVyIjogQXNz
-ZXJ0ZWQgZm9yIGFlciBpbnRlcnJ1cHQgd2hlbiBjaGlwIHN1cHBvcnQgdGhlIGFlciBpbnRlcnJ1
-cHQgd2l0aA0KPiArCSBub25lIE1TSS9NU0ktWC9JTlR4IG1vZGUsYnV0IHRoZXJlIGlzIGludGVy
-cnVwdCBsaW5lIGZvciBhZXIuDQo+ICsgICJwbWUiOiBBc3NlcnRlZCBmb3IgcG1lIGludGVycnVw
-dCB3aGVuIGNoaXAgc3VwcG9ydCB0aGUgcG1lIGludGVycnVwdA0KPiB3aXRoDQo+ICsJIG5vbmUg
-TVNJL01TSS1YL0lOVHggbW9kZSxidXQgdGhlcmUgaXMgaW50ZXJydXB0IGxpbmUgZm9yIHBtZS4N
-Cj4gKy0gZG1hLWNvaGVyZW50OiBJbmRpY2F0ZXMgdGhhdCB0aGUgaGFyZHdhcmUgSVAgYmxvY2sg
-Y2FuIGVuc3VyZSB0aGUNCj4gK2NvaGVyZW5jeQ0KPiArICBvZiB0aGUgZGF0YSB0cmFuc2ZlcnJl
-ZCBmcm9tL3RvIHRoZSBJUCBibG9jay4gVGhpcyBjYW4gYXZvaWQgdGhlDQo+ICtzb2Z0d2FyZQ0K
-PiArICBjYWNoZSBmbHVzaC9pbnZhbGlkIGFjdGlvbnMsIGFuZCBpbXByb3ZlIHRoZSBwZXJmb3Jt
-YW5jZSBzaWduaWZpY2FudGx5Lg0KPiArLSBtc2ktcGFyZW50IDogU2VlIHRoZSBnZW5lcmljIE1T
-SSBiaW5kaW5nIGRlc2NyaWJlZCBpbg0KPiArICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvbXNpLnR4dC4NCj4gKw0KPiArRXhhbXBsZToNCj4g
-Kw0KPiArCXBjaWVAMzQwMDAwMCB7DQo+ICsJCWNvbXBhdGlibGUgPSAiZnNsLGx4MjE2MGEtcGNp
-ZSI7DQo+ICsJCXJlZyA9IDwweDAwIDB4MDM0MDAwMDAgMHgwIDB4MDAxMDAwMDAgICAvKiBjb250
-cm9sbGVyIHJlZ2lzdGVycw0KPiAqLw0KPiArCQkgICAgICAgMHg4MCAweDAwMDAwMDAwIDB4MCAw
-eDAwMDAxMDAwPjsgLyogY29uZmlndXJhdGlvbiBzcGFjZQ0KPiAqLw0KPiArCQlyZWctbmFtZXMg
-PSAiY3NyX2F4aV9zbGF2ZSIsICJjb25maWdfYXhpX3NsYXZlIjsNCj4gKwkJaW50ZXJydXB0cyA9
-IDxHSUNfU1BJIDEwOCBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgLyogQUVSDQo+IGludGVycnVwdCAq
-Lw0KPiArCQkJICAgICA8R0lDX1NQSSAxMDggSVJRX1RZUEVfTEVWRUxfSElHSD4sIC8qIFBNRSBp
-bnRlcnJ1cHQNCj4gKi8NCj4gKwkJCSAgICAgPEdJQ19TUEkgMTA4IElSUV9UWVBFX0xFVkVMX0hJ
-R0g+OyAvKiBjb250cm9sbGVyDQo+IGludGVycnVwdCAqLw0KPiArCQlpbnRlcnJ1cHQtbmFtZXMg
-PSAiYWVyIiwgInBtZSIsICJpbnRyIjsNCj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8Mz47DQo+ICsJ
-CSNzaXplLWNlbGxzID0gPDI+Ow0KPiArCQlkZXZpY2VfdHlwZSA9ICJwY2kiOw0KPiArCQlhcGlv
-LXdpbnMgPSA8OD47DQo+ICsJCXBwaW8td2lucyA9IDw4PjsNCj4gKwkJZG1hLWNvaGVyZW50Ow0K
-PiArCQlidXMtcmFuZ2UgPSA8MHgwIDB4ZmY+Ow0KPiArCQltc2ktcGFyZW50ID0gPCZpdHM+Ow0K
-PiArCQlyYW5nZXMgPSA8MHg4MjAwMDAwMCAweDAgMHg0MDAwMDAwMCAweDgwIDB4NDAwMDAwMDAg
-MHgwDQo+IDB4NDAwMDAwMDA+Ow0KPiArCQkjaW50ZXJydXB0LWNlbGxzID0gPDE+Ow0KPiArCQlp
-bnRlcnJ1cHQtbWFwLW1hc2sgPSA8MCAwIDAgNz47DQo+ICsJCWludGVycnVwdC1tYXAgPSA8MDAw
-MCAwIDAgMSAmZ2ljIDAgMCBHSUNfU1BJIDEwOQ0KPiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4g
-KwkJCQk8MDAwMCAwIDAgMiAmZ2ljIDAgMCBHSUNfU1BJIDExMA0KPiBJUlFfVFlQRV9MRVZFTF9I
-SUdIPiwNCj4gKwkJCQk8MDAwMCAwIDAgMyAmZ2ljIDAgMCBHSUNfU1BJIDExMQ0KPiBJUlFfVFlQ
-RV9MRVZFTF9ISUdIPiwNCj4gKwkJCQk8MDAwMCAwIDAgNCAmZ2ljIDAgMCBHSUNfU1BJIDExMg0K
-PiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gKwl9Ow0KPiBkaWZmIC0tZ2l0IGEvTUFJTlRBSU5F
-UlMgYi9NQUlOVEFJTkVSUw0KPiBpbmRleCAxMDEzZTc0YjE0ZjIuLjJkMThjNzIxMzk5MSAxMDA2
-NDQNCj4gLS0tIGEvTUFJTlRBSU5FUlMNCj4gKysrIGIvTUFJTlRBSU5FUlMNCj4gQEAgLTExODM1
-LDYgKzExODM1LDE0IEBAIEw6CWxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0K
-PiAgUzoJTWFpbnRhaW5lZA0KPiAgRjoJZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvKmxheWVy
-c2NhcGUqDQo+IA0KPiArUENJIERSSVZFUiBGT1IgTlhQIExBWUVSU0NBUEUgR0VONCBDT05UUk9M
-TEVSDQo+ICtNOglIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiArTDoJbGlu
-dXgtcGNpQHZnZXIua2VybmVsLm9yZw0KPiArTDoJbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnDQo+ICtTOglNYWludGFpbmVkDQo+ICtGOglEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLWdlbjQudHh0DQo+ICtGOglkcml2ZXJzL3Bj
-aS9jb250cm9sbGVyL21vYmliZWlsL3BjaS1sYXllcnNjYXBlLWdlbjQuYw0KPiArDQo+ICBQQ0kg
-RFJJVkVSIEZPUiBHRU5FUklDIE9GIEhPU1RTDQo+ICBNOglXaWxsIERlYWNvbiA8d2lsbC5kZWFj
-b25AYXJtLmNvbT4NCj4gIEw6CWxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmcNCj4gLS0NCj4gMi4x
-Ny4xDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
-bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwK
+On Mär 12 2019, Yash Shah <yash.shah@sifive.com> wrote:
+
+> This patch series adds a PWM driver and DT documentation
+> for HiFive Unleashed board. The patches are mostly based on
+> Wesley's patch.
+
+Heartbeat trigger still doesn't work for me.
+
+Andreas.
+
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
