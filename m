@@ -1,269 +1,84 @@
-From: Angus Ainslie <angus@akkea.ca>
-Subject: Re: [PATCH 1/3] arm64: dts: fsl: librem5: Add a device tree for the  Librem5 devkit
-Date: Tue, 12 Mar 2019 06:18:17 -0700
-Message-ID: <27b43910ac10170c3679cad51fc5bb83@www.akkea.ca>
-References: <20190311234655.30357-1-angus@akkea.ca>
- <20190311234655.30357-2-angus@akkea.ca>
- <CAOMZO5Do+GF-sLO5wHEMR0daUbf4pnrwQby9dtvLXF+4fVC+Xw@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/7] dt-bindings: phy: Add document for phy-mtk-ufs
+Date: Tue, 12 Mar 2019 08:25:24 -0500
+Message-ID: <20190312132524.GA27601@bogus>
+References: <1551252192-535-1-git-send-email-stanley.chu@mediatek.com>
+ <1551252192-535-6-git-send-email-stanley.chu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5Do+GF-sLO5wHEMR0daUbf4pnrwQby9dtvLXF+4fVC+Xw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, NXP Linux Team <linux-imx@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1551252192-535-6-git-send-email-stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chun-hung.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, avri.altman-Sjgp3cTcYWE@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, pedrom.sousa-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+On Wed, Feb 27, 2019 at 03:23:09PM +0800, Stanley Chu wrote:
+> Add UFS M-PHY node document for MediaTek SoC chips.
+> 
+> Signed-off-by: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/phy/phy-mtk-ufs.txt   | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt b/Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
+> new file mode 100644
+> index 000000000000..5fc22c7fe0bc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
+> @@ -0,0 +1,35 @@
+> +MediaTek Universal Flash Storage (UFS) M-PHY binding
+> +--------------------------------------------------------
+> +
+> +UFS M-PHY nodes are defined to describe on-chip UFS M-PHY hardware macro.
+> +Each UFS M-PHY node should have its own node.
+> +
+> +To bind UFS M-PHY with UFS host controller, the controller node should
+> +contain a phandle reference to UFS M-PHY node.
+> +
+> +Required properties for UFS M-PHY nodes:
+> +- compatible         : Compatible list, contains the following controller:
+> +                       "mediatek,ufs-mphy"
 
-On 2019-03-11 17:10, Fabio Estevam wrote:
-> On Mon, Mar 11, 2019 at 8:47 PM Angus Ainslie (Purism) <angus@akkea.ca> 
-> wrote:
-> 
->> +/ {
->> +       model = "Purism Librem 5 devkit 1.0";
->> +       compatible = "fsl,librem5-devkit", "fsl,imx8mq";
-> 
-> This board is not manufactured by FSL/NXP, so it should be
-> "purism,librem5-devkit", "fsl,imx8mq" instead.
-> 
-> You should also add an entry for the purism vendor entry in
-> Documentation/devicetree/bindings/vendor-prefixes.txt in a separate
-> patch.
-> 
+Needs a more specific compatible string.
 
-Thanks I'll add it in there.
+> +- reg                : Address and length of the UFS M-PHY register set.
+> +- #phy-cells         : This property shall be set to 0
+> +- clocks             : List of phandle and clock specifier pairs.
+> +- clock-names        : List of clock input name strings sorted in the same
+> +                       order as the clocks property. "unipro-clk" and
+> +                       "mp-clk" are mandatory.
+> +
+> +Example:
+> +
+> +	ufs_mphy: ufs_mphy@11fa0000 {
 
->> +
->> +       chosen {
->> +               stdout-path = &uart1;
->> +       };
->> +
->> +       reg_usdhc2_vmmc: regulator-vsd-3v3 {
-> 
-> The usual format would be:
-> 
-> reg_usdhc2_vmmc: regulator-usdhc2-vmmc {
-> 
+phy@...
 
-Ok
-
+> +		compatible = "mediatek,ufs-mphy";
+> +		reg = <0 0x11fa0000 0 0xc000>;
+> +		#phy-cells = <0>;
+> +
+> +		clocks = <&infracfg_ao INFRACFG_AO_UNIPRO_SCK_CG>,
+> +			 <&infracfg_ao INFRACFG_AO_UFS_MP_SAP_BCLK_CG>;
+> +		clock-names = "unipro-clk", "mp-clk";
+> +	};
+> +
+> +	ufshci:ufshci@11270000 {
+> +		...
+> +		phys = <&ufs_mphy>;
+> +	};
+> -- 
+> 2.18.0
 > 
->> +               compatible = "regulator-fixed";
->> +               regulator-name = "VSD_3V3";
->> +               regulator-min-microvolt = <3300000>;
->> +               regulator-max-microvolt = <3300000>;
->> +               gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
->> +               enable-active-high;
->> +               regulator-always-on;
-> 
-> Always on? It would be better to pass this regulator inside the mmc 
-> node.
-> 
-
-This GPIO is a #disable line for the WLAN and if it goes low the module 
-doesn't recover. Until we get the WLAN driver working after disable it's 
-best to leave it always on.
-
->> +       };
->> +
->> +       reg_pwr_en: pwr_en {
-> 
-> reg_pwr_en: regulator-pwr-en {
-> 
-
-Ok
-
->> +               compatible = "regulator-fixed";
->> +               regulator-name = "PWR_EN";
->> +               regulator-min-microvolt = <3300000>;
->> +               regulator-max-microvolt = <3300000>;
->> +               gpio = <&gpio1 8 GPIO_ACTIVE_HIGH>;
->> +               enable-active-high;
->> +               regulator-always-on;
-> 
-> Same here. No need for "regulator-always-on" as it is controlled by
-> the gyroscope.
-> 
-
-This controls a regulator that feeds 80% of the peripherals on the board 
-and we don't have all of the drivers in the devicetree yet. Shutting 
-this off would during runtime would break the board so for now it needs 
-to stay always on.
-
->> +&fec1 {
->> +       pinctrl-names = "default";
->> +       pinctrl-0 = <&pinctrl_fec1>;
->> +       phy-mode = "rgmii-id";
->> +       phy-handle = <&ethphy0>;
->> +       fsl,magic-packet;
->> +       status = "okay";
->> +       phy-supply = <&reg_pwr_en>;
->> +
->> +       mdio {
->> +               #address-cells = <1>;
->> +               #size-cells = <0>;
->> +
->> +               ethphy0: ethernet-phy@0 {
->> +                       compatible = "ethernet-phy-ieee802.3-c22";
->> +                       reg = <1>;
-> 
-> You pass @0 and use reg = <1>, which is a mismatch. Building it with
-> W=1 would have warned you about this mismatch.
-> 
-
-Thanks I'll fix that
-
->> +                       at803x,led-act-blind-workaround;
->> +                       at803x,eee-disabled;
->> +                       power-supply = <&reg_pwr_en>;
->> +               };
->> +       };
->> +};
->> +
->> +&iomuxc {
->> +       imx8m-som {
-> 
-> No need for this imx8m-som level.
-> 
-> 
->> +               pinctrl_nc: ncgrp {
-> 
-> Not a very descriptive naming.
-> 
-
-Ok , this was my list of not connected pins but it should be removed.
-
->> +                       fsl,pins = <
->> +                       MX8MQ_IOMUXC_SAI1_MCLK_SAI1_MCLK        0x00
->> +                       MX8MQ_IOMUXC_I2C4_SCL_I2C4_SCL          
->> 0x4000007f
->> +                       MX8MQ_IOMUXC_I2C4_SDA_I2C4_SDA          
->> 0x4000007f
->> +                       >;
->> +               };
->> +
->> +               pinctrl_up: upgrp {
-> 
-> Same here. Also, this is not used. Please remove it.
-> 
-
-Ok
-
->> +                       fsl,pins = <
->> +                       MX8MQ_IOMUXC_SAI1_TXD2_SAI1_TX_DATA2           
->>  0x00
->> +                       >;
->> +               };
->> +
->> +               pinctrl_csi1: csi1grp {
-> 
-> This is not used at the moment. Please remove it and re-add it when
-> CSI gets supported.
-> 
-
-Ok
-
->> +                       fsl,pins = <
->> +                       /* CSI_nRST */
->> +                       MX8MQ_IOMUXC_GPIO1_IO06_GPIO1_IO6              
->>  0x11
->> +                       /* CSI_PWDN */
->> +                       MX8MQ_IOMUXC_GPIO1_IO07_GPIO1_IO7              
->>  0x19
->> +                       /* CLK01 */
->> +                       MX8MQ_IOMUXC_GPIO1_IO14_CCMSRCGPCMIX_CLKO1     
->>  0x19
->> +                       >;
->> +               };
->> +
->> +               pinctrl_pwr_en: pwr_engrp {
->> +                       fsl,pins = <
->> +                       MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8              
->>  0x06
->> +                       >;
->> +               };
->> +
->> +               pinctrl_wwan: wwan_grp {
-> 
-> Not used. Please remove this one and all unused pinctrl nodes.
-> 
-
-This one should have been used but I'll go through and checked the rest 
-as well.
-
->> +&i2c1 {
->> +       clock-frequency = <400000>;
->> +       pinctrl-names = "default";
->> +       pinctrl-0 = <&pinctrl_i2c1>;
->> +       status = "okay";
->> +
->> +       pmic: bd71837@4b {
-> 
-> Node names should be generic: pmic@4b
-> 
->> +       typec_ptn5100: ptn5110@52 {
-> 
-> Same here.
-> 
-
-Ok
-
->> +       charger: charger@6b { /* bq25896 */
->> +               compatible = "ti,bq25890";
->> +               reg = <0x6b>;
->> +               pinctrl-names = "default";
->> +               pinctrl-0 = <&pinctrl_charger>;
->> +               interrupt-parent = <&gpio3>;
->> +               interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
->> +               ti,battery-regulation-voltage = <4192000>; // 4.192V
->> +               ti,charge-current = <1600000>; // 1.6 A
->> +               ti,termination-current = <66000>;  // 66mA
->> +               ti,precharge-current = <1300000>; // 1.3A
->> +               ti,minimum-sys-voltage = <2750000>; // 2.75V
->> +               ti,boost-voltage = <5000000>; // 5V
->> +               ti,boost-max-current = <50000>; // 50mA
-> 
-> No // style comments, please/
-> 
-
-Ok
-
->> +&i2c3 {
->> +       clock-frequency = <100000>;
->> +       pinctrl-names = "default";
->> +       pinctrl-0 = <&pinctrl_i2c3>, <&pinctrl_imu>;
->> +       status = "okay";
->> +
->> +       lsm9d: lsm9d@6a {
->> +               compatible = "st,lsm9ds1-gyro";
-> 
-> I don't find this binding.
-> 
-
-Thanks
-
->> +               reg = <0x6a>;
->> +               interrupt-parent = <&gpio3>;
->> +               interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
->> +               power-supply = <&reg_pwr_en>;
->> +       };
->> +};
-> 
->> +&uart4 { /* BT */
->> +       pinctrl-names = "default";
->> +       pinctrl-0 = <&pinctrl_uart4>, <&pinctrl_bt>;
->> +       fsl,uart-has-rtscts;
-> 
-> uart-has-rtscts is preferred.
-> 
->> +       /* resets = <&modem_reset>; */
-> 
-> Please remove this line instead of commenting it out.
-
-Ok
-
-Thanks
-Angus
