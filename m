@@ -1,59 +1,93 @@
 From: Vishal Sagar <vsagar@xilinx.com>
-Subject: RE: [PATCH v3 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI
+Subject: RE: [PATCH v5 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI
  CSI-2 Rx Subsystem
-Date: Tue, 12 Mar 2019 04:36:28 +0000
-Message-ID: <CY4PR02MB2709BECF081E32B5D4EA5354A7490@CY4PR02MB2709.namprd02.prod.outlook.com>
-References: <1549025766-135037-1-git-send-email-vishal.sagar@xilinx.com>
- <1549025766-135037-2-git-send-email-vishal.sagar@xilinx.com>
- <fe975327-2746-28d4-1340-5ad1e71858f1@lucaceresoli.net>
- <CY4PR02MB27098AB5D144C74AE6553699A74D0@CY4PR02MB2709.namprd02.prod.outlook.com>
- <1f698576-89b2-e264-387e-6db4c5a4713a@lucaceresoli.net>
+Date: Tue, 12 Mar 2019 04:38:17 +0000
+Message-ID: <CY4PR02MB27096C056A79EDF5B62AC7E6A7490@CY4PR02MB2709.namprd02.prod.outlook.com>
+References: <1552297257-145919-1-git-send-email-vishal.sagar@xilinx.com>
+ <1552297257-145919-2-git-send-email-vishal.sagar@xilinx.com>
+ <20190311224140.GA23484@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1f698576-89b2-e264-387e-6db4c5a4713a@lucaceresoli.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190311224140.GA23484@bogus>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Luca Ceresoli <luca@lucaceresoli.net>, Vishal Sagar <vishal.sagar@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dinesh Kumar <dineshk@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dinesh Kumar <dineshk@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, Vishal Sagar <vishal.sagar@xilinx.com>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTHVjYSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMdWNhIENl
-cmVzb2xpIFttYWlsdG86bHVjYUBsdWNhY2VyZXNvbGkubmV0XQ0KPiBTZW50OiBNb25kYXksIE1h
-cmNoIDExLCAyMDE5IDU6MzggUE0NCj4gVG86IFZpc2hhbCBTYWdhciA8dnNhZ2FyQHhpbGlueC5j
-b20+OyBWaXNoYWwgU2FnYXIgPHZpc2hhbC5zYWdhckB4aWxpbnguY29tPjsNCj4gSHl1biBLd29u
-IDxoeXVua0B4aWxpbnguY29tPjsgbGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tOw0K
-PiBtY2hlaGFiQGtlcm5lbC5vcmc7IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFy
-bS5jb207IE1pY2hhbA0KPiBTaW1layA8bWljaGFsc0B4aWxpbnguY29tPjsgbGludXgtbWVkaWFA
-dmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgc2FrYXJpLmFp
-bHVzQGxpbnV4LmludGVsLmNvbTsNCj4gaGFucy52ZXJrdWlsQGNpc2NvLmNvbTsgbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVs
-Lm9yZzsgRGluZXNoIEt1bWFyIDxkaW5lc2hrQHhpbGlueC5jb20+OyBTYW5kaXAgS290aGFyaQ0K
-PiA8c2FuZGlwa0B4aWxpbnguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDEvMl0gbWVk
-aWE6IGR0LWJpbmRpbmdzOiBtZWRpYTogeGlsaW54OiBBZGQgWGlsaW54IE1JUEkNCj4gQ1NJLTIg
-UnggU3Vic3lzdGVtDQo+IA0KPiBIaSBWaXNoYWwsDQo+IA0KPiBPbiAwOC8wMy8xOSAyMDowNCwg
-VmlzaGFsIFNhZ2FyIHdyb3RlOg0KPiA+Pj4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4+PiAr
-LS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPj4+ICstIHhsbngsdmZiOiBUaGlzIGlzIHByZXNlbnQg
-d2hlbiBWaWRlbyBGb3JtYXQgQnJpZGdlIGlzIGVuYWJsZWQuDQo+ID4+PiArICBXaXRob3V0IHRo
-aXMgcHJvcGVydHkgdGhlIGRyaXZlciB3b24ndCBiZSBsb2FkZWQgYXMgSVAgd29uJ3QgYmUgYWJs
-ZSB0bw0KPiA+PiBnZW5lcmF0ZQ0KPiA+Pj4gKyAgbWVkaWEgYnVzIGZvcm1hdCBjb21wbGlhbnQg
-c3RyZWFtIG91dHB1dC4NCj4gPj4+ICstIHhsbngsZW4tY3NpLXYyLTA6IFByZXNlbnQgaWYgQ1NJ
-IHYyIGlzIGVuYWJsZWQgaW4gSVAgY29uZmlndXJhdGlvbi4NCj4gPj4+ICstIHhsbngsZW4tdmN4
-OiBXaGVuIHByZXNlbnQsIHRoZXJlIGFyZSBtYXhpbXVtIDE2IHZpcnR1YWwgY2hhbm5lbHMsIGVs
-c2UNCj4gPj4+ICsgIG9ubHkgNC4gVGhpcyBpcyBwcmVzZW50IG9ubHkgaWYgeGxueCxlbi1jc2kt
-djItMCBpcyBwcmVzZW50Lg0KPiA+Pj4gKy0geGxueCxlbi1hY3RpdmUtbGFuZXM6IEVuYWJsZSBB
-Y3RpdmUgbGFuZXMgY29uZmlndXJhdGlvbiBpbiBQcm90b2NvbA0KPiA+Pj4gKyAgQ29uZmlndXJh
-dGlvbiBSZWdpc3Rlci4NCj4gPj4NCj4gPj4gVGhpcyBkb2Vzbid0IHNlZW0gdmVyeSBjbGVhciB0
-byBtZS4gQWNjb3JkaW5nIHRvIG15IHVuZGVyc3RhbmRpbmcgb2YgdGhlDQo+ID4+IElQIGFuZCBk
-cml2ZXIsIEknZCByYXRoZXIgcmVwaHJhc2UgYXM6DQo+ID4+DQo+ID4+IC0geGxueCxlbi1hY3Rp
-dmUtbGFuZXM6IHByZXNlbnQgaWYgdGhlIG51bWJlciBvZiBhY3RpdmUgbGFuZXMgY2FuIGJlDQo+
-ID4+ICAgcmVjb25maWd1cmVkIGF0IHJ1bnRpbWUgaW4gdGhlIFByb3RvY29sIENvbmZpZ3VyYXRp
-b24gUmVnaXN0ZXIuDQo+ID4+ICAgSWYgcHJlc2VudCwgdGhlIFY0TDJfQ0lEX1hJTElOWF9NSVBJ
-Q1NJU1NfQUNUX0xBTkVTIGlzIGFkZGVkLg0KPiA+PiAgIE90aGVyd2lzZSBhbGwgbGFuZXMgYXJl
-IGFsd2F5cyBhY3RpdmUuDQo+ID4+DQo+ID4NCj4gPiBZb3VyIGRlc2NyaXB0aW9uIGlzIGJldHRl
-ci4gSSB3aWxsIHVwZGF0ZSB3aXRoIHRoaXMgaW4gbmV4dCB2ZXJzaW9uLg0KPiANCj4gT2ssIHRo
-YW5rcy4gQnV0IEkganVzdCBub3RpY2VkIGFuIGVycm9yIGluIG15IG93biB3b3Jkcy4uLg0KPiAi
-VjRMMl9DSURfWElMSU5YX01JUElDU0lTU19BQ1RfTEFORVMgaXMgYWRkZWQiIC0+DQo+ICJWNEwy
-X0NJRF9YSUxJTlhfTUlQSUNTSVNTX0FDVF9MQU5FUyBjb250cm9sIGlzIGFkZGVkIi4NCj4gDQo+
-IC0tDQo+IEx1Y2ENCg0KT2sgSSB3aWxsIGRvIHRoaXMgaW4gbmV4dCByb3VuZCBvZiBwYXRjaC4N
-Cg0KUmVnYXJkcw0KVmlzaGFsIFNhZ2FyDQo=
+Hi Rob,
+
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Tuesday, March 12, 2019 4:12 AM
+> To: Vishal Sagar <vishal.sagar@xilinx.com>
+> Cc: Hyun Kwon <hyunk@xilinx.com>; laurent.pinchart@ideasonboard.com;
+> mchehab@kernel.org; robh+dt@kernel.org; mark.rutland@arm.com; Michal
+> Simek <michals@xilinx.com>; linux-media@vger.kernel.org;
+> devicetree@vger.kernel.org; sakari.ailus@linux.intel.com;
+> hans.verkuil@cisco.com; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; Dinesh Kumar <dineshk@xilinx.com>; Sandip Kothari
+> <sandipk@xilinx.com>; Vishal Sagar <vishal.sagar@xilinx.com>
+> Subject: Re: [PATCH v5 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI
+> CSI-2 Rx Subsystem
+> 
+> EXTERNAL EMAIL
+> 
+> On Mon, 11 Mar 2019 15:10:56 +0530, Vishal Sagar wrote:
+> > Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
+> >
+> > The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
+> > DPHY in Rx mode, an optional I2C controller and a Video Format Bridge.
+> >
+> > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> > Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> > ---
+> > v5
+> > - Incorporated comments by Luca Cersoli
+> > - Removed DPHY clock from description and example
+> > - Removed bayer pattern from device tree MIPI CSI IP
+> >   doesn't deal with bayer pattern.
+> >
+> > v4
+> > - Added reviewed by Hyun Kwon
+> >
+> > v3
+> > - removed interrupt parent as suggested by Rob
+> > - removed dphy clock
+> > - moved vfb to optional properties
+> > - Added required and optional port properties section
+> > - Added endpoint property section
+> >
+> > v2
+> > - updated the compatible string to latest version supported
+> > - removed DPHY related parameters
+> > - added CSI v2.0 related property (including VCX for supporting upto 16
+> >   virtual channels).
+> > - modified csi-pxl-format from string to unsigned int type where the value
+> >   is as per the CSI specification
+> > - Defined port 0 and port 1 as sink and source ports.
+> > - Removed max-lanes property as suggested by Rob and Sakari
+> >
+> >  .../bindings/media/xilinx/xlnx,csi2rxss.txt        | 118
+> +++++++++++++++++++++
+> >  1 file changed, 118 insertions(+)
+> >  create mode 100644
+> Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+> >
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+Thanks for the review. :) 
+
+Regards
+Vishal Sagar
