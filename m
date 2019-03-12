@@ -1,7 +1,7 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V5 2/4] ARM: dts: imx7ulp: add mmdc support
-Date: Tue, 12 Mar 2019 02:24:12 +0000
-Message-ID: <1552357127-1283-2-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V5 4/4] ARM: dts: imx6qdl: Improve mmdc1 node
+Date: Tue, 12 Mar 2019 02:24:20 +0000
+Message-ID: <1552357127-1283-4-git-send-email-Anson.Huang@nxp.com>
 References: <1552357127-1283-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -14,34 +14,32 @@ To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutl
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-i.MX7ULP has a MMDC module to control DDR, it reuses
-i.MX6Q's MMDC module, add support for it.
+Add MMDC1 compatible string which is missing, and also set
+it to be disabled by default, as most of the platforms ONLY
+use single channel MMDC0, if dual MMDC channels are used, it
+can be enabled in board dts file.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
 ---
-No changes.
+New patch.
 ---
- arch/arm/boot/dts/imx7ulp.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/imx6qdl.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dts=
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dts=
 i
-index fca6e50..eb349fd 100644
---- a/arch/arm/boot/dts/imx7ulp.dtsi
-+++ b/arch/arm/boot/dts/imx7ulp.dtsi
-@@ -286,6 +286,12 @@
- 			status =3D "disabled";
- 		};
+index 4c7278b..8c51364 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1136,7 +1136,9 @@
+ 			};
 =20
-+		memory-controller@40ab0000 {
-+			compatible =3D "fsl,imx7ulp-mmdc", "fsl,imx6q-mmdc";
-+			reg =3D <0x40ab0000 0x1000>;
-+			clocks =3D <&pcc3 IMX7ULP_CLK_MMDC>;
-+		};
-+
- 		iomuxc1: pinctrl@40ac0000 {
- 			compatible =3D "fsl,imx7ulp-iomuxc1";
- 			reg =3D <0x40ac0000 0x1000>;
+ 			mmdc1: memory-controller@21b4000 { /* MMDC1 */
++				compatible =3D "fsl,imx6q-mmdc";
+ 				reg =3D <0x021b4000 0x4000>;
++				status =3D "disabled";
+ 			};
+=20
+ 			weim: weim@21b8000 {
 --=20
 2.7.4
