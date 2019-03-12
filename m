@@ -1,105 +1,155 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 5/7] dt-bindings: scsi: ufs: Add document for
- ufs-mediatek
-Date: Tue, 12 Mar 2019 08:31:13 -0500
-Message-ID: <20190312133113.GA8956@bogus>
-References: <1551252192-535-1-git-send-email-stanley.chu@mediatek.com>
- <1551252192-535-7-git-send-email-stanley.chu@mediatek.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCHv4 26/28] PCI: mobiveil: ls_pcie_g4: add Workaround for
+ A-011451
+Date: Tue, 12 Mar 2019 08:34:52 -0500
+Message-ID: <20190312133452.GA210027@google.com>
+References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
+ <20190311093130.7209-27-Zhiqiang.Hou@nxp.com>
+ <20190311173439.GH214730@google.com>
+ <AM6PR04MB578187096D0CFD2B8D9C13FF84490@AM6PR04MB5781.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1551252192-535-7-git-send-email-stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chun-hung.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, avri.altman-Sjgp3cTcYWE@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, pedrom.sousa-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <AM6PR04MB578187096D0CFD2B8D9C13FF84490@AM6PR04MB5781.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 03:23:10PM +0800, Stanley Chu wrote:
-> Add UFS and UFS PHY node document for Mediatek SoC chips.
+On Tue, Mar 12, 2019 at 09:34:17AM +0000, Z.q. Hou wrote:
+> Hi Bjorn,
 > 
-> Signed-off-by: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/ufs/ufs-mediatek.txt  | 47 +++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ufs/ufs-mediatek.txt
+> Thanks a lot for your comments!
 > 
-> diff --git a/Documentation/devicetree/bindings/ufs/ufs-mediatek.txt b/Documentation/devicetree/bindings/ufs/ufs-mediatek.txt
-> new file mode 100644
-> index 000000000000..5fc985928b3e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ufs/ufs-mediatek.txt
-> @@ -0,0 +1,47 @@
-> +* Mediatek Universal Flash Storage (UFS) Host Controller
-> +
-> +UFS nodes are defined to describe on-chip UFS hardware macro.
-> +Each UFS Host Controller should have its own node.
-> +
-> +To bind UFS PHY with UFS host controller, the controller node should
-> +contain a phandle reference to UFS M-PHY node.
-> +
-> +Required properties for UFS nodes:
-> +- compatible         : Compatible list, contains the following controller:
-> +                       "mediatek,ufshci"
-
-Needs an SoC specific compatible string.
-
-> +- reg                : Address and length of the UFS register set.
-> +- interrupt-parent   : Interrupt device.
-
-Drop this. It is implied or may be in a parent node.
-
-> +- phys               : phandle to m-phy.
-> +- clocks             : List of phandle and clock specifier pairs.
-> +- clock-names        : List of clock input name strings sorted in the same
-> +                       order as the clocks property. "ufs-clk" is mandatory.
-> +- freq-table-hz      : Array of <min max> operating frequencies stored in the same
-> +                       order as the clocks property. If this property is not
-> +                       defined or a value in the array is "0" then it is assumed
-> +                       that the frequency is set by the parent clock or a
-> +                       fixed rate clock source.
-> +- vcc-supply         : Power to the UFS device.
-> +- vcc-fixed-regulator: Specify that vcc-supply is a fixed regulator.
-
-Why is this needed? The driver could query the voltage range of the 
-regulator or you could check the regulator node.
-
-> +- lanes-per-direction: Number of lanes available per direction. Shall be 1.
-
-If this can only be one value, then it can be implied by the compatible 
-string.
-
-> +
-> +Example:
-> +
-> +	ufs_mphy: ufs_mphy@11fa0000 {
-> +		...
-> +	};
-> +
-> +	ufshci:ufshci@11270000 {
-> +		compatible = "mediatek,ufshci";
-> +		reg = <0 0x11270000 0 0x2300>;
-> +		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>;
-> +		phys = <&ufs_mphy>;
-> +
-> +		clocks = <&infracfg_ao INFRACFG_AO_UFS_CG>;
-> +		clock-names = "ufs-clk";
-> +		freq-table-hz = <0 0>;
-> +
-> +		vcc-supply = <&mt_pmic_vemc_ldo_reg>;
-> +		vcc-fixed-regulator;
-> +
-> +		lanes-per-direction = <1>;
-> +	};
-> -- 
-> 2.18.0
+> > -----Original Message-----
+> > From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+> > Sent: 2019年3月12日 1:35
+> > To: Z.q. Hou <zhiqiang.hou@nxp.com>
+> > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > robh+dt@kernel.org; mark.rutland@arm.com; l.subrahmanya@mobiveil.co.in;
+> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>;
+> > lorenzo.pieralisi@arm.com; catalin.marinas@arm.com;
+> > will.deacon@arm.com; Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian
+> > <minghuan.lian@nxp.com>; Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Subject: Re: [PATCHv4 26/28] PCI: mobiveil: ls_pcie_g4: add Workaround for
+> > A-011451
+> > 
+> > On Mon, Mar 11, 2019 at 09:33:32AM +0000, Z.q. Hou wrote:
+> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > >
+> > > When LX2 PCIe controller is sending multiple split completions and ACK
+> > > latency expires indicating that ACK should be send at priority.
+> > > But because of large number of split completions and FC update DLLP,
+> > > the controller does not give priority to ACK transmission. This
+> > > results into ACK latency timer timeout error at the link partner and
+> > > the pending TLPs are replayed by the link partner again.
+> > >
+> > > Workaround:
+> > > 1. Reduce the ACK latency timeout value to a very small value.
+> > > 2. Restrict the number of completions from the LX2 PCIe controller
+> > >    to 1, by changing the Max Read Request Size (MRRS) of link partner
+> > >    to the same value as Max Packet size (MPS).
+> > >
+> > > This patch implemented part 1, the part 2 can be set by kernel
+> > > parameter 'pci=pcie_bus_perf'
+> > 
+> > If I understand correctly, you're saying that LX2160A Rev1.0 will only work
+> > correctly if you have this patch applied AND you boot with
+> > "pci=pcie_bus_perf".
 > 
+> Your understanding is correct.
+> 
+> > That might be OK if these rev 1.0 parts are only used in the lab and are never
+> > shipped to customers.  But if these parts are ever shipped to customers, I
+> > don't think it's acceptable for them to have to figure out that they must boot
+> > with "pci=pcie_bus_perf".  Yes, you can document that in release notes, but
+> > it's still a poor user experience, and users will forget, and they will see
+> > mysterious hard-to-debug issues.
+
+Since you didn't respond here, I assume these rev 1.0 parts have been
+or will be shipped to end users?  Please confirm.
+
+> > Maybe there's a way for you to automatically set that pcie_bus_perf mode?
+> > With a dmesg note to indicate that you're overriding any mode the user may
+> > have selected?
+> 
+> Actually we don't have a way to set the pcie_bus_perf automatically
+> under Linux, we give this parameter in kernel cmdline.  Do you have
+> any advice about how to set this parameter automatically under
+> Linux?
+
+The beauty of Linux being open-source is that if you need something
+that doesn't exist, you are empowered to create it.
+
+We do have one place already (cns3xxx_pcie_hw_init()) that explicitly
+sets pcie_bus_config.  You might be able to do something similar.
+
+> > > This ERRATA is only for LX2160A Rev1.0, and it will be fixed in
+> > > Rev2.0.
+> > >
+> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > ---
+> > > V4:
+> > >  - no change
+> > >
+> > >  .../pci/controller/mobiveil/pci-layerscape-gen4.c | 15 +++++++++++++++
+> > >  drivers/pci/controller/mobiveil/pcie-mobiveil.h   |  4 ++++
+> > >  2 files changed, 19 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
+> > > b/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
+> > > index d2c5dbbd5e3c..20ce146788ca 100644
+> > > --- a/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
+> > > +++ b/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
+> > > @@ -82,12 +82,27 @@ static bool ls_pcie_g4_is_bridge(struct ls_pcie_g4
+> > *pcie)
+> > >  	return header_type == PCI_HEADER_TYPE_BRIDGE;  }
+> > >
+> > > +static void workaround_A011451(struct ls_pcie_g4 *pcie) {
+> > > +	struct mobiveil_pcie *mv_pci = pcie->pci;
+> > > +	u32 val;
+> > > +
+> > > +	/* Set ACK latency timeout */
+> > > +	val = csr_readl(mv_pci, GPEX_ACK_REPLAY_TO);
+> > > +	val &= ~(ACK_LAT_TO_VAL_MASK << ACK_LAT_TO_VAL_SHIFT);
+> > > +	val |= (4 << ACK_LAT_TO_VAL_SHIFT);
+> > > +	csr_writel(mv_pci, val, GPEX_ACK_REPLAY_TO); }
+> > > +
+> > >  static int ls_pcie_g4_host_init(struct mobiveil_pcie *pci)  {
+> > >  	struct ls_pcie_g4 *pcie = to_ls_pcie_g4(pci);
+> > >
+> > >  	pcie->rev = csr_readb(pci, PCI_REVISION_ID);
+> > >
+> > > +	if (pcie->rev == REV_1_0)
+> > > +		workaround_A011451(pcie);
+> > > +
+> > >  	return 0;
+> > >  }
+> > >
+> > > diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> > > b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> > > index ab43de5e4b2b..f0e2e4ae09b5 100644
+> > > --- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> > > +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> > > @@ -85,6 +85,10 @@
+> > >  #define PAB_AXI_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR(0x0bac,
+> > win)
+> > >  #define PAB_INTP_AXI_PIO_CLASS		0x474
+> > >
+> > > +#define GPEX_ACK_REPLAY_TO		0x438
+> > > +#define  ACK_LAT_TO_VAL_MASK		0x1fff
+> > > +#define  ACK_LAT_TO_VAL_SHIFT		0
+> > > +
+> > >  #define PAB_PEX_AMAP_CTRL(win)		PAB_REG_ADDR(0x4ba0,
+> > win)
+> > >  #define  AMAP_CTRL_EN_SHIFT		0
+> > >  #define  AMAP_CTRL_TYPE_SHIFT		1
+> > > --
+> > > 2.17.1
+> > >
+> 
+> Thanks,
+> Zhiqiang
