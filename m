@@ -1,76 +1,39 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv4 11/28] PCI: mobiveil: only fix up the Class Code field
-Date: Tue, 12 Mar 2019 09:17:53 +0000
-Message-ID: <AM6PR04MB5781498315C6B69EB2586B9D84490@AM6PR04MB5781.eurprd04.prod.outlook.com>
-References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
- <20190311093130.7209-12-Zhiqiang.Hou@nxp.com>
- <20190311141401.GG214730@google.com>
+From: Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH 0/2] L2 Cache EDAC Support for HiFive Unleashed
+Date: Tue, 12 Mar 2019 14:50:59 +0530
+Message-ID: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190311141401.GG214730@google.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org, palmer@sifive.com, paul.walmsley@sifive.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, Yash Shah <yash.shah@sifive.com>, robh+dt@kernel.org, bp@alien8.de, mchehab@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmpvcm4sDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIFttYWlsdG86aGVsZ2Fh
-c0BrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE5xOoz1MIxMcjVIDIyOjE0DQo+IFRvOiBaLnEuIEhv
-dSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiByb2JoK2R0QGtl
-cm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNv
-LmluOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47
-DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOw0K
-PiB3aWxsLmRlYWNvbkBhcm0uY29tOyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBN
-LmguIExpYW4NCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IFhpYW93ZWkgQmFvIDx4aWFvd2Vp
-LmJhb0BueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIdjQgMTEvMjhdIFBDSTogbW9iaXZl
-aWw6IG9ubHkgZml4IHVwIHRoZSBDbGFzcyBDb2RlIGZpZWxkDQo+IA0KPiBPbiBNb24sIE1hciAx
-MSwgMjAxOSBhdCAwOTozMToyM0FNICswMDAwLCBaLnEuIEhvdSB3cm90ZToNCj4gPiBGcm9tOiBI
-b3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+DQo+ID4gRml4IHVwIHRoZSBD
-bGFzcyBDb2RlIHRvIFBDSSBicmlkZ2UsIGRvIG5vdCBjaGFuZ2UgdGhlIFJldmlzaW9uIElELg0K
-PiA+IEFuZCBtb3ZlIHRoZSBmaXh1cCB0byBtb2JpdmVpbF9ob3N0X2luaXQgZnVuY3Rpb24uDQo+
-IA0KPiBBZGQgcGFyZW5zIGFmdGVyIGZ1bmN0aW9uIG5hbWUuDQo+IA0KPiBQbGVhc2UgZXhwbGFp
-biB3aHkgdGhpcyBjaGFuZ2UgaXMgbmVlZGVkLiAgRG9lcyBpdCBmaXggYSBidWc/DQo+IA0KPiBE
-b2VzIHRoaXMgZml4IHRoZSBwcm9ibGVtIHRoYXQgdGhlIFBDSSBjb3JlIGRpZG4ndCBjb3JyZWN0
-bHkgaWRlbnRpZnkgdGhlIGRldmljZQ0KPiBhcyBhIGJyaWRnZSBiZWNhdXNlIGl0IGlkZW50aWZp
-ZWQgYnJpZGdlcyBieSBjbGFzcyBjb2RlIGluc3RlYWQgb2YgaGVhZGVyIHR5cGU/DQo+IA0KPiBU
-aGF0IHByb2JsZW0gKnNob3VsZCogYmUgZml4ZWQgYnkgYjJmYjVjYzU3NDY5ICgiUENJOiBSZWx5
-IG9uIGNvbmZpZyBzcGFjZQ0KPiBoZWFkZXIgdHlwZSwgbm90IGNsYXNzIGNvZGUiKSwgd2hpY2gg
-aXMgbm93IHVwc3RyZWFtLg0KPiANCj4gWW91IG1pZ2h0IHN0aWxsIHdhbnQgdGhpcyBjbGFzcyBj
-b2RlIGNoYW5nZSBzbyB0aGF0IGxzcGNpIHNob3dzIHRoZSBjb3JyZWN0DQo+IHRoaW5nLiAgVGhh
-dCdzIGZpbmUsIGJ1dCB0aGUgY2hhbmdlbG9nIHNob3VsZCBzYXkgd2h5IHdlJ3JlIGRvaW5nIGl0
-Lg0KPg0KDQpTdWJyYWhtYW55YSdzIG9yaWdpbmFsIHBhdGNoIGlzIHRvIGZpeHVwICdDbGFzcyBD
-b2RlJyBmaWVsZCwgYnV0IGl0IGFsc28gZml4ZWQgdGhlICdSZXZpc2lvbiBJRCcgZmllbGQuIFRo
-aXMgcGF0Y2ggaXMgcGF0Y2ggaXMgdG8gcmVtb3ZlIHRoZSBmaXh1cCBvZiAnUmV2aXNpb24gSUQn
-IGZpZWxkLg0KDQo+ID4gRml4ZXM6IDlhZjZiY2IxMWUxMiAoIlBDSTogbW9iaXZlaWw6IEFkZCBN
-b2JpdmVpbCBQQ0llIEhvc3QgQnJpZGdlIElQDQo+ID4gZHJpdmVyIikNCj4gDQo+IE1ha2UgdGhp
-cyAiRml4ZXM6IiBsaW5lIGEgc2luZ2xlIGxpbmUgYWdhaW4uDQo+IA0KPiA+IFNpZ25lZC1vZmYt
-Ynk6IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6
-IE1pbmdodWFuIExpYW4gPE1pbmdodWFuLkxpYW5AbnhwLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTog
-U3VicmFobWFueWEgTGluZ2FwcGEgPGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28uaW4+DQo+ID4g
-LS0tDQo+ID4gVjQ6DQo+ID4gIC0gbm8gY2hhbmdlDQo+ID4NCj4gPiAgZHJpdmVycy9wY2kvY29u
-dHJvbGxlci9wY2llLW1vYml2ZWlsLmMgfCA5ICsrKysrKy0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdl
-ZCwgNiBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jDQo+ID4gYi9kcml2ZXJzL3Bj
-aS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0KPiA+IGluZGV4IDc4ZTU3NWU3MWY0ZC4uOGVl
-ZTFhYjdlZTI0IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1t
-b2JpdmVpbC5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2ZWls
-LmMNCj4gPiBAQCAtNjUzLDYgKzY1MywxMiBAQCBzdGF0aWMgaW50IG1vYml2ZWlsX2hvc3RfaW5p
-dChzdHJ1Y3QgbW9iaXZlaWxfcGNpZQ0KPiAqcGNpZSkNCj4gPiAgCQkJCSAgIHR5cGUsIHJlc291
-cmNlX3NpemUod2luLT5yZXMpKTsNCj4gPiAgCX0NCj4gPg0KPiA+ICsJLyogZml4dXAgZm9yIFBD
-SWUgY2xhc3MgcmVnaXN0ZXIgKi8NCj4gPiArCXZhbHVlID0gY3NyX3JlYWRsKHBjaWUsIFBBQl9J
-TlRQX0FYSV9QSU9fQ0xBU1MpOw0KPiA+ICsJdmFsdWUgJj0gMHhmZjsNCj4gPiArCXZhbHVlIHw9
-IChQQ0lfQ0xBU1NfQlJJREdFX1BDSSA8PCAxNik7DQo+ID4gKwljc3Jfd3JpdGVsKHBjaWUsIHZh
-bHVlLCBQQUJfSU5UUF9BWElfUElPX0NMQVNTKTsNCj4gPiArDQo+ID4gIAkvKiBzZXR1cCBNU0kg
-aGFyZHdhcmUgcmVnaXN0ZXJzICovDQo+ID4gIAltb2JpdmVpbF9wY2llX2VuYWJsZV9tc2kocGNp
-ZSk7DQo+ID4NCj4gPiBAQCAtODk2LDkgKzkwMiw2IEBAIHN0YXRpYyBpbnQgbW9iaXZlaWxfcGNp
-ZV9wcm9iZShzdHJ1Y3QNCj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICAJCWdvdG8gZXJy
-b3I7DQo+ID4gIAl9DQo+ID4NCj4gPiAtCS8qIGZpeHVwIGZvciBQQ0llIGNsYXNzIHJlZ2lzdGVy
-ICovDQo+ID4gLQljc3Jfd3JpdGVsKHBjaWUsIDB4MDYwNDAyYWIsIFBBQl9JTlRQX0FYSV9QSU9f
-Q0xBU1MpOw0KPiA+IC0NCj4gPiAgCS8qIGluaXRpYWxpemUgdGhlIElSUSBkb21haW5zICovDQo+
-ID4gIAlyZXQgPSBtb2JpdmVpbF9wY2llX2luaXRfaXJxX2RvbWFpbihwY2llKTsNCj4gPiAgCWlm
-IChyZXQpIHsNCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQoNClRoYW5rcywNClpoaXFpYW5nDQo=
+This patch series adds a L2 Cache EDAC driver and DT documentation
+for HiFive Unleashed board.
+
+Yash Shah (2):
+  edac: sifive: Add DT documentation for SiFive L2 cache Controller
+  sifive: edac: Add EDAC driver for Sifive l2 Cache Controller
+
+ .../devicetree/bindings/edac/sifive-edac-l2.txt    |  31 +++
+ arch/riscv/Kconfig                                 |   1 +
+ drivers/edac/Kconfig                               |   7 +
+ drivers/edac/Makefile                              |   1 +
+ drivers/edac/sifive_edac-l2.c                      | 292 +++++++++++++++++++++
+ 5 files changed, 332 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/sifive-edac-l2.txt
+ create mode 100644 drivers/edac/sifive_edac-l2.c
+
+-- 
+1.9.1
