@@ -1,178 +1,81 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] arm: dts: rk3288-tinker.dtsi: Enable WiFi
-Date: Tue, 12 Mar 2019 15:18:33 +0100
-Message-ID: <1822354.MXcUDnUBre@phil>
-References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
- <20190309153923.22806-1-beagleboard@davidjohnsummers.uk>
- <20190309153923.22806-2-beagleboard@davidjohnsummers.uk>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 02/13] driver core: Remove the link if there is no driver
+ with AUTO flag
+Date: Tue, 12 Mar 2019 15:21:51 +0100
+Message-ID: <e15e94be-3eb9-dc7b-2073-4163f91f0259@gmail.com>
+References: <1546318276-18993-1-git-send-email-yong.wu@mediatek.com>
+ <1546318276-18993-3-git-send-email-yong.wu@mediatek.com>
+ <CAE=gft7mWs1jc+KQQcPuuhcmxpFRnRBTt35+uC3F20N6R554bQ@mail.gmail.com>
+ <1551278000.17917.50.camel@mhfsdcap03>
+ <CAE=gft4iHRo8VQot26dH2NaRNLtxxRYWBmSpjkoL2BE_i6eXQw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190309153923.22806-2-beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Tony McKahan <tonymckahan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAE=gft4iHRo8VQot26dH2NaRNLtxxRYWBmSpjkoL2BE_i6eXQw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Evan Green <evgreen@chromium.org>, Yong Wu <yong.wu@mediatek.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, Arnd Bergmann <arnd@arndb.de>, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 9. M=E4rz 2019, 16:39:22 CET schrieb David Summers:
-> This patch adds wifi support to the ASUS Tinker Board (S) machines.
-> =
-
-> This is provided by an wifi card (RTL8723BS) wired into the sdio interfac=
-e.
-> =
-
-> It requires certain pins pulled, to enable the WiFi.
-> =
-
-> The schematics for these board do not show the WiFi connection, so the
-> connections have been taken from:
-> =
-
-> https://github.com/TinkerBoard/debian_kernel/blob/develop/arch/arm/boot/d=
-ts/rk3288-miniarm.dts
-> =
-
-> In particular the pulling of two pins.
-> =
-
-> This patch is almost identical to v1. A few additional line breaks for
-> readability. On Armbian, they did not use sd-uhs-ddr50, so this has
-> been removed. It does not change functionality. The ASUS patch set
-> sd-uhs-sdr104;.
-> =
-
-> Signed-off-by: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-
-trying to understand the relationship here, is that a
-"Co-developed-by: Stefan Wahren <...>" case?
-
-Because individual Signed-off-bys would be (1) author, (2) sender
-and (3) me and Stefan obviously didn't send the patch :-)
-
-> Tested-by: Tony McKahan <tonymckahan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> =
-
-> Test-by: TheSaint @ ArchLinux ARM =
 
 
-Same comment about Tested-by with an actual name+mail please.
+On 05/03/2019 20:03, Evan Green wrote:
+> On Wed, Feb 27, 2019 at 6:33 AM Yong Wu <yong.wu@mediatek.com> wrote:
+>>
+>> On Mon, 2019-02-25 at 15:53 -0800, Evan Green wrote:
+>>> On Mon, Dec 31, 2018 at 8:52 PM Yong Wu <yong.wu@mediatek.com> wrote:
+>>>>
+>>>> DL_FLAG_AUTOREMOVE_CONSUMER/SUPPLIER means "Remove the link
+>>>> automatically on consumer/supplier driver unbind", that means we should
+>>>> remove whole the device_link when there is no this driver no matter what
+>>>> the ref_count of the link is.
+>>>>
+>>>> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+>>>> ---
+>>>> The ref_count of our device_link normally is over 1. When the consumer
+>>>> device driver is removed, whole the device_link should be removed.
+>>>> Thus, I add this patch.
+>>>> ---
+>>>
+>>> I will admit to reading about device links for the first time while
+>>> reviewing this patch, but I don't really get this. Why use a kref at
+>>> all if we're just going to ignore its value? For instance, I see that
+>>> if you call device_link_add() with the same supplier and consumer, it
+>>> uses the kref to return the same link. That machinery is broken with
+>>> your change. Although I don't see any uses of it, you might also
+>>> expect a supplier or consumer could do a kref_get() on the link it got
+>>> back from device_link_add(), and have a reasonable expectation that
+>>> the link wouldn't be freed out from under it. This would also be
+>>> broken.
+>>>
+>>> Can you explain why your device_links normally have a reference count
+>>>> 1,
+>>
+>> I use device link between the smi-larb device and the iommu-consumer
+>> device. Take a example, smi-larb1 have 4 VDEC ports. From 4/13 in this
+>> patchset, we use device_link to link the VDEC device and the smi-larb1
+>> device in the function(mtk_iommu_config). since there are 4 ports, it
+>> will call device_link_add 4 times.
+>>
+>>>
+>>> and why those additional references can't be cleaned up in an
+>>> orderly fashion?
+>>
+>> If the iommu-consume device(like VDEC above) is removed, It should enter
+>> device_links_driver_cleanup which only ref_put one time. I guess whole
+>> the link should be removed at that time.
+> 
+> It seems like Robin had some suggestions about using
+> mtk_iommu_add_device() rather than the attach_dev() to set the links
+> up, and then track them for removal in the corresponding
+> remove_device() callback. Then you wouldn't need this change, right?
+> 
 
-Other than that bit of bureaucracy this looks good, minus some
-reordering. If you need to resend for whatever reason, please try to
-order devicetree nodes and properties alphabetical if they don't have
-an address in the name (otherwise obviously by address).
+FYI, Evan the patch is queued for v5.1-rc1 as
+0fe6f7874d46 ("driver core: Remove the link if there is no driver with AUTO flag")
 
-But I can do that reordering myself and also drop the Review-tag naming
-Robin above, if you clear up the "paperwork" above :-).
-
-Heiko
-Heiko
-
-
-
-> =
-
-> ---
->  arch/arm/boot/dts/rk3288-tinker.dtsi | 40 +++++++++++++++++++++++++++-
->  1 file changed, 39 insertions(+), 1 deletion(-)
-> =
-
-> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3=
-288-tinker.dtsi
-> index ef653c3209bc..0ffab1b7c940 100644
-> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
-> @@ -5,6 +5,7 @@
->  =
-
->  #include "rk3288.dtsi"
->  #include <dt-bindings/input/input.h>
-> +#include <dt-bindings/clock/rockchip,rk808.h>
->  =
-
->  / {
->  	chosen {
-> @@ -96,6 +97,17 @@
->  		startup-delay-us =3D <100000>;
->  		vin-supply =3D <&vcc_io>;
->  	};
-> +
-> +	sdio_pwrseq: sdio-pwrseq {
-> +		compatible =3D "mmc-pwrseq-simple";
-> +		clocks =3D <&rk808 RK808_CLKOUT1>;
-> +		clock-names =3D "ext_clock";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&wifi_enable>;
-> +		reset-gpios =3D <&gpio4 RK_PD3 GPIO_ACTIVE_LOW>,
-> +			<&gpio4 RK_PD4 GPIO_ACTIVE_LOW>;
-> +	};
-> +
->  };
->  =
-
->  &cpu0 {
-> @@ -336,7 +348,7 @@
->  =
-
->  &io_domains {
->  	status =3D "okay";
-> -
-> +	wifi-supply =3D <&vcc_18>;
->  	sdcard-supply =3D <&vccio_sd>;
->  };
->  =
-
-> @@ -416,6 +428,13 @@
->  			rockchip,pins =3D <7 8 RK_FUNC_GPIO &pcfg_pull_none>;
->  		};
->  	};
-> +
-> +	sdio {
-> +		wifi_enable: wifi-enable {
-> +			rockchip,pins =3D <4 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>,
-> +				<4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
->  };
->  =
-
->  &pwm0 {
-> @@ -440,6 +459,25 @@
->  	vqmmc-supply =3D <&vccio_sd>;
->  };
->  =
-
-> +&sdio0 {
-> +	bus-width =3D <4>;
-> +	cap-sd-highspeed;
-> +	cap-sdio-irq;
-> +	keep-power-in-suspend;
-> +	mmc-pwrseq =3D <&sdio_pwrseq>;
-> +	non-removable;
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&sdio0_bus4>, <&sdio0_cmd>, <&sdio0_clk>, <&sdio0_int>;
-> +	max-frequency =3D <50000000>;
-> +	sd-uhs-sdr12;
-> +	sd-uhs-sdr25;
-> +	sd-uhs-sdr50;
-> +	vmmc-supply =3D <&vcc_io>;
-> +	vqmmc-supply =3D <&vcc_18>;
-> +	status =3D "okay";
-> +};
-> +
-> +
->  &tsadc {
->  	rockchip,hw-tshut-mode =3D <1>; /* tshut mode 0:CRU 1:GPIO */
->  	rockchip,hw-tshut-polarity =3D <1>; /* tshut polarity 0:LOW 1:HIGH */
-> =
+So if you think there is something wrong with it, then please provide a fix or
+raise awareness :)
