@@ -1,130 +1,85 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH] arm64: dts: fsl: imx8mq: enable the thermal management
- unit (TMU)
-Date: Mon, 11 Mar 2019 19:35:25 -0700
-Message-ID: <CAHQ1cqEHr1mB2EH3-fJPrYa+nkcWPPjmCTjSt-XsDnJp-SCf+w@mail.gmail.com>
-References: <20190311213124.29325-1-angus@akkea.ca>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Date: Mon, 11 Mar 2019 21:38:41 -0500
+Message-ID: <CAL_Jsq+M2P8eEkwS9-mLXfoA3LC6K-_WHUns5sH75E6h6qC2fA@mail.gmail.com>
+References: <20190304185536.211084-1-venture@google.com> <20190311222007.GA16254@bogus>
+ <CAO=notzjsdOxJSf+p+OqB71N5-c1QPCcfd9OVAV8ft18e+SngQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190311213124.29325-1-angus@akkea.ca>
+In-Reply-To: <CAO=notzjsdOxJSf+p+OqB71N5-c1QPCcfd9OVAV8ft18e+SngQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, daniel.baluta@nxp.com, agx@sigxcpu.org, dl-linux-imx <linux-imx@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Patrick Venture <venture@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Greg KH <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 2:35 PM Angus Ainslie (Purism) <angus@akkea.ca> wrote:
+On Mon, Mar 11, 2019 at 6:49 PM Patrick Venture <venture@google.com> wrote:
 >
-> These are the TMU nodes from the NXP vendor kernel
+> On Mon, Mar 11, 2019 at 3:20 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Mon, Mar 04, 2019 at 10:55:36AM -0800, Patrick Venture wrote:
+> > > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+> > >
+> > > Signed-off-by: Patrick Venture <venture@google.com>
+> > > ---
+> > > Changes for v6:
+> > > - None
+> > > Changes for v5:
+> > > - None
+> > > Changes for v4:
+> > > - None
+> > > Changes for v3:
+> > > - None
+> > > Changes for v2:
+> > > - Added comment about syscon required parameter.
+> > > ---
+> > >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 32 +++++++++++++++++++
+> > >  1 file changed, 32 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> > > new file mode 100644
+> > > index 000000000000..1092d62d1c92
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> > > @@ -0,0 +1,32 @@
+> > > +======================================================================
+> > > +Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
+> > > +======================================================================
+> > > +
+> > > +The bridge is available on platforms with the VGA enabled on the Aspeed device.
+> > > +In this case, the host has access to a 64KiB window into all of the BMC's
+> > > +memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
+> > > +has read access to all the regions of memory, however the host only has read
+> > > +and write access depending on a register controlled by the BMC.
+> > > +
+> > > +Required properties:
+> > > +===================
+> > > +
+> > > + - compatible: must be one of:
+> > > +     - "aspeed,ast2400-p2a-ctrl"
+> > > +     - "aspeed,ast2500-p2a-ctrl"
+> > > +
+> > > + - syscon: handle to syscon device node controlling PCI.
+> > > +
+> > > +Optional properties:
+> > > +===================
+> > > +
+> > > +- memory-region: A phandle to a reserved_memory region to be used for the PCI
+> > > +             to AHB mapping
+> > > +
+> > > +Example:
+> > > +
+> > > +p2a: p2a-control@1e6e2000 {
+> > > +     compatible = "aspeed,ast2400-p2a-ctrl";
+> > > +     memory-region = <&reserved_memory>;
+> > > +     syscon = <&syscon>;
+> >
+> > Make this node a child of what you are pointing to instead if this the
+> > only control interface.
 >
+> You're suggesting I make this a child of the syscon?
 
-Hey Angus,
+Yes.
 
-TMU block supports multiple thermal zones and vendor kernel doesn't
-really account for that (see below). Latest version of the driver in
-thermal tree now actually supports that feature (mulit-sensor), so I
-think the code in DT should reflect that as well. I recently submitted
-a series adding HWMON integration for TMU
-(https://lore.kernel.org/lkml/20190222200508.26325-1-andrew.smirnov@gmail.com/T/#u)
-and this is my take on this patch:
-
-https://github.com/ndreys/linux/commit/09931e3d60af0a74377307b433db97da1be31570
-
-All of the code there is up for grabs, if you feel like using it.
-
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 83 +++++++++++++++++++++++
->  1 file changed, 83 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index 9155bd4784eb..087620c6e17f 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -8,6 +8,7 @@
->  #include <dt-bindings/power/imx8mq-power.h>
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/thermal/thermal.h>
->  #include "imx8mq-pinfunc.h"
->
->  / {
-> @@ -89,6 +90,7 @@
->                         reg = <0x0>;
->                         enable-method = "psci";
->                         next-level-cache = <&A53_L2>;
-> +                       #cooling-cells = <2>;
->                 };
->
->                 A53_1: cpu@1 {
-> @@ -210,6 +212,87 @@
->                                 #interrupt-cells = <2>;
->                         };
->
-> +                       tmu: tmu@30260000 {
-> +                               compatible = "fsl,imx8mq-tmu";
-> +                               reg = <0x30260000 0x10000>;
-> +                               interrupt = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> +                               little-endian;
-> +                               fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
-> +                               fsl,tmu-calibration = <0x00000000 0x00000023
-> +                                                      0x00000001 0x00000029
-> +                                                      0x00000002 0x0000002f
-> +                                                      0x00000003 0x00000035
-> +                                                      0x00000004 0x0000003d
-> +                                                      0x00000005 0x00000043
-> +                                                      0x00000006 0x0000004b
-> +                                                      0x00000007 0x00000051
-> +                                                      0x00000008 0x00000057
-> +                                                      0x00000009 0x0000005f
-> +                                                      0x0000000a 0x00000067
-> +                                                      0x0000000b 0x0000006f
-> +
-> +                                                      0x00010000 0x0000001b
-> +                                                      0x00010001 0x00000023
-> +                                                      0x00010002 0x0000002b
-> +                                                      0x00010003 0x00000033
-> +                                                      0x00010004 0x0000003b
-> +                                                      0x00010005 0x00000043
-> +                                                      0x00010006 0x0000004b
-> +                                                      0x00010007 0x00000055
-> +                                                      0x00010008 0x0000005d
-> +                                                      0x00010009 0x00000067
-> +                                                      0x0001000a 0x00000070
-> +
-> +                                                      0x00020000 0x00000017
-> +                                                      0x00020001 0x00000023
-> +                                                      0x00020002 0x0000002d
-> +                                                      0x00020003 0x00000037
-> +                                                      0x00020004 0x00000041
-> +                                                      0x00020005 0x0000004b
-> +                                                      0x00020006 0x00000057
-> +                                                      0x00020007 0x00000063
-> +                                                      0x00020008 0x0000006f
-> +
-> +                                                      0x00030000 0x00000015
-> +                                                      0x00030001 0x00000021
-> +                                                      0x00030002 0x0000002d
-> +                                                      0x00030003 0x00000039
-> +                                                      0x00030004 0x00000045
-> +                                                      0x00030005 0x00000053
-> +                                                      0x00030006 0x0000005f
-> +                                                      0x00030007 0x00000071>;
-> +                               #thermal-sensor-cells =  <0>;
-
-As per #thermal-sensor-cells must be 1 (see
-Documentation/devicetree/bindings/thermal/qoriq-thermal.txt), since as
-I mentioned above there are multiple thermal zones (CPU, GPU, VPU).
-
-> +                       };
-> +
-> +                       thermal-zones {
-> +                               cpu-thermal {
-> +                                       polling-delay-passive = <250>;
-> +                                       polling-delay = <2000>;
-> +                                       thermal-sensors = <&tmu>;
-
-Ditto.
-
-Thanks,
-Andrey Smirnov
+Rob
