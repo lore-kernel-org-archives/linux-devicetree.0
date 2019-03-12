@@ -1,69 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/5] dt-bindings: ti_sci_pm_domains: Add support for
- exclusive access
-Date: Tue, 12 Mar 2019 10:43:01 -0500
-Message-ID: <20190312154301.GA21389@bogus>
-References: <20190223093232.29003-1-lokeshvutla@ti.com>
- <20190223093232.29003-3-lokeshvutla@ti.com>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH 04/14] pinctrl: sunxi: v3: really introduce support for V3
+Date: Tue, 12 Mar 2019 23:45:06 +0800
+Message-ID: <7B6C1341-BAB5-48C5-9E60-11BCEAC3D0CD@aosc.io>
+References: <20190312152256.35574-1-icenowy@aosc.io> <20190312152256.35574-5-icenowy@aosc.io> <20190312153654.25r5orlw7qjtlhbt@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190223093232.29003-3-lokeshvutla@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190312153654.25r5orlw7qjtlhbt@flea>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Jagan Teki <jagan@amarulasolutions.com>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 23, 2019 at 03:02:29PM +0530, Lokesh Vutla wrote:
-> TISCI protocol supports for enabling the device with exclusive
-> permissions. Certain remoteproc devices or some shared devices
-> across VM doesn't wants to request devices with this flag set.
 
-The wording here is weird. You want to add exclusive support, but you 
-are talking about devices which don't want exclusive support.
 
-> So add support for getting this information from DT by increasing
-> the power-domain cells to 2.
+于 2019年3月12日 GMT+08:00 下午11:36:54, Maxime Ripard <maxime.ripard@bootlin.com> 写到:
+>On Tue, Mar 12, 2019 at 11:22:46PM +0800, Icenowy Zheng wrote:
+>> Introduce the GPIO pins that is only available on V3 (not on V3s) to
+>the
+>> V3 pinctrl driver.
+>> 
+>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+>> ---
+>>  drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c | 291
+>+++++++++++++++++++++--
+>>  drivers/pinctrl/sunxi/pinctrl-sunxi.h    |   2 +
+>>  2 files changed, 275 insertions(+), 18 deletions(-)
+>> 
+>> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
+>b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
+>> index 6704ce8e5e3d..54c210871a95 100644
+>> --- a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
+>> +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
+>> @@ -1,5 +1,5 @@
+>>  /*
+>> - * Allwinner V3s SoCs pinctrl driver.
+>> + * Allwinner V3/V3s SoCs pinctrl driver.
+>>   *
+>>   * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.xyz>
+>>   *
+>> @@ -23,7 +23,7 @@
+>>  
+>>  #include "pinctrl-sunxi.h"
+>>  
+>> -static const struct sunxi_desc_pin sun8i_v3s_pins[] = {
+>> +static const struct sunxi_desc_pin sun8i_v3_v3s_pins[] = {
+>
+>I'm not sure all that remaining is worth it to be honest. It adds a
+>lot of noise for no particular reason (and the same goes for renaming
+>the file itself)
 
-Seems like this would be racy. Whomever wants exclusive access would 
-have to be the first to request a device. Seems like whether devices are 
-able to be shared or not would be known because generally h/w has to be 
-designed for that.
+Maybe keeping names is okay "for historial reasons".
 
-> 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> ---
->  Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-> index f7b00a7c0f68..5fdda7475023 100644
-> --- a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-> +++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-> @@ -19,8 +19,11 @@ child of the pmmc node.
->  Required Properties:
->  --------------------
->  - compatible: should be "ti,sci-pm-domain"
-> -- #power-domain-cells: Must be 1 so that an id can be provided in each
-> -		       device node.
-> +- #power-domain-cells: Can be one of the following:
-> +			1: Containing the device id of each node
-> +			2: First entry should be device id
-> +			   Second entry should be 1 or 0. Use 1 for enabling
-> +			   the device with exclusive permissions set else 0.
->  
->  Example (K2G):
->  -------------
-> -- 
-> 2.19.2
-> 
+In fact I want to keep them.
+
+>
+>Maxime
+
+-- 
+使用 K-9 Mail 发送自我的Android设备。
