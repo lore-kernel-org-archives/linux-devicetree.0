@@ -1,395 +1,771 @@
-From: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 6/6] ARM: PWM: add allwinner sun8i
- R40/T3/V40 PWM support.
-Date: Tue, 12 Mar 2019 13:42:57 +0800
-Message-ID: <CAJeuY7_sik1Jp0ves4WCCSR46UkqGHcs3YjswRVsCBH8ToZLJw@mail.gmail.com>
-References: <20181125162319.GA5422@arx-s1> <20181220175750.GG9408@ulmo>
-Reply-To: hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: [PATCH v2 1/3] arm64: dts: imx: Add i.mx8mm dtsi support
+Date: Tue, 12 Mar 2019 05:44:53 +0000
+Message-ID: <1552369779-7614-1-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDKITZOARQMBB3MNTXSAKGQEKT3HLBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181220175750.GG9408@ulmo>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =E4=BA=8E2018=E5=B9=B412=E6=9C=88=
-21=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=881:57=E5=86=99=E9=81=93=EF=
-=BC=9A
->
-> On Mon, Nov 26, 2018 at 12:23:19AM +0800, Hao Zhang wrote:
-> > The sun8i R40/T3/V40 PWM has 8 PWM channals and divides to 4 PWM pairs,
-> > each PWM pair built-in 1 clock module, 2 timer logic module and 1
-> > programmable dead-time generator, it also support waveform capture.
-> > It has 2 clock sources OSC24M and APB1, it is different with the
-> > sun4i-pwm driver, Therefore add a new driver for it.
-> >
-> > Signed-off-by: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  drivers/pwm/Kconfig     |  12 +-
-> >  drivers/pwm/Makefile    |   1 +
-> >  drivers/pwm/pwm-sun8i.c | 418 ++++++++++++++++++++++++++++++++++++++++=
-++++++++
-> >  3 files changed, 430 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/pwm/pwm-sun8i.c
-> >
-> > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> > index 504d252..6105ac8 100644
-> > --- a/drivers/pwm/Kconfig
-> > +++ b/drivers/pwm/Kconfig
-> > @@ -426,7 +426,7 @@ config PWM_STMPE
-> >         expanders.
-> >
-> >  config PWM_SUN4I
-> > -     tristate "Allwinner PWM support"
-> > +     tristate "Allwinner SUN4I PWM support"
-> >       depends on ARCH_SUNXI || COMPILE_TEST
-> >       depends on HAS_IOMEM && COMMON_CLK
-> >       help
-> > @@ -435,6 +435,16 @@ config PWM_SUN4I
-> >         To compile this driver as a module, choose M here: the module
-> >         will be called pwm-sun4i.
-> >
-> > +config PWM_SUN8I
-> > +     tristate "Allwinner SUN8I (R40/V40/T3) PWM support"
-> > +     depends on ARCH_SUNXI || COMPILE_TEST
-> > +     depends on HAS_IOMEM && COMMON_CLK
-> > +     help
-> > +       Generic PWM framework driver for Allwinner R40/V40/T3 SoCs.
-> > +
-> > +       To compile this driver as a module, choose M here: the module
-> > +       will be called pwm-sun8i.
-> > +
-> >  config PWM_TEGRA
-> >       tristate "NVIDIA Tegra PWM support"
-> >       depends on ARCH_TEGRA
-> > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> > index 9c676a0..32c8d2d 100644
-> > --- a/drivers/pwm/Makefile
-> > +++ b/drivers/pwm/Makefile
-> > @@ -43,6 +43,7 @@ obj-$(CONFIG_PWM_STM32)             +=3D pwm-stm32.o
-> >  obj-$(CONFIG_PWM_STM32_LP)   +=3D pwm-stm32-lp.o
-> >  obj-$(CONFIG_PWM_STMPE)              +=3D pwm-stmpe.o
-> >  obj-$(CONFIG_PWM_SUN4I)              +=3D pwm-sun4i.o
-> > +obj-$(CONFIG_PWM_SUN8I)              +=3D pwm-sun8i.o
-> >  obj-$(CONFIG_PWM_TEGRA)              +=3D pwm-tegra.o
-> >  obj-$(CONFIG_PWM_TIECAP)     +=3D pwm-tiecap.o
-> >  obj-$(CONFIG_PWM_TIEHRPWM)   +=3D pwm-tiehrpwm.o
-> > diff --git a/drivers/pwm/pwm-sun8i.c b/drivers/pwm/pwm-sun8i.c
-> > new file mode 100644
-> > index 0000000..d8597e4
-> > --- /dev/null
-> > +++ b/drivers/pwm/pwm-sun8i.c
-> > @@ -0,0 +1,418 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +// Copyright (C) 2018 Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > +
-> > +#include <linux/bitops.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/clk-provider.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/err.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pwm.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/spinlock.h>
-> > +#include <linux/time.h>
-> > +#include <linux/regmap.h>
-> > +
-> > +#define PWM_IRQ_ENABLE_REG   0x0000
-> > +#define PCIE(ch)             BIT(ch)
-> > +
-> > +#define PWM_IRQ_STATUS_REG   0x0004
-> > +#define PIS(ch)                      BIT(ch)
-> > +
-> > +#define CAPTURE_IRQ_ENABLE_REG       0x0010
-> > +#define CRIE(ch)             BIT((ch) * 2)
-> > +#define CFIE(ch)             BIT((ch) * 2 + 1)
-> > +
-> > +#define CAPTURE_IRQ_STATUS_REG       0x0014
-> > +#define CRIS(ch)             BIT((ch) * 2)
-> > +#define CFIS(ch)             BIT((ch) * 2 + 1)
-> > +
-> > +#define CLK_CFG_REG(ch)              (0x0020 + ((ch) >> 1) * 4)
-> > +#define CLK_SRC_SEL          GENMASK(8, 7)
-> > +#define CLK_SRC_BYPASS_SEC   BIT(6)
-> > +#define CLK_SRC_BYPASS_FIR   BIT(5)
-> > +#define CLK_GATING           BIT(4)
-> > +#define CLK_DIV_M            GENMASK(3, 0)
-> > +
-> > +#define PWM_DZ_CTR_REG(ch)   (0x0030 + ((ch) >> 1) * 4)
-> > +#define PWM_DZ_INTV          GENMASK(15, 8)
-> > +#define PWM_DZ_EN            BIT(0)
-> > +
-> > +#define PWM_ENABLE_REG               0x0040
-> > +#define PWM_EN(ch)           BIT(ch)
-> > +
-> > +#define CAPTURE_ENABLE_REG   0x0044
-> > +#define CAP_EN(ch)           BIT(ch)
-> > +
-> > +#define PWM_CTR_REG(ch)              (0x0060 + (ch) * 0x20)
-> > +#define PWM_PERIOD_RDY               BIT(11)
-> > +#define PWM_PUL_START                BIT(10)
-> > +#define PWM_MODE             BIT(9)
-> > +#define PWM_ACT_STA          BIT(8)
-> > +#define PWM_PRESCAL_K                GENMASK(7, 0)
-> > +
-> > +#define PWM_PERIOD_REG(ch)   (0x0064 + (ch) * 0x20)
-> > +#define PWM_ENTIRE_CYCLE     GENMASK(31, 16)
-> > +#define PWM_ACT_CYCLE                GENMASK(15, 0)
-> > +
-> > +#define PWM_CNT_REG(ch)              (0x0068 + (ch) * 0x20)
-> > +#define PWM_CNT_VAL          GENMASK(15, 0)
-> > +
-> > +#define CAPTURE_CTR_REG(ch)  (0x006c + (ch) * 0x20)
-> > +#define CAPTURE_CRLF         BIT(2)
-> > +#define CAPTURE_CFLF         BIT(1)
-> > +#define CAPINV                       BIT(0)
-> > +
-> > +#define CAPTURE_RISE_REG(ch) (0x0070 + (ch) * 0x20)
-> > +#define CAPTURE_CRLR         GENMASK(15, 0)
-> > +
-> > +#define CAPTURE_FALL_REG(ch) (0x0074 + (ch) * 0x20)
-> > +#define CAPTURE_CFLR         GENMASK(15, 0)
-> > +
-> > +struct sun8i_pwm_chip {
-> > +     struct pwm_chip chip;
-> > +     struct clk *clk;
-> > +     void __iomem *base;
-> > +     const struct sun8i_pwm_data *data;
-> > +     struct regmap *regmap;
-> > +};
-> > +
-> > +static struct sun8i_pwm_chip *to_sun8i_pwm_chip(struct pwm_chip *chip)
-> > +{
-> > +     return container_of(chip, struct sun8i_pwm_chip, chip);
-> > +}
-> > +
-> > +static u32 sun8i_pwm_read(struct sun8i_pwm_chip *sun8i_pwm,
-> > +                       unsigned long offset)
-> > +{
-> > +     u32 val;
-> > +
-> > +     regmap_read(sun8i_pwm->regmap, offset, &val);
-> > +     return val;
-> > +}
-> > +
-> > +static void sun8i_pwm_set_bit(struct sun8i_pwm_chip *sun8i_pwm,
-> > +                           unsigned long reg, u32 bit)
-> > +{
-> > +     regmap_update_bits(sun8i_pwm->regmap, reg, bit, bit);
-> > +}
-> > +
-> > +static void sun8i_pwm_clear_bit(struct sun8i_pwm_chip *sun8i_pwm,
-> > +                             unsigned long reg, u32 bit)
-> > +{
-> > +     regmap_update_bits(sun8i_pwm->regmap, reg, bit, 0);
-> > +}
-> > +
-> > +static void sun8i_pwm_set_value(struct sun8i_pwm_chip *sun8i_pwm,
-> > +                             unsigned long reg, u32 mask, u32 val)
-> > +{
-> > +     regmap_update_bits(sun8i_pwm->regmap, reg, mask, val);
-> > +}
-> > +
-> > +static void sun8i_pwm_set_polarity(struct sun8i_pwm_chip *chip, u32 ch=
-,
-> > +                                enum pwm_polarity polarity)
-> > +{
-> > +     if (polarity =3D=3D PWM_POLARITY_NORMAL)
-> > +             sun8i_pwm_set_bit(chip, PWM_CTR_REG(ch), PWM_ACT_STA);
-> > +     else
-> > +             sun8i_pwm_clear_bit(chip, PWM_CTR_REG(ch), PWM_ACT_STA);
-> > +}
-> > +
-> > +static int sun8i_pwm_config(struct sun8i_pwm_chip *sun8i_pwm, u8 ch,
-> > +                         struct pwm_state *state)
-> > +{
-> > +     u64 clk_rate, clk_div, val;
-> > +     u16 prescaler =3D 0;
-> > +     u16 div_id =3D 0;
-> > +     struct clk *clk;
-> > +     bool is_clk;
-> > +     int ret;
-> > +
-> > +     clk_rate =3D clk_get_rate(sun8i_pwm->clk);
-> > +
-> > +     /* check period and select clock source */
-> > +     val =3D state->period * clk_rate;
-> > +     do_div(val, NSEC_PER_SEC);
-> > +     is_clk =3D devm_clk_name_match(sun8i_pwm->clk, "mux-0");
-> > +     if (val <=3D 1 && is_clk) {
-> > +             clk =3D devm_clk_get(sun8i_pwm->chip.dev, "mux-1");
-> > +             if (IS_ERR(clk)) {
-> > +                     dev_err(sun8i_pwm->chip.dev,
-> > +                             "Period expects a larger value\n");
-> > +                     return -EINVAL;
-> > +             }
->
-> You should never try to get resources at this point. You should have
-> requested them already at ->probe() time. Otherwise, how are you going
-> to handle failures here?
->
+The i.MX8M Mini is new SOC of the i.MX8M family. it is
+focused on delivering the latest and greatest video and
+audio experience combining state-of-the-art media-specific
+features with high-performance processing while optimized
+for lowest power consumption. The i.MX 8M Mini Media Applications
+Processor is  14nm FinFET product of the growing i.MX8M family
+targeting the consumer & industrial market. It is built in 14LPP
+to achieve both high performance and low power consumption
+and relies on a powerful fully coherent core complex based on
+a quad Cortex-A53 cluster with video and graphics accelerators
 
-Something wrong here, i will fix it, thanks :)
+This patch adds the basic dtsi support for i.MX8MM.
 
-> > +
-> > +             clk_rate =3D clk_get_rate(clk);
-> > +             val =3D state->period * clk_rate;
-> > +             do_div(val, NSEC_PER_SEC);
-> > +             if (val <=3D 1) {
-> > +                     dev_err(sun8i_pwm->chip.dev,
-> > +                             "Period expects a larger value\n");
-> > +                     return -EINVAL;
-> > +             }
-> > +
-> > +             /* change clock source to "mux-1" */
-> > +             clk_disable_unprepare(sun8i_pwm->clk);
-> > +             devm_clk_put(sun8i_pwm->chip.dev, sun8i_pwm->clk);
-> > +             sun8i_pwm->clk =3D clk;
-> > +
-> > +             ret =3D clk_prepare_enable(sun8i_pwm->clk);
-> > +             if (ret) {
-> > +                     dev_err(sun8i_pwm->chip.dev,
-> > +                             "Failed to enable PWM clock\n");
-> > +                     return ret;
-> > +             }
-> > +
-> > +     } else {
-> > +             dev_err(sun8i_pwm->chip.dev,
-> > +                     "Period expects a larger value\n");
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     is_clk =3D devm_clk_name_match(sun8i_pwm->clk, "mux-0");
-> > +     if (is_clk)
-> > +             sun8i_pwm_set_value(sun8i_pwm, CLK_CFG_REG(ch),
-> > +                                 CLK_SRC_SEL, 0 << 7);
-> > +     else
-> > +             sun8i_pwm_set_value(sun8i_pwm, CLK_CFG_REG(ch),
-> > +                                 CLK_SRC_SEL, 1 << 7);
-> > +
-> > +     dev_info(sun8i_pwm->chip.dev, "clock source freq:%lldHz\n", clk_r=
-ate);
-> > +
-> > +     /* calculate and set prescaler, div table, PWM entire cycle */
-> > +     clk_div =3D val;
-> > +     while (clk_div > 65535) {
-> > +             prescaler++;
-> > +             clk_div =3D val;
-> > +             do_div(clk_div, 1U << div_id);
-> > +             do_div(clk_div, prescaler + 1);
-> > +
-> > +             if (prescaler =3D=3D 255) {
-> > +                     prescaler =3D 0;
-> > +                     div_id++;
-> > +                     if (div_id =3D=3D 9) {
-> > +                             dev_err(sun8i_pwm->chip.dev,
-> > +                                     "unsupport period value\n");
-> > +                             return -EINVAL;
-> > +                     }
-> > +             }
-> > +     }
-> > +
-> > +     sun8i_pwm_set_value(sun8i_pwm, PWM_PERIOD_REG(ch),
-> > +                         PWM_ENTIRE_CYCLE, clk_div << 16);
-> > +     sun8i_pwm_set_value(sun8i_pwm, PWM_CTR_REG(ch),
-> > +                         PWM_PRESCAL_K, prescaler << 0);
-> > +     sun8i_pwm_set_value(sun8i_pwm, CLK_CFG_REG(ch),
-> > +                         CLK_DIV_M, div_id << 0);
-> > +
-> > +     /* set duty cycle */
-> > +     val =3D state->period;
-> > +     do_div(val, clk_div);
-> > +     clk_div =3D state->duty_cycle;
-> > +     do_div(clk_div, val);
-> > +     if (clk_div > 65535)
-> > +             clk_div =3D 65535;
-> > +
-> > +     sun8i_pwm_set_value(sun8i_pwm, PWM_PERIOD_REG(ch),
-> > +                         PWM_ACT_CYCLE, clk_div << 0);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int sun8i_pwm_apply(struct pwm_chip *chip, struct pwm_device *p=
-wm,
-> > +                        struct pwm_state *state)
-> > +{
-> > +     int ret;
-> > +     struct sun8i_pwm_chip *sun8i_pwm =3D to_sun8i_pwm_chip(chip);
-> > +     struct pwm_state cstate;
-> > +
-> > +     pwm_get_state(pwm, &cstate);
-> > +     if (!cstate.enabled) {
-> > +             ret =3D clk_prepare_enable(sun8i_pwm->clk);
-> > +             if (ret) {
-> > +                     dev_err(chip->dev, "Failed to enable PWM clock\n"=
-);
-> > +                     return ret;
-> > +             }
-> > +     }
-> > +
-> > +     if ((cstate.period !=3D state->period) ||
-> > +         (cstate.duty_cycle !=3D state->duty_cycle)) {
-> > +             ret =3D sun8i_pwm_config(sun8i_pwm, pwm->hwpwm, state);
-> > +             if (ret) {
-> > +                     dev_err(chip->dev, "Failed to config PWM\n");
-> > +                     return ret;
-> > +             }
-> > +     }
->
-> So this isn't really how atomic is supposed to work. The whole point of
-> the single callback is to allow the driver to apply the changes in an
-> atomic way, which means that either everything is applied or nothing is
-> applied.
->
-> That's not what you do here. In the above you can end up with an enabled
-> clock but the settings not being applied. Similarly sun8i_pwm_config()
-> can abort in a number of places, which would leave you with a half-
-> configured PWM channel.
->
-> Instead, what you should be doing is precompute everything and check
-> that the configuration can be applied before touching any registers or
-> enabling clocks. Once you've validate the new state, you need to write
-> everything and there should be no more risk of failure.
->
+Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+---
+ change v1->v2:
+ - removed unnecessary 'okay' status
+ - change AIPS's address-cells and size-cells to '1'
+ - remove sdma's undocumented property
+---
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 717 ++++++++++++++++++++++++++++++
+ 1 file changed, 717 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mm.dtsi
 
-Got it, it is useful for me !
-
-> Thierry
-> -----BEGIN PGP SIGNATURE-----
->
-> iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlwb2B4ACgkQ3SOs138+
-> s6GmgRAAwvTyhaFa0jWmUftz+0FS5JTXADm9VusyhbSlmHV7UNkqkQuLnaT1WoGi
-> gGW5ZMLA+wSPWrXqGsw1HuzLc57c1/eDQdxLmlqBz0Lwribn75+0kisEvV3CRCEL
-> P9UiTgMualhTe0DGKZmcHJvV56sEhx7b2WQ81sOn5nZvCP/iFTURp5WSyk+phAyb
-> ss9i5bjwuxC34wLC0wCVNvr2XlpdD7CTy0R/nap1Za2nf6Cm0TnzGGPIYki1/gM2
-> fUtYT/zCvfGp+JG5+R2755XdomXzj0vmXD7Omv75eKzMb+HivolmLPJEfUiP8c+x
-> SElT/F/jIkwvdBzyeQ/sA8ybh4N0DVapnUxBjrUBLOMlrNDlh+ApjUOOpwylQBXQ
-> 6JKmjoHoBg31lK9QEPxoIoNP0FdZBr6+lAaZeQNx95PeICxD21IvPtuLEp4ksbX7
-> fJsOxbkBzbIMpKuxLM3vkl89/O9IhPbVoyvMASCPMmdwAIH+LSy3SvIFWbGQ0nXS
-> gwjTzN4r1AWmdXIN+faT6khnNY64WoPd896AyJSQ5mQsl42IMKRi42kpfeN3/f8y
-> x4d07WSTCRB4v+OehJEVP2WJNsbI3EvtClbngn66xSac7kGSbg4cpbW0NzkrFj+T
-> dOG2p9wUMibPBXzS+V7JzTsDgR9JG2fzxG8PhEesaG/Bt32Hg0Y=3D
-> =3DS1Wz
-> -----END PGP SIGNATURE-----
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+new file mode 100644
+index 0000000..47740d6
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -0,0 +1,717 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright 2019 NXP
++ */
++
++#include <dt-bindings/clock/imx8mm-clock.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/thermal/thermal.h>
++
++#include "imx8mm-pinfunc.h"
++
++/ {
++	compatible = "fsl,imx8mm";
++	interrupt-parent = <&gic>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	aliases {
++		ethernet0 = &fec1;
++		i2c0 = &i2c1;
++		i2c1 = &i2c2;
++		i2c2 = &i2c3;
++		i2c3 = &i2c4;
++		serial0 = &uart1;
++		serial1 = &uart2;
++		serial2 = &uart3;
++		serial3 = &uart4;
++		spi0 = &ecspi1;
++		spi1 = &ecspi2;
++		spi2 = &ecspi3;
++		mmc0 = &usdhc1;
++		mmc1 = &usdhc2;
++		mmc2 = &usdhc3;
++		gpio0 = &gpio1;
++		gpio1 = &gpio2;
++		gpio2 = &gpio3;
++		gpio3 = &gpio4;
++		gpio4 = &gpio5;
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		A53_0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x0>;
++			enable-method = "psci";
++			next-level-cache = <&A53_L2>;
++		};
++
++		A53_1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x1>;
++			enable-method = "psci";
++			next-level-cache = <&A53_L2>;
++		};
++
++		A53_2: cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x2>;
++			enable-method = "psci";
++			next-level-cache = <&A53_L2>;
++		};
++
++		A53_3: cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x3>;
++			enable-method = "psci";
++			next-level-cache = <&A53_L2>;
++		};
++
++		A53_L2: l2-cache0 {
++			compatible = "cache";
++		};
++	};
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0x0 0x40000000 0 0x80000000>;
++	};
++
++	osc_32k: clock-osc-32k {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		clock-output-names = "osc_32k";
++	};
++
++	osc_24m: clock-osc-24m {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <24000000>;
++		clock-output-names = "osc_24m";
++	};
++
++	clk_ext1: clock-ext1 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <133000000>;
++		clock-output-names = "clk_ext1";
++	};
++
++	clk_ext2: clock-ext2 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <133000000>;
++		clock-output-names = "clk_ext2";
++	};
++
++	clk_ext3: clock-ext3 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <133000000>;
++		clock-output-names = "clk_ext3";
++	};
++
++	clk_ext4: clock-ext4 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency= <133000000>;
++		clock-output-names = "clk_ext4";
++	};
++
++	gic: interrupt-controller@38800000 {
++		compatible = "arm,gic-v3";
++		reg = <0x0 0x38800000 0 0x10000>, /* GIC Dist */
++		      <0x0 0x38880000 0 0xC0000>; /* GICR (RD_base + SGI_base) */
++		#interrupt-cells = <3>;
++		interrupt-controller;
++		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	psci {
++		compatible = "arm,psci-1.0";
++		method = "smc";
++	};
++
++	pmu {
++		compatible = "arm,armv8-pmuv3";
++		interrupts = <GIC_PPI 7
++			     (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>;
++		interrupt-affinity = <&A53_0>, <&A53_1>, <&A53_2>, <&A53_3>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>, /* Physical Secure */
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>, /* Physical Non-Secure */
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>, /* Virtual */
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>; /* Hypervisor */
++		clock-frequency = <8000000>;
++		arm,no-tick-in-suspend;
++	};
++
++	soc@0 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0x0 0x0 0x3e000000>;
++
++		aips1: bus@30000000 {
++			compatible = "fsl,aips-bus", "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			gpio1: gpio@30200000 {
++				compatible = "fsl,imx8mm-gpio", "fsl,imx35-gpio";
++				reg = <0x30200000 0x10000>;
++				interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++			};
++
++			gpio2: gpio@30210000 {
++				compatible = "fsl,imx8mm-gpio", "fsl,imx35-gpio";
++				reg = <0x30210000 0x10000>;
++				interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++			};
++
++			gpio3: gpio@30220000 {
++				compatible = "fsl,imx8mm-gpio", "fsl,imx35-gpio";
++				reg = <0x30220000 0x10000>;
++				interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++			};
++
++			gpio4: gpio@30230000 {
++				compatible = "fsl,imx8mm-gpio", "fsl,imx35-gpio";
++				reg = <0x30230000 0x10000>;
++				interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++			};
++
++			gpio5: gpio@30240000 {
++				compatible = "fsl,imx8mm-gpio", "fsl,imx35-gpio";
++				reg = <0x30240000 0x10000>;
++				interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++			};
++
++			wdog1: wdog@30280000 {
++				compatible = "fsl,imx21-wdt";
++				reg = <0x30280000 0x10000>;
++				interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_WDOG1_ROOT>;
++				status = "disabled";
++			};
++
++			wdog2: wdog@30290000 {
++				compatible = "fsl,imx21-wdt";
++				reg = <0x30290000 0x10000>;
++				interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_WDOG2_ROOT>;
++				status = "disabled";
++			};
++
++			wdog3: wdog@302a0000 {
++				compatible = "fsl,imx21-wdt";
++				reg = <0x302a0000 0x10000>;
++				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_WDOG3_ROOT>;
++				status = "disabled";
++			};
++
++			sdma2: dma-controller@302c0000 {
++				compatible = "fsl,imx8mq-sdma", "fsl,imx7d-sdma";
++				reg = <0x302c0000 0x10000>;
++				interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_SDMA2_ROOT>,
++					 <&clk IMX8MM_CLK_SDMA2_ROOT>;
++				clock-names = "ipg", "ahb";
++				#dma-cells = <3>;
++				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
++			};
++
++			sdma3: dma-controller@302b0000 {
++				compatible = "fsl,imx8mq-sdma", "fsl,imx7d-sdma";
++				reg = <0x302b0000 0x10000>;
++				interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_SDMA3_ROOT>,
++				 <&clk IMX8MM_CLK_SDMA3_ROOT>;
++				clock-names = "ipg", "ahb";
++				#dma-cells = <3>;
++				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
++			};
++
++			iomuxc: pinctrl@30330000 {
++				compatible = "fsl,imx8mm-iomuxc";
++				reg = <0x30330000 0x10000>;
++			};
++
++			gpr: iomuxc-gpr@30340000 {
++				compatible = "fsl,imx8mm-iomuxc-gpr", "syscon";
++				reg = <0x30340000 0x10000>;
++			};
++
++			ocotp: ocotp-ctrl@30350000 {
++				compatible = "fsl,imx8mq-ocotp", "fsl,imx7d-ocotp", "syscon";
++				reg = <0x30350000 0x10000>;
++				clocks = <&clk IMX8MM_CLK_OCOTP_ROOT>;
++				/* For nvmem subnodes */
++				#address-cells = <1>;
++				#size-cells = <1>;
++			};
++
++			anatop: anatop@30360000 {
++				compatible = "fsl,imx8mm-anatop", "syscon", "simple-bus";
++				reg = <0x30360000 0x10000>;
++			};
++
++			snvs: snvs@30370000 {
++				compatible = "fsl,sec-v4.0-mon","syscon", "simple-mfd";
++				reg = <0x30370000 0x10000>;
++
++				snvs_rtc: snvs-rtc-lp{
++					compatible = "fsl,sec-v4.0-mon-rtc-lp";
++					regmap =<&snvs>;
++					offset = <0x34>;
++					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
++						     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++				};
++
++				snvs_pwrkey: snvs-powerkey {
++					compatible = "fsl,sec-v4.0-pwrkey";
++					regmap = <&snvs>;
++					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
++					linux,keycode = <KEY_POWER>;
++					wakeup-source;
++				};
++			};
++
++			clk: clock-controller@30380000 {
++				compatible = "fsl,imx8mm-ccm";
++				reg = <0x30380000 0x10000>;
++				#clock-cells = <1>;
++				clocks = <&osc_32k>, <&osc_24m>, <&clk_ext1>, <&clk_ext2>,
++					 <&clk_ext3>, <&clk_ext4>;
++				clock-names = "osc_32k", "osc_24m", "clk_ext1", "clk_ext2",
++					      "clk_ext3", "clk_ext4";
++			};
++
++			src: src@30390000 {
++				compatible = "fsl,imx8mm-src", "syscon";
++				reg = <0x30390000 0x10000>;
++				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
++				#reset-cells = <1>;
++			};
++
++			gpc: gpc@303a0000 {
++				compatible = "fsl,imx8mm-gpc", "syscon";
++				reg = <0x303a0000 0x10000>;
++				interrupt-controller;
++				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++				#interrupt-cells = <3>;
++			};
++		};
++
++		aips2: bus@30400000 {
++			compatible = "fsl,aips-bus", "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			pwm1: pwm@30660000 {
++				compatible = "fsl,imx8mm-pwm", "fsl,imx27-pwm";
++				reg = <0x30660000 0x10000>;
++				interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_PWM1_ROOT>,
++					<&clk IMX8MM_CLK_PWM1_ROOT>;
++				clock-names = "ipg", "per";
++				#pwm-cells = <2>;
++				status = "disabled";
++			};
++
++			pwm2: pwm@30670000 {
++				compatible = "fsl,imx8mm-pwm", "fsl,imx27-pwm";
++				reg = <0x30670000 0x10000>;
++				interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_PWM2_ROOT>,
++					 <&clk IMX8MM_CLK_PWM2_ROOT>;
++				clock-names = "ipg", "per";
++				#pwm-cells = <2>;
++				status = "disabled";
++			};
++
++			pwm3: pwm@30680000 {
++				compatible = "fsl,imx8mm-pwm", "fsl,imx27-pwm";
++				reg = <0x30680000 0x10000>;
++				interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_PWM3_ROOT>,
++					 <&clk IMX8MM_CLK_PWM3_ROOT>;
++				clock-names = "ipg", "per";
++				#pwm-cells = <2>;
++				status = "disabled";
++			};
++
++			pwm4: pwm@30690000 {
++				compatible = "fsl,imx8mm-pwm", "fsl,imx27-pwm";
++				reg = <0x30690000 0x10000>;
++				interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_PWM4_ROOT>,
++					 <&clk IMX8MM_CLK_PWM4_ROOT>;
++				clock-names = "ipg", "per";
++				#pwm-cells = <2>;
++				status = "disabled";
++			};
++		};
++
++		aips3: bus@30800000 {
++			compatible = "fsl,aips-bus", "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			ecspi1: ecspi@30820000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,imx8mm-ecspi", "fsl,imx51-ecspi";
++				reg = <0x30820000 0x10000>;
++				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_ECSPI1_ROOT>,
++					 <&clk IMX8MM_CLK_ECSPI1_ROOT>;
++				clock-names = "ipg", "per";
++				dmas = <&sdma1 0 7 1>, <&sdma1 1 7 2>;
++				dma-names = "rx", "tx";
++				status = "disabled";
++			};
++
++			ecspi2: ecspi@30830000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,imx8mm-ecspi", "fsl,imx51-ecspi";
++				reg = <0x30830000 0x10000>;
++				interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_ECSPI2_ROOT>,
++					 <&clk IMX8MM_CLK_ECSPI2_ROOT>;
++				clock-names = "ipg", "per";
++				dmas = <&sdma1 2 7 1>, <&sdma1 3 7 2>;
++				dma-names = "rx", "tx";
++				status = "disabled";
++			};
++
++			ecspi3: ecspi@30840000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,imx8mm-ecspi", "fsl,imx51-ecspi";
++				reg = <0x30840000 0x10000>;
++				interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_ECSPI3_ROOT>,
++					 <&clk IMX8MM_CLK_ECSPI3_ROOT>;
++				clock-names = "ipg", "per";
++				dmas = <&sdma1 4 7 1>, <&sdma1 5 7 2>;
++				dma-names = "rx", "tx";
++				status = "disabled";
++			};
++
++			uart1: serial@30860000 {
++				compatible = "fsl,imx8mm-uart",
++					     "fsl,imx6q-uart", "fsl,imx21-uart";
++				reg = <0x30860000 0x10000>;
++				interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_UART1_ROOT>,
++					 <&clk IMX8MM_CLK_UART1_ROOT>;
++				clock-names = "ipg", "per";
++				dmas = <&sdma1 22 4 0>, <&sdma1 23 4 0>;
++				dma-names = "rx", "tx";
++				status = "disabled";
++			};
++
++			uart3: serial@30880000 {
++				compatible = "fsl,imx8mm-uart",
++					     "fsl,imx6q-uart", "fsl,imx21-uart";
++				reg = <0x30880000 0x10000>;
++				interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_UART3_ROOT>,
++					 <&clk IMX8MM_CLK_UART3_ROOT>;
++				clock-names = "ipg", "per";
++				dmas = <&sdma1 26 4 0>, <&sdma1 27 4 0>;
++				dma-names = "rx", "tx";
++				status = "disabled";
++			};
++
++			uart2: serial@30890000 {
++				compatible = "fsl,imx8mm-uart",
++					     "fsl,imx6q-uart", "fsl,imx21-uart";
++				reg = <0x30890000 0x10000>;
++				interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_UART2_ROOT>,
++					 <&clk IMX8MM_CLK_UART2_ROOT>;
++				clock-names = "ipg", "per";
++				status = "disabled";
++			};
++
++			i2c1: i2c@30a20000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,imx8mm-i2c", "fsl,imx21-i2c";
++				reg = <0x30a20000 0x10000>;
++				interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_I2C1_ROOT>;
++				status = "disabled";
++			};
++
++			i2c2: i2c@30a30000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,imx8mm-i2c", "fsl,imx21-i2c";
++				reg = <0x30a30000 0x10000>;
++				interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_I2C2_ROOT>;
++				status = "disabled";
++			};
++
++			i2c3: i2c@30a40000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,imx8mm-i2c", "fsl,imx21-i2c";
++				reg = <0x30a40000 0x10000>;
++				interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_I2C3_ROOT>;
++				status = "disabled";
++			};
++
++			i2c4: i2c@30a50000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,imx8mm-i2c", "fsl,imx21-i2c";
++				reg = <0x30a50000 0x10000>;
++				interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_I2C4_ROOT>;
++				status = "disabled";
++			};
++
++			uart4: serial@30a60000 {
++				compatible = "fsl,imx8mq-uart",
++					     "fsl,imx6q-uart", "fsl,imx21-uart";
++				reg = <0x30a60000 0x10000>;
++				interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_UART4_ROOT>,
++					 <&clk IMX8MM_CLK_UART4_ROOT>;
++				clock-names = "ipg", "per";
++				dmas = <&sdma1 28 4 0>, <&sdma1 29 4 0>;
++				dma-names = "rx", "tx";
++				status = "disabled";
++			};
++
++			usdhc1: mmc@30b40000 {
++				compatible = "fsl,imx8mq-usdhc", "fsl,imx7d-usdhc";
++				reg = <0x30b40000 0x10000>;
++				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_DUMMY>,
++					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
++					 <&clk IMX8MM_CLK_USDHC1_ROOT>;
++				clock-names = "ipg", "ahb", "per";
++				assigned-clocks = <&clk IMX8MM_CLK_USDHC1>;
++				assigned-clock-rates = <400000000>;
++				fsl,tuning-start-tap = <20>;
++				fsl,tuning-step= <2>;
++				bus-width = <4>;
++				status = "disabled";
++			};
++
++			usdhc2: mmc@30b50000 {
++				compatible = "fsl,imx8mq-usdhc", "fsl,imx7d-usdhc";
++				reg = <0x30b50000 0x10000>;
++				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_DUMMY>,
++					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
++					 <&clk IMX8MM_CLK_USDHC2_ROOT>;
++				clock-names = "ipg", "ahb", "per";
++				fsl,tuning-start-tap = <20>;
++				fsl,tuning-step= <2>;
++				bus-width = <4>;
++				status = "disabled";
++			};
++
++			usdhc3: mmc@30b60000 {
++				compatible = "fsl,imx8mq-usdhc", "fsl,imx7d-usdhc";
++				reg = <0x30b60000 0x10000>;
++				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_DUMMY>,
++					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
++					 <&clk IMX8MM_CLK_USDHC3_ROOT>;
++				clock-names = "ipg", "ahb", "per";
++				assigned-clocks = <&clk IMX8MM_CLK_USDHC3_ROOT>;
++				assigned-clock-rates = <400000000>;
++				fsl,tuning-start-tap = <20>;
++				fsl,tuning-step= <2>;
++				bus-width = <4>;
++				status = "disabled";
++			};
++
++			sdma1: dma-controller@30bd0000 {
++				compatible = "fsl,imx8mq-sdma", "fsl,imx7d-sdma";
++				reg = <0x30bd0000 0x10000>;
++				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_SDMA1_ROOT>,
++					 <&clk IMX8MM_CLK_SDMA1_ROOT>;
++				clock-names = "ipg", "ahb";
++				#dma-cells = <3>;
++				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
++			};
++
++			fec1: ethernet@30be0000 {
++				compatible = "fsl,imx8mq-fec", "fsl,imx6sx-fec";
++				reg = <0x30be0000 0x10000>;
++				interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_ENET1_ROOT>,
++					 <&clk IMX8MM_CLK_ENET1_ROOT>,
++					 <&clk IMX8MM_CLK_ENET_TIMER>,
++					 <&clk IMX8MM_CLK_ENET_REF>,
++					 <&clk IMX8MM_CLK_ENET_PHY_REF>;
++				clock-names = "ipg", "ahb", "ptp",
++					      "enet_clk_ref", "enet_out";
++				assigned-clocks = <&clk IMX8MM_CLK_ENET_AXI>,
++						  <&clk IMX8MM_CLK_ENET_TIMER>,
++						  <&clk IMX8MM_CLK_ENET_REF>,
++						  <&clk IMX8MM_CLK_ENET_TIMER>;
++				assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_266M>,
++							 <&clk IMX8MM_SYS_PLL2_100M>,
++							 <&clk IMX8MM_SYS_PLL2_125M>;
++				assigned-clock-rates = <0>, <0>, <125000000>, <100000000>;
++				stop-mode = <&gpr 0x10 3>;
++				fsl,num-tx-queues=<3>;
++				fsl,num-rx-queues=<3>;
++				fsl,wakeup_irq = <2>;
++				status = "disabled";
++			};
++
++		};
++
++		aips4: bus@32c00000 {
++			compatible = "fsl,aips-bus", "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			usbotg1: usb@32e40000 {
++				compatible = "fsl,imx8mm-usb", "fsl,imx7d-usb", "fsl,imx27-usb";
++				reg = <0x32e40000 0x200>;
++				interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_USB1_CTRL_ROOT>;
++				clock-names = "usb1_ctrl_root_clk";
++				assigned-clocks = <&clk IMX8MM_CLK_USB_BUS>,
++						  <&clk IMX8MM_CLK_USB_CORE_REF>;
++				assigned-clock-parents = <&clk IMX8MM_SYS_PLL2_500M>,
++							 <&clk IMX8MM_SYS_PLL1_100M>;
++				fsl,usbphy = <&usbphynop1>;
++				fsl,usbmisc = <&usbmisc1 0>;
++				status = "disabled";
++			};
++
++			usbphynop1: usbphynop1 {
++				compatible = "usb-nop-xceiv";
++				clocks = <&clk IMX8MM_CLK_USB_PHY_REF>;
++				assigned-clocks = <&clk IMX8MM_CLK_USB_PHY_REF>;
++				assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_100M>;
++				clock-names = "main_clk";
++			};
++
++			usbmisc1: usbmisc@32e40200 {
++				#index-cells = <1>;
++				compatible = "fsl,imx7d-usbmisc", "fsl,imx6q-usbmisc";
++				reg = <0x32e40200 0x200>;
++			};
++
++			usbotg2: usb@32e50000 {
++				compatible = "fsl,imx8mm-usb", "fsl,imx7d-usb", "fsl,imx27-usb";
++				reg = <0x32e50000 0x200>;
++				interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_USB1_CTRL_ROOT>;
++				clock-names = "usb1_ctrl_root_clk";
++				assigned-clocks = <&clk IMX8MM_CLK_USB_BUS>,
++						  <&clk IMX8MM_CLK_USB_CORE_REF>;
++				assigned-clock-parents = <&clk IMX8MM_SYS_PLL2_500M>,
++							 <&clk IMX8MM_SYS_PLL1_100M>;
++				fsl,usbphy = <&usbphynop2>;
++				fsl,usbmisc = <&usbmisc2 0>;
++				status = "disabled";
++			};
++
++			usbphynop2: usbphynop2 {
++				compatible = "usb-nop-xceiv";
++				clocks = <&clk IMX8MM_CLK_USB_PHY_REF>;
++				assigned-clocks = <&clk IMX8MM_CLK_USB_PHY_REF>;
++				assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_100M>;
++				clock-names = "main_clk";
++			};
++
++			usbmisc2: usbmisc@32e50200 {
++				#index-cells = <1>;
++				compatible = "fsl,imx7d-usbmisc", "fsl,imx6q-usbmisc";
++				reg = <0x32e50200 0x200>;
++			};
++
++		};
++
++		dma_apbh: dma-apbh@33000000 {
++			compatible = "fsl,imx7d-dma-apbh", "fsl,imx28-dma-apbh";
++			reg = <0x33000000 0x2000>;
++			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "gpmi0", "gpmi1", "gpmi2", "gpmi3";
++			#dma-cells = <1>;
++			dma-channels = <4>;
++			clocks = <&clk IMX8MM_CLK_NAND_USDHC_BUS_RAWNAND_CLK>;
++		};
++
++		gpmi: gpmi-nand@33002000{
++			compatible = "fsl,imx7d-gpmi-nand";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0x33002000 0x2000>, <0x33004000 0x4000>;
++			reg-names = "gpmi-nand", "bch";
++			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "bch";
++			clocks = <&clk IMX8MM_CLK_NAND_ROOT>,
++			<&clk IMX8MM_CLK_NAND_USDHC_BUS_RAWNAND_CLK>;
++			clock-names = "gpmi_io", "gpmi_bch_apb";
++			dmas = <&dma_apbh 0>;
++			dma-names = "rx-tx";
++			status = "disabled";
++		};
++	};
++};
+-- 
+1.9.1
