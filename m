@@ -1,104 +1,44 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v5 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
-Date: Tue, 12 Mar 2019 08:27:28 +0100
-Message-ID: <20190312072728.dy26cg4cateumuug@pengutronix.de>
-References: <1548762199-7065-1-git-send-email-yash.shah@sifive.com>
- <1548762199-7065-3-git-send-email-yash.shah@sifive.com>
- <20190207101657.rfzcq6xdv6ocvubg@pengutronix.de>
- <20190213123703.GE647@ulmo>
- <20190214155903.7h3b7v3nbhj57uy2@pengutronix.de>
+From: Patrick Wildt <patrick@blueri.se>
+Subject: Re: [PATCH] dt-bindings: clock: imx8mq: Fix numbering overlaps and
+ gaps
+Date: Tue, 12 Mar 2019 08:36:54 +0100
+Message-ID: <20190312073654.GA85609@thor.local>
+References: <1551779342-2640-1-git-send-email-abel.vesa@nxp.com>
+ <155181110921.20095.1641360339603928947@swboyd.mtv.corp.google.com>
+ <20190306130941.dqf3swx66bchm5k2@fsr-ub1664-175>
+ <155205894567.20095.2782332899458282059@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190214155903.7h3b7v3nbhj57uy2@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, palmer@sifive.com, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>, robh+dt@kernel.org, paul.walmsley@sifive.com, linux-riscv@lists.infradead.org
+In-Reply-To: <155205894567.20095.2782332899458282059@swboyd.mtv.corp.google.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Abel Vesa <abel.vesa@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Fri, Mar 08, 2019 at 07:29:05AM -0800, Stephen Boyd wrote:
+> It's mostly about making sure that any existing dtbs don't have their
+> numbers shifted around. So hopefully any overlapping identifiers aren't
+> in use yet and then those ids can be changed while leaving the ones that
+> are in use how they are.
 
-On Thu, Feb 14, 2019 at 04:59:03PM +0100, Uwe Kleine-K=F6nig wrote:
-> On Wed, Feb 13, 2019 at 01:37:03PM +0100, Thierry Reding wrote:
-> > On Thu, Feb 07, 2019 at 11:16:57AM +0100, Uwe Kleine-K=F6nig wrote:
-> > > On Tue, Jan 29, 2019 at 05:13:19PM +0530, Yash Shah wrote:
-> > [...]
-> > > > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-> > [...]
-> > > > +	writel(val, pwm->regs + PWM_SIFIVE_PWMCFG);
-> > > > +
-> > > > +	writel(frac, pwm->regs + PWM_SIFIVE_PWMCMP0 + dev->hwpwm * SIZE_P=
-WMCMP);
-> > > > +
-> > > > +	val &=3D ~(1 << PWM_SIFIVE_PWMCFG_DEGLITCH);
-> > > > +	writel(val, pwm->regs + PWM_SIFIVE_PWMCFG);
-> > > > +
-> > > > +	pwm_sifive_get_state(chip, dev, state);
-> > > =
+In practice I bet no one uses Linux 5.0's i.MX8M device trees since they
+lack too much support.  It's so basic it's not useful.  You'd still run
+your existing non-mainline bindings until it is.  Thus I would argue
+changing the ABI right now would be the only chance there is.
 
-> > > Thierry: This changes the pwm_state. Is this how this should be done?
-> > =
+If you think that chance is gone, then I guess the reasonable thing is
+to keep the numbers and only move those (to the end) which overlap.  Or
+put them into that erreneous number gap.
 
-> > Yes, I think that's fine. The PWM state should always reflect the
-> > current hardware state. If the configuration that we program does not
-> > reflect the state that was requested, that should be reflected in the
-> > PWM state.
-> =
-
-> I'm not sure you blessed what is really done here. If I do:
-> =
-
-> 	state.duty_cycle =3D state.period;
-> 	pwm_apply_state(pwm, &state);
-> =
-
-> the call in question doesn't only result in pwm->state.duty_cycle <
-> pwm->state.period, but it also corrects my local state variable (i.e. I
-> have state.duty_cycle < state.period afterwards).
-> =
-
-> Is this what you thought to be fine?
-
-I thought a bit about this and I'm convinced that updating struct
-pwm_device::state is/might be fine, but changing the caller's struct pwm_st=
-ate
-that was passed to pwm_apply_state is not.
-
-Consider a consumer who does:
-
-	#define PERIOD 5000000
-	#define DUTY_LITTLE 10
-	...
-	struct pwm_state state =3D {
-		.period =3D PERIOD,
-		.duty_cycle =3D DUTY_LITTLE,
-		.polarity =3D PWM_POLARITY_NORMAL,
-		.enabled =3D true,
-	};
-
-	pwm_apply_state(mypwm, &state);
-	...
-	state.duty_cycle =3D PERIOD / 2;
-	pwm_apply_state(mypwm, &state);
-
-I think the second request should have state.period =3D 5000000 and not
-some other value (that might only have chosen by the respective driver
-because the first duty cycle was so short).
-
-Best regards
-Uwe
-
--- =
-
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Patrick
