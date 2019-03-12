@@ -1,49 +1,106 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv4 23/28] dt-bindings: pci: Add NXP Layerscape SoCs PCIe
- Gen4  controller
-Date: Tue, 12 Mar 2019 03:17:03 +0000
-Message-ID: <AM6PR04MB5781CBCE876031C73D0A4E3B84490@AM6PR04MB5781.eurprd04.prod.outlook.com>
-References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
- <20190311093130.7209-24-Zhiqiang.Hou@nxp.com> <20190311221142.GA11898@bogus>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH 1/5] dt-bindings: connector: add optional properties for
+ Type-B
+Date: Tue, 12 Mar 2019 11:18:08 +0800
+Message-ID: <1552360688.10179.55.camel@mhfsdcap03>
+References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
+ <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
+ <1552282383.10179.21.camel@mhfsdcap03>
+ <c8084259-74d3-c85f-1275-854826c935a0@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190311221142.GA11898@bogus>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <c8084259-74d3-c85f-1275-854826c935a0@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Badhri Jagan Sridharan <badhri@google.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Min Guo <min.guo@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, linux-arm-kernel@lists.infradead.org, Li Jun <jun.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJy
-aW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE5xOoz1MIxMsjVIDY6MTIN
-Cj4gVG86IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4g
-ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
-DQo+IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5k
-QGFybS5jb207DQo+IGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28uaW47IHNoYXduZ3VvQGtlcm5l
-bC5vcmc7IExlbyBMaQ0KPiA8bGVveWFuZy5saUBueHAuY29tPjsgbG9yZW56by5waWVyYWxpc2lA
-YXJtLmNvbTsNCj4gY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwuZGVhY29uQGFybS5jb207
-IE1pbmdrYWkgSHUNCj4gPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0uaC4gTGlhbiA8bWluZ2h1YW4u
-bGlhbkBueHAuY29tPjsgWGlhb3dlaSBCYW8NCj4gPHhpYW93ZWkuYmFvQG54cC5jb20+OyBaLnEu
-IEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NCAyMy8y
-OF0gZHQtYmluZGluZ3M6IHBjaTogQWRkIE5YUCBMYXllcnNjYXBlIFNvQ3MgUENJZQ0KPiBHZW40
-IGNvbnRyb2xsZXINCj4gDQo+IE9uIE1vbiwgMTEgTWFyIDIwMTkgMDk6MzM6MDUgKzAwMDAsICJa
-LnEuIEhvdSIgd3JvdGU6DQo+ID4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhw
-LmNvbT4NCj4gPg0KPiA+IEFkZCBQQ0llIEdlbjQgY29udHJvbGxlciBEVCBiaW5kaW5ncyBvZiBO
-WFAgTGF5ZXJzY2FwZSBTb0NzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogSG91IFpoaXFpYW5n
-IDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBWNDoNCj4gPiAgLSBubyBjaGFu
-Z2UNCj4gPg0KPiA+ICAuLi4vYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLWdlbjQudHh0ICAg
-ICAgfCA1Mg0KPiArKysrKysrKysrKysrKysrKysrDQo+ID4gIE1BSU5UQUlORVJTICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICA4ICsrKw0KPiA+ICAyIGZpbGVzIGNoYW5nZWQs
-IDYwIGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaS1nZW40LnR4dA0KPiA+
-DQo+IA0KPiBQbGVhc2UgYWRkIEFja2VkLWJ5L1Jldmlld2VkLWJ5IHRhZ3Mgd2hlbiBwb3N0aW5n
-IG5ldyB2ZXJzaW9ucy4gSG93ZXZlciwNCj4gdGhlcmUncyBubyBuZWVkIHRvIHJlcG9zdCBwYXRj
-aGVzICpvbmx5KiB0byBhZGQgdGhlIHRhZ3MuIFRoZSB1cHN0cmVhbQ0KPiBtYWludGFpbmVyIHdp
-bGwgZG8gdGhhdCBmb3IgYWNrcyByZWNlaXZlZCBvbiB0aGUgdmVyc2lvbiB0aGV5IGFwcGx5Lg0K
-PiANCj4gSWYgYSB0YWcgd2FzIG5vdCBhZGRlZCBvbiBwdXJwb3NlLCBwbGVhc2Ugc3RhdGUgd2h5
-IGFuZCB3aGF0IGNoYW5nZWQuDQoNClNvcnJ5LCBJIG1pc3NlZCB5b3VyIFJldmlld2VkLWJ5IHRh
-ZyBpbiB0aGlzIHBhdGNoLCB3aWxsIHJlLXNlbmQgdGhpcyBwYXRjaCBhZGRpbmcgdGhlIGxvc3Qg
-dGFnLg0KDQpUaGFua3MsDQpaaGlxaWFuZw0K
+Hi,
+On Mon, 2019-03-11 at 09:06 +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 11-03-19 06:33, Chunfeng Yun wrote:
+> > Hi,
+> > 
+> > On Fri, 2019-03-08 at 13:07 +0100, Hans de Goede wrote:
+> >> Hi,
+> >>
+> >> On 08-03-19 07:13, Chunfeng Yun wrote:
+> >>> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+> >>> usb-b-connector
+> >>>
+> >>> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> >>> ---
+> >>>    .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
+> >>>    1 file changed, 10 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> >>> index a9a2f2fc44f2..7a07b0f4f973 100644
+> >>> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+> >>> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> >>> @@ -17,6 +17,16 @@ Optional properties:
+> >>>    - self-powered: Set this property if the usb device that has its own power
+> >>>      source.
+> >>>    
+> >>> +Optional properties for usb-b-connector:
+> >>> +- id-gpios: gpio for USB ID pin.
+> >>
+> >> What about boards where the ID pin is *not* connected to a GPIO,
+> >> but e.g. to a special pin on the PMIC which can also detect
+> >> an ACA adapter ? Currently this case is handled by extcon
+> >> drivers, but we have no way to set e.g. vbus-supply for the
+> >> connector. Maybe in this case the usb-connector node should
+> >> be a child of the PMIC node ?
+> > Yes, it would be, PMIC is in charger of detecting the status of ID pin
+> 
+> Ok, then I think this should be documented too.
+> 
+> >> And in many cases there also is a mux to switch the datalines
+> >> between the host and device(gadget) controllers, how should
+> >> that be described in this model?  See the new usb-role-switch
+> >> code under drivers/usb/roles
+> >>
+> >> In some cases the mux is controlled through a gpio, so we
+> >> may want to add a "mux-gpios" here in which case we also
+> >> need to define what 0/1 means.
+> > I'm not sure, the mux seems not belong to this connector,
+> > and may need another driver to register usb-role-switch,
+> > similar to:
+> > 
+> > [v2,2/2] usb: typec: add typec switch via GPIO control
+> > https://patchwork.kernel.org/patch/10834327/
+> 
+> Right the mux/role-switch will need a driver, but the "owner"
+> of the usb_connector, e.g. the PMIC or the owner of the
+> id GPIO pin needs to know which device is the role-switch so
+> that it can set the role correctly based on the id-pin.
+> 
+> Your binding already contains Vbus info, allowing the owner
+> of the usb_connector to enable/disable Vbus based on the id-pin,
+> but the owner will also be responsible for setting the role-switch.
+In this patch series, I make usb_connector driver enable/disable Vbus,
+but not the parent(USB controller) of usb_connector which registers a
+usb-role-switch, which way do you think it is better? 
+
+Thanks
+> 
+> Note we cannot simply assume there will be only one role-switch,
+> we really need some link from the usb_connector to the role-switch
+> (or if it is a GPIO driven role-switch simply a role-switch-gpios
+> member in the usb_connector).
+> 
+> Regards,
+> 
+> Hans
+> 
