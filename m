@@ -1,53 +1,66 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.20 094/171] MIPS: DTS: jz4740: Correct interrupt number of DMA core
-Date: Tue, 12 Mar 2019 10:07:54 -0700
-Message-ID: <20190312170356.078923649@linuxfoundation.org>
+Subject: [PATCH 4.20 156/171] arm64: dts: hikey: Revert "Enable HS200 mode on
+ eMMC"
+Date: Tue, 12 Mar 2019 10:08:56 -0700
+Message-ID: <20190312170400.911136900@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
-Sender: stable-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Paul Burton <paul.burton@mips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ryan Grachek <ryan@edited.us>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alistair Strachan <astrachan@google.com>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, stable@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 4.20-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit 70999ec1c9d3f783a7232973cfc26971e5732758 ]
+From: Alistair Strachan <astrachan@google.com>
 
-The interrupt number set in the devicetree node of the DMA driver was
-wrong.
+commit 8d26c1390aec795d492b8de5e4437751e8805a1d upstream.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
+This reverts commit abd7d0972a192ee653efc7b151a6af69db58f2bb. This
+change was already partially reverted by John Stultz in
+commit 9c6d26df1fae ("arm64: dts: hikey: Fix eMMC corruption regression").
+
+This change appears to cause controller resets and block read failures
+which prevents successful booting on some hikey boards.
+
+Cc: Ryan Grachek <ryan@edited.us>
+Cc: Wei Xu <xuwei5@hisilicon.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
 Cc: devicetree@vger.kernel.org
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Cc: stable <stable@vger.kernel.org> #4.17+
+Signed-off-by: Alistair Strachan <astrachan@google.com>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index 6fb16fd24035..2beb78a62b7d 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -161,7 +161,7 @@
- 		#dma-cells = <2>;
+---
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts |    1 -
+ 1 file changed, 1 deletion(-)
+
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -301,7 +301,6 @@
  
- 		interrupt-parent = <&intc>;
--		interrupts = <29>;
-+		interrupts = <20>;
- 
- 		clocks = <&cgu JZ4740_CLK_DMA>;
- 
--- 
-2.19.1
+ 		dwmmc_0: dwmmc0@f723d000 {
+ 			cap-mmc-highspeed;
+-			mmc-hs200-1_8v;
+ 			non-removable;
+ 			bus-width = <0x8>;
+ 			vmmc-supply = <&ldo19>;
