@@ -1,56 +1,106 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 2/2] pwm: Kconfig: Enable ehrpwm driver to be compiled
- for ARCH_K3
-Date: Tue, 12 Mar 2019 10:30:12 +0100
-Message-ID: <20190312093012.g4rnis37nltzbygz@pengutronix.de>
-References: <20190312091629.31701-1-vigneshr@ti.com>
- <20190312091629.31701-3-vigneshr@ti.com>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCHv4 26/28] PCI: mobiveil: ls_pcie_g4: add Workaround for
+ A-011451
+Date: Tue, 12 Mar 2019 09:34:17 +0000
+Message-ID: <AM6PR04MB578187096D0CFD2B8D9C13FF84490@AM6PR04MB5781.eurprd04.prod.outlook.com>
+References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
+ <20190311093130.7209-27-Zhiqiang.Hou@nxp.com>
+ <20190311173439.GH214730@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190312091629.31701-3-vigneshr@ti.com>
+In-Reply-To: <20190311173439.GH214730@google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 02:46:29PM +0530, Vignesh Raghavendra wrote:
-> K3 devices have the same EHRPWM IP as OMAP SoCs. Enable driver to be built
-> for K3 devices. Also, drop reference to AM33xx in help text, as IP is
-> found on multiple TI SoCs.
-> 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
->  drivers/pwm/Kconfig | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 54f8238aac0d..c054bd1dba36 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -467,10 +467,9 @@ config  PWM_TIECAP
->  
->  config  PWM_TIEHRPWM
->  	tristate "EHRPWM PWM support"
-> -	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX
-> +	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_K3
->  	help
-> -	  PWM driver support for the EHRPWM controller found on AM33XX
-> -	  TI SOC
-> +	  PWM driver support for the EHRPWM controller found on TI SOCs
-
-It would be great to be able to compile this driver with COMPILE_TEST.
->From a quick look the following would be appropriate:
-
-	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_K3 || COMPILE_TEST
-	depends on HAVE_CLK && HAS_IOMEM
- 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+SGkgQmpvcm4sDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIFttYWlsdG86aGVsZ2Fh
+c0BrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE5xOoz1MIxMsjVIDE6MzUNCj4gVG86IFoucS4gSG91
+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IHJvYmgrZHRAa2Vy
+bmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28u
+aW47DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsN
+Cj4gbG9yZW56by5waWVyYWxpc2lAYXJtLmNvbTsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207DQo+
+IHdpbGwuZGVhY29uQGFybS5jb207IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0u
+aC4gTGlhbg0KPiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgWGlhb3dlaSBCYW8gPHhpYW93ZWku
+YmFvQG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NCAyNi8yOF0gUENJOiBtb2JpdmVp
+bDogbHNfcGNpZV9nNDogYWRkIFdvcmthcm91bmQgZm9yDQo+IEEtMDExNDUxDQo+IA0KPiBPbiBN
+b24sIE1hciAxMSwgMjAxOSBhdCAwOTozMzozMkFNICswMDAwLCBaLnEuIEhvdSB3cm90ZToNCj4g
+PiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+DQo+ID4gV2hl
+biBMWDIgUENJZSBjb250cm9sbGVyIGlzIHNlbmRpbmcgbXVsdGlwbGUgc3BsaXQgY29tcGxldGlv
+bnMgYW5kIEFDSw0KPiA+IGxhdGVuY3kgZXhwaXJlcyBpbmRpY2F0aW5nIHRoYXQgQUNLIHNob3Vs
+ZCBiZSBzZW5kIGF0IHByaW9yaXR5Lg0KPiA+IEJ1dCBiZWNhdXNlIG9mIGxhcmdlIG51bWJlciBv
+ZiBzcGxpdCBjb21wbGV0aW9ucyBhbmQgRkMgdXBkYXRlIERMTFAsDQo+ID4gdGhlIGNvbnRyb2xs
+ZXIgZG9lcyBub3QgZ2l2ZSBwcmlvcml0eSB0byBBQ0sgdHJhbnNtaXNzaW9uLiBUaGlzDQo+ID4g
+cmVzdWx0cyBpbnRvIEFDSyBsYXRlbmN5IHRpbWVyIHRpbWVvdXQgZXJyb3IgYXQgdGhlIGxpbmsg
+cGFydG5lciBhbmQNCj4gPiB0aGUgcGVuZGluZyBUTFBzIGFyZSByZXBsYXllZCBieSB0aGUgbGlu
+ayBwYXJ0bmVyIGFnYWluLg0KPiA+DQo+ID4gV29ya2Fyb3VuZDoNCj4gPiAxLiBSZWR1Y2UgdGhl
+IEFDSyBsYXRlbmN5IHRpbWVvdXQgdmFsdWUgdG8gYSB2ZXJ5IHNtYWxsIHZhbHVlLg0KPiA+IDIu
+IFJlc3RyaWN0IHRoZSBudW1iZXIgb2YgY29tcGxldGlvbnMgZnJvbSB0aGUgTFgyIFBDSWUgY29u
+dHJvbGxlcg0KPiA+ICAgIHRvIDEsIGJ5IGNoYW5naW5nIHRoZSBNYXggUmVhZCBSZXF1ZXN0IFNp
+emUgKE1SUlMpIG9mIGxpbmsgcGFydG5lcg0KPiA+ICAgIHRvIHRoZSBzYW1lIHZhbHVlIGFzIE1h
+eCBQYWNrZXQgc2l6ZSAoTVBTKS4NCj4gPg0KPiA+IFRoaXMgcGF0Y2ggaW1wbGVtZW50ZWQgcGFy
+dCAxLCB0aGUgcGFydCAyIGNhbiBiZSBzZXQgYnkga2VybmVsDQo+ID4gcGFyYW1ldGVyICdwY2k9
+cGNpZV9idXNfcGVyZicNCj4gDQo+IElmIEkgdW5kZXJzdGFuZCBjb3JyZWN0bHksIHlvdSdyZSBz
+YXlpbmcgdGhhdCBMWDIxNjBBIFJldjEuMCB3aWxsIG9ubHkgd29yaw0KPiBjb3JyZWN0bHkgaWYg
+eW91IGhhdmUgdGhpcyBwYXRjaCBhcHBsaWVkIEFORCB5b3UgYm9vdCB3aXRoDQo+ICJwY2k9cGNp
+ZV9idXNfcGVyZiIuDQo+IA0KDQpZb3VyIHVuZGVyc3RhbmRpbmcgaXMgY29ycmVjdC4NCg0KPiBU
+aGF0IG1pZ2h0IGJlIE9LIGlmIHRoZXNlIHJldiAxLjAgcGFydHMgYXJlIG9ubHkgdXNlZCBpbiB0
+aGUgbGFiIGFuZCBhcmUgbmV2ZXINCj4gc2hpcHBlZCB0byBjdXN0b21lcnMuICBCdXQgaWYgdGhl
+c2UgcGFydHMgYXJlIGV2ZXIgc2hpcHBlZCB0byBjdXN0b21lcnMsIEkNCj4gZG9uJ3QgdGhpbmsg
+aXQncyBhY2NlcHRhYmxlIGZvciB0aGVtIHRvIGhhdmUgdG8gZmlndXJlIG91dCB0aGF0IHRoZXkg
+bXVzdCBib290DQo+IHdpdGggInBjaT1wY2llX2J1c19wZXJmIi4gIFllcywgeW91IGNhbiBkb2N1
+bWVudCB0aGF0IGluIHJlbGVhc2Ugbm90ZXMsIGJ1dA0KPiBpdCdzIHN0aWxsIGEgcG9vciB1c2Vy
+IGV4cGVyaWVuY2UsIGFuZCB1c2VycyB3aWxsIGZvcmdldCwgYW5kIHRoZXkgd2lsbCBzZWUNCj4g
+bXlzdGVyaW91cyBoYXJkLXRvLWRlYnVnIGlzc3Vlcy4NCj4gDQo+IE1heWJlIHRoZXJlJ3MgYSB3
+YXkgZm9yIHlvdSB0byBhdXRvbWF0aWNhbGx5IHNldCB0aGF0IHBjaWVfYnVzX3BlcmYgbW9kZT8N
+Cj4gV2l0aCBhIGRtZXNnIG5vdGUgdG8gaW5kaWNhdGUgdGhhdCB5b3UncmUgb3ZlcnJpZGluZyBh
+bnkgbW9kZSB0aGUgdXNlciBtYXkNCj4gaGF2ZSBzZWxlY3RlZD8NCj4gDQoNCkFjdHVhbGx5IHdl
+IGRvbid0IGhhdmUgYSB3YXkgdG8gc2V0IHRoZSBwY2llX2J1c19wZXJmIGF1dG9tYXRpY2FsbHkg
+dW5kZXIgTGludXgsIHdlIGdpdmUgdGhpcyBwYXJhbWV0ZXIgaW4ga2VybmVsIGNtZGxpbmUuDQpE
+byB5b3UgaGF2ZSBhbnkgYWR2aWNlIGFib3V0IGhvdyB0byBzZXQgdGhpcyBwYXJhbWV0ZXIgYXV0
+b21hdGljYWxseSB1bmRlciBMaW51eD8NCg0KPiA+IFRoaXMgRVJSQVRBIGlzIG9ubHkgZm9yIExY
+MjE2MEEgUmV2MS4wLCBhbmQgaXQgd2lsbCBiZSBmaXhlZCBpbg0KPiA+IFJldjIuMC4NCj4gPg0K
+PiA+IFNpZ25lZC1vZmYtYnk6IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+
+ID4gLS0tDQo+ID4gVjQ6DQo+ID4gIC0gbm8gY2hhbmdlDQo+ID4NCj4gPiAgLi4uL3BjaS9jb250
+cm9sbGVyL21vYml2ZWlsL3BjaS1sYXllcnNjYXBlLWdlbjQuYyB8IDE1ICsrKysrKysrKysrKysr
+Kw0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwuaCAg
+IHwgIDQgKysrKw0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKykNCj4gPg0K
+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaS1sYXll
+cnNjYXBlLWdlbjQuYw0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2kt
+bGF5ZXJzY2FwZS1nZW40LmMNCj4gPiBpbmRleCBkMmM1ZGJiZDVlM2MuLjIwY2UxNDY3ODhjYSAx
+MDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaS1sYXll
+cnNjYXBlLWdlbjQuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwv
+cGNpLWxheWVyc2NhcGUtZ2VuNC5jDQo+ID4gQEAgLTgyLDEyICs4MiwyNyBAQCBzdGF0aWMgYm9v
+bCBsc19wY2llX2c0X2lzX2JyaWRnZShzdHJ1Y3QgbHNfcGNpZV9nNA0KPiAqcGNpZSkNCj4gPiAg
+CXJldHVybiBoZWFkZXJfdHlwZSA9PSBQQ0lfSEVBREVSX1RZUEVfQlJJREdFOyAgfQ0KPiA+DQo+
+ID4gK3N0YXRpYyB2b2lkIHdvcmthcm91bmRfQTAxMTQ1MShzdHJ1Y3QgbHNfcGNpZV9nNCAqcGNp
+ZSkgew0KPiA+ICsJc3RydWN0IG1vYml2ZWlsX3BjaWUgKm12X3BjaSA9IHBjaWUtPnBjaTsNCj4g
+PiArCXUzMiB2YWw7DQo+ID4gKw0KPiA+ICsJLyogU2V0IEFDSyBsYXRlbmN5IHRpbWVvdXQgKi8N
+Cj4gPiArCXZhbCA9IGNzcl9yZWFkbChtdl9wY2ksIEdQRVhfQUNLX1JFUExBWV9UTyk7DQo+ID4g
+Kwl2YWwgJj0gfihBQ0tfTEFUX1RPX1ZBTF9NQVNLIDw8IEFDS19MQVRfVE9fVkFMX1NISUZUKTsN
+Cj4gPiArCXZhbCB8PSAoNCA8PCBBQ0tfTEFUX1RPX1ZBTF9TSElGVCk7DQo+ID4gKwljc3Jfd3Jp
+dGVsKG12X3BjaSwgdmFsLCBHUEVYX0FDS19SRVBMQVlfVE8pOyB9DQo+ID4gKw0KPiA+ICBzdGF0
+aWMgaW50IGxzX3BjaWVfZzRfaG9zdF9pbml0KHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2kpICB7
+DQo+ID4gIAlzdHJ1Y3QgbHNfcGNpZV9nNCAqcGNpZSA9IHRvX2xzX3BjaWVfZzQocGNpKTsNCj4g
+Pg0KPiA+ICAJcGNpZS0+cmV2ID0gY3NyX3JlYWRiKHBjaSwgUENJX1JFVklTSU9OX0lEKTsNCj4g
+Pg0KPiA+ICsJaWYgKHBjaWUtPnJldiA9PSBSRVZfMV8wKQ0KPiA+ICsJCXdvcmthcm91bmRfQTAx
+MTQ1MShwY2llKTsNCj4gPiArDQo+ID4gIAlyZXR1cm4gMDsNCj4gPiAgfQ0KPiA+DQo+ID4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5o
+DQo+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwuaA0K
+PiA+IGluZGV4IGFiNDNkZTVlNGIyYi4uZjBlMmU0YWUwOWI1IDEwMDY0NA0KPiA+IC0tLSBhL2Ry
+aXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5oDQo+ID4gKysrIGIv
+ZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmgNCj4gPiBAQCAt
+ODUsNiArODUsMTAgQEANCj4gPiAgI2RlZmluZSBQQUJfQVhJX0FNQVBfUEVYX1dJTl9IKHdpbikJ
+UEFCX1JFR19BRERSKDB4MGJhYywNCj4gd2luKQ0KPiA+ICAjZGVmaW5lIFBBQl9JTlRQX0FYSV9Q
+SU9fQ0xBU1MJCTB4NDc0DQo+ID4NCj4gPiArI2RlZmluZSBHUEVYX0FDS19SRVBMQVlfVE8JCTB4
+NDM4DQo+ID4gKyNkZWZpbmUgIEFDS19MQVRfVE9fVkFMX01BU0sJCTB4MWZmZg0KPiA+ICsjZGVm
+aW5lICBBQ0tfTEFUX1RPX1ZBTF9TSElGVAkJMA0KPiA+ICsNCj4gPiAgI2RlZmluZSBQQUJfUEVY
+X0FNQVBfQ1RSTCh3aW4pCQlQQUJfUkVHX0FERFIoMHg0YmEwLA0KPiB3aW4pDQo+ID4gICNkZWZp
+bmUgIEFNQVBfQ1RSTF9FTl9TSElGVAkJMA0KPiA+ICAjZGVmaW5lICBBTUFQX0NUUkxfVFlQRV9T
+SElGVAkJMQ0KPiA+IC0tDQo+ID4gMi4xNy4xDQo+ID4NCg0KVGhhbmtzLA0KWmhpcWlhbmcNCg==
