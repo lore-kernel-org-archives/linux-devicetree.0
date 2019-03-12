@@ -1,13 +1,13 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 10/14] dt-bindings: arm: sunxi: add compatible
- string for V3/S3/S3L SoCs
-Date: Tue, 12 Mar 2019 23:22:52 +0800
-Message-ID: <20190312152256.35574-11-icenowy@aosc.io>
+Subject: [PATCH 11/14] ARM: sunxi: dts: s3/s3l/v3: add DTSI
+ files for S3/S3L/V3 SoCs
+Date: Tue, 12 Mar 2019 23:22:53 +0800
+Message-ID: <20190312152256.35574-12-icenowy@aosc.io>
 References: <20190312152256.35574-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBH47T7SAKGQE53IJBOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBJM7T7SAKGQEBFD4YSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190312152256.35574-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,34 +20,66 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner V3/V3s/S3L and SoChip S3 SoCs share the same die, but with
-different package (V3 is BGA, without co-packaged DRAM, V3s is QFP,
-with co-packaged DDR2, S3 is BGA, with co-packaged DDR3, S3L is BGA
-pin-compatible with S3, but with co-packaged DDR2).
+The Allwinner S3/S3L/V3 SoCs all share the same die with the V3s SoC,
+but with more GPIO wired out of the package.
 
-Add compatible strings for Allwinner V3/S3L and SoChip S3 SoCs.
+Add DTSI files for these SoCs. The DTSI file for V3 just replaces the
+pinctrl compatible string, and the S3/S3L DTSI files just include the V3
+DTSI file.
 
 Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/sunxi.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/sun8i-s3.dtsi  |  6 ++++++
+ arch/arm/boot/dts/sun8i-s3l.dtsi |  6 ++++++
+ arch/arm/boot/dts/sun8i-v3.dtsi  | 14 ++++++++++++++
+ 3 files changed, 26 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun8i-s3.dtsi
+ create mode 100644 arch/arm/boot/dts/sun8i-s3l.dtsi
+ create mode 100644 arch/arm/boot/dts/sun8i-v3.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
-index 9254cbe7d516..6de8edba5d2b 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.txt
-+++ b/Documentation/devicetree/bindings/arm/sunxi.txt
-@@ -15,9 +15,12 @@ using one of the following compatible strings:
-   allwinner,sun8i-h2-plus
-   allwinner,sun8i-h3
-   allwinner,sun8i-r40
-+  allwinner,sun8i-s3l
-   allwinner,sun8i-t3
-+  allwinner,sun8i-v3
-   allwinner,sun8i-v3s
-   allwinner,sun9i-a80
-   allwinner,sun50i-a64
-   allwinner,suniv-f1c100s
-   nextthing,gr8
-+  sochip,s3
+diff --git a/arch/arm/boot/dts/sun8i-s3.dtsi b/arch/arm/boot/dts/sun8i-s3.dtsi
+new file mode 100644
+index 000000000000..0f41a25ecb30
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-s3.dtsi
+@@ -0,0 +1,6 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (C) 2019 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
++ */
++
++#include "sun8i-v3.dtsi"
+diff --git a/arch/arm/boot/dts/sun8i-s3l.dtsi b/arch/arm/boot/dts/sun8i-s3l.dtsi
+new file mode 100644
+index 000000000000..0f41a25ecb30
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-s3l.dtsi
+@@ -0,0 +1,6 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (C) 2019 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
++ */
++
++#include "sun8i-v3.dtsi"
+diff --git a/arch/arm/boot/dts/sun8i-v3.dtsi b/arch/arm/boot/dts/sun8i-v3.dtsi
+new file mode 100644
+index 000000000000..6ae8645ade50
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-v3.dtsi
+@@ -0,0 +1,14 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (C) 2019 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
++ */
++
++#include "sun8i-v3s.dtsi"
++
++&ccu {
++	compatible = "allwinner,sun8i-v3-ccu";
++};
++
++&pio {
++	compatible = "allwinner,sun8i-v3-pinctrl";
++};
 -- 
 2.18.1
