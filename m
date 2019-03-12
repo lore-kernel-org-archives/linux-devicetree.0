@@ -1,92 +1,158 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2 1/5] Documentation: dt: edac: Fix Stratix10 IRQ bindings
-Date: Tue, 12 Mar 2019 11:00:57 -0500
-Message-ID: <20190312160057.GA31306@bogus>
+Subject: Re: [PATCHv2 2/5] Documentation: dt: edac: Add Stratix10 Peripheral
+ bindings
+Date: Tue, 12 Mar 2019 11:04:45 -0500
+Message-ID: <20190312160445.GA8802@bogus>
 References: <1551288445-22335-1-git-send-email-thor.thayer@linux.intel.com>
- <1551288445-22335-2-git-send-email-thor.thayer@linux.intel.com>
+ <1551288445-22335-3-git-send-email-thor.thayer@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1551288445-22335-2-git-send-email-thor.thayer@linux.intel.com>
+In-Reply-To: <1551288445-22335-3-git-send-email-thor.thayer@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: thor.thayer@linux.intel.com
 Cc: bp@alien8.de, dinguyen@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 11:27:21AM -0600, thor.thayer@linux.intel.com wrote:
+On Wed, Feb 27, 2019 at 11:27:22AM -0600, thor.thayer@linux.intel.com wrote:
 > From: Thor Thayer <thor.thayer@linux.intel.com>
 > 
-> Fix Stratix10 ECC bindings to specify only the single
-> bit error. On Stratix10 double bit errors are handled
-> as SErrors instead of interrupts.
-> Indicate the differences between the ARM64 and ARM32
-> EDAC architecture in the bindings.
+> Add peripheral bindings for Stratix10 EDAC to capture
+> the differences between the ARM64 and ARM32 architecture.
+
+What's the difference? Sounds like 2 different chips, so Stratix10 or 
+s10 is not specific enough perhaps.
+
 > 
 > Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 > ---
 > v2 No change
 > ---
->  .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 23 +++++++++++++++-------
->  1 file changed, 16 insertions(+), 7 deletions(-)
+>  .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 106 +++++++++++++++++++++
+>  1 file changed, 106 insertions(+)
 > 
 > diff --git a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-> index 5626560a6cfd..a0ac50e15912 100644
+> index a0ac50e15912..a0fa80c53d2a 100644
 > --- a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
 > +++ b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-> @@ -236,33 +236,42 @@ Stratix10 SoCFPGA ECC Manager
->  The Stratix10 SoC ECC Manager handles the IRQs for each peripheral
->  in a shared register similar to the Arria10. However, ECC requires
->  access to registers that can only be read from Secure Monitor with
-> -SMC calls. Therefore the device tree is slightly different.
-> +SMC calls. Therefore the device tree is slightly different. Note that
-> +only 1 interrupt is sent because the double bit errors are treated as
-> +SErrors instead of IRQ.
->  
->  Required Properties:
->  - compatible : Should be "altr,socfpga-s10-ecc-manager"
-> -- interrupts : Should be single bit error interrupt, then double bit error
-> -	interrupt.
-> +- altr,sysgr-syscon : phandle to Stratix10 System Manager Block
-> +	              containing the ECC manager registers.
-
-Seems this was already in use, but why not just make this node a child 
-of the System Manager Block and remove this phandle?
-
-> +- interrupts : Should be single bit error interrupt.
->  - interrupt-controller : boolean indicator that ECC Manager is an interrupt controller
->  - #interrupt-cells : must be set to 2.
-> +- #address-cells: must be 1
-> +- #size-cells: must be 1
-> +- ranges : standard definition, should translate from local addresses
->  
->  Subcomponents:
->  
->  SDRAM ECC
->  Required Properties:
+> @@ -258,6 +258,49 @@ Required Properties:
 >  - compatible : Should be "altr,sdram-edac-s10"
-> -- interrupts : Should be single bit error interrupt, then double bit error
-> -	interrupt, in this order.
-> +- interrupts : Should be single bit error interrupt.
+>  - interrupts : Should be single bit error interrupt.
 >  
+> +On-Chip RAM ECC
+> +Required Properties:
+> +- compatible      : Should be "altr,socfpga-s10-ocram-ecc"
+> +- reg             : Address and size for ECC block registers.
+> +- altr,ecc-parent : phandle to parent OCRAM node.
+> +- interrupts      : Should be single bit error interrupt.
+> +
+> +Ethernet FIFO ECC
+> +Required Properties:
+> +- compatible      : Should be "altr,socfpga-s10-eth-mac-ecc"
+> +- reg             : Address and size for ECC block registers.
+> +- altr,ecc-parent : phandle to parent Ethernet node.
+> +- interrupts      : Should be single bit error interrupt.
+> +
+> +NAND FIFO ECC
+> +Required Properties:
+> +- compatible      : Should be "altr,socfpga-s10-nand-ecc"
+> +- reg             : Address and size for ECC block registers.
+> +- altr,ecc-parent : phandle to parent NAND node.
+> +- interrupts      : Should be single bit error interrupt.
+> +
+> +DMA FIFO ECC
+> +Required Properties:
+> +- compatible      : Should be "altr,socfpga-s10-dma-ecc"
+> +- reg             : Address and size for ECC block registers.
+> +- altr,ecc-parent : phandle to parent DMA node.
+> +- interrupts      : Should be single bit error interrupt.
+> +
+> +USB FIFO ECC
+> +Required Properties:
+> +- compatible      : Should be "altr,socfpga-s10-usb-ecc"
+> +- reg             : Address and size for ECC block registers.
+> +- altr,ecc-parent : phandle to parent USB node.
+> +- interrupts      : Should be single bit error interrupt.
+> +
+> +SDMMC FIFO ECC
+> +Required Properties:
+> +- compatible      : Should be "altr,socfpga-s10-sdmmc-ecc"
+> +- reg             : Address and size for ECC block registers.
+> +- altr,ecc-parent : phandle to parent SD/MMC node.
+> +- interrupts      : Should be single bit error interrupt for port A
+> +		    and then single bit error interrupt for port B.
+> +
 >  Example:
 >  
 >  	eccmgr {
->  		compatible = "altr,socfpga-s10-ecc-manager";
-> -		interrupts = <0 15 4>, <0 95 4>;
-> +		altr,sysmgr-syscon = <&sysmgr>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		interrupts = <0 15 4>;
->  		interrupt-controller;
->  		#interrupt-cells = <2>;
-> +		ranges;
->  
->  		sdramedac {
+> @@ -274,4 +317,67 @@ Example:
 >  			compatible = "altr,sdram-edac-s10";
-> -			interrupts = <16 4>, <48 4>;
-> +			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
+>  			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
 >  		};
+> +
+> +		ocram-ecc@ff8cc000 {
+> +			compatible = "altr,socfpga-s10-ocram-ecc";
+> +			reg = <ff8cc000 0x100>;
+> +			altr,ecc-parent = <&ocram>;
+> +			interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		emac0-rx-ecc@ff8c0000 {
+> +			compatible = "altr,socfpga-s10-eth-mac-ecc";
+> +			reg = <0xff8c0000 0x100>;
+> +			altr,ecc-parent = <&gmac0>;
+> +			interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		emac0-tx-ecc@ff8c0400 {
+> +			compatible = "altr,socfpga-s10-eth-mac-ecc";
+> +			reg = <0xff8c0400 0x100>;
+> +			altr,ecc-parent = <&gmac0>;
+> +			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>'
+> +		};
+> +
+> +		nand-buf-ecc@ff8c8000 {
+> +			compatible = "altr,socfpga-s10-nand-ecc";
+> +			reg = <0xff8c8000 0x100>;
+> +			altr,ecc-parent = <&nand>;
+> +			interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		nand-rd-ecc@ff8c8400 {
+> +			compatible = "altr,socfpga-s10-nand-ecc";
+> +			reg = <0xff8c8400 0x100>;
+> +			altr,ecc-parent = <&nand>;
+> +			interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		nand-wr-ecc@ff8c8800 {
+> +			compatible = "altr,socfpga-s10-nand-ecc";
+> +			reg = <0xff8c8800 0x100>;
+> +			altr,ecc-parent = <&nand>;
+> +			interrupts = <12 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		dma-ecc@ff8c9000 {
+> +			compatible = "altr,socfpga-s10-dma-ecc";
+> +			reg = <0xff8c9000 0x100>;
+> +			altr,ecc-parent = <&pdma>;
+> +			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +		usb0-ecc@ff8c4000 {
+> +			compatible = "altr,socfpga-s10-usb-ecc";
+> +			reg = <0xff8c4000 0x100>;
+> +			altr,ecc-parent = <&usb0>;
+> +			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		sdmmc-ecc@ff8c8c00 {
+> +			compatible = "altr,socfpga-s10-sdmmc-ecc";
+> +			reg = <0xff8c8c00 0x100>;
+> +			altr,ecc-parent = <&mmc>;
+> +			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <15 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
 >  	};
 > -- 
 > 2.7.4
