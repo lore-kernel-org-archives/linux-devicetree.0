@@ -1,137 +1,95 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v5 3/3] arm64: dts: Add USB DT nodes for Stingray SoC
-Date: Tue, 12 Mar 2019 21:36:21 +0530
-Message-ID: <1552406781-5180-4-git-send-email-srinath.mannam@broadcom.com>
-References: <1552406781-5180-1-git-send-email-srinath.mannam@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552406781-5180-1-git-send-email-srinath.mannam@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Tejun Heo <tj@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Srinath Mannam <srinath.mannam@broadcom.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 5/5] drm/bridge: sii902x: Implement HDMI audio support
+Date: Tue, 12 Mar 2019 11:11:50 -0500
+Message-ID: <20190312161150.GA14848@bogus>
+References: <cover.1551303673.git.jsarha@ti.com>
+ <21632d24b955ef7d9c29e05426224c65507202a9.1551303673.git.jsarha@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <21632d24b955ef7d9c29e05426224c65507202a9.1551303673.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: fabrizio.castro@bp.renesas.com, devicetree@vger.kernel.org, Songjun.Wu@atmel.com, tony@atomide.com, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, voice.shen@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-Add DT nodes for
-  - Two xHCI host controllers
-  - Two BDC Broadcom USB device controller
-  - Five USB PHY controllers
-
-[xHCI0]      [BDC0]            [xHCI1]            [BDC1]
-   |           |                  |                 |
-  ---------------               -----------------------
-   |           |                 |         |         |
-[SS-PHY0]   [HS-PHY0]        [SS-PHY1] [HS-PHY2] [HS-PHY1]
-
-[SS-PHY0/HS-PHY0] and [SS-PHY1/HS-PHY1] are combo PHYs has one SS and
-one HS PHYs. [HS-PHY2] is a single HS PHY.
-
-xHCI use SS-PHY to detect SS devices and HS-PHY to detect HS/FS/LS
-devices. BDC use SS-PHY in SS mode and HS-PHY in HS mode.
-
-xHCI0 port1 is SS-PHY0, port2 is HS-PHY0.
-xHCI1 port1 is SS-PHY1, port2 is HS-PHY2 and port3 is HS-PHY1.
-
-Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
----
- .../boot/dts/broadcom/stingray/stingray-usb.dtsi   | 78 ++++++++++++++++++++++
- .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  1 +
- 2 files changed, 79 insertions(+)
- create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
-
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
-new file mode 100644
-index 0000000..a5d3354
---- /dev/null
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
-@@ -0,0 +1,78 @@
-+// SPDX-License-Identifier: (GPL-2.0 or BSD-3-Clause)
-+/*
-+ *Copyright(c) 2018 Broadcom
-+ */
-+	usb {
-+		compatible = "simple-bus";
-+		dma-ranges;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x0 0x68500000 0x00400000>;
-+
-+		usbphy0: usb-phy@0 {
-+			compatible = "brcm,sr-usb-combo-phy";
-+			reg = <0x00000000 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			#phy-cells = <1>;
-+			status = "disabled";
-+		};
-+
-+		xhci0: usb@1000 {
-+			compatible = "generic-xhci";
-+			reg = <0x00001000 0x1000>;
-+			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&usbphy0 1>, <&usbphy0 0>;
-+			phy-names = "phy0", "phy1";
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		bdc0: usb@2000 {
-+			compatible = "brcm,bdc-v0.16";
-+			reg = <0x00002000 0x1000>;
-+			interrupts = <GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&usbphy0 0>, <&usbphy0 1>;
-+			phy-names = "phy0", "phy1";
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		usbphy1: usb-phy@10000 {
-+			compatible = "brcm,sr-usb-combo-phy";
-+			reg = <0x00010000 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			#phy-cells = <1>;
-+			status = "disabled";
-+		};
-+
-+		usbphy2: usb-phy@20000 {
-+			compatible = "brcm,sr-usb-hs-phy";
-+			reg = <0x00020000 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		xhci1: usb@11000 {
-+			compatible = "generic-xhci";
-+			reg = <0x00011000 0x1000>;
-+			interrupts = <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&usbphy1 1>, <&usbphy2>, <&usbphy1 0>;
-+			phy-names = "phy0", "phy1", "phy2";
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		bdc1: usb@21000 {
-+			compatible = "brcm,bdc-v0.16";
-+			reg = <0x00021000 0x1000>;
-+			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&usbphy2>;
-+			phy-names = "phy0";
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+	};
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-index cfeaa85..21dbb12 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-@@ -287,6 +287,7 @@
- 	#include "stingray-fs4.dtsi"
- 	#include "stingray-sata.dtsi"
- 	#include "stingray-pcie.dtsi"
-+	#include "stingray-usb.dtsi"
- 
- 	hsls {
- 		compatible = "simple-bus";
--- 
-2.7.4
+T24gV2VkLCBGZWIgMjcsIDIwMTkgYXQgMTE6NTQ6MjNQTSArMDIwMCwgSnlyaSBTYXJoYSB3cm90
+ZToKPiBJbXBsZW1lbnQgSERNSSBhdWRpbyBzdXBwb3J0IGJ5IHVzaW5nIEFTb0MgSERNSSBjb2Rl
+Yy4gVGhlIGNvbW1pdAo+IGltcGxlbWVudHMgdGhlIG5lY2Vzc2FyeSBjYWxsYmFja3MgYW5kIGNv
+bmZpZ3VyYXRpb24gZm9yIHRoZSBIRE1JCj4gY29kZWMgYW5kIHJlZ2lzdGVycyBhIHZpcnR1YWwg
+cGxhdGZvcm0gZGV2aWNlIGZvciB0aGUgY29kZWMgdG8gYXR0YWNoLgo+IAo+IFNpZ25lZC1vZmYt
+Ynk6IEp5cmkgU2FyaGEgPGpzYXJoYUB0aS5jb20+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNw
+bGF5L2JyaWRnZS9zaWk5MDJ4LnR4dCAgICAgICB8ICAzNiArLQo+ICBkcml2ZXJzL2dwdS9kcm0v
+YnJpZGdlL3NpaTkwMnguYyAgICAgICAgICAgICAgfCA0NTMgKysrKysrKysrKysrKysrKystCj4g
+IGluY2x1ZGUvZHQtYmluZGluZ3Mvc291bmQvc2lpOTAyeC1hdWRpby5oICAgICB8ICAxMSArCgpQ
+bGVhc2Ugc3BsaXQgYmluZGluZ3MgKGRvYyBhbmQgaGVhZGVyKSB0byBhIHNlcGFyYXRlIHBhdGNo
+LgoKPiAgMyBmaWxlcyBjaGFuZ2VkLCA0OTMgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkK
+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3Mvc291bmQvc2lpOTAyeC1h
+dWRpby5oCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dAo+IGluZGV4IDcyZDJkYzZjM2U2Yi4u
+NjQ3YjJmZDg0ZGI5IDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dAo+IEBAIC01LDkgKzUs
+MzIgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAgCS0gcmVnOiBpMmMgYWRkcmVzcyBvZiB0aGUg
+YnJpZGdlCj4gIAo+ICBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+IC0JLSBpbnRlcnJ1cHRzOiBkZXNj
+cmliZSB0aGUgaW50ZXJydXB0IGxpbmUgdXNlZCB0byBpbmZvcm0gdGhlIGhvc3QgCj4gKwktIGlu
+dGVycnVwdHM6IGRlc2NyaWJlIHRoZSBpbnRlcnJ1cHQgbGluZSB1c2VkIHRvIGluZm9ybSB0aGUg
+aG9zdAoKVW5yZWxhdGVkIGNoYW5nZS4KCj4gIAkgIGFib3V0IGhvdHBsdWcgZXZlbnRzLgo+ICAJ
+LSByZXNldC1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBSU1Rf
+TiBwaW4uCj4gKwktIGkycy1maWZvLXJvdXRpbmc6IEFycmF5IG9mIGV4YWN0bHkgNCBpbnRlZ2Vy
+cyBpbmRpY2F0aW5nIGkycwoKTmVlZHMgYSB2ZW5kb3IgcHJlZml4LgoKPiArCSAgcGlucyBmb3Ig
+YXVkaW8gZmlmbyByb3V0aW5nLiBGaXJzdCBpbnRlZ2VyIGRlZmluZXMgcm91dGluZyB0bwo+ICsJ
+ICBmaWZvIDAgYW5kIHNlY29uZCB0byBmaWZvIDEsIGV0Yy4gSW50ZWdlcnMgY2FuIGJlIGZpbGxl
+ZCB3aXRoCj4gKwkgIGRlZmluaXRpb25zIGZyb206IGluY2x1ZGUvZHQtYmluZGluZ3Mvc291bmQv
+c2lpOTAyeC1hdWRpby5oCj4gKwkgIFRoZSBhdmFpbGFibGUgZGVmaW5pdGlvbnMgYXJlOgo+ICsJ
+ICAtIEVOQUJMRV9CSVQ6CWVuYWJsZSB0aGlzIGF1ZGlvIGZpZm8KPiArCSAgLSBDT05ORUNUX1NE
+Izogcm91dGUgYXVkaW8gaW5wdXQgZnJvbSBTRDAsIFNEMSwgU0QyLCBvciBTRDMgaTJzCj4gKwkJ
+CSBkYXRhIGlucHV0IHBpbgo+ICsJICAtIExFRlRfUklHSFRfU1dBUF9CSVQ6IHN3YXAgaTJzIGlu
+cHV0IGNoYW5uZWxzIGZvciB0aGlzIGZpZm8KPiArCSAgSTJTIEhETUkgYXVkaW8gaXMgY29uZmln
+dXJlZCBvbmx5IGlmIHRoaXMgcHJvcGVydHkgaXMgZm91bmQuCj4gKwktIGNsb2NrczogcGhhbmRs
+ZSBtY2xrCj4gKwktIGNsb2NrLW5hbWVzOiAibWNsayIKPiArCSAgICBEZXNjcmliZXMgU0lJOTAy
+eCBNQ0xLIGlucHV0LiBNQ0xLIGlzIHVzZWQgdG8gcHJvZHVjZQo+ICsJICAgIEhETUkgYXVkaW8g
+Q1RTIHZhbHVlcy4gVGhpcyBwcm9wZXJ0eSBpcyByZXF1aXJlZCBpZgo+ICsJICAgICJpMnMtZmlm
+by1yb3V0aW5nIi1wcm9wZXJ0eSBpcyBwcmVzZW50LiBUaGlzIHByb3BlcnR5IGZvbGxvd3MKPiAr
+CSAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmluZGlu
+Z3MudHh0Cj4gKwkgICAgY29uc3VtZXIgYmluZGluZy4KPiArCS0gI3NvdW5kLWRhaS1jZWxscyA9
+IDwwPjogQVNvQyBjb2RlYyBkYWkgYXZhaWxhYmxlIGZvciBzaW1wbGUtY2FyZAo+ICsJICAgIElm
+IGF1ZGlvIHByb3BlcnRpZXMgYXJlIHByZXNlbnQgc2lpOTAyeCBwcm92aWRlcyBhbiBBU29DCj4g
+KwkgICAgY29kZWMgY29tcG9uZW50IGRyaXZlciB0aGF0IGNhbiBiZSB1c2VkIGJ5IG90aGVyIEFT
+b0MKPiArCSAgICBjb21wb25lbnRzIGxpa2Ugc2ltcGxlLWNhcmQuIFNlZSBiaW5kaW5nIGRvY3Vt
+ZW50IGZvPiArCSAgICBkZXRhaWxzOgo+ICsJICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9zb3VuZC9zaW1wbGUtY2FyZC50eHQKPiAgCj4gIE9wdGlvbmFsIHN1Ym5vZGVzOgo+
+ICAJLSB2aWRlbyBpbnB1dDogdGhpcyBzdWJub2RlIGNhbiBjb250YWluIGEgdmlkZW8gaW5wdXQg
+cG9ydCBub2RlCj4gQEAgLTIxLDYgKzQ0LDE3IEBAIEV4YW1wbGU6Cj4gIAkJY29tcGF0aWJsZSA9
+ICJzaWwsc2lpOTAyMiI7Cj4gIAkJcmVnID0gPDB4Mzk+Owo+ICAJCXJlc2V0LWdwaW9zID0gPCZw
+aW9BIDEgMD47Cj4gKwo+ICsJCSNzb3VuZC1kYWktY2VsbHMgPSA8MD47Cj4gKwkJaTJzLWZpZm8t
+cm91dGluZyA9IDwKPiArCQkJKEVOQUJMRV9CSVR8Q09OTkVDVF9TRDApCj4gKwkJCTAKPiArCQkJ
+MAo+ICsJCQkwCj4gKwkJPjsKPiArCQljbG9ja3MgPSA8Jm1jbGs+Owo+ICsJCWNsb2NrLW5hbWVz
+ID0gIm1jbGsiOwo+ICsKPiAgCQlwb3J0cyB7Cj4gIAkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+
+ICAJCQkjc2l6ZS1jZWxscyA9IDwwPjsKClsuLi5dCgo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2R0
+LWJpbmRpbmdzL3NvdW5kL3NpaTkwMngtYXVkaW8uaCBiL2luY2x1ZGUvZHQtYmluZGluZ3Mvc291
+bmQvc2lpOTAyeC1hdWRpby5oCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAw
+MDAwMDAuLjMyZTUwYTkyNmI2Zgo+IC0tLSAvZGV2L251bGwKPiArKysgYi9pbmNsdWRlL2R0LWJp
+bmRpbmdzL3NvdW5kL3NpaTkwMngtYXVkaW8uaAo+IEBAIC0wLDAgKzEsMTEgQEAKCkxpY2Vuc2U/
+Cgo+ICsjaWZuZGVmIF9fRFRfU0lJOTAyMl9BVURJT19ICj4gKyNkZWZpbmUgX19EVF9TSUk5MDIy
+X0FVRElPX0gKPiArCj4gKyNkZWZpbmUgRU5BQkxFX0JJVAkJCTB4ODAKPiArI2RlZmluZSBDT05O
+RUNUX1NEMAkJCTB4MDAKPiArI2RlZmluZSBDT05ORUNUX1NEMQkJCTB4MTAKPiArI2RlZmluZSBD
+T05ORUNUX1NEMgkJCTB4MjAKPiArI2RlZmluZSBDT05ORUNUX1NEMwkJCTB4MzAKPiArI2RlZmlu
+ZSBMRUZUX1JJR0hUX1NXQVBfQklUCQkweDA0Cj4gKwo+ICsjZW5kaWYgLyogX19EVF9TSUk5MDIy
+X0FVRElPX0ggKi8KPiAtLSAKPiBUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2Fs
+YW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4gWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEt
+NC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kKPiAKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
