@@ -1,121 +1,213 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] arm: dts: rk3288-tinker.dtsi: Fix SD card detection
-Date: Tue, 12 Mar 2019 15:08:15 +0100
-Message-ID: <10436027.DUyLE1RSiR@phil>
-References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
- <20190309153923.22806-1-beagleboard@davidjohnsummers.uk>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v14 08/13] ARM: dts: imx7: Add video mux, csi and
+ mipi_csi and connections
+Date: Tue, 12 Mar 2019 16:10:46 +0200
+Message-ID: <20190312141046.GB4845@pendragon.ideasonboard.com>
+References: <20190206151328.21629-1-rui.silva@linaro.org>
+ <20190206151328.21629-9-rui.silva@linaro.org>
+ <20190310214102.GA7578@pendragon.ideasonboard.com>
+ <m3y35kdw7v.fsf@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190309153923.22806-1-beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <m3y35kdw7v.fsf@linaro.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil@xs4all.nl>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 9. M=E4rz 2019, 16:39:21 CET schrieb David Summers:
-> The Problem:
-> =
+Hi Rui,
 
-> On ASUS Tinker Board S, when booting from the eMMC, and there is card
-> in the sd slot, there are constant errors.
-> =
+On Tue, Mar 12, 2019 at 02:05:24PM +0000, Rui Miguel Silva wrote:
+> On Sun 10 Mar 2019 at 21:41, Laurent Pinchart wrote:
+> > Hi Rui,
+> >
+> > Thank you for the patch.
+> 
+> Where have you been for the latest 14 versions? :)
 
-> Also when warm reboot, uboot can not access the sd slot
-> =
+Elsewhere I suppose :-)
 
-> Cause:
-> =
+> This is already merged, but... follow up patches can address your
+> issues bellow.
 
-> Identified by Robin Murphy @ ARM. The Card Detect on rk3288
-> devices is pulled up by vccio-sd; so when the regulator powers this
-> off, card detect gives spurious errors. A second problem, is during
-> power down, vccio-sd apprears to be powered down. This causes a
-> problem when warm rebooting from the sd card. This was identified by
-> Jonas Karlman.
-> =
+I saw the driver and DT bindings patches merged in the media tree for
+v5.2, where have the DT patches been merged ?
 
-> History:
-> =
+> > On Wed, Feb 06, 2019 at 03:13:23PM +0000, Rui Miguel Silva 
+> > wrote:
+> >> This patch adds the device tree nodes for csi, video 
+> >> multiplexer and mipi-csi besides the graph connecting the necessary
+> >> endpoints to make the media capture entities to work in imx7 Warp
+> >> board.
+> >> 
+> >> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> >> ---
+> >>  arch/arm/boot/dts/imx7s-warp.dts | 51 ++++++++++++++++++++++++++++++++
+> >>  arch/arm/boot/dts/imx7s.dtsi     | 27 +++++++++++++++++
+> >
+> > I would have split this in two patches to make backporting 
+> > easier, but it's not a big deal.
+> >
+> > Please see below for a few additional comments.
+> >
+> >>  2 files changed, 78 insertions(+)
+> >> 
+> >> diff --git a/arch/arm/boot/dts/imx7s-warp.dts 
+> >> b/arch/arm/boot/dts/imx7s-warp.dts
+> >> index 23431faecaf4..358bcae7ebaf 100644
+> >> --- a/arch/arm/boot/dts/imx7s-warp.dts
+> >> +++ b/arch/arm/boot/dts/imx7s-warp.dts
+> >> @@ -277,6 +277,57 @@
+> >>  	status = "okay";
+> >>  };
+> >>  
+> >> +&gpr {
+> >> +	csi_mux {
+> >> +		compatible = "video-mux";
+> >> +		mux-controls = <&mux 0>;
+> >> +		#address-cells = <1>;
+> >> +		#size-cells = <0>;
+> >> +
+> >> +		port@1 {
+> >> +			reg = <1>;
+> >> +
+> >> +			csi_mux_from_mipi_vc0: endpoint {
+> >> +				remote-endpoint = 
+> >> <&mipi_vc0_to_csi_mux>;
+> >> +			};
+> >> +		};
+> >> +
+> >> +		port@2 {
+> >> +			reg = <2>;
+> >> +
+> >> +			csi_mux_to_csi: endpoint {
+> >> +				remote-endpoint = 
+> >> <&csi_from_csi_mux>;
+> >> +			};
+> >> +		};
+> >> +	};
+> >> +};
+> >> +
+> >> +&csi {
+> >> +	status = "okay";
+> >> +
+> >> +	port {
+> >> +		csi_from_csi_mux: endpoint {
+> >> +			remote-endpoint = <&csi_mux_to_csi>;
+> >> +		};
+> >> +	};
+> >> +};
+> >
+> > Shouldn't these two nodes, as well as port@1 of the mipi_csi 
+> > node, be moved to imx7d.dtsi ?
+> 
+> Yeah, I guess you are right here.
+> 
+> >
+> >> +
+> >> +&mipi_csi {
+> >> +	clock-frequency = <166000000>;
+> >> +	status = "okay";
+> >> +	#address-cells = <1>;
+> >> +	#size-cells = <0>;
+> >> +	fsl,csis-hs-settle = <3>;
+> >
+> > Shouldn't this be an endpoint property ? Different sensors connected
+> > through different endpoints could have different timing
+> > requirements.
+> 
+> Hum... I see you point, even tho the phy hs-settle is a common
+> control. 
 
-> A common fault on these rk3288 board, which impliment the reference
-> design.
-> =
+I suppose we don't need to care about DT backward compatibility if we
+make changes in the bindings for v5.2 ? Would you fix this, or do you
+want a patch ?
 
-> When this arose before:
-> =
+> >> +
+> >> +	port@1 {
+> >> +		reg = <1>;
+> >> +
+> >> +		mipi_vc0_to_csi_mux: endpoint {
+> >> +			remote-endpoint = <&csi_mux_from_mipi_vc0>;
+> >> +		};
+> >> +	};
+> >> +};
+> >> +
+> >>  &wdog1 {
+> >>  	pinctrl-names = "default";
+> >>  	pinctrl-0 = <&pinctrl_wdog>;
+> >> diff --git a/arch/arm/boot/dts/imx7s.dtsi 
+> >> b/arch/arm/boot/dts/imx7s.dtsi
+> >> index 792efcd2caa1..01962f85cab6 100644
+> >> --- a/arch/arm/boot/dts/imx7s.dtsi
+> >> +++ b/arch/arm/boot/dts/imx7s.dtsi
+> >> @@ -8,6 +8,7 @@
+> >>  #include <dt-bindings/gpio/gpio.h>
+> >>  #include <dt-bindings/input/input.h>
+> >>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> >> +#include <dt-bindings/reset/imx7-reset.h>
+> >>  #include "imx7d-pinfunc.h"
+> >>  
+> >>  / {
+> >> @@ -709,6 +710,17 @@
+> >>  				status = "disabled";
+> >>  			};
+> >>  
+> >> +			csi: csi@30710000 {
+> >> +				compatible = "fsl,imx7-csi";
+> >> +				reg = <0x30710000 0x10000>;
+> >> +				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> >> +				clocks = <&clks IMX7D_CLK_DUMMY>,
+> >> +						<&clks IMX7D_CSI_MCLK_ROOT_CLK>,
+> >> +						<&clks IMX7D_CLK_DUMMY>;
+> >> +				clock-names = "axi", "mclk", "dcic";
+> >> +				status = "disabled";
+> >> +			};
+> >> +
+> >>  			lcdif: lcdif@30730000 {
+> >>  				compatible = "fsl,imx7d-lcdif", "fsl,imx28-lcdif";
+> >>  				reg = <0x30730000 0x10000>;
+> >> @@ -718,6 +730,21 @@
+> >>  				clock-names = "pix", "axi";
+> >>  				status = "disabled";
+> >>  			};
+> >> +
+> >> +			mipi_csi: mipi-csi@30750000 {
+> >> +				compatible = "fsl,imx7-mipi-csi2";
+> >> +				reg = <0x30750000 0x10000>;
+> >> +				interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+> >> +				clocks = <&clks IMX7D_IPG_ROOT_CLK>,
+> >> +					<&clks IMX7D_MIPI_CSI_ROOT_CLK>,
+> >> +					<&clks IMX7D_MIPI_DPHY_ROOT_CLK>;
+> >> +				clock-names = "pclk", "wrap", "phy";
+> >> +				power-domains = <&pgc_mipi_phy>;
+> >> +				phy-supply = <&reg_1p0d>;
+> >> +				resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
+> >> +				reset-names = "mrst";
+> >> +				status = "disabled";
+> >
+> > How about already declaring port@0 here too (but obviously 
+> > without any endoint) ?
+> 
+> empty port, do not know if they make much sense.
 
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-August/281153.=
-html
-> =
+The port describes the ability to connect. There's always a port@0 for
+the CSI-2 receiver, so I would define it in imx7s.dtsi. If a system
+doesn't connect any CSI-2 sensor then no endpoint will exist (and this
+node will stay disabled anyway).
 
-> And Ulf and Jaehoon clearly said this was a broken card detect design,
-> which should be solved via polling
-> =
+-- 
+Regards,
 
-> Solution:
-> =
-
-> Hence broken-cd is set as a property. This cures the errors. The
-> powering down of vccio-sd during reboot is cured by adding
-> regulator-boot-on.
-> =
-
-> This solutions has been fairly widely reviewed and tested.
-> =
-
-> Signed-off-by: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-> Reviewed by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> Reviewed by: Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>
-> Test by: TheSaint @ ArchLinux Arm
-
-please follow patch submission guidelines, here it would be
-Tested-by: ... with an actual Name + mail address
-
-Also I did try to go through the way big mail thread but didn't
-find an actual "Reviewed-by" from Robin Murphy, similar to what
-he pointed out in patch2
-
-Other than that and including the past discussions, this looks good.
-
-
-Heiko
-
-> ---
->  arch/arm/boot/dts/rk3288-tinker.dtsi | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> =
-
-> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3=
-288-tinker.dtsi
-> index aa107ee41b8b..ef653c3209bc 100644
-> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
-> @@ -254,6 +254,7 @@
->  			};
->  =
-
->  			vccio_sd: LDO_REG5 {
-> +				regulator-boot-on;
->  				regulator-min-microvolt =3D <1800000>;
->  				regulator-max-microvolt =3D <3300000>;
->  				regulator-name =3D "vccio_sd";
-> @@ -430,7 +431,7 @@
->  	bus-width =3D <4>;
->  	cap-mmc-highspeed;
->  	cap-sd-highspeed;
-> -	card-detect-delay =3D <200>;
-> +	broken-cd;
->  	disable-wp;			/* wp not hooked up */
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
-> =
+Laurent Pinchart
