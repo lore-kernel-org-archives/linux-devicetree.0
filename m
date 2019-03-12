@@ -1,73 +1,269 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 2/3] dt-bindings: mmc: Add a new property disable-cqe-dcmd.
-Date: Tue, 12 Mar 2019 14:17:55 +0100
-Message-ID: <4793843.T1TZ7EF8k3@phil>
-References: <20190307084329.25416-1-christoph.muellner@theobroma-systems.com> <37a96eda-196e-bacf-7ae2-5b9354c70273@intel.com> <3BCC2A27-3AF4-4E5E-BBD4-6A5B49831D3C@theobroma-systems.com>
+From: Angus Ainslie <angus@akkea.ca>
+Subject: Re: [PATCH 1/3] arm64: dts: fsl: librem5: Add a device tree for the  Librem5 devkit
+Date: Tue, 12 Mar 2019 06:18:17 -0700
+Message-ID: <27b43910ac10170c3679cad51fc5bb83@www.akkea.ca>
+References: <20190311234655.30357-1-angus@akkea.ca>
+ <20190311234655.30357-2-angus@akkea.ca>
+ <CAOMZO5Do+GF-sLO5wHEMR0daUbf4pnrwQby9dtvLXF+4fVC+Xw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3BCC2A27-3AF4-4E5E-BBD4-6A5B49831D3C@theobroma-systems.com>
+In-Reply-To: <CAOMZO5Do+GF-sLO5wHEMR0daUbf4pnrwQby9dtvLXF+4fVC+Xw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph =?ISO-8859-1?Q?M=FCllner?= <christoph.muellner@theobroma-systems.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawn.lin@rock-chips.com, ulf.hansson@linaro.org, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Michal Simek <michal.simek@xilinx.com>, Douglas Anderson <dianders@chromium.org>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Vicente Bergas <vicencb@gmail.com>, Emil Renner Berthing <kernel@esmil.dk>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Ezequiel Garcia <ezequiel@collabora.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Lin Huang <hl@rock-chips.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.orglinux-
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, NXP Linux Team <linux-imx@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 8. März 2019, 14:10:45 CET schrieb Christoph Müllner:
+Hi Fabio,
+
+On 2019-03-11 17:10, Fabio Estevam wrote:
+> On Mon, Mar 11, 2019 at 8:47 PM Angus Ainslie (Purism) <angus@akkea.ca> 
+> wrote:
 > 
-> > On 08.03.2019, at 13:46, Adrian Hunter <adrian.hunter@intel.com> wrote:
-> > 
-> > On 7/03/19 10:43 AM, Christoph Muellner wrote:
-> >> This patch documents the new property disable-cqe-dcmd
-> >> for the Arasan eMMC 5.1 driver.
-> >> 
-> >> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-> >> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-> >> ---
-> >> Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 4 ++++
-> >> 1 file changed, 4 insertions(+)
-> >> 
-> >> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> >> index 1edbb049cccb..ec699bf98b7c 100644
-> >> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> >> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> >> @@ -44,6 +44,10 @@ Optional Properties:
-> >>     properly. Test mode can be used to force the controller to function.
-> >>   - xlnx,int-clock-stable-broken: when present, the controller always reports
-> >>     that the internal clock is stable even when it is not.
-> >> +  - disable-cqe-dcmd: The eMMC 5.1 standard specifies direct commands (DCMDs)
-> >> +    as part of the command queue engine (CQE). On controllers with a CQHCI,
-> >> +    such as the Arasan eMMC 5.1 host controller, the driver has to enable DCMDs.
-> >> +    This is done unless disable-cqe-dcmd is specified.
-
-This needs a rewording please. See below for hw-description vs. driver, so
-the description should be centered around why this is a property of the hw
-[like faulty controller implementation or whatever]
-
-
-> > If "supports-cqe" is in mmc.txt, should "disable-cqe-dcmd" be there also?
+>> +/ {
+>> +       model = "Purism Librem 5 devkit 1.0";
+>> +       compatible = "fsl,librem5-devkit", "fsl,imx8mq";
 > 
-> The file mmc.txt says on top:
-> "These properties are common to multiple MMC host controllers".
-> As my patchset introduces "disable-cqe-dcmd" just for sdhci-of-arasan,
-> I would say it should not go into that file.
+> This board is not manufactured by FSL/NXP, so it should be
+> "purism,librem5-devkit", "fsl,imx8mq" instead.
 > 
-> Also I wonder why "supports-cqe" is in mmc.txt, because
-> only sdhci-tegra.c is evaluating that property.
-> So I would expect it to be documented in
-> Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
+> You should also add an entry for the purism vendor entry in
+> Documentation/devicetree/bindings/vendor-prefixes.txt in a separate
+> patch.
 > 
-> However, I see that "disable-cqe-dcmd" could go into other drivers as well.
-> But is this enough to document it in mmc.txt?
 
-Devicetree is always about describing the hardware capabilites and never
-about the actual nitty-gritty of driver implementation, aka it is not meant
-as a space for hardware-independent config-settings or such.
+Thanks I'll add it in there.
 
-As for only tegra evaluating this, is probably because it is still so new, like
-january 2019 and Rob explicitly suggested it becoming common [0], which
-suggests that the disable-cqe-dcmds should probably also be common.
+>> +
+>> +       chosen {
+>> +               stdout-path = &uart1;
+>> +       };
+>> +
+>> +       reg_usdhc2_vmmc: regulator-vsd-3v3 {
+> 
+> The usual format would be:
+> 
+> reg_usdhc2_vmmc: regulator-usdhc2-vmmc {
+> 
 
-Heiko
+Ok
 
-[0] https://lore.kernel.org/patchwork/patch/1031163/
+> 
+>> +               compatible = "regulator-fixed";
+>> +               regulator-name = "VSD_3V3";
+>> +               regulator-min-microvolt = <3300000>;
+>> +               regulator-max-microvolt = <3300000>;
+>> +               gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+>> +               enable-active-high;
+>> +               regulator-always-on;
+> 
+> Always on? It would be better to pass this regulator inside the mmc 
+> node.
+> 
+
+This GPIO is a #disable line for the WLAN and if it goes low the module 
+doesn't recover. Until we get the WLAN driver working after disable it's 
+best to leave it always on.
+
+>> +       };
+>> +
+>> +       reg_pwr_en: pwr_en {
+> 
+> reg_pwr_en: regulator-pwr-en {
+> 
+
+Ok
+
+>> +               compatible = "regulator-fixed";
+>> +               regulator-name = "PWR_EN";
+>> +               regulator-min-microvolt = <3300000>;
+>> +               regulator-max-microvolt = <3300000>;
+>> +               gpio = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+>> +               enable-active-high;
+>> +               regulator-always-on;
+> 
+> Same here. No need for "regulator-always-on" as it is controlled by
+> the gyroscope.
+> 
+
+This controls a regulator that feeds 80% of the peripherals on the board 
+and we don't have all of the drivers in the devicetree yet. Shutting 
+this off would during runtime would break the board so for now it needs 
+to stay always on.
+
+>> +&fec1 {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&pinctrl_fec1>;
+>> +       phy-mode = "rgmii-id";
+>> +       phy-handle = <&ethphy0>;
+>> +       fsl,magic-packet;
+>> +       status = "okay";
+>> +       phy-supply = <&reg_pwr_en>;
+>> +
+>> +       mdio {
+>> +               #address-cells = <1>;
+>> +               #size-cells = <0>;
+>> +
+>> +               ethphy0: ethernet-phy@0 {
+>> +                       compatible = "ethernet-phy-ieee802.3-c22";
+>> +                       reg = <1>;
+> 
+> You pass @0 and use reg = <1>, which is a mismatch. Building it with
+> W=1 would have warned you about this mismatch.
+> 
+
+Thanks I'll fix that
+
+>> +                       at803x,led-act-blind-workaround;
+>> +                       at803x,eee-disabled;
+>> +                       power-supply = <&reg_pwr_en>;
+>> +               };
+>> +       };
+>> +};
+>> +
+>> +&iomuxc {
+>> +       imx8m-som {
+> 
+> No need for this imx8m-som level.
+> 
+> 
+>> +               pinctrl_nc: ncgrp {
+> 
+> Not a very descriptive naming.
+> 
+
+Ok , this was my list of not connected pins but it should be removed.
+
+>> +                       fsl,pins = <
+>> +                       MX8MQ_IOMUXC_SAI1_MCLK_SAI1_MCLK        0x00
+>> +                       MX8MQ_IOMUXC_I2C4_SCL_I2C4_SCL          
+>> 0x4000007f
+>> +                       MX8MQ_IOMUXC_I2C4_SDA_I2C4_SDA          
+>> 0x4000007f
+>> +                       >;
+>> +               };
+>> +
+>> +               pinctrl_up: upgrp {
+> 
+> Same here. Also, this is not used. Please remove it.
+> 
+
+Ok
+
+>> +                       fsl,pins = <
+>> +                       MX8MQ_IOMUXC_SAI1_TXD2_SAI1_TX_DATA2           
+>>  0x00
+>> +                       >;
+>> +               };
+>> +
+>> +               pinctrl_csi1: csi1grp {
+> 
+> This is not used at the moment. Please remove it and re-add it when
+> CSI gets supported.
+> 
+
+Ok
+
+>> +                       fsl,pins = <
+>> +                       /* CSI_nRST */
+>> +                       MX8MQ_IOMUXC_GPIO1_IO06_GPIO1_IO6              
+>>  0x11
+>> +                       /* CSI_PWDN */
+>> +                       MX8MQ_IOMUXC_GPIO1_IO07_GPIO1_IO7              
+>>  0x19
+>> +                       /* CLK01 */
+>> +                       MX8MQ_IOMUXC_GPIO1_IO14_CCMSRCGPCMIX_CLKO1     
+>>  0x19
+>> +                       >;
+>> +               };
+>> +
+>> +               pinctrl_pwr_en: pwr_engrp {
+>> +                       fsl,pins = <
+>> +                       MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8              
+>>  0x06
+>> +                       >;
+>> +               };
+>> +
+>> +               pinctrl_wwan: wwan_grp {
+> 
+> Not used. Please remove this one and all unused pinctrl nodes.
+> 
+
+This one should have been used but I'll go through and checked the rest 
+as well.
+
+>> +&i2c1 {
+>> +       clock-frequency = <400000>;
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&pinctrl_i2c1>;
+>> +       status = "okay";
+>> +
+>> +       pmic: bd71837@4b {
+> 
+> Node names should be generic: pmic@4b
+> 
+>> +       typec_ptn5100: ptn5110@52 {
+> 
+> Same here.
+> 
+
+Ok
+
+>> +       charger: charger@6b { /* bq25896 */
+>> +               compatible = "ti,bq25890";
+>> +               reg = <0x6b>;
+>> +               pinctrl-names = "default";
+>> +               pinctrl-0 = <&pinctrl_charger>;
+>> +               interrupt-parent = <&gpio3>;
+>> +               interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+>> +               ti,battery-regulation-voltage = <4192000>; // 4.192V
+>> +               ti,charge-current = <1600000>; // 1.6 A
+>> +               ti,termination-current = <66000>;  // 66mA
+>> +               ti,precharge-current = <1300000>; // 1.3A
+>> +               ti,minimum-sys-voltage = <2750000>; // 2.75V
+>> +               ti,boost-voltage = <5000000>; // 5V
+>> +               ti,boost-max-current = <50000>; // 50mA
+> 
+> No // style comments, please/
+> 
+
+Ok
+
+>> +&i2c3 {
+>> +       clock-frequency = <100000>;
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&pinctrl_i2c3>, <&pinctrl_imu>;
+>> +       status = "okay";
+>> +
+>> +       lsm9d: lsm9d@6a {
+>> +               compatible = "st,lsm9ds1-gyro";
+> 
+> I don't find this binding.
+> 
+
+Thanks
+
+>> +               reg = <0x6a>;
+>> +               interrupt-parent = <&gpio3>;
+>> +               interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
+>> +               power-supply = <&reg_pwr_en>;
+>> +       };
+>> +};
+> 
+>> +&uart4 { /* BT */
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&pinctrl_uart4>, <&pinctrl_bt>;
+>> +       fsl,uart-has-rtscts;
+> 
+> uart-has-rtscts is preferred.
+> 
+>> +       /* resets = <&modem_reset>; */
+> 
+> Please remove this line instead of commenting it out.
+
+Ok
+
+Thanks
+Angus
