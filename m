@@ -1,29 +1,56 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] ARM: dts: rockchip: fix rk3288 cpu opp node reference
-Date: Tue, 12 Mar 2019 09:52:51 +0100
-Message-ID: <3482373.0PG0Fu4BEl@phil>
-References: <AM3PR03MB0966C52CCF14FCEDE6615265AC790@AM3PR03MB0966.eurprd03.prod.outlook.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH] arm64: dts: meson-gxl-s905d-phicomm-n1: add status LED
+Date: Tue, 12 Mar 2019 09:59:20 +0100
+Message-ID: <5c580f1b-1038-2c34-7047-e504eb4ac323@baylibre.com>
+References: <20190312083326.18029-1-gch981213@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM3PR03MB0966C52CCF14FCEDE6615265AC790@AM3PR03MB0966.eurprd03.prod.outlook.com>
+In-Reply-To: <20190312083326.18029-1-gch981213@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonas Karlman <jonas@kwiboo.se>
-Cc: "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Chuanhong Guo <gch981213@gmail.com>, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Sonntag, 24. Februar 2019, 22:51:22 CET schrieb Jonas Karlman:
-> The following error can be seen during boot:
-> 
->   of: /cpus/cpu@501: Couldn't find opp node
-> 
-> Change cpu nodes to use operating-points-v2 in order to fix this.
-> 
-> Fixes: ce76de984649 ("ARM: dts: rockchip: convert rk3288 to operating-points-v2")
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Hi Chuanhong,
 
-added a Cc-stable tag and applied as fix for 5.1
+On 12/03/2019 09:33, Chuanhong Guo wrote:
+> There is a white LED on the front panel behind the logo and the
+> manufacturer uses that LED to indicate network and USB drive status.
+> 
+> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+> ---
+>  .../boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts    | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
+> index 9a8a8a7e4b53..b5667f1fb2c8 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
+> @@ -14,6 +14,16 @@
+>  	cvbs-connector {
+>  		status = "disabled";
+>  	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +
+> +		status {
+> +			label = "n1:white:status";
+> +			gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
+> +			default-state = "on";
+> +		};
+> +	};
+>  };
+>  
+>  &cvbs_vdac_port {
+> 
 
-Thanks for catching this
-Heiko
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+
+BTW, do you know if it's possible to have a sample of the Phicomm N1
+in order to be added in kernelci ?
+
+Neil
