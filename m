@@ -1,59 +1,70 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] i2c: i2c-stm32f7: Fix SDADEL minimum formula
-Date: Tue, 12 Mar 2019 14:00:51 +0100
-Message-ID: <20190312130051.kngknb26tikzsm7j@ninjato>
-References: <1551885125-22295-1-git-send-email-bich.hemon@st.com>
- <20190309101340.GH1340@kunai>
- <20190309105021.GI1340@kunai>
- <36e0aec2-8fb8-d584-daee-1b3427f1067e@st.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="is76gvcv4mjw7ial"
+From: =?utf-8?Q?Christoph_M=C3=BCllner?=
+        <christoph.muellner@theobroma-systems.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: phy: Add a new property
+ drive-impedance-ohm for RK's emmc PHY
+Date: Tue, 12 Mar 2019 14:01:42 +0100
+Message-ID: <1C73976A-9039-4F7B-959A-4A1E1840EF68@theobroma-systems.com>
+References: <20190307084159.25236-1-christoph.muellner@theobroma-systems.com>
+ <20190307084159.25236-2-christoph.muellner@theobroma-systems.com>
+ <1924357.CMCVK5N5Qd@phil>
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <36e0aec2-8fb8-d584-daee-1b3427f1067e@st.com>
+In-Reply-To: <1924357.CMCVK5N5Qd@phil>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bich HEMON <bich.hemon@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Pierre Yves MORDRET <pierre-yves.mordret@st.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawn.lin@rock-chips.com, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Kishon Vijay Abraham I <kishon@ti.com>, Brian Norris <briannorris@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Douglas Anderson <dianders@chromium.org>, Viresh Kumar <viresh.kumar@linaro.org>, Ezequiel Garcia <ezequiel@collabora.com>, Lin Huang <hl@rock-chips.com>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Vicente Bergas <vicencb@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---is76gvcv4mjw7ial
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 12.03.2019, at 13:52, Heiko Stuebner <heiko@sntech.de> wrote:
+> 
+> Hi Christoph,
+> 
+> Am Donnerstag, 7. März 2019, 09:41:54 CET schrieb Christoph Muellner:
+>> This patch documents the new proprty drive-impedance-ohm for
+>> Rockchip's eMMC PHY node.
+>> 
+>> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+>> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+>> ---
+>> Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt | 3 +++
+>> 1 file changed, 3 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+>> index e3ea55763b0a..5f5d999dacc3 100644
+>> --- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+>> +++ b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+>> @@ -13,6 +13,9 @@ specified by name:
+> 
+> you might want to adapt the section headline as well, as right now it
+> talks about "Optional clocks", but should likely become the generic
+> "Optional properties" as in other bindings (including moving the clock-
+> binding.txt reference down into the clock elements)
 
+Thank's for spotting this.
+Will do for v3.
 
-> > Do you have a Fixes tag for this?
-> >=20
->=20
-> Fixes: aeb068c57214858b638d5ee627bb4a831f98771e ("i2c: i2c-stm32f7: add=
-=20
-> driver")
->=20
-> Will you change the commit message or do you want me to resend the patch?
+Thanks,
+Christoph
 
-I'll fix it. Thanks for this info!
-
-
---is76gvcv4mjw7ial
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyHrYMACgkQFA3kzBSg
-KbZT1g//bRBMzXRZ84ILbD3iczv55pWU32XqytQZVYE0B4meki6Az4h3se4n4AmM
-z8jL7OxLEmXzA22MbqRxhXvI3e3U3yBh65PGD2855Fv/Q9n/R7NxDEesvCU3aI+y
-O7eKUXMMqaOc1DcgiPw2dpxxsneUEYTtk7EE+1lYCOXK9BkXA9ZX7VQLg493bQxj
-RHRK/5+YK/Sj+mdaJktY73k3NZiB3qJ4gK9EoMVu+/W6wBpSHpknuSmFxPNUxUSF
-8UKETR0DvY0TOqYqpNdRLI8jR+UM2wTIe+yBLXK6oBSMFFkk3hanyfYt78VjVxlG
-lUnStJ18G7orGmwOpmf2xNX7kNgtz6CLgMFLX//AL9qouw8hhf2/SzNft+j4TDKx
-i3TcCGRV5tjGk/NMAHVhIPD9Qfbhs998uaNPFa91flnOALfGAL7Sjp8dT7I5APIG
-QB9qhQrBsQlg0pkm419Sa9A9F0PNWe1mwhP7rXBNpYU1S3fRPnyp0SPg4iSSIve0
-l4U+doq+3biw0Mb5WRhx28WrePKYXHe57PRx5Fm6wNHEkP401HeblF83Xo/bM+Zi
-y2SNRSNHWqVndxSiRt3/uQ543p+xzOQvwFuO3DTezJ+iizI6ukIGnWZAnQloTVIt
-P+HA478TJktkWOT7vXeS2b+hM5hFQbxoQ2yqnHcWuXn03vN6jEU=
-=WcWM
------END PGP SIGNATURE-----
-
---is76gvcv4mjw7ial--
+> 
+> 
+> Heiko
+> 
+>> 		(because most boards can get basic functionality without having
+>> 		access to it), it is strongly suggested.
+>>  - clocks: Should have a phandle to the card clock exported by the SDHCI driver.
+>> + - drive-impedance-ohm: Specifies the drive impedance in Ohm.
+>> +                        Possible values are 33, 40, 50, 66 and 100.
+>> +                        If not set, the default value of 50 will be applied.
+>> 
+>> Example:
+>> 
+>> 
+> 
+> 
+> 
+> 
