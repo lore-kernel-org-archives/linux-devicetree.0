@@ -1,29 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/4] dt-bindings: serial: sprd: Add dma properties to
- support DMA mode
-Date: Tue, 12 Mar 2019 13:22:02 -0500
-Message-ID: <20190312182202.GA10396@bogus>
-References: <cover.1551689518.git.baolin.wang@linaro.org>
- <5ef1bbcf1d78829f28377a599d81d0adc7d61ef1.1551689518.git.baolin.wang@linaro.org>
+Subject: Re: [PATCH v2 2/8] dt-bindings: phy: Add Amlogic G12A USB3+PCIE
+ Combo PHY  Bindings
+Date: Tue, 12 Mar 2019 13:23:12 -0500
+Message-ID: <20190312182312.GA12396@bogus>
+References: <20190304103846.2060-1-narmstrong@baylibre.com>
+ <20190304103846.2060-3-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5ef1bbcf1d78829f28377a599d81d0adc7d61ef1.1551689518.git.baolin.wang@linaro.org>
+In-Reply-To: <20190304103846.2060-3-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, jslaby@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang@linaro.org, broonie@kernel.org, lanqing.liu@unisoc.com, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  4 Mar 2019 16:58:23 +0800, Baolin Wang wrote:
-> From: Lanqing Liu <lanqing.liu@unisoc.com>
+On Mon,  4 Mar 2019 11:38:40 +0100, Neil Armstrong wrote:
+> Add the Amlogic G12A Family USB3 + PCIE Combo PHY Bindings.
 > 
-> This patch adds dmas and dma-names properties for the UART DMA mode.
+> This PHY can provide exclusively USB3 or PCIE support on shared I/Os.
 > 
-> Signed-off-by: Lanqing Liu <lanqing.liu@unisoc.com>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  .../devicetree/bindings/serial/sprd-uart.txt       |    6 ++++++
->  1 file changed, 6 insertions(+)
+>  .../bindings/phy/meson-g12a-usb3-pcie-phy.txt | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
