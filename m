@@ -1,31 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 mailbox 2/3] dt-bindings: mailbox: Document
- armada-37xx-rwtm-mailbox binding
-Date: Tue, 12 Mar 2019 11:13:36 -0500
-Message-ID: <20190312161336.GA29174@bogus>
-References: <20190301042341.29484-1-marek.behun@nic.cz>
- <20190301042341.29484-3-marek.behun@nic.cz>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Add vendor prefix for MaxBotix
+Date: Tue, 12 Mar 2019 11:14:07 -0500
+Message-ID: <20190312161407.GA30150@bogus>
+References: <20190301134155.ujtl434di6eb7jir@arbad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190301042341.29484-3-marek.behun@nic.cz>
+In-Reply-To: <20190301134155.ujtl434di6eb7jir@arbad>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, linux-arm-kernel@lists.infradead.org, Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>, devicetree@vger.kernel.org
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, arnd@arndb.de, davem@davemloft.net, gregkh@linuxfoundation.org, johan@kernel.org, khilman@baylibre.com, knaack.h@gmx.de, lars@metafoo.de, linux-kernel@vger.kernel.org, martin.blumenstingl@googlemail.com, mchehab+samsung@kernel.org, m.othacehe@gmail.com, nicolas.ferre@microchip.com, pmeerw@pmeerw.net, robh@kernel.org, songqiang1304521@gmail.com, treding@nvidia.com, techsupport@maxbotix.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  1 Mar 2019 05:23:40 +0100, =?UTF-8?q?Marek=20Beh=C3=BAn?= wrote:
-> This adds device tree binding documentation for the rWTM BIU mailbox
-> driver on the Armada 37xx SOC (EspressoBin, Turris Mox).
+On Fri, 1 Mar 2019 14:41:57 +0100, Andreas Klinger wrote:
+> Add MaxBotix, which is a vendor of ultrasonic rangers in different
+> varieties and interfaces.
 > 
-> Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 > ---
->  .../mailbox/armada-37xx-rwtm-mailbox.txt         | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/armada-37xx-rwtm-mailbox.txt
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
