@@ -1,91 +1,91 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] arm: dts: rk3288-tinker.dtsi: Fix SD card detection
-Date: Tue, 12 Mar 2019 15:22:46 +0100
-Message-ID: <50094675.5IylMcgSg6@phil>
-References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
- <20190309153923.22806-1-beagleboard@davidjohnsummers.uk>
+From: Patrick Venture <venture@google.com>
+Subject: Re: [PATCH v6 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Date: Tue, 12 Mar 2019 07:23:04 -0700
+Message-ID: <CAO=noty8c3T+6=L+m=85Ps8Ms-5EGwkcT1FMJK0UFf=EqRbOww@mail.gmail.com>
+References: <20190304185536.211084-1-venture@google.com> <20190311222007.GA16254@bogus>
+ <CAO=notzjsdOxJSf+p+OqB71N5-c1QPCcfd9OVAV8ft18e+SngQ@mail.gmail.com> <CAL_Jsq+M2P8eEkwS9-mLXfoA3LC6K-_WHUns5sH75E6h6qC2fA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190309153923.22806-1-beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>, Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+M2P8eEkwS9-mLXfoA3LC6K-_WHUns5sH75E6h6qC2fA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Greg KH <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonas,
+On Mon, Mar 11, 2019 at 7:38 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Mar 11, 2019 at 6:49 PM Patrick Venture <venture@google.com> wrote:
+> >
+> > On Mon, Mar 11, 2019 at 3:20 PM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Mon, Mar 04, 2019 at 10:55:36AM -0800, Patrick Venture wrote:
+> > > > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+> > > >
+> > > > Signed-off-by: Patrick Venture <venture@google.com>
+> > > > ---
+> > > > Changes for v6:
+> > > > - None
+> > > > Changes for v5:
+> > > > - None
+> > > > Changes for v4:
+> > > > - None
+> > > > Changes for v3:
+> > > > - None
+> > > > Changes for v2:
+> > > > - Added comment about syscon required parameter.
+> > > > ---
+> > > >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 32 +++++++++++++++++++
+> > > >  1 file changed, 32 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> > > > new file mode 100644
+> > > > index 000000000000..1092d62d1c92
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> > > > @@ -0,0 +1,32 @@
+> > > > +======================================================================
+> > > > +Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
+> > > > +======================================================================
+> > > > +
+> > > > +The bridge is available on platforms with the VGA enabled on the Aspeed device.
+> > > > +In this case, the host has access to a 64KiB window into all of the BMC's
+> > > > +memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
+> > > > +has read access to all the regions of memory, however the host only has read
+> > > > +and write access depending on a register controlled by the BMC.
+> > > > +
+> > > > +Required properties:
+> > > > +===================
+> > > > +
+> > > > + - compatible: must be one of:
+> > > > +     - "aspeed,ast2400-p2a-ctrl"
+> > > > +     - "aspeed,ast2500-p2a-ctrl"
+> > > > +
+> > > > + - syscon: handle to syscon device node controlling PCI.
+> > > > +
+> > > > +Optional properties:
+> > > > +===================
+> > > > +
+> > > > +- memory-region: A phandle to a reserved_memory region to be used for the PCI
+> > > > +             to AHB mapping
+> > > > +
+> > > > +Example:
+> > > > +
+> > > > +p2a: p2a-control@1e6e2000 {
+> > > > +     compatible = "aspeed,ast2400-p2a-ctrl";
+> > > > +     memory-region = <&reserved_memory>;
+> > > > +     syscon = <&syscon>;
+> > >
+> > > Make this node a child of what you are pointing to instead if this the
+> > > only control interface.
+> >
+> > You're suggesting I make this a child of the syscon?
+>
+> Yes.
 
-Am Samstag, 9. M=E4rz 2019, 16:39:21 CET schrieb David Summers:
-> The Problem:
-> =
+Roger that, will update and send out a patchset v6 with the
+corresponding changes.
 
-> On ASUS Tinker Board S, when booting from the eMMC, and there is card
-> in the sd slot, there are constant errors.
-> =
-
-> Also when warm reboot, uboot can not access the sd slot
-> =
-
-> Cause:
-> =
-
-> Identified by Robin Murphy @ ARM. The Card Detect on rk3288
-> devices is pulled up by vccio-sd; so when the regulator powers this
-> off, card detect gives spurious errors. A second problem, is during
-> power down, vccio-sd apprears to be powered down. This causes a
-> problem when warm rebooting from the sd card. This was identified by
-> Jonas Karlman.
-> =
-
-> History:
-> =
-
-> A common fault on these rk3288 board, which impliment the reference
-> design.
-> =
-
-> When this arose before:
-> =
-
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-August/281153.=
-html
-> =
-
-> And Ulf and Jaehoon clearly said this was a broken card detect design,
-> which should be solved via polling
-> =
-
-> Solution:
-> =
-
-> Hence broken-cd is set as a property. This cures the errors. The
-> powering down of vccio-sd during reboot is cured by adding
-> regulator-boot-on.
-> =
-
-> This solutions has been fairly widely reviewed and tested.
-> =
-
-> Signed-off-by: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-> Reviewed by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> Reviewed by: Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>
-
-in v2, you gave a
-Tested-by: Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>
-it seems, which somehow transformed into a reviewed-by in v3.
-
-V3 did change a bit in its approach - for the better, but do you approve
-of adding that Reviewed-by above (and maybe also providing a Tested-by
-for the new approach)?
-
-Thanks
-Heiko
+>
+> Rob
