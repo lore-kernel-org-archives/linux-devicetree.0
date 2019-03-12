@@ -1,181 +1,141 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v9 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
-Date: Tue, 12 Mar 2019 13:12:18 +0100
-Message-ID: <20190312121218.GM31026@ulmo>
-References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
- <1552378289-27245-3-git-send-email-yash.shah@sifive.com>
- <20190312091739.fhv2hb2ll2eamdsn@pengutronix.de>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v3 3/4] mfd: ti-lmu: Remove LM3532 backlight driver references
+Date: Tue, 12 Mar 2019 07:18:21 -0500
+Message-ID: <20190312121822.8315-3-dmurphy@ti.com>
+References: <20190312121822.8315-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="P9KQiUGMzYCFwWCN"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190312091739.fhv2hb2ll2eamdsn@pengutronix.de>
+In-Reply-To: <20190312121822.8315-1-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Yash Shah <yash.shah@sifive.com>, palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, paul.walmsley@sifive.com
+To: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, tony@atomide.com, lee.jones@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Remove the LM3532 backlight driver references from the ti-lmu
+code as dedicated driver support is available.
 
---P9KQiUGMzYCFwWCN
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
 
-On Tue, Mar 12, 2019 at 10:17:39AM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> Hello,
->=20
-> there are just a few minor things left I commented below.
->=20
-> On Tue, Mar 12, 2019 at 01:41:29PM +0530, Yash Shah wrote:
-> > +#define div_u64_round(a, b) \
-> > +	({typeof(b) __b =3D b; div_u64((a) + __b / 2, __b); })
->=20
-> Parenthesis around b please. I guess I didn't had them in my suggestion
-> either, sorry for that.
+v3 - No changes - https://lore.kernel.org/patchwork/patch/1049025/
 
-We don't really need the parentheses here, do we? The only operator that
-has lower priority than the assignment is the comma operator, and that's
-not going to work in the macro anyway, unless you put it inside a pair
-of parentheses, in which case, well, you have the parentheses already.
+v2 - Removed LM3532 register definitions from ti-lmu-register - https://lore.kernel.org/patchwork/patch/1048808/
 
-> > +static int pwm_sifive_enable(struct pwm_chip *chip, bool enable)
-> > +{
-> > +	struct pwm_sifive_ddata *pwm =3D pwm_sifive_chip_to_ddata(chip);
-> > +	int ret;
-> > +
-> > +	if (enable) {
-> > +		ret =3D clk_enable(pwm->clk);
-> > +		if (ret) {
-> > +			dev_err(pwm->chip.dev, "Enable clk failed:%d\n", ret);
-> > +			return ret;
-> > +		}
-> > +	}
-> > +
-> > +	if (!enable)
-> > +		clk_disable(pwm->clk);
-> > +
-> > +	return 0;
-> > +}
->=20
-> There is only a single caller for this function. I wonder if it is
-> trivial enough to fold it into pwm_sifive_apply.
+ drivers/mfd/ti-lmu.c                | 11 --------
+ include/linux/mfd/ti-lmu-register.h | 44 -----------------------------
+ include/linux/mfd/ti-lmu.h          |  1 -
+ 3 files changed, 56 deletions(-)
 
-I think this is fine. pwm_sifive_apply() is already fairly long at this
-point, so might as well split things up a little.
-
-> > +static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *=
-dev,
-> > +			    struct pwm_state *state)
-> > +{
-> > +	struct pwm_sifive_ddata *pwm =3D pwm_sifive_chip_to_ddata(chip);
-> > +	unsigned int duty_cycle;
-> > +	u32 frac;
-> > +	struct pwm_state cur_state;
-> > +	bool enabled;
-> > +	int ret =3D 0;
-> > +	unsigned long num;
-> > +
-> > +	if (state->polarity !=3D PWM_POLARITY_INVERSED)
-> > +		return -EINVAL;
-> > +
-> > +	ret =3D clk_enable(pwm->clk);
-> > +	if (ret) {
-> > +		dev_err(pwm->chip.dev, "Enable clk failed:%d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	mutex_lock(&pwm->lock);
-> > +	pwm_get_state(dev, &cur_state);
-> > +
-> > +	enabled =3D cur_state.enabled;
-> > +
-> > +	if (state->period !=3D pwm->approx_period) {
-> > +		if (pwm->user_count !=3D 1) {
-> > +			ret =3D -EBUSY;
-> > +			goto exit;
-> > +		}
-> > +		pwm->approx_period =3D state->period;
-> > +		pwm_sifive_update_clock(pwm, clk_get_rate(pwm->clk));
-> > +	}
-> > +
-> > +	duty_cycle =3D state->duty_cycle;
-> > +	if (!state->enabled)
-> > +		duty_cycle =3D 0;
-> > +
-> > +	num =3D (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
-> > +	frac =3D div_u64_round(num, state->period);
-> > +	/* The hardware cannot generate a 100% duty cycle */
-> > +	frac =3D min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
-> > +
-> > +	writel(frac, pwm->regs + PWM_SIFIVE_PWMCMP0 +
-> > +	       dev->hwpwm * PWM_SIFIVE_SIZE_PWMCMP);
-> > +
-> > +	if (state->enabled !=3D enabled) {
-> > +		ret =3D pwm_sifive_enable(chip, state->enabled);
-> > +		if (ret)
-> > +			goto exit;
->=20
-> This goto is a noop.
->=20
-> > +	}
-> > +
-> > +exit:
-> > +	clk_disable(pwm->clk);
-> > +	mutex_unlock(&pwm->lock);
-> > +	return ret;
-> > +}
->=20
-> There are a few other things that could be improved, but I think they
-> could be addressed later. For some of these I don't even know what to
-> suggest, for some Thierry might not agree it is worth fixing:
->=20
->  - rounding
->    how to round? When should a request declined, when is rounding ok?
->    There is still "if (state->period !=3D pwm->approx_period) return -EBU=
-SY"
->    in this driver. This is better than before, but if state-period =3D=3D
->    pwm->approx_period + 1 the result (if accepted) might be the same as
->    without the +1 and so returning -EBUSY for one case and accepting the
->    other is strange.
-
-Perhaps a good idea would be to reject a configuration only after we've
-determined that it is incompatible? If we're really going to end up with
-the same configuration within a given margin of period or duty cycle and
-we can't do much about it, there's little point in rejecting such
-configurations.
-
->  - don't call PWM API functions designed for consumers (here: pwm_get_sta=
-te)
-
-Agreed. The driver can just access pwm_device.state directly.
-
->  - Move div_u64_round to include/linux/math64.h
-
-Looks to me like DIV_ROUND_CLOSEST_ULL() is already pretty much this.
-The only difference that I can see is that the divisor is 32-bit, but
-since we pass in state->period, that already works fine.
-
-Thierry
-
---P9KQiUGMzYCFwWCN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyHoh8ACgkQ3SOs138+
-s6E7lw/8CwEa+SQ6iOIiC0QTSowiTzEaVGxw+bbwyxGkg7BXfvg6iLEzK+ZhsIU4
-NyA0Q2/u8dP6lFawnP5kzMcjzYeKDbBq5hpfjv+JVGaLOo4KdCfVI5rNyrtv68Cz
-Gp0J8SxekNcqGwXp19oYLy5HyaIxZupDAPGkdKmVQn4Khxj2wee4kBj3BoSDRCyh
-/deUWdxme4U5RurMMiDTeS6MMiXubCZjS/ITjzDCvrroVlWzC10ATPZObZ1jJPI4
-UljScKJgZwCHLfuZN8X+dXQGCHHJ25kLmnXpouPM84JsypKqKqhmN3ngwdVdg9Vn
-YOrGOXoemgKXMpuKAKDg3Oc+Ys+1kmODm7PnrxAOX8Q6Vb+C7H9KMIKVBZpIcbfX
-jJwYrXcDxwW+5bA+mPDUBLQxUdxcEq0FheOLDjHQefnQGWu1NZoyLeHGITIS72/D
-KcKVqijEMR5SoGyIFLdq1Ua03YFfYl2b4WOuWRFd3KxcqZ+rdenC9uzCw57JFF28
-n35rUWNpTbuQYdhTzkNcdP2Tf2joG0cPvN8+5adW7SwAHSUQgAipFFOt/2ldL0+c
-tay4eC7LxSZ5sBqxPdIbH3P1iAsVtbxlpL/640lg5U5eBawVH5ewpOe7hVBtEoKn
-Rn2nfqndVJHWZg1YxZsC8RIx0ylD1/YhnP+tRJhvZOEwjf4dq2Q=
-=iW8+
------END PGP SIGNATURE-----
-
---P9KQiUGMzYCFwWCN--
+diff --git a/drivers/mfd/ti-lmu.c b/drivers/mfd/ti-lmu.c
+index 37d0bdb291c3..b06cb908d1aa 100644
+--- a/drivers/mfd/ti-lmu.c
++++ b/drivers/mfd/ti-lmu.c
+@@ -54,14 +54,6 @@ static void ti_lmu_disable_hw(void *data)
+ 		gpiod_set_value(lmu->en_gpio, 0);
+ }
+ 
+-static const struct mfd_cell lm3532_devices[] = {
+-	{
+-		.name          = "ti-lmu-backlight",
+-		.id            = LM3532,
+-		.of_compatible = "ti,lm3532-backlight",
+-	},
+-};
+-
+ #define LM363X_REGULATOR(_id)			\
+ {						\
+ 	.name          = "lm363x-regulator",	\
+@@ -141,7 +133,6 @@ static const struct ti_lmu_data chip##_data =	\
+ 	.max_register = max_reg,		\
+ }						\
+ 
+-TI_LMU_DATA(lm3532, LM3532_MAX_REG);
+ TI_LMU_DATA(lm3631, LM3631_MAX_REG);
+ TI_LMU_DATA(lm3632, LM3632_MAX_REG);
+ TI_LMU_DATA(lm3633, LM3633_MAX_REG);
+@@ -211,7 +202,6 @@ static int ti_lmu_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+ }
+ 
+ static const struct of_device_id ti_lmu_of_match[] = {
+-	{ .compatible = "ti,lm3532", .data = &lm3532_data },
+ 	{ .compatible = "ti,lm3631", .data = &lm3631_data },
+ 	{ .compatible = "ti,lm3632", .data = &lm3632_data },
+ 	{ .compatible = "ti,lm3633", .data = &lm3633_data },
+@@ -222,7 +212,6 @@ static const struct of_device_id ti_lmu_of_match[] = {
+ MODULE_DEVICE_TABLE(of, ti_lmu_of_match);
+ 
+ static const struct i2c_device_id ti_lmu_ids[] = {
+-	{ "lm3532", LM3532 },
+ 	{ "lm3631", LM3631 },
+ 	{ "lm3632", LM3632 },
+ 	{ "lm3633", LM3633 },
+diff --git a/include/linux/mfd/ti-lmu-register.h b/include/linux/mfd/ti-lmu-register.h
+index 2125c7c02818..f09510561a55 100644
+--- a/include/linux/mfd/ti-lmu-register.h
++++ b/include/linux/mfd/ti-lmu-register.h
+@@ -15,50 +15,6 @@
+ 
+ #include <linux/bitops.h>
+ 
+-/* LM3532 */
+-#define LM3532_REG_OUTPUT_CFG			0x10
+-#define LM3532_ILED1_CFG_MASK			0x03
+-#define LM3532_ILED2_CFG_MASK			0x0C
+-#define LM3532_ILED3_CFG_MASK			0x30
+-#define LM3532_ILED1_CFG_SHIFT			0
+-#define LM3532_ILED2_CFG_SHIFT			2
+-#define LM3532_ILED3_CFG_SHIFT			4
+-
+-#define LM3532_REG_RAMPUP			0x12
+-#define LM3532_REG_RAMPDN			LM3532_REG_RAMPUP
+-#define LM3532_RAMPUP_MASK			0x07
+-#define LM3532_RAMPUP_SHIFT			0
+-#define LM3532_RAMPDN_MASK			0x38
+-#define LM3532_RAMPDN_SHIFT			3
+-
+-#define LM3532_REG_ENABLE			0x1D
+-
+-#define LM3532_REG_PWM_A_CFG			0x13
+-#define LM3532_PWM_A_MASK			0x05	/* zone 0 */
+-#define LM3532_PWM_ZONE_0			BIT(2)
+-
+-#define LM3532_REG_PWM_B_CFG			0x14
+-#define LM3532_PWM_B_MASK			0x09	/* zone 1 */
+-#define LM3532_PWM_ZONE_1			BIT(3)
+-
+-#define LM3532_REG_PWM_C_CFG			0x15
+-#define LM3532_PWM_C_MASK			0x11	/* zone 2 */
+-#define LM3532_PWM_ZONE_2			BIT(4)
+-
+-#define LM3532_REG_ZONE_CFG_A			0x16
+-#define LM3532_REG_ZONE_CFG_B			0x18
+-#define LM3532_REG_ZONE_CFG_C			0x1A
+-#define LM3532_ZONE_MASK			(BIT(2) | BIT(3) | BIT(4))
+-#define LM3532_ZONE_0				0
+-#define LM3532_ZONE_1				BIT(2)
+-#define LM3532_ZONE_2				BIT(3)
+-
+-#define LM3532_REG_BRT_A			0x70	/* zone 0 */
+-#define LM3532_REG_BRT_B			0x76	/* zone 1 */
+-#define LM3532_REG_BRT_C			0x7C	/* zone 2 */
+-
+-#define LM3532_MAX_REG				0x7E
+-
+ /* LM3631 */
+ #define LM3631_REG_DEVCTRL			0x00
+ #define LM3631_LCD_EN_MASK			BIT(1)
+diff --git a/include/linux/mfd/ti-lmu.h b/include/linux/mfd/ti-lmu.h
+index 1ef51ed36be5..7762c1bce55d 100644
+--- a/include/linux/mfd/ti-lmu.h
++++ b/include/linux/mfd/ti-lmu.h
+@@ -22,7 +22,6 @@
+ #define LMU_EVENT_MONITOR_DONE		0x01
+ 
+ enum ti_lmu_id {
+-	LM3532,
+ 	LM3631,
+ 	LM3632,
+ 	LM3633,
+-- 
+2.20.1.390.gb5101f9297
