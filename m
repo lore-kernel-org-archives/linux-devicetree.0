@@ -1,285 +1,183 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv4 24/28] PCI: mobiveil: add PCIe Gen4 RC driver for NXP
- Layerscape SoCs
-Date: Tue, 12 Mar 2019 04:40:56 +0000
-Message-ID: <AM6PR04MB57816A8E3D431B97E65ABB2A84490@AM6PR04MB5781.eurprd04.prod.outlook.com>
-References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
- <20190311093130.7209-25-Zhiqiang.Hou@nxp.com>
- <20190311140140.GA161843@google.com>
+From: Vishal Sagar <vishal.sagar@xilinx.com>
+Subject: [PATCH v6 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem
+Date: Tue, 12 Mar 2019 10:05:29 +0530
+Message-ID: <1552365330-21155-2-git-send-email-vishal.sagar@xilinx.com>
+References: <1552365330-21155-1-git-send-email-vishal.sagar@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190311140140.GA161843@google.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1552365330-21155-1-git-send-email-vishal.sagar@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hyun Kwon <hyunk@xilinx.com>, laurent.pinchart@ideasonboard.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dinesh Kumar <dineshk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>
+Cc: Vishal Sagar <vishal.sagar@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmpvcm4sDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIFttYWlsdG86aGVsZ2Fh
-c0BrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE55bm0M+aciDEx5pelIDIyOjAyDQo+IFRvOiBaLnEu
-IEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiByb2JoK2R0
-QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBsLnN1YnJhaG1hbnlhQG1vYml2ZWls
-LmNvLmluOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNv
-bT47DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29t
-Ow0KPiB3aWxsLmRlYWNvbkBhcm0uY29tOyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+
-OyBNLmguIExpYW4NCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IFhpYW93ZWkgQmFvIDx4aWFv
-d2VpLmJhb0BueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIdjQgMjQvMjhdIFBDSTogbW9i
-aXZlaWw6IGFkZCBQQ0llIEdlbjQgUkMgZHJpdmVyIGZvciBOWFANCj4gTGF5ZXJzY2FwZSBTb0Nz
-DQo+IA0KPiBPbiBNb24sIE1hciAxMSwgMjAxOSBhdCAwOTozMzoxNkFNICswMDAwLCBaLnEuIEhv
-dSB3cm90ZToNCj4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0K
-PiA+DQo+ID4gVGhpcyBQQ0llIGNvbnRyb2xsZXIgaXMgYmFzZWQgb24gdGhlIE1vYml2ZWlsIEdQ
-RVggSVAsIHdoaWNoIGlzDQo+ID4gY29tcGF0aWJsZSB3aXRoIHRoZSBQQ0kgRXhwcmVzc+KEoiBC
-YXNlIFNwZWNpZmljYXRpb24sIFJldmlzaW9uIDQuMC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6
-IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IE1p
-bmdodWFuIExpYW4gPE1pbmdodWFuLkxpYW5AbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBWNDoNCj4g
-PiAgLSBubyBjaGFuZ2UNCj4gPg0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWls
-L0tjb25maWcgICAgICAgfCAgMTAgKw0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2
-ZWlsL01ha2VmaWxlICAgICAgfCAgIDEgKw0KPiA+ICAuLi4vY29udHJvbGxlci9tb2JpdmVpbC9w
-Y2ktbGF5ZXJzY2FwZS1nZW40LmMgfCAyNTQgKysrKysrKysrKysrKysrKysrDQo+ID4gIC4uLi9w
-Y2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmggICB8ICAxNiArLQ0KPiA+ICA0
-IGZpbGVzIGNoYW5nZWQsIDI3OSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKSAgY3JlYXRl
-IG1vZGUNCj4gPiAxMDA2NDQgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2ktbGF5
-ZXJzY2FwZS1nZW40LmMNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9s
-bGVyL21vYml2ZWlsL0tjb25maWcNCj4gPiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZl
-aWwvS2NvbmZpZw0KPiA+IGluZGV4IDY0MzQzYzA3YmZlZC4uM2RkYjdkNjE2M2E5IDEwMDY0NA0K
-PiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvS2NvbmZpZw0KPiA+ICsr
-KyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvS2NvbmZpZw0KPiA+IEBAIC0yMSw0
-ICsyMSwxNCBAQCBjb25maWcgUENJRV9NT0JJVkVJTF9QTEFUDQo+ID4gIAkgIFNvZnQgSVAuIEl0
-IGhhcyB1cCB0byA4IG91dGJvdW5kIGFuZCBpbmJvdW5kIHdpbmRvd3MNCj4gPiAgCSAgZm9yIGFk
-ZHJlc3MgdHJhbnNsYXRpb24gYW5kIGl0IGlzIGEgUENJZSBHZW40IElQLg0KPiA+DQo+ID4gK2Nv
-bmZpZyBQQ0lfTEFZRVJTQ0FQRV9HRU40DQo+ID4gKwlib29sICJGcmVlc2NhbGUgTGF5ZXJzY3Bl
-IFBDSWUgR2VuNCBjb250cm9sbGVyIg0KPiANCj4gIkxheWVyc2NhcGUiDQoNCldpbGwgZml4IGlu
-IHY1Lg0KDQo+IA0KPiA+ICsJZGVwZW5kcyBvbiBQQ0kNCj4gPiArCWRlcGVuZHMgb24gT0YgJiYg
-KEFSTTY0IHx8IEFSQ0hfTEFZRVJTQ0FQRSkNCj4gPiArCWRlcGVuZHMgb24gUENJX01TSV9JUlFf
-RE9NQUlODQo+ID4gKwlzZWxlY3QgUENJRV9NT0JJVkVJTF9IT1NUDQo+ID4gKwloZWxwDQo+ID4g
-KwkgIFNheSBZIGhlcmUgaWYgeW91IHdhbnQgUENJZSBHZW40IGNvbnRyb2xsZXIgc3VwcG9ydCBv
-bg0KPiA+ICsJICBMYXllcnNjYXBlIFNvQ3MuIFRoZSBQQ0llIGNvbnRyb2xsZXIgY2FuIHdvcmsg
-aW4gUkMgb3INCj4gPiArCSAgRVAgbW9kZSBhY2NvcmRpbmcgdG8gUkNXW0hPU1RfQUdUX1BFWF0g
-c2V0dGluZy4NCj4gPiAgZW5kbWVudQ0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250
-cm9sbGVyL21vYml2ZWlsL01ha2VmaWxlDQo+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21v
-Yml2ZWlsL01ha2VmaWxlDQo+ID4gaW5kZXggOWZiNmQxYzY1MDRkLi5mZjY2Nzc0Y2NhYzQgMTAw
-NjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9NYWtlZmlsZQ0K
-PiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvTWFrZWZpbGUNCj4gPiBA
-QCAtMiwzICsyLDQgQEANCj4gPiAgb2JqLSQoQ09ORklHX1BDSUVfTU9CSVZFSUwpICs9IHBjaWUt
-bW9iaXZlaWwubw0KPiA+ICBvYmotJChDT05GSUdfUENJRV9NT0JJVkVJTF9IT1NUKSArPSBwY2ll
-LW1vYml2ZWlsLWhvc3Qubw0KPiA+ICBvYmotJChDT05GSUdfUENJRV9NT0JJVkVJTF9QTEFUKSAr
-PSBwY2llLW1vYml2ZWlsLXBsYXQubw0KPiA+ICtvYmotJChDT05GSUdfUENJX0xBWUVSU0NBUEVf
-R0VONCkgKz0gcGNpLWxheWVyc2NhcGUtZ2VuNC5vDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-cGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpLWxheWVyc2NhcGUtZ2VuNC5jDQo+ID4gYi9kcml2
-ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaS1sYXllcnNjYXBlLWdlbjQuYw0KPiA+IG5l
-dyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi4xNzRjYmNhYzQwNTkN
-Cj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2Jp
-dmVpbC9wY2ktbGF5ZXJzY2FwZS1nZW40LmMNCj4gPiBAQCAtMCwwICsxLDI1NCBAQA0KPiA+ICsv
-LyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+ICsvKg0KPiA+ICsgKiBQQ0ll
-IGhvc3QgY29udHJvbGxlciBkcml2ZXIgZm9yIE5YUCBMYXllcnNjYXBlIFNvQ3MNCj4gDQo+IEl0
-IHdvdWxkIGJlIG5pY2UgdG8gbWFrZSAiTlhQIExheWVyc2NhcGUgU29DcyIgYSBsaXR0bGUgbW9y
-ZSBzcGVjaWZpYyBzbyB3ZQ0KPiBjYW4gdGVsbCBob3cgaXQncyBkaWZmZXJlbnQgZnJvbSB0aGUg
-ZXhpc3RpbmcgcGNpLWxheWVyc2NhcGUuYyB0aGF0IHNheXMNCj4gIkZyZWVzY2FsZSBMYXllcnNj
-YXBlIFNvQ3MiLiAgSSBhc3N1bWUgdGhpcyBkcml2ZXIgb25seSB3b3JrcyB3aXRoIGdlbjQNCj4g
-cGFydHMuDQoNClllcywgaXQgaXMgb25seSBmb3IgTlhQIFNvQ3Mgd2l0aCBNb2JpdmVpbCBQQ0ll
-IEdlbjQgY29udHJvbGxlciwgYW5kIHdpbGwgYWRkIHNwZWNpZmljIGluIHY1Lg0KDQo+IA0KPiA+
-ICsgKiBDb3B5cmlnaHQgMjAxOCBOWFANCj4gDQo+IHMvMjAxOC8yMDE5Lw0KPiANCg0KV2lsbCBm
-aXggaW4gdjUuDQoNCj4gPiArICoNCj4gPiArICogQXV0aG9yOiBaaGlxaWFuZyBIb3UgPFpoaXFp
-YW5nLkhvdUBueHAuY29tPiAqLw0KPiA+ICsNCj4gPiArI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5o
-Pg0KPiA+ICsjaW5jbHVkZSA8bGludXgvaW50ZXJydXB0Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51
-eC9pbml0Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZl9wY2kuaD4NCj4gPiArI2luY2x1ZGUg
-PGxpbnV4L29mX3BsYXRmb3JtLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZl9pcnEuaD4NCj4g
-PiArI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3Bj
-aS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQo+ID4gKyNpbmNs
-dWRlIDxsaW51eC9yZXNvdXJjZS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvbWZkL3N5c2Nvbi5o
-Pg0KPiA+ICsjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+DQo+ID4gKw0KPiA+ICsjaW5jbHVkZSAi
-cGNpZS1tb2JpdmVpbC5oIg0KPiA+ICsNCj4gPiArLyogTFVUIGFuZCBQRiBjb250cm9sIHJlZ2lz
-dGVycyAqLw0KPiA+ICsjZGVmaW5lIFBDSUVfTFVUX09GRgkJCSgweDgwMDAwKQ0KPiA+ICsjZGVm
-aW5lIFBDSUVfUEZfT0ZGCQkJKDB4YzAwMDApDQo+ID4gKyNkZWZpbmUgUENJRV9QRl9JTlRfU1RB
-VAkJKDB4MTgpDQo+ID4gKyNkZWZpbmUgUEZfSU5UX1NUQVRfUEFCUlNUCQkoMzEpDQo+IA0KPiBZ
-b3UgbWl4IGNvbnN0YW50cyB0aGF0IGFyZQ0KPiANCj4gICAtIHRoZSBiaXQgcG9zaXRpb24gKGxp
-a2UgdGhpcyksIGFuZA0KPiAgIC0gdGhlIGFjdHVhbCBiaXQgbWFzaywgbGlrZSBQQUJfSU5UUF9S
-RVNFVA0KPiANCj4gUGljayBvbmUgYW5kIHVzZSBhIHNpbmdsZSBzdHlsZS4gIE15IHBlcnNvbmFs
-IHByZWZlcmVuY2UgaXMgYSBwbGFpbiBoZXggYml0DQo+IG1hc2ssIGUuZy4sDQo+IA0KPiAgICNk
-ZWZpbmUgUEZfSU5UX1NUQVRfUEFCUlNUICAgIDB4ODAwMDAwMDANCj4gICAjZGVmaW5lIFBBQl9J
-TlRQX1JFU0VUICAgICAgICAweDAwMDAwMDAyDQo+IA0KPiBCdXQgc29tZSBwZW9wbGUgbGlrZSBC
-SVQoKSBvciB0aGUgc3R5bGUgeW91IHVzZWQgZm9yIFBBQl9JTlRQX1JFU0VUOg0KPiANCj4gICAj
-ZGVmaW5lIFBBQl9JTlRQX1JFU0VUICAgICAgICBCSVQoMSkNCj4gICAjZGVmaW5lIFBBQl9JTlRQ
-X1JFU0VUICAgICAgICAoMHgxIDw8IDEpDQo+IA0KPiBJIGRlZmluaXRlbHkgZG9uJ3QgbGlrZSB0
-aGUgc2ltcGxlIGJpdCBwb3NpdGlvbiBsaWtlIHRoaXM6DQo+IA0KPiAgICNkZWZpbmUgUEZfSU5U
-X1NUQVRfUEFCUlNUICAgIDMxDQo+IA0KPiBiZWNhdXNlIHRoYXQgbWVhbnMgeW91IGhhdmUgdG8g
-cmVwZWF0IHRoaW5ncyBsaWtlDQo+ICIxIDw8IFBGX0lOVF9TVEFUX1BBQlJTVCIgZXZlcnl3aGVy
-ZSB5b3UgdXNlIGl0Lg0KPiANCg0KV2lsbCB1bmlmeSB0aGVtIGluIHY1Lg0KDQo+ID4gKyNkZWZp
-bmUgUENJRV9QRl9EQkcJCQkoMHg3ZmMpDQo+ID4gKyNkZWZpbmUgUEZfREJHX0xUU1NNX01BU0sJ
-CSgweDNmKQ0KPiA+ICsjZGVmaW5lIFBGX0RCR19XRQkJCSgzMSkNCj4gPiArI2RlZmluZSBQRl9E
-QkdfUEFCUgkJCSgyNykNCj4gDQo+IFBhcmVucyBhcmUgbm90IG5lZWRlZCBhcm91bmQgc2luZ2xl
-IGNvbnN0YW50cyBsaWtlIHRoZXNlLg0KDQpZZXMsIHRoYW5rcyBmb3IgeW91ciBhZHZpY2UuDQoN
-Cj4gDQo+ID4gKyNkZWZpbmUgTFNfUENJRV9HNF9MVFNTTV9MMAkJMHgyZCAvKiBMMCBzdGF0ZSAq
-Lw0KPiA+ICsNCj4gPiArI2RlZmluZSB0b19sc19wY2llX2c0KHgpCQlwbGF0Zm9ybV9nZXRfZHJ2
-ZGF0YSgoeCktPnBkZXYpDQo+ID4gKw0KPiA+ICtzdHJ1Y3QgbHNfcGNpZV9nNCB7DQo+ID4gKwlz
-dHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNpOw0KPiA+ICsJc3RydWN0IGRlbGF5ZWRfd29yayBkd29y
-azsNCj4gPiArCWludCBpcnE7DQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW5saW5lIHUz
-MiBsc19wY2llX2c0X2x1dF9yZWFkbChzdHJ1Y3QgbHNfcGNpZV9nNCAqcGNpZSwgdTMyDQo+ID4g
-K29mZikgew0KPiA+ICsJcmV0dXJuIGlvcmVhZDMyKHBjaWUtPnBjaS0+Y3NyX2F4aV9zbGF2ZV9i
-YXNlICsgUENJRV9MVVRfT0ZGICsgb2ZmKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGlu
-bGluZSB2b2lkIGxzX3BjaWVfZzRfbHV0X3dyaXRlbChzdHJ1Y3QgbHNfcGNpZV9nNCAqcGNpZSwN
-Cj4gPiArCQkJCQkgdTMyIG9mZiwgdTMyIHZhbCkNCj4gPiArew0KPiA+ICsJaW93cml0ZTMyKHZh
-bCwgcGNpZS0+cGNpLT5jc3JfYXhpX3NsYXZlX2Jhc2UgKyBQQ0lFX0xVVF9PRkYgKyBvZmYpOw0K
-PiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW5saW5lIHUzMiBsc19wY2llX2c0X3BmX3JlYWRs
-KHN0cnVjdCBsc19wY2llX2c0ICpwY2llLCB1MzINCj4gPiArb2ZmKSB7DQo+ID4gKwlyZXR1cm4g
-aW9yZWFkMzIocGNpZS0+cGNpLT5jc3JfYXhpX3NsYXZlX2Jhc2UgKyBQQ0lFX1BGX09GRiArIG9m
-Zik7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbmxpbmUgdm9pZCBsc19wY2llX2c0X3Bm
-X3dyaXRlbChzdHJ1Y3QgbHNfcGNpZV9nNCAqcGNpZSwNCj4gPiArCQkJCQl1MzIgb2ZmLCB1MzIg
-dmFsKQ0KPiA+ICt7DQo+ID4gKwlpb3dyaXRlMzIodmFsLCBwY2llLT5wY2ktPmNzcl9heGlfc2xh
-dmVfYmFzZSArIFBDSUVfUEZfT0ZGICsgb2ZmKTsgfQ0KPiA+ICsNCj4gPiArc3RhdGljIGJvb2wg
-bHNfcGNpZV9nNF9pc19icmlkZ2Uoc3RydWN0IGxzX3BjaWVfZzQgKnBjaWUpIHsNCj4gPiArCXN0
-cnVjdCBtb2JpdmVpbF9wY2llICptdl9wY2kgPSBwY2llLT5wY2k7DQo+ID4gKwl1MzIgaGVhZGVy
-X3R5cGU7DQo+ID4gKw0KPiA+ICsJaGVhZGVyX3R5cGUgPSBjc3JfcmVhZGIobXZfcGNpLCBQQ0lf
-SEVBREVSX1RZUEUpOw0KPiA+ICsJaGVhZGVyX3R5cGUgJj0gMHg3ZjsNCj4gPiArDQo+ID4gKwly
-ZXR1cm4gaGVhZGVyX3R5cGUgPT0gUENJX0hFQURFUl9UWVBFX0JSSURHRTsgfQ0KPiA+ICsNCj4g
-PiArc3RhdGljIGludCBsc19wY2llX2c0X2xpbmtfdXAoc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBj
-aSkgew0KPiA+ICsJc3RydWN0IGxzX3BjaWVfZzQgKnBjaWUgPSB0b19sc19wY2llX2c0KHBjaSk7
-DQo+ID4gKwl1MzIgc3RhdGU7DQo+ID4gKw0KPiA+ICsJc3RhdGUgPSBsc19wY2llX2c0X3BmX3Jl
-YWRsKHBjaWUsIFBDSUVfUEZfREJHKTsNCj4gPiArCXN0YXRlID0Jc3RhdGUgJiBQRl9EQkdfTFRT
-U01fTUFTSzsNCj4gPiArDQo+ID4gKwlpZiAoc3RhdGUgPT0gTFNfUENJRV9HNF9MVFNTTV9MMCkN
-Cj4gPiArCQlyZXR1cm4gMTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsN
-Cj4gPiArc3RhdGljIHZvaWQgbHNfcGNpZV9nNF9yZWluaXRfaHcoc3RydWN0IGxzX3BjaWVfZzQg
-KnBjaWUpIHsNCj4gPiArCXN0cnVjdCBtb2JpdmVpbF9wY2llICptdl9wY2kgPSBwY2llLT5wY2k7
-DQo+ID4gKwl1MzIgdmFsLCBhY3Rfc3RhdDsNCj4gPiArCWludCB0byA9IDEwMDsNCj4gPiArDQo+
-ID4gKwkvKiBQb2xsIGZvciBwYWJfY3NiX3Jlc2V0IHRvIHNldCBhbmQgUEFCIGFjdGl2aXR5IHRv
-IGNsZWFyICovDQo+ID4gKwlkbyB7DQo+ID4gKwkJdXNsZWVwX3JhbmdlKDEwLCAxNSk7DQo+ID4g
-KwkJdmFsID0gbHNfcGNpZV9nNF9wZl9yZWFkbChwY2llLCBQQ0lFX1BGX0lOVF9TVEFUKTsNCj4g
-PiArCQlhY3Rfc3RhdCA9IGNzcl9yZWFkbChtdl9wY2ksIFBBQl9BQ1RJVklUWV9TVEFUKTsNCj4g
-PiArCX0gd2hpbGUgKCgodmFsICYgMSA8PCBQRl9JTlRfU1RBVF9QQUJSU1QpID09IDAgfHwgYWN0
-X3N0YXQpICYmIHRvLS0pOw0KPiA+ICsJaWYgKHRvIDwgMCkgew0KPiA+ICsJCWRldl9lcnIoJm12
-X3BjaS0+cGRldi0+ZGV2LCAicG9sbCBQQUJSU1QmUEFCQUNUIHRpbWVvdXRcbiIpOw0KPiA+ICsJ
-CXJldHVybjsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwkvKiBjbGVhciBQRVhfUkVTRVQgYml0IGlu
-IFBFWF9QRjBfREJHIHJlZ2lzdGVyICovDQo+ID4gKwl2YWwgPSBsc19wY2llX2c0X3BmX3JlYWRs
-KHBjaWUsIFBDSUVfUEZfREJHKTsNCj4gPiArCXZhbCB8PSAxIDw8IFBGX0RCR19XRTsNCj4gPiAr
-CWxzX3BjaWVfZzRfcGZfd3JpdGVsKHBjaWUsIFBDSUVfUEZfREJHLCB2YWwpOw0KPiA+ICsNCj4g
-PiArCXZhbCA9IGxzX3BjaWVfZzRfcGZfcmVhZGwocGNpZSwgUENJRV9QRl9EQkcpOw0KPiA+ICsJ
-dmFsIHw9IDEgPDwgUEZfREJHX1BBQlI7DQo+ID4gKwlsc19wY2llX2c0X3BmX3dyaXRlbChwY2ll
-LCBQQ0lFX1BGX0RCRywgdmFsKTsNCj4gPiArDQo+ID4gKwl2YWwgPSBsc19wY2llX2c0X3BmX3Jl
-YWRsKHBjaWUsIFBDSUVfUEZfREJHKTsNCj4gPiArCXZhbCAmPSB+KDEgPDwgUEZfREJHX1dFKTsN
-Cj4gPiArCWxzX3BjaWVfZzRfcGZfd3JpdGVsKHBjaWUsIFBDSUVfUEZfREJHLCB2YWwpOw0KPiA+
-ICsNCj4gPiArCW1vYml2ZWlsX2hvc3RfaW5pdChtdl9wY2ksIHRydWUpOw0KPiA+ICsNCj4gPiAr
-CXRvID0gMTAwOw0KPiA+ICsJd2hpbGUgKCFsc19wY2llX2c0X2xpbmtfdXAobXZfcGNpKSAmJiB0
-by0tKQ0KPiA+ICsJCXVzbGVlcF9yYW5nZSgyMDAsIDI1MCk7DQo+ID4gKwlpZiAodG8gPCAwKQ0K
-PiA+ICsJCWRldl9lcnIoJm12X3BjaS0+cGRldi0+ZGV2LCAiUENJZSBsaW5rIHRyYWlubmluZyB0
-aW1lb3V0XG4iKTsNCj4gDQo+IHMvdHJhaW5uaW5nL3RyYWluaW5nLw0KPiANCg0KTXkgdHlwbywg
-d2lsbCBmaXggaW4gdjUuDQoNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGlycXJldHVybl90
-IGxzX3BjaWVfZzRfaGFuZGxlcihpbnQgaXJxLCB2b2lkICpkZXZfaWQpDQo+IA0KPiBGdW5jdGlv
-biBuYW1lIHNob3VsZCBpbmNsdWRlICJpcnFfaGFuZGxlciIgb3IgImlzciIuICBSdW4NCj4gDQo+
-ICAgZ2l0IGdyZXAgcmVxdWVzdF9pcnEgZHJpdmVycy9wY2kvY29udHJvbGxlci8NCj4gDQo+IGFu
-ZCBmb2xsb3cgdGhlIGV4aXN0aW5nIGNvbnZlbnRpb25zLg0KPg0KDQpZZXMsIHdpbGwgZml4IGlu
-IHY1Lg0KIA0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgbHNfcGNpZV9nNCAqcGNpZSA9IChzdHJ1Y3Qg
-bHNfcGNpZV9nNCAqKWRldl9pZDsNCj4gPiArCXN0cnVjdCBtb2JpdmVpbF9wY2llICptdl9wY2kg
-PSBwY2llLT5wY2k7DQo+ID4gKwl1MzIgdmFsOw0KPiA+ICsNCj4gPiArCXZhbCA9IGNzcl9yZWFk
-bChtdl9wY2ksIFBBQl9JTlRQX0FNQkFfTUlTQ19TVEFUKTsNCj4gPiArCWlmICghdmFsKQ0KPiA+
-ICsJCXJldHVybiBJUlFfTk9ORTsNCj4gPiArDQo+ID4gKwlpZiAodmFsICYgUEFCX0lOVFBfUkVT
-RVQpDQo+ID4gKwkJc2NoZWR1bGVfZGVsYXllZF93b3JrKCZwY2llLT5kd29yaywgbXNlY3NfdG9f
-amlmZmllcygxKSk7DQo+ID4gKw0KPiA+ICsJY3NyX3dyaXRlbChtdl9wY2ksIHZhbCwgUEFCX0lO
-VFBfQU1CQV9NSVNDX1NUQVQpOw0KPiA+ICsNCj4gPiArCXJldHVybiBJUlFfSEFORExFRDsNCj4g
-PiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBsc19wY2llX2c0X2ludGVycnVwdF9pbml0KHN0
-cnVjdCBtb2JpdmVpbF9wY2llICptdl9wY2kpIHsNCj4gPiArCXN0cnVjdCBsc19wY2llX2c0ICpw
-Y2llID0gdG9fbHNfcGNpZV9nNChtdl9wY2kpOw0KPiA+ICsJdTMyIHZhbDsNCj4gPiArCWludCBy
-ZXQ7DQo+ID4gKw0KPiA+ICsJcGNpZS0+aXJxID0gcGxhdGZvcm1fZ2V0X2lycV9ieW5hbWUobXZf
-cGNpLT5wZGV2LCAiaW50ciIpOw0KPiA+ICsJaWYgKHBjaWUtPmlycSA8IDApIHsNCj4gPiArCQlk
-ZXZfZXJyKCZtdl9wY2ktPnBkZXYtPmRldiwgIkNhbid0IGdldCAnaW50cicgaXJxLlxuIik7DQo+
-IA0KPiBXaGVuIHlvdSB1c2UgJm12X3BjaS0+cGRldi0+ZGV2IG1vcmUgdGhhbiBvbmNlLCBhcyB5
-b3UgZG8gaGVyZSwgcGxlYXNlDQo+IGFkZA0KPiANCj4gICBzdHJ1Y3QgZGV2aWNlICpkZXYgPSAm
-bXZfcGNpLT5wZGV2LT5kZXY7DQo+IA0KPiBhbmQgdXNlICJkZXYiIGluc3RlYWQgb2YgcmVwZWF0
-aW5nIHRoZSB3aG9sZSAiJm12X3BjaS0+cGRldi0+ZGV2Ig0KPiBleHByZXNzaW9uLg0KPiANCj4g
-cy9pcnEuL0lSUS8gKENhcGl0YWxpemUgSVJRIGFuZCBvbWl0IHBlcmlvZCkNCj4gDQoNCldpbGwg
-Zml4IGluIHY1Lg0KDQo+ID4gKwkJcmV0dXJuIHBjaWUtPmlycTsNCj4gPiArCX0NCj4gPiArCXJl
-dCA9IGRldm1fcmVxdWVzdF9pcnEoJm12X3BjaS0+cGRldi0+ZGV2LCBwY2llLT5pcnEsDQo+ID4g
-KwkJCSAgICAgICBsc19wY2llX2c0X2hhbmRsZXIsIElSUUZfU0hBUkVELA0KPiA+ICsJCQkgICAg
-ICAgbXZfcGNpLT5wZGV2LT5uYW1lLCBwY2llKTsNCj4gPiArCWlmIChyZXQpIHsNCj4gPiArCQlk
-ZXZfZXJyKCZtdl9wY2ktPnBkZXYtPmRldiwgIkNhbid0IHJlZ2lzdGVyIFBDSWUgSVJRLlxuIik7
-DQo+IA0KPiBPbWl0IHBlcmlvZCBmcm9tIG1lc3NhZ2UgYW5kIG1heWJlIGluY2x1ZGUgdGhlIElS
-USBudW1iZXIuDQo+DQoNCldpbGwgYWRkIGluIHY1Lg0KIA0KPiBBbGwgeW91ciBtZXNzYWdlcyBz
-aG91bGQgc3RhcnQgd2l0aCBsb3dlci1jYXNlIG9yIGFsbCBzaG91bGQgc3RhcnQgd2l0aA0KPiB1
-cHBlci1jYXNlICh0aGUgdHdvIGluIHRoaXMgZnVuY3Rpb24gYXJlIGNhcGl0YWxpemVkLCBidXQg
-dGhlIG90aGVycyBhcmUgbm90KS4NCj4NCg0KV2lsbCB1bmlmeSB0aGVtIGluIHY1Lg0KIA0KPiA+
-ICsJCXJldHVybiAgcmV0Ow0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCS8qIEVuYWJsZSBpbnRlcnJ1
-cHRzICovDQo+ID4gKwl2YWwgPSBQQUJfSU5UUF9JTlRYX01BU0sgfCBQQUJfSU5UUF9NU0kgfCBQ
-QUJfSU5UUF9SRVNFVCB8DQo+ID4gKwkgICAgICBQQUJfSU5UUF9QQ0lFX1VFIHwgUEFCX0lOVFBf
-SUVfUE1SRURJIHwgUEFCX0lOVFBfSUVfRUM7DQo+ID4gKwljc3Jfd3JpdGVsKG12X3BjaSwgdmFs
-LCBQQUJfSU5UUF9BTUJBX01JU0NfRU5CKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiAr
-fQ0KPiA+ICsNCj4gPiArc3RhdGljIHZvaWQgbHNfcGNpZV9nNF9yZXNldChzdHJ1Y3Qgd29ya19z
-dHJ1Y3QgKndvcmspIHsNCj4gPiArCXN0cnVjdCBkZWxheWVkX3dvcmsgKmR3b3JrID0gY29udGFp
-bmVyX29mKHdvcmssIHN0cnVjdCBkZWxheWVkX3dvcmssDQo+ID4gKwkJCQkJCSAgd29yayk7DQo+
-ID4gKwlzdHJ1Y3QgbHNfcGNpZV9nNCAqcGNpZSA9IGNvbnRhaW5lcl9vZihkd29yaywgc3RydWN0
-IGxzX3BjaWVfZzQsIGR3b3JrKTsNCj4gPiArCXN0cnVjdCBtb2JpdmVpbF9wY2llICptdl9wY2kg
-PSBwY2llLT5wY2k7DQo+ID4gKwl1MTYgY3RybDsNCj4gPiArDQo+ID4gKwljdHJsID0gY3NyX3Jl
-YWR3KG12X3BjaSwgUENJX0JSSURHRV9DT05UUk9MKTsNCj4gPiArCWN0cmwgJj0gflBDSV9CUklE
-R0VfQ1RMX0JVU19SRVNFVDsNCj4gPiArCWNzcl93cml0ZXcobXZfcGNpLCBjdHJsLCBQQ0lfQlJJ
-REdFX0NPTlRST0wpOw0KPiA+ICsJbHNfcGNpZV9nNF9yZWluaXRfaHcocGNpZSk7DQo+ID4gK30N
-Cj4gPiArDQo+ID4gK3N0YXRpYyBzdHJ1Y3QgbW9iaXZlaWxfcnBfb3BzIGxzX3BjaWVfZzRfcnBf
-b3BzID0gew0KPiA+ICsJLmludGVycnVwdF9pbml0ID0gbHNfcGNpZV9nNF9pbnRlcnJ1cHRfaW5p
-dCwgfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbW9iaXZlaWxfcGFiX29wcyBs
-c19wY2llX2c0X3BhYl9vcHMgPSB7DQo+ID4gKwkubGlua191cCA9IGxzX3BjaWVfZzRfbGlua191
-cCwNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgX19pbml0IGxzX3BjaWVfZzRfcHJv
-YmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikgew0KPiA+ICsJc3RydWN0IGRldmljZSAq
-ZGV2ID0gJnBkZXYtPmRldjsNCj4gPiArCXN0cnVjdCBtb2JpdmVpbF9wY2llICptdl9wY2k7DQo+
-ID4gKwlzdHJ1Y3QgbHNfcGNpZV9nNCAqcGNpZTsNCj4gPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAq
-bnAgPSBkZXYtPm9mX25vZGU7DQo+ID4gKwlpbnQgcmV0Ow0KPiA+ICsNCj4gPiArCWlmICghb2Zf
-cGFyc2VfcGhhbmRsZShucCwgIm1zaS1wYXJlbnQiLCAwKSkgew0KPiA+ICsJCWRldl9lcnIoZGV2
-LCAiZmFpbGVkIHRvIGZpbmQgbXNpLXBhcmVudFxuIik7DQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7
-DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJcGNpZSA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigq
-cGNpZSksIEdGUF9LRVJORUwpOw0KPiA+ICsJaWYgKCFwY2llKQ0KPiA+ICsJCXJldHVybiAtRU5P
-TUVNOw0KPiA+ICsNCj4gPiArCW12X3BjaSA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqbXZf
-cGNpKSwgR0ZQX0tFUk5FTCk7DQo+ID4gKwlpZiAoIW12X3BjaSkNCj4gPiArCQlyZXR1cm4gLUVO
-T01FTTsNCj4gPiArDQo+ID4gKwltdl9wY2ktPnBkZXYgPSBwZGV2Ow0KPiA+ICsJbXZfcGNpLT5v
-cHMgPSAmbHNfcGNpZV9nNF9wYWJfb3BzOw0KPiA+ICsJbXZfcGNpLT5ycC5vcHMgPSAmbHNfcGNp
-ZV9nNF9ycF9vcHM7DQo+ID4gKwlwY2llLT5wY2kgPSBtdl9wY2k7DQo+ID4gKw0KPiA+ICsJcGxh
-dGZvcm1fc2V0X2RydmRhdGEocGRldiwgcGNpZSk7DQo+ID4gKw0KPiA+ICsJSU5JVF9ERUxBWUVE
-X1dPUksoJnBjaWUtPmR3b3JrLCBsc19wY2llX2c0X3Jlc2V0KTsNCj4gPiArDQo+ID4gKwlyZXQg
-PSBtb2JpdmVpbF9wY2llX2hvc3RfcHJvYmUobXZfcGNpKTsNCj4gPiArCWlmIChyZXQpIHsNCj4g
-PiArCQlkZXZfZXJyKGRldiwgImZhaWwgdG8gcHJvYmUhXG4iKTsNCj4gPiArCQlyZXR1cm4gIHJl
-dDsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlpZiAoIWxzX3BjaWVfZzRfaXNfYnJpZGdlKHBjaWUp
-KQ0KPiA+ICsJCXJldHVybiAtRU5PREVWOw0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+ICt9
-DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBsc19wY2llX2c0
-X29mX21hdGNoW10gPSB7DQo+ID4gKwl7IC5jb21wYXRpYmxlID0gImZzbCxseDIxNjBhLXBjaWUi
-LCB9LA0KPiA+ICsJeyB9LA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIHN0cnVjdCBwbGF0
-Zm9ybV9kcml2ZXIgbHNfcGNpZV9nNF9kcml2ZXIgPSB7DQo+ID4gKwkuZHJpdmVyID0gew0KPiA+
-ICsJCS5uYW1lID0gImxheWVyc2NhcGUtcGNpZS1nZW40IiwNCj4gPiArCQkub2ZfbWF0Y2hfdGFi
-bGUgPSBsc19wY2llX2c0X29mX21hdGNoLA0KPiA+ICsJCS5zdXBwcmVzc19iaW5kX2F0dHJzID0g
-dHJ1ZSwNCj4gPiArCX0sDQo+ID4gK307DQo+ID4gKw0KPiA+ICtidWlsdGluX3BsYXRmb3JtX2Ry
-aXZlcl9wcm9iZShsc19wY2llX2c0X2RyaXZlciwgbHNfcGNpZV9nNF9wcm9iZSk7DQo+ID4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5o
-DQo+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwuaA0K
-PiA+IGluZGV4IDBmNTMwMzk2MmU4OC4uMGNjZDZjZWU1ZjhmIDEwMDY0NA0KPiA+IC0tLSBhL2Ry
-aXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5oDQo+ID4gKysrIGIv
-ZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmgNCj4gPiBAQCAt
-NDEsNiArNDEsOCBAQA0KPiA+ICAjZGVmaW5lICBQQUdFX0xPX01BU0sJCQkweDNmZg0KPiA+ICAj
-ZGVmaW5lICBQQUdFX1NFTF9PRkZTRVRfU0hJRlQJCTEwDQo+ID4NCj4gPiArI2RlZmluZSBQQUJf
-QUNUSVZJVFlfU1RBVAkJMHg4MWMNCj4gPiArDQo+ID4gICNkZWZpbmUgUEFCX0FYSV9QSU9fQ1RS
-TAkJMHgwODQwDQo+ID4gICNkZWZpbmUgIEFQSU9fRU5fTUFTSwkJCTB4Zg0KPiA+DQo+ID4gQEAg
-LTQ5LDggKzUxLDE4IEBADQo+ID4NCj4gPiAgI2RlZmluZSBQQUJfSU5UUF9BTUJBX01JU0NfRU5C
-CQkweDBiMGMNCj4gPiAgI2RlZmluZSBQQUJfSU5UUF9BTUJBX01JU0NfU1RBVAkJMHgwYjFjDQo+
-ID4gLSNkZWZpbmUgIFBBQl9JTlRQX0lOVFhfTUFTSwkJMHgwMWUwDQo+ID4gLSNkZWZpbmUgIFBB
-Ql9JTlRQX01TSV9NQVNLCQkweDgNCj4gPiArI2RlZmluZSAgUEFCX0lOVFBfUkVTRVQJCQkoMHgx
-IDw8IDEpDQo+ID4gKyNkZWZpbmUgIFBBQl9JTlRQX01TSQkJCSgweDEgPDwgMykNCj4gPiArI2Rl
-ZmluZSAgUEFCX0lOVFBfSU5UQQkJCSgweDEgPDwgNSkNCj4gPiArI2RlZmluZSAgUEFCX0lOVFBf
-SU5UQgkJCSgweDEgPDwgNikNCj4gPiArI2RlZmluZSAgUEFCX0lOVFBfSU5UQwkJCSgweDEgPDwg
-NykNCj4gPiArI2RlZmluZSAgUEFCX0lOVFBfSU5URAkJCSgweDEgPDwgOCkNCj4gPiArI2RlZmlu
-ZSAgUEFCX0lOVFBfUENJRV9VRQkJKDB4MSA8PCA5KQ0KPiA+ICsjZGVmaW5lICBQQUJfSU5UUF9J
-RV9QTVJFREkJCSgweDEgPDwgMjkpDQo+ID4gKyNkZWZpbmUgIFBBQl9JTlRQX0lFX0VDCQkJKDB4
-MSA8PCAzMCkNCj4gPiArI2RlZmluZSAgUEFCX0lOVFBfTVNJX01BU0sJCVBBQl9JTlRQX01TSQ0K
-PiA+ICsjZGVmaW5lICBQQUJfSU5UUF9JTlRYX01BU0sJCShQQUJfSU5UUF9JTlRBIHwNCj4gUEFC
-X0lOVFBfSU5UQiB8XA0KPiA+ICsJCQkJCVBBQl9JTlRQX0lOVEMgfCBQQUJfSU5UUF9JTlREKQ0K
-PiA+DQo+ID4gICNkZWZpbmUgUEFCX0FYSV9BTUFQX0NUUkwod2luKQkJUEFCX1JFR19BRERSKDB4
-MGJhMCwNCj4gd2luKQ0KPiA+ICAjZGVmaW5lICBXSU5fRU5BQkxFX1NISUZUCQkwDQo+ID4gLS0N
-Cj4gPiAyLjE3LjENCj4gPg0KDQpUaGFua3MsDQpaaGlxaWFuZw0KX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
+
+The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
+DPHY in Rx mode, an optional I2C controller and a Video Format Bridge.
+
+Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+v6
+- Added "control" after V4L2_CID_XILINX_MIPICSISS_ACT_LANES as suggested by Luca
+- Added reviewed by Rob Herring
+
+v5
+- Incorporated comments by Luca Cersoli
+- Removed DPHY clock from description and example
+- Removed bayer pattern from device tree MIPI CSI IP
+  doesn't deal with bayer pattern.
+
+v4
+- Added reviewed by Hyun Kwon
+
+v3
+- removed interrupt parent as suggested by Rob
+- removed dphy clock
+- moved vfb to optional properties
+- Added required and optional port properties section
+- Added endpoint property section
+
+v2
+- updated the compatible string to latest version supported
+- removed DPHY related parameters
+- added CSI v2.0 related property (including VCX for supporting upto 16
+  virtual channels).
+- modified csi-pxl-format from string to unsigned int type where the value
+  is as per the CSI specification
+- Defined port 0 and port 1 as sink and source ports.
+- Removed max-lanes property as suggested by Rob and Sakari
+
+ .../bindings/media/xilinx/xlnx,csi2rxss.txt        | 118 +++++++++++++++++++++
+ 1 file changed, 118 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+
+diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+new file mode 100644
+index 0000000..5b8170f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+@@ -0,0 +1,118 @@
++Xilinx MIPI CSI2 Receiver Subsystem Device Tree Bindings
++--------------------------------------------------------
++
++The Xilinx MIPI CSI2 Receiver Subsystem is used to capture MIPI CSI2 traffic
++from compliant camera sensors and send the output as AXI4 Stream video data
++for image processing.
++
++The subsystem consists of a MIPI DPHY in slave mode which captures the
++data packets. This is passed along the MIPI CSI2 Rx IP which extracts the
++packet data. The optional Video Format Bridge (VFB) converts this data to
++AXI4 Stream video data.
++
++For more details, please refer to PG232 Xilinx MIPI CSI-2 Receiver Subsystem.
++
++Required properties:
++--------------------
++- compatible: Must contain "xlnx,mipi-csi2-rx-subsystem-4.0".
++- reg: Physical base address and length of the registers set for the device.
++- interrupts: Property with a value describing the interrupt number.
++- clocks: List of phandles to AXI Lite and Video clocks.
++- clock-names: Must contain "lite_aclk" and "video_aclk" in the same order
++  as clocks listed in clocks property.
++- xlnx,csi-pxl-format: This denotes the CSI Data type selected in hw design.
++  Packets other than this data type (except for RAW8 and User defined data
++  types) will be filtered out. Possible values are as below -
++  0x1E - YUV4228B
++  0x1F - YUV42210B
++  0x20 - RGB444
++  0x21 - RGB555
++  0x22 - RGB565
++  0x23 - RGB666
++  0x24 - RGB888
++  0x28 - RAW6
++  0x29 - RAW7
++  0x2A - RAW8
++  0x2B - RAW10
++  0x2C - RAW12
++  0x2D - RAW14
++  0x2E - RAW16
++  0x2F - RAW20
++
++
++Optional properties:
++--------------------
++- xlnx,vfb: This is present when Video Format Bridge is enabled.
++  Without this property the driver won't be loaded as IP won't be able to generate
++  media bus format compliant stream output.
++- xlnx,en-csi-v2-0: Present if CSI v2 is enabled in IP configuration.
++- xlnx,en-vcx: When present, there are maximum 16 virtual channels, else
++  only 4. This is present only if xlnx,en-csi-v2-0 is present.
++- xlnx,en-active-lanes: present if the number of active lanes can be
++  reconfigured at runtime in the Protocol Configuration Register.
++  If present, the V4L2_CID_XILINX_MIPICSISS_ACT_LANES control is added.
++  Otherwise all lanes, as set in IP configuration, are always active.
++
++Ports
++-----
++The device node shall contain two 'port' child nodes as defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++The port@0 is a sink port and shall connect to CSI2 source like camera.
++It must have the data-lanes property.
++
++The port@1 is a source port and can be connected to any video processing IP
++which can work with AXI4 Stream data.
++
++Required port properties:
++--------------------
++- reg: 0 - for sink port.
++       1 - for source port.
++
++Optional endpoint property:
++---------------------------
++- data-lanes: specifies MIPI CSI-2 data lanes as covered in video-interfaces.txt.
++  This should be in the sink port endpoint which connects to MIPI CSI2 source
++  like sensor. The possible values are:
++  1       - For 1 lane enabled in IP.
++  1 2     - For 2 lanes enabled in IP.
++  1 2 3   - For 3 lanes enabled in IP.
++  1 2 3 4 - For 4 lanes enabled in IP.
++
++Example:
++
++	csiss_1: csiss@a0020000 {
++		compatible = "xlnx,mipi-csi2-rx-subsystem-4.0";
++		reg = <0x0 0xa0020000 0x0 0x10000>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 95 4>;
++		xlnx,csi-pxl-format = <0x2a>;
++		xlnx,vfb;
++		xlnx,en-active-lanes;
++		xlnx,en-csi-v2-0;
++		xlnx,en-vcx;
++		clock-names = "lite_aclk", "video_aclk";
++		clocks = <&misc_clk_0>, <&misc_clk_1>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				/* Sink port */
++				reg = <0>;
++				csiss_in: endpoint {
++					data-lanes = <1 2 3 4>;
++					/* MIPI CSI2 Camera handle */
++					remote-endpoint = <&camera_out>;
++				};
++			};
++			port@1 {
++				/* Source port */
++				reg = <1>;
++				csiss_out: endpoint {
++					remote-endpoint = <&vproc_in>;
++				};
++			};
++		};
++	};
+-- 
+2.7.4
