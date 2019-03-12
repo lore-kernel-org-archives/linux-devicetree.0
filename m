@@ -1,81 +1,50 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 02/13] driver core: Remove the link if there is no driver
- with AUTO flag
-Date: Tue, 12 Mar 2019 15:21:51 +0100
-Message-ID: <e15e94be-3eb9-dc7b-2073-4163f91f0259@gmail.com>
-References: <1546318276-18993-1-git-send-email-yong.wu@mediatek.com>
- <1546318276-18993-3-git-send-email-yong.wu@mediatek.com>
- <CAE=gft7mWs1jc+KQQcPuuhcmxpFRnRBTt35+uC3F20N6R554bQ@mail.gmail.com>
- <1551278000.17917.50.camel@mhfsdcap03>
- <CAE=gft4iHRo8VQot26dH2NaRNLtxxRYWBmSpjkoL2BE_i6eXQw@mail.gmail.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] arm: dts: rk3288-tinker.dtsi: Enable WiFi
+Date: Tue, 12 Mar 2019 15:21:49 +0100
+Message-ID: <8fc4cc3c-5a83-4616-9fa2-3055899acdb7@i2se.com>
+References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
+ <20190309153923.22806-1-beagleboard@davidjohnsummers.uk>
+ <20190309153923.22806-2-beagleboard@davidjohnsummers.uk>
+ <1822354.MXcUDnUBre@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAE=gft4iHRo8VQot26dH2NaRNLtxxRYWBmSpjkoL2BE_i6eXQw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1822354.MXcUDnUBre@phil>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@chromium.org>, Yong Wu <yong.wu@mediatek.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, Arnd Bergmann <arnd@arndb.de>, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Tony McKahan <tonymckahan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 05/03/2019 20:03, Evan Green wrote:
-> On Wed, Feb 27, 2019 at 6:33 AM Yong Wu <yong.wu@mediatek.com> wrote:
->>
->> On Mon, 2019-02-25 at 15:53 -0800, Evan Green wrote:
->>> On Mon, Dec 31, 2018 at 8:52 PM Yong Wu <yong.wu@mediatek.com> wrote:
->>>>
->>>> DL_FLAG_AUTOREMOVE_CONSUMER/SUPPLIER means "Remove the link
->>>> automatically on consumer/supplier driver unbind", that means we should
->>>> remove whole the device_link when there is no this driver no matter what
->>>> the ref_count of the link is.
->>>>
->>>> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
->>>> ---
->>>> The ref_count of our device_link normally is over 1. When the consumer
->>>> device driver is removed, whole the device_link should be removed.
->>>> Thus, I add this patch.
->>>> ---
->>>
->>> I will admit to reading about device links for the first time while
->>> reviewing this patch, but I don't really get this. Why use a kref at
->>> all if we're just going to ignore its value? For instance, I see that
->>> if you call device_link_add() with the same supplier and consumer, it
->>> uses the kref to return the same link. That machinery is broken with
->>> your change. Although I don't see any uses of it, you might also
->>> expect a supplier or consumer could do a kref_get() on the link it got
->>> back from device_link_add(), and have a reasonable expectation that
->>> the link wouldn't be freed out from under it. This would also be
->>> broken.
->>>
->>> Can you explain why your device_links normally have a reference count
->>>> 1,
->>
->> I use device link between the smi-larb device and the iommu-consumer
->> device. Take a example, smi-larb1 have 4 VDEC ports. From 4/13 in this
->> patchset, we use device_link to link the VDEC device and the smi-larb1
->> device in the function(mtk_iommu_config). since there are 4 ports, it
->> will call device_link_add 4 times.
->>
->>>
->>> and why those additional references can't be cleaned up in an
->>> orderly fashion?
->>
->> If the iommu-consume device(like VDEC above) is removed, It should enter
->> device_links_driver_cleanup which only ref_put one time. I guess whole
->> the link should be removed at that time.
-> 
-> It seems like Robin had some suggestions about using
-> mtk_iommu_add_device() rather than the attach_dev() to set the links
-> up, and then track them for removal in the corresponding
-> remove_device() callback. Then you wouldn't need this change, right?
-> 
-
-FYI, Evan the patch is queued for v5.1-rc1 as
-0fe6f7874d46 ("driver core: Remove the link if there is no driver with AUTO flag")
-
-So if you think there is something wrong with it, then please provide a fix or
-raise awareness :)
+SGkgSGVpa28sCgpBbSAxMi4wMy4xOSB1bSAxNToxOCBzY2hyaWViIEhlaWtvIFN0dWVibmVyOgo+
+IEFtIFNhbXN0YWcsIDkuIE3DpHJ6IDIwMTksIDE2OjM5OjIyIENFVCBzY2hyaWViIERhdmlkIFN1
+bW1lcnM6Cj4+IFRoaXMgcGF0Y2ggYWRkcyB3aWZpIHN1cHBvcnQgdG8gdGhlIEFTVVMgVGlua2Vy
+IEJvYXJkIChTKSBtYWNoaW5lcy4KPj4KPj4gVGhpcyBpcyBwcm92aWRlZCBieSBhbiB3aWZpIGNh
+cmQgKFJUTDg3MjNCUykgd2lyZWQgaW50byB0aGUgc2RpbyBpbnRlcmZhY2UuCj4+Cj4+IEl0IHJl
+cXVpcmVzIGNlcnRhaW4gcGlucyBwdWxsZWQsIHRvIGVuYWJsZSB0aGUgV2lGaS4KPj4KPj4gVGhl
+IHNjaGVtYXRpY3MgZm9yIHRoZXNlIGJvYXJkIGRvIG5vdCBzaG93IHRoZSBXaUZpIGNvbm5lY3Rp
+b24sIHNvIHRoZQo+PiBjb25uZWN0aW9ucyBoYXZlIGJlZW4gdGFrZW4gZnJvbToKPj4KPj4gaHR0
+cHM6Ly9naXRodWIuY29tL1RpbmtlckJvYXJkL2RlYmlhbl9rZXJuZWwvYmxvYi9kZXZlbG9wL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1taW5pYXJtLmR0cwo+Pgo+PiBJbiBwYXJ0aWN1bGFyIHRo
+ZSBwdWxsaW5nIG9mIHR3byBwaW5zLgo+Pgo+PiBUaGlzIHBhdGNoIGlzIGFsbW9zdCBpZGVudGlj
+YWwgdG8gdjEuIEEgZmV3IGFkZGl0aW9uYWwgbGluZSBicmVha3MgZm9yCj4+IHJlYWRhYmlsaXR5
+LiBPbiBBcm1iaWFuLCB0aGV5IGRpZCBub3QgdXNlIHNkLXVocy1kZHI1MCwgc28gdGhpcyBoYXMK
+Pj4gYmVlbiByZW1vdmVkLiBJdCBkb2VzIG5vdCBjaGFuZ2UgZnVuY3Rpb25hbGl0eS4gVGhlIEFT
+VVMgcGF0Y2ggc2V0Cj4+IHNkLXVocy1zZHIxMDQ7Lgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBEYXZp
+ZCBTdW1tZXJzIDxiZWFnbGVib2FyZEBkYXZpZGpvaG5zdW1tZXJzLnVrPgo+PiBTaWduZWQtb2Zm
+LWJ5OiBTdGVmYW4gV2FocmVuIDxzdGVmYW4ud2FocmVuQGkyc2UuY29tPgo+IHRyeWluZyB0byB1
+bmRlcnN0YW5kIHRoZSByZWxhdGlvbnNoaXAgaGVyZSwgaXMgdGhhdCBhCj4gIkNvLWRldmVsb3Bl
+ZC1ieTogU3RlZmFuIFdhaHJlbiA8Li4uPiIgY2FzZT8KCnllcyBpdCBpcy4KClJlZ2FyZHMgU3Rl
+ZmFuCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGlu
+dXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2Nr
+Y2hpcAo=
