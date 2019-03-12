@@ -1,32 +1,51 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 armsoc/drivers/bus+gpio 5/5] dt-bindings: gpio:
- Document GPIOs via Moxtet bus
-Date: Tue, 12 Mar 2019 07:47:14 -0500
-Message-ID: <20190312124714.GA14530@bogus>
-References: <20190307125251.724-1-marek.behun@nic.cz>
- <20190307125251.724-6-marek.behun@nic.cz>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 2/4] dt-bindings: phy: Add a new property drive-impedance-ohm for RK's emmc PHY
+Date: Tue, 12 Mar 2019 13:52:39 +0100
+Message-ID: <1924357.CMCVK5N5Qd@phil>
+References: <20190307084159.25236-1-christoph.muellner@theobroma-systems.com> <20190307084159.25236-2-christoph.muellner@theobroma-systems.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190307125251.724-6-marek.behun@nic.cz>
+In-Reply-To: <20190307084159.25236-2-christoph.muellner@theobroma-systems.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, Tony Lindgren <tony@atomide.com>, Shawn Guo <shawnguo@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>, devicetree@vger.kernel.org
+To: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawn.lin@rock-chips.com, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Kishon Vijay Abraham I <kishon@ti.com>, Brian Norris <briannorris@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Douglas Anderson <dianders@chromium.org>, Viresh Kumar <viresh.kumar@linaro.org>, Ezequiel Garcia <ezequiel@collabora.com>, Lin Huang <hl@rock-chips.com>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Vicente Bergas <vicencb@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  7 Mar 2019 13:52:51 +0100, =?UTF-8?q?Marek=20Beh=C3=BAn?= wrote:
-> This patch adds documentation of the device tree bindings for GPIOs
-> on the devices connected via Moxtet bus.
-> 
-> Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> ---
->  .../devicetree/bindings/gpio/gpio-moxtet.txt   | 18 ++++++++++++++++++
->  MAINTAINERS                                    |  1 +
->  2 files changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-moxtet.txt
-> 
+Hi Christoph,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Am Donnerstag, 7. März 2019, 09:41:54 CET schrieb Christoph Muellner:
+> This patch documents the new proprty drive-impedance-ohm for
+> Rockchip's eMMC PHY node.
+> 
+> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+> ---
+>  Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> index e3ea55763b0a..5f5d999dacc3 100644
+> --- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> @@ -13,6 +13,9 @@ specified by name:
+
+you might want to adapt the section headline as well, as right now it
+talks about "Optional clocks", but should likely become the generic
+"Optional properties" as in other bindings (including moving the clock-
+binding.txt reference down into the clock elements)
+
+
+Heiko
+
+>  		(because most boards can get basic functionality without having
+>  		access to it), it is strongly suggested.
+>   - clocks: Should have a phandle to the card clock exported by the SDHCI driver.
+> + - drive-impedance-ohm: Specifies the drive impedance in Ohm.
+> +                        Possible values are 33, 40, 50, 66 and 100.
+> +                        If not set, the default value of 50 will be applied.
+>  
+>  Example:
+>  
+> 
