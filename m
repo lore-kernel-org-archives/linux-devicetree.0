@@ -1,71 +1,43 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.20 095/171] DTS: CI20: Fix bugs in ci20s device tree.
-Date: Tue, 12 Mar 2019 10:07:55 -0700
-Message-ID: <20190312170356.160461164@linuxfoundation.org>
-References: <20190312170347.868927101@linuxfoundation.org>
+From: Johan Jonker <jbx6244@gmail.com>
+Subject: Re: [PATCH v3 1/4] drm: rockchip: introduce rk3066 hdmi
+Date: Tue, 12 Mar 2019 19:10:33 +0100
+Message-ID: <d53892e0-17f9-1c7f-b7d3-2794fad09207@gmail.com>
+References: <20190302104116.1535-1-jbx6244@gmail.com>
+ <20190302104116.1535-2-jbx6244@gmail.com>
+ <20190303202308.GD13157@ravnborg.org>
+ <b6b818d5-8c24-e01a-572e-97c1754c80e8@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Zhou Yanjie <zhouyanjie@cduestc.edu.cn>, Paul Burton <paul.burton@mips.com>, linux-mips <linux-mips@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, ralf@linux-mips.org, jhogan@kernel.org, mark.rutland@arm.com, malat@debian.org, ezequiel@collabora.co.uk, ulf.hansson@linaro.org, syq <syq@debian.org>, "jiaxun.yang" <jiaxun.yang@flygoat.com>, Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b6b818d5-8c24-e01a-572e-97c1754c80e8@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, heiko@sntech.de, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-4.20-stable review patch.  If anyone has any objections, please let me know.
+On 3/4/19 11:48 PM, Johan Jonker wrote:
+>
+> With regard to the bugs something between rc1 and rc8 results
+> in a freeze on poweroff. Power domain doesn't seem to turn off
+> the vop and hdmi in rc8.
 
-------------------
+The bug is due to a patch revert earlier this year.
+To shutdown MK808 one can continue to use the patch at the link below
+until this issue is fix by them.
 
-[ Upstream commit 1ca1c87f91d9dc50d6a38e2177b2032996e7901c ]
+drm/rockchip: shutdown drm subsystem on shutdown
+https://patchwork.kernel.org/patch/10556151/
 
-According to the Schematic, the hardware of ci20 leads to uart3,
-but not to uart2. Uart2 is miswritten in the original code.
-
-Signed-off-by: Zhou Yanjie <zhouyanjie@cduestc.edu.cn>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips <linux-mips@vger.kernel.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org
-Cc: ralf@linux-mips.org
-Cc: jhogan@kernel.org
-Cc: mark.rutland@arm.com
-Cc: malat@debian.org
-Cc: ezequiel@collabora.co.uk
-Cc: ulf.hansson@linaro.org
-Cc: syq <syq@debian.org>
-Cc: jiaxun.yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/mips/boot/dts/ingenic/ci20.dts | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 50cff3cbcc6d..4f7b1fa31cf5 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -76,7 +76,7 @@
- 	status = "okay";
- 
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pins_uart2>;
-+	pinctrl-0 = <&pins_uart3>;
- };
- 
- &uart4 {
-@@ -196,9 +196,9 @@
- 		bias-disable;
- 	};
- 
--	pins_uart2: uart2 {
--		function = "uart2";
--		groups = "uart2-data", "uart2-hwflow";
-+	pins_uart3: uart3 {
-+		function = "uart3";
-+		groups = "uart3-data", "uart3-hwflow";
- 		bias-disable;
- 	};
- 
--- 
-2.19.1
+[for-4.20] Revert "drm/rockchip: Allow driver to be shutdown on
+reboot/kexec"
+https://patchwork.kernel.org/patch/10714725/
