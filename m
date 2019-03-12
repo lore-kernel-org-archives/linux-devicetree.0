@@ -1,54 +1,47 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH] arm64: tegra: dts: enable aconnect, adma and agic
-Date: Tue, 12 Mar 2019 15:29:35 +0000
-Message-ID: <e473d089-7d6c-1c22-d395-91bd0ca8e122@nvidia.com>
-References: <1552400705-1179-1-git-send-email-spujar@nvidia.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 01/14] dt-bindings: pinctrl: add missing
+ compatible string for V3s
+Date: Tue, 12 Mar 2019 16:31:45 +0100
+Message-ID: <20190312153145.cqni5ll7ry4kspo3@flea>
+References: <20190312152256.35574-1-icenowy@aosc.io>
+ <20190312152256.35574-2-icenowy@aosc.io>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552400705-1179-1-git-send-email-spujar@nvidia.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sameer Pujar <spujar@nvidia.com>, robh+dt@kernel.org, mark.rutland@arm.com, treding@nvidia.com
-Cc: josephl@nvidia.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fymw2tgdk7jweltr"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZNBT7SAKGQE65HCTMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190312152256.35574-2-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 12/03/2019 14:25, Sameer Pujar wrote:
-> Enable aconnect, adma and agic for Tegra Jetson TX1.
-> 
-> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts b/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-> index 9fad0d2..5a57396 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-> @@ -99,4 +99,16 @@
->  		pinctrl-0 = <&dvfs_pwm_active_state>;
->  		pinctrl-1 = <&dvfs_pwm_inactive_state>;
->  	};
-> +
-> +	aconnect@702c0000 {
-> +		status = "okay";
-> +
-> +		dma@702e2000 {
-> +			status = "okay";
-> +		};
-> +
-> +		agic@702f9000 {
-> +			status = "okay";
-> +		};
-> +	};
->  };
+--fymw2tgdk7jweltr
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+On Tue, Mar 12, 2019 at 11:22:43PM +0800, Icenowy Zheng wrote:
+> The pinctrl driver of V3s is already available and used in the kernel,
+> but the compatible string of it is forgotten to be added.
+> 
+> Add the missing compatible string.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-Cheers
-Jon
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+
+Maxime
 
 -- 
-nvpublic
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--fymw2tgdk7jweltr--
