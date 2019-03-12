@@ -1,116 +1,353 @@
-From: =?utf-8?Q?Christoph_M=C3=BCllner?=
- <christoph.muellner@theobroma-systems.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: mmc: Add a new property
- disable-cqe-dcmd.
-Date: Tue, 12 Mar 2019 18:16:40 +0100
-Message-ID: <B1575425-14BA-496D-A295-FF956C8F3346@theobroma-systems.com>
-References: <20190307084329.25416-1-christoph.muellner@theobroma-systems.com>
- <4793843.T1TZ7EF8k3@phil>
- <D7EF0176-0EBD-4401-83BE-E7F951F88CAA@theobroma-systems.com>
- <2038789.ZmMFo7ZELZ@diego>
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2038789.ZmMFo7ZELZ@diego>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: mark.rutland@arm.com, ulf.hansson@linaro.org, Emil Renner Berthing <kernel@esmil.dk>, Viresh Kumar <viresh.kumar@linaro.org>, shawn.lin@rock-chips.com, Adrian Hunter <adrian.hunter@intel.com>, Tony Xie <tony.xie@rock-chips.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Michal Simek <michal.simek@xilinx.com>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Randy Li <ayaka@soulik.info>, Vicente Bergas <vicencb@gmail.com>, robh+dt@kernel.org, Ezequiel Garcia <ezequiel@collabora.com>, linux-arm-kernel@lists.infradead.org, Lin Huang <hl@rock-chips.com>, linux-mmc@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 02/25] leds: core: Add support for composing LED class
+ device names
+Date: Tue, 12 Mar 2019 18:28:10 +0100
+Message-ID: <db4c776a-88fe-6872-5aa5-da0ac43521b7@gmail.com>
+References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
+ <20190310182836.20841-3-jacek.anaszewski@gmail.com>
+ <79bf90e1-f1df-c015-d3ed-6294bda7f1fb@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <79bf90e1-f1df-c015-d3ed-6294bda7f1fb@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Cj4gT24gMTIuMDMuMjAxOSwgYXQgMTg6MTAsIEhlaWtvIFN0w7xibmVyIDxoZWlrb0BzbnRlY2gu
-ZGU+IHdyb3RlOgo+IAo+IEhpIENocmlzdG9waCwKPiAKPiBBbSBEaWVuc3RhZywgMTIuIE3DpHJ6
-IDIwMTksIDE1OjQ2OjQ0IENFVCBzY2hyaWViIENocmlzdG9waCBNw7xsbG5lcjoKPj4+IE9uIDEy
-LjAzLjIwMTksIGF0IDE0OjE3LCBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPiB3cm90
-ZToKPj4+IAo+Pj4gQW0gRnJlaXRhZywgOC4gTcOkcnogMjAxOSwgMTQ6MTA6NDUgQ0VUIHNjaHJp
-ZWIgQ2hyaXN0b3BoIE3DvGxsbmVyOgo+Pj4+PiBPbiAwOC4wMy4yMDE5LCBhdCAxMzo0NiwgQWRy
-aWFuIEh1bnRlciA8YWRyaWFuLmh1bnRlckBpbnRlbC5jb20+IHdyb3RlOgo+Pj4+PiAKPj4+Pj4g
-T24gNy8wMy8xOSAxMDo0MyBBTSwgQ2hyaXN0b3BoIE11ZWxsbmVyIHdyb3RlOgo+Pj4+Pj4gVGhp
-cyBwYXRjaCBkb2N1bWVudHMgdGhlIG5ldyBwcm9wZXJ0eSBkaXNhYmxlLWNxZS1kY21kCj4+Pj4+
-PiBmb3IgdGhlIEFyYXNhbiBlTU1DIDUuMSBkcml2ZXIuCj4+Pj4+PiAKPj4+Pj4+IFNpZ25lZC1v
-ZmYtYnk6IENocmlzdG9waCBNdWVsbG5lcgo+Pj4+Pj4gPGNocmlzdG9waC5tdWVsbG5lckB0aGVv
-YnJvbWEtc3lzdGVtcy5jb20+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHAKPj4+Pj4+IFRvbXNpY2gg
-PHBoaWxpcHAudG9tc2ljaEB0aGVvYnJvbWEtc3lzdGVtcy5jb20+IC0tLQo+Pj4+Pj4gRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9hcmFzYW4sc2RoY2kudHh0IHwgNCArKysr
-Cj4+Pj4+PiAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspCj4+Pj4+PiAKPj4+Pj4+IGRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbW1jL2FyYXNhbixz
-ZGhjaS50eHQKPj4+Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9h
-cmFzYW4sc2RoY2kudHh0IGluZGV4Cj4+Pj4+PiAxZWRiYjA0OWNjY2IuLmVjNjk5YmY5OGI3YyAx
-MDA2NDQKPj4+Pj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMv
-YXJhc2FuLHNkaGNpLnR4dAo+Pj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL21tYy9hcmFzYW4sc2RoY2kudHh0Cj4+Pj4+PiAKPj4+Pj4+IEBAIC00NCw2ICs0NCwx
-MCBAQCBPcHRpb25hbCBQcm9wZXJ0aWVzOgo+Pj4+Pj4gICBwcm9wZXJseS4gVGVzdCBtb2RlIGNh
-biBiZSB1c2VkIHRvIGZvcmNlIHRoZSBjb250cm9sbGVyIHRvIGZ1bmN0aW9uLgo+Pj4+Pj4gCj4+
-Pj4+PiAtIHhsbngsaW50LWNsb2NrLXN0YWJsZS1icm9rZW46IHdoZW4gcHJlc2VudCwgdGhlIGNv
-bnRyb2xsZXIgYWx3YXlzCj4+Pj4+PiByZXBvcnRzCj4+Pj4+PiAKPj4+Pj4+ICAgdGhhdCB0aGUg
-aW50ZXJuYWwgY2xvY2sgaXMgc3RhYmxlIGV2ZW4gd2hlbiBpdCBpcyBub3QuCj4+Pj4+PiAKPj4+
-Pj4+ICsgIC0gZGlzYWJsZS1jcWUtZGNtZDogVGhlIGVNTUMgNS4xIHN0YW5kYXJkIHNwZWNpZmll
-cyBkaXJlY3QgY29tbWFuZHMKPj4+Pj4+IChEQ01EcykgKyAgICBhcyBwYXJ0IG9mIHRoZSBjb21t
-YW5kIHF1ZXVlIGVuZ2luZSAoQ1FFKS4gT24gY29udHJvbGxlcnMKPj4+Pj4+IHdpdGggYSBDUUhD
-SSwgKyAgICBzdWNoIGFzIHRoZSBBcmFzYW4gZU1NQyA1LjEgaG9zdCBjb250cm9sbGVyLCB0aGUK
-Pj4+Pj4+IGRyaXZlciBoYXMgdG8gZW5hYmxlIERDTURzLiArICAgIFRoaXMgaXMgZG9uZSB1bmxl
-c3MgZGlzYWJsZS1jcWUtZGNtZAo+Pj4+Pj4gaXMgc3BlY2lmaWVkLgo+Pj4gCj4+PiBUaGlzIG5l
-ZWRzIGEgcmV3b3JkaW5nIHBsZWFzZS4gU2VlIGJlbG93IGZvciBody1kZXNjcmlwdGlvbiB2cy4g
-ZHJpdmVyLCBzbwo+Pj4gdGhlIGRlc2NyaXB0aW9uIHNob3VsZCBiZSBjZW50ZXJlZCBhcm91bmQg
-d2h5IHRoaXMgaXMgYSBwcm9wZXJ0eSBvZiB0aGUgaHcKPj4+IFtsaWtlIGZhdWx0eSBjb250cm9s
-bGVyIGltcGxlbWVudGF0aW9uIG9yIHdoYXRldmVyXQo+PiAKPj4gSSB1bmRlcnN0YW5kLCB0aGF0
-IHlvdSBwcmVmZXIgYSBIVy1zcGVjaWZpYyBuYW1lIGZvciBhIHByb3BlcnR5Cj4+IG92ZXIgb25l
-LCB0aGF0IGV4cGxhaW5zIHRoZSBhY3R1YWwgZWZmZWN0Lgo+IAo+IEFjdHVhbGx5IEkgdGhpbmsg
-dGhlIHByb3BlcnR5LW5hbWUgaXMganVzdCBmaW5lIDotKSAuCj4gCj4gVGhlIGRlc2NyaXB0aW9u
-IG1pZ2h0IHByb2ZpdCBmcm9tIGEgcmV3b3JkaW5nIHRob3VnaC4gQWthIG5vdCBkcml2ZXItCj4g
-Y2VudHJpYyBidXQgaHctY2VudHJpYywgZGVzY3JpYmluZyB3aHkgc29tZSBjb250cm9sbGVycyBt
-YXkgbmVlZCB0aGUKPiBvcHRpb24gdG8gZGlzYWJsZSB0aGVzZSBkY21kcyAoY29udHJvbGxlciBi
-dWdzIG9yIHdoYXRldmVyKS4KCkFoLCBvay4gTm93IEkgdW5kZXJzdGFuZCB3aGF0IHlvdSBtZWFu
-LgpXaWxsIGRvIGZvciB2My4KClRoYW5rcywKQ2hyaXN0b3BoCgo+IAo+IAo+IEhlaWtvCj4gCj4g
-Cj4gCj4+IEhvd2V2ZXIsIHVzaW5nIGRpc2FibGUtPGZlYXR1cmU+ICh3aGljaCBpcyBhbHdheXMg
-YSBkaXJlY3RpdmUgZm9yIHRoZSBkcml2ZXIKPj4gYW5kIG5vdCBhIEhXIGRlc2NyaXB0aW9uKSBp
-cyBub3QgdW5jb21tb246Cj4+IAo+PiAqIGRpc2FibGUtd3Agc2hvdWxkIGJlICJuby13cC1saW5l
-LWNvbm5lY3Rpb24iCj4+ICogZGlzYWJsZS1vdmVyLWN1cnJlbnQgLT4gIm5vLW92ZXItY3VycmVu
-dC1saW5lLWNvbm5lY3Rpb24iCj4+ICogc3JwLWRpc2FibGUgLT4gIm5vdC1leGlzdGluZy1zcnAt
-aW1wbGVtZW50YXRpb24iCj4+ICogLi4uCj4+IAo+PiBCdXQgSSBkb24ndCBtaW5kIHVzaW5nIHNv
-bWV0aGluZyBlbHNlLgo+PiBXb3VsZCAiYnJva2VuLWNxZS1kY21kIiAobGlrZSBicm9rZW4tY2Qg
-b3IgYnJva2VuLWZsYXNoLXJlc2V0KSBiZSBvaz8KPj4gT3Igb3RoZXIgc3VnZ2VzdGlvbnM/Cj4+
-IAo+PiBBbHNvIEknZCBsaWtlIHRvIG1lbnRpb24sIHRoYXQgbXkgZmlyc3QgaW1wbGVtZW50YXRp
-b24gd2FzCj4+ICJzdXBwb3J0cy1jcWUtZGNtZCIuIEkgZ3Vlc3MgdGhhdCB3b3VsZCBiZSBhIGdv
-b2QgY2hvaWNlLCBpZiBpdCB3b3VsZCBoYXZlCj4+IGJlZW4gdGhlcmUKPj4gZnJvbSB0aGUgYmVn
-aW5uaW5nLiBJbnRyb2R1Y2luZyBpdCBub3csIHdvdWxkIHNpbGVudGx5IGRpc2FibGUgRENNRAo+
-PiBmb3IgZXhpc3RpbmcgRFRCcy4gVGhlcmVmb3JlIEkgd2VudCBvbiB0byAiZGlzYWJsZS1jcWUt
-ZGNtZCIuCj4+IAo+Pj4+PiBJZiAic3VwcG9ydHMtY3FlIiBpcyBpbiBtbWMudHh0LCBzaG91bGQg
-ImRpc2FibGUtY3FlLWRjbWQiIGJlIHRoZXJlCj4+Pj4+IGFsc28/Cj4+Pj4gCj4+Pj4gVGhlIGZp
-bGUgbW1jLnR4dCBzYXlzIG9uIHRvcDoKPj4+PiAiVGhlc2UgcHJvcGVydGllcyBhcmUgY29tbW9u
-IHRvIG11bHRpcGxlIE1NQyBob3N0IGNvbnRyb2xsZXJzIi4KPj4+PiBBcyBteSBwYXRjaHNldCBp
-bnRyb2R1Y2VzICJkaXNhYmxlLWNxZS1kY21kIiBqdXN0IGZvciBzZGhjaS1vZi1hcmFzYW4sCj4+
-Pj4gSSB3b3VsZCBzYXkgaXQgc2hvdWxkIG5vdCBnbyBpbnRvIHRoYXQgZmlsZS4KPj4+PiAKPj4+
-PiBBbHNvIEkgd29uZGVyIHdoeSAic3VwcG9ydHMtY3FlIiBpcyBpbiBtbWMudHh0LCBiZWNhdXNl
-Cj4+Pj4gb25seSBzZGhjaS10ZWdyYS5jIGlzIGV2YWx1YXRpbmcgdGhhdCBwcm9wZXJ0eS4KPj4+
-PiBTbyBJIHdvdWxkIGV4cGVjdCBpdCB0byBiZSBkb2N1bWVudGVkIGluCj4+Pj4gRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9udmlkaWEsdGVncmEyMC1zZGhjaS50eHQKPj4+
-PiAKPj4+PiBIb3dldmVyLCBJIHNlZSB0aGF0ICJkaXNhYmxlLWNxZS1kY21kIiBjb3VsZCBnbyBp
-bnRvIG90aGVyIGRyaXZlcnMgYXMKPj4+PiB3ZWxsLgo+Pj4+IEJ1dCBpcyB0aGlzIGVub3VnaCB0
-byBkb2N1bWVudCBpdCBpbiBtbWMudHh0Pwo+Pj4gCj4+PiBEZXZpY2V0cmVlIGlzIGFsd2F5cyBh
-Ym91dCBkZXNjcmliaW5nIHRoZSBoYXJkd2FyZSBjYXBhYmlsaXRlcyBhbmQgbmV2ZXIKPj4+IGFi
-b3V0IHRoZSBhY3R1YWwgbml0dHktZ3JpdHR5IG9mIGRyaXZlciBpbXBsZW1lbnRhdGlvbiwgYWth
-IGl0IGlzIG5vdAo+Pj4gbWVhbnQKPj4+IGFzIGEgc3BhY2UgZm9yIGhhcmR3YXJlLWluZGVwZW5k
-ZW50IGNvbmZpZy1zZXR0aW5ncyBvciBzdWNoLgo+Pj4gCj4+PiBBcyBmb3Igb25seSB0ZWdyYSBl
-dmFsdWF0aW5nIHRoaXMsIGlzIHByb2JhYmx5IGJlY2F1c2UgaXQgaXMgc3RpbGwgc28gbmV3LAo+
-Pj4gbGlrZSBqYW51YXJ5IDIwMTkgYW5kIFJvYiBleHBsaWNpdGx5IHN1Z2dlc3RlZCBpdCBiZWNv
-bWluZyBjb21tb24gWzBdLAo+Pj4gd2hpY2ggc3VnZ2VzdHMgdGhhdCB0aGUgZGlzYWJsZS1jcWUt
-ZGNtZHMgc2hvdWxkIHByb2JhYmx5IGFsc28gYmUgY29tbW9uLgo+PiBTbyBtbWMudHh0IGxpc3Rz
-ICJzdGFuZGFyZGlzZWQiIG5hbWVzIGZvciBwcm9wZXJ0aWVzIHRvIHJlZHVjZSB0aGUgcmlzawo+
-PiBvZiBoYXZpbmcgc2ltaWxhciwgYnV0IGRpc3RpbmN0IG5hbWVzIGZvciBkaWZmZXJlbnQgTU1D
-IGRyaXZlcnMuCj4+IFNvIHdoZW5ldmVyIHlvdSB3YW50IHRvIGludHJvZHVjZSBhIG5ldyBwcm9w
-ZXJ0eSBmb3IgYSBkcml2ZXIsCj4+IGNoZWNrIGlmIHRoZXJlIGlzbid0IGFscmVhZHkgc29tZXRo
-aW5nIGRlZmluZWQgaW4gbW1jLnR4dC4KPj4gCj4+IFdoZW4gc2VlaW5nIGl0IHRoaXMgd2F5LCBp
-dCBjbGVhcmx5IG1ha2VzIHNlbnNlIHRvIGhhdmUgdGhlIHByb3BlcnR5IHRoZXJlLgo+PiAKPj4g
-VGhhbmtzLAo+PiBDaHJpc3RvcGgKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Dan,
+
+On 3/12/19 6:15 PM, Dan Murphy wrote:
+> On 3/10/19 1:28 PM, Jacek Anaszewski wrote:
+>> Add public led_compose_name() API for composing LED class device
+>> name basing on fwnode_handle data. The function composes device name
+>> according to either a new <color:function> pattern or the legacy
+>> <devicename:color:function> pattern. The decision on using the
+>> particular pattern is made basing on whether fwnode contains new
+>> "function" and "color" properties, or the legacy "label" proeprty.
+>>
+>> Backwards compatibility with in-driver hard-coded LED class device
+>> names is assured thanks to the default_desc argument.
+>>
+>> In case none of the aforementioned properties was found, then, for OF
+>> nodes, the node name is adopted for LED class device name.
+>>
+>> Alongside these changes added is a new tool - tools/leds/get_led_device_info.sh.
+>> The tool allows retrieving details of a LED class device's parent device,
+>> which proves that getting rid of a devicename section from LED name pattern
+>> is justified since this information is already available in sysfs.
+>>
+>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>> Cc: Baolin Wang <baolin.wang@linaro.org>
+>> Cc: Daniel Mack <daniel@zonque.org>
+>> Cc: Dan Murphy <dmurphy@ti.com>
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+>> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> ---
+>>   Documentation/leds/leds-class.txt | 20 +++++++++-
+>>   drivers/leds/led-core.c           | 82 +++++++++++++++++++++++++++++++++++++++
+>>   include/linux/leds.h              | 31 +++++++++++++++
+>>   tools/leds/get_led_device_info.sh | 81 ++++++++++++++++++++++++++++++++++++++
+>>   4 files changed, 213 insertions(+), 1 deletion(-)
+>>   create mode 100755 tools/leds/get_led_device_info.sh
+>>
+>> diff --git a/Documentation/leds/leds-class.txt b/Documentation/leds/leds-class.txt
+>> index 8b39cc6b03ee..866fe87063d4 100644
+>> --- a/Documentation/leds/leds-class.txt
+>> +++ b/Documentation/leds/leds-class.txt
+>> @@ -43,7 +43,22 @@ LED Device Naming
+>>   
+>>   Is currently of the form:
+>>   
+>> -"devicename:colour:function"
+>> +"colour:function"
+>> +
+>> +There might be still LED class drivers around using "devicename:colour:function"
+>> +naming pattern, but the "devicename" section is now deprecated since it used
+>> +to convey information that was already available in the sysfs, like product
+>> +name. There is a tool (tools/leds/get_led_device_info.sh) available for
+>> +retrieving that information per a LED class device.
+>> +
+>> +Associations with other devices, like network ones, should be defined
+>> +via LED triggr mechanism. This approach is applied by some of wireless
+>> +network drivers that create triggers dynamically and incorporate phy
+>> +name into its name. On the other hand input subsystem offers LED - input
+>> +bridge (drivers/input/input-leds.c) for exposing keyboard LEDs as LED class
+>> +devices. The get_led_device_info.sh script has support for retrieving related
+>> +input device node name. Should it support discovery of associations between
+>> +LEDs and other subsystems, please don't hesitate to submit a relevant patch.
+>>   
+>>   There have been calls for LED properties such as colour to be exported as
+>>   individual led class attributes. As a solution which doesn't incur as much
+>> @@ -51,6 +66,9 @@ overhead, I suggest these become part of the device name. The naming scheme
+>>   above leaves scope for further attributes should they be needed. If sections
+>>   of the name don't apply, just leave that section blank.
+>>   
+>> +Please also keep in mind that LED subsystem has a protection against LED name
+>> +conflict. It adds numerical suffix (e.g. "_1", "_2", "_3" etc.) to the requested
+>> +LED class device name in case it is already in use.
+>>   
+>>   Brightness setting API
+>>   ======================
+>> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+>> index ede4fa0ac2cc..bad92250d1d5 100644
+>> --- a/drivers/leds/led-core.c
+>> +++ b/drivers/leds/led-core.c
+>> @@ -16,6 +16,8 @@
+>>   #include <linux/list.h>
+>>   #include <linux/module.h>
+>>   #include <linux/mutex.h>
+>> +#include <linux/of.h>
+>> +#include <linux/property.h>
+>>   #include <linux/rwsem.h>
+>>   #include "leds.h"
+>>   
+>> @@ -327,3 +329,83 @@ void led_sysfs_enable(struct led_classdev *led_cdev)
+>>   	led_cdev->flags &= ~LED_SYSFS_DISABLE;
+>>   }
+>>   EXPORT_SYMBOL_GPL(led_sysfs_enable);
+>> +
+>> +static void led_parse_properties(struct fwnode_handle *fwnode,
+>> +				 struct led_properties *props)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (!fwnode)
+>> +		return;
+>> +
+>> +	if (fwnode_property_present(fwnode, "label")) {
+>> +		ret = fwnode_property_read_string(fwnode, "label", &props->label);
+>> +		if (ret)
+>> +			pr_err("Error parsing \'label\' property (%d)\n", ret);
+>> +		return;
+>> +	}
+>> +
+>> +	if (fwnode_property_present(fwnode, "function")) {
+>> +		ret = fwnode_property_read_string(fwnode, "function", &props->function);
+>> +		if (ret)
+>> +			pr_err("Error parsing \'function\' property (%d)\n", ret);
+>> +	} else {
+>> +		pr_info("\'function\' property not found\n");
+>> +	}
+>> +
+>> +	if (fwnode_property_present(fwnode, "color")) {
+>> +		ret = fwnode_property_read_string(fwnode, "color", &props->color);
+>> +		if (ret)
+>> +			pr_info("Error parsing \'color\' property (%d)\n", ret);
+>> +	} else {
+>> +		pr_info("\'color\' property not found\n");
+>> +	}
+>> +}
+>> +
+>> +int led_compose_name(struct fwnode_handle *fwnode, const char *led_hw_name,
+>> +		     const char *default_desc, char *led_classdev_name)
+>> +{
+>> +	struct led_properties props = {};
+>> +
+>> +	if (!led_classdev_name)
+>> +		return -EINVAL;
+>> +
+>> +	led_parse_properties(fwnode, &props);
+>> +
+>> +	if (props.label) {
+>> +		/*
+>> +		 * Presence of 'label' DT property implies legacy LED name,
+>> +		 * formatted as <devicename:color:function>, with possible
+>> +		 * section omission if doesn't apply to given device.
+>> +		 *
+>> +		 * If no led_hw_name has been passed, then it indicates that
+>> +		 * DT label should be used as-is for LED class device name.
+>> +		 * Otherwise the label is prepended with led_hw_name to compose
+>> +		 * the final LED class device name.
+>> +		 */
+>> +		if (!led_hw_name) {
+>> +			strncpy(led_classdev_name, props.label,
+>> +				LED_MAX_NAME_SIZE);
+>> +		} else {
+>> +			snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
+>> +				 led_hw_name, props.label);
+>> +		}
+>> +	} else if (props.function || props.color) {
+>> +		snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
+>> +			 props.color ?: "", props.function ?: "");
+>> +	} else if (default_desc) {
+>> +		if (!led_hw_name) {
+>> +			pr_err("Legacy LED naming requires devicename segment");
+>> +			return -EINVAL;
+>> +		}
+>> +		snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
+>> +			 led_hw_name, default_desc);
+>> +	} else if (is_of_node(fwnode)) {
+>> +		strncpy(led_classdev_name, to_of_node(fwnode)->name,
+>> +			LED_MAX_NAME_SIZE);
+>> +	} else
+>> +		return -EINVAL;
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(led_compose_name);
+>> diff --git a/include/linux/leds.h b/include/linux/leds.h
+>> index bffb4315fd66..c2936fc989d4 100644
+>> --- a/include/linux/leds.h
+>> +++ b/include/linux/leds.h
+>> @@ -252,6 +252,31 @@ extern void led_sysfs_disable(struct led_classdev *led_cdev);
+>>   extern void led_sysfs_enable(struct led_classdev *led_cdev);
+>>   
+>>   /**
+>> + * led_compose_name - compose LED class device name
+>> + * @child: child fwnode_handle describing a LED,
+>> + *	   or a group of synchronized LEDs.
+>> + * @led_hw_name: name of the LED controller, used when falling back to legacy
+>> + *		 LED naming; it should be set to NULL in new LED class drivers
+>> + * @default_desc: default <color:function> tuple, for backwards compatibility
+>> + *		  with in-driver hard-coded LED names used as a fallback when
+>> + *		  "label" DT property is absent; it should be set to NULL
+>> + *		  in new LED class drivers
+>> + * @led_classdev_name: composed LED class device name
+>> + *
+>> + * Create LED class device name basing on the configuration provided by the
+>> + * board firmware. The name can have a legacy form <devicename:color:function>,
+>> + * or a new form <color:function>. The latter is chosen if "label" property is
+>> + * absent and at least one of "color" or "function" is present in the fwnode,
+>> + * leaving the section blank if the related property is absent. In case none
+>> + * of the aforementioned properties is found, then, for OF nodes, the node name
+>> + * is adopted for LED class device name.
+>> + *
+>> + * Returns: 0 on success or negative error value on failure
+>> + */
+>> +extern int led_compose_name(struct fwnode_handle *child, const char *led_hw_name,
+>> +			    const char *default_desc, char *led_classdev_name);
+>> +
+>> +/**
+>>    * led_sysfs_is_disabled - check if LED sysfs interface is disabled
+>>    * @led_cdev: the LED to query
+>>    *
+>> @@ -428,6 +453,12 @@ struct led_platform_data {
+>>   	struct led_info	*leds;
+>>   };
+>>   
+>> +struct led_properties {
+>> +	const char *color;
+>> +	const char *function;
+>> +	const char *label;
+>> +};
+>> +
+>>   struct gpio_desc;
+>>   typedef int (*gpio_blink_set_t)(struct gpio_desc *desc, int state,
+>>   				unsigned long *delay_on,
+>> diff --git a/tools/leds/get_led_device_info.sh b/tools/leds/get_led_device_info.sh
+>> new file mode 100755
+>> index 000000000000..4671aa690e4a
+>> --- /dev/null
+>> +++ b/tools/leds/get_led_device_info.sh
+>> @@ -0,0 +1,81 @@
+>> +#!/bin/sh
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +
+> 
+> Is there a way to give usage or help here?  It's not entirely clear what the argument to pass in is.
+
+It is in the first statement of this script - see below.
+It is customary to print help when unexpected arguments or a number
+thereof is given.
+
+I can print help also when "--help" is passed.
+
+> maybe if $1 = "?" then print usage
+> 
+> Dan
+> 
+> 
+>> +if [ $# -ne 1 ]; then
+>> +	echo "get_led_devicename.sh LED_CDEV_PATH"
+
+s/get_led_devicename/get_led_device_info/
+
+It is a leftover from earlier stage of development.
+
+>> +	exit 1
+>> +fi
+>> +
+>> +led_cdev_path=`echo $1 | sed s'/\/$//'`
+>> +
+>> +ls "$led_cdev_path/brightness" > /dev/null 2>&1
+>> +if [ $? -ne 0 ]; then
+>> +	echo "Device \"$led_cdev_path\" does not exist."
+>> +	exit 1
+>> +fi
+>> +
+>> +bus=`readlink $led_cdev_path/device/subsystem | sed s'/.*\///'`
+>> +usb_subdev=`readlink $led_cdev_path | grep usb | sed s'/\(.*usb[0-9]*\/[0-9]*-[0-9]*\)\/.*/\1/'`
+>> +ls "$led_cdev_path/device/of_node/compatible" > /dev/null 2>&1
+>> +of_node_missing=$?
+>> +
+>> +if [ "$bus" = "input" ]; then
+>> +	input_node=`readlink $led_cdev_path/device | sed s'/.*\///'`
+>> +	if [ ! -z $usb_subdev ]; then
+>> +		bus="usb"
+>> +	fi
+>> +fi
+>> +
+>> +if [ "$bus" = "usb" ]; then
+>> +	usb_interface=`readlink $led_cdev_path | sed s'/.*\(usb[0-9]*\)/\1/' | cut -d \/ -f 3`
+>> +	driver=`readlink $usb_interface/driver | sed s'/.*\///'`
+>> +	cd $led_cdev_path/../$usb_subdev
+>> +	idVendor=`cat idVendor`
+>> +	idProduct=`cat idProduct`
+>> +	manufacturer=`cat manufacturer`
+>> +	product=`cat product`
+>> +elif [ "$bus" = "input" ]; then
+>> +	cd $led_cdev_path
+>> +	product=`cat device/name`
+>> +	driver=`cat device/device/driver/description`
+>> +elif [ $of_node_missing -eq 0 ]; then
+>> +	cd $led_cdev_path
+>> +	compatible=`cat device/of_node/compatible`
+>> +	if [ "$compatible" = "gpio-leds" ]; then
+>> +		driver="leds-gpio"
+>> +	elif [ "$compatible" = "pwm-leds" ]; then
+>> +		driver="leds-pwm"
+>> +	else
+>> +		manufacturer=`echo $compatible | cut -d, -f1`
+>> +		product=`echo $compatible | cut -d, -f2`
+>> +	fi
+>> +else
+>> +	echo "Unknown device type."
+>> +	exit 1
+>> +fi
+>> +
+>> +printf "bus:\t\t\t$bus\n"
+>> +
+>> +if [ ! -z "$idVendor" ]; then
+>> +	printf "idVendor:\t\t$idVendor\n"
+>> +fi
+>> +
+>> +if [ ! -z "$idProduct" ]; then
+>> +	printf "idProduct:\t\t$idProduct\n"
+>> +fi
+>> +
+>> +if [ ! -z "$manufacturer" ]; then
+>> +	printf "manufacturer:\t\t$manufacturer\n"
+>> +fi
+>> +
+>> +if [ ! -z "$product" ]; then
+>> +	printf "product:\t\t$product\n"
+>> +fi
+>> +
+>> +if [ ! -z "$driver" ]; then
+>> +	printf "driver:\t\t\t$driver\n"
+>> +fi
+>> +
+>> +if [ ! -z "$input_node" ]; then
+>> +	printf "associated input node:\t$input_node\n"
+>> +fi
+>>
+> 
+> 
+
+-- 
+Best regards,
+Jacek Anaszewski
