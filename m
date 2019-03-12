@@ -1,29 +1,40 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v3 03/11] ARM: davinci: WARN_ON() if clk_get() fails
-Date: Tue, 12 Mar 2019 13:23:59 -0500
-Message-ID: <4292798d-444c-9eb1-2ea3-434909bce9b0@lechnology.com>
-References: <20190226120633.18200-1-brgl@bgdev.pl>
- <20190226120633.18200-4-brgl@bgdev.pl>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 4/8] dt-bindings: usb: dwc3: Add Amlogic G12A DWC3
+ Glue Bindings
+Date: Tue, 12 Mar 2019 13:29:17 -0500
+Message-ID: <20190312182917.GA22114@bogus>
+References: <20190304103846.2060-1-narmstrong@baylibre.com>
+ <20190304103846.2060-5-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190226120633.18200-4-brgl@bgdev.pl>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190304103846.2060-5-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/26/19 6:06 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Mon,  4 Mar 2019 11:38:42 +0100, Neil Armstrong wrote:
+> Adds the bindings for the Amlogic G12A USB Glue HW.
 > 
-> Currently the timer code checks if the clock pointer passed to it is
-> good (!IS_ERR(clk)). The new clocksource driver expects the clock to
-> be functional and doesn't perform any checks so emit a warning if
-> clk_get() fails. Apply this to all davinci platforms.
+> The Amlogic G12A SoC Family embeds 2 USB Controllers :
+> - a DWC3 IP configured as Host for USB2 and USB3
+> - a DWC2 IP configured as Peripheral USB2 Only
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> A glue connects these both controllers to 2 USB2 PHYs,
+> and optionnally to an USB3+PCIE Combo PHY shared with the PCIE controller.
+> 
+> The Glue configures the UTMI 8bit interfaces for the USB2 PHYs, including
+> routing of the OTG PHY between the DWC3 and DWC2 controllers, and
+> setups the on-chip OTG mode selection for this PHY.
+> 
+> The PHYs phandles are passed  to the Glue node since the Glue controls the
+> interface with the PHY, not the DWC3 controller.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
+>  .../devicetree/bindings/usb/amlogic,dwc3.txt  | 88 +++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+> 
 
-Reviewed-by: David Lechner <david@lechnology.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
