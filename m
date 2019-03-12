@@ -1,32 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: power: supply: gpio-charger: Add
- status-gpios property
-Date: Tue, 12 Mar 2019 10:50:21 -0500
-Message-ID: <20190312155021.GA23277@bogus>
-References: <20190226150437.3704-1-contact@artur-rojek.eu>
+Subject: Re: [PATCH v2 1/2] dt-bindings: vendor-prefix: add prefix for Czech
+ Technical University in Prague.
+Date: Tue, 12 Mar 2019 10:51:00 -0500
+Message-ID: <20190312155100.GA24416@bogus>
+References: <cover.1551287365.git.pisa@cmp.felk.cvut.cz>
+ <c8988d37b193d7e713fa8f4916a6fb2787c37bef.1551287365.git.pisa@cmp.felk.cvut.cz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190226150437.3704-1-contact@artur-rojek.eu>
+In-Reply-To: <c8988d37b193d7e713fa8f4916a6fb2787c37bef.1551287365.git.pisa@cmp.felk.cvut.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
+Cc: devicetree@vger.kernel.org, mkl@pengutronix.de, linux-can@vger.kernel.org, wg@grandegger.com, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, martin.jerabek01@gmail.com, ondrej.ille@gmail.com, Pavel Pisa <pisa@cmp.felk.cvut.cz>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 26 Feb 2019 16:04:36 +0100, Artur Rojek wrote:
-> Add documentation for the "status-gpios" property.
-> Update the "gpios" property with a valid example.
+On Wed, 27 Feb 2019 18:26:28 +0100, pisa@cmp.felk.cvut.cz wrote:
+> From: Pavel Pisa <pisa@cmp.felk.cvut.cz>
 > 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Signed-off-by: Pavel Pisa <pisa@cmp.felk.cvut.cz>
 > ---
-> 
-> Changes:
-> 
-> v2: - add a better description for the "status-gpios" property,
->     - add valid examples for the "gpios" and "status-gpios" properties
-> 
->  .../devicetree/bindings/power/supply/gpio-charger.txt       | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
