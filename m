@@ -1,61 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/5] dt-bindings: display: armada: Add more compatible
- strings
-Date: Tue, 12 Mar 2019 13:42:27 -0500
-Message-ID: <20190312184227.GA1766@bogus>
+Subject: Re: [PATCH v2 1/5] dt-bindings: reserved-memory: Add binding for
+ Armada framebuffer
+Date: Tue, 12 Mar 2019 13:42:36 -0500
+Message-ID: <20190312184236.GA12049@bogus>
 References: <20190304202006.3863-1-lkundrak@v3.sk>
- <20190304202006.3863-5-lkundrak@v3.sk>
+ <20190304202006.3863-2-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190304202006.3863-5-lkundrak@v3.sk>
+In-Reply-To: <20190304202006.3863-2-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 09:20:05PM +0100, Lubomir Rintel wrote:
-> There's a generic compatible string and the driver will work on a MMP2 as
-> well, using the same binding.
+On Mon,  4 Mar 2019 21:20:02 +0100, Lubomir Rintel wrote:
+> This is the binding for memory that is set aside for allocation of Marvell
+> Armada framebuffer objects.
 > 
 > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 > 
 > ---
 > Changes since v1:
-> - Added marvell,armada-lcdc compatible string.
+> - Moved from bindings/display/armada/
+> - Removed the marvell,dove-framebuffer string
+> - Added to the MAINTAINERS entry
 > 
->  .../devicetree/bindings/display/marvell,armada-lcdc.txt       | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  .../marvell,armada-framebuffer.txt            | 22 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reserved-memory/marvell,armada-framebuffer.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt b/Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
-> index 2606a8efc956..4ef66bc2845c 100644
-> --- a/Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
-> +++ b/Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
-> @@ -3,7 +3,9 @@ Marvell Armada LCD controller
->  
->  Required properties:
->  
-> - - compatible: value should be "marvell,dove-lcd".
-> + - compatible: value should be "marvell,armada-lcdc" along with
-> +   "marvell,dove-lcd" or "marvell,mmp2-lcd", depending on the
-> +   exact SoC model.
 
-It is not exactly clear what the order is here. The preferred form is:
-
-compatible: must be one of:
- a
- b
- c
-followed by 'fallback'
-
-So "marvell,armada-lcdc" is the fallback, but you can't start requiring 
-the existing "marvell,dove-lcd" to have a fallback. At least you can't 
-depend on that.
-
->   - reg: base address and size of the LCD controller
->   - interrupts: single interrupt number for the LCD controller
->  
-> -- 
-> 2.20.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
