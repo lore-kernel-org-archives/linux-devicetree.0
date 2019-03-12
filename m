@@ -1,96 +1,57 @@
-From: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 4/7] dt-bindings: phy: Add document for phy-mtk-ufs
-Date: Wed, 13 Mar 2019 10:42:54 +0800
-Message-ID: <1552444974.30977.40.camel@mtkswgap22>
-References: <1551252192-535-1-git-send-email-stanley.chu@mediatek.com>
- <1551252192-535-6-git-send-email-stanley.chu@mediatek.com>
- <20190312132524.GA27601@bogus>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v2 2/5] dt-bindings: ti_sci_pm_domains: Add support for
+ exclusive access
+Date: Tue, 12 Mar 2019 18:03:17 -0500
+Message-ID: <20190312230317.bzq3hxonqil7xpyj@kahuna>
+References: <20190223093232.29003-1-lokeshvutla@ti.com>
+ <20190223093232.29003-3-lokeshvutla@ti.com>
+ <20190312154301.GA21389@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190312132524.GA27601@bogus>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chun-Hung Wu =?UTF-8?Q?=28=E5=B7=AB=E9=A7=BF=E5=AE=8F=29?= <Chun-hung.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kuohong Wang =?UTF-8?Q?=28=E7=8E=8B=E5=9C=8B=E9=B4=BB=29?= <kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Peter Wang =?UTF-8?Q?=28=E7=8E=8B=E4=BF=A1=E5=8F=8B=29?= <peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "avri.altman-Sjgp3cTcYWE@public.gmane.org" <avri.altman-Sjgp3cTcYWE@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chunfeng Yun =?UTF-8?Q?=28=E4=BA=91=E6=98=A5=E5=B3=B0=29?= <Chunfeng.Yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>pe
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190312154301.GA21389@bogus>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Tue, 2019-03-12 at 21:25 +0800, Rob Herring wrote:
-> On Wed, Feb 27, 2019 at 03:23:09PM +0800, Stanley Chu wrote:
-> > Add UFS M-PHY node document for MediaTek SoC chips.
-> > 
-> > Signed-off-by: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/phy/phy-mtk-ufs.txt   | 35 +++++++++++++++++++
-> >  1 file changed, 35 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt b/Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
-> > new file mode 100644
-> > index 000000000000..5fc22c7fe0bc
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
-> > @@ -0,0 +1,35 @@
-> > +MediaTek Universal Flash Storage (UFS) M-PHY binding
-> > +--------------------------------------------------------
-> > +
-> > +UFS M-PHY nodes are defined to describe on-chip UFS M-PHY hardware macro.
-> > +Each UFS M-PHY node should have its own node.
-> > +
-> > +To bind UFS M-PHY with UFS host controller, the controller node should
-> > +contain a phandle reference to UFS M-PHY node.
-> > +
-> > +Required properties for UFS M-PHY nodes:
-> > +- compatible         : Compatible list, contains the following controller:
-> > +                       "mediatek,ufs-mphy"
+On 10:43-20190312, Rob Herring wrote:
+> On Sat, Feb 23, 2019 at 03:02:29PM +0530, Lokesh Vutla wrote:
+> > TISCI protocol supports for enabling the device with exclusive
+> > permissions. Certain remoteproc devices or some shared devices
+> > across VM doesn't wants to request devices with this flag set.
 > 
-> Needs a more specific compatible string.
-
-Will add it.
-
+> The wording here is weird. You want to add exclusive support, but you 
+> are talking about devices which don't want exclusive support.
 > 
-> > +- reg                : Address and length of the UFS M-PHY register set.
-> > +- #phy-cells         : This property shall be set to 0
-> > +- clocks             : List of phandle and clock specifier pairs.
-> > +- clock-names        : List of clock input name strings sorted in the same
-> > +                       order as the clocks property. "unipro-clk" and
-> > +                       "mp-clk" are mandatory.
-> > +
-> > +Example:
-> > +
-> > +	ufs_mphy: ufs_mphy@11fa0000 {
+> > So add support for getting this information from DT by increasing
+> > the power-domain cells to 2.
 > 
-> phy@...
+> Seems like this would be racy. Whomever wants exclusive access would 
+> have to be the first to request a device. Seems like whether devices are 
+> able to be shared or not would be known because generally h/w has to be 
+> designed for that.
 
-Will fix it.
+Rob,
 
-> 
-> > +		compatible = "mediatek,ufs-mphy";
-> > +		reg = <0 0x11fa0000 0 0xc000>;
-> > +		#phy-cells = <0>;
-> > +
-> > +		clocks = <&infracfg_ao INFRACFG_AO_UNIPRO_SCK_CG>,
-> > +			 <&infracfg_ao INFRACFG_AO_UFS_MP_SAP_BCLK_CG>;
-> > +		clock-names = "unipro-clk", "mp-clk";
-> > +	};
-> > +
-> > +	ufshci:ufshci@11270000 {
-> > +		...
-> > +		phys = <&ufs_mphy>;
-> > +	};
-> > -- 
-> > 2.18.0
-> > 
+I wonder if it is better to represent this as exclusive power domain or
+shared power domain - because that is what the firmware in effect makes
+OS think the hardware is? Two power domain nodes in dts, instead of
+introducing property as part of cells?
 
-Thanks,
-Stanley.
+Device may belong to a shared domain or an exclusive domain depending on
+the SoC variations.
+
+-- 
+Regards,
+Nishanth Menon
