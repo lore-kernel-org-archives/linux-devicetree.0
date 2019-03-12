@@ -1,70 +1,149 @@
-Return-Path: <robherring2@gmail.com>
-Date: Tue, 12 Mar 2019 09:45:27 -0500
-From: Rob Herring <robh@kernel.org>
+Return-Path: <SRS0=ZFWD=RP=redhat.com=hdegoede@kernel.org>
 Subject: Re: [PATCH v3 1/2] dt-bindings: usb: add documentation for typec
  switch via GPIO
-Message-ID: <20190312144527.GA18735@bogus>
 References: <1552299557-6306-1-git-send-email-jun.li@nxp.com>
+ <afcbc9c0-d3f6-98ff-f7bc-9919cda6a034@redhat.com>
+ <AM0PR04MB454795707E40FDDBB61DD12D89490@AM0PR04MB4547.eurprd04.prod.outlook.com>
+ <20190312104512.GA7752@kuha.fi.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Message-ID: <d6496540-686e-f84f-aab4-aabe2c1f74c1@redhat.com>
+Date: Tue, 12 Mar 2019 12:46:36 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1552299557-6306-1-git-send-email-jun.li@nxp.com>
-To: Jun Li <jun.li@nxp.com>
-Cc: "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+In-Reply-To: <20190312104512.GA7752@kuha.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Jun Li <jun.li@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Mar 11, 2019 at 10:40:09AM +0000, Jun Li wrote:
-> Some typec super speed active channel switch can be controlled via
-> a GPIO, this binding can be used to specify the switch node by
-> a GPIO and the remote endpoint of its consumer.
+Hi,
+
+On 12-03-19 11:45, Heikki Krogerus wrote:
+> Hi,
 > 
-> Signed-off-by: Li Jun <jun.li@nxp.com>
-> ---
->  .../devicetree/bindings/usb/typec-switch-gpio.txt  | 30 ++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
+> On Tue, Mar 12, 2019 at 10:32:00AM +0000, Jun Li wrote:
+>> Hi Hans
+>>> -----Original Message-----
+>>> From: Hans de Goede <hdegoede@redhat.com>
+>>> Sent: 2019年3月11日 19:03
+>>> To: Jun Li <jun.li@nxp.com>; robh+dt@kernel.org; heikki.krogerus@linux.intel.com
+>>> Cc: gregkh@linuxfoundation.org; andy.shevchenko@gmail.com;
+>>> linux-usb@vger.kernel.org; devicetree@vger.kernel.org; dl-linux-imx
+>>> <linux-imx@nxp.com>
+>>> Subject: Re: [PATCH v3 1/2] dt-bindings: usb: add documentation for typec switch
+>>> via GPIO
+>>>
+>>> Hi,
+>>>
+>>> On 11-03-19 11:40, Jun Li wrote:
+>>>> Some typec super speed active channel switch can be controlled via a
+>>>> GPIO, this binding can be used to specify the switch node by a GPIO
+>>>> and the remote endpoint of its consumer.
+>>>>
+>>>> Signed-off-by: Li Jun <jun.li@nxp.com>
+>>>> ---
+>>>>    .../devicetree/bindings/usb/typec-switch-gpio.txt  | 30
+>>> ++++++++++++++++++++++
+>>>>    1 file changed, 30 insertions(+)
+>>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/usb/typec-switch-gpio.txt
+>>>> b/Documentation/devicetree/bindings/usb/typec-switch-gpio.txt
+>>>> new file mode 100644
+>>>> index 0000000..4ef76cf
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/usb/typec-switch-gpio.txt
+>>>> @@ -0,0 +1,30 @@
+>>>> +Typec orientation switch via a GPIO
+>>>> +-----------------------------------
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible: should be set one of following:
+>>>> +	- "nxp,ptn36043" for NXP Type-C SuperSpeed active switch.
+>>>> +
+>>>> +- gpios: the GPIO used to switch the super speed active channel,
+>>>> +		GPIO_ACTIVE_HIGH: GPIO state high for cc1;
+>>>> +		GPIO_ACTIVE_LOW:  GPIO state low for cc1.
+>>>> +- orientation-switch: must be present.
+>>>
+>>> Shouldn't this have usb-c in the propery name, e.g.:
+>>> usb-c-orientation-switch  ?
+>>
+>> This is decided by drivers/usb/typec/mux.c:36
+>> /*
+>>   * With OF graph the mux node must have a boolean device property named
+>>   * "orientation-switch".
+>>   */
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/typec-switch-gpio.txt b/Documentation/devicetree/bindings/usb/typec-switch-gpio.txt
-> new file mode 100644
-> index 0000000..4ef76cf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/typec-switch-gpio.txt
-> @@ -0,0 +1,30 @@
-> +Typec orientation switch via a GPIO
-> +-----------------------------------
-> +
-> +Required properties:
-> +- compatible: should be set one of following:
-> +	- "nxp,ptn36043" for NXP Type-C SuperSpeed active switch.
-> +
-> +- gpios: the GPIO used to switch the super speed active channel,
-
-Perhaps switch-gpios in case there are other gpios needed.
-
-> +		GPIO_ACTIVE_HIGH: GPIO state high for cc1;
-> +		GPIO_ACTIVE_LOW:  GPIO state low for cc1.
-> +- orientation-switch: must be present.
-
-Why is this needed? The compatible can't imply this?
-
-> +
-> +Required sub-node:
-> +- port: specify the remote endpoint of typec switch consumer.
-> +
-> +Example:
-> +
-> +ptn36043 {
-> +	compatible = "nxp,ptn36043";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_ss_sel>;
-> +	gpios = <&gpio3 15 GPIO_ACTIVE_HIGH>;
-> +	orientation-switch;
-> +
-> +	port {
-> +		usb3_data_ss: endpoint {
-> +			remote-endpoint = <&typec_con_ss>;
-> +		};
-> +	};
-> +};
-> -- 
-> 2.7.4
+> Yes, but it's still OK to change it. It's not documented anywhere yet.
 > 
+>>>> +
+>>>> +Required sub-node:
+>>>> +- port: specify the remote endpoint of typec switch consumer.
+>>>> +
+>>>> +Example:
+>>>> +
+>>>> +ptn36043 {
+>>>> +	compatible = "nxp,ptn36043";
+>>>> +	pinctrl-names = "default";
+>>>> +	pinctrl-0 = <&pinctrl_ss_sel>;
+>>>> +	gpios = <&gpio3 15 GPIO_ACTIVE_HIGH>;
+>>>> +	orientation-switch;
+>>>> +
+>>>> +	port {
+>>>> +		usb3_data_ss: endpoint {
+>>>> +			remote-endpoint = <&typec_con_ss>;
+>>>
+>>>
+>>> Isn't this the wrong way around, shouldn't the "usb-c-connector"
+>>> compatible port be pointing to the orientation switch, rather then the other way
+>>> around?
+> 
+> Hans, in OF graph both endpoints will have a remote-endpoint pointing
+> to each other..
+> 
+>> I am not sure I am getting your point, "usb-c-connector" is the user of typec switch,
+>> yes, it is pointing to the orientation switch provider(i.e, this example node).
+>>
+>>> Both will work in the end. but to me it feels more natural to group all the
+>>> info about the type-c connector together in the "usb-c-connector" compatible port
+>>>
+>>
+>>          ptn36043 {
+>>                  compatible = "nxp,ptn36043";
+>>                  pinctrl-names = "default";
+>>                  pinctrl-0 = <&pinctrl_ss_sel>;
+>>                  gpios = <&gpio3 15 GPIO_ACTIVE_HIGH>;
+>>                  orientation-switch;
+>>
+>>                  port {
+>>                          usb3_data_ss: endpoint {
+>>                                  remote-endpoint = <&typec_con_ss>;
+>>                          };
+>>                  };
+>>          };
+>>
+>> usb_con: connector {
+>> 	compatible = "usb-c-connector";
+>> 	...
+>> 	ports {
+>> 		#address-cells = <1>;
+>> 		#size-cells = <0>;
+>>
+>> 		port@1 {
+>> 			reg = <1>;
+>> 			typec_con_ss: endpoint {
+>> 				remote-endpoint = <&usb3_data_ss>;
+>> 			};
+>> 		};
+>> 	};
+>> };
+> 
+> So like that.
+
+Ah I see, thank you for clarifying that.
+
+Regards,
+
+Hans
