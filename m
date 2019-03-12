@@ -1,93 +1,57 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V5 3/4] ARM: dts: imx: make MMDC node name generic
-Date: Tue, 12 Mar 2019 02:24:16 +0000
-Message-ID: <1552357127-1283-3-git-send-email-Anson.Huang@nxp.com>
-References: <1552357127-1283-1-git-send-email-Anson.Huang@nxp.com>
+From: Sean Wang <sean.wang@kernel.org>
+Subject: Re: [PATCH v2 3/9] dt-bindings: mfd: Add compatible for the MediaTek
+ MT6358 PMIC
+Date: Mon, 11 Mar 2019 19:25:26 -0700
+Message-ID: <CAGp9LzoCdCNLwr_6ufmox2Oqf3S87N4wyTZM-jU_XkUS+mA0hA@mail.gmail.com>
+References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1552275991-34648-4-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <CAGp9LzrWawWy+mX5VpLeqdV85f0iEdRv6JtJbjS5pamN5xfKjA@mail.gmail.com> <20190311220630.GA4082@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552357127-1283-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20190311220630.GA4082@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Eddie Huang <eddie.huang@mediatek.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, srv_heupstream <srv_heupstream@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Marc Zyngier <marc.zyngier@arm.com>, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-mediatek@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Node name should be generic, so use "memory-controller"
-instead of "mmdc" for MMDC node name, also remove "mmdc"
-label for platforms with single MMDC node.
+On Mon, Mar 11, 2019 at 3:06 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Mar 11, 2019 at 12:19:32PM -0700, Sean Wang wrote:
+> > Hi,
+> >
+> > Always put the patches about dt-binding changes at the head of the
+> > series to let the related maintainer more easily find them.
+> >
+> > On Sun, Mar 10, 2019 at 8:48 PM Hsin-Hsiung Wang
+> > <hsin-hsiung.wang@mediatek.com> wrote:
+> > >
+> > > This adds compatible for the MediaTek MT6358 PMIC.
+> > >
+> > > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/mfd/mt6397.txt | 11 ++++++++---
+> > >  1 file changed, 8 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> > > index 0ebd08a..62f1c17 100644
+> > > --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
+> > > +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> > > @@ -17,22 +17,27 @@ Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+> > >  This document describes the binding for MFD device and its sub module.
+> > >
+> > >  Required properties:
+> > > -compatible: "mediatek,mt6397" or "mediatek,mt6323"
+> > > +compatible:
+> > > +       "mediatek,mt6323" for PMIC MT6323
+> > > +       "mediatek,mt6358" for PMIC MT6358
+> > > +       "mediatek,mt6397" for PMIC MT6397
+> >
+> > don't change anything not related MT6358
+>
+> Reformatting like this is preferred.
+>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
----
-No changes.
----
- arch/arm/boot/dts/imx6qdl.dtsi | 4 ++--
- arch/arm/boot/dts/imx6sl.dtsi  | 2 +-
- arch/arm/boot/dts/imx6sx.dtsi  | 2 +-
- arch/arm/boot/dts/imx6ul.dtsi  | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+Sure, it's fine to me for the purpose.
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dts=
-i
-index fe17a34..4c7278b 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -1129,13 +1129,13 @@
- 				reg =3D <0x021ac000 0x4000>;
- 			};
-=20
--			mmdc0: mmdc@21b0000 { /* MMDC0 */
-+			mmdc0: memory-controller@21b0000 { /* MMDC0 */
- 				compatible =3D "fsl,imx6q-mmdc";
- 				reg =3D <0x021b0000 0x4000>;
- 				clocks =3D <&clks IMX6QDL_CLK_MMDC_P0_IPG>;
- 			};
-=20
--			mmdc1: mmdc@21b4000 { /* MMDC1 */
-+			mmdc1: memory-controller@21b4000 { /* MMDC1 */
- 				reg =3D <0x021b4000 0x4000>;
- 			};
-=20
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 4b4813f..733ea50 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -922,7 +922,7 @@
- 				status =3D "disabled";
- 			};
-=20
--			mmdc: mmdc@21b0000 {
-+			memory-controller@21b0000 {
- 				compatible =3D "fsl,imx6sl-mmdc", "fsl,imx6q-mmdc";
- 				reg =3D <0x021b0000 0x4000>;
- 				clocks =3D <&clks IMX6SL_CLK_MMDC_P0_IPG>;
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 5b16e65..df0c595 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -1017,7 +1017,7 @@
- 				status =3D "disabled";
- 			};
-=20
--			mmdc: mmdc@21b0000 {
-+			memory-controller@21b0000 {
- 				compatible =3D "fsl,imx6sx-mmdc", "fsl,imx6q-mmdc";
- 				reg =3D <0x021b0000 0x4000>;
- 				clocks =3D <&clks IMX6SX_CLK_MMDC_P0_IPG>;
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 62ed30c..a77bbca 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -914,7 +914,7 @@
- 				status =3D "disabled";
- 			};
-=20
--			mmdc: mmdc@21b0000 {
-+			memory-controller@21b0000 {
- 				compatible =3D "fsl,imx6ul-mmdc", "fsl,imx6q-mmdc";
- 				reg =3D <0x021b0000 0x4000>;
- 				clocks =3D <&clks IMX6UL_CLK_MMDC_P0_IPG>;
---=20
-2.7.4
+> Rob
