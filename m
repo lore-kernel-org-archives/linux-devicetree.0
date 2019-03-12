@@ -1,15 +1,15 @@
 From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v3 09/11] ARM: davinci: dm644x: switch to using the
+Subject: Re: [PATCH v3 10/11] ARM: davinci: dm646x: switch to using the
  clocksource driver
-Date: Tue, 12 Mar 2019 13:44:38 -0500
-Message-ID: <7f3117eb-75f6-7285-4ba9-3ddf361ec6cd@lechnology.com>
+Date: Tue, 12 Mar 2019 13:45:18 -0500
+Message-ID: <5cfcbb18-a750-6c27-c350-3b5be9ea1e0a@lechnology.com>
 References: <20190226120633.18200-1-brgl@bgdev.pl>
- <20190226120633.18200-10-brgl@bgdev.pl>
+ <20190226120633.18200-11-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190226120633.18200-10-brgl@bgdev.pl>
+In-Reply-To: <20190226120633.18200-11-brgl@bgdev.pl>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
@@ -19,7 +19,7 @@ List-Id: devicetree@vger.kernel.org
 On 2/26/19 6:06 AM, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> We now have a proper clocksource driver for davinci. Switch the dm644x
+> We now have a proper clocksource driver for davinci. Switch the dm646x
 > platform to using it.
 > 
 > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
