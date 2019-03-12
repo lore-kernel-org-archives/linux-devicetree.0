@@ -1,69 +1,198 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 04/14] pinctrl: sunxi: v3: really introduce
- support for V3
-Date: Tue, 12 Mar 2019 16:36:54 +0100
-Message-ID: <20190312153654.25r5orlw7qjtlhbt@flea>
-References: <20190312152256.35574-1-icenowy@aosc.io>
- <20190312152256.35574-5-icenowy@aosc.io>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: Re: [PATCH v4 06/12] media: dt-bindings: add bindings for i.MX7 media
+ driver
+Date: Tue, 12 Mar 2019 15:37:14 +0000
+Message-ID: <m3sgvsdryt.fsf@linaro.org>
+References: <20180517125033.18050-1-rui.silva@linaro.org>
+ <20180517125033.18050-7-rui.silva@linaro.org>
+ <20180518065824.csio2fgwsxo2g2ow@valkosipuli.retiisi.org.uk>
+ <m3tvr5xt9t.fsf@linaro.org>
+ <20190310214834.GB7578@pendragon.ideasonboard.com>
+ <m3wol4dw55.fsf@linaro.org>
+ <20190312151053.GD4845@pendragon.ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="s44e46kj3dzvjmpr"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBGNET7SAKGQEQ34NB6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190312152256.35574-5-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-reply-to: <20190312151053.GD4845@pendragon.ideasonboard.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Laurent,
+On Tue 12 Mar 2019 at 15:10, Laurent Pinchart wrote:
+> Hi Rui,
+>
+> On Tue, Mar 12, 2019 at 02:07:02PM +0000, Rui Miguel Silva 
+> wrote:
+>> On Sun 10 Mar 2019 at 21:48, Laurent Pinchart wrote:
+>> > On Fri, May 18, 2018 at 09:27:58AM +0100, Rui Miguel Silva 
+>> > wrote:
+>> >> On Fri 18 May 2018 at 06:58, Sakari Ailus wrote:
+>> >>> On Thu, May 17, 2018 at 01:50:27PM +0100, Rui Miguel Silva 
+>> >>> wrote:
+>> >>>> Add bindings documentation for i.MX7 media drivers.
+>> >>>> 
+>> >>>> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+>> >>>> ---
+>> >>>>  .../devicetree/bindings/media/imx7.txt        | 145 
+>> >>>>  ++++++++++++++++++
+>> >>>>  1 file changed, 145 insertions(+)
+>> >>>>  create mode 100644 
+>> >>>>  Documentation/devicetree/bindings/media/imx7.txt
+>> >>>> 1
+>> >>>> diff --git 
+>> >>>> a/Documentation/devicetree/bindings/media/imx7.txt 
+>> >>>> b/Documentation/devicetree/bindings/media/imx7.txt
+>> >>>> new file mode 100644
+>> >>>> index 000000000000..161cff8e6442
+>> >>>> --- /dev/null
+>> >>>> +++ b/Documentation/devicetree/bindings/media/imx7.txt
+>> >>>> @@ -0,0 +1,145 @@
+>> >>>> +Freescale i.MX7 Media Video Device
+>> >>>> +==================================
+>> >>>> +
+>> >>>> +Video Media Controller node
+>> >>>> +---------------------------
+>> >>>
+>> >>> Note that DT bindings document the hardware, they are as 
+>> >>> such 
+>> >>> not Linux dependent.
+>> >> 
+>> >> This was removed in this series, however I removed it in the 
+>> >> wrong
+>> >> patch, If you see patch 11/12 you will see this being 
+>> >> removed. I
+>> >> will fix this in v5. Thanks for notice it.
+>> >> 
+>> >>>> +
+>> >>>> +This is the media controller node for video capture 
+>> >>>> support. It is a
+>> >>>> +virtual device that lists the camera serial interface 
+>> >>>> nodes that the
+>> >>>> +media device will control.
+>> >>>
+>> >>> Ditto.
+>> >>>
+>> >>>> +
+>> >>>> +Required properties:
+>> >>>> +- compatible : "fsl,imx7-capture-subsystem";
+>> >>>> +- ports      : Should contain a list of phandles pointing 
+>> >>>> to camera
+>> >>>> +		sensor interface port of CSI
+>> >>>> +
+>> >>>> +example:
+>> >>>> +
+>> >>>> +capture-subsystem {
+>> >>>
+>> >>> What's the purpose of this node, if you only refer to 
+>> >>> another 
+>> >>> device? This one rather does not look like a real device at 
+>> >>> all.
+>> >>>
+>> >>>> +	compatible = "fsl,imx7-capture-subsystem";
+>> >>>> +	ports = <&csi>;
+>> >>>> +};
+>> >>>> +
+>> >>>> +
+>> >>>> +mipi_csi2 node
+>> >>>> +--------------
+>> >>>> +
+>> >>>> +This is the device node for the MIPI CSI-2 receiver core 
+>> >>>> in i.MX7 SoC. It is
+>> >>>> +compatible with previous version of Samsung D-phy.
+>> >>>> +
+>> >>>> +Required properties:
+>> >>>> +
+>> >>>> +- compatible    : "fsl,imx7-mipi-csi2";
+>> >>>> +- reg           : base address and length of the register 
+>> >>>> set for the device;
+>> >>>> +- interrupts    : should contain MIPI CSIS interrupt;
+>> >>>> +- clocks        : list of clock specifiers, see
+>> >>>> + 
+>> >>>> Documentation/devicetree/bindings/clock/clock-bindings.txt 
+>> >>>> for details;
+>> >>>> +- clock-names   : must contain "pclk", "wrap" and "phy" 
+>> >>>> entries, matching
+>> >>>> +                  entries in the clock property;
+>> >>>> +- power-domains : a phandle to the power domain, see
+>> >>>> + 
+>> >>>> Documentation/devicetree/bindings/power/power_domain.txt 
+>> >>>> for details.
+>> >>>> +- reset-names   : should include following entry "mrst";
+>> >>>> +- resets        : a list of phandle, should contain reset 
+>> >>>> entry of
+>> >>>> +                  reset-names;
+>> >>>> +- phy-supply    : from the generic phy bindings, a 
+>> >>>> phandle to a regulator that
+>> >>>> +	          provides power to MIPI CSIS core;
+>> >>>> +- bus-width     : maximum number of data lanes supported 
+>> >>>> (SoC specific);
+>> >>>> +
+>> >>>> +Optional properties:
+>> >>>> +
+>> >>>> +- clock-frequency : The IP's main (system bus) clock 
+>> >>>> frequency in Hz, default
+>> >>>> +		    value when this property is not 
+>> >>>> specified is 166 MHz;
+>> >>>> +
+>> >>>> +port node
+>> >>>> +---------
+>> >>>> +
+>> >>>> +- reg		  : (required) can take the values 0 or 1, 
+>> >>>> where 0 is the
+>> >>>> +                     related sink port and port 1 should 
+>> >>>> be the source one;
+>> >>>> +
+>> >>>> +endpoint node
+>> >>>> +-------------
+>> >>>> +
+>> >>>> +- data-lanes    : (required) an array specifying active 
+>> >>>> physical MIPI-CSI2
+>> >>>> +		    data input lanes and their mapping to 
+>> >>>> logical lanes; the
+>> >>>> +		    array's content is unused, only its 
+>> >>>> length is meaningful;
+>> >>>> +
+>> >>>> +- fsl,csis-hs-settle : (optional) differential receiver 
+>> >>>> (HS-RX) settle time;
+>> >>>
+>> >>> Could you calculate this, as other drivers do? It probably 
+>> >>> changes> depending on the device runtime configuration.
+>> >> 
+>> >> The only reference to possible values to this parameter is 
+>> >> given by
+>> >> table in [0], can you point me out the formula for imx7 in 
+>> >> the
+>> >> documentation?
+>> >> 
+>> >> [0] https://community.nxp.com/thread/463777
+>> >
+>> > Can't you use the values from that table ? :-) You can get 
+>> > the 
+>> > link speed by querying the connected subdev and reading its
+>> > V4L2_CID_PIXEL_RATE control.
+>> 
+>> Yeah, I good point to add support for others subdev's. I will 
+>> try
+>> to add your comments in a follow up series.
+>
+> Just for my information (no commitment), do you know the 
+> timeframe for
+> that ?
 
---s44e46kj3dzvjmpr
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+With no commitment I will try to take a look at this until end of
+week, not sure if I can make it, but I will try.
 
-On Tue, Mar 12, 2019 at 11:22:46PM +0800, Icenowy Zheng wrote:
-> Introduce the GPIO pins that is only available on V3 (not on V3s) to the
-> V3 pinctrl driver.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->  drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c | 291 +++++++++++++++++++++--
->  drivers/pinctrl/sunxi/pinctrl-sunxi.h    |   2 +
->  2 files changed, 275 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
-> index 6704ce8e5e3d..54c210871a95 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
-> @@ -1,5 +1,5 @@
->  /*
-> - * Allwinner V3s SoCs pinctrl driver.
-> + * Allwinner V3/V3s SoCs pinctrl driver.
->   *
->   * Copyright (C) 2016 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->   *
-> @@ -23,7 +23,7 @@
->  
->  #include "pinctrl-sunxi.h"
->  
-> -static const struct sunxi_desc_pin sun8i_v3s_pins[] = {
-> +static const struct sunxi_desc_pin sun8i_v3_v3s_pins[] = {
-
-I'm not sure all that remaining is worth it to be honest. It adds a
-lot of noise for no particular reason (and the same goes for renaming
-the file itself).
-
-Maxime
-
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---s44e46kj3dzvjmpr--
+---
+Cheers,
+	Rui
