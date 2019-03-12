@@ -1,213 +1,82 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v14 08/13] ARM: dts: imx7: Add video mux, csi and
- mipi_csi and connections
-Date: Tue, 12 Mar 2019 16:10:46 +0200
-Message-ID: <20190312141046.GB4845@pendragon.ideasonboard.com>
-References: <20190206151328.21629-1-rui.silva@linaro.org>
- <20190206151328.21629-9-rui.silva@linaro.org>
- <20190310214102.GA7578@pendragon.ideasonboard.com>
- <m3y35kdw7v.fsf@linaro.org>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] arm: dts: rk3288-tinker.dtsi: Fix SD card detection
+Date: Tue, 12 Mar 2019 14:17:39 +0000
+Message-ID: <d12c29af-147a-34b5-f660-98b3d85c7126@arm.com>
+References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
+ <20190309153923.22806-1-beagleboard@davidjohnsummers.uk>
+ <10436027.DUyLE1RSiR@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <m3y35kdw7v.fsf@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil@xs4all.nl>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <10436027.DUyLE1RSiR@phil>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rui,
-
-On Tue, Mar 12, 2019 at 02:05:24PM +0000, Rui Miguel Silva wrote:
-> On Sun 10 Mar 2019 at 21:41, Laurent Pinchart wrote:
-> > Hi Rui,
-> >
-> > Thank you for the patch.
-> 
-> Where have you been for the latest 14 versions? :)
-
-Elsewhere I suppose :-)
-
-> This is already merged, but... follow up patches can address your
-> issues bellow.
-
-I saw the driver and DT bindings patches merged in the media tree for
-v5.2, where have the DT patches been merged ?
-
-> > On Wed, Feb 06, 2019 at 03:13:23PM +0000, Rui Miguel Silva 
-> > wrote:
-> >> This patch adds the device tree nodes for csi, video 
-> >> multiplexer and mipi-csi besides the graph connecting the necessary
-> >> endpoints to make the media capture entities to work in imx7 Warp
-> >> board.
-> >> 
-> >> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> >> ---
-> >>  arch/arm/boot/dts/imx7s-warp.dts | 51 ++++++++++++++++++++++++++++++++
-> >>  arch/arm/boot/dts/imx7s.dtsi     | 27 +++++++++++++++++
-> >
-> > I would have split this in two patches to make backporting 
-> > easier, but it's not a big deal.
-> >
-> > Please see below for a few additional comments.
-> >
-> >>  2 files changed, 78 insertions(+)
-> >> 
-> >> diff --git a/arch/arm/boot/dts/imx7s-warp.dts 
-> >> b/arch/arm/boot/dts/imx7s-warp.dts
-> >> index 23431faecaf4..358bcae7ebaf 100644
-> >> --- a/arch/arm/boot/dts/imx7s-warp.dts
-> >> +++ b/arch/arm/boot/dts/imx7s-warp.dts
-> >> @@ -277,6 +277,57 @@
-> >>  	status = "okay";
-> >>  };
-> >>  
-> >> +&gpr {
-> >> +	csi_mux {
-> >> +		compatible = "video-mux";
-> >> +		mux-controls = <&mux 0>;
-> >> +		#address-cells = <1>;
-> >> +		#size-cells = <0>;
-> >> +
-> >> +		port@1 {
-> >> +			reg = <1>;
-> >> +
-> >> +			csi_mux_from_mipi_vc0: endpoint {
-> >> +				remote-endpoint = 
-> >> <&mipi_vc0_to_csi_mux>;
-> >> +			};
-> >> +		};
-> >> +
-> >> +		port@2 {
-> >> +			reg = <2>;
-> >> +
-> >> +			csi_mux_to_csi: endpoint {
-> >> +				remote-endpoint = 
-> >> <&csi_from_csi_mux>;
-> >> +			};
-> >> +		};
-> >> +	};
-> >> +};
-> >> +
-> >> +&csi {
-> >> +	status = "okay";
-> >> +
-> >> +	port {
-> >> +		csi_from_csi_mux: endpoint {
-> >> +			remote-endpoint = <&csi_mux_to_csi>;
-> >> +		};
-> >> +	};
-> >> +};
-> >
-> > Shouldn't these two nodes, as well as port@1 of the mipi_csi 
-> > node, be moved to imx7d.dtsi ?
-> 
-> Yeah, I guess you are right here.
-> 
-> >
-> >> +
-> >> +&mipi_csi {
-> >> +	clock-frequency = <166000000>;
-> >> +	status = "okay";
-> >> +	#address-cells = <1>;
-> >> +	#size-cells = <0>;
-> >> +	fsl,csis-hs-settle = <3>;
-> >
-> > Shouldn't this be an endpoint property ? Different sensors connected
-> > through different endpoints could have different timing
-> > requirements.
-> 
-> Hum... I see you point, even tho the phy hs-settle is a common
-> control. 
-
-I suppose we don't need to care about DT backward compatibility if we
-make changes in the bindings for v5.2 ? Would you fix this, or do you
-want a patch ?
-
-> >> +
-> >> +	port@1 {
-> >> +		reg = <1>;
-> >> +
-> >> +		mipi_vc0_to_csi_mux: endpoint {
-> >> +			remote-endpoint = <&csi_mux_from_mipi_vc0>;
-> >> +		};
-> >> +	};
-> >> +};
-> >> +
-> >>  &wdog1 {
-> >>  	pinctrl-names = "default";
-> >>  	pinctrl-0 = <&pinctrl_wdog>;
-> >> diff --git a/arch/arm/boot/dts/imx7s.dtsi 
-> >> b/arch/arm/boot/dts/imx7s.dtsi
-> >> index 792efcd2caa1..01962f85cab6 100644
-> >> --- a/arch/arm/boot/dts/imx7s.dtsi
-> >> +++ b/arch/arm/boot/dts/imx7s.dtsi
-> >> @@ -8,6 +8,7 @@
-> >>  #include <dt-bindings/gpio/gpio.h>
-> >>  #include <dt-bindings/input/input.h>
-> >>  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >> +#include <dt-bindings/reset/imx7-reset.h>
-> >>  #include "imx7d-pinfunc.h"
-> >>  
-> >>  / {
-> >> @@ -709,6 +710,17 @@
-> >>  				status = "disabled";
-> >>  			};
-> >>  
-> >> +			csi: csi@30710000 {
-> >> +				compatible = "fsl,imx7-csi";
-> >> +				reg = <0x30710000 0x10000>;
-> >> +				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> >> +				clocks = <&clks IMX7D_CLK_DUMMY>,
-> >> +						<&clks IMX7D_CSI_MCLK_ROOT_CLK>,
-> >> +						<&clks IMX7D_CLK_DUMMY>;
-> >> +				clock-names = "axi", "mclk", "dcic";
-> >> +				status = "disabled";
-> >> +			};
-> >> +
-> >>  			lcdif: lcdif@30730000 {
-> >>  				compatible = "fsl,imx7d-lcdif", "fsl,imx28-lcdif";
-> >>  				reg = <0x30730000 0x10000>;
-> >> @@ -718,6 +730,21 @@
-> >>  				clock-names = "pix", "axi";
-> >>  				status = "disabled";
-> >>  			};
-> >> +
-> >> +			mipi_csi: mipi-csi@30750000 {
-> >> +				compatible = "fsl,imx7-mipi-csi2";
-> >> +				reg = <0x30750000 0x10000>;
-> >> +				interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-> >> +				clocks = <&clks IMX7D_IPG_ROOT_CLK>,
-> >> +					<&clks IMX7D_MIPI_CSI_ROOT_CLK>,
-> >> +					<&clks IMX7D_MIPI_DPHY_ROOT_CLK>;
-> >> +				clock-names = "pclk", "wrap", "phy";
-> >> +				power-domains = <&pgc_mipi_phy>;
-> >> +				phy-supply = <&reg_1p0d>;
-> >> +				resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
-> >> +				reset-names = "mrst";
-> >> +				status = "disabled";
-> >
-> > How about already declaring port@0 here too (but obviously 
-> > without any endoint) ?
-> 
-> empty port, do not know if they make much sense.
-
-The port describes the ability to connect. There's always a port@0 for
-the CSI-2 receiver, so I would define it in imx7s.dtsi. If a system
-doesn't connect any CSI-2 sensor then no endpoint will exist (and this
-node will stay disabled anyway).
-
--- 
-Regards,
-
-Laurent Pinchart
+T24gMjAxOS0wMy0xMiAyOjA4IHBtLCBIZWlrbyBTdHVlYm5lciB3cm90ZToKPiBBbSBTYW1zdGFn
+LCA5LiBNw6RyeiAyMDE5LCAxNjozOToyMSBDRVQgc2NocmllYiBEYXZpZCBTdW1tZXJzOgo+PiBU
+aGUgUHJvYmxlbToKPj4KPj4gT24gQVNVUyBUaW5rZXIgQm9hcmQgUywgd2hlbiBib290aW5nIGZy
+b20gdGhlIGVNTUMsIGFuZCB0aGVyZSBpcyBjYXJkCj4+IGluIHRoZSBzZCBzbG90LCB0aGVyZSBh
+cmUgY29uc3RhbnQgZXJyb3JzLgo+Pgo+PiBBbHNvIHdoZW4gd2FybSByZWJvb3QsIHVib290IGNh
+biBub3QgYWNjZXNzIHRoZSBzZCBzbG90Cj4+Cj4+IENhdXNlOgo+Pgo+PiBJZGVudGlmaWVkIGJ5
+IFJvYmluIE11cnBoeSBAIEFSTS4gVGhlIENhcmQgRGV0ZWN0IG9uIHJrMzI4OAo+PiBkZXZpY2Vz
+IGlzIHB1bGxlZCB1cCBieSB2Y2Npby1zZDsgc28gd2hlbiB0aGUgcmVndWxhdG9yIHBvd2VycyB0
+aGlzCj4+IG9mZiwgY2FyZCBkZXRlY3QgZ2l2ZXMgc3B1cmlvdXMgZXJyb3JzLiBBIHNlY29uZCBw
+cm9ibGVtLCBpcyBkdXJpbmcKPj4gcG93ZXIgZG93biwgdmNjaW8tc2QgYXBwcmVhcnMgdG8gYmUg
+cG93ZXJlZCBkb3duLiBUaGlzIGNhdXNlcyBhCj4+IHByb2JsZW0gd2hlbiB3YXJtIHJlYm9vdGlu
+ZyBmcm9tIHRoZSBzZCBjYXJkLiBUaGlzIHdhcyBpZGVudGlmaWVkIGJ5Cj4+IEpvbmFzIEthcmxt
+YW4uCj4+Cj4+IEhpc3Rvcnk6Cj4+Cj4+IEEgY29tbW9uIGZhdWx0IG9uIHRoZXNlIHJrMzI4OCBi
+b2FyZCwgd2hpY2ggaW1wbGltZW50IHRoZSByZWZlcmVuY2UKPj4gZGVzaWduLgo+Pgo+PiBXaGVu
+IHRoaXMgYXJvc2UgYmVmb3JlOgo+Pgo+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBl
+cm1haWwvbGludXgtYXJtLWtlcm5lbC8yMDE0LUF1Z3VzdC8yODExNTMuaHRtbAo+Pgo+PiBBbmQg
+VWxmIGFuZCBKYWVob29uIGNsZWFybHkgc2FpZCB0aGlzIHdhcyBhIGJyb2tlbiBjYXJkIGRldGVj
+dCBkZXNpZ24sCj4+IHdoaWNoIHNob3VsZCBiZSBzb2x2ZWQgdmlhIHBvbGxpbmcKPj4KPj4gU29s
+dXRpb246Cj4+Cj4+IEhlbmNlIGJyb2tlbi1jZCBpcyBzZXQgYXMgYSBwcm9wZXJ0eS4gVGhpcyBj
+dXJlcyB0aGUgZXJyb3JzLiBUaGUKPj4gcG93ZXJpbmcgZG93biBvZiB2Y2Npby1zZCBkdXJpbmcg
+cmVib290IGlzIGN1cmVkIGJ5IGFkZGluZwo+PiByZWd1bGF0b3ItYm9vdC1vbi4KPj4KPj4gVGhp
+cyBzb2x1dGlvbnMgaGFzIGJlZW4gZmFpcmx5IHdpZGVseSByZXZpZXdlZCBhbmQgdGVzdGVkLgo+
+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBEYXZpZCBTdW1tZXJzIDxiZWFnbGVib2FyZEBkYXZpZGpvaG5z
+dW1tZXJzLnVrPgo+PiBSZXZpZXdlZCBieTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJt
+LmNvbT4KPj4gUmV2aWV3ZWQgYnk6IEpvbmFzIEthcmxtYW4gPGpvbmFzQGt3aWJvby5zZT4KPj4g
+VGVzdCBieTogVGhlU2FpbnQgQCBBcmNoTGludXggQXJtCj4gCj4gcGxlYXNlIGZvbGxvdyBwYXRj
+aCBzdWJtaXNzaW9uIGd1aWRlbGluZXMsIGhlcmUgaXQgd291bGQgYmUKPiBUZXN0ZWQtYnk6IC4u
+LiB3aXRoIGFuIGFjdHVhbCBOYW1lICsgbWFpbCBhZGRyZXNzCj4gCj4gQWxzbyBJIGRpZCB0cnkg
+dG8gZ28gdGhyb3VnaCB0aGUgd2F5IGJpZyBtYWlsIHRocmVhZCBidXQgZGlkbid0Cj4gZmluZCBh
+biBhY3R1YWwgIlJldmlld2VkLWJ5IiBmcm9tIFJvYmluIE11cnBoeSwgc2ltaWxhciB0byB3aGF0
+Cj4gaGUgcG9pbnRlZCBvdXQgaW4gcGF0Y2gyCgpBaCwgSSBkaWRuJ3QgZ2V0IGEgZGlyZWN0IEND
+IG9mIHRoaXMgcGF0Y2ggc28gSSBoYWRuJ3Qgc3BvdHRlZCB0aGF0IC0gCkZXSVcgdGhvdWdoLCBJ
+J20gaGFwcHkgd2l0aCBEb3VnJ3MgcmVhc29uaW5nIGZvciAiYnJva2VuLWNkIiBiZWluZyB0aGUg
+Cm1vc3Qgcm9idXN0IHNvbHV0aW9uIGZvciBub3csIHNvIGZlZWwgZnJlZSB0byBrZWVwCgpSZXZp
+ZXdlZC1ieTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4KCmZvciB0aGlzIG9u
+ZS4KCkNoZWVycywKUm9iaW4uCgo+IAo+IE90aGVyIHRoYW4gdGhhdCBhbmQgaW5jbHVkaW5nIHRo
+ZSBwYXN0IGRpc2N1c3Npb25zLCB0aGlzIGxvb2tzIGdvb2QuCj4gCj4gCj4gSGVpa28KPiAKPj4g
+LS0tCj4+ICAgYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LXRpbmtlci5kdHNpIHwgMyArKy0KPj4g
+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4+Cj4+IGRp
+ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yazMyODgtdGlua2VyLmR0c2kgYi9hcmNoL2Fy
+bS9ib290L2R0cy9yazMyODgtdGlua2VyLmR0c2kKPj4gaW5kZXggYWExMDdlZTQxYjhiLi5lZjY1
+M2MzMjA5YmMgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC10aW5rZXIu
+ZHRzaQo+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9yazMyODgtdGlua2VyLmR0c2kKPj4gQEAg
+LTI1NCw2ICsyNTQsNyBAQAo+PiAgIAkJCX07Cj4+ICAgCj4+ICAgCQkJdmNjaW9fc2Q6IExET19S
+RUc1IHsKPj4gKwkJCQlyZWd1bGF0b3ItYm9vdC1vbjsKPj4gICAJCQkJcmVndWxhdG9yLW1pbi1t
+aWNyb3ZvbHQgPSA8MTgwMDAwMD47Cj4+ICAgCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0g
+PDMzMDAwMDA+Owo+PiAgIAkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2Y2Npb19zZCI7Cj4+IEBAIC00
+MzAsNyArNDMxLDcgQEAKPj4gICAJYnVzLXdpZHRoID0gPDQ+Owo+PiAgIAljYXAtbW1jLWhpZ2hz
+cGVlZDsKPj4gICAJY2FwLXNkLWhpZ2hzcGVlZDsKPj4gLQljYXJkLWRldGVjdC1kZWxheSA9IDwy
+MDA+Owo+PiArCWJyb2tlbi1jZDsKPj4gICAJZGlzYWJsZS13cDsJCQkvKiB3cCBub3QgaG9va2Vk
+IHVwICovCj4+ICAgCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4+ICAgCXBpbmN0cmwtMCA9
+IDwmc2RtbWNfY2xrICZzZG1tY19jbWQgJnNkbW1jX2NkICZzZG1tY19idXM0PjsKPj4KPiAKPiAK
+PiAKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxp
+bnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9j
+a2NoaXAK
