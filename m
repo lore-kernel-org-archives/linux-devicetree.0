@@ -1,63 +1,68 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [PATCH 04/14] pinctrl: sunxi: v3: really introduce support for V3
-Date: Tue, 12 Mar 2019 23:45:06 +0800
-Message-ID: <7B6C1341-BAB5-48C5-9E60-11BCEAC3D0CD@aosc.io>
-References: <20190312152256.35574-1-icenowy@aosc.io> <20190312152256.35574-5-icenowy@aosc.io> <20190312153654.25r5orlw7qjtlhbt@flea>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RFC V2 1/3] dt-bindings: hwmon: Add tachometer interrupt
+ to pwm-fan
+Date: Tue, 12 Mar 2019 10:48:46 -0500
+Message-ID: <20190312154846.GA11788@bogus>
+References: <1551110359-19860-1-git-send-email-stefan.wahren@i2se.com>
+ <1551110359-19860-2-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190312153654.25r5orlw7qjtlhbt@flea>
+Content-Disposition: inline
+In-Reply-To: <1551110359-19860-2-git-send-email-stefan.wahren@i2se.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Jagan Teki <jagan@amarulasolutions.com>, linux-clk@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Feb 25, 2019 at 04:59:17PM +0100, Stefan Wahren wrote:
+> This adds the tachometer interrupt to the pwm-fan binding, which is
+> necessary for RPM support.
+> 
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> ---
+>  Documentation/devicetree/bindings/hwmon/pwm-fan.txt | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+> index 49ca5d8..7d09623 100644
+> --- a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+> @@ -8,6 +8,14 @@ Required properties:
+>  
+>  Optional properties:
+>  - fan-supply    : phandle to the regulator that provides power to the fan
+> +- interrupts      : This contains a single interrupt specifier which
+> +		    describes the tachometer output of the fan as an
+> +		    interrupt source. The output signal must generate a
+> +		    defined number of interrupts per fan revolution, which
+> +		    require that it must be self resetting edge interrupts.
+> +		    See interrupt-controller/interrupts.txt for the format.
+> +- interrupt-ratio : defines the ratio interrupts per fan revolution as an
+> +		    integer (default is 2 interrupts per revolution)
 
+Name this for what it is, not how it is used. Using 'interrupt' is 
+misleading that it is related to the interrupt binding.
+'tach-pulse-per-rev' or something similar.
 
-于 2019年3月12日 GMT+08:00 下午11:36:54, Maxime Ripard <maxime.ripard@bootlin.com> 写到:
->On Tue, Mar 12, 2019 at 11:22:46PM +0800, Icenowy Zheng wrote:
->> Introduce the GPIO pins that is only available on V3 (not on V3s) to
->the
->> V3 pinctrl driver.
->> 
->> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->> ---
->>  drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c | 291
->+++++++++++++++++++++--
->>  drivers/pinctrl/sunxi/pinctrl-sunxi.h    |   2 +
->>  2 files changed, 275 insertions(+), 18 deletions(-)
->> 
->> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
->b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
->> index 6704ce8e5e3d..54c210871a95 100644
->> --- a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
->> +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
->> @@ -1,5 +1,5 @@
->>  /*
->> - * Allwinner V3s SoCs pinctrl driver.
->> + * Allwinner V3/V3s SoCs pinctrl driver.
->>   *
->>   * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.xyz>
->>   *
->> @@ -23,7 +23,7 @@
->>  
->>  #include "pinctrl-sunxi.h"
->>  
->> -static const struct sunxi_desc_pin sun8i_v3s_pins[] = {
->> +static const struct sunxi_desc_pin sun8i_v3_v3s_pins[] = {
->
->I'm not sure all that remaining is worth it to be honest. It adds a
->lot of noise for no particular reason (and the same goes for renaming
->the file itself)
-
-Maybe keeping names is okay "for historial reasons".
-
-In fact I want to keep them.
-
->
->Maxime
-
--- 
-使用 K-9 Mail 发送自我的Android设备。
+>  
+>  Example:
+>  	fan0: pwm-fan {
+> @@ -38,3 +46,14 @@ Example:
+>  					};
+>  			     };
+>  		};
+> +
+> +Example 2:
+> +	fan0: pwm-fan {
+> +		fan0: pwm-fan {
+> +		compatible = "pwm-fan";
+> +		pwms = <&pwm 0 40000 0>;
+> +		fan-supply = <&reg_fan>;
+> +		interrupt-parent = <&gpio5>;
+> +		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
+> +		interrupt-ratio = <2>;
+> +	};
+> -- 
+> 2.7.4
+> 
