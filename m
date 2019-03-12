@@ -1,158 +1,69 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: Re: [PATCH v14 08/13] ARM: dts: imx7: Add video mux,
- csi and mipi_csi and connections
-Date: Tue, 12 Mar 2019 15:35:33 +0000
-Message-ID: <m3tvg8ds1m.fsf@linaro.org>
-References: <20190206151328.21629-1-rui.silva@linaro.org>
- <20190206151328.21629-9-rui.silva@linaro.org>
- <20190310214102.GA7578@pendragon.ideasonboard.com>
- <m3y35kdw7v.fsf@linaro.org>
- <20190312141046.GB4845@pendragon.ideasonboard.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 04/14] pinctrl: sunxi: v3: really introduce
+ support for V3
+Date: Tue, 12 Mar 2019 16:36:54 +0100
+Message-ID: <20190312153654.25r5orlw7qjtlhbt@flea>
+References: <20190312152256.35574-1-icenowy@aosc.io>
+ <20190312152256.35574-5-icenowy@aosc.io>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-reply-to: <20190312141046.GB4845@pendragon.ideasonboard.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil@xs4all.nl>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="s44e46kj3dzvjmpr"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBGNET7SAKGQEQ34NB6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190312152256.35574-5-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-On Tue 12 Mar 2019 at 14:10, Laurent Pinchart wrote:
-> Hi Rui,
->
-> On Tue, Mar 12, 2019 at 02:05:24PM +0000, Rui Miguel Silva 
-> wrote:
->> On Sun 10 Mar 2019 at 21:41, Laurent Pinchart wrote:
->> > Hi Rui,
->> >
->> > Thank you for the patch.
->> 
->> Where have you been for the latest 14 versions? :)
->
-> Elsewhere I suppose :-)
 
-eheh.
+--s44e46kj3dzvjmpr
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
->
->> This is already merged, but... follow up patches can address 
->> your
->> issues bellow.
->
-> I saw the driver and DT bindings patches merged in the media 
-> tree for
-> v5.2, where have the DT patches been merged ?
+On Tue, Mar 12, 2019 at 11:22:46PM +0800, Icenowy Zheng wrote:
+> Introduce the GPIO pins that is only available on V3 (not on V3s) to the
+> V3 pinctrl driver.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c | 291 +++++++++++++++++++++--
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.h    |   2 +
+>  2 files changed, 275 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
+> index 6704ce8e5e3d..54c210871a95 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
+> @@ -1,5 +1,5 @@
+>  /*
+> - * Allwinner V3s SoCs pinctrl driver.
+> + * Allwinner V3/V3s SoCs pinctrl driver.
+>   *
+>   * Copyright (C) 2016 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>   *
+> @@ -23,7 +23,7 @@
+>  
+>  #include "pinctrl-sunxi.h"
+>  
+> -static const struct sunxi_desc_pin sun8i_v3s_pins[] = {
+> +static const struct sunxi_desc_pin sun8i_v3_v3s_pins[] = {
 
-Good question, now that you talk I do not think they were merged.
+I'm not sure all that remaining is worth it to be honest. It adds a
+lot of noise for no particular reason (and the same goes for renaming
+the file itself).
 
->
->> > On Wed, Feb 06, 2019 at 03:13:23PM +0000, Rui Miguel Silva 
->> > wrote:
->> >> This patch adds the device tree nodes for csi, video 
->> >> multiplexer and mipi-csi besides the graph connecting the 
->> >> necessary
->> >> endpoints to make the media capture entities to work in imx7 
->> >> Warp
->> >> board.
->> >> 
->> >> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
->> >> ---
->> >>  arch/arm/boot/dts/imx7s-warp.dts | 51 
->> >>  ++++++++++++++++++++++++++++++++
->> >>  arch/arm/boot/dts/imx7s.dtsi     | 27 +++++++++++++++++
->> >
->> > I would have split this in two patches to make backporting 
->> > easier, but it's not a big deal.
->> >
->> > Please see below for a few additional comments.
->> >
->> >>  2 files changed, 78 insertions(+)
->> >> 
->> >> diff --git a/arch/arm/boot/dts/imx7s-warp.dts 
->> >> b/arch/arm/boot/dts/imx7s-warp.dts
->> >> index 23431faecaf4..358bcae7ebaf 100644
->> >> --- a/arch/arm/boot/dts/imx7s-warp.dts
->> >> +++ b/arch/arm/boot/dts/imx7s-warp.dts
->> >> @@ -277,6 +277,57 @@
->> >>  	status = "okay";
->> >>  };
->> >>  
->> >> +&gpr {
->> >> +	csi_mux {
->> >> +		compatible = "video-mux";
->> >> +		mux-controls = <&mux 0>;
->> >> +		#address-cells = <1>;
->> >> +		#size-cells = <0>;
->> >> +
->> >> +		port@1 {
->> >> +			reg = <1>;
->> >> +
->> >> +			csi_mux_from_mipi_vc0: endpoint {
->> >> +				remote-endpoint = 
->> >> <&mipi_vc0_to_csi_mux>;
->> >> +			};
->> >> +		};
->> >> +
->> >> +		port@2 {
->> >> +			reg = <2>;
->> >> +
->> >> +			csi_mux_to_csi: endpoint {
->> >> +				remote-endpoint = 
->> >> <&csi_from_csi_mux>;
->> >> +			};
->> >> +		};
->> >> +	};
->> >> +};
->> >> +
->> >> +&csi {
->> >> +	status = "okay";
->> >> +
->> >> +	port {
->> >> +		csi_from_csi_mux: endpoint {
->> >> +			remote-endpoint = <&csi_mux_to_csi>;
->> >> +		};
->> >> +	};
->> >> +};
->> >
->> > Shouldn't these two nodes, as well as port@1 of the mipi_csi 
->> > node, be moved to imx7d.dtsi ?
->> 
->> Yeah, I guess you are right here.
->> 
->> >
->> >> +
->> >> +&mipi_csi {
->> >> +	clock-frequency = <166000000>;
->> >> +	status = "okay";
->> >> +	#address-cells = <1>;
->> >> +	#size-cells = <0>;
->> >> +	fsl,csis-hs-settle = <3>;
->> >
->> > Shouldn't this be an endpoint property ? Different sensors 
->> > connected
->> > through different endpoints could have different timing
->> > requirements.
->> 
->> Hum... I see you point, even tho the phy hs-settle is a common
->> control. 
->
-> I suppose we don't need to care about DT backward compatibility 
-> if we
-> make changes in the bindings for v5.2 ? Would you fix this, or 
-> do you
-> want a patch ?
+Maxime
 
-I will try to take a look at this until end of week.
-
----
-Cheers,
-	Rui
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--s44e46kj3dzvjmpr--
