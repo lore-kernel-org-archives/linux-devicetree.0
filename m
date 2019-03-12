@@ -1,17 +1,14 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] arm: dts: rk3288-tinker.dtsi: Enable WiFi
-Date: Tue, 12 Mar 2019 15:21:49 +0100
-Message-ID: <8fc4cc3c-5a83-4616-9fa2-3055899acdb7@i2se.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] arm: dts: rk3288-tinker.dtsi: Fix SD card detection
+Date: Tue, 12 Mar 2019 15:22:46 +0100
+Message-ID: <50094675.5IylMcgSg6@phil>
 References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
  <20190309153923.22806-1-beagleboard@davidjohnsummers.uk>
- <20190309153923.22806-2-beagleboard@davidjohnsummers.uk>
- <1822354.MXcUDnUBre@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1822354.MXcUDnUBre@phil>
-Content-Language: en-US
+In-Reply-To: <20190309153923.22806-1-beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
@@ -21,30 +18,74 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
 Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Tony McKahan <tonymckahan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>, Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28sCgpBbSAxMi4wMy4xOSB1bSAxNToxOCBzY2hyaWViIEhlaWtvIFN0dWVibmVyOgo+
-IEFtIFNhbXN0YWcsIDkuIE3DpHJ6IDIwMTksIDE2OjM5OjIyIENFVCBzY2hyaWViIERhdmlkIFN1
-bW1lcnM6Cj4+IFRoaXMgcGF0Y2ggYWRkcyB3aWZpIHN1cHBvcnQgdG8gdGhlIEFTVVMgVGlua2Vy
-IEJvYXJkIChTKSBtYWNoaW5lcy4KPj4KPj4gVGhpcyBpcyBwcm92aWRlZCBieSBhbiB3aWZpIGNh
-cmQgKFJUTDg3MjNCUykgd2lyZWQgaW50byB0aGUgc2RpbyBpbnRlcmZhY2UuCj4+Cj4+IEl0IHJl
-cXVpcmVzIGNlcnRhaW4gcGlucyBwdWxsZWQsIHRvIGVuYWJsZSB0aGUgV2lGaS4KPj4KPj4gVGhl
-IHNjaGVtYXRpY3MgZm9yIHRoZXNlIGJvYXJkIGRvIG5vdCBzaG93IHRoZSBXaUZpIGNvbm5lY3Rp
-b24sIHNvIHRoZQo+PiBjb25uZWN0aW9ucyBoYXZlIGJlZW4gdGFrZW4gZnJvbToKPj4KPj4gaHR0
-cHM6Ly9naXRodWIuY29tL1RpbmtlckJvYXJkL2RlYmlhbl9rZXJuZWwvYmxvYi9kZXZlbG9wL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1taW5pYXJtLmR0cwo+Pgo+PiBJbiBwYXJ0aWN1bGFyIHRo
-ZSBwdWxsaW5nIG9mIHR3byBwaW5zLgo+Pgo+PiBUaGlzIHBhdGNoIGlzIGFsbW9zdCBpZGVudGlj
-YWwgdG8gdjEuIEEgZmV3IGFkZGl0aW9uYWwgbGluZSBicmVha3MgZm9yCj4+IHJlYWRhYmlsaXR5
-LiBPbiBBcm1iaWFuLCB0aGV5IGRpZCBub3QgdXNlIHNkLXVocy1kZHI1MCwgc28gdGhpcyBoYXMK
-Pj4gYmVlbiByZW1vdmVkLiBJdCBkb2VzIG5vdCBjaGFuZ2UgZnVuY3Rpb25hbGl0eS4gVGhlIEFT
-VVMgcGF0Y2ggc2V0Cj4+IHNkLXVocy1zZHIxMDQ7Lgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBEYXZp
-ZCBTdW1tZXJzIDxiZWFnbGVib2FyZEBkYXZpZGpvaG5zdW1tZXJzLnVrPgo+PiBTaWduZWQtb2Zm
-LWJ5OiBTdGVmYW4gV2FocmVuIDxzdGVmYW4ud2FocmVuQGkyc2UuY29tPgo+IHRyeWluZyB0byB1
-bmRlcnN0YW5kIHRoZSByZWxhdGlvbnNoaXAgaGVyZSwgaXMgdGhhdCBhCj4gIkNvLWRldmVsb3Bl
-ZC1ieTogU3RlZmFuIFdhaHJlbiA8Li4uPiIgY2FzZT8KCnllcyBpdCBpcy4KClJlZ2FyZHMgU3Rl
-ZmFuCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGlu
-dXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2Nr
-Y2hpcAo=
+Hi Jonas,
+
+Am Samstag, 9. M=E4rz 2019, 16:39:21 CET schrieb David Summers:
+> The Problem:
+> =
+
+> On ASUS Tinker Board S, when booting from the eMMC, and there is card
+> in the sd slot, there are constant errors.
+> =
+
+> Also when warm reboot, uboot can not access the sd slot
+> =
+
+> Cause:
+> =
+
+> Identified by Robin Murphy @ ARM. The Card Detect on rk3288
+> devices is pulled up by vccio-sd; so when the regulator powers this
+> off, card detect gives spurious errors. A second problem, is during
+> power down, vccio-sd apprears to be powered down. This causes a
+> problem when warm rebooting from the sd card. This was identified by
+> Jonas Karlman.
+> =
+
+> History:
+> =
+
+> A common fault on these rk3288 board, which impliment the reference
+> design.
+> =
+
+> When this arose before:
+> =
+
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-August/281153.=
+html
+> =
+
+> And Ulf and Jaehoon clearly said this was a broken card detect design,
+> which should be solved via polling
+> =
+
+> Solution:
+> =
+
+> Hence broken-cd is set as a property. This cures the errors. The
+> powering down of vccio-sd during reboot is cured by adding
+> regulator-boot-on.
+> =
+
+> This solutions has been fairly widely reviewed and tested.
+> =
+
+> Signed-off-by: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+> Reviewed by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> Reviewed by: Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>
+
+in v2, you gave a
+Tested-by: Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>
+it seems, which somehow transformed into a reviewed-by in v3.
+
+V3 did change a bit in its approach - for the better, but do you approve
+of adding that Reviewed-by above (and maybe also providing a Tested-by
+for the new approach)?
+
+Thanks
+Heiko
