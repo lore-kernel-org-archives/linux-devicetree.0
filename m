@@ -1,109 +1,107 @@
-Return-Path: <SRS0=L7Fd=RW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55502 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbfCSRA2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Mar 2019 13:00:28 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 4so17593974wmf.5
-        for <devicetree@vger.kernel.org>; Tue, 19 Mar 2019 10:00:27 -0700 (PDT)
+Return-Path: <SRS0=ezLt=RQ=linaro.org=rui.silva@kernel.org>
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH 5/5] ARM: dts: imx7s-warp: add ov2680 sensor node
-Date: Tue, 19 Mar 2019 17:00:03 +0000
-Message-Id: <20190319170003.21261-6-rui.silva@linaro.org>
-In-Reply-To: <20190319170003.21261-1-rui.silva@linaro.org>
-References: <20190319170003.21261-1-rui.silva@linaro.org>
+Subject: [PATCH v3 0/6] iio: gyro: add fxas21002c driver
+Date: Wed, 13 Mar 2019 18:39:56 +0000
+Message-Id: <20190313184002.2501-1-rui.silva@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Warp7 comes with a Omnivision OV2680 sensor, add the node here to make
-complete the camera data path for this system. Add the needed regulator
-to the analog voltage supply, the port and endpoints in mipi_csi node
-and the pinctrl for the reset gpio.
+Hi,
+Sorry about the delay, being traveling and other stuff to do, but
+here goes v3.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+This series introduce a NXP fxas21002c tri axis gyroscope driver [0]
+It add a core implementaiton plus an i2c and spi.
+
+This device can be found in the warp7 board [1], where it was tested.
+
 ---
- arch/arm/boot/dts/imx7s-warp.dts | 45 ++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+Cheers,
+   Rui
 
-diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
-index 5158c2d958a7..6ca68ab33b61 100644
---- a/arch/arm/boot/dts/imx7s-warp.dts
-+++ b/arch/arm/boot/dts/imx7s-warp.dts
-@@ -55,6 +55,14 @@
- 		regulator-always-on;
- 	};
- 
-+	reg_peri_3p15v: regulator-peri-3p15v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "peri_3p15v_reg";
-+		regulator-min-microvolt = <3150000>;
-+		regulator-max-microvolt = <3150000>;
-+		regulator-always-on;
-+	};
-+
- 	sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "imx7-sgtl5000";
-@@ -178,6 +186,27 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-+
-+	ov2680: camera@36 {
-+		compatible = "ovti,ov2680";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ov2680>;
-+		reg = <0x36>;
-+		clocks = <&osc>;
-+		clock-names = "xvclk";
-+		reset-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
-+		DOVDD-supply = <&sw2_reg>;
-+		DVDD-supply = <&sw2_reg>;
-+		AVDD-supply = <&reg_peri_3p15v>;
-+
-+		port {
-+			ov2680_to_mipi: endpoint {
-+				remote-endpoint = <&mipi_from_sensor>;
-+				clock-lanes = <0>;
-+				data-lanes = <1>;
-+			};
-+		};
-+	};
- };
- 
- &i2c3 {
-@@ -285,6 +314,16 @@
- 	clock-frequency = <166000000>;
- 	status = "okay";
- 	fsl,csis-hs-settle = <3>;
-+
-+	port@0 {
-+		reg = <0>;
-+
-+		mipi_from_sensor: endpoint {
-+			remote-endpoint = <&ov2680_to_mipi>;
-+			data-lanes = <1>;
-+		};
-+
-+	};
- };
- 
- &wdog1 {
-@@ -341,6 +380,12 @@
- 		>;
- 	};
- 
-+	pinctrl_ov2680: ov2660grp {
-+		fsl,pins = <
-+			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x14
-+		>;
-+	};
-+
- 	pinctrl_sai1: sai1grp {
- 		fsl,pins = <
- 			MX7D_PAD_SAI1_RX_DATA__SAI1_RX_DATA0	0x1f
+v2->v3:
+Jonathan Cameron:
+  - cacheline aligned (DMA safe buffer)
+     Great presentation [2] and links in the presentation, thanks
+  - global renaming, including filenames, fxas2100x->fxas21002c
+  - provide spi info in dts bidings
+  - Remove SPI_MASTER in Kconfig i2c patch and move it to right patch
+  - remove extra blank line in comment
+  - add break range_value_from_fs after found
+  - in range_value_from_fs use local variable
+  - remove mode check at mode_set
+  - combine two if statements in mode_set
+  - in scale_get return 0 and let caller to set IIO_VAL_FRACTIONAL
+  - remove dev_err from vdd_io regulator get
+  - handle regulator error path
+  - devm_add_action
+  - check unwind order
+  - simplify data in _suspend and alike
+  - disable regulators at suspend
+  - error handling at _resume
+  - return -EAGAIN at runtime_resume
+
+Rob Herring:
+   - Set label as gyroscope
+
+- add interrupt to bindings
+- add entry to maintainers
+
+
+v1->v2:
+Peter Meerwal-Stadler:
+  - changed (c) to current year
+  - add regmap include file in .h
+  - fix comments s/cuttof/cutoff/
+  - add more info in mutex comment
+  - check value in range_fs_from_value
+  - ret not checked in range_value_from_fs
+  - move mode to enum type
+  - remove line between value get and validation of value in all file
+  - pre-write, regmap_field_write, post_write refactoring
+  - check val2 and val == 0 in write raw
+  - check in_anglvel_scale: 7.8125?
+  - trigger_handler: 2 => sizeof(s16)
+  - check buffer size
+  - print %02% to output chip id
+  - remove !! as state is bool
+  - trigger probe return devm_iio_trigger_register
+  - remove error msg in case of devm_iio_device_register
+Fabio Estebam:
+  - rename FXAS2100X to FXAS21002
+  - change compatible nxp,fxas2100x to the exact support
+  - add VDD and VDDIO regulators in bindings and driver
+
+[0]: https://www.nxp.com/docs/en/data-sheet/FXAS21002.pdf
+[1]: https://www.element14.com/community/community/designcenter/single-board-computers/warp7/overview
+[2]: https://events.linuxfoundation.org/wp-content/uploads/2017/12/20181023-Wolfram-Sang-ELCE18-safe_dma_buffers.pdf
+
+Rui Miguel Silva (6):
+  iio: gyro: add DT bindings to fxas21002c
+  iio: gyro: add core driver for fxas21002c
+  iio: gyro: fxas21002c: add i2c driver
+  iio: gyro: fxas21002c: add spi driver
+  ARM: dts: imx7s-warp: add fxas21002c gyroscope
+  MAINTAINERS: add entry for fxas21002c gyro driver
+
+ .../bindings/iio/gyroscope/nxp,fxas21002c.txt |  26 +
+ MAINTAINERS                                   |  10 +
+ arch/arm/boot/dts/imx7s-warp.dts              |   7 +
+ drivers/iio/gyro/Kconfig                      |  22 +
+ drivers/iio/gyro/Makefile                     |   3 +
+ drivers/iio/gyro/fxas21002c.h                 | 151 +++
+ drivers/iio/gyro/fxas21002c_core.c            | 989 ++++++++++++++++++
+ drivers/iio/gyro/fxas21002c_i2c.c             |  73 ++
+ drivers/iio/gyro/fxas21002c_spi.c             |  69 ++
+ 9 files changed, 1350 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
+ create mode 100644 drivers/iio/gyro/fxas21002c.h
+ create mode 100644 drivers/iio/gyro/fxas21002c_core.c
+ create mode 100644 drivers/iio/gyro/fxas21002c_i2c.c
+ create mode 100644 drivers/iio/gyro/fxas21002c_spi.c
+
 -- 
-2.21.0
+2.20.1
