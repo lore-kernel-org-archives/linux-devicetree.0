@@ -1,88 +1,87 @@
-From: David Summers <beagleboard@davidjohnsummers.uk>
-Subject: Re: [PATCH v3 3/3] arm: dts: rk3288-tinker.dtsi: Add outline
- Bluetooth support
-Date: Wed, 13 Mar 2019 20:02:24 +0000
-Message-ID: <f71f537d-f7d3-dda8-a960-13dd442d75c4@davidjohnsummers.uk>
-References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
- <20190309153923.22806-1-beagleboard@davidjohnsummers.uk>
- <20190309153923.22806-3-beagleboard@davidjohnsummers.uk>
- <4537885.W6WcYDDAQ4@diego>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 6/6] dt-bindings: fpga: Add bindings for ZynqMP fpga driver
+Date: Wed, 13 Mar 2019 15:07:04 -0500
+Message-ID: <CAL_JsqJnG_zMxy-ESTey5tzeEnU3LA8GjZ7aLB3i+05rqkqDsg@mail.gmail.com>
+References: <20190121173835.21173-1-nava.manne@xilinx.com> <20190121173835.21173-7-nava.manne@xilinx.com>
+ <20190121154928.GA32129@bogus> <BYAPR02MB4710D1404CF2816599623363C2980@BYAPR02MB4710.namprd02.prod.outlook.com>
+ <CAL_JsqKy0DB+nt+q307d2HHuuf1OCdCe-Ro-5covdTibBwQw8A@mail.gmail.com>
+ <BYAPR02MB4710216D63D98A56ABD99E67C2710@BYAPR02MB4710.namprd02.prod.outlook.com>
+ <CAL_JsqLn8LrO_qHkXK0hgwjvsedMCAEL0MTYXBLrke2cgri3+g@mail.gmail.com> <BYAPR02MB471068180BA4592779B0C2CEC2720@BYAPR02MB4710.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4537885.W6WcYDDAQ4@diego>
-Content-Language: en-PH
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: linux-bluetooth@vger.kernel.org, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <BYAPR02MB471068180BA4592779B0C2CEC2720@BYAPR02MB4710.namprd02.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nava kishore Manne <navam@xilinx.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Moritz Fischer <moritz.fischer@ettus.com>, Alan Tull <atull@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jolly Shah <JOLLYS@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>, Michal Simek <michals@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTMvMDMvMjAxOSAxMDo1NiwgSGVpa28gU3TDvGJuZXIgd3JvdGU6Cj4gSGkgRGF2aWQsCj4K
-PiBBbSBTYW1zdGFnLCA5LiBNw6RyeiAyMDE5LCAxNjozOToyMyBDRVQgc2NocmllYiBEYXZpZCBT
-dW1tZXJzOgo+PiBUaGlzIHBhdGNoIGlzIGFuIG91dGxpbmUgZm9yIGJsdWV0b290aCBvbiB0aGUg
-QVNVUyBUaW5rZXIgQm9hcmQgKFMpLgo+Pgo+PiBCbHVldG9vdGggaXMgcHJvdmlkZWQgbXkgUlRM
-ODcyM0JTIG9uIHRoZXNlIG1hY2hpbmUsIGFuZCB0aGlzIGlzIHdpcmVkCj4+IGludG8gVUFSVDAu
-Cj4+Cj4+IEhlcmUgdGhpcyBpcyBwZXJmb3JtZWQgYXMgYSBTZXJEZXYgZGV2aWNlLgo+Pgo+PiBO
-b3cgYXMgcHJlc2VudGVkLCB0aGlzIGRvZXMgbm90IGdpdmUgZnVuY3Rpb25pbmcgYmx1ZXRvb3Ro
-LiBUaGUKPj4gdXBkYXRlcyBuZWVkZWQgdG8gdGhlIGRldmljZSBkcml2ZXI6Cj4+Cj4+IGh0dHBz
-Oi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2xpbnV4LWJsdWV0b290aC9tc2c3ODY2MS5odG1sCj4+
-Cj4+IEhhdmVuJ3QgeWV0IGJlZW4gYWNjZXB0ZWQuIFNvIHRoaXMgZGV2aWNlIHRyZWUgaG9vayBk
-b2Vzbid0IHlldCBoYXZlCj4+ICJyZWFsdGVrLHJ0bDg3MjNicy1idCIgY29tcGF0aWJsZSBmbGFn
-Lgo+Pgo+PiBJdCBpcyBob3dldmVyIHN0aWxsIHN1Ym1pdHRlZCBhcyBhIHBhdGNoLCBhcyBpdCBz
-ZXRzIHRoZSBVQVJUIHVwCj4+IGNvcnJlY3RseS4gQW5kIHNvIGJhc2ljIGNvbW11bmNpYXRpb24g
-Y2FuIGJlIGhhZCB3aXRoIHRoZSBkZXZpY2UuIFRoaXMKPj4gaGFzIGJlZW4gY29uZmlybWVkIGJ5
-IFRvbnkgTWNLYWhhbiBAIEFybWJpYW4sIGluIHBhcnRpY3VsYXIgdGhhdCB0aGUKPj4gQ1RTL1JU
-UyBpcyBuZWVkZWQuCj4+Cj4+IFdoZW4gVmFzaWx5IHBhdGNoIGlzIGFjY2VwdGVkLCB0aGlzIHdp
-bGwgYmUgYWRkZWQgYXMgYSBtaW5vciBwYXRjaCBvbgo+PiB0b3Agb2YgdGhpcyBwYXRjaDsgYXMg
-dGhpcyBwYXRjaCBnaXZlcyB0aGUgcGlucyBuZWVkZWQuCj4+Cj4+IFRoZSBvbmUgb2RkaXR5LCBp
-cyB0aGUgUkVTRVQgcGluLCBpdCBpcyBsYWJlbGVkIHRoaXMgd2F5IG9uIHRoZQo+PiBzY2hlbWF0
-aWMuIEhvd2V2ZXIgdGhlIGhjaV9oNS5jIGRyaXZlciBjYWxscyB0aGlzIEVOQUJMRS4gSGVyZSB3
-ZSBoYXZlCj4+IHN0dWNrIHdpdGggdGhlIHNjaGVtYXRpYyBuYW1lLgo+Pgo+PiBTaWduZWQtb2Zm
-LWJ5OiBEYXZpZCBTdW1tZXJzIDxiZWFnbGVib2FyZEBkYXZpZGpvaG5zdW1tZXJzLnVrPgo+PiAt
-LS0KPj4gICBhcmNoL2FybS9ib290L2R0cy9yazMyODgtdGlua2VyLmR0c2kgfCAxMSArKysrKysr
-KysrKwo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYgLS1n
-aXQgYS9hcmNoL2FybS9ib290L2R0cy9yazMyODgtdGlua2VyLmR0c2kKPj4gYi9hcmNoL2FybS9i
-b290L2R0cy9yazMyODgtdGlua2VyLmR0c2kgaW5kZXggMGZmYWIxYjdjOTQwLi5kMjlmNWIzNGQ3
-ZTYKPj4gMTAwNjQ0Cj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC10aW5rZXIuZHRz
-aQo+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9yazMyODgtdGlua2VyLmR0c2kKPj4gQEAgLTQ4
-Niw2ICs0ODYsMTcgQEAKPj4KPj4gICAmdWFydDAgewo+PiAgIAlzdGF0dXMgPSAib2theSI7Cj4+
-ICsJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPj4gKwlwaW5jdHJsLTAgPSA8JnVhcnQwX3hm
-ZXI+LCA8JnVhcnQwX2N0cz4sIDwmdWFydDBfcnRzPjsKPj4gKwo+PiArCWJsdWV0b290aCB7Cj4+
-ICsJCWNsb2NrcyA9IDwmcms4MDggUks4MDhfQ0xLT1VUMT47Cj4+ICsJCXJlc2V0LWdwaW9zID0g
-PCZncGlvNCBSS19QRDUgR1BJT19BQ1RJVkVfSElHSD47Cj4+ICsJCWRldmljZS13YWtlLWdwaW9z
-ID0gPCZncGlvNCBSS19QRDIgR1BJT19BQ1RJVkVfSElHSD47Cj4+ICsJCWhvc3Qtd2FrZS1ncGlv
-cyA9IDwmZ3BpbzQgUktfUEQ3IEdQSU9fQUNUSVZFX0hJR0g+Owo+PiArCQl2Y2MtMTgtc3VwcGx5
-ID0gPCZ2Y2NfMTg+Owo+PiArCQl2Y2MtaW8tc3VwcGx5ID0gPCZ2Y2NfaW8+Owo+PiArCX07Cj4g
-QXMgdGhpcyBpcyBzdXBwb3NlZCB0byB3b3JrIGFzIHNlcmlhbCBhdHRhY2hlZCBkZXZpY2UgaXQg
-c2hvdWxkIGZvbGxvdyBhCj4gZHQtYmluZGluZywgc28gZmlyc3Qgb2YgYWxsIGRlZmluaXRseSBu
-ZWVkcyBhIGNvbXBhdGlibGUgYW5kIGEgYmluZGluZwo+IHNwZWNpZnlpbmcgYWxsIHRoZSBwcm9w
-ZXJ0aWVzIGRlY2xhcmVkIGFib3ZlLgo+Cj4gU2VlIGZvciBleGFtcGxlIERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvYnJvYWRjb20tYmx1ZXRvb3RoLnR4dAo+IGZvciBhIHNp
-bWlsYXIgZGV2aWNlLgo+Cj4gSGVpa28KPgo+CkhlaWtvLAoKWWVzIEkgdW5kZXJzdGFuZC4gTWVh
-bnMgSSdsbCBuZWVkIHRvIHRha2UgY2FyZSBub3QgdG8gbG9vc2UgdGhlc2UgZW1haWwsIAphcyBn
-ZXR0aW5nIGFsbCB0aGUgcGlucyByaWdodCB0b29rIHNvbWUgdGltZSAuLi4KCkknbGwgcHJvYmFi
-bHkgZm9sbG93IApodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9saW51eC1ibHVldG9vdGgv
-bXNnNzg2NTQuaHRtbCBpZiBpdCBnZXRzIAphY2NlcHRlZC4gVGhhdCBpcyB0aGUgbWFpbiBwcm9i
-bGVtIGhlcmUsIGF0IHRoZSBtb21lbnQgdGhlcmUgaXMgbm8gCmNvbXBhdGlibGUgdGhhdCBjYW4g
-YmUgdXNlZCwgYXMgbm9uZSB5ZXQgYWNjZXB0ZWQuCgpSb2IgSCwgUXVlc3Rpb24gZm9yIHlvdSwg
-YmVmb3JlIHlvdSBzYWlkIFsxXToKCj4gVGhlcmUncyBubyBpbnRlcnJ1cHRzLCBHUElPIGNvbnRy
-b2wgbGluZXMsIHBvd2VyIHN1cHBsaWVzLCBldGMuIGZvcgo+IHRoZXNlIGNoaXBzPyBUaGUgYmlu
-ZGluZyBzaG91bGQgYmUgY29tcGxldGUgZXZlbiBpZiB5b3VyIHBsYXRmb3JtCj4gZG9lc24ndCBu
-ZWVkIHRoZXNlLgpOb3cgaXRzIGNsZWFyIHRoYXQgc28gZmFyIHRoZSBkcml2ZXIgZm9yIGJsdWV0
-b290aCBkb2Vzbid0IGtub3cgYWJvdXQgCnN1cHBseSwgYW5kIGNsb2NrcyBldGMuCgpTbyBzaG91
-bGQgdGhlc2UgYmUgaW5jbHVkZWQgaW4gdGhlIGR0cywgYXMgYSBjb3JyZWN0IGRlc2NyaXB0aW9u
-IGFzIGhvdyAKaXRzIHdpcmVkOyBldmVuIGlmIG5vdCB1c2VkIGluIHRoZSBjdXJyZW50IGRyaXZl
-ciwgdGhleSBtYXkgYmUgdXNlZCBpbiAKZnV0dXJlLgoKQW0gaGFwcHkgdG8gZG8gd2hhdGV2ZXIg
-YmVzdC4KClJlZ2FyZHMsCgpEYXZpZC4KClsxXSBodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0
-cy9saW51eC1ibHVldG9vdGgvbXNnNzg1NDUuaHRtbAoKCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Tue, Mar 5, 2019 at 3:42 AM Nava kishore Manne <navam@xilinx.com> wrote:
+>
+> Hi Rob,
+>
+> Thanks for the quick response.
+> Please find my response inline.
+>
+> > -----Original Message-----
+> > From: Rob Herring [mailto:robh@kernel.org]
+> > Sent: Monday, March 4, 2019 10:57 PM
+> > To: Nava kishore Manne <navam@xilinx.com>
+> > Cc: mark.rutland@arm.com; Michal Simek <michals@xilinx.com>; Rajan Vaja
+> > <RAJANV@xilinx.com>; linux-arm-kernel@lists.infradead.org; linux-
+> > kernel@vger.kernel.org; devicetree@vger.kernel.org; Jolly Shah
+> > <JOLLYS@xilinx.com>; chinnikishore369@gmail.com
+> > Subject: Re: [PATCH v3 6/6] dt-bindings: fpga: Add bindings for ZynqMP fpga
+> > driver
+
+Please fix your mail program to...
+
+> > On Mon, Mar 4, 2019 at 5:35 AM Nava kishore Manne <navam@xilinx.com>
+> > wrote:
+
+...use this style reply header.
+
+[...]
+
+> > > Device Tree Example for Full Reconfiguration
+> > > ============================================
+> > >
+> > > Live Device Tree contains:
+> > >
+> > >         zynqmp_pcap: pcap {
+> > >                 compatible = "xlnx,zynqmp-pcap-fpga";
+> > >         };
+> > >
+> > >         fpga_region0: fpga-region0 {
+> >
+> > This should be a child of pcap.
+> >
+> AFAIK we can't put the fpga-region as a child of pcap as both are independent and they refered to each other using phandlers
+> I have made this changes by looking into the below reference doc.
+> https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/fpga/fpga-region.txt
+
+Indeed. But having them a as child of the firmware node doesn't make
+sense either. Putting them at the top level would make more sense. I
+don't recall why we didn't make them a child. Maybe regions can span
+multiple bridges in the case with bridges.
+
+> > >                 compatible = "fpga-region";
+> > >                 fpga-mgr = <&zynqmp_pcap>;
+> > >                 #address-cells = <0x1>;
+> > >                 #size-cells = <0x1>;
+> > >                 ranges;
+> > >         };
+> > >
+> > > DT Overlay contains:
+> >
+> > Don't show overlays in examples. Just show a final tree (i.e. base with overlay
+> > applied).
+>
+> To get a better picture for the users i have added this example node with overlays
+> I feel it's good to have this info because it will not impact the functionality of PCAP node.
+
+Then feel free to document this somewhere else. As we move to schema
+documents, your examples will have to compile and validate against the
+schema. I don't want to add applying overlays to the mix.
+
+Rob
