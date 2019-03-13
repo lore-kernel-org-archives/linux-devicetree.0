@@ -1,59 +1,43 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v4 06/10] dt-bindings: sdm845-pinctrl: add wakeup interrupt parent for GPIO
-Date: Wed, 13 Mar 2019 15:18:40 -0600
-Message-ID: <20190313211844.29416-7-ilina@codeaurora.org>
-References: <20190313211844.29416-1-ilina@codeaurora.org>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: [PATCH V3 01/10] mmc: tegra: fix ddr signaling for non-ddr modes
+Date: Wed, 13 Mar 2019 14:45:43 -0700
+Message-ID: <1552513552-23423-1-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190313211844.29416-1-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com
-Cc: linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com, bjorn.andersson@linaro.org, dianders@chromium.org, linus.walleij@linaro.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
+To: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, riteshh@codeaurora.org
+Cc: skomatineni@nvidia.com, thierry.reding@gmail.com, jonathanh@nvidia.com, anrao@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
-routed to the PDC as interrupts that can be used to wake the system up
-from deep low power modes and suspend.
+ddr_signaling is set to true for DDR50 and DDR52 modes but is
+not set back to false for other modes. This programs incorrect
+host clock when mode change happens from DDR52/DDR50 to other
+SDR or HS modes like incase of mmc_retune where it switches
+from HS400 to HS DDR and then from HS DDR to HS mode and then
+to HS200.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+This patch fixes the ddr_signaling to set properly for non DDR
+modes.
+
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- .../devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt    | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-tegra.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-index 665aadb5ea28..f0fedbc5d41a 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-@@ -29,6 +29,11 @@ SDM845 platform.
- 	Definition: must be 2. Specifying the pin number and flags, as defined
- 		    in <dt-bindings/interrupt-controller/irq.h>
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index 32e62904c0d3..46086dd43bfb 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -779,6 +779,7 @@ static void tegra_sdhci_set_uhs_signaling(struct sdhci_host *host,
+ 	bool set_dqs_trim = false;
+ 	bool do_hs400_dll_cal = false;
  
-+- wakeup-parent:
-+	Usage: optional
-+	Value type: <phandle>
-+	Definition: A phandle to the wakeup interrupt controller for the SoC.
-+
- - gpio-controller:
- 	Usage: required
- 	Value type: <none>
-@@ -53,7 +58,6 @@ pin, a group, or a list of pins or groups. This configuration can include the
- mux function to select on those pin(s)/group(s), and various pin configuration
- parameters, such as pull-up, drive strength, etc.
- 
--
- PIN CONFIGURATION NODES:
- 
- The name of each subnode is not important; all subnodes should be enumerated
-@@ -160,6 +164,7 @@ Example:
- 		#gpio-cells = <2>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
-+		wake-parent = <&pdc_intc>;
- 
- 		qup9_active: qup9-active {
- 			mux {
++	tegra_host->ddr_signaling = false;
+ 	switch (timing) {
+ 	case MMC_TIMING_UHS_SDR50:
+ 	case MMC_TIMING_UHS_SDR104:
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
