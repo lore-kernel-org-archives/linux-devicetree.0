@@ -1,87 +1,85 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v4 2/9] dt-bindings: mtd: ingenic: Change 'BCH' to 'ECC'
- in documentation
-Date: Wed, 13 Mar 2019 14:12:31 +0100
-Message-ID: <20190313141231.1cc6e072@xps13>
-References: <20190209192305.4434-1-paul@crapouillou.net>
-        <20190209192305.4434-2-paul@crapouillou.net>
-        <20190304105014.0cceea0a@xps13>
-        <1551723830.4932.3@crapouillou.net>
-        <20190304195852.45c056f6@xps13>
-        <1552481988.2412.2@crapouillou.net>
+From: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [SPAM][PATCH v3 4/7] dt-bindings: phy: Add document for
+ phy-mtk-ufs
+Date: Wed, 13 Mar 2019 22:05:18 +0800
+Message-ID: <1552485918.30977.56.camel@mtkswgap22>
+References: <1551252192-535-1-git-send-email-stanley.chu@mediatek.com>
+ <1551252192-535-6-git-send-email-stanley.chu@mediatek.com>
+ <1552472519.500.1.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552481988.2412.2@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1552472519.500.1.camel@mtksdaap41>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chun-Hung Wu =?UTF-8?Q?=28=E5=B7=AB=E9=A7=BF=E5=AE=8F=29?= <Chun-hung.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kuohong Wang =?UTF-8?Q?=28=E7=8E=8B=E5=9C=8B=E9=B4=BB=29?= <kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "avri.altman-Sjgp3cTcYWE@public.gmane.org" <avri.altman-Sjgp3cTcYWE@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chunfeng Yun =?UTF-8?Q?=28=E4=BA=91=E6=98=A5=E5=B3=B0=29?= <Chunfeng.Yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+Hi Yingjoe,
 
-Paul Cercueil <paul@crapouillou.net> wrote on Wed, 13 Mar 2019 09:59:48
--0300:
-
-> Le lun. 4 mars 2019 à 15:58, Miquel Raynal <miquel.raynal@bootlin.com> a écrit :
-> > Hi Paul,
+On Wed, 2019-03-13 at 18:21 +0800, Yingjoe Chen wrote:
+> On Wed, 2019-02-27 at 15:23 +0800, Stanley Chu wrote:
+> > Add UFS M-PHY node document for MediaTek SoC chips.
 > > 
-> > Paul Cercueil <paul@crapouillou.net> wrote on Mon, 04 Mar 2019 > 19:23:50
-> > +0100:
-> >   
-> >>  On Mon, Mar 4, 2019 at 10:50 AM, Miquel Raynal >> <miquel.raynal@bootlin.com> wrote:  
-> >>  > Hi Paul,
-> >>  >
-> >>  > Paul Cercueil <paul@crapouillou.net >> <mailto:paul@crapouillou.net>> > wrote on Sat,  9 Feb 2019 16:22:58
-> >>  > -0300:
-> >>  >  
-> >>  >>  The JZ4740 ECC hardware is not BCH but Reed-Solomon, so it >> makes >> more
-> >>  >>  sense to use the more generic ECC term.  
-> >>  >> >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net >> >> <mailto:paul@crapouillou.net>>  
-> >>  >>  ---  
-> >>  >> >>  Changes:
-> >>  >> >>  v3: New patch
-> >>  >> >>  v4: No change
-> >>  >> >>   .../devicetree/bindings/mtd/ingenic,jz4780-nand.txt    | 18 >> >> +++++++++---------  
-> >>  >>   1 file changed, 9 insertions(+), 9 deletions(-)  
-> >>  >> >>  diff --git >> >> a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt >> >> b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt  
-> >>  >>  index a5b940f18bf6..5a45cc54f46d 100644  
-> >>  >>  --- >> a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt  
-> >>  >>  +++ >> b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> >>  >>  @@ -1,4 +1,4 @@
-> >>  >>  -* Ingenic JZ4780 NAND/BCH
-> >>  >>  +* Ingenic JZ4780 NAND/ECC  
-> >>  >> >>   This file documents the device tree bindings for NAND flash >> >> devices on the  
-> >>  >>   JZ4780. NAND devices are connected to the NEMC controller >> >> (described in
-> >>  >>  @@ -14,10 +14,10 @@ Required NAND controller device properties:
-> >>  >>     an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC >> >> bank).  
-> >>  >> >>   Optional NAND controller device properties:  
-> >>  >>  -- ingenic,bch-controller: To make use of the hardware BCH >> >> controller, this
-> >>  >>  -  property must contain a phandle for the BCH controller node. >> The >> required
-> >>  >>  +- ingenic,bch-controller: To make use of the hardware ECC >> >> controller, this
-> >>  >>  +  property must contain a phandle for the ECC controller node. >> The >> required  
-> >>  >
-> >>  > I think there is already a 'ecc-engine' property used by MTK and >> Atmel
-> >>  > NAND controllers to point to the ECC engine block. Please use this
-> >>  > property instead of the ingenic specific one.  
-> >> >>  ingenic,bch-controller is already in the devicetree ABI. I can't >> change it now...  
+> > Signed-off-by: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/phy/phy-mtk-ufs.txt   | 35 +++++++++++++++++++
+> >  1 file changed, 35 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
 > > 
-> > Oh, right...
-> > 
-> > Well, same thing as before, maybe you can change it and keep the > driver
-> > backward compatible? I don't want new DT to use this property because
-> > it is not generic and we must have a way from the core to find the ECC
-> > engine handle when the controller does not embed one itself (thus, the
-> > ecc-engine property which is around for quite some time already).  
+> > diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt b/Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
+> > new file mode 100644
+> > index 000000000000..5fc22c7fe0bc
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
+> > @@ -0,0 +1,35 @@
+> > +MediaTek Universal Flash Storage (UFS) M-PHY binding
+> > +--------------------------------------------------------
+> > +
+> > +UFS M-PHY nodes are defined to describe on-chip UFS M-PHY hardware macro.
+> > +Each UFS M-PHY node should have its own node.
+> > +
+> > +To bind UFS M-PHY with UFS host controller, the controller node should
+> > +contain a phandle reference to UFS M-PHY node.
+> > +
+> > +Required properties for UFS M-PHY nodes:
+> > +- compatible         : Compatible list, contains the following controller:
+> > +                       "mediatek,ufs-mphy"
+> > +- reg                : Address and length of the UFS M-PHY register set.
+> > +- #phy-cells         : This property shall be set to 0
+> > +- clocks             : List of phandle and clock specifier pairs.
+> > +- clock-names        : List of clock input name strings sorted in the same
+> > +                       order as the clocks property. "unipro-clk" and
+> > +                       "mp-clk" are mandatory.
 > 
-> I can do that. Will the new ECC framework work with the "ecc-engine" property?
+> All names in clock-names are clock, don't need to add -clk again.
+> Please describe shortly what these clock are used.
+> 
 
-Yes.
+Sorry this mail is marked as [SPAM] so I did not notice this before
+sending the same question to Rob.
 
-Right now it does not, but when supporting raw NAND devices, it will
-have to.
+This style seems suitable in phy documents but existed ufs documents
+already have lots of "_clk" so I am confused.
 
+Maybe I need to drop "-clk" in phy documents and use "_clk" in ufs
+documents?
 
-Thanks,
-Miquèl
+Or wait for Rob's feedback in another mail?
+
+> Joe.C
+> 
+> 
+> 
+
+Thanks.
+Stanley.
