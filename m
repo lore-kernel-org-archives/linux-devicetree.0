@@ -1,211 +1,106 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 2/5] pwm: Add i.MX TPM PWM driver support
-Date: Wed, 13 Mar 2019 08:47:16 +0000
-Message-ID: <AM6PR0402MB3911FD60ACBF99217BF526B2F54A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-References: <1552288273-31028-1-git-send-email-Anson.Huang@nxp.com>
- <1552288273-31028-3-git-send-email-Anson.Huang@nxp.com>
- <20190311092644.a2x53zgxv2iseqao@pengutronix.de>
- <AM6PR0402MB391160F820907ABE8ECA4C26F54A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
- <20190313083226.qgnldzd6pc3arooc@pengutronix.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 5/5] ASoC: rsnd: dma: use extended audio dmac registers
+ when available
+Date: Wed, 13 Mar 2019 09:52:06 +0100
+Message-ID: <CAMuHMdUHeh6YDY1gTkSgnJm1xG0XtyaQ-zs_3bvFx1+mz6LHTg@mail.gmail.com>
+References: <20190313055811.26135-1-jiada_wang@mentor.com> <87h8c7gv73.wl-kuninori.morimoto.gx@renesas.com>
+ <eb7ac3a6-e386-09e8-54b0-2e0eda90ad66@mentor.com> <87d0mvgtnc.wl-kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190313083226.qgnldzd6pc3arooc@pengutronix.de>
-Content-Language: en-US
+In-Reply-To: <87d0mvgtnc.wl-kuninori.morimoto.gx@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "stefan@agner.ch" <stefan@agner.ch>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, Leonard Crestez <leonard.crestez@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, Robin Gong <yibin.gong@nxp.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>l
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Jiada Wang <jiada_wang@mentor.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFV3ZQ0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+IEZyb206IFV3ZSBLbGVpbmUtS8O2bmlnIFttYWlsdG86dS5rbGVpbmUt
-a29lbmlnQHBlbmd1dHJvbml4LmRlXQ0KPiBTZW50OiAyMDE55bm0M+aciDEz5pelIDE2OjMyDQo+
-IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IHRoaWVycnkucmVk
-aW5nQGdtYWlsLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsN
-Cj4gc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVlckBwZW5ndXRyb25peC5kZTsga2VybmVsQHBl
-bmd1dHJvbml4LmRlOw0KPiBmZXN0ZXZhbUBnbWFpbC5jb207IGxpbnV4QGFybWxpbnV4Lm9yZy51
-azsgc3RlZmFuQGFnbmVyLmNoOw0KPiBvdGF2aW9Ab3NzeXN0ZW1zLmNvbS5icjsgTGVvbmFyZCBD
-cmVzdGV6IDxsZW9uYXJkLmNyZXN0ZXpAbnhwLmNvbT47DQo+IHNjaG5pdHplbHRvbnlAZ21haWwu
-Y29tOyBqYW4udHVlcmtAZW10cmlvbi5jb207IFJvYmluIEdvbmcNCj4gPHlpYmluLmdvbmdAbnhw
-LmNvbT47IGxpbnV4LXB3bUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJu
-ZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBr
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0K
-PiBTdWJqZWN0OiBSZTogW1BBVENIIDIvNV0gcHdtOiBBZGQgaS5NWCBUUE0gUFdNIGRyaXZlciBz
-dXBwb3J0DQo+IA0KPiBIZWxsbywNCj4gDQo+IE9uIFdlZCwgTWFyIDEzLCAyMDE5IGF0IDA3OjI4
-OjI0QU0gKzAwMDAsIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+ID4gT24gTW9uLCBNYXIgMTEsIDIw
-MTkgYXQgMDc6MTY6MTZBTSArMDAwMCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gPiA+ICsNCj4g
-PiA+ID4gIGNvbmZpZyBQV01fSlo0NzQwDQo+ID4gPiA+ICAJdHJpc3RhdGUgIkluZ2VuaWMgSlo0
-N3h4IFBXTSBzdXBwb3J0Ig0KPiA+ID4gPiAgCWRlcGVuZHMgb24gTUFDSF9JTkdFTklDDQo+ID4g
-PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3B3bS9NYWtlZmlsZSBiL2RyaXZlcnMvcHdtL01ha2Vm
-aWxlIGluZGV4DQo+ID4gPiA+IDljNjc2YTAuLjY0ZTAzNmMgMTAwNjQ0DQo+ID4gPiA+IC0tLSBh
-L2RyaXZlcnMvcHdtL01ha2VmaWxlDQo+ID4gPiA+ICsrKyBiL2RyaXZlcnMvcHdtL01ha2VmaWxl
-DQo+ID4gPiA+IEBAIC0xOCw2ICsxOCw3IEBAIG9iai0kKENPTkZJR19QV01fRlNMX0ZUTSkJKz0g
-cHdtLWZzbC0NCj4gZnRtLm8NCj4gPiA+ID4gIG9iai0kKENPTkZJR19QV01fSElCVlQpCQkrPSBw
-d20taGlidnQubw0KPiA+ID4gPiAgb2JqLSQoQ09ORklHX1BXTV9JTUcpCQkrPSBwd20taW1nLm8N
-Cj4gPiA+ID4gIG9iai0kKENPTkZJR19QV01fSU1YKQkJKz0gcHdtLWlteC5vDQo+ID4gPiA+ICtv
-YmotJChDT05GSUdfUFdNX0lNWF9UUE0pCSs9IHB3bS1pbXgtdHBtLm8NCj4gPiA+ID4gIG9iai0k
-KENPTkZJR19QV01fSlo0NzQwKQkrPSBwd20tano0NzQwLm8NCj4gPiA+ID4gIG9iai0kKENPTkZJ
-R19QV01fTFAzOTQzKQkrPSBwd20tbHAzOTQzLm8NCj4gPiA+ID4gIG9iai0kKENPTkZJR19QV01f
-TFBDMThYWF9TQ1QpCSs9IHB3bS1scGMxOHh4LXNjdC5vDQo+ID4gPiA+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL3B3bS9wd20taW14LXRwbS5jIGIvZHJpdmVycy9wd20vcHdtLWlteC0NCj4gdHBtLmMN
-Cj4gPiA+IG5ldw0KPiA+ID4gPiBmaWxlIG1vZGUgMTAwNjQ0IGluZGV4IDAwMDAwMDAuLmE1MzI1
-NmENCj4gPiA+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ID4gPiArKysgYi9kcml2ZXJzL3B3bS9wd20t
-aW14LXRwbS5jDQo+ID4gPiA+IEBAIC0wLDAgKzEsMjc3IEBADQo+ID4gPiA+ICsvLyBTUERYLUxp
-Y2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+ID4gPiArLyoNCj4gPiA+ID4gKyAqIENvcHly
-aWdodCAyMDE4LTIwMTkgTlhQLg0KPiA+ID4gPiArICovDQo+ID4gPg0KPiA+ID4gUGxlYXNlIGFk
-ZCBhIGxpbmsgdG8gdGhlIHJlZmVyZW5jZSBtYW51YWwgdG8gdGhlIGhlYWRlci4NCj4gPg0KPiA+
-IEkgY2hlY2tlZCB0aGUgTlhQIHdlYnNpdGUsIGxvb2tzIGxpa2UgaS5NWDdVTFAgcmVmZXJlbmNl
-IG1hbnVhbCBpcyBOT1QNCj4gPiBwdWJsaXNoZWQgeWV0LCBzaG91bGQgYmUgcHVibGlzaGVkIHZl
-cnkgc29vbi4NCj4gDQo+IG9rLg0KPiANCj4gPiA+ID4gKyNpbmNsdWRlIDxsaW51eC9iaXRvcHMu
-aD4NCj4gPiA+ID4gKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4NCj4gPiA+ID4gKyNpbmNsdWRlIDxs
-aW51eC9lcnIuaD4NCj4gPiA+ID4gKyNpbmNsdWRlIDxsaW51eC9pby5oPg0KPiA+ID4gPiArI2lu
-Y2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiA+ID4gPiArI2luY2x1ZGUgPGxpbnV4L29mLmg+DQo+
-ID4gPiA+ICsjaW5jbHVkZSA8bGludXgvb2ZfYWRkcmVzcy5oPg0KPiA+ID4gPiArI2luY2x1ZGUg
-PGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPiAjaW5jbHVkZSA8bGludXgvcHdtLmg+DQo+ID4gPiA+
-ICsjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KPiA+ID4gPiArDQo+ID4gPiA+ICsjZGVmaW5lIFRQ
-TV9HTE9CQUwJMHg4DQo+ID4gPiA+ICsjZGVmaW5lIFRQTV9TQwkJMHgxMA0KPiA+ID4gPiArI2Rl
-ZmluZSBUUE1fQ05UCQkweDE0DQo+ID4gPiA+ICsjZGVmaW5lIFRQTV9NT0QJCTB4MTgNCj4gPiA+
-ID4gKyNkZWZpbmUgVFBNX0MwU0MJMHgyMA0KPiA+ID4gPiArI2RlZmluZSBUUE1fQzBWCQkweDI0
-DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyNkZWZpbmUgU0NfQ01PRAkJMw0KPiA+ID4NCj4gPiA+IFRo
-aXMgc2VlbXMgdG8gYmUgYW4gb2Zmc2V0LCB3aHkgbm90IGRlZmluaW5nIGl0IGFzIEJJVCgzKSBp
-bnN0ZWFkPw0KPiA+DQo+ID4gU0NfQ01PRCBmaWVsZCBhcyAyIGJpdHMsIEkgd2lsbCB1c2UgYmVs
-b3cgaW4gVjIgcGF0Y2ggc2V0Og0KPiA+DQo+ID4gI2RlZmluZSBUUE1fU0NfQ01PRF9TSElGVCAg
-ICAgICAzDQo+ID4gI2RlZmluZSBUUE1fU0NfQ01PRF9NQVNLICAgICAgICAoMHgzIDw8IFRQTV9T
-Q19DTU9EX1NISUZUKQ0KPiANCj4gSSBzdWdnZXN0DQo+IA0KPiAJI2RlZmluZSBQV01fSU1YX1RQ
-TV9TQ19DTU9ECUdFTk1BU0soMSwgMCkNCj4gDQo+IGluc3RlYWQuIFNlZSBpbmNsdWRlL2xpbnV4
-L2JpdGZpZWxkLmggZm9yIGRldGFpbHMuDQo+IEFsc28gbm90ZSB0aGF0ICJUUE0iIGlzbid0IGEg
-Z3JlYXQgcHJlZml4IGdpdmVuIHRoYXQgd2UgaGF2ZToNCj4gDQo+IAkkIGdpdCBscy1maWxlcyB8
-IGdyZXAgLWMgdHBtDQo+IAk4Mg0KPiANCj4gLiBFdmVuIHRob3VnaCBQV01fSU1YX1RQTSBpcyBs
-b25nZXIgSSB0aGluayBpdCdzIHdvcnRoIHRoZSBleHRyYSBieXRlcy4NCj4gVGhlbiBpZiB5b3Ug
-dXNlIHB3bV9pbXhfdHBtIGFscyBwcmVmaXggZm9yIHlvdXIgZnVuY3Rpb24gaXQncyBvYnZpb3Vz
-IHRoYXQNCj4gdGhleSBhbGwgYmVsb25nIHRvZ2V0aGVyLiBGb3IgZXh0cmEgY3JlZGl0cyBhbHNv
-IGFkYXB0IHRoZSBkcml2ZXIgbmFtZSB0bw0KPiBtYXRjaC4NCg0KT0ssIEkgd2lsbCBpbXByb3Zl
-IGl0IGFjY29yZGluZ2x5Lg0KDQo+IA0KPiA+ID4gPiArCQlyZXQgPSBjbGtfcHJlcGFyZV9lbmFi
-bGUodHBtLT5jbGspOw0KPiA+ID4gPiArCQlpZiAocmV0KSB7DQo+ID4gPiA+ICsJCQlkZXZfZXJy
-KGNoaXAtPmRldiwNCj4gPiA+ID4gKwkJCQkiZmFpbGVkIHRvIHByZXBhcmUgb3IgZW5hYmxlIGNs
-ayAlZFxuIiwgcmV0KTsNCj4gPiA+ID4gKwkJCXJldHVybiByZXQ7DQo+ID4gPiA+ICsJCX0NCj4g
-PiA+ID4gKwl9DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwl2YWwgPSByZWFkbCh0cG0tPmJhc2UgKyBU
-UE1fU0MpOw0KPiA+ID4gPiArCXZhbCAmPSB+VFBNX1NDX1BTX01BU0s7DQo+ID4gPiA+ICsJdmFs
-IHw9IGRpdjsNCj4gPiA+ID4gKwl3cml0ZWwodmFsLCB0cG0tPmJhc2UgKyBUUE1fU0MpOw0KPiA+
-ID4NCj4gPiA+IElmIHRoZSB1bml0IHJhbiB3aXRoIChzYXkpIGRpdiA9PSA1IGFuZCBhIGhpZ2gg
-ZHV0eSBjeWNsZSBiZWZvcmUgYW5kDQo+ID4gPiBmb3IgdGhlIG5ldyBjb25maWd1cmF0aW9uIHlv
-dSBuZWVkIGRpdiA9PSA2IHdpdGggYSBsb3cgZHV0eSBjeWNsZSwNCj4gPiA+IGNhbiBpdCBoYXBw
-ZW4gaGVyZSB0aGF0IHRoZSBvdXRwdXQgdXNlcyB0aGUgbmV3IGRpdiB2YWx1ZSBhbHJlYWR5IHdp
-dGgNCj4gdGhlIGhpZ2ggZHV0eSBjeWNsZT8NCj4gPiA+IElmIHNvLCB0aGlzIGlzIGJhZC4NCj4g
-Pg0KPiA+IEFzIHRoZSBUUE0gY291bnRlciBpcyBzaGFyZWQgYmV0d2VlbiAyIGNoYW5uZWxzLCBz
-byBJIHdpbGwgbWFrZSB0aGlzDQo+ID4gcHJlc2NhbGUgc2V0dGluZyB0byBiZSBpbml0aWFsaXpl
-ZCBPTkxZIG9uY2UsIE9OTFkgZmlyc3QgY2hhbm5lbCB3aWxsDQo+ID4gY29uZmlnIGl0LCB0aGlz
-IG1ha2VzIHRoaW5ncyBzaW1wbGUgYW5kIHRoZSBvdGhlciBjaGFubmVsIHNob3VsZCB1c2UNCj4g
-PiBzYW1lIHByZXNjYWxlIHZhbHVlIGFzIGZpcnN0IGNoYW5uZWwgYW5kIE9OTFkgYWRqdXN0IGl0
-cyBvd24gZHV0eSBjeWNsZSBhbmQNCj4gcG9sYXJpdHkgZXRjLi4NCj4gDQo+IFNvIHRoZSB0d28g
-Y2hhbm5lbHMgaGF2ZSB0byBzaGFyZSB0aGUgcGVyaW9kIGxlbmd0aD8gSWYgc28gcGxlYXNlIG5v
-dGUgdGhpcyBpbg0KPiB0aGUgaGVhZGVyIG9mIHRoZSBkcml2ZXIgbGlrZSBpdCB3YXMgZG9uZSBp
-bg0KPiBodHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJs
-PWh0dHBzJTNBJTJGJTJGd3cNCj4gdy5zcGluaWNzLm5ldCUyRmxpc3RzJTJGbGludXgtDQo+IHB3
-bSUyRm1zZzA5MTQ5Lmh0bWwmYW1wO2RhdGE9MDIlN0MwMSU3Q2Fuc29uLmh1YW5nJTQwbnhwLmNv
-bQ0KPiAlN0NmNTE4NzMxMWFjNzM0YWNiOTdmNzA4ZDZhNzhlNzcwYyU3QzY4NmVhMWQzYmMyYjRj
-NmZhOTJjZDk5YzVjMw0KPiAwMTYzNSU3QzAlN0MwJTdDNjM2ODgwNjI3NjU4NDU0Mzc0JmFtcDtz
-ZGF0YT1iZ0JSWFZBQlpKeE5sS3V3DQo+IERaNUo3R3RRQTFjdm1NZmhIdmxFekhsZGJTSSUzRCZh
-bXA7cmVzZXJ2ZWQ9MCAoc2VhcmNoIGZvcg0KPiAiTGltaXRhdGlvbnMiKS4gWW91IGFsc28gbmVl
-ZCBzb21lIGxvZ2ljIHRvIGFzc2VydCB0aGF0IHNldHRpbmcgdGhlIDJuZA0KPiBjaGFubmVsIGRv
-ZXNuJ3QgbW9kaWZ5IHRoZSBmaXJzdCAoaWYgdGhlIGZpcnN0IGlzIGluIHVzZSkuDQo+IA0KDQpP
-SywgSSB3aWxsIGFkZCBsaW1pdGF0aW9ucyBhdCB0b3Agb2YgZmlsZS4NCg0KPiA+ID4gPiArCXBl
-cmlvZF9jeWNsZXMgPSBjOw0KPiA+ID4gPiArCWMgKj0gZHV0eV9uczsNCj4gPiA+ID4gKwlkb19k
-aXYoYywgcGVyaW9kX25zKTsNCj4gPiA+ID4gKwlkdXR5X2N5Y2xlcyA9IGM7DQo+ID4gPiA+ICsN
-Cj4gPiA+ID4gKwl3cml0ZWwocGVyaW9kX2N5Y2xlcyAmIFRQTV9NT0RfTU9EX01BU0ssIHRwbS0+
-YmFzZSArDQo+ID4gPiBUUE1fTU9EKTsNCj4gPiA+DQo+ID4gPiBEb24ndCB5b3UgbmVlZCB0byBh
-ZGQgcHdtLT5od3B3bSAqIFRQTV9DSG5fQUREUl9PRkZTRVQgdG8gdGhlDQo+ID4gPiByZWdpc3Rl
-ciBvZmZzZXQgaGVyZT8gQW5kIGlmIG5vdCwgSSBhc3N1bWUgdGhpcyBhZmZlY3RzIHRoZSBvdGhl
-cg0KPiA+ID4gUFdNcyBwcm92aWRlZCBieSB0aGlzIGhhcmR3YXJlIHVuaXQgd2hpY2ggaXMgYmFk
-Lg0KPiA+DQo+ID4gVGhlIE1PRCByZWdpc3RlciBpcyBzaGFyZWQgYmV0d2VlbiBkaWZmZXJlbnQg
-Y2hhbm5lbHMsIE9OTFkgMSByZWdpc3Rlcg0KPiB0aGVyZS4NCj4gPiBUaGlzIHJlZ2lzdGVyIHdp
-bGwgYmUgc2FtZSBhcyBTQywgT05MWSBjb25maWd1cmVkIE9OQ0UgYnkgZmlyc3QgY2hhbm5lbC4N
-Cj4gPg0KPiA+ID4NCj4gPiA+ID4gKwl3cml0ZWwoZHV0eV9jeWNsZXMgJiBUUE1fTU9EX01PRF9N
-QVNLLCB0cG0tPmJhc2UgKw0KPiA+ID4gPiArCSAgICAgICBUUE1fQzBWICsgcHdtLT5od3B3bSAq
-IFRQTV9DSG5fQUREUl9PRkZTRVQpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJLyogaWYgcHdtIGlz
-IG5vdCBlbmFibGVkLCBkaXNhYmxlIGNsayBhZnRlciBzZXR0aW5nICovDQo+ID4gPiA+ICsJaWYg
-KCFwd21faXNfZW5hYmxlZChwd20pKQ0KPiA+ID4gPiArCQljbGtfZGlzYWJsZV91bnByZXBhcmUo
-dHBtLT5jbGspOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJcmV0dXJuIDA7DQo+ID4gPiA+ICt9DQo+
-ID4gPiA+ICsNCj4gPiA+ID4gK3N0YXRpYyBpbnQgdHBtX3B3bV9lbmFibGUoc3RydWN0IHB3bV9j
-aGlwICpjaGlwLCBzdHJ1Y3QNCj4gPiA+ID4gK3B3bV9kZXZpY2UNCj4gPiA+ID4gKypwd20pIHsN
-Cj4gPiA+ID4gKwlzdHJ1Y3QgdHBtX3B3bV9jaGlwICp0cG0gPSB0b190cG1fcHdtX2NoaXAoY2hp
-cCk7DQo+ID4gPiA+ICsJaW50IHJldDsNCj4gPiA+ID4gKwl1MzIgdmFsOw0KPiA+ID4gPiArDQo+
-ID4gPiA+ICsJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKHRwbS0+Y2xrKTsNCj4gPiA+ID4gKwlp
-ZiAocmV0KSB7DQo+ID4gPiA+ICsJCWRldl9lcnIoY2hpcC0+ZGV2LA0KPiA+ID4gPiArCQkJImZh
-aWxlZCB0byBwcmVwYXJlIG9yIGVuYWJsZSBjbGsgJWRcbiIsIHJldCk7DQo+ID4gPiA+ICsJCXJl
-dHVybiByZXQ7DQo+ID4gPiA+ICsJfQ0KPiA+ID4gPiArDQo+ID4gPiA+ICsJLyoNCj4gPiA+ID4g
-KwkgKiBUbyBlbmFibGUgYSB0cG0gY2hhbm5lbCwgQ1BXTVMgPSAwLCBNU25COk1TbkEgPSAweDAs
-DQo+ID4gPiA+ICsJICogZm9yIFRQTSBub3JtYWwgcG9sYXJpdHkgRUxTbkI6RUxTbkEgPSAyYicx
-MCwNCj4gPiA+ID4gKwkgKiBpbnZlcnNlIEVMU25COkVMU25BID0gMmInMDENCj4gPiA+ID4gKwkg
-Ki8NCj4gPiA+ID4gKwl2YWwgPSByZWFkbCh0cG0tPmJhc2UgKyBUUE1fQzBTQyArIHB3bS0+aHdw
-d20gKg0KPiA+ID4gPiArVFBNX0NIbl9BRERSX09GRlNFVCk7DQo+IA0KPiBZb3UgY291bGQgbWFr
-ZSBpdCBvYnZpb3VzIHdoaWNoIGNoYW5uZWxzIGFyZSBzaGFyZWQgYW5kIHdoaWNoIGhhdmUgb25l
-DQo+IGluc3RhbmNlIHBlciBwd20gYnkgZG9pbmc6DQo+IA0KPiAJI2RlZmluZSBQV01fSU1YX1RQ
-TV9DMFNDKGh3aWQpCSgweDIwICsgaHdpZCAqIDQpDQoNCkxvb2tzIGdvb2QsIEkgd2lsbCB1c2Ug
-bWFjcm8gdG8gaW1wcm92ZSBpdC4NCg0KPiANCj4gPiA+ID4gKwl2YWwgfD0gcHdtLT5zdGF0ZS5w
-b2xhcml0eSA/IEVMU25BIDogRUxTbkI7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwl3cml0ZWwodmFs
-LCB0cG0tPmJhc2UgKyBUUE1fQzBTQyArIHB3bS0+aHdwd20gKg0KPiA+ID4gPiArVFBNX0NIbl9B
-RERSX09GRlNFVCk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwkvKiBzdGFydCB0aGUgY291bnRlciAq
-Lw0KPiA+ID4gPiArCXZhbCA9IHJlYWRsKHRwbS0+YmFzZSArIFRQTV9TQyk7DQo+ID4gPiA+ICsJ
-dmFsIHw9IDB4MSA8PCBTQ19DTU9EOw0KPiA+ID4gPiArCXdyaXRlbCh2YWwsIHRwbS0+YmFzZSAr
-IFRQTV9TQyk7DQo+ID4gPg0KPiA+ID4gSWYgdHBtX3B3bV9lbmFibGUgaXMgY2FsbGVkIGZvciB0
-aGUgZmlyc3QgUFdNIHByb3ZpZGVkIGJ5IHRoZQ0KPiA+ID4gaGFyZHdhcmUsIGhvdyBkb2VzIHRo
-aXMgd3JpdGVsIGFmZmVjdCB0aGUgc2Vjb25kIG9uZT8NCj4gPg0KPiA+IEkgd2lsbCBtYWtlIHRo
-ZSBUUE0gY291bnRlciBlbmFibGVkIGZvciBldmVyeSBjaGFubmVsIGVuYWJsZWQsIGlmIE9OTFkN
-Cj4gPiBkaXNhYmxlZCB3aGVuIGJvdGggY2hhbm5lbHMgYXJlIGRpc2FibGVkLg0KPiANCj4gU28g
-eW91IGhhdmUgdG8gbWFrZSBzdXJlIHRoYXQ6DQo+IA0KPiAgLSBpZiB5b3UgZGlzYWJsZSBvbmUg
-Y2hhbm5lbCB3aGlsZSB0aGUgb3RoZXIgaXMgc3RpbGwgcnVubmluZywganVzdCBzZXQNCj4gICAg
-dGhlIGR1dHkgY3ljbGUgdG8gemVybyB0byBub3QgaW50ZXJmZXJlIHdpdGggdGhlIG90aGVyDQo+
-ICAtIGlmIHlvdSBlbmFibGUgb25lIGNoYW5uZWwgd2hpbGUgdGhlIG90aGVyIGlzIHN0aWxsIG9m
-Zi91bnVzZWQsIG1ha2UNCj4gICAgc3VyZSB0aGF0IG90aGVyIGNoYW5uZWwgZG9lc24ndCBzdGFy
-dCB0byB3aWdnbGUuDQoNCk9OTFkgc2V0dGluZyBkdXR5IGN5Y2xlIGlzIE5PVCBlbm91Z2ggSSB0
-aGluaywgSSBzYXcgdGhlIC5jb25maWcgd2lsbCBiZSBjYWxsZWQNCmFuZCBkdXR5IGN5Y2xlIGlz
-IGNvbmZpZ3VyZWQsIE9OQ0UgZHV0eSBjeWNsZSBpcyBjb25maWd1cmVkLCB0aGUgUFdNIGNoYW5u
-ZWwNCndpbGwgc3RhcnQgb3V0cHV0IHNpZ25hbHMsIHRoZSBUUE0gaGFyZHdhcmUgaGFzIHBvbGFy
-aXR5IHNldHRpbmcgcmVnaXN0ZXIsIHdoZW4NCnRoZXkgYXJlIGNsZWFyLCB0aGUgY2hhbm5lbCB3
-aWxsIGJlIGRpc2FibGVkLCBzbyBiZWxvdyBpcyB3aGF0IEkgZGlkIGluIFYyOg0KDQppZiBvbmUg
-Y2hhbm5lbCBpcyBkaXNhYmxlZCwgdGhlIHBvbGFyaXR5IHdpbGwgYmUgc2V0IHRvIDAgdG8gZGlz
-YWJsZSB0aGUgY2hhbm5lbCwgYW5kDQp0aGUgY29uZmlnIHdpbGwgYmUgc2F2ZWQuIEFuZCBjb25m
-aWcgd2lsbCBiZSByZXN0b3JlZCBpZiBjaGFubmVsIGdvdCBlbmFibGVkIGFnYWluLg0KQW5kIGlm
-IGFsbCBjaGFubmVscyBhcmUgZGlzYWJsZWQsIHRoZSBUUE0gY291bnRlciB3aWxsIGJlIHN0b3Bw
-ZWQsIGlmIGFueSBjaGFubmVsDQppcyBhY3RpdmUsIFRQTSBjb3VudGVyIHdpbGwgcmVtYWluIHJ1
-bm5pbmcuDQoNCj4gDQo+ID4gPiA+ICsJcmV0dXJuIDA7DQo+ID4gPiA+ICt9DQo+ID4gPiA+ICsN
-Cj4gPiA+ID4gK3N0YXRpYyBpbnQgdHBtX3B3bV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2Rldmlj
-ZSAqcGRldikgew0KPiA+ID4gPiArCXN0cnVjdCB0cG1fcHdtX2NoaXAgKnRwbSA9IHBsYXRmb3Jt
-X2dldF9kcnZkYXRhKHBkZXYpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJcmV0dXJuIHB3bWNoaXBf
-cmVtb3ZlKCZ0cG0tPmNoaXApOyB9DQo+ID4gPiA+ICsNCj4gPiA+ID4gK3N0YXRpYyBpbnQgX19t
-YXliZV91bnVzZWQgdHBtX3B3bV9zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikgew0KPiA+ID4g
-PiArCXN0cnVjdCB0cG1fcHdtX2NoaXAgKnRwbSA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KPiA+
-ID4gPiArDQo+ID4gPiA+ICsJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHRwbS0+Y2xrKTsNCj4gPiA+
-DQo+ID4gPiBJZiB0aGUgUFdNIGlzIGluIHVzZSwgaXQgc2hvdWxkbid0IHN0b3Agb24gc3VzcGVu
-ZC4NCj4gPg0KPiA+IEkgdGhpbmsgUFdNIHNob3VsZCBiZSBkaXNhYmxlZCB3aGVuIHN1c3BlbmQs
-IGlmIGEgZGV2aWNlIGlzIHN1c3BlbmRlZCwNCj4gPiBidXQgUFdNIGlzIHN0aWxsIGVuYWJsZWQs
-IHdlIHdpbGwgc2VlIGJhY2tsaWdodCBpcyBlbmFibGVkLiBUaGlzIGlzDQo+ID4gd2VpcmQuIFVu
-bGVzcyB0aGUgYmFja2xpZ2h0IGRyaXZlciB3aWxsIGd1YXJhbnRlZSB0aGF0IHB3bSBpcyBkaXNh
-YmxlZA0KPiBiZWZvcmUgc3VzcGVuZD8NCj4gDQo+IE5vLCBvbiBzdXNwZW5kIGl0J3MgdGhlIHJl
-c3BvbnNpYmlsaXR5IG9mIHRoZSBiYWNrbGlnaHQgZHJpdmVyIHRvIGRpc2FibGUgdGhlDQo+IHB3
-bS4gT3RoZXJ3aXNlIHRoZSBQV00gY2hhbmdlcyBpdHMgYmVoYXZpb3VyIHdpdGhvdXQgdGhlIGNv
-bnN1bWVyJ3MNCj4gY29uc2VudCB3aGljaCBkZXBlbmRpbmcgb24gdGhlIHB1cnBvc2Ugb2YgdGhl
-IFBXTSBpcyBiYWQuDQoNClNvLCBwd20ncyBjb25zdW1lciB3aWxsIGRpc2FibGUgdGhlIFBXTSBj
-aGFubmVsIHdoZW4gc3VzcGVuZCwgc2luY2UgdGhlIFBXTQ0KY2xvY2sgaXMgZW5hYmxlZCBhZnRl
-ciBwcm9iZWQgYW5kIGtlcHQgYWx3YXlzIGVuYWJsZWQsIHRoZW4gZGlzYWJsZSBpdCBpbiBQV00g
-ZHJpdmVyDQphbHNvIG1ha2Ugc2Vuc2U/IEFzIGFsbCBjb25zdW1lcnMgd2lsbCBkaXNhYmxlIHRo
-ZSBQV00gY2hhbm5lbHMgYmVmb3JlIFBXTSBkcml2ZXINCnN1c3BlbmQ/DQoNCk1ha2luZyBjbG9j
-ayBQV00gY2xvY2sgYWx3YXlzIGVuYWJsZWQgYWZ0ZXIgcHJvYmVkIGlzIHRvIG1ha2UgcmVnaXN0
-ZXIgd3JpdGUvcmVhZCBzaW1wbGUsDQpvdGhlcndpc2UsIHdlIGhhdmUgdG8gYWRkIGNoZWNrIGFu
-ZCB0aW1lb3V0IGZvciBldmVyeSBUUE0gcmVnaXN0ZXIgd3JpdGUsIGlmIGVuYWJsZSB0aGUgY2xv
-Y2ssDQpkbyByZWdpc3RlciB3cml0ZSBhbmQgZGlzYWJsZSB0aGUgY2xvY2sgaW1tZWRpYXRlbHks
-IEkgc2F3IHJlZ2lzdGVyIHZhbHVlIGlzIE5PVCBjaGFuZ2VkIGF0IGFsbCwNCkkgZ3Vlc3MgdGhl
-IFRQTSBjbG9jayBpcyB0b28gc2xvdyBjb21wYXJlZCB3aXRoIEFSTSBjbG9jay4gDQoNCkNhbiB5
-b3UgcmV2aWV3IHRoZSBWMiBwYXRjaCBzZXQgYW5kIHByb3ZpZGUgY29tbWVudHMsIHRoZW4gSSB3
-aWxsIGZpeCB0aGVtIHRvZ2V0aGVyIGFuZCBzZW5kaW5nDQpBIFYzLg0KDQpUaGFua3MuDQpBbnNv
-bg0KDQo+IA0KPiBCZXN0IHJlZ2FyZHMNCj4gVXdlDQo+IA0KPiAtLQ0KPiBQZW5ndXRyb25peCBl
-LksuICAgICAgICAgICAgICAgICAgICAgICAgICAgfCBVd2UgS2xlaW5lLUvDtm5pZyAgICAgICAg
-ICAgIHwNCj4gSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAgICAgICAgICAgIHwNCj4g
-aHR0cHM6Ly9lbWVhMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRw
-JTNBJTJGJTJGd3cNCj4gdy5wZW5ndXRyb25peC5kZSUyRiZhbXA7ZGF0YT0wMiU3QzAxJTdDYW5z
-b24uaHVhbmclNDBueHAuY29tJTcNCj4gQ2Y1MTg3MzExYWM3MzRhY2I5N2Y3MDhkNmE3OGU3NzBj
-JTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDENCj4gNjM1JTdDMCU3QzAlN0M2MzY4ODA2
-Mjc2NTg0NTQzNzQmYW1wO3NkYXRhPXJwQSUyRjE5bmpUaWFZS2NUVHMNCj4gTXd6ZXhwVG5VN3dn
-NWoyUFZqV0M0T3VPZEUlM0QmYW1wO3Jlc2VydmVkPTAgIHwNCg==
+Hi Morimoto-san,
+
+On Wed, Mar 13, 2019 at 7:57 AM Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+> > > 2nd, in my understanding, our conclusion at Renesas-ML
+> > > is that we don't need to think about basic/extend DMAC register.
+> > > Because extend area is 100% covering basic area.
+> > > In other words, it is compatible.
+> > > Driver side don't need to think about it.
+> > >
+> > I am a little confused,
+> > because latest comment received from simon, suggests to let driver to
+> > decide which register set to use.
+> >
+> > for me, I think it's not necessary, if extended register set is available,
+> > driver shall always use it.
+>
+> I can agree to have both basic/extend register
+> if driver need to switch its behavior.
+> But this case, there is nothing to do on driver side.
+> In other words, SoC always need to use extend
+> register if it has.
+> I don't know why datasheet is indicating both area.
+> Maybe it is because for Gen3 all-in ? I'm not sure.
+>
+> Anyway, Simon, can you agree about it ?
+> Having both basic/extend register is just noise for driver.
+
+I can follow your rationale of only describing the extended register set,
+if available.
+
+However:
+  1) The DT bindings should state clearly that the AUDMAPP register
+     block should point to the extended register set, if available,
+  2) Can the driver distinguish between an old DTB describing the basic
+     register set, and a new DTB describing the extended register set?
+     I.e. will the driver avoid using busif4-7 when using an old DTB
+     describing the basic register set, to maintain backwards compatibility?
+
+Thanks!
+
+P.S. The binding doc seems to need some love.
+     I came up with the following a while ago, but got interrupted.
+     Feel free to steal ;-)
+
+--- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
++++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
+@@ -338,9 +338,9 @@ Required properties:
+ =============================================
+
+ - compatible                   : "renesas,rcar_sound-<soctype>", fallbacks
+-                                 "renesas,rcar_sound-gen1" if generation1, and
+-                                 "renesas,rcar_sound-gen2" if
+generation2 (or RZ/G1)
+-                                 "renesas,rcar_sound-gen3" if
+generation3 (or RZ/G2)
++                                 "renesas,rcar_sound-gen1" if R-Car Gen1, and
++                                 "renesas,rcar_sound-gen2" if R-Car
+Gen2 or RZ/G1
++                                 "renesas,rcar_sound-gen3" if R-Car
+Gen3 or RZ/G2
+                                  Examples with soctypes are:
+                                    - "renesas,rcar_sound-r8a7743" (RZ/G1M)
+                                    - "renesas,rcar_sound-r8a7745" (RZ/G1E)
+@@ -357,8 +357,10 @@ Required properties:
+                                    - "renesas,rcar_sound-r8a77990" (R-Car E3)
+ - reg                          : Should contain the register physical address.
+                                  required register is
+-                                  SRU/ADG/SSI      if generation1
+-                                  SRU/ADG/SSIU/SSI if generation2
++                                  SRU/ADG/SSI      if R-Car Gen1
++                                  SCU/ADG/SSIU/SSI/AUDMAPP if R-Car Gen2,
++                                                   R-Car Gen3, RZ/G1, or RZ/G2.
++- reg-names = "scu", "adg", "ssiu", "ssi", "audmapp";
+ - rcar_sound,ssi               : Should contain SSI feature.
+                                  The number of SSI subnode should be
+same as HW.
+                                  see below for detail.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
