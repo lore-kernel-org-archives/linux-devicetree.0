@@ -1,66 +1,94 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH] arm64: dts: fsl: imx8mq: enable the thermal management
- unit (TMU)
-Date: Tue, 12 Mar 2019 17:31:19 -0700
-Message-ID: <CAHQ1cqHS6Q9naaYO8etfVC6ra0Km8a3Hs-4FTVdjjS5Ciwjpbw@mail.gmail.com>
-References: <20190311213124.29325-1-angus@akkea.ca> <CAHQ1cqEHr1mB2EH3-fJPrYa+nkcWPPjmCTjSt-XsDnJp-SCf+w@mail.gmail.com>
- <9f25fb1a0acb35539dcd802502c49058@www.akkea.ca>
+From: Chen Yu <chenyu56@huawei.com>
+Subject: Re: [PATCH v3 01/12] dt-bindings: phy: Add support for HiSilicon's
+ hi3660 USB PHY
+Date: Wed, 13 Mar 2019 09:40:25 +0800
+Message-ID: <594394e2-c399-39db-979a-fadb17ef28df@huawei.com>
+References: <20190302090505.65542-1-chenyu56@huawei.com>
+ <20190302090505.65542-2-chenyu56@huawei.com> <20190312134525.GA9706@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9f25fb1a0acb35539dcd802502c49058@www.akkea.ca>
+In-Reply-To: <20190312134525.GA9706@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Angus Ainslie <angus@akkea.ca>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, daniel.baluta@nxp.com, agx@sigxcpu.org, dl-linux-imx <linux-imx@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: liuyu712@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Mark Rutland <mark.rutland@arm.com>, Binghui Wang <wangbinghui@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 1:19 PM Angus Ainslie <angus@akkea.ca> wrote:
->
-> Hi Andrey,
->
-> On 2019-03-11 19:35, Andrey Smirnov wrote:
-> > On Mon, Mar 11, 2019 at 2:35 PM Angus Ainslie (Purism) <angus@akkea.ca>
-> > wrote:
-> >>
-> >> These are the TMU nodes from the NXP vendor kernel
-> >>
-> >
-> > Hey Angus,
-> >
-> > TMU block supports multiple thermal zones and vendor kernel doesn't
-> > really account for that (see below). Latest version of the driver in
-> > thermal tree now actually supports that feature (mulit-sensor), so I
-> > think the code in DT should reflect that as well. I recently submitted
-> > a series adding HWMON integration for TMU
-> > (https://lore.kernel.org/lkml/20190222200508.26325-1-andrew.smirnov@gmail.com/T/#u)
->
-> I tried applying those to linux-next. They don't apply very cleanly
-> there so I gave up.
->
-> > and this is my take on this patch:
-> >
-> > https://github.com/ndreys/linux/commit/09931e3d60af0a74377307b433db97da1be31570
-> >
-> > All of the code there is up for grabs, if you feel like using it.
-> >
->
-> I followed that and I have a version that works with linux-next that
-> does not include the GPU
-> and VPU parts.
->
-> I also tested a version with the GPU and VPU parts and it "works" but
-> creates 2 useless
-> paths in /sys/class/thermal .
->
-> Should I wait for your changes to get into linux-next or resubmit a
-> version that works with the current one ?
->
+Hi Rob,
 
-You don't really need my changes for multi sensor support, only the
-patch Fabio pointed to. You can send the patch sans GPU and VPU nodes
-to get it in sooner or you can wait until multi-sensor support patch
-trickles down to get all in in a single patch. All options are fine by
-me, so it's up to you and Shawn I'd say.
+On 2019/3/12 21:45, Rob Herring wrote:
+> On Sat, Mar 02, 2019 at 05:04:54PM +0800, Yu Chen wrote:
+>> This patch adds binding documentation for supporting the hi3660 usb
+>> phy on boards like the HiKey960.
+>>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: John Stultz <john.stultz@linaro.org>
+>> Cc: Binghui Wang <wangbinghui@hisilicon.com>
+>> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+>> ---
+>> v1:
+>> * Fix some format error as suggested by Rob.
+>> v2:
+>> * Change hi3660 usb PHY to hi3660 USB PHY
+>> v3:
+>> * Make device node a subnode of usb3_otg_bc register.
+>> ---
+>> ---
+>>  .../devicetree/bindings/phy/phy-hi3660-usb3.txt    | 28 ++++++++++++++++++++++
+>>  1 file changed, 28 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+>> new file mode 100644
+>> index 000000000000..6096214a2bc6
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+>> @@ -0,0 +1,28 @@
+>> +Hisilicon hi3660 USB PHY
+>> +-----------------------
+>> +
+>> +Required properties:
+>> +- compatible: should be "hisilicon,hi3660-usb-phy"
+>> +- #phy-cells: must be 0
+>> +- hisilicon,pericrg-syscon: phandle of syscon used to control phy.
+>> +- hisilicon,pctrl-syscon: phandle of syscon used to control phy.
+>> +- hisilicon,usb3-otg-bc-syscon: phandle of syscon used to control phy.
+> 
+> You can drop this as it is now just the parent node.
+> 
+>> +- hisilicon,eye-diagram-param: parameter set for phy
+>> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
+>> +
+>> +This is a subnode of usb3_otg_bc register node.
+>> +
+>> +Example:
+>> +	usb3_otg_bc: usb3_otg_bc@ff200000 {
+>> +		compatible = "syscon", "simple-mfd";
+> 
+> This node should have a specific compatible.
+> 
+Do you mean I need write a specific driver for this node ?
 
-Thanks,
-Andrey Smirnov
+>> +		reg = <0x0 0xff200000 0x0 0x1000>;
+>> +
+>> +		usb-phy {
+>> +			compatible = "hisilicon,hi3660-usb-phy";
+>> +			#phy-cells = <0>;
+>> +			hisilicon,pericrg-syscon = <&crg_ctrl>;
+>> +			hisilicon,pctrl-syscon = <&pctrl>;
+>> +			hisilicon,usb3-otg-bc-syscon = <&usb3_otg_bc>;
+>> +			hisilicon,eye-diagram-param = <0x22466e4>;
+>> +		};
+>> +	};
+>> -- 
+>> 2.15.0-rc2
+>>
+> 
+> .
+> 
+
+Thanks
+Yu Chen
