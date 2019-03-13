@@ -1,92 +1,99 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH 4/4] cpufreq: dt: Add support for interconnect bandwidth scaling
-Date: Wed, 13 Mar 2019 11:00:10 +0200
-Message-ID: <20190313090010.20534-5-georgi.djakov@linaro.org>
-References: <20190313090010.20534-1-georgi.djakov@linaro.org>
+From: Yong Wu <yong.wu@mediatek.com>
+Subject: Re: [PATCH 02/13] driver core: Remove the link if there is no
+ driver with AUTO flag
+Date: Wed, 13 Mar 2019 17:08:23 +0800
+Message-ID: <1552468103.7433.11.camel@mhfsdcap03>
+References: <1546318276-18993-1-git-send-email-yong.wu@mediatek.com>
+         <1546318276-18993-3-git-send-email-yong.wu@mediatek.com>
+         <CAE=gft7mWs1jc+KQQcPuuhcmxpFRnRBTt35+uC3F20N6R554bQ@mail.gmail.com>
+         <1551278000.17917.50.camel@mhfsdcap03>
+         <CAE=gft4iHRo8VQot26dH2NaRNLtxxRYWBmSpjkoL2BE_i6eXQw@mail.gmail.com>
+         <e15e94be-3eb9-dc7b-2073-4163f91f0259@gmail.com>
+         <CAE=gft47TODOqKUxCvd+kDKfGbkQC1OVBarb1MaU3KrptcXiNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190313090010.20534-1-georgi.djakov@linaro.org>
+In-Reply-To: <CAE=gft47TODOqKUxCvd+kDKfGbkQC1OVBarb1MaU3KrptcXiNw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vireshk@kernel.org, sboyd@kernel.org, nm@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net
-Cc: jcrouse@codeaurora.org, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, sibis@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org
+To: Evan Green <evgreen@chromium.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Joerg Roedel <joro@8bytes.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, Arnd Bergmann <arnd@arndb.de>, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-In addition to clocks and regulators, some devices can scale the bandwidth
-of their on-chip interconnect - for example between CPU and DDR memory. Add
-support for that, so that platforms which support it can make use of it.
+On Tue, 2019-03-12 at 16:17 -0700, Evan Green wrote:
+> On Tue, Mar 12, 2019 at 7:21 AM Matthias Brugger <matthias.bgg@gmail.com> wrote:
+> >
+> >
+> >
+> > On 05/03/2019 20:03, Evan Green wrote:
+> > > On Wed, Feb 27, 2019 at 6:33 AM Yong Wu <yong.wu@mediatek.com> wrote:
+> > >>
+> > >> On Mon, 2019-02-25 at 15:53 -0800, Evan Green wrote:
+> > >>> On Mon, Dec 31, 2018 at 8:52 PM Yong Wu <yong.wu@mediatek.com> wrote:
+> > >>>>
+> > >>>> DL_FLAG_AUTOREMOVE_CONSUMER/SUPPLIER means "Remove the link
+> > >>>> automatically on consumer/supplier driver unbind", that means we should
+> > >>>> remove whole the device_link when there is no this driver no matter what
+> > >>>> the ref_count of the link is.
+> > >>>>
+> > >>>> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > >>>> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> > >>>> ---
+> > >>>> The ref_count of our device_link normally is over 1. When the consumer
+> > >>>> device driver is removed, whole the device_link should be removed.
+> > >>>> Thus, I add this patch.
+> > >>>> ---
+> > >>>
+> > >>> I will admit to reading about device links for the first time while
+> > >>> reviewing this patch, but I don't really get this. Why use a kref at
+> > >>> all if we're just going to ignore its value? For instance, I see that
+> > >>> if you call device_link_add() with the same supplier and consumer, it
+> > >>> uses the kref to return the same link. That machinery is broken with
+> > >>> your change. Although I don't see any uses of it, you might also
+> > >>> expect a supplier or consumer could do a kref_get() on the link it got
+> > >>> back from device_link_add(), and have a reasonable expectation that
+> > >>> the link wouldn't be freed out from under it. This would also be
+> > >>> broken.
+> > >>>
+> > >>> Can you explain why your device_links normally have a reference count
+> > >>>> 1,
+> > >>
+> > >> I use device link between the smi-larb device and the iommu-consumer
+> > >> device. Take a example, smi-larb1 have 4 VDEC ports. From 4/13 in this
+> > >> patchset, we use device_link to link the VDEC device and the smi-larb1
+> > >> device in the function(mtk_iommu_config). since there are 4 ports, it
+> > >> will call device_link_add 4 times.
+> > >>
+> > >>>
+> > >>> and why those additional references can't be cleaned up in an
+> > >>> orderly fashion?
+> > >>
+> > >> If the iommu-consume device(like VDEC above) is removed, It should enter
+> > >> device_links_driver_cleanup which only ref_put one time. I guess whole
+> > >> the link should be removed at that time.
+> > >
+> > > It seems like Robin had some suggestions about using
+> > > mtk_iommu_add_device() rather than the attach_dev() to set the links
+> > > up, and then track them for removal in the corresponding
+> > > remove_device() callback. Then you wouldn't need this change, right?
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- drivers/cpufreq/cpufreq-dt.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+Hi Evan,  sorry for reply you so late. I have not got time to try
+this(Put it in the add_device), But I guess it works.
+At that time the ref_cnt here should be 1, then this patch is
+unnecessary.
 
-diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
-index e58bfcb1169e..30fed0fc266d 100644
---- a/drivers/cpufreq/cpufreq-dt.c
-+++ b/drivers/cpufreq/cpufreq-dt.c
-@@ -17,6 +17,7 @@
- #include <linux/cpufreq.h>
- #include <linux/cpumask.h>
- #include <linux/err.h>
-+#include <linux/interconnect.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/pm_opp.h>
-@@ -100,6 +101,7 @@ static int resources_available(void)
- 	struct device *cpu_dev;
- 	struct regulator *cpu_reg;
- 	struct clk *cpu_clk;
-+	struct icc_path *cpu_path;
- 	int ret = 0;
- 	const char *name;
- 
-@@ -126,6 +128,19 @@ static int resources_available(void)
- 
- 	clk_put(cpu_clk);
- 
-+	cpu_path = of_icc_get(cpu_dev, NULL);
-+	ret = PTR_ERR_OR_ZERO(cpu_path);
-+	if (ret) {
-+		if (ret == -EPROBE_DEFER)
-+			dev_dbg(cpu_dev, "defer icc path: %d\n", ret);
-+		else
-+			dev_err(cpu_dev, "failed to get icc path: %d\n", ret);
-+
-+		return ret;
-+	}
-+
-+	icc_put(cpu_path);
-+
- 	name = find_supply_name(cpu_dev);
- 	/* Platform doesn't require regulator */
- 	if (!name)
-@@ -205,10 +220,18 @@ static int cpufreq_init(struct cpufreq_policy *policy)
- 		}
- 	}
- 
-+	opp_table = dev_pm_opp_set_path(cpu_dev, NULL);
-+	if (IS_ERR(opp_table)) {
-+		ret = PTR_ERR(opp_table);
-+		dev_err(cpu_dev, "Failed to set interconnect path for cpu%d: %d\n",
-+			policy->cpu, ret);
-+		goto out_put_regulator;
-+	}
-+
- 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
- 	if (!priv) {
- 		ret = -ENOMEM;
--		goto out_put_regulator;
-+		goto out_put_path;
- 	}
- 
- 	priv->reg_name = name;
-@@ -288,6 +311,8 @@ static int cpufreq_init(struct cpufreq_policy *policy)
- 	if (priv->have_static_opps)
- 		dev_pm_opp_of_cpumask_remove_table(policy->cpus);
- 	kfree(priv);
-+out_put_path:
-+	dev_pm_opp_put_path(opp_table);
- out_put_regulator:
- 	if (name)
- 		dev_pm_opp_put_regulators(opp_table);
+> > >
+> >
+> > FYI, Evan the patch is queued for v5.1-rc1 as
+> > 0fe6f7874d46 ("driver core: Remove the link if there is no driver with AUTO flag")
+> >
+> > So if you think there is something wrong with it, then please provide a fix or
+> > raise awareness :)
+> 
+> Oh. Thanks for the heads-up Matthias. It's pretty weird that we have
+> the kref there whose count we just completely ignore. I'll try to find
+> some time to submit a patch.
+
+Thanks very much if you improve this.
+
+> -Evan
