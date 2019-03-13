@@ -1,63 +1,68 @@
-From: Nicolas Boichat <drinkcat@chromium.org>
-Subject: Re: [RESEND PATCH v1, 00/18] add drm support for MT8183
-Date: Wed, 13 Mar 2019 18:49:08 +0800
-Message-ID: <CANMq1KC31g7=NiW2zHLxqv9yH7a11qRLdieSyoES446ZJxi8Sw@mail.gmail.com>
-References: <1552465563-6940-1-git-send-email-yongqiang.niu@mediatek.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] arm: dts: rk3288-tinker.dtsi: Enable WiFi
+Date: Wed, 13 Mar 2019 11:50:27 +0100
+Message-ID: <51774018.eXxrgBCrf5@diego>
+References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
+ <20190309153923.22806-1-beagleboard@davidjohnsummers.uk>
+ <20190309153923.22806-2-beagleboard@davidjohnsummers.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552465563-6940-1-git-send-email-yongqiang.niu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yongqiang Niu <yongqiang.niu@mediatek.com>
-Cc: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, lkml <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190309153923.22806-2-beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Tony McKahan <tonymckahan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 4:53 PM Yongqiang Niu
-<yongqiang.niu@mediatek.com> wrote:
->
-> This series are based on 4.20-rc1 and provide 18 patches to
-> support mediatek SOC MT8183
+Am Samstag, 9. M=E4rz 2019, 16:39:22 CET schrieb David Summers:
+> This patch adds wifi support to the ASUS Tinker Board (S) machines.
+> =
 
-v1 (https://patchwork.freedesktop.org/series/54451/#rev1) had a large
-number of comments, and I don't think you addressed any of them here?
-Can you please do so before resending?
+> This is provided by an wifi card (RTL8723BS) wired into the sdio interfac=
+e.
+> =
 
-> Yongqiang Niu (18):
->   drm/mediatek: update dt-bindings for mt8183
->   drm/mediatek: add mutex mod and sof into ddp private data
->   drm/mediatek: redefine mtk_ddp_sout_sel
->   drm/mediatek: move rdma sout from mtk_ddp_mout_en into
->     mtk_ddp_sout_sel
->   drm/mediatek: add ddp component CCORR
->   drm/mediatek: add mmsys private data for ddp path config
->   drm/mediatek: add commponent OVL0_2L
->   drm/mediatek: add component OVL1_2L
->   drm/mediatek: add component DITHER
->   drm/mediatek: add gmc_bits for ovl private data
->   drm/medaitek: add layer_nr for ovl private data
->   drm/mediatek: add function to connect module with it's previous one
->   drm/mediatek: add ddp write register common api
->   drm/mediatek: add connect function for ovl
->   drm/mediatek: add RDMA1 fifo size into RDMA private data
->   drm/mediatek: add function mtk_ddp_comp_get_type
->   drm/mediatek: add ovl0/ovl0_2l usecase
->   drm/mediatek: add support for mediatek SOC MT8183
->
->  .../bindings/display/mediatek/mediatek,disp.txt    |  11 +-
->  drivers/gpu/drm/mediatek/mtk_disp_ovl.c            |  64 ++-
->  drivers/gpu/drm/mediatek/mtk_disp_rdma.c           |  23 +-
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.c            |  42 +-
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c             | 458 ++++++++++++++++-----
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.h             |  11 +
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        | 100 +++++
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  24 ++
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  55 +++
->  drivers/gpu/drm/mediatek/mtk_drm_drv.h             |   4 +
->  10 files changed, 688 insertions(+), 104 deletions(-)
->
-> --
-> 1.8.1.1.dirty
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> It requires certain pins pulled, to enable the WiFi.
+> =
+
+> The schematics for these board do not show the WiFi connection, so the
+> connections have been taken from:
+> =
+
+> https://github.com/TinkerBoard/debian_kernel/blob/develop/arch/arm/boot/d=
+ts/
+> rk3288-miniarm.dts
+> =
+
+> In particular the pulling of two pins.
+> =
+
+> This patch is almost identical to v1. A few additional line breaks for
+> readability. On Armbian, they did not use sd-uhs-ddr50, so this has
+> been removed. It does not change functionality. The ASUS patch set
+> sd-uhs-sdr104;.
+> =
+
+> Signed-off-by: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> Tested-by: Tony McKahan <tonymckahan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> Test-by: TheSaint @ ArchLinux ARM
+
+applied for 5.2 with the following changes:
+- adapted subject to match the subsystem
+- updated received tags as negotiated yesterday
+- reordered some nodes and properties to match general sorting
+  (by @address first, otherwise largely alphabetical)
+
+Thanks
+Heiko
