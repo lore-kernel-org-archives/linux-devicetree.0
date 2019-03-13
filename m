@@ -1,106 +1,160 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 5/5] ASoC: rsnd: dma: use extended audio dmac registers
- when available
-Date: Wed, 13 Mar 2019 09:52:06 +0100
-Message-ID: <CAMuHMdUHeh6YDY1gTkSgnJm1xG0XtyaQ-zs_3bvFx1+mz6LHTg@mail.gmail.com>
-References: <20190313055811.26135-1-jiada_wang@mentor.com> <87h8c7gv73.wl-kuninori.morimoto.gx@renesas.com>
- <eb7ac3a6-e386-09e8-54b0-2e0eda90ad66@mentor.com> <87d0mvgtnc.wl-kuninori.morimoto.gx@renesas.com>
+From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+Subject: [RESEND PATCH v1, 01/18] drm/mediatek: update dt-bindings for mt8183
+Date: Wed, 13 Mar 2019 16:25:46 +0800
+Message-ID: <1552465563-6940-2-git-send-email-yongqiang.niu@mediatek.com>
+References: <1552465563-6940-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87d0mvgtnc.wl-kuninori.morimoto.gx@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Jiada Wang <jiada_wang@mentor.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>
+Content-Type: multipart/mixed; boundary="===============0833955143=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1552465563-6940-1-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yongqiang Niu <yongqiang.niu@mediatek.com>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Morimoto-san,
+--===============0833955143==
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_004_663511428.1735150283"
 
-On Wed, Mar 13, 2019 at 7:57 AM Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
-> > > 2nd, in my understanding, our conclusion at Renesas-ML
-> > > is that we don't need to think about basic/extend DMAC register.
-> > > Because extend area is 100% covering basic area.
-> > > In other words, it is compatible.
-> > > Driver side don't need to think about it.
-> > >
-> > I am a little confused,
-> > because latest comment received from simon, suggests to let driver to
-> > decide which register set to use.
-> >
-> > for me, I think it's not necessary, if extended register set is available,
-> > driver shall always use it.
->
-> I can agree to have both basic/extend register
-> if driver need to switch its behavior.
-> But this case, there is nothing to do on driver side.
-> In other words, SoC always need to use extend
-> register if it has.
-> I don't know why datasheet is indicating both area.
-> Maybe it is because for Gen3 all-in ? I'm not sure.
->
-> Anyway, Simon, can you agree about it ?
-> Having both basic/extend register is just noise for driver.
+--__=_Part_Boundary_004_663511428.1735150283
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_005_963406302.2003887693"
 
-I can follow your rationale of only describing the extended register set,
-if available.
+--__=_Part_Boundary_005_963406302.2003887693
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-However:
-  1) The DT bindings should state clearly that the AUDMAPP register
-     block should point to the extended register set, if available,
-  2) Can the driver distinguish between an old DTB describing the basic
-     register set, and a new DTB describing the extended register set?
-     I.e. will the driver avoid using busif4-7 when using an old DTB
-     describing the basic register set, to maintain backwards compatibility?
+PHByZT4NClVwZGF0ZSBkZXZpY2UgdHJlZSBiaW5kaW5nIGRvY3VtZW50aW9uIGZvciB0aGUgZGlz
+cGxheSBzdWJzeXN0ZW0gZm9yDQpNZWRpYXRlayBNVDgxODMgU09Dcw0KDQpTaWduZWQtb2ZmLWJ5
+OiBZb25ncWlhbmcgTml1ICZsdDt5b25ncWlhbmcubml1QG1lZGlhdGVrLmNvbSZndDsNCi0tLQ0K
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50
+eHQgICAgfCAxMSArKysrKysrKysrLQ0KIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCsp
+LCAxIGRlbGV0aW9uKC0pDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkaXNwLnR4dCBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRpc3AudHh0
+DQppbmRleCA4NDY5ZGU1Li4xYzY2ZjM5IDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQNCisrKyBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlh
+dGVrLGRpc3AudHh0DQpAQCAtMjgsOSArMjgsMTIgQEAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dC4NCiBSZXF1aXJlZCBw
+cm9wZXJ0aWVzIChhbGwgZnVuY3Rpb24gYmxvY2tzKToNCiAtIGNvbXBhdGlibGU6ICZxdW90O21l
+ZGlhdGVrLCZsdDtjaGlwJmd0Oy1kaXNwLSZsdDtmdW5jdGlvbiZndDsmcXVvdDssIG9uZSBvZg0K
+IAkmcXVvdDttZWRpYXRlaywmbHQ7Y2hpcCZndDstZGlzcC1vdmwmcXVvdDsgICAtIG92ZXJsYXkg
+KDQgbGF5ZXJzLCBibGVuZGluZywgY3NjKQ0KKwkmcXVvdDttZWRpYXRlaywmbHQ7Y2hpcCZndDst
+ZGlzcC1vdmwtMmwmcXVvdDsgICAtIG92ZXJsYXkgKDIgbGF5ZXJzLCBibGVuZGluZywgY3NjKQ0K
+IAkmcXVvdDttZWRpYXRlaywmbHQ7Y2hpcCZndDstZGlzcC1yZG1hJnF1b3Q7ICAtIHJlYWQgRE1B
+IC8gbGluZSBidWZmZXINCiAJJnF1b3Q7bWVkaWF0ZWssJmx0O2NoaXAmZ3Q7LWRpc3Atd2RtYSZx
+dW90OyAgLSB3cml0ZSBETUENCisJJnF1b3Q7bWVkaWF0ZWssJmx0O2NoaXAmZ3Q7LWRpc3AtY2Nv
+cnImcXVvdDsgLSBjb2xvciBjb3JyZWN0aW9uDQogCSZxdW90O21lZGlhdGVrLCZsdDtjaGlwJmd0
+Oy1kaXNwLWNvbG9yJnF1b3Q7IC0gY29sb3IgcHJvY2Vzc29yDQorCSZxdW90O21lZGlhdGVrLCZs
+dDtjaGlwJmd0Oy1kaXNwLWRpdGhlciZxdW90OyAtIGRpdGhlcg0KIAkmcXVvdDttZWRpYXRlaywm
+bHQ7Y2hpcCZndDstZGlzcC1hYWwmcXVvdDsgICAtIGFkYXB0aXZlIGFtYmllbnQgbGlnaHQgY29u
+dHJvbGxlcg0KIAkmcXVvdDttZWRpYXRlaywmbHQ7Y2hpcCZndDstZGlzcC1nYW1tYSZxdW90OyAt
+IGdhbW1hIGNvcnJlY3Rpb24NCiAJJnF1b3Q7bWVkaWF0ZWssJmx0O2NoaXAmZ3Q7LWRpc3AtbWVy
+Z2UmcXVvdDsgLSBtZXJnZSBzdHJlYW1zIGZyb20gdHdvIFJETUEgc291cmNlcw0KQEAgLTQwLDcg
+KzQzLDcgQEAgUmVxdWlyZWQgcHJvcGVydGllcyAoYWxsIGZ1bmN0aW9uIGJsb2Nrcyk6DQogCSZx
+dW90O21lZGlhdGVrLCZsdDtjaGlwJmd0Oy1kcGkmcXVvdDsgICAgICAgIC0gRFBJIGNvbnRyb2xs
+ZXIsIHNlZSBtZWRpYXRlayxkcGkudHh0DQogCSZxdW90O21lZGlhdGVrLCZsdDtjaGlwJmd0Oy1k
+aXNwLW11dGV4JnF1b3Q7IC0gZGlzcGxheSBtdXRleA0KIAkmcXVvdDttZWRpYXRlaywmbHQ7Y2hp
+cCZndDstZGlzcC1vZCZxdW90OyAgICAtIG92ZXJkcml2ZQ0KLSAgdGhlIHN1cHBvcnRlZCBjaGlw
+cyBhcmUgbXQyNzAxLCBtdDI3MTIgYW5kIG10ODE3My4NCisgIHRoZSBzdXBwb3J0ZWQgY2hpcHMg
+YXJlIG10MjcwMSwgbXQyNzEyLCBtdDgxNzMgYW5kIG10ODE4My4NCiAtIHJlZzogUGh5c2ljYWwg
+YmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGZ1bmN0aW9uIGJsb2NrIHJlZ2lzdGVyIHNw
+YWNlDQogLSBpbnRlcnJ1cHRzOiBUaGUgaW50ZXJydXB0IHNpZ25hbCBmcm9tIHRoZSBmdW5jdGlv
+biBibG9jayAocmVxdWlyZWQsIGV4Y2VwdCBmb3INCiAgIG1lcmdlIGFuZCBzcGxpdCBmdW5jdGlv
+biBibG9ja3MpLg0KQEAgLTcxLDYgKzc0LDEyIEBAIG1tc3lzOiBjbG9jay1jb250cm9sbGVyQDE0
+MDAwMDAwIHsNCiAJI2Nsb2NrLWNlbGxzID0gJmx0OzEmZ3Q7Ow0KIH07DQogDQorZGlzcGxheV9j
+b21wb25lbnRzOiBkaXNwc3lzQDE0MDAwMDAwIHsNCisJCWNvbXBhdGlibGUgPSAmcXVvdDttZWRp
+YXRlayxtdDgxODMtZGlzcGxheSZxdW90OzsNCisJCXJlZyA9ICZsdDswIDB4MTQwMDAwMDAgMCAw
+eDEwMDAmZ3Q7Ow0KKwkJcG93ZXItZG9tYWlucyA9ICZsdDsmYW1wO3NjcHN5cyBNVDgxODNfUE9X
+RVJfRE9NQUlOX0RJU1AmZ3Q7Ow0KK307DQorDQogb3ZsMDogb3ZsQDE0MDBjMDAwIHsNCiAJY29t
+cGF0aWJsZSA9ICZxdW90O21lZGlhdGVrLG10ODE3My1kaXNwLW92bCZxdW90OzsNCiAJcmVnID0g
+Jmx0OzAgMHgxNDAwYzAwMCAwIDB4MTAwMCZndDs7DQotLSANCjEuOC4xLjEuZGlydHkNCg0KPC9w
+cmU+PCEtLXR5cGU6dGV4dC0tPjwhLS17LS0+PHByZT4qKioqKioqKioqKioqIEVtYWlsIENvbmZp
+ZGVudGlhbGl0eSBOb3RpY2UNCiAqKioqKioqKioqKioqKioqKioqKg0KVGhlIGluZm9ybWF0aW9u
+IGNvbnRhaW5lZCBpbiB0aGlzIGUtbWFpbCBtZXNzYWdlIChpbmNsdWRpbmcgYW55IA0KYXR0YWNo
+bWVudHMpIG1heSBiZSBjb25maWRlbnRpYWwsIHByb3ByaWV0YXJ5LCBwcml2aWxlZ2VkLCBvciBv
+dGhlcndpc2UNCmV4ZW1wdCBmcm9tIGRpc2Nsb3N1cmUgdW5kZXIgYXBwbGljYWJsZSBsYXdzLiBJ
+dCBpcyBpbnRlbmRlZCB0byBiZSANCmNvbnZleWVkIG9ubHkgdG8gdGhlIGRlc2lnbmF0ZWQgcmVj
+aXBpZW50KHMpLiBBbnkgdXNlLCBkaXNzZW1pbmF0aW9uLCANCmRpc3RyaWJ1dGlvbiwgcHJpbnRp
+bmcsIHJldGFpbmluZyBvciBjb3B5aW5nIG9mIHRoaXMgZS1tYWlsIChpbmNsdWRpbmcgaXRzIA0K
+YXR0YWNobWVudHMpIGJ5IHVuaW50ZW5kZWQgcmVjaXBpZW50KHMpIGlzIHN0cmljdGx5IHByb2hp
+Yml0ZWQgYW5kIG1heSANCmJlIHVubGF3ZnVsLiBJZiB5b3UgYXJlIG5vdCBhbiBpbnRlbmRlZCBy
+ZWNpcGllbnQgb2YgdGhpcyBlLW1haWwsIG9yIGJlbGlldmUNCiANCnRoYXQgeW91IGhhdmUgcmVj
+ZWl2ZWQgdGhpcyBlLW1haWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciANCmlt
+bWVkaWF0ZWx5IChieSByZXBseWluZyB0byB0aGlzIGUtbWFpbCksIGRlbGV0ZSBhbnkgYW5kIGFs
+bCBjb3BpZXMgb2YgDQp0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGFueSBhdHRhY2htZW50cykgZnJv
+bSB5b3VyIHN5c3RlbSwgYW5kIGRvIG5vdA0KZGlzY2xvc2UgdGhlIGNvbnRlbnQgb2YgdGhpcyBl
+LW1haWwgdG8gYW55IG90aGVyIHBlcnNvbi4gVGhhbmsNCiB5b3UhPC9wcmU+PCEtLX0tLT4=
 
-Thanks!
+--__=_Part_Boundary_005_963406302.2003887693
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
 
-P.S. The binding doc seems to need some love.
-     I came up with the following a while ago, but got interrupted.
-     Feel free to steal ;-)
+VXBkYXRlIGRldmljZSB0cmVlIGJpbmRpbmcgZG9jdW1lbnRpb24gZm9yIHRoZSBkaXNwbGF5IHN1
+YnN5c3RlbSBmb3INCk1lZGlhdGVrIE1UODE4MyBTT0NzDQoNClNpZ25lZC1vZmYtYnk6IFlvbmdx
+aWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tPg0KLS0tDQogLi4uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkaXNwLnR4dCAgICB8IDExICsr
+KysrKysrKystDQogMSBmaWxlIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24o
+LSkNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L21lZGlhdGVrL21lZGlhdGVrLGRpc3AudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQNCmluZGV4IDg0Njlk
+ZTUuLjFjNjZmMzkgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkaXNwLnR4dA0KKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQN
+CkBAIC0yOCw5ICsyOCwxMiBAQCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9tZWRpYXRlay9tZWRpYXRlayxkcGkudHh0Lg0KIFJlcXVpcmVkIHByb3BlcnRpZXMgKGFs
+bCBmdW5jdGlvbiBibG9ja3MpOg0KIC0gY29tcGF0aWJsZTogIm1lZGlhdGVrLDxjaGlwPi1kaXNw
+LTxmdW5jdGlvbj4iLCBvbmUgb2YNCiAJIm1lZGlhdGVrLDxjaGlwPi1kaXNwLW92bCIgICAtIG92
+ZXJsYXkgKDQgbGF5ZXJzLCBibGVuZGluZywgY3NjKQ0KKwkibWVkaWF0ZWssPGNoaXA+LWRpc3At
+b3ZsLTJsIiAgIC0gb3ZlcmxheSAoMiBsYXllcnMsIGJsZW5kaW5nLCBjc2MpDQogCSJtZWRpYXRl
+ayw8Y2hpcD4tZGlzcC1yZG1hIiAgLSByZWFkIERNQSAvIGxpbmUgYnVmZmVyDQogCSJtZWRpYXRl
+ayw8Y2hpcD4tZGlzcC13ZG1hIiAgLSB3cml0ZSBETUENCisJIm1lZGlhdGVrLDxjaGlwPi1kaXNw
+LWNjb3JyIiAtIGNvbG9yIGNvcnJlY3Rpb24NCiAJIm1lZGlhdGVrLDxjaGlwPi1kaXNwLWNvbG9y
+IiAtIGNvbG9yIHByb2Nlc3Nvcg0KKwkibWVkaWF0ZWssPGNoaXA+LWRpc3AtZGl0aGVyIiAtIGRp
+dGhlcg0KIAkibWVkaWF0ZWssPGNoaXA+LWRpc3AtYWFsIiAgIC0gYWRhcHRpdmUgYW1iaWVudCBs
+aWdodCBjb250cm9sbGVyDQogCSJtZWRpYXRlayw8Y2hpcD4tZGlzcC1nYW1tYSIgLSBnYW1tYSBj
+b3JyZWN0aW9uDQogCSJtZWRpYXRlayw8Y2hpcD4tZGlzcC1tZXJnZSIgLSBtZXJnZSBzdHJlYW1z
+IGZyb20gdHdvIFJETUEgc291cmNlcw0KQEAgLTQwLDcgKzQzLDcgQEAgUmVxdWlyZWQgcHJvcGVy
+dGllcyAoYWxsIGZ1bmN0aW9uIGJsb2Nrcyk6DQogCSJtZWRpYXRlayw8Y2hpcD4tZHBpIiAgICAg
+ICAgLSBEUEkgY29udHJvbGxlciwgc2VlIG1lZGlhdGVrLGRwaS50eHQNCiAJIm1lZGlhdGVrLDxj
+aGlwPi1kaXNwLW11dGV4IiAtIGRpc3BsYXkgbXV0ZXgNCiAJIm1lZGlhdGVrLDxjaGlwPi1kaXNw
+LW9kIiAgICAtIG92ZXJkcml2ZQ0KLSAgdGhlIHN1cHBvcnRlZCBjaGlwcyBhcmUgbXQyNzAxLCBt
+dDI3MTIgYW5kIG10ODE3My4NCisgIHRoZSBzdXBwb3J0ZWQgY2hpcHMgYXJlIG10MjcwMSwgbXQy
+NzEyLCBtdDgxNzMgYW5kIG10ODE4My4NCiAtIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFu
+ZCBsZW5ndGggb2YgdGhlIGZ1bmN0aW9uIGJsb2NrIHJlZ2lzdGVyIHNwYWNlDQogLSBpbnRlcnJ1
+cHRzOiBUaGUgaW50ZXJydXB0IHNpZ25hbCBmcm9tIHRoZSBmdW5jdGlvbiBibG9jayAocmVxdWly
+ZWQsIGV4Y2VwdCBmb3INCiAgIG1lcmdlIGFuZCBzcGxpdCBmdW5jdGlvbiBibG9ja3MpLg0KQEAg
+LTcxLDYgKzc0LDEyIEBAIG1tc3lzOiBjbG9jay1jb250cm9sbGVyQDE0MDAwMDAwIHsNCiAJI2Ns
+b2NrLWNlbGxzID0gPDE+Ow0KIH07DQogDQorZGlzcGxheV9jb21wb25lbnRzOiBkaXNwc3lzQDE0
+MDAwMDAwIHsNCisJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLWRpc3BsYXkiOw0KKwkJ
+cmVnID0gPDAgMHgxNDAwMDAwMCAwIDB4MTAwMD47DQorCQlwb3dlci1kb21haW5zID0gPCZzY3Bz
+eXMgTVQ4MTgzX1BPV0VSX0RPTUFJTl9ESVNQPjsNCit9Ow0KKw0KIG92bDA6IG92bEAxNDAwYzAw
+MCB7DQogCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWRpc3Atb3ZsIjsNCiAJcmVnID0g
+PDAgMHgxNDAwYzAwMCAwIDB4MTAwMD47DQotLSANCjEuOC4xLjEuZGlydHkNCg==
 
---- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-+++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-@@ -338,9 +338,9 @@ Required properties:
- =============================================
+--__=_Part_Boundary_005_963406302.2003887693--
 
- - compatible                   : "renesas,rcar_sound-<soctype>", fallbacks
--                                 "renesas,rcar_sound-gen1" if generation1, and
--                                 "renesas,rcar_sound-gen2" if
-generation2 (or RZ/G1)
--                                 "renesas,rcar_sound-gen3" if
-generation3 (or RZ/G2)
-+                                 "renesas,rcar_sound-gen1" if R-Car Gen1, and
-+                                 "renesas,rcar_sound-gen2" if R-Car
-Gen2 or RZ/G1
-+                                 "renesas,rcar_sound-gen3" if R-Car
-Gen3 or RZ/G2
-                                  Examples with soctypes are:
-                                    - "renesas,rcar_sound-r8a7743" (RZ/G1M)
-                                    - "renesas,rcar_sound-r8a7745" (RZ/G1E)
-@@ -357,8 +357,10 @@ Required properties:
-                                    - "renesas,rcar_sound-r8a77990" (R-Car E3)
- - reg                          : Should contain the register physical address.
-                                  required register is
--                                  SRU/ADG/SSI      if generation1
--                                  SRU/ADG/SSIU/SSI if generation2
-+                                  SRU/ADG/SSI      if R-Car Gen1
-+                                  SCU/ADG/SSIU/SSI/AUDMAPP if R-Car Gen2,
-+                                                   R-Car Gen3, RZ/G1, or RZ/G2.
-+- reg-names = "scu", "adg", "ssiu", "ssi", "audmapp";
- - rcar_sound,ssi               : Should contain SSI feature.
-                                  The number of SSI subnode should be
-same as HW.
-                                  see below for detail.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+--__=_Part_Boundary_004_663511428.1735150283--
 
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+--===============0833955143==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+
+--===============0833955143==--
