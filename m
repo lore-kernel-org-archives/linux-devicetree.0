@@ -1,90 +1,178 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] dt-bindings: Add a guide of do's and don't's for writing bindings
-Date: Wed, 13 Mar 2019 10:06:48 -0500
-Message-ID: <20190313150648.32404-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: axi-i2s: let both capture and playback be optional" to the asoc tree
+Date: Wed, 13 Mar 2019 15:38:37 +0000 (GMT)
+Message-ID: <20190313153837.A5BD01128B97@debutante.sirena.org.uk>
+References: <20190307214456.16445-1-luca@lucaceresoli.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190307214456.16445-1-luca@lucaceresoli.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Luca Ceresoli <luca@lucaceresoli.net>
+Cc: Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>Mark Brown <broonie@kernel.org>alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Devicetree binding reviews have a lot of repeated review comments. Much
-of the guidelines aren't written down. This list of do's and don't's is
-by no means an exhaustive guide for how to write bindings, but at least
-the "rules" are written down in some form.
+The patch
 
-Signed-off-by: Rob Herring <robh@kernel.org>
+   ASoC: axi-i2s: let both capture and playback be optional
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 7bf7d0554890c53478ec04d3d4bfced0c881f6c8 Mon Sep 17 00:00:00 2001
+From: Luca Ceresoli <luca@lucaceresoli.net>
+Date: Thu, 7 Mar 2019 22:44:55 +0100
+Subject: [PATCH] ASoC: axi-i2s: let both capture and playback be optional
+
+Both the capture and playback channels are optional in the axi_i2s IP
+block. Reflect this in the driver by enabling only the channel(s) that
+have a DMA.
+
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/writing-bindings.txt  | 60 +++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/writing-bindings.txt
+ sound/soc/adi/axi-i2s.c | 68 +++++++++++++++++++++++++++++------------
+ 1 file changed, 48 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/writing-bindings.txt b/Documentation/devicetree/bindings/writing-bindings.txt
-new file mode 100644
-index 000000000000..27dfd2d8016e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/writing-bindings.txt
-@@ -0,0 +1,60 @@
-+DOs and DON'Ts for designing and writing Devicetree bindings
+diff --git a/sound/soc/adi/axi-i2s.c b/sound/soc/adi/axi-i2s.c
+index 4c23381727a1..273c543e8ff3 100644
+--- a/sound/soc/adi/axi-i2s.c
++++ b/sound/soc/adi/axi-i2s.c
+@@ -43,6 +43,9 @@ struct axi_i2s {
+ 	struct clk *clk;
+ 	struct clk *clk_ref;
+ 
++	bool   has_capture;
++	bool   has_playback;
 +
-+This is a list of common review feedback items focused on binding design. With
-+every rule, there are exceptions and bindings have many gray areas.
+ 	struct snd_soc_dai_driver dai_driver;
+ 
+ 	struct snd_dmaengine_dai_dma_data capture_dma_data;
+@@ -136,8 +139,10 @@ static int axi_i2s_dai_probe(struct snd_soc_dai *dai)
+ {
+ 	struct axi_i2s *i2s = snd_soc_dai_get_drvdata(dai);
+ 
+-	snd_soc_dai_init_dma_data(dai, &i2s->playback_dma_data,
+-		&i2s->capture_dma_data);
++	snd_soc_dai_init_dma_data(
++		dai,
++		i2s->has_playback ? &i2s->playback_dma_data : NULL,
++		i2s->has_capture  ? &i2s->capture_dma_data  : NULL);
+ 
+ 	return 0;
+ }
+@@ -151,18 +156,6 @@ static const struct snd_soc_dai_ops axi_i2s_dai_ops = {
+ 
+ static struct snd_soc_dai_driver axi_i2s_dai = {
+ 	.probe = axi_i2s_dai_probe,
+-	.playback = {
+-		.channels_min = 2,
+-		.channels_max = 2,
+-		.rates = SNDRV_PCM_RATE_KNOT,
+-		.formats = SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE,
+-	},
+-	.capture = {
+-		.channels_min = 2,
+-		.channels_max = 2,
+-		.rates = SNDRV_PCM_RATE_KNOT,
+-		.formats = SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE,
+-	},
+ 	.ops = &axi_i2s_dai_ops,
+ 	.symmetric_rates = 1,
+ };
+@@ -178,6 +171,19 @@ static const struct regmap_config axi_i2s_regmap_config = {
+ 	.max_register = AXI_I2S_REG_STATUS,
+ };
+ 
++static void axi_i2s_parse_of(struct axi_i2s *i2s, const struct device_node *np)
++{
++	struct property *dma_names;
++	const char *dma_name;
 +
-+For guidelines related to patches, see
-+Documentation/devicetree/bindings/submitting-patches.txt
++	of_property_for_each_string(np, "dma-names", dma_names, dma_name) {
++		if (strcmp(dma_name, "rx") == 0)
++			i2s->has_capture = true;
++		if (strcmp(dma_name, "tx") == 0)
++			i2s->has_playback = true;
++	}
++}
 +
+ static int axi_i2s_probe(struct platform_device *pdev)
+ {
+ 	struct resource *res;
+@@ -191,6 +197,8 @@ static int axi_i2s_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, i2s);
+ 
++	axi_i2s_parse_of(i2s, pdev->dev.of_node);
 +
-+Overall design
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	base = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(base))
+@@ -213,13 +221,29 @@ static int axi_i2s_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	i2s->playback_dma_data.addr = res->start + AXI_I2S_REG_TX_FIFO;
+-	i2s->playback_dma_data.addr_width = 4;
+-	i2s->playback_dma_data.maxburst = 1;
++	if (i2s->has_playback) {
++		axi_i2s_dai.playback.channels_min = 2;
++		axi_i2s_dai.playback.channels_max = 2;
++		axi_i2s_dai.playback.rates = SNDRV_PCM_RATE_KNOT;
++		axi_i2s_dai.playback.formats =
++			SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE;
 +
-+- DO attempt to make bindings complete even if a driver doesn't support some
-+  features. For example, if a device has an interrupt, then include the
-+  'interrupts' property even if the driver is only polled mode.
++		i2s->playback_dma_data.addr = res->start + AXI_I2S_REG_TX_FIFO;
++		i2s->playback_dma_data.addr_width = 4;
++		i2s->playback_dma_data.maxburst = 1;
++	}
 +
-+- DON'T refer to Linux or "device driver" in bindings. Bindings should be
-+  based on what the hardware has, not what an OS and driver currently support.
++	if (i2s->has_capture) {
++		axi_i2s_dai.capture.channels_min = 2;
++		axi_i2s_dai.capture.channels_max = 2;
++		axi_i2s_dai.capture.rates = SNDRV_PCM_RATE_KNOT;
++		axi_i2s_dai.capture.formats =
++			SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE;
+ 
+-	i2s->capture_dma_data.addr = res->start + AXI_I2S_REG_RX_FIFO;
+-	i2s->capture_dma_data.addr_width = 4;
+-	i2s->capture_dma_data.maxburst = 1;
++		i2s->capture_dma_data.addr = res->start + AXI_I2S_REG_RX_FIFO;
++		i2s->capture_dma_data.addr_width = 4;
++		i2s->capture_dma_data.maxburst = 1;
++	}
+ 
+ 	i2s->ratnum.num = clk_get_rate(i2s->clk_ref) / 2 / AXI_I2S_BITS_PER_FRAME;
+ 	i2s->ratnum.den_step = 1;
+@@ -240,6 +264,10 @@ static int axi_i2s_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_clk_disable;
+ 
++	dev_info(&pdev->dev, "probed, capture %s, playback %s\n",
++		 i2s->has_capture ? "enabled" : "disabled",
++		 i2s->has_playback ? "enabled" : "disabled");
 +
-+- DO use node names matching the class of the device. Many standard names are
-+  defined in the DT Spec. If there isn't one, consider adding it.
-+
-+- DO check that the example matches the documentation especially after making
-+  review changes.
-+
-+- DON'T create nodes just for the sake of instantiating drivers. Multi-function
-+  devices only need child nodes when the child nodes have their own DT
-+  resources. A single node can be multiple providers (e.g. clocks and resets).
-+
-+- DON'T use 'syscon' alone without a specific compatible string. A 'syscon'
-+  hardware block should have a compatible string unique enough to infer the
-+  register layout of the entire block (at a minimum).
-+
-+
-+Properties
-+
-+- DO make 'compatible' properties specific. DON'T use wildcards in compatible
-+  strings. DO use fallback compatibles when devices are the same as or a subset
-+  of prior implementations. DO add new compatibles in case there are new
-+  features or bugs.
-+
-+- DO use a vendor prefix on device specific property names. Consider if
-+  properties could be common among devices of the same class. Check other
-+  existing bindings for similar devices.
-+
-+- DON'T redefine common properties. Just reference the definition and define
-+  constraints specific to the device.
-+
-+- DO use common property unit suffixes for properties with scientific units.
-+  See property-units.txt.
-+
-+- DO define properties in terms of constraints. How many entries? What are
-+  possible values? What is the order?
-+
-+
-+Board/SoC .dts Files
-+
-+- DO put all MMIO devices under a bus node and not at the top-level.
-+
-+- DO use non-empty 'ranges' to limit the size of child buses/devices. 64-bit
-+  platforms don't need all devices to have 64-bit address and size.
+ 	return 0;
+ 
+ err_clk_disable:
 -- 
-2.19.1
+2.20.1
