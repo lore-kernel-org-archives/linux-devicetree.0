@@ -1,54 +1,78 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 28/60] ARM: dts: am335x-evmsk: Fix PHY mode for ethernet
-Date: Wed, 13 Mar 2019 15:09:49 -0400
-Message-ID: <20190313191021.158171-28-sashal@kernel.org>
-References: <20190313191021.158171-1-sashal@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 01/12] dt-bindings: phy: Add support for HiSilicon's
+ hi3660 USB PHY
+Date: Wed, 13 Mar 2019 14:38:12 -0500
+Message-ID: <CAL_JsqKUCBcKOjaU9WMUjzKtOALAJDpVABbRJLeFTNk3bM5oVA@mail.gmail.com>
+References: <20190302090505.65542-1-chenyu56@huawei.com> <20190302090505.65542-2-chenyu56@huawei.com>
+ <20190312134525.GA9706@bogus> <594394e2-c399-39db-979a-fadb17ef28df@huawei.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
+In-Reply-To: <594394e2-c399-39db-979a-fadb17ef28df@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+To: Chen Yu <chenyu56@huawei.com>
+Cc: liuyu712@hisilicon.com, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, Li Pengcheng <lipengcheng8@huawei.com>, Song Xiaowei <songxiaowei@hisilicon.com>, Yiping Xu <xuyiping@hisilicon.com>, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang <zangleigang@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, Binghui Wang <wangbinghui@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+On Tue, Mar 12, 2019 at 8:40 PM Chen Yu <chenyu56@huawei.com> wrote:
+>
+> Hi Rob,
+>
+> On 2019/3/12 21:45, Rob Herring wrote:
+> > On Sat, Mar 02, 2019 at 05:04:54PM +0800, Yu Chen wrote:
+> >> This patch adds binding documentation for supporting the hi3660 usb
+> >> phy on boards like the HiKey960.
+> >>
+> >> Cc: Rob Herring <robh+dt@kernel.org>
+> >> Cc: Mark Rutland <mark.rutland@arm.com>
+> >> Cc: John Stultz <john.stultz@linaro.org>
+> >> Cc: Binghui Wang <wangbinghui@hisilicon.com>
+> >> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> >> ---
+> >> v1:
+> >> * Fix some format error as suggested by Rob.
+> >> v2:
+> >> * Change hi3660 usb PHY to hi3660 USB PHY
+> >> v3:
+> >> * Make device node a subnode of usb3_otg_bc register.
+> >> ---
+> >> ---
+> >>  .../devicetree/bindings/phy/phy-hi3660-usb3.txt    | 28 ++++++++++++++++++++++
+> >>  1 file changed, 28 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+> >> new file mode 100644
+> >> index 000000000000..6096214a2bc6
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+> >> @@ -0,0 +1,28 @@
+> >> +Hisilicon hi3660 USB PHY
+> >> +-----------------------
+> >> +
+> >> +Required properties:
+> >> +- compatible: should be "hisilicon,hi3660-usb-phy"
+> >> +- #phy-cells: must be 0
+> >> +- hisilicon,pericrg-syscon: phandle of syscon used to control phy.
+> >> +- hisilicon,pctrl-syscon: phandle of syscon used to control phy.
+> >> +- hisilicon,usb3-otg-bc-syscon: phandle of syscon used to control phy.
+> >
+> > You can drop this as it is now just the parent node.
+> >
+> >> +- hisilicon,eye-diagram-param: parameter set for phy
+> >> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
+> >> +
+> >> +This is a subnode of usb3_otg_bc register node.
+> >> +
+> >> +Example:
+> >> +    usb3_otg_bc: usb3_otg_bc@ff200000 {
+> >> +            compatible = "syscon", "simple-mfd";
+> >
+> > This node should have a specific compatible.
+> >
+> Do you mean I need write a specific driver for this node ?
 
-[ Upstream commit 759c962d3c9bb1a60e3b4b780daa66ee6d4be13a ]
+No, only that you could if needed in the future. You can still use the
+fallbacks for now.
 
-The PHY must add both tx and rx delay and not only on the tx clock.
-The board uses AR8031_AL1A PHY where the rx delay is enabled by default,
-the tx dealy is disabled.
-
-The reason why rgmii-txid worked because the rx delay was not disabled by
-the driver so essentially we ended up with rgmii-id PHY mode.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/am335x-evmsk.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-index 245868f58fe3..583f83b1742d 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -651,13 +651,13 @@
- 
- &cpsw_emac0 {
- 	phy-handle = <&ethphy0>;
--	phy-mode = "rgmii-txid";
-+	phy-mode = "rgmii-id";
- 	dual_emac_res_vlan = <1>;
- };
- 
- &cpsw_emac1 {
- 	phy-handle = <&ethphy1>;
--	phy-mode = "rgmii-txid";
-+	phy-mode = "rgmii-id";
- 	dual_emac_res_vlan = <2>;
- };
- 
--- 
-2.19.1
+Rob
