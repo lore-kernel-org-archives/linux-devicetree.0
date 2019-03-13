@@ -1,61 +1,73 @@
-Return-Path: <SRS0=Q+cw=RR=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp3-g21.free.fr ([212.27.42.3]:15522 "EHLO smtp3-g21.free.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbfCNIq1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 Mar 2019 04:46:27 -0400
-Subject: Re: [PATCH v3 5/7] dt-bindings: scsi: ufs: Add document for
- ufs-mediatek
-References: <1551252192-535-1-git-send-email-stanley.chu@mediatek.com>
- <1551252192-535-7-git-send-email-stanley.chu@mediatek.com>
- <20190312133113.GA8956@bogus> <1552444909.30977.39.camel@mtkswgap22>
- <CAL_JsqJ8EkM5EsQCCsyY0M1SuDar2qQi6QjA=91+Svv79-8rAg@mail.gmail.com>
-From: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <7f801bb4-97ea-1fe2-045c-507fd2656469@free.fr>
-Date: Thu, 14 Mar 2019 09:46:09 +0100
+Return-Path: <SRS0=Paxx=RQ=mediatek.com=stanley.chu@kernel.org>
+From: Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v4 5/7] dt-bindings: scsi: ufs: Add document for ufs-mediatek
+Date: Wed, 13 Mar 2019 12:10:09 +0800
+Message-ID: <1552450211-7149-7-git-send-email-stanley.chu@mediatek.com>
+In-Reply-To: <1552450211-7149-1-git-send-email-stanley.chu@mediatek.com>
+References: <1552450211-7149-1-git-send-email-stanley.chu@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJ8EkM5EsQCCsyY0M1SuDar2qQi6QjA=91+Svv79-8rAg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Avri Altman <avri.altman@wdc.com>, Alim Akhtar <alim.akhtar@samsung.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Jeffrey Hugo <jhugo@codeaurora.org>, DT <devicetree@vger.kernel.org>, SCSI <linux-scsi@vger.kernel.org>
+Content-Type: text/plain
+To: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, chunfeng.yun@mediatek.com, kishon@ti.com, martin.petersen@oracle.com, avri.altman@wdc.com, alim.akhtar@samsung.com, pedrom.sousa@synopsys.com
+Cc: vivek.gautam@codeaurora.org, subhashj@codeaurora.org, liwei213@huawei.com, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, kuohong.wang@mediatek.com, peter.wang@mediatek.com, chun-hung.wu@mediatek.com, Stanley Chu <stanley.chu@mediatek.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On 13/03/2019 20:48, Rob Herring wrote:
+Add UFS and UFS PHY node document for Mediatek SoC chips.
 
-Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt mentions:
-- <name>-fixed-regulator : boolean property specifying that <name>-supply is a fixed regulator.
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+---
+ .../devicetree/bindings/ufs/ufs-mediatek.txt  | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ufs/ufs-mediatek.txt
 
-> There are no users of that property in tree and doesn't look like
-> adding it was ever reviewed. We have standard ways to handle this and
-> don't need a custom property.
-
-FWIW, it seems to come from downstream:
-
-https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/?h=LE.UM.1.3.r3.25
-
-$ git grep fixed-regulator vendor -- arch/arm/boot/dts/qcom/
-vendor:arch/arm/boot/dts/qcom/msm8996.dtsi:             vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/msm8998-cdp.dtsi: vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/msm8998-interposer-sdm660-cdp.dtsi:       vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/msm8998-interposer-sdm660-mtp.dtsi:       vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/msm8998-mtp.dtsi: vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/msm8998-qrd-skuk.dtsi:    vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/msm8998-qrd-vr1.dtsi:     vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/msm8998-qrd.dtsi: vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/msm8998-rumi.dtsi:        vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/msm8998-sim.dtsi: vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/msm8998-svr20.dtsi:       vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/msm8998-v2.1-interposer-sdm660-qrd.dtsi:  vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/sdm630-cdp.dtsi:  vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/sdm630-mtp.dtsi:  vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/sdm630-qrd.dtsi:  vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/sdm630-rumi.dts:  vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/sdm660-cdp.dtsi:  vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/sdm660-mtp.dtsi:  vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/sdm660-pm660a-rumi.dts:   vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/sdm660-pm660a-sim.dts:    vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/sdm660-qrd.dtsi:  vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/sdm660-rumi.dts:  vdd-hba-fixed-regulator;
-vendor:arch/arm/boot/dts/qcom/sdm660-sim.dts:   vdd-hba-fixed-regulator;
+diff --git a/Documentation/devicetree/bindings/ufs/ufs-mediatek.txt b/Documentation/devicetree/bindings/ufs/ufs-mediatek.txt
+new file mode 100644
+index 000000000000..9594e1cd7ecf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ufs/ufs-mediatek.txt
+@@ -0,0 +1,44 @@
++* Mediatek Universal Flash Storage (UFS) Host Controller
++
++UFS nodes are defined to describe on-chip UFS hardware macro.
++Each UFS Host Controller should have its own node.
++
++To bind UFS PHY with UFS host controller, the controller node should
++contain a phandle reference to UFS M-PHY node.
++
++Required properties for UFS nodes:
++- compatible         : Compatible list, contains the following controller:
++                       "mediatek,mt8183-ufshci" for MediaTek UFS host controller
++                       present on MT81xx chipsets.
++- reg                : Address and length of the UFS register set.
++- phys               : phandle to m-phy.
++- clocks             : List of phandle and clock specifier pairs.
++- clock-names        : List of clock input name strings sorted in the same
++                       order as the clocks property. "ufs-clk" is mandatory.
++- freq-table-hz      : Array of <min max> operating frequencies stored in the same
++                       order as the clocks property. If this property is not
++                       defined or a value in the array is "0" then it is assumed
++                       that the frequency is set by the parent clock or a
++                       fixed rate clock source.
++- vcc-supply         : Power to the UFS device.
++- vcc-fixed-regulator: Specify that vcc-supply is a fixed regulator.
++
++Example:
++
++	ufsphy: phy@11fa0000 {
++		...
++	};
++
++	ufshci@11270000 {
++		compatible = "mediatek,mt8183-ufshci";
++		reg = <0 0x11270000 0 0x2300>;
++		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>;
++		phys = <&ufsphy>;
++
++		clocks = <&infracfg_ao INFRACFG_AO_UFS_CG>;
++		clock-names = "ufs-clk";
++		freq-table-hz = <0 0>;
++
++		vcc-supply = <&mt_pmic_vemc_ldo_reg>;
++		vcc-fixed-regulator;
++	};
+-- 
+2.18.0
