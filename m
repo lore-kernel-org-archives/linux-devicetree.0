@@ -1,43 +1,164 @@
-From: Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH] arm64: dts: imx8qxp: add lsio_mu2 node
-Date: Wed, 13 Mar 2019 09:24:42 +0000
-Message-ID: <20190313093650.18693-1-peng.fan@nxp.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 12/22] memory: mtk-smi: Add gals support
+Date: Wed, 13 Mar 2019 17:25:07 +0800
+Message-ID: <1552469107.7433.21.camel@mhfsdcap03>
+References: <1550394300-17420-1-git-send-email-yong.wu@mediatek.com>
+	<1550394300-17420-13-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "van.freenix@gmail.com" <van.freenix@gmail.com>, Peng Fan <peng.fan@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1550394300-17420-13-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add lsio_mu2 node which could be used communicate with SCU.
+Hi Matthias,
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+A gentle ping for all the smi part here.
+>From Joerg, your review is expected before he apply.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
-ts/freescale/imx8qxp.dtsi
-index 16766838ac77..64eecd6cb1e9 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -339,6 +339,14 @@
- 			#mbox-cells =3D <2>;
- 		};
-=20
-+		lsio_mu2: mailbox@5d1d0000 {
-+			compatible =3D "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
-+			reg =3D <0x5d1d0000 0x10000>;
-+			interrupts =3D <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
-+			#mbox-cells =3D <2>;
-+			status =3D "disabled";
-+		};
-+
- 		lsio_mu3: mailbox@5d1e0000 {
- 			compatible =3D "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
- 			reg =3D <0x5d1e0000 0x10000>;
---=20
-2.16.4
+Thanks in advance.
+
+On Sun, 2019-02-17 at 17:04 +0800, Yong Wu wrote:
+> In some SoCs like mt8183, SMI add GALS(Global Async Local Sync) module
+> which can help synchronize for the modules in different clock frequency.
+> It can be seen as a "asynchronous fifo". This is a example diagram:
+> 
+>             M4U
+>              |
+>          ----------
+>          |        |
+>      gals0-rx   gals1-rx
+>          |        |
+>          |        |
+>      gals0-tx   gals1-tx
+>          |        |
+>         ------------
+>          SMI Common
+>         ------------
+>              |
+>   +-----+--------+-----+- ...
+>   |     |        |     |
+>   |  gals-rx  gals-rx  |
+>   |     |        |     |
+>   |     |        |     |
+>   |  gals-tx  gals-tx  |
+>   |     |        |     |
+> larb1 larb2   larb3  larb4
+> 
+> GALS only help transfer the command/data while it doesn't have the
+> configuring register, thus it has the special "smi" clock and doesn't
+> have the "apb" clock. From the diagram above, we add "gals0" and
+> "gals1" clocks for smi-common and add a "gals" clock for smi-larb.
+> 
+> This patch adds gals clock supporting in the SMI. Note that some larbs
+> may still don't have the "gals" clock like larb1 and larb4 above.
+> 
+> This is also a preparing patch for mt8183 which has GALS.
+> 
+> CC: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  drivers/memory/mtk-smi.c | 36 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
+> index 8a2f968..91634d7 100644
+> --- a/drivers/memory/mtk-smi.c
+> +++ b/drivers/memory/mtk-smi.c
+> @@ -56,6 +56,7 @@ enum mtk_smi_gen {
+>  
+>  struct mtk_smi_common_plat {
+>  	enum mtk_smi_gen gen;
+> +	bool             has_gals;
+>  };
+>  
+>  struct mtk_smi_larb_gen {
+> @@ -63,11 +64,13 @@ struct mtk_smi_larb_gen {
+>  	int port_in_larb[MTK_LARB_NR_MAX + 1];
+>  	void (*config_port)(struct device *);
+>  	unsigned int larb_direct_to_common_mask;
+> +	bool             has_gals;
+>  };
+>  
+>  struct mtk_smi {
+>  	struct device			*dev;
+>  	struct clk			*clk_apb, *clk_smi;
+> +	struct clk			*clk_gals0, *clk_gals1;
+>  	struct clk			*clk_async; /*only needed by mt2701*/
+>  	void __iomem			*smi_ao_base;
+>  
+> @@ -99,8 +102,20 @@ static int mtk_smi_enable(const struct mtk_smi *smi)
+>  	if (ret)
+>  		goto err_disable_apb;
+>  
+> +	ret = clk_prepare_enable(smi->clk_gals0);
+> +	if (ret)
+> +		goto err_disable_smi;
+> +
+> +	ret = clk_prepare_enable(smi->clk_gals1);
+> +	if (ret)
+> +		goto err_disable_gals0;
+> +
+>  	return 0;
+>  
+> +err_disable_gals0:
+> +	clk_disable_unprepare(smi->clk_gals0);
+> +err_disable_smi:
+> +	clk_disable_unprepare(smi->clk_smi);
+>  err_disable_apb:
+>  	clk_disable_unprepare(smi->clk_apb);
+>  err_put_pm:
+> @@ -110,6 +125,8 @@ static int mtk_smi_enable(const struct mtk_smi *smi)
+>  
+>  static void mtk_smi_disable(const struct mtk_smi *smi)
+>  {
+> +	clk_disable_unprepare(smi->clk_gals1);
+> +	clk_disable_unprepare(smi->clk_gals0);
+>  	clk_disable_unprepare(smi->clk_smi);
+>  	clk_disable_unprepare(smi->clk_apb);
+>  	pm_runtime_put_sync(smi->dev);
+> @@ -310,6 +327,15 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
+>  	larb->smi.clk_smi = devm_clk_get(dev, "smi");
+>  	if (IS_ERR(larb->smi.clk_smi))
+>  		return PTR_ERR(larb->smi.clk_smi);
+> +
+> +	if (larb->larb_gen->has_gals) {
+> +		/* The larbs may still haven't gals even if the SoC support.*/
+> +		larb->smi.clk_gals0 = devm_clk_get(dev, "gals");
+> +		if (PTR_ERR(larb->smi.clk_gals0) == -ENOENT)
+> +			larb->smi.clk_gals0 = NULL;
+> +		else if (IS_ERR(larb->smi.clk_gals0))
+> +			return PTR_ERR(larb->smi.clk_gals0);
+> +	}
+>  	larb->smi.dev = dev;
+>  
+>  	if (larb->larb_gen->need_larbid) {
+> @@ -402,6 +428,16 @@ static int mtk_smi_common_probe(struct platform_device *pdev)
+>  	if (IS_ERR(common->clk_smi))
+>  		return PTR_ERR(common->clk_smi);
+>  
+> +	if (common->plat->has_gals) {
+> +		common->clk_gals0 = devm_clk_get(dev, "gals0");
+> +		if (IS_ERR(common->clk_gals0))
+> +			return PTR_ERR(common->clk_gals0);
+> +
+> +		common->clk_gals1 = devm_clk_get(dev, "gals1");
+> +		if (IS_ERR(common->clk_gals1))
+> +			return PTR_ERR(common->clk_gals1);
+> +	}
+> +
+>  	/*
+>  	 * for mtk smi gen 1, we need to get the ao(always on) base to config
+>  	 * m4u port, and we need to enable the aync clock for transform the smi
