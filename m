@@ -2,13 +2,13 @@ From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 Subject: [RESEND PATCH v1,
  12/18] drm/mediatek: add function to connect module with it's
  previous one
-Date: Thu, 14 Mar 2019 16:05:56 +0800
-Message-ID: <1552550762-21527-13-git-send-email-yongqiang.niu@mediatek.com>
-References: <1552550762-21527-1-git-send-email-yongqiang.niu@mediatek.com>
+Date: Wed, 13 Mar 2019 20:00:51 +0800
+Message-ID: <1552478457-9615-13-git-send-email-yongqiang.niu@mediatek.com>
+References: <1552478457-9615-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0992327784=="
+Content-Type: multipart/mixed; boundary="===============0024704587=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1552550762-21527-1-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <1552478457-9615-1-git-send-email-yongqiang.niu@mediatek.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -22,16 +22,16 @@ To: ck.hu@mediatek.com, p.zabel@pengutronix.de, robh+dt@kernel.org, matthias.bgg
 Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Yongqiang Niu <yongqiang.niu@mediatek.com>, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============0992327784==
+--===============0024704587==
 Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_006_1851758266.2007373326"
+	boundary="__=_Part_Boundary_003_1208371714.370176511"
 
---__=_Part_Boundary_006_1851758266.2007373326
+--__=_Part_Boundary_003_1208371714.370176511
 Content-Transfer-Encoding: base64
 Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_007_1137960686.1125460174"
+	boundary="__=_Part_Boundary_004_1086489988.1788026634"
 
---__=_Part_Boundary_007_1137960686.1125460174
+--__=_Part_Boundary_004_1086489988.1788026634
 Content-Type: text/html
 Content-Transfer-Encoding: base64
 
@@ -59,23 +59,23 @@ Z2V0X2lkKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSwNCiAJCQllbnVtIG10a19kZHBfY29tcF90
 eXBlIGNvbXBfdHlwZSk7DQogaW50IG10a19kZHBfY29tcF9pbml0KHN0cnVjdCBkZXZpY2UgKmRl
 diwgc3RydWN0IGRldmljZV9ub2RlICpjb21wX25vZGUsDQotLSANCjEuOC4xLjEuZGlydHkNCg0K
 PC9wcmU+PCEtLXR5cGU6dGV4dC0tPjwhLS17LS0+PHByZT4qKioqKioqKioqKioqIEVtYWlsIENv
-bmZpZGVudGlhbGl0eSBOb3RpY2UgKioqKioqKioqKioqKioqKioqKioNClRoZSBpbmZvcm1hdGlv
-biBjb250YWluZWQgaW4gdGhpcyBlLW1haWwgbWVzc2FnZSAoaW5jbHVkaW5nIGFueSANCmF0dGFj
-aG1lbnRzKSBtYXkgYmUgY29uZmlkZW50aWFsLCBwcm9wcmlldGFyeSwgcHJpdmlsZWdlZCwgb3Ig
-b3RoZXJ3aXNlDQpleGVtcHQgZnJvbSBkaXNjbG9zdXJlIHVuZGVyIGFwcGxpY2FibGUgbGF3cy4g
-SXQgaXMgaW50ZW5kZWQgdG8gYmUgDQpjb252ZXllZCBvbmx5IHRvIHRoZSBkZXNpZ25hdGVkIHJl
-Y2lwaWVudChzKS4gQW55IHVzZSwgZGlzc2VtaW5hdGlvbiwgDQpkaXN0cmlidXRpb24sIHByaW50
-aW5nLCByZXRhaW5pbmcgb3IgY29weWluZyBvZiB0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGl0cyAN
-CmF0dGFjaG1lbnRzKSBieSB1bmludGVuZGVkIHJlY2lwaWVudChzKSBpcyBzdHJpY3RseSBwcm9o
-aWJpdGVkIGFuZCBtYXkgDQpiZSB1bmxhd2Z1bC4gSWYgeW91IGFyZSBub3QgYW4gaW50ZW5kZWQg
-cmVjaXBpZW50IG9mIHRoaXMgZS1tYWlsLCBvciBiZWxpZXZlIA0KdGhhdCB5b3UgaGF2ZSByZWNl
-aXZlZCB0aGlzIGUtbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIA0KaW1t
-ZWRpYXRlbHkgKGJ5IHJlcGx5aW5nIHRvIHRoaXMgZS1tYWlsKSwgZGVsZXRlIGFueSBhbmQgYWxs
-IGNvcGllcyBvZiANCnRoaXMgZS1tYWlsIChpbmNsdWRpbmcgYW55IGF0dGFjaG1lbnRzKSBmcm9t
-IHlvdXIgc3lzdGVtLCBhbmQgZG8gbm90DQpkaXNjbG9zZSB0aGUgY29udGVudCBvZiB0aGlzIGUt
-bWFpbCB0byBhbnkgb3RoZXIgcGVyc29uLiBUaGFuayB5b3UhPC9wcmU+PCEtLX0tLT4=
+bmZpZGVudGlhbGl0eSBOb3RpY2UNCiAqKioqKioqKioqKioqKioqKioqKg0KVGhlIGluZm9ybWF0
+aW9uIGNvbnRhaW5lZCBpbiB0aGlzIGUtbWFpbCBtZXNzYWdlIChpbmNsdWRpbmcgYW55IA0KYXR0
+YWNobWVudHMpIG1heSBiZSBjb25maWRlbnRpYWwsIHByb3ByaWV0YXJ5LCBwcml2aWxlZ2VkLCBv
+ciBvdGhlcndpc2UNCmV4ZW1wdCBmcm9tIGRpc2Nsb3N1cmUgdW5kZXIgYXBwbGljYWJsZSBsYXdz
+LiBJdCBpcyBpbnRlbmRlZCB0byBiZSANCmNvbnZleWVkIG9ubHkgdG8gdGhlIGRlc2lnbmF0ZWQg
+cmVjaXBpZW50KHMpLiBBbnkgdXNlLCBkaXNzZW1pbmF0aW9uLCANCmRpc3RyaWJ1dGlvbiwgcHJp
+bnRpbmcsIHJldGFpbmluZyBvciBjb3B5aW5nIG9mIHRoaXMgZS1tYWlsIChpbmNsdWRpbmcgaXRz
+IA0KYXR0YWNobWVudHMpIGJ5IHVuaW50ZW5kZWQgcmVjaXBpZW50KHMpIGlzIHN0cmljdGx5IHBy
+b2hpYml0ZWQgYW5kIG1heSANCmJlIHVubGF3ZnVsLiBJZiB5b3UgYXJlIG5vdCBhbiBpbnRlbmRl
+ZCByZWNpcGllbnQgb2YgdGhpcyBlLW1haWwsIG9yIGJlbGlldmUNCiANCnRoYXQgeW91IGhhdmUg
+cmVjZWl2ZWQgdGhpcyBlLW1haWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciAN
+CmltbWVkaWF0ZWx5IChieSByZXBseWluZyB0byB0aGlzIGUtbWFpbCksIGRlbGV0ZSBhbnkgYW5k
+IGFsbCBjb3BpZXMgb2YgDQp0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGFueSBhdHRhY2htZW50cykg
+ZnJvbSB5b3VyIHN5c3RlbSwgYW5kIGRvIG5vdA0KZGlzY2xvc2UgdGhlIGNvbnRlbnQgb2YgdGhp
+cyBlLW1haWwgdG8gYW55IG90aGVyIHBlcnNvbi4gVGhhbmsNCiB5b3UhPC9wcmU+PCEtLX0tLT4=
 
---__=_Part_Boundary_007_1137960686.1125460174
+--__=_Part_Boundary_004_1086489988.1788026634
 Content-Type: text/plain
 Content-Transfer-Encoding: base64
 
@@ -103,12 +103,12 @@ X2RkcF9jb21wX3R5cGUgY29tcF90eXBlKTsNCiBpbnQgbXRrX2RkcF9jb21wX2luaXQoc3RydWN0
 IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlX25vZGUgKmNvbXBfbm9kZSwNCi0tIA0KMS44LjEu
 MS5kaXJ0eQ0K
 
---__=_Part_Boundary_007_1137960686.1125460174--
+--__=_Part_Boundary_004_1086489988.1788026634--
 
---__=_Part_Boundary_006_1851758266.2007373326--
+--__=_Part_Boundary_003_1208371714.370176511--
 
 
---===============0992327784==
+--===============0024704587==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -118,4 +118,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
 IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
 
---===============0992327784==--
+--===============0024704587==--
