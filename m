@@ -1,85 +1,129 @@
-From: David Summers <beagleboard@davidjohnsummers.uk>
-Subject: Re: [PATCH v3 1/3] arm: dts: rk3288-tinker.dtsi: Fix SD card detection
-Date: Tue, 12 Mar 2019 20:34:00 +0000
-Message-ID: <4a1ad220-103d-543e-56d1-3c6d6ad906ec@davidjohnsummers.uk>
-References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
- <20190309153923.22806-1-beagleboard@davidjohnsummers.uk>
- <50094675.5IylMcgSg6@phil>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 6/7] phy: mediatek: Add UFS M-PHY driver
+Date: Wed, 13 Mar 2019 17:37:31 +0800
+Message-ID: <1552469851.25686.3.camel@mtksdaap41>
+References: <1551252192-535-1-git-send-email-stanley.chu@mediatek.com>
+ <1551252192-535-8-git-send-email-stanley.chu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <50094675.5IylMcgSg6@phil>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>, Jonas Karlman <jonas@kwiboo.se>
-Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, jh80.chung@samsung.com, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1551252192-535-8-git-send-email-stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chun-hung.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, avri.altman-Sjgp3cTcYWE@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pedrom.sousa-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTIvMDMvMjAxOSAxNDoyMiwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gSGkgSm9uYXMsCj4K
-PiBBbSBTYW1zdGFnLCA5LiBNw6RyeiAyMDE5LCAxNjozOToyMSBDRVQgc2NocmllYiBEYXZpZCBT
-dW1tZXJzOgo+PiBUaGUgUHJvYmxlbToKPj4KPj4gT24gQVNVUyBUaW5rZXIgQm9hcmQgUywgd2hl
-biBib290aW5nIGZyb20gdGhlIGVNTUMsIGFuZCB0aGVyZSBpcyBjYXJkCj4+IGluIHRoZSBzZCBz
-bG90LCB0aGVyZSBhcmUgY29uc3RhbnQgZXJyb3JzLgo+Pgo+PiBBbHNvIHdoZW4gd2FybSByZWJv
-b3QsIHVib290IGNhbiBub3QgYWNjZXNzIHRoZSBzZCBzbG90Cj4+Cj4+IENhdXNlOgo+Pgo+PiBJ
-ZGVudGlmaWVkIGJ5IFJvYmluIE11cnBoeSBAIEFSTS4gVGhlIENhcmQgRGV0ZWN0IG9uIHJrMzI4
-OAo+PiBkZXZpY2VzIGlzIHB1bGxlZCB1cCBieSB2Y2Npby1zZDsgc28gd2hlbiB0aGUgcmVndWxh
-dG9yIHBvd2VycyB0aGlzCj4+IG9mZiwgY2FyZCBkZXRlY3QgZ2l2ZXMgc3B1cmlvdXMgZXJyb3Jz
-LiBBIHNlY29uZCBwcm9ibGVtLCBpcyBkdXJpbmcKPj4gcG93ZXIgZG93biwgdmNjaW8tc2QgYXBw
-cmVhcnMgdG8gYmUgcG93ZXJlZCBkb3duLiBUaGlzIGNhdXNlcyBhCj4+IHByb2JsZW0gd2hlbiB3
-YXJtIHJlYm9vdGluZyBmcm9tIHRoZSBzZCBjYXJkLiBUaGlzIHdhcyBpZGVudGlmaWVkIGJ5Cj4+
-IEpvbmFzIEthcmxtYW4uCj4+Cj4+IEhpc3Rvcnk6Cj4+Cj4+IEEgY29tbW9uIGZhdWx0IG9uIHRo
-ZXNlIHJrMzI4OCBib2FyZCwgd2hpY2ggaW1wbGltZW50IHRoZSByZWZlcmVuY2UKPj4gZGVzaWdu
-Lgo+Pgo+PiBXaGVuIHRoaXMgYXJvc2UgYmVmb3JlOgo+Pgo+PiBodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9waXBlcm1haWwvbGludXgtYXJtLWtlcm5lbC8yMDE0LUF1Z3VzdC8yODExNTMuaHRt
-bAo+Pgo+PiBBbmQgVWxmIGFuZCBKYWVob29uIGNsZWFybHkgc2FpZCB0aGlzIHdhcyBhIGJyb2tl
-biBjYXJkIGRldGVjdCBkZXNpZ24sCj4+IHdoaWNoIHNob3VsZCBiZSBzb2x2ZWQgdmlhIHBvbGxp
-bmcKPj4KPj4gU29sdXRpb246Cj4+Cj4+IEhlbmNlIGJyb2tlbi1jZCBpcyBzZXQgYXMgYSBwcm9w
-ZXJ0eS4gVGhpcyBjdXJlcyB0aGUgZXJyb3JzLiBUaGUKPj4gcG93ZXJpbmcgZG93biBvZiB2Y2Np
-by1zZCBkdXJpbmcgcmVib290IGlzIGN1cmVkIGJ5IGFkZGluZwo+PiByZWd1bGF0b3ItYm9vdC1v
-bi4KPj4KPj4gVGhpcyBzb2x1dGlvbnMgaGFzIGJlZW4gZmFpcmx5IHdpZGVseSByZXZpZXdlZCBh
-bmQgdGVzdGVkLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBEYXZpZCBTdW1tZXJzIDxiZWFnbGVib2Fy
-ZEBkYXZpZGpvaG5zdW1tZXJzLnVrPgo+PiBSZXZpZXdlZCBieTogUm9iaW4gTXVycGh5IDxyb2Jp
-bi5tdXJwaHlAYXJtLmNvbT4KPj4gUmV2aWV3ZWQgYnk6IEpvbmFzIEthcmxtYW4gPGpvbmFzQGt3
-aWJvby5zZT4KPiBpbiB2MiwgeW91IGdhdmUgYQo+IFRlc3RlZC1ieTogSm9uYXMgS2FybG1hbiA8
-am9uYXNAa3dpYm9vLnNlPgo+IGl0IHNlZW1zLCB3aGljaCBzb21laG93IHRyYW5zZm9ybWVkIGlu
-dG8gYSByZXZpZXdlZC1ieSBpbiB2My4KPgo+IFYzIGRpZCBjaGFuZ2UgYSBiaXQgaW4gaXRzIGFw
-cHJvYWNoIC0gZm9yIHRoZSBiZXR0ZXIsIGJ1dCBkbyB5b3UgYXBwcm92ZQo+IG9mIGFkZGluZyB0
-aGF0IFJldmlld2VkLWJ5IGFib3ZlIChhbmQgbWF5YmUgYWxzbyBwcm92aWRpbmcgYSBUZXN0ZWQt
-YnkKPiBmb3IgdGhlIG5ldyBhcHByb2FjaCk/Cj4KPiBUaGFua3MKPiBIZWlrbwo+Cj4KSGkgYWxs
-LAoKWWVzIGFwb2xvZ2llcyBmb3IgdGhlc2Ugc2lnbmVkLW9mZiBsaW5lcyBldGMgd3JvbmcuIEl0
-cyBzdGlsbCBhIGxlYXJuaW5nIApleHBlcmltZW50IGZvciBtZSEKCkJvdGggUm9iaW4gYW5kIEpv
-bmFzIGFkZGVkIGEgbG90IHRvIFBhdGNoLCBhcyBleHBsYWluZWQgaW4gdGhlIHdyaXRlIHVwLiAK
-Um9iaW4gY2FtZSB1cCB3aXRoIHRoZSBjYXVzZSBvZiB0aGUgZmF1bHQsIGFuZCBKb25hcyBub3Rp
-Y2VkIGEgc2Vjb25kIApmYXVsdC4gU28gdGhlIHF1ZXN0aW9uIGlzIHRvIGdpdmUgdGhlc2UgdHdv
-IHRoZWlyIGR1ZS4gSSB0aGluayB3aGF0IHRoZXkgCmJvdGggYWRkZWQgd2FzIGltcG9ydGFudC4K
-ClRoYW5rcyBSb2JpbiBmb3IgdGhlIG9mZmljaWFsICJSZXZpZXdlZC1ieSIuCgpKb25hcyB0ZXN0
-ZWQgdGhlIHNlY29uZCB2ZXJzaW9uLCB3aGljaCBrZXB0IHBvd2VyIG9uIHZjY2lvLXNkIGFsbCB0
-aGUgCnRpbWUsIHdoZXJlYXMgdjEgYW5kIHYzIGN1cmVkIHRoZSBwcm9ibGVtIHdpdGggYnJva2Vu
-LWNkLiBTbyBhbHRob3VnaCAKYm90aCBmaXhlZCB0aGUgcHJvYmxlbSwgdGhleSB3YXkgcGVyZm9y
-bWVkIGlzIGRpZmZlcmVudC4gU28gZG9uJ3QgdGhpbmsgCkkgY2FuIHNheSBKb25hcyBUZXN0ZWQt
-YnkgdjMuCgpBcyBmb3IgdGhlIHRlc3RlZCBieSAiVGhlU2FpbnQgQCBBcmNoTGludXggQXJtIiwg
-aGUgYWN0dWFsbHkgdGVzdGVkIGp1c3QgCmFib3ZlIGV2ZXJ5IHNpbmdsZSB2ZXJzaW9uIG9mIHRo
-ZSBwYXRjaCwgYW5kIGEgd2hvbGUgbG90IG1vcmUgYmVmb3JlIGl0IAp3YXMgc2VudCBpbiAtIGhl
-IGlzIG91ciBBU1VTIFRpbmtlciBCb2FyZCB1c2VyIG9uIGFyY2guIEhlIGRvZXNuJ3QgCnJlYWxs
-eSB3YW50IGhpcyBlbWFpbCBpbiB0aGUgb3BlbiwgYnV0IGlmIHB1c2ggY29tZXMgdG8gc2hvdmUg
-aGUnbGwgCmFsbG93IGl0LiBRdWVzdGlvbiBpcyBkbyB5b3UgbmVlZCB0aGlzIGZvciB0aGUgUGF0
-Y2ggdG8gcGFzcz8KCkhlaWtvLCBJJ20gaGFwcHkgdG8gY2hhbmdlIHRoZSBzaWduIG9mZiBldGMs
-IGFuZCByZXNlbnQgdGhlIHBhdGNoIChhcyAKdjQpLiBCdXQgd291bGQgYmUgdGhlIHNhbWUgcGF0
-Y2guIFRoaW5rIHRoZSBxdWVzdGlvbiBpcyB3aGF0IGlzIGJlc3QgZm9yIAp5b3UuIERvbid0IHdh
-bnQgdG8gc2VuZCB1bm5lZWRlZCBlbWFpbCAuLi4gYW55d2F5IGxldCBtZSBrbm93IChwcml2YXRl
-IAplbWFpbD8pIGFuZCBJJ2xsIGRvIHdoYXRldmVyIGlzIGJlc3QgZm9yIHlvdS4KClJlZ2FyZHMs
-CgpEYXZpZC4KClAuUy4gRXZlbnR1YWxseSBJJ2xsIGdldCBiZXR0ZXIgYXQgdGhlc2UgcGF0Y2hl
-cyAsIGFsYXMgdGhlIGRheSBqb2IgCmtlZXBzIG1lIHRvbyBidXN5IC0gYW5kIEkgZm9yZ2V0IHRo
-ZSBydWxlcyA6KAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwK
+On Wed, 2019-02-27 at 15:23 +0800, Stanley Chu wrote:
+> Add UFS M-PHY driver on MediaTek chipsets.
+> 
+> Signed-off-by: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/phy/mediatek/Kconfig       |   9 ++
+>  drivers/phy/mediatek/Makefile      |   1 +
+>  drivers/phy/mediatek/phy-mtk-ufs.c | 239 +++++++++++++++++++++++++++++
+>  3 files changed, 249 insertions(+)
+>  create mode 100644 drivers/phy/mediatek/phy-mtk-ufs.c
+> 
+> diff --git a/drivers/phy/mediatek/Kconfig b/drivers/phy/mediatek/Kconfig
+> index 8857d00b3c65..4a20110a511d 100644
+> --- a/drivers/phy/mediatek/Kconfig
+> +++ b/drivers/phy/mediatek/Kconfig
+> @@ -21,3 +21,12 @@ config PHY_MTK_XSPHY
+>  	  Enable this to support the SuperSpeedPlus XS-PHY transceiver for
+>  	  USB3.1 GEN2 controllers on MediaTek chips. The driver supports
+>  	  multiple USB2.0, USB3.1 GEN2 ports.
+> +
+> +config PHY_MTK_UFS
+> +	tristate "MediaTek UFS M-PHY driver"
+
+Please sorting according to config name.
+
+> +	depends on ARCH_MEDIATEK && OF
+> +	select GENERIC_PHY
+> +	help
+> +	  Support for UFS M-PHY on MediaTek chipsets. Enable this to provide
+> +	  vendor-specific initialization, power on and off flow of specified
+> +	  M-PHYs.
+> diff --git a/drivers/phy/mediatek/Makefile b/drivers/phy/mediatek/Makefile
+> index ee49edc97ee9..14e9aa0b8aa4 100644
+> --- a/drivers/phy/mediatek/Makefile
+> +++ b/drivers/phy/mediatek/Makefile
+> @@ -5,3 +5,4 @@
+>  
+>  obj-$(CONFIG_PHY_MTK_TPHY)		+= phy-mtk-tphy.o
+>  obj-$(CONFIG_PHY_MTK_XSPHY)		+= phy-mtk-xsphy.o
+> +obj-$(CONFIG_PHY_MTK_UFS)		+= phy-mtk-ufs.o
+
+Same here.
+
+> diff --git a/drivers/phy/mediatek/phy-mtk-ufs.c b/drivers/phy/mediatek/phy-mtk-ufs.c
+> new file mode 100644
+> index 000000000000..7375ad83af05
+> --- /dev/null
+> +++ b/drivers/phy/mediatek/phy-mtk-ufs.c
+> @@ -0,0 +1,239 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019 MediaTek Inc.
+> + * Author: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +
+> +/* mphy register and offsets */
+> +#define MP_GLB_DIG_8C               0x008C
+> +#define FRC_PLL_ISO_EN              BIT(8)
+> +#define PLL_ISO_EN                  BIT(9)
+> +#define FRC_FRC_PWR_ON              BIT(10)
+> +#define PLL_PWR_ON                  BIT(11)
+> +
+> +#define MP_LN_DIG_RX_9C             0xA09C
+> +#define FSM_DIFZ_FRC                BIT(18)
+> +
+> +#define MP_LN_DIG_RX_AC             0xA0AC
+> +#define FRC_RX_SQ_EN                BIT(0)
+> +#define RX_SQ_EN                    BIT(1)
+> +
+> +#define MP_LN_RX_44                 0xB044
+> +#define FRC_CDR_PWR_ON              BIT(17)
+> +#define CDR_PWR_ON                  BIT(18)
+> +#define FRC_CDR_ISO_EN              BIT(19)
+> +#define CDR_ISO_EN                  BIT(20)
+> +
+> +#define mphy_readl(phy, ofs) readl((phy)->mmio + (ofs))
+> +#define mphy_writel(phy, val, ofs) writel((val), (phy)->mmio + (ofs))
+> +
+> +struct ufs_mtk_phy {
+> +	struct device *dev;
+> +	void __iomem *mmio;
+> +	struct clk *mp_clk;
+> +	struct clk *unipro_clk;
+> +};
+> +
+> +static inline void mphy_set_bit(struct ufs_mtk_phy *phy, u32 reg, u32 ofs)
+
+Don't need to add inline, let compiler decide this.
+
+> +{
+> +	u32 val;
+> +
+> +	val = mphy_readl(phy, reg);
+> +	val |= ofs;
+
+Value in ofs is bit value, not offset. Maybe need a better name.
+
+Joe.C
