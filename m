@@ -1,13 +1,13 @@
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 Subject: [RESEND PATCH v1,
  11/18] drm/medaitek: add layer_nr for ovl private data
-Date: Thu, 14 Mar 2019 16:05:55 +0800
-Message-ID: <1552550762-21527-12-git-send-email-yongqiang.niu@mediatek.com>
-References: <1552550762-21527-1-git-send-email-yongqiang.niu@mediatek.com>
+Date: Wed, 13 Mar 2019 17:12:10 +0800
+Message-ID: <1552468337-7748-12-git-send-email-yongqiang.niu@mediatek.com>
+References: <1552468337-7748-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1010678649=="
+Content-Type: multipart/mixed; boundary="===============1923335141=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1552550762-21527-1-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <1552468337-7748-1-git-send-email-yongqiang.niu@mediatek.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -17,20 +17,20 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: ck.hu@mediatek.com, p.zabel@pengutronix.de, robh+dt@kernel.org, matthias.bgg@gmail.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Yongqiang Niu <yongqiang.niu@mediatek.com>, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yongqiang Niu <yongqiang.niu@mediatek.com>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============1010678649==
+--===============1923335141==
 Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_002_1827820008.662397652"
+	boundary="__=_Part_Boundary_003_362130069.825577084"
 
---__=_Part_Boundary_002_1827820008.662397652
+--__=_Part_Boundary_003_362130069.825577084
 Content-Transfer-Encoding: base64
 Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_003_1019435979.1714944867"
+	boundary="__=_Part_Boundary_004_852700353.299530035"
 
---__=_Part_Boundary_003_1019435979.1714944867
+--__=_Part_Boundary_004_852700353.299530035
 Content-Type: text/html
 Content-Transfer-Encoding: base64
 
@@ -60,23 +60,23 @@ IG10ODE3M19vdmxfZHJpdmVyX2RhdGEgPSB7DQogCS5hZGRyID0gRElTUF9SRUdfT1ZMX0FERFJf
 TVQ4MTczLA0KIAkuZ21jX2JpdHMgPSA4LA0KKwkubGF5ZXJfbnIgPSA0LA0KIAkuZm10X3JnYjU2
 NV9pc18wID0gdHJ1ZSwNCiB9Ow0KIA0KLS0gDQoxLjguMS4xLmRpcnR5DQoNCjwvcHJlPjwhLS10
 eXBlOnRleHQtLT48IS0tey0tPjxwcmU+KioqKioqKioqKioqKiBFbWFpbCBDb25maWRlbnRpYWxp
-dHkgTm90aWNlICoqKioqKioqKioqKioqKioqKioqDQpUaGUgaW5mb3JtYXRpb24gY29udGFpbmVk
-IGluIHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBhbnkgDQphdHRhY2htZW50cykgbWF5
-IGJlIGNvbmZpZGVudGlhbCwgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQsIG9yIG90aGVyd2lzZQ0K
-ZXhlbXB0IGZyb20gZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlzIGludGVu
-ZGVkIHRvIGJlIA0KY29udmV5ZWQgb25seSB0byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQocyku
-IEFueSB1c2UsIGRpc3NlbWluYXRpb24sIA0KZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0YWlu
-aW5nIG9yIGNvcHlpbmcgb2YgdGhpcyBlLW1haWwgKGluY2x1ZGluZyBpdHMgDQphdHRhY2htZW50
-cykgYnkgdW5pbnRlbmRlZCByZWNpcGllbnQocykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQg
-bWF5IA0KYmUgdW5sYXdmdWwuIElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBv
-ZiB0aGlzIGUtbWFpbCwgb3IgYmVsaWV2ZSANCnRoYXQgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBl
-LW1haWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciANCmltbWVkaWF0ZWx5IChi
-eSByZXBseWluZyB0byB0aGlzIGUtbWFpbCksIGRlbGV0ZSBhbnkgYW5kIGFsbCBjb3BpZXMgb2Yg
-DQp0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGFueSBhdHRhY2htZW50cykgZnJvbSB5b3VyIHN5c3Rl
-bSwgYW5kIGRvIG5vdA0KZGlzY2xvc2UgdGhlIGNvbnRlbnQgb2YgdGhpcyBlLW1haWwgdG8gYW55
-IG90aGVyIHBlcnNvbi4gVGhhbmsgeW91ITwvcHJlPjwhLS19LS0+
+dHkgTm90aWNlDQogKioqKioqKioqKioqKioqKioqKioNClRoZSBpbmZvcm1hdGlvbiBjb250YWlu
+ZWQgaW4gdGhpcyBlLW1haWwgbWVzc2FnZSAoaW5jbHVkaW5nIGFueSANCmF0dGFjaG1lbnRzKSBt
+YXkgYmUgY29uZmlkZW50aWFsLCBwcm9wcmlldGFyeSwgcHJpdmlsZWdlZCwgb3Igb3RoZXJ3aXNl
+DQpleGVtcHQgZnJvbSBkaXNjbG9zdXJlIHVuZGVyIGFwcGxpY2FibGUgbGF3cy4gSXQgaXMgaW50
+ZW5kZWQgdG8gYmUgDQpjb252ZXllZCBvbmx5IHRvIHRoZSBkZXNpZ25hdGVkIHJlY2lwaWVudChz
+KS4gQW55IHVzZSwgZGlzc2VtaW5hdGlvbiwgDQpkaXN0cmlidXRpb24sIHByaW50aW5nLCByZXRh
+aW5pbmcgb3IgY29weWluZyBvZiB0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGl0cyANCmF0dGFjaG1l
+bnRzKSBieSB1bmludGVuZGVkIHJlY2lwaWVudChzKSBpcyBzdHJpY3RseSBwcm9oaWJpdGVkIGFu
+ZCBtYXkgDQpiZSB1bmxhd2Z1bC4gSWYgeW91IGFyZSBub3QgYW4gaW50ZW5kZWQgcmVjaXBpZW50
+IG9mIHRoaXMgZS1tYWlsLCBvciBiZWxpZXZlDQogDQp0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRo
+aXMgZS1tYWlsIGluIGVycm9yLCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgDQppbW1lZGlhdGVs
+eSAoYnkgcmVwbHlpbmcgdG8gdGhpcyBlLW1haWwpLCBkZWxldGUgYW55IGFuZCBhbGwgY29waWVz
+IG9mIA0KdGhpcyBlLW1haWwgKGluY2x1ZGluZyBhbnkgYXR0YWNobWVudHMpIGZyb20geW91ciBz
+eXN0ZW0sIGFuZCBkbyBub3QNCmRpc2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRv
+IGFueSBvdGhlciBwZXJzb24uIFRoYW5rDQogeW91ITwvcHJlPjwhLS19LS0+
 
---__=_Part_Boundary_003_1019435979.1714944867
+--__=_Part_Boundary_004_852700353.299530035
 Content-Type: text/plain
 Content-Transfer-Encoding: base64
 
@@ -106,12 +106,12 @@ ZGF0YSA9IHsNCiAJLmFkZHIgPSBESVNQX1JFR19PVkxfQUREUl9NVDgxNzMsDQogCS5nbWNfYml0
 cyA9IDgsDQorCS5sYXllcl9uciA9IDQsDQogCS5mbXRfcmdiNTY1X2lzXzAgPSB0cnVlLA0KIH07
 DQogDQotLSANCjEuOC4xLjEuZGlydHkNCg==
 
---__=_Part_Boundary_003_1019435979.1714944867--
+--__=_Part_Boundary_004_852700353.299530035--
 
---__=_Part_Boundary_002_1827820008.662397652--
+--__=_Part_Boundary_003_362130069.825577084--
 
 
---===============1010678649==
+--===============1923335141==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -121,4 +121,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
 IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
 
---===============1010678649==--
+--===============1923335141==--
