@@ -1,101 +1,59 @@
-From: Patrick Venture <venture@google.com>
-Subject: Re: [PATCH v7 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
-Date: Wed, 13 Mar 2019 13:41:56 -0700
-Message-ID: <CAO=notz1Wrqaj4wWw5HmfMPpp6BMacMkr++WirLEHrphaesySA@mail.gmail.com>
-References: <20190312163051.155405-1-venture@google.com> <CAL_JsqLRO8m+voL_6mSpcrGmAT-SPwXhXDSOMEgQW6wmmTxZfQ@mail.gmail.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH v4 06/10] dt-bindings: sdm845-pinctrl: add wakeup interrupt parent for GPIO
+Date: Wed, 13 Mar 2019 15:18:40 -0600
+Message-ID: <20190313211844.29416-7-ilina@codeaurora.org>
+References: <20190313211844.29416-1-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLRO8m+voL_6mSpcrGmAT-SPwXhXDSOMEgQW6wmmTxZfQ@mail.gmail.com>
+In-Reply-To: <20190313211844.29416-1-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com
+Cc: linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com, bjorn.andersson@linaro.org, dianders@chromium.org, linus.walleij@linaro.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 12:54 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Tue, Mar 12, 2019 at 11:30 AM Patrick Venture <venture@google.com> wrote:
-> >
-> > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
-> >
-> > Signed-off-by: Patrick Venture <venture@google.com>
-> > ---
-> > Changes for v7:
-> > - Moved node under the syscon node it requires
-> > Changes for v6:
-> > - None
-> > Changes for v5:
-> > - None
-> > Changes for v4:
-> > - None
-> > Changes for v3:
-> > - None
-> > Changes for v2:
-> > - Added comment about syscon required parameter.
-> > ---
-> >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
-> >  1 file changed, 48 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> > new file mode 100644
-> > index 000000000000..088cc4e3dc54
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> > @@ -0,0 +1,48 @@
-> > +======================================================================
-> > +Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
-> > +======================================================================
-> > +
-> > +The bridge is available on platforms with the VGA enabled on the Aspeed device.
-> > +In this case, the host has access to a 64KiB window into all of the BMC's
-> > +memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
-> > +has read access to all the regions of memory, however the host only has read
-> > +and write access depending on a register controlled by the BMC.
-> > +
-> > +Required properties:
-> > +===================
-> > +
-> > + - compatible: must be one of:
-> > +       - "aspeed,ast2400-p2a-ctrl"
-> > +       - "aspeed,ast2500-p2a-ctrl"
-> > +
-> > + - syscon: handle to syscon device node controlling PCI.
-> > +
-> > +Optional properties:
-> > +===================
-> > +
-> > +- memory-region: A phandle to a reserved_memory region to be used for the PCI
-> > +               to AHB mapping
-> > +
-> > +The p2a-control node should be the child of a syscon node with the required
-> > +property:
-> > +
-> > +- compatible : Should be one of the following:
-> > +               "aspeed,ast2400-scu", "syscon", "simple-mfd"
-> > +               "aspeed,g4-scu", "syscon", "simple-mfd"
-> > +               "aspeed,ast2500-scu", "syscon", "simple-mfd"
-> > +               "aspeed,g5-scu", "syscon", "simple-mfd"
-> > +
-> > +Example:
-> > +
-> > +g4 Example
-> > +----------
-> > +
-> > +syscon: scu@1e6e2000 {
-> > +       compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
-> > +       reg = <0x1e6e2000 0x1a8>;
-> > +
-> > +       p2a: p2a-control {
-> > +               compatible = "aspeed,ast2400-p2a-ctrl";
->
-> If there's a defined register range, then you could add a reg property
-> (even though Linux doesn't use it).
+SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
+routed to the PDC as interrupts that can be used to wake the system up
+from deep low power modes and suspend.
 
-in this case, the device just needs access to two separate registers
-controlled by the syscon to which it is now a child.
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+---
+ .../devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt    | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
->
-> Either way,
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+index 665aadb5ea28..f0fedbc5d41a 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+@@ -29,6 +29,11 @@ SDM845 platform.
+ 	Definition: must be 2. Specifying the pin number and flags, as defined
+ 		    in <dt-bindings/interrupt-controller/irq.h>
+ 
++- wakeup-parent:
++	Usage: optional
++	Value type: <phandle>
++	Definition: A phandle to the wakeup interrupt controller for the SoC.
++
+ - gpio-controller:
+ 	Usage: required
+ 	Value type: <none>
+@@ -53,7 +58,6 @@ pin, a group, or a list of pins or groups. This configuration can include the
+ mux function to select on those pin(s)/group(s), and various pin configuration
+ parameters, such as pull-up, drive strength, etc.
+ 
+-
+ PIN CONFIGURATION NODES:
+ 
+ The name of each subnode is not important; all subnodes should be enumerated
+@@ -160,6 +164,7 @@ Example:
+ 		#gpio-cells = <2>;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
++		wake-parent = <&pdc_intc>;
+ 
+ 		qup9_active: qup9-active {
+ 			mux {
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
