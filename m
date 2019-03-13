@@ -1,220 +1,455 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V10 1/4] dt-bindings: fsl: scu: add thermal binding
-Date: Wed, 13 Mar 2019 08:12:14 +0000
-Message-ID: <AM6PR0402MB39111B82FAE76449785EDF90F54A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-References: <1551256894-21954-1-git-send-email-Anson.Huang@nxp.com>
- <20190227235455.GA15211@bogus>
- <DB3PR0402MB391673518C43A0ABE9BDB55FF5750@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAL_JsqJct4BztHEak+=iNK3G7dwYR-pQPeUqb4kBnEdRQMLr6A@mail.gmail.com>
- <DB3PR0402MB3916D67D2CA6C33D27371F58F5760@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <DB3PR0402MB39166061B0712B30E443DA07F5730@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Erin Lo <erin.lo@mediatek.com>
+Subject: Re: [PATCH v8 2/2] arm64: dts: Add Mediatek SoC MT8183 and
+ evaluation board dts and Makefile
+Date: Wed, 13 Mar 2019 16:26:51 +0800
+Message-ID: <1552465611.21996.11.camel@mtksdaap41>
+References: <1552294472-32929-1-git-send-email-erin.lo@mediatek.com>
+         <1552294472-32929-3-git-send-email-erin.lo@mediatek.com>
+         <d81e9ae0-f571-a890-75e7-be8242ad3879@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB39166061B0712B30E443DA07F5730@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Content-Language: en-US
+In-Reply-To: <d81e9ae0-f571-a890-75e7-be8242ad3879@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sn>
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org, zhiyong.tao@mediatek.com, Mengqi.Zhang@mediatek.com, Ben Ho <Ben.Ho@mediatek.com>, Seiya Wang <seiya.wang@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-UGluZy4uLg0KSGksIEVkdWFyZG8NCglDYW4geW91IHRha2UgYSBsb29rIGF0IHRoaXMgdGhyZWFk
-PyBUaGFua3MuDQoNCg0KQmVzdCBSZWdhcmRzIQ0KQW5zb24gSHVhbmcNCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbnNvbiBIdWFuZw0KPiBTZW50OiAyMDE55bm0M+ac
-iDbml6UgMTM6MjcNCj4gVG86ICdSb2IgSGVycmluZycgPHJvYmhAa2VybmVsLm9yZz47ICdlZHVi
-ZXp2YWxAZ21haWwuY29tJw0KPiA8ZWR1YmV6dmFsQGdtYWlsLmNvbT4NCj4gQ2M6ICdtYXJrLnJ1
-dGxhbmRAYXJtLmNvbScgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsNCj4gJ3NoYXduZ3VvQGtlcm5l
-bC5vcmcnIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgJ3MuaGF1ZXJAcGVuZ3V0cm9uaXguZGUnDQo+
-IDxzLmhhdWVyQHBlbmd1dHJvbml4LmRlPjsgJ2tlcm5lbEBwZW5ndXRyb25peC5kZScNCj4gPGtl
-cm5lbEBwZW5ndXRyb25peC5kZT47ICdmZXN0ZXZhbUBnbWFpbC5jb20nIDxmZXN0ZXZhbUBnbWFp
-bC5jb20+Ow0KPiAnY2F0YWxpbi5tYXJpbmFzQGFybS5jb20nIDxjYXRhbGluLm1hcmluYXNAYXJt
-LmNvbT47DQo+ICd3aWxsLmRlYWNvbkBhcm0uY29tJyA8d2lsbC5kZWFjb25AYXJtLmNvbT47ICdy
-dWkuemhhbmdAaW50ZWwuY29tJw0KPiA8cnVpLnpoYW5nQGludGVsLmNvbT47ICdlZHViZXp2YWxA
-Z21haWwuY29tJyA8ZWR1YmV6dmFsQGdtYWlsLmNvbT47DQo+ICdkYW5pZWwubGV6Y2Fub0BsaW5h
-cm8ub3JnJyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz47IEFpc2hlbmcgRG9uZw0KPiA8YWlz
-aGVuZy5kb25nQG54cC5jb20+OyAndWxmLmhhbnNzb25AbGluYXJvLm9yZycNCj4gPHVsZi5oYW5z
-c29uQGxpbmFyby5vcmc+OyAnc2JveWRAa2VybmVsLm9yZycgPHNib3lkQGtlcm5lbC5vcmc+OyBE
-YW5pZWwNCj4gQmFsdXRhIDxkYW5pZWwuYmFsdXRhQG54cC5jb20+OyBBbmR5IEdyb3NzIDxhbmR5
-Lmdyb3NzQGxpbmFyby5vcmc+Ow0KPiAnaG9ybXMrcmVuZXNhc0B2ZXJnZS5uZXQuYXUnIDxob3Jt
-cytyZW5lc2FzQHZlcmdlLm5ldC5hdT47DQo+ICdoZWlrb0BzbnRlY2guZGUnIDxoZWlrb0BzbnRl
-Y2guZGU+OyAnYXJuZEBhcm5kYi5kZScgPGFybmRAYXJuZGIuZGU+Ow0KPiAnbWF4aW1lLnJpcGFy
-ZEBib290bGluLmNvbScgPG1heGltZS5yaXBhcmRAYm9vdGxpbi5jb20+Ow0KPiAnYmpvcm4uYW5k
-ZXJzc29uQGxpbmFyby5vcmcnIDxiam9ybi5hbmRlcnNzb25AbGluYXJvLm9yZz47DQo+ICdqYWdh
-bkBhbWFydWxhc29sdXRpb25zLmNvbScgPGphZ2FuQGFtYXJ1bGFzb2x1dGlvbnMuY29tPjsNCj4g
-J2VucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb20nIDxlbnJpYy5iYWxsZXRib0Bjb2xsYWJvcmEu
-Y29tPjsNCj4gJ21hcmMudy5nb256YWxlekBmcmVlLmZyJyA8bWFyYy53LmdvbnphbGV6QGZyZWUu
-ZnI+OyAnb2xvZkBsaXhvbS5uZXQnDQo+IDxvbG9mQGxpeG9tLm5ldD47ICdkZXZpY2V0cmVlQHZn
-ZXIua2VybmVsLm9yZycNCj4gPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgJ2xpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmcnIDxsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZz47
-ICdsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcnIDxsaW51eC1hcm0tDQo+IGtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsgJ2xpbnV4LXBtQHZnZXIua2VybmVsLm9yZycgPGxp
-bnV4LQ0KPiBwbUB2Z2VyLmtlcm5lbC5vcmc+OyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAu
-Y29tPg0KPiBTdWJqZWN0OiBSRTogW1BBVENIIFYxMCAxLzRdIGR0LWJpbmRpbmdzOiBmc2w6IHNj
-dTogYWRkIHRoZXJtYWwgYmluZGluZw0KPiANCj4gUGluZy4uLg0KPiANCj4gSGksIEVkdWFyZG8N
-Cj4gCUxvb2tzIGxpa2Ugd2UgYXJlIGdvaW5nIGFyb3VuZCBpbiBjaXJjbGUsIGNhbiB3ZSBtYWtl
-IGRlY2lzaW9uIG9mDQo+IHdoaWNoIGRpcmVjdGlvbiB0byBnbz8NCj4gDQo+IEJlc3QgUmVnYXJk
-cyENCj4gQW5zb24gSHVhbmcNCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
-PiBGcm9tOiBBbnNvbiBIdWFuZw0KPiA+IFNlbnQ6IDIwMTnlubQz5pyIMeaXpSA5OjQxDQo+ID4g
-VG86ICdSb2IgSGVycmluZycgPHJvYmhAa2VybmVsLm9yZz47IGVkdWJlenZhbEBnbWFpbC5jb20N
-Cj4gPiBDYzogbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IHMu
-aGF1ZXJAcGVuZ3V0cm9uaXguZGU7DQo+ID4ga2VybmVsQHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZh
-bUBnbWFpbC5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOw0KPiA+IHdpbGwuZGVhY29uQGFy
-bS5jb207IHJ1aS56aGFuZ0BpbnRlbC5jb207IGVkdWJlenZhbEBnbWFpbC5jb207DQo+ID4gZGFu
-aWVsLmxlemNhbm9AbGluYXJvLm9yZzsgQWlzaGVuZyBEb25nIDxhaXNoZW5nLmRvbmdAbnhwLmNv
-bT47DQo+ID4gdWxmLmhhbnNzb25AbGluYXJvLm9yZzsgc2JveWRAa2VybmVsLm9yZzsgRGFuaWVs
-IEJhbHV0YQ0KPiA+IDxkYW5pZWwuYmFsdXRhQG54cC5jb20+OyBBbmR5IEdyb3NzIDxhbmR5Lmdy
-b3NzQGxpbmFyby5vcmc+Ow0KPiA+IGhvcm1zK3JlbmVzYXNAdmVyZ2UubmV0LmF1OyBoZWlrb0Bz
-bnRlY2guZGU7IGFybmRAYXJuZGIuZGU7DQo+ID4gbWF4aW1lLnJpcGFyZEBib290bGluLmNvbTsg
-Ympvcm4uYW5kZXJzc29uQGxpbmFyby5vcmc7DQo+ID4gamFnYW5AYW1hcnVsYXNvbHV0aW9ucy5j
-b207IGVucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb207DQo+ID4gbWFyYy53LmdvbnphbGV6QGZy
-ZWUuZnI7IG9sb2ZAbGl4b20ubmV0OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gPiBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmc7DQo+ID4gbGludXgtIHBtQHZnZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14IDxs
-aW51eC1pbXhAbnhwLmNvbT4NCj4gPiBTdWJqZWN0OiBSRTogW1BBVENIIFYxMCAxLzRdIGR0LWJp
-bmRpbmdzOiBmc2w6IHNjdTogYWRkIHRoZXJtYWwNCj4gPiBiaW5kaW5nDQo+ID4NCj4gPiBIaSwg
-Um9iL0VkdWFyZG8NCj4gPg0KPiA+IEJlc3QgUmVnYXJkcyENCj4gPiBBbnNvbiBIdWFuZw0KPiA+
-DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogUm9iIEhlcnJp
-bmcgW21haWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+ID4gPiBTZW50OiAyMDE55bm0MuaciDI45pel
-IDIyOjQ5DQo+ID4gPiBUbzogQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+ID4g
-PiBDYzogbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+ID4gcy5o
-YXVlckBwZW5ndXRyb25peC5kZTsNCj4gPiA+IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgZmVzdGV2
-YW1AZ21haWwuY29tOw0KPiBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsNCj4gPiA+IHdpbGwuZGVh
-Y29uQGFybS5jb207IHJ1aS56aGFuZ0BpbnRlbC5jb207IGVkdWJlenZhbEBnbWFpbC5jb207DQo+
-ID4gPiBkYW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnOyBBaXNoZW5nIERvbmcgPGFpc2hlbmcuZG9u
-Z0BueHAuY29tPjsNCj4gPiA+IHVsZi5oYW5zc29uQGxpbmFyby5vcmc7IHNib3lkQGtlcm5lbC5v
-cmc7IERhbmllbCBCYWx1dGENCj4gPiA+IDxkYW5pZWwuYmFsdXRhQG54cC5jb20+OyBBbmR5IEdy
-b3NzIDxhbmR5Lmdyb3NzQGxpbmFyby5vcmc+Ow0KPiA+ID4gaG9ybXMrcmVuZXNhc0B2ZXJnZS5u
-ZXQuYXU7IGhlaWtvQHNudGVjaC5kZTsgYXJuZEBhcm5kYi5kZTsNCj4gPiA+IG1heGltZS5yaXBh
-cmRAYm9vdGxpbi5jb207IGJqb3JuLmFuZGVyc3NvbkBsaW5hcm8ub3JnOw0KPiA+ID4gamFnYW5A
-YW1hcnVsYXNvbHV0aW9ucy5jb207IGVucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb207DQo+ID4g
-PiBtYXJjLncuZ29uemFsZXpAZnJlZS5mcjsgb2xvZkBsaXhvbS5uZXQ7IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnOw0KPiA+ID4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gbGludXgtIHBtQHZnZXIua2Vy
-bmVsLm9yZzsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gPiA+IFN1YmplY3Q6
-IFJlOiBbUEFUQ0ggVjEwIDEvNF0gZHQtYmluZGluZ3M6IGZzbDogc2N1OiBhZGQgdGhlcm1hbA0K
-PiA+ID4gYmluZGluZw0KPiA+ID4NCj4gPiA+IE9uIFdlZCwgRmViIDI3LCAyMDE5IGF0IDY6NDgg
-UE0gQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+ID4gPiB3cm90ZToNCj4gPiA+
-ID4NCj4gPiA+ID4gSGksIFJvYg0KPiA+ID4gPg0KPiA+ID4gPiBCZXN0IFJlZ2FyZHMhDQo+ID4g
-PiA+IEFuc29uIEh1YW5nDQo+ID4gPiA+DQo+ID4gPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCj4gPiA+ID4gPiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRvOnJvYmhAa2VybmVsLm9y
-Z10NCj4gPiA+ID4gPiBTZW50OiAyMDE55bm0MuaciDI45pelIDc6NTUNCj4gPiA+ID4gPiBUbzog
-QW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+ID4gPiA+ID4gQ2M6IG1hcmsucnV0
-bGFuZEBhcm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOw0KPiA+ID4gPiA+IHMuaGF1ZXJAcGVu
-Z3V0cm9uaXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsNCj4gPiBmZXN0ZXZhbUBnbWFpbC5j
-b207DQo+ID4gPiA+ID4gY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwuZGVhY29uQGFybS5j
-b207DQo+ID4gcnVpLnpoYW5nQGludGVsLmNvbTsNCj4gPiA+ID4gPiBlZHViZXp2YWxAZ21haWwu
-Y29tOyBkYW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnOyBBaXNoZW5nIERvbmcNCj4gPiA+ID4gPiA8
-YWlzaGVuZy5kb25nQG54cC5jb20+OyB1bGYuaGFuc3NvbkBsaW5hcm8ub3JnOw0KPiA+ID4gPiA+
-IHNib3lkQGtlcm5lbC5vcmc7IERhbmllbCBCYWx1dGEgPGRhbmllbC5iYWx1dGFAbnhwLmNvbT47
-IEFuZHkNCj4gPiA+ID4gPiBHcm9zcyA8YW5keS5ncm9zc0BsaW5hcm8ub3JnPjsgaG9ybXMrcmVu
-ZXNhc0B2ZXJnZS5uZXQuYXU7DQo+ID4gPiA+ID4gaGVpa29Ac250ZWNoLmRlOyBhcm5kQGFybmRi
-LmRlOyBtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29tOw0KPiA+ID4gPiA+IGJqb3JuLmFuZGVyc3Nv
-bkBsaW5hcm8ub3JnOyBqYWdhbkBhbWFydWxhc29sdXRpb25zLmNvbTsNCj4gPiA+ID4gPiBlbnJp
-Yy5iYWxsZXRib0Bjb2xsYWJvcmEuY29tOyBtYXJjLncuZ29uemFsZXpAZnJlZS5mcjsNCj4gPiA+
-ID4gPiBvbG9mQGxpeG9tLm5ldDsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiA+
-ID4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+ID4gPiBsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+ID4gPiA+ID4gbGludXgtIHBtQHZnZXIua2VybmVs
-Lm9yZzsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gPiA+ID4gPiBTdWJqZWN0
-OiBSZTogW1BBVENIIFYxMCAxLzRdIGR0LWJpbmRpbmdzOiBmc2w6IHNjdTogYWRkIHRoZXJtYWwN
-Cj4gPiA+ID4gPiBiaW5kaW5nDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBPbiBXZWQsIEZlYiAyNywg
-MjAxOSBhdCAwODo0NjoyMUFNICswMDAwLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gPiA+ID4gPiA+
-IE5YUCBpLk1YOFFYUCBpcyBhbiBBUk12OCBTb0Mgd2l0aCBhIENvcnRleC1NNCBjb3JlIGluc2lk
-ZSBhcw0KPiA+ID4gPiA+ID4gc3lzdGVtIGNvbnRyb2xsZXIsIHRoZSBzeXN0ZW0gY29udHJvbGxl
-ciBpcyBpbiBjaGFyZ2Ugb2YNCj4gPiA+ID4gPiA+IHN5c3RlbSBwb3dlciwgY2xvY2sgYW5kIHRo
-ZXJtYWwgc2Vuc29ycyBldGMuIG1hbmFnZW1lbnQsIExpbnV4DQo+ID4gPiA+ID4gPiBrZXJuZWwg
-aGFzIHRvIGNvbW11bmljYXRlIHdpdGggc3lzdGVtIGNvbnRyb2xsZXIgdmlhIE1VDQo+ID4gPiA+
-ID4gPiAobWVzc2FnZSB1bml0KSBJUEMgdG8gZ2V0IHRlbXBlcmF0dXJlIGZyb20gdGhlcm1hbCBz
-ZW5zb3JzLA0KPiA+ID4gPiA+ID4gdGhpcyBwYXRjaCBhZGRzIGJpbmRpbmcgZG9jIGZvciBpLk1Y
-IHN5c3RlbSBjb250cm9sbGVyIHRoZXJtYWwNCj4gZHJpdmVyLg0KPiA+ID4gPiA+ID4NCj4gPiA+
-ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0K
-PiA+ID4gPiA+ID4gLS0tDQo+ID4gPiA+ID4gPiBDaGFuZ2VzIHNpbmNlIFY5Og0KPiA+ID4gPiA+
-ID4gICAgIC0gY2hhbmdlICN0aGVybWFsLXNlbnNvci1jZWxscyB2YWx1ZSBpbiBleGFtcGxlIHRv
-IDEsDQo+ID4gPiA+ID4gPiBzaW5jZSB0aGVyZSBhcmUNCj4gPiA+ID4gPiBvdGhlcg0KPiA+ID4g
-PiA+ID4gICAgICAgdGhlcm1hbCBzZW5zb3JzIGluc2lkZSBzeXN0ZW0gY29udHJvbGxlciwgaXQg
-aXMganVzdA0KPiA+ID4gPiA+ID4gYmVjYXVzZSB0aGVyZSBhcmUNCj4gPiA+ID4gPiBzdGlsbA0K
-PiA+ID4gPiA+ID4gICAgICAgc29tZSBpc3N1ZSwgc28gc3lzdGVtIGNvbnRyb2xsZXIgZG9lcyBO
-T1QgZXhwb3NlIHRoZW0NCj4gPiA+ID4gPiA+IGZvciBub3csDQo+ID4gPiA+ID4gdGhleSBjb3Vs
-ZA0KPiA+ID4gPiA+ID4gICAgICAgYmUgZXhwb3NlZCBsYXRlciwgc28gaXQgc2hvdWxkIGJlIDEg
-ZnJvbSBIVyBwZXJzcGVjdGl2ZS4NCj4gPiA+ID4gPiA+IC0tLQ0KPiA+ID4gPiA+ID4gIC4uLi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQgICB8IDIxDQo+ID4g
-PiA+ID4gKysrKysrKysrKysrKysrKysrKysrDQo+ID4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQs
-IDIxIGluc2VydGlvbnMoKykNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0DQo+
-ID4gPiA+ID4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNj
-YWxlL2ZzbCxzY3UudHh0DQo+ID4gPiA+ID4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0DQo+ID4gPiA+ID4gPiBpbmRleCA3MmQ0
-ODFjLi44NTUyNzBiIDEwMDY0NA0KPiA+ID4gPiA+ID4gLS0tDQo+ID4gPiA+ID4gPiBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0DQo+
-ID4gPiA+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2Zy
-ZWVzY2FsZS9mc2wsc2N1Lg0KPiA+ID4gPiA+ID4gKysrIHR4DQo+ID4gPiA+ID4gPiArKysgdA0K
-PiA+ID4gPiA+ID4gQEAgLTEyMiw2ICsxMjIsMjEgQEAgUlRDIGJpbmRpbmdzIGJhc2VkIG9uIFND
-VSBNZXNzYWdlDQo+ID4gUHJvdG9jb2wNCj4gPiA+ID4gPiA+IFJlcXVpcmVkIHByb3BlcnRpZXM6
-DQo+ID4gPiA+ID4gPiAgLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgImZzbCxpbXg4cXhwLXNjLXJ0
-YyI7DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gK1RoZXJtYWwgYmluZGluZ3MgYmFzZWQgb24g
-U0NVIE1lc3NhZ2UgUHJvdG9jb2wNCj4gPiA+ID4gPiA+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiA+ID4gPiA+ICsNCj4g
-PiA+ID4gPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ID4gPiA+ID4gKy0gY29tcGF0aWJs
-ZTogICAgICAgICAgICAgICAgICAgICAgU2hvdWxkIGJlIDoNCj4gPiA+ID4gPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICJmc2wsaW14OHF4cC1zYy10aGVybWFsIg0KPiA+ID4gPiA+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgIGZvbGxvd2VkIGJ5ICJmc2wsaW14LXNjLXRo
-ZXJtYWwiOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKy0gI3RoZXJtYWwtc2Vuc29yLWNl
-bGxzOiAgIFNlZQ0KPiA+ID4gPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90
-aGVybWFsL3RoZXJtYWwudHh0DQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgZm9yIGEgZGVzY3JpcHRpb24uDQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArLSBpbXgs
-c2Vuc29yLXJlc291cmNlLWlkOiAgQSBzaW5nbGUgaW50ZWdlciBmb3Igc2luZ2xlDQo+ID4gPiA+
-ID4gPiArdGhlcm1hbCB6b25lJ3MNCj4gPiA+ID4gPiByZXNvdXJjZSBJRCBvcg0KPiA+ID4gPiA+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgIGFuIGFycmF5IG9mIGludGVnZXJzIHRvIHNw
-ZWNpZnkNCj4gPiA+ID4gPiA+ICsgZWFjaCB0aGVybWFsDQo+ID4gPiA+ID4gem9uZSdzIHNlbnNv
-cg0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlc291cmNlIElELg0K
-PiA+ID4gPiA+DQo+ID4gPiA+ID4gQ2FuJ3QgeW91IHB1dCB0aGUgcmVzb3VyY2UgaWRzIGluIHRo
-ZSB0aGVybWFsLXNlbnNvciBjZWxscz8gV2h5DQo+ID4gPiA+ID4gZG8geW91IG5lZWQgdG8gbGlz
-dCB0aGVtIGhlcmU/DQo+ID4gPiA+DQo+ID4gPiA+IEZvciB0aGUgdGhlcm1hbC1zZW5zb3IgY2Vs
-bHMsIGlmIHlvdSBtZWFudCB0aGUgYXJndW1lbnQgb2YgdHNlbnMNCj4gPiA+ID4gcGhhbmRsZSwg
-dGhlbiB0aGUgcmVhc29uIGlzIHRoYXQgYXJndW1lbnQgaXMgZm9yIHNlbnNvciBpbmRleA0KPiA+
-ID4gPiBzdGFydGluZyBmcm9tIDAsIHByZXZpb3VzIEkgdXNlIGl0IGZvciBvdXIgcmVzb3VyY2Ug
-SUQsIGJ1dCBpdA0KPiA+ID4gPiBsb29rcyBjb25mdXNlZCwgc2luY2UgdXNlciB3aWxsIHRoaW5r
-IHRoZXJlIGFyZSBtYW55IHNlbnNvcnMgdGhlcmUNCj4gPiA+ID4gcGVyDQo+ID4gRWR1YXJkbydz
-IGNvbW1lbnQuDQo+ID4gPiA+DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHRoZXJt
-YWwtc2Vuc29ycyA9IDwmdHNlbnMgMD47DQo+ID4gPiA+DQo+ID4gPiA+IElmIHlvdSBtZWFudCBw
-dXR0aW5nIGl0IGluIGVhY2ggdGhlcm1hbCBzZW5zb3Igbm9kZSBpbnN0ZWFkIG9mICJ0c2VucyIN
-Cj4gPiA+ID4gbm9kZSwgdGhlbiBpbiBwcmV2aW91cyBwYXRjaCBzZXJpZXMsIEkgcHV0IHRoaXMg
-Ig0KPiA+ID4gPiBpbXgsc2Vuc29yLXJlc291cmNlLWlkICIgcHJvcGVydHkgaW4gZWFjaCB0aGVy
-bWFsIHNlbnNvciBub2RlLCBidXQNCj4gPiA+ID4gdGhlIHRoZXJtYWwgc2Vuc29yIG5vZGVzIGFy
-ZSBwYXJzZWQgYnkgY29tbW9uIHRoZXJtYWwgZnJhbWV3b3JrLA0KPiA+ID4gPiB0aGVybWFsIGRy
-aXZlciB3aWxsIG5lZWQgdG8gZmluZCB0aGUgdGhlcm1hbCB6b25lIG5vZGUgYW5kIGdvDQo+ID4g
-PiA+IHRocm91Z2ggZXZlcnkgY2hpbGQgbm9kZSB0byBnZXQgdGhlIHJlc291cmNlIGlkIGFnYWlu
-LCBzbyBFZHVhcmRvDQo+ID4gPiA+IHN1Z2dlc3RlZCB0byBwdXQgaXQgaW4NCj4gPiA+IG91ciBw
-bGF0Zm9ybSB0c2VucyBub2RlLCB0aGF0IG1ha2VzIG91ciB0aGVybWFsIGRyaXZlciBjb2RlIG11
-Y2gNCj4gPiA+IG1vcmUgc2ltcGxlLg0KPiA+ID4NCj4gPiA+IFRoZSBwaGFuZGxlIGFyZ3MgYXJl
-IG1lYW50IHRvIGJlIGFuIGlkIHR5cGljYWxseS4gVGhlcmUncyBhYnNvbHV0ZWx5DQo+ID4gPiBu
-byByZXF1aXJlbWVudCB0aGV5IGFyZSAwLU4gYmFzZWQuIFRoZXkgb2Z0ZW4gYXJlIGJlY2F1c2Ug
-dGhpbmdzDQo+ID4gPiBsaWtlIGludGVycnVwdHMgYXJlIDAtTiBvciBjbG9ja3MgaGF2ZSBubyBo
-L3cgaWQuIElmIHlvdSBhbHJlYWR5IGhhdmUgYW4gaWQsDQo+IHVzZSBpdC4NCj4gPiA+IERvbid0
-IGludmVudCB5b3VyIG93bi4NCj4gPg0KPiA+IEF0IHRoZSBiZWdpbm5pbmcsIEkgcHV0IHRoZSBI
-VyByZXNvdXJjZSBJRCBpbiB0aGUgInRzZW5zIiBwaGFuZGxlDQo+ID4gYXJndW1lbnQgb2YgInRo
-ZXJtYWwtc2Vuc29ycyIgbm9kZSwgc2VlICBiZWxvdyBwYXRjaCBJIHNlbnQgYmVmb3JlLA0KPiA+
-IHRoZSBiZW5lZml0IGlzIEkgZG8gTk9UIG5lZWQgdG8gYWRkIG5ldyBwcm9wZXJ0eSBmb3IgcGFz
-c2luZyBIVw0KPiA+IHJlc291cmNlIElEIHRvIGRyaXZlciwgdGhlIGRpc2FkdmFudGFnZSBpcywg
-SSBoYXZlIHRvIHBhcnNlIHRoZQ0KPiA+IHRoZXJtYWxfem9uZXMnIGVhY2ggY2hpbGQgbm9kZSBh
-bmQgZ2V0IHRoZSBIVyByZXNvdXJjZSBJRCBmcm9tIHBoYW5kbGUNCj4gPiBhcmd1bWVudChzZWFy
-aW5nIHRoZXJtYWxfem9uZXMgbm9kZSBhbmQgZ28gdGhyb3VnaCBhbGwgaXRzIGNoaWxkIG5vZGUs
-DQo+ID4gYW5kIGdldCB0aGUgcGhhbmRsZSBhcmd1bWVudCksIHRoZXkgYXJlIGJ5IGRlZmF1bHQg
-T05MWSBwYXJzZWQgYnkNCj4gPiB0aGVybWFsIGNvcmUgZHJpdmVyLiBXaGVuIHdlIHJlZ2lzdGVy
-IHRoZXJtYWwgem9uZSwgd2UgaGF2ZSB0byBwYXNzDQo+ID4gdGhlIEhXIHJlc291cmNlIElEIHdo
-ZW4gY2FsbGluZw0KPiA+IGRldm1fdGhlcm1hbF96b25lX29mX3NlbnNvcl9yZWdpc3RlcigpLCBp
-ZiB3ZSBhZGQgb3VyIG93biBwcm9wZXJ0eSB0bw0KPiA+IHBhc3MgdGhlIEhXIHJlc291cmNlIElE
-LCB0aGVuIG5vIG5lZWQgdG8gZG8gc28sIHdlIGp1c3QgcGFzcyB0aGUgaW5kZXgNCj4gPiAwLU4g
-Zm9yIGVhY2ggdGhlcm1hbCBzZW5zb3JzIGluIGRldmljZXRyZWUgd2hpY2ggYWxzbyB3aXRoIHBo
-YW5kbGUNCj4gYXJndW1lbnQgMC0gTi4gU28gdXNpbmcgb3VyIG93biBwcm9wZXJ0eSBtYWtlcyB0
-aGUgZHJpdmVyIG11Y2ggbW9yZQ0KPiBzaW1wbGUuDQo+ID4NCj4gPiBTbywgQEVkdWFyZG8sIHdo
-aWNoIGRpcmVjdGlvbiBJIHNob3VsZCBnbz8gTG9va3MgbGlrZSBSb2Igc3VnZ2VzdHMNCj4gPiBq
-dXN0IHB1dCB0aGUgSFcgcmVzb3VyY2UgSUQgaW4gdGhlIHBoYW5kbGUgYXJndW1lbnQgbGlrZSB3
-aGF0IEkgZGlkIGF0DQo+ID4gdGhlIGJlZ2lubmluZywgY2FuIHlvdSBhZHZpc2U/DQo+ID4NCj4g
-PiBUaGFua3MsDQo+ID4gQW5zb24uDQo+ID4NCj4gPiBodHRwczovL3BhdGNod29yay5rZXJuZWwu
-b3JnL3BhdGNoLzEwNzAzODQ5Lw0KPiA+ID4gKwl0aGVybWFsX3pvbmVzOiB0aGVybWFsLXpvbmVz
-IHsNCj4gPiA+ICsJCWNwdS10aGVybWFsMCB7DQo+ID4gPiArCQkJcG9sbGluZy1kZWxheS1wYXNz
-aXZlID0gPDI1MD47DQo+ID4gPiArCQkJcG9sbGluZy1kZWxheSA9IDwyMDAwPjsNCj4gPiA+ICsJ
-CQl0aGVybWFsLXNlbnNvcnMgPSA8JnRzZW5zIDM1NT47DQo+ID4gPiArCQkJdHJpcHMgew0KPiA+
-ID4gKwkJCQljcHVfYWxlcnQwOiB0cmlwMCB7DQo+ID4gPiArCQkJCQl0ZW1wZXJhdHVyZSA9IDwx
-MDcwMDA+Ow0KPiA+ID4gKwkJCQkJaHlzdGVyZXNpcyA9IDwyMDAwPjsNCj4gPiA+ICsJCQkJCXR5
-cGUgPSAicGFzc2l2ZSI7DQo+ID4gPiArCQkJCX07DQo+ID4NCj4gPiA+DQo+ID4gPiBSb2INCg==
+On Tue, 2019-03-12 at 13:22 +0100, Matthias Brugger wrote:
+> 
+> On 11/03/2019 09:54, Erin Lo wrote:
+> > From: Ben Ho <Ben.Ho@mediatek.com>
+> > 
+> > Add basic chip support for Mediatek 8183, include
+> > uart node with correct uart clocks, pwrap device
+> > 
+> > Add clock controller nodes, include topckgen, infracfg,
+> > apmixedsys and subsystem.
+> > 
+> > Signed-off-by: Ben Ho <Ben.Ho@mediatek.com>
+> > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> > Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
+> > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> > Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> > Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
+> > ---
+> >  arch/arm64/boot/dts/mediatek/Makefile       |   1 +
+> >  arch/arm64/boot/dts/mediatek/mt8183-evb.dts |  31 +++
+> >  arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 335 ++++++++++++++++++++++++++++
+> >  3 files changed, 367 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > 
+> > diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> > index e8f952f..458bbc4 100644
+> > --- a/arch/arm64/boot/dts/mediatek/Makefile
+> > +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> > @@ -7,3 +7,4 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
+> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
+> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+> > +dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-evb.dtb
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> > new file mode 100644
+> > index 0000000..9b52559
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> > @@ -0,0 +1,31 @@
+> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> > +/*
+> > + * Copyright (c) 2018 MediaTek Inc.
+> > + * Author: Ben Ho <ben.ho@mediatek.com>
+> > + *	   Erin Lo <erin.lo@mediatek.com>
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "mt8183.dtsi"
+> > +
+> > +/ {
+> > +	model = "MediaTek MT8183 evaluation board";
+> > +	compatible = "mediatek,mt8183-evb", "mediatek,mt8183";
+> > +
+> > +	aliases {
+> > +		serial0 = &uart0;
+> > +	};
+> > +
+> > +	memory@40000000 {
+> > +		device_type = "memory";
+> > +		reg = <0 0x40000000 0 0x80000000>;
+> > +	};
+> > +
+> > +	chosen {
+> > +		stdout-path = "serial0:921600n8";
+> > +	};
+> > +};
+> > +
+> > +&uart0 {
+> > +	status = "okay";
+> > +};
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > new file mode 100644
+> > index 0000000..64f8bd6
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > @@ -0,0 +1,335 @@
+> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> > +/*
+> > + * Copyright (c) 2018 MediaTek Inc.
+> > + * Author: Ben Ho <ben.ho@mediatek.com>
+> > + *	   Erin Lo <erin.lo@mediatek.com>
+> > + */
+> > +
+> > +#include <dt-bindings/clock/mt8183-clk.h>
+> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +
+> > +/ {
+> > +	compatible = "mediatek,mt8183";
+> > +	interrupt-parent = <&sysirq>;
+> > +	#address-cells = <2>;
+> > +	#size-cells = <2>;
+> > +
+> > +	cpus {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		cpu-map {
+> > +			cluster0 {
+> > +				core0 {
+> > +					cpu = <&cpu0>;
+> > +				};
+> > +				core1 {
+> > +					cpu = <&cpu1>;
+> > +				};
+> > +				core2 {
+> > +					cpu = <&cpu2>;
+> > +				};
+> > +				core3 {
+> > +					cpu = <&cpu3>;
+> > +				};
+> > +			};
+> > +
+> > +			cluster1 {
+> > +				core0 {
+> > +					cpu = <&cpu4>;
+> > +				};
+> > +				core1 {
+> > +					cpu = <&cpu5>;
+> > +				};
+> > +				core2 {
+> > +					cpu = <&cpu6>;
+> > +				};
+> > +				core3 {
+> > +					cpu = <&cpu7>;
+> > +				};
+> > +			};
+> > +		};
+> > +
+> > +		cpu0: cpu@0 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a53";
+> > +			reg = <0x000>;
+> > +			enable-method = "psci";
+> > +		};
+> > +
+> > +		cpu1: cpu@1 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a53";
+> > +			reg = <0x001>;
+> > +			enable-method = "psci";
+> > +		};
+> > +
+> > +		cpu2: cpu@2 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a53";
+> > +			reg = <0x002>;
+> > +			enable-method = "psci";
+> > +		};
+> > +
+> > +		cpu3: cpu@3 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a53";
+> > +			reg = <0x003>;
+> > +			enable-method = "psci";
+> > +		};
+> > +
+> > +		cpu4: cpu@100 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a73";
+> > +			reg = <0x100>;
+> > +			enable-method = "psci";
+> > +		};
+> > +
+> > +		cpu5: cpu@101 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a73";
+> > +			reg = <0x101>;
+> > +			enable-method = "psci";
+> > +		};
+> > +
+> > +		cpu6: cpu@102 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a73";
+> > +			reg = <0x102>;
+> > +			enable-method = "psci";
+> > +		};
+> > +
+> > +		cpu7: cpu@103 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a73";
+> > +			reg = <0x103>;
+> > +			enable-method = "psci";
+> > +		};
+> > +	};
+> > +
+> > +	pmu-a53 {
+> > +		compatible = "arm,cortex-a53-pmu";
+> > +		interrupt-parent = <&gic>;
+> > +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &ppi_cluster0>;
+> > +	};
+> > +
+> > +	pmu-a73 {
+> > +		compatible = "arm,cortex-a73-pmu";
+> > +		interrupt-parent = <&gic>;
+> > +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &ppi_cluster1>;
+> > +	};
+> > +
+> > +	psci {
+> > +		compatible      = "arm,psci-1.0";
+> > +		method          = "smc";
+> > +	};
+> > +
+> > +	clk26m: oscillator {
+> > +		compatible = "fixed-clock";
+> > +		#clock-cells = <0>;
+> > +		clock-frequency = <26000000>;
+> > +		clock-output-names = "clk26m";
+> > +	};
+> > +
+> > +	timer {
+> > +		compatible = "arm,armv8-timer";
+> > +		interrupt-parent = <&gic>;
+> > +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW 0>,
+> > +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW 0>,
+> > +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW 0>,
+> > +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW 0>;
+> > +	};
+> > +
+> > +	soc {
+> > +		#address-cells = <2>;
+> > +		#size-cells = <2>;
+> > +		compatible = "simple-bus";
+> > +		ranges;
+> > +
+> > +		gic: interrupt-controller@c000000 {
+> > +			compatible = "arm,gic-v3";
+> > +			#interrupt-cells = <4>;
+> > +			interrupt-parent = <&gic>;
+> > +			interrupt-controller;
+> > +			reg = <0 0x0c000000 0 0x40000>,  /* GICD */
+> > +			      <0 0x0c100000 0 0x200000>, /* GICR */
+> > +			      <0 0x0c400000 0 0x2000>,   /* GICC */
+> > +			      <0 0x0c410000 0 0x1000>,   /* GICH */
+> > +			      <0 0x0c420000 0 0x2000>;   /* GICV */
+> > +
+> > +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH 0>;
+> > +			ppi-partitions {
+> > +				ppi_cluster0: interrupt-partition-0 {
+> > +					affinity = <&cpu0 &cpu1 &cpu2 &cpu3>;
+> > +				};
+> > +				ppi_cluster1: interrupt-partition-1 {
+> > +					affinity = <&cpu4 &cpu5 &cpu6 &cpu7>;
+> > +				};
+> > +			};
+> > +		};
+> > +
+> > +		mcucfg: syscon@c530000 {
+> > +			compatible = "mediatek,mt8183-mcucfg", "syscon";
+> 
+> Binding is not documented. I found some other bindings not documented as well.
+> Please update the binding documentation to add this compatible, otherwise I
+> won't be able to take this patch.
+> 
+> Regards,
+> Matthias
+> 
+
+The binding is
+http://lists.infradead.org/pipermail/linux-mediatek/2018-December/016249.html
+which is included in below series as cover letter mentioned.
+http://lists.infradead.org/pipermail/linux-mediatek/2018-December/016243.html
+
+Do you have any idea about how we arrange it in next version?
+
+
+> > +			reg = <0 0x0c530000 0 0x1000>;
+> > +			#clock-cells = <1>;
+> > +		};
+> > +
+> > +		sysirq: interrupt-controller@c530a80 {
+> > +			compatible = "mediatek,mt8183-sysirq",
+> > +				     "mediatek,mt6577-sysirq";
+> > +			interrupt-controller;
+> > +			#interrupt-cells = <3>;
+> > +			interrupt-parent = <&gic>;
+> > +			reg = <0 0x0c530a80 0 0x50>;
+> > +		};
+> > +
+> > +		topckgen: syscon@10000000 {
+> > +			compatible = "mediatek,mt8183-topckgen", "syscon";
+> > +			reg = <0 0x10000000 0 0x1000>;
+> > +			#clock-cells = <1>;
+> > +		};
+> > +
+> > +		infracfg: syscon@10001000 {
+> > +			compatible = "mediatek,mt8183-infracfg", "syscon";
+> > +			reg = <0 0x10001000 0 0x1000>;
+> > +			#clock-cells = <1>;
+> > +		};
+> > +
+> > +		pio: pinctrl@10005000 {
+> > +			compatible = "mediatek,mt8183-pinctrl";
+> > +			reg = <0 0x10005000 0 0x1000>,
+> > +			      <0 0x11f20000 0 0x1000>,
+> > +			      <0 0x11e80000 0 0x1000>,
+> > +			      <0 0x11e70000 0 0x1000>,
+> > +			      <0 0x11e90000 0 0x1000>,
+> > +			      <0 0x11d30000 0 0x1000>,
+> > +			      <0 0x11d20000 0 0x1000>,
+> > +			      <0 0x11c50000 0 0x1000>,
+> > +			      <0 0x11f30000 0 0x1000>,
+> > +			      <0 0x1000b000 0 0x1000>;
+> > +			reg-names = "iocfg0", "iocfg1", "iocfg2",
+> > +				    "iocfg3", "iocfg4", "iocfg5",
+> > +				    "iocfg6", "iocfg7", "iocfg8",
+> > +				    "eint";
+> > +			gpio-controller;
+> > +			#gpio-cells = <2>;
+> > +			gpio-ranges = <&pio 0 0 192>;
+> > +			interrupt-controller;
+> > +			interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
+> > +			#interrupt-cells = <3>;
+> > +		};
+
+I will remove it in next version since the binding is not ready.
+
+Best Regards,
+Erin.
+
+> > +
+> > +		apmixedsys: syscon@1000c000 {
+> > +			compatible = "mediatek,mt8183-apmixedsys", "syscon";
+> > +			reg = <0 0x1000c000 0 0x1000>;
+> > +			#clock-cells = <1>;
+> > +		};
+> > +
+> > +		pwrap: pwrap@1000d000 {
+> > +			compatible = "mediatek,mt8183-pwrap";
+> > +			reg = <0 0x1000d000 0 0x1000>;
+> > +			reg-names = "pwrap";
+> > +			interrupts = <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&topckgen CLK_TOP_MUX_PMICSPI>,
+> > +				 <&infracfg CLK_INFRA_PMIC_AP>;
+> > +			clock-names = "spi", "wrap";
+> > +		};
+> > +
+> > +		uart0: serial@11002000 {
+> > +			compatible = "mediatek,mt8183-uart",
+> > +				     "mediatek,mt6577-uart";
+> > +			reg = <0 0x11002000 0 0x1000>;
+> > +			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
+> > +			clocks = <&clk26m>, <&infracfg CLK_INFRA_UART0>;
+> > +			clock-names = "baud", "bus";
+> > +			status = "disabled";
+> > +		};
+> > +
+> > +		uart1: serial@11003000 {
+> > +			compatible = "mediatek,mt8183-uart",
+> > +				     "mediatek,mt6577-uart";
+> > +			reg = <0 0x11003000 0 0x1000>;
+> > +			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
+> > +			clocks = <&clk26m>, <&infracfg CLK_INFRA_UART1>;
+> > +			clock-names = "baud", "bus";
+> > +			status = "disabled";
+> > +		};
+> > +
+> > +		uart2: serial@11004000 {
+> > +			compatible = "mediatek,mt8183-uart",
+> > +				     "mediatek,mt6577-uart";
+> > +			reg = <0 0x11004000 0 0x1000>;
+> > +			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
+> > +			clocks = <&clk26m>, <&infracfg CLK_INFRA_UART2>;
+> > +			clock-names = "baud", "bus";
+> > +			status = "disabled";
+> > +		};
+> > +
+> > +		audiosys: syscon@11220000 {
+> > +			compatible = "mediatek,mt8183-audiosys", "syscon";
+> > +			reg = <0 0x11220000 0 0x1000>;
+> > +			#clock-cells = <1>;
+> > +		};
+> > +
+> > +		mfgcfg: syscon@13000000 {
+> > +			compatible = "mediatek,mt8183-mfgcfg", "syscon";
+> > +			reg = <0 0x13000000 0 0x1000>;
+> > +			#clock-cells = <1>;
+> > +		};
+> > +
+> > +		mmsys: syscon@14000000 {
+> > +			compatible = "mediatek,mt8183-mmsys", "syscon";
+> > +			reg = <0 0x14000000 0 0x1000>;
+> > +			#clock-cells = <1>;
+> > +		};
+> > +
+> > +		imgsys: syscon@15020000 {
+> > +			compatible = "mediatek,mt8183-imgsys", "syscon";
+> > +			reg = <0 0x15020000 0 0x1000>;
+> > +			#clock-cells = <1>;
+> > +		};
+> > +
+> > +		vdecsys: syscon@16000000 {
+> > +			compatible = "mediatek,mt8183-vdecsys", "syscon";
+> > +			reg = <0 0x16000000 0 0x1000>;
+> > +			#clock-cells = <1>;
+> > +		};
+> > +
+> > +		vencsys: syscon@17000000 {
+> > +			compatible = "mediatek,mt8183-vencsys", "syscon";
+> > +			reg = <0 0x17000000 0 0x1000>;
+> > +			#clock-cells = <1>;
+> > +		};
+> > +
+> > +		ipu_conn: syscon@19000000 {
+> > +			compatible = "mediatek,mt8183-ipu_conn", "syscon";
+> > +			reg = <0 0x19000000 0 0x1000>;
+> > +			#clock-cells = <1>;
+> > +		};
+> > +
+> > +		ipu_adl: syscon@19010000 {
+> > +			compatible = "mediatek,mt8183-ipu_adl", "syscon";
+> > +			reg = <0 0x19010000 0 0x1000>;
+> > +			#clock-cells = <1>;
+> > +		};
+> > +
+> > +		ipu_core0: syscon@19180000 {
+> > +			compatible = "mediatek,mt8183-ipu_core0", "syscon";
+> > +			reg = <0 0x19180000 0 0x1000>;
+> > +			#clock-cells = <1>;
+> > +		};
+> > +
+> > +		ipu_core1: syscon@19280000 {
+> > +			compatible = "mediatek,mt8183-ipu_core1", "syscon";
+> > +			reg = <0 0x19280000 0 0x1000>;
+> > +			#clock-cells = <1>;
+> > +		};
+> > +
+> > +		camsys: syscon@1a000000 {
+> > +			compatible = "mediatek,mt8183-camsys", "syscon";
+> > +			reg = <0 0x1a000000 0 0x1000>;
+> > +			#clock-cells = <1>;
+> > +		};
+> > +	};
+> > +};
+> > 
