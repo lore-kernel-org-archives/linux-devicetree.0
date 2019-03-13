@@ -1,7 +1,7 @@
 From: Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH 5/6] ARM: dts: stm32: Add hwlock for irqchip on stm32mp157
-Date: Wed, 13 Mar 2019 16:50:36 +0100
-Message-ID: <1552492237-28810-6-git-send-email-fabien.dessenne@st.com>
+Subject: [PATCH 6/6] ARM: dts: stm32: hwlocks for GPIO for stm32mp157
+Date: Wed, 13 Mar 2019 16:50:37 +0100
+Message-ID: <1552492237-28810-7-git-send-email-fabien.dessenne@st.com>
 References: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,25 +12,32 @@ To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.or
 Cc: Fabien Dessenne <fabien.dessenne@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Define a hwspinlock to be used by the irq controller driver and the
-syscon driver.
+Declare a shared hwlock to be used by all gpio / pin controllers.
 
 Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 18baaea..0795124 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -922,6 +922,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
- 			reg = <0x5000d000 0x400>;
-+			hwlocks = <&hsem 1 1>;
- 		};
+diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+index 6b3a9c6..9fd562a 100644
+--- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+@@ -14,6 +14,7 @@
+ 			ranges = <0 0x50002000 0xa400>;
+ 			interrupt-parent = <&exti>;
+ 			st,syscfg = <&exti 0x60 0xff>;
++			hwlocks = <&hsem 0 1>;
+ 			pins-are-numbered;
  
- 		syscfg: syscon@50020000 {
+ 			gpioa: gpio@50002000 {
+@@ -424,6 +425,7 @@
+ 			pins-are-numbered;
+ 			interrupt-parent = <&exti>;
+ 			st,syscfg = <&exti 0x60 0xff>;
++			hwlocks = <&hsem 0 1>;
+ 
+ 			gpioz: gpio@54004000 {
+ 				gpio-controller;
 -- 
 2.7.4
