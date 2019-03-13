@@ -1,40 +1,63 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: [PATCH V3 05/10] arm64: tegra: fix default tap and trim values
-Date: Wed, 13 Mar 2019 14:45:47 -0700
-Message-ID: <1552513552-23423-5-git-send-email-skomatineni@nvidia.com>
-References: <1552513552-23423-1-git-send-email-skomatineni@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v5 01/12] dt-bindings: mtd: ingenic: Add compatible strings for JZ4740 and JZ4725B
+Date: Wed, 13 Mar 2019 23:22:48 +0100
+Message-ID: <20190313222259.28704-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552513552-23423-1-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, riteshh@codeaurora.org
-Cc: skomatineni@nvidia.com, thierry.reding@gmail.com, jonathanh@nvidia.com, anrao@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
+To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>
+Cc: od@zcrc.me, Mathieu Malaterre <malat@debian.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Default tap and trim values are incorrect for Tegra186 SDMMC4.
-This patch fixes it.
+Add compatible strings to probe the jz4780-nand and jz4780-bch drivers
+from devicetree on the JZ4725B and JZ4740 SoCs from Ingenic.
 
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/boot/dts/nvidia/tegra186.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-index 97aeb946ed5e..472f55fe9488 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-@@ -317,8 +317,8 @@
- 		nvidia,pad-autocal-pull-down-offset-1v8-timeout = <0x0a>;
- 		nvidia,pad-autocal-pull-up-offset-3v3-timeout = <0x0a>;
- 		nvidia,pad-autocal-pull-down-offset-3v3-timeout = <0x0a>;
--		nvidia,default-tap = <0x5>;
--		nvidia,default-trim = <0x9>;
-+		nvidia,default-tap = <0x9>;
-+		nvidia,default-trim = <0x5>;
- 		nvidia,dqs-trim = <63>;
- 		mmc-hs400-1_8v;
- 		status = "disabled";
+Notes:
+    v2: - Change 'ingenic,jz4725b-nand' compatible string to
+          'ingenic,jz4740-nand' to reflect driver change
+        - Add 'ingenic,jz4740-bch' compatible string
+        - Document 'ingenic,oob-layout' property
+    
+    v3: - Removed 'ingenic,oob-layout' property
+        - Update compatible strings to what the driver supports
+    
+    v4: No change
+    
+    v5: No change
+
+ Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+index 29ea5853ca91..a5b940f18bf6 100644
+--- a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+@@ -6,7 +6,10 @@ memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
+ be children of the NEMC node.
+ 
+ Required NAND controller device properties:
+-- compatible: Should be set to "ingenic,jz4780-nand".
++- compatible: Should be one of:
++  * ingenic,jz4740-nand
++  * ingenic,jz4725b-nand
++  * ingenic,jz4780-nand
+ - reg: For each bank with a NAND chip attached, should specify a bank number,
+   an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
+ 
+@@ -72,7 +75,10 @@ NAND devices. The following is a description of the device properties for a
+ BCH controller.
+ 
+ Required BCH properties:
+-- compatible: Should be set to "ingenic,jz4780-bch".
++- compatible: Should be one of:
++  * ingenic,jz4740-ecc
++  * ingenic,jz4725b-bch
++  * ingenic,jz4780-bch
+ - reg: Should specify the BCH controller registers location and length.
+ - clocks: Clock for the BCH controller.
+ 
 -- 
-2.7.4
+2.11.0
