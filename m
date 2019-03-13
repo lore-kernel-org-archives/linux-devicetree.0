@@ -1,12 +1,12 @@
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 Subject: [RESEND PATCH v1, 14/18] drm/mediatek: add connect function for ovl
-Date: Wed, 13 Mar 2019 20:00:53 +0800
-Message-ID: <1552478457-9615-15-git-send-email-yongqiang.niu@mediatek.com>
-References: <1552478457-9615-1-git-send-email-yongqiang.niu@mediatek.com>
+Date: Wed, 13 Mar 2019 17:12:13 +0800
+Message-ID: <1552468337-7748-15-git-send-email-yongqiang.niu@mediatek.com>
+References: <1552468337-7748-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1290990119=="
+Content-Type: multipart/mixed; boundary="===============1778964773=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1552478457-9615-1-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <1552468337-7748-1-git-send-email-yongqiang.niu@mediatek.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -16,20 +16,21 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: ck.hu@mediatek.com, p.zabel@pengutronix.de, robh+dt@kernel.org, matthias.bgg@gmail.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Yongqiang Niu <yongqiang.niu@mediatek.com>, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob
+ Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yongqiang Niu <yongqiang.niu@mediatek.com>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============1290990119==
+--===============1778964773==
 Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_004_1587152172.982757629"
+	boundary="__=_Part_Boundary_001_836095446.2286306"
 
---__=_Part_Boundary_004_1587152172.982757629
+--__=_Part_Boundary_001_836095446.2286306
 Content-Transfer-Encoding: base64
 Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_005_1982760490.2024284384"
+	boundary="__=_Part_Boundary_002_762826718.224581848"
 
---__=_Part_Boundary_005_1982760490.2024284384
+--__=_Part_Boundary_002_762826718.224581848
 Content-Type: text/html
 Content-Transfer-Encoding: base64
 
@@ -82,7 +83,7 @@ bWFpbCAoaW5jbHVkaW5nIGFueSBhdHRhY2htZW50cykgZnJvbSB5b3VyIHN5c3RlbSwgYW5kIGRv
 IG5vdA0KZGlzY2xvc2UgdGhlIGNvbnRlbnQgb2YgdGhpcyBlLW1haWwgdG8gYW55IG90aGVyIHBl
 cnNvbi4gVGhhbmsNCiB5b3UhPC9wcmU+PCEtLX0tLT4=
 
---__=_Part_Boundary_005_1982760490.2024284384
+--__=_Part_Boundary_002_762826718.224581848
 Content-Type: text/plain
 Content-Transfer-Encoding: base64
 
@@ -119,12 +120,12 @@ ZWN0ID0gbXRrX292bF9jb25uZWN0LA0KIH07DQogDQogc3RhdGljIGludCBtdGtfZGlzcF9vdmxf
 YmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwNCi0tIA0KMS44
 LjEuMS5kaXJ0eQ0K
 
---__=_Part_Boundary_005_1982760490.2024284384--
+--__=_Part_Boundary_002_762826718.224581848--
 
---__=_Part_Boundary_004_1587152172.982757629--
+--__=_Part_Boundary_001_836095446.2286306--
 
 
---===============1290990119==
+--===============1778964773==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -134,4 +135,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
 IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
 
---===============1290990119==--
+--===============1778964773==--
