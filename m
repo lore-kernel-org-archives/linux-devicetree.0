@@ -1,455 +1,233 @@
-From: Erin Lo <erin.lo@mediatek.com>
-Subject: Re: [PATCH v8 2/2] arm64: dts: Add Mediatek SoC MT8183 and
- evaluation board dts and Makefile
-Date: Wed, 13 Mar 2019 16:26:51 +0800
-Message-ID: <1552465611.21996.11.camel@mtksdaap41>
-References: <1552294472-32929-1-git-send-email-erin.lo@mediatek.com>
-         <1552294472-32929-3-git-send-email-erin.lo@mediatek.com>
-         <d81e9ae0-f571-a890-75e7-be8242ad3879@gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 2/5] pwm: Add i.MX TPM PWM driver support
+Date: Wed, 13 Mar 2019 09:32:26 +0100
+Message-ID: <20190313083226.qgnldzd6pc3arooc@pengutronix.de>
+References: <1552288273-31028-1-git-send-email-Anson.Huang@nxp.com>
+ <1552288273-31028-3-git-send-email-Anson.Huang@nxp.com>
+ <20190311092644.a2x53zgxv2iseqao@pengutronix.de>
+ <AM6PR0402MB391160F820907ABE8ECA4C26F54A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d81e9ae0-f571-a890-75e7-be8242ad3879@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <AM6PR0402MB391160F820907ABE8ECA4C26F54A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org, zhiyong.tao@mediatek.com, Mengqi.Zhang@mediatek.com, Ben Ho <Ben.Ho@mediatek.com>, Seiya Wang <seiya.wang@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "stefan@agner.ch" <stefan@agner.ch>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, Leonard Crestez <leonard.crestez@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, Robin Gong <yibin.gong@nxp.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>l
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-03-12 at 13:22 +0100, Matthias Brugger wrote:
+Hello,
+
+On Wed, Mar 13, 2019 at 07:28:24AM +0000, Anson Huang wrote:
+> > On Mon, Mar 11, 2019 at 07:16:16AM +0000, Anson Huang wrote:
+> > > +
+> > >  config PWM_JZ4740
+> > >  	tristate "Ingenic JZ47xx PWM support"
+> > >  	depends on MACH_INGENIC
+> > > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile index
+> > > 9c676a0..64e036c 100644
+> > > --- a/drivers/pwm/Makefile
+> > > +++ b/drivers/pwm/Makefile
+> > > @@ -18,6 +18,7 @@ obj-$(CONFIG_PWM_FSL_FTM)	+= pwm-fsl-ftm.o
+> > >  obj-$(CONFIG_PWM_HIBVT)		+= pwm-hibvt.o
+> > >  obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
+> > >  obj-$(CONFIG_PWM_IMX)		+= pwm-imx.o
+> > > +obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
+> > >  obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
+> > >  obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
+> > >  obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
+> > > diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
+> > new
+> > > file mode 100644 index 0000000..a53256a
+> > > --- /dev/null
+> > > +++ b/drivers/pwm/pwm-imx-tpm.c
+> > > @@ -0,0 +1,277 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Copyright 2018-2019 NXP.
+> > > + */
+> > 
+> > Please add a link to the reference manual to the header.
 > 
-> On 11/03/2019 09:54, Erin Lo wrote:
-> > From: Ben Ho <Ben.Ho@mediatek.com>
+> I checked the NXP website, looks like i.MX7ULP reference manual is NOT
+> published yet, should be published very soon.
+
+ok.
+
+> > > +#include <linux/bitops.h>
+> > > +#include <linux/clk.h>
+> > > +#include <linux/err.h>
+> > > +#include <linux/io.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/of_address.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/pwm.h>
+> > > +#include <linux/slab.h>
+> > > +
+> > > +#define TPM_GLOBAL	0x8
+> > > +#define TPM_SC		0x10
+> > > +#define TPM_CNT		0x14
+> > > +#define TPM_MOD		0x18
+> > > +#define TPM_C0SC	0x20
+> > > +#define TPM_C0V		0x24
+> > > +
+> > > +#define SC_CMOD		3
 > > 
-> > Add basic chip support for Mediatek 8183, include
-> > uart node with correct uart clocks, pwrap device
-> > 
-> > Add clock controller nodes, include topckgen, infracfg,
-> > apmixedsys and subsystem.
-> > 
-> > Signed-off-by: Ben Ho <Ben.Ho@mediatek.com>
-> > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> > Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
-> > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-> > Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> > Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
-> > ---
-> >  arch/arm64/boot/dts/mediatek/Makefile       |   1 +
-> >  arch/arm64/boot/dts/mediatek/mt8183-evb.dts |  31 +++
-> >  arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 335 ++++++++++++++++++++++++++++
-> >  3 files changed, 367 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > 
-> > diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-> > index e8f952f..458bbc4 100644
-> > --- a/arch/arm64/boot/dts/mediatek/Makefile
-> > +++ b/arch/arm64/boot/dts/mediatek/Makefile
-> > @@ -7,3 +7,4 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
-> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
-> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
-> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
-> > +dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-evb.dtb
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> > new file mode 100644
-> > index 0000000..9b52559
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> > @@ -0,0 +1,31 @@
-> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> > +/*
-> > + * Copyright (c) 2018 MediaTek Inc.
-> > + * Author: Ben Ho <ben.ho@mediatek.com>
-> > + *	   Erin Lo <erin.lo@mediatek.com>
-> > + */
-> > +
-> > +/dts-v1/;
-> > +#include "mt8183.dtsi"
-> > +
-> > +/ {
-> > +	model = "MediaTek MT8183 evaluation board";
-> > +	compatible = "mediatek,mt8183-evb", "mediatek,mt8183";
-> > +
-> > +	aliases {
-> > +		serial0 = &uart0;
-> > +	};
-> > +
-> > +	memory@40000000 {
-> > +		device_type = "memory";
-> > +		reg = <0 0x40000000 0 0x80000000>;
-> > +	};
-> > +
-> > +	chosen {
-> > +		stdout-path = "serial0:921600n8";
-> > +	};
-> > +};
-> > +
-> > +&uart0 {
-> > +	status = "okay";
-> > +};
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > new file mode 100644
-> > index 0000000..64f8bd6
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > @@ -0,0 +1,335 @@
-> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> > +/*
-> > + * Copyright (c) 2018 MediaTek Inc.
-> > + * Author: Ben Ho <ben.ho@mediatek.com>
-> > + *	   Erin Lo <erin.lo@mediatek.com>
-> > + */
-> > +
-> > +#include <dt-bindings/clock/mt8183-clk.h>
-> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +#include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +/ {
-> > +	compatible = "mediatek,mt8183";
-> > +	interrupt-parent = <&sysirq>;
-> > +	#address-cells = <2>;
-> > +	#size-cells = <2>;
-> > +
-> > +	cpus {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		cpu-map {
-> > +			cluster0 {
-> > +				core0 {
-> > +					cpu = <&cpu0>;
-> > +				};
-> > +				core1 {
-> > +					cpu = <&cpu1>;
-> > +				};
-> > +				core2 {
-> > +					cpu = <&cpu2>;
-> > +				};
-> > +				core3 {
-> > +					cpu = <&cpu3>;
-> > +				};
-> > +			};
-> > +
-> > +			cluster1 {
-> > +				core0 {
-> > +					cpu = <&cpu4>;
-> > +				};
-> > +				core1 {
-> > +					cpu = <&cpu5>;
-> > +				};
-> > +				core2 {
-> > +					cpu = <&cpu6>;
-> > +				};
-> > +				core3 {
-> > +					cpu = <&cpu7>;
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +		cpu0: cpu@0 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a53";
-> > +			reg = <0x000>;
-> > +			enable-method = "psci";
-> > +		};
-> > +
-> > +		cpu1: cpu@1 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a53";
-> > +			reg = <0x001>;
-> > +			enable-method = "psci";
-> > +		};
-> > +
-> > +		cpu2: cpu@2 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a53";
-> > +			reg = <0x002>;
-> > +			enable-method = "psci";
-> > +		};
-> > +
-> > +		cpu3: cpu@3 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a53";
-> > +			reg = <0x003>;
-> > +			enable-method = "psci";
-> > +		};
-> > +
-> > +		cpu4: cpu@100 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a73";
-> > +			reg = <0x100>;
-> > +			enable-method = "psci";
-> > +		};
-> > +
-> > +		cpu5: cpu@101 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a73";
-> > +			reg = <0x101>;
-> > +			enable-method = "psci";
-> > +		};
-> > +
-> > +		cpu6: cpu@102 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a73";
-> > +			reg = <0x102>;
-> > +			enable-method = "psci";
-> > +		};
-> > +
-> > +		cpu7: cpu@103 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a73";
-> > +			reg = <0x103>;
-> > +			enable-method = "psci";
-> > +		};
-> > +	};
-> > +
-> > +	pmu-a53 {
-> > +		compatible = "arm,cortex-a53-pmu";
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &ppi_cluster0>;
-> > +	};
-> > +
-> > +	pmu-a73 {
-> > +		compatible = "arm,cortex-a73-pmu";
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &ppi_cluster1>;
-> > +	};
-> > +
-> > +	psci {
-> > +		compatible      = "arm,psci-1.0";
-> > +		method          = "smc";
-> > +	};
-> > +
-> > +	clk26m: oscillator {
-> > +		compatible = "fixed-clock";
-> > +		#clock-cells = <0>;
-> > +		clock-frequency = <26000000>;
-> > +		clock-output-names = "clk26m";
-> > +	};
-> > +
-> > +	timer {
-> > +		compatible = "arm,armv8-timer";
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW 0>,
-> > +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW 0>,
-> > +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW 0>,
-> > +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW 0>;
-> > +	};
-> > +
-> > +	soc {
-> > +		#address-cells = <2>;
-> > +		#size-cells = <2>;
-> > +		compatible = "simple-bus";
-> > +		ranges;
-> > +
-> > +		gic: interrupt-controller@c000000 {
-> > +			compatible = "arm,gic-v3";
-> > +			#interrupt-cells = <4>;
-> > +			interrupt-parent = <&gic>;
-> > +			interrupt-controller;
-> > +			reg = <0 0x0c000000 0 0x40000>,  /* GICD */
-> > +			      <0 0x0c100000 0 0x200000>, /* GICR */
-> > +			      <0 0x0c400000 0 0x2000>,   /* GICC */
-> > +			      <0 0x0c410000 0 0x1000>,   /* GICH */
-> > +			      <0 0x0c420000 0 0x2000>;   /* GICV */
-> > +
-> > +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH 0>;
-> > +			ppi-partitions {
-> > +				ppi_cluster0: interrupt-partition-0 {
-> > +					affinity = <&cpu0 &cpu1 &cpu2 &cpu3>;
-> > +				};
-> > +				ppi_cluster1: interrupt-partition-1 {
-> > +					affinity = <&cpu4 &cpu5 &cpu6 &cpu7>;
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +		mcucfg: syscon@c530000 {
-> > +			compatible = "mediatek,mt8183-mcucfg", "syscon";
+> > This seems to be an offset, why not defining it as BIT(3) instead?
 > 
-> Binding is not documented. I found some other bindings not documented as well.
-> Please update the binding documentation to add this compatible, otherwise I
-> won't be able to take this patch.
+> SC_CMOD field as 2 bits, I will use below in V2 patch set:
 > 
-> Regards,
-> Matthias
-> 
+> #define TPM_SC_CMOD_SHIFT       3
+> #define TPM_SC_CMOD_MASK        (0x3 << TPM_SC_CMOD_SHIFT)
 
-The binding is
-http://lists.infradead.org/pipermail/linux-mediatek/2018-December/016249.html
-which is included in below series as cover letter mentioned.
-http://lists.infradead.org/pipermail/linux-mediatek/2018-December/016243.html
+I suggest
 
-Do you have any idea about how we arrange it in next version?
+	#define PWM_IMX_TPM_SC_CMOD	GENMASK(1, 0)
 
+instead. See include/linux/bitfield.h for details.
+Also note that "TPM" isn't a great prefix given that we have:
 
-> > +			reg = <0 0x0c530000 0 0x1000>;
-> > +			#clock-cells = <1>;
-> > +		};
-> > +
-> > +		sysirq: interrupt-controller@c530a80 {
-> > +			compatible = "mediatek,mt8183-sysirq",
-> > +				     "mediatek,mt6577-sysirq";
-> > +			interrupt-controller;
-> > +			#interrupt-cells = <3>;
-> > +			interrupt-parent = <&gic>;
-> > +			reg = <0 0x0c530a80 0 0x50>;
-> > +		};
-> > +
-> > +		topckgen: syscon@10000000 {
-> > +			compatible = "mediatek,mt8183-topckgen", "syscon";
-> > +			reg = <0 0x10000000 0 0x1000>;
-> > +			#clock-cells = <1>;
-> > +		};
-> > +
-> > +		infracfg: syscon@10001000 {
-> > +			compatible = "mediatek,mt8183-infracfg", "syscon";
-> > +			reg = <0 0x10001000 0 0x1000>;
-> > +			#clock-cells = <1>;
-> > +		};
-> > +
-> > +		pio: pinctrl@10005000 {
-> > +			compatible = "mediatek,mt8183-pinctrl";
-> > +			reg = <0 0x10005000 0 0x1000>,
-> > +			      <0 0x11f20000 0 0x1000>,
-> > +			      <0 0x11e80000 0 0x1000>,
-> > +			      <0 0x11e70000 0 0x1000>,
-> > +			      <0 0x11e90000 0 0x1000>,
-> > +			      <0 0x11d30000 0 0x1000>,
-> > +			      <0 0x11d20000 0 0x1000>,
-> > +			      <0 0x11c50000 0 0x1000>,
-> > +			      <0 0x11f30000 0 0x1000>,
-> > +			      <0 0x1000b000 0 0x1000>;
-> > +			reg-names = "iocfg0", "iocfg1", "iocfg2",
-> > +				    "iocfg3", "iocfg4", "iocfg5",
-> > +				    "iocfg6", "iocfg7", "iocfg8",
-> > +				    "eint";
-> > +			gpio-controller;
-> > +			#gpio-cells = <2>;
-> > +			gpio-ranges = <&pio 0 0 192>;
-> > +			interrupt-controller;
-> > +			interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
-> > +			#interrupt-cells = <3>;
-> > +		};
+	$ git ls-files | grep -c tpm
+	82
 
-I will remove it in next version since the binding is not ready.
+. Even though PWM_IMX_TPM is longer I think it's worth the extra bytes.
+Then if you use pwm_imx_tpm als prefix for your function it's obvious
+that they all belong together. For extra credits also adapt the driver
+name to match.
 
-Best Regards,
-Erin.
-
-> > +
-> > +		apmixedsys: syscon@1000c000 {
-> > +			compatible = "mediatek,mt8183-apmixedsys", "syscon";
-> > +			reg = <0 0x1000c000 0 0x1000>;
-> > +			#clock-cells = <1>;
-> > +		};
-> > +
-> > +		pwrap: pwrap@1000d000 {
-> > +			compatible = "mediatek,mt8183-pwrap";
-> > +			reg = <0 0x1000d000 0 0x1000>;
-> > +			reg-names = "pwrap";
-> > +			interrupts = <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
-> > +			clocks = <&topckgen CLK_TOP_MUX_PMICSPI>,
-> > +				 <&infracfg CLK_INFRA_PMIC_AP>;
-> > +			clock-names = "spi", "wrap";
-> > +		};
-> > +
-> > +		uart0: serial@11002000 {
-> > +			compatible = "mediatek,mt8183-uart",
-> > +				     "mediatek,mt6577-uart";
-> > +			reg = <0 0x11002000 0 0x1000>;
-> > +			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
-> > +			clocks = <&clk26m>, <&infracfg CLK_INFRA_UART0>;
-> > +			clock-names = "baud", "bus";
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		uart1: serial@11003000 {
-> > +			compatible = "mediatek,mt8183-uart",
-> > +				     "mediatek,mt6577-uart";
-> > +			reg = <0 0x11003000 0 0x1000>;
-> > +			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
-> > +			clocks = <&clk26m>, <&infracfg CLK_INFRA_UART1>;
-> > +			clock-names = "baud", "bus";
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		uart2: serial@11004000 {
-> > +			compatible = "mediatek,mt8183-uart",
-> > +				     "mediatek,mt6577-uart";
-> > +			reg = <0 0x11004000 0 0x1000>;
-> > +			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
-> > +			clocks = <&clk26m>, <&infracfg CLK_INFRA_UART2>;
-> > +			clock-names = "baud", "bus";
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		audiosys: syscon@11220000 {
-> > +			compatible = "mediatek,mt8183-audiosys", "syscon";
-> > +			reg = <0 0x11220000 0 0x1000>;
-> > +			#clock-cells = <1>;
-> > +		};
-> > +
-> > +		mfgcfg: syscon@13000000 {
-> > +			compatible = "mediatek,mt8183-mfgcfg", "syscon";
-> > +			reg = <0 0x13000000 0 0x1000>;
-> > +			#clock-cells = <1>;
-> > +		};
-> > +
-> > +		mmsys: syscon@14000000 {
-> > +			compatible = "mediatek,mt8183-mmsys", "syscon";
-> > +			reg = <0 0x14000000 0 0x1000>;
-> > +			#clock-cells = <1>;
-> > +		};
-> > +
-> > +		imgsys: syscon@15020000 {
-> > +			compatible = "mediatek,mt8183-imgsys", "syscon";
-> > +			reg = <0 0x15020000 0 0x1000>;
-> > +			#clock-cells = <1>;
-> > +		};
-> > +
-> > +		vdecsys: syscon@16000000 {
-> > +			compatible = "mediatek,mt8183-vdecsys", "syscon";
-> > +			reg = <0 0x16000000 0 0x1000>;
-> > +			#clock-cells = <1>;
-> > +		};
-> > +
-> > +		vencsys: syscon@17000000 {
-> > +			compatible = "mediatek,mt8183-vencsys", "syscon";
-> > +			reg = <0 0x17000000 0 0x1000>;
-> > +			#clock-cells = <1>;
-> > +		};
-> > +
-> > +		ipu_conn: syscon@19000000 {
-> > +			compatible = "mediatek,mt8183-ipu_conn", "syscon";
-> > +			reg = <0 0x19000000 0 0x1000>;
-> > +			#clock-cells = <1>;
-> > +		};
-> > +
-> > +		ipu_adl: syscon@19010000 {
-> > +			compatible = "mediatek,mt8183-ipu_adl", "syscon";
-> > +			reg = <0 0x19010000 0 0x1000>;
-> > +			#clock-cells = <1>;
-> > +		};
-> > +
-> > +		ipu_core0: syscon@19180000 {
-> > +			compatible = "mediatek,mt8183-ipu_core0", "syscon";
-> > +			reg = <0 0x19180000 0 0x1000>;
-> > +			#clock-cells = <1>;
-> > +		};
-> > +
-> > +		ipu_core1: syscon@19280000 {
-> > +			compatible = "mediatek,mt8183-ipu_core1", "syscon";
-> > +			reg = <0 0x19280000 0 0x1000>;
-> > +			#clock-cells = <1>;
-> > +		};
-> > +
-> > +		camsys: syscon@1a000000 {
-> > +			compatible = "mediatek,mt8183-camsys", "syscon";
-> > +			reg = <0 0x1a000000 0 0x1000>;
-> > +			#clock-cells = <1>;
-> > +		};
-> > +	};
-> > +};
+> > > +		ret = clk_prepare_enable(tpm->clk);
+> > > +		if (ret) {
+> > > +			dev_err(chip->dev,
+> > > +				"failed to prepare or enable clk %d\n", ret);
+> > > +			return ret;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	val = readl(tpm->base + TPM_SC);
+> > > +	val &= ~TPM_SC_PS_MASK;
+> > > +	val |= div;
+> > > +	writel(val, tpm->base + TPM_SC);
 > > 
+> > If the unit ran with (say) div == 5 and a high duty cycle before and for the
+> > new configuration you need div == 6 with a low duty cycle, can it happen
+> > here that the output uses the new div value already with the high duty cycle?
+> > If so, this is bad.
+> 
+> As the TPM counter is shared between 2 channels, so I will make this prescale setting
+> to be initialized ONLY once, ONLY first channel will config it, this makes things simple
+> and the other channel should use same prescale value as first channel and ONLY adjust
+> its own duty cycle and polarity etc..
+
+So the two channels have to share the period length? If so please note
+this in the header of the driver like it was done in
+https://www.spinics.net/lists/linux-pwm/msg09149.html (search for
+"Limitations"). You also need some logic to assert that setting the 2nd
+channel doesn't modify the first (if the first is in use).
+
+> > > +	period_cycles = c;
+> > > +	c *= duty_ns;
+> > > +	do_div(c, period_ns);
+> > > +	duty_cycles = c;
+> > > +
+> > > +	writel(period_cycles & TPM_MOD_MOD_MASK, tpm->base +
+> > TPM_MOD);
+> > 
+> > Don't you need to add pwm->hwpwm * TPM_CHn_ADDR_OFFSET to the
+> > register offset here? And if not, I assume this affects the other PWMs
+> > provided by this hardware unit which is bad.
+> 
+> The MOD register is shared between different channels, ONLY 1 register there.
+> This register will be same as SC, ONLY configured ONCE by first channel.
+> 
+> > 
+> > > +	writel(duty_cycles & TPM_MOD_MOD_MASK, tpm->base +
+> > > +	       TPM_C0V + pwm->hwpwm * TPM_CHn_ADDR_OFFSET);
+> > > +
+> > > +	/* if pwm is not enabled, disable clk after setting */
+> > > +	if (!pwm_is_enabled(pwm))
+> > > +		clk_disable_unprepare(tpm->clk);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int tpm_pwm_enable(struct pwm_chip *chip, struct pwm_device
+> > > +*pwm) {
+> > > +	struct tpm_pwm_chip *tpm = to_tpm_pwm_chip(chip);
+> > > +	int ret;
+> > > +	u32 val;
+> > > +
+> > > +	ret = clk_prepare_enable(tpm->clk);
+> > > +	if (ret) {
+> > > +		dev_err(chip->dev,
+> > > +			"failed to prepare or enable clk %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	/*
+> > > +	 * To enable a tpm channel, CPWMS = 0, MSnB:MSnA = 0x0,
+> > > +	 * for TPM normal polarity ELSnB:ELSnA = 2b'10,
+> > > +	 * inverse ELSnB:ELSnA = 2b'01
+> > > +	 */
+> > > +	val = readl(tpm->base + TPM_C0SC + pwm->hwpwm * TPM_CHn_ADDR_OFFSET);
+
+You could make it obvious which channels are shared and which have one
+instance per pwm by doing:
+
+	#define PWM_IMX_TPM_C0SC(hwid)	(0x20 + hwid * 4)
+
+> > > +	val |= pwm->state.polarity ? ELSnA : ELSnB;
+> > > +
+> > > +	writel(val, tpm->base + TPM_C0SC + pwm->hwpwm *
+> > > +TPM_CHn_ADDR_OFFSET);
+> > > +
+> > > +	/* start the counter */
+> > > +	val = readl(tpm->base + TPM_SC);
+> > > +	val |= 0x1 << SC_CMOD;
+> > > +	writel(val, tpm->base + TPM_SC);
+> > 
+> > If tpm_pwm_enable is called for the first PWM provided by the hardware,
+> > how does this writel affect the second one?
+> 
+> I will make the TPM counter enabled for every channel enabled, if ONLY disabled
+> when both channels are disabled.
+
+So you have to make sure that:
+
+ - if you disable one channel while the other is still running, just set
+   the duty cycle to zero to not interfere with the other
+ - if you enable one channel while the other is still off/unused, make
+   sure that other channel doesn't start to wiggle.
+
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int tpm_pwm_remove(struct platform_device *pdev) {
+> > > +	struct tpm_pwm_chip *tpm = platform_get_drvdata(pdev);
+> > > +
+> > > +	return pwmchip_remove(&tpm->chip);
+> > > +}
+> > > +
+> > > +static int __maybe_unused tpm_pwm_suspend(struct device *dev) {
+> > > +	struct tpm_pwm_chip *tpm = dev_get_drvdata(dev);
+> > > +
+> > > +	clk_disable_unprepare(tpm->clk);
+> > 
+> > If the PWM is in use, it shouldn't stop on suspend.
+> 
+> I think PWM should be disabled when suspend, if a device is suspended, but PWM
+> is still enabled, we will see backlight is enabled. This is weird. Unless the backlight
+> driver will guarantee that pwm is disabled before suspend?
+
+No, on suspend it's the responsibility of the backlight driver to
+disable the pwm. Otherwise the PWM changes its behaviour without the
+consumer's consent which depending on the purpose of the PWM is bad.
+ 
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
