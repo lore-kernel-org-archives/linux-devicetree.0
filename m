@@ -1,95 +1,28 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v7 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
-Date: Wed, 13 Mar 2019 14:54:36 -0500
-Message-ID: <CAL_JsqLRO8m+voL_6mSpcrGmAT-SPwXhXDSOMEgQW6wmmTxZfQ@mail.gmail.com>
-References: <20190312163051.155405-1-venture@google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RESEND V2 1/4] dt-bindings: fsl: scu: add watchdog binding
+Date: Wed, 13 Mar 2019 14:55:27 -0500
+Message-ID: <CAL_JsqKFcTm0BUEhty+t6Yajc3m27BrieQRaEuTZjGZG35+N+Q@mail.gmail.com>
+References: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
+ <1550472539-16590-2-git-send-email-Anson.Huang@nxp.com> <20190222195217.GA22194@bogus>
+ <bb19470c-1590-f8dd-72e6-b382444d7902@roeck-us.net> <DB3PR0402MB3916912A64AF0837A9649913F5790@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <96932b3e-87f1-d8f2-95bc-0e9a8d5d45ed@roeck-us.net> <DB3PR0402MB391659B6A466B1D85114E9C9F57A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAL_JsqJV9NxpOJi3Jh2Uk-TOmOL4rWwqZp3sodxsRinAHZ3m3w@mail.gmail.com>
+ <DB3PR0402MB391698A30FC58BA8BFAC20B3F5730@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <AM6PR0402MB3911BA1CDA911F94071BE320F54A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190312163051.155405-1-venture@google.com>
+In-Reply-To: <AM6PR0402MB3911BA1CDA911F94071BE320F54A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick Venture <venture@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "festevam@gmail.com" <festevam@gmail.com>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, Andy Gross <andy.gross@linaro.org>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, enri
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 11:30 AM Patrick Venture <venture@google.com> wrote:
+On Wed, Mar 13, 2019 at 3:11 AM Anson Huang <anson.huang@nxp.com> wrote:
 >
-> Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
->
-> Signed-off-by: Patrick Venture <venture@google.com>
-> ---
-> Changes for v7:
-> - Moved node under the syscon node it requires
-> Changes for v6:
-> - None
-> Changes for v5:
-> - None
-> Changes for v4:
-> - None
-> Changes for v3:
-> - None
-> Changes for v2:
-> - Added comment about syscon required parameter.
-> ---
->  .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
->
-> diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> new file mode 100644
-> index 000000000000..088cc4e3dc54
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> @@ -0,0 +1,48 @@
-> +======================================================================
-> +Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
-> +======================================================================
-> +
-> +The bridge is available on platforms with the VGA enabled on the Aspeed device.
-> +In this case, the host has access to a 64KiB window into all of the BMC's
-> +memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
-> +has read access to all the regions of memory, however the host only has read
-> +and write access depending on a register controlled by the BMC.
-> +
-> +Required properties:
-> +===================
-> +
-> + - compatible: must be one of:
-> +       - "aspeed,ast2400-p2a-ctrl"
-> +       - "aspeed,ast2500-p2a-ctrl"
-> +
-> + - syscon: handle to syscon device node controlling PCI.
-> +
-> +Optional properties:
-> +===================
-> +
-> +- memory-region: A phandle to a reserved_memory region to be used for the PCI
-> +               to AHB mapping
-> +
-> +The p2a-control node should be the child of a syscon node with the required
-> +property:
-> +
-> +- compatible : Should be one of the following:
-> +               "aspeed,ast2400-scu", "syscon", "simple-mfd"
-> +               "aspeed,g4-scu", "syscon", "simple-mfd"
-> +               "aspeed,ast2500-scu", "syscon", "simple-mfd"
-> +               "aspeed,g5-scu", "syscon", "simple-mfd"
-> +
-> +Example:
-> +
-> +g4 Example
-> +----------
-> +
-> +syscon: scu@1e6e2000 {
-> +       compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
-> +       reg = <0x1e6e2000 0x1a8>;
-> +
-> +       p2a: p2a-control {
-> +               compatible = "aspeed,ast2400-p2a-ctrl";
+> Hi, Rob
+>         Do you have any feedback about adding imx scu watchdog node in dts? Thanks.
 
-If there's a defined register range, then you could add a reg property
-(even though Linux doesn't use it).
+Yes, in my reply 2 days ago.
 
-Either way,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+Rob
