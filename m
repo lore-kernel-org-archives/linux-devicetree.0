@@ -1,114 +1,47 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 5/6] dt-bindings: display: sii902x: Add HDMI audio
- bindings
-Date: Wed, 13 Mar 2019 18:47:24 +0200
-Message-ID: <20190313164724.GM4722@pendragon.ideasonboard.com>
-References: <cover.1552492550.git.jsarha@ti.com>
- <e730f059db53a60b8992c8abfc133c00c49de5d1.1552492550.git.jsarha@ti.com>
- <20190313162919.GL4722@pendragon.ideasonboard.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH] regulator: Use of_node_name_eq for node name comparisons
+Date: Wed, 13 Mar 2019 18:21:26 +0100
+Message-ID: <1552497686.2453.49.camel@pengutronix.de>
+References: <20181205195050.4759-21-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190313162919.GL4722@pendragon.ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: fabrizio.castro@bp.renesas.com, devicetree@vger.kernel.org, voice.shen@atmel.com, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, Songjun.Wu@atmel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181205195050.4759-21-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gYWdhaW4sCgpPbiBXZWQsIE1hciAxMywgMjAxOSBhdCAwNjoyOToxOVBNICswMjAwLCBM
-YXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+IE9uIFdlZCwgTWFyIDEzLCAyMDE5IGF0IDA2OjAxOjA3
-UE0gKzAyMDAsIEp5cmkgU2FyaGEgd3JvdGU6Cj4gPiBUaGUgc2lpOTAyeCBjaGlwIGZhbWlseSBz
-dXBwb3J0cyBhbHNvIEhETUkgYXVkaW8uIEFkZCBiaW5kaW5nIGZvcgo+ID4gZGVzY3JpYmluZyB0
-aGUgbmVjZXNzYXJ5IGkycyBhbmQgbWNsayB3aXJpbmcgZm9yIGl0Lgo+ID4gCj4gPiBTaWduZWQt
-b2ZmLWJ5OiBKeXJpIFNhcmhhIDxqc2FyaGFAdGkuY29tPgo+ID4gLS0tCj4gPiAgLi4uL2JpbmRp
-bmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0ICAgICAgIHwgMzQgKysrKysrKysrKysrKysr
-KysrKwo+ID4gIGluY2x1ZGUvZHQtYmluZGluZ3Mvc291bmQvc2lpOTAyeC1hdWRpby5oICAgICB8
-IDE3ICsrKysrKysrKysKPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDUxIGluc2VydGlvbnMoKykKPiA+
-ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kdC1iaW5kaW5ncy9zb3VuZC9zaWk5MDJ4LWF1
-ZGlvLmgKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dAo+ID4gaW5kZXggYzRjMTg1NWNh
-NjU0Li45Nzc3NTY4NDExOTMgMTAwNjQ0Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTAyeC50eHQKPiA+ICsrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dAo+ID4g
-QEAgLTgsNiArOCwyOSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4gIAktIGludGVycnVwdHM6
-IGRlc2NyaWJlIHRoZSBpbnRlcnJ1cHQgbGluZSB1c2VkIHRvIGluZm9ybSB0aGUgaG9zdAo+ID4g
-IAkgIGFib3V0IGhvdHBsdWcgZXZlbnRzLgo+ID4gIAktIHJlc2V0LWdwaW9zOiBPRiBkZXZpY2Ut
-dHJlZSBncGlvIHNwZWNpZmljYXRpb24gZm9yIFJTVF9OIHBpbi4KPiA+ICsJLSBzaWwsaTJzLWZp
-Zm8tcm91dGluZzogQXJyYXkgb2YgZXhhY3RseSA0IGludGVnZXJzIGluZGljYXRpbmcgaTJzCj4g
-PiArCSAgcGlucyBmb3IgYXVkaW8gZmlmbyByb3V0aW5nLiBGaXJzdCBpbnRlZ2VyIGRlZmluZXMg
-cm91dGluZyB0bwo+ID4gKwkgIGZpZm8gMCBhbmQgc2Vjb25kIHRvIGZpZm8gMSwgZXRjLiBJbnRl
-Z2VycyBjYW4gYmUgZmlsbGVkIHdpdGgKPiA+ICsJICBkZWZpbml0aW9ucyBmcm9tOiBpbmNsdWRl
-L2R0LWJpbmRpbmdzL3NvdW5kL3NpaTkwMngtYXVkaW8uaAo+ID4gKwkgIFRoZSBhdmFpbGFibGUg
-ZGVmaW5pdGlvbnMgYXJlOgo+ID4gKwkgIC0gRU5BQkxFX0JJVDoJZW5hYmxlIHRoaXMgYXVkaW8g
-Zmlmbwo+ID4gKwkgIC0gQ09OTkVDVF9TRCM6IHJvdXRlIGF1ZGlvIGlucHV0IGZyb20gU0QwLCBT
-RDEsIFNEMiwgb3IgU0QzIGkycwo+ID4gKwkJCSBkYXRhIGlucHV0IHBpbgo+ID4gKwkgIC0gTEVG
-VF9SSUdIVF9TV0FQX0JJVDogc3dhcCBpMnMgaW5wdXQgY2hhbm5lbHMgZm9yIHRoaXMgZmlmbwo+
-IAo+IEFyZSBhbGwgY29tYmluYXRpb25zIHZhbGlkID8gRm9yIGluc3RhbmNlLCBjb3VsZCB3ZSBo
-YXZlIEQxIHJvdXRlZCB0bwo+IHRoZSB0aGlyZCBGSUZPLCBhbmQgYWxsIG90aGVyIEZJRk9zIGRp
-c2FibGVkID8KCkkgZm91bmQgdGhlIGFuc3dlciB0byB0aGlzIHF1ZXN0aW9uIGluIHRoZSBkYXRh
-c2hlZXQ6CgoiTm90ZSB0aGF0IG5vIGdhcHMgYXJlIGFsbG93ZWQgd2hlbiBtYXBwaW5nIGNoYW5u
-ZWxzIHRvIEZJRk9zIOKAkyBTRCBwaW5zCm11c3QgYmUgbWFwcGVkIHRvIEZJRk8jMCBhbmQgRklG
-TyMxIGJlZm9yZSBtYXBwaW5nIGEgY2hhbm5lbCB0byBGSUZPIzIsCmFuZCBzbyBvbi4iCgpJIHRo
-aW5rIHdlIGNhbiB0aHVzIHNpbXBsaWZ5IHRoZSBiaW5kaW5ncywgYW5kIHVzZSBhbiBhcHByb2Fj
-aCBzaW1pbGFyCnRvIHRoZSBvbmUgdGFrZW4gYnkgdGhlIGRhdGEtbGFuZXMgcHJvcGVydHkgZm9y
-IENTSS0yLiBGdXJ0aGVybW9yZSwgSQp0aGluayB0aGlzIHNob3VsZCBiZSBzdGFuZGFyZGl6ZWQs
-IG5vdCBsZWZ0IGRldmljZS1zcGVjaWZpYy4KCkhvdyBhYm91dCBhbiBzZC1sYW5lcyBwcm9wZXJ0
-eSAoYmV0dGVyIG5hbWVzIGFyZSB3ZWxjb21lKSB0aGF0IHdvdWxkCnN0b3JlIGFuIGFycmF5IG9m
-IE4gaW50ZWdlcnMsIHdoZXJlIGVhY2ggc2QtbGFuZXNbaV0gdGVsbHMgd2hpY2ggU0QgcGluCnRo
-ZSBpLXRoIEZJRk8gaXMgY29ubmVjdGVkIHRvID8KCj4gPiArCSAgSTJTIEhETUkgYXVkaW8gaXMg
-Y29uZmlndXJlZCBvbmx5IGlmIHRoaXMgcHJvcGVydHkgaXMgZm91bmQuCj4gPiArCS0gY2xvY2tz
-OiBwaGFuZGxlIG1jbGsKPiAKPiBNYXliZSAiY2xvY2tzOiBwaGFuZGxlIGFuZCBjbG9jayBzcGVj
-aWZpZXIgZm9yIGVhY2ggY2xvY2sgbGlzdGVkIGluIHRoZSBjbG9jay1uYW1lcyBwcm9wZXJ0eSIg
-Pwo+IAo+ID4gKwktIGNsb2NrLW5hbWVzOiAibWNsayIKPiA+ICsJICAgIERlc2NyaWJlcyBTSUk5
-MDJ4IE1DTEsgaW5wdXQuIE1DTEsgaXMgdXNlZCB0byBwcm9kdWNlCj4gPiArCSAgICBIRE1JIGF1
-ZGlvIENUUyB2YWx1ZXMuIFRoaXMgcHJvcGVydHkgaXMgcmVxdWlyZWQgaWYKPiA+ICsJICAgICJp
-MnMtZmlmby1yb3V0aW5nIi1wcm9wZXJ0eSBpcyBwcmVzZW50LiBUaGlzIHByb3BlcnR5IGZvbGxv
-d3MKPiAKPiBUaGUgcHJvcGVydHkgaXMgbmFtZWQgc2lsLGkycy1maWZvLXJvdXRpbmcuCj4gCj4g
-PiArCSAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmlu
-ZGluZ3MudHh0Cj4gPiArCSAgICBjb25zdW1lciBiaW5kaW5nLgo+ID4gKwktICNzb3VuZC1kYWkt
-Y2VsbHMgPSA8MD46IEFTb0MgY29kZWMgZGFpIGF2YWlsYWJsZSBmb3Igc2ltcGxlLWNhcmQKPiA+
-ICsJICAgIElmIGF1ZGlvIHByb3BlcnRpZXMgYXJlIHByZXNlbnQgc2lpOTAyeCBwcm92aWRlcyBh
-biBBU29DCj4gPiArCSAgICBjb2RlYyBjb21wb25lbnQgZHJpdmVyIHRoYXQgY2FuIGJlIHVzZWQg
-Ynkgb3RoZXIgQVNvQwo+ID4gKwkgICAgY29tcG9uZW50cyBsaWtlIHNpbXBsZS1jYXJkLiBTZWUg
-YmluZGluZyBkb2N1bWVudCBmb3IKPiA+ICsJICAgIGRldGFpbHM6Cj4gPiArCSAgICBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvc2ltcGxlLWNhcmQudHh0Cj4gPiAgCj4g
-PiAgT3B0aW9uYWwgc3Vibm9kZXM6Cj4gPiAgCS0gdmlkZW8gaW5wdXQ6IHRoaXMgc3Vibm9kZSBj
-YW4gY29udGFpbiBhIHZpZGVvIGlucHV0IHBvcnQgbm9kZQo+ID4gQEAgLTIxLDYgKzQ0LDE3IEBA
-IEV4YW1wbGU6Cj4gPiAgCQljb21wYXRpYmxlID0gInNpbCxzaWk5MDIyIjsKPiA+ICAJCXJlZyA9
-IDwweDM5PjsKPiA+ICAJCXJlc2V0LWdwaW9zID0gPCZwaW9BIDEgMD47Cj4gPiArCj4gPiArCQkj
-c291bmQtZGFpLWNlbGxzID0gPDA+Owo+ID4gKwkJc2lsLGkycy1maWZvLXJvdXRpbmcgPSA8Cj4g
-PiArCQkJKEVOQUJMRV9CSVR8Q09OTkVDVF9TRDApCj4gPiArCQkJMAo+ID4gKwkJCTAKPiA+ICsJ
-CQkwCj4gPiArCQk+Owo+ID4gKwkJY2xvY2tzID0gPCZtY2xrPjsKPiA+ICsJCWNsb2NrLW5hbWVz
-ID0gIm1jbGsiOwo+ID4gKwo+ID4gIAkJcG9ydHMgewo+ID4gIAkJCSNhZGRyZXNzLWNlbGxzID0g
-PDE+Owo+ID4gIAkJCSNzaXplLWNlbGxzID0gPDA+OwoKSSBhbHNvIGZvcmdvdCB0byBtZW50aW9u
-IHRoYXQgdGhlIGF1ZGlvIGNvbm5lY3Rpb24gc2hvdWxkIGJlIG1vZGVsZWQKdXNpbmcgT0YgZ3Jh
-cGggdG9vLgoKPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2R0LWJpbmRpbmdzL3NvdW5kL3NpaTkw
-MngtYXVkaW8uaCBiL2luY2x1ZGUvZHQtYmluZGluZ3Mvc291bmQvc2lpOTAyeC1hdWRpby5oCj4g
-PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi4wYTg0OTkwNDc1
-NGIKPiA+IC0tLSAvZGV2L251bGwKPiA+ICsrKyBiL2luY2x1ZGUvZHQtYmluZGluZ3Mvc291bmQv
-c2lpOTAyeC1hdWRpby5oCj4gPiBAQCAtMCwwICsxLDE3IEBACj4gPiArLy8gU1BEWC1MaWNlbnNl
-LUlkZW50aWZpZXI6IEdQTC0yLjAKPiA+ICsvKgo+ID4gKyAqIENvcHlyaWdodCAoQykgMjAxOSBU
-ZXhhcyBJbnN0cnVtZW50cyBJbmNvcnBvcmF0ZWQgLSBodHRwOi8vd3d3LnRpLmNvbS8KPiA+ICsg
-KiBBdXRob3I6IEp5cmkgU2FyaGEgPGpzYXJoYUB0aS5jb20+Cj4gPiArICovCj4gPiArCj4gPiAr
-I2lmbmRlZiBfX0RUX1NJSTkwMjJfQVVESU9fSAo+ID4gKyNkZWZpbmUgX19EVF9TSUk5MDIyX0FV
-RElPX0gKPiA+ICsKPiA+ICsjZGVmaW5lIEVOQUJMRV9CSVQJCQkweDgwCj4gPiArI2RlZmluZSBD
-T05ORUNUX1NEMAkJCTB4MDAKPiA+ICsjZGVmaW5lIENPTk5FQ1RfU0QxCQkJMHgxMAo+ID4gKyNk
-ZWZpbmUgQ09OTkVDVF9TRDIJCQkweDIwCj4gPiArI2RlZmluZSBDT05ORUNUX1NEMwkJCTB4MzAK
-PiA+ICsjZGVmaW5lIExFRlRfUklHSFRfU1dBUF9CSVQJCTB4MDQKPiAKPiBUaGlzIGlzIGZhaXJs
-eSBnZW5lcmljLCBzaG91bGQgeW91IHByZWZpeCB0aGUgbWFjcm9zIHdpdGggU0lJOTAyMiA/Cj4g
-Cj4gPiArCj4gPiArI2VuZGlmIC8qIF9fRFRfU0lJOTAyMl9BVURJT19IICovCgotLSAKUmVnYXJk
-cywKCkxhdXJlbnQgUGluY2hhcnQKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVs
+Hi Rob, hi Mark,
+
+Am Mittwoch, den 05.12.2018, 13:50 -0600 schrieb Rob Herring:
+> Convert string compares of DT node names to use of_node_name_eq helper
+> instead. This removes direct access to the node name pointer.
+> 
+> For instances using of_node_cmp, this has the side effect of now using
+> case sensitive comparisons. This should not matter for any FDT based
+> system which all of these are.
+[...]
+> diff --git a/drivers/regulator/mc13xxx-regulator-core.c b/drivers/regulator/mc13xxx-regulator-core.c
+> index 65eb1e0350cf..2243138d8a58 100644
+> --- a/drivers/regulator/mc13xxx-regulator-core.c
+> +++ b/drivers/regulator/mc13xxx-regulator-core.c
+> @@ -186,7 +186,7 @@ struct mc13xxx_regulator_init_data *mc13xxx_parse_regulators_dt(
+> >  		for (i = 0; i < num_regulators; i++) {
+> >  			if (!regulators[i].desc.name)
+> >  				continue;
+> > -			if (!of_node_cmp(child->name,
+> > +			if (of_node_name_eq(child,
+> >  					 regulators[i].desc.name))
+> > 
+
+Unfortunately this change causes a regression on systems with MC13xxx
+regulators. The desc.name field is filled with an uppercase name of the
+regulator, while the existing DTs (as far as I know) all use lowercase
+node names, so the matching in the function above doesn't work anymore.
+
+Any opinions about how to proceed here?
+
+Regards,
+Lucas
