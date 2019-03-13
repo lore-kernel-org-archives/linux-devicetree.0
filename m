@@ -1,7 +1,7 @@
 From: Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH 3/6] dt-bindings: hwlock: update STM32 #hwlock-cells value
-Date: Wed, 13 Mar 2019 16:50:34 +0100
-Message-ID: <1552492237-28810-4-git-send-email-fabien.dessenne@st.com>
+Subject: [PATCH 1/6] dt-bindings: hwlock: add support of shared locks
+Date: Wed, 13 Mar 2019 16:50:32 +0100
+Message-ID: <1552492237-28810-2-git-send-email-fabien.dessenne@st.com>
 References: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,36 +12,68 @@ To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.or
 Cc: Fabien Dessenne <fabien.dessenne@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Use a value of 2, so users can share hwlocks.
+Use #hwlock-cells value to define whether the locks can be shared
+by several users.
 
 Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/hwlock/hwlock.txt          | 27 ++++++++++++++++------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
-index adf4f000..60a3716 100644
---- a/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
-+++ b/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
-@@ -4,8 +4,8 @@ STM32 Hardware Spinlock Device Binding
- Required properties :
- - compatible : should be "st,stm32-hwspinlock".
- - reg : the register address of hwspinlock.
--- #hwlock-cells : hwlock users only use the hwlock id to represent a specific
--	hwlock, so the number of cells should be <1> here.
-+- #hwlock-cells : should be <2> so the hwlock users use the hwlock id to
-+	represent a specific hwlock and define its shared / exclusive attribute.
- - clock-names : Must contain "hsem".
- - clocks : Must contain a phandle entry for the clock in clock-names, see the
- 	common clock bindings.
-@@ -16,7 +16,7 @@ Please look at the generic hwlock binding for usage information for consumers,
- Example of hwlock provider:
- 	hwspinlock@4c000000 {
- 		compatible = "st,stm32-hwspinlock";
--		#hwlock-cells = <1>;
-+		#hwlock-cells = <2>;
- 		reg = <0x4c000000 0x400>;
- 		clocks = <&rcc HSEM>;
- 		clock-names = "hsem";
+diff --git a/Documentation/devicetree/bindings/hwlock/hwlock.txt b/Documentation/devicetree/bindings/hwlock/hwlock.txt
+index 085d1f5..e98088a 100644
+--- a/Documentation/devicetree/bindings/hwlock/hwlock.txt
++++ b/Documentation/devicetree/bindings/hwlock/hwlock.txt
+@@ -13,7 +13,7 @@ hwlock providers:
+ 
+ Required properties:
+ - #hwlock-cells:        Specifies the number of cells needed to represent a
+-                        specific lock.
++                        specific lock. Shall be 1 or 2 (see hwlocks below).
+ 
+ hwlock users:
+ =============
+@@ -27,6 +27,11 @@ Required properties:
+                         #hwlock-cells. The list can have just a single hwlock
+                         or multiple hwlocks, with each hwlock represented by
+                         a phandle and a corresponding args specifier.
++                        If #hwlock-cells is 1, all of the locks are exclusive
++                        (cannot be used by several users).
++                        If #hwlock-cells is 2, the value of the second cell
++                        defines whether the lock is for exclusive usage (0) or
++                        shared (1) i.e. can be used by several users.
+ 
+ Optional properties:
+ - hwlock-names:         List of hwlock name strings defined in the same order
+@@ -46,14 +51,22 @@ of length 1.
+ 		...
+ 	};
+ 
+-2. Example of a node using multiple specific hwlocks:
++2. Example of nodes using multiple and shared specific hwlocks:
+ 
+-The following example has a node requesting two hwlocks, a hwlock within
+-the hwlock device node 'hwlock1' with #hwlock-cells value of 1, and another
+-hwlock within the hwlock device node 'hwlock2' with #hwlock-cells value of 2.
++The following example has a nodeA requesting two hwlocks:
++- an exclusive one (#hwlock-cells = 1) within the hwlock device node 'hwlock1'
++- a shared one (#hwlock-cells = 2, second cell = 1) within the hwlock device
++  node 'hwlock2'.
++The shared lock is also be used by nodeB.
+ 
+-	node {
++	nodeA {
+ 		...
+-		hwlocks = <&hwlock1 2>, <&hwlock2 0 3>;
++		hwlocks = <&hwlock1 2>, <&hwlock2 0 1>;
+ 		...
+ 	};
++
++	nodeB {
++		...
++		hwlocks = <&hwlock2 0 1>;
++		...
++	};
+\ No newline at end of file
 -- 
 2.7.4
