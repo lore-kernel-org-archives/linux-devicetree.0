@@ -1,7 +1,7 @@
 From: Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH 6/6] ARM: dts: stm32: hwlocks for GPIO for stm32mp157
-Date: Wed, 13 Mar 2019 16:50:37 +0100
-Message-ID: <1552492237-28810-7-git-send-email-fabien.dessenne@st.com>
+Subject: [PATCH 4/6] ARM: dts: stm32: Add hwspinlock node for stm32mp157 SoC
+Date: Wed, 13 Mar 2019 16:50:35 +0100
+Message-ID: <1552492237-28810-5-git-send-email-fabien.dessenne@st.com>
 References: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,32 +12,32 @@ To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.or
 Cc: Fabien Dessenne <fabien.dessenne@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Declare a shared hwlock to be used by all gpio / pin controllers.
+Declare hwspinlock device for stm32mp157 SoC
 
 Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/stm32mp157c.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-index 6b3a9c6..9fd562a 100644
---- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-@@ -14,6 +14,7 @@
- 			ranges = <0 0x50002000 0xa400>;
- 			interrupt-parent = <&exti>;
- 			st,syscfg = <&exti 0x60 0xff>;
-+			hwlocks = <&hsem 0 1>;
- 			pins-are-numbered;
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index 105e21f..18baaea 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -886,6 +886,15 @@
+ 			status = "disabled";
+ 		};
  
- 			gpioa: gpio@50002000 {
-@@ -424,6 +425,7 @@
- 			pins-are-numbered;
- 			interrupt-parent = <&exti>;
- 			st,syscfg = <&exti 0x60 0xff>;
-+			hwlocks = <&hsem 0 1>;
- 
- 			gpioz: gpio@54004000 {
- 				gpio-controller;
++		hsem: hwspinlock@4c000000 {
++			compatible = "st,stm32-hwspinlock";
++			#hwlock-cells = <2>;
++			reg = <0x4c000000 0x400>;
++			clocks = <&rcc HSEM>;
++			clock-names = "hsem";
++			status = "okay";
++		};
++
+ 		ipcc: mailbox@4c001000 {
+ 			compatible = "st,stm32mp1-ipcc";
+ 			#mbox-cells = <1>;
 -- 
 2.7.4
