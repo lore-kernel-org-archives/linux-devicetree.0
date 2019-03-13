@@ -1,43 +1,51 @@
-From: Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH 4/6] ARM: dts: stm32: Add hwspinlock node for stm32mp157 SoC
-Date: Wed, 13 Mar 2019 16:50:35 +0100
-Message-ID: <1552492237-28810-5-git-send-email-fabien.dessenne@st.com>
-References: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v3 0/6] drm/bridge: sii902x: HDMI-audio support and some fixes
+Date: Wed, 13 Mar 2019 18:01:02 +0200
+Message-ID: <cover.1552492550.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jonathan Corbet <corbet@lwn.net>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
-Cc: Fabien Dessenne <fabien.dessenne@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: fabrizio.castro@bp.renesas.com, Songjun.Wu@atmel.com, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, voice.shen@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-Declare hwspinlock device for stm32mp157 SoC
-
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
----
- arch/arm/boot/dts/stm32mp157c.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 105e21f..18baaea 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -886,6 +886,15 @@
- 			status = "disabled";
- 		};
- 
-+		hsem: hwspinlock@4c000000 {
-+			compatible = "st,stm32-hwspinlock";
-+			#hwlock-cells = <2>;
-+			reg = <0x4c000000 0x400>;
-+			clocks = <&rcc HSEM>;
-+			clock-names = "hsem";
-+			status = "okay";
-+		};
-+
- 		ipcc: mailbox@4c001000 {
- 			compatible = "st,stm32mp1-ipcc";
- 			#mbox-cells = <1>;
--- 
-2.7.4
+Q2hhbmdlcyBzaW5jZSB2MjoKLSBzcGxpdCBkdC1iaW5kaW5nIGFuZCByZWxhdGVkIGhlYWRlciB0
+byBhIHNlcGFyYXRlIHBhdGNoCi0gYWRkIHZlbmRvciBwcmVmaXggdG8gaTJzLWZpZm8tcm91dGlu
+ZyBkdC1wcm9wZXJ0eQotIGFkZCBsaWNlbnNlIGlkZW50aWZpZXIgYW5kIGNvcHlyaWdodCBub3Rp
+Y2UgdG8gc2lpOTAyeC1hdWRpby5oCi0gc2lpOTAyeF9nZXRfbW9kZXMoKSByZW9yZGVyIGxvY2Fs
+IHZhcmlhYmxlcwotIHB1dCBjbGtfcHJlcGFyZV9lbmFibGUoKSBiZWZvcmUgY2xrX2dldF9yYXRl
+KCksIGFjY29yZGluZyB0byBkb2N1bWVudGF0aW9uCiAgY2xrX2dldF9yYXRlKCkgaXMgb25seSB2
+YWxpZCBvbmNlIHRoZSBjbG9jayBpcyBlbmFibGVkCgpUaGUgdGhyZWUgYWxyZWFkeSByZXZpZXdl
+ZCBwYXRjaGVzIGFyZSBpbiBmcm9udDoKICAtIGRybS9icmlkZ2U6IHNpaTkwMng6IGFkZCBpbnB1
+dF9idXNfZmxhZ3MKICAtIGRybS9icmlkZ2U6IHNpaTkwMng6IFNldCBvdXRwdXQgbW9kZSB0byBI
+RE1JIG9yIERWSSBhY2NvcmRpbmcgdG8gRURJRAogIC0gZHJtL2JyaWRnZTogc2lpOTAyeDogcGl4
+ZWwgY2xvY2sgdW5pdCBpcyAxMGtIeiBpbnN0ZWFkIG9mIDFrSHoKClRoZSBwcmV2aW91cyByZXZp
+ZXcgcm91bmQgY2FuIGJlIGZvdW5kIGhlcmU6Cmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcv
+Y292ZXIvMTA4MzIzNTEvCgpKeXJpIFNhcmhhICg1KToKICBkcm0vYnJpZGdlOiBzaWk5MDJ4OiBT
+ZXQgb3V0cHV0IG1vZGUgdG8gSERNSSBvciBEVkkgYWNjb3JkaW5nIHRvIEVESUQKICBkcm0vYnJp
+ZGdlOiBzaWk5MDJ4OiBwaXhlbCBjbG9jayB1bml0IGlzIDEwa0h6IGluc3RlYWQgb2YgMWtIegog
+IGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBzaWk5MDJ4OiBSZW1vdmUgdHJhaWxpbmcgd2hpdGUgc3Bh
+Y2UKICBkdC1iaW5kaW5nczogZGlzcGxheTogc2lpOTAyeDogQWRkIEhETUkgYXVkaW8gYmluZGlu
+Z3MKICBkcm0vYnJpZGdlOiBzaWk5MDJ4OiBJbXBsZW1lbnQgSERNSSBhdWRpbyBzdXBwb3J0CgpU
+b21pIFZhbGtlaW5lbiAoMSk6CiAgZHJtL2JyaWRnZTogc2lpOTAyeDogYWRkIGlucHV0X2J1c19m
+bGFncwoKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dCAgICAgICB8ICAz
+NiArLQogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMgICAgICAgICAgICAgIHwgNDcy
+ICsrKysrKysrKysrKysrKysrLQogaW5jbHVkZS9kdC1iaW5kaW5ncy9zb3VuZC9zaWk5MDJ4LWF1
+ZGlvLmggICAgIHwgIDE3ICsKIDMgZmlsZXMgY2hhbmdlZCwgNTE3IGluc2VydGlvbnMoKyksIDgg
+ZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kdC1iaW5kaW5ncy9zb3Vu
+ZC9zaWk5MDJ4LWF1ZGlvLmgKCi0tIApUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jr
+a2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4gWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1
+MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
