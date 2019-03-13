@@ -1,224 +1,97 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 23/48] ARM: dts: armada-xp: fix Armada XP boards NAND description
-Date: Wed, 13 Mar 2019 15:12:25 -0400
-Message-ID: <20190313191250.158955-23-sashal@kernel.org>
-References: <20190313191250.158955-1-sashal@kernel.org>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v3 5/6] dt-bindings: display: sii902x: Add HDMI audio
+ bindings
+Date: Wed, 13 Mar 2019 21:28:27 +0200
+Message-ID: <2525ba29-437d-5bfd-a945-52bfe5da21ed@ti.com>
+References: <cover.1552492550.git.jsarha@ti.com>
+ <e730f059db53a60b8992c8abfc133c00c49de5d1.1552492550.git.jsarha@ti.com>
+ <20190313162919.GL4722@pendragon.ideasonboard.com>
+ <20190313164724.GM4722@pendragon.ideasonboard.com>
+ <24386af2-4b05-9439-ce55-16c84777b907@ti.com>
+ <20190313181208.GQ4722@pendragon.ideasonboard.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190313191250.158955-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190313181208.GQ4722@pendragon.ideasonboard.com>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: fabrizio.castro@bp.renesas.com, devicetree@vger.kernel.org, voice.shen@atmel.com, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, Songjun.Wu@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-
-[ Upstream commit 6fc979179c98d2591784937d5618edc3e5cd31c1 ]
-
-Commit 3b79919946cd2cf4dac47842afc9a893acec4ed7 ("ARM: dts:
-armada-370-xp: update NAND node with new bindings") updated some
-Marvell Armada DT description to use the new NAND controller bindings,
-but did it incorrectly for a number of boards: armada-xp-gp,
-armada-xp-db and armada-xp-lenovo-ix4-300d. Due to this, the NAND is
-no longer detected on those platforms.
-
-This commit fixes that by properly using the new NAND DT binding. This
-commit was runtime-tested on Armada XP GP, the two other platforms are
-only compile-tested.
-
-Fixes: 3b79919946cd2 ("ARM: dts: armada-370-xp: update NAND node with new bindings")
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/armada-xp-db.dts            | 46 +++++-----
- arch/arm/boot/dts/armada-xp-gp.dts            | 13 +--
- .../boot/dts/armada-xp-lenovo-ix4-300d.dts    | 85 ++++++++++---------
- 3 files changed, 76 insertions(+), 68 deletions(-)
-
-diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
-index f3ac7483afed..5d04dc68cf57 100644
---- a/arch/arm/boot/dts/armada-xp-db.dts
-+++ b/arch/arm/boot/dts/armada-xp-db.dts
-@@ -144,30 +144,32 @@
- 				status = "okay";
- 			};
- 
--			nand@d0000 {
-+			nand-controller@d0000 {
- 				status = "okay";
--				label = "pxa3xx_nand-0";
--				num-cs = <1>;
--				marvell,nand-keep-config;
--				nand-on-flash-bbt;
--
--				partitions {
--					compatible = "fixed-partitions";
--					#address-cells = <1>;
--					#size-cells = <1>;
--
--					partition@0 {
--						label = "U-Boot";
--						reg = <0 0x800000>;
--					};
--					partition@800000 {
--						label = "Linux";
--						reg = <0x800000 0x800000>;
--					};
--					partition@1000000 {
--						label = "Filesystem";
--						reg = <0x1000000 0x3f000000>;
- 
-+				nand@0 {
-+					reg = <0>;
-+					label = "pxa3xx_nand-0";
-+					nand-rb = <0>;
-+					nand-on-flash-bbt;
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						partition@0 {
-+							label = "U-Boot";
-+							reg = <0 0x800000>;
-+						};
-+						partition@800000 {
-+							label = "Linux";
-+							reg = <0x800000 0x800000>;
-+						};
-+						partition@1000000 {
-+							label = "Filesystem";
-+							reg = <0x1000000 0x3f000000>;
-+						};
- 					};
- 				};
- 			};
-diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
-index 1139e9469a83..b4cca507cf13 100644
---- a/arch/arm/boot/dts/armada-xp-gp.dts
-+++ b/arch/arm/boot/dts/armada-xp-gp.dts
-@@ -160,12 +160,15 @@
- 				status = "okay";
- 			};
- 
--			nand@d0000 {
-+			nand-controller@d0000 {
- 				status = "okay";
--				label = "pxa3xx_nand-0";
--				num-cs = <1>;
--				marvell,nand-keep-config;
--				nand-on-flash-bbt;
-+
-+				nand@0 {
-+					reg = <0>;
-+					label = "pxa3xx_nand-0";
-+					nand-rb = <0>;
-+					nand-on-flash-bbt;
-+				};
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-index bbbb38888bb8..87dcb502f72d 100644
---- a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-+++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-@@ -81,49 +81,52 @@
- 
- 			};
- 
--			nand@d0000 {
-+			nand-controller@d0000 {
- 				status = "okay";
--				label = "pxa3xx_nand-0";
--				num-cs = <1>;
--				marvell,nand-keep-config;
--				nand-on-flash-bbt;
--
--				partitions {
--					compatible = "fixed-partitions";
--					#address-cells = <1>;
--					#size-cells = <1>;
--
--					partition@0 {
--						label = "u-boot";
--						reg = <0x00000000 0x000e0000>;
--						read-only;
--					};
--
--					partition@e0000 {
--						label = "u-boot-env";
--						reg = <0x000e0000 0x00020000>;
--						read-only;
--					};
--
--					partition@100000 {
--						label = "u-boot-env2";
--						reg = <0x00100000 0x00020000>;
--						read-only;
--					};
--
--					partition@120000 {
--						label = "zImage";
--						reg = <0x00120000 0x00400000>;
--					};
--
--					partition@520000 {
--						label = "initrd";
--						reg = <0x00520000 0x00400000>;
--					};
- 
--					partition@e00000 {
--						label = "boot";
--						reg = <0x00e00000 0x3f200000>;
-+				nand@0 {
-+					reg = <0>;
-+					label = "pxa3xx_nand-0";
-+					nand-rb = <0>;
-+					nand-on-flash-bbt;
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						partition@0 {
-+							label = "u-boot";
-+							reg = <0x00000000 0x000e0000>;
-+							read-only;
-+						};
-+
-+						partition@e0000 {
-+							label = "u-boot-env";
-+							reg = <0x000e0000 0x00020000>;
-+							read-only;
-+						};
-+
-+						partition@100000 {
-+							label = "u-boot-env2";
-+							reg = <0x00100000 0x00020000>;
-+							read-only;
-+						};
-+
-+						partition@120000 {
-+							label = "zImage";
-+							reg = <0x00120000 0x00400000>;
-+						};
-+
-+						partition@520000 {
-+							label = "initrd";
-+							reg = <0x00520000 0x00400000>;
-+						};
-+
-+						partition@e00000 {
-+							label = "boot";
-+							reg = <0x00e00000 0x3f200000>;
-+						};
- 					};
- 				};
- 			};
--- 
-2.19.1
+T24gMTMvMDMvMjAxOSAyMDoxMiwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiBIaSBKeXJpLAo+
+IAo+IE9uIFdlZCwgTWFyIDEzLCAyMDE5IGF0IDA3OjUyOjA4UE0gKzAyMDAsIEp5cmkgU2FyaGEg
+d3JvdGU6Cj4+IE9uIDEzLzAzLzIwMTkgMTg6NDcsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4+
+PiBPbiBXZWQsIE1hciAxMywgMjAxOSBhdCAwNjoyOToxOVBNICswMjAwLCBMYXVyZW50IFBpbmNo
+YXJ0IHdyb3RlOgo+Pj4+IE9uIFdlZCwgTWFyIDEzLCAyMDE5IGF0IDA2OjAxOjA3UE0gKzAyMDAs
+IEp5cmkgU2FyaGEgd3JvdGU6Cj4+Pj4+IFRoZSBzaWk5MDJ4IGNoaXAgZmFtaWx5IHN1cHBvcnRz
+IGFsc28gSERNSSBhdWRpby4gQWRkIGJpbmRpbmcgZm9yCj4+Pj4+IGRlc2NyaWJpbmcgdGhlIG5l
+Y2Vzc2FyeSBpMnMgYW5kIG1jbGsgd2lyaW5nIGZvciBpdC4KPj4+Pj4KPj4+Pj4gU2lnbmVkLW9m
+Zi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KPj4+Pj4gLS0tCj4+Pj4+ICAuLi4vYmlu
+ZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTAyeC50eHQgICAgICAgfCAzNCArKysrKysrKysrKysr
+KysrKysrCj4+Pj4+ICBpbmNsdWRlL2R0LWJpbmRpbmdzL3NvdW5kL3NpaTkwMngtYXVkaW8uaCAg
+ICAgfCAxNyArKysrKysrKysrCj4+Pj4+ICAyIGZpbGVzIGNoYW5nZWQsIDUxIGluc2VydGlvbnMo
+KykKPj4+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2R0LWJpbmRpbmdzL3NvdW5kL3Np
+aTkwMngtYXVkaW8uaAo+Pj4+Pgo+Pj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0Cj4+Pj4+IGlu
+ZGV4IGM0YzE4NTVjYTY1NC4uOTc3NzU2ODQxMTkzIDEwMDY0NAo+Pj4+PiAtLS0gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTAyeC50eHQKPj4+
+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
+L3NpaTkwMngudHh0Cj4+Pj4+IEBAIC04LDYgKzgsMjkgQEAgT3B0aW9uYWwgcHJvcGVydGllczoK
+Pj4+Pj4gIAktIGludGVycnVwdHM6IGRlc2NyaWJlIHRoZSBpbnRlcnJ1cHQgbGluZSB1c2VkIHRv
+IGluZm9ybSB0aGUgaG9zdAo+Pj4+PiAgCSAgYWJvdXQgaG90cGx1ZyBldmVudHMuCj4+Pj4+ICAJ
+LSByZXNldC1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBSU1Rf
+TiBwaW4uCj4+Pj4+ICsJLSBzaWwsaTJzLWZpZm8tcm91dGluZzogQXJyYXkgb2YgZXhhY3RseSA0
+IGludGVnZXJzIGluZGljYXRpbmcgaTJzCj4+Pj4+ICsJICBwaW5zIGZvciBhdWRpbyBmaWZvIHJv
+dXRpbmcuIEZpcnN0IGludGVnZXIgZGVmaW5lcyByb3V0aW5nIHRvCj4+Pj4+ICsJICBmaWZvIDAg
+YW5kIHNlY29uZCB0byBmaWZvIDEsIGV0Yy4gSW50ZWdlcnMgY2FuIGJlIGZpbGxlZCB3aXRoCj4+
+Pj4+ICsJICBkZWZpbml0aW9ucyBmcm9tOiBpbmNsdWRlL2R0LWJpbmRpbmdzL3NvdW5kL3NpaTkw
+MngtYXVkaW8uaAo+Pj4+PiArCSAgVGhlIGF2YWlsYWJsZSBkZWZpbml0aW9ucyBhcmU6Cj4+Pj4+
+ICsJICAtIEVOQUJMRV9CSVQ6CWVuYWJsZSB0aGlzIGF1ZGlvIGZpZm8KPj4+Pj4gKwkgIC0gQ09O
+TkVDVF9TRCM6IHJvdXRlIGF1ZGlvIGlucHV0IGZyb20gU0QwLCBTRDEsIFNEMiwgb3IgU0QzIGky
+cwo+Pj4+PiArCQkJIGRhdGEgaW5wdXQgcGluCj4+Pj4+ICsJICAtIExFRlRfUklHSFRfU1dBUF9C
+SVQ6IHN3YXAgaTJzIGlucHV0IGNoYW5uZWxzIGZvciB0aGlzIGZpZm8KPj4+PiBBcmUgYWxsIGNv
+bWJpbmF0aW9ucyB2YWxpZCA/IEZvciBpbnN0YW5jZSwgY291bGQgd2UgaGF2ZSBEMSByb3V0ZWQg
+dG8KPj4+PiB0aGUgdGhpcmQgRklGTywgYW5kIGFsbCBvdGhlciBGSUZPcyBkaXNhYmxlZCA/Cj4+
+PiBJIGZvdW5kIHRoZSBhbnN3ZXIgdG8gdGhpcyBxdWVzdGlvbiBpbiB0aGUgZGF0YXNoZWV0Ogo+
+Pj4KPj4+ICJOb3RlIHRoYXQgbm8gZ2FwcyBhcmUgYWxsb3dlZCB3aGVuIG1hcHBpbmcgY2hhbm5l
+bHMgdG8gRklGT3Mg4oCTIFNEIHBpbnMKPj4+IG11c3QgYmUgbWFwcGVkIHRvIEZJRk8jMCBhbmQg
+RklGTyMxIGJlZm9yZSBtYXBwaW5nIGEgY2hhbm5lbCB0byBGSUZPIzIsCj4+PiBhbmQgc28gb24u
+Igo+Pj4KPj4+IEkgdGhpbmsgd2UgY2FuIHRodXMgc2ltcGxpZnkgdGhlIGJpbmRpbmdzLCBhbmQg
+dXNlIGFuIGFwcHJvYWNoIHNpbWlsYXIKPj4+IHRvIHRoZSBvbmUgdGFrZW4gYnkgdGhlIGRhdGEt
+bGFuZXMgcHJvcGVydHkgZm9yIENTSS0yLiBGdXJ0aGVybW9yZSwgSQo+Pj4gdGhpbmsgdGhpcyBz
+aG91bGQgYmUgc3RhbmRhcmRpemVkLCBub3QgbGVmdCBkZXZpY2Utc3BlY2lmaWMuCj4+Pgo+Pj4g
+SG93IGFib3V0IGFuIHNkLWxhbmVzIHByb3BlcnR5IChiZXR0ZXIgbmFtZXMgYXJlIHdlbGNvbWUp
+IHRoYXQgd291bGQKPj4+IHN0b3JlIGFuIGFycmF5IG9mIE4gaW50ZWdlcnMsIHdoZXJlIGVhY2gg
+c2QtbGFuZXNbaV0gdGVsbHMgd2hpY2ggU0QgcGluCj4+PiB0aGUgaS10aCBGSUZPIGlzIGNvbm5l
+Y3RlZCB0byA/Cj4+IEkgYWdyZWUgb3RoZXJ3aXNlLCBidXQgSSB3b3VsZCBzdGlsbCByYXRoZXIg
+dXNlIGkycyB0aGFuIHNkLCBiZWNhdXNlIGl0Cj4+IGlzIG1vcmUgZXhwbGljaXQuIFNEIG92ZXJs
+YXBzIHdpdGggc28gbWFueSBvdGhlciBhY3Jvbnltcy4gU28gaG93IHdvdWxkCj4+IGkycy1sYW5l
+cyBzb3VuZD8KPiBTb3VuZHMgZ29vZCB0byBtZS4gSXQncyBhIGJldHRlciBuYW1lLCBzbyBpdCdz
+IHdlbGNvbWUgOi0pIEkgZG9uJ3Qga25vdwo+IHdoYXQgdGVybWlub2xvZ3kgaXMgdXN1YWxseSB1
+c2VkIGluIHRoZSBhdWRpbyB3b3JsZCBmb3IgdGhpcywgc28gSSB3YXMKPiBwcmV0dHkgc3VyZSBt
+eSBpbml0aWFsIG5hbWUgcHJvcG9zYWwgd2FzIGJhZC4KPiAKPiBJcyB0aGVyZSBhIHJpc2sgb2Yg
+bmVlZGluZyB0byBkZXNjcmliZSB0aGUgY2xvY2sgbGFuZSBzZXBhcmF0ZWx5IGluIHRoZQo+IGZ1
+dHVyZSAoZm9yIHRoaXMgb3IgYW5vdGhlciBJMlMtcmVsYXRlZCBjaGlwKSA/IElmIHNvLCBtYXli
+ZQo+IGkycy1kYXRhLWxhbmVzLCBvciBqdXN0IGRhdGEtbGFuZXMsIHdvdWxkIGJlIGEgYmV0dGVy
+IHBpY2suCj4gCgpVc3VhbGx5IChvciBhbHdheXMgQUZBSUspIHRoZXJlIGlzIG9ubHkgb25lIGJp
+dCBjbG9jayBhbmQgb25lIGZyYW1lCmNsb2NrIGxhbmUsIGFuZCAxIC0gbiBkYXRhIGxhbmVzLiBC
+dXQgc3RpbGwgYmVpbmcgbW9yZSBleHBsaWNpdCBkb2VzIG5vdApodXJ0LCBsZXQncyBtYWtlIGl0
+IGkycy1kYXRhLWxhbmVzLgoKVGhhbmtzIGZvciB0aGUgcHJvbXB0IHJldmlldy4gSSdsbCB0cnkg
+dG8gbWFrZSB0aGUgY2hhbmdlcyBmb3IgdG9tb3Jyb3cuCgpCZXN0IHJlZ2FyZHMsCkp5cmkKCi0t
+IApUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBI
+ZWxzaW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21p
+Y2lsZTogSGVsc2lua2kKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVs
