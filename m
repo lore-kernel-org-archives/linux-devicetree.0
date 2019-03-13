@@ -1,94 +1,112 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v3 01/12] dt-bindings: phy: Add support for HiSilicon's
- hi3660 USB PHY
-Date: Wed, 13 Mar 2019 09:40:25 +0800
-Message-ID: <594394e2-c399-39db-979a-fadb17ef28df@huawei.com>
-References: <20190302090505.65542-1-chenyu56@huawei.com>
- <20190302090505.65542-2-chenyu56@huawei.com> <20190312134525.GA9706@bogus>
+From: Ritesh Harjani <riteshh@codeaurora.org>
+Subject: Re: [PATCH V1 07/11] mmc: cqhci: add quirk for setting DCMD
+ CMD_TIMING
+Date: Wed, 13 Mar 2019 08:01:05 +0530
+Message-ID: <05a6e500-9dc9-1984-9576-44b3a9fdc595@codeaurora.org>
+References: <1551504025-3541-1-git-send-email-skomatineni@nvidia.com>
+ <1551504025-3541-7-git-send-email-skomatineni@nvidia.com>
+ <a320c841-7e58-4d3e-5df6-61e10520d9d8@intel.com>
+ <a544bc6d-7b23-53e8-16d0-ee0eaf576eb2@codeaurora.org>
+ <BYAPR12MB33984D80A404EF919F3A86A0C24C0@BYAPR12MB3398.namprd12.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190312134525.GA9706@bogus>
+In-Reply-To: <BYAPR12MB33984D80A404EF919F3A86A0C24C0@BYAPR12MB3398.namprd12.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: liuyu712@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Mark Rutland <mark.rutland@arm.com>, Binghui Wang <wangbinghui@hisilicon.com>
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Asutosh Das <asutoshd@codeaurora.org>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Aniruddha Tvs Rao <anrao@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 2019/3/12 21:45, Rob Herring wrote:
-> On Sat, Mar 02, 2019 at 05:04:54PM +0800, Yu Chen wrote:
->> This patch adds binding documentation for supporting the hi3660 usb
->> phy on boards like the HiKey960.
+On 3/7/2019 11:46 PM, Sowjanya Komatineni wrote:
+>> On 3/6/2019 6:30 PM, Adrian Hunter wrote:
+>>> On 2/03/19 7:20 AM, Sowjanya Komatineni wrote:
+>>>> This patch adds a quirk for setting CMD_TIMING to 1 in descriptor for
+>>>> DCMD with R1B response type to allow the command to be sent to device
+>>>> during data activity or busy time.
+>>>>
+>>>> Tegra186 CQHCI host has bug where it selects DATA_PRESENT_SELECT to 1
+>>>> by CQHCI controller for DCMDs with R1B response type and since DCMD
+>>>> does not trigger any data transfer, DCMD task complete happens
+>>>> leaving the DATA FSM of host controller in wait state for data.
+>>>>
+>>>> This effects the data transfer task issued after R1B DCMD task and no
+>>>> interrupt is generated for the data transfer task.
+>>>>
+>>>> SW WAR for this issue is to set CMD_TIMING bit to 1 in DCMD task
+>>>> descriptor and as DCMD task descriptor preparation is done by cqhci
+>>>> driver, this patch adds cqequirk to handle this.
+>>>>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>    drivers/mmc/host/cqhci.c | 5 ++++-
+>>>>    drivers/mmc/host/cqhci.h | 1 +
+>>>>    2 files changed, 5 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
+>>>> index a8af682a9182..b34c07125f32 100644
+>>>> --- a/drivers/mmc/host/cqhci.c
+>>>> +++ b/drivers/mmc/host/cqhci.c
+>>>> @@ -521,7 +521,10 @@ static void cqhci_prep_dcmd_desc(struct mmc_host *mmc,
+>>>>    	} else {
+>>>>    		if (mrq->cmd->flags & MMC_RSP_R1B) {
+>>>>    			resp_type = 0x3;
+>>>> -			timing = 0x0;
+>>>> +			if (cq_host->quirks & CQHCI_QUIRK_CMD_TIMING_R1B_DCMD)
+>>>> +				timing = 0x1;
+>>>> +			else
+>>>> +				timing = 0x0;
+>>> I was thinking it would be nice if there was a generic way for drivers
+>>> to make changes to descriptors before a task is started.  Currently
+>>> there is
+>>> host->ops->write_l() which would make it possible by checking for
+>>> host->ops->CQHCI_TDBR
+>>> register and, in this case, the DCMD tag.  We would need to export
+>>> get_desc(), perhaps rename it cqhci_get_desc() and put it in cqhci.h
+>>> since it is an inline function.
+>> We take spin_lock_irqsave after the descriptor is prepared and before writing to TDBR.
+>> Not sure but tomorrow this may become a limitation for drivers to make changes to descriptors if they edit descriptors in host->ops->write_l() call.
+>> Though in this case it is not required here.
 >>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: John Stultz <john.stultz@linaro.org>
->> Cc: Binghui Wang <wangbinghui@hisilicon.com>
->> Signed-off-by: Yu Chen <chenyu56@huawei.com>
->> ---
->> v1:
->> * Fix some format error as suggested by Rob.
->> v2:
->> * Change hi3660 usb PHY to hi3660 USB PHY
->> v3:
->> * Make device node a subnode of usb3_otg_bc register.
->> ---
->> ---
->>  .../devicetree/bindings/phy/phy-hi3660-usb3.txt    | 28 ++++++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+>>> Alternatively we could add host->ops for descriptor preparation.
+>> Both ways sounds good to me.
+>> But maybe adding a host->ops for descriptor preparation is better way to go,
+>> since that will be the right interface exposed to make changes to
+>> descriptors.
 >>
->> diff --git a/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
->> new file mode 100644
->> index 000000000000..6096214a2bc6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
->> @@ -0,0 +1,28 @@
->> +Hisilicon hi3660 USB PHY
->> +-----------------------
->> +
->> +Required properties:
->> +- compatible: should be "hisilicon,hi3660-usb-phy"
->> +- #phy-cells: must be 0
->> +- hisilicon,pericrg-syscon: phandle of syscon used to control phy.
->> +- hisilicon,pctrl-syscon: phandle of syscon used to control phy.
->> +- hisilicon,usb3-otg-bc-syscon: phandle of syscon used to control phy.
-> 
-> You can drop this as it is now just the parent node.
-> 
->> +- hisilicon,eye-diagram-param: parameter set for phy
->> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
->> +
->> +This is a subnode of usb3_otg_bc register node.
->> +
->> +Example:
->> +	usb3_otg_bc: usb3_otg_bc@ff200000 {
->> +		compatible = "syscon", "simple-mfd";
-> 
-> This node should have a specific compatible.
-> 
-Do you mean I need write a specific driver for this node ?
+> DCMD descriptor attributes remain same for any host and also task parameters as QBR need to be enabled with DCMD.
+> So I believe it should be ok if we just add callback to allow hosts to update command parameters of DCMD descriptor only thru cqhci_host_ops.
 
->> +		reg = <0x0 0xff200000 0x0 0x1000>;
->> +
->> +		usb-phy {
->> +			compatible = "hisilicon,hi3660-usb-phy";
->> +			#phy-cells = <0>;
->> +			hisilicon,pericrg-syscon = <&crg_ctrl>;
->> +			hisilicon,pctrl-syscon = <&pctrl>;
->> +			hisilicon,usb3-otg-bc-syscon = <&usb3_otg_bc>;
->> +			hisilicon,eye-diagram-param = <0x22466e4>;
->> +		};
->> +	};
->> -- 
->> 2.15.0-rc2
->>
-> 
-> .
-> 
+For now we can add host->ops as update_dcmd_desc and pass the task_desc 
+of DCMD for updating any params which host may want to update.
 
-Thanks
-Yu Chen
+>
+> Also, don’t see any requirement for host specific Task parameter updates in Task descriptor so not sure if there is any need to provide callback for task descriptor data preparation to hosts.
+> Please confirm.
+
+Sure, for now the requirement has come up only for DCMD desc update. 
+Sure we can add task descriptor ops in the similar way later when required.
+
+Adrian, please confirm if you are fine with both of above?
+
+>
+>>> What do people think?
+>>>
+>>>>    		} else {
+>>>>    			resp_type = 0x2;
+>>>>    			timing = 0x1;
+>>>> diff --git a/drivers/mmc/host/cqhci.h b/drivers/mmc/host/cqhci.h
+>>>> index 9e68286a07b4..f96d8565cc07 100644
+>>>> --- a/drivers/mmc/host/cqhci.h
+>>>> +++ b/drivers/mmc/host/cqhci.h
+>>>> @@ -170,6 +170,7 @@ struct cqhci_host {
+>>>>    
+>>>>    	u32 quirks;
+>>>>    #define CQHCI_QUIRK_SHORT_TXFR_DESC_SZ	0x1
+>>>> +#define CQHCI_QUIRK_CMD_TIMING_R1B_DCMD	0x2
+>>>>    
+>>>>    	bool enabled;
+>>>>    	bool halted;
+>>>>
