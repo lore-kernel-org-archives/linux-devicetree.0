@@ -1,34 +1,50 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 0/3] dt-bindings: meson: Add G12A display bindings
-Date: Wed, 13 Mar 2019 15:10:27 +0100
-Message-ID: <20190313141030.5958-1-narmstrong@baylibre.com>
+Subject: [PATCH 1/3] dt-bindings: display: amlogic,
+ meson-vpu: Add G12A compatible and ports
+Date: Wed, 13 Mar 2019 15:10:28 +0100
+Message-ID: <20190313141030.5958-2-narmstrong@baylibre.com>
+References: <20190313141030.5958-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190313141030.5958-1-narmstrong@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds the G12A specific bindings for the Display VPU
-and VPU Power Control.
-
-The Amlogic Meson G12A Display module is based on the Meson GXM SoC
-with an updated Plane Blender, thus VPU architecture and interconnect
-is the same.
-
-Implementation then DT nodes will come in a further patchsets.
-
-Neil Armstrong (3):
-  dt-bindings: display: amlogic,meson-vpu: Add G12A compatible and ports
-  dt-bindings: display: amlogic,meson-dw-hdmi: Add G12A compatible and
-    ports
-  dt-bindings: power: amlogic,meson-gx-pwrc: Add G12A compatible
-
- .../devicetree/bindings/display/amlogic,meson-dw-hdmi.txt     | 4 ++++
- .../devicetree/bindings/display/amlogic,meson-vpu.txt         | 4 ++++
- .../devicetree/bindings/power/amlogic,meson-gx-pwrc.txt       | 4 +++-
- 3 files changed, 11 insertions(+), 1 deletion(-)
-
--- 
-2.20.1
+VGhlIEFtbG9naWMgRzEyQSBWUFUgaXMgdmVyeSBzaW1pbGFyIHRvIHRoZSBBbWxvZ2ljIEdYTSBW
+UFUgYnV0IHdpdGggOgotIGFuIGVuaGFuY2VkIHBsYW5lIGJsZW5kZXIsIHdpdGggdXAgdG8gMyBP
+U0QgcGxhbmVzCi0gc3VwcG9ydCBmb3IgQUZCQyAxLjIgZGVjb2RlciAoZm9yIEJpZnJvc3QgR1BV
+KQotIHN1cHBvcnQgZGlzcGxheSBtb2RlIHVwIHRvIDRrNjBANzVIegoKU2lnbmVkLW9mZi1ieTog
+TmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPgotLS0KIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYW1sb2dpYyxtZXNvbi12cHUudHh0ICAgICAgICAgfCA0ICsr
+KysKIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbWxvZ2ljLG1lc29uLXZwdS50eHQg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbWxvZ2ljLG1lc29u
+LXZwdS50eHQKaW5kZXggNDE5NDQ0ZTJiNGQzLi5iZTQwYTc4MDUwMWMgMTAwNjQ0Ci0tLSBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FtbG9naWMsbWVzb24tdnB1
+LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbWxv
+Z2ljLG1lc29uLXZwdS50eHQKQEAgLTU3LDYgKzU3LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoK
+IAktIEdYTCAoUzkwNVgsIFM5MDVEKSA6ICJhbWxvZ2ljLG1lc29uLWd4bC12cHUiCiAJLSBHWE0g
+KFM5MTIpIDogImFtbG9naWMsbWVzb24tZ3htLXZwdSIKIAlmb2xsb3dlZCBieSB0aGUgY29tbW9u
+ICJhbWxvZ2ljLG1lc29uLWd4LXZwdSIKKwktIEcxMkEgKFM5MDVYMiwgUzkwNVkyLCBTOTA1RDIp
+IDogImFtbG9naWMsbWVzb24tZzEyYS12cHUiCiAtIHJlZzogYmFzZSBhZGRyZXNzIGFuZCBzaXpl
+IG9mIGhlIGZvbGxvd2luZyBtZW1vcnktbWFwcGVkIHJlZ2lvbnMgOgogCS0gdnB1CiAJLSBoaGkK
+QEAgLTgzLDYgKzg0LDkgQEAgY29ycmVzcG9uZGluZyB0byBlYWNoIFZQVSBvdXRwdXQuCiAgUzkw
+NVggKEdYTCkJQ1ZCUyBWREFDCUhETUktVFgKICBTOTA1RCAoR1hMKQlDVkJTIFZEQUMJSERNSS1U
+WAogIFM5MTIgKEdYTSkJQ1ZCUyBWREFDCUhETUktVFgKKyBTOTA1WDIgKEcxMkEpCUNWQlMgVkRB
+QwlIRE1JLVRYCisgUzkwNVkyIChHMTJBKQlDVkJTIFZEQUMJSERNSS1UWAorIFM5MDVEMiAoRzEy
+QSkJQ1ZCUyBWREFDCUhETUktVFgKIAogRXhhbXBsZToKIAotLSAKMi4yMC4xCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
