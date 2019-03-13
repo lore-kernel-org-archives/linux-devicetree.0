@@ -1,329 +1,275 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 6/7] phy: mediatek: Add UFS M-PHY driver
-Date: Thu, 14 Mar 2019 13:36:28 +0530
-Message-ID: <a2b91daa-9391-1a81-a298-efcfcaccc775@ti.com>
-References: <1552536516-12723-1-git-send-email-stanley.chu@mediatek.com>
- <1552536516-12723-8-git-send-email-stanley.chu@mediatek.com>
+From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+Subject: [RESEND PATCH v1,
+ 04/18] drm/mediatek: move rdma sout from mtk_ddp_mout_en into
+ mtk_ddp_sout_sel
+Date: Wed, 13 Mar 2019 17:24:57 +0800
+Message-ID: <1552469111-8014-5-git-send-email-yongqiang.niu@mediatek.com>
+References: <1552469111-8014-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1552536516-12723-8-git-send-email-stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, avri.altman-Sjgp3cTcYWE@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pedrom.sousa-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
-Cc: chun-hung.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1134677507=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1552469111-8014-1-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yongqiang Niu <yongqiang.niu@mediatek.com>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--===============1134677507==
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_005_1489280317.1730123095"
 
-On 14/03/19 9:38 AM, Stanley Chu wrote:
-> Add UFS M-PHY driver on MediaTek chipsets.
-> 
-> Signed-off-by: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/phy/mediatek/Kconfig       |  11 ++
->  drivers/phy/mediatek/Makefile      |   1 +
->  drivers/phy/mediatek/phy-mtk-ufs.c | 239 +++++++++++++++++++++++++++++
->  3 files changed, 251 insertions(+)
->  create mode 100644 drivers/phy/mediatek/phy-mtk-ufs.c
-> 
-> diff --git a/drivers/phy/mediatek/Kconfig b/drivers/phy/mediatek/Kconfig
-> index 8857d00b3c65..2152d5619c8f 100644
-> --- a/drivers/phy/mediatek/Kconfig
-> +++ b/drivers/phy/mediatek/Kconfig
-> @@ -13,6 +13,16 @@ config PHY_MTK_TPHY
->  	  multi-ports is first version, otherwise is second veriosn,
->  	  so you can easily distinguish them by banks layout.
->  
-> +config PHY_MTK_UFS
-> +	tristate "MediaTek UFS M-PHY driver"
-> +	depends on ARCH_MEDIATEK && OF
-> +	select GENERIC_PHY
-> +	help
-> +	  Support for UFS M-PHY on MediaTek chipsets.
-> +	  Enable this to provide vendor-specific probing,
-> +	  initialization, power on and power off flow of
-> +	  specified M-PHYs.
-> +
->  config PHY_MTK_XSPHY
->      tristate "MediaTek XS-PHY Driver"
->      depends on ARCH_MEDIATEK && OF
-> @@ -21,3 +31,4 @@ config PHY_MTK_XSPHY
->  	  Enable this to support the SuperSpeedPlus XS-PHY transceiver for
->  	  USB3.1 GEN2 controllers on MediaTek chips. The driver supports
->  	  multiple USB2.0, USB3.1 GEN2 ports.
-> +
+--__=_Part_Boundary_005_1489280317.1730123095
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_006_1710267074.487704130"
 
-spurious blank space.
-> diff --git a/drivers/phy/mediatek/Makefile b/drivers/phy/mediatek/Makefile
-> index ee49edc97ee9..08a8e6a97b1e 100644
-> --- a/drivers/phy/mediatek/Makefile
-> +++ b/drivers/phy/mediatek/Makefile
-> @@ -4,4 +4,5 @@
->  #
->  
->  obj-$(CONFIG_PHY_MTK_TPHY)		+= phy-mtk-tphy.o
-> +obj-$(CONFIG_PHY_MTK_UFS)		+= phy-mtk-ufs.o
->  obj-$(CONFIG_PHY_MTK_XSPHY)		+= phy-mtk-xsphy.o
-> diff --git a/drivers/phy/mediatek/phy-mtk-ufs.c b/drivers/phy/mediatek/phy-mtk-ufs.c
-> new file mode 100644
-> index 000000000000..71c29ff83f27
-> --- /dev/null
-> +++ b/drivers/phy/mediatek/phy-mtk-ufs.c
-> @@ -0,0 +1,239 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 MediaTek Inc.
-> + * Author: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +
-> +/* mphy register and offsets */
-> +#define MP_GLB_DIG_8C               0x008C
-> +#define FRC_PLL_ISO_EN              BIT(8)
-> +#define PLL_ISO_EN                  BIT(9)
-> +#define FRC_FRC_PWR_ON              BIT(10)
-> +#define PLL_PWR_ON                  BIT(11)
-> +
-> +#define MP_LN_DIG_RX_9C             0xA09C
-> +#define FSM_DIFZ_FRC                BIT(18)
-> +
-> +#define MP_LN_DIG_RX_AC             0xA0AC
-> +#define FRC_RX_SQ_EN                BIT(0)
-> +#define RX_SQ_EN                    BIT(1)
-> +
-> +#define MP_LN_RX_44                 0xB044
-> +#define FRC_CDR_PWR_ON              BIT(17)
-> +#define CDR_PWR_ON                  BIT(18)
-> +#define FRC_CDR_ISO_EN              BIT(19)
-> +#define CDR_ISO_EN                  BIT(20)
-> +
-> +#define mphy_readl(phy, ofs) readl((phy)->mmio + (ofs))
-> +#define mphy_writel(phy, val, ofs) writel((val), (phy)->mmio + (ofs))
+--__=_Part_Boundary_006_1710267074.487704130
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-These are better implemented as inline functions.
-> +
-> +struct ufs_mtk_phy {
-> +	struct device *dev;
-> +	void __iomem *mmio;
-> +	struct clk *mp_clk;
-> +	struct clk *unipro_clk;
-> +};
-> +
-> +static void mphy_set_bit(struct ufs_mtk_phy *phy, u32 reg, u32 bit)
-> +{
-> +	u32 val;
-> +
-> +	val = mphy_readl(phy, reg);
-> +	val |= bit;
-> +	mphy_writel(phy, val, reg);
-> +}
-> +
-> +static void mphy_clr_bit(struct ufs_mtk_phy *phy, u32 reg, u32 bit)
-> +{
-> +	u32 val;
-> +
-> +	val = mphy_readl(phy, reg);
-> +	val &= ~bit;
-> +	mphy_writel(phy, val, reg);
-> +}
-> +
-> +static struct ufs_mtk_phy *get_ufs_mtk_phy(struct phy *generic_phy)
-> +{
-> +	return (struct ufs_mtk_phy *)phy_get_drvdata(generic_phy);
-> +}
-> +
-> +static int ufs_mtk_phy_clk_init(struct ufs_mtk_phy *phy)
-> +{
-> +	struct device *dev = phy->dev;
-> +
-> +	phy->unipro_clk = devm_clk_get(dev, "unipro");
-> +	if (IS_ERR(phy->unipro_clk)) {
-> +		dev_err(dev, "failed to get clock: unipro");
-> +		return PTR_ERR(phy->unipro_clk);
-> +	}
-> +
-> +	phy->mp_clk = devm_clk_get(dev, "mp");
-> +	if (IS_ERR(phy->mp_clk)) {
-> +		dev_err(dev, "failed to get clock: mp");
-> +		return PTR_ERR(phy->mp_clk);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void ufs_mtk_phy_set_active(struct ufs_mtk_phy *phy)
-> +{
-> +	/* release DA_MP_PLL_PWR_ON */
-> +	mphy_set_bit(phy, MP_GLB_DIG_8C, PLL_PWR_ON);
-> +	mphy_clr_bit(phy, MP_GLB_DIG_8C, FRC_FRC_PWR_ON);
-> +
-> +	/* release DA_MP_PLL_ISO_EN */
-> +	mphy_clr_bit(phy, MP_GLB_DIG_8C, PLL_ISO_EN);
-> +	mphy_clr_bit(phy, MP_GLB_DIG_8C, FRC_PLL_ISO_EN);
-> +
-> +	/* release DA_MP_CDR_PWR_ON */
-> +	mphy_set_bit(phy, MP_LN_RX_44, CDR_PWR_ON);
-> +	mphy_clr_bit(phy, MP_LN_RX_44, FRC_CDR_PWR_ON);
-> +
-> +	/* release DA_MP_CDR_ISO_EN */
-> +	mphy_clr_bit(phy, MP_LN_RX_44, CDR_ISO_EN);
-> +	mphy_clr_bit(phy, MP_LN_RX_44, FRC_CDR_ISO_EN);
-> +
-> +	/* release DA_MP_RX0_SQ_EN */
-> +	mphy_set_bit(phy, MP_LN_DIG_RX_AC, RX_SQ_EN);
-> +	mphy_clr_bit(phy, MP_LN_DIG_RX_AC, FRC_RX_SQ_EN);
-> +
-> +	/* delay 1us to wait DIFZ stable */
-> +	udelay(1);
-> +
-> +	/* release DIFZ */
-> +	mphy_clr_bit(phy, MP_LN_DIG_RX_9C, FSM_DIFZ_FRC);
-> +}
-> +
-> +static void ufs_mtk_phy_set_deep_hibern(struct ufs_mtk_phy *phy)
-> +{
-> +	/* force DIFZ */
-> +	mphy_set_bit(phy, MP_LN_DIG_RX_9C, FSM_DIFZ_FRC);
-> +
-> +	/* force DA_MP_RX0_SQ_EN */
-> +	mphy_set_bit(phy, MP_LN_DIG_RX_AC, FRC_RX_SQ_EN);
-> +	mphy_clr_bit(phy, MP_LN_DIG_RX_AC, RX_SQ_EN);
-> +
-> +	/* force DA_MP_CDR_ISO_EN */
-> +	mphy_set_bit(phy, MP_LN_RX_44, FRC_CDR_ISO_EN);
-> +	mphy_set_bit(phy, MP_LN_RX_44, CDR_ISO_EN);
-> +
-> +	/* force DA_MP_CDR_PWR_ON */
-> +	mphy_set_bit(phy, MP_LN_RX_44, FRC_CDR_PWR_ON);
-> +	mphy_clr_bit(phy, MP_LN_RX_44, CDR_PWR_ON);
-> +
-> +	/* force DA_MP_PLL_ISO_EN */
-> +	mphy_set_bit(phy, MP_GLB_DIG_8C, FRC_PLL_ISO_EN);
-> +	mphy_set_bit(phy, MP_GLB_DIG_8C, PLL_ISO_EN);
-> +
-> +	/* force DA_MP_PLL_PWR_ON */
-> +	mphy_set_bit(phy, MP_GLB_DIG_8C, FRC_FRC_PWR_ON);
-> +	mphy_clr_bit(phy, MP_GLB_DIG_8C, PLL_PWR_ON);
-> +}
-> +
-> +static int ufs_mtk_phy_power_on(struct phy *generic_phy)
-> +{
-> +	struct ufs_mtk_phy *phy = get_ufs_mtk_phy(generic_phy);
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(phy->unipro_clk);
-> +	if (ret) {
-> +		dev_err(phy->dev, "unipro_clk enable failed %d\n", ret);
-> +		goto out;
-> +	}
-> +
-> +	ret = clk_prepare_enable(phy->mp_clk);
-> +	if (ret) {
-> +		dev_err(phy->dev, "mp_clk enable failed %d\n", ret);
-> +		goto out_unprepare_unipro_clk;
-> +	}
-> +
-> +	ufs_mtk_phy_set_active(phy);
-> +
-> +	return 0;
-> +
-> +out_unprepare_unipro_clk:
-> +	clk_disable_unprepare(phy->unipro_clk);
-> +out:
-> +	return ret;
-> +}
-> +
-> +static int ufs_mtk_phy_power_off(struct phy *generic_phy)
-> +{
-> +	struct ufs_mtk_phy *phy = get_ufs_mtk_phy(generic_phy);
-> +
-> +	ufs_mtk_phy_set_deep_hibern(phy);
-> +
-> +	clk_disable_unprepare(phy->unipro_clk);
-> +	clk_disable_unprepare(phy->mp_clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct phy_ops ufs_mtk_phy_ops = {
-> +	.power_on       = ufs_mtk_phy_power_on,
-> +	.power_off      = ufs_mtk_phy_power_off,
-> +	.owner          = THIS_MODULE,
-> +};
-> +
-> +static int ufs_mtk_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct phy *generic_phy;
-> +	struct phy_provider *phy_provider;
-> +	struct resource *res;
-> +	struct ufs_mtk_phy *phy;
-> +	int ret;
-> +
-> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
-> +	if (!phy)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	phy->mmio = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(phy->mmio))
-> +		return PTR_ERR(phy->mmio);
-> +
-> +	phy->dev = dev;
-> +
-> +	ret = ufs_mtk_phy_clk_init(phy);
-> +	if (ret)
-> +		return ret;
-> +
-> +	generic_phy = devm_phy_create(dev, NULL, &ufs_mtk_phy_ops);
-> +	if (IS_ERR(generic_phy))
-> +		return PTR_ERR(generic_phy);
-> +
-> +	phy_set_drvdata(generic_phy, phy);
-> +
-> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> +
-> +	return PTR_ERR_OR_ZERO(phy_provider);
-> +}
-> +
-> +static const struct of_device_id ufs_mtk_phy_of_match[] = {
-> +	{.compatible = "mediatek,mt8183-ufsphy"},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, ufs_mtk_phy_of_match);
-> +
-> +static struct platform_driver ufs_mtk_phy_driver = {
-> +	.probe = ufs_mtk_phy_probe,
-> +	.driver = {
-> +		.of_match_table = ufs_mtk_phy_of_match,
-> +		.name = "ufs_mtk_phy",
-> +	},
-> +};
-> +module_platform_driver(ufs_mtk_phy_driver);
-> +
-> +MODULE_DESCRIPTION("Universal Flash Storage (UFS) MediaTek MPHY");
-> +MODULE_AUTHOR("Stanley Chu <stanley.chu-c+3QU6Y0cdFWk0Htik3J/w@public.gmane.org>");
-> +MODULE_LICENSE("GPL v2");
-> +
+PHByZT4NClRoaXMgcGF0Y2ggbW92ZSByZG1hIHNvdXQgZnJvbSBtdGtfZGRwX21vdXRfZW4gaW50
+byBtdGtfZGRwX3NvdXRfc2VsDQoNClNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgJmx0O3lv
+bmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tJmd0Ow0KLS0tDQogZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fZGRwLmMgfCA5MCArKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0t
+DQogMSBmaWxlIGNoYW5nZWQsIDQ1IGluc2VydGlvbnMoKyksIDQ1IGRlbGV0aW9ucygtKQ0KDQpk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgYi9kcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYw0KaW5kZXggNTkyZjg1Mi4uNjBjZmRl
+NyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jDQor
+KysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYw0KQEAgLTI5NSw1MSAr
+Mjk1LDYgQEAgc3RhdGljIHVuc2lnbmVkIGludCBtdGtfZGRwX21vdXRfZW4oZW51bSBtdGtfZGRw
+X2NvbXBfaWQgY3VyLA0KIAl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX09EMSAmYW1w
+OyZhbXA7IG5leHQgPT0gRERQX0NPTVBPTkVOVF9SRE1BMSkgew0KIAkJKmFkZHIgPSBESVNQX1JF
+R19DT05GSUdfRElTUF9PRF9NT1VUX0VOOw0KIAkJdmFsdWUgPSBPRDFfTU9VVF9FTl9SRE1BMTsN
+Ci0JfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMCAmYW1wOyZhbXA7IG5leHQg
+PT0gRERQX0NPTVBPTkVOVF9EUEkwKSB7DQotCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQ
+X1JETUEwX1NPVVRfRU47DQotCQl2YWx1ZSA9IFJETUEwX1NPVVRfRFBJMDsNCi0JfSBlbHNlIGlm
+IChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMCAmYW1wOyZhbXA7IG5leHQgPT0gRERQX0NPTVBP
+TkVOVF9EUEkxKSB7DQotCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEwX1NPVVRf
+RU47DQotCQl2YWx1ZSA9IFJETUEwX1NPVVRfRFBJMTsNCi0JfSBlbHNlIGlmIChjdXIgPT0gRERQ
+X0NPTVBPTkVOVF9SRE1BMCAmYW1wOyZhbXA7IG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kxKSB7
+DQotCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEwX1NPVVRfRU47DQotCQl2YWx1
+ZSA9IFJETUEwX1NPVVRfRFNJMTsNCi0JfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9S
+RE1BMCAmYW1wOyZhbXA7IG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kyKSB7DQotCQkqYWRkciA9
+IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEwX1NPVVRfRU47DQotCQl2YWx1ZSA9IFJETUEwX1NP
+VVRfRFNJMjsNCi0JfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMCAmYW1wOyZh
+bXA7IG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kzKSB7DQotCQkqYWRkciA9IERJU1BfUkVHX0NP
+TkZJR19ESVNQX1JETUEwX1NPVVRfRU47DQotCQl2YWx1ZSA9IFJETUEwX1NPVVRfRFNJMzsNCi0J
+fSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMSAmYW1wOyZhbXA7IG5leHQgPT0g
+RERQX0NPTVBPTkVOVF9EU0kxKSB7DQotCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JE
+TUExX1NPVVRfRU47DQotCQl2YWx1ZSA9IFJETUExX1NPVVRfRFNJMTsNCi0JfSBlbHNlIGlmIChj
+dXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMSAmYW1wOyZhbXA7IG5leHQgPT0gRERQX0NPTVBPTkVO
+VF9EU0kyKSB7DQotCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUExX1NPVVRfRU47
+DQotCQl2YWx1ZSA9IFJETUExX1NPVVRfRFNJMjsNCi0JfSBlbHNlIGlmIChjdXIgPT0gRERQX0NP
+TVBPTkVOVF9SRE1BMSAmYW1wOyZhbXA7IG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kzKSB7DQot
+CQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUExX1NPVVRfRU47DQotCQl2YWx1ZSA9
+IFJETUExX1NPVVRfRFNJMzsNCi0JfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1B
+MSAmYW1wOyZhbXA7IG5leHQgPT0gRERQX0NPTVBPTkVOVF9EUEkwKSB7DQotCQkqYWRkciA9IERJ
+U1BfUkVHX0NPTkZJR19ESVNQX1JETUExX1NPVVRfRU47DQotCQl2YWx1ZSA9IFJETUExX1NPVVRf
+RFBJMDsNCi0JfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMSAmYW1wOyZhbXA7
+IG5leHQgPT0gRERQX0NPTVBPTkVOVF9EUEkxKSB7DQotCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJ
+R19ESVNQX1JETUExX1NPVVRfRU47DQotCQl2YWx1ZSA9IFJETUExX1NPVVRfRFBJMTsNCi0JfSBl
+bHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMiAmYW1wOyZhbXA7IG5leHQgPT0gRERQ
+X0NPTVBPTkVOVF9EUEkwKSB7DQotCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEy
+X1NPVVQ7DQotCQl2YWx1ZSA9IFJETUEyX1NPVVRfRFBJMDsNCi0JfSBlbHNlIGlmIChjdXIgPT0g
+RERQX0NPTVBPTkVOVF9SRE1BMiAmYW1wOyZhbXA7IG5leHQgPT0gRERQX0NPTVBPTkVOVF9EUEkx
+KSB7DQotCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEyX1NPVVQ7DQotCQl2YWx1
+ZSA9IFJETUEyX1NPVVRfRFBJMTsNCi0JfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9S
+RE1BMiAmYW1wOyZhbXA7IG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kxKSB7DQotCQkqYWRkciA9
+IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEyX1NPVVQ7DQotCQl2YWx1ZSA9IFJETUEyX1NPVVRf
+RFNJMTsNCi0JfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMiAmYW1wOyZhbXA7
+IG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kyKSB7DQotCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJ
+R19ESVNQX1JETUEyX1NPVVQ7DQotCQl2YWx1ZSA9IFJETUEyX1NPVVRfRFNJMjsNCi0JfSBlbHNl
+IGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMiAmYW1wOyZhbXA7IG5leHQgPT0gRERQX0NP
+TVBPTkVOVF9EU0kzKSB7DQotCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEyX1NP
+VVQ7DQotCQl2YWx1ZSA9IFJETUEyX1NPVVRfRFNJMzsNCiAJfSBlbHNlIHsNCiAJCXZhbHVlID0g
+MDsNCiAJfQ0KQEAgLTQyMSw2ICszNzYsNTEgQEAgc3RhdGljIHVuc2lnbmVkIGludCBtdGtfZGRw
+X3NvdXRfc2VsKHZvaWQgX19pb21lbSAqY29uZmlnX3JlZ3MsDQogCX0gZWxzZSBpZiAoY3VyID09
+IEREUF9DT01QT05FTlRfUkRNQTEgJmFtcDsmYW1wOyBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJ
+MCkgew0KIAkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRFNJX1NFTDsNCiAJCXZhbHVlID0gRFNJ
+X1NFTF9JTl9SRE1BOw0KKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEwICZh
+bXA7JmFtcDsgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTApIHsNCisJCSphZGRyID0gRElTUF9S
+RUdfQ09ORklHX0RJU1BfUkRNQTBfU09VVF9FTjsNCisJCXZhbHVlID0gUkRNQTBfU09VVF9EUEkw
+Ow0KKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEwICZhbXA7JmFtcDsgbmV4
+dCA9PSBERFBfQ09NUE9ORU5UX0RQSTEpIHsNCisJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJ
+U1BfUkRNQTBfU09VVF9FTjsNCisJCXZhbHVlID0gUkRNQTBfU09VVF9EUEkxOw0KKwl9IGVsc2Ug
+aWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEwICZhbXA7JmFtcDsgbmV4dCA9PSBERFBfQ09N
+UE9ORU5UX0RTSTEpIHsNCisJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTBfU09V
+VF9FTjsNCisJCXZhbHVlID0gUkRNQTBfU09VVF9EU0kxOw0KKwl9IGVsc2UgaWYgKGN1ciA9PSBE
+RFBfQ09NUE9ORU5UX1JETUEwICZhbXA7JmFtcDsgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTIp
+IHsNCisJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTBfU09VVF9FTjsNCisJCXZh
+bHVlID0gUkRNQTBfU09VVF9EU0kyOw0KKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5U
+X1JETUEwICZhbXA7JmFtcDsgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTMpIHsNCisJCSphZGRy
+ID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTBfU09VVF9FTjsNCisJCXZhbHVlID0gUkRNQTBf
+U09VVF9EU0kzOw0KKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUExICZhbXA7
+JmFtcDsgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTEpIHsNCisJCSphZGRyID0gRElTUF9SRUdf
+Q09ORklHX0RJU1BfUkRNQTFfU09VVF9FTjsNCisJCXZhbHVlID0gUkRNQTFfU09VVF9EU0kxOw0K
+Kwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUExICZhbXA7JmFtcDsgbmV4dCA9
+PSBERFBfQ09NUE9ORU5UX0RTSTIpIHsNCisJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1Bf
+UkRNQTFfU09VVF9FTjsNCisJCXZhbHVlID0gUkRNQTFfU09VVF9EU0kyOw0KKwl9IGVsc2UgaWYg
+KGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUExICZhbXA7JmFtcDsgbmV4dCA9PSBERFBfQ09NUE9O
+RU5UX0RTSTMpIHsNCisJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTFfU09VVF9F
+TjsNCisJCXZhbHVlID0gUkRNQTFfU09VVF9EU0kzOw0KKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBf
+Q09NUE9ORU5UX1JETUExICZhbXA7JmFtcDsgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTApIHsN
+CisJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTFfU09VVF9FTjsNCisJCXZhbHVl
+ID0gUkRNQTFfU09VVF9EUEkwOw0KKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JE
+TUExICZhbXA7JmFtcDsgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTEpIHsNCisJCSphZGRyID0g
+RElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTFfU09VVF9FTjsNCisJCXZhbHVlID0gUkRNQTFfU09V
+VF9EUEkxOw0KKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEyICZhbXA7JmFt
+cDsgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTApIHsNCisJCSphZGRyID0gRElTUF9SRUdfQ09O
+RklHX0RJU1BfUkRNQTJfU09VVDsNCisJCXZhbHVlID0gUkRNQTJfU09VVF9EUEkwOw0KKwl9IGVs
+c2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEyICZhbXA7JmFtcDsgbmV4dCA9PSBERFBf
+Q09NUE9ORU5UX0RQSTEpIHsNCisJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTJf
+U09VVDsNCisJCXZhbHVlID0gUkRNQTJfU09VVF9EUEkxOw0KKwl9IGVsc2UgaWYgKGN1ciA9PSBE
+RFBfQ09NUE9ORU5UX1JETUEyICZhbXA7JmFtcDsgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTEp
+IHsNCisJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTJfU09VVDsNCisJCXZhbHVl
+ID0gUkRNQTJfU09VVF9EU0kxOw0KKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JE
+TUEyICZhbXA7JmFtcDsgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTIpIHsNCisJCSphZGRyID0g
+RElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTJfU09VVDsNCisJCXZhbHVlID0gUkRNQTJfU09VVF9E
+U0kyOw0KKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEyICZhbXA7JmFtcDsg
+bmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTMpIHsNCisJCSphZGRyID0gRElTUF9SRUdfQ09ORklH
+X0RJU1BfUkRNQTJfU09VVDsNCisJCXZhbHVlID0gUkRNQTJfU09VVF9EU0kzOw0KIAl9IGVsc2Ug
+ew0KIAkJdmFsdWUgPSAwOw0KIAl9DQotLSANCjEuOC4xLjEuZGlydHkNCg0KPC9wcmU+PCEtLXR5
+cGU6dGV4dC0tPjwhLS17LS0+PHByZT4qKioqKioqKioqKioqIEVtYWlsIENvbmZpZGVudGlhbGl0
+eSBOb3RpY2UNCiAqKioqKioqKioqKioqKioqKioqKg0KVGhlIGluZm9ybWF0aW9uIGNvbnRhaW5l
+ZCBpbiB0aGlzIGUtbWFpbCBtZXNzYWdlIChpbmNsdWRpbmcgYW55IA0KYXR0YWNobWVudHMpIG1h
+eSBiZSBjb25maWRlbnRpYWwsIHByb3ByaWV0YXJ5LCBwcml2aWxlZ2VkLCBvciBvdGhlcndpc2UN
+CmV4ZW1wdCBmcm9tIGRpc2Nsb3N1cmUgdW5kZXIgYXBwbGljYWJsZSBsYXdzLiBJdCBpcyBpbnRl
+bmRlZCB0byBiZSANCmNvbnZleWVkIG9ubHkgdG8gdGhlIGRlc2lnbmF0ZWQgcmVjaXBpZW50KHMp
+LiBBbnkgdXNlLCBkaXNzZW1pbmF0aW9uLCANCmRpc3RyaWJ1dGlvbiwgcHJpbnRpbmcsIHJldGFp
+bmluZyBvciBjb3B5aW5nIG9mIHRoaXMgZS1tYWlsIChpbmNsdWRpbmcgaXRzIA0KYXR0YWNobWVu
+dHMpIGJ5IHVuaW50ZW5kZWQgcmVjaXBpZW50KHMpIGlzIHN0cmljdGx5IHByb2hpYml0ZWQgYW5k
+IG1heSANCmJlIHVubGF3ZnVsLiBJZiB5b3UgYXJlIG5vdCBhbiBpbnRlbmRlZCByZWNpcGllbnQg
+b2YgdGhpcyBlLW1haWwsIG9yIGJlbGlldmUNCiANCnRoYXQgeW91IGhhdmUgcmVjZWl2ZWQgdGhp
+cyBlLW1haWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciANCmltbWVkaWF0ZWx5
+IChieSByZXBseWluZyB0byB0aGlzIGUtbWFpbCksIGRlbGV0ZSBhbnkgYW5kIGFsbCBjb3BpZXMg
+b2YgDQp0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGFueSBhdHRhY2htZW50cykgZnJvbSB5b3VyIHN5
+c3RlbSwgYW5kIGRvIG5vdA0KZGlzY2xvc2UgdGhlIGNvbnRlbnQgb2YgdGhpcyBlLW1haWwgdG8g
+YW55IG90aGVyIHBlcnNvbi4gVGhhbmsNCiB5b3UhPC9wcmU+PCEtLX0tLT4=
 
-spurious blank line.
+--__=_Part_Boundary_006_1710267074.487704130
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
 
-Thanks
-Kishon
+VGhpcyBwYXRjaCBtb3ZlIHJkbWEgc291dCBmcm9tIG10a19kZHBfbW91dF9lbiBpbnRvIG10a19k
+ZHBfc291dF9zZWwNCg0KU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5p
+dUBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9k
+ZHAuYyB8IDkwICsrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0NCiAxIGZpbGUgY2hh
+bmdlZCwgNDUgaW5zZXJ0aW9ucygrKSwgNDUgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9k
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyBiL2RyaXZlcnMvZ3B1L2RybS9t
+ZWRpYXRlay9tdGtfZHJtX2RkcC5jDQppbmRleCA1OTJmODUyLi42MGNmZGU3IDEwMDY0NA0KLS0t
+IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMNCisrKyBiL2RyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jDQpAQCAtMjk1LDUxICsyOTUsNiBAQCBzdGF0
+aWMgdW5zaWduZWQgaW50IG10a19kZHBfbW91dF9lbihlbnVtIG10a19kZHBfY29tcF9pZCBjdXIs
+DQogCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfT0QxICYmIG5leHQgPT0gRERQX0NP
+TVBPTkVOVF9SRE1BMSkgew0KIAkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9PRF9NT1VU
+X0VOOw0KIAkJdmFsdWUgPSBPRDFfTU9VVF9FTl9SRE1BMTsNCi0JfSBlbHNlIGlmIChjdXIgPT0g
+RERQX0NPTVBPTkVOVF9SRE1BMCAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMCkgew0KLQkJ
+KmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMF9TT1VUX0VOOw0KLQkJdmFsdWUgPSBS
+RE1BMF9TT1VUX0RQSTA7DQotCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTAg
+JiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTEpIHsNCi0JCSphZGRyID0gRElTUF9SRUdfQ09O
+RklHX0RJU1BfUkRNQTBfU09VVF9FTjsNCi0JCXZhbHVlID0gUkRNQTBfU09VVF9EUEkxOw0KLQl9
+IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEwICYmIG5leHQgPT0gRERQX0NPTVBP
+TkVOVF9EU0kxKSB7DQotCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEwX1NPVVRf
+RU47DQotCQl2YWx1ZSA9IFJETUEwX1NPVVRfRFNJMTsNCi0JfSBlbHNlIGlmIChjdXIgPT0gRERQ
+X0NPTVBPTkVOVF9SRE1BMCAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMikgew0KLQkJKmFk
+ZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMF9TT1VUX0VOOw0KLQkJdmFsdWUgPSBSRE1B
+MF9TT1VUX0RTSTI7DQotCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTAgJiYg
+bmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTMpIHsNCi0JCSphZGRyID0gRElTUF9SRUdfQ09ORklH
+X0RJU1BfUkRNQTBfU09VVF9FTjsNCi0JCXZhbHVlID0gUkRNQTBfU09VVF9EU0kzOw0KLQl9IGVs
+c2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUExICYmIG5leHQgPT0gRERQX0NPTVBPTkVO
+VF9EU0kxKSB7DQotCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUExX1NPVVRfRU47
+DQotCQl2YWx1ZSA9IFJETUExX1NPVVRfRFNJMTsNCi0JfSBlbHNlIGlmIChjdXIgPT0gRERQX0NP
+TVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMikgew0KLQkJKmFkZHIg
+PSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMV9TT1VUX0VOOw0KLQkJdmFsdWUgPSBSRE1BMV9T
+T1VUX0RTSTI7DQotCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTEgJiYgbmV4
+dCA9PSBERFBfQ09NUE9ORU5UX0RTSTMpIHsNCi0JCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJ
+U1BfUkRNQTFfU09VVF9FTjsNCi0JCXZhbHVlID0gUkRNQTFfU09VVF9EU0kzOw0KLQl9IGVsc2Ug
+aWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUExICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9E
+UEkwKSB7DQotCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUExX1NPVVRfRU47DQot
+CQl2YWx1ZSA9IFJETUExX1NPVVRfRFBJMDsNCi0JfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBP
+TkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMSkgew0KLQkJKmFkZHIgPSBE
+SVNQX1JFR19DT05GSUdfRElTUF9SRE1BMV9TT1VUX0VOOw0KLQkJdmFsdWUgPSBSRE1BMV9TT1VU
+X0RQSTE7DQotCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTIgJiYgbmV4dCA9
+PSBERFBfQ09NUE9ORU5UX0RQSTApIHsNCi0JCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1Bf
+UkRNQTJfU09VVDsNCi0JCXZhbHVlID0gUkRNQTJfU09VVF9EUEkwOw0KLQl9IGVsc2UgaWYgKGN1
+ciA9PSBERFBfQ09NUE9ORU5UX1JETUEyICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EUEkxKSB7
+DQotCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEyX1NPVVQ7DQotCQl2YWx1ZSA9
+IFJETUEyX1NPVVRfRFBJMTsNCi0JfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1B
+MiAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMSkgew0KLQkJKmFkZHIgPSBESVNQX1JFR19D
+T05GSUdfRElTUF9SRE1BMl9TT1VUOw0KLQkJdmFsdWUgPSBSRE1BMl9TT1VUX0RTSTE7DQotCX0g
+ZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTIgJiYgbmV4dCA9PSBERFBfQ09NUE9O
+RU5UX0RTSTIpIHsNCi0JCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTJfU09VVDsN
+Ci0JCXZhbHVlID0gUkRNQTJfU09VVF9EU0kyOw0KLQl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09N
+UE9ORU5UX1JETUEyICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kzKSB7DQotCQkqYWRkciA9
+IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEyX1NPVVQ7DQotCQl2YWx1ZSA9IFJETUEyX1NPVVRf
+RFNJMzsNCiAJfSBlbHNlIHsNCiAJCXZhbHVlID0gMDsNCiAJfQ0KQEAgLTQyMSw2ICszNzYsNTEg
+QEAgc3RhdGljIHVuc2lnbmVkIGludCBtdGtfZGRwX3NvdXRfc2VsKHZvaWQgX19pb21lbSAqY29u
+ZmlnX3JlZ3MsDQogCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTEgJiYgbmV4
+dCA9PSBERFBfQ09NUE9ORU5UX0RTSTApIHsNCiAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RT
+SV9TRUw7DQogCQl2YWx1ZSA9IERTSV9TRUxfSU5fUkRNQTsNCisJfSBlbHNlIGlmIChjdXIgPT0g
+RERQX0NPTVBPTkVOVF9SRE1BMCAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMCkgew0KKwkJ
+KmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMF9TT1VUX0VOOw0KKwkJdmFsdWUgPSBS
+RE1BMF9TT1VUX0RQSTA7DQorCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTAg
+JiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTEpIHsNCisJCSphZGRyID0gRElTUF9SRUdfQ09O
+RklHX0RJU1BfUkRNQTBfU09VVF9FTjsNCisJCXZhbHVlID0gUkRNQTBfU09VVF9EUEkxOw0KKwl9
+IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEwICYmIG5leHQgPT0gRERQX0NPTVBP
+TkVOVF9EU0kxKSB7DQorCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEwX1NPVVRf
+RU47DQorCQl2YWx1ZSA9IFJETUEwX1NPVVRfRFNJMTsNCisJfSBlbHNlIGlmIChjdXIgPT0gRERQ
+X0NPTVBPTkVOVF9SRE1BMCAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMikgew0KKwkJKmFk
+ZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMF9TT1VUX0VOOw0KKwkJdmFsdWUgPSBSRE1B
+MF9TT1VUX0RTSTI7DQorCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTAgJiYg
+bmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTMpIHsNCisJCSphZGRyID0gRElTUF9SRUdfQ09ORklH
+X0RJU1BfUkRNQTBfU09VVF9FTjsNCisJCXZhbHVlID0gUkRNQTBfU09VVF9EU0kzOw0KKwl9IGVs
+c2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUExICYmIG5leHQgPT0gRERQX0NPTVBPTkVO
+VF9EU0kxKSB7DQorCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUExX1NPVVRfRU47
+DQorCQl2YWx1ZSA9IFJETUExX1NPVVRfRFNJMTsNCisJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NP
+TVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMikgew0KKwkJKmFkZHIg
+PSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMV9TT1VUX0VOOw0KKwkJdmFsdWUgPSBSRE1BMV9T
+T1VUX0RTSTI7DQorCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTEgJiYgbmV4
+dCA9PSBERFBfQ09NUE9ORU5UX0RTSTMpIHsNCisJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJ
+U1BfUkRNQTFfU09VVF9FTjsNCisJCXZhbHVlID0gUkRNQTFfU09VVF9EU0kzOw0KKwl9IGVsc2Ug
+aWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUExICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9E
+UEkwKSB7DQorCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUExX1NPVVRfRU47DQor
+CQl2YWx1ZSA9IFJETUExX1NPVVRfRFBJMDsNCisJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBP
+TkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMSkgew0KKwkJKmFkZHIgPSBE
+SVNQX1JFR19DT05GSUdfRElTUF9SRE1BMV9TT1VUX0VOOw0KKwkJdmFsdWUgPSBSRE1BMV9TT1VU
+X0RQSTE7DQorCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTIgJiYgbmV4dCA9
+PSBERFBfQ09NUE9ORU5UX0RQSTApIHsNCisJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1Bf
+UkRNQTJfU09VVDsNCisJCXZhbHVlID0gUkRNQTJfU09VVF9EUEkwOw0KKwl9IGVsc2UgaWYgKGN1
+ciA9PSBERFBfQ09NUE9ORU5UX1JETUEyICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EUEkxKSB7
+DQorCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEyX1NPVVQ7DQorCQl2YWx1ZSA9
+IFJETUEyX1NPVVRfRFBJMTsNCisJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1B
+MiAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMSkgew0KKwkJKmFkZHIgPSBESVNQX1JFR19D
+T05GSUdfRElTUF9SRE1BMl9TT1VUOw0KKwkJdmFsdWUgPSBSRE1BMl9TT1VUX0RTSTE7DQorCX0g
+ZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTIgJiYgbmV4dCA9PSBERFBfQ09NUE9O
+RU5UX0RTSTIpIHsNCisJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTJfU09VVDsN
+CisJCXZhbHVlID0gUkRNQTJfU09VVF9EU0kyOw0KKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09N
+UE9ORU5UX1JETUEyICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kzKSB7DQorCQkqYWRkciA9
+IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEyX1NPVVQ7DQorCQl2YWx1ZSA9IFJETUEyX1NPVVRf
+RFNJMzsNCiAJfSBlbHNlIHsNCiAJCXZhbHVlID0gMDsNCiAJfQ0KLS0gDQoxLjguMS4xLmRpcnR5
+DQo=
+
+--__=_Part_Boundary_006_1710267074.487704130--
+
+--__=_Part_Boundary_005_1489280317.1730123095--
+
+
+--===============1134677507==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+
+--===============1134677507==--
