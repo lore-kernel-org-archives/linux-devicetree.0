@@ -1,91 +1,63 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] arm: dts: rk3288-tinker.dtsi: Fix SD card detection
-Date: Wed, 13 Mar 2019 11:40:45 +0100
-Message-ID: <3123627.puci4abFsC@diego>
-References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
- <20190309153923.22806-1-beagleboard@davidjohnsummers.uk>
+From: Nicolas Boichat <drinkcat@chromium.org>
+Subject: Re: [RESEND PATCH v1, 00/18] add drm support for MT8183
+Date: Wed, 13 Mar 2019 18:49:08 +0800
+Message-ID: <CANMq1KC31g7=NiW2zHLxqv9yH7a11qRLdieSyoES446ZJxi8Sw@mail.gmail.com>
+References: <1552465563-6940-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190309153923.22806-1-beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1552465563-6940-1-git-send-email-yongqiang.niu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, lkml <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 9. M=E4rz 2019, 16:39:21 CET schrieb David Summers:
-> The Problem:
-> =
+On Wed, Mar 13, 2019 at 4:53 PM Yongqiang Niu
+<yongqiang.niu@mediatek.com> wrote:
+>
+> This series are based on 4.20-rc1 and provide 18 patches to
+> support mediatek SOC MT8183
 
-> On ASUS Tinker Board S, when booting from the eMMC, and there is card
-> in the sd slot, there are constant errors.
-> =
+v1 (https://patchwork.freedesktop.org/series/54451/#rev1) had a large
+number of comments, and I don't think you addressed any of them here?
+Can you please do so before resending?
 
-> Also when warm reboot, uboot can not access the sd slot
-> =
-
-> Cause:
-> =
-
-> Identified by Robin Murphy @ ARM. The Card Detect on rk3288
-> devices is pulled up by vccio-sd; so when the regulator powers this
-> off, card detect gives spurious errors. A second problem, is during
-> power down, vccio-sd apprears to be powered down. This causes a
-> problem when warm rebooting from the sd card. This was identified by
-> Jonas Karlman.
-> =
-
-> History:
-> =
-
-> A common fault on these rk3288 board, which impliment the reference
-> design.
-> =
-
-> When this arose before:
-> =
-
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-August/281153.=
-htm
-> l
-> =
-
-> And Ulf and Jaehoon clearly said this was a broken card detect design,
-> which should be solved via polling
-> =
-
-> Solution:
-> =
-
-> Hence broken-cd is set as a property. This cures the errors. The
-> powering down of vccio-sd during reboot is cured by adding
-> regulator-boot-on.
-> =
-
-> This solutions has been fairly widely reviewed and tested.
-> =
-
-> Signed-off-by: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-> Reviewed by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> Reviewed by: Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>
-> Test by: TheSaint @ ArchLinux Arm
-
-applied as fix for 5.1 with the following modifications:
-- new subject: "ARM: dts: rockchip: Fix SD card detection on rk3288-tinker"
-  to match the subsystem
-- adapted Reviewed and Tested tags as collected from involved parties
-- added Fixes and Cc-stable tags (pointing to the dtsi-split only to ease
-  load of stable maintainers, as hopefully most people will use somewhat
-  recent kernels on sbcs]
-
-
-Heiko
+> Yongqiang Niu (18):
+>   drm/mediatek: update dt-bindings for mt8183
+>   drm/mediatek: add mutex mod and sof into ddp private data
+>   drm/mediatek: redefine mtk_ddp_sout_sel
+>   drm/mediatek: move rdma sout from mtk_ddp_mout_en into
+>     mtk_ddp_sout_sel
+>   drm/mediatek: add ddp component CCORR
+>   drm/mediatek: add mmsys private data for ddp path config
+>   drm/mediatek: add commponent OVL0_2L
+>   drm/mediatek: add component OVL1_2L
+>   drm/mediatek: add component DITHER
+>   drm/mediatek: add gmc_bits for ovl private data
+>   drm/medaitek: add layer_nr for ovl private data
+>   drm/mediatek: add function to connect module with it's previous one
+>   drm/mediatek: add ddp write register common api
+>   drm/mediatek: add connect function for ovl
+>   drm/mediatek: add RDMA1 fifo size into RDMA private data
+>   drm/mediatek: add function mtk_ddp_comp_get_type
+>   drm/mediatek: add ovl0/ovl0_2l usecase
+>   drm/mediatek: add support for mediatek SOC MT8183
+>
+>  .../bindings/display/mediatek/mediatek,disp.txt    |  11 +-
+>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c            |  64 ++-
+>  drivers/gpu/drm/mediatek/mtk_disp_rdma.c           |  23 +-
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c            |  42 +-
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c             | 458 ++++++++++++++++-----
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.h             |  11 +
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        | 100 +++++
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  24 ++
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  55 +++
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.h             |   4 +
+>  10 files changed, 688 insertions(+), 104 deletions(-)
+>
+> --
+> 1.8.1.1.dirty
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
