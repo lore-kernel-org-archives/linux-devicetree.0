@@ -1,60 +1,87 @@
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH v4 1/9] dt-bindings: mtd: ingenic: Add compatible
- strings for JZ4740 and JZ4725B
-Date: Wed, 13 Mar 2019 14:09:43 +0100
-Message-ID: <20190313140943.01afcbdc@collabora.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v4 2/9] dt-bindings: mtd: ingenic: Change 'BCH' to 'ECC'
+ in documentation
+Date: Wed, 13 Mar 2019 14:12:31 +0100
+Message-ID: <20190313141231.1cc6e072@xps13>
 References: <20190209192305.4434-1-paul@crapouillou.net>
-        <20190304104554.09be4cd4@xps13>
-        <1551723742.4932.2@crapouillou.net>
-        <20190304195149.7cca9c64@xps13>
-        <1552481734.2412.1@crapouillou.net>
+        <20190209192305.4434-2-paul@crapouillou.net>
+        <20190304105014.0cceea0a@xps13>
+        <1551723830.4932.3@crapouillou.net>
+        <20190304195852.45c056f6@xps13>
+        <1552481988.2412.2@crapouillou.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552481734.2412.1@crapouillou.net>
+In-Reply-To: <1552481988.2412.2@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Paul Cercueil <paul@crapouillou.net>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 13 Mar 2019 09:55:34 -0300
-Paul Cercueil <paul@crapouillou.net> wrote:
+Hi Paul,
 
-> Hi,
-> 
-> Le lun. 4 mars 2019 à 15:51, Miquel Raynal <miquel.raynal@bootlin.com> 
-> a écrit :
+Paul Cercueil <paul@crapouillou.net> wrote on Wed, 13 Mar 2019 09:59:48
+-0300:
+
+> Le lun. 4 mars 2019 à 15:58, Miquel Raynal <miquel.raynal@bootlin.com> a écrit :
 > > Hi Paul,
-> >   
-> >>  >>  ---   
-> >> a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt  
-> >>  >>  +++   
-> >> b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt  
-> >>  >>  @@ -6,7 +6,10 @@ memory-controllers/ingenic,jz4780-nemc.txt),   
-> >> and >> thus NAND device nodes must  
-> >>  >>   be children of the NEMC node.  
-> >>  >> >>   Required NAND controller device properties:  
-> >>  >>  -- compatible: Should be set to "ingenic,jz4780-nand".
-> >>  >>  +- compatible: Should be one of:
-> >>  >>  +  * ingenic,jz4740-nand
-> >>  >>  +  * ingenic,jz4725b-nand
-> >>  >>  +  * ingenic,jz4780-nand  
-> >>  >
-> >>  > Wouldn't "-nand-controller" suffix be better? Of course in the   
-> >> driver  
-> >>  > you should still check for jz4780-nand.  
-> >> 
-> >>  So I would be compatible with:
-> >>  * ingenic,jz4740-nand-controller
-> >>  * ingenic,jz4725b-nand-controller
-> >>  * ingenic,jz4780-nand
-> >>  ?  
 > > 
-> > From a driver POV I would even prefer ingenic,jz4780-nand-controller. 
-> > I
-> > don't know what's best here. Maybe Boris or Rob can help?
+> > Paul Cercueil <paul@crapouillou.net> wrote on Mon, 04 Mar 2019 > 19:23:50
+> > +0100:
+> >   
+> >>  On Mon, Mar 4, 2019 at 10:50 AM, Miquel Raynal >> <miquel.raynal@bootlin.com> wrote:  
+> >>  > Hi Paul,
+> >>  >
+> >>  > Paul Cercueil <paul@crapouillou.net >> <mailto:paul@crapouillou.net>> > wrote on Sat,  9 Feb 2019 16:22:58
+> >>  > -0300:
+> >>  >  
+> >>  >>  The JZ4740 ECC hardware is not BCH but Reed-Solomon, so it >> makes >> more
+> >>  >>  sense to use the more generic ECC term.  
+> >>  >> >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net >> >> <mailto:paul@crapouillou.net>>  
+> >>  >>  ---  
+> >>  >> >>  Changes:
+> >>  >> >>  v3: New patch
+> >>  >> >>  v4: No change
+> >>  >> >>   .../devicetree/bindings/mtd/ingenic,jz4780-nand.txt    | 18 >> >> +++++++++---------  
+> >>  >>   1 file changed, 9 insertions(+), 9 deletions(-)  
+> >>  >> >>  diff --git >> >> a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt >> >> b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt  
+> >>  >>  index a5b940f18bf6..5a45cc54f46d 100644  
+> >>  >>  --- >> a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt  
+> >>  >>  +++ >> b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> >>  >>  @@ -1,4 +1,4 @@
+> >>  >>  -* Ingenic JZ4780 NAND/BCH
+> >>  >>  +* Ingenic JZ4780 NAND/ECC  
+> >>  >> >>   This file documents the device tree bindings for NAND flash >> >> devices on the  
+> >>  >>   JZ4780. NAND devices are connected to the NEMC controller >> >> (described in
+> >>  >>  @@ -14,10 +14,10 @@ Required NAND controller device properties:
+> >>  >>     an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC >> >> bank).  
+> >>  >> >>   Optional NAND controller device properties:  
+> >>  >>  -- ingenic,bch-controller: To make use of the hardware BCH >> >> controller, this
+> >>  >>  -  property must contain a phandle for the BCH controller node. >> The >> required
+> >>  >>  +- ingenic,bch-controller: To make use of the hardware ECC >> >> controller, this
+> >>  >>  +  property must contain a phandle for the ECC controller node. >> The >> required  
+> >>  >
+> >>  > I think there is already a 'ecc-engine' property used by MTK and >> Atmel
+> >>  > NAND controllers to point to the ECC engine block. Please use this
+> >>  > property instead of the ingenic specific one.  
+> >> >>  ingenic,bch-controller is already in the devicetree ABI. I can't >> change it now...  
+> > 
+> > Oh, right...
+> > 
+> > Well, same thing as before, maybe you can change it and keep the > driver
+> > backward compatible? I don't want new DT to use this property because
+> > it is not generic and we must have a way from the core to find the ECC
+> > engine handle when the controller does not embed one itself (thus, the
+> > ecc-engine property which is around for quite some time already).  
+> 
+> I can do that. Will the new ECC framework work with the "ecc-engine" property?
 
-Let's keep it consistent and have all compatibles follow the old
-naming scheme (ingenic,<soc>-nand). But yes, for new drivers, I agree
-that -nand-controller is better than just -nand.
+Yes.
+
+Right now it does not, but when supporting raw NAND devices, it will
+have to.
+
+
+Thanks,
+Miquèl
