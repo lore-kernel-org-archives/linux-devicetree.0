@@ -1,47 +1,42 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 3/3] dt-bindings: power: amlogic,
- meson-gx-pwrc: Add G12A compatible
-Date: Wed, 13 Mar 2019 15:10:30 +0100
-Message-ID: <20190313141030.5958-4-narmstrong@baylibre.com>
-References: <20190313141030.5958-1-narmstrong@baylibre.com>
+From: Christina Quast <cquast@hanoverdisplays.com>
+Subject: [PATCH v2] dt-bindings: pinctrl: imx7d: Fix PAD_CTL_DSE_X*
+Date: Wed, 13 Mar 2019 15:20:40 +0100
+Message-ID: <20190313142040.26694-1-cquast@hanoverdisplays.com>
+Reply-To: VI1PR04MB42227AA158BA1FCBF314AA27807B0@VI1PR04MB4222.eurprd04.prod.outlook.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190313141030.5958-1-narmstrong@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org, stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Christina Quast <cquast@hanoverdisplays.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEFtbG9naWMgRzEyQSBoYXMgYSBzbGlnaGx5IGRpZmZlcmVudCBQb3dlciBDb250cm9sLCBi
-dXQgdXNlcyB0aGUKc2FtZSBhZGRyZXNzIHNwYWNlIGFuZCBzeXNjdHJsIHJlZ2lzdGVycy4KClNp
-Z25lZC1vZmYtYnk6IE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT4KLS0t
-CiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9hbWxvZ2ljLG1lc29uLWd4LXB3cmMudHh0
-ICAgICAgIHwgNCArKystCiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0
-aW9uKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bv
-d2VyL2FtbG9naWMsbWVzb24tZ3gtcHdyYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvcG93ZXIvYW1sb2dpYyxtZXNvbi1neC1wd3JjLnR4dAppbmRleCAxY2QwNTBiNDA1
-NGMuLjBmZGMzZGQxMTI1ZSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3Bvd2VyL2FtbG9naWMsbWVzb24tZ3gtcHdyYy50eHQKKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL2FtbG9naWMsbWVzb24tZ3gtcHdyYy50eHQKQEAg
-LTE2LDcgKzE2LDkgQEAgRGV2aWNlIFRyZWUgQmluZGluZ3M6CiAtLS0tLS0tLS0tLS0tLS0tLS0t
-LS0KIAogUmVxdWlyZWQgcHJvcGVydGllczoKLS0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJhbWxv
-Z2ljLG1lc29uLWd4LXB3cmMtdnB1IiBmb3IgdGhlIE1lc29uIEdYIFNvQ3MKKy0gY29tcGF0aWJs
-ZTogc2hvdWxkIGJlIG9uZSBvZiB0aGUgZm9sbG93aW5nIDoKKwktICJhbWxvZ2ljLG1lc29uLWd4
-LXB3cmMtdnB1IiBmb3IgdGhlIE1lc29uIEdYIFNvQ3MKKwktICJhbWxvZ2ljLG1lc29uLWcxMmEt
-cHdyYy12cHUiIGZvciB0aGUgTWVzb24gRzEyQSBTb0NzCiAtICNwb3dlci1kb21haW4tY2VsbHM6
-IHNob3VsZCBiZSAwCiAtIGFtbG9naWMsaGhpLXN5c2N0cmw6IHBoYW5kbGUgdG8gdGhlIEhISSBz
-eXNjdHJsIG5vZGUKIC0gcmVzZXRzOiBwaGFuZGxlcyB0byB0aGUgcmVzZXQgbGluZXMgbmVlZGVk
-IGZvciB0aGlzIHBvd2VyIGRlbWFpbiBzZXF1ZW5jZQotLSAKMi4yMC4xCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+In the iMX7d datasheet, the PAD_CTL_DSE_X* values are different from
+the documentation.
+
+Changes since v2:
+* Changed patch title to 'dt-bindings: pinctrl: imx7d:'
+
+Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
+---
+ .../devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt       | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
+index 6666277c3acb..8ac1d0851a0f 100644
+--- a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
+@@ -48,9 +48,9 @@ PAD_CTL_HYS                     (1 << 3)
+ PAD_CTL_SRE_SLOW                (1 << 2)
+ PAD_CTL_SRE_FAST                (0 << 2)
+ PAD_CTL_DSE_X1                  (0 << 0)
+-PAD_CTL_DSE_X2                  (1 << 0)
+-PAD_CTL_DSE_X3                  (2 << 0)
+-PAD_CTL_DSE_X4                  (3 << 0)
++PAD_CTL_DSE_X4                  (1 << 0)
++PAD_CTL_DSE_X2                  (2 << 0)
++PAD_CTL_DSE_X6                  (3 << 0)
+ 
+ Examples:
+ While iomuxc-lpsr is intended to be used by dedicated peripherals to take
+-- 
+2.20.1
