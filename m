@@ -1,47 +1,101 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCHv14 3/3] ARM:drm ivip Intel FPGA Video and Image Processing
- Suite
-Date: Wed, 13 Mar 2019 13:35:53 -0700
-Message-ID: <fe101dca-2b39-fe0e-9bee-279abab9db8a@infradead.org>
-References: <20190313202206.921-1-hean.loong.ong@intel.com>
- <20190313202206.921-4-hean.loong.ong@intel.com>
+From: Patrick Venture <venture@google.com>
+Subject: Re: [PATCH v7 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Date: Wed, 13 Mar 2019 13:41:56 -0700
+Message-ID: <CAO=notz1Wrqaj4wWw5HmfMPpp6BMacMkr++WirLEHrphaesySA@mail.gmail.com>
+References: <20190312163051.155405-1-venture@google.com> <CAL_JsqLRO8m+voL_6mSpcrGmAT-SPwXhXDSOMEgQW6wmmTxZfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190313202206.921-4-hean.loong.ong@intel.com>
-Content-Language: en-US
+In-Reply-To: <CAL_JsqLRO8m+voL_6mSpcrGmAT-SPwXhXDSOMEgQW6wmmTxZfQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Hean-Loong, Ong" <hean.loong.ong@intel.com>, Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, chin.liang.see@intel.com, Ong@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3/13/19 1:22 PM, Hean-Loong, Ong wrote:
-> diff --git a/drivers/gpu/drm/ivip/Kconfig b/drivers/gpu/drm/ivip/Kconfig
-> new file mode 100644
-> index 0000000..1d08b90
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ivip/Kconfig
-> @@ -0,0 +1,14 @@
-> +config DRM_IVIP
-> +        tristate "Intel FGPA Video and Image Processing"
-> +        depends on DRM && OF
-> +        select DRM_GEM_CMA_HELPER
-> +        select DRM_KMS_HELPER
-> +        select DRM_KMS_FB_HELPER
-> +        select DRM_KMS_CMA_HELPER
-> +        help
-> +		  Choose this option if you have an Intel FPGA Arria 10 system
-> +		  and above with an Intel Display Port IP. This does not support
-> +		  legacy Intel FPGA Cyclone V display port. Currently only single
-> +		  frame buffer is supported. Note that ACPI and X_86 architecture
-> +		  is not supported for Arria10. If M is selected the module will be
-> +		  called ivip.
+On Wed, Mar 13, 2019 at 12:54 PM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Tue, Mar 12, 2019 at 11:30 AM Patrick Venture <venture@google.com> wrote:
+> >
+> > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+> >
+> > Signed-off-by: Patrick Venture <venture@google.com>
+> > ---
+> > Changes for v7:
+> > - Moved node under the syscon node it requires
+> > Changes for v6:
+> > - None
+> > Changes for v5:
+> > - None
+> > Changes for v4:
+> > - None
+> > Changes for v3:
+> > - None
+> > Changes for v2:
+> > - Added comment about syscon required parameter.
+> > ---
+> >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
+> >  1 file changed, 48 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> > new file mode 100644
+> > index 000000000000..088cc4e3dc54
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> > @@ -0,0 +1,48 @@
+> > +======================================================================
+> > +Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
+> > +======================================================================
+> > +
+> > +The bridge is available on platforms with the VGA enabled on the Aspeed device.
+> > +In this case, the host has access to a 64KiB window into all of the BMC's
+> > +memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
+> > +has read access to all the regions of memory, however the host only has read
+> > +and write access depending on a register controlled by the BMC.
+> > +
+> > +Required properties:
+> > +===================
+> > +
+> > + - compatible: must be one of:
+> > +       - "aspeed,ast2400-p2a-ctrl"
+> > +       - "aspeed,ast2500-p2a-ctrl"
+> > +
+> > + - syscon: handle to syscon device node controlling PCI.
+> > +
+> > +Optional properties:
+> > +===================
+> > +
+> > +- memory-region: A phandle to a reserved_memory region to be used for the PCI
+> > +               to AHB mapping
+> > +
+> > +The p2a-control node should be the child of a syscon node with the required
+> > +property:
+> > +
+> > +- compatible : Should be one of the following:
+> > +               "aspeed,ast2400-scu", "syscon", "simple-mfd"
+> > +               "aspeed,g4-scu", "syscon", "simple-mfd"
+> > +               "aspeed,ast2500-scu", "syscon", "simple-mfd"
+> > +               "aspeed,g5-scu", "syscon", "simple-mfd"
+> > +
+> > +Example:
+> > +
+> > +g4 Example
+> > +----------
+> > +
+> > +syscon: scu@1e6e2000 {
+> > +       compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
+> > +       reg = <0x1e6e2000 0x1a8>;
+> > +
+> > +       p2a: p2a-control {
+> > +               compatible = "aspeed,ast2400-p2a-ctrl";
+>
+> If there's a defined register range, then you could add a reg property
+> (even though Linux doesn't use it).
 
-Hi,
-If you make any changes to this series, the help text here is
-indented too much.  Just use one tab + 2 spaces, not 2 tabs + 2 spaces.
+in this case, the device just needs access to two separate registers
+controlled by the syscon to which it is now a child.
 
-thanks.
--- 
-~Randy
+>
+> Either way,
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
