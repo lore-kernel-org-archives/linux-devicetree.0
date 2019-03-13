@@ -1,12 +1,12 @@
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 Subject: [RESEND PATCH v1, 17/18] drm/mediatek: add ovl0/ovl0_2l usecase
-Date: Wed, 13 Mar 2019 17:25:10 +0800
-Message-ID: <1552469111-8014-18-git-send-email-yongqiang.niu@mediatek.com>
-References: <1552469111-8014-1-git-send-email-yongqiang.niu@mediatek.com>
+Date: Wed, 13 Mar 2019 17:12:16 +0800
+Message-ID: <1552468337-7748-18-git-send-email-yongqiang.niu@mediatek.com>
+References: <1552468337-7748-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1176303128=="
+Content-Type: multipart/mixed; boundary="===============1106447147=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1552469111-8014-1-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <1552468337-7748-1-git-send-email-yongqiang.niu@mediatek.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -20,16 +20,16 @@ To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herr
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yongqiang Niu <yongqiang.niu@mediatek.com>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============1176303128==
+--===============1106447147==
 Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_006_2051595247.2117592145"
+	boundary="__=_Part_Boundary_006_1364806092.760936264"
 
---__=_Part_Boundary_006_2051595247.2117592145
+--__=_Part_Boundary_006_1364806092.760936264
 Content-Transfer-Encoding: base64
 Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_007_978435240.1282158797"
+	boundary="__=_Part_Boundary_007_1709878934.1394777352"
 
---__=_Part_Boundary_007_978435240.1282158797
+--__=_Part_Boundary_007_1709878934.1394777352
 Content-Type: text/html
 Content-Transfer-Encoding: base64
 
@@ -107,7 +107,7 @@ KGluY2x1ZGluZyBhbnkgYXR0YWNobWVudHMpIGZyb20geW91ciBzeXN0ZW0sIGFuZCBkbyBub3QN
 CmRpc2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBvdGhlciBwZXJzb24u
 IFRoYW5rDQogeW91ITwvcHJlPjwhLS19LS0+
 
---__=_Part_Boundary_007_978435240.1282158797
+--__=_Part_Boundary_007_1709878934.1394777352
 Content-Type: text/plain
 Content-Transfer-Encoding: base64
 
@@ -167,12 +167,12 @@ Ow0KIAltdGtfY3J0Yy0+cGxhbmVzID0gZGV2bV9rY2FsbG9jKGRldiwgbXRrX2NydGMtPmxheWVy
 X25yLA0KIAkJCQkJc2l6ZW9mKHN0cnVjdCBkcm1fcGxhbmUpLA0KIAkJCQkJR0ZQX0tFUk5FTCk7
 DQotLSANCjEuOC4xLjEuZGlydHkNCg==
 
---__=_Part_Boundary_007_978435240.1282158797--
+--__=_Part_Boundary_007_1709878934.1394777352--
 
---__=_Part_Boundary_006_2051595247.2117592145--
+--__=_Part_Boundary_006_1364806092.760936264--
 
 
---===============1176303128==
+--===============1106447147==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -182,4 +182,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
 IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
 
---===============1176303128==--
+--===============1106447147==--
