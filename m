@@ -1,141 +1,65 @@
-Return-Path: <SRS0=ezLt=RQ=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v3 3/6] iio: gyro: fxas21002c: add i2c driver
-Date: Wed, 13 Mar 2019 18:39:59 +0000
-Message-Id: <20190313184002.2501-4-rui.silva@linaro.org>
-In-Reply-To: <20190313184002.2501-1-rui.silva@linaro.org>
-References: <20190313184002.2501-1-rui.silva@linaro.org>
+Return-Path: <SRS0=Paxx=RQ=mediatek.com=stanley.chu@kernel.org>
+From: Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v4 4/7] dt-bindings: phy: Add document for phy-mtk-ufs
+Date: Wed, 13 Mar 2019 12:10:08 +0800
+Message-ID: <1552450211-7149-6-git-send-email-stanley.chu@mediatek.com>
+In-Reply-To: <1552450211-7149-1-git-send-email-stanley.chu@mediatek.com>
+References: <1552450211-7149-1-git-send-email-stanley.chu@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+Content-Type: text/plain
+To: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, chunfeng.yun@mediatek.com, kishon@ti.com, martin.petersen@oracle.com, avri.altman@wdc.com, alim.akhtar@samsung.com, pedrom.sousa@synopsys.com
+Cc: vivek.gautam@codeaurora.org, subhashj@codeaurora.org, liwei213@huawei.com, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, kuohong.wang@mediatek.com, peter.wang@mediatek.com, chun-hung.wu@mediatek.com, Stanley Chu <stanley.chu@mediatek.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add the real driver to talk over i2c and use the fxas21002c core
-for the main tasks.
+Add UFS M-PHY node document for MediaTek SoC chips.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
 ---
- drivers/iio/gyro/Kconfig          |  6 +++
- drivers/iio/gyro/Makefile         |  1 +
- drivers/iio/gyro/fxas21002c_i2c.c | 73 +++++++++++++++++++++++++++++++
- 3 files changed, 80 insertions(+)
- create mode 100644 drivers/iio/gyro/fxas21002c_i2c.c
+ .../devicetree/bindings/phy/phy-mtk-ufs.txt   | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
 
-diff --git a/drivers/iio/gyro/Kconfig b/drivers/iio/gyro/Kconfig
-index cfd2cf44bac8..71b6552ee06b 100644
---- a/drivers/iio/gyro/Kconfig
-+++ b/drivers/iio/gyro/Kconfig
-@@ -77,6 +77,8 @@ config FXAS21002C
-        tristate "NXP FXAS21002C Gyro Sensor"
-        select IIO_BUFFER
-        select IIO_TRIGGERED_BUFFER
-+       select FXAS21002C_I2C if (I2C)
-+       depends on I2C
-        help
-          Say yes here to build support for NXP FXAS21002C Tri-axis Gyro
-          Sensor driver connected via I2C or SPI.
-@@ -84,6 +86,10 @@ config FXAS21002C
-          This driver can also be built as a module.  If so, the module
-          will be called fxas21002c_i2c or fxas21002c_spi.
- 
-+config FXAS21002C_I2C
-+       tristate
-+       select REGMAP_I2C
-+
- config HID_SENSOR_GYRO_3D
- 	depends on HID_SENSOR_HUB
- 	select IIO_BUFFER
-diff --git a/drivers/iio/gyro/Makefile b/drivers/iio/gyro/Makefile
-index 247dc600a602..adc18a5eb283 100644
---- a/drivers/iio/gyro/Makefile
-+++ b/drivers/iio/gyro/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_BMG160) += bmg160_core.o
- obj-$(CONFIG_BMG160_I2C) += bmg160_i2c.o
- obj-$(CONFIG_BMG160_SPI) += bmg160_spi.o
- obj-$(CONFIG_FXAS21002C) += fxas21002c_core.o
-+obj-$(CONFIG_FXAS21002C_I2C) += fxas21002c_i2c.o
- 
- obj-$(CONFIG_HID_SENSOR_GYRO_3D) += hid-sensor-gyro-3d.o
- 
-diff --git a/drivers/iio/gyro/fxas21002c_i2c.c b/drivers/iio/gyro/fxas21002c_i2c.c
+diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt b/Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
 new file mode 100644
-index 000000000000..c248ac5251df
+index 000000000000..dc6c9933b08d
 --- /dev/null
-+++ b/drivers/iio/gyro/fxas21002c_i2c.c
-@@ -0,0 +1,73 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for NXP FXAS21002C Gyroscope - I2C
-+ *
-+ * Copyright (C) 2018 Linaro Ltd.
-+ */
++++ b/Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
+@@ -0,0 +1,36 @@
++MediaTek Universal Flash Storage (UFS) M-PHY binding
++--------------------------------------------------------
 +
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regmap.h>
++UFS M-PHY nodes are defined to describe on-chip UFS M-PHY hardware macro.
++Each UFS M-PHY node should have its own node.
 +
-+#include "fxas21002c.h"
++To bind UFS M-PHY with UFS host controller, the controller node should
++contain a phandle reference to UFS M-PHY node.
 +
-+static const struct regmap_config fxas21002c_regmap_i2c_conf = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = FXAS21002C_REG_CTRL3,
-+};
++Required properties for UFS M-PHY nodes:
++- compatible         : Compatible list, contains the following controller:
++                       "mediatek,mt8183-ufsphy" for ufs phy
++                       persent on MT81xx chipsets.
++- reg                : Address and length of the UFS M-PHY register set.
++- #phy-cells         : This property shall be set to 0
++- clocks             : List of phandle and clock specifier pairs.
++- clock-names        : List of clock input name strings sorted in the same
++                       order as the clocks property. "unipro-clk" and
++                       "mp-clk" are mandatory.
 +
-+static int fxas21002c_i2c_probe(struct i2c_client *i2c,
-+				const struct i2c_device_id *id)
-+{
-+	struct regmap *regmap;
-+	const char *name = NULL;
++Example:
 +
-+	regmap = devm_regmap_init_i2c(i2c, &fxas21002c_regmap_i2c_conf);
-+	if (IS_ERR(regmap)) {
-+		dev_err(&i2c->dev, "Failed to register i2c regmap: %ld\n",
-+			PTR_ERR(regmap));
-+		return PTR_ERR(regmap);
-+	}
++	ufsphy: phy@11fa0000 {
++		compatible = "mediatek,mt8183-ufsphy";
++		reg = <0 0x11fa0000 0 0xc000>;
++		#phy-cells = <0>;
 +
-+	if (id)
-+		name = id->name;
++		clocks = <&infracfg_ao INFRACFG_AO_UNIPRO_SCK_CG>,
++			 <&infracfg_ao INFRACFG_AO_UFS_MP_SAP_BCLK_CG>;
++		clock-names = "unipro-clk", "mp-clk";
++	};
 +
-+	return fxas21002c_core_probe(&i2c->dev, regmap, i2c->irq, name);
-+}
-+
-+static int fxas21002c_i2c_remove(struct i2c_client *i2c)
-+{
-+	fxas21002c_core_remove(&i2c->dev);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id fxas21002c_i2c_id[] = {
-+	{ "fxas21002c", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, fxas21002c_i2c_id);
-+
-+static const struct of_device_id fxas21002c_i2c_of_match[] = {
-+	{ .compatible = "nxp,fxas21002c", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, fxas21002c_i2c_of_match);
-+
-+static struct i2c_driver fxas21002c_i2c_driver = {
-+	.driver = {
-+		.name = "fxas21002c_i2c",
-+		.pm = &fxas21002c_pm_ops,
-+		.of_match_table = of_match_ptr(fxas21002c_i2c_of_match),
-+	},
-+	.probe		= fxas21002c_i2c_probe,
-+	.remove		= fxas21002c_i2c_remove,
-+	.id_table	= fxas21002c_i2c_id,
-+};
-+module_i2c_driver(fxas21002c_i2c_driver);
-+
-+MODULE_AUTHOR("Rui Miguel Silva <rui.silva@linaro.org>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("FXAS21002C I2C Gyro driver");
++	ufshci@11270000 {
++		...
++		phys = <&ufsphy>;
++	};
 -- 
-2.20.1
+2.18.0
