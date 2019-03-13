@@ -1,47 +1,87 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH] regulator: Use of_node_name_eq for node name comparisons
-Date: Wed, 13 Mar 2019 18:21:26 +0100
-Message-ID: <1552497686.2453.49.camel@pengutronix.de>
-References: <20181205195050.4759-21-robh@kernel.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] libfdt: prefix header search paths with $(srctree)/
+Date: Thu, 14 Mar 2019 02:35:39 +0900
+Message-ID: <CAK7LNASfATE2zgm7Qz3i2Hm1vxTg_jE-jDwDDJ8ASVg19EdCXQ@mail.gmail.com>
+References: <1548387699-9222-1-git-send-email-yamada.masahiro@socionext.com> <CAK7LNAQ6bRxhXuSgVS0DqZ_izMyKuujmQe9TVV8pDXve-gs90g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181205195050.4759-21-robh@kernel.org>
+In-Reply-To: <CAK7LNAQ6bRxhXuSgVS0DqZ_izMyKuujmQe9TVV8pDXve-gs90g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob, hi Mark,
+On Mon, Feb 11, 2019 at 10:43 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Hi Rob,
+>
+>
+> On Fri, Jan 25, 2019 at 12:42 PM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > Currently, the Kbuild core manipulates header search paths in a crazy
+> > way [1].
+> >
+> > To fix this mess, I want all Makefiles to add explicit $(srctree)/ to
+> > the search paths in the srctree. Some Makefiles are already written in
+> > that way, but not all. The goal of this work is to make the notation
+> > consistent, and finally get rid of the gross hacks.
+> >
+> > Having whitespaces after -I does not matter since commit 48f6e3cf5bc6
+> > ("kbuild: do not drop -I without parameter").
+> >
+> > [1]: https://patchwork.kernel.org/patch/9632347/
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>
+>
+> Could you apply this to your tree?
 
-Am Mittwoch, den 05.12.2018, 13:50 -0600 schrieb Rob Herring:
-> Convert string compares of DT node names to use of_node_name_eq helper
-> instead. This removes direct access to the node name pointer.
-> 
-> For instances using of_node_cmp, this has the side effect of now using
-> case sensitive comparisons. This should not matter for any FDT based
-> system which all of these are.
-[...]
-> diff --git a/drivers/regulator/mc13xxx-regulator-core.c b/drivers/regulator/mc13xxx-regulator-core.c
-> index 65eb1e0350cf..2243138d8a58 100644
-> --- a/drivers/regulator/mc13xxx-regulator-core.c
-> +++ b/drivers/regulator/mc13xxx-regulator-core.c
-> @@ -186,7 +186,7 @@ struct mc13xxx_regulator_init_data *mc13xxx_parse_regulators_dt(
-> >  		for (i = 0; i < num_regulators; i++) {
-> >  			if (!regulators[i].desc.name)
-> >  				continue;
-> > -			if (!of_node_cmp(child->name,
-> > +			if (of_node_name_eq(child,
-> >  					 regulators[i].desc.name))
-> > 
 
-Unfortunately this change causes a regression on systems with MC13xxx
-regulators. The desc.name field is filled with an uppercase name of the
-regulator, while the existing DTs (as far as I know) all use lowercase
-node names, so the matching in the function above doesn't work anymore.
+Anyway, this one is trivial Makefile change.
 
-Any opinions about how to proceed here?
+Applied to linux-kbuild now.
 
-Regards,
-Lucas
+
+
+
+
+> Thanks.
+>
+> Masahiro
+>
+>
+> > ---
+> >
+> >  lib/Makefile | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/lib/Makefile b/lib/Makefile
+> > index e1b59da..05973c1 100644
+> > --- a/lib/Makefile
+> > +++ b/lib/Makefile
+> > @@ -208,7 +208,7 @@ KCOV_INSTRUMENT_stackdepot.o := n
+> >  libfdt_files = fdt.o fdt_ro.o fdt_wip.o fdt_rw.o fdt_sw.o fdt_strerror.o \
+> >                fdt_empty_tree.o
+> >  $(foreach file, $(libfdt_files), \
+> > -       $(eval CFLAGS_$(file) = -I$(src)/../scripts/dtc/libfdt))
+> > +       $(eval CFLAGS_$(file) = -I $(srctree)/scripts/dtc/libfdt))
+> >  lib-$(CONFIG_LIBFDT) += $(libfdt_files)
+> >
+> >  obj-$(CONFIG_RBTREE_TEST) += rbtree_test.o
+> > --
+> > 2.7.4
+> >
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
