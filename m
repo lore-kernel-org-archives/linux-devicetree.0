@@ -1,15 +1,16 @@
 From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] arm: dts: rk3288-tinker.dtsi: Enable WiFi
-Date: Wed, 13 Mar 2019 11:50:27 +0100
-Message-ID: <51774018.eXxrgBCrf5@diego>
+Subject: Re: [PATCH v3 3/3] arm: dts: rk3288-tinker.dtsi: Add outline
+ Bluetooth support
+Date: Wed, 13 Mar 2019 11:56:58 +0100
+Message-ID: <4537885.W6WcYDDAQ4@diego>
 References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
  <20190309153923.22806-1-beagleboard@davidjohnsummers.uk>
- <20190309153923.22806-2-beagleboard@davidjohnsummers.uk>
+ <20190309153923.22806-3-beagleboard@davidjohnsummers.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190309153923.22806-2-beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+In-Reply-To: <20190309153923.22806-3-beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
@@ -20,49 +21,81 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
 Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 To: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Tony McKahan <tonymckahan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 9. M=E4rz 2019, 16:39:22 CET schrieb David Summers:
-> This patch adds wifi support to the ASUS Tinker Board (S) machines.
+Hi David,
+
+Am Samstag, 9. M=E4rz 2019, 16:39:23 CET schrieb David Summers:
+> This patch is an outline for bluetooth on the ASUS Tinker Board (S).
 > =
 
-> This is provided by an wifi card (RTL8723BS) wired into the sdio interfac=
-e.
+> Bluetooth is provided my RTL8723BS on these machine, and this is wired
+> into UART0.
 > =
 
-> It requires certain pins pulled, to enable the WiFi.
+> Here this is performed as a SerDev device.
 > =
 
-> The schematics for these board do not show the WiFi connection, so the
-> connections have been taken from:
+> Now as presented, this does not give functioning bluetooth. The
+> updates needed to the device driver:
 > =
 
-> https://github.com/TinkerBoard/debian_kernel/blob/develop/arch/arm/boot/d=
-ts/
-> rk3288-miniarm.dts
+> https://www.spinics.net/lists/linux-bluetooth/msg78661.html
 > =
 
-> In particular the pulling of two pins.
+> Haven't yet been accepted. So this device tree hook doesn't yet have
+> "realtek,rtl8723bs-bt" compatible flag.
 > =
 
-> This patch is almost identical to v1. A few additional line breaks for
-> readability. On Armbian, they did not use sd-uhs-ddr50, so this has
-> been removed. It does not change functionality. The ASUS patch set
-> sd-uhs-sdr104;.
+> It is however still submitted as a patch, as it sets the UART up
+> correctly. And so basic communciation can be had with the device. This
+> has been confirmed by Tony McKahan @ Armbian, in particular that the
+> CTS/RTS is needed.
+> =
+
+> When Vasily patch is accepted, this will be added as a minor patch on
+> top of this patch; as this patch gives the pins needed.
+> =
+
+> The one oddity, is the RESET pin, it is labeled this way on the
+> schematic. However the hci_h5.c driver calls this ENABLE. Here we have
+> stuck with the schematic name.
 > =
 
 > Signed-off-by: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> Tested-by: Tony McKahan <tonymckahan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> Test-by: TheSaint @ ArchLinux ARM
+> ---
+>  arch/arm/boot/dts/rk3288-tinker.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> =
 
-applied for 5.2 with the following changes:
-- adapted subject to match the subsystem
-- updated received tags as negotiated yesterday
-- reordered some nodes and properties to match general sorting
-  (by @address first, otherwise largely alphabetical)
+> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi
+> b/arch/arm/boot/dts/rk3288-tinker.dtsi index 0ffab1b7c940..d29f5b34d7e6
+> 100644
+> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+> @@ -486,6 +486,17 @@
+> =
 
-Thanks
+>  &uart0 {
+>  	status =3D "okay";
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&uart0_xfer>, <&uart0_cts>, <&uart0_rts>;
+> +
+> +	bluetooth {
+> +		clocks =3D <&rk808 RK808_CLKOUT1>;
+> +		reset-gpios =3D <&gpio4 RK_PD5 GPIO_ACTIVE_HIGH>;
+> +		device-wake-gpios =3D <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
+> +		host-wake-gpios =3D <&gpio4 RK_PD7 GPIO_ACTIVE_HIGH>;
+> +		vcc-18-supply =3D <&vcc_18>;
+> +		vcc-io-supply =3D <&vcc_io>;
+> +	};
+
+As this is supposed to work as serial attached device it should follow a
+dt-binding, so first of all definitly needs a compatible and a binding
+specifying all the properties declared above.
+
+See for example Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+for a similar device.
+
 Heiko
