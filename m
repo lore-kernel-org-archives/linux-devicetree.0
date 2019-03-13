@@ -1,92 +1,65 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v5 12/12] mtd: rawnand: ingenic: Add ooblayout for the Qi Ben Nanonote
-Date: Wed, 13 Mar 2019 23:22:59 +0100
-Message-ID: <20190313222259.28704-12-paul@crapouillou.net>
+Subject: [PATCH v5 03/12] dt-bindings: mtd: ingenic: Use standard ecc-engine
+ property
+Date: Wed, 13 Mar 2019 23:22:50 +0100
+Message-ID: <20190313222259.28704-3-paul@crapouillou.net>
 References: <20190313222259.28704-1-paul@crapouillou.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
 In-Reply-To: <20190313222259.28704-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
 To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>
-Cc: od@zcrc.me, Mathieu Malaterre <malat@debian.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Cc: devicetree@vger.kernel.org, Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, od@zcrc.me, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Ben Nanonote from Qi Hardware expects a specific OOB layout on its
-NAND.
+The 'ingenic,bch-controller' property is now deprecated and the
+'ecc-engine' property should be used instead.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
 
 Notes:
-    v2: New patch
-    
-    v3: Use the qi,lb60 layout unconditionally if we detect that we're
-        running on that board.
-    
-    v4: No change
-    
-    v5: No change
+    v5: New patch
 
- drivers/mtd/nand/raw/ingenic/ingenic_nand.c | 41 ++++++++++++++++++++++++++++-
- 1 file changed, 40 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
-index a2450e10932a..d32d68ef0dc7 100644
---- a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
-+++ b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
-@@ -72,6 +72,41 @@ static inline struct ingenic_nfc *to_ingenic_nfc(struct nand_controller *ctrl)
- 	return container_of(ctrl, struct ingenic_nfc, controller);
- }
+diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+index 5a45cc54f46d..c02259353327 100644
+--- a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+@@ -14,7 +14,7 @@ Required NAND controller device properties:
+   an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
  
-+static int qi_lb60_ooblayout_ecc(struct mtd_info *mtd, int section,
-+				 struct mtd_oob_region *oobregion)
-+{
-+	struct nand_chip *chip = mtd_to_nand(mtd);
-+	struct nand_ecc_ctrl *ecc = &chip->ecc;
-+
-+	if (section || !ecc->total)
-+		return -ERANGE;
-+
-+	oobregion->length = ecc->total;
-+	oobregion->offset = 12;
-+
-+	return 0;
-+}
-+
-+static int qi_lb60_ooblayout_free(struct mtd_info *mtd, int section,
-+				  struct mtd_oob_region *oobregion)
-+{
-+	struct nand_chip *chip = mtd_to_nand(mtd);
-+	struct nand_ecc_ctrl *ecc = &chip->ecc;
-+
-+	if (section)
-+		return -ERANGE;
-+
-+	oobregion->length = mtd->oobsize - ecc->total - 12;
-+	oobregion->offset = 12 + ecc->total;
-+
-+	return 0;
-+}
-+
-+const struct mtd_ooblayout_ops qi_lb60_ooblayout_ops = {
-+	.ecc = qi_lb60_ooblayout_ecc,
-+	.free = qi_lb60_ooblayout_free,
-+};
-+
- static int jz4725b_ooblayout_ecc(struct mtd_info *mtd, int section,
- 				 struct mtd_oob_region *oobregion)
- {
-@@ -247,7 +282,11 @@ static int ingenic_nand_attach_chip(struct nand_chip *chip)
- 		return -EINVAL;
- 	}
+ Optional NAND controller device properties:
+-- ingenic,bch-controller: To make use of the hardware ECC controller, this
++- ecc-engine: To make use of the hardware ECC controller, this
+   property must contain a phandle for the ECC controller node. The required
+   properties for this node are described below. If this is not specified,
+   software ECC will be used instead.
+@@ -48,7 +48,7 @@ nemc: nemc@13410000 {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
  
--	mtd_set_ooblayout(mtd, nfc->soc_info->oob_layout);
-+	/* For legacy reasons we use a different layout on the qi,lb60 board. */
-+	if (of_machine_is_compatible("qi,lb60"))
-+		mtd_set_ooblayout(mtd, &qi_lb60_ooblayout_ops);
-+	else
-+		mtd_set_ooblayout(mtd, nfc->soc_info->oob_layout);
+-		ingenic,bch-controller = <&bch>;
++		ecc-engine = <&bch>;
  
- 	return 0;
- }
+ 		nand@1 {
+ 			reg = <1>;
 -- 
 2.11.0
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
