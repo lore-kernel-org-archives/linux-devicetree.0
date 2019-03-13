@@ -1,8 +1,8 @@
 Return-Path: <SRS0=Paxx=RQ=mediatek.com=stanley.chu@kernel.org>
 From: Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v4 0/7] scsi: ufs-mediatek: Add ufshci and ufsphy support for Mediatek SoC chips
-Date: Wed, 13 Mar 2019 12:10:04 +0800
-Message-ID: <1552450211-7149-2-git-send-email-stanley.chu@mediatek.com>
+Subject: [PATCH v4 3/7] scsi: ufs-hisi: Re-factor ufshcd_get_pwr_dev_param
+Date: Wed, 13 Mar 2019 12:10:07 +0800
+Message-ID: <1552450211-7149-5-git-send-email-stanley.chu@mediatek.com>
 In-Reply-To: <1552450211-7149-1-git-send-email-stanley.chu@mediatek.com>
 References: <1552450211-7149-1-git-send-email-stanley.chu@mediatek.com>
 MIME-Version: 1.0
@@ -11,56 +11,149 @@ To: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, 
 Cc: vivek.gautam@codeaurora.org, subhashj@codeaurora.org, liwei213@huawei.com, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, kuohong.wang@mediatek.com, peter.wang@mediatek.com, chun-hung.wu@mediatek.com, Stanley Chu <stanley.chu@mediatek.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello,
+ufshcd_get_pwr_dev_param function and ufs_dev_params struct
+are re-factored to ufs common driver thus change the way this
+driver used.
 
-This patch series adds UFS M-PHY and UFS host driver support in MediaTek chipsets.
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+---
+ drivers/scsi/ufs/ufs-hisi.c | 109 ++----------------------------------
+ 1 file changed, 4 insertions(+), 105 deletions(-)
 
-In the meantime, re-factors ufshcd_get_pwr_dev_param in vendors' drivers. This function is for vendors to decide finally agreed attributes for power mode change if vendors define
-their host capability in struct ufs_dev_params. Because it is using by both ufs-qcom and ufs-hisi and also used in ufs-mediatek in this serious, simply re-factor it and then every vendors can reuse it.
-
-Changes since v3:
--	dt-bindings: Use specific compatible name for both ufs-mediatek and phy-mtk-ufs, remove interrupt-parent and lanes-per-direction in ufs-mediatek, and fix descriptions.
-
-Changes since v2:
--	Fix header style with SPDX-License-Identifier declaration used.
--	Simplify ufs-phy-mtk to single source file since we has one MPHY version now, and do fixes according to Chunfeng Yun's comments.
--	Add dt-bindings of ufs-phy-mtk.
-
-Changes since v1:
--	Re-factor ufshcd_get_pwr_dev_param in mediatek/qcom/hisi vendor drivers.
--	Introduce ufs-phy-mtk to have a good extension capability for different power control flows in future different MPHY versions.
--	Bind ufs-phy-mtk and hook suitable callbacks in ufs-mediatek driver.
--	Use PA_LOCAL_TX_LCC_ENABLE attribute defined in unipro.h instead.
--	Do some minor format fixes.
-
-Stanley Chu (7):
-  scsi: ufs: Introduce ufshcd_get_pwr_dev_param
-  scsi: ufs-qcom: Re-factor ufshcd_get_pwr_dev_param
-  scsi: ufs-hisi: Re-factor ufshcd_get_pwr_dev_param
-  dt-bindings: phy: Add document for phy-mtk-ufs
-  dt-bindings: scsi: ufs: Add document for ufs-mediatek
-  phy: mediatek: Add UFS M-PHY driver
-  scsi: ufs-mediatek: Add UFS support for Mediatek SoC chips
-
- .../devicetree/bindings/phy/phy-mtk-ufs.txt   |  36 ++
- .../devicetree/bindings/ufs/ufs-mediatek.txt  |  44 +++
- drivers/phy/mediatek/Kconfig                  |   9 +
- drivers/phy/mediatek/Makefile                 |   1 +
- drivers/phy/mediatek/phy-mtk-ufs.c            | 239 ++++++++++++
- drivers/scsi/ufs/Kconfig                      |  14 +
- drivers/scsi/ufs/Makefile                     |   1 +
- drivers/scsi/ufs/ufs-hisi.c                   | 109 +-----
- drivers/scsi/ufs/ufs-mediatek.c               | 368 ++++++++++++++++++
- drivers/scsi/ufs/ufs-mediatek.h               |  54 +++
- drivers/scsi/ufs/ufs-qcom.c                   | 106 +----
- drivers/scsi/ufs/ufshcd-pltfrm.c              |  98 +++++
- drivers/scsi/ufs/ufshcd-pltfrm.h              |  21 +
- 13 files changed, 893 insertions(+), 207 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
- create mode 100644 Documentation/devicetree/bindings/ufs/ufs-mediatek.txt
- create mode 100644 drivers/phy/mediatek/phy-mtk-ufs.c
- create mode 100644 drivers/scsi/ufs/ufs-mediatek.c
- create mode 100644 drivers/scsi/ufs/ufs-mediatek.h
-
+diff --git a/drivers/scsi/ufs/ufs-hisi.c b/drivers/scsi/ufs/ufs-hisi.c
+index 452e19f8fb47..01faad26ec26 100644
+--- a/drivers/scsi/ufs/ufs-hisi.c
++++ b/drivers/scsi/ufs/ufs-hisi.c
+@@ -272,108 +272,7 @@ static int ufs_hi3660_link_startup_notify(struct ufs_hba *hba,
+ 	return err;
+ }
+ 
+-struct ufs_hisi_dev_params {
+-	u32 pwm_rx_gear; /* pwm rx gear to work in */
+-	u32 pwm_tx_gear; /* pwm tx gear to work in */
+-	u32 hs_rx_gear;  /* hs rx gear to work in */
+-	u32 hs_tx_gear;  /* hs tx gear to work in */
+-	u32 rx_lanes;    /* number of rx lanes */
+-	u32 tx_lanes;    /* number of tx lanes */
+-	u32 rx_pwr_pwm;  /* rx pwm working pwr */
+-	u32 tx_pwr_pwm;  /* tx pwm working pwr */
+-	u32 rx_pwr_hs;   /* rx hs working pwr */
+-	u32 tx_pwr_hs;   /* tx hs working pwr */
+-	u32 hs_rate;     /* rate A/B to work in HS */
+-	u32 desired_working_mode;
+-};
+-
+-static int ufs_hisi_get_pwr_dev_param(
+-				    struct ufs_hisi_dev_params *hisi_param,
+-				    struct ufs_pa_layer_attr *dev_max,
+-				    struct ufs_pa_layer_attr *agreed_pwr)
+-{
+-	int min_hisi_gear;
+-	int min_dev_gear;
+-	bool is_dev_sup_hs = false;
+-	bool is_hisi_max_hs = false;
+-
+-	if (dev_max->pwr_rx == FASTAUTO_MODE || dev_max->pwr_rx == FAST_MODE)
+-		is_dev_sup_hs = true;
+-
+-	if (hisi_param->desired_working_mode == FAST) {
+-		is_hisi_max_hs = true;
+-		min_hisi_gear = min_t(u32, hisi_param->hs_rx_gear,
+-				       hisi_param->hs_tx_gear);
+-	} else {
+-		min_hisi_gear = min_t(u32, hisi_param->pwm_rx_gear,
+-				       hisi_param->pwm_tx_gear);
+-	}
+-
+-	/*
+-	 * device doesn't support HS but
+-	 * hisi_param->desired_working_mode is HS,
+-	 * thus device and hisi_param don't agree
+-	 */
+-	if (!is_dev_sup_hs && is_hisi_max_hs) {
+-		pr_err("%s: device not support HS\n", __func__);
+-		return -ENOTSUPP;
+-	} else if (is_dev_sup_hs && is_hisi_max_hs) {
+-		/*
+-		 * since device supports HS, it supports FAST_MODE.
+-		 * since hisi_param->desired_working_mode is also HS
+-		 * then final decision (FAST/FASTAUTO) is done according
+-		 * to hisi_params as it is the restricting factor
+-		 */
+-		agreed_pwr->pwr_rx = agreed_pwr->pwr_tx =
+-			hisi_param->rx_pwr_hs;
+-	} else {
+-		/*
+-		 * here hisi_param->desired_working_mode is PWM.
+-		 * it doesn't matter whether device supports HS or PWM,
+-		 * in both cases hisi_param->desired_working_mode will
+-		 * determine the mode
+-		 */
+-		agreed_pwr->pwr_rx = agreed_pwr->pwr_tx =
+-			hisi_param->rx_pwr_pwm;
+-	}
+-
+-	/*
+-	 * we would like tx to work in the minimum number of lanes
+-	 * between device capability and vendor preferences.
+-	 * the same decision will be made for rx
+-	 */
+-	agreed_pwr->lane_tx =
+-		min_t(u32, dev_max->lane_tx, hisi_param->tx_lanes);
+-	agreed_pwr->lane_rx =
+-		min_t(u32, dev_max->lane_rx, hisi_param->rx_lanes);
+-
+-	/* device maximum gear is the minimum between device rx and tx gears */
+-	min_dev_gear = min_t(u32, dev_max->gear_rx, dev_max->gear_tx);
+-
+-	/*
+-	 * if both device capabilities and vendor pre-defined preferences are
+-	 * both HS or both PWM then set the minimum gear to be the chosen
+-	 * working gear.
+-	 * if one is PWM and one is HS then the one that is PWM get to decide
+-	 * what is the gear, as it is the one that also decided previously what
+-	 * pwr the device will be configured to.
+-	 */
+-	if ((is_dev_sup_hs && is_hisi_max_hs) ||
+-	    (!is_dev_sup_hs && !is_hisi_max_hs))
+-		agreed_pwr->gear_rx = agreed_pwr->gear_tx =
+-			min_t(u32, min_dev_gear, min_hisi_gear);
+-	else
+-		agreed_pwr->gear_rx = agreed_pwr->gear_tx = min_hisi_gear;
+-
+-	agreed_pwr->hs_rate = hisi_param->hs_rate;
+-
+-	pr_info("ufs final power mode: gear = %d, lane = %d, pwr = %d, rate = %d\n",
+-		agreed_pwr->gear_rx, agreed_pwr->lane_rx, agreed_pwr->pwr_rx,
+-		agreed_pwr->hs_rate);
+-	return 0;
+-}
+-
+-static void ufs_hisi_set_dev_cap(struct ufs_hisi_dev_params *hisi_param)
++static void ufs_hisi_set_dev_cap(struct ufs_dev_params *hisi_param)
+ {
+ 	hisi_param->rx_lanes = UFS_HISI_LIMIT_NUM_LANES_RX;
+ 	hisi_param->tx_lanes = UFS_HISI_LIMIT_NUM_LANES_TX;
+@@ -434,7 +333,7 @@ static int ufs_hi3660_pwr_change_notify(struct ufs_hba *hba,
+ 				       struct ufs_pa_layer_attr *dev_max_params,
+ 				       struct ufs_pa_layer_attr *dev_req_params)
+ {
+-	struct ufs_hisi_dev_params ufs_hisi_cap;
++	struct ufs_dev_params ufs_hisi_cap;
+ 	int ret = 0;
+ 
+ 	if (!dev_req_params) {
+@@ -447,8 +346,8 @@ static int ufs_hi3660_pwr_change_notify(struct ufs_hba *hba,
+ 	switch (status) {
+ 	case PRE_CHANGE:
+ 		ufs_hisi_set_dev_cap(&ufs_hisi_cap);
+-		ret = ufs_hisi_get_pwr_dev_param(
+-			&ufs_hisi_cap, dev_max_params, dev_req_params);
++		ret = ufshcd_get_pwr_dev_param(&ufs_hisi_cap,
++					       dev_max_params, dev_req_params);
+ 		if (ret) {
+ 			dev_err(hba->dev,
+ 			    "%s: failed to determine capabilities\n", __func__);
 -- 
 2.18.0
