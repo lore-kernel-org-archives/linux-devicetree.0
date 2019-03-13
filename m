@@ -1,16 +1,13 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv4 26/28] PCI: mobiveil: ls_pcie_g4: add Workaround for
- A-011451
-Date: Wed, 13 Mar 2019 14:51:48 +0000
-Message-ID: <AM6PR04MB5781A68E3511D6ACCAA192E3844A0@AM6PR04MB5781.eurprd04.prod.outlook.com>
-References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
- <20190311093130.7209-27-Zhiqiang.Hou@nxp.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 6/9] regulator: mt6358: Add support for MT6358 regulator
+Date: Wed, 13 Mar 2019 15:01:32 +0000
+Message-ID: <20190313150132.GA5951@sirena.org.uk>
+References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1552275991-34648-7-git-send-email-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============0366961588999294646=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190311093130.7209-27-Zhiqiang.Hou@nxp.com>
-Content-Language: en-US
+In-Reply-To: <1552275991-34648-7-git-send-email-hsin-hsiung.wang@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,76 +17,127 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>
-Cc: "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
+To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, srv_heupstream@mediatek.com, Alessandro Zummo <a.zummo@towertech.it>, Marc Zyngier <marc.zyngier@arm.com>, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQWxsLA0KDQpQbGVhc2UgaWdub3JlIHRoaXMgcGF0Y2gsIHJldjEuMCB3aWxsIG5vdCBiZSBw
-cm9kdWN0aW9uLg0KDQpUaGFua3MsDQpaaGlxaWFuZw0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNz
-YWdlLS0tLS0NCj4gRnJvbTogWi5xLiBIb3UNCj4gU2VudDogMjAxOcTqM9TCMTHI1SAxNzozNA0K
-PiBUbzogbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZzsNCj4gYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwu
-b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gbC5zdWJyYWhtYW55YUBtb2JpdmVpbC5jby5p
-bjsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpDQo+IDxsZW95YW5nLmxpQG54cC5jb20+OyBs
-b3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOw0KPiBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsgd2ls
-bC5kZWFjb25AYXJtLmNvbQ0KPiBDYzogTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsg
-TS5oLiBMaWFuDQo+IDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBYaWFvd2VpIEJhbyA8eGlhb3dl
-aS5iYW9AbnhwLmNvbT47IFoucS4gSG91DQo+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gU3Vi
-amVjdDogW1BBVENIdjQgMjYvMjhdIFBDSTogbW9iaXZlaWw6IGxzX3BjaWVfZzQ6IGFkZCBXb3Jr
-YXJvdW5kIGZvcg0KPiBBLTAxMTQ1MQ0KPiANCj4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFu
-Zy5Ib3VAbnhwLmNvbT4NCj4gDQo+IFdoZW4gTFgyIFBDSWUgY29udHJvbGxlciBpcyBzZW5kaW5n
-IG11bHRpcGxlIHNwbGl0IGNvbXBsZXRpb25zIGFuZCBBQ0sNCj4gbGF0ZW5jeSBleHBpcmVzIGlu
-ZGljYXRpbmcgdGhhdCBBQ0sgc2hvdWxkIGJlIHNlbmQgYXQgcHJpb3JpdHkuDQo+IEJ1dCBiZWNh
-dXNlIG9mIGxhcmdlIG51bWJlciBvZiBzcGxpdCBjb21wbGV0aW9ucyBhbmQgRkMgdXBkYXRlIERM
-TFAsIHRoZQ0KPiBjb250cm9sbGVyIGRvZXMgbm90IGdpdmUgcHJpb3JpdHkgdG8gQUNLIHRyYW5z
-bWlzc2lvbi4gVGhpcyByZXN1bHRzIGludG8gQUNLDQo+IGxhdGVuY3kgdGltZXIgdGltZW91dCBl
-cnJvciBhdCB0aGUgbGluayBwYXJ0bmVyIGFuZCB0aGUgcGVuZGluZyBUTFBzIGFyZQ0KPiByZXBs
-YXllZCBieSB0aGUgbGluayBwYXJ0bmVyIGFnYWluLg0KPiANCj4gV29ya2Fyb3VuZDoNCj4gMS4g
-UmVkdWNlIHRoZSBBQ0sgbGF0ZW5jeSB0aW1lb3V0IHZhbHVlIHRvIGEgdmVyeSBzbWFsbCB2YWx1
-ZS4NCj4gMi4gUmVzdHJpY3QgdGhlIG51bWJlciBvZiBjb21wbGV0aW9ucyBmcm9tIHRoZSBMWDIg
-UENJZSBjb250cm9sbGVyDQo+ICAgIHRvIDEsIGJ5IGNoYW5naW5nIHRoZSBNYXggUmVhZCBSZXF1
-ZXN0IFNpemUgKE1SUlMpIG9mIGxpbmsgcGFydG5lcg0KPiAgICB0byB0aGUgc2FtZSB2YWx1ZSBh
-cyBNYXggUGFja2V0IHNpemUgKE1QUykuDQo+IA0KPiBUaGlzIHBhdGNoIGltcGxlbWVudGVkIHBh
-cnQgMSwgdGhlIHBhcnQgMiBjYW4gYmUgc2V0IGJ5IGtlcm5lbCBwYXJhbWV0ZXINCj4gJ3BjaT1w
-Y2llX2J1c19wZXJmJw0KPiANCj4gVGhpcyBFUlJBVEEgaXMgb25seSBmb3IgTFgyMTYwQSBSZXYx
-LjAsIGFuZCBpdCB3aWxsIGJlIGZpeGVkIGluIFJldjIuMC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6
-IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+IC0tLQ0KPiBWNDoNCj4gIC0g
-bm8gY2hhbmdlDQo+IA0KPiAgLi4uL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaS1sYXllcnNj
-YXBlLWdlbjQuYyB8IDE1ICsrKysrKysrKysrKysrKw0KPiAgZHJpdmVycy9wY2kvY29udHJvbGxl
-ci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmggICB8ICA0ICsrKysNCj4gIDIgZmlsZXMgY2hhbmdl
-ZCwgMTkgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRy
-b2xsZXIvbW9iaXZlaWwvcGNpLWxheWVyc2NhcGUtZ2VuNC5jDQo+IGIvZHJpdmVycy9wY2kvY29u
-dHJvbGxlci9tb2JpdmVpbC9wY2ktbGF5ZXJzY2FwZS1nZW40LmMNCj4gaW5kZXggZDJjNWRiYmQ1
-ZTNjLi4yMGNlMTQ2Nzg4Y2EgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
-bW9iaXZlaWwvcGNpLWxheWVyc2NhcGUtZ2VuNC5jDQo+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRy
-b2xsZXIvbW9iaXZlaWwvcGNpLWxheWVyc2NhcGUtZ2VuNC5jDQo+IEBAIC04MiwxMiArODIsMjcg
-QEAgc3RhdGljIGJvb2wgbHNfcGNpZV9nNF9pc19icmlkZ2Uoc3RydWN0IGxzX3BjaWVfZzQNCj4g
-KnBjaWUpDQo+ICAJcmV0dXJuIGhlYWRlcl90eXBlID09IFBDSV9IRUFERVJfVFlQRV9CUklER0U7
-ICB9DQo+IA0KPiArc3RhdGljIHZvaWQgd29ya2Fyb3VuZF9BMDExNDUxKHN0cnVjdCBsc19wY2ll
-X2c0ICpwY2llKSB7DQo+ICsJc3RydWN0IG1vYml2ZWlsX3BjaWUgKm12X3BjaSA9IHBjaWUtPnBj
-aTsNCj4gKwl1MzIgdmFsOw0KPiArDQo+ICsJLyogU2V0IEFDSyBsYXRlbmN5IHRpbWVvdXQgKi8N
-Cj4gKwl2YWwgPSBjc3JfcmVhZGwobXZfcGNpLCBHUEVYX0FDS19SRVBMQVlfVE8pOw0KPiArCXZh
-bCAmPSB+KEFDS19MQVRfVE9fVkFMX01BU0sgPDwgQUNLX0xBVF9UT19WQUxfU0hJRlQpOw0KPiAr
-CXZhbCB8PSAoNCA8PCBBQ0tfTEFUX1RPX1ZBTF9TSElGVCk7DQo+ICsJY3NyX3dyaXRlbChtdl9w
-Y2ksIHZhbCwgR1BFWF9BQ0tfUkVQTEFZX1RPKTsgfQ0KPiArDQo+ICBzdGF0aWMgaW50IGxzX3Bj
-aWVfZzRfaG9zdF9pbml0KHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2kpICB7DQo+ICAJc3RydWN0
-IGxzX3BjaWVfZzQgKnBjaWUgPSB0b19sc19wY2llX2c0KHBjaSk7DQo+IA0KPiAgCXBjaWUtPnJl
-diA9IGNzcl9yZWFkYihwY2ksIFBDSV9SRVZJU0lPTl9JRCk7DQo+IA0KPiArCWlmIChwY2llLT5y
-ZXYgPT0gUkVWXzFfMCkNCj4gKwkJd29ya2Fyb3VuZF9BMDExNDUxKHBjaWUpOw0KPiArDQo+ICAJ
-cmV0dXJuIDA7DQo+ICB9DQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxl
-ci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmgNCj4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21v
-Yml2ZWlsL3BjaWUtbW9iaXZlaWwuaA0KPiBpbmRleCBhYjQzZGU1ZTRiMmIuLmYwZTJlNGFlMDli
-NSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1v
-Yml2ZWlsLmgNCj4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1v
-Yml2ZWlsLmgNCj4gQEAgLTg1LDYgKzg1LDEwIEBADQo+ICAjZGVmaW5lIFBBQl9BWElfQU1BUF9Q
-RVhfV0lOX0god2luKQlQQUJfUkVHX0FERFIoMHgwYmFjLA0KPiB3aW4pDQo+ICAjZGVmaW5lIFBB
-Ql9JTlRQX0FYSV9QSU9fQ0xBU1MJCTB4NDc0DQo+IA0KPiArI2RlZmluZSBHUEVYX0FDS19SRVBM
-QVlfVE8JCTB4NDM4DQo+ICsjZGVmaW5lICBBQ0tfTEFUX1RPX1ZBTF9NQVNLCQkweDFmZmYNCj4g
-KyNkZWZpbmUgIEFDS19MQVRfVE9fVkFMX1NISUZUCQkwDQo+ICsNCj4gICNkZWZpbmUgUEFCX1BF
-WF9BTUFQX0NUUkwod2luKQkJUEFCX1JFR19BRERSKDB4NGJhMCwgd2luKQ0KPiAgI2RlZmluZSAg
-QU1BUF9DVFJMX0VOX1NISUZUCQkwDQo+ICAjZGVmaW5lICBBTUFQX0NUUkxfVFlQRV9TSElGVAkJ
-MQ0KPiAtLQ0KPiAyLjE3LjENCg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+
+--===============0366961588999294646==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
+Content-Disposition: inline
+
+
+--jI8keyz6grp/JLjh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Mar 11, 2019 at 11:46:28AM +0800, Hsin-Hsiung Wang wrote:
+
+> +static const u32 vefuse_voltages[] = {
+> +	1700000, 1800000, 1900000,
+> +};
+
+This and a bunch of the other regulators look like they're just linear
+ranges and could use the linear range helpers.
+
+> +static const u32 vcn33_bt_voltages[] = {
+> +	3300000, 3400000, 3500000,
+> +};
+> +
+> +static const u32 vcn33_wifi_voltages[] = {
+> +	3300000, 3400000, 3500000,
+> +};
+
+These also have the same range so no matter which helpers are used I'd
+expect the data to be shared, I think some of the other regulators might
+have shared tables but didn't confirm.
+
+> +static inline unsigned int mt6358_map_mode(unsigned int mode)
+> +{
+> +	return mode == MT6358_BUCK_MODE_FORCE_PWM ?
+> +		REGULATOR_MODE_FAST : REGULATOR_MODE_NORMAL;
+> +}
+
+Please write normal if statements, it makes the code more readable.
+
+> +static int mt6358_set_voltage_sel(struct regulator_dev *rdev,
+> +				  unsigned int selector)
+> +{
+> +	int idx, ret;
+> +	const u32 *pvol;
+> +	struct mt6358_regulator_info *info = rdev_get_drvdata(rdev);
+> +
+> +	pvol = (const u32 *)info->index_table;
+> +
+> +	idx = pvol[selector];
+> +	ret = regmap_update_bits(rdev->regmap, info->desc.vsel_reg,
+> +				 info->desc.vsel_mask,
+> +				 idx << info->vsel_shift);
+> +
+> +	return ret;
+> +}
+
+This looks like something other devices might do - rather than implement
+it in the driver it would be a bit better to add it to helpers.c as a
+reusable function.
+
+> +static int mt6358_get_buck_voltage_sel(struct regulator_dev *rdev)
+> +{
+> +	int ret, regval;
+> +	struct mt6358_regulator_info *info = rdev_get_drvdata(rdev);
+> +
+> +	ret = regmap_read(rdev->regmap, info->da_vsel_reg, &regval);
+> +	if (ret != 0) {
+> +		dev_info(&rdev->dev,
+> +			 "Failed to get mt6358 Buck %s vsel reg: %d\n",
+> +			 info->desc.name, ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = (regval >> info->da_vsel_shift) & info->da_vsel_mask;
+> +
+> +	return ret;
+> +}
+
+This is just the generic get_voltage_sel() as far as I can see?
+
+> +	/* Read PMIC chip revision to update constraints and voltage table */
+> +	if (regmap_read(mt6397->regmap, MT6358_SWCID, &reg_value) < 0) {
+> +		dev_err(&pdev->dev, "Failed to read Chip ID\n");
+> +		return -EIO;
+> +	}
+
+We never use the value we read here?
+
+
+--jI8keyz6grp/JLjh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyJG0kACgkQJNaLcl1U
+h9Bqcwf/cBs7hTJMGSxxGTMQXuOiF7spWZKUwkRLK+rWiYzZv7xUeHEoUoSLZzm/
+d1xUkLNQ48R3p7Ey4aVzFf3HltiH9RGj+3g8OszIJS6SdTybiZYhJqMsAMnqfX/x
+tIbiu6NhlLrtm6qfKEEjHHnYSu1dIhMm6Y6JJ4D/yjpxWBed6xR0LlGTk7s3b3Gs
+xf1hGjBU2Hl0CE4TiamypPcVTzEIx4mzw1VpB2qBXwCoDLG1wnJKwjAmFVFNyWLo
+jpEeWmmqBboKOiRw+LfVXPW7CF35a3smalwrzBhIYToBop3b95kY5Pza/r7Vmr84
+203AJzm4IdIG7xe56xcuLu3AOOQqaA==
+=Aw1h
+-----END PGP SIGNATURE-----
+
+--jI8keyz6grp/JLjh--
+
+
+--===============0366961588999294646==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0366961588999294646==--
