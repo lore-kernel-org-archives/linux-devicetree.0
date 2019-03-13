@@ -1,59 +1,75 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2 2/5] Documentation: dt: edac: Add Stratix10 Peripheral bindings
-Date: Wed, 13 Mar 2019 14:20:01 -0500
-Message-ID: <CAL_JsqJHKwOBcHLwfHfB407XkU4SFDymbWR05fN+Zft1ki+b=w@mail.gmail.com>
+Subject: Re: [PATCHv2 1/5] Documentation: dt: edac: Fix Stratix10 IRQ bindings
+Date: Wed, 13 Mar 2019 14:23:53 -0500
+Message-ID: <CAL_JsqKnwYXSsP5B_uAaRoCEEV7Cb7f8XFPSC2z_hfSj7Rgqyg@mail.gmail.com>
 References: <1551288445-22335-1-git-send-email-thor.thayer@linux.intel.com>
- <1551288445-22335-3-git-send-email-thor.thayer@linux.intel.com>
- <20190312160445.GA8802@bogus> <8b671f75-8488-1e06-a020-5f7d95166918@linux.intel.com>
+ <1551288445-22335-2-git-send-email-thor.thayer@linux.intel.com>
+ <20190312160057.GA31306@bogus> <8b18501b-e120-97f2-f6b5-4771dc0f613f@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8b671f75-8488-1e06-a020-5f7d95166918@linux.intel.com>
+In-Reply-To: <8b18501b-e120-97f2-f6b5-4771dc0f613f@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: thor.thayer@linux.intel.com
 Cc: Borislav Petkov <bp@alien8.de>, Dinh Nguyen <dinguyen@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 2:28 PM Thor Thayer <thor.thayer@linux.intel.com> wrote:
+On Tue, Mar 12, 2019 at 2:13 PM Thor Thayer <thor.thayer@linux.intel.com> wrote:
 >
 > Hi Rob,
 >
-> On 3/12/19 11:04 AM, Rob Herring wrote:
-> > On Wed, Feb 27, 2019 at 11:27:22AM -0600, thor.thayer@linux.intel.com wrote:
+> On 3/12/19 11:00 AM, Rob Herring wrote:
+> > On Wed, Feb 27, 2019 at 11:27:21AM -0600, thor.thayer@linux.intel.com wrote:
 > >> From: Thor Thayer <thor.thayer@linux.intel.com>
 > >>
-> >> Add peripheral bindings for Stratix10 EDAC to capture
-> >> the differences between the ARM64 and ARM32 architecture.
+> >> Fix Stratix10 ECC bindings to specify only the single
+> >> bit error. On Stratix10 double bit errors are handled
+> >> as SErrors instead of interrupts.
+> >> Indicate the differences between the ARM64 and ARM32
+> >> EDAC architecture in the bindings.
+> >>
+> >> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+> >> ---
+> >> v2 No change
+> >> ---
+> >>   .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 23 +++++++++++++++-------
+> >>   1 file changed, 16 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+> >> index 5626560a6cfd..a0ac50e15912 100644
+> >> --- a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+> >> +++ b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+> >> @@ -236,33 +236,42 @@ Stratix10 SoCFPGA ECC Manager
+> >>   The Stratix10 SoC ECC Manager handles the IRQs for each peripheral
+> >>   in a shared register similar to the Arria10. However, ECC requires
+> >>   access to registers that can only be read from Secure Monitor with
+> >> -SMC calls. Therefore the device tree is slightly different.
+> >> +SMC calls. Therefore the device tree is slightly different. Note that
+> >> +only 1 interrupt is sent because the double bit errors are treated as
+> >> +SErrors instead of IRQ.
+> >>
+> >>   Required Properties:
+> >>   - compatible : Should be "altr,socfpga-s10-ecc-manager"
+> >> -- interrupts : Should be single bit error interrupt, then double bit error
+> >> -    interrupt.
+> >> +- altr,sysgr-syscon : phandle to Stratix10 System Manager Block
+> >> +                  containing the ECC manager registers.
 > >
-> > What's the difference? Sounds like 2 different chips, so Stratix10 or
-> > s10 is not specific enough perhaps.
+> > Seems this was already in use, but why not just make this node a child
+> > of the System Manager Block and remove this phandle?
 > >
+> Yes, this was already in use but I'm trying to fix that oversight with
+> this patch.
 >
-> Yes, our ARM32 chips are the Cyclone5 and Arria10. The Stratix10 is
-> ARM64 and I'm using S10 as shorthand for the Stratix10.
+> The System Manager is a collection of registers used by different
+> peripherals including EMAC and ECC.
 
-So it's really just differences between one chip and another... ARM32
-vs 64 really has nothing to do with that.
+The EMAC has its own registers too, right? But the ECC does not it seems.
 
->
-> The ECC blocks are very similar between Arria10 and Stratix10 but there
-> are differences as a result of the ARM32 vs ARM64 architecture
-> differences. The major difference is how Double Bit Errors are handled.
-> In the ARM32, the DBE is mapped to an IRQ. On ARM64, the DBE is mapped
-> to a SError.
+> I view ECC Manager as a separate entity as is the Ethernet MAC which is
+> why I have it separate. Using the phandle also follows the convention
+> established with the Arria10 ECC Manager.
 
-Okay, I guess that's why arm64 matters...
+I guess this ship has sailed, so:
 
-> I had started out re-using the Arria10 bindings for Stratix10 since they
-> were very similar. Dinh pointed out that having separate bindings for
-> ARM64 would allow separation between the architectures and make future
-> changes easier.
->
-> I'm unclear on the comment about being specific enough. Are you
-> suggesting that I use arm64 in the binding name instead of s10? Or is
-> there a better naming convention I should follow?
-
-NM, it was me that was confused. It was that Stratix10 was already
-mentioned in the doc that confused me.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
