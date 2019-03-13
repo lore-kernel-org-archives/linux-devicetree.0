@@ -1,80 +1,122 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] arm: dts: rk3288-tinker.dtsi: Enable WiFi
-Date: Tue, 12 Mar 2019 21:55:08 +0100
-Message-ID: <2230941.OycJZGmSUK@diego>
-References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
- <383c9884-4885-34e1-9ef7-96e936bb211d@arm.com>
- <c91db9a2-4283-0ea5-949e-ed190a7a8083@davidjohnsummers.uk>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v3 1/7] dt-bindings: interconnect: Add a dma interconnect
+ name
+Date: Wed, 13 Mar 2019 13:48:48 +0200
+Message-ID: <f73cdaff-6bf9-370e-7c0e-0f1dee193838@linaro.org>
+References: <cover.f2e5fbb4d21384168973fa32377a33d627768146.1549897336.git-series.maxime.ripard@bootlin.com>
+ <43eeca13733faefe62f9facc25b8e88f7e593f61.1549897336.git-series.maxime.ripard@bootlin.com>
+ <553c987c-da9a-1f85-fb16-4b9fe17dd14b@linaro.org>
+ <20190305155337.glfvgyddvnkv774m@flea>
+ <0e72fbf7-b100-ddc5-3c19-32f71c37f76f@arm.com>
+ <477995b0-9ac3-b6ca-f5f2-856e4af926f1@linaro.org>
+ <20190307154755.5kgc7oh4b5bhg2fj@flea>
+ <CAGb2v666u1c1OE3FnN=Y_kZe7TgNKvtA6=GYiHuWycJ2ooQhxw@mail.gmail.com>
+ <20190311101130.7t7rctxlqly3uqmt@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <c91db9a2-4283-0ea5-949e-ed190a7a8083-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Tony McKahan <tonymckahan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190311101130.7t7rctxlqly3uqmt@flea>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Yong Deng <yong.deng@magewell.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 12. M=E4rz 2019, 21:41:24 CET schrieb David Summers:
-> On 11/03/2019 22:18, Robin Murphy wrote:
-> > On 2019-03-09 3:39 pm, David Summers wrote:
-> >> Signed-off-by: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-> >> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> >> Tested-by: Tony McKahan <tonymckahan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> > =
+Hi,
 
-> > Erm, I don't think I did... :(
-> > =
+On 3/11/19 12:11, Maxime Ripard wrote:
+> On Fri, Mar 08, 2019 at 12:09:47AM +0800, Chen-Yu Tsai wrote:
+>> On Thu, Mar 7, 2019 at 11:48 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>>>
+>>> On Thu, Mar 07, 2019 at 05:15:20PM +0200, Georgi Djakov wrote:
+>>>> Hi,
+>>>>
+>>>> On 3/5/19 18:14, Robin Murphy wrote:
+>>>>> On 05/03/2019 15:53, Maxime Ripard wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On Fri, Mar 01, 2019 at 07:48:15PM +0200, Georgi Djakov wrote:
+>>>>>>> On 2/11/19 17:02, Maxime Ripard wrote:
+>>>>>>>> The current DT bindings assume that the DMA will be performed by the
+>>>>>>>> devices through their parent DT node, and rely on that assumption
+>>>>>>>> for the
+>>>>>>>> address translation using dma-ranges.
+>>>>>>>>
+>>>>>>>> However, some SoCs have devices that will perform DMA through
+>>>>>>>> another bus,
+>>>>>>>> with separate address translation rules. We therefore need to
+>>>>>>>> express that
+>>>>>>>> relationship, through the special interconnect name "dma".
+>>>>>>>>
+>>>>>>>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>>>>>>>> ---
+>>>>>>>>   Documentation/devicetree/bindings/interconnect/interconnect.txt |
+>>>>>>>> 3 +++
+>>>>>>>>   1 file changed, 3 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git
+>>>>>>>> a/Documentation/devicetree/bindings/interconnect/interconnect.txt
+>>>>>>>> b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+>>>>>>>> index 5a3c575b387a..e69fc2d992c3 100644
+>>>>>>>> --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
+>>>>>>>> +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+>>>>>>>> @@ -51,6 +51,9 @@ interconnect-names : List of interconnect path
+>>>>>>>> name strings sorted in the same
+>>>>>>>>                interconnect-names to match interconnect paths with
+>>>>>>>> interconnect
+>>>>>>>>                specifier pairs.
+>>>>>>>>   +                     Reserved interconnect names:
+>>>>>>>> +                         * dma: Path from the device to the main
+>>>>>>>> memory of the system
+>>>>>>>
+>>>>>>> Bikeshed: As it's from the device to the main memory, maybe here we can
+>>>>>>> also denote this my calling the path dma-mem or dma-memory. For other
+>>>>>>> paths, we are trying to mention both the source and the destination and
+>>>>>>> maybe it would be good to be consistent although this is special one.
+>>>>>>
+>>>>>> I'm not sure I understand what you mean. You'd like two interconnect
+>>>>>> names, one called dma-memory, and one memory-dma?
+>>>>>
+>>>>> Hmm, yes, it's not like "dma" describes an actual source or destination
+>>>>> either :/
+>>>>
+>>>> IIUC, it's a path (bus) that a dma device use to access some memory
+>>>> (read or/and write). So i have used source-destination above more in the
+>>>> sense of initiator-target or master-slave. My suggestion was just to
+>>>> change the reserved interconnect name from "dma" to "dma-mem" or
+>>>> "dma-memory".
+>>>
+>>> If dma is an issue in itself, maybe we can call it "device-memory" ?
+>>
+>> Might I ask what happens if the device can both DMA to and from memory?
+> 
+> We can create another one called memory-device if that's needed?
 
-> > Please see section 13 of Documentation/process/submitting-patches.rst
-> > for what that tag means.
-> > =
+I don't think this is needed if in both cases the DMA device is the
+initiator of the transfer. In both cases the DMA device is the initiator
+(master), so memory-device or memory-dma does not make much sense. Sorry
+for the confusion.
 
-> > FWIW this is the kind of patch I might have considered formally
-> > reviewing if I had enough first-hand experience of the Tinker Board or
-> > Realtek SDIO modules to judge correctness, but sadly I have zero of
-> > either.
-> > =
+> 
+>> IIRC the display frontends, backends, and mixers all have writeback
+>> capability, using the same interconnect port.
+> 
+> I think in both cases it's the same path. The camera driver also need
+> to have that offset, even though it's a producer and not a consumer,
+> and the VPU does too.
 
-> > Robin.
-> > =
+Again, the camera driver and probably the VPU too would be the
+initiators, so regarding naming it should be the same (despite that the
+data flow is bi-directional).
 
-> >> Test-by: TheSaint @ ArchLinux ARM
-> =
-
-> Apols Robin. I read to much into your understanding of the comments that
-> were talked to be added....
-> =
-
-> Yes Stefan but at least as much, maybe more work into this patch than I
-> did. He was the man that made it close to what we could mainline. I only
-> added very little, but then again I was also the one pushing for mainlini=
-ng.
-> =
-
-> So if only one sign off - Probably Stefan did most.
-
-Nope, that was the reason for my Co-developed-by question.
-If you look into the submitting patches document there is a special tag
-Co-Developed-by to give credit to the author that is not the "patch-from".
-
-And in this case all authors also get a signed-off-by line.
-
-> =
-
-> Heiko: Same question as before do you want me to resend which cleared up
-> signoff? Just send me an email - and I'll do whatever is best for you.
-
-As in the other mail, resending for things like that is not necessary in my
-case. I just need to hunt down the relevant information as you can see :-D
-
-Heiko
+Thanks,
+Georgi
