@@ -1,101 +1,130 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] arm: dts: rk3288-tinker.dtsi: Add outline
- Bluetooth support
-Date: Wed, 13 Mar 2019 11:56:58 +0100
-Message-ID: <4537885.W6WcYDDAQ4@diego>
-References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
- <20190309153923.22806-1-beagleboard@davidjohnsummers.uk>
- <20190309153923.22806-3-beagleboard@davidjohnsummers.uk>
+From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Subject: Re: [PATCHv4 11/28] PCI: mobiveil: only fix up the Class Code field
+Date: Wed, 13 Mar 2019 16:29:18 +0530
+Message-ID: <CAFZiPx1+SDPLZ3CAAhSxbTUWdKrnx3UkF99nTxwqoNx3mdXDcA@mail.gmail.com>
+References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com> <20190311093130.7209-12-Zhiqiang.Hou@nxp.com>
+ <20190311141401.GG214730@google.com> <AM6PR04MB5781498315C6B69EB2586B9D84490@AM6PR04MB5781.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190309153923.22806-3-beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AM6PR04MB5781498315C6B69EB2586B9D84490@AM6PR04MB5781.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+Bjorn/ZQ,
 
-Am Samstag, 9. M=E4rz 2019, 16:39:23 CET schrieb David Summers:
-> This patch is an outline for bluetooth on the ASUS Tinker Board (S).
-> =
 
-> Bluetooth is provided my RTL8723BS on these machine, and this is wired
-> into UART0.
-> =
+On Tue, Mar 12, 2019 at 2:48 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+>
+> Hi Bjorn,
+>
+> Thanks a lot for your comments!
+>
+> > -----Original Message-----
+> > From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+> > Sent: 2019=E5=B9=B43=E6=9C=8811=E6=97=A5 22:14
+> > To: Z.q. Hou <zhiqiang.hou@nxp.com>
+> > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > robh+dt@kernel.org; mark.rutland@arm.com; l.subrahmanya@mobiveil.co.in;
+> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>;
+> > lorenzo.pieralisi@arm.com; catalin.marinas@arm.com;
+> > will.deacon@arm.com; Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian
+> > <minghuan.lian@nxp.com>; Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Subject: Re: [PATCHv4 11/28] PCI: mobiveil: only fix up the Class Code =
+field
+> >
+> > On Mon, Mar 11, 2019 at 09:31:23AM +0000, Z.q. Hou wrote:
+> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > >
+> > > Fix up the Class Code to PCI bridge, do not change the Revision ID.
+> > > And move the fixup to mobiveil_host_init function.
+> >
+> > Add parens after function name.
+> >
+> > Please explain why this change is needed.  Does it fix a bug?
+> >
+> > Does this fix the problem that the PCI core didn't correctly identify t=
+he device
+> > as a bridge because it identified bridges by class code instead of head=
+er type?
+> >
+> > That problem *should* be fixed by b2fb5cc57469 ("PCI: Rely on config sp=
+ace
+> > header type, not class code"), which is now upstream.
+> >
+> > You might still want this class code change so that lspci shows the cor=
+rect
+> > thing.  That's fine, but the changelog should say why we're doing it.
+> >
+>
+> Subrahmanya's original patch is to fixup 'Class Code' field, but it also =
+fixed the 'Revision ID' field. This patch is patch is to remove the fixup o=
+f 'Revision ID' field.
 
-> Here this is performed as a SerDev device.
-> =
+it was introduced during the test with 4.9 and 4.15 linux version,
+without this fix driver was not getting loaded.
 
-> Now as presented, this does not give functioning bluetooth. The
-> updates needed to the device driver:
-> =
+I belive it should be sufficient to mention in code comment:  "Fixing
+the class code as hardware is not reflecting the correct class code",
+And the changelog for this patch mentioning "avoid changing the
+revision ID  during the class code fix". Is that OK?
 
-> https://www.spinics.net/lists/linux-bluetooth/msg78661.html
-> =
+Thanks,
 
-> Haven't yet been accepted. So this device tree hook doesn't yet have
-> "realtek,rtl8723bs-bt" compatible flag.
-> =
-
-> It is however still submitted as a patch, as it sets the UART up
-> correctly. And so basic communciation can be had with the device. This
-> has been confirmed by Tony McKahan @ Armbian, in particular that the
-> CTS/RTS is needed.
-> =
-
-> When Vasily patch is accepted, this will be added as a minor patch on
-> top of this patch; as this patch gives the pins needed.
-> =
-
-> The one oddity, is the RESET pin, it is labeled this way on the
-> schematic. However the hci_h5.c driver calls this ENABLE. Here we have
-> stuck with the schematic name.
-> =
-
-> Signed-off-by: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-> ---
->  arch/arm/boot/dts/rk3288-tinker.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> =
-
-> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi
-> b/arch/arm/boot/dts/rk3288-tinker.dtsi index 0ffab1b7c940..d29f5b34d7e6
-> 100644
-> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
-> @@ -486,6 +486,17 @@
-> =
-
->  &uart0 {
->  	status =3D "okay";
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&uart0_xfer>, <&uart0_cts>, <&uart0_rts>;
-> +
-> +	bluetooth {
-> +		clocks =3D <&rk808 RK808_CLKOUT1>;
-> +		reset-gpios =3D <&gpio4 RK_PD5 GPIO_ACTIVE_HIGH>;
-> +		device-wake-gpios =3D <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
-> +		host-wake-gpios =3D <&gpio4 RK_PD7 GPIO_ACTIVE_HIGH>;
-> +		vcc-18-supply =3D <&vcc_18>;
-> +		vcc-io-supply =3D <&vcc_io>;
-> +	};
-
-As this is supposed to work as serial attached device it should follow a
-dt-binding, so first of all definitly needs a compatible and a binding
-specifying all the properties declared above.
-
-See for example Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-for a similar device.
-
-Heiko
+>
+> > > Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP
+> > > driver")
+> >
+> > Make this "Fixes:" line a single line again.
+> >
+> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> > > Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> > > ---
+> > > V4:
+> > >  - no change
+> > >
+> > >  drivers/pci/controller/pcie-mobiveil.c | 9 ++++++---
+> > >  1 file changed, 6 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-mobiveil.c
+> > > b/drivers/pci/controller/pcie-mobiveil.c
+> > > index 78e575e71f4d..8eee1ab7ee24 100644
+> > > --- a/drivers/pci/controller/pcie-mobiveil.c
+> > > +++ b/drivers/pci/controller/pcie-mobiveil.c
+> > > @@ -653,6 +653,12 @@ static int mobiveil_host_init(struct mobiveil_pc=
+ie
+> > *pcie)
+> > >                                type, resource_size(win->res));
+> > >     }
+> > >
+> > > +   /* fixup for PCIe class register */
+> > > +   value =3D csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
+> > > +   value &=3D 0xff;
+> > > +   value |=3D (PCI_CLASS_BRIDGE_PCI << 16);
+> > > +   csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
+> > > +
+> > >     /* setup MSI hardware registers */
+> > >     mobiveil_pcie_enable_msi(pcie);
+> > >
+> > > @@ -896,9 +902,6 @@ static int mobiveil_pcie_probe(struct
+> > platform_device *pdev)
+> > >             goto error;
+> > >     }
+> > >
+> > > -   /* fixup for PCIe class register */
+> > > -   csr_writel(pcie, 0x060402ab, PAB_INTP_AXI_PIO_CLASS);
+> > > -
+> > >     /* initialize the IRQ domains */
+> > >     ret =3D mobiveil_pcie_init_irq_domain(pcie);
+> > >     if (ret) {
+> > > --
+> > > 2.17.1
+> > >
+>
+> Thanks,
+> Zhiqiang
