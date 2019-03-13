@@ -1,165 +1,56 @@
-From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [RESEND PATCH v1,
- 15/18] drm/mediatek: add RDMA1 fifo size into RDMA private data
-Date: Wed, 13 Mar 2019 16:26:00 +0800
-Message-ID: <1552465563-6940-16-git-send-email-yongqiang.niu@mediatek.com>
-References: <1552465563-6940-1-git-send-email-yongqiang.niu@mediatek.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [PATCH 0/4] Introduce OPP bandwidth bindings
+Date: Wed, 13 Mar 2019 11:00:06 +0200
+Message-ID: <20190313090010.20534-1-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0595865049=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1552465563-6940-1-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yongqiang Niu <yongqiang.niu@mediatek.com>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vireshk@kernel.org, sboyd@kernel.org, nm@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net
+Cc: jcrouse@codeaurora.org, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, sibis@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
---===============0595865049==
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_007_106913879.1393182818"
+Here is a proposal to extend the OPP bindings with bandwidth based on
+a previous discussion [1].
 
---__=_Part_Boundary_007_106913879.1393182818
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_008_1633762523.1277265807"
+Every functional block on a SoC can contribute to the system power
+efficiency by expressing its own bandwidth needs (to memory or other SoC
+modules). This will allow the system to save power when high throughput
+is not required (and also provide maximum throughput when needed).
 
---__=_Part_Boundary_008_1633762523.1277265807
-Content-Type: text/html
-Content-Transfer-Encoding: base64
+There are at least three ways for a device to determine its bandwidth
+needs:
+	1. The device can dynamically calculate the needed bandwidth
+based on some known variable. For example: UART (baud rate), I2C (fast
+mode, high-speed mode, etc), USB (specification version, data transfer
+type), SDHC (SD standard, clock rate, bus-width), Video Encoder/Decoder
+(video format, resolution, frame-rate)
 
-PHByZT4NClRoaXMgcGF0Y2ggYWRkIFJETUExIGZpZm8gc2l6ZSBpbnRvIFJETUEgcHJpdmF0ZSBk
-YXRhDQoNClNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgJmx0O3lvbmdxaWFuZy5uaXVAbWVk
-aWF0ZWsuY29tJmd0Ow0KLS0tDQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX3Jk
-bWEuYyB8IDE2ICsrKysrKysrKysrKysrKy0NCiAxIGZpbGUgY2hhbmdlZCwgMTUgaW5zZXJ0aW9u
-cygrKSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
-dGVrL210a19kaXNwX3JkbWEuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9y
-ZG1hLmMNCmluZGV4IGIwYTVjZmYuLjNmOWI0ZDQgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0
-ZWsvbXRrX2Rpc3BfcmRtYS5jDQpAQCAtNTMsMTIgKzUzLDE0IEBADQogI2RlZmluZSBSRE1BX0ZJ
-Rk9fUFNFVURPX1NJWkUoYnl0ZXMpCQkJKCgoYnl0ZXMpIC8gMTYpICZsdDsmbHQ7IDE2KQ0KICNk
-ZWZpbmUgUkRNQV9PVVRQVVRfVkFMSURfRklGT19USFJFU0hPTEQoYnl0ZXMpCQkoKGJ5dGVzKSAv
-IDE2KQ0KICNkZWZpbmUgUkRNQV9GSUZPX1NJWkUocmRtYSkJCQkoKHJkbWEpLSZndDtkYXRhLSZn
-dDtmaWZvX3NpemUpDQorI2RlZmluZSBSRE1BX0ZJRk9fU0laRTEocmRtYSkJCQkoKHJkbWEpLSZn
-dDtkYXRhLSZndDtmaWZvX3NpemUxKQ0KICNkZWZpbmUgRElTUF9SRE1BX01FTV9TVEFSVF9BRERS
-CQkweDBmMDANCiANCiAjZGVmaW5lIFJETUFfTUVNX0dNQwkJCQkweDQwNDAyMDIwDQogDQogc3Ry
-dWN0IG10a19kaXNwX3JkbWFfZGF0YSB7DQogCXVuc2lnbmVkIGludCBmaWZvX3NpemU7DQorCXVu
-c2lnbmVkIGludCBmaWZvX3NpemUxOw0KIH07DQogDQogLyoqDQpAQCAtMTM3LDExICsxMzksMTcg
-QEAgc3RhdGljIHZvaWQgbXRrX3JkbWFfY29uZmlnKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAs
-IHVuc2lnbmVkIGludCB3aWR0aCwNCiB7DQogCXVuc2lnbmVkIGludCB0aHJlc2hvbGQ7DQogCXVu
-c2lnbmVkIGludCByZWc7DQorCXVuc2lnbmVkIGludCByZG1hX2ZpZm9fc2l6ZTsNCiAJc3RydWN0
-IG10a19kaXNwX3JkbWEgKnJkbWEgPSBjb21wX3RvX3JkbWEoY29tcCk7DQogDQogCXJkbWFfdXBk
-YXRlX2JpdHMoY29tcCwgRElTUF9SRUdfUkRNQV9TSVpFX0NPTl8wLCAweGZmZiwgd2lkdGgpOw0K
-IAlyZG1hX3VwZGF0ZV9iaXRzKGNvbXAsIERJU1BfUkVHX1JETUFfU0laRV9DT05fMSwgMHhmZmZm
-ZiwgaGVpZ2h0KTsNCiANCisJaWYgKGNvbXAtJmd0O2lkID09IEREUF9DT01QT05FTlRfUkRNQTEp
-DQorCQlyZG1hX2ZpZm9fc2l6ZSA9IFJETUFfRklGT19TSVpFMShyZG1hKTsNCisJZWxzZQ0KKwkJ
-cmRtYV9maWZvX3NpemUgPSBSRE1BX0ZJRk9fU0laRShyZG1hKTsNCisNCiAJLyoNCiAJICogRW5h
-YmxlIEZJRk8gdW5kZXJmbG93IHNpbmNlIERTSSBhbmQgRFBJIGNhbiYjMzk7dCBiZSBibG9ja2Vk
-Lg0KIAkgKiBLZWVwIHRoZSBGSUZPIHBzZXVkbyBzaXplIHJlc2V0IGRlZmF1bHQgb2YgOCBLaUIu
-IFNldCB0aGUNCkBAIC0xNDksOCArMTU3LDEyIEBAIHN0YXRpYyB2b2lkIG10a19yZG1hX2NvbmZp
-ZyhzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLCB1bnNpZ25lZCBpbnQgd2lkdGgsDQogCSAqIGFj
-Y291bnQgZm9yIGJsYW5raW5nLCBhbmQgd2l0aCBhIHBpeGVsIGRlcHRoIG9mIDQgYnl0ZXM6DQog
-CSAqLw0KIAl0aHJlc2hvbGQgPSB3aWR0aCAqIGhlaWdodCAqIHZyZWZyZXNoICogNCAqIDcgLyAx
-MDAwMDAwOw0KKw0KKwlpZiAodGhyZXNob2xkICZndDsgcmRtYV9maWZvX3NpemUpDQorCQl0aHJl
-c2hvbGQgPSByZG1hX2ZpZm9fc2l6ZTsNCisNCiAJcmVnID0gUkRNQV9GSUZPX1VOREVSRkxPV19F
-TiB8DQotCSAgICAgIFJETUFfRklGT19QU0VVRE9fU0laRShSRE1BX0ZJRk9fU0laRShyZG1hKSkg
-fA0KKwkgICAgICBSRE1BX0ZJRk9fUFNFVURPX1NJWkUocmRtYV9maWZvX3NpemUpIHwNCiAJICAg
-ICAgUkRNQV9PVVRQVVRfVkFMSURfRklGT19USFJFU0hPTEQodGhyZXNob2xkKTsNCiAJd3JpdGVs
-KHJlZywgY29tcC0mZ3Q7cmVncyArIERJU1BfUkVHX1JETUFfRklGT19DT04pOw0KIH0NCkBAIC0z
-MzAsMTAgKzM0MiwxMiBAQCBzdGF0aWMgaW50IG10a19kaXNwX3JkbWFfcmVtb3ZlKHN0cnVjdCBw
-bGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfZGlzcF9y
-ZG1hX2RhdGEgbXQyNzAxX3JkbWFfZHJpdmVyX2RhdGEgPSB7DQogCS5maWZvX3NpemUgPSBTWl80
-SywNCisJLmZpZm9fc2l6ZTEgPSBTWl80SywNCiB9Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-bXRrX2Rpc3BfcmRtYV9kYXRhIG10ODE3M19yZG1hX2RyaXZlcl9kYXRhID0gew0KIAkuZmlmb19z
-aXplID0gU1pfOEssDQorCS5maWZvX3NpemUxID0gU1pfOEssDQogfTsNCiANCiBzdGF0aWMgY29u
-c3Qgc3RydWN0IG9mX2RldmljZV9pZCBtdGtfZGlzcF9yZG1hX2RyaXZlcl9kdF9tYXRjaFtdID0g
-ew0KLS0gDQoxLjguMS4xLmRpcnR5DQoNCjwvcHJlPjwhLS10eXBlOnRleHQtLT48IS0tey0tPjxw
-cmU+KioqKioqKioqKioqKiBFbWFpbCBDb25maWRlbnRpYWxpdHkgTm90aWNlDQogKioqKioqKioq
-KioqKioqKioqKioNClRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaW4gdGhpcyBlLW1haWwgbWVz
-c2FnZSAoaW5jbHVkaW5nIGFueSANCmF0dGFjaG1lbnRzKSBtYXkgYmUgY29uZmlkZW50aWFsLCBw
-cm9wcmlldGFyeSwgcHJpdmlsZWdlZCwgb3Igb3RoZXJ3aXNlDQpleGVtcHQgZnJvbSBkaXNjbG9z
-dXJlIHVuZGVyIGFwcGxpY2FibGUgbGF3cy4gSXQgaXMgaW50ZW5kZWQgdG8gYmUgDQpjb252ZXll
-ZCBvbmx5IHRvIHRoZSBkZXNpZ25hdGVkIHJlY2lwaWVudChzKS4gQW55IHVzZSwgZGlzc2VtaW5h
-dGlvbiwgDQpkaXN0cmlidXRpb24sIHByaW50aW5nLCByZXRhaW5pbmcgb3IgY29weWluZyBvZiB0
-aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGl0cyANCmF0dGFjaG1lbnRzKSBieSB1bmludGVuZGVkIHJl
-Y2lwaWVudChzKSBpcyBzdHJpY3RseSBwcm9oaWJpdGVkIGFuZCBtYXkgDQpiZSB1bmxhd2Z1bC4g
-SWYgeW91IGFyZSBub3QgYW4gaW50ZW5kZWQgcmVjaXBpZW50IG9mIHRoaXMgZS1tYWlsLCBvciBi
-ZWxpZXZlDQogDQp0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1tYWlsIGluIGVycm9yLCBw
-bGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgDQppbW1lZGlhdGVseSAoYnkgcmVwbHlpbmcgdG8gdGhp
-cyBlLW1haWwpLCBkZWxldGUgYW55IGFuZCBhbGwgY29waWVzIG9mIA0KdGhpcyBlLW1haWwgKGlu
-Y2x1ZGluZyBhbnkgYXR0YWNobWVudHMpIGZyb20geW91ciBzeXN0ZW0sIGFuZCBkbyBub3QNCmRp
-c2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBvdGhlciBwZXJzb24uIFRo
-YW5rDQogeW91ITwvcHJlPjwhLS19LS0+
+	2. There is a hardware specific value. For example: hardware
+specific constant value (e.g. for PRNG) or use-case specific value that
+is hard-coded.
 
---__=_Part_Boundary_008_1633762523.1277265807
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
+	3. Predefined SoC/board specific bandwidth values. For example:
+CPU or GPU bandwidth is related to the current core frequency and both
+bandwidth and frequency are scaled together.
 
-VGhpcyBwYXRjaCBhZGQgUkRNQTEgZmlmbyBzaXplIGludG8gUkRNQSBwcml2YXRlIGRhdGENCg0K
-U2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+
-DQotLS0NCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jIHwgMTYgKysr
-KysrKysrKysrKysrLQ0KIDEgZmlsZSBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspLCAxIGRlbGV0
-aW9uKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3Bf
-cmRtYS5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX3JkbWEuYw0KaW5kZXgg
-YjBhNWNmZi4uM2Y5YjRkNCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
-dGtfZGlzcF9yZG1hLmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9y
-ZG1hLmMNCkBAIC01MywxMiArNTMsMTQgQEANCiAjZGVmaW5lIFJETUFfRklGT19QU0VVRE9fU0la
-RShieXRlcykJCQkoKChieXRlcykgLyAxNikgPDwgMTYpDQogI2RlZmluZSBSRE1BX09VVFBVVF9W
-QUxJRF9GSUZPX1RIUkVTSE9MRChieXRlcykJCSgoYnl0ZXMpIC8gMTYpDQogI2RlZmluZSBSRE1B
-X0ZJRk9fU0laRShyZG1hKQkJCSgocmRtYSktPmRhdGEtPmZpZm9fc2l6ZSkNCisjZGVmaW5lIFJE
-TUFfRklGT19TSVpFMShyZG1hKQkJCSgocmRtYSktPmRhdGEtPmZpZm9fc2l6ZTEpDQogI2RlZmlu
-ZSBESVNQX1JETUFfTUVNX1NUQVJUX0FERFIJCTB4MGYwMA0KIA0KICNkZWZpbmUgUkRNQV9NRU1f
-R01DCQkJCTB4NDA0MDIwMjANCiANCiBzdHJ1Y3QgbXRrX2Rpc3BfcmRtYV9kYXRhIHsNCiAJdW5z
-aWduZWQgaW50IGZpZm9fc2l6ZTsNCisJdW5zaWduZWQgaW50IGZpZm9fc2l6ZTE7DQogfTsNCiAN
-CiAvKioNCkBAIC0xMzcsMTEgKzEzOSwxNyBAQCBzdGF0aWMgdm9pZCBtdGtfcmRtYV9jb25maWco
-c3RydWN0IG10a19kZHBfY29tcCAqY29tcCwgdW5zaWduZWQgaW50IHdpZHRoLA0KIHsNCiAJdW5z
-aWduZWQgaW50IHRocmVzaG9sZDsNCiAJdW5zaWduZWQgaW50IHJlZzsNCisJdW5zaWduZWQgaW50
-IHJkbWFfZmlmb19zaXplOw0KIAlzdHJ1Y3QgbXRrX2Rpc3BfcmRtYSAqcmRtYSA9IGNvbXBfdG9f
-cmRtYShjb21wKTsNCiANCiAJcmRtYV91cGRhdGVfYml0cyhjb21wLCBESVNQX1JFR19SRE1BX1NJ
-WkVfQ09OXzAsIDB4ZmZmLCB3aWR0aCk7DQogCXJkbWFfdXBkYXRlX2JpdHMoY29tcCwgRElTUF9S
-RUdfUkRNQV9TSVpFX0NPTl8xLCAweGZmZmZmLCBoZWlnaHQpOw0KIA0KKwlpZiAoY29tcC0+aWQg
-PT0gRERQX0NPTVBPTkVOVF9SRE1BMSkNCisJCXJkbWFfZmlmb19zaXplID0gUkRNQV9GSUZPX1NJ
-WkUxKHJkbWEpOw0KKwllbHNlDQorCQlyZG1hX2ZpZm9fc2l6ZSA9IFJETUFfRklGT19TSVpFKHJk
-bWEpOw0KKw0KIAkvKg0KIAkgKiBFbmFibGUgRklGTyB1bmRlcmZsb3cgc2luY2UgRFNJIGFuZCBE
-UEkgY2FuJ3QgYmUgYmxvY2tlZC4NCiAJICogS2VlcCB0aGUgRklGTyBwc2V1ZG8gc2l6ZSByZXNl
-dCBkZWZhdWx0IG9mIDggS2lCLiBTZXQgdGhlDQpAQCAtMTQ5LDggKzE1NywxMiBAQCBzdGF0aWMg
-dm9pZCBtdGtfcmRtYV9jb25maWcoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCwgdW5zaWduZWQg
-aW50IHdpZHRoLA0KIAkgKiBhY2NvdW50IGZvciBibGFua2luZywgYW5kIHdpdGggYSBwaXhlbCBk
-ZXB0aCBvZiA0IGJ5dGVzOg0KIAkgKi8NCiAJdGhyZXNob2xkID0gd2lkdGggKiBoZWlnaHQgKiB2
-cmVmcmVzaCAqIDQgKiA3IC8gMTAwMDAwMDsNCisNCisJaWYgKHRocmVzaG9sZCA+IHJkbWFfZmlm
-b19zaXplKQ0KKwkJdGhyZXNob2xkID0gcmRtYV9maWZvX3NpemU7DQorDQogCXJlZyA9IFJETUFf
-RklGT19VTkRFUkZMT1dfRU4gfA0KLQkgICAgICBSRE1BX0ZJRk9fUFNFVURPX1NJWkUoUkRNQV9G
-SUZPX1NJWkUocmRtYSkpIHwNCisJICAgICAgUkRNQV9GSUZPX1BTRVVET19TSVpFKHJkbWFfZmlm
-b19zaXplKSB8DQogCSAgICAgIFJETUFfT1VUUFVUX1ZBTElEX0ZJRk9fVEhSRVNIT0xEKHRocmVz
-aG9sZCk7DQogCXdyaXRlbChyZWcsIGNvbXAtPnJlZ3MgKyBESVNQX1JFR19SRE1BX0ZJRk9fQ09O
-KTsNCiB9DQpAQCAtMzMwLDEwICszNDIsMTIgQEAgc3RhdGljIGludCBtdGtfZGlzcF9yZG1hX3Jl
-bW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1
-Y3QgbXRrX2Rpc3BfcmRtYV9kYXRhIG10MjcwMV9yZG1hX2RyaXZlcl9kYXRhID0gew0KIAkuZmlm
-b19zaXplID0gU1pfNEssDQorCS5maWZvX3NpemUxID0gU1pfNEssDQogfTsNCiANCiBzdGF0aWMg
-Y29uc3Qgc3RydWN0IG10a19kaXNwX3JkbWFfZGF0YSBtdDgxNzNfcmRtYV9kcml2ZXJfZGF0YSA9
-IHsNCiAJLmZpZm9fc2l6ZSA9IFNaXzhLLA0KKwkuZmlmb19zaXplMSA9IFNaXzhLLA0KIH07DQog
-DQogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbXRrX2Rpc3BfcmRtYV9kcml2ZXJf
-ZHRfbWF0Y2hbXSA9IHsNCi0tIA0KMS44LjEuMS5kaXJ0eQ0K
+This patchset is trying to address point 3 above by extending the OPP
+bindings to support predefined SoC/board bandwidth values and adds
+support in cpufreq-dt to scale the interconnect between the CPU and the
+DDR together with frequency and voltage.
 
---__=_Part_Boundary_008_1633762523.1277265807--
+[1] https://patchwork.kernel.org/patch/10577315/
 
---__=_Part_Boundary_007_106913879.1393182818--
+Georgi Djakov (4):
+  dt-bindings: opp: Introduce opp-bw-MBs bindings
+  OPP: Add support for parsing the interconnect bandwidth
+  OPP: Update the bandwidth on OPP frequency changes
+  cpufreq: dt: Add support for interconnect bandwidth scaling
 
-
---===============0595865049==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============0595865049==--
+ Documentation/devicetree/bindings/opp/opp.txt | 45 ++++++++++++
+ drivers/cpufreq/cpufreq-dt.c                  | 27 ++++++-
+ drivers/opp/core.c                            | 71 +++++++++++++++++++
+ drivers/opp/of.c                              | 44 ++++++++++++
+ drivers/opp/opp.h                             |  6 ++
+ include/linux/pm_opp.h                        | 14 ++++
+ 6 files changed, 206 insertions(+), 1 deletion(-)
