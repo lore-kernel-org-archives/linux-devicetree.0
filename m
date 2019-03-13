@@ -1,239 +1,177 @@
-Return-Path: <SRS0=qg7P=RQ=davidjohnsummers.uk=beagleboard@kernel.org>
-Subject: Re: [PATCH v3 3/3] arm: dts: rk3288-tinker.dtsi: Add outline
- Bluetooth support
-References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
- <20190309153923.22806-1-beagleboard@davidjohnsummers.uk>
- <20190309153923.22806-3-beagleboard@davidjohnsummers.uk>
- <4537885.W6WcYDDAQ4@diego>
-From: David Summers <beagleboard@davidjohnsummers.uk>
-Message-ID: <c0300b4b-1989-1589-6583-2a4184d15a2b@davidjohnsummers.uk>
-Date: Wed, 13 Mar 2019 19:57:55 +0000
+Return-Path: <SRS0=Paxx=RQ=mediatek.com=stanley.chu@kernel.org>
+From: Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v4 1/7] scsi: ufs: Introduce ufshcd_get_pwr_dev_param
+Date: Wed, 13 Mar 2019 12:10:05 +0800
+Message-ID: <1552450211-7149-3-git-send-email-stanley.chu@mediatek.com>
+In-Reply-To: <1552450211-7149-1-git-send-email-stanley.chu@mediatek.com>
+References: <1552450211-7149-1-git-send-email-stanley.chu@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <4537885.W6WcYDDAQ4@diego>
-Content-Type: multipart/alternative;
- boundary="------------BA0D7C907A85883C1C2A6345"
-Content-Language: en-PH
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: robh+dt@kernel.org, frowand.list@gmail.com, marcel@holtmann.org, johan.hedberg@gmail.com, anarsoul@gmail.com, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org
+Content-Type: text/plain
+To: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, chunfeng.yun@mediatek.com, kishon@ti.com, martin.petersen@oracle.com, avri.altman@wdc.com, alim.akhtar@samsung.com, pedrom.sousa@synopsys.com
+Cc: vivek.gautam@codeaurora.org, subhashj@codeaurora.org, liwei213@huawei.com, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, kuohong.wang@mediatek.com, peter.wang@mediatek.com, chun-hung.wu@mediatek.com, Stanley Chu <stanley.chu@mediatek.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This is a multi-part message in MIME format.
---------------BA0D7C907A85883C1C2A6345
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ufshcd_get_pwr_dev_param is for vendors to decide finally
+agreed attributes for power mode change if vendors define
+their host capability in struct ufs_dev_params.
 
-On 13/03/2019 10:56, Heiko Stübner wrote:
-> Hi David,
->
-> Am Samstag, 9. März 2019, 16:39:23 CET schrieb David Summers:
->> This patch is an outline for bluetooth on the ASUS Tinker Board (S).
->>
->> Bluetooth is provided my RTL8723BS on these machine, and this is wired
->> into UART0.
->>
->> Here this is performed as a SerDev device.
->>
->> Now as presented, this does not give functioning bluetooth. The
->> updates needed to the device driver:
->>
->> https://www.spinics.net/lists/linux-bluetooth/msg78661.html
->>
->> Haven't yet been accepted. So this device tree hook doesn't yet have
->> "realtek,rtl8723bs-bt" compatible flag.
->>
->> It is however still submitted as a patch, as it sets the UART up
->> correctly. And so basic communciation can be had with the device. This
->> has been confirmed by Tony McKahan @ Armbian, in particular that the
->> CTS/RTS is needed.
->>
->> When Vasily patch is accepted, this will be added as a minor patch on
->> top of this patch; as this patch gives the pins needed.
->>
->> The one oddity, is the RESET pin, it is labeled this way on the
->> schematic. However the hci_h5.c driver calls this ENABLE. Here we have
->> stuck with the schematic name.
->>
->> Signed-off-by: David Summers <beagleboard@davidjohnsummers.uk>
->> ---
->>   arch/arm/boot/dts/rk3288-tinker.dtsi | 11 +++++++++++
->>   1 file changed, 11 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi
->> b/arch/arm/boot/dts/rk3288-tinker.dtsi index 0ffab1b7c940..d29f5b34d7e6
->> 100644
->> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
->> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
->> @@ -486,6 +486,17 @@
->>
->>   &uart0 {
->>   	status = "okay";
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&uart0_xfer>, <&uart0_cts>, <&uart0_rts>;
->> +
->> +	bluetooth {
->> +		clocks = <&rk808 RK808_CLKOUT1>;
->> +		reset-gpios = <&gpio4 RK_PD5 GPIO_ACTIVE_HIGH>;
->> +		device-wake-gpios = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
->> +		host-wake-gpios = <&gpio4 RK_PD7 GPIO_ACTIVE_HIGH>;
->> +		vcc-18-supply = <&vcc_18>;
->> +		vcc-io-supply = <&vcc_io>;
->> +	};
-> As this is supposed to work as serial attached device it should follow a
-> dt-binding, so first of all definitly needs a compatible and a binding
-> specifying all the properties declared above.
->
-> See for example Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> for a similar device.
->
-> Heiko
->
->
-Heiko,
+This api is using by both ufs-qcom and ufs-hisi now. Simply
+re-factor it and then every vendors can reuse it.
 
-Yes I understand. Means I'll need to take care not to loose these email, 
-as getting all the pins right took some time ...
-
-I'll probably follow 
-https://www.spinics.net/lists/linux-bluetooth/msg78654.html if it gets 
-accepted. That is the main problem here, at the moment there is no 
-compatible that can be used, as none yet accepted.
-
-Rob H, Question for you, before you said [1]:
-
-> There's no interrupts, GPIO control lines, power supplies, etc. for
-> these chips? The binding should be complete even if your platform
-> doesn't need these.
-Now its clear that so far the driver for bluetooth doesn't know about 
-supply, and clocks etc.
-
-So should these be included in the dts, as a correct description as how 
-its wired; even if not used in the current driver, they may be used in 
-future.
-
-Am happy to do whatever best.
-
-Regards,
-
-David.
-
-[1] https://www.spinics.net/lists/linux-bluetooth/msg78545.html
-
-
-
---------------BA0D7C907A85883C1C2A6345
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: 8bit
-
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  </head>
-  <body text="#000000" bgcolor="#FFFFFF">
-    <div class="moz-cite-prefix">On 13/03/2019 10:56, Heiko Stübner
-      wrote:<br>
-    </div>
-    <blockquote type="cite" cite="mid:4537885.W6WcYDDAQ4@diego">
-      <pre class="moz-quote-pre" wrap="">Hi David,
-
-Am Samstag, 9. März 2019, 16:39:23 CET schrieb David Summers:
-</pre>
-      <blockquote type="cite">
-        <pre class="moz-quote-pre" wrap="">This patch is an outline for bluetooth on the ASUS Tinker Board (S).
-
-Bluetooth is provided my RTL8723BS on these machine, and this is wired
-into UART0.
-
-Here this is performed as a SerDev device.
-
-Now as presented, this does not give functioning bluetooth. The
-updates needed to the device driver:
-
-<a class="moz-txt-link-freetext" href="https://www.spinics.net/lists/linux-bluetooth/msg78661.html">https://www.spinics.net/lists/linux-bluetooth/msg78661.html</a>
-
-Haven't yet been accepted. So this device tree hook doesn't yet have
-"realtek,rtl8723bs-bt" compatible flag.
-
-It is however still submitted as a patch, as it sets the UART up
-correctly. And so basic communciation can be had with the device. This
-has been confirmed by Tony McKahan @ Armbian, in particular that the
-CTS/RTS is needed.
-
-When Vasily patch is accepted, this will be added as a minor patch on
-top of this patch; as this patch gives the pins needed.
-
-The one oddity, is the RESET pin, it is labeled this way on the
-schematic. However the hci_h5.c driver calls this ENABLE. Here we have
-stuck with the schematic name.
-
-Signed-off-by: David Summers <a class="moz-txt-link-rfc2396E" href="mailto:beagleboard@davidjohnsummers.uk">&lt;beagleboard@davidjohnsummers.uk&gt;</a>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
 ---
- arch/arm/boot/dts/rk3288-tinker.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/scsi/ufs/ufshcd-pltfrm.c | 98 ++++++++++++++++++++++++++++++++
+ drivers/scsi/ufs/ufshcd-pltfrm.h | 21 +++++++
+ 2 files changed, 119 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi
-b/arch/arm/boot/dts/rk3288-tinker.dtsi index 0ffab1b7c940..d29f5b34d7e6
-100644
---- a/arch/arm/boot/dts/rk3288-tinker.dtsi
-+++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
-@@ -486,6 +486,17 @@
-
- &amp;uart0 {
- 	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = &lt;&amp;uart0_xfer&gt;, &lt;&amp;uart0_cts&gt;, &lt;&amp;uart0_rts&gt;;
+diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
+index 895a9b5ac989..508c561c9a62 100644
+--- a/drivers/scsi/ufs/ufshcd-pltfrm.c
++++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
+@@ -39,6 +39,7 @@
+ 
+ #include "ufshcd.h"
+ #include "ufshcd-pltfrm.h"
++#include "unipro.h"
+ 
+ #define UFSHCD_DEFAULT_LANES_PER_DIRECTION		2
+ 
+@@ -289,6 +290,103 @@ static void ufshcd_init_lanes_per_dir(struct ufs_hba *hba)
+ 	}
+ }
+ 
++/**
++ * ufshcd_get_pwr_dev_param - get finally agreed attributes for
++ *                            power mode change
++ * @pltfrm_param: pointer to platform parameters
++ * @dev_max: pointer to device attributes
++ * @agreed_pwr: returned agreed attributes
++ *
++ * Returns 0 on success, non-zero value on failure
++ */
++int ufshcd_get_pwr_dev_param(struct ufs_dev_params *pltfrm_param,
++			     struct ufs_pa_layer_attr *dev_max,
++			     struct ufs_pa_layer_attr *agreed_pwr)
++{
++	int min_pltfrm_gear;
++	int min_dev_gear;
++	bool is_dev_sup_hs = false;
++	bool is_pltfrm_max_hs = false;
 +
-+	bluetooth {
-+		clocks = &lt;&amp;rk808 RK808_CLKOUT1&gt;;
-+		reset-gpios = &lt;&amp;gpio4 RK_PD5 GPIO_ACTIVE_HIGH&gt;;
-+		device-wake-gpios = &lt;&amp;gpio4 RK_PD2 GPIO_ACTIVE_HIGH&gt;;
-+		host-wake-gpios = &lt;&amp;gpio4 RK_PD7 GPIO_ACTIVE_HIGH&gt;;
-+		vcc-18-supply = &lt;&amp;vcc_18&gt;;
-+		vcc-io-supply = &lt;&amp;vcc_io&gt;;
-+	};
-</pre>
-      </blockquote>
-      <pre class="moz-quote-pre" wrap="">
-As this is supposed to work as serial attached device it should follow a
-dt-binding, so first of all definitly needs a compatible and a binding
-specifying all the properties declared above.
-
-See for example Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-for a similar device.
-
-Heiko
-
-
-</pre>
-    </blockquote>
-    <p>Heiko,</p>
-    <p>Yes I understand. Means I'll need to take care not to loose these
-      email, as getting all the pins right took some time ...</p>
-    <p>I'll probably follow
-      <a class="moz-txt-link-freetext" href="https://www.spinics.net/lists/linux-bluetooth/msg78654.html">https://www.spinics.net/lists/linux-bluetooth/msg78654.html</a> if it
-      gets accepted. That is the main problem here, at the moment there
-      is no compatible that can be used, as none yet accepted.</p>
-    <p>Rob H, Question for you, before you said [1]:</p>
-    <p>
-      <blockquote type="cite">
-        <pre>There's no interrupts, GPIO control lines, power supplies, etc. for 
-these chips? The binding should be complete even if your platform 
-doesn't need these.</pre>
-      </blockquote>
-      Now its clear that so far the driver for bluetooth doesn't know
-      about supply, and clocks etc.</p>
-    <p>So should these be included in the dts, as a correct description
-      as how its wired; even if not used in the current driver, they may
-      be used in future.<br>
-    </p>
-    <p>Am happy to do whatever best.</p>
-    <p>Regards,</p>
-    <p>David.<br>
-    </p>
-    <p>[1] <a class="moz-txt-link-freetext" href="https://www.spinics.net/lists/linux-bluetooth/msg78545.html">https://www.spinics.net/lists/linux-bluetooth/msg78545.html</a><br>
-    </p>
-    <p><br>
-    </p>
-  </body>
-</html>
-
---------------BA0D7C907A85883C1C2A6345--
++	if (dev_max->pwr_rx == FAST_MODE)
++		is_dev_sup_hs = true;
++
++	if (pltfrm_param->desired_working_mode == UFS_HS_MODE) {
++		is_pltfrm_max_hs = true;
++		min_pltfrm_gear = min_t(u32, pltfrm_param->hs_rx_gear,
++					pltfrm_param->hs_tx_gear);
++	} else {
++		min_pltfrm_gear = min_t(u32, pltfrm_param->pwm_rx_gear,
++					pltfrm_param->pwm_tx_gear);
++	}
++
++	/*
++	 * device doesn't support HS but
++	 * pltfrm_param->desired_working_mode is HS,
++	 * thus device and pltfrm_param don't agree
++	 */
++	if (!is_dev_sup_hs && is_pltfrm_max_hs) {
++		pr_info("%s: device doesn't support HS\n",
++			__func__);
++		return -ENOTSUPP;
++	} else if (is_dev_sup_hs && is_pltfrm_max_hs) {
++		/*
++		 * since device supports HS, it supports FAST_MODE.
++		 * since pltfrm_param->desired_working_mode is also HS
++		 * then final decision (FAST/FASTAUTO) is done according
++		 * to pltfrm_params as it is the restricting factor
++		 */
++		agreed_pwr->pwr_rx = pltfrm_param->rx_pwr_hs;
++		agreed_pwr->pwr_tx = agreed_pwr->pwr_rx;
++	} else {
++		/*
++		 * here pltfrm_param->desired_working_mode is PWM.
++		 * it doesn't matter whether device supports HS or PWM,
++		 * in both cases pltfrm_param->desired_working_mode will
++		 * determine the mode
++		 */
++		agreed_pwr->pwr_rx = pltfrm_param->rx_pwr_pwm;
++		agreed_pwr->pwr_tx = agreed_pwr->pwr_rx;
++	}
++
++	/*
++	 * we would like tx to work in the minimum number of lanes
++	 * between device capability and vendor preferences.
++	 * the same decision will be made for rx
++	 */
++	agreed_pwr->lane_tx = min_t(u32, dev_max->lane_tx,
++				    pltfrm_param->tx_lanes);
++	agreed_pwr->lane_rx = min_t(u32, dev_max->lane_rx,
++				    pltfrm_param->rx_lanes);
++
++	/* device maximum gear is the minimum between device rx and tx gears */
++	min_dev_gear = min_t(u32, dev_max->gear_rx, dev_max->gear_tx);
++
++	/*
++	 * if both device capabilities and vendor pre-defined preferences are
++	 * both HS or both PWM then set the minimum gear to be the chosen
++	 * working gear.
++	 * if one is PWM and one is HS then the one that is PWM get to decide
++	 * what is the gear, as it is the one that also decided previously what
++	 * pwr the device will be configured to.
++	 */
++	if ((is_dev_sup_hs && is_pltfrm_max_hs) ||
++	    (!is_dev_sup_hs && !is_pltfrm_max_hs)) {
++		agreed_pwr->gear_rx =
++			min_t(u32, min_dev_gear, min_pltfrm_gear);
++	} else if (!is_dev_sup_hs) {
++		agreed_pwr->gear_rx = min_dev_gear;
++	} else {
++		agreed_pwr->gear_rx = min_pltfrm_gear;
++	}
++	agreed_pwr->gear_tx = agreed_pwr->gear_rx;
++
++	agreed_pwr->hs_rate = pltfrm_param->hs_rate;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(ufshcd_get_pwr_dev_param);
++
+ /**
+  * ufshcd_pltfrm_init - probe routine of the driver
+  * @pdev: pointer to Platform device handle
+diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.h b/drivers/scsi/ufs/ufshcd-pltfrm.h
+index df64c4180340..d3ba62269be6 100644
+--- a/drivers/scsi/ufs/ufshcd-pltfrm.h
++++ b/drivers/scsi/ufs/ufshcd-pltfrm.h
+@@ -16,6 +16,27 @@
+ 
+ #include "ufshcd.h"
+ 
++#define UFS_PWM_MODE 1
++#define UFS_HS_MODE  2
++
++struct ufs_dev_params {
++	u32 pwm_rx_gear;        /* pwm rx gear to work in */
++	u32 pwm_tx_gear;        /* pwm tx gear to work in */
++	u32 hs_rx_gear;         /* hs rx gear to work in */
++	u32 hs_tx_gear;         /* hs tx gear to work in */
++	u32 rx_lanes;           /* number of rx lanes */
++	u32 tx_lanes;           /* number of tx lanes */
++	u32 rx_pwr_pwm;         /* rx pwm working pwr */
++	u32 tx_pwr_pwm;         /* tx pwm working pwr */
++	u32 rx_pwr_hs;          /* rx hs working pwr */
++	u32 tx_pwr_hs;          /* tx hs working pwr */
++	u32 hs_rate;            /* rate A/B to work in HS */
++	u32 desired_working_mode;
++};
++
++int ufshcd_get_pwr_dev_param(struct ufs_dev_params *dev_param,
++			     struct ufs_pa_layer_attr *dev_max,
++			     struct ufs_pa_layer_attr *agreed_pwr);
+ int ufshcd_pltfrm_init(struct platform_device *pdev,
+ 		       struct ufs_hba_variant_ops *vops);
+ void ufshcd_pltfrm_shutdown(struct platform_device *pdev);
+-- 
+2.18.0
