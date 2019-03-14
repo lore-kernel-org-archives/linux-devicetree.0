@@ -1,64 +1,59 @@
-Return-Path: <SRS0=iz5u=RS=nxp.com=anson.huang@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V8 1/4] dt-bindings: watchdog: add i.MX system controller
- watchdog
-Date: Fri, 15 Mar 2019 06:17:16 +0000
-Message-ID: <1552630331-32068-2-git-send-email-Anson.Huang@nxp.com>
-References: <1552630331-32068-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1552630331-32068-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-To: "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, Andy Gross <andy.gross@linaro.org>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Return-Path: <SRS0=0oJi=RR=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2 6/7] arm64: dts: renesas: r8a774c0-cat874: Enable USB3.0 host/peripheral device node
+Date: Thu, 14 Mar 2019 08:39:34 +0000
+Message-Id: <1552552775-51667-7-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1552552775-51667-1-git-send-email-biju.das@bp.renesas.com>
+References: <1552552775-51667-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add i.MX system controller watchdog binding doc.
+This patch enables USB3.0 host/peripheral device node for r8a774c0
+cat874 board.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 ---
-New patch, as watchdog node is moved out of SCU, so we need to add binding =
-doc for it.
----
- .../devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt  | 20 ++++++++++++++++=
-++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-sc-w=
-dt.txt
+V1-->V2
+  * No change
 
-diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt =
-b/Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt
-new file mode 100644
-index 0000000..e461c85
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt
-@@ -0,0 +1,20 @@
-+* Freescale i.MX System Controller Watchdog
+This patch depends on commit 35ed6229c0f0d079f2
+("usb: gadget: udc: renesas_usb3: Add bindings for r8a774c0")
+---
+ arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+index 42c66f9..d9d55c8 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
++++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+@@ -124,6 +124,11 @@
+ 		function = "sdhi0";
+ 		power-source = <1800>;
+ 	};
 +
-+i.MX system controller watchdog is for i.MX SoCs with system controller in=
-side,
-+the watchdog is managed by system controller, users can ONLY communicate w=
-ith
-+system controller from secure mode for watchdog operations, so Linux i.MX =
-system
-+controller watchdog driver will call ARM SMC API and trap into ARM-Trusted=
--Firmware
-+for watchdog operations, ARM-Trusted-Firmware is running at secure EL3 mod=
-e and
-+it will request system controller to execute the watchdog operation passed=
- from
-+Linux kernel.
++	usb30_pins: usb30 {
++		groups = "usb30", "usb30_id";
++		function = "usb30";
++	};
+ };
+ 
+ &rwdt {
+@@ -151,3 +156,15 @@
+ 	sd-uhs-sdr104;
+ 	status = "okay";
+ };
 +
-+Required properties:
-+- compatible:	Should be :
-+		"fsl,imx8qxp-sc-wdt"
-+		followed by "fsl,imx-sc-wdt";
-+
-+Examples:
-+
-+watchdog {
-+	compatible =3D "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
++&usb3_peri0 {
++	companion = <&xhci0>;
++	status = "okay";
 +};
---=20
++
++&xhci0 {
++	pinctrl-0 = <&usb30_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++};
+-- 
 2.7.4
