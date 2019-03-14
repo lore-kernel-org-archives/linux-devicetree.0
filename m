@@ -1,127 +1,80 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] ARM: dts: sun8i-h3: Add support for the RerVision H3-DVK
- board
-Date: Thu, 14 Mar 2019 16:50:11 +0100
-Message-ID: <20190314155011.znrhrxp6jyrxdodt@flea>
-References: <20190314130656.8010-1-paul.kocialkowski@bootlin.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gkwgnztfmwdi3bs5"
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: axi-i2s: make both "rx" and "tx" optional" to the asoc tree
+Date: Thu, 14 Mar 2019 15:53:27 +0000 (GMT)
+Message-ID: <20190314155327.D99621126E64@debutante.sirena.org.uk>
+References: <20190307214456.16445-2-luca@lucaceresoli.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190314130656.8010-1-paul.kocialkowski@bootlin.com>
+In-Reply-To: <20190307214456.16445-2-luca@lucaceresoli.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: Luca Ceresoli <luca@lucaceresoli.net>
+Cc: Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>Mark Brown <broonie@kernel.org>alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---gkwgnztfmwdi3bs5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+   ASoC: axi-i2s: make both "rx" and "tx" optional
 
-On Thu, Mar 14, 2019 at 02:06:56PM +0100, Paul Kocialkowski wrote:
-> This is an H3-based board that sticks close to the reference design.
->=20
-> Supported features:
-> * UART
-> * DRAM
-> * MMC
-> * eMMC
-> * Ethernet
-> * USB host
-> * USB peripheral
-> * HDMI
->=20
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
->  arch/arm/boot/dts/Makefile                   |   1 +
->  arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts | 119 +++++++++++++++++++
->  2 files changed, 120 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
->=20
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index bd40148a15b2..8db275b75214 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1078,6 +1078,7 @@ dtb-$(CONFIG_MACH_SUN8I) +=3D \
->  	sun8i-h3-orangepi-plus.dtb \
->  	sun8i-h3-orangepi-plus2e.dtb \
->  	sun8i-h3-orangepi-zero-plus2.dtb \
-> +	sun8i-h3-rervision-dvk.dtb \
->  	sun8i-r16-bananapi-m2m.dtb \
->  	sun8i-r16-nintendo-nes-classic.dtb \
->  	sun8i-r16-nintendo-super-nes-classic.dtb \
-> diff --git a/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts b/arch/arm/boot=
-/dts/sun8i-h3-rervision-dvk.dts
-> new file mode 100644
-> index 000000000000..94b71e064eb6
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
-> @@ -0,0 +1,119 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (C) 2019 Bootlin
-> + * Author: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> + */
-> +
-> +/dts-v1/;
-> +#include "sun8i-h3.dtsi"
-> +#include "sunxi-common-regulators.dtsi"
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +
-> +/ {
-> +	model =3D "RerVision H3-DVK";
-> +	compatible =3D "rervision,h3-dvk", "allwinner,sun8i-h3";
-> +
-> +	aliases {
-> +		ethernet0 =3D &emac;
-> +		serial0 =3D &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path =3D "serial0:115200n8";
-> +	};
-> +
-> +	connector {
-> +		compatible =3D "hdmi-connector";
-> +		type =3D "a";
-> +
-> +		port {
-> +			hdmi_connector_input: endpoint {
-> +				remote-endpoint =3D <&hdmi_connector_output>;
+has been applied to the asoc tree at
 
-Those are pretty long labels, how would you feel about hdmi_con_in and
-hdmi_out_con, as we've used on all the other boards?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-> +&mmc2_8bit_pins {
-> +	drive-strength =3D <40>;
-> +	bias-pull-up;
-> +};
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-bias-pull-up is already set by default, and a 30mA drive strength
-should cover what the spec asks for. Did you encounter any issue with
-this?
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Maxime
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---gkwgnztfmwdi3bs5
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+Mark
 
------BEGIN PGP SIGNATURE-----
+>From fa225400758dfc7ccddebf4d990f991a435f7921 Mon Sep 17 00:00:00 2001
+From: Luca Ceresoli <luca@lucaceresoli.net>
+Date: Thu, 7 Mar 2019 22:44:56 +0100
+Subject: [PATCH] ASoC: axi-i2s: make both "rx" and "tx" optional
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXIp4MwAKCRDj7w1vZxhR
-xUGmAP9bda6GQ7eidD06h2KNY90UC3Gls/nX7OjeiHngEvp0aAD/bGJmEy8Wic9o
-0M6IE88lOXzQtoP28M0j9Z2AQQbijQ0=
-=wDzW
------END PGP SIGNATURE-----
+Both the capture and playback channels are optional in the axi_i2s IP
+block. Document how to tell the driver which channels are
+instantiated.
 
---gkwgnztfmwdi3bs5--
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/adi,axi-i2s.txt | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt b/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
+index 4248b662deff..229ad1392cdc 100644
+--- a/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
++++ b/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
+@@ -1,5 +1,8 @@
+ ADI AXI-I2S controller
+ 
++The core can be generated with transmit (playback), only receive
++(capture) or both directions enabled.
++
+ Required properties:
+  - compatible : Must be "adi,axi-i2s-1.00.a"
+  - reg : Must contain I2S core's registers location and length
+@@ -9,8 +12,8 @@ Required properties:
+  - clock-names : "axi" for the clock to the AXI interface, "ref" for the sample
+    rate reference clock.
+  - dmas: Pairs of phandle and specifier for the DMA channels that are used by
+-   the core. The core expects two dma channels, one for transmit and one for
+-   receive.
++   the core. The core expects two dma channels if both transmit and receive are
++   enabled, one channel otherwise.
+  - dma-names : "tx" for the transmit channel, "rx" for the receive channel.
+ 
+ For more details on the 'dma', 'dma-names', 'clock' and 'clock-names' properties
+-- 
+2.20.1
