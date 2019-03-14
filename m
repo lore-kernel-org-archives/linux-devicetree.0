@@ -1,7 +1,7 @@
 From: <yongqiang.niu@mediatek.com>
-Subject: [RESEND PATCH v1 15/18] drm/mediatek: add RDMA1 fifo size into RDMA private data
-Date: Thu, 14 Mar 2019 20:05:17 +0800
-Message-ID: <1552565120-24329-16-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [RESEND PATCH v1 04/18] drm/mediatek: move rdma sout from mtk_ddp_mout_en into mtk_ddp_sout_sel
+Date: Thu, 14 Mar 2019 20:05:06 +0800
+Message-ID: <1552565120-24329-5-git-send-email-yongqiang.niu@mediatek.com>
 References: <1552565120-24329-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,76 +14,120 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This patch add RDMA1 fifo size into RDMA private data
+This patch move rdma sout from mtk_ddp_mout_en into mtk_ddp_sout_sel
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_disp_rdma.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 90 +++++++++++++++++-----------------
+ 1 file changed, 45 insertions(+), 45 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-index b0a5cff..3f9b4d4 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-@@ -53,12 +53,14 @@
- #define RDMA_FIFO_PSEUDO_SIZE(bytes)			(((bytes) / 16) << 16)
- #define RDMA_OUTPUT_VALID_FIFO_THRESHOLD(bytes)		((bytes) / 16)
- #define RDMA_FIFO_SIZE(rdma)			((rdma)->data->fifo_size)
-+#define RDMA_FIFO_SIZE1(rdma)			((rdma)->data->fifo_size1)
- #define DISP_RDMA_MEM_START_ADDR		0x0f00
- 
- #define RDMA_MEM_GMC				0x40402020
- 
- struct mtk_disp_rdma_data {
- 	unsigned int fifo_size;
-+	unsigned int fifo_size1;
- };
- 
- /**
-@@ -137,11 +139,17 @@ static void mtk_rdma_config(struct mtk_ddp_comp *comp, unsigned int width,
- {
- 	unsigned int threshold;
- 	unsigned int reg;
-+	unsigned int rdma_fifo_size;
- 	struct mtk_disp_rdma *rdma = comp_to_rdma(comp);
- 
- 	rdma_update_bits(comp, DISP_REG_RDMA_SIZE_CON_0, 0xfff, width);
- 	rdma_update_bits(comp, DISP_REG_RDMA_SIZE_CON_1, 0xfffff, height);
- 
-+	if (comp->id == DDP_COMPONENT_RDMA1)
-+		rdma_fifo_size = RDMA_FIFO_SIZE1(rdma);
-+	else
-+		rdma_fifo_size = RDMA_FIFO_SIZE(rdma);
-+
- 	/*
- 	 * Enable FIFO underflow since DSI and DPI can't be blocked.
- 	 * Keep the FIFO pseudo size reset default of 8 KiB. Set the
-@@ -149,8 +157,12 @@ static void mtk_rdma_config(struct mtk_ddp_comp *comp, unsigned int width,
- 	 * account for blanking, and with a pixel depth of 4 bytes:
- 	 */
- 	threshold = width * height * vrefresh * 4 * 7 / 1000000;
-+
-+	if (threshold > rdma_fifo_size)
-+		threshold = rdma_fifo_size;
-+
- 	reg = RDMA_FIFO_UNDERFLOW_EN |
--	      RDMA_FIFO_PSEUDO_SIZE(RDMA_FIFO_SIZE(rdma)) |
-+	      RDMA_FIFO_PSEUDO_SIZE(rdma_fifo_size) |
- 	      RDMA_OUTPUT_VALID_FIFO_THRESHOLD(threshold);
- 	writel(reg, comp->regs + DISP_REG_RDMA_FIFO_CON);
- }
-@@ -330,10 +342,12 @@ static int mtk_disp_rdma_remove(struct platform_device *pdev)
- 
- static const struct mtk_disp_rdma_data mt2701_rdma_driver_data = {
- 	.fifo_size = SZ_4K,
-+	.fifo_size1 = SZ_4K,
- };
- 
- static const struct mtk_disp_rdma_data mt8173_rdma_driver_data = {
- 	.fifo_size = SZ_8K,
-+	.fifo_size1 = SZ_8K,
- };
- 
- static const struct of_device_id mtk_disp_rdma_driver_dt_match[] = {
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+index 592f852..60cfde7 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+@@ -295,51 +295,6 @@ static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
+ 	} else if (cur == DDP_COMPONENT_OD1 && next == DDP_COMPONENT_RDMA1) {
+ 		*addr = DISP_REG_CONFIG_DISP_OD_MOUT_EN;
+ 		value = OD1_MOUT_EN_RDMA1;
+-	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI0) {
+-		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+-		value = RDMA0_SOUT_DPI0;
+-	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI1) {
+-		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+-		value = RDMA0_SOUT_DPI1;
+-	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI1) {
+-		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+-		value = RDMA0_SOUT_DSI1;
+-	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI2) {
+-		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+-		value = RDMA0_SOUT_DSI2;
+-	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI3) {
+-		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+-		value = RDMA0_SOUT_DSI3;
+-	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
+-		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+-		value = RDMA1_SOUT_DSI1;
+-	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI2) {
+-		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+-		value = RDMA1_SOUT_DSI2;
+-	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI3) {
+-		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+-		value = RDMA1_SOUT_DSI3;
+-	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
+-		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+-		value = RDMA1_SOUT_DPI0;
+-	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
+-		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+-		value = RDMA1_SOUT_DPI1;
+-	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI0) {
+-		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+-		value = RDMA2_SOUT_DPI0;
+-	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
+-		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+-		value = RDMA2_SOUT_DPI1;
+-	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
+-		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+-		value = RDMA2_SOUT_DSI1;
+-	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI2) {
+-		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+-		value = RDMA2_SOUT_DSI2;
+-	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
+-		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+-		value = RDMA2_SOUT_DSI3;
+ 	} else {
+ 		value = 0;
+ 	}
+@@ -421,6 +376,51 @@ static unsigned int mtk_ddp_sout_sel(void __iomem *config_regs,
+ 	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
+ 		*addr = DISP_REG_CONFIG_DSI_SEL;
+ 		value = DSI_SEL_IN_RDMA;
++	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI0) {
++		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
++		value = RDMA0_SOUT_DPI0;
++	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI1) {
++		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
++		value = RDMA0_SOUT_DPI1;
++	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI1) {
++		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
++		value = RDMA0_SOUT_DSI1;
++	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI2) {
++		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
++		value = RDMA0_SOUT_DSI2;
++	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI3) {
++		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
++		value = RDMA0_SOUT_DSI3;
++	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
++		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
++		value = RDMA1_SOUT_DSI1;
++	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI2) {
++		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
++		value = RDMA1_SOUT_DSI2;
++	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI3) {
++		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
++		value = RDMA1_SOUT_DSI3;
++	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
++		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
++		value = RDMA1_SOUT_DPI0;
++	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
++		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
++		value = RDMA1_SOUT_DPI1;
++	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI0) {
++		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
++		value = RDMA2_SOUT_DPI0;
++	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
++		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
++		value = RDMA2_SOUT_DPI1;
++	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
++		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
++		value = RDMA2_SOUT_DSI1;
++	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI2) {
++		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
++		value = RDMA2_SOUT_DSI2;
++	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
++		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
++		value = RDMA2_SOUT_DSI3;
+ 	} else {
+ 		value = 0;
+ 	}
 -- 
 1.8.1.1.dirty
