@@ -1,13 +1,14 @@
 From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [RFC v1 0/4] media: mediatek: support mdp3 on mt8183 platform
-Date: Thu, 14 Mar 2019 09:37:20 +0100
-Message-ID: <176c023b-d734-c5a0-bf40-e190eff00278@xs4all.nl>
-References: <1552024160-33055-1-git-send-email-daoyuan.huang@mediatek.com>
+Subject: Re: [RFC PATCH V0 0/7] media: platform: Add support for Face
+ Detection (FD) on mt8183 SoC
+Date: Thu, 14 Mar 2019 09:40:49 +0100
+Message-ID: <1967d769-48c2-1d49-464a-6895cd2ff102@xs4all.nl>
+References: <1550648893-42050-1-git-send-email-Jerry-Ch.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1552024160-33055-1-git-send-email-daoyuan.huang@mediatek.com>
+In-Reply-To: <1550648893-42050-1-git-send-email-Jerry-Ch.chen@mediatek.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -18,29 +19,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daoyuan Huang <daoyuan.huang@mediatek.com>, laurent.pinchart+renesas@ideasonboard.com, tfiga@chromium.org, matthias.bgg@gmail.com, mchehab@kernel.org
-Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, Jerry-ch.Chen@mediatek.com, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, ping-hsun.wu@mediatek.com, zwisler@chromium.org, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+To: Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, tfiga@chromium.org, matthias.bgg@gmail.com, mchehab@kernel.org
+Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, zwisler@chromium.org, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daoyuan Huang,
+Hi Jerry-ch Chen,
 
-On 3/8/19 6:49 AM, Daoyuan Huang wrote:
-> From: daoyuan huang <daoyuan.huang@mediatek.com>
+On 2/20/19 8:48 AM, Jerry-ch Chen wrote:
+> Hello,
 > 
-> This is the first version of RFC patch for Media Data Path 3 (MDP3),
-> MDP3 is used for scaling and color format conversion.
-> support using GCE to write register in critical time limitation.
-> support V4L2 m2m device control.
+> This is the first version of the RFC patch series adding Face Detection
+> (FD) driver on Mediatek mt8183 SoC, which will be used in camera features
+> on CrOS application. It belongs to the first Mediatek's camera driver
+> series based on V4L2 and media controller framework. I posted the main part
+> of the FD driver as RFC to discuss first and would like some review
+> comments on the overall structure of the driver.
+> 
+> Face Detection (FD) unit provide hardware accelerated face detection
+> feature. It can detect different sizes of faces in a given image.
+> Furthermore, it has the capability to detect the faces of Rotation-in-Plane
+> from -180 to +180 degrees and Rotation-off-Plane from -90 to +90 degrees.
+> 
+> The driver is implemented with V4L2 and media controller framework. We have
+> the following entities describing the FD path.
 
 Just a high-level comment before you post the next version of this series:
 
 Please compile the latest version of v4l2-compliance (part of
 git://linuxtv.org/v4l-utils.git) and run it against your driver:
 
-v4l2-compliance -d /dev/videoX -s10 -f
-
-(I hope the -f option works, it tests all combinations of pixelformats, but those
-tests are new so there may be issues, just let me know if that's the case).
+v4l2-compliance -m /dev/mediaX
 
 Whenever you post a new version of this series, please do a 'git pull' of
 the v4l-utils repo, recompile and retest with v4l2-compliance and post the
@@ -48,81 +56,88 @@ test results in the cover letter.
 
 Obviously, there should be no FAILs and probably no warnings.
 
+I suspect that streaming (e.g. adding the -s10 option to v4l2-compliance)
+probably won't work since v4l2-compliance doesn't know about the meta data
+formats.
+
 Regards,
 
 	Hans
 
 > 
-> ---
-> Based on v5.0-rc1 and these series:
-> device tree:
-> http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017570.html
-> clock control:
-> http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017320.html
-> system control processor (SCP):
-> http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017774.html
-> global command engine (GCE):
-> http://lists.infradead.org/pipermail/linux-mediatek/2019-January/017143.html
-> ---
+> 1. Meta input (output video device): connects to FD sub device. It accepts
+>    the input parameter buffer from userspace. The metadata interface used
+>    currently is only a temporary solution to kick off driver development
+>    and is not ready for reviewed yet.
 > 
-> daoyuan huang (4):
->   dt-binding: mt8183: Add Mediatek MDP3 dt-bindings
->   dts: arm64: mt8183: Add Mediatek MDP3 nodes
->   media: platform: Add Mediatek MDP3 driver KConfig
->   media: platform: mtk-mdp3: Add Mediatek MDP3 driver
+> 2. RAW (output video device): connects to FD sub device. It accepts input
+>    image buffer from userspace.
 > 
->  .../bindings/media/mediatek,mt8183-mdp3.txt        |  217 ++++
->  arch/arm64/boot/dts/mediatek/mt8183.dtsi           |  109 ++
->  drivers/media/platform/Kconfig                     |   18 +
->  drivers/media/platform/Makefile                    |    2 +
->  drivers/media/platform/mtk-mdp3/Makefile           |    9 +
->  drivers/media/platform/mtk-mdp3/isp_reg.h          |   38 +
->  drivers/media/platform/mtk-mdp3/mdp-platform.h     |   67 ++
->  drivers/media/platform/mtk-mdp3/mdp_reg_ccorr.h    |   76 ++
->  drivers/media/platform/mtk-mdp3/mdp_reg_rdma.h     |  207 ++++
->  drivers/media/platform/mtk-mdp3/mdp_reg_rsz.h      |  110 ++
->  drivers/media/platform/mtk-mdp3/mdp_reg_wdma.h     |  126 +++
->  drivers/media/platform/mtk-mdp3/mdp_reg_wrot.h     |  116 ++
->  drivers/media/platform/mtk-mdp3/mmsys_config.h     |  189 ++++
->  drivers/media/platform/mtk-mdp3/mmsys_mutex.h      |   36 +
->  drivers/media/platform/mtk-mdp3/mmsys_reg_base.h   |   39 +
->  drivers/media/platform/mtk-mdp3/mtk-img-ipi.h      |  272 +++++
->  drivers/media/platform/mtk-mdp3/mtk-mdp3-cmdq.c    |  407 +++++++
->  drivers/media/platform/mtk-mdp3/mtk-mdp3-cmdq.h    |   52 +
->  drivers/media/platform/mtk-mdp3/mtk-mdp3-comp.c    | 1180 ++++++++++++++++++++
->  drivers/media/platform/mtk-mdp3/mtk-mdp3-comp.h    |  176 +++
->  drivers/media/platform/mtk-mdp3/mtk-mdp3-core.c    |  257 +++++
->  drivers/media/platform/mtk-mdp3/mtk-mdp3-core.h    |   89 ++
->  drivers/media/platform/mtk-mdp3/mtk-mdp3-m2m.c     |  784 +++++++++++++
->  drivers/media/platform/mtk-mdp3/mtk-mdp3-m2m.h     |   52 +
->  drivers/media/platform/mtk-mdp3/mtk-mdp3-regs.c    |  778 +++++++++++++
->  drivers/media/platform/mtk-mdp3/mtk-mdp3-regs.h    |  382 +++++++
->  drivers/media/platform/mtk-mdp3/mtk-mdp3-vpu.c     |  277 +++++
->  drivers/media/platform/mtk-mdp3/mtk-mdp3-vpu.h     |   90 ++
->  28 files changed, 6155 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-mdp3.txt
->  create mode 100644 drivers/media/platform/mtk-mdp3/Makefile
->  create mode 100644 drivers/media/platform/mtk-mdp3/isp_reg.h
->  create mode 100644 drivers/media/platform/mtk-mdp3/mdp-platform.h
->  create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_ccorr.h
->  create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_rdma.h
->  create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_rsz.h
->  create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_wdma.h
->  create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_wrot.h
->  create mode 100644 drivers/media/platform/mtk-mdp3/mmsys_config.h
->  create mode 100644 drivers/media/platform/mtk-mdp3/mmsys_mutex.h
->  create mode 100644 drivers/media/platform/mtk-mdp3/mmsys_reg_base.h
->  create mode 100644 drivers/media/platform/mtk-mdp3/mtk-img-ipi.h
->  create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-cmdq.c
->  create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-cmdq.h
->  create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-comp.c
->  create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-comp.h
->  create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-core.c
->  create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-core.h
->  create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-m2m.c
->  create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-m2m.h
->  create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-regs.c
->  create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-regs.h
->  create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-vpu.c
->  create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-vpu.h
+> 3. FD (sub device): connects to Meta output. When processing an image,
+>    FD hardware only returns the statistics of detected faces so it needs
+>    only one capture video devices to return the streaming data to the user.
+> 
+> 4. Meta output (capture video device): Return the result of detected faces
+>    as metadata output.
+> 
+>    The overall file structure of the FD driver is as following:
+> 
+> * mtk_fd-dev-ctx-core.c: Implements common software flow of FD driver.
+> * mtk_fd-v4l2.c: Static FD contexts configuration.
+> * mtk_fd.c: Controls the hardware flow.
+> * mtk_fd-dev.c: Implements context-independent flow.
+> * mtk_fd-ctrl.c: Handles the HW ctrl request from userspace.
+> * mtk_fd-smem-drv.c: Provides the shared memory management required
+> operation. We reserved a memory region for the co-processor and FD to
+> exchange the hardware configuration data.
+> * mtk_fd-v4l2-util.c: Implements V4L2 and vb2 ops.
+> 
+> Jerry-ch Chen (7):
+>   dt-bindings: mt8183: Add binding for FD shared memory
+>   dts: arm64: mt8183: Add FD shared memory node
+>   dt-bindings: mt8183: Added FD-SMEM dt-bindings
+>   dt-bindings: mt8183: Added FD dt-bindings
+>   dts: arm64: mt8183: Add FD nodes
+>   media: platform: Add Mediatek FD driver KConfig
+>   platform: mtk-isp: Add Mediatek FD driver
+> 
+>  .../devicetree/bindings/media/mediatek,fd_smem.txt |   28 +
+>  .../bindings/media/mediatek,mt8183-fd.txt          |   30 +
+>  .../mediatek,reserve-memory-fd_smem.txt            |   44 +
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi           |   28 +
+>  drivers/media/platform/Kconfig                     |    2 +
+>  drivers/media/platform/mtk-isp/Kconfig             |   10 +
+>  drivers/media/platform/mtk-isp/Makefile            |   16 +
+>  drivers/media/platform/mtk-isp/fd/Makefile         |   38 +
+>  drivers/media/platform/mtk-isp/fd/mtk_fd-core.h    |  157 +++
+>  drivers/media/platform/mtk-isp/fd/mtk_fd-ctx.h     |  299 ++++++
+>  .../platform/mtk-isp/fd/mtk_fd-dev-ctx-core.c      |  917 +++++++++++++++++
+>  drivers/media/platform/mtk-isp/fd/mtk_fd-dev.c     |  355 +++++++
+>  drivers/media/platform/mtk-isp/fd/mtk_fd-dev.h     |  198 ++++
+>  .../media/platform/mtk-isp/fd/mtk_fd-smem-drv.c    |  452 +++++++++
+>  drivers/media/platform/mtk-isp/fd/mtk_fd-smem.h    |   25 +
+>  .../media/platform/mtk-isp/fd/mtk_fd-v4l2-util.c   | 1046 ++++++++++++++++++++
+>  drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.c    |  115 +++
+>  drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.h    |   36 +
+>  drivers/media/platform/mtk-isp/fd/mtk_fd.c         |  730 ++++++++++++++
+>  drivers/media/platform/mtk-isp/fd/mtk_fd.h         |  127 +++
+>  20 files changed, 4653 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek,fd_smem.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt
+>  create mode 100644 Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-fd_smem.txt
+>  create mode 100644 drivers/media/platform/mtk-isp/Kconfig
+>  create mode 100644 drivers/media/platform/mtk-isp/Makefile
+>  create mode 100644 drivers/media/platform/mtk-isp/fd/Makefile
+>  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-core.h
+>  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-ctx.h
+>  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-dev-ctx-core.c
+>  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-dev.c
+>  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-dev.h
+>  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-smem-drv.c
+>  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-smem.h
+>  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2-util.c
+>  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.c
+>  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.h
+>  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd.c
+>  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd.h
 > 
