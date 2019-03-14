@@ -1,7 +1,7 @@
 From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: [PATCH v4 1/6] dt-bindings: power: Add ZynqMP power domain bindings
-Date: Thu, 14 Mar 2019 19:31:17 +0530
-Message-ID: <20190314140122.23372-2-nava.manne@xilinx.com>
+Subject: [PATCH v4 3/6] dt-bindings: reset: Add bindings for ZynqMP reset driver
+Date: Thu, 14 Mar 2019 19:31:19 +0530
+Message-ID: <20190314140122.23372-4-nava.manne@xilinx.com>
 References: <20190314140122.23372-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,45 +9,42 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190314140122.23372-1-nava.manne@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: atull@kernel.org, mdf@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, rajanv@xilinx.com, jollys@xilinx.com, nava.manne@xilinx.com, linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
-Cc: Rajan Vaja <rajan.vaja@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rajan Vaja <rajan.vaja@xilinx.com>
+Add documentation to describe Xilinx ZynqMP reset driver
+bindings.
 
-Add documentation to describe ZynqMP power domain bindings.
-
-Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
 Signed-off-by: Jolly Shah <jollys@xilinx.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/power/xlnx,zynqmp-genpd.txt      | 34 ++++++++++++++++
- include/dt-bindings/power/xlnx-zynqmp-power.h | 39 +++++++++++++++++++
- 2 files changed, 73 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
- create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
+ .../bindings/reset/xlnx,zynqmp-reset.txt      |  52 +++++++
+ .../dt-bindings/reset/xlnx-zynqmp-resets.h    | 130 ++++++++++++++++++
+ 2 files changed, 182 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
+ create mode 100644 include/dt-bindings/reset/xlnx-zynqmp-resets.h
 
-diff --git a/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt b/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
+diff --git a/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
 new file mode 100644
-index 000000000000..3c7f2378e146
+index 000000000000..27a45fe5ecf1
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
-@@ -0,0 +1,34 @@
-+-----------------------------------------------------------
-+Device Tree Bindings for the Xilinx Zynq MPSoC PM domains
-+-----------------------------------------------------------
-+The binding for zynqmp-power-controller follow the common
-+generic PM domain binding[1].
++++ b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
+@@ -0,0 +1,52 @@
++--------------------------------------------------------------------------
++ =  Zynq UltraScale+ MPSoC reset driver binding =
++--------------------------------------------------------------------------
++The Zynq UltraScale+ MPSoC has several different resets.
 +
-+[1] Documentation/devicetree/bindings/power/power_domain.txt
++See Chapter 36 of the Zynq UltraScale+ MPSoC TRM (UG) for more information
++about zynqmp resets.
 +
-+== Zynq MPSoC Generic PM Domain Node ==
++Please also refer to reset.txt in this directory for common reset
++controller binding usage.
 +
-+Required property:
-+ - Below property should be in zynqmp-firmware node.
-+ - #power-domain-cells:	Number of cells in a PM domain specifier. Must be 1.
-+
-+Power domain ID indexes are mentioned in
-+include/dt-bindings/power/xlnx-zynqmp-power.h.
++Required Properties:
++- compatible:	"xlnx,zynqmp-reset"
++- #reset-cells:	Specifies the number of cells needed to encode reset
++		line, should be 1
 +
 +-------
 +Example
@@ -55,60 +52,170 @@ index 000000000000..3c7f2378e146
 +
 +firmware {
 +	zynqmp_firmware: zynqmp-firmware {
-+		...
-+		#power-domain-cells = <1>;
-+		...
++		compatible = "xlnx,zynqmp-firmware";
++		method = "smc";
++
++		zynqmp_reset: reset-controller {
++			compatible = "xlnx,zynqmp-reset";
++			#reset-cells = <1>;
++		};
 +	};
 +};
 +
-+sata {
++Specifying reset lines connected to IP modules
++==============================================
++
++Device nodes that need access to reset lines should
++specify them as a reset phandle in their corresponding node as
++specified in reset.txt.
++
++For list of all valid reset indicies see
++<dt-bindings/reset/xlnx-zynqmp-resets.h>
++
++Example:
++
++serdes: zynqmp_phy@fd400000 {
 +	...
-+	power-domains = <&zynqmp_firmware 2>;
++
++	resets = <&zynqmp_reset ZYNQMP_RESET_SATA>;
++	reset-names = "sata_rst";
++
 +	...
 +};
-diff --git a/include/dt-bindings/power/xlnx-zynqmp-power.h b/include/dt-bindings/power/xlnx-zynqmp-power.h
+diff --git a/include/dt-bindings/reset/xlnx-zynqmp-resets.h b/include/dt-bindings/reset/xlnx-zynqmp-resets.h
 new file mode 100644
-index 000000000000..1bc9636098ca
+index 000000000000..e295fd5d824e
 --- /dev/null
-+++ b/include/dt-bindings/power/xlnx-zynqmp-power.h
-@@ -0,0 +1,39 @@
++++ b/include/dt-bindings/reset/xlnx-zynqmp-resets.h
+@@ -0,0 +1,130 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
 + *  Copyright (C) 2018 Xilinx, Inc.
 + */
 +
-+#ifndef _DT_BINDINGS_ZYNQMP_POWER_H
-+#define _DT_BINDINGS_ZYNQMP_POWER_H
++#ifndef _DT_BINDINGS_ZYNQMP_RESETS_H
++#define _DT_BINDINGS_ZYNQMP_RESETS_H
 +
-+#define		PD_USB_0	0
-+#define		PD_USB_1	1
-+#define		PD_SATA		2
-+#define		PD_SPI_0	3
-+#define		PD_SPI_1	4
-+#define		PD_UART_0	5
-+#define		PD_UART_1	6
-+#define		PD_ETH_0	7
-+#define		PD_ETH_1	8
-+#define		PD_ETH_2	9
-+#define		PD_ETH_3	10
-+#define		PD_I2C_0	11
-+#define		PD_I2C_1	12
-+#define		PD_DP		13
-+#define		PD_GDMA		14
-+#define		PD_ADMA		15
-+#define		PD_TTC_0	16
-+#define		PD_TTC_1	17
-+#define		PD_TTC_2	18
-+#define		PD_TTC_3	19
-+#define		PD_SD_0		20
-+#define		PD_SD_1		21
-+#define		PD_NAND		22
-+#define		PD_QSPI		23
-+#define		PD_GPIO		24
-+#define		PD_CAN_0	25
-+#define		PD_CAN_1	26
-+#define		PD_PCIE		27
-+#define		PD_GPU		28
++#define		ZYNQMP_RESET_PCIE_CFG		0
++#define		ZYNQMP_RESET_PCIE_BRIDGE	1
++#define		ZYNQMP_RESET_PCIE_CTRL		2
++#define		ZYNQMP_RESET_DP			3
++#define		ZYNQMP_RESET_SWDT_CRF		4
++#define		ZYNQMP_RESET_AFI_FM5		5
++#define		ZYNQMP_RESET_AFI_FM4		6
++#define		ZYNQMP_RESET_AFI_FM3		7
++#define		ZYNQMP_RESET_AFI_FM2		8
++#define		ZYNQMP_RESET_AFI_FM1		9
++#define		ZYNQMP_RESET_AFI_FM0		10
++#define		ZYNQMP_RESET_GDMA		11
++#define		ZYNQMP_RESET_GPU_PP1		12
++#define		ZYNQMP_RESET_GPU_PP0		13
++#define		ZYNQMP_RESET_GPU		14
++#define		ZYNQMP_RESET_GT			15
++#define		ZYNQMP_RESET_SATA		16
++#define		ZYNQMP_RESET_ACPU3_PWRON	17
++#define		ZYNQMP_RESET_ACPU2_PWRON	18
++#define		ZYNQMP_RESET_ACPU1_PWRON	19
++#define		ZYNQMP_RESET_ACPU0_PWRON	20
++#define		ZYNQMP_RESET_APU_L2		21
++#define		ZYNQMP_RESET_ACPU3		22
++#define		ZYNQMP_RESET_ACPU2		23
++#define		ZYNQMP_RESET_ACPU1		24
++#define		ZYNQMP_RESET_ACPU0		25
++#define		ZYNQMP_RESET_DDR		26
++#define		ZYNQMP_RESET_APM_FPD		27
++#define		ZYNQMP_RESET_SOFT		28
++#define		ZYNQMP_RESET_GEM0		29
++#define		ZYNQMP_RESET_GEM1		30
++#define		ZYNQMP_RESET_GEM2		31
++#define		ZYNQMP_RESET_GEM3		32
++#define		ZYNQMP_RESET_QSPI		33
++#define		ZYNQMP_RESET_UART0		34
++#define		ZYNQMP_RESET_UART1		35
++#define		ZYNQMP_RESET_SPI0		36
++#define		ZYNQMP_RESET_SPI1		37
++#define		ZYNQMP_RESET_SDIO0		38
++#define		ZYNQMP_RESET_SDIO1		39
++#define		ZYNQMP_RESET_CAN0		40
++#define		ZYNQMP_RESET_CAN1		41
++#define		ZYNQMP_RESET_I2C0		42
++#define		ZYNQMP_RESET_I2C1		43
++#define		ZYNQMP_RESET_TTC0		44
++#define		ZYNQMP_RESET_TTC1		45
++#define		ZYNQMP_RESET_TTC2		46
++#define		ZYNQMP_RESET_TTC3		47
++#define		ZYNQMP_RESET_SWDT_CRL		48
++#define		ZYNQMP_RESET_NAND		49
++#define		ZYNQMP_RESET_ADMA		50
++#define		ZYNQMP_RESET_GPIO		51
++#define		ZYNQMP_RESET_IOU_CC		52
++#define		ZYNQMP_RESET_TIMESTAMP		53
++#define		ZYNQMP_RESET_RPU_R50		54
++#define		ZYNQMP_RESET_RPU_R51		55
++#define		ZYNQMP_RESET_RPU_AMBA		56
++#define		ZYNQMP_RESET_OCM		57
++#define		ZYNQMP_RESET_RPU_PGE		58
++#define		ZYNQMP_RESET_USB0_CORERESET	59
++#define		ZYNQMP_RESET_USB1_CORERESET	60
++#define		ZYNQMP_RESET_USB0_HIBERRESET	61
++#define		ZYNQMP_RESET_USB1_HIBERRESET	62
++#define		ZYNQMP_RESET_USB0_APB		63
++#define		ZYNQMP_RESET_USB1_APB		64
++#define		ZYNQMP_RESET_IPI		65
++#define		ZYNQMP_RESET_APM_LPD		66
++#define		ZYNQMP_RESET_RTC		67
++#define		ZYNQMP_RESET_SYSMON		68
++#define		ZYNQMP_RESET_AFI_FM6		69
++#define		ZYNQMP_RESET_LPD_SWDT		70
++#define		ZYNQMP_RESET_FPD		71
++#define		ZYNQMP_RESET_RPU_DBG1		72
++#define		ZYNQMP_RESET_RPU_DBG0		73
++#define		ZYNQMP_RESET_DBG_LPD		74
++#define		ZYNQMP_RESET_DBG_FPD		75
++#define		ZYNQMP_RESET_APLL		76
++#define		ZYNQMP_RESET_DPLL		77
++#define		ZYNQMP_RESET_VPLL		78
++#define		ZYNQMP_RESET_IOPLL		79
++#define		ZYNQMP_RESET_RPLL		80
++#define		ZYNQMP_RESET_GPO3_PL_0		81
++#define		ZYNQMP_RESET_GPO3_PL_1		82
++#define		ZYNQMP_RESET_GPO3_PL_2		83
++#define		ZYNQMP_RESET_GPO3_PL_3		84
++#define		ZYNQMP_RESET_GPO3_PL_4		85
++#define		ZYNQMP_RESET_GPO3_PL_5		86
++#define		ZYNQMP_RESET_GPO3_PL_6		87
++#define		ZYNQMP_RESET_GPO3_PL_7		88
++#define		ZYNQMP_RESET_GPO3_PL_8		89
++#define		ZYNQMP_RESET_GPO3_PL_9		90
++#define		ZYNQMP_RESET_GPO3_PL_10		91
++#define		ZYNQMP_RESET_GPO3_PL_11		92
++#define		ZYNQMP_RESET_GPO3_PL_12		93
++#define		ZYNQMP_RESET_GPO3_PL_13		94
++#define		ZYNQMP_RESET_GPO3_PL_14		95
++#define		ZYNQMP_RESET_GPO3_PL_15		96
++#define		ZYNQMP_RESET_GPO3_PL_16		97
++#define		ZYNQMP_RESET_GPO3_PL_17		98
++#define		ZYNQMP_RESET_GPO3_PL_18		99
++#define		ZYNQMP_RESET_GPO3_PL_19		100
++#define		ZNQMP_RESET_GPO3_PL_20		101
++#define		ZYNQMP_RESET_GPO3_PL_21		102
++#define		ZYNQMP_RESET_GPO3_PL_22		103
++#define		ZYNQMP_RESET_GPO3_PL_23		104
++#define		ZYNQMP_RESET_GPO3_PL_24		105
++#define		ZYNQMP_RESET_GPO3_PL_25		106
++#define		ZYNQMP_RESET_GPO3_PL_26		107
++#define		ZYNQMP_RESET_GPO3_PL_27		108
++#define		ZYNQMP_RESET_GPO3_PL_28		109
++#define		ZYNQMP_RESET_GPO3_PL_29		110
++#define		ZYNQMP_RESET_GPO3_PL_30		111
++#define		ZYNQMP_RESET_GPO3_PL_31		112
++#define		ZYNQMP_RESET_RPU_LS		113
++#define		ZYNQMP_RESET_PS_ONLY		114
++#define		ZYNQMP_RESET_PL			115
++#define		ZYNQMP_RESET_PS_PL0		116
++#define		ZYNQMP_RESET_PS_PL1		117
++#define		ZYNQMP_RESET_PS_PL2		118
++#define		ZYNQMP_RESET_PS_PL3		119
 +
 +#endif
 -- 
