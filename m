@@ -1,103 +1,143 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH RESEND V2 1/4] dt-bindings: fsl: scu: add watchdog binding
-Date: Thu, 14 Mar 2019 02:10:05 +0000
-Message-ID: <DB3PR0402MB391699A42921B2F037D9A45BF54B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
- <1550472539-16590-2-git-send-email-Anson.Huang@nxp.com>
- <20190222195217.GA22194@bogus>
- <bb19470c-1590-f8dd-72e6-b382444d7902@roeck-us.net>
- <DB3PR0402MB3916912A64AF0837A9649913F5790@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <96932b3e-87f1-d8f2-95bc-0e9a8d5d45ed@roeck-us.net>
- <DB3PR0402MB391659B6A466B1D85114E9C9F57A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAL_JsqJV9NxpOJi3Jh2Uk-TOmOL4rWwqZp3sodxsRinAHZ3m3w@mail.gmail.com>
- <AM0PR04MB4211EAEA6F03465D372B0B4F804C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CAL_JsqJiKx8UvZ8qu-YaaPooLbSMKANSX=YZQO=Nm_anD2v9gw@mail.gmail.com>
+From: mtk14576 <ran.bi@mediatek.com>
+Subject: Re: [PATCH v2 8/9] rtc: mt6397: fix alarm register overwrite
+Date: Thu, 14 Mar 2019 10:46:21 +0800
+Message-ID: <1552531581.18390.8.camel@mhfsdcap03>
+References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <1552275991-34648-9-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <CAGp9Lzq4D56PbivbHkQd41-TCoGACTiBqLz+Jyiqiog=YMvEbQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqJiKx8UvZ8qu-YaaPooLbSMKANSX=YZQO=Nm_anD2v9gw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "festevam@gmail.com" <festevam@gmail.com>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, Andy Gross <andy.gross@linaro.org>, Guenter Roeck <linux@roeck-us.net>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "olof@lixom.net" <olof@lixom.net>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, wim@linux-watchdog.or
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <CAGp9Lzq4D56PbivbHkQd41-TCoGACTiBqLz+Jyiqiog=YMvEbQ@mail.gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Sean Wang <sean.wang@kernel.org>
+Cc: stable@vger.kernel.org, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Eddie Huang <eddie.huang@mediatek.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, srv_heupstream <srv_heupstream@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Marc Zyngier <marc.zyngier@arm.com>, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-mediatek@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFJvYg0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3Jn
-XQ0KPiBTZW50OiAyMDE55bm0M+aciDEy5pelIDU6MjYNCj4gVG86IEFpc2hlbmcgRG9uZyA8YWlz
-aGVuZy5kb25nQG54cC5jb20+DQo+IENjOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNv
-bT47IEd1ZW50ZXIgUm9lY2sgPGxpbnV4QHJvZWNrLQ0KPiB1cy5uZXQ+OyBtYXJrLnJ1dGxhbmRA
-YXJtLmNvbTsgdWxmLmhhbnNzb25AbGluYXJvLm9yZzsgaGVpa29Ac250ZWNoLmRlOw0KPiBjYXRh
-bGluLm1hcmluYXNAYXJtLmNvbTsgd2lsbC5kZWFjb25AYXJtLmNvbTsNCj4gYmpvcm4uYW5kZXJz
-c29uQGxpbmFyby5vcmc7IGZlc3RldmFtQGdtYWlsLmNvbTsNCj4gamFnYW5AYW1hcnVsYXNvbHV0
-aW9ucy5jb207IEFuZHkgR3Jvc3MgPGFuZHkuZ3Jvc3NAbGluYXJvLm9yZz47IGRsLQ0KPiBsaW51
-eC1pbXggPGxpbnV4LWlteEBueHAuY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxp
-bnV4LQ0KPiB3YXRjaGRvZ0B2Z2VyLmtlcm5lbC5vcmc7IGFybmRAYXJuZGIuZGU7IG1hcmMudy5n
-b256YWxlekBmcmVlLmZyOw0KPiBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBlbnJpYy5iYWxsZXRi
-b0Bjb2xsYWJvcmEuY29tOw0KPiBob3JtcytyZW5lc2FzQHZlcmdlLm5ldC5hdTsgd2ltQGxpbnV4
-LXdhdGNoZG9nLm9yZzsgRGFuaWVsIEJhbHV0YQ0KPiA8ZGFuaWVsLmJhbHV0YUBueHAuY29tPjsg
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4ga2VybmVsQHZn
-ZXIua2VybmVsLm9yZzsga2VybmVsQHBlbmd1dHJvbml4LmRlOyBvbG9mQGxpeG9tLm5ldDsNCj4g
-c2hhd25ndW9Aa2VybmVsLm9yZzsgSmVucyBXaWtsYW5kZXIgPGplbnMud2lrbGFuZGVyQGxpbmFy
-by5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggUkVTRU5EIFYyIDEvNF0gZHQtYmluZGluZ3M6
-IGZzbDogc2N1OiBhZGQgd2F0Y2hkb2cNCj4gYmluZGluZw0KPiANCj4gK0plbnMgVw0KPiANCj4g
-T24gVGh1LCBNYXIgNywgMjAxOSBhdCA2OjIyIEFNIEFpc2hlbmcgRG9uZyA8YWlzaGVuZy5kb25n
-QG54cC5jb20+DQo+IHdyb3RlOg0KPiA+DQo+ID4gSGkgUm9iLA0KPiA+DQo+ID4gPiA+ID4gSSB0
-aGluayBSb2Igc3VnZ2VzdGVkIHRoYXQgdGhlIFNDVSBwYXJlbnQgZHJpdmVyIHNob3VsZA0KPiA+
-ID4gPiA+IGluc3RhbnRpYXRlIHRoZSB3YXRjaGRvZyB3aXRob3V0IGV4cGxpY2l0IHdhdGNoZG9n
-IG5vZGUuIFRoYXQNCj4gPiA+ID4gPiB3b3VsZCBiZSBwb3NzaWJsZSwgYnV0IGl0IGN1cnJlbnRs
-eSB1c2VzDQo+ID4gPiA+ID4gZGV2bV9vZl9wbGF0Zm9ybV9wb3B1bGF0ZSgpIHRvIGRvIHRoZSBp
-bnN0YW50aWF0aW9uLCBhbmQNCj4gPiA+ID4gPiBjaGFuZ2luZyB0aGF0IHdvdWxkIGJlIGEgbWVz
-cy4gQmVzaWRlcywgaXQgZG9lcyBzZW0gdG8gbWUgdGhhdA0KPiA+ID4gPiA+IHlvdXIgc3VnZ2Vz
-dGVkIG5vZGUgd291bGQgZGVzY3JpYmUgdGhlIGhhcmR3YXJlLCBzbyBJIGFtIG5vdA0KPiA+ID4g
-PiA+IHN1cmUgSSB1bmRlcnN0YW5kIHRoZQ0KPiA+ID4gcmVhc29uaW5nLg0KPiA+ID4NCj4gPiA+
-IEl0IHdvdWxkIGp1c3QgYmUgYSBjYWxsIHRvIGNyZWF0ZSBhIHBsYXRmb3JtIGRldmljZSBpbnN0
-ZWFkLiBIb3cgaXMgdGhhdCBhDQo+IG1lc3M/DQo+ID4gPg0KPiA+ID4gSXQncyBkZXNjcmliaW5n
-IGZpcm13YXJlLiBXZSBoYXZlIERUIGZvciBkZXNjcmliaW5nIGgvdyB3ZSd2ZSBmYWlsZWQNCj4g
-PiA+IHRvIG1ha2UgZGlzY292ZXJhYmxlLiBXZSBzaG91bGQgbm90IHJlcGVhdCB0aGF0IGFuZCBq
-dXN0IGRlc2NyaWJlDQo+IGZpcm13YXJlIGluIERULg0KPiA+ID4gTWFrZSB0aGUgZmlybXdhcmUg
-ZGlzY292ZXJhYmxlISBUaG91Z2ggdGhlcmUgYXJlIGNhc2VzIGxpa2UgZmlybXdhcmUNCj4gPiA+
-IHByb3ZpZGVkIGNsb2NrcyB3aGVyZSB3ZSBzdGlsbCBuZWVkIHNvbWV0aGluZyBpbiBEVCwgYnV0
-IHRoaXMgaXMgbm90DQo+ID4gPiBvbmUgb2YgdGhlbS4NCj4gPiA+DQo+ID4NCj4gPiBUaGUgd2F0
-Y2hkb2cgbm9kZSBoZXJlIGluIHF1ZXN0aW9uIGFjdHVhbGx5IGlzIG5vdCB1c2luZyBTQ1UgZmly
-bXdhcmUgY2FsbC4NCj4gPiBEdWUgdG8gc2VjdXJpdHkgcmVxdWlyZW1lbnQgYnkgU0NVLCB3YXRj
-aGRvZyBjYW4gb25seSBiZSBhY2Nlc3NlZCBpbg0KPiA+IHNlY3VyaXR5IG1vZGUsIGZvciBJTVgg
-Y2FzZSwgdmlhIEFSTSBUcnVzdCBGaXJtd2FyZS4gVGhhdCBtZWFucyB0aGUNCj4gPiB3YXRjaGRv
-ZyB1c2VkIGluIExpbnV4IGFjdHVhbGx5IGlzIHVzaW5nIEFSTSBTTUMgY2FsbCBhbmQgZG9lcyBu
-b3QNCj4gPiBkZXBlbmQgU0NVIGRyaXZlci4gU28gSXQgd291bGQgYmUgc3RyYW5nZSBmb3IgU0NV
-IGRyaXZlciB0byBpbnN0YW50aWF0ZSBpdC4NCj4gPg0KPiA+IEZvciB0aGlzIHNpdHVhdGlvbiwg
-ZG8geW91IHRoaW5rIHdlIGNhbiBtb3ZlIHdhdGNoZG9nIG91dCBvZiBzY3Ugbm9kZT8NCj4gPiBN
-YXliZSByZW5hbWUgdGhlIGNvbXBhdGlibGUgc3RyaW5nIGxpa2UgImZzbCxpbXg4cXhwLXNpcC13
-YXRjaGRvZyINCj4gPiBiZWNhdXNlIGl0J3MgYWN0dWFsbHkgYSB3YXRjaGRvZyBzZXJ2aWNlZCBi
-eSBBVEYgZmlybXdhcmUuDQo+IA0KPiBZZXMsIGJ1dCB0aGF0IGNyZWF0ZXMgbW9yZSBxdWVzdGlv
-bnMuIFdoYXQgZXhhY3RseSBkb2VzIEFURiB0YWxrIHRvIGZvciB0aGUNCj4gd2F0Y2hkb2c/IFRo
-ZSBTQ1UgZmlybXdhcmU/DQoNClllcywgQVRGIHRhbGtzIHRvIFNDVSBmaXJtd2FyZSBkaXJlY3Rs
-eSwgTGludXgga2VybmVsIHdhdGNoZG9nIGRyaXZlciBjYWxsIFNNQyBpbnN0cnVjdGlvbnMNCnRv
-IHNlbmQgY29tbWFuZCB0byBBVEYsIGFuZCBBVEYgd2lsbCBjYWxsIFNDVSBmaXJtd2FyZSBBUEkg
-dG8gZmluaXNoIHRoZSBvcGVyYXRpb24gcmVxdWVzdGVkDQpieSBMaW51eCBrZXJuZWwgd2F0Y2hk
-b2cgZHJpdmVyLg0KDQo+IA0KPiBNYXliZSBBVEYgc2hvdWxkIGRlZmluZSBhbmQgcHJvdmlkZSBh
-IHN0YW5kYXJkIHdhdGNoZG9nIGludGVyZmFjZT8gSXQgaXMNCj4gc3RpbGwgYSBxdWVzdGlvbiBv
-ZiBtYWtpbmcgdGhlIGZpcm13YXJlIGRpc2NvdmVyYWJsZSByYXRoZXIgdGhhbiB0cnlpbmcgdG8N
-Cj4gZGVzY3JpYmUgdGhlIGZpcm13YXJlIGluIERULg0KDQpUaGUgU01DIGNhbGwgYnkgTGludXgg
-a2VybmVsIHdhdGNoZG9nIGFscmVhZHkgZm9sbG93IHRoZSBTSVAoc2lsaWNvbiBwcm92aWRlcikg
-c3RhbmRhcmQsIGVhY2gNClNvQyBjYW4gZGVmaW5lIGl0cyBvd24gcHJvdG9jb2wgZm9yIFNJUC4g
-QVRGIGRvZXMgTk9UIGhhdmUgYSBzdGFuZGFyZCBjb21tb24gd2F0Y2hkb2cgaW50ZXJmYWNlDQpu
-b3csIHNpbmNlIGl0IGlzIG1vcmUgbGlrZSBhIHBsYXRmb3JtIHNwZWNpZmljIGZlYXR1cmUsIG1v
-c3Qgb2YgcGxhdGZvcm1zIGNhbiBjb250cm9sIHdhdGNoZG9nIGRpcmVjdGx5DQpmcm9tIExpbnV4
-IGtlcm5lbCBJIHRoaW5rLiANCg0KU28sIGRvIHlvdSBoYXZlIHN1Z2dlc3Rpb24gZm9yIHRoaXMg
-Y2FzZT8gRWl0aGVyIGZpbmQgYSBwbGFjZSBpbiBEVCB0byBwdXQgd2F0Y2hkb2cgbm9kZSwgb3Ig
-bWFrZSBpdA0KYSBidWlsZC1pbiBkZXZpY2UgaW5zaWRlIFNDVSBkcml2ZXI/IE9yIHlvdSBoYXZl
-IG90aGVyIGJldHRlciBpZGVhcz8NCg0KVGhhbmtzLA0KQW5zb24uDQoNCj4gDQo+IFJvYg0KX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
-cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
-bAo=
+Hi,
+
+On Mon, 2019-03-11 at 13:50 -0700, Sean Wang wrote:
+> Hi,
+> 
+> On Sun, Mar 10, 2019 at 8:49 PM Hsin-Hsiung Wang
+> <hsin-hsiung.wang@mediatek.com> wrote:
+> >
+> > From: Ran Bi <ran.bi@mediatek.com>
+> >
+> > Alarm registers high byte was reserved for other functions.
+> > This add mask in alarm registers operation functions.
+> > This also fix error condition in interrupt handler.
+> >
+> > Fixes: fc2979118f3f ("rtc: mediatek: Add MT6397 RTC driver")
+> >
+> 
+> add a  Cc: stable@vger.kernel.org  here to apply to all stable kernels
+> for the critical fixup patch.
+> 
+> > Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> > ---
+> >  drivers/rtc/rtc-mt6397.c | 47 +++++++++++++++++++++++++++++++++--------------
+> >  1 file changed, 33 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> > index e9a25ec..f85f1fc 100644
+> > --- a/drivers/rtc/rtc-mt6397.c
+> > +++ b/drivers/rtc/rtc-mt6397.c
+> > @@ -55,6 +55,14 @@
+> >
+> >  #define RTC_AL_SEC             0x0018
+> >
+> > +#define RTC_AL_SEC_MASK                0x003f
+> > +#define RTC_AL_MIN_MASK                0x003f
+> > +#define RTC_AL_HOU_MASK                0x001f
+> > +#define RTC_AL_DOM_MASK                0x001f
+> > +#define RTC_AL_DOW_MASK                0x0007
+> > +#define RTC_AL_MTH_MASK                0x000f
+> > +#define RTC_AL_YEA_MASK                0x007f
+> > +
+> >  #define RTC_PDN2               0x002e
+> >  #define RTC_PDN2_PWRON_ALARM   BIT(4)
+> >
+> > @@ -111,7 +119,7 @@ static irqreturn_t mtk_rtc_irq_handler_thread(int irq, void *data)
+> >                 irqen = irqsta & ~RTC_IRQ_EN_AL;
+> >                 mutex_lock(&rtc->lock);
+> >                 if (regmap_write(rtc->regmap, rtc->addr_base + RTC_IRQ_EN,
+> > -                                irqen) < 0)
+> > +                                irqen) == 0)
+> >                         mtk_rtc_write_trigger(rtc);
+> >                 mutex_unlock(&rtc->lock);
+> >
+> > @@ -233,12 +241,12 @@ static int mtk_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
+> >         alm->pending = !!(pdn2 & RTC_PDN2_PWRON_ALARM);
+> >         mutex_unlock(&rtc->lock);
+> >
+> > -       tm->tm_sec = data[RTC_OFFSET_SEC];
+> > -       tm->tm_min = data[RTC_OFFSET_MIN];
+> > -       tm->tm_hour = data[RTC_OFFSET_HOUR];
+> > -       tm->tm_mday = data[RTC_OFFSET_DOM];
+> > -       tm->tm_mon = data[RTC_OFFSET_MTH];
+> > -       tm->tm_year = data[RTC_OFFSET_YEAR];
+> > +       tm->tm_sec = data[RTC_OFFSET_SEC] & RTC_AL_SEC_MASK;
+> > +       tm->tm_min = data[RTC_OFFSET_MIN] & RTC_AL_MIN_MASK;
+> > +       tm->tm_hour = data[RTC_OFFSET_HOUR] & RTC_AL_HOU_MASK;
+> > +       tm->tm_mday = data[RTC_OFFSET_DOM] & RTC_AL_DOM_MASK;
+> > +       tm->tm_mon = data[RTC_OFFSET_MTH] & RTC_AL_MTH_MASK;
+> > +       tm->tm_year = data[RTC_OFFSET_YEAR] & RTC_AL_YEA_MASK;
+> >
+> >         tm->tm_year += RTC_MIN_YEAR_OFFSET;
+> >         tm->tm_mon--;
+> > @@ -259,14 +267,25 @@ static int mtk_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
+> >         tm->tm_year -= RTC_MIN_YEAR_OFFSET;
+> >         tm->tm_mon++;
+> >
+> > -       data[RTC_OFFSET_SEC] = tm->tm_sec;
+> > -       data[RTC_OFFSET_MIN] = tm->tm_min;
+> > -       data[RTC_OFFSET_HOUR] = tm->tm_hour;
+> > -       data[RTC_OFFSET_DOM] = tm->tm_mday;
+> > -       data[RTC_OFFSET_MTH] = tm->tm_mon;
+> > -       data[RTC_OFFSET_YEAR] = tm->tm_year;
+> > -
+> >         mutex_lock(&rtc->lock);
+> > +       ret = regmap_bulk_read(rtc->regmap, rtc->addr_base + RTC_AL_SEC,
+> > +                              data, RTC_OFFSET_COUNT);
+> > +       if (ret < 0)
+> > +               goto exit;
+> > +
+> 
+> Why did we need an additional regmap_bulk_read here? I would suppose
+> data[RTC_OFFSET_*] & ~(RTC_AL_*_MASK) is always equal to 0.
+
+In bootloader, RTC init part need to operate these RTC_AL_* registers
+high byte for RTC operating mode settings and data storage, while
+RTC_AL_* low byte was used as alarm register here. So we need an
+additional regmap_bulk_read here to keep the RTC settings correct.
+
+> 
+> It might be another fixup since change is not being mentioned in the
+> git message.
+> 
+> > +       data[RTC_OFFSET_SEC] = ((data[RTC_OFFSET_SEC] & ~(RTC_AL_SEC_MASK)) |
+> > +                               (tm->tm_sec & RTC_AL_SEC_MASK));
+> > +       data[RTC_OFFSET_MIN] = ((data[RTC_OFFSET_MIN] & ~(RTC_AL_MIN_MASK)) |
+> > +                               (tm->tm_min & RTC_AL_MIN_MASK));
+> > +       data[RTC_OFFSET_HOUR] = ((data[RTC_OFFSET_HOUR] & ~(RTC_AL_HOU_MASK)) |
+> > +                               (tm->tm_hour & RTC_AL_HOU_MASK));
+> > +       data[RTC_OFFSET_DOM] = ((data[RTC_OFFSET_DOM] & ~(RTC_AL_DOM_MASK)) |
+> > +                               (tm->tm_mday & RTC_AL_DOM_MASK));
+> > +       data[RTC_OFFSET_MTH] = ((data[RTC_OFFSET_MTH] & ~(RTC_AL_MTH_MASK)) |
+> > +                               (tm->tm_mon & RTC_AL_MTH_MASK));
+> > +       data[RTC_OFFSET_YEAR] = ((data[RTC_OFFSET_YEAR] & ~(RTC_AL_YEA_MASK)) |
+> > +                               (tm->tm_year & RTC_AL_YEA_MASK));
+> > +
+> >         if (alm->enabled) {
+> >                 ret = regmap_bulk_write(rtc->regmap,
+> >                                         rtc->addr_base + RTC_AL_SEC,
+> > --
+> > 1.9.1
+> >
+> >
+> > _______________________________________________
+> > Linux-mediatek mailing list
+> > Linux-mediatek@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
