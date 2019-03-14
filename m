@@ -1,130 +1,126 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 6/6] leds: netdev trigger: allow setting initial values
- in device tree
-Date: Thu, 14 Mar 2019 15:24:56 +0100
-Message-ID: <742bd6b2-0a11-858e-d727-204b0313265e@gmail.com>
-References: <20190313202615.22883-1-linux@rasmusvillemoes.dk>
- <20190314140619.3309-1-linux@rasmusvillemoes.dk>
- <20190314140619.3309-7-linux@rasmusvillemoes.dk>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V2 2/5] pwm: Add i.MX TPM PWM driver support
+Date: Thu, 14 Mar 2019 14:25:32 +0000
+Message-ID: <DB3PR0402MB391616E8DBC8086C86B25D01F54B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1552461970-20813-1-git-send-email-Anson.Huang@nxp.com>
+ <1552461970-20813-3-git-send-email-Anson.Huang@nxp.com>
+ <20190314091702.sooxvnzd4mqr2ilz@pengutronix.de>
+ <DB3PR0402MB3916975BC10346C612135334F54B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190314100042.fl4kdwn7awcw4aov@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190314140619.3309-7-linux@rasmusvillemoes.dk>
+In-Reply-To: <20190314100042.fl4kdwn7awcw4aov@pengutronix.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rasmus Villemoes <linux@rasmusvillemoes.dk>, Pavel Machek <pavel@ucw.cz>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "stefan@agner.ch" <stefan@agner.ch>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, Leonard Crestez <leonard.crestez@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, Robin Gong <yibin.gong@nxp.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>l
 List-Id: devicetree@vger.kernel.org
 
-Rasmus,
-
-Thank you for the update.
-Still, there is one thing to improve.
-
-On 3/14/19 3:06 PM, Rasmus Villemoes wrote:
-> It can be quite convenient to initialize a netdev-triggered LED with a
-> device name and setting the rx,tx,link properties from device tree,
-> instead of having to do that in an init script (or udev rule) in
-> userspace.
-> 
-> My main motivation for this is to be able to switch away from the
-> deprecated CONFIG_CAN_LEDS. The example added to common.txt
-> corresponds to switching linux,default-trigger = "can0-rxtx" to
-> "netdev" and adding the indicated netdev subnode.
-> 
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> ---
->   .../devicetree/bindings/leds/common.txt       | 11 +++++++
->   drivers/leds/trigger/ledtrig-netdev.c         | 30 +++++++++++++++++++
->   2 files changed, 41 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> index 7cb88460a47c..f8078c4cf6f8 100644
-> --- a/Documentation/devicetree/bindings/leds/common.txt
-> +++ b/Documentation/devicetree/bindings/leds/common.txt
-> @@ -43,6 +43,17 @@ Optional properties for child nodes:
->                   Documentation/ABI/testing/sysfs-class-led-trigger-netdev)
->                   to reflect the state and activity of a net device.
->   
-> +                The optional child node netdev can be used to
-> +                configure initial values for the link, rx, tx and
-> +                device_name properties. For example,
-> +
-> +                netdev {
-> +                    rx;
-> +                    tx;
-> +                    link;
-> +                    device-name = "can0";
-> +                };
-> +
->   - led-pattern : Array of integers with default pattern for certain triggers.
->                   Each trigger may parse this property differently:
->                   - one-shot : two numbers specifying delay on and delay off (in ms),
-> diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
-> index e4a76ce4e4c7..387932cfea55 100644
-> --- a/drivers/leds/trigger/ledtrig-netdev.c
-> +++ b/drivers/leds/trigger/ledtrig-netdev.c
-> @@ -20,6 +20,7 @@
->   #include <linux/list.h>
->   #include <linux/module.h>
->   #include <linux/netdevice.h>
-> +#include <linux/of.h>
->   #include <linux/spinlock.h>
->   #include <linux/timer.h>
->   #include "../leds.h"
-> @@ -400,6 +401,33 @@ static void netdev_trig_work(struct work_struct *work)
->   			(atomic_read(&trigger_data->interval)*2));
->   }
->   
-> +static void netdev_trig_of_init(struct led_classdev *led_cdev,
-> +				struct led_netdev_data *trigger_data)
-> +{
-> +	struct device_node *np = led_cdev->dev->of_node;
-> +	const char *device_name;
-> +
-> +	if (!np)
-> +		return;
-> +	np = of_get_child_by_name(np, "netdev");
-> +	if (!np)
-> +		return;
-> +
-> +	if (of_property_read_bool(np, "link"))
-> +		__set_bit(NETDEV_LED_LINK, &trigger_data->mode);
-> +	if (of_property_read_bool(np, "tx"))
-> +		__set_bit(NETDEV_LED_TX, &trigger_data->mode);
-> +	if (of_property_read_bool(np, "rx"))
-> +		__set_bit(NETDEV_LED_RX, &trigger_data->mode);
-> +	if (!of_property_read_string(np, "device-name", &device_name))
-> +		netdev_trig_set_device(trigger_data, device_name,
-> +				       strlen(device_name));
-> +
-> +	set_baseline_state(trigger_data);
-> +
-> +	of_node_put(np);
-> +}
-> +
->   static int netdev_trig_activate(struct led_classdev *led_cdev)
->   {
->   	struct led_netdev_data *trigger_data;
-> @@ -423,6 +451,8 @@ static int netdev_trig_activate(struct led_classdev *led_cdev)
->   	trigger_data->mode = 0;
->   	atomic_set(&trigger_data->interval, msecs_to_jiffies(50));
->   	trigger_data->last_activity = 0;
-> +	if (led_cdev->flags & LED_INIT_DEFAULT_TRIGGER)
-> +		netdev_trig_of_init(led_cdev, trigger_data);
-
-We don't necessarily want OF settings to be used for initialization on
-each LED trigger activation for the LED class device, but only on the
-first one. That's why the triggers using this flags clean it here:
-
-led_cdev->flags &= ~LED_INIT_DEFAULT_TRIGGER;
-
->   
->   	led_set_trigger_data(led_cdev, trigger_data);
->   
-> 
-
--- 
-Best regards,
-Jacek Anaszewski
+SGksIFV3ZQ0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+IEZyb206IFV3ZSBLbGVpbmUtS8O2bmlnIFttYWlsdG86dS5rbGVpbmUt
+a29lbmlnQHBlbmd1dHJvbml4LmRlXQ0KPiBTZW50OiAyMDE55bm0M+aciDE05pelIDE4OjAxDQo+
+IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IHRoaWVycnkucmVk
+aW5nQGdtYWlsLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsN
+Cj4gc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVlckBwZW5ndXRyb25peC5kZTsga2VybmVsQHBl
+bmd1dHJvbml4LmRlOw0KPiBmZXN0ZXZhbUBnbWFpbC5jb207IGxpbnV4QGFybWxpbnV4Lm9yZy51
+azsgc3RlZmFuQGFnbmVyLmNoOw0KPiBvdGF2aW9Ab3NzeXN0ZW1zLmNvbS5icjsgTGVvbmFyZCBD
+cmVzdGV6IDxsZW9uYXJkLmNyZXN0ZXpAbnhwLmNvbT47DQo+IHNjaG5pdHplbHRvbnlAZ21haWwu
+Y29tOyBqYW4udHVlcmtAZW10cmlvbi5jb207IFJvYmluIEdvbmcNCj4gPHlpYmluLmdvbmdAbnhw
+LmNvbT47IGxpbnV4LXB3bUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBr
+ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0K
+PiBTdWJqZWN0OiBSZTogW1BBVENIIFYyIDIvNV0gcHdtOiBBZGQgaS5NWCBUUE0gUFdNIGRyaXZl
+ciBzdXBwb3J0DQo+IA0KPiBIZWxsbywNCj4gDQo+IE9uIFRodSwgTWFyIDE0LCAyMDE5IGF0IDA5
+OjQ5OjA2QU0gKzAwMDAsIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+ID4gT24gV2VkLCBNYXIgMTMs
+IDIwMTkgYXQgMDc6MzE6MTZBTSArMDAwMCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gPiA+ICtz
+dGF0aWMgdm9pZCBpbXhfdHBtX3B3bV9jb25maWcoc3RydWN0IHB3bV9jaGlwICpjaGlwLA0KPiA+
+ID4gPiArCQkJICAgICAgIHN0cnVjdCBwd21fZGV2aWNlICpwd20sDQo+ID4gPiA+ICsJCQkgICAg
+ICAgc3RydWN0IHB3bV9zdGF0ZSAqc3RhdGUpIHsNCj4gPiA+ID4gKwlzdHJ1Y3QgaW14X3RwbV9w
+d21fY2hpcCAqdHBtID0gdG9faW14X3RwbV9wd21fY2hpcChjaGlwKTsNCj4gPiA+ID4gKwlzdGF0
+aWMgYm9vbCB0cG1fY250X2luaXRpYWxpemVkOw0KPiA+ID4gPiArCXVuc2lnbmVkIGludCBkdXR5
+X2NudDsNCj4gPiA+ID4gKwl1MzIgdmFsOw0KPiA+ID4gPiArCXU2NCB0bXA7DQo+ID4gPiA+ICsN
+Cj4gPiA+ID4gKwkvKg0KPiA+ID4gPiArCSAqIFRQTSBjb3VudGVyIGlzIHNoYXJlZCBieSBtdWx0
+aSBjaGFubmVscywgbGV0J3MgbWFrZSBpdCB0byBiZQ0KPiA+ID4gPiArCSAqIE9OTFkgZmlyc3Qg
+Y2hhbm5lbCBjYW4gY29uZmlnIFRQTSBjb3VudGVyJ3MgcHJlY2FsZSBhbmQgcGVyaW9kDQo+ID4g
+PiA+ICsJICogY291bnQuDQo+ID4gPiA+ICsJICovDQo+ID4gPiA+ICsJaWYgKCF0cG1fY250X2lu
+aXRpYWxpemVkKSB7DQo+ID4gPiA+ICsJCWlteF90cG1fcHdtX2NvbmZpZ19jb3VudGVyKGNoaXAs
+IHN0YXRlLT5wZXJpb2QpOw0KPiA+ID4gPiArCQl0cG1fY250X2luaXRpYWxpemVkID0gdHJ1ZTsN
+Cj4gPiA+ID4gKwl9DQo+ID4gPg0KPiA+ID4gU28gdGhlIHBlcmlvZCBjYW4gb25seSBiZSBjb25m
+aWd1cmVkIG9uY2UuIFRoYXQgaXMgbm90IGFzIGdvb2QgYXMgaXQgY291bGQNCj4gYmUuDQo+ID4g
+PiBZb3Ugc2hvdWxkIGFsbG93IGEgY2hhbmdlIHdoZW5ldmVyIHRoZXJlIGlzIGV4YWN0bHkgb25l
+IFBXTSBpbiB1c2UuDQo+ID4NCj4gPiBPSywgbWF5YmUgSSBjYW4gYWRkIGNoZWNrIGZvciBvdGhl
+ciBjaGFubmVscycgc3RhdHVlIGhlcmUsIGFuZCBhbGxvdw0KPiA+IHRoZSBwZXJpb2QgdXBkYXRl
+IGlmIE9OTFkgMSBjaGFubmVsIGlzIGVuYWJsZWQuDQo+IA0KPiBTZWUgaG93IHRoZSBTaUZpdmUg
+cGF0Y2ggdGhhdCBJIGFscmVhZHkgcG9pbnRlZCBvdXQgc29sdmVzIHRoaXMgc2FtZSBwcm9ibGVt
+Lg0KDQpUaGFua3MsIEkgd2lsbCBhZGQgYSB1c2VyX2NvdW50IHRvIGRldGVybWluZSBob3cgbWFu
+eSBjaGFubmVscyBhcmUgdXNlZC4NCg0KDQo+IA0KPiA+ID4gPiArCS8qIHNldCBkdXR5IGNvdW50
+ZXIgKi8NCj4gPiA+ID4gKwl0bXAgPSByZWFkbCh0cG0tPmJhc2UgKyBUUE1fTU9EKSAmIFRQTV9N
+T0RfTU9EX01BU0s7DQo+ID4gPiA+ICsJdG1wICo9IHN0YXRlLT5kdXR5X2N5Y2xlOw0KPiA+ID4g
+PiArCWR1dHlfY250ID0gRElWX1JPVU5EX0NMT1NFU1RfVUxMKHRtcCwgc3RhdGUtPnBlcmlvZCk7
+DQo+ID4gPg0KPiA+ID4gVWFoLCB5b3UgdXNlIHN0YXRlLT5wZXJpb2QgaGVyZSBldmVuIHRob3Vn
+aCBmb3IgdGhlIDJuZCBQV00gdGhlDQo+ID4gPiBEaXZpZGVyIG1pZ2h0IG5vdCBiZSBzZXR1cCBh
+cHByb3ByaWF0ZWx5Lg0KPiA+DQo+ID4gSSB0aGluayB0aGF0IGlzIDEgbGltaXRhdGlvbiBoZXJl
+LCB0aGUgZHRzIHNob3VsZCBtYWtlIHN1cmUgdGhlIHBlcmlvZA0KPiA+IHVzZWQgZm9yIGRpZmZl
+cmVudCBjaGFubmVscyBhcmUgc2FtZSBvciBhdCBsZWFzdCB0aGV5IGNhbiBzaGFyZSBzYW1lDQo+
+ID4gZGl2aWRlciwgb3RoZXJ3aXNlLCB3aGF0IGlmIG11bHRpcGxlIGNoYW5uZWxzIGNhbiBOT1Qg
+ZmluZCBhIGRpdmlkZXINCj4gPiBnb29kIGZvciBldmVyeSBjaGFubmVsPyBIb3cgdG8gZGVhbCB3
+aXRoIHRoaXMgY2FzZT8NCj4gDQo+IFlvdSBzaG91bGQgcmV0dXJuIC1FUkFOR0Ugb3IgLUVJTlZB
+TCBmb3IgdGhlIGNhbGxzIHRoYXQgY2Fubm90IGJlIHNhdGlzZmllZC4NCg0KSW4gbXkgbGF0ZXN0
+IGltcGxlbWVudGF0aW9uLCBJIGhhdmUgYWRkZWQgdGhlIHBlcmlvZCBzZXR0aW5nIGNoZWNrIGF0
+IHRoZSBiZWdpbm5pbmcNCm9mIHRoZSAuYXBwbHksIGFzIHRoZSBsaW1pdGF0aW9uIHN0YXRlcywg
+YWxsIGNoYW5uZWxzIHNob3VsZCB1c2Ugc2FtZSBwZXJpb2Qgc2V0dGluZ3MsIHNvDQp0aGUgcGVy
+aW9kIGhlcmUgaXMgc2FtZSBmb3IgYWxsIGNoYW5uZWxzLCBvbmNlIGl0IGlzIGRpZmZlcmVudCwg
+dGhlIC5hcHBseSBjYWxsIHdpbGwgcmV0dXJuIGZhaWxlZA0KYW5kIHRoZSBkdXR5IGN5Y2xlIHNl
+dHRpbmcgd2lsbCBiZSBza2lwcGVkIGFzIHdlbGwuDQoNCjIzMiAgICAgICAgIGlmIChzdGF0ZS0+
+cGVyaW9kICE9IGN1cnN0YXRlLnBlcmlvZCkgew0KMjMzICAgICAgICAgICAgICAgICAvKg0KMjM0
+ICAgICAgICAgICAgICAgICAgKiBUUE0gY291bnRlciBpcyBzaGFyZWQgYnkgbXVsdGlwbGUgY2hh
+bm5lbHMsIHNvIHRoZSBwcmVzY2FsZQ0KMjM1ICAgICAgICAgICAgICAgICAgKiBhbmQgcGVyaW9k
+IGNhbiBOT1QgYmUgbW9kaWZpZWQgd2hlbiBhbnkgb3RoZXIgY2hhbm5lbCBpcyB1c2VkLg0KMjM2
+ICAgICAgICAgICAgICAgICAgKi8NCjIzNyAgICAgICAgICAgICAgICAgaWYgKHRwbS0+dXNlcl9j
+b3VudCAhPSAxKQ0KMjM4ICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiAtRUJVU1k7DQoy
+MzkgICAgICAgICAgICAgICAgIHJldCA9IGlteF90cG1fcHdtX2NvbmZpZ19jb3VudGVyKGNoaXAs
+IHN0YXRlLT5wZXJpb2QpOw0KMjQwICAgICAgICAgICAgICAgICBpZiAocmV0KQ0KMjQxICAgICAg
+ICAgICAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQoyNDIgICAgICAgICB9DQoyNDMNCjI0NCAg
+ICAgICAgIGlmICghc3RhdGUtPmVuYWJsZWQpDQoyNDUgICAgICAgICAgICAgICAgIGR1dHlfY3lj
+bGUgPSAwOw0KMjQ2DQoyNDcgICAgICAgICBpZiAoc3RhdGUtPmR1dHlfY3ljbGUgIT0gY3Vyc3Rh
+dGUuZHV0eV9jeWNsZSB8fA0KMjQ4ICAgICAgICAgICAgIHN0YXRlLT5wb2xhcml0eSAhPSBjdXJz
+dGF0ZS5wb2xhcml0eSkNCjI0OSAgICAgICAgICAgICAgICAgaW14X3RwbV9wd21fY29uZmlnKGNo
+aXAsIHB3bSwNCjI1MCAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0ZS0+cGVyaW9kLCBkdXR5
+X2N5Y2xlLCBzdGF0ZS0+cG9sYXJpdHkpOw0KDQoNCg0KDQo+IA0KPiA+ID4gPiBbLi4uXQ0KPiA+
+ID4gPiArc3RhdGljIGludCBpbXhfdHBtX3B3bV9hcHBseShzdHJ1Y3QgcHdtX2NoaXAgKmNoaXAs
+IHN0cnVjdA0KPiBwd21fZGV2aWNlICpwd20sDQo+ID4gPiA+ICsJCQkgIHN0cnVjdCBwd21fc3Rh
+dGUgKnN0YXRlKQ0KPiA+ID4gPiArew0KPiA+ID4gPiArCXN0cnVjdCBpbXhfdHBtX3B3bV9jaGlw
+ICp0cG0gPSB0b19pbXhfdHBtX3B3bV9jaGlwKGNoaXApOw0KPiA+ID4gPiArCXN0cnVjdCBwd21f
+c3RhdGUgY3Vyc3RhdGU7DQo+ID4gPiA+ICsJdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gPiA+ID4g
+Kw0KPiA+ID4gPiArCWlteF90cG1fcHdtX2dldF9zdGF0ZShjaGlwLCBwd20sICZjdXJzdGF0ZSk7
+DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwlzcGluX2xvY2tfaXJxc2F2ZSgmdHBtLT5sb2NrLCBmbGFn
+cyk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwlpZiAoc3RhdGUtPnBlcmlvZCAhPSBjdXJzdGF0ZS5w
+ZXJpb2QgfHwNCj4gPiA+ID4gKwkgICAgc3RhdGUtPmR1dHlfY3ljbGUgIT0gY3Vyc3RhdGUuZHV0
+eV9jeWNsZSB8fA0KPiA+ID4gPiArCSAgICBzdGF0ZS0+cG9sYXJpdHkgIT0gY3Vyc3RhdGUucG9s
+YXJpdHkpDQo+ID4gPiA+ICsJCWlteF90cG1fcHdtX2NvbmZpZyhjaGlwLCBwd20sIHN0YXRlKTsN
+Cj4gPiA+ID4gKw0KPiA+ID4gPiArCWlmIChzdGF0ZS0+ZW5hYmxlZCAhPSBjdXJzdGF0ZS5lbmFi
+bGVkKQ0KPiA+ID4gPiArCQlpbXhfdHBtX3B3bV9lbmFibGUoY2hpcCwgcHdtLCBzdGF0ZS0+ZW5h
+YmxlZCk7DQo+ID4gPg0KPiA+ID4gVGhpcyBpcyB3cm9uZy4gVGhpcyBzZXF1ZW5jZToNCj4gPiA+
+DQo+ID4gPiAJcHdtX2FwcGx5X3N0YXRlKHB3bSwgeyAuZHV0eV9jeWNsZSA9IDAsIC5wZXJpb2Qg
+PSAxMDAwMCwgLmVuYWJsZWQgPQ0KPiA+ID4gdHJ1ZSB9KTsNCj4gPiA+IAlwd21fYXBwbHlfc3Rh
+dGUocHdtLCB7IC5kdXR5X2N5Y2xlID0gMTAwMDAsIC5wZXJpb2QgPSAxMDAwMCwNCj4gPiA+IC5l
+bmFibGVkID0gZmFsc2UgfSk7DQo+ID4gPg0KPiA+ID4gbXVzdCBrZWVwIHRoZSBvdXRwdXQgcGlu
+IGxvdyB3aGljaCBpc24ndCBndWFyYW50ZWVkIGhlcmUuDQo+ID4NCj4gPiBTbyB5b3UgbWVhbiBm
+b3IgZXZlcnkgLmFwcGx5IG9wZXJhdGlvbiwgdGhlIGNoYW5uZWwgTVVTVCBiZSBkaXNhYmxlZA0K
+PiA+IGZpcnN0LCB0aGVuIGNvbmZpZyBpdCwgdGhlbiBlbmFibGUgaXQ/DQo+IA0KPiBOby4gSSBv
+bmx5IHNheSB0aGF0IHlvdSBzaG91bGQgbm90IGNvbmZpZ3VyZSB0aGUgbmV3IHBlcmlvZCBhbmQg
+ZHV0eSBjeWNsZSBpZg0KPiBpbiB0aGUgZW5kIHRoZSBoYXJkd2FyZSBzaG91bGQgYmUgZGlzYWJs
+ZWQuIEFsd2F5cyBkaXNhYmxpbmcgaXMgd3JvbmcsIHRvby4NCj4NCg0KVW5kZXJzdGFuZCBub3cs
+IEkgd2lsbCBjaGVjayB0aGUgc3RhdGUtPmVuYWJsZSBmaXJzdCwgaWYgaXQgaXMgZmFsc2UsIEkg
+d2lsbCBzZXQgdGhlIGR1dHlfY3ljbGUNCnRvIDAgYmVmb3JlIGNvbmZpZ3VyaW5nIHRoZSBjaGFu
+bmVsLg0KDQpBbnNvbi4NCg0KIA0KPiBCZXN0IHJlZ2FyZHMNCj4gVXdlDQo+IA0KPiAtLQ0KPiBQ
+ZW5ndXRyb25peCBlLksuICAgICAgICAgICAgICAgICAgICAgICAgICAgfCBVd2UgS2xlaW5lLUvD
+tm5pZyAgICAgICAgICAgIHwNCj4gSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAgICAg
+ICAgICAgIHwNCj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNv
+bS8/dXJsPWh0dHAlM0ElMkYlMkZ3d3cucA0KPiBlbmd1dHJvbml4LmRlJTJGJmFtcDtkYXRhPTAy
+JTdDMDElN0NhbnNvbi5odWFuZyU0MG54cC5jb20lN0M2ZjMNCj4gMGJiNDBmYjlkNDYwY2Q3M2Ew
+OGQ2YTg2M2Y0YzklN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNQ0KPiAlN0MwJTdD
+MCU3QzYzNjg4MTU0NDYwMDQ0OTg3NSZhbXA7c2RhdGE9U1JCVG4lMkJjcXV6UlJSTHJ6T1RHDQo+
+IHZsQzVXTnZvZjI4SjAlMkI3N2lTeHRGVllBJTNEJmFtcDtyZXNlcnZlZD0wICB8DQo=
