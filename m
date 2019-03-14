@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v3 1/5] dt-bindings: media: Add Allwinner A10 CSI binding
-Date: Thu, 14 Mar 2019 22:17:45 +0100
-Message-ID: <6d73b7f5688e9e8424f09e11f12302268939d917.1552598161.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v3 5/5] DO NOT MERGE: ARM: dts: bananapi: Add Camera support
+Date: Thu, 14 Mar 2019 22:17:49 +0100
+Message-ID: <4a9d087583fbc95188cc23cca1475d66dcd3f5b3.1552598161.git-series.maxime.ripard@bootlin.com>
 References: <cover.f6227e6c3d38ac887e358a1f54c5581c254da1bd.1552598161.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,138 +12,140 @@ To: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.inte
 Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-The Allwinner A10 CMOS Sensor Interface is a camera capture interface also
-used in later (A10s, A13, A20, R8 and GR8) SoCs.
-
-On some SoCs, like the A10, there's multiple instances of that controller,
-with one instance supporting more channels and having an ISP.
-
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 115 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 115 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts | 91 +++++++++++++++++++++++++-
+ 1 file changed, 91 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-new file mode 100644
-index 000000000000..30c5dc1406cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-@@ -0,0 +1,115 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/allwinner,sun4i-a10-csi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+index 81bc85d398c1..33f1b40ee3f2 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+@@ -54,6 +54,9 @@
+ 	compatible = "lemaker,bananapi", "allwinner,sun7i-a20";
+ 
+ 	aliases {
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
+ 		serial0 = &uart0;
+ 		serial1 = &uart3;
+ 		serial2 = &uart7;
+@@ -63,6 +66,41 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	reg_cam: cam {
++		compatible = "regulator-fixed";
++		regulator-name = "cam";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&reg_vcc5v0>;
++		gpio = <&pio 7 16 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		regulator-always-on;
++	};
 +
-+title: Allwinner A10 CMOS Sensor Interface (CSI) Device Tree Bindings
++        reg_cam_avdd: cam-avdd {
++                compatible = "regulator-fixed";
++                regulator-name = "cam500b-avdd";
++                regulator-min-microvolt = <2800000>;
++                regulator-max-microvolt = <2800000>;
++                vin-supply = <&reg_cam>;
++        };
 +
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <maxime.ripard@bootlin.com>
++        reg_cam_dovdd: cam-dovdd {
++                compatible = "regulator-fixed";
++                regulator-name = "cam500b-dovdd";
++                regulator-min-microvolt = <1800000>;
++                regulator-max-microvolt = <1800000>;
++                vin-supply = <&reg_cam>;
++        };
 +
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+        - enum:
-+          - allwinner,sun7i-a20-csi0
-+        - const: allwinner,sun4i-a10-csi0
++        reg_cam_dvdd: cam-dvdd {
++                compatible = "regulator-fixed";
++                regulator-name = "cam500b-dvdd";
++                regulator-min-microvolt = <1500000>;
++                regulator-max-microvolt = <1500000>;
++                vin-supply = <&reg_cam>;
++        };
 +
-+      - items:
-+        - const: allwinner,sun4i-a10-csi0
+ 	hdmi-connector {
+ 		compatible = "hdmi-connector";
+ 		type = "a";
+@@ -116,6 +154,23 @@
+ 		>;
+ };
+ 
++&csi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&csi0_pins_a>;
++	status = "okay";
 +
-+  reg:
-+    maxItems: 1
++	port {
++		csi_from_ov5640: endpoint {
++                        remote-endpoint = <&ov5640_to_csi>;
++                        bus-width = <8>;
++                        hsync-active = <1>; /* Active high */
++                        vsync-active = <0>; /* Active low */
++                        data-active = <1>;  /* Active high */
++                        pclk-sample = <1>;  /* Rising */
++                };
++	};
++};
 +
-+  interrupts:
-+    maxItems: 1
+ &de {
+ 	status = "okay";
+ };
+@@ -161,6 +216,36 @@
+ 	};
+ };
+ 
++&i2c1 {
++	status = "okay";
 +
-+  clocks:
-+    items:
-+      - description: The CSI interface clock
-+      - description: The CSI module clock
-+      - description: The CSI ISP clock
-+      - description: The CSI DRAM clock
++	camera: camera@21 {
++		compatible = "ovti,ov5640";
++		reg = <0x21>;
++                clocks = <&ccu CLK_CSI0>;
++                clock-names = "xclk";
++		assigned-clocks = <&ccu CLK_CSI0>;
++		assigned-clock-rates = <24000000>;
 +
-+  clock-names:
-+    items:
-+      - const: bus
-+      - const: mod
-+      - const: isp
-+      - const: ram
++                reset-gpios = <&pio 7 14 GPIO_ACTIVE_LOW>;
++                powerdown-gpios = <&pio 7 19 GPIO_ACTIVE_HIGH>;
++                AVDD-supply = <&reg_cam_avdd>;
++                DOVDD-supply = <&reg_cam_dovdd>;
++                DVDD-supply = <&reg_cam_dvdd>;
 +
-+  resets:
-+    description: The reset line driver this IP
-+    maxItems: 1
++                port {
++                        ov5640_to_csi: endpoint {
++                                remote-endpoint = <&csi_from_ov5640>;
++                                bus-width = <8>;
++                                hsync-active = <1>; /* Active high */
++                                vsync-active = <0>; /* Active low */
++                                data-active = <1>;  /* Active high */
++                                pclk-sample = <1>;  /* Rising */
++                        };
++                };
++	};
++};
 +
-+  pinctrl-0:
-+    minItems: 1
+ &i2c2 {
+ 	status = "okay";
+ };
+@@ -247,6 +332,12 @@
+ 		"IO-6", "IO-3", "IO-2", "IO-0", "", "", "", "",
+ 		"", "", "", "", "", "", "", "";
+ 
++	csi0_pins_a: csi_pins_a@0 {
++		pins = "PE0", "PE1", "PE2", "PE3", "PE4", "PE5",
++		       "PE6", "PE7", "PE8", "PE9", "PE10", "PE11";
++		function = "csi0";
++	};
 +
-+  pinctrl-names:
-+    const: default
-+
-+  port:
-+    additionalProperties: false
-+
-+    properties:
-+      endpoint:
-+        properties:
-+          bus-width:
-+            const: 8
-+            description:
-+              Number of data lines actively used.
-+
-+          data-active:
-+            description: Polarity of the data lines, 0 for active low,
-+              1 for active high.
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+              - enum: [0, 1]
-+
-+          hsync-active:
-+            description: Active state of the HSYNC signal, 0 for
-+              active low, 1 for active high.
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+              - enum: [0, 1]
-+
-+          pclk-sample:
-+            description: Sample data on the rising (1) or falling (0)
-+              edge of the pixel clock signal
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+              - enum: [0, 1]
-+
-+          remote-endpoint:
-+            $ref: '/schemas/types.yaml#/definitions/phandle'
-+            description: Phandle to an endpoint subnode of a remote
-+              device node.
-+
-+          vsync-active:
-+            description: Active state of the VSYNC signal, 0 for
-+              active low, 1 for active high.
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+              - enum: [0, 1]
-+
-+        required:
-+          - bus-width
-+          - data-active
-+          - hsync-active
-+          - pclk-sample
-+          - remote-endpoint
-+          - vsync-active
-+
-+    required:
-+      - endpoint
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+additionalProperties: false
+ 	usb0_id_detect_pin: usb0-id-detect-pin {
+ 		pins = "PH4";
+ 		function = "gpio_in";
 -- 
 git-series 0.9.1
