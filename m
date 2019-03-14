@@ -1,93 +1,89 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: [PATCH v2 1/8] mmc: sdhci: Get rid of finish_tasklet
-Date: Thu, 14 Mar 2019 17:11:21 +0530
-Message-ID: <b8d12a8a-2eed-bee9-2421-d8560b99703b@ti.com>
-References: <20190215192033.24203-1-faiz_abbas@ti.com>
- <20190215192033.24203-2-faiz_abbas@ti.com>
- <abcc1506-cd38-5ff4-aaeb-57e9a9622e90@intel.com>
- <8d72ff93-e07f-52b9-da85-acd54f046694@ti.com>
- <63b6631d-86e7-b8ef-ffaf-40e7d4e96cfb@intel.com>
- <842caafd-1547-1ea6-faf0-27a85a912622@ti.com>
- <2a74ed21-2e6f-1ba3-3d49-6826a5ab3e66@ti.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 4/4] leds: netdev trigger: allow setting initial values
+ in device tree
+Date: Thu, 14 Mar 2019 13:00:47 +0100
+Message-ID: <20190314120047.GA19072@amd>
+References: <20190311144227.GA4404@amd>
+ <20190313202615.22883-1-linux@rasmusvillemoes.dk>
+ <20190313202615.22883-5-linux@rasmusvillemoes.dk>
+ <20190314102911.GA15173@amd>
+ <6fb71b90-1ae3-9d93-6e0c-c95e441ced7a@rasmusvillemoes.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2a74ed21-2e6f-1ba3-3d49-6826a5ab3e66@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <6fb71b90-1ae3-9d93-6e0c-c95e441ced7a@rasmusvillemoes.dk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, zhang.chunyan@linaro.org
+To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 14/03/19 4:45 PM, Grygorii Strashko wrote:
-> 
-> 
-> On 12.03.19 19:30, Rizvi, Mohammad Faiz Abbas wrote:
->> Hi Adrian,
->>
->> On 3/8/2019 7:06 PM, Adrian Hunter wrote:
->>> On 6/03/19 12:00 PM, Faiz Abbas wrote:
->>>> Adrian,
->>>>
->>>> On 25/02/19 1:47 PM, Adrian Hunter wrote:
->>>>> On 15/02/19 9:20 PM, Faiz Abbas wrote:
->>>>>> sdhci.c has two bottom halves implemented. A threaded_irq for handling
->>>>>> card insert/remove operations and a tasklet for finishing mmc requests.
->>>>>> With the addition of external dma support, dmaengine APIs need to
->>>>>> terminate in non-atomic context before unmapping the dma buffers.
->>>>>>
->>>>>> To facilitate this, remove the finish_tasklet and move the call of
->>>>>> sdhci_request_done() to the threaded_irq() callback.
->>>>>
->>>>> The irq thread has a higher latency than the tasklet.  The performance drop
->>>>> is measurable on the system I tried:
->>>>>
->>>>> Before:
->>>>>
->>>>> # dd if=/dev/mmcblk1 of=/dev/null bs=1G count=1 &
->>>>> 1+0 records in
->>>>> 1+0 records out
->>>>> 1073741824 bytes (1.1 GB) copied, 4.44502 s, 242 MB/s
->>>>>
->>>>> After:
->>>>>
->>>>> # dd if=/dev/mmcblk1 of=/dev/null bs=1G count=1 &
->>>>> 1+0 records in
->>>>> 1+0 records out
->>>>> 1073741824 bytes (1.1 GB) copied, 4.50898 s, 238 MB/s
->>>>>
->>>>> So we only want to resort to the thread for the error case.
->>>>>
->>>>
->>>> Sorry for the late response here, but this is about 1.6% decrease. I
->>>> tried out the same commands on a dra7xx board here (with about 5
->>>> consecutive dd of 1GB) and the average decrease was 0.3%. I believe you
->>>> will also find a lesser percentage change if you average over multiple
->>>> dd commands.
->>>>
->>>> Is this really so significant that we have to maintain two different
->>>> bottom halves and keep having difficulty with adding APIs that can sleep?
->>>
->>> It is a performance drop that can be avoided, so it might as well be.
->>> Splitting the success path from the failure path is common for I/O drivers
->>> for similar reasons as here: the success path can be optimized whereas the
->>> failure path potentially needs to sleep.
->>
->> Understood. You wanna keep the success path as fast as possible.
-> 
-> Sry, I've not completely followed this series, but I'd like to add 5c
-> 
-> It's good thing to get rid of tasklets hence RT Linux kernel is actively moving towards to LKML
-> and there everything handled in threads (even networking trying to get rid of softirqs).
-> 
-> Performance is pretty relative thing here - just try to run network traffic in parallel, and
-> there are no control over it comparing to threads. Now way to assign priority or pin to CPU.
+--UugvWAfsgieZRqgk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There is a 2007 LWN article(https://lwn.net/Articles/239633/) which
-talks about removing tasklets altogether. I wonder what happened after that.
+On Thu 2019-03-14 12:26:38, Rasmus Villemoes wrote:
+> On 14/03/2019 11.29, Pavel Machek wrote:
+> > On Wed 2019-03-13 21:26:15, Rasmus Villemoes wrote:
+> >> It can be quite convenient to initialize a netdev-triggered LED with a
+> >> device name and setting the rx,tx,link properties from device tree,
+> >> instead of having to do that in an init script in userspace.
+> >>
+> >> +                The optional child node netdev can be used to
+> >> +                configure initial values for the link, rx, tx and
+> >> +                device_name properties. For example, setting
+> >> +                linux,default-trigger =3D "netdev" and adding the chi=
+ld
+> >> +                node
+> >> +
+> >> +                netdev {
+> >> +                    rx;
+> >> +                    tx;
+> >> +                    link;
+> >> +                    device-name =3D "can0";
+> >> +                };
+> >> +
+> >> +                can be used to replace 'linux,default-trigger =3D
+> >> +                "can0-rxtx"' that relies on the deprecated
+> >> +                CONFIG_CAN_LEDS.
+> >=20
+> > I'm sorry, but no, not like this. I see it works for you, only having
+> > single can device, but it would quickly break with two of them and two
+> > ethernets are rather common.
+> >=20
+> > So this will need to be device =3D <&phandle_of_ethernet_device> or
+> > something like that. There may be example with usb port triggers.
+>=20
+> Huh? I have two CAN devices, and there are two LEDs on the front panel
+> labeled CAN-A and CAN-B; my device tree nodes for that are
+=2E..
+> and this works just fine. The only change from the old DT is the
+> addition of the netdev nodes and changing linux,default-trigger from
+> "can0-rxtx", "can1-rxtx" to both "netdev".
 
-Thanks,
-Faiz
+Yeah and now insert the modules for the can devices in different
+order... May not happen in your case but will be fairly common for
+ethernets.
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--UugvWAfsgieZRqgk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyKQm8ACgkQMOfwapXb+vI2kgCeI4eLitwds68MutQltj+a4klK
+xT0An1vLH+H/RtsLkTkIb2mBueNE1jsi
+=BBl1
+-----END PGP SIGNATURE-----
+
+--UugvWAfsgieZRqgk--
