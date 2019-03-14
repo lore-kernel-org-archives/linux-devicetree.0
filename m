@@ -1,86 +1,53 @@
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH 4/4] leds: netdev trigger: allow setting initial values in
- device tree
-Date: Thu, 14 Mar 2019 12:26:38 +0100
-Message-ID: <6fb71b90-1ae3-9d93-6e0c-c95e441ced7a@rasmusvillemoes.dk>
-References: <20190311144227.GA4404@amd>
- <20190313202615.22883-1-linux@rasmusvillemoes.dk>
- <20190313202615.22883-5-linux@rasmusvillemoes.dk>
- <20190314102911.GA15173@amd>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v4 1/6] drm/bridge: sii902x: add input_bus_flags
+Date: Thu, 14 Mar 2019 13:27:47 +0200
+Message-ID: <9eb914abae61e7e96c9d248ca04285d8c4331024.1552562385.git.jsarha@ti.com>
+References: <cover.1552562385.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190314102911.GA15173@amd>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1552562385.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: fabrizio.castro@bp.renesas.com, Songjun.Wu@atmel.com, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, voice.shen@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-On 14/03/2019 11.29, Pavel Machek wrote:
-> On Wed 2019-03-13 21:26:15, Rasmus Villemoes wrote:
->> It can be quite convenient to initialize a netdev-triggered LED with a
->> device name and setting the rx,tx,link properties from device tree,
->> instead of having to do that in an init script in userspace.
->>
->> +                The optional child node netdev can be used to
->> +                configure initial values for the link, rx, tx and
->> +                device_name properties. For example, setting
->> +                linux,default-trigger = "netdev" and adding the child
->> +                node
->> +
->> +                netdev {
->> +                    rx;
->> +                    tx;
->> +                    link;
->> +                    device-name = "can0";
->> +                };
->> +
->> +                can be used to replace 'linux,default-trigger =
->> +                "can0-rxtx"' that relies on the deprecated
->> +                CONFIG_CAN_LEDS.
-> 
-> I'm sorry, but no, not like this. I see it works for you, only having
-> single can device, but it would quickly break with two of them and two
-> ethernets are rather common.
-> 
-> So this will need to be device = <&phandle_of_ethernet_device> or
-> something like that. There may be example with usb port triggers.
-
-Huh? I have two CAN devices, and there are two LEDs on the front panel
-labeled CAN-A and CAN-B; my device tree nodes for that are
-
-		cana {
-			label = "cana:green:activity";
-			gpios = <&gpio0 10 0>;
-			default-state = "off";
-			linux,default-trigger = "netdev";
-
-			netdev {
-				rx;
-				tx;
-				link;
-				device-name = "can0";
-			};
-		};
-
-		canb {
-			label = "canb:green:activity";
-			gpios = <&gpio0 5 0>;
-			default-state = "off";
-			linux,default-trigger = "netdev";
-
-			netdev {
-				rx;
-				tx;
-				link;
-				device-name = "can1";
-			};
-		};
-
-and this works just fine. The only change from the old DT is the
-addition of the netdev nodes and changing linux,default-trigger from
-"can0-rxtx", "can1-rxtx" to both "netdev".
-
-Rasmus
+RnJvbTogVG9taSBWYWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KClRoZSBkcml2ZXIg
+YWx3YXlzIHNldHMgSW5wdXRCdXNGbXQ6RURHRSB0byAwIChmYWxsaW5nIGVkZ2UpLgoKQWRkIGRy
+bV9icmlkZ2VfdGltaW5ncydzIGlucHV0X2J1c19mbGFncyB0byByZWZsZWN0IHRoYXQgdGhlIGJy
+aWRnZQpzYW1wbGVzIG9uIGZhbGxpbmcgZWRnZXMuCgpTaWduZWQtb2ZmLWJ5OiBUb21pIFZhbGtl
+aW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29tPgpTaWduZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxq
+c2FyaGFAdGkuY29tPgpSZXZpZXdlZC1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5n
+LmNvbT4KUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRl
+YXNvbmJvYXJkLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYyB8IDcg
+KysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9z
+aWk5MDJ4LmMKaW5kZXggYmZhOTAyMDEzYWE0Li4xYWZhMDAwMTQxZDUgMTAwNjQ0Ci0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlk
+Z2Uvc2lpOTAyeC5jCkBAIC00NTksNiArNDU5LDEyIEBAIHN0YXRpYyBpbnQgc2lpOTAyeF9pMmNf
+YnlwYXNzX2Rlc2VsZWN0KHN0cnVjdCBpMmNfbXV4X2NvcmUgKm11eCwgdTMyIGNoYW5faWQpCiAJ
+cmV0dXJuIDA7CiB9CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2JyaWRnZV90aW1pbmdzIGRl
+ZmF1bHRfc2lpOTAyeF90aW1pbmdzID0geworCS5pbnB1dF9idXNfZmxhZ3MgPSBEUk1fQlVTX0ZM
+QUdfUElYREFUQV9TQU1QTEVfTkVHRURHRQorCQkgfCBEUk1fQlVTX0ZMQUdfU1lOQ19TQU1QTEVf
+TkVHRURHRQorCQkgfCBEUk1fQlVTX0ZMQUdfREVfSElHSCwKK307CisKIHN0YXRpYyBpbnQgc2lp
+OTAyeF9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LAogCQkJIGNvbnN0IHN0cnVjdCBp
+MmNfZGV2aWNlX2lkICppZCkKIHsKQEAgLTUyOSw2ICs1MzUsNyBAQCBzdGF0aWMgaW50IHNpaTkw
+MnhfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwKIAogCXNpaTkwMngtPmJyaWRnZS5m
+dW5jcyA9ICZzaWk5MDJ4X2JyaWRnZV9mdW5jczsKIAlzaWk5MDJ4LT5icmlkZ2Uub2Zfbm9kZSA9
+IGRldi0+b2Zfbm9kZTsKKwlzaWk5MDJ4LT5icmlkZ2UudGltaW5ncyA9ICZkZWZhdWx0X3NpaTkw
+MnhfdGltaW5nczsKIAlkcm1fYnJpZGdlX2FkZCgmc2lpOTAyeC0+YnJpZGdlKTsKIAogCWkyY19z
+ZXRfY2xpZW50ZGF0YShjbGllbnQsIHNpaTkwMngpOwotLSAKVGV4YXMgSW5zdHJ1bWVudHMgRmlu
+bGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuIFktdHVubnVzL0J1c2lu
+ZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
