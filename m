@@ -1,58 +1,212 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v4 7/7] ARM: dts: sun5i: Add the MBUS controller
-Date: Thu, 14 Mar 2019 21:26:06 +0100
-Message-ID: <78dc836777ae3dfe1949c77f45ca03e442bacab5.1552595146.git-series.maxime.ripard@bootlin.com>
-References: <cover.221220f2f28e14ef07cce84e753ac662085d84ff.1552595146.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v3 0/5] media: Allwinner A10 CSI support
+Date: Thu, 14 Mar 2019 22:17:44 +0100
+Message-ID: <cover.f6227e6c3d38ac887e358a1f54c5581c254da1bd.1552598161.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.221220f2f28e14ef07cce84e753ac662085d84ff.1552595146.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Robin Murphy <robin.murphy@arm.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIE1CVVMgKGFuZCBpdHMgYXNzb2NpYXRlZCBjb250cm9sbGVyKSBpcyB0aGUgYnVzIGluIHRo
-ZSBBbGx3aW5uZXIgU29Dcwp0aGF0IERNQSBkZXZpY2VzIHVzZSBpbiB0aGUgc3lzdGVtIHRvIGFj
-Y2VzcyB0aGUgbWVtb3J5LgoKQW1vbmcgb3RoZXIgdGhpbmdzIChhbmQgZGVwZW5kaW5nIG9uIHRo
-ZSBTb0MgZ2VuZXJhdGlvbiksIGl0IGNhbiBhbHNvCmVuZm9yY2UgcHJpb3JpdGllcyBvciByZXBv
-cnQgYmFuZHdpZHRoIHVzYWdlcyBvbiBhIHBlci1tYXN0ZXIgYmFzaXMuCgpPbmUgb2YgdGhlIG1v
-c3Qgbm90YWJsZSB0aGluZyBpcyB0aGF0IGluc3RlYWQgb2YgaGF2aW5nIHRoZSBzYW1lIG1hcHBp
-bmcKZm9yIHRoZSBSQU0gdGhhbiB0aGUgQ1BVLCBpdCBtYXBzIGl0IGF0IGFkZHJlc3MgMCwgd2hp
-Y2ggbWVhbnMgd2UnbGwgaGF2ZQp0byBkbyBhZGRyZXNzIHRyYW5zbGF0aW9uIHRoYW5rcyB0byB0
-aGUgZG1hLXJhbmdlcyBwcm9wZXJ0eS4KClNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1h
-eGltZS5yaXBhcmRAYm9vdGxpbi5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvc3VuNWkuZHRz
-aSB8IDEzICsrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspCgpk
-aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuNWkuZHRzaSBiL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL3N1bjVpLmR0c2kKaW5kZXggNTQ5N2Q5ODVjNTRhLi4xNzE4ZGZiMGI5YjkgMTAwNjQ0Ci0t
-LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjVpLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-c3VuNWkuZHRzaQpAQCAtMTI3LDYgKzEyNyw3IEBACiAJCWNvbXBhdGlibGUgPSAic2ltcGxlLWJ1
-cyI7CiAJCSNhZGRyZXNzLWNlbGxzID0gPDE+OwogCQkjc2l6ZS1jZWxscyA9IDwxPjsKKwkJZG1h
-LXJhbmdlczsKIAkJcmFuZ2VzOwogCiAJCXN5c3RlbS1jb250cm9sQDFjMDAwMDAgewpAQCAtMTgx
-LDYgKzE4MiwxNCBAQAogCQkJfTsKIAkJfTsKIAorCQltYnVzOiBkcmFtLWNvbnRyb2xsZXJAMWMw
-MTAwMCB7CisJCQljb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW41aS1hMTMtbWJ1cyI7CisJCQly
-ZWcgPSA8MHgwMWMwMTAwMCAweDEwMDA+OworCQkJY2xvY2tzID0gPCZjY3UgQ0xLX01CVVM+Owor
-CQkJZG1hLXJhbmdlcyA9IDwweDAwMDAwMDAwIDB4NDAwMDAwMDAgMHgyMDAwMDAwMD47CisJCQkj
-aW50ZXJjb25uZWN0LWNlbGxzID0gPDE+OworCQl9OworCiAJCWRtYTogZG1hLWNvbnRyb2xsZXJA
-MWMwMjAwMCB7CiAJCQljb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW40aS1hMTAtZG1hIjsKIAkJ
-CXJlZyA9IDwweDAxYzAyMDAwIDB4MTAwMD47CkBAIC03MjcsNiArNzM2LDggQEAKIAkJCWNsb2Nr
-LW5hbWVzID0gImFoYiIsICJtb2QiLAogCQkJCSAgICAgICJyYW0iOwogCQkJcmVzZXRzID0gPCZj
-Y3UgUlNUX0RFX0ZFPjsKKwkJCWludGVyY29ubmVjdHMgPSA8Jm1idXMgMTk+OworCQkJaW50ZXJj
-b25uZWN0LW5hbWVzID0gImRtYS1tZW0iOwogCQkJc3RhdHVzID0gImRpc2FibGVkIjsKIAogCQkJ
-cG9ydHMgewpAQCAtNzU1LDYgKzc2Niw4IEBACiAJCQljbG9jay1uYW1lcyA9ICJhaGIiLCAibW9k
-IiwKIAkJCQkgICAgICAicmFtIjsKIAkJCXJlc2V0cyA9IDwmY2N1IFJTVF9ERV9CRT47CisJCQlp
-bnRlcmNvbm5lY3RzID0gPCZtYnVzIDE4PjsKKwkJCWludGVyY29ubmVjdC1uYW1lcyA9ICJkbWEt
-bWVtIjsKIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CiAKIAkJCWFzc2lnbmVkLWNsb2NrcyA9IDwm
-Y2N1IENMS19ERV9CRT47Ci0tIApnaXQtc2VyaWVzIDAuOS4xCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+Hi,
+
+Here is a series introducing the support for the A10 (and SoCs of the same
+generation) CMOS Sensor Interface (called CSI, not to be confused with
+MIPI-CSI, which isn't support by that IP).
+
+That interface is pretty straightforward, but the driver has a few issues
+that I wanted to bring up:
+
+  * The only board I've been testing this with has an ov5640 sensor
+    attached, which doesn't work with the upstream driver. Copying the
+    Allwinner init sequence works though, and this is how it has been
+    tested. Testing with a second sensor would allow to see if it's an
+    issue on the CSI side or the sensor side.
+  * We don't have support for the ISP at the moment, but this can be added
+    eventually.
+
+Here is the v4l2-compliance output (commit f61132e81d79 of v4l-utils)
+v4l2-compliance SHA: not available, 32 bits
+
+Compliance test for device /dev/video1:
+
+Driver Info:
+	Driver name      : sun4i_csi
+	Card type        : sun4i-csi
+	Bus info         : platform:1c09000.csi
+	Driver version   : 5.0.0
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : sun4i-csi
+	Model            : Allwinner Video Capture Device
+	Serial           :
+	Bus info         :
+	Media version    : 5.0.0
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 5.0.0
+Interface Info:
+	ID               : 0x03000007
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000005 (5)
+	Name             : sun4i_csi
+	Function         : V4L2 I/O
+	Pad 0x01000006   : 0: Sink, Must Connect
+	  Link 0x02000009: from remote pad 0x1000002 of entity 'ov5640 1-0021': Data, Enabled, Immutable
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video1 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls (Input 0):
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls (Input 0):
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls (Input 0):
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls (Input 0):
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test VIDIOC_EXPBUF: OK
+
+Test input 0:
+
+Streaming ioctls:
+	test read/write: OK (Not Supported)
+	test blocking wait: OK
+	test MMAP: OK
+	test USERPTR: OK (Not Supported)
+	test DMABUF: OK (Not Supported)
+
+Stream using all formats:
+	test MMAP for Format YM12, Frame Size 2x2:
+		Stride 2, Field None: OK
+	test MMAP for Format YM12, Frame Size 2x2:
+		Stride 2, Field None: OK
+	test MMAP for Format YM12, Frame Size 640x480:
+		Stride 640, Field None: OK
+Total: 52, Succeeded: 52, Failed: 0, Warnings: 0
+
+Let me know what you think,
+Maxime
+
+Changes from v2:
+  - Address a few minors comments on the error path, the return type of
+    some functions, the type of some variables
+  - Disable the device if the subdev call fails in start_streaming
+  - Use __maybe_unused and SET_RUNTIME_PM_OPS for the runtime PM hooks
+  - Call media_device_cleanup in the remove function
+  - Add a dependency on the subdev API and the common clock framework
+  - Fix the MAINTAINERS entry to point to the yaml file
+  - Add the of graph bindings to the YAML schemas
+  - Rebase on next
+
+Changes from v1:
+  - Make sure it's compliant with a much newer v4l2-compliance
+  - Conversion of the DT bindings to a JSON schema
+  - Drop the vendor properties and use a separate compatible instead
+  - Fix an issue on the last frame where we would not have any buffer
+    queued and would report an error by using a scratch buffer
+  - Fix the warnings reported by v4l2-compliance
+  - Rebase on top of 5.0-rc1
+  - Added a MAINTAINERS entry
+  - Switched to strscpy
+  - Fixed SPDX header
+
+Maxime Ripard (5):
+  dt-bindings: media: Add Allwinner A10 CSI binding
+  media: sunxi: Refactor the Makefile and Kconfig
+  media: sunxi: Add A10 CSI driver
+  ARM: dts: sun7i: Add CSI0 controller
+  DO NOT MERGE: ARM: dts: bananapi: Add Camera support
+
+ Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 115 +++++++++++++++++++-
+ MAINTAINERS                                                          |   8 +-
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts                             |  91 +++++++++++++++-
+ arch/arm/boot/dts/sun7i-a20.dtsi                                     |  11 ++-
+ drivers/media/platform/Kconfig                                       |   2 +-
+ drivers/media/platform/Makefile                                      |   2 +-
+ drivers/media/platform/sunxi/Kconfig                                 |   2 +-
+ drivers/media/platform/sunxi/Makefile                                |   2 +-
+ drivers/media/platform/sunxi/sun4i-csi/Kconfig                       |  11 ++-
+ drivers/media/platform/sunxi/sun4i-csi/Makefile                      |   5 +-
+ drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c                   | 274 +++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h                   | 142 +++++++++++++++++++++++-
+ drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c                   | 438 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/media/platform/sunxi/sun4i-csi/sun4i_v4l2.c                  | 300 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 14 files changed, 1401 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+ create mode 100644 drivers/media/platform/sunxi/Kconfig
+ create mode 100644 drivers/media/platform/sunxi/Makefile
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/Kconfig
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/Makefile
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_v4l2.c
+
+base-commit: 6c6be3d41ae2ef58cfcd22835d66c33f3c89f57f
+-- 
+git-series 0.9.1
