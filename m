@@ -1,137 +1,103 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH 1/5] dt-bindings: connector: add optional properties for
- Type-B
-Date: Thu, 14 Mar 2019 10:05:14 +0800
-Message-ID: <1552529114.10179.113.camel@mhfsdcap03>
-References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
-         <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
-         <1552282383.10179.21.camel@mhfsdcap03>
-         <c8084259-74d3-c85f-1275-854826c935a0@redhat.com>
-         <1552360688.10179.55.camel@mhfsdcap03>
-         <464f1021-4c5e-9137-489d-65fd578575d3@redhat.com>
-         <1552472109.10179.103.camel@mhfsdcap03>
-         <0c3ca095-9077-0b9d-839f-61ebc066e3f9@redhat.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH RESEND V2 1/4] dt-bindings: fsl: scu: add watchdog binding
+Date: Thu, 14 Mar 2019 02:10:05 +0000
+Message-ID: <DB3PR0402MB391699A42921B2F037D9A45BF54B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
+ <1550472539-16590-2-git-send-email-Anson.Huang@nxp.com>
+ <20190222195217.GA22194@bogus>
+ <bb19470c-1590-f8dd-72e6-b382444d7902@roeck-us.net>
+ <DB3PR0402MB3916912A64AF0837A9649913F5790@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <96932b3e-87f1-d8f2-95bc-0e9a8d5d45ed@roeck-us.net>
+ <DB3PR0402MB391659B6A466B1D85114E9C9F57A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAL_JsqJV9NxpOJi3Jh2Uk-TOmOL4rWwqZp3sodxsRinAHZ3m3w@mail.gmail.com>
+ <AM0PR04MB4211EAEA6F03465D372B0B4F804C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <CAL_JsqJiKx8UvZ8qu-YaaPooLbSMKANSX=YZQO=Nm_anD2v9gw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0c3ca095-9077-0b9d-839f-61ebc066e3f9@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqJiKx8UvZ8qu-YaaPooLbSMKANSX=YZQO=Nm_anD2v9gw@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "festevam@gmail.com" <festevam@gmail.com>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, Andy Gross <andy.gross@linaro.org>, Guenter Roeck <linux@roeck-us.net>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "olof@lixom.net" <olof@lixom.net>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, wim@linux-watchdog.or
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Wed, 2019-03-13 at 11:18 +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 3/13/19 11:15 AM, Chunfeng Yun wrote:
-> > Hi,
-> > On Tue, 2019-03-12 at 13:45 +0100, Hans de Goede wrote:
-> >> Hi,
-> >> On 12-03-19 04:18, Chunfeng Yun wrote:
-> >>> Hi,
-> >>> On Mon, 2019-03-11 at 09:06 +0100, Hans de Goede wrote:
-> >>>> Hi,
-> >>>>
-> >>>> On 11-03-19 06:33, Chunfeng Yun wrote:
-> >>>>> Hi,
-> >>>>>
-> >>>>> On Fri, 2019-03-08 at 13:07 +0100, Hans de Goede wrote:
-> >>>>>> Hi,
-> >>>>>>
-> >>>>>> On 08-03-19 07:13, Chunfeng Yun wrote:
-> >>>>>>> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
-> >>>>>>> usb-b-connector
-> >>>>>>>
-> >>>>>>> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> >>>>>>> ---
-> >>>>>>>      .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
-> >>>>>>>      1 file changed, 10 insertions(+)
-> >>>>>>>
-> >>>>>>> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> >>>>>>> index a9a2f2fc44f2..7a07b0f4f973 100644
-> >>>>>>> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
-> >>>>>>> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> >>>>>>> @@ -17,6 +17,16 @@ Optional properties:
-> >>>>>>>      - self-powered: Set this property if the usb device that has its own power
-> >>>>>>>        source.
-> >>>>>>>      
-> >>>>>>> +Optional properties for usb-b-connector:
-> >>>>>>> +- id-gpios: gpio for USB ID pin.
-> >>>>>>
-> >>>>>> What about boards where the ID pin is *not* connected to a GPIO,
-> >>>>>> but e.g. to a special pin on the PMIC which can also detect
-> >>>>>> an ACA adapter ? Currently this case is handled by extcon
-> >>>>>> drivers, but we have no way to set e.g. vbus-supply for the
-> >>>>>> connector. Maybe in this case the usb-connector node should
-> >>>>>> be a child of the PMIC node ?
-> >>>>> Yes, it would be, PMIC is in charger of detecting the status of ID pin
-> >>>>
-> >>>> Ok, then I think this should be documented too.
-> >>>>
-> >>>>>> And in many cases there also is a mux to switch the datalines
-> >>>>>> between the host and device(gadget) controllers, how should
-> >>>>>> that be described in this model?  See the new usb-role-switch
-> >>>>>> code under drivers/usb/roles
-> >>>>>>
-> >>>>>> In some cases the mux is controlled through a gpio, so we
-> >>>>>> may want to add a "mux-gpios" here in which case we also
-> >>>>>> need to define what 0/1 means.
-> >>>>> I'm not sure, the mux seems not belong to this connector,
-> >>>>> and may need another driver to register usb-role-switch,
-> >>>>> similar to:
-> >>>>>
-> >>>>> [v2,2/2] usb: typec: add typec switch via GPIO control
-> >>>>> https://patchwork.kernel.org/patch/10834327/
-> >>>>
-> >>>> Right the mux/role-switch will need a driver, but the "owner"
-> >>>> of the usb_connector, e.g. the PMIC or the owner of the
-> >>>> id GPIO pin needs to know which device is the role-switch so
-> >>>> that it can set the role correctly based on the id-pin.
-> >>>>
-> >>>> Your binding already contains Vbus info, allowing the owner
-> >>>> of the usb_connector to enable/disable Vbus based on the id-pin,
-> >>>> but the owner will also be responsible for setting the role-switch.
-> >>> In this patch series, I make usb_connector driver enable/disable Vbus,
-> >>> but not the parent(USB controller) of usb_connector which registers a
-> >>> usb-role-switch, which way do you think it is better?
-> >>
-> >> IMHO there should not be a driver for the usb_connector child-node,
-> >> only for the parent-device of that child-node.
-> > If so, each USB controller driver should process this special case by
-> > itself when use a gpio to detect the status of ID pin, it's not a
-> > friendly way. And it's easy by using extcon-usb-gpio driver before, so
-> > we also want to provide a simple way when support usb_connector, no
-> > matter what method we choose.
-> > 
-> > Ideally, the only one thing that USB controller driver need to do, just
-> > register a usb-role-switch, and leave decision when switch the role to
-> > other drivers, such as type-C, PMIC/charger, also include gpio
-> > 
-> >>
-> >> There are going to be too many specific setups surrounding PMICs to
-> >> be able to do a single generic driver for the connector.
-> >>
-> > Fortunately, these patches only focus on the simplest gpio driven role
-> > switch :)
-> 
-> In that case there should be an extra compatible added to the
-> usb_b_connector node to which the "simple gpio" driver binds,
-> so that not all devicetree-s declaring a usb_b_connector child-node
-> automatically get that driver bound, 
-Yes
-> and the gpio / vbus
-> properties should be mandatory properties for usb_b_connector
-> child nodes declaring the extra compatible, rather then being
-> optional for the generic compatible.
-At least one of id-gpios and vbus-gpios should exist, so both of them
-are optional, of course if only vbus-gpios exists, then only device mode
-is supported, in this case vbus is also optional.
-
-> 
-> Regards,
-> 
-> Hans
-> 
+SGksIFJvYg0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3Jn
+XQ0KPiBTZW50OiAyMDE55bm0M+aciDEy5pelIDU6MjYNCj4gVG86IEFpc2hlbmcgRG9uZyA8YWlz
+aGVuZy5kb25nQG54cC5jb20+DQo+IENjOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNv
+bT47IEd1ZW50ZXIgUm9lY2sgPGxpbnV4QHJvZWNrLQ0KPiB1cy5uZXQ+OyBtYXJrLnJ1dGxhbmRA
+YXJtLmNvbTsgdWxmLmhhbnNzb25AbGluYXJvLm9yZzsgaGVpa29Ac250ZWNoLmRlOw0KPiBjYXRh
+bGluLm1hcmluYXNAYXJtLmNvbTsgd2lsbC5kZWFjb25AYXJtLmNvbTsNCj4gYmpvcm4uYW5kZXJz
+c29uQGxpbmFyby5vcmc7IGZlc3RldmFtQGdtYWlsLmNvbTsNCj4gamFnYW5AYW1hcnVsYXNvbHV0
+aW9ucy5jb207IEFuZHkgR3Jvc3MgPGFuZHkuZ3Jvc3NAbGluYXJvLm9yZz47IGRsLQ0KPiBsaW51
+eC1pbXggPGxpbnV4LWlteEBueHAuY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxp
+bnV4LQ0KPiB3YXRjaGRvZ0B2Z2VyLmtlcm5lbC5vcmc7IGFybmRAYXJuZGIuZGU7IG1hcmMudy5n
+b256YWxlekBmcmVlLmZyOw0KPiBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBlbnJpYy5iYWxsZXRi
+b0Bjb2xsYWJvcmEuY29tOw0KPiBob3JtcytyZW5lc2FzQHZlcmdlLm5ldC5hdTsgd2ltQGxpbnV4
+LXdhdGNoZG9nLm9yZzsgRGFuaWVsIEJhbHV0YQ0KPiA8ZGFuaWVsLmJhbHV0YUBueHAuY29tPjsg
+bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4ga2VybmVsQHZn
+ZXIua2VybmVsLm9yZzsga2VybmVsQHBlbmd1dHJvbml4LmRlOyBvbG9mQGxpeG9tLm5ldDsNCj4g
+c2hhd25ndW9Aa2VybmVsLm9yZzsgSmVucyBXaWtsYW5kZXIgPGplbnMud2lrbGFuZGVyQGxpbmFy
+by5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggUkVTRU5EIFYyIDEvNF0gZHQtYmluZGluZ3M6
+IGZzbDogc2N1OiBhZGQgd2F0Y2hkb2cNCj4gYmluZGluZw0KPiANCj4gK0plbnMgVw0KPiANCj4g
+T24gVGh1LCBNYXIgNywgMjAxOSBhdCA2OjIyIEFNIEFpc2hlbmcgRG9uZyA8YWlzaGVuZy5kb25n
+QG54cC5jb20+DQo+IHdyb3RlOg0KPiA+DQo+ID4gSGkgUm9iLA0KPiA+DQo+ID4gPiA+ID4gSSB0
+aGluayBSb2Igc3VnZ2VzdGVkIHRoYXQgdGhlIFNDVSBwYXJlbnQgZHJpdmVyIHNob3VsZA0KPiA+
+ID4gPiA+IGluc3RhbnRpYXRlIHRoZSB3YXRjaGRvZyB3aXRob3V0IGV4cGxpY2l0IHdhdGNoZG9n
+IG5vZGUuIFRoYXQNCj4gPiA+ID4gPiB3b3VsZCBiZSBwb3NzaWJsZSwgYnV0IGl0IGN1cnJlbnRs
+eSB1c2VzDQo+ID4gPiA+ID4gZGV2bV9vZl9wbGF0Zm9ybV9wb3B1bGF0ZSgpIHRvIGRvIHRoZSBp
+bnN0YW50aWF0aW9uLCBhbmQNCj4gPiA+ID4gPiBjaGFuZ2luZyB0aGF0IHdvdWxkIGJlIGEgbWVz
+cy4gQmVzaWRlcywgaXQgZG9lcyBzZW0gdG8gbWUgdGhhdA0KPiA+ID4gPiA+IHlvdXIgc3VnZ2Vz
+dGVkIG5vZGUgd291bGQgZGVzY3JpYmUgdGhlIGhhcmR3YXJlLCBzbyBJIGFtIG5vdA0KPiA+ID4g
+PiA+IHN1cmUgSSB1bmRlcnN0YW5kIHRoZQ0KPiA+ID4gcmVhc29uaW5nLg0KPiA+ID4NCj4gPiA+
+IEl0IHdvdWxkIGp1c3QgYmUgYSBjYWxsIHRvIGNyZWF0ZSBhIHBsYXRmb3JtIGRldmljZSBpbnN0
+ZWFkLiBIb3cgaXMgdGhhdCBhDQo+IG1lc3M/DQo+ID4gPg0KPiA+ID4gSXQncyBkZXNjcmliaW5n
+IGZpcm13YXJlLiBXZSBoYXZlIERUIGZvciBkZXNjcmliaW5nIGgvdyB3ZSd2ZSBmYWlsZWQNCj4g
+PiA+IHRvIG1ha2UgZGlzY292ZXJhYmxlLiBXZSBzaG91bGQgbm90IHJlcGVhdCB0aGF0IGFuZCBq
+dXN0IGRlc2NyaWJlDQo+IGZpcm13YXJlIGluIERULg0KPiA+ID4gTWFrZSB0aGUgZmlybXdhcmUg
+ZGlzY292ZXJhYmxlISBUaG91Z2ggdGhlcmUgYXJlIGNhc2VzIGxpa2UgZmlybXdhcmUNCj4gPiA+
+IHByb3ZpZGVkIGNsb2NrcyB3aGVyZSB3ZSBzdGlsbCBuZWVkIHNvbWV0aGluZyBpbiBEVCwgYnV0
+IHRoaXMgaXMgbm90DQo+ID4gPiBvbmUgb2YgdGhlbS4NCj4gPiA+DQo+ID4NCj4gPiBUaGUgd2F0
+Y2hkb2cgbm9kZSBoZXJlIGluIHF1ZXN0aW9uIGFjdHVhbGx5IGlzIG5vdCB1c2luZyBTQ1UgZmly
+bXdhcmUgY2FsbC4NCj4gPiBEdWUgdG8gc2VjdXJpdHkgcmVxdWlyZW1lbnQgYnkgU0NVLCB3YXRj
+aGRvZyBjYW4gb25seSBiZSBhY2Nlc3NlZCBpbg0KPiA+IHNlY3VyaXR5IG1vZGUsIGZvciBJTVgg
+Y2FzZSwgdmlhIEFSTSBUcnVzdCBGaXJtd2FyZS4gVGhhdCBtZWFucyB0aGUNCj4gPiB3YXRjaGRv
+ZyB1c2VkIGluIExpbnV4IGFjdHVhbGx5IGlzIHVzaW5nIEFSTSBTTUMgY2FsbCBhbmQgZG9lcyBu
+b3QNCj4gPiBkZXBlbmQgU0NVIGRyaXZlci4gU28gSXQgd291bGQgYmUgc3RyYW5nZSBmb3IgU0NV
+IGRyaXZlciB0byBpbnN0YW50aWF0ZSBpdC4NCj4gPg0KPiA+IEZvciB0aGlzIHNpdHVhdGlvbiwg
+ZG8geW91IHRoaW5rIHdlIGNhbiBtb3ZlIHdhdGNoZG9nIG91dCBvZiBzY3Ugbm9kZT8NCj4gPiBN
+YXliZSByZW5hbWUgdGhlIGNvbXBhdGlibGUgc3RyaW5nIGxpa2UgImZzbCxpbXg4cXhwLXNpcC13
+YXRjaGRvZyINCj4gPiBiZWNhdXNlIGl0J3MgYWN0dWFsbHkgYSB3YXRjaGRvZyBzZXJ2aWNlZCBi
+eSBBVEYgZmlybXdhcmUuDQo+IA0KPiBZZXMsIGJ1dCB0aGF0IGNyZWF0ZXMgbW9yZSBxdWVzdGlv
+bnMuIFdoYXQgZXhhY3RseSBkb2VzIEFURiB0YWxrIHRvIGZvciB0aGUNCj4gd2F0Y2hkb2c/IFRo
+ZSBTQ1UgZmlybXdhcmU/DQoNClllcywgQVRGIHRhbGtzIHRvIFNDVSBmaXJtd2FyZSBkaXJlY3Rs
+eSwgTGludXgga2VybmVsIHdhdGNoZG9nIGRyaXZlciBjYWxsIFNNQyBpbnN0cnVjdGlvbnMNCnRv
+IHNlbmQgY29tbWFuZCB0byBBVEYsIGFuZCBBVEYgd2lsbCBjYWxsIFNDVSBmaXJtd2FyZSBBUEkg
+dG8gZmluaXNoIHRoZSBvcGVyYXRpb24gcmVxdWVzdGVkDQpieSBMaW51eCBrZXJuZWwgd2F0Y2hk
+b2cgZHJpdmVyLg0KDQo+IA0KPiBNYXliZSBBVEYgc2hvdWxkIGRlZmluZSBhbmQgcHJvdmlkZSBh
+IHN0YW5kYXJkIHdhdGNoZG9nIGludGVyZmFjZT8gSXQgaXMNCj4gc3RpbGwgYSBxdWVzdGlvbiBv
+ZiBtYWtpbmcgdGhlIGZpcm13YXJlIGRpc2NvdmVyYWJsZSByYXRoZXIgdGhhbiB0cnlpbmcgdG8N
+Cj4gZGVzY3JpYmUgdGhlIGZpcm13YXJlIGluIERULg0KDQpUaGUgU01DIGNhbGwgYnkgTGludXgg
+a2VybmVsIHdhdGNoZG9nIGFscmVhZHkgZm9sbG93IHRoZSBTSVAoc2lsaWNvbiBwcm92aWRlcikg
+c3RhbmRhcmQsIGVhY2gNClNvQyBjYW4gZGVmaW5lIGl0cyBvd24gcHJvdG9jb2wgZm9yIFNJUC4g
+QVRGIGRvZXMgTk9UIGhhdmUgYSBzdGFuZGFyZCBjb21tb24gd2F0Y2hkb2cgaW50ZXJmYWNlDQpu
+b3csIHNpbmNlIGl0IGlzIG1vcmUgbGlrZSBhIHBsYXRmb3JtIHNwZWNpZmljIGZlYXR1cmUsIG1v
+c3Qgb2YgcGxhdGZvcm1zIGNhbiBjb250cm9sIHdhdGNoZG9nIGRpcmVjdGx5DQpmcm9tIExpbnV4
+IGtlcm5lbCBJIHRoaW5rLiANCg0KU28sIGRvIHlvdSBoYXZlIHN1Z2dlc3Rpb24gZm9yIHRoaXMg
+Y2FzZT8gRWl0aGVyIGZpbmQgYSBwbGFjZSBpbiBEVCB0byBwdXQgd2F0Y2hkb2cgbm9kZSwgb3Ig
+bWFrZSBpdA0KYSBidWlsZC1pbiBkZXZpY2UgaW5zaWRlIFNDVSBkcml2ZXI/IE9yIHlvdSBoYXZl
+IG90aGVyIGJldHRlciBpZGVhcz8NCg0KVGhhbmtzLA0KQW5zb24uDQoNCj4gDQo+IFJvYg0KX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
+cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
+bAo=
