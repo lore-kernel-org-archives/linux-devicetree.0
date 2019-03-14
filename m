@@ -1,149 +1,88 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 4/4] leds: netdev trigger: allow setting initial values in
- device tree
-Date: Thu, 14 Mar 2019 11:32:17 +0100
-Message-ID: <98fda0ee-555d-86a5-a4f1-1774271e4b6d@gmail.com>
-References: <20190311144227.GA4404@amd>
- <20190313202615.22883-1-linux@rasmusvillemoes.dk>
- <20190313202615.22883-5-linux@rasmusvillemoes.dk>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v2 1/8] mmc: sdhci: Get rid of finish_tasklet
+Date: Thu, 14 Mar 2019 13:15:34 +0200
+Message-ID: <2a74ed21-2e6f-1ba3-3d49-6826a5ab3e66@ti.com>
+References: <20190215192033.24203-1-faiz_abbas@ti.com>
+ <20190215192033.24203-2-faiz_abbas@ti.com>
+ <abcc1506-cd38-5ff4-aaeb-57e9a9622e90@intel.com>
+ <8d72ff93-e07f-52b9-da85-acd54f046694@ti.com>
+ <63b6631d-86e7-b8ef-ffaf-40e7d4e96cfb@intel.com>
+ <842caafd-1547-1ea6-faf0-27a85a912622@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190313202615.22883-5-linux@rasmusvillemoes.dk>
+In-Reply-To: <842caafd-1547-1ea6-faf0-27a85a912622@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rasmus Villemoes <linux@rasmusvillemoes.dk>, Pavel Machek <pavel@ucw.cz>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org
+To: "Rizvi, Mohammad Faiz Abbas" <faiz_abbas@ti.com>, Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, zhang.chunyan@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rasmus,
 
-Thank you for the patch set.
 
-I have one comment below.
-
-On 3/13/19 9:26 PM, Rasmus Villemoes wrote:
-> It can be quite convenient to initialize a netdev-triggered LED with a
-> device name and setting the rx,tx,link properties from device tree,
-> instead of having to do that in an init script in userspace.
+On 12.03.19 19:30, Rizvi, Mohammad Faiz Abbas wrote:
+> Hi Adrian,
 > 
-> My main motivation for this is to be able to switch away from the
-> deprecated CONFIG_CAN_LEDS, so add an example based on that and add a
-> pointer in the net/can/Kconfig file.
+> On 3/8/2019 7:06 PM, Adrian Hunter wrote:
+>> On 6/03/19 12:00 PM, Faiz Abbas wrote:
+>>> Adrian,
+>>>
+>>> On 25/02/19 1:47 PM, Adrian Hunter wrote:
+>>>> On 15/02/19 9:20 PM, Faiz Abbas wrote:
+>>>>> sdhci.c has two bottom halves implemented. A threaded_irq for handling
+>>>>> card insert/remove operations and a tasklet for finishing mmc requests.
+>>>>> With the addition of external dma support, dmaengine APIs need to
+>>>>> terminate in non-atomic context before unmapping the dma buffers.
+>>>>>
+>>>>> To facilitate this, remove the finish_tasklet and move the call of
+>>>>> sdhci_request_done() to the threaded_irq() callback.
+>>>>
+>>>> The irq thread has a higher latency than the tasklet.  The performance drop
+>>>> is measurable on the system I tried:
+>>>>
+>>>> Before:
+>>>>
+>>>> # dd if=/dev/mmcblk1 of=/dev/null bs=1G count=1 &
+>>>> 1+0 records in
+>>>> 1+0 records out
+>>>> 1073741824 bytes (1.1 GB) copied, 4.44502 s, 242 MB/s
+>>>>
+>>>> After:
+>>>>
+>>>> # dd if=/dev/mmcblk1 of=/dev/null bs=1G count=1 &
+>>>> 1+0 records in
+>>>> 1+0 records out
+>>>> 1073741824 bytes (1.1 GB) copied, 4.50898 s, 238 MB/s
+>>>>
+>>>> So we only want to resort to the thread for the error case.
+>>>>
+>>>
+>>> Sorry for the late response here, but this is about 1.6% decrease. I
+>>> tried out the same commands on a dra7xx board here (with about 5
+>>> consecutive dd of 1GB) and the average decrease was 0.3%. I believe you
+>>> will also find a lesser percentage change if you average over multiple
+>>> dd commands.
+>>>
+>>> Is this really so significant that we have to maintain two different
+>>> bottom halves and keep having difficulty with adding APIs that can sleep?
+>>
+>> It is a performance drop that can be avoided, so it might as well be.
+>> Splitting the success path from the failure path is common for I/O drivers
+>> for similar reasons as here: the success path can be optimized whereas the
+>> failure path potentially needs to sleep.
 > 
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> ---
->   .../devicetree/bindings/leds/common.txt       | 17 ++++++++++
->   drivers/leds/trigger/ledtrig-netdev.c         | 31 +++++++++++++++++++
->   drivers/net/can/Kconfig                       |  3 +-
->   3 files changed, 50 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> index 7cb88460a47c..4f3a97e73417 100644
-> --- a/Documentation/devicetree/bindings/leds/common.txt
-> +++ b/Documentation/devicetree/bindings/leds/common.txt
-> @@ -43,6 +43,23 @@ Optional properties for child nodes:
->                   Documentation/ABI/testing/sysfs-class-led-trigger-netdev)
->                   to reflect the state and activity of a net device.
->   
-> +                The optional child node netdev can be used to
-> +                configure initial values for the link, rx, tx and
-> +                device_name properties. For example, setting
-> +                linux,default-trigger = "netdev" and adding the child
-> +                node
-> +
-> +                netdev {
-> +                    rx;
-> +                    tx;
-> +                    link;
-> +                    device-name = "can0";
-> +                };
-> +
-> +                can be used to replace 'linux,default-trigger =
-> +                "can0-rxtx"' that relies on the deprecated
-> +                CONFIG_CAN_LEDS.
-> +
->   - led-pattern : Array of integers with default pattern for certain triggers.
->                   Each trigger may parse this property differently:
->                   - one-shot : two numbers specifying delay on and delay off (in ms),
-> diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
-> index 55153a7e8433..1f7c86df1e91 100644
-> --- a/drivers/leds/trigger/ledtrig-netdev.c
-> +++ b/drivers/leds/trigger/ledtrig-netdev.c
-> @@ -20,6 +20,7 @@
->   #include <linux/list.h>
->   #include <linux/module.h>
->   #include <linux/netdevice.h>
-> +#include <linux/of.h>
->   #include <linux/spinlock.h>
->   #include <linux/timer.h>
->   #include "../leds.h"
-> @@ -395,6 +396,35 @@ static void netdev_trig_work(struct work_struct *work)
->   			(atomic_read(&trigger_data->interval)*2));
->   }
->   
-> +static void netdev_trig_of_init(struct led_classdev *led_cdev,
-> +				struct led_netdev_data *trigger_data)
-> +{
-> +	struct device_node *np = led_cdev->dev->of_node;
-> +	const char *device_name;
-> +
-> +	if (!np)
-> +		return;
-> +	np = of_get_child_by_name(np, "netdev");
-> +	if (!np)
-> +		return;
-> +
-> +	if (of_property_read_bool(np, "link"))
-> +		__set_bit(NETDEV_LED_LINK, &trigger_data->mode);
-> +	if (of_property_read_bool(np, "tx"))
-> +		__set_bit(NETDEV_LED_TX, &trigger_data->mode);
-> +	if (of_property_read_bool(np, "rx"))
-> +		__set_bit(NETDEV_LED_RX, &trigger_data->mode);
-> +	if (!of_property_read_string(np, "device-name", &device_name)) {
-> +		unsigned len = strlen(device_name);
-> +
-> +		if (len < IFNAMSIZ)
-> +			set_device(trigger_data, device_name, len);
-> +	}
-> +	set_baseline_state(trigger_data);
-> +
-> +	of_node_put(np);
-> +}
-> +
->   static int netdev_trig_activate(struct led_classdev *led_cdev)
->   {
->   	struct led_netdev_data *trigger_data;
-> @@ -418,6 +448,7 @@ static int netdev_trig_activate(struct led_classdev *led_cdev)
->   	trigger_data->mode = 0;
->   	atomic_set(&trigger_data->interval, msecs_to_jiffies(50));
->   	trigger_data->last_activity = 0;
-> +	netdev_trig_of_init(led_cdev, trigger_data);
+> Understood. You wanna keep the success path as fast as possible.
 
-You want to execute this only if recently introduced flag
-LED_INIT_DEFAULT_TRIGGER is set. Please compare how
-drivers/leds/trigger/ledtrig-pattern.c uses it.
+Sry, I've not completely followed this series, but I'd like to add 5c
 
->   
->   	led_set_trigger_data(led_cdev, trigger_data);
->   
-> diff --git a/drivers/net/can/Kconfig b/drivers/net/can/Kconfig
-> index e0f0ad7a550a..91703a96b636 100644
-> --- a/drivers/net/can/Kconfig
-> +++ b/drivers/net/can/Kconfig
-> @@ -77,7 +77,8 @@ config CAN_LEDS
->   	# everything that this driver is doing. This is marked as broken
->   	# because it uses stuff that is intended to be changed or removed.
->   	# Please consider switching to the netdev trigger and confirm it
-> -	# fulfills your needs instead of fixing this driver.
-> +	# fulfills your needs instead of fixing this driver. See e.g.
-> +	# Documentation/devicetree/bindings/leds/common.txt
->   	depends on BROKEN
->   	select LEDS_TRIGGERS
->   	---help---
-> 
+It's good thing to get rid of tasklets hence RT Linux kernel is actively moving towards to LKML
+and there everything handled in threads (even networking trying to get rid of softirqs).
+
+Performance is pretty relative thing here - just try to run network traffic in parallel, and
+there are no control over it comparing to threads. Now way to assign priority or pin to CPU.
+
 
 -- 
 Best regards,
-Jacek Anaszewski
+grygorii
