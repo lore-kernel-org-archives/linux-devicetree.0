@@ -1,46 +1,640 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v3 4/5] ARM: dts: sun7i: Add CSI0 controller
-Date: Thu, 14 Mar 2019 22:17:48 +0100
-Message-ID: <2323d3efb4d654a162db0c856c779319b2498413.1552598161.git-series.maxime.ripard@bootlin.com>
-References: <cover.f6227e6c3d38ac887e358a1f54c5581c254da1bd.1552598161.git-series.maxime.ripard@bootlin.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
+Subject: Re: [PATCH v2 2/9] mfd: mt6397: extract irq related code from core driver
+Date: Fri, 15 Mar 2019 07:25:38 +0800
+Message-ID: <CANMq1KDXBbYydjgu_fVdhiHBJOGQBZah0oL6DUh3EXqgP+H2rw@mail.gmail.com>
+References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1552275991-34648-3-git-send-email-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.f6227e6c3d38ac887e358a1f54c5581c254da1bd.1552598161.git-series.maxime.ripard@bootlin.com>
+In-Reply-To: <1552275991-34648-3-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Eddie Huang <eddie.huang@mediatek.com>, Marc Zyngier <marc.zyngier@arm.com>, srv_heupstream <srv_heupstream@mediatek.com>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-rtc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Guenter Roeck <groeck@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-The CSI controller embedded in the A20 can be supported by our new driver.
-Let's add it to our DT.
+On Mon, Mar 11, 2019 at 11:48 AM Hsin-Hsiung Wang
+<hsin-hsiung.wang@mediatek.com> wrote:
+>
+> In order to support different types of irq design, we decide to add
+> separate irq drivers for different design and keep mt6397 mfd core
+> simple and reusable to all generations of PMICs so far.
+>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  drivers/mfd/Makefile            |   2 +-
+>  drivers/mfd/mt6397-core.c       | 228 ++++++----------------------------------
+>  drivers/mfd/mt6397-irq.c        | 214 +++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/mt6397/core.h |  12 +++
+>  4 files changed, 259 insertions(+), 197 deletions(-)
+>  create mode 100644 drivers/mfd/mt6397-irq.c
+>
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 12980a4..088e249 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -230,7 +230,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)        += intel-soc-pmic.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)     += intel_soc_pmic_bxtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)     += intel_soc_pmic_chtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)  += intel_soc_pmic_chtdc_ti.o
+> -obj-$(CONFIG_MFD_MT6397)       += mt6397-core.o
+> +obj-$(CONFIG_MFD_MT6397)       += mt6397-core.o mt6397-irq.o
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- arch/arm/boot/dts/sun7i-a20.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Guenter reported the following issue with this
+(https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1524423):
+"""
+Building the mt6397/mt6358 driver as module results in the following errors.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 641a8fa6d428..0eade0805fb0 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -376,6 +376,17 @@
- 			num-cs = <1>;
- 		};
- 
-+		csi0: csi@1c09000 {
-+			compatible = "allwinner,sun7i-a20-csi0",
-+				     "allwinner,sun4i-a10-csi0";
-+			reg = <0x01c09000 0x1000>;
-+			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI0>,
-+				 <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
-+			clock-names = "bus", "mod", "isp", "ram";
-+			resets = <&ccu RST_CSI0>;
-+		};
+ERROR: "mt6397_irq_init" [drivers/mfd/mt6397-core.ko] undefined!
+ERROR: "mt6358_irq_init" [drivers/mfd/mt6397-core.ko] undefined!
+
+This is because the irq code for mt6358 and mt6397_irq is built as
+separate modules, but the functions implemented by those modules are
+not exported. We could export the functions, but that seems to be
+quite pointless since the driver always requires both interrupt
+handlers. Modify the Makefile to build a single module instead.
+"""
+
+His fix looks like this:
+
+@@ -230,7 +230,9 @@
+ obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC) += intel_soc_pmic_bxtwc.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC) += intel_soc_pmic_chtwc.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI) += intel_soc_pmic_chtdc_ti.o
+-obj-$(CONFIG_MFD_MT6397) += mt6397-core.o mt6397-irq.o mt6358-irq.o
 +
- 		emac: ethernet@1c0b000 {
- 			compatible = "allwinner,sun4i-a10-emac";
- 			reg = <0x01c0b000 0x1000>;
--- 
-git-series 0.9.1
++mt6397-objs := mt6397-core.o mt6397-irq.o mt6358-irq.o
++obj-$(CONFIG_MFD_MT6397) += mt6397.o
+
+ obj-$(CONFIG_MFD_ALTERA_A10SR) += altera-a10sr.o
+ obj-$(CONFIG_MFD_SUN4I_GPADC) += sun4i-gpadc.o
+
+>
+>  obj-$(CONFIG_MFD_ALTERA_A10SR) += altera-a10sr.o
+>  obj-$(CONFIG_MFD_SUN4I_GPADC)  += sun4i-gpadc.o
+> diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+> index acb9812..53f1edc 100644
+> --- a/drivers/mfd/mt6397-core.c
+> +++ b/drivers/mfd/mt6397-core.c
+> @@ -12,7 +12,6 @@
+>   * GNU General Public License for more details.
+>   */
+>
+> -#include <linux/interrupt.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+>  #include <linux/of_irq.h>
+> @@ -26,10 +25,6 @@
+>  #define MT6397_RTC_BASE                0xe000
+>  #define MT6397_RTC_SIZE                0x3e
+>
+> -#define MT6323_CHIP_ID         0x23
+> -#define MT6391_CHIP_ID         0x91
+> -#define MT6397_CHIP_ID         0x97
+> -
+>  static const struct resource mt6397_rtc_resources[] = {
+>         {
+>                 .start = MT6397_RTC_BASE,
+> @@ -94,182 +89,24 @@
+>         }
+>  };
+>
+> -static void mt6397_irq_lock(struct irq_data *data)
+> -{
+> -       struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+> -
+> -       mutex_lock(&mt6397->irqlock);
+> -}
+> -
+> -static void mt6397_irq_sync_unlock(struct irq_data *data)
+> -{
+> -       struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+> -
+> -       regmap_write(mt6397->regmap, mt6397->int_con[0],
+> -                    mt6397->irq_masks_cur[0]);
+> -       regmap_write(mt6397->regmap, mt6397->int_con[1],
+> -                    mt6397->irq_masks_cur[1]);
+> -
+> -       mutex_unlock(&mt6397->irqlock);
+> -}
+> -
+> -static void mt6397_irq_disable(struct irq_data *data)
+> -{
+> -       struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+> -       int shift = data->hwirq & 0xf;
+> -       int reg = data->hwirq >> 4;
+> -
+> -       mt6397->irq_masks_cur[reg] &= ~BIT(shift);
+> -}
+> -
+> -static void mt6397_irq_enable(struct irq_data *data)
+> -{
+> -       struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+> -       int shift = data->hwirq & 0xf;
+> -       int reg = data->hwirq >> 4;
+> -
+> -       mt6397->irq_masks_cur[reg] |= BIT(shift);
+> -}
+> -
+> -#ifdef CONFIG_PM_SLEEP
+> -static int mt6397_irq_set_wake(struct irq_data *irq_data, unsigned int on)
+> -{
+> -       struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(irq_data);
+> -       int shift = irq_data->hwirq & 0xf;
+> -       int reg = irq_data->hwirq >> 4;
+> -
+> -       if (on)
+> -               mt6397->wake_mask[reg] |= BIT(shift);
+> -       else
+> -               mt6397->wake_mask[reg] &= ~BIT(shift);
+> -
+> -       return 0;
+> -}
+> -#else
+> -#define mt6397_irq_set_wake NULL
+> -#endif
+> -
+> -static struct irq_chip mt6397_irq_chip = {
+> -       .name = "mt6397-irq",
+> -       .irq_bus_lock = mt6397_irq_lock,
+> -       .irq_bus_sync_unlock = mt6397_irq_sync_unlock,
+> -       .irq_enable = mt6397_irq_enable,
+> -       .irq_disable = mt6397_irq_disable,
+> -       .irq_set_wake = mt6397_irq_set_wake,
+> +struct chip_data {
+> +       u32 cid_addr;
+>  };
+>
+> -static void mt6397_irq_handle_reg(struct mt6397_chip *mt6397, int reg,
+> -               int irqbase)
+> -{
+> -       unsigned int status;
+> -       int i, irq, ret;
+> -
+> -       ret = regmap_read(mt6397->regmap, reg, &status);
+> -       if (ret) {
+> -               dev_err(mt6397->dev, "Failed to read irq status: %d\n", ret);
+> -               return;
+> -       }
+> -
+> -       for (i = 0; i < 16; i++) {
+> -               if (status & BIT(i)) {
+> -                       irq = irq_find_mapping(mt6397->irq_domain, irqbase + i);
+> -                       if (irq)
+> -                               handle_nested_irq(irq);
+> -               }
+> -       }
+> -
+> -       regmap_write(mt6397->regmap, reg, status);
+> -}
+> -
+> -static irqreturn_t mt6397_irq_thread(int irq, void *data)
+> -{
+> -       struct mt6397_chip *mt6397 = data;
+> -
+> -       mt6397_irq_handle_reg(mt6397, mt6397->int_status[0], 0);
+> -       mt6397_irq_handle_reg(mt6397, mt6397->int_status[1], 16);
+> -
+> -       return IRQ_HANDLED;
+> -}
+> -
+> -static int mt6397_irq_domain_map(struct irq_domain *d, unsigned int irq,
+> -                                       irq_hw_number_t hw)
+> -{
+> -       struct mt6397_chip *mt6397 = d->host_data;
+> -
+> -       irq_set_chip_data(irq, mt6397);
+> -       irq_set_chip_and_handler(irq, &mt6397_irq_chip, handle_level_irq);
+> -       irq_set_nested_thread(irq, 1);
+> -       irq_set_noprobe(irq);
+> -
+> -       return 0;
+> -}
+> -
+> -static const struct irq_domain_ops mt6397_irq_domain_ops = {
+> -       .map = mt6397_irq_domain_map,
+> +static const struct chip_data mt6323_core = {
+> +       .cid_addr = MT6323_CID,
+>  };
+>
+> -static int mt6397_irq_init(struct mt6397_chip *mt6397)
+> -{
+> -       int ret;
+> -
+> -       mutex_init(&mt6397->irqlock);
+> -
+> -       /* Mask all interrupt sources */
+> -       regmap_write(mt6397->regmap, mt6397->int_con[0], 0x0);
+> -       regmap_write(mt6397->regmap, mt6397->int_con[1], 0x0);
+> -
+> -       mt6397->irq_domain = irq_domain_add_linear(mt6397->dev->of_node,
+> -               MT6397_IRQ_NR, &mt6397_irq_domain_ops, mt6397);
+> -       if (!mt6397->irq_domain) {
+> -               dev_err(mt6397->dev, "could not create irq domain\n");
+> -               return -ENOMEM;
+> -       }
+> -
+> -       ret = devm_request_threaded_irq(mt6397->dev, mt6397->irq, NULL,
+> -               mt6397_irq_thread, IRQF_ONESHOT, "mt6397-pmic", mt6397);
+> -       if (ret) {
+> -               dev_err(mt6397->dev, "failed to register irq=%d; err: %d\n",
+> -                       mt6397->irq, ret);
+> -               return ret;
+> -       }
+> -
+> -       return 0;
+> -}
+> -
+> -#ifdef CONFIG_PM_SLEEP
+> -static int mt6397_irq_suspend(struct device *dev)
+> -{
+> -       struct mt6397_chip *chip = dev_get_drvdata(dev);
+> -
+> -       regmap_write(chip->regmap, chip->int_con[0], chip->wake_mask[0]);
+> -       regmap_write(chip->regmap, chip->int_con[1], chip->wake_mask[1]);
+> -
+> -       enable_irq_wake(chip->irq);
+> -
+> -       return 0;
+> -}
+> -
+> -static int mt6397_irq_resume(struct device *dev)
+> -{
+> -       struct mt6397_chip *chip = dev_get_drvdata(dev);
+> -
+> -       regmap_write(chip->regmap, chip->int_con[0], chip->irq_masks_cur[0]);
+> -       regmap_write(chip->regmap, chip->int_con[1], chip->irq_masks_cur[1]);
+> -
+> -       disable_irq_wake(chip->irq);
+> -
+> -       return 0;
+> -}
+> -#endif
+> -
+> -static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_irq_suspend,
+> -                       mt6397_irq_resume);
+> +static const struct chip_data mt6397_core = {
+> +       .cid_addr = MT6397_CID,
+> +};
+>
+>  static int mt6397_probe(struct platform_device *pdev)
+>  {
+>         int ret;
+>         unsigned int id;
+>         struct mt6397_chip *pmic;
+> +       const struct chip_data *pmic_core;
+>
+>         pmic = devm_kzalloc(&pdev->dev, sizeof(*pmic), GFP_KERNEL);
+>         if (!pmic)
+> @@ -285,28 +122,30 @@ static int mt6397_probe(struct platform_device *pdev)
+>         if (!pmic->regmap)
+>                 return -ENODEV;
+>
+> -       platform_set_drvdata(pdev, pmic);
+> +       pmic_core = of_device_get_match_data(&pdev->dev);
+> +       if (!pmic_core)
+> +               return -ENODEV;
+>
+> -       ret = regmap_read(pmic->regmap, MT6397_CID, &id);
+> +       ret = regmap_read(pmic->regmap, pmic_core->cid_addr, &id);
+>         if (ret) {
+> -               dev_err(pmic->dev, "Failed to read chip id: %d\n", ret);
+> +               dev_err(&pdev->dev, "Failed to read chip id: %d\n", ret);
+>                 return ret;
+>         }
+>
+> +       pmic->chip_id = id & 0xff;
+> +
+> +       platform_set_drvdata(pdev, pmic);
+> +
+>         pmic->irq = platform_get_irq(pdev, 0);
+>         if (pmic->irq <= 0)
+>                 return pmic->irq;
+>
+> -       switch (id & 0xff) {
+> -       case MT6323_CHIP_ID:
+> -               pmic->int_con[0] = MT6323_INT_CON0;
+> -               pmic->int_con[1] = MT6323_INT_CON1;
+> -               pmic->int_status[0] = MT6323_INT_STATUS0;
+> -               pmic->int_status[1] = MT6323_INT_STATUS1;
+> -               ret = mt6397_irq_init(pmic);
+> -               if (ret)
+> -                       return ret;
+> +       ret = mt6397_irq_init(pmic);
+> +       if (ret)
+> +               return ret;
+>
+> +       switch (pmic->chip_id) {
+> +       case MT6323_CHIP_ID:
+>                 ret = devm_mfd_add_devices(&pdev->dev, -1, mt6323_devs,
+>                                            ARRAY_SIZE(mt6323_devs), NULL,
+>                                            0, pmic->irq_domain);
+> @@ -314,21 +153,13 @@ static int mt6397_probe(struct platform_device *pdev)
+>
+>         case MT6391_CHIP_ID:
+>         case MT6397_CHIP_ID:
+> -               pmic->int_con[0] = MT6397_INT_CON0;
+> -               pmic->int_con[1] = MT6397_INT_CON1;
+> -               pmic->int_status[0] = MT6397_INT_STATUS0;
+> -               pmic->int_status[1] = MT6397_INT_STATUS1;
+> -               ret = mt6397_irq_init(pmic);
+> -               if (ret)
+> -                       return ret;
+> -
+>                 ret = devm_mfd_add_devices(&pdev->dev, -1, mt6397_devs,
+>                                            ARRAY_SIZE(mt6397_devs), NULL,
+>                                            0, pmic->irq_domain);
+>                 break;
+>
+>         default:
+> -               dev_err(&pdev->dev, "unsupported chip: %d\n", id);
+> +               dev_err(&pdev->dev, "unsupported chip: %d\n", pmic->chip_id);
+>                 ret = -ENODEV;
+>                 break;
+>         }
+> @@ -342,9 +173,15 @@ static int mt6397_probe(struct platform_device *pdev)
+>  }
+>
+>  static const struct of_device_id mt6397_of_match[] = {
+> -       { .compatible = "mediatek,mt6397" },
+> -       { .compatible = "mediatek,mt6323" },
+> -       { }
+> +       {
+> +               .compatible = "mediatek,mt6323",
+> +               .data = &mt6323_core,
+> +       }, {
+> +               .compatible = "mediatek,mt6397",
+> +               .data = &mt6397_core,
+> +       }, {
+> +               /* sentinel */
+> +       }
+>  };
+>  MODULE_DEVICE_TABLE(of, mt6397_of_match);
+>
+> @@ -359,7 +196,6 @@ static int mt6397_probe(struct platform_device *pdev)
+>         .driver = {
+>                 .name = "mt6397",
+>                 .of_match_table = of_match_ptr(mt6397_of_match),
+> -               .pm = &mt6397_pm_ops,
+>         },
+>         .id_table = mt6397_id,
+>  };
+> diff --git a/drivers/mfd/mt6397-irq.c b/drivers/mfd/mt6397-irq.c
+> new file mode 100644
+> index 0000000..669e93d
+> --- /dev/null
+> +++ b/drivers/mfd/mt6397-irq.c
+> @@ -0,0 +1,214 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (c) 2019 MediaTek Inc.
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/suspend.h>
+> +#include <linux/mfd/mt6323/core.h>
+> +#include <linux/mfd/mt6323/registers.h>
+> +#include <linux/mfd/mt6397/core.h>
+> +#include <linux/mfd/mt6397/registers.h>
+> +
+> +static void mt6397_irq_lock(struct irq_data *data)
+> +{
+> +       struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+> +
+> +       mutex_lock(&mt6397->irqlock);
+> +}
+> +
+> +static void mt6397_irq_sync_unlock(struct irq_data *data)
+> +{
+> +       struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+> +
+> +       regmap_write(mt6397->regmap, mt6397->int_con[0],
+> +                    mt6397->irq_masks_cur[0]);
+> +       regmap_write(mt6397->regmap, mt6397->int_con[1],
+> +                    mt6397->irq_masks_cur[1]);
+> +
+> +       mutex_unlock(&mt6397->irqlock);
+> +}
+> +
+> +static void mt6397_irq_disable(struct irq_data *data)
+> +{
+> +       struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+> +       int shift = data->hwirq & 0xf;
+> +       int reg = data->hwirq >> 4;
+> +
+> +       mt6397->irq_masks_cur[reg] &= ~BIT(shift);
+> +}
+> +
+> +static void mt6397_irq_enable(struct irq_data *data)
+> +{
+> +       struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+> +       int shift = data->hwirq & 0xf;
+> +       int reg = data->hwirq >> 4;
+> +
+> +       mt6397->irq_masks_cur[reg] |= BIT(shift);
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int mt6397_irq_set_wake(struct irq_data *irq_data, unsigned int on)
+> +{
+> +       struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(irq_data);
+> +       int shift = irq_data->hwirq & 0xf;
+> +       int reg = irq_data->hwirq >> 4;
+> +
+> +       if (on)
+> +               mt6397->wake_mask[reg] |= BIT(shift);
+> +       else
+> +               mt6397->wake_mask[reg] &= ~BIT(shift);
+> +
+> +       return 0;
+> +}
+> +#else
+> +#define mt6397_irq_set_wake NULL
+> +#endif
+> +
+> +static struct irq_chip mt6397_irq_chip = {
+> +       .name = "mt6397-irq",
+> +       .irq_bus_lock = mt6397_irq_lock,
+> +       .irq_bus_sync_unlock = mt6397_irq_sync_unlock,
+> +       .irq_enable = mt6397_irq_enable,
+> +       .irq_disable = mt6397_irq_disable,
+> +       .irq_set_wake = mt6397_irq_set_wake,
+> +};
+> +
+> +static void mt6397_irq_handle_reg(struct mt6397_chip *mt6397, int reg,
+> +                                 int irqbase)
+> +{
+> +       unsigned int status;
+> +       int i, irq, ret;
+> +
+> +       ret = regmap_read(mt6397->regmap, reg, &status);
+> +       if (ret) {
+> +               dev_err(mt6397->dev, "Failed to read irq status: %d\n", ret);
+> +               return;
+> +       }
+> +
+> +       for (i = 0; i < 16; i++) {
+> +               if (status & BIT(i)) {
+> +                       irq = irq_find_mapping(mt6397->irq_domain, irqbase + i);
+> +                       if (irq)
+> +                               handle_nested_irq(irq);
+> +               }
+> +       }
+> +
+> +       regmap_write(mt6397->regmap, reg, status);
+> +}
+> +
+> +static irqreturn_t mt6397_irq_thread(int irq, void *data)
+> +{
+> +       struct mt6397_chip *mt6397 = data;
+> +
+> +       mt6397_irq_handle_reg(mt6397, mt6397->int_status[0], 0);
+> +       mt6397_irq_handle_reg(mt6397, mt6397->int_status[1], 16);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int mt6397_irq_domain_map(struct irq_domain *d, unsigned int irq,
+> +                                irq_hw_number_t hw)
+> +{
+> +       struct mt6397_chip *mt6397 = d->host_data;
+> +
+> +       irq_set_chip_data(irq, mt6397);
+> +       irq_set_chip_and_handler(irq, &mt6397_irq_chip, handle_level_irq);
+> +       irq_set_nested_thread(irq, 1);
+> +       irq_set_noprobe(irq);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct irq_domain_ops mt6397_irq_domain_ops = {
+> +       .map = mt6397_irq_domain_map,
+> +};
+> +
+> +static int mt6397_irq_pm_notifier(struct notifier_block *notifier,
+> +                                 unsigned long pm_event, void *unused)
+> +{
+> +       struct mt6397_chip *chip =
+> +               container_of(notifier, struct mt6397_chip, pm_nb);
+> +
+> +       switch (pm_event) {
+> +       case PM_SUSPEND_PREPARE:
+> +               regmap_write(chip->regmap,
+> +                            chip->int_con[0], chip->wake_mask[0]);
+> +               regmap_write(chip->regmap,
+> +                            chip->int_con[1], chip->wake_mask[1]);
+> +               enable_irq_wake(chip->irq);
+> +               break;
+> +
+> +       case PM_POST_SUSPEND:
+> +               regmap_write(chip->regmap,
+> +                            chip->int_con[0], chip->irq_masks_cur[0]);
+> +               regmap_write(chip->regmap,
+> +                            chip->int_con[1], chip->irq_masks_cur[1]);
+> +               disable_irq_wake(chip->irq);
+> +               break;
+> +
+> +       default:
+> +               break;
+> +       }
+> +
+> +       return NOTIFY_DONE;
+> +}
+> +
+> +int mt6397_irq_init(struct mt6397_chip *chip)
+> +{
+> +       int ret;
+> +
+> +       mutex_init(&chip->irqlock);
+> +
+> +       switch (chip->chip_id) {
+> +       case MT6323_CHIP_ID:
+> +               chip->int_con[0] = MT6323_INT_CON0;
+> +               chip->int_con[1] = MT6323_INT_CON1;
+> +               chip->int_status[0] = MT6323_INT_STATUS0;
+> +               chip->int_status[1] = MT6323_INT_STATUS1;
+> +               break;
+> +
+> +       case MT6391_CHIP_ID:
+> +       case MT6397_CHIP_ID:
+> +               chip->int_con[0] = MT6397_INT_CON0;
+> +               chip->int_con[1] = MT6397_INT_CON1;
+> +               chip->int_status[0] = MT6397_INT_STATUS0;
+> +               chip->int_status[1] = MT6397_INT_STATUS1;
+> +               break;
+> +
+> +       default:
+> +               dev_err(chip->dev, "unsupported chip: 0x%x\n", chip->chip_id);
+> +               return -ENODEV;
+> +       }
+> +
+> +       /* Mask all interrupt sources */
+> +       regmap_write(chip->regmap, chip->int_con[0], 0x0);
+> +       regmap_write(chip->regmap, chip->int_con[1], 0x0);
+> +
+> +       chip->pm_nb.notifier_call = mt6397_irq_pm_notifier;
+> +       chip->irq_domain = irq_domain_add_linear(chip->dev->of_node,
+> +                                                MT6397_IRQ_NR,
+> +                                                &mt6397_irq_domain_ops,
+> +                                                chip);
+> +       if (!chip->irq_domain) {
+> +               dev_err(chip->dev, "could not create irq domain\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       ret = devm_request_threaded_irq(chip->dev, chip->irq, NULL,
+> +                                       mt6397_irq_thread, IRQF_ONESHOT,
+> +                                       "mt6397-pmic", chip);
+> +       if (ret) {
+> +               dev_err(chip->dev, "failed to register irq=%d; err: %d\n",
+> +                       chip->irq, ret);
+> +               return ret;
+> +       }
+> +
+> +       register_pm_notifier(&chip->pm_nb);
+> +       return 0;
+> +}
+> diff --git a/include/linux/mfd/mt6397/core.h b/include/linux/mfd/mt6397/core.h
+> index d678f52..23c8c6a 100644
+> --- a/include/linux/mfd/mt6397/core.h
+> +++ b/include/linux/mfd/mt6397/core.h
+> @@ -15,6 +15,14 @@
+>  #ifndef __MFD_MT6397_CORE_H__
+>  #define __MFD_MT6397_CORE_H__
+>
+> +#include <linux/notifier.h>
+> +
+> +enum chip_id {
+> +       MT6323_CHIP_ID = 0x23,
+> +       MT6391_CHIP_ID = 0x91,
+> +       MT6397_CHIP_ID = 0x97,
+> +};
+> +
+>  enum mt6397_irq_numbers {
+>         MT6397_IRQ_SPKL_AB = 0,
+>         MT6397_IRQ_SPKR_AB,
+> @@ -54,6 +62,7 @@ enum mt6397_irq_numbers {
+>  struct mt6397_chip {
+>         struct device *dev;
+>         struct regmap *regmap;
+> +       struct notifier_block pm_nb;
+>         int irq;
+>         struct irq_domain *irq_domain;
+>         struct mutex irqlock;
+> @@ -62,6 +71,9 @@ struct mt6397_chip {
+>         u16 irq_masks_cache[2];
+>         u16 int_con[2];
+>         u16 int_status[2];
+> +       u16 chip_id;
+>  };
+>
+> +int mt6397_irq_init(struct mt6397_chip *mt6397);
+> +
+>  #endif /* __MFD_MT6397_CORE_H__ */
+> --
+> 1.9.1
+>
