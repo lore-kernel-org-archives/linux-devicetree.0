@@ -1,51 +1,95 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] ARM: dts: exynos: Always enable necessary APIO_1V8 and ABB_1V8 regulators on Arndale Octa
-Date: Thu, 14 Mar 2019 21:02:17 +0100
-Message-ID: <20190314200217.6002-1-krzk@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Jonas Karlman <jonas@kwiboo.se>
+Subject: Re: [PATCH] arm64: dts: rockchip: add usb3 controller node for RK3328
+ SoCs
+Date: Thu, 14 Mar 2019 20:07:50 +0000
+Message-ID: <AM3PR03MB0966BA1BAD15470960C71AB9AC4B0@AM3PR03MB0966.eurprd03.prod.outlook.com>
+References: <20190314182035.7101-1-papadakospan@gmail.com>
+ <5530020.nRYjYCbPGH@diego> <1552590510.1381.1@gmail.com>
+ <3517438.8SjcAmMXWL@diego>
+ <CAMdYzYpbv+6gJ23E_pH+EG+gOhvoJ-3vZZXEeH7UkD5qv+OO5g@mail.gmail.com>
+ <AM3PR03MB0966D234062854A5217539B8AC4B0@AM3PR03MB0966.eurprd03.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <AM3PR03MB0966D234062854A5217539B8AC4B0@AM3PR03MB0966.eurprd03.prod.outlook.com>
+Content-Language: en-US
+Content-ID: <EDD0EFFD68A72745984950FFC0360294@eurprd03.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Geis <pgwipeout@gmail.com>, =?utf-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "william.wu@rock-chips.com" <william.wu@rock-chips.com>, "Leonidas P. Papadakos" <papadakospan@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The PVDD_APIO_1V8 (LDO2) and PVDD_ABB_1V8 (LDO8) regulators were turned
-off by Linux kernel as unused.  However they supply critical parts of
-SoC so they should be always on:
-
-1. PVDD_APIO_1V8 supplies SYS pins (gpx[0-3], PSHOLD), HDMI level shift,
-   RTC, VDD1_12 (DRAM internal 1.8 V logic), pull-up for PMIC interrupt
-   lines, TTL/UARTR level shift, reset pins and SW-TACT1 button.
-   It also supplies unused blocks like VDDQ_SRAM (for SROM controller) and
-   VDDQ_GPIO (gpm7, gpy7).
-   The LDO2 cannot be turned off (S2MPS11 keeps it on anyway) so
-   marking it "always-on" only reflects its real status.
-
-2. PVDD_ABB_1V8 supplies Adaptive Body Bias Generator for ARM cores,
-   memory and Mali (G3D).
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos5420-arndale-octa.dts | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-index 3447160e1fbf..a0e27e1c0feb 100644
---- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-+++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-@@ -107,6 +107,7 @@
- 				regulator-name = "PVDD_APIO_1V8";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 			};
- 
- 			ldo3_reg: LDO3 {
-@@ -145,6 +146,7 @@
- 				regulator-name = "PVDD_ABB_1V8";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 			};
- 
- 			ldo9_reg: LDO9 {
--- 
-2.17.1
+VGhlIHVzYjMgaXNzdWUgSGVpa28gZGVzY3JpYmUgaXMgc3RpbGwgdGhlcmUsIG15IHVzYjMgZGV2
+aWNlIGlzIG9ubHkgZGlzY292ZXJlZCBvbmNlIG9uIG15IFJvY2sgNjQuDQpJIG11c3QgaGF2ZSBv
+bmx5IHRlc3RlZCBpbnNlcnRpbmcgbXkgdXNiMyBkZXZpY2VzIG9uY2Ugd2hlbiBJIHRlc3Rpbmcg
+YmVmb3JlLg0KDQpSZWdhcmRzLA0KSm9uYXMNCg0KT24gMjAxOS0wMy0xNCAyMDo1MiwgSm9uYXMg
+S2FybG1hbiB3cm90ZToNCj4gSSBoYXZlIGJlZW4gdXNpbmcgdGhhdCBjbGsgcGF0Y2ggc2luY2Ug
+SSBzdGFydGVkIGluaXRpYWwgdGVzdGluZyBvZiByazMzMjggb24gbWFpbmxpbmUgNC4xNiBbMV0N
+Cj4gYW5kIEkgY2Fubm90IHJlbWVtYmVyIHNlZWluZyBhbnkgcmVhbCBpc3N1ZSB3aXRoIHVzYjIv
+dXNiMyAoYmVzaWRlIHVzYiByZWd1bGF0b3IgcmVsYXRlZCBpc3N1ZSkuDQo+IFRoZSBjbGsgcGF0
+Y2ggbWF5IGhhdmUgaGVscGVkIHdpdGggc29tZSB1c2IgaXNzdWVzIHRoYXQgSSBuZXZlciBleHBl
+cmllbmNlZCA6LSkNCj4NCj4gWzFdIGh0dHBzOi8vZ2l0aHViLmNvbS9Ld2lib28vbGludXgtcm9j
+a2NoaXAvY29tbWl0cy9yb2NrY2hpcC00LjE2L2RyaXZlcnMvY2xrL3JvY2tjaGlwDQo+DQo+IFJl
+Z2FyZHMsDQo+IEpvbmFzDQo+DQo+IE9uIDIwMTktMDMtMTQgMjA6MjQsIFBldGVyIEdlaXMgd3Jv
+dGU6DQo+PiBIYXMgYW55b25lIHRlc3RlZCB0aGlzIHNpbmNlIEpvbmFzIEthcmxtYW4ncyBjbGsg
+cGF0Y2ggbGFuZGVkPw0KPj4gSSBub3RpY2VkIGEgbG90IG9mIG15IFVTQiBob3RwbHVnIGlzc3Vl
+cyBkaXNhcHBlYXJlZCB3aGVuIEkgcHVsbGVkDQo+PiB0aGF0IHBhdGNoIGluLg0KPj4gRXNwZWNp
+YWxseSBzaW5jZSBvbmUgb2YgdGhlIGZpeGVzIHdhcyBhY2xrX3VzYjNvdGcsIHNpbmNlIGl0IHdh
+cw0KPj4gaW5jb3JyZWN0bHkgZGVmaW5lZCB0byB1c2IyJ3MgYWNsay4NCj4+DQo+PiBPbiBUaHUs
+IE1hciAxNCwgMjAxOSBhdCAzOjIxIFBNIEhlaWtvIFN0w7xibmVyIDxoZWlrb0BzbnRlY2guZGU+
+IHdyb3RlOg0KPj4+IEhpIGFnYWluIDotKQ0KPj4+DQo+Pj4gQW0gRG9ubmVyc3RhZywgMTQuIE3D
+pHJ6IDIwMTksIDIwOjA4OjMwIENFVCBzY2hyaWViIExlb25pZGFzIFAuIFBhcGFkYWtvczoNCj4+
+Pj4gSSBtdXN0IHNheSB3aXRoIG15IHRlc3RpbmcsIEkgbmV2ZXIgcmVhbGx5IGhhdmUgYW55IGRp
+c2Nvbm5lY3RzLiBNeQ0KPj4+PiBkcml2ZSBnZW5lcmFsbHkgd29ya3MNCj4+PiBJdCdzIG5vdCBh
+bnkgZGlzY29ubmVjdHMsIGl0IGlzIHJlYWxseSB3aGVuIHlvdSB1bnBsdWcgdGhlIGRldmljZSBm
+cm9tDQo+Pj4gdGhlIHJvb3QgcG9ydCB0aGF0IHRoZQ0KPj4+DQo+Pj4+IFN1cmVseSBpdCdzIGJl
+dHRlciB0aGF0IGl0IHdvcmtzIHNvbWV3aGF0IHRoYW4gbm90IGF0IGFsbC4NCj4+Pj4gTWF5YmUg
+d2UgY291bGQgaW5jbHVkZSB0aGUgcGF0Y2hlcyBhbmQgcmV2ZXJ0IHRoZW0gbGF0ZXIgaWYgYSBz
+b2x1dGlvbg0KPj4+PiBhcnJpc2VzPw0KPj4+Pg0KPj4+PiBPciBpcyB0aGF0IGFnYWluc3QgdGhl
+IExpbnV4IHdheSBvZiBkb2luZyB0aGluZ3M/DQo+Pj4gVGhlIG1haW4gaXNzdWUgaXMNCj4+PiAg
+ICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzMyOC1kd2MzIiwgInJvY2tj
+aGlwLHJrMzM5OS1kd2MzIjsNCj4+Pg0KPj4+IGJlY2F1c2U6DQo+Pj4gKDEpIE9uIHRoZSBkZXZp
+Y2V0cmVlLXNpZGUgeW91IGRlY2xhcmUgdGhhdCB0aGV5IGFyZSBjb21wYXRpYmxlIHdoaWNoIG1h
+eQ0KPj4+ICAgICBvciBtYXkgbm90IGNvbmZsaWN0IHdpdGggbmVlZGVkIGxhdGVyIGNoYW5nZXMN
+Cj4+PiAoMikgT24gdGhlIGtlcm5lbC1kcml2ZXItc2lkZSB3aXRoIHRoZSBjdXJyZW50IHN0YXR1
+cyB0aGUgcmszMzI4LWR3YzMNCj4+PiAgICAgd2lsbCBnZXQgaWdub3JlZCBhbmQgcmszMzk5LWR3
+YzMgdXNlZCB0byBiaW5kIHRvIHRoZSBnZW5lcmljIGR0LWR3YzMNCj4+PiAgICAgZHJpdmVyLg0K
+Pj4+ICAgICBGcm9tIGxvb2tpbmcgYXQgdGhlIFJvY2tjaGlwIGNvZGUgaW4gdGhlIHZlbmRvciBr
+ZXJuZWwgd2UgbWF5IHZlcnkgd2VsbA0KPj4+ICAgICBuZWVkIGEgc2VwYXJhdGUgZHJpdmVyIHRv
+IGhhbmRsZSB0aGUgYmlnIGlzc3VlIHdoaWNoIGNyZWF0ZXMgdGhlIGlzc3VlDQo+Pj4gICAgIHdo
+aWNoIGRyaXZlciB3aWxsIGJpbmQgdG8gdGhlIGR0LW5vZGUuIEl0IHdpbGwgYmUgZWl0aGVyIHRo
+ZSBnZW5lcmljIG9uZQ0KPj4+ICAgICBiaW5kaW5nIHRvIHRoZSByazMzOTktZHdjMyBvciB0aGUg
+c3BlY2lhbCBvbmUgYmluZGluZyB0byByazMzMjgtZHdjMy4NCj4+PiAgICAgQW5kIHNhZGx5IGl0
+IHdpbGwgcHJvYmFibHkgZGVwZW5kIG9uIHdoaWNoIG1vZHVsZSBnZXRzIGxvYWRlZCBmaXJzdC4N
+Cj4+Pg0KPj4+IEFuZCBkZXZpY2V0cmVlcyBhcmUgc3VwcG9zZWQgdG8gYmUgYmFja3dhcmRzIGNv
+bXBhdGlibGUgc28gYSBuZXdlcg0KPj4+IGtlcm5lbCBzaG91bGQga2VlcCB3b3JraW5nIHdpdGgg
+YW4gb2xkIGRldmljZXRyZWUuDQo+Pj4NCj4+PiBBIHBvc3NpYmxlIHdheSBmb3J3YXJkIHdvdWxk
+IGJlIHRvIGludHJvZHVjZSBhIHNlcGFyYXRlIGNvbXBhdGlibGUgZm9yDQo+Pj4gcmszMzI4IChi
+b3RoIGluIHRoZSBiaW5kaW5nIGRvYyBhbmQgdGhlIGdlbmVyaWMgZHdjMyBkcml2ZXIpLCBzbyB0
+aGF0DQo+Pj4gd2UgZ2V0IG9ubHkgYQ0KPj4+ICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAi
+cm9ja2NoaXAscmszMzI4LWR3YzMiOw0KPj4+DQo+Pj4gV2hpY2ggdGhlbiBldmVuIGNhbiBtb3Zl
+IGVhc2lseSBpbnRvIGEgbmV3IGRyaXZlciBpZiBuZWNlc3Nhcnkgd2l0aG91dA0KPj4+IGNhdXNp
+bmcgaXNzdWVzIGZvciBleGlzdGluZyBkZXZpY2V0cmVlcy4NCj4+Pg0KPj4+IEhlaWtvDQo+Pj4N
+Cj4+Pg0KPj4+DQo+Pj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18NCj4+PiBMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QNCj4+PiBMaW51eC1yb2NrY2hp
+cEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+Pj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcA0KPj4gX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18NCj4+IExpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdA0K
+Pj4gTGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPj4gaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcA0KPiBfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBMaW51eC1yb2NrY2hpcCBt
+YWlsaW5nIGxpc3QNCj4gTGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBodHRw
+Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlwDQoN
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
+bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
+ZXJuZWwK
