@@ -1,15 +1,16 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+From: Peter Geis <pgwipeout@gmail.com>
 Subject: Re: [PATCH] arm64: dts: rockchip: add usb3 controller node for RK3328
  SoCs
-Date: Thu, 14 Mar 2019 20:21:12 +0100
-Message-ID: <3517438.8SjcAmMXWL@diego>
+Date: Thu, 14 Mar 2019 15:24:12 -0400
+Message-ID: <CAMdYzYpbv+6gJ23E_pH+EG+gOhvoJ-3vZZXEeH7UkD5qv+OO5g@mail.gmail.com>
 References: <20190314182035.7101-1-papadakospan@gmail.com>
- <5530020.nRYjYCbPGH@diego> <1552590510.1381.1@gmail.com>
+ <5530020.nRYjYCbPGH@diego>
+ <1552590510.1381.1@gmail.com> <3517438.8SjcAmMXWL@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1552590510.1381.1@gmail.com>
+In-Reply-To: <3517438.8SjcAmMXWL@diego>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,52 +20,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Leonidas P. Papadakos" <papadakospan@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, william.wu@rock-chips.com, linux-arm-kernel@lists.infradead.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, william.wu@rock-chips.com, "Leonidas P. Papadakos" <papadakospan@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi again :-)
-
-Am Donnerstag, 14. M=E4rz 2019, 20:08:30 CET schrieb Leonidas P. Papadakos:
-> I must say with my testing, I never really have any disconnects. My
-> drive generally works
-
-It's not any disconnects, it is really when you unplug the device from
-the root port that the =
-
-
-> Surely it's better that it works somewhat than not at all.
-> Maybe we could include the patches and revert them later if a solution
-> arrises?
-> =
-
-> Or is that against the Linux way of doing things?
-
-The main issue is
-               compatible =3D "rockchip,rk3328-dwc3", "rockchip,rk3399-dwc3=
-";
-
-because:
-(1) On the devicetree-side you declare that they are compatible which may
-    or may not conflict with needed later changes
-(2) On the kernel-driver-side with the current status the rk3328-dwc3
-    will get ignored and rk3399-dwc3 used to bind to the generic dt-dwc3
-    driver.
-    From looking at the Rockchip code in the vendor kernel we may very well
-    need a separate driver to handle the big issue which creates the issue
-    which driver will bind to the dt-node. It will be either the generic one
-    binding to the rk3399-dwc3 or the special one binding to rk3328-dwc3.
-    And sadly it will probably depend on which module gets loaded first.
-
-And devicetrees are supposed to be backwards compatible so a newer
-kernel should keep working with an old devicetree.
-
-A possible way forward would be to introduce a separate compatible for
-rk3328 (both in the binding doc and the generic dwc3 driver), so that
-we get only a
-               compatible =3D "rockchip,rk3328-dwc3";
-
-Which then even can move easily into a new driver if necessary without
-causing issues for existing devicetrees.
-
-Heiko
+SGFzIGFueW9uZSB0ZXN0ZWQgdGhpcyBzaW5jZSBKb25hcyBLYXJsbWFuJ3MgY2xrIHBhdGNoIGxh
+bmRlZD8KSSBub3RpY2VkIGEgbG90IG9mIG15IFVTQiBob3RwbHVnIGlzc3VlcyBkaXNhcHBlYXJl
+ZCB3aGVuIEkgcHVsbGVkCnRoYXQgcGF0Y2ggaW4uCkVzcGVjaWFsbHkgc2luY2Ugb25lIG9mIHRo
+ZSBmaXhlcyB3YXMgYWNsa191c2Izb3RnLCBzaW5jZSBpdCB3YXMKaW5jb3JyZWN0bHkgZGVmaW5l
+ZCB0byB1c2IyJ3MgYWNsay4KCk9uIFRodSwgTWFyIDE0LCAyMDE5IGF0IDM6MjEgUE0gSGVpa28g
+U3TDvGJuZXIgPGhlaWtvQHNudGVjaC5kZT4gd3JvdGU6Cj4KPiBIaSBhZ2FpbiA6LSkKPgo+IEFt
+IERvbm5lcnN0YWcsIDE0LiBNw6RyeiAyMDE5LCAyMDowODozMCBDRVQgc2NocmllYiBMZW9uaWRh
+cyBQLiBQYXBhZGFrb3M6Cj4gPiBJIG11c3Qgc2F5IHdpdGggbXkgdGVzdGluZywgSSBuZXZlciBy
+ZWFsbHkgaGF2ZSBhbnkgZGlzY29ubmVjdHMuIE15Cj4gPiBkcml2ZSBnZW5lcmFsbHkgd29ya3MK
+Pgo+IEl0J3Mgbm90IGFueSBkaXNjb25uZWN0cywgaXQgaXMgcmVhbGx5IHdoZW4geW91IHVucGx1
+ZyB0aGUgZGV2aWNlIGZyb20KPiB0aGUgcm9vdCBwb3J0IHRoYXQgdGhlCj4KPiA+IFN1cmVseSBp
+dCdzIGJldHRlciB0aGF0IGl0IHdvcmtzIHNvbWV3aGF0IHRoYW4gbm90IGF0IGFsbC4KPiA+IE1h
+eWJlIHdlIGNvdWxkIGluY2x1ZGUgdGhlIHBhdGNoZXMgYW5kIHJldmVydCB0aGVtIGxhdGVyIGlm
+IGEgc29sdXRpb24KPiA+IGFycmlzZXM/Cj4gPgo+ID4gT3IgaXMgdGhhdCBhZ2FpbnN0IHRoZSBM
+aW51eCB3YXkgb2YgZG9pbmcgdGhpbmdzPwo+Cj4gVGhlIG1haW4gaXNzdWUgaXMKPiAgICAgICAg
+ICAgICAgICBjb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzMyOC1kd2MzIiwgInJvY2tjaGlwLHJr
+MzM5OS1kd2MzIjsKPgo+IGJlY2F1c2U6Cj4gKDEpIE9uIHRoZSBkZXZpY2V0cmVlLXNpZGUgeW91
+IGRlY2xhcmUgdGhhdCB0aGV5IGFyZSBjb21wYXRpYmxlIHdoaWNoIG1heQo+ICAgICBvciBtYXkg
+bm90IGNvbmZsaWN0IHdpdGggbmVlZGVkIGxhdGVyIGNoYW5nZXMKPiAoMikgT24gdGhlIGtlcm5l
+bC1kcml2ZXItc2lkZSB3aXRoIHRoZSBjdXJyZW50IHN0YXR1cyB0aGUgcmszMzI4LWR3YzMKPiAg
+ICAgd2lsbCBnZXQgaWdub3JlZCBhbmQgcmszMzk5LWR3YzMgdXNlZCB0byBiaW5kIHRvIHRoZSBn
+ZW5lcmljIGR0LWR3YzMKPiAgICAgZHJpdmVyLgo+ICAgICBGcm9tIGxvb2tpbmcgYXQgdGhlIFJv
+Y2tjaGlwIGNvZGUgaW4gdGhlIHZlbmRvciBrZXJuZWwgd2UgbWF5IHZlcnkgd2VsbAo+ICAgICBu
+ZWVkIGEgc2VwYXJhdGUgZHJpdmVyIHRvIGhhbmRsZSB0aGUgYmlnIGlzc3VlIHdoaWNoIGNyZWF0
+ZXMgdGhlIGlzc3VlCj4gICAgIHdoaWNoIGRyaXZlciB3aWxsIGJpbmQgdG8gdGhlIGR0LW5vZGUu
+IEl0IHdpbGwgYmUgZWl0aGVyIHRoZSBnZW5lcmljIG9uZQo+ICAgICBiaW5kaW5nIHRvIHRoZSBy
+azMzOTktZHdjMyBvciB0aGUgc3BlY2lhbCBvbmUgYmluZGluZyB0byByazMzMjgtZHdjMy4KPiAg
+ICAgQW5kIHNhZGx5IGl0IHdpbGwgcHJvYmFibHkgZGVwZW5kIG9uIHdoaWNoIG1vZHVsZSBnZXRz
+IGxvYWRlZCBmaXJzdC4KPgo+IEFuZCBkZXZpY2V0cmVlcyBhcmUgc3VwcG9zZWQgdG8gYmUgYmFj
+a3dhcmRzIGNvbXBhdGlibGUgc28gYSBuZXdlcgo+IGtlcm5lbCBzaG91bGQga2VlcCB3b3JraW5n
+IHdpdGggYW4gb2xkIGRldmljZXRyZWUuCj4KPiBBIHBvc3NpYmxlIHdheSBmb3J3YXJkIHdvdWxk
+IGJlIHRvIGludHJvZHVjZSBhIHNlcGFyYXRlIGNvbXBhdGlibGUgZm9yCj4gcmszMzI4IChib3Ro
+IGluIHRoZSBiaW5kaW5nIGRvYyBhbmQgdGhlIGdlbmVyaWMgZHdjMyBkcml2ZXIpLCBzbyB0aGF0
+Cj4gd2UgZ2V0IG9ubHkgYQo+ICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicm9ja2NoaXAs
+cmszMzI4LWR3YzMiOwo+Cj4gV2hpY2ggdGhlbiBldmVuIGNhbiBtb3ZlIGVhc2lseSBpbnRvIGEg
+bmV3IGRyaXZlciBpZiBuZWNlc3Nhcnkgd2l0aG91dAo+IGNhdXNpbmcgaXNzdWVzIGZvciBleGlz
+dGluZyBkZXZpY2V0cmVlcy4KPgo+IEhlaWtvCj4KPgo+Cj4gX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KPiBMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QK
+PiBMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
+IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
