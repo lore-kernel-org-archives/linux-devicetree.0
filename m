@@ -1,86 +1,67 @@
-From: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 0/7] scsi: ufs-mediatek: Add UFS support for Mediatek SoC
- chips
-Date: Thu, 14 Mar 2019 12:08:29 +0800
-Message-ID: <1552536516-12723-2-git-send-email-stanley.chu@mediatek.com>
-References: <1552536516-12723-1-git-send-email-stanley.chu@mediatek.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 4/4] arm64: dts: sdm845: Add zap shader
+ region for GPU
+Date: Wed, 13 Mar 2019 22:20:20 -0700
+Message-ID: <20190314052020.GC6435@tuxbook-pro>
+References: <1552414422-9568-1-git-send-email-jcrouse@codeaurora.org>
+ <1552414422-9568-5-git-send-email-jcrouse@codeaurora.org>
+ <CAF6AEGt74Hs+VMgMOMAyFw9FGk5mrY2NU07JUh=OKSOhj-h6CA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1552536516-12723-1-git-send-email-stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, avri.altman-Sjgp3cTcYWE@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pedrom.sousa-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
-Cc: chun-hung.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGt74Hs+VMgMOMAyFw9FGk5mrY2NU07JUh=OKSOhj-h6CA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-This patch series adds UFS M-PHY and UFS host driver support in MediaTek chipsets.
-
-In the meantime, re-factors ufshcd_get_pwr_dev_param in vendors' drivers. This function is for vendors to decide finally agreed attributes for power mode change if vendors define
-their host capability in struct ufs_dev_params. Because it is using by both ufs-qcom and ufs-hisi and also used in ufs-mediatek in this serious, simply re-factor it and then every vendors can reuse it.
-
-Changes since v4:
--	phy-mtk-ufs:
-	  * Sort name in Kconfig and Makefile
-	  * Drop "inline" and fix symbol name for mphy_set_bit()/mphy_clr_bit().
--	dt-bindings: phy-mtk-ufs: Drop "-clk" in clock names.
--	dt-bindings: ufs-mediatek:
-	  * Change clock name "ufs-clk" to "ufs".
-	  * Drop vcc related first. VCC control is planned to be added back by another patch accompanied with VCC/ICC logic fix in ufs common driver.
-
-Changes since v3:
--	dt-bindings: Use specific compatible name for both ufs-mediatek and phy-mtk-ufs, remove interrupt-parent and lanes-per-direction in ufs-mediatek, and fix descriptions.
-
-Changes since v2:
--	Fix header style with SPDX-License-Identifier declaration used.
--	Simplify ufs-phy-mtk to single source file since we has one MPHY version now, and do fixes according to Chunfeng Yun's comments.
--	Add dt-bindings of ufs-phy-mtk.
-
-Changes since v1:
--	Re-factor ufshcd_get_pwr_dev_param in mediatek/qcom/hisi vendor drivers.
--	Introduce ufs-phy-mtk to have a good extension capability for different power control flows in future different MPHY versions.
--	Bind ufs-phy-mtk and hook suitable callbacks in ufs-mediatek driver.
--	Use PA_LOCAL_TX_LCC_ENABLE attribute defined in unipro.h instead.
--	Do some minor format fixes.
-
-Stanley Chu (7):
-  scsi: ufs: Introduce ufshcd_get_pwr_dev_param
-  scsi: ufs-qcom: Re-factor ufshcd_get_pwr_dev_param
-  scsi: ufs-hisi: Re-factor ufshcd_get_pwr_dev_param
-  dt-bindings: phy: Add document for phy-mtk-ufs
-  dt-bindings: scsi: ufs: Add document for ufs-mediatek
-  phy: mediatek: Add UFS M-PHY driver
-  scsi: ufs-mediatek: Add UFS support for Mediatek SoC chips
-
- .../devicetree/bindings/phy/phy-mtk-ufs.txt   |  38 ++
- .../devicetree/bindings/ufs/ufs-mediatek.txt  |  40 ++
- drivers/phy/mediatek/Kconfig                  |  11 +
- drivers/phy/mediatek/Makefile                 |   1 +
- drivers/phy/mediatek/phy-mtk-ufs.c            | 239 ++++++++++++
- drivers/scsi/ufs/Kconfig                      |  14 +
- drivers/scsi/ufs/Makefile                     |   1 +
- drivers/scsi/ufs/ufs-hisi.c                   | 109 +-----
- drivers/scsi/ufs/ufs-mediatek.c               | 368 ++++++++++++++++++
- drivers/scsi/ufs/ufs-mediatek.h               |  54 +++
- drivers/scsi/ufs/ufs-qcom.c                   | 106 +----
- drivers/scsi/ufs/ufshcd-pltfrm.c              |  98 +++++
- drivers/scsi/ufs/ufshcd-pltfrm.h              |  21 +
- 13 files changed, 893 insertions(+), 207 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
- create mode 100644 Documentation/devicetree/bindings/ufs/ufs-mediatek.txt
- create mode 100644 drivers/phy/mediatek/phy-mtk-ufs.c
- create mode 100644 drivers/scsi/ufs/ufs-mediatek.c
- create mode 100644 drivers/scsi/ufs/ufs-mediatek.h
-
--- 
-2.18.0
+T24gV2VkIDEzIE1hciAwODo0MiBQRFQgMjAxOSwgUm9iIENsYXJrIHdyb3RlOgoKPiBPbiBUdWUs
+IE1hciAxMiwgMjAxOSBhdCAyOjE0IFBNIEpvcmRhbiBDcm91c2UgPGpjcm91c2VAY29kZWF1cm9y
+YS5vcmc+IHdyb3RlOgo+ID4KPiA+IFNvbWUgQWRyZW5vIEdQVSB0YXJnZXRzIHJlcXVpcmUgYSBz
+cGVjaWFsIHphcCBzaGFkZXIgdG8gYnJpbmcgdGhlIEdQVQo+ID4gb3V0IG9mIHNlY3VyZSBtb2Rl
+LiBEZWZpbmUgYSByZWdpb24gdG8gYWxsb2NhdGUgYW5kIHN0b3JlIHRoZSB6YXAKPiA+IHNoYWRl
+ci4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNlQGNvZGVhdXJv
+cmEub3JnPgo+ID4gLS0tCj4gPgo+ID4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUu
+ZHRzaSB8IDExICsrKysrKysrKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMo
+KykKPiA+Cj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5k
+dHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpCj4gPiBpbmRleCBmZWQ3
+YTI5Li41MjY0NTZkIDEwMDY0NAo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3Nk
+bTg0NS5kdHNpCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kK
+PiA+IEBAIC0xMDAsNiArMTAwLDExIEBACj4gPiAgICAgICAgICAgICAgICAgICAgICAgICBuby1t
+YXA7Cj4gPiAgICAgICAgICAgICAgICAgfTsKPiA+Cj4gPiArICAgICAgICAgICAgICAgemFwX3No
+YWRlcl9yZWdpb246IG1lbW9yeUA4YzQxNTAwMCB7Cj4gPiArICAgICAgICAgICAgICAgICAgICAg
+ICByZWcgPSA8MCAweDhjNDE1MDAwIDAgMHgyMDAwPjsKPiA+ICsgICAgICAgICAgICAgICAgICAg
+ICAgIG5vLW1hcDsKPiA+ICsgICAgICAgICAgICAgICB9Owo+ID4gKwo+ID4gICAgICAgICAgICAg
+ICAgIG1wc3NfcmVnaW9uOiBtZW1vcnlAOGUwMDAwMDAgewo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgcmVnID0gPDAgMHg4ZTAwMDAwMCAwIDB4NzgwMDAwMD47Cj4gPiAgICAgICAgICAgICAg
+ICAgICAgICAgICBuby1tYXA7Cj4gPiBAQCAtMTA5LDYgKzExNCw4IEBACj4gPiAgICAgICAgICAg
+ICAgICAgICAgICAgICByZWcgPSA8MCAweDk2NTAwMDAwIDAgMHgyMDAwMDA+Owo+ID4gICAgICAg
+ICAgICAgICAgICAgICAgICAgbm8tbWFwOwo+ID4gICAgICAgICAgICAgICAgIH07Cj4gPiArCj4g
+PiArCj4gCj4gSSBndWVzcyB3ZSBkb24ndCByZWFsbHkgbmVlZCB0aGlzIGh1bmsuLgo+IAoKSSds
+bCB0cmltIHRoYXQgYXMgSSBwaWNrIHVwIHRoZSBwYXRjaC4KCj4gb3RoZXIgdGhhbiB0aGF0LCB0
+aGUgc2VyaWVzIGxndG0KPiAKCldpbGwgeW91IHBpY2sgdXAgcGF0Y2ggMS0zIGFuZCBJJ2xsIHBp
+Y2sgcGF0Y2ggNCB0aHJvdWdoIEFuZHkncyB0cmVlPwoKUmVnYXJkcywKQmpvcm4KCj4gQlIsCj4g
+LVIKPiAKPiA+ICAgICAgICAgfTsKPiA+Cj4gPiAgICAgICAgIGNwdXMgewo+ID4gQEAgLTE1MTQs
+NiArMTUyMSwxMCBAQAo+ID4KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHFjb20sZ211ID0g
+PCZnbXU+Owo+ID4KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHphcC1zaGFkZXIgewo+ID4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtZW1vcnktcmVnaW9uID0gPCZ6YXBfc2hh
+ZGVyX3JlZ2lvbj47Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+ID4gKwo+ID4gICAg
+ICAgICAgICAgICAgICAgICAgICAgZ3B1X29wcF90YWJsZTogb3BwLXRhYmxlIHsKPiA+ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJvcGVyYXRpbmctcG9pbnRz
+LXYyIjsKPiA+Cj4gPiAtLQo+ID4gMi43LjQKPiA+Cj4gPiBfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwo+ID4gRnJlZWRyZW5vIG1haWxpbmcgbGlzdAo+ID4g
+RnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+ID4gaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8KX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJl
+bm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZnJlZWRyZW5v
