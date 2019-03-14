@@ -1,196 +1,139 @@
 From: Vishal Sagar <vishal.sagar@xilinx.com>
-Subject: [PATCH v7 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI
- CSI-2 Rx Subsystem
-Date: Thu, 14 Mar 2019 16:54:50 +0530
-Message-ID: <1552562691-14445-2-git-send-email-vishal.sagar@xilinx.com>
-References: <1552562691-14445-1-git-send-email-vishal.sagar@xilinx.com>
+Subject: [PATCH v7 0/2] Add support for Xilinx CSI2 Receiver Subsystem
+Date: Thu, 14 Mar 2019 16:54:49 +0530
+Message-ID: <1552562691-14445-1-git-send-email-vishal.sagar@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1552562691-14445-1-git-send-email-vishal.sagar@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Hyun Kwon <hyunk@xilinx.com>, laurent.pinchart@ideasonboard.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dinesh Kumar <dineshk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>, Luca Ceresoli <luca@lucaceresoli.net>
 Cc: Vishal Sagar <vishal.sagar@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
 
-The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
-DPHY in Rx mode, an optional I2C controller and a Video Format Bridge.
+Xilinx MIPI CSI-2 Receiver Subsystem
+------------------------------------
 
-Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
-Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
+The Xilinx MIPI CSI-2 Receiver Subsystem Soft IP consists of a DPHY which
+gets the data, an optional I2C, a CSI-2 Receiver which parses the data and
+converts it into AXIS data.
+This stream output maybe connected to a Xilinx Video Format Bridge.
+The maximum number of lanes supported is fixed in the design.
+The number of active lanes can be programmed.
+For e.g. the design may set maximum lanes as 4 but if the camera sensor has
+only 1 lane then the active lanes shall be set as 1.
+
+The pixel format set in design acts as a filter allowing only the selected
+data type or RAW8 data packets. The D-PHY register access can be gated in
+the design. The base address of the DPHY depends on whether the internal
+Xilinx I2C controller is enabled or not in design.
+
+The device driver registers the MIPI CSI2 Rx Subsystem as a V4L2 sub device
+having 2 pads. The sink pad is connected to the MIPI camera sensor and
+output pad is connected to the video node.
+Refer to xlnx,csi2rxss.txt for device tree node details.
+
+This driver helps configure the number of active lanes to be set, setting
+and handling interrupts and IP core enable. It logs the number of events
+occurring according to their type between streaming ON and OFF.
+It generates a v4l2 event for each short packet data received.
+The application can then dequeue this event and get the requisite data
+from the event structure.
+
+It adds new V4L2 controls which are used to get the event counter values
+and reset the subsystem.
+
+The Xilinx CSI-2 Rx Subsystem outputs an AXI4 Stream data which can be
+used for image processing. This data follows the video formats mentioned
+in Xilinx UG934 when the Video Format Bridge is enabled.
+
 v7
-- Removed the control name from dt bindings
-- Updated the example dt node name to csi2rx
+- 1/2
+  - Removed the name of control from en-active-lanes as suggested by Sakari
+  - Updated the dt node name to csi2rx
+- 2/2
+  - No change
 
 v6
-- Added "control" after V4L2_CID_XILINX_MIPICSISS_ACT_LANES as suggested by Luca
-- Added reviewed by Rob Herring
+- 1/2
+  - Added minor comment by Luca
+  - Added Reviewed by Rob Herring
+- 2/2
+  - No change
 
 v5
-- Incorporated comments by Luca Cersoli
-- Removed DPHY clock from description and example
-- Removed bayer pattern from device tree MIPI CSI IP
-  doesn't deal with bayer pattern.
+- 1/2
+  - Removed the DPHY clock description and dt node.
+  - removed bayer pattern as CSI doesn't deal with it.
+- 2/2
+  - removed bayer pattern as CSI doesn't deal with it.
+  - add YUV422 10bpc media bus format.
 
 v4
-- Added reviewed by Hyun Kwon
+- 1/2
+  - Added reviewed by Hyun Kwon
+- 2/2
+  - Removed irq member from core structure
+  - Consolidated IP config prints in xcsi2rxss_log_ipconfig()
+  - Return -EINVAL in case of invalid ioctl
+  - Code formatting
+  - Added reviewed by Hyun Kwon
 
 v3
-- removed interrupt parent as suggested by Rob
-- removed dphy clock
-- moved vfb to optional properties
-- Added required and optional port properties section
-- Added endpoint property section
+- 1/2
+  - removed interrupt parent as suggested by Rob
+  - removed dphy clock
+  - moved vfb to optional properties
+  - Added required and optional port properties section
+  - Added endpoint property section
+- 2/2
+ - Fixed comments given by Hyun.
+ - Removed DPHY 200 MHz clock. This will be controlled by DPHY driver
+ - Minor code formatting
+ - en_csi_v20 and vfb members removed from struct and made local to dt parsing
+ - lock description updated
+ - changed to ratelimited type for all dev prints in irq handler
+ - Removed YUV 422 10bpc media format
 
 v2
-- updated the compatible string to latest version supported
-- removed DPHY related parameters
-- added CSI v2.0 related property (including VCX for supporting upto 16
-  virtual channels).
-- modified csi-pxl-format from string to unsigned int type where the value
-  is as per the CSI specification
-- Defined port 0 and port 1 as sink and source ports.
-- Removed max-lanes property as suggested by Rob and Sakari
+- 1/2
+  - updated the compatible string to latest version supported
+  - removed DPHY related parameters
+  - added CSI v2.0 related property (including VCX for supporting upto 16
+    virtual channels).
+  - modified csi-pxl-format from string to unsigned int type where the value
+    is as per the CSI specification
+  - Defined port 0 and port 1 as sink and source ports.
+  - Removed max-lanes property as suggested by Rob and Sakari
 
- .../bindings/media/xilinx/xlnx,csi2rxss.txt        | 117 +++++++++++++++++++++
- 1 file changed, 117 insertions(+)
+- 2/2
+  - Fixed comments given by Hyun and Sakari.
+  - Made all bitmask using BIT() and GENMASK()
+  - Removed unused definitions
+  - Removed DPHY access. This will be done by separate DPHY PHY driver.
+  - Added support for CSI v2.0 for YUV 422 10bpc, RAW16, RAW20 and extra
+    virtual channels
+  - Fixed the ports as sink and source
+  - Now use the v4l2fwnode API to get number of data-lanes
+  - Added clock framework support
+  - Removed the close() function
+  - updated the set format function
+  - Support only VFB enabled config
+
+Vishal Sagar (2):
+  media: dt-bindings: media: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem
+  media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem driver
+
+ .../bindings/media/xilinx/xlnx,csi2rxss.txt        |  117 ++
+ drivers/media/platform/xilinx/Kconfig              |   10 +
+ drivers/media/platform/xilinx/Makefile             |    1 +
+ drivers/media/platform/xilinx/xilinx-csi2rxss.c    | 1465 ++++++++++++++++++++
+ include/uapi/linux/xilinx-v4l2-controls.h          |   14 +
+ include/uapi/linux/xilinx-v4l2-events.h            |   25 +
+ 6 files changed, 1632 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+ create mode 100644 drivers/media/platform/xilinx/xilinx-csi2rxss.c
+ create mode 100644 include/uapi/linux/xilinx-v4l2-events.h
 
-diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
-new file mode 100644
-index 0000000..73c18bc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
-@@ -0,0 +1,117 @@
-+Xilinx MIPI CSI2 Receiver Subsystem Device Tree Bindings
-+--------------------------------------------------------
-+
-+The Xilinx MIPI CSI2 Receiver Subsystem is used to capture MIPI CSI2 traffic
-+from compliant camera sensors and send the output as AXI4 Stream video data
-+for image processing.
-+
-+The subsystem consists of a MIPI DPHY in slave mode which captures the
-+data packets. This is passed along the MIPI CSI2 Rx IP which extracts the
-+packet data. The optional Video Format Bridge (VFB) converts this data to
-+AXI4 Stream video data.
-+
-+For more details, please refer to PG232 Xilinx MIPI CSI-2 Receiver Subsystem.
-+
-+Required properties:
-+--------------------
-+- compatible: Must contain "xlnx,mipi-csi2-rx-subsystem-4.0".
-+- reg: Physical base address and length of the registers set for the device.
-+- interrupts: Property with a value describing the interrupt number.
-+- clocks: List of phandles to AXI Lite and Video clocks.
-+- clock-names: Must contain "lite_aclk" and "video_aclk" in the same order
-+  as clocks listed in clocks property.
-+- xlnx,csi-pxl-format: This denotes the CSI Data type selected in hw design.
-+  Packets other than this data type (except for RAW8 and User defined data
-+  types) will be filtered out. Possible values are as below -
-+  0x1E - YUV4228B
-+  0x1F - YUV42210B
-+  0x20 - RGB444
-+  0x21 - RGB555
-+  0x22 - RGB565
-+  0x23 - RGB666
-+  0x24 - RGB888
-+  0x28 - RAW6
-+  0x29 - RAW7
-+  0x2A - RAW8
-+  0x2B - RAW10
-+  0x2C - RAW12
-+  0x2D - RAW14
-+  0x2E - RAW16
-+  0x2F - RAW20
-+
-+
-+Optional properties:
-+--------------------
-+- xlnx,vfb: This is present when Video Format Bridge is enabled.
-+  Without this property the driver won't be loaded as IP won't be able to generate
-+  media bus format compliant stream output.
-+- xlnx,en-csi-v2-0: Present if CSI v2 is enabled in IP configuration.
-+- xlnx,en-vcx: When present, there are maximum 16 virtual channels, else
-+  only 4. This is present only if xlnx,en-csi-v2-0 is present.
-+- xlnx,en-active-lanes: present if the number of active lanes can be
-+  re-configured at runtime in the Protocol Configuration Register.
-+  Otherwise all lanes, as set in IP configuration, are always active.
-+
-+Ports
-+-----
-+The device node shall contain two 'port' child nodes as defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+The port@0 is a sink port and shall connect to CSI2 source like camera.
-+It must have the data-lanes property.
-+
-+The port@1 is a source port and can be connected to any video processing IP
-+which can work with AXI4 Stream data.
-+
-+Required port properties:
-+--------------------
-+- reg: 0 - for sink port.
-+       1 - for source port.
-+
-+Optional endpoint property:
-+---------------------------
-+- data-lanes: specifies MIPI CSI-2 data lanes as covered in video-interfaces.txt.
-+  This should be in the sink port endpoint which connects to MIPI CSI2 source
-+  like sensor. The possible values are:
-+  1       - For 1 lane enabled in IP.
-+  1 2     - For 2 lanes enabled in IP.
-+  1 2 3   - For 3 lanes enabled in IP.
-+  1 2 3 4 - For 4 lanes enabled in IP.
-+
-+Example:
-+
-+	xcsi2rxss_1: csi2rx@a0020000 {
-+		compatible = "xlnx,mipi-csi2-rx-subsystem-4.0";
-+		reg = <0x0 0xa0020000 0x0 0x10000>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 95 4>;
-+		xlnx,csi-pxl-format = <0x2a>;
-+		xlnx,vfb;
-+		xlnx,en-active-lanes;
-+		xlnx,en-csi-v2-0;
-+		xlnx,en-vcx;
-+		clock-names = "lite_aclk", "video_aclk";
-+		clocks = <&misc_clk_0>, <&misc_clk_1>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				/* Sink port */
-+				reg = <0>;
-+				csiss_in: endpoint {
-+					data-lanes = <1 2 3 4>;
-+					/* MIPI CSI2 Camera handle */
-+					remote-endpoint = <&camera_out>;
-+				};
-+			};
-+			port@1 {
-+				/* Source port */
-+				reg = <1>;
-+				csiss_out: endpoint {
-+					remote-endpoint = <&vproc_in>;
-+				};
-+			};
-+		};
-+	};
 -- 
 2.7.4
