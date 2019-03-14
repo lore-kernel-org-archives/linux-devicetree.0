@@ -1,67 +1,61 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 4/4] arm64: dts: sdm845: Add zap shader
- region for GPU
-Date: Wed, 13 Mar 2019 22:20:20 -0700
-Message-ID: <20190314052020.GC6435@tuxbook-pro>
-References: <1552414422-9568-1-git-send-email-jcrouse@codeaurora.org>
- <1552414422-9568-5-git-send-email-jcrouse@codeaurora.org>
- <CAF6AEGt74Hs+VMgMOMAyFw9FGk5mrY2NU07JUh=OKSOhj-h6CA@mail.gmail.com>
+From: Ritesh Harjani <riteshh@codeaurora.org>
+Subject: Re: [PATCH V3 06/10] mmc: cqhci: allow hosts to update dcmd cmd desc
+Date: Thu, 14 Mar 2019 11:02:28 +0530
+Message-ID: <8a90c2e5-fd0a-9ea3-59a5-c237c0003a3b@codeaurora.org>
+References: <1552513552-23423-1-git-send-email-skomatineni@nvidia.com>
+ <1552513552-23423-6-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGt74Hs+VMgMOMAyFw9FGk5mrY2NU07JUh=OKSOhj-h6CA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1552513552-23423-6-git-send-email-skomatineni@nvidia.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, anrao@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkIDEzIE1hciAwODo0MiBQRFQgMjAxOSwgUm9iIENsYXJrIHdyb3RlOgoKPiBPbiBUdWUs
-IE1hciAxMiwgMjAxOSBhdCAyOjE0IFBNIEpvcmRhbiBDcm91c2UgPGpjcm91c2VAY29kZWF1cm9y
-YS5vcmc+IHdyb3RlOgo+ID4KPiA+IFNvbWUgQWRyZW5vIEdQVSB0YXJnZXRzIHJlcXVpcmUgYSBz
-cGVjaWFsIHphcCBzaGFkZXIgdG8gYnJpbmcgdGhlIEdQVQo+ID4gb3V0IG9mIHNlY3VyZSBtb2Rl
-LiBEZWZpbmUgYSByZWdpb24gdG8gYWxsb2NhdGUgYW5kIHN0b3JlIHRoZSB6YXAKPiA+IHNoYWRl
-ci4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNlQGNvZGVhdXJv
-cmEub3JnPgo+ID4gLS0tCj4gPgo+ID4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUu
-ZHRzaSB8IDExICsrKysrKysrKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMo
-KykKPiA+Cj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5k
-dHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpCj4gPiBpbmRleCBmZWQ3
-YTI5Li41MjY0NTZkIDEwMDY0NAo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3Nk
-bTg0NS5kdHNpCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kK
-PiA+IEBAIC0xMDAsNiArMTAwLDExIEBACj4gPiAgICAgICAgICAgICAgICAgICAgICAgICBuby1t
-YXA7Cj4gPiAgICAgICAgICAgICAgICAgfTsKPiA+Cj4gPiArICAgICAgICAgICAgICAgemFwX3No
-YWRlcl9yZWdpb246IG1lbW9yeUA4YzQxNTAwMCB7Cj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICByZWcgPSA8MCAweDhjNDE1MDAwIDAgMHgyMDAwPjsKPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgIG5vLW1hcDsKPiA+ICsgICAgICAgICAgICAgICB9Owo+ID4gKwo+ID4gICAgICAgICAgICAg
-ICAgIG1wc3NfcmVnaW9uOiBtZW1vcnlAOGUwMDAwMDAgewo+ID4gICAgICAgICAgICAgICAgICAg
-ICAgICAgcmVnID0gPDAgMHg4ZTAwMDAwMCAwIDB4NzgwMDAwMD47Cj4gPiAgICAgICAgICAgICAg
-ICAgICAgICAgICBuby1tYXA7Cj4gPiBAQCAtMTA5LDYgKzExNCw4IEBACj4gPiAgICAgICAgICAg
-ICAgICAgICAgICAgICByZWcgPSA8MCAweDk2NTAwMDAwIDAgMHgyMDAwMDA+Owo+ID4gICAgICAg
-ICAgICAgICAgICAgICAgICAgbm8tbWFwOwo+ID4gICAgICAgICAgICAgICAgIH07Cj4gPiArCj4g
-PiArCj4gCj4gSSBndWVzcyB3ZSBkb24ndCByZWFsbHkgbmVlZCB0aGlzIGh1bmsuLgo+IAoKSSds
-bCB0cmltIHRoYXQgYXMgSSBwaWNrIHVwIHRoZSBwYXRjaC4KCj4gb3RoZXIgdGhhbiB0aGF0LCB0
-aGUgc2VyaWVzIGxndG0KPiAKCldpbGwgeW91IHBpY2sgdXAgcGF0Y2ggMS0zIGFuZCBJJ2xsIHBp
-Y2sgcGF0Y2ggNCB0aHJvdWdoIEFuZHkncyB0cmVlPwoKUmVnYXJkcywKQmpvcm4KCj4gQlIsCj4g
-LVIKPiAKPiA+ICAgICAgICAgfTsKPiA+Cj4gPiAgICAgICAgIGNwdXMgewo+ID4gQEAgLTE1MTQs
-NiArMTUyMSwxMCBAQAo+ID4KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHFjb20sZ211ID0g
-PCZnbXU+Owo+ID4KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHphcC1zaGFkZXIgewo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtZW1vcnktcmVnaW9uID0gPCZ6YXBfc2hh
-ZGVyX3JlZ2lvbj47Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+ID4gKwo+ID4gICAg
-ICAgICAgICAgICAgICAgICAgICAgZ3B1X29wcF90YWJsZTogb3BwLXRhYmxlIHsKPiA+ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJvcGVyYXRpbmctcG9pbnRz
-LXYyIjsKPiA+Cj4gPiAtLQo+ID4gMi43LjQKPiA+Cj4gPiBfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwo+ID4gRnJlZWRyZW5vIG1haWxpbmcgbGlzdAo+ID4g
-RnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+ID4gaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8KX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJl
-bm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZnJlZWRyZW5v
+
+On 3/14/2019 3:15 AM, Sowjanya Komatineni wrote:
+> This patch adds update_dcmd_desc interface to cqhci_host_ops to
+> allow hosts to update any of the DCMD task descriptor attributes
+> and parameters.
+>
+> Tested-by: Jon Hunter <jonathanh@nvidia.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+
+Thanks,
+
+Reviewed-by: Ritesh Harjani <riteshh@codeaurora.org>
+
+> ---
+>   drivers/mmc/host/cqhci.c | 2 ++
+>   drivers/mmc/host/cqhci.h | 2 ++
+>   2 files changed, 4 insertions(+)
+>
+> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
+> index a8af682a9182..d59cb0a51964 100644
+> --- a/drivers/mmc/host/cqhci.c
+> +++ b/drivers/mmc/host/cqhci.c
+> @@ -537,6 +537,8 @@ static void cqhci_prep_dcmd_desc(struct mmc_host *mmc,
+>   		 CQHCI_ACT(0x5) |
+>   		 CQHCI_CMD_INDEX(mrq->cmd->opcode) |
+>   		 CQHCI_CMD_TIMING(timing) | CQHCI_RESP_TYPE(resp_type));
+> +	if (cq_host->ops->update_dcmd_desc)
+> +		cq_host->ops->update_dcmd_desc(mmc, mrq, &data);
+>   	*task_desc |= data;
+>   	desc = (u8 *)task_desc;
+>   	pr_debug("%s: cqhci: dcmd: cmd: %d timing: %d resp: %d\n",
+> diff --git a/drivers/mmc/host/cqhci.h b/drivers/mmc/host/cqhci.h
+> index 9e68286a07b4..8c8ec6f01c45 100644
+> --- a/drivers/mmc/host/cqhci.h
+> +++ b/drivers/mmc/host/cqhci.h
+> @@ -210,6 +210,8 @@ struct cqhci_host_ops {
+>   	u32 (*read_l)(struct cqhci_host *host, int reg);
+>   	void (*enable)(struct mmc_host *mmc);
+>   	void (*disable)(struct mmc_host *mmc, bool recovery);
+> +	void (*update_dcmd_desc)(struct mmc_host *mmc, struct mmc_request *mrq,
+> +				 u64 *data);
+>   };
+>   
+>   static inline void cqhci_writel(struct cqhci_host *host, u32 val, int reg)
