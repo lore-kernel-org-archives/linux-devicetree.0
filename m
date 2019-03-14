@@ -1,161 +1,81 @@
-Return-Path: <SRS0=iGTx=RQ=linux.intel.com=sakari.ailus@kernel.org>
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH 1/1] device property: Add fwnode_graph_get_endpoint_by_id
-Date: Wed, 13 Mar 2019 18:42:46 +0200
-Message-Id: <20190313164246.23321-1-sakari.ailus@linux.intel.com>
-To: rafael@kernel.org
-Cc: robh@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=0oJi=RR=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2 7/7] arm64: dts: renesas: r8a774c0-cat874: Enable usb role switch support
+Date: Thu, 14 Mar 2019 08:39:35 +0000
+Message-Id: <1552552775-51667-8-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1552552775-51667-1-git-send-email-biju.das@bp.renesas.com>
+References: <1552552775-51667-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-fwnode_graph_get_endpoint_by_id() is intended for obtaining local
-endpoints by a given port number or both endpoint and port numbers.
-fwnode_graph_get_endpoint_by_id() is slightly different from its OF
-counterpart is of_graph_get_endpoint_by_regs(): instead of using -1 as a
-value to signify that a port or an endpoint number does not matter, it
-uses flags to look for equal or greater port or endpoint. It also
-implements a flag to return only endpoints that point to a remote device
-which is available, i.e. those that a driver generally would be interested
-in.
+This patch enables TI HD3SS3220 device and support usb role switch
+for the CAT 874 platform.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 ---
-Hi Rafael, Rob, others,
+V1-->V2
+  * New patch
+---
+ arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 39 +++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-I'd like to add this in order to move away from iterative graph endpoint
-parsing in V4L2 drivers. As noted above, the functionality is not an exact
-match with the OF counterpart, but the OF counterpart provides less
-functionality than what a driver gets by using the old existing iterative
-API. If you like, I can add a function that is an exact match, but I'd
-like to have this one as well.
-
-Most drivers will in practice just get the first endpoint from ports
-they're interested in. I'll post the V4L2 patches in the near future.
-
- drivers/base/property.c  | 78 ++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/property.h | 22 ++++++++++++++
- 2 files changed, 100 insertions(+)
-
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 8b91ab380d14..b77bb9cf7d56 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -984,6 +984,84 @@ fwnode_graph_get_remote_node(const struct fwnode_handle *fwnode, u32 port_id,
- EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_node);
+diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+index d9d55c8..ea74d21 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
++++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+@@ -80,6 +80,34 @@
+ 	clock-frequency = <48000000>;
+ };
  
- /**
-+ * fwnode_graph_get_endpoint_by_id - get endpoint node by port and endpoint
-+ *				       numbers
-+ * @fwnode: pointer to parent fwnode_handle containing the graph
-+ * @port: identifier of the port node
-+ * @endpoint: identifier of the endpoint node under the port node
-+ * @flags: fwnode graph flags
-+ *
-+ * Returns the fwnode handle to the local endpoint corresponding the port and
-+ * endpoint IDs or NULL if not found.
-+ *
-+ * Flags may be set in order to obtain the next port or endpoint instead of just
-+ * returning the specified one or none at all, or to only return endpoints that
-+ * belong to a device that is available.
-+ *
-+ * Use fwnode_node_put() on the endpoint fwnode handle when done using it.
-+ */
-+struct fwnode_handle *
-+fwnode_graph_get_endpoint_by_id(const struct fwnode_handle *fwnode,
-+				  u32 port, u32 endpoint,
-+				  enum fwnode_graph_get_endpoint_flags flags)
-+{
-+	struct fwnode_handle *ep = NULL, *best_ep = NULL;
-+	unsigned int best_ep_id = 0, best_port_id = 0;
-+	bool port_next = flags & FWNODE_GRAPH_PORT_NEXT;
-+	bool endpoint_next = flags & FWNODE_GRAPH_ENDPOINT_NEXT;
-+	bool available = flags & FWNODE_GRAPH_ENDPOINT_AVAILABLE;
++&i2c0 {
++	status = "okay";
++	clock-frequency = <100000>;
 +
-+	while ((ep = fwnode_graph_get_next_endpoint(fwnode, ep))) {
-+		struct fwnode_endpoint fwnode_ep = { 0 };
-+		int ret;
++	hd3ss3220@47 {
++		compatible = "ti,hd3ss3220";
++		reg = <0x47>;
++		interrupt-parent = <&gpio6>;
++		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
 +
-+		if (available) {
-+			struct fwnode_handle *dev;
++		usb_con: connector {
++			compatible = "usb-c-connector";
++			label = "USB-C";
++			data-role = "dual";
++		};
 +
-+			dev = fwnode_graph_get_remote_port_parent(ep);
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+			if (!fwnode_device_is_available(dev)) {
-+				fwnode_handle_put(dev);
-+				continue;
-+			}
-+
-+			fwnode_handle_put(dev);
-+		}
-+
-+		ret = fwnode_graph_parse_endpoint(ep, &fwnode_ep);
-+		if (ret < 0)
-+			continue;
-+
-+		if (port_next) {
-+			if (fwnode_ep.port < port ||
-+			    (best_ep && best_port_id < fwnode_ep.port))
-+				continue;
-+		} else if (fwnode_ep.port != port) {
-+			continue;
-+		}
-+
-+		if (endpoint_next) {
-+			if (fwnode_ep.id < endpoint ||
-+			    (best_ep && best_ep_id < fwnode_ep.id))
-+				continue;
-+		} else if (fwnode_ep.id != endpoint) {
-+			continue;
-+		}
-+
-+		if (!port_next && !endpoint_next)
-+			return ep;
-+
-+		fwnode_handle_put(best_ep);
-+		best_ep = fwnode_handle_get(ep);
-+		best_port_id = fwnode_ep.port;
-+		best_ep_id = fwnode_ep.id;
-+	}
-+
-+	return best_ep;
-+}
-+EXPORT_SYMBOL_GPL(fwnode_graph_get_endpoint_by_id);
-+
-+/**
-  * fwnode_graph_parse_endpoint - parse common endpoint node properties
-  * @fwnode: pointer to endpoint fwnode_handle
-  * @endpoint: pointer to the fwnode endpoint data structure
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 3789ec755fb6..40db39ac1969 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -304,6 +304,28 @@ struct fwnode_handle *
- fwnode_graph_get_remote_node(const struct fwnode_handle *fwnode, u32 port,
- 			     u32 endpoint);
- 
-+/**
-+ * enum fwnode_graph_get_endpoint_flags - Flags for finding an endpoint
-+ *
-+ * @FWNODE_GRAPH_PORT_NEXT: if no specified port is found, pick the smallest one
-+ *			    found which is greater than specified
-+ * @FWNODE_GRAPH_ENDPOINT_NEXT: if no specified endpoint is found, obtain the
-+ *				smallest endpoint number greater than specified
-+ * @FWNODE_GRAPH_ENDPOINT_AVAILABLE: require that the device to which the remote
-+ *				     endpoint of the given endpoint belongs to,
-+ *				     is available
-+ */
-+enum fwnode_graph_get_endpoint_flags {
-+	FWNODE_GRAPH_PORT_NEXT		= 0x00000001,
-+	FWNODE_GRAPH_ENDPOINT_NEXT	= 0x00000002,
-+	FWNODE_GRAPH_ENDPOINT_AVAILABLE	= 0x00000004,
++			hd3ss3220_ep: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&usb3peri_role_switch>;
++			};
++		};
++	};
 +};
 +
-+struct fwnode_handle *
-+fwnode_graph_get_endpoint_by_id(const struct fwnode_handle *fwnode,
-+				  u32 port, u32 endpoint,
-+				  enum fwnode_graph_get_endpoint_flags flags);
+ &i2c1 {
+ 	pinctrl-0 = <&i2c1_pins>;
+ 	pinctrl-names = "default";
+@@ -160,6 +188,17 @@
+ &usb3_peri0 {
+ 	companion = <&xhci0>;
+ 	status = "okay";
++	usb-role-switch;
 +
- #define fwnode_graph_for_each_endpoint(fwnode, child)			\
- 	for (child = NULL;						\
- 	     (child = fwnode_graph_get_next_endpoint(fwnode, child)); )
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		usb3peri_role_switch: endpoint@0 {
++			reg = <0>;
++			remote-endpoint = <&hd3ss3220_ep>;
++		};
++	};
+ };
+ 
+ &xhci0 {
 -- 
-2.11.0
+2.7.4
