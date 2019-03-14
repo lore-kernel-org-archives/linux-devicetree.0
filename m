@@ -1,35 +1,71 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 4/7] dt-bindings: phy: Add document for phy-mtk-ufs
-Date: Thu, 14 Mar 2019 11:38:25 -0500
-Message-ID: <CAL_JsqKXxgYTqHrND+M7=8+aUe4pSo5b=UtukcuG6BH05e2+rw@mail.gmail.com>
-References: <1552536516-12723-1-git-send-email-stanley.chu@mediatek.com>
- <1552536516-12723-6-git-send-email-stanley.chu@mediatek.com>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 4/4] arm64: dts: sdm845: Add zap shader
+ region for GPU
+Date: Thu, 14 Mar 2019 12:59:01 -0400
+Message-ID: <CAF6AEGvhYQfnP2yJ89xCX56uOzvTi6Ui+5Znxt_C4jAKBoLhUw@mail.gmail.com>
+References: <1552414422-9568-1-git-send-email-jcrouse@codeaurora.org>
+ <1552414422-9568-5-git-send-email-jcrouse@codeaurora.org>
+ <CAF6AEGt74Hs+VMgMOMAyFw9FGk5mrY2NU07JUh=OKSOhj-h6CA@mail.gmail.com>
+ <20190314052020.GC6435@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1552536516-12723-6-git-send-email-stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Martin K. Petersen" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?UTF-8?B?Q2h1bi1IdW5nIFd1ICjlt6vpp7/lro8p?= <chun-hung.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?S3VvaG9uZyBXYW5nICjnjovlnIvptLsp?= <kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UGV0ZXIgV2FuZyAo546L5L+h5Y+LKQ==?= <peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, avri.altman-Sjgp3cTcYWE@public.gmane.org, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Li Wei <liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, pedrom.sousa-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20190314052020.GC6435@tuxbook-pro>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 11:09 PM Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->
-> Add UFS M-PHY node document for MediaTek SoC chips.
->
-> Signed-off-by: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/phy/phy-mtk-ufs.txt   | 38 +++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
-
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+T24gVGh1LCBNYXIgMTQsIDIwMTkgYXQgMToyMCBBTSBCam9ybiBBbmRlcnNzb24KPGJqb3JuLmFu
+ZGVyc3NvbkBsaW5hcm8ub3JnPiB3cm90ZToKPgo+IE9uIFdlZCAxMyBNYXIgMDg6NDIgUERUIDIw
+MTksIFJvYiBDbGFyayB3cm90ZToKPgo+ID4gT24gVHVlLCBNYXIgMTIsIDIwMTkgYXQgMjoxNCBQ
+TSBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNlQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPiA+ID4KPiA+
+ID4gU29tZSBBZHJlbm8gR1BVIHRhcmdldHMgcmVxdWlyZSBhIHNwZWNpYWwgemFwIHNoYWRlciB0
+byBicmluZyB0aGUgR1BVCj4gPiA+IG91dCBvZiBzZWN1cmUgbW9kZS4gRGVmaW5lIGEgcmVnaW9u
+IHRvIGFsbG9jYXRlIGFuZCBzdG9yZSB0aGUgemFwCj4gPiA+IHNoYWRlci4KPiA+ID4KPiA+ID4g
+U2lnbmVkLW9mZi1ieTogSm9yZGFuIENyb3VzZSA8amNyb3VzZUBjb2RlYXVyb3JhLm9yZz4KPiA+
+ID4gLS0tCj4gPiA+Cj4gPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kg
+fCAxMSArKysrKysrKysrKwo+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKykK
+PiA+ID4KPiA+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUu
+ZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQo+ID4gPiBpbmRleCBm
+ZWQ3YTI5Li41MjY0NTZkIDEwMDY0NAo+ID4gPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fj
+b20vc2RtODQ1LmR0c2kKPiA+ID4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0
+NS5kdHNpCj4gPiA+IEBAIC0xMDAsNiArMTAwLDExIEBACj4gPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgIG5vLW1hcDsKPiA+ID4gICAgICAgICAgICAgICAgIH07Cj4gPiA+Cj4gPiA+ICsgICAg
+ICAgICAgICAgICB6YXBfc2hhZGVyX3JlZ2lvbjogbWVtb3J5QDhjNDE1MDAwIHsKPiA+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDAgMHg4YzQxNTAwMCAwIDB4MjAwMD47Cj4gPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgIG5vLW1hcDsKPiA+ID4gKyAgICAgICAgICAgICAgIH07
+Cj4gPiA+ICsKPiA+ID4gICAgICAgICAgICAgICAgIG1wc3NfcmVnaW9uOiBtZW1vcnlAOGUwMDAw
+MDAgewo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MCAweDhlMDAwMDAwIDAg
+MHg3ODAwMDAwPjsKPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgbm8tbWFwOwo+ID4gPiBA
+QCAtMTA5LDYgKzExNCw4IEBACj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDww
+IDB4OTY1MDAwMDAgMCAweDIwMDAwMD47Cj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIG5v
+LW1hcDsKPiA+ID4gICAgICAgICAgICAgICAgIH07Cj4gPiA+ICsKPiA+ID4gKwo+ID4KPiA+IEkg
+Z3Vlc3Mgd2UgZG9uJ3QgcmVhbGx5IG5lZWQgdGhpcyBodW5rLi4KPiA+Cj4KPiBJJ2xsIHRyaW0g
+dGhhdCBhcyBJIHBpY2sgdXAgdGhlIHBhdGNoLgo+Cj4gPiBvdGhlciB0aGFuIHRoYXQsIHRoZSBz
+ZXJpZXMgbGd0bQo+ID4KPgo+IFdpbGwgeW91IHBpY2sgdXAgcGF0Y2ggMS0zIGFuZCBJJ2xsIHBp
+Y2sgcGF0Y2ggNCB0aHJvdWdoIEFuZHkncyB0cmVlPwoKeWVhaCwgc291bmRzIGdvb2QuCgpCUiwK
+LVIKCj4gUmVnYXJkcywKPiBCam9ybgo+Cj4gPiBCUiwKPiA+IC1SCj4gPgo+ID4gPiAgICAgICAg
+IH07Cj4gPiA+Cj4gPiA+ICAgICAgICAgY3B1cyB7Cj4gPiA+IEBAIC0xNTE0LDYgKzE1MjEsMTAg
+QEAKPiA+ID4KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgcWNvbSxnbXUgPSA8JmdtdT47
+Cj4gPiA+Cj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHphcC1zaGFkZXIgewo+ID4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG1lbW9yeS1yZWdpb24gPSA8JnphcF9zaGFk
+ZXJfcmVnaW9uPjsKPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsKPiA+ID4gKwo+ID4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICBncHVfb3BwX3RhYmxlOiBvcHAtdGFibGUgewo+ID4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAib3BlcmF0aW5n
+LXBvaW50cy12MiI7Cj4gPiA+Cj4gPiA+IC0tCj4gPiA+IDIuNy40Cj4gPiA+Cj4gPiA+IF9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gPiA+IEZyZWVkcmVu
+byBtYWlsaW5nIGxpc3QKPiA+ID4gRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+ID4g
+PiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVu
+bwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJl
+bm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8=
