@@ -1,7 +1,7 @@
 From: <yongqiang.niu@mediatek.com>
-Subject: [RESEND PATCH v1 08/18] drm/mediatek: add component OVL1_2L
-Date: Thu, 14 Mar 2019 20:05:10 +0800
-Message-ID: <1552565120-24329-9-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [RESEND PATCH v1 13/18] drm/mediatek: add ddp write register common api
+Date: Thu, 14 Mar 2019 20:05:15 +0800
+Message-ID: <1552565120-24329-14-git-send-email-yongqiang.niu@mediatek.com>
 References: <1552565120-24329-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,37 +14,67 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This patch add component OVL1_2L
+This patch add ddp write register common api
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 1 +
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 24 ++++++++++++++++++++++++
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |  9 +++++++++
+ 2 files changed, 33 insertions(+)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-index 1b2d9e9..63f4b1e 100644
+index a97e27b..1c0f9cc 100644
 --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
 +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-@@ -267,6 +267,7 @@ struct mtk_ddp_comp_match {
- 	[DDP_COMPONENT_OVL0]	= { MTK_DISP_OVL,	0, NULL },
- 	[DDP_COMPONENT_OVL1]	= { MTK_DISP_OVL,	1, NULL },
- 	[DDP_COMPONENT_OVL0_2L]	= { MTK_DISP_OVL,	2, NULL },
-+	[DDP_COMPONENT_OVL1_2L]	= { MTK_DISP_OVL,	3, NULL },
- 	[DDP_COMPONENT_PWM0]	= { MTK_DISP_PWM,	0, NULL },
- 	[DDP_COMPONENT_PWM1]	= { MTK_DISP_PWM,	1, NULL },
- 	[DDP_COMPONENT_PWM2]	= { MTK_DISP_PWM,	2, NULL },
+@@ -84,6 +84,30 @@
+ #define DITHER_ADD_LSHIFT_G(x)			(((x) & 0x7) << 4)
+ #define DITHER_ADD_RSHIFT_G(x)			(((x) & 0x7) << 0)
+ 
++void mtk_ddp_write(unsigned int value, struct mtk_ddp_comp *comp,
++		   unsigned int offset)
++{
++	writel(value, comp->regs + offset);
++}
++
++void mtk_ddp_write_relaxed(unsigned int value,
++			   struct mtk_ddp_comp *comp,
++			   unsigned int offset)
++{
++	writel_relaxed(value, comp->regs + offset);
++}
++
++void mtk_ddp_write_mask(unsigned int value,
++			struct mtk_ddp_comp *comp,
++			unsigned int offset,
++			unsigned int mask)
++{
++	unsigned int tmp = readl(comp->regs + offset);
++
++	tmp = (tmp & ~mask) | (value & mask);
++	writel(tmp, comp->regs + offset);
++}
++
+ void mtk_dither_set(struct mtk_ddp_comp *comp, unsigned int bpc,
+ 		    unsigned int CFG)
+ {
 diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-index 3c74b63..6905647 100644
+index f2ab0b3..b908172 100644
 --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
 +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-@@ -60,6 +60,7 @@ enum mtk_ddp_comp_id {
- 	DDP_COMPONENT_OVL0,
- 	DDP_COMPONENT_OVL0_2L,
- 	DDP_COMPONENT_OVL1,
-+	DDP_COMPONENT_OVL1_2L,
- 	DDP_COMPONENT_PWM0,
- 	DDP_COMPONENT_PWM1,
- 	DDP_COMPONENT_PWM2,
+@@ -189,5 +189,14 @@ int mtk_ddp_comp_init(struct device *dev, struct device_node *comp_node,
+ void mtk_ddp_comp_unregister(struct drm_device *drm, struct mtk_ddp_comp *comp);
+ void mtk_dither_set(struct mtk_ddp_comp *comp, unsigned int bpc,
+ 		    unsigned int CFG);
++void mtk_ddp_write(unsigned int value, struct mtk_ddp_comp *comp,
++		   unsigned int offset);
++void mtk_ddp_write_relaxed(unsigned int value,
++			   struct mtk_ddp_comp *comp,
++			   unsigned int offset);
++void mtk_ddp_write_mask(unsigned int value,
++			struct mtk_ddp_comp *comp,
++			unsigned int offset,
++			unsigned int mask);
+ 
+ #endif /* MTK_DRM_DDP_COMP_H */
 -- 
 1.8.1.1.dirty
