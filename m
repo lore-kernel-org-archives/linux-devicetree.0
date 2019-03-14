@@ -1,79 +1,42 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH] ARM: dts: am335x-evmsk: Correct the regulators for the audio
- codec
-Date: Thu, 14 Mar 2019 15:20:47 +0200
-Message-ID: <20190314132047.30708-1-peter.ujfalusi@ti.com>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Subject: MT7621 PCIe PHY
+Date: Thu, 14 Mar 2019 14:22:08 +0100
+Message-ID: <20190314132210.654-1-sergio.paracuellos@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kishon@ti.com
+Cc: linux-kernel@vger.kernel.org, driverdev-devel@linuxdriverproject.org, devicetree@vger.kernel.org, john@phrozen.org, linux-mips@vger.kernel.org, robh+dt@kernel.org, neil@brown.name
 List-Id: devicetree@vger.kernel.org
 
-Correctly map the regulators used by tlv320aic3106.
-Both 1.8V and 3.3V for the codec is derived from VBAT via fixed regulators.
+This series adds support for the PCIe PHY found in the Mediatek
+MT7621 SoC.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- arch/arm/boot/dts/am335x-evmsk.dts | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
+This is the first attempt to get feedback of what is missing in
+this driver to be promoted from staging.
 
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-index b128998097ce..2c2d8b5b8cf5 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -73,6 +73,24 @@
- 		enable-active-high;
- 	};
- 
-+	/* TPS79518 */
-+	v1_8d_reg: fixedregulator-v1_8d {
-+		compatible = "regulator-fixed";
-+		regulator-name = "v1_8d";
-+		vin-supply = <&vbat>;
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
-+	/* TPS78633 */
-+	v3_3d_reg: fixedregulator-v3_3d {
-+		compatible = "regulator-fixed";
-+		regulator-name = "v3_3d";
-+		vin-supply = <&vbat>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
- 	leds {
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&user_leds_s0>;
-@@ -501,10 +519,10 @@
- 		status = "okay";
- 
- 		/* Regulators */
--		AVDD-supply = <&vaux2_reg>;
--		IOVDD-supply = <&vaux2_reg>;
--		DRVDD-supply = <&vaux2_reg>;
--		DVDD-supply = <&vbat>;
-+		AVDD-supply = <&v3_3d_reg>;
-+		IOVDD-supply = <&v3_3d_reg>;
-+		DRVDD-supply = <&v3_3d_reg>;
-+		DVDD-supply = <&v1_8d_reg>;
- 	};
- };
- 
+There is also a 'mt7621-pci' driver which is the controller part
+which is still in staging and is a client of this phy.
+
+Both drivers have been tested together in a gnubee1 board.
+
+Thanks in advance for your time.
+
+Best regards,
+     Sergio Paracuellos
+
+Sergio Paracuellos (2):
+  phy: ralink: Add PHY driver for MT7621 PCIe PHY
+  dt-bindings: phy: Add binding for Mediatek MT7621 PCIe PHY
+
+ .../bindings/phy/mediatek,mt7621-pci-phy.txt  |  54 +++
+ drivers/phy/ralink/Kconfig                    |   7 +
+ drivers/phy/ralink/Makefile                   |   1 +
+ drivers/phy/ralink/phy-mt7621-pci.c           | 387 ++++++++++++++++++
+ 4 files changed, 449 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt
+ create mode 100644 drivers/phy/ralink/phy-mt7621-pci.c
+
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.19.1
