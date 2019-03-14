@@ -1,115 +1,162 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH V3 2/5] pwm: Add i.MX TPM PWM driver support
-Date: Thu, 14 Mar 2019 10:22:11 +0100
-Message-ID: <20190314092211.rt36ynjjsdesszut@pengutronix.de>
-References: <1552544534-5295-1-git-send-email-Anson.Huang@nxp.com>
- <1552544534-5295-3-git-send-email-Anson.Huang@nxp.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 4/4] leds: netdev trigger: allow setting initial values
+ in device tree
+Date: Thu, 14 Mar 2019 10:36:59 +0100
+Message-ID: <20190314093659.srtlgqljcasbawva@pengutronix.de>
+References: <20190311144227.GA4404@amd>
+ <20190313202615.22883-1-linux@rasmusvillemoes.dk>
+ <20190313202615.22883-5-linux@rasmusvillemoes.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1552544534-5295-3-git-send-email-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Robin Gong <yibin.gong@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "stefan@agner.ch" <stefan@agner.ch>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
+In-Reply-To: <20190313202615.22883-5-linux@rasmusvillemoes.dk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Pavel Machek <pavel@ucw.cz>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 06:27:20AM +0000, Anson Huang wrote:
-> i.MX7ULP has TPM(Low Power Timer/Pulse Width Modulation Module)
-> inside, add TPM PWM driver support.
-> =
+Hello,
 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On Wed, Mar 13, 2019 at 09:26:15PM +0100, Rasmus Villemoes wrote:
+> It can be quite convenient to initialize a netdev-triggered LED with a
+> device name and setting the rx,tx,link properties from device tree,
+> instead of having to do that in an init script in userspace.
+
+Well, you'd do this in an udev rule instead of an init script.
+
+> My main motivation for this is to be able to switch away from the
+> deprecated CONFIG_CAN_LEDS, so add an example based on that and add a
+> pointer in the net/can/Kconfig file.
+> 
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 > ---
-> Changes since V2:
-> 	- Add "IMX_" as prefix to macro define as TPM is already used;
-> 	- Use macro define for channel registers address instead of calculation =
-in everywhere.
-> 	- Add limitations statement in copyright.
-> ---
->  drivers/pwm/Kconfig       |  10 ++
->  drivers/pwm/Makefile      |   1 +
->  drivers/pwm/pwm-imx-tpm.c | 343 ++++++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 354 insertions(+)
->  create mode 100644 drivers/pwm/pwm-imx-tpm.c
-> =
-
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index a8f47df..c1cbb43 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -201,6 +201,16 @@ config PWM_IMX
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-imx.
->  =
-
-> +config PWM_IMX_TPM
-> +	tristate "i.MX TPM PWM support"
-> +	depends on ARCH_MXC
-> +	help
-> +	  Generic PWM framework driver for i.MX7ULP TPM module, TPM's full
-> +	  name is Low Power Timer/Pulse Width Modulation Module.
+>  .../devicetree/bindings/leds/common.txt       | 17 ++++++++++
+>  drivers/leds/trigger/ledtrig-netdev.c         | 31 +++++++++++++++++++
+>  drivers/net/can/Kconfig                       |  3 +-
+>  3 files changed, 50 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index 7cb88460a47c..4f3a97e73417 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -43,6 +43,23 @@ Optional properties for child nodes:
+>                  Documentation/ABI/testing/sysfs-class-led-trigger-netdev)
+>                  to reflect the state and activity of a net device.
+>  
+> +                The optional child node netdev can be used to
+> +                configure initial values for the link, rx, tx and
+> +                device_name properties. For example, setting
+> +                linux,default-trigger = "netdev" and adding the child
+> +                node
 > +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-imx-tpm.
+> +                netdev {
+> +                    rx;
+> +                    tx;
+> +                    link;
+> +                    device-name = "can0";
+
+Maybe make this:
+
+	device = <&can0>;
+
+?
+
+> +                };
 > +
->  config PWM_JZ4740
->  	tristate "Ingenic JZ47xx PWM support"
->  	depends on MACH_INGENIC
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 9c676a0..64e036c 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -18,6 +18,7 @@ obj-$(CONFIG_PWM_FSL_FTM)	+=3D pwm-fsl-ftm.o
->  obj-$(CONFIG_PWM_HIBVT)		+=3D pwm-hibvt.o
->  obj-$(CONFIG_PWM_IMG)		+=3D pwm-img.o
->  obj-$(CONFIG_PWM_IMX)		+=3D pwm-imx.o
-> +obj-$(CONFIG_PWM_IMX_TPM)	+=3D pwm-imx-tpm.o
->  obj-$(CONFIG_PWM_JZ4740)	+=3D pwm-jz4740.o
->  obj-$(CONFIG_PWM_LP3943)	+=3D pwm-lp3943.o
->  obj-$(CONFIG_PWM_LPC18XX_SCT)	+=3D pwm-lpc18xx-sct.o
-> diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
-> new file mode 100644
-> index 0000000..cdb29f6
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-imx-tpm.c
-> @@ -0,0 +1,343 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2018-2019 NXP.
-> + *
-> + * Limitations:
-> + * - The TPM counter and period counter are shared between
-> + *   multiple channels, so all channels should use same period
-> + *   settings.
-> + * - When a channel is disabled, its polarity settings will be
-> + *   saved and its output will be disabled by clearing polarity
-> + *   setting, when channel is enabled, polarity settings will be
-> + *   restored and output will be enabled again.
-> + * - ONLY when all channels are disabled, then TPM counter will
-> + *   be disabled.
+> +                can be used to replace 'linux,default-trigger =
+> +                "can0-rxtx"' that relies on the deprecated
+> +                CONFIG_CAN_LEDS.
 
-I wouldn't list the last two items in this section. These are
-implementation details that a PWM consumer doesn't need to bother with.
-These are fine to be noted in a code comment at the appropriate place.
+Mentioning "CONFIG_CAN_LEDS" is wrong for a binding document that is
+supposed to be independent from the kernel.
 
-Other than that please look at my feedback for the previous series that
-I just sent out. I think most things still apply to this version.
+>  - led-pattern : Array of integers with default pattern for certain triggers.
+>                  Each trigger may parse this property differently:
+>                  - one-shot : two numbers specifying delay on and delay off (in ms),
+> diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
+> index 55153a7e8433..1f7c86df1e91 100644
+> --- a/drivers/leds/trigger/ledtrig-netdev.c
+> +++ b/drivers/leds/trigger/ledtrig-netdev.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/list.h>
+>  #include <linux/module.h>
+>  #include <linux/netdevice.h>
+> +#include <linux/of.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/timer.h>
+>  #include "../leds.h"
+> @@ -395,6 +396,35 @@ static void netdev_trig_work(struct work_struct *work)
+>  			(atomic_read(&trigger_data->interval)*2));
+>  }
+>  
+> +static void netdev_trig_of_init(struct led_classdev *led_cdev,
+> +				struct led_netdev_data *trigger_data)
+> +{
+> +	struct device_node *np = led_cdev->dev->of_node;
+> +	const char *device_name;
+> +
+> +	if (!np)
+> +		return;
+> +	np = of_get_child_by_name(np, "netdev");
+> +	if (!np)
+> +		return;
+> +
+> +	if (of_property_read_bool(np, "link"))
+> +		__set_bit(NETDEV_LED_LINK, &trigger_data->mode);
+> +	if (of_property_read_bool(np, "tx"))
+> +		__set_bit(NETDEV_LED_TX, &trigger_data->mode);
+> +	if (of_property_read_bool(np, "rx"))
+> +		__set_bit(NETDEV_LED_RX, &trigger_data->mode);
+> +	if (!of_property_read_string(np, "device-name", &device_name)) {
+> +		unsigned len = strlen(device_name);
+> +
+> +		if (len < IFNAMSIZ)
+> +			set_device(trigger_data, device_name, len);
+
+if set_device contained the length check you'd have it in only one
+place.
+
+> +	}
+> +	set_baseline_state(trigger_data);
+> +
+> +	of_node_put(np);
+> +}
+> +
+>  static int netdev_trig_activate(struct led_classdev *led_cdev)
+>  {
+>  	struct led_netdev_data *trigger_data;
+> @@ -418,6 +448,7 @@ static int netdev_trig_activate(struct led_classdev *led_cdev)
+>  	trigger_data->mode = 0;
+>  	atomic_set(&trigger_data->interval, msecs_to_jiffies(50));
+>  	trigger_data->last_activity = 0;
+> +	netdev_trig_of_init(led_cdev, trigger_data);
+>  
+>  	led_set_trigger_data(led_cdev, trigger_data);
+>  
+> diff --git a/drivers/net/can/Kconfig b/drivers/net/can/Kconfig
+> index e0f0ad7a550a..91703a96b636 100644
+> --- a/drivers/net/can/Kconfig
+> +++ b/drivers/net/can/Kconfig
+> @@ -77,7 +77,8 @@ config CAN_LEDS
+>  	# everything that this driver is doing. This is marked as broken
+>  	# because it uses stuff that is intended to be changed or removed.
+>  	# Please consider switching to the netdev trigger and confirm it
+> -	# fulfills your needs instead of fixing this driver.
+> +	# fulfills your needs instead of fixing this driver. See e.g.
+> +	# Documentation/devicetree/bindings/leds/common.txt
+>  	depends on BROKEN
+>  	select LEDS_TRIGGERS
+>  	---help---
+
+This hunk can better live in the patch adding to
+Documentation/devicetree/bindings/leds/common.txt or a separate patch.
 
 Best regards
 Uwe
 
--- =
-
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
 Industrial Linux Solutions                 | http://www.pengutronix.de/  |
