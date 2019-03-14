@@ -1,107 +1,156 @@
-Return-Path: <SRS0=ezLt=RQ=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v3 0/6] iio: gyro: add fxas21002c driver
-Date: Wed, 13 Mar 2019 18:39:56 +0000
-Message-Id: <20190313184002.2501-1-rui.silva@linaro.org>
+Return-Path: <SRS0=+6Cn=RR=gmail.com=tduszyns@kernel.org>
+Date: Thu, 14 Mar 2019 20:31:18 +0100
+From: Tomasz Duszynski <tduszyns@gmail.com>
+Subject: Re: [PATCH v3 4/6] iio: gyro: fxas21002c: add spi driver
+Message-ID: <20190314193117.GC23693@arch>
+References: <20190313184002.2501-1-rui.silva@linaro.org>
+ <20190313184002.2501-5-rui.silva@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190313184002.2501-5-rui.silva@linaro.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
-Sorry about the delay, being traveling and other stuff to do, but
-here goes v3.
+On Wed, Mar 13, 2019 at 06:40:00PM +0000, Rui Miguel Silva wrote:
+> Add driver to talk over spi to a fxas21002c gyroscope device and use
+> the core as main controller.
+>
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> ---
+>  drivers/iio/gyro/Kconfig          |  7 +++-
+>  drivers/iio/gyro/Makefile         |  1 +
+>  drivers/iio/gyro/fxas21002c_spi.c | 69 +++++++++++++++++++++++++++++++
+>  3 files changed, 76 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/iio/gyro/fxas21002c_spi.c
+>
+> diff --git a/drivers/iio/gyro/Kconfig b/drivers/iio/gyro/Kconfig
+> index 71b6552ee06b..61c00cee037d 100644
+> --- a/drivers/iio/gyro/Kconfig
+> +++ b/drivers/iio/gyro/Kconfig
+> @@ -78,7 +78,8 @@ config FXAS21002C
+>         select IIO_BUFFER
+>         select IIO_TRIGGERED_BUFFER
+>         select FXAS21002C_I2C if (I2C)
+> -       depends on I2C
+> +       select FXAS21002C_SPI if (SPI)
+> +       depends on (I2C || SPI_MASTER)
+>         help
+>           Say yes here to build support for NXP FXAS21002C Tri-axis Gyro
+>           Sensor driver connected via I2C or SPI.
+> @@ -90,6 +91,10 @@ config FXAS21002C_I2C
+>         tristate
+>         select REGMAP_I2C
+>
+> +config FXAS21002C_SPI
+> +       tristate
+> +       select REGMAP_SPI
+> +
+>  config HID_SENSOR_GYRO_3D
+>  	depends on HID_SENSOR_HUB
+>  	select IIO_BUFFER
+> diff --git a/drivers/iio/gyro/Makefile b/drivers/iio/gyro/Makefile
+> index adc18a5eb283..45cbd5dc644e 100644
+> --- a/drivers/iio/gyro/Makefile
+> +++ b/drivers/iio/gyro/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_BMG160_I2C) += bmg160_i2c.o
+>  obj-$(CONFIG_BMG160_SPI) += bmg160_spi.o
+>  obj-$(CONFIG_FXAS21002C) += fxas21002c_core.o
+>  obj-$(CONFIG_FXAS21002C_I2C) += fxas21002c_i2c.o
+> +obj-$(CONFIG_FXAS21002C_SPI) += fxas21002c_spi.o
+>
+>  obj-$(CONFIG_HID_SENSOR_GYRO_3D) += hid-sensor-gyro-3d.o
+>
+> diff --git a/drivers/iio/gyro/fxas21002c_spi.c b/drivers/iio/gyro/fxas21002c_spi.c
+> new file mode 100644
+> index 000000000000..88a4e9acad24
+> --- /dev/null
+> +++ b/drivers/iio/gyro/fxas21002c_spi.c
+> @@ -0,0 +1,69 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Driver for NXP Fxas21002c Gyroscope - SPI
+> + *
+> + * Copyright (C) 2019 Linaro Ltd.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/of.h>
 
-This series introduce a NXP fxas21002c tri axis gyroscope driver [0]
-It add a core implementaiton plus an i2c and spi.
+Are we actually using something from of.h?
 
-This device can be found in the warp7 board [1], where it was tested.
+> +#include <linux/regmap.h>
+> +#include <linux/spi/spi.h>
 
----
-Cheers,
-   Rui
+mod_devicetable.h and err.h are missing, would you mind adding these?
 
-v2->v3:
-Jonathan Cameron:
-  - cacheline aligned (DMA safe buffer)
-     Great presentation [2] and links in the presentation, thanks
-  - global renaming, including filenames, fxas2100x->fxas21002c
-  - provide spi info in dts bidings
-  - Remove SPI_MASTER in Kconfig i2c patch and move it to right patch
-  - remove extra blank line in comment
-  - add break range_value_from_fs after found
-  - in range_value_from_fs use local variable
-  - remove mode check at mode_set
-  - combine two if statements in mode_set
-  - in scale_get return 0 and let caller to set IIO_VAL_FRACTIONAL
-  - remove dev_err from vdd_io regulator get
-  - handle regulator error path
-  - devm_add_action
-  - check unwind order
-  - simplify data in _suspend and alike
-  - disable regulators at suspend
-  - error handling at _resume
-  - return -EAGAIN at runtime_resume
+> +
+> +#include "fxas21002c.h"
+> +
+> +static const struct regmap_config fxas21002c_regmap_spi_conf = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = FXAS21002C_REG_CTRL3,
+> +};
+> +
+> +static int fxas21002c_spi_probe(struct spi_device *spi)
+> +{
+> +	const struct spi_device_id *id = spi_get_device_id(spi);
+> +	struct regmap *regmap;
+> +
+> +	regmap = devm_regmap_init_spi(spi, &fxas21002c_regmap_spi_conf);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(&spi->dev, "Failed to register spi regmap: %ld\n",
+> +			PTR_ERR(regmap));
+> +		return PTR_ERR(regmap);
+> +	}
+> +
+> +	return fxas21002c_core_probe(&spi->dev, regmap, spi->irq, id->name);
+> +}
+> +
+> +static int fxas21002c_spi_remove(struct spi_device *spi)
+> +{
+> +	fxas21002c_core_remove(&spi->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct spi_device_id fxas21002c_spi_id[] = {
+> +	{ "fxas21002c", 0 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(spi, fxas21002c_spi_id);
+> +
+> +static const struct of_device_id fxas21002c_spi_of_match[] = {
+> +	{ .compatible = "nxp,fxas21002c", },
+> +	{ },
 
-Rob Herring:
-   - Set label as gyroscope
+Presumably compatible chips will end up before sentinel which means
+you can drop this extra coma.
 
-- add interrupt to bindings
-- add entry to maintainers
+> +};
+> +MODULE_DEVICE_TABLE(of, fxas21002c_spi_of_match);
+> +
+> +static struct spi_driver fxas21002c_spi_driver = {
+> +	.driver = {
+> +		.name = "fxas21002c_spi",
+> +		.pm = &fxas21002c_pm_ops,
+> +		.of_match_table = of_match_ptr(fxas21002c_spi_of_match),
 
+Some say of_match_ptr breaks ACPI probing so generally it better to
+avoid it.
 
-v1->v2:
-Peter Meerwal-Stadler:
-  - changed (c) to current year
-  - add regmap include file in .h
-  - fix comments s/cuttof/cutoff/
-  - add more info in mutex comment
-  - check value in range_fs_from_value
-  - ret not checked in range_value_from_fs
-  - move mode to enum type
-  - remove line between value get and validation of value in all file
-  - pre-write, regmap_field_write, post_write refactoring
-  - check val2 and val == 0 in write raw
-  - check in_anglvel_scale: 7.8125?
-  - trigger_handler: 2 => sizeof(s16)
-  - check buffer size
-  - print %02% to output chip id
-  - remove !! as state is bool
-  - trigger probe return devm_iio_trigger_register
-  - remove error msg in case of devm_iio_device_register
-Fabio Estebam:
-  - rename FXAS2100X to FXAS21002
-  - change compatible nxp,fxas2100x to the exact support
-  - add VDD and VDDIO regulators in bindings and driver
-
-[0]: https://www.nxp.com/docs/en/data-sheet/FXAS21002.pdf
-[1]: https://www.element14.com/community/community/designcenter/single-board-computers/warp7/overview
-[2]: https://events.linuxfoundation.org/wp-content/uploads/2017/12/20181023-Wolfram-Sang-ELCE18-safe_dma_buffers.pdf
-
-Rui Miguel Silva (6):
-  iio: gyro: add DT bindings to fxas21002c
-  iio: gyro: add core driver for fxas21002c
-  iio: gyro: fxas21002c: add i2c driver
-  iio: gyro: fxas21002c: add spi driver
-  ARM: dts: imx7s-warp: add fxas21002c gyroscope
-  MAINTAINERS: add entry for fxas21002c gyro driver
-
- .../bindings/iio/gyroscope/nxp,fxas21002c.txt |  26 +
- MAINTAINERS                                   |  10 +
- arch/arm/boot/dts/imx7s-warp.dts              |   7 +
- drivers/iio/gyro/Kconfig                      |  22 +
- drivers/iio/gyro/Makefile                     |   3 +
- drivers/iio/gyro/fxas21002c.h                 | 151 +++
- drivers/iio/gyro/fxas21002c_core.c            | 989 ++++++++++++++++++
- drivers/iio/gyro/fxas21002c_i2c.c             |  73 ++
- drivers/iio/gyro/fxas21002c_spi.c             |  69 ++
- 9 files changed, 1350 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
- create mode 100644 drivers/iio/gyro/fxas21002c.h
- create mode 100644 drivers/iio/gyro/fxas21002c_core.c
- create mode 100644 drivers/iio/gyro/fxas21002c_i2c.c
- create mode 100644 drivers/iio/gyro/fxas21002c_spi.c
-
--- 
-2.20.1
+> +	},
+> +	.probe		= fxas21002c_spi_probe,
+> +	.remove		= fxas21002c_spi_remove,
+> +	.id_table	= fxas21002c_spi_id,
+> +};
+> +module_spi_driver(fxas21002c_spi_driver);
+> +
+> +MODULE_AUTHOR("Rui Miguel Silva <rui.silva@linaro.org>");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("FXAS21002C SPI Gyro driver");
+> --
+> 2.20.1
+>
