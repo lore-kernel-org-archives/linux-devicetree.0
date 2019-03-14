@@ -1,14 +1,13 @@
 From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [RFC PATCH V0 0/7] media: platform: Add support for Face
- Detection (FD) on mt8183 SoC
-Date: Thu, 14 Mar 2019 09:40:49 +0100
-Message-ID: <1967d769-48c2-1d49-464a-6895cd2ff102@xs4all.nl>
-References: <1550648893-42050-1-git-send-email-Jerry-Ch.chen@mediatek.com>
+Subject: Re: [RFC PATCH V0 0/4] media: support Mediatek sensor interface driver
+Date: Thu, 14 Mar 2019 09:42:18 +0100
+Message-ID: <d65ff907-51af-cf95-9f95-84aef95af505@xs4all.nl>
+References: <1550733718-31702-1-git-send-email-louis.kuo@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550648893-42050-1-git-send-email-Jerry-Ch.chen@mediatek.com>
+In-Reply-To: <1550733718-31702-1-git-send-email-louis.kuo@mediatek.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -19,36 +18,33 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, tfiga@chromium.org, matthias.bgg@gmail.com, mchehab@kernel.org
-Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, zwisler@chromium.org, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+To: Louis Kuo <louis.kuo@mediatek.com>, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, tfiga@chromium.org, matthias.bgg@gmail.com, mchehab@kernel.org
+Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, Jerry-ch.Chen@mediatek.com, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, zwisler@chromium.org, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jerry-ch Chen,
+Hi Louis Kuo,
 
-On 2/20/19 8:48 AM, Jerry-ch Chen wrote:
+On 2/21/19 8:21 AM, Louis Kuo wrote:
 > Hello,
 > 
-> This is the first version of the RFC patch series adding Face Detection
-> (FD) driver on Mediatek mt8183 SoC, which will be used in camera features
-> on CrOS application. It belongs to the first Mediatek's camera driver
-> series based on V4L2 and media controller framework. I posted the main part
-> of the FD driver as RFC to discuss first and would like some review
-> comments on the overall structure of the driver.
+> This is the first version of the RFC patch series adding Sensor Inferface(seninf) driver on
+> Mediatek mt8183 SoC, which will be used in camera features on CrOS application.
+> It belongs to the first Mediatek's camera driver series based on V4L2 and media controller framework.
+> I posted the main part of the seninf driver as RFC to discuss first and would like some review comments
+> on the overall structure of the driver.
 > 
-> Face Detection (FD) unit provide hardware accelerated face detection
-> feature. It can detect different sizes of faces in a given image.
-> Furthermore, it has the capability to detect the faces of Rotation-in-Plane
-> from -180 to +180 degrees and Rotation-off-Plane from -90 to +90 degrees.
-> 
-> The driver is implemented with V4L2 and media controller framework. We have
-> the following entities describing the FD path.
+> The driver is implemented with V4L2 framework.
+> 1. Register as a V4L2 sub-device.
+> 2. Only one entity with sink pads linked to camera sensors for choosing desired camera sensor by setup link
+>    and with source pads linked to cam-io for routing different types of decoded packet datas to PASS1 driver
+>    to generate sensor image frame and meta-data.
 
 Just a high-level comment before you post the next version of this series:
 
 Please compile the latest version of v4l2-compliance (part of
 git://linuxtv.org/v4l-utils.git) and run it against your driver:
 
-v4l2-compliance -m /dev/mediaX
+v4l2-compliance -d /dev/videoX -s10 -f
 
 Whenever you post a new version of this series, please do a 'git pull' of
 the v4l-utils repo, recompile and retest with v4l2-compliance and post the
@@ -56,88 +52,40 @@ test results in the cover letter.
 
 Obviously, there should be no FAILs and probably no warnings.
 
-I suspect that streaming (e.g. adding the -s10 option to v4l2-compliance)
-probably won't work since v4l2-compliance doesn't know about the meta data
-formats.
-
 Regards,
 
 	Hans
 
 > 
-> 1. Meta input (output video device): connects to FD sub device. It accepts
->    the input parameter buffer from userspace. The metadata interface used
->    currently is only a temporary solution to kick off driver development
->    and is not ready for reviewed yet.
+> The overall file structure of the seninf driver is as following:
 > 
-> 2. RAW (output video device): connects to FD sub device. It accepts input
->    image buffer from userspace.
+> * mtk_seninf.c: Implement software and HW control flow of seninf driver.
+> * seninf_drv_def.h: Define data structure and enumeration.
+> * seninf_reg.h: Define HW register R/W macros and HW register names.
 > 
-> 3. FD (sub device): connects to Meta output. When processing an image,
->    FD hardware only returns the statistics of detected faces so it needs
->    only one capture video devices to return the streaming data to the user.
+> Louis Kuo (4):
+>   media: platform: mtk-isp: Add Mediatek sensor interface driver
+>   media: platform: Add Mediatek sensor interface driver KConfig
+>   dt-bindings: mt8183: Added sensor interface dt-bindings
+>   dts: arm64: mt8183: Add sensor interface nodes
 > 
-> 4. Meta output (capture video device): Return the result of detected faces
->    as metadata output.
-> 
->    The overall file structure of the FD driver is as following:
-> 
-> * mtk_fd-dev-ctx-core.c: Implements common software flow of FD driver.
-> * mtk_fd-v4l2.c: Static FD contexts configuration.
-> * mtk_fd.c: Controls the hardware flow.
-> * mtk_fd-dev.c: Implements context-independent flow.
-> * mtk_fd-ctrl.c: Handles the HW ctrl request from userspace.
-> * mtk_fd-smem-drv.c: Provides the shared memory management required
-> operation. We reserved a memory region for the co-processor and FD to
-> exchange the hardware configuration data.
-> * mtk_fd-v4l2-util.c: Implements V4L2 and vb2 ops.
-> 
-> Jerry-ch Chen (7):
->   dt-bindings: mt8183: Add binding for FD shared memory
->   dts: arm64: mt8183: Add FD shared memory node
->   dt-bindings: mt8183: Added FD-SMEM dt-bindings
->   dt-bindings: mt8183: Added FD dt-bindings
->   dts: arm64: mt8183: Add FD nodes
->   media: platform: Add Mediatek FD driver KConfig
->   platform: mtk-isp: Add Mediatek FD driver
-> 
->  .../devicetree/bindings/media/mediatek,fd_smem.txt |   28 +
->  .../bindings/media/mediatek,mt8183-fd.txt          |   30 +
->  .../mediatek,reserve-memory-fd_smem.txt            |   44 +
->  arch/arm64/boot/dts/mediatek/mt8183.dtsi           |   28 +
->  drivers/media/platform/Kconfig                     |    2 +
->  drivers/media/platform/mtk-isp/Kconfig             |   10 +
->  drivers/media/platform/mtk-isp/Makefile            |   16 +
->  drivers/media/platform/mtk-isp/fd/Makefile         |   38 +
->  drivers/media/platform/mtk-isp/fd/mtk_fd-core.h    |  157 +++
->  drivers/media/platform/mtk-isp/fd/mtk_fd-ctx.h     |  299 ++++++
->  .../platform/mtk-isp/fd/mtk_fd-dev-ctx-core.c      |  917 +++++++++++++++++
->  drivers/media/platform/mtk-isp/fd/mtk_fd-dev.c     |  355 +++++++
->  drivers/media/platform/mtk-isp/fd/mtk_fd-dev.h     |  198 ++++
->  .../media/platform/mtk-isp/fd/mtk_fd-smem-drv.c    |  452 +++++++++
->  drivers/media/platform/mtk-isp/fd/mtk_fd-smem.h    |   25 +
->  .../media/platform/mtk-isp/fd/mtk_fd-v4l2-util.c   | 1046 ++++++++++++++++++++
->  drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.c    |  115 +++
->  drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.h    |   36 +
->  drivers/media/platform/mtk-isp/fd/mtk_fd.c         |  730 ++++++++++++++
->  drivers/media/platform/mtk-isp/fd/mtk_fd.h         |  127 +++
->  20 files changed, 4653 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek,fd_smem.txt
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt
->  create mode 100644 Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-fd_smem.txt
+>  .../devicetree/bindings/media/mediatek-seninf.txt  |   52 +
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi           |   34 +
+>  drivers/media/platform/Makefile                    |    2 +
+>  drivers/media/platform/mtk-isp/Kconfig             |   16 +
+>  drivers/media/platform/mtk-isp/Makefile            |   14 +
+>  drivers/media/platform/mtk-isp/isp_50/Makefile     |   17 +
+>  .../media/platform/mtk-isp/isp_50/seninf/Makefile  |    4 +
+>  .../platform/mtk-isp/isp_50/seninf/mtk_seninf.c    | 1339 ++++++++++++++++++++
+>  .../mtk-isp/isp_50/seninf/seninf_drv_def.h         |  201 +++
+>  .../platform/mtk-isp/isp_50/seninf/seninf_reg.h    |  992 +++++++++++++++
+>  10 files changed, 2671 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-seninf.txt
 >  create mode 100644 drivers/media/platform/mtk-isp/Kconfig
 >  create mode 100644 drivers/media/platform/mtk-isp/Makefile
->  create mode 100644 drivers/media/platform/mtk-isp/fd/Makefile
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-core.h
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-ctx.h
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-dev-ctx-core.c
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-dev.c
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-dev.h
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-smem-drv.c
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-smem.h
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2-util.c
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.c
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.h
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd.c
->  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd.h
+>  create mode 100644 drivers/media/platform/mtk-isp/isp_50/Makefile
+>  create mode 100644 drivers/media/platform/mtk-isp/isp_50/seninf/Makefile
+>  create mode 100644 drivers/media/platform/mtk-isp/isp_50/seninf/mtk_seninf.c
+>  create mode 100644 drivers/media/platform/mtk-isp/isp_50/seninf/seninf_drv_def.h
+>  create mode 100644 drivers/media/platform/mtk-isp/isp_50/seninf/seninf_reg.h
 > 
