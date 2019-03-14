@@ -1,117 +1,61 @@
-From: <yongqiang.niu@mediatek.com>
-Subject: [RESEND PATCH v1 09/18] drm/mediatek: add component DITHER
-Date: Thu, 14 Mar 2019 20:05:11 +0800
-Message-ID: <1552565120-24329-10-git-send-email-yongqiang.niu@mediatek.com>
-References: <1552565120-24329-1-git-send-email-yongqiang.niu@mediatek.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v4 1/4] dt: lm3532: Add lm3532 dt doc and update ti_lmu
+ doc
+Date: Thu, 14 Mar 2019 07:52:04 -0500
+Message-ID: <75def574-5fe4-46c0-664f-8c6583b69668@ti.com>
+References: <20190313123249.17258-1-dmurphy@ti.com>
+ <20190314093912.GA10637@amd>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552565120-24329-1-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <20190314093912.GA10637@amd>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: ck.hu@mediatek.com, p.zabel@pengutronix.de, robh+dt@kernel.org, matthias.bgg@gmail.com
-Cc: airlied@linux.ie, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Bibby.Hsieh@mediatek.com, yt.shen@mediatek.com, Yongqiang Niu <yongqiang.niu@mediatek.com>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, tony@atomide.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+Hello
 
-This patch add component DITHER
+On 3/14/19 4:39 AM, Pavel Machek wrote:
+> Hi!
+> 
+> Could you maybe slow down a bit.
+> 
+> "Hey, I should review this". "Hmm, there are two new versions in the
+> mailbox in the meantime, good thing I waited."
+> 
 
-Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
----
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 32 +++++++++++++++++++++++++++++
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |  2 ++
- 2 files changed, 34 insertions(+)
+Yes.  I am going to hold off on v5 until the code gets reviewed.
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-index 63f4b1e..a97e27b 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-@@ -47,6 +47,12 @@
- #define CCORR_RELAY_MODE			BIT(0)
- #define DISP_CCORR_SIZE				0x0030
- 
-+#define DISP_DITHER_EN				0x0000
-+#define DITHER_EN				BIT(0)
-+#define DISP_DITHER_CFG                        0x0020
-+#define DITHER_RELAY_MODE			BIT(0)
-+#define DISP_DITHER_SIZE			0x0030
-+
- #define DISP_GAMMA_EN				0x0000
- #define DISP_GAMMA_CFG				0x0020
- #define DISP_GAMMA_SIZE				0x0030
-@@ -155,6 +161,24 @@ static void mtk_ccorr_stop(struct mtk_ddp_comp *comp)
- 	writel_relaxed(0x0, comp->regs + DISP_CCORR_EN);
- }
- 
-+static void mtk_dither_config(struct mtk_ddp_comp *comp, unsigned int w,
-+			      unsigned int h, unsigned int vrefresh,
-+			      unsigned int bpc)
-+{
-+	writel(h << 16 | w, comp->regs + DISP_DITHER_SIZE);
-+	writel(DITHER_RELAY_MODE, comp->regs + DISP_DITHER_CFG);
-+}
-+
-+static void mtk_dither_start(struct mtk_ddp_comp *comp)
-+{
-+	writel(DITHER_EN, comp->regs + DISP_DITHER_EN);
-+}
-+
-+static void mtk_dither_stop(struct mtk_ddp_comp *comp)
-+{
-+	writel_relaxed(0x0, comp->regs + DISP_DITHER_EN);
-+}
-+
- static void mtk_gamma_config(struct mtk_ddp_comp *comp, unsigned int w,
- 			     unsigned int h, unsigned int vrefresh,
- 			     unsigned int bpc)
-@@ -209,6 +233,12 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
- 	.stop = mtk_ccorr_stop,
- };
- 
-+static const struct mtk_ddp_comp_funcs ddp_dither = {
-+	.config = mtk_dither_config,
-+	.start = mtk_dither_start,
-+	.stop = mtk_dither_stop,
-+};
-+
- static const struct mtk_ddp_comp_funcs ddp_gamma = {
- 	.gamma_set = mtk_gamma_set,
- 	.config = mtk_gamma_config,
-@@ -233,6 +263,7 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
- 	[MTK_DISP_CCORR] = "ccorr",
- 	[MTK_DISP_AAL] = "aal",
- 	[MTK_DISP_GAMMA] = "gamma",
-+	[MTK_DISP_DITHER] = "dither",
- 	[MTK_DISP_UFOE] = "ufoe",
- 	[MTK_DSI] = "dsi",
- 	[MTK_DPI] = "dpi",
-@@ -255,6 +286,7 @@ struct mtk_ddp_comp_match {
- 	[DDP_COMPONENT_CCORR]	= { MTK_DISP_CCORR,	0, &ddp_ccorr },
- 	[DDP_COMPONENT_COLOR0]	= { MTK_DISP_COLOR,	0, NULL },
- 	[DDP_COMPONENT_COLOR1]	= { MTK_DISP_COLOR,	1, NULL },
-+	[DDP_COMPONENT_DITHER]	= { MTK_DISP_DITHER,	0, &ddp_dither },
- 	[DDP_COMPONENT_DPI0]	= { MTK_DPI,		0, NULL },
- 	[DDP_COMPONENT_DPI1]	= { MTK_DPI,		1, NULL },
- 	[DDP_COMPONENT_DSI0]	= { MTK_DSI,		0, NULL },
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-index 6905647..b0064c52 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-@@ -29,6 +29,7 @@ enum mtk_ddp_comp_type {
- 	MTK_DISP_WDMA,
- 	MTK_DISP_COLOR,
- 	MTK_DISP_CCORR,
-+	MTK_DISP_DITHER,
- 	MTK_DISP_AAL,
- 	MTK_DISP_GAMMA,
- 	MTK_DISP_UFOE,
-@@ -48,6 +49,7 @@ enum mtk_ddp_comp_id {
- 	DDP_COMPONENT_CCORR,
- 	DDP_COMPONENT_COLOR0,
- 	DDP_COMPONENT_COLOR1,
-+	DDP_COMPONENT_DITHER,
- 	DDP_COMPONENT_DPI0,
- 	DDP_COMPONENT_DPI1,
- 	DDP_COMPONENT_DSI0,
+>> +	ramp-up-ms = <1024>;
+>> +	ramp-down-ms = <65536>;
+> 
+> This is wrong.
+> 
+
+Ack.  Changed in it in the example I deleted.
+
+>> +	led@1 {
+>> +		reg = <1>;
+>> +		led-sources = <1>;
+>> +		ti,led-mode = <0>;
+>> +		label = "keypad";
+> 
+> "platform::kbd_backlight"
+
+Being an example does it have to match DT contents?
+
+I can change it since I have to touch the file anyway.
+
+Dan
+
+
+> 									Pavel
+> 
+
+
 -- 
-1.8.1.1.dirty
+------------------
+Dan Murphy
