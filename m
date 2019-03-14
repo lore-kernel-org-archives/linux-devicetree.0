@@ -1,14 +1,15 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+From: "Leonidas P. Papadakos" <papadakospan@gmail.com>
 Subject: Re: [PATCH] arm64: dts: rockchip: add usb3 controller node for RK3328
  SoCs
-Date: Thu, 14 Mar 2019 20:02:55 +0100
-Message-ID: <5530020.nRYjYCbPGH@diego>
+Date: Thu, 14 Mar 2019 21:05:23 +0200
+Message-ID: <1552590323.1381.0@gmail.com>
 References: <20190314182035.7101-1-papadakospan@gmail.com>
+ <5530020.nRYjYCbPGH@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190314182035.7101-1-papadakospan@gmail.com>
+In-Reply-To: <5530020.nRYjYCbPGH@diego>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,81 +19,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Leonidas P. Papadakos" <papadakospan@gmail.com>
+To: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, william.wu@rock-chips.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Am Donnerstag, 14. M=E4rz 2019, 19:20:35 CET schrieb Leonidas P. Papadakos:
-> From: William Wu <william.wu@rock-chips.com>
-> =
-
-> RK3328 has one USB 3.0 OTG controller which uses DWC_USB3
-> core's general architecture. It can act as static xHCI host
-> controller, static device controller, USB 3.0/2.0 OTG basing
-> on ID of USB3.0 PHY.
-> =
-
-> Signed-off-by: William Wu <william.wu@rock-chips.com>
-> Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
-
-the rk3328 usb3-phy has an issue with detecting any plugin events
-after a previous device got removed - see the inno-usb3-phy driver
-in the vendor kernel.
-
-So once you unplug an usb device from the port it won't detect
-a newly connected device. This is also the reason why the original
-usb3 patches are still sitting around in my tree, as I don't want to
-codify a binding that may not last once somebody actually manages
-to go around that issue with kernel code - especially as the node
-below claims to be compatible with the rk3399 dwc3.
-
-
-Heiko
-
-> ---
->  arch/arm64/boot/dts/rockchip/rk3328.dtsi | 27 ++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> =
-
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> b/arch/arm64/boot/dts/rockchip/rk3328.dtsi index 84f14b132..f5c1ab596
-> 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> @@ -917,6 +917,33 @@
->  		status =3D "disabled";
->  	};
-> =
-
-> +	usbdrd3: usb@ff600000 {
-> +		compatible =3D "rockchip,rk3328-dwc3", "rockchip,rk3399-dwc3";
-> +		clocks =3D <&cru SCLK_USB3OTG_REF>, <&cru SCLK_USB3OTG_SUSPEND>,
-> +			 <&cru ACLK_USB3OTG>;
-> +		clock-names =3D "ref_clk", "suspend_clk",
-> +			      "bus_clk";
-> +		#address-cells =3D <2>;
-> +		#size-cells =3D <2>;
-> +		ranges;
-> +		status =3D "disabled";
-> +
-> +		usbdrd_dwc3: dwc3@ff600000 {
-> +			compatible =3D "snps,dwc3";
-> +			reg =3D <0x0 0xff600000 0x0 0x100000>;
-> +			interrupts =3D <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-> +			dr_mode =3D "otg";
-> +			phy_type =3D "utmi_wide";
-> +			snps,dis_enblslpm_quirk;
-> +			snps,dis-u2-freeclk-exists-quirk;
-> +			snps,dis_u2_susphy_quirk;
-> +			snps,dis_u3_susphy_quirk;
-> +			snps,dis-del-phy-power-chg-quirk;
-> +			snps,dis-tx-ipgap-linecheck-quirk;
-> +			status =3D "disabled";
-> +		};
-> +	};
-> +
->  	gic: interrupt-controller@ff811000 {
->  		compatible =3D "arm,gic-400";
->  		#interrupt-cells =3D <3>;
+CgrOo8+EzrnPgiDOoM61zrwsIDE0IM6czrHPgSwgMjAxOSBhdCA5OjAyIM6czpwsIM6/L863IEhl
+aWtvIAo9P2lzby04ODU5LTE/cT9TdD1GQ2JuZXI/PSA8aGVpa29Ac250ZWNoLmRlPiDOrc6zz4HO
+sc+IzrU6Cj4gSGksCj4gCj4gQW0gRG9ubmVyc3RhZywgMTQuIE3DpHJ6IDIwMTksIDE5OjIwOjM1
+IENFVCBzY2hyaWViIExlb25pZGFzIFAuIAo+IFBhcGFkYWtvczoKPj4gIEZyb206IFdpbGxpYW0g
+V3UgPHdpbGxpYW0ud3VAcm9jay1jaGlwcy5jb20+Cj4+IAo+PiAgUkszMzI4IGhhcyBvbmUgVVNC
+IDMuMCBPVEcgY29udHJvbGxlciB3aGljaCB1c2VzIERXQ19VU0IzCj4+ICBjb3JlJ3MgZ2VuZXJh
+bCBhcmNoaXRlY3R1cmUuIEl0IGNhbiBhY3QgYXMgc3RhdGljIHhIQ0kgaG9zdAo+PiAgY29udHJv
+bGxlciwgc3RhdGljIGRldmljZSBjb250cm9sbGVyLCBVU0IgMy4wLzIuMCBPVEcgYmFzaW5nCj4+
+ICBvbiBJRCBvZiBVU0IzLjAgUEhZLgo+PiAKPj4gIFNpZ25lZC1vZmYtYnk6IFdpbGxpYW0gV3Ug
+PHdpbGxpYW0ud3VAcm9jay1jaGlwcy5jb20+Cj4+ICBTaWduZWQtb2ZmLWJ5OiBMZW9uaWRhcyBQ
+LiBQYXBhZGFrb3MgPHBhcGFkYWtvc3BhbkBnbWFpbC5jb20+Cj4gCj4gdGhlIHJrMzMyOCB1c2Iz
+LXBoeSBoYXMgYW4gaXNzdWUgd2l0aCBkZXRlY3RpbmcgYW55IHBsdWdpbiBldmVudHMKPiBhZnRl
+ciBhIHByZXZpb3VzIGRldmljZSBnb3QgcmVtb3ZlZCAtIHNlZSB0aGUgaW5uby11c2IzLXBoeSBk
+cml2ZXIKPiBpbiB0aGUgdmVuZG9yIGtlcm5lbC4KPiAKPiBTbyBvbmNlIHlvdSB1bnBsdWcgYW4g
+dXNiIGRldmljZSBmcm9tIHRoZSBwb3J0IGl0IHdvbid0IGRldGVjdAo+IGEgbmV3bHkgY29ubmVj
+dGVkIGRldmljZS4gVGhpcyBpcyBhbHNvIHRoZSByZWFzb24gd2h5IHRoZSBvcmlnaW5hbAo+IHVz
+YjMgcGF0Y2hlcyBhcmUgc3RpbGwgc2l0dGluZyBhcm91bmQgaW4gbXkgdHJlZSwgYXMgSSBkb24n
+dCB3YW50IHRvCj4gY29kaWZ5IGEgYmluZGluZyB0aGF0IG1heSBub3QgbGFzdCBvbmNlIHNvbWVi
+b2R5IGFjdHVhbGx5IG1hbmFnZXMKPiB0byBnbyBhcm91bmQgdGhhdCBpc3N1ZSB3aXRoIGtlcm5l
+bCBjb2RlIC0gZXNwZWNpYWxseSBhcyB0aGUgbm9kZQo+IGJlbG93IGNsYWltcyB0byBiZSBjb21w
+YXRpYmxlIHdpdGggdGhlIHJrMzM5OSBkd2MzLgo+IAo+IAo+IEhlaWtvCj4gCj4+ICAtLS0KPj4g
+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzMyOC5kdHNpIHwgMjcgCj4+ICsrKysr
+KysrKysrKysrKysrKysrKysrKwo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAyNyBpbnNlcnRpb25zKCsp
+Cj4+IAo+PiAgZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzI4
+LmR0c2kKPj4gIGIvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzMjguZHRzaSBpbmRl
+eCAKPj4gODRmMTRiMTMyLi5mNWMxYWI1OTYKPj4gIDEwMDY0NAo+PiAgLS0tIGEvYXJjaC9hcm02
+NC9ib290L2R0cy9yb2NrY2hpcC9yazMzMjguZHRzaQo+PiAgKysrIGIvYXJjaC9hcm02NC9ib290
+L2R0cy9yb2NrY2hpcC9yazMzMjguZHRzaQo+PiAgQEAgLTkxNyw2ICs5MTcsMzMgQEAKPj4gICAJ
+CXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4+ICAgCX07Cj4+IAo+PiAgKwl1c2JkcmQzOiB1c2JAZmY2
+MDAwMDAgewo+PiAgKwkJY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMzMjgtZHdjMyIsICJyb2Nr
+Y2hpcCxyazMzOTktZHdjMyI7Cj4+ICArCQljbG9ja3MgPSA8JmNydSBTQ0xLX1VTQjNPVEdfUkVG
+PiwgPCZjcnUgU0NMS19VU0IzT1RHX1NVU1BFTkQ+LAo+PiAgKwkJCSA8JmNydSBBQ0xLX1VTQjNP
+VEc+Owo+PiAgKwkJY2xvY2stbmFtZXMgPSAicmVmX2NsayIsICJzdXNwZW5kX2NsayIsCj4+ICAr
+CQkJICAgICAgImJ1c19jbGsiOwo+PiAgKwkJI2FkZHJlc3MtY2VsbHMgPSA8Mj47Cj4+ICArCQkj
+c2l6ZS1jZWxscyA9IDwyPjsKPj4gICsJCXJhbmdlczsKPj4gICsJCXN0YXR1cyA9ICJkaXNhYmxl
+ZCI7Cj4+ICArCj4+ICArCQl1c2JkcmRfZHdjMzogZHdjM0BmZjYwMDAwMCB7Cj4+ICArCQkJY29t
+cGF0aWJsZSA9ICJzbnBzLGR3YzMiOwo+PiAgKwkJCXJlZyA9IDwweDAgMHhmZjYwMDAwMCAweDAg
+MHgxMDAwMDA+Owo+PiAgKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA2NyBJUlFfVFlQRV9MRVZF
+TF9ISUdIPjsKPj4gICsJCQlkcl9tb2RlID0gIm90ZyI7Cj4+ICArCQkJcGh5X3R5cGUgPSAidXRt
+aV93aWRlIjsKPj4gICsJCQlzbnBzLGRpc19lbmJsc2xwbV9xdWlyazsKPj4gICsJCQlzbnBzLGRp
+cy11Mi1mcmVlY2xrLWV4aXN0cy1xdWlyazsKPj4gICsJCQlzbnBzLGRpc191Ml9zdXNwaHlfcXVp
+cms7Cj4+ICArCQkJc25wcyxkaXNfdTNfc3VzcGh5X3F1aXJrOwo+PiAgKwkJCXNucHMsZGlzLWRl
+bC1waHktcG93ZXItY2hnLXF1aXJrOwo+PiAgKwkJCXNucHMsZGlzLXR4LWlwZ2FwLWxpbmVjaGVj
+ay1xdWlyazsKPj4gICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+PiAgKwkJfTsKPj4gICsJfTsK
+Pj4gICsKPj4gICAJZ2ljOiBpbnRlcnJ1cHQtY29udHJvbGxlckBmZjgxMTAwMCB7Cj4+ICAgCQlj
+b21wYXRpYmxlID0gImFybSxnaWMtNDAwIjsKPj4gICAJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8Mz47
+Cj4gCj4gCj4gCj4gCk5vdyBpdCBtYWtlcyBzZW5zZS4gSSB0aG91Z2h0IGl0IHdhcyBib2FyZCBz
+cGVjaWZpYy4gSXQncyBhIGdlbmVyYWwgCnJrMzMyOCBpc3N1ZSwgdGhlbi4KVGhhbmtzIGZvciBj
+bGVhcmluZyBpdCB1cC4gKHlldCBhZ2Fpbiwgb29wcykKCgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
+bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
