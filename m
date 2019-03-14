@@ -1,94 +1,51 @@
-From: Jonas Karlman <jonas@kwiboo.se>
-Subject: Re: [PATCH] arm64: dts: rockchip: add usb3 controller node for RK3328
- SoCs
-Date: Thu, 14 Mar 2019 19:52:30 +0000
-Message-ID: <AM3PR03MB0966D234062854A5217539B8AC4B0@AM3PR03MB0966.eurprd03.prod.outlook.com>
-References: <20190314182035.7101-1-papadakospan@gmail.com>
- <5530020.nRYjYCbPGH@diego> <1552590510.1381.1@gmail.com>
- <3517438.8SjcAmMXWL@diego>
- <CAMdYzYpbv+6gJ23E_pH+EG+gOhvoJ-3vZZXEeH7UkD5qv+OO5g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMdYzYpbv+6gJ23E_pH+EG+gOhvoJ-3vZZXEeH7UkD5qv+OO5g@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <B5C19D2B23E73849874BB627772E1C8A@eurprd03.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Geis <pgwipeout@gmail.com>, =?utf-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, "Leonidas P. Papadakos" <papadakospan@gmail.com>, "william.wu@rock-chips.com" <william.wu@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] ARM: dts: exynos: Always enable necessary APIO_1V8 and ABB_1V8 regulators on Arndale Octa
+Date: Thu, 14 Mar 2019 21:02:17 +0100
+Message-ID: <20190314200217.6002-1-krzk@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SSBoYXZlIGJlZW4gdXNpbmcgdGhhdCBjbGsgcGF0Y2ggc2luY2UgSSBzdGFydGVkIGluaXRpYWwg
-dGVzdGluZyBvZiByazMzMjggb24gbWFpbmxpbmUgNC4xNiBbMV0NCmFuZCBJIGNhbm5vdCByZW1l
-bWJlciBzZWVpbmcgYW55IHJlYWwgaXNzdWUgd2l0aCB1c2IyL3VzYjMgKGJlc2lkZSB1c2IgcmVn
-dWxhdG9yIHJlbGF0ZWQgaXNzdWUpLg0KVGhlIGNsayBwYXRjaCBtYXkgaGF2ZSBoZWxwZWQgd2l0
-aCBzb21lIHVzYiBpc3N1ZXMgdGhhdCBJIG5ldmVyIGV4cGVyaWVuY2VkIDotKQ0KDQpbMV0gaHR0
-cHM6Ly9naXRodWIuY29tL0t3aWJvby9saW51eC1yb2NrY2hpcC9jb21taXRzL3JvY2tjaGlwLTQu
-MTYvZHJpdmVycy9jbGsvcm9ja2NoaXANCg0KUmVnYXJkcywNCkpvbmFzDQoNCk9uIDIwMTktMDMt
-MTQgMjA6MjQsIFBldGVyIEdlaXMgd3JvdGU6DQo+IEhhcyBhbnlvbmUgdGVzdGVkIHRoaXMgc2lu
-Y2UgSm9uYXMgS2FybG1hbidzIGNsayBwYXRjaCBsYW5kZWQ/DQo+IEkgbm90aWNlZCBhIGxvdCBv
-ZiBteSBVU0IgaG90cGx1ZyBpc3N1ZXMgZGlzYXBwZWFyZWQgd2hlbiBJIHB1bGxlZA0KPiB0aGF0
-IHBhdGNoIGluLg0KPiBFc3BlY2lhbGx5IHNpbmNlIG9uZSBvZiB0aGUgZml4ZXMgd2FzIGFjbGtf
-dXNiM290Zywgc2luY2UgaXQgd2FzDQo+IGluY29ycmVjdGx5IGRlZmluZWQgdG8gdXNiMidzIGFj
-bGsuDQo+DQo+IE9uIFRodSwgTWFyIDE0LCAyMDE5IGF0IDM6MjEgUE0gSGVpa28gU3TDvGJuZXIg
-PGhlaWtvQHNudGVjaC5kZT4gd3JvdGU6DQo+PiBIaSBhZ2FpbiA6LSkNCj4+DQo+PiBBbSBEb25u
-ZXJzdGFnLCAxNC4gTcOkcnogMjAxOSwgMjA6MDg6MzAgQ0VUIHNjaHJpZWIgTGVvbmlkYXMgUC4g
-UGFwYWRha29zOg0KPj4+IEkgbXVzdCBzYXkgd2l0aCBteSB0ZXN0aW5nLCBJIG5ldmVyIHJlYWxs
-eSBoYXZlIGFueSBkaXNjb25uZWN0cy4gTXkNCj4+PiBkcml2ZSBnZW5lcmFsbHkgd29ya3MNCj4+
-IEl0J3Mgbm90IGFueSBkaXNjb25uZWN0cywgaXQgaXMgcmVhbGx5IHdoZW4geW91IHVucGx1ZyB0
-aGUgZGV2aWNlIGZyb20NCj4+IHRoZSByb290IHBvcnQgdGhhdCB0aGUNCj4+DQo+Pj4gU3VyZWx5
-IGl0J3MgYmV0dGVyIHRoYXQgaXQgd29ya3Mgc29tZXdoYXQgdGhhbiBub3QgYXQgYWxsLg0KPj4+
-IE1heWJlIHdlIGNvdWxkIGluY2x1ZGUgdGhlIHBhdGNoZXMgYW5kIHJldmVydCB0aGVtIGxhdGVy
-IGlmIGEgc29sdXRpb24NCj4+PiBhcnJpc2VzPw0KPj4+DQo+Pj4gT3IgaXMgdGhhdCBhZ2FpbnN0
-IHRoZSBMaW51eCB3YXkgb2YgZG9pbmcgdGhpbmdzPw0KPj4gVGhlIG1haW4gaXNzdWUgaXMNCj4+
-ICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMzI4LWR3YzMiLCAicm9j
-a2NoaXAscmszMzk5LWR3YzMiOw0KPj4NCj4+IGJlY2F1c2U6DQo+PiAoMSkgT24gdGhlIGRldmlj
-ZXRyZWUtc2lkZSB5b3UgZGVjbGFyZSB0aGF0IHRoZXkgYXJlIGNvbXBhdGlibGUgd2hpY2ggbWF5
-DQo+PiAgICAgb3IgbWF5IG5vdCBjb25mbGljdCB3aXRoIG5lZWRlZCBsYXRlciBjaGFuZ2VzDQo+
-PiAoMikgT24gdGhlIGtlcm5lbC1kcml2ZXItc2lkZSB3aXRoIHRoZSBjdXJyZW50IHN0YXR1cyB0
-aGUgcmszMzI4LWR3YzMNCj4+ICAgICB3aWxsIGdldCBpZ25vcmVkIGFuZCByazMzOTktZHdjMyB1
-c2VkIHRvIGJpbmQgdG8gdGhlIGdlbmVyaWMgZHQtZHdjMw0KPj4gICAgIGRyaXZlci4NCj4+ICAg
-ICBGcm9tIGxvb2tpbmcgYXQgdGhlIFJvY2tjaGlwIGNvZGUgaW4gdGhlIHZlbmRvciBrZXJuZWwg
-d2UgbWF5IHZlcnkgd2VsbA0KPj4gICAgIG5lZWQgYSBzZXBhcmF0ZSBkcml2ZXIgdG8gaGFuZGxl
-IHRoZSBiaWcgaXNzdWUgd2hpY2ggY3JlYXRlcyB0aGUgaXNzdWUNCj4+ICAgICB3aGljaCBkcml2
-ZXIgd2lsbCBiaW5kIHRvIHRoZSBkdC1ub2RlLiBJdCB3aWxsIGJlIGVpdGhlciB0aGUgZ2VuZXJp
-YyBvbmUNCj4+ICAgICBiaW5kaW5nIHRvIHRoZSByazMzOTktZHdjMyBvciB0aGUgc3BlY2lhbCBv
-bmUgYmluZGluZyB0byByazMzMjgtZHdjMy4NCj4+ICAgICBBbmQgc2FkbHkgaXQgd2lsbCBwcm9i
-YWJseSBkZXBlbmQgb24gd2hpY2ggbW9kdWxlIGdldHMgbG9hZGVkIGZpcnN0Lg0KPj4NCj4+IEFu
-ZCBkZXZpY2V0cmVlcyBhcmUgc3VwcG9zZWQgdG8gYmUgYmFja3dhcmRzIGNvbXBhdGlibGUgc28g
-YSBuZXdlcg0KPj4ga2VybmVsIHNob3VsZCBrZWVwIHdvcmtpbmcgd2l0aCBhbiBvbGQgZGV2aWNl
-dHJlZS4NCj4+DQo+PiBBIHBvc3NpYmxlIHdheSBmb3J3YXJkIHdvdWxkIGJlIHRvIGludHJvZHVj
-ZSBhIHNlcGFyYXRlIGNvbXBhdGlibGUgZm9yDQo+PiByazMzMjggKGJvdGggaW4gdGhlIGJpbmRp
-bmcgZG9jIGFuZCB0aGUgZ2VuZXJpYyBkd2MzIGRyaXZlciksIHNvIHRoYXQNCj4+IHdlIGdldCBv
-bmx5IGENCj4+ICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMzI4LWR3
-YzMiOw0KPj4NCj4+IFdoaWNoIHRoZW4gZXZlbiBjYW4gbW92ZSBlYXNpbHkgaW50byBhIG5ldyBk
-cml2ZXIgaWYgbmVjZXNzYXJ5IHdpdGhvdXQNCj4+IGNhdXNpbmcgaXNzdWVzIGZvciBleGlzdGlu
-ZyBkZXZpY2V0cmVlcy4NCj4+DQo+PiBIZWlrbw0KPj4NCj4+DQo+Pg0KPj4gX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4+IExpbnV4LXJvY2tjaGlwIG1h
-aWxpbmcgbGlzdA0KPj4gTGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPj4gaHR0
-cHM6Ly9uYW0wMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0El
-MkYlMkZsaXN0cy5pbmZyYWRlYWQub3JnJTJGbWFpbG1hbiUyRmxpc3RpbmZvJTJGbGludXgtcm9j
-a2NoaXAmYW1wO2RhdGE9MDIlN0MwMSU3QyU3QzlhNGMzNWJkYTBiZjQwYjQ4Y2U1MDhkNmE4YjJi
-YjAxJTdDODRkZjllN2ZlOWY2NDBhZmI0MzVhYWFhYWFhYWFhYWElN0MxJTdDMCU3QzYzNjg4MTg4
-MjkyMjM0NzU2MCZhbXA7c2RhdGE9R0pwRDBBUVBUY0NUMEJMamIlMkJLS2RqU01sUEt2bmlxT3hp
-Z3g1cW5PRW1BJTNEJmFtcDtyZXNlcnZlZD0wDQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fDQo+IExpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdA0KPiBM
-aW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IGh0dHBzOi8vbmFtMDEuc2FmZWxp
-bmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGbGlzdHMuaW5mcmFk
-ZWFkLm9yZyUyRm1haWxtYW4lMkZsaXN0aW5mbyUyRmxpbnV4LXJvY2tjaGlwJmFtcDtkYXRhPTAy
-JTdDMDElN0MlN0M5YTRjMzViZGEwYmY0MGI0OGNlNTA4ZDZhOGIyYmIwMSU3Qzg0ZGY5ZTdmZTlm
-NjQwYWZiNDM1YWFhYWFhYWFhYWFhJTdDMSU3QzAlN0M2MzY4ODE4ODI5MjIzNDc1NjAmYW1wO3Nk
-YXRhPUdKcEQwQVFQVGNDVDBCTGpiJTJCS0tkalNNbFBLdm5pcU94aWd4NXFuT0VtQSUzRCZhbXA7
-cmVzZXJ2ZWQ9MA0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1hcm0ta2VybmVsCg==
+The PVDD_APIO_1V8 (LDO2) and PVDD_ABB_1V8 (LDO8) regulators were turned
+off by Linux kernel as unused.  However they supply critical parts of
+SoC so they should be always on:
+
+1. PVDD_APIO_1V8 supplies SYS pins (gpx[0-3], PSHOLD), HDMI level shift,
+   RTC, VDD1_12 (DRAM internal 1.8 V logic), pull-up for PMIC interrupt
+   lines, TTL/UARTR level shift, reset pins and SW-TACT1 button.
+   It also supplies unused blocks like VDDQ_SRAM (for SROM controller) and
+   VDDQ_GPIO (gpm7, gpy7).
+   The LDO2 cannot be turned off (S2MPS11 keeps it on anyway) so
+   marking it "always-on" only reflects its real status.
+
+2. PVDD_ABB_1V8 supplies Adaptive Body Bias Generator for ARM cores,
+   memory and Mali (G3D).
+
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/boot/dts/exynos5420-arndale-octa.dts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+index 3447160e1fbf..a0e27e1c0feb 100644
+--- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
++++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+@@ -107,6 +107,7 @@
+ 				regulator-name = "PVDD_APIO_1V8";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 			};
+ 
+ 			ldo3_reg: LDO3 {
+@@ -145,6 +146,7 @@
+ 				regulator-name = "PVDD_ABB_1V8";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 			};
+ 
+ 			ldo9_reg: LDO9 {
+-- 
+2.17.1
