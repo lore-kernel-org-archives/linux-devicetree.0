@@ -1,65 +1,127 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 6/6] leds: netdev trigger: allow setting initial values
- in device tree
-Date: Thu, 14 Mar 2019 16:36:45 +0100
-Message-ID: <ddc53d4c-3da8-3f00-12dc-51df4a149bcf@gmail.com>
-References: <20190313202615.22883-1-linux@rasmusvillemoes.dk>
- <20190314140619.3309-1-linux@rasmusvillemoes.dk>
- <20190314140619.3309-7-linux@rasmusvillemoes.dk>
- <742bd6b2-0a11-858e-d727-204b0313265e@gmail.com>
- <10d65087-2ae5-8ddf-e9be-02c9341b452b@rasmusvillemoes.dk>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] ARM: dts: sun8i-h3: Add support for the RerVision H3-DVK
+ board
+Date: Thu, 14 Mar 2019 16:50:11 +0100
+Message-ID: <20190314155011.znrhrxp6jyrxdodt@flea>
+References: <20190314130656.8010-1-paul.kocialkowski@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gkwgnztfmwdi3bs5"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <10d65087-2ae5-8ddf-e9be-02c9341b452b@rasmusvillemoes.dk>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190314130656.8010-1-paul.kocialkowski@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rasmus Villemoes <linux@rasmusvillemoes.dk>, Pavel Machek <pavel@ucw.cz>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On 3/14/19 4:05 PM, Rasmus Villemoes wrote:
-> On 14/03/2019 15.24, Jacek Anaszewski wrote:
->> Rasmus,
->>
->> Thank you for the update.
->> Still, there is one thing to improve.
->>
-> 
->>>    static int netdev_trig_activate(struct led_classdev *led_cdev)
->>>    {
->>>        struct led_netdev_data *trigger_data;
->>> @@ -423,6 +451,8 @@ static int netdev_trig_activate(struct
->>> led_classdev *led_cdev)
->>>        trigger_data->mode = 0;
->>>        atomic_set(&trigger_data->interval, msecs_to_jiffies(50));
->>>        trigger_data->last_activity = 0;
->>> +    if (led_cdev->flags & LED_INIT_DEFAULT_TRIGGER)
->>> +        netdev_trig_of_init(led_cdev, trigger_data);
->>
->> We don't necessarily want OF settings to be used for initialization on
->> each LED trigger activation for the LED class device, but only on the
->> first one. That's why the triggers using this flags clean it here:
->>
->> led_cdev->flags &= ~LED_INIT_DEFAULT_TRIGGER;
-> 
-> Right, I noticed that pattern, but wondered about it. If this is
-> supposed to be a general thing, why isn't it just done by the trigger
-> core after the call of led_trigger_set() in the two places the bit gets
-> set? I.e.
-> 
-> 		led_cdev->flags |= LED_INIT_DEFAULT_TRIGGER;
-> 		led_trigger_set(led_cdev, trig);
-> +		led_cdev->flags &= ~LED_INIT_DEFAULT_TRIGGER;
-> 
-> I can certainly add clearing the flag to my code, just wondering.
 
-Good point. It would have to be applied in both
-led_trigger_set_default() and led_trigger_register(). So you either
-need to add generic support for clearing the flag (and update the three
-users) or update your patch alone.
+--gkwgnztfmwdi3bs5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Best regards,
-Jacek Anaszewski
+On Thu, Mar 14, 2019 at 02:06:56PM +0100, Paul Kocialkowski wrote:
+> This is an H3-based board that sticks close to the reference design.
+>=20
+> Supported features:
+> * UART
+> * DRAM
+> * MMC
+> * eMMC
+> * Ethernet
+> * USB host
+> * USB peripheral
+> * HDMI
+>=20
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> ---
+>  arch/arm/boot/dts/Makefile                   |   1 +
+>  arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts | 119 +++++++++++++++++++
+>  2 files changed, 120 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
+>=20
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index bd40148a15b2..8db275b75214 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1078,6 +1078,7 @@ dtb-$(CONFIG_MACH_SUN8I) +=3D \
+>  	sun8i-h3-orangepi-plus.dtb \
+>  	sun8i-h3-orangepi-plus2e.dtb \
+>  	sun8i-h3-orangepi-zero-plus2.dtb \
+> +	sun8i-h3-rervision-dvk.dtb \
+>  	sun8i-r16-bananapi-m2m.dtb \
+>  	sun8i-r16-nintendo-nes-classic.dtb \
+>  	sun8i-r16-nintendo-super-nes-classic.dtb \
+> diff --git a/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts b/arch/arm/boot=
+/dts/sun8i-h3-rervision-dvk.dts
+> new file mode 100644
+> index 000000000000..94b71e064eb6
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
+> @@ -0,0 +1,119 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (C) 2019 Bootlin
+> + * Author: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun8i-h3.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +
+> +/ {
+> +	model =3D "RerVision H3-DVK";
+> +	compatible =3D "rervision,h3-dvk", "allwinner,sun8i-h3";
+> +
+> +	aliases {
+> +		ethernet0 =3D &emac;
+> +		serial0 =3D &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path =3D "serial0:115200n8";
+> +	};
+> +
+> +	connector {
+> +		compatible =3D "hdmi-connector";
+> +		type =3D "a";
+> +
+> +		port {
+> +			hdmi_connector_input: endpoint {
+> +				remote-endpoint =3D <&hdmi_connector_output>;
+
+Those are pretty long labels, how would you feel about hdmi_con_in and
+hdmi_out_con, as we've used on all the other boards?
+
+> +&mmc2_8bit_pins {
+> +	drive-strength =3D <40>;
+> +	bias-pull-up;
+> +};
+
+bias-pull-up is already set by default, and a 30mA drive strength
+should cover what the spec asks for. Did you encounter any issue with
+this?
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--gkwgnztfmwdi3bs5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXIp4MwAKCRDj7w1vZxhR
+xUGmAP9bda6GQ7eidD06h2KNY90UC3Gls/nX7OjeiHngEvp0aAD/bGJmEy8Wic9o
+0M6IE88lOXzQtoP28M0j9Z2AQQbijQ0=
+=wDzW
+-----END PGP SIGNATURE-----
+
+--gkwgnztfmwdi3bs5--
