@@ -1,61 +1,57 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 0/6] drm/bridge: Add ICN6211 MIPI-DSI/RGB bridge
-Date: Fri, 15 Mar 2019 18:38:19 +0530
-Message-ID: <20190315130825.9005-1-jagan@amarulasolutions.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH 1/6] drm/bridge: Export drm_bridge_detach
+Date: Fri, 15 Mar 2019 18:38:20 +0530
+Message-ID: <20190315130825.9005-2-jagan@amarulasolutions.com>
+References: <20190315130825.9005-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBW6HV3SAKGQERX74J7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190315130825.9005-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBzZXJpZXMgc3VwcG9ydCBDaGlwb25lIElDTjYyMTEgRFNJL1JHQiBicmlkZ2Ugc3VwcG9y
-dC4KClRoaXMgSUNONjIxMSBicmlkZ2UgaXMgdGFraW5nIGZsZXhpYmxlIGNvbmZpZ3VyYXRpb24g
-b2YgTUlQSSBEU0kKc2lnbmFsIGlucHV0IGFuZCBwcm9kdWNlIFJHQjU2NSwgUkdCNjY2LCBSR0I4
-ODggb3V0cHV0IGZvcm1hdCAKYW5kIGl0IGlzIHByZXNlbnQgaW4gdGhlIEJhbmFuYXBpIHMwNzB3
-djIwLWN0MTYgcGFuZWwuCgpJbml0aWFsbHkgc2ltaWxhciBzdXBwb3J0IGlzIHdyaXR0ZW4gYXMg
-ZHNpIHBhbmVsIGRyaXZlciwgYnV0IApiYXNlZCBvbiB0aGUgZGlzY3Vzc2lvbiBmcm9tIHRoaXMg
-dGhyZWFkIFsxXSBhbmQgaW5wdXQgZnJvbSAKIkFuZHJ6ZWogSGFqZGEiIEkgd291bGQgZW5kZWQt
-dXAgd3JpdGluZyBicmlkZ2UgZHJpdmVyLgoKcGF0Y2ggMSwgMjogZXhwb3J0IGRybV9icmlkZ2Vf
-ZGV0YWNoCgpwYXRjaCAzOiBicmlkZ2Ugc3VwcG9ydCBvbiBBbGx3aW5uZXIgRFNJIGNvbnRyb2xs
-ZXIKCnBhdGNoIDQ6IElDTjYyMTEgZHQtYmluZGluZ3MKCnBhdGNoIDU6IElDTjYyMTEgYnJpZGdl
-IGRyaXZlcgoKcGF0Y2ggNjogb3ZlcmxheSB0byBlbmFibGUgYnJpZGdlIGFuZCBwYW5lbCBvbiBC
-UEktTTY0LCB0aGlzIHdvdWxkCmV2ZW50dWFsbHkgZGVwZW5kcyBvbiAnQWxsd2lubmVyIEE2NCBN
-SVBJLURTSSIgc3VwcG9ydCBbMl0KClsyXSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3By
-b2plY3QvbGludXgtYXJtLWtlcm5lbC9saXN0Lz9zZXJpZXM9OTAxMTcKWzFdIGh0dHBzOi8vcGF0
-Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA2NTc1NzkvCgpBbnkgaW5wdXRzPwpKYWdhbi4KCkph
-Z2FuIFRla2kgKDYpOgogIGRybS9icmlkZ2U6IEV4cG9ydCBkcm1fYnJpZGdlX2RldGFjaAogIGRy
-bS9leHlub3M6IGRzaTogVXNlIGRybV9icmlkZ2VfZGV0YWNoCiAgZHJtL3N1bjRpOiBkc2k6IEFk
-ZCBicmlkZ2Ugc3VwcG9ydAogIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBicmlkZ2U6IEFkZCBJQ042
-MjExIE1JUEktRFNJIHRvIFJHQiBjb252ZXJ0b3IKICAgIGJyaWRnZQogIGRybS9icmlkZ2U6IEFk
-ZCBDaGlwb25lIElDTjYyMTEgTUlQSS1EU0kvUkdCIGNvbnZlcnRvciBicmlkZ2UKICBbRE8gTk9U
-IE1FUkdFXSBhcm02NDogZHRzOiBhbGx3aW5uZXI6IGJhbmFuYXBpLW02NDogRW5hYmxlIFMwNzBX
-VjIwLUNUMTYgRFNJIHBhbmVsCgogLi4uL2Rpc3BsYXkvYnJpZGdlL2NoaXBvbmUsaWNuNjIxMS50
-eHQgICAgICAgIHwgIDM2ICsrKwogTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgICA2ICsKIC4uLi9kdHMvYWxsd2lubmVyL3N1bjUwaS1hNjQtYmFuYW5hcGkt
-bTY0LmR0cyB8ICA2MyArKysrCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAgICAg
-ICAgICAgICAgfCAgMTAgKwogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAgICAg
-ICAgICAgIHwgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvY2hpcG9uZS1pY242MjExLmMg
-ICAgICB8IDI3NSArKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9kcm1fYnJpZGdl
-LmMgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5v
-c19kcm1fZHNpLmMgICAgICAgfCAgIDMgKy0KIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW42aV9t
-aXBpX2RzaS5jICAgICAgICB8ICA2NSArKystLQogZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjZp
-X21pcGlfZHNpLmggICAgICAgIHwgICAxICsKIGluY2x1ZGUvZHJtL2RybV9icmlkZ2UuaCAgICAg
-ICAgICAgICAgICAgICAgICB8ICAgMSArCiAxMSBmaWxlcyBjaGFuZ2VkLCA0NDMgaW5zZXJ0aW9u
-cygrKSwgMTkgZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2NoaXBvbmUsaWNuNjIxMS50eHQKIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2NoaXBvbmUtaWNuNjIxMS5j
-CgotLSAKMi4xOC4wLjMyMS5nZmZjNmZhMGUzCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWw=
+Export drm_bridge_detach from drm bridge core so-that it
+can use on respective interface or bridge driver while
+detaching the bridge.
+
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+ drivers/gpu/drm/drm_bridge.c | 1 +
+ include/drm/drm_bridge.h     | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+index 138b2711d389..569d4f345429 100644
+--- a/drivers/gpu/drm/drm_bridge.c
++++ b/drivers/gpu/drm/drm_bridge.c
+@@ -159,6 +159,7 @@ void drm_bridge_detach(struct drm_bridge *bridge)
+ 
+ 	bridge->dev = NULL;
+ }
++EXPORT_SYMBOL(drm_bridge_detach);
+ 
+ /**
+  * DOC: bridge callbacks
+diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+index 9da8c93f7976..4955e3e50fa4 100644
+--- a/include/drm/drm_bridge.h
++++ b/include/drm/drm_bridge.h
+@@ -301,6 +301,7 @@ void drm_bridge_remove(struct drm_bridge *bridge);
+ struct drm_bridge *of_drm_find_bridge(struct device_node *np);
+ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
+ 		      struct drm_bridge *previous);
++void drm_bridge_detach(struct drm_bridge *bridge);
+ 
+ bool drm_bridge_mode_fixup(struct drm_bridge *bridge,
+ 			   const struct drm_display_mode *mode,
+-- 
+2.18.0.321.gffc6fa0e3
