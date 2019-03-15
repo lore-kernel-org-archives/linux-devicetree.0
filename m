@@ -1,81 +1,53 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V4 4/5] ARM: dts: imx7ulp: Add pwm0 support
-Date: Fri, 15 Mar 2019 00:47:04 +0000
-Message-ID: <1552610505-13568-5-git-send-email-Anson.Huang@nxp.com>
-References: <1552610505-13568-1-git-send-email-Anson.Huang@nxp.com>
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Subject: [PATCH v3 mailbox+firmware 6/6] dt-bindings: firmware: Document cznic,turris-mox-rwtm binding
+Date: Fri, 15 Mar 2019 01:59:26 +0100
+Message-ID: <20190315005926.5994-7-marek.behun@nic.cz>
+References: <20190315005926.5994-1-marek.behun@nic.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552610505-13568-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20190315005926.5994-1-marek.behun@nic.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "stefan@agner.ch" <stefan@agner.ch>, Leonard Crestez <leonard.crestez@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, Robin Gong <yibin.gong@nxp.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Jassi Brar <jaswinder.singh@linaro.org>, linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, arm@kernel.org, =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add i.MX7ULP EVK board PWM0 support.
+This adds device tree binding documentation for the driver communicating
+with the rWTM firmware on Turris Mox.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
 ---
-No changes.
----
- arch/arm/boot/dts/imx7ulp-evk.dts | 12 ++++++++++++
- arch/arm/boot/dts/imx7ulp.dtsi    | 10 ++++++++++
- 2 files changed, 22 insertions(+)
+ .../firmware/cznic,turris-mox-rwtm.txt        | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/cznic,turris-mox-rwtm.txt
 
-diff --git a/arch/arm/boot/dts/imx7ulp-evk.dts b/arch/arm/boot/dts/imx7ulp-=
-evk.dts
-index a09026a..3f5ea18 100644
---- a/arch/arm/boot/dts/imx7ulp-evk.dts
-+++ b/arch/arm/boot/dts/imx7ulp-evk.dts
-@@ -40,6 +40,12 @@
- 	status =3D "okay";
- };
-=20
-+&pwm0 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_pwm0>;
-+	status =3D "okay";
-+};
+diff --git a/Documentation/devicetree/bindings/firmware/cznic,turris-mox-rwtm.txt b/Documentation/devicetree/bindings/firmware/cznic,turris-mox-rwtm.txt
+new file mode 100644
+index 000000000000..338169dea7bb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/firmware/cznic,turris-mox-rwtm.txt
+@@ -0,0 +1,19 @@
++Turris Mox rWTM firmware driver
 +
- &usdhc0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&pinctrl_usdhc0>;
-@@ -57,6 +63,12 @@
- 		bias-pull-up;
- 	};
-=20
-+	pinctrl_pwm0: pwm0grp {
-+		fsl,pins =3D <
-+			IMX7ULP_PAD_PTF2__TPM4_CH1	0x2
-+		>;
-+	};
++Required properties:
++ - compatible		: Should be "cznic,turris-mox-rwtm"
++ - mboxes		: Must contain a reference to associated mailbox
 +
- 	pinctrl_usdhc0: usdhc0grp {
- 		fsl,pins =3D <
- 			IMX7ULP_PAD_PTD1__SDHC0_CMD	0x43
-diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dts=
-i
-index fca6e50..6361c4e 100644
---- a/arch/arm/boot/dts/imx7ulp.dtsi
-+++ b/arch/arm/boot/dts/imx7ulp.dtsi
-@@ -124,6 +124,16 @@
- 			status =3D "disabled";
- 		};
-=20
-+		pwm0: pwm@40250000 {
-+			compatible =3D "fsl,imx-tpm-pwm";
-+			reg =3D <0x40250000 0x1000>;
-+			assigned-clocks =3D <&pcc2 IMX7ULP_CLK_LPTPM4>;
-+			assigned-clock-parents =3D <&scg1 IMX7ULP_CLK_SOSC_BUS_CLK>;
-+			clocks =3D <&pcc2 IMX7ULP_CLK_LPTPM4>;
-+			#pwm-cells =3D <2>;
-+			status =3D "disabled";
++This device tree node should be used on Turris Mox, or potentially another A3700
++compatible device running the Mox's rWTM firmware in the secure processor (for
++example it is possible to flash this firmware into EspressoBin).
++
++Example:
++
++	firmware {
++		turris-mox-rwtm {
++			compatible = "cznic,turris-mox-rwtm";
++			mboxes = <&rwtm 0>;
++			status = "okay";
 +		};
-+
- 		tpm5: tpm@40260000 {
- 			compatible =3D "fsl,imx7ulp-tpm";
- 			reg =3D <0x40260000 0x1000>;
---=20
-2.7.4
++	};
+-- 
+2.19.2
