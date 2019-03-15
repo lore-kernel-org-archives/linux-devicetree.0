@@ -1,26 +1,38 @@
-Return-Path: <SRS0=QSCE=RW=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 0/2] Add HDMI support to the iwg23s
-Date: Tue, 19 Mar 2019 12:21:37 +0000
-Message-Id: <1552998099-22972-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <SRS0=qIkx=RS=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:59550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727469AbfCOKIo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Mar 2019 06:08:44 -0400
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: [PATCH 0/2] add support for LSM6DSOX
+Date: Fri, 15 Mar 2019 11:08:23 +0100
+Message-Id: <cover.1552643968.git.lorenzo@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: jic23@kernel.org
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, lorenzo.bianconi@redhat.com
 List-ID: <devicetree@vger.kernel.org>
 
-Dear All,
+Add support for LSM6DSOX IMU mems sensor
+https://www.st.com/resource/en/datasheet/lsm6dsox.pdf
 
-this series adds HDMI support to the iwg23s board.
+Please note I just compiled the series since I have no adapter for this sensor
+but according to the datasheet it has a common register map with lsm6dso (at
+least for supported features)
 
-Thanks,
-Fab
+Lorenzo Bianconi (2):
+  iio: imu: st_lsm6dsx: add support to LSM6DSOX
+  dt-bindings: iio: imu: st_lsm6dsx: add lsm6dsox device bindings
 
-Fabrizio Castro (2):
-  ARM: dts: r8a77470: Add DU support
-  ARM: dts: iwg23s-sbc: Add HDMI support
-
- arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts | 79 +++++++++++++++++++++++++++++++
- arch/arm/boot/dts/r8a77470.dtsi           | 32 +++++++++++++
- 2 files changed, 111 insertions(+)
+ Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt | 1 +
+ drivers/iio/imu/st_lsm6dsx/Kconfig                       | 2 +-
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h                  | 2 ++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c           | 4 ++--
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c             | 3 ++-
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c              | 5 +++++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c              | 5 +++++
+ 7 files changed, 18 insertions(+), 4 deletions(-)
 
 -- 
-2.7.4
+2.20.1
