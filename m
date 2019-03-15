@@ -1,16 +1,16 @@
-Return-Path: <SRS0=KptV=RY=nxp.com=anson.huang@kernel.org>
+Return-Path: <SRS0=iz5u=RS=nxp.com=anson.huang@kernel.org>
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V9 2/4] watchdog: imx_sc: Add i.MX system controller watchdog
+Subject: [PATCH V8 2/4] watchdog: imx_sc: Add i.MX system controller watchdog
  support
-Date: Thu, 21 Mar 2019 02:26:47 +0000
-Message-ID: <1553134884-1720-3-git-send-email-Anson.Huang@nxp.com>
-References: <1553134884-1720-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1553134884-1720-1-git-send-email-Anson.Huang@nxp.com>
+Date: Fri, 15 Mar 2019 06:17:25 +0000
+Message-ID: <1552630331-32068-3-git-send-email-Anson.Huang@nxp.com>
+References: <1552630331-32068-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1552630331-32068-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-To: "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, Andy Gross <andy.gross@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, Andy Gross <andy.gross@linaro.org>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
@@ -25,16 +25,17 @@ ARM-Trusted-Firmware and then it will request system controller
 to do watchdog operation via IPC.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 ---
-Changes since V8:
-	- change timeout value to be from DT instead of from module parameter.
+Changes since V7:
+	- remove the dependence of IMX_SCU as it does NOT call SCU API directly;
+	- add more detail info into the help section of how this module works;
+	- add back device id table since now we have watchdog node in DT.
 ---
  drivers/watchdog/Kconfig      |  16 ++++
  drivers/watchdog/Makefile     |   1 +
- drivers/watchdog/imx_sc_wdt.c | 177 ++++++++++++++++++++++++++++++++++++++=
+ drivers/watchdog/imx_sc_wdt.c | 182 ++++++++++++++++++++++++++++++++++++++=
 ++++
- 3 files changed, 194 insertions(+)
+ 3 files changed, 199 insertions(+)
  create mode 100644 drivers/watchdog/imx_sc_wdt.c
 
 diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
@@ -78,10 +79,10 @@ index ba930e4..136d9f0 100644
  obj-$(CONFIG_BCM2835_WDT) +=3D bcm2835_wdt.o
 diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
 new file mode 100644
-index 0000000..86c2722
+index 0000000..c8a087a
 --- /dev/null
 +++ b/drivers/watchdog/imx_sc_wdt.c
-@@ -0,0 +1,177 @@
+@@ -0,0 +1,182 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright 2018-2019 NXP.
@@ -124,6 +125,11 @@ max
 +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (defau=
 lt=3D"
 +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
++
++static unsigned int timeout =3D DEFAULT_TIMEOUT;
++module_param(timeout, uint, 0000);
++MODULE_PARM_DESC(timeout, "Watchdog timeout in seconds (default=3D"
++		 __MODULE_STRING(DEFAULT_TIMEOUT) ")");
 +
 +static int imx_sc_wdt_ping(struct watchdog_device *wdog)
 +{
@@ -204,7 +210,7 @@ lt=3D"
 +	imx_sc_wdd->parent =3D &pdev->dev;
 +	imx_sc_wdd->timeout =3D DEFAULT_TIMEOUT;
 +
-+	ret =3D watchdog_init_timeout(imx_sc_wdd, 0, &pdev->dev);
++	ret =3D watchdog_init_timeout(imx_sc_wdd, timeout, &pdev->dev);
 +	if (ret)
 +		dev_warn(&pdev->dev, "Failed to set timeout value, using default\n");
 +
