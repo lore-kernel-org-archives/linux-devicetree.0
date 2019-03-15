@@ -1,12 +1,12 @@
 From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: sun8i-h3: Add support for the
+Subject: [PATCH v3] ARM: dts: sun8i-h3: Add support for the
  RerVision H3-DVK board
-Date: Fri, 15 Mar 2019 13:35:49 +0100
-Message-ID: <20190315123549.8022-1-paul.kocialkowski@bootlin.com>
+Date: Fri, 15 Mar 2019 13:38:28 +0100
+Message-ID: <20190315123828.3224-1-paul.kocialkowski@bootlin.com>
 Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBO5YV3SAKGQEEHU4PWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRBX5ZV3SAKGQE47TK4AA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -32,13 +32,16 @@ Supported features:
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 ---
+Changes since v2:
+* Actually made the changes instead of sending the same patch again.
+
 Changes since v1:
 * Removed unneeded changes to mmc2_8bit_pins node;
 * Renamed HDMI connector nodes to match other boards.
 
  arch/arm/boot/dts/Makefile                   |   1 +
- arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts | 119 +++++++++++++++++++
- 2 files changed, 120 insertions(+)
+ arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts | 114 +++++++++++++++++++
+ 2 files changed, 115 insertions(+)
  create mode 100644 arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
@@ -55,10 +58,10 @@ index bd40148a15b2..8db275b75214 100644
  	sun8i-r16-nintendo-super-nes-classic.dtb \
 diff --git a/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts b/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
 new file mode 100644
-index 000000000000..94b71e064eb6
+index 000000000000..51bd2c00bbae
 --- /dev/null
 +++ b/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
-@@ -0,0 +1,119 @@
+@@ -0,0 +1,114 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
 + * Copyright (C) 2019 Bootlin
@@ -90,8 +93,8 @@ index 000000000000..94b71e064eb6
 +		type = "a";
 +
 +		port {
-+			hdmi_connector_input: endpoint {
-+				remote-endpoint = <&hdmi_connector_output>;
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
 +			};
 +		};
 +	};
@@ -125,8 +128,8 @@ index 000000000000..94b71e064eb6
 +};
 +
 +&hdmi_out {
-+	hdmi_connector_output: endpoint {
-+		remote-endpoint = <&hdmi_connector_input>;
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
 +	};
 +};
 +
@@ -145,11 +148,6 @@ index 000000000000..94b71e064eb6
 +	non-removable;
 +	cap-mmc-hw-reset;
 +	status = "okay";
-+};
-+
-+&mmc2_8bit_pins {
-+	drive-strength = <40>;
-+	bias-pull-up;
 +};
 +
 +&ohci1 {
