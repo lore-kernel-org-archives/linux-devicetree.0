@@ -1,86 +1,136 @@
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: Re: [RESEND PATCH v1 00/18] add drm support for MT8183
-Date: Fri, 15 Mar 2019 09:37:25 +0800
-Message-ID: <1552613845.31200.7.camel@mhfsdcap03>
-References: <1552565120-24329-1-git-send-email-yongqiang.niu@mediatek.com>
-         <c6859dd1-5689-d64d-69cd-5996eb0abea8@gmail.com>
+Subject: Re: [PATCH 03/18] drm/mediatek: redefine mtk_ddp_sout_sel
+Date: Fri, 15 Mar 2019 10:06:16 +0800
+Message-ID: <1552615576.31200.19.camel@mhfsdcap03>
+References: <1545638931-24938-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1545638931-24938-4-git-send-email-yongqiang.niu@mediatek.com>
+         <CANMq1KBTN61hmWy2K+rrx3NL0eR7AXhFQBkCpcHu5nhUw_6xjw@mail.gmail.com>
 Reply-To: <yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c6859dd1-5689-d64d-69cd-5996eb0abea8@gmail.com>
+In-Reply-To: <CANMq1KBTN61hmWy2K+rrx3NL0eR7AXhFQBkCpcHu5nhUw_6xjw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: ck.hu@mediatek.com, p.zabel@pengutronix.de, robh+dt@kernel.org, airlied@linux.ie, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Bibby.Hsieh@mediatek.com, yt.shen@mediatek.com
+To: Nicolas Boichat <drinkcat@chromium.org>
+Cc: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-03-14 at 18:35 +0100, Matthias Brugger wrote:
+On Tue, 2018-12-25 at 11:57 +0800, Nicolas Boichat wrote:
+> On Mon, Dec 24, 2018 at 6:52 PM Yongqiang Niu
+> <yongqiang.niu@mediatek.com> wrote:
+> >
+> > This patch redefine mtk_ddp_sout_sel
 > 
-> On 14/03/2019 13:05, yongqiang.niu@mediatek.com wrote:
-> > From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> > 
-> > This series are based on 4.20-rc1 and provide 18 patches to
-> > support mediatek SOC MT8183
-> > Resend first version 
-> > 
+> Can you describe a bit more why you are making this change?
+
+the format of "mtk_ddp_sout_sel"was not flexible, after we add more
+mediatek SOC support, that will be redundant
+
+set this function format like mtk_ddp_mout_en and mtk_ddp_sel_in
+
 > 
-> I think you send the very same series several times yesterday. Please check your
-> config and make sure that you don't send a series more then once. If for any
-> reason you have to resend the series then please specify in the cover letter why
-> you resend it.
+> > Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> > ---
+> >  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 32 ++++++++++++++++++++------------
+> >  1 file changed, 20 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> > index adb37e4..592f852 100644
+> > --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> > @@ -405,21 +405,27 @@ static unsigned int mtk_ddp_sel_in(enum mtk_ddp_comp_id cur,
+> >         return value;
+> >  }
+> >
+> > -static void mtk_ddp_sout_sel(void __iomem *config_regs,
+> > -                            enum mtk_ddp_comp_id cur,
+> > -                            enum mtk_ddp_comp_id next)
+> > +static unsigned int mtk_ddp_sout_sel(void __iomem *config_regs,
 > 
-> Reviewing series can take a while, be patient. If nobody reacts to your series
-> you can send a reminder email (best if you just hit reply-all on the cover
-> letter) asking kindly for review. Sending out the same series on a daily or
-> hourly basis will most probably lead to confusion, as people don't know which
-> version is the "good" one. In the end it has the contrary affect from what you
-> want to achieve (getting someone to review your series).
+> You don't use config_regs anymore, drop it.
+
+ok, will drop it in next version
+
 > 
-> Regards,
-> Matthias
+> > +                                    enum mtk_ddp_comp_id cur,
+> > +                                    enum mtk_ddp_comp_id next,
+> > +                                    unsigned int *addr)
+> >  {
+> > +       unsigned int value;
+> > +
+> >         if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DSI0) {
+> > -               writel_relaxed(BLS_TO_DSI_RDMA1_TO_DPI1,
+> > -                              config_regs + DISP_REG_CONFIG_OUT_SEL);
+> > +               *addr = DISP_REG_CONFIG_OUT_SEL;
+> > +               value = BLS_TO_DSI_RDMA1_TO_DPI1;
+> 
+> You can directly return BLS_TO_DSI_RDMA1_TO_DPI1.
+
+just format this like mtk_ddp_mout_en and mtk_ddp_sel_in
+
+> 
+> >         } else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
+> > -               writel_relaxed(BLS_TO_DPI_RDMA1_TO_DSI,
+> > -                              config_regs + DISP_REG_CONFIG_OUT_SEL);
+> > -               writel_relaxed(DSI_SEL_IN_RDMA,
+> > -                              config_regs + DISP_REG_CONFIG_DSI_SEL);
+> > -               writel_relaxed(DPI_SEL_IN_BLS,
+> > -                              config_regs + DISP_REG_CONFIG_DPI_SEL);
+> > +               *addr = DISP_REG_CONFIG_OUT_SEL;
+> > +               value = BLS_TO_DPI_RDMA1_TO_DSI;
+> 
+> I (kind of) understand the change above, as you still end up writing
+> BLS_TO_DSI_RDMA1_TO_DPI1 in DISP_REG_CONFIG_OUT_SEL.
+> 
+> This changes the behaviour, as now you only write
+> BLS_TO_DPI_RDMA1_TO_DSI to DISP_REG_CONFIG_OUT_SEL, but the previous
+> revision of the code would also write to DISP_REG_CONFIG_DSI_SEL and
+> DISP_REG_CONFIG_DPI_SEL. Why?
 > 
 
-sorry for the confusion.
+DISP_REG_CONFIG_DSI_SEL set in the next lines.
+DPI_SEL_IN_BLS is 0 for DISP_REG_CONFIG_DPI_SEL set, and hardware
+default setting is also 0, so this one is no need anymore
 
-there was some problem with my upstream account setting yesterday, the
-first several letters was rejected by
-"linux-arm-kernel@lists.infradead.org" and "devicetree@vger.kernel.org".
+> > +       } else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
+> > +               *addr = DISP_REG_CONFIG_DSI_SEL;
+> > +               value = DSI_SEL_IN_RDMA;
+> > +       } else {
+> > +               value = 0;
+> >         }
+> > +
+> > +       return value;
+> >  }
+> >
+> >  void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
+> > @@ -434,7 +440,9 @@ void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
+> >                 writel_relaxed(reg, config_regs + addr);
+> >         }
+> >
+> > -       mtk_ddp_sout_sel(config_regs, cur, next);
+> > +       value = mtk_ddp_sout_sel(cur, next, &addr);
+> > +       if (value)
+> > +               writel_relaxed(value, config_regs + addr);
+> 
+> Why this change? I don't see mtk_ddp_sout_sel being used later in the
+> series, so I'm not sure why we don't directly write the value into the
+> register.
+> 
+in the patch "[PATCH 04/18] drm/mediatek: move rdma sout from
+mtk_ddp_mout_en into mtk_ddp_sout_sel", i moved all rdma out to here,
+rdma only have single out, no multi out.
+if keep this format, there will many writel_relaxed in mtk_ddp_sout_sel.
+and modify this format like mtk_ddp_mout_en and mtk_ddp_sel_in looks
+better.
 
-after the problem was fixed, i have resent the last one, which include
-the key world "Resend first version".
-
-
-> > Yongqiang Niu (18):
-> >   drm/mediatek: update dt-bindings for mt8183
-> >   drm/mediatek: add mutex mod and sof into ddp private data
-> >   drm/mediatek: redefine mtk_ddp_sout_sel
-> >   drm/mediatek: move rdma sout from mtk_ddp_mout_en into
-> >     mtk_ddp_sout_sel
-> >   drm/mediatek: add ddp component CCORR
-> >   drm/mediatek: add mmsys private data for ddp path config
-> >   drm/mediatek: add commponent OVL0_2L
-> >   drm/mediatek: add component OVL1_2L
-> >   drm/mediatek: add component DITHER
-> >   drm/mediatek: add gmc_bits for ovl private data
-> >   drm/medaitek: add layer_nr for ovl private data
-> >   drm/mediatek: add function to connect module with it's previous one
-> >   drm/mediatek: add ddp write register common api
-> >   drm/mediatek: add connect function for ovl
-> >   drm/mediatek: add RDMA1 fifo size into RDMA private data
-> >   drm/mediatek: add function mtk_ddp_comp_get_type
-> >   drm/mediatek: add ovl0/ovl0_2l usecase
-> >   drm/mediatek: add support for mediatek SOC MT8183
-> > 
-> >  .../bindings/display/mediatek/mediatek,disp.txt    |  11 +-
-> >  drivers/gpu/drm/mediatek/mtk_disp_ovl.c            |  64 ++-
-> >  drivers/gpu/drm/mediatek/mtk_disp_rdma.c           |  23 +-
-> >  drivers/gpu/drm/mediatek/mtk_drm_crtc.c            |  42 +-
-> >  drivers/gpu/drm/mediatek/mtk_drm_ddp.c             | 458 ++++++++++++++++-----
-> >  drivers/gpu/drm/mediatek/mtk_drm_ddp.h             |  11 +
-> >  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        | 100 +++++
-> >  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  24 ++
-> >  drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  55 +++
-> >  drivers/gpu/drm/mediatek/mtk_drm_drv.h             |   4 +
-> >  10 files changed, 688 insertions(+), 104 deletions(-)
-> > 
+> 
+> 
+> >         value = mtk_ddp_sel_in(cur, next, &addr);
+> >         if (value) {
+> > --
+> > 1.8.1.1.dirty
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
