@@ -1,54 +1,78 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH] dt-bindings: clock: imx8mq: Fix numbering overlaps and
- gaps
-Date: Fri, 15 Mar 2019 13:33:31 +0000
-Message-ID: <AM0PR04MB42112ECD22C474CE71C8D9B680440@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1551779342-2640-1-git-send-email-abel.vesa@nxp.com>
- <155181110921.20095.1641360339603928947@swboyd.mtv.corp.google.com>
- <20190306130941.dqf3swx66bchm5k2@fsr-ub1664-175>
- <155205894567.20095.2782332899458282059@swboyd.mtv.corp.google.com>
- <20190312073654.GA85609@thor.local>
- <155242319026.20095.4334777579139010310@swboyd.mtv.corp.google.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 4/6] dt-bindings: display: bridge: Add
+ ICN6211 MIPI-DSI to RGB convertor bridge
+Date: Fri, 15 Mar 2019 14:34:14 +0100
+Message-ID: <20190315133414.5zwc5qtrivrbrzow@flea>
+References: <20190315130825.9005-1-jagan@amarulasolutions.com>
+ <20190315130825.9005-5-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <155242319026.20095.4334777579139010310@swboyd.mtv.corp.google.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Patrick Wildt <patrick@blueri.se>
-Cc: Abel Vesa <abel.vesa@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ju6ym54ol55b4fyp"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXGTV3SAKGQENM7JYSQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190315130825.9005-5-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PiBGcm9tOiBTdGVwaGVuIEJveWQgW21haWx0bzpzYm95ZEBrZXJuZWwub3JnXQ0KPiANCj4gUXVv
-dGluZyBQYXRyaWNrIFdpbGR0ICgyMDE5LTAzLTEyIDAwOjM2OjU0KQ0KPiA+IE9uIEZyaSwgTWFy
-IDA4LCAyMDE5IGF0IDA3OjI5OjA1QU0gLTA4MDAsIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4gPiA+
-IEl0J3MgbW9zdGx5IGFib3V0IG1ha2luZyBzdXJlIHRoYXQgYW55IGV4aXN0aW5nIGR0YnMgZG9u
-J3QgaGF2ZQ0KPiA+ID4gdGhlaXIgbnVtYmVycyBzaGlmdGVkIGFyb3VuZC4gU28gaG9wZWZ1bGx5
-IGFueSBvdmVybGFwcGluZw0KPiA+ID4gaWRlbnRpZmllcnMgYXJlbid0IGluIHVzZSB5ZXQgYW5k
-IHRoZW4gdGhvc2UgaWRzIGNhbiBiZSBjaGFuZ2VkDQo+ID4gPiB3aGlsZSBsZWF2aW5nIHRoZSBv
-bmVzIHRoYXQgYXJlIGluIHVzZSBob3cgdGhleSBhcmUuDQo+ID4NCj4gPiBJbiBwcmFjdGljZSBJ
-IGJldCBubyBvbmUgdXNlcyBMaW51eCA1LjAncyBpLk1YOE0gZGV2aWNlIHRyZWVzIHNpbmNlDQo+
-ID4gdGhleSBsYWNrIHRvbyBtdWNoIHN1cHBvcnQuICBJdCdzIHNvIGJhc2ljIGl0J3Mgbm90IHVz
-ZWZ1bC4gIFlvdSdkDQo+ID4gc3RpbGwgcnVuIHlvdXIgZXhpc3Rpbmcgbm9uLW1haW5saW5lIGJp
-bmRpbmdzIHVudGlsIGl0IGlzLiAgVGh1cyBJDQo+ID4gd291bGQgYXJndWUgY2hhbmdpbmcgdGhl
-IEFCSSByaWdodCBub3cgd291bGQgYmUgdGhlIG9ubHkgY2hhbmNlIHRoZXJlIGlzLg0KPiA+DQo+
-ID4gSWYgeW91IHRoaW5rIHRoYXQgY2hhbmNlIGlzIGdvbmUsIHRoZW4gSSBndWVzcyB0aGUgcmVh
-c29uYWJsZSB0aGluZyBpcw0KPiA+IHRvIGtlZXAgdGhlIG51bWJlcnMgYW5kIG9ubHkgbW92ZSB0
-aG9zZSAodG8gdGhlIGVuZCkgd2hpY2ggb3ZlcmxhcC4NCj4gPiBPciBwdXQgdGhlbSBpbnRvIHRo
-YXQgZXJyZW5lb3VzIG51bWJlciBnYXAuDQo+ID4NCj4gDQo+IFRoZSBjaGFuY2UgaXMgcXVpY2ts
-eSBzbGlwcGluZyBhd2F5IGJlY2F1c2Ugd2UncmUgZ29pbmcgdG8gYmUgYXQgLXJjMSBzb29uLiBJ
-J20NCj4gbm90IHRoZSBvbmUgdG8gZGVjaWRlIHdoYXQgaXMgYW5kIGlzbid0IGJlaW5nIHVzZWQg
-YnkgcGVvcGxlIG91dCB0aGVyZSwgc28gSSdtDQo+IGhhcHB5IHRvIGFwcGx5IHRoaXMgcGF0Y2gg
-bm93IGJlZm9yZSB0aGUgbmV4dCAtcmMxIGNvbWVzIG91dCBhcyBsb25nIGFzIGl0DQo+IGRvZXNu
-J3QgYnJlYWsgYW55dGhpbmcgaW4gYXJtLXNvYyBhcmVhLiBUaGUgY29uZmlkZW5jZSBJJ20gZ2V0
-dGluZyBpc24ndCBoaWdoDQo+IHRob3VnaC4gSGFzIGFueW9uZSBmcm9tIE5YUCByZXZpZXdlZCB0
-aGlzIGNoYW5nZT8gTWF5YmUgSSBjYW4gZ2V0IGFuIGFjaw0KPiBmcm9tIHNvbWVvbmUgZWxzZSB0
-aGF0IG5vcm1hbGx5IGxvb2tzIGFmdGVyIHRoZSBhcm0tc29jL2R0cyBzaWRlIG9mIHRoaW5ncw0K
-PiBoZXJlIGluZGljYXRpbmcgdGhhdCBub3RoaW5nIHNob3VsZCBnbyB3cm9uZz8gVGhhdCB3b3Vs
-ZCBpbmNyZWFzZSBteQ0KPiBjb25maWRlbmNlIGxldmVscy4NCg0KQUZBSUsgbm8gb25lIG91dCB0
-aGVyZSB1c2luZyBpdCBmb3IgcHJvZHVjdCB3aXRob3V0IGJlaW5nIGFibGUgdG8gdXBkYXRlIGFj
-Y29yZGluZ2x5LA0KYXMgaXQgc3RpbGwgaGFzIGEgdmVyeSBwcmVsaW1pbmFyeSBzdXBwb3J0Lg0K
-U28gSSBhZ3JlZSB3ZSBuZWVkIHRvIGZpeCBpdCBhdCB0aGlzIGVhcmx5IHRpbWUNCg0KVGVzdGVk
-LWFuZC1BY2tlZC1ieTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCg0KUmVn
-YXJkcw0KRG9uZyBBaXNoZW5nDQo=
+
+--ju6ym54ol55b4fyp
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Fri, Mar 15, 2019 at 06:38:23PM +0530, Jagan Teki wrote:
+> ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
+> It has a flexible configuration of MIPI DSI signal input
+> and produce RGB565, RGB666, RGB888 output format.
+> 
+> Add dt-bingings for it.
+> 
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> ---
+>  .../display/bridge/chipone,icn6211.txt        | 36 +++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
+> new file mode 100644
+> index 000000000000..7f13efd7ee7f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
+> @@ -0,0 +1,36 @@
+> +Chipone ICN6211 MIPI-DSI to RGB Convertor Bridge
+> +
+> +ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
+> +It has a flexible configuration of MIPI DSI signal input
+> +and produce RGB565, RGB666, RGB888 output format.
+> +
+> +Required properties for RGB:
+> +- compatible: must be "chipone,icn6211" and one of:
+> +  * "bananapi,icn6211"
+
+Why is that compatible needed?
+
+> +- reg: the virtual channel number of a DSI peripheral
+> +- reset-gpios: a GPIO phandle for the reset pin
+> +
+> +The device node can contain following 'port' child nodes,
+> +according to the OF graph bindings defined in [1]:
+> +  0: DSI Input, not required, if the bridge is DSI controlled
+> +  1: RGB Output, mandatory
+
+Your example doesn't have that input port
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--ju6ym54ol55b4fyp--
