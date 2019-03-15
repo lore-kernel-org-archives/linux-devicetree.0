@@ -1,56 +1,69 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH v2 4/4] dt-bindings: iio: adc: lpc32xx-adc: Document
- vref-supply
-Date: Fri, 15 Mar 2019 10:52:31 +0100
-Message-ID: <20190315095231.17001-5-gregory.clement@bootlin.com>
-References: <20190315095231.17001-1-gregory.clement@bootlin.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH] arm64: dts: imx8qxp: fix mbox-cells
+Date: Fri, 15 Mar 2019 10:23:33 +0000
+Message-ID: <AM0PR04MB4211910FCC3CEDF11EE4B10380440@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190313093626.18589-1-peng.fan@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190315095231.17001-1-gregory.clement@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Gregory CLEMENT <gregory.clement@bootlin.com>, Vladimir Zapolskiy <vz@mleia.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190313093626.18589-1-peng.fan@nxp.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Anson Huang <anson.huang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "van.freenix@gmail.com" <van.freenix@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-As most of the other ADC the lpc32xx one use a vref-supply property:
-document it.
+> From: Peng Fan
+>
+> Subject: [PATCH] arm64: dts: imx8qxp: fix mbox-cells
+>=20
+> Currently lsio_mu1 is used by Linux Kernel with mbox-cells as 2, but actu=
+ally
+> mu0-4 could be used to communicate with SCU. So fix the mbox-cells.
+>=20
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
----
- Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt b/Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt
-index b3629d3a9adf..3a1bc669bd51 100644
---- a/Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt
-@@ -6,6 +6,10 @@ Required properties:
-   region.
- - interrupts: The ADC interrupt
- 
-+Optional:
-+ - vref-supply: The regulator supply ADC reference voltage, optional
-+   for legacy reason, but highly encouraging to us in new device tree
-+
- Example:
- 
- 	adc@40048000 {
-@@ -13,4 +17,5 @@ Example:
- 		reg = <0x40048000 0x1000>;
- 		interrupt-parent = <&mic>;
- 		interrupts = <39 0>;
-+		vref-supply = <&vcc>;
- 	};
--- 
-2.20.1
+Regards
+Dong Aisheng
+
+> ---
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> index 4c3dd95ed488..16766838ac77 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -328,7 +328,7 @@
+>  			compatible =3D "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+>  			reg =3D <0x5d1b0000 0x10000>;
+>  			interrupts =3D <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+> -			#mbox-cells =3D <0>;
+> +			#mbox-cells =3D <2>;
+>  			status =3D "disabled";
+>  		};
+>=20
+> @@ -343,7 +343,7 @@
+>  			compatible =3D "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+>  			reg =3D <0x5d1e0000 0x10000>;
+>  			interrupts =3D <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
+> -			#mbox-cells =3D <0>;
+> +			#mbox-cells =3D <2>;
+>  			status =3D "disabled";
+>  		};
+>=20
+> @@ -351,7 +351,7 @@
+>  			compatible =3D "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+>  			reg =3D <0x5d1f0000 0x10000>;
+>  			interrupts =3D <GIC_SPI 180 IRQ_TYPE_LEVEL_HIGH>;
+> -			#mbox-cells =3D <0>;
+> +			#mbox-cells =3D <2>;
+>  			status =3D "disabled";
+>  		};
+>=20
+> --
+> 2.16.4
