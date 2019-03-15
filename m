@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH v2 2/4] iio: adc: lpc32xx: Cleanup headers
-Date: Fri, 15 Mar 2019 10:52:29 +0100
-Message-ID: <20190315095231.17001-3-gregory.clement@bootlin.com>
+Subject: [PATCH v2 1/4] iio: adc: lpc32xx: Sort headers
+Date: Fri, 15 Mar 2019 10:52:28 +0100
+Message-ID: <20190315095231.17001-2-gregory.clement@bootlin.com>
 References: <20190315095231.17001-1-gregory.clement@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,32 +21,45 @@ To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-
 Cc: devicetree@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, Vladimir Zapolskiy <vz@mleia.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-A few headers is useless: remove them.
+Sort the headers in alphabetic order in order to ease the maintenance for
+this part.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
- drivers/iio/adc/lpc32xx_adc.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/iio/adc/lpc32xx_adc.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/iio/adc/lpc32xx_adc.c b/drivers/iio/adc/lpc32xx_adc.c
-index 7084f804504e..f391c1e10136 100644
+index e361c1532a75..7084f804504e 100644
 --- a/drivers/iio/adc/lpc32xx_adc.c
 +++ b/drivers/iio/adc/lpc32xx_adc.c
-@@ -9,17 +9,11 @@
+@@ -7,20 +7,19 @@
+  *  Copyright (C) 2011, 2012 Roland Stigge <stigge@antcom.de>
+  */
  
- #include <linux/clk.h>
- #include <linux/completion.h>
+-#include <linux/module.h>
+-#include <linux/platform_device.h>
+-#include <linux/interrupt.h>
 -#include <linux/device.h>
--#include <linux/err.h>
- #include <linux/iio/iio.h>
--#include <linux/iio/sysfs.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
 -#include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/of.h>
- #include <linux/platform_device.h>
 -#include <linux/slab.h>
+-#include <linux/io.h>
+ #include <linux/clk.h>
+-#include <linux/err.h>
+ #include <linux/completion.h>
+-#include <linux/of.h>
+-
++#include <linux/device.h>
++#include <linux/err.h>
+ #include <linux/iio/iio.h>
+ #include <linux/iio/sysfs.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
  
  /*
   * LPC32XX registers definitions
