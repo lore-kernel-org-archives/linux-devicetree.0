@@ -1,56 +1,46 @@
-From: Yash Shah <yash.shah@sifive.com>
-Subject: Re: [PATCH v9 0/2] PWM support for HiFive Unleashed
-Date: Fri, 15 Mar 2019 17:19:59 +0530
-Message-ID: <CAJ2_jOE3RH9FyFg_NATcLEpHv5y89zdh06Ji2x8n3C_gp-wn6A@mail.gmail.com>
-References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com> <mvmimwotn60.fsf@suse.de>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v2 4/6] usb: roles: add API to get usb_role_switch by node
+Date: Fri, 15 Mar 2019 13:58:54 +0200
+Message-ID: <20190315115854.GJ7752@kuha.fi.intel.com>
+References: <1552635513-2378-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1552635513-2378-5-git-send-email-chunfeng.yun@mediatek.com>
+ <20190315081835.GD7752@kuha.fi.intel.com>
+ <1552641204.10179.133.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <mvmimwotn60.fsf@suse.de>
+Content-Disposition: inline
+In-Reply-To: <1552641204.10179.133.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Schwab <schwab@suse.de>
-Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 3:44 PM Andreas Schwab <schwab@suse.de> wrote:
->
-> On M=C3=A4r 12 2019, Yash Shah <yash.shah@sifive.com> wrote:
->
-> > This patch series adds a PWM driver and DT documentation
-> > for HiFive Unleashed board. The patches are mostly based on
-> > Wesley's patch.
->
-> Heartbeat trigger still doesn't work for me.
+On Fri, Mar 15, 2019 at 05:13:24PM +0800, Chunfeng Yun wrote:
+> I encounter a build error when CONFIG_USB_ROLE_SWITCH is not enabled,
+> 
+> drivers/usb/mtu3/mtu3_dr.o: In function `ssusb_role_sw_register':
+> ./drivers/usb/mtu3/mtu3_dr.c:460: undefined reference to
+> `usb_role_switch_register'
+> drivers/usb/mtu3/mtu3_dr.o: In function `ssusb_otg_switch_exit':
+> ./drivers/usb/mtu3/mtu3_dr.c:491: undefined reference to
+> `usb_role_switch_unregister'
+> 
+> the following patch has fixed the issue, but seems not get into kernel,
+> [v3,08/12] usb: roles: Add usb role switch notifier.
+> https://patchwork.kernel.org/patch/10836525/
+> 
+> What should I do if I add a new API? Thanks
 
-You need to make sure the period setting is passed via the
-conventional way in DT file.
-Example:
-pwmleds {
-    compatible =3D "pwm-leds";
-    heartbeat {
-        pwms =3D <&L45 0 10000000 0>;
-        max-brightness =3D <255>;
-        linux,default-trigger =3D "heartbeat";
-    };
-};
+So if you are asking should you supply dummy functions for the new API,
+then I would just say that if you do so, you need to prepare these
+patches on top of that series from Yu Chen. In general I'm not sure we
+need dummy functions with this API.
 
-I have tested on HiFive unleashed board. To modify DT file I performed
-the following steps:
+Hans, comments?
 
-Use the open-source FSBL from:
-https://github.com/sifive/freedom-u540-c000-bootloader
 
-Modify the fsbl/ux00_fsbl.dts file and re-build the fsbl.bin
+thanks,
 
-Steps for using fsbl.bin in HiFive Unleashed board:
-https://github.com/sifive/freedom-u540-c000-bootloader/issues/9
-
->
-> Andreas.
->
-> --
-> Andreas Schwab, SUSE Labs, schwab@suse.de
-> GPG Key fingerprint =3D 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D=
-7
-> "And now for something completely different."
+-- 
+heikki
