@@ -1,166 +1,111 @@
 From: Nicolas Boichat <drinkcat@chromium.org>
-Subject: Re: [PATCH 03/18] drm/mediatek: redefine mtk_ddp_sout_sel
-Date: Fri, 15 Mar 2019 11:22:10 +0800
-Message-ID: <CANMq1KBSw=Xsw_QX7=ci3dCWqHXVhceHv6H+v_C_uSvVeraDeQ@mail.gmail.com>
+Subject: Re: [PATCH 10/18] drm/mediatek: add gmc_bits for ovl private data
+Date: Fri, 15 Mar 2019 11:26:43 +0800
+Message-ID: <CANMq1KCh5rf6My5yeRgxf0mZaOy=A3d2ag6TEPFKz+EPsVDzJg@mail.gmail.com>
 References: <1545638931-24938-1-git-send-email-yongqiang.niu@mediatek.com>
- <1545638931-24938-4-git-send-email-yongqiang.niu@mediatek.com>
- <CANMq1KBTN61hmWy2K+rrx3NL0eR7AXhFQBkCpcHu5nhUw_6xjw@mail.gmail.com> <1552615576.31200.19.camel@mhfsdcap03>
+ <1545638931-24938-11-git-send-email-yongqiang.niu@mediatek.com>
+ <CANMq1KC_JwVfvFd46_gP_wK_QNO0LTZOcwRAbotF6MghYivJYw@mail.gmail.com>
+ <1552617252.31200.24.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552615576.31200.19.camel@mhfsdcap03>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1552617252.31200.24.camel@mhfsdcap03>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Yongqiang Niu <yongqiang.niu@mediatek.com>
-Cc: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, lkml <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 10:06 AM Yongqiang Niu
-<yongqiang.niu@mediatek.com> wrote:
->
-> On Tue, 2018-12-25 at 11:57 +0800, Nicolas Boichat wrote:
-> > On Mon, Dec 24, 2018 at 6:52 PM Yongqiang Niu
-> > <yongqiang.niu@mediatek.com> wrote:
-> > >
-> > > This patch redefine mtk_ddp_sout_sel
-> >
-> > Can you describe a bit more why you are making this change?
->
-> the format of "mtk_ddp_sout_sel"was not flexible, after we add more
-> mediatek SOC support, that will be redundant
->
-> set this function format like mtk_ddp_mout_en and mtk_ddp_sel_in
-
-This needs to be 2 patches:
- 1. Make the change to "cur == DDP_COMPONENT_BLS && next ==
-DDP_COMPONENT_DPI0", along with an explanation of why this is
-reasonable.
- 2. Change the format to look like mtk_ddp_mout_en and mtk_ddp_sel_in
-
-> >
-> > > Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> > > ---
-> > >  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 32 ++++++++++++++++++++------------
-> > >  1 file changed, 20 insertions(+), 12 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> > > index adb37e4..592f852 100644
-> > > --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> > > +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> > > @@ -405,21 +405,27 @@ static unsigned int mtk_ddp_sel_in(enum mtk_ddp_comp_id cur,
-> > >         return value;
-> > >  }
-> > >
-> > > -static void mtk_ddp_sout_sel(void __iomem *config_regs,
-> > > -                            enum mtk_ddp_comp_id cur,
-> > > -                            enum mtk_ddp_comp_id next)
-> > > +static unsigned int mtk_ddp_sout_sel(void __iomem *config_regs,
-> >
-> > You don't use config_regs anymore, drop it.
->
-> ok, will drop it in next version
->
-> >
-> > > +                                    enum mtk_ddp_comp_id cur,
-> > > +                                    enum mtk_ddp_comp_id next,
-> > > +                                    unsigned int *addr)
-> > >  {
-> > > +       unsigned int value;
-> > > +
-> > >         if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DSI0) {
-> > > -               writel_relaxed(BLS_TO_DSI_RDMA1_TO_DPI1,
-> > > -                              config_regs + DISP_REG_CONFIG_OUT_SEL);
-> > > +               *addr = DISP_REG_CONFIG_OUT_SEL;
-> > > +               value = BLS_TO_DSI_RDMA1_TO_DPI1;
-> >
-> > You can directly return BLS_TO_DSI_RDMA1_TO_DPI1.
->
-> just format this like mtk_ddp_mout_en and mtk_ddp_sel_in
-
-Since there is precedent, sounds ok.
-
-> >
-> > >         } else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
-> > > -               writel_relaxed(BLS_TO_DPI_RDMA1_TO_DSI,
-> > > -                              config_regs + DISP_REG_CONFIG_OUT_SEL);
-> > > -               writel_relaxed(DSI_SEL_IN_RDMA,
-> > > -                              config_regs + DISP_REG_CONFIG_DSI_SEL);
-> > > -               writel_relaxed(DPI_SEL_IN_BLS,
-> > > -                              config_regs + DISP_REG_CONFIG_DPI_SEL);
-> > > +               *addr = DISP_REG_CONFIG_OUT_SEL;
-> > > +               value = BLS_TO_DPI_RDMA1_TO_DSI;
-> >
-> > I (kind of) understand the change above, as you still end up writing
-> > BLS_TO_DSI_RDMA1_TO_DPI1 in DISP_REG_CONFIG_OUT_SEL.
-> >
-> > This changes the behaviour, as now you only write
-> > BLS_TO_DPI_RDMA1_TO_DSI to DISP_REG_CONFIG_OUT_SEL, but the previous
-> > revision of the code would also write to DISP_REG_CONFIG_DSI_SEL and
-> > DISP_REG_CONFIG_DPI_SEL. Why?
-> >
->
-> DISP_REG_CONFIG_DSI_SEL set in the next lines.
-
-Ok, but where is mtk_ddp_sout_sel(DDP_COMPONENT_RDMA1,
-DDP_COMPONENT_DSI0) called from?
-
-Before this change, we just needed to call:
-mtk_ddp_sout_sel(DDP_COMPONENT_BLS, DDP_COMPONENT_DSI0)
-and the following 3 registers would be modified:
-BLS_TO_DPI_RDMA1_TO_DSI, DSI_SEL_IN_RDMA, DPI_SEL_IN_BLS.
-
-Now, to get similar behaviour, we need to call:
-mtk_ddp_sout_sel(DDP_COMPONENT_BLS, DDP_COMPONENT_DSI0)
-mtk_ddp_sout_sel(DDP_COMPONENT_RDMA1, DDP_COMPONENT_DSI0)
-
-Maybe that's ok, but you really need to explain the reason for this
-change in the commit message.
-
-> DPI_SEL_IN_BLS is 0 for DISP_REG_CONFIG_DPI_SEL set, and hardware
-> default setting is also 0, so this one is no need anymore
-
-That's somewhat reasonable, but this needs to be at the very least
-described in the commit message.
-
-> > > +       } else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
-> > > +               *addr = DISP_REG_CONFIG_DSI_SEL;
-> > > +               value = DSI_SEL_IN_RDMA;
-> > > +       } else {
-> > > +               value = 0;
-> > >         }
-> > > +
-> > > +       return value;
-> > >  }
-> > >
-> > >  void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
-> > > @@ -434,7 +440,9 @@ void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
-> > >                 writel_relaxed(reg, config_regs + addr);
-> > >         }
-> > >
-> > > -       mtk_ddp_sout_sel(config_regs, cur, next);
-> > > +       value = mtk_ddp_sout_sel(cur, next, &addr);
-> > > +       if (value)
-> > > +               writel_relaxed(value, config_regs + addr);
-> >
-> > Why this change? I don't see mtk_ddp_sout_sel being used later in the
-> > series, so I'm not sure why we don't directly write the value into the
-> > register.
-> >
-> in the patch "[PATCH 04/18] drm/mediatek: move rdma sout from
-> mtk_ddp_mout_en into mtk_ddp_sout_sel", i moved all rdma out to here,
-> rdma only have single out, no multi out.
-> if keep this format, there will many writel_relaxed in mtk_ddp_sout_sel.
-> and modify this format like mtk_ddp_mout_en and mtk_ddp_sel_in looks
-> better.
->
-> >
-> >
-> > >         value = mtk_ddp_sel_in(cur, next, &addr);
-> > >         if (value) {
-> > > --
-> > > 1.8.1.1.dirty
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
->
->
+T24gRnJpLCBNYXIgMTUsIDIwMTkgYXQgMTA6MzQgQU0gWW9uZ3FpYW5nIE5pdQo8eW9uZ3FpYW5n
+Lm5pdUBtZWRpYXRlay5jb20+IHdyb3RlOgo+Cj4gT24gVHVlLCAyMDE4LTEyLTI1IGF0IDEyOjE1
+ICswODAwLCBOaWNvbGFzIEJvaWNoYXQgd3JvdGU6Cj4gPiBPbiBNb24sIERlYyAyNCwgMjAxOCBh
+dCA2OjUzIFBNIFlvbmdxaWFuZyBOaXUKPiA+IDx5b25ncWlhbmcubml1QG1lZGlhdGVrLmNvbT4g
+d3JvdGU6Cj4gPiA+Cj4gPiA+IFRoaXMgcGF0Y2ggYWRkIGdtY19iaXRzIGZvciBvdmwgcHJpdmF0
+ZSBkYXRhCj4gPiA+Cj4gPiA+IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFu
+Zy5uaXVAbWVkaWF0ZWsuY29tPgo+ID4gPiAtLS0KPiA+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRp
+YXRlay9tdGtfZGlzcF9vdmwuYyB8IDIzICsrKysrKysrKysrKysrKysrKysrKy0tCj4gPiA+ICAx
+IGZpbGUgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPiA+ID4KPiA+
+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyBi
+L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYwo+ID4gPiBpbmRleCAyOGQx
+OTExLi5hZmIzMTNjIDEwMDY0NAo+ID4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2Rpc3Bfb3ZsLmMKPiA+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
+aXNwX292bC5jCj4gPiA+IEBAIC0zOSw3ICszOSw5IEBACj4gPiA+ICAjZGVmaW5lIERJU1BfUkVH
+X09WTF9BRERSX01UODE3MyAgICAgICAgICAgICAgIDB4MGY0MAo+ID4gPiAgI2RlZmluZSBESVNQ
+X1JFR19PVkxfQUREUihvdmwsIG4pICAgICAgICAgICAgICAoKG92bCktPmRhdGEtPmFkZHIgKyAw
+eDIwICogKG4pKQo+ID4gPgo+ID4gPiAtI2RlZmluZSAgICAgICAgT1ZMX1JETUFfTUVNX0dNQyAg
+ICAgICAgMHg0MDQwMjAyMAo+ID4gPiArI2RlZmluZSBHTUNfVEhSRVNIT0xEX0JJVFMgICAgIDE2
+Cj4gPiA+ICsjZGVmaW5lIEdNQ19USFJFU0hPTERfSElHSCAgICAgKCgxIDw8IEdNQ19USFJFU0hP
+TERfQklUUykgLyA0KQo+ID4gPiArI2RlZmluZSBHTUNfVEhSRVNIT0xEX0xPVyAgICAgICgoMSA8
+PCBHTUNfVEhSRVNIT0xEX0JJVFMpIC8gOCkKPiA+ID4KPiA+ID4gICNkZWZpbmUgT1ZMX0NPTl9C
+WVRFX1NXQVAgICAgICBCSVQoMjQpCj4gPiA+ICAjZGVmaW5lIE9WTF9DT05fTVRYX1lVVl9UT19S
+R0IgKDYgPDwgMTYpCj4gPiA+IEBAIC01Nyw2ICs1OSw3IEBACj4gPiA+Cj4gPiA+ICBzdHJ1Y3Qg
+bXRrX2Rpc3Bfb3ZsX2RhdGEgewo+ID4gPiAgICAgICAgIHVuc2lnbmVkIGludCBhZGRyOwo+ID4g
+PiArICAgICAgIHVuc2lnbmVkIGludCBnbWNfYml0czsKPiA+ID4gICAgICAgICBib29sIGZtdF9y
+Z2I1NjVfaXNfMDsKPiA+ID4gIH07Cj4gPiA+Cj4gPiA+IEBAIC0xNDAsOSArMTQzLDIzIEBAIHN0
+YXRpYyB1bnNpZ25lZCBpbnQgbXRrX292bF9sYXllcl9ucihzdHJ1Y3QgbXRrX2RkcF9jb21wICpj
+b21wKQo+ID4gPiAgc3RhdGljIHZvaWQgbXRrX292bF9sYXllcl9vbihzdHJ1Y3QgbXRrX2RkcF9j
+b21wICpjb21wLCB1bnNpZ25lZCBpbnQgaWR4KQo+ID4gPiAgewo+ID4gPiAgICAgICAgIHVuc2ln
+bmVkIGludCByZWc7Cj4gPiA+ICsgICAgICAgdW5zaWduZWQgaW50IGdtY190aHJzaGRfbDsKPiA+
+ID4gKyAgICAgICB1bnNpZ25lZCBpbnQgZ21jX3RocnNoZF9oOwo+ID4gPiArICAgICAgIHVuc2ln
+bmVkIGludCBnbWNfdmFsdWU7Cj4gPiA+ICsgICAgICAgc3RydWN0IG10a19kaXNwX292bCAqb3Zs
+ID0gY29tcF90b19vdmwoY29tcCk7Cj4gPiA+Cj4gPiA+ICAgICAgICAgd3JpdGVsKDB4MSwgY29t
+cC0+cmVncyArIERJU1BfUkVHX09WTF9SRE1BX0NUUkwoaWR4KSk7Cj4gPiA+IC0gICAgICAgd3Jp
+dGVsKE9WTF9SRE1BX01FTV9HTUMsIGNvbXAtPnJlZ3MgKyBESVNQX1JFR19PVkxfUkRNQV9HTUMo
+aWR4KSk7Cj4gPiA+ICsKPiA+ID4gKyAgICAgICBnbWNfdGhyc2hkX2wgPSBHTUNfVEhSRVNIT0xE
+X0xPVyA+Pgo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgKEdNQ19USFJFU0hPTERfQklUUyAt
+IG92bC0+ZGF0YS0+Z21jX2JpdHMpOwo+ID4gPiArICAgICAgIGdtY190aHJzaGRfaCA9IEdNQ19U
+SFJFU0hPTERfSElHSCA+Pgo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgKEdNQ19USFJFU0hP
+TERfQklUUyAtIG92bC0+ZGF0YS0+Z21jX2JpdHMpOwo+ID4gPiArICAgICAgIGlmIChvdmwtPmRh
+dGEtPmdtY19iaXRzID09IDEwKQo+ID4gPiArICAgICAgICAgICAgICAgZ21jX3ZhbHVlID0gZ21j
+X3RocnNoZF9oIHwgZ21jX3RocnNoZF9oIDw8IDE2Owo+ID4KPiA+IEkgZG9uJ3QgcmVhbGx5IGdl
+dCB3aGF0IHRoaXMgZG9lcywgYnV0IGlzIGl0IGludGVudGlvbmFsIHRoYXQgeW91Cj4gPiBkb24n
+dCB1c2UgZ21jX3RocnNoZF9sIGhlcmU/Cj4gPgo+IEdNQyByZWdpc3RlciB3YXMgc2V0IFJETUEg
+dWx0cmEgYW5kIHByZS11bHRyYSB0aHJlc2hvbGQuCj4gTVQ4MTgzIEdNQyByZWdpc3RlciBkZWZp
+bmUgaXMgZGlmZmVyZW50IHdpdGggb3RoZXIgU09DLCBnbWNfdGhyc2hkX2wgbm90Cj4gdXNlZCBo
+ZXJlLgoKT2sgY29vbC4gTXkgaXNzdWUgaXMgdGhhdCB0aGlzIHJlYWxseSBhcHBlYXJzIHRvIGJl
+IGxpa2UgYSBtaXN0YWtlLCBzbwptYXliZSBpdCdzIGJldHRlciB0byBvbmx5IGNvbXB1dGUgZ21j
+X3RocnNoZF9sIGluIHRoZSBlbHNlIGJyYW5jaD8KCmdtY190aHJzaGRfaCA9IEdNQ19USFJFU0hP
+TERfSElHSCA+PgogICAgICAgICAgICAgICAgICAgICAoR01DX1RIUkVTSE9MRF9CSVRTIC0gb3Zs
+LT5kYXRhLT5nbWNfYml0cyk7CmlmIChvdmwtPmRhdGEtPmdtY19iaXRzID09IDEwKSB7CiAgICAg
+Z21jX3ZhbHVlID0gZ21jX3RocnNoZF9oIHwgZ21jX3RocnNoZF9oIDw8IDE2Owp9IGVsc2Ugewog
+ICAgIGdtY190aHJzaGRfbCA9IEdNQ19USFJFU0hPTERfTE9XID4+CiAgICAgICAgICAgICAgICAg
+ICAgIChHTUNfVEhSRVNIT0xEX0JJVFMgLSBvdmwtPmRhdGEtPmdtY19iaXRzKTsKICAgICBnbWNf
+dmFsdWUgPSBnbWNfdGhyc2hkX2wgfCBnbWNfdGhyc2hkX2wgPDwgOCB8CiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgZ21jX3RocnNoZF9oIDw8IDE2IHwgZ21jX3RocnNoZF9oIDw8IDI0Owp9Cgo+
+ID4gQWxzbywgaWYgeW91IG9ubHkgZXZlciB1c2UgOCBvciAxMCBiaXRzIGdtYywgbWF5YmUgaXQn
+cyBlYXNpZXIgdG8KPiA+IGhhcmQtY29kZSB0aGUgMiB2YWx1ZXM/Cj4gPiBpZiAob3ZsLT5kYXRh
+LT5nbWNfYml0cyA9PSAxMCkKPiA+ICAgZ21jX3ZhbHVlID0gT1ZMX1JETUFfTUVNX0dNQ18xMEJJ
+VDsKPiA+IGVsc2UKPiA+ICAgZ21jX3ZhbHVlID0gT1ZMX1JETUFfTUVNX0dNQ184QklUOyAvLzB4
+NDA0MDIwMjAKPiA+Cj4KPiBvdXIgaW50ZXJuYWwgbWFpbnRhaW5lciBwcmVmZXIgY2FsY3VsYXRl
+IEdNQyBzZXR0aW5nIHdpdGggcHJpdmF0ZSBkYXRhCj4gZ21jIGJpdCBpbnN0ZWFkIG9mIGhhcmQt
+Y29yZS4KPiBhbmQgd2l0aCBjYWxjdWxhdGlvbiBmdW5jdGlvbiB0aGF0IHdpbGwgYmUgbW9yZSBm
+bGV4aWJsZQoKU291bmRzIG9rLgoKPiA+ID4gKyAgICAgICBlbHNlCj4gPiA+ICsgICAgICAgICAg
+ICAgICBnbWNfdmFsdWUgPSBnbWNfdGhyc2hkX2wgfCBnbWNfdGhyc2hkX2wgPDwgOCB8Cj4gPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICBnbWNfdGhyc2hkX2ggPDwgMTYgfCBnbWNfdGhy
+c2hkX2ggPDwgMjQ7Cj4gPiA+ICsgICAgICAgd3JpdGVsKGdtY192YWx1ZSwgY29tcC0+cmVncyAr
+IERJU1BfUkVHX09WTF9SRE1BX0dNQyhpZHgpKTsKPiA+ID4KPiA+ID4gICAgICAgICByZWcgPSBy
+ZWFkbChjb21wLT5yZWdzICsgRElTUF9SRUdfT1ZMX1NSQ19DT04pOwo+ID4gPiAgICAgICAgIHJl
+ZyA9IHJlZyB8IEJJVChpZHgpOwo+ID4gPiBAQCAtMzI0LDExICszNDEsMTMgQEAgc3RhdGljIGlu
+dCBtdGtfZGlzcF9vdmxfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gPiA+
+Cj4gPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19kaXNwX292bF9kYXRhIG10MjcwMV9vdmxf
+ZHJpdmVyX2RhdGEgPSB7Cj4gPiA+ICAgICAgICAgLmFkZHIgPSBESVNQX1JFR19PVkxfQUREUl9N
+VDI3MDEsCj4gPiA+ICsgICAgICAgLmdtY19iaXRzID0gOCwKPiA+ID4gICAgICAgICAuZm10X3Jn
+YjU2NV9pc18wID0gZmFsc2UsCj4gPiA+ICB9Owo+ID4gPgo+ID4gPiAgc3RhdGljIGNvbnN0IHN0
+cnVjdCBtdGtfZGlzcF9vdmxfZGF0YSBtdDgxNzNfb3ZsX2RyaXZlcl9kYXRhID0gewo+ID4gPiAg
+ICAgICAgIC5hZGRyID0gRElTUF9SRUdfT1ZMX0FERFJfTVQ4MTczLAo+ID4gPiArICAgICAgIC5n
+bWNfYml0cyA9IDgsCj4gPiA+ICAgICAgICAgLmZtdF9yZ2I1NjVfaXNfMCA9IHRydWUsCj4gPiA+
+ICB9Owo+ID4gPgo+ID4gPiAtLQo+ID4gPiAxLjguMS4xLmRpcnR5Cj4gPiA+IF9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gPiA+IGRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKPiA+ID4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+ID4gPiBodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo+Cj4K
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
