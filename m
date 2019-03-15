@@ -1,76 +1,61 @@
-From: Thor Thayer <thor.thayer@linux.intel.com>
-Subject: Re: [PATCHv2 2/5] Documentation: dt: edac: Add Stratix10 Peripheral
- bindings
-Date: Fri, 15 Mar 2019 11:24:29 -0500
-Message-ID: <58583ae5-2a8c-97ab-9a82-fef8d4077169@linux.intel.com>
-References: <1551288445-22335-1-git-send-email-thor.thayer@linux.intel.com>
- <1551288445-22335-3-git-send-email-thor.thayer@linux.intel.com>
- <20190312160445.GA8802@bogus>
- <8b671f75-8488-1e06-a020-5f7d95166918@linux.intel.com>
- <CAL_JsqJHKwOBcHLwfHfB407XkU4SFDymbWR05fN+Zft1ki+b=w@mail.gmail.com>
-Reply-To: thor.thayer@linux.intel.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 1/3] dt-bindings: Add doc for the ingenic-drm driver
+Date: Fri, 15 Mar 2019 18:06:59 +0100
+Message-ID: <20190315170701.29670-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJHKwOBcHLwfHfB407XkU4SFDymbWR05fN+Zft1ki+b=w@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>, Dinh Nguyen <dinguyen@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Add documentation for the devicetree bindings of the DRM driver for the
+JZ47xx family of SoCs from Ingenic.
 
-On 3/13/19 2:20 PM, Rob Herring wrote:
-> On Tue, Mar 12, 2019 at 2:28 PM Thor Thayer <thor.thayer@linux.intel.com> wrote:
->>
->> Hi Rob,
->>
->> On 3/12/19 11:04 AM, Rob Herring wrote:
->>> On Wed, Feb 27, 2019 at 11:27:22AM -0600, thor.thayer@linux.intel.com wrote:
->>>> From: Thor Thayer <thor.thayer@linux.intel.com>
->>>>
->>>> Add peripheral bindings for Stratix10 EDAC to capture
->>>> the differences between the ARM64 and ARM32 architecture.
->>>
->>> What's the difference? Sounds like 2 different chips, so Stratix10 or
->>> s10 is not specific enough perhaps.
->>>
->>
->> Yes, our ARM32 chips are the Cyclone5 and Arria10. The Stratix10 is
->> ARM64 and I'm using S10 as shorthand for the Stratix10.
-> 
-> So it's really just differences between one chip and another... ARM32
-> vs 64 really has nothing to do with that.
-> 
->>
->> The ECC blocks are very similar between Arria10 and Stratix10 but there
->> are differences as a result of the ARM32 vs ARM64 architecture
->> differences. The major difference is how Double Bit Errors are handled.
->> In the ARM32, the DBE is mapped to an IRQ. On ARM64, the DBE is mapped
->> to a SError.
-> 
-> Okay, I guess that's why arm64 matters...
-> 
->> I had started out re-using the Arria10 bindings for Stratix10 since they
->> were very similar. Dinh pointed out that having separate bindings for
->> ARM64 would allow separation between the architectures and make future
->> changes easier.
->>
->> I'm unclear on the comment about being specific enough. Are you
->> suggesting that I use arm64 in the binding name instead of s10? Or is
->> there a better naming convention I should follow?
-> 
-> NM, it was me that was confused. It was that Stratix10 was already
-> mentioned in the doc that confused me.
-> 
-> Rob
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Artur Rojek <contact@artur-rojek.eu>
+---
 
-I can reword this to make it clearer. Do you have any additional 
-suggestions for clarification aside from ARM64 vs ARM32 IRQ handling as 
-we discuss above that you would need to ack this patch?
+Notes:
+    v2: Remove ingenic,panel property.
 
-Thanks,
+ .../devicetree/bindings/display/ingenic,drm.txt    | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ingenic,drm.txt
 
-Thor
+diff --git a/Documentation/devicetree/bindings/display/ingenic,drm.txt b/Documentation/devicetree/bindings/display/ingenic,drm.txt
+new file mode 100644
+index 000000000000..f57a4ae0f7ac
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/ingenic,drm.txt
+@@ -0,0 +1,29 @@
++Ingenic JZ47xx DRM driver
++
++Required properties:
++- compatible: one of:
++  * ingenic,jz4740-drm
++  * ingenic,jz4725b-drm
++- reg: LCD registers location and length
++- clocks: LCD pixclock and device clock specifiers.
++	   The device clock is only required on the JZ4740.
++- clock-names: "lcd_pclk" and "lcd"
++- interrupts: Specifies the interrupt line the LCD controller is connected to.
++
++Optional properties:
++- ingenic,lcd-mode: LCD mode to use with the display panel.
++		    See <dt-bindings/display/ingenic,drm.h> for all the
++		    possible values.
++
++Example:
++
++lcd: lcd-controller@13050000 {
++	compatible = "ingenic,jz4725b-drm";
++	reg = <0x13050000 0x1000>;
++
++	interrupt-parent = <&intc>;
++	interrupts = <31>;
++
++	clocks = <&cgu JZ4725B_CLK_LCD>;
++	clock-names = "lcd";
++};
+-- 
+2.11.0
