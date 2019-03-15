@@ -1,73 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 06/10] dt-bindings: sdm845-pinctrl: add wakeup
- interrupt parent for GPIO
-Date: Fri, 15 Mar 2019 18:37:48 -0500
-Message-ID: <20190315233748.GA7219@bogus>
-References: <20190313211844.29416-1-ilina@codeaurora.org>
- <20190313211844.29416-7-ilina@codeaurora.org>
+Subject: Re: [PATCH v4 4/6] dt-bindings: display: sii902x: Remove trailing
+ white space
+Date: Fri, 15 Mar 2019 18:38:19 -0500
+Message-ID: <20190315233819.GA12283@bogus>
+References: <cover.1552562385.git.jsarha@ti.com>
+ <a3779a61b52214d302d1c1c01d1ae828de138ae9.1552562385.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20190313211844.29416-7-ilina@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com, bjorn.andersson@linaro.org, dianders@chromium.org, linus.walleij@linaro.org, devicetree@vger.kernel.org
+In-Reply-To: <a3779a61b52214d302d1c1c01d1ae828de138ae9.1552562385.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: fabrizio.castro@bp.renesas.com, devicetree@vger.kernel.org, Songjun.Wu@atmel.com, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, voice.shen@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 03:18:40PM -0600, Lina Iyer wrote:
-> SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
-> routed to the PDC as interrupts that can be used to wake the system up
-> from deep low power modes and suspend.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
->  .../devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt    | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-
-I still don't love this being specific to wake-up, but don't have a 
-better suggestion. One nit, otherwise:
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> index 665aadb5ea28..f0fedbc5d41a 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> @@ -29,6 +29,11 @@ SDM845 platform.
->  	Definition: must be 2. Specifying the pin number and flags, as defined
->  		    in <dt-bindings/interrupt-controller/irq.h>
->  
-> +- wakeup-parent:
-> +	Usage: optional
-> +	Value type: <phandle>
-> +	Definition: A phandle to the wakeup interrupt controller for the SoC.
-> +
->  - gpio-controller:
->  	Usage: required
->  	Value type: <none>
-> @@ -53,7 +58,6 @@ pin, a group, or a list of pins or groups. This configuration can include the
->  mux function to select on those pin(s)/group(s), and various pin configuration
->  parameters, such as pull-up, drive strength, etc.
->  
-> -
->  PIN CONFIGURATION NODES:
->  
->  The name of each subnode is not important; all subnodes should be enumerated
-> @@ -160,6 +164,7 @@ Example:
->  		#gpio-cells = <2>;
->  		interrupt-controller;
->  		#interrupt-cells = <2>;
-> +		wake-parent = <&pdc_intc>;
-
-wakeup-parent
-
->  
->  		qup9_active: qup9-active {
->  			mux {
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+T24gVGh1LCAxNCBNYXIgMjAxOSAxMzoyNzo1MCArMDIwMCwgSnlyaSBTYXJoYSB3cm90ZToKPiBS
+ZW1vdmUgdHJhaWxpbmcgd2hpdGUgc3BhY2UgZnJvbSBzaWk5MDJ4IGRpc3BsYXkgYnJpZGdlIGJp
+bmRpbmcuCj4gCj4gU2lnbmVkLW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KPiBS
+ZXZpZXdlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9h
+cmQuY29tPgo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9icmlkZ2Uvc2lpOTAyeC50eHQgfCAyICstCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlv
+bigrKSwgMSBkZWxldGlvbigtKQo+IAoKUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtl
+cm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
