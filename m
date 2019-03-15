@@ -1,28 +1,48 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: Add YAML description for Allwinner boards
-Date: Fri, 15 Mar 2019 08:53:15 -0500
-Message-ID: <CAL_JsqLCbTjjoAfDqcs=dqEo7AX5OPbXjb4v0D6R4XwWihuB4g@mail.gmail.com>
-References: <20190315093651.24978-1-maxime.ripard@bootlin.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 1/2] dt-bindings: gpu: mali-midgard: Add resets property
+Date: Fri, 15 Mar 2019 14:56:54 +0100
+Message-ID: <20190315135655.28359-2-narmstrong@baylibre.com>
+References: <20190315135655.28359-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190315093651.24978-1-maxime.ripard@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190315135655.28359-1-narmstrong@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: devicetree@vger.kernel.org, khilman@baylibre.com, icenowy@aosc.io
+Cc: linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 4:36 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> We've never had a board compatibles documentation for the Allwinner boards
-> so far.
->
-> Let's create a json-schema for them.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  .../devicetree/bindings/arm/sunxi.yaml        | 792 ++++++++++++++++++
->  1 file changed, 792 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/sunxi.yaml
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+VGhlIEFtbG9naWMgQVJNIE1hbGkgTWlkZ2FyZCByZXF1aXJlcyByZXNldCBjb250cm9scyB0byBw
+b3dlciBvbiBhbmQKc29mdHdhcmUgcmVzZXQgdGhlIEdQVSwgYWRkcyB0aGVzZSBhcyBvcHRpb25h
+bCBpbiB0aGUgYmluZGluZ3MuCgpTaWduZWQtb2ZmLWJ5OiBOZWlsIEFybXN0cm9uZyA8bmFybXN0
+cm9uZ0BiYXlsaWJyZS5jb20+Ci0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxt
+YWxpLW1pZGdhcmQudHh0ICAgfCAxNCArKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDE0
+IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZ3B1L2FybSxtYWxpLW1pZGdhcmQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4dAppbmRleCAxOGEyY2RlMmU1ZjMuLjFi
+MWE3NDEyOTE0MSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZ3B1L2FybSxtYWxpLW1pZGdhcmQudHh0CkBAIC0zNyw2ICszNywyMCBAQCBPcHRp
+b25hbCBwcm9wZXJ0aWVzOgogLSBvcGVyYXRpbmctcG9pbnRzLXYyIDogUmVmZXIgdG8gRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL29wcC9vcHAudHh0CiAgIGZvciBkZXRhaWxzLgog
+CistIHJlc2V0cyA6IFBoYW5kbGUgb2YgdGhlIEdQVSByZXNldCBsaW5lLgorCitWZW5kb3Itc3Bl
+Y2lmaWMgYmluZGluZ3MKKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQorCitUaGUgTWFsaSBHUFUg
+aXMgaW50ZWdyYXRlZCB2ZXJ5IGRpZmZlcmVudGx5IGZyb20gb25lIFNvQyB0bworYW5vdGhlci4g
+SW4gb3JkZXIgdG8gYWNjb21vZGF0ZSB0aG9zZSBkaWZmZXJlbmNlcywgeW91IGhhdmUgdGhlIG9w
+dGlvbgordG8gc3BlY2lmeSBvbmUgbW9yZSB2ZW5kb3Itc3BlY2lmaWMgY29tcGF0aWJsZSwgYW1v
+bmc6CisKKy0gImFtbG9naWMsbWVzb24tZ3htLW1hbGkiCisgIFJlcXVpcmVkIHByb3BlcnRpZXM6
+CisgIC0gcmVzZXRzIDogU2hvdWxkIGNvbnRhaW4gcGhhbmRsZXMgb2YgOgorICAgICsgR1BVIHJl
+c2V0IGxpbmUKKyAgICArIEdQVSBBUEIgZ2x1ZSByZXNldCBsaW5lCiAKIEV4YW1wbGUgZm9yIGEg
+TWFsaS1UNzYwOgogCi0tIAoyLjIwLjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbA==
