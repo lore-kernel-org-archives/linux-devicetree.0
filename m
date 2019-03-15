@@ -1,53 +1,67 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH] arm64: dts: imx8qxp: add lsio_mu2 node
-Date: Fri, 15 Mar 2019 10:24:11 +0000
-Message-ID: <AM0PR04MB4211FEB4C272759B84BCB6A180440@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190313093650.18693-1-peng.fan@nxp.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v2 4/6] usb: roles: add API to get usb_role_switch by node
+Date: Fri, 15 Mar 2019 12:34:17 +0200
+Message-ID: <20190315103417.GH7752@kuha.fi.intel.com>
+References: <1552635513-2378-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1552635513-2378-5-git-send-email-chunfeng.yun@mediatek.com>
+ <20190315081835.GD7752@kuha.fi.intel.com>
+ <1552641204.10179.133.camel@mhfsdcap03>
+ <20190315092644.GG7752@kuha.fi.intel.com>
+ <1552642379.10179.138.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190313093650.18693-1-peng.fan@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1552642379.10179.138.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Anson Huang <anson.huang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "van.freenix@gmail.com" <van.freenix@gmail.com>
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> From: Peng Fan
->=20
-> Add lsio_mu2 node which could be used communicate with SCU.
->=20
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+On Fri, Mar 15, 2019 at 05:32:59PM +0800, Chunfeng Yun wrote:
+> Hi,
+> On Fri, 2019-03-15 at 11:26 +0200, Heikki Krogerus wrote:
+> > Hi Chunfeng,
+> > 
+> > On Fri, Mar 15, 2019 at 05:13:24PM +0800, Chunfeng Yun wrote:
+> > > I encounter a build error when CONFIG_USB_ROLE_SWITCH is not enabled,
+> > > 
+> > > drivers/usb/mtu3/mtu3_dr.o: In function `ssusb_role_sw_register':
+> > > ./drivers/usb/mtu3/mtu3_dr.c:460: undefined reference to
+> > > `usb_role_switch_register'
+> > > drivers/usb/mtu3/mtu3_dr.o: In function `ssusb_otg_switch_exit':
+> > > ./drivers/usb/mtu3/mtu3_dr.c:491: undefined reference to
+> > > `usb_role_switch_unregister'
+> > 
+> > So you need to add dependency on USB_ROLE_SWITCH, right?
+> Yes
+> 
+> > 
+> > --- a/drivers/usb/mtu3/Kconfig
+> > +++ b/drivers/usb/mtu3/Kconfig
+> > @@ -43,6 +43,7 @@ config USB_MTU3_DUAL_ROLE
+> >         bool "Dual Role mode"
+> >         depends on ((USB=y || USB=USB_MTU3) && (USB_GADGET=y || USB_GADGET=USB_MTU3))
+> >         depends on (EXTCON=y || EXTCON=USB_MTU3)
+> > +       depends on USB_ROLE_SWITCH
+> >         help
+> >           This is the default mode of working of MTU3 controller where
+> >           both host and gadget features are enabled.
+> > 
+> > > the following patch has fixed the issue, but seems not get into kernel,
+> > > [v3,08/12] usb: roles: Add usb role switch notifier.
+> > > https://patchwork.kernel.org/patch/10836525/
+> > 
+> > I don't understand how that fixes the problem? That patch will in any
+> > case be targeting v5.2. We are in the middle of merge window, so
+> > nothing is happening until v5.1-rc1 is tagged.
+> It provides some dummy inline functions when USB_ROLE_SWITCH is not
+> enabled, this will avoid build error
 
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Ah, true. Those should brobable be introduced in their own patch.
 
-Regards
-Dong Aisheng
 
-> ---
->  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> index 16766838ac77..64eecd6cb1e9 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> @@ -339,6 +339,14 @@
->  			#mbox-cells =3D <2>;
->  		};
->=20
-> +		lsio_mu2: mailbox@5d1d0000 {
-> +			compatible =3D "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
-> +			reg =3D <0x5d1d0000 0x10000>;
-> +			interrupts =3D <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
-> +			#mbox-cells =3D <2>;
-> +			status =3D "disabled";
-> +		};
-> +
->  		lsio_mu3: mailbox@5d1e0000 {
->  			compatible =3D "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
->  			reg =3D <0x5d1e0000 0x10000>;
-> --
-> 2.16.4
+thanks,
+
+-- 
+heikki
