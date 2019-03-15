@@ -1,124 +1,56 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH] dt-bindings: Add YAML description for Allwinner boards
-Date: Fri, 15 Mar 2019 19:37:41 +0800
-Message-ID: <CAGb2v66gXDU=Bt204dr_6yvUWCg_e0qZ0X+oDTwNjgjTsD2kyQ@mail.gmail.com>
-References: <20190315093651.24978-1-maxime.ripard@bootlin.com>
+From: Yash Shah <yash.shah@sifive.com>
+Subject: Re: [PATCH v9 0/2] PWM support for HiFive Unleashed
+Date: Fri, 15 Mar 2019 17:19:59 +0530
+Message-ID: <CAJ2_jOE3RH9FyFg_NATcLEpHv5y89zdh06Ji2x8n3C_gp-wn6A@mail.gmail.com>
+References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com> <mvmimwotn60.fsf@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190315093651.24978-1-maxime.ripard@bootlin.com>
+In-Reply-To: <mvmimwotn60.fsf@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Andreas Schwab <schwab@suse.de>
+Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 5:37 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+On Tue, Mar 12, 2019 at 3:44 PM Andreas Schwab <schwab@suse.de> wrote:
 >
-> We've never had a board compatibles documentation for the Allwinner boards
-> so far.
+> On M=C3=A4r 12 2019, Yash Shah <yash.shah@sifive.com> wrote:
 >
-> Let's create a json-schema for them.
+> > This patch series adds a PWM driver and DT documentation
+> > for HiFive Unleashed board. The patches are mostly based on
+> > Wesley's patch.
 >
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  .../devicetree/bindings/arm/sunxi.yaml        | 792 ++++++++++++++++++
->  1 file changed, 792 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/sunxi.yaml
+> Heartbeat trigger still doesn't work for me.
+
+You need to make sure the period setting is passed via the
+conventional way in DT file.
+Example:
+pwmleds {
+    compatible =3D "pwm-leds";
+    heartbeat {
+        pwms =3D <&L45 0 10000000 0>;
+        max-brightness =3D <255>;
+        linux,default-trigger =3D "heartbeat";
+    };
+};
+
+I have tested on HiFive unleashed board. To modify DT file I performed
+the following steps:
+
+Use the open-source FSBL from:
+https://github.com/sifive/freedom-u540-c000-bootloader
+
+Modify the fsbl/ux00_fsbl.dts file and re-build the fsbl.bin
+
+Steps for using fsbl.bin in HiFive Unleashed board:
+https://github.com/sifive/freedom-u540-c000-bootloader/issues/9
+
 >
-> diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> new file mode 100644
-> index 000000000000..b34d9c5b7fd8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> @@ -0,0 +1,792 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR X11)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/sunxi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner platforms device tree bindings
-> +
-> +maintainers:
-> +  - Chen-Yu Tsai <wens@csie.org>
-> +  - Maxime Ripard <maxime.ripard@bootlin.com>
-> +
-> +properties:
-> +  $nodename:
-> +    const: '/'
-> +  compatible:
-> +    oneOf:
-> +
-
-[...]
-
-> +      - description: Sinovoip BananaPi M1 Plus
-> +        items:
-> +          - const: sinovoip,bpi-m1-plus
-> +          - const: allwinner,sun7i-a20
-> +
-> +      - description: Sinovoip BananaPi M2
-> +        items:
-> +          - const: sinovoip,bpi-m2
-> +          - const: allwinner,sun6i-a31s
-> +
-> +      - description: Sinovoip BananaPi M2 Berry
-> +        items:
-> +          - const: sinovoip,bpi-m2-berry
-> +          - const: allwinner,sun8i-r40
-> +
-> +      - description: Sinovoip BananaPi M2 Plus
-> +        items:
-> +          - const: sinovoip,bpi-m2-plus
-> +          - const: allwinner,sun8i-h3
-> +
-> +      - description: Sinovoip BananaPi M2 Plus
-> +        items:
-> +          - const: sinovoip,bpi-m2-plus
-> +          - const: allwinner,sun50i-h5
-> +
-> +      - description: Sinovoip BananaPi M2 Plus v1.2
-> +        items:
-> +          - const: bananapi,bpi-m2-plus-v1.2
-> +          - const: allwinner,sun8i-h3
-> +
-> +      - description: Sinovoip BananaPi M2 Plus v1.2
-> +        items:
-> +          - const: bananapi,bpi-m2-plus-v1.2
-> +          - const: allwinner,sun50i-h5
-> +
-> +      - description: Sinovoip BananaPi M2 Magic
-> +        items:
-> +          - const: sinovoip,bananapi-m2m
-> +          - const: allwinner,sun8i-a33
-> +
-> +      - description: Sinovoip BananaPi M2 Ultra
-> +        items:
-> +          - const: sinovoip,bpi-m2-ultra
-> +          - const: allwinner,sun8i-r40
-> +
-> +      - description: Sinovoip BananaPi M2 Zero
-> +        items:
-> +          - const: sinovoip,bpi-m2-zero
-> +          - const: allwinner,sun8i-h2-plus
-> +
-> +      - description: Sinovoip BananaPi M3
-> +        items:
-> +          - const: sinovoip,bpi-m3
-> +          - const: allwinner,sun8i-a83t
-> +
-> +      - description: Sinovoip BananaPi M64
-> +        items:
-> +          - const: sinovoip,bananapi-m64
-> +          - const: allwinner,sun50i-a64
-
-Any chance we could rename and list them as just BananaPi xxx?
-
-When the BananaPi-R2 was mainlined, I asked the submitter to ask them
-whether the vendor was Sinovoip or Bananapi, and they (Bananapi team)
-said it was Bananapi.
-
-We managed to convert a few (the BPI-M2+), but most still carry the
-Sinovoip name.
-
-ChenYu
+> Andreas.
+>
+> --
+> Andreas Schwab, SUSE Labs, schwab@suse.de
+> GPG Key fingerprint =3D 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D=
+7
+> "And now for something completely different."
