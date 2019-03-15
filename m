@@ -1,59 +1,124 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V4 3/4] arm64: dts: freescale: imx8qxp: enable scu general
- irq channel
-Date: Fri, 15 Mar 2019 11:06:47 +0000
-Message-ID: <AM0PR04MB4211B9EE638042D10E0E7ED680440@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1550740354-2701-1-git-send-email-Anson.Huang@nxp.com>
- <1550740354-2701-3-git-send-email-Anson.Huang@nxp.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH] dt-bindings: Add YAML description for Allwinner boards
+Date: Fri, 15 Mar 2019 19:37:41 +0800
+Message-ID: <CAGb2v66gXDU=Bt204dr_6yvUWCg_e0qZ0X+oDTwNjgjTsD2kyQ@mail.gmail.com>
+References: <20190315093651.24978-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550740354-2701-3-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190315093651.24978-1-maxime.ripard@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> From: Anson Huang
-> 
-> On i.MX8QXP, SCU uses MU1 general interrupt channel #3 to notify user for
-> IRQs of RTC alarm, thermal alarm and WDOG etc., mailbox RX doorbell mode is
-> used for this function, this patch adds support for it.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On Fri, Mar 15, 2019 at 5:37 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> We've never had a board compatibles documentation for the Allwinner boards
+> so far.
+>
+> Let's create a json-schema for them.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 > ---
-> Changes since V3:
-> 	- rename "gi3" to "gip3";
-> 	- add alias for getting mu id by driver.
-> ---
->  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> index 4c3dd95..f0a9224 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> @@ -21,6 +21,7 @@
->  		mmc1 = &usdhc2;
->  		mmc2 = &usdhc3;
->  		serial0 = &adma_lpuart0;
-> +		mu1 = &lsio_mu1;
+>  .../devicetree/bindings/arm/sunxi.yaml        | 792 ++++++++++++++++++
+>  1 file changed, 792 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/sunxi.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
+> new file mode 100644
+> index 000000000000..b34d9c5b7fd8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+> @@ -0,0 +1,792 @@
+> +# SPDX-License-Identifier: (GPL-2.0+ OR X11)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/sunxi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Allwinner platforms device tree bindings
+> +
+> +maintainers:
+> +  - Chen-Yu Tsai <wens@csie.org>
+> +  - Maxime Ripard <maxime.ripard@bootlin.com>
+> +
+> +properties:
+> +  $nodename:
+> +    const: '/'
+> +  compatible:
+> +    oneOf:
+> +
 
-Need add aliase in binding doc.
+[...]
 
-Otherwise:
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+> +      - description: Sinovoip BananaPi M1 Plus
+> +        items:
+> +          - const: sinovoip,bpi-m1-plus
+> +          - const: allwinner,sun7i-a20
+> +
+> +      - description: Sinovoip BananaPi M2
+> +        items:
+> +          - const: sinovoip,bpi-m2
+> +          - const: allwinner,sun6i-a31s
+> +
+> +      - description: Sinovoip BananaPi M2 Berry
+> +        items:
+> +          - const: sinovoip,bpi-m2-berry
+> +          - const: allwinner,sun8i-r40
+> +
+> +      - description: Sinovoip BananaPi M2 Plus
+> +        items:
+> +          - const: sinovoip,bpi-m2-plus
+> +          - const: allwinner,sun8i-h3
+> +
+> +      - description: Sinovoip BananaPi M2 Plus
+> +        items:
+> +          - const: sinovoip,bpi-m2-plus
+> +          - const: allwinner,sun50i-h5
+> +
+> +      - description: Sinovoip BananaPi M2 Plus v1.2
+> +        items:
+> +          - const: bananapi,bpi-m2-plus-v1.2
+> +          - const: allwinner,sun8i-h3
+> +
+> +      - description: Sinovoip BananaPi M2 Plus v1.2
+> +        items:
+> +          - const: bananapi,bpi-m2-plus-v1.2
+> +          - const: allwinner,sun50i-h5
+> +
+> +      - description: Sinovoip BananaPi M2 Magic
+> +        items:
+> +          - const: sinovoip,bananapi-m2m
+> +          - const: allwinner,sun8i-a33
+> +
+> +      - description: Sinovoip BananaPi M2 Ultra
+> +        items:
+> +          - const: sinovoip,bpi-m2-ultra
+> +          - const: allwinner,sun8i-r40
+> +
+> +      - description: Sinovoip BananaPi M2 Zero
+> +        items:
+> +          - const: sinovoip,bpi-m2-zero
+> +          - const: allwinner,sun8i-h2-plus
+> +
+> +      - description: Sinovoip BananaPi M3
+> +        items:
+> +          - const: sinovoip,bpi-m3
+> +          - const: allwinner,sun8i-a83t
+> +
+> +      - description: Sinovoip BananaPi M64
+> +        items:
+> +          - const: sinovoip,bananapi-m64
+> +          - const: allwinner,sun50i-a64
 
-Regards
-Dong Aisheng
+Any chance we could rename and list them as just BananaPi xxx?
+
+When the BananaPi-R2 was mainlined, I asked the submitter to ask them
+whether the vendor was Sinovoip or Bananapi, and they (Bananapi team)
+said it was Bananapi.
+
+We managed to convert a few (the BPI-M2+), but most still carry the
+Sinovoip name.
+
+ChenYu
