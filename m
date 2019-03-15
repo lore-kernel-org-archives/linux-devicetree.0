@@ -1,28 +1,62 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V4 1/4] dt-bindings: fsl: scu: add general interrupt
- support
-Date: Fri, 15 Mar 2019 10:34:42 +0000
-Message-ID: <AM0PR04MB421124EF723BD6444E4DA7C080440@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1550740354-2701-1-git-send-email-Anson.Huang@nxp.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH] ARM: dts: am335x-evm: Correct the regulators for the
+ audio codec
+Date: Fri, 15 Mar 2019 12:48:11 +0200
+Message-ID: <0f1dddab-3473-ab1c-22d3-52012a75b1b8@ti.com>
+References: <20190314132040.30637-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550740354-2701-1-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190314132040.30637-1-peter.ujfalusi@ti.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tony@atomide.com
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> From: Anson Huang
->=20
-> Add scu general interrupt function support.
->=20
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-
-Regards
-Dong Aisheng
+SGksCgpPbiAxNC8wMy8yMDE5IDE1LjIwLCBQZXRlciBVamZhbHVzaSB3cm90ZToKPiBDb3JyZWN0
+bHkgbWFwIHRoZSByZWd1bGF0b3JzIHVzZWQgYnkgdGx2MzIwYWljMzEwNi4KPiBCb3RoIDEuOFYg
+YW5kIDMuM1YgZm9yIHRoZSBjb2RlYyBpcyBkZXJpdmVkIGZyb20gVkJBVCB2aWEgZml4ZWQgcmVn
+dWxhdG9ycy4KCkl0IHdpbGwgYmUgZ29vZCB0byBiYWNrcG9ydCB0aGlzIHRvIHN0YWJsZSB2NC4x
+NCsgd2hlcmUgdGhlIGFpYzN4IE9DTVYKY29uZmlndXJhdGlvbiB3YXMgZmlyc3QgYXZhaWxhYmxl
+LgoKSSB3aWxsIHJlc2VuZCB3aXRoIHRhZ2dpbmcgdGhlIHBhdGNoIHRvIGJlIGJhY2twb3J0ZWQu
+Cgo+IAo+IFNpZ25lZC1vZmYtYnk6IFBldGVyIFVqZmFsdXNpIDxwZXRlci51amZhbHVzaUB0aS5j
+b20+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1eC1ldm0uZHRzIHwgMjYgKysrKysr
+KysrKysrKysrKysrKysrKy0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKyks
+IDQgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1
+eC1ldm0uZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvYW0zMzV4LWV2bS5kdHMKPiBpbmRleCBkY2U1
+YmU1ZGY5N2IuLmVkY2ZmNzk4NzllNyAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9h
+bTMzNXgtZXZtLmR0cwo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1eC1ldm0uZHRzCj4g
+QEAgLTU3LDYgKzU3LDI0IEBACj4gIAkJZW5hYmxlLWFjdGl2ZS1oaWdoOwo+ICAJfTsKPiAgCj4g
+KwkvKiBUUFM3OTUwMSAqLwo+ICsJdjFfOGRfcmVnOiBmaXhlZHJlZ3VsYXRvci12MV84ZCB7Cj4g
+KwkJY29tcGF0aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOwo+ICsJCXJlZ3VsYXRvci1uYW1lID0g
+InYxXzhkIjsKPiArCQl2aW4tc3VwcGx5ID0gPCZ2YmF0PjsKPiArCQlyZWd1bGF0b3ItbWluLW1p
+Y3Jvdm9sdCA9IDwxODAwMDAwPjsKPiArCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxODAw
+MDAwPjsKPiArCX07Cj4gKwo+ICsJLyogVFBTNzk1MDEgKi8KPiArCXYzXzNkX3JlZzogZml4ZWRy
+ZWd1bGF0b3ItdjNfM2Qgewo+ICsJCWNvbXBhdGlibGUgPSAicmVndWxhdG9yLWZpeGVkIjsKPiAr
+CQlyZWd1bGF0b3ItbmFtZSA9ICJ2M18zZCI7Cj4gKwkJdmluLXN1cHBseSA9IDwmdmJhdD47Cj4g
+KwkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MzMwMDAwMD47Cj4gKwkJcmVndWxhdG9yLW1h
+eC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47Cj4gKwl9Owo+ICsKPiAgCW1hdHJpeF9rZXlwYWQ6IG1h
+dHJpeF9rZXlwYWQwIHsKPiAgCQljb21wYXRpYmxlID0gImdwaW8tbWF0cml4LWtleXBhZCI7Cj4g
+IAkJZGVib3VuY2UtZGVsYXktbXMgPSA8NT47Cj4gQEAgLTQ5OSwxMCArNTE3LDEwIEBACj4gIAkJ
+c3RhdHVzID0gIm9rYXkiOwo+ICAKPiAgCQkvKiBSZWd1bGF0b3JzICovCj4gLQkJQVZERC1zdXBw
+bHkgPSA8JnZhdXgyX3JlZz47Cj4gLQkJSU9WREQtc3VwcGx5ID0gPCZ2YXV4Ml9yZWc+Owo+IC0J
+CURSVkRELXN1cHBseSA9IDwmdmF1eDJfcmVnPjsKPiAtCQlEVkRELXN1cHBseSA9IDwmdmJhdD47
+Cj4gKwkJQVZERC1zdXBwbHkgPSA8JnYzXzNkX3JlZz47Cj4gKwkJSU9WREQtc3VwcGx5ID0gPCZ2
+M18zZF9yZWc+Owo+ICsJCURSVkRELXN1cHBseSA9IDwmdjNfM2RfcmVnPjsKPiArCQlEVkRELXN1
+cHBseSA9IDwmdjFfOGRfcmVnPjsKPiAgCX07Cj4gIH07Cj4gIAo+IAoKLSBQw6l0ZXIKClRleGFz
+IEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtp
+LgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBI
+ZWxzaW5raQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
