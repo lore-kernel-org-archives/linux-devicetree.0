@@ -1,50 +1,38 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH v2 4/6] usb: roles: add API to get usb_role_switch by
- node
-Date: Fri, 15 Mar 2019 17:14:08 +0800
-Message-ID: <1552641248.10179.134.camel@mhfsdcap03>
-References: <1552635513-2378-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1552635513-2378-5-git-send-email-chunfeng.yun@mediatek.com>
-         <20190315081835.GD7752@kuha.fi.intel.com>
-         <20190315091127.GF7752@kuha.fi.intel.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH] of: property: Document that of_graph_get_endpoint_by_regs needs of_node_put
+Date: Fri, 15 Mar 2019 10:22:47 +0100
+Message-ID: <20190315092247.7286-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190315091127.GF7752@kuha.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Fri, 2019-03-15 at 11:11 +0200, Heikki Krogerus wrote:
-> On Fri, Mar 15, 2019 at 10:18:35AM +0200, Heikki Krogerus wrote:
-> > Andy already pointed out that you need to use fwnodes.
-> > 
-> > Rule of thumb: You always use fwnodes. Only if there is something that
-> > can't be done with fwnodes you use DT or ACPI nodes directly.
-> > 
-> > In this case there is absolutely nothing that would prevent you from
-> > using fwnodes.
-> 
-> ...
-> 
-> > +/**
-> > + * usb_role_switch_get_by_node - Find USB role switch by it's parent node
-> > + * @node: The node that register USB role switch
-> > + *
-> > + * Finds and returns role switch registered by @node. The reference count
-> > + * for the found switch is incremented.
-> > + */
-> > +struct usb_role_switch *usb_role_switch_get_by_node(struct device_node *node)
-> 
-> This is my proposal for function prototype:
-> 
-> struct usb_role_switch *
-> fwnode_usb_role_switch_get(struct fwnode_handle *fwnode);
-Ok, thanks again
-> 
-> 
-> thanks,
-> 
+The node returned by of_graph_get_endpoint_by_regs has a reference taken,
+and we need to put that reference back when done with the node.
+
+However, the documentation for that node doesn't mention it, so let's make
+sure it does.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ drivers/of/property.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index 08430031bd28..29bfc5d3b783 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -659,7 +659,7 @@ EXPORT_SYMBOL(of_graph_get_next_endpoint);
+  *
+  * Return: An 'endpoint' node pointer which is identified by reg and at the same
+  * is the child of a port node identified by port_reg. reg and port_reg are
+- * ignored when they are -1.
++ * ignored when they are -1. Use of_node_put() on the pointer when done.
+  */
+ struct device_node *of_graph_get_endpoint_by_regs(
+ 	const struct device_node *parent, int port_reg, int reg)
+-- 
+2.20.1
