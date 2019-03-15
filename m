@@ -1,180 +1,61 @@
-From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3] ARM: dts: sun8i-h3: Add support for the
- RerVision H3-DVK board
-Date: Fri, 15 Mar 2019 13:38:28 +0100
-Message-ID: <20190315123828.3224-1-paul.kocialkowski@bootlin.com>
-Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH 0/6] drm/bridge: Add ICN6211 MIPI-DSI/RGB bridge
+Date: Fri, 15 Mar 2019 18:38:19 +0530
+Message-ID: <20190315130825.9005-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBX5ZV3SAKGQE47TK4AA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is an H3-based board that sticks close to the reference design.
-
-Supported features:
-* UART
-* DRAM
-* MMC
-* eMMC
-* Ethernet
-* USB host
-* USB peripheral
-* HDMI
-
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
----
-Changes since v2:
-* Actually made the changes instead of sending the same patch again.
-
-Changes since v1:
-* Removed unneeded changes to mmc2_8bit_pins node;
-* Renamed HDMI connector nodes to match other boards.
-
- arch/arm/boot/dts/Makefile                   |   1 +
- arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts | 114 +++++++++++++++++++
- 2 files changed, 115 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index bd40148a15b2..8db275b75214 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1078,6 +1078,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-h3-orangepi-plus.dtb \
- 	sun8i-h3-orangepi-plus2e.dtb \
- 	sun8i-h3-orangepi-zero-plus2.dtb \
-+	sun8i-h3-rervision-dvk.dtb \
- 	sun8i-r16-bananapi-m2m.dtb \
- 	sun8i-r16-nintendo-nes-classic.dtb \
- 	sun8i-r16-nintendo-super-nes-classic.dtb \
-diff --git a/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts b/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
-new file mode 100644
-index 000000000000..51bd2c00bbae
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
-@@ -0,0 +1,114 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2019 Bootlin
-+ * Author: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-+ */
-+
-+/dts-v1/;
-+#include "sun8i-h3.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "RerVision H3-DVK";
-+	compatible = "rervision,h3-dvk", "allwinner,sun8i-h3";
-+
-+	aliases {
-+		ethernet0 = &emac;
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+};
-+
-+&de {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&ehci2 {
-+	status = "okay";
-+};
-+
-+&ehci3 {
-+	status = "okay";
-+};
-+
-+&emac {
-+	phy-handle = <&int_mii_phy>;
-+	phy-mode = "mii";
-+	allwinner,leds-active-low;
-+	status = "okay";
-+};
-+
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
-+&mmc0 {
-+	bus-width = <4>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
-+	status = "okay";
-+	vmmc-supply = <&reg_vcc3v3>;
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_8bit_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <8>;
-+	non-removable;
-+	cap-mmc-hw-reset;
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&ohci2 {
-+	status = "okay";
-+};
-+
-+&ohci3 {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	status = "okay";
-+	dr_mode = "peripheral";
-+};
-+
-+&usbphy {
-+	status = "okay";
-+};
--- 
-2.21.0
+VGhpcyBzZXJpZXMgc3VwcG9ydCBDaGlwb25lIElDTjYyMTEgRFNJL1JHQiBicmlkZ2Ugc3VwcG9y
+dC4KClRoaXMgSUNONjIxMSBicmlkZ2UgaXMgdGFraW5nIGZsZXhpYmxlIGNvbmZpZ3VyYXRpb24g
+b2YgTUlQSSBEU0kKc2lnbmFsIGlucHV0IGFuZCBwcm9kdWNlIFJHQjU2NSwgUkdCNjY2LCBSR0I4
+ODggb3V0cHV0IGZvcm1hdCAKYW5kIGl0IGlzIHByZXNlbnQgaW4gdGhlIEJhbmFuYXBpIHMwNzB3
+djIwLWN0MTYgcGFuZWwuCgpJbml0aWFsbHkgc2ltaWxhciBzdXBwb3J0IGlzIHdyaXR0ZW4gYXMg
+ZHNpIHBhbmVsIGRyaXZlciwgYnV0IApiYXNlZCBvbiB0aGUgZGlzY3Vzc2lvbiBmcm9tIHRoaXMg
+dGhyZWFkIFsxXSBhbmQgaW5wdXQgZnJvbSAKIkFuZHJ6ZWogSGFqZGEiIEkgd291bGQgZW5kZWQt
+dXAgd3JpdGluZyBicmlkZ2UgZHJpdmVyLgoKcGF0Y2ggMSwgMjogZXhwb3J0IGRybV9icmlkZ2Vf
+ZGV0YWNoCgpwYXRjaCAzOiBicmlkZ2Ugc3VwcG9ydCBvbiBBbGx3aW5uZXIgRFNJIGNvbnRyb2xs
+ZXIKCnBhdGNoIDQ6IElDTjYyMTEgZHQtYmluZGluZ3MKCnBhdGNoIDU6IElDTjYyMTEgYnJpZGdl
+IGRyaXZlcgoKcGF0Y2ggNjogb3ZlcmxheSB0byBlbmFibGUgYnJpZGdlIGFuZCBwYW5lbCBvbiBC
+UEktTTY0LCB0aGlzIHdvdWxkCmV2ZW50dWFsbHkgZGVwZW5kcyBvbiAnQWxsd2lubmVyIEE2NCBN
+SVBJLURTSSIgc3VwcG9ydCBbMl0KClsyXSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3By
+b2plY3QvbGludXgtYXJtLWtlcm5lbC9saXN0Lz9zZXJpZXM9OTAxMTcKWzFdIGh0dHBzOi8vcGF0
+Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA2NTc1NzkvCgpBbnkgaW5wdXRzPwpKYWdhbi4KCkph
+Z2FuIFRla2kgKDYpOgogIGRybS9icmlkZ2U6IEV4cG9ydCBkcm1fYnJpZGdlX2RldGFjaAogIGRy
+bS9leHlub3M6IGRzaTogVXNlIGRybV9icmlkZ2VfZGV0YWNoCiAgZHJtL3N1bjRpOiBkc2k6IEFk
+ZCBicmlkZ2Ugc3VwcG9ydAogIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBicmlkZ2U6IEFkZCBJQ042
+MjExIE1JUEktRFNJIHRvIFJHQiBjb252ZXJ0b3IKICAgIGJyaWRnZQogIGRybS9icmlkZ2U6IEFk
+ZCBDaGlwb25lIElDTjYyMTEgTUlQSS1EU0kvUkdCIGNvbnZlcnRvciBicmlkZ2UKICBbRE8gTk9U
+IE1FUkdFXSBhcm02NDogZHRzOiBhbGx3aW5uZXI6IGJhbmFuYXBpLW02NDogRW5hYmxlIFMwNzBX
+VjIwLUNUMTYgRFNJIHBhbmVsCgogLi4uL2Rpc3BsYXkvYnJpZGdlL2NoaXBvbmUsaWNuNjIxMS50
+eHQgICAgICAgIHwgIDM2ICsrKwogTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHwgICA2ICsKIC4uLi9kdHMvYWxsd2lubmVyL3N1bjUwaS1hNjQtYmFuYW5hcGkt
+bTY0LmR0cyB8ICA2MyArKysrCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAgICAg
+ICAgICAgICAgfCAgMTAgKwogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAgICAg
+ICAgICAgIHwgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvY2hpcG9uZS1pY242MjExLmMg
+ICAgICB8IDI3NSArKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9kcm1fYnJpZGdl
+LmMgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5v
+c19kcm1fZHNpLmMgICAgICAgfCAgIDMgKy0KIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW42aV9t
+aXBpX2RzaS5jICAgICAgICB8ICA2NSArKystLQogZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjZp
+X21pcGlfZHNpLmggICAgICAgIHwgICAxICsKIGluY2x1ZGUvZHJtL2RybV9icmlkZ2UuaCAgICAg
+ICAgICAgICAgICAgICAgICB8ICAgMSArCiAxMSBmaWxlcyBjaGFuZ2VkLCA0NDMgaW5zZXJ0aW9u
+cygrKSwgMTkgZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2NoaXBvbmUsaWNuNjIxMS50eHQKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2NoaXBvbmUtaWNuNjIxMS5j
+CgotLSAKMi4xOC4wLjMyMS5nZmZjNmZhMGUzCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWw=
