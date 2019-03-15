@@ -1,63 +1,60 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v2 4/6] usb: roles: add API to get usb_role_switch by node
-Date: Fri, 15 Mar 2019 10:18:35 +0200
-Message-ID: <20190315081835.GD7752@kuha.fi.intel.com>
-References: <1552635513-2378-1-git-send-email-chunfeng.yun@mediatek.com>
- <1552635513-2378-5-git-send-email-chunfeng.yun@mediatek.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v5 09/12] mtd: rawnand: ingenic: Make use of ecc-engine
+ property
+Date: Fri, 15 Mar 2019 09:40:09 +0100
+Message-ID: <20190315094009.66b91ad5@xps13>
+References: <20190313222259.28704-1-paul@crapouillou.net>
+        <20190313222259.28704-9-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1552635513-2378-5-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <20190313222259.28704-9-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, od@zcrc.me, Mathieu Malaterre <malat@debian.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 03:38:31PM +0800, Chunfeng Yun wrote:
-> Add usb_role_switch_get_by_node() to make easier to get
-> usb_role_switch by node which register it.
-> It's useful when there is not device_connection registered
-> between two drivers and only knows the node which register
-> usb_role_switch.
+Hi Paul,
+
+Paul Cercueil <paul@crapouillou.net> wrote on Wed, 13 Mar 2019 23:22:56
++0100:
+
+> Use the 'ecc-engine' standard property instead of the custom
+> 'ingenic,bch-controller' custom property, which is now deprecated.
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  drivers/usb/roles/class.c | 30 ++++++++++++++++++++++++++++++
->  include/linux/usb/role.h  |  1 +
->  2 files changed, 31 insertions(+)
 > 
-> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-> index 99116af07f1d..284b19856dc4 100644
-> --- a/drivers/usb/roles/class.c
-> +++ b/drivers/usb/roles/class.c
-> @@ -11,6 +11,7 @@
->  #include <linux/device.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/of.h>
->  #include <linux/slab.h>
+> Notes:
+>     v5: New patch
+> 
+>  drivers/mtd/nand/raw/ingenic/ingenic_ecc.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
+> index d7f3a8c3abea..30436ca6628a 100644
+> --- a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
+> +++ b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
+> @@ -82,9 +82,9 @@ static struct ingenic_ecc *ingenic_ecc_get(struct device_node *np)
 >  
->  static struct class *role_class;
-> @@ -121,6 +122,35 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(usb_role_switch_get);
->  
-> +static int __switch_match_node(struct device *dev, const void *node)
-> +{
-> +	return dev->parent->of_node == (const struct device_node *)node;
-> +}
+>  /**
+>   * of_ingenic_ecc_get() - get the ECC controller from a DT node
+> - * @of_node: the node that contains a bch-controller property.
+> + * @of_node: the node that contains a ecc-engine property.
 
-Andy already pointed out that you need to use fwnodes.
+Would "contains an ecc-engine property" be better English?
 
-Rule of thumb: You always use fwnodes. Only if there is something that
-can't be done with fwnodes you use DT or ACPI nodes directly.
+I am not sure what is the rule when it comes to plain English with
+variable names. However if you agree, no need to re-send the series, I
+can fix it when applying.
 
-In this case there is absolutely nothing that would prevent you from
-using fwnodes.
+BTW, I added hw ECC engines support to my generic ECC engine
+implementation, but migrating the whole raw NAND subsystem (using I/O
+requests like in the SPI-NAND core, adding prepare/finish_io_req hooks)
+is going to be much more invasive than initially expected, so I am not
+sure I will finish the migration any time soon.
 
 
-thanks,
-
--- 
-heikki
+Thanks,
+Miquèl
