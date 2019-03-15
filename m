@@ -1,154 +1,179 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: spi-mem: stm32-qspi: add suspend/resume support" to the
- spi tree
-Date: Fri, 15 Mar 2019 17:19:34 +0000 (GMT)
-Message-ID: <20190315171934.8C7B61126E81@debutante.sirena.org.uk>
-References: <1552050741-27739-3-git-send-email-ludovic.Barre@st.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH 0/4] Introduce OPP bandwidth bindings
+Date: Sat, 16 Mar 2019 00:32:49 +0530
+Message-ID: <460be20a-0baa-cf9c-2d5c-ea825aa34bc4@codeaurora.org>
+References: <20190313090010.20534-1-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1552050741-27739-3-git-send-email-ludovic.Barre@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ludovic Barre <ludovic.barre@st.com>
-Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Boris Brezillon <boris.brezillon@bootlin.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190313090010.20534-1-georgi.djakov@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>, vireshk@kernel.org, sboyd@kernel.org, nm@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net
+Cc: jcrouse@codeaurora.org, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, myungjoo.ham@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
 
-   spi: spi-mem: stm32-qspi: add suspend/resume support
 
-has been applied to the spi tree at
+On 3/13/19 2:30 PM, Georgi Djakov wrote:
+> Here is a proposal to extend the OPP bindings with bandwidth based on
+> a previous discussion [1].
+> 
+> Every functional block on a SoC can contribute to the system power
+> efficiency by expressing its own bandwidth needs (to memory or other SoC
+> modules). This will allow the system to save power when high throughput
+> is not required (and also provide maximum throughput when needed).
+> 
+> There are at least three ways for a device to determine its bandwidth
+> needs:
+> 	1. The device can dynamically calculate the needed bandwidth
+> based on some known variable. For example: UART (baud rate), I2C (fast
+> mode, high-speed mode, etc), USB (specification version, data transfer
+> type), SDHC (SD standard, clock rate, bus-width), Video Encoder/Decoder
+> (video format, resolution, frame-rate)
+> 
+> 	2. There is a hardware specific value. For example: hardware
+> specific constant value (e.g. for PRNG) or use-case specific value that
+> is hard-coded.
+> 
+> 	3. Predefined SoC/board specific bandwidth values. For example:
+> CPU or GPU bandwidth is related to the current core frequency and both
+> bandwidth and frequency are scaled together.
+> 
+> This patchset is trying to address point 3 above by extending the OPP
+> bindings to support predefined SoC/board bandwidth values and adds
+> support in cpufreq-dt to scale the interconnect between the CPU and the
+> DDR together with frequency and voltage.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+Hey Georgi,
+Having opp-bw-MBps as a part of cpu opp does greatly simplify the
+problem of scaling multiple interconnect devices with change in cpu
+frequency. But there is still a need to scale other devices (non 
+interconnect based) according to cpu frequency. Having a devfreq
+governor for the same would help to have the same generic solution
+across SoCs (msm8916/8996/qcs405/sdm845). The devfreq maintainer did
+like the idea but wanted it incorporated into the passive governor.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+* 
+https://lore.kernel.org/lkml/20180528060014epcms1p87ec68a4d44f9447b06f979a87e545b7d@epcms1p8/
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+* 
+https://lore.kernel.org/lkml/20180802095608epcms1p33fb061543efc9ceb3ec12d5567ceffbc@epcms1p3/
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+I have a RFC series implementing ddr scaling with passive governor for 
+sdm845 with the following bindings, will post it early next week.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+cpus {
+	...
 
-Thanks,
-Mark
+	CPU0: cpu@0 {
+		...
+		operating-points-v2 = <&cpu0_opp_table>;
+		...
+	};
+         ....
 
->From 2e541b64ee5269278fde5c87953a9963a8219ed4 Mon Sep 17 00:00:00 2001
-From: Ludovic Barre <ludovic.barre@st.com>
-Date: Fri, 8 Mar 2019 14:12:21 +0100
-Subject: [PATCH] spi: spi-mem: stm32-qspi: add suspend/resume support
+	CPU4: cpu@400 {
+		...
+		operating-points-v2 = <&cpu4_opp_table>;
+		...
+	};
+         ...
+};
 
-This patch adds suspend and resume support for spi-stm32-qspi
-drivers.
+cpu0_opp_table: cpu0_opp_table {
+	compatible = "operating-points-v2";
+	opp-shared;
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-stm32-qspi.c | 39 ++++++++++++++++++++++++++++++++----
- 1 file changed, 35 insertions(+), 4 deletions(-)
+	cpu0_opp1: opp-300000000 {
+		opp-hz = /bits/ 64 <300000000>;
+	};
 
-diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
-index 7354f9d68dba..3e8ca10011cc 100644
---- a/drivers/spi/spi-stm32-qspi.c
-+++ b/drivers/spi/spi-stm32-qspi.c
-@@ -13,6 +13,7 @@
- #include <linux/mutex.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/reset.h>
- #include <linux/sizes.h>
-@@ -101,6 +102,9 @@ struct stm32_qspi {
- 	struct completion data_completion;
- 	u32 fmode;
- 
-+	u32 cr_reg;
-+	u32 dcr_reg;
-+
- 	/*
- 	 * to protect device configuration, could be different between
- 	 * 2 flash access (bk1, bk2)
-@@ -355,7 +359,7 @@ static int stm32_qspi_setup(struct spi_device *spi)
- 	struct spi_controller *ctrl = spi->master;
- 	struct stm32_qspi *qspi = spi_controller_get_devdata(ctrl);
- 	struct stm32_qspi_flash *flash;
--	u32 cr, presc;
-+	u32 presc;
- 
- 	if (ctrl->busy)
- 		return -EBUSY;
-@@ -371,11 +375,12 @@ static int stm32_qspi_setup(struct spi_device *spi)
- 	flash->presc = presc;
- 
- 	mutex_lock(&qspi->lock);
--	cr = FIELD_PREP(CR_FTHRES_MASK, 3) | CR_SSHIFT | CR_EN;
--	writel_relaxed(cr, qspi->io_base + QSPI_CR);
-+	qspi->cr_reg = FIELD_PREP(CR_FTHRES_MASK, 3) | CR_SSHIFT | CR_EN;
-+	writel_relaxed(qspi->cr_reg, qspi->io_base + QSPI_CR);
- 
- 	/* set dcr fsize to max address */
--	writel_relaxed(DCR_FSIZE_MASK, qspi->io_base + QSPI_DCR);
-+	qspi->dcr_reg = DCR_FSIZE_MASK;
-+	writel_relaxed(qspi->dcr_reg, qspi->io_base + QSPI_DCR);
- 	mutex_unlock(&qspi->lock);
- 
- 	return 0;
-@@ -489,6 +494,31 @@ static int stm32_qspi_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int __maybe_unused stm32_qspi_suspend(struct device *dev)
-+{
-+	struct stm32_qspi *qspi = dev_get_drvdata(dev);
-+
-+	clk_disable_unprepare(qspi->clk);
-+	pinctrl_pm_select_sleep_state(dev);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused stm32_qspi_resume(struct device *dev)
-+{
-+	struct stm32_qspi *qspi = dev_get_drvdata(dev);
-+
-+	pinctrl_pm_select_default_state(dev);
-+	clk_prepare_enable(qspi->clk);
-+
-+	writel_relaxed(qspi->cr_reg, qspi->io_base + QSPI_CR);
-+	writel_relaxed(qspi->dcr_reg, qspi->io_base + QSPI_DCR);
-+
-+	return 0;
-+}
-+
-+SIMPLE_DEV_PM_OPS(stm32_qspi_pm_ops, stm32_qspi_suspend, stm32_qspi_resume);
-+
- static const struct of_device_id stm32_qspi_match[] = {
- 	{.compatible = "st,stm32f469-qspi"},
- 	{}
-@@ -501,6 +531,7 @@ static struct platform_driver stm32_qspi_driver = {
- 	.driver	= {
- 		.name = "stm32-qspi",
- 		.of_match_table = stm32_qspi_match,
-+		.pm = &stm32_qspi_pm_ops,
- 	},
- };
- module_platform_driver(stm32_qspi_driver);
+	...
+
+	cpu0_opp16: opp-1612800000 {
+		opp-hz = /bits/ 64 <1612800000>;
+	};
+
+	...
+};
+
+cpu4_opp_table: cpu4_opp_table {
+	compatible = "operating-points-v2";
+	opp-shared;
+
+	...
+
+	cpu4_opp4: opp-1056000000 {
+		opp-hz = /bits/ 64 <1056000000>;
+	};
+
+	cpu4_opp5: opp-1209600000 {
+		opp-hz = /bits/ 64 <1209600000>;
+	};
+
+	...
+};
+
+bw_opp_table: bw-opp-table {
+	compatible = "operating-points-v2";
+
+	opp-200  {
+		opp-hz = /bits/ 64 < 200000000 >; /* 200 MHz */
+		required-opps = <&cpu0_opp1>;
+		/* 0 MB/s average and 762 MB/s peak bandwidth */
+		opp-bw-MBs = <0 762>;
+	};
+
+	opp-300 {
+		opp-hz = /bits/ 64 < 300000000 >; /* 300 MHz */
+		/* 0 MB/s average and 1144 MB/s peak bandwidth */
+		opp-bw-MBs = <0 1144>;
+	};
+
+	...
+
+	opp-768 {
+		opp-hz = /bits/ 64 < 768000000 >; /* 768 MHz */
+		/* 0 MB/s average and 2929 MB/s peak bandwidth */
+		opp-bw-MBs = <0 2929>;
+		required-opps = <&cpu4_opp4>;
+	};
+
+	opp-1017 {
+		opp-hz = /bits/ 64 < 1017000000 >; /* 1017 MHz */
+		/* 0 MB/s average and 3879 MB/s peak bandwidth */
+		opp-bw-MBs = <0 3879>;
+		required-opps = <&cpu0_opp16>, <&cpu4_opp5>;
+	};
+};
+
+cpubw {
+	compatible = "devfreq-icbw";
+	interconnects = <&snoc MASTER_APSS_1 &bimc SLAVE_EBI_CH0>;
+	operating-points-v2 = <&bw_opp_table>;
+};
+
+
+> > [1] https://patchwork.kernel.org/patch/10577315/
+> 
+> Georgi Djakov (4):
+>    dt-bindings: opp: Introduce opp-bw-MBs bindings
+>    OPP: Add support for parsing the interconnect bandwidth
+>    OPP: Update the bandwidth on OPP frequency changes
+>    cpufreq: dt: Add support for interconnect bandwidth scaling
+> 
+>   Documentation/devicetree/bindings/opp/opp.txt | 45 ++++++++++++
+>   drivers/cpufreq/cpufreq-dt.c                  | 27 ++++++-
+>   drivers/opp/core.c                            | 71 +++++++++++++++++++
+>   drivers/opp/of.c                              | 44 ++++++++++++
+>   drivers/opp/opp.h                             |  6 ++
+>   include/linux/pm_opp.h                        | 14 ++++
+>   6 files changed, 206 insertions(+), 1 deletion(-)
+> 
+
 -- 
-2.20.1
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
