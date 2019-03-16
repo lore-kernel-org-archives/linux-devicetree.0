@@ -1,57 +1,72 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v5 06/11] staging:iio:ad7780: add chip ID values and
- mask
-Date: Sat, 16 Mar 2019 18:00:42 +0000
-Message-ID: <20190316180042.369d55e6@archlinux>
+Subject: Re: [PATCH v5 07/11] staging: iio: ad7780: move regulator to after
+ GPIO init
+Date: Sat, 16 Mar 2019 18:02:36 +0000
+Message-ID: <20190316180236.22a907b2@archlinux>
 References: <cover.1552700652.git.renatogeh@gmail.com>
-        <8154410f6c1b6cdde21cfb781dbc2088f5c91d21.1552700652.git.renatogeh@gmail.com>
+        <c018f41a8f21c0b2b25fe264cb58ba4bd2239505.1552700652.git.renatogeh@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8154410f6c1b6cdde21cfb781dbc2088f5c91d21.1552700652.git.renatogeh@gmail.com>
+In-Reply-To: <c018f41a8f21c0b2b25fe264cb58ba4bd2239505.1552700652.git.renatogeh@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Renato Lui Geh <renatogeh@gmail.com>
 Cc: lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, stefan.popa@analog.com, alexandru.Ardelean@analog.com, giuliano.belinassi@usp.br, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 15 Mar 2019 23:14:27 -0300
+On Fri, 15 Mar 2019 23:14:59 -0300
 Renato Lui Geh <renatogeh@gmail.com> wrote:
 
-> The ad7780 supports both the ad778x and ad717x families. Each chip has
-> a corresponding ID. This patch provides a mask for extracting ID values
-> from the status bits and also macros for the correct values for the
-> ad7170, ad7171, ad7780 and ad7781.
+> To maintain consistency between ad7780_probe and ad7780_remove orders,
+> regulator initialization has been moved to after GPIO initializations.
 > 
 > Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
-I'll admit I find it hard to summon an enthusiasm for this patch, but
-it does no harm and I don't want to delay the following ones.
+Applied,
 
-Hence applied anyway.
+Thanks,
 
 Jonathan
 
 > ---
-> Changes in v5:
->  - Put AD7780_ID{0,1} back
-> 
->  drivers/staging/iio/adc/ad7780.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  drivers/staging/iio/adc/ad7780.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
 > 
 > diff --git a/drivers/staging/iio/adc/ad7780.c b/drivers/staging/iio/adc/ad7780.c
-> index 94cb60c327d0..977b381c1260 100644
+> index 977b381c1260..568c5b4472ff 100644
 > --- a/drivers/staging/iio/adc/ad7780.c
 > +++ b/drivers/staging/iio/adc/ad7780.c
-> @@ -30,6 +30,12 @@
->  #define AD7780_ID0		BIT(3)
->  #define AD7780_GAIN		BIT(2)
+> @@ -295,16 +295,6 @@ static int ad7780_probe(struct spi_device *spi)
 >  
-> +#define AD7170_ID		0
-> +#define AD7171_ID		1
-> +#define AD7780_ID		1
-> +#define AD7781_ID		0
+>  	ad_sd_init(&st->sd, indio_dev, spi, &ad7780_sigma_delta_info);
+>  
+> -	st->reg = devm_regulator_get(&spi->dev, "avdd");
+> -	if (IS_ERR(st->reg))
+> -		return PTR_ERR(st->reg);
+> -
+> -	ret = regulator_enable(st->reg);
+> -	if (ret) {
+> -		dev_err(&spi->dev, "Failed to enable specified AVdd supply\n");
+> -		return ret;
+> -	}
+> -
+>  	st->chip_info =
+>  		&ad7780_chip_info_tbl[spi_get_device_id(spi)->driver_data];
+>  
+> @@ -321,6 +311,16 @@ static int ad7780_probe(struct spi_device *spi)
+>  	if (ret)
+>  		goto error_cleanup_buffer_and_trigger;
+>  
+> +	st->reg = devm_regulator_get(&spi->dev, "avdd");
+> +	if (IS_ERR(st->reg))
+> +		return PTR_ERR(st->reg);
 > +
-> +#define AD7780_ID_MASK		(AD7780_ID0 | AD7780_ID1)
->  
->  #define AD7780_PATTERN_GOOD	1
->  #define AD7780_PATTERN_MASK	GENMASK(1, 0)
+> +	ret = regulator_enable(st->reg);
+> +	if (ret) {
+> +		dev_err(&spi->dev, "Failed to enable specified AVdd supply\n");
+> +		return ret;
+> +	}
+> +
+>  	ret = ad_sd_setup_buffer_and_trigger(indio_dev);
+>  	if (ret)
+>  		goto error_disable_reg;
