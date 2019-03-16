@@ -1,103 +1,126 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 1/3] dt-bindings: Add doc for the ingenic-drm driver
-Date: Sat, 16 Mar 2019 22:56:35 +0100
-Message-ID: <1552773395.1562.1@crapouillou.net>
-References: <20190315170701.29670-1-paul@crapouillou.net>
-        <20190316205945.GA11309@ravnborg.org>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v1 1/3] dt-bindings: Document MIPID02 bindings
+Date: Sat, 16 Mar 2019 23:46:49 +0200
+Message-ID: <20190316214649.co63p5arhiwbuv3g@valkosipuli.retiisi.org.uk>
+References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
+ <1552373045-134493-2-git-send-email-mickael.guene@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190316205945.GA11309@ravnborg.org>
+Content-Disposition: inline
+In-Reply-To: <1552373045-134493-2-git-send-email-mickael.guene@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+To: Mickael Guene <mickael.guene@st.com>
+Cc: linux-media@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sam,
+Hi Mickael,
 
-Le sam. 16 mars 2019 =E0 21:59, Sam Ravnborg <sam@ravnborg.org> a =E9crit=20
-:
-> Hi Paul.
->=20
-> On Fri, Mar 15, 2019 at 06:06:59PM +0100, Paul Cercueil wrote:
->>  Add documentation for the devicetree bindings of the DRM driver for=20
->> the
->>  JZ47xx family of SoCs from Ingenic.
->>=20
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  Tested-by: Artur Rojek <contact@artur-rojek.eu>
->>  ---
->>=20
->>  Notes:
->>      v2: Remove ingenic,panel property.
->>=20
->>   .../devicetree/bindings/display/ingenic,drm.txt    | 29=20
->> ++++++++++++++++++++++
->>   1 file changed, 29 insertions(+)
->>   create mode 100644=20
->> Documentation/devicetree/bindings/display/ingenic,drm.txt
->>=20
->>  diff --git=20
->> a/Documentation/devicetree/bindings/display/ingenic,drm.txt=20
->> b/Documentation/devicetree/bindings/display/ingenic,drm.txt
->>  new file mode 100644
->>  index 000000000000..f57a4ae0f7ac
->>  --- /dev/null
->>  +++ b/Documentation/devicetree/bindings/display/ingenic,drm.txt
->>  @@ -0,0 +1,29 @@
->>  +Ingenic JZ47xx DRM driver
->>  +
->>  +Required properties:
->>  +- compatible: one of:
->>  +  * ingenic,jz4740-drm
->>  +  * ingenic,jz4725b-drm
->>  +- reg: LCD registers location and length
->>  +- clocks: LCD pixclock and device clock specifiers.
->>  +	   The device clock is only required on the JZ4740.
->>  +- clock-names: "lcd_pclk" and "lcd"
->>  +- interrupts: Specifies the interrupt line the LCD controller is=20
->> connected to.
->>  +
->>  +Optional properties:
->>  +- ingenic,lcd-mode: LCD mode to use with the display panel.
->>  +		    See <dt-bindings/display/ingenic,drm.h> for all the
->>  +		    possible values.
->=20
-> The value of the ingenic,lcd-mode depends on the panel used.
-> So this looks like a panel property and not a display property.
->=20
-> The panel should be specified using an OF graph binding
-> in a port sub-node.
-> The remote-endpoint will specifify the panel properties
-> and if the panel requires something special from the display driver,
-> the panle should specify this.
-> So one can change panel without touching the display node
-> in the DT.
+Thanks for the patchset.
 
-Then the 'ingenic,lcd-mode' property would be in the panel node,
-even though it's not used by the panel driver but by the DRM driver?
-That sounds strange to me.
+On Tue, Mar 12, 2019 at 07:44:03AM +0100, Mickael Guene wrote:
+> This adds documentation of device tree for MIPID02 CSI-2 to PARALLEL
+> bridge.
+> 
+> Signed-off-by: Mickael Guene <mickael.guene@st.com>
+> ---
+> 
+>  .../bindings/media/i2c/st,st-mipid02.txt           | 69 ++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+> new file mode 100644
+> index 0000000..a1855da
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+> @@ -0,0 +1,69 @@
+> +STMicroelectronics MIPID02 CSI-2 to PARALLEL bridge
+> +
+> +MIPID02 has two CSI-2 input ports, only one of those ports can be active at a
+> +time. Active port input stream will be de-serialized and its content outputted
+> +through PARALLEL output port.
+> +CSI-2 first input port is a dual lane 800Mbps whereas CSI-2 second input port is
 
->>  +
->>  +Example:
->>  +
->>  +lcd: lcd-controller@13050000 {
->>  +	compatible =3D "ingenic,jz4725b-drm";
->>  +	reg =3D <0x13050000 0x1000>;
->>  +
->>  +	interrupt-parent =3D <&intc>;
->>  +	interrupts =3D <31>;
->>  +
->>  +	clocks =3D <&cgu JZ4725B_CLK_LCD>;
->>  +	clock-names =3D "lcd";
->>  +};
->=20
-> As hinted above the panel is not specified above and to follow the
-> modern way to do so would be to use a OF graph binding.
+800 Mbps per lane (or total)?
 
-It's done this way in the DRM driver now, but I didn't update the
-example. I will update it in the next version.
+> +a single lane 800Mbps. Both ports support clock and data lane polarity swap.
+> +First port also supports data lane swap.
+> +PARALLEL output port has a maximum width of 12 bits.
+> +Supported formats are RAW6, RAW7, RAW8, RAW10, RAW12, RGB565, RGB888, RGB444,
+> +YUV420 8-bit, YUV422 8-bit and YUV420 10-bit.
+> +
+> +Required Properties:
+> +- compatible: should be "st,st-mipid02"
+> +- clocks: reference to the xclk input clock.
+> +- clock-names: should be "xclk".
+> +- VDDE-supply: sensor digital IO supply. Must be 1.8 volts.
+> +- VDDIN-supply: sensor internal regulator supply. Must be 1.8 volts.
 
--Paul
-=
+Perhaps Rob can confirm, but AFAIR the custom is to use lower case letters.
+
+> +
+> +Optional Properties:
+> +- reset-gpios: reference to the GPIO connected to the xsdn pin, if any.
+> +	       This is an active low signal to the mipid02.
+> +
+> +Required subnodes:
+> +  - ports: A ports node with one port child node per device input and output
+> +	   port, in accordance with the video interface bindings defined in
+> +	   Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> +	   port nodes are numbered as follows:
+> +
+> +	   Port Description
+> +	   -----------------------------
+> +	   0    CSI-2 first input port
+> +	   1    CSI-2 second input port
+> +	   2    PARALLEL output
+
+Please document which endpoint properties are relevant. From the above
+description I'd presume this to be at least clock-lanes (1st input),
+data-lanes, lane-polarities (for CSI-2) as well as bus-width for the
+parallel bus.
+
+> +
+> +Example:
+> +
+> +mipid02: mipid02@14 {
+
+The node should be a generic name. "csi2rx" is used by a few devices now.
+
+> +	compatible = "st,st-mipid02";
+> +	reg = <0x14>;
+> +	status = "okay";
+> +	clocks = <&clk_ext_camera_12>;
+> +	clock-names = "xclk";
+> +	VDDE-supply = <&vdd>;
+> +	VDDIN-supply = <&vdd>;
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			ep0: endpoint {
+> +				clock-lanes = <0>;
+> +				data-lanes = <1 2>;
+> +				remote-endpoint = <&mipi_csi2_in>;
+> +			};
+> +		};
+> +		port@2 {
+> +			reg = <2>;
+> +
+> +			ep2: endpoint {
+> +				bus-width = <8>;
+> +				hsync-active = <0>;
+> +				vsync-active = <0>;
+> +				remote-endpoint = <&parallel_out>;
+> +			};
+> +		};
+> +	};
+> +};
+
+-- 
+Kind regards,
+
+Sakari Ailus
