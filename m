@@ -1,144 +1,156 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 5/6] dmaengine: sun6i: Add support for H6 DMA
-Date: Sat, 16 Mar 2019 16:43:24 +0530
-Message-ID: <20190316111324.GI5348@vkoul-mobl>
-References: <20190307165829.9086-1-jernej.skrabec@siol.net>
- <20190307165829.9086-6-jernej.skrabec@siol.net>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH 2/6] dmaengine: sun6i: Add a quirk for
+ additional mbus clock
+Date: Sat, 16 Mar 2019 12:23:47 +0100
+Message-ID: <2451376.qVWA8nfu3q@jernej-laptop>
+References: <20190307165829.9086-1-jernej.skrabec@siol.net> <20190307165829.9086-3-jernej.skrabec@siol.net> <20190316110753.GH5348@vkoul-mobl>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190307165829.9086-6-jernej.skrabec@siol.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, maxime.ripard@bootlin.com, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, dmaengine@vger.kernel.org, dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBSFZWPSAKGQEROVIQUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190316110753.GH5348@vkoul-mobl>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Vinod Koul <vkoul-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07-03-19, 17:58, Jernej Skrabec wrote:
-> H6 DMA has more than 32 supported DRQs, which means that configuration
-> register is slightly rearranged. It also needs additional clock to be
-> enabled.
+Hi!
 
-Okay how many register are rearraged in the new IP block. If there are
-large changes, consider using regmap_fields to abstract the register and
-bit differences..
+Dne sobota, 16. marec 2019 ob 12:07:53 CET je Vinod Koul napisal(a):
+> On 07-03-19, 17:58, Jernej Skrabec wrote:
+> > H6 DMA controller needs additional mbus clock to be enabled.
+> > 
+> > Add a quirk for it and handle it accordingly.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> > ---
+> > 
+> >  drivers/dma/sun6i-dma.c | 23 ++++++++++++++++++++++-
+> >  1 file changed, 22 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+> > index 0cd13f17fc11..761555080325 100644
+> > --- a/drivers/dma/sun6i-dma.c
+> > +++ b/drivers/dma/sun6i-dma.c
+> > @@ -129,6 +129,7 @@ struct sun6i_dma_config {
+> > 
+> >  	u32 dst_burst_lengths;
+> >  	u32 src_addr_widths;
+> >  	u32 dst_addr_widths;
+> > 
+> > +	bool mbus_clk;
+> > 
+> >  };
+> >  
+> >  /*
+> > 
+> > @@ -182,6 +183,7 @@ struct sun6i_dma_dev {
+> > 
+> >  	struct dma_device	slave;
+> >  	void __iomem		*base;
+> >  	struct clk		*clk;
+> > 
+> > +	struct clk		*clk_mbus;
+> 
+> So rather than have mbus_clk and then a ptr, why not use the ptr and use
+> NULL value to check for..?
+> 
+
+I'm not sure what you mean here. clk_mbus will hold a reference to a clock 
+retrieved by devm_clk_get() so it has to be "struct clk *".
+
+What I'm missing here?
+
+> >  	int			irq;
+> >  	spinlock_t		lock;
+> >  	struct reset_control	*rstc;
+> > 
+> > @@ -1208,6 +1210,14 @@ static int sun6i_dma_probe(struct platform_device
+> > *pdev)> 
+> >  		return PTR_ERR(sdc->clk);
+> >  	
+> >  	}
+> > 
+> > +	if (sdc->cfg->mbus_clk) {
+> 
+> where is the populated? I was expecting this to be set based on DT!
+
+Of course it is based on DT. Check patch 5, where quirks structure attached to 
+H6 DMA compatible contains ".mbus_clk = true,". "sdc->cfg" points to this 
+quirk structure.
 
 > 
-> Add support for it.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  drivers/dma/sun6i-dma.c | 44 +++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 42 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-> index 6a37f8bb39b1..eceedd139651 100644
-> --- a/drivers/dma/sun6i-dma.c
-> +++ b/drivers/dma/sun6i-dma.c
-> @@ -69,14 +69,19 @@
->  
->  #define DMA_CHAN_CUR_CFG	0x0c
->  #define DMA_CHAN_MAX_DRQ_A31		0x1f
-> +#define DMA_CHAN_MAX_DRQ_H6		0x3f
->  #define DMA_CHAN_CFG_SRC_DRQ_A31(x)	((x) & DMA_CHAN_MAX_DRQ_A31)
-> +#define DMA_CHAN_CFG_SRC_DRQ_H6(x)	((x) & DMA_CHAN_MAX_DRQ_H6)
->  #define DMA_CHAN_CFG_SRC_MODE_A31(x)	(((x) & 0x1) << 5)
-> +#define DMA_CHAN_CFG_SRC_MODE_H6(x)	(((x) & 0x1) << 8)
->  #define DMA_CHAN_CFG_SRC_BURST_A31(x)	(((x) & 0x3) << 7)
->  #define DMA_CHAN_CFG_SRC_BURST_H3(x)	(((x) & 0x3) << 6)
->  #define DMA_CHAN_CFG_SRC_WIDTH(x)	(((x) & 0x3) << 9)
->  
->  #define DMA_CHAN_CFG_DST_DRQ_A31(x)	(DMA_CHAN_CFG_SRC_DRQ_A31(x) << 16)
-> +#define DMA_CHAN_CFG_DST_DRQ_H6(x)	(DMA_CHAN_CFG_SRC_DRQ_H6(x) << 16)
->  #define DMA_CHAN_CFG_DST_MODE_A31(x)	(DMA_CHAN_CFG_SRC_MODE_A31(x) << 16)
-> +#define DMA_CHAN_CFG_DST_MODE_H6(x)	(DMA_CHAN_CFG_SRC_MODE_H6(x) << 16)
->  #define DMA_CHAN_CFG_DST_BURST_A31(x)	(DMA_CHAN_CFG_SRC_BURST_A31(x) << 16)
->  #define DMA_CHAN_CFG_DST_BURST_H3(x)	(DMA_CHAN_CFG_SRC_BURST_H3(x) << 16)
->  #define DMA_CHAN_CFG_DST_WIDTH(x)	(DMA_CHAN_CFG_SRC_WIDTH(x) << 16)
-> @@ -319,12 +324,24 @@ static void sun6i_set_drq_a31(u32 *p_cfg, s8 src_drq, s8 dst_drq)
->  		  DMA_CHAN_CFG_DST_DRQ_A31(dst_drq);
->  }
->  
-> +static void sun6i_set_drq_h6(u32 *p_cfg, s8 src_drq, s8 dst_drq)
-> +{
-> +	*p_cfg |= DMA_CHAN_CFG_SRC_DRQ_H6(src_drq) |
-> +		  DMA_CHAN_CFG_DST_DRQ_H6(dst_drq);
-> +}
-> +
->  static void sun6i_set_mode_a31(u32 *p_cfg, s8 src_mode, s8 dst_mode)
->  {
->  	*p_cfg |= DMA_CHAN_CFG_SRC_MODE_A31(src_mode) |
->  		  DMA_CHAN_CFG_DST_MODE_A31(dst_mode);
->  }
->  
-> +static void sun6i_set_mode_h6(u32 *p_cfg, s8 src_mode, s8 dst_mode)
-> +{
-> +	*p_cfg |= DMA_CHAN_CFG_SRC_MODE_H6(src_mode) |
-> +		  DMA_CHAN_CFG_DST_MODE_H6(dst_mode);
-> +}
-> +
->  static size_t sun6i_get_chan_size(struct sun6i_pchan *pchan)
->  {
->  	struct sun6i_desc *txd = pchan->desc;
-> @@ -1160,6 +1177,28 @@ static struct sun6i_dma_config sun50i_a64_dma_cfg = {
->  			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
->  };
->  
-> +/*
-> + * The H6 binding uses the number of dma channels from the
-> + * device tree node.
-> + */
-> +static struct sun6i_dma_config sun50i_h6_dma_cfg = {
-> +	.clock_autogate_enable = sun6i_enable_clock_autogate_h3,
-> +	.set_burst_length = sun6i_set_burst_length_h3,
-> +	.set_drq          = sun6i_set_drq_h6,
-> +	.set_mode         = sun6i_set_mode_h6,
-> +	.src_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
-> +	.dst_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
-> +	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-> +			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
-> +			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
-> +			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
-> +	.dst_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-> +			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
-> +			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
-> +			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
-> +	.mbus_clk = true,
-> +};
-> +
->  /*
->   * The V3s have only 8 physical channels, a maximum DRQ port id of 23,
->   * and a total of 24 usable source and destination endpoints.
-> @@ -1190,6 +1229,7 @@ static const struct of_device_id sun6i_dma_match[] = {
->  	{ .compatible = "allwinner,sun8i-h3-dma", .data = &sun8i_h3_dma_cfg },
->  	{ .compatible = "allwinner,sun8i-v3s-dma", .data = &sun8i_v3s_dma_cfg },
->  	{ .compatible = "allwinner,sun50i-a64-dma", .data = &sun50i_a64_dma_cfg },
-> +	{ .compatible = "allwinner,sun50i-h6-dma", .data = &sun50i_h6_dma_cfg },
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, sun6i_dma_match);
-> @@ -1288,8 +1328,8 @@ static int sun6i_dma_probe(struct platform_device *pdev)
->  	ret = of_property_read_u32(np, "dma-requests", &sdc->max_request);
->  	if (ret && !sdc->max_request) {
->  		dev_info(&pdev->dev, "Missing dma-requests, using %u.\n",
-> -			 DMA_CHAN_MAX_DRQ_A31);
-> -		sdc->max_request = DMA_CHAN_MAX_DRQ_A31;
-> +			 DMA_CHAN_MAX_DRQ_H6);
-> +		sdc->max_request = DMA_CHAN_MAX_DRQ_H6;
->  	}
->  
->  	/*
-> -- 
-> 2.21.0
-
--- 
-~Vinod
+> > +		sdc->clk_mbus = devm_clk_get(&pdev->dev, "mbus");
+> > +		if (IS_ERR(sdc->clk_mbus)) {
+> > +			dev_err(&pdev->dev, "No mbus clock 
+specified\n");
+> > +			return PTR_ERR(sdc->clk_mbus);
+> > +		}
+> > +	}
+> > +
+> > 
+> >  	sdc->rstc = devm_reset_control_get(&pdev->dev, NULL);
+> >  	if (IS_ERR(sdc->rstc)) {
+> >  	
+> >  		dev_err(&pdev->dev, "No reset controller specified\n");
+> > 
+> > @@ -1312,11 +1322,19 @@ static int sun6i_dma_probe(struct platform_device
+> > *pdev)> 
+> >  		goto err_reset_assert;
+> >  	
+> >  	}
+> > 
+> > +	if (sdc->cfg->mbus_clk) {
+> > +		ret = clk_prepare_enable(sdc->clk_mbus);
+> > +		if (ret) {
+> > +			dev_err(&pdev->dev, "Couldn't enable mbus 
+clock\n");
+> > +			goto err_clk_disable;
+> > +		}
+> > +	}
+> > +
+> > 
+> >  	ret = devm_request_irq(&pdev->dev, sdc->irq, sun6i_dma_interrupt, 
+0,
+> >  	
+> >  			       dev_name(&pdev->dev), sdc);
+> >  	
+> >  	if (ret) {
+> >  	
+> >  		dev_err(&pdev->dev, "Cannot request IRQ\n");
+> > 
+> > -		goto err_clk_disable;
+> > +		goto err_mbus_clk_disable;
+> > 
+> >  	}
+> >  	
+> >  	ret = dma_async_device_register(&sdc->slave);
+> > 
+> > @@ -1341,6 +1359,8 @@ static int sun6i_dma_probe(struct platform_device
+> > *pdev)> 
+> >  	dma_async_device_unregister(&sdc->slave);
+> >  
+> >  err_irq_disable:
+> >  	sun6i_kill_tasklet(sdc);
+> > 
+> > +err_mbus_clk_disable:
+> > +	clk_disable_unprepare(sdc->clk_mbus);
+> > 
+> >  err_clk_disable:
+> >  	clk_disable_unprepare(sdc->clk);
+> >  
+> >  err_reset_assert:
+> > @@ -1359,6 +1379,7 @@ static int sun6i_dma_remove(struct platform_device
+> > *pdev)> 
+> >  	sun6i_kill_tasklet(sdc);
+> > 
+> > +	clk_disable_unprepare(sdc->clk_mbus);
+> > 
+> >  	clk_disable_unprepare(sdc->clk);
+> >  	reset_control_assert(sdc->rstc);
