@@ -1,23 +1,67 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 0/3] Small improvements/bugfixes to the rk3399-opi dt
-Date: Sat, 16 Mar 2019 20:45:41 +0100
-Message-ID: <7964924.m6SUGMZW0x@phil>
-References: <20190315145818.23610-1-aballier@gentoo.org>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: Add doc for the ingenic-drm driver
+Date: Sat, 16 Mar 2019 21:59:45 +0100
+Message-ID: <20190316205945.GA11309@ravnborg.org>
+References: <20190315170701.29670-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190315145818.23610-1-aballier@gentoo.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexis Ballier <aballier@gentoo.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190315170701.29670-1-paul@crapouillou.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 15. März 2019, 15:58:15 CET schrieb Alexis Ballier:
-> This patch series is based on the rockchip/v5.2-armsoc/dts64 branch and
-> fixes a few mistakes in the rk3399-orangepi.dts I sent a couple weeks ago.
-
-applied all 3 for 5.2
-
-Thanks
-Heiko
+SGkgUGF1bC4KCk9uIEZyaSwgTWFyIDE1LCAyMDE5IGF0IDA2OjA2OjU5UE0gKzAxMDAsIFBhdWwg
+Q2VyY3VlaWwgd3JvdGU6Cj4gQWRkIGRvY3VtZW50YXRpb24gZm9yIHRoZSBkZXZpY2V0cmVlIGJp
+bmRpbmdzIG9mIHRoZSBEUk0gZHJpdmVyIGZvciB0aGUKPiBKWjQ3eHggZmFtaWx5IG9mIFNvQ3Mg
+ZnJvbSBJbmdlbmljLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFBhdWwgQ2VyY3VlaWwgPHBhdWxAY3Jh
+cG91aWxsb3UubmV0Pgo+IFRlc3RlZC1ieTogQXJ0dXIgUm9qZWsgPGNvbnRhY3RAYXJ0dXItcm9q
+ZWsuZXU+Cj4gLS0tCj4gCj4gTm90ZXM6Cj4gICAgIHYyOiBSZW1vdmUgaW5nZW5pYyxwYW5lbCBw
+cm9wZXJ0eS4KPiAKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbmdlbmljLGRy
+bS50eHQgICAgfCAyOSArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAy
+OSBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbmdlbmljLGRybS50eHQKPiAKPiBkaWZmIC0tZ2l0IGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaW5nZW5pYyxkcm0udHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaW5nZW5pYyxkcm0u
+dHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLmY1N2E0YWUw
+ZjdhYwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9pbmdlbmljLGRybS50eHQKPiBAQCAtMCwwICsxLDI5IEBACj4gK0luZ2Vu
+aWMgSlo0N3h4IERSTSBkcml2ZXIKPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29t
+cGF0aWJsZTogb25lIG9mOgo+ICsgICogaW5nZW5pYyxqejQ3NDAtZHJtCj4gKyAgKiBpbmdlbmlj
+LGp6NDcyNWItZHJtCj4gKy0gcmVnOiBMQ0QgcmVnaXN0ZXJzIGxvY2F0aW9uIGFuZCBsZW5ndGgK
+PiArLSBjbG9ja3M6IExDRCBwaXhjbG9jayBhbmQgZGV2aWNlIGNsb2NrIHNwZWNpZmllcnMuCj4g
+KwkgICBUaGUgZGV2aWNlIGNsb2NrIGlzIG9ubHkgcmVxdWlyZWQgb24gdGhlIEpaNDc0MC4KPiAr
+LSBjbG9jay1uYW1lczogImxjZF9wY2xrIiBhbmQgImxjZCIKPiArLSBpbnRlcnJ1cHRzOiBTcGVj
+aWZpZXMgdGhlIGludGVycnVwdCBsaW5lIHRoZSBMQ0QgY29udHJvbGxlciBpcyBjb25uZWN0ZWQg
+dG8uCj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICstIGluZ2VuaWMsbGNkLW1vZGU6IExD
+RCBtb2RlIHRvIHVzZSB3aXRoIHRoZSBkaXNwbGF5IHBhbmVsLgo+ICsJCSAgICBTZWUgPGR0LWJp
+bmRpbmdzL2Rpc3BsYXkvaW5nZW5pYyxkcm0uaD4gZm9yIGFsbCB0aGUKPiArCQkgICAgcG9zc2li
+bGUgdmFsdWVzLgoKVGhlIHZhbHVlIG9mIHRoZSBpbmdlbmljLGxjZC1tb2RlIGRlcGVuZHMgb24g
+dGhlIHBhbmVsIHVzZWQuClNvIHRoaXMgbG9va3MgbGlrZSBhIHBhbmVsIHByb3BlcnR5IGFuZCBu
+b3QgYSBkaXNwbGF5IHByb3BlcnR5LgoKVGhlIHBhbmVsIHNob3VsZCBiZSBzcGVjaWZpZWQgdXNp
+bmcgYW4gT0YgZ3JhcGggYmluZGluZwppbiBhIHBvcnQgc3ViLW5vZGUuClRoZSByZW1vdGUtZW5k
+cG9pbnQgd2lsbCBzcGVjaWZpZnkgdGhlIHBhbmVsIHByb3BlcnRpZXMKYW5kIGlmIHRoZSBwYW5l
+bCByZXF1aXJlcyBzb21ldGhpbmcgc3BlY2lhbCBmcm9tIHRoZSBkaXNwbGF5IGRyaXZlciwKdGhl
+IHBhbmxlIHNob3VsZCBzcGVjaWZ5IHRoaXMuClNvIG9uZSBjYW4gY2hhbmdlIHBhbmVsIHdpdGhv
+dXQgdG91Y2hpbmcgdGhlIGRpc3BsYXkgbm9kZQppbiB0aGUgRFQuCgoKPiArCj4gK0V4YW1wbGU6
+Cj4gKwo+ICtsY2Q6IGxjZC1jb250cm9sbGVyQDEzMDUwMDAwIHsKPiArCWNvbXBhdGlibGUgPSAi
+aW5nZW5pYyxqejQ3MjViLWRybSI7Cj4gKwlyZWcgPSA8MHgxMzA1MDAwMCAweDEwMDA+Owo+ICsK
+PiArCWludGVycnVwdC1wYXJlbnQgPSA8JmludGM+Owo+ICsJaW50ZXJydXB0cyA9IDwzMT47Cj4g
+Kwo+ICsJY2xvY2tzID0gPCZjZ3UgSlo0NzI1Ql9DTEtfTENEPjsKPiArCWNsb2NrLW5hbWVzID0g
+ImxjZCI7Cj4gK307CgpBcyBoaW50ZWQgYWJvdmUgdGhlIHBhbmVsIGlzIG5vdCBzcGVjaWZpZWQg
+YWJvdmUgYW5kIHRvIGZvbGxvdyB0aGUKbW9kZXJuIHdheSB0byBkbyBzbyB3b3VsZCBiZSB0byB1
+c2UgYSBPRiBncmFwaCBiaW5kaW5nLgoKCVNhbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWw=
