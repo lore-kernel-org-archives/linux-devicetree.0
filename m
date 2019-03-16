@@ -1,14 +1,14 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 2/4] iio: adc: lpc32xx: Cleanup headers
-Date: Sat, 16 Mar 2019 17:23:27 +0000
-Message-ID: <20190316172327.2c1d7751@archlinux>
+Subject: Re: [PATCH v2 3/4] iio: adc: lpc32xx: Add scale feature
+Date: Sat, 16 Mar 2019 17:26:34 +0000
+Message-ID: <20190316172634.4bb51753@archlinux>
 References: <20190315095231.17001-1-gregory.clement@bootlin.com>
- <20190315095231.17001-3-gregory.clement@bootlin.com>
+ <20190315095231.17001-4-gregory.clement@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190315095231.17001-3-gregory.clement@bootlin.com>
+In-Reply-To: <20190315095231.17001-4-gregory.clement@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,39 +22,141 @@ To: Gregory CLEMENT <gregory.clement@bootlin.com>
 Cc: devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Vladimir Zapolskiy <vz@mleia.com>, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Sylvain Lemieux <slemieux.tyco@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 15 Mar 2019 10:52:29 +0100
+On Fri, 15 Mar 2019 10:52:30 +0100
 Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
 
-> A few headers is useless: remove them.
+> Until now this driver only exposed the raw value of the channels. With
+> this patch, the scale value is also exposed.
+> 
+> It depends of a regulator supply, and unlike most of the other driver, do
+> not having this regulator won't prevent to use the driver. The reason for
+> it is to allow to continue to use this driver with an old device tree. If
+> there is no regulator supply then the scale won't be exposed.
 > 
 > Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+
+I made a minor tweak to downgrade the message if the regulator isn't
+specified.
+
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
 > ---
->  drivers/iio/adc/lpc32xx_adc.c | 6 ------
->  1 file changed, 6 deletions(-)
+>  drivers/iio/adc/lpc32xx_adc.c | 44 ++++++++++++++++++++++++++++++-----
+>  1 file changed, 38 insertions(+), 6 deletions(-)
 > 
 > diff --git a/drivers/iio/adc/lpc32xx_adc.c b/drivers/iio/adc/lpc32xx_adc.c
-> index 7084f804504e..f391c1e10136 100644
+> index f391c1e10136..5d1c76e3aad8 100644
 > --- a/drivers/iio/adc/lpc32xx_adc.c
 > +++ b/drivers/iio/adc/lpc32xx_adc.c
-> @@ -9,17 +9,11 @@
->  
->  #include <linux/clk.h>
->  #include <linux/completion.h>
-> -#include <linux/device.h>
-> -#include <linux/err.h>
- -EINVAL comes from asm/errno.h I believe. IS_ERR
-is also in this header.  Otherwise, they are fine, so
-I'll just leave this one.
-
->  #include <linux/iio/iio.h>
-> -#include <linux/iio/sysfs.h>
->  #include <linux/interrupt.h>
+> @@ -14,6 +14,7 @@
 >  #include <linux/io.h>
-> -#include <linux/kernel.h>
 >  #include <linux/module.h>
-> -#include <linux/of.h>
 >  #include <linux/platform_device.h>
-> -#include <linux/slab.h>
+> +#include <linux/regulator/consumer.h>
 >  
 >  /*
 >   * LPC32XX registers definitions
+> @@ -45,6 +46,7 @@ struct lpc32xx_adc_state {
+>  	void __iomem *adc_base;
+>  	struct clk *clk;
+>  	struct completion completion;
+> +	struct regulator *vref;
+>  
+>  	u32 value;
+>  };
+> @@ -57,7 +59,9 @@ static int lpc32xx_read_raw(struct iio_dev *indio_dev,
+>  {
+>  	struct lpc32xx_adc_state *st = iio_priv(indio_dev);
+>  	int ret;
+> -	if (mask == IIO_CHAN_INFO_RAW) {
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+>  		mutex_lock(&indio_dev->mlock);
+>  		ret = clk_prepare_enable(st->clk);
+>  		if (ret) {
+> @@ -77,22 +81,36 @@ static int lpc32xx_read_raw(struct iio_dev *indio_dev,
+>  		mutex_unlock(&indio_dev->mlock);
+>  
+>  		return IIO_VAL_INT;
+> -	}
+>  
+> -	return -EINVAL;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = regulator_get_voltage(st->vref) / 1000;
+> +		*val2 =  10;
+> +
+> +		return IIO_VAL_FRACTIONAL_LOG2;
+> +	default:
+> +		return -EINVAL;
+> +	}
+>  }
+>  
+>  static const struct iio_info lpc32xx_adc_iio_info = {
+>  	.read_raw = &lpc32xx_read_raw,
+>  };
+>  
+> -#define LPC32XX_ADC_CHANNEL(_index) {			\
+> +#define LPC32XX_ADC_CHANNEL_BASE(_index)		\
+>  	.type = IIO_VOLTAGE,				\
+>  	.indexed = 1,					\
+>  	.channel = _index,				\
+>  	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),	\
+>  	.address = LPC32XXAD_IN * _index,		\
+> -	.scan_index = _index,				\
+> +	.scan_index = _index,
+> +
+> +#define LPC32XX_ADC_CHANNEL(_index) {		\
+> +	LPC32XX_ADC_CHANNEL_BASE(_index)	\
+> +}
+> +
+> +#define LPC32XX_ADC_SCALE_CHANNEL(_index) {			\
+> +	LPC32XX_ADC_CHANNEL_BASE(_index)			\
+> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE)	\
+>  }
+>  
+>  static const struct iio_chan_spec lpc32xx_adc_iio_channels[] = {
+> @@ -101,6 +119,12 @@ static const struct iio_chan_spec lpc32xx_adc_iio_channels[] = {
+>  	LPC32XX_ADC_CHANNEL(2),
+>  };
+>  
+> +static const struct iio_chan_spec lpc32xx_adc_iio_scale_channels[] = {
+> +	LPC32XX_ADC_SCALE_CHANNEL(0),
+> +	LPC32XX_ADC_SCALE_CHANNEL(1),
+> +	LPC32XX_ADC_SCALE_CHANNEL(2),
+> +};
+> +
+>  static irqreturn_t lpc32xx_adc_isr(int irq, void *dev_id)
+>  {
+>  	struct lpc32xx_adc_state *st = dev_id;
+> @@ -159,6 +183,15 @@ static int lpc32xx_adc_probe(struct platform_device *pdev)
+>  		return retval;
+>  	}
+>  
+> +	st->vref = devm_regulator_get(&pdev->dev, "vref");
+> +	if (IS_ERR(st->vref)) {
+> +		iodev->channels = lpc32xx_adc_iio_channels;
+> +		dev_err(&pdev->dev,
+> +			"Missing vref regulator: No scaling available\n");
+It isn't an error, so downgraded to dev_info.
+
+> +	} else {
+> +		iodev->channels = lpc32xx_adc_iio_scale_channels;
+> +	}
+> +
+>  	platform_set_drvdata(pdev, iodev);
+>  
+>  	init_completion(&st->completion);
+> @@ -167,7 +200,6 @@ static int lpc32xx_adc_probe(struct platform_device *pdev)
+>  	iodev->dev.parent = &pdev->dev;
+>  	iodev->info = &lpc32xx_adc_iio_info;
+>  	iodev->modes = INDIO_DIRECT_MODE;
+> -	iodev->channels = lpc32xx_adc_iio_channels;
+>  	iodev->num_channels = ARRAY_SIZE(lpc32xx_adc_iio_channels);
+>  
+>  	retval = devm_iio_device_register(&pdev->dev, iodev);
