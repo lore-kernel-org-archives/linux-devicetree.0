@@ -1,13 +1,14 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 0/4] Adding scale support to the lpc32xx ADC driver
-Date: Sat, 16 Mar 2019 17:16:58 +0000
-Message-ID: <20190316171658.327ab411@archlinux>
+Subject: Re: [PATCH v2 1/4] iio: adc: lpc32xx: Sort headers
+Date: Sat, 16 Mar 2019 17:17:47 +0000
+Message-ID: <20190316171747.34be37ab@archlinux>
 References: <20190315095231.17001-1-gregory.clement@bootlin.com>
+ <20190315095231.17001-2-gregory.clement@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190315095231.17001-1-gregory.clement@bootlin.com>
+In-Reply-To: <20190315095231.17001-2-gregory.clement@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,53 +22,54 @@ To: Gregory CLEMENT <gregory.clement@bootlin.com>
 Cc: devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Vladimir Zapolskiy <vz@mleia.com>, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Sylvain Lemieux <slemieux.tyco@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 15 Mar 2019 10:52:27 +0100
+On Fri, 15 Mar 2019 10:52:28 +0100
 Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
 
-> Hello,
+> Sort the headers in alphabetic order in order to ease the maintenance for
+> this part.
 > 
-> This is the second version of a series adding the support of the scale
-> feature to the lpc32xx ADC driver. In order to use it we need to have
-> the voltage reference as a device tree property, however in order to
-> be backward compatible, this property is optional and do not prevent
-> to use the driver if missing.
-> 
-> I updated the binding documentation accordingly.
-> 
-> Gregory
-> 
-> Changelog:
-> v1 -> v2:
-> 
->  - "dt-bindings: iio: adc: move lpc32xx-adc out of staging" and
->    "iio:adc:lpc32xx use SPDX-License-Identifier" has been merged
-> 
->  - split "iio:adc:lpc32xx use SPDX-License-Identifier" in 2 patches
->    one foe sorting and the second one for removal
-Hohum. I'm reviewing cover letters now. Must have too much time on 
-my hands ;)
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Applied,
 
-This is talking about the wrong patch.
+Thanks,
 
+Jonathan
+
+> ---
+>  drivers/iio/adc/lpc32xx_adc.c | 19 +++++++++----------
+>  1 file changed, 9 insertions(+), 10 deletions(-)
 > 
->  - add reviewed-by from Rob Herring on the binding documentation patch
-> 
->  - add default in the switch/case in lpc32xx_read_raw()
-> 
->  - no more use scan_type.realbits and directly put the value in the
->    IIO_CHAN_INFO_SCALE case
-> 
->  - keep the const for the struct iio_chan_spec and declare 2 of them.
-> 
->  - remove the unrelated and bad whitespace change.
-> 
-> Gregory CLEMENT (4):
->   iio: adc: lpc32xx: Sort headers
->   iio: adc: lpc32xx: Cleanup headers
->   iio: adc: lpc32xx: Add scale feature
->   dt-bindings: iio: adc: lpc32xx-adc: Document vref-supply
-> 
->  .../bindings/iio/adc/lpc32xx-adc.txt          |  5 ++
->  drivers/iio/adc/lpc32xx_adc.c                 | 59 +++++++++++++------
->  2 files changed, 47 insertions(+), 17 deletions(-)
-> 
+> diff --git a/drivers/iio/adc/lpc32xx_adc.c b/drivers/iio/adc/lpc32xx_adc.c
+> index e361c1532a75..7084f804504e 100644
+> --- a/drivers/iio/adc/lpc32xx_adc.c
+> +++ b/drivers/iio/adc/lpc32xx_adc.c
+> @@ -7,20 +7,19 @@
+>   *  Copyright (C) 2011, 2012 Roland Stigge <stigge@antcom.de>
+>   */
+>  
+> -#include <linux/module.h>
+> -#include <linux/platform_device.h>
+> -#include <linux/interrupt.h>
+> -#include <linux/device.h>
+> -#include <linux/kernel.h>
+> -#include <linux/slab.h>
+> -#include <linux/io.h>
+>  #include <linux/clk.h>
+> -#include <linux/err.h>
+>  #include <linux/completion.h>
+> -#include <linux/of.h>
+> -
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+>  
+>  /*
+>   * LPC32XX registers definitions
