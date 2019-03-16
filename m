@@ -1,8 +1,7 @@
 From: Renato Lui Geh <renatogeh@gmail.com>
-Subject: [PATCH v5 02/11] staging: iio: ad7780: add missing switch default
- case
-Date: Fri, 15 Mar 2019 23:12:53 -0300
-Message-ID: <84375be9b21a30dde736e47a7e2f72c1aedf7e92.1552700652.git.renatogeh@gmail.com>
+Subject: [PATCH v5 03/11] staging: iio: ad7780: add gain reading to ad778x
+Date: Fri, 15 Mar 2019 23:13:13 -0300
+Message-ID: <aed4d900061c5733decc429d0d0816122dba0991.1552700652.git.renatogeh@gmail.com>
 References: <cover.1552700652.git.renatogeh@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
@@ -14,25 +13,37 @@ To: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, knaack.h@gm
 Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch simply adds a missing switch default case in read_raw.
+This patch adds a new functionality of reading gain values from the
+ad778x chips. This value is stored in the chip's state struct and is
+updated whenever a read or write call is performed on the driver.
 
 Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
 ---
- drivers/staging/iio/adc/ad7780.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/iio/adc/ad7780.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/staging/iio/adc/ad7780.c b/drivers/staging/iio/adc/ad7780.c
-index 07e5e35c92a3..f4cd7bc3e02f 100644
+index f4cd7bc3e02f..fbcc0d3345ca 100644
 --- a/drivers/staging/iio/adc/ad7780.c
 +++ b/drivers/staging/iio/adc/ad7780.c
-@@ -118,6 +118,8 @@ static int ad7780_read_raw(struct iio_dev *indio_dev,
- 	case IIO_CHAN_INFO_OFFSET:
- 		*val = -(1 << (chan->scan_type.realbits - 1));
- 		return IIO_VAL_INT;
-+	default:
-+		break;
- 	}
+@@ -42,6 +42,8 @@
+ #define AD7780_GAIN_MIDPOINT	64
+ #define AD7780_FILTER_MIDPOINT	13350
  
- 	return -EINVAL;
++static const unsigned int ad778x_gain[2] = { 1, 128 };
++
+ struct ad7780_chip_info {
+ 	struct iio_chan_spec	channel;
+ 	unsigned int		pattern_mask;
+@@ -179,6 +181,9 @@ static int ad7780_postprocess_sample(struct ad_sigma_delta *sigma_delta,
+ 	    ((raw_sample & chip_info->pattern_mask) != chip_info->pattern))
+ 		return -EIO;
+ 
++	if (chip_info->is_ad778x)
++		st->gain = ad778x_gain[raw_sample & AD7780_GAIN];
++
+ 	return 0;
+ }
+ 
 -- 
 2.21.0
