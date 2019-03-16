@@ -1,81 +1,165 @@
-Return-Path: <SRS0=0oJi=RR=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 7/7] arm64: dts: renesas: r8a774c0-cat874: Enable usb role switch support
-Date: Thu, 14 Mar 2019 08:39:35 +0000
-Message-Id: <1552552775-51667-8-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1552552775-51667-1-git-send-email-biju.das@bp.renesas.com>
-References: <1552552775-51667-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=sfcU=RT=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:44350 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726376AbfCPQph (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 16 Mar 2019 12:45:37 -0400
+Date: Sat, 16 Mar 2019 16:45:31 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/2] iio: imu: st_lsm6dsx: add support to LSM6DSOX
+Message-ID: <20190316164531.5ee59121@archlinux>
+In-Reply-To: <c483e74a9bb420a06f2c1d94f5d9f764a4960bc3.1552643968.git.lorenzo@kernel.org>
+References: <cover.1552643968.git.lorenzo@kernel.org>
+        <c483e74a9bb420a06f2c1d94f5d9f764a4960bc3.1552643968.git.lorenzo@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, lorenzo.bianconi@redhat.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch enables TI HD3SS3220 device and support usb role switch
-for the CAT 874 platform.
+On Fri, 15 Mar 2019 11:08:24 +0100
+Lorenzo Bianconi <lorenzo@kernel.org> wrote:
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-V1-->V2
-  * New patch
----
- arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 39 +++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+> Add support to STM LSM6DSOX 6-axis (acc + gyro) Mems sensor
+> https://www.st.com/resource/en/datasheet/lsm6dsox.pdf
+> 
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Applied to the togreg branch of iio.git and pushed out as
+testing for the autobuilders to play with it.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-index d9d55c8..ea74d21 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-@@ -80,6 +80,34 @@
- 	clock-frequency = <48000000>;
- };
- 
-+&i2c0 {
-+	status = "okay";
-+	clock-frequency = <100000>;
-+
-+	hd3ss3220@47 {
-+		compatible = "ti,hd3ss3220";
-+		reg = <0x47>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+
-+		usb_con: connector {
-+			compatible = "usb-c-connector";
-+			label = "USB-C";
-+			data-role = "dual";
-+		};
-+
-+		port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			hd3ss3220_ep: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&usb3peri_role_switch>;
-+			};
-+		};
-+	};
-+};
-+
- &i2c1 {
- 	pinctrl-0 = <&i2c1_pins>;
- 	pinctrl-names = "default";
-@@ -160,6 +188,17 @@
- &usb3_peri0 {
- 	companion = <&xhci0>;
- 	status = "okay";
-+	usb-role-switch;
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usb3peri_role_switch: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&hd3ss3220_ep>;
-+		};
-+	};
- };
- 
- &xhci0 {
--- 
-2.7.4
+thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/imu/st_lsm6dsx/Kconfig             | 2 +-
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h        | 2 ++
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 4 ++--
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c   | 3 ++-
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c    | 5 +++++
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c    | 5 +++++
+>  6 files changed, 17 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
+> index 36048bf0455a..8dcf5137b8da 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/Kconfig
+> +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
+> @@ -9,7 +9,7 @@ config IIO_ST_LSM6DSX
+>  	help
+>  	  Say yes here to build support for STMicroelectronics LSM6DSx imu
+>  	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
+> -	  ism330dlc, lsm6dso, asm330lhh
+> +	  ism330dlc, lsm6dso, lsm6dsox, asm330lhh
+>  
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called st_lsm6dsx.
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> index de2a0dc39353..0a0c56c1701d 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> @@ -21,6 +21,7 @@
+>  #define ST_ISM330DLC_DEV_NAME	"ism330dlc"
+>  #define ST_LSM6DSO_DEV_NAME	"lsm6dso"
+>  #define ST_ASM330LHH_DEV_NAME	"asm330lhh"
+> +#define ST_LSM6DSOX_DEV_NAME	"lsm6dsox"
+>  
+>  enum st_lsm6dsx_hw_id {
+>  	ST_LSM6DS3_ID,
+> @@ -30,6 +31,7 @@ enum st_lsm6dsx_hw_id {
+>  	ST_ISM330DLC_ID,
+>  	ST_LSM6DSO_ID,
+>  	ST_ASM330LHH_ID,
+> +	ST_LSM6DSOX_ID,
+>  	ST_LSM6DSX_MAX_ID,
+>  };
+>  
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> index 8f443bdb5b51..2da8c5ff699a 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> @@ -13,7 +13,7 @@
+>   * (e.g. Gx, Gy, Gz, Ax, Ay, Az), then data are repeated depending on the
+>   * value of the decimation factor and ODR set for each FIFO data set.
+>   *
+> - * LSM6DSO/ASM330LHH: The FIFO buffer can be configured to store data
+> + * LSM6DSO/LSM6DSOX/ASM330LHH: The FIFO buffer can be configured to store data
+>   * from gyroscope and accelerometer. Each sample is queued with a tag (1B)
+>   * indicating data source (gyroscope, accelerometer, hw timer).
+>   *
+> @@ -506,7 +506,7 @@ st_lsm6dsx_push_tagged_data(struct st_lsm6dsx_hw *hw, u8 tag,
+>  }
+>  
+>  /**
+> - * st_lsm6dsx_read_tagged_fifo() - LSM6DSO/ASM330LHH read FIFO routine
+> + * st_lsm6dsx_read_tagged_fifo() - LSM6DSO/LSM6DSOX/ASM330LHH read FIFO routine
+>   * @hw: Pointer to instance of struct st_lsm6dsx_hw.
+>   *
+>   * Read samples from the hw FIFO and push them to IIO buffers.
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> index 50cab3531b11..c167ae2c21ab 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> @@ -23,7 +23,7 @@
+>   *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
+>   *   - FIFO size: 4KB
+>   *
+> - * - LSM6DSO/ASM330LHH
+> + * - LSM6DSO/LSM6DSOX/ASM330LHH
+>   *   - Accelerometer/Gyroscope supported ODR [Hz]: 13, 26, 52, 104, 208, 416
+>   *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
+>   *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
+> @@ -287,6 +287,7 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+>  		.max_fifo_size = 512,
+>  		.id = {
+>  			[0] = ST_LSM6DSO_ID,
+> +			[1] = ST_LSM6DSOX_ID,
+>  		},
+>  		.batch = {
+>  			[ST_LSM6DSX_ID_ACC] = {
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+> index 00b4b702645a..0bfc66d2d772 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+> @@ -69,6 +69,10 @@ static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
+>  		.compatible = "st,asm330lhh",
+>  		.data = (void *)ST_ASM330LHH_ID,
+>  	},
+> +	{
+> +		.compatible = "st,lsm6dsox",
+> +		.data = (void *)ST_LSM6DSOX_ID,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
+> @@ -81,6 +85,7 @@ static const struct i2c_device_id st_lsm6dsx_i2c_id_table[] = {
+>  	{ ST_ISM330DLC_DEV_NAME, ST_ISM330DLC_ID },
+>  	{ ST_LSM6DSO_DEV_NAME, ST_LSM6DSO_ID },
+>  	{ ST_ASM330LHH_DEV_NAME, ST_ASM330LHH_ID },
+> +	{ ST_LSM6DSOX_DEV_NAME, ST_LSM6DSOX_ID },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+> index 836256c2ac7d..9f46d4ce9fc1 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+> @@ -69,6 +69,10 @@ static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
+>  		.compatible = "st,asm330lhh",
+>  		.data = (void *)ST_ASM330LHH_ID,
+>  	},
+> +	{
+> +		.compatible = "st,lsm6dsox",
+> +		.data = (void *)ST_LSM6DSOX_ID,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
+> @@ -81,6 +85,7 @@ static const struct spi_device_id st_lsm6dsx_spi_id_table[] = {
+>  	{ ST_ISM330DLC_DEV_NAME, ST_ISM330DLC_ID },
+>  	{ ST_LSM6DSO_DEV_NAME, ST_LSM6DSO_ID },
+>  	{ ST_ASM330LHH_DEV_NAME, ST_ASM330LHH_ID },
+> +	{ ST_LSM6DSOX_DEV_NAME, ST_LSM6DSOX_ID },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);
