@@ -1,132 +1,104 @@
-Return-Path: <SRS0=Zx4x=R6=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 4/4] Input: ads7846 - add support for general touchscreen bindings
-Date: Wed, 27 Mar 2019 14:39:27 +0100
-Message-Id: <20190327133927.1340-5-m.felsch@pengutronix.de>
-In-Reply-To: <20190327133927.1340-1-m.felsch@pengutronix.de>
-References: <20190327133927.1340-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=Mw68=RT=the-dreams.de=wsa@kernel.org>
+Date: Sat, 16 Mar 2019 23:26:37 +0100
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 2/2] dt-bindings: can: rcar_canfd: add r8a77995 (R-Car
+ D3) compatibility strings
+Message-ID: <20190316222637.GC1111@kunai>
+References: <1543972625-11267-1-git-send-email-uli+renesas@fpond.eu>
+ <1543972625-11267-3-git-send-email-uli+renesas@fpond.eu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: dmitry.torokhov@gmail.com, robh+dt@kernel.org
-Cc: kernel@pengutronix.de, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="CblX+4bnyfN0pR09"
+Content-Disposition: inline
+In-Reply-To: <1543972625-11267-3-git-send-email-uli+renesas@fpond.eu>
+To: Ulrich Hecht <uli+renesas@fpond.eu>, mkl@pengutronix.de
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, robh@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-A few vendor specific bindings are now covered by common bindings.
 
-Let the driver parse the common bindings to make use of common
-inverting and swapping mechnism. Aslo make use of
-touchscreen_report_pos() to ensure the correct inverting-swapping
-order.
+--CblX+4bnyfN0pR09
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The vendor specific properties are used as default (backward
-compatibility) and gets overwritten by common bindings.
+On Wed, Dec 05, 2018 at 09:17:05AM +0800, Ulrich Hecht wrote:
+> From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+>=20
+> Adds compatible strings for the R-Car CAN FD controller in the D3 SoC.
+>=20
+> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/input/touchscreen/ads7846.c | 38 +++++++++++++++++++++++------
- 1 file changed, 30 insertions(+), 8 deletions(-)
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-diff --git a/drivers/input/touchscreen/ads7846.c b/drivers/input/touchscreen/ads7846.c
-index 5a7a8425d619..2fe3b91f1db8 100644
---- a/drivers/input/touchscreen/ads7846.c
-+++ b/drivers/input/touchscreen/ads7846.c
-@@ -23,6 +23,7 @@
- #include <linux/sched.h>
- #include <linux/delay.h>
- #include <linux/input.h>
-+#include <linux/input/touchscreen.h>
- #include <linux/interrupt.h>
- #include <linux/slab.h>
- #include <linux/pm.h>
-@@ -132,6 +133,8 @@ struct ads7846 {
- 
- 	u16			penirq_recheck_delay_usecs;
- 
-+	struct touchscreen_properties core_prop;
-+
- 	struct mutex		lock;
- 	bool			stopped;	/* P: lock */
- 	bool			disabled;	/* P: lock */
-@@ -826,17 +829,13 @@ static void ads7846_report_state(struct ads7846 *ts)
- 	if (Rt) {
- 		struct input_dev *input = ts->input;
- 
--		if (ts->swap_xy)
--			swap(x, y);
--
- 		if (!ts->pendown) {
- 			input_report_key(input, BTN_TOUCH, 1);
- 			ts->pendown = true;
- 			dev_vdbg(&ts->spi->dev, "DOWN\n");
- 		}
- 
--		input_report_abs(input, ABS_X, x);
--		input_report_abs(input, ABS_Y, y);
-+		touchscreen_report_pos(input, &ts->core_prop, x, y, false);
- 		input_report_abs(input, ABS_PRESSURE, ts->pressure_max - Rt);
- 
- 		input_sync(input);
-@@ -1188,6 +1187,7 @@ static const struct ads7846_platform_data *ads7846_probe_dt(struct device *dev)
- 	struct ads7846_platform_data *pdata;
- 	struct device_node *node = dev->of_node;
- 	const struct of_device_id *match;
-+	u32 value;
- 
- 	if (!node) {
- 		dev_err(dev, "Device does not have associated DT data\n");
-@@ -1226,10 +1226,18 @@ static const struct ads7846_platform_data *ads7846_probe_dt(struct device *dev)
- 	of_property_read_u16(node, "ti,x-max", &pdata->x_max);
- 	of_property_read_u16(node, "ti,y-max", &pdata->y_max);
- 
-+	/*
-+	 * touchscreen-max-pressure gets parsed during
-+	 * touchscreen_parse_properties()
-+	 */
- 	of_property_read_u16(node, "ti,pressure-min", &pdata->pressure_min);
-+	if (!of_property_read_u32(node, "touchscreen-min-pressure", &value))
-+		pdata->pressure_min = (u16) value;
- 	of_property_read_u16(node, "ti,pressure-max", &pdata->pressure_max);
- 
- 	of_property_read_u16(node, "ti,debounce-max", &pdata->debounce_max);
-+	if (!of_property_read_u32(node, "touchscreen-average-samples", &value))
-+		pdata->debounce_max = (u16) value;
- 	of_property_read_u16(node, "ti,debounce-tol", &pdata->debounce_tol);
- 	of_property_read_u16(node, "ti,debounce-rep", &pdata->debounce_rep);
- 
-@@ -1314,10 +1322,7 @@ static int ads7846_probe(struct spi_device *spi)
- 	ts->model = pdata->model ? : 7846;
- 	ts->vref_delay_usecs = pdata->vref_delay_usecs ? : 100;
- 	ts->x_plate_ohms = pdata->x_plate_ohms ? : 400;
--	ts->pressure_max = pdata->pressure_max ? : ~0;
--
- 	ts->vref_mv = pdata->vref_mv;
--	ts->swap_xy = pdata->swap_xy;
- 
- 	if (pdata->filter != NULL) {
- 		if (pdata->filter_init != NULL) {
-@@ -1368,6 +1373,23 @@ static int ads7846_probe(struct spi_device *spi)
- 	input_set_abs_params(input_dev, ABS_PRESSURE,
- 			pdata->pressure_min, pdata->pressure_max, 0, 0);
- 
-+	/*
-+	 * Parse common framework properties. Must be done here to ensure the
-+	 * correct behaviour in case of using the legacy vendor bindings. The
-+	 * general binding value overrides the vendor specific one.
-+	 */
-+	touchscreen_parse_properties(ts->input, false, &ts->core_prop);
-+	ts->pressure_max = input_abs_get_max(input_dev, ABS_PRESSURE) ? : ~0;
-+
-+	/*
-+	 * Check if legacy ti,swap-xy binding is used instead of
-+	 * touchscreen-swapped-x-y
-+	 */
-+	if (!ts->core_prop.swap_x_y && pdata->swap_xy) {
-+		swap(input_dev->absinfo[ABS_X], input_dev->absinfo[ABS_Y]);
-+		ts->core_prop.swap_x_y = true;
-+	}
-+
- 	ads7846_setup_spi_msg(ts, pdata);
- 
- 	ts->reg = regulator_get(&spi->dev, "vcc");
--- 
-2.20.1
+Adding Marc to CC.
+
+> ---
+>  Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/D=
+ocumentation/devicetree/bindings/net/can/rcar_canfd.txt
+> index ac71daa..ae2a2b7 100644
+> --- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> +++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> @@ -8,6 +8,7 @@ Required properties:
+>    - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controll=
+er.
+>    - "renesas,r8a77970-canfd" for R8A77970 (R-Car V3M) compatible control=
+ler.
+>    - "renesas,r8a77980-canfd" for R8A77980 (R-Car V3H) compatible control=
+ler.
+> +  - "renesas,r8a77995-canfd" for R8A77995 (R-Car D3) compatible controll=
+er.
+> =20
+>    When compatible with the generic version, nodes must list the
+>    SoC-specific version corresponding to the platform first, followed by =
+the
+> @@ -26,10 +27,9 @@ The name of the child nodes are "channel0" and "channe=
+l1" respectively. Each
+>  child node supports the "status" property only, which is used to
+>  enable/disable the respective channel.
+> =20
+> -Required properties for "renesas,r8a7795-canfd" and "renesas,r8a7796-can=
+fd"
+> -compatible:
+> -In R8A7795 and R8A7796 SoCs, canfd clock is a div6 clock and can be used=
+ by both
+> -CAN and CAN FD controller at the same time. It needs to be scaled to max=
+imum
+> +Required properties for R8A7795, R8A7796 and R8A77995:
+> +In the denoted SoCs, canfd clock is a div6 clock and can be used by both=
+ CAN
+> +and CAN FD controller at the same time. It needs to be scaled to maximum
+>  frequency if any of these controllers use it. This is done using the bel=
+ow
+>  properties:
+> =20
+> --=20
+> 2.7.4
+>=20
+
+--CblX+4bnyfN0pR09
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyNeB0ACgkQFA3kzBSg
+KbbetA//Ud45iLvQnZPs2Dm+Nyous6o45L31fGFhN8txgZm/H0jsxUoPQk3KkhZc
+H4CKUvZcC/Os70Lo9lwYPNlPbGIOGsARj4a8yhKJGBDZh/TjyavGwRPCt4uQ8wFy
+wTI2t7F5VuGa/zzuVVMReur78/m5wIBcKyy0S+FnrKeL2x/P/piJ7ejP+B3ccgHR
+D2RyxLN6kM6JAt/IeGGYg5VlO34mUnpRKoyWLpvMBscNq/IrspF3D10L7NtLPt88
+7bkk7c8WSB2yXMXXs9wV3UILDZ1sGTAOSWNXIL+GgBOyRT2PIQRvaoYb93itdbFw
+TN2yDrWauND3s8cU8yaTwLPsuLoTm3Rb7Zh+4tZfWCTQYnuEsdNkTHmjF9BAgAcs
+OACOXZHWyobqNMHUzrG+s5X1jfkGxOMuNl8t07qDqJMMRbdqrOi3NUojb4LkjeYo
+DUo51oH2xVJZH/nDdNI/FIae7zWi4j71rvHzunO10mYTd670dczmBGbwH2XQep8x
+cEEq1nsCjb0zedZDyh28V1DKPbRu5h6Mk+QcoPBL+CkNtTbhUckTgYzPeQKTgKte
+HaOjbPey6usTYeLx35HIfARA81C9nylkUPIUct18+Potp9CgKQzCiF0MCyGlC7OP
+Jmkfi5e6f4reTvuMvciGExh81KfuoNJgwuV1ZdFXzAtTuNWZTss=
+=U38l
+-----END PGP SIGNATURE-----
+
+--CblX+4bnyfN0pR09--
