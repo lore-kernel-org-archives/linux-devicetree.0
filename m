@@ -1,29 +1,71 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 2/3] net: phy: add amlogic g12a mdio mux support
-Date: Sat, 16 Mar 2019 03:54:48 +0100
-Message-ID: <20190316025448.GD29548@lunn.ch>
-References: <20190314140135.19184-1-jbrunet@baylibre.com>
- <20190314140135.19184-3-jbrunet@baylibre.com>
+From: Yu Chen <chenyu56@huawei.com>
+Subject: [PATCH v4 01/12] dt-bindings: phy: Add support for HiSilicon's hi3660 USB PHY
+Date: Sat, 16 Mar 2019 11:53:31 +0800
+Message-ID: <20190316035342.77998-2-chenyu56@huawei.com>
+References: <20190316035342.77998-1-chenyu56@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190314140135.19184-3-jbrunet@baylibre.com>
+In-Reply-To: <20190316035342.77998-1-chenyu56@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller" <davem@davemloft.net>, Kevin Hilman <khilman@baylibre.com>, netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Binghui Wang <wangbinghui@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 03:01:34PM +0100, Jerome Brunet wrote:
->> +static int _g12a_enable_internal_mdio(struct g12a_mdio_mux *priv)
->
+This patch adds binding documentation for supporting the hi3660 usb
+phy on boards like the HiKey960.
 
-You would generally use the _ prefix when you have a locked and an
-unlocked version. I don't see anything like this here. So please drop
-the _ .
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Binghui Wang <wangbinghui@hisilicon.com>
+Signed-off-by: Yu Chen <chenyu56@huawei.com>
+---
+v1:
+* Fix some format error as suggested by Rob.
+v2:
+* Change hi3660 usb PHY to hi3660 USB PHY
+v3:
+* Make device node a subnode of usb3_otg_bc register.
+v4:
+* Remove "hisilicon,usb3-otg-bc-syscon" property
+---
+---
+ .../devicetree/bindings/phy/phy-hi3660-usb3.txt    | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
 
-Nice to see the generic clock framework being used. I just wonder if
-this is the correct place to have this clock code. Can it be made part
-of the SoC clock code?
-
-    Andrew
+diff --git a/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+new file mode 100644
+index 000000000000..e88ba7d92dcb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+@@ -0,0 +1,26 @@
++Hisilicon hi3660 USB PHY
++-----------------------
++
++Required properties:
++- compatible: should be "hisilicon,hi3660-usb-phy"
++- #phy-cells: must be 0
++- hisilicon,pericrg-syscon: phandle of syscon used to control phy.
++- hisilicon,pctrl-syscon: phandle of syscon used to control phy.
++- hisilicon,eye-diagram-param: parameter set for phy
++Refer to phy/phy-bindings.txt for the generic PHY binding properties
++
++This is a subnode of usb3_otg_bc register node.
++
++Example:
++	usb3_otg_bc: usb3_otg_bc@ff200000 {
++		compatible = "syscon", "simple-mfd";
++		reg = <0x0 0xff200000 0x0 0x1000>;
++
++		usb-phy {
++			compatible = "hisilicon,hi3660-usb-phy";
++			#phy-cells = <0>;
++			hisilicon,pericrg-syscon = <&crg_ctrl>;
++			hisilicon,pctrl-syscon = <&pctrl>;
++			hisilicon,eye-diagram-param = <0x22466e4>;
++		};
++	};
+-- 
+2.15.0-rc2
