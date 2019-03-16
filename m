@@ -1,61 +1,73 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: iio: light: Document the VCNL4xx0
- device tree bindings
-Date: Sat, 16 Mar 2019 17:15:17 +0000
-Message-ID: <20190316171517.4c783134@archlinux>
-References: <20190315215425.24140-1-angus@akkea.ca>
-        <20190315215425.24140-3-angus@akkea.ca>
+Subject: Re: [PATCH v2 0/4] Adding scale support to the lpc32xx ADC driver
+Date: Sat, 16 Mar 2019 17:16:58 +0000
+Message-ID: <20190316171658.327ab411@archlinux>
+References: <20190315095231.17001-1-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190315215425.24140-3-angus@akkea.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc: angus.ainslie@puri.sm, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tomas Novotny <tomas@novotny.cz>, Brian Masney <masneyb@onstation.org>, Robert Eshleman <bobbyeshleman@gmail.com>, Mathieu Othacehe <m.othacehe@gmail.com>, Parthiban Nallathambi <pn@denx.de>, ryang <decatf@gmail.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190315095231.17001-1-gregory.clement@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Vladimir Zapolskiy <vz@mleia.com>, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Sylvain Lemieux <slemieux.tyco@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 15 Mar 2019 14:54:25 -0700
-"Angus Ainslie (Purism)" <angus@akkea.ca> wrote:
+On Fri, 15 Mar 2019 10:52:27 +0100
+Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
 
-> devicetree hooks where added to the VCNL4xx0 light and proximity
-> sensor driver.
+> Hello,
 > 
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-Please avoid wild cards in naming. It goes wrong too often.  People can grep
-if they want to see if their device is supported by any drivers rather
-than try to figure out wildcards.
-
-> ---
->  .../devicetree/bindings/iio/light/vcnl4xx0.txt    | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4xx0.txt
+> This is the second version of a series adding the support of the scale
+> feature to the lpc32xx ADC driver. In order to use it we need to have
+> the voltage reference as a device tree property, however in order to
+> be backward compatible, this property is optional and do not prevent
+> to use the driver if missing.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4xx0.txt b/Documentation/devicetree/bindings/iio/light/vcnl4xx0.txt
-> new file mode 100644
-> index 000000000000..d61cf3c121c3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/vcnl4xx0.txt
-> @@ -0,0 +1,15 @@
-> +VISHAY VCNL4xx0 -  Ambient Light and proximity sensor
-> +
-> +This driver supports the VCNL4000/10/20/40 and VCNL4200
-> +
-> +Required properties:
-> +
-> +	-compatible: should be "vishay,vcnl4000" or "vishay,vcnl4040"
-One per line.
+> I updated the binding documentation accordingly.
+> 
+> Gregory
+> 
+> Changelog:
+> v1 -> v2:
+> 
+>  - "dt-bindings: iio: adc: move lpc32xx-adc out of staging" and
+>    "iio:adc:lpc32xx use SPDX-License-Identifier" has been merged
+> 
+>  - split "iio:adc:lpc32xx use SPDX-License-Identifier" in 2 patches
+>    one foe sorting and the second one for removal
+Hohum. I'm reviewing cover letters now. Must have too much time on 
+my hands ;)
 
-I'd also like to see all the options in the list.  We already seem
-to have an undocumented difference between your new part and some
-of the older ones.  It's always better for people to use the 'most
-correct' part name the can.
+This is talking about the wrong patch.
 
-> +	-reg: I2C address of the sensor, should be 0x60
-> +
-> +Example:
-> +
-> +light-sensor@60 {
-> +	compatible = "vishay,vcnl4040";
-> +	reg = <0x60>;
-> +};
+> 
+>  - add reviewed-by from Rob Herring on the binding documentation patch
+> 
+>  - add default in the switch/case in lpc32xx_read_raw()
+> 
+>  - no more use scan_type.realbits and directly put the value in the
+>    IIO_CHAN_INFO_SCALE case
+> 
+>  - keep the const for the struct iio_chan_spec and declare 2 of them.
+> 
+>  - remove the unrelated and bad whitespace change.
+> 
+> Gregory CLEMENT (4):
+>   iio: adc: lpc32xx: Sort headers
+>   iio: adc: lpc32xx: Cleanup headers
+>   iio: adc: lpc32xx: Add scale feature
+>   dt-bindings: iio: adc: lpc32xx-adc: Document vref-supply
+> 
+>  .../bindings/iio/adc/lpc32xx-adc.txt          |  5 ++
+>  drivers/iio/adc/lpc32xx_adc.c                 | 59 +++++++++++++------
+>  2 files changed, 47 insertions(+), 17 deletions(-)
+> 
