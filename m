@@ -1,7 +1,7 @@
 From: Yu Chen <chenyu56@huawei.com>
-Subject: [PATCH v4 05/12] usb: dwc3: Execute GCTL Core Soft Reset while switch mdoe for Hisilicon Kirin Soc
-Date: Sat, 16 Mar 2019 11:53:35 +0800
-Message-ID: <20190316035342.77998-6-chenyu56@huawei.com>
+Subject: [PATCH v4 07/12] phy: Add usb phy support for hi3660 Soc of Hisilicon
+Date: Sat, 16 Mar 2019 11:53:37 +0800
+Message-ID: <20190316035342.77998-8-chenyu56@huawei.com>
 References: <20190316035342.77998-1-chenyu56@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,90 +9,337 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190316035342.77998-1-chenyu56@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>
+Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>, Pengcheng Li <lpc.li@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-A GCTL soft reset should be executed when switch mode for dwc3 core
-of Hisilicon Kirin Soc.
+This driver handles usb phy power on and shutdown for hi3660 Soc of
+Hisilicon.
 
 Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Pengcheng Li <lpc.li@hisilicon.com>
+Cc: Jianguo Sun <sunjianguo1@huawei.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Jiancheng Xue <xuejiancheng@hisilicon.com>
 Cc: John Stultz <john.stultz@linaro.org>
 Cc: Binghui Wang <wangbinghui@hisilicon.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Yu Chen <chenyu56@huawei.com>
 ---
+v1:
+* Remove unused code and add comment for time delay as suggested by
+Kishon Vijay Abraham I.
+v2:
+* Fix license declaration.
+* Remove redundant parens.
+* Remove unused member variables in struct hi3660_priv.
 v4:
-* Add description for 'gctl_reset_quirk'.
+* Add comments for HI3660_USB_DEFAULT_PHY_PARAM.
+* Add margin for usleep_range.
+* Get regmap of otg_bc from parent's of_node.
 ---
 ---
- drivers/usb/dwc3/core.c | 19 +++++++++++++++++++
- drivers/usb/dwc3/core.h |  2 ++
- 2 files changed, 21 insertions(+)
+ MAINTAINERS                             |   8 ++
+ drivers/phy/hisilicon/Kconfig           |  10 ++
+ drivers/phy/hisilicon/Makefile          |   1 +
+ drivers/phy/hisilicon/phy-hi3660-usb3.c | 233 ++++++++++++++++++++++++++++++++
+ 4 files changed, 252 insertions(+)
+ create mode 100644 drivers/phy/hisilicon/phy-hi3660-usb3.c
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index c3ef6bd2b0d4..fd581d72794a 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -112,6 +112,19 @@ void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)
- 	dwc->current_dr_role = mode;
- }
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f8ff9ae52c21..f52f996829d3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16077,6 +16077,14 @@ L:	linux-usb@vger.kernel.org
+ S:	Maintained
+ F:	drivers/usb/roles/intel-xhci-usb-role-switch.c
  
-+static void dwc3_gctl_core_soft_reset(struct dwc3 *dwc)
++USB IP DRIVER FOR HISILICON KIRIN
++M:	Yu Chen <chenyu56@huawei.com>
++M:	Binghui Wang <wangbinghui@hisilicon.com>
++L:	linux-usb@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
++F:	drivers/phy/hisilicon/phy-hi3660-usb3.c
++
+ USB ISP116X DRIVER
+ M:	Olav Kongas <ok@artecdesign.ee>
+ L:	linux-usb@vger.kernel.org
+diff --git a/drivers/phy/hisilicon/Kconfig b/drivers/phy/hisilicon/Kconfig
+index b40ee54a1a50..3c142f08987c 100644
+--- a/drivers/phy/hisilicon/Kconfig
++++ b/drivers/phy/hisilicon/Kconfig
+@@ -12,6 +12,16 @@ config PHY_HI6220_USB
+ 
+ 	  To compile this driver as a module, choose M here.
+ 
++config PHY_HI3660_USB
++	tristate "hi3660 USB PHY support"
++	depends on (ARCH_HISI && ARM64) || COMPILE_TEST
++	select GENERIC_PHY
++	select MFD_SYSCON
++	help
++	  Enable this to support the HISILICON HI3660 USB PHY.
++
++	  To compile this driver as a module, choose M here.
++
+ config PHY_HISTB_COMBPHY
+ 	tristate "HiSilicon STB SoCs COMBPHY support"
+ 	depends on (ARCH_HISI && ARM64) || COMPILE_TEST
+diff --git a/drivers/phy/hisilicon/Makefile b/drivers/phy/hisilicon/Makefile
+index f662a4fe18d8..75ba64e2faf8 100644
+--- a/drivers/phy/hisilicon/Makefile
++++ b/drivers/phy/hisilicon/Makefile
+@@ -1,4 +1,5 @@
+ obj-$(CONFIG_PHY_HI6220_USB)		+= phy-hi6220-usb.o
++obj-$(CONFIG_PHY_HI3660_USB)		+= phy-hi3660-usb3.o
+ obj-$(CONFIG_PHY_HISTB_COMBPHY)		+= phy-histb-combphy.o
+ obj-$(CONFIG_PHY_HISI_INNO_USB2)	+= phy-hisi-inno-usb2.o
+ obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
+diff --git a/drivers/phy/hisilicon/phy-hi3660-usb3.c b/drivers/phy/hisilicon/phy-hi3660-usb3.c
+new file mode 100644
+index 000000000000..cc0af2c044d0
+--- /dev/null
++++ b/drivers/phy/hisilicon/phy-hi3660-usb3.c
+@@ -0,0 +1,233 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Phy provider for USB 3.0 controller on HiSilicon 3660 platform
++ *
++ * Copyright (C) 2017-2018 Hilisicon Electronics Co., Ltd.
++ *		http://www.huawei.com
++ *
++ * Authors: Yu Chen <chenyu56@huawei.com>
++ */
++
++#include <linux/kernel.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++#define PERI_CRG_CLK_EN4			0x40
++#define PERI_CRG_CLK_DIS4			0x44
++#define GT_CLK_USB3OTG_REF			BIT(0)
++#define GT_ACLK_USB3OTG				BIT(1)
++
++#define PERI_CRG_RSTEN4				0x90
++#define PERI_CRG_RSTDIS4			0x94
++#define IP_RST_USB3OTGPHY_POR			BIT(3)
++#define IP_RST_USB3OTG				BIT(5)
++
++#define PERI_CRG_ISODIS				0x148
++#define USB_REFCLK_ISO_EN			BIT(25)
++
++#define PCTRL_PERI_CTRL3			0x10
++#define PCTRL_PERI_CTRL3_MSK_START		16
++#define USB_TCXO_EN				BIT(1)
++
++#define PCTRL_PERI_CTRL24			0x64
++#define SC_CLK_USB3PHY_3MUX1_SEL		BIT(25)
++
++#define USBOTG3_CTRL0				0x00
++#define SC_USB3PHY_ABB_GT_EN			BIT(15)
++
++#define USBOTG3_CTRL2				0x08
++#define USBOTG3CTRL2_POWERDOWN_HSP		BIT(0)
++#define USBOTG3CTRL2_POWERDOWN_SSP		BIT(1)
++
++#define USBOTG3_CTRL3				0x0C
++#define USBOTG3_CTRL3_VBUSVLDEXT		BIT(6)
++#define USBOTG3_CTRL3_VBUSVLDEXTSEL		BIT(5)
++
++#define USBOTG3_CTRL4				0x10
++
++#define USBOTG3_CTRL7				0x1c
++#define REF_SSP_EN				BIT(16)
++
++/* This value config the default txtune parameter of the usb 2.0 phy */
++#define HI3660_USB_DEFAULT_PHY_PARAM		0x1c466e3
++
++struct hi3660_priv {
++	struct device *dev;
++	struct regmap *peri_crg;
++	struct regmap *pctrl;
++	struct regmap *otg_bc;
++	u32 eye_diagram_param;
++};
++
++static int hi3660_phy_init(struct phy *phy)
 +{
-+	u32 reg;
++	struct hi3660_priv *priv = phy_get_drvdata(phy);
++	u32 val, mask;
++	int ret;
 +
-+	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
-+	reg |= DWC3_GCTL_CORESOFTRESET;
-+	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
++	/* usb refclk iso disable */
++	ret = regmap_write(priv->peri_crg, PERI_CRG_ISODIS, USB_REFCLK_ISO_EN);
++	if (ret)
++		goto out;
 +
-+	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
-+	reg &= ~DWC3_GCTL_CORESOFTRESET;
-+	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
++	/* enable usb_tcxo_en */
++	val = USB_TCXO_EN | (USB_TCXO_EN << PCTRL_PERI_CTRL3_MSK_START);
++	ret = regmap_write(priv->pctrl, PCTRL_PERI_CTRL3, val);
++	if (ret)
++		goto out;
++
++	/* assert phy */
++	val = IP_RST_USB3OTGPHY_POR | IP_RST_USB3OTG;
++	ret = regmap_write(priv->peri_crg, PERI_CRG_RSTEN4, val);
++	if (ret)
++		goto out;
++
++	/* enable phy ref clk */
++	val = SC_USB3PHY_ABB_GT_EN;
++	mask = val;
++	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL0, mask, val);
++	if (ret)
++		goto out;
++
++	val = REF_SSP_EN;
++	mask = val;
++	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL7, mask, val);
++	if (ret)
++		goto out;
++
++	/* exit from IDDQ mode */
++	mask = USBOTG3CTRL2_POWERDOWN_HSP | USBOTG3CTRL2_POWERDOWN_SSP;
++	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL2, mask, 0);
++	if (ret)
++		goto out;
++
++	/* delay for exit from IDDQ mode */
++	usleep_range(100, 120);
++
++	/* deassert phy */
++	val = IP_RST_USB3OTGPHY_POR | IP_RST_USB3OTG;
++	ret = regmap_write(priv->peri_crg, PERI_CRG_RSTDIS4, val);
++	if (ret)
++		goto out;
++
++	/* delay for phy deasserted */
++	usleep_range(10000, 15000);
++
++	/* fake vbus valid signal */
++	val = USBOTG3_CTRL3_VBUSVLDEXT | USBOTG3_CTRL3_VBUSVLDEXTSEL;
++	mask = val;
++	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL3, mask, val);
++	if (ret)
++		goto out;
++
++	/* delay for vbus valid */
++	usleep_range(100, 120);
++
++	ret = regmap_write(priv->otg_bc, USBOTG3_CTRL4,
++			priv->eye_diagram_param);
++	if (ret)
++		goto out;
++
++	return 0;
++out:
++	dev_err(priv->dev, "failed to init phy ret: %d\n", ret);
++	return ret;
 +}
 +
- static void __dwc3_set_mode(struct work_struct *work)
- {
- 	struct dwc3 *dwc = work_to_dwc(work);
-@@ -157,6 +170,10 @@ static void __dwc3_set_mode(struct work_struct *work)
- 
- 	dwc3_set_prtcap(dwc, dwc->desired_dr_role);
- 
-+	/* Execute a GCTL Core Soft Reset when switch mode */
-+	if (dwc->gctl_reset_quirk)
-+		dwc3_gctl_core_soft_reset(dwc);
++static int hi3660_phy_exit(struct phy *phy)
++{
++	struct hi3660_priv *priv = phy_get_drvdata(phy);
++	u32 val;
++	int ret;
 +
- 	spin_unlock_irqrestore(&dwc->lock, flags);
- 
- 	switch (dwc->desired_dr_role) {
-@@ -1314,6 +1331,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
- 
- 	dwc->dis_split_quirk = device_property_read_bool(dev,
- 				"snps,dis-split-quirk");
-+	dwc->gctl_reset_quirk = device_property_read_bool(dev,
-+				"snps,gctl-reset-quirk");
- 
- 	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
- 	dwc->tx_de_emphasis = tx_de_emphasis;
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 28475e301ad9..6a050d663ec7 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -1035,6 +1035,7 @@ struct dwc3_scratchpad_array {
-  * 	3	- Reserved
-  * @dis_metastability_quirk: set to disable metastability quirk.
-  * @dis_split_quirk: set to disable split boundary.
-+ * @gctl_reset_quirk: set to do a gctl soft-reset while switch operation mode.
-  * @imod_interval: set the interrupt moderation interval in 250ns
-  *                 increments or 0 to disable.
-  */
-@@ -1222,6 +1223,7 @@ struct dwc3 {
- 	unsigned		dis_metastability_quirk:1;
- 
- 	unsigned		dis_split_quirk:1;
-+	unsigned		gctl_reset_quirk:1;
- 
- 	u16			imod_interval;
- };
++	/* assert phy */
++	val = IP_RST_USB3OTGPHY_POR;
++	ret = regmap_write(priv->peri_crg, PERI_CRG_RSTEN4, val);
++	if (ret)
++		goto out;
++
++	/* disable usb_tcxo_en */
++	val = USB_TCXO_EN << PCTRL_PERI_CTRL3_MSK_START;
++	ret = regmap_write(priv->pctrl, PCTRL_PERI_CTRL3, val);
++	if (ret)
++		goto out;
++
++	return 0;
++out:
++	dev_err(priv->dev, "failed to exit phy ret: %d\n", ret);
++	return ret;
++}
++
++static struct phy_ops hi3660_phy_ops = {
++	.init		= hi3660_phy_init,
++	.exit		= hi3660_phy_exit,
++	.owner		= THIS_MODULE,
++};
++
++static int hi3660_phy_probe(struct platform_device *pdev)
++{
++	struct phy_provider *phy_provider;
++	struct device *dev = &pdev->dev;
++	struct phy *phy;
++	struct hi3660_priv *priv;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->dev = dev;
++	priv->peri_crg = syscon_regmap_lookup_by_phandle(dev->of_node,
++					"hisilicon,pericrg-syscon");
++	if (IS_ERR(priv->peri_crg)) {
++		dev_err(dev, "no hisilicon,pericrg-syscon\n");
++		return PTR_ERR(priv->peri_crg);
++	}
++
++	priv->pctrl = syscon_regmap_lookup_by_phandle(dev->of_node,
++					"hisilicon,pctrl-syscon");
++	if (IS_ERR(priv->pctrl)) {
++		dev_err(dev, "no hisilicon,pctrl-syscon\n");
++		return PTR_ERR(priv->pctrl);
++	}
++
++	/* node of hi3660 phy is a sub-node of usb3_otg_bc */
++	priv->otg_bc = syscon_node_to_regmap(dev->parent->of_node);
++	if (IS_ERR(priv->otg_bc)) {
++		dev_err(dev, "no hisilicon,usb3-otg-bc-syscon\n");
++		return PTR_ERR(priv->otg_bc);
++	}
++
++	if (of_property_read_u32(dev->of_node, "hisilicon,eye-diagram-param",
++		&(priv->eye_diagram_param)))
++		priv->eye_diagram_param = HI3660_USB_DEFAULT_PHY_PARAM;
++
++	phy = devm_phy_create(dev, NULL, &hi3660_phy_ops);
++	if (IS_ERR(phy))
++		return PTR_ERR(phy);
++
++	phy_set_drvdata(phy, priv);
++	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++	return PTR_ERR_OR_ZERO(phy_provider);
++}
++
++static const struct of_device_id hi3660_phy_of_match[] = {
++	{.compatible = "hisilicon,hi3660-usb-phy",},
++	{ }
++};
++MODULE_DEVICE_TABLE(of, hi3660_phy_of_match);
++
++static struct platform_driver hi3660_phy_driver = {
++	.probe	= hi3660_phy_probe,
++	.driver = {
++		.name	= "hi3660-usb-phy",
++		.of_match_table	= hi3660_phy_of_match,
++	}
++};
++module_platform_driver(hi3660_phy_driver);
++
++MODULE_AUTHOR("Yu Chen <chenyu56@huawei.com>");
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("Hilisicon Hi3660 USB3 PHY Driver");
 -- 
 2.15.0-rc2
