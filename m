@@ -1,36 +1,67 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 4/6] dt-bindings: display: sii902x: Remove trailing
- white space
-Date: Fri, 15 Mar 2019 18:38:19 -0500
-Message-ID: <20190315233819.GA12283@bogus>
-References: <cover.1552562385.git.jsarha@ti.com>
- <a3779a61b52214d302d1c1c01d1ae828de138ae9.1552562385.git.jsarha@ti.com>
+Subject: [PATCH] dt-bindings: Require child nodes type to be 'object'
+Date: Fri, 15 Mar 2019 19:09:34 -0500
+Message-ID: <20190316000934.30776-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <a3779a61b52214d302d1c1c01d1ae828de138ae9.1552562385.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: fabrizio.castro@bp.renesas.com, devicetree@vger.kernel.org, Songjun.Wu@atmel.com, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, voice.shen@atmel.com
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAxNCBNYXIgMjAxOSAxMzoyNzo1MCArMDIwMCwgSnlyaSBTYXJoYSB3cm90ZToKPiBS
-ZW1vdmUgdHJhaWxpbmcgd2hpdGUgc3BhY2UgZnJvbSBzaWk5MDJ4IGRpc3BsYXkgYnJpZGdlIGJp
-bmRpbmcuCj4gCj4gU2lnbmVkLW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KPiBS
-ZXZpZXdlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9h
-cmQuY29tPgo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9icmlkZ2Uvc2lpOTAyeC50eHQgfCAyICstCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlv
-bigrKSwgMSBkZWxldGlvbigtKQo+IAoKUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtl
-cm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+A node is always an object (aka a dictionary), so make that explicit for
+child node schemas.
+
+A meta-schema update will enforce having 'type' specified.
+
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/arm/cpus.yaml                  | 1 +
+ .../devicetree/bindings/interrupt-controller/arm,gic.yaml        | 1 +
+ Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml | 1 +
+ 3 files changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+index 298c17b327c6..de30466a399d 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.yaml
++++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+@@ -67,6 +67,7 @@ properties:
+ 
+ patternProperties:
+   '^cpu@[0-9a-f]+$':
++    type: object
+     properties:
+       device_type:
+         const: cpu
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml b/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml
+index 758fbd7128e7..54838d4ea44c 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml
+@@ -129,6 +129,7 @@ required:
+ 
+ patternProperties:
+   "^v2m@[0-9a-f]+$":
++    type: object
+     description: |
+       * GICv2m extension for MSI/MSI-x support (Optional)
+ 
+diff --git a/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml b/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
+index c4ab59550fc2..b3f0fe96ff0d 100644
+--- a/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
++++ b/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
+@@ -59,6 +59,7 @@ properties:
+ 
+ patternProperties:
+   '^frame@[0-9a-z]*$':
++    type: object
+     description: A timer node has up to 8 frame sub-nodes, each with the following properties.
+     properties:
+       frame-number:
+-- 
+2.19.1
