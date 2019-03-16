@@ -1,14 +1,14 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 1/4] iio: adc: lpc32xx: Sort headers
-Date: Sat, 16 Mar 2019 17:17:47 +0000
-Message-ID: <20190316171747.34be37ab@archlinux>
+Subject: Re: [PATCH v2 2/4] iio: adc: lpc32xx: Cleanup headers
+Date: Sat, 16 Mar 2019 17:23:27 +0000
+Message-ID: <20190316172327.2c1d7751@archlinux>
 References: <20190315095231.17001-1-gregory.clement@bootlin.com>
- <20190315095231.17001-2-gregory.clement@bootlin.com>
+ <20190315095231.17001-3-gregory.clement@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190315095231.17001-2-gregory.clement@bootlin.com>
+In-Reply-To: <20190315095231.17001-3-gregory.clement@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,54 +22,39 @@ To: Gregory CLEMENT <gregory.clement@bootlin.com>
 Cc: devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Vladimir Zapolskiy <vz@mleia.com>, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Sylvain Lemieux <slemieux.tyco@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 15 Mar 2019 10:52:28 +0100
+On Fri, 15 Mar 2019 10:52:29 +0100
 Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
 
-> Sort the headers in alphabetic order in order to ease the maintenance for
-> this part.
+> A few headers is useless: remove them.
 > 
 > Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Applied,
-
-Thanks,
-
-Jonathan
-
 > ---
->  drivers/iio/adc/lpc32xx_adc.c | 19 +++++++++----------
->  1 file changed, 9 insertions(+), 10 deletions(-)
+>  drivers/iio/adc/lpc32xx_adc.c | 6 ------
+>  1 file changed, 6 deletions(-)
 > 
 > diff --git a/drivers/iio/adc/lpc32xx_adc.c b/drivers/iio/adc/lpc32xx_adc.c
-> index e361c1532a75..7084f804504e 100644
+> index 7084f804504e..f391c1e10136 100644
 > --- a/drivers/iio/adc/lpc32xx_adc.c
 > +++ b/drivers/iio/adc/lpc32xx_adc.c
-> @@ -7,20 +7,19 @@
->   *  Copyright (C) 2011, 2012 Roland Stigge <stigge@antcom.de>
->   */
+> @@ -9,17 +9,11 @@
 >  
-> -#include <linux/module.h>
-> -#include <linux/platform_device.h>
-> -#include <linux/interrupt.h>
-> -#include <linux/device.h>
-> -#include <linux/kernel.h>
-> -#include <linux/slab.h>
-> -#include <linux/io.h>
 >  #include <linux/clk.h>
-> -#include <linux/err.h>
 >  #include <linux/completion.h>
-> -#include <linux/of.h>
-> -
-> +#include <linux/device.h>
-> +#include <linux/err.h>
+> -#include <linux/device.h>
+> -#include <linux/err.h>
+ -EINVAL comes from asm/errno.h I believe. IS_ERR
+is also in this header.  Otherwise, they are fine, so
+I'll just leave this one.
+
 >  #include <linux/iio/iio.h>
->  #include <linux/iio/sysfs.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
+> -#include <linux/iio/sysfs.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+> -#include <linux/kernel.h>
+>  #include <linux/module.h>
+> -#include <linux/of.h>
+>  #include <linux/platform_device.h>
+> -#include <linux/slab.h>
 >  
 >  /*
 >   * LPC32XX registers definitions
