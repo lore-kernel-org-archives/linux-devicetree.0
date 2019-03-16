@@ -1,79 +1,29 @@
-From: Renato Lui Geh <renatogeh@gmail.com>
-Subject: [PATCH v5 11/11] staging: iio: ad7780: add device tree binding
-Date: Fri, 15 Mar 2019 23:16:13 -0300
-Message-ID: <fce522fbe69b6d5ab8f06c70d18cf097f256711c.1552700652.git.renatogeh@gmail.com>
-References: <cover.1552700652.git.renatogeh@gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next 2/3] net: phy: add amlogic g12a mdio mux support
+Date: Sat, 16 Mar 2019 03:54:48 +0100
+Message-ID: <20190316025448.GD29548@lunn.ch>
+References: <20190314140135.19184-1-jbrunet@baylibre.com>
+ <20190314140135.19184-3-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1552700652.git.renatogeh@gmail.com>
+In-Reply-To: <20190314140135.19184-3-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, stefan.popa@analog.com, alexandru.Ardelean@analog.com, giuliano.belinassi@usp.br, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, devicetree@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller" <davem@davemloft.net>, Kevin Hilman <khilman@baylibre.com>, netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adds a device tree binding for the ad7780 driver.
+On Thu, Mar 14, 2019 at 03:01:34PM +0100, Jerome Brunet wrote:
+>> +static int _g12a_enable_internal_mdio(struct g12a_mdio_mux *priv)
+>
 
-Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
----
- .../bindings/iio/adc/adi,ad7780.txt           | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+You would generally use the _ prefix when you have a locked and an
+unlocked version. I don't see anything like this here. So please drop
+the _ .
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-new file mode 100644
-index 000000000000..440e52555349
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-@@ -0,0 +1,48 @@
-+* Analog Devices AD7170/AD7171/AD7780/AD7781
-+
-+Data sheets:
-+
-+- AD7170:
-+	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
-+- AD7171:
-+	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
-+- AD7780:
-+	* https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
-+- AD7781:
-+	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
-+
-+Required properties:
-+
-+- compatible: should be one of
-+	* "adi,ad7170"
-+	* "adi,ad7171"
-+	* "adi,ad7780"
-+	* "adi,ad7781"
-+- reg: spi chip select number for the device
-+- vref-supply: the regulator supply for the ADC reference voltage
-+
-+Optional properties:
-+
-+- powerdown-gpios:  must be the device tree identifier of the PDRST pin. If
-+		    specified, it will be asserted during driver probe. As the
-+		    line is active high, it should be marked GPIO_ACTIVE_HIGH.
-+- adi,gain-gpios:   must be the device tree identifier of the GAIN pin. Only for
-+		    the ad778x chips. If specified, it will be asserted during
-+		    driver probe. As the line is active low, it should be marked
-+		    GPIO_ACTIVE_LOW.
-+- adi,filter-gpios: must be the device tree identifier of the FILTER pin. Only
-+		    for the ad778x chips. If specified, it will be asserted
-+		    during driver probe. As the line is active low, it should be
-+		    marked GPIO_ACTIVE_LOW.
-+
-+Example:
-+
-+adc@0 {
-+	compatible =  "adi,ad7780";
-+	reg =	      <0>;
-+	vref-supply = <&vdd_supply>
-+
-+	powerdown-gpios  = <&gpio 12 GPIO_ACTIVE_HIGH>;
-+	adi,gain-gpios   = <&gpio  5 GPIO_ACTIVE_LOW>;
-+	adi,filter-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
-+};
--- 
-2.21.0
+Nice to see the generic clock framework being used. I just wonder if
+this is the correct place to have this clock code. Can it be made part
+of the SoC clock code?
+
+    Andrew
