@@ -1,30 +1,30 @@
 Return-Path: <SRS0=Mw68=RT=the-dreams.de=wsa@kernel.org>
-Date: Sat, 16 Mar 2019 23:26:37 +0100
+Date: Sat, 16 Mar 2019 23:25:47 +0100
 From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v3 2/2] dt-bindings: can: rcar_canfd: add r8a77995 (R-Car
+Subject: Re: [PATCH v3 1/2] dt-bindings: can: rcar_can: add r8a77995 (R-Car
  D3) compatibility strings
-Message-ID: <20190316222637.GC1111@kunai>
+Message-ID: <20190316222547.GB1111@kunai>
 References: <1543972625-11267-1-git-send-email-uli+renesas@fpond.eu>
- <1543972625-11267-3-git-send-email-uli+renesas@fpond.eu>
+ <1543972625-11267-2-git-send-email-uli+renesas@fpond.eu>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="CblX+4bnyfN0pR09"
+	protocol="application/pgp-signature"; boundary="K8nIJk4ghYZn606h"
 Content-Disposition: inline
-In-Reply-To: <1543972625-11267-3-git-send-email-uli+renesas@fpond.eu>
+In-Reply-To: <1543972625-11267-2-git-send-email-uli+renesas@fpond.eu>
 To: Ulrich Hecht <uli+renesas@fpond.eu>, mkl@pengutronix.de
 Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, robh@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
 
---CblX+4bnyfN0pR09
+--K8nIJk4ghYZn606h
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 05, 2018 at 09:17:05AM +0800, Ulrich Hecht wrote:
+On Wed, Dec 05, 2018 at 09:17:04AM +0800, Ulrich Hecht wrote:
 > From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 >=20
-> Adds compatible strings for the R-Car CAN FD controller in the D3 SoC.
+> Adds compatible strings for the R-Car CAN controller in the D3 SoC.
 >=20
 > Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 > Acked-by: Rob Herring <robh@kernel.org>
@@ -36,69 +36,59 @@ Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 Adding Marc to CC.
 
 > ---
->  Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  Documentation/devicetree/bindings/net/can/rcar_can.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/D=
-ocumentation/devicetree/bindings/net/can/rcar_canfd.txt
-> index ac71daa..ae2a2b7 100644
-> --- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> +++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> @@ -8,6 +8,7 @@ Required properties:
->    - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controll=
-er.
->    - "renesas,r8a77970-canfd" for R8A77970 (R-Car V3M) compatible control=
-ler.
->    - "renesas,r8a77980-canfd" for R8A77980 (R-Car V3H) compatible control=
-ler.
-> +  - "renesas,r8a77995-canfd" for R8A77995 (R-Car D3) compatible controll=
-er.
+> diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Doc=
+umentation/devicetree/bindings/net/can/rcar_can.txt
+> index 9936b9e..a72ced1 100644
+> --- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> +++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> @@ -16,6 +16,7 @@ Required properties:
+>  	      "renesas,can-r8a7795" if CAN controller is a part of R8A7795 SoC.
+>  	      "renesas,can-r8a7796" if CAN controller is a part of R8A7796 SoC.
+>  	      "renesas,can-r8a77965" if CAN controller is a part of R8A77965 So=
+C.
+> +	      "renesas,can-r8a77995" if CAN controller is a part of R8A77995 So=
+C.
+>  	      "renesas,rcar-gen1-can" for a generic R-Car Gen1 compatible devic=
+e.
+>  	      "renesas,rcar-gen2-can" for a generic R-Car Gen2 or RZ/G1
+>  	      compatible device.
+> @@ -37,7 +38,7 @@ Required properties:
+>  - pinctrl-0: pin control group to be used for this controller.
+>  - pinctrl-names: must be "default".
 > =20
->    When compatible with the generic version, nodes must list the
->    SoC-specific version corresponding to the platform first, followed by =
-the
-> @@ -26,10 +27,9 @@ The name of the child nodes are "channel0" and "channe=
-l1" respectively. Each
->  child node supports the "status" property only, which is used to
->  enable/disable the respective channel.
-> =20
-> -Required properties for "renesas,r8a7795-canfd" and "renesas,r8a7796-can=
-fd"
-> -compatible:
-> -In R8A7795 and R8A7796 SoCs, canfd clock is a div6 clock and can be used=
- by both
-> -CAN and CAN FD controller at the same time. It needs to be scaled to max=
-imum
-> +Required properties for R8A7795, R8A7796 and R8A77995:
-> +In the denoted SoCs, canfd clock is a div6 clock and can be used by both=
- CAN
-> +and CAN FD controller at the same time. It needs to be scaled to maximum
->  frequency if any of these controllers use it. This is done using the bel=
-ow
->  properties:
-> =20
+> -Required properties for R8A7795, R8A7796 and R8A77965:
+> +Required properties for R8A7795, R8A7796, R8A77965 and R8A77995:
+>  For the denoted SoCs, "clkp2" can be CANFD clock. This is a div6 clock a=
+nd can
+>  be used by both CAN and CAN FD controller at the same time. It needs to =
+be
+>  scaled to maximum frequency if any of these controllers use it. This is =
+done
 > --=20
 > 2.7.4
 >=20
 
---CblX+4bnyfN0pR09
+--K8nIJk4ghYZn606h
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyNeB0ACgkQFA3kzBSg
-KbbetA//Ud45iLvQnZPs2Dm+Nyous6o45L31fGFhN8txgZm/H0jsxUoPQk3KkhZc
-H4CKUvZcC/Os70Lo9lwYPNlPbGIOGsARj4a8yhKJGBDZh/TjyavGwRPCt4uQ8wFy
-wTI2t7F5VuGa/zzuVVMReur78/m5wIBcKyy0S+FnrKeL2x/P/piJ7ejP+B3ccgHR
-D2RyxLN6kM6JAt/IeGGYg5VlO34mUnpRKoyWLpvMBscNq/IrspF3D10L7NtLPt88
-7bkk7c8WSB2yXMXXs9wV3UILDZ1sGTAOSWNXIL+GgBOyRT2PIQRvaoYb93itdbFw
-TN2yDrWauND3s8cU8yaTwLPsuLoTm3Rb7Zh+4tZfWCTQYnuEsdNkTHmjF9BAgAcs
-OACOXZHWyobqNMHUzrG+s5X1jfkGxOMuNl8t07qDqJMMRbdqrOi3NUojb4LkjeYo
-DUo51oH2xVJZH/nDdNI/FIae7zWi4j71rvHzunO10mYTd670dczmBGbwH2XQep8x
-cEEq1nsCjb0zedZDyh28V1DKPbRu5h6Mk+QcoPBL+CkNtTbhUckTgYzPeQKTgKte
-HaOjbPey6usTYeLx35HIfARA81C9nylkUPIUct18+Potp9CgKQzCiF0MCyGlC7OP
-Jmkfi5e6f4reTvuMvciGExh81KfuoNJgwuV1ZdFXzAtTuNWZTss=
-=U38l
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyNd+sACgkQFA3kzBSg
+KbYq7xAAhWcRpqq+YOjLD8iBZJCfOhgeMMRh4pq5cNB9srTFgF8MJNv01YDpPvEI
+r1oNtMDlfNraIAlObb3Ssa39susvB2gbvhoyQq/RVfUZfJSZ0YWnWVljhH0Qa3wc
+a1S+dEKsd2xASnSWMaxe5HO/0C7cHc2fQleQ5V6wi1h/0zZrJNlheJH+CGMDRzHA
+kdvKpLEkFqrKxG4OKdgIUVXiAK2OcrwxEs99JG3HFQplFPPkS9y5KA3i+dLCnmBP
+OYfWfOW/YfSSw0V7tTWi9L+jS11wGBQ8AakS2i0r5fjJFatSQ4p5wa+EZi4jR8de
+nKcY50m8xkxS6C16eXYl4NEvxGJ2b76HTCDMw6/nJfG5fKHjGmJ5eNbixBFqwIOH
+3SXz+1E5bqI9Ft1hfIOxuwS7pvXP0J19GqniJieU9zT0LnS2lZOyWTB0Msz8/y4b
+TZMADXYsqVsiDsFaAhNKM5A4s4aneP/HG1LQxaYWnnaPXozcMX9WHkUcFyobPKun
+P9Fqquy+t5skBH1gAsnGRdM7mewh4jGVWay1UqQYESFxqO/tITqRyVFLE4hN+kbf
+JXU6f14VqLkhh6ZDDyp2PPLsSchv1j7zS8bMkp8XmD9nIbazLSCcZ77iiQ3uICM6
+vOIFFiwiW1/qVS4uxVHknLFWFzTZc+UiBgBOaSFAb3HRkLY/mcE=
+=fa9F
 -----END PGP SIGNATURE-----
 
---CblX+4bnyfN0pR09--
+--K8nIJk4ghYZn606h--
