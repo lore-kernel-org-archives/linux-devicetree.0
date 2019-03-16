@@ -1,64 +1,169 @@
-From: Yu Chen <chenyu56@huawei.com>
-Subject: [PATCH v4 00/12] Add support for usb on Hikey960
-Date: Sat, 16 Mar 2019 11:53:30 +0800
-Message-ID: <20190316035342.77998-1-chenyu56@huawei.com>
+From: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v6 3/7] scsi: ufs-hisi: Re-factor ufshcd_get_pwr_dev_param
+Date: Sat, 16 Mar 2019 13:04:43 +0800
+Message-ID: <1552712687-20186-5-git-send-email-stanley.chu@mediatek.com>
+References: <1552712687-20186-1-git-send-email-stanley.chu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Yu Chen <chenyu56@huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1552712687-20186-1-git-send-email-stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, avri.altman-Sjgp3cTcYWE@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pedrom.sousa-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+Cc: chun-hung.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patchset adds support for usb functionality of Hikey960, includes:
-- usb phy driver for Hisilicon Kirin Soc hi3660
-- usb driver for HiKey960 board
-- some adjustment in dwc3 and usb role driver
-- dts for support usb of HiKey960
+ufshcd_get_pwr_dev_param function and ufs_dev_params struct
+are re-factored to ufs common driver thus change the way this
+driver used.
 
-Yu Chen (12):
-  dt-bindings: phy: Add support for HiSilicon's hi3660 USB PHY
-  dt-bindings: misc: Add bindings for HiSilicon usb hub and data role
-    switch functionality on HiKey960
-  usb: dwc3: dwc3-of-simple: Add support for dwc3 of Hisilicon Soc
-    Platform
-  usb: dwc3: Add splitdisable quirk for Hisilicon Kirin Soc
-  usb: dwc3: Execute GCTL Core Soft Reset while switch mdoe for
-    Hisilicon Kirin Soc
-  usb: dwc3: Increase timeout for CmdAct cleared by device controller
-  phy: Add usb phy support for hi3660 Soc of Hisilicon
-  usb: roles: Add usb role switch notifier.
-  usb: dwc3: Registering a role switch in the DRD code.
-  hikey960: Support usb functionality of Hikey960
-  usb: gadget: Add configfs attribuite for controling
-    match_existing_only
-  dts: hi3660: Add support for usb on Hikey960
+Signed-off-by: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Avri Altman <avri.altman-Sjgp3cTcYWE@public.gmane.org>
+---
+ drivers/scsi/ufs/ufs-hisi.c | 109 ++----------------------------------
+ 1 file changed, 4 insertions(+), 105 deletions(-)
 
- .../bindings/misc/hisilicon-hikey-usb.txt          |  52 +++++
- .../devicetree/bindings/phy/phy-hi3660-usb3.txt    |  26 +++
- MAINTAINERS                                        |   8 +
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts  |  53 +++++
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |  74 +++++++
- drivers/misc/Kconfig                               |   6 +
- drivers/misc/Makefile                              |   1 +
- drivers/misc/hisi_hikey_usb.c                      | 162 ++++++++++++++
- drivers/phy/hisilicon/Kconfig                      |  10 +
- drivers/phy/hisilicon/Makefile                     |   1 +
- drivers/phy/hisilicon/phy-hi3660-usb3.c            | 233 +++++++++++++++++++++
- drivers/usb/dwc3/Kconfig                           |   1 +
- drivers/usb/dwc3/core.c                            |  45 ++++
- drivers/usb/dwc3/core.h                            |  15 ++
- drivers/usb/dwc3/drd.c                             |  58 ++++-
- drivers/usb/dwc3/dwc3-of-simple.c                  |   4 +-
- drivers/usb/dwc3/gadget.c                          |   2 +-
- drivers/usb/gadget/configfs.c                      |  32 +++
- drivers/usb/roles/class.c                          |  20 +-
- include/linux/usb/role.h                           |  46 ++++
- 20 files changed, 845 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
- create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
- create mode 100644 drivers/misc/hisi_hikey_usb.c
- create mode 100644 drivers/phy/hisilicon/phy-hi3660-usb3.c
-
+diff --git a/drivers/scsi/ufs/ufs-hisi.c b/drivers/scsi/ufs/ufs-hisi.c
+index 452e19f8fb47..01faad26ec26 100644
+--- a/drivers/scsi/ufs/ufs-hisi.c
++++ b/drivers/scsi/ufs/ufs-hisi.c
+@@ -272,108 +272,7 @@ static int ufs_hi3660_link_startup_notify(struct ufs_hba *hba,
+ 	return err;
+ }
+ 
+-struct ufs_hisi_dev_params {
+-	u32 pwm_rx_gear; /* pwm rx gear to work in */
+-	u32 pwm_tx_gear; /* pwm tx gear to work in */
+-	u32 hs_rx_gear;  /* hs rx gear to work in */
+-	u32 hs_tx_gear;  /* hs tx gear to work in */
+-	u32 rx_lanes;    /* number of rx lanes */
+-	u32 tx_lanes;    /* number of tx lanes */
+-	u32 rx_pwr_pwm;  /* rx pwm working pwr */
+-	u32 tx_pwr_pwm;  /* tx pwm working pwr */
+-	u32 rx_pwr_hs;   /* rx hs working pwr */
+-	u32 tx_pwr_hs;   /* tx hs working pwr */
+-	u32 hs_rate;     /* rate A/B to work in HS */
+-	u32 desired_working_mode;
+-};
+-
+-static int ufs_hisi_get_pwr_dev_param(
+-				    struct ufs_hisi_dev_params *hisi_param,
+-				    struct ufs_pa_layer_attr *dev_max,
+-				    struct ufs_pa_layer_attr *agreed_pwr)
+-{
+-	int min_hisi_gear;
+-	int min_dev_gear;
+-	bool is_dev_sup_hs = false;
+-	bool is_hisi_max_hs = false;
+-
+-	if (dev_max->pwr_rx == FASTAUTO_MODE || dev_max->pwr_rx == FAST_MODE)
+-		is_dev_sup_hs = true;
+-
+-	if (hisi_param->desired_working_mode == FAST) {
+-		is_hisi_max_hs = true;
+-		min_hisi_gear = min_t(u32, hisi_param->hs_rx_gear,
+-				       hisi_param->hs_tx_gear);
+-	} else {
+-		min_hisi_gear = min_t(u32, hisi_param->pwm_rx_gear,
+-				       hisi_param->pwm_tx_gear);
+-	}
+-
+-	/*
+-	 * device doesn't support HS but
+-	 * hisi_param->desired_working_mode is HS,
+-	 * thus device and hisi_param don't agree
+-	 */
+-	if (!is_dev_sup_hs && is_hisi_max_hs) {
+-		pr_err("%s: device not support HS\n", __func__);
+-		return -ENOTSUPP;
+-	} else if (is_dev_sup_hs && is_hisi_max_hs) {
+-		/*
+-		 * since device supports HS, it supports FAST_MODE.
+-		 * since hisi_param->desired_working_mode is also HS
+-		 * then final decision (FAST/FASTAUTO) is done according
+-		 * to hisi_params as it is the restricting factor
+-		 */
+-		agreed_pwr->pwr_rx = agreed_pwr->pwr_tx =
+-			hisi_param->rx_pwr_hs;
+-	} else {
+-		/*
+-		 * here hisi_param->desired_working_mode is PWM.
+-		 * it doesn't matter whether device supports HS or PWM,
+-		 * in both cases hisi_param->desired_working_mode will
+-		 * determine the mode
+-		 */
+-		agreed_pwr->pwr_rx = agreed_pwr->pwr_tx =
+-			hisi_param->rx_pwr_pwm;
+-	}
+-
+-	/*
+-	 * we would like tx to work in the minimum number of lanes
+-	 * between device capability and vendor preferences.
+-	 * the same decision will be made for rx
+-	 */
+-	agreed_pwr->lane_tx =
+-		min_t(u32, dev_max->lane_tx, hisi_param->tx_lanes);
+-	agreed_pwr->lane_rx =
+-		min_t(u32, dev_max->lane_rx, hisi_param->rx_lanes);
+-
+-	/* device maximum gear is the minimum between device rx and tx gears */
+-	min_dev_gear = min_t(u32, dev_max->gear_rx, dev_max->gear_tx);
+-
+-	/*
+-	 * if both device capabilities and vendor pre-defined preferences are
+-	 * both HS or both PWM then set the minimum gear to be the chosen
+-	 * working gear.
+-	 * if one is PWM and one is HS then the one that is PWM get to decide
+-	 * what is the gear, as it is the one that also decided previously what
+-	 * pwr the device will be configured to.
+-	 */
+-	if ((is_dev_sup_hs && is_hisi_max_hs) ||
+-	    (!is_dev_sup_hs && !is_hisi_max_hs))
+-		agreed_pwr->gear_rx = agreed_pwr->gear_tx =
+-			min_t(u32, min_dev_gear, min_hisi_gear);
+-	else
+-		agreed_pwr->gear_rx = agreed_pwr->gear_tx = min_hisi_gear;
+-
+-	agreed_pwr->hs_rate = hisi_param->hs_rate;
+-
+-	pr_info("ufs final power mode: gear = %d, lane = %d, pwr = %d, rate = %d\n",
+-		agreed_pwr->gear_rx, agreed_pwr->lane_rx, agreed_pwr->pwr_rx,
+-		agreed_pwr->hs_rate);
+-	return 0;
+-}
+-
+-static void ufs_hisi_set_dev_cap(struct ufs_hisi_dev_params *hisi_param)
++static void ufs_hisi_set_dev_cap(struct ufs_dev_params *hisi_param)
+ {
+ 	hisi_param->rx_lanes = UFS_HISI_LIMIT_NUM_LANES_RX;
+ 	hisi_param->tx_lanes = UFS_HISI_LIMIT_NUM_LANES_TX;
+@@ -434,7 +333,7 @@ static int ufs_hi3660_pwr_change_notify(struct ufs_hba *hba,
+ 				       struct ufs_pa_layer_attr *dev_max_params,
+ 				       struct ufs_pa_layer_attr *dev_req_params)
+ {
+-	struct ufs_hisi_dev_params ufs_hisi_cap;
++	struct ufs_dev_params ufs_hisi_cap;
+ 	int ret = 0;
+ 
+ 	if (!dev_req_params) {
+@@ -447,8 +346,8 @@ static int ufs_hi3660_pwr_change_notify(struct ufs_hba *hba,
+ 	switch (status) {
+ 	case PRE_CHANGE:
+ 		ufs_hisi_set_dev_cap(&ufs_hisi_cap);
+-		ret = ufs_hisi_get_pwr_dev_param(
+-			&ufs_hisi_cap, dev_max_params, dev_req_params);
++		ret = ufshcd_get_pwr_dev_param(&ufs_hisi_cap,
++					       dev_max_params, dev_req_params);
+ 		if (ret) {
+ 			dev_err(hba->dev,
+ 			    "%s: failed to determine capabilities\n", __func__);
 -- 
-2.15.0-rc2
+2.18.0
