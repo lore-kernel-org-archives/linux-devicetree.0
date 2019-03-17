@@ -1,105 +1,86 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 2/3] net: phy: add amlogic g12a mdio mux support
-Date: Sun, 17 Mar 2019 17:14:02 +0100
-Message-ID: <20190317161402.GB22226@lunn.ch>
-References: <20190314140135.19184-1-jbrunet@baylibre.com>
- <20190314140135.19184-3-jbrunet@baylibre.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v4 5/6] dt-bindings: display: sii902x: Add HDMI audio
+ bindings
+Date: Sun, 17 Mar 2019 18:16:09 +0200
+Message-ID: <20190317161609.GD17898@pendragon.ideasonboard.com>
+References: <cover.1552562385.git.jsarha@ti.com>
+ <da7c2a4f469a81d8cdc5c04ab245529a094dbfd3.1552562385.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20190314140135.19184-3-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller" <davem@davemloft.net>, Kevin Hilman <khilman@baylibre.com>, netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <da7c2a4f469a81d8cdc5c04ab245529a094dbfd3.1552562385.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: fabrizio.castro@bp.renesas.com, devicetree@vger.kernel.org, Songjun.Wu@atmel.com, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, voice.shen@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 03:01:34PM +0100, Jerome Brunet wrote:
-> Add support for the mdio mux and internal phy glue of the g12a SoC family
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  drivers/net/phy/Kconfig               |  10 +
->  drivers/net/phy/Makefile              |   1 +
->  drivers/net/phy/mdio-mux-meson-g12a.c | 371 ++++++++++++++++++++++++++
->  3 files changed, 382 insertions(+)
->  create mode 100644 drivers/net/phy/mdio-mux-meson-g12a.c
-> 
-> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> index 071869db44cf..831aa350b1cb 100644
-> --- a/drivers/net/phy/Kconfig
-> +++ b/drivers/net/phy/Kconfig
-> @@ -74,6 +74,16 @@ config MDIO_BUS_MUX_GPIO
->  	  several child MDIO busses to a parent bus.  Child bus
->  	  selection is under the control of GPIO lines.
->  
-> +config MDIO_BUS_MUX_MESON_G12A
-> +	tristate "Amlogic G12a based MDIO bus multiplexer"
-> +	depends on ARCH_MESON || COMPILE_TEST
-> +	depends on OF_MDIO && HAS_IOMEM
-> +	select MDIO_BUS_MUX
-
-Hi Jerome
-
-Do you need some clock depends? 
-
-> +static int g12a_mdio_switch_fn(int current_child, int desired_child,
-> +			       void *data)
-> +{
-> +	struct device *dev = data;
-> +	struct g12a_mdio_mux *priv = dev_get_drvdata(dev);
-
-David won't like that you don't have reverse Christmas tree. You need
-to do the assignment to priv in the body of the code. Or can you pass
-data directly to dev_get_drvdata?
-
-> +static int g12a_mdio_mux_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	struct g12a_mdio_mux *priv;
-> +	int ret;
-
-Reverse Christmas tree please.
-
-
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	priv->regs = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(priv->regs))
-> +		return PTR_ERR(priv->regs);
-> +
-> +	priv->pclk = devm_clk_get(dev, "pclk");
-> +	if (IS_ERR(priv->pclk)) {
-> +		ret = PTR_ERR(priv->pclk);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to get peripheral clock\n");
-> +		return ret;
-> +	}
-> +
-> +	/* Make sure the device registers are clocked */
-> +	ret = clk_prepare_enable(priv->pclk);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable peripheral clock");
-> +		return ret;
-> +	}
-> +
-> +	/* Register PLL in CCF */
-> +	ret = g12a_ephy_glue_clk_register(dev);
-
-On error, you are not disabling the peripheral clock.
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	return mdio_mux_init(dev, dev->of_node, g12a_mdio_switch_fn,
-> +			     &priv->mux_handle, dev, NULL);
-> +}
-
-  Andrew
+SGkgSnlyaSwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gVGh1LCBNYXIgMTQsIDIwMTkg
+YXQgMDE6Mjc6NTFQTSArMDIwMCwgSnlyaSBTYXJoYSB3cm90ZToKPiBUaGUgc2lpOTAyeCBjaGlw
+IGZhbWlseSBzdXBwb3J0cyBhbHNvIEhETUkgYXVkaW8uIEFkZCBiaW5kaW5nIGZvcgo+IGRlc2Ny
+aWJpbmcgdGhlIG5lY2Vzc2FyeSBpMnMgYW5kIG1jbGsgd2lyaW5nIGZvciBpdC4KPiAKPiBTaWdu
+ZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxqc2FyaGFAdGkuY29tPgo+IC0tLQo+ICAuLi4vYmluZGlu
+Z3MvZGlzcGxheS9icmlkZ2Uvc2lpOTAyeC50eHQgICAgICAgfCAzMyArKysrKysrKysrKysrKysr
+KysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAzMyBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9z
+aWk5MDJ4LnR4dAo+IGluZGV4IGM0YzE4NTVjYTY1NC4uMWEzN2JiZTdjNTk3IDEwMDY0NAo+IC0t
+LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5
+MDJ4LnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L2JyaWRnZS9zaWk5MDJ4LnR4dAo+IEBAIC05LDYgKzksMzMgQEAgT3B0aW9uYWwgcHJvcGVydGll
+czoKPiAgCSAgYWJvdXQgaG90cGx1ZyBldmVudHMuCj4gIAktIHJlc2V0LWdwaW9zOiBPRiBkZXZp
+Y2UtdHJlZSBncGlvIHNwZWNpZmljYXRpb24gZm9yIFJTVF9OIHBpbi4KPiAgCj4gKwlIRE1JIGF1
+ZGlvIHByb3BlcnRpZXM6Cj4gKwktIGkycy1kYXRhLWxhbmVzOiBBcnJheSBvZiB1cCB0byA0IGlu
+dGVnZXJzIHdpdGggdmFsdWVzIG9mIDAtMwo+ICsJICAgRWFjaCBpbnRlZ2VyIGluZGljYXRlcyB3
+aGljaCBpMnMgcGluIGlzIGNvbm5lY3RlZCB0byB3aGljaAo+ICsJICAgYXVkaW8gZmlmby4gVGhl
+IGZpcnN0IGludGVnZXIgc2VsZWN0cyBpMnMgYXVkaW8gcGluIGZvciB0aGUKPiArCSAgIGZpcnN0
+IGF1ZGlvIGZpZm8jMCAoSERNSSBjaGFubmVscyAxJjIpLCBzZWNvbmQgZm9yIGZpZm8jMQo+ICsJ
+ICAgKEhETUkgY2hhbm5lbHMgMyY0KSwgYW5kIHNvIG9uLiBUaGVyZSBpcyA0IGZpZm9zIGFuZCA0
+IGkycwo+ICsJICAgcGlucyAoU0QwIC0gU0QzKS4gQW55IGkycyBwaW4gY2FuIGJlIGNvbm5lY3Rl
+ZCB0byBhbnkgZmlmbywKPiArCSAgIGJ1dCB0aGVyZSBjYW4gYmUgbm8gZ2Fwcy4gRS5nLiBhbiBp
+MnMgcGluIG11c3QgYmUgbWFwcGVkIHRvCj4gKwkgICBmaWZvIzAgYW5kIGZpZm8jMSBiZWZvcmUg
+bWFwcGluZyBhIGNoYW5uZWwgdG8gZmlmbyMyLgo+ICsJICAgSTJTIEhETUkgYXVkaW8gaXMgY29u
+ZmlndXJlZCBvbmx5IGlmIHRoaXMgcHJvcGVydHkgaXMgZm91bmQuCgpUaGlzIGxvb2tzIGdvb2Qg
+dG8gbWUsIGJ1dCBzaG91bGRuJ3QgdGhlIHByb3BlcnR5IGJlIGRlZmluZWQgc29tZXdoZXJlCmlu
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC8gPyBUaGUgc291bmQgYmlu
+ZGluZ3Mgc2VlbSB0bwpiZSBhIGJpdCBtZXNzeSB0aG91Z2gsIHdpdGggbGl0dGxlIGNvbW1vbiBv
+ciBoaWdoLWxldmVsIGRvY3VtZW50YXRpb24sCnNvIEkgZG9uJ3Qgd2FudCB0byBhc2sgeW91IHRv
+IGZpeCBhbGwgdGhhdCA6LSkgTWF5YmUganVzdCBhZGRpbmcgYQpjb21tb24taTJzLnR4dCBmaWxl
+IHRoZXJlIHdvdWxkIGJlIGVub3VnaCA/IAoKQXBhcnQgZnJvbSB0aGlzIHRoZSByZXN0IGxvb2tz
+IGdvb2QgdG8gbWUsIGJ1dCBJJ2QgYXBwcmVjaWF0ZSBpZiBpdApjb3VsZCBiZSByZXZpZXdlZCBi
+eSBhdWRpbyBwZW9wbGUuCgo+ICsJLSBjbG9ja3M6IHBoYW5kbGUgYW5kIGNsb2NrIHNwZWNpZmll
+ciBmb3IgZWFjaCBjbG9jayBsaXN0ZWQgaW4KPiArICAgICAgICAgIHRoZSBjbG9jay1uYW1lcyBw
+cm9wZXJ0eQo+ICsJLSBjbG9jay1uYW1lczogIm1jbGsiCj4gKwkgICAgRGVzY3JpYmVzIFNJSTkw
+MnggTUNMSyBpbnB1dC4gTUNMSyBpcyB1c2VkIHRvIHByb2R1Y2UKPiArCSAgICBIRE1JIGF1ZGlv
+IENUUyB2YWx1ZXMuIFRoaXMgcHJvcGVydHkgaXMgcmVxdWlyZWQgaWYKPiArCSAgICAiaTJzLWRh
+dGEtbGFuZXMiLXByb3BlcnR5IGlzIHByZXNlbnQuIFRoaXMgcHJvcGVydHkgZm9sbG93cwo+ICsJ
+ICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jbG9jay1iaW5kaW5n
+cy50eHQKPiArCSAgICBjb25zdW1lciBiaW5kaW5nLgo+ICsKPiArCUlmIEhETUkgYXVkaW8gaXMg
+Y29uZmlndXJlZCB0aGUgc2lpOTAyeCBkZXZpY2UgYmVjb21lcyBhbiBBU29DCj4gKwljb2RlYyBj
+b21wb25lbnQsIHRoYXQgY2FuIGJlIHVzZWQgaW4gY29uZmlndXJpbmcgZnVsbCBhdWRpbwo+ICsJ
+ZGV2aWNlcyB3aXRoIEFTb0Mgc2ltcGxlLWNhcmQgb3IgYXVkaW8tZ3JhcGgtY2FyZC4gU2VlIHRo
+ZWlyCj4gKwliaW5kaW5nIGRvY3VtZW50cyBvbiBob3cgdG8gZGVzY3JpYmUgaG93IHRoZSBzaWk5
+MDJ4IGRldmljZSBpcwo+ICsJY29ubmVjdGVkIHRvIHRoZSByZXN0IG9mIHRoZSBhdWRpbyBzeXN0
+ZW06Cj4gKwlEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvc2ltcGxlLWNh
+cmQudHh0Cj4gKwlEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvYXVkaW8t
+Z3JhcGgtY2FyZC50eHQKPiArCj4gIE9wdGlvbmFsIHN1Ym5vZGVzOgo+ICAJLSB2aWRlbyBpbnB1
+dDogdGhpcyBzdWJub2RlIGNhbiBjb250YWluIGEgdmlkZW8gaW5wdXQgcG9ydCBub2RlCj4gIAkg
+IHRvIGNvbm5lY3QgdGhlIGJyaWRnZSB0byBhIGRpc3BsYXkgY29udHJvbGxlciBvdXRwdXQgKFNl
+ZSB0aGlzCj4gQEAgLTIxLDYgKzQ4LDEyIEBAIEV4YW1wbGU6Cj4gIAkJY29tcGF0aWJsZSA9ICJz
+aWwsc2lpOTAyMiI7Cj4gIAkJcmVnID0gPDB4Mzk+Owo+ICAJCXJlc2V0LWdwaW9zID0gPCZwaW9B
+IDEgMD47Cj4gKwo+ICsJCSNzb3VuZC1kYWktY2VsbHMgPSA8MD47Cj4gKwkJaTJzLWRhdGEtbGFu
+ZXMgPSA8IDAgMSAyID47Cj4gKwkJY2xvY2tzID0gPCZtY2xrPjsKPiArCQljbG9jay1uYW1lcyA9
+ICJtY2xrIjsKPiArCj4gIAkJcG9ydHMgewo+ICAJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiAg
+CQkJI3NpemUtY2VsbHMgPSA8MD47CgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
