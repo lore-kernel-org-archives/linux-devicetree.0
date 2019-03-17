@@ -1,7 +1,7 @@
 From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v2 2/5] iio: light: vcnl4000 add devicetree hooks
-Date: Sun, 17 Mar 2019 08:47:59 -0700
-Message-ID: <20190317154802.15174-3-angus@akkea.ca>
+Subject: [PATCH v2 5/5] dt-bindings: iio: light: add vcnl4040 devicetree bindings
+Date: Sun, 17 Mar 2019 08:48:02 -0700
+Message-ID: <20190317154802.15174-6-angus@akkea.ca>
 References: <20190317154802.15174-1-angus@akkea.ca>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190317154802.15174-1-angus@akkea.ca>
@@ -10,48 +10,38 @@ To: Jonathan Cameron <jic23@kernel.org>
 Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Tomas Novotny <tomas@novotny.cz>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add an of_match table for devicetree probing.
+Document the vishay VCNL4040 devicetree bindings.
 
 Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 ---
- drivers/iio/light/vcnl4000.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ Documentation/devicetree/bindings/iio/light/vcnl4000.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-index 5295330b65e2..836fa97b4e0c 100644
---- a/drivers/iio/light/vcnl4000.c
-+++ b/drivers/iio/light/vcnl4000.c
-@@ -363,9 +363,31 @@ static int vcnl4000_probe(struct i2c_client *client,
- 	return devm_iio_device_register(&client->dev, indio_dev);
- }
+diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt b/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
+index 4a9d558a412a..955af4555c90 100644
+--- a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
++++ b/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
+@@ -1,6 +1,6 @@
+ VISHAY VCNL4000 -  Ambient Light and proximity sensor
  
-+static const struct of_device_id vcnl_4000_of_match[] = {
-+	{
-+		.compatible = "vishay,vcnl4000",
-+		.data = "VCNL4000",
-+	},
-+	{
-+		.compatible = "vishay,vcnl4010",
-+		.data = "VCNL4010",
-+	},
-+	{
-+		.compatible = "vishay,vcnl4010",
-+		.data = "VCNL4020",
-+	},
-+	{
-+		.compatible = "vishay,vcnl4200",
-+		.data = "VCNL4200",
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, vcnl4000_of_match);
-+
- static struct i2c_driver vcnl4000_driver = {
- 	.driver = {
- 		.name   = VCNL4000_DRV_NAME,
-+		.of_match_table = of_match_ptr(vcnl_4000_of_match),
- 	},
- 	.probe  = vcnl4000_probe,
- 	.id_table = vcnl4000_id,
+-This driver supports the VCNL4000/10/20 and VCNL4200 chips
++This driver supports the VCNL4000/10/20/40 and VCNL4200 chips
+ 
+ Required properties:
+ 
+@@ -8,11 +8,13 @@ Required properties:
+         vishay,vcnl4000
+         vishay,vcnl4010
+         vishay,vcnl4020
++        vishay,vcnl4040
+         vishay,vcnl4200
+ 
+ 	-reg: I2C address of the sensor, should be one from below based on the model:
+         0x13
+         0x51
++        0x60
+ 
+ Example:
+ 
 -- 
 2.17.1
