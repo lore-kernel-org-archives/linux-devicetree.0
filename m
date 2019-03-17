@@ -1,96 +1,51 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH v2 0/4] Patches to allow consistent mmc / mmcblk
- numbering w/ device tree
-Date: Sun, 17 Mar 2019 16:59:57 +0000
-Message-ID: <20190317165957.k6lxxaq3hbs2owqz@shell.armlinux.org.uk>
-References: <1461951139-6109-1-git-send-email-dianders@chromium.org>
- <yw1x5zsx5wc7.fsf@mansr.com>
- <CAJ+vNU1PxK-B63Dc3AgzYb9POyxxoF-xPOWBEpxJ+3eVNK8xqw@mail.gmail.com>
- <d5310138-7fdd-973d-5210-3fc91c4686ee@denx.de>
- <yw1xftrn2em9.fsf@mansr.com>
- <1fcd4dad-1e00-67cc-ac5d-24640ae34340@denx.de>
- <20190316153900.xqi55awrockovmsi@shell.armlinux.org.uk>
- <c23d6c4edf92d58aec86da811eaa97a5@agner.ch>
- <yw1xbm2930rr.fsf@mansr.com>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH 0/7] Timer & SPI support for Allwinner suniv F1C100s
+Date: Mon, 18 Mar 2019 01:39:44 +0800
+Message-ID: <2485e6c52810df376a0df6eb7f749f35b7b19044.camel@aosc.xyz>
+References: <cover.1549875778.git.mesihkilinc@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <yw1xbm2930rr.fsf@mansr.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Cc: Stefan Agner <stefan@agner.ch>, Marek Vasut <marex@denx.de>, Tim Harvey <tharvey@gateworks.com>, Douglas Anderson <dianders@chromium.org>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, shawn.lin@rock-chips.com, Adrian Hunter <adrian.hunter@intel.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Jisheng Zhang <jszhang@marvell.com>, linux-rockchip@lists.infradead.org, devicetree-spec@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, open list <linux-kernel@vger.kernel.org>, vbyravarasu@nvidia.com, Lars-Peter Clausen <lars@metafoo.de>, jonathanh@nvidia.com, linux-arm-kernel@lists.infradead.orgde
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1549875778.git.mesihkilinc@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mesih Kilinc <mesihkilinc@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 04:48:24PM +0000, Måns Rullgård wrote:
-> Stefan Agner <stefan@agner.ch> writes:
-> 
-> > On 16.03.2019 16:39, Russell King - ARM Linux admin wrote:
-> >> On Sat, Mar 16, 2019 at 01:33:58PM +0100, Marek Vasut wrote:
-> >>> If you have a FS or partition table there, it does.
-> >>> If you don't, I agree ... that's a problem.
-> >> 
-> >> eMMC boot partitions are called mmcblkXbootY, and unless you have more
-> >> than one eMMC device on the system, they can be found either by looking
-> >> for /dev/mmcblk*boot* or by querying udev.  The advantage of using udev
-> >> is you can discover the physical device behind it by looking at DEVPATH,
-> >> ID_PATH, etc, but you may not have that installed on an embedded device.
-> >> 
-> >> However, as I say, just looking for /dev/mmcblk*boot* is sufficient to
-> >> find the eMMC boot partitions where there is just one eMMC device
-> >> present (which seems to be the standard setup.)
-> >> 
-> >>> > I don't care the slightest what the numbering is, as long as it is
-> >>> > stable.  On some hardware, with an unpatched kernel, the mmc device
-> >>> > numbering changes depending on whether or not an SD card is inserted on
-> >>> > boot.  Getting rid of that behaviour is really all I want.
-> >>>
-> >>> Agreed, that would be an improvement.
-> >> 
-> >> The mmc device numbering was tied to the mmc host numbering a while back
-> >> and the order that the hosts are probed should be completely independent
-> >> of whether a card is inserted or not:
-> >> 
-> >>         snprintf(md->disk->disk_name, sizeof(md->disk->disk_name),
-> >>                  "mmcblk%u%s", card->host->index, subname ? subname : "");
-> >> 
-> >>         snprintf(rpmb_name, sizeof(rpmb_name),
-> >>                  "mmcblk%u%s", card->host->index, subname ? subname : "");
-> >> 
-> >> I suspect that Mans is quoting something from the dim and distant past
-> >> to confuse the issue - as shown above, it is now dependent on the host
-> >> numbering order not the order in which cards are inserted.
-> >
-> > Commit 9aaf3437aa72 ("mmc: block: Use the mmc host device index as the
-> > mmcblk device index") which came in with v4.6 enables constant mmc block
-> > device numbering. I can confirm that it works nicely, and it improved
-> > the situation a lot.
-> 
-> That's the answer I was looking for.  I guess we can drop these patches
-> from our kernels then.
-> 
-> > That being said, we still use a patch downstream which allows
-> > renumbering using an alias. We deal with a bunch of different boards
-> > with different SoC's. I have a couple of SD cards with various rootfs
-> > and use internal eMMC boot quite often as well. Remembering which board
-> > uses which numbering is a pain. Maintaining a patch is just easier...
-> > Furthermore, U-Boot allows reordering and all boards I deal with use mmc
-> > 0 for the internal eMMC. The aliases allow consistency.
-> 
-> Since pretty much every other device type supports renumbering with DT
-> aliases, it would make sense to do this for mmc as well.
-
-SATA does not.  SCSI devices, whether they are disks, cdroms, tape
-drives or whatever have always been allocated dynamically in the
-order that they are discovered.
-
-Ethernet also does not, and davem remains opposed the idea of fixed
-allocation in the kernel.
-
-It's only a minority that demand fixed enumeration of devices.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+5ZyoIDIwMTktMDItMTHkuIDnmoQgMTI6MjEgKzAzMDDvvIxNZXNpaCBLaWxpbmPlhpnpgZPvvJoK
+PiBUaGlzIGlzIGZvbGxvd3VwIHNlcmllcyBmb3IgRjFDMTAwcyBpbml0aWFsIHN1cHBvcnQgcGF0
+Y2hzZXQuIAo+IEFsbCBwYXRjaGVzIG1lcmdlZCBleGNlcHQgcGF0Y2ggMSB+IDIgd2hpY2ggaXMg
+cmVsYXRlZCB0byB0aW1lci4KPiBJIGFtIHJlc2VuZGluZyB0aG9zZSBzaW5jZSB0aGV5IGFyZSBh
+bHJlYWR5IGhhdmUgQWNrZWQgdGFncy4KClBpbmcuCgpDb3VsZCB5b3UgcGxlYXNlIG1lcmdlIHRo
+ZXNlIHRpbWVyLXJlbGF0ZWQgcGF0Y2hlcz8KClRoYW5rcyEKSWNlbm93eQoKPiAKPiBPdXIgZHQt
+YmluZGluZ3MgZm9yIEYxQzEwMHMgYXJlIG1lcmdlZCwgd2UgY2FuIG5vdyB1c2UgdGhlbSBhdCBv
+dXIgCj4gZGV2aWNlIHRyZWUgc291cmNlIC0gcGF0Y2ggMy4KPiAKPiBBbHNvIHRoaXMgc2VyaWVz
+IGFkZCBzcGkgc3VwcG9ydCBhbmQgZW5hYmxlcyBzcGkgZmxhc2ggYXQgTGljaGVlLXBpCj4gTmFu
+bwo+IGluIHBhdGNoIDQgfiA3LiBUaGlzIHBhdGNoZXMgYXJlIGJhc2VkIG9uIEljZW5vd3kncyB3
+b3JrLgo+IAo+IFRoYW5rcyEKPiAKPiBNZXNpaCBLaWxpbmMgKDcpOgo+ICAgZHQtYmluZGluZ3M6
+IHRpbWVyOiBBZGQgQWxsd2lubmVyIHN1bml2IHRpbWVyCj4gICBjbG9ja3NvdXJjZTogc3VuNGk6
+IGFkZCBhIGNvbXBhdGlibGUgZm9yIHN1bml2Cj4gICBBUk06IGR0czogc3VuaXY6IEFkZCBkdC1i
+aW5kaW5nIGhlYWRlcnMgZm9yIEYxQzEwMHMKPiAgIGR0LWJpbmRpbmdzOiBzcGk6IEFkZCBTdXBw
+b3J0IGZvciBBbGx3aW5uZXIgRjFDMTAwcwo+ICAgQVJNOiBkdHM6IHN1bml2OiBBZGQgU1BJIGRl
+dmljZS10cmVlIG5vZGVzCj4gICBBUk06IGR0czogc3VuaXY6IEFkZCBwaW5tdXggZm9yIFNQSTAg
+YW5kIFNQSTEgb2YgRjFDMTAwcwo+ICAgQVJNOiBkdHM6IGYxYzEwMHM6IEFjdGl2YXRlIFNQSSBm
+bGFzaCBvbiBMaWNoZWUgUGkgTmFubwo+IAo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkv
+c3BpLXN1bjZpLnR4dCAgICAgICAgICB8ICA1ICstCj4gIC4uLi9iaW5kaW5ncy90aW1lci9hbGx3
+aW5uZXIsc3VuNGktdGltZXIudHh0ICAgICAgIHwgIDQgKy0KPiAgYXJjaC9hcm0vYm9vdC9kdHMv
+c3VuaXYtZjFjMTAwcy1saWNoZWVwaS1uYW5vLmR0cyAgfCAxMyArKysrKysKPiAgYXJjaC9hcm0v
+Ym9vdC9kdHMvc3VuaXYtZjFjMTAwcy5kdHNpICAgICAgICAgICAgICAgfCA1Mwo+ICsrKysrKysr
+KysrKysrKysrKystLS0KPiAgZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1zdW40aS5jICAgICAg
+ICAgICAgICAgICAgfCAgNSArLQo+ICA1IGZpbGVzIGNoYW5nZWQsIDcwIGluc2VydGlvbnMoKyks
+IDEwIGRlbGV0aW9ucygtKQo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
