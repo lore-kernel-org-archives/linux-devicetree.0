@@ -1,75 +1,77 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v6 0/4] input: touchscreen: Add goodix GT5553 CTP support
-Date: Mon, 18 Mar 2019 00:02:02 +0530
-Message-ID: <CAMty3ZAn-7BSr_Bd3hOqEK2pvyBpuLX2McuFBf6Krsk1BKPP8g@mail.gmail.com>
-References: <20190219101629.15977-1-jagan@amarulasolutions.com>
- <CAMty3ZDpy5YX3V+6e=UtY=a9Lgiw-NEP1JPQn4_LKL3mYFtrvQ@mail.gmail.com>
- <CAMty3ZB3o1Np7_H7rmCgpUWPk7BRqHRm7gxRpgAq_YyeCUKgaw@mail.gmail.com> <CAMty3ZAmPzXvM+xS3+ULorGuQ-rKfMRNi-HvQdr7hjaFYfMZrg@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 4/4] leds: netdev trigger: allow setting initial values
+ in device tree
+Date: Sun, 17 Mar 2019 20:11:50 +0100
+Message-ID: <20190317191150.GA31285@amd>
+References: <20190311144227.GA4404@amd>
+ <20190313202615.22883-1-linux@rasmusvillemoes.dk>
+ <20190313202615.22883-5-linux@rasmusvillemoes.dk>
+ <20190314102911.GA15173@amd>
+ <6fb71b90-1ae3-9d93-6e0c-c95e441ced7a@rasmusvillemoes.dk>
+ <20190314120047.GA19072@amd>
+ <2cd9c42c-1056-979f-568e-c7e387bf90c6@rasmusvillemoes.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMty3ZAmPzXvM+xS3+ULorGuQ-rKfMRNi-HvQdr7hjaFYfMZrg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <2cd9c42c-1056-979f-568e-c7e387bf90c6@rasmusvillemoes.dk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Rob Herring <robh+dt@kernel.org>
-Cc: Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>
+To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
 
-On Mon, Mar 11, 2019 at 7:08 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> On Wed, Mar 6, 2019 at 10:47 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> >
-> > Hi Dmitry,
-> >
-> > On Tue, Feb 26, 2019 at 11:43 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > >
-> > > Hi Dmitry,
-> > >
-> > > On Tue, Feb 19, 2019 at 3:46 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > > >
-> > > > This is v6 patchset for supporting goodix GT5553 CTP. Here is the
-> > > > previous version[1]
-> > > >
-> > > > Changes for v5:
-> > > > - document bindings for required regulators, which are need during
-> > > >   power-on sequence
-> > > > - enable, disable required regulators as described in power-on sequence
-> > > >   using normal regulator calls
-> > > > - update the proper commi messages
-> > > > Changes for v4:
-> > > > - document AVDD22, DVDD12, VDDIO as optional properties
-> > > > - use regulator bulk calls, for get, enable and disable functionalities
-> > > > Changes for v4:
-> > > > - devm_add_action_or_reset for disabling regulator
-> > > > Changes for v3:
-> > > > - add cover-letter
-> > > > - s/ADVV28/AVDD28 on commit head
-> > > > - fix few typo
-> > > > Changes for v2:
-> > > > - Rename vcc-supply with AVDD28-supply
-> > > > - disable regulator in remove
-> > > > - fix to setup regulator in probe code
-> > > > - add chipdata
-> > > > - drop example node in dt-bindings
-> > > >
-> > > > [1] https://patchwork.kernel.org/cover/10816901/
-> > > >
-> > > > Jagan Teki (4):
-> > > >   dt-bindings: input: touchscreen: goodix: Document regulator properties
-> > > >   Input: goodix - Add regulators suppot
-> > > >   dt-bindings: input: touchscreen: goodix: Add GT5663 compatible
-> > > >   Input: goodix - Add GT5663 CTP support
-> > > >
-> > > >  .../bindings/input/touchscreen/goodix.txt     |  3 +
-> > > >  drivers/input/touchscreen/goodix.c            | 60 +++++++++++++++++++
-> > > >  2 files changed, 63 insertions(+)
-> > >
-> > > Let me know if you have any further comments on regulator patch, fyi
-> > > Rob reviewed it already.
-> >
-> > Would you comment on this? few dts changes are pending for this to support.
->
-> Gentle remainder.
+--qMm9M+Fa2AknHoGS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It's been several weeks, any further comments?
+On Thu 2019-03-14 14:19:42, Rasmus Villemoes wrote:
+> On 14/03/2019 13.00, Pavel Machek wrote:
+> linux,default-trigger from
+> >=20
+> > Yeah and now insert the modules for the can devices in different
+> > order... May not happen in your case but will be fairly common for
+> > ethernets.
+>=20
+> Unpredictable device names is not a problem I'm trying to solve, nor one
+> that actually occurs on embedded systems. And even if one has such a
+> system, one is likely running udev or similar to rename devices to
+> something sane and predictable, in which case a fixed string _still_
+> works fine. Or one uses udev rules to munge the netdev trigger sysfs
+> files, and has applications dealing with devices appearing as banana457.
+>=20
+> OK, so there's of_find_net_device_by_node, so a phandle solution might
+> also be possible, and might work just as well for my case. But I still
+> think initializing with a fixed string is the simplest and sanest thing
+> to do.
+
+Simplest, yes. Mergeable, no. Sorry.
+
+Udev will not help with renaming -- it runs after kernel boot, while
+udev parsing is usually done before userland starts.
+
+Plus, device tree should really describe hardware, and be usable with
+other operating systems. Of course, there are exceptions, but "can0"
+is unneccessarily linux-specific.
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--qMm9M+Fa2AknHoGS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyOm/YACgkQMOfwapXb+vK53QCeIdu8vu9Fai0AxUL3FZQMEO2k
+r5QAoKxdUdhvcbLSBdfF+dFwQEtFyYK5
+=JKhN
+-----END PGP SIGNATURE-----
+
+--qMm9M+Fa2AknHoGS--
