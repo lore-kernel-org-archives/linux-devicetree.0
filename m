@@ -1,83 +1,105 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH v2 0/4] Patches to allow consistent mmc / mmcblk numbering
- w/ device tree
-Date: Sun, 17 Mar 2019 16:50:51 +0100
-Message-ID: <6962d659-5308-1f06-7329-1595e41aaeac@denx.de>
-References: <1461951139-6109-1-git-send-email-dianders@chromium.org>
- <yw1x5zsx5wc7.fsf@mansr.com>
- <CAJ+vNU1PxK-B63Dc3AgzYb9POyxxoF-xPOWBEpxJ+3eVNK8xqw@mail.gmail.com>
- <d5310138-7fdd-973d-5210-3fc91c4686ee@denx.de> <yw1xftrn2em9.fsf@mansr.com>
- <1fcd4dad-1e00-67cc-ac5d-24640ae34340@denx.de>
- <20190316153900.xqi55awrockovmsi@shell.armlinux.org.uk>
- <c23d6c4edf92d58aec86da811eaa97a5@agner.ch>
- <20190317154350.esbhdx4huzqe2jxy@shell.armlinux.org.uk>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next 2/3] net: phy: add amlogic g12a mdio mux support
+Date: Sun, 17 Mar 2019 17:14:02 +0100
+Message-ID: <20190317161402.GB22226@lunn.ch>
+References: <20190314140135.19184-1-jbrunet@baylibre.com>
+ <20190314140135.19184-3-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190317154350.esbhdx4huzqe2jxy@shell.armlinux.org.uk>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190314140135.19184-3-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux admin <linux@armlinux.org.uk>, Stefan Agner <stefan@agner.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>, Heiko Stuebner <heiko@sntech.de>, devicetree-spec@vger.kernel.org, shawn.lin@rock-chips.com, Douglas Anderson <dianders@chromium.org>, vbyravarasu@nvidia.com, Jisheng Zhang <jszhang@marvell.com>, Lars-Peter Clausen <lars@metafoo.de>, jonathanh@nvidia.com, Jaehoon Chung <jh80.chung@samsung.com>, linux-rockchip@lists.infradead.org, chaotian.jing@mediatek.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, grundler@chromium.org, Tim Harvey <tharvey@gateworks.com>, sudeep.holla@arm.com, lporzio@micron.com, Rob Herring <robh+dt@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller" <davem@davemloft.net>, Kevin Hilman <khilman@baylibre.com>, netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 3/17/19 4:43 PM, Russell King - ARM Linux admin wrote:
-> On Sun, Mar 17, 2019 at 04:05:14PM +0100, Stefan Agner wrote:
->> On 16.03.2019 16:39, Russell King - ARM Linux admin wrote:
->>> On Sat, Mar 16, 2019 at 01:33:58PM +0100, Marek Vasut wrote:
->>>> If you have a FS or partition table there, it does.
->>>> If you don't, I agree ... that's a problem.
->>>
->>> eMMC boot partitions are called mmcblkXbootY, and unless you have more
->>> than one eMMC device on the system, they can be found either by looking
->>> for /dev/mmcblk*boot* or by querying udev.  The advantage of using udev
->>> is you can discover the physical device behind it by looking at DEVPATH,
->>> ID_PATH, etc, but you may not have that installed on an embedded device.
->>>
->>> However, as I say, just looking for /dev/mmcblk*boot* is sufficient to
->>> find the eMMC boot partitions where there is just one eMMC device
->>> present (which seems to be the standard setup.)
->>>
->>>>> I don't care the slightest what the numbering is, as long as it is
->>>>> stable.  On some hardware, with an unpatched kernel, the mmc device
->>>>> numbering changes depending on whether or not an SD card is inserted on
->>>>> boot.  Getting rid of that behaviour is really all I want.
->>>>
->>>> Agreed, that would be an improvement.
->>>
->>> The mmc device numbering was tied to the mmc host numbering a while back
->>> and the order that the hosts are probed should be completely independent
->>> of whether a card is inserted or not:
->>>
->>>         snprintf(md->disk->disk_name, sizeof(md->disk->disk_name),
->>>                  "mmcblk%u%s", card->host->index, subname ? subname : "");
->>>
->>>         snprintf(rpmb_name, sizeof(rpmb_name),
->>>                  "mmcblk%u%s", card->host->index, subname ? subname : "");
->>>
->>> I suspect that Mans is quoting something from the dim and distant past
->>> to confuse the issue - as shown above, it is now dependent on the host
->>> numbering order not the order in which cards are inserted.
->>
->> Commit 9aaf3437aa72 ("mmc: block: Use the mmc host device index as the
->> mmcblk device index") which came in with v4.6 enables constant mmc block
->> device numbering. I can confirm that it works nicely, and it improved
->> the situation a lot.
->>
->> That being said, we still use a patch downstream which allows
->> renumbering using an alias. We deal with a bunch of different boards
->> with different SoC's. I have a couple of SD cards with various rootfs
->> and use internal eMMC boot quite often as well. Remembering which board
->> uses which numbering is a pain. Maintaining a patch is just easier...
->> Furthermore, U-Boot allows reordering and all boards I deal with use mmc
->> 0 for the internal eMMC. The aliases allow consistency.
+On Thu, Mar 14, 2019 at 03:01:34PM +0100, Jerome Brunet wrote:
+> Add support for the mdio mux and internal phy glue of the g12a SoC family
 > 
-> Maybe eMMC should've been given a different block device name?
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  drivers/net/phy/Kconfig               |  10 +
+>  drivers/net/phy/Makefile              |   1 +
+>  drivers/net/phy/mdio-mux-meson-g12a.c | 371 ++++++++++++++++++++++++++
+>  3 files changed, 382 insertions(+)
+>  create mode 100644 drivers/net/phy/mdio-mux-meson-g12a.c
+> 
+> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> index 071869db44cf..831aa350b1cb 100644
+> --- a/drivers/net/phy/Kconfig
+> +++ b/drivers/net/phy/Kconfig
+> @@ -74,6 +74,16 @@ config MDIO_BUS_MUX_GPIO
+>  	  several child MDIO busses to a parent bus.  Child bus
+>  	  selection is under the control of GPIO lines.
+>  
+> +config MDIO_BUS_MUX_MESON_G12A
+> +	tristate "Amlogic G12a based MDIO bus multiplexer"
+> +	depends on ARCH_MESON || COMPILE_TEST
+> +	depends on OF_MDIO && HAS_IOMEM
+> +	select MDIO_BUS_MUX
 
-I presume that's because they have hardware and software partitioning
-and that's why you want to discern those two.
+Hi Jerome
 
--- 
-Best regards,
-Marek Vasut
+Do you need some clock depends? 
+
+> +static int g12a_mdio_switch_fn(int current_child, int desired_child,
+> +			       void *data)
+> +{
+> +	struct device *dev = data;
+> +	struct g12a_mdio_mux *priv = dev_get_drvdata(dev);
+
+David won't like that you don't have reverse Christmas tree. You need
+to do the assignment to priv in the body of the code. Or can you pass
+data directly to dev_get_drvdata?
+
+> +static int g12a_mdio_mux_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *res;
+> +	struct g12a_mdio_mux *priv;
+> +	int ret;
+
+Reverse Christmas tree please.
+
+
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	priv->regs = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(priv->regs))
+> +		return PTR_ERR(priv->regs);
+> +
+> +	priv->pclk = devm_clk_get(dev, "pclk");
+> +	if (IS_ERR(priv->pclk)) {
+> +		ret = PTR_ERR(priv->pclk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to get peripheral clock\n");
+> +		return ret;
+> +	}
+> +
+> +	/* Make sure the device registers are clocked */
+> +	ret = clk_prepare_enable(priv->pclk);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable peripheral clock");
+> +		return ret;
+> +	}
+> +
+> +	/* Register PLL in CCF */
+> +	ret = g12a_ephy_glue_clk_register(dev);
+
+On error, you are not disabling the peripheral clock.
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	return mdio_mux_init(dev, dev->of_node, g12a_mdio_switch_fn,
+> +			     &priv->mux_handle, dev, NULL);
+> +}
+
+  Andrew
