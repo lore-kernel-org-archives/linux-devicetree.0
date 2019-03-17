@@ -1,47 +1,54 @@
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v2 5/5] dt-bindings: iio: light: add vcnl4040 devicetree bindings
-Date: Sun, 17 Mar 2019 08:48:02 -0700
-Message-ID: <20190317154802.15174-6-angus@akkea.ca>
-References: <20190317154802.15174-1-angus@akkea.ca>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next 2/3] net: phy: add amlogic g12a mdio mux support
+Date: Sun, 17 Mar 2019 16:48:21 +0100
+Message-ID: <20190317154821.GA22226@lunn.ch>
+References: <20190314140135.19184-1-jbrunet@baylibre.com>
+ <20190314140135.19184-3-jbrunet@baylibre.com>
+ <20190316025448.GD29548@lunn.ch>
+ <13432d537f671c8065693b7e53348f812e8bbc04.camel@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190317154802.15174-1-angus@akkea.ca>
+Content-Disposition: inline
+In-Reply-To: <13432d537f671c8065693b7e53348f812e8bbc04.camel@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Tomas Novotny <tomas@novotny.cz>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller" <davem@davemloft.net>, Kevin Hilman <khilman@baylibre.com>, netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document the vishay VCNL4040 devicetree bindings.
+On Sat, Mar 16, 2019 at 06:02:45PM +0100, Jerome Brunet wrote:
+> On Sat, 2019-03-16 at 03:54 +0100, Andrew Lunn wrote:
+> > On Thu, Mar 14, 2019 at 03:01:34PM +0100, Jerome Brunet wrote:
+> > > > +static int _g12a_enable_internal_mdio(struct g12a_mdio_mux *priv)
+> > 
+> > You would generally use the _ prefix when you have a locked and an
+> > unlocked version. I don't see anything like this here. So please drop
+> > the _ .
+> > 
+> 
+> will do
+> 
+> > Nice to see the generic clock framework being used. I just wonder if
+> > this is the correct place to have this clock code. Can it be made part
+> > of the SoC clock code?
+> 
+> the PLL is local to this particular device.
+> 
+> In 'Soc clock code' (driver/clk/meson in this case) we usually put clock
+> controllers. Those controllers feeds the different devices of the SoC but we
+> tends some more clock elements in the consumer device
+> 
+> Usually, it is just a few mux, dividers and gates (like in
+> drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c) but in this case, we have
+> a PLL. IMO, it belongs here. Do you see a problem with this ?
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- Documentation/devicetree/bindings/iio/light/vcnl4000.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Hi Jerome
 
-diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt b/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
-index 4a9d558a412a..955af4555c90 100644
---- a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
-+++ b/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
-@@ -1,6 +1,6 @@
- VISHAY VCNL4000 -  Ambient Light and proximity sensor
- 
--This driver supports the VCNL4000/10/20 and VCNL4200 chips
-+This driver supports the VCNL4000/10/20/40 and VCNL4200 chips
- 
- Required properties:
- 
-@@ -8,11 +8,13 @@ Required properties:
-         vishay,vcnl4000
-         vishay,vcnl4010
-         vishay,vcnl4020
-+        vishay,vcnl4040
-         vishay,vcnl4200
- 
- 	-reg: I2C address of the sensor, should be one from below based on the model:
-         0x13
-         0x51
-+        0x60
- 
- Example:
- 
--- 
-2.17.1
+Some maintainers like to have code in their directory structure. It
+would be good to check that the clock maintainer in happy with clock
+code under the network driver subtree. Also, the clock maintainer
+should also review this code. So please at least Cc: the clock
+maintainer and clock list on the next submission, as well as netdev. I
+personally don't know the clock code well enough to review such code.
+
+	   Andrew
