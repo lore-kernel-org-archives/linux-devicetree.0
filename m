@@ -1,152 +1,290 @@
-From: Sam Ravnborg <sam@ravnborg.org>
+From: Paul Cercueil <paul@crapouillou.net>
 Subject: Re: [PATCH v2 3/3] DRM: Add KMS driver for the Ingenic JZ47xx SoCs
-Date: Sat, 16 Mar 2019 22:59:44 +0100
-Message-ID: <20190316215944.GB11309@ravnborg.org>
+Date: Sun, 17 Mar 2019 02:14:32 +0100
+Message-ID: <1552785272.1562.2@crapouillou.net>
 References: <20190315170701.29670-1-paul@crapouillou.net>
- <20190315170701.29670-3-paul@crapouillou.net>
+        <20190315170701.29670-3-paul@crapouillou.net>
+        <20190316215944.GB11309@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190315170701.29670-3-paul@crapouillou.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190316215944.GB11309@ravnborg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGF1bC4KClRoYW5rcyBmb3IgdGhlIHYyIHN1Ym1pc3Npb24uCgpEaWQgeW91IGFuYWx5emUg
-dGhlIHBvc3NpYmlsaXR5IHRvIHV0aWxpemUgZHJtX3NpbXBsZV9kaXNwbGF5X3BpcGVfaW5pdCgp
-CmFuZCB0aGUgcmVsYXRlZCBpbmZyYXN0cnVjdHVyZT8KSWYgdGhpcyBmaXRzIGl0IHNob3VsZCBz
-aW1wbGlmeSB0aGUgZHJpdmVyLgpJZiBpdCBkb2VzIG5vdCBmaXQgcGxlYXNlIGxldCB1cyBrbm93
-IHdoeS4KQXMgdGhpcyBpcyBhIG9uZSBjcnRjIC8gb25lIGNvbm5lY3RvciAvIG9uZSBwYW5lbCB0
-aGUgZHJtX3NpbXBsZV8qCmluZnJhc3RydWN0dXJlIGlzIHN1cHBvc2VkIHRvIGJlIGEgZ29vZCBm
-aXQuCgpTb21lIHNtYWxsZXIgY29tbWVudHMgaW4gdGhlIGZvbGxvd2luZy4KTW9zdCBhcmUgc3Vn
-Z2VzdGlvbiwgZG8gbm90IGZvbGxvdyB0aGVzZSBibGluZGx5LgoKCVNhbQoKPiBBZGQgYSBLTVMg
-ZHJpdmVyIGZvciB0aGUgSW5nZW5pYyBKWjQ3eHggZmFtaWx5IG9mIFNvQ3MuCj4gVGhpcyBkcml2
-ZXIgaXMgbWVhbnQgdG8gcmVwbGFjZSB0aGUgYWdpbmcgano0NzQwLWZiIGRyaXZlci4KPiAKPiBT
-aWduZWQtb2ZmLWJ5OiBQYXVsIENlcmN1ZWlsIDxwYXVsQGNyYXBvdWlsbG91Lm5ldD4KPiBUZXN0
-ZWQtYnk6IEFydHVyIFJvamVrIDxjb250YWN0QGFydHVyLXJvamVrLmV1PgoKPiArc3RydWN0IGlu
-Z2VuaWNfZHJtIHsKPiArCXN0cnVjdCBkZXZpY2UgKmRldjsKPiArCXZvaWQgX19pb21lbSAqYmFz
-ZTsKPiArCXN0cnVjdCByZWdtYXAgKm1hcDsKPiArCXN0cnVjdCBjbGsgKmxjZF9jbGssICpwaXhf
-Y2xrOwo+ICsKPiArCXUzMiBsY2RfbW9kZTsKPiArCj4gKwlzdHJ1Y3QgaW5nZW5pY19kbWFfaHdk
-ZXNjICpmcmFtZWRlc2M7CgpDb25zaWRlciB0aGUgbmFtZSAiZG1hX2h3ZGVzYyIgZm9yIHRoaXMu
-ClRoZSBzdHJ1Y3QgaXMgbmFtZWQgc28sIHdoaWNoIGdpdmUgYSBnb29kIGluZGljYXRpb24KdGhp
-cyBpcyBhIG1vcmUgZGVzY3JpcHRpdmUgbmFtZS4KClRoYXQgc2FpZCwgdGhlIGN1cnJlbnQgc29s
-dXRpb24gbG9va3MgbXVjaCBjbGVhbmVyIHRoYW4gdGhlCnByZXZpb3VzIG9uZS4KCj4gKwlkbWFf
-YWRkcl90IGZyYW1lZGVzY19waHlzOwpMaWtld2lzZS4KCgo+ICsKPiArCXN0cnVjdCBkcm1fZGV2
-aWNlICpkcm07CklmIGRybSBpcyBlbWJlZGRlZCB5b3UgY2FuIHVzZSBkZXZtX2RybV9kZXZfaW5p
-dCgpCnJlY2VudGx5IGFkZGVkIHRvIGRybS1taXNjLgoKU2VlIHRoZSB2ZXJ5IG5pY2UgZXhhbXBs
-ZSBpbiBkcml2ZXJzL2d1L2RybS9kcm1fZHJ2LmMKKG9ubHkgaW4gZHJtLW1pc2MtbmV4dCBmb3Ig
-bm93KQoKPiArCXN0cnVjdCBkcm1fcGxhbmUgcHJpbWFyeTsKPiArCXN0cnVjdCBkcm1fY3J0YyBj
-cnRjOwo+ICsJc3RydWN0IGRybV9lbmNvZGVyIGVuY29kZXI7Cj4gK307Cj4gKwo+ICsKPiArc3Rh
-dGljIGludCBpbmdlbmljX2RybV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+
-ICt7Cj4gKwljb25zdCBzdHJ1Y3Qganpfc29jX2luZm8gKnNvY19pbmZvOwo+ICsJc3RydWN0IGRl
-dmljZSAqZGV2ID0gJnBkZXYtPmRldjsKPiArCXN0cnVjdCBpbmdlbmljX2RybSAqcHJpdjsKPiAr
-CXN0cnVjdCBjbGsgKnBhcmVudF9jbGs7Cj4gKwlzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlOwo+
-ICsJc3RydWN0IGRybV9wYW5lbCAqcGFuZWw7Cj4gKwlzdHJ1Y3QgZHJtX2RldmljZSAqZHJtOwo+
-ICsJc3RydWN0IHJlc291cmNlICptZW07Cj4gKwl2b2lkIF9faW9tZW0gKmJhc2U7Cj4gKwlsb25n
-IHBhcmVudF9yYXRlOwo+ICsJaW50IHJldCwgaXJxOwo+ICsKPiArCXNvY19pbmZvID0gZGV2aWNl
-X2dldF9tYXRjaF9kYXRhKGRldik7CkV2ZXJ5b25lIGVsc2UgdXNlcyBvZl9kZXZpY2VfLi4uIGhl
-cmUuIFlvdSBzaG91bGQgbW9zdApsaWtlbHkgZG8gdGhlIHNhbWUuCgo+ICsJaWYgKCFzb2NfaW5m
-bykKPiArCQlyZXR1cm4gLUVJTlZBTDsKQWxzbywgY29uc2lkZXIgdG8gcHJpbnQgYW4gZXJyb3Ig
-aGVyZS4KCj4gKwo+ICsJcHJpdiA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqcHJpdiksIEdG
-UF9LRVJORUwpOwo+ICsJaWYgKCFwcml2KQo+ICsJCXJldHVybiAtRU5PTUVNOwpVc2Ugb2YgZGV2
-bV9remFsbG9jKCkgaGVyZSBpcyBub3QgZ29vZC4gU2VlIGRyaXZlciBleGFtcGxlIGluIGRybV9k
-cnYuYwoKPiArCj4gKwlwcml2LT5kZXYgPSBkZXY7Cj4gKwo+ICsJbWVtID0gcGxhdGZvcm1fZ2V0
-X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsKPiArCXByaXYtPmJhc2UgPSBiYXNl
-ID0gZGV2bV9pb3JlbWFwX3Jlc291cmNlKGRldiwgbWVtKTsKPiArCWlmIChJU19FUlIoYmFzZSkp
-Cj4gKwkJcmV0dXJuIFBUUl9FUlIoYmFzZSk7Cj4gKwo+ICsJaXJxID0gcGxhdGZvcm1fZ2V0X2ly
-cShwZGV2LCAwKTsKPiArCWlmIChpcnEgPCAwKSB7Cj4gKwkJZGV2X2VycihkZXYsICJGYWlsZWQg
-dG8gZ2V0IHBsYXRmb3JtIGlycVxuIik7Cj4gKwkJcmV0dXJuIC1FTk9FTlQ7Cj4gKwl9Cj4gKwo+
-ICsJcHJpdi0+bWFwID0gZGV2bV9yZWdtYXBfaW5pdF9tbWlvKGRldiwgYmFzZSwKPiArCQkJCQkg
-ICZpbmdlbmljX2RybV9yZWdtYXBfY29uZmlnKTsKPiArCWlmIChJU19FUlIocHJpdi0+bWFwKSkg
-ewo+ICsJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGNyZWF0ZSByZWdtYXBcbiIpOwo+ICsJCXJl
-dHVybiBQVFJfRVJSKHByaXYtPm1hcCk7Cj4gKwl9Cj4gKwo+ICsJaWYgKHNvY19pbmZvLT5uZWVk
-c19kZXZfY2xrKSB7Cj4gKwkJcHJpdi0+bGNkX2NsayA9IGRldm1fY2xrX2dldChkZXYsICJsY2Qi
-KTsKPiArCQlpZiAoSVNfRVJSKHByaXYtPmxjZF9jbGspKSB7Cj4gKwkJCWRldl9lcnIoZGV2LCAi
-RmFpbGVkIHRvIGdldCBsY2QgY2xvY2tcbiIpOwo+ICsJCQlyZXR1cm4gUFRSX0VSUihwcml2LT5s
-Y2RfY2xrKTsKPiArCQl9Cj4gKwl9Cj4gKwo+ICsJcHJpdi0+cGl4X2NsayA9IGRldm1fY2xrX2dl
-dChkZXYsICJsY2RfcGNsayIpOwo+ICsJaWYgKElTX0VSUihwcml2LT5waXhfY2xrKSkgewo+ICsJ
-CWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGdldCBwaXhlbCBjbG9ja1xuIik7Cj4gKwkJcmV0dXJu
-IFBUUl9FUlIocHJpdi0+cGl4X2Nsayk7Cj4gKwl9Cj4gKwo+ICsJcmV0ID0gZHJtX29mX2ZpbmRf
-cGFuZWxfb3JfYnJpZGdlKGRldi0+b2Zfbm9kZSwgMCwgMCwgJnBhbmVsLCAmYnJpZGdlKTsKPiAr
-CWlmIChyZXQpIHsKPiArCQlpZiAocmV0ICE9IC1FUFJPQkVfREVGRVIpCj4gKwkJCWRldl9lcnIo
-ZGV2LCAiRmFpbGVkIHRvIGdldCBwYW5lbCBoYW5kbGVcbiIpOwo+ICsJCXJldHVybiByZXQ7Cj4g
-Kwl9Cj4gKwo+ICsJaWYgKHBhbmVsKSB7Cj4gKwkJYnJpZGdlID0gZGV2bV9kcm1fcGFuZWxfYnJp
-ZGdlX2FkZChkZXYsIHBhbmVsLAo+ICsJCQkJCQkgICBEUk1fTU9ERV9DT05ORUNUT1JfVW5rbm93
-bik7Cj4gKwl9Cj4gKwo+ICsJZGV2aWNlX3Byb3BlcnR5X3JlYWRfdTMyKGRldiwgImluZ2VuaWMs
-bGNkLW1vZGUiLCAmcHJpdi0+bGNkX21vZGUpOwo+ICsKPiArCXByaXYtPmZyYW1lZGVzYyA9IGRt
-YV9hbGxvY19jb2hlcmVudChkZXYsIHNpemVvZigqcHJpdi0+ZnJhbWVkZXNjKSwKPiArCQkJCQkg
-ICAgICZwcml2LT5mcmFtZWRlc2NfcGh5cywgR0ZQX0tFUk5FTCk7Cj4gKwlpZiAoIXByaXYtPmZy
-YW1lZGVzYykKPiArCQlyZXR1cm4gLUVOT01FTTsKPiArCj4gKwlwcml2LT5mcmFtZWRlc2MtPm5l
-eHQgPSBwcml2LT5mcmFtZWRlc2NfcGh5czsKPiArCXByaXYtPmZyYW1lZGVzYy0+aWQgPSAweGRl
-YWZiZWFkOwo+ICsKPiArCWRybSA9IGRybV9kZXZfYWxsb2MoJmluZ2VuaWNfZHJtX2RyaXZlcl9k
-YXRhLCBkZXYpOwo+ICsJaWYgKElTX0VSUihkcm0pKSB7Cj4gKwkJcmV0ID0gUFRSX0VSUihkcm0p
-Owo+ICsJCWdvdG8gZXJyX2ZyZWVfZG1hOwo+ICsJfQo+ICsKPiArCXByaXYtPmRybSA9IGRybTsK
-PiArCj4gKwlkcm1fbW9kZV9jb25maWdfaW5pdChkcm0pOwo+ICsJZHJtLT5tb2RlX2NvbmZpZy5t
-aW5fd2lkdGggPSAwOwo+ICsJZHJtLT5tb2RlX2NvbmZpZy5taW5faGVpZ2h0ID0gMDsKPiArCWRy
-bS0+bW9kZV9jb25maWcubWF4X3dpZHRoID0gODAwOwo+ICsJZHJtLT5tb2RlX2NvbmZpZy5tYXhf
-aGVpZ2h0ID0gNjAwOwo+ICsJZHJtLT5tb2RlX2NvbmZpZy5mdW5jcyA9ICZpbmdlbmljX2RybV9t
-b2RlX2NvbmZpZ19mdW5jczsKPiArCj4gKwlkcm1fcGxhbmVfaGVscGVyX2FkZCgmcHJpdi0+cHJp
-bWFyeSwgJmluZ2VuaWNfZHJtX3BsYW5lX2hlbHBlcl9mdW5jcyk7Cj4gKwo+ICsJcmV0ID0gZHJt
-X3VuaXZlcnNhbF9wbGFuZV9pbml0KGRybSwgJnByaXYtPnByaW1hcnksCj4gKwkJCQkgICAgICAg
-MCwgJmluZ2VuaWNfZHJtX3ByaW1hcnlfcGxhbmVfZnVuY3MsCj4gKwkJCQkgICAgICAgaW5nZW5p
-Y19kcm1fcHJpbWFyeV9mb3JtYXRzLAo+ICsJCQkJICAgICAgIEFSUkFZX1NJWkUoaW5nZW5pY19k
-cm1fcHJpbWFyeV9mb3JtYXRzKSwKPiArCQkJCSAgICAgICBOVUxMLCBEUk1fUExBTkVfVFlQRV9Q
-UklNQVJZLCBOVUxMKTsKPiArCWlmIChyZXQpIHsKPiArCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0
-byByZWdpc3RlciBwcmltYXJ5IHBsYW5lOiAlaVxuIiwgcmV0KTsKPiArCQlnb3RvIGVycl91bnJl
-Zl9kcm07Cj4gKwl9Cj4gKwo+ICsJZHJtX2NydGNfaGVscGVyX2FkZCgmcHJpdi0+Y3J0YywgJmlu
-Z2VuaWNfZHJtX2NydGNfaGVscGVyX2Z1bmNzKTsKPiArCj4gKwlyZXQgPSBkcm1fY3J0Y19pbml0
-X3dpdGhfcGxhbmVzKGRybSwgJnByaXYtPmNydGMsICZwcml2LT5wcmltYXJ5LAo+ICsJCQkJCU5V
-TEwsICZpbmdlbmljX2RybV9jcnRjX2Z1bmNzLCBOVUxMKTsKPiArCWlmIChyZXQpIHsKPiArCQlk
-ZXZfZXJyKGRldiwgIkZhaWxlZCB0byBpbml0IENSVEM6ICVpXG4iLCByZXQpOwo+ICsJCWdvdG8g
-ZXJyX2NsZWFudXBfcGxhbmU7Cj4gKwl9Cj4gKwo+ICsJcHJpdi0+ZW5jb2Rlci5wb3NzaWJsZV9j
-cnRjcyA9IDE7Cj4gKwo+ICsJZHJtX2VuY29kZXJfaGVscGVyX2FkZCgmcHJpdi0+ZW5jb2RlciwK
-PiArCQkJICAgICAgICZpbmdlbmljX2RybV9lbmNvZGVyX2hlbHBlcl9mdW5jcyk7Cj4gKwo+ICsJ
-cmV0ID0gZHJtX2VuY29kZXJfaW5pdChkcm0sICZwcml2LT5lbmNvZGVyLCAmaW5nZW5pY19kcm1f
-ZW5jb2Rlcl9mdW5jcywKPiArCQkJICAgICAgIERSTV9NT0RFX0VOQ09ERVJfRFBJLCBOVUxMKTsK
-PiArCWlmIChyZXQpIHsKPiArCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBpbml0IGVuY29kZXI6
-ICVpXG4iLCByZXQpOwo+ICsJCWdvdG8gZXJyX2NsZWFudXBfY3J0YzsKPiArCX0KPiArCj4gKwly
-ZXQgPSBkcm1fYnJpZGdlX2F0dGFjaCgmcHJpdi0+ZW5jb2RlciwgYnJpZGdlLCBOVUxMKTsKPiAr
-CWlmIChyZXQpIHsKPiArCQlkZXZfZXJyKGRldiwgIlVuYWJsZSB0byBhdHRhY2ggYnJpZGdlXG4i
-KTsKPiArCQlnb3RvIGVycl9jbGVhbnVwX2VuY29kZXI7Cj4gKwl9Cj4gKwo+ICsJcGxhdGZvcm1f
-c2V0X2RydmRhdGEocGRldiwgZHJtKTsKPiArCXByaXYtPmRybSA9IGRybTsKPiArCWRybS0+ZGV2
-X3ByaXZhdGUgPSBwcml2Owo+ICsKPiArCXJldCA9IGRybV9pcnFfaW5zdGFsbChkcm0sIGlycSk7
-Cj4gKwlpZiAocmV0KSB7Cj4gKwkJZGV2X2VycihkZXYsICJVbmFibGUgdG8gaW5zdGFsbCBJUlEg
-aGFuZGxlclxuIik7Cj4gKwkJZ290byBlcnJfY2xlYW51cF9lbmNvZGVyOwo+ICsJfQo+ICsKPiAr
-CXJldCA9IGRybV92YmxhbmtfaW5pdChkcm0sIDEpOwo+ICsJaWYgKHJldCkgewo+ICsJCWRldl9l
-cnIoZGV2LCAiRmFpbGVkIGNhbGxpbmcgZHJtX3ZibGFua19pbml0KClcbiIpOwo+ICsJCWdvdG8g
-ZXJyX3VuaW5zdGFsbF9pcnE7Cj4gKwl9Cj4gKwo+ICsJZHJtX21vZGVfY29uZmlnX3Jlc2V0KGRy
-bSk7Cj4gKwo+ICsJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKHByaXYtPnBpeF9jbGspOwo+ICsJ
-aWYgKHJldCkgewo+ICsJCWRldl9lcnIoZGV2LCAiVW5hYmxlIHRvIHN0YXJ0IHBpeGVsIGNsb2Nr
-XG4iKTsKPiArCQlnb3RvIGVycl91bmluc3RhbGxfaXJxOwo+ICsJfQo+ICsKPiArCWlmIChwcml2
-LT5sY2RfY2xrKSB7Cj4gKwkJcGFyZW50X2NsayA9IGNsa19nZXRfcGFyZW50KHByaXYtPmxjZF9j
-bGspOwo+ICsJCXBhcmVudF9yYXRlID0gY2xrX2dldF9yYXRlKHBhcmVudF9jbGspOwo+ICsKPiAr
-CQkvKiBMQ0QgRGV2aWNlIGNsb2NrIG11c3QgYmUgM3ggdGhlIHBpeGVsIGNsb2NrIGZvciBTVE4g
-cGFuZWxzLAo+ICsJCSAqIG9yIDEuNXggdGhlIHBpeGVsIGNsb2NrIGZvciBURlQgcGFuZWxzLiBU
-byBhdm9pZCBoYXZpbmcgdG8KPiArCQkgKiBjaGVjayBmb3IgdGhlIExDRCBkZXZpY2UgY2xvY2sg
-ZXZlcnl0aW1lIHdlIGRvIGEgbW9kZSBjaGFuZ2UsCj4gKwkJICogd2Ugc2V0IHRoZSBMQ0QgZGV2
-aWNlIGNsb2NrIHRvIHRoZSBoaWdoZXN0IHJhdGUgcG9zc2libGUuCj4gKwkJICovCj4gKwkJcmV0
-ID0gY2xrX3NldF9yYXRlKHByaXYtPmxjZF9jbGssIHBhcmVudF9yYXRlKTsKPiArCQlpZiAocmV0
-KSB7Cj4gKwkJCWRldl9lcnIoZGV2LCAiVW5hYmxlIHRvIHNldCBMQ0QgY2xvY2sgcmF0ZVxuIik7
-Cj4gKwkJCWdvdG8gZXJyX3BpeGNsa19kaXNhYmxlOwo+ICsJCX0KPiArCj4gKwkJcmV0ID0gY2xr
-X3ByZXBhcmVfZW5hYmxlKHByaXYtPmxjZF9jbGspOwo+ICsJCWlmIChyZXQpIHsKPiArCQkJZGV2
-X2VycihkZXYsICJVbmFibGUgdG8gc3RhcnQgbGNkIGNsb2NrXG4iKTsKPiArCQkJZ290byBlcnJf
-cGl4Y2xrX2Rpc2FibGU7Cj4gKwkJfQo+ICsJfQo+ICsKPiArCXJldCA9IGRybV9mYmRldl9nZW5l
-cmljX3NldHVwKGRybSwgMTYpOwo+ICsJaWYgKHJldCkgewo+ICsJCWRldl9lcnIoZGV2LCAiRmFp
-bGVkIHRvIGluaXQgZmJkZXZcbiIpOwo+ICsJCWdvdG8gZXJyX2RldmNsa19kaXNhYmxlOwo+ICsJ
-fQpmYmRldiBpcyB1c3VhbGx5IGNvbnNpZGVyZWQgYW4gb3B0aW9ubCBmZWF0dXJlIHRoYXQgZG8g
-bm90IHByZXZlbnQKdGhlIGRpc3BsYXkgZHJpdmVyIGZyb20gbG9hZGluZy4KQ29uc2lkZXIgd2hh
-dCB0byBkbyBpbiB0aGUgZXJyb3IgY2FzZS4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbA==
+Hi Sam,
+
+Le sam. 16 mars 2019 =E0 22:59, Sam Ravnborg <sam@ravnborg.org> a =E9crit=20
+:
+> Hi Paul.
+>=20
+> Thanks for the v2 submission.
+>=20
+> Did you analyze the possibility to utilize=20
+> drm_simple_display_pipe_init()
+> and the related infrastructure?
+> If this fits it should simplify the driver.
+> If it does not fit please let us know why.
+> As this is a one crtc / one connector / one panel the drm_simple_*
+> infrastructure is supposed to be a good fit.
+
+In the current state of the driver it would be possible to use the
+drm_simple_display_pipe stuff, yes. However the SoCs support multiple
+planes, and multiple outputs, and the plan is to upload the driver
+to support these.
+
+> Some smaller comments in the following.
+> Most are suggestion, do not follow these blindly.
+
+Ok, thanks.
+
+Regards,
+-Paul
+
+> 	Sam
+>=20
+>>  Add a KMS driver for the Ingenic JZ47xx family of SoCs.
+>>  This driver is meant to replace the aging jz4740-fb driver.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  Tested-by: Artur Rojek <contact@artur-rojek.eu>
+>=20
+>>  +struct ingenic_drm {
+>>  +	struct device *dev;
+>>  +	void __iomem *base;
+>>  +	struct regmap *map;
+>>  +	struct clk *lcd_clk, *pix_clk;
+>>  +
+>>  +	u32 lcd_mode;
+>>  +
+>>  +	struct ingenic_dma_hwdesc *framedesc;
+>=20
+> Consider the name "dma_hwdesc" for this.
+> The struct is named so, which give a good indication
+> this is a more descriptive name.
+>=20
+> That said, the current solution looks much cleaner than the
+> previous one.
+>=20
+>>  +	dma_addr_t framedesc_phys;
+> Likewise.
+>=20
+>=20
+>>  +
+>>  +	struct drm_device *drm;
+> If drm is embedded you can use devm_drm_dev_init()
+> recently added to drm-misc.
+>=20
+> See the very nice example in drivers/gu/drm/drm_drv.c
+> (only in drm-misc-next for now)
+>=20
+>>  +	struct drm_plane primary;
+>>  +	struct drm_crtc crtc;
+>>  +	struct drm_encoder encoder;
+>>  +};
+>>  +
+>>  +
+>>  +static int ingenic_drm_probe(struct platform_device *pdev)
+>>  +{
+>>  +	const struct jz_soc_info *soc_info;
+>>  +	struct device *dev =3D &pdev->dev;
+>>  +	struct ingenic_drm *priv;
+>>  +	struct clk *parent_clk;
+>>  +	struct drm_bridge *bridge;
+>>  +	struct drm_panel *panel;
+>>  +	struct drm_device *drm;
+>>  +	struct resource *mem;
+>>  +	void __iomem *base;
+>>  +	long parent_rate;
+>>  +	int ret, irq;
+>>  +
+>>  +	soc_info =3D device_get_match_data(dev);
+> Everyone else uses of_device_... here. You should most
+> likely do the same.
+>=20
+>>  +	if (!soc_info)
+>>  +		return -EINVAL;
+> Also, consider to print an error here.
+>=20
+>>  +
+>>  +	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>>  +	if (!priv)
+>>  +		return -ENOMEM;
+> Use of devm_kzalloc() here is not good. See driver example in=20
+> drm_drv.c
+>=20
+>>  +
+>>  +	priv->dev =3D dev;
+>>  +
+>>  +	mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>  +	priv->base =3D base =3D devm_ioremap_resource(dev, mem);
+>>  +	if (IS_ERR(base))
+>>  +		return PTR_ERR(base);
+>>  +
+>>  +	irq =3D platform_get_irq(pdev, 0);
+>>  +	if (irq < 0) {
+>>  +		dev_err(dev, "Failed to get platform irq\n");
+>>  +		return -ENOENT;
+>>  +	}
+>>  +
+>>  +	priv->map =3D devm_regmap_init_mmio(dev, base,
+>>  +					  &ingenic_drm_regmap_config);
+>>  +	if (IS_ERR(priv->map)) {
+>>  +		dev_err(dev, "Failed to create regmap\n");
+>>  +		return PTR_ERR(priv->map);
+>>  +	}
+>>  +
+>>  +	if (soc_info->needs_dev_clk) {
+>>  +		priv->lcd_clk =3D devm_clk_get(dev, "lcd");
+>>  +		if (IS_ERR(priv->lcd_clk)) {
+>>  +			dev_err(dev, "Failed to get lcd clock\n");
+>>  +			return PTR_ERR(priv->lcd_clk);
+>>  +		}
+>>  +	}
+>>  +
+>>  +	priv->pix_clk =3D devm_clk_get(dev, "lcd_pclk");
+>>  +	if (IS_ERR(priv->pix_clk)) {
+>>  +		dev_err(dev, "Failed to get pixel clock\n");
+>>  +		return PTR_ERR(priv->pix_clk);
+>>  +	}
+>>  +
+>>  +	ret =3D drm_of_find_panel_or_bridge(dev->of_node, 0, 0, &panel,=20
+>> &bridge);
+>>  +	if (ret) {
+>>  +		if (ret !=3D -EPROBE_DEFER)
+>>  +			dev_err(dev, "Failed to get panel handle\n");
+>>  +		return ret;
+>>  +	}
+>>  +
+>>  +	if (panel) {
+>>  +		bridge =3D devm_drm_panel_bridge_add(dev, panel,
+>>  +						   DRM_MODE_CONNECTOR_Unknown);
+>>  +	}
+>>  +
+>>  +	device_property_read_u32(dev, "ingenic,lcd-mode",=20
+>> &priv->lcd_mode);
+>>  +
+>>  +	priv->framedesc =3D dma_alloc_coherent(dev,=20
+>> sizeof(*priv->framedesc),
+>>  +					     &priv->framedesc_phys, GFP_KERNEL);
+>>  +	if (!priv->framedesc)
+>>  +		return -ENOMEM;
+>>  +
+>>  +	priv->framedesc->next =3D priv->framedesc_phys;
+>>  +	priv->framedesc->id =3D 0xdeafbead;
+>>  +
+>>  +	drm =3D drm_dev_alloc(&ingenic_drm_driver_data, dev);
+>>  +	if (IS_ERR(drm)) {
+>>  +		ret =3D PTR_ERR(drm);
+>>  +		goto err_free_dma;
+>>  +	}
+>>  +
+>>  +	priv->drm =3D drm;
+>>  +
+>>  +	drm_mode_config_init(drm);
+>>  +	drm->mode_config.min_width =3D 0;
+>>  +	drm->mode_config.min_height =3D 0;
+>>  +	drm->mode_config.max_width =3D 800;
+>>  +	drm->mode_config.max_height =3D 600;
+>>  +	drm->mode_config.funcs =3D &ingenic_drm_mode_config_funcs;
+>>  +
+>>  +	drm_plane_helper_add(&priv->primary,=20
+>> &ingenic_drm_plane_helper_funcs);
+>>  +
+>>  +	ret =3D drm_universal_plane_init(drm, &priv->primary,
+>>  +				       0, &ingenic_drm_primary_plane_funcs,
+>>  +				       ingenic_drm_primary_formats,
+>>  +				       ARRAY_SIZE(ingenic_drm_primary_formats),
+>>  +				       NULL, DRM_PLANE_TYPE_PRIMARY, NULL);
+>>  +	if (ret) {
+>>  +		dev_err(dev, "Failed to register primary plane: %i\n", ret);
+>>  +		goto err_unref_drm;
+>>  +	}
+>>  +
+>>  +	drm_crtc_helper_add(&priv->crtc, &ingenic_drm_crtc_helper_funcs);
+>>  +
+>>  +	ret =3D drm_crtc_init_with_planes(drm, &priv->crtc, &priv->primary,
+>>  +					NULL, &ingenic_drm_crtc_funcs, NULL);
+>>  +	if (ret) {
+>>  +		dev_err(dev, "Failed to init CRTC: %i\n", ret);
+>>  +		goto err_cleanup_plane;
+>>  +	}
+>>  +
+>>  +	priv->encoder.possible_crtcs =3D 1;
+>>  +
+>>  +	drm_encoder_helper_add(&priv->encoder,
+>>  +			       &ingenic_drm_encoder_helper_funcs);
+>>  +
+>>  +	ret =3D drm_encoder_init(drm, &priv->encoder,=20
+>> &ingenic_drm_encoder_funcs,
+>>  +			       DRM_MODE_ENCODER_DPI, NULL);
+>>  +	if (ret) {
+>>  +		dev_err(dev, "Failed to init encoder: %i\n", ret);
+>>  +		goto err_cleanup_crtc;
+>>  +	}
+>>  +
+>>  +	ret =3D drm_bridge_attach(&priv->encoder, bridge, NULL);
+>>  +	if (ret) {
+>>  +		dev_err(dev, "Unable to attach bridge\n");
+>>  +		goto err_cleanup_encoder;
+>>  +	}
+>>  +
+>>  +	platform_set_drvdata(pdev, drm);
+>>  +	priv->drm =3D drm;
+>>  +	drm->dev_private =3D priv;
+>>  +
+>>  +	ret =3D drm_irq_install(drm, irq);
+>>  +	if (ret) {
+>>  +		dev_err(dev, "Unable to install IRQ handler\n");
+>>  +		goto err_cleanup_encoder;
+>>  +	}
+>>  +
+>>  +	ret =3D drm_vblank_init(drm, 1);
+>>  +	if (ret) {
+>>  +		dev_err(dev, "Failed calling drm_vblank_init()\n");
+>>  +		goto err_uninstall_irq;
+>>  +	}
+>>  +
+>>  +	drm_mode_config_reset(drm);
+>>  +
+>>  +	ret =3D clk_prepare_enable(priv->pix_clk);
+>>  +	if (ret) {
+>>  +		dev_err(dev, "Unable to start pixel clock\n");
+>>  +		goto err_uninstall_irq;
+>>  +	}
+>>  +
+>>  +	if (priv->lcd_clk) {
+>>  +		parent_clk =3D clk_get_parent(priv->lcd_clk);
+>>  +		parent_rate =3D clk_get_rate(parent_clk);
+>>  +
+>>  +		/* LCD Device clock must be 3x the pixel clock for STN panels,
+>>  +		 * or 1.5x the pixel clock for TFT panels. To avoid having to
+>>  +		 * check for the LCD device clock everytime we do a mode change,
+>>  +		 * we set the LCD device clock to the highest rate possible.
+>>  +		 */
+>>  +		ret =3D clk_set_rate(priv->lcd_clk, parent_rate);
+>>  +		if (ret) {
+>>  +			dev_err(dev, "Unable to set LCD clock rate\n");
+>>  +			goto err_pixclk_disable;
+>>  +		}
+>>  +
+>>  +		ret =3D clk_prepare_enable(priv->lcd_clk);
+>>  +		if (ret) {
+>>  +			dev_err(dev, "Unable to start lcd clock\n");
+>>  +			goto err_pixclk_disable;
+>>  +		}
+>>  +	}
+>>  +
+>>  +	ret =3D drm_fbdev_generic_setup(drm, 16);
+>>  +	if (ret) {
+>>  +		dev_err(dev, "Failed to init fbdev\n");
+>>  +		goto err_devclk_disable;
+>>  +	}
+> fbdev is usually considered an optionl feature that do not prevent
+> the display driver from loading.
+> Consider what to do in the error case.
+>=20
+=
