@@ -1,158 +1,312 @@
-From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 11/14] ARM: sunxi: dts: s3/s3l/v3: add DTSI
- files for S3/S3L/V3 SoCs
-Date: Mon, 18 Mar 2019 16:19:16 +0100
-Message-ID: <b33c62f75ffd5858a50fe1edb970faa59ee9cd1e.camel@bootlin.com>
-References: <20190312152256.35574-1-icenowy@aosc.io>
-	 <20190312152256.35574-12-icenowy@aosc.io>
-	 <ea4f86798466bd9680f064f663a50450452509bc.camel@bootlin.com>
-	 <86A3A1C2-323E-439D-9615-530E2AD9E199@aosc.io>
-Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V5 2/5] pwm: Add i.MX TPM PWM driver support
+Date: Mon, 18 Mar 2019 16:30:51 +0100
+Message-ID: <20190318153051.GA31929@ulmo>
+References: <1552894581-3391-1-git-send-email-Anson.Huang@nxp.com>
+ <1552894581-3391-3-git-send-email-Anson.Huang@nxp.com>
+ <20190318102740.GE17565@ulmo>
+ <DB3PR0402MB39169937B4A02D70FB72FB8DF5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRB6XNX3SAKGQEM3FGQ7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <86A3A1C2-323E-439D-9615-530E2AD9E199-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <DB3PR0402MB39169937B4A02D70FB72FB8DF5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "stefan@agner.ch" <stefan@agner.ch>, Leonard Crestez <leonard.crestez@nxp.com>, Robin Gong <yibin.gong@nxp.com>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-Le lundi 18 mars 2019 =C3=A0 23:15 +0800, Icenowy Zheng a =C3=A9crit :
+--W/nzBZO5zC0uMSeA
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Mar 18, 2019 at 11:33:33AM +0000, Anson Huang wrote:
+> Hi, Thierry
 >=20
-> =E4=BA=8E 2019=E5=B9=B43=E6=9C=8818=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
-8:41:32, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=
-=B0:
-> > Hi,
-> >=20
-> > Le mardi 12 mars 2019 =C3=A0 23:22 +0800, Icenowy Zheng a =C3=A9crit :
-> > > The Allwinner S3/S3L/V3 SoCs all share the same die with the V3s SoC,
-> > > but with more GPIO wired out of the package.
-> > >=20
-> > > Add DTSI files for these SoCs. The DTSI file for V3 just replaces the
-> > > pinctrl compatible string, and the S3/S3L DTSI files just include the
-> > V3
-> > > DTSI file.
-> >=20
-> > Note that the V3 has a NMI controller at 1c000d0, that is required for
-> > handling the AXP209 interrupts IIRQ. I have no idea whether it's also
-> > the case on the V3s/S3/S3L though but it would be good to know.
+> Best Regards!
+> Anson Huang
 >=20
-> It's not mentioned on the datasheet.
->=20
-> If it's present, please send a patch.
-
-Indeed, it is not documented but the block is definitely there (and it
-shows up in Allwinner's kernel source too). I'll send a patch once
-these series is merged then!
-
-> BTW all V3 series chip share the same die (sun8iw8).
-
-Right, so I think it's safe to assume that the controller is there on
-all of them then.
-
-Cheers,
-
-Paul
-
-> Thanks
->=20
-> > Note that I can totally add support for it when adding support for my
-> > V3 device that uses the AXP209 this way.
+> > -----Original Message-----
+> > From: Thierry Reding [mailto:thierry.reding@gmail.com]
+> > Sent: 2019=E5=B9=B43=E6=9C=8818=E6=97=A5 18:28
+> > To: Anson Huang <anson.huang@nxp.com>
+> > Cc: robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org;
+> > s.hauer@pengutronix.de; kernel@pengutronix.de; festevam@gmail.com;
+> > linux@armlinux.org.uk; otavio@ossystems.com.br; stefan@agner.ch;
+> > Leonard Crestez <leonard.crestez@nxp.com>; Robin Gong
+> > <yibin.gong@nxp.com>; jan.tuerk@emtrion.com; linux-
+> > pwm@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org; u.kleine-
+> > koenig@pengutronix.de; dl-linux-imx <linux-imx@nxp.com>
+> > Subject: Re: [PATCH V5 2/5] pwm: Add i.MX TPM PWM driver support
 > >=20
-> > Also, could we get proper compatibles and config options for these new
-> > SoCs, since they are distinct from the V3S?
-> >=20
-> > Cheers,
-> >=20
-> > Paul
-> >=20
-> > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> > > ---
-> > >  arch/arm/boot/dts/sun8i-s3.dtsi  |  6 ++++++
-> > >  arch/arm/boot/dts/sun8i-s3l.dtsi |  6 ++++++
-> > >  arch/arm/boot/dts/sun8i-v3.dtsi  | 14 ++++++++++++++
-> > >  3 files changed, 26 insertions(+)
-> > >  create mode 100644 arch/arm/boot/dts/sun8i-s3.dtsi
-> > >  create mode 100644 arch/arm/boot/dts/sun8i-s3l.dtsi
-> > >  create mode 100644 arch/arm/boot/dts/sun8i-v3.dtsi
-> > >=20
-> > > diff --git a/arch/arm/boot/dts/sun8i-s3.dtsi
-> > b/arch/arm/boot/dts/sun8i-s3.dtsi
-> > > new file mode 100644
-> > > index 000000000000..0f41a25ecb30
-> > > --- /dev/null
-> > > +++ b/arch/arm/boot/dts/sun8i-s3.dtsi
-> > > @@ -0,0 +1,6 @@
-> > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > On Mon, Mar 18, 2019 at 07:41:42AM +0000, Anson Huang wrote:
+[...]
+> > > +static void pwm_imx_tpm_config(struct pwm_chip *chip,
+> > > +			       struct pwm_device *pwm,
+> > > +			       u32 period,
+> > > +			       u32 duty_cycle,
+> > > +			       enum pwm_polarity polarity) {
+> > > +	struct imx_tpm_pwm_chip *tpm =3D to_imx_tpm_pwm_chip(chip);
+> > > +	u32 duty_cnt, val;
+> > > +	u64 tmp;
+> > > +
+> > > +	/* set duty counter */
+> > > +	tmp =3D readl(tpm->base + PWM_IMX_TPM_MOD) &
+> > PWM_IMX_TPM_MOD_MOD;
+> > > +	tmp *=3D duty_cycle;
+> > > +	duty_cnt =3D DIV_ROUND_CLOSEST_ULL(tmp, period);
+> > > +	writel(duty_cnt & PWM_IMX_TPM_MOD_MOD,
+> > > +	       tpm->base + PWM_IMX_TPM_CnV(pwm->hwpwm));
+> > > +
+> > > +	/*
+> > > +	 * set polarity (for edge-aligned PWM modes)
+> > > +	 *
+> > > +	 * CPWMS  MSB:MSA  ELSB:ELSA  Mode  Configuration
+> > > +	 * 0	  10	   10	      PWM   High-true pulse
+> > > +	 * 0	  10	   00	      PWM   Reserved
+> > > +	 * 0	  10	   01	      PWM   Low-true pulse
+> > > +	 * 0	  10	   11	      PWM   Reserved
+> > > +	 *
+> > > +	 * High-true pulse: clear output on counter match, set output on
+> > > +	 * counter reload, set output when counter first enabled or paused.
+> > > +	 *
+> > > +	 * Low-true pulse: set output on counter match, clear output on
+> > > +	 * counter reload, clear output when counter first enabled or pause=
+d.
+> > > +	 */
+> > > +
+> > > +	val =3D readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
+> > > +	val &=3D ~(PWM_IMX_TPM_CnSC_ELSB | PWM_IMX_TPM_CnSC_ELSA
+> > |
+> > > +		 PWM_IMX_TPM_CnSC_MSA);
+> > > +	val |=3D PWM_IMX_TPM_CnSC_MSB;
+> > > +	val |=3D (polarity =3D=3D PWM_POLARITY_NORMAL) ?
+> > > +		PWM_IMX_TPM_CnSC_ELSB : PWM_IMX_TPM_CnSC_ELSA;
+> > > +	/*
+> > > +	 * polarity settings will enabled/disable output status
+> > > +	 * immediately, so here ONLY save the config and write
+> > > +	 * it into register when channel is enabled/disabled.
+> > > +	 */
+> > > +	tpm->chn_config[pwm->hwpwm] =3D val;
+> > > +}
+> > > +
 > > > +/*
-> > > + * Copyright (C) 2019 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> > > + * When a channel's polarity is configured, the polarity settings
+> > > + * will be saved and ONLY write into the register when the channel
+> > > + * is enabled.
+> > > + *
+> > > + * When a channel is disabled, its polarity settings will be saved
+> > > + * and its output will be disabled by clearing polarity settings.
+> > > + *
+> > > + * when a channel is enabled, its polarity settings will be restored
+> >=20
+> > "when" -> "When".
+>=20
+> Will fix it.
+>=20
+> >=20
+> > > + * and output will be enabled again.
 > > > + */
+> > > +static void pwm_imx_tpm_enable(struct pwm_chip *chip,
+> > > +			       struct pwm_device *pwm,
+> > > +			       bool enable)
+> > > +{
+> > > +	struct imx_tpm_pwm_chip *tpm =3D to_imx_tpm_pwm_chip(chip);
+> > > +	u32 val;
 > > > +
-> > > +#include "sun8i-v3.dtsi"
-> > > diff --git a/arch/arm/boot/dts/sun8i-s3l.dtsi
-> > b/arch/arm/boot/dts/sun8i-s3l.dtsi
-> > > new file mode 100644
-> > > index 000000000000..0f41a25ecb30
-> > > --- /dev/null
-> > > +++ b/arch/arm/boot/dts/sun8i-s3l.dtsi
-> > > @@ -0,0 +1,6 @@
-> > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > > +/*
-> > > + * Copyright (C) 2019 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> > > + */
+> > > +	val =3D readl(tpm->base + PWM_IMX_TPM_SC);
+> > > +	if (enable) {
+> > > +		/* restore channel config */
+> > > +		writel(tpm->chn_config[pwm->hwpwm],
+> > > +		       tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
 > > > +
-> > > +#include "sun8i-v3.dtsi"
-> > > diff --git a/arch/arm/boot/dts/sun8i-v3.dtsi
-> > b/arch/arm/boot/dts/sun8i-v3.dtsi
-> > > new file mode 100644
-> > > index 000000000000..6ae8645ade50
-> > > --- /dev/null
-> > > +++ b/arch/arm/boot/dts/sun8i-v3.dtsi
-> > > @@ -0,0 +1,14 @@
-> > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > > +/*
-> > > + * Copyright (C) 2019 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> > > + */
+> > > +		if (++tpm->enable_count =3D=3D 1) {
+> > > +			/* start TPM counter */
+> > > +			val |=3D PWM_IMX_TPM_SC_CMOD_INC_EVERY_CLK;
+> > > +			writel(val, tpm->base + PWM_IMX_TPM_SC);
+> > > +		}
+> > > +	} else {
+> > > +		/* disable channel */
+> > > +		val =3D readl(tpm->base + PWM_IMX_TPM_CnSC(pwm-
+> > >hwpwm));
+> > > +		val &=3D ~(PWM_IMX_TPM_CnSC_MSA |
+> > PWM_IMX_TPM_CnSC_MSB |
+> > > +			 PWM_IMX_TPM_CnSC_ELSB |
+> > PWM_IMX_TPM_CnSC_ELSA);
+> > > +		writel(val, tpm->base + PWM_IMX_TPM_CnSC(pwm-
+> > >hwpwm));
 > > > +
-> > > +#include "sun8i-v3s.dtsi"
+> > > +		if (--tpm->enable_count =3D=3D 0) {
+> > > +			/* stop TPM counter since all channels are disabled
+> > */
+> > > +			val &=3D ~PWM_IMX_TPM_SC_CMOD;
+> > > +			writel(val, tpm->base + PWM_IMX_TPM_SC);
+> > > +		}
+> > > +	}
 > > > +
-> > > +&ccu {
-> > > +	compatible =3D "allwinner,sun8i-v3-ccu";
+> > > +	/* update channel status */
+> > > +	tpm->chn_status[pwm->hwpwm] =3D enable; }
+> > > +
+> > > +static void pwm_imx_tpm_get_state(struct pwm_chip *chip,
+> > > +				  struct pwm_device *pwm,
+> > > +				  struct pwm_state *state)
+> > > +{
+> > > +	struct imx_tpm_pwm_chip *tpm =3D to_imx_tpm_pwm_chip(chip);
+> > > +	u64 tmp;
+> > > +	u32 val, rate;
+> > > +
+> > > +	/* get period */
+> > > +	rate =3D clk_get_rate(tpm->clk);
+> > > +	tmp =3D readl(tpm->base + PWM_IMX_TPM_MOD);
+> > > +	val =3D readl(tpm->base + PWM_IMX_TPM_SC);
+> > > +	val &=3D PWM_IMX_TPM_SC_PS;
+> > > +	tmp *=3D (1 << val) * NSEC_PER_SEC;
+> > > +	state->period =3D DIV_ROUND_CLOSEST_ULL(tmp, rate);
+> > > +
+> > > +	/* get duty cycle */
+> > > +	tmp =3D readl(tpm->base + PWM_IMX_TPM_CnV(pwm->hwpwm));
+> > > +	tmp *=3D (1 << val) * NSEC_PER_SEC;
+> > > +	state->duty_cycle =3D DIV_ROUND_CLOSEST_ULL(tmp, rate);
+> > > +
+> > > +	/* get polarity */
+> > > +	val =3D readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
+> > > +	if (val & PWM_IMX_TPM_CnSC_ELSA)
+> > > +		state->polarity =3D PWM_POLARITY_INVERSED;
+> > > +	else
+> > > +		state->polarity =3D PWM_POLARITY_NORMAL;
+> > > +
+> > > +	/* get channel status */
+> > > +	state->enabled =3D tpm->chn_status[pwm->hwpwm] ? true : false; }
+> > > +
+> > > +static int pwm_imx_tpm_apply(struct pwm_chip *chip, struct pwm_device
+> > *pwm,
+> > > +			     struct pwm_state *state)
+> > > +{
+> > > +	struct imx_tpm_pwm_chip *tpm =3D to_imx_tpm_pwm_chip(chip);
+> > > +	struct pwm_state curstate;
+> > > +	int ret;
+> > > +
+> > > +	mutex_lock(&tpm->lock);
+> > > +
+> > > +	pwm_imx_tpm_get_state(chip, pwm, &curstate);
+> > > +
+> > > +	if (state->period !=3D curstate.period) {
+> > > +		/*
+> > > +		 * TPM counter is shared by multiple channels, so
+> > > +		 * prescale and period can NOT be modified when
+> > > +		 * there are multiple channels in use.
+> > > +		 */
+> > > +		if (tpm->user_count !=3D 1)
+> > > +			return -EBUSY;
+> > > +		ret =3D pwm_imx_tpm_config_counter(chip, state->period);
+> > > +		if (ret)
+> > > +			return ret;
+> > > +	}
+> > > +
+> > > +	if (state->enabled =3D=3D false) {
+> > > +		/*
+> > > +		 * if eventually the PWM output is LOW, either
+> > > +		 * duty cycle is 0 or status is disabled, need
+> > > +		 * to make sure the output pin is LOW.
+> > > +		 */
+> > > +		pwm_imx_tpm_config(chip, pwm, state->period,
+> > > +				   0, state->polarity);
+> > > +		if (curstate.enabled)
+> > > +			pwm_imx_tpm_enable(chip, pwm, false);
+> > > +	} else {
+> > > +		pwm_imx_tpm_config(chip, pwm, state->period,
+> > > +				   state->duty_cycle, state->polarity);
+> > > +		if (!curstate.enabled)
+> > > +			pwm_imx_tpm_enable(chip, pwm, true);
+> >=20
+> > Doesn't this mean that you won't be applying changes to the polarity wh=
+ile a
+> > PWM is enabled? That seems wrong. Granted, you may usually not run into
+> > that, but if you can't support it I think you should at least return an=
+ error if
+> > you detect that the user wants to change polarity while the PWM is enab=
+led.
+>=20
+> I thought below function call already set the polarity? No matter its sta=
+tus is enabled
+> or disabled, the polarity setting will be always applied.
+> =20
+> 		pwm_imx_tpm_config(chip, pwm, state->period,
+> 				   state->duty_cycle, state->polarity);
+
+That's not what it seems to do. In fact there's a comment that explains
+why it doesn't do that. Quoting here:
+
+> > > +	/*
+> > > +	 * polarity settings will enabled/disable output status
+> > > +	 * immediately, so here ONLY save the config and write
+> > > +	 * it into register when channel is enabled/disabled.
+> > > +	 */
+> > > +	tpm->chn_config[pwm->hwpwm] =3D val;
+
+Looks to me like that only stores the value for that register so that it
+can be applied at a later point. Or am I missing something?
+
+> > > +				ret);
+> > > +	}
+> > > +
+> > > +	return ret;
 > > > +};
-> > > +
-> > > +&pio {
-> > > +	compatible =3D "allwinner,sun8i-v3-pinctrl";
-> > > +};
-> > > --=20
-> > > 2.18.1
-> > >=20
-> > --=20
-> > Paul Kocialkowski, Bootlin
-> > Embedded Linux and kernel engineering
-> > https://bootlin.com
 > >=20
+> > Your handling of the clock seems strange here. Basically in the above y=
+ou
+> > always keep the clock on and you only disable it if there are no users =
+and
+> > you're going to suspend.
 > >=20
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+> > Why do you need to keep an extra reference count anyway? Or why keep the
+> > clock on all the time? Can't you just do a clk_prepare_enable() every t=
+ime
+> > somebody enables the PWM? The CCF already has built-in reference
+> > counting, so I'm not sure you really need to duplicate that here.
+>=20
+> Keeping clock always ON since driver probe is because, many TMP registers'
+> write needs clock to be ON for sync into register hardware, just enable t=
+he clock
+> before writing register and disable the clock immediately does NOT work, =
+unless
+> we keep reading the register value until the register value is what we wa=
+nt to write,
+> but that makes code much more complicated, and the PWM clock normally is =
+=66rom
+> OSC which does NOT consume too much power, so I keep the clock always on =
+and ONLY
+> disable it after suspend.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Why do you bother with keeping the enable reference count, then? Can't
+you just enable the clock on probe, then on suspend disable it, enable
+it again on resume and on remove you also disable it? Why does it need
+to be dependent on whether there are any active PWMs or not?
+
+Thierry
+
+--W/nzBZO5zC0uMSeA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyPuacACgkQ3SOs138+
+s6H9Vw/9EpjiP7x6maJyjU7MldmX3QCsQ4I+HPOaMu4e39mOE/kt2VJG1fIVi3eb
+jRuen2P+uH/cB76It4CUTYrMachZSooKzbwBGlh1Im2CpgYf6/L5TPgocBaLtATq
+JddcM2WGes66e7Ry0lnkCbvKWe4NkMn6Qanbg+jsOSbirRi6bu/3Hi978n3YAvAw
+870E++4OjxeyfAB5HY+n/VZ88jGmsQobELAc9BbtnabUg6Dli6WdWRypbO4h/+9d
+L4G7FxQMPKFFfCg5b40GYi31K5o3YYL4P8H3Q/4yMSP3hUqa9K6y4Y+7c9m6w8yj
+wm1PXGjAeTvb4x1vo4TI8XhZWW9EwZLoQ3vYvE6jxMFNfbEaow1ZVIT/vO9QagOj
+2Zil24HYgffixv3JaPshCGzvEOLZnL6twmbbEBpwLSdKJX6ZGZ0t7gU9J3A9k0w2
+lhOwi87RxWXUFwhd0UL2SwKfwmNuZssURQhBWlEJ61phg+6QmRFMtMG7i/1WV40J
+4MqEfxnZrdaE7X4a/mxJR0y0aZrZyYYqnBB+fXYzITp9qMsDalsnVF9yXoyU/eip
+SobQEOZKhG320OQYpS+YjxKaJIc4mwJJsfZdDM0KzCm2GW8U5ALeBB3vsyYBYjX8
+n6F9Mht40O1u0pxeFO4d+OSrHlJfRisQvdghPWVhWs4Lob4DuOM=
+=psPO
+-----END PGP SIGNATURE-----
+
+--W/nzBZO5zC0uMSeA--
