@@ -1,42 +1,67 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH V4 2/5] pwm: Add i.MX TPM PWM driver support
-Date: Mon, 18 Mar 2019 15:10:51 +0100
-Message-ID: <20190318141051.t2x2ddz73fmksadq@pengutronix.de>
-References: <1552610505-13568-1-git-send-email-Anson.Huang@nxp.com>
- <1552610505-13568-3-git-send-email-Anson.Huang@nxp.com>
- <20190315093532.xw5ivfkxrwvrkvix@pengutronix.de>
- <DB3PR0402MB39161B062231C59842595374F5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190318080743.xumj6e72bzumszvp@pengutronix.de>
- <DB3PR0402MB391627A8C741C84A2057E576F5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <DB3PR0402MB39161A9884D5768F7280024FF5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH/RFC 07/15] dt-bindings: display: renesas: lvds: Add
+ renesas,companion property
+Date: Mon, 18 Mar 2019 16:22:40 +0200
+Message-ID: <20190318142240.GC12707@pendragon.ideasonboard.com>
+References: <20190306232345.23052-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20190306232345.23052-8-laurent.pinchart+renesas@ideasonboard.com>
+ <CAMuHMdWfNk+v9PTMpE43DD8DvrmhZDeAocDReVNOsE=oh4P6uw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB39161A9884D5768F7280024FF5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Robin Gong <yibin.gong@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "stefan@agner.ch" <stefan@agner.ch>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
+In-Reply-To: <CAMuHMdWfNk+v9PTMpE43DD8DvrmhZDeAocDReVNOsE=oh4P6uw@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, DRI Development <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-as you got some feedback for v5 already I assume you will post a v6.
-I'll skip reviewing v5 then.
-
-Best regards
-Uwe
-
--- =
-
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+SGkgR2VlcnQsCgpPbiBNb24sIE1hciAxOCwgMjAxOSBhdCAxMToyMToxNUFNICswMTAwLCBHZWVy
+dCBVeXR0ZXJob2V2ZW4gd3JvdGU6Cj4gT24gVGh1LCBNYXIgNywgMjAxOSBhdCAxMjoyNCBBTSBM
+YXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+ID4gQWRkIGEgbmV3IG9wdGlvbmFsIHJlbmVzYXMsY29t
+cGFuaW9uIHByb3BlcnR5IHRvIHBvaW50IHRvIHRoZSBjb21wYW5pb24KPiA+IExWRFMgZW5jb2Rl
+ci4gVGhpcyBpcyB1c2VkIHRvIHN1cHBvcnQgZHVhbC1saW5rIG9wZXJhdGlvbiB3aGVyZSB0aGUg
+bWFpbgo+ID4gTFZEUyBlbmNvZGVyIHNwbGl0cyBldmVuLW51bWJlcmVkIGFuZCBvZGQtbnVtYmVy
+ZWQgcGl4ZWxzIGJldHdlZW4gdGhlCj4gPiB0d28gTFZEUyBlbmNvZGVycy4KPiAKPiBOb3RlIHRo
+YXQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9nZW5lcmljLnR4dCBhbHJl
+YWR5Cj4gZGVzY3JpYmVzIGEgImNvbXBhbmlvbiIgcHJvcGVydHkgd2l0aG91dCB2ZW5kb3IgcHJl
+Zml4Lgo+IAo+ID4gVGhlIG5ldyBwcm9wZXJ0eSBkb2Vzbid0IGNvbnRyb2wgdGhlIG1vZGUgb2Yg
+b3BlcmF0aW9uLCBpdCBvbmx5Cj4gPiBkZXNjcmliZXMgdGhlIHJlbGF0aW9uc2hpcCBiZXR3ZWVu
+IHRoZSBtYXN0ZXIgYW5kIGNvbXBhbmlvbiBMVkRTCj4gPiBlbmNvZGVycy4KPiA+Cj4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRl
+YXNvbmJvYXJkLmNvbT4KPiA+IC0tLQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQgICAgIHwgNiArKysrKysKPiA+ICAxIGZpbGUgY2hh
+bmdlZCwgNiBpbnNlcnRpb25zKCspCj4gPgo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZk
+cy50eHQKPiA+IGluZGV4IDkwMGE4ODRhZDlmNS4uYTcyMGRiYjVkZTY5IDEwMDY0NAo+ID4gLS0t
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVz
+YXMsbHZkcy50eHQKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0Cj4gPiBAQCAtNDUsNiArNDUsMTIgQEAgT0Yg
+Z3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9ncmFwaC50eHQuCj4gPgo+ID4gIEVhY2ggcG9ydCBzaGFsbCBoYXZlIGEgc2luZ2xlIGVu
+ZHBvaW50Lgo+ID4KPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4gKwo+ID4gKy0gcmVuZXNh
+cyxjb21wYW5pb24gOiBwaGFuZGxlIHRvIHRoZSBjb21wYW5pb24gTFZEUyBlbmNvZGVyLiBUaGlz
+IHByb3BlcnR5IGlzCj4gPiArICB2YWxpZCBmb3IgdGhlIGZpcnN0IExWRFMgZW5jb2RlciBEMyBh
+bmQgRTMgU29DcyBvbmx5LCBhbmQgcG9pbnRzIHRvIHRoZQo+IAo+IC4uLiBvbiBEMyAuLi4KPiAK
+PiA+ICsgIHNlY29uZCBlbmNvZGVyIHRvIGJlIHVzZWQgYXMgYSBjb21wYW5pb24gaW4gZHVhbC1s
+aW5rIG1vZGUuCj4gCj4gV2h5IHJlc3RyaWN0IHRoaXMgdG8gdGhlIGZpcnN0IExWRFMgZGVjb2Rl
+ciwgYW5kIG5vdCBoYXZlIGEgYmFja2xpbmsgaW4gdGhlCj4gb3RoZXIgbm9kZSwKCkJlY2F1c2Ug
+dGhlcmUncyBubyBuZWVkIHRvID8gOi0pIEZ1cnRoZXJtb3JlIHRoZXJlJ3MgYSBuZWVkIGZvciB0
+aGUKbWFzdGVyIHRvIGtub3cgaXRzIGEgbWFzdGVyLCBzbyBoYXZlIGEgbGluayBpbiBhIHNpbmds
+ZSBkaXJlY3Rpb24gaXMKcHJldHR5IGNvbnZlbmllbnQuIE90aGVyd2lzZSBJJ2QgbmVlZCBhbiBl
+eHRyYSBwcm9wZXJ0eSB0byBpZGVudGlmeSB0aGUKbWFzdGVyLgoKPiBsaWtlIGZvciBVU0I/CgpJ
+J20gbm90IHN1cmUgd2hhdCBVU0IgZG9lcyBpbiB0aGF0IHJlZ2FyZC4KCi0tIApSZWdhcmRzLAoK
+TGF1cmVudCBQaW5jaGFydApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWw=
