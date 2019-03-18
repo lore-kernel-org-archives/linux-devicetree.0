@@ -1,78 +1,71 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH 4/6] dt-bindings: display: bridge: Add ICN6211 MIPI-DSI to
- RGB convertor bridge
-Date: Mon, 18 Mar 2019 22:28:10 +0530
-Message-ID: <CAMty3ZBn=MjB-VxwadkEDaM_==hGu1pzTv2A47cKitv0Vb5VXw@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH 1/6] drm/bridge: Export drm_bridge_detach
+Date: Mon, 18 Mar 2019 22:37:57 +0530
+Message-ID: <CAMty3ZC2M=+Xb1OK0ZtU6wbKzmdYvHoTGSRouqKhMV+xk6DzRA@mail.gmail.com>
 References: <20190315130825.9005-1-jagan@amarulasolutions.com>
- <20190315130825.9005-5-jagan@amarulasolutions.com> <20190315133414.5zwc5qtrivrbrzow@flea>
+ <20190315130825.9005-2-jagan@amarulasolutions.com>
+ <c52be751ac1bc7b1ee21e3e2a30d5b494bf95faa.camel@bootlin.com>
+ <CAMty3ZBOTOR4hHfPE4Ufhb2+VoNJfFQwiii1kti263fi7DEEaQ@mail.gmail.com>
+ <b3f7e096c94347b7a244d5278a38d9ced99218d1.camel@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190315133414.5zwc5qtrivrbrzow@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula@amarulasolutions.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <b3f7e096c94347b7a244d5278a38d9ced99218d1.camel@bootlin.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 7:04 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Fri, Mar 15, 2019 at 06:38:23PM +0530, Jagan Teki wrote:
-> > ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
-> > It has a flexible configuration of MIPI DSI signal input
-> > and produce RGB565, RGB666, RGB888 output format.
-> >
-> > Add dt-bingings for it.
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> >  .../display/bridge/chipone,icn6211.txt        | 36 +++++++++++++++++++
-> >  1 file changed, 36 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
-> > new file mode 100644
-> > index 000000000000..7f13efd7ee7f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
-> > @@ -0,0 +1,36 @@
-> > +Chipone ICN6211 MIPI-DSI to RGB Convertor Bridge
-> > +
-> > +ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
-> > +It has a flexible configuration of MIPI DSI signal input
-> > +and produce RGB565, RGB666, RGB888 output format.
-> > +
-> > +Required properties for RGB:
-> > +- compatible: must be "chipone,icn6211" and one of:
-> > +  * "bananapi,icn6211"
->
-> Why is that compatible needed?
-
-chipone,icn6211 - generic compatible bridge controller IC
-bananapi,icn6211 -  compatible for icn6211 bridge using on bananapi panel
-
-I hope this would be proper bindings in terms of controller IC with
-associate device, anything wrong? Infact I used similar reference from
-Ilitek Bananapi panel from here
-Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.txt
-
-This is what I understood based on dt-binding, correct if I'm wrong.
-
-ilitek,ili9881c - generic ilitek,ili9881c compatable
-bananapi,lhr050h41 - compatible for bananapi panel associated with
-this ilitek IC
-
->
-> > +- reg: the virtual channel number of a DSI peripheral
-> > +- reset-gpios: a GPIO phandle for the reset pin
-> > +
-> > +The device node can contain following 'port' child nodes,
-> > +according to the OF graph bindings defined in [1]:
-> > +  0: DSI Input, not required, if the bridge is DSI controlled
-> > +  1: RGB Output, mandatory
->
-> Your example doesn't have that input port
-
-Yes, I intentionally did this by referring existing bridge binding.
-Documentation/devicetree/bindings/display/bridge/toshiba,tc35876*.txt
-
-Do we really need? since the input port can be part of panel binding.
+T24gTW9uLCBNYXIgMTgsIDIwMTkgYXQgMTA6MjcgUE0gUGF1bCBLb2NpYWxrb3dza2kKPHBhdWwu
+a29jaWFsa293c2tpQGJvb3RsaW4uY29tPiB3cm90ZToKPgo+IEhpLAo+Cj4gTGUgbHVuZGkgMTgg
+bWFycyAyMDE5IMOgIDIyOjE4ICswNTMwLCBKYWdhbiBUZWtpIGEgw6ljcml0IDoKPiA+IEhpIFBh
+dWwsCj4gPgo+ID4gT24gRnJpLCBNYXIgMTUsIDIwMTkgYXQgNjo1OCBQTSBQYXVsIEtvY2lhbGtv
+d3NraQo+ID4gPHBhdWwua29jaWFsa293c2tpQGJvb3RsaW4uY29tPiB3cm90ZToKPiA+ID4gSGkg
+SmFrYW4sCj4gPiA+Cj4gPiA+IE9uIEZyaSwgMjAxOS0wMy0xNSBhdCAxODozOCArMDUzMCwgSmFn
+YW4gVGVraSB3cm90ZToKPiA+ID4gPiBFeHBvcnQgZHJtX2JyaWRnZV9kZXRhY2ggZnJvbSBkcm0g
+YnJpZGdlIGNvcmUgc28tdGhhdCBpdAo+ID4gPiA+IGNhbiB1c2Ugb24gcmVzcGVjdGl2ZSBpbnRl
+cmZhY2Ugb3IgYnJpZGdlIGRyaXZlciB3aGlsZQo+ID4gPiA+IGRldGFjaGluZyB0aGUgYnJpZGdl
+Lgo+ID4gPgo+ID4gPiBJIGRvbid0IHNlZSB3aHkgdGhpcyBjaGFuZ2UgaXMgcmVxdWlyZWQgYmFz
+ZWQgb24gdGhlIGNvbW1pdCBsb2cuIFRoZQo+ID4gPiBEUk0gYnJpZGdlIGNvZGUgY2xlYXJseSBp
+bmRpY2F0ZXMgdGhhdCBkcm1fYnJpZGdlX2F0dGFjaCBzaG91bGQgKm5vdCoKPiA+ID4gYmUgYmFs
+YW5jZWQgd2l0aCBhIGRybV9icmlkZ2VfZGV0YWNoIGNhbGwgaW4gdGhlIGRyaXZlciwgc28gdGhp
+cyBzZWVtcwo+ID4gPiBxdWl0ZSB3cm9uZy4KPiA+ID4KPiA+ID4gVGhlIERSTSBjb3JlIGl0c2Vs
+ZiBzaG91bGQgaGFuZGxlIGRldGFjaGluZyB0aGUgYnJpZGdlLCBub3QgdGhlIGRyaXZlci4KPiA+
+ID4gSXMgdGhlcmUgYW55IHJlYXNvbiB3aHkgeW91IG5lZWQgdG8gZG8gdGhpbmdzIGRpZmZlcmVu
+dGx5IGZvciBEU0k/Cj4gPgo+ID4gWWVzLCB5b3UgYXJlIGNvcnJlY3QgdGhlIGRldGFjaCBvZiBi
+cmlkZ2UgaXMgYmVpbmcgdGFraW5nIGNhcmUgdmlhCj4gPiBkcm1fZW5jb2Rlcl9jbGVhbnVwLiBU
+aGlzIHBhdGNoIGV4cG9ydGVkIGV4cGxpY2l0bHksIHNpbmNlIHdlIG5lZWQgdG8KPiA+IHRha2Vu
+IGNhcmUgYnJpZGdlIGRldGFjaCBkdXJpbmcgdW5iaW5kIGV2ZW4gZXh5bm9zX2RybV9kc2kgaW4g
+b3RoZXIKPiA+IHBhdGNoIHNlZW1zIHVzaW5nIGRldGFjaCBieSBleHBsaWNpdGx5IHBvaW50aW5n
+Lgo+Cj4gSSBjYW4gc2VlIHRoYXQgZnJvbSB5b3VyIHBhdGNoZXMsIGJ1dCB5b3UgYXJlIG5vdCBl
+eHBsYWluaW5nIHdoeSB5b3UKPiBuZWVkIHRoZSBjaGFuZ2UuIEFuZCBpZiB0aGUgZnJhbWV3b3Jr
+IGRvZXNuJ3Qgd29yayBmb3IgeW91ciBjYXNlLCB5b3UKPiBzaG91bGQgY2VydGFpbmx5IHRyeSBh
+bmQgZml4IHRoZSBmcmFtZXdvcmsgaW5zdGVhZCBvZiB3b3JraW5nIGFyb3VuZAo+IHRoZSBpc3N1
+ZS4KClBsZWFzZSBzZWUgYmVsb3cgY29tbWVudHMuCgo+Cj4gQW55d2F5LCB5b3Ugc2hvdWxkIHBy
+b2JhYmx5IGxvb2sgaW50byB1c2luZyBkcm1fcGFuZWxfYnJpZGdlX2FkZCwgaXQKPiBtaWdodCBm
+aXggdGhlIHVuZGVybHlpbmcgaXNzdWUgb24gaXRzIG93bi4KPgo+ID4gc28gSSB0aGluayB0aGUg
+YmV0dGVyIGFwcHJvYWNoIGlzIHRvIHVzZSBkcm1fZW5jb2Rlcl9jbGVhbnVwIGluCj4gPiB1bmJp
+bmQsIHdoYXQgZG8geW91IHNheT8KPgo+IEkgYW55IGNhc2UsIHlvdSBuZWVkIHRvIHN0YXRlIHdo
+YXQgeW91ciBwcm9ibGVtIGlzIChpbiB0aGUgY29tbWl0IGxvZywKPiBhbmQgbm90IGV2ZW4gaW4g
+c3Vic2VxdWVudCBkaXNjdXNzaW9ucykgc28gdGhhdCB3ZSBjYW4gaGF2ZSBhIGNoYW5jZSB0bwo+
+IHVuZGVyc3RhbmQgaXQgYW5kIHByb3ZpZGUgc29tZSBmZWVkYmFjayBhYm91dCB3aGF0IGlzIGFu
+IGFwcHJvcHJpYXRlCj4gZml4IGFuZCB3aGF0IGlzIG5vdC4gV2UgY2FuJ3QgdW5kZXJzdGFuZCB0
+aGUgZml4IGlmIHdlIGNhbid0IHVuZGVyc3RhbmQKPiB0aGUgdW5kZXJseWluZyBpc3N1ZS4KClRy
+dWUsIGlmIG15IGludGVudGlvbnMgaXMgdHJ5aW5nIHRvIGZpeCBzb21lIGlzc3VlLCBidXQgYXMg
+SSBzYWlkIGluCnByZXZpb3VzIG1haWwgc2luY2UgdGhlIG90aGVyIGRzaSAoZXh5bm9zX2RybV9k
+c2kpIGRyaXZlciBpcwpleHBsaWNpdGx5IGRldGFjaGluZyBJIHByZXN1bWUgaXQgcmVxdWlyZSBv
+ciBtaXNzZWQgdGhlIGV4cG9ydCwgbm90CnRob3VnaHQgYWJvdXQgZml4IGFuZCBuZWl0aGVyIEkg
+bWVudGlvbmVkIG9uIHRoZSBjb21taXQgaGVhZC4gIEFueXdheQp0aGFua3MgZm9yIHRoZSByZXZp
+ZXcsIHdpbGwgdXBkYXRlIHRoZSBjb2RlIGFjY29yZGluZ2x5IGluIG5leHQKdmVyc2lvbi4KX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
