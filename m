@@ -1,72 +1,41 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 4/6] nvmem: sunxi_sid: Read out data in
- native format
-Date: Mon, 18 Mar 2019 09:57:51 +0100
-Message-ID: <20190318085751.kziqzxnadtho4kdb@flea>
-References: <20190318073354.12151-1-wens@kernel.org>
- <20190318073354.12151-5-wens@kernel.org>
- <20190318084212.lv2lorskizl65uzg@flea>
- <CAGb2v67H9FkjKjSE5a7fUCb_t95Zfuk1p0bjWYJxjMqhMN-hfg@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Mickael GUENE <mickael.guene@st.com>
+Subject: Re: [PATCH v1 1/3] dt-bindings: Document MIPID02 bindings
+Date: Mon, 18 Mar 2019 09:08:57 +0000
+Message-ID: <a8dff925-3ec4-3a40-f129-ea162ca25aed@st.com>
+References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
+ <1552373045-134493-2-git-send-email-mickael.guene@st.com>
+ <20190316214649.co63p5arhiwbuv3g@valkosipuli.retiisi.org.uk>
+ <b238948a-4b08-4fb8-c955-d071bbcd3d2d@st.com>
+ <20190318084825.3hpejk5xg2xt2h4b@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="la2n7sufjnrgak3p"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBEV3XXSAKGQEFXJ645Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAGb2v67H9FkjKjSE5a7fUCb_t95Zfuk1p0bjWYJxjMqhMN-hfg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190318084825.3hpejk5xg2xt2h4b@valkosipuli.retiisi.org.uk>
+Content-Language: en-US
+Content-ID: <618E78B5CF9334458B50EFA417AA7D80@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+Sakari,
 
---la2n7sufjnrgak3p
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+>>>> +
+>>>> +Example:
+>>>> +
+>>>> +mipid02: mipid02@14 {
+>>>
+>>> The node should be a generic name. "csi2rx" is used by a few devices now.
+>>>
+>>  If I understand you well, you would prefer:
+>> csi2rx: mipid02@14 {
+>>  I show no usage of csi2rx node naming except for MIPI-CSI2 RX controller.
+> 
+> The other way around. :)
+> 
+> The label can be more or less anything AFAIK.
+> 
+ Ok got it !!! So something like 'mipid02: bridge@14 {' should be ok ?
 
-On Mon, Mar 18, 2019 at 04:45:19PM +0800, Chen-Yu Tsai wrote:
-> On Mon, Mar 18, 2019 at 4:42 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> >
-> > Hi,
-> >
-> > On Mon, Mar 18, 2019 at 03:33:52PM +0800, Chen-Yu Tsai wrote:
-> > > From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> > >
-> > > Originally the SID e-fuses were thought to be in big-endian format.
-> > > Later sources show that they are in fact native or little-endian.
-> > > The most compelling evidence is the thermal sensor calibration data,
-> > > which is a set of one to three 16-bit values. In native-endian they
-> > > are in 16-bit cells with increasing offsets, whereas with big-endian
-> > > they are in the wrong order, and a gap with no data will show if there
-> > > are one or three cells.
-> > >
-> > > Switch to a native endian representation for the nvmem device. For the
-> > > H3, the register read-out method was already returning data in native
-> > > endian. This only affects the other SoCs.
-> > >
-> > > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> >
-> > I thought only the newer SoCs were impacted by this issue?
->
-> It is noticable on the newer SoCs. The old ones only have the 128-bit SID,
-> which could be read either way, as AFAIK it's just a serial number.
->
-> If you think we should leave the old ones alone I can factor that in.
-
-IIRC, there was also the SoC ID in the SID on those SoCs as well,
-which we might have to use in the future so we'll want to make sure it
-is correct.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---la2n7sufjnrgak3p--
+Thx
