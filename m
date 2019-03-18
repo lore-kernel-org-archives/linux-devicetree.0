@@ -1,70 +1,53 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH 0/7] Timer & SPI support for Allwinner suniv F1C100s
-Date: Mon, 18 Mar 2019 15:18:56 +0800
-Message-ID: <8e1cf9c7111a423ce7cc32a6759d16e4197b87d9.camel@aosc.xyz>
-References: <cover.1549875778.git.mesihkilinc@gmail.com>
-         <2485e6c52810df376a0df6eb7f749f35b7b19044.camel@aosc.xyz>
-         <177e2598-3491-03af-8638-c60e77cc4a34@linaro.org>
+From: Chen-Yu Tsai <wens@kernel.org>
+Subject: [PATCH 0/6] nvmem: sunxi_sid: native format and A83T/H5 support
+Date: Mon, 18 Mar 2019 15:33:48 +0800
+Message-ID: <20190318073354.12151-1-wens@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <177e2598-3491-03af-8638-c60e77cc4a34@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mesih Kilinc <mesihkilinc@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-在 2019-03-17日的 21:52 +0100，Daniel Lezcano写道：
-> On 17/03/2019 18:39, Icenowy Zheng wrote:
-> > 在 2019-02-11一的 12:21 +0300，Mesih Kilinc写道：
-> > > This is followup series for F1C100s initial support patchset. 
-> > > All patches merged except patch 1 ~ 2 which is related to timer.
-> > > I am resending those since they are already have Acked tags.
-> > 
-> > Ping.
-> > 
-> > Could you please merge these timer-related patches?
-> 
-> Hi,
-> 
-> I acked the timer-related patches. If you resend the patches with my
-> acked-by I will consider them to go through the allwinner tree.
-> 
-> Do you want me to take 1 and 2 through my tree?
+From: Chen-Yu Tsai <wens@csie.org>
 
-Please. They also have the ACK from Allwinner/sunXi maintainer.
+Hi everyone,
 
-> 
-> 
-> 
-> > > Our dt-bindings for F1C100s are merged, we can now use them at
-> > > our 
-> > > device tree source - patch 3.
-> > > 
-> > > Also this series add spi support and enables spi flash at Lichee-
-> > > pi
-> > > Nano
-> > > in patch 4 ~ 7. This patches are based on Icenowy's work.
-> > > 
-> > > Thanks!
-> > > 
-> > > Mesih Kilinc (7):
-> > >   dt-bindings: timer: Add Allwinner suniv timer
-> > >   clocksource: sun4i: add a compatible for suniv
-> > >   ARM: dts: suniv: Add dt-binding headers for F1C100s
-> > >   dt-bindings: spi: Add Support for Allwinner F1C100s
-> > >   ARM: dts: suniv: Add SPI device-tree nodes
-> > >   ARM: dts: suniv: Add pinmux for SPI0 and SPI1 of F1C100s
-> > >   ARM: dts: f1c100s: Activate SPI flash on Lichee Pi Nano
-> > > 
-> > >  .../devicetree/bindings/spi/spi-sun6i.txt          |  5 +-
-> > >  .../bindings/timer/allwinner,sun4i-timer.txt       |  4 +-
-> > >  arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts  | 13 ++++++
-> > >  arch/arm/boot/dts/suniv-f1c100s.dtsi               | 53
-> > > +++++++++++++++++++---
-> > >  drivers/clocksource/timer-sun4i.c                  |  5 +-
-> > >  5 files changed, 70 insertions(+), 10 deletions(-)
-> > > 
-> 
-> 
+This series converts the sunxi_sid driver to read out data in native
+endianness for all Allwinner SoCs. It was already the case for the H3,
+which used a different read-out method. The endianness for this hardware
+was found to be either native or little endian [1], based on the data
+layout for the thermal sensor calibration data stored within. Some SoCs
+have either 1 or 3 sensors, and calibration data for each sensor is 2
+bytes wide, with data for 2 sensors packed into 1 word.
+
+The first three patches do some clean-up and improvements of the code
+overall. The fourth patch converts the driver to reading out data in
+native endianness. The fifth adds support for the A83T and H5. These
+two were already listed in the device tree bindings. The last patch
+adds a device node for it on H3 and H5.
+
+Please have a look.
+
+Regards
+ChenYu
+
+[1] https://lkml.org/lkml/2019/2/18/134
+
+Chen-Yu Tsai (6):
+  nvmem: sunxi_sid: Read out SID for randomness without looping
+  nvmem: sunxi_sid: Optimize register read-out method
+  nvmem: sunxi_sid: Dynamically allocate nvmem_config structure
+  nvmem: sunxi_sid: Read out data in native format
+  nvmem: sunxi_sid: Support SID on A83T and H5
+  ARM: dts: sunxi: h3/h5: Add device node for SID
+
+ arch/arm/boot/dts/sun8i-h3.dtsi              |  4 +
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi           |  5 +
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi |  4 +
+ drivers/nvmem/sunxi_sid.c                    | 98 ++++++++------------
+ 4 files changed, 52 insertions(+), 59 deletions(-)
+
+-- 
+2.20.1
