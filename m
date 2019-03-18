@@ -1,39 +1,45 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: `From c152138a8ec2bcd8faaac8db01dbb9be547fd021 Mon Sep 17 00:00:00 2001
-Date: Mon, 18 Mar 2019 19:38:45 +0000
-Message-ID: <1552937931-23050-1-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v1 1/6] dt-bindings: gpu: mali-utgard: add hisilicon,hi6220-mali compatible
+Date: Mon, 18 Mar 2019 19:38:46 +0000
+Message-ID: <1552937931-23050-2-git-send-email-peter.griffin@linaro.org>
+References: <1552937931-23050-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1552937931-23050-1-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de, xuwei5@hisilicon.com, mturquette@baylibre.com, sboyd@kernel.org
 Cc: john.stultz@linaro.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, yuq825@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi folks,
+The Hisilicon hi6220 uses a Mali-450MP4 with 4 PPs, so add
+a compatible for it.
 
-This series adds support for the Mali450 MP4 GPU found on the
-hi6220 SoC from HiSilicon. It has been tested with the out
-of tree lima drm/mesa driver hosted on freedesktop.org gitlab,
-and validated using Weston and kmscube.
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+ Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-regards,
-
-Peter.
-
-Peter Griffin (6):
-  dt-bindings: gpu: mali-utgard: add hisilicon,hi6220-mali compatible
-  dt-bindings: reset: hisilicon: Update compatible documentation
-  arm64: dts: hisilicon: Add Mali-450 MP4 GPU DT entry
-  reset: hi6220: Add support for AO reset controller
-  dt-bindings: reset: hisilicon: Add ao reset controller
-  clk: hi6220: use CLK_OF_DECLARE_DRIVER
-
- .../devicetree/bindings/gpu/arm,mali-utgard.txt    |  5 +++
- .../bindings/reset/hisilicon,hi6220-reset.txt      |  1 +
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi          | 38 ++++++++++++++++
- drivers/clk/hisilicon/clk-hi6220.c                 |  2 +-
- drivers/reset/hisilicon/hi6220_reset.c             | 51 +++++++++++++++++++++-
- include/dt-bindings/reset/hisi,hi6220-resets.h     |  7 +++
- 6 files changed, 102 insertions(+), 2 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+index ae63f09..936a20a 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+@@ -23,6 +23,7 @@ Required properties:
+       + rockchip,rk3228-mali
+       + rockchip,rk3328-mali
+       + stericsson,db8500-mali
++      + hisilicon,hi6220-mali
+ 
+   - reg: Physical base address and length of the GPU registers
+ 
+@@ -97,6 +98,10 @@ to specify one more vendor-specific compatible, among:
+       * interrupt-names and interrupts:
+         + combined: combined interrupt of all of the above lines
+ 
++  - hisilicon,hi6220-mali
++    Required properties:
++      * resets: phandles to the reset lines for the GPU
++
+ Example:
+ 
+ mali: gpu@1c40000 {
 -- 
 2.7.4
