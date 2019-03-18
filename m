@@ -1,52 +1,188 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V4 2/5] pwm: Add i.MX TPM PWM driver support
-Date: Mon, 18 Mar 2019 14:42:00 +0000
-Message-ID: <DB3PR0402MB391633E42A4139C10A0A226DF5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1552610505-13568-1-git-send-email-Anson.Huang@nxp.com>
- <1552610505-13568-3-git-send-email-Anson.Huang@nxp.com>
- <20190315093532.xw5ivfkxrwvrkvix@pengutronix.de>
- <DB3PR0402MB39161B062231C59842595374F5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190318080743.xumj6e72bzumszvp@pengutronix.de>
- <DB3PR0402MB391627A8C741C84A2057E576F5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <DB3PR0402MB39161A9884D5768F7280024FF5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190318141051.t2x2ddz73fmksadq@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: spi-fsl-spi: support use of the SPISEL_BOOT signal on MPC8309" to the spi tree
+Date: Mon, 18 Mar 2019 14:51:59 +0000 (GMT)
+Message-ID: <20190318145159.4DEDC1128874@debutante.sirena.org.uk>
+References: <20190306103156.19897-1-rasmus.villemoes@prevas.dk>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190318141051.t2x2ddz73fmksadq@pengutronix.de>
-Content-Language: en-US
+In-Reply-To: <20190306103156.19897-1-rasmus.villemoes@prevas.dk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "stefan@agner.ch" <stefan@agner.ch>, Leonard Crestez <leonard.crestez@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, Robin Gong <yibin.gong@nxp.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>l
+To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Esben Haabendal <esben@geanix.com>, Fabio Estevam <festevam@gmail.com>, Per Christensen <pnc@deif.com>, Rasmus Villemoes <Rasmus.Villemoes@prevas.se>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFV3ZQ0KCVllcywgSSB3aWxsIHBvc3QgYSBWNiwgYnV0IGJlZm9yZSBzZW5kaW5nIFY2LCBj
-YW4geW91IGhlbHAgY29uZmlybSBpZiB5b3UgYWdyZWUgbXkgMiBhbnN3ZXJzIGZvciB5b3VyIGxh
-c3QgY29tbWVudHMsIHN1Y2ggYXMgdGhlIGNvdW50ZXIgZGlzYWJsZSBmb3IgY2hhbmdpbmcgcHJl
-c2NhbGUgYW5kIHRoZSBtdXRleCBsb2NrIGluIC5hcHBseSBmdW5jdGlvbj8NCg0KQmVzdCBSZWdh
-cmRzIQ0KQW5zb24gSHVhbmcNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9t
-OiBVd2UgS2xlaW5lLUvDtm5pZyBbbWFpbHRvOnUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5k
-ZV0NCj4gU2VudDogMjAxOeW5tDPmnIgxOOaXpSAyMjoxMQ0KPiBUbzogQW5zb24gSHVhbmcgPGFu
-c29uLmh1YW5nQG54cC5jb20+DQo+IENjOiB0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb207IHJvYmgr
-ZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHNoYXduZ3VvQGtlcm5lbC5v
-cmc7IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsNCj4gZmVz
-dGV2YW1AZ21haWwuY29tOyBsaW51eEBhcm1saW51eC5vcmcudWs7IG90YXZpb0Bvc3N5c3RlbXMu
-Y29tLmJyOw0KPiBzdGVmYW5AYWduZXIuY2g7IExlb25hcmQgQ3Jlc3RleiA8bGVvbmFyZC5jcmVz
-dGV6QG54cC5jb20+Ow0KPiBzY2huaXR6ZWx0b255QGdtYWlsLmNvbTsgamFuLnR1ZXJrQGVtdHJp
-b24uY29tOyBSb2JpbiBHb25nDQo+IDx5aWJpbi5nb25nQG54cC5jb20+OyBsaW51eC1wd21Admdl
-ci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9y
-ZzsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRD
-SCBWNCAyLzVdIHB3bTogQWRkIGkuTVggVFBNIFBXTSBkcml2ZXIgc3VwcG9ydA0KPiANCj4gSGVs
-bG8sDQo+IA0KPiBhcyB5b3UgZ290IHNvbWUgZmVlZGJhY2sgZm9yIHY1IGFscmVhZHkgSSBhc3N1
-bWUgeW91IHdpbGwgcG9zdCBhIHY2Lg0KPiBJJ2xsIHNraXAgcmV2aWV3aW5nIHY1IHRoZW4uDQo+
-IA0KPiBCZXN0IHJlZ2FyZHMNCj4gVXdlDQo+IA0KPiAtLQ0KPiBQZW5ndXRyb25peCBlLksuICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgfCBVd2UgS2xlaW5lLUvDtm5pZyAgICAgICAgICAgIHwN
-Cj4gSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAgICAgICAgICAgIHwNCj4gaHR0cHM6
-Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYl
-MkZ3d3cucA0KPiBlbmd1dHJvbml4LmRlJTJGJmFtcDtkYXRhPTAyJTdDMDElN0NhbnNvbi5odWFu
-ZyU0MG54cC5jb20lN0M3OQ0KPiA3NTE0YWZmZmNiNGY3OTliZjQwOGQ2YWJhYjkxODglN0M2ODZl
-YTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNQ0KPiAlN0MwJTdDMCU3QzYzNjg4NTE1MDcwNjQx
-NzIwMSZhbXA7c2RhdGE9a1Z1dDFYOEp0akdkR09NMmN6eVJSYw0KPiA1ZGk3N0kySHU4ZFF0dGY4
-REpuMUElM0QmYW1wO3Jlc2VydmVkPTAgIHwNCg==
+The patch
+
+   spi: spi-fsl-spi: support use of the SPISEL_BOOT signal on MPC8309
+
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 69b921acae8a5b7feef03921d9b42c3634f3b9d1 Mon Sep 17 00:00:00 2001
+From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Date: Wed, 6 Mar 2019 10:32:05 +0000
+Subject: [PATCH] spi: spi-fsl-spi: support use of the SPISEL_BOOT signal on
+ MPC8309
+
+The MPC8309 has a dedicated signal, SPISEL_BOOT, usually used as chip
+select for the flash device from which the bootloader is loaded. It is
+not an ordinary gpio, but is simply controlled via the SPI_CS register
+in the system configuration.
+
+To allow accessing such a spi slave, we need to teach
+fsl_spi_cs_control() how to control the SPISEL_BOOT signal. To
+distinguish the gpio-controlled slaves, continue to have those use
+chip_select values of 0..ngpios-1, and use chip_select == ngpios for
+the boot flash.
+
+I'm not too happy with all the ifdeffery, but it seems to be necessary
+for guarding the sysdev/fsl_soc.h and use of
+get_immrbase() (spi-fsl-lib.c already contains similar ifdeffery).
+
+Googling suggests that the MPC8306 is similar, with the SPI_CS
+register at the same offset.
+
+Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../devicetree/bindings/spi/fsl-spi.txt       |  4 ++
+ drivers/spi/spi-fsl-lib.h                     |  2 +
+ drivers/spi/spi-fsl-spi.c                     | 40 ++++++++++++++++---
+ 3 files changed, 41 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/fsl-spi.txt b/Documentation/devicetree/bindings/spi/fsl-spi.txt
+index 8854004a1d3a..411375eac54d 100644
+--- a/Documentation/devicetree/bindings/spi/fsl-spi.txt
++++ b/Documentation/devicetree/bindings/spi/fsl-spi.txt
+@@ -18,6 +18,10 @@ Optional properties:
+ - gpios : specifies the gpio pins to be used for chipselects.
+   The gpios will be referred to as reg = <index> in the SPI child nodes.
+   If unspecified, a single SPI device without a chip select can be used.
++- fsl,spisel_boot : for the MPC8306 and MPC8309, specifies that the
++  SPISEL_BOOT signal is used as chip select for a slave device. Use
++  reg = <number of gpios> in the corresponding child node, i.e. 0 if
++  the gpios property is not present.
+ 
+ Example:
+ 	spi@4c0 {
+diff --git a/drivers/spi/spi-fsl-lib.h b/drivers/spi/spi-fsl-lib.h
+index f303f306b38e..483734bc1b1e 100644
+--- a/drivers/spi/spi-fsl-lib.h
++++ b/drivers/spi/spi-fsl-lib.h
+@@ -95,8 +95,10 @@ static inline u32 mpc8xxx_spi_read_reg(__be32 __iomem *reg)
+ 
+ struct mpc8xxx_spi_probe_info {
+ 	struct fsl_spi_platform_data pdata;
++	int ngpios;
+ 	int *gpios;
+ 	bool *alow_flags;
++	__be32 __iomem *immr_spi_cs;
+ };
+ 
+ extern u32 mpc8xxx_spi_tx_buf_u8(struct mpc8xxx_spi *mpc8xxx_spi);
+diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
+index 8f2e97857e8b..3d7b50c65f36 100644
+--- a/drivers/spi/spi-fsl-spi.c
++++ b/drivers/spi/spi-fsl-spi.c
+@@ -39,6 +39,14 @@
+ #include <linux/spi/spi_bitbang.h>
+ #include <linux/types.h>
+ 
++#ifdef CONFIG_FSL_SOC
++#include <sysdev/fsl_soc.h>
++#endif
++
++/* Specific to the MPC8306/MPC8309 */
++#define IMMR_SPI_CS_OFFSET 0x14c
++#define SPI_BOOT_SEL_BIT   0x80000000
++
+ #include "spi-fsl-lib.h"
+ #include "spi-fsl-cpm.h"
+ #include "spi-fsl-spi.h"
+@@ -701,10 +709,17 @@ static void fsl_spi_cs_control(struct spi_device *spi, bool on)
+ 	struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
+ 	struct mpc8xxx_spi_probe_info *pinfo = to_of_pinfo(pdata);
+ 	u16 cs = spi->chip_select;
+-	int gpio = pinfo->gpios[cs];
+-	bool alow = pinfo->alow_flags[cs];
+ 
+-	gpio_set_value(gpio, on ^ alow);
++	if (cs < pinfo->ngpios) {
++		int gpio = pinfo->gpios[cs];
++		bool alow = pinfo->alow_flags[cs];
++
++		gpio_set_value(gpio, on ^ alow);
++	} else {
++		if (WARN_ON_ONCE(cs > pinfo->ngpios || !pinfo->immr_spi_cs))
++			return;
++		iowrite32be(on ? SPI_BOOT_SEL_BIT : 0, pinfo->immr_spi_cs);
++	}
+ }
+ 
+ static int of_fsl_spi_get_chipselects(struct device *dev)
+@@ -712,12 +727,15 @@ static int of_fsl_spi_get_chipselects(struct device *dev)
+ 	struct device_node *np = dev->of_node;
+ 	struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
+ 	struct mpc8xxx_spi_probe_info *pinfo = to_of_pinfo(pdata);
++	bool spisel_boot = IS_ENABLED(CONFIG_FSL_SOC) &&
++		of_property_read_bool(np, "fsl,spisel_boot");
+ 	int ngpios;
+ 	int i = 0;
+ 	int ret;
+ 
+ 	ngpios = of_gpio_count(np);
+-	if (ngpios <= 0) {
++	ngpios = max(ngpios, 0);
++	if (ngpios == 0 && !spisel_boot) {
+ 		/*
+ 		 * SPI w/o chip-select line. One SPI device is still permitted
+ 		 * though.
+@@ -726,6 +744,7 @@ static int of_fsl_spi_get_chipselects(struct device *dev)
+ 		return 0;
+ 	}
+ 
++	pinfo->ngpios = ngpios;
+ 	pinfo->gpios = kmalloc_array(ngpios, sizeof(*pinfo->gpios),
+ 				     GFP_KERNEL);
+ 	if (!pinfo->gpios)
+@@ -769,7 +788,18 @@ static int of_fsl_spi_get_chipselects(struct device *dev)
+ 		}
+ 	}
+ 
+-	pdata->max_chipselect = ngpios;
++#if IS_ENABLED(CONFIG_FSL_SOC)
++	if (spisel_boot) {
++		pinfo->immr_spi_cs = ioremap(get_immrbase() + IMMR_SPI_CS_OFFSET, 4);
++		if (!pinfo->immr_spi_cs) {
++			ret = -ENOMEM;
++			i = ngpios - 1;
++			goto err_loop;
++		}
++	}
++#endif
++
++	pdata->max_chipselect = ngpios + spisel_boot;
+ 	pdata->cs_control = fsl_spi_cs_control;
+ 
+ 	return 0;
+-- 
+2.20.1
