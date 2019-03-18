@@ -1,62 +1,99 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] ARM: l2x0: add L210 write allocate override flag
-Date: Mon, 18 Mar 2019 23:14:05 +0100
-Message-ID: <CACRpkdba=cp-jGvh+pN_Qg5cTFM+=052wiijQMra81QOG62cVQ@mail.gmail.com>
-References: <20190318083053.24197-1-linus.walleij@linaro.org>
- <20190318140439.xmfh66mbktpd55l2@shell.armlinux.org.uk>
+From: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 0/7] scsi: ufs-mediatek: Add UFS support for Mediatek
+ SoC chips
+Date: Tue, 19 Mar 2019 07:19:10 +0800
+Message-ID: <1552951150.30977.72.camel@mtkswgap22>
+References: <1552712687-20186-1-git-send-email-stanley.chu@mediatek.com>
+ <1552712687-20186-2-git-send-email-stanley.chu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190318140439.xmfh66mbktpd55l2@shell.armlinux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1552712687-20186-2-git-send-email-stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: "linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chun-Hung Wu =?UTF-8?Q?=28=E5=B7=AB=E9=A7=BF=E5=AE=8F=29?= <Chun-hung.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kuohong Wang =?UTF-8?Q?=28=E7=8E=8B=E5=9C=8B=E9=B4=BB=29?= <kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Peter Wang =?UTF-8?Q?=28=E7=8E=8B=E4=BF=A1=E5=8F=8B=29?= <peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "avri.altman-Sjgp3cTcYWE@public.gmane.org" <avri.altman-Sjgp3cTcYWE@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chunfeng
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 3:04 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
-> On Mon, Mar 18, 2019 at 09:30:53AM +0100, Linus Walleij wrote:
-> > This adds support for setting the flag bit "write allocate
-> > override" to the L210 variant.
-> >
-> > The "write allocate override" bit is used on the Nomadik STn8815
-> > and is necessary to properly make use of the L210 cache on that
-> > machine without sporadic crashes.
-> >
-> > After this the platform can boot and run without any out-of-tree
-> > patches.
->
-> This is not something that should be done by the kernel but by the
-> firmware - needing this bit set is a basic requirement of having
-> the caches enabled, and if (eg) the boot loader enables the caches
-> it too will suffer this problem.
+Hi Martin,
 
-I see your point. This U-Boot port does not enable the cache, I guess
-because it was a bit unusual for ARM926EJ-S machines to have
-L2 cache at  the time, and I remember U-Boot was not using L2CC for
-a long time (maybe still not?).
+Would you have any further comments?
 
-The Nomadik was unstable for years and then I looked at the
-outoftree vendor kernel and saw that it sets this bit and since I did that
-it has been rock solid.
+Could be this series merged to scsi tree?
 
-I can of course try to recompile and reflash the U-Boot for this
-board but it is stored in NAND flash and if I break it, ugh, I have
-toasted this board and I only have one. So I'm scared about that.
+On Sat, 2019-03-16 at 13:04 +0800, Stanley Chu wrote:
+> Hello,
+> 
+> This patch series adds UFS M-PHY and UFS host driver support in MediaTek chipsets.
+> 
+> In the meantime, re-factors ufshcd_get_pwr_dev_param in vendors' drivers. This function is for vendors to decide finally agreed attributes for power mode change if vendors define
+> their host capability in struct ufs_dev_params. Because it is using by both ufs-qcom and ufs-hisi and also used in ufs-mediatek in this series, simply re-factor it and then every vendors can reuse it.
+> 
+> Changes since v5:
+> -	phy-mtk-ufs: Change mphy_readl/mphy_writel() to inline functions.
+> -	Fix typo in cover letter.
+> 
+> Changes since v4:
+> -	phy-mtk-ufs:
+> 	  * Sort name in Kconfig and Makefile
+> 	  * Drop "inline" and fix symbol name for mphy_set_bit()/mphy_clr_bit().
+> -	dt-bindings: phy-mtk-ufs: Drop "-clk" in clock names.
+> -	dt-bindings: ufs-mediatek:
+> 	  * Change clock name "ufs-clk" to "ufs".
+> 	  * Drop vcc related first. VCC control is planned to be added back by another patch accompanied with VCC/ICC logic fix in ufs common driver.
+> 
+> Changes since v3:
+> -	dt-bindings: Use specific compatible name for both ufs-mediatek and phy-mtk-ufs, remove interrupt-parent and lanes-per-direction in ufs-mediatek, and fix descriptions.
+> 
+> Changes since v2:
+> -	Fix header style with SPDX-License-Identifier declaration used.
+> -	Simplify ufs-phy-mtk to single source file since we has one MPHY version now, and do fixes according to Chunfeng Yun's comments.
+> -	Add dt-bindings of ufs-phy-mtk.
+> 
+> Changes since v1:
+> -	Re-factor ufshcd_get_pwr_dev_param in mediatek/qcom/hisi vendor drivers.
+> -	Introduce ufs-phy-mtk to have a good extension capability for different power control flows in future different MPHY versions.
+> -	Bind ufs-phy-mtk and hook suitable callbacks in ufs-mediatek driver.
+> -	Use PA_LOCAL_TX_LCC_ENABLE attribute defined in unipro.h instead.
+> -	Do some minor format fixes.
+> 
+> Stanley Chu (7):
+>   scsi: ufs: Introduce ufshcd_get_pwr_dev_param
+>   scsi: ufs-qcom: Re-factor ufshcd_get_pwr_dev_param
+>   scsi: ufs-hisi: Re-factor ufshcd_get_pwr_dev_param
+>   dt-bindings: phy: Add document for phy-mtk-ufs
+>   dt-bindings: scsi: ufs: Add document for ufs-mediatek
+>   phy: mediatek: Add UFS M-PHY driver
+>   scsi: ufs-mediatek: Add UFS support for Mediatek SoC chips
+> 
+>  .../devicetree/bindings/phy/phy-mtk-ufs.txt   |  38 ++
+>  .../devicetree/bindings/ufs/ufs-mediatek.txt  |  40 ++
+>  drivers/phy/mediatek/Kconfig                  |  10 +
+>  drivers/phy/mediatek/Makefile                 |   1 +
+>  drivers/phy/mediatek/phy-mtk-ufs.c            | 245 ++++++++++++
+>  drivers/scsi/ufs/Kconfig                      |  14 +
+>  drivers/scsi/ufs/Makefile                     |   1 +
+>  drivers/scsi/ufs/ufs-hisi.c                   | 109 +-----
+>  drivers/scsi/ufs/ufs-mediatek.c               | 368 ++++++++++++++++++
+>  drivers/scsi/ufs/ufs-mediatek.h               |  54 +++
+>  drivers/scsi/ufs/ufs-qcom.c                   | 106 +----
+>  drivers/scsi/ufs/ufshcd-pltfrm.c              |  98 +++++
+>  drivers/scsi/ufs/ufshcd-pltfrm.h              |  21 +
+>  13 files changed, 898 insertions(+), 207 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
+>  create mode 100644 Documentation/devicetree/bindings/ufs/ufs-mediatek.txt
+>  create mode 100644 drivers/phy/mediatek/phy-mtk-ufs.c
+>  create mode 100644 drivers/scsi/ufs/ufs-mediatek.c
+>  create mode 100644 drivers/scsi/ufs/ufs-mediatek.h
+> 
 
-I have been carrying this as an out-of-tree patch for years and I can of
-course continue to do so, I just felt it was a bit sad so I tried
-to diet down the previous patch to the single bit the Nomadik
-needs to set up for it's L2CC to work.
-
-Yours,
-Linus Walleij
+Thanks,
+Stanley
