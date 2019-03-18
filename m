@@ -1,217 +1,385 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [RESEND PATCH v6 00/11] mfd: add support for max77650 PMIC
-Date: Mon, 18 Mar 2019 18:44:18 +0100
-Message-ID: <CAMRc=Mf5itrBMdgAUaMLJ8tWKByPSstZbdKvEhw=_qnsKXdKAg@mail.gmail.com>
-References: <20190318174040.17899-1-brgl@bgdev.pl>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH 5/6] drm/bridge: Add Chipone ICN6211 MIPI-DSI/RGB
+ convertor bridge
+Date: Mon, 18 Mar 2019 23:29:11 +0530
+Message-ID: <CAMty3ZDjq5U3fHAZESuLtx9XMtZmKL=2RG-6QU8UemVtRh-Tuw@mail.gmail.com>
+References: <20190315130825.9005-1-jagan@amarulasolutions.com>
+ <20190315130825.9005-6-jagan@amarulasolutions.com> <20190315133304.vzwy3tbw27e6lum3@flea>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190318174040.17899-1-brgl@bgdev.pl>
+In-Reply-To: <20190315133304.vzwy3tbw27e6lum3@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-pon., 18 mar 2019 o 18:40 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(=
-a):
+On Fri, Mar 15, 2019 at 7:03 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> On Fri, Mar 15, 2019 at 06:38:24PM +0530, Jagan Teki wrote:
+> > ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
+> > It has a flexible configuration of MIPI DSI signal input
+> > and produce RGB565, RGB666, RGB888 output format.
+> >
+> > Add bridge driver for it.
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> >  MAINTAINERS                              |   6 +
+> >  drivers/gpu/drm/bridge/Kconfig           |  10 +
+> >  drivers/gpu/drm/bridge/Makefile          |   1 +
+> >  drivers/gpu/drm/bridge/chipone-icn6211.c | 275 +++++++++++++++++++++++
+> >  4 files changed, 292 insertions(+)
+> >  create mode 100644 drivers/gpu/drm/bridge/chipone-icn6211.c
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 4de80222cffb..e529addd30f5 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -4897,6 +4897,12 @@ T:     git git://anongit.freedesktop.org/drm/drm-misc
+> >  S:   Maintained
+> >  F:   drivers/gpu/drm/bochs/
+> >
+> > +DRM DRIVER FOR CHIPONE ICN6211 MIPI-DSI to RGB CONVERTOR BRIDGE
+> > +M:   Jagan Teki <jagan@amarulasolutions.com>
+> > +S:   Maintained
+> > +F:   drivers/gpu/drm/bridge/chipone-icn6211.c
+> > +F:   Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
+> > +
+> >  DRM DRIVER FOR FARADAY TVE200 TV ENCODER
+> >  M:   Linus Walleij <linus.walleij@linaro.org>
+> >  T:   git git://anongit.freedesktop.org/drm/drm-misc
+> > diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> > index 8840f396a7b6..cd314572e4ed 100644
+> > --- a/drivers/gpu/drm/bridge/Kconfig
+> > +++ b/drivers/gpu/drm/bridge/Kconfig
+> > @@ -36,6 +36,16 @@ config DRM_CDNS_DSI
+> >         Support Cadence DPI to DSI bridge. This is an internal
+> >         bridge and is meant to be directly embedded in a SoC.
+> >
+> > +config DRM_CHIPONE_ICN6211
+> > +     tristate "Chipone ICN6211 MIPI-DSI/RGB converter bridge"
+> > +     depends on DRM && DRM_PANEL
+> > +     depends on OF
+> > +     select DRM_MIPI_DSI
+> > +     help
+> > +       ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
+> > +       It has a flexible configuration of MIPI DSI signal input
+> > +       and produce RGB565, RGB666, RGB888 output format.
+> > +
+> >  config DRM_DUMB_VGA_DAC
+> >       tristate "Dumb VGA DAC Bridge support"
+> >       depends on OF
+> > diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+> > index 4934fcf5a6f8..541fdccad10b 100644
+> > --- a/drivers/gpu/drm/bridge/Makefile
+> > +++ b/drivers/gpu/drm/bridge/Makefile
+> > @@ -1,6 +1,7 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> >  obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+> >  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
+> > +obj-$(CONFIG_DRM_CHIPONE_ICN6211) += chipone-icn6211.o
+> >  obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
+> >  obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
+> >  obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
+> > diff --git a/drivers/gpu/drm/bridge/chipone-icn6211.c b/drivers/gpu/drm/bridge/chipone-icn6211.c
+> > new file mode 100644
+> > index 000000000000..cd2f3505f845
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/bridge/chipone-icn6211.c
+> > @@ -0,0 +1,275 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Copyright (C) 2018 Amarula Solutions
+> > + * Author: Jagan Teki <jagan@amarulasolutions.com>
+> > + */
+> > +
+> > +#include <drm/drm_atomic_helper.h>
+> > +#include <drm/drm_fb_helper.h>
+> > +#include <drm/drm_of.h>
+> > +#include <drm/drm_panel.h>
+> > +#include <drm/drm_print.h>
+> > +#include <drm/drm_probe_helper.h>
+> > +#include <drm/drm_mipi_dsi.h>
+> > +
+> > +#include <linux/delay.h>
+> > +#include <linux/gpio/consumer.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_graph.h>
+> > +
+> > +#define ICN6211_INIT_CMD_LEN         2
+> > +
+> > +struct chipone {
+> > +     struct device *dev;
+> > +     struct drm_bridge bridge;
+> > +     struct drm_connector connector;
+> > +     struct drm_panel *panel;
+> > +
+> > +     struct gpio_desc *reset;
+> > +};
+> > +
+> > +static inline struct chipone *bridge_to_chipone(struct drm_bridge *bridge)
+> > +{
+> > +     return container_of(bridge, struct chipone, bridge);
+> > +}
+> > +
+> > +static inline
+> > +struct chipone *connector_to_chipone(struct drm_connector *connector)
+> > +{
+> > +     return container_of(connector, struct chipone, connector);
+> > +}
+> > +
+> > +struct icn6211_init_cmd {
+> > +     u8 data[ICN6211_INIT_CMD_LEN];
+> > +};
+> > +
+> > +static const struct icn6211_init_cmd icn6211_init_cmds[] = {
+> > +     { .data = { 0x7A, 0xC1 } },
+> > +     { .data = { 0x20, 0x20 } },
+> > +     { .data = { 0x21, 0xE0 } },
+> > +     { .data = { 0x22, 0x13 } },
+> > +     { .data = { 0x23, 0x28 } },
+> > +     { .data = { 0x24, 0x30 } },
+> > +     { .data = { 0x25, 0x28 } },
+> > +     { .data = { 0x26, 0x00 } },
+> > +     { .data = { 0x27, 0x0D } },
+> > +     { .data = { 0x28, 0x03 } },
+> > +     { .data = { 0x29, 0x1D } },
+> > +     { .data = { 0x34, 0x80 } },
+> > +     { .data = { 0x36, 0x28 } },
+> > +     { .data = { 0xB5, 0xA0 } },
+> > +     { .data = { 0x5C, 0xFF } },
+> > +     { .data = { 0x2A, 0x01 } },
+> > +     { .data = { 0x56, 0x92 } },
+> > +     { .data = { 0x6B, 0x71 } },
+> > +     { .data = { 0x69, 0x2B } },
+> > +     { .data = { 0x10, 0x40 } },
+> > +     { .data = { 0x11, 0x98 } },
+> > +     { .data = { 0xB6, 0x20 } },
+> > +     { .data = { 0x51, 0x20 } },
+> > +     { .data = { 0x09, 0x10 } },
+> > +};
 >
-> This series missed the last merge window so resending rebased on top
-> of v5.1-rc1 with no functional changes.
->
-> ---
->
-> This series adds support for max77650 ultra low-power PMIC. It provides
-> the core mfd driver and a set of five sub-drivers for the regulator,
-> power supply, gpio, leds and input subsystems.
->
-> Patches 1-4 add the DT binding documents. Patch 5 documents mfd_add_devic=
-es().
-> Patches 6-10 add all drivers. Last patch adds a MAINTAINERS entry for thi=
-s
-> device.
->
-> The regulator part is already upstream.
->
-> v1 -> v2:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> General:
-> - use C++ style comments for the SPDX license identifier and the
->   copyright header
-> - s/MODULE_LICENSE("GPL")/MODULE_LICENSE("GPL v2")/
-> - lookup the virtual interrupt numbers in the MFD driver, setup
->   resources for child devices and use platform_get_irq_byname()
->   in sub-drivers
-> - picked up review tags
-> - use devm_request_any_context_irq() for interrupt requests
->
-> LEDs:
-> - changed the max77650_leds_ prefix to max77650_led_
-> - drop the max77650_leds structure as the only field it held was the
->   regmap pointer, move said pointer to struct max77650_led
-> - change the driver name to "max77650-led"
-> - drop the last return value check and return the result of
->   regmap_write() directly
-> - change the labeling scheme to one consistent with other LED drivers
->
-> ONKEY:
-> - drop the key reporting helper and call the input functions directly
->   from interrupt handlers
-> - rename the rv local variable to error
-> - drop parent device asignment
->
-> Regulator:
-> - drop the unnecessary init_data lookup from the driver code
-> - drop unnecessary include
->
-> Charger:
-> - disable the charger on driver remove
-> - change the power supply type to POWER_SUPPLY_TYPE_USB
->
-> GPIO:
-> - drop interrupt support until we have correct implementation of hierarch=
-ical
->   irqs in gpiolib
->
-> v2 -> v3:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> General:
-> - dropped regulator patches as they're already in Mark Brown's branch
->
-> LED:
-> - fix the compatible string in the DT binding example
-> - use the max_brightness property
-> - use a common prefix ("MAX77650_LED") for all defines in the driver
->
-> MFD:
-> - add the MODULE_DEVICE_TABLE()
-> - add a sentinel to the of_device_id array
-> - constify the pointers to irq names
-> - use an enum instead of defines for interrupt indexes
->
-> v3 -> v4:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> GPIO:
-> - as discussed with Linus Walleij: the gpio-controller is now part of
->   the core mfd module (we don't spawn a sub-node anymore), the binding
->   document for GPIO has been dropped, the GPIO properties have been
->   defined in the binding document for the mfd core, the interrupt
->   functionality has been reintroduced with the irq directly passed from
->   the mfd part
-> - due to the above changes the Reviewed-by tag from Linus was dropped
->
-> v4 -> v5:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> General:
-> - add a patch documenting mfd_add_devices()
->
-> MFD:
-> - pass the regmap irq_chip irq domain to mfd over mfd_add_devices so that
->   the hw interrupts from resources can be correctly mapped to virtual irq=
-s
-> - remove the enum listing cell indexes
-> - extend Kconfig help
-> - add a link to the programming manual
-> - use REGMAP_IRQ_REG() for regmap interrupts (except for GPI which has
->   is composed of two hw interrupts for rising and falling edge)
-> - add error messages in probe
-> - use PLATFORM_DEVID_NONE constant in devm_mfd_add_devices()
-> - set irq_base to 0 in regmap_add_irq_chip() as other users to, it's only
->   relevant if it's > 0
->
-> Charger:
-> - use non-maxim specific property names for minimum input voltage and cur=
-rent
->   limit
-> - code shrink by using the enable/disable charger helpers everywhere
-> - use more descriptive names for constants
->
-> Onkey:
-> - use EV_SW event type for slide mode
->
-> LED:
-> - remove stray " from Kconfig help
->
-> v5 -> v6:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> MFD:
-> - remove stray spaces in the binding document
-> - rename the example dt node
-> - remove unnecessary interrupt-parent property from the bindings
->
-> LED:
-> - add a missing dependency on LEDS_CLASS to Kconfig
->
-> Onkey:
-> - use boolean for the slide button property
->
-> Charger:
-> - fix the property names in DT example
-> - make constants even more readable
->
-> Bartosz Golaszewski (11):
->   dt-bindings: mfd: add DT bindings for max77650
->   dt-bindings: power: supply: add DT bindings for max77650
->   dt-bindings: leds: add DT bindings for max77650
->   dt-bindings: input: add DT bindings for max77650
->   mfd: core: document mfd_add_devices()
->   mfd: max77650: new core mfd driver
->   power: supply: max77650: add support for battery charger
->   gpio: max77650: add GPIO support
->   leds: max77650: add LEDs support
->   input: max77650: add onkey support
->   MAINTAINERS: add an entry for max77650 mfd driver
->
->  .../bindings/input/max77650-onkey.txt         |  26 ++
->  .../bindings/leds/leds-max77650.txt           |  57 +++
->  .../devicetree/bindings/mfd/max77650.txt      |  46 +++
->  .../power/supply/max77650-charger.txt         |  27 ++
->  MAINTAINERS                                   |  14 +
->  drivers/gpio/Kconfig                          |   7 +
->  drivers/gpio/Makefile                         |   1 +
->  drivers/gpio/gpio-max77650.c                  | 190 +++++++++
->  drivers/input/misc/Kconfig                    |   9 +
->  drivers/input/misc/Makefile                   |   1 +
->  drivers/input/misc/max77650-onkey.c           | 121 ++++++
->  drivers/leds/Kconfig                          |   6 +
->  drivers/leds/Makefile                         |   1 +
->  drivers/leds/leds-max77650.c                  | 147 +++++++
->  drivers/mfd/Kconfig                           |  14 +
->  drivers/mfd/Makefile                          |   1 +
->  drivers/mfd/max77650.c                        | 234 +++++++++++
->  drivers/mfd/mfd-core.c                        |  14 +
->  drivers/power/supply/Kconfig                  |   7 +
->  drivers/power/supply/Makefile                 |   1 +
->  drivers/power/supply/max77650-charger.c       | 366 ++++++++++++++++++
->  include/linux/mfd/max77650.h                  |  59 +++
->  22 files changed, 1349 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/max77650-onke=
-y.txt
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-max77650.=
-txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
->  create mode 100644 Documentation/devicetree/bindings/power/supply/max776=
-50-charger.txt
->  create mode 100644 drivers/gpio/gpio-max77650.c
->  create mode 100644 drivers/input/misc/max77650-onkey.c
->  create mode 100644 drivers/leds/leds-max77650.c
->  create mode 100644 drivers/mfd/max77650.c
->  create mode 100644 drivers/power/supply/max77650-charger.c
->  create mode 100644 include/linux/mfd/max77650.h
->
-> --
-> 2.20.1
->
+> What are those commands supposed to be? Some of them at least look
+> pretty standard (and have proper functions):
+> MIPI_DCS_EXIT_INVERT_MODE, _SET_DISPLAY_ON, _SET_TEAR_OFF, etc.
 
-Sorry for spamming - I got a strange error from git send-email:
+As I said in previous Allwinner MIPI-DSI fixes and new code support
+series. For this bridge we don't have programming guide or any
+datasheet. The initialization sequence is taken from BSP panel driver
+and analyzed based on other references mentioned here [1]. Some of the
+command sequence value are based on the timings other based on
+standard MIPI commands as you said. Do you need to add comments to
+describe the same or some other changes?
 
-Died at /<snip!>libexec/git-core/git-send-email line 1542.
+>
+> > +static int chipone_get_modes(struct drm_connector *connector)
+> > +{
+> > +     struct chipone *icn = connector_to_chipone(connector);
+> > +
+> > +     return drm_panel_get_modes(icn->panel);
+> > +}
+> > +
+> > +static const
+> > +struct drm_connector_helper_funcs chipone_connector_helper_funcs = {
+> > +     .get_modes = chipone_get_modes,
+> > +};
+> > +
+> > +static const struct drm_connector_funcs chipone_connector_funcs = {
+> > +     .fill_modes = drm_helper_probe_single_connector_modes,
+> > +     .destroy = drm_connector_cleanup,
+> > +     .reset = drm_atomic_helper_connector_reset,
+> > +     .atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+> > +     .atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+> > +};
+> > +
+> > +static void chipone_disable(struct drm_bridge *bridge)
+> > +{
+> > +     struct chipone *icn = bridge_to_chipone(bridge);
+> > +     int ret = drm_panel_disable(bridge_to_chipone(bridge)->panel);
+> > +
+> > +     if (ret < 0)
+> > +             DRM_DEV_ERROR(icn->dev, "error disabling panel (%d)\n", ret);
+> > +}
+> > +
+> > +static void chipone_post_disable(struct drm_bridge *bridge)
+> > +{
+> > +     struct chipone *icn = bridge_to_chipone(bridge);
+> > +     int ret;
+> > +
+> > +     ret = drm_panel_unprepare(icn->panel);
+> > +     if (ret < 0)
+> > +             DRM_DEV_ERROR(icn->dev, "error unpreparing panel (%d)\n", ret);
+> > +
+> > +     msleep(50);
+> > +
+> > +     gpiod_set_value(icn->reset, 0);
+> > +}
+> > +
+> > +static void chipone_pre_enable(struct drm_bridge *bridge)
+> > +{
+> > +     struct chipone *icn = bridge_to_chipone(bridge);
+> > +     struct mipi_dsi_device *dsi = to_mipi_dsi_device(icn->dev);
+> > +     unsigned int i;
+> > +     int ret;
+> > +
+> > +     gpiod_set_value(icn->reset, 0);
+> > +     msleep(20);
+> > +
+> > +     gpiod_set_value(icn->reset, 1);
+> > +     msleep(50);
+> > +
+> > +     for (i = 0; i < ARRAY_SIZE(icn6211_init_cmds); i++) {
+> > +             const struct icn6211_init_cmd *cmd = &icn6211_init_cmds[i];
+> > +
+> > +             ret = mipi_dsi_generic_write(dsi, cmd->data,
+> > +                                          ICN6211_INIT_CMD_LEN);
+> > +             if (ret < 0) {
+> > +                     DRM_DEV_ERROR(icn->dev,
+> > +                                   "failed to write cmd %d: %d\n", i, ret);
+> > +                     return;
+> > +             }
+> > +     }
+> > +
+> > +     ret = drm_panel_prepare(icn->panel);
+> > +     if (ret < 0)
+> > +             DRM_DEV_ERROR(icn->dev, "error preparing panel (%d)\n", ret);
+> > +}
+> > +
+> > +static void chipone_enable(struct drm_bridge *bridge)
+> > +{
+> > +     struct chipone *icn = bridge_to_chipone(bridge);
+> > +     int ret = drm_panel_enable(icn->panel);
+> > +
+> > +     if (ret < 0)
+> > +             DRM_DEV_ERROR(icn->dev, "error enabling panel (%d)\n", ret);
+> > +}
+> > +
+> > +static int chipone_attach(struct drm_bridge *bridge)
+> > +{
+> > +     struct chipone *icn = bridge_to_chipone(bridge);
+> > +     struct drm_device *drm = bridge->dev;
+> > +     int ret;
+> > +
+> > +     icn->connector.polled = DRM_CONNECTOR_POLL_HPD;
+> > +     ret = drm_connector_init(drm, &icn->connector,
+> > +                              &chipone_connector_funcs,
+> > +                              DRM_MODE_CONNECTOR_Unknown);
+>
+> It should be a DRM_MODE_CONNECTOR_DPI connector.
 
-Bart
+Since the output connector is RGB, I have used 'Unknown' since we
+follow similar connector type in sun4i_rgb.c So these RGB comes under
+parallel display interface we can have to use this DPI connector is
+it?
+
+>
+> > +     if (ret) {
+> > +             DRM_ERROR("Failed to initialize connector\n");
+> > +             return ret;
+> > +     }
+> > +
+> > +     drm_connector_helper_add(&icn->connector,
+> > +                              &chipone_connector_helper_funcs);
+> > +     drm_connector_attach_encoder(&icn->connector, bridge->encoder);
+> > +     drm_panel_attach(icn->panel, &icn->connector);
+> > +     icn->connector.funcs->reset(&icn->connector);
+> > +     drm_fb_helper_add_one_connector(drm->fb_helper, &icn->connector);
+>
+> What do you need that for?
+
+I took the reference code, sorry it is accidentally present will
+wind-up in next version.
+
+>
+> > +     drm_connector_register(&icn->connector);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void chipone_detach(struct drm_bridge *bridge)
+> > +{
+> > +     struct chipone *icn = bridge_to_chipone(bridge);
+> > +     struct drm_device *drm = bridge->dev;
+> > +
+> > +     drm_connector_unregister(&icn->connector);
+> > +     drm_fb_helper_remove_one_connector(drm->fb_helper, &icn->connector);
+> > +     drm_panel_detach(icn->panel);
+> > +     icn->panel = NULL;
+> > +     drm_connector_put(&icn->connector);
+> > +}
+> > +
+> > +static const struct drm_bridge_funcs chipone_bridge_funcs = {
+> > +     .disable = chipone_disable,
+> > +     .post_disable = chipone_post_disable,
+> > +     .enable = chipone_enable,
+> > +     .pre_enable = chipone_pre_enable,
+> > +     .attach = chipone_attach,
+> > +     .detach = chipone_detach,
+> > +};
+> > +
+> > +static int chipone_probe(struct mipi_dsi_device *dsi)
+> > +{
+> > +     struct device *dev = &dsi->dev;
+> > +     struct chipone *icn;
+> > +     int ret;
+> > +
+> > +     icn = devm_kzalloc(dev, sizeof(struct chipone), GFP_KERNEL);
+> > +     if (!icn)
+> > +             return -ENOMEM;
+> > +
+> > +     mipi_dsi_set_drvdata(dsi, icn);
+> > +
+> > +     icn->dev = dev;
+> > +     dsi->lanes = 4;
+> > +     dsi->format = MIPI_DSI_FMT_RGB888;
+> > +     dsi->mode_flags = MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
+> > +
+> > +     icn->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> > +     if (IS_ERR(icn->reset)) {
+> > +             DRM_DEV_ERROR(dev, "no reset GPIO pin provided\n");
+> > +             return PTR_ERR(icn->reset);
+> > +     }
+> > +
+> > +     ret = drm_of_find_panel_or_bridge(icn->dev->of_node, 1, 0,
+> > +                                       &icn->panel, NULL);
+> > +     if (ret && ret != -EPROBE_DEFER) {
+> > +             DRM_DEV_ERROR(dev, "failed to find panel (ret = %d)\n", ret);
+> > +             return ret;
+> > +     }
+> > +
+> > +     icn->bridge.funcs = &chipone_bridge_funcs;
+> > +     icn->bridge.of_node = dev->of_node;
+> > +
+> > +     drm_bridge_add(&icn->bridge);
+> > +
+> > +     ret = mipi_dsi_attach(dsi);
+> > +     if (ret < 0) {
+> > +             drm_bridge_remove(&icn->bridge);
+> > +             DRM_DEV_ERROR(dev, "failed to attach dsi (ret = %d)\n", ret);
+> > +     }
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static int chipone_remove(struct mipi_dsi_device *dsi)
+> > +{
+> > +     struct chipone *icn = mipi_dsi_get_drvdata(dsi);
+> > +
+> > +     mipi_dsi_detach(dsi);
+> > +     drm_bridge_remove(&icn->bridge);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct of_device_id chipone_of_match[] = {
+> > +     { .compatible = "bananapi,icn6211" },
+>
+> This should have your generic compatible listed
+
+Any idea why? usually it can be know attached device associated IC
+chip isn't it? I can see this similar approach in some panel driver
+which I commented in 4/5
+https://patchwork.freedesktop.org/patch/292416/
+
+[1] https://patchwork.kernel.org/patch/10617921/
