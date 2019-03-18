@@ -1,45 +1,43 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v1 6/6] clk: hi6220: use CLK_OF_DECLARE_DRIVER
-Date: Mon, 18 Mar 2019 13:21:29 -0700
-Message-ID: <155294048956.20095.14072308972262767231@swboyd.mtv.corp.google.com>
-References: <1552937931-23050-1-git-send-email-peter.griffin@linaro.org> <1552937931-23050-7-git-send-email-peter.griffin@linaro.org>
+Subject: Re: [V2 1/2] clk: imx6q: remove unsupported pll4_audio_div
+Date: Mon, 18 Mar 2019 13:25:01 -0700
+Message-ID: <155294070124.20095.17167777488324467790@swboyd.mtv.corp.google.com>
+References: <1552304271.2453.12.camel@pengutronix.de> <1552319997-24622-1-git-send-email-eric@nelint.com> <1552319997-24622-2-git-send-email-eric@nelint.com> <0cf890a4-20b0-13ce-14d3-06f7c3227655@nelint.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552937931-23050-7-git-send-email-peter.griffin@linaro.org>
+In-Reply-To: <0cf890a4-20b0-13ce-14d3-06f7c3227655@nelint.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>, airlied@linux.ie, daniel@ffwll.ch, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, p.zabel@pengutronix.de, robh+dt@kernel.org, xuwei5@hisilicon.com
-Cc: john.stultz@linaro.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, yuq825@gmail.com
+To: Eric Nelson <eric@nelint.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: anson.huang@nxp.com, colin.didier@devialet.com, festevam@gmail.com, kernel@pengutronix.de, l.stach@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org, tiny.windzz@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Peter Griffin (2019-03-18 12:38:51)
-> As now we also need to probe in the reset driver as well.
+Quoting Eric Nelson (2019-03-11 13:48:55)
+>  > On March 11, 2019, 6:35 p.m. UTC, Stephen Boyd wrote:
+> > Quoting Eric Nelson (2019-03-11 08:59:56)
+> >> + *
+> >> + * Renamed to _BROKEN to prevent inadvertent use,
+> >> + * but reserved the array slot to maintain DT binary
+> >> + * compatibility.
+> >> + */
+> >> +#define IMX6QDL_CLK_PLL4_AUDIO_DIV_BROKEN      203
+> >=20
+> > But it breaks the build. I don't get it. Just add a comment indicating
+> > it shouldn't be used? That breaks the cross-tree dependency chain and
+> > lets clk tree merge the clk driver part and arm-soc merge the dts part.
+> The device tree update also requires the update to clk-imx6q.c
+> for proper run-time operation, so I don't see how these two parts
+> can be separated.
 >=20
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
->  drivers/clk/hisilicon/clk-hi6220.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I thought about leaving the PLL4_AUDIO_DIV clock in place but
+> turning it into a dummy (placeholder), but that might lead others
+> down the long path I traversed before I found out that my manual
+> was old and the clock didn't function.
 
-Doesn't this need to be squashed with the reset driver bits so we don't
-have a bisection hole?
-
->=20
-> diff --git a/drivers/clk/hisilicon/clk-hi6220.c b/drivers/clk/hisilicon/c=
-lk-hi6220.c
-> index a87809d..952ffe2 100644
-> --- a/drivers/clk/hisilicon/clk-hi6220.c
-> +++ b/drivers/clk/hisilicon/clk-hi6220.c
-> @@ -89,7 +89,7 @@ static void __init hi6220_clk_ao_init(struct device_nod=
-e *np)
->         hisi_clk_register_gate_sep(hi6220_separated_gate_clks_ao,
->                                 ARRAY_SIZE(hi6220_separated_gate_clks_ao)=
-, clk_data_ao);
->  }
-> -CLK_OF_DECLARE(hi6220_clk_ao, "hisilicon,hi6220-aoctrl", hi6220_clk_ao_i=
-nit);
-> +CLK_OF_DECLARE_DRIVER(hi6220_clk_ao, "hisilicon,hi6220-aoctrl", hi6220_c=
-lk_ao_init);
-
-Can you also add a comment indicating why/what is the other driver that
-is probing the same device node?
+I'm not suggesting that it's left as a dummy forever, just until the
+other trees can merge their parts of this series and so that these
+patches can be applied in order that they're sent. Right now, the kbuild
+robot fails on this patch series because this patch intentionally breaks
+the build. Please don't do that. Send patch series that are bisectable
+so that the build doesn't break in the middle.
