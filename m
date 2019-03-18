@@ -1,56 +1,82 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 4/6] nvmem: sunxi_sid: Read out data in
- native format
-Date: Mon, 18 Mar 2019 09:42:12 +0100
-Message-ID: <20190318084212.lv2lorskizl65uzg@flea>
-References: <20190318073354.12151-1-wens@kernel.org>
- <20190318073354.12151-5-wens@kernel.org>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Erin Lo <erin.lo@mediatek.com>
+Subject: [PATCH v9] Add basic and clock support for Mediatek MT8183 SoC
+Date: Mon, 18 Mar 2019 16:42:31 +0800
+Message-ID: <1552898552-13045-1-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="pby5l7iw3zraifpt"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2NTXXSAKGQE6PSMQ6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190318073354.12151-5-wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, erin.lo@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+MT8183 is a SoC based on 64bit ARMv8 architecture.
+It contains 4 CA53 and 4 CA73 cores.
+MT8183 share many HW IP with MT65xx series.
+This patchset was tested on MT8183 evaluation board and use correct clock to shell.
 
---pby5l7iw3zraifpt
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Based on v5.1-rc1 and
+http://lists.infradead.org/pipermail/linux-mediatek/2019-March/017963.html
 
-Hi,
+Change in v9:
+Remove pio node since binding is not documented yet
 
-On Mon, Mar 18, 2019 at 03:33:52PM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->
-> Originally the SID e-fuses were thought to be in big-endian format.
-> Later sources show that they are in fact native or little-endian.
-> The most compelling evidence is the thermal sensor calibration data,
-> which is a set of one to three 16-bit values. In native-endian they
-> are in 16-bit cells with increasing offsets, whereas with big-endian
-> they are in the wrong order, and a gap with no data will show if there
-> are one or three cells.
->
-> Switch to a native endian representation for the nvmem device. For the
-> H3, the register read-out method was already returning data in native
-> endian. This only affects the other SoCs.
->
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Change in v8:
+1. Fix interrupt-parent of pio node
+2. Remove pinfunc.h and spi node patches
 
-I thought only the newer SoCs were impacted by this issue?
+Change in v7:
+1. Place all the MMIO peripherals under one or more simple-bus nodes
+2. Make the pinfunc.h and spi node into seperate patch
+3. Modify SPIs pamerater from 4 back to 3
+   and remove patch "support 4 interrupt parameters for sysirq"
+4. Rename intpol-controller to interrupt-controller
+5. Rename pinctrl@1000b000 to pinctrl@10005000
+
+Change in v6:
+1. Remove power and iommu nodes
+2. Fix dtb build warning
+3. Fix pinctrl binding doc
+4. Fix '_' in node names
+
+Change in v5:
+1. Collect all device tree nodes to the last patch
+2. Add PMU
+3. Add Signed-off-by
+4. Remove clock driver code and binding doc
+5. Add pinctrl, iommu, spi, and pwrap nodes
+
+Change in v4:
+1. Correct syntax error in dtsi
+2. Add MT8183 clock support
+
+Change in v3:
+1. Fill out GICC, GICH, GICV regions
+2. Update Copyright to 2018
+
+Change in v2:
+1. Split dt-bindings into different patches
+2. Correct bindings for supported SoCs (mtk-uart.txt)
+
+Ben Ho (1):
+  arm64: dts: Add Mediatek SoC MT8183 and evaluation board dts and
+    Makefile
+
+ arch/arm64/boot/dts/mediatek/Makefile       |   1 +
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts |  31 +++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 311 ++++++++++++++++++++++++++++
+ 3 files changed, 343 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183.dtsi
 
 --
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---pby5l7iw3zraifpt--
+1.9.1
