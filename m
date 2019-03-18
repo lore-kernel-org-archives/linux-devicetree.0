@@ -1,75 +1,33 @@
-From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH v1 2/3] ARM: dts: stm32: enable Vivante GPU support on
- stm32mp157c-ed1 board
-Date: Mon, 18 Mar 2019 10:21:24 +0100
-Message-ID: <2dcacbfb-2306-5147-b2d3-43be27319e5a@st.com>
-References: <1550246316-9747-1-git-send-email-pierre-yves.mordret@st.com>
- <1550246316-9747-3-git-send-email-pierre-yves.mordret@st.com>
- <1550247269.2546.58.camel@pengutronix.de>
- <2cf49be6-474d-350b-8dfd-3fe1bf38af3a@st.com>
+From: Andreas Schwab <schwab@suse.de>
+Subject: Re: [PATCH v9 0/2] PWM support for HiFive Unleashed
+Date: Mon, 18 Mar 2019 10:24:33 +0100
+Message-ID: <mvmbm28r0vi.fsf@suse.de>
+References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
+        <mvmimwotn60.fsf@suse.de>
+        <CAJ2_jOE3RH9FyFg_NATcLEpHv5y89zdh06Ji2x8n3C_gp-wn6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2cf49be6-474d-350b-8dfd-3fe1bf38af3a@st.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, Philippe Cornu <philippe.cornu@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJ2_jOE3RH9FyFg_NATcLEpHv5y89zdh06Ji2x8n3C_gp-wn6A@mail.gmail.com>
+        (Yash Shah's message of "Fri, 15 Mar 2019 17:19:59 +0530")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yash Shah <yash.shah@sifive.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTHVjYXMsCgpJJ20gZ29pbmcgdG8gcmVzZW5kIGEgbmV3IHZlcnNpb24gb24gdGhpcyBEVC4g
-SSBoYXZlIHRvIG1vdmUgdGhpcyByZWdpb24gZWxzZXdoZXJlLgoKSG93ZXZlciBJIGRpZG4ndCBn
-ZXQgeW91ciBmZWVkYmFjayBhYm91dCBzdGF0ZW1lbnQgSSBkaWQuCldvdWxkIGl0IGJlIHBvc3Np
-YmxlIHRvIGhhdmUgeW91ciBmZWVsaW5ncyA/CgpUaGFua3MgOikKCk9uIDIvMjUvMTkgNDo1NyBQ
-TSwgUGllcnJlIFl2ZXMgTU9SRFJFVCB3cm90ZToKPiBIaSBhZ2FpbiwKPiAKPiBPbiAyLzE1LzE5
-IDU6MTQgUE0sIEx1Y2FzIFN0YWNoIHdyb3RlOgo+PiBBbSBGcmVpdGFnLCBkZW4gMTUuMDIuMjAx
-OSwgMTY6NTggKzAxMDAgc2NocmllYiBQaWVycmUtWXZlcyBNT1JEUkVUOgo+Pj4gRW5hYmxlIFZp
-dmFudGUgR1BVIGRyaXZlciBmb3Igc3RtMzJtcDE1N2MtZWQxIGJvYXJkLgo+Pj4KPj4+IFNpZ25l
-ZC1vZmYtYnk6IFBpZXJyZS1ZdmVzIE1PUkRSRVQgPHBpZXJyZS15dmVzLm1vcmRyZXRAc3QuY29t
-Pgo+Pj4gLS0tCj4+PiDCoGFyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTdjLWVkMS5kdHMgfCAx
-NiArKysrKysrKysrKysrKysrCj4+PiDCoDEgZmlsZSBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCsp
-Cj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTdjLWVkMS5k
-dHMKPj4+IGIvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJtcDE1N2MtZWQxLmR0cwo+Pj4gaW5kZXgg
-OThlZjdhMC4uNzkyZjQwMiAxMDA2NDQKPj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMy
-bXAxNTdjLWVkMS5kdHMKPj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTdjLWVk
-MS5kdHMKPj4+IEBAIC0yMCw2ICsyMCwxNyBAQAo+Pj4gwqAJCXJlZyA9IDwweEMwMDAwMDAwIDB4
-NDAwMDAwMDA+Owo+Pj4gwqAJfTsKPj4+IMKgCj4+PiArCXJlc2VydmVkLW1lbW9yeSB7Cj4+PiAr
-CQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4+ICsJCSNzaXplLWNlbGxzID0gPDE+Owo+Pj4gKwkJ
-cmFuZ2VzOwo+Pj4gKwo+Pj4gKwkJZ3B1X3Jlc2VydmVkOiBncHVAZjgwMDAwMDAgewo+Pj4gKwkJ
-CXJlZyA9IDwweGY4MDAwMDAwIDB4ODAwMDAwMD47Cj4+PiArCQkJbm8tbWFwOwo+Pj4gKwkJfTsK
-Pj4+ICsJfTsKPj4+ICsKPj4KPj4gSSBkb24ndCB0aGluayB5b3UgbmVlZCB0aGlzLiBUaGUgR1BV
-IGRyaXZlciB1c2VzIHZlcnkgbGl0dGxlIGNvbnRpZyBkbWEKPj4gbWVtb3J5LiBNb3N0IG9mIHRo
-ZSBHUFUgbWVtb3J5IGlzIG9yZGluYXJ5IHBhZ2VkIG1lbW9yeSwgc28gc2V0dGluZwo+PiBhc2lk
-ZSBhIHByaXZhdGUgbWVtb3J5IHJlZ2lvbiBvZiB0aGlzIHNpemUgaXMgYSB3YXN0ZSBvZiBtZW1v
-cnkuIE1vc3QKPj4gbGlrZWx5IHlvdSBjYW4ganVzdCBhbGxvdyB0aGUgR1BVIGRyaXZlciB0byB1
-c2UgdGhlIHN5c3RlbSBnbG9iYWwgQ01BCj4+IHJlZ2lvbi4KPiAKPiBUaGF0J3MgY29ycmVjdCwg
-YnV0IHRoaXMgbWVtb3J5IGFyZWEgaXMgYWxzbyB1c2VkIGZvciBVLUJPT1Qgc3BsYXNoIHNjcmVl
-bgo+IHJlbmRlcmluZy4KPiBNb3Jlb3ZlciwgZXZlbiBpZiB3ZSBsYWNrIG9mIHByb29mIGFzIGZv
-ciB0b2RheSwgaXQgdHVybnMgb3V0IHBlcmZvcm1hbmNlcyBhcmUKPiBiZXR0ZXIgd2l0aCB0aGlz
-IHJlZ2lvbiBhcyByZWR1Y2VzIE1NVSBhY2Nlc3NlcyAod2l0aCBWaXZhbnRlIGRyaXZlcikKPiBF
-dmVudHVhbGx5IHVzaW5nIEFuZHJvaWQgZnJhbWV3b3JrIGFwcGxpY2F0aW9uIGlzIHN0YXJ0ZWQg
-bW9yZSBnZW50bHkgd2hhdGV2ZXIKPiBwcmV2aW91cyBhcHBsaWNhdGlvbiBhbmQgQ01BIHN0YXR1
-cyhmcmFnbWVudGF0aW9uKS4KPiBQcm92aWRlZCB0aGlzIG1lbW9yeSwgQ01BIHJlZ2lvbiBpcyBk
-ZWNyZWFzZWQgYWNjb3JkaW5nbHkuCj4gCj4gSG9wZSBpdCBjbGFyaWZpZXMuCj4gCj4gUmVnYXJk
-cwo+Pgo+PiBSZWdhcmRzLAo+PiBMdWNhcwo+Pgo+Pgo+Pj4gwqAJYWxpYXNlcyB7Cj4+PiDCoAkJ
-c2VyaWFsMCA9ICZ1YXJ0NDsKPj4+IMKgCX07Cj4+PiBAQCAtNTMsNiArNjQsMTEgQEAKPj4+IMKg
-CXN0YXR1cyA9ICJva2F5IjsKPj4+IMKgfTsKPj4+IMKgCj4+PiArJmdwdSB7Cj4+PiArCWNvbnRp
-Z3VvdXMtYXJlYSA9IDwmZ3B1X3Jlc2VydmVkPjsKPj4+ICsJc3RhdHVzID0gIm9rYXkiOwo+Pj4g
-K307Cj4+PiArCj4+PiDCoCZpMmM0IHsKPj4+IMKgCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7
-Cj4+PiDCoAlwaW5jdHJsLTAgPSA8JmkyYzRfcGluc19hPjsKPiAKPiBfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
-ZyBsaXN0Cj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCj4gCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0t
-a2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
-bmVsCg==
+On Mär 15 2019, Yash Shah <yash.shah@sifive.com> wrote:
+
+> Use the open-source FSBL from:
+> https://github.com/sifive/freedom-u540-c000-bootloader
+>
+> Modify the fsbl/ux00_fsbl.dts file and re-build the fsbl.bin
+
+That doesn't even compile.
+
+Andreas.
+
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
