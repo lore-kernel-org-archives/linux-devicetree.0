@@ -1,7 +1,7 @@
 From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v2] arm64: dts: fsl: imx8mq: enable the thermal management unit (TMU)
-Date: Mon, 18 Mar 2019 08:48:49 -0700
-Message-ID: <20190318154849.25456-1-angus@akkea.ca>
+Subject: [PATCH] arm64: dts: fsl: imx8mq: enable the multi sensor TMU
+Date: Mon, 18 Mar 2019 09:04:48 -0700
+Message-ID: <20190318160448.28964-1-angus@akkea.ca>
 References: <20190311213124.29325-1-angus@akkea.ca>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190311213124.29325-1-angus@akkea.ca>
@@ -10,20 +10,20 @@ To: angus@akkea.ca, andrew.smirnov@gmail.com
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Carlo Caione <ccaione@baylibre.com>, Abel Vesa <abel.vesa@nxp.com>, Baruch Siach <baruch@tkos.co.il>, =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the TMU node for the CPU
+Add the imx8mq TMU (Thermal mannagement unit) nodes for CPU,
+GPU, and VPU.
 
-Changes since v1:
+This patch requires that the multi sensor patch is already applied
 
-Fixed the muber of sensor cells to work with or without the multi
-sensors patch.
+https://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal.git/patch/?id=7797ff424818c975b59c35880dbc90fe08350204
 
 Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 ---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 90 +++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 118 ++++++++++++++++++++++
+ 1 file changed, 118 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 9155bd4784eb..d367aa0023c4 100644
+index 9155bd4784eb..885395e74452 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
 @@ -8,6 +8,7 @@
@@ -66,7 +66,7 @@ index 9155bd4784eb..d367aa0023c4 100644
  		};
  
  		A53_L2: l2-cache0 {
-@@ -210,6 +215,91 @@
+@@ -210,6 +215,119 @@
  				#interrupt-cells = <2>;
  			};
  
@@ -150,6 +150,34 @@ index 9155bd4784eb..d367aa0023c4 100644
 +								<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
 +								<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
 +								<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++						};
++					};
++				};
++
++				gpu-thermal {
++					polling-delay-passive = <250>;
++					polling-delay = <2000>;
++					thermal-sensors = <&tmu 1>;
++
++					trips {
++						cpu-crit {
++							temperature = <95000>;
++							hysteresis = <2000>;
++							type = "critical";
++						};
++					};
++				};
++
++				vpu-thermal {
++					polling-delay-passive = <250>;
++					polling-delay = <2000>;
++					thermal-sensors = <&tmu 2>;
++
++					trips {
++						cpu-crit {
++							temperature = <95000>;
++							hysteresis = <2000>;
++							type = "critical";
 +						};
 +					};
 +				};
