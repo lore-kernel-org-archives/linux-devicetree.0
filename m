@@ -1,190 +1,42 @@
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH] arm64: dts: fsl: imx8mq: enable the multi sensor TMU
-Date: Mon, 18 Mar 2019 09:04:48 -0700
-Message-ID: <20190318160448.28964-1-angus@akkea.ca>
-References: <20190311213124.29325-1-angus@akkea.ca>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [linux-sunxi] [PATCH 1/6] drm/bridge: Export drm_bridge_detach
+Date: Mon, 18 Mar 2019 22:18:11 +0530
+Message-ID: <CAMty3ZBOTOR4hHfPE4Ufhb2+VoNJfFQwiii1kti263fi7DEEaQ@mail.gmail.com>
+References: <20190315130825.9005-1-jagan@amarulasolutions.com>
+ <20190315130825.9005-2-jagan@amarulasolutions.com> <c52be751ac1bc7b1ee21e3e2a30d5b494bf95faa.camel@bootlin.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190311213124.29325-1-angus@akkea.ca>
+In-Reply-To: <c52be751ac1bc7b1ee21e3e2a30d5b494bf95faa.camel@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: angus@akkea.ca, andrew.smirnov@gmail.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Carlo Caione <ccaione@baylibre.com>, Abel Vesa <abel.vesa@nxp.com>, Baruch Siach <baruch@tkos.co.il>, =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-Add the imx8mq TMU (Thermal mannagement unit) nodes for CPU,
-GPU, and VPU.
+Hi Paul,
 
-This patch requires that the multi sensor patch is already applied
+On Fri, Mar 15, 2019 at 6:58 PM Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
+>
+> Hi Jakan,
+>
+> On Fri, 2019-03-15 at 18:38 +0530, Jagan Teki wrote:
+> > Export drm_bridge_detach from drm bridge core so-that it
+> > can use on respective interface or bridge driver while
+> > detaching the bridge.
+>
+> I don't see why this change is required based on the commit log. The
+> DRM bridge code clearly indicates that drm_bridge_attach should *not*
+> be balanced with a drm_bridge_detach call in the driver, so this seems
+> quite wrong.
+>
+> The DRM core itself should handle detaching the bridge, not the driver.
+> Is there any reason why you need to do things differently for DSI?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal.git/patch/?id=7797ff424818c975b59c35880dbc90fe08350204
+Yes, you are correct the detach of bridge is being taking care via
+drm_encoder_cleanup. This patch exported explicitly, since we need to
+taken care bridge detach during unbind even exynos_drm_dsi in other
+patch seems using detach by explicitly pointing. so I think the better
+approach is to use drm_encoder_cleanup in unbind, what do you say?
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 118 ++++++++++++++++++++++
- 1 file changed, 118 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 9155bd4784eb..885395e74452 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/power/imx8mq-power.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/thermal/thermal.h>
- #include "imx8mq-pinfunc.h"
- 
- / {
-@@ -89,6 +90,7 @@
- 			reg = <0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_1: cpu@1 {
-@@ -97,6 +99,7 @@
- 			reg = <0x1>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_2: cpu@2 {
-@@ -105,6 +108,7 @@
- 			reg = <0x2>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_3: cpu@3 {
-@@ -113,6 +117,7 @@
- 			reg = <0x3>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_L2: l2-cache0 {
-@@ -210,6 +215,119 @@
- 				#interrupt-cells = <2>;
- 			};
- 
-+			tmu: tmu@30260000 {
-+				compatible = "fsl,imx8mq-tmu";
-+				reg = <0x30260000 0x10000>;
-+				interrupt = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+				little-endian;
-+				fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
-+				fsl,tmu-calibration = <0x00000000 0x00000023
-+						       0x00000001 0x00000029
-+						       0x00000002 0x0000002f
-+						       0x00000003 0x00000035
-+						       0x00000004 0x0000003d
-+						       0x00000005 0x00000043
-+						       0x00000006 0x0000004b
-+						       0x00000007 0x00000051
-+						       0x00000008 0x00000057
-+						       0x00000009 0x0000005f
-+						       0x0000000a 0x00000067
-+						       0x0000000b 0x0000006f
-+
-+						       0x00010000 0x0000001b
-+						       0x00010001 0x00000023
-+						       0x00010002 0x0000002b
-+						       0x00010003 0x00000033
-+						       0x00010004 0x0000003b
-+						       0x00010005 0x00000043
-+						       0x00010006 0x0000004b
-+						       0x00010007 0x00000055
-+						       0x00010008 0x0000005d
-+						       0x00010009 0x00000067
-+						       0x0001000a 0x00000070
-+
-+						       0x00020000 0x00000017
-+						       0x00020001 0x00000023
-+						       0x00020002 0x0000002d
-+						       0x00020003 0x00000037
-+						       0x00020004 0x00000041
-+						       0x00020005 0x0000004b
-+						       0x00020006 0x00000057
-+						       0x00020007 0x00000063
-+						       0x00020008 0x0000006f
-+
-+						       0x00030000 0x00000015
-+						       0x00030001 0x00000021
-+						       0x00030002 0x0000002d
-+						       0x00030003 0x00000039
-+						       0x00030004 0x00000045
-+						       0x00030005 0x00000053
-+						       0x00030006 0x0000005f
-+						       0x00030007 0x00000071>;
-+				#thermal-sensor-cells =  <1>;
-+			};
-+
-+			thermal-zones {
-+				cpu-thermal {
-+					polling-delay-passive = <250>;
-+					polling-delay = <2000>;
-+					thermal-sensors = <&tmu 0>;
-+
-+					trips {
-+						cpu_alert: cpu-alert {
-+							temperature = <85000>;
-+							hysteresis = <2000>;
-+							type = "passive";
-+						};
-+
-+						cpu_crit {
-+							temperature = <95000>;
-+							hysteresis = <2000>;
-+							type = "critical";
-+						};
-+					};
-+
-+					cooling-maps {
-+						map0 {
-+							trip = <&cpu_alert>;
-+							cooling-device =
-+								<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+								<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+								<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+								<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+						};
-+					};
-+				};
-+
-+				gpu-thermal {
-+					polling-delay-passive = <250>;
-+					polling-delay = <2000>;
-+					thermal-sensors = <&tmu 1>;
-+
-+					trips {
-+						cpu-crit {
-+							temperature = <95000>;
-+							hysteresis = <2000>;
-+							type = "critical";
-+						};
-+					};
-+				};
-+
-+				vpu-thermal {
-+					polling-delay-passive = <250>;
-+					polling-delay = <2000>;
-+					thermal-sensors = <&tmu 2>;
-+
-+					trips {
-+						cpu-crit {
-+							temperature = <95000>;
-+							hysteresis = <2000>;
-+							type = "critical";
-+						};
-+					};
-+				};
-+			};
-+
- 			wdog1: watchdog@30280000 {
- 				compatible = "fsl,imx8mq-wdt", "fsl,imx21-wdt";
- 				reg = <0x30280000 0x10000>;
--- 
-2.17.1
+Jagan.
