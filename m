@@ -1,73 +1,58 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 1/2] dt-bindings: extcon: Add support for fsa9480 switch
-Date: Mon, 18 Mar 2019 19:39:36 +0900
-Message-ID: <1cc29550-695e-a522-28bd-7bda3299aec5@samsung.com>
-References: <20190225165822.2770-1-pawel.mikolaj.chmiel@gmail.com>
-        <CGME20190225165901epcas2p44405070eb1a171aebb3c33fcbfac3b2a@epcas2p4.samsung.com>
-        <20190225165822.2770-2-pawel.mikolaj.chmiel@gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH] ASoC: simple-amplifier: Make gpio property optional
+Date: Mon, 18 Mar 2019 11:39:38 +0100
+Message-ID: <20190318103938.15035-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190225165822.2770-2-pawel.mikolaj.chmiel@gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, myungjoo.ham@samsung.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Mylène Josserand <mylene.josserand@bootlin.com>
 
-Sorry for late reply.
+Some amplifier may not have a GPIO to control the power, but instead simply
+rely on the regulator to power up and down the amplifier.
 
-On 19. 2. 26. 오전 1:58, Paweł Chmiel wrote:
-> From: Tomasz Figa <tomasz.figa@gmail.com>
-> 
-> This patch adds documentation for binding of extcont Fairchild
-> Semiconductor FSA9480 microusb switch.
-> This usb port accessory detector and switch, can be found for example in
-> some Samsung s5pv210 based phones.
-> 
-> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> ---
->  .../bindings/extcon/extcon-fsa9480.txt        | 21 +++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt b/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
-> new file mode 100644
-> index 000000000000..ebced7b18eb5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
-> @@ -0,0 +1,21 @@
-> +FAIRCHILD SEMICONDUCTOR FSA9480 MICROUSB SWITCH
-> +
-> +The FSA9480 is a USB port accessory detector and switch. The FSA9480 is fully
-> +controlled using I2C and enables USB data, stereo and mono audio, video,
-> +microphone, and UART data to use a common connector port.
-> +
-> +Required properties:
-> + - compatible : Must be "fcs,fsa9480"
-> + - reg : Specifies i2c slave address. Must be 0x25.
-> + - interrupt-parent : Phandle to interrupt controller to which interrupt
-> +   signal of the chip is connected.
-> + - interrupts : Should contain one entry specifying interrupt signal of
-> +   interrupt parent to which interrupt pin of the chip is connected.
-> +
-> + Example:
-> +	musb@25 {
-> +		compatible = "fcs,fsa9480";
-> +		reg = <0x25>;
-> +		interrupt-parent = <&gph2>;
-> +		interrupts = <7 0>;
-> +	};
-> \ No newline at end of file
-> 
+In order to support those setups, let's make the GPIO optional.
 
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ Documentation/devicetree/bindings/sound/simple-amplifier.txt | 2 +-
+ sound/soc/codecs/simple-amplifier.c                          | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/sound/simple-amplifier.txt b/Documentation/devicetree/bindings/sound/simple-amplifier.txt
+index 7182ac4f1e65..b1b097cc9b68 100644
+--- a/Documentation/devicetree/bindings/sound/simple-amplifier.txt
++++ b/Documentation/devicetree/bindings/sound/simple-amplifier.txt
+@@ -2,9 +2,9 @@ Simple Amplifier Audio Driver
+ 
+ Required properties:
+ - compatible : "dioo,dio2125" or "simple-audio-amplifier"
+-- enable-gpios : the gpio connected to the enable pin of the simple amplifier
+ 
+ Optional properties:
++- enable-gpios : the gpio connected to the enable pin of the simple amplifier
+ - VCC-supply   : power supply for the device, as covered
+                  in Documentation/devicetree/bindings/regulator/regulator.txt
+ 
+diff --git a/sound/soc/codecs/simple-amplifier.c b/sound/soc/codecs/simple-amplifier.c
+index c07e8a80b4b7..351aa55c384e 100644
+--- a/sound/soc/codecs/simple-amplifier.c
++++ b/sound/soc/codecs/simple-amplifier.c
+@@ -89,7 +89,8 @@ static int simple_amp_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	platform_set_drvdata(pdev, priv);
+ 
+-	priv->gpiod_enable = devm_gpiod_get(dev, "enable", GPIOD_OUT_LOW);
++	priv->gpiod_enable = devm_gpiod_get_optional(dev, "enable",
++						     GPIOD_OUT_LOW);
+ 	if (IS_ERR(priv->gpiod_enable)) {
+ 		err = PTR_ERR(priv->gpiod_enable);
+ 		if (err != -EPROBE_DEFER)
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.20.1
