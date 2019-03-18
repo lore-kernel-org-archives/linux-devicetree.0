@@ -1,71 +1,135 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [linux-sunxi] [PATCH 1/6] drm/bridge: Export drm_bridge_detach
-Date: Mon, 18 Mar 2019 22:37:57 +0530
-Message-ID: <CAMty3ZC2M=+Xb1OK0ZtU6wbKzmdYvHoTGSRouqKhMV+xk6DzRA@mail.gmail.com>
-References: <20190315130825.9005-1-jagan@amarulasolutions.com>
- <20190315130825.9005-2-jagan@amarulasolutions.com>
- <c52be751ac1bc7b1ee21e3e2a30d5b494bf95faa.camel@bootlin.com>
- <CAMty3ZBOTOR4hHfPE4Ufhb2+VoNJfFQwiii1kti263fi7DEEaQ@mail.gmail.com>
- <b3f7e096c94347b7a244d5278a38d9ced99218d1.camel@bootlin.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH V4 2/5] pwm: Add i.MX TPM PWM driver support
+Date: Mon, 18 Mar 2019 18:25:35 +0100
+Message-ID: <20190318172535.2yxokxwu52yjf6xf@pengutronix.de>
+References: <1552610505-13568-1-git-send-email-Anson.Huang@nxp.com>
+ <1552610505-13568-3-git-send-email-Anson.Huang@nxp.com>
+ <20190315093532.xw5ivfkxrwvrkvix@pengutronix.de>
+ <DB3PR0402MB39161B062231C59842595374F5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190318080743.xumj6e72bzumszvp@pengutronix.de>
+ <DB3PR0402MB391627A8C741C84A2057E576F5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <DB3PR0402MB39161A9884D5768F7280024FF5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <b3f7e096c94347b7a244d5278a38d9ced99218d1.camel@bootlin.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <DB3PR0402MB39161A9884D5768F7280024FF5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "stefan@agner.ch" <stefan@agner.ch>, Leonard Crestez <leonard.crestez@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, Robin Gong <yibin.gong@nxp.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>l
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBNYXIgMTgsIDIwMTkgYXQgMTA6MjcgUE0gUGF1bCBLb2NpYWxrb3dza2kKPHBhdWwu
-a29jaWFsa293c2tpQGJvb3RsaW4uY29tPiB3cm90ZToKPgo+IEhpLAo+Cj4gTGUgbHVuZGkgMTgg
-bWFycyAyMDE5IMOgIDIyOjE4ICswNTMwLCBKYWdhbiBUZWtpIGEgw6ljcml0IDoKPiA+IEhpIFBh
-dWwsCj4gPgo+ID4gT24gRnJpLCBNYXIgMTUsIDIwMTkgYXQgNjo1OCBQTSBQYXVsIEtvY2lhbGtv
-d3NraQo+ID4gPHBhdWwua29jaWFsa293c2tpQGJvb3RsaW4uY29tPiB3cm90ZToKPiA+ID4gSGkg
-SmFrYW4sCj4gPiA+Cj4gPiA+IE9uIEZyaSwgMjAxOS0wMy0xNSBhdCAxODozOCArMDUzMCwgSmFn
-YW4gVGVraSB3cm90ZToKPiA+ID4gPiBFeHBvcnQgZHJtX2JyaWRnZV9kZXRhY2ggZnJvbSBkcm0g
-YnJpZGdlIGNvcmUgc28tdGhhdCBpdAo+ID4gPiA+IGNhbiB1c2Ugb24gcmVzcGVjdGl2ZSBpbnRl
-cmZhY2Ugb3IgYnJpZGdlIGRyaXZlciB3aGlsZQo+ID4gPiA+IGRldGFjaGluZyB0aGUgYnJpZGdl
-Lgo+ID4gPgo+ID4gPiBJIGRvbid0IHNlZSB3aHkgdGhpcyBjaGFuZ2UgaXMgcmVxdWlyZWQgYmFz
-ZWQgb24gdGhlIGNvbW1pdCBsb2cuIFRoZQo+ID4gPiBEUk0gYnJpZGdlIGNvZGUgY2xlYXJseSBp
-bmRpY2F0ZXMgdGhhdCBkcm1fYnJpZGdlX2F0dGFjaCBzaG91bGQgKm5vdCoKPiA+ID4gYmUgYmFs
-YW5jZWQgd2l0aCBhIGRybV9icmlkZ2VfZGV0YWNoIGNhbGwgaW4gdGhlIGRyaXZlciwgc28gdGhp
-cyBzZWVtcwo+ID4gPiBxdWl0ZSB3cm9uZy4KPiA+ID4KPiA+ID4gVGhlIERSTSBjb3JlIGl0c2Vs
-ZiBzaG91bGQgaGFuZGxlIGRldGFjaGluZyB0aGUgYnJpZGdlLCBub3QgdGhlIGRyaXZlci4KPiA+
-ID4gSXMgdGhlcmUgYW55IHJlYXNvbiB3aHkgeW91IG5lZWQgdG8gZG8gdGhpbmdzIGRpZmZlcmVu
-dGx5IGZvciBEU0k/Cj4gPgo+ID4gWWVzLCB5b3UgYXJlIGNvcnJlY3QgdGhlIGRldGFjaCBvZiBi
-cmlkZ2UgaXMgYmVpbmcgdGFraW5nIGNhcmUgdmlhCj4gPiBkcm1fZW5jb2Rlcl9jbGVhbnVwLiBU
-aGlzIHBhdGNoIGV4cG9ydGVkIGV4cGxpY2l0bHksIHNpbmNlIHdlIG5lZWQgdG8KPiA+IHRha2Vu
-IGNhcmUgYnJpZGdlIGRldGFjaCBkdXJpbmcgdW5iaW5kIGV2ZW4gZXh5bm9zX2RybV9kc2kgaW4g
-b3RoZXIKPiA+IHBhdGNoIHNlZW1zIHVzaW5nIGRldGFjaCBieSBleHBsaWNpdGx5IHBvaW50aW5n
-Lgo+Cj4gSSBjYW4gc2VlIHRoYXQgZnJvbSB5b3VyIHBhdGNoZXMsIGJ1dCB5b3UgYXJlIG5vdCBl
-eHBsYWluaW5nIHdoeSB5b3UKPiBuZWVkIHRoZSBjaGFuZ2UuIEFuZCBpZiB0aGUgZnJhbWV3b3Jr
-IGRvZXNuJ3Qgd29yayBmb3IgeW91ciBjYXNlLCB5b3UKPiBzaG91bGQgY2VydGFpbmx5IHRyeSBh
-bmQgZml4IHRoZSBmcmFtZXdvcmsgaW5zdGVhZCBvZiB3b3JraW5nIGFyb3VuZAo+IHRoZSBpc3N1
-ZS4KClBsZWFzZSBzZWUgYmVsb3cgY29tbWVudHMuCgo+Cj4gQW55d2F5LCB5b3Ugc2hvdWxkIHBy
-b2JhYmx5IGxvb2sgaW50byB1c2luZyBkcm1fcGFuZWxfYnJpZGdlX2FkZCwgaXQKPiBtaWdodCBm
-aXggdGhlIHVuZGVybHlpbmcgaXNzdWUgb24gaXRzIG93bi4KPgo+ID4gc28gSSB0aGluayB0aGUg
-YmV0dGVyIGFwcHJvYWNoIGlzIHRvIHVzZSBkcm1fZW5jb2Rlcl9jbGVhbnVwIGluCj4gPiB1bmJp
-bmQsIHdoYXQgZG8geW91IHNheT8KPgo+IEkgYW55IGNhc2UsIHlvdSBuZWVkIHRvIHN0YXRlIHdo
-YXQgeW91ciBwcm9ibGVtIGlzIChpbiB0aGUgY29tbWl0IGxvZywKPiBhbmQgbm90IGV2ZW4gaW4g
-c3Vic2VxdWVudCBkaXNjdXNzaW9ucykgc28gdGhhdCB3ZSBjYW4gaGF2ZSBhIGNoYW5jZSB0bwo+
-IHVuZGVyc3RhbmQgaXQgYW5kIHByb3ZpZGUgc29tZSBmZWVkYmFjayBhYm91dCB3aGF0IGlzIGFu
-IGFwcHJvcHJpYXRlCj4gZml4IGFuZCB3aGF0IGlzIG5vdC4gV2UgY2FuJ3QgdW5kZXJzdGFuZCB0
-aGUgZml4IGlmIHdlIGNhbid0IHVuZGVyc3RhbmQKPiB0aGUgdW5kZXJseWluZyBpc3N1ZS4KClRy
-dWUsIGlmIG15IGludGVudGlvbnMgaXMgdHJ5aW5nIHRvIGZpeCBzb21lIGlzc3VlLCBidXQgYXMg
-SSBzYWlkIGluCnByZXZpb3VzIG1haWwgc2luY2UgdGhlIG90aGVyIGRzaSAoZXh5bm9zX2RybV9k
-c2kpIGRyaXZlciBpcwpleHBsaWNpdGx5IGRldGFjaGluZyBJIHByZXN1bWUgaXQgcmVxdWlyZSBv
-ciBtaXNzZWQgdGhlIGV4cG9ydCwgbm90CnRob3VnaHQgYWJvdXQgZml4IGFuZCBuZWl0aGVyIEkg
-bWVudGlvbmVkIG9uIHRoZSBjb21taXQgaGVhZC4gIEFueXdheQp0aGFua3MgZm9yIHRoZSByZXZp
-ZXcsIHdpbGwgdXBkYXRlIHRoZSBjb2RlIGFjY29yZGluZ2x5IGluIG5leHQKdmVyc2lvbi4KX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Hello,
+
+On Mon, Mar 18, 2019 at 02:04:00PM +0000, Anson Huang wrote:
+> > > On Mon, Mar 18, 2019 at 07:41:02AM +0000, Anson Huang wrote:
+> > > > > > +	val &= ~PWM_IMX_TPM_SC_CMOD;
+> > > > > > +	writel(val, tpm->base + PWM_IMX_TPM_SC);
+> > > > >
+> > > > > As this interrupts the output, please only do it if necessary.
+> > > >
+> > > > OK, will do it ONLY when it is enabled previously.
+> > >
+> > > I think you only need to do that when the value actually changes.
+> > 
+> > OK, I will save the period/div count and ONLY do it when the value actually
+> > changes.
+> 
+> After further think, I added below tpm->period to save the current period settings,
+> ONLY when the new period to be set is different from the current period, then the 
+> pwm_imx_tpm_config_counter() is called, so I think no need to care about the value
+> changes, the value is always changed when pwm_imx_tpm_config_counter() is called.
+> 
+>                  if (tpm->user_count != 1 && state->period != tpm->period)
+>                          return -EBUSY;
+>                  ret = pwm_imx_tpm_config_counter(chip, state->period);
+>                  if (ret)
+>                          return ret;
+
+This is still not the optimal thing to do. What you really want is:
+
+	p = round_period_according_to_hw_caps(state->period);
+	if (p != actually_configured_period && tpm->user_count != 1)
+		return -EBUSY;
+
+
+> > > > > > +	/* set duty counter */
+> > > > > > +	tmp = readl(tpm->base + PWM_IMX_TPM_MOD) &
+> > > > > > +PWM_IMX_TPM_MOD_MOD_MASK;
+> > > > >
+> > > > > I recommend storing this value in driver data.
+> > > >
+> > > > NOT quite understand, as we did NOT use it in other places except
+> > > > the get_state, just reading the register once should be OK there.
+> > >
+> > > I had the impression it is used more than once. Will look again in the
+> > > next iteration. But also note that shadowing the value might already
+> > > be beneficial for a single call site as driver data might occupy more
+> > > RAM than necessary anyhow and reading from RAM is faster than from the
+> > > hardware's register.
+> > > Probably this is not a fast path, so not worth the optimisation?!
+> > 
+> > OK, will save it in driver data and avoid accessing register again.
+
+please apply some thought before following my advices. If this is not a
+fast path and it hurts readability, don't shadow the register in driver
+data.
+
+> > > > > > +		/* disable channel */
+> > > > > > +		writel(PWM_IMX_TPM_CnSC_CHF,
+> > > > > > +			tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
+> > > > >
+> > > > > Clearing CHF doens't disable the channel as I read the manual.
+> > > >
+> > > > This write clears CHF as well as writing other bits 0, to disable
+> > > > the output. Maybe I can explicitly clear MSA/MSB/ELSA/ELSB to avoid
+> > > > confusion.
+> > >
+> > > Ah, I misinterpreted the value written.
+> > >
+> > > > > > +static int pwm_imx_tpm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > > > > > +			     struct pwm_state *state) {
+> > > > > > +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
+> > > > > > +	struct pwm_state curstate;
+> > > > > > +	u32 duty_cycle = state->duty_cycle;
+> > > > > > +	int ret;
+> > > > > > +
+> > > > > > +	pwm_imx_tpm_get_state(chip, pwm, &curstate);
+> > > > > > +
+> > > > > > +	mutex_lock(&tpm->lock);
+> > > > >
+> > > > > What should this lock protect? Does it hurt if the state changes
+> > > > > between pwm_imx_tpm_get_state releasing the lock and
+> > > > > pwm_imx_tpm_apply taking it?
+> > > >
+> > > > The idea is to protect the share resourced by multiple channels, but
+> > > > I think I can make the mutex_lock includes get_state and remove the
+> > > > lock in get_state function.
+> > >
+> > > You might need it in .get_state to return a consistent state to the
+> > > caller. In this case just introduce an unlocked variant of .get_state
+> > > to share code between the two functions.
+> > >
+> > > And BTW the question was honest. I'm not entirely sure that you need
+> > > to hold the lock.
+> > 
+> > Agreed, if the different channel configuration ONLY access its own register,
+> > NOT any shared registers, then I think this lock is unnecessary.
+> 
+> Since all the functions in .apply function will need to access registers and these
+> registers are shared by different channels, so I think the lock is necessary. 
+
+I think so, too, but didn't thought it to the end. I can invest some
+time here in the next review round.
+
+BTW, one thing that I think is missing is, that .apply must only return
+when the newly configured setting is already active.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
