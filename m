@@ -1,34 +1,38 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v1 2/6] dt-bindings: reset: hisilicon: Update compatible documentation
-Date: Mon, 18 Mar 2019 19:38:47 +0000
-Message-ID: <1552937931-23050-3-git-send-email-peter.griffin@linaro.org>
-References: <1552937931-23050-1-git-send-email-peter.griffin@linaro.org>
+From: Vijay Khemka <vijaykhemka@fb.com>
+Subject: Re: [Potential Spoof] Re: [PATCH] ARM: dts: aspeed: tiogapass: Enable
+ VUART
+Date: Mon, 18 Mar 2019 19:44:51 +0000
+Message-ID: <34F58DD7-2C58-4074-AA86-212E639274F0@fb.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552937931-23050-1-git-send-email-peter.griffin@linaro.org>
+Content-Language: en-US
+Content-ID: <9B420B6B29D23B449283B0708DC5A138@namprd15.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de, xuwei5@hisilicon.com, mturquette@baylibre.com, sboyd@kernel.org
-Cc: john.stultz@linaro.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, yuq825@gmail.com
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-The reset driver now supports the ao reset controller, so update the
-documentation to match.
-
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
-index c25da39..ea0a6a9 100644
---- a/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
-+++ b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
-@@ -11,6 +11,7 @@ Required properties:
- - compatible: should be one of the following:
-   - "hisilicon,hi6220-sysctrl", "syscon" : For peripheral reset controller.
-   - "hisilicon,hi6220-mediactrl", "syscon" : For media reset controller.
-+  - "hisilicon,hi6220-aoctrl", "syscon" : For ao reset controller.
- - reg: should be register base and length as documented in the
-   datasheet
- - #reset-cells: 1, see below
--- 
-2.7.4
+SGkgSm9lbCwNClBsZWFzZSBhcHBseSB0aGlzIHBhdGNoLg0KDQpSZWdhcmRzDQotVmlqYXkNCg0K
+77u/T24gMy81LzE5LCAxMjowNiBQTSwgIm9wZW5ibWMgb24gYmVoYWxmIG9mIFZpamF5IEtoZW1r
+YSIgPG9wZW5ibWMtYm91bmNlcyt2aWpheWtoZW1rYT1mYi5jb21AbGlzdHMub3psYWJzLm9yZyBv
+biBiZWhhbGYgb2YgdmlqYXlraGVta2FAZmIuY29tPiB3cm90ZToNCg0KICAgIFBsZWFzZSByZXZp
+ZXcgYmVsb3cgcGF0Y2guDQogICAgDQogICAgUmVnYXJkcw0KICAgIC1WaWpheQ0KICAgIA0KICAg
+IE9uIDEvMzAvMTksIDEwOjE0IEFNLCAiVmlqYXkgS2hlbWthIiA8dmlqYXlraGVta2FAZmIuY29t
+PiB3cm90ZToNCiAgICANCiAgICAgICAgRW5hYmxpbmcgdnVhcnQgZm9yIEZhY2Vib29rIHRpb2dh
+cGFzcw0KICAgICAgICANCiAgICAgICAgU2lnbmVkLW9mZi1ieTogVmlqYXkgS2hlbWthIDx2aWph
+eWtoZW1rYUBmYi5jb20+DQogICAgICAgIC0tLQ0KICAgICAgICAgYXJjaC9hcm0vYm9vdC9kdHMv
+YXNwZWVkLWJtYy1mYWNlYm9vay10aW9nYXBhc3MuZHRzIHwgNSArKysrKw0KICAgICAgICAgMSBm
+aWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKQ0KICAgICAgICANCiAgICAgICAgZGlmZiAtLWdp
+dCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2stdGlvZ2FwYXNzLmR0cyBi
+L2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2stdGlvZ2FwYXNzLmR0cw0KICAg
+ICAgICBpbmRleCA0MmUwZDdhOGU4ZDAuLmEwNThmYjI5ODVmNyAxMDA2NDQNCiAgICAgICAgLS0t
+IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1mYWNlYm9vay10aW9nYXBhc3MuZHRzDQog
+ICAgICAgICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2stdGlvZ2Fw
+YXNzLmR0cw0KICAgICAgICBAQCAtNjQsNiArNjQsMTEgQEANCiAgICAgICAgIAlzdGF0dXMgPSAi
+b2theSI7DQogICAgICAgICB9Ow0KICAgICAgICAgDQogICAgICAgICsmdnVhcnQgew0KICAgICAg
+ICArCS8vIFZVQVJUIEhvc3QgQ29uc29sZQ0KICAgICAgICArCXN0YXR1cyA9ICJva2F5IjsNCiAg
+ICAgICAgK307DQogICAgICAgICsNCiAgICAgICAgICZ1YXJ0MSB7DQogICAgICAgICAJLy8gSG9z
+dCBDb25zb2xlDQogICAgICAgICAJc3RhdHVzID0gIm9rYXkiOw0KICAgICAgICAtLSANCiAgICAg
+ICAgMi4xNy4xDQogICAgICAgIA0KICAgICAgICANCiAgICANCiAgICANCg0K
