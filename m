@@ -1,12 +1,13 @@
 From: Chen-Yu Tsai <wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 4/6] nvmem: sunxi_sid: Read out data in native format
-Date: Mon, 18 Mar 2019 15:33:52 +0800
-Message-ID: <20190318073354.12151-5-wens@kernel.org>
+Subject: [PATCH 2/6] nvmem: sunxi_sid: Optimize register
+ read-out method
+Date: Mon, 18 Mar 2019 15:33:50 +0800
+Message-ID: <20190318073354.12151-3-wens@kernel.org>
 References: <20190318073354.12151-1-wens@kernel.org>
 Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB54TXXSAKGQEHNC44RY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB6UTXXSAKGQEVCIRYMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190318073354.12151-1-wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,61 +22,87 @@ List-Id: devicetree@vger.kernel.org
 
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-Originally the SID e-fuses were thought to be in big-endian format.
-Later sources show that they are in fact native or little-endian.
-The most compelling evidence is the thermal sensor calibration data,
-which is a set of one to three 16-bit values. In native-endian they
-are in 16-bit cells with increasing offsets, whereas with big-endian
-they are in the wrong order, and a gap with no data will show if there
-are one or three cells.
+SID cells are 32-bit aligned, and a multiple of 32 bits in length. The
+only outlier is the thermal sensor calibration data, which is 16 bits
+per sensor. However a whole 64 bits is allocated for this purpose, so
+we could consider it conforming to the rule above.
 
-Switch to a native endian representation for the nvmem device. For the
-H3, the register read-out method was already returning data in native
-endian. This only affects the other SoCs.
+Also, the register read-out method assumes native endian, unlike the
+direct MMIO method, which assumes big endian. Thus no endian conversion
+is involved.
+
+Under these assumptions, the register read-out method can be slightly
+optimized. Instead of reading one word then discarding 3 bytes, read
+the whole word directly into the buffer. However, for reads under 4
+bytes or trailing bytes, we still use a scratch buffer to extract the
+requested bytes.
+
+We could go one step further if .word_size was 4, but changing that
+would affect the sysfs interface's behavior.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/nvmem/sunxi_sid.c | 23 +----------------------
- 1 file changed, 1 insertion(+), 22 deletions(-)
+ drivers/nvmem/sunxi_sid.c | 38 ++++++++++++++++++--------------------
+ 1 file changed, 18 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
-index 75c1f48cb3d0..14c114620ed6 100644
+index 704c35edf796..15fbfab62595 100644
 --- a/drivers/nvmem/sunxi_sid.c
 +++ b/drivers/nvmem/sunxi_sid.c
-@@ -46,33 +46,12 @@ struct sunxi_sid {
- 	u32			value_offset;
- };
- 
--/* We read the entire key, due to a 32 bit read alignment requirement. Since we
-- * want to return the requested byte, this results in somewhat slower code and
-- * uses 4 times more reads as needed but keeps code simpler. Since the SID is
-- * only very rarely probed, this is not really an issue.
-- */
--static u8 sunxi_sid_read_byte(const struct sunxi_sid *sid,
--			      const unsigned int offset)
+@@ -115,36 +115,34 @@ static int sun8i_sid_register_readout(const struct sunxi_sid *sid,
+  * to be not reliable at all.
+  * Read by the registers instead.
+  */
+-static int sun8i_sid_read_byte_by_reg(const struct sunxi_sid *sid,
+-				      const unsigned int offset,
+-				      u8 *out)
 -{
--	u32 sid_key;
+-	u32 word;
+-	int ret;
 -
--	sid_key = ioread32be(sid->base + round_down(offset, 4));
--	sid_key >>= (offset % 4) * 8;
+-	ret = sun8i_sid_register_readout(sid, offset & ~0x03, &word);
 -
--	return sid_key; /* Only return the last byte */
+-	if (ret)
+-		return ret;
+-
+-	*out = (word >> ((offset & 0x3) * 8)) & 0xff;
+-
+-	return 0;
 -}
 -
- static int sunxi_sid_read(void *context, unsigned int offset,
- 			  void *val, size_t bytes)
+ static int sun8i_sid_read_by_reg(void *context, unsigned int offset,
+ 				 void *val, size_t bytes)
  {
  	struct sunxi_sid *sid = context;
 -	u8 *buf = val;
--
--	/* Offset the read operation to the real position of SID */
--	offset += sid->value_offset;
++	u32 word;
+ 	int ret;
  
--	while (bytes--)
--		*buf++ = sunxi_sid_read_byte(sid, offset++);
-+	memcpy_fromio(val, sid->base + sid->value_offset + offset, bytes);
+-	while (bytes--) {
+-		ret = sun8i_sid_read_byte_by_reg(sid, offset++, buf++);
++	/* .stride = 4 so offset is guaranteed to be aligned */
++	while (bytes >= 4) {
++		ret = sun8i_sid_register_readout(sid, offset, val);
+ 		if (ret)
+ 			return ret;
++
++		val += 4;
++		offset += 4;
++		bytes -= 4;
+ 	}
  
++	if (!bytes)
++		return 0;
++
++	/* Handle any trailing bytes */
++	ret = sun8i_sid_register_readout(sid, offset, &word);
++	if (ret)
++		return ret;
++
++	memcpy(val, &word, bytes);
++
  	return 0;
  }
+ 
 -- 
 2.20.1
