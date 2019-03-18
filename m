@@ -1,38 +1,45 @@
-From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: Re: [Potential Spoof] Re: [PATCH] ARM: dts: aspeed: tiogapass: Enable
- VUART
-Date: Mon, 18 Mar 2019 19:44:51 +0000
-Message-ID: <34F58DD7-2C58-4074-AA86-212E639274F0@fb.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v1 6/6] clk: hi6220: use CLK_OF_DECLARE_DRIVER
+Date: Mon, 18 Mar 2019 13:21:29 -0700
+Message-ID: <155294048956.20095.14072308972262767231@swboyd.mtv.corp.google.com>
+References: <1552937931-23050-1-git-send-email-peter.griffin@linaro.org> <1552937931-23050-7-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Content-ID: <9B420B6B29D23B449283B0708DC5A138@namprd15.prod.outlook.com>
+In-Reply-To: <1552937931-23050-7-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
+To: Peter Griffin <peter.griffin@linaro.org>, airlied@linux.ie, daniel@ffwll.ch, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, p.zabel@pengutronix.de, robh+dt@kernel.org, xuwei5@hisilicon.com
+Cc: john.stultz@linaro.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, yuq825@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgSm9lbCwNClBsZWFzZSBhcHBseSB0aGlzIHBhdGNoLg0KDQpSZWdhcmRzDQotVmlqYXkNCg0K
-77u/T24gMy81LzE5LCAxMjowNiBQTSwgIm9wZW5ibWMgb24gYmVoYWxmIG9mIFZpamF5IEtoZW1r
-YSIgPG9wZW5ibWMtYm91bmNlcyt2aWpheWtoZW1rYT1mYi5jb21AbGlzdHMub3psYWJzLm9yZyBv
-biBiZWhhbGYgb2YgdmlqYXlraGVta2FAZmIuY29tPiB3cm90ZToNCg0KICAgIFBsZWFzZSByZXZp
-ZXcgYmVsb3cgcGF0Y2guDQogICAgDQogICAgUmVnYXJkcw0KICAgIC1WaWpheQ0KICAgIA0KICAg
-IE9uIDEvMzAvMTksIDEwOjE0IEFNLCAiVmlqYXkgS2hlbWthIiA8dmlqYXlraGVta2FAZmIuY29t
-PiB3cm90ZToNCiAgICANCiAgICAgICAgRW5hYmxpbmcgdnVhcnQgZm9yIEZhY2Vib29rIHRpb2dh
-cGFzcw0KICAgICAgICANCiAgICAgICAgU2lnbmVkLW9mZi1ieTogVmlqYXkgS2hlbWthIDx2aWph
-eWtoZW1rYUBmYi5jb20+DQogICAgICAgIC0tLQ0KICAgICAgICAgYXJjaC9hcm0vYm9vdC9kdHMv
-YXNwZWVkLWJtYy1mYWNlYm9vay10aW9nYXBhc3MuZHRzIHwgNSArKysrKw0KICAgICAgICAgMSBm
-aWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKQ0KICAgICAgICANCiAgICAgICAgZGlmZiAtLWdp
-dCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2stdGlvZ2FwYXNzLmR0cyBi
-L2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2stdGlvZ2FwYXNzLmR0cw0KICAg
-ICAgICBpbmRleCA0MmUwZDdhOGU4ZDAuLmEwNThmYjI5ODVmNyAxMDA2NDQNCiAgICAgICAgLS0t
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1mYWNlYm9vay10aW9nYXBhc3MuZHRzDQog
-ICAgICAgICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2stdGlvZ2Fw
-YXNzLmR0cw0KICAgICAgICBAQCAtNjQsNiArNjQsMTEgQEANCiAgICAgICAgIAlzdGF0dXMgPSAi
-b2theSI7DQogICAgICAgICB9Ow0KICAgICAgICAgDQogICAgICAgICsmdnVhcnQgew0KICAgICAg
-ICArCS8vIFZVQVJUIEhvc3QgQ29uc29sZQ0KICAgICAgICArCXN0YXR1cyA9ICJva2F5IjsNCiAg
-ICAgICAgK307DQogICAgICAgICsNCiAgICAgICAgICZ1YXJ0MSB7DQogICAgICAgICAJLy8gSG9z
-dCBDb25zb2xlDQogICAgICAgICAJc3RhdHVzID0gIm9rYXkiOw0KICAgICAgICAtLSANCiAgICAg
-ICAgMi4xNy4xDQogICAgICAgIA0KICAgICAgICANCiAgICANCiAgICANCg0K
+Quoting Peter Griffin (2019-03-18 12:38:51)
+> As now we also need to probe in the reset driver as well.
+>=20
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+>  drivers/clk/hisilicon/clk-hi6220.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+
+Doesn't this need to be squashed with the reset driver bits so we don't
+have a bisection hole?
+
+>=20
+> diff --git a/drivers/clk/hisilicon/clk-hi6220.c b/drivers/clk/hisilicon/c=
+lk-hi6220.c
+> index a87809d..952ffe2 100644
+> --- a/drivers/clk/hisilicon/clk-hi6220.c
+> +++ b/drivers/clk/hisilicon/clk-hi6220.c
+> @@ -89,7 +89,7 @@ static void __init hi6220_clk_ao_init(struct device_nod=
+e *np)
+>         hisi_clk_register_gate_sep(hi6220_separated_gate_clks_ao,
+>                                 ARRAY_SIZE(hi6220_separated_gate_clks_ao)=
+, clk_data_ao);
+>  }
+> -CLK_OF_DECLARE(hi6220_clk_ao, "hisilicon,hi6220-aoctrl", hi6220_clk_ao_i=
+nit);
+> +CLK_OF_DECLARE_DRIVER(hi6220_clk_ao, "hisilicon,hi6220-aoctrl", hi6220_c=
+lk_ao_init);
+
+Can you also add a comment indicating why/what is the other driver that
+is probing the same device node?
