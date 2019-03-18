@@ -1,135 +1,64 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v3 4/8] dt-bindings: usb: dwc3: Add Amlogic G12A DWC3 Glue Bindings
-Date: Mon, 18 Mar 2019 11:11:49 +0100
-Message-ID: <20190318101153.7531-5-narmstrong@baylibre.com>
-References: <20190318101153.7531-1-narmstrong@baylibre.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC 07/15] dt-bindings: display: renesas: lvds: Add
+ renesas,companion property
+Date: Mon, 18 Mar 2019 11:21:15 +0100
+Message-ID: <CAMuHMdWfNk+v9PTMpE43DD8DvrmhZDeAocDReVNOsE=oh4P6uw@mail.gmail.com>
+References: <20190306232345.23052-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20190306232345.23052-8-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190318101153.7531-1-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org, kishon@ti.com, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190306232345.23052-8-laurent.pinchart+renesas@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, DRI Development <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds the bindings for the Amlogic G12A USB Glue HW.
-
-The Amlogic G12A SoC Family embeds 2 USB Controllers :
-- a DWC3 IP configured as Host for USB2 and USB3
-- a DWC2 IP configured as Peripheral USB2 Only
-
-A glue connects these both controllers to 2 USB2 PHYs,
-and optionnally to an USB3+PCIE Combo PHY shared with the PCIE controller.
-
-The Glue configures the UTMI 8bit interfaces for the USB2 PHYs, including
-routing of the OTG PHY between the DWC3 and DWC2 controllers, and
-setups the on-chip OTG mode selection for this PHY.
-
-The PHYs phandles are passed  to the Glue node since the Glue controls the
-interface with the PHY, not the DWC3 controller.
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/usb/amlogic,dwc3.txt  | 88 +++++++++++++++++++
- 1 file changed, 88 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
-index 9a8b631904fd..b9f04e617eb7 100644
---- a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
-@@ -40,3 +40,91 @@ Example device nodes:
- 				phy-names = "usb2-phy", "usb3-phy";
- 			};
- 		};
-+
-+Amlogic Meson G12A DWC3 USB SoC Controller Glue
-+
-+The Amlogic G12A embeds a DWC3 USB IP Core configured for USB2 and USB3
-+in host-only mode, and a DWC2 IP Core configured for USB2 peripheral mode
-+only.
-+
-+A glue connects the DWC3 core to USB2 PHYs and optionnaly to an USB3 PHY.
-+
-+One of the USB2 PHY can be re-routed in peripheral mode to a DWC2 USB IP.
-+
-+The DWC3 Glue controls the PHY routing and power, an interrupt line is
-+connected to the Glue to serve as OTG ID change detection.
-+
-+Required properties:
-+- compatible:	Should be "amlogic,meson-g12a-usb-ctrl"
-+- clocks:	a handle for the "USB" clock
-+- resets:	a handle for the shared "USB" reset line
-+- reg:		The base address and length of the registers
-+- interrupts:	the interrupt specifier for the OTG detection
-+- phys: 	handle to used PHYs on the system
-+	- a <0> phandle can be used if a PHY is not used
-+- phy-names:	names of the used PHYs on the system :
-+	- "usb2-phy0" for USB2 PHY0 if USBHOST_A port is used
-+	- "usb2-phy1" for USB2 PHY1 if USBOTG_B port is used
-+	- "usb3-phy0" for USB3 PHY if USB3_0 is used
-+- dr_mode:	should be "host", "peripheral", or "otg" depending on
-+	the usage and configuration of the OTG Capable port.
-+	- "host" and "peripheral" means a fixed Host or Device only connection
-+	- "otg" means the port can be used as both Host or Device and
-+	  be switched automatically using the OTG ID pin.
-+
-+Optional properties:
-+- vbus-supply:	should be a phandle to the regulator controlling the VBUS
-+		power supply when used in OTG switchable mode
-+
-+Required child nodes:
-+
-+A child node must exist to represent the core DWC3 IP block. The name of
-+the node is not important. The content of the node is defined in dwc3.txt.
-+
-+A child node must exist to represent the core DWC2 IP block. The name of
-+the node is not important. The content of the node is defined in dwc2.txt.
-+
-+PHY documentation is provided in the following places:
-+- Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
-+- Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
-+
-+Example device nodes:
-+	usb: usb@ffe09000 {
-+			compatible = "amlogic,meson-g12a-usb-ctrl";
-+			reg = <0x0 0xffe09000 0x0 0xa0>;
-+			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			clocks = <&clkc CLKID_USB>;
-+			resets = <&reset RESET_USB>;
-+
-+			dr_mode = "otg";
-+
-+			phys = <&usb2_phy0>, <&usb2_phy1>,
-+			       <&usb3_pcie_phy PHY_TYPE_USB3>;
-+			phy-names = "usb2-phy0", "usb2-phy1", "usb3-phy0";
-+
-+			dwc2: usb@ff400000 {
-+				compatible = "amlogic,meson-g12a-usb", "snps,dwc2";
-+				reg = <0x0 0xff400000 0x0 0x40000>;
-+				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
-+				clock-names = "ddr";
-+				phys = <&usb2_phy1>;
-+				dr_mode = "peripheral";
-+				g-rx-fifo-size = <192>;
-+				g-np-tx-fifo-size = <128>;
-+				g-tx-fifo-size = <128 128 16 16 16>;
-+			};
-+
-+			dwc3: usb@ff500000 {
-+				compatible = "snps,dwc3";
-+				reg = <0x0 0xff500000 0x0 0x100000>;
-+				interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+				dr_mode = "host";
-+				snps,dis_u2_susphy_quirk;
-+				snps,quirk-frame-length-adjustment;
-+			};
-+	};
--- 
-2.20.1
+SGkgTGF1cmVudCwKCk9uIFRodSwgTWFyIDcsIDIwMTkgYXQgMTI6MjQgQU0gTGF1cmVudCBQaW5j
+aGFydAo8bGF1cmVudC5waW5jaGFydCtyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+IHdyb3RlOgo+
+IEFkZCBhIG5ldyBvcHRpb25hbCByZW5lc2FzLGNvbXBhbmlvbiBwcm9wZXJ0eSB0byBwb2ludCB0
+byB0aGUgY29tcGFuaW9uCj4gTFZEUyBlbmNvZGVyLiBUaGlzIGlzIHVzZWQgdG8gc3VwcG9ydCBk
+dWFsLWxpbmsgb3BlcmF0aW9uIHdoZXJlIHRoZSBtYWluCj4gTFZEUyBlbmNvZGVyIHNwbGl0cyBl
+dmVuLW51bWJlcmVkIGFuZCBvZGQtbnVtYmVyZWQgcGl4ZWxzIGJldHdlZW4gdGhlCj4gdHdvIExW
+RFMgZW5jb2RlcnMuCgpOb3RlIHRoYXQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3VzYi9nZW5lcmljLnR4dCBhbHJlYWR5CmRlc2NyaWJlcyBhICJjb21wYW5pb24iIHByb3BlcnR5
+IHdpdGhvdXQgdmVuZG9yIHByZWZpeC4KCj4gVGhlIG5ldyBwcm9wZXJ0eSBkb2Vzbid0IGNvbnRy
+b2wgdGhlIG1vZGUgb2Ygb3BlcmF0aW9uLCBpdCBvbmx5Cj4gZGVzY3JpYmVzIHRoZSByZWxhdGlv
+bnNoaXAgYmV0d2VlbiB0aGUgbWFzdGVyIGFuZCBjb21wYW5pb24gTFZEUwo+IGVuY29kZXJzLgo+
+Cj4gU2lnbmVkLW9mZi1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydCtyZW5l
+c2FzQGlkZWFzb25ib2FyZC5jb20+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQgICAgIHwgNiArKysrKysKPiAgMSBmaWxlIGNo
+YW5nZWQsIDYgaW5zZXJ0aW9ucygrKQo+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0IGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50
+eHQKPiBpbmRleCA5MDBhODg0YWQ5ZjUuLmE3MjBkYmI1ZGU2OSAxMDA2NDQKPiAtLS0gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRz
+LnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
+aWRnZS9yZW5lc2FzLGx2ZHMudHh0Cj4gQEAgLTQ1LDYgKzQ1LDEyIEBAIE9GIGdyYXBoIGJpbmRp
+bmdzIHNwZWNpZmllZCBpbiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgu
+dHh0Lgo+Cj4gIEVhY2ggcG9ydCBzaGFsbCBoYXZlIGEgc2luZ2xlIGVuZHBvaW50Lgo+Cj4gK09w
+dGlvbmFsIHByb3BlcnRpZXM6Cj4gKwo+ICstIHJlbmVzYXMsY29tcGFuaW9uIDogcGhhbmRsZSB0
+byB0aGUgY29tcGFuaW9uIExWRFMgZW5jb2Rlci4gVGhpcyBwcm9wZXJ0eSBpcwo+ICsgIHZhbGlk
+IGZvciB0aGUgZmlyc3QgTFZEUyBlbmNvZGVyIEQzIGFuZCBFMyBTb0NzIG9ubHksIGFuZCBwb2lu
+dHMgdG8gdGhlCgouLi4gb24gRDMgLi4uCgo+ICsgIHNlY29uZCBlbmNvZGVyIHRvIGJlIHVzZWQg
+YXMgYSBjb21wYW5pb24gaW4gZHVhbC1saW5rIG1vZGUuCgpXaHkgcmVzdHJpY3QgdGhpcyB0byB0
+aGUgZmlyc3QgTFZEUyBkZWNvZGVyLCBhbmQgbm90IGhhdmUgYSBiYWNrbGluayBpbiB0aGUKb3Ro
+ZXIgbm9kZSwgbGlrZSBmb3IgVVNCPwoKR3J7b2V0amUsZWV0aW5nfXMsCgogICAgICAgICAgICAg
+ICAgICAgICAgICBHZWVydAoKLS0gCkdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMg
+b2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcKCkluIHBlcnNvbmFs
+IGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFj
+a2VyLiBCdXQKd2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9n
+cmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0aGF0LgogICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIC0tIExpbnVzIFRvcnZhbGRzCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbA==
