@@ -1,91 +1,59 @@
-Return-Path: <SRS0=Qdya=RW=linux.intel.com=heikki.krogerus@kernel.org>
-Date: Tue, 19 Mar 2019 10:18:01 +0200
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: usb: add documentation for typec
+Return-Path: <SRS0=GHoU=RV=nxp.com=jun.li@kernel.org>
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v3 1/2] dt-bindings: usb: add documentation for typec
  switch via GPIO
-Message-ID: <20190319081801.GP7752@kuha.fi.intel.com>
-References: <1552299557-6306-1-git-send-email-jun.li@nxp.com>
- <20190312144527.GA18735@bogus>
- <20190313093540.GB7752@kuha.fi.intel.com>
+Date: Mon, 18 Mar 2019 10:59:31 +0000
+Message-ID: 
  <VI1PR04MB45585F62042838331761536B89470@VI1PR04MB4558.eurprd04.prod.outlook.com>
+References: <1552299557-6306-1-git-send-email-jun.li@nxp.com>
+ <20190312144527.GA18735@bogus> <20190313093540.GB7752@kuha.fi.intel.com>
+In-Reply-To: <20190313093540.GB7752@kuha.fi.intel.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <VI1PR04MB45585F62042838331761536B89470@VI1PR04MB4558.eurprd04.prod.outlook.com>
-To: Jun Li <jun.li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Rob Herring <robh@kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Mar 18, 2019 at 10:59:31AM +0000, Jun Li wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > Sent: 2019年3月13日 17:36
-> > To: Rob Herring <robh@kernel.org>
-> > Cc: Jun Li <jun.li@nxp.com>; gregkh@linuxfoundation.org; hdegoede@redhat.com;
-> > andy.shevchenko@gmail.com; linux-usb@vger.kernel.org;
-> > devicetree@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>
-> > Subject: Re: [PATCH v3 1/2] dt-bindings: usb: add documentation for typec switch
-> > via GPIO
-> > 
-> > On Tue, Mar 12, 2019 at 09:45:27AM -0500, Rob Herring wrote:
-> > > On Mon, Mar 11, 2019 at 10:40:09AM +0000, Jun Li wrote:
-> > > > Some typec super speed active channel switch can be controlled via a
-> > > > GPIO, this binding can be used to specify the switch node by a GPIO
-> > > > and the remote endpoint of its consumer.
-> > > >
-> > > > Signed-off-by: Li Jun <jun.li@nxp.com>
-> > > > ---
-> > > >  .../devicetree/bindings/usb/typec-switch-gpio.txt  | 30
-> > > > ++++++++++++++++++++++
-> > > >  1 file changed, 30 insertions(+)
-> > > >
-> > > > diff --git
-> > > > a/Documentation/devicetree/bindings/usb/typec-switch-gpio.txt
-> > > > b/Documentation/devicetree/bindings/usb/typec-switch-gpio.txt
-> > > > new file mode 100644
-> > > > index 0000000..4ef76cf
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/usb/typec-switch-gpio.txt
-> > > > @@ -0,0 +1,30 @@
-> > > > +Typec orientation switch via a GPIO
-> > > > +-----------------------------------
-> > > > +
-> > > > +Required properties:
-> > > > +- compatible: should be set one of following:
-> > > > +	- "nxp,ptn36043" for NXP Type-C SuperSpeed active switch.
-> > > > +
-> > > > +- gpios: the GPIO used to switch the super speed active channel,
-> > >
-> > > Perhaps switch-gpios in case there are other gpios needed.
-> > >
-> > > > +		GPIO_ACTIVE_HIGH: GPIO state high for cc1;
-> > > > +		GPIO_ACTIVE_LOW:  GPIO state low for cc1.
-> > > > +- orientation-switch: must be present.
-> > >
-> > > Why is this needed? The compatible can't imply this?
-> > 
-> > I think Jun Li is added that based on the comment I put to drivers/usb/typec/mux.c,
-> > so I'm to blame here. If we can handle this with the compatible like I guess we can,
-> > I'm happy.
-> 
-> Hi Heikki
-> 
-> Can I just remove the original bool property check? i.e, match OK if the remote
-> parent node is in switch_list.
-
-No. If typec_switch_get() is called before the mux device is
-registered, we need to return -EPROBE_DEFER. That means we need to be
-able to identify the mux device node.
-
-I think we should just use the compatible like Rob suggested. The
-Type-C muxes should probable have their own bindings file where it's
-defined for these muxes.
-
-
-thanks,
-
--- 
-heikki
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSGVpa2tpIEtyb2dlcnVz
+IDxoZWlra2kua3JvZ2VydXNAbGludXguaW50ZWwuY29tPg0KPiBTZW50OiAyMDE5xOoz1MIxM8jV
+IDE3OjM2DQo+IFRvOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KPiBDYzogSnVuIExp
+IDxqdW4ubGlAbnhwLmNvbT47IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyBoZGVnb2VkZUBy
+ZWRoYXQuY29tOw0KPiBhbmR5LnNoZXZjaGVua29AZ21haWwuY29tOyBsaW51eC11c2JAdmdlci5r
+ZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14IDxs
+aW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAxLzJdIGR0LWJpbmRp
+bmdzOiB1c2I6IGFkZCBkb2N1bWVudGF0aW9uIGZvciB0eXBlYyBzd2l0Y2gNCj4gdmlhIEdQSU8N
+Cj4gDQo+IE9uIFR1ZSwgTWFyIDEyLCAyMDE5IGF0IDA5OjQ1OjI3QU0gLTA1MDAsIFJvYiBIZXJy
+aW5nIHdyb3RlOg0KPiA+IE9uIE1vbiwgTWFyIDExLCAyMDE5IGF0IDEwOjQwOjA5QU0gKzAwMDAs
+IEp1biBMaSB3cm90ZToNCj4gPiA+IFNvbWUgdHlwZWMgc3VwZXIgc3BlZWQgYWN0aXZlIGNoYW5u
+ZWwgc3dpdGNoIGNhbiBiZSBjb250cm9sbGVkIHZpYSBhDQo+ID4gPiBHUElPLCB0aGlzIGJpbmRp
+bmcgY2FuIGJlIHVzZWQgdG8gc3BlY2lmeSB0aGUgc3dpdGNoIG5vZGUgYnkgYSBHUElPDQo+ID4g
+PiBhbmQgdGhlIHJlbW90ZSBlbmRwb2ludCBvZiBpdHMgY29uc3VtZXIuDQo+ID4gPg0KPiA+ID4g
+U2lnbmVkLW9mZi1ieTogTGkgSnVuIDxqdW4ubGlAbnhwLmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4g
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi90eXBlYy1zd2l0Y2gtZ3Bpby50eHQgIHwgMzAN
+Cj4gPiA+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMzAg
+aW5zZXJ0aW9ucygrKQ0KPiA+ID4NCj4gPiA+IGRpZmYgLS1naXQNCj4gPiA+IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi90eXBlYy1zd2l0Y2gtZ3Bpby50eHQNCj4gPiA+
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi90eXBlYy1zd2l0Y2gtZ3Bp
+by50eHQNCj4gPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gPiBpbmRleCAwMDAwMDAwLi40
+ZWY3NmNmDQo+ID4gPiAtLS0gL2Rldi9udWxsDQo+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdXNiL3R5cGVjLXN3aXRjaC1ncGlvLnR4dA0KPiA+ID4gQEAgLTAs
+MCArMSwzMCBAQA0KPiA+ID4gK1R5cGVjIG9yaWVudGF0aW9uIHN3aXRjaCB2aWEgYSBHUElPDQo+
+ID4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiA+ICsNCj4gPiA+
+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ID4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlIHNl
+dCBvbmUgb2YgZm9sbG93aW5nOg0KPiA+ID4gKwktICJueHAscHRuMzYwNDMiIGZvciBOWFAgVHlw
+ZS1DIFN1cGVyU3BlZWQgYWN0aXZlIHN3aXRjaC4NCj4gPiA+ICsNCj4gPiA+ICstIGdwaW9zOiB0
+aGUgR1BJTyB1c2VkIHRvIHN3aXRjaCB0aGUgc3VwZXIgc3BlZWQgYWN0aXZlIGNoYW5uZWwsDQo+
+ID4NCj4gPiBQZXJoYXBzIHN3aXRjaC1ncGlvcyBpbiBjYXNlIHRoZXJlIGFyZSBvdGhlciBncGlv
+cyBuZWVkZWQuDQo+ID4NCj4gPiA+ICsJCUdQSU9fQUNUSVZFX0hJR0g6IEdQSU8gc3RhdGUgaGln
+aCBmb3IgY2MxOw0KPiA+ID4gKwkJR1BJT19BQ1RJVkVfTE9XOiAgR1BJTyBzdGF0ZSBsb3cgZm9y
+IGNjMS4NCj4gPiA+ICstIG9yaWVudGF0aW9uLXN3aXRjaDogbXVzdCBiZSBwcmVzZW50Lg0KPiA+
+DQo+ID4gV2h5IGlzIHRoaXMgbmVlZGVkPyBUaGUgY29tcGF0aWJsZSBjYW4ndCBpbXBseSB0aGlz
+Pw0KPiANCj4gSSB0aGluayBKdW4gTGkgaXMgYWRkZWQgdGhhdCBiYXNlZCBvbiB0aGUgY29tbWVu
+dCBJIHB1dCB0byBkcml2ZXJzL3VzYi90eXBlYy9tdXguYywNCj4gc28gSSdtIHRvIGJsYW1lIGhl
+cmUuIElmIHdlIGNhbiBoYW5kbGUgdGhpcyB3aXRoIHRoZSBjb21wYXRpYmxlIGxpa2UgSSBndWVz
+cyB3ZSBjYW4sDQo+IEknbSBoYXBweS4NCg0KSGkgSGVpa2tpDQoNCkNhbiBJIGp1c3QgcmVtb3Zl
+IHRoZSBvcmlnaW5hbCBib29sIHByb3BlcnR5IGNoZWNrPyBpLmUsIG1hdGNoIE9LIGlmIHRoZSBy
+ZW1vdGUNCnBhcmVudCBub2RlIGlzIGluIHN3aXRjaF9saXN0Lg0KDQpUaGFua3MNCkxpIEp1bg0K
+PiANCj4gdGhhbmtzLA0KPiANCj4gLS0NCj4gaGVpa2tpDQo=
