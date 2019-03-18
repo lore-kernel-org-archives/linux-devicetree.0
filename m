@@ -1,67 +1,110 @@
-Return-Path: <SRS0=L7Fd=RW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46490 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727418AbfCSK7p (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Mar 2019 06:59:45 -0400
-Received: by mail-wr1-f68.google.com with SMTP id o1so1147838wrs.13
-        for <devicetree@vger.kernel.org>; Tue, 19 Mar 2019 03:59:44 -0700 (PDT)
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v4 1/6] iio: gyro: add DT bindings to fxas21002c
-Date: Tue, 19 Mar 2019 10:59:20 +0000
-Message-Id: <20190319105925.25863-2-rui.silva@linaro.org>
-In-Reply-To: <20190319105925.25863-1-rui.silva@linaro.org>
-References: <20190319105925.25863-1-rui.silva@linaro.org>
+Return-Path: <SRS0=LceJ=RV=sifive.com=paul.walmsley@kernel.org>
+Subject: Re: [PATCH v9 0/2] PWM support for HiFive Unleashed
+References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
+ <mvmimwotn60.fsf@suse.de>
+ <CAJ2_jOE3RH9FyFg_NATcLEpHv5y89zdh06Ji2x8n3C_gp-wn6A@mail.gmail.com>
+ <mvm5zsgp00d.fsf@suse.de>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Message-ID: <19807892-f450-58d8-2e78-34d3954da56f@sifive.com>
+Date: Mon, 18 Mar 2019 16:15:48 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+In-Reply-To: <mvm5zsgp00d.fsf@suse.de>
+Content-Type: multipart/alternative;
+ boundary="------------1DDAA2E043AB5BD9F61CDEA9"
+Content-Language: en-US
+To: Yash Shah <yash.shah@sifive.com>
+Cc: Andreas Schwab <schwab@suse.de>, Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree bindings for the FXAS21002C gyroscope.
+This is a multi-part message in MIME format.
+--------------1DDAA2E043AB5BD9F61CDEA9
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
----
- .../bindings/iio/gyroscope/nxp,fxas21002c.txt | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
+Hi Yash
 
-diff --git a/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt b/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
-new file mode 100644
-index 000000000000..465e104bbf14
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
-@@ -0,0 +1,31 @@
-+* NXP FXAS21002C Gyroscope device tree bindings
-+
-+http://www.nxp.com/products/sensors/gyroscopes/3-axis-digital-gyroscope:FXAS21002C
-+
-+Required properties:
-+  - compatible : should be "nxp,fxas21002c"
-+  - reg : the I2C address of the sensor or SPI chip select number for the
-+          device.
-+  - vdd-supply: phandle to the regulator that provides power to the sensor.
-+  - vddio-supply: phandle to the regulator that provides power to the bus.
-+
-+Optional properties:
-+  - reset-gpios : gpio used to reset the device, see gpio/gpio.txt
-+  - interrupts : device support 2 interrupts, INT1 and INT2,
-+                 the interrupts can be triggered on rising or falling edges.
-+                 See interrupt-controller/interrupts.txt
-+  - interrupt-names: should contain "INT1" or "INT2", the gyroscope interrupt
-+                     line in use.
-+  - drive-open-drain: the interrupt/data ready line will be configured
-+                      as open drain, which is useful if several sensors share
-+                      the same interrupt line. This is a boolean property.
-+                      (This binding is taken from pinctrl/pinctrl-bindings.txt)
-+
-+Example:
-+
-+gyroscope@20 {
-+	compatible = "nxp,fxas21002c";
-+	reg = <0x20>;
-+	vdd-supply = <&reg_peri_3p15v>;
-+	vddio-supply = <&reg_peri_3p15v>;
-+};
--- 
-2.21.0
+
+On 3/18/19 10:26 AM, Andreas Schwab wrote:
+> On Mär 15 2019, Yash Shah <yash.shah@sifive.com> wrote:
+>
+>> You need to make sure the period setting is passed via the
+>> conventional way in DT file.
+>> Example:
+>> pwmleds {
+>>     compatible = "pwm-leds";
+>>     heartbeat {
+>>         pwms = <&L45 0 10000000 0>;
+>>         max-brightness = <255>;
+>>         linux,default-trigger = "heartbeat";
+>>     };
+>> };
+> I've now managed to build a working FSBL with that change, but that
+> didn't change anything.  There is not even a heartbeat option in
+> /sys/class/leds/heartbeat/trigger any more.
+
+
+Could you post a copy of the current DTS file and Kconfig that you're
+using so that Andreas can duplicate your results?
+
+
+thanks,
+
+
+- Paul
+
+
+--------------1DDAA2E043AB5BD9F61CDEA9
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <p>Hi Yash</p>
+    <p><br>
+    </p>
+    <div class="moz-cite-prefix">On 3/18/19 10:26 AM, Andreas Schwab
+      wrote:<br>
+    </div>
+    <blockquote type="cite" cite="mid:mvm5zsgp00d.fsf@suse.de">
+      <pre class="moz-quote-pre" wrap="">On Mär 15 2019, Yash Shah <a class="moz-txt-link-rfc2396E" href="mailto:yash.shah@sifive.com">&lt;yash.shah@sifive.com&gt;</a> wrote:
+
+</pre>
+      <blockquote type="cite">
+        <pre class="moz-quote-pre" wrap="">You need to make sure the period setting is passed via the
+conventional way in DT file.
+Example:
+pwmleds {
+    compatible = "pwm-leds";
+    heartbeat {
+        pwms = &lt;&amp;L45 0 10000000 0&gt;;
+        max-brightness = &lt;255&gt;;
+        linux,default-trigger = "heartbeat";
+    };
+};
+</pre>
+      </blockquote>
+      <pre class="moz-quote-pre" wrap="">
+I've now managed to build a working FSBL with that change, but that
+didn't change anything.  There is not even a heartbeat option in
+/sys/class/leds/heartbeat/trigger any more.
+</pre>
+    </blockquote>
+    <p><br>
+    </p>
+    <p>Could you post a copy of the current DTS file and Kconfig that
+      you're using so that Andreas can duplicate your results?<br>
+    </p>
+    <p><br>
+    </p>
+    <p>thanks,</p>
+    <p><br>
+    </p>
+    <p>- Paul<br>
+    </p>
+  </body>
+</html>
+
+--------------1DDAA2E043AB5BD9F61CDEA9--
