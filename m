@@ -1,48 +1,112 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V5 5/5] ARM: dts: imx7ulp-evk: Add backlight support
-Date: Mon, 18 Mar 2019 07:42:10 +0000
-Message-ID: <1552894581-3391-6-git-send-email-Anson.Huang@nxp.com>
-References: <1552894581-3391-1-git-send-email-Anson.Huang@nxp.com>
+From: Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Subject: Re: [PATCH] spi: spi-fsl-spi: support use of the SPISEL_BOOT signal
+ on MPC8309
+Date: Mon, 18 Mar 2019 07:43:47 +0000
+Message-ID: <3f0313c8-670c-5d70-80e2-210add8e328c@prevas.se>
+References: <20190306103156.19897-1-rasmus.villemoes@prevas.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552894581-3391-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20190306103156.19897-1-rasmus.villemoes@prevas.dk>
 Content-Language: en-US
+Content-ID: <4179966A83D55F4B91E29404726DC421@EURPRD10.PROD.OUTLOOK.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "stefan@agner.ch" <stefan@agner.ch>, Leonard Crestez <leonard.crestez@nxp.com>, Robin Gong <yibin.gong@nxp.com>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kern>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Esben Haabendal <esben@geanix.com>, Fabio Estevam <festevam@gmail.com>, Per Christensen <pnc@deif.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds i.MX7ULP EVK board MIPI-DSI backlight
-support.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No changes.
----
- arch/arm/boot/dts/imx7ulp-evk.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx7ulp-evk.dts b/arch/arm/boot/dts/imx7ulp-=
-evk.dts
-index 3f5ea18..f90f2f3 100644
---- a/arch/arm/boot/dts/imx7ulp-evk.dts
-+++ b/arch/arm/boot/dts/imx7ulp-evk.dts
-@@ -22,6 +22,14 @@
- 		reg =3D <0x60000000 0x40000000>;
- 	};
-=20
-+	backlight {
-+		compatible =3D "pwm-backlight";
-+		pwms =3D <&pwm0 1 50000>;
-+		brightness-levels =3D <0 20 25 30 35 40 100>;
-+		default-brightness-level =3D <6>;
-+		status =3D "okay";
-+	};
-+
- 	reg_vsd_3v3: regulator-vsd-3v3 {
- 		compatible =3D "regulator-fixed";
- 		regulator-name =3D "VSD_3V3";
---=20
-2.7.4
+cGluZw0KDQpPbiAwNi8wMy8yMDE5IDExLjMyLCBSYXNtdXMgVmlsbGVtb2VzIHdyb3RlOg0KPiBU
+aGUgTVBDODMwOSBoYXMgYSBkZWRpY2F0ZWQgc2lnbmFsLCBTUElTRUxfQk9PVCwgdXN1YWxseSB1
+c2VkIGFzIGNoaXANCj4gc2VsZWN0IGZvciB0aGUgZmxhc2ggZGV2aWNlIGZyb20gd2hpY2ggdGhl
+IGJvb3Rsb2FkZXIgaXMgbG9hZGVkLiBJdCBpcw0KPiBub3QgYW4gb3JkaW5hcnkgZ3BpbywgYnV0
+IGlzIHNpbXBseSBjb250cm9sbGVkIHZpYSB0aGUgU1BJX0NTIHJlZ2lzdGVyDQo+IGluIHRoZSBz
+eXN0ZW0gY29uZmlndXJhdGlvbi4NCj4gDQo+IFRvIGFsbG93IGFjY2Vzc2luZyBzdWNoIGEgc3Bp
+IHNsYXZlLCB3ZSBuZWVkIHRvIHRlYWNoDQo+IGZzbF9zcGlfY3NfY29udHJvbCgpIGhvdyB0byBj
+b250cm9sIHRoZSBTUElTRUxfQk9PVCBzaWduYWwuIFRvDQo+IGRpc3Rpbmd1aXNoIHRoZSBncGlv
+LWNvbnRyb2xsZWQgc2xhdmVzLCBjb250aW51ZSB0byBoYXZlIHRob3NlIHVzZQ0KPiBjaGlwX3Nl
+bGVjdCB2YWx1ZXMgb2YgMC4ubmdwaW9zLTEsIGFuZCB1c2UgY2hpcF9zZWxlY3QgPT0gbmdwaW9z
+IGZvcg0KPiB0aGUgYm9vdCBmbGFzaC4NCj4gDQo+IEknbSBub3QgdG9vIGhhcHB5IHdpdGggYWxs
+IHRoZSBpZmRlZmZlcnksIGJ1dCBpdCBzZWVtcyB0byBiZSBuZWNlc3NhcnkNCj4gZm9yIGd1YXJk
+aW5nIHRoZSBzeXNkZXYvZnNsX3NvYy5oIGFuZCB1c2Ugb2YNCj4gZ2V0X2ltbXJiYXNlKCkgKHNw
+aS1mc2wtbGliLmMgYWxyZWFkeSBjb250YWlucyBzaW1pbGFyIGlmZGVmZmVyeSkuDQo+IA0KPiBH
+b29nbGluZyBzdWdnZXN0cyB0aGF0IHRoZSBNUEM4MzA2IGlzIHNpbWlsYXIsIHdpdGggdGhlIFNQ
+SV9DUw0KPiByZWdpc3RlciBhdCB0aGUgc2FtZSBvZmZzZXQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5
+OiBSYXNtdXMgVmlsbGVtb2VzIDxyYXNtdXMudmlsbGVtb2VzQHByZXZhcy5kaz4NCj4gLS0tDQo+
+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvZnNsLXNwaS50eHQgICAgICAgfCAgNCArKw0K
+PiAgZHJpdmVycy9zcGkvc3BpLWZzbC1saWIuaCAgICAgICAgICAgICAgICAgICAgIHwgIDIgKw0K
+PiAgZHJpdmVycy9zcGkvc3BpLWZzbC1zcGkuYyAgICAgICAgICAgICAgICAgICAgIHwgNDAgKysr
+KysrKysrKysrKysrKy0tLQ0KPiAgMyBmaWxlcyBjaGFuZ2VkLCA0MSBpbnNlcnRpb25zKCspLCA1
+IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9zcGkvZnNsLXNwaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3Mvc3BpL2ZzbC1zcGkudHh0DQo+IGluZGV4IDg4NTQwMDRhMWQzYS4uNDExMzc1ZWFjNTRk
+IDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL2Zz
+bC1zcGkudHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkv
+ZnNsLXNwaS50eHQNCj4gQEAgLTE4LDYgKzE4LDEwIEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+
+ICAtIGdwaW9zIDogc3BlY2lmaWVzIHRoZSBncGlvIHBpbnMgdG8gYmUgdXNlZCBmb3IgY2hpcHNl
+bGVjdHMuDQo+ICAgIFRoZSBncGlvcyB3aWxsIGJlIHJlZmVycmVkIHRvIGFzIHJlZyA9IDxpbmRl
+eD4gaW4gdGhlIFNQSSBjaGlsZCBub2Rlcy4NCj4gICAgSWYgdW5zcGVjaWZpZWQsIGEgc2luZ2xl
+IFNQSSBkZXZpY2Ugd2l0aG91dCBhIGNoaXAgc2VsZWN0IGNhbiBiZSB1c2VkLg0KPiArLSBmc2ws
+c3Bpc2VsX2Jvb3QgOiBmb3IgdGhlIE1QQzgzMDYgYW5kIE1QQzgzMDksIHNwZWNpZmllcyB0aGF0
+IHRoZQ0KPiArICBTUElTRUxfQk9PVCBzaWduYWwgaXMgdXNlZCBhcyBjaGlwIHNlbGVjdCBmb3Ig
+YSBzbGF2ZSBkZXZpY2UuIFVzZQ0KPiArICByZWcgPSA8bnVtYmVyIG9mIGdwaW9zPiBpbiB0aGUg
+Y29ycmVzcG9uZGluZyBjaGlsZCBub2RlLCBpLmUuIDAgaWYNCj4gKyAgdGhlIGdwaW9zIHByb3Bl
+cnR5IGlzIG5vdCBwcmVzZW50Lg0KPiAgDQo+ICBFeGFtcGxlOg0KPiAgCXNwaUA0YzAgew0KPiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9zcGkvc3BpLWZzbC1saWIuaCBiL2RyaXZlcnMvc3BpL3NwaS1m
+c2wtbGliLmgNCj4gaW5kZXggZjMwM2YzMDZiMzhlLi40ODM3MzRiYzFiMWUgMTAwNjQ0DQo+IC0t
+LSBhL2RyaXZlcnMvc3BpL3NwaS1mc2wtbGliLmgNCj4gKysrIGIvZHJpdmVycy9zcGkvc3BpLWZz
+bC1saWIuaA0KPiBAQCAtOTUsOCArOTUsMTAgQEAgc3RhdGljIGlubGluZSB1MzIgbXBjOHh4eF9z
+cGlfcmVhZF9yZWcoX19iZTMyIF9faW9tZW0gKnJlZykNCj4gIA0KPiAgc3RydWN0IG1wYzh4eHhf
+c3BpX3Byb2JlX2luZm8gew0KPiAgCXN0cnVjdCBmc2xfc3BpX3BsYXRmb3JtX2RhdGEgcGRhdGE7
+DQo+ICsJaW50IG5ncGlvczsNCj4gIAlpbnQgKmdwaW9zOw0KPiAgCWJvb2wgKmFsb3dfZmxhZ3M7
+DQo+ICsJX19iZTMyIF9faW9tZW0gKmltbXJfc3BpX2NzOw0KPiAgfTsNCj4gIA0KPiAgZXh0ZXJu
+IHUzMiBtcGM4eHh4X3NwaV90eF9idWZfdTgoc3RydWN0IG1wYzh4eHhfc3BpICptcGM4eHh4X3Nw
+aSk7DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NwaS9zcGktZnNsLXNwaS5jIGIvZHJpdmVycy9z
+cGkvc3BpLWZzbC1zcGkuYw0KPiBpbmRleCA4ZjJlOTc4NTdlOGIuLjNkN2I1MGM2NWYzNiAxMDA2
+NDQNCj4gLS0tIGEvZHJpdmVycy9zcGkvc3BpLWZzbC1zcGkuYw0KPiArKysgYi9kcml2ZXJzL3Nw
+aS9zcGktZnNsLXNwaS5jDQo+IEBAIC0zOSw2ICszOSwxNCBAQA0KPiAgI2luY2x1ZGUgPGxpbnV4
+L3NwaS9zcGlfYml0YmFuZy5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L3R5cGVzLmg+DQo+ICANCj4g
+KyNpZmRlZiBDT05GSUdfRlNMX1NPQw0KPiArI2luY2x1ZGUgPHN5c2Rldi9mc2xfc29jLmg+DQo+
+ICsjZW5kaWYNCj4gKw0KPiArLyogU3BlY2lmaWMgdG8gdGhlIE1QQzgzMDYvTVBDODMwOSAqLw0K
+PiArI2RlZmluZSBJTU1SX1NQSV9DU19PRkZTRVQgMHgxNGMNCj4gKyNkZWZpbmUgU1BJX0JPT1Rf
+U0VMX0JJVCAgIDB4ODAwMDAwMDANCj4gKw0KPiAgI2luY2x1ZGUgInNwaS1mc2wtbGliLmgiDQo+
+ICAjaW5jbHVkZSAic3BpLWZzbC1jcG0uaCINCj4gICNpbmNsdWRlICJzcGktZnNsLXNwaS5oIg0K
+PiBAQCAtNzAxLDEwICs3MDksMTcgQEAgc3RhdGljIHZvaWQgZnNsX3NwaV9jc19jb250cm9sKHN0
+cnVjdCBzcGlfZGV2aWNlICpzcGksIGJvb2wgb24pDQo+ICAJc3RydWN0IGZzbF9zcGlfcGxhdGZv
+cm1fZGF0YSAqcGRhdGEgPSBkZXZfZ2V0X3BsYXRkYXRhKGRldik7DQo+ICAJc3RydWN0IG1wYzh4
+eHhfc3BpX3Byb2JlX2luZm8gKnBpbmZvID0gdG9fb2ZfcGluZm8ocGRhdGEpOw0KPiAgCXUxNiBj
+cyA9IHNwaS0+Y2hpcF9zZWxlY3Q7DQo+IC0JaW50IGdwaW8gPSBwaW5mby0+Z3Bpb3NbY3NdOw0K
+PiAtCWJvb2wgYWxvdyA9IHBpbmZvLT5hbG93X2ZsYWdzW2NzXTsNCj4gIA0KPiAtCWdwaW9fc2V0
+X3ZhbHVlKGdwaW8sIG9uIF4gYWxvdyk7DQo+ICsJaWYgKGNzIDwgcGluZm8tPm5ncGlvcykgew0K
+PiArCQlpbnQgZ3BpbyA9IHBpbmZvLT5ncGlvc1tjc107DQo+ICsJCWJvb2wgYWxvdyA9IHBpbmZv
+LT5hbG93X2ZsYWdzW2NzXTsNCj4gKw0KPiArCQlncGlvX3NldF92YWx1ZShncGlvLCBvbiBeIGFs
+b3cpOw0KPiArCX0gZWxzZSB7DQo+ICsJCWlmIChXQVJOX09OX09OQ0UoY3MgPiBwaW5mby0+bmdw
+aW9zIHx8ICFwaW5mby0+aW1tcl9zcGlfY3MpKQ0KPiArCQkJcmV0dXJuOw0KPiArCQlpb3dyaXRl
+MzJiZShvbiA/IFNQSV9CT09UX1NFTF9CSVQgOiAwLCBwaW5mby0+aW1tcl9zcGlfY3MpOw0KPiAr
+CX0NCj4gIH0NCj4gIA0KPiAgc3RhdGljIGludCBvZl9mc2xfc3BpX2dldF9jaGlwc2VsZWN0cyhz
+dHJ1Y3QgZGV2aWNlICpkZXYpDQo+IEBAIC03MTIsMTIgKzcyNywxNSBAQCBzdGF0aWMgaW50IG9m
+X2ZzbF9zcGlfZ2V0X2NoaXBzZWxlY3RzKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gIAlzdHJ1Y3Qg
+ZGV2aWNlX25vZGUgKm5wID0gZGV2LT5vZl9ub2RlOw0KPiAgCXN0cnVjdCBmc2xfc3BpX3BsYXRm
+b3JtX2RhdGEgKnBkYXRhID0gZGV2X2dldF9wbGF0ZGF0YShkZXYpOw0KPiAgCXN0cnVjdCBtcGM4
+eHh4X3NwaV9wcm9iZV9pbmZvICpwaW5mbyA9IHRvX29mX3BpbmZvKHBkYXRhKTsNCj4gKwlib29s
+IHNwaXNlbF9ib290ID0gSVNfRU5BQkxFRChDT05GSUdfRlNMX1NPQykgJiYNCj4gKwkJb2ZfcHJv
+cGVydHlfcmVhZF9ib29sKG5wLCAiZnNsLHNwaXNlbF9ib290Iik7DQo+ICAJaW50IG5ncGlvczsN
+Cj4gIAlpbnQgaSA9IDA7DQo+ICAJaW50IHJldDsNCj4gIA0KPiAgCW5ncGlvcyA9IG9mX2dwaW9f
+Y291bnQobnApOw0KPiAtCWlmIChuZ3Bpb3MgPD0gMCkgew0KPiArCW5ncGlvcyA9IG1heChuZ3Bp
+b3MsIDApOw0KPiArCWlmIChuZ3Bpb3MgPT0gMCAmJiAhc3Bpc2VsX2Jvb3QpIHsNCj4gIAkJLyoN
+Cj4gIAkJICogU1BJIHcvbyBjaGlwLXNlbGVjdCBsaW5lLiBPbmUgU1BJIGRldmljZSBpcyBzdGls
+bCBwZXJtaXR0ZWQNCj4gIAkJICogdGhvdWdoLg0KPiBAQCAtNzI2LDYgKzc0NCw3IEBAIHN0YXRp
+YyBpbnQgb2ZfZnNsX3NwaV9nZXRfY2hpcHNlbGVjdHMoc3RydWN0IGRldmljZSAqZGV2KQ0KPiAg
+CQlyZXR1cm4gMDsNCj4gIAl9DQo+ICANCj4gKwlwaW5mby0+bmdwaW9zID0gbmdwaW9zOw0KPiAg
+CXBpbmZvLT5ncGlvcyA9IGttYWxsb2NfYXJyYXkobmdwaW9zLCBzaXplb2YoKnBpbmZvLT5ncGlv
+cyksDQo+ICAJCQkJICAgICBHRlBfS0VSTkVMKTsNCj4gIAlpZiAoIXBpbmZvLT5ncGlvcykNCj4g
+QEAgLTc2OSw3ICs3ODgsMTggQEAgc3RhdGljIGludCBvZl9mc2xfc3BpX2dldF9jaGlwc2VsZWN0
+cyhzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ICAJCX0NCj4gIAl9DQo+ICANCj4gLQlwZGF0YS0+bWF4
+X2NoaXBzZWxlY3QgPSBuZ3Bpb3M7DQo+ICsjaWYgSVNfRU5BQkxFRChDT05GSUdfRlNMX1NPQykN
+Cj4gKwlpZiAoc3Bpc2VsX2Jvb3QpIHsNCj4gKwkJcGluZm8tPmltbXJfc3BpX2NzID0gaW9yZW1h
+cChnZXRfaW1tcmJhc2UoKSArIElNTVJfU1BJX0NTX09GRlNFVCwgNCk7DQo+ICsJCWlmICghcGlu
+Zm8tPmltbXJfc3BpX2NzKSB7DQo+ICsJCQlyZXQgPSAtRU5PTUVNOw0KPiArCQkJaSA9IG5ncGlv
+cyAtIDE7DQo+ICsJCQlnb3RvIGVycl9sb29wOw0KPiArCQl9DQo+ICsJfQ0KPiArI2VuZGlmDQo+
+ICsNCj4gKwlwZGF0YS0+bWF4X2NoaXBzZWxlY3QgPSBuZ3Bpb3MgKyBzcGlzZWxfYm9vdDsNCj4g
+IAlwZGF0YS0+Y3NfY29udHJvbCA9IGZzbF9zcGlfY3NfY29udHJvbDsNCj4gIA0KPiAgCXJldHVy
+biAwOw0KPiANCg0K
