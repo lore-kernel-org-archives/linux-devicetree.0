@@ -1,63 +1,68 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH v5 0/3] Add PM support to STM32 LP Timer drivers
-Date: Mon, 18 Mar 2019 15:35:03 +0100
-Message-ID: <b89207ac-d80b-d79f-02cc-095f19b8aecf@st.com>
-References: <1550668068-9661-1-git-send-email-fabrice.gasnier@st.com>
+From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+Subject: Re: [PATCH 2/2] usb: hub: use non-removable-ports DT property
+Date: Mon, 18 Mar 2019 14:38:57 +0000
+Message-ID: <yw1xlg1c1c3i.fsf@mansr.com>
+References: <20190228184540.24570-1-mans@mansr.com>
+        <20190228184540.24570-2-mans@mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550668068-9661-1-git-send-email-fabrice.gasnier@st.com>
-Content-Language: en-US
+In-Reply-To: <20190228184540.24570-2-mans@mansr.com> (Mans Rullgard's message
+        of "Thu, 28 Feb 2019 18:45:40 +0000")
 Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com
-Cc: robh+dt@kernel.org, u.kleine-koenig@pengutronix.de, tduszyns@gmail.com, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/20/19 2:07 PM, Fabrice Gasnier wrote:
-> This patch series adds power management support for STM32 LP Timer:
-> - PWM driver
-> - Document the pinctrl states for sleep mode
-> 
-> It also adds device link between the PWM consumer and the PWM provider.
-> This allows proper sequencing for suspend/resume (e.g. user will likely
-> do a pwm_disable() before the PWM provider suspend executes), see [1].
-> 
-> [1] https://lkml.org/lkml/2019/2/5/770
+Mans Rullgard <mans@mansr.com> writes:
 
-Hi Thierry,
-
-Gentle reminder to review changes I've made in v5.
-
-Thanks in advance,
-Best Regards,
-Fabrice
-
-> 
+> Mark any ports listed in the non-removable-ports DT property as
+> hardwired. This is useful for boards with built-in USB devices
+> that cannot be (or have not been) marked as fixed in hardware.
+>
+> Signed-off-by: Mans Rullgard <mans@mansr.com>
 > ---
-> Changes in v5:
-> - improve a warning message, fix a style issue.
-> 
-> Changes in v4:
-> - improve error handling when adding the PWM consumer device link.
-> 
-> Changes in v3:
-> - Move the device_link_add() call to of_pwm_get() as discussed with Uwe.
-> 
-> Changes in v2:
-> - Don't disable PWM channel in PWM provider: rather refuse to suspend
->   and report an error as suggested by Uwe and Thierry.
-> - Add patch 3/3 to propose device link addition.
-> - No updates for STM32 LP Timer IIO driver. Patches can be send separately.
-> 
-> Fabrice Gasnier (3):
->   dt-bindings: pwm-stm32-lp: document pinctrl sleep state
->   pwm: stm32-lp: Add power management support
->   pwm: core: add consumer device link
-> 
->  .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |  9 ++--
->  drivers/pwm/core.c                                 | 50 ++++++++++++++++++++--
->  drivers/pwm/pwm-stm32-lp.c                         | 25 +++++++++++
->  include/linux/pwm.h                                |  6 ++-
->  4 files changed, 82 insertions(+), 8 deletions(-)
-> 
+>  drivers/usb/core/hub.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+
+Any comments on these patches?
+
+> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> index 3adff4da2ee1..44ac49a30be1 100644
+> --- a/drivers/usb/core/hub.c
+> +++ b/drivers/usb/core/hub.c
+> @@ -1328,6 +1328,9 @@ static int hub_configure(struct usb_hub *hub,
+>  	unsigned unit_load;
+>  	unsigned full_load;
+>  	unsigned maxchild;
+> +	struct property *prop;
+> +	const __be32 *cur;
+> +	u32 val;
+>
+>  	hub->buffer = kmalloc(sizeof(*hub->buffer), GFP_KERNEL);
+>  	if (!hub->buffer) {
+> @@ -1629,6 +1632,17 @@ static int hub_configure(struct usb_hub *hub,
+>  		}
+>  	}
+>
+> +	of_property_for_each_u32(hub_dev->of_node, "non-removable-ports",
+> +				 prop, cur, val) {
+> +		if (val < 1 || val > hdev->maxchild) {
+> +			dev_warn(hub_dev, "port number %u out of range\n", val);
+> +			continue;
+> +		}
+> +
+> +		hub->ports[val - 1]->connect_type =
+> +			USB_PORT_CONNECT_TYPE_HARD_WIRED;
+> +	}
+> +
+>  	usb_hub_adjust_deviceremovable(hdev, hub->descriptor);
+>
+>  	hub_activate(hub, HUB_INIT);
+> -- 
+> 2.20.1
+>
+
+-- 
+Måns Rullgård
