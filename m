@@ -1,64 +1,58 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC 07/15] dt-bindings: display: renesas: lvds: Add
- renesas,companion property
-Date: Mon, 18 Mar 2019 11:21:15 +0100
-Message-ID: <CAMuHMdWfNk+v9PTMpE43DD8DvrmhZDeAocDReVNOsE=oh4P6uw@mail.gmail.com>
-References: <20190306232345.23052-1-laurent.pinchart+renesas@ideasonboard.com>
- <20190306232345.23052-8-laurent.pinchart+renesas@ideasonboard.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] spi: spi-fsl-spi: support use of the SPISEL_BOOT signal
+ on MPC8309
+Date: Mon, 18 Mar 2019 10:22:57 +0000
+Message-ID: <20190318102257.GA6221@sirena.org.uk>
+References: <20190306103156.19897-1-rasmus.villemoes@prevas.dk>
+ <3f0313c8-670c-5d70-80e2-210add8e328c@prevas.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190306232345.23052-8-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, DRI Development <dri-devel@lists.freedesktop.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3f0313c8-670c-5d70-80e2-210add8e328c@prevas.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Esben Haabendal <esben@geanix.com>, Fabio Estevam <festevam@gmail.com>, Per Christensen <pnc@deif.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKCk9uIFRodSwgTWFyIDcsIDIwMTkgYXQgMTI6MjQgQU0gTGF1cmVudCBQaW5j
-aGFydAo8bGF1cmVudC5waW5jaGFydCtyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+IHdyb3RlOgo+
-IEFkZCBhIG5ldyBvcHRpb25hbCByZW5lc2FzLGNvbXBhbmlvbiBwcm9wZXJ0eSB0byBwb2ludCB0
-byB0aGUgY29tcGFuaW9uCj4gTFZEUyBlbmNvZGVyLiBUaGlzIGlzIHVzZWQgdG8gc3VwcG9ydCBk
-dWFsLWxpbmsgb3BlcmF0aW9uIHdoZXJlIHRoZSBtYWluCj4gTFZEUyBlbmNvZGVyIHNwbGl0cyBl
-dmVuLW51bWJlcmVkIGFuZCBvZGQtbnVtYmVyZWQgcGl4ZWxzIGJldHdlZW4gdGhlCj4gdHdvIExW
-RFMgZW5jb2RlcnMuCgpOb3RlIHRoYXQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3VzYi9nZW5lcmljLnR4dCBhbHJlYWR5CmRlc2NyaWJlcyBhICJjb21wYW5pb24iIHByb3BlcnR5
-IHdpdGhvdXQgdmVuZG9yIHByZWZpeC4KCj4gVGhlIG5ldyBwcm9wZXJ0eSBkb2Vzbid0IGNvbnRy
-b2wgdGhlIG1vZGUgb2Ygb3BlcmF0aW9uLCBpdCBvbmx5Cj4gZGVzY3JpYmVzIHRoZSByZWxhdGlv
-bnNoaXAgYmV0d2VlbiB0aGUgbWFzdGVyIGFuZCBjb21wYW5pb24gTFZEUwo+IGVuY29kZXJzLgo+
-Cj4gU2lnbmVkLW9mZi1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydCtyZW5l
-c2FzQGlkZWFzb25ib2FyZC5jb20+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQgICAgIHwgNiArKysrKysKPiAgMSBmaWxlIGNo
-YW5nZWQsIDYgaW5zZXJ0aW9ucygrKQo+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0IGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50
-eHQKPiBpbmRleCA5MDBhODg0YWQ5ZjUuLmE3MjBkYmI1ZGU2OSAxMDA2NDQKPiAtLS0gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRz
-LnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
-aWRnZS9yZW5lc2FzLGx2ZHMudHh0Cj4gQEAgLTQ1LDYgKzQ1LDEyIEBAIE9GIGdyYXBoIGJpbmRp
-bmdzIHNwZWNpZmllZCBpbiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgu
-dHh0Lgo+Cj4gIEVhY2ggcG9ydCBzaGFsbCBoYXZlIGEgc2luZ2xlIGVuZHBvaW50Lgo+Cj4gK09w
-dGlvbmFsIHByb3BlcnRpZXM6Cj4gKwo+ICstIHJlbmVzYXMsY29tcGFuaW9uIDogcGhhbmRsZSB0
-byB0aGUgY29tcGFuaW9uIExWRFMgZW5jb2Rlci4gVGhpcyBwcm9wZXJ0eSBpcwo+ICsgIHZhbGlk
-IGZvciB0aGUgZmlyc3QgTFZEUyBlbmNvZGVyIEQzIGFuZCBFMyBTb0NzIG9ubHksIGFuZCBwb2lu
-dHMgdG8gdGhlCgouLi4gb24gRDMgLi4uCgo+ICsgIHNlY29uZCBlbmNvZGVyIHRvIGJlIHVzZWQg
-YXMgYSBjb21wYW5pb24gaW4gZHVhbC1saW5rIG1vZGUuCgpXaHkgcmVzdHJpY3QgdGhpcyB0byB0
-aGUgZmlyc3QgTFZEUyBkZWNvZGVyLCBhbmQgbm90IGhhdmUgYSBiYWNrbGluayBpbiB0aGUKb3Ro
-ZXIgbm9kZSwgbGlrZSBmb3IgVVNCPwoKR3J7b2V0amUsZWV0aW5nfXMsCgogICAgICAgICAgICAg
-ICAgICAgICAgICBHZWVydAoKLS0gCkdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMg
-b2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcKCkluIHBlcnNvbmFs
-IGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFj
-a2VyLiBCdXQKd2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9n
-cmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0aGF0LgogICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIC0tIExpbnVzIFRvcnZhbGRzCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbA==
+
+--FL5UXtIhxfXey3p5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Mar 18, 2019 at 07:43:47AM +0000, Rasmus Villemoes wrote:
+> ping
+>=20
+> On 06/03/2019 11.32, Rasmus Villemoes wrote:
+
+Please don't send content free pings and please allow a reasonable time
+for review.  People get busy, go on holiday, attend conferences and so=20
+on so unless there is some reason for urgency (like critical bug fixes)
+please allow at least a couple of weeks for review.  If there have been
+review comments then people may be waiting for those to be addressed.
+
+Sending content free pings adds to the mail volume (if they are seen at
+all) which is often the problem and since they can't be reviewed
+directly if something has gone wrong you'll have to resend the patches
+anyway, so sending again is generally a better approach though there are
+some other maintainers who like them - if in doubt look at how patches
+for the subsystem are normally handled.
+
+--FL5UXtIhxfXey3p5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyPcYAACgkQJNaLcl1U
+h9Czxwf/Zi8hNjbwLvG1C60sGV85PLsh4mSzTnWNjr6x8PxqRBadRmrb+i6PQdxh
+yGDP2L8AUhZbQH4kjwH/H6HDHCZrxh0eRuKpbSXFNVkih5YXMmcr7mE1woV1HGZ7
+relo2dVkp5JKP4biS5+rkOIsxiWdBrJo8BbJ1CNLeykQKh/qizqD6X70MSQZwyho
+Y3/3YRkUWVo83Vdm53/pRo3dOGZ+ihPulmVUnx5Nh7jA3C1TdVK1qdJzyLn/gG4i
+dmljnrxj9G2D2C0uAudO9RSgfkhqvAQsWEGAQUwnPlXiZ69rmUMKBz79OkjP4RGL
+LTzz4cXEBqx4XCIznLV9oSrwNowDVQ==
+=Vo2r
+-----END PGP SIGNATURE-----
+
+--FL5UXtIhxfXey3p5--
