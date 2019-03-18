@@ -1,58 +1,39 @@
-From: Chen-Yu Tsai <wens@kernel.org>
-Subject: Re: [PATCH 4/6] nvmem: sunxi_sid: Read out data in native format
-Date: Mon, 18 Mar 2019 17:09:44 +0800
-Message-ID: <CAGb2v64pq5V0_nZ7f0ZPwuNxNU8HbY0A6CqeC6TMd2z2xhJHwg@mail.gmail.com>
-References: <20190318073354.12151-1-wens@kernel.org> <20190318073354.12151-5-wens@kernel.org>
- <20190318084212.lv2lorskizl65uzg@flea> <CAGb2v67H9FkjKjSE5a7fUCb_t95Zfuk1p0bjWYJxjMqhMN-hfg@mail.gmail.com>
- <20190318085751.kziqzxnadtho4kdb@flea>
+From: "Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [EXT] [PATCH v6 1/7] scsi: ufs: Introduce ufshcd_get_pwr_dev_param
+Date: Mon, 18 Mar 2019 09:13:42 +0000
+Message-ID: <BN7PR08MB56841EF4C188AB6FFFCCFDF7DB470@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <1552712687-20186-1-git-send-email-stanley.chu@mediatek.com>
+ <1552712687-20186-3-git-send-email-stanley.chu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190318085751.kziqzxnadtho4kdb@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1552712687-20186-3-git-send-email-stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "avri.altman-Sjgp3cTcYWE@public.gmane.org" <avri.altman-Sjgp3cTcYWE@public.gmane.org>, "alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "pedrom.sousa-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <pedrom.sousa-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: "chun-hung.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <chun-hung.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 4:57 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+This patch absolutely needed.
+
+>Subject: [EXT] [PATCH v6 1/7] scsi: ufs: Introduce ufshcd_get_pwr_dev_param
 >
-> On Mon, Mar 18, 2019 at 04:45:19PM +0800, Chen-Yu Tsai wrote:
-> > On Mon, Mar 18, 2019 at 4:42 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Mon, Mar 18, 2019 at 03:33:52PM +0800, Chen-Yu Tsai wrote:
-> > > > From: Chen-Yu Tsai <wens@csie.org>
-> > > >
-> > > > Originally the SID e-fuses were thought to be in big-endian format.
-> > > > Later sources show that they are in fact native or little-endian.
-> > > > The most compelling evidence is the thermal sensor calibration data,
-> > > > which is a set of one to three 16-bit values. In native-endian they
-> > > > are in 16-bit cells with increasing offsets, whereas with big-endian
-> > > > they are in the wrong order, and a gap with no data will show if there
-> > > > are one or three cells.
-> > > >
-> > > > Switch to a native endian representation for the nvmem device. For the
-> > > > H3, the register read-out method was already returning data in native
-> > > > endian. This only affects the other SoCs.
-> > > >
-> > > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > >
-> > > I thought only the newer SoCs were impacted by this issue?
-> >
-> > It is noticable on the newer SoCs. The old ones only have the 128-bit SID,
-> > which could be read either way, as AFAIK it's just a serial number.
-> >
-> > If you think we should leave the old ones alone I can factor that in.
+>ufshcd_get_pwr_dev_param is for vendors to decide finally agreed attributes
+>for power mode change if vendors define their host capability in struct
+>ufs_dev_params.
 >
-> IIRC, there was also the SoC ID in the SID on those SoCs as well,
-> which we might have to use in the future so we'll want to make sure it
-> is correct.
-
-We'll need to ask Allwinner about this then.
-
-FWIW, the fel command in sunxi-tools reads them out in little endian. I
-believe this and the SID page on the linux-sunxi wiki predate the sunxi_sid
-driver.
-
-ChenYu
+>This api is using by both ufs-qcom and ufs-hisi now. Simply re-factor it and
+>then every vendors can reuse it.
+>
+>Signed-off-by: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>Reviewed-by: Avri Altman <avri.altman-Sjgp3cTcYWE@public.gmane.org>
+Acked-by: Bean Huo <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
