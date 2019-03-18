@@ -1,41 +1,58 @@
-From: Mickael GUENE <mickael.guene@st.com>
-Subject: Re: [PATCH v1 1/3] dt-bindings: Document MIPID02 bindings
-Date: Mon, 18 Mar 2019 09:08:57 +0000
-Message-ID: <a8dff925-3ec4-3a40-f129-ea162ca25aed@st.com>
-References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
- <1552373045-134493-2-git-send-email-mickael.guene@st.com>
- <20190316214649.co63p5arhiwbuv3g@valkosipuli.retiisi.org.uk>
- <b238948a-4b08-4fb8-c955-d071bbcd3d2d@st.com>
- <20190318084825.3hpejk5xg2xt2h4b@valkosipuli.retiisi.org.uk>
+From: Chen-Yu Tsai <wens@kernel.org>
+Subject: Re: [PATCH 4/6] nvmem: sunxi_sid: Read out data in native format
+Date: Mon, 18 Mar 2019 17:09:44 +0800
+Message-ID: <CAGb2v64pq5V0_nZ7f0ZPwuNxNU8HbY0A6CqeC6TMd2z2xhJHwg@mail.gmail.com>
+References: <20190318073354.12151-1-wens@kernel.org> <20190318073354.12151-5-wens@kernel.org>
+ <20190318084212.lv2lorskizl65uzg@flea> <CAGb2v67H9FkjKjSE5a7fUCb_t95Zfuk1p0bjWYJxjMqhMN-hfg@mail.gmail.com>
+ <20190318085751.kziqzxnadtho4kdb@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190318084825.3hpejk5xg2xt2h4b@valkosipuli.retiisi.org.uk>
-Content-Language: en-US
-Content-ID: <618E78B5CF9334458B50EFA417AA7D80@st.com>
+In-Reply-To: <20190318085751.kziqzxnadtho4kdb@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Sakari,
+On Mon, Mar 18, 2019 at 4:57 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Mon, Mar 18, 2019 at 04:45:19PM +0800, Chen-Yu Tsai wrote:
+> > On Mon, Mar 18, 2019 at 4:42 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On Mon, Mar 18, 2019 at 03:33:52PM +0800, Chen-Yu Tsai wrote:
+> > > > From: Chen-Yu Tsai <wens@csie.org>
+> > > >
+> > > > Originally the SID e-fuses were thought to be in big-endian format.
+> > > > Later sources show that they are in fact native or little-endian.
+> > > > The most compelling evidence is the thermal sensor calibration data,
+> > > > which is a set of one to three 16-bit values. In native-endian they
+> > > > are in 16-bit cells with increasing offsets, whereas with big-endian
+> > > > they are in the wrong order, and a gap with no data will show if there
+> > > > are one or three cells.
+> > > >
+> > > > Switch to a native endian representation for the nvmem device. For the
+> > > > H3, the register read-out method was already returning data in native
+> > > > endian. This only affects the other SoCs.
+> > > >
+> > > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > >
+> > > I thought only the newer SoCs were impacted by this issue?
+> >
+> > It is noticable on the newer SoCs. The old ones only have the 128-bit SID,
+> > which could be read either way, as AFAIK it's just a serial number.
+> >
+> > If you think we should leave the old ones alone I can factor that in.
+>
+> IIRC, there was also the SoC ID in the SID on those SoCs as well,
+> which we might have to use in the future so we'll want to make sure it
+> is correct.
 
->>>> +
->>>> +Example:
->>>> +
->>>> +mipid02: mipid02@14 {
->>>
->>> The node should be a generic name. "csi2rx" is used by a few devices now.
->>>
->>  If I understand you well, you would prefer:
->> csi2rx: mipid02@14 {
->>  I show no usage of csi2rx node naming except for MIPI-CSI2 RX controller.
-> 
-> The other way around. :)
-> 
-> The label can be more or less anything AFAIK.
-> 
- Ok got it !!! So something like 'mipid02: bridge@14 {' should be ok ?
+We'll need to ask Allwinner about this then.
 
-Thx
+FWIW, the fel command in sunxi-tools reads them out in little endian. I
+believe this and the SID page on the linux-sunxi wiki predate the sunxi_sid
+driver.
+
+ChenYu
