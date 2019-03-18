@@ -1,67 +1,63 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH/RFC 07/15] dt-bindings: display: renesas: lvds: Add
- renesas,companion property
-Date: Mon, 18 Mar 2019 16:22:40 +0200
-Message-ID: <20190318142240.GC12707@pendragon.ideasonboard.com>
-References: <20190306232345.23052-1-laurent.pinchart+renesas@ideasonboard.com>
- <20190306232345.23052-8-laurent.pinchart+renesas@ideasonboard.com>
- <CAMuHMdWfNk+v9PTMpE43DD8DvrmhZDeAocDReVNOsE=oh4P6uw@mail.gmail.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v5 0/3] Add PM support to STM32 LP Timer drivers
+Date: Mon, 18 Mar 2019 15:35:03 +0100
+Message-ID: <b89207ac-d80b-d79f-02cc-095f19b8aecf@st.com>
+References: <1550668068-9661-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWfNk+v9PTMpE43DD8DvrmhZDeAocDReVNOsE=oh4P6uw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, DRI Development <dri-devel@lists.freedesktop.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1550668068-9661-1-git-send-email-fabrice.gasnier@st.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: thierry.reding@gmail.com
+Cc: robh+dt@kernel.org, u.kleine-koenig@pengutronix.de, tduszyns@gmail.com, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsCgpPbiBNb24sIE1hciAxOCwgMjAxOSBhdCAxMToyMToxNUFNICswMTAwLCBHZWVy
-dCBVeXR0ZXJob2V2ZW4gd3JvdGU6Cj4gT24gVGh1LCBNYXIgNywgMjAxOSBhdCAxMjoyNCBBTSBM
-YXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+ID4gQWRkIGEgbmV3IG9wdGlvbmFsIHJlbmVzYXMsY29t
-cGFuaW9uIHByb3BlcnR5IHRvIHBvaW50IHRvIHRoZSBjb21wYW5pb24KPiA+IExWRFMgZW5jb2Rl
-ci4gVGhpcyBpcyB1c2VkIHRvIHN1cHBvcnQgZHVhbC1saW5rIG9wZXJhdGlvbiB3aGVyZSB0aGUg
-bWFpbgo+ID4gTFZEUyBlbmNvZGVyIHNwbGl0cyBldmVuLW51bWJlcmVkIGFuZCBvZGQtbnVtYmVy
-ZWQgcGl4ZWxzIGJldHdlZW4gdGhlCj4gPiB0d28gTFZEUyBlbmNvZGVycy4KPiAKPiBOb3RlIHRo
-YXQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9nZW5lcmljLnR4dCBhbHJl
-YWR5Cj4gZGVzY3JpYmVzIGEgImNvbXBhbmlvbiIgcHJvcGVydHkgd2l0aG91dCB2ZW5kb3IgcHJl
-Zml4Lgo+IAo+ID4gVGhlIG5ldyBwcm9wZXJ0eSBkb2Vzbid0IGNvbnRyb2wgdGhlIG1vZGUgb2Yg
-b3BlcmF0aW9uLCBpdCBvbmx5Cj4gPiBkZXNjcmliZXMgdGhlIHJlbGF0aW9uc2hpcCBiZXR3ZWVu
-IHRoZSBtYXN0ZXIgYW5kIGNvbXBhbmlvbiBMVkRTCj4gPiBlbmNvZGVycy4KPiA+Cj4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRl
-YXNvbmJvYXJkLmNvbT4KPiA+IC0tLQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQgICAgIHwgNiArKysrKysKPiA+ICAxIGZpbGUgY2hh
-bmdlZCwgNiBpbnNlcnRpb25zKCspCj4gPgo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZk
-cy50eHQKPiA+IGluZGV4IDkwMGE4ODRhZDlmNS4uYTcyMGRiYjVkZTY5IDEwMDY0NAo+ID4gLS0t
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVz
-YXMsbHZkcy50eHQKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0Cj4gPiBAQCAtNDUsNiArNDUsMTIgQEAgT0Yg
-Z3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9ncmFwaC50eHQuCj4gPgo+ID4gIEVhY2ggcG9ydCBzaGFsbCBoYXZlIGEgc2luZ2xlIGVu
-ZHBvaW50Lgo+ID4KPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4gKwo+ID4gKy0gcmVuZXNh
-cyxjb21wYW5pb24gOiBwaGFuZGxlIHRvIHRoZSBjb21wYW5pb24gTFZEUyBlbmNvZGVyLiBUaGlz
-IHByb3BlcnR5IGlzCj4gPiArICB2YWxpZCBmb3IgdGhlIGZpcnN0IExWRFMgZW5jb2RlciBEMyBh
-bmQgRTMgU29DcyBvbmx5LCBhbmQgcG9pbnRzIHRvIHRoZQo+IAo+IC4uLiBvbiBEMyAuLi4KPiAK
-PiA+ICsgIHNlY29uZCBlbmNvZGVyIHRvIGJlIHVzZWQgYXMgYSBjb21wYW5pb24gaW4gZHVhbC1s
-aW5rIG1vZGUuCj4gCj4gV2h5IHJlc3RyaWN0IHRoaXMgdG8gdGhlIGZpcnN0IExWRFMgZGVjb2Rl
-ciwgYW5kIG5vdCBoYXZlIGEgYmFja2xpbmsgaW4gdGhlCj4gb3RoZXIgbm9kZSwKCkJlY2F1c2Ug
-dGhlcmUncyBubyBuZWVkIHRvID8gOi0pIEZ1cnRoZXJtb3JlIHRoZXJlJ3MgYSBuZWVkIGZvciB0
-aGUKbWFzdGVyIHRvIGtub3cgaXRzIGEgbWFzdGVyLCBzbyBoYXZlIGEgbGluayBpbiBhIHNpbmds
-ZSBkaXJlY3Rpb24gaXMKcHJldHR5IGNvbnZlbmllbnQuIE90aGVyd2lzZSBJJ2QgbmVlZCBhbiBl
-eHRyYSBwcm9wZXJ0eSB0byBpZGVudGlmeSB0aGUKbWFzdGVyLgoKPiBsaWtlIGZvciBVU0I/CgpJ
-J20gbm90IHN1cmUgd2hhdCBVU0IgZG9lcyBpbiB0aGF0IHJlZ2FyZC4KCi0tIApSZWdhcmRzLAoK
-TGF1cmVudCBQaW5jaGFydApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWw=
+On 2/20/19 2:07 PM, Fabrice Gasnier wrote:
+> This patch series adds power management support for STM32 LP Timer:
+> - PWM driver
+> - Document the pinctrl states for sleep mode
+> 
+> It also adds device link between the PWM consumer and the PWM provider.
+> This allows proper sequencing for suspend/resume (e.g. user will likely
+> do a pwm_disable() before the PWM provider suspend executes), see [1].
+> 
+> [1] https://lkml.org/lkml/2019/2/5/770
+
+Hi Thierry,
+
+Gentle reminder to review changes I've made in v5.
+
+Thanks in advance,
+Best Regards,
+Fabrice
+
+> 
+> ---
+> Changes in v5:
+> - improve a warning message, fix a style issue.
+> 
+> Changes in v4:
+> - improve error handling when adding the PWM consumer device link.
+> 
+> Changes in v3:
+> - Move the device_link_add() call to of_pwm_get() as discussed with Uwe.
+> 
+> Changes in v2:
+> - Don't disable PWM channel in PWM provider: rather refuse to suspend
+>   and report an error as suggested by Uwe and Thierry.
+> - Add patch 3/3 to propose device link addition.
+> - No updates for STM32 LP Timer IIO driver. Patches can be send separately.
+> 
+> Fabrice Gasnier (3):
+>   dt-bindings: pwm-stm32-lp: document pinctrl sleep state
+>   pwm: stm32-lp: Add power management support
+>   pwm: core: add consumer device link
+> 
+>  .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |  9 ++--
+>  drivers/pwm/core.c                                 | 50 ++++++++++++++++++++--
+>  drivers/pwm/pwm-stm32-lp.c                         | 25 +++++++++++
+>  include/linux/pwm.h                                |  6 ++-
+>  4 files changed, 82 insertions(+), 8 deletions(-)
+> 
