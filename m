@@ -1,33 +1,89 @@
-From: Andreas Schwab <schwab@suse.de>
-Subject: Re: [PATCH v9 0/2] PWM support for HiFive Unleashed
-Date: Mon, 18 Mar 2019 10:24:33 +0100
-Message-ID: <mvmbm28r0vi.fsf@suse.de>
-References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
-        <mvmimwotn60.fsf@suse.de>
-        <CAJ2_jOE3RH9FyFg_NATcLEpHv5y89zdh06Ji2x8n3C_gp-wn6A@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 4/6] nvmem: sunxi_sid: Read out data in
+ native format
+Date: Mon, 18 Mar 2019 10:25:19 +0100
+Message-ID: <20190318092519.g2rvdjiunti2ev7p@flea>
+References: <20190318073354.12151-1-wens@kernel.org>
+ <20190318073354.12151-5-wens@kernel.org>
+ <20190318084212.lv2lorskizl65uzg@flea>
+ <CAGb2v67H9FkjKjSE5a7fUCb_t95Zfuk1p0bjWYJxjMqhMN-hfg@mail.gmail.com>
+ <20190318085751.kziqzxnadtho4kdb@flea>
+ <CAGb2v64pq5V0_nZ7f0ZPwuNxNU8HbY0A6CqeC6TMd2z2xhJHwg@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJ2_jOE3RH9FyFg_NATcLEpHv5y89zdh06Ji2x8n3C_gp-wn6A@mail.gmail.com>
-        (Yash Shah's message of "Fri, 15 Mar 2019 17:19:59 +0530")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yash Shah <yash.shah@sifive.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fgqxvk5pq25ezuac"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBAOIXXSAKGQECATMUTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64pq5V0_nZ7f0ZPwuNxNU8HbY0A6CqeC6TMd2z2xhJHwg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mär 15 2019, Yash Shah <yash.shah@sifive.com> wrote:
 
-> Use the open-source FSBL from:
-> https://github.com/sifive/freedom-u540-c000-bootloader
+--fgqxvk5pq25ezuac
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Mon, Mar 18, 2019 at 05:09:44PM +0800, Chen-Yu Tsai wrote:
+> On Mon, Mar 18, 2019 at 4:57 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >
+> > On Mon, Mar 18, 2019 at 04:45:19PM +0800, Chen-Yu Tsai wrote:
+> > > On Mon, Mar 18, 2019 at 4:42 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Mon, Mar 18, 2019 at 03:33:52PM +0800, Chen-Yu Tsai wrote:
+> > > > > From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> > > > >
+> > > > > Originally the SID e-fuses were thought to be in big-endian format.
+> > > > > Later sources show that they are in fact native or little-endian.
+> > > > > The most compelling evidence is the thermal sensor calibration data,
+> > > > > which is a set of one to three 16-bit values. In native-endian they
+> > > > > are in 16-bit cells with increasing offsets, whereas with big-endian
+> > > > > they are in the wrong order, and a gap with no data will show if there
+> > > > > are one or three cells.
+> > > > >
+> > > > > Switch to a native endian representation for the nvmem device. For the
+> > > > > H3, the register read-out method was already returning data in native
+> > > > > endian. This only affects the other SoCs.
+> > > > >
+> > > > > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> > > >
+> > > > I thought only the newer SoCs were impacted by this issue?
+> > >
+> > > It is noticable on the newer SoCs. The old ones only have the 128-bit SID,
+> > > which could be read either way, as AFAIK it's just a serial number.
+> > >
+> > > If you think we should leave the old ones alone I can factor that in.
+> >
+> > IIRC, there was also the SoC ID in the SID on those SoCs as well,
+> > which we might have to use in the future so we'll want to make sure it
+> > is correct.
 >
-> Modify the fsbl/ux00_fsbl.dts file and re-build the fsbl.bin
+> We'll need to ask Allwinner about this then.
+>
+> FWIW, the fel command in sunxi-tools reads them out in little endian. I
+> believe this and the SID page on the linux-sunxi wiki predate the sunxi_sid
+> driver.
 
-That doesn't even compile.
+Yeah, and the driver has a readl as well:
+https://github.com/linux-sunxi/linux-sunxi/blob/sunxi-3.4/arch/arm/plat-sunxi/soc-detect.c#L92
 
-Andreas.
+For the whole series,
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--fgqxvk5pq25ezuac--
