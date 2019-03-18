@@ -1,188 +1,70 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: spi-fsl-spi: support use of the SPISEL_BOOT signal on MPC8309" to the spi tree
-Date: Mon, 18 Mar 2019 14:51:59 +0000 (GMT)
-Message-ID: <20190318145159.4DEDC1128874@debutante.sirena.org.uk>
-References: <20190306103156.19897-1-rasmus.villemoes@prevas.dk>
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH 2/2] usb: hub: use non-removable-ports DT property
+Date: Mon, 18 Mar 2019 10:58:28 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1903181055310.1533-100000@iolanthe.rowland.org>
+References: <yw1xlg1c1c3i.fsf@mansr.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190306103156.19897-1-rasmus.villemoes@prevas.dk>
+In-Reply-To: <yw1xlg1c1c3i.fsf@mansr.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Esben Haabendal <esben@geanix.com>, Fabio Estevam <festevam@gmail.com>, Per Christensen <pnc@deif.com>, Rasmus Villemoes <Rasmus.Villemoes@prevas.se>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>linux-spi@vger.kernel.org
+To: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Mon, 18 Mar 2019, [iso-8859-1] Måns Rullgård wrote:
 
-   spi: spi-fsl-spi: support use of the SPISEL_BOOT signal on MPC8309
+> Mans Rullgard <mans@mansr.com> writes:
+> 
+> > Mark any ports listed in the non-removable-ports DT property as
+> > hardwired. This is useful for boards with built-in USB devices
+> > that cannot be (or have not been) marked as fixed in hardware.
+> >
+> > Signed-off-by: Mans Rullgard <mans@mansr.com>
+> > ---
+> >  drivers/usb/core/hub.c | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> 
+> Any comments on these patches?
+> 
+> > diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> > index 3adff4da2ee1..44ac49a30be1 100644
+> > --- a/drivers/usb/core/hub.c
+> > +++ b/drivers/usb/core/hub.c
+> > @@ -1328,6 +1328,9 @@ static int hub_configure(struct usb_hub *hub,
+> >  	unsigned unit_load;
+> >  	unsigned full_load;
+> >  	unsigned maxchild;
+> > +	struct property *prop;
+> > +	const __be32 *cur;
+> > +	u32 val;
+> >
+> >  	hub->buffer = kmalloc(sizeof(*hub->buffer), GFP_KERNEL);
+> >  	if (!hub->buffer) {
+> > @@ -1629,6 +1632,17 @@ static int hub_configure(struct usb_hub *hub,
+> >  		}
+> >  	}
+> >
+> > +	of_property_for_each_u32(hub_dev->of_node, "non-removable-ports",
+> > +				 prop, cur, val) {
+> > +		if (val < 1 || val > hdev->maxchild) {
+> > +			dev_warn(hub_dev, "port number %u out of range\n", val);
+> > +			continue;
+> > +		}
+> > +
+> > +		hub->ports[val - 1]->connect_type =
+> > +			USB_PORT_CONNECT_TYPE_HARD_WIRED;
+> > +	}
+> > +
+> >  	usb_hub_adjust_deviceremovable(hdev, hub->descriptor);
+> >
+> >  	hub_activate(hub, HUB_INIT);
+> > -- 
+> > 2.20.1
 
-has been applied to the spi tree at
+This seems like a reasonable thing to do.  However, you should improve
+the warning message; people who encounter it will have no idea what it
+refers to.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 69b921acae8a5b7feef03921d9b42c3634f3b9d1 Mon Sep 17 00:00:00 2001
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Date: Wed, 6 Mar 2019 10:32:05 +0000
-Subject: [PATCH] spi: spi-fsl-spi: support use of the SPISEL_BOOT signal on
- MPC8309
-
-The MPC8309 has a dedicated signal, SPISEL_BOOT, usually used as chip
-select for the flash device from which the bootloader is loaded. It is
-not an ordinary gpio, but is simply controlled via the SPI_CS register
-in the system configuration.
-
-To allow accessing such a spi slave, we need to teach
-fsl_spi_cs_control() how to control the SPISEL_BOOT signal. To
-distinguish the gpio-controlled slaves, continue to have those use
-chip_select values of 0..ngpios-1, and use chip_select == ngpios for
-the boot flash.
-
-I'm not too happy with all the ifdeffery, but it seems to be necessary
-for guarding the sysdev/fsl_soc.h and use of
-get_immrbase() (spi-fsl-lib.c already contains similar ifdeffery).
-
-Googling suggests that the MPC8306 is similar, with the SPI_CS
-register at the same offset.
-
-Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/spi/fsl-spi.txt       |  4 ++
- drivers/spi/spi-fsl-lib.h                     |  2 +
- drivers/spi/spi-fsl-spi.c                     | 40 ++++++++++++++++---
- 3 files changed, 41 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/fsl-spi.txt b/Documentation/devicetree/bindings/spi/fsl-spi.txt
-index 8854004a1d3a..411375eac54d 100644
---- a/Documentation/devicetree/bindings/spi/fsl-spi.txt
-+++ b/Documentation/devicetree/bindings/spi/fsl-spi.txt
-@@ -18,6 +18,10 @@ Optional properties:
- - gpios : specifies the gpio pins to be used for chipselects.
-   The gpios will be referred to as reg = <index> in the SPI child nodes.
-   If unspecified, a single SPI device without a chip select can be used.
-+- fsl,spisel_boot : for the MPC8306 and MPC8309, specifies that the
-+  SPISEL_BOOT signal is used as chip select for a slave device. Use
-+  reg = <number of gpios> in the corresponding child node, i.e. 0 if
-+  the gpios property is not present.
- 
- Example:
- 	spi@4c0 {
-diff --git a/drivers/spi/spi-fsl-lib.h b/drivers/spi/spi-fsl-lib.h
-index f303f306b38e..483734bc1b1e 100644
---- a/drivers/spi/spi-fsl-lib.h
-+++ b/drivers/spi/spi-fsl-lib.h
-@@ -95,8 +95,10 @@ static inline u32 mpc8xxx_spi_read_reg(__be32 __iomem *reg)
- 
- struct mpc8xxx_spi_probe_info {
- 	struct fsl_spi_platform_data pdata;
-+	int ngpios;
- 	int *gpios;
- 	bool *alow_flags;
-+	__be32 __iomem *immr_spi_cs;
- };
- 
- extern u32 mpc8xxx_spi_tx_buf_u8(struct mpc8xxx_spi *mpc8xxx_spi);
-diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
-index 8f2e97857e8b..3d7b50c65f36 100644
---- a/drivers/spi/spi-fsl-spi.c
-+++ b/drivers/spi/spi-fsl-spi.c
-@@ -39,6 +39,14 @@
- #include <linux/spi/spi_bitbang.h>
- #include <linux/types.h>
- 
-+#ifdef CONFIG_FSL_SOC
-+#include <sysdev/fsl_soc.h>
-+#endif
-+
-+/* Specific to the MPC8306/MPC8309 */
-+#define IMMR_SPI_CS_OFFSET 0x14c
-+#define SPI_BOOT_SEL_BIT   0x80000000
-+
- #include "spi-fsl-lib.h"
- #include "spi-fsl-cpm.h"
- #include "spi-fsl-spi.h"
-@@ -701,10 +709,17 @@ static void fsl_spi_cs_control(struct spi_device *spi, bool on)
- 	struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
- 	struct mpc8xxx_spi_probe_info *pinfo = to_of_pinfo(pdata);
- 	u16 cs = spi->chip_select;
--	int gpio = pinfo->gpios[cs];
--	bool alow = pinfo->alow_flags[cs];
- 
--	gpio_set_value(gpio, on ^ alow);
-+	if (cs < pinfo->ngpios) {
-+		int gpio = pinfo->gpios[cs];
-+		bool alow = pinfo->alow_flags[cs];
-+
-+		gpio_set_value(gpio, on ^ alow);
-+	} else {
-+		if (WARN_ON_ONCE(cs > pinfo->ngpios || !pinfo->immr_spi_cs))
-+			return;
-+		iowrite32be(on ? SPI_BOOT_SEL_BIT : 0, pinfo->immr_spi_cs);
-+	}
- }
- 
- static int of_fsl_spi_get_chipselects(struct device *dev)
-@@ -712,12 +727,15 @@ static int of_fsl_spi_get_chipselects(struct device *dev)
- 	struct device_node *np = dev->of_node;
- 	struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
- 	struct mpc8xxx_spi_probe_info *pinfo = to_of_pinfo(pdata);
-+	bool spisel_boot = IS_ENABLED(CONFIG_FSL_SOC) &&
-+		of_property_read_bool(np, "fsl,spisel_boot");
- 	int ngpios;
- 	int i = 0;
- 	int ret;
- 
- 	ngpios = of_gpio_count(np);
--	if (ngpios <= 0) {
-+	ngpios = max(ngpios, 0);
-+	if (ngpios == 0 && !spisel_boot) {
- 		/*
- 		 * SPI w/o chip-select line. One SPI device is still permitted
- 		 * though.
-@@ -726,6 +744,7 @@ static int of_fsl_spi_get_chipselects(struct device *dev)
- 		return 0;
- 	}
- 
-+	pinfo->ngpios = ngpios;
- 	pinfo->gpios = kmalloc_array(ngpios, sizeof(*pinfo->gpios),
- 				     GFP_KERNEL);
- 	if (!pinfo->gpios)
-@@ -769,7 +788,18 @@ static int of_fsl_spi_get_chipselects(struct device *dev)
- 		}
- 	}
- 
--	pdata->max_chipselect = ngpios;
-+#if IS_ENABLED(CONFIG_FSL_SOC)
-+	if (spisel_boot) {
-+		pinfo->immr_spi_cs = ioremap(get_immrbase() + IMMR_SPI_CS_OFFSET, 4);
-+		if (!pinfo->immr_spi_cs) {
-+			ret = -ENOMEM;
-+			i = ngpios - 1;
-+			goto err_loop;
-+		}
-+	}
-+#endif
-+
-+	pdata->max_chipselect = ngpios + spisel_boot;
- 	pdata->cs_control = fsl_spi_cs_control;
- 
- 	return 0;
--- 
-2.20.1
+Alan Stern
