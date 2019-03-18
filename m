@@ -1,59 +1,67 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V5 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
-Date: Mon, 18 Mar 2019 10:09:01 +0000
-Message-ID: <DB3PR0402MB3916F037CC96A5CDE328BC19F5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1552894581-3391-1-git-send-email-Anson.Huang@nxp.com>
- <1552894581-3391-2-git-send-email-Anson.Huang@nxp.com>
- <20190318095842.GD17565@ulmo>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v3 1/8] dt-bindings: phy: Add Amlogic G12A USB2 PHY Bindings
+Date: Mon, 18 Mar 2019 11:11:46 +0100
+Message-ID: <20190318101153.7531-2-narmstrong@baylibre.com>
+References: <20190318101153.7531-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190318095842.GD17565@ulmo>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "stefan@agner.ch" <stefan@agner.ch>, Leonard Crestez <leonard.crestez@nxp.com>, Robin Gong <yibin.gong@nxp.com>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190318101153.7531-1-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org, kishon@ti.com, devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFRoaWVycnkNCg0KQmVzdCBSZWdhcmRzIQ0KQW5zb24gSHVhbmcNCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBUaGllcnJ5IFJlZGluZyBbbWFpbHRvOnRoaWVycnku
-cmVkaW5nQGdtYWlsLmNvbV0NCj4gU2VudDogMjAxOcTqM9TCMTjI1SAxNzo1OQ0KPiBUbzogQW5z
-b24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiByb2JoK2R0QGtlcm5lbC5vcmc7
-IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOw0KPiBzLmhhdWVyQHBl
-bmd1dHJvbml4LmRlOyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsN
-Cj4gbGludXhAYXJtbGludXgub3JnLnVrOyBvdGF2aW9Ab3NzeXN0ZW1zLmNvbS5icjsgc3RlZmFu
-QGFnbmVyLmNoOw0KPiBMZW9uYXJkIENyZXN0ZXogPGxlb25hcmQuY3Jlc3RlekBueHAuY29tPjsg
-Um9iaW4gR29uZw0KPiA8eWliaW4uZ29uZ0BueHAuY29tPjsgamFuLnR1ZXJrQGVtdHJpb24uY29t
-OyBsaW51eC0NCj4gcHdtQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc7IHUua2xlaW5lLQ0KPiBrb2VuaWdAcGVuZ3V0cm9uaXguZGU7IGRs
-LWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjUg
-MS81XSBkdC1iaW5kaW5nczogcHdtOiBBZGQgaS5NWCBUUE0gUFdNIGJpbmRpbmcNCj4gDQo+IE9u
-IE1vbiwgTWFyIDE4LCAyMDE5IGF0IDA3OjQxOjMyQU0gKzAwMDAsIEFuc29uIEh1YW5nIHdyb3Rl
-Og0KPiA+IEFkZCBpLk1YIFRQTShMb3cgUG93ZXIgVGltZXIvUHVsc2UgV2lkdGggTW9kdWxhdGlv
-biBNb2R1bGUpIFBXTQ0KPiBiaW5kaW5nLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24g
-SHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gTm8gY2hhbmdlcy4NCj4g
-PiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9pbXgtdHBt
-LXB3bS50eHQgfCAxOQ0KPiA+ICsrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5n
-ZWQsIDE5IGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9pbXgtdHBtLXB3bS50eHQNCj4gPg0KPiA+
-IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL2lteC10
-cG0tcHdtLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9p
-bXgtdHBtLXB3bS50eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAw
-MDAuLmQ0N2I4ZmINCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9pbXgtdHBtLXB3bS50eHQNCj4gPiBAQCAtMCwwICsxLDE5
-IEBADQo+ID4gK0ZyZWVzY2FsZSBpLk1YIFRQTSBQV00gY29udHJvbGxlcg0KPiA+ICsNCj4gPiAr
-UmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArLSBjb21wYXRpYmxlIDogU2hvdWxkIGJlICJmc2ws
-aW14LXRwbS1wd20iLg0KPiANCj4gU2hvdWxkIHRoaXMgcGVyaGFwcyBvbmx5IGJlICJmc2wsaW14
-LXRwbSI/IFNvdW5kcyB0byBtZSBsaWtlIHRoaXMgaXMgYQ0KPiBoYXJkd2FyZSBibG9jayBjYWxs
-ZWQgIlRQTSIgdGhhdCBjYW4gYmUgdXNlZCBhcyBhIFBXTS4gVGhlIGNvbXBhdGlibGUNCj4gc3Ry
-aW5nIHNob3VsZCBkZXNjcmliZSB0aGUgaGFyZHdhcmUgYmxvY2ssIG5vdCB0aGUgbW9kZSBpbiB3
-aGljaCBpdCBpcyB1c2VkLg0KDQpPSywgd2lsbCBmaXggaXQuDQoNCj4gDQo+ID4gKy0gcmVnOiBQ
-aHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJlZ2lz
-dGVycy4NCj4gPiArLSAjcHdtLWNlbGxzOiBTaG91bGQgYmUgMi4gU2VlIHB3bS50eHQgaW4gdGhp
-cyBkaXJlY3RvcnkgZm9yIGEgZGVzY3JpcHRpb24NCj4gb2YgdGhlIGNlbGxzIGZvcm1hdC4NCj4g
-PiArLSBjbG9ja3MgOiBUaGUgY2xvY2sgcHJvdmlkZWQgYnkgdGhlIFNvQyB0byBkcml2ZSB0aGUg
-UFdNLg0KPiA+ICstIGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgZm9yIHRoZSBwd20gY29udHJv
-bGxlci4NCj4gDQo+IHB3bSAtPiBQV00NCg0KT0suDQpUaGFua3MsDQpBbnNvbg0KDQo+IA0KPiBU
-aGllcnJ5DQo=
+Add the Amlogic G12A Family USB2 OTG PHY Bindings
+
+The PHY can work in host or peripheral modes depending on it's position.
+Configuration of the mode is part of the USBCTRL registers which are
+outside of the PHY registers.
+
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/phy/meson-g12a-usb2-phy.txt      | 22 +++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt b/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
+new file mode 100644
+index 000000000000..a6ebc3dea159
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
+@@ -0,0 +1,22 @@
++* Amlogic G12A USB2 PHY binding
++
++Required properties:
++- compatible:	Should be "amlogic,meson-g12a-usb2-phy"
++- reg:		The base address and length of the registers
++- #phys-cells:	must be 0 (see phy-bindings.txt in this directory)
++- clocks:	a phandle to the clock of this PHY
++- clock-names:	must be "xtal"
++- resets:	a phandle to the reset line of this PHY
++- reset-names:	must be "phy"
++- phy-supply:	see phy-bindings.txt in this directory
++
++Example:
++	usb2_phy0: phy@36000 {
++		compatible = "amlogic,g12a-usb2-phy";
++		reg = <0x0 0x36000 0x0 0x2000>;
++		clocks = <&xtal>;
++		clock-names = "xtal";
++		resets = <&reset RESET_USB_PHY21>;
++		reset-names = "phy";
++		#phy-cells = <0>;
++	};
+-- 
+2.20.1
