@@ -1,52 +1,113 @@
-From: Chen-Yu Tsai <wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/6] nvmem: sunxi_sid: Read out data in
- native format
-Date: Mon, 18 Mar 2019 16:45:19 +0800
-Message-ID: <CAGb2v67H9FkjKjSE5a7fUCb_t95Zfuk1p0bjWYJxjMqhMN-hfg@mail.gmail.com>
-References: <20190318073354.12151-1-wens@kernel.org> <20190318073354.12151-5-wens@kernel.org>
- <20190318084212.lv2lorskizl65uzg@flea>
-Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v1 1/3] dt-bindings: Document MIPID02 bindings
+Date: Mon, 18 Mar 2019 10:48:25 +0200
+Message-ID: <20190318084825.3hpejk5xg2xt2h4b@valkosipuli.retiisi.org.uk>
+References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
+ <1552373045-134493-2-git-send-email-mickael.guene@st.com>
+ <20190316214649.co63p5arhiwbuv3g@valkosipuli.retiisi.org.uk>
+ <b238948a-4b08-4fb8-c955-d071bbcd3d2d@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBL5VXXSAKGQE3HWUU3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190318084212.lv2lorskizl65uzg@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <b238948a-4b08-4fb8-c955-d071bbcd3d2d@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mickael GUENE <mickael.guene@st.com>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 4:42 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> Hi,
->
-> On Mon, Mar 18, 2019 at 03:33:52PM +0800, Chen-Yu Tsai wrote:
-> > From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+On Mon, Mar 18, 2019 at 08:28:36AM +0000, Mickael GUENE wrote:
+> Hi Sakari,
+> 
+> Thanks for your review. Find my comments below.
+> 
+> On 3/16/19 22:46, Sakari Ailus wrote:
+> > Hi Mickael,
+> > 
+> > Thanks for the patchset.
+> > 
+> > On Tue, Mar 12, 2019 at 07:44:03AM +0100, Mickael Guene wrote:
+> >> This adds documentation of device tree for MIPID02 CSI-2 to PARALLEL
+> >> bridge.
+> >>
+> >> Signed-off-by: Mickael Guene <mickael.guene@st.com>
+> >> ---
+> >>
+> >>  .../bindings/media/i2c/st,st-mipid02.txt           | 69 ++++++++++++++++++++++
+> >>  1 file changed, 69 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+> >> new file mode 100644
+> >> index 0000000..a1855da
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+> >> @@ -0,0 +1,69 @@
+> >> +STMicroelectronics MIPID02 CSI-2 to PARALLEL bridge
+> >> +
+> >> +MIPID02 has two CSI-2 input ports, only one of those ports can be active at a
+> >> +time. Active port input stream will be de-serialized and its content outputted
+> >> +through PARALLEL output port.
+> >> +CSI-2 first input port is a dual lane 800Mbps whereas CSI-2 second input port is
+> > 
+> > 800 Mbps per lane (or total)?
+> > 
+> 800 Mbps per lane. I will document it.
+> >> +a single lane 800Mbps. Both ports support clock and data lane polarity swap.
+> >> +First port also supports data lane swap.
+> >> +PARALLEL output port has a maximum width of 12 bits.
+> >> +Supported formats are RAW6, RAW7, RAW8, RAW10, RAW12, RGB565, RGB888, RGB444,
+> >> +YUV420 8-bit, YUV422 8-bit and YUV420 10-bit.
+> >> +
+> >> +Required Properties:
+> >> +- compatible: should be "st,st-mipid02"
+> >> +- clocks: reference to the xclk input clock.
+> >> +- clock-names: should be "xclk".
+> >> +- VDDE-supply: sensor digital IO supply. Must be 1.8 volts.
+> >> +- VDDIN-supply: sensor internal regulator supply. Must be 1.8 volts.
+> > 
+> > Perhaps Rob can confirm, but AFAIR the custom is to use lower case letters.
+> > 
+>  It seems there is a 50-50 ratio between upper and lower case usage in
+> Documentation/devicetree/bindings/media/i2. I will wait Rob's answer to change
+> it or not.
+> >> +
+> >> +Optional Properties:
+> >> +- reset-gpios: reference to the GPIO connected to the xsdn pin, if any.
+> >> +	       This is an active low signal to the mipid02.
+> >> +
+> >> +Required subnodes:
+> >> +  - ports: A ports node with one port child node per device input and output
+> >> +	   port, in accordance with the video interface bindings defined in
+> >> +	   Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> >> +	   port nodes are numbered as follows:
+> >> +
+> >> +	   Port Description
+> >> +	   -----------------------------
+> >> +	   0    CSI-2 first input port
+> >> +	   1    CSI-2 second input port
+> >> +	   2    PARALLEL output
+> > 
+> > Please document which endpoint properties are relevant. From the above
+> > description I'd presume this to be at least clock-lanes (1st input),
+> > data-lanes, lane-polarities (for CSI-2) as well as bus-width for the
+> > parallel bus.
+> > 
+> ok. I will add documentation.
+> >> +
+> >> +Example:
+> >> +
+> >> +mipid02: mipid02@14 {
+> > 
+> > The node should be a generic name. "csi2rx" is used by a few devices now.
 > >
-> > Originally the SID e-fuses were thought to be in big-endian format.
-> > Later sources show that they are in fact native or little-endian.
-> > The most compelling evidence is the thermal sensor calibration data,
-> > which is a set of one to three 16-bit values. In native-endian they
-> > are in 16-bit cells with increasing offsets, whereas with big-endian
-> > they are in the wrong order, and a gap with no data will show if there
-> > are one or three cells.
-> >
-> > Switch to a native endian representation for the nvmem device. For the
-> > H3, the register read-out method was already returning data in native
-> > endian. This only affects the other SoCs.
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->
-> I thought only the newer SoCs were impacted by this issue?
+>  If I understand you well, you would prefer:
+> csi2rx: mipid02@14 {
+>  I show no usage of csi2rx node naming except for MIPI-CSI2 RX controller.
 
-It is noticable on the newer SoCs. The old ones only have the 128-bit SID,
-which could be read either way, as AFAIK it's just a serial number.
+The other way around. :)
 
-If you think we should leave the old ones alone I can factor that in.
+The label can be more or less anything AFAIK.
 
-ChenYu
+-- 
+Sakari Ailus
