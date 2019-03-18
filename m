@@ -1,14 +1,20 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH] ARM: l2x0: add L210 write allocate override flag
-Date: Mon, 18 Mar 2019 14:04:40 +0000
-Message-ID: <20190318140439.xmfh66mbktpd55l2@shell.armlinux.org.uk>
-References: <20190318083053.24197-1-linus.walleij@linaro.org>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH V4 2/5] pwm: Add i.MX TPM PWM driver support
+Date: Mon, 18 Mar 2019 15:10:51 +0100
+Message-ID: <20190318141051.t2x2ddz73fmksadq@pengutronix.de>
+References: <1552610505-13568-1-git-send-email-Anson.Huang@nxp.com>
+ <1552610505-13568-3-git-send-email-Anson.Huang@nxp.com>
+ <20190315093532.xw5ivfkxrwvrkvix@pengutronix.de>
+ <DB3PR0402MB39161B062231C59842595374F5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190318080743.xumj6e72bzumszvp@pengutronix.de>
+ <DB3PR0402MB391627A8C741C84A2057E576F5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <DB3PR0402MB39161A9884D5768F7280024FF5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190318083053.24197-1-linus.walleij@linaro.org>
+In-Reply-To: <DB3PR0402MB39161A9884D5768F7280024FF5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,81 +24,19 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Robin Gong <yibin.gong@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "stefan@agner.ch" <stefan@agner.ch>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 09:30:53AM +0100, Linus Walleij wrote:
-> This adds support for setting the flag bit "write allocate
-> override" to the L210 variant.
-> 
-> The "write allocate override" bit is used on the Nomadik STn8815
-> and is necessary to properly make use of the L210 cache on that
-> machine without sporadic crashes.
-> 
-> After this the platform can boot and run without any out-of-tree
-> patches.
+Hello,
 
-This is not something that should be done by the kernel but by the
-firmware - needing this bit set is a basic requirement of having
-the caches enabled, and if (eg) the boot loader enables the caches
-it too will suffer this problem.
+as you got some feedback for v5 already I assume you will post a v6.
+I'll skip reviewing v5 then.
 
-> 
-> Cc: devicetree@vger.kernel.org
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  Documentation/devicetree/bindings/arm/l2c2x0.yaml | 5 +++++
->  arch/arm/mm/cache-l2x0.c                          | 8 ++++++++
->  2 files changed, 13 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/l2c2x0.yaml b/Documentation/devicetree/bindings/arm/l2c2x0.yaml
-> index bfc5c185561c..4cffcda3e2b7 100644
-> --- a/Documentation/devicetree/bindings/arm/l2c2x0.yaml
-> +++ b/Documentation/devicetree/bindings/arm/l2c2x0.yaml
-> @@ -168,6 +168,11 @@ properties:
->        be specified to indicate that such transforms are precluded.
->      type: boolean
->  
-> +  arm,write-allocate-override:
-> +    description: On L210 only, normally the L210 will use HPROT attributes,
-> +    setting this bit overrides that behaviour and cause the cache to make all
-> +    write-through and write-back accesses into read-write-allocate accesses.
-> +
->    arm,parity-enable:
->      description: enable parity checking on the L2 cache (L220 or PL310).
->      type: boolean
-> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-> index 808efbb89b88..5cbdb9c18884 100644
-> --- a/arch/arm/mm/cache-l2x0.c
-> +++ b/arch/arm/mm/cache-l2x0.c
-> @@ -1078,6 +1078,14 @@ static void __init l2x0_of_parse(const struct device_node *np,
->  		val |= L2C_AUX_CTRL_SHARED_OVERRIDE;
->  	}
->  
-> +	/* L210-specific aux control flag */
-> +	if (of_device_is_compatible(np, "arm,l210-cache")) {
-> +		if (of_property_read_bool(np, "arm,write-allocate-override")) {
-> +			mask &= ~L210_AUX_CTRL_WA_OVERRIDE;
-> +			val |= L210_AUX_CTRL_WA_OVERRIDE;
-> +		}
-> +	}
-> +
->  	ret = l2x0_cache_size_of_parse(np, aux_val, aux_mask, &assoc, SZ_256K);
->  	if (ret)
->  		return;
-> -- 
-> 2.20.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+Best regards
+Uwe
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
