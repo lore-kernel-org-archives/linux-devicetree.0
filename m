@@ -1,74 +1,65 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH net-next 2/3] net: phy: add amlogic g12a mdio mux support
-Date: Mon, 18 Mar 2019 10:45:55 +0100
-Message-ID: <c7c1af27-eb6d-d148-887c-6a069f01ad7c@baylibre.com>
-References: <20190314140135.19184-1-jbrunet@baylibre.com>
- <20190314140135.19184-3-jbrunet@baylibre.com>
- <20190316025448.GD29548@lunn.ch>
- <13432d537f671c8065693b7e53348f812e8bbc04.camel@baylibre.com>
- <20190317154821.GA22226@lunn.ch>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V5 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
+Date: Mon, 18 Mar 2019 09:50:01 +0000
+Message-ID: <DB3PR0402MB3916ABEA308378751FE54D21F5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1552894581-3391-1-git-send-email-Anson.Huang@nxp.com>
+ <1552894581-3391-2-git-send-email-Anson.Huang@nxp.com>
+ <d1f8b006ad56e8ed4e9fb9137148d98b@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190317154821.GA22226@lunn.ch>
+In-Reply-To: <d1f8b006ad56e8ed4e9fb9137148d98b@agner.ch>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Jerome Brunet <jbrunet@baylibre.com>
-Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, "David S. Miller" <davem@davemloft.net>, Heiner Kallweit <hkallweit1@gmail.com>
+To: Stefan Agner <stefan@agner.ch>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, Leonard Crestez <leonard.crestez@nxp.com>, Robin Gong <yibin.gong@nxp.com>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kerne
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
-
-On 17/03/2019 16:48, Andrew Lunn wrote:
-> On Sat, Mar 16, 2019 at 06:02:45PM +0100, Jerome Brunet wrote:
->> On Sat, 2019-03-16 at 03:54 +0100, Andrew Lunn wrote:
->>> On Thu, Mar 14, 2019 at 03:01:34PM +0100, Jerome Brunet wrote:
->>>>> +static int _g12a_enable_internal_mdio(struct g12a_mdio_mux *priv)
->>>
->>> You would generally use the _ prefix when you have a locked and an
->>> unlocked version. I don't see anything like this here. So please drop
->>> the _ .
->>>
->>
->> will do
->>
->>> Nice to see the generic clock framework being used. I just wonder if
->>> this is the correct place to have this clock code. Can it be made part
->>> of the SoC clock code?
->>
->> the PLL is local to this particular device.
->>
->> In 'Soc clock code' (driver/clk/meson in this case) we usually put clock
->> controllers. Those controllers feeds the different devices of the SoC but we
->> tends some more clock elements in the consumer device
->>
->> Usually, it is just a few mux, dividers and gates (like in
->> drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c) but in this case, we have
->> a PLL. IMO, it belongs here. Do you see a problem with this ?
-> 
-> Hi Jerome
-> 
-> Some maintainers like to have code in their directory structure. It
-> would be good to check that the clock maintainer in happy with clock
-> code under the network driver subtree. Also, the clock maintainer
-> should also review this code. So please at least Cc: the clock
-> maintainer and clock list on the next submission, as well as netdev. I
-> personally don't know the clock code well enough to review such code.
-
-If it can help, I also co-maintain the Amlogic Clocks drivers, and I did
-not interfere with the review process in purpose, but if it can help :
-
-For the clock code :
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-
-Neil
-
-> 
-> 	   Andrew
-> 
-> _______________________________________________
-> linux-amlogic mailing list
-> linux-amlogic@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-amlogic
-> 
+SGksIFN0ZWZhbg0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2lu
+YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFN0ZWZhbiBBZ25lciBbbWFpbHRvOnN0ZWZhbkBhZ25l
+ci5jaF0NCj4gU2VudDogMjAxOcTqM9TCMTjI1SAxNjoxOQ0KPiBUbzogQW5zb24gSHVhbmcgPGFu
+c29uLmh1YW5nQG54cC5jb20+DQo+IENjOiB0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb207IHJvYmgr
+ZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHNoYXduZ3VvQGtlcm5lbC5v
+cmc7IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsNCj4gZmVz
+dGV2YW1AZ21haWwuY29tOyBsaW51eEBhcm1saW51eC5vcmcudWs7IG90YXZpb0Bvc3N5c3RlbXMu
+Y29tLmJyOw0KPiBMZW9uYXJkIENyZXN0ZXogPGxlb25hcmQuY3Jlc3RlekBueHAuY29tPjsgUm9i
+aW4gR29uZw0KPiA8eWliaW4uZ29uZ0BueHAuY29tPjsgamFuLnR1ZXJrQGVtdHJpb24uY29tOyBs
+aW51eC0NCj4gcHdtQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmc7IHUua2xlaW5lLQ0KPiBrb2VuaWdAcGVuZ3V0cm9uaXguZGU7IGRsLWxp
+bnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjUgMS81
+XSBkdC1iaW5kaW5nczogcHdtOiBBZGQgaS5NWCBUUE0gUFdNIGJpbmRpbmcNCj4gDQo+IE9uIDE4
+LjAzLjIwMTkgMDg6NDEsIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+IEFkZCBpLk1YIFRQTShMb3cg
+UG93ZXIgVGltZXIvUHVsc2UgV2lkdGggTW9kdWxhdGlvbiBNb2R1bGUpIFBXTQ0KPiBiaW5kaW5n
+Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5j
+b20+DQo+ID4gLS0tDQo+ID4gTm8gY2hhbmdlcy4NCj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9pbXgtdHBtLXB3bS50eHQgfCAxOQ0KPiA+ICsrKysr
+KysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKykNCj4g
+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3B3bS9pbXgtdHBtLXB3bS50eHQNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL2lteC10cG0tcHdtLnR4dA0KPiA+IGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9pbXgtdHBtLXB3bS50eHQNCj4gPiBuZXcg
+ZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLmQ0N2I4ZmINCj4gPiAtLS0gL2Rl
+di9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9p
+bXgtdHBtLXB3bS50eHQNCj4gPiBAQCAtMCwwICsxLDE5IEBADQo+ID4gK0ZyZWVzY2FsZSBpLk1Y
+IFRQTSBQV00gY29udHJvbGxlcg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4g
+PiArLSBjb21wYXRpYmxlIDogU2hvdWxkIGJlICJmc2wsaW14LXRwbS1wd20iLg0KPiA+ICstIHJl
+ZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGNvbnRyb2xsZXIncyBy
+ZWdpc3RlcnMuDQo+ID4gKy0gI3B3bS1jZWxsczogU2hvdWxkIGJlIDIuIFNlZSBwd20udHh0IGlu
+IHRoaXMgZGlyZWN0b3J5IGZvciBhDQo+ID4gZGVzY3JpcHRpb24gb2YgdGhlIGNlbGxzIGZvcm1h
+dC4NCj4gDQo+IEl0IHNlZW1zIHRoYXQgdGhlIGRyaXZlciBzdXBwb3J0cyBwb2xhcml0eS4gQ2Fu
+IHdlIHVzZSAzIGNlbGxzIHNvIHdlIGNhbg0KPiBzcGVjaWZ5IHRoZSBwb2xhcml0eSBpbiB0aGUg
+ZGV2aWNlIHRyZWU/DQo+IA0KPiBBbHNvIHVzZSAzIGNlbGxzIGluIHRoZSBiYXNlIGRldmljZSB0
+cmVlIHRvIGVuYWJsZSBvdGhlciBib2FyZHMgbWFraW5nIHVzZSBvZg0KPiB0aGUgcG9sYXJpdHkg
+KGFyY2gvYXJtL2Jvb3QvZHRzL2lteDd1bHAuZHRzaSkuDQoNCkl0IG1ha2VzIHNlbnNlLCBJIHdp
+bGwgY2hhbmdlIGl0IHRvIDMgY2VsbHMgYW5kIHNwZWNpZnkgdGhlIHBvbGFyaXR5IGluIGJhY2ts
+aWdodCBub2RlLg0KDQpBbnNvbi4NCg0KPiANCj4gLS0NCj4gU3RlZmFuDQo+IA0KPiA+ICstIGNs
+b2NrcyA6IFRoZSBjbG9jayBwcm92aWRlZCBieSB0aGUgU29DIHRvIGRyaXZlIHRoZSBQV00uDQo+
+ID4gKy0gaW50ZXJydXB0czogVGhlIGludGVycnVwdCBmb3IgdGhlIHB3bSBjb250cm9sbGVyLg0K
+PiA+ICsNCj4gPiArRXhhbXBsZToNCj4gPiArDQo+ID4gK3B3bTA6IHRwbUA0MDI1MDAwMCB7DQo+
+ID4gKwljb21wYXRpYmxlID0gImZzbCxpbXgtdHBtLXB3bSI7DQo+ID4gKwlyZWcgPSA8MHg0MDI1
+MDAwMCAweDEwMDA+Ow0KPiA+ICsJYXNzaWduZWQtY2xvY2tzID0gPCZjbGtzIElNWDdVTFBfQ0xL
+X0xQVFBNND47DQo+ID4gKwlhc3NpZ25lZC1jbG9jay1wYXJlbnRzID0gPCZjbGtzIElNWDdVTFBf
+Q0xLX1NPU0NfQlVTX0NMSz47DQo+ID4gKwljbG9ja3MgPSA8JmNsa3MgSU1YN1VMUF9DTEtfTFBU
+UE00PjsNCj4gPiArCSNwd20tY2VsbHMgPSA8Mj47DQo+ID4gK307DQo=
