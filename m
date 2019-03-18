@@ -1,138 +1,76 @@
-From: Mickael GUENE <mickael.guene@st.com>
-Subject: Re: [PATCH v1 1/3] dt-bindings: Document MIPID02 bindings
-Date: Mon, 18 Mar 2019 08:28:36 +0000
-Message-ID: <b238948a-4b08-4fb8-c955-d071bbcd3d2d@st.com>
-References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
- <1552373045-134493-2-git-send-email-mickael.guene@st.com>
- <20190316214649.co63p5arhiwbuv3g@valkosipuli.retiisi.org.uk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] ARM: l2x0: add L210 write allocate override flag
+Date: Mon, 18 Mar 2019 09:30:53 +0100
+Message-ID: <20190318083053.24197-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190316214649.co63p5arhiwbuv3g@valkosipuli.retiisi.org.uk>
-Content-Language: en-US
-Content-ID: <31217DE2CC8BF743A87F799B2144CEB6@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+This adds support for setting the flag bit "write allocate
+override" to the L210 variant.
 
-Thanks for your review. Find my comments below.
+The "write allocate override" bit is used on the Nomadik STn8815
+and is necessary to properly make use of the L210 cache on that
+machine without sporadic crashes.
 
-On 3/16/19 22:46, Sakari Ailus wrote:
-> Hi Mickael,
-> 
-> Thanks for the patchset.
-> 
-> On Tue, Mar 12, 2019 at 07:44:03AM +0100, Mickael Guene wrote:
->> This adds documentation of device tree for MIPID02 CSI-2 to PARALLEL
->> bridge.
->>
->> Signed-off-by: Mickael Guene <mickael.guene@st.com>
->> ---
->>
->>  .../bindings/media/i2c/st,st-mipid02.txt           | 69 ++++++++++++++++++++++
->>  1 file changed, 69 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
->> new file mode 100644
->> index 0000000..a1855da
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
->> @@ -0,0 +1,69 @@
->> +STMicroelectronics MIPID02 CSI-2 to PARALLEL bridge
->> +
->> +MIPID02 has two CSI-2 input ports, only one of those ports can be active at a
->> +time. Active port input stream will be de-serialized and its content outputted
->> +through PARALLEL output port.
->> +CSI-2 first input port is a dual lane 800Mbps whereas CSI-2 second input port is
-> 
-> 800 Mbps per lane (or total)?
-> 
-800 Mbps per lane. I will document it.
->> +a single lane 800Mbps. Both ports support clock and data lane polarity swap.
->> +First port also supports data lane swap.
->> +PARALLEL output port has a maximum width of 12 bits.
->> +Supported formats are RAW6, RAW7, RAW8, RAW10, RAW12, RGB565, RGB888, RGB444,
->> +YUV420 8-bit, YUV422 8-bit and YUV420 10-bit.
->> +
->> +Required Properties:
->> +- compatible: should be "st,st-mipid02"
->> +- clocks: reference to the xclk input clock.
->> +- clock-names: should be "xclk".
->> +- VDDE-supply: sensor digital IO supply. Must be 1.8 volts.
->> +- VDDIN-supply: sensor internal regulator supply. Must be 1.8 volts.
-> 
-> Perhaps Rob can confirm, but AFAIR the custom is to use lower case letters.
-> 
- It seems there is a 50-50 ratio between upper and lower case usage in
-Documentation/devicetree/bindings/media/i2. I will wait Rob's answer to change
-it or not.
->> +
->> +Optional Properties:
->> +- reset-gpios: reference to the GPIO connected to the xsdn pin, if any.
->> +	       This is an active low signal to the mipid02.
->> +
->> +Required subnodes:
->> +  - ports: A ports node with one port child node per device input and output
->> +	   port, in accordance with the video interface bindings defined in
->> +	   Documentation/devicetree/bindings/media/video-interfaces.txt. The
->> +	   port nodes are numbered as follows:
->> +
->> +	   Port Description
->> +	   -----------------------------
->> +	   0    CSI-2 first input port
->> +	   1    CSI-2 second input port
->> +	   2    PARALLEL output
-> 
-> Please document which endpoint properties are relevant. From the above
-> description I'd presume this to be at least clock-lanes (1st input),
-> data-lanes, lane-polarities (for CSI-2) as well as bus-width for the
-> parallel bus.
-> 
-ok. I will add documentation.
->> +
->> +Example:
->> +
->> +mipid02: mipid02@14 {
-> 
-> The node should be a generic name. "csi2rx" is used by a few devices now.
->
- If I understand you well, you would prefer:
-csi2rx: mipid02@14 {
- I show no usage of csi2rx node naming except for MIPI-CSI2 RX controller.
->> +	compatible = "st,st-mipid02";
->> +	reg = <0x14>;
->> +	status = "okay";
->> +	clocks = <&clk_ext_camera_12>;
->> +	clock-names = "xclk";
->> +	VDDE-supply = <&vdd>;
->> +	VDDIN-supply = <&vdd>;
->> +	ports {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		port@0 {
->> +			reg = <0>;
->> +
->> +			ep0: endpoint {
->> +				clock-lanes = <0>;
->> +				data-lanes = <1 2>;
->> +				remote-endpoint = <&mipi_csi2_in>;
->> +			};
->> +		};
->> +		port@2 {
->> +			reg = <2>;
->> +
->> +			ep2: endpoint {
->> +				bus-width = <8>;
->> +				hsync-active = <0>;
->> +				vsync-active = <0>;
->> +				remote-endpoint = <&parallel_out>;
->> +			};
->> +		};
->> +	};
->> +};
-> 
+After this the platform can boot and run without any out-of-tree
+patches.
+
+Cc: devicetree@vger.kernel.org
+Cc: Russell King <linux@arm.linux.org.uk>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ Documentation/devicetree/bindings/arm/l2c2x0.yaml | 5 +++++
+ arch/arm/mm/cache-l2x0.c                          | 8 ++++++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/l2c2x0.yaml b/Documentation/devicetree/bindings/arm/l2c2x0.yaml
+index bfc5c185561c..4cffcda3e2b7 100644
+--- a/Documentation/devicetree/bindings/arm/l2c2x0.yaml
++++ b/Documentation/devicetree/bindings/arm/l2c2x0.yaml
+@@ -168,6 +168,11 @@ properties:
+       be specified to indicate that such transforms are precluded.
+     type: boolean
+ 
++  arm,write-allocate-override:
++    description: On L210 only, normally the L210 will use HPROT attributes,
++    setting this bit overrides that behaviour and cause the cache to make all
++    write-through and write-back accesses into read-write-allocate accesses.
++
+   arm,parity-enable:
+     description: enable parity checking on the L2 cache (L220 or PL310).
+     type: boolean
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index 808efbb89b88..5cbdb9c18884 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -1078,6 +1078,14 @@ static void __init l2x0_of_parse(const struct device_node *np,
+ 		val |= L2C_AUX_CTRL_SHARED_OVERRIDE;
+ 	}
+ 
++	/* L210-specific aux control flag */
++	if (of_device_is_compatible(np, "arm,l210-cache")) {
++		if (of_property_read_bool(np, "arm,write-allocate-override")) {
++			mask &= ~L210_AUX_CTRL_WA_OVERRIDE;
++			val |= L210_AUX_CTRL_WA_OVERRIDE;
++		}
++	}
++
+ 	ret = l2x0_cache_size_of_parse(np, aux_val, aux_mask, &assoc, SZ_256K);
+ 	if (ret)
+ 		return;
+-- 
+2.20.1
