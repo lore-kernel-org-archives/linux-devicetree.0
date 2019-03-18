@@ -1,60 +1,46 @@
-From: Chen-Yu Tsai <wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/6] nvmem: sunxi_sid: Read out SID for
- randomness without looping
-Date: Mon, 18 Mar 2019 15:33:49 +0800
-Message-ID: <20190318073354.12151-2-wens@kernel.org>
+From: Chen-Yu Tsai <wens@kernel.org>
+Subject: [PATCH 5/6] nvmem: sunxi_sid: Support SID on A83T and H5
+Date: Mon, 18 Mar 2019 15:33:53 +0800
+Message-ID: <20190318073354.12151-6-wens@kernel.org>
 References: <20190318073354.12151-1-wens@kernel.org>
-Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB54TXXSAKGQEHNC44RY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190318073354.12151-1-wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190318073354.12151-1-wens@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+From: Chen-Yu Tsai <wens@csie.org>
 
-Since the reg_read callbacks already support arbitrary, but 4-byte
-aligned. offsets and lengths into the SID, there is no need for another
-for loop just to use it to read 1 byte at a time.
+The device tree binding already lists compatible strings for these two
+SoCs. They don't have the defect as seen on the H3, and the size and
+register layout is the same as the A64. Furthermore, the driver does
+not include nvmem cell definitions.
 
-Read out the whole SID block in one go.
+Add support for these two compatible strings, re-using the config for
+the A64.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- drivers/nvmem/sunxi_sid.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/nvmem/sunxi_sid.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
-index 570a2e354f30..704c35edf796 100644
+index 14c114620ed6..e7936380ce89 100644
 --- a/drivers/nvmem/sunxi_sid.c
 +++ b/drivers/nvmem/sunxi_sid.c
-@@ -154,7 +154,7 @@ static int sunxi_sid_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	struct nvmem_device *nvmem;
- 	struct sunxi_sid *sid;
--	int i, size;
-+	int size;
- 	char *randomness;
- 	const struct sunxi_sid_cfg *cfg;
- 
-@@ -189,8 +189,7 @@ static int sunxi_sid_probe(struct platform_device *pdev)
- 	if (!randomness)
- 		return -ENOMEM;
- 
--	for (i = 0; i < size; i++)
--		econfig.reg_read(sid, i, &randomness[i], 1);
-+	econfig.reg_read(sid, 0, randomness, size);
- 
- 	add_device_randomness(randomness, size);
- 	kfree(randomness);
+@@ -200,8 +200,10 @@ static const struct sunxi_sid_cfg sun50i_a64_cfg = {
+ static const struct of_device_id sunxi_sid_of_match[] = {
+ 	{ .compatible = "allwinner,sun4i-a10-sid", .data = &sun4i_a10_cfg },
+ 	{ .compatible = "allwinner,sun7i-a20-sid", .data = &sun7i_a20_cfg },
++	{ .compatible = "allwinner,sun8i-a83t-sid", .data = &sun50i_a64_cfg },
+ 	{ .compatible = "allwinner,sun8i-h3-sid", .data = &sun8i_h3_cfg },
+ 	{ .compatible = "allwinner,sun50i-a64-sid", .data = &sun50i_a64_cfg },
++	{ .compatible = "allwinner,sun50i-h5-sid", .data = &sun50i_a64_cfg },
+ 	{/* sentinel */},
+ };
+ MODULE_DEVICE_TABLE(of, sunxi_sid_of_match);
 -- 
 2.20.1
