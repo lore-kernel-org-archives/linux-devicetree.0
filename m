@@ -1,30 +1,75 @@
-From: "Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [EXT] [PATCH v6 2/7] scsi: ufs-qcom: Re-factor
- ufshcd_get_pwr_dev_param
-Date: Mon, 18 Mar 2019 09:15:49 +0000
-Message-ID: <BN7PR08MB56848373585FAE22F7BCCC0EDB470@BN7PR08MB5684.namprd08.prod.outlook.com>
-References: <1552712687-20186-1-git-send-email-stanley.chu@mediatek.com>
- <1552712687-20186-4-git-send-email-stanley.chu@mediatek.com>
+From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: Re: [PATCH v1 2/3] ARM: dts: stm32: enable Vivante GPU support on
+ stm32mp157c-ed1 board
+Date: Mon, 18 Mar 2019 10:21:24 +0100
+Message-ID: <2dcacbfb-2306-5147-b2d3-43be27319e5a@st.com>
+References: <1550246316-9747-1-git-send-email-pierre-yves.mordret@st.com>
+ <1550246316-9747-3-git-send-email-pierre-yves.mordret@st.com>
+ <1550247269.2546.58.camel@pengutronix.de>
+ <2cf49be6-474d-350b-8dfd-3fe1bf38af3a@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1552712687-20186-4-git-send-email-stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2cf49be6-474d-350b-8dfd-3fe1bf38af3a@st.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "avri.altman-Sjgp3cTcYWE@public.gmane.org" <avri.altman-Sjgp3cTcYWE@public.gmane.org>, "alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "pedrom.sousa-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <pedrom.sousa-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: "chun-hung.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <chun-hung.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, Philippe Cornu <philippe.cornu@st.com>
 List-Id: devicetree@vger.kernel.org
 
->
->Signed-off-by: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->Reviewed-by: Avri Altman <avri.altman-Sjgp3cTcYWE@public.gmane.org>
-Acked-by: Bean Huo <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
+SGkgTHVjYXMsCgpJJ20gZ29pbmcgdG8gcmVzZW5kIGEgbmV3IHZlcnNpb24gb24gdGhpcyBEVC4g
+SSBoYXZlIHRvIG1vdmUgdGhpcyByZWdpb24gZWxzZXdoZXJlLgoKSG93ZXZlciBJIGRpZG4ndCBn
+ZXQgeW91ciBmZWVkYmFjayBhYm91dCBzdGF0ZW1lbnQgSSBkaWQuCldvdWxkIGl0IGJlIHBvc3Np
+YmxlIHRvIGhhdmUgeW91ciBmZWVsaW5ncyA/CgpUaGFua3MgOikKCk9uIDIvMjUvMTkgNDo1NyBQ
+TSwgUGllcnJlIFl2ZXMgTU9SRFJFVCB3cm90ZToKPiBIaSBhZ2FpbiwKPiAKPiBPbiAyLzE1LzE5
+IDU6MTQgUE0sIEx1Y2FzIFN0YWNoIHdyb3RlOgo+PiBBbSBGcmVpdGFnLCBkZW4gMTUuMDIuMjAx
+OSwgMTY6NTggKzAxMDAgc2NocmllYiBQaWVycmUtWXZlcyBNT1JEUkVUOgo+Pj4gRW5hYmxlIFZp
+dmFudGUgR1BVIGRyaXZlciBmb3Igc3RtMzJtcDE1N2MtZWQxIGJvYXJkLgo+Pj4KPj4+IFNpZ25l
+ZC1vZmYtYnk6IFBpZXJyZS1ZdmVzIE1PUkRSRVQgPHBpZXJyZS15dmVzLm1vcmRyZXRAc3QuY29t
+Pgo+Pj4gLS0tCj4+PiDCoGFyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTdjLWVkMS5kdHMgfCAx
+NiArKysrKysrKysrKysrKysrCj4+PiDCoDEgZmlsZSBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCsp
+Cj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTdjLWVkMS5k
+dHMKPj4+IGIvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJtcDE1N2MtZWQxLmR0cwo+Pj4gaW5kZXgg
+OThlZjdhMC4uNzkyZjQwMiAxMDA2NDQKPj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMy
+bXAxNTdjLWVkMS5kdHMKPj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTdjLWVk
+MS5kdHMKPj4+IEBAIC0yMCw2ICsyMCwxNyBAQAo+Pj4gwqAJCXJlZyA9IDwweEMwMDAwMDAwIDB4
+NDAwMDAwMDA+Owo+Pj4gwqAJfTsKPj4+IMKgCj4+PiArCXJlc2VydmVkLW1lbW9yeSB7Cj4+PiAr
+CQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4+ICsJCSNzaXplLWNlbGxzID0gPDE+Owo+Pj4gKwkJ
+cmFuZ2VzOwo+Pj4gKwo+Pj4gKwkJZ3B1X3Jlc2VydmVkOiBncHVAZjgwMDAwMDAgewo+Pj4gKwkJ
+CXJlZyA9IDwweGY4MDAwMDAwIDB4ODAwMDAwMD47Cj4+PiArCQkJbm8tbWFwOwo+Pj4gKwkJfTsK
+Pj4+ICsJfTsKPj4+ICsKPj4KPj4gSSBkb24ndCB0aGluayB5b3UgbmVlZCB0aGlzLiBUaGUgR1BV
+IGRyaXZlciB1c2VzIHZlcnkgbGl0dGxlIGNvbnRpZyBkbWEKPj4gbWVtb3J5LiBNb3N0IG9mIHRo
+ZSBHUFUgbWVtb3J5IGlzIG9yZGluYXJ5IHBhZ2VkIG1lbW9yeSwgc28gc2V0dGluZwo+PiBhc2lk
+ZSBhIHByaXZhdGUgbWVtb3J5IHJlZ2lvbiBvZiB0aGlzIHNpemUgaXMgYSB3YXN0ZSBvZiBtZW1v
+cnkuIE1vc3QKPj4gbGlrZWx5IHlvdSBjYW4ganVzdCBhbGxvdyB0aGUgR1BVIGRyaXZlciB0byB1
+c2UgdGhlIHN5c3RlbSBnbG9iYWwgQ01BCj4+IHJlZ2lvbi4KPiAKPiBUaGF0J3MgY29ycmVjdCwg
+YnV0IHRoaXMgbWVtb3J5IGFyZWEgaXMgYWxzbyB1c2VkIGZvciBVLUJPT1Qgc3BsYXNoIHNjcmVl
+bgo+IHJlbmRlcmluZy4KPiBNb3Jlb3ZlciwgZXZlbiBpZiB3ZSBsYWNrIG9mIHByb29mIGFzIGZv
+ciB0b2RheSwgaXQgdHVybnMgb3V0IHBlcmZvcm1hbmNlcyBhcmUKPiBiZXR0ZXIgd2l0aCB0aGlz
+IHJlZ2lvbiBhcyByZWR1Y2VzIE1NVSBhY2Nlc3NlcyAod2l0aCBWaXZhbnRlIGRyaXZlcikKPiBF
+dmVudHVhbGx5IHVzaW5nIEFuZHJvaWQgZnJhbWV3b3JrIGFwcGxpY2F0aW9uIGlzIHN0YXJ0ZWQg
+bW9yZSBnZW50bHkgd2hhdGV2ZXIKPiBwcmV2aW91cyBhcHBsaWNhdGlvbiBhbmQgQ01BIHN0YXR1
+cyhmcmFnbWVudGF0aW9uKS4KPiBQcm92aWRlZCB0aGlzIG1lbW9yeSwgQ01BIHJlZ2lvbiBpcyBk
+ZWNyZWFzZWQgYWNjb3JkaW5nbHkuCj4gCj4gSG9wZSBpdCBjbGFyaWZpZXMuCj4gCj4gUmVnYXJk
+cwo+Pgo+PiBSZWdhcmRzLAo+PiBMdWNhcwo+Pgo+Pgo+Pj4gwqAJYWxpYXNlcyB7Cj4+PiDCoAkJ
+c2VyaWFsMCA9ICZ1YXJ0NDsKPj4+IMKgCX07Cj4+PiBAQCAtNTMsNiArNjQsMTEgQEAKPj4+IMKg
+CXN0YXR1cyA9ICJva2F5IjsKPj4+IMKgfTsKPj4+IMKgCj4+PiArJmdwdSB7Cj4+PiArCWNvbnRp
+Z3VvdXMtYXJlYSA9IDwmZ3B1X3Jlc2VydmVkPjsKPj4+ICsJc3RhdHVzID0gIm9rYXkiOwo+Pj4g
+K307Cj4+PiArCj4+PiDCoCZpMmM0IHsKPj4+IMKgCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7
+Cj4+PiDCoAlwaW5jdHJsLTAgPSA8JmkyYzRfcGluc19hPjsKPiAKPiBfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
+ZyBsaXN0Cj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCj4gCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0t
+a2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcK
+aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
+bmVsCg==
