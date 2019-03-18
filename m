@@ -1,70 +1,115 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH 2/2] usb: hub: use non-removable-ports DT property
-Date: Mon, 18 Mar 2019 10:58:28 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1903181055310.1533-100000@iolanthe.rowland.org>
-References: <yw1xlg1c1c3i.fsf@mansr.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH] arm64: zynqmp: dt: Add TI PHY quirk
+Date: Mon, 18 Mar 2019 15:59:31 +0100
+Message-ID: <0abac7f6-0aff-4577-18f6-17516cea0b04@xilinx.com>
+References: <1552130218-21505-1-git-send-email-harini.katakam@xilinx.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <yw1xlg1c1c3i.fsf@mansr.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1552130218-21505-1-git-send-email-harini.katakam@xilinx.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Harini Katakam <harini.katakam@xilinx.com>, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, sudeep.holla@arm.com
+Cc: devicetree@vger.kernel.org, harinikatakamlinux@gmail.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 18 Mar 2019, [iso-8859-1] Måns Rullgård wrote:
-
-> Mans Rullgard <mans@mansr.com> writes:
+On 09. 03. 19 12:16, Harini Katakam wrote:
+> Add TI PHY strap ctrl quirk for all the HW where applicable.
 > 
-> > Mark any ports listed in the non-removable-ports DT property as
-> > hardwired. This is useful for boards with built-in USB devices
-> > that cannot be (or have not been) marked as fixed in hardware.
-> >
-> > Signed-off-by: Mans Rullgard <mans@mansr.com>
-> > ---
-> >  drivers/usb/core/hub.c | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
+> Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
+> ---
+>  arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts | 1 +
+>  arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts      | 1 +
+>  arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts      | 1 +
+>  arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts      | 1 +
+>  arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts      | 1 +
+>  arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts      | 1 +
+>  6 files changed, 6 insertions(+)
 > 
-> Any comments on these patches?
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
+> index 11cc671..2421ec7 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
+> @@ -89,6 +89,7 @@
+>  		ti,rx-internal-delay = <0x8>;
+>  		ti,tx-internal-delay = <0xa>;
+>  		ti,fifo-depth = <0x1>;
+> +		ti,dp83867-rxctrl-strap-quirk;
+>  	};
+>  };
+>  
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+> index cef8167..2a3b665 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+> @@ -110,6 +110,7 @@
+>  		ti,rx-internal-delay = <0x8>;
+>  		ti,tx-internal-delay = <0xa>;
+>  		ti,fifo-depth = <0x1>;
+> +		ti,dp83867-rxctrl-strap-quirk;
+>  	};
+>  };
+>  
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
+> index af4d868..1780ed2 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
+> @@ -21,6 +21,7 @@
+>  		ti,rx-internal-delay = <0x8>;
+>  		ti,tx-internal-delay = <0xa>;
+>  		ti,fifo-depth = <0x1>;
+> +		ti,dp83867-rxctrl-strap-quirk;
+>  	};
+>  	/* Cleanup from RevA */
+>  	/delete-node/ phy@21;
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
+> index d4ad19a..8f45614 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
+> @@ -55,6 +55,7 @@
+>  		ti,rx-internal-delay = <0x8>;
+>  		ti,tx-internal-delay = <0xa>;
+>  		ti,fifo-depth = <0x1>;
+> +		ti,dp83867-rxctrl-strap-quirk;
+>  	};
+>  };
+>  
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
+> index 94cf509..93ce7eb 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
+> @@ -111,6 +111,7 @@
+>  		ti,rx-internal-delay = <0x8>;
+>  		ti,tx-internal-delay = <0xa>;
+>  		ti,fifo-depth = <0x1>;
+> +		ti,dp83867-rxctrl-strap-quirk;
+>  	};
+>  };
+>  
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
+> index 460adc3..8bb0001 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
+> @@ -106,6 +106,7 @@
+>  		ti,rx-internal-delay = <0x8>;
+>  		ti,tx-internal-delay = <0xa>;
+>  		ti,fifo-depth = <0x1>;
+> +		ti,dp83867-rxctrl-strap-quirk;
+>  	};
+>  };
+>  
 > 
-> > diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-> > index 3adff4da2ee1..44ac49a30be1 100644
-> > --- a/drivers/usb/core/hub.c
-> > +++ b/drivers/usb/core/hub.c
-> > @@ -1328,6 +1328,9 @@ static int hub_configure(struct usb_hub *hub,
-> >  	unsigned unit_load;
-> >  	unsigned full_load;
-> >  	unsigned maxchild;
-> > +	struct property *prop;
-> > +	const __be32 *cur;
-> > +	u32 val;
-> >
-> >  	hub->buffer = kmalloc(sizeof(*hub->buffer), GFP_KERNEL);
-> >  	if (!hub->buffer) {
-> > @@ -1629,6 +1632,17 @@ static int hub_configure(struct usb_hub *hub,
-> >  		}
-> >  	}
-> >
-> > +	of_property_for_each_u32(hub_dev->of_node, "non-removable-ports",
-> > +				 prop, cur, val) {
-> > +		if (val < 1 || val > hdev->maxchild) {
-> > +			dev_warn(hub_dev, "port number %u out of range\n", val);
-> > +			continue;
-> > +		}
-> > +
-> > +		hub->ports[val - 1]->connect_type =
-> > +			USB_PORT_CONNECT_TYPE_HARD_WIRED;
-> > +	}
-> > +
-> >  	usb_hub_adjust_deviceremovable(hdev, hub->descriptor);
-> >
-> >  	hub_activate(hub, HUB_INIT);
-> > -- 
-> > 2.20.1
 
-This seems like a reasonable thing to do.  However, you should improve
-the warning message; people who encounter it will have no idea what it
-refers to.
+Applied.
 
-Alan Stern
+Thanks,
+Michal
