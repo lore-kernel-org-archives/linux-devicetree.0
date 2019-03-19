@@ -1,44 +1,26 @@
-Return-Path: <SRS0=L7Fd=RW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50338 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbfCSRAP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Mar 2019 13:00:15 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z11so9185540wmi.0
-        for <devicetree@vger.kernel.org>; Tue, 19 Mar 2019 10:00:14 -0700 (PDT)
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH 0/5] ARM: imx7s: add media nodes
-Date: Tue, 19 Mar 2019 16:59:58 +0000
-Message-Id: <20190319170003.21261-1-rui.silva@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+Return-Path: <SRS0=QSCE=RW=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 0/2] Add HDMI support to the iwg23s
+Date: Tue, 19 Mar 2019 12:21:37 +0000
+Message-Id: <1552998099-22972-1-git-send-email-fabrizio.castro@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This series is a continuation of the
-[PATCH v14 00/13] media: staging/imx7: add i.MX7 media driver [0] series.
-All code patches and bindings are already merged, missing only this dts patches.
+Dear All,
 
-The main difference from the version in the previous series is as
-commented by Laurent:
- - split of dtsi and dts in 2 patches
- - push endpoints to imx7s.dtsi
+this series adds HDMI support to the iwg23s board.
 
-Cheers,
-   Rui
+Thanks,
+Fab
 
-[0] https://lore.kernel.org/linux-media/20190206151328.21629-1-rui.silva@linaro.org/
-Rui Miguel Silva (5):
-  ARM: dts: imx7s: add mipi phy power domain
-  ARM: dts: imx7s: add multiplexer controls
-  ARM: dts: imx7s: Add video mux, csi and mipi_csi
-  ARM: dts: imx7s-warp: add csi and mipi_csi node
-  ARM: dts: imx7s-warp: add ov2680 sensor node
+Fabrizio Castro (2):
+  ARM: dts: r8a77470: Add DU support
+  ARM: dts: iwg23s-sbc: Add HDMI support
 
- arch/arm/boot/dts/imx7s-warp.dts | 55 ++++++++++++++++++++
- arch/arm/boot/dts/imx7s.dtsi     | 87 +++++++++++++++++++++++++++++++-
- 2 files changed, 140 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts | 79 +++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/r8a77470.dtsi           | 32 +++++++++++++
+ 2 files changed, 111 insertions(+)
 
 -- 
-2.21.0
+2.7.4
