@@ -1,7 +1,7 @@
 From: Jiada Wang <jiada_wang@mentor.com>
-Subject: [PATCH v3 2/3] arm64: dts: renesas: r8a7796: use extended audio dmac register
-Date: Tue, 19 Mar 2019 14:57:04 +0900
-Message-ID: <20190319055705.24115-3-jiada_wang@mentor.com>
+Subject: [PATCH v3 3/3] arm64: dts: renesas: r8a77965: use extended audio dmac register
+Date: Tue, 19 Mar 2019 14:57:05 +0900
+Message-ID: <20190319055705.24115-4-jiada_wang@mentor.com>
 References: <20190319055705.24115-1-jiada_wang@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -19,14 +19,14 @@ need to be used
 
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 2 +-
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-index cdf784899cf8..13c6b5b3e8e0 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-@@ -1775,7 +1775,7 @@
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index 9763d108e183..e9dd91081c52 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -1461,7 +1461,7 @@
  				<0 0xec5a0000 0 0x100>,  /* ADG */
  				<0 0xec540000 0 0x1000>, /* SSIU */
  				<0 0xec541000 0 0x280>,  /* SSI */
