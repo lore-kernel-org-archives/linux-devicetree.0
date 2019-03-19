@@ -1,40 +1,119 @@
-Return-Path: <SRS0=iz5u=RS=nxp.com=anson.huang@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V8 3/4] arm64: defconfig: add support for i.MX system
- controller watchdog
-Date: Fri, 15 Mar 2019 06:17:34 +0000
-Message-ID: <1552630331-32068-4-git-send-email-Anson.Huang@nxp.com>
-References: <1552630331-32068-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1552630331-32068-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=/J0V=RW=linaro.org=rui.silva@kernel.org>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH v4 0/6] iio: gyro: add fxas21002c driver
+Date: Tue, 19 Mar 2019 10:59:19 +0000
+Message-Id: <20190319105925.25863-1-rui.silva@linaro.org>
 MIME-Version: 1.0
-To: "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, Andy Gross <andy.gross@linaro.org>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Transfer-Encoding: 8bit
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Enable CONFIG_IMX_SC_WDT as module to support i.MX system
-controller watchdog.
+Hi,
+This series introduce a NXP fxas21002c tri axis gyroscope driver [0]
+It add a core implementaiton plus an i2c and spi.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No changes.
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+This device can be found in the warp7 board [1], where it was tested.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 2d9c390..690f4ba 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -427,6 +427,7 @@ CONFIG_WATCHDOG=3Dy
- CONFIG_ARM_SP805_WATCHDOG=3Dy
- CONFIG_S3C2410_WATCHDOG=3Dy
- CONFIG_IMX2_WDT=3Dy
-+CONFIG_IMX_SC_WDT=3Dm
- CONFIG_MESON_GXBB_WATCHDOG=3Dm
- CONFIG_MESON_WATCHDOG=3Dm
- CONFIG_RENESAS_WDT=3Dy
---=20
-2.7.4
+---
+Cheers,
+   Rui
+
+v3->v4:
+Tomasz Duszynski:
+  - mention irq flags in bindings
+  - add reference to drive-open-drain in bindings
+  - fix headers files
+  - drop comas in of_device_id sentinel
+  - drop of_match_ptr
+  - use probe_new
+
+  Joan Cameron:
+  - disable vdd regulator in case of vddio fail
+  - use devm_add_action_or_reset
+  - simpler functions returns
+  - remove noisy dev_info
+  - remove EAGAIN from runtime_suspend
+
+v2->v3:
+Jonathan Cameron:
+  - cacheline aligned (DMA safe buffer)
+     Great presentation [2] and links in the presentation, thanks
+  - global renaming, including filenames, fxas2100x->fxas21002c
+  - provide spi info in dts bidings
+  - Remove SPI_MASTER in Kconfig i2c patch and move it to right patch
+  - remove extra blank line in comment
+  - add break range_value_from_fs after found
+  - in range_value_from_fs use local variable
+  - remove mode check at mode_set
+  - combine two if statements in mode_set
+  - in scale_get return 0 and let caller to set IIO_VAL_FRACTIONAL
+  - remove dev_err from vdd_io regulator get
+  - handle regulator error path
+  - devm_add_action
+  - check unwind order
+  - simplify data in _suspend and alike
+  - disable regulators at suspend
+  - error handling at _resume
+  - return -EAGAIN at runtime_resume
+
+Rob Herring:
+   - Set label as gyroscope
+
+- add interrupt to bindings
+- add entry to maintainers
+
+
+v1->v2:
+Peter Meerwal-Stadler:
+  - changed (c) to current year
+  - add regmap include file in .h
+  - fix comments s/cuttof/cutoff/
+  - add more info in mutex comment
+  - check value in range_fs_from_value
+  - ret not checked in range_value_from_fs
+  - move mode to enum type
+  - remove line between value get and validation of value in all file
+  - pre-write, regmap_field_write, post_write refactoring
+  - check val2 and val == 0 in write raw
+  - check in_anglvel_scale: 7.8125?
+  - trigger_handler: 2 => sizeof(s16)
+  - check buffer size
+  - print %02% to output chip id
+  - remove !! as state is bool
+  - trigger probe return devm_iio_trigger_register
+  - remove error msg in case of devm_iio_device_register
+Fabio Estebam:
+  - rename FXAS2100X to FXAS21002
+  - change compatible nxp,fxas2100x to the exact support
+  - add VDD and VDDIO regulators in bindings and driver
+
+[0]: https://www.nxp.com/docs/en/data-sheet/FXAS21002.pdf
+[1]: https://www.element14.com/community/community/designcenter/single-board-computers/warp7/overview
+[2]: https://events.linuxfoundation.org/wp-content/uploads/2017/12/20181023-Wolfram-Sang-ELCE18-safe_dma_buffers.pdf
+Rui Miguel Silva (6):
+  iio: gyro: add DT bindings to fxas21002c
+  iio: gyro: add core driver for fxas21002c
+  iio: gyro: fxas21002c: add i2c driver
+  iio: gyro: fxas21002c: add spi driver
+  ARM: dts: imx7s-warp: add fxas21002c gyroscope
+  MAINTAINERS: add entry for fxas21002c gyro driver
+
+ .../bindings/iio/gyroscope/nxp,fxas21002c.txt |  31 +
+ MAINTAINERS                                   |  10 +
+ arch/arm/boot/dts/imx7s-warp.dts              |   7 +
+ drivers/iio/gyro/Kconfig                      |  22 +
+ drivers/iio/gyro/Makefile                     |   3 +
+ drivers/iio/gyro/fxas21002c.h                 | 151 +++
+ drivers/iio/gyro/fxas21002c_core.c            | 987 ++++++++++++++++++
+ drivers/iio/gyro/fxas21002c_i2c.c             |  69 ++
+ drivers/iio/gyro/fxas21002c_spi.c             |  70 ++
+ 9 files changed, 1350 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
+ create mode 100644 drivers/iio/gyro/fxas21002c.h
+ create mode 100644 drivers/iio/gyro/fxas21002c_core.c
+ create mode 100644 drivers/iio/gyro/fxas21002c_i2c.c
+ create mode 100644 drivers/iio/gyro/fxas21002c_spi.c
+
+-- 
+2.21.0
