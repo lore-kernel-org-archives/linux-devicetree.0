@@ -1,86 +1,63 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v6 1/4] arm64: dts: imx8mq: Add SDMA nodes
-Date: Tue, 19 Mar 2019 22:31:42 +0800
-Message-ID: <20190319143139.GA24315@dragon>
-References: <20190308120141.3698-1-daniel.baluta@nxp.com>
- <20190308120141.3698-2-daniel.baluta@nxp.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [V2 1/2] clk: imx6q: remove unsupported pll4_audio_div
+Date: Tue, 19 Mar 2019 14:34:51 +0000
+Message-ID: <AM0PR04MB4211767C2F7ABF4A9A8EC3CC80400@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1552304271.2453.12.camel@pengutronix.de>
+ <1552319997-24622-1-git-send-email-eric@nelint.com>
+ <1552319997-24622-2-git-send-email-eric@nelint.com>
+ <0cf890a4-20b0-13ce-14d3-06f7c3227655@nelint.com>
+ <155294070124.20095.17167777488324467790@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190308120141.3698-2-daniel.baluta@nxp.com>
+In-Reply-To: <155294070124.20095.17167777488324467790@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "baruch@tkos.co.il" <baruch@tkos.co.il>, Anson Huang <anson.huang@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "spencercw@gmail.com" <spencercw@gmail.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "festevam@gmail.com" <festevam@gmail.com>, s.hau
+To: Stephen Boyd <sboyd@kernel.org>, Eric Nelson <eric@nelint.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
+Cc: Anson Huang <anson.huang@nxp.com>, "colin.didier@devialet.com" <colin.didier@devialet.com>, "festevam@gmail.com" <festevam@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "tiny.windzz@gmail.com" <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 12:02:22PM +0000, Daniel Baluta wrote:
-> SDMA1 is part of AIPS-3 region and SDMA2 is part
-> of AIPS-1 region.
-> 
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-
-Reviewed-by tag should go after your SoB, since that's the sequence of
-how they come. 
-
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> [initial submit in i.MX internal tree]
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> [adaptation for linux-next]
-
-I would see these notes in commit log or even just cover letter.
-
-Shawn
-
-> ---
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index 9155bd4784eb..9d48450453fb 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -234,6 +234,17 @@
->  				status = "disabled";
->  			};
->  
-> +			sdma2: sdma@302c0000 {
-> +				compatible = "fsl,imx8mq-sdma","fsl,imx7d-sdma";
-> +				reg = <0x302c0000 0x10000>;
-> +				interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clk IMX8MQ_CLK_SDMA2_ROOT>,
-> +					 <&clk IMX8MQ_CLK_SDMA2_ROOT>;
-> +				clock-names = "ipg", "ahb";
-> +				#dma-cells = <3>;
-> +				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
-> +			};
-> +
->  			iomuxc: iomuxc@30330000 {
->  				compatible = "fsl,imx8mq-iomuxc";
->  				reg = <0x30330000 0x10000>;
-> @@ -575,6 +586,17 @@
->  				status = "disabled";
->  			};
->  
-> +			sdma1: sdma@30bd0000 {
-> +				compatible = "fsl, imx8mq-sdma","fsl,imx7d-sdma";
-> +				reg = <0x30bd0000 0x10000>;
-> +				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clk IMX8MQ_CLK_SDMA1_ROOT>,
-> +					 <&clk IMX8MQ_CLK_SDMA1_ROOT>;
-> +				clock-names = "ipg", "ahb";
-> +				#dma-cells = <3>;
-> +				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
-> +			};
-> +
->  			fec1: ethernet@30be0000 {
->  				compatible = "fsl,imx8mq-fec", "fsl,imx6sx-fec";
->  				reg = <0x30be0000 0x10000>;
-> -- 
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+PiBGcm9tOiBTdGVwaGVuIEJveWQgW21haWx0bzpzYm95ZEBrZXJuZWwub3JnXQ0KPiANCj4gUXVv
+dGluZyBFcmljIE5lbHNvbiAoMjAxOS0wMy0xMSAxMzo0ODo1NSkNCj4gPiAgPiBPbiBNYXJjaCAx
+MSwgMjAxOSwgNjozNSBwLm0uIFVUQywgU3RlcGhlbiBCb3lkIHdyb3RlOg0KPiA+ID4gUXVvdGlu
+ZyBFcmljIE5lbHNvbiAoMjAxOS0wMy0xMSAwODo1OTo1NikNCj4gPiA+PiArICoNCj4gPiA+PiAr
+ICogUmVuYW1lZCB0byBfQlJPS0VOIHRvIHByZXZlbnQgaW5hZHZlcnRlbnQgdXNlLA0KPiA+ID4+
+ICsgKiBidXQgcmVzZXJ2ZWQgdGhlIGFycmF5IHNsb3QgdG8gbWFpbnRhaW4gRFQgYmluYXJ5DQo+
+ID4gPj4gKyAqIGNvbXBhdGliaWxpdHkuDQo+ID4gPj4gKyAqLw0KPiA+ID4+ICsjZGVmaW5lIElN
+WDZRRExfQ0xLX1BMTDRfQVVESU9fRElWX0JST0tFTiAgICAgIDIwMw0KPiA+ID4NCj4gPiA+IEJ1
+dCBpdCBicmVha3MgdGhlIGJ1aWxkLiBJIGRvbid0IGdldCBpdC4gSnVzdCBhZGQgYSBjb21tZW50
+DQo+ID4gPiBpbmRpY2F0aW5nIGl0IHNob3VsZG4ndCBiZSB1c2VkPyBUaGF0IGJyZWFrcyB0aGUg
+Y3Jvc3MtdHJlZQ0KPiA+ID4gZGVwZW5kZW5jeSBjaGFpbiBhbmQgbGV0cyBjbGsgdHJlZSBtZXJn
+ZSB0aGUgY2xrIGRyaXZlciBwYXJ0IGFuZCBhcm0tc29jDQo+IG1lcmdlIHRoZSBkdHMgcGFydC4N
+Cj4gPiBUaGUgZGV2aWNlIHRyZWUgdXBkYXRlIGFsc28gcmVxdWlyZXMgdGhlIHVwZGF0ZSB0byBj
+bGstaW14NnEuYyBmb3INCj4gPiBwcm9wZXIgcnVuLXRpbWUgb3BlcmF0aW9uLCBzbyBJIGRvbid0
+IHNlZSBob3cgdGhlc2UgdHdvIHBhcnRzIGNhbiBiZQ0KPiA+IHNlcGFyYXRlZC4NCj4gPg0KPiA+
+IEkgdGhvdWdodCBhYm91dCBsZWF2aW5nIHRoZSBQTEw0X0FVRElPX0RJViBjbG9jayBpbiBwbGFj
+ZSBidXQgdHVybmluZw0KPiA+IGl0IGludG8gYSBkdW1teSAocGxhY2Vob2xkZXIpLCBidXQgdGhh
+dCBtaWdodCBsZWFkIG90aGVycyBkb3duIHRoZQ0KPiA+IGxvbmcgcGF0aCBJIHRyYXZlcnNlZCBi
+ZWZvcmUgSSBmb3VuZCBvdXQgdGhhdCBteSBtYW51YWwgd2FzIG9sZCBhbmQNCj4gPiB0aGUgY2xv
+Y2sgZGlkbid0IGZ1bmN0aW9uLg0KPiANCj4gSSdtIG5vdCBzdWdnZXN0aW5nIHRoYXQgaXQncyBs
+ZWZ0IGFzIGEgZHVtbXkgZm9yZXZlciwganVzdCB1bnRpbCB0aGUgb3RoZXIgdHJlZXMNCj4gY2Fu
+IG1lcmdlIHRoZWlyIHBhcnRzIG9mIHRoaXMgc2VyaWVzIGFuZCBzbyB0aGF0IHRoZXNlIHBhdGNo
+ZXMgY2FuIGJlIGFwcGxpZWQgaW4NCj4gb3JkZXIgdGhhdCB0aGV5J3JlIHNlbnQuIFJpZ2h0IG5v
+dywgdGhlIGtidWlsZCByb2JvdCBmYWlscyBvbiB0aGlzIHBhdGNoIHNlcmllcw0KPiBiZWNhdXNl
+IHRoaXMgcGF0Y2ggaW50ZW50aW9uYWxseSBicmVha3MgdGhlIGJ1aWxkLiBQbGVhc2UgZG9uJ3Qg
+ZG8gdGhhdC4gU2VuZA0KPiBwYXRjaCBzZXJpZXMgdGhhdCBhcmUgYmlzZWN0YWJsZSBzbyB0aGF0
+IHRoZSBidWlsZCBkb2Vzbid0IGJyZWFrIGluIHRoZSBtaWRkbGUuDQoNCkEgZ3JlcCBzaG93cyB0
+aGVyZSdyZSBzdGlsbCBtYW55IHVzZXJzIG9mIGl0Lg0KJCBncmVwIC1ybiBJTVg2UURMX0NMS19Q
+TEw0X0FVRElPX0RJViBhcmNoL2FybS9ib290L2R0cy8qLmR0cyoNCmFyY2gvYXJtL2Jvb3QvZHRz
+L2lteDZxLWNtLWZ4Ni5kdHM6NDUxOgkJCTwmY2xrcyBJTVg2UURMX0NMS19QTEw0X0FVRElPX0RJ
+Vj47DQphcmNoL2FybS9ib290L2R0cy9pbXg2cS1jbS1meDYuZHRzOjQ1MjoJYXNzaWduZWQtY2xv
+Y2stcGFyZW50cyA9IDwmY2xrcyBJTVg2UURMX0NMS19QTEw0X0FVRElPX0RJVj47DQphcmNoL2Fy
+bS9ib290L2R0cy9pbXg2cWRsLXNhYnJlYXV0by5kdHNpOjI4NzoJYXNzaWduZWQtY2xvY2stcGFy
+ZW50cyA9IDwmY2xrcyBJTVg2UURMX0NMS19QTEw0X0FVRElPX0RJVj47DQphcmNoL2FybS9ib290
+L2R0cy9pbXg2cWRsLXNhYnJlYXV0by5kdHNpLm9yaWc6MTI3Oglhc3NpZ25lZC1jbG9jay1wYXJl
+bnRzID0gPCZjbGtzIElNWDZRRExfQ0xLX1BMTDRfQVVESU9fRElWPjsNCmFyY2gvYXJtL2Jvb3Qv
+ZHRzL2lteDZxLW5vdmVuYS5kdHM6NDIxOgkJCQkJIDwmY2xrcyBJTVg2UURMX0NMS19QTEw0X0FV
+RElPX0RJVj4sDQoNCldlIHByb2JhYmx5IG5lZWQgdG8gZml4IHRob3NlIGRldmljZSB0cmVlcyBm
+aXJzdCBhbmQgdGhlbiBjYW4gbWFyayBpdCBhcyBCUk9LRU4NCmFuZCByZW1vdmUgZnJvbSB0aGUg
+ZHJpdmVyIHN1cHBvcnQuDQoNCkNvcHkgTlhQIGF1ZGlvIGd1eXMgdG8gZG91YmxlIGNoZWNrIGlm
+IHRoZSBpc3N1ZSBleGlzdHMgb24gdGhlIGRvd25zdHJlYW0gdHJlZQ0KYXMgSSBzYXcgdGhlIHNp
+bWlsYXIgY29kZSB0aGVyZS4NCg0KU2hlbmdqaXUsDQpDYW4geW91IGhlbHAgY2hlY2sgaXQ/DQoN
+ClJlZ2FyZHMNCkRvbmcgQWlzaGVuZw0K
