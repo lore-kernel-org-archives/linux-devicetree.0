@@ -1,58 +1,40 @@
-Return-Path: <SRS0=3wvu=RX=opensource.cirrus.com=ckeepax@kernel.org>
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH 1/3] hwmon: lochnagar: Add device tree binding document
-Date: Wed, 20 Mar 2019 14:58:16 +0000
-Message-ID: <20190320145818.30644-1-ckeepax@opensource.cirrus.com>
+Return-Path: <SRS0=/J0V=RW=linaro.org=rui.silva@kernel.org>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH v4 5/6] ARM: dts: imx7s-warp: add fxas21002c gyroscope
+Date: Tue, 19 Mar 2019 10:59:24 +0000
+Message-Id: <20190319105925.25863-6-rui.silva@linaro.org>
+In-Reply-To: <20190319105925.25863-1-rui.silva@linaro.org>
+References: <20190319105925.25863-1-rui.silva@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-hwmon@vger.kernel.org, corbet@lwn.net, devicetree@vger.kernel.org, patches@opensource.cirrus.com
+Content-Transfer-Encoding: 8bit
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Lochnagar is an evaluation and development board for Cirrus
-Logic Smart CODEC and Amp devices. It allows the connection of
-most Cirrus Logic devices on mini-cards, as well as allowing
-connection of various application processor systems to provide a
-full evaluation platform. This driver supports the board
-controller chip on the Lochnagar board.
+Add entry to enable the fxas21002c gyroscope in the warp7 board.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- .../devicetree/bindings/hwmon/cirrus,lochnagar.txt | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
+ arch/arm/boot/dts/imx7s-warp.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
-new file mode 100644
-index 0000000000000..ffb79ccf51ee3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
-@@ -0,0 +1,26 @@
-+Cirrus Logic Lochnagar Audio Development Board
+diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
+index 23431faecaf4..c7dd66828a90 100644
+--- a/arch/arm/boot/dts/imx7s-warp.dts
++++ b/arch/arm/boot/dts/imx7s-warp.dts
+@@ -209,6 +209,13 @@
+ 		compatible = "fsl,mpl3115";
+ 		reg = <0x60>;
+ 	};
 +
-+Lochnagar is an evaluation and development board for Cirrus Logic
-+Smart CODEC and Amp devices. It allows the connection of most Cirrus
-+Logic devices on mini-cards, as well as allowing connection of
-+various application processor systems to provide a full evaluation
-+platform.  Audio system topology, clocking and power can all be
-+controlled through the Lochnagar, allowing the device under test
-+to be used in a variety of possible use cases.
-+
-+This binding document describes the binding for the hardware monitor
-+portion of the driver.
-+
-+This binding must be part of the Lochnagar MFD binding:
-+  [4] ../mfd/cirrus,lochnagar.txt
-+
-+Required properties:
-+
-+  - compatible : One of the following strings:
-+                 "cirrus,lochnagar2-hwmon"
-+
-+Example:
-+
-+lochnagar-hwmon {
-+	compatible = "cirrus,lochnagar2-hwmon";
-+};
++	gyroscope@20 {
++		compatible = "nxp,fxas21002c";
++		reg = <0x20>;
++		vdd-supply = <&reg_peri_3p15v>;
++		vddio-supply = <&reg_peri_3p15v>;
++	};
+ };
+ 
+ &sai1 {
 -- 
-2.11.0
+2.21.0
