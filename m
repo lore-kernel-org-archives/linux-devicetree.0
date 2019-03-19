@@ -1,131 +1,71 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v6 3/3] arm64: dts: Add USB DT nodes for Stingray SoC
-Date: Tue, 19 Mar 2019 14:45:44 +0530
-Message-ID: <1552986944-3398-4-git-send-email-srinath.mannam@broadcom.com>
-References: <1552986944-3398-1-git-send-email-srinath.mannam@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552986944-3398-1-git-send-email-srinath.mannam@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Tejun Heo <tj@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, Srinath Mannam <srinath.mannam@broadcom.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 6/6] arm64: dts: allwinner: h6: Add Video
+ Engine node
+Date: Tue, 19 Mar 2019 10:49:33 +0100
+Message-ID: <20190319094933.24n7kfluasfmmsps@flea>
+References: <20190128205504.11225-1-jernej.skrabec@siol.net>
+ <20190128205504.11225-7-jernej.skrabec@siol.net>
+ <83d5db0b3e40cbd541ed8084d8a8052ce95887b7.camel@bootlin.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="kfjmam5vgios3kkp"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMPWYLSAKGQE5KU6LSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <83d5db0b3e40cbd541ed8084d8a8052ce95887b7.camel-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: jernej.skrabec-gGgVlfcn5nU@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT nodes for
-  - Two xHCI host controllers
-  - Two BDC Broadcom USB device controller
-  - Five USB PHY controllers
 
-[xHCI0]      [BDC0]            [xHCI1]            [BDC1]
-   |           |                  |                 |
-  ---------------               -----------------------
-   |           |                 |         |         |
-[SS-PHY0]   [HS-PHY0]        [SS-PHY1] [HS-PHY2] [HS-PHY1]
+--kfjmam5vgios3kkp
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[SS-PHY0/HS-PHY0] and [SS-PHY1/HS-PHY1] are combo PHYs has one SS and
-one HS PHYs. [HS-PHY2] is a single HS PHY.
+On Tue, Mar 19, 2019 at 09:50:24AM +0100, Paul Kocialkowski wrote:
+> Le lundi 28 janvier 2019 =C3=A0 21:55 +0100, Jernej Skrabec a =C3=A9crit =
+:
+> > This adds the Video engine node for H6. It can use whole DRAM range so
+> > there is no need for reserved memory node.
+>
+> Looks like the patch adding SRAM support made it through but this one
+> didn't. It looks ready to be picked up though.
+>
+> Reviewed-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
-xHCI use SS-PHY to detect SS devices and HS-PHY to detect HS/FS/LS
-devices. BDC use SS-PHY in SS mode and HS-PHY in HS mode.
+Merged, thanks
 
-xHCI0 port1 is SS-PHY0, port2 is HS-PHY0.
-xHCI1 port1 is SS-PHY1, port2 is HS-PHY2 and port3 is HS-PHY1.
+Maxime
 
-Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
----
- .../boot/dts/broadcom/stingray/stingray-usb.dtsi   | 72 ++++++++++++++++++++++
- .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  1 +
- 2 files changed, 73 insertions(+)
- create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
-new file mode 100644
-index 0000000..55259f9
---- /dev/null
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
-@@ -0,0 +1,72 @@
-+// SPDX-License-Identifier: (GPL-2.0 or BSD-3-Clause)
-+/*
-+ *Copyright(c) 2018 Broadcom
-+ */
-+	usb {
-+		compatible = "simple-bus";
-+		dma-ranges;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x0 0x68500000 0x00400000>;
-+
-+		usbphy0: usb-phy@0 {
-+			compatible = "brcm,sr-usb-combo-phy";
-+			reg = <0x00000000 0x100>;
-+			#phy-cells = <1>;
-+			status = "disabled";
-+		};
-+
-+		xhci0: usb@1000 {
-+			compatible = "generic-xhci";
-+			reg = <0x00001000 0x1000>;
-+			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&usbphy0 1>, <&usbphy0 0>;
-+			phy-names = "phy0", "phy1";
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		bdc0: usb@2000 {
-+			compatible = "brcm,bdc-v0.16";
-+			reg = <0x00002000 0x1000>;
-+			interrupts = <GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&usbphy0 0>, <&usbphy0 1>;
-+			phy-names = "phy0", "phy1";
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		usbphy1: usb-phy@10000 {
-+			compatible = "brcm,sr-usb-combo-phy";
-+			reg = <0x00010000 0x100>;
-+			#phy-cells = <1>;
-+			status = "disabled";
-+		};
-+
-+		usbphy2: usb-phy@20000 {
-+			compatible = "brcm,sr-usb-hs-phy";
-+			reg = <0x00020000 0x100>;
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		xhci1: usb@11000 {
-+			compatible = "generic-xhci";
-+			reg = <0x00011000 0x1000>;
-+			interrupts = <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&usbphy1 1>, <&usbphy2>, <&usbphy1 0>;
-+			phy-names = "phy0", "phy1", "phy2";
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		bdc1: usb@21000 {
-+			compatible = "brcm,bdc-v0.16";
-+			reg = <0x00021000 0x1000>;
-+			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&usbphy2>;
-+			phy-names = "phy0";
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+	};
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-index cfeaa85..21dbb12 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-@@ -287,6 +287,7 @@
- 	#include "stingray-fs4.dtsi"
- 	#include "stingray-sata.dtsi"
- 	#include "stingray-pcie.dtsi"
-+	#include "stingray-usb.dtsi"
- 
- 	hsls {
- 		compatible = "simple-bus";
--- 
-2.7.4
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--kfjmam5vgios3kkp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXJC7LQAKCRDj7w1vZxhR
+xUa5AP9yN3BG1WTRK91lIW2v82LQoUgZ4L5x2MVTMyKeG3AYlQD/TN3dDewW4BvS
+92gox0YISyvfZwSL449hK1GpddohFgc=
+=Rinj
+-----END PGP SIGNATURE-----
+
+--kfjmam5vgios3kkp--
