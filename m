@@ -1,33 +1,19 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 0/6] support a new type of PMIC,including two
- chips(rk817 and rk809)
-Date: Tue, 19 Mar 2019 14:47:17 +0000
-Message-ID: <20190319144717.GG4731@dell>
-References: <20190102102002.29245-1-tony.xie@rock-chips.com>
- <36121846.smLYK4jT4q@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v6 00/13] Ingenic NAND patchset v6
+Date: Tue, 19 Mar 2019 15:53:50 +0100
+Message-ID: <20190319145403.31627-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <36121846.smLYK4jT4q@diego>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc: Tony Xie <tony.xie@rock-chips.com>, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>
+Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 19 Mar 2019, Heiko Stübner wrote:
-> Am Mittwoch, 2. Januar 2019, 11:19:56 CET schrieb Tony Xie:
-> > Most of functions and registers of the rk817 and rk808 are the same,
-> > so they can share allmost all codes.
-> 
-> do you have this series on your radar somewhere or should Tony
-> resend the series? As it looks like it fell through the cracks somehow.
+Hi,
 
-It wasn't, but it is now, thanks.
+Changes from V5 include just a typo correction in patch 09/13, and the
+introduction of the patch 13/13 which is new.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+The rest is untouched.
+
+Thanks,
+-Paul
