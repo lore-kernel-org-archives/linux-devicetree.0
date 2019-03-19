@@ -1,46 +1,93 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH RESEND V6 0/5] Add i.MX7ULP EVK PWM backlight support
-Date: Tue, 19 Mar 2019 09:14:46 +0100
-Message-ID: <20190319081446.m5eboi4v54er3niv@pengutronix.de>
-References: <1552979097-5814-1-git-send-email-Anson.Huang@nxp.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 4/6] dt-bindings: display: bridge: Add ICN6211 MIPI-DSI
+ to RGB convertor bridge
+Date: Tue, 19 Mar 2019 09:35:36 +0100
+Message-ID: <20190319083536.3ltcphubftwljnkv@flea>
+References: <20190315130825.9005-1-jagan@amarulasolutions.com>
+ <20190315130825.9005-5-jagan@amarulasolutions.com>
+ <20190315133414.5zwc5qtrivrbrzow@flea>
+ <CAMty3ZBn=MjB-VxwadkEDaM_==hGu1pzTv2A47cKitv0Vb5VXw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xya52razlxraohjj"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1552979097-5814-1-git-send-email-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Robin Gong <yibin.gong@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "stefan@agner.ch" <stefan@agner.ch>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
+In-Reply-To: <CAMty3ZBn=MjB-VxwadkEDaM_==hGu1pzTv2A47cKitv0Vb5VXw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 07:09:56AM +0000, Anson Huang wrote:
-> i.MX7ULP EVK board has MIPI-DSI display, its backlight is supplied by
-> TPM PWM module, this patch set enables i.MX7ULP TPM PWM driver support
-> and also add backlight support for MIPI-DSI display.
 
-Given that you actually changed something compared to v6, this is not a
-resend but v7. Also I suggest to practise a bit of patience before
-sending out a new revision to prevent people still looking at the
-previous round. I just gave feedback to the original v6 which you
-obviously didn't address :-|
+--xya52razlxraohjj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Also a highlevel changelog for the series (here something like: "Properly
-separate dt changes into soc-specific and machine-specific changes") is
-helpful.
+On Mon, Mar 18, 2019 at 10:28:10PM +0530, Jagan Teki wrote:
+> On Fri, Mar 15, 2019 at 7:04 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Fri, Mar 15, 2019 at 06:38:23PM +0530, Jagan Teki wrote:
+> > > ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
+> > > It has a flexible configuration of MIPI DSI signal input
+> > > and produce RGB565, RGB666, RGB888 output format.
+> > >
+> > > Add dt-bingings for it.
+> > >
+> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > ---
+> > >  .../display/bridge/chipone,icn6211.txt        | 36 +++++++++++++++++++
+> > >  1 file changed, 36 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
+> > > new file mode 100644
+> > > index 000000000000..7f13efd7ee7f
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
+> > > @@ -0,0 +1,36 @@
+> > > +Chipone ICN6211 MIPI-DSI to RGB Convertor Bridge
+> > > +
+> > > +ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
+> > > +It has a flexible configuration of MIPI DSI signal input
+> > > +and produce RGB565, RGB666, RGB888 output format.
+> > > +
+> > > +Required properties for RGB:
+> > > +- compatible: must be "chipone,icn6211" and one of:
+> > > +  * "bananapi,icn6211"
+> >
+> > Why is that compatible needed?
+>
+> chipone,icn6211 - generic compatible bridge controller IC
+> bananapi,icn6211 -  compatible for icn6211 bridge using on bananapi panel
+>
+> I hope this would be proper bindings in terms of controller IC with
+> associate device, anything wrong? Infact I used similar reference from
+> Ilitek Bananapi panel from here
+> Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.txt
+>
+> This is what I understood based on dt-binding, correct if I'm wrong.
 
-Best regards
-Uwe
+The ILI9881c is an LCD controller, and it has some panel specific
+configuration.
 
--- =
+Does your bridge have board specific configuration?
 
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--xya52razlxraohjj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXJCp2AAKCRDj7w1vZxhR
+xc0+AP4kBTWhE+HbFLHtDwT2CHATZKqvjT4ZfSVQKVmklha/wAEA2DrQF7uMkPmU
+FHT7yxsm8m+SH2s1bvRUbbetRpMSFwU=
+=sNtl
+-----END PGP SIGNATURE-----
+
+--xya52razlxraohjj--
