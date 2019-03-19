@@ -1,60 +1,67 @@
-Return-Path: <SRS0=f0E1=RE=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH] arm64: dts: renesas: r8a774c0: Add CANFD support
-Date: Fri,  1 Mar 2019 11:04:16 +0000
-Message-Id: <1551438256-22065-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <SRS0=L7Fd=RW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46490 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727418AbfCSK7p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Mar 2019 06:59:45 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o1so1147838wrs.13
+        for <devicetree@vger.kernel.org>; Tue, 19 Mar 2019 03:59:44 -0700 (PDT)
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH v4 1/6] iio: gyro: add DT bindings to fxas21002c
+Date: Tue, 19 Mar 2019 10:59:20 +0000
+Message-Id: <20190319105925.25863-2-rui.silva@linaro.org>
+In-Reply-To: <20190319105925.25863-1-rui.silva@linaro.org>
+References: <20190319105925.25863-1-rui.silva@linaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The CANFD implementation on the RZ/G2E (a.k.a. r8a774c0) is
-identical to the one found on the r8a77990.
+Add device tree bindings for the FXAS21002C gyroscope.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
-This patch depends on:
-https://patchwork.kernel.org/patch/10766777/
-https://patchwork.kernel.org/patch/10766781/
----
- arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ .../bindings/iio/gyroscope/nxp,fxas21002c.txt | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-index af0abf6..f6b3eb4 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-@@ -992,6 +992,31 @@
- 			status = "disabled";
- 		};
- 
-+		canfd: can@e66c0000 {
-+			compatible = "renesas,r8a774c0-canfd",
-+				     "renesas,rcar-gen3-canfd";
-+			reg = <0 0xe66c0000 0 0x8000>;
-+			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 914>,
-+				 <&cpg CPG_CORE R8A774C0_CLK_CANFD>,
-+				 <&can_clk>;
-+			clock-names = "fck", "canfd", "can_clk";
-+			assigned-clocks = <&cpg CPG_CORE R8A774C0_CLK_CANFD>;
-+			assigned-clock-rates = <40000000>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			resets = <&cpg 914>;
-+			status = "disabled";
+diff --git a/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt b/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
+new file mode 100644
+index 000000000000..465e104bbf14
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
+@@ -0,0 +1,31 @@
++* NXP FXAS21002C Gyroscope device tree bindings
 +
-+			channel0 {
-+				status = "disabled";
-+			};
++http://www.nxp.com/products/sensors/gyroscopes/3-axis-digital-gyroscope:FXAS21002C
 +
-+			channel1 {
-+				status = "disabled";
-+			};
-+		};
++Required properties:
++  - compatible : should be "nxp,fxas21002c"
++  - reg : the I2C address of the sensor or SPI chip select number for the
++          device.
++  - vdd-supply: phandle to the regulator that provides power to the sensor.
++  - vddio-supply: phandle to the regulator that provides power to the bus.
 +
- 		pwm0: pwm@e6e30000 {
- 			compatible = "renesas,pwm-r8a774c0", "renesas,pwm-rcar";
- 			reg = <0 0xe6e30000 0 0x8>;
++Optional properties:
++  - reset-gpios : gpio used to reset the device, see gpio/gpio.txt
++  - interrupts : device support 2 interrupts, INT1 and INT2,
++                 the interrupts can be triggered on rising or falling edges.
++                 See interrupt-controller/interrupts.txt
++  - interrupt-names: should contain "INT1" or "INT2", the gyroscope interrupt
++                     line in use.
++  - drive-open-drain: the interrupt/data ready line will be configured
++                      as open drain, which is useful if several sensors share
++                      the same interrupt line. This is a boolean property.
++                      (This binding is taken from pinctrl/pinctrl-bindings.txt)
++
++Example:
++
++gyroscope@20 {
++	compatible = "nxp,fxas21002c";
++	reg = <0x20>;
++	vdd-supply = <&reg_peri_3p15v>;
++	vddio-supply = <&reg_peri_3p15v>;
++};
 -- 
-2.7.4
+2.21.0
