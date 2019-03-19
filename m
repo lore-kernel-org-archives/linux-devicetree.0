@@ -1,119 +1,160 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add clkp2 clock to
- CAN nodes
-Date: Tue, 19 Mar 2019 12:55:09 +0100
-Message-ID: <20190319115509.pnwcqma472xnjeng@verge.net.au>
-References: <20190123095122.l3engeuwx6qr5lzc@verge.net.au>
- <20190123113812.e3nojtxjxywmg4gn@verge.net.au>
- <TYXPR01MB1775ABDCFD939F91F1053534C0990@TYXPR01MB1775.jpnprd01.prod.outlook.com>
- <CAMuHMdVkFJ7Cy-+tNHsOcYaxDj82WjMynuFuPRXa4k=DH2fGCQ@mail.gmail.com>
- <TYXPR01MB1775B75CED683E38B9171EA8C0990@TYXPR01MB1775.jpnprd01.prod.outlook.com>
- <20190124100123.a2gvucnnwrxibulf@verge.net.au>
- <TY1PR01MB177085C4C1DF3D9827EB769BC09B0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <20190128130111.t54jbcyx35fiymq6@verge.net.au>
- <TY1PR01MB177071330C7BD433A701F728C0960@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <TY1PR01MB1770A2ACD8287D3675270A0AC0400@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v4 08/12] usb: roles: Add usb role switch notifier.
+Date: Tue, 19 Mar 2019 13:56:51 +0200
+Message-ID: <20190319115651.GT7752@kuha.fi.intel.com>
+References: <20190316035342.77998-1-chenyu56@huawei.com>
+ <20190316035342.77998-9-chenyu56@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <TY1PR01MB1770A2ACD8287D3675270A0AC0400@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-Sender: netdev-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "David S. Miller" <davem@davemloft.net>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@v>
+In-Reply-To: <20190316035342.77998-9-chenyu56@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yu Chen <chenyu56@huawei.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 11:22:35AM +0000, Fabrizio Castro wrote:
-> Hello Simon,
+On Sat, Mar 16, 2019 at 11:53:38AM +0800, Yu Chen wrote:
+> This patch adds notifier for drivers want to be informed of the usb role switch.
 > 
-> > From: devicetree-owner@vger.kernel.org <devicetree-owner@vger.kernel.org> On Behalf Of Fabrizio Castro
-> > Sent: 28 January 2019 14:49
-> > Subject: RE: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add clkp2 clock to CAN nodes
-> > 
-> > > From: Simon Horman <horms@verge.net.au>
-> > > Sent: 28 January 2019 13:01
-> > > Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add clkp2 clock to CAN nodes
-> > >
-> > > On Fri, Jan 25, 2019 at 11:33:41AM +0000, Fabrizio Castro wrote:
-> > > > Hello Simon,
-> > > >
-> > > > Thank you for your feedback!
-> > > >
-> > > > > From: Simon Horman <horms@verge.net.au>
-> > > > > Sent: 24 January 2019 10:01
-> > > > > Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add clkp2 clock to CAN nodes
-> > > > >
-> > > > > On Wed, Jan 23, 2019 at 12:18:45PM +0000, Fabrizio Castro wrote:
-> > > > > > Hello Geert,
-> > > > > >
-> > > > > > Thank you for your feedback!
-> > > > > >
-> > > > > > > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > > > > > Sent: 23 January 2019 12:08
-> > > > > > > Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add clkp2 clock to CAN nodes
-> > > > > > >
-> > > > > > > Hi Fabrizio,
-> > > > > > >
-> > > > > > > On Wed, Jan 23, 2019 at 1:01 PM Fabrizio Castro
-> > > > > > > <fabrizio.castro@bp.renesas.com> wrote:
-> > > > > > > > > From: Simon Horman <horms@verge.net.au>
-> > > > > > > > > Sent: 23 January 2019 11:38
-> > > > > > > > > Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add clkp2 clock to CAN nodes
-> > > > > > > > >
-> > > > > > > > > On Wed, Jan 23, 2019 at 10:51:23AM +0100, Simon Horman wrote:
-> > > > > > > > > > On Fri, Jan 18, 2019 at 01:13:53PM +0100, Simon Horman wrote:
-> > > > > > > > > > > On Thu, Jan 17, 2019 at 02:54:15PM +0000, Fabrizio Castro wrote:
-> > > > > > > > > > > > According to the latest information, clkp2 is available on RZ/G2.
-> > > > > > > > > > > > Modify CAN0 and CAN1 nodes accordingly.
-> > > > > > > > > > > >
-> > > > > > > > > > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > > > > > > > > > > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> > > > > > >
-> > > > > > > > > > Thanks again, applied for v5.1.
-> > > > > > > > >
-> > > > > > > > > Sorry, I was a little hasty there.
-> > > > > > > > >
-> > > > > > > > > This patch depends on the presence of R8A774A1_CLK_CANFD which
-> > > > > > > > > (rightly) is added in a different patch in this series which is to
-> > > > > > > > > go upstream via a different tree.
-> > > > > > > > >
-> > > > > > > > > I have dropped this patch for now. I think there are two solution to this
-> > > > > > > > > problem.
-> > > > > > > > >
-> > > > > > > > > 1. Provide a version of this patch which uses a numeric index instead of
-> > > > > > > > >    R8A774A1_CLK_CANFD. And then, once R8A774A1_CLK_CANFD is present in an
-> > > > > > > > >    RC release provide a patch to switch to using R8A774A1_CLK_CANFD.
-> > > > > > > > >
-> > > > > > > > > 2. Defer this patch until R8A774A1_CLK_CANFD is present in an RC release.
-> > > > > > > >
-> > > > > > > > Yeah, my personal preference is solution 2.
-> > > > > > >
-> > > > > > > Note that solution 2 will probably defer the DT patch to v5.2.
-> > > > > >
-> > > > > > Yeah, my understanding is that even if we chose solution 1 we would still
-> > > > > > need to be waiting for v5.2 for the patch to switch to using
-> > > > > > R8A774A1_CLK_CANFD to appear in a rc, therefore I think solution 2 is
-> > > > > > fine.
-> > > > >
-> > > > > Your understanding is the same as mine.
-> > > > >
-> > > > > I do seem some slight value in option 1 in terms of getting the change,
-> > > > > less the minor issue of using an index rather than a symbol, upstream
-> > > > > earlier. But I do not feel strongly about this.
-> > > > >
-> > > > > I am marking this patch as deferred. Please repost or otherwise ping me
-> > > > > when you would like to revisit this topic.
-> > > >
-> > > > Thank you. Will do.
-> > >
-> > > Thanks.
-> > >
-> > > I believe "[10/11] arm64: dts: renesas: r8a774c0: Add clkp2 clock to CAN nodes"
-> > > falls into the same category. I have marked it as deferred accordingly.
-> > 
-> > Ok, thank you Simon
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> ---
+>  drivers/usb/roles/class.c | 20 +++++++++++++++++++-
+>  include/linux/usb/role.h  | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 65 insertions(+), 1 deletion(-)
 > 
-> My understanding is that this patch can now be taken, and it still applies neatly.
+> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+> index f45d8df5cfb8..e2caaa665d6e 100644
+> --- a/drivers/usb/roles/class.c
+> +++ b/drivers/usb/roles/class.c
+> @@ -20,6 +20,7 @@ struct usb_role_switch {
+>  	struct device dev;
+>  	struct mutex lock; /* device lock*/
+>  	enum usb_role role;
+> +	struct blocking_notifier_head nh;
+>  
+>  	/* From descriptor */
+>  	struct device *usb2_port;
+> @@ -49,8 +50,10 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
+>  	mutex_lock(&sw->lock);
+>  
+>  	ret = sw->set(sw->dev.parent, role);
+> -	if (!ret)
+> +	if (!ret) {
+>  		sw->role = role;
+> +		blocking_notifier_call_chain(&sw->nh, role, NULL);
+> +	}
+>  
+>  	mutex_unlock(&sw->lock);
+>  
+> @@ -58,6 +61,20 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
+>  }
+>  EXPORT_SYMBOL_GPL(usb_role_switch_set_role);
+>  
+> +int usb_role_switch_register_notifier(struct usb_role_switch *sw,
+> +				      struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_register(&sw->nh, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(usb_role_switch_register_notifier);
+> +
+> +int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
+> +					struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_unregister(&sw->nh, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(usb_role_switch_unregister_notifier);
+> +
+>  /**
+>   * usb_role_switch_get_role - Get the USB role for a switch
+>   * @sw: USB role switch
+> @@ -271,6 +288,7 @@ usb_role_switch_register(struct device *parent,
+>  		return ERR_PTR(-ENOMEM);
+>  
+>  	mutex_init(&sw->lock);
+> +	BLOCKING_INIT_NOTIFIER_HEAD(&sw->nh);
+>  
+>  	sw->allow_userspace_control = desc->allow_userspace_control;
+>  	sw->usb2_port = desc->usb2_port;
+> diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
+> index c05ffa6abda9..99d8b8e4fe61 100644
+> --- a/include/linux/usb/role.h
+> +++ b/include/linux/usb/role.h
+> @@ -42,6 +42,8 @@ struct usb_role_switch_desc {
+>  	bool allow_userspace_control;
+>  };
+>  
+> +
+> +#if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
+>  int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
+>  enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
+>  struct usb_role_switch *usb_role_switch_get(struct device *dev);
+> @@ -51,5 +53,49 @@ struct usb_role_switch *
+>  usb_role_switch_register(struct device *parent,
+>  			 const struct usb_role_switch_desc *desc);
+>  void usb_role_switch_unregister(struct usb_role_switch *sw);
+> +int usb_role_switch_register_notifier(struct usb_role_switch *sw,
+> +				      struct notifier_block *nb);
+> +int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
+> +					struct notifier_block *nb);
+> +#else
+> +static inline int usb_role_switch_set_role(struct usb_role_switch *sw,
+> +		enum usb_role role)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
+> +{
+> +	return USB_ROLE_NONE;
+> +}
+> +
+> +static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
+> +{
+> +	return ERR_PTR(-ENODEV);
+> +}
+> +
+> +static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
+> +
+> +static inline struct usb_role_switch *
+> +usb_role_switch_register(struct device *parent,
+> +			 const struct usb_role_switch_desc *desc)
+> +{
+> +	return ERR_PTR(-ENODEV);
+> +}
+> +
+> +static inline void usb_role_switch_unregister(struct usb_role_switch *sw) { }
+> +
+> +static int usb_role_switch_register_notifier(struct usb_role_switch *sw,
+> +				      struct notifier_block *nb)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
+> +					struct notifier_block *nb)
+> +{
+> +	return -ENODEV;
+> +}
+> +#endif
+>  
+>  #endif /* __LINUX_USB_ROLE_H */
 
-Thanks, I agree this should be ready now.
-I've applied it for v5.2.
+Sorry for the late response, but since you are providing a stub for
+all the functions, not just the new ones, could you please introduce
+them in a separate patch.
+
+Add a patch where you introduce stubs for the exiting functions, and
+this patch can then add the stubs for just the new notifier functions.
+
+
+thanks,
+
+-- 
+heikki
