@@ -1,264 +1,95 @@
-From: Sergey Suloev <ssuloev@orpaltech.com>
-Subject: Re: [PATCH v8 02/15] drm/sun4i: tcon: Compute DCLK dividers based on
- format, lanes
-Date: Tue, 19 Mar 2019 15:17:30 +0300
-Message-ID: <7dab458e-7fad-2dbe-bbae-bd3cdf89dcb4@orpaltech.com>
-References: <20190311133637.18334-1-jagan@amarulasolutions.com>
- <20190311133637.18334-3-jagan@amarulasolutions.com>
- <20190311153847.oz6ruqmptaq2befn@flea>
- <CAMty3ZChz=s7gdQyX9KnsAp1t5FrpouXGK74-r0SKJ89yJN67Q@mail.gmail.com>
- <20190319105307.omowzyhqu33e3pzy@flea>
+From: =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>
+Subject: [PATCH v2 0/5] Add support for drm/rockchip to dynamically control the DDR frequency.
+Date: Tue, 19 Mar 2019 14:13:18 -0400
+Message-ID: <20190319181323.22804-1-gael.portay@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1526517722=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190319105307.omowzyhqu33e3pzy@flea>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Jagan Teki <jagan@amarulasolutions.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-amarula@amarulasolutions.com, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lin Huang <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Derek Basehore <dbasehore@chromium.org>, Randy Li <ayaka@soulik.info>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, kernel@collabora.com, =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
---===============1526517722==
-Content-Type: multipart/alternative;
- boundary="------------75921FD4313A9A1DFBF21BEB"
-Content-Language: en-US
+Dear all,
 
-This is a multi-part message in MIME format.
---------------75921FD4313A9A1DFBF21BEB
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
+The rk3399 platform has a DFI controller that can monitor DDR load and a
+DMC driver that talks with the TF-A (Trusted Firmware-A) to dynamically
+set the DDR frequency with following flow.
 
-Hi, guys,
+             kernel                          Trusted Firmware-A
+                                                  (bl31)
+        monitor ddr load
+                |
+                |
+        get_target_rate
+                |
+                |           pass rate to TF-A
+        clk_set_rate(ddr) --------------------->run ddr dvs flow
+                                                    |
+                                                    |
+                 <------------------------------end ddr dvs flow
+                |
+                |
+              return
 
-On 3/19/19 1:53 PM, Maxime Ripard wrote:
-> On Mon, Mar 11, 2019 at 09:36:27PM +0530, Jagan Teki wrote:
->> On Mon, Mar 11, 2019 at 9:08 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->>> On Mon, Mar 11, 2019 at 07:06:24PM +0530, Jagan Teki wrote:
->>>> pll-video => pll-mipi => tcon0 => tcon0-pixel-clock is the typical
->>>> MIPI clock topology in Allwinner DSI controller.
->>>>
->>>> TCON dotclock driver is computing the desired DCLK divider based on
->>>> panel pixel clock along with input DCLK min, max divider values from
->>>> tcon driver and that would eventually set the pll-mipi clock rate.
->>>>
->>>> The current code allows the TCON clock divider to have a default 4
->>>> for min, max ranges that would fail to compute the desired pll-mipi
->>>> rate while supporting new panels.
->>>>
->>>> So, add the computation logic 'format/lanes' to dclk min and max dividers
->>>> and instead of default 4. This computation logic align with Allwinner A64
->>>> BSP, hoping that would work even for A33.
->>> Last time we discussed this, we found out that this wasn't the case,
->>> even in the BSP.
->> This was the case for BSP to compute pll-mipi not for TCON_DSI clock
->> register, SUN4I_TCON0_DCLK_REG, which marked the divider 4 by default.
->>
->>> What compelling evidence have you found that makes you say otherwise?
->> divider 4 isn't worked, this I would mentioned before as well.
-> Maybe you mentionned it before, but it's nowhere to be found in your
-> commit log.
->
->> Tested this on 4 different panels, and below are the desired divider values
->> and pll-mipi clock rate with respect to pixel clock frequency.
->>
->> - 55MHz pixel clock with 4-lane panel, and the desired DSI clock divider
->>    is 6 with the output parent clock rate of 330MHz.
->> - 30MHz pixel clock with 4-lane panel, and the desired DSI clock divider
->>    is 6 with parent clock rate of 180MHz.
->> - 27.5Mhz pixel clock with 2-lane pane, and the desired DSI clock divider
->>    is 12 with the output parent clock rate of 330MHz.
->> - 147MHz pixel clock with 4-lane panel, and the desired DSI clock divider
->>    is 6 with the output parent clock rate of 882MHz.
->>
->> BSP trying to use this format/lane to compute dsi divider that in-turn
->> using pll-mipi set_rate but TCON0_DCLK_REG keep constant 4.
-> Feel free to reply to
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/629596.html
->
-> And correct whatever is said there that isn't what is happening.
+These patches add support for devfreq to dynamically control the DDR
+frequency into the drm rockchip driver. By default it uses the
+'simple_ondemand' governor which can adjust the frequency based on the
+DDR load.
+
+Waiting for your feedback.
+
+Best regards,
+GaÃ«l
+
+Changes in v2:
+- [PATCH 1/8] Really add Acked-by: Chanwoo Choi <cw00.choi@samsung.com>.
+- [PATCH 4/8] Removed from patchset.
+- [PATCH 5/8] Removed from patchset.
+- [PATCH 6/8] Removed from patchset.
+- [PATCH 7/8] Reword the commit message to reflect the removal of
+              rk3390-dram-default-timing.dts in v1.
+- [PATCH 8/8] Move center-supply attribute of dmc node in file
+              rk3399-gru-chromebook.dtsi (where ppvar_centerlogic is
+	      defined).
+
+Changes in v1:
+- [RFC 1/10] Add Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+- [RFC 1/10] s/Generic/General/ (Robin Murphy)
+- [RFC 2/10] Add reviewed and acked tags from Chanwoo Choi and Rob Herring
+- [RFC 3/10] Add an explanation for platform SIP calls.
+- [RFC 3/10] Change if statement for a switch.
+- [RFC 3/10] Rename ddr_flag to odt_enable to be more clear.
+- [RFC 4/10] Removed from the series. I did not found a use case where not holding the mutex causes the issue.
+- [RFC 7/10] Removed from the series. I did not found a use case where this matters.
+- [RFC 8/10] Move rk3399-dram.h to dt-includes.
+- [RFC 8/10] Put sdram default values under the dmc node.
+- [RFC 8/10] Removed rk3399-dram-default-timing.dts
 
 
-excuse me if my message is out of topic.
+Enric Balletbo i Serra (3):
+  devfreq: rockchip-dfi: Move GRF definitions to a common place.
+  dt-bindings: devfreq: rk3399_dmc: Add rockchip,pmu phandle.
+  devfreq: rk3399_dmc: Pass ODT and auto power down parameters to TF-A.
 
-I just want let you know  that the code
+Lin Huang (2):
+  arm64: dts: rk3399: Add dfi and dmc nodes.
+  arm64: dts: rockchip: Enable dmc and dfi nodes on gru.
 
-tcon->dclk_min_div = SUN6I_DSI_TCON_DIV;
-tcon->dclk_max_div = SUN6I_DSI_TCON_DIV;
+ .../bindings/devfreq/rk3399_dmc.txt           |  2 +
+ .../dts/rockchip/rk3399-gru-chromebook.dtsi   |  4 +
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi  | 20 +++++
+ .../boot/dts/rockchip/rk3399-op1-opp.dtsi     | 29 ++++++++
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi      | 51 ++++++++++++-
+ drivers/devfreq/event/rockchip-dfi.c          | 23 ++----
+ drivers/devfreq/rk3399_dmc.c                  | 74 ++++++++++++++++++-
+ include/dt-bindings/power/rk3399-dram.h       | 73 ++++++++++++++++++
+ include/soc/rockchip/rk3399_grf.h             | 21 ++++++
+ include/soc/rockchip/rockchip_sip.h           |  1 +
+ 10 files changed, 280 insertions(+), 18 deletions(-)
+ create mode 100644 include/dt-bindings/power/rk3399-dram.h
+ create mode 100644 include/soc/rockchip/rk3399_grf.h
 
-where SUN6I_DSI_TCON_DIV = 4  isn't working with my 2-lane panel: I am 
-always getting the error:
-
-  [CRTC:38:crtc-0] vblank wait timed out
-
-As soon as I set
-
-tcon->dclk_min_div = tcon->dclk_max_div = bpp/lanes, i.e. 12
-
-the error disappears.
-
-
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---------------75921FD4313A9A1DFBF21BEB
-Content-Type: text/html; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html;
-      charset=windows-1252">
-  </head>
-  <body text="#000000" bgcolor="#FFFFFF">
-    <p>Hi, guys,<br>
-    </p>
-    <div class="moz-cite-prefix">On 3/19/19 1:53 PM, Maxime Ripard
-      wrote:<br>
-    </div>
-    <blockquote type="cite"
-      cite="mid:20190319105307.omowzyhqu33e3pzy@flea">
-      <pre class="moz-quote-pre" wrap="">On Mon, Mar 11, 2019 at 09:36:27PM +0530, Jagan Teki wrote:
-</pre>
-      <blockquote type="cite">
-        <pre class="moz-quote-pre" wrap="">On Mon, Mar 11, 2019 at 9:08 PM Maxime Ripard <a class="moz-txt-link-rfc2396E" href="mailto:maxime.ripard@bootlin.com">&lt;maxime.ripard@bootlin.com&gt;</a> wrote:
-</pre>
-        <blockquote type="cite">
-          <pre class="moz-quote-pre" wrap="">
-On Mon, Mar 11, 2019 at 07:06:24PM +0530, Jagan Teki wrote:
-</pre>
-          <blockquote type="cite">
-            <pre class="moz-quote-pre" wrap="">pll-video =&gt; pll-mipi =&gt; tcon0 =&gt; tcon0-pixel-clock is the typical
-MIPI clock topology in Allwinner DSI controller.
-
-TCON dotclock driver is computing the desired DCLK divider based on
-panel pixel clock along with input DCLK min, max divider values from
-tcon driver and that would eventually set the pll-mipi clock rate.
-
-The current code allows the TCON clock divider to have a default 4
-for min, max ranges that would fail to compute the desired pll-mipi
-rate while supporting new panels.
-
-So, add the computation logic 'format/lanes' to dclk min and max dividers
-and instead of default 4. This computation logic align with Allwinner A64
-BSP, hoping that would work even for A33.
-</pre>
-          </blockquote>
-          <pre class="moz-quote-pre" wrap="">
-Last time we discussed this, we found out that this wasn't the case,
-even in the BSP.
-</pre>
-        </blockquote>
-        <pre class="moz-quote-pre" wrap="">
-This was the case for BSP to compute pll-mipi not for TCON_DSI clock
-register, SUN4I_TCON0_DCLK_REG, which marked the divider 4 by default.
-
-</pre>
-        <blockquote type="cite">
-          <pre class="moz-quote-pre" wrap="">What compelling evidence have you found that makes you say otherwise?
-</pre>
-        </blockquote>
-        <pre class="moz-quote-pre" wrap="">
-divider 4 isn't worked, this I would mentioned before as well.
-</pre>
-      </blockquote>
-      <pre class="moz-quote-pre" wrap="">
-Maybe you mentionned it before, but it's nowhere to be found in your
-commit log.
-
-</pre>
-      <blockquote type="cite">
-        <pre class="moz-quote-pre" wrap="">Tested this on 4 different panels, and below are the desired divider values
-and pll-mipi clock rate with respect to pixel clock frequency.
-
-- 55MHz pixel clock with 4-lane panel, and the desired DSI clock divider
-  is 6 with the output parent clock rate of 330MHz.
-- 30MHz pixel clock with 4-lane panel, and the desired DSI clock divider
-  is 6 with parent clock rate of 180MHz.
-- 27.5Mhz pixel clock with 2-lane pane, and the desired DSI clock divider
-  is 12 with the output parent clock rate of 330MHz.
-- 147MHz pixel clock with 4-lane panel, and the desired DSI clock divider
-  is 6 with the output parent clock rate of 882MHz.
-
-BSP trying to use this format/lane to compute dsi divider that in-turn
-using pll-mipi set_rate but TCON0_DCLK_REG keep constant 4.
-</pre>
-      </blockquote>
-      <pre class="moz-quote-pre" wrap="">
-Feel free to reply to
-<a class="moz-txt-link-freetext" href="http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/629596.html">http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/629596.html</a>
-
-And correct whatever is said there that isn't what is happening.
-</pre>
-    </blockquote>
-    <p><br>
-    </p>
-    <p>excuse me if my message is out of topic.</p>
-    <p>I just want let you know  that the code <br>
-    </p>
-    <p>tcon-&gt;dclk_min_div = SUN6I_DSI_TCON_DIV;<br>
-      tcon-&gt;dclk_max_div = SUN6I_DSI_TCON_DIV;</p>
-    <p>where SUN6I_DSI_TCON_DIV = 4  isn't working with my 2-lane panel:
-      I am always getting the error:</p>
-    <p> [CRTC:38:crtc-0] vblank wait timed out<br>
-    </p>
-    <p>As soon as I set <br>
-    </p>
-    <p>tcon-&gt;dclk_min_div = tcon-&gt;dclk_max_div = bpp/lanes, i.e.
-      12<br>
-    </p>
-    <p>the error disappears.<br>
-    </p>
-    <p><br>
-    </p>
-    <blockquote type="cite"
-      cite="mid:20190319105307.omowzyhqu33e3pzy@flea">
-      <pre class="moz-quote-pre" wrap="">
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-<a class="moz-txt-link-freetext" href="https://bootlin.com">https://bootlin.com</a>
-</pre>
-      <br>
-      <fieldset class="mimeAttachmentHeader"></fieldset>
-      <pre class="moz-quote-pre" wrap="">_______________________________________________
-linux-arm-kernel mailing list
-<a class="moz-txt-link-abbreviated" href="mailto:linux-arm-kernel@lists.infradead.org">linux-arm-kernel@lists.infradead.org</a>
-<a class="moz-txt-link-freetext" href="http://lists.infradead.org/mailman/listinfo/linux-arm-kernel">http://lists.infradead.org/mailman/listinfo/linux-arm-kernel</a>
-</pre>
-    </blockquote>
-  </body>
-</html>
-
---------------75921FD4313A9A1DFBF21BEB--
-
---===============1526517722==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============1526517722==--
+-- 
+2.21.0
