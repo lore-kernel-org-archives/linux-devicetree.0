@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v4 2/5] media: sunxi: Refactor the Makefile and Kconfig
-Date: Tue, 19 Mar 2019 16:55:45 +0100
-Message-ID: <bcbb0c0752b31c80140723b3e55979740943a0a4.1553010938.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v4 5/5] DO NOT MERGE: ARM: dts: bananapi: Add Camera support
+Date: Tue, 19 Mar 2019 16:55:48 +0100
+Message-ID: <63bd0ff34f679a88e57fed01b0caa41d18b9ea21.1553010938.git-series.maxime.ripard@bootlin.com>
 References: <cover.2aba8cbd95630d87f927465cc2beb881936c83d9.1553010938.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,57 +12,140 @@ To: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.inte
 Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-The Makefile and Kconfig for the sun6i CSI driver are included in the main
-Makefile / KConfig file. Since we're going to add a new CSI driver for an
-older chip, and the Cedrus driver eventually, it makes more sense to put
-those in our directory.
-
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- drivers/media/platform/Kconfig        | 2 +-
- drivers/media/platform/Makefile       | 2 +-
- drivers/media/platform/sunxi/Kconfig  | 1 +
- drivers/media/platform/sunxi/Makefile | 1 +
- 4 files changed, 4 insertions(+), 2 deletions(-)
- create mode 100644 drivers/media/platform/sunxi/Kconfig
- create mode 100644 drivers/media/platform/sunxi/Makefile
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts | 91 +++++++++++++++++++++++++-
+ 1 file changed, 91 insertions(+)
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 4acbed189644..9533fcd33410 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -146,7 +146,7 @@ source "drivers/media/platform/am437x/Kconfig"
- source "drivers/media/platform/xilinx/Kconfig"
- source "drivers/media/platform/rcar-vin/Kconfig"
- source "drivers/media/platform/atmel/Kconfig"
--source "drivers/media/platform/sunxi/sun6i-csi/Kconfig"
-+source "drivers/media/platform/sunxi/Kconfig"
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+index 81bc85d398c1..33f1b40ee3f2 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+@@ -54,6 +54,9 @@
+ 	compatible = "lemaker,bananapi", "allwinner,sun7i-a20";
  
- config VIDEO_TI_CAL
- 	tristate "TI CAL (Camera Adaptation Layer) driver"
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index 7cbbd925124c..6ee7eb0d36f4 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -100,4 +100,4 @@ obj-y					+= meson/
+ 	aliases {
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
+ 		serial0 = &uart0;
+ 		serial1 = &uart3;
+ 		serial2 = &uart7;
+@@ -63,6 +66,41 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
  
- obj-y					+= cros-ec-cec/
++	reg_cam: cam {
++		compatible = "regulator-fixed";
++		regulator-name = "cam";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&reg_vcc5v0>;
++		gpio = <&pio 7 16 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		regulator-always-on;
++	};
++
++        reg_cam_avdd: cam-avdd {
++                compatible = "regulator-fixed";
++                regulator-name = "cam500b-avdd";
++                regulator-min-microvolt = <2800000>;
++                regulator-max-microvolt = <2800000>;
++                vin-supply = <&reg_cam>;
++        };
++
++        reg_cam_dovdd: cam-dovdd {
++                compatible = "regulator-fixed";
++                regulator-name = "cam500b-dovdd";
++                regulator-min-microvolt = <1800000>;
++                regulator-max-microvolt = <1800000>;
++                vin-supply = <&reg_cam>;
++        };
++
++        reg_cam_dvdd: cam-dvdd {
++                compatible = "regulator-fixed";
++                regulator-name = "cam500b-dvdd";
++                regulator-min-microvolt = <1500000>;
++                regulator-max-microvolt = <1500000>;
++                vin-supply = <&reg_cam>;
++        };
++
+ 	hdmi-connector {
+ 		compatible = "hdmi-connector";
+ 		type = "a";
+@@ -116,6 +154,23 @@
+ 		>;
+ };
  
--obj-$(CONFIG_VIDEO_SUN6I_CSI)		+= sunxi/sun6i-csi/
-+obj-y					+= sunxi/
-diff --git a/drivers/media/platform/sunxi/Kconfig b/drivers/media/platform/sunxi/Kconfig
-new file mode 100644
-index 000000000000..1b6e89cb78b2
---- /dev/null
-+++ b/drivers/media/platform/sunxi/Kconfig
-@@ -0,0 +1 @@
-+source "drivers/media/platform/sunxi/sun6i-csi/Kconfig"
-diff --git a/drivers/media/platform/sunxi/Makefile b/drivers/media/platform/sunxi/Makefile
-new file mode 100644
-index 000000000000..8d06f98500ee
---- /dev/null
-+++ b/drivers/media/platform/sunxi/Makefile
-@@ -0,0 +1 @@
-+obj-y		+= sun6i-csi/
++&csi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&csi0_pins_a>;
++	status = "okay";
++
++	port {
++		csi_from_ov5640: endpoint {
++                        remote-endpoint = <&ov5640_to_csi>;
++                        bus-width = <8>;
++                        hsync-active = <1>; /* Active high */
++                        vsync-active = <0>; /* Active low */
++                        data-active = <1>;  /* Active high */
++                        pclk-sample = <1>;  /* Rising */
++                };
++	};
++};
++
+ &de {
+ 	status = "okay";
+ };
+@@ -161,6 +216,36 @@
+ 	};
+ };
+ 
++&i2c1 {
++	status = "okay";
++
++	camera: camera@21 {
++		compatible = "ovti,ov5640";
++		reg = <0x21>;
++                clocks = <&ccu CLK_CSI0>;
++                clock-names = "xclk";
++		assigned-clocks = <&ccu CLK_CSI0>;
++		assigned-clock-rates = <24000000>;
++
++                reset-gpios = <&pio 7 14 GPIO_ACTIVE_LOW>;
++                powerdown-gpios = <&pio 7 19 GPIO_ACTIVE_HIGH>;
++                AVDD-supply = <&reg_cam_avdd>;
++                DOVDD-supply = <&reg_cam_dovdd>;
++                DVDD-supply = <&reg_cam_dvdd>;
++
++                port {
++                        ov5640_to_csi: endpoint {
++                                remote-endpoint = <&csi_from_ov5640>;
++                                bus-width = <8>;
++                                hsync-active = <1>; /* Active high */
++                                vsync-active = <0>; /* Active low */
++                                data-active = <1>;  /* Active high */
++                                pclk-sample = <1>;  /* Rising */
++                        };
++                };
++	};
++};
++
+ &i2c2 {
+ 	status = "okay";
+ };
+@@ -247,6 +332,12 @@
+ 		"IO-6", "IO-3", "IO-2", "IO-0", "", "", "", "",
+ 		"", "", "", "", "", "", "", "";
+ 
++	csi0_pins_a: csi_pins_a@0 {
++		pins = "PE0", "PE1", "PE2", "PE3", "PE4", "PE5",
++		       "PE6", "PE7", "PE8", "PE9", "PE10", "PE11";
++		function = "csi0";
++	};
++
+ 	usb0_id_detect_pin: usb0-id-detect-pin {
+ 		pins = "PH4";
+ 		function = "gpio_in";
 -- 
 git-series 0.9.1
