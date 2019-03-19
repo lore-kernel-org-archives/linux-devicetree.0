@@ -1,61 +1,61 @@
 From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH 0/5] ARM: Initial devicetree for Kobo Aura
-Date: Tue, 19 Mar 2019 16:24:15 +0100
-Message-ID: <20190319152421.16179-1-j.neuschaefer@gmx.net>
+Subject: [PATCH 3/5] ARM: dts: imx50: Add PHY node for usbotg and adjust clocks
+Date: Tue, 19 Mar 2019 16:24:18 +0100
+Message-ID: <20190319152421.16179-4-j.neuschaefer@gmx.net>
+References: <20190319152421.16179-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190319152421.16179-1-j.neuschaefer@gmx.net>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Johan Hovold <johan@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Thierry Reding <treding@nvidia.com>, Fabio Estevam <festevam@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Jagan Teki <jagan@amarulasolutions.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Heiko Stuebner <heiko@sntech.de>, Jagan Teki <jagan@amarulasolutions.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBzZXJpZXMgYWRkcyBhIGRldmljZXRyZWUgZm9yIHRoZSBpLk1YNTA3LWJhc2VkIEtvYm8g
-QXVyYSBlLWJvb2sKcmVhZGVyLCBhbmQgZml4ZXMgYSBmZXcgdGhpbmdzIGluIGlteDUwLmR0c2kg
-YWxvbmcgdGhlIHdheS4KCkEgbG90IG9mIGZ1bmN0aW9uYWxpdHkgaXMgc3RpbGwgbWlzc2luZzoK
-LSBwb3dlcm9mZi9yZWJvb3QsIFJUQywgYW5kIGJhdHRlcnkgbW9uaXRvcmluZyBzdXBwb3J0LCBh
-cyB3ZWxsIGFzIGEgUFdNCiAgY2hhbm5lbCBmb3IgdGhlIGRpc3BsYXkgYmFja2xpZ2h0IGFyZSBw
-cm92aWRlZCBieSBhIGN1c3RvbSBlbWJlZGRlZAogIGNvbnRyb2xsZXIsIHdoaWNoIHdpbGwgYmUg
-c3VwcG9ydGVkIGJ5IGEgZnV0dXJlIHBhdGNoc2V0LgogIFRoZSBFQyBkcml2ZXIgd2lsbCBhbHNv
-IHRlbGwgdGhlIEVDIHRvIGtlZXAgdGhlIGJvYXJkIHBvd2VyZWQgb247CiAgb3RoZXJ3aXNlIHRo
-ZSBFQyB3aWxsIHBvd2VyIHRoZSBib2FyZCBvZmYgYWZ0ZXIgYWJvdXQgdGVuIHNlY29uZHMKICAo
-cHJlc3VtYWJseSB0byBhdm9pZCBiYXR0ZXJ5IGRyYWluIGlmIHRoZSBPUyBpcyBtaXNzaW5nIG9y
-IGNvcnJ1cHRlZCkKLSBUaGUgdG91Y2hzY3JlZW4gY29udHJvbGxlciwgZUtURjIxMzIsIGN1cnJl
-bnRseSBkb2Vzbid0IGhhdmUgYQogIG1haW5saW5lIGRyaXZlci4KLSBUaGUgZS1wYXBlciBkaXNw
-bGF5IGNvbnRyb2xsZXIgKEVQREMpIGVtYmVkZGVkIGluIHRoZSBpLk1YNTAgU29DIHdpbGwKICBu
-ZWVkIGEgd2hvbGUgbmV3IERSTSBkcml2ZXIsIGRldmljZXRyZWUgYmluZGluZ3MsIGV0Yy4KLSBU
-aGUgVFBTNjUxODUgUE1JQywgd2hpY2ggZ2VuZXJhdGVzIHRoZSB2b2x0YWdlcyBuZWNlc3Nhcnkg
-Zm9yIGRyaXZpbmcKICB0aGUgRSBJbmsgcGFuZWwsIGFsc28gbmVlZHMgYSBkcml2ZXIKLSBUaGUg
-YmFja2xpZ2h0IGRvZXNuJ3QgcXVpdGUgZml0IHRoZSBleGlzdGluZyBwd20tYmFja2xpZ2h0IERU
-IGJpbmRpbmcsCiAgYmVjYXVzZSBpdCB1c2VzIGFuIGFkZGl0aW9uYWwgR1BJTyB0byBib29zdCB0
-aGUgYnJpZ2h0bmVzcy4gVGhpcwogIHJlcXVpcmVzIHNvbWUgZGV2aWNldHJlZSB3b3JrCi0gTGlu
-dXggZG9lc24ndCBjdXJyZW50bHkgc3VwcG9ydCBzdXNwZW5kLXRvLXJhbSBvbiBpLk1YNTAKCklu
-IG9yZGVyIHRvIGtlZXAgdGhlIHN5c3RlbSBydW5uaW5nIHdoZW4gQ09ORklHX1BNIGlzIGVuYWJs
-ZWQsIHRoZQpmb2xsb3dpbmcgZml4IGlzIGFsc28gcmVxdWlyZWQ6Cmh0dHBzOi8vbG9yZS5rZXJu
-ZWwub3JnL2xrbWwvMjAxOTAzMTgyMzE3MzcuODQ1OS0xLWoubmV1c2NoYWVmZXJAZ214Lm5ldC8K
-Ck15IG93biBub3RlcyBhYm91dCB0aGlzIG1hY2hpbmUgY2FuIGJlIGZvdW5kIGhlcmU6Cmh0dHBz
-Oi8vZ2l0aHViLmNvbS9uZXVzY2hhZWZlci9saW51eC93aWtpL0tvYm8tQXVyYQoKSm9uYXRoYW4g
-TmV1c2Now6RmZXIgKDUpOgogIGR0LWJpbmRpbmdzOiBBZGQgdmVuZG9yIHByZWZpeCBmb3IgUmFr
-dXRlbiBLb2JvLCBJbmMuCiAgQVJNOiBkdHM6IGlteDUwOiBBZGQgS29ibyBBdXJhIERUUwogIEFS
-TTogZHRzOiBpbXg1MDogQWRkIFBIWSBub2RlIGZvciB1c2JvdGcgYW5kIGFkanVzdCBjbG9ja3MK
-ICBBUk06IGR0czogaW14NTAta29iby1hdXJhOiBFbmFibGUgVVNCIHN1cHBvcnQKICBBUk06IGR0
-czogaW14NTA6IEZpeCB0aGUgbnVtYmVyaW5nIG9mIHRoZSBJMkMgY29udHJvbGxlcnMKCiAuLi4v
-ZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0ICAgfCAgIDEgKwogYXJjaC9h
-cm0vYm9vdC9kdHMvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgIHwgICAzICstCiBhcmNoL2Fy
-bS9ib290L2R0cy9pbXg1MC1rb2JvLWF1cmEuZHRzICAgICAgICAgfCAyNjMgKysrKysrKysrKysr
-KysrKysrCiBhcmNoL2FybS9ib290L2R0cy9pbXg1MC5kdHNpICAgICAgICAgICAgICAgICAgfCAg
-MTQgKy0KIDQgZmlsZXMgY2hhbmdlZCwgMjc5IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
-CiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvaW14NTAta29iby1hdXJhLmR0
-cwoKLS0KMi4yMC4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtYXJtLWtlcm5lbAo=
+Even though the ChipIdea USB controller binding[1] doesn't specify the
+properties that reference a PHY as required, the Linux driver
+requires[2] such a reference.
+
+The clock situation is like on i.MX53: The USB controller is clocked
+from IMX5_CLK_USBOH3_GATE and the PHY from IMX5_CLK_USB_PHY1_GATE.
+
+[1]: Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+[2]: Search for EINVAL in drivers/usb/chipidea/ci_hdrc_imx.c
+
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ arch/arm/boot/dts/imx50.dtsi | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.dtsi
+index ee1e3e8bf4ec..e5632ce24ba0 100644
+=2D-- a/arch/arm/boot/dts/imx50.dtsi
++++ b/arch/arm/boot/dts/imx50.dtsi
+@@ -76,6 +76,14 @@
+ 		};
+ 	};
+
++	usbphy0: usbphy-0 {
++		compatible =3D "usb-nop-xceiv";
++		clocks =3D <&clks IMX5_CLK_USB_PHY1_GATE>;
++		clock-names =3D "main_clk";
++		#phy-cells =3D <0>;
++		status =3D "okay";
++	};
++
+ 	soc {
+ 		#address-cells =3D <1>;
+ 		#size-cells =3D <1>;
+@@ -187,7 +195,8 @@
+ 				compatible =3D "fsl,imx50-usb", "fsl,imx27-usb";
+ 				reg =3D <0x53f80000 0x0200>;
+ 				interrupts =3D <18>;
+-				clocks =3D <&clks IMX5_CLK_USB_PHY1_GATE>;
++				clocks =3D <&clks IMX5_CLK_USBOH3_GATE>;
++				fsl,usbphy =3D <&usbphy0>;
+ 				status =3D "disabled";
+ 			};
+
+=2D-
+2.20.1
