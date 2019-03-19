@@ -1,62 +1,49 @@
-From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH 4/5] ARM: dts: imx50-kobo-aura: Enable USB support
-Date: Tue, 19 Mar 2019 16:24:19 +0100
-Message-ID: <20190319152421.16179-5-j.neuschaefer@gmx.net>
-References: <20190319152421.16179-1-j.neuschaefer@gmx.net>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH] dt-bindings: hwmon (pwm-fan) Remove dead
+ "cooling-*-state" properties
+Date: Tue, 19 Mar 2019 16:27:51 +0100
+Message-ID: <14253588.EKW5T2lhLl@diego>
+References: <afde4ebd929821d63b5172c8e70e15f0725a4b49.1553006788.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190319152421.16179-1-j.neuschaefer@gmx.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Heiko Stuebner <heiko@sntech.de>, Jagan Teki <jagan@amarulasolutions.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <afde4ebd929821d63b5172c8e70e15f0725a4b49.1553006788.git.robin.murphy@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, krzk@kernel.org, jonathanh@nvidia.com, kgene@kernel.org, thierry.reding@gmail.com, linux-arm-kernel@lists.infradead.org, shawnguo@kernel.org, linux@roeck-us.net
 List-Id: devicetree@vger.kernel.org
 
-Enable the USBOTG controller in device mode, and also enable the
-corresponding PHY. The presence of Vbus is detected via a GPIO.
+Am Dienstag, 19. M=E4rz 2019, 15:54:04 CET schrieb Robin Murphy:
+> The old "cooling-{min,max}-state" properties for thermal bindings were
+> ratified to "cooling-{min,max}-level" by commit eb168b70dea5 ("of:
+> thermal: Fix inconsitency between cooling-*-state and cooling-*-level"),
+> which were later removed entirely by commit e04907dbc259 ("dt-bindings:
+> thermal: Remove "cooling-{min|max}-level" properties").
+> =
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- arch/arm/boot/dts/imx50-kobo-aura.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+> The pwm-fan binding, however, was apparently in-flight in parallel with
+> that ratification, and so managed to introduce an example of the old
+> properties which escaped the scope of the later cleanup and has thus
+> continued to be dutifully copied for new boards despite being useless.
+> Clean up these remaining undocumented anachronisms to minimise any
+> further confusion.
+> =
 
-diff --git a/arch/arm/boot/dts/imx50-kobo-aura.dts b/arch/arm/boot/dts/imx=
-50-kobo-aura.dts
-index e778a677c752..d0dc20d99d99 100644
-=2D-- a/arch/arm/boot/dts/imx50-kobo-aura.dts
-+++ b/arch/arm/boot/dts/imx50-kobo-aura.dts
-@@ -87,6 +87,12 @@
- 		>;
- 	};
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+> =
 
-+	pinctrl_usbphy: usbphy {
-+		fsl,pins =3D <
-+			MX50_PAD_ECSPI2_SS0__GPIO4_19		0x0
-+		>;
-+	};
-+
- 	pinctrl_i2c1: i2c1 {
- 		fsl,pins =3D <
- 			MX50_PAD_I2C1_SCL__I2C1_SCL		0x400001fd
-@@ -180,6 +186,18 @@
- 	status =3D "okay";
- };
+> Presented as one big hwmon patch for simplicity, but the DT changes
+> can quite easily be broken out by platform if maintainers prefer.
 
-+&usbotg {
-+	status =3D "okay";
-+	phy_type =3D "utmi_wide";
-+	dr_mode =3D "peripheral";
-+};
-+
-+&usbphy0 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_usbphy>;
-+	vbus-detect-gpio =3D <&gpio4 19 GPIO_ACTIVE_LOW>;
-+};
-+
- &i2c1 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&pinctrl_i2c1>;
-=2D-
-2.20.1
+For the Rockchip-parts
+Acked-by: Heiko Stuebner <heiko@sntech.de>
