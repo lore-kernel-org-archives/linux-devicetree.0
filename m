@@ -1,47 +1,42 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 0/2] clk: meson8b: add the video decoder clocks
-Date: Tue, 19 Mar 2019 23:00:10 +0100
-Message-ID: <20190319220012.31065-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 1/2] dt-bindings: clock: meson8b: export the video decoder clocks
+Date: Tue, 19 Mar 2019 23:00:11 +0100
+Message-ID: <20190319220012.31065-2-martin.blumenstingl@googlemail.com>
+References: <20190319220012.31065-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190319220012.31065-1-martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: narmstrong@baylibre.com, jbrunet@baylibre.com, linux-amlogic@lists.infradead.org, mjourdan@baylibre.com
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the video decoder clocks for Meson8, Meson8b and Meson8m2.
+Export the four video decoder clocks so they can be used by the video
+decoder driver:
+- VDEC_1
+- VDEC_HCODEC
+- VDEC_2
+- VDEC_HEVC
 
-The clock tree on Meson8 differs from the one one Meson8b and Meson8m2.
-Details can be found in patch #2.
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ include/dt-bindings/clock/meson8b-clkc.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-There are some checkpatch warnings in patch #2:
-  WARNING: please, no space before tabs
-I decided to still send the patch because we have the same inconsistency
-with all other clk_hw_onecell_data table entries. Please let me know if
-I should come up with a follow-up patch to clean them all up.
-
-Testing:
-I have not tested this with Maxime's video decoder driver yet.
-However, I manually enabled and set various frequencies for the HCODEC
-clock and verified that clkmsr reports the correct rate.
-
-Dependencies:
-This is meant to be applied on top of my other series from [0]:
-  clk: meson8b: add the VPU clock tree
-
-
-[0] https://patchwork.kernel.org/cover/10860401/
-
-
-Martin Blumenstingl (2):
-  dt-bindings: clock: meson8b: export the video decoder clocks
-  clk: meson: meson8b: add the video decoder clock trees
-
- drivers/clk/meson/meson8b.c              | 312 +++++++++++++++++++++++
- drivers/clk/meson/meson8b.h              |  17 +-
- include/dt-bindings/clock/meson8b-clkc.h |   4 +
- 3 files changed, 332 insertions(+), 1 deletion(-)
-
+diff --git a/include/dt-bindings/clock/meson8b-clkc.h b/include/dt-bindings/clock/meson8b-clkc.h
+index 2ac9469a1c27..47556539f0ee 100644
+--- a/include/dt-bindings/clock/meson8b-clkc.h
++++ b/include/dt-bindings/clock/meson8b-clkc.h
+@@ -108,5 +108,9 @@
+ #define CLKID_AXI		128
+ #define CLKID_L2_DRAM		130
+ #define CLKID_VPU		190
++#define CLKID_VDEC_1		196
++#define CLKID_VDEC_HCODEC	199
++#define CLKID_VDEC_2		202
++#define CLKID_VDEC_HEVC		206
+ 
+ #endif /* __MESON8B_CLKC_H */
 -- 
 2.21.0
