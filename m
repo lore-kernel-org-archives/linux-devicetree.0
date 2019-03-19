@@ -1,117 +1,48 @@
-From: Christian Lamparter <chunkeey@gmail.com>
-Subject: [PATCH v3 2/3] dt-bindings: net: dsa: qca8k: support internal mdio-bus
-Date: Tue, 19 Mar 2019 20:54:18 +0100
-Message-ID: <20190319195419.12746-2-chunkeey@gmail.com>
-References: <20190319195419.12746-1-chunkeey@gmail.com>
+From: Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCH v3 0/8] phy: qcom-ufs: Enable regulators to be off in suspend
+Date: Tue, 19 Mar 2019 13:04:22 -0700
+Message-ID: <CAE=gft4YPmqd35ySmZw2UG876Lvt8rcz+nNwELXK98PDvHuVeA@mail.gmail.com>
+References: <20190205185902.106085-1-evgreen@chromium.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190319195419.12746-1-chunkeey@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Vivien Didelot <vivien.didelot@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190205185902.106085-1-evgreen@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Stephen Boyd <swboyd@chromium.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Grygorii Strashko <grygorii.strashko@ti.com>, Rob Herring <robh+dt@kernel.org>, Vinayak Holikatti <vinholikatti@gmail.com>, Jeffrey Hugo <jhugo@codeaurora.org>, SCSI <linux-scsi@vger.kernel.org>, David Brown <david.brown@linaro.org>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, liwei <liwei213@huawei.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the qca8k's binding to document to the
-approach for using the internal mdio-bus of the supported
-qca8k switches.
+On Tue, Feb 5, 2019 at 10:59 AM Evan Green <evgreen@chromium.org> wrote:
+>
+...
+> Evan Green (8):
+>   dt-bindings: ufs: Add #reset-cells for Qualcomm controllers
+>   dt-bindings: phy-qcom-qmp: Add UFS PHY reset
+>   dt-bindings: phy: qcom-ufs: Add resets property
+>   arm64: dts: sdm845: Add UFS PHY reset
+>   arm64: dts: msm8996: Add UFS PHY reset controller
+>   scsi: ufs: qcom: Expose the reset controller for PHY
+>   phy: qcom: Utilize UFS reset controller
+>   phy: ufs-qcom: Refactor all init steps into phy_poweron
+>
+>  .../devicetree/bindings/phy/qcom-qmp-phy.txt  |   6 +-
+>  .../devicetree/bindings/ufs/ufs-qcom.txt      |   5 +-
+>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |   3 +
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi         |   4 +-
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi          |   3 +
+>  drivers/phy/qualcomm/phy-qcom-qmp.c           | 117 +++++++++---------
+>  drivers/phy/qualcomm/phy-qcom-ufs-i.h         |   5 +-
+>  drivers/phy/qualcomm/phy-qcom-ufs-qmp-14nm.c  |  25 +---
+>  drivers/phy/qualcomm/phy-qcom-ufs-qmp-20nm.c  |  25 +---
+>  drivers/phy/qualcomm/phy-qcom-ufs.c           |  57 +++++++--
+>  drivers/scsi/ufs/Kconfig                      |   1 +
+>  drivers/scsi/ufs/ufs-qcom.c                   | 114 ++++++++++-------
+>  drivers/scsi/ufs/ufs-qcom.h                   |   4 +
+>  13 files changed, 202 insertions(+), 167 deletions(-)
+>
+> --
 
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
----
- .../devicetree/bindings/net/dsa/qca8k.txt     | 69 +++++++++++++++++--
- 1 file changed, 64 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-index 5eda99e6c86e..93a7469e70d4 100644
---- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-@@ -12,10 +12,15 @@ Required properties:
- Subnodes:
- 
- The integrated switch subnode should be specified according to the binding
--described in dsa/dsa.txt. As the QCA8K switches do not have a N:N mapping of
--port and PHY id, each subnode describing a port needs to have a valid phandle
--referencing the internal PHY connected to it. The CPU port of this switch is
--always port 0.
-+described in dsa/dsa.txt. If the QCA8K switch is connect to a SoC's external
-+mdio-bus each subnode describing a port needs to have a valid phandle
-+referencing the internal PHY it is connected to. This is because there's no
-+N:N mapping of port and PHY id.
-+
-+Don't use mixed external and internal mdio-bus configurations, as this is
-+not supported by the hardware.
-+
-+The CPU port of this switch is always port 0.
- 
- A CPU port node has the following optional node:
- 
-@@ -31,8 +36,9 @@ For QCA8K the 'fixed-link' sub-node supports only the following properties:
- - 'full-duplex' (boolean, optional), to indicate that full duplex is
-   used. When absent, half duplex is assumed.
- 
--Example:
-+Examples:
- 
-+for the external mdio-bus configuration:
- 
- 	&mdio0 {
- 		phy_port1: phy@0 {
-@@ -108,3 +114,56 @@ Example:
- 			};
- 		};
- 	};
-+
-+for the internal master mdio-bus configuration:
-+
-+	&mdio0 {
-+		switch@10 {
-+			compatible = "qca,qca8337";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			reg = <0x10>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					label = "cpu";
-+					ethernet = <&gmac1>;
-+					phy-mode = "rgmii";
-+					fixed-link {
-+						speed = 1000;
-+						full-duplex;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					label = "lan1";
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					label = "lan2";
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					label = "lan3";
-+				};
-+
-+				port@4 {
-+					reg = <4>;
-+					label = "lan4";
-+				};
-+
-+				port@5 {
-+					reg = <5>;
-+					label = "wan";
-+				};
-+			};
-+		};
-+	};
--- 
-2.20.1
+Hi Kishon,
+A gentle ping here now that rc1 is out. Are you able to take these? I
+can also repost if needed.
+-Evan
