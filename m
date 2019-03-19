@@ -1,37 +1,117 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH v5 06/10] irqchip: ti-sci-intr: Add support for Interrupt
- Router driver
-Date: Tue, 19 Mar 2019 18:14:27 +0530
-Message-ID: <799cd61d-e73b-d979-f5e0-9f4ce1de7d03@ti.com>
-References: <20190212074237.2875-1-lokeshvutla@ti.com>
- <20190212074237.2875-7-lokeshvutla@ti.com>
- <20190218155217.5195f118@why.wild-wind.fr.eu.org>
- <1c2f2610-2be4-c145-4786-eabf3a07bc47@ti.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH 1/3] dt-bindings: phy: Add bindings for the SMSC USB333x
+ ULPI USB PHY
+Date: Tue, 19 Mar 2019 13:47:51 +0100
+Message-ID: <580ae1b1053aeaae7a1ee126d406b84ef3681394.camel@bootlin.com>
+References: <20190130155023.4495-1-paul.kocialkowski@bootlin.com>
+         <20190130155023.4495-2-paul.kocialkowski@bootlin.com>
+         <20190225164139.GA10291@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1c2f2610-2be4-c145-4786-eabf3a07bc47@ti.com>
-Content-Language: en-US
+In-Reply-To: <20190225164139.GA10291@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Nishanth Menon <nm@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, jason@lakedaemon.net, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, tglx@linutronix.de, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, =?ISO-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
+Hi and sorry for the late response,
 
-[..snip..]
-
+Le lundi 25 février 2019 à 10:41 -0600, Rob Herring a écrit :
+> On Wed, Jan 30, 2019 at 04:50:21PM +0100, Paul Kocialkowski wrote:
+> > Introduce the device-tree bindings for this ULPI USB PHY.
+> > Optional bindings that are not prefixed with the vendor may be
+> > relevant to other ULPI USB PHYs since they match generic ULPI
+> > registers.
+> > 
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > ---
+> >  .../devicetree/bindings/phy/smsc-usb333x.txt  | 50 +++++++++++++++++++
+> >  1 file changed, 50 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/smsc-usb333x.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/phy/smsc-usb333x.txt b/Documentation/devicetree/bindings/phy/smsc-usb333x.txt
+> > new file mode 100644
+> > index 000000000000..50d500d67b2f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/smsc-usb333x.txt
+> > @@ -0,0 +1,50 @@
+> > +Device tree bindings for SMSC USB333x ULPI USB PHY
+> > +
+> > +Required properties:
+> > +- compatible: Should be "smsc,usb333x".
+> > +
+> > +Optional properties:
+> > +- reset-gpios: GPIO to reset the PHY.
+> > +- clocks: Reference clock that feeds the PHY's PLL.
+> > +- clock-names: Should be "refclk" for the reference clock.
+> > +- extvbus-passthru: Enable EXTVBUS signal pass-through to assert the VbusValid
+> > +  signal internally. This is useful when no VBUS line is connected to the PHY.
+> > +- auto-resume: Enable automatic transmission resume (in host mode).
+> > +- chrg-vbus: Enable internal VBUS pull-up to 3.3 V during OTG SRP.
+> > +- dischrg-vbus: Enable internal VBUS pull-down during OTG SRP.
+> > +- id-pull-up: Enable internal ID pull-up tp 3.3 V.
 > 
->> suggested to investigate the x86 two phase allocation mechanism for the
->> INTA driver.
+> These all need smsc prefix.
+
+Note that these features are not specific to this PHY but reflect the
+use of fields from the standardized ULPI register set, so they could
+just as well apply to other ULPI USB PHYs.
+
+With that in mind, do these props still qualify to get a smsc prefix?
+Perhaps they should be added to bindings/usb/generic.txt instead.
+
+> > +- smsc,varisense: Squelch detector threshold register field value, as described
+> > +  in the datasheet.
+> > +- smsc,phyboost: Output voltage change register field value, as described in the
+> > +  datasheet.
 > 
-> Sorry, Ill try to explore this path. Any pointers to the doc/code will be really
-> helpful :)
+> Please give a range of values at least so we can write constraints.
 
-I have been trying hard to get some information on this for past few days but I
-can't find anything in kernel. Can you point me to some doc/code for the x86 two
-phase allocation of irqs?
+Yes, I'll definitely do that in the next revision.
 
-Thanks and regards,
-Lokesh
+Thanks for the review!
+
+Cheers,
+
+Paul
+
+> > +
+> > +Refer to phy/phy-bindings.txt for the generic PHY binding properties.
+> > +Refer to usb/ulpi.txt for the parent ULPI bus binding required for this PHY.
+> > +
+> > +Example:
+> > +
+> > +&usb0 {
+> > +	compatible = "xlnx,zynq-usb-2.20a", "chipidea,usb2";
+> > +	clocks = <&clkc 28>;
+> > +	interrupt-parent = <&intc>;
+> > +	interrupts = <0 21 4>;
+> > +	reg = <0xe0002000 0x1000>;
+> > +	dr_mode = "peripheral";
+> > +	phys = <&usb_phy0>;
+> > +	phy-names = "usb-phy";
+> > +	phy_type = "ulpi";
+> > +
+> > +	ulpi {
+> > +		usb_phy0: usb-phy0 {
+> > +			#phy-cells = <0>;
+> > +			compatible = "smsc,usb333x";
+> > +			reset-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
+> > +			clocks = <&usb_phy_clk>;
+> > +			clock-names = "refclk";
+> > +			smsc,varisense = <1>;
+> > +			smsc,phyboost = <5>;
+> > +			extvbus-passthru;
+> > +			chrg-vbus;
+> > +		};
+> > +	};
+> > +};
+> > -- 
+> > 2.20.1
+> > 
+-- 
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
