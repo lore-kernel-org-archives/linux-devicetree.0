@@ -1,83 +1,89 @@
-From: Samuel Holland <samuel@sholland.org>
-Subject: Re: [linux-sunxi] [PATCH 6/6] ARM: dts: sunxi: h3/h5: Add device node
- for SID
-Date: Mon, 18 Mar 2019 20:55:04 -0500
-Message-ID: <8e9ef57f-1d24-b151-f8a4-812b7bb65388@sholland.org>
-References: <20190318073354.12151-1-wens@kernel.org>
- <20190318073354.12151-7-wens@kernel.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 4/6] dt-bindings: display: bridge: Add
+ ICN6211 MIPI-DSI to RGB convertor bridge
+Date: Tue, 19 Mar 2019 10:59:27 +0800
+Message-ID: <CAGb2v66mkSTxhR_p4iRYR-hqzxw2QFK9iv3WsQ7NOQ2mT2mSiw@mail.gmail.com>
+References: <20190315130825.9005-1-jagan@amarulasolutions.com>
+ <20190315130825.9005-5-jagan@amarulasolutions.com> <20190315133414.5zwc5qtrivrbrzow@flea>
+ <CAMty3ZBn=MjB-VxwadkEDaM_==hGu1pzTv2A47cKitv0Vb5VXw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190318073354.12151-7-wens@kernel.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: wens@kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMty3ZBn=MjB-VxwadkEDaM_==hGu1pzTv2A47cKitv0Vb5VXw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/18/19 02:33, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
-> 
-> The device tree binding already lists compatible strings for these two
-> SoCs. Add a device node for them.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> ---
->  arch/arm/boot/dts/sun8i-h3.dtsi              | 4 ++++
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi           | 5 +++++
->  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 4 ++++
->  3 files changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-> index 959d265e7254..e37c30e811d3 100644
-> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> @@ -231,3 +231,7 @@
->  &rtc {
->  	compatible = "allwinner,sun8i-h3-rtc";
->  };
-> +
-> +&sid {
-> +	compatible = "allwinner,sun8i-h3-sid";
-> +};
-> diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> index d74a6cbbfdf4..e2100b673a51 100644
-> --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> @@ -227,6 +227,11 @@
->  			#size-cells = <0>;
->  		};
->  
-> +		sid: eeprom@1c14000 {
-> +			/* compatible and clocks are in per SoC .dtsi file */
+On Tue, Mar 19, 2019 at 12:58 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+>
+> On Fri, Mar 15, 2019 at 7:04 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Fri, Mar 15, 2019 at 06:38:23PM +0530, Jagan Teki wrote:
+> > > ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
+> > > It has a flexible configuration of MIPI DSI signal input
+> > > and produce RGB565, RGB666, RGB888 output format.
+> > >
+> > > Add dt-bingings for it.
+> > >
+> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > ---
+> > >  .../display/bridge/chipone,icn6211.txt        | 36 +++++++++++++++++++
+> > >  1 file changed, 36 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
+> > > new file mode 100644
+> > > index 000000000000..7f13efd7ee7f
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
+> > > @@ -0,0 +1,36 @@
+> > > +Chipone ICN6211 MIPI-DSI to RGB Convertor Bridge
+> > > +
+> > > +ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
+> > > +It has a flexible configuration of MIPI DSI signal input
+> > > +and produce RGB565, RGB666, RGB888 output format.
+> > > +
+> > > +Required properties for RGB:
+> > > +- compatible: must be "chipone,icn6211" and one of:
+> > > +  * "bananapi,icn6211"
+> >
+> > Why is that compatible needed?
+>
+> chipone,icn6211 - generic compatible bridge controller IC
+> bananapi,icn6211 -  compatible for icn6211 bridge using on bananapi panel
+>
+> I hope this would be proper bindings in terms of controller IC with
+> associate device, anything wrong? Infact I used similar reference from
+> Ilitek Bananapi panel from here
+> Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.txt
+>
+> This is what I understood based on dt-binding, correct if I'm wrong.
+>
+> ilitek,ili9881c - generic ilitek,ili9881c compatable
+> bananapi,lhr050h41 - compatible for bananapi panel associated with
+> this ilitek IC
 
-There are no clocks for this node, just a compatible string.
+ili9881c is an LCD driver chip with a MIPI DSI interface. It directly
+drives the LCD panel, not outputting some RGB stuff. So it is a binding
+and driver for a panel, not a bridge in your case.
 
-> +			reg = <0x1c14000 0x400>;
-> +		};
-> +
->  		usb_otg: usb@1c19000 {
->  			compatible = "allwinner,sun8i-h3-musb";
->  			reg = <0x01c19000 0x400>;
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> index 96acafd3a852..f002a496d7cb 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> @@ -209,3 +209,7 @@
->  &rtc {
->  	compatible = "allwinner,sun50i-h5-rtc";
->  };
-> +
-> +&sid {
-> +	compatible = "allwinner,sun50i-h5-sid";
-> +};
-> 
+> >
+> > > +- reg: the virtual channel number of a DSI peripheral
+> > > +- reset-gpios: a GPIO phandle for the reset pin
+> > > +
+> > > +The device node can contain following 'port' child nodes,
+> > > +according to the OF graph bindings defined in [1]:
+> > > +  0: DSI Input, not required, if the bridge is DSI controlled
+> > > +  1: RGB Output, mandatory
+> >
+> > Your example doesn't have that input port
+>
+> Yes, I intentionally did this by referring existing bridge binding.
+> Documentation/devicetree/bindings/display/bridge/toshiba,tc35876*.txt
+>
+> Do we really need? since the input port can be part of panel binding.
+
+How could the input port of _your_ _bridge_ be part of the panel binding?
+
+ChenYu
