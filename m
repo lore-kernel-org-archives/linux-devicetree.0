@@ -1,13 +1,11 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] dt-bindings: hwmon (pwm-fan) Remove dead
- "cooling-*-state" properties
-Date: Tue, 19 Mar 2019 16:14:07 +0100
-Message-ID: <20190319151407.GA30117@ulmo>
-References: <afde4ebd929821d63b5172c8e70e15f0725a4b49.1553006788.git.robin.murphy@arm.com>
+From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: [PATCH 0/5] ARM: Initial devicetree for Kobo Aura
+Date: Tue, 19 Mar 2019 16:24:15 +0100
+Message-ID: <20190319152421.16179-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6991963019920697400=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <afde4ebd929821d63b5172c8e70e15f0725a4b49.1553006788.git.robin.murphy@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,85 +15,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, heiko@sntech.de, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, krzk@kernel.org, jonathanh@nvidia.com, kgene@kernel.org, linux-arm-kernel@lists.infradead.org, shawnguo@kernel.org, linux@roeck-us.net
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Johan Hovold <johan@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Thierry Reding <treding@nvidia.com>, Fabio Estevam <festevam@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-
---===============6991963019920697400==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
-Content-Disposition: inline
-
-
---nFreZHaLTZJo0R7j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Mar 19, 2019 at 02:54:04PM +0000, Robin Murphy wrote:
-> The old "cooling-{min,max}-state" properties for thermal bindings were
-> ratified to "cooling-{min,max}-level" by commit eb168b70dea5 ("of:
-> thermal: Fix inconsitency between cooling-*-state and cooling-*-level"),
-> which were later removed entirely by commit e04907dbc259 ("dt-bindings:
-> thermal: Remove "cooling-{min|max}-level" properties").
->=20
-> The pwm-fan binding, however, was apparently in-flight in parallel with
-> that ratification, and so managed to introduce an example of the old
-> properties which escaped the scope of the later cleanup and has thus
-> continued to be dutifully copied for new boards despite being useless.
-> Clean up these remaining undocumented anachronisms to minimise any
-> further confusion.
->=20
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> ---
->=20
-> Presented as one big hwmon patch for simplicity, but the DT changes
-> can quite easily be broken out by platform if maintainers prefer.
->=20
-> Robin.
->=20
->  Documentation/devicetree/bindings/hwmon/pwm-fan.txt | 2 --
->  arch/arm/boot/dts/exynos4412-odroidu3.dts           | 2 --
->  arch/arm/boot/dts/exynos5410-odroidxu.dts           | 2 --
->  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi  | 2 --
->  arch/arm/boot/dts/imx6qdl-emcon.dtsi                | 2 --
->  arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts  | 2 --
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---nFreZHaLTZJo0R7j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyRBzwACgkQ3SOs138+
-s6FiOA/7BkzGBW7hWW2KtXIWUMWewb3SleBXsp/dx7l2U0rsm77sHX9lHnWCfAxE
-fSkK6n+ND8WLb4Yqy4B/ZF1JDQ5PXW3OLhjZUymh3re0hdEN7c0GCeN6Byyu7WJt
-IT0tMp5eS6jRxdOYa2AYYs2goG0DAb//TN3Fa4gXb327uNyjApiHKCgM8c1h1yxv
-lU57rksIdG3Q/JfovZrNvqHQD4/CxG4szOXpFmLpBCBHG8cTL9Q5DbKgeLQGspqB
-dmIIXg8xoVxTm20PgSDneSkkNuAXV0FykBqbrbeDDeV8QCli0e/YCAYEjLN9MCIi
-3jEt+oxVaHDgGaYsGzExDx/i1JmNV4ZnVcHPWcTKoUB1Cw+m95gBYF/T8mdMA4kc
-CX7Ifbb/15Dw3HlVEquOtXILdNHdv2zJ7/4uQStf22J+ilQDqA86gjynEYF0VSQY
-EYSUmTPBoQCEd79W/pBG6pMIihhcLC1sQ55rFkL9lt42ZSZWF7Y6t3aA5SjmLUdB
-Kx79+1pkA/XyiQSc6njs8lzm30Rr9I43ShYJsfwVLqeosGM5ahZqD0fvr+Ixo6AU
-kLVoT2AKNkN6YOja9znodLUNLA9GfNGBdzuDs4HKxA4nPBtqw7NokLSRYFNjbpyo
-Z6oIa9cbLjGpeBskG3xSH7/OYixfQB7yXdjTWj2+QdjWdhqwCyY=
-=GdJ9
------END PGP SIGNATURE-----
-
---nFreZHaLTZJo0R7j--
-
-
---===============6991963019920697400==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============6991963019920697400==--
+VGhpcyBzZXJpZXMgYWRkcyBhIGRldmljZXRyZWUgZm9yIHRoZSBpLk1YNTA3LWJhc2VkIEtvYm8g
+QXVyYSBlLWJvb2sKcmVhZGVyLCBhbmQgZml4ZXMgYSBmZXcgdGhpbmdzIGluIGlteDUwLmR0c2kg
+YWxvbmcgdGhlIHdheS4KCkEgbG90IG9mIGZ1bmN0aW9uYWxpdHkgaXMgc3RpbGwgbWlzc2luZzoK
+LSBwb3dlcm9mZi9yZWJvb3QsIFJUQywgYW5kIGJhdHRlcnkgbW9uaXRvcmluZyBzdXBwb3J0LCBh
+cyB3ZWxsIGFzIGEgUFdNCiAgY2hhbm5lbCBmb3IgdGhlIGRpc3BsYXkgYmFja2xpZ2h0IGFyZSBw
+cm92aWRlZCBieSBhIGN1c3RvbSBlbWJlZGRlZAogIGNvbnRyb2xsZXIsIHdoaWNoIHdpbGwgYmUg
+c3VwcG9ydGVkIGJ5IGEgZnV0dXJlIHBhdGNoc2V0LgogIFRoZSBFQyBkcml2ZXIgd2lsbCBhbHNv
+IHRlbGwgdGhlIEVDIHRvIGtlZXAgdGhlIGJvYXJkIHBvd2VyZWQgb247CiAgb3RoZXJ3aXNlIHRo
+ZSBFQyB3aWxsIHBvd2VyIHRoZSBib2FyZCBvZmYgYWZ0ZXIgYWJvdXQgdGVuIHNlY29uZHMKICAo
+cHJlc3VtYWJseSB0byBhdm9pZCBiYXR0ZXJ5IGRyYWluIGlmIHRoZSBPUyBpcyBtaXNzaW5nIG9y
+IGNvcnJ1cHRlZCkKLSBUaGUgdG91Y2hzY3JlZW4gY29udHJvbGxlciwgZUtURjIxMzIsIGN1cnJl
+bnRseSBkb2Vzbid0IGhhdmUgYQogIG1haW5saW5lIGRyaXZlci4KLSBUaGUgZS1wYXBlciBkaXNw
+bGF5IGNvbnRyb2xsZXIgKEVQREMpIGVtYmVkZGVkIGluIHRoZSBpLk1YNTAgU29DIHdpbGwKICBu
+ZWVkIGEgd2hvbGUgbmV3IERSTSBkcml2ZXIsIGRldmljZXRyZWUgYmluZGluZ3MsIGV0Yy4KLSBU
+aGUgVFBTNjUxODUgUE1JQywgd2hpY2ggZ2VuZXJhdGVzIHRoZSB2b2x0YWdlcyBuZWNlc3Nhcnkg
+Zm9yIGRyaXZpbmcKICB0aGUgRSBJbmsgcGFuZWwsIGFsc28gbmVlZHMgYSBkcml2ZXIKLSBUaGUg
+YmFja2xpZ2h0IGRvZXNuJ3QgcXVpdGUgZml0IHRoZSBleGlzdGluZyBwd20tYmFja2xpZ2h0IERU
+IGJpbmRpbmcsCiAgYmVjYXVzZSBpdCB1c2VzIGFuIGFkZGl0aW9uYWwgR1BJTyB0byBib29zdCB0
+aGUgYnJpZ2h0bmVzcy4gVGhpcwogIHJlcXVpcmVzIHNvbWUgZGV2aWNldHJlZSB3b3JrCi0gTGlu
+dXggZG9lc24ndCBjdXJyZW50bHkgc3VwcG9ydCBzdXNwZW5kLXRvLXJhbSBvbiBpLk1YNTAKCklu
+IG9yZGVyIHRvIGtlZXAgdGhlIHN5c3RlbSBydW5uaW5nIHdoZW4gQ09ORklHX1BNIGlzIGVuYWJs
+ZWQsIHRoZQpmb2xsb3dpbmcgZml4IGlzIGFsc28gcmVxdWlyZWQ6Cmh0dHBzOi8vbG9yZS5rZXJu
+ZWwub3JnL2xrbWwvMjAxOTAzMTgyMzE3MzcuODQ1OS0xLWoubmV1c2NoYWVmZXJAZ214Lm5ldC8K
+Ck15IG93biBub3RlcyBhYm91dCB0aGlzIG1hY2hpbmUgY2FuIGJlIGZvdW5kIGhlcmU6Cmh0dHBz
+Oi8vZ2l0aHViLmNvbS9uZXVzY2hhZWZlci9saW51eC93aWtpL0tvYm8tQXVyYQoKSm9uYXRoYW4g
+TmV1c2Now6RmZXIgKDUpOgogIGR0LWJpbmRpbmdzOiBBZGQgdmVuZG9yIHByZWZpeCBmb3IgUmFr
+dXRlbiBLb2JvLCBJbmMuCiAgQVJNOiBkdHM6IGlteDUwOiBBZGQgS29ibyBBdXJhIERUUwogIEFS
+TTogZHRzOiBpbXg1MDogQWRkIFBIWSBub2RlIGZvciB1c2JvdGcgYW5kIGFkanVzdCBjbG9ja3MK
+ICBBUk06IGR0czogaW14NTAta29iby1hdXJhOiBFbmFibGUgVVNCIHN1cHBvcnQKICBBUk06IGR0
+czogaW14NTA6IEZpeCB0aGUgbnVtYmVyaW5nIG9mIHRoZSBJMkMgY29udHJvbGxlcnMKCiAuLi4v
+ZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0ICAgfCAgIDEgKwogYXJjaC9h
+cm0vYm9vdC9kdHMvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgIHwgICAzICstCiBhcmNoL2Fy
+bS9ib290L2R0cy9pbXg1MC1rb2JvLWF1cmEuZHRzICAgICAgICAgfCAyNjMgKysrKysrKysrKysr
+KysrKysrCiBhcmNoL2FybS9ib290L2R0cy9pbXg1MC5kdHNpICAgICAgICAgICAgICAgICAgfCAg
+MTQgKy0KIDQgZmlsZXMgY2hhbmdlZCwgMjc5IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvaW14NTAta29iby1hdXJhLmR0
+cwoKLS0KMi4yMC4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtYXJtLWtlcm5lbAo=
