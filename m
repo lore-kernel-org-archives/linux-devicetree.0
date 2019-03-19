@@ -1,91 +1,98 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v8 02/15] drm/sun4i: tcon: Compute DCLK
- dividers based on format, lanes
-Date: Tue, 19 Mar 2019 11:53:07 +0100
-Message-ID: <20190319105307.omowzyhqu33e3pzy@flea>
-References: <20190311133637.18334-1-jagan@amarulasolutions.com>
- <20190311133637.18334-3-jagan@amarulasolutions.com>
- <20190311153847.oz6ruqmptaq2befn@flea>
- <CAMty3ZChz=s7gdQyX9KnsAp1t5FrpouXGK74-r0SKJ89yJN67Q@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 10/11] arm64: dts: renesas: r8a774c0: Add clkp2 clock to
+ CAN nodes
+Date: Tue, 19 Mar 2019 11:12:33 +0000
+Message-ID: <TY1PR01MB1770DDAB8A6FBC79DF91F600C0400@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1547663874-29411-11-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190117120541.slymsz47fjkzz3kg@verge.net.au>
+ <20190128130238.gork4cep3qonghwz@verge.net.au>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="w5h7eaccwffawgtl"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBGUUYPSAKGQEPNJ6ZAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZChz=s7gdQyX9KnsAp1t5FrpouXGK74-r0SKJ89yJN67Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190128130238.gork4cep3qonghwz@verge.net.au>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, =?iso-8859-2?Q?Andreas_F=E4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>Be
 List-Id: devicetree@vger.kernel.org
 
+Hello Simon,
 
---w5h7eaccwffawgtl
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Mon, Mar 11, 2019 at 09:36:27PM +0530, Jagan Teki wrote:
-> On Mon, Mar 11, 2019 at 9:08 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> From: Simon Horman <horms@verge.net.au>
+> Sent: 28 January 2019 13:03
+> Subject: Re: [PATCH 10/11] arm64: dts: renesas: r8a774c0: Add clkp2 clock=
+ to CAN nodes
+>=20
+> On Thu, Jan 17, 2019 at 01:05:42PM +0100, Simon Horman wrote:
+> > On Wed, Jan 16, 2019 at 06:37:53PM +0000, Fabrizio Castro wrote:
+> > > According to the latest information, clkp2 is available on RZ/G2.
+> > > Modify CAN0 and CAN1 nodes accordingly.
+> > >
+> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 > >
-> > On Mon, Mar 11, 2019 at 07:06:24PM +0530, Jagan Teki wrote:
-> > > pll-video => pll-mipi => tcon0 => tcon0-pixel-clock is the typical
-> > > MIPI clock topology in Allwinner DSI controller.
-> > >
-> > > TCON dotclock driver is computing the desired DCLK divider based on
-> > > panel pixel clock along with input DCLK min, max divider values from
-> > > tcon driver and that would eventually set the pll-mipi clock rate.
-> > >
-> > > The current code allows the TCON clock divider to have a default 4
-> > > for min, max ranges that would fail to compute the desired pll-mipi
-> > > rate while supporting new panels.
-> > >
-> > > So, add the computation logic 'format/lanes' to dclk min and max dividers
-> > > and instead of default 4. This computation logic align with Allwinner A64
-> > > BSP, hoping that would work even for A33.
+> > Taking your word for the motivation for this change,
+> > this patch seems fine to me but I would like to wait for review
+> > from others.
 > >
-> > Last time we discussed this, we found out that this wasn't the case,
-> > even in the BSP.
->
-> This was the case for BSP to compute pll-mipi not for TCON_DSI clock
-> register, SUN4I_TCON0_DCLK_REG, which marked the divider 4 by default.
->
-> > What compelling evidence have you found that makes you say otherwise?
->
-> divider 4 isn't worked, this I would mentioned before as well.
+> > Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+>=20
+> I am marking this as deferred until R8A774C0_CLK_CANFD
+> shows up in an rc release.
+>=20
+> Alternatively I'd be happy to take a version that uses
+> numeric values, followed up by a patch to switching to R8A774C0_CLK_CANFD
+> once it is available in an rc release.
+>=20
+> Please repost or otherwise ping me as appropriate.
 
-Maybe you mentionned it before, but it's nowhere to be found in your
-commit log.
+It seems like this patch still applies without conflicts, do you mind takin=
+g it now
+as R8A774C0_CLK_CANFD is finally available?
 
-> Tested this on 4 different panels, and below are the desired divider values
-> and pll-mipi clock rate with respect to pixel clock frequency.
->
-> - 55MHz pixel clock with 4-lane panel, and the desired DSI clock divider
->   is 6 with the output parent clock rate of 330MHz.
-> - 30MHz pixel clock with 4-lane panel, and the desired DSI clock divider
->   is 6 with parent clock rate of 180MHz.
-> - 27.5Mhz pixel clock with 2-lane pane, and the desired DSI clock divider
->   is 12 with the output parent clock rate of 330MHz.
-> - 147MHz pixel clock with 4-lane panel, and the desired DSI clock divider
->   is 6 with the output parent clock rate of 882MHz.
->
-> BSP trying to use this format/lane to compute dsi divider that in-turn
-> using pll-mipi set_rate but TCON0_DCLK_REG keep constant 4.
+Thanks,
+Fab
 
-Feel free to reply to
-http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/629596.html
-
-And correct whatever is said there that isn't what is happening.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---w5h7eaccwffawgtl--
+>=20
+> >
+> > > ---
+> > >  arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 12 ++++++++----
+> > >  1 file changed, 8 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/b=
+oot/dts/renesas/r8a774c0.dtsi
+> > > index 3970aaf..326ab3a 100644
+> > > --- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
+> > > +++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
+> > > @@ -809,8 +809,10 @@
+> > >  				     "renesas,rcar-gen3-can";
+> > >  			reg =3D <0 0xe6c30000 0 0x1000>;
+> > >  			interrupts =3D <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
+> > > -			clocks =3D <&cpg CPG_MOD 916>, <&can_clk>;
+> > > -			clock-names =3D "clkp1", "can_clk";
+> > > +			clocks =3D <&cpg CPG_MOD 916>,
+> > > +				 <&cpg CPG_CORE R8A774C0_CLK_CANFD>,
+> > > +				 <&can_clk>;
+> > > +			clock-names =3D "clkp1", "clkp2", "can_clk";
+> > >  			power-domains =3D <&sysc R8A774C0_PD_ALWAYS_ON>;
+> > >  			resets =3D <&cpg 916>;
+> > >  			status =3D "disabled";
+> > > @@ -821,8 +823,10 @@
+> > >  				     "renesas,rcar-gen3-can";
+> > >  			reg =3D <0 0xe6c38000 0 0x1000>;
+> > >  			interrupts =3D <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
+> > > -			clocks =3D <&cpg CPG_MOD 915>, <&can_clk>;
+> > > -			clock-names =3D "clkp1", "can_clk";
+> > > +			clocks =3D <&cpg CPG_MOD 915>,
+> > > +				 <&cpg CPG_CORE R8A774C0_CLK_CANFD>,
+> > > +				 <&can_clk>;
+> > > +			clock-names =3D "clkp1", "clkp2", "can_clk";
+> > >  			power-domains =3D <&sysc R8A774C0_PD_ALWAYS_ON>;
+> > >  			resets =3D <&cpg 915>;
+> > >  			status =3D "disabled";
+> > > --
+> > > 2.7.4
+> > >
+> >
