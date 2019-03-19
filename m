@@ -1,51 +1,43 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/1] dt-bindings: clock: meson8b: drop the "ABP" clock
- definition
-Date: Tue, 19 Mar 2019 22:41:23 +0100
-Message-ID: <20190319214123.27219-2-martin.blumenstingl@googlemail.com>
-References: <20190319214123.27219-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/4] clk: meson8b: add the VPU clock tree
+Date: Tue, 19 Mar 2019 22:51:17 +0100
+Message-ID: <20190319215121.29340-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190319214123.27219-1-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: narmstrong@baylibre.com, jbrunet@baylibre.com, linux-amlogic@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Commit 8e1dd17c8b0e3f ("dt-bindings: clock: meson8b: export the CPU post
-dividers") added a new clock ID "CLKID_ABP" which contains a typo. This
-was fixed by adding a new (typo-free) #define CLKID_APB in
-commit 40d08f774c17ad ("dt-bindings: clock: meson8b: add APB clock
-definition").
-Now that the new #define is used by the driver we can remove the old
-one (because the old one is not used anywhere).
+This adds the VPU clock tree for Meson8, Meson8b and Meson8m2.
+The VPU clock tree is slightly different on all three SoCs. The details
+are explained in patch #4.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- include/dt-bindings/clock/meson8b-clkc.h | 1 -
- 1 file changed, 1 deletion(-)
+Meson8m2 requires the previously unsupported "gp_pll" PLL. This PLL only
+exists on Meson8m2 - Meson8 and Meson8b don't have it.
+A separate clk_hw_onecell_data is introduced for Meson8m2 (using the
+compatible string which is already available) to account for this SoC
+specific clock setup.
 
-diff --git a/include/dt-bindings/clock/meson8b-clkc.h b/include/dt-bindings/clock/meson8b-clkc.h
-index 8067077a62ca..cd11628f50f8 100644
---- a/include/dt-bindings/clock/meson8b-clkc.h
-+++ b/include/dt-bindings/clock/meson8b-clkc.h
-@@ -103,7 +103,6 @@
- #define CLKID_MPLL1		94
- #define CLKID_MPLL2		95
- #define CLKID_NAND_CLK		112
--#define CLKID_ABP		124
- #define CLKID_APB		124
- #define CLKID_PERIPH		126
- #define CLKID_AXI		128
+dependencies:
+This series is meant to be applied on top of my other patch from [0]:
+  dt-bindings: clock: meson8b: drop the "ABP" clock definition
+
+
+[0] https://patchwork.kernel.org/patch/10860387/
+
+
+Martin Blumenstingl (4):
+  dt-bindings: clock: meson8b: export the VPU clock
+  clk: meson: meson8b: use a sparate clock table for Meson8m2
+  clk: meson: meson8b: add support for the GP_PLL clock on Meson8m2
+  clk: meson: meson8b: add the VPU clock trees
+
+ drivers/clk/meson/meson8b.c              | 422 ++++++++++++++++++++++-
+ drivers/clk/meson/meson8b.h              |  12 +-
+ include/dt-bindings/clock/meson8b-clkc.h |   1 +
+ 3 files changed, 433 insertions(+), 2 deletions(-)
+
 -- 
 2.21.0
