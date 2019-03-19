@@ -1,109 +1,66 @@
-From: =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>
-Subject: [PATCH v2 5/5] arm64: dts: rockchip: Enable dmc and dfi nodes on gru.
-Date: Tue, 19 Mar 2019 14:13:23 -0400
-Message-ID: <20190319181323.22804-6-gael.portay@collabora.com>
-References: <20190319181323.22804-1-gael.portay@collabora.com>
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH v6 0/3] Stingray USB PHY driver support
+Date: Tue, 19 Mar 2019 11:38:28 -0700
+Message-ID: <7490f894-3c0b-c7cd-5ff0-4eea6ea2c199@broadcom.com>
+References: <1552986944-3398-1-git-send-email-srinath.mannam@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190319181323.22804-1-gael.portay@collabora.com>
+In-Reply-To: <1552986944-3398-1-git-send-email-srinath.mannam@broadcom.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lin Huang <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Derek Basehore <dbasehore@chromium.org>, Randy Li <ayaka@soulik.info>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, kernel@collabora.com, =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>
+To: Srinath Mannam <srinath.mannam@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Tejun Heo <tj@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Lin Huang <hl@rock-chips.com>
+Thanks Srinath and Rob - patch series looks good now.
 
-Enable the DMC (Dynamic Memory Controller) and the DFI (DDR PHY Interface)
-nodes on gru/kevin boards so we can support DDR DVFS.
+patch series,
 
-Signed-off-by: Lin Huang <hl@rock-chips.com>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>
----
+Acked-by: Scott Branden <scott.branden@broadcom.com>
 
-Changes in v2:
-- [PATCH 8/8] Move center-supply attribute of dmc node in file
-              rk3399-gru-chromebook.dtsi (where ppvar_centerlogic is
-	      defined).
 
-Changes in v1: None
-
- .../dts/rockchip/rk3399-gru-chromebook.dtsi   |  4 ++++
- arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi  | 20 +++++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3399.dtsi      |  2 +-
- 3 files changed, 25 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
-index 931640e9aed4..cfb81356c61e 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
-@@ -400,3 +400,7 @@ ap_i2c_tp: &i2c5 {
- 		rockchip,pins = <0 8 RK_FUNC_GPIO &pcfg_pull_none>;
- 	};
- };
-+
-+&dmc {
-+	center-supply = <&ppvar_centerlogic>;
-+};
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-index da03fa9c5662..d14dce679e7a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-@@ -289,6 +289,12 @@
- 	status = "okay";
- };
- 
-+&dmc_opp_table {
-+	opp04 {
-+		opp-suspend;
-+	};
-+};
-+
- /*
-  * Set some suspend operating points to avoid OVP in suspend
-  *
-@@ -368,6 +374,10 @@
- 		<200000000>;
- };
- 
-+&display_subsystem {
-+	devfreq = <&dmc>;
-+};
-+
- &emmc_phy {
- 	status = "okay";
- };
-@@ -489,6 +499,16 @@ ap_i2c_audio: &i2c8 {
- 	status = "okay";
- };
- 
-+&dfi {
-+	status = "okay";
-+};
-+
-+&dmc {
-+	status = "okay";
-+	upthreshold = <25>;
-+	downdifferential = <15>;
-+};
-+
- &sdhci {
- 	/*
- 	 * Signal integrity isn't great at 200 MHz and 150 MHz (DDR) gives the
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 8fe86a3e7658..010b3e5267a0 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -156,7 +156,7 @@
- 		};
- 	};
- 
--	display-subsystem {
-+	display_subsystem: display-subsystem {
- 		compatible = "rockchip,display-subsystem";
- 		ports = <&vopl_out>, <&vopb_out>;
- 	};
--- 
-2.21.0
+On 2019-03-19 2:15 a.m., Srinath Mannam wrote:
+> These patches add Stingray USB PHY driver and its corresponding
+> DT nodes with documentation.
+>
+> This patch set is based on Linux-5.0-rc2.
+>
+> Changes from v5:
+>    - Removed redundant address and size cells in DT nodes.
+>
+> Changes from v4:
+>    - Addressed Rob Herring review comments
+>       - Removed child nodes and added #phy-cells 1
+>       - Added xlate function to get phy using phandle argument.
+>
+> Changes from v3:
+>    - Addressed Rob Herring review comments
+>       - Changed compatible strings.
+>       - updated driver based on new compatible strings.
+>
+> Changes from v2:
+>    - Addressed Kishon review comments
+>    - Updated patchset to Linux-5.0-rc2
+>
+> Changes from v1:
+>    - Addressed Kishon review comments
+>    - phy init call return value handle
+>    
+> Srinath Mannam (3):
+>    dt-bindings: phy: Add Stingray USB PHY binding document
+>    phy: sr-usb: Add Stingray USB PHY driver
+>    arm64: dts: Add USB DT nodes for Stingray SoC
+>
+>   .../bindings/phy/brcm,stingray-usb-phy.txt         |  32 ++
+>   .../boot/dts/broadcom/stingray/stingray-usb.dtsi   |  72 ++++
+>   .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   1 +
+>   drivers/phy/broadcom/Kconfig                       |  11 +
+>   drivers/phy/broadcom/Makefile                      |   1 +
+>   drivers/phy/broadcom/phy-bcm-sr-usb.c              | 393 +++++++++++++++++++++
+>   6 files changed, 510 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+>   create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
+>   create mode 100644 drivers/phy/broadcom/phy-bcm-sr-usb.c
+>
