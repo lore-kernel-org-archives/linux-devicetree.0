@@ -1,42 +1,53 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v7 2/4] bindings: fsl-imx-sdma: Document fsl,imx8mq-sdma
- compatbile string
-Date: Tue, 19 Mar 2019 17:48:38 +0000
-Message-ID: <20190319174823.29467-3-daniel.baluta@nxp.com>
-References: <20190319174823.29467-1-daniel.baluta@nxp.com>
+From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Subject: [PATCH 1/3] ASoC: da7219: Update DAI clock binding info to cover
+ WCLK/BCLK
+Date: Tue, 19 Mar 2019 17:49:30 +0000
+Message-ID: <a2e2ae888b3c2fbcaab3e4791ce98f877e3d38ff.1553017237.git.Adam.Thomson.Opensource@diasemi.com>
+References: <cover.1553017237.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190319174823.29467-1-daniel.baluta@nxp.com>
-Content-Language: en-US
+In-Reply-To: <cover.1553017237.git.Adam.Thomson.Opensource@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "S.j. Wang" <shengjiu.wang@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "angus@akkea.ca" <angus@akkea.ca>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, "kuninori.morimoto.gx@renesas.com" <kuninori.morimo>
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Akshu Agrawal <Akshu.Agrawal@amd.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Add imx8mq sdma support.
+With the need to expose WCLK and BCLK as separate clocks, the
+'clock-cells' and 'clock-output-names' descriptions need to be
+updated as now the codec is providing 2 clocks. The example is
+also updated accordingly.
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 ---
- Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/sound/da7219.txt | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Docum=
-entation/devicetree/bindings/dma/fsl-imx-sdma.txt
-index 3c9a57a8443b..9d8bbac27d8b 100644
---- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-+++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-@@ -9,6 +9,7 @@ Required properties:
-       "fsl,imx53-sdma"
-       "fsl,imx6q-sdma"
-       "fsl,imx7d-sdma"
-+      "fsl,imx8mq-sdma"
-   The -to variants should be preferred since they allow to determine the
-   correct ROM script addresses needed for the driver to work without addit=
-ional
-   firmware.
---=20
-2.17.1
+diff --git a/Documentation/devicetree/bindings/sound/da7219.txt b/Documentation/devicetree/bindings/sound/da7219.txt
+index e9d0bae..add1caf 100644
+--- a/Documentation/devicetree/bindings/sound/da7219.txt
++++ b/Documentation/devicetree/bindings/sound/da7219.txt
+@@ -23,8 +23,8 @@ Optional properties:
+   interrupt is to be used to wake system, otherwise "irq" should be used.
+ - wakeup-source: Flag to indicate this device can wake system (suspend/resume).
+ 
+-- #clock-cells :  Should be set to '<0>', only one clock source provided;
+-- clock-output-names : Name given for DAI clocks output;
++- #clock-cells :  Should be set to '<1>', two clock sources provided;
++- clock-output-names : Names given for DAI clock outputs (WCLK & BCLK);
+ 
+ - clocks : phandle and clock specifier for codec MCLK.
+ - clock-names : Clock name string for 'clocks' attribute, should be "mclk".
+@@ -84,8 +84,8 @@ Example:
+ 		VDDMIC-supply = <&reg_audio>;
+ 		VDDIO-supply = <&reg_audio>;
+ 
+-		#clock-cells = <0>;
+-		clock-output-names = "dai-clks";
++		#clock-cells = <1>;
++		clock-output-names = "dai-wclk", "dai-bclk";
+ 
+ 		clocks = <&clks 201>;
+ 		clock-names = "mclk";
+-- 
+1.9.1
