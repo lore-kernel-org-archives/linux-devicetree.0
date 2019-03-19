@@ -1,84 +1,36 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v7 0/6] support a new type of PMIC,including two chips(rk817 and rk809)
-Date: Tue, 19 Mar 2019 11:08:33 +0100
-Message-ID: <36121846.smLYK4jT4q@diego>
-References: <20190102102002.29245-1-tony.xie@rock-chips.com>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: [PATCH v2 1/2] dt-bindings: clk: g12a-clkc: add VDEC clock IDs
+Date: Tue, 19 Mar 2019 11:11:37 +0100
+Message-ID: <20190319101138.27520-2-mjourdan@baylibre.com>
+References: <20190319101138.27520-1-mjourdan@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190102102002.29245-1-tony.xie@rock-chips.com>
+In-Reply-To: <20190319101138.27520-1-mjourdan@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Xie <tony.xie@rock-chips.com>, lee.jones@linaro.org
-Cc: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
+To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org
+Cc: Maxime Jourdan <mjourdan@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Expose the three clocks related to the video decoder.
 
-Am Mittwoch, 2. Januar 2019, 11:19:56 CET schrieb Tony Xie:
-> Most of functions and registers of the rk817 and rk808 are the same,
-> so they can share allmost all codes.
+Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+---
+ include/dt-bindings/clock/g12a-clkc.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-do you have this series on your radar somewhere or should Tony
-resend the series? As it looks like it fell through the cracks somehow.
-
-
-Thanks
-Heiko
-
-
-> Their specifications are as follows:
->   1) The RK809 and RK809 consist of 5 DCDCs, 9 LDOs and have the same
-> registers
->      for these components except dcdc5.
->   2) The dcdc5 is a boost dcdc for RK817 and is a buck for RK809.
->   3) The RK817 has one switch but The Rk809 has two.
-> 
-> Changes in V2:
-> 1. initialize the pm_pwroff_fn to NULL.
-> 2. use EXPORT_SYMBOL_GPL to export pm_power_off_prepare.
-> 3. change patch 2/3/4/5 subjects.
-> 
-> Changes in V3
-> 1. change patch 4 subjects
-> 2. replace pr_ with dev_ for printing in patch 2
-> 3. modify switch1 and switch2 configs in patch 2
-> 4. explain gpio information for rk809 and rk817 in patch 4
-> 
-> Changes in V4:
-> 1. modify some codes for patch 2 and patch 5 according to comments
-> 2. add reviewer mail lists for patch 3 and 4
-> 
-> Changes in V5:
-> modify some codes for patch 1 according to reveiw comments for v3.
->  1) remove the pm_power_off_prepare() and replace with shutdown
-> call-back from syscore
->  2) move the macro REGMAP_IRQ_M into the regmap.h and rename it
-> REGMAP_IRQ_LINE
->  3) make some dev_warn() log clear
-> 
-> Changes in V6:
-> modify some codes according to reveiw comments for v5.
-> 
-> Changes in V7:
-> modify some codes for patch 2 according to reveiw comments.
-> 
-> Tony Xie (6):
->   mfd: rk808: remove the id_table
->   mfd: rk808: Add RK817 and RK809 support
->   regulator: rk808: add RK809 and RK817 support.
->   dt-bindings: mfd: rk808: Add binding information for RK809 and RK817.
->   rtc: rk808: add RK809 and RK817 support.
->   clk: RK808: add RK809 and RK817 support.
-> 
->  .../devicetree/bindings/mfd/rk808.txt         |  44 ++
->  drivers/clk/Kconfig                           |   9 +-
->  drivers/clk/clk-rk808.c                       |  64 +-
->  drivers/mfd/Kconfig                           |   6 +-
->  drivers/mfd/rk808.c                           | 199 +++++-
->  drivers/regulator/Kconfig                     |   4 +-
->  drivers/regulator/rk808-regulator.c           | 657 +++++++++++++++++-
->  drivers/rtc/Kconfig                           |   4 +-
->  drivers/rtc/rtc-rk808.c                       |  68 +-
->  include/linux/mfd/rk808.h                     | 175 +++++
->  10 files changed, 1164 insertions(+), 66 deletions(-)
+diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
+index 30303728fe09..82c9e0c020b2 100644
+--- a/include/dt-bindings/clock/g12a-clkc.h
++++ b/include/dt-bindings/clock/g12a-clkc.h
+@@ -133,5 +133,8 @@
+ #define CLKID_MPLL_5OM				177
+ #define CLKID_CPU_CLK				187
+ #define CLKID_PCIE_PLL				201
++#define CLKID_VDEC_1				204
++#define CLKID_VDEC_HEVC				207
++#define CLKID_VDEC_HEVCF			210
+ 
+ #endif /* __G12A_CLKC_H */
+-- 
+2.21.0
