@@ -1,43 +1,52 @@
-Return-Path: <SRS0=rSv0=RZ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relay10.mail.gandi.net ([217.70.178.230]:38599 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbfCVGXw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Mar 2019 02:23:52 -0400
-Date: Fri, 22 Mar 2019 07:23:43 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 1/2 v2] rtc: x1205: Add DT bindings
-Message-ID: <20190322062343.GW29054@piout.net>
-References: <20190319074014.20616-1-linus.walleij@linaro.org>
+Return-Path: <SRS0=L7Fd=RW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46728 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfCSHkT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Mar 2019 03:40:19 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y62so5529510lfc.13
+        for <devicetree@vger.kernel.org>; Tue, 19 Mar 2019 00:40:18 -0700 (PDT)
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/2 v2] rtc: x1205: Add DT bindings
+Date: Tue, 19 Mar 2019 08:40:13 +0100
+Message-Id: <20190319074014.20616-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190319074014.20616-1-linus.walleij@linaro.org>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org
+To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: linux-rtc@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 19/03/2019 08:40:13+0100, Linus Walleij wrote:
-> This adds device tree bindings for the Xircom X1205 RTC found
-> in the Linksys NSLU2.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> ChangeLog v1->v2:
-> - Rebase on v5.1-rc1
-> - Resend
-> ---
->  .../devicetree/bindings/rtc/xircom,x1205.txt         | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/xircom,x1205.txt
-> 
+This adds device tree bindings for the Xircom X1205 RTC found
+in the Linksys NSLU2.
 
-Both applied (this time), thanks!
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v2:
+- Rebase on v5.1-rc1
+- Resend
+---
+ .../devicetree/bindings/rtc/xircom,x1205.txt         | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/xircom,x1205.txt
 
-I've moved the doc to rtc.txt as this is a trivial rtc.
-
+diff --git a/Documentation/devicetree/bindings/rtc/xircom,x1205.txt b/Documentation/devicetree/bindings/rtc/xircom,x1205.txt
+new file mode 100644
+index 000000000000..3e3102a32728
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/xircom,x1205.txt
+@@ -0,0 +1,12 @@
++* Xircom X1205 I2C RTC
++
++Required properties:
++- compatible: Should be "xircom,x1205"
++- reg: I2C address
++
++Example:
++
++rtc@6f {
++	compatible = "xicor,x1205";
++	reg = <0x6f>;
++};
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.20.1
