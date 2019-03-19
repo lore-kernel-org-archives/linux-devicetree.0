@@ -1,15 +1,11 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH RESEND V6 0/5] Add i.MX7ULP EVK PWM backlight support
-Date: Tue, 19 Mar 2019 09:11:38 +0000
-Message-ID: <DB3PR0402MB39165E52E113BAB7B66AFB24F5400@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1552979097-5814-1-git-send-email-Anson.Huang@nxp.com>
- <20190319081446.m5eboi4v54er3niv@pengutronix.de>
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH v6 0/3] Stingray USB PHY driver support
+Date: Tue, 19 Mar 2019 14:45:41 +0530
+Message-ID: <1552986944-3398-1-git-send-email-srinath.mannam@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190319081446.m5eboi4v54er3niv@pengutronix.de>
-Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,54 +15,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Robin Gong <yibin.gong@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "stefan@agner.ch" <stefan@agner.ch>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Jayachandran C <jnair@caviumnetworks.com>, Tejun Heo <tj@kernel.org>, Srinath Mannam <srinath.mannam@broadcom.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNz
-YWdlLS0tLS0NCj4gRnJvbTogVXdlIEtsZWluZS1Lw7ZuaWcgW21haWx0bzp1LmtsZWluZS1rb2Vu
-aWdAcGVuZ3V0cm9uaXguZGVdDQo+IFNlbnQ6IDIwMTnlubQz5pyIMTnml6UgMTY6MTUNCj4gVG86
-IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogdGhpZXJyeS5yZWRpbmdA
-Z21haWwuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiBz
-aGF3bmd1b0BrZXJuZWwub3JnOyBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBrZXJuZWxAcGVuZ3V0
-cm9uaXguZGU7DQo+IGZlc3RldmFtQGdtYWlsLmNvbTsgbGludXhAYXJtbGludXgub3JnLnVrOyBz
-dGVmYW5AYWduZXIuY2g7DQo+IG90YXZpb0Bvc3N5c3RlbXMuY29tLmJyOyBMZW9uYXJkIENyZXN0
-ZXogPGxlb25hcmQuY3Jlc3RlekBueHAuY29tPjsNCj4gc2Nobml0emVsdG9ueUBnbWFpbC5jb207
-IGphbi50dWVya0BlbXRyaW9uLmNvbTsgUm9iaW4gR29uZw0KPiA8eWliaW4uZ29uZ0BueHAuY29t
-PjsgbGludXgtcHdtQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtDQo+IGtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0ggUkVTRU5EIFY2IDAvNV0gQWRkIGkuTVg3VUxQIEVWSyBQV00gYmFj
-a2xpZ2h0DQo+IHN1cHBvcnQNCj4gDQo+IE9uIFR1ZSwgTWFyIDE5LCAyMDE5IGF0IDA3OjA5OjU2
-QU0gKzAwMDAsIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+IGkuTVg3VUxQIEVWSyBib2FyZCBoYXMg
-TUlQSS1EU0kgZGlzcGxheSwgaXRzIGJhY2tsaWdodCBpcyBzdXBwbGllZCBieQ0KPiA+IFRQTSBQ
-V00gbW9kdWxlLCB0aGlzIHBhdGNoIHNldCBlbmFibGVzIGkuTVg3VUxQIFRQTSBQV00gZHJpdmVy
-DQo+IHN1cHBvcnQNCj4gPiBhbmQgYWxzbyBhZGQgYmFja2xpZ2h0IHN1cHBvcnQgZm9yIE1JUEkt
-RFNJIGRpc3BsYXkuDQo+IA0KPiBHaXZlbiB0aGF0IHlvdSBhY3R1YWxseSBjaGFuZ2VkIHNvbWV0
-aGluZyBjb21wYXJlZCB0byB2NiwgdGhpcyBpcyBub3QgYQ0KPiByZXNlbmQgYnV0IHY3LiBBbHNv
-IEkgc3VnZ2VzdCB0byBwcmFjdGlzZSBhIGJpdCBvZiBwYXRpZW5jZSBiZWZvcmUgc2VuZGluZyBv
-dXQNCj4gYSBuZXcgcmV2aXNpb24gdG8gcHJldmVudCBwZW9wbGUgc3RpbGwgbG9va2luZyBhdCB0
-aGUgcHJldmlvdXMgcm91bmQuIEkganVzdA0KPiBnYXZlIGZlZWRiYWNrIHRvIHRoZSBvcmlnaW5h
-bCB2NiB3aGljaCB5b3Ugb2J2aW91c2x5IGRpZG4ndCBhZGRyZXNzIDotfA0KPiANCj4gQWxzbyBh
-IGhpZ2hsZXZlbCBjaGFuZ2Vsb2cgZm9yIHRoZSBzZXJpZXMgKGhlcmUgc29tZXRoaW5nIGxpa2U6
-ICJQcm9wZXJseQ0KPiBzZXBhcmF0ZSBkdCBjaGFuZ2VzIGludG8gc29jLXNwZWNpZmljIGFuZCBt
-YWNoaW5lLXNwZWNpZmljIGNoYW5nZXMiKSBpcw0KPiBoZWxwZnVsLg0KDQpPSywgd2lsbCBwYXkg
-YXR0ZW50aW9uIHRvIHRoYXQsIHRoZSByZXNlbmQgaXMganVzdCBiZWNhdXNlIHRoZSBwYXRjaCBj
-b250ZW50IGlzIE5PVA0KQ2hhbmdlZCwganVzdCByZS1vcmdhbml6ZSB0aGUgRFQgcGF0Y2guDQoN
-CkFsc28sIEkgdW5kZXJzdGFuZCB0aGF0IHNlbmRpbmcgdGhlIHBhdGNoIHZlcnNpb24gdG9vIHF1
-aWNrbHkgd2lsbCByZXN1bHQgaW4gdG9vIG1hbnkNClBhdGNoIHZlcnNpb24gaW4gdGhpcyB0aHJl
-YWQsIGJ1dCBJIGp1c3Qgd2FudCB0byBhZGRyZXNzIHRoZSBjb21tZW50cyBBU0FQIHdoZW4gSQ0K
-SGF2ZSB0aW1lLCBob3BlIHRoYXQgZG9lcyBOT1QgYm90aGVyIHJldmlld2VyIHRvbyBtdWNoLi4u
-DQoNClRoYW5rcyBmb3IgeW91ciBwYXRpZW5jZSENCkFuc29uLg0KDQo+IA0KPiBCZXN0IHJlZ2Fy
-ZHMNCj4gVXdlDQo+IA0KPiAtLQ0KPiBQZW5ndXRyb25peCBlLksuICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgfCBVd2UgS2xlaW5lLUvDtm5pZyAgICAgICAgICAgIHwNCj4gSW5kdXN0cmlhbCBM
-aW51eCBTb2x1dGlvbnMgICAgICAgICAgICAgICAgIHwNCj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlu
-a3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZ3d3cucA0KPiBlbmd1
-dHJvbml4LmRlJTJGJmFtcDtkYXRhPTAyJTdDMDElN0NhbnNvbi5odWFuZyU0MG54cC5jb20lN0M0
-ZjENCj4gZmY5NGUyZTJhNDQxOTlkMzgwOGQ2YWM0MmY5MTYlN0M2ODZlYTFkM2JjMmI0YzZmYTky
-Y2Q5OWM1YzMwMTYzNSUNCj4gN0MwJTdDMCU3QzYzNjg4NTgwMDk3ODc5MDgyNCZhbXA7c2RhdGE9
-cCUyRkszc3VydXVCRlJQblc4blolMg0KPiBCRlpwbFYycjBpMjJONkpxNEhpN0RCd3A0JTNEJmFt
-cDtyZXNlcnZlZD0wICB8DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9saW51eC1hcm0ta2VybmVsCg==
+These patches add Stingray USB PHY driver and its corresponding
+DT nodes with documentation.
+
+This patch set is based on Linux-5.0-rc2.
+
+Changes from v5:
+  - Removed redundant address and size cells in DT nodes.
+
+Changes from v4:
+  - Addressed Rob Herring review comments
+     - Removed child nodes and added #phy-cells 1
+     - Added xlate function to get phy using phandle argument.
+
+Changes from v3:
+  - Addressed Rob Herring review comments
+     - Changed compatible strings.
+     - updated driver based on new compatible strings.
+
+Changes from v2:
+  - Addressed Kishon review comments
+  - Updated patchset to Linux-5.0-rc2
+
+Changes from v1:
+  - Addressed Kishon review comments
+  - phy init call return value handle
+  
+Srinath Mannam (3):
+  dt-bindings: phy: Add Stingray USB PHY binding document
+  phy: sr-usb: Add Stingray USB PHY driver
+  arm64: dts: Add USB DT nodes for Stingray SoC
+
+ .../bindings/phy/brcm,stingray-usb-phy.txt         |  32 ++
+ .../boot/dts/broadcom/stingray/stingray-usb.dtsi   |  72 ++++
+ .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   1 +
+ drivers/phy/broadcom/Kconfig                       |  11 +
+ drivers/phy/broadcom/Makefile                      |   1 +
+ drivers/phy/broadcom/phy-bcm-sr-usb.c              | 393 +++++++++++++++++++++
+ 6 files changed, 510 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+ create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
+ create mode 100644 drivers/phy/broadcom/phy-bcm-sr-usb.c
+
+-- 
+2.7.4
