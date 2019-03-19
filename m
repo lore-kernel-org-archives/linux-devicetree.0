@@ -1,43 +1,53 @@
-Return-Path: <SRS0=/J0V=RW=linaro.org=rui.silva@kernel.org>
+Return-Path: <SRS0=L7Fd=RW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40284 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbfCSRAT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Mar 2019 13:00:19 -0400
+Received: by mail-wm1-f66.google.com with SMTP id u10so14801722wmj.5
+        for <devicetree@vger.kernel.org>; Tue, 19 Mar 2019 10:00:18 -0700 (PDT)
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v4 6/6] MAINTAINERS: add entry for fxas21002c gyro driver
-Date: Tue, 19 Mar 2019 10:59:25 +0000
-Message-Id: <20190319105925.25863-7-rui.silva@linaro.org>
-In-Reply-To: <20190319105925.25863-1-rui.silva@linaro.org>
-References: <20190319105925.25863-1-rui.silva@linaro.org>
+Subject: [PATCH 2/5] ARM: dts: imx7s: add multiplexer controls
+Date: Tue, 19 Mar 2019 17:00:00 +0000
+Message-Id: <20190319170003.21261-3-rui.silva@linaro.org>
+In-Reply-To: <20190319170003.21261-1-rui.silva@linaro.org>
+References: <20190319170003.21261-1-rui.silva@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+Sender: devicetree-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-Add me as maintainer of the nxp fxas21002c gyroscope driver.
+The IOMUXC General Purpose Register has bitfield to control video bus
+multiplexer to control the CSI input between the MIPI-CSI2 and parallel
+interface. Add that register and mask.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- MAINTAINERS | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/imx7s.dtsi | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index dce5c099f43c..13e229d4a425 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10905,6 +10905,16 @@ F:	Documentation/ABI/stable/sysfs-bus-nvmem
- F:	include/linux/nvmem-consumer.h
- F:	include/linux/nvmem-provider.h
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 9a680d3d6424..792efcd2caa1 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -497,8 +497,15 @@
  
-+NXP FXAS21002C DRIVER
-+M:	Rui Miguel Silva <rmfrfs@gmail.com>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/gyroscope/fxas21002c.txt
-+F:	drivers/iio/gyro/fxas21002c_core.c
-+F:	drivers/iio/gyro/fxas21002c.h
-+F:	drivers/iio/gyro/fxas21002c_i2c.c
-+F:	drivers/iio/gyro/fxas21002c_spi.c
+ 			gpr: iomuxc-gpr@30340000 {
+ 				compatible = "fsl,imx7d-iomuxc-gpr",
+-					"fsl,imx6q-iomuxc-gpr", "syscon";
++					"fsl,imx6q-iomuxc-gpr", "syscon",
++					"simple-mfd";
+ 				reg = <0x30340000 0x10000>;
 +
- NXP SGTL5000 DRIVER
- M:	Fabio Estevam <festevam@gmail.com>
- L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
++				mux: mux-controller {
++					compatible = "mmio-mux";
++					#mux-control-cells = <0>;
++					mux-reg-masks = <0x14 0x00000010>;
++				};
+ 			};
+ 
+ 			ocotp: ocotp-ctrl@30350000 {
 -- 
 2.21.0
