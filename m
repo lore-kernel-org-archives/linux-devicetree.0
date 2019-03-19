@@ -1,7 +1,7 @@
 From: Jiada Wang <jiada_wang@mentor.com>
-Subject: [PATCH v3 1/3] arm64: dts: renesas: r8a7795: use extended audio dmac register
-Date: Tue, 19 Mar 2019 14:57:03 +0900
-Message-ID: <20190319055705.24115-2-jiada_wang@mentor.com>
+Subject: [PATCH v3 2/3] arm64: dts: renesas: r8a7796: use extended audio dmac register
+Date: Tue, 19 Mar 2019 14:57:04 +0900
+Message-ID: <20190319055705.24115-3-jiada_wang@mentor.com>
 References: <20190319055705.24115-1-jiada_wang@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -15,18 +15,18 @@ List-Id: devicetree@vger.kernel.org
 
 Basic audio dmac register only supports busif from 0 to 3,
 in order to use busif4 ~ busif7, extended audio dmac register
-need to be used.
+need to be used
 
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 2 +-
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index abeac3059383..55472b2b013e 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -1836,7 +1836,7 @@
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index cdf784899cf8..13c6b5b3e8e0 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -1775,7 +1775,7 @@
  				<0 0xec5a0000 0 0x100>,  /* ADG */
  				<0 0xec540000 0 0x1000>, /* SSIU */
  				<0 0xec541000 0 0x280>,  /* SSI */
