@@ -1,43 +1,35 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 0/4] clk: meson8b: add the VPU clock tree
-Date: Tue, 19 Mar 2019 22:51:17 +0100
-Message-ID: <20190319215121.29340-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 1/4] dt-bindings: clock: meson8b: export the VPU clock
+Date: Tue, 19 Mar 2019 22:51:18 +0100
+Message-ID: <20190319215121.29340-2-martin.blumenstingl@googlemail.com>
+References: <20190319215121.29340-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190319215121.29340-1-martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: narmstrong@baylibre.com, jbrunet@baylibre.com, linux-amlogic@lists.infradead.org
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the VPU clock tree for Meson8, Meson8b and Meson8m2.
-The VPU clock tree is slightly different on all three SoCs. The details
-are explained in patch #4.
+The VPU clock is an input the the "VPU" (Video Processing Unit), which is
+one of the components of the display controller.
 
-Meson8m2 requires the previously unsupported "gp_pll" PLL. This PLL only
-exists on Meson8m2 - Meson8 and Meson8b don't have it.
-A separate clk_hw_onecell_data is introduced for Meson8m2 (using the
-compatible string which is already available) to account for this SoC
-specific clock setup.
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ include/dt-bindings/clock/meson8b-clkc.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-dependencies:
-This series is meant to be applied on top of my other patch from [0]:
-  dt-bindings: clock: meson8b: drop the "ABP" clock definition
-
-
-[0] https://patchwork.kernel.org/patch/10860387/
-
-
-Martin Blumenstingl (4):
-  dt-bindings: clock: meson8b: export the VPU clock
-  clk: meson: meson8b: use a sparate clock table for Meson8m2
-  clk: meson: meson8b: add support for the GP_PLL clock on Meson8m2
-  clk: meson: meson8b: add the VPU clock trees
-
- drivers/clk/meson/meson8b.c              | 422 ++++++++++++++++++++++-
- drivers/clk/meson/meson8b.h              |  12 +-
- include/dt-bindings/clock/meson8b-clkc.h |   1 +
- 3 files changed, 433 insertions(+), 2 deletions(-)
-
+diff --git a/include/dt-bindings/clock/meson8b-clkc.h b/include/dt-bindings/clock/meson8b-clkc.h
+index cd11628f50f8..2ac9469a1c27 100644
+--- a/include/dt-bindings/clock/meson8b-clkc.h
++++ b/include/dt-bindings/clock/meson8b-clkc.h
+@@ -107,5 +107,6 @@
+ #define CLKID_PERIPH		126
+ #define CLKID_AXI		128
+ #define CLKID_L2_DRAM		130
++#define CLKID_VPU		190
+ 
+ #endif /* __MESON8B_CLKC_H */
 -- 
 2.21.0
