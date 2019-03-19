@@ -1,66 +1,55 @@
-From: Chen-Yu Tsai <wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM: dts: sunxi: h3/h5: Add device node
- for SID
-Date: Tue, 19 Mar 2019 11:17:31 +0800
-Message-ID: <CAGb2v64HJX+2rC14OEPgBSc61h-8KCAthdyY05xTuquKYTfsRA@mail.gmail.com>
-References: <20190318073354.12151-1-wens@kernel.org> <20190318073354.12151-7-wens@kernel.org>
- <8e9ef57f-1d24-b151-f8a4-812b7bb65388@sholland.org>
-Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH 2/6] drm/exynos: dsi: Use drm_bridge_detach
+Date: Tue, 19 Mar 2019 12:59:49 +0900
+Message-ID: <e7d55512-41be-b3a7-a23b-59fd6bfbcbc3@samsung.com>
+References: <20190315130825.9005-1-jagan@amarulasolutions.com>
+        <CGME20190315130851epcas1p2412844a1a23d72e725ac6e2d23179fbd@epcas1p2.samsung.com>
+        <20190315130825.9005-3-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBWF6YHSAKGQE2E7JCQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <8e9ef57f-1d24-b151-f8a4-812b7bb65388-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190315130825.9005-3-jagan@amarulasolutions.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 9:55 AM Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org> wrote:
->
-> On 03/18/19 02:33, Chen-Yu Tsai wrote:
-> > From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> >
-> > The device tree binding already lists compatible strings for these two
-> > SoCs. Add a device node for them.
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/sun8i-h3.dtsi              | 4 ++++
-> >  arch/arm/boot/dts/sunxi-h3-h5.dtsi           | 5 +++++
-> >  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 4 ++++
-> >  3 files changed, 13 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-> > index 959d265e7254..e37c30e811d3 100644
-> > --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> > +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> > @@ -231,3 +231,7 @@
-> >  &rtc {
-> >       compatible = "allwinner,sun8i-h3-rtc";
-> >  };
-> > +
-> > +&sid {
-> > +     compatible = "allwinner,sun8i-h3-sid";
-> > +};
-> > diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> > index d74a6cbbfdf4..e2100b673a51 100644
-> > --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> > +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> > @@ -227,6 +227,11 @@
-> >                       #size-cells = <0>;
-> >               };
-> >
-> > +             sid: eeprom@1c14000 {
-> > +                     /* compatible and clocks are in per SoC .dtsi file */
->
-> There are no clocks for this node, just a compatible string.
 
-Right. I'll fix this when applying.
 
-ChenYu
+19. 3. 15. 오후 10:08에 Jagan Teki 이(가) 쓴 글:
+> drm_bridge_detach now available to use while detaching
+> bridge, use this core wrapper instead of explicitly
+> pointing the bridge funcs.
+> 
+> Cc: Dae <inki.dae@samsung.com>
+> Cc: Joonyoung Shim <jy0922.shim@samsung.com>
+> Cc: Seung-Woo Kim <sw0312.kim@samsung.com>
+> Cc: Kyungmin Park <kyungmin.park@samsung.com>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+
+Acked-by: Inki Dae <inki.dae@samsung.com>
+
+Thanks,
+Inki Dae
+
+> ---
+>  drivers/gpu/drm/exynos/exynos_drm_dsi.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> index a4253dd55f86..5daf43d02768 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> @@ -1583,8 +1583,7 @@ static int exynos_dsi_host_detach(struct mipi_dsi_host *host,
+>  		dsi->connector.status = connector_status_disconnected;
+>  		mutex_unlock(&drm->mode_config.mutex);
+>  	} else {
+> -		if (dsi->out_bridge->funcs->detach)
+> -			dsi->out_bridge->funcs->detach(dsi->out_bridge);
+> +		drm_bridge_detach(dsi->out_bridge);
+>  		dsi->out_bridge = NULL;
+>  	}
+>  
+> 
