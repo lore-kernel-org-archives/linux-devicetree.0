@@ -1,48 +1,57 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH v3 0/8] phy: qcom-ufs: Enable regulators to be off in suspend
-Date: Tue, 19 Mar 2019 13:04:22 -0700
-Message-ID: <CAE=gft4YPmqd35ySmZw2UG876Lvt8rcz+nNwELXK98PDvHuVeA@mail.gmail.com>
-References: <20190205185902.106085-1-evgreen@chromium.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH] clk: g12a-aoclk: re-export CLKID_AO_SAR_ADC_SEL clock id
+Date: Tue, 19 Mar 2019 21:26:53 +0100
+Message-ID: <0a7145eb-2d34-cd0c-8b8c-3393f5e334af@baylibre.com>
+References: <20190304105358.4987-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190205185902.106085-1-evgreen@chromium.org>
+In-Reply-To: <20190304105358.4987-1-narmstrong@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Stephen Boyd <swboyd@chromium.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Grygorii Strashko <grygorii.strashko@ti.com>, Rob Herring <robh+dt@kernel.org>, Vinayak Holikatti <vinholikatti@gmail.com>, Jeffrey Hugo <jhugo@codeaurora.org>, SCSI <linux-scsi@vger.kernel.org>, David Brown <david.brown@linaro.org>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, liwei <liwei213@huawei.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+To: jbrunet@baylibre.com
+Cc: linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 5, 2019 at 10:59 AM Evan Green <evgreen@chromium.org> wrote:
->
-...
-> Evan Green (8):
->   dt-bindings: ufs: Add #reset-cells for Qualcomm controllers
->   dt-bindings: phy-qcom-qmp: Add UFS PHY reset
->   dt-bindings: phy: qcom-ufs: Add resets property
->   arm64: dts: sdm845: Add UFS PHY reset
->   arm64: dts: msm8996: Add UFS PHY reset controller
->   scsi: ufs: qcom: Expose the reset controller for PHY
->   phy: qcom: Utilize UFS reset controller
->   phy: ufs-qcom: Refactor all init steps into phy_poweron
->
->  .../devicetree/bindings/phy/qcom-qmp-phy.txt  |   6 +-
->  .../devicetree/bindings/ufs/ufs-qcom.txt      |   5 +-
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |   3 +
->  arch/arm64/boot/dts/qcom/msm8996.dtsi         |   4 +-
->  arch/arm64/boot/dts/qcom/sdm845.dtsi          |   3 +
->  drivers/phy/qualcomm/phy-qcom-qmp.c           | 117 +++++++++---------
->  drivers/phy/qualcomm/phy-qcom-ufs-i.h         |   5 +-
->  drivers/phy/qualcomm/phy-qcom-ufs-qmp-14nm.c  |  25 +---
->  drivers/phy/qualcomm/phy-qcom-ufs-qmp-20nm.c  |  25 +---
->  drivers/phy/qualcomm/phy-qcom-ufs.c           |  57 +++++++--
->  drivers/scsi/ufs/Kconfig                      |   1 +
->  drivers/scsi/ufs/ufs-qcom.c                   | 114 ++++++++++-------
->  drivers/scsi/ufs/ufs-qcom.h                   |   4 +
->  13 files changed, 202 insertions(+), 167 deletions(-)
->
-> --
+On 04/03/2019 11:53, Neil Armstrong wrote:
+> When submitted v2 of the G12A AO-CLK IDs, the SAR_ADC_SEL ID was moved
+> to the internal non-exported bindings, but this clock is necessary and
+> mandatory for the SAR ADC bindings.
+> 
+> Export it back to the public bindings.
+> 
+> Fixes: be3d960b0aeb ("dt-bindings: clk: add G12A AO Clock and Reset Bindings")
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/clk/meson/g12a-aoclk.h          | 1 -
+>  include/dt-bindings/clock/g12a-aoclkc.h | 1 +
+>  2 files changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/meson/g12a-aoclk.h b/drivers/clk/meson/g12a-aoclk.h
+> index 04b0d5506641..666b4493822c 100644
+> --- a/drivers/clk/meson/g12a-aoclk.h
+> +++ b/drivers/clk/meson/g12a-aoclk.h
+> @@ -16,7 +16,6 @@
+>   * to expose, such as the internal muxes and dividers of composite clocks,
+>   * will remain defined here.
+>   */
+> -#define CLKID_AO_SAR_ADC_SEL	16
+>  #define CLKID_AO_SAR_ADC_DIV	17
+>  #define CLKID_AO_CTS_OSCIN	19
+>  #define CLKID_AO_32K_PRE	20
+> diff --git a/include/dt-bindings/clock/g12a-aoclkc.h b/include/dt-bindings/clock/g12a-aoclkc.h
+> index 8db01ffbeb06..5ac66a2eee0f 100644
+> --- a/include/dt-bindings/clock/g12a-aoclkc.h
+> +++ b/include/dt-bindings/clock/g12a-aoclkc.h
+> @@ -26,6 +26,7 @@
+>  #define CLKID_AO_M4_FCLK	13
+>  #define CLKID_AO_M4_HCLK	14
+>  #define CLKID_AO_CLK81		15
+> +#define CLKID_AO_SAR_ADC_SEL	16
+>  #define CLKID_AO_SAR_ADC_CLK	18
+>  #define CLKID_AO_32K		23
+>  #define CLKID_AO_CEC		27
+> 
 
-Hi Kishon,
-A gentle ping here now that rc1 is out. Are you able to take these? I
-can also repost if needed.
--Evan
+Applied to next/headers
