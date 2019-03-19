@@ -1,14 +1,13 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] dt-bindings: hwmon (pwm-fan) Remove dead
- "cooling-*-state" properties
-Date: Tue, 19 Mar 2019 16:06:27 +0100
-Message-ID: <CAJKOXPd12YPvL61nu0TDWze4pBuQK=KbJCrc5wh-tACsRQt37g@mail.gmail.com>
-References: <afde4ebd929821d63b5172c8e70e15f0725a4b49.1553006788.git.robin.murphy@arm.com>
+From: "Angus Ainslie (Purism)" <angus@akkea.ca>
+Subject: [PATCH v3] arm64: dts: fsl: imx8mq: enable the multi sensor TMU
+Date: Tue, 19 Mar 2019 08:10:09 -0700
+Message-ID: <20190319151009.7603-1-angus@akkea.ca>
+References: <20190311213124.29325-1-angus@akkea.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <afde4ebd929821d63b5172c8e70e15f0725a4b49.1553006788.git.robin.murphy@arm.com>
+In-Reply-To: <20190311213124.29325-1-angus@akkea.ca>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,48 +17,190 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, heiko@sntech.de, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, jonathanh@nvidia.com, thierry.reding@gmail.com, kgene@kernel.org, shawnguo@kernel.org, linux@roeck-us.net, linux-arm-kernel@lists.infradead.org
+To: andrew.smirnov@gmail.com, Lucas Stach <l.stach@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, Abel Vesa <abel.vesa@nxp.com>, Carlo Caione <ccaione@baylibre.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "Angus Ainslie (Purism)" <angus@akkea.ca>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 19 Mar 2019 at 15:54, Robin Murphy <robin.murphy@arm.com> wrote:
->
-> The old "cooling-{min,max}-state" properties for thermal bindings were
-> ratified to "cooling-{min,max}-level" by commit eb168b70dea5 ("of:
-> thermal: Fix inconsitency between cooling-*-state and cooling-*-level"),
-> which were later removed entirely by commit e04907dbc259 ("dt-bindings:
-> thermal: Remove "cooling-{min|max}-level" properties").
->
-> The pwm-fan binding, however, was apparently in-flight in parallel with
-> that ratification, and so managed to introduce an example of the old
-> properties which escaped the scope of the later cleanup and has thus
-> continued to be dutifully copied for new boards despite being useless.
-> Clean up these remaining undocumented anachronisms to minimise any
-> further confusion.
->
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> ---
->
-> Presented as one big hwmon patch for simplicity, but the DT changes
-> can quite easily be broken out by platform if maintainers prefer.
->
-> Robin.
->
->  Documentation/devicetree/bindings/hwmon/pwm-fan.txt | 2 --
->  arch/arm/boot/dts/exynos4412-odroidu3.dts           | 2 --
->  arch/arm/boot/dts/exynos5410-odroidxu.dts           | 2 --
->  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi  | 2 --
+Add the imx8mq TMU (Thermal management unit) nodes for CPU,
+GPU, and VPU.
 
-Probably you should send it directly to arm-soc maintainers so it
-would go with other DT changes. In such case:
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Changes since v2:
 
-Best regards,
-Krzysztof
+Updated alert and critical temps for commercial parts.
+Fixed node names.
 
->  arch/arm/boot/dts/imx6qdl-emcon.dtsi                | 2 --
->  arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts  | 2 --
->  arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi       | 2 --
->  arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi       | 2 --
->  8 files changed, 16 deletions(-)
->
+Changes since v1:
+
+Removed references to multi sensor patch.
+
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 118 ++++++++++++++++++++++
+ 1 file changed, 118 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 9155bd4784eb..83c0187e1524 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -8,6 +8,7 @@
+ #include <dt-bindings/power/imx8mq-power.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/thermal/thermal.h>
+ #include "imx8mq-pinfunc.h"
+ 
+ / {
+@@ -89,6 +90,7 @@
+ 			reg = <0x0>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A53_1: cpu@1 {
+@@ -97,6 +99,7 @@
+ 			reg = <0x1>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A53_2: cpu@2 {
+@@ -105,6 +108,7 @@
+ 			reg = <0x2>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A53_3: cpu@3 {
+@@ -113,6 +117,7 @@
+ 			reg = <0x3>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A53_L2: l2-cache0 {
+@@ -210,6 +215,119 @@
+ 				#interrupt-cells = <2>;
+ 			};
+ 
++			tmu: tmu@30260000 {
++				compatible = "fsl,imx8mq-tmu";
++				reg = <0x30260000 0x10000>;
++				interrupt = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++				little-endian;
++				fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
++				fsl,tmu-calibration = <0x00000000 0x00000023
++						       0x00000001 0x00000029
++						       0x00000002 0x0000002f
++						       0x00000003 0x00000035
++						       0x00000004 0x0000003d
++						       0x00000005 0x00000043
++						       0x00000006 0x0000004b
++						       0x00000007 0x00000051
++						       0x00000008 0x00000057
++						       0x00000009 0x0000005f
++						       0x0000000a 0x00000067
++						       0x0000000b 0x0000006f
++
++						       0x00010000 0x0000001b
++						       0x00010001 0x00000023
++						       0x00010002 0x0000002b
++						       0x00010003 0x00000033
++						       0x00010004 0x0000003b
++						       0x00010005 0x00000043
++						       0x00010006 0x0000004b
++						       0x00010007 0x00000055
++						       0x00010008 0x0000005d
++						       0x00010009 0x00000067
++						       0x0001000a 0x00000070
++
++						       0x00020000 0x00000017
++						       0x00020001 0x00000023
++						       0x00020002 0x0000002d
++						       0x00020003 0x00000037
++						       0x00020004 0x00000041
++						       0x00020005 0x0000004b
++						       0x00020006 0x00000057
++						       0x00020007 0x00000063
++						       0x00020008 0x0000006f
++
++						       0x00030000 0x00000015
++						       0x00030001 0x00000021
++						       0x00030002 0x0000002d
++						       0x00030003 0x00000039
++						       0x00030004 0x00000045
++						       0x00030005 0x00000053
++						       0x00030006 0x0000005f
++						       0x00030007 0x00000071>;
++				#thermal-sensor-cells =  <1>;
++			};
++
++			thermal-zones {
++				cpu-thermal {
++					polling-delay-passive = <250>;
++					polling-delay = <2000>;
++					thermal-sensors = <&tmu 0>;
++
++					trips {
++						cpu_alert: cpu-alert {
++							temperature = <80000>;
++							hysteresis = <2000>;
++							type = "passive";
++						};
++
++						cpu-crit {
++							temperature = <90000>;
++							hysteresis = <2000>;
++							type = "critical";
++						};
++					};
++
++					cooling-maps {
++						map0 {
++							trip = <&cpu_alert>;
++							cooling-device =
++								<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++								<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++								<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++								<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++						};
++					};
++				};
++
++				gpu-thermal {
++					polling-delay-passive = <250>;
++					polling-delay = <2000>;
++					thermal-sensors = <&tmu 1>;
++
++					trips {
++						gpu-crit {
++							temperature = <90000>;
++							hysteresis = <2000>;
++							type = "critical";
++						};
++					};
++				};
++
++				vpu-thermal {
++					polling-delay-passive = <250>;
++					polling-delay = <2000>;
++					thermal-sensors = <&tmu 2>;
++
++					trips {
++						vpu-crit {
++							temperature = <90000>;
++							hysteresis = <2000>;
++							type = "critical";
++						};
++					};
++				};
++			};
++
+ 			wdog1: watchdog@30280000 {
+ 				compatible = "fsl,imx8mq-wdt", "fsl,imx21-wdt";
+ 				reg = <0x30280000 0x10000>;
+-- 
+2.17.1
