@@ -1,117 +1,116 @@
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH 1/3] dt-bindings: phy: Add bindings for the SMSC USB333x
- ULPI USB PHY
-Date: Tue, 19 Mar 2019 13:47:51 +0100
-Message-ID: <580ae1b1053aeaae7a1ee126d406b84ef3681394.camel@bootlin.com>
-References: <20190130155023.4495-1-paul.kocialkowski@bootlin.com>
-         <20190130155023.4495-2-paul.kocialkowski@bootlin.com>
-         <20190225164139.GA10291@bogus>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v3 4/4] memory: jz4780_nemc: Add support for the JZ4740
+Date: Tue, 19 Mar 2019 13:59:20 +0100
+Message-ID: <1553000360.2015.0@crapouillou.net>
+References: <20190205035240.31410-1-paul@crapouillou.net>
+        <20190205035240.31410-5-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190225164139.GA10291@bogus>
+In-Reply-To: <20190205035240.31410-5-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, =?ISO-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <bbrezillon@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi and sorry for the late response,
+Hi,
 
-Le lundi 25 février 2019 à 10:41 -0600, Rob Herring a écrit :
-> On Wed, Jan 30, 2019 at 04:50:21PM +0100, Paul Kocialkowski wrote:
-> > Introduce the device-tree bindings for this ULPI USB PHY.
-> > Optional bindings that are not prefixed with the vendor may be
-> > relevant to other ULPI USB PHYs since they match generic ULPI
-> > registers.
-> > 
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > ---
-> >  .../devicetree/bindings/phy/smsc-usb333x.txt  | 50 +++++++++++++++++++
-> >  1 file changed, 50 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/smsc-usb333x.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/smsc-usb333x.txt b/Documentation/devicetree/bindings/phy/smsc-usb333x.txt
-> > new file mode 100644
-> > index 000000000000..50d500d67b2f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/smsc-usb333x.txt
-> > @@ -0,0 +1,50 @@
-> > +Device tree bindings for SMSC USB333x ULPI USB PHY
-> > +
-> > +Required properties:
-> > +- compatible: Should be "smsc,usb333x".
-> > +
-> > +Optional properties:
-> > +- reset-gpios: GPIO to reset the PHY.
-> > +- clocks: Reference clock that feeds the PHY's PLL.
-> > +- clock-names: Should be "refclk" for the reference clock.
-> > +- extvbus-passthru: Enable EXTVBUS signal pass-through to assert the VbusValid
-> > +  signal internally. This is useful when no VBUS line is connected to the PHY.
-> > +- auto-resume: Enable automatic transmission resume (in host mode).
-> > +- chrg-vbus: Enable internal VBUS pull-up to 3.3 V during OTG SRP.
-> > +- dischrg-vbus: Enable internal VBUS pull-down during OTG SRP.
-> > +- id-pull-up: Enable internal ID pull-up tp 3.3 V.
-> 
-> These all need smsc prefix.
+Any feedback on this patchset? Should I resend?
 
-Note that these features are not specific to this PHY but reflect the
-use of fields from the standardized ULPI register set, so they could
-just as well apply to other ULPI USB PHYs.
+Thanks,
+-Paul
 
-With that in mind, do these props still qualify to get a smsc prefix?
-Perhaps they should be added to bindings/usb/generic.txt instead.
-
-> > +- smsc,varisense: Squelch detector threshold register field value, as described
-> > +  in the datasheet.
-> > +- smsc,phyboost: Output voltage change register field value, as described in the
-> > +  datasheet.
-> 
-> Please give a range of values at least so we can write constraints.
-
-Yes, I'll definitely do that in the next revision.
-
-Thanks for the review!
-
-Cheers,
-
-Paul
-
-> > +
-> > +Refer to phy/phy-bindings.txt for the generic PHY binding properties.
-> > +Refer to usb/ulpi.txt for the parent ULPI bus binding required for this PHY.
-> > +
-> > +Example:
-> > +
-> > +&usb0 {
-> > +	compatible = "xlnx,zynq-usb-2.20a", "chipidea,usb2";
-> > +	clocks = <&clkc 28>;
-> > +	interrupt-parent = <&intc>;
-> > +	interrupts = <0 21 4>;
-> > +	reg = <0xe0002000 0x1000>;
-> > +	dr_mode = "peripheral";
-> > +	phys = <&usb_phy0>;
-> > +	phy-names = "usb-phy";
-> > +	phy_type = "ulpi";
-> > +
-> > +	ulpi {
-> > +		usb_phy0: usb-phy0 {
-> > +			#phy-cells = <0>;
-> > +			compatible = "smsc,usb333x";
-> > +			reset-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
-> > +			clocks = <&usb_phy_clk>;
-> > +			clock-names = "refclk";
-> > +			smsc,varisense = <1>;
-> > +			smsc,phyboost = <5>;
-> > +			extvbus-passthru;
-> > +			chrg-vbus;
-> > +		};
-> > +	};
-> > +};
-> > -- 
-> > 2.20.1
-> > 
--- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Le mar. 5 f=E9vr. 2019 =E0 4:52, Paul Cercueil <paul@crapouillou.net> a=20
+=E9crit :
+> Add support for the JZ4740 SoC from Ingenic.
+>=20
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
+> ---
+>=20
+> v2: No change
+>=20
+> v3: Support the JZ4740 instead of the JZ4725B (exact same=20
+> functionality
+>     but JZ4740 is already fully upstream)
+>=20
+>  drivers/memory/jz4780-nemc.c | 24 +++++++++++++++++++++---
+>  1 file changed, 21 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/memory/jz4780-nemc.c=20
+> b/drivers/memory/jz4780-nemc.c
+> index 66b8b43eaeff..f3a19b9b76ac 100644
+> --- a/drivers/memory/jz4780-nemc.c
+> +++ b/drivers/memory/jz4780-nemc.c
+> @@ -44,9 +44,14 @@
+>  #define NEMC_NFCSR_NFCEn(n)	BIT((((n) - 1) << 1) + 1)
+>  #define NEMC_NFCSR_TNFEn(n)	BIT(16 + (n) - 1)
+>=20
+> +struct jz_soc_info {
+> +	u8 tas_tah_cycles_max;
+> +};
+> +
+>  struct jz4780_nemc {
+>  	spinlock_t lock;
+>  	struct device *dev;
+> +	const struct jz_soc_info *soc_info;
+>  	void __iomem *base;
+>  	struct clk *clk;
+>  	uint32_t clk_period;
+> @@ -202,7 +207,7 @@ static bool jz4780_nemc_configure_bank(struct=20
+> jz4780_nemc *nemc,
+>  	if (of_property_read_u32(node, "ingenic,nemc-tAS", &val) =3D=3D 0) {
+>  		smcr &=3D ~NEMC_SMCR_TAS_MASK;
+>  		cycles =3D jz4780_nemc_ns_to_cycles(nemc, val);
+> -		if (cycles > 15) {
+> +		if (cycles > nemc->soc_info->tas_tah_cycles_max) {
+>  			dev_err(nemc->dev, "tAS %u is too high (%u cycles)\n",
+>  				val, cycles);
+>  			return false;
+> @@ -214,7 +219,7 @@ static bool jz4780_nemc_configure_bank(struct=20
+> jz4780_nemc *nemc,
+>  	if (of_property_read_u32(node, "ingenic,nemc-tAH", &val) =3D=3D 0) {
+>  		smcr &=3D ~NEMC_SMCR_TAH_MASK;
+>  		cycles =3D jz4780_nemc_ns_to_cycles(nemc, val);
+> -		if (cycles > 15) {
+> +		if (cycles > nemc->soc_info->tas_tah_cycles_max) {
+>  			dev_err(nemc->dev, "tAH %u is too high (%u cycles)\n",
+>  				val, cycles);
+>  			return false;
+> @@ -278,6 +283,10 @@ static int jz4780_nemc_probe(struct=20
+> platform_device *pdev)
+>  	if (!nemc)
+>  		return -ENOMEM;
+>=20
+> +	nemc->soc_info =3D device_get_match_data(dev);
+> +	if (!nemc->soc_info)
+> +		return -EINVAL;
+> +
+>  	spin_lock_init(&nemc->lock);
+>  	nemc->dev =3D dev;
+>=20
+> @@ -370,8 +379,17 @@ static int jz4780_nemc_remove(struct=20
+> platform_device *pdev)
+>  	return 0;
+>  }
+>=20
+> +static const struct jz_soc_info jz4740_soc_info =3D {
+> +	.tas_tah_cycles_max =3D 7,
+> +};
+> +
+> +static const struct jz_soc_info jz4780_soc_info =3D {
+> +	.tas_tah_cycles_max =3D 15,
+> +};
+> +
+>  static const struct of_device_id jz4780_nemc_dt_match[] =3D {
+> -	{ .compatible =3D "ingenic,jz4780-nemc" },
+> +	{ .compatible =3D "ingenic,jz4740-nemc", .data =3D &jz4740_soc_info, },
+> +	{ .compatible =3D "ingenic,jz4780-nemc", .data =3D &jz4780_soc_info, },
+>  	{},
+>  };
+>=20
+> --
+> 2.11.0
+>=20
+=
