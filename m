@@ -1,159 +1,129 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH] dt-bindings: hwmon (pwm-fan) Remove dead "cooling-*-state"
- properties
-Date: Tue, 19 Mar 2019 14:54:04 +0000
-Message-ID: <afde4ebd929821d63b5172c8e70e15f0725a4b49.1553006788.git.robin.murphy@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux@roeck-us.net, jdelvare@suse.com
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, heiko@sntech.de, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, krzk@kernel.org, jonathanh@nvidia.com, thierry.reding@gmail.com, kgene@kernel.org, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v6 04/13] mtd: rawnand: Move drivers for Ingenic SoCs to subfolder
+Date: Tue, 19 Mar 2019 15:53:54 +0100
+Message-ID: <20190319145403.31627-5-paul@crapouillou.net>
+References: <20190319145403.31627-1-paul@crapouillou.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190319145403.31627-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>
+Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-The old "cooling-{min,max}-state" properties for thermal bindings were
-ratified to "cooling-{min,max}-level" by commit eb168b70dea5 ("of:
-thermal: Fix inconsitency between cooling-*-state and cooling-*-level"),
-which were later removed entirely by commit e04907dbc259 ("dt-bindings:
-thermal: Remove "cooling-{min|max}-level" properties").
+Before adding support for more SoCs and seeing the number of files for
+these drivers grow, we move them to their own subfolder to keep it tidy.
 
-The pwm-fan binding, however, was apparently in-flight in parallel with
-that ratification, and so managed to introduce an example of the old
-properties which escaped the scope of the later cleanup and has thus
-continued to be dutifully copied for new boards despite being useless.
-Clean up these remaining undocumented anachronisms to minimise any
-further confusion.
-
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
 
-Presented as one big hwmon patch for simplicity, but the DT changes
-can quite easily be broken out by platform if maintainers prefer.
+Notes:
+    v2: New patch
+    
+    v3: No change
+    
+    v4: No change
+    
+    v5: No change
+    
+    v6: No change
 
-Robin.
+ drivers/mtd/nand/raw/Kconfig                     | 14 +-------------
+ drivers/mtd/nand/raw/Makefile                    |  3 +--
+ drivers/mtd/nand/raw/ingenic/Kconfig             | 13 +++++++++++++
+ drivers/mtd/nand/raw/ingenic/Makefile            |  2 ++
+ drivers/mtd/nand/raw/{ => ingenic}/jz4740_nand.c |  0
+ drivers/mtd/nand/raw/{ => ingenic}/jz4780_bch.c  |  0
+ drivers/mtd/nand/raw/{ => ingenic}/jz4780_bch.h  |  0
+ drivers/mtd/nand/raw/{ => ingenic}/jz4780_nand.c |  0
+ 8 files changed, 17 insertions(+), 15 deletions(-)
+ create mode 100644 drivers/mtd/nand/raw/ingenic/Kconfig
+ create mode 100644 drivers/mtd/nand/raw/ingenic/Makefile
+ rename drivers/mtd/nand/raw/{ => ingenic}/jz4740_nand.c (100%)
+ rename drivers/mtd/nand/raw/{ => ingenic}/jz4780_bch.c (100%)
+ rename drivers/mtd/nand/raw/{ => ingenic}/jz4780_bch.h (100%)
+ rename drivers/mtd/nand/raw/{ => ingenic}/jz4780_nand.c (100%)
 
- Documentation/devicetree/bindings/hwmon/pwm-fan.txt | 2 --
- arch/arm/boot/dts/exynos4412-odroidu3.dts           | 2 --
- arch/arm/boot/dts/exynos5410-odroidxu.dts           | 2 --
- arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi  | 2 --
- arch/arm/boot/dts/imx6qdl-emcon.dtsi                | 2 --
- arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts  | 2 --
- arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi       | 2 --
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi       | 2 --
- 8 files changed, 16 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-index 49ca5d83ed13..716e84f3bbb2 100644
---- a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-+++ b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-@@ -12,8 +12,6 @@ Optional properties:
- Example:
- 	fan0: pwm-fan {
- 		compatible = "pwm-fan";
--		cooling-min-state = <0>;
--		cooling-max-state = <3>;
- 		#cooling-cells = <2>;
- 		pwms = <&pwm 0 10000 0>;
- 		cooling-levels = <0 102 170 230>;
-diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-index 2bdf899df436..6d400b01d9c9 100644
---- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
-+++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-@@ -34,8 +34,6 @@
- 	fan0: pwm-fan {
- 		compatible = "pwm-fan";
- 		pwms = <&pwm 0 10000 0>;
--		cooling-min-state = <0>;
--		cooling-max-state = <3>;
- 		#cooling-cells = <2>;
- 		cooling-levels = <0 102 170 230>;
- 	};
-diff --git a/arch/arm/boot/dts/exynos5410-odroidxu.dts b/arch/arm/boot/dts/exynos5410-odroidxu.dts
-index 434a7591ff63..8f9e08f940ab 100644
---- a/arch/arm/boot/dts/exynos5410-odroidxu.dts
-+++ b/arch/arm/boot/dts/exynos5410-odroidxu.dts
-@@ -38,8 +38,6 @@
- 	fan0: pwm-fan {
- 		compatible = "pwm-fan";
- 		pwms = <&pwm 0 20972 0>;
--		cooling-min-state = <0>;
--		cooling-max-state = <3>;
- 		#cooling-cells = <2>;
- 		cooling-levels = <0 130 170 230>;
- 	};
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-index 5f195ad7e467..93a48f2dda49 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-@@ -44,8 +44,6 @@
- 	fan0: pwm-fan {
- 		compatible = "pwm-fan";
- 		pwms = <&pwm 0 20972 0>;
--		cooling-min-state = <0>;
--		cooling-max-state = <3>;
- 		#cooling-cells = <2>;
- 		cooling-levels = <0 130 170 230>;
- 	};
-diff --git a/arch/arm/boot/dts/imx6qdl-emcon.dtsi b/arch/arm/boot/dts/imx6qdl-emcon.dtsi
-index 397e205551c4..70d26616d771 100644
---- a/arch/arm/boot/dts/imx6qdl-emcon.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-emcon.dtsi
-@@ -77,8 +77,6 @@
+diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
+index e604625e2dfa..705863c6709a 100644
+--- a/drivers/mtd/nand/raw/Kconfig
++++ b/drivers/mtd/nand/raw/Kconfig
+@@ -470,19 +470,7 @@ config MTD_NAND_NUC900
+ 	  This enables the driver for the NAND Flash on evaluation board based
+ 	  on w90p910 / NUC9xx.
  
- 	pwm_fan: pwm-fan {
- 		compatible = "pwm-fan";
--		cooling-min-state = <0>;
--		cooling-max-state = <4>;
- 		#cooling-cells = <2>;
- 		pwms = <&pwm4 0 50000>;
- 		cooling-levels = <0 64 127 191 255>;
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-index b62e96945846..73801b48d1d8 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-@@ -57,8 +57,6 @@
- 		pwms = <&pwm4 0 45334>;
+-config MTD_NAND_JZ4740
+-	tristate "Support for JZ4740 SoC NAND controller"
+-	depends on MACH_JZ4740 || COMPILE_TEST
+-	depends on HAS_IOMEM
+-	help
+-	  Enables support for NAND Flash on JZ4740 SoC based boards.
+-
+-config MTD_NAND_JZ4780
+-	tristate "Support for NAND on JZ4780 SoC"
+-	depends on JZ4780_NEMC
+-	help
+-	  Enables support for NAND Flash connected to the NEMC on JZ4780 SoC
+-	  based boards, using the BCH controller for hardware error correction.
++source "drivers/mtd/nand/raw/ingenic/Kconfig"
  
- 		cooling-levels = <0 64 128 255>;
--		cooling-min-state = <0>;
--		cooling-max-state = <3>;
- 		#cooling-cells = <2>;
- 	};
- 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi b/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-index 1b35d612b660..cc35c88dafd9 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-@@ -56,8 +56,6 @@
- 			fan: fan@18 {
- 				compatible = "ti,amc6821";
- 				reg = <0x18>;
--				cooling-min-state = <0>;
--				cooling-max-state = <9>;
- 				#cooling-cells = <2>;
- 			};
- 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-index 0130b9f98c9d..490be7a6a851 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-@@ -369,8 +369,6 @@
- 	fan: fan@18 {
- 		compatible = "ti,amc6821";
- 		reg = <0x18>;
--		cooling-min-state = <0>;
--		cooling-max-state = <9>;
- 		#cooling-cells = <2>;
- 	};
- 
+ config MTD_NAND_FSMC
+ 	tristate "Support for NAND on ST Micros FSMC"
+diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makefile
+index 5a5a72f0793e..5552c4a9f2cf 100644
+--- a/drivers/mtd/nand/raw/Makefile
++++ b/drivers/mtd/nand/raw/Makefile
+@@ -45,8 +45,7 @@ obj-$(CONFIG_MTD_NAND_NUC900)		+= nuc900_nand.o
+ obj-$(CONFIG_MTD_NAND_MPC5121_NFC)	+= mpc5121_nfc.o
+ obj-$(CONFIG_MTD_NAND_VF610_NFC)	+= vf610_nfc.o
+ obj-$(CONFIG_MTD_NAND_RICOH)		+= r852.o
+-obj-$(CONFIG_MTD_NAND_JZ4740)		+= jz4740_nand.o
+-obj-$(CONFIG_MTD_NAND_JZ4780)		+= jz4780_nand.o jz4780_bch.o
++obj-y					+= ingenic/
+ obj-$(CONFIG_MTD_NAND_GPMI_NAND)	+= gpmi-nand/
+ obj-$(CONFIG_MTD_NAND_XWAY)		+= xway_nand.o
+ obj-$(CONFIG_MTD_NAND_BCM47XXNFLASH)	+= bcm47xxnflash/
+diff --git a/drivers/mtd/nand/raw/ingenic/Kconfig b/drivers/mtd/nand/raw/ingenic/Kconfig
+new file mode 100644
+index 000000000000..67806c87b2c4
+--- /dev/null
++++ b/drivers/mtd/nand/raw/ingenic/Kconfig
+@@ -0,0 +1,13 @@
++config MTD_NAND_JZ4740
++	tristate "Support for JZ4740 SoC NAND controller"
++	depends on MACH_JZ4740 || COMPILE_TEST
++	depends on HAS_IOMEM
++	help
++	  Enables support for NAND Flash on JZ4740 SoC based boards.
++
++config MTD_NAND_JZ4780
++	tristate "Support for NAND on JZ4780 SoC"
++	depends on JZ4780_NEMC
++	help
++	  Enables support for NAND Flash connected to the NEMC on JZ4780 SoC
++	  based boards, using the BCH controller for hardware error correction.
+diff --git a/drivers/mtd/nand/raw/ingenic/Makefile b/drivers/mtd/nand/raw/ingenic/Makefile
+new file mode 100644
+index 000000000000..44c2ca053d24
+--- /dev/null
++++ b/drivers/mtd/nand/raw/ingenic/Makefile
+@@ -0,0 +1,2 @@
++obj-$(CONFIG_MTD_NAND_JZ4740) += jz4740_nand.o
++obj-$(CONFIG_MTD_NAND_JZ4780) += jz4780_nand.o jz4780_bch.o
+diff --git a/drivers/mtd/nand/raw/jz4740_nand.c b/drivers/mtd/nand/raw/ingenic/jz4740_nand.c
+similarity index 100%
+rename from drivers/mtd/nand/raw/jz4740_nand.c
+rename to drivers/mtd/nand/raw/ingenic/jz4740_nand.c
+diff --git a/drivers/mtd/nand/raw/jz4780_bch.c b/drivers/mtd/nand/raw/ingenic/jz4780_bch.c
+similarity index 100%
+rename from drivers/mtd/nand/raw/jz4780_bch.c
+rename to drivers/mtd/nand/raw/ingenic/jz4780_bch.c
+diff --git a/drivers/mtd/nand/raw/jz4780_bch.h b/drivers/mtd/nand/raw/ingenic/jz4780_bch.h
+similarity index 100%
+rename from drivers/mtd/nand/raw/jz4780_bch.h
+rename to drivers/mtd/nand/raw/ingenic/jz4780_bch.h
+diff --git a/drivers/mtd/nand/raw/jz4780_nand.c b/drivers/mtd/nand/raw/ingenic/jz4780_nand.c
+similarity index 100%
+rename from drivers/mtd/nand/raw/jz4780_nand.c
+rename to drivers/mtd/nand/raw/ingenic/jz4780_nand.c
 -- 
-2.20.1.dirty
+2.11.0
