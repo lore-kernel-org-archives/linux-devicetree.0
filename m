@@ -1,56 +1,41 @@
-Return-Path: <vkoul@kernel.org>
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 1/6] arm64: dts: qcom: qcs404: Add Ethernet node
-Date: Sun, 24 Mar 2019 22:02:04 +0530
-Message-Id: <20190324163209.17312-2-vkoul@kernel.org>
-In-Reply-To: <20190324163209.17312-1-vkoul@kernel.org>
-References: <20190324163209.17312-1-vkoul@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>
+Return-Path: <SRS0=QSCE=RW=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH RESEND] dt-bindings: irqchip: renesas-irqc: Document r8a774c0 support
+Date: Tue, 19 Mar 2019 11:02:01 +0000
+Message-Id: <1552993321-19646-1-git-send-email-fabrizio.castro@bp.renesas.com>
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add the ethernet node found in QCS404 platform.
+Document RZ/G2E (R8A774C0) SoC bindings.
 
-Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Hello Marc,
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index e8fd26633d57..32f2f51bbf7f 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -479,6 +479,27 @@
- 			status = "okay";
- 		};
- 
-+		ethernet: ethernet@7a80000 {
-+			compatible = "qcom,qcs404-ethqos";
-+			reg = <0x07a80000 0x10000>,
-+				<0x07a96000 0x100>;
-+			reg-names = "stmmaceth", "rgmii";
-+			clock-names = "stmmaceth", "pclk", "ptp_ref", "rgmii";
-+			clocks = <&gcc GCC_ETH_AXI_CLK>,
-+				<&gcc GCC_ETH_SLAVE_AHB_CLK>,
-+				<&gcc GCC_ETH_PTP_CLK>,
-+				<&gcc GCC_ETH_RGMII_CLK>;
-+			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "macirq", "eth_lpi";
-+
-+			snps,tso;
-+			rx-fifo-depth = <4096>;
-+			tx-fifo-depth = <4096>;
-+
-+			status = "disabled";
-+		};
-+
- 		wifi: wifi@a000000 {
- 			compatible = "qcom,wcn3990-wifi";
- 			reg = <0xa000000 0x800000>;
+I am resending this patch as per our discussion on here:
+https://patchwork.kernel.org/patch/10729743/
+
+Thanks,
+Fab
+
+ Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+index 8de96a4..f977ea7 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+@@ -16,6 +16,7 @@ Required properties:
+     - "renesas,irqc-r8a7793" (R-Car M2-N)
+     - "renesas,irqc-r8a7794" (R-Car E2)
+     - "renesas,intc-ex-r8a774a1" (RZ/G2M)
++    - "renesas,intc-ex-r8a774c0" (RZ/G2E)
+     - "renesas,intc-ex-r8a7795" (R-Car H3)
+     - "renesas,intc-ex-r8a7796" (R-Car M3-W)
+     - "renesas,intc-ex-r8a77965" (R-Car M3-N)
 -- 
-2.20.1
+2.7.4
