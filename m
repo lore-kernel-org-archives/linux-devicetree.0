@@ -1,74 +1,123 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH RESEND V6 0/5] Add i.MX7ULP EVK PWM backlight support
-Date: Tue, 19 Mar 2019 11:25:03 +0100
-Message-ID: <20190319102503.q6svn7s6yz7hw2zd@pengutronix.de>
-References: <1552979097-5814-1-git-send-email-Anson.Huang@nxp.com>
- <20190319081446.m5eboi4v54er3niv@pengutronix.de>
- <DB3PR0402MB39165E52E113BAB7B66AFB24F5400@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v8 01/15] drm/sun4i: dsi: Fix video start
+ delay computation
+Date: Tue, 19 Mar 2019 11:25:20 +0100
+Message-ID: <20190319102520.ldgjtyzrphuib3td@flea>
+References: <20190311133637.18334-1-jagan@amarulasolutions.com>
+ <20190311133637.18334-2-jagan@amarulasolutions.com>
+ <20190311153734.izg44ijwqqh2vpxc@flea>
+ <CAMty3ZDDARP02qMJZ9CXeiMv=kghoiUHgEAV9b4q+SrbLss40Q@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4kxxtlmvi7tknwsq"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBFMHYPSAKGQEJC7O77A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB39165E52E113BAB7B66AFB24F5400@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Robin Gong <yibin.gong@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "stefan@agner.ch" <stefan@agner.ch>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nx>
+In-Reply-To: <CAMty3ZDDARP02qMJZ9CXeiMv=kghoiUHgEAV9b4q+SrbLss40Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 09:11:38AM +0000, Anson Huang wrote:
-> Hi,
-> 
-> Best Regards!
-> Anson Huang
-> 
-> > -----Original Message-----
-> > From: Uwe Kleine-König [mailto:u.kleine-koenig@pengutronix.de]
-> > Sent: 2019年3月19日 16:15
-> > To: Anson Huang <anson.huang@nxp.com>
-> > Cc: thierry.reding@gmail.com; robh+dt@kernel.org; mark.rutland@arm.com;
-> > shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
-> > festevam@gmail.com; linux@armlinux.org.uk; stefan@agner.ch;
-> > otavio@ossystems.com.br; Leonard Crestez <leonard.crestez@nxp.com>;
-> > schnitzeltony@gmail.com; jan.tuerk@emtrion.com; Robin Gong
-> > <yibin.gong@nxp.com>; linux-pwm@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> > kernel@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>
-> > Subject: Re: [PATCH RESEND V6 0/5] Add i.MX7ULP EVK PWM backlight
-> > support
-> > 
-> > On Tue, Mar 19, 2019 at 07:09:56AM +0000, Anson Huang wrote:
-> > > i.MX7ULP EVK board has MIPI-DSI display, its backlight is supplied by
-> > > TPM PWM module, this patch set enables i.MX7ULP TPM PWM driver
-> > support
-> > > and also add backlight support for MIPI-DSI display.
-> > 
-> > Given that you actually changed something compared to v6, this is not a
-> > resend but v7. Also I suggest to practise a bit of patience before sending out
-> > a new revision to prevent people still looking at the previous round. I just
-> > gave feedback to the original v6 which you obviously didn't address :-|
-> > 
-> > Also a highlevel changelog for the series (here something like: "Properly
-> > separate dt changes into soc-specific and machine-specific changes") is
-> > helpful.
-> 
-> OK, will pay attention to that, the resend is just because the patch content is NOT
-> Changed, just re-organize the DT patch.
-> 
-> Also, I understand that sending the patch version too quickly will result in too many
-> Patch version in this thread, but I just want to address the comments ASAP when I
-> Have time, hope that does NOT bother reviewer too much...
 
-A middle way is to provide a git-tree somewhere and in reply to a review
-just say: I updated the patches according to your feedback, but will
-wait a bit more for further feedback before resending. If you're
-interested the current work in progress can be found at git://... in the
-xyz branch.
+--4kxxtlmvi7tknwsq
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Best regards
-Uwe
+On Mon, Mar 11, 2019 at 09:31:11PM +0530, Jagan Teki wrote:
+> On Mon, Mar 11, 2019 at 9:07 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >
+> > On Mon, Mar 11, 2019 at 07:06:23PM +0530, Jagan Teki wrote:
+> > > Vertical video start delay is computed by excluding vertical front
+> > > porch value from total vertical timings.
+> > >
+> > > This clearly confirmed from BSP code and here how it computed,
+> > >
+> > > (drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
+> > > u32 vfp = panel->lcd_vt - panel->lcd_y - panel->lcd_vbp;
+> > > => (panel->lcd_vt) - panel->lcd_y - (panel->lcd_vbp)
+> > > => (timmings->ver_front_porch + panel->lcd_vbp + panel->lcd_y)
+> > >    - panel->lcd_y - (panel->lcd_vbp)
+> > > => timmings->ver_front_porch + panel->lcd_vbp + panel->lcd_y
+> > >                            - panel->lcd_y - panel->lcd_vbp
+> > > => timmings->ver_front_porch
+> > >
+> > > But the current driver is assuming it can exclude vertical front
+> > > porch along with vertical sync values from total vertical timings,
+> > > which resulting wrong start delay indeed wrong picture rendering
+> > > in the panel.
+> >
+> > Same story here: which panel, which datasheet, which "wrong picture
+> > rendering"?
+>
+> It's bananapi,s070wv20-ct16 DSI
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+You're answering one out of three questions.
+
+> > > Example: timings, where it produces the issue.
+> > > {
+> > >       .vdisplay       = 600,
+> > >       .vsync_start    = 600 + 12,
+> > >       .vsync_end      = 600 + 12 + 2,
+> > >       .vtotal         = 600 + 12 + 2 + 21,
+> > > }
+> >
+> > Can you 100% trust those timings?
+>
+> ie. reason, I have given the Mainline timings [1]. The above timings
+> are wrongly mentioned actual timings are from [1]
+
+You're still answering partially here. Those timings are working for
+RGB, you have no proof that we need to make the same adjustments for
+DSI.
+
+> > > It produces the desired start delay value as 19 but the correct working
+> > > value should be 513.
+> > >
+> > > So, Fix it by computing proper video start delay.
+> > >
+> > > Fixes: 69006ef0ecb1 ("drm/sun4i: dsi: Change the start delay calculation")
+> > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > ---
+> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 10 ++++++++--
+> > >  1 file changed, 8 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > index 62a508420227..8d6292c0158b 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > @@ -364,8 +364,14 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
+> > >  static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
+> > >                                          struct drm_display_mode *mode)
+> > >  {
+> > > -     u16 start = clamp(mode->vtotal - mode->vdisplay - 10, 8, 100);
+> > > -     u16 delay = mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
+> > > +     u16 delay = mode->vtotal - (mode->vsync_start - mode->vdisplay);
+> > > +
+> > > +     /**
+> > > +      * BSP comment:
+> > > +      * put start_delay to tcon. set ready sync early to dramfreq,
+> > > +      * so set start_delay 1
+> > > +      */
+> >
+> > That doesn't make any sense to me... What does it mean?
+>
+> Which is meaning as above stated as "BSP comment" from here[2]
+
+It doesn't matter where you took it from. If you cannot explain what
+happen, putting a random label that doesn't explain anything will not
+help.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--4kxxtlmvi7tknwsq--
