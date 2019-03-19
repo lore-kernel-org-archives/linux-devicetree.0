@@ -1,43 +1,69 @@
-Return-Path: <SRS0=/J0V=RW=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH 1/5] ARM: dts: imx7s: add mipi phy power domain
-Date: Tue, 19 Mar 2019 16:59:59 +0000
-Message-Id: <20190319170003.21261-2-rui.silva@linaro.org>
-In-Reply-To: <20190319170003.21261-1-rui.silva@linaro.org>
-References: <20190319170003.21261-1-rui.silva@linaro.org>
+Return-Path: <SRS0=Hrfh=RW=verge.net.au=horms@kernel.org>
+Date: Tue, 19 Mar 2019 12:55:01 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a774c0: Add CANFD support
+Message-ID: <20190319115500.mju7gwonrza32p66@verge.net.au>
+References: <1551438256-22065-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdWNqFkSRnX9kGGFOCMTEHguQtsD=JfqLaHUpB=kgETPWA@mail.gmail.com>
+ <20190304095856.uqqwhw46oueb2vtf@verge.net.au>
+ <TY1PR01MB1770F48284CA48C991052263C0710@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <20190306125359.xqtuq35ccwfbbk5q@verge.net.au>
+ <TY1PR01MB17701F90AC74BA91D68B1ABDC0400@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TY1PR01MB17701F90AC74BA91D68B1ABDC0400@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add power domain index 0 related with mipi-phy to imx7s.
+On Tue, Mar 19, 2019 at 11:16:36AM +0000, Fabrizio Castro wrote:
+> Hello Simon,
+> 
+> > From: Simon Horman <horms@verge.net.au>
+> > Sent: 06 March 2019 12:54
+> > Subject: Re: [PATCH] arm64: dts: renesas: r8a774c0: Add CANFD support
+> > 
+> > On Mon, Mar 04, 2019 at 10:10:49AM +0000, Fabrizio Castro wrote:
+> > > Hello Simon,
+> > >
+> > > Thank you for your feedback!
+> > >
+> > > > From: Simon Horman <horms@verge.net.au>
+> > > > Sent: 04 March 2019 09:59
+> > > > To: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > > Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>; Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> > <mark.rutland@arm.com>;
+> > > > Magnus Damm <magnus.damm@gmail.com>; Linux-Renesas <linux-renesas-soc@vger.kernel.org>; open list:OPEN FIRMWARE
+> > AND
+> > > > FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>; Chris Paterson <Chris.Paterson2@renesas.com>; Biju Das
+> > > > <biju.das@bp.renesas.com>
+> > > > Subject: Re: [PATCH] arm64: dts: renesas: r8a774c0: Add CANFD support
+> > > >
+> > > > On Fri, Mar 01, 2019 at 02:38:53PM +0100, Geert Uytterhoeven wrote:
+> > > > > On Fri, Mar 1, 2019 at 12:04 PM Fabrizio Castro
+> > > > > <fabrizio.castro@bp.renesas.com> wrote:
+> > > > > > The CANFD implementation on the RZ/G2E (a.k.a. r8a774c0) is
+> > > > > > identical to the one found on the r8a77990.
+> > > > > >
+> > > > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > > >
+> > > > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > >
+> > > > Thanks, applied.
+> > >
+> > > The patch that adds R8A774C0_CLK_CANFD (https://patchwork.kernel.org/patch/10766867/)
+> > > Isn't in a release candidate just yet, therefore I was expecting this patch to be deferred to
+> > > to when R8A774C0_CLK_CANFD is finally available, similarly to:
+> > > https://www.spinics.net/lists/netdev/msg547320.html
+> > >
+> > > Was I wrong?
+> > 
+> > No, I was wrong in sending out the email above.
+> > 
+> > The patch is still deferred.
+> 
+> My understanding is that this patch can be taken now, and it still applies neatly.
 
-While at it rename pcie power-domain node to remove pgc prefix.
-
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
----
- arch/arm/boot/dts/imx7s.dtsi | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index e88f53a4c7f4..9a680d3d6424 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -606,7 +606,13 @@
- 					#address-cells = <1>;
- 					#size-cells = <0>;
- 
--					pgc_pcie_phy: pgc-power-domain@1 {
-+					pgc_mipi_phy: power-domain@0 {
-+						#power-domain-cells = <0>;
-+						reg = <0>;
-+						power-supply = <&reg_1p0d>;
-+					};
-+
-+					pgc_pcie_phy: power-domain@1 {
- 						#power-domain-cells = <0>;
- 						reg = <1>;
- 						power-supply = <&reg_1p0d>;
--- 
-2.21.0
+Thanks, I agree this should be ready now.
+I've applied it for v5.2.
