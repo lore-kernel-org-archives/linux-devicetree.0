@@ -1,156 +1,109 @@
-Return-Path: <SRS0=Paxx=RQ=mediatek.com=stanley.chu@kernel.org>
-From: Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v4 2/7] scsi: ufs-qcom: Re-factor ufshcd_get_pwr_dev_param
-Date: Wed, 13 Mar 2019 12:10:06 +0800
-Message-ID: <1552450211-7149-4-git-send-email-stanley.chu@mediatek.com>
-In-Reply-To: <1552450211-7149-1-git-send-email-stanley.chu@mediatek.com>
-References: <1552450211-7149-1-git-send-email-stanley.chu@mediatek.com>
+Return-Path: <SRS0=L7Fd=RW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55502 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbfCSRA2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Mar 2019 13:00:28 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 4so17593974wmf.5
+        for <devicetree@vger.kernel.org>; Tue, 19 Mar 2019 10:00:27 -0700 (PDT)
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH 5/5] ARM: dts: imx7s-warp: add ov2680 sensor node
+Date: Tue, 19 Mar 2019 17:00:03 +0000
+Message-Id: <20190319170003.21261-6-rui.silva@linaro.org>
+In-Reply-To: <20190319170003.21261-1-rui.silva@linaro.org>
+References: <20190319170003.21261-1-rui.silva@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, chunfeng.yun@mediatek.com, kishon@ti.com, martin.petersen@oracle.com, avri.altman@wdc.com, alim.akhtar@samsung.com, pedrom.sousa@synopsys.com
-Cc: vivek.gautam@codeaurora.org, subhashj@codeaurora.org, liwei213@huawei.com, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, kuohong.wang@mediatek.com, peter.wang@mediatek.com, chun-hung.wu@mediatek.com, Stanley Chu <stanley.chu@mediatek.com>
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-ufshcd_get_pwr_dev_param function and ufs_dev_params struct
-are re-factored to ufs common driver thus change the way this
-driver used.
+Warp7 comes with a Omnivision OV2680 sensor, add the node here to make
+complete the camera data path for this system. Add the needed regulator
+to the analog voltage supply, the port and endpoints in mipi_csi node
+and the pinctrl for the reset gpio.
 
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- drivers/scsi/ufs/ufs-qcom.c | 106 ++----------------------------------
- 1 file changed, 4 insertions(+), 102 deletions(-)
+ arch/arm/boot/dts/imx7s-warp.dts | 45 ++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-index 3aeadb14aae1..a6b6f6eb9061 100644
---- a/drivers/scsi/ufs/ufs-qcom.c
-+++ b/drivers/scsi/ufs/ufs-qcom.c
-@@ -595,104 +595,6 @@ static int ufs_qcom_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
- 	return err;
- }
+diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
+index 5158c2d958a7..6ca68ab33b61 100644
+--- a/arch/arm/boot/dts/imx7s-warp.dts
++++ b/arch/arm/boot/dts/imx7s-warp.dts
+@@ -55,6 +55,14 @@
+ 		regulator-always-on;
+ 	};
  
--struct ufs_qcom_dev_params {
--	u32 pwm_rx_gear;	/* pwm rx gear to work in */
--	u32 pwm_tx_gear;	/* pwm tx gear to work in */
--	u32 hs_rx_gear;		/* hs rx gear to work in */
--	u32 hs_tx_gear;		/* hs tx gear to work in */
--	u32 rx_lanes;		/* number of rx lanes */
--	u32 tx_lanes;		/* number of tx lanes */
--	u32 rx_pwr_pwm;		/* rx pwm working pwr */
--	u32 tx_pwr_pwm;		/* tx pwm working pwr */
--	u32 rx_pwr_hs;		/* rx hs working pwr */
--	u32 tx_pwr_hs;		/* tx hs working pwr */
--	u32 hs_rate;		/* rate A/B to work in HS */
--	u32 desired_working_mode;
--};
--
--static int ufs_qcom_get_pwr_dev_param(struct ufs_qcom_dev_params *qcom_param,
--				      struct ufs_pa_layer_attr *dev_max,
--				      struct ufs_pa_layer_attr *agreed_pwr)
--{
--	int min_qcom_gear;
--	int min_dev_gear;
--	bool is_dev_sup_hs = false;
--	bool is_qcom_max_hs = false;
--
--	if (dev_max->pwr_rx == FAST_MODE)
--		is_dev_sup_hs = true;
--
--	if (qcom_param->desired_working_mode == FAST) {
--		is_qcom_max_hs = true;
--		min_qcom_gear = min_t(u32, qcom_param->hs_rx_gear,
--				      qcom_param->hs_tx_gear);
--	} else {
--		min_qcom_gear = min_t(u32, qcom_param->pwm_rx_gear,
--				      qcom_param->pwm_tx_gear);
--	}
--
--	/*
--	 * device doesn't support HS but qcom_param->desired_working_mode is
--	 * HS, thus device and qcom_param don't agree
--	 */
--	if (!is_dev_sup_hs && is_qcom_max_hs) {
--		pr_err("%s: failed to agree on power mode (device doesn't support HS but requested power is HS)\n",
--			__func__);
--		return -ENOTSUPP;
--	} else if (is_dev_sup_hs && is_qcom_max_hs) {
--		/*
--		 * since device supports HS, it supports FAST_MODE.
--		 * since qcom_param->desired_working_mode is also HS
--		 * then final decision (FAST/FASTAUTO) is done according
--		 * to qcom_params as it is the restricting factor
--		 */
--		agreed_pwr->pwr_rx = agreed_pwr->pwr_tx =
--						qcom_param->rx_pwr_hs;
--	} else {
--		/*
--		 * here qcom_param->desired_working_mode is PWM.
--		 * it doesn't matter whether device supports HS or PWM,
--		 * in both cases qcom_param->desired_working_mode will
--		 * determine the mode
--		 */
--		 agreed_pwr->pwr_rx = agreed_pwr->pwr_tx =
--						qcom_param->rx_pwr_pwm;
--	}
--
--	/*
--	 * we would like tx to work in the minimum number of lanes
--	 * between device capability and vendor preferences.
--	 * the same decision will be made for rx
--	 */
--	agreed_pwr->lane_tx = min_t(u32, dev_max->lane_tx,
--						qcom_param->tx_lanes);
--	agreed_pwr->lane_rx = min_t(u32, dev_max->lane_rx,
--						qcom_param->rx_lanes);
--
--	/* device maximum gear is the minimum between device rx and tx gears */
--	min_dev_gear = min_t(u32, dev_max->gear_rx, dev_max->gear_tx);
--
--	/*
--	 * if both device capabilities and vendor pre-defined preferences are
--	 * both HS or both PWM then set the minimum gear to be the chosen
--	 * working gear.
--	 * if one is PWM and one is HS then the one that is PWM get to decide
--	 * what is the gear, as it is the one that also decided previously what
--	 * pwr the device will be configured to.
--	 */
--	if ((is_dev_sup_hs && is_qcom_max_hs) ||
--	    (!is_dev_sup_hs && !is_qcom_max_hs))
--		agreed_pwr->gear_rx = agreed_pwr->gear_tx =
--			min_t(u32, min_dev_gear, min_qcom_gear);
--	else if (!is_dev_sup_hs)
--		agreed_pwr->gear_rx = agreed_pwr->gear_tx = min_dev_gear;
--	else
--		agreed_pwr->gear_rx = agreed_pwr->gear_tx = min_qcom_gear;
--
--	agreed_pwr->hs_rate = qcom_param->hs_rate;
--	return 0;
--}
--
- #ifdef CONFIG_MSM_BUS_SCALING
- static int ufs_qcom_get_bus_vote(struct ufs_qcom_host *host,
- 		const char *speed_mode)
-@@ -920,7 +822,7 @@ static int ufs_qcom_pwr_change_notify(struct ufs_hba *hba,
- {
- 	u32 val;
- 	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
--	struct ufs_qcom_dev_params ufs_qcom_cap;
-+	struct ufs_dev_params ufs_qcom_cap;
- 	int ret = 0;
++	reg_peri_3p15v: regulator-peri-3p15v {
++		compatible = "regulator-fixed";
++		regulator-name = "peri_3p15v_reg";
++		regulator-min-microvolt = <3150000>;
++		regulator-max-microvolt = <3150000>;
++		regulator-always-on;
++	};
++
+ 	sound {
+ 		compatible = "simple-audio-card";
+ 		simple-audio-card,name = "imx7-sgtl5000";
+@@ -178,6 +186,27 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
++
++	ov2680: camera@36 {
++		compatible = "ovti,ov2680";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ov2680>;
++		reg = <0x36>;
++		clocks = <&osc>;
++		clock-names = "xvclk";
++		reset-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
++		DOVDD-supply = <&sw2_reg>;
++		DVDD-supply = <&sw2_reg>;
++		AVDD-supply = <&reg_peri_3p15v>;
++
++		port {
++			ov2680_to_mipi: endpoint {
++				remote-endpoint = <&mipi_from_sensor>;
++				clock-lanes = <0>;
++				data-lanes = <1>;
++			};
++		};
++	};
+ };
  
- 	if (!dev_req_params) {
-@@ -959,9 +861,9 @@ static int ufs_qcom_pwr_change_notify(struct ufs_hba *hba,
- 				ufs_qcom_cap.hs_rx_gear = UFS_HS_G2;
- 		}
+ &i2c3 {
+@@ -285,6 +314,16 @@
+ 	clock-frequency = <166000000>;
+ 	status = "okay";
+ 	fsl,csis-hs-settle = <3>;
++
++	port@0 {
++		reg = <0>;
++
++		mipi_from_sensor: endpoint {
++			remote-endpoint = <&ov2680_to_mipi>;
++			data-lanes = <1>;
++		};
++
++	};
+ };
  
--		ret = ufs_qcom_get_pwr_dev_param(&ufs_qcom_cap,
--						 dev_max_params,
--						 dev_req_params);
-+		ret = ufshcd_get_pwr_dev_param(&ufs_qcom_cap,
-+					       dev_max_params,
-+					       dev_req_params);
- 		if (ret) {
- 			pr_err("%s: failed to determine capabilities\n",
- 					__func__);
+ &wdog1 {
+@@ -341,6 +380,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_ov2680: ov2660grp {
++		fsl,pins = <
++			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x14
++		>;
++	};
++
+ 	pinctrl_sai1: sai1grp {
+ 		fsl,pins = <
+ 			MX7D_PAD_SAI1_RX_DATA__SAI1_RX_DATA0	0x1f
 -- 
-2.18.0
+2.21.0
