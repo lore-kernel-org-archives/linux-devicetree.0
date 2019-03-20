@@ -1,40 +1,41 @@
-Return-Path: <SRS0=KptV=RY=nxp.com=anson.huang@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V9 3/4] arm64: defconfig: add support for i.MX system
- controller watchdog
-Date: Thu, 21 Mar 2019 02:26:57 +0000
-Message-ID: <1553134884-1720-4-git-send-email-Anson.Huang@nxp.com>
-References: <1553134884-1720-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1553134884-1720-1-git-send-email-Anson.Huang@nxp.com>
+Return-Path: <SRS0=p57L=RX=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1400123.outbound.protection.outlook.com ([40.107.140.123]:35900
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726832AbfCTUlq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Mar 2019 16:41:46 -0400
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 0/2] ARM: dts: rskrza1: Add I2C and remaining LEDs
+Date: Wed, 20 Mar 2019 20:41:43 +0000
+Message-ID: <TY1PR01MB15627B138E7BE709BC483E2A8A410@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20190320194410.14870-1-geert+renesas@glider.be>
+In-Reply-To: <20190320194410.14870-1-geert+renesas@glider.be>
 Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-To: "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, Andy Gross <andy.gross@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Enable CONFIG_IMX_SC_WDT as module to support i.MX system
-controller watchdog.
+Hi Geert,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-no changes.
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+On Wed, Mar 20, 2019, Geert Uytterhoeven wrote:
+> 	Hi Simon, Magnus, Chris,
+>=20
+> This patch series adds support for devices on the I2C bus on the RSKRZA1
+> board, including the GPIO expander that drives 3 LEDs.
+>=20
+> Thanks!
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index f575401..b4000aa 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -429,6 +429,7 @@ CONFIG_WATCHDOG=3Dy
- CONFIG_ARM_SP805_WATCHDOG=3Dy
- CONFIG_S3C2410_WATCHDOG=3Dy
- CONFIG_IMX2_WDT=3Dy
-+CONFIG_IMX_SC_WDT=3Dm
- CONFIG_MESON_GXBB_WATCHDOG=3Dm
- CONFIG_MESON_WATCHDOG=3Dm
- CONFIG_RENESAS_WDT=3Dy
---=20
-2.7.4
+Very cool.
+
+I figured there was a more graceful way of turning on/off those LEDs=20
+than what I was doing...which was just writing to the I2C bus in my LED=20
+heartbeat kernel thread.
+https://github.com/renesas-rz/rza_linux-4.19/blob/master/arch/arm/mach-shmo=
+bile/board-rskrza1.c#L145
+
+
+Chris
