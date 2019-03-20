@@ -1,281 +1,139 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 4/4] clk: meson: meson8b: add the VPU clock trees
-Date: Wed, 20 Mar 2019 09:18:27 +0100
-Message-ID: <0439a93e-8338-efca-9a7d-8285710400fb@baylibre.com>
-References: <20190319215121.29340-1-martin.blumenstingl@googlemail.com>
- <20190319215121.29340-5-martin.blumenstingl@googlemail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: ls1088a: add one more thermal zone node
+Date: Wed, 20 Mar 2019 16:18:55 +0800
+Message-ID: <20190320081853.GE4980@dragon>
+References: <20190304032111.21770-1-andy.tang@nxp.com>
+ <20190304062115.GB26041@dragon>
+ <VI1PR04MB433386B86A5E6AA804E9C3B5F3710@VI1PR04MB4333.eurprd04.prod.outlook.com>
+ <dc94e884-f5eb-fe07-27ef-6a94c3174acb@linaro.org>
+ <VI1PR04MB43330C6FAAD0D8EAE901C56FF34D0@VI1PR04MB4333.eurprd04.prod.outlook.com>
+ <cb262e2c-7115-86a5-01ce-4a12d45ee019@linaro.org>
+ <VI1PR04MB43338294C193D1AB4F577E92F34D0@VI1PR04MB4333.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190319215121.29340-5-martin.blumenstingl@googlemail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB43338294C193D1AB4F577E92F34D0@VI1PR04MB4333.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, jbrunet@baylibre.com, linux-amlogic@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Tang <andy.tang@nxp.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19/03/2019 22:51, Martin Blumenstingl wrote:
-> The VPU clock tree is slightly different on all three supported SoCs:
+On Fri, Mar 08, 2019 at 09:57:09AM +0000, Andy Tang wrote:
 > 
-> Meson8 only has an input mux (which chooses between "fclk_div4",
-> "fclk_div3", "fclk_div5" and "fclk_div7"), a divider and a gate.
 > 
-> Meson8b has two VPU clock trees, each with an input mux (using the same
-> parents as the input mux on Meson8), divider and a gates. The final VPU
-> clock is a glitch-free mux which chooses between VPU_1 and VPU_2.
+> > -----Original Message-----
+> > From: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Sent: 2019年3月8日 17:28
+> > To: Andy Tang <andy.tang@nxp.com>; Shawn Guo <shawnguo@kernel.org>
+> > Cc: Leo Li <leoyang.li@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
+> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
+> > linux-kernel@vger.kernel.org; linux-pm@vger.kernel.org; rui.zhang@intel.com;
+> > edubezval@gmail.com
+> > Subject: Re: [PATCH v2] arm64: dts: ls1088a: add one more thermal zone node
+> > 
+> > On 08/03/2019 03:07, Andy Tang wrote:
+> > >
+> > >
+> > >> -----Original Message-----
+> > >> From: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > >> Sent: 2019年3月7日 17:15
+> > >> To: Andy Tang <andy.tang@nxp.com>; Shawn Guo <shawnguo@kernel.org>
+> > >> Cc: Leo Li <leoyang.li@nxp.com>; robh+dt@kernel.org;
+> > >> mark.rutland@arm.com; linux-arm-kernel@lists.infradead.org;
+> > >> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > >> linux-pm@vger.kernel.org; rui.zhang@intel.com; edubezval@gmail.com
+> > >> Subject: Re: [PATCH v2] arm64: dts: ls1088a: add one more thermal
+> > >> zone node
+> > >>
+> > >>>>> PS: In order to keep consistency to the first thermal-zone node,
+> > >>>>> there will be "WARNING: line over 80 characters" warnings.
+> > >>>>>
+> > >>>>>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   43
+> > >>>> +++++++++++++++++++++--
+> > >>>>>  1 files changed, 39 insertions(+), 4 deletions(-)
+> > >>>>>
+> > >>>>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > >>>>> b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > >>>>> index 661137f..9f52bc9 100644
+> > >>>>> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > >>>>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > >>>>> @@ -129,19 +129,19 @@
+> > >>>>>  	};
+> > >>>>>
+> > >>>>>  	thermal-zones {
+> > >>>>> -		cpu_thermal: cpu-thermal {
+> > >>>>> +		ccu {
+> > >>>>
+> > >>>> Is this change really necessary?  What does 'ccu' stand for?
+> > >>> I think so. ccu stands for core cluster unit. cpu is too general.
+> > >>> On some platforms, there are more than one core clusters.
+> > >>> At least we should change it to "core cluster" if short form is not
+> > appropriate.
+> > >>
+> > >> If the sensor is a the cluster level, 'cluster' is enough. IMHO, no
+> > >> need to give a description of what contains the cluster, otherwise
+> > >> you will end up with a 'core-gpu-cluster-l2' name.
+> > > If cluster is specific to core, we can use cluster instead. But I don't think so.
+> > > Cluster may refer to "core cluster", "GPU cluster" etc.
+> > > So, I think "core-cluster" is ok.
+> > > If core was divided to several clusters, we can name it as "core-cluster1",
+> > "core-cluster2" etc.
+> > > If GPU was divided to several clusters we can name it as "gpu-cluster1",
+> > "gpu-cluster2" etc.
+> > 
+> > 
+> > Hi Andy,
+> > 
+> > I think there is a confusion around the 'cpu' term and 'cluster'.
+> > 
+> > ARM would like to see the 'cluster' word to disappear, so whenever possible we
+> > should avoid it.
+> > 
+> > From the hardware side, 'CPU' is usually used to describe the physical chip
+> > containing the cores+cache.
+> > 
+> > From the software side, 'CPU' is usually used to describe the logical process
+> > unit, aka a core or a hyper-thread.
+> > 
+> > As we are in the DT, so describing the hardware, the CPU refers to the group
+> > cores+caches.
+> > 
+> > From my POV, using 'cpu' for the group of cores and 'gpu' for the graphic
+> > sounds ok, and so far that is what is used for the other platforms.
+> > 
+> > If you change the name, that may give the feeling there is something special
+> > with those thermal zones.
 > 
-> Meson8m2 uses a similar clock tree as Meson8b but the last input clock
-> is different: instead of using "fclk_div7" as input Meson8m2 uses
-> "gp_pll". This was probably done in hardware to improve the accuracy of
-> the clock because fclk_div7 gives us 2550MHz / 7 = 364.286MHz while
-> GP_PLL can achieve 364.0MHz.
+> Thanks Daniel for your detailed explanations.
+> 
+> But as you said 'CPU' is usually used to describe the physical chip.
 
-This could be a reason, but they only implement frequency scaling for the VPU
-in the recent 4.9 kernel releases... but we should also implement it upstream
-once we solve how to switch these dual clocks in a clean fashion.
+Here is how I would understand Daniel's comments:
 
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  drivers/clk/meson/meson8b.c | 167 ++++++++++++++++++++++++++++++++++++
->  drivers/clk/meson/meson8b.h |   9 +-
->  2 files changed, 175 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-> index 0d08f1ef7af8..8e091c2d10e6 100644
-> --- a/drivers/clk/meson/meson8b.c
-> +++ b/drivers/clk/meson/meson8b.c
-> @@ -1761,6 +1761,147 @@ static struct clk_regmap meson8m2_gp_pll = {
->  	},
->  };
->  
-> +static const char * const mmeson8b_vpu_0_1_parent_names[] = {
-> +	"fclk_div4", "fclk_div3", "fclk_div5", "fclk_div7"
-> +};
-> +
-> +static const char * const mmeson8m2_vpu_0_1_parent_names[] = {
-> +	"fclk_div4", "fclk_div3", "fclk_div5", "gp_pll"
-> +};
-> +
-> +static struct clk_regmap meson8b_vpu_0_sel = {
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.mask = 0x3,
-> +		.shift = 9,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vpu_0_sel",
-> +		.ops = &clk_regmap_mux_ops,
-> +		.parent_names = mmeson8b_vpu_0_1_parent_names,
-> +		.num_parents = ARRAY_SIZE(mmeson8b_vpu_0_1_parent_names),
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap meson8m2_vpu_0_sel = {
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.mask = 0x3,
-> +		.shift = 9,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vpu_0_sel",
-> +		.ops = &clk_regmap_mux_ops,
-> +		.parent_names = mmeson8m2_vpu_0_1_parent_names,
-> +		.num_parents = ARRAY_SIZE(mmeson8m2_vpu_0_1_parent_names),
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap meson8b_vpu_0_div = {
-> +	.data = &(struct clk_regmap_div_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.shift = 0,
-> +		.width = 7,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vpu_0_div",
-> +		.ops = &clk_regmap_divider_ops,
-> +		.parent_names = (const char *[]){ "vpu_0_sel" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap meson8b_vpu_0 = {
-> +	.data = &(struct clk_regmap_gate_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.bit_idx = 8,
-> +	},
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "vpu_0",
-> +		.ops = &clk_regmap_gate_ops,
-> +		.parent_names = (const char *[]){ "vpu_0_div" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap meson8b_vpu_1_sel = {
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.mask = 0x3,
-> +		.shift = 25,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vpu_1_sel",
-> +		.ops = &clk_regmap_mux_ops,
-> +		.parent_names = mmeson8b_vpu_0_1_parent_names,
-> +		.num_parents = ARRAY_SIZE(mmeson8b_vpu_0_1_parent_names),
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap meson8m2_vpu_1_sel = {
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.mask = 0x3,
-> +		.shift = 25,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vpu_1_sel",
-> +		.ops = &clk_regmap_mux_ops,
-> +		.parent_names = mmeson8m2_vpu_0_1_parent_names,
-> +		.num_parents = ARRAY_SIZE(mmeson8m2_vpu_0_1_parent_names),
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap meson8b_vpu_1_div = {
-> +	.data = &(struct clk_regmap_div_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.shift = 16,
-> +		.width = 7,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vpu_1_div",
-> +		.ops = &clk_regmap_divider_ops,
-> +		.parent_names = (const char *[]){ "vpu_1_sel" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap meson8b_vpu_1 = {
-> +	.data = &(struct clk_regmap_gate_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.bit_idx = 24,
-> +	},
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "vpu_1",
-> +		.ops = &clk_regmap_gate_ops,
-> +		.parent_names = (const char *[]){ "vpu_1_div" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap meson8b_vpu = {
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.mask = 1,
-> +		.shift = 31,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vpu",
-> +		.ops = &clk_regmap_mux_ops,
-> +		.parent_names = (const char *[]){ "vpu_0", "vpu_1" },
-> +		.num_parents = 2,
-> +		.flags = CLK_SET_RATE_NO_REPARENT,
-> +	},
-> +};
-> +
->  /* Everything Else (EE) domain gates */
->  
->  static MESON_GATE(meson8b_ddr, HHI_GCLK_MPEG0, 0);
-> @@ -2024,6 +2165,9 @@ static struct clk_hw_onecell_data meson8_hw_onecell_data = {
->  		[CLKID_MALI_0_SEL]	    = &meson8b_mali_0_sel.hw,
->  		[CLKID_MALI_0_DIV]	    = &meson8b_mali_0_div.hw,
->  		[CLKID_MALI]		    = &meson8b_mali_0.hw,
-> +		[CLKID_VPU_0_SEL]	    = &meson8b_vpu_0_sel.hw,
-> +		[CLKID_VPU_0_DIV]	    = &meson8b_vpu_0_div.hw,
-> +		[CLKID_VPU]		    = &meson8b_vpu_0.hw,
->  		[CLK_NR_CLKS]		    = NULL,
->  	},
->  	.num = CLK_NR_CLKS,
-> @@ -2210,6 +2354,13 @@ static struct clk_hw_onecell_data meson8b_hw_onecell_data = {
->  		[CLKID_MALI_1_DIV]	    = &meson8b_mali_1_div.hw,
->  		[CLKID_MALI_1]		    = &meson8b_mali_1.hw,
->  		[CLKID_MALI]		    = &meson8b_mali.hw,
-> +		[CLKID_VPU_0_SEL]	    = &meson8b_vpu_0_sel.hw,
-> +		[CLKID_VPU_0_DIV]	    = &meson8b_vpu_0_div.hw,
-> +		[CLKID_VPU_0]		    = &meson8b_vpu_0.hw,
-> +		[CLKID_VPU_1_SEL]	    = &meson8b_vpu_1_sel.hw,
-> +		[CLKID_VPU_1_DIV]	    = &meson8b_vpu_1_div.hw,
-> +		[CLKID_VPU_1]		    = &meson8b_vpu_1.hw,
-> +		[CLKID_VPU]		    = &meson8b_vpu.hw,
->  		[CLK_NR_CLKS]		    = NULL,
->  	},
->  	.num = CLK_NR_CLKS,
-> @@ -2398,6 +2549,13 @@ static struct clk_hw_onecell_data meson8m2_hw_onecell_data = {
->  		[CLKID_MALI]		    = &meson8b_mali.hw,
->  		[CLKID_GP_PLL_DCO]	    = &meson8m2_gp_pll_dco.hw,
->  		[CLKID_GP_PLL]		    = &meson8m2_gp_pll.hw,
-> +		[CLKID_VPU_0_SEL]	    = &meson8m2_vpu_0_sel.hw,
-> +		[CLKID_VPU_0_DIV]	    = &meson8b_vpu_0_div.hw,
-> +		[CLKID_VPU_0]		    = &meson8b_vpu_0.hw,
-> +		[CLKID_VPU_1_SEL]	    = &meson8m2_vpu_1_sel.hw,
-> +		[CLKID_VPU_1_DIV]	    = &meson8b_vpu_1_div.hw,
-> +		[CLKID_VPU_1]		    = &meson8b_vpu_1.hw,
-> +		[CLKID_VPU]		    = &meson8b_vpu.hw,
->  		[CLK_NR_CLKS]		    = NULL,
->  	},
->  	.num = CLK_NR_CLKS,
-> @@ -2562,6 +2720,15 @@ static struct clk_regmap *const meson8b_clk_regmaps[] = {
->  	&meson8b_mali,
->  	&meson8m2_gp_pll_dco,
->  	&meson8m2_gp_pll,
-> +	&meson8b_vpu_0_sel,
-> +	&meson8m2_vpu_0_sel,
-> +	&meson8b_vpu_0_div,
-> +	&meson8b_vpu_0,
-> +	&meson8b_vpu_1_sel,
-> +	&meson8m2_vpu_1_sel,
-> +	&meson8b_vpu_1_div,
-> +	&meson8b_vpu_1,
-> +	&meson8b_vpu,
->  };
->  
->  static const struct meson8b_clk_reset_line {
-> diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
-> index a45f7102c558..e775f91ccce9 100644
-> --- a/drivers/clk/meson/meson8b.h
-> +++ b/drivers/clk/meson/meson8b.h
-> @@ -35,6 +35,7 @@
->  #define HHI_VID_DIVIDER_CNTL		0x198 /* 0x66 offset in data sheet */
->  #define HHI_SYS_CPU_CLK_CNTL0		0x19c /* 0x67 offset in data sheet */
->  #define HHI_MALI_CLK_CNTL		0x1b0 /* 0x6c offset in data sheet */
-> +#define HHI_VPU_CLK_CNTL		0x1bc /* 0x6f offset in data sheet */
->  #define HHI_HDMI_CLK_CNTL		0x1cc /* 0x73 offset in data sheet */
->  #define HHI_NAND_CLK_CNTL		0x25c /* 0x97 offset in data sheet */
->  #define HHI_MPLL_CNTL			0x280 /* 0xa0 offset in data sheet */
-> @@ -149,8 +150,14 @@
->  #define CLKID_MALI_1		180
->  #define CLKID_GP_PLL_DCO	181
->  #define CLKID_GP_PLL		182
-> +#define CLKID_VPU_0_SEL		183
-> +#define CLKID_VPU_0_DIV		184
-> +#define CLKID_VPU_0		185
-> +#define CLKID_VPU_1_SEL		186
-> +#define CLKID_VPU_1_DIV		187
-> +#define CLKID_VPU_1		189
->  
-> -#define CLK_NR_CLKS		183
-> +#define CLK_NR_CLKS		191
->  
->  /*
->   * include the CLKID and RESETID that have
-> 
+  CPU = cores + caches
+  physical chip = SoC = CPU + GPU + peripherals ...
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> So if we name it as CPU, it sounds like this temperature sensor is monitoring the whole chip.
+> That's not true in our case.
+> 
+> Take ls2088a for example:
+> In ls2088a SoC, there are 7 temperature sensors. Please note that they are all located in SoC.
+> The placement of the temperature sensors are showed below:
+> 
+> Sensor ID		placement
+> 1			DDR controller 1
+> 2			DDR controller 2
+> 3			DDR controller 3
+> 4			core cluster 1
+> 5 			core cluster 2
+> 6 			core cluster 3
+> 7 			core cluster 4
+> 
+> Apparently using CPU or CPU-cluster is not appropriate. Core-cluster is better.
+
+So using CPU is appropriate for me, less confusing, more consistent with
+other platforms.
+
+Shawn
