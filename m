@@ -1,72 +1,63 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCHv1 2/2] arm64: dts: qcom: pms405: Rename adc outputs as per schematics
-Date: Wed, 20 Mar 2019 19:09:58 +0530
-Message-ID: <65fdb9213591901d30c9af89102c22a730fb2745.1553088982.git.amit.kucheria@linaro.org>
-References: <cover.1553088982.git.amit.kucheria@linaro.org>
+From: Adam Ford <aford173@gmail.com>
+Subject: Re: [PATCH 2/3] ARM: DTS: imx6q-logicpd: Reduce inrush current on start
+Date: Wed, 20 Mar 2019 08:41:27 -0500
+Message-ID: <CAHCN7x+DKh8bR17C90o-zKKnFqWe_Yz5EM68xEiSY0W6ufNARA@mail.gmail.com>
+References: <20190306140402.17122-1-aford173@gmail.com> <20190306140402.17122-2-aford173@gmail.com>
+ <20190320124446.GO4980@dragon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1553088982.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1553088982.git.amit.kucheria@linaro.org>
-References: <cover.1553088982.git.amit.kucheria@linaro.org>
+In-Reply-To: <20190320124446.GO4980@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, David Brown <david.brown@linaro.org>
-Cc: devicetree@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: arm-soc <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The adc outputs shouldn't contain information about their configuration
-e.g. 100K pull-up, but just reflect the name of the signal in the
-schematics.
+On Wed, Mar 20, 2019 at 7:45 AM Shawn Guo <shawnguo@kernel.org> wrote:
+>
+> On Wed, Mar 06, 2019 at 08:04:00AM -0600, Adam Ford wrote:
+> > The main 3.3V regulator sources a series of additional regulators.
+> > This patch adds a small delay, so when the 3.3V regulator comes
+> > on it delays a bit before the subsequent regulators can come on.
+> > This reduces the inrush current a bit on the external DC power
+> > supply.
+> >
+> > Fixes: 1c207f911fe9 ("ARM: dts: imx: Add support for Logic PD
+> > i.MX6QD EVM")
+>
+> Same comment as patch #1.
 
-Making them labels also allows us to overwrite their configuration in
-board-specific DTs.
+The sourcing regulator occasionally cuts out because the inrush is so
+high.  I would argue that preventing a hardware issue like that would
+be a 'fix' and if it helps, I could add that to the description.
 
-Sort them by order as used in adc5_chans_rev2, while we're at it.
+>
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+>
+> To match the convention, the 'DTS' in subject prefix should be
+> lowercase.
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- arch/arm64/boot/dts/qcom/pms405.dtsi | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+I will fix in V2.
 
-diff --git a/arch/arm64/boot/dts/qcom/pms405.dtsi b/arch/arm64/boot/dts/qcom/pms405.dtsi
-index 8b6aa2334f56..37c8bea24796 100644
---- a/arch/arm64/boot/dts/qcom/pms405.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pms405.dtsi
-@@ -98,7 +98,7 @@
- 				qcom,pre-scaling = <1 1>;
- 			};
- 
--			vph_pwr {
-+			pon_1: vph_pwr {
- 				reg = <ADC5_VPH_PWR>;
- 				qcom,pre-scaling = <1 3>;
- 			};
-@@ -108,22 +108,22 @@
- 				qcom,pre-scaling = <1 1>;
- 			};
- 
--			xo_therm_100k_pu {
--				reg = <ADC5_XO_THERM_100K_PU>;
-+			pa_therm1: thermistor1 {
-+				reg = <ADC5_AMUX_THM1_100K_PU>;
- 				qcom,ratiometric;
- 				qcom,hw-settle-time = <200>;
- 				qcom,pre-scaling = <1 1>;
- 			};
- 
--			amux_thm1_100k_pu {
--				reg = <ADC5_AMUX_THM1_100K_PU>;
-+			pa_therm3: thermistor3 {
-+				reg = <ADC5_AMUX_THM3_100K_PU>;
- 				qcom,ratiometric;
- 				qcom,hw-settle-time = <200>;
- 				qcom,pre-scaling = <1 1>;
- 			};
- 
--			amux_thm3_100k_pu {
--				reg = <ADC5_AMUX_THM3_100K_PU>;
-+			xo_therm: xo_temp {
-+				reg = <ADC5_XO_THERM_100K_PU>;
- 				qcom,ratiometric;
- 				qcom,hw-settle-time = <200>;
- 				qcom,pre-scaling = <1 1>;
--- 
-2.17.1
+>
+> Shawn
+
+adam
+>
+> >
+> > diff --git a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
+> > index fb01fa6e4224..e31b6923cb72 100644
+> > --- a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
+> > +++ b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
+> > @@ -99,6 +99,7 @@
+> >               regulator-min-microvolt = <3300000>;
+> >               regulator-max-microvolt = <3300000>;
+> >               gpio = <&gpio1 26 GPIO_ACTIVE_HIGH>;
+> > +             startup-delay-us = <70000>;
+> >               enable-active-high;
+> >               regulator-always-on;
+> >       };
+> > --
+> > 2.17.1
+> >
