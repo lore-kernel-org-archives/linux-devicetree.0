@@ -1,58 +1,43 @@
-From: Schrempf Frieder <frieder.schrempf@kontron.de>
-Subject: [PATCH 2/2] ARM64: dts: Remove unused properties from FSL QSPI nodes
-Date: Wed, 20 Mar 2019 14:38:04 +0000
-Message-ID: <20190320143800.3555-2-frieder.schrempf@kontron.de>
-References: <20190320143800.3555-1-frieder.schrempf@kontron.de>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: ls1088a: add one more thermal zone node
+Date: Wed, 20 Mar 2019 22:49:09 +0800
+Message-ID: <20190320144907.GC8337@dragon>
+References: <20190304032111.21770-1-andy.tang@nxp.com>
+ <20190304062115.GB26041@dragon>
+ <VI1PR04MB433386B86A5E6AA804E9C3B5F3710@VI1PR04MB4333.eurprd04.prod.outlook.com>
+ <dc94e884-f5eb-fe07-27ef-6a94c3174acb@linaro.org>
+ <VI1PR04MB43330C6FAAD0D8EAE901C56FF34D0@VI1PR04MB4333.eurprd04.prod.outlook.com>
+ <cb262e2c-7115-86a5-01ce-4a12d45ee019@linaro.org>
+ <VI1PR04MB43338294C193D1AB4F577E92F34D0@VI1PR04MB4333.eurprd04.prod.outlook.com>
+ <20190320081853.GE4980@dragon>
+ <VI1PR04MB433351C20A9863EEF21A2504F3410@VI1PR04MB4333.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190320143800.3555-1-frieder.schrempf@kontron.de>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB433351C20A9863EEF21A2504F3410@VI1PR04MB4333.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>
-Cc: Schrempf Frieder <frieder.schrempf@kontron.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Andy Tang <andy.tang@nxp.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+On Wed, Mar 20, 2019 at 08:44:18AM +0000, Andy Tang wrote:
+> > > Sensor ID		placement
+> > > 1			DDR controller 1
+> > > 2			DDR controller 2
+> > > 3			DDR controller 3
+> > > 4			core cluster 1
+> > > 5 		core cluster 2
+> > > 6 		core cluster 3
+> > > 7 		core cluster 4
+> > >
+> > > Apparently using CPU or CPU-cluster is not appropriate. Core-cluster is better.
+> > 
+> > So using CPU is appropriate for me, less confusing, more consistent with other
+> > platforms.
+> What about core cluster? We can't name it cpu0, cpu1 etc I think.
 
-After switching to the new FSL QSPI driver the properties
-'fsl,qspi-has-second-chip' and 'big-endian' are not used anymore.
+Hmm, yes, that would be even more confusing.  What about cpu-thermal-1,
+cpu-thermal-2 ...?
 
-The driver now uses the 'reg' property to determine the bus and
-the chipselect. The endianness is selected by the driver depending
-on which SoC is used.
-
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
----
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 1 -
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 2 --
- 2 files changed, 3 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 6fd6116509cc..2fb8138c6bb0 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -296,7 +296,6 @@
- 			interrupts = <0 99 0x4>;
- 			clock-names = "qspi_en", "qspi";
- 			clocks = <&clockgen 4 0>, <&clockgen 4 0>;
--			big-endian;
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index cb7185014d3a..b0ef08b090dd 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -215,8 +215,6 @@
- 			interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "qspi_en", "qspi";
- 			clocks = <&clockgen 4 1>, <&clockgen 4 1>;
--			big-endian;
--			fsl,qspi-has-second-chip;
- 			status = "disabled";
- 		};
- 
--- 
-2.17.1
+Shawn
