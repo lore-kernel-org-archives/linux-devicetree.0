@@ -1,24 +1,55 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx7s-warp: PMIC swbst boot-on/always-on
-Date: Wed, 20 Mar 2019 16:09:42 +0800
-Message-ID: <20190320080940.GD4980@dragon>
-References: <1551565949-13843-1-git-send-email-pjtexier@koncepto.io>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/1] dt-bindings: clock: meson8b: drop the "ABP" clock
+ definition
+Date: Wed, 20 Mar 2019 09:12:45 +0100
+Message-ID: <b7d2edf1-da66-a09f-5f29-28f37ce3f06b@baylibre.com>
+References: <20190319214123.27219-1-martin.blumenstingl@googlemail.com>
+ <20190319214123.27219-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1551565949-13843-1-git-send-email-pjtexier@koncepto.io>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Jean Texier <pjtexier@koncepto.io>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190319214123.27219-2-martin.blumenstingl@googlemail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, jbrunet@baylibre.com, linux-amlogic@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 02, 2019 at 11:32:29PM +0100, Pierre-Jean Texier wrote:
-> PMIC swbst regulator is used for the MikroBUS socket (pin +5V).
+On 19/03/2019 22:41, Martin Blumenstingl wrote:
+> Commit 8e1dd17c8b0e3f ("dt-bindings: clock: meson8b: export the CPU post
+> dividers") added a new clock ID "CLKID_ABP" which contains a typo. This
+> was fixed by adding a new (typo-free) #define CLKID_APB in
+> commit 40d08f774c17ad ("dt-bindings: clock: meson8b: add APB clock
+> definition").
+> Now that the new #define is used by the driver we can remove the old
+> one (because the old one is not used anywhere).
 > 
-> We have to set the regulator to "boot-on" and "always-on"
-> to output a voltage of 5V on this socket.
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  include/dt-bindings/clock/meson8b-clkc.h | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> Signed-off-by: Pierre-Jean Texier <pjtexier@koncepto.io>
+> diff --git a/include/dt-bindings/clock/meson8b-clkc.h b/include/dt-bindings/clock/meson8b-clkc.h
+> index 8067077a62ca..cd11628f50f8 100644
+> --- a/include/dt-bindings/clock/meson8b-clkc.h
+> +++ b/include/dt-bindings/clock/meson8b-clkc.h
+> @@ -103,7 +103,6 @@
+>  #define CLKID_MPLL1		94
+>  #define CLKID_MPLL2		95
+>  #define CLKID_NAND_CLK		112
+> -#define CLKID_ABP		124
+>  #define CLKID_APB		124
+>  #define CLKID_PERIPH		126
+>  #define CLKID_AXI		128
+> 
 
-Applied, thanks.
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
