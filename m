@@ -1,45 +1,189 @@
-From: Mukesh Ojha <mojha@codeaurora.org>
-Subject: [PATCH] of: Drop redundant check in linker section OF match table
-Date: Wed, 20 Mar 2019 16:19:00 +0530
-Message-ID: <1553078940-9907-1-git-send-email-mojha@codeaurora.org>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH V7 2/5] pwm: Add i.MX TPM PWM driver support
+Date: Wed, 20 Mar 2019 11:57:42 +0100
+Message-ID: <20190320105742.jdabsbcoebbyftqr@pengutronix.de>
+References: <1553058067-18793-1-git-send-email-Anson.Huang@nxp.com>
+ <1553058067-18793-3-git-send-email-Anson.Huang@nxp.com>
+ <20190320081856.wkw55pmw57i4ifdj@pengutronix.de>
+ <AM6PR0402MB3911185E2D7E96FD3224BCBDF5410@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <AM6PR0402MB3911185E2D7E96FD3224BCBDF5410@AM6PR0402MB3911.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Mukesh Ojha <mojha@codeaurora.org>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "stefan@agner.ch" <stefan@agner.ch>, Leonard Crestez <leonard.crestez@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, Robin Gong <yibin.gong@nxp.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
 List-Id: devicetree@vger.kernel.org
 
-Existing check of `fn` against NULL inside OF match table
-is redundant. Remove the check.
+Hello Anson,
 
-Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: devicetree@vger.kernel.org
----
- include/linux/of.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Wed, Mar 20, 2019 at 10:17:50AM +0000, Anson Huang wrote:
+> > On Wed, Mar 20, 2019 at 05:06:21AM +0000, Anson Huang wrote:
+> > > +	/* make sure counter is disabled for programming prescale */
+> > > +	val = readl(tpm->base + PWM_IMX_TPM_SC);
+> > > +	saved_cmod = FIELD_GET(PWM_IMX_TPM_SC_CMOD, val);
+> > > +	if (saved_cmod) {
+> > > +		val &= ~PWM_IMX_TPM_SC_CMOD;
+> > > +		writel(val, tpm->base + PWM_IMX_TPM_SC);
+> > 
+> > I thought we agreed on not stopping the counter if the PS field isn't changed?
+> 
+> If the PS field no need to change, the round state should already return the period
+> equal to current period settings, so this function will NOT be called, right?
+> 
+>          if (real_state.period != tpm->real_period) {
+>                  if (tpm->user_count > 1) {
+>                          ret = -EBUSY;
+>                          goto exit;
+>                  }
+> 
+> 	pwm_imx_tpm_setup_period(chip, param);
+>                  tpm->real_period = real_state.period;
+>         } 
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index e240992..b86c00a 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -1283,13 +1283,13 @@ static inline int of_get_available_child_count(const struct device_node *np)
- 	static const struct of_device_id __of_table_##name		\
- 		__used __section(__##table##_of_table)			\
- 		 = { .compatible = compat,				\
--		     .data = (fn == (fn_type)NULL) ? fn : fn  }
-+		     .data = fn }
- #else
- #define _OF_DECLARE(table, name, compat, fn, fn_type)			\
- 	static const struct of_device_id __of_table_##name		\
- 		__attribute__((unused))					\
- 		 = { .compatible = compat,				\
--		     .data = (fn == (fn_type)NULL) ? fn : fn }
-+		     .data = fn }
- #endif
- 
- typedef int (*of_init_fn_2)(struct device_node *, struct device_node *);
+If the PS field is already right .period might still not match as its
+value depends on SC.PS and MOD.MOD.
+
+> > > +	val &= ~PWM_IMX_TPM_SC_PS;
+> > > +	val |= FIELD_PREP(PWM_IMX_TPM_SC_PS, p.prescale);
+> > > +	writel(val, tpm->base + PWM_IMX_TPM_SC);
+> > > +
+> > > +	/*
+> > > +	 * set period count: according to RM, the MOD register is
+> > > +	 * updated immediately after CMOD[1:0] = 2b'00 above
+> > > +	 */
+> > 
+> > So the current period isn't completed? That's wrong.
+> 
+> So you mean we have to wait for the current period to finish here?
+> I did NOT know this, so we have to compare the counter value with
+
+Yeah, see https://patchwork.ozlabs.org/patch/1021566/ which documents
+this but waits for feedback by Thierry since some time.
+
+> the MOD value until they match then proceed the period change?
+
+If the hardware doesn't support you here (usually it does) I think it's
+not reliable enough to try to sync in software. I assume you can get the
+right wave form if you don't change SC.PS but only MOD.MOD? So maybe the
+sanest approach is to refuse changing SC.PS if the PWM is running.
+
+Or disable (which also should wait for the current period to finish),
+poll for the end (or use an irq?) and then setup the new configuration.
+
+> > > +{
+> > > +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
+> > > +	struct pwm_state c;
+> > > +	u32 val, sc_val;
+> > > +	u64 tmp;
+> > > +
+> > > +	pwm_imx_tpm_get_state(chip, pwm, &c);
+> > > +
+> > > +	if (state.duty_cycle != c.duty_cycle) {
+> > > +		/* set duty counter */
+> > > +		tmp = readl(tpm->base + PWM_IMX_TPM_MOD) & PWM_IMX_TPM_MOD_MOD;
+> > > +		tmp *= state.duty_cycle;
+> > > +		val = DIV_ROUND_CLOSEST_ULL(tmp, state.period);
+> > > +		writel(val, tpm->base + PWM_IMX_TPM_CnV(pwm->hwpwm));
+> > > +	}
+> > > +
+> > > +	if (state.enabled != c.enabled) {
+> > 
+> > This is wrong. If the PWM was running (c.enabled == true) and you are
+> > supposed to disable (state.enabled == false) you enable the hardware once
+> > more.
+> 
+> A little confused here, as the case you assume, inside this block, there is another
+> check for state.enabled, if it is false, the polarity will be set to channel disabled mode,
+> the polarity setting is combined together with the enable status here, am I wrong?  
+
+Ah, you're right. I missed that probably because I saw register accesses
+after the state.enabled != c.enabled check.
+
+> > > +			val |= (state.polarity == PWM_POLARITY_NORMAL) ?
+> > > +				FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0x2) :
+> > > +				FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0x1);
+> > 
+> > Introduce PWM_IMX_TPM_CnSC_ELS_POLARITY_NORMAL and use it
+> > together with PWM_IMX_TPM_CnSC_ELS_POLARITY_INVERSED here. If you
+> > put the FIELD_PREP into the definition the line doesn't get excessively long.
+> > 
+> 
+> I put the FIELD_PREP into definition, the line still long, but I agree using definition is better.
+> 
+> #define PWM_IMX_TPM_CnSC_ELS_INVERSED   FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 1)
+> #define PWM_IMX_TPM_CnSC_ELS_NORMAL     FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 2)
+> 
+>                          val |= (state->polarity == PWM_POLARITY_NORMAL) ?
+>                                  PWM_IMX_TPM_CnSC_ELS_NORMAL :
+>                                  PWM_IMX_TPM_CnSC_ELS_INVERSED;
+> 
+> > Maybe also add
+> > 
+> > 	#define PWM_IMX_TPM_CnSC_ELS_INACTIVE FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0)
+> > 
+> 
+> I did NOT use the FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0) at all, so why add it?
+> I don't quite understand.
+
+You use it implicitly in pwm_imx_tpm_apply_hw() if state.enabled ==
+false and c.enabled == true:
+
+	val = readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
+	val &= ~(PWM_IMX_TPM_CnSC_ELS | ...);
+	...
+	writel(val, tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
+
+> > > +static int pwm_imx_tpm_apply(struct pwm_chip *chip,
+> > > +			      struct pwm_device *pwm,
+> > > +			     struct pwm_state *state)
+> > > +{
+> > > +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
+> > > +	struct imx_tpm_pwm_param param;
+> > > +	struct pwm_state real_state;
+> > > +	int ret;
+> > > +
+> > > +	ret = pwm_imx_tpm_round_state(chip, &param, state, &real_state);
+> > > +	if (ret)
+> > > +		return -EINVAL;
+> > > +
+> > > +	mutex_lock(&tpm->lock);
+> > > +
+> > > +	/*
+> > > +	 * TPM counter is shared by multiple channels, so
+> > > +	 * prescale and period can NOT be modified when
+> > > +	 * there are multiple channels in use with different
+> > > +	 * period settings.
+> > > +	 */
+> > > +	if (real_state.period != tpm->real_period) {
+> > > +		if (tpm->user_count > 1) {
+> > > +			ret = -EBUSY;
+> > > +			goto exit;
+> > > +		}
+> > > +
+> > > +		pwm_imx_tpm_config_counter(chip, param);
+> > > +		tpm->real_period = real_state.period;
+> > > +	}
+> > 
+> > Maybe add a comment that this could still be optimized. For example if
+> > pwm_imx_tpm_round_state returned prescale = 5 but prescale is currently 6,
+> > you might still be able to configure
+> 
+> You meant for multiple users request different period case? In this block, if there is
+> ONLY one user and the requested period can be met by HW, it will anyway re-configure
+> the HW for the prescale and period I think, or I did NOT get your point?
+
+My idea has a flaw. I thought that if there is another user, the
+duty_cycle can still be represented if the actually used prescale value
+is slightly higher. But then there is still a problem with the period
+length that I missed. So my remark was wrong, sorry for that.
+
+Best regards
+Uwe
+
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
-Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
