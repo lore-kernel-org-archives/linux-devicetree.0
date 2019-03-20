@@ -1,77 +1,68 @@
-From: Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [PATCH v4 00/12] Add support for usb on Hikey960
-Date: Wed, 20 Mar 2019 16:35:52 +0000
-Message-ID: <a6d1e2dd-3ce0-865f-ec74-e0bc7f3f1ea6@arm.com>
-References: <20190316035342.77998-1-chenyu56@huawei.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] ASoC: lochnagar: Add device tree
+	binding document
+Date: Wed, 20 Mar 2019 16:52:51 +0000
+Message-ID: <20190320165251.GC27518@sirena.org.uk>
+References: <20190320142813.12745-1-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190316035342.77998-1-chenyu56@huawei.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yu Chen <chenyu56@huawei.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com
+Content-Type: multipart/mixed; boundary="===============8679090479219640682=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20190320142813.12745-1-ckeepax@opensource.cirrus.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 16/03/2019 03:53, Yu Chen wrote:
-> The patchset adds support for usb functionality of Hikey960, includes:
-> - usb phy driver for Hisilicon Kirin Soc hi3660
-> - usb driver for HiKey960 board
-> - some adjustment in dwc3 and usb role driver
-> - dts for support usb of HiKey960
-> 
+--===============8679090479219640682==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="WfZ7S8PLGjBY9Voh"
+Content-Disposition: inline
 
-Still works fine on my Debian userspace.
 
-Tested-by: Valentin Schneider <valentin.schneider@arm.com>
+--WfZ7S8PLGjBY9Voh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks,
-Valentin
+On Wed, Mar 20, 2019 at 02:28:12PM +0000, Charles Keepax wrote:
 
-> Yu Chen (12):
->   dt-bindings: phy: Add support for HiSilicon's hi3660 USB PHY
->   dt-bindings: misc: Add bindings for HiSilicon usb hub and data role
->     switch functionality on HiKey960
->   usb: dwc3: dwc3-of-simple: Add support for dwc3 of Hisilicon Soc
->     Platform
->   usb: dwc3: Add splitdisable quirk for Hisilicon Kirin Soc
->   usb: dwc3: Execute GCTL Core Soft Reset while switch mdoe for
->     Hisilicon Kirin Soc
->   usb: dwc3: Increase timeout for CmdAct cleared by device controller
->   phy: Add usb phy support for hi3660 Soc of Hisilicon
->   usb: roles: Add usb role switch notifier.
->   usb: dwc3: Registering a role switch in the DRD code.
->   hikey960: Support usb functionality of Hikey960
->   usb: gadget: Add configfs attribuite for controling
->     match_existing_only
->   dts: hi3660: Add support for usb on Hikey960
-> 
->  .../bindings/misc/hisilicon-hikey-usb.txt          |  52 +++++
->  .../devicetree/bindings/phy/phy-hi3660-usb3.txt    |  26 +++
->  MAINTAINERS                                        |   8 +
->  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts  |  53 +++++
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |  74 +++++++
->  drivers/misc/Kconfig                               |   6 +
->  drivers/misc/Makefile                              |   1 +
->  drivers/misc/hisi_hikey_usb.c                      | 162 ++++++++++++++
->  drivers/phy/hisilicon/Kconfig                      |  10 +
->  drivers/phy/hisilicon/Makefile                     |   1 +
->  drivers/phy/hisilicon/phy-hi3660-usb3.c            | 233 +++++++++++++++++++++
->  drivers/usb/dwc3/Kconfig                           |   1 +
->  drivers/usb/dwc3/core.c                            |  45 ++++
->  drivers/usb/dwc3/core.h                            |  15 ++
->  drivers/usb/dwc3/drd.c                             |  58 ++++-
->  drivers/usb/dwc3/dwc3-of-simple.c                  |   4 +-
->  drivers/usb/dwc3/gadget.c                          |   2 +-
->  drivers/usb/gadget/configfs.c                      |  32 +++
->  drivers/usb/roles/class.c                          |  20 +-
->  include/linux/usb/role.h                           |  46 ++++
->  20 files changed, 845 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
->  create mode 100644 drivers/misc/hisi_hikey_usb.c
->  create mode 100644 drivers/phy/hisilicon/phy-hi3660-usb3.c
-> 
+> +  - clock-names : Must include the following clocks:
+> +      "ln-sound-mclk" Master clock source for the sound card, should
+> +      normally be set to LOCHNAGAR_SOUNDCARD_MCLK provided by the
+> +      Lochnagar clock driver.
+
+Why the namespacing on the clock name here?
+
+--WfZ7S8PLGjBY9Voh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlySb+IACgkQJNaLcl1U
+h9D1ywf9EIOMSyYqyyri/2a8CoFHzaIumJcYOiC6pSHaHBYiYzMbhVqeAXqg4C8F
+p2ZvMy7Zhg0lsyVNU7TgKbzm3rriUb3gxnsDTV6qA5mKv5DcathD/NziOYlJV+Uf
+2l9yg9oeyoqQ1H5s4ZG2uw7EuuNM6wb3wStwZ6gCHrLzgsW3r9ztogkWz0foFszz
+cAyo6P+o+uaJuM1FtgfqT25G+yLmhCpAfYtzRnouzITNy3p5D7RR+sdTkyxG3pTD
+6qohwVQGJKRQ8KV+o7zJYCtZK0m34B6wkmuUNfXn4qJU8k9Y8iJDGH1sXDVrLPyE
+d2TtpFonUs7pOyK9tlW9wHYeIPbnew==
+=7a3L
+-----END PGP SIGNATURE-----
+
+--WfZ7S8PLGjBY9Voh--
+
+--===============8679090479219640682==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============8679090479219640682==--
