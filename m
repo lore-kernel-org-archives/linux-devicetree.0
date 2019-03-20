@@ -1,64 +1,59 @@
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH 2/2] pwm: Kconfig: Enable ehrpwm driver to be compiled for
- ARCH_K3
-Date: Wed, 20 Mar 2019 14:35:49 +0530
-Message-ID: <a998ec1e-d734-b350-8b3f-99a5bb52b62a@ti.com>
-References: <20190312091629.31701-1-vigneshr@ti.com>
- <20190312091629.31701-3-vigneshr@ti.com>
- <20190312093012.g4rnis37nltzbygz@pengutronix.de>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 0/8] phy: qcom-ufs: Enable regulators to be off in
+ suspend
+Date: Wed, 20 Mar 2019 14:36:00 +0530
+Message-ID: <405b80c6-2624-cc7d-24fa-670b7e8cb3a9@ti.com>
+References: <20190205185902.106085-1-evgreen@chromium.org>
+ <CAE=gft4YPmqd35ySmZw2UG876Lvt8rcz+nNwELXK98PDvHuVeA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190312093012.g4rnis37nltzbygz@pengutronix.de>
+In-Reply-To: <CAE=gft4YPmqd35ySmZw2UG876Lvt8rcz+nNwELXK98PDvHuVeA@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+To: Evan Green <evgreen@chromium.org>, Andy Gross <andy.gross@linaro.org>
+Cc: Stephen Boyd <swboyd@chromium.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Grygorii Strashko <grygorii.strashko@ti.com>, Rob Herring <robh+dt@kernel.org>, Vinayak Holikatti <vinholikatti@gmail.com>, Jeffrey Hugo <jhugo@codeaurora.org>, SCSI <linux-scsi@vger.kernel.org>, David Brown <david.brown@linaro.org>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, liwei <liwei213@huawei.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Evan,
 
-On 12/03/19 3:00 PM, Uwe Kleine-König wrote:
-> On Tue, Mar 12, 2019 at 02:46:29PM +0530, Vignesh Raghavendra wrote:
->> K3 devices have the same EHRPWM IP as OMAP SoCs. Enable driver to be built
->> for K3 devices. Also, drop reference to AM33xx in help text, as IP is
->> found on multiple TI SoCs.
+On 20/03/19 1:34 AM, Evan Green wrote:
+> On Tue, Feb 5, 2019 at 10:59 AM Evan Green <evgreen@chromium.org> wrote:
 >>
->> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
->> ---
->>  drivers/pwm/Kconfig | 5 ++---
->>  1 file changed, 2 insertions(+), 3 deletions(-)
+> ...
+>> Evan Green (8):
+>>   dt-bindings: ufs: Add #reset-cells for Qualcomm controllers
+>>   dt-bindings: phy-qcom-qmp: Add UFS PHY reset
+>>   dt-bindings: phy: qcom-ufs: Add resets property
+>>   arm64: dts: sdm845: Add UFS PHY reset
+>>   arm64: dts: msm8996: Add UFS PHY reset controller
+>>   scsi: ufs: qcom: Expose the reset controller for PHY
+>>   phy: qcom: Utilize UFS reset controller
+>>   phy: ufs-qcom: Refactor all init steps into phy_poweron
 >>
->> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->> index 54f8238aac0d..c054bd1dba36 100644
->> --- a/drivers/pwm/Kconfig
->> +++ b/drivers/pwm/Kconfig
->> @@ -467,10 +467,9 @@ config  PWM_TIECAP
->>  
->>  config  PWM_TIEHRPWM
->>  	tristate "EHRPWM PWM support"
->> -	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX
->> +	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_K3
->>  	help
->> -	  PWM driver support for the EHRPWM controller found on AM33XX
->> -	  TI SOC
->> +	  PWM driver support for the EHRPWM controller found on TI SOCs
+>>  .../devicetree/bindings/phy/qcom-qmp-phy.txt  |   6 +-
+>>  .../devicetree/bindings/ufs/ufs-qcom.txt      |   5 +-
+>>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |   3 +
+>>  arch/arm64/boot/dts/qcom/msm8996.dtsi         |   4 +-
+>>  arch/arm64/boot/dts/qcom/sdm845.dtsi          |   3 +
+>>  drivers/phy/qualcomm/phy-qcom-qmp.c           | 117 +++++++++---------
+>>  drivers/phy/qualcomm/phy-qcom-ufs-i.h         |   5 +-
+>>  drivers/phy/qualcomm/phy-qcom-ufs-qmp-14nm.c  |  25 +---
+>>  drivers/phy/qualcomm/phy-qcom-ufs-qmp-20nm.c  |  25 +---
+>>  drivers/phy/qualcomm/phy-qcom-ufs.c           |  57 +++++++--
+>>  drivers/scsi/ufs/Kconfig                      |   1 +
+>>  drivers/scsi/ufs/ufs-qcom.c                   | 114 ++++++++++-------
+>>  drivers/scsi/ufs/ufs-qcom.h                   |   4 +
+>>  13 files changed, 202 insertions(+), 167 deletions(-)
+>>
+>> --
 > 
-> It would be great to be able to compile this driver with COMPILE_TEST.
-> From a quick look the following would be appropriate:
-> 
-> 	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_K3 || COMPILE_TEST
-> 	depends on HAVE_CLK && HAS_IOMEM
->  
+> Hi Kishon,
+> A gentle ping here now that rc1 is out. Are you able to take these? I
+> can also repost if needed.
 
-Thanks for the suggestion! I will send a separate patch on top of this
-series to enable COMPILE TEST for this driver and other TI PWM drivers.
+Can you repost with the updated tags please?
 
-> Best regards
-> Uwe
-> 
-
--- 
-Regards
-Vignesh
+Thanks
+Kishon
