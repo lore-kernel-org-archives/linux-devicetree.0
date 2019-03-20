@@ -1,54 +1,56 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 3/3] ARM: DTS: imx6q-logicpd: Fix Analog audio capture
-Date: Wed, 20 Mar 2019 20:46:35 +0800
-Message-ID: <20190320124634.GP4980@dragon>
-References: <20190306140402.17122-1-aford173@gmail.com>
- <20190306140402.17122-3-aford173@gmail.com>
+From: Wanglai Shi <shiwanglai@hisilicon.com>
+Subject: [PATCH v2 0/3] Support static funnel and CoreSight DT on Hikey960
+Date: Wed, 20 Mar 2019 20:38:07 +0800
+Message-ID: <1553085490-42870-1-git-send-email-shiwanglai@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190306140402.17122-3-aford173@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: mathieu.poirier@linaro.org, suzuki.poulose@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, alexander.shishkin@linux.intel.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leo.yan@linaro.org, suzhuangluan@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 08:04:01AM -0600, Adam Ford wrote:
-> The original submission had functional audio out and was based
-> on reviewing other boards using the same wm8962 codec. However,
-> the Logic PD board uses an analog microphone which was being
-> disabled for a digital mic.  This patch corrects that and
-> explicitly sets the gpio-cfg pins all to 0x0000 which allows the
-> analog microphone to capture audio.
-> 
-> Fixes: 1c207f911fe9 ("ARM: dts: imx: Add support for Logic PD
-> i.MX6QD EVM")
+From: Leo Yan <leo.yan@linaro.org>
 
-If audio capture has never worked, the change is more like a "new feature"
-than critical fix.
+Since before there have no platforms use static funnel in mainline
+kernel (though maybe some in-house SoC has used it but didn't upstream
+for mainline kernel yet so we don't be aware for it), when enable
+CoreSight DT binding for hikey960, we found the SoC uses the static
+funnel in the link path and but it's not supported in CoreSight funnel
+driver.
 
-Shawn
+So patches 0001/0002 are two patches to support static funnel, this
+first patch is to update DT documentation to support static funnel (we
+call it as non-configurable funnel in documentation); the second patch
+is to support the static funnel in the CoreSight funnel driver.
 
-> 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> 
-> diff --git a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
-> index e31b6923cb72..db6b5b900826 100644
-> --- a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
-> +++ b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
-> @@ -248,9 +248,9 @@
->  		gpio-cfg = <
->  			0x0000 /* 0:Default */
->  			0x0000 /* 1:Default */
-> -			0x0013 /* 2:FN_DMICCLK */
-> +			0x0000 /* 2:FN_DMICCLK */
->  			0x0000 /* 3:Default */
-> -			0x8014 /* 4:FN_DMICCDAT */
-> +			0x0000 /* 4:FN_DMICCDAT */
->  			0x0000 /* 5:Default */
->  		>;
->  	};
-> -- 
-> 2.17.1
-> 
+Credits to Suzuki shared code for CoreSight replicator refactoring,
+patches 0001/0002 heavily follows up the same fashion in Suzuki's shared
+code.
+
+Patch 0003 is the DT binding for CoreSight enabling on Hikey960, and
+it's the first consumer for use static funnel binding.
+
+This patch set has been tested on Hikey960 with perf command for trace
+data recording and decoding with below commands:
+
+  # perf record -e cs_etm/@20010000.etf/ --per-thread ./main
+  # perf report --tui
+
+
+Leo Yan (2):
+  dt-bindings: arm: coresight: Support non-configurable funnel
+  coresight: funnel: Support static funnel
+
+Wanglai Shi (1):
+  arm64: dts: hi3660: Add CoreSight support
+
+ .../devicetree/bindings/arm/coresight.txt     |  45 +-
+ .../boot/dts/hisilicon/hi3660-coresight.dtsi  | 456 ++++++++++++++++++
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi     |   2 +
+ .../hwtracing/coresight/coresight-funnel.c    | 112 +++--
+ 4 files changed, 585 insertions(+), 30 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi
+
+-- 
+2.17.1
