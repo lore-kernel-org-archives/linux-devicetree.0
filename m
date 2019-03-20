@@ -1,90 +1,55 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v2 2/3] coresight: funnel: Support static funnel
-Date: Wed, 20 Mar 2019 13:52:58 +0000
-Message-ID: <ecfa879e-9fd9-0815-d2da-bb9870d6ae59@arm.com>
-References: <1553085490-42870-1-git-send-email-shiwanglai@hisilicon.com>
- <1553085490-42870-3-git-send-email-shiwanglai@hisilicon.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v2 1/3] dt-bindings: imx-ocotp: Add i.MX8MQ compatible
+Date: Wed, 20 Mar 2019 14:56:40 +0100
+Message-ID: <1553090200.4806.21.camel@pengutronix.de>
+References: <20190228070137.30867-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553085490-42870-3-git-send-email-shiwanglai@hisilicon.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: shiwanglai@hisilicon.com, mathieu.poirier@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, alexander.shishkin@linux.intel.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leo.yan@linaro.org, suzhuangluan@hisilicon.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190228070137.30867-1-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: devicetree@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>, Carlo Caione <ccaione@baylibre.com>, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 20/03/2019 12:38, Wanglai Shi wrote:
-> From: Leo Yan <leo.yan@linaro.org>
-> 
-> Since CoreSight hardware topology can use a 'hidden' funnel in the
-> trace data path, this kind funnel doesn't have register for accessing
-> and is used by default from hardware design perspective.  Below is an
-> example for related hardware topology:
-> 
->    +------+  +------+
->    | cpu0 |->| ETM  |-\
->    +------+  +------+  \-> +--------+  +-----+
->     ......                 | Funnel |->| ETF |-\    Hidden funnel
->    +------+  +------+  /-> +--------+  +-----+  \        |
->    | cpu3 |->| ETM  |-/                          \       V
->    +------+  +------+                             \-> +--------+
->                                                       | Funnel |-> ...
->    +------+  +------+                             /-> +--------+
->    | cpu4 |->| ETM  |-\                          /
->    +------+  +------+  \-> +--------+  +-----+  /
->     ......                 | Funnel |->| ETF |-/
->    +------+  +------+  /-> +--------+  +-----+
->    | cpu7 |->| ETM  |-/
->    +------+  +------+
-> 
-> The CoreSight funnel driver only supports dynamic funnel with
-> registration register resource, thus it cannot support for the static
-> funnel case and it's impossible to create trace data path for this case.
-> 
-> This patch is to extend CoreSight funnel driver to support both for
-> static funnel and dynamic funnel.  For the dynamic funnel it reuses the
-> code existed in the driver, for static funnel the driver will support
-> device probe if without providing register resource and the driver skips
-> registers accessing when detect the register base is NULL.
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
-
-Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-
-> -static const struct amba_id funnel_ids[] = {
-> +static int static_funnel_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +
-> +	pm_runtime_get_noresume(&pdev->dev);
-> +	pm_runtime_set_active(&pdev->dev);
-> +	pm_runtime_enable(&pdev->dev);
-> +
-> +	/* Static funnel do not have programming base */
-> +	ret = funnel_probe(&pdev->dev, NULL);
-> +
-> +	if (ret) {
-> +		pm_runtime_put_noidle(&pdev->dev);
-> +		pm_runtime_disable(&pdev->dev);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct of_device_id static_funnel_match[] = {
-> +	{.compatible = "arm,coresight-funnel"},
-
-There is a potential issue with re-using the "compatible" string
-already reserved for the normal programmable funnel. We may handle
-a programmable funnel as non-programmable one, which is not good.
-
-Do we need to use "arm,coresight-static-funnel" ?
-
-Otherwise, looks good to me.
-
-Suzuki
+SGkgU3Jpbml2YXMsCgpmcmllbmRseSBwaW5nLiBUaGlzIHNlcmllcyBoYXMgYmVlbiByZXZpZXdl
+ZCBhbmQgYWNrZWQsIHNvIEkgdGhpbmsgaXQKc2hvdWxkIGJlIGdvb2QgdG8gZ28gaW4uCgpSZWdh
+cmRzLApMdWNhcwoKQW0gRG9ubmVyc3RhZywgZGVuIDI4LjAyLjIwMTksIDA4OjAxICswMTAwIHNj
+aHJpZWIgTHVjYXMgU3RhY2g6Cj4gQWRkIGNvbXBhdGlibGUgZm9yIGkuTVg4TVEgYW5kIGFkZCBp
+Lk1YN0QvUywgaS5NWDdVTFAgYW5kIGkuTThNUQo+IHRvIHRoZSBkZXNjcmlwdGlvbi4KPiAKPiA+
+IFNpZ25lZC1vZmYtYnk6IEx1Y2FzIFN0YWNoIDxsLnN0YWNoQHBlbmd1dHJvbml4LmRlPgo+ID4g
+UmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4gPiBSZXZpZXdlZC1i
+eTogQWJlbCBWZXNhIDxhYmVsLnZlc2FAbnhwLmNvbT4KPiAtLS0KPiB2MjoKPiAtIHJlYmFzZWQg
+b24gbGludXgtbmV4dAo+IC0gY29sbGVjdGVkIHJldmlld2VkCj4gLS0tCj4gwqBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbnZtZW0vaW14LW9jb3RwLnR4dCB8IDQgKysrLQo+IMKg
+MSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYg
+LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbnZtZW0vaW14LW9jb3Rw
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9udm1lbS9pbXgtb2NvdHAu
+dHh0Cj4gaW5kZXggN2E5OTlhMTM1ZTU2Li42OGY3ZDZmZGQxNDAgMTAwNjQ0Cj4gLS0tIGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL252bWVtL2lteC1vY290cC50eHQKPiArKysg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbnZtZW0vaW14LW9jb3RwLnR4dAo+
+IEBAIC0xLDcgKzEsOCBAQAo+IMKgRnJlZXNjYWxlIGkuTVg2IE9uLUNoaXAgT1RQIENvbnRyb2xs
+ZXIgKE9DT1RQKSBkZXZpY2UgdHJlZSBiaW5kaW5ncwo+IMKgCj4gwqBUaGlzIGJpbmRpbmcgcmVw
+cmVzZW50cyB0aGUgb24tY2hpcCBlRnVzZSBPVFAgY29udHJvbGxlciBmb3VuZCBvbgo+IC1pLk1Y
+NlEvRCwgaS5NWDZETC9TLCBpLk1YNlNMLCBpLk1YNlNYLCBpLk1YNlVMLCBpLk1YNlVMTC9VTFog
+YW5kIGkuTVg2U0xMIFNvQ3MuCj4gK2kuTVg2US9ELCBpLk1YNkRML1MsIGkuTVg2U0wsIGkuTVg2
+U1gsIGkuTVg2VUwsIGkuTVg2VUxML1VMWiwgaS5NWDZTTEwsCj4gK2kuTVg3RC9TLCBpLk1YN1VM
+UCBhbmQgaS5NWDhNUSBTb0NzLgo+IMKgCj4gwqBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+IMKgLSBj
+b21wYXRpYmxlOiBzaG91bGQgYmUgb25lIG9mCj4gQEAgLTEzLDYgKzE0LDcgQEAgUmVxdWlyZWQg
+cHJvcGVydGllczoKPiA+IMKgCSJmc2wsaW14N2Qtb2NvdHAiIChpLk1YN0QvUyksCj4gPiDCoAki
+ZnNsLGlteDZzbGwtb2NvdHAiIChpLk1YNlNMTCksCj4gPiDCoAkiZnNsLGlteDd1bHAtb2NvdHAi
+IChpLk1YN1VMUCksCj4gPiArCSJmc2wsaW14OG1xLW9jb3RwIiAoaS5NWDhNUSksCj4gPiDCoAlm
+b2xsb3dlZCBieSAic3lzY29uIi4KPiDCoC0gI2FkZHJlc3MtY2VsbHMgOiBTaG91bGQgYmUgMQo+
+IMKgLSAjc2l6ZS1jZWxscyA6IFNob3VsZCBiZSAxCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
+eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
