@@ -1,47 +1,39 @@
-From: =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
-Subject: [PATCH] arm64: dts: ls1043a: add crypto node alias also for qds
-Date: Wed, 20 Mar 2019 17:29:00 +0200
-Message-ID: <20190320152900.9379-1-horia.geanta@nxp.com>
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH] ARM: dts: imx6qdl-sabresd: change phy-mode to use
+ rgmii-id
+Date: Wed, 20 Mar 2019 16:03:40 +0000
+Message-ID: <VI1PR10MB2352C3A55BE8FABAF3B02681FE410@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
+References: <20190320120604.7D99B3FBE9@swsrvapps-01.diasemi.com>
+ <CAOMZO5AHzQJzz3vd5MzYgSSxzPjU9xan1dFh9473BXeiRCOzzg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5AHzQJzz3vd5MzYgSSxzPjU9xan1dFh9473BXeiRCOzzg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-ARM-KERNEL <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Y3J5cHRvIG5vZGUgYWxpYXMgaXMgbmVlZGVkIGJ5IFUtYm9vdCB0byBpZGVudGlmeSB0aGUgbm9k
-ZSBhbmQKcGVyZm9ybSBmaXgtdXBzLCBsaWtlIGFkZGluZyAiZnNsLHNlYy1lcmEiIHByb3BlcnR5
-IG9yIGRlbGV0aW5nCmEgam9iIHJpbmcgY2hpbGQgbm9kZSAoaW4gY2FzZSBBUk0gVEYtQSBpcyBy
-dW5uaW5nKS4KCkZpeGVzOiBlYzA1ZTljYzZhNmUgKCJhcm02NDogZHRzOiBhZGQgTFMxMDQzYS1R
-RFMgYm9hcmQgc3VwcG9ydCIpClNpZ25lZC1vZmYtYnk6IEhvcmlhIEdlYW50xIMgPGhvcmlhLmdl
-YW50YUBueHAuY29tPgotLS0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEw
-NDNhLXJkYi5kdHMgfCAxIC0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEw
-NDNhLmR0c2kgICAgfCAxICsKIDIgZmlsZXMgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVs
-ZXRpb24oLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
-bHMxMDQzYS1yZGIuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0
-M2EtcmRiLmR0cwppbmRleCAxN2NhMzU3ZTg1NGYuLjQyMjNhMjM1MmQ0NSAxMDA2NDQKLS0tIGEv
-YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0M2EtcmRiLmR0cworKysgYi9h
-cmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQzYS1yZGIuZHRzCkBAIC0xNSw3
-ICsxNSw2IEBACiAJbW9kZWwgPSAiTFMxMDQzQSBSREIgQm9hcmQiOwogCiAJYWxpYXNlcyB7Ci0J
-CWNyeXB0byA9ICZjcnlwdG87CiAJCXNlcmlhbDAgPSAmZHVhcnQwOwogCQlzZXJpYWwxID0gJmR1
-YXJ0MTsKIAkJc2VyaWFsMiA9ICZkdWFydDI7CmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQzYS5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
-c2NhbGUvZnNsLWxzMTA0M2EuZHRzaQppbmRleCA3MDA1N2I0ZTQ2ZTguLjEwYzQ4NmJlMzJiMyAx
-MDA2NDQKLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0M2EuZHRz
-aQorKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQzYS5kdHNpCkBA
-IC0xOCw2ICsxOCw3IEBACiAJI3NpemUtY2VsbHMgPSA8Mj47CiAKIAlhbGlhc2VzIHsKKwkJY3J5
-cHRvID0gJmNyeXB0bzsKIAkJZm1hbjAgPSAmZm1hbjA7CiAJCWV0aGVybmV0MCA9ICZlbmV0MDsK
-IAkJZXRoZXJuZXQxID0gJmVuZXQxOwotLSAKMi4xNy4xCgoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+SGkgRmFiaW8sDQoNCk9uIDIwIE1hcmNoIDIwMTkgMTI6MTcsIEZhYmlvIEVzdGV2YW0gd3JvdGU6
+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIEFSTTogZHRzOiBpbXg2cWRsLXNhYnJlc2Q6IGNoYW5n
+ZSBwaHktbW9kZSB0byB1c2UgcmdtaWktaWQNCj4gDQo+IEhpIFN0ZXZlLA0KPiANCj4gT24gV2Vk
+LCBNYXIgMjAsIDIwMTkgYXQgOTowNiBBTSBTdGV2ZSBUd2lzcw0KPiA8c3R3aXNzLm9wZW5zb3Vy
+Y2VAZGlhc2VtaS5jb20+IHdyb3RlOg0KPiA+DQo+ID4gVGhlIFBIWSB1c2VkIG9uIHRoZSBGcmVl
+c2NhbGUgaS5NWDZRL0RMIFNBQlJFIGJvYXJkcyBpcyBxdWFsaWZpZWQgYXMNCj4gPiAncmdtaWkn
+IGluc3RlYWQgb2YgJ3JnbWlpLWlkJy4gTWVhbmluZyB0aGUgUlggYW5kIFRYIGRlbGF5cyB0aGF0
+IHdlcmUNCj4gDQo+IFRoaXMgcGF0Y2ggZGVjbGFyZXMgaXQgYXMgJ3JnbWlpLWlkJywgd2hpY2gg
+Y29udHJhZGljdHMgdGhlIGNvbW1pdCBsb2cuDQoNClRoZSBQSFkgdXNlZCBvbiB0aGUgRnJlZXNj
+YWxlIGkuTVg2US9ETCBTQUJSRSBib2FyZHMgaXMgcXVhbGlmaWVkIGFzDQoncmdtaWknIGluc3Rl
+YWQgb2YgJ3JnbWlpLWlkJy4NCg0KQ2FuIHRoYXQgYmUgcmVhZCB0d28gd2F5cz8NCkkgbWVhbnQg
+dGhlIHBoeS1tb2RlIGlzIGN1cnJlbnRseSBxdWFsaWZpZWQgYXMgJ3JnbWlpJyBpbnN0ZWFkIG9m
+IHdoYXQgaXQNCnNob3VsZCBiZTogJ3JnbWlpLWlkJy4NCg0KWy4uLl0NCg0KPiA+IFRoaXMgcGF0
+Y2ggZml4ZXMgdGhlIG5ldHdvcmsgcHJvYmxlbXMgc2VlbiBvbiB0aGUgRnJlZXNjYWxlIGkuTVg2
+US9ETA0KPiANCj4gUGxlYXNlIHByb3ZpZGUgYSBGaXhlcyB0YWcuIEl0IHdvdWxkIGJlIGdvb2Qg
+dG8ga25vdyBpZiB0aGlzIGZpeCBuZWVkcw0KPiB0byBiZSBhcHBsaWVkIHRvIG9sZGVyIGtlcm5l
+bHMuDQoNCkkgZGlkbid0IHB1dCBhIEZpeGVzIHRhZyBpbiBiZWNhdXNlIEkgZmluZCB0aGlzIHBh
+dGNoIGZpeGVzIHY1LjEtcmMxICh3aGljaCBJIHNlZSBhcyBicm9rZW4pLg0KQnV0IHRoZSBwYXRj
+aCBpcyBub3QgbmVlZGVkIGluIHY1LjAgYmVjYXVzZSBJIHNlZSB0aGF0IGFzIHdvcmtpbmcuDQpT
+byBkaWRuJ3Qgc2VlIHRoZSBuZWVkIGZvciBhIENjOiBzdGFibGUuDQoNClJlZ2FyZHMsDQpTdGV2
+ZQ0K
