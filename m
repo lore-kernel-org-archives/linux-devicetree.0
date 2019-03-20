@@ -1,27 +1,57 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v3 0/5] dt-bindings: improve the Armada DRM bindings
-Date: Wed, 20 Mar 2019 09:20:52 +0100
-Message-ID: <20190320082057.856943-1-lkundrak@v3.sk>
+Subject: [PATCH v3 2/5] dt-bindings: display: armada: Rename the binding doc file
+Date: Wed, 20 Mar 2019 09:20:54 +0100
+Message-ID: <20190320082057.856943-3-lkundrak@v3.sk>
+References: <20190320082057.856943-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190320082057.856943-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Russell King <linux@armlinux.org.uk>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Use a more generic name, since it will document more compatible LCD
+controllers than just that of Dove. Also, there's no point putting it in
+a separate directory.
 
-this is the third spin of a patch set that aims to complete the Armada
-DRM binding documentation. Apart from collecting the Review-by tags, the
-only change is the order of the compatible strings for the LCDC node.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-What is documented corresponds to the armada-devel branch of
-git://git.armlinux.org.uk/~rmk/linux-arm.git with these differencies:
+---
+Changes since v1:
+- Choose a better name than armada/marvell-armada-drm.txt, since
+  there will be no display-subsystem master node and thus it will
+  only document just the LCDC.
 
-* Documentation of the bus-width property of the LCDC
-* The MMP2 compatible strings.
+ .../{armada/marvell,dove-lcd.txt =3D> marvell,armada-lcdc.txt}    | 0
+ MAINTAINERS                                                     | 2 +-
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename Documentation/devicetree/bindings/display/{armada/marvell,dove-lc=
+d.txt =3D> marvell,armada-lcdc.txt} (100%)
 
-Patches to the driver for the above were sent out separately.
-
-Lubo
+diff --git a/Documentation/devicetree/bindings/display/armada/marvell,dov=
+e-lcd.txt b/Documentation/devicetree/bindings/display/marvell,armada-lcdc=
+.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/display/armada/marvell,dove=
+-lcd.txt
+rename to Documentation/devicetree/bindings/display/marvell,armada-lcdc.t=
+xt
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e71aa05fef29..890cbd6e0b7b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8966,7 +8966,7 @@ T:	git git://git.armlinux.org.uk/~rmk/linux-arm.git=
+ drm-armada-devel
+ T:	git git://git.armlinux.org.uk/~rmk/linux-arm.git drm-armada-fixes
+ F:	drivers/gpu/drm/armada/
+ F:	include/uapi/drm/armada_drm.h
+-F:	Documentation/devicetree/bindings/display/armada/
++F:	Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
+ F:	Documentation/devicetree/bindings/reserved-memory/marvell,armada-fram=
+ebuffer.txt
+=20
+ MARVELL CRYPTO DRIVER
+--=20
+2.20.1
