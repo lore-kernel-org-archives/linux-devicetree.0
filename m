@@ -1,65 +1,56 @@
-Return-Path: <SRS0=Paxx=RQ=mediatek.com=stanley.chu@kernel.org>
-From: Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v4 4/7] dt-bindings: phy: Add document for phy-mtk-ufs
-Date: Wed, 13 Mar 2019 12:10:08 +0800
-Message-ID: <1552450211-7149-6-git-send-email-stanley.chu@mediatek.com>
-In-Reply-To: <1552450211-7149-1-git-send-email-stanley.chu@mediatek.com>
-References: <1552450211-7149-1-git-send-email-stanley.chu@mediatek.com>
+Return-Path: <SRS0=FcdI=RX=gmail.com=groeck7@kernel.org>
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Wed, 20 Mar 2019 10:38:49 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 2/3] hwmon: Add convience macro to define simple static
+ sensors
+Message-ID: <20190320173849.GA17363@roeck-us.net>
+References: <20190320145818.30644-1-ckeepax@opensource.cirrus.com>
+ <20190320145818.30644-2-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, chunfeng.yun@mediatek.com, kishon@ti.com, martin.petersen@oracle.com, avri.altman@wdc.com, alim.akhtar@samsung.com, pedrom.sousa@synopsys.com
-Cc: vivek.gautam@codeaurora.org, subhashj@codeaurora.org, liwei213@huawei.com, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, kuohong.wang@mediatek.com, peter.wang@mediatek.com, chun-hung.wu@mediatek.com, Stanley Chu <stanley.chu@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190320145818.30644-2-ckeepax@opensource.cirrus.com>
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, corbet@lwn.net, devicetree@vger.kernel.org, patches@opensource.cirrus.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add UFS M-PHY node document for MediaTek SoC chips.
+On Wed, Mar 20, 2019 at 02:58:17PM +0000, Charles Keepax wrote:
+> It takes a fair amount of boiler plate code to add new sensors, add a
+> macro that can be used to specify simple static sensors.
+> 
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
----
- .../devicetree/bindings/phy/phy-mtk-ufs.txt   | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
+Great idea!
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt b/Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
-new file mode 100644
-index 000000000000..dc6c9933b08d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-mtk-ufs.txt
-@@ -0,0 +1,36 @@
-+MediaTek Universal Flash Storage (UFS) M-PHY binding
-+--------------------------------------------------------
-+
-+UFS M-PHY nodes are defined to describe on-chip UFS M-PHY hardware macro.
-+Each UFS M-PHY node should have its own node.
-+
-+To bind UFS M-PHY with UFS host controller, the controller node should
-+contain a phandle reference to UFS M-PHY node.
-+
-+Required properties for UFS M-PHY nodes:
-+- compatible         : Compatible list, contains the following controller:
-+                       "mediatek,mt8183-ufsphy" for ufs phy
-+                       persent on MT81xx chipsets.
-+- reg                : Address and length of the UFS M-PHY register set.
-+- #phy-cells         : This property shall be set to 0
-+- clocks             : List of phandle and clock specifier pairs.
-+- clock-names        : List of clock input name strings sorted in the same
-+                       order as the clocks property. "unipro-clk" and
-+                       "mp-clk" are mandatory.
-+
-+Example:
-+
-+	ufsphy: phy@11fa0000 {
-+		compatible = "mediatek,mt8183-ufsphy";
-+		reg = <0 0x11fa0000 0 0xc000>;
-+		#phy-cells = <0>;
-+
-+		clocks = <&infracfg_ao INFRACFG_AO_UNIPRO_SCK_CG>,
-+			 <&infracfg_ao INFRACFG_AO_UFS_MP_SAP_BCLK_CG>;
-+		clock-names = "unipro-clk", "mp-clk";
-+	};
-+
-+	ufshci@11270000 {
-+		...
-+		phys = <&ufsphy>;
-+	};
--- 
-2.18.0
+Applied to hwmon-next; no need to resend.
+
+Thanks,
+Guenter
+
+> ---
+>  include/linux/hwmon.h | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/include/linux/hwmon.h b/include/linux/hwmon.h
+> index 99e0c1b0b5fb3..7a8cc06a0d61d 100644
+> --- a/include/linux/hwmon.h
+> +++ b/include/linux/hwmon.h
+> @@ -365,6 +365,14 @@ struct hwmon_channel_info {
+>  	const u32 *config;
+>  };
+>  
+> +#define HWMON_CHANNEL_INFO(stype, ...)	\
+> +	(&(struct hwmon_channel_info) {	\
+> +		.type = hwmon_##stype,	\
+> +		.config = (u32 []) {	\
+> +			__VA_ARGS__, 0	\
+> +		}			\
+> +	})
+> +
+>  /**
+>   * Chip configuration
+>   * @ops:	Pointer to hwmon operations.
+> -- 
+> 2.11.0
+> 
