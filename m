@@ -1,10 +1,12 @@
 From: Wanglai Shi <shiwanglai@hisilicon.com>
-Subject: [PATCH v2 0/3] Support static funnel and CoreSight DT on Hikey960
-Date: Wed, 20 Mar 2019 20:38:07 +0800
-Message-ID: <1553085490-42870-1-git-send-email-shiwanglai@hisilicon.com>
+Subject: [PATCH v2 1/3] dt-bindings: arm: coresight: Support non-configurable funnel
+Date: Wed, 20 Mar 2019 20:38:08 +0800
+Message-ID: <1553085490-42870-2-git-send-email-shiwanglai@hisilicon.com>
+References: <1553085490-42870-1-git-send-email-shiwanglai@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1553085490-42870-1-git-send-email-shiwanglai@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: mathieu.poirier@linaro.org, suzuki.poulose@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, alexander.shishkin@linux.intel.com
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leo.yan@linaro.org, suzhuangluan@hisilicon.com
@@ -12,45 +14,94 @@ List-Id: devicetree@vger.kernel.org
 
 From: Leo Yan <leo.yan@linaro.org>
 
-Since before there have no platforms use static funnel in mainline
-kernel (though maybe some in-house SoC has used it but didn't upstream
-for mainline kernel yet so we don't be aware for it), when enable
-CoreSight DT binding for hikey960, we found the SoC uses the static
-funnel in the link path and but it's not supported in CoreSight funnel
-driver.
+Document DT binding for non-configurable funnel and give an example
+for it.
 
-So patches 0001/0002 are two patches to support static funnel, this
-first patch is to update DT documentation to support static funnel (we
-call it as non-configurable funnel in documentation); the second patch
-is to support the static funnel in the CoreSight funnel driver.
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ .../devicetree/bindings/arm/coresight.txt     | 45 +++++++++++++++++--
+ 1 file changed, 42 insertions(+), 3 deletions(-)
 
-Credits to Suzuki shared code for CoreSight replicator refactoring,
-patches 0001/0002 heavily follows up the same fashion in Suzuki's shared
-code.
-
-Patch 0003 is the DT binding for CoreSight enabling on Hikey960, and
-it's the first consumer for use static funnel binding.
-
-This patch set has been tested on Hikey960 with perf command for trace
-data recording and decoding with below commands:
-
-  # perf record -e cs_etm/@20010000.etf/ --per-thread ./main
-  # perf report --tui
-
-
-Leo Yan (2):
-  dt-bindings: arm: coresight: Support non-configurable funnel
-  coresight: funnel: Support static funnel
-
-Wanglai Shi (1):
-  arm64: dts: hi3660: Add CoreSight support
-
- .../devicetree/bindings/arm/coresight.txt     |  45 +-
- .../boot/dts/hisilicon/hi3660-coresight.dtsi  | 456 ++++++++++++++++++
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi     |   2 +
- .../hwtracing/coresight/coresight-funnel.c    | 112 +++--
- 4 files changed, 585 insertions(+), 30 deletions(-)
- create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi
-
+diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+index f8aff65ab921..e63ec3362af8 100644
+--- a/Documentation/devicetree/bindings/arm/coresight.txt
++++ b/Documentation/devicetree/bindings/arm/coresight.txt
+@@ -8,7 +8,8 @@ through the intermediate links connecting the source to the currently selected
+ sink. Each CoreSight component device should use these properties to describe
+ its hardware characteristcs.
+ 
+-* Required properties for all components *except* non-configurable replicators:
++* Required properties for all components *except* non-configurable replicators
++  and non-configurable funnels:
+ 
+ 	* compatible: These have to be supplemented with "arm,primecell" as
+ 	  drivers are using the AMBA bus interface.  Possible values include:
+@@ -24,7 +25,7 @@ its hardware characteristcs.
+ 		  discovered at boot time when the device is probed.
+ 			"arm,coresight-tmc", "arm,primecell";
+ 
+-		- Trace Funnel:
++		- Trace Programmable Funnel:
+ 			"arm,coresight-funnel", "arm,primecell";
+ 
+ 		- Embedded Trace Macrocell (version 3.x) and
+@@ -65,11 +66,12 @@ its hardware characteristcs.
+ 	  "stm-stimulus-base", each corresponding to the areas defined in "reg".
+ 
+ * Required properties for devices that don't show up on the AMBA bus, such as
+-  non-configurable replicators:
++  non-configurable replicators and non-configurable funnels:
+ 
+ 	* compatible: Currently supported value is (note the absence of the
+ 	  AMBA markee):
+ 		- "arm,coresight-replicator"
++		- "arm,coresight-funnel"
+ 
+ 	* port or ports: see "Graph bindings for Coresight" below.
+ 
+@@ -200,6 +202,43 @@ Example:
+ 		};
+ 	};
+ 
++	funnel {
++		/*
++		 * non-configurable funnel don't show up on the AMBA
++		 * bus.  As such no need to add "arm,primecell".
++		 */
++		compatible = "arm,coresight-funnel";
++		clocks = <&crg_ctrl HI3660_PCLK>;
++		clock-names = "apb_pclk";
++
++		out-ports {
++			port {
++				combo_funnel_out: endpoint {
++					remote-endpoint = <&top_funnel_in>;
++				};
++			};
++		};
++
++		in-ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				combo_funnel_in0: endpoint {
++					remote-endpoint = <&cluster0_etf_out>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				combo_funnel_in1: endpoint {
++					remote-endpoint = <&cluster1_etf_out>;
++				};
++			};
++		};
++	};
++
+ 	funnel@20040000 {
+ 		compatible = "arm,coresight-funnel", "arm,primecell";
+ 		reg = <0 0x20040000 0 0x1000>;
 -- 
 2.17.1
