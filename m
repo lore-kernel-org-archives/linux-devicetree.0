@@ -1,13 +1,14 @@
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Subject: Re: [PATCH v2 1/3] dt-bindings: imx-ocotp: Add i.MX8MQ compatible
-Date: Wed, 20 Mar 2019 14:56:40 +0100
-Message-ID: <1553090200.4806.21.camel@pengutronix.de>
+Date: Wed, 20 Mar 2019 14:10:08 +0000
+Message-ID: <5a73fbce-c5bc-4105-2359-9cb269bd5f79@linaro.org>
 References: <20190228070137.30867-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190228070137.30867-1-l.stach@pengutronix.de>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,39 +18,16 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Lucas Stach <l.stach@pengutronix.de>
 Cc: devicetree@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>, Carlo Caione <ccaione@baylibre.com>, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3Jpbml2YXMsCgpmcmllbmRseSBwaW5nLiBUaGlzIHNlcmllcyBoYXMgYmVlbiByZXZpZXdl
-ZCBhbmQgYWNrZWQsIHNvIEkgdGhpbmsgaXQKc2hvdWxkIGJlIGdvb2QgdG8gZ28gaW4uCgpSZWdh
-cmRzLApMdWNhcwoKQW0gRG9ubmVyc3RhZywgZGVuIDI4LjAyLjIwMTksIDA4OjAxICswMTAwIHNj
-aHJpZWIgTHVjYXMgU3RhY2g6Cj4gQWRkIGNvbXBhdGlibGUgZm9yIGkuTVg4TVEgYW5kIGFkZCBp
-Lk1YN0QvUywgaS5NWDdVTFAgYW5kIGkuTThNUQo+IHRvIHRoZSBkZXNjcmlwdGlvbi4KPiAKPiA+
-IFNpZ25lZC1vZmYtYnk6IEx1Y2FzIFN0YWNoIDxsLnN0YWNoQHBlbmd1dHJvbml4LmRlPgo+ID4g
-UmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4gPiBSZXZpZXdlZC1i
-eTogQWJlbCBWZXNhIDxhYmVsLnZlc2FAbnhwLmNvbT4KPiAtLS0KPiB2MjoKPiAtIHJlYmFzZWQg
-b24gbGludXgtbmV4dAo+IC0gY29sbGVjdGVkIHJldmlld2VkCj4gLS0tCj4gwqBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbnZtZW0vaW14LW9jb3RwLnR4dCB8IDQgKysrLQo+IMKg
-MSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbnZtZW0vaW14LW9jb3Rw
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9udm1lbS9pbXgtb2NvdHAu
-dHh0Cj4gaW5kZXggN2E5OTlhMTM1ZTU2Li42OGY3ZDZmZGQxNDAgMTAwNjQ0Cj4gLS0tIGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL252bWVtL2lteC1vY290cC50eHQKPiArKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbnZtZW0vaW14LW9jb3RwLnR4dAo+
-IEBAIC0xLDcgKzEsOCBAQAo+IMKgRnJlZXNjYWxlIGkuTVg2IE9uLUNoaXAgT1RQIENvbnRyb2xs
-ZXIgKE9DT1RQKSBkZXZpY2UgdHJlZSBiaW5kaW5ncwo+IMKgCj4gwqBUaGlzIGJpbmRpbmcgcmVw
-cmVzZW50cyB0aGUgb24tY2hpcCBlRnVzZSBPVFAgY29udHJvbGxlciBmb3VuZCBvbgo+IC1pLk1Y
-NlEvRCwgaS5NWDZETC9TLCBpLk1YNlNMLCBpLk1YNlNYLCBpLk1YNlVMLCBpLk1YNlVMTC9VTFog
-YW5kIGkuTVg2U0xMIFNvQ3MuCj4gK2kuTVg2US9ELCBpLk1YNkRML1MsIGkuTVg2U0wsIGkuTVg2
-U1gsIGkuTVg2VUwsIGkuTVg2VUxML1VMWiwgaS5NWDZTTEwsCj4gK2kuTVg3RC9TLCBpLk1YN1VM
-UCBhbmQgaS5NWDhNUSBTb0NzLgo+IMKgCj4gwqBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+IMKgLSBj
-b21wYXRpYmxlOiBzaG91bGQgYmUgb25lIG9mCj4gQEAgLTEzLDYgKzE0LDcgQEAgUmVxdWlyZWQg
-cHJvcGVydGllczoKPiA+IMKgCSJmc2wsaW14N2Qtb2NvdHAiIChpLk1YN0QvUyksCj4gPiDCoAki
-ZnNsLGlteDZzbGwtb2NvdHAiIChpLk1YNlNMTCksCj4gPiDCoAkiZnNsLGlteDd1bHAtb2NvdHAi
-IChpLk1YN1VMUCksCj4gPiArCSJmc2wsaW14OG1xLW9jb3RwIiAoaS5NWDhNUSksCj4gPiDCoAlm
-b2xsb3dlZCBieSAic3lzY29uIi4KPiDCoC0gI2FkZHJlc3MtY2VsbHMgOiBTaG91bGQgYmUgMQo+
-IMKgLSAjc2l6ZS1jZWxscyA6IFNob3VsZCBiZSAxCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+
+On 28/02/2019 07:01, Lucas Stach wrote:
+> Add compatible for i.MX8MQ and add i.MX7D/S, i.MX7ULP and i.M8MQ
+> to the description.
+
+Thanks, Applied series to nvmem next.
+
+--srini
