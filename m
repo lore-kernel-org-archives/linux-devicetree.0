@@ -1,98 +1,104 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 2/2] clk: meson: meson8b: add the video decoder clock trees
-Date: Wed, 20 Mar 2019 21:53:43 +0100
-Message-ID: <CAFBinCC4cVkRr0TGJXkKVSd+k7bxeBVkZZxrH+EjS=X78StS=g@mail.gmail.com>
-References: <20190319220012.31065-1-martin.blumenstingl@googlemail.com>
- <20190319220012.31065-3-martin.blumenstingl@googlemail.com> <CAMO6nawKpBRrp0oBtrGY8KskD6tUX9ZCNeDqSGPB-kMnm27HnA@mail.gmail.com>
+From: =?utf-8?B?R2HDq2w=?= PORTAY <gael.portay@collabora.com>
+Subject: Re: [PATCH v2 3/5] devfreq: rk3399_dmc: Pass ODT and auto power down
+ parameters to TF-A.
+Date: Wed, 20 Mar 2019 17:50:13 -0400
+Message-ID: <20190320215013.43zgvyn5frnb3yud@archlinux.localdomain>
+References: <20190319181323.22804-1-gael.portay@collabora.com>
+ <20190319181323.22804-4-gael.portay@collabora.com>
+ <20190320003352.GN112750@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMO6nawKpBRrp0oBtrGY8KskD6tUX9ZCNeDqSGPB-kMnm27HnA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190320003352.GN112750@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Jourdan <mjourdan@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Derek Basehore <dbasehore@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-rockchip@lists.infradead.org, Randy Li <ayaka@soulik.info>, kernel@collabora.com, linux-arm-kernel@lists.infradead.org, Lin Huang <hl@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+Hi Matthias,
 
-On Wed, Mar 20, 2019 at 12:16 PM Maxime Jourdan <mjourdan@baylibre.com> wrote:
+On Tue, Mar 19, 2019 at 05:33:52PM -0700, Matthias Kaehlcke wrote:
+> ...
+> > @@ -95,6 +103,19 @@ static int rk3399_dmcfreq_target(struct device *dev, unsigned long *freq,
+> >  
+> >  	mutex_lock(&dmcfreq->lock);
+> >  
+> > +	if (target_rate >= dmcfreq->odt_dis_freq)
+> > +		odt_enable = true;
+> > +
+> > +	/*
+> > +	 * This makes a SMC call to the TF-A to set the DDR PD (power-down)
+> > +	 * timings and to enable or disable the ODT (on-die termination)
+> > +	 * resistors.
+> > +	 */
+> > +	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, dmcfreq->odt_pd_arg0,
+> > +		      dmcfreq->odt_pd_arg1,
+> > +		      ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD,
+> > +		      odt_enable, 0, 0, 0, &res);
+> 
+> Is it necessary/desirable to make this call for every frequency
+> change? IIUC it should be only needed when odt_enable changes and the
+> driver could track the state. If the DDR frequency doesn't change too
+> often and the overhead of the call is small it shouldn't be really
+> important though.
 >
-> Hi Martin, thanks for looking into the video decoder for meson8!
-you're welcome - this is only possible because of your work on the
-video decoder driver!
 
-> On Tue, Mar 19, 2019 at 11:00 PM Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
-> >
-> > This adds the four video decoder clock trees.
-> >
-> > VDEC_1 is split into two paths on Meson8b and Meson8m2:
-> > - input mux called "vdec_1_sel"
-> > - two dividers ("vdec_1_1_div" and "vdec_1_2_div") and gates ("vdec_1_1"
-> >   and "vdec_1_2")
-> > - and an output mux (probably glitch-free) called "vdec_1"
->
-> Yes, all vdec clocks have a glitch-free mux to be able to safely
-> adjust the frequency on the fly, although in practice it's barely
-> used.
->
-> > On Meson8 the VDEC_1 tree is simpler because there's only one path:
-> > - input mux called "vdec_1_sel"
-> > - divider ("vdec_1_1_div") and gate ("vdec_1_1")
-> > - (the gate is used as output directly, there's no mux)
-> >
-> > The VDEC_HCODEC and VDEC_2 clocks are simple composite clocks each
-> > consisting of an input mux, divider and a gate.
-> >
-> > The VDEC_HEVC clock seems to have two paths similar to the VDEC_1 clock.
-> > However, the register offsets of the second clock path is not known.
-> > Amlogic's 3.10 kernel (which is used as reference) sets
-> > HHI_VDEC2_CLK_CNTL[31] to 1 before changing the VDEC_HEVC clock and back
-> > to 0 afterwards. For now, leave a TODO comment and only add the first
-> > path.
-> >
->
-> Looking at aml-3.10/drivers/amlogic/amports/m8b/vdec_clk.c, it's weird
-> indeed. They seem to copy the divider's value to the same place
-> (HHI_VDEC2_CLK_CNTL[16~23]), and the only thing that stands out is
-> enabling HHI_VDEC2_CLK_CNTL[31].
->
-> Then again they don't make use of that codepath at all, so who knows..
-indeed, that's why I skipped it for now
+I will test your solution first to make sure there is no regression to
+run that call for frequency change only.
 
-[...]
-> > diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
-> > index e775f91ccce9..ed37196187e6 100644
-> > --- a/drivers/clk/meson/meson8b.h
-> > +++ b/drivers/clk/meson/meson8b.h
-> > @@ -37,6 +37,9 @@
-> >  #define HHI_MALI_CLK_CNTL              0x1b0 /* 0x6c offset in data sheet */
-> >  #define HHI_VPU_CLK_CNTL               0x1bc /* 0x6f offset in data sheet */
-> >  #define HHI_HDMI_CLK_CNTL              0x1cc /* 0x73 offset in data sheet */
-> > +#define HHI_VDEC_CLK_CNTL              0x1e0 /* 0x78 offset in data sheet */
-> > +#define HHI_VDEC2_CLK_CNTL             0x1e4 /* 0x79 offset in data sheet */
-> > +#define HHI_VDEC3_CLK_CNTL             0x1e8 /* 0x7a offset in data sheet */
-> >  #define HHI_NAND_CLK_CNTL              0x25c /* 0x97 offset in data sheet */
-> >  #define HHI_MPLL_CNTL                  0x280 /* 0xa0 offset in data sheet */
-> >  #define HHI_SYS_PLL_CNTL               0x300 /* 0xc0 offset in data sheet */
-> > @@ -156,8 +159,20 @@
-> >  #define CLKID_VPU_1_SEL                186
-> >  #define CLKID_VPU_1_DIV                187
-> >  #define CLKID_VPU_1            189
-> > +#define CLKID_VDEC_1_SEL       191
-> > +#define CLKID_VDEC_1_1_DIV     192
-> > +#define CLKID_VDEC_1_1         193
-> > +#define CLKID_VDEC_1_2_DIV     194
-> > +#define CLKID_VDEC_1_2         195
->
-> In order to make use of the glitch-free mux by the driver, shouldn't
-> CLKID_VDEC_1_1 and CLKID_VDEC_1_2 be exported in the bindings ?
-I considered this but I didn't export them because of three reasons:
-- the video decoder driver doesn't have any logic to use the glitch-free mux yet
-- assigned-clock-rates or clk_set_rate will figure out the parent
-setup on it's own if we ignore the glitch-free mux until the video
-decoder driver supports it
-- exporting CLKIDs is easier than un-exporting them
+Also, the call takes around 300us.
 
-Regards
-Martin
+> > ...
+> > @@ -334,6 +357,34 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
+> >  		return ret;
+> >  	}
+> >  
+> > +	/* Try to find the optional reference to the pmu syscon */
+> > +	node = of_parse_phandle(np, "rockchip,pmu", 0);
+> > +	if (node) {
+> 
+> The 'optional' part doesn't seem to be accurate: according to the
+> binding (https://lore.kernel.org/patchwork/patch/1052322/) the
+> property is required and the code below assumes that data->regmap_pmu
+> is set.
+>
+
+Indeed.
+
+> > +		data->regmap_pmu = syscon_node_to_regmap(node);
+> > +		if (IS_ERR(data->regmap_pmu))
+> > +			return PTR_ERR(data->regmap_pmu);
+> > +	}
+> > +
+> > +	/* Get DDR type */
+> 
+> nit: the comment doesn't add much value, thanks to good variable
+> naming this is evident from the code.
+> 
+> > +	regmap_read(data->regmap_pmu, RK3399_PMUGRF_OS_REG2, &val);
+> > +	ddr_type = (val >> RK3399_PMUGRF_DDRTYPE_SHIFT) &
+> > +		    RK3399_PMUGRF_DDRTYPE_MASK;
+> > +
+> > +	/* Get the odt_dis_freq parameter in function of the DDR type */
+> 
+> nit: ditto
+> 
+> (if you prefer to keep these comments I'm not opposed to keeping them,
+> but I don't think they are needed)
+>
+
+I will remove all the comments in the v3.
+
+> Cheers
+> 
+> Matthias
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+
+Regards,
+Gaël
