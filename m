@@ -1,62 +1,59 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: pfla02: increase phy reset duration
-Date: Wed, 20 Mar 2019 19:37:46 +0800
-Message-ID: <20190320113744.GL4980@dragon>
-References: <20190304104940.18138-1-m.felsch@pengutronix.de>
- <20190320085937.GG4980@dragon>
- <20190320101040.r7yuqvg6cbqnnpey@pengutronix.de>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH] arm64: dts: juno: Enable smmu_pcie for Juno r1/r2
+Date: Wed, 20 Mar 2019 19:44:50 +0800
+Message-ID: <20190320114450.GB17539@leoy-ThinkPad-X240s>
+References: <20190320083105.8954-1-leo.yan@linaro.org>
+ <2566ce76-a8b2-c8ac-9f3f-4b99101f7661@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190320101040.r7yuqvg6cbqnnpey@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, Christian Hemp <c.hemp@phytec.de>, Stefan Christ <s.christ@phytec.de>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <2566ce76-a8b2-c8ac-9f3f-4b99101f7661@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 11:10:40AM +0100, Marco Felsch wrote:
-> Hi Shawn,
-> 
-> On 19-03-20 16:59, Shawn Guo wrote:
-> > On Mon, Mar 04, 2019 at 11:49:40AM +0100, Marco Felsch wrote:
-> > > Increase the reset duration to ensure correct phy functionality. The
-> > > reset duration is taken from barebox commit 52fdd510de ("ARM: dts:
-> > > pfla02: use long enough reset for ethernet phy"):
-> > > 
-> > >   Use a longer reset time for ethernet phy Micrel KSZ9031RNX. Otherwise a
-> > >   small percentage of modules have 'transmission timeouts' errors like
-> > > 
-> > >   barebox@Phytec phyFLEX-i.MX6 Quad Carrier-Board:/ ifup eth0
-> > >   warning: No MAC address set. Using random address 7e:94:4d:02:f8:f3
-> > >   eth0: 1000Mbps full duplex link detected
-> > >   eth0: transmission timeout
-> > >   T eth0: transmission timeout
-> > >   T eth0: transmission timeout
-> > >   T eth0: transmission timeout
-> > >   T eth0: transmission timeout
-> > > 
-> > > Cc: Stefan Christ <s.christ@phytec.de>
-> > > Cc: Christian Hemp <c.hemp@phytec.de>
-> > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > 
-> > Do you want to get this in as a fix or just -next material?  If it's a
-> > fix, please have a Fixes tag.
-> 
-> I don't know that either.. IMHO it's a fix but there is no one out their
-> complaining about such a problem so it can be -next material too.
-> 
-> Please feel free to add:
-> 
-> Fixes: 3180f956668e ("ARM: dts: Phytec imx6q pfla02 and pbab01 support")
+Hi Robin,
 
-Applied as fix, thanks.
+On Wed, Mar 20, 2019 at 11:24:18AM +0000, Robin Murphy wrote:
+> Hi Leo,
+> 
+> On 20/03/2019 08:31, Leo Yan wrote:
+> > Though PCIe controller has been enabled on Juno r1/r2, but it misses to
+> > enable its connected SMMU.  From the testing, even without set this SMMU
+> > status property to 'okay', the PCIe NIC device still works well.  Since
+> > the SMMU is not enabled in DT binding and its iommu_groups is not
+> > created properly, finally this prevents to enable vfio-pci for NIC
+> > device with KVM.
+> 
+> FWIW, whilst it might appear to be fine, there are still potential issues
+> once the DMA API sees this SMMU and starts using it, which is why this
+> particular change remains as one of my oldest local hacks that I've never
+> yet considered upstreamable.
+> 
+> The IOMMU DMA ops happen to work for light usage now as a side-effect of
+> 122fac030e912 combined with the current top-down allocation behaviour, but
+> as soon as IOVA usage/fragmentation leads to 32-bit DMA addresses below
+> 0x8000000, or full 40-bit addresses, being allocated then data loss and
+> other problems will happen (for the reasons explained on the other thread).
+> Similarly, it's also going to be fragile to any internal changes in the IOVA
+> allocator.
+>
+> Until we have a decent solution for handling such 'windowed' DMA
+> restrictions (there do exist other systems with similar behaviour) I'd be
+> very wary of enabling the PCIe SMMU for all users who may not be aware of
+> the caveats. Given that the lack of stream IDs and SR-IOV support prevents
+> Juno from being a realistic virtualisation platform anyway, I'm not
+> convinced there's enough benefit to justify the risk.
+
+Ah, I didn't connect the 'windowde' DMA restriction with the IOMMU
+property setting in dt, which actually is deliberate.
+
+Please drop this patch and will leave it to you.  Thanks a lot for
+related info.
+
+[...]
+
+Thanks,
+Leo Yan
