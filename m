@@ -1,58 +1,44 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/6] dt-bindings: fsl: add compatible for i.MX7S generic
- board
-Date: Wed, 20 Mar 2019 17:13:29 +0800
-Message-ID: <20190320091327.GJ4980@dragon>
-References: <20190304165630.18225-1-bruno.thomsen@gmail.com>
- <20190304165630.18225-3-bruno.thomsen@gmail.com>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH 1/2] dt-bindings: drm/panel: simple: add lg,acx467akm-7
+ panel
+Date: Wed, 20 Mar 2019 05:17:27 -0400
+Message-ID: <20190320091727.GA13882@basecamp>
+References: <20181124200628.24393-1-masneyb@onstation.org>
+ <CACRpkdYqxUJKZGHGX0qPVaSVW4vzHYBMp-FARA2uP85W9AX5wA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190304165630.18225-3-bruno.thomsen@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bruno Thomsen <bruno.thomsen@gmail.com>
-Cc: markus.niebel@tq-group.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CACRpkdYqxUJKZGHGX0qPVaSVW4vzHYBMp-FARA2uP85W9AX5wA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Dave Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jonathan Marek <jonathan@marek.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 05:56:26PM +0100, Bruno Thomsen wrote:
-> This patch adds missing compatible for i.MX7Solo boards.
-> 
-> Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.txt | 4 ++++
+Hi Linus,
 
-It's gone.  Please patch Documentation/devicetree/bindings/arm/fsl.yaml
-instead.
-
-Shawn
-
->  1 file changed, 4 insertions(+)
+On Tue, Mar 05, 2019 at 11:42:15PM +0100, Linus Walleij wrote:
+> On Sat, Nov 24, 2018 at 9:06 PM Brian Masney <masneyb@onstation.org> wrote:
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-> index 7fbc42484001..c90058b621bc 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.txt
-> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
-> @@ -127,6 +127,10 @@ i.MX6q generic board
->  Required root node properties:
->      - compatible = "fsl,imx6q";
->  
-> +i.MX7S generic board
-> +Required root node properties:
-> +    - compatible = "fsl,imx7s";
-> +
->  i.MX7ULP generic board
->  Required root node properties:
->      - compatible = "fsl,imx7ulp";
-> -- 
-> 2.20.1
+> > Add binding for the LG ACX467AKM-7 4.95" 1080×1920 LCD panel that is
+> > found on the LG Nexus 5 (hammerhead) phone. This appears to be a JDI
+> > panel based on some Internet searches, however a specific model number
+> > could not be found. I disassembled an old Nexus 5 with a broken
+> > screen and the LG part number is the only model number present on the
+> > back of the panel, so I think that is probably the best ID to use.
+> >
+> > Signed-off-by: Brian Masney <masneyb@onstation.org>
 > 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Tell me if you need me to merge this to the DRM misc tree.
+
+It would be great if you could take this patch, plus the corresponding
+change to panel-simple.c [1]
+
+[1] https://lore.kernel.org/lkml/20181124200628.24393-2-masneyb@onstation.org/
+
+Thanks,
+
+Brian
