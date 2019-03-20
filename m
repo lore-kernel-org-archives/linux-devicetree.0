@@ -1,59 +1,64 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 0/8] phy: qcom-ufs: Enable regulators to be off in
- suspend
-Date: Wed, 20 Mar 2019 14:36:00 +0530
-Message-ID: <405b80c6-2624-cc7d-24fa-670b7e8cb3a9@ti.com>
-References: <20190205185902.106085-1-evgreen@chromium.org>
- <CAE=gft4YPmqd35ySmZw2UG876Lvt8rcz+nNwELXK98PDvHuVeA@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 0/6] ARM: dts: tq imx7 evaluation board
+Date: Wed, 20 Mar 2019 17:12:00 +0800
+Message-ID: <20190320091159.GI4980@dragon>
+References: <20190304165630.18225-1-bruno.thomsen@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAE=gft4YPmqd35ySmZw2UG876Lvt8rcz+nNwELXK98PDvHuVeA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@chromium.org>, Andy Gross <andy.gross@linaro.org>
-Cc: Stephen Boyd <swboyd@chromium.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Grygorii Strashko <grygorii.strashko@ti.com>, Rob Herring <robh+dt@kernel.org>, Vinayak Holikatti <vinholikatti@gmail.com>, Jeffrey Hugo <jhugo@codeaurora.org>, SCSI <linux-scsi@vger.kernel.org>, David Brown <david.brown@linaro.org>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, liwei <liwei213@huawei.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190304165630.18225-1-bruno.thomsen@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bruno Thomsen <bruno.thomsen@gmail.com>
+Cc: markus.niebel@tq-group.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Evan,
-
-On 20/03/19 1:34 AM, Evan Green wrote:
-> On Tue, Feb 5, 2019 at 10:59 AM Evan Green <evgreen@chromium.org> wrote:
->>
-> ...
->> Evan Green (8):
->>   dt-bindings: ufs: Add #reset-cells for Qualcomm controllers
->>   dt-bindings: phy-qcom-qmp: Add UFS PHY reset
->>   dt-bindings: phy: qcom-ufs: Add resets property
->>   arm64: dts: sdm845: Add UFS PHY reset
->>   arm64: dts: msm8996: Add UFS PHY reset controller
->>   scsi: ufs: qcom: Expose the reset controller for PHY
->>   phy: qcom: Utilize UFS reset controller
->>   phy: ufs-qcom: Refactor all init steps into phy_poweron
->>
->>  .../devicetree/bindings/phy/qcom-qmp-phy.txt  |   6 +-
->>  .../devicetree/bindings/ufs/ufs-qcom.txt      |   5 +-
->>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |   3 +
->>  arch/arm64/boot/dts/qcom/msm8996.dtsi         |   4 +-
->>  arch/arm64/boot/dts/qcom/sdm845.dtsi          |   3 +
->>  drivers/phy/qualcomm/phy-qcom-qmp.c           | 117 +++++++++---------
->>  drivers/phy/qualcomm/phy-qcom-ufs-i.h         |   5 +-
->>  drivers/phy/qualcomm/phy-qcom-ufs-qmp-14nm.c  |  25 +---
->>  drivers/phy/qualcomm/phy-qcom-ufs-qmp-20nm.c  |  25 +---
->>  drivers/phy/qualcomm/phy-qcom-ufs.c           |  57 +++++++--
->>  drivers/scsi/ufs/Kconfig                      |   1 +
->>  drivers/scsi/ufs/ufs-qcom.c                   | 114 ++++++++++-------
->>  drivers/scsi/ufs/ufs-qcom.h                   |   4 +
->>  13 files changed, 202 insertions(+), 167 deletions(-)
->>
->> --
+On Mon, Mar 04, 2019 at 05:56:24PM +0100, Bruno Thomsen wrote:
+> This patch series is an effort to get mainline kernel support for TQ
+> boards with i.MX7 SoCs and is based on the vendor BSP. Products based
+> on these TQMa7 modules such as smart grid infrastructure will be sold
+> for many years with an expected field lifetime of up to two decades.
+> During this long lifetime they need to receive security patches and
+> new in-kernel security features. The typical device of this type does
+> not use audio and video, so it has not been a focus area. This however
+> could be worked on in the future if someone desire that functionality.
 > 
-> Hi Kishon,
-> A gentle ping here now that rc1 is out. Are you able to take these? I
-> can also repost if needed.
+> The following device trees has been tested on a 4.19 mainline kernel
+> together with U-Boot 2019.01.
+> 
+> Working/tested:
+> USB
+> Ethernet
+> SD
+> Console
+> Buttons
+> 
+> Not working/tested:
+> Sound
+> Video
+> 
+> No changes to MAINTAINERS are needed IMHO.
+> 
+> Bruno Thomsen (6):
+>   dt-bindings: add vendor prefix for TQ Systems GmbH
+>   dt-bindings: fsl: add compatible for i.MX7S generic board
+>   dt-bindings: tq: add compatible for i.MX7 boards
+>   ARM: dts: tq imx7 common board support
+>   ARM: dts: tq imx7s board support
+>   ARM: dts: tq imx7d board support
 
-Can you repost with the updated tags please?
+Please copy the following reviewers for new posting.
 
-Thanks
-Kishon
+R:      Pengutronix Kernel Team <kernel@pengutronix.de>
+R:      Fabio Estevam <festevam@gmail.com>
+
+Shawn
