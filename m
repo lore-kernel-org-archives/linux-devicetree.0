@@ -1,125 +1,42 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2 5/5] arm64: dts: rockchip: Enable dmc and dfi nodes
- on gru.
-Date: Wed, 20 Mar 2019 14:05:21 +0900
-Message-ID: <3adc4347-7dd9-106f-e564-26d39ff38ffb@samsung.com>
-References: <20190319181323.22804-1-gael.portay@collabora.com>
-        <CGME20190319181359epcas4p11159b40adf1c883d179e18356d4cbd30@epcas4p1.samsung.com>
-        <20190319181323.22804-6-gael.portay@collabora.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V7 0/5] Add i.MX7ULP EVK PWM backlight support
+Date: Wed, 20 Mar 2019 05:06:08 +0000
+Message-ID: <1553058067-18793-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190319181323.22804-6-gael.portay@collabora.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Ga=c3=abl_PORTAY?= <gael.portay@collabora.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lin Huang <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Derek Basehore <dbasehore@chromium.org>, Randy Li <ayaka@soulik.info>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, kernel@collabora.com
+To: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "stefan@agner.ch" <stefan@agner.ch>, Leonard Crestez <leonard.crestez@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, Robin Gong <yibin.gong@nxp.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gaël,
+i.MX7ULP EVK board has MIPI-DSI display, its backlight is supplied by
+TPM PWM module, this patch set enables i.MX7ULP TPM PWM driver support
+and also add backlight support for MIPI-DSI display.
 
-On 19. 3. 20. 오전 3:13, Gaël PORTAY wrote:
-> From: Lin Huang <hl@rock-chips.com>
-> 
-> Enable the DMC (Dynamic Memory Controller) and the DFI (DDR PHY Interface)
-> nodes on gru/kevin boards so we can support DDR DVFS.
-> 
-> Signed-off-by: Lin Huang <hl@rock-chips.com>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>
-> ---
-> 
-> Changes in v2:
-> - [PATCH 8/8] Move center-supply attribute of dmc node in file
->               rk3399-gru-chromebook.dtsi (where ppvar_centerlogic is
-> 	      defined).
-> 
-> Changes in v1: None
-> 
->  .../dts/rockchip/rk3399-gru-chromebook.dtsi   |  4 ++++
->  arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi  | 20 +++++++++++++++++++
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi      |  2 +-
->  3 files changed, 25 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
-> index 931640e9aed4..cfb81356c61e 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
-> @@ -400,3 +400,7 @@ ap_i2c_tp: &i2c5 {
->  		rockchip,pins = <0 8 RK_FUNC_GPIO &pcfg_pull_none>;
->  	};
->  };
-> +
-> +&dmc {
-> +	center-supply = <&ppvar_centerlogic>;
-> +};
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> index da03fa9c5662..d14dce679e7a 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> @@ -289,6 +289,12 @@
->  	status = "okay";
->  };
->  
-> +&dmc_opp_table {
-> +	opp04 {
-> +		opp-suspend;
-> +	};
-> +};
-> +
->  /*
->   * Set some suspend operating points to avoid OVP in suspend
->   *
-> @@ -368,6 +374,10 @@
->  		<200000000>;
->  };
->  
-> +&display_subsystem {
-> +	devfreq = <&dmc>;
-> +};
+Changes since V6:
+	- ONLY change the pwm driver patch.
 
-When I checked the rockchip_drm_drv.c on linux-next.git (20190320),
-there are no any codes about this. Maybe it should be removed.
+Anson Huang (5):
+  dt-bindings: pwm: Add i.MX TPM PWM binding
+  pwm: Add i.MX TPM PWM driver support
+  ARM: imx_v6_v7_defconfig: Add TPM PWM support by default
+  ARM: dts: imx7ulp: Add pwm0 support
+  ARM: dts: imx7ulp-evk: Add backlight support
 
-> +
->  &emmc_phy {
->  	status = "okay";
->  };
-> @@ -489,6 +499,16 @@ ap_i2c_audio: &i2c8 {
->  	status = "okay";
->  };
->  
-> +&dfi {
-> +	status = "okay";
-> +};
-> +
-> +&dmc {
-> +	status = "okay";
-> +	upthreshold = <25>;
-> +	downdifferential = <15>;
-> +};
-> +
->  &sdhci {
->  	/*
->  	 * Signal integrity isn't great at 200 MHz and 150 MHz (DDR) gives the
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 8fe86a3e7658..010b3e5267a0 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -156,7 +156,7 @@
->  		};
->  	};
->  
-> -	display-subsystem {
-> +	display_subsystem: display-subsystem {
->  		compatible = "rockchip,display-subsystem";
->  		ports = <&vopl_out>, <&vopb_out>;
->  	};
-> 
+ .../devicetree/bindings/pwm/imx-tpm-pwm.txt        |  19 +
+ arch/arm/boot/dts/imx7ulp-evk.dts                  |  20 +
+ arch/arm/boot/dts/imx7ulp.dtsi                     |  10 +
+ arch/arm/configs/imx_v6_v7_defconfig               |   1 +
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-imx-tpm.c                          | 436 +++++++++++++++++=
+++++
+ 7 files changed, 498 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
+ create mode 100644 drivers/pwm/pwm-imx-tpm.c
 
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+--=20
+2.7.4
