@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v3 5/5] dt-bindings: display: armada: Document bus-width property
-Date: Wed, 20 Mar 2019 09:20:57 +0100
-Message-ID: <20190320082057.856943-6-lkundrak@v3.sk>
+Subject: [PATCH v3 4/5] dt-bindings: display: armada: Add more compatible strings
+Date: Wed, 20 Mar 2019 09:20:56 +0100
+Message-ID: <20190320082057.856943-5-lkundrak@v3.sk>
 References: <20190320082057.856943-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -9,47 +9,38 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190320082057.856943-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Russell King <linux@armlinux.org.uk>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-This makes it possible to choose a different pixel format for the
-endpoint. Modelled after what other LCD controllers use, including
-marvell,pxa2xx-lcdc and atmel,hlcdc-display-controller and perhaps more.
+There's a generic compatible string and the driver will work on a MMP2 as
+well, using the same binding.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Reviewed-by: Rob Herring <robh@kernel.org>
 
 ---
 Changes since v2:
-- Collected the Reviewed-by tag
+- Order marvell,armada-lcdc after the model-specific strings.
 
- .../devicetree/bindings/display/marvell,armada-lcdc.txt     | 6 ++++++
- 1 file changed, 6 insertions(+)
+Changes since v1:
+- Added marvell,armada-lcdc compatible string.
+
+ .../devicetree/bindings/display/marvell,armada-lcdc.txt        | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/display/marvell,armada-lcd=
 c.txt b/Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
-index 0ea4cbe5a32e..d1dadaaeee73 100644
+index 2606a8efc956..0ea4cbe5a32e 100644
 --- a/Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
 +++ b/Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
-@@ -25,6 +25,11 @@ Required child nodes:
+@@ -3,7 +3,8 @@ Marvell Armada LCD controller
 =20
- - port: video output port with endpoints, as described by
-   Documentation/devicetree/bindings/graph.txt
-+  The endpoints can optionally specify the following property:
-+
-+  - bus-width: recognized values are <12>, <16>, <18> and <24>, that
-+    select "rgb444", "rgb565", "rgb666" or "rgb888" pixel format
-+    respectively. Defaults to <24> if unspecified.
+ Required properties:
 =20
- Example:
+- - compatible: value should be "marvell,dove-lcd".
++ - compatible: value should be "marvell,dove-lcd" or "marvell,mmp2-lcd",
++   depending on the exact SoC model, along with "marvell,armada-lcdc"
+  - reg: base address and size of the LCD controller
+  - interrupts: single interrupt number for the LCD controller
 =20
-@@ -37,6 +42,7 @@ Example:
-=20
- 		lcd0_port: port {
- 			lcd0_rgb_out: endpoint {
-+				bus-width =3D <24>;
- 				remote-endpoint =3D <&encoder_rgb_in>;
- 			};
- 		};
 --=20
 2.20.1
