@@ -1,51 +1,61 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 1/2] clk: imx7ulp: remove snvs clock
-Date: Wed, 20 Mar 2019 06:47:20 +0000
-Message-ID: <AM6PR0402MB39113020252197C138A83DBBF5410@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-References: <1551343889-6674-1-git-send-email-Anson.Huang@nxp.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v7 0/4] Enable wm8524 on i.MX8MQ-EVK
+Date: Wed, 20 Mar 2019 15:55:53 +0800
+Message-ID: <20190320075552.GB4980@dragon>
+References: <20190319174823.29467-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551343889-6674-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190319174823.29467-1-daniel.baluta@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, kunin
 List-Id: devicetree@vger.kernel.org
 
-UGluZy4uLg0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+IEZyb206IEFuc29uIEh1YW5nDQo+IFNlbnQ6IDIwMTnE6jLUwjI4yNUg
-MTY6NTYNCj4gVG86IG10dXJxdWV0dGVAYmF5bGlicmUuY29tOyBzYm95ZEBrZXJuZWwub3JnOyBz
-aGF3bmd1b0BrZXJuZWwub3JnOw0KPiBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBrZXJuZWxAcGVu
-Z3V0cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsNCj4gcm9iaCtkdEBrZXJuZWwub3JnOyBt
-YXJrLnJ1dGxhbmRAYXJtLmNvbTsgQWlzaGVuZyBEb25nDQo+IDxhaXNoZW5nLmRvbmdAbnhwLmNv
-bT47IGd1c3Rhdm9AZW1iZWRkZWRvci5jb207IGxpbnV4LQ0KPiBjbGtAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxA
-dmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBDYzogZGwtbGlu
-dXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogW1BBVENIIDEvMl0gY2xrOiBp
-bXg3dWxwOiByZW1vdmUgc252cyBjbG9jaw0KPiANCj4gU2luY2UgaS5NWDdVTFAgQjAgY2hpcCwg
-dGhlIFNOVlMgbW9kdWxlIGlzIG1vdmVkIGludG8gTTQgZG9tYWluIGFuZCBpdHMNCj4gY2xvY2sg
-aXMgYWxzbyBtb3ZlZCBpbnRvIFBDQzAgd2hpY2ggaXMgY29udG9ybGxlZCBieSBNNCwgTGludXgg
-a2VybmVsIHNob3VsZA0KPiBOT1QgYWRkIGl0IGludG8gY2xvY2sgdHJlZS4NCj4gDQo+IFNpZ25l
-ZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiAtLS0NCj4gIGRy
-aXZlcnMvY2xrL2lteC9jbGstaW14N3VscC5jIHwgMSAtDQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBk
-ZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2lteC9jbGstaW14N3Vs
-cC5jIGIvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg3dWxwLmMNCj4gaW5kZXggY2UzMDY2My4uNjY2
-ODIxMCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg3dWxwLmMNCj4gKysr
-IGIvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg3dWxwLmMNCj4gQEAgLTE1MSw3ICsxNTEsNiBAQCBz
-dGF0aWMgdm9pZCBfX2luaXQgaW14N3VscF9jbGtfcGNjMl9pbml0KHN0cnVjdA0KPiBkZXZpY2Vf
-bm9kZSAqbnApDQo+ICAJY2xrc1tJTVg3VUxQX0NMS19ETUExXQkJPSBpbXhfY2xrX2h3X2dhdGUo
-ImRtYTEiLA0KPiAibmljMV9jbGsiLCBiYXNlICsgMHgyMCwgMzApOw0KPiAgCWNsa3NbSU1YN1VM
-UF9DTEtfUkdQSU8yUDFdCT0gaW14X2Nsa19od19nYXRlKCJyZ3BpbzJwMSIsDQo+ICJuaWMxX2J1
-c19jbGsiLCBiYXNlICsgMHgzYywgMzApOw0KPiAgCWNsa3NbSU1YN1VMUF9DTEtfRE1BX01VWDFd
-CT0NCj4gaW14X2Nsa19od19nYXRlKCJkbWFfbXV4MSIsICJuaWMxX2J1c19jbGsiLCBiYXNlICsg
-MHg4NCwgMzApOw0KPiAtCWNsa3NbSU1YN1VMUF9DTEtfU05WU10JCT0gaW14X2Nsa19od19nYXRl
-KCJzbnZzIiwNCj4gIm5pYzFfYnVzX2NsayIsIGJhc2UgKyAweDhjLCAzMCk7DQo+ICAJY2xrc1tJ
-TVg3VUxQX0NMS19DQUFNXQkJPSBpbXhfY2xrX2h3X2dhdGUoImNhYW0iLA0KPiAibmljMV9jbGsi
-LCBiYXNlICsgMHg5MCwgMzApOw0KPiAgCWNsa3NbSU1YN1VMUF9DTEtfTFBUUE00XQk9IGlteDd1
-bHBfY2xrX2NvbXBvc2l0ZSgibHB0cG00IiwNCj4gcGVyaXBoX2J1c19zZWxzLCBBUlJBWV9TSVpF
-KHBlcmlwaF9idXNfc2VscyksIHRydWUsIGZhbHNlLCB0cnVlLCBiYXNlICsNCj4gMHg5NCk7DQo+
-ICAJY2xrc1tJTVg3VUxQX0NMS19MUFRQTTVdCT0gaW14N3VscF9jbGtfY29tcG9zaXRlKCJscHRw
-bTUiLA0KPiBwZXJpcGhfYnVzX3NlbHMsIEFSUkFZX1NJWkUocGVyaXBoX2J1c19zZWxzKSwgdHJ1
-ZSwgZmFsc2UsIHRydWUsIGJhc2UgKw0KPiAweDk4KTsNCj4gLS0NCj4gMi43LjQNCg0K
+On Tue, Mar 19, 2019 at 05:48:35PM +0000, Daniel Baluta wrote:
+> On i.MX8MQ EVK we can start the party using the wm8524 codec
+> which gets it's data through the SAI2 interface.
+> 
+> In order to make it work this patch series enables the SDMA nodes,
+> sets the correct pinctrl configuration and uses the simple card
+> machine driver to put everything together.
+> 
+> Changes since v6: (after Shawn's comments)
+> 	- rebased on latest Shawn's for-next branch
+> 	- added new lines between properties and child nodes
+> 	- added new lines between child nodes
+> 	- keep pinctrl nodes sorted
+> 	- added reviewed by after SoBs in commit message
+> 
+> Changes since v5:
+>         - remove clocks and clock-names properties from wm8524
+>         code node as they are not used.
+> 
+> Changes since v4 (after Fabio's review)
+>         - removed mclk0 from sai2 node because it is not yet supported
+>           by SAI driver
+>         - s/audio-codec-0/audio-codec
+>         - squashed patches 4 and 5
+> 
+> Changes since v3:
+>         - use "arm64: dts: imx8mq-evk" prefix for patches specific to
+>           8MQ-EVK
+>         - squash together patches for setting up SAI (previous 3/5 and
+>           4/5)
+>         - add back and document "fsl, imx8mq-sdma" compatbile string
+> 
+> Changes since v2:
+>         - s/QM/MQ after Chris comments
+> 
+> Changes since v1:
+>         - added cover letter
+>         - remove "fsl,imx8mq-sdma" compatible for sdma.
+> 
+> Daniel Baluta (4):
+>   arm64: dts: imx8mq: Add SDMA nodes
+>   bindings: fsl-imx-sdma: Document fsl,imx8mq-sdma compatbile string
+>   arm64: dts: imx8mq: Add SAI2 node
+>   arm64: dts: imx8mq-evk: Enable audio codec wm8524
+
+Applied all, thanks.
