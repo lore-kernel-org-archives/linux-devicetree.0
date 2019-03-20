@@ -1,60 +1,64 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] i2c: i2c-stm32f7: improve loopback in timing algorithm
-Date: Wed, 20 Mar 2019 18:00:59 +0100
-Message-ID: <20190320170059.2bkw4e62wo2vugbo@ninjato>
-References: <1551885142-22365-1-git-send-email-bich.hemon@st.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: change phy-mode to use rgmii-id
+Date: Wed, 20 Mar 2019 14:04:42 -0300
+Message-ID: <CAOMZO5By8=j7gZRAdf2-h-5ak-Qo34rqwDL4+HA_97cMXTAnEQ@mail.gmail.com>
+References: <20190320120604.7D99B3FBE9@swsrvapps-01.diasemi.com>
+ <CAOMZO5AHzQJzz3vd5MzYgSSxzPjU9xan1dFh9473BXeiRCOzzg@mail.gmail.com> <VI1PR10MB2352C3A55BE8FABAF3B02681FE410@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jlxgfbkaiqonc2hk"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1551885142-22365-1-git-send-email-bich.hemon@st.com>
+In-Reply-To: <VI1PR10MB2352C3A55BE8FABAF3B02681FE410@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bich HEMON <bich.hemon@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Pierre Yves MORDRET <pierre-yves.mordret@st.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Steve Twiss <stwiss.opensource@diasemi.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-ARM-KERNEL <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Steve,
 
---jlxgfbkaiqonc2hk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[Adding Andrew]
 
-On Wed, Mar 06, 2019 at 03:12:32PM +0000, Bich HEMON wrote:
-> From: Nicolas Le Bayon <nicolas.le.bayon@st.com>
->=20
-> This avoids useless loops inside the I2C timing algorithm.
-> Actually, we support only one possible solution per prescaler value.
-> So after finding a solution with a prescaler, the algorithm can
-> switch directly to the next prescaler value.
->=20
-> Signed-off-by: Nicolas Le Bayon <nicolas.le.bayon@st.com>
-> Signed-off-by: Bich Hemon <bich.hemon@st.com>
+On Wed, Mar 20, 2019 at 1:03 PM Steve Twiss
+<stwiss.opensource@diasemi.com> wrote:
+>
+> Hi Fabio,
+>
+> On 20 March 2019 12:17, Fabio Estevam wrote:
+> > Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: change phy-mode to use rgmii-id
+> >
+> > Hi Steve,
+> >
+> > On Wed, Mar 20, 2019 at 9:06 AM Steve Twiss
+> > <stwiss.opensource@diasemi.com> wrote:
+> > >
+> > > The PHY used on the Freescale i.MX6Q/DL SABRE boards is qualified as
+> > > 'rgmii' instead of 'rgmii-id'. Meaning the RX and TX delays that were
+> >
+> > This patch declares it as 'rgmii-id', which contradicts the commit log.
+>
+> The PHY used on the Freescale i.MX6Q/DL SABRE boards is qualified as
+> 'rgmii' instead of 'rgmii-id'.
+>
+> Can that be read two ways?
+> I meant the phy-mode is currently qualified as 'rgmii' instead of what it
+> should be: 'rgmii-id'.
 
-Applied to for-next, thanks!
+Thanks for the clarification.
 
-Pierre-Yves, there are two binding patches for stm32 still open, if you
-have some time for it...
+>
+> [...]
+>
+> > > This patch fixes the network problems seen on the Freescale i.MX6Q/DL
+> >
+> > Please provide a Fixes tag. It would be good to know if this fix needs
+> > to be applied to older kernels.
+>
+> I didn't put a Fixes tag in because I find this patch fixes v5.1-rc1 (which I see as broken).
+> But the patch is not needed in v5.0 because I see that as working.
+> So didn't see the need for a Cc: stable.
 
+It seems we have other boards that need to be fixed and we can not
+have an old dtb with functional Ethernet with a new kernel.
 
---jlxgfbkaiqonc2hk
-Content-Type: application/pgp-signature; name="signature.asc"
+Does anyone know if this issue is AR8031 specific?
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlySccsACgkQFA3kzBSg
-Kbb1CA//RsWBLBogKq3sIipw89QpsZf+f5oNMl9ha+Olr8DPSwDWjJrvu3HNcdyw
-Zl/jht9fZZj4exyIDePoGwu+ezJXcf+JOeKLyRuCHkf2Y8BYnsimC8D6HwuDe9SU
-K7qR7j+Hqww6EcJKNwxfhWYc+ie4uUEUhGRuhTOTXkcp/Qd4qXZnfKZ8jN0jYGaJ
-+T6q9JAvc4BLdF9S2frIvWSPnWPmpbgWOQ9edC6YMuzn0MBDPU29DiKLcGMrWSud
-iXtj+cZpAPDYuox0Q7cC0Ot9rUPyJlSyz7glZzkQBTUhKTwaFxLwmODB6Pfp8AXY
-HkFr3IHhEFH4QQHDtO1GFhQTvcxMph0Fdyo0jFs/c8OfWv1OVwKqR0v3/krdpaNm
-HYhhdeR4cXkldmTH+iYtQirHskcB5TAzc7W8JhVBspgO15hiUi2HYaljTo9NjseP
-tpXoCNrhqtjZjzSr3cxOLKhKWAPQDclFLbXxHXAXczJxDW4T+FtDNuitCLyrGw42
-U7hl4aPO4QCkA3mNZpgeJRaJsW2zoiXKq8Qx6ShzOF18iseV8Aw6SjP8v1oJdUEl
-WImd+oE2RPwujAkXfagPhFaAP9rJYegSV27P5OUKggnGQ55GOQFrrpbQPuJy8Ky/
-z7rvk9UEy/jXQCXUdsaGS8PSZCaKQbvDEWsGH625BrDKATq3M/M=
-=+MDo
------END PGP SIGNATURE-----
-
---jlxgfbkaiqonc2hk--
+Thanks
