@@ -1,67 +1,118 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v3 1/3] devicetree: bindings: bd718x7: document HW state
- related ROHM specific properties
-Date: Wed, 20 Mar 2019 16:17:01 +0200
-Message-ID: <20190320141701.GA6208@localhost.localdomain>
-References: <cover.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
- <6ed4238fb083f52de0f5f013647b2334bad8ebe4.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
- <20190320130259.GN4731@dell>
+From: Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH 5/5] media: tvp5150: add support to limit tv norms on
+ connector
+Date: Wed, 20 Mar 2019 11:18:51 -0300
+Message-ID: <20190320111851.1749c9ac@coco.lan>
+References: <20190202121004.9014-1-m.felsch@pengutronix.de>
+ <20190202121004.9014-6-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190320130259.GN4731@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: mazzisaccount@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Robin Gong <yibin.gong@nxp.com>, Elven Wang <elven.wang@nxp.com>, Anson Huang <anson.huang@nxp.com>, Angus Ainslie <angus.ainslie@puri.sm>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190202121004.9014-6-m.felsch@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, airlied@linux.ie, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, hans.verkuil@cisco.com, kernel@pengutronix.de, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Lee, All
-
-On Wed, Mar 20, 2019 at 01:02:59PM +0000, Lee Jones wrote:
-> On Thu, 14 Feb 2019, Matti Vaittinen wrote:
-> 
-> > Add ROHM BD71837 / BD71847 specific device tree bindings for
-> > controlling the PMIC shutdown/reset states and voltages for
-> > different HW states. The PMIC was designed to be used with NXP
-> > i.MX8 SoC and it supports SNVS low power state which seems to
-> > be typical for NXP i.MX SoCs. However, when SNVS is used we must
-> > not allow SW to control enabling/disabling those regulators which
-> > are crucial for system to boot as there is a HW limitation which
-> > causes SW controlled regulators to be kept shut down after SNVS
-> > reset.
-> > 
-> > Allow setting the SNVS to be used as reset target state and allow
-> > marking those regulators which are critical for boot.
-> > 
-> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > ---
-> >  .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  | 17 ++++++++++
-> >  .../bindings/regulator/rohm,bd71837-regulator.txt  | 38 ++++++++++++++++++++++
-> >  2 files changed, 55 insertions(+)
-> 
-> Needs a DT Ack.
-
-I think this was already applied to regulator tree by Mark:
-https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git/commit/?h=for-next&id=f43d1b388f9be4aa47ed42c33659243a675c5c76
-Does it go in via his tree or do we need to apply it in Lee's tree too?
-
-Br,
-	Matti Vaittinen
-
-> 
-> -- 
-> Lee Jones [李琼斯]
-> Linaro Services Technical Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+RW0gU2F0LCAgMiBGZWIgMjAxOSAxMzoxMDowNCArMDEwMApNYXJjbyBGZWxzY2ggPG0uZmVsc2No
+QHBlbmd1dHJvbml4LmRlPiBlc2NyZXZldToKCj4gVGhlIHR2cDUxNTAgYWNjZXB0cyBOVFNDKE0s
+Siw0LjQzKSwgUEFMIChCLEQsRyxILEksTSxOKSBhbmQgU0VDQU0gdmlkZW8KPiBkYXRhIGFuZCBp
+cyBhYmxlIHRvIGF1dG8tZGV0ZWN0IHRoZSBpbnB1dCBzaWduYWwuIAoKSG1tLi4uIEknbSBhZnJh
+aWQgb2YgdGhpcyBjaGFuZ2UuIEFzIGZhciBhcyBJIHJlbWVtYmVyLCBJIHRlc3RlZCBzb21lCndl
+aXJkIGZvcm1hdCB2YXJpYW50cyBsaWtlIFY0TDJfU1REX1BBTF82MCBhIGxvbmcgdGltZSBhZ28s
+IGJ1dCB0aGVyZSdzCm5vIHdheSB0byBmb3JjZSB2aWRlbyB0byB1c2UgdGhvc2UuIFRoZSBmb3Jt
+YXQgc2VsZWN0aW9uIGxvZ2ljIHNpbXBseQpwbGFjZXMgdGhlIGRldmljZSBvbiBhdXRvLWRldGVj
+dCBtb2RlIGZvciB0aG9zZSB3ZWlyZG9zLCBhbmQgdGhhdAp3b3JrcyBmaW5lIGF0IHRoZSBkZXZp
+Y2VzIEkga25vdy4KCkEgY2hhbmdlIGxpa2UgdGhhdCBtYXkgYnJlYWsgdGhpbmdzLiBTbyBJIHdv
+dWxkIGFjdHVhbGx5IGhhdmUgYSBxdWlyawp0byBvcHRpb25hbGx5IGRpc2FibGUgYXV0by1kZXRl
+Y3Rpb24gb24gZGV2aWNlcyB0aGF0IHRoaXMgaXMgbm90IGtub3cKdG8gd29yay4KCj4gVGhlIGF1
+dG8tZGV0ZWN0aW9uCj4gZG9lcyBub3Qgd29yayBpZiB0aGUgY29ubmVjdG9yIGRvZXMgbm90IHJl
+Y2VpdmUgYW4gaW5wdXQgc2lnbmFsIGFuZCB0aGUKPiB0dnA1MTUwIG1pZ2h0IG5vdCBiZSBjb25m
+aWd1cmVkIGNvcnJlY3RseS4gVGhpcyBtaXNjb25maWd1cmF0aW9uIGxlYWRzCj4gaW50byB3cm9u
+ZyBkZWNvZGVkIHZpZGVvIHN0cmVhbXMgaWYgdGhlIHR2cDUxNTAgZ2V0cyBwb3dlcmVkIG9uIGJl
+Zm9yZQo+IHRoZSB2aWRlbyBzaWduYWwgaXMgcHJlc2VudC4KPiAKPiBMaW1pdCB0aGUgc3VwcG9y
+dGVkIHR2IG5vcm1zIGFjY29yZGluZyB0byB0aGUgYWN0dWFsIHNlbGVjdGVkIGNvbm5lY3Rvcgo+
+IHRvIGF2b2lkIGEgbWlzY29uZmlndXJhdGlvbi4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBNYXJjbyBG
+ZWxzY2ggPG0uZmVsc2NoQHBlbmd1dHJvbml4LmRlPgo+IC0tLQo+ICBkcml2ZXJzL21lZGlhL2ky
+Yy90dnA1MTUwLmMgfCA0MiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystCj4g
+IDEgZmlsZSBjaGFuZ2VkLCA0MSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gCj4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvaTJjL3R2cDUxNTAuYyBiL2RyaXZlcnMvbWVkaWEvaTJj
+L3R2cDUxNTAuYwo+IGluZGV4IGYzYTJhZDAwYTQwZC4uNzYxOTc5M2RlZTY3IDEwMDY0NAo+IC0t
+LSBhL2RyaXZlcnMvbWVkaWEvaTJjL3R2cDUxNTAuYwo+ICsrKyBiL2RyaXZlcnMvbWVkaWEvaTJj
+L3R2cDUxNTAuYwo+IEBAIC0zMiw2ICszMiwxMyBAQAo+ICAjZGVmaW5lIFRWUDUxNTBfTUJVU19G
+TVQJTUVESUFfQlVTX0ZNVF9VWVZZOF8yWDgKPiAgI2RlZmluZSBUVlA1MTUwX0ZJRUxECQlWNEwy
+X0ZJRUxEX0FMVEVSTkFURQo+ICAjZGVmaW5lIFRWUDUxNTBfQ09MT1JTUEFDRQlWNEwyX0NPTE9S
+U1BBQ0VfU01QVEUxNzBNCj4gKyNkZWZpbmUgVFZQNTE1MF9TVERfTUFTSwkoVjRMMl9TVERfTlRT
+QyAgICAgfCBcCj4gKwkJCQkgVjRMMl9TVERfTlRTQ180NDMgfCBcCj4gKwkJCQkgVjRMMl9TVERf
+UEFMICAgICAgfCBcCj4gKwkJCQkgVjRMMl9TVERfUEFMX00gICAgfCBcCj4gKwkJCQkgVjRMMl9T
+VERfUEFMX04gICAgfCBcCj4gKwkJCQkgVjRMMl9TVERfUEFMX05jICAgfCBcCj4gKwkJCQkgVjRM
+Ml9TVERfU0VDQU0pCj4gIAo+ICBNT0RVTEVfREVTQ1JJUFRJT04oIlRleGFzIEluc3RydW1lbnRz
+IFRWUDUxNTBBL1RWUDUxNTBBTTEvVFZQNTE1MSB2aWRlbyBkZWNvZGVyIGRyaXZlciIpOwo+ICBN
+T0RVTEVfQVVUSE9SKCJNYXVybyBDYXJ2YWxobyBDaGVoYWIiKTsKPiBAQCAtNzQsNiArODEsNyBA
+QCBzdHJ1Y3QgdHZwNTE1MCB7Cj4gIAlzdHJ1Y3QgbWVkaWFfcGFkIHBhZHNbVFZQNTE1MF9OVU1f
+UEFEU107Cj4gIAlpbnQgcGFkc19zdGF0ZVtUVlA1MTUwX05VTV9QQURTXTsKPiAgCXN0cnVjdCB0
+dnA1MTUwX2Nvbm5lY3RvciAqY29ubmVjdG9yczsKPiArCXN0cnVjdCB0dnA1MTUwX2Nvbm5lY3Rv
+ciAqY3VyX2Nvbm5lY3RvcjsKPiAgCWludCBjb25uZWN0b3JzX251bTsKPiAgCWJvb2wgbW9kaWZ5
+X3NlY29uZF9saW5rOwo+ICAjZW5kaWYKPiBAQCAtNzk0LDE3ICs4MDIsMjcgQEAgc3RhdGljIGlu
+dCB0dnA1MTUwX2dfc3RkKHN0cnVjdCB2NGwyX3N1YmRldiAqc2QsIHY0bDJfc3RkX2lkICpzdGQp
+Cj4gIHN0YXRpYyBpbnQgdHZwNTE1MF9zX3N0ZChzdHJ1Y3QgdjRsMl9zdWJkZXYgKnNkLCB2NGwy
+X3N0ZF9pZCBzdGQpCj4gIHsKPiAgCXN0cnVjdCB0dnA1MTUwICpkZWNvZGVyID0gdG9fdHZwNTE1
+MChzZCk7Cj4gKwl2NGwyX3N0ZF9pZCBzdXBwb3J0ZWRfbm9ybXMgPQo+ICsJCWRlY29kZXItPmN1
+cl9jb25uZWN0b3ItPmJhc2UuY29ubmVjdG9yLmFuYWxvZy5zdXBwb3J0ZWRfdHZub3JtczsKPiAg
+Cj4gIAlpZiAoZGVjb2Rlci0+bm9ybSA9PSBzdGQpCj4gIAkJcmV0dXJuIDA7Cj4gIAo+ICsJLyoK
+PiArCSAqIGNoZWNrIGlmIHJlcXVlc3RlZCBzdGQgb3IgZ3JvdXAgb2Ygc3RkJ3MgaXMvYXJlIHN1
+cHBvcnRlZCBieSB0aGUKPiArCSAqIGNvbm5lY3Rvcgo+ICsJICovCj4gKwlpZiAoKHN1cHBvcnRl
+ZF9ub3JtcyAmIHN0ZCkgPT0gMCkKPiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCj4gIAkvKiBDaGFu
+Z2UgY3JvcHBpbmcgaGVpZ2h0IGxpbWl0cyAqLwo+ICAJaWYgKHN0ZCAmIFY0TDJfU1REXzUyNV82
+MCkKPiAgCQlkZWNvZGVyLT5yZWN0LmhlaWdodCA9IFRWUDUxNTBfVl9NQVhfNTI1XzYwOwo+ICAJ
+ZWxzZQo+ICAJCWRlY29kZXItPnJlY3QuaGVpZ2h0ID0gVFZQNTE1MF9WX01BWF9PVEhFUlM7Cj4g
+IAo+IC0JZGVjb2Rlci0+bm9ybSA9IHN0ZDsKPiArCS8qIHNldCBvbmx5IHRoZSBzcGVjaWZpYyBz
+dXBwb3J0ZWQgc3RkIGluIGNhc2Ugb2YgZ3JvdXAgb2Ygc3RkJ3MgKi8KPiArCWRlY29kZXItPm5v
+cm0gPSBzdXBwb3J0ZWRfbm9ybXMgJiBzdGQ7Cj4gIAo+ICAJcmV0dXJuIHR2cDUxNTBfc2V0X3N0
+ZChzZCwgc3RkKTsKPiAgfQo+IEBAIC0xMjk4LDYgKzEzMTYsNyBAQCBzdGF0aWMgaW50IHR2cDUx
+NTBfbGlua19zZXR1cChzdHJ1Y3QgbWVkaWFfZW50aXR5ICplbnRpdHksCj4gIAlpbnQgKnBhZF9z
+dGF0ZSA9ICZkZWNvZGVyLT5wYWRzX3N0YXRlWzBdOwo+ICAJaW50IGksIGFjdGl2ZV9wYWQsIHJl
+dCA9IDA7Cj4gIAlib29sIGlzX3N2aWRlbyA9IGZhbHNlOwo+ICsJYm9vbCB1cGRhdGVfY3VyX2Nv
+bm5lY3RvciA9IGZhbHNlOwo+ICAKPiAgCS8qCj4gIAkgKiBUaGUgdHZwIHN0YXRlIGlzIGRldGVy
+bWluZWQgYnkgdGhlIGVuYWJsZWQgc2luayBwYWQgbGluay4KPiBAQCAtMTM0NCwxMCArMTM2Mywx
+MiBAQCBzdGF0aWMgaW50IHR2cDUxNTBfbGlua19zZXR1cChzdHJ1Y3QgbWVkaWFfZW50aXR5ICpl
+bnRpdHksCj4gIAkJCQlkZWNvZGVyLT5tb2RpZnlfc2Vjb25kX2xpbmsgPSBmYWxzZTsKPiAgCQkJ
+CXR2cDUxNTBfc19yb3V0aW5nKHNkLCBUVlA1MTUwX1NWSURFTywKPiAgCQkJCQkJICBUVlA1MTUw
+X05PUk1BTCwgMCk7Cj4gKwkJCQl1cGRhdGVfY3VyX2Nvbm5lY3RvciA9IHRydWU7Cj4gIAkJCX0K
+PiAgCQl9IGVsc2Ugewo+ICAJCQl0dnA1MTUwX3Nfcm91dGluZyhzZCwgdHZwNTE1MF9wYWQtPmlu
+ZGV4LAo+ICAJCQkJCSAgVFZQNTE1MF9OT1JNQUwsIDApOwo+ICsJCQl1cGRhdGVfY3VyX2Nvbm5l
+Y3RvciA9IHRydWU7Cj4gIAkJfQo+ICAJfSBlbHNlIHsKPiAgCQkvKgo+IEBAIC0xMzc2LDYgKzEz
+OTcsMTQgQEAgc3RhdGljIGludCB0dnA1MTUwX2xpbmtfc2V0dXAoc3RydWN0IG1lZGlhX2VudGl0
+eSAqZW50aXR5LAo+ICAJCQkJCSAgYWN0aXZlX3BhZCwgVFZQNTE1MF9CTEFDS19TQ1JFRU4sIDAp
+Owo+ICAJCWRlY29kZXItPm1vZGlmeV9zZWNvbmRfbGluayA9IGZhbHNlOwo+ICAJfQo+ICsKPiAr
+CWlmICh1cGRhdGVfY3VyX2Nvbm5lY3Rvcikgewo+ICsJCS8qIFVwZGF0ZSB0dm5vcm0gYWNjb3Jk
+aW5nIHRvIGNvbm5lY3RvciAqLwo+ICsJCWRlY29kZXItPmN1cl9jb25uZWN0b3IgPQo+ICsJCQlj
+b250YWluZXJfb2YocmVtb3RlLCBzdHJ1Y3QgdHZwNTE1MF9jb25uZWN0b3IsIHBhZCk7Cj4gKwkJ
+dHZwNTE1MF9zX3N0ZChzZCwKPiArCQkJZGVjb2Rlci0+Y3VyX2Nvbm5lY3Rvci0+YmFzZS5jb25u
+ZWN0b3IuYW5hbG9nLnN1cHBvcnRlZF90dm5vcm1zKTsKPiArCX0KPiAgb3V0Ogo+ICAJcmV0dXJu
+IHJldDsKPiAgfQo+IEBAIC0xNjA1LDYgKzE2MzQsOSBAQCBzdGF0aWMgaW50IHR2cDUxNTBfcmVn
+aXN0ZXJlZChzdHJ1Y3QgdjRsMl9zdWJkZXYgKnNkKQo+ICAJCQl9Cj4gIAkJCXR2cDUxNTBfc2Vs
+bXV4KHNkKTsKPiAgCQkJZGVjb2Rlci0+bW9kaWZ5X3NlY29uZF9saW5rID0gZmFsc2U7Cj4gKwkJ
+CWRlY29kZXItPmN1cl9jb25uZWN0b3IgPSAmZGVjb2Rlci0+Y29ubmVjdG9yc1tpXTsKPiArCQkJ
+dHZwNTE1MF9zX3N0ZChzZCwKPiArCQkJCWRlY29kZXItPmNvbm5lY3RvcnNbaV0uYmFzZS5jb25u
+ZWN0b3IuYW5hbG9nLnN1cHBvcnRlZF90dm5vcm1zKTsKPiAgCQl9Cj4gIAl9Cj4gICNlbmRpZgo+
+IEBAIC0xOTI1LDYgKzE5NTcsMTQgQEAgc3RhdGljIGludCB0dnA1MTUwX3BhcnNlX2R0KHN0cnVj
+dCB0dnA1MTUwICpkZWNvZGVyLCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQo+ICAJCQkJcmV0ID0g
+LUVJTlZBTDsKPiAgCQkJCWdvdG8gZXJyOwo+ICAJCQl9Cj4gKwkJCWlmICghKGMuY29ubmVjdG9y
+LmFuYWxvZy5zdXBwb3J0ZWRfdHZub3JtcyAmCj4gKwkJCSAgICBUVlA1MTUwX1NURF9NQVNLKSkg
+ewo+ICsJCQkJZGV2X2VycihkZXYsCj4gKwkJCQkJIkludmFsaWQgdHYgbm9ybShzKSBvbiBjb25u
+ZWN0b3IgJXMuXG4iLAo+ICsJCQkJCWMubGFiZWwpOwo+ICsJCQkJcmV0ID0gLUVJTlZBTDsKPiAr
+CQkJCWdvdG8gZXJyOwo+ICsJCQl9Cj4gIAkJCWluKys7Cj4gIAkJCWJyZWFrOwo+ICAJCWNhc2Ug
+VFZQNTE1MF9QQURfVklEX09VVDoKCgoKVGhhbmtzLApNYXVybwpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
