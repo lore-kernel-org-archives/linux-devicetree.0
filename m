@@ -1,181 +1,125 @@
-From: Liang Yang <liang.yang@amlogic.com>
-Subject: Re: [RFC PATCH nand-next 0/2] meson-nand: support for older SoCs
-Date: Wed, 20 Mar 2019 11:33:52 +0800
-Message-ID: <8134890a-457d-7803-01a4-1832f925f65f@amlogic.com>
-References: <20190301182922.8309-1-martin.blumenstingl@googlemail.com>
- <98776767-c4d7-1207-6d42-97105f289bec@amlogic.com>
- <CAFBinCC7P40sqrDGTuM8M=jVOFTgZLDUK6rGdNpigFoepyCASw@mail.gmail.com>
- <20190307140959.10092d45@xps13>
- <ccb95e75-e62f-c510-cabd-853481f77fc8@amlogic.com>
- <CAFBinCBd=dOZjv4KEDY9ODOONDO=WtaBqAMRi_a+gH3_iZEAHQ@mail.gmail.com>
- <CAFBinCA7LLK6K3ZqauJy2N-z5-kTfuTztmoSQ=Bk4A5Xagxddw@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v2 5/5] arm64: dts: rockchip: Enable dmc and dfi nodes
+ on gru.
+Date: Wed, 20 Mar 2019 14:05:21 +0900
+Message-ID: <3adc4347-7dd9-106f-e564-26d39ff38ffb@samsung.com>
+References: <20190319181323.22804-1-gael.portay@collabora.com>
+        <CGME20190319181359epcas4p11159b40adf1c883d179e18356d4cbd30@epcas4p1.samsung.com>
+        <20190319181323.22804-6-gael.portay@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFBinCA7LLK6K3ZqauJy2N-z5-kTfuTztmoSQ=Bk4A5Xagxddw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190319181323.22804-6-gael.portay@collabora.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jianxin.pan@amlogic.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Ga=c3=abl_PORTAY?= <gael.portay@collabora.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lin Huang <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Derek Basehore <dbasehore@chromium.org>, Randy Li <ayaka@soulik.info>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+Hi Gaël,
 
-Thanks for your time.
-On 2019/3/20 4:27, Martin Blumenstingl wrote:
-> Hello Liang,
+On 19. 3. 20. 오전 3:13, Gaël PORTAY wrote:
+> From: Lin Huang <hl@rock-chips.com>
 > 
-> On Sat, Mar 16, 2019 at 11:55 AM Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
-> [...]
->>> Martin, Now i am not sure whether NFC driver leads to kernel panic when
->>> calling kmem_cache_alloc_trace.
->> thank you for confirming that it works for you on GXL
->>
->> I'm not sure that this is a NFC driver problem.
->> after enabling CONFIG_SLAB_FREELIST_HARDENED in my kernel config the
->> crash moves. it's now crashing in slub.c's kfree() at
->> BUG_ON(!PageCompound(page));
-> I added some debug prints in meson_nfc_read_buf() to get some details
-> about the info buffer before the crash,
-> format is: meson_nfc_read_buf <virtual address> <physical address>
+> Enable the DMC (Dynamic Memory Controller) and the DFI (DDR PHY Interface)
+> nodes on gru/kevin boards so we can support DDR DVFS.
 > 
-> during my first test three different addresses are used:
-> - meson_nfc_read_buf e9e6c640 0x29e6c640 (works fine)
-> - meson_nfc_read_buf e9e6c680 0x29e6c680 (works fine)
-> - meson_nfc_read_buf ee39a34b 0x2e39a34b (crashes during kfree)
+> Signed-off-by: Lin Huang <hl@rock-chips.com>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>
+> ---
 > 
-> so I tried playing around with the allocation size (see the attached
-> patch) and changed it to:
->    kzalloc(PER_INFO_BYTE + 64, GFP_KERNEL)
-> this results in the following addresses being used:
-> - meson_nfc_read_buf e9ea4280 0x29ea4280 (works fine)
-> - meson_nfc_read_buf e9ea4300 0x29ea4300 (works fine)
-> (there is no crash anymore)
+> Changes in v2:
+> - [PATCH 8/8] Move center-supply attribute of dmc node in file
+>               rk3399-gru-chromebook.dtsi (where ppvar_centerlogic is
+> 	      defined).
 > 
-> Liang, are there any special requirements on the "info address" like
-> the alignment?
-It must be 4 bytes alignment. i have met it previously when debugging 
-NFC driver on AXG platform, but it is not specified on spec. Now i am 
-confused that how to get the no aligned address "xe39a34b" when using 
-kmalloc; i think it should return the aligned address. doesn't it?
+> Changes in v1: None
+> 
+>  .../dts/rockchip/rk3399-gru-chromebook.dtsi   |  4 ++++
+>  arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi  | 20 +++++++++++++++++++
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi      |  2 +-
+>  3 files changed, 25 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
+> index 931640e9aed4..cfb81356c61e 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
+> @@ -400,3 +400,7 @@ ap_i2c_tp: &i2c5 {
+>  		rockchip,pins = <0 8 RK_FUNC_GPIO &pcfg_pull_none>;
+>  	};
+>  };
+> +
+> +&dmc {
+> +	center-supply = <&ppvar_centerlogic>;
+> +};
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> index da03fa9c5662..d14dce679e7a 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> @@ -289,6 +289,12 @@
+>  	status = "okay";
+>  };
+>  
+> +&dmc_opp_table {
+> +	opp04 {
+> +		opp-suspend;
+> +	};
+> +};
+> +
+>  /*
+>   * Set some suspend operating points to avoid OVP in suspend
+>   *
+> @@ -368,6 +374,10 @@
+>  		<200000000>;
+>  };
+>  
+> +&display_subsystem {
+> +	devfreq = <&dmc>;
+> +};
 
-> also do you know why the PER_INFO_BYTE buffer is allocated dynamically
-> in meson_nfc_read_buf() instead of allocating it at initialization?
-> I'm not saying that it should be changed! I'm curious because there's
-> per-meson_nfc_nand_chip info and data buffers which are allocated at
-> initialization time.
-> NAND scan or initialization is divided into three stages: 
-nand_scan_ident->nand_attach->nand_scan_tail. info and data buffer which 
-depend on the result of nand_scan_ident are allocated on nand_attach; so 
-nand_scan_ident can not use the info buffer on meson_nfc_nand_chip.
-Allocating a fixed size info buffer before nand_scan_ident and attach it 
-on the struct meson_nfc; Or considering not use dma for reading data 
-less than 8 bytes. Both can reduce kmalloc and kfree calling. Thanks.
+When I checked the rockchip_drm_drv.c on linux-next.git (20190320),
+there are no any codes about this. Maybe it should be removed.
+
+> +
+>  &emmc_phy {
+>  	status = "okay";
+>  };
+> @@ -489,6 +499,16 @@ ap_i2c_audio: &i2c8 {
+>  	status = "okay";
+>  };
+>  
+> +&dfi {
+> +	status = "okay";
+> +};
+> +
+> +&dmc {
+> +	status = "okay";
+> +	upthreshold = <25>;
+> +	downdifferential = <15>;
+> +};
+> +
+>  &sdhci {
+>  	/*
+>  	 * Signal integrity isn't great at 200 MHz and 150 MHz (DDR) gives the
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index 8fe86a3e7658..010b3e5267a0 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -156,7 +156,7 @@
+>  		};
+>  	};
+>  
+> -	display-subsystem {
+> +	display_subsystem: display-subsystem {
+>  		compatible = "rockchip,display-subsystem";
+>  		ports = <&vopl_out>, <&vopb_out>;
+>  	};
 > 
-> meson_nfc_read_buf debug log with PER_INFO_BYTE allocation:
-> [    2.032914] meson_nfc_read_buf e9e6c640 0x29e6c640
-> [    2.033005] meson_nfc_dma_buffer_setup 0x29e6c640
-> [    2.037717] meson_nfc_read_buf: about to kfree info
-> [    2.042535] meson_nfc_read_buf: kfree'd info
-> [    2.046794] meson_nfc_read_buf e9e6c640 0x29e6c640
-> [    2.051552] meson_nfc_dma_buffer_setup 0x29e6c640
-> [    2.056261] meson_nfc_read_buf: about to kfree info
-> [    2.061086] meson_nfc_read_buf: kfree'd info
-> [    2.065356] meson_nfc_read_buf e9e6c680 0x29e6c680
-> [    2.070102] meson_nfc_dma_buffer_setup 0x29e6c680
-> [    2.074810] meson_nfc_read_buf: about to kfree info
-> [    2.079635] meson_nfc_read_buf: kfree'd info
-> [    2.083978] meson_nfc_read_buf e9e6c640 0x29e6c640
-> [    2.088684] meson_nfc_dma_buffer_setup 0x29e6c640
-> [    2.093334] meson_nfc_read_buf: about to kfree info
-> [    2.098199] meson_nfc_read_buf: kfree'd info
-> [    2.102446] meson_nfc_read_buf e9e6c640 0x29e6c640
-> [    2.107208] meson_nfc_dma_buffer_setup 0x29e6c640
-> [    2.111883] meson_nfc_read_buf: about to kfree info
-> [    2.116765] meson_nfc_read_buf: kfree'd info
-> [    2.120996] meson_nfc_read_buf e9e6c640 0x29e6c640
-> [    2.125762] meson_nfc_dma_buffer_setup 0x29e6c640
-> [    2.130433] meson_nfc_read_buf: about to kfree info
-> [    2.135294] meson_nfc_read_buf: kfree'd info
-> [    2.139545] Could not find a valid ONFI parameter page, trying
-> bit-wise majority to recover it
-> [    2.148173] ONFI parameter recovery failed, aborting
-> [    2.153058] meson_nfc_read_buf e9e6c680 0x29e6c680
-> [    2.157831] meson_nfc_dma_buffer_setup 0x29e6c680
-> [    2.162527] meson_nfc_read_buf: about to kfree info
-> [    2.167369] meson_nfc_read_buf: kfree'd info
-> [    2.171611] meson_nfc_read_buf ee39a34b 0x2e39a34b
-> [    2.176383] meson_nfc_dma_buffer_setup 0x2e39a34b
-> [    2.181076] meson_nfc_read_buf: about to kfree info
-> [    2.185932] ------------[ cut here ]------------
-> [    2.190503] kernel BUG at mm/slub.c:3950!
-> [    2.194491] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP ARM
-> ...
-> 
-> meson_nfc_read_buf debug log with PER_INFO_BYTE+64 allocation:
-> [    2.033019] meson_nfc_read_buf e9ea4280 0x29ea4280
-> [    2.033112] meson_nfc_dma_buffer_setup 0x29ea4280
-> [    2.037847] meson_nfc_read_buf: about to kfree info
-> [    2.042642] meson_nfc_read_buf: kfree'd info
-> [    2.046909] meson_nfc_read_buf e9ea4280 0x29ea4280
-> [    2.051659] meson_nfc_dma_buffer_setup 0x29ea4280
-> [    2.056374] meson_nfc_read_buf: about to kfree info
-> [    2.061192] meson_nfc_read_buf: kfree'd info
-> [    2.065461] meson_nfc_read_buf e9ea4280 0x29ea4280
-> [    2.070208] meson_nfc_dma_buffer_setup 0x29ea4280
-> [    2.074922] meson_nfc_read_buf: about to kfree info
-> [    2.079742] meson_nfc_read_buf: kfree'd info
-> [    2.084087] meson_nfc_read_buf e9ea4280 0x29ea4280
-> [    2.088789] meson_nfc_dma_buffer_setup 0x29ea4280
-> [    2.093440] meson_nfc_read_buf: about to kfree info
-> [    2.098303] meson_nfc_read_buf: kfree'd info
-> [    2.102553] meson_nfc_read_buf e9ea4280 0x29ea4280
-> [    2.107316] meson_nfc_dma_buffer_setup 0x29ea4280
-> [    2.111990] meson_nfc_read_buf: about to kfree info
-> [    2.116870] meson_nfc_read_buf: kfree'd info
-> [    2.121103] meson_nfc_read_buf e9ea4280 0x29ea4280
-> [    2.125868] meson_nfc_dma_buffer_setup 0x29ea4280
-> [    2.130540] meson_nfc_read_buf: about to kfree info
-> [    2.135400] meson_nfc_read_buf: kfree'd info
-> [    2.139652] Could not find a valid ONFI parameter page, trying
-> bit-wise majority to recover it
-> [    2.148276] ONFI parameter recovery failed, aborting
-> [    2.153165] meson_nfc_read_buf e9ea4280 0x29ea4280
-> [    2.157938] meson_nfc_dma_buffer_setup 0x29ea4280
-> [    2.162634] meson_nfc_read_buf: about to kfree info
-> [    2.167475] meson_nfc_read_buf: kfree'd info
-> [    2.171717] meson_nfc_read_buf e9ea4280 0x29ea4280
-> [    2.176489] meson_nfc_dma_buffer_setup 0x29ea4280
-> [    2.181183] meson_nfc_read_buf: about to kfree info
-> [    2.186025] meson_nfc_read_buf: kfree'd info
-> [    2.190265] nand: device found, Manufacturer ID: 0xad, Chip ID: 0xde
-> [    2.196598] nand: Hynix NAND 8GiB 3,3V 8-bit
-> [    2.200840] nand: 8192 MiB, MLC, erase size: 4096 KiB, page size:
-> 16384, OOB size: 1280
-> [    2.208829] meson_nfc_read_buf e9ea4300 0x29ea4300
-> [    2.213581] meson_nfc_dma_buffer_setup 0x29ea4300
-> [    2.218291] meson_nfc_read_buf: about to kfree info
-> [    2.223115] meson_nfc_read_buf: kfree'd info
-> [    2.227374] ------------[ cut here ]------------
-> [    2.231968] WARNING: CPU: 1 PID: 1 at
-> drivers/mtd/nand/raw/nand_base.c:5503 nand_scan_with_ids+0x1718/0x171c
-> [    2.241760] No oob scheme defined for oobsize 1280
-> ...
-> (the "No oob scheme defined for oobsize 1280" message is expected)
-> 
-miss mtd_set_ooblayout(mtd, &meson_ooblayout_ops) on function 
-meson_nand_attach_chip.
-> 
-> Regards
-> Martin
-> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
