@@ -1,39 +1,90 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH RESEND] ARM: dts: exynos: Fix audio (microphone) routing on
- Odroid XU3
-Date: Wed, 20 Mar 2019 10:59:50 +0100
-Message-ID: <20190320095950.23566-1-s.nawrocki@samsung.com>
-References: <20190319205522.GD16150@kozik-lap>
-        <CGME20190320100002epcas2p2c85f13b20896f837aa5a48643b917680@epcas2p2.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20190319205522.GD16150@kozik-lap>
-Sender: linux-kernel-owner@vger.kernel.org
-To: krzk@kernel.org
-Cc: alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kgene@kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>, stable@vger.kernel.org
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH] ARM: dts: pfla02: increase phy reset duration
+Date: Wed, 20 Mar 2019 11:10:40 +0100
+Message-ID: <20190320101040.r7yuqvg6cbqnnpey@pengutronix.de>
+References: <20190304104940.18138-1-m.felsch@pengutronix.de>
+ <20190320085937.GG4980@dragon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190320085937.GG4980@dragon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, Christian Hemp <c.hemp@phytec.de>, Stefan Christ <s.christ@phytec.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The name of CODEC input widget to which microphone is connected through
-the "Headphone" jack is "IN12" not "IN1". This fixes microphone support
-on Odroid XU3.
+Hi Shawn,
 
-Cc: <stable@vger.kernel.org> # v4.14+
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 19-03-20 16:59, Shawn Guo wrote:
+> On Mon, Mar 04, 2019 at 11:49:40AM +0100, Marco Felsch wrote:
+> > Increase the reset duration to ensure correct phy functionality. The
+> > reset duration is taken from barebox commit 52fdd510de ("ARM: dts:
+> > pfla02: use long enough reset for ethernet phy"):
+> > 
+> >   Use a longer reset time for ethernet phy Micrel KSZ9031RNX. Otherwise a
+> >   small percentage of modules have 'transmission timeouts' errors like
+> > 
+> >   barebox@Phytec phyFLEX-i.MX6 Quad Carrier-Board:/ ifup eth0
+> >   warning: No MAC address set. Using random address 7e:94:4d:02:f8:f3
+> >   eth0: 1000Mbps full duplex link detected
+> >   eth0: transmission timeout
+> >   T eth0: transmission timeout
+> >   T eth0: transmission timeout
+> >   T eth0: transmission timeout
+> >   T eth0: transmission timeout
+> > 
+> > Cc: Stefan Christ <s.christ@phytec.de>
+> > Cc: Christian Hemp <c.hemp@phytec.de>
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> 
+> Do you want to get this in as a fix or just -next material?  If it's a
+> fix, please have a Fixes tag.
 
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
-index 3a37267e6134..c3c2d85267da 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
-@@ -22,7 +22,7 @@
- 			"Headphone Jack", "HPL",
- 			"Headphone Jack", "HPR",
- 			"Headphone Jack", "MICBIAS",
--			"IN1", "Headphone Jack",
-+			"IN12", "Headphone Jack",
- 			"Speakers", "SPKL",
- 			"Speakers", "SPKR",
- 			"I2S Playback", "Mixer DAI TX",
---
-2.17.1
+I don't know that either.. IMHO it's a fix but there is no one out their
+complaining about such a problem so it can be -next material too.
+
+Please feel free to add:
+
+Fixes: 3180f956668e ("ARM: dts: Phytec imx6q pfla02 and pbab01 support")
+
+Regards,
+Marco
+
+> Shawn
+> 
+> > ---
+> >  arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
+> > index 673711f445b6..7e53ac6cfa8a 100644
+> > --- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
+> > +++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
+> > @@ -91,6 +91,7 @@
+> >  	pinctrl-0 = <&pinctrl_enet>;
+> >  	phy-handle = <&ethphy>;
+> >  	phy-mode = "rgmii";
+> > +	phy-reset-duration = <10>; /* in msecs */
+> >  	phy-reset-gpios = <&gpio3 23 GPIO_ACTIVE_LOW>;
+> >  	phy-supply = <&vdd_eth_io_reg>;
+> >  	status = "disabled";
+> > -- 
+> > 2.20.1
+> > 
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
