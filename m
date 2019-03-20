@@ -1,46 +1,87 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH] dt-bindings: reset: meson-g12a: Add missing USB2 PHY
- resets
-Date: Wed, 20 Mar 2019 11:35:22 +0100
-Message-ID: <1553078122.7071.6.camel@pengutronix.de>
-References: <20190304104916.3937-1-narmstrong@baylibre.com>
+Subject: Re: [PATCH v1 4/6] reset: hi6220: Add support for AO reset
+ controller
+Date: Wed, 20 Mar 2019 11:46:20 +0100
+Message-ID: <1553078780.7071.8.camel@pengutronix.de>
+References: <1552937931-23050-1-git-send-email-peter.griffin@linaro.org>
+         <1552937931-23050-5-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190304104916.3937-1-narmstrong@baylibre.com>
+In-Reply-To: <1552937931-23050-5-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, mturquette@baylibre.com, sboyd@kernel.org
+Cc: john.stultz@linaro.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, yuq825@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-03-04 at 11:49 +0100, Neil Armstrong wrote:
-> The G12A Documentation lacked these 2 reset lines, but they are present and
-> used for each USB 2 PHYs.
-> 
-> Add them to the dt-bindings for the upcoming USB support.
-> 
-> Fixes: dbfc54534dfc ("dt-bindings: reset: meson: add g12a bindings")
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  include/dt-bindings/reset/amlogic,meson-g12a-reset.h | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/dt-bindings/reset/amlogic,meson-g12a-reset.h b/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
-> index 8063e8314eef..6d487c5eba2c 100644
-> --- a/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
-> +++ b/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
-> @@ -51,7 +51,10 @@
->  #define RESET_SD_EMMC_A			44
->  #define RESET_SD_EMMC_B			45
->  #define RESET_SD_EMMC_C			46
-> -/*					47-60 */
-> +/*					47	*/
-> +#define RESET_USB_PHY20			48
-> +#define RESET_USB_PHY21			49
-> +/*					50-60	*/
->  #define RESET_AUDIO_CODEC		61
->  /*					62-63	*/
->  /*	RESET2					*/
+Hi Peter,
 
-Thank you, applied to reset/fixes with Martin's review tag.
+On Mon, 2019-03-18 at 19:38 +0000, Peter Griffin wrote:
+> This is required to bring Mali450 gpu out of reset.
+> 
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+>  drivers/reset/hisilicon/hi6220_reset.c | 51 +++++++++++++++++++++++++++++++++-
+>  1 file changed, 50 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/reset/hisilicon/hi6220_reset.c b/drivers/reset/hisilicon/hi6220_reset.c
+> index d5e5229..0cd5f92 100644
+> --- a/drivers/reset/hisilicon/hi6220_reset.c
+> +++ b/drivers/reset/hisilicon/hi6220_reset.c
+> @@ -36,6 +36,7 @@
+>  enum hi6220_reset_ctrl_type {
+>  	PERIPHERAL,
+>  	MEDIA,
+> +	AO,
+>  };
+>  
+>  struct hi6220_reset_data {
+> @@ -95,6 +96,47 @@ static const struct reset_control_ops hi6220_media_reset_ops = {
+>  	.deassert = hi6220_media_deassert,
+>  };
+>  
+> +#define AO_SCTRL_SC_PW_CLKEN0     0x800
+> +#define AO_SCTRL_SC_PW_CLKDIS0    0x804
+> +
+> +#define AO_SCTRL_SC_PW_RSTEN0     0x810
+> +#define AO_SCTRL_SC_PW_RSTDIS0    0x814
+> +
+> +#define AO_SCTRL_SC_PW_ISOEN0     0x820
+> +#define AO_SCTRL_SC_PW_ISODIS0    0x824
+> +#define AO_MAX_INDEX              12
+> +
+> +static int hi6220_ao_assert(struct reset_controller_dev *rc_dev,
+> +			       unsigned long idx)
+> +{
+> +	struct hi6220_reset_data *data = to_reset_data(rc_dev);
+> +	struct regmap *regmap = data->regmap;
+> +	int ret;
+> +
+> +	ret = regmap_write(regmap, AO_SCTRL_SC_PW_RSTEN0, BIT(idx));
+> +	ret |= regmap_write(regmap, AO_SCTRL_SC_PW_ISOEN0, BIT(idx));
+> +	ret |= regmap_write(regmap, AO_SCTRL_SC_PW_CLKDIS0, BIT(idx));
+
+What if two regmap_writes return a different error code? Better check
+for ret and return individually. Also, no need to issue two more writes
+if the first one failed.
+
+> +	return ret;
+> +}
+> +
+> +static int hi6220_ao_deassert(struct reset_controller_dev *rc_dev,
+> +				 unsigned long idx)
+> +{
+> +	struct hi6220_reset_data *data = to_reset_data(rc_dev);
+> +	struct regmap *regmap = data->regmap;
+> +	int ret;
+> +
+> +	ret = regmap_write(regmap, AO_SCTRL_SC_PW_RSTDIS0, BIT(idx));
+> +	ret |= regmap_write(regmap, AO_SCTRL_SC_PW_ISODIS0, BIT(idx));
+> +	ret |= regmap_write(regmap, AO_SCTRL_SC_PW_CLKEN0, BIT(idx));
+
+Same as above. Otherwise this looks fine. With this fixed, I could pick
+up patches 2, 4, and 5.
+
+regards
+Philipp
