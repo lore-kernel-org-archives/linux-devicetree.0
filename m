@@ -1,453 +1,178 @@
-From: Maxime Jourdan <mjourdan@baylibre.com>
-Subject: Re: [PATCH 2/2] clk: meson: meson8b: add the video decoder clock trees
-Date: Wed, 20 Mar 2019 12:16:19 +0100
-Message-ID: <CAMO6nawKpBRrp0oBtrGY8KskD6tUX9ZCNeDqSGPB-kMnm27HnA@mail.gmail.com>
-References: <20190319220012.31065-1-martin.blumenstingl@googlemail.com> <20190319220012.31065-3-martin.blumenstingl@googlemail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V7 2/5] pwm: Add i.MX TPM PWM driver support
+Date: Wed, 20 Mar 2019 11:21:00 +0000
+Message-ID: <AM6PR0402MB39119DCE06E875756F354347F5410@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+References: <1553058067-18793-1-git-send-email-Anson.Huang@nxp.com>
+ <1553058067-18793-3-git-send-email-Anson.Huang@nxp.com>
+ <20190320081856.wkw55pmw57i4ifdj@pengutronix.de>
+ <AM6PR0402MB3911185E2D7E96FD3224BCBDF5410@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+ <20190320105742.jdabsbcoebbyftqr@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190319220012.31065-3-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20190320105742.jdabsbcoebbyftqr@pengutronix.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "stefan@agner.ch" <stefan@agner.ch>, Leonard Crestez <leonard.crestez@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, Robin Gong <yibin.gong@nxp.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin, thanks for looking into the video decoder for meson8!
-On Tue, Mar 19, 2019 at 11:00 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> This adds the four video decoder clock trees.
->
-> VDEC_1 is split into two paths on Meson8b and Meson8m2:
-> - input mux called "vdec_1_sel"
-> - two dividers ("vdec_1_1_div" and "vdec_1_2_div") and gates ("vdec_1_1"
->   and "vdec_1_2")
-> - and an output mux (probably glitch-free) called "vdec_1"
-
-Yes, all vdec clocks have a glitch-free mux to be able to safely
-adjust the frequency on the fly, although in practice it's barely
-used.
-
-> On Meson8 the VDEC_1 tree is simpler because there's only one path:
-> - input mux called "vdec_1_sel"
-> - divider ("vdec_1_1_div") and gate ("vdec_1_1")
-> - (the gate is used as output directly, there's no mux)
->
-> The VDEC_HCODEC and VDEC_2 clocks are simple composite clocks each
-> consisting of an input mux, divider and a gate.
->
-> The VDEC_HEVC clock seems to have two paths similar to the VDEC_1 clock.
-> However, the register offsets of the second clock path is not known.
-> Amlogic's 3.10 kernel (which is used as reference) sets
-> HHI_VDEC2_CLK_CNTL[31] to 1 before changing the VDEC_HEVC clock and back
-> to 0 afterwards. For now, leave a TODO comment and only add the first
-> path.
->
-
-Looking at aml-3.10/drivers/amlogic/amports/m8b/vdec_clk.c, it's weird
-indeed. They seem to copy the divider's value to the same place
-(HHI_VDEC2_CLK_CNTL[16~23]), and the only thing that stands out is
-enabling HHI_VDEC2_CLK_CNTL[31].
-
-Then again they don't make use of that codepath at all, so who knows..
-
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  drivers/clk/meson/meson8b.c | 312 ++++++++++++++++++++++++++++++++++++
->  drivers/clk/meson/meson8b.h |  17 +-
->  2 files changed, 328 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-> index 8e091c2d10e6..37cf0f01bb5d 100644
-> --- a/drivers/clk/meson/meson8b.c
-> +++ b/drivers/clk/meson/meson8b.c
-> @@ -1902,6 +1902,257 @@ static struct clk_regmap meson8b_vpu = {
->         },
->  };
->
-> +static const char * const meson8b_vdec_parent_names[] = {
-> +       "fclk_div4", "fclk_div3", "fclk_div5", "fclk_div7", "mpll2", "mpll1"
-> +};
-> +
-> +static struct clk_regmap meson8b_vdec_1_sel = {
-> +       .data = &(struct clk_regmap_mux_data){
-> +               .offset = HHI_VDEC_CLK_CNTL,
-> +               .mask = 0x3,
-> +               .shift = 9,
-> +               .flags = CLK_MUX_ROUND_CLOSEST,
-> +       },
-> +       .hw.init = &(struct clk_init_data){
-> +               .name = "vdec_1_sel",
-> +               .ops = &clk_regmap_mux_ops,
-> +               .parent_names = meson8b_vdec_parent_names,
-> +               .num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
-> +               .flags = CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_regmap meson8b_vdec_1_1_div = {
-> +       .data = &(struct clk_regmap_div_data){
-> +               .offset = HHI_VDEC_CLK_CNTL,
-> +               .shift = 0,
-> +               .width = 7,
-> +               .flags = CLK_DIVIDER_ROUND_CLOSEST,
-> +       },
-> +       .hw.init = &(struct clk_init_data){
-> +               .name = "vdec_1_1_div",
-> +               .ops = &clk_regmap_divider_ops,
-> +               .parent_names = (const char *[]){ "vdec_1_sel" },
-> +               .num_parents = 1,
-> +               .flags = CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_regmap meson8b_vdec_1_1 = {
-> +       .data = &(struct clk_regmap_gate_data){
-> +               .offset = HHI_VDEC_CLK_CNTL,
-> +               .bit_idx = 8,
-> +       },
-> +       .hw.init = &(struct clk_init_data) {
-> +               .name = "vdec_1_1",
-> +               .ops = &clk_regmap_gate_ops,
-> +               .parent_names = (const char *[]){ "vdec_1_1_div" },
-> +               .num_parents = 1,
-> +               .flags = CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_regmap meson8b_vdec_1_2_div = {
-> +       .data = &(struct clk_regmap_div_data){
-> +               .offset = HHI_VDEC3_CLK_CNTL,
-> +               .shift = 0,
-> +               .width = 7,
-> +               .flags = CLK_DIVIDER_ROUND_CLOSEST,
-> +       },
-> +       .hw.init = &(struct clk_init_data){
-> +               .name = "vdec_1_2_div",
-> +               .ops = &clk_regmap_divider_ops,
-> +               .parent_names = (const char *[]){ "vdec_1_sel" },
-> +               .num_parents = 1,
-> +               .flags = CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_regmap meson8b_vdec_1_2 = {
-> +       .data = &(struct clk_regmap_gate_data){
-> +               .offset = HHI_VDEC3_CLK_CNTL,
-> +               .bit_idx = 8,
-> +       },
-> +       .hw.init = &(struct clk_init_data) {
-> +               .name = "vdec_1_2",
-> +               .ops = &clk_regmap_gate_ops,
-> +               .parent_names = (const char *[]){ "vdec_1_2_div" },
-> +               .num_parents = 1,
-> +               .flags = CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_regmap meson8b_vdec_1 = {
-> +       .data = &(struct clk_regmap_mux_data){
-> +               .offset = HHI_VDEC3_CLK_CNTL,
-> +               .mask = 0x1,
-> +               .shift = 15,
-> +               .flags = CLK_MUX_ROUND_CLOSEST,
-> +       },
-> +       .hw.init = &(struct clk_init_data){
-> +               .name = "vdec_1",
-> +               .ops = &clk_regmap_mux_ops,
-> +               .parent_names = (const char *[]){ "vdec_1_1", "vdec_1_2" },
-> +               .num_parents = 2,
-> +               .flags = CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_regmap meson8b_vdec_hcodec_sel = {
-> +       .data = &(struct clk_regmap_mux_data){
-> +               .offset = HHI_VDEC_CLK_CNTL,
-> +               .mask = 0x3,
-> +               .shift = 25,
-> +               .flags = CLK_MUX_ROUND_CLOSEST,
-> +       },
-> +       .hw.init = &(struct clk_init_data){
-> +               .name = "vdec_hcodec_sel",
-> +               .ops = &clk_regmap_mux_ops,
-> +               .parent_names = meson8b_vdec_parent_names,
-> +               .num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
-> +               .flags = CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_regmap meson8b_vdec_hcodec_div = {
-> +       .data = &(struct clk_regmap_div_data){
-> +               .offset = HHI_VDEC_CLK_CNTL,
-> +               .shift = 16,
-> +               .width = 7,
-> +               .flags = CLK_DIVIDER_ROUND_CLOSEST,
-> +       },
-> +       .hw.init = &(struct clk_init_data){
-> +               .name = "vdec_hcodec_div",
-> +               .ops = &clk_regmap_divider_ops,
-> +               .parent_names = (const char *[]){ "vdec_hcodec_sel" },
-> +               .num_parents = 1,
-> +               .flags = CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_regmap meson8b_vdec_hcodec = {
-> +       .data = &(struct clk_regmap_gate_data){
-> +               .offset = HHI_VDEC_CLK_CNTL,
-> +               .bit_idx = 24,
-> +       },
-> +       .hw.init = &(struct clk_init_data) {
-> +               .name = "vdec_hcodec",
-> +               .ops = &clk_regmap_gate_ops,
-> +               .parent_names = (const char *[]){ "vdec_hcodec_div" },
-> +               .num_parents = 1,
-> +               .flags = CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_regmap meson8b_vdec_2_sel = {
-> +       .data = &(struct clk_regmap_mux_data){
-> +               .offset = HHI_VDEC2_CLK_CNTL,
-> +               .mask = 0x3,
-> +               .shift = 9,
-> +               .flags = CLK_MUX_ROUND_CLOSEST,
-> +       },
-> +       .hw.init = &(struct clk_init_data){
-> +               .name = "vdec_2_sel",
-> +               .ops = &clk_regmap_mux_ops,
-> +               .parent_names = meson8b_vdec_parent_names,
-> +               .num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
-> +               .flags = CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_regmap meson8b_vdec_2_div = {
-> +       .data = &(struct clk_regmap_div_data){
-> +               .offset = HHI_VDEC2_CLK_CNTL,
-> +               .shift = 0,
-> +               .width = 7,
-> +               .flags = CLK_DIVIDER_ROUND_CLOSEST,
-> +       },
-> +       .hw.init = &(struct clk_init_data){
-> +               .name = "vdec_2_div",
-> +               .ops = &clk_regmap_divider_ops,
-> +               .parent_names = (const char *[]){ "vdec_2_sel" },
-> +               .num_parents = 1,
-> +               .flags = CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_regmap meson8b_vdec_2 = {
-> +       .data = &(struct clk_regmap_gate_data){
-> +               .offset = HHI_VDEC2_CLK_CNTL,
-> +               .bit_idx = 8,
-> +       },
-> +       .hw.init = &(struct clk_init_data) {
-> +               .name = "vdec_2",
-> +               .ops = &clk_regmap_gate_ops,
-> +               .parent_names = (const char *[]){ "vdec_2_div" },
-> +               .num_parents = 1,
-> +               .flags = CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_regmap meson8b_vdec_hevc_sel = {
-> +       .data = &(struct clk_regmap_mux_data){
-> +               .offset = HHI_VDEC2_CLK_CNTL,
-> +               .mask = 0x3,
-> +               .shift = 25,
-> +               .flags = CLK_MUX_ROUND_CLOSEST,
-> +       },
-> +       .hw.init = &(struct clk_init_data){
-> +               .name = "vdec_hevc_sel",
-> +               .ops = &clk_regmap_mux_ops,
-> +               .parent_names = meson8b_vdec_parent_names,
-> +               .num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
-> +               .flags = CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_regmap meson8b_vdec_hevc_div = {
-> +       .data = &(struct clk_regmap_div_data){
-> +               .offset = HHI_VDEC2_CLK_CNTL,
-> +               .shift = 16,
-> +               .width = 7,
-> +               .flags = CLK_DIVIDER_ROUND_CLOSEST,
-> +       },
-> +       .hw.init = &(struct clk_init_data){
-> +               .name = "vdec_hevc_div",
-> +               .ops = &clk_regmap_divider_ops,
-> +               .parent_names = (const char *[]){ "vdec_hevc_sel" },
-> +               .num_parents = 1,
-> +               .flags = CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_regmap meson8b_vdec_hevc_en = {
-> +       .data = &(struct clk_regmap_gate_data){
-> +               .offset = HHI_VDEC2_CLK_CNTL,
-> +               .bit_idx = 24,
-> +       },
-> +       .hw.init = &(struct clk_init_data) {
-> +               .name = "vdec_hevc_en",
-> +               .ops = &clk_regmap_gate_ops,
-> +               .parent_names = (const char *[]){ "vdec_hevc_div" },
-> +               .num_parents = 1,
-> +               .flags = CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_regmap meson8b_vdec_hevc = {
-> +       .data = &(struct clk_regmap_mux_data){
-> +               .offset = HHI_VDEC2_CLK_CNTL,
-> +               .mask = 0x1,
-> +               .shift = 31,
-> +               .flags = CLK_MUX_ROUND_CLOSEST,
-> +       },
-> +       .hw.init = &(struct clk_init_data){
-> +               .name = "vdec_hevc",
-> +               .ops = &clk_regmap_mux_ops,
-> +               /* TODO: The second parent is currently unknown */
-> +               .parent_names = (const char *[]){ "vdec_hevc_en" },
-> +               .num_parents = 1,
-> +               .flags = CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
->  /* Everything Else (EE) domain gates */
->
->  static MESON_GATE(meson8b_ddr, HHI_GCLK_MPEG0, 0);
-> @@ -2168,6 +2419,19 @@ static struct clk_hw_onecell_data meson8_hw_onecell_data = {
->                 [CLKID_VPU_0_SEL]           = &meson8b_vpu_0_sel.hw,
->                 [CLKID_VPU_0_DIV]           = &meson8b_vpu_0_div.hw,
->                 [CLKID_VPU]                 = &meson8b_vpu_0.hw,
-> +               [CLKID_VDEC_1_SEL]          = &meson8b_vdec_1_sel.hw,
-> +               [CLKID_VDEC_1_1_DIV]        = &meson8b_vdec_1_1_div.hw,
-> +               [CLKID_VDEC_1]              = &meson8b_vdec_1_1.hw,
-> +               [CLKID_VDEC_HCODEC_SEL]     = &meson8b_vdec_hcodec_sel.hw,
-> +               [CLKID_VDEC_HCODEC_DIV]     = &meson8b_vdec_hcodec_div.hw,
-> +               [CLKID_VDEC_HCODEC]         = &meson8b_vdec_hcodec.hw,
-> +               [CLKID_VDEC_2_SEL]          = &meson8b_vdec_2_sel.hw,
-> +               [CLKID_VDEC_2_DIV]          = &meson8b_vdec_2_div.hw,
-> +               [CLKID_VDEC_2]              = &meson8b_vdec_2.hw,
-> +               [CLKID_VDEC_HEVC_SEL]       = &meson8b_vdec_hevc_sel.hw,
-> +               [CLKID_VDEC_HEVC_DIV]       = &meson8b_vdec_hevc_div.hw,
-> +               [CLKID_VDEC_HEVC_EN]        = &meson8b_vdec_hevc_en.hw,
-> +               [CLKID_VDEC_HEVC]           = &meson8b_vdec_hevc.hw,
->                 [CLK_NR_CLKS]               = NULL,
->         },
->         .num = CLK_NR_CLKS,
-> @@ -2361,6 +2625,22 @@ static struct clk_hw_onecell_data meson8b_hw_onecell_data = {
->                 [CLKID_VPU_1_DIV]           = &meson8b_vpu_1_div.hw,
->                 [CLKID_VPU_1]               = &meson8b_vpu_1.hw,
->                 [CLKID_VPU]                 = &meson8b_vpu.hw,
-> +               [CLKID_VDEC_1_SEL]          = &meson8b_vdec_1_sel.hw,
-> +               [CLKID_VDEC_1_1_DIV]        = &meson8b_vdec_1_1_div.hw,
-> +               [CLKID_VDEC_1_1]            = &meson8b_vdec_1_1.hw,
-> +               [CLKID_VDEC_1_2_DIV]        = &meson8b_vdec_1_2_div.hw,
-> +               [CLKID_VDEC_1_2]            = &meson8b_vdec_1_2.hw,
-> +               [CLKID_VDEC_1]              = &meson8b_vdec_1.hw,
-> +               [CLKID_VDEC_HCODEC_SEL]     = &meson8b_vdec_hcodec_sel.hw,
-> +               [CLKID_VDEC_HCODEC_DIV]     = &meson8b_vdec_hcodec_div.hw,
-> +               [CLKID_VDEC_HCODEC]         = &meson8b_vdec_hcodec.hw,
-> +               [CLKID_VDEC_2_SEL]          = &meson8b_vdec_2_sel.hw,
-> +               [CLKID_VDEC_2_DIV]          = &meson8b_vdec_2_div.hw,
-> +               [CLKID_VDEC_2]              = &meson8b_vdec_2.hw,
-> +               [CLKID_VDEC_HEVC_SEL]       = &meson8b_vdec_hevc_sel.hw,
-> +               [CLKID_VDEC_HEVC_DIV]       = &meson8b_vdec_hevc_div.hw,
-> +               [CLKID_VDEC_HEVC_EN]        = &meson8b_vdec_hevc_en.hw,
-> +               [CLKID_VDEC_HEVC]           = &meson8b_vdec_hevc.hw,
->                 [CLK_NR_CLKS]               = NULL,
->         },
->         .num = CLK_NR_CLKS,
-> @@ -2556,6 +2836,22 @@ static struct clk_hw_onecell_data meson8m2_hw_onecell_data = {
->                 [CLKID_VPU_1_DIV]           = &meson8b_vpu_1_div.hw,
->                 [CLKID_VPU_1]               = &meson8b_vpu_1.hw,
->                 [CLKID_VPU]                 = &meson8b_vpu.hw,
-> +               [CLKID_VDEC_1_SEL]          = &meson8b_vdec_1_sel.hw,
-> +               [CLKID_VDEC_1_1_DIV]        = &meson8b_vdec_1_1_div.hw,
-> +               [CLKID_VDEC_1_1]            = &meson8b_vdec_1_1.hw,
-> +               [CLKID_VDEC_1_2_DIV]        = &meson8b_vdec_1_2_div.hw,
-> +               [CLKID_VDEC_1_2]            = &meson8b_vdec_1_2.hw,
-> +               [CLKID_VDEC_1]              = &meson8b_vdec_1.hw,
-> +               [CLKID_VDEC_HCODEC_SEL]     = &meson8b_vdec_hcodec_sel.hw,
-> +               [CLKID_VDEC_HCODEC_DIV]     = &meson8b_vdec_hcodec_div.hw,
-> +               [CLKID_VDEC_HCODEC]         = &meson8b_vdec_hcodec.hw,
-> +               [CLKID_VDEC_2_SEL]          = &meson8b_vdec_2_sel.hw,
-> +               [CLKID_VDEC_2_DIV]          = &meson8b_vdec_2_div.hw,
-> +               [CLKID_VDEC_2]              = &meson8b_vdec_2.hw,
-> +               [CLKID_VDEC_HEVC_SEL]       = &meson8b_vdec_hevc_sel.hw,
-> +               [CLKID_VDEC_HEVC_DIV]       = &meson8b_vdec_hevc_div.hw,
-> +               [CLKID_VDEC_HEVC_EN]        = &meson8b_vdec_hevc_en.hw,
-> +               [CLKID_VDEC_HEVC]           = &meson8b_vdec_hevc.hw,
->                 [CLK_NR_CLKS]               = NULL,
->         },
->         .num = CLK_NR_CLKS,
-> @@ -2729,6 +3025,22 @@ static struct clk_regmap *const meson8b_clk_regmaps[] = {
->         &meson8b_vpu_1_div,
->         &meson8b_vpu_1,
->         &meson8b_vpu,
-> +       &meson8b_vdec_1_sel,
-> +       &meson8b_vdec_1_1_div,
-> +       &meson8b_vdec_1_1,
-> +       &meson8b_vdec_1_2_div,
-> +       &meson8b_vdec_1_2,
-> +       &meson8b_vdec_1,
-> +       &meson8b_vdec_hcodec_sel,
-> +       &meson8b_vdec_hcodec_div,
-> +       &meson8b_vdec_hcodec,
-> +       &meson8b_vdec_2_sel,
-> +       &meson8b_vdec_2_div,
-> +       &meson8b_vdec_2,
-> +       &meson8b_vdec_hevc_sel,
-> +       &meson8b_vdec_hevc_div,
-> +       &meson8b_vdec_hevc_en,
-> +       &meson8b_vdec_hevc,
->  };
->
->  static const struct meson8b_clk_reset_line {
-> diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
-> index e775f91ccce9..ed37196187e6 100644
-> --- a/drivers/clk/meson/meson8b.h
-> +++ b/drivers/clk/meson/meson8b.h
-> @@ -37,6 +37,9 @@
->  #define HHI_MALI_CLK_CNTL              0x1b0 /* 0x6c offset in data sheet */
->  #define HHI_VPU_CLK_CNTL               0x1bc /* 0x6f offset in data sheet */
->  #define HHI_HDMI_CLK_CNTL              0x1cc /* 0x73 offset in data sheet */
-> +#define HHI_VDEC_CLK_CNTL              0x1e0 /* 0x78 offset in data sheet */
-> +#define HHI_VDEC2_CLK_CNTL             0x1e4 /* 0x79 offset in data sheet */
-> +#define HHI_VDEC3_CLK_CNTL             0x1e8 /* 0x7a offset in data sheet */
->  #define HHI_NAND_CLK_CNTL              0x25c /* 0x97 offset in data sheet */
->  #define HHI_MPLL_CNTL                  0x280 /* 0xa0 offset in data sheet */
->  #define HHI_SYS_PLL_CNTL               0x300 /* 0xc0 offset in data sheet */
-> @@ -156,8 +159,20 @@
->  #define CLKID_VPU_1_SEL                186
->  #define CLKID_VPU_1_DIV                187
->  #define CLKID_VPU_1            189
-> +#define CLKID_VDEC_1_SEL       191
-> +#define CLKID_VDEC_1_1_DIV     192
-> +#define CLKID_VDEC_1_1         193
-> +#define CLKID_VDEC_1_2_DIV     194
-> +#define CLKID_VDEC_1_2         195
-
-In order to make use of the glitch-free mux by the driver, shouldn't
-CLKID_VDEC_1_1 and CLKID_VDEC_1_2 be exported in the bindings ?
-
-> +#define CLKID_VDEC_HCODEC_SEL  197
-> +#define CLKID_VDEC_HCODEC_DIV  198
-> +#define CLKID_VDEC_2_SEL       200
-> +#define CLKID_VDEC_2_DIV       201
-> +#define CLKID_VDEC_HEVC_SEL    203
-> +#define CLKID_VDEC_HEVC_DIV    204
-> +#define CLKID_VDEC_HEVC_EN     205
->
-> -#define CLK_NR_CLKS            191
-> +#define CLK_NR_CLKS            207
->
->  /*
->   * include the CLKID and RESETID that have
-> --
-> 2.21.0
->
+SGksIFV3ZQ0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+IEZyb206IFV3ZSBLbGVpbmUtS8O2bmlnIFttYWlsdG86dS5rbGVpbmUt
+a29lbmlnQHBlbmd1dHJvbml4LmRlXQ0KPiBTZW50OiAyMDE55bm0M+aciDIw5pelIDE4OjU4DQo+
+IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IHRoaWVycnkucmVk
+aW5nQGdtYWlsLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsN
+Cj4gc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVlckBwZW5ndXRyb25peC5kZTsga2VybmVsQHBl
+bmd1dHJvbml4LmRlOw0KPiBmZXN0ZXZhbUBnbWFpbC5jb207IGxpbnV4QGFybWxpbnV4Lm9yZy51
+azsgb3RhdmlvQG9zc3lzdGVtcy5jb20uYnI7DQo+IHN0ZWZhbkBhZ25lci5jaDsgTGVvbmFyZCBD
+cmVzdGV6IDxsZW9uYXJkLmNyZXN0ZXpAbnhwLmNvbT47DQo+IHNjaG5pdHplbHRvbnlAZ21haWwu
+Y29tOyBSb2JpbiBHb25nIDx5aWJpbi5nb25nQG54cC5jb20+OyBsaW51eC0NCj4gcHdtQHZnZXIu
+a2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4ga2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRs
+LWxpbnV4LWlteA0KPiA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+VjcgMi81XSBwd206IEFkZCBpLk1YIFRQTSBQV00gZHJpdmVyIHN1cHBvcnQNCj4gDQo+IEhlbGxv
+IEFuc29uLA0KPiANCj4gT24gV2VkLCBNYXIgMjAsIDIwMTkgYXQgMTA6MTc6NTBBTSArMDAwMCwg
+QW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gPiBPbiBXZWQsIE1hciAyMCwgMjAxOSBhdCAwNTowNjoy
+MUFNICswMDAwLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gPiA+ID4gKwkvKiBtYWtlIHN1cmUgY291
+bnRlciBpcyBkaXNhYmxlZCBmb3IgcHJvZ3JhbW1pbmcgcHJlc2NhbGUgKi8NCj4gPiA+ID4gKwl2
+YWwgPSByZWFkbCh0cG0tPmJhc2UgKyBQV01fSU1YX1RQTV9TQyk7DQo+ID4gPiA+ICsJc2F2ZWRf
+Y21vZCA9IEZJRUxEX0dFVChQV01fSU1YX1RQTV9TQ19DTU9ELCB2YWwpOw0KPiA+ID4gPiArCWlm
+IChzYXZlZF9jbW9kKSB7DQo+ID4gPiA+ICsJCXZhbCAmPSB+UFdNX0lNWF9UUE1fU0NfQ01PRDsN
+Cj4gPiA+ID4gKwkJd3JpdGVsKHZhbCwgdHBtLT5iYXNlICsgUFdNX0lNWF9UUE1fU0MpOw0KPiA+
+ID4NCj4gPiA+IEkgdGhvdWdodCB3ZSBhZ3JlZWQgb24gbm90IHN0b3BwaW5nIHRoZSBjb3VudGVy
+IGlmIHRoZSBQUyBmaWVsZCBpc24ndA0KPiBjaGFuZ2VkPw0KPiA+DQo+ID4gSWYgdGhlIFBTIGZp
+ZWxkIG5vIG5lZWQgdG8gY2hhbmdlLCB0aGUgcm91bmQgc3RhdGUgc2hvdWxkIGFscmVhZHkNCj4g
+PiByZXR1cm4gdGhlIHBlcmlvZCBlcXVhbCB0byBjdXJyZW50IHBlcmlvZCBzZXR0aW5ncywgc28g
+dGhpcyBmdW5jdGlvbiB3aWxsIE5PVA0KPiBiZSBjYWxsZWQsIHJpZ2h0Pw0KPiA+DQo+ID4gICAg
+ICAgICAgaWYgKHJlYWxfc3RhdGUucGVyaW9kICE9IHRwbS0+cmVhbF9wZXJpb2QpIHsNCj4gPiAg
+ICAgICAgICAgICAgICAgIGlmICh0cG0tPnVzZXJfY291bnQgPiAxKSB7DQo+ID4gICAgICAgICAg
+ICAgICAgICAgICAgICAgIHJldCA9IC1FQlVTWTsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgZ290byBleGl0Ow0KPiA+ICAgICAgICAgICAgICAgICAgfQ0KPiA+DQo+ID4gCXB3bV9pbXhf
+dHBtX3NldHVwX3BlcmlvZChjaGlwLCBwYXJhbSk7DQo+ID4gICAgICAgICAgICAgICAgICB0cG0t
+PnJlYWxfcGVyaW9kID0gcmVhbF9zdGF0ZS5wZXJpb2Q7DQo+ID4gICAgICAgICB9DQo+IA0KPiBJ
+ZiB0aGUgUFMgZmllbGQgaXMgYWxyZWFkeSByaWdodCAucGVyaW9kIG1pZ2h0IHN0aWxsIG5vdCBt
+YXRjaCBhcyBpdHMgdmFsdWUNCj4gZGVwZW5kcyBvbiBTQy5QUyBhbmQgTU9ELk1PRC4NCg0KQWgs
+IG15IGJhZC4uLiBJIGRpZCBOT1Qga25vdyB3aGF0IEkgd2FzIHRoaW5raW5nLi4uDQpZZXMsIEkg
+d2lsbCBhZGQgdGhlIFBTIGNoZWNrIHRvIGRlY2lkZSB3aGV0aGVyIGRpc2FibGluZyBjb3VudGVy
+Li4NCg0KDQo+IA0KPiA+ID4gPiArCXZhbCAmPSB+UFdNX0lNWF9UUE1fU0NfUFM7DQo+ID4gPiA+
+ICsJdmFsIHw9IEZJRUxEX1BSRVAoUFdNX0lNWF9UUE1fU0NfUFMsIHAucHJlc2NhbGUpOw0KPiA+
+ID4gPiArCXdyaXRlbCh2YWwsIHRwbS0+YmFzZSArIFBXTV9JTVhfVFBNX1NDKTsNCj4gPiA+ID4g
+Kw0KPiA+ID4gPiArCS8qDQo+ID4gPiA+ICsJICogc2V0IHBlcmlvZCBjb3VudDogYWNjb3JkaW5n
+IHRvIFJNLCB0aGUgTU9EIHJlZ2lzdGVyIGlzDQo+ID4gPiA+ICsJICogdXBkYXRlZCBpbW1lZGlh
+dGVseSBhZnRlciBDTU9EWzE6MF0gPSAyYicwMCBhYm92ZQ0KPiA+ID4gPiArCSAqLw0KPiA+ID4N
+Cj4gPiA+IFNvIHRoZSBjdXJyZW50IHBlcmlvZCBpc24ndCBjb21wbGV0ZWQ/IFRoYXQncyB3cm9u
+Zy4NCj4gPg0KPiA+IFNvIHlvdSBtZWFuIHdlIGhhdmUgdG8gd2FpdCBmb3IgdGhlIGN1cnJlbnQg
+cGVyaW9kIHRvIGZpbmlzaCBoZXJlPw0KPiA+IEkgZGlkIE5PVCBrbm93IHRoaXMsIHNvIHdlIGhh
+dmUgdG8gY29tcGFyZSB0aGUgY291bnRlciB2YWx1ZSB3aXRoDQo+IA0KPiBZZWFoLCBzZWUNCj4g
+aHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBz
+JTNBJTJGJTJGcGF0Y2gNCj4gd29yay5vemxhYnMub3JnJTJGcGF0Y2glMkYxMDIxNTY2JTJGJmFt
+cDtkYXRhPTAyJTdDMDElN0NhbnNvbi5oDQo+IHVhbmclNDBueHAuY29tJTdDNjI2YTZmNTYwM2Y3
+NGFlMGQzN2UwOGQ2YWQyMmU3NzQlN0M2ODZlYTFkM2JjDQo+IDJiNGM2ZmE5MmNkOTljNWMzMDE2
+MzUlN0MwJTdDMCU3QzYzNjg4Njc2Mjc1Nzg3NjkxNiZhbXA7c2RhdGE9cg0KPiB3dSUyQlVvM0ds
+Ulg4ajRsWFNPVnVBczduMXlFdVA1UDJXNnZoWSUyQmppWGRRJTNEJmFtcDtyZXNlcnZlDQo+IGQ9
+MCB3aGljaCBkb2N1bWVudHMgdGhpcyBidXQgd2FpdHMgZm9yIGZlZWRiYWNrIGJ5IFRoaWVycnkg
+c2luY2Ugc29tZSB0aW1lLg0KPiANCj4gPiB0aGUgTU9EIHZhbHVlIHVudGlsIHRoZXkgbWF0Y2gg
+dGhlbiBwcm9jZWVkIHRoZSBwZXJpb2QgY2hhbmdlPw0KPiANCj4gSWYgdGhlIGhhcmR3YXJlIGRv
+ZXNuJ3Qgc3VwcG9ydCB5b3UgaGVyZSAodXN1YWxseSBpdCBkb2VzKSBJIHRoaW5rIGl0J3Mgbm90
+DQo+IHJlbGlhYmxlIGVub3VnaCB0byB0cnkgdG8gc3luYyBpbiBzb2Z0d2FyZS4gSSBhc3N1bWUg
+eW91IGNhbiBnZXQgdGhlIHJpZ2h0DQo+IHdhdmUgZm9ybSBpZiB5b3UgZG9uJ3QgY2hhbmdlIFND
+LlBTIGJ1dCBvbmx5IE1PRC5NT0Q/IFNvIG1heWJlIHRoZQ0KPiBzYW5lc3QgYXBwcm9hY2ggaXMg
+dG8gcmVmdXNlIGNoYW5naW5nIFNDLlBTIGlmIHRoZSBQV00gaXMgcnVubmluZy4NCj4gDQo+IE9y
+IGRpc2FibGUgKHdoaWNoIGFsc28gc2hvdWxkIHdhaXQgZm9yIHRoZSBjdXJyZW50IHBlcmlvZCB0
+byBmaW5pc2gpLCBwb2xsIGZvcg0KPiB0aGUgZW5kIChvciB1c2UgYW4gaXJxPykgYW5kIHRoZW4g
+c2V0dXAgdGhlIG5ldyBjb25maWd1cmF0aW9uLg0KDQpMZXQgbWUgdHJ5IHRvIHBvbGwgdGhlIFRP
+RiAodGltZXIgb3ZlcmZsb3cpIGJlZm9yZSBzZXR1cCB0aGUgbmV3IGNvbmZpZ3VyYXRpb24uDQpB
+bmQgd2lsbCBhbHNvIG5lZWQgdG8gYWRkIHRpbWVvdXQgZm9yIHRoZSBwb2xsaW5nLCB3aGF0IHNo
+b3VkIHRoZSB0aW1lb3V0IHZhbHVlDQpiZSwgMTAwbXM/IEFzIGlkZWFsbHkgdGhlIG1heCBwZXJp
+b2QgY2FuIGJlIHZlcnkgbGFyZ2UsIHNldmVyYWwgc2Vjb25kcyBvciBldmVuDQpsYXJnZSwgc28g
+aXMgdGhlIDEwMG1TIGdvb2QgaGVyZT8gDQoNCj4gDQo+ID4gPiA+ICt7DQo+ID4gPiA+ICsJc3Ry
+dWN0IGlteF90cG1fcHdtX2NoaXAgKnRwbSA9IHRvX2lteF90cG1fcHdtX2NoaXAoY2hpcCk7DQo+
+ID4gPiA+ICsJc3RydWN0IHB3bV9zdGF0ZSBjOw0KPiA+ID4gPiArCXUzMiB2YWwsIHNjX3ZhbDsN
+Cj4gPiA+ID4gKwl1NjQgdG1wOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJcHdtX2lteF90cG1fZ2V0
+X3N0YXRlKGNoaXAsIHB3bSwgJmMpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJaWYgKHN0YXRlLmR1
+dHlfY3ljbGUgIT0gYy5kdXR5X2N5Y2xlKSB7DQo+ID4gPiA+ICsJCS8qIHNldCBkdXR5IGNvdW50
+ZXIgKi8NCj4gPiA+ID4gKwkJdG1wID0gcmVhZGwodHBtLT5iYXNlICsgUFdNX0lNWF9UUE1fTU9E
+KSAmDQo+IFBXTV9JTVhfVFBNX01PRF9NT0Q7DQo+ID4gPiA+ICsJCXRtcCAqPSBzdGF0ZS5kdXR5
+X2N5Y2xlOw0KPiA+ID4gPiArCQl2YWwgPSBESVZfUk9VTkRfQ0xPU0VTVF9VTEwodG1wLCBzdGF0
+ZS5wZXJpb2QpOw0KPiA+ID4gPiArCQl3cml0ZWwodmFsLCB0cG0tPmJhc2UgKyBQV01fSU1YX1RQ
+TV9DblYocHdtLQ0KPiA+aHdwd20pKTsNCj4gPiA+ID4gKwl9DQo+ID4gPiA+ICsNCj4gPiA+ID4g
+KwlpZiAoc3RhdGUuZW5hYmxlZCAhPSBjLmVuYWJsZWQpIHsNCj4gPiA+DQo+ID4gPiBUaGlzIGlz
+IHdyb25nLiBJZiB0aGUgUFdNIHdhcyBydW5uaW5nIChjLmVuYWJsZWQgPT0gdHJ1ZSkgYW5kIHlv
+dQ0KPiA+ID4gYXJlIHN1cHBvc2VkIHRvIGRpc2FibGUgKHN0YXRlLmVuYWJsZWQgPT0gZmFsc2Up
+IHlvdSBlbmFibGUgdGhlDQo+ID4gPiBoYXJkd2FyZSBvbmNlIG1vcmUuDQo+ID4NCj4gPiBBIGxp
+dHRsZSBjb25mdXNlZCBoZXJlLCBhcyB0aGUgY2FzZSB5b3UgYXNzdW1lLCBpbnNpZGUgdGhpcyBi
+bG9jaywNCj4gPiB0aGVyZSBpcyBhbm90aGVyIGNoZWNrIGZvciBzdGF0ZS5lbmFibGVkLCBpZiBp
+dCBpcyBmYWxzZSwgdGhlIHBvbGFyaXR5DQo+ID4gd2lsbCBiZSBzZXQgdG8gY2hhbm5lbCBkaXNh
+YmxlZCBtb2RlLCB0aGUgcG9sYXJpdHkgc2V0dGluZyBpcyBjb21iaW5lZA0KPiB0b2dldGhlciB3
+aXRoIHRoZSBlbmFibGUgc3RhdHVzIGhlcmUsIGFtIEkgd3Jvbmc/DQo+IA0KPiBBaCwgeW91J3Jl
+IHJpZ2h0LiBJIG1pc3NlZCB0aGF0IHByb2JhYmx5IGJlY2F1c2UgSSBzYXcgcmVnaXN0ZXIgYWNj
+ZXNzZXMgYWZ0ZXINCj4gdGhlIHN0YXRlLmVuYWJsZWQgIT0gYy5lbmFibGVkIGNoZWNrLg0KPiAN
+Cj4gPiA+ID4gKwkJCXZhbCB8PSAoc3RhdGUucG9sYXJpdHkgPT0gUFdNX1BPTEFSSVRZX05PUk1B
+TCkgPw0KPiA+ID4gPiArCQkJCUZJRUxEX1BSRVAoUFdNX0lNWF9UUE1fQ25TQ19FTFMsIDB4Mikg
+Og0KPiA+ID4gPiArCQkJCUZJRUxEX1BSRVAoUFdNX0lNWF9UUE1fQ25TQ19FTFMsIDB4MSk7DQo+
+ID4gPg0KPiA+ID4gSW50cm9kdWNlIFBXTV9JTVhfVFBNX0NuU0NfRUxTX1BPTEFSSVRZX05PUk1B
+TCBhbmQgdXNlIGl0DQo+IHRvZ2V0aGVyDQo+ID4gPiB3aXRoIFBXTV9JTVhfVFBNX0NuU0NfRUxT
+X1BPTEFSSVRZX0lOVkVSU0VEIGhlcmUuIElmIHlvdSBwdXQNCj4gdGhlDQo+ID4gPiBGSUVMRF9Q
+UkVQIGludG8gdGhlIGRlZmluaXRpb24gdGhlIGxpbmUgZG9lc24ndCBnZXQgZXhjZXNzaXZlbHkg
+bG9uZy4NCj4gPiA+DQo+ID4NCj4gPiBJIHB1dCB0aGUgRklFTERfUFJFUCBpbnRvIGRlZmluaXRp
+b24sIHRoZSBsaW5lIHN0aWxsIGxvbmcsIGJ1dCBJIGFncmVlIHVzaW5nDQo+IGRlZmluaXRpb24g
+aXMgYmV0dGVyLg0KPiA+DQo+ID4gI2RlZmluZSBQV01fSU1YX1RQTV9DblNDX0VMU19JTlZFUlNF
+RA0KPiBGSUVMRF9QUkVQKFBXTV9JTVhfVFBNX0NuU0NfRUxTLCAxKQ0KPiA+ICNkZWZpbmUgUFdN
+X0lNWF9UUE1fQ25TQ19FTFNfTk9STUFMDQo+IEZJRUxEX1BSRVAoUFdNX0lNWF9UUE1fQ25TQ19F
+TFMsIDIpDQo+ID4NCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsIHw9IChzdGF0ZS0+
+cG9sYXJpdHkgPT0gUFdNX1BPTEFSSVRZX05PUk1BTCkgPw0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIFBXTV9JTVhfVFBNX0NuU0NfRUxTX05PUk1BTCA6DQo+ID4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgUFdNX0lNWF9UUE1fQ25TQ19FTFNfSU5WRVJTRUQ7
+DQo+ID4NCj4gPiA+IE1heWJlIGFsc28gYWRkDQo+ID4gPg0KPiA+ID4gCSNkZWZpbmUgUFdNX0lN
+WF9UUE1fQ25TQ19FTFNfSU5BQ1RJVkUNCj4gPiA+IEZJRUxEX1BSRVAoUFdNX0lNWF9UUE1fQ25T
+Q19FTFMsIDApDQo+ID4gPg0KPiA+DQo+ID4gSSBkaWQgTk9UIHVzZSB0aGUgRklFTERfUFJFUChQ
+V01fSU1YX1RQTV9DblNDX0VMUywgMCkgYXQgYWxsLCBzbyB3aHkNCj4gYWRkIGl0Pw0KPiA+IEkg
+ZG9uJ3QgcXVpdGUgdW5kZXJzdGFuZC4NCj4gDQo+IFlvdSB1c2UgaXQgaW1wbGljaXRseSBpbiBw
+d21faW14X3RwbV9hcHBseV9odygpIGlmIHN0YXRlLmVuYWJsZWQgPT0gZmFsc2UNCj4gYW5kIGMu
+ZW5hYmxlZCA9PSB0cnVlOg0KPiANCj4gCXZhbCA9IHJlYWRsKHRwbS0+YmFzZSArIFBXTV9JTVhf
+VFBNX0NuU0MocHdtLT5od3B3bSkpOw0KPiAJdmFsICY9IH4oUFdNX0lNWF9UUE1fQ25TQ19FTFMg
+fCAuLi4pOw0KPiAJLi4uDQo+IAl3cml0ZWwodmFsLCB0cG0tPmJhc2UgKyBQV01fSU1YX1RQTV9D
+blNDKHB3bS0+aHdwd20pKTsNCg0KQWgsIE9LLCBJIGNhbiByZXBsYWNlIHRoZSByZWdpc3RlciBm
+aWVsZCBjbGVhciB3aXRoIHRoZSBmaWVsZCBwcmVwYXJlIGRlZmluaXRpb24uDQoNCj4gDQo+ID4g
+PiA+ICtzdGF0aWMgaW50IHB3bV9pbXhfdHBtX2FwcGx5KHN0cnVjdCBwd21fY2hpcCAqY2hpcCwN
+Cj4gPiA+ID4gKwkJCSAgICAgIHN0cnVjdCBwd21fZGV2aWNlICpwd20sDQo+ID4gPiA+ICsJCQkg
+ICAgIHN0cnVjdCBwd21fc3RhdGUgKnN0YXRlKQ0KPiA+ID4gPiArew0KPiA+ID4gPiArCXN0cnVj
+dCBpbXhfdHBtX3B3bV9jaGlwICp0cG0gPSB0b19pbXhfdHBtX3B3bV9jaGlwKGNoaXApOw0KPiA+
+ID4gPiArCXN0cnVjdCBpbXhfdHBtX3B3bV9wYXJhbSBwYXJhbTsNCj4gPiA+ID4gKwlzdHJ1Y3Qg
+cHdtX3N0YXRlIHJlYWxfc3RhdGU7DQo+ID4gPiA+ICsJaW50IHJldDsNCj4gPiA+ID4gKw0KPiA+
+ID4gPiArCXJldCA9IHB3bV9pbXhfdHBtX3JvdW5kX3N0YXRlKGNoaXAsICZwYXJhbSwgc3RhdGUs
+ICZyZWFsX3N0YXRlKTsNCj4gPiA+ID4gKwlpZiAocmV0KQ0KPiA+ID4gPiArCQlyZXR1cm4gLUVJ
+TlZBTDsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCW11dGV4X2xvY2soJnRwbS0+bG9jayk7DQo+ID4g
+PiA+ICsNCj4gPiA+ID4gKwkvKg0KPiA+ID4gPiArCSAqIFRQTSBjb3VudGVyIGlzIHNoYXJlZCBi
+eSBtdWx0aXBsZSBjaGFubmVscywgc28NCj4gPiA+ID4gKwkgKiBwcmVzY2FsZSBhbmQgcGVyaW9k
+IGNhbiBOT1QgYmUgbW9kaWZpZWQgd2hlbg0KPiA+ID4gPiArCSAqIHRoZXJlIGFyZSBtdWx0aXBs
+ZSBjaGFubmVscyBpbiB1c2Ugd2l0aCBkaWZmZXJlbnQNCj4gPiA+ID4gKwkgKiBwZXJpb2Qgc2V0
+dGluZ3MuDQo+ID4gPiA+ICsJICovDQo+ID4gPiA+ICsJaWYgKHJlYWxfc3RhdGUucGVyaW9kICE9
+IHRwbS0+cmVhbF9wZXJpb2QpIHsNCj4gPiA+ID4gKwkJaWYgKHRwbS0+dXNlcl9jb3VudCA+IDEp
+IHsNCj4gPiA+ID4gKwkJCXJldCA9IC1FQlVTWTsNCj4gPiA+ID4gKwkJCWdvdG8gZXhpdDsNCj4g
+PiA+ID4gKwkJfQ0KPiA+ID4gPiArDQo+ID4gPiA+ICsJCXB3bV9pbXhfdHBtX2NvbmZpZ19jb3Vu
+dGVyKGNoaXAsIHBhcmFtKTsNCj4gPiA+ID4gKwkJdHBtLT5yZWFsX3BlcmlvZCA9IHJlYWxfc3Rh
+dGUucGVyaW9kOw0KPiA+ID4gPiArCX0NCj4gPiA+DQo+ID4gPiBNYXliZSBhZGQgYSBjb21tZW50
+IHRoYXQgdGhpcyBjb3VsZCBzdGlsbCBiZSBvcHRpbWl6ZWQuIEZvciBleGFtcGxlDQo+ID4gPiBp
+ZiBwd21faW14X3RwbV9yb3VuZF9zdGF0ZSByZXR1cm5lZCBwcmVzY2FsZSA9IDUgYnV0IHByZXNj
+YWxlIGlzDQo+ID4gPiBjdXJyZW50bHkgNiwgeW91IG1pZ2h0IHN0aWxsIGJlIGFibGUgdG8gY29u
+ZmlndXJlDQo+ID4NCj4gPiBZb3UgbWVhbnQgZm9yIG11bHRpcGxlIHVzZXJzIHJlcXVlc3QgZGlm
+ZmVyZW50IHBlcmlvZCBjYXNlPyBJbiB0aGlzDQo+ID4gYmxvY2ssIGlmIHRoZXJlIGlzIE9OTFkg
+b25lIHVzZXIgYW5kIHRoZSByZXF1ZXN0ZWQgcGVyaW9kIGNhbiBiZSBtZXQNCj4gPiBieSBIVywg
+aXQgd2lsbCBhbnl3YXkgcmUtY29uZmlndXJlIHRoZSBIVyBmb3IgdGhlIHByZXNjYWxlIGFuZCBw
+ZXJpb2QgSQ0KPiB0aGluaywgb3IgSSBkaWQgTk9UIGdldCB5b3VyIHBvaW50Pw0KPiANCj4gTXkg
+aWRlYSBoYXMgYSBmbGF3LiBJIHRob3VnaHQgdGhhdCBpZiB0aGVyZSBpcyBhbm90aGVyIHVzZXIs
+IHRoZSBkdXR5X2N5Y2xlIGNhbg0KPiBzdGlsbCBiZSByZXByZXNlbnRlZCBpZiB0aGUgYWN0dWFs
+bHkgdXNlZCBwcmVzY2FsZSB2YWx1ZSBpcyBzbGlnaHRseSBoaWdoZXIuIEJ1dA0KPiB0aGVuIHRo
+ZXJlIGlzIHN0aWxsIGEgcHJvYmxlbSB3aXRoIHRoZSBwZXJpb2QgbGVuZ3RoIHRoYXQgSSBtaXNz
+ZWQuIFNvIG15DQo+IHJlbWFyayB3YXMgd3JvbmcsIHNvcnJ5IGZvciB0aGF0Lg0KDQpUaGFua3Ms
+DQpBbnNvbg0KDQo+IA0KPiBCZXN0IHJlZ2FyZHMNCj4gVXdlDQo+IA0KPiAtLQ0KPiBQZW5ndXRy
+b25peCBlLksuICAgICAgICAgICAgICAgICAgICAgICAgICAgfCBVd2UgS2xlaW5lLUvDtm5pZyAg
+ICAgICAgICAgIHwNCj4gSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAgICAgICAgICAg
+IHwNCj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJs
+PWh0dHAlM0ElMkYlMkZ3d3cucA0KPiBlbmd1dHJvbml4LmRlJTJGJmFtcDtkYXRhPTAyJTdDMDEl
+N0NhbnNvbi5odWFuZyU0MG54cC5jb20lN0M2Mg0KPiA2YTZmNTYwM2Y3NGFlMGQzN2UwOGQ2YWQy
+MmU3NzQlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzDQo+IDUlN0MwJTdDMCU3QzYz
+Njg4Njc2Mjc1Nzg3NjkxNiZhbXA7c2RhdGE9SnNOUmE4RHVHWWl6RTdGQ3lIVnVZDQo+IFFTVXU0
+ZVV1NXFUaDZFZHBmM0F6bTglM0QmYW1wO3Jlc2VydmVkPTAgIHwNCg==
