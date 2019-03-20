@@ -1,149 +1,78 @@
-From: Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH 5/5] media: tvp5150: add support to limit tv norms on
- connector
-Date: Wed, 20 Mar 2019 14:29:31 -0300
-Message-ID: <20190320142931.4a4b91fd@coco.lan>
-References: <20190202121004.9014-1-m.felsch@pengutronix.de>
- <20190202121004.9014-6-m.felsch@pengutronix.de>
- <20190320111851.1749c9ac@coco.lan>
- <20190320163650.ua6cx3jwffm36p3m@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190320163650.ua6cx3jwffm36p3m@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, airlied@linux.ie, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, hans.verkuil@cisco.com, kernel@pengutronix.de, linux-media@vger.kernel.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "dt-bindings: snps,dw-apb-ssi: Add optional clock bindings documentation" to the spi tree
+Date: Wed, 20 Mar 2019 17:30:07 +0000 (GMT)
+Message-ID: <20190320173007.BD6281126E4C@debutante.sirena.org.uk>
+References: <1553010727-23157-3-git-send-email-gareth.williams.jx@renesas.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1553010727-23157-3-git-send-email-gareth.williams.jx@renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gareth Williams <gareth.williams.jx@renesas.com>
+Cc: Phil Edworthy <phil.edworthy@renesas.com>, Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>Phil Edworthy <phil.edworthy@renesas.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.orglinux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RW0gV2VkLCAyMCBNYXIgMjAxOSAxNzozNjo1MCArMDEwMApNYXJjbyBGZWxzY2ggPG0uZmVsc2No
-QHBlbmd1dHJvbml4LmRlPiBlc2NyZXZldToKCj4gSGkgTWF1cm8sCj4gCj4gT24gMTktMDMtMjAg
-MTE6MTgsIE1hdXJvIENhcnZhbGhvIENoZWhhYiB3cm90ZToKPiA+IEVtIFNhdCwgIDIgRmViIDIw
-MTkgMTM6MTA6MDQgKzAxMDAKPiA+IE1hcmNvIEZlbHNjaCA8bS5mZWxzY2hAcGVuZ3V0cm9uaXgu
-ZGU+IGVzY3JldmV1Ogo+ID4gICAKPiA+ID4gVGhlIHR2cDUxNTAgYWNjZXB0cyBOVFNDKE0sSiw0
-LjQzKSwgUEFMIChCLEQsRyxILEksTSxOKSBhbmQgU0VDQU0gdmlkZW8KPiA+ID4gZGF0YSBhbmQg
-aXMgYWJsZSB0byBhdXRvLWRldGVjdCB0aGUgaW5wdXQgc2lnbmFsLiAgIAo+ID4gCj4gPiBIbW0u
-Li4gSSdtIGFmcmFpZCBvZiB0aGlzIGNoYW5nZS4gQXMgZmFyIGFzIEkgcmVtZW1iZXIsIEkgdGVz
-dGVkIHNvbWUKPiA+IHdlaXJkIGZvcm1hdCB2YXJpYW50cyBsaWtlIFY0TDJfU1REX1BBTF82MCBh
-IGxvbmcgdGltZSBhZ28sIGJ1dCB0aGVyZSdzCj4gPiBubyB3YXkgdG8gZm9yY2UgdmlkZW8gdG8g
-dXNlIHRob3NlLiBUaGUgZm9ybWF0IHNlbGVjdGlvbiBsb2dpYyBzaW1wbHkKPiA+IHBsYWNlcyB0
-aGUgZGV2aWNlIG9uIGF1dG8tZGV0ZWN0IG1vZGUgZm9yIHRob3NlIHdlaXJkb3MsIGFuZCB0aGF0
-Cj4gPiB3b3JrcyBmaW5lIGF0IHRoZSBkZXZpY2VzIEkga25vdy4gIAo+IAo+IFNvcnJ5IEkgZGlk
-bid0IGdldCB0aGlzLiBUaGUgZm9ybWF0IGlzIHNldCB0byBhdXRvZGV0ZWN0IGR1cmluZyBwcm9i
-ZSgpLgoKWWVzLCBidXQgYXBwcyB3aWxsIGNoYW5nZSBiYXNlZCBvbiBHX0ZNVCwgVFJZX0ZNVCBh
-bmQgU19GTVQuCgpTZWUsIG15IG1haW4gY29uY2VybiBoZXJlIGlzIHdpdGggZXhpc3RpbmcgdHZw
-NTE1MCBub24tcGxhdGZvcm0KZHJpdmVycywgYXMgYSBjaGFuZ2UgdGhlcmUgd291bGQgYmUgYSBy
-ZWdyZXNzaW9uLgoKPiBJZiB0aGVyZSBpcyBubyBmb3JtYXQgbGltaXRhdGlvbiB0aGlzIHdvbid0
-IGJlIGNoYW5nZWQgZHVyaW5nCj4gbWVkaWEubGlua19zZXR1cCgpLiBZb3UncmUgcmlnaHQgSSBm
-b3Jnb3QgdG8gY2hlY2sgaWYgdGhlIGN1cl9jb25uZWN0b3IKPiBpcyBhdmFpbGFibGUgZHVyaW5n
-IHR2cDUxNTBfc19zdGQoKSwgaW4gY2FzZSBvZiBwZGF0YSByZWxhdGVkIGRldmljZXMuCgpZZWFo
-LCB0aGF0J3Mgd2hhdCBJJ20gdGFsa2luZyBhYm91dC4KCj4gSW4gc3VjaCBhIGNhc2Ugd2Ugc2hv
-dWxkIHNldCBzdXBwb3J0ZWRfbm9ybXMgdG8gVjRMMl9TVERfQUxMIGFzIGl0IGlzCj4gZG9uZSBi
-eSB2NGwyX2Z3bm9kZV9wYXJzZV9jb25uZWN0b3IoKSBpZiBubyBsaW1pdGF0aW9ucyBhcmUgZ2l2
-ZW4uCj4gCj4gQnR3LCBob3cgZG9lcyBpdCBsb29rIHdpdGggdGhlIG90aGVyIHBhdGNoc2V0PwoK
-SSBhc2tlZCBIYW5zIHRvIHRha2UgYSBsb29rIGF0IHRoZSBwYXRjaCBzZXJpZXMsIGFzIGhlJ3Mg
-c3ViLW1haW50YWluaW5nCnRoZSB2NGwyIHN0dWZmLiAKCkknbSBpbnRlbmRpbmcgdG8gdGFrZQph
-IGRlZXBlciBsb29rIGF0IHBhdGNoIDIvNyB2NCBmcm9tIHRoZSBwYXN0IHNlcmllcy4KCj4gCj4g
-UmVnYXJkcywKPiBNYXJjbwo+IAo+ID4gCj4gPiBBIGNoYW5nZSBsaWtlIHRoYXQgbWF5IGJyZWFr
-IHRoaW5ncy4gU28gSSB3b3VsZCBhY3R1YWxseSBoYXZlIGEgcXVpcmsKPiA+IHRvIG9wdGlvbmFs
-bHkgZGlzYWJsZSBhdXRvLWRldGVjdGlvbiBvbiBkZXZpY2VzIHRoYXQgdGhpcyBpcyBub3Qga25v
-dwo+ID4gdG8gd29yay4KPiA+ICAgCj4gPiA+IFRoZSBhdXRvLWRldGVjdGlvbgo+ID4gPiBkb2Vz
-IG5vdCB3b3JrIGlmIHRoZSBjb25uZWN0b3IgZG9lcyBub3QgcmVjZWl2ZSBhbiBpbnB1dCBzaWdu
-YWwgYW5kIHRoZQo+ID4gPiB0dnA1MTUwIG1pZ2h0IG5vdCBiZSBjb25maWd1cmVkIGNvcnJlY3Rs
-eS4gVGhpcyBtaXNjb25maWd1cmF0aW9uIGxlYWRzCj4gPiA+IGludG8gd3JvbmcgZGVjb2RlZCB2
-aWRlbyBzdHJlYW1zIGlmIHRoZSB0dnA1MTUwIGdldHMgcG93ZXJlZCBvbiBiZWZvcmUKPiA+ID4g
-dGhlIHZpZGVvIHNpZ25hbCBpcyBwcmVzZW50Lgo+ID4gPiAKPiA+ID4gTGltaXQgdGhlIHN1cHBv
-cnRlZCB0diBub3JtcyBhY2NvcmRpbmcgdG8gdGhlIGFjdHVhbCBzZWxlY3RlZCBjb25uZWN0b3IK
-PiA+ID4gdG8gYXZvaWQgYSBtaXNjb25maWd1cmF0aW9uLgo+ID4gPiAKPiA+ID4gU2lnbmVkLW9m
-Zi1ieTogTWFyY28gRmVsc2NoIDxtLmZlbHNjaEBwZW5ndXRyb25peC5kZT4KPiA+ID4gLS0tCj4g
-PiA+ICBkcml2ZXJzL21lZGlhL2kyYy90dnA1MTUwLmMgfCA0MiArKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKystCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgNDEgaW5zZXJ0aW9ucygr
-KSwgMSBkZWxldGlvbigtKQo+ID4gPiAKPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEv
-aTJjL3R2cDUxNTAuYyBiL2RyaXZlcnMvbWVkaWEvaTJjL3R2cDUxNTAuYwo+ID4gPiBpbmRleCBm
-M2EyYWQwMGE0MGQuLjc2MTk3OTNkZWU2NyAxMDA2NDQKPiA+ID4gLS0tIGEvZHJpdmVycy9tZWRp
-YS9pMmMvdHZwNTE1MC5jCj4gPiA+ICsrKyBiL2RyaXZlcnMvbWVkaWEvaTJjL3R2cDUxNTAuYwo+
-ID4gPiBAQCAtMzIsNiArMzIsMTMgQEAKPiA+ID4gICNkZWZpbmUgVFZQNTE1MF9NQlVTX0ZNVAlN
-RURJQV9CVVNfRk1UX1VZVlk4XzJYOAo+ID4gPiAgI2RlZmluZSBUVlA1MTUwX0ZJRUxECQlWNEwy
-X0ZJRUxEX0FMVEVSTkFURQo+ID4gPiAgI2RlZmluZSBUVlA1MTUwX0NPTE9SU1BBQ0UJVjRMMl9D
-T0xPUlNQQUNFX1NNUFRFMTcwTQo+ID4gPiArI2RlZmluZSBUVlA1MTUwX1NURF9NQVNLCShWNEwy
-X1NURF9OVFNDICAgICB8IFwKPiA+ID4gKwkJCQkgVjRMMl9TVERfTlRTQ180NDMgfCBcCj4gPiA+
-ICsJCQkJIFY0TDJfU1REX1BBTCAgICAgIHwgXAo+ID4gPiArCQkJCSBWNEwyX1NURF9QQUxfTSAg
-ICB8IFwKPiA+ID4gKwkJCQkgVjRMMl9TVERfUEFMX04gICAgfCBcCj4gPiA+ICsJCQkJIFY0TDJf
-U1REX1BBTF9OYyAgIHwgXAo+ID4gPiArCQkJCSBWNEwyX1NURF9TRUNBTSkKPiA+ID4gIAo+ID4g
-PiAgTU9EVUxFX0RFU0NSSVBUSU9OKCJUZXhhcyBJbnN0cnVtZW50cyBUVlA1MTUwQS9UVlA1MTUw
-QU0xL1RWUDUxNTEgdmlkZW8gZGVjb2RlciBkcml2ZXIiKTsKPiA+ID4gIE1PRFVMRV9BVVRIT1Io
-Ik1hdXJvIENhcnZhbGhvIENoZWhhYiIpOwo+ID4gPiBAQCAtNzQsNiArODEsNyBAQCBzdHJ1Y3Qg
-dHZwNTE1MCB7Cj4gPiA+ICAJc3RydWN0IG1lZGlhX3BhZCBwYWRzW1RWUDUxNTBfTlVNX1BBRFNd
-Owo+ID4gPiAgCWludCBwYWRzX3N0YXRlW1RWUDUxNTBfTlVNX1BBRFNdOwo+ID4gPiAgCXN0cnVj
-dCB0dnA1MTUwX2Nvbm5lY3RvciAqY29ubmVjdG9yczsKPiA+ID4gKwlzdHJ1Y3QgdHZwNTE1MF9j
-b25uZWN0b3IgKmN1cl9jb25uZWN0b3I7Cj4gPiA+ICAJaW50IGNvbm5lY3RvcnNfbnVtOwo+ID4g
-PiAgCWJvb2wgbW9kaWZ5X3NlY29uZF9saW5rOwo+ID4gPiAgI2VuZGlmCj4gPiA+IEBAIC03OTQs
-MTcgKzgwMiwyNyBAQCBzdGF0aWMgaW50IHR2cDUxNTBfZ19zdGQoc3RydWN0IHY0bDJfc3ViZGV2
-ICpzZCwgdjRsMl9zdGRfaWQgKnN0ZCkKPiA+ID4gIHN0YXRpYyBpbnQgdHZwNTE1MF9zX3N0ZChz
-dHJ1Y3QgdjRsMl9zdWJkZXYgKnNkLCB2NGwyX3N0ZF9pZCBzdGQpCj4gPiA+ICB7Cj4gPiA+ICAJ
-c3RydWN0IHR2cDUxNTAgKmRlY29kZXIgPSB0b190dnA1MTUwKHNkKTsKPiA+ID4gKwl2NGwyX3N0
-ZF9pZCBzdXBwb3J0ZWRfbm9ybXMgPQo+ID4gPiArCQlkZWNvZGVyLT5jdXJfY29ubmVjdG9yLT5i
-YXNlLmNvbm5lY3Rvci5hbmFsb2cuc3VwcG9ydGVkX3R2bm9ybXM7Cj4gPiA+ICAKPiA+ID4gIAlp
-ZiAoZGVjb2Rlci0+bm9ybSA9PSBzdGQpCj4gPiA+ICAJCXJldHVybiAwOwo+ID4gPiAgCj4gPiA+
-ICsJLyoKPiA+ID4gKwkgKiBjaGVjayBpZiByZXF1ZXN0ZWQgc3RkIG9yIGdyb3VwIG9mIHN0ZCdz
-IGlzL2FyZSBzdXBwb3J0ZWQgYnkgdGhlCj4gPiA+ICsJICogY29ubmVjdG9yCj4gPiA+ICsJICov
-Cj4gPiA+ICsJaWYgKChzdXBwb3J0ZWRfbm9ybXMgJiBzdGQpID09IDApCj4gPiA+ICsJCXJldHVy
-biAtRUlOVkFMOwo+ID4gPiArCj4gPiA+ICAJLyogQ2hhbmdlIGNyb3BwaW5nIGhlaWdodCBsaW1p
-dHMgKi8KPiA+ID4gIAlpZiAoc3RkICYgVjRMMl9TVERfNTI1XzYwKQo+ID4gPiAgCQlkZWNvZGVy
-LT5yZWN0LmhlaWdodCA9IFRWUDUxNTBfVl9NQVhfNTI1XzYwOwo+ID4gPiAgCWVsc2UKPiA+ID4g
-IAkJZGVjb2Rlci0+cmVjdC5oZWlnaHQgPSBUVlA1MTUwX1ZfTUFYX09USEVSUzsKPiA+ID4gIAo+
-ID4gPiAtCWRlY29kZXItPm5vcm0gPSBzdGQ7Cj4gPiA+ICsJLyogc2V0IG9ubHkgdGhlIHNwZWNp
-ZmljIHN1cHBvcnRlZCBzdGQgaW4gY2FzZSBvZiBncm91cCBvZiBzdGQncyAqLwo+ID4gPiArCWRl
-Y29kZXItPm5vcm0gPSBzdXBwb3J0ZWRfbm9ybXMgJiBzdGQ7Cj4gPiA+ICAKPiA+ID4gIAlyZXR1
-cm4gdHZwNTE1MF9zZXRfc3RkKHNkLCBzdGQpOwo+ID4gPiAgfQo+ID4gPiBAQCAtMTI5OCw2ICsx
-MzE2LDcgQEAgc3RhdGljIGludCB0dnA1MTUwX2xpbmtfc2V0dXAoc3RydWN0IG1lZGlhX2VudGl0
-eSAqZW50aXR5LAo+ID4gPiAgCWludCAqcGFkX3N0YXRlID0gJmRlY29kZXItPnBhZHNfc3RhdGVb
-MF07Cj4gPiA+ICAJaW50IGksIGFjdGl2ZV9wYWQsIHJldCA9IDA7Cj4gPiA+ICAJYm9vbCBpc19z
-dmlkZW8gPSBmYWxzZTsKPiA+ID4gKwlib29sIHVwZGF0ZV9jdXJfY29ubmVjdG9yID0gZmFsc2U7
-Cj4gPiA+ICAKPiA+ID4gIAkvKgo+ID4gPiAgCSAqIFRoZSB0dnAgc3RhdGUgaXMgZGV0ZXJtaW5l
-ZCBieSB0aGUgZW5hYmxlZCBzaW5rIHBhZCBsaW5rLgo+ID4gPiBAQCAtMTM0NCwxMCArMTM2Mywx
-MiBAQCBzdGF0aWMgaW50IHR2cDUxNTBfbGlua19zZXR1cChzdHJ1Y3QgbWVkaWFfZW50aXR5ICpl
-bnRpdHksCj4gPiA+ICAJCQkJZGVjb2Rlci0+bW9kaWZ5X3NlY29uZF9saW5rID0gZmFsc2U7Cj4g
-PiA+ICAJCQkJdHZwNTE1MF9zX3JvdXRpbmcoc2QsIFRWUDUxNTBfU1ZJREVPLAo+ID4gPiAgCQkJ
-CQkJICBUVlA1MTUwX05PUk1BTCwgMCk7Cj4gPiA+ICsJCQkJdXBkYXRlX2N1cl9jb25uZWN0b3Ig
-PSB0cnVlOwo+ID4gPiAgCQkJfQo+ID4gPiAgCQl9IGVsc2Ugewo+ID4gPiAgCQkJdHZwNTE1MF9z
-X3JvdXRpbmcoc2QsIHR2cDUxNTBfcGFkLT5pbmRleCwKPiA+ID4gIAkJCQkJICBUVlA1MTUwX05P
-Uk1BTCwgMCk7Cj4gPiA+ICsJCQl1cGRhdGVfY3VyX2Nvbm5lY3RvciA9IHRydWU7Cj4gPiA+ICAJ
-CX0KPiA+ID4gIAl9IGVsc2Ugewo+ID4gPiAgCQkvKgo+ID4gPiBAQCAtMTM3Niw2ICsxMzk3LDE0
-IEBAIHN0YXRpYyBpbnQgdHZwNTE1MF9saW5rX3NldHVwKHN0cnVjdCBtZWRpYV9lbnRpdHkgKmVu
-dGl0eSwKPiA+ID4gIAkJCQkJICBhY3RpdmVfcGFkLCBUVlA1MTUwX0JMQUNLX1NDUkVFTiwgMCk7
-Cj4gPiA+ICAJCWRlY29kZXItPm1vZGlmeV9zZWNvbmRfbGluayA9IGZhbHNlOwo+ID4gPiAgCX0K
-PiA+ID4gKwo+ID4gPiArCWlmICh1cGRhdGVfY3VyX2Nvbm5lY3Rvcikgewo+ID4gPiArCQkvKiBV
-cGRhdGUgdHZub3JtIGFjY29yZGluZyB0byBjb25uZWN0b3IgKi8KPiA+ID4gKwkJZGVjb2Rlci0+
-Y3VyX2Nvbm5lY3RvciA9Cj4gPiA+ICsJCQljb250YWluZXJfb2YocmVtb3RlLCBzdHJ1Y3QgdHZw
-NTE1MF9jb25uZWN0b3IsIHBhZCk7Cj4gPiA+ICsJCXR2cDUxNTBfc19zdGQoc2QsCj4gPiA+ICsJ
-CQlkZWNvZGVyLT5jdXJfY29ubmVjdG9yLT5iYXNlLmNvbm5lY3Rvci5hbmFsb2cuc3VwcG9ydGVk
-X3R2bm9ybXMpOwo+ID4gPiArCX0KPiA+ID4gIG91dDoKPiA+ID4gIAlyZXR1cm4gcmV0Owo+ID4g
-PiAgfQo+ID4gPiBAQCAtMTYwNSw2ICsxNjM0LDkgQEAgc3RhdGljIGludCB0dnA1MTUwX3JlZ2lz
-dGVyZWQoc3RydWN0IHY0bDJfc3ViZGV2ICpzZCkKPiA+ID4gIAkJCX0KPiA+ID4gIAkJCXR2cDUx
-NTBfc2VsbXV4KHNkKTsKPiA+ID4gIAkJCWRlY29kZXItPm1vZGlmeV9zZWNvbmRfbGluayA9IGZh
-bHNlOwo+ID4gPiArCQkJZGVjb2Rlci0+Y3VyX2Nvbm5lY3RvciA9ICZkZWNvZGVyLT5jb25uZWN0
-b3JzW2ldOwo+ID4gPiArCQkJdHZwNTE1MF9zX3N0ZChzZCwKPiA+ID4gKwkJCQlkZWNvZGVyLT5j
-b25uZWN0b3JzW2ldLmJhc2UuY29ubmVjdG9yLmFuYWxvZy5zdXBwb3J0ZWRfdHZub3Jtcyk7Cj4g
-PiA+ICAJCX0KPiA+ID4gIAl9Cj4gPiA+ICAjZW5kaWYKPiA+ID4gQEAgLTE5MjUsNiArMTk1Nywx
-NCBAQCBzdGF0aWMgaW50IHR2cDUxNTBfcGFyc2VfZHQoc3RydWN0IHR2cDUxNTAgKmRlY29kZXIs
-IHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApCj4gPiA+ICAJCQkJcmV0ID0gLUVJTlZBTDsKPiA+ID4g
-IAkJCQlnb3RvIGVycjsKPiA+ID4gIAkJCX0KPiA+ID4gKwkJCWlmICghKGMuY29ubmVjdG9yLmFu
-YWxvZy5zdXBwb3J0ZWRfdHZub3JtcyAmCj4gPiA+ICsJCQkgICAgVFZQNTE1MF9TVERfTUFTSykp
-IHsKPiA+ID4gKwkJCQlkZXZfZXJyKGRldiwKPiA+ID4gKwkJCQkJIkludmFsaWQgdHYgbm9ybShz
-KSBvbiBjb25uZWN0b3IgJXMuXG4iLAo+ID4gPiArCQkJCQljLmxhYmVsKTsKPiA+ID4gKwkJCQly
-ZXQgPSAtRUlOVkFMOwo+ID4gPiArCQkJCWdvdG8gZXJyOwo+ID4gPiArCQkJfQo+ID4gPiAgCQkJ
-aW4rKzsKPiA+ID4gIAkJCWJyZWFrOwo+ID4gPiAgCQljYXNlIFRWUDUxNTBfUEFEX1ZJRF9PVVQ6
-ICAKPiA+IAo+ID4gCj4gPiAKPiA+IFRoYW5rcywKPiA+IE1hdXJvCj4gPiAgIAo+IAoKCgpUaGFu
-a3MsCk1hdXJvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+The patch
+
+   dt-bindings: snps,dw-apb-ssi: Add optional clock bindings documentation
+
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 2f324ac7cf8c50aa079cf30445b99a1b98ea2728 Mon Sep 17 00:00:00 2001
+From: Gareth Williams <gareth.williams.jx@renesas.com>
+Date: Tue, 19 Mar 2019 15:52:06 +0000
+Subject: [PATCH] dt-bindings: snps,dw-apb-ssi: Add optional clock bindings
+ documentation
+
+Add documentation to the Synopsys SPI dt-bindings to support an
+optional interface clock that may be used for register access.
+
+Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+index bcd8f960afb9..f54c8c36395e 100644
+--- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
++++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+@@ -8,9 +8,15 @@ Required properties:
+ - interrupts : One interrupt, used by the controller.
+ - #address-cells : <1>, as required by generic SPI binding.
+ - #size-cells : <0>, also as required by generic SPI binding.
+-- clocks : phandle for the core clock used to generate the external SPI clock.
++- clocks : phandles for the clocks, see the description of clock-names below.
++   The phandle for the "ssi_clk" is required. The phandle for the "pclk" clock
++   is optional. If a single clock is specified but no clock-name, it is the
++   "ssi_clk" clock. If both clocks are listed, the "ssi_clk" must be first.
+ 
+ Optional properties:
++- clock-names : Contains the names of the clocks:
++    "ssi_clk", for the core clock used to generate the external SPI clock.
++    "pclk", the interface clock, required for register access.
+ - cs-gpios : Specifies the gpio pins to be used for chipselects.
+ - num-cs : The number of chipselects. If omitted, this will default to 4.
+ - reg-io-width : The I/O register width (in bytes) implemented by this
+-- 
+2.20.1
