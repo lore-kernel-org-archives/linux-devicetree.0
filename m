@@ -1,44 +1,127 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH 1/2] ASoC: lochnagar: Add device tree
-	binding document
-Date: Wed, 20 Mar 2019 17:05:29 +0000
-Message-ID: <20190320170529.GV46536@ediswmail.ad.cirrus.com>
-References: <20190320142813.12745-1-ckeepax@opensource.cirrus.com>
- <20190320165251.GC27518@sirena.org.uk>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: arm: coresight: Support
+ non-configurable funnel
+Date: Wed, 20 Mar 2019 11:28:07 -0600
+Message-ID: <CANLsYkyooCaEjRtq0OnNkSKPhe6MPKVbL14Fao=pQ1j3Riw5Pg@mail.gmail.com>
+References: <1553085490-42870-1-git-send-email-shiwanglai@hisilicon.com>
+ <1553085490-42870-2-git-send-email-shiwanglai@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20190320165251.GC27518@sirena.org.uk>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1553085490-42870-2-git-send-email-shiwanglai@hisilicon.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wanglai Shi <shiwanglai@hisilicon.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "Suzuki K. Poulose" <suzuki.poulose@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Suzhuangluan <suzhuangluan@hisilicon.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, xuwei <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Leo Yan <leo.yan@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 04:52:51PM +0000, Mark Brown wrote:
-> On Wed, Mar 20, 2019 at 02:28:12PM +0000, Charles Keepax wrote:
-> 
-> > +  - clock-names : Must include the following clocks:
-> > +      "ln-sound-mclk" Master clock source for the sound card, should
-> > +      normally be set to LOCHNAGAR_SOUNDCARD_MCLK provided by the
-> > +      Lochnagar clock driver.
-> 
-> Why the namespacing on the clock name here?
+Hi Wanglai,
 
-I think this is just a hang over from when these clocks were not
-handled through DT and thus had to have the same name as was used
-in the clock driver. Agree it is redundant now and will remove,
-maybe even just mclk should be fine I guess, as the sound is
-kinda redundant as well.
+On Wed, 20 Mar 2019 at 06:53, Wanglai Shi <shiwanglai@hisilicon.com> wrote:
+>
+> From: Leo Yan <leo.yan@linaro.org>
+>
+> Document DT binding for non-configurable funnel and give an example
+> for it.
+>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
-Thanks,
-Charles
+This patch needs to be sent on its own.
+
+
+> ---
+>  .../devicetree/bindings/arm/coresight.txt     | 45 +++++++++++++++++--
+>  1 file changed, 42 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> index f8aff65ab921..e63ec3362af8 100644
+> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> @@ -8,7 +8,8 @@ through the intermediate links connecting the source to the currently selected
+>  sink. Each CoreSight component device should use these properties to describe
+>  its hardware characteristcs.
+>
+> -* Required properties for all components *except* non-configurable replicators:
+> +* Required properties for all components *except* non-configurable replicators
+> +  and non-configurable funnels:
+>
+>         * compatible: These have to be supplemented with "arm,primecell" as
+>           drivers are using the AMBA bus interface.  Possible values include:
+> @@ -24,7 +25,7 @@ its hardware characteristcs.
+>                   discovered at boot time when the device is probed.
+>                         "arm,coresight-tmc", "arm,primecell";
+>
+> -               - Trace Funnel:
+> +               - Trace Programmable Funnel:
+>                         "arm,coresight-funnel", "arm,primecell";
+>
+>                 - Embedded Trace Macrocell (version 3.x) and
+> @@ -65,11 +66,12 @@ its hardware characteristcs.
+>           "stm-stimulus-base", each corresponding to the areas defined in "reg".
+>
+>  * Required properties for devices that don't show up on the AMBA bus, such as
+> -  non-configurable replicators:
+> +  non-configurable replicators and non-configurable funnels:
+>
+>         * compatible: Currently supported value is (note the absence of the
+>           AMBA markee):
+>                 - "arm,coresight-replicator"
+> +               - "arm,coresight-funnel"
+>
+>         * port or ports: see "Graph bindings for Coresight" below.
+>
+> @@ -200,6 +202,43 @@ Example:
+>                 };
+>         };
+>
+> +       funnel {
+> +               /*
+> +                * non-configurable funnel don't show up on the AMBA
+> +                * bus.  As such no need to add "arm,primecell".
+> +                */
+> +               compatible = "arm,coresight-funnel";
+> +               clocks = <&crg_ctrl HI3660_PCLK>;
+> +               clock-names = "apb_pclk";
+> +
+> +               out-ports {
+> +                       port {
+> +                               combo_funnel_out: endpoint {
+> +                                       remote-endpoint = <&top_funnel_in>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               in-ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       port@0 {
+> +                               reg = <0>;
+> +                               combo_funnel_in0: endpoint {
+> +                                       remote-endpoint = <&cluster0_etf_out>;
+> +                               };
+> +                       };
+> +
+> +                       port@1 {
+> +                               reg = <1>;
+> +                               combo_funnel_in1: endpoint {
+> +                                       remote-endpoint = <&cluster1_etf_out>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+>         funnel@20040000 {
+>                 compatible = "arm,coresight-funnel", "arm,primecell";
+>                 reg = <0 0x20040000 0 0x1000>;
+> --
+> 2.17.1
+>
