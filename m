@@ -1,43 +1,34 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 1/3] devicetree: bindings: bd718x7: document HW state
- related ROHM specific properties
-Date: Wed, 20 Mar 2019 13:02:59 +0000
-Message-ID: <20190320130259.GN4731@dell>
-References: <cover.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
- <6ed4238fb083f52de0f5f013647b2334bad8ebe4.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: stm32: syscon: add clock support
+Date: Wed, 20 Mar 2019 13:05:22 +0000
+Message-ID: <20190320130522.GO4731@dell>
+References: <1544604495-4082-1-git-send-email-fabrice.gasnier@st.com>
+ <1544604495-4082-2-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6ed4238fb083f52de0f5f013647b2334bad8ebe4.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <1544604495-4082-2-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: mazzisaccount@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Robin Gong <yibin.gong@nxp.com>, Elven Wang <elven.wang@nxp.com>, Anson Huang <anson.huang@nxp.com>, Angus Ainslie <angus.ainslie@puri.sm>
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: robh+dt@kernel.org, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, arnd@arndb.de, mark.rutland@arm.com, gabriel.fernandez@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 14 Feb 2019, Matti Vaittinen wrote:
+On Wed, 12 Dec 2018, Fabrice Gasnier wrote:
 
-> Add ROHM BD71837 / BD71847 specific device tree bindings for
-> controlling the PMIC shutdown/reset states and voltages for
-> different HW states. The PMIC was designed to be used with NXP
-> i.MX8 SoC and it supports SNVS low power state which seems to
-> be typical for NXP i.MX SoCs. However, when SNVS is used we must
-> not allow SW to control enabling/disabling those regulators which
-> are crucial for system to boot as there is a HW limitation which
-> causes SW controlled regulators to be kept shut down after SNVS
-> reset.
+> STM32 system configuration controller registers needs to be clocked.
+> Document clock support on stm32-syscon.
 > 
-> Allow setting the SNVS to be used as reset target state and allow
-> marking those regulators which are critical for boot.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 > ---
->  .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  | 17 ++++++++++
->  .../bindings/regulator/rohm,bd71837-regulator.txt  | 38 ++++++++++++++++++++++
->  2 files changed, 55 insertions(+)
+> Changes in v2:
+> - move clocks to specific bindings using syscon as per Rob's comment
+> ---
+>  Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Needs a DT Ack.
+Applied, thanks.
 
 -- 
 Lee Jones [李琼斯]
