@@ -1,189 +1,453 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH V7 2/5] pwm: Add i.MX TPM PWM driver support
-Date: Wed, 20 Mar 2019 11:57:42 +0100
-Message-ID: <20190320105742.jdabsbcoebbyftqr@pengutronix.de>
-References: <1553058067-18793-1-git-send-email-Anson.Huang@nxp.com>
- <1553058067-18793-3-git-send-email-Anson.Huang@nxp.com>
- <20190320081856.wkw55pmw57i4ifdj@pengutronix.de>
- <AM6PR0402MB3911185E2D7E96FD3224BCBDF5410@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: Re: [PATCH 2/2] clk: meson: meson8b: add the video decoder clock trees
+Date: Wed, 20 Mar 2019 12:16:19 +0100
+Message-ID: <CAMO6nawKpBRrp0oBtrGY8KskD6tUX9ZCNeDqSGPB-kMnm27HnA@mail.gmail.com>
+References: <20190319220012.31065-1-martin.blumenstingl@googlemail.com> <20190319220012.31065-3-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <AM6PR0402MB3911185E2D7E96FD3224BCBDF5410@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+In-Reply-To: <20190319220012.31065-3-martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "stefan@agner.ch" <stefan@agner.ch>, Leonard Crestez <leonard.crestez@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, Robin Gong <yibin.gong@nxp.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Anson,
+Hi Martin, thanks for looking into the video decoder for meson8!
+On Tue, Mar 19, 2019 at 11:00 PM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> This adds the four video decoder clock trees.
+>
+> VDEC_1 is split into two paths on Meson8b and Meson8m2:
+> - input mux called "vdec_1_sel"
+> - two dividers ("vdec_1_1_div" and "vdec_1_2_div") and gates ("vdec_1_1"
+>   and "vdec_1_2")
+> - and an output mux (probably glitch-free) called "vdec_1"
 
-On Wed, Mar 20, 2019 at 10:17:50AM +0000, Anson Huang wrote:
-> > On Wed, Mar 20, 2019 at 05:06:21AM +0000, Anson Huang wrote:
-> > > +	/* make sure counter is disabled for programming prescale */
-> > > +	val = readl(tpm->base + PWM_IMX_TPM_SC);
-> > > +	saved_cmod = FIELD_GET(PWM_IMX_TPM_SC_CMOD, val);
-> > > +	if (saved_cmod) {
-> > > +		val &= ~PWM_IMX_TPM_SC_CMOD;
-> > > +		writel(val, tpm->base + PWM_IMX_TPM_SC);
-> > 
-> > I thought we agreed on not stopping the counter if the PS field isn't changed?
-> 
-> If the PS field no need to change, the round state should already return the period
-> equal to current period settings, so this function will NOT be called, right?
-> 
->          if (real_state.period != tpm->real_period) {
->                  if (tpm->user_count > 1) {
->                          ret = -EBUSY;
->                          goto exit;
->                  }
-> 
-> 	pwm_imx_tpm_setup_period(chip, param);
->                  tpm->real_period = real_state.period;
->         } 
+Yes, all vdec clocks have a glitch-free mux to be able to safely
+adjust the frequency on the fly, although in practice it's barely
+used.
 
-If the PS field is already right .period might still not match as its
-value depends on SC.PS and MOD.MOD.
+> On Meson8 the VDEC_1 tree is simpler because there's only one path:
+> - input mux called "vdec_1_sel"
+> - divider ("vdec_1_1_div") and gate ("vdec_1_1")
+> - (the gate is used as output directly, there's no mux)
+>
+> The VDEC_HCODEC and VDEC_2 clocks are simple composite clocks each
+> consisting of an input mux, divider and a gate.
+>
+> The VDEC_HEVC clock seems to have two paths similar to the VDEC_1 clock.
+> However, the register offsets of the second clock path is not known.
+> Amlogic's 3.10 kernel (which is used as reference) sets
+> HHI_VDEC2_CLK_CNTL[31] to 1 before changing the VDEC_HEVC clock and back
+> to 0 afterwards. For now, leave a TODO comment and only add the first
+> path.
+>
 
-> > > +	val &= ~PWM_IMX_TPM_SC_PS;
-> > > +	val |= FIELD_PREP(PWM_IMX_TPM_SC_PS, p.prescale);
-> > > +	writel(val, tpm->base + PWM_IMX_TPM_SC);
-> > > +
-> > > +	/*
-> > > +	 * set period count: according to RM, the MOD register is
-> > > +	 * updated immediately after CMOD[1:0] = 2b'00 above
-> > > +	 */
-> > 
-> > So the current period isn't completed? That's wrong.
-> 
-> So you mean we have to wait for the current period to finish here?
-> I did NOT know this, so we have to compare the counter value with
+Looking at aml-3.10/drivers/amlogic/amports/m8b/vdec_clk.c, it's weird
+indeed. They seem to copy the divider's value to the same place
+(HHI_VDEC2_CLK_CNTL[16~23]), and the only thing that stands out is
+enabling HHI_VDEC2_CLK_CNTL[31].
 
-Yeah, see https://patchwork.ozlabs.org/patch/1021566/ which documents
-this but waits for feedback by Thierry since some time.
+Then again they don't make use of that codepath at all, so who knows..
 
-> the MOD value until they match then proceed the period change?
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  drivers/clk/meson/meson8b.c | 312 ++++++++++++++++++++++++++++++++++++
+>  drivers/clk/meson/meson8b.h |  17 +-
+>  2 files changed, 328 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
+> index 8e091c2d10e6..37cf0f01bb5d 100644
+> --- a/drivers/clk/meson/meson8b.c
+> +++ b/drivers/clk/meson/meson8b.c
+> @@ -1902,6 +1902,257 @@ static struct clk_regmap meson8b_vpu = {
+>         },
+>  };
+>
+> +static const char * const meson8b_vdec_parent_names[] = {
+> +       "fclk_div4", "fclk_div3", "fclk_div5", "fclk_div7", "mpll2", "mpll1"
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_1_sel = {
+> +       .data = &(struct clk_regmap_mux_data){
+> +               .offset = HHI_VDEC_CLK_CNTL,
+> +               .mask = 0x3,
+> +               .shift = 9,
+> +               .flags = CLK_MUX_ROUND_CLOSEST,
+> +       },
+> +       .hw.init = &(struct clk_init_data){
+> +               .name = "vdec_1_sel",
+> +               .ops = &clk_regmap_mux_ops,
+> +               .parent_names = meson8b_vdec_parent_names,
+> +               .num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
+> +               .flags = CLK_SET_RATE_PARENT,
+> +       },
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_1_1_div = {
+> +       .data = &(struct clk_regmap_div_data){
+> +               .offset = HHI_VDEC_CLK_CNTL,
+> +               .shift = 0,
+> +               .width = 7,
+> +               .flags = CLK_DIVIDER_ROUND_CLOSEST,
+> +       },
+> +       .hw.init = &(struct clk_init_data){
+> +               .name = "vdec_1_1_div",
+> +               .ops = &clk_regmap_divider_ops,
+> +               .parent_names = (const char *[]){ "vdec_1_sel" },
+> +               .num_parents = 1,
+> +               .flags = CLK_SET_RATE_PARENT,
+> +       },
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_1_1 = {
+> +       .data = &(struct clk_regmap_gate_data){
+> +               .offset = HHI_VDEC_CLK_CNTL,
+> +               .bit_idx = 8,
+> +       },
+> +       .hw.init = &(struct clk_init_data) {
+> +               .name = "vdec_1_1",
+> +               .ops = &clk_regmap_gate_ops,
+> +               .parent_names = (const char *[]){ "vdec_1_1_div" },
+> +               .num_parents = 1,
+> +               .flags = CLK_SET_RATE_PARENT,
+> +       },
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_1_2_div = {
+> +       .data = &(struct clk_regmap_div_data){
+> +               .offset = HHI_VDEC3_CLK_CNTL,
+> +               .shift = 0,
+> +               .width = 7,
+> +               .flags = CLK_DIVIDER_ROUND_CLOSEST,
+> +       },
+> +       .hw.init = &(struct clk_init_data){
+> +               .name = "vdec_1_2_div",
+> +               .ops = &clk_regmap_divider_ops,
+> +               .parent_names = (const char *[]){ "vdec_1_sel" },
+> +               .num_parents = 1,
+> +               .flags = CLK_SET_RATE_PARENT,
+> +       },
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_1_2 = {
+> +       .data = &(struct clk_regmap_gate_data){
+> +               .offset = HHI_VDEC3_CLK_CNTL,
+> +               .bit_idx = 8,
+> +       },
+> +       .hw.init = &(struct clk_init_data) {
+> +               .name = "vdec_1_2",
+> +               .ops = &clk_regmap_gate_ops,
+> +               .parent_names = (const char *[]){ "vdec_1_2_div" },
+> +               .num_parents = 1,
+> +               .flags = CLK_SET_RATE_PARENT,
+> +       },
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_1 = {
+> +       .data = &(struct clk_regmap_mux_data){
+> +               .offset = HHI_VDEC3_CLK_CNTL,
+> +               .mask = 0x1,
+> +               .shift = 15,
+> +               .flags = CLK_MUX_ROUND_CLOSEST,
+> +       },
+> +       .hw.init = &(struct clk_init_data){
+> +               .name = "vdec_1",
+> +               .ops = &clk_regmap_mux_ops,
+> +               .parent_names = (const char *[]){ "vdec_1_1", "vdec_1_2" },
+> +               .num_parents = 2,
+> +               .flags = CLK_SET_RATE_PARENT,
+> +       },
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_hcodec_sel = {
+> +       .data = &(struct clk_regmap_mux_data){
+> +               .offset = HHI_VDEC_CLK_CNTL,
+> +               .mask = 0x3,
+> +               .shift = 25,
+> +               .flags = CLK_MUX_ROUND_CLOSEST,
+> +       },
+> +       .hw.init = &(struct clk_init_data){
+> +               .name = "vdec_hcodec_sel",
+> +               .ops = &clk_regmap_mux_ops,
+> +               .parent_names = meson8b_vdec_parent_names,
+> +               .num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
+> +               .flags = CLK_SET_RATE_PARENT,
+> +       },
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_hcodec_div = {
+> +       .data = &(struct clk_regmap_div_data){
+> +               .offset = HHI_VDEC_CLK_CNTL,
+> +               .shift = 16,
+> +               .width = 7,
+> +               .flags = CLK_DIVIDER_ROUND_CLOSEST,
+> +       },
+> +       .hw.init = &(struct clk_init_data){
+> +               .name = "vdec_hcodec_div",
+> +               .ops = &clk_regmap_divider_ops,
+> +               .parent_names = (const char *[]){ "vdec_hcodec_sel" },
+> +               .num_parents = 1,
+> +               .flags = CLK_SET_RATE_PARENT,
+> +       },
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_hcodec = {
+> +       .data = &(struct clk_regmap_gate_data){
+> +               .offset = HHI_VDEC_CLK_CNTL,
+> +               .bit_idx = 24,
+> +       },
+> +       .hw.init = &(struct clk_init_data) {
+> +               .name = "vdec_hcodec",
+> +               .ops = &clk_regmap_gate_ops,
+> +               .parent_names = (const char *[]){ "vdec_hcodec_div" },
+> +               .num_parents = 1,
+> +               .flags = CLK_SET_RATE_PARENT,
+> +       },
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_2_sel = {
+> +       .data = &(struct clk_regmap_mux_data){
+> +               .offset = HHI_VDEC2_CLK_CNTL,
+> +               .mask = 0x3,
+> +               .shift = 9,
+> +               .flags = CLK_MUX_ROUND_CLOSEST,
+> +       },
+> +       .hw.init = &(struct clk_init_data){
+> +               .name = "vdec_2_sel",
+> +               .ops = &clk_regmap_mux_ops,
+> +               .parent_names = meson8b_vdec_parent_names,
+> +               .num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
+> +               .flags = CLK_SET_RATE_PARENT,
+> +       },
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_2_div = {
+> +       .data = &(struct clk_regmap_div_data){
+> +               .offset = HHI_VDEC2_CLK_CNTL,
+> +               .shift = 0,
+> +               .width = 7,
+> +               .flags = CLK_DIVIDER_ROUND_CLOSEST,
+> +       },
+> +       .hw.init = &(struct clk_init_data){
+> +               .name = "vdec_2_div",
+> +               .ops = &clk_regmap_divider_ops,
+> +               .parent_names = (const char *[]){ "vdec_2_sel" },
+> +               .num_parents = 1,
+> +               .flags = CLK_SET_RATE_PARENT,
+> +       },
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_2 = {
+> +       .data = &(struct clk_regmap_gate_data){
+> +               .offset = HHI_VDEC2_CLK_CNTL,
+> +               .bit_idx = 8,
+> +       },
+> +       .hw.init = &(struct clk_init_data) {
+> +               .name = "vdec_2",
+> +               .ops = &clk_regmap_gate_ops,
+> +               .parent_names = (const char *[]){ "vdec_2_div" },
+> +               .num_parents = 1,
+> +               .flags = CLK_SET_RATE_PARENT,
+> +       },
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_hevc_sel = {
+> +       .data = &(struct clk_regmap_mux_data){
+> +               .offset = HHI_VDEC2_CLK_CNTL,
+> +               .mask = 0x3,
+> +               .shift = 25,
+> +               .flags = CLK_MUX_ROUND_CLOSEST,
+> +       },
+> +       .hw.init = &(struct clk_init_data){
+> +               .name = "vdec_hevc_sel",
+> +               .ops = &clk_regmap_mux_ops,
+> +               .parent_names = meson8b_vdec_parent_names,
+> +               .num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
+> +               .flags = CLK_SET_RATE_PARENT,
+> +       },
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_hevc_div = {
+> +       .data = &(struct clk_regmap_div_data){
+> +               .offset = HHI_VDEC2_CLK_CNTL,
+> +               .shift = 16,
+> +               .width = 7,
+> +               .flags = CLK_DIVIDER_ROUND_CLOSEST,
+> +       },
+> +       .hw.init = &(struct clk_init_data){
+> +               .name = "vdec_hevc_div",
+> +               .ops = &clk_regmap_divider_ops,
+> +               .parent_names = (const char *[]){ "vdec_hevc_sel" },
+> +               .num_parents = 1,
+> +               .flags = CLK_SET_RATE_PARENT,
+> +       },
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_hevc_en = {
+> +       .data = &(struct clk_regmap_gate_data){
+> +               .offset = HHI_VDEC2_CLK_CNTL,
+> +               .bit_idx = 24,
+> +       },
+> +       .hw.init = &(struct clk_init_data) {
+> +               .name = "vdec_hevc_en",
+> +               .ops = &clk_regmap_gate_ops,
+> +               .parent_names = (const char *[]){ "vdec_hevc_div" },
+> +               .num_parents = 1,
+> +               .flags = CLK_SET_RATE_PARENT,
+> +       },
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_hevc = {
+> +       .data = &(struct clk_regmap_mux_data){
+> +               .offset = HHI_VDEC2_CLK_CNTL,
+> +               .mask = 0x1,
+> +               .shift = 31,
+> +               .flags = CLK_MUX_ROUND_CLOSEST,
+> +       },
+> +       .hw.init = &(struct clk_init_data){
+> +               .name = "vdec_hevc",
+> +               .ops = &clk_regmap_mux_ops,
+> +               /* TODO: The second parent is currently unknown */
+> +               .parent_names = (const char *[]){ "vdec_hevc_en" },
+> +               .num_parents = 1,
+> +               .flags = CLK_SET_RATE_PARENT,
+> +       },
+> +};
+> +
+>  /* Everything Else (EE) domain gates */
+>
+>  static MESON_GATE(meson8b_ddr, HHI_GCLK_MPEG0, 0);
+> @@ -2168,6 +2419,19 @@ static struct clk_hw_onecell_data meson8_hw_onecell_data = {
+>                 [CLKID_VPU_0_SEL]           = &meson8b_vpu_0_sel.hw,
+>                 [CLKID_VPU_0_DIV]           = &meson8b_vpu_0_div.hw,
+>                 [CLKID_VPU]                 = &meson8b_vpu_0.hw,
+> +               [CLKID_VDEC_1_SEL]          = &meson8b_vdec_1_sel.hw,
+> +               [CLKID_VDEC_1_1_DIV]        = &meson8b_vdec_1_1_div.hw,
+> +               [CLKID_VDEC_1]              = &meson8b_vdec_1_1.hw,
+> +               [CLKID_VDEC_HCODEC_SEL]     = &meson8b_vdec_hcodec_sel.hw,
+> +               [CLKID_VDEC_HCODEC_DIV]     = &meson8b_vdec_hcodec_div.hw,
+> +               [CLKID_VDEC_HCODEC]         = &meson8b_vdec_hcodec.hw,
+> +               [CLKID_VDEC_2_SEL]          = &meson8b_vdec_2_sel.hw,
+> +               [CLKID_VDEC_2_DIV]          = &meson8b_vdec_2_div.hw,
+> +               [CLKID_VDEC_2]              = &meson8b_vdec_2.hw,
+> +               [CLKID_VDEC_HEVC_SEL]       = &meson8b_vdec_hevc_sel.hw,
+> +               [CLKID_VDEC_HEVC_DIV]       = &meson8b_vdec_hevc_div.hw,
+> +               [CLKID_VDEC_HEVC_EN]        = &meson8b_vdec_hevc_en.hw,
+> +               [CLKID_VDEC_HEVC]           = &meson8b_vdec_hevc.hw,
+>                 [CLK_NR_CLKS]               = NULL,
+>         },
+>         .num = CLK_NR_CLKS,
+> @@ -2361,6 +2625,22 @@ static struct clk_hw_onecell_data meson8b_hw_onecell_data = {
+>                 [CLKID_VPU_1_DIV]           = &meson8b_vpu_1_div.hw,
+>                 [CLKID_VPU_1]               = &meson8b_vpu_1.hw,
+>                 [CLKID_VPU]                 = &meson8b_vpu.hw,
+> +               [CLKID_VDEC_1_SEL]          = &meson8b_vdec_1_sel.hw,
+> +               [CLKID_VDEC_1_1_DIV]        = &meson8b_vdec_1_1_div.hw,
+> +               [CLKID_VDEC_1_1]            = &meson8b_vdec_1_1.hw,
+> +               [CLKID_VDEC_1_2_DIV]        = &meson8b_vdec_1_2_div.hw,
+> +               [CLKID_VDEC_1_2]            = &meson8b_vdec_1_2.hw,
+> +               [CLKID_VDEC_1]              = &meson8b_vdec_1.hw,
+> +               [CLKID_VDEC_HCODEC_SEL]     = &meson8b_vdec_hcodec_sel.hw,
+> +               [CLKID_VDEC_HCODEC_DIV]     = &meson8b_vdec_hcodec_div.hw,
+> +               [CLKID_VDEC_HCODEC]         = &meson8b_vdec_hcodec.hw,
+> +               [CLKID_VDEC_2_SEL]          = &meson8b_vdec_2_sel.hw,
+> +               [CLKID_VDEC_2_DIV]          = &meson8b_vdec_2_div.hw,
+> +               [CLKID_VDEC_2]              = &meson8b_vdec_2.hw,
+> +               [CLKID_VDEC_HEVC_SEL]       = &meson8b_vdec_hevc_sel.hw,
+> +               [CLKID_VDEC_HEVC_DIV]       = &meson8b_vdec_hevc_div.hw,
+> +               [CLKID_VDEC_HEVC_EN]        = &meson8b_vdec_hevc_en.hw,
+> +               [CLKID_VDEC_HEVC]           = &meson8b_vdec_hevc.hw,
+>                 [CLK_NR_CLKS]               = NULL,
+>         },
+>         .num = CLK_NR_CLKS,
+> @@ -2556,6 +2836,22 @@ static struct clk_hw_onecell_data meson8m2_hw_onecell_data = {
+>                 [CLKID_VPU_1_DIV]           = &meson8b_vpu_1_div.hw,
+>                 [CLKID_VPU_1]               = &meson8b_vpu_1.hw,
+>                 [CLKID_VPU]                 = &meson8b_vpu.hw,
+> +               [CLKID_VDEC_1_SEL]          = &meson8b_vdec_1_sel.hw,
+> +               [CLKID_VDEC_1_1_DIV]        = &meson8b_vdec_1_1_div.hw,
+> +               [CLKID_VDEC_1_1]            = &meson8b_vdec_1_1.hw,
+> +               [CLKID_VDEC_1_2_DIV]        = &meson8b_vdec_1_2_div.hw,
+> +               [CLKID_VDEC_1_2]            = &meson8b_vdec_1_2.hw,
+> +               [CLKID_VDEC_1]              = &meson8b_vdec_1.hw,
+> +               [CLKID_VDEC_HCODEC_SEL]     = &meson8b_vdec_hcodec_sel.hw,
+> +               [CLKID_VDEC_HCODEC_DIV]     = &meson8b_vdec_hcodec_div.hw,
+> +               [CLKID_VDEC_HCODEC]         = &meson8b_vdec_hcodec.hw,
+> +               [CLKID_VDEC_2_SEL]          = &meson8b_vdec_2_sel.hw,
+> +               [CLKID_VDEC_2_DIV]          = &meson8b_vdec_2_div.hw,
+> +               [CLKID_VDEC_2]              = &meson8b_vdec_2.hw,
+> +               [CLKID_VDEC_HEVC_SEL]       = &meson8b_vdec_hevc_sel.hw,
+> +               [CLKID_VDEC_HEVC_DIV]       = &meson8b_vdec_hevc_div.hw,
+> +               [CLKID_VDEC_HEVC_EN]        = &meson8b_vdec_hevc_en.hw,
+> +               [CLKID_VDEC_HEVC]           = &meson8b_vdec_hevc.hw,
+>                 [CLK_NR_CLKS]               = NULL,
+>         },
+>         .num = CLK_NR_CLKS,
+> @@ -2729,6 +3025,22 @@ static struct clk_regmap *const meson8b_clk_regmaps[] = {
+>         &meson8b_vpu_1_div,
+>         &meson8b_vpu_1,
+>         &meson8b_vpu,
+> +       &meson8b_vdec_1_sel,
+> +       &meson8b_vdec_1_1_div,
+> +       &meson8b_vdec_1_1,
+> +       &meson8b_vdec_1_2_div,
+> +       &meson8b_vdec_1_2,
+> +       &meson8b_vdec_1,
+> +       &meson8b_vdec_hcodec_sel,
+> +       &meson8b_vdec_hcodec_div,
+> +       &meson8b_vdec_hcodec,
+> +       &meson8b_vdec_2_sel,
+> +       &meson8b_vdec_2_div,
+> +       &meson8b_vdec_2,
+> +       &meson8b_vdec_hevc_sel,
+> +       &meson8b_vdec_hevc_div,
+> +       &meson8b_vdec_hevc_en,
+> +       &meson8b_vdec_hevc,
+>  };
+>
+>  static const struct meson8b_clk_reset_line {
+> diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
+> index e775f91ccce9..ed37196187e6 100644
+> --- a/drivers/clk/meson/meson8b.h
+> +++ b/drivers/clk/meson/meson8b.h
+> @@ -37,6 +37,9 @@
+>  #define HHI_MALI_CLK_CNTL              0x1b0 /* 0x6c offset in data sheet */
+>  #define HHI_VPU_CLK_CNTL               0x1bc /* 0x6f offset in data sheet */
+>  #define HHI_HDMI_CLK_CNTL              0x1cc /* 0x73 offset in data sheet */
+> +#define HHI_VDEC_CLK_CNTL              0x1e0 /* 0x78 offset in data sheet */
+> +#define HHI_VDEC2_CLK_CNTL             0x1e4 /* 0x79 offset in data sheet */
+> +#define HHI_VDEC3_CLK_CNTL             0x1e8 /* 0x7a offset in data sheet */
+>  #define HHI_NAND_CLK_CNTL              0x25c /* 0x97 offset in data sheet */
+>  #define HHI_MPLL_CNTL                  0x280 /* 0xa0 offset in data sheet */
+>  #define HHI_SYS_PLL_CNTL               0x300 /* 0xc0 offset in data sheet */
+> @@ -156,8 +159,20 @@
+>  #define CLKID_VPU_1_SEL                186
+>  #define CLKID_VPU_1_DIV                187
+>  #define CLKID_VPU_1            189
+> +#define CLKID_VDEC_1_SEL       191
+> +#define CLKID_VDEC_1_1_DIV     192
+> +#define CLKID_VDEC_1_1         193
+> +#define CLKID_VDEC_1_2_DIV     194
+> +#define CLKID_VDEC_1_2         195
 
-If the hardware doesn't support you here (usually it does) I think it's
-not reliable enough to try to sync in software. I assume you can get the
-right wave form if you don't change SC.PS but only MOD.MOD? So maybe the
-sanest approach is to refuse changing SC.PS if the PWM is running.
+In order to make use of the glitch-free mux by the driver, shouldn't
+CLKID_VDEC_1_1 and CLKID_VDEC_1_2 be exported in the bindings ?
 
-Or disable (which also should wait for the current period to finish),
-poll for the end (or use an irq?) and then setup the new configuration.
-
-> > > +{
-> > > +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> > > +	struct pwm_state c;
-> > > +	u32 val, sc_val;
-> > > +	u64 tmp;
-> > > +
-> > > +	pwm_imx_tpm_get_state(chip, pwm, &c);
-> > > +
-> > > +	if (state.duty_cycle != c.duty_cycle) {
-> > > +		/* set duty counter */
-> > > +		tmp = readl(tpm->base + PWM_IMX_TPM_MOD) & PWM_IMX_TPM_MOD_MOD;
-> > > +		tmp *= state.duty_cycle;
-> > > +		val = DIV_ROUND_CLOSEST_ULL(tmp, state.period);
-> > > +		writel(val, tpm->base + PWM_IMX_TPM_CnV(pwm->hwpwm));
-> > > +	}
-> > > +
-> > > +	if (state.enabled != c.enabled) {
-> > 
-> > This is wrong. If the PWM was running (c.enabled == true) and you are
-> > supposed to disable (state.enabled == false) you enable the hardware once
-> > more.
-> 
-> A little confused here, as the case you assume, inside this block, there is another
-> check for state.enabled, if it is false, the polarity will be set to channel disabled mode,
-> the polarity setting is combined together with the enable status here, am I wrong?  
-
-Ah, you're right. I missed that probably because I saw register accesses
-after the state.enabled != c.enabled check.
-
-> > > +			val |= (state.polarity == PWM_POLARITY_NORMAL) ?
-> > > +				FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0x2) :
-> > > +				FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0x1);
-> > 
-> > Introduce PWM_IMX_TPM_CnSC_ELS_POLARITY_NORMAL and use it
-> > together with PWM_IMX_TPM_CnSC_ELS_POLARITY_INVERSED here. If you
-> > put the FIELD_PREP into the definition the line doesn't get excessively long.
-> > 
-> 
-> I put the FIELD_PREP into definition, the line still long, but I agree using definition is better.
-> 
-> #define PWM_IMX_TPM_CnSC_ELS_INVERSED   FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 1)
-> #define PWM_IMX_TPM_CnSC_ELS_NORMAL     FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 2)
-> 
->                          val |= (state->polarity == PWM_POLARITY_NORMAL) ?
->                                  PWM_IMX_TPM_CnSC_ELS_NORMAL :
->                                  PWM_IMX_TPM_CnSC_ELS_INVERSED;
-> 
-> > Maybe also add
-> > 
-> > 	#define PWM_IMX_TPM_CnSC_ELS_INACTIVE FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0)
-> > 
-> 
-> I did NOT use the FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0) at all, so why add it?
-> I don't quite understand.
-
-You use it implicitly in pwm_imx_tpm_apply_hw() if state.enabled ==
-false and c.enabled == true:
-
-	val = readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
-	val &= ~(PWM_IMX_TPM_CnSC_ELS | ...);
-	...
-	writel(val, tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
-
-> > > +static int pwm_imx_tpm_apply(struct pwm_chip *chip,
-> > > +			      struct pwm_device *pwm,
-> > > +			     struct pwm_state *state)
-> > > +{
-> > > +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> > > +	struct imx_tpm_pwm_param param;
-> > > +	struct pwm_state real_state;
-> > > +	int ret;
-> > > +
-> > > +	ret = pwm_imx_tpm_round_state(chip, &param, state, &real_state);
-> > > +	if (ret)
-> > > +		return -EINVAL;
-> > > +
-> > > +	mutex_lock(&tpm->lock);
-> > > +
-> > > +	/*
-> > > +	 * TPM counter is shared by multiple channels, so
-> > > +	 * prescale and period can NOT be modified when
-> > > +	 * there are multiple channels in use with different
-> > > +	 * period settings.
-> > > +	 */
-> > > +	if (real_state.period != tpm->real_period) {
-> > > +		if (tpm->user_count > 1) {
-> > > +			ret = -EBUSY;
-> > > +			goto exit;
-> > > +		}
-> > > +
-> > > +		pwm_imx_tpm_config_counter(chip, param);
-> > > +		tpm->real_period = real_state.period;
-> > > +	}
-> > 
-> > Maybe add a comment that this could still be optimized. For example if
-> > pwm_imx_tpm_round_state returned prescale = 5 but prescale is currently 6,
-> > you might still be able to configure
-> 
-> You meant for multiple users request different period case? In this block, if there is
-> ONLY one user and the requested period can be met by HW, it will anyway re-configure
-> the HW for the prescale and period I think, or I did NOT get your point?
-
-My idea has a flaw. I thought that if there is another user, the
-duty_cycle can still be represented if the actually used prescale value
-is slightly higher. But then there is still a problem with the period
-length that I missed. So my remark was wrong, sorry for that.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> +#define CLKID_VDEC_HCODEC_SEL  197
+> +#define CLKID_VDEC_HCODEC_DIV  198
+> +#define CLKID_VDEC_2_SEL       200
+> +#define CLKID_VDEC_2_DIV       201
+> +#define CLKID_VDEC_HEVC_SEL    203
+> +#define CLKID_VDEC_HEVC_DIV    204
+> +#define CLKID_VDEC_HEVC_EN     205
+>
+> -#define CLK_NR_CLKS            191
+> +#define CLK_NR_CLKS            207
+>
+>  /*
+>   * include the CLKID and RESETID that have
+> --
+> 2.21.0
+>
