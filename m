@@ -1,47 +1,49 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: [PATCH 3/3] arm64: dts: hi3660: Fixup unofficial dma-min-chan to dma-channel-mask
-Date: Wed, 20 Mar 2019 13:25:40 -0700
-Message-ID: <1553113540-28726-4-git-send-email-john.stultz@linaro.org>
-References: <1553113540-28726-1-git-send-email-john.stultz@linaro.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 2/4] clk: meson: meson8b: use a sparate clock table for Meson8m2
+Date: Wed, 20 Mar 2019 21:38:33 +0100
+Message-ID: <CAFBinCC61EgCS2djT2NZdYnGsHM1VS3_zOzaxSDyHGdguLCFyg@mail.gmail.com>
+References: <20190319215121.29340-1-martin.blumenstingl@googlemail.com>
+ <20190319215121.29340-3-martin.blumenstingl@googlemail.com> <1d52f584-1a5d-8b0d-ecd0-8c041f2b9c18@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553113540-28726-1-git-send-email-john.stultz@linaro.org>
+In-Reply-To: <1d52f584-1a5d-8b0d-ecd0-8c041f2b9c18@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lkml <linux-kernel@vger.kernel.org>
-Cc: John Stultz <john.stultz@linaro.org>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: jbrunet@baylibre.com, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-A undocumented and unimplemented binding got into the hi3660
-dtsi, and this switches that binding to the now documented one.
+Hi Neil,
 
-Cc: Tanglei Han <hantanglei@huawei.com>
-Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
-Cc: Ryan Grachek <ryan@edited.us>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Wei Xu <xuwei5@hisilicon.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
-v3: Renamed to hisi-dma-avail-chan
-v4: Renamed to dma-channel-mask
----
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, Mar 20, 2019 at 9:15 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Hi,
+>
+> There is a typo in the subject "s/sparate/separate/" !
+good catch - I'll wait until the weekend and send a fixed version then!
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index fb5498d..aa6a8ad 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -560,7 +560,7 @@
- 			#dma-cells = <1>;
- 			dma-channels = <16>;
- 			dma-requests = <32>;
--			dma-min-chan = <1>;
-+			dma-channel-mask = <0xfffe>;
- 			interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&crg_ctrl HI3660_CLK_GATE_DMAC>;
- 			dma-no-cci;
--- 
-2.7.4
+> On 19/03/2019 22:51, Martin Blumenstingl wrote:
+> > Meson8, Meson8b and Meson8m2 implement a similar clock controller.
+> > However, there are a few differences between the three actual IP blocks.
+> >
+> > One example where Meson8m2 differs from Meson8b is the VPU clock setup:
+> > - the VPU input mux can choose between "fclk_div4", "fclk_div3",
+> >   "fclk_div5" and "fclk_div7" on Meson8b
+> > - however, on Meson8m2 it can choose between "fclk_div4", "fclk_div3",
+> >   "fclk_div5" and "gp_pll" (GP_PLL only exists on Meson8m2, it's the
+> >   predecessor of the GP0_PLL clock on GXBB/GXL/GXM))
+>
+> By curiosity, what is the default (maximum) setup ? On GX & G12A, fclk_div3 is the default/max setup.
+u-boot on my Meson8m2 board uses GP_PLL as input (364MHz)
+u-boot on my Meson8b (Odroid-C1) uses fclk_div7 as input (approx. 364MHz)
+if you want I can look up the divider (I don't remember it from the
+top of my head)
+
+[...]
+> Apart the typo in the subject,
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+thank you!
+
+
+Regards
+Martin
