@@ -1,597 +1,443 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH V7 2/5] pwm: Add i.MX TPM PWM driver support
-Date: Wed, 20 Mar 2019 09:18:56 +0100
-Message-ID: <20190320081856.wkw55pmw57i4ifdj@pengutronix.de>
-References: <1553058067-18793-1-git-send-email-Anson.Huang@nxp.com>
- <1553058067-18793-3-git-send-email-Anson.Huang@nxp.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 2/2] clk: meson: meson8b: add the video decoder clock
+ trees
+Date: Wed, 20 Mar 2019 09:20:48 +0100
+Message-ID: <343a0e9d-b25c-ff4d-d3b8-c08ee89e09fe@baylibre.com>
+References: <20190319220012.31065-1-martin.blumenstingl@googlemail.com>
+ <20190319220012.31065-3-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1553058067-18793-3-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20190319220012.31065-3-martin.blumenstingl@googlemail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "stefan@agner.ch" <stefan@agner.ch>, Leonard Crestez <leonard.crestez@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, Robin Gong <yibin.gong@nxp.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, jbrunet@baylibre.com, linux-amlogic@lists.infradead.org, mjourdan@baylibre.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 19/03/2019 23:00, Martin Blumenstingl wrote:
+> This adds the four video decoder clock trees.
+> 
+> VDEC_1 is split into two paths on Meson8b and Meson8m2:
+> - input mux called "vdec_1_sel"
+> - two dividers ("vdec_1_1_div" and "vdec_1_2_div") and gates ("vdec_1_1"
+>   and "vdec_1_2")
+> - and an output mux (probably glitch-free) called "vdec_1"
+> On Meson8 the VDEC_1 tree is simpler because there's only one path:
+> - input mux called "vdec_1_sel"
+> - divider ("vdec_1_1_div") and gate ("vdec_1_1")
+> - (the gate is used as output directly, there's no mux)
 
-On Wed, Mar 20, 2019 at 05:06:21AM +0000, Anson Huang wrote:
-> i.MX7ULP has TPM(Low Power Timer/Pulse Width Modulation Module)
-> inside, it can support multiple PWM channels, all the channels
-> share same counter and period setting, but each channel can
-> configure its duty and polarity independently.
+Interesting to see they kept all the dual clocks designs since Meson8b.
+
 > 
-> There are several TPM modules in i.MX7ULP, the number of channels
-> in TPM modules are different, it can be read from each TPM module's
-> PARAM register.
+> The VDEC_HCODEC and VDEC_2 clocks are simple composite clocks each
+> consisting of an input mux, divider and a gate.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> The VDEC_HEVC clock seems to have two paths similar to the VDEC_1 clock.
+> However, the register offsets of the second clock path is not known.
+> Amlogic's 3.10 kernel (which is used as reference) sets
+> HHI_VDEC2_CLK_CNTL[31] to 1 before changing the VDEC_HEVC clock and back
+> to 0 afterwards. For now, leave a TODO comment and only add the first
+> path.
+
+The second path is maybe broken, who knows !
+
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
-> Changes since V6:
-> 	- merge "config" and "enable" functions into ONE function pwm_imx_tpm_apply_hw;
-> 	- save computation for confiuring counter, the "round_state" function will return
-> 	  the registers value directly;
-> 	- improve the logic in .apply;
-> 	- return error when there is still PWM active during suspend callback.
-> ---
->  drivers/pwm/Kconfig       |  11 ++
->  drivers/pwm/Makefile      |   1 +
->  drivers/pwm/pwm-imx-tpm.c | 428 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 440 insertions(+)
->  create mode 100644 drivers/pwm/pwm-imx-tpm.c
+>  drivers/clk/meson/meson8b.c | 312 ++++++++++++++++++++++++++++++++++++
+>  drivers/clk/meson/meson8b.h |  17 +-
+>  2 files changed, 328 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 54f8238..3ea0391 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -210,6 +210,17 @@ config PWM_IMX27
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-imx27.
+> diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
+> index 8e091c2d10e6..37cf0f01bb5d 100644
+> --- a/drivers/clk/meson/meson8b.c
+> +++ b/drivers/clk/meson/meson8b.c
+> @@ -1902,6 +1902,257 @@ static struct clk_regmap meson8b_vpu = {
+>  	},
+>  };
 >  
-> +config PWM_IMX_TPM
-> +	tristate "i.MX TPM PWM support"
-> +	depends on ARCH_MXC || COMPILE_TEST
-> +	depends on HAVE_CLK && HAS_IOMEM
-> +	help
-> +	  Generic PWM framework driver for i.MX7ULP TPM module, TPM's full
-> +	  name is Low Power Timer/Pulse Width Modulation Module.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-imx-tpm.
-> +
->  config PWM_JZ4740
->  	tristate "Ingenic JZ47xx PWM support"
->  	depends on MACH_INGENIC
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 448825e..c368599 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -19,6 +19,7 @@ obj-$(CONFIG_PWM_HIBVT)		+= pwm-hibvt.o
->  obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
->  obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
->  obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
-> +obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
->  obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
->  obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
->  obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
-> diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
-> new file mode 100644
-> index 0000000..02403d0
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-imx-tpm.c
-> @@ -0,0 +1,428 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2018-2019 NXP.
-> + *
-> + * Limitations:
-> + * - The TPM counter and period counter are shared between
-> + *   multiple channels, so all channels should use same period
-> + *   settings.
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/log2.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/slab.h>
-> +
-> +#define PWM_IMX_TPM_PARAM	0x4
-> +#define PWM_IMX_TPM_GLOBAL	0x8
-> +#define PWM_IMX_TPM_SC		0x10
-> +#define PWM_IMX_TPM_CNT		0x14
-> +#define PWM_IMX_TPM_MOD		0x18
-> +#define PWM_IMX_TPM_CnSC(n)	(0x20 + (n) * 0x8)
-> +#define PWM_IMX_TPM_CnV(n)	(0x24 + (n) * 0x8)
-> +
-> +#define PWM_IMX_TPM_PARAM_CHAN			GENMASK(7, 0)
-> +
-> +#define PWM_IMX_TPM_SC_PS			GENMASK(2, 0)
-> +#define PWM_IMX_TPM_SC_CMOD			GENMASK(4, 3)
-> +#define PWM_IMX_TPM_SC_CMOD_INC_EVERY_CLK	BIT(3)
-
-#define PWM_IMX_TPM_SC_CMOD_INC_EVERY_CLK	FIELD_PREP(PWM_IMX_TPM_SC_CMOD, 1)
-
-?
-
-> +#define PWM_IMX_TPM_SC_CPWMS			BIT(5)
-> +
-> +#define PWM_IMX_TPM_CnSC_CHF	BIT(7)
-> +#define PWM_IMX_TPM_CnSC_MSB	BIT(5)
-> +#define PWM_IMX_TPM_CnSC_MSA	BIT(4)
-> +
-> +/*
-> + * The reference manual describes this field as two separate bits. The
-> + * samantic of the two bits isn't orthogonal though, so they are treated
-> + * together as a 2-bit field here.
-> + */
-> +#define PWM_IMX_TPM_CnSC_ELS	GENMASK(3, 2)
-> +#define PWM_IMX_TPM_CnSC_ELS_POLARITY_INVERSED	0x1
-> +
-> +#define PWM_IMX_TPM_MOD_MOD	GENMASK(15, 0)
-> +
-> +struct imx_tpm_pwm_chip {
-> +	struct pwm_chip chip;
-> +	struct clk *clk;
-> +	void __iomem *base;
-> +	struct mutex lock;
-> +	u32 user_count;
-> +	u32 enable_count;
-> +	u32 real_period;
+> +static const char * const meson8b_vdec_parent_names[] = {
+> +	"fclk_div4", "fclk_div3", "fclk_div5", "fclk_div7", "mpll2", "mpll1"
 > +};
 > +
-> +struct imx_tpm_pwm_param {
-> +	u8 prescale;
-> +	u32 mod;
-> +};
-> +
-> +static inline struct imx_tpm_pwm_chip *to_imx_tpm_pwm_chip(struct pwm_chip *chip)
-> +{
-> +	return container_of(chip, struct imx_tpm_pwm_chip, chip);
-> +}
-> +
-> +static int pwm_imx_tpm_round_state(struct pwm_chip *chip,
-> +				   struct imx_tpm_pwm_param *p,
-> +				   struct pwm_state *state,
-> +				   struct pwm_state *real_state)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> +	u32 rate, prescale, period_count, clock_unit;
-> +	u64 tmp;
-> +
-> +	rate = clk_get_rate(tpm->clk);
-> +	tmp = (u64)state->period * rate;
-> +	clock_unit = DIV_ROUND_CLOSEST_ULL(tmp, NSEC_PER_SEC);
-> +	if (clock_unit <= PWM_IMX_TPM_MOD_MOD) {
-> +		prescale = 0;
-> +	} else {
-> +		prescale = roundup_pow_of_two(clock_unit);
-> +		prescale = ilog2(prescale) - 16;
-
-This 16 should be a define to make it obvious where it comes from.
-
-Maybe use:
-
-	#define PWM_IMX_TPM_MOD_WIDTH	16
-	#define PWM_IMX_TPM_MOD_MOD	GENMASK(PWM_IMX_TPM_MOD_WIDTH - 1, 0)
-
-?
-
-If clock_unit happens to be 0x10000, we end up with prescale = 0 which
-is wrong. I think we need:
-
-	} else {
-		prescale = ilog2(clock_unit) + 1 - PWM_IMX_TPM_MOD_WIDTH;
-
-without the roundup.
-
-> +	}
-> +
-> +	if ((!FIELD_FIT(PWM_IMX_TPM_SC_PS, prescale)))
-> +		return -ERANGE;
-> +	p->prescale = prescale;
-> +
-> +	period_count = (clock_unit + ((1 << prescale) >> 1)) >> prescale;
-> +	if (period_count > PWM_IMX_TPM_MOD_MOD)
-> +		return -ERANGE;
-
-This check (together with the right way to calculate prescale) is
-theoretically superflous. period_count cannot be bigger than
-PWM_IMX_TPM_MOD_MOD. I'd either drop that check or add a scary warning
-to make people hitting this report the respective parameters.
-
-> +	p->mod = period_count;
-> +
-> +	/* calculate real period HW can support */
-> +	tmp = (u64)period_count << prescale;
-> +	tmp *= NSEC_PER_SEC;
-> +	real_state->period = DIV_ROUND_CLOSEST_ULL(tmp, rate);
-> +
-> +	/*
-> +	 * if eventually the PWM output is LOW, either
-> +	 * duty cycle is 0 or status is disabled, need
-> +	 * to make sure the output pin is LOW.
-
-s/LOW/inactive/, then it's also true for inversed polarity.
-
-> +	 */
-> +	if (!state->enabled)
-> +		real_state->duty_cycle = 0;
-> +	else
-> +		real_state->duty_cycle = state->duty_cycle;
-> +
-> +	real_state->polarity = state->polarity;
-> +	real_state->enabled = state->enabled;
-> +
-> +	return 0;
-> +}
-> +
-> +static void pwm_imx_tpm_config_counter(struct pwm_chip *chip,
-> +				       struct imx_tpm_pwm_param p)
-
-Please pass p as a pointer. I think pwm_imx_tpm_setup_period is a better
-name here.
-
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> +	u32 val, saved_cmod;
-> +
-> +	/* make sure counter is disabled for programming prescale */
-> +	val = readl(tpm->base + PWM_IMX_TPM_SC);
-> +	saved_cmod = FIELD_GET(PWM_IMX_TPM_SC_CMOD, val);
-> +	if (saved_cmod) {
-> +		val &= ~PWM_IMX_TPM_SC_CMOD;
-> +		writel(val, tpm->base + PWM_IMX_TPM_SC);
-
-I thought we agreed on not stopping the counter if the PS field isn't
-changed?
-
-> +	}
-> +
-> +	/* set TPM counter prescale */
-> +	val = readl(tpm->base + PWM_IMX_TPM_SC);
-
-val already holds this register value, no need to reread.
-
-> +	val &= ~PWM_IMX_TPM_SC_PS;
-> +	val |= FIELD_PREP(PWM_IMX_TPM_SC_PS, p.prescale);
-> +	writel(val, tpm->base + PWM_IMX_TPM_SC);
-> +
-> +	/*
-> +	 * set period count: according to RM, the MOD register is
-> +	 * updated immediately after CMOD[1:0] = 2b'00 above
-> +	 */
-
-So the current period isn't completed? That's wrong.
-
-> +	writel(p.mod, tpm->base + PWM_IMX_TPM_MOD);
-> +
-> +	/* restore the clock mode if necessary */
-> +	if (saved_cmod) {
-> +		val = readl(tpm->base + PWM_IMX_TPM_SC);
-> +		val |= FIELD_PREP(PWM_IMX_TPM_SC_CMOD, saved_cmod);
-> +		writel(val, tpm->base + PWM_IMX_TPM_SC);
-> +	}
-> +}
-> +
-> +static void pwm_imx_tpm_get_state(struct pwm_chip *chip,
-> +				  struct pwm_device *pwm,
-> +				  struct pwm_state *state)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> +	u32 rate, val;
-> +	u64 tmp;
-> +
-> +	/* get period */
-> +	state->period = tpm->real_period;
-> +
-> +	/* get duty cycle */
-> +	rate = clk_get_rate(tpm->clk);
-> +	val = readl(tpm->base + PWM_IMX_TPM_SC);
-> +	val = FIELD_GET(PWM_IMX_TPM_SC_PS, val);
-> +	tmp = readl(tpm->base + PWM_IMX_TPM_CnV(pwm->hwpwm));
-> +	tmp *= (1 << val) * NSEC_PER_SEC;
-
-"prescale" would be a better name here than "val". As in the previous
-review round: Don't multiply by (1 << something).
-
-> +	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, rate);
-> +
-> +	/* get polarity */
-> +	val = readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
-> +	if (FIELD_GET(PWM_IMX_TPM_CnSC_ELS, val) ==
-> +	    PWM_IMX_TPM_CnSC_ELS_POLARITY_INVERSED)
-> +		state->polarity = PWM_POLARITY_INVERSED;
-> +	else
-> +		/*
-> +		 * Assume reserved values (2b00 and 2b11) to yield
-> +		 * normal polarity.
-> +		 */
-> +		state->polarity = PWM_POLARITY_NORMAL;
-> +
-> +	/* get channel status */
-> +	state->enabled = FIELD_GET(PWM_IMX_TPM_CnSC_ELS, val) ? true : false;
-> +}
-> +
-> +static void pwm_imx_tpm_apply_hw(struct pwm_chip *chip,
-> +				 struct pwm_device *pwm,
-> +				 struct pwm_state state)
-
-Please pass a the struct pwm_state as a pointer, not as a value.
-
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> +	struct pwm_state c;
-> +	u32 val, sc_val;
-> +	u64 tmp;
-> +
-> +	pwm_imx_tpm_get_state(chip, pwm, &c);
-> +
-> +	if (state.duty_cycle != c.duty_cycle) {
-> +		/* set duty counter */
-> +		tmp = readl(tpm->base + PWM_IMX_TPM_MOD) & PWM_IMX_TPM_MOD_MOD;
-> +		tmp *= state.duty_cycle;
-> +		val = DIV_ROUND_CLOSEST_ULL(tmp, state.period);
-> +		writel(val, tpm->base + PWM_IMX_TPM_CnV(pwm->hwpwm));
-> +	}
-> +
-> +	if (state.enabled != c.enabled) {
-
-This is wrong. If the PWM was running (c.enabled == true) and you are
-supposed to disable (state.enabled == false) you enable the hardware
-once more.
-
-> +		/*
-> +		 * set polarity (for edge-aligned PWM modes)
-> +		 *
-> +		 * ELS[1:0] = 2b10 yields normal polarity behaviour,
-> +		 * ELS[1:0] = 2b01 yields inversed polarity.
-> +		 * The other values are reserved.
-> +		 *
-> +		 * polarity settings will enabled/disable output status
-> +		 * immediately, so if the channel is disabled, need to
-> +		 * make sure MSA/MSB/ELS are set to 0 which means channel
-> +		 * disabled.
-> +		 */
-> +		val = readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
-> +		val &= ~(PWM_IMX_TPM_CnSC_ELS | PWM_IMX_TPM_CnSC_MSA |
-> +			 PWM_IMX_TPM_CnSC_MSB);
-> +		sc_val = readl(tpm->base + PWM_IMX_TPM_SC);
-> +		if (state.enabled) {
-> +			val |= PWM_IMX_TPM_CnSC_MSB;
-> +			val |= (state.polarity == PWM_POLARITY_NORMAL) ?
-> +				FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0x2) :
-> +				FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0x1);
-
-Introduce PWM_IMX_TPM_CnSC_ELS_POLARITY_NORMAL and use it together with
-PWM_IMX_TPM_CnSC_ELS_POLARITY_INVERSED here. If you put the FIELD_PREP
-into the definition the line doesn't get excessively long.
-
-Maybe also add
-
-	#define PWM_IMX_TPM_CnSC_ELS_INACTIVE FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0)
-
-?
-
-> +			if (++tpm->enable_count == 1) {
-> +				/* start TPM counter */
-> +				sc_val |= PWM_IMX_TPM_SC_CMOD_INC_EVERY_CLK;
-> +				writel(sc_val, tpm->base + PWM_IMX_TPM_SC);
-> +			}
-> +		} else {
-> +			if (--tpm->enable_count == 0) {
-> +				/* stop TPM counter */
-> +				sc_val &= ~PWM_IMX_TPM_SC_CMOD;
-> +				writel(sc_val, tpm->base + PWM_IMX_TPM_SC);
-> +			}
-> +		}
-> +		writel(val, tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
-> +	}
-> +}
-> +
-> +static int pwm_imx_tpm_apply(struct pwm_chip *chip,
-> +			      struct pwm_device *pwm,
-> +			     struct pwm_state *state)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> +	struct imx_tpm_pwm_param param;
-> +	struct pwm_state real_state;
-> +	int ret;
-> +
-> +	ret = pwm_imx_tpm_round_state(chip, &param, state, &real_state);
-> +	if (ret)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&tpm->lock);
-> +
-> +	/*
-> +	 * TPM counter is shared by multiple channels, so
-> +	 * prescale and period can NOT be modified when
-> +	 * there are multiple channels in use with different
-> +	 * period settings.
-> +	 */
-> +	if (real_state.period != tpm->real_period) {
-> +		if (tpm->user_count > 1) {
-> +			ret = -EBUSY;
-> +			goto exit;
-> +		}
-> +
-> +		pwm_imx_tpm_config_counter(chip, param);
-> +		tpm->real_period = real_state.period;
-> +	}
-
-Maybe add a comment that this could still be optimized. For example if
-pwm_imx_tpm_round_state returned prescale = 5 but prescale is currently
-6, you might still be able to configure
-
-> +
-> +	pwm_imx_tpm_apply_hw(chip, pwm, real_state);
-> +
-> +exit:
-> +	mutex_unlock(&tpm->lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static int pwm_imx_tpm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> +
-> +	mutex_lock(&tpm->lock);
-> +	tpm->user_count++;
-> +	mutex_unlock(&tpm->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static void pwm_imx_tpm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> +
-> +	mutex_lock(&tpm->lock);
-> +	tpm->user_count--;
-> +	mutex_unlock(&tpm->lock);
-> +}
-> +
-> +static const struct pwm_ops imx_tpm_pwm_ops = {
-> +	.request = pwm_imx_tpm_request,
-> +	.free = pwm_imx_tpm_free,
-> +	.get_state = pwm_imx_tpm_get_state,
-> +	.apply = pwm_imx_tpm_apply,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static int pwm_imx_tpm_probe(struct platform_device *pdev)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm;
-> +	int ret;
-> +	u32 val;
-> +
-> +	tpm = devm_kzalloc(&pdev->dev, sizeof(*tpm), GFP_KERNEL);
-> +	if (!tpm)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, tpm);
-> +
-> +	tpm->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(tpm->base))
-> +		return PTR_ERR(tpm->base);
-> +
-> +	tpm->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(tpm->clk)) {
-> +		ret = PTR_ERR(tpm->clk);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev,
-> +				"failed to get PWM clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(tpm->clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev,
-> +			"failed to prepare or enable clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	tpm->chip.dev = &pdev->dev;
-> +	tpm->chip.ops = &imx_tpm_pwm_ops;
-> +	tpm->chip.base = -1;
-> +	tpm->chip.of_xlate = of_pwm_xlate_with_flags;
-> +	tpm->chip.of_pwm_n_cells = 3;
-> +
-> +	/* get number of channels */
-> +	val = readl(tpm->base + PWM_IMX_TPM_PARAM);
-> +	tpm->chip.npwm = FIELD_GET(PWM_IMX_TPM_PARAM_CHAN, val);
-> +
-> +	mutex_init(&tpm->lock);
-> +
-> +	ret = pwmchip_add(&tpm->chip);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to add PWM chip: %d\n", ret);
-> +		clk_disable_unprepare(tpm->clk);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int pwm_imx_tpm_remove(struct platform_device *pdev)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = platform_get_drvdata(pdev);
-> +	int ret = pwmchip_remove(&tpm->chip);
-> +
-> +	clk_disable_unprepare(tpm->clk);
-> +
-> +	return ret;
-> +}
-> +
-> +static int __maybe_unused pwm_imx_tpm_suspend(struct device *dev)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = dev_get_drvdata(dev);
-> +
-> +	if (tpm->enable_count > 0)
-> +		return -EBUSY;
-> +
-> +	clk_disable_unprepare(tpm->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused pwm_imx_tpm_resume(struct device *dev)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = dev_get_drvdata(dev);
-> +	int ret = 0;
-> +
-> +	if (tpm->enable_count == 0) {
-
-tpm->enable_count cannot be different from 0 here.
-
-> +		ret = clk_prepare_enable(tpm->clk);
-> +		if (ret)
-> +			dev_err(dev,
-> +				"failed to prepare or enable clock: %d\n",
-> +				ret);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(imx_tpm_pwm_pm,
-> +			 pwm_imx_tpm_suspend, pwm_imx_tpm_resume);
-> +
-> +static const struct of_device_id imx_tpm_pwm_dt_ids[] = {
-> +	{ .compatible = "fsl,imx-tpm", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, imx_tpm_pwm_dt_ids);
-> +
-> +static struct platform_driver imx_tpm_pwm_driver = {
-> +	.driver = {
-> +		.name = "imx-tpm-pwm",
-> +		.of_match_table = imx_tpm_pwm_dt_ids,
-> +		.pm = &imx_tpm_pwm_pm,
+> +static struct clk_regmap meson8b_vdec_1_sel = {
+> +	.data = &(struct clk_regmap_mux_data){
+> +		.offset = HHI_VDEC_CLK_CNTL,
+> +		.mask = 0x3,
+> +		.shift = 9,
+> +		.flags = CLK_MUX_ROUND_CLOSEST,
 > +	},
-> +	.probe	= pwm_imx_tpm_probe,
-> +	.remove = pwm_imx_tpm_remove,
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vdec_1_sel",
+> +		.ops = &clk_regmap_mux_ops,
+> +		.parent_names = meson8b_vdec_parent_names,
+> +		.num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
 > +};
-> +module_platform_driver(imx_tpm_pwm_driver);
 > +
-> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
-> +MODULE_DESCRIPTION("i.MX TPM PWM Driver");
-> +MODULE_LICENSE("GPL v2");
+> +static struct clk_regmap meson8b_vdec_1_1_div = {
+> +	.data = &(struct clk_regmap_div_data){
+> +		.offset = HHI_VDEC_CLK_CNTL,
+> +		.shift = 0,
+> +		.width = 7,
+> +		.flags = CLK_DIVIDER_ROUND_CLOSEST,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vdec_1_1_div",
+> +		.ops = &clk_regmap_divider_ops,
+> +		.parent_names = (const char *[]){ "vdec_1_sel" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_1_1 = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_VDEC_CLK_CNTL,
+> +		.bit_idx = 8,
+> +	},
+> +	.hw.init = &(struct clk_init_data) {
+> +		.name = "vdec_1_1",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "vdec_1_1_div" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_1_2_div = {
+> +	.data = &(struct clk_regmap_div_data){
+> +		.offset = HHI_VDEC3_CLK_CNTL,
+> +		.shift = 0,
+> +		.width = 7,
+> +		.flags = CLK_DIVIDER_ROUND_CLOSEST,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vdec_1_2_div",
+> +		.ops = &clk_regmap_divider_ops,
+> +		.parent_names = (const char *[]){ "vdec_1_sel" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_1_2 = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_VDEC3_CLK_CNTL,
+> +		.bit_idx = 8,
+> +	},
+> +	.hw.init = &(struct clk_init_data) {
+> +		.name = "vdec_1_2",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "vdec_1_2_div" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_1 = {
+> +	.data = &(struct clk_regmap_mux_data){
+> +		.offset = HHI_VDEC3_CLK_CNTL,
+> +		.mask = 0x1,
+> +		.shift = 15,
+> +		.flags = CLK_MUX_ROUND_CLOSEST,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vdec_1",
+> +		.ops = &clk_regmap_mux_ops,
+> +		.parent_names = (const char *[]){ "vdec_1_1", "vdec_1_2" },
+> +		.num_parents = 2,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_hcodec_sel = {
+> +	.data = &(struct clk_regmap_mux_data){
+> +		.offset = HHI_VDEC_CLK_CNTL,
+> +		.mask = 0x3,
+> +		.shift = 25,
+> +		.flags = CLK_MUX_ROUND_CLOSEST,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vdec_hcodec_sel",
+> +		.ops = &clk_regmap_mux_ops,
+> +		.parent_names = meson8b_vdec_parent_names,
+> +		.num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_hcodec_div = {
+> +	.data = &(struct clk_regmap_div_data){
+> +		.offset = HHI_VDEC_CLK_CNTL,
+> +		.shift = 16,
+> +		.width = 7,
+> +		.flags = CLK_DIVIDER_ROUND_CLOSEST,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vdec_hcodec_div",
+> +		.ops = &clk_regmap_divider_ops,
+> +		.parent_names = (const char *[]){ "vdec_hcodec_sel" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_hcodec = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_VDEC_CLK_CNTL,
+> +		.bit_idx = 24,
+> +	},
+> +	.hw.init = &(struct clk_init_data) {
+> +		.name = "vdec_hcodec",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "vdec_hcodec_div" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_2_sel = {
+> +	.data = &(struct clk_regmap_mux_data){
+> +		.offset = HHI_VDEC2_CLK_CNTL,
+> +		.mask = 0x3,
+> +		.shift = 9,
+> +		.flags = CLK_MUX_ROUND_CLOSEST,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vdec_2_sel",
+> +		.ops = &clk_regmap_mux_ops,
+> +		.parent_names = meson8b_vdec_parent_names,
+> +		.num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_2_div = {
+> +	.data = &(struct clk_regmap_div_data){
+> +		.offset = HHI_VDEC2_CLK_CNTL,
+> +		.shift = 0,
+> +		.width = 7,
+> +		.flags = CLK_DIVIDER_ROUND_CLOSEST,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vdec_2_div",
+> +		.ops = &clk_regmap_divider_ops,
+> +		.parent_names = (const char *[]){ "vdec_2_sel" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_2 = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_VDEC2_CLK_CNTL,
+> +		.bit_idx = 8,
+> +	},
+> +	.hw.init = &(struct clk_init_data) {
+> +		.name = "vdec_2",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "vdec_2_div" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_hevc_sel = {
+> +	.data = &(struct clk_regmap_mux_data){
+> +		.offset = HHI_VDEC2_CLK_CNTL,
+> +		.mask = 0x3,
+> +		.shift = 25,
+> +		.flags = CLK_MUX_ROUND_CLOSEST,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vdec_hevc_sel",
+> +		.ops = &clk_regmap_mux_ops,
+> +		.parent_names = meson8b_vdec_parent_names,
+> +		.num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_hevc_div = {
+> +	.data = &(struct clk_regmap_div_data){
+> +		.offset = HHI_VDEC2_CLK_CNTL,
+> +		.shift = 16,
+> +		.width = 7,
+> +		.flags = CLK_DIVIDER_ROUND_CLOSEST,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vdec_hevc_div",
+> +		.ops = &clk_regmap_divider_ops,
+> +		.parent_names = (const char *[]){ "vdec_hevc_sel" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_hevc_en = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_VDEC2_CLK_CNTL,
+> +		.bit_idx = 24,
+> +	},
+> +	.hw.init = &(struct clk_init_data) {
+> +		.name = "vdec_hevc_en",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "vdec_hevc_div" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vdec_hevc = {
+> +	.data = &(struct clk_regmap_mux_data){
+> +		.offset = HHI_VDEC2_CLK_CNTL,
+> +		.mask = 0x1,
+> +		.shift = 31,
+> +		.flags = CLK_MUX_ROUND_CLOSEST,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vdec_hevc",
+> +		.ops = &clk_regmap_mux_ops,
+> +		/* TODO: The second parent is currently unknown */
+> +		.parent_names = (const char *[]){ "vdec_hevc_en" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+>  /* Everything Else (EE) domain gates */
+>  
+>  static MESON_GATE(meson8b_ddr, HHI_GCLK_MPEG0, 0);
+> @@ -2168,6 +2419,19 @@ static struct clk_hw_onecell_data meson8_hw_onecell_data = {
+>  		[CLKID_VPU_0_SEL]	    = &meson8b_vpu_0_sel.hw,
+>  		[CLKID_VPU_0_DIV]	    = &meson8b_vpu_0_div.hw,
+>  		[CLKID_VPU]		    = &meson8b_vpu_0.hw,
+> +		[CLKID_VDEC_1_SEL]	    = &meson8b_vdec_1_sel.hw,
+> +		[CLKID_VDEC_1_1_DIV]	    = &meson8b_vdec_1_1_div.hw,
+> +		[CLKID_VDEC_1]	   	    = &meson8b_vdec_1_1.hw,
+> +		[CLKID_VDEC_HCODEC_SEL]	    = &meson8b_vdec_hcodec_sel.hw,
+> +		[CLKID_VDEC_HCODEC_DIV]	    = &meson8b_vdec_hcodec_div.hw,
+> +		[CLKID_VDEC_HCODEC]	    = &meson8b_vdec_hcodec.hw,
+> +		[CLKID_VDEC_2_SEL]	    = &meson8b_vdec_2_sel.hw,
+> +		[CLKID_VDEC_2_DIV]	    = &meson8b_vdec_2_div.hw,
+> +		[CLKID_VDEC_2]	    	    = &meson8b_vdec_2.hw,
+> +		[CLKID_VDEC_HEVC_SEL]	    = &meson8b_vdec_hevc_sel.hw,
+> +		[CLKID_VDEC_HEVC_DIV]	    = &meson8b_vdec_hevc_div.hw,
+> +		[CLKID_VDEC_HEVC_EN]	    = &meson8b_vdec_hevc_en.hw,
+> +		[CLKID_VDEC_HEVC]	    = &meson8b_vdec_hevc.hw,
+>  		[CLK_NR_CLKS]		    = NULL,
+>  	},
+>  	.num = CLK_NR_CLKS,
+> @@ -2361,6 +2625,22 @@ static struct clk_hw_onecell_data meson8b_hw_onecell_data = {
+>  		[CLKID_VPU_1_DIV]	    = &meson8b_vpu_1_div.hw,
+>  		[CLKID_VPU_1]		    = &meson8b_vpu_1.hw,
+>  		[CLKID_VPU]		    = &meson8b_vpu.hw,
+> +		[CLKID_VDEC_1_SEL]	    = &meson8b_vdec_1_sel.hw,
+> +		[CLKID_VDEC_1_1_DIV]	    = &meson8b_vdec_1_1_div.hw,
+> +		[CLKID_VDEC_1_1]	    = &meson8b_vdec_1_1.hw,
+> +		[CLKID_VDEC_1_2_DIV]	    = &meson8b_vdec_1_2_div.hw,
+> +		[CLKID_VDEC_1_2]	    = &meson8b_vdec_1_2.hw,
+> +		[CLKID_VDEC_1]	    	    = &meson8b_vdec_1.hw,
+> +		[CLKID_VDEC_HCODEC_SEL]	    = &meson8b_vdec_hcodec_sel.hw,
+> +		[CLKID_VDEC_HCODEC_DIV]	    = &meson8b_vdec_hcodec_div.hw,
+> +		[CLKID_VDEC_HCODEC]	    = &meson8b_vdec_hcodec.hw,
+> +		[CLKID_VDEC_2_SEL]	    = &meson8b_vdec_2_sel.hw,
+> +		[CLKID_VDEC_2_DIV]	    = &meson8b_vdec_2_div.hw,
+> +		[CLKID_VDEC_2]	    	    = &meson8b_vdec_2.hw,
+> +		[CLKID_VDEC_HEVC_SEL]	    = &meson8b_vdec_hevc_sel.hw,
+> +		[CLKID_VDEC_HEVC_DIV]	    = &meson8b_vdec_hevc_div.hw,
+> +		[CLKID_VDEC_HEVC_EN]	    = &meson8b_vdec_hevc_en.hw,
+> +		[CLKID_VDEC_HEVC]	    = &meson8b_vdec_hevc.hw,
+>  		[CLK_NR_CLKS]		    = NULL,
+>  	},
+>  	.num = CLK_NR_CLKS,
+> @@ -2556,6 +2836,22 @@ static struct clk_hw_onecell_data meson8m2_hw_onecell_data = {
+>  		[CLKID_VPU_1_DIV]	    = &meson8b_vpu_1_div.hw,
+>  		[CLKID_VPU_1]		    = &meson8b_vpu_1.hw,
+>  		[CLKID_VPU]		    = &meson8b_vpu.hw,
+> +		[CLKID_VDEC_1_SEL]	    = &meson8b_vdec_1_sel.hw,
+> +		[CLKID_VDEC_1_1_DIV]	    = &meson8b_vdec_1_1_div.hw,
+> +		[CLKID_VDEC_1_1]	    = &meson8b_vdec_1_1.hw,
+> +		[CLKID_VDEC_1_2_DIV]	    = &meson8b_vdec_1_2_div.hw,
+> +		[CLKID_VDEC_1_2]	    = &meson8b_vdec_1_2.hw,
+> +		[CLKID_VDEC_1]	    	    = &meson8b_vdec_1.hw,
+> +		[CLKID_VDEC_HCODEC_SEL]	    = &meson8b_vdec_hcodec_sel.hw,
+> +		[CLKID_VDEC_HCODEC_DIV]	    = &meson8b_vdec_hcodec_div.hw,
+> +		[CLKID_VDEC_HCODEC]	    = &meson8b_vdec_hcodec.hw,
+> +		[CLKID_VDEC_2_SEL]	    = &meson8b_vdec_2_sel.hw,
+> +		[CLKID_VDEC_2_DIV]	    = &meson8b_vdec_2_div.hw,
+> +		[CLKID_VDEC_2]	    	    = &meson8b_vdec_2.hw,
+> +		[CLKID_VDEC_HEVC_SEL]	    = &meson8b_vdec_hevc_sel.hw,
+> +		[CLKID_VDEC_HEVC_DIV]	    = &meson8b_vdec_hevc_div.hw,
+> +		[CLKID_VDEC_HEVC_EN]	    = &meson8b_vdec_hevc_en.hw,
+> +		[CLKID_VDEC_HEVC]	    = &meson8b_vdec_hevc.hw,
+>  		[CLK_NR_CLKS]		    = NULL,
+>  	},
+>  	.num = CLK_NR_CLKS,
+> @@ -2729,6 +3025,22 @@ static struct clk_regmap *const meson8b_clk_regmaps[] = {
+>  	&meson8b_vpu_1_div,
+>  	&meson8b_vpu_1,
+>  	&meson8b_vpu,
+> +	&meson8b_vdec_1_sel,
+> +	&meson8b_vdec_1_1_div,
+> +	&meson8b_vdec_1_1,
+> +	&meson8b_vdec_1_2_div,
+> +	&meson8b_vdec_1_2,
+> +	&meson8b_vdec_1,
+> +	&meson8b_vdec_hcodec_sel,
+> +	&meson8b_vdec_hcodec_div,
+> +	&meson8b_vdec_hcodec,
+> +	&meson8b_vdec_2_sel,
+> +	&meson8b_vdec_2_div,
+> +	&meson8b_vdec_2,
+> +	&meson8b_vdec_hevc_sel,
+> +	&meson8b_vdec_hevc_div,
+> +	&meson8b_vdec_hevc_en,
+> +	&meson8b_vdec_hevc,
+>  };
+>  
+>  static const struct meson8b_clk_reset_line {
+> diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
+> index e775f91ccce9..ed37196187e6 100644
+> --- a/drivers/clk/meson/meson8b.h
+> +++ b/drivers/clk/meson/meson8b.h
+> @@ -37,6 +37,9 @@
+>  #define HHI_MALI_CLK_CNTL		0x1b0 /* 0x6c offset in data sheet */
+>  #define HHI_VPU_CLK_CNTL		0x1bc /* 0x6f offset in data sheet */
+>  #define HHI_HDMI_CLK_CNTL		0x1cc /* 0x73 offset in data sheet */
+> +#define HHI_VDEC_CLK_CNTL		0x1e0 /* 0x78 offset in data sheet */
+> +#define HHI_VDEC2_CLK_CNTL		0x1e4 /* 0x79 offset in data sheet */
+> +#define HHI_VDEC3_CLK_CNTL		0x1e8 /* 0x7a offset in data sheet */
+>  #define HHI_NAND_CLK_CNTL		0x25c /* 0x97 offset in data sheet */
+>  #define HHI_MPLL_CNTL			0x280 /* 0xa0 offset in data sheet */
+>  #define HHI_SYS_PLL_CNTL		0x300 /* 0xc0 offset in data sheet */
+> @@ -156,8 +159,20 @@
+>  #define CLKID_VPU_1_SEL		186
+>  #define CLKID_VPU_1_DIV		187
+>  #define CLKID_VPU_1		189
+> +#define CLKID_VDEC_1_SEL	191
+> +#define CLKID_VDEC_1_1_DIV	192
+> +#define CLKID_VDEC_1_1		193
+> +#define CLKID_VDEC_1_2_DIV	194
+> +#define CLKID_VDEC_1_2		195
+> +#define CLKID_VDEC_HCODEC_SEL	197
+> +#define CLKID_VDEC_HCODEC_DIV	198
+> +#define CLKID_VDEC_2_SEL	200
+> +#define CLKID_VDEC_2_DIV	201
+> +#define CLKID_VDEC_HEVC_SEL	203
+> +#define CLKID_VDEC_HEVC_DIV	204
+> +#define CLKID_VDEC_HEVC_EN	205
+>  
+> -#define CLK_NR_CLKS		191
+> +#define CLK_NR_CLKS		207
+>  
+>  /*
+>   * include the CLKID and RESETID that have
+> 
 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
