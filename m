@@ -1,44 +1,46 @@
-From: =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
-Subject: [PATCH] powerpc/dts/fsl: add crypto node alias for B4
-Date: Wed, 20 Mar 2019 14:55:16 +0200
-Message-ID: <20190320125516.12277-1-horia.geanta@nxp.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 1/3] devicetree: bindings: bd718x7: document HW state
+ related ROHM specific properties
+Date: Wed, 20 Mar 2019 13:02:59 +0000
+Message-ID: <20190320130259.GN4731@dell>
+References: <cover.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
+ <6ed4238fb083f52de0f5f013647b2334bad8ebe4.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Scott Wood <oss@buserror.net>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6ed4238fb083f52de0f5f013647b2334bad8ebe4.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: mazzisaccount@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Robin Gong <yibin.gong@nxp.com>, Elven Wang <elven.wang@nxp.com>, Anson Huang <anson.huang@nxp.com>, Angus Ainslie <angus.ainslie@puri.sm>
 List-Id: devicetree@vger.kernel.org
 
-crypto node alias is needed by U-boot to identify the node and
-perform fix-ups, like adding "fsl,sec-era" property.
+On Thu, 14 Feb 2019, Matti Vaittinen wrote:
 
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
----
- arch/powerpc/boot/dts/fsl/b4qds.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+> Add ROHM BD71837 / BD71847 specific device tree bindings for
+> controlling the PMIC shutdown/reset states and voltages for
+> different HW states. The PMIC was designed to be used with NXP
+> i.MX8 SoC and it supports SNVS low power state which seems to
+> be typical for NXP i.MX SoCs. However, when SNVS is used we must
+> not allow SW to control enabling/disabling those regulators which
+> are crucial for system to boot as there is a HW limitation which
+> causes SW controlled regulators to be kept shut down after SNVS
+> reset.
+> 
+> Allow setting the SNVS to be used as reset target state and allow
+> marking those regulators which are critical for boot.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+>  .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  | 17 ++++++++++
+>  .../bindings/regulator/rohm,bd71837-regulator.txt  | 38 ++++++++++++++++++++++
+>  2 files changed, 55 insertions(+)
 
-diff --git a/arch/powerpc/boot/dts/fsl/b4qds.dtsi b/arch/powerpc/boot/dts/fsl/b4qds.dtsi
-index 999efd3bc167..05be919f3545 100644
---- a/arch/powerpc/boot/dts/fsl/b4qds.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/b4qds.dtsi
-@@ -40,6 +40,7 @@
- 	interrupt-parent = <&mpic>;
- 
- 	aliases {
-+		crypto = &crypto;
- 		phy_sgmii_10 = &phy_sgmii_10;
- 		phy_sgmii_11 = &phy_sgmii_11;
- 		phy_sgmii_1c = &phy_sgmii_1c;
+Needs a DT Ack.
+
 -- 
-2.17.1
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
