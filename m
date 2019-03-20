@@ -1,33 +1,67 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: imx-ocotp: Add i.MX8MQ compatible
-Date: Wed, 20 Mar 2019 14:10:08 +0000
-Message-ID: <5a73fbce-c5bc-4105-2359-9cb269bd5f79@linaro.org>
-References: <20190228070137.30867-1-l.stach@pengutronix.de>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v3 1/3] devicetree: bindings: bd718x7: document HW state
+ related ROHM specific properties
+Date: Wed, 20 Mar 2019 16:17:01 +0200
+Message-ID: <20190320141701.GA6208@localhost.localdomain>
+References: <cover.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
+ <6ed4238fb083f52de0f5f013647b2334bad8ebe4.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190320130259.GN4731@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190228070137.30867-1-l.stach@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: devicetree@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>, Carlo Caione <ccaione@baylibre.com>, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190320130259.GN4731@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: mazzisaccount@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Robin Gong <yibin.gong@nxp.com>, Elven Wang <elven.wang@nxp.com>, Anson Huang <anson.huang@nxp.com>, Angus Ainslie <angus.ainslie@puri.sm>
 List-Id: devicetree@vger.kernel.org
 
+Hello Lee, All
 
+On Wed, Mar 20, 2019 at 01:02:59PM +0000, Lee Jones wrote:
+> On Thu, 14 Feb 2019, Matti Vaittinen wrote:
+> 
+> > Add ROHM BD71837 / BD71847 specific device tree bindings for
+> > controlling the PMIC shutdown/reset states and voltages for
+> > different HW states. The PMIC was designed to be used with NXP
+> > i.MX8 SoC and it supports SNVS low power state which seems to
+> > be typical for NXP i.MX SoCs. However, when SNVS is used we must
+> > not allow SW to control enabling/disabling those regulators which
+> > are crucial for system to boot as there is a HW limitation which
+> > causes SW controlled regulators to be kept shut down after SNVS
+> > reset.
+> > 
+> > Allow setting the SNVS to be used as reset target state and allow
+> > marking those regulators which are critical for boot.
+> > 
+> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > ---
+> >  .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  | 17 ++++++++++
+> >  .../bindings/regulator/rohm,bd71837-regulator.txt  | 38 ++++++++++++++++++++++
+> >  2 files changed, 55 insertions(+)
+> 
+> Needs a DT Ack.
 
-On 28/02/2019 07:01, Lucas Stach wrote:
-> Add compatible for i.MX8MQ and add i.MX7D/S, i.MX7ULP and i.M8MQ
-> to the description.
+I think this was already applied to regulator tree by Mark:
+https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git/commit/?h=for-next&id=f43d1b388f9be4aa47ed42c33659243a675c5c76
+Does it go in via his tree or do we need to apply it in Lee's tree too?
 
-Thanks, Applied series to nvmem next.
+Br,
+	Matti Vaittinen
 
---srini
+> 
+> -- 
+> Lee Jones [李琼斯]
+> Linaro Services Technical Lead
+> Linaro.org │ Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
