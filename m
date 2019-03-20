@@ -1,64 +1,44 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: change phy-mode to use rgmii-id
-Date: Wed, 20 Mar 2019 14:04:42 -0300
-Message-ID: <CAOMZO5By8=j7gZRAdf2-h-5ak-Qo34rqwDL4+HA_97cMXTAnEQ@mail.gmail.com>
-References: <20190320120604.7D99B3FBE9@swsrvapps-01.diasemi.com>
- <CAOMZO5AHzQJzz3vd5MzYgSSxzPjU9xan1dFh9473BXeiRCOzzg@mail.gmail.com> <VI1PR10MB2352C3A55BE8FABAF3B02681FE410@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH 1/2] ASoC: lochnagar: Add device tree
+	binding document
+Date: Wed, 20 Mar 2019 17:05:29 +0000
+Message-ID: <20190320170529.GV46536@ediswmail.ad.cirrus.com>
+References: <20190320142813.12745-1-ckeepax@opensource.cirrus.com>
+ <20190320165251.GC27518@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR10MB2352C3A55BE8FABAF3B02681FE410@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steve Twiss <stwiss.opensource@diasemi.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-ARM-KERNEL <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20190320165251.GC27518@sirena.org.uk>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Steve,
+On Wed, Mar 20, 2019 at 04:52:51PM +0000, Mark Brown wrote:
+> On Wed, Mar 20, 2019 at 02:28:12PM +0000, Charles Keepax wrote:
+> 
+> > +  - clock-names : Must include the following clocks:
+> > +      "ln-sound-mclk" Master clock source for the sound card, should
+> > +      normally be set to LOCHNAGAR_SOUNDCARD_MCLK provided by the
+> > +      Lochnagar clock driver.
+> 
+> Why the namespacing on the clock name here?
 
-[Adding Andrew]
+I think this is just a hang over from when these clocks were not
+handled through DT and thus had to have the same name as was used
+in the clock driver. Agree it is redundant now and will remove,
+maybe even just mclk should be fine I guess, as the sound is
+kinda redundant as well.
 
-On Wed, Mar 20, 2019 at 1:03 PM Steve Twiss
-<stwiss.opensource@diasemi.com> wrote:
->
-> Hi Fabio,
->
-> On 20 March 2019 12:17, Fabio Estevam wrote:
-> > Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: change phy-mode to use rgmii-id
-> >
-> > Hi Steve,
-> >
-> > On Wed, Mar 20, 2019 at 9:06 AM Steve Twiss
-> > <stwiss.opensource@diasemi.com> wrote:
-> > >
-> > > The PHY used on the Freescale i.MX6Q/DL SABRE boards is qualified as
-> > > 'rgmii' instead of 'rgmii-id'. Meaning the RX and TX delays that were
-> >
-> > This patch declares it as 'rgmii-id', which contradicts the commit log.
->
-> The PHY used on the Freescale i.MX6Q/DL SABRE boards is qualified as
-> 'rgmii' instead of 'rgmii-id'.
->
-> Can that be read two ways?
-> I meant the phy-mode is currently qualified as 'rgmii' instead of what it
-> should be: 'rgmii-id'.
-
-Thanks for the clarification.
-
->
-> [...]
->
-> > > This patch fixes the network problems seen on the Freescale i.MX6Q/DL
-> >
-> > Please provide a Fixes tag. It would be good to know if this fix needs
-> > to be applied to older kernels.
->
-> I didn't put a Fixes tag in because I find this patch fixes v5.1-rc1 (which I see as broken).
-> But the patch is not needed in v5.0 because I see that as working.
-> So didn't see the need for a Cc: stable.
-
-It seems we have other boards that need to be fixed and we can not
-have an old dtb with functional Ethernet with a new kernel.
-
-Does anyone know if this issue is AR8031 specific?
-
-Thanks
+Thanks,
+Charles
