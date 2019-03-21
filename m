@@ -1,117 +1,43 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: lochnagar: Add device tree binding
-	document" to the asoc tree
-Date: Thu, 21 Mar 2019 15:06:37 +0000 (GMT)
-Message-ID: <20190321150637.5E7FB11288EC@debutante.sirena.org.uk>
-References: <20190320173732.8067-1-ckeepax@opensource.cirrus.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: RE: [PATCH V3 05/10] arm64: tegra: fix default tap and trim values
+Date: Thu, 21 Mar 2019 15:22:47 +0000
+Message-ID: <BYAPR12MB3398F91B190D9B1C56FDC4F7C2420@BYAPR12MB3398.namprd12.prod.outlook.com>
+References: <1552513552-23423-1-git-send-email-skomatineni@nvidia.com>
+ <1552513552-23423-5-git-send-email-skomatineni@nvidia.com>
+ <CAPDyKFq4ZVaMmvefuVqGs84E7xg5VgvU-Ecq1MYJdmBhuEm7xA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20190320173732.8067-1-ckeepax@opensource.cirrus.com>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFq4ZVaMmvefuVqGs84E7xg5VgvU-Ecq1MYJdmBhuEm7xA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harjani Ritesh <riteshh@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Aniruddha Tvs Rao <anrao@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   ASoC: lochnagar: Add device tree binding document
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From d9b27d50340c4c90637ebf24106c9064992e2f2a Mon Sep 17 00:00:00 2001
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Date: Wed, 20 Mar 2019 17:37:31 +0000
-Subject: [PATCH] ASoC: lochnagar: Add device tree binding document
-
-Lochnagar is an evaluation and development board for Cirrus
-Logic Smart CODEC and Amp devices. It allows the connection of
-most Cirrus Logic devices on mini-cards, as well as allowing
-connection of various application processor systems to provide a
-full evaluation platform. This driver supports the board
-controller chip on the Lochnagar board.
-
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../bindings/sound/cirrus,lochnagar.txt       | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
-new file mode 100644
-index 000000000000..41ae2699f07a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
-@@ -0,0 +1,39 @@
-+Cirrus Logic Lochnagar Audio Development Board
-+
-+Lochnagar is an evaluation and development board for Cirrus Logic
-+Smart CODEC and Amp devices. It allows the connection of most Cirrus
-+Logic devices on mini-cards, as well as allowing connection of
-+various application processor systems to provide a full evaluation
-+platform.  Audio system topology, clocking and power can all be
-+controlled through the Lochnagar, allowing the device under test
-+to be used in a variety of possible use cases.
-+
-+This binding document describes the binding for the audio portion
-+of the driver.
-+
-+This binding must be part of the Lochnagar MFD binding:
-+  [4] ../mfd/cirrus,lochnagar.txt
-+
-+Required properties:
-+
-+  - compatible : One of the following strings:
-+                 "cirrus,lochnagar2-soundcard"
-+
-+  - #sound-dai-cells : Must be set to 1.
-+
-+  - clocks : Contains an entry for each entry in clock-names.
-+  - clock-names : Must include the following clocks:
-+      "mclk" Master clock source for the sound card, should normally
-+      be set to LOCHNAGAR_SOUNDCARD_MCLK provided by the Lochnagar
-+      clock driver.
-+
-+Example:
-+
-+lochnagar-sc {
-+	compatible = "cirrus,lochnagar2-soundcard";
-+
-+	#sound-dai-cells = <1>;
-+
-+	clocks = <&lochnagar_clk LOCHNAGAR_SOUNDCARD_MCLK>;
-+	clock-names = "mclk";
-+};
--- 
-2.20.1
+PiA+DQo+ID4gRGVmYXVsdCB0YXAgYW5kIHRyaW0gdmFsdWVzIGFyZSBpbmNvcnJlY3QgZm9yIFRl
+Z3JhMTg2IFNETU1DNC4NCj4gPiBUaGlzIHBhdGNoIGZpeGVzIGl0Lg0KPiA+DQo+ID4gVGVzdGVk
+LWJ5OiBKb24gSHVudGVyIDxqb25hdGhhbmhAbnZpZGlhLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5
+OiBTb3dqYW55YSBLb21hdGluZW5pIDxza29tYXRpbmVuaUBudmlkaWEuY29tPg0KPg0KPiBJcyB0
+aGlzIGEgZml4IGFuZC9vciBmb3Igc3RhYmxlPw0KPg0KPiBJbiBlaXRoZXIgY2FzZSwgSSBhbSBs
+ZWF2aW5nIHRoaXMgZm9yIGFybS1zb2MuDQo+DQo+IEtpbmQgcmVnYXJkcw0KPiBVZmZlDQo+DQoN
+ClRoYW5rcyBVZmZlLiBZZXMgdGhpcyBpcyBhcHBsaWNhYmxlIGZvciBzdGFibGUuDQoNCj4gPiAt
+LS0NCj4gPiAgYXJjaC9hcm02NC9ib290L2R0cy9udmlkaWEvdGVncmExODYuZHRzaSB8IDQgKyst
+LQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0K
+PiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbnZpZGlhL3RlZ3JhMTg2
+LmR0c2kgDQo+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL252aWRpYS90ZWdyYTE4Ni5kdHNpDQo+
+ID4gaW5kZXggOTdhZWI5NDZlZDVlLi40NzJmNTVmZTk0ODggMTAwNjQ0DQo+ID4gLS0tIGEvYXJj
+aC9hcm02NC9ib290L2R0cy9udmlkaWEvdGVncmExODYuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvbnZpZGlhL3RlZ3JhMTg2LmR0c2kNCj4gPiBAQCAtMzE3LDggKzMxNyw4IEBA
+DQo+ID4gICAgICAgICAgICAgICAgIG52aWRpYSxwYWQtYXV0b2NhbC1wdWxsLWRvd24tb2Zmc2V0
+LTF2OC10aW1lb3V0ID0gPDB4MGE+Ow0KPiA+ICAgICAgICAgICAgICAgICBudmlkaWEscGFkLWF1
+dG9jYWwtcHVsbC11cC1vZmZzZXQtM3YzLXRpbWVvdXQgPSA8MHgwYT47DQo+ID4gICAgICAgICAg
+ICAgICAgIG52aWRpYSxwYWQtYXV0b2NhbC1wdWxsLWRvd24tb2Zmc2V0LTN2My10aW1lb3V0ID0g
+PDB4MGE+Ow0KPiA+IC0gICAgICAgICAgICAgICBudmlkaWEsZGVmYXVsdC10YXAgPSA8MHg1PjsN
+Cj4gPiAtICAgICAgICAgICAgICAgbnZpZGlhLGRlZmF1bHQtdHJpbSA9IDwweDk+Ow0KPiA+ICsg
+ICAgICAgICAgICAgICBudmlkaWEsZGVmYXVsdC10YXAgPSA8MHg5PjsNCj4gPiArICAgICAgICAg
+ICAgICAgbnZpZGlhLGRlZmF1bHQtdHJpbSA9IDwweDU+Ow0KPiA+ICAgICAgICAgICAgICAgICBu
+dmlkaWEsZHFzLXRyaW0gPSA8NjM+Ow0KPiA+ICAgICAgICAgICAgICAgICBtbWMtaHM0MDAtMV84
+djsNCj4gPiAgICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiAtLQ0KPiA+
+IDIuNy40DQo+ID4NCg==
