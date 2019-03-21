@@ -1,48 +1,40 @@
-Return-Path: <SRS0=4gC5=RE=linux.intel.com=jarkko.nikula@kernel.org>
-Subject: Re: [PATCH v5 1/2] dt: snps,designware-i2c: Add clock bindings
- documentation
-References: <1551361930-24434-1-git-send-email-gareth.williams.jx@renesas.com>
- <1551361930-24434-2-git-send-email-gareth.williams.jx@renesas.com>
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <71fabf45-b438-c2a7-ccb3-4b3c95f6d5d8@linux.intel.com>
-Date: Fri, 1 Mar 2019 16:57:18 +0200
-MIME-Version: 1.0
-In-Reply-To: <1551361930-24434-2-git-send-email-gareth.williams.jx@renesas.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Return-Path: <SRS0=KptV=RY=nxp.com=anson.huang@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V9 3/4] arm64: defconfig: add support for i.MX system
+ controller watchdog
+Date: Thu, 21 Mar 2019 02:26:57 +0000
+Message-ID: <1553134884-1720-4-git-send-email-Anson.Huang@nxp.com>
+References: <1553134884-1720-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1553134884-1720-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Gareth Williams <gareth.williams.jx@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+To: "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, Andy Gross <andy.gross@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On 2/28/19 3:52 PM, Gareth Williams wrote:
-> From: Phil Edworthy <phil.edworthy@renesas.com>
-> 
-> The driver requires an undocumented clock property, so detail it.
-> Add documentation for a separate, optional, interface clock.
-> 
-> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
-> Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> v5:
->   - Changed clocks and clock-names sections to use term "interface
->     clock" instead of "peripheral clock".
->   - Updated commit message to reference "interface clock" instead of
->     "peripheral clock".
-> v4:
->   - Updated commit message to reference "peripheral clock" instead of
->     "bus clock".
-> v3:
->   - Changed clocks and clock-names sections to use term "peripheral clock"
->     (pclk) instead of "bus clock" (busclk).
-> v2:
->   - No changes.
-> v1:
->   - Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->   Documentation/devicetree/bindings/i2c/i2c-designware.txt | 9 +++++++++
->   1 file changed, 9 insertions(+)
-> 
-Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Enable CONFIG_IMX_SC_WDT as module to support i.MX system
+controller watchdog.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+no changes.
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index f575401..b4000aa 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -429,6 +429,7 @@ CONFIG_WATCHDOG=3Dy
+ CONFIG_ARM_SP805_WATCHDOG=3Dy
+ CONFIG_S3C2410_WATCHDOG=3Dy
+ CONFIG_IMX2_WDT=3Dy
++CONFIG_IMX_SC_WDT=3Dm
+ CONFIG_MESON_GXBB_WATCHDOG=3Dm
+ CONFIG_MESON_WATCHDOG=3Dm
+ CONFIG_RENESAS_WDT=3Dy
+--=20
+2.7.4
