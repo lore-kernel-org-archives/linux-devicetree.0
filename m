@@ -1,108 +1,64 @@
-From: Mukesh Ojha <mojha@codeaurora.org>
-Subject: Re: [PATCH] of: Drop redundant check in linker section OF match table
-Date: Thu, 21 Mar 2019 13:09:29 +0530
-Message-ID: <44f8ba04-8a50-fa81-8784-aaffc4f7c3cc@codeaurora.org>
-References: <1553078940-9907-1-git-send-email-mojha@codeaurora.org>
- <67db2d00-26d0-f9e3-f4dd-0f48633142a9@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RESEND PATCHv4 0/6] Add SOCFPGA System Manager
+Date: Thu, 21 Mar 2019 09:03:48 +0100
+Message-ID: <CAK8P3a2yH+6idKS-n=t+JkQRyUK0nU_2qiJaQktQP9p_3y_86w@mail.gmail.com>
+References: <1552342688-6663-1-git-send-email-thor.thayer@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <67db2d00-26d0-f9e3-f4dd-0f48633142a9@gmail.com>
-Content-Language: en-US
+In-Reply-To: <1552342688-6663-1-git-send-email-thor.thayer@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org
+To: thor.thayer@linux.intel.com
+Cc: Lee Jones <lee.jones@linaro.org>, Dinh Nguyen <dinguyen@kernel.org>, Russell King - ARM Linux <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Olof Johansson <olof@lixom.net>, David Miller <davem@davemloft.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Networking <netdev@vger.kernel.org>, soc@kernel
 List-Id: devicetree@vger.kernel.org
 
-
-On 3/21/2019 1:25 AM, Frank Rowand wrote:
-> On 3/20/19 3:49 AM, Mukesh Ojha wrote:
->> Existing check of `fn` against NULL inside OF match table
->> is redundant. Remove the check.
->>
->> Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
->> Cc: Rob Herring <robh@kernel.org>
->> Cc: Frank Rowand <frowand.list@gmail.com>
->> Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
->> Cc: devicetree@vger.kernel.org
->> ---
->>   include/linux/of.h | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/include/linux/of.h b/include/linux/of.h
->> index e240992..b86c00a 100644
->> --- a/include/linux/of.h
->> +++ b/include/linux/of.h
->> @@ -1283,13 +1283,13 @@ static inline int of_get_available_child_count(const struct device_node *np)
->>   	static const struct of_device_id __of_table_##name		\
->>   		__used __section(__##table##_of_table)			\
->>   		 = { .compatible = compat,				\
->> -		     .data = (fn == (fn_type)NULL) ? fn : fn  }
->> +		     .data = fn }
->>   #else
->>   #define _OF_DECLARE(table, name, compat, fn, fn_type)			\
->>   	static const struct of_device_id __of_table_##name		\
->>   		__attribute__((unused))					\
->>   		 = { .compatible = compat,				\
->> -		     .data = (fn == (fn_type)NULL) ? fn : fn }
->> +		     .data = fn }
->>   #endif
->>   
->>   typedef int (*of_init_fn_2)(struct device_node *, struct device_node *);
->>
-> The check is not redundant and does serve a purpose.
+On Mon, Mar 11, 2019 at 11:15 PM <thor.thayer@linux.intel.com> wrote:
 >
-> The purpose is not very obvious on the surface, but it is checking that
-> the function fn() is of the proper type.
+> From: Thor Thayer <thor.thayer@linux.intel.com>
+>
+> Add MFD driver for SOCFPGA System Manager to handle
+> System Manager calls differently for ARM32 vs ARM64.
+> The SOCFPGA System Manager includes registers from several
+> SOC peripherals.
+>
+> On ARM32, syscon handles this aggregated register grouping.
+> Implement System Manager calls as regmap_mmio similar to syscon
+> for ARM32 SOCFPGA systems.
+>
+> The ARM64 System Manager can only be accessed from priority
+> level EL3 so this new MFD driver handles the calls to EL3.
 
-Frank,
+(adding arm@kernel.org)
+As discussed with Lee, let's keep the series together and merge it
+through the mfd tree.
 
-Thanks for taking out time to explain the stuff, Yeah some miscellaneous 
-driver can do this type of mistake.
+For all six patches:
 
--Mukesh
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
 
-> An example of a compiler warning with a bad function type is created
-> by applying the following patch:
+> Thor Thayer (6):
+>   mfd: altera-sysmgr: Add SOCFPGA System Manager
+>   Documentation: dt: socfpga: Add S10 System Manager binding
+>   ARM: socfpga_defconfig: Enable CONFIG_MTD_ALTERA_SYSMGR
+>   arm64: defconfig: Enable CONFIG_MTD_ALTERA_SYSMGR
+>   net: stmmac: socfpga: Use shared System Manager driver
+>   arm64: dts: stratix10: New System Manager compatible
 >
->     drivers/of/unittest.c:62:1: warning: comparison of distinct pointer types lacks a cast [enabled by default]
+>  .../bindings/arm/altera/socfpga-system.txt         |  12 ++
+>  MAINTAINERS                                        |   6 +
+>  arch/arm/configs/socfpga_defconfig                 |   1 +
+>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |   2 +-
+>  arch/arm64/configs/defconfig                       |   1 +
+>  drivers/mfd/Kconfig                                |  10 +
+>  drivers/mfd/Makefile                               |   1 +
+>  drivers/mfd/altera-sysmgr.c                        | 211 +++++++++++++++++++++
+>  .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    |   5 +-
+>  include/linux/mfd/altera-sysmgr.h                  |  29 +++
+>  10 files changed, 275 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/mfd/altera-sysmgr.c
+>  create mode 100644 include/linux/mfd/altera-sysmgr.h
 >
-> Note that you need to have CONFIG_UNITTEST enabled to compile unittest.c.
+> --
+> 2.7.4
 >
-> Line 62 is
->     OF_DECLARE_1(__unittest_of_table, unittest_setup_2_bad, "unittest_compat",
->
-> ---
->   drivers/of/unittest.c |   17 +++++++++++++++++
->   1 file changed, 17 insertions(+)
->
-> Index: b/drivers/of/unittest.c
-> ===================================================================
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -45,6 +45,23 @@ static struct unittest_results {
->   	failed; \
->   })
->   
-> +struct of_device_id __unittest_of_table;
-> +
-> +static void __init unittest_setup_1_good(struct device_node *np)
-> +{
-> +}
-> +
-> +static void __init unittest_setup_2_bad(struct device_node *np_1,
-> +	struct device_node *np_2)
-> +{
-> +}
-> +
-> +OF_DECLARE_1(__unittest_of_table, unittest_setup_1_good, "unittest_compat",
-> +	unittest_setup_1_good);
-> +
-> +OF_DECLARE_1(__unittest_of_table, unittest_setup_2_bad, "unittest_compat",
-> +	unittest_setup_2_bad);
-> +
->   static void __init of_unittest_find_node_by_name(void)
->   {
->   	struct device_node *np;
