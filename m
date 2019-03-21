@@ -1,310 +1,156 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 3/3] arm64: dts: imx: Add i.mx8mm evk basic dts support
-Date: Thu, 21 Mar 2019 16:44:54 +0800
-Message-ID: <20190321084453.GE12513@dragon>
-References: <1552369779-7614-1-git-send-email-ping.bai@nxp.com>
- <1552369779-7614-3-git-send-email-ping.bai@nxp.com>
+From: Chen-Yu Tsai <wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 4/9] power: supply: axp20x_usb_power: use
+ polling to detect vbus status change
+Date: Thu, 21 Mar 2019 16:48:45 +0800
+Message-ID: <20190321084850.20769-5-wens@kernel.org>
+References: <20190321084850.20769-1-wens@kernel.org>
+Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1552369779-7614-3-git-send-email-ping.bai@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jacky Bai <ping.bai@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB7U7ZXSAKGQEKRFDEEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190321084850.20769-1-wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 05:45:05AM +0000, Jacky Bai wrote:
-> Add basic dts support for i.MM8MM LPDDR4 EVK.
-> 
-> Signed-off-by: Jacky Bai <ping.bai@nxp.com>
-> ---
->  change v1->v2:
->  - remove duplicated imx8mq-evk line caused by rebase conflict
-> ---
->  arch/arm64/boot/dts/freescale/Makefile       |   1 +
->  arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 238 +++++++++++++++++++++++++++
->  2 files changed, 239 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 13604e5..9845543 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -20,5 +20,6 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
->  
-> +dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> new file mode 100644
-> index 0000000..48a1a40
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> @@ -0,0 +1,238 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright 2019 NXP
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "imx8mm.dtsi"
-> +
-> +/ {
-> +	model = "FSL i.MX8MM EVK board";
-> +	compatible = "fsl,imx8mm-evk", "fsl,imx8mm";
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-The board compatible should be added to
-Documentation/devicetree/bindings/arm/fsl.yaml as well.
-> +
-> +	chosen {
-> +		bootargs = "console=ttymxc1,115200 earlycon=ec_imx6q,0x30890000,115200";
+On AXP221 and later AXP PMICs that have the N_VBUSEN pin, when this pin
+is high, either due to the PMIC driving it high or as an input, the VBUS
+detection related interrupt mechanisms are disabled.
 
-Is it really necessary to have a bootargs in DT?
+Previously this was worked around in the phy-sun4i-usb driver, which
+needed to sense VBUS changes and report them to the musb driver in a
+timely matter. However this workaround was only for the A31 and A33 type
+USB PHYs. To support newer platforms we would have to enable it for
+almost all the post-A31 SoCs.
 
-> +		stdout-path = &uart2;
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_gpio_led>;
-> +
-> +		status {
-> +			label = "status";
-> +			gpios = <&gpio3 16 0>;
+However, since this is actually the result of the PMIC's behavior, the
+workaround would be better if done in the PMIC driver, in this case the
+VBUS power supply driver.
 
-Use GPIO_ACTIVE_HIGH.
+Add the same workqueue-based polling to the VBUS power supply driver.
+The polling interval is chosen to be the debounce interval from the USB
+PHY driver, as this short interval is needed in some cases, but the
+power supply driver would not know when.
 
-> +			default-state = "on";
-> +		};
-> +	};
-> +
-> +	reg_usdhc2_vmmc: regulator-usdhc2 {
-> +		compatible = "regulator-fixed";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_reg_usdhc2_vmmc>;
-> +		regulator-name = "VSD_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
-> +		off-on-delay = <20000>;
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ drivers/power/supply/axp20x_usb_power.c | 53 +++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-Unsupported property?
-
-Shawn
-
-> +		enable-active-high;
-> +	};
-> +};
-> +
-> +&fec1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_fec1>;
-> +	phy-mode = "rgmii-id";
-> +	phy-handle = <&ethphy0>;
-> +	fsl,magic-packet;
-> +	status = "okay";
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethphy0: ethernet-phy@0 {
-> +			compatible = "ethernet-phy-ieee802.3-c22";
-> +			reg = <0>;
-> +			at803x,led-act-blind-workaround;
-> +			at803x,eee-okay;
-> +			at803x,vddio-1p8v;
-> +		};
-> +	};
-> +};
-> +
-> +&uart2 { /* console */
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart2>;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc2 {
-> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> +	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-> +	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
-> +	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-> +	cd-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
-> +	bus-width = <4>;
-> +	vmmc-supply = <&reg_usdhc2_vmmc>;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc3 {
-> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> +	pinctrl-0 = <&pinctrl_usdhc3>;
-> +	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
-> +	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
-> +	bus-width = <8>;
-> +	non-removable;
-> +	status = "okay";
-> +};
-> +
-> +&wdog1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_wdog>;
-> +	fsl,ext-reset-output;
-> +	status = "okay";
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl-names = "default";
-> +
-> +	pinctrl_fec1: fec1grp {
-> +		fsl,pins = <
-> +			MX8MM_IOMUXC_ENET_MDC_ENET1_MDC			0x3
-> +			MX8MM_IOMUXC_ENET_MDIO_ENET1_MDIO		0x3
-> +			MX8MM_IOMUXC_ENET_TD3_ENET1_RGMII_TD3		0x1f
-> +			MX8MM_IOMUXC_ENET_TD2_ENET1_RGMII_TD2		0x1f
-> +			MX8MM_IOMUXC_ENET_TD1_ENET1_RGMII_TD1		0x1f
-> +			MX8MM_IOMUXC_ENET_TD0_ENET1_RGMII_TD0		0x1f
-> +			MX8MM_IOMUXC_ENET_RD3_ENET1_RGMII_RD3		0x91
-> +			MX8MM_IOMUXC_ENET_RD2_ENET1_RGMII_RD2		0x91
-> +			MX8MM_IOMUXC_ENET_RD1_ENET1_RGMII_RD1		0x91
-> +			MX8MM_IOMUXC_ENET_RD0_ENET1_RGMII_RD0		0x91
-> +			MX8MM_IOMUXC_ENET_TXC_ENET1_RGMII_TXC		0x1f
-> +			MX8MM_IOMUXC_ENET_RXC_ENET1_RGMII_RXC		0x91
-> +			MX8MM_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
-> +			MX8MM_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
-> +			MX8MM_IOMUXC_SAI2_RXC_GPIO4_IO22		0x19
-> +		>;
-> +	};
-> +
-> +	pinctrl_gpio_led: gpioledgrp {
-> +		fsl,pins = <
-> +			MX8MM_IOMUXC_NAND_READY_B_GPIO3_IO16	0x19
-> +		>;
-> +	};
-> +
-> +	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
-> +		fsl,pins = <
-> +			MX8MM_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart2: uart2grp {
-> +		fsl,pins = <
-> +			MX8MM_IOMUXC_UART2_RXD_UART2_DCE_RX	0x140
-> +			MX8MM_IOMUXC_UART2_TXD_UART2_DCE_TX	0x140
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_gpio: usdhc2grpgpio {
-> +		fsl,pins = <
-> +			MX8MM_IOMUXC_GPIO1_IO15_GPIO1_IO15	0x1c4
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2: usdhc2grp {
-> +		fsl,pins = <
-> +			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK		0x190
-> +			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD		0x1d0
-> +			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0	0x1d0
-> +			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1	0x1d0
-> +			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2	0x1d0
-> +			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3	0x1d0
-> +			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0x1d0
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-> +		fsl,pins = <
-> +			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK		0x194
-> +			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD		0x1d4
-> +			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0	0x1d4
-> +			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1	0x1d4
-> +			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2	0x1d4
-> +			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3	0x1d4
-> +			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0x1d0
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-> +		fsl,pins = <
-> +			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK		0x196
-> +			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD		0x1d6
-> +			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0	0x1d6
-> +			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1	0x1d6
-> +			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2	0x1d6
-> +			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3	0x1d6
-> +			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0x1d0
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc3: usdhc3grp {
-> +		fsl,pins = <
-> +			MX8MM_IOMUXC_NAND_WE_B_USDHC3_CLK		0x190
-> +			MX8MM_IOMUXC_NAND_WP_B_USDHC3_CMD		0x1d0
-> +			MX8MM_IOMUXC_NAND_DATA04_USDHC3_DATA0		0x1d0
-> +			MX8MM_IOMUXC_NAND_DATA05_USDHC3_DATA1		0x1d0
-> +			MX8MM_IOMUXC_NAND_DATA06_USDHC3_DATA2		0x1d0
-> +			MX8MM_IOMUXC_NAND_DATA07_USDHC3_DATA3		0x1d0
-> +			MX8MM_IOMUXC_NAND_RE_B_USDHC3_DATA4		0x1d0
-> +			MX8MM_IOMUXC_NAND_CE2_B_USDHC3_DATA5		0x1d0
-> +			MX8MM_IOMUXC_NAND_CE3_B_USDHC3_DATA6		0x1d0
-> +			MX8MM_IOMUXC_NAND_CLE_USDHC3_DATA7		0x1d0
-> +			MX8MM_IOMUXC_NAND_CE1_B_USDHC3_STROBE 		0x190
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc3_100mhz: usdhc3grp100mhz {
-> +		fsl,pins = <
-> +			MX8MM_IOMUXC_NAND_WE_B_USDHC3_CLK		0x194
-> +			MX8MM_IOMUXC_NAND_WP_B_USDHC3_CMD		0x1d4
-> +			MX8MM_IOMUXC_NAND_DATA04_USDHC3_DATA0		0x1d4
-> +			MX8MM_IOMUXC_NAND_DATA05_USDHC3_DATA1		0x1d4
-> +			MX8MM_IOMUXC_NAND_DATA06_USDHC3_DATA2		0x1d4
-> +			MX8MM_IOMUXC_NAND_DATA07_USDHC3_DATA3		0x1d4
-> +			MX8MM_IOMUXC_NAND_RE_B_USDHC3_DATA4		0x1d4
-> +			MX8MM_IOMUXC_NAND_CE2_B_USDHC3_DATA5		0x1d4
-> +			MX8MM_IOMUXC_NAND_CE3_B_USDHC3_DATA6		0x1d4
-> +			MX8MM_IOMUXC_NAND_CLE_USDHC3_DATA7		0x1d4
-> +			MX8MM_IOMUXC_NAND_CE1_B_USDHC3_STROBE 		0x194
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc3_200mhz: usdhc3grp200mhz {
-> +		fsl,pins = <
-> +			MX8MM_IOMUXC_NAND_WE_B_USDHC3_CLK		0x196
-> +			MX8MM_IOMUXC_NAND_WP_B_USDHC3_CMD		0x1d6
-> +			MX8MM_IOMUXC_NAND_DATA04_USDHC3_DATA0		0x1d6
-> +			MX8MM_IOMUXC_NAND_DATA05_USDHC3_DATA1		0x1d6
-> +			MX8MM_IOMUXC_NAND_DATA06_USDHC3_DATA2		0x1d6
-> +			MX8MM_IOMUXC_NAND_DATA07_USDHC3_DATA3		0x1d6
-> +			MX8MM_IOMUXC_NAND_RE_B_USDHC3_DATA4		0x1d6
-> +			MX8MM_IOMUXC_NAND_CE2_B_USDHC3_DATA5		0x1d6
-> +			MX8MM_IOMUXC_NAND_CE3_B_USDHC3_DATA6		0x1d6
-> +			MX8MM_IOMUXC_NAND_CLE_USDHC3_DATA7		0x1d6
-> +			MX8MM_IOMUXC_NAND_CE1_B_USDHC3_STROBE 		0x196
-> +		>;
-> +	};
-> +
-> +	pinctrl_wdog: wdoggrp {
-> +		fsl,pins = <
-> +			MX8MM_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B	0xc6
-> +		>;
-> +	};
-> +};
-> +
-> -- 
-> 1.9.1
-> 
+diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
+index e2f353906bb1..ac061bcdc056 100644
+--- a/drivers/power/supply/axp20x_usb_power.c
++++ b/drivers/power/supply/axp20x_usb_power.c
+@@ -24,6 +24,7 @@
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+ #include <linux/iio/consumer.h>
++#include <linux/workqueue.h>
+ 
+ #define DRVNAME "axp20x-usb-power-supply"
+ 
+@@ -46,6 +47,12 @@
+ 
+ #define AXP20X_VBUS_MON_VBUS_VALID	BIT(3)
+ 
++/*
++ * Note do not raise the debounce time, we must report Vusb high within
++ * 100ms otherwise we get Vbus errors in musb.
++ */
++#define DEBOUNCE_TIME			msecs_to_jiffies(50)
++
+ struct axp20x_usb_power {
+ 	struct device_node *np;
+ 	struct regmap *regmap;
+@@ -53,6 +60,8 @@ struct axp20x_usb_power {
+ 	enum axp20x_variants axp20x_id;
+ 	struct iio_channel *vbus_v;
+ 	struct iio_channel *vbus_i;
++	struct delayed_work vbus_detect;
++	unsigned int old_status;
+ };
+ 
+ static irqreturn_t axp20x_usb_power_irq(int irq, void *devid)
+@@ -64,6 +73,35 @@ static irqreturn_t axp20x_usb_power_irq(int irq, void *devid)
+ 	return IRQ_HANDLED;
+ }
+ 
++static void axp20x_usb_power_poll_vbus(struct work_struct *work)
++{
++	struct axp20x_usb_power *power =
++		container_of(work, struct axp20x_usb_power, vbus_detect.work);
++	unsigned int val;
++	int ret;
++
++	ret = regmap_read(power->regmap, AXP20X_PWR_INPUT_STATUS, &val);
++	if (ret)
++		goto out;
++
++	val &= (AXP20X_PWR_STATUS_VBUS_PRESENT | AXP20X_PWR_STATUS_VBUS_USED);
++	if (val != power->old_status)
++		power_supply_changed(power->supply);
++
++	power->old_status = val;
++
++out:
++	mod_delayed_work(system_wq, &power->vbus_detect, DEBOUNCE_TIME);
++}
++
++static bool axp20x_usb_vbus_needs_polling(struct axp20x_usb_power *power)
++{
++	if (power->axp20x_id >= AXP221_ID)
++		return true;
++
++	return false;
++}
++
+ static int axp20x_usb_power_get_property(struct power_supply *psy,
+ 	enum power_supply_property psp, union power_supply_propval *val)
+ {
+@@ -362,6 +400,7 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
+ 	if (!power)
+ 		return -ENOMEM;
+ 
++	platform_set_drvdata(pdev, power);
+ 	power->axp20x_id = (enum axp20x_variants)of_device_get_match_data(
+ 								&pdev->dev);
+ 
+@@ -420,6 +459,19 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
+ 				 irq_names[i], ret);
+ 	}
+ 
++	INIT_DELAYED_WORK(&power->vbus_detect, axp20x_usb_power_poll_vbus);
++	if (axp20x_usb_vbus_needs_polling(power))
++		queue_delayed_work(system_wq, &power->vbus_detect, 0);
++
++	return 0;
++}
++
++static int axp20x_usb_power_remove(struct platform_device *pdev)
++{
++	struct axp20x_usb_power *power = platform_get_drvdata(pdev);
++
++	cancel_delayed_work_sync(&power->vbus_detect);
++
+ 	return 0;
+ }
+ 
+@@ -439,6 +491,7 @@ MODULE_DEVICE_TABLE(of, axp20x_usb_power_match);
+ 
+ static struct platform_driver axp20x_usb_power_driver = {
+ 	.probe = axp20x_usb_power_probe,
++	.remove = axp20x_usb_power_remove,
+ 	.driver = {
+ 		.name = DRVNAME,
+ 		.of_match_table = axp20x_usb_power_match,
+-- 
+2.20.1
