@@ -1,37 +1,67 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 2/4] dt-bindings: Add vendor prefix for microtech
-Date: Thu, 21 Mar 2019 19:29:53 +0530
-Message-ID: <20190321135955.25661-3-jagan@amarulasolutions.com>
+Subject: [PATCH v2 3/4] dt-bindings: display: Add Novatek NT35596 panel
+ documentation
+Date: Thu, 21 Mar 2019 19:29:54 +0530
+Message-ID: <20190321135955.25661-4-jagan@amarulasolutions.com>
 References: <20190321135955.25661-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <20190321135955.25661-1-jagan@amarulasolutions.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Trimarchi <michael@amarulasolutions.com>, Ryan Pannell <ryan@osukl.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
+Cc: devicetree@vger.kernel.org, Ryan Pannell <ryan@osukl.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-Add vendor prefix for microtech, known as
-Microtech Technology Company Limited. a known producer for
-Liquid Crytal Display modules and Touch Panels.
-
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index caa7dbae750b..9e0b83e61414 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -249,6 +249,7 @@ micrel	Micrel Inc.
- microchip	Microchip Technology Inc.
- microcrystal	Micro Crystal AG
- micron	Micron Technology Inc.
-+microtech	Microtech Technology Company Limited
- mikroe		MikroElektronika d.o.o.
- minix	MINIX Technology Ltd.
- miramems	MiraMEMS Sensing Technology Co., Ltd.
--- 
-2.18.0.321.gffc6fa0e3
+Tm92YXRlayBOVDM1NTk2IGlzIGEgc2luZ2xlLWNoaXAgSUMgc29sdXRpb24gZm9yIHNtYWxsIG9y
+IG1lZGl1bS1zaXplZApMVFBTIFRGVCBMQ0QgcGFuZWxzLiBOVDM1NTk2IHByb3ZpZGVzICBzZXZl
+cmFsIHN5c3RlbSBpbnRlcmZhY2VzIGxpa2UKTUlQSS9TUEkvSTJDLgoKTWljcm90ZWNoIE1URjA1
+MEZIREktMDMgaXMgMTA4MHgxOTIwLCA0LWxhbmUgTUlQSSBEU0kgTENEIHBhbmVsIHdoaWNoCmhh
+cyBpbmJ1aWx0IE5UMzU1OTYgSUMgY2hpcC4KCk5UMzU1OTYgc3VwcG9ydCBzZXZlcmFsIHJlZ3Vs
+YXRvcnMgb24gdGhlIGNoaXAsIGFtb25nIHRob3NlIG9ubHkgNCByZWd1bGF0b3JzCmxpa2UgVkNJ
+LCBWRERJL0RWREQsIEFWREQsIEFWRUUgYXJlIHVzZWQgZHVyaW5nIHBvd2VyLW9uIHNlcXVlbmNl
+LgoKT3V0IG9mIGZvdXIgcmVndWxhdG9ycyBNVEYwNTBGSERJLTAzIHBhbmVsIGRvIHN1cHBvcnQg
+My1yZWd1bGF0b3IgYmFzZWQKcG93ZXItb24gc2VxdWVuY2UsIHNvIHRoaXMgcGF0Y2ggZG9jdW1l
+bnRlZCB0aGVzZSAzIG5lZWRmdWwgcmVndWxhdG9ycwphbmQgcmVzdCBjYW4gYmUgYWRkIHdoaWxl
+IHN1cHBvcnRpbmcgbmV3IHBhbmVscyBvbiB0aGUgc2ltaWxhciBjaGlwIElDLgoKU2lnbmVkLW9m
+Zi1ieTogSmFnYW4gVGVraSA8amFnYW5AYW1hcnVsYXNvbHV0aW9ucy5jb20+Ci0tLQogLi4uL2Rp
+c3BsYXkvcGFuZWwvbm92YXRlayxudDM1NTk2LnR4dCAgICAgICAgIHwgMzIgKysrKysrKysrKysr
+KysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9ub3Zh
+dGVrLG50MzU1OTYudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvcGFuZWwvbm92YXRlayxudDM1NTk2LnR4dCBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL25vdmF0ZWssbnQzNTU5Ni50eHQKbmV3
+IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5kMzM2Y2Q0MWUxNzcKLS0tIC9k
+ZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
+YW5lbC9ub3ZhdGVrLG50MzU1OTYudHh0CkBAIC0wLDAgKzEsMzIgQEAKK05vdmF0ZWsgTlQzNTU5
+NiBiYXNlZCBMQ0QgcGFuZWxzCisKK05vdmF0ZWsgTlQzNTU5NiBpcyBhIHNpbmdsZS1jaGlwIElD
+IHNvbHV0aW9uIGZvciBzbWFsbCBvciBtZWRpdW0tc2l6ZWQKK0xUUFMgVEZUIExDRCBwYW5lbHMu
+IE5UMzU1OTYgcHJvdmlkZXMgIHNldmVyYWwgc3lzdGVtIGludGVyZmFjZXMgbGlrZQorTUlQSS9T
+UEkvSTJDLgorCitNaWNyb3RlY2ggTVRGMDUwRkhESS0wMyBpcyAxMDgweDE5MjAsIDQtbGFuZSBN
+SVBJIERTSSBMQ0QgcGFuZWwgd2hpY2gKK2hhcyBpbmJ1aWx0IE5UMzU1OTYgSUMgY2hpcC4KKwor
+UmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZTogbXVzdCBiZSAibm92YXRlayxudDM1
+NTk2IiBhbmQgb25lIG9mCisgICogIm1pY3JvdGVjaCxtdGYwNTBmaGRpLTAzIgorLSByZXNldC1n
+cGlvczogYSBHUElPIHBoYW5kbGUgZm9yIHRoZSByZXNldCBwaW4KKworUmVxdWlyZWQgcHJvcGVy
+dGllcyBmb3IgbWljcm90ZWNoLG10ZjA1MGZoZGktMDM6CistIHJlZzogRFNJIHZpcnR1YWwgY2hh
+bm5lbCB1c2VkIGJ5IHRoYXQgc2NyZWVuCistIGR2ZGQtc3VwcGx5OiBJL08gc3lzdGVtIHJlZ3Vs
+YXRvcgorLSBhdmRkLXN1cHBseTogYW5hbG9nIHJlZ3VsYXRvciBmb3IgTUlQSSBjaXJjdWl0Cist
+IGF2ZWUtc3VwcGx5OiBhbmFsb2cgcmVndWxhdG9yIGZvciBNSVBJIGNpcmN1aXQKKworT3B0aW9u
+YWwgcHJvcGVydGllczoKKy0gYmFja2xpZ2h0OiBwaGFuZGxlIGZvciB0aGUgYmFja2xpZ2h0IGNv
+bnRyb2wuCisKK3BhbmVsQDAgeworCWNvbXBhdGlibGUgPSAibWljcm90ZWNoLG10ZjA1MGZoZGkt
+MDMiLCAibm92YXRlayxudDM1NTk2IjsKKwlyZWcgPSA8MD47CisJZHZkZC1zdXBwbHkgPSA8JnJl
+Z19kbGRvMj47CS8qIFZDQy1NSVBJICovCisJYXZkZC1zdXBwbHkgPSA8JnJlZ19kYzFzdz47CS8q
+IEFWRERfNVYwICovCisJYXZlZS1zdXBwbHkgPSA8JnJlZ19kYzFzdz47CS8qIEFWRUVfNVYgKi8K
+KwlyZXNldC1ncGlvcyA9IDwmcGlvIDMgMjQgR1BJT19BQ1RJVkVfSElHSD47IC8qIExDRC1SU1Q6
+IFBEMjQgKi8KKwliYWNrbGlnaHQgPSA8JmJhY2tsaWdodD47Cit9OwotLSAKMi4xOC4wLjMyMS5n
+ZmZjNmZhMGUzCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
