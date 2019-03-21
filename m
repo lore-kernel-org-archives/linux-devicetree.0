@@ -1,53 +1,28 @@
-From: Marek Vasut <marex@denx.de>
-Subject: [PATCH V4 1/3] of: Add vendor prefix for Menlo Systems GmbH
-Date: Thu, 21 Mar 2019 03:56:53 +0100
-Message-ID: <20190321025655.15031-1-marex@denx.de>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] ARM: dts: imx6ull: Use the correct style for SPDX
+ License Identifier
+Date: Thu, 21 Mar 2019 11:01:54 +0800
+Message-ID: <20190321030152.GB12513@dragon>
+References: <20190311142700.GA5867@nishad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Fabio Estevam <festevam@gmail.com>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190311142700.GA5867@nishad>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishad Kamdar <nishadkamdar@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add vendor prefix for Menlo Systems GmbH, http://www.menlosystems.com/ .
+On Mon, Mar 11, 2019 at 07:57:04PM +0530, Nishad Kamdar wrote:
+> This patch corrects the SPDX License Identifier style
+> in imx6ull-pinfunc-snvs.h.
+> 
+> Changes made by using a script provided by Joe Perches here:
+> https://lkml.org/lkml/2019/2/7/46
+> and making some manual changes.
+> 
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-To: linux-arm-kernel@lists.infradead.org
----
-V2: - Rebase on latest next/master
-V3: - No change
-V4: - No change
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 10b52511ac63..fae55f50b2d3 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -244,6 +244,7 @@ melexis	Melexis N.V.
- melfas	MELFAS Inc.
- mellanox	Mellanox Technologies
- memsic	MEMSIC Inc.
-+menlo	Menlo Systems GmbH
- merrii	Merrii Technology Co., Ltd.
- micrel	Micrel Inc.
- microchip	Microchip Technology Inc.
--- 
-2.20.1
+Applied, thanks.
