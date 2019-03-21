@@ -1,40 +1,43 @@
-Return-Path: <SRS0=p57L=RX=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from michel.telenet-ops.be ([195.130.137.88]:53034 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbfCTKd7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Mar 2019 06:33:59 -0400
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: at24: add Renesas R1EX24016
-Date: Wed, 20 Mar 2019 11:33:51 +0100
-Message-Id: <20190320103351.20609-1-geert+renesas@glider.be>
-Sender: devicetree-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Chris Brandt <chris.brandt@renesas.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <SRS0=KptV=RY=nxp.com=anson.huang@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V9 4/4] arm64: dts: imx8qxp: add system controller watchdog
+ support
+Date: Thu, 21 Mar 2019 02:27:06 +0000
+Message-ID: <1553134884-1720-5-git-send-email-Anson.Huang@nxp.com>
+References: <1553134884-1720-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1553134884-1720-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+To: "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, Andy Gross <andy.gross@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document the compatible value for the Renesas R1EX24128ASAS0A two-wire
-serial interface EEPROM, so it can be used in DTS files without causing
-checkpatch warnings.
+Add i.MX8QXP system controller watchdog support.
 
-This is a 2 KiB EEPROM.  The first 1 KiB can always be written, the
-second 1 KiB cannot be written if the write-protect line is asserted.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- Documentation/devicetree/bindings/eeprom/at24.txt | 1 +
- 1 file changed, 1 insertion(+)
+Changes since V8:
+	- add timeout property.
+---
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/eeprom/at24.txt b/Documentation/devicetree/bindings/eeprom/at24.txt
-index 0e456bbc121399b7..22aead844d0f58d6 100644
---- a/Documentation/devicetree/bindings/eeprom/at24.txt
-+++ b/Documentation/devicetree/bindings/eeprom/at24.txt
-@@ -50,6 +50,7 @@ Required properties:
- 
-                 "nxp,se97b" - the fallback is "atmel,24c02",
-                 "renesas,r1ex24002" - the fallback is "atmel,24c02"
-+                "renesas,r1ex24016" - the fallback is "atmel,24c16"
-                 "renesas,r1ex24128" - the fallback is "atmel,24c128"
-                 "rohm,br24t01" - the fallback is "atmel,24c01"
- 
--- 
-2.17.1
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
+ts/freescale/imx8qxp.dtsi
+index 019abce..ca4541e 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -473,4 +473,9 @@
+ 			power-domains =3D <&pd IMX_SC_R_GPIO_7>;
+ 		};
+ 	};
++
++	watchdog {
++		compatible =3D "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
++		timeout-sec =3D <60>;
++	};
+ };
+--=20
+2.7.4
