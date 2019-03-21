@@ -1,36 +1,49 @@
-From: Liang Yang <liang.yang@amlogic.com>
-Subject: [PATCH 1/1] mtd: rawnand: meson: set oob layout ops
-Date: Thu, 21 Mar 2019 20:14:01 +0800
-Message-ID: <1553170441-23448-1-git-send-email-liang.yang@amlogic.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/3] ASoC: da7219: Update DAI clock binding info to cover
+ WCLK/BCLK
+Date: Thu, 21 Mar 2019 12:21:52 +0000
+Message-ID: <20190321122152.GA5684@sirena.org.uk>
+References: <cover.1553017237.git.Adam.Thomson.Opensource@diasemi.com>
+ <a2e2ae888b3c2fbcaab3e4791ce98f877e3d38ff.1553017237.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <a2e2ae888b3c2fbcaab3e4791ce98f877e3d38ff.1553017237.git.Adam.Thomson.Opensource@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org
-Cc: Liang Yang <liang.yang@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Akshu Agrawal <Akshu.Agrawal@amd.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Specify the oob layout operation to avoid no oob scheme defined for
-some nand flash.
 
-Fixes: 8fae856c5350 ("mtd: rawnand: meson: add support for Amlogic NAND flash controller")
-Signed-off-by: Liang Yang <liang.yang@amlogic.com>
----
- drivers/mtd/nand/raw/meson_nand.c | 2 ++
- 1 file changed, 2 insertions(+)
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/mtd/nand/raw/meson_nand.c b/drivers/mtd/nand/raw/meson_nand.c
-index 3e8aa71..a2154a2 100644
---- a/drivers/mtd/nand/raw/meson_nand.c
-+++ b/drivers/mtd/nand/raw/meson_nand.c
-@@ -1183,6 +1183,8 @@ static int meson_nand_attach_chip(struct nand_chip *nand)
- 		return -EINVAL;
- 	}
- 
-+	mtd_set_ooblayout(mtd, &meson_ooblayout_ops);
-+
- 	ret = meson_nand_bch_mode(nand);
- 	if (ret)
- 		return -EINVAL;
--- 
-1.9.1
+On Tue, Mar 19, 2019 at 05:49:30PM +0000, Adam Thomson wrote:
+
+> -- #clock-cells :  Should be set to '<0>', only one clock source provided;
+> -- clock-output-names : Name given for DAI clocks output;
+> +- #clock-cells :  Should be set to '<1>', two clock sources provided;
+> +- clock-output-names : Names given for DAI clock outputs (WCLK & BCLK);
+
+This might need some handling later on as it's a binding change, however
+I can't see any current users so hopefully nobody will notice.
+
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyTgeAACgkQJNaLcl1U
+h9B0qAf+PFsG2TAKEIRT9VDw6jBv1x9NUTOiIOByLkIgFdaUQ9F+Ve0TdGxHQncO
+5h7ubsO0hb7whjsTNTK7LjCQS5Ibz9b8Upilqtr3Mg9uHi/gJCpKwve7T0mzMeVZ
+wHWk26x5BdInzZOKHn8V2lu8kBKAiapJ0/CUp2r7qOTPhsfQM/bNU+JaVf0JjTQv
+D57JjwlCblHOvi5PN35jzz/f7d78C4cj573MDtV5YNVTjSmRZ0hneNpU4AsTQHhA
+K/DNAGbPN7juXURKxQWTFFo7UTlRwBrpiV4e5KgpkKo/8i/i0Ue2IcOESDQodGVG
+UlcKlS76bSdREljWeVz4MBqK9/BylA==
+=UT0f
+-----END PGP SIGNATURE-----
+
+--3V7upXqbjpZ4EhLz--
