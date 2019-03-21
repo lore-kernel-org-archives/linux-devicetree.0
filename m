@@ -1,172 +1,167 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: [RFT/RFC PATCH v3 1/5] Documentation: DT: arm: add support for
- sockets defining package boundaries
-Date: Wed, 20 Mar 2019 16:48:02 -0700
-Message-ID: <20190320234806.19748-2-atish.patra@wdc.com>
-References: <20190320234806.19748-1-atish.patra@wdc.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190320234806.19748-1-atish.patra@wdc.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Will Deacon <will.deacon@arm.com>, Atish Patra <atish.patra@wdc.com>, linux-riscv@lists.infradead.org, Ingo Molnar <mingo@kernel.org>, Rob Herring <robh@kernel.org>, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Anup Patel <anup@brainfault.org>, Morten Rasmussen <morten.rasmussen@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jeremy Linton <jeremy.linton@arm.com>, Otto Sabart <ottosabart@seberm.com>, Sudeep Holla <sudeep.holla@arm.com>
+From: Johan Jonker <jbx6244@gmail.com>
+Subject: [PATCH v5 0/5] Enable rk3066 VOP and HDMI for MK808
+Date: Thu, 21 Mar 2019 01:14:35 +0100
+Message-ID: <20190321001440.31057-1-jbx6244@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+For testing only.
 
-The current ARM DT topology description provides the operating system
-with a topological view of the system that is based on leaf nodes
-representing either cores or threads (in an SMT system) and a
-hierarchical set of cluster nodes that creates a hierarchical topology
-view of how those cores and threads are grouped.
+Version: V5
 
-However this hierarchical representation of clusters does not allow to
-describe what topology level actually represents the physical package or
-the socket boundary, which is a key piece of information to be used by
-an operating system to optimize resource allocation and scheduling.
+Title: Enable rk3066 VOP and HDMI for MK808.
 
-Lets add a new "socket" node type in the cpu-map node to describe the
-same.
+This patch serie only works in combination with a MK808 TV stick and
+a rk3066 processor. Other boxes and tablets with a rk3066
+need extra software for power management and lcd's.
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/arm/topology.txt      | 52 ++++++++++++++-----
- 1 file changed, 39 insertions(+), 13 deletions(-)
+What does it do:
 
-diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
-index b0d80c0f..3b8febb4 100644
---- a/Documentation/devicetree/bindings/arm/topology.txt
-+++ b/Documentation/devicetree/bindings/arm/topology.txt
-@@ -9,6 +9,7 @@ ARM topology binding description
- In an ARM system, the hierarchy of CPUs is defined through three entities that
- are used to describe the layout of physical CPUs in the system:
- 
-+- socket
- - cluster
- - core
- - thread
-@@ -63,21 +64,23 @@ nodes are listed.
- 
- 	The cpu-map node's child nodes can be:
- 
--	- one or more cluster nodes
-+	- one or more cluster nodes or
-+	- one or more socket nodes in a multi-socket system
- 
- 	Any other configuration is considered invalid.
- 
--The cpu-map node can only contain three types of child nodes:
-+The cpu-map node can only contain 4 types of child nodes:
- 
-+- socket node
- - cluster node
- - core node
- - thread node
- 
- whose bindings are described in paragraph 3.
- 
--The nodes describing the CPU topology (cluster/core/thread) can only
--be defined within the cpu-map node and every core/thread in the system
--must be defined within the topology.  Any other configuration is
-+The nodes describing the CPU topology (socket/cluster/core/thread) can
-+only be defined within the cpu-map node and every core/thread in the
-+system must be defined within the topology.  Any other configuration is
- invalid and therefore must be ignored.
- 
- ===========================================
-@@ -85,26 +88,44 @@ invalid and therefore must be ignored.
- ===========================================
- 
- cpu-map child nodes must follow a naming convention where the node name
--must be "clusterN", "coreN", "threadN" depending on the node type (ie
--cluster/core/thread) (where N = {0, 1, ...} is the node number; nodes which
--are siblings within a single common parent node must be given a unique and
-+must be "socketN", "clusterN", "coreN", "threadN" depending on the node type
-+(ie socket/cluster/core/thread) (where N = {0, 1, ...} is the node number; nodes
-+which are siblings within a single common parent node must be given a unique and
- sequential N value, starting from 0).
- cpu-map child nodes which do not share a common parent node can have the same
- name (ie same number N as other cpu-map child nodes at different device tree
- levels) since name uniqueness will be guaranteed by the device tree hierarchy.
- 
- ===========================================
--3 - cluster/core/thread node bindings
-+3 - socket/cluster/core/thread node bindings
- ===========================================
- 
--Bindings for cluster/cpu/thread nodes are defined as follows:
-+Bindings for socket/cluster/cpu/thread nodes are defined as follows:
-+
-+- socket node
-+
-+	 Description: must be declared within a cpu-map node, one node
-+		      per physical socket in the system. A system can
-+		      contain single or multiple physical socket.
-+		      The association of sockets and NUMA nodes is beyond
-+		      the scope of this bindings, please refer [2] for
-+		      NUMA bindings.
-+
-+	This node is optional for a single socket system.
-+
-+	The socket node name must be "socketN" as described in 2.1 above.
-+	A socket node can not be a leaf node.
-+
-+	A socket node's child nodes must be one or more cluster nodes.
-+
-+	Any other configuration is considered invalid.
- 
- - cluster node
- 
- 	 Description: must be declared within a cpu-map node, one node
- 		      per cluster. A system can contain several layers of
--		      clustering and cluster nodes can be contained in parent
--		      cluster nodes.
-+		      clustering within a single physical socket and cluster
-+		      nodes can be contained in parent cluster nodes.
- 
- 	The cluster node name must be "clusterN" as described in 2.1 above.
- 	A cluster node can not be a leaf node.
-@@ -164,13 +185,15 @@ Bindings for cluster/cpu/thread nodes are defined as follows:
- 4 - Example dts
- ===========================================
- 
--Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters):
-+Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters in a single
-+physical socket):
- 
- cpus {
- 	#size-cells = <0>;
- 	#address-cells = <2>;
- 
- 	cpu-map {
-+		socket0 {
- 			cluster0 {
- 				cluster0 {
- 					core0 {
-@@ -253,6 +276,7 @@ cpus {
- 				};
- 			};
- 		};
-+	};
- 
- 	CPU0: cpu@0 {
- 		device_type = "cpu";
-@@ -473,3 +497,5 @@ cpus {
- ===============================================================================
- [1] ARM Linux kernel documentation
-     Documentation/devicetree/bindings/arm/cpus.yaml
-+[2] Devicetree NUMA binding description
-+    Documentation/devicetree/bindings/numa.txt
+With these kernel patches a MK808 can show 2 penguins and a console
+on a DVI-D monitor in combination with a framebuffer.
+
+Not tested:
+
+HDMI TV
+HDCP
+DRM
+Xorg
+Display managers
+Android
+etc.
+
+Problems:
+
+DRM functions keep changing every rc.
+With v5.0-rc8 the monitor doesn't blank on poweroff, it freezes
+due to a patch revert some time ago.
+
+  drm/rockchip: shutdown drm subsystem on shutdown
+    https://patchwork.kernel.org/patch/10556151/
+  drm/rockchip: Allow driver to be shutdown on reboot/kexec
+    https://patchwork.kernel.org/patch/10556135/
+  [for-4.20] Revert "drm/rockchip: Allow driver to be shutdown on reboot/kexec"
+    https://patchwork.kernel.org/patch/10714725/
+
+To get the rk3066 hdmi driver accepted DVI-D support is removed.
+(Fixed screen size support for DVI-D with extra patch.)
+
+HDMI sound not included.
+etc.
+
+///////////////////////////////////////////
+Changes V5:
+
+rockchip,rk3066-hdmi.txt
+  add Reviewed-by tag
+
+rk3066_hdmi.c
+  change order in unbind function
+  add goto err_disable_i2c to rk3066_hdmi_bind function
+  change dev_foobar calls to their DRM_* equivalents
+  remove rk3066_hdmi_i2c_irq function
+  use define constants in rk3066_hdmi_encoder_enable function
+  add comment to rk3066_hdmi_config_phy function
+  small text style changes
+  remove DVI-D support
+  (add DVI-D support with extra patch)
+
+rk3066_hdmi.h
+  add define constants
+
+///////////////////////////////////////////
+Changes V4:
+
+rockchip,rk3066-hdmi.txt
+  change document name
+
+rk3066_hdmi.c
+  add more info in commit message
+  replace deprecated drmP.h include
+  small text style changes
+  explain vic variable
+  remove enc_in_format
+  change lock name
+  change regmap name
+  change cmp name
+  replace hdmi->dev by dev
+  use sentinel
+  use HDMI_VIDEO_VSYNC_OFFSET_SHIFT define
+  remove unused module macros
+  change driver name for dmesg
+
+///////////////////////////////////////////
+Changes V3:
+
+updated to v5.0-rc8
+removed patches that are already added to linux-next
+
+rk3066_hdmi.c
+  removed gpl text
+  small style changes
+  removed unused includes
+  add include for:
+    drm_helper_hpd_irq_event
+    drm_helper_probe_single_connector_modes
+  update drm_hdmi_avi_infoframe_from_display_mode function call
+
+rk3066_hdmi.h
+  removed gpl text
+
+rk3066a.dtsi
+  add extra port for hdmi connector node
+
+rk3066a-mk808.dts
+  add hdmi connector node
+  connect hdmi_out with hdmi_con_in
+
+rk3066-hdmi.txt
+  add extra port for hdmi connector node
+
+///////////////////////////////////////////
+
+# How to make rkfs.cpio
+
+find . | cpio -o --format=newc > ../rkfs.cpio
+
+# How to compile/flash
+
+make menuconfig  ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi-
+make -j4  ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi-
+
+cp ./arch/arm/boot/zImage ../zImage-dtb
+cat ./arch/arm/boot/dts/rk3066a-mk808.dtb >> ../zImage-dtb
+../tools/rkcrc -k ../zImage-dtb ../mk808.img
+sudo ../tools/rkflashtool w 0x4000 0x8000 < ../mk808.img
+sudo ../tools/rkflashtool b
+
+///////////////////////////////////////////
+
+Johan Jonker (3):
+  ARM: dts: rockchip: rk3066a-mk808: enable vop0 and hdmi nodes
+  dt-bindings: display: rockchip: add document for rk3066 hdmi
+  drm: rockchip: add fixed screen size DVI-D support for rk3066 hdmi
+
+Zheng Yang (2):
+  drm: rockchip: introduce rk3066 hdmi
+  ARM: dts: rockchip: add rk3066 hdmi nodes
+
+ .../display/rockchip/rockchip,rk3066-hdmi.txt      |  72 ++
+ arch/arm/boot/dts/rk3066a-mk808.dts                |  29 +
+ arch/arm/boot/dts/rk3066a.dtsi                     |  52 ++
+ drivers/gpu/drm/rockchip/Kconfig                   |   8 +
+ drivers/gpu/drm/rockchip/Makefile                  |   1 +
+ drivers/gpu/drm/rockchip/rk3066_hdmi.c             | 889 +++++++++++++++++++++
+ drivers/gpu/drm/rockchip/rk3066_hdmi.h             | 229 ++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |   2 +
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   1 +
+ 9 files changed, 1283 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
+ create mode 100644 drivers/gpu/drm/rockchip/rk3066_hdmi.c
+ create mode 100644 drivers/gpu/drm/rockchip/rk3066_hdmi.h
+
 -- 
-2.21.0
+2.11.0
