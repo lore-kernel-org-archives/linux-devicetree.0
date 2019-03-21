@@ -1,55 +1,381 @@
-From: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v3 1/3] devicetree: bindings: bd718x7: document HW state
- related ROHM specific properties
-Date: Thu, 21 Mar 2019 12:50:30 +0000
-Message-ID: <74b5d125c5cac75b3ab37ff2202966fb3f3395a1.camel@fi.rohmeurope.com>
-References: <cover.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
-         <6ed4238fb083f52de0f5f013647b2334bad8ebe4.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
-         <20190320130259.GN4731@dell> <20190320141701.GA6208@localhost.localdomain>
-         <20190321082338.GT4731@dell>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 2/2] edac: sifive: Add EDAC driver for SiFive FU540-C000
+ chip
+Date: Thu, 21 Mar 2019 14:33:40 +0100
+Message-ID: <20190321133340.GB7047@nazgul.tnic>
+References: <1553082728-9232-1-git-send-email-yash.shah@sifive.com>
+ <1553082728-9232-3-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190321082338.GT4731@dell>
-Content-Language: de-DE
-Content-ID: <5A9EDC7EB113F94184FBFE7E244C0153@de.rohmeurope.com>
+Content-Disposition: inline
+In-Reply-To: <1553082728-9232-3-git-send-email-yash.shah@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "lee.jones@linaro.org" <lee.jones@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "elven.wang@nxp.com" <elven.wang@nxp.com>, "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>, "broonie@kernel.org" <broonie@kernel.org>, "angus.ainslie@puri.sm" <angus.ainslie@puri.sm>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "anson.huang@nxp.com" <anson.huang@nxp.com>, "matt.vaittinen@fi.rohmeurope.com" <matt.vaittinen@fi.rohmeurope.com>, "yibin.gong@nxp.com" <yibin.gong@nxp.com>, "Haikola, Heikki" <Heikki.Haikola@fi.rohmeurope.com>
+To: Yash Shah <yash.shah@sifive.com>
+Cc: linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org, palmer@sifive.com, paul.walmsley@sifive.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, aou@eecs.berkeley.edu, mchehab@kernel.org, devicetree@vger.kernel.org, sachin.ghadi@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTAzLTIxIGF0IDA4OjIzICswMDAwLCBMZWUgSm9uZXMgd3JvdGU6DQo+IE9u
-IFdlZCwgMjAgTWFyIDIwMTksIE1hdHRpIFZhaXR0aW5lbiB3cm90ZToNCj4gDQo+ID4gSGVsbG8g
-TGVlLCBBbGwNCj4gPiANCj4gPiBPbiBXZWQsIE1hciAyMCwgMjAxOSBhdCAwMTowMjo1OVBNICsw
-MDAwLCBMZWUgSm9uZXMgd3JvdGU6DQo+ID4gPiBPbiBUaHUsIDE0IEZlYiAyMDE5LCBNYXR0aSBW
-YWl0dGluZW4gd3JvdGU6DQo+ID4gPiANCj4gPiA+ID4gQWRkIFJPSE0gQkQ3MTgzNyAvIEJENzE4
-NDcgc3BlY2lmaWMgZGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yDQo+ID4gPiA+IGNvbnRyb2xsaW5n
-IHRoZSBQTUlDIHNodXRkb3duL3Jlc2V0IHN0YXRlcyBhbmQgdm9sdGFnZXMgZm9yDQo+ID4gPiA+
-IGRpZmZlcmVudCBIVyBzdGF0ZXMuIFRoZSBQTUlDIHdhcyBkZXNpZ25lZCB0byBiZSB1c2VkIHdp
-dGggTlhQDQo+ID4gPiA+IGkuTVg4IFNvQyBhbmQgaXQgc3VwcG9ydHMgU05WUyBsb3cgcG93ZXIg
-c3RhdGUgd2hpY2ggc2VlbXMgdG8NCj4gPiA+ID4gYmUgdHlwaWNhbCBmb3IgTlhQIGkuTVggU29D
-cy4gSG93ZXZlciwgd2hlbiBTTlZTIGlzIHVzZWQgd2UNCj4gPiA+ID4gbXVzdA0KPiA+ID4gPiBu
-b3QgYWxsb3cgU1cgdG8gY29udHJvbCBlbmFibGluZy9kaXNhYmxpbmcgdGhvc2UgcmVndWxhdG9y
-cw0KPiA+ID4gPiB3aGljaA0KPiA+ID4gPiBhcmUgY3J1Y2lhbCBmb3Igc3lzdGVtIHRvIGJvb3Qg
-YXMgdGhlcmUgaXMgYSBIVyBsaW1pdGF0aW9uDQo+ID4gPiA+IHdoaWNoDQo+ID4gPiA+IGNhdXNl
-cyBTVyBjb250cm9sbGVkIHJlZ3VsYXRvcnMgdG8gYmUga2VwdCBzaHV0IGRvd24gYWZ0ZXIgU05W
-Uw0KPiA+ID4gPiByZXNldC4NCj4gPiA+ID4gDQo+ID4gPiA+IEFsbG93IHNldHRpbmcgdGhlIFNO
-VlMgdG8gYmUgdXNlZCBhcyByZXNldCB0YXJnZXQgc3RhdGUgYW5kDQo+ID4gPiA+IGFsbG93DQo+
-ID4gPiA+IG1hcmtpbmcgdGhvc2UgcmVndWxhdG9ycyB3aGljaCBhcmUgY3JpdGljYWwgZm9yIGJv
-b3QuDQo+ID4gPiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPA0K
-PiA+ID4gPiBtYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+DQo+ID4gPiA+IC0tLQ0K
-PiA+ID4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3JvaG0sYmQ3MTgzNy1wbWljLnR4
-dCAgfCAxNw0KPiA+ID4gPiArKysrKysrKysrDQo+ID4gPiA+ICAuLi4vYmluZGluZ3MvcmVndWxh
-dG9yL3JvaG0sYmQ3MTgzNy1yZWd1bGF0b3IudHh0ICB8IDM4DQo+ID4gPiA+ICsrKysrKysrKysr
-KysrKysrKysrKysNCj4gPiA+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNTUgaW5zZXJ0aW9ucygrKQ0K
-PiA+ID4gDQo+ID4gPiBOZWVkcyBhIERUIEFjay4NCj4gPiANCj4gPiBJIHRoaW5rIHRoaXMgd2Fz
-IGFscmVhZHkgYXBwbGllZCB0byByZWd1bGF0b3IgdHJlZSBieSBNYXJrOg0KPiA+IA0KaHR0cHM6
-Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvYnJvb25pZS9yZWd1bGF0
-b3IuZ2l0L2NvbW1pdC8/aD1mb3ItbmV4dCZpZD1mNDNkMWIzODhmOWJlNGFhNDdlZDQyYzMzNjU5
-MjQzYTY3NWM1Yzc2DQo+ID4gRG9lcyBpdCBnbyBpbiB2aWEgaGlzIHRyZWUgb3IgZG8gd2UgbmVl
-ZCB0byBhcHBseSBpdCBpbiBMZWUncyB0cmVlDQo+ID4gdG9vPw0KPiANCj4gV2h5IGRvbid0IEkg
-c2VlIGFuIGVtYWlsIGZyb20gTWFyaz8NCj4gDQoNCg0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcv
-bGttbC8yMDE5MDIxNDE2MDAyNS42NUI4RTExMjZGNzhAZGVidXRhbnRlLnNpcmVuYS5vcmcudWsv
-DQoNCk1heWJlIHRoYXQncyB3aGF0IHlvdSdyZSBsb29raW5nIGZvcj8NCg0KQnIsDQoJTWF0dGkg
-VmFpdHRpbmVuDQo=
+On Wed, Mar 20, 2019 at 05:22:08PM +0530, Yash Shah wrote:
+> This EDAC driver supports:
+> - Initial configuration reporting on bootup via debug logs
+> - ECC event monitoring and reporting through the EDAC framework
+> - ECC event injection
+> 
+> This driver is partially based on pnd2_edac.c and altera_edac.c
+> 
+> Initially L2 Cache controller is added as a subcomponent to
+> this EDAC driver.
+> 
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+
+...
+
+> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+> index e286b5b..112d9d1 100644
+> --- a/drivers/edac/Kconfig
+> +++ b/drivers/edac/Kconfig
+> @@ -440,6 +440,19 @@ config EDAC_ALTERA_SDMMC
+>  	  Support for error detection and correction on the
+>  	  Altera SDMMC FIFO Memory for Altera SoCs.
+>  
+> +config EDAC_SIFIVE
+> +	tristate "Sifive ECC"
+> +	depends on RISCV
+> +	help
+> +	  Support for error detection and correction on the SiFive SoCs.
+> +
+> +config EDAC_SIFIVE_L2
+
+That config item is unused. Drop it.
+
+> +	bool "SiFive L2 Cache ECC"
+> +	depends on EDAC_SIFIVE=y
+> +	help
+> +	  Support for error detection and correction of the L2 cache
+> +	  memory on SiFive SoCs.
+> +
+>  config EDAC_SYNOPSYS
+>  	tristate "Synopsys DDR Memory Controller"
+>  	depends on ARCH_ZYNQ || ARCH_ZYNQMP
+
+...
+
+> +/*
+> + * sifive_edac_l2_int_handler - ISR function for l2 cache controller
+> + * @irq:	Irq Number
+> + * @device:	Pointer to the edac device controller instance
+> + *
+> + * This routine is triggered whenever there is ECC error detected
+> + *
+> + * Return: Always returns IRQ_HANDLED
+> + */
+> +static irqreturn_t sifive_edac_l2_int_handler(int irq, void *device)
+> +{
+> +	struct edac_device_ctl_info *dci =
+> +					(struct edac_device_ctl_info *)device;
+
+No ugly linebreaks like that - just let it stick out even if it is > 80
+cols long.
+
+> +	struct sifive_edac_device_dev *drvdata = dci->pvt_info;
+> +	u32 regval, add_h, add_l;
+> +
+> +	if (irq == drvdata->irq[dir_corr]) {
+> +		add_h = readl(drvdata->base + SIFIVE_EDAC_DIRFIX_HIGH);
+> +		add_l = readl(drvdata->base + SIFIVE_EDAC_DIRFIX_LOW);
+> +		dev_err(dci->dev,
+> +			"DirError at address 0x%08X.%08X\n", add_h, add_l);
+
+Same here and below.
+
+> +		regval = readl(drvdata->base + SIFIVE_EDAC_DIRFIX_COUNT);
+> +		edac_device_handle_ce(dci, 0, 0, "DirECCFix");
+> +	}
+> +	if (irq == drvdata->irq[data_corr]) {
+> +		add_h = readl(drvdata->base + SIFIVE_EDAC_DATFIX_HIGH);
+> +		add_l = readl(drvdata->base + SIFIVE_EDAC_DATFIX_LOW);
+> +		dev_err(dci->dev,
+> +			"DataError at address 0x%08X.%08X\n", add_h, add_l);
+> +		regval = readl(drvdata->base + SIFIVE_EDAC_DATFIX_COUNT);
+> +		edac_device_handle_ce(dci, 0, 0, "DatECCFix");
+> +	}
+> +	if (irq == drvdata->irq[data_uncorr]) {
+> +		add_h = readl(drvdata->base + SIFIVE_EDAC_DATFAIL_HIGH);
+> +		add_l = readl(drvdata->base + SIFIVE_EDAC_DATFAIL_LOW);
+> +		dev_err(dci->dev,
+> +			"DataFail at address 0x%08X.%08X\n", add_h, add_l);
+> +		regval = readl(drvdata->base + SIFIVE_EDAC_DATFAIL_COUNT);
+> +		edac_device_handle_ue(dci, 0, 0, "DatECCFail");
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static void sifive_edac_l2_config_read(struct edac_device_ctl_info *dci)
+> +{
+> +	struct sifive_edac_device_dev *drvdata = dci->pvt_info;
+> +	u32 regval, val;
+> +
+> +	regval = readl(drvdata->base + SIFIVE_EDAC_CONFIG);
+> +	val = regval & 0xFF;
+> +	dev_info(dci->dev, "No. of Banks in the cache: %d\n", val);
+> +	val = (regval & 0xFF00) >> 8;
+> +	dev_info(dci->dev, "No. of ways per bank: %d\n", val);
+> +	val = (regval & 0xFF0000) >> 16;
+> +	dev_info(dci->dev, "Sets per bank: %llu\n", (uint64_t)1 << val);
+> +	val = (regval & 0xFF000000) >> 24;
+> +	dev_info(dci->dev,
+> +		 "Bytes per cache block: %llu\n", (uint64_t)1 << val);
+> +}
+> +
+> +static const struct sifive_edac_device_prv l2ecc_data = {
+> +	.setup = sifive_edac_l2_config_read,
+> +	.inject_fops = &sifive_edac_l2_fops,
+> +	.ecc_irq_handler = sifive_edac_l2_int_handler,
+> +};
+> +
+> +/*
+> + * sifive_edac_device_probe()
+> + *	This is a generic EDAC device driver that will support
+> + *	various SiFive memory devices as well as the memories
+> + *	for other peripherals. Module specific initialization is
+> + *	done by passing the function index in the device tree.
+
+This comment doesn't have anything to do with that function but rather
+belongs at the top of this file.
+
+> + */
+> +static int sifive_edac_device_probe(struct platform_device *pdev)
+> +{
+> +	struct edac_device_ctl_info *dci;
+> +	struct sifive_edac_device_dev *drvdata;
+> +	int rc, i;
+> +	struct resource *res;
+> +	void __iomem *baseaddr;
+> +	struct device_node *np = pdev->dev.of_node;
+> +	char *ecc_name = (char *)np->name;
+> +	static int dev_instance;
+
+Please sort function local variables declaration in a reverse christmas
+tree order:
+
+	<type_a> longest_variable_name;
+	<type_b> shorter_var_name;
+	<type_c> even_shorter;
+	<type_d> i;
+
+> +
+> +	/* Get the data from the platform device */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	baseaddr = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(baseaddr))
+> +		return PTR_ERR(baseaddr);
+> +
+> +	dci = edac_device_alloc_ctl_info(sizeof(*drvdata), ecc_name,
+> +					 1, ecc_name, 1, 1, NULL, 0,
+> +					 dev_instance++);
+> +	if (IS_ERR(dci))
+> +		return PTR_ERR(dci);
+> +
+> +	drvdata = dci->pvt_info;
+> +	drvdata->base = baseaddr;
+> +	drvdata->edac_dev_name = ecc_name;
+> +	dci->dev = &pdev->dev;
+> +	dci->mod_name = "Sifive ECC Manager";
+> +	dci->ctl_name = dev_name(&pdev->dev);
+> +	dci->dev_name = dev_name(&pdev->dev);
+> +
+> +	 /* Get driver specific data for this EDAC device */
+> +	drvdata->data = of_match_node(sifive_edac_device_of_match, np)->data;
+> +
+> +	setup_sifive_debug(dci, drvdata->data);
+> +
+> +	if (drvdata->data->setup)
+> +		drvdata->data->setup(dci);
+> +
+> +	for (i = 0; i < SIFIVE_EDAC_MAX_INTR; i++) {
+> +		drvdata->irq[i] = platform_get_irq(pdev, i);
+> +		rc = devm_request_irq(&pdev->dev, drvdata->irq[i],
+> +				      sifive_edac_l2_int_handler, 0,
+> +				      dev_name(&pdev->dev), (void *)dci);
+> +		if (rc) {
+> +			dev_err(&pdev->dev,
+> +				"Could not request IRQ %d\n", drvdata->irq[i]);
+> +			goto del_edac_device;
+> +		}
+> +	}
+> +
+> +	rc = edac_device_add_device(dci);
+> +	if (rc) {
+> +		dev_err(&pdev->dev, "failed to register with EDAC core\n");
+> +		goto del_edac_device;
+> +	}
+
+Call setup_sifive_debug() in the success case here so that you don't
+have to teardown below.
+
+> +
+> +	return rc;
+> +
+> +del_edac_device:
+> +	teardown_sifive_debug();
+> +	edac_device_del_device(&pdev->dev);
+> +	edac_device_free_ctl_info(dci);
+
+Those three can be replaced by a call to sifive_edac_device_remove() ?
+
+Btw, you have prefixed your static functions with "sifive_edac_" which
+doesn't make much sense and you have long names for no good reason.
+
+> +
+> +	return rc;
+> +}
+> +
+> +static int sifive_edac_device_remove(struct platform_device *pdev)
+> +{
+> +	struct edac_device_ctl_info *dci = platform_get_drvdata(pdev);
+> +
+> +	teardown_sifive_debug();
+> +	edac_device_del_device(&pdev->dev);
+> +	edac_device_free_ctl_info(dci);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id sifive_edac_device_of_match[] = {
+> +	{ .compatible = "sifive,ccache0", .data = &l2ecc_data },
+> +	{ /* end of table */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, sifive_edac_device_of_match);
+> +
+> +static struct platform_driver sifive_edac_device_driver = {
+> +	.driver = {
+> +		 .name = "sifive_edac_device",
+
+"device"? I think it is clear that it is a device and thus kinda
+tautological. "sifive_edac" should be enough...
+
+Last but not least, building this driver with the riscv64 cross compilers from
+here:
+
+http://cdn.kernel.org/pub/tools/crosstool/files/bin/
+
+fails like below. With the riscv32 compiler it fails the same.
+
+Provided I'm not doing anything wrong, you should not be sending me
+half-baked stuff which doesn't even build.
+
+drivers/edac/sifive_edac.c: In function 'sifive_edac_device_probe':
+drivers/edac/sifive_edac.c:231:16: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  drvdata->data = of_match_node(sifive_edac_device_of_match, np)->data;
+                ^
+In file included from drivers/edac/sifive_edac.c:10:
+drivers/edac/sifive_edac.c: At top level:
+./include/linux/module.h:130:42: error: redefinition of '__inittest'
+  static inline initcall_t __maybe_unused __inittest(void)  \
+                                          ^~~~~~~~~~
+./include/linux/device.h:1647:1: note: in expansion of macro 'module_init'
+ module_init(__driver##_init); \
+ ^~~~~~~~~~~
+./include/linux/platform_device.h:233:2: note: in expansion of macro 'module_driver'
+  module_driver(__platform_driver, platform_driver_register, \
+  ^~~~~~~~~~~~~
+drivers/edac/sifive_edac.c:293:1: note: in expansion of macro 'module_platform_driver'
+ module_platform_driver(sifive_edac_device_driver);
+ ^~~~~~~~~~~~~~~~~~~~~~
+./include/linux/module.h:130:42: note: previous definition of '__inittest' was here
+  static inline initcall_t __maybe_unused __inittest(void)  \
+                                          ^~~~~~~~~~
+./include/linux/device.h:1647:1: note: in expansion of macro 'module_init'
+ module_init(__driver##_init); \
+ ^~~~~~~~~~~
+./include/linux/platform_device.h:233:2: note: in expansion of macro 'module_driver'
+  module_driver(__platform_driver, platform_driver_register, \
+  ^~~~~~~~~~~~~
+drivers/edac/sifive_edac.c:57:1: note: in expansion of macro 'module_platform_driver'
+ module_platform_driver(sifive_edac_driver);
+ ^~~~~~~~~~~~~~~~~~~~~~
+./include/linux/module.h:132:6: error: redefinition of 'init_module'
+  int init_module(void) __copy(initfn) __attribute__((alias(#initfn)));
+      ^~~~~~~~~~~
+./include/linux/device.h:1647:1: note: in expansion of macro 'module_init'
+ module_init(__driver##_init); \
+ ^~~~~~~~~~~
+./include/linux/platform_device.h:233:2: note: in expansion of macro 'module_driver'
+  module_driver(__platform_driver, platform_driver_register, \
+  ^~~~~~~~~~~~~
+drivers/edac/sifive_edac.c:293:1: note: in expansion of macro 'module_platform_driver'
+ module_platform_driver(sifive_edac_device_driver);
+ ^~~~~~~~~~~~~~~~~~~~~~
+./include/linux/module.h:132:6: note: previous definition of 'init_module' was here
+  int init_module(void) __copy(initfn) __attribute__((alias(#initfn)));
+      ^~~~~~~~~~~
+./include/linux/device.h:1647:1: note: in expansion of macro 'module_init'
+ module_init(__driver##_init); \
+ ^~~~~~~~~~~
+./include/linux/platform_device.h:233:2: note: in expansion of macro 'module_driver'
+  module_driver(__platform_driver, platform_driver_register, \
+  ^~~~~~~~~~~~~
+drivers/edac/sifive_edac.c:57:1: note: in expansion of macro 'module_platform_driver'
+ module_platform_driver(sifive_edac_driver);
+ ^~~~~~~~~~~~~~~~~~~~~~
+./include/linux/module.h:136:42: error: redefinition of '__exittest'
+  static inline exitcall_t __maybe_unused __exittest(void)  \
+                                          ^~~~~~~~~~
+./include/linux/device.h:1652:1: note: in expansion of macro 'module_exit'
+ module_exit(__driver##_exit);
+ ^~~~~~~~~~~
+./include/linux/platform_device.h:233:2: note: in expansion of macro 'module_driver'
+  module_driver(__platform_driver, platform_driver_register, \
+  ^~~~~~~~~~~~~
+drivers/edac/sifive_edac.c:293:1: note: in expansion of macro 'module_platform_driver'
+ module_platform_driver(sifive_edac_device_driver);
+ ^~~~~~~~~~~~~~~~~~~~~~
+./include/linux/module.h:136:42: note: previous definition of '__exittest' was here
+  static inline exitcall_t __maybe_unused __exittest(void)  \
+                                          ^~~~~~~~~~
+./include/linux/device.h:1652:1: note: in expansion of macro 'module_exit'
+ module_exit(__driver##_exit);
+ ^~~~~~~~~~~
+./include/linux/platform_device.h:233:2: note: in expansion of macro 'module_driver'
+  module_driver(__platform_driver, platform_driver_register, \
+  ^~~~~~~~~~~~~
+drivers/edac/sifive_edac.c:57:1: note: in expansion of macro 'module_platform_driver'
+ module_platform_driver(sifive_edac_driver);
+ ^~~~~~~~~~~~~~~~~~~~~~
+./include/linux/module.h:138:7: error: redefinition of 'cleanup_module'
+  void cleanup_module(void) __copy(exitfn) __attribute__((alias(#exitfn)));
+       ^~~~~~~~~~~~~~
+./include/linux/device.h:1652:1: note: in expansion of macro 'module_exit'
+ module_exit(__driver##_exit);
+ ^~~~~~~~~~~
+./include/linux/platform_device.h:233:2: note: in expansion of macro 'module_driver'
+  module_driver(__platform_driver, platform_driver_register, \
+  ^~~~~~~~~~~~~
+drivers/edac/sifive_edac.c:293:1: note: in expansion of macro 'module_platform_driver'
+ module_platform_driver(sifive_edac_device_driver);
+ ^~~~~~~~~~~~~~~~~~~~~~
+./include/linux/module.h:138:7: note: previous definition of 'cleanup_module' was here
+  void cleanup_module(void) __copy(exitfn) __attribute__((alias(#exitfn)));
+       ^~~~~~~~~~~~~~
+./include/linux/device.h:1652:1: note: in expansion of macro 'module_exit'
+ module_exit(__driver##_exit);
+ ^~~~~~~~~~~
+./include/linux/platform_device.h:233:2: note: in expansion of macro 'module_driver'
+  module_driver(__platform_driver, platform_driver_register, \
+  ^~~~~~~~~~~~~
+drivers/edac/sifive_edac.c:57:1: note: in expansion of macro 'module_platform_driver'
+ module_platform_driver(sifive_edac_driver);
+ ^~~~~~~~~~~~~~~~~~~~~~
+make[3]: *** [scripts/Makefile.build:285: drivers/edac/sifive_edac.o] Error 1
+make[2]: *** [scripts/Makefile.build:489: drivers/edac] Error 2
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/home/boris/kernel/linux-2.6/Makefile:1046: drivers] Error 2
+make: *** [Makefile:170: sub-make] Error 2
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
