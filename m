@@ -1,7 +1,7 @@
 From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v3 1/5] iio: light: vcnl4000 use word writes instead of byte writes
-Date: Thu, 21 Mar 2019 08:40:43 -0700
-Message-ID: <20190321154047.23236-2-angus@akkea.ca>
+Subject: [PATCH v3 5/5] dt-bindings: iio: light: add vcnl4040 devicetree bindings
+Date: Thu, 21 Mar 2019 08:40:47 -0700
+Message-ID: <20190321154047.23236-6-angus@akkea.ca>
 References: <20190321154047.23236-1-angus@akkea.ca>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190321154047.23236-1-angus@akkea.ca>
@@ -10,31 +10,38 @@ To: jic23@kernel.org
 Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Tomas Novotny <tomas@novotny.cz>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The VCNL4200 datasheet says that word read and writes should be used
-to access the registers.
+Document the vishay VCNL4040 devicetree bindings.
 
 Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-Tested-by: Tomas Novotny <tomas@novotny.cz>
 ---
- drivers/iio/light/vcnl4000.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/iio/light/vcnl4000.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-index 04fd0d4b6f19..5e0a8eb83ebc 100644
---- a/drivers/iio/light/vcnl4000.c
-+++ b/drivers/iio/light/vcnl4000.c
-@@ -140,10 +140,10 @@ static int vcnl4200_init(struct vcnl4000_data *data)
- 	data->rev = (ret >> 8) & 0xf;
+diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt b/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
+index 4a9d558a412a..955af4555c90 100644
+--- a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
++++ b/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
+@@ -1,6 +1,6 @@
+ VISHAY VCNL4000 -  Ambient Light and proximity sensor
  
- 	/* Set defaults and enable both channels */
--	ret = i2c_smbus_write_byte_data(data->client, VCNL4200_AL_CONF, 0x00);
-+	ret = i2c_smbus_write_word_data(data->client, VCNL4200_AL_CONF, 0);
- 	if (ret < 0)
- 		return ret;
--	ret = i2c_smbus_write_byte_data(data->client, VCNL4200_PS_CONF1, 0x00);
-+	ret = i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, 0);
- 	if (ret < 0)
- 		return ret;
+-This driver supports the VCNL4000/10/20 and VCNL4200 chips
++This driver supports the VCNL4000/10/20/40 and VCNL4200 chips
+ 
+ Required properties:
+ 
+@@ -8,11 +8,13 @@ Required properties:
+         vishay,vcnl4000
+         vishay,vcnl4010
+         vishay,vcnl4020
++        vishay,vcnl4040
+         vishay,vcnl4200
+ 
+ 	-reg: I2C address of the sensor, should be one from below based on the model:
+         0x13
+         0x51
++        0x60
+ 
+ Example:
  
 -- 
 2.17.1
