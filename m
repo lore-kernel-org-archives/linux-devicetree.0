@@ -1,297 +1,266 @@
-Return-Path: <SRS0=Paxx=RQ=mediatek.com=stanley.chu@kernel.org>
-From: Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v4 6/7] phy: mediatek: Add UFS M-PHY driver
-Date: Wed, 13 Mar 2019 12:10:10 +0800
-Message-ID: <1552450211-7149-8-git-send-email-stanley.chu@mediatek.com>
-In-Reply-To: <1552450211-7149-1-git-send-email-stanley.chu@mediatek.com>
-References: <1552450211-7149-1-git-send-email-stanley.chu@mediatek.com>
+Return-Path: <SRS0=KptV=RY=nxp.com=anson.huang@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V9 2/4] watchdog: imx_sc: Add i.MX system controller watchdog
+ support
+Date: Thu, 21 Mar 2019 02:26:47 +0000
+Message-ID: <1553134884-1720-3-git-send-email-Anson.Huang@nxp.com>
+References: <1553134884-1720-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1553134884-1720-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-To: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, chunfeng.yun@mediatek.com, kishon@ti.com, martin.petersen@oracle.com, avri.altman@wdc.com, alim.akhtar@samsung.com, pedrom.sousa@synopsys.com
-Cc: vivek.gautam@codeaurora.org, subhashj@codeaurora.org, liwei213@huawei.com, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, kuohong.wang@mediatek.com, peter.wang@mediatek.com, chun-hung.wu@mediatek.com, Stanley Chu <stanley.chu@mediatek.com>
+To: "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, Andy Gross <andy.gross@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add UFS M-PHY driver on MediaTek chipsets.
+i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
+inside, the system controller is in charge of controlling power,
+clock and watchdog etc..
 
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Reviewed-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+This patch adds i.MX system controller watchdog driver support,
+watchdog operation needs to be done in secure EL3 mode via
+ARM-Trusted-Firmware, using SMC call, CPU will trap into
+ARM-Trusted-Firmware and then it will request system controller
+to do watchdog operation via IPC.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/phy/mediatek/Kconfig       |   9 ++
- drivers/phy/mediatek/Makefile      |   1 +
- drivers/phy/mediatek/phy-mtk-ufs.c | 239 +++++++++++++++++++++++++++++
- 3 files changed, 249 insertions(+)
- create mode 100644 drivers/phy/mediatek/phy-mtk-ufs.c
+Changes since V8:
+	- change timeout value to be from DT instead of from module parameter.
+---
+ drivers/watchdog/Kconfig      |  16 ++++
+ drivers/watchdog/Makefile     |   1 +
+ drivers/watchdog/imx_sc_wdt.c | 177 ++++++++++++++++++++++++++++++++++++++=
+++++
+ 3 files changed, 194 insertions(+)
+ create mode 100644 drivers/watchdog/imx_sc_wdt.c
 
-diff --git a/drivers/phy/mediatek/Kconfig b/drivers/phy/mediatek/Kconfig
-index 8857d00b3c65..4a20110a511d 100644
---- a/drivers/phy/mediatek/Kconfig
-+++ b/drivers/phy/mediatek/Kconfig
-@@ -21,3 +21,12 @@ config PHY_MTK_XSPHY
- 	  Enable this to support the SuperSpeedPlus XS-PHY transceiver for
- 	  USB3.1 GEN2 controllers on MediaTek chips. The driver supports
- 	  multiple USB2.0, USB3.1 GEN2 ports.
-+
-+config PHY_MTK_UFS
-+	tristate "MediaTek UFS M-PHY driver"
-+	depends on ARCH_MEDIATEK && OF
-+	select GENERIC_PHY
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 242eea8..44a3158 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -641,6 +641,22 @@ config IMX2_WDT
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called imx2_wdt.
+=20
++config IMX_SC_WDT
++	tristate "IMX SC Watchdog"
++	depends on HAVE_ARM_SMCCC
++	select WATCHDOG_CORE
 +	help
-+	  Support for UFS M-PHY on MediaTek chipsets. Enable this to provide
-+	  vendor-specific initialization, power on and off flow of specified
-+	  M-PHYs.
-diff --git a/drivers/phy/mediatek/Makefile b/drivers/phy/mediatek/Makefile
-index ee49edc97ee9..14e9aa0b8aa4 100644
---- a/drivers/phy/mediatek/Makefile
-+++ b/drivers/phy/mediatek/Makefile
-@@ -5,3 +5,4 @@
- 
- obj-$(CONFIG_PHY_MTK_TPHY)		+= phy-mtk-tphy.o
- obj-$(CONFIG_PHY_MTK_XSPHY)		+= phy-mtk-xsphy.o
-+obj-$(CONFIG_PHY_MTK_UFS)		+= phy-mtk-ufs.o
-diff --git a/drivers/phy/mediatek/phy-mtk-ufs.c b/drivers/phy/mediatek/phy-mtk-ufs.c
++	  This is the driver for the system controller watchdog
++	  on the NXP i.MX SoCs with system controller inside, the
++	  watchdog driver will call ARM SMC API and trap into
++	  ARM-Trusted-Firmware for operations, ARM-Trusted-Firmware
++	  will request system controller to execute the operations.
++	  If you have one of these processors and wish to have
++	  watchdog support enabled, say Y, otherwise say N.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called imx_sc_wdt.
++
+ config UX500_WATCHDOG
+ 	tristate "ST-Ericsson Ux500 watchdog"
+ 	depends on MFD_DB8500_PRCMU
+diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+index ba930e4..136d9f0 100644
+--- a/drivers/watchdog/Makefile
++++ b/drivers/watchdog/Makefile
+@@ -68,6 +68,7 @@ obj-$(CONFIG_NUC900_WATCHDOG) +=3D nuc900_wdt.o
+ obj-$(CONFIG_TS4800_WATCHDOG) +=3D ts4800_wdt.o
+ obj-$(CONFIG_TS72XX_WATCHDOG) +=3D ts72xx_wdt.o
+ obj-$(CONFIG_IMX2_WDT) +=3D imx2_wdt.o
++obj-$(CONFIG_IMX_SC_WDT) +=3D imx_sc_wdt.o
+ obj-$(CONFIG_UX500_WATCHDOG) +=3D ux500_wdt.o
+ obj-$(CONFIG_RETU_WATCHDOG) +=3D retu_wdt.o
+ obj-$(CONFIG_BCM2835_WDT) +=3D bcm2835_wdt.o
+diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
 new file mode 100644
-index 000000000000..4ff4abdf90e2
+index 0000000..86c2722
 --- /dev/null
-+++ b/drivers/phy/mediatek/phy-mtk-ufs.c
-@@ -0,0 +1,239 @@
++++ b/drivers/watchdog/imx_sc_wdt.c
+@@ -0,0 +1,177 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2019 MediaTek Inc.
-+ * Author: Stanley Chu <stanley.chu@mediatek.com>
++ * Copyright 2018-2019 NXP.
 + */
 +
-+#include <linux/clk.h>
-+#include <linux/delay.h>
++#include <linux/arm-smccc.h>
 +#include <linux/io.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/phy/phy.h>
++#include <linux/moduleparam.h>
++#include <linux/of.h>
 +#include <linux/platform_device.h>
++#include <linux/reboot.h>
++#include <linux/watchdog.h>
 +
-+/* mphy register and offsets */
-+#define MP_GLB_DIG_8C               0x008C
-+#define FRC_PLL_ISO_EN              BIT(8)
-+#define PLL_ISO_EN                  BIT(9)
-+#define FRC_FRC_PWR_ON              BIT(10)
-+#define PLL_PWR_ON                  BIT(11)
++#define DEFAULT_TIMEOUT 60
++/*
++ * Software timer tick implemented in scfw side, support 10ms to 0xfffffff=
+f ms
++ * in theory, but for normal case, 1s~128s is enough, you can change this =
+max
++ * value in case it's not enough.
++ */
++#define MAX_TIMEOUT 128
 +
-+#define MP_LN_DIG_RX_9C             0xA09C
-+#define FSM_DIFZ_FRC                BIT(18)
++#define IMX_SIP_TIMER			0xC2000002
++#define IMX_SIP_TIMER_START_WDOG		0x01
++#define IMX_SIP_TIMER_STOP_WDOG		0x02
++#define IMX_SIP_TIMER_SET_WDOG_ACT	0x03
++#define IMX_SIP_TIMER_PING_WDOG		0x04
++#define IMX_SIP_TIMER_SET_TIMEOUT_WDOG	0x05
++#define IMX_SIP_TIMER_GET_WDOG_STAT	0x06
++#define IMX_SIP_TIMER_SET_PRETIME_WDOG	0x07
 +
-+#define MP_LN_DIG_RX_AC             0xA0AC
-+#define FRC_RX_SQ_EN                BIT(0)
-+#define RX_SQ_EN                    BIT(1)
++#define SC_TIMER_WDOG_ACTION_PARTITION	0
 +
-+#define MP_LN_RX_44                 0xB044
-+#define FRC_CDR_PWR_ON              BIT(17)
-+#define CDR_PWR_ON                  BIT(18)
-+#define FRC_CDR_ISO_EN              BIT(19)
-+#define CDR_ISO_EN                  BIT(20)
++static bool nowayout =3D WATCHDOG_NOWAYOUT;
++module_param(nowayout, bool, 0000);
++MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (defau=
+lt=3D"
++		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
 +
-+#define mphy_readl(phy, ofs) readl((phy)->mmio + (ofs))
-+#define mphy_writel(phy, val, ofs) writel((val), (phy)->mmio + (ofs))
++static int imx_sc_wdt_ping(struct watchdog_device *wdog)
++{
++	struct arm_smccc_res res;
 +
-+struct ufs_mtk_phy {
-+	struct device *dev;
-+	void __iomem *mmio;
-+	struct clk *mp_clk;
-+	struct clk *unipro_clk;
++	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_PING_WDOG,
++		      0, 0, 0, 0, 0, 0, &res);
++
++	return 0;
++}
++
++static int imx_sc_wdt_start(struct watchdog_device *wdog)
++{
++	struct arm_smccc_res res;
++
++	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_START_WDOG,
++		      0, 0, 0, 0, 0, 0, &res);
++	if (res.a0)
++		return -EACCES;
++
++	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_SET_WDOG_ACT,
++		      SC_TIMER_WDOG_ACTION_PARTITION,
++		      0, 0, 0, 0, 0, &res);
++	return res.a0 ? -EACCES : 0;
++}
++
++static int imx_sc_wdt_stop(struct watchdog_device *wdog)
++{
++	struct arm_smccc_res res;
++
++	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_STOP_WDOG,
++		      0, 0, 0, 0, 0, 0, &res);
++
++	return res.a0 ? -EACCES : 0;
++}
++
++static int imx_sc_wdt_set_timeout(struct watchdog_device *wdog,
++				unsigned int timeout)
++{
++	struct arm_smccc_res res;
++
++	wdog->timeout =3D timeout;
++	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_SET_TIMEOUT_WDOG,
++		      timeout * 1000, 0, 0, 0, 0, 0, &res);
++
++	return res.a0 ? -EACCES : 0;
++}
++
++static const struct watchdog_ops imx_sc_wdt_ops =3D {
++	.owner =3D THIS_MODULE,
++	.start =3D imx_sc_wdt_start,
++	.stop  =3D imx_sc_wdt_stop,
++	.ping  =3D imx_sc_wdt_ping,
++	.set_timeout =3D imx_sc_wdt_set_timeout,
 +};
 +
-+static inline void mphy_set_bit(struct ufs_mtk_phy *phy, u32 reg, u32 ofs)
-+{
-+	u32 val;
-+
-+	val = mphy_readl(phy, reg);
-+	val |= ofs;
-+	mphy_writel(phy, val, reg);
-+}
-+
-+static inline void mphy_clr_bit(struct ufs_mtk_phy *phy, u32 reg, u32 ofs)
-+{
-+	u32 val;
-+
-+	val = mphy_readl(phy, reg);
-+	val &= ~ofs;
-+	mphy_writel(phy, val, reg);
-+}
-+
-+static struct ufs_mtk_phy *get_ufs_mtk_phy(struct phy *generic_phy)
-+{
-+	return (struct ufs_mtk_phy *)phy_get_drvdata(generic_phy);
-+}
-+
-+static int ufs_mtk_phy_clk_init(struct ufs_mtk_phy *phy)
-+{
-+	struct device *dev = phy->dev;
-+
-+	phy->unipro_clk = devm_clk_get(dev, "unipro-clk");
-+	if (IS_ERR(phy->unipro_clk)) {
-+		dev_err(dev, "failed to get unipro-clk");
-+		return PTR_ERR(phy->unipro_clk);
-+	}
-+
-+	phy->mp_clk = devm_clk_get(dev, "mp-clk");
-+	if (IS_ERR(phy->mp_clk)) {
-+		dev_err(dev, "failed to get mp-clk");
-+		return PTR_ERR(phy->mp_clk);
-+	}
-+
-+	return 0;
-+}
-+
-+static void ufs_mtk_phy_set_active(struct ufs_mtk_phy *phy)
-+{
-+	/* release DA_MP_PLL_PWR_ON */
-+	mphy_set_bit(phy, MP_GLB_DIG_8C, PLL_PWR_ON);
-+	mphy_clr_bit(phy, MP_GLB_DIG_8C, FRC_FRC_PWR_ON);
-+
-+	/* release DA_MP_PLL_ISO_EN */
-+	mphy_clr_bit(phy, MP_GLB_DIG_8C, PLL_ISO_EN);
-+	mphy_clr_bit(phy, MP_GLB_DIG_8C, FRC_PLL_ISO_EN);
-+
-+	/* release DA_MP_CDR_PWR_ON */
-+	mphy_set_bit(phy, MP_LN_RX_44, CDR_PWR_ON);
-+	mphy_clr_bit(phy, MP_LN_RX_44, FRC_CDR_PWR_ON);
-+
-+	/* release DA_MP_CDR_ISO_EN */
-+	mphy_clr_bit(phy, MP_LN_RX_44, CDR_ISO_EN);
-+	mphy_clr_bit(phy, MP_LN_RX_44, FRC_CDR_ISO_EN);
-+
-+	/* release DA_MP_RX0_SQ_EN */
-+	mphy_set_bit(phy, MP_LN_DIG_RX_AC, RX_SQ_EN);
-+	mphy_clr_bit(phy, MP_LN_DIG_RX_AC, FRC_RX_SQ_EN);
-+
-+	/* delay 1us to wait DIFZ stable */
-+	udelay(1);
-+
-+	/* release DIFZ */
-+	mphy_clr_bit(phy, MP_LN_DIG_RX_9C, FSM_DIFZ_FRC);
-+}
-+
-+static void ufs_mtk_phy_set_deep_hibern(struct ufs_mtk_phy *phy)
-+{
-+	/* force DIFZ */
-+	mphy_set_bit(phy, MP_LN_DIG_RX_9C, FSM_DIFZ_FRC);
-+
-+	/* force DA_MP_RX0_SQ_EN */
-+	mphy_set_bit(phy, MP_LN_DIG_RX_AC, FRC_RX_SQ_EN);
-+	mphy_clr_bit(phy, MP_LN_DIG_RX_AC, RX_SQ_EN);
-+
-+	/* force DA_MP_CDR_ISO_EN */
-+	mphy_set_bit(phy, MP_LN_RX_44, FRC_CDR_ISO_EN);
-+	mphy_set_bit(phy, MP_LN_RX_44, CDR_ISO_EN);
-+
-+	/* force DA_MP_CDR_PWR_ON */
-+	mphy_set_bit(phy, MP_LN_RX_44, FRC_CDR_PWR_ON);
-+	mphy_clr_bit(phy, MP_LN_RX_44, CDR_PWR_ON);
-+
-+	/* force DA_MP_PLL_ISO_EN */
-+	mphy_set_bit(phy, MP_GLB_DIG_8C, FRC_PLL_ISO_EN);
-+	mphy_set_bit(phy, MP_GLB_DIG_8C, PLL_ISO_EN);
-+
-+	/* force DA_MP_PLL_PWR_ON */
-+	mphy_set_bit(phy, MP_GLB_DIG_8C, FRC_FRC_PWR_ON);
-+	mphy_clr_bit(phy, MP_GLB_DIG_8C, PLL_PWR_ON);
-+}
-+
-+static int ufs_mtk_phy_power_on(struct phy *generic_phy)
-+{
-+	struct ufs_mtk_phy *phy = get_ufs_mtk_phy(generic_phy);
-+	int ret;
-+
-+	ret = clk_prepare_enable(phy->unipro_clk);
-+	if (ret) {
-+		dev_err(phy->dev, "unipro_clk enable failed %d\n", ret);
-+		goto out;
-+	}
-+
-+	ret = clk_prepare_enable(phy->mp_clk);
-+	if (ret) {
-+		dev_err(phy->dev, "mp_clk enable failed %d\n", ret);
-+		goto out_unprepare_unipro_clk;
-+	}
-+
-+	ufs_mtk_phy_set_active(phy);
-+
-+	return 0;
-+
-+out_unprepare_unipro_clk:
-+	clk_disable_unprepare(phy->unipro_clk);
-+out:
-+	return ret;
-+}
-+
-+static int ufs_mtk_phy_power_off(struct phy *generic_phy)
-+{
-+	struct ufs_mtk_phy *phy = get_ufs_mtk_phy(generic_phy);
-+
-+	ufs_mtk_phy_set_deep_hibern(phy);
-+
-+	clk_disable_unprepare(phy->unipro_clk);
-+	clk_disable_unprepare(phy->mp_clk);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops ufs_mtk_phy_ops = {
-+	.power_on       = ufs_mtk_phy_power_on,
-+	.power_off      = ufs_mtk_phy_power_off,
-+	.owner          = THIS_MODULE,
++static const struct watchdog_info imx_sc_wdt_info =3D {
++	.identity	=3D "i.MX SC watchdog timer",
++	.options	=3D WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
++			  WDIOF_MAGICCLOSE | WDIOF_PRETIMEOUT,
 +};
 +
-+static int ufs_mtk_phy_probe(struct platform_device *pdev)
++static int imx_sc_wdt_probe(struct platform_device *pdev)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct phy *generic_phy;
-+	struct phy_provider *phy_provider;
-+	struct resource *res;
-+	struct ufs_mtk_phy *phy;
++	struct watchdog_device *imx_sc_wdd;
 +	int ret;
 +
-+	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
-+	if (!phy)
++	imx_sc_wdd =3D devm_kzalloc(&pdev->dev, sizeof(*imx_sc_wdd), GFP_KERNEL);
++	if (!imx_sc_wdd)
 +		return -ENOMEM;
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	phy->mmio = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(phy->mmio))
-+		return PTR_ERR(phy->mmio);
++	platform_set_drvdata(pdev, imx_sc_wdd);
 +
-+	phy->dev = dev;
++	imx_sc_wdd->info =3D &imx_sc_wdt_info;
++	imx_sc_wdd->ops =3D &imx_sc_wdt_ops;
++	imx_sc_wdd->min_timeout =3D 1;
++	imx_sc_wdd->max_timeout =3D MAX_TIMEOUT;
++	imx_sc_wdd->parent =3D &pdev->dev;
++	imx_sc_wdd->timeout =3D DEFAULT_TIMEOUT;
 +
-+	ret = ufs_mtk_phy_clk_init(phy);
++	ret =3D watchdog_init_timeout(imx_sc_wdd, 0, &pdev->dev);
 +	if (ret)
++		dev_warn(&pdev->dev, "Failed to set timeout value, using default\n");
++
++	watchdog_stop_on_reboot(imx_sc_wdd);
++	watchdog_stop_on_unregister(imx_sc_wdd);
++
++	ret =3D devm_watchdog_register_device(&pdev->dev, imx_sc_wdd);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to register watchdog device\n");
 +		return ret;
++	}
 +
-+	generic_phy = devm_phy_create(dev, NULL, &ufs_mtk_phy_ops);
-+	if (IS_ERR(generic_phy))
-+		return PTR_ERR(generic_phy);
-+
-+	phy_set_drvdata(generic_phy, phy);
-+
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
++	return 0;
 +}
 +
-+static const struct of_device_id ufs_mtk_phy_of_match[] = {
-+	{.compatible = "mediatek,mt8183-ufsphy"},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, ufs_mtk_phy_of_match);
++static int __maybe_unused imx_sc_wdt_suspend(struct device *dev)
++{
++	struct watchdog_device *imx_sc_wdd =3D dev_get_drvdata(dev);
 +
-+static struct platform_driver ufs_mtk_phy_driver = {
-+	.probe = ufs_mtk_phy_probe,
-+	.driver = {
-+		.of_match_table = ufs_mtk_phy_of_match,
-+		.name = "ufs_mtk_phy",
++	if (watchdog_active(imx_sc_wdd))
++		imx_sc_wdt_stop(imx_sc_wdd);
++
++	return 0;
++}
++
++static int __maybe_unused imx_sc_wdt_resume(struct device *dev)
++{
++	struct watchdog_device *imx_sc_wdd =3D dev_get_drvdata(dev);
++
++	if (watchdog_active(imx_sc_wdd))
++		imx_sc_wdt_start(imx_sc_wdd);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(imx_sc_wdt_pm_ops,
++			 imx_sc_wdt_suspend, imx_sc_wdt_resume);
++
++static const struct of_device_id imx_sc_wdt_dt_ids[] =3D {
++	{ .compatible =3D "fsl,imx-sc-wdt", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, imx_sc_wdt_dt_ids);
++
++static struct platform_driver imx_sc_wdt_driver =3D {
++	.probe		=3D imx_sc_wdt_probe,
++	.driver		=3D {
++		.name	=3D "imx-sc-wdt",
++		.of_match_table =3D imx_sc_wdt_dt_ids,
++		.pm	=3D &imx_sc_wdt_pm_ops,
 +	},
 +};
-+module_platform_driver(ufs_mtk_phy_driver);
++module_platform_driver(imx_sc_wdt_driver);
 +
-+MODULE_DESCRIPTION("Universal Flash Storage (UFS) MediaTek MPHY");
-+MODULE_AUTHOR("Stanley Chu <stanley.chu@medaitek.com>");
++MODULE_AUTHOR("Robin Gong <yibin.gong@nxp.com>");
++MODULE_DESCRIPTION("NXP i.MX system controller watchdog driver");
 +MODULE_LICENSE("GPL v2");
-+
--- 
-2.18.0
+--=20
+2.7.4
