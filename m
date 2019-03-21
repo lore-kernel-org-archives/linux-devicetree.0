@@ -1,100 +1,131 @@
-From: Knut Omang <knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC v4 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Thu, 21 Mar 2019 21:14:40 +0100
-Message-ID: <356e2b5f8d18b7789a38d0e6e3fe7a48784ba56b.camel@oracle.com>
-References: <20190214213729.21702-1-brendanhiggins@google.com>
- <6d9b3b21-1179-3a45-7545-30aa15306cb4@deltatee.com>
- <01b2a950f661e8ebd6acbc45c2f89c8f10063daf.camel@oracle.com>
- <ce355f5c-189c-816c-cde4-fb4e816d44e7@deltatee.com>
- <CAFd5g45LKU+SZAFzn3RNCoxhzum0NAr9t+UJ80SJDMc_FeKgBQ@mail.gmail.com>
- <73b62e929f631038a9d8d21d261aa22ac3c18949.camel@oracle.com>
- <961494a3-d08c-2720-c59d-7d7008edb288@deltatee.com>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH] ARM: dts: rockchip: Add vdd_logic to rk3288-veyron
+Date: Thu, 21 Mar 2019 13:19:44 -0700
+Message-ID: <20190321201944.34684-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <961494a3-d08c-2720-c59d-7d7008edb288-OTvnGxWRz7hWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Logan Gunthorpe <logang-OTvnGxWRz7hWk0Htik3J/w@public.gmane.org>, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: brakmo-b10kYP2dOMg@public.gmane.org, Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, Amir Goldstein <amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Sasha Levin <Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Jeff Dike <jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "Bird,
- Timothy" <Tim.Bird-7U/KSKJipcs@public.gmane.org>, Kees Cook <keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>, Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TZUIDd8j+nm9g@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: mka@chromium.org, ryandcase@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-03-21 at 13:29 -0600, Logan Gunthorpe wrote:
-> 
-> On 2019-03-21 1:13 p.m., Knut Omang wrote:
-> > > Nevertheless, I don't really see KTF as a real unit testing framework
-> > > for a number of different reasons; you pointed out some below, but I
-> > > think the main one being that it requires booting a real kernel on
-> > > actual hardware; 
-> > 
-> > That depends on what you want to test. If you need hardware (or simulated or
-> > emulated hardware) for the test, of course you would need to have that
-> > hardware,
-> > but if, lets say, you just wanted to run tests like the skbuff example tests
-> > (see link above) you wouldn't need anything more than what you need to run
-> > KUnit
-> > tests.
-> 
-> I'm starting to get the same impression: KTF isn't unit testing. When we
-> are saying "unit tests" we are specifying exactly what we want to test:
-> small sections of code in isolation. So by definition you should not
-> need hardware for this.
+The vdd_logic rail controls the voltage supplied to misc logic on
+rk3288, including the voltage supplied to the memory controller.  The
+vcc logic is implemented by a PWM regulator.
 
-In my world hardware is just that: a piece of code. It can be in many forms, but
-it is still code to be tested, and code that can be changed (but sometimes at a
-slightly higher cost than a recompile ;-)
+Right now there are no consumers of vdd_logic on veyron but if anyone
+ever wants to try to add DDR Freq they'd need it.
 
-But that's not the point here: KTF can be used for your narrower definition of
-unit tests, and it can be used for small, precise tests, for particular bugs for
-instance, that you would not characterize as a unit test, still it serves the
-same purpose, and I believe in a pragmatic approach to this. We want to maximize
-the value of our time. I believe there's a sweet point wrt return on investment
-on the scale from purist unit testing to just writing code and test with
-existing applications. We're targeting that ;-)
+Note that in the downstream Chrome OS kernel the PWM regulator has
+a voltage table with these points:
+  1350000 0%
+  1300000 10%
+  1250000 20%
+  1200000 31%
+  1150000 41%
+  1125000 46%
+  1100000 52%
+  1050000 62%
+  1000000 72%
+   950000 83%
 
-> > I have fulfilled that dream, so I know it is possible (Inifinband driver,
-> > kernels from 2.6.39 to 4.8.x or so..) I know a lot of projects would benefit
-> > from support for such workflows, but that's not really the point here - we
-> > want
-> > to achieve both goals!
-> 
-> This is what makes me think we are not talking about testing the same
-> things. We are not talking about end to end testing of entire drivers
-> but smaller sections of code.
+The DDR Freq driver in the downstream kernel only uses some of those
+points, namely:
+  DDR3:  1200000, 1150000, 1100000, 1050000
+  LPDDR:          1150000, 1100000, 1050000
 
-No! I am talking about testing units within a driver, or within any kernel
-component. I am sure you agree that what constitutes a unit depend on what 
-level of abstraction you are looking at.
+When adapting the downstream kernel to upstream I have opted to switch
+to using the "continuous" mode of the PWM regulator driver.  This was
+the only way I could get the upstream driver to achieve _exactly_ the
+same voltages as the downstream driver could.  Specifically note that
+the old driver in downstream Chrome OS 3.14 _didn't_ have the
+DIV_ROUND_CLOSEST_ULL() in the Rockchip PLL driver.  That means if I
+use the same (downstream) table I might end up with a duty cycle
+that's 1 larger than was used downstream, leading to a slightly
+different voltage.  Due to the way the rounding worked I couldn't even
+just adjust the "percent" by 1 for a given voltage level--certain duty
+cycles just aren't achievable with the upstream math for voltage
+tables.
 
->  A unit test is far more granular and
-> despite an infinband driver existing for 2.6.39 through 4.8, the
-> internal implementation could be drastically different. But unit tests
-> would be testing internal details which could be very different version
-> to version and has to evolve with the implementation.
+Using continuous mode you can achieve the exact same duty cycle by
+simply adjusting the voltage you use by a tad bit.  The voltages that
+are equivalent to the ones used in the downstream kernel's table are:
+  1350000, 1304472, 1255691, 1200407, 1154878,
+  1128862, 1099593, 1050813, 1005285, 950000
 
-> > If your target component under test can be built as a kernel module, or set
-> > of
-> > modules, with KTF your workflow would not involve booting at all (unless you
-> > happened to crash the system with one of your tests, that is :) )
-> > You would just unload your module under test and the test module, recompile
-> > the
-> > two and insmod again. My work current work cycle on this is just a few
-> > seconds.
-> 
-> Yes, I'm sure we've all done that many a time but it's really beside the
-> point. Kunit offers a much nicer method for running a lot of unit tests
-> on existing code.
+Note that the top/bottom voltage is exactly the same just due to the
+way that continuous mode is calculated and the fact that I used those
+as anchors.  I didn't make any attempt to do the resistor math (as was
+done on rk3399-gru).
 
-Again, use cases and examples are the key here,..
+If anyone ever gets DDRFreq working on veyron upstream they should
+thus adjust the voltage specified in the DDRFreq operating points
+slightly (as per the above) to obtain the existing/tested values.  AKA
+you'd use:
+  DDR3:  1200407, 1154878, 1099593, 1050813
+  LPDDR:          1154878, 1099593, 1050813
 
-Knut
+A few other notes:
+- The "period" here (1994) is different than the "period" downstream
+  (2000) for similar reasons: there's a DIV_ROUND_CLOSEST_ULL() that
+  wasn't downstream.  With 1994 upstream comes up with the same value
+  (0x94) to program into the hardware that downstream put there.  As
+  far as I can tell 0x94 actually means 1993.27.
+- The duty cycle unit of 0x94 was picked by just matching the period
+  which nicely allows us to insert 0x7b as that value to program into
+  the hardware for 950mV.  The 0x7b was found by observing what the
+  downstream kernel calculated (not that the system can actually run
+  with vdd_log at 950 mV).
+- The downstream kernel can also be seen to program a different value
+  into the CTRL field.  Upstream achieves 0x0b and downstream 0x1b.
+  This is because the upstream commit bc834d7b07b4 ("pwm: rockchip:
+  Move the configuration of polarity") fixed a bug by adding "ctrl &=
+  ~PWM_POLARITY_MASK".  Downstream accidentally left bit 4 set.
+  Luckily this bit doesn't matter--it's only used when the PWM goes
+  inactive (AKA if it's in oneshot mode or is disabled) and we don't
+  do that for the PWM regulator.
+
+I measured the voltage of vdd_log while adjusting it and found that
+with the upstream kernel voltage difference between requested and
+actual was 9.2 mV at 950 mV and 13.4 mV at 1350 mV with in-between
+voltages consistently showing ~1% error.  This error is likely
+expected as voltage can be seen to sag a bit when more load is put on
+the rail.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ arch/arm/boot/dts/rk3288-veyron.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
+index 0bc2409f6903..5181d9435fda 100644
+--- a/arch/arm/boot/dts/rk3288-veyron.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
+@@ -95,6 +95,23 @@
+ 		regulator-boot-on;
+ 		vin-supply = <&vcc_5v>;
+ 	};
++
++	vdd_logic: vdd-logic {
++		compatible = "pwm-regulator";
++		regulator-name = "vdd_logic";
++
++		pwms = <&pwm1 0 1994 0>;
++		pwm-supply = <&vcc33_sys>;
++
++		pwm-dutycycle-range = <0x7b 0>;
++		pwm-dutycycle-unit = <0x94>;
++
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <950000>;
++		regulator-max-microvolt = <1350000>;
++		regulator-ramp-delay = <4000>;
++	};
+ };
+ 
+ &cpu0 {
+-- 
+2.21.0.225.g810b269d1ac-goog
