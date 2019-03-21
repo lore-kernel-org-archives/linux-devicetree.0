@@ -1,112 +1,66 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3] arm64: dts: ls1088a: add one more thermal zone node
-Date: Thu, 21 Mar 2019 10:44:01 +0800
-Message-ID: <20190321024359.GA12513@dragon>
-References: <20190304075050.33432-1-andy.tang@nxp.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [RESEND PATCH 00/11] add debugfs consumers,
+ tracepoints and supports USB Gen2 ISOC
+Date: Thu, 21 Mar 2019 10:53:38 +0800
+Message-ID: <1553136829-14712-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190304075050.33432-1-andy.tang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yuantian Tang <andy.tang@nxp.com>
-Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, daniel.lezcano@linaro.org, rui.zhang@intel.com, edubezval@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 03:50:50PM +0800, Yuantian Tang wrote:
-> Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core cluster
-> sensor is used to monitor the temperature of core and SoC platform is for
-> platform. The current dts only support the first sensor.
-> This patch adds the second sensor node to dts to enable it.
-> 
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
-> ---
-> v3:
-> 	- use more descriptive name for each zone
-> v2:
-> 	- Add more information about sensors to description
-> PS: In order to keep consistency to the first thermal-zone node, there will
-> be "WARNING: line over 80 characters" warnings.
-> 
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   43 +++++++++++++++++++++--
->  1 files changed, 39 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index 661137f..54f973b 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -129,19 +129,19 @@
->  	};
->  
->  	thermal-zones {
-> -		cpu_thermal: cpu-thermal {
-> +		core_cluster_thermal {
+In order to help debug, this series add more debugfs consumers,
+introduce a few initial tracepoints;
+And support new features introduced by USB3 Gen2 ISOC:
+1. TXCSR/RXCSR registers are adjusted to support greater MULT
+   and MAX_PKT
+2. QMU format is also improved
+last, some small problems are fixed.
 
-We prefer to use hyphen instead of underscore in node name.
+Chunfeng Yun (11):
+  usb: mtu3: check return value of devm_extcon_register_notifier()
+  usb: mtu3: print useful information also for device and host modes
+  usb: mtu3: remove unnecessary local variable @req
+  usb: mtu3: rebuild the code of getting vbus regulator
+  usb: mtu3: fix transfer error of USB3 Gen2 isoc
+  usb: mtu3: rebuild qmu_gpd struct to prepare to support new QMU format
+  usb: mtu3: supports new QMU format
+  usb: mtu3: add debugfs interface files
+  usb: mtu3: move vbus and mode debugfs interfaces into mtu3_debugfs.c
+  usb: mtu3: add tracepoints to help debug
+  usb: mtu3: add a function to switch mailbox state to string
 
-Shawn
+ drivers/usb/mtu3/Makefile          |  11 +
+ drivers/usb/mtu3/mtu3.h            |  57 ++-
+ drivers/usb/mtu3/mtu3_core.c       |  27 +-
+ drivers/usb/mtu3/mtu3_debug.h      |  50 +++
+ drivers/usb/mtu3/mtu3_debugfs.c    | 539 +++++++++++++++++++++++++++++
+ drivers/usb/mtu3/mtu3_dr.c         | 156 ++-------
+ drivers/usb/mtu3/mtu3_dr.h         |   4 +
+ drivers/usb/mtu3/mtu3_gadget.c     |  20 +-
+ drivers/usb/mtu3/mtu3_gadget_ep0.c |   4 +
+ drivers/usb/mtu3/mtu3_hw_regs.h    |  48 ++-
+ drivers/usb/mtu3/mtu3_plat.c       |  28 +-
+ drivers/usb/mtu3/mtu3_qmu.c        | 118 ++++---
+ drivers/usb/mtu3/mtu3_qmu.h        |   1 +
+ drivers/usb/mtu3/mtu3_trace.c      |  23 ++
+ drivers/usb/mtu3/mtu3_trace.h      | 279 +++++++++++++++
+ 15 files changed, 1146 insertions(+), 219 deletions(-)
+ create mode 100644 drivers/usb/mtu3/mtu3_debug.h
+ create mode 100644 drivers/usb/mtu3/mtu3_debugfs.c
+ create mode 100644 drivers/usb/mtu3/mtu3_trace.c
+ create mode 100644 drivers/usb/mtu3/mtu3_trace.h
 
->  			polling-delay-passive = <1000>;
->  			polling-delay = <5000>;
->  			thermal-sensors = <&tmu 0>;
->  
->  			trips {
-> -				cpu_alert: cpu-alert {
-> +				core_cluster_alert: core_cluster-alert {
->  					temperature = <85000>;
->  					hysteresis = <2000>;
->  					type = "passive";
->  				};
->  
-> -				cpu_crit: cpu-crit {
-> +				core_cluster_crit: core_cluster-crit {
->  					temperature = <95000>;
->  					hysteresis = <2000>;
->  					type = "critical";
-> @@ -150,7 +150,42 @@
->  
->  			cooling-maps {
->  				map0 {
-> -					trip = <&cpu_alert>;
-> +					trip = <&core_cluster_alert>;
-> +					cooling-device =
-> +						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +				};
-> +			};
-> +		};
-> +
-> +		platform-thermal {
-> +			polling-delay-passive = <1000>;
-> +			polling-delay = <5000>;
-> +			thermal-sensors = <&tmu 1>;
-> +
-> +			trips {
-> +				platform_alert: platform-alert {
-> +					temperature = <85000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				platform_crit: platform-crit {
-> +					temperature = <95000>;
-> +					hysteresis = <2000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				map0 {
-> +					trip = <&platform_alert>;
->  					cooling-device =
->  						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->  						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> -- 
-> 1.7.1
-> 
+-- 
+2.20.1
