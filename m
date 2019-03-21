@@ -1,7 +1,7 @@
 From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [RFC PATCH v2 1/5] mtd: cfi_cmdset_0002: Add support for polling status register
-Date: Thu, 21 Mar 2019 23:15:44 +0530
-Message-ID: <20190321174548.9288-2-vigneshr@ti.com>
+Subject: [RFC PATCH v2 4/5] dt-bindings: mtd: Add bindings for TI's AM654 Hyperbus memory controller
+Date: Thu, 21 Mar 2019 23:15:47 +0530
+Message-ID: <20190321174548.9288-5-vigneshr@ti.com>
 References: <20190321174548.9288-1-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,131 +13,60 @@ To: Vignesh R <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian No
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tudor.ambarus@microchip.com, nsekhar@ti.com, Mason Yang <masonccyang@mxic.com.tw>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-HyperFlash devices are compliant with CFI AMD/Fujitsu Extended Command
-Set(0x0002) for flash operations, therefore drivers/mtd/chips/cfi_cmdset_0002.c
-can be use as is. But these devices do not support DQ polling method of
-determining chip ready/good status. These flashes provide Status
-Register whose bits can be polled to know status of flash operation.
-
-Cypress HyperFlash datasheet here[1], talks about CFI Amd/Fujitsu
-Extended Query version 1.5. Bit 0 of "Software Features supported" field
-of CFI Primary Vendor-Specific Extended Query table indicates
-presence/absence of status register and Bit 1 indicates whether or not
-DQ polling is supported. Using these bits, its possible to determine
-whether flash supports DQ polling or need to use Status Register.
-
-Add support for polling status register to know device ready/status of
-erase/write operations when DQ polling is not supported.
-
-[1] https://www.cypress.com/file/213346/download
+Add binding documentation for TI's Hyperbus memory controller present on
+AM654 SoC.
 
 Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 ---
- drivers/mtd/chips/cfi_cmdset_0002.c | 50 +++++++++++++++++++++++++++++
- include/linux/mtd/cfi.h             |  5 +++
- 2 files changed, 55 insertions(+)
+ .../devicetree/bindings/mtd/ti,am654-hbmc.txt | 27 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
 
-diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c b/drivers/mtd/chips/cfi_cmdset_0002.c
-index 72428b6bfc47..29987d8e6c6e 100644
---- a/drivers/mtd/chips/cfi_cmdset_0002.c
-+++ b/drivers/mtd/chips/cfi_cmdset_0002.c
-@@ -49,6 +49,14 @@
- #define SST49LF008A		0x005a
- #define AT49BV6416		0x00d6
- 
-+/*
-+ * Bits of Status Register definition for flash devices that don't
-+ * support DQ polling (Eg.: Hyperflash)
-+ */
-+#define CFI_SR_DRB		BIT(7)
-+#define CFI_SR_ESB		BIT(5)
-+#define CFI_SR_PSB		BIT(4)
+diff --git a/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+new file mode 100644
+index 000000000000..b70fd1795fc5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+@@ -0,0 +1,27 @@
++Bindings for Hyperbus Memory Controller on TI's K3 family of SoCs
 +
- static int cfi_amdstd_read (struct mtd_info *, loff_t, size_t, size_t *, u_char *);
- static int cfi_amdstd_write_words(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
- static int cfi_amdstd_write_buffers(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
-@@ -97,6 +105,18 @@ static struct mtd_chip_driver cfi_amdstd_chipdrv = {
- 	.module		= THIS_MODULE
- };
- 
-+/*
-+ * Use status register to poll for Erase/write completion when DQ is not
-+ * supported. This is indicated by Bit[1:0] of SoftwareFeatures field in
-+ * CFI Primary Vendor-Specific Extended Query table 1.5
-+ */
-+static int cfi_use_status_reg(struct cfi_private *cfi)
-+{
-+	struct cfi_pri_amdstd *extp = cfi->cmdset_priv;
++Required properties:
++- compatible : "ti,am654-hbmc" for AM654 SoC
++- reg : Two entries:
++	First entry pointed to the register space of HBMC controller
++	Second entry pointing to the memory map region dedicated for
++	MMIO access to attached flash devices
++- ranges : Address range allocated for each Chipselect in the MMIO space
 +
-+	return (extp->MinorVersion >= '5') &&
-+		(extp->SoftwareFeatures & 0x11) == 1;
-+}
- 
- /* #define DEBUG_CFI_FEATURES */
- 
-@@ -744,8 +764,21 @@ static struct mtd_info *cfi_amdstd_setup(struct mtd_info *mtd)
-  */
- static int __xipram chip_ready(struct map_info *map, unsigned long addr)
- {
-+	struct cfi_private *cfi = map->fldrv_priv;
- 	map_word d, t;
- 
-+	if (cfi_use_status_reg(cfi)) {
-+		/*
-+		 * For chips that support status register, check device
-+		 * ready bit
-+		 */
-+		cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
-+				 cfi->device_type, NULL);
-+		d = map_read(map, addr);
++Example:
++	hbmc: hbmc@47034000 {
++		compatible = "ti,am654-hbmc";
++		reg = <0x0 0x47034000 0x0 0x100>,
++			<0x5 0x00000000 0x1 0x0000000>;
++		power-domains = <&k3_pds 55>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0x5 0x00000000 0x4000000>, /* CS0 - 64MB */
++			 <0x1 0x5 0x04000000 0x4000000>; /* CS1 - 64MB
 +
-+		return d.x[0] & CFI_SR_DRB;
-+	}
-+
- 	d = map_read(map, addr);
- 	t = map_read(map, addr);
++		/* Slave flash node */
++		flash@0{
++			compatible = "cypress,hyperflash";
++			reg = <0x0 0x4000000>;
++		};
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 48f1f227f65b..3453f397ad87 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7194,6 +7194,7 @@ S:	Supported
+ F:	drivers/mtd/hyperbus/
+ F:	include/linux/mtd/hyperbus.h
+ F:	Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
++F:	Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
  
-@@ -769,8 +802,25 @@ static int __xipram chip_ready(struct map_info *map, unsigned long addr)
-  */
- static int __xipram chip_good(struct map_info *map, unsigned long addr, map_word expected)
- {
-+	struct cfi_private *cfi = map->fldrv_priv;
- 	map_word oldd, curd;
- 
-+	if (cfi_use_status_reg(cfi)) {
-+		/*
-+		 * For chips that support status register, check device
-+		 * ready bit and Erase/Program status bit to know if
-+		 * operation succeeded.
-+		 */
-+		cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
-+				 cfi->device_type, NULL);
-+		curd = map_read(map, addr);
-+
-+		if (curd.x[0] & CFI_SR_DRB)
-+			return !(curd.x[0] & (CFI_SR_PSB | CFI_SR_ESB));
-+
-+		return 0;
-+	}
-+
- 	oldd = map_read(map, addr);
- 	curd = map_read(map, addr);
- 
-diff --git a/include/linux/mtd/cfi.h b/include/linux/mtd/cfi.h
-index cbf77168658c..92ac82ac2329 100644
---- a/include/linux/mtd/cfi.h
-+++ b/include/linux/mtd/cfi.h
-@@ -233,6 +233,11 @@ struct cfi_pri_amdstd {
- 	uint8_t  VppMin;
- 	uint8_t  VppMax;
- 	uint8_t  TopBottom;
-+	/* Below field are added from version 1.5 */
-+	uint8_t  ProgramSuspend;
-+	uint8_t  UnlockBypass;
-+	uint8_t  SecureSiliconSector;
-+	uint8_t  SoftwareFeatures;
- } __packed;
- 
- /* Vendor-Specific PRI for Atmel chips (command set 0x0002) */
+ HYPERVISOR VIRTUAL CONSOLE DRIVER
+ L:	linuxppc-dev@lists.ozlabs.org
 -- 
 2.21.0
