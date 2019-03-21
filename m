@@ -1,51 +1,58 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v7 4/4] Input: goodix - Add GT5663 CTP support
-Date: Thu, 21 Mar 2019 13:51:04 +0530
-Message-ID: <20190321082104.2874-5-jagan@amarulasolutions.com>
-References: <20190321082104.2874-1-jagan@amarulasolutions.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 4/4] leds: lm3532: Introduce the lm3532 LED driver
+Date: Thu, 21 Mar 2019 08:21:39 +0000
+Message-ID: <20190321082139.GS4731@dell>
+References: <20190313123249.17258-1-dmurphy@ti.com>
+ <20190313123249.17258-4-dmurphy@ti.com>
+ <a7ee025e-361e-90b8-e38d-53546a542102@gmail.com>
+ <7b3d8a13-d255-e36e-979b-cbd337078d30@ti.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190321082104.2874-1-jagan@amarulasolutions.com>
+Content-Disposition: inline
+In-Reply-To: <7b3d8a13-d255-e36e-979b-cbd337078d30@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Rob Herring <robh+dt@kernel.org>
-Cc: Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
+To: Dan Murphy <dmurphy@ti.com>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, pavel@ucw.cz, tony@atomide.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-GT5663 is capacitive touch controller with customized smart
-wakeup gestures.
+On Wed, 20 Mar 2019, Dan Murphy wrote:
+> On 3/20/19 1:59 PM, Jacek Anaszewski wrote:
+> > On 3/13/19 1:32 PM, Dan Murphy wrote:
+> >> Introduce the Texas Instruments LM3532 White LED driver.
+> >> The driver supports ALS configurability or manual brightness
+> >> control.
+> >>
+> >> The driver also supports associating LED strings with specific
+> >> control banks in a group or as individually controlled strings.
+> >>
+> >> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> >> ---
+> >>
+> >> v4 - Updated code to DT doc changes appending "ti," to TI specific properties -
+> >> https://lore.kernel.org/patchwork/patch/1050124/
+> >>
+> >> v3 - Removed switch case for register setting in favor of an algorithim (v1 comment),
+> >> https://lore.kernel.org/patchwork/patch/1049024/
+> >> v2 - Added look up tables for als_avg, als_imp and ramp times, fixed brightness
+> >> control when ALS is in control, added property value checks to ensure the values
+> >> are not out of bounds - https://lore.kernel.org/patchwork/patch/1048807/
+> >>
+> >>   drivers/leds/Kconfig       |  10 +
+> >>   drivers/leds/Makefile      |   1 +
+> >>   drivers/leds/leds-lm3532.c | 681 +++++++++++++++++++++++++++++++++++++
+> >>   3 files changed, 692 insertions(+)
+> >>   create mode 100644 drivers/leds/leds-lm3532.c
 
-Add support for it by adding compatible and supported chip data.
+[snip 700 lines of churn]
 
-The chip data on GT5663 is similar to GT1151, like
-- config data register has 0x8050 address
-- config data register max len is 240
-- config data checksum has 16-bit
+> Ack.  I give post v5 tomorrow.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- drivers/input/touchscreen/goodix.c | 2 ++
- 1 file changed, 2 insertions(+)
+Same for you too please Dan.
 
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index de5b80a08f41..c558b091749c 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -219,6 +219,7 @@ static const struct goodix_chip_data *goodix_get_chip_data(u16 id)
- {
- 	switch (id) {
- 	case 1151:
-+	case 5663:
- 	case 5688:
- 		return &gt1x_chip_data;
- 
-@@ -1003,6 +1004,7 @@ MODULE_DEVICE_TABLE(acpi, goodix_acpi_match);
- #ifdef CONFIG_OF
- static const struct of_device_id goodix_of_match[] = {
- 	{ .compatible = "goodix,gt1151" },
-+	{ .compatible = "goodix,gt5663" },
- 	{ .compatible = "goodix,gt5688" },
- 	{ .compatible = "goodix,gt911" },
- 	{ .compatible = "goodix,gt9110" },
 -- 
-2.18.0.321.gffc6fa0e3
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
