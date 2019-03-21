@@ -1,57 +1,90 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 3/9] power: supply: axp20x_usb_power:
- allow disabling input current limiting
-Date: Thu, 21 Mar 2019 10:30:12 +0100
-Message-ID: <20190321093012.kg72voxs5kw5xtzu@flea>
-References: <20190321084850.20769-1-wens@kernel.org>
- <20190321084850.20769-4-wens@kernel.org>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v2 9/9] rtc: Add support for the MediaTek MT6358 RTC
+Date: Thu, 21 Mar 2019 17:51:26 +0800
+Message-ID: <1553161886.13384.7.camel@mtksdaap41>
+References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <1552275991-34648-10-git-send-email-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="g72eht37btz5vbkz"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBJ5TZXSAKGQEYWT2QJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190321084850.20769-4-wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1552275991-34648-10-git-send-email-hsin-hsiung.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Eddie Huang <eddie.huang@mediatek.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, srv_heupstream@mediatek.com, Alessandro Zummo <a.zummo@towertech.it>, Marc Zyngier <marc.zyngier@arm.com>, Ran Bi <ran.bi@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-mediatek@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---g72eht37btz5vbkz
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
 Hi,
 
-The rest of the series is
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
-On Thu, Mar 21, 2019 at 04:48:44PM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->
-> The AXP PMICs allow the user to disable current limiting on the VBUS
-> input. While read-out of this setting was already supported by the
-> driver, it did not allow the user to configure the PMIC to disable
-> current limiting.
->
-> Add support for this.
->
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Should use 'rtc: mt6397: ' as prefix for this patch.
 
-Do we really want to do that though? That could have some pretty bad
-consequences.
 
-Maxime
+On Mon, 2019-03-11 at 11:46 +0800, Hsin-Hsiung Wang wrote:
+> From: Ran Bi <ran.bi@mediatek.com>
+> 
+> This add support for the MediaTek MT6358 RTC. MT6397 mfd will pass
+> RTC_WRTGR address offset to RTC driver.
+> 
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> ---
+>  drivers/rtc/rtc-mt6397.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index f85f1fc..c8a0090 100644
+> --- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -27,7 +27,7 @@
+>  #define RTC_BBPU		0x0000
+>  #define RTC_BBPU_CBUSY		BIT(6)
+>  
+> -#define RTC_WRTGR		0x003c
+> +#define RTC_WRTGR_DEFAULT	0x003c
+>  
+>  #define RTC_IRQ_STA		0x0002
+>  #define RTC_IRQ_STA_AL		BIT(0)
+> @@ -78,6 +78,7 @@ struct mt6397_rtc {
+>  	struct regmap		*regmap;
+>  	int			irq;
+>  	u32			addr_base;
+> +	u32			wrtgr_offset;
+>  };
+>  
+>  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+> @@ -86,7 +87,8 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+>  	int ret;
+>  	u32 data;
+>  
+> -	ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
+> +	ret = regmap_write(rtc->regmap,
+> +			   rtc->addr_base + rtc->wrtgr_offset, 1);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -341,6 +343,15 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	rtc->addr_base = res->start;
+>  
+> +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
+> +	if (res) {
+> +		rtc->wrtgr_offset = res->start;
+> +		dev_info(&pdev->dev, "register offset:%d\n", rtc->wrtgr_offset);
+> +	} else {
+> +		rtc->wrtgr_offset = RTC_WRTGR_DEFAULT;
+> +		dev_err(&pdev->dev, "Failed to get register offset\n");
+> +	}
+> +
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---g72eht37btz5vbkz--
+Since this will be passed by MFD, do we still need to keep the DEFAULT?
+Any case this platform_get_resource will failed?
+
+It's too bad HW changed this offset, but I'm not sure about passing this
+information from MFD. We have 1 register that have different offset now,
+and might have others for future chips, adding each one by
+IORESOURCE_IRQ doesn't looks like a good solution. Keeping this
+information in RTC driver only also looks better.
+
+
+Joe.C
