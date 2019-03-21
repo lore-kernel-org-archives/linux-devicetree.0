@@ -1,61 +1,70 @@
-From: Andy Tang <andy.tang@nxp.com>
-Subject: RE: [PATCH v2] arm64: dts: ls1088a: add one more thermal zone node
-Date: Thu, 21 Mar 2019 01:05:29 +0000
-Message-ID: <VI1PR04MB4333256C38E6DEDD3E0F303AF3420@VI1PR04MB4333.eurprd04.prod.outlook.com>
-References: <20190304032111.21770-1-andy.tang@nxp.com>
- <20190304062115.GB26041@dragon>
- <VI1PR04MB433386B86A5E6AA804E9C3B5F3710@VI1PR04MB4333.eurprd04.prod.outlook.com>
- <dc94e884-f5eb-fe07-27ef-6a94c3174acb@linaro.org>
- <VI1PR04MB43330C6FAAD0D8EAE901C56FF34D0@VI1PR04MB4333.eurprd04.prod.outlook.com>
- <cb262e2c-7115-86a5-01ce-4a12d45ee019@linaro.org>
- <VI1PR04MB43338294C193D1AB4F577E92F34D0@VI1PR04MB4333.eurprd04.prod.outlook.com>
- <20190320081853.GE4980@dragon>
- <VI1PR04MB433351C20A9863EEF21A2504F3410@VI1PR04MB4333.eurprd04.prod.outlook.com>
- <20190320144907.GC8337@dragon>
+From: Logan Gunthorpe <logang-OTvnGxWRz7hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC v4 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Wed, 20 Mar 2019 19:07:34 -0600
+Message-ID: <6d9b3b21-1179-3a45-7545-30aa15306cb4@deltatee.com>
+References: <20190214213729.21702-1-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190320144907.GC8337@dragon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20190214213729.21702-1-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-CA
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: brakmo-b10kYP2dOMg@public.gmane.org, pmladek-IBi9RG/b67k@public.gmane.org, amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tim.Bird-7U/KSKJipcs@public.gmane.org, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIDxzaGF3
-bmd1b0BrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE5xOoz1MIyMMjVIDIyOjQ5DQo+IFRvOiBBbmR5
-IFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPg0KPiBDYzogRGFuaWVsIExlemNhbm8gPGRhbmllbC5s
-ZXpjYW5vQGxpbmFyby5vcmc+OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gZGV2aWNldHJlZUB2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBtQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+Ow0KPiBlZHViZXp2
-YWxAZ21haWwuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7IHJ1aS56aGFuZ0BpbnRlbC5jb207DQo+
-IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BB
-VENIIHYyXSBhcm02NDogZHRzOiBsczEwODhhOiBhZGQgb25lIG1vcmUgdGhlcm1hbCB6b25lIG5v
-ZGUNCj4gDQo+IE9uIFdlZCwgTWFyIDIwLCAyMDE5IGF0IDA4OjQ0OjE4QU0gKzAwMDAsIEFuZHkg
-VGFuZyB3cm90ZToNCj4gPiA+ID4gU2Vuc29yIElECQlwbGFjZW1lbnQNCj4gPiA+ID4gMQkJCURE
-UiBjb250cm9sbGVyIDENCj4gPiA+ID4gMgkJCUREUiBjb250cm9sbGVyIDINCj4gPiA+ID4gMwkJ
-CUREUiBjb250cm9sbGVyIDMNCj4gPiA+ID4gNAkJCWNvcmUgY2x1c3RlciAxDQo+ID4gPiA+IDUg
-CQljb3JlIGNsdXN0ZXIgMg0KPiA+ID4gPiA2IAkJY29yZSBjbHVzdGVyIDMNCj4gPiA+ID4gNyAJ
-CWNvcmUgY2x1c3RlciA0DQo+ID4gPiA+DQo+ID4gPiA+IEFwcGFyZW50bHkgdXNpbmcgQ1BVIG9y
-IENQVS1jbHVzdGVyIGlzIG5vdCBhcHByb3ByaWF0ZS4gQ29yZS1jbHVzdGVyIGlzDQo+IGJldHRl
-ci4NCj4gPiA+DQo+ID4gPiBTbyB1c2luZyBDUFUgaXMgYXBwcm9wcmlhdGUgZm9yIG1lLCBsZXNz
-IGNvbmZ1c2luZywgbW9yZSBjb25zaXN0ZW50DQo+ID4gPiB3aXRoIG90aGVyIHBsYXRmb3Jtcy4N
-Cj4gPiBXaGF0IGFib3V0IGNvcmUgY2x1c3Rlcj8gV2UgY2FuJ3QgbmFtZSBpdCBjcHUwLCBjcHUx
-IGV0YyBJIHRoaW5rLg0KPiANCj4gSG1tLCB5ZXMsIHRoYXQgd291bGQgYmUgZXZlbiBtb3JlIGNv
-bmZ1c2luZy4gIFdoYXQgYWJvdXQgY3B1LXRoZXJtYWwtMSwNCj4gY3B1LXRoZXJtYWwtMiAuLi4/
-DQpDcHUtdGhlcm1hbC14IGNhbid0IGNoYW5nZSBhbnl0aGluZyBiZXR0ZXIgdGhhbiBjcHVYLiBJ
-dCBjYW4ndCByZWZsZWN0IHRoZSBjb25jZXB0IG9mIENMVVNURVIuDQpJIHByZWZlciB0byB1c2Ug
-Y29yZS1jbHVzdGVyLiBJdCBpcyBhIHdpbGQgYWNjZXB0ZWQgdGVybSBpbiBBUk0gZWNvc3lzdGVt
-Lg0KDQpCUiwNCkFuZHkNCj4gDQo+IFNoYXduDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi,
+
+On 2019-02-14 2:37 p.m., Brendan Higgins wrote:
+> This patch set proposes KUnit, a lightweight unit testing and mocking
+> framework for the Linux kernel.
+
+I haven't followed the entire conversation but I saw the KUnit write-up
+on LWN and ended up, as an exercise, giving it a try.
+
+I really like the idea of having a fast unit testing infrastructure in
+the kernel. Occasionally, I write userspace tests for tricky functions
+that I essentially write by copying the code over to a throw away C file
+and exercise them as I need. I think it would be great to be able to
+keep these tests around in a way that they can be run by anyone who
+wants to touch the code.
+
+I was just dealing with some functions that required some mocked up
+tests so I thought I'd give KUnit a try. I found writing the code very
+easy and the infrastructure I was testing was quite simple to mock out
+the hardware.
+
+However, I got a bit hung up by one issue: I was writing unit tests for
+code in the NTB tree which itself depends on CONFIG_PCI which cannot be
+enabled in UML (for what should be obvious reasons). I managed to work
+around this because, as luck would have it, all the functions I cared
+about testing were actually static inline functions in headers. So I
+placed my test code in the kunit folder (so it would compile) and hacked
+around a couple a of functions I didn't care about that would not be
+compiled.
+
+In the end I got it to work acceptably, but I get the impression that
+KUnit will not be usable for wide swaths of kernel code that can't be
+compiled in UML. Has there been any discussion or ideas on how to work
+around this so it can be more generally useful? Or will this feature be
+restricted roughly to non-drivers and functions in headers that don't
+have #ifdefs around them?
+
+If you're interested in seeing the unit tests I ended up writing you can
+find the commits here[1].
+
+Thanks,
+
+Logan
+
+[1] https://github.com/sbates130272/linux-p2pmem/ ntb_kunit
