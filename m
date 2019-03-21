@@ -1,40 +1,99 @@
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: RE: [PATCH 1/3] ASoC: da7219: Update DAI clock binding info to cover
- WCLK/BCLK
-Date: Thu, 21 Mar 2019 14:15:41 +0000
-Message-ID: <AM5PR1001MB0994B0B76F0166D45990E5F980420@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-References: <cover.1553017237.git.Adam.Thomson.Opensource@diasemi.com>
- <a2e2ae888b3c2fbcaab3e4791ce98f877e3d38ff.1553017237.git.Adam.Thomson.Opensource@diasemi.com>
- <20190321122152.GA5684@sirena.org.uk>
+From: Tomas Novotny <tomas@novotny.cz>
+Subject: Re: [PATCH v2 1/5] iio: light: vcnl4000 use word writes instead of
+  byte writes
+Date: Thu, 21 Mar 2019 15:28:23 +0100
+Message-ID: <20190321152823.41991dae@tomas-nb>
+References: <20190317154802.15174-1-angus@akkea.ca>
+        <20190317154802.15174-2-angus@akkea.ca>
+        <20190320155322.3fd9f080@tomas.local.tbs-biometrics.cz>
+        <16a2d3e86f296fac2f56fb47e1f1afac@www.akkea.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190321122152.GA5684@sirena.org.uk>
-Content-Language: en-US
+In-Reply-To: <16a2d3e86f296fac2f56fb47e1f1afac@www.akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Akshu Agrawal <Akshu.Agrawal@amd.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+To: Angus Ainslie <angus@akkea.ca>
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 21 March 2019 12:22, Mark Brown wrote:
+Hi Angus,
 
-> On Tue, Mar 19, 2019 at 05:49:30PM +0000, Adam Thomson wrote:
->=20
-> > -- #clock-cells :  Should be set to '<0>', only one clock source
-> > provided;
-> > -- clock-output-names : Name given for DAI clocks output;
-> > +- #clock-cells :  Should be set to '<1>', two clock sources provided;
-> > +- clock-output-names : Names given for DAI clock outputs (WCLK &
-> > +BCLK);
->=20
-> This might need some handling later on as it's a binding change, however =
-I can't
-> see any current users so hopefully nobody will notice.
+On Wed, 20 Mar 2019 13:21:58 -0700
+Angus Ainslie <angus@akkea.ca> wrote:
 
-No I do not believe there are users of this, other than the AMD board which
-doesn't use these bindings. Actually given they're the same bindings, albei=
-t
-with a different number of cells, I've tested the code with just 1 cell and
-1 clock in the DTS and this still works as before so the driver should be
-backwards compatible.
+> Hi Tomas,
+> 
+> On 2019-03-20 07:53, Tomas Novotny wrote:
+> > Hi Angus,
+> > 
+> > On Sun, 17 Mar 2019 08:47:58 -0700
+> > "Angus Ainslie (Purism)" <angus@akkea.ca> wrote:
+> >   
+> >> The VCNL4200 datasheet says that word read and writes should be used
+> >> to access the registers.
+> >> 
+> >> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> >> ---
+> >>  drivers/iio/light/vcnl4000.c | 4 ++--
+> >>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >> 
+> >> diff --git a/drivers/iio/light/vcnl4000.c 
+> >> b/drivers/iio/light/vcnl4000.c
+> >> index 04fd0d4b6f19..5295330b65e2 100644
+> >> --- a/drivers/iio/light/vcnl4000.c
+> >> +++ b/drivers/iio/light/vcnl4000.c
+> >> @@ -140,10 +140,10 @@ static int vcnl4200_init(struct vcnl4000_data 
+> >> *data)
+> >>  	data->rev = (ret >> 8) & 0xf;
+> >> 
+> >>  	/* Set defaults and enable both channels */
+> >> -	ret = i2c_smbus_write_byte_data(data->client, VCNL4200_AL_CONF, 
+> >> 0x00);
+> >> +	ret = i2c_smbus_write_word_data(data->client, VCNL4200_AL_CONF, 
+> >> 0x00);  
+> > 
+> > minor note: the 0x00 looks like a byte. 0 or 0x0000 would be slightly 
+> > better?
+> > The same below.
+> >   
+> >>  	if (ret < 0)
+> >>  		return ret;
+> >> -	ret = i2c_smbus_write_byte_data(data->client, VCNL4200_PS_CONF1, 
+> >> 0x00);
+> >> +	ret = i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, 
+> >> 0x00);  
+> > 
+> > The VCNL4200_PS_CONF1 definition is a bit misleading with word write. 
+> > Because
+> > PS_CONF1 is only a low byte of command code 0x03. The high byte of 0x03 
+> > is
+> > PS_CONF2. I would rename it.
+> >   
+> 
+> As far as a base address for the register that is correct based on the 
+> names in the datasheet. I suppose I could add something like:
+> 
+> #define VCNL4200_PS_CONF  VCNL4200_PS_CONF1
+>
+> and change the reference here if you think that would be more clear.
+
+to be honest, I don't know the best practice. As there is also PS_CONF3, I
+was thinking about PS_CONF1_2, but thinking again, your current name is good
+enough maybe.
+
+Tomas
+
+> >>  	if (ret < 0)
+> >>  		return ret;  
+> > 
+> > Anyway, the main point is that I've tested this patch on VCNL4200 and 
+> > it
+> > works, so:
+> > Tested-by: Tomas Novotny <tomas@novotny.cz>
+> > 
+> > T.  
+> 
+> Thanks for testing it
+> Angus
+> 
