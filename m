@@ -1,54 +1,55 @@
-From: "Cormier, Jonathan" <jcormier@criticallink.com>
-Subject: [PATCH v2 4/7] ASoC: tlv320aic26: Fix module autoload
-Date: Thu, 21 Mar 2019 18:15:46 -0400
-Message-ID: <20190321221549.13765-5-jcormier@criticallink.com>
-References: <20190321221549.13765-1-jcormier@criticallink.com>
+From: Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [RFC v4 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Thu, 21 Mar 2019 16:26:45 -0600
+Message-ID: <3bdbe44c-5bd8-db37-89f9-a518cd5a21a8@deltatee.com>
+References: <20190214213729.21702-1-brendanhiggins@google.com>
+ <6d9b3b21-1179-3a45-7545-30aa15306cb4@deltatee.com>
+ <CAFd5g47G=mTdk+=wpO+rkyO0+mAbEfPAg=Pr7_507Uek4sdWeA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190321221549.13765-1-jcormier@criticallink.com>
+In-Reply-To: <CAFd5g47G=mTdk+=wpO+rkyO0+mAbEfPAg=Pr7_507Uek4sdWeA@mail.gmail.com>
+Content-Language: en-CA
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org
-Cc: Bob Duke <bduke@criticallink.com>, Mike Williamson <michael.williamson@criticallink.com>, Greg Gluszek <greg.gluszek@criticallink.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Jyri Sarha <jsarha@ti.com>, Misael Lopez Cruz <misael.lopez@ti.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Kees Cook <keescook@google.com>, Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org, Rob Herring <robh@kernel.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>, Michael Ellerman <mpe@ellerman.id.au>, Joe Perches <joe@perches.com>, brakmo@fb.com, Steven Rostedt <rostedt@goodmis.org>, "Bird, Timothy" <Tim.Bird@sony.com>, Kevin Hilman <khilman@baylibre.com>, Julia Lawall <julia.lawall@lip6.fr>, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>, linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-Add the missing MODULE_DEVICE_TABLE() for OF and SPI to export
-the information so modules have the correct aliases built-in and
-autoloading works correctly.
 
-A longer explanation by Javier Canillas can be found here:
-https://lkml.org/lkml/2015/7/30/519
-https://lkml.org/lkml/2014/9/11/458
 
-Signed-off-by: Cormier, Jonathan <jcormier@criticallink.com>
----
- sound/soc/codecs/tlv320aic26.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+On 2019-03-21 4:07 p.m., Brendan Higgins wrote:
+> A couple of points, as for needing CONFIG_PCI; my plan to deal with
+> that type of thing has been that we would add support for a KUnit/UML
+> version that is just for KUnit. It would mock out the necessary bits
+> to provide a fake hardware implementation for anything that might
+> depend on it. I wrote a prototype for mocking/faking MMIO that I
+> presented to the list here[1]; it is not part of the current patchset
+> because we decided it would be best to focus on getting an MVP in, but
+> I plan on bringing it back up at some point. Anyway, what do you
+> generally think of this approach?
 
-diff --git a/sound/soc/codecs/tlv320aic26.c b/sound/soc/codecs/tlv320aic26.c
-index 5c9b320b918c..db1d1704ae5c 100644
---- a/sound/soc/codecs/tlv320aic26.c
-+++ b/sound/soc/codecs/tlv320aic26.c
-@@ -368,6 +368,12 @@ static int aic26_spi_probe(struct spi_device *spi)
- 	return ret;
- }
- 
-+static const struct spi_device_id tlv320aic26_id_table[] = {
-+	{ "tlv320aic26" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(spi, tlv320aic26_id_table);
-+
- static const struct of_device_id tlv320aic26_of_match[] = {
- 	{ .compatible = "ti,tlv320aic26", },
- 	{},
-@@ -380,6 +386,7 @@ static struct spi_driver aic26_spi = {
- 		.of_match_table = of_match_ptr(tlv320aic26_of_match),
- 	},
- 	.probe = aic26_spi_probe,
-+	.id_table = tlv320aic26_id_table,
- };
- 
- module_spi_driver(aic26_spi);
--- 
-2.21.0
+Yes, I was wondering if that might be possible. I think that's a great
+approach but it will unfortunately take a lot of work before larger
+swaths of the kernel are testable in Kunit with UML. Having more common
+mocked infrastructure will be great by-product of it though.
+
+> Awesome, I looked at the code you posted and it doesn't look like you
+> have had too many troubles. One thing that stood out to me, why did
+> you need to put it in the kunit/ dir?
+
+Yeah, writing the code was super easy. Only after, did I realized I
+couldn't get it to easily build.
+
+Putting it in the kunit directory was necessary because nothing in the
+NTB tree builds unless CONFIG_NTB is set (see drivers/Makefile) and
+CONFIG_NTB depends on CONFIG_PCI. I didn't experiment to see how hard it
+would be to set CONFIG_NTB without CONFIG_PCI; I assumed it would be tricky.
+
+> I am looking forward to see what you think!
+
+Generally, I'm impressed and want to see this work in upstream as soon
+as possible so I can start to make use of it!
+
+Logan
