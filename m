@@ -1,48 +1,154 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V2 1/6] mmc: mmci: add get_datactrl_cfg callback
-Date: Thu, 21 Mar 2019 17:57:38 +0100
-Message-ID: <CAPDyKFq52dXPP+-peh82uCqTDFhmXvYWbTyncHDr_Oyo8Bd1VA@mail.gmail.com>
-References: <1551976742-4358-1-git-send-email-ludovic.Barre@st.com> <1551976742-4358-2-git-send-email-ludovic.Barre@st.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH 3/4] ARM: dts: da850-evm: enable cpufreq
+Date: Thu, 21 Mar 2019 18:13:25 +0100
+Message-ID: <CAMRc=MfFqYJnfgA=Ku-mpYv_NQz2BhsBvXtwpKufScob+YT_Og@mail.gmail.com>
+References: <20190321141010.19612-1-brgl@bgdev.pl> <20190321141010.19612-4-brgl@bgdev.pl>
+ <06c6fe16-eb33-960c-909a-635e70c3b976@lechnology.com> <CAMpxmJWDn9-W6wGTyZdAHJJnp8vHysNHNcL+qqKMRss664MhrQ@mail.gmail.com>
+ <CAMpxmJUT7Rc5noOAKZsoaN--hu14wQTujnH_6v8TWiO=KufNhg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551976742-4358-2-git-send-email-ludovic.Barre@st.com>
+In-Reply-To: <CAMpxmJUT7Rc5noOAKZsoaN--hu14wQTujnH_6v8TWiO=KufNhg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: David Lechner <david@lechnology.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 7 Mar 2019 at 17:39, Ludovic Barre <ludovic.Barre@st.com> wrote:
+czw., 21 mar 2019 o 17:44 Bartosz Golaszewski
+<bgolaszewski@baylibre.com> napisa=C5=82(a):
 >
-> From: Ludovic Barre <ludovic.barre@st.com>
+> czw., 21 mar 2019 o 17:36 Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> napisa=C5=82(a):
+> >
+> > czw., 21 mar 2019 o 16:53 David Lechner <david@lechnology.com> napisa=
+=C5=82(a):
+> > >
+> > > On 3/21/19 9:10 AM, Bartosz Golaszewski wrote:
+> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > >
+> > > > Enable cpufreq-dt support for da850-evm. The cvdd regulator is fixe=
+d
+> > > > at 1.2V on this board so disable the lower operating points and ena=
+ble
+> > > > the 375MHz opp.
+> > >
+> > >
+> > > The board-da850-evm.c file seems to indicate that this regulator is
+> > > variable and comes from the tps65070. This regulator seems to be miss=
+ing
+> > > from the device tree though, even though it has device tree bindings.
+> > >
+> >
+> > Oh snap, you're right. I glanced over the 1.2V comment and thought
+> > it's the same as other boards, but actually it specifies: .min_uV =3D
+> > 950000, .max_uV =3D 1350000, so all the operating points should work on
+> > that one.
+> >
 >
-> This patch adds get_datactrl_cfg callback in mmci_host_ops
-> to allow to get datactrl configuration specific at variant.
+> It seems this pmic is defined here[1] and a skeleton included here[2]
+> and then the regulator constraints follow.
 >
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> ---
->  drivers/mmc/host/mmci.h | 1 +
->  1 file changed, 1 insertion(+)
+> Bart
 >
-> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-> index 6bde28c..a59049b 100644
-> --- a/drivers/mmc/host/mmci.h
-> +++ b/drivers/mmc/host/mmci.h
-> @@ -362,6 +362,7 @@ struct mmci_host_ops {
->                          bool next);
->         void (*unprep_data)(struct mmci_host *host, struct mmc_data *data,
->                             int err);
-> +       u32 (*get_datactrl_cfg)(struct mmci_host *host);
->         void (*get_next_data)(struct mmci_host *host, struct mmc_data *data);
->         int (*dma_setup)(struct mmci_host *host);
->         void (*dma_release)(struct mmci_host *host);
-> --
-> 2.7.4
+> [1] https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/da85=
+0-evm.dts#L224
+> [2] https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/da85=
+0-evm.dts#L326
 >
 
-Perhaps squash this change with patch2, they seems to belong to each
-other as they are both the preparation that is needed for the
-following changes on top.
+Ok I retested and the patch will look like this:
 
-Kind regards
-Uffe
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.=
+dts
+index f04bc3e15332..a0a1b3dccf37 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -191,6 +191,18 @@
+         };
+ };
+
++&cpu {
++        cpu-supply =3D <&vdcdc3_reg>;
++};
++
++&opp_375 {
++        status =3D "okay";
++};
++
++&opp_456 {
++        status =3D "okay";
++};
++
+ &sata {
+         status =3D "okay";
+ };
+
+I'll resend the whole series tomorrow to not spam Sekhar's mailbox anymore.
+
+Bartosz
+
+> > Bart
+> >
+> > > Cc: Adam Ford
+> > >
+> > >
+> > > >
+> > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > > ---
+> > > >   arch/arm/boot/dts/da850-evm.dts | 30 ++++++++++++++++++++++++++++=
+++
+> > > >   1 file changed, 30 insertions(+)
+> > > >
+> > > > diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da=
+850-evm.dts
+> > > > index f04bc3e15332..f63867692da4 100644
+> > > > --- a/arch/arm/boot/dts/da850-evm.dts
+> > > > +++ b/arch/arm/boot/dts/da850-evm.dts
+> > > > @@ -151,6 +151,15 @@
+> > > >                       system-clock-frequency =3D <24576000>;
+> > > >               };
+> > > >       };
+> > > > +
+> > > > +     cvdd: regulator0 {
+> > > > +             compatible =3D "regulator-fixed";
+> > > > +             regulator-name =3D "cvdd";
+> > > > +             regulator-min-microvolt =3D <1200000>;
+> > > > +             regulator-max-microvolt =3D <1200000>;
+> > > > +             regulator-always-on;
+> > > > +             regulator-boot-on;
+> > > > +     };
+> > > >   };
+> > > >
+> > > >   &ecap2 {
+> > > > @@ -191,6 +200,27 @@
+> > > >       };
+> > > >   };
+> > > >
+> > > > +&cpu {
+> > > > +     cpu-supply =3D <&cvdd>;
+> > > > +};
+> > > > +
+> > > > +/*
+> > > > + * DA850-EVM has a fixed CVDD of 1.2V - we cannot go below 300MHz =
+or
+> > > > + * above 375MHz.
+> > > > + */
+> > > > +
+> > > > +&opp_100 {
+> > > > +     status =3D "disabled";
+> > > > +};
+> > > > +
+> > > > +&opp_200 {
+> > > > +     status =3D "disabled";
+> > > > +};
+> > > > +
+> > > > +&opp_375 {
+> > > > +     status =3D "okay";
+> > > > +};
+> > > > +
+> > > >   &sata {
+> > > >       status =3D "okay";
+> > > >   };
+> > > >
+> > >
