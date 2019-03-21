@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 4/4] ARM: davinci_all_defconfig: Enable CPUFREQ_DT
-Date: Thu, 21 Mar 2019 15:10:10 +0100
-Message-ID: <20190321141010.19612-5-brgl@bgdev.pl>
+Subject: [PATCH 1/4] ARM: davinci: fix cpufreq registration on da850-evm
+Date: Thu, 21 Mar 2019 15:10:07 +0100
+Message-ID: <20190321141010.19612-2-brgl@bgdev.pl>
 References: <20190321141010.19612-1-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,28 +12,40 @@ To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-From: David Lechner <david@lechnology.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This sets CONFIG_CPUFREQ_DT=m in davinci_all_defconfig. This is used for
-frequency scaling on device tree boards.
+The system_rev variable is never set on davinci and is always 0, so
+we're using the default max operating point of 300MHz. The cvdd supply
+is fixed at 1.2V however, so we can go up to 372MHz. Remove the switch
+and always set da850_max_speed to 372000.
 
-Signed-off-by: David Lechner <david@lechnology.com>
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/configs/davinci_all_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-davinci/board-da850-evm.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
-index 207962a656a2..c3502236132e 100644
---- a/arch/arm/configs/davinci_all_defconfig
-+++ b/arch/arm/configs/davinci_all_defconfig
-@@ -45,6 +45,7 @@ CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE=y
- CONFIG_CPU_FREQ_GOV_PERFORMANCE=m
- CONFIG_CPU_FREQ_GOV_POWERSAVE=m
- CONFIG_CPU_FREQ_GOV_ONDEMAND=m
-+CONFIG_CPUFREQ_DT=m
- CONFIG_CPU_IDLE=y
- CONFIG_NET=y
- CONFIG_PACKET=y
+diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
+index 1fdc9283a8c5..77d74fb311fa 100644
+--- a/arch/arm/mach-davinci/board-da850-evm.c
++++ b/arch/arm/mach-davinci/board-da850-evm.c
+@@ -1155,17 +1155,7 @@ static struct edma_rsv_info *da850_edma_rsv[2] = {
+ #ifdef CONFIG_CPU_FREQ
+ static __init int da850_evm_init_cpufreq(void)
+ {
+-	switch (system_rev & 0xF) {
+-	case 3:
+-		da850_max_speed = 456000;
+-		break;
+-	case 2:
+-		da850_max_speed = 408000;
+-		break;
+-	case 1:
+-		da850_max_speed = 372000;
+-		break;
+-	}
++	da850_max_speed = 372000;
+ 
+ 	return da850_register_cpufreq("pll0_sysclk3");
+ }
 -- 
 2.20.1
