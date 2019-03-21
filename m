@@ -1,154 +1,124 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH 3/4] ARM: dts: da850-evm: enable cpufreq
-Date: Thu, 21 Mar 2019 18:13:25 +0100
-Message-ID: <CAMRc=MfFqYJnfgA=Ku-mpYv_NQz2BhsBvXtwpKufScob+YT_Og@mail.gmail.com>
-References: <20190321141010.19612-1-brgl@bgdev.pl> <20190321141010.19612-4-brgl@bgdev.pl>
- <06c6fe16-eb33-960c-909a-635e70c3b976@lechnology.com> <CAMpxmJWDn9-W6wGTyZdAHJJnp8vHysNHNcL+qqKMRss664MhrQ@mail.gmail.com>
- <CAMpxmJUT7Rc5noOAKZsoaN--hu14wQTujnH_6v8TWiO=KufNhg@mail.gmail.com>
+From: Evan Green <evgreen@chromium.org>
+Subject: [PATCH v5 0/8] phy: qcom-ufs: Enable regulators to be off in suspend
+Date: Thu, 21 Mar 2019 10:17:52 -0700
+Message-ID: <20190321171800.104681-1-evgreen@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMpxmJUT7Rc5noOAKZsoaN--hu14wQTujnH_6v8TWiO=KufNhg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: David Lechner <david@lechnology.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Stephen Boyd <swboyd@chromium.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, Pedro Sousa <pedrom.sousa@synopsys.com>, liwei <liwei213@huawei.com>, linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, Bart Van Assche <Bart.VanAssche@wdc.com>, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Subhash Jadavani <subhashj@codeaurora.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh+dt@kernel.org>, Avri Altman <avri.altman@wdc.com>, Mark Rutland <mark.rutla>
 List-Id: devicetree@vger.kernel.org
 
-czw., 21 mar 2019 o 17:44 Bartosz Golaszewski
-<bgolaszewski@baylibre.com> napisa=C5=82(a):
->
-> czw., 21 mar 2019 o 17:36 Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> napisa=C5=82(a):
-> >
-> > czw., 21 mar 2019 o 16:53 David Lechner <david@lechnology.com> napisa=
-=C5=82(a):
-> > >
-> > > On 3/21/19 9:10 AM, Bartosz Golaszewski wrote:
-> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > >
-> > > > Enable cpufreq-dt support for da850-evm. The cvdd regulator is fixe=
-d
-> > > > at 1.2V on this board so disable the lower operating points and ena=
-ble
-> > > > the 375MHz opp.
-> > >
-> > >
-> > > The board-da850-evm.c file seems to indicate that this regulator is
-> > > variable and comes from the tps65070. This regulator seems to be miss=
-ing
-> > > from the device tree though, even though it has device tree bindings.
-> > >
-> >
-> > Oh snap, you're right. I glanced over the 1.2V comment and thought
-> > it's the same as other boards, but actually it specifies: .min_uV =3D
-> > 950000, .max_uV =3D 1350000, so all the operating points should work on
-> > that one.
-> >
->
-> It seems this pmic is defined here[1] and a skeleton included here[2]
-> and then the regulator constraints follow.
->
-> Bart
->
-> [1] https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/da85=
-0-evm.dts#L224
-> [2] https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/da85=
-0-evm.dts#L326
->
+The goal with this series is to enable shutting off regulators that power
+UFS during system suspend.
 
-Ok I retested and the patch will look like this:
+In "the good life" version of this, we'd just disable the regulators
+in phy_poweroff() and be done with it. Unfortunately, that's not symmetric,
+as regulators are not enabled during phy_poweron(). Ok, so you might think
+we could just move the regulator enable and anything else that needs to
+come along into phy_poweron(), so that we can then undo it all in
+phy_poweroff(). That's where things get tricky.
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.=
-dts
-index f04bc3e15332..a0a1b3dccf37 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -191,6 +191,18 @@
-         };
- };
+The qcom-qmp-phy overloaded the phy_init() and phy_poweron() callbacks,
+basically to mean "init phase 1" and "init phase 2". There are two phases
+because they have this phy_reset bit outside of the phy (in the UFS
+controller registers), and they need to make sure this bit is toggled at
+specific points in the phy init sequence. So there's this implicit
+sequence in the init dance between ufs-qcom.c and phy-qcom-qmp.c:
+1) ufs-qcom asserts the PHY reset bit.
+2) phy-qcom-qmp phy_init() does most of its initialization, but exits early.
+3) ufs-qcom deasserts the PHY reset bit.
+4) phy-qcom-qmp phy_poweron() finishes its initialization.
 
-+&cpu {
-+        cpu-supply =3D <&vdcdc3_reg>;
-+};
-+
-+&opp_375 {
-+        status =3D "okay";
-+};
-+
-+&opp_456 {
-+        status =3D "okay";
-+};
-+
- &sata {
-         status =3D "okay";
- };
+This init dance is very difficult to follow in the code (since it's split
+between two drivers and not spelled out well), and arguably represents a
+deficiency in the hardware description of these devices.
 
-I'll resend the whole series tomorrow to not spam Sekhar's mailbox anymore.
+In this series I'm proposing tweaking the bindings for the Qualcomm
+UFS controller and PHY. In it we expose a reset controller from the
+UFS controller, that is then picked up and used from the PHY code.
+With this, the phy code can be reorganized to complete its initialization
+in a single function, removing the implicit two-phase overloading.
 
-Bartosz
+Then I can move most of the phy initialization, including enabling
+the regulators, into phy_poweron(). Now, when phy_poweroff() is called,
+the phy actually powers off. This finally disables the regulators
+and allows me to save power in system suspend.
 
-> > Bart
-> >
-> > > Cc: Adam Ford
-> > >
-> > >
-> > > >
-> > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > > ---
-> > > >   arch/arm/boot/dts/da850-evm.dts | 30 ++++++++++++++++++++++++++++=
-++
-> > > >   1 file changed, 30 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da=
-850-evm.dts
-> > > > index f04bc3e15332..f63867692da4 100644
-> > > > --- a/arch/arm/boot/dts/da850-evm.dts
-> > > > +++ b/arch/arm/boot/dts/da850-evm.dts
-> > > > @@ -151,6 +151,15 @@
-> > > >                       system-clock-frequency =3D <24576000>;
-> > > >               };
-> > > >       };
-> > > > +
-> > > > +     cvdd: regulator0 {
-> > > > +             compatible =3D "regulator-fixed";
-> > > > +             regulator-name =3D "cvdd";
-> > > > +             regulator-min-microvolt =3D <1200000>;
-> > > > +             regulator-max-microvolt =3D <1200000>;
-> > > > +             regulator-always-on;
-> > > > +             regulator-boot-on;
-> > > > +     };
-> > > >   };
-> > > >
-> > > >   &ecap2 {
-> > > > @@ -191,6 +200,27 @@
-> > > >       };
-> > > >   };
-> > > >
-> > > > +&cpu {
-> > > > +     cpu-supply =3D <&cvdd>;
-> > > > +};
-> > > > +
-> > > > +/*
-> > > > + * DA850-EVM has a fixed CVDD of 1.2V - we cannot go below 300MHz =
-or
-> > > > + * above 375MHz.
-> > > > + */
-> > > > +
-> > > > +&opp_100 {
-> > > > +     status =3D "disabled";
-> > > > +};
-> > > > +
-> > > > +&opp_200 {
-> > > > +     status =3D "disabled";
-> > > > +};
-> > > > +
-> > > > +&opp_375 {
-> > > > +     status =3D "okay";
-> > > > +};
-> > > > +
-> > > >   &sata {
-> > > >       status =3D "okay";
-> > > >   };
-> > > >
-> > >
+Because the UFS PHY reset bit is now toggled in the PHY, rather
+than in ufs-qcom, this also percolated to all other PHYs using
+ufs-qcom, which from what I can see is just 8996.
+
+I removed the calls to phy_poweroff() during clock gating. This
+was originally dialing down a clock or two, while leaving the phy powered.
+I've now changed the semantics of phy_poweroff() to, well, actually power off.
+This works great for userlands that have set UFS's spm_lvl to 5 (off) like
+I have, but maybe changes power consumption for devices that have spm_lvl
+set to 3. I could try to use phy_init() and phy_poweron() as the two
+different possible transitions (fully off, and clocks off respectively),
+but I'm not sure if it actually matters, and I like the idea that
+phy_poweroff() really does power the thing off.
+
+Also, I don't have an 8996 device to test. If someone is able to test this
+out and perhaps point out any (hopefully obvious) bugs in the 8996 portion,
+I'd be grateful.
+
+This patch is based atop phy-next.
+
+Changes in v5:
+- Updated tags
+
+Changes in v4:
+- Do reset_control_* unconditionally since null is handled (Stephen).
+- Keep doing reset_control* unconditionally through refactor (Stephen).
+
+Changes in v3:
+- Refactor to only expose the reset controller in one change (Stephen).
+- Add period to comment (Stephen).
+- Reset err to 0 in ignored error case (Stephen).
+- Add include of reset-controller.h (Stephen)
+- Refactored to move reset control in a single commit (Stephen)
+- Use no_pcs_sw_reset as an indicator of UFS reset in qmp-phy (Stephen).
+- Assign ret = PTR_ERR() earlier, for better reuse (Stephen).
+- Refactor init => poweron for all PHYs and UFS in one step (Stephen)
+
+Changes in v2:
+- Added resets to example (Stephen).
+- Remove include of reset.h (Stephen)
+- Fix error print of phy_power_on (Stephen)
+- Comment for reset controller warnings on id != 0 (Stephen)
+- Add static to ufs_qcom_reset_ops (Stephen).
+- Use devm_* to get the reset (Stephen)
+- Clear ufs_reset on error getting it
+- Remove needless error print (Stephen)
+- Use devm_ to get the reset (Stephen)
+- Removed whitespace changes (Stephen)
+
+Evan Green (8):
+  dt-bindings: ufs: Add #reset-cells for Qualcomm controllers
+  dt-bindings: phy-qcom-qmp: Add UFS PHY reset
+  dt-bindings: phy: qcom-ufs: Add resets property
+  arm64: dts: sdm845: Add UFS PHY reset
+  arm64: dts: msm8996: Add UFS PHY reset controller
+  scsi: ufs: qcom: Expose the reset controller for PHY
+  phy: qcom: Utilize UFS reset controller
+  phy: ufs-qcom: Refactor all init steps into phy_poweron
+
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt  |   6 +-
+ .../devicetree/bindings/ufs/ufs-qcom.txt      |   5 +-
+ .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |   3 +
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         |   4 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |   3 +
+ drivers/phy/qualcomm/phy-qcom-qmp.c           | 112 +++++++++--------
+ drivers/phy/qualcomm/phy-qcom-ufs-i.h         |   5 +-
+ drivers/phy/qualcomm/phy-qcom-ufs-qmp-14nm.c  |  25 +---
+ drivers/phy/qualcomm/phy-qcom-ufs-qmp-20nm.c  |  25 +---
+ drivers/phy/qualcomm/phy-qcom-ufs.c           |  57 ++++++---
+ drivers/scsi/ufs/Kconfig                      |   1 +
+ drivers/scsi/ufs/ufs-qcom.c                   | 114 +++++++++++-------
+ drivers/scsi/ufs/ufs-qcom.h                   |   4 +
+ 13 files changed, 193 insertions(+), 171 deletions(-)
+
+-- 
+2.20.1
