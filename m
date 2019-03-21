@@ -1,127 +1,206 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v8 01/15] drm/sun4i: dsi: Fix video start delay computation
-Date: Thu, 21 Mar 2019 20:08:58 +0530
-Message-ID: <CAMty3ZC+dTVuc2TWR=cqKNbrZe6j2vnwfXAqg6RbvduvY_63LA@mail.gmail.com>
-References: <20190311133637.18334-1-jagan@amarulasolutions.com>
- <20190311133637.18334-2-jagan@amarulasolutions.com> <20190311153734.izg44ijwqqh2vpxc@flea>
- <CAMty3ZDDARP02qMJZ9CXeiMv=kghoiUHgEAV9b4q+SrbLss40Q@mail.gmail.com> <20190319102520.ldgjtyzrphuib3td@flea>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v4] arm64: dts: fsl: imx8mq: enable the multi sensor TMU
+Date: Thu, 21 Mar 2019 15:48:34 +0100
+Message-ID: <1553179714.4806.39.camel@pengutronix.de>
+References: <20190311213124.29325-1-angus@akkea.ca>
+         <20190321125252.4498-1-angus@akkea.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190319102520.ldgjtyzrphuib3td@flea>
+In-Reply-To: <20190321125252.4498-1-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-sunxi <linux-sunxi@googlegroups.com>
+To: "Angus Ainslie (Purism)" <angus@akkea.ca>, Fabio Estevam <festevam@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Carlo Caione <ccaione@baylibre.com>, Abel Vesa <abel.vesa@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 3:55 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Mon, Mar 11, 2019 at 09:31:11PM +0530, Jagan Teki wrote:
-> > On Mon, Mar 11, 2019 at 9:07 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > On Mon, Mar 11, 2019 at 07:06:23PM +0530, Jagan Teki wrote:
-> > > > Vertical video start delay is computed by excluding vertical front
-> > > > porch value from total vertical timings.
-> > > >
-> > > > This clearly confirmed from BSP code and here how it computed,
-> > > >
-> > > > (drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
-> > > > u32 vfp = panel->lcd_vt - panel->lcd_y - panel->lcd_vbp;
-> > > > => (panel->lcd_vt) - panel->lcd_y - (panel->lcd_vbp)
-> > > > => (timmings->ver_front_porch + panel->lcd_vbp + panel->lcd_y)
-> > > >    - panel->lcd_y - (panel->lcd_vbp)
-> > > > => timmings->ver_front_porch + panel->lcd_vbp + panel->lcd_y
-> > > >                            - panel->lcd_y - panel->lcd_vbp
-> > > > => timmings->ver_front_porch
-> > > >
-> > > > But the current driver is assuming it can exclude vertical front
-> > > > porch along with vertical sync values from total vertical timings,
-> > > > which resulting wrong start delay indeed wrong picture rendering
-> > > > in the panel.
-> > >
-> > > Same story here: which panel, which datasheet, which "wrong picture
-> > > rendering"?
-> >
-> > It's bananapi,s070wv20-ct16 DSI
+Am Donnerstag, den 21.03.2019, 05:52 -0700 schrieb Angus Ainslie (Purism):
+> Add the imx8mq TMU (Thermal management unit) nodes for CPU,
+> GPU, and VPU.
+> 
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 
-2. as I said before, it is the same panel for both RGB and DSI, and
-ICN6211 bridge is converter for RGB-to-DSI. we don't have any specific
-programming or detailed datasheet from this except BSP DSI panel
-sequence along with BSP panel timings which are similar to RGB one.
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
-3. wrong picture rendering is something sprightliness followed by
-colors jerks, which I couldn't explain it properly ie reason I
-mentioned some generic term for understanding.
-
->
-> You're answering one out of three questions.
->
-> > > > Example: timings, where it produces the issue.
-> > > > {
-> > > >       .vdisplay       = 600,
-> > > >       .vsync_start    = 600 + 12,
-> > > >       .vsync_end      = 600 + 12 + 2,
-> > > >       .vtotal         = 600 + 12 + 2 + 21,
-> > > > }
-> > >
-> > > Can you 100% trust those timings?
-> >
-> > ie. reason, I have given the Mainline timings [1]. The above timings
-> > are wrongly mentioned actual timings are from [1]
->
-> You're still answering partially here. Those timings are working for
-> RGB, you have no proof that we need to make the same adjustments for
-> DSI.
-
-It is RGB to DSI bridge on the same panel, as I explained above and it
-would shared same timings. I can confirm or proved it from BSP panel
-timings which are working. indeed same timings are been in Mainline
-tree, we can trust them atleast.
-
->
-> > > > It produces the desired start delay value as 19 but the correct working
-> > > > value should be 513.
-> > > >
-> > > > So, Fix it by computing proper video start delay.
-> > > >
-> > > > Fixes: 69006ef0ecb1 ("drm/sun4i: dsi: Change the start delay calculation")
-> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > ---
-> > > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 10 ++++++++--
-> > > >  1 file changed, 8 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > > index 62a508420227..8d6292c0158b 100644
-> > > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > > @@ -364,8 +364,14 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
-> > > >  static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
-> > > >                                          struct drm_display_mode *mode)
-> > > >  {
-> > > > -     u16 start = clamp(mode->vtotal - mode->vdisplay - 10, 8, 100);
-> > > > -     u16 delay = mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
-> > > > +     u16 delay = mode->vtotal - (mode->vsync_start - mode->vdisplay);
-> > > > +
-> > > > +     /**
-> > > > +      * BSP comment:
-> > > > +      * put start_delay to tcon. set ready sync early to dramfreq,
-> > > > +      * so set start_delay 1
-> > > > +      */
-> > >
-> > > That doesn't make any sense to me... What does it mean?
-> >
-> > Which is meaning as above stated as "BSP comment" from here[2]
->
-> It doesn't matter where you took it from. If you cannot explain what
-> happen, putting a random label that doesn't explain anything will not
-> help.
-
-I have no idea or document to refer why this 1 would be added. so I
-used same comment from BSP like many places on sun4i does. w/o this +1
-the delay is computed to 512 which is not working and with this the
-desired delay is 513 which is perfectly working.
-
-If you have any idea on this, please share so-that I can add it in
-comment otherwise.
-
-Jagan.
+> ---
+> 
+> Changes since v3:
+> 
+> Moved the annotation.
+> 
+> Changes since v2:
+> 
+> Updated alert and critical temps for commercial parts.
+> Fixed node names.
+> 
+> Changes since v1:
+> 
+> Removed references to multi sensor patch.
+> 
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 118 ++++++++++++++++++++++
+>  1 file changed, 118 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index b39c6c75c043..81d5ce1b1ec1 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -8,6 +8,7 @@
+>  #include <dt-bindings/power/imx8mq-power.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>  #include "imx8mq-pinfunc.h"
+>  
+>  / {
+> @@ -89,6 +90,7 @@
+> >  			reg = <0x0>;
+> >  			enable-method = "psci";
+> >  			next-level-cache = <&A53_L2>;
+> > +			#cooling-cells = <2>;
+> >  		};
+>  
+> > >  		A53_1: cpu@1 {
+> @@ -97,6 +99,7 @@
+> >  			reg = <0x1>;
+> >  			enable-method = "psci";
+> >  			next-level-cache = <&A53_L2>;
+> > +			#cooling-cells = <2>;
+> >  		};
+>  
+> > >  		A53_2: cpu@2 {
+> @@ -105,6 +108,7 @@
+> >  			reg = <0x2>;
+> >  			enable-method = "psci";
+> >  			next-level-cache = <&A53_L2>;
+> > +			#cooling-cells = <2>;
+> >  		};
+>  
+> > >  		A53_3: cpu@3 {
+> @@ -113,6 +117,7 @@
+> >  			reg = <0x3>;
+> >  			enable-method = "psci";
+> >  			next-level-cache = <&A53_L2>;
+> > +			#cooling-cells = <2>;
+> >  		};
+>  
+> >  		A53_L2: l2-cache0 {
+> @@ -210,6 +215,119 @@
+> >  				#interrupt-cells = <2>;
+> >  			};
+>  
+> > > +			tmu: tmu@30260000 {
+> > +				compatible = "fsl,imx8mq-tmu";
+> > +				reg = <0x30260000 0x10000>;
+> > +				interrupt = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> > +				little-endian;
+> > +				fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
+> > +				fsl,tmu-calibration = <0x00000000 0x00000023
+> > +						       0x00000001 0x00000029
+> > +						       0x00000002 0x0000002f
+> > +						       0x00000003 0x00000035
+> > +						       0x00000004 0x0000003d
+> > +						       0x00000005 0x00000043
+> > +						       0x00000006 0x0000004b
+> > +						       0x00000007 0x00000051
+> > +						       0x00000008 0x00000057
+> > +						       0x00000009 0x0000005f
+> > +						       0x0000000a 0x00000067
+> > +						       0x0000000b 0x0000006f
+> +
+> > +						       0x00010000 0x0000001b
+> > +						       0x00010001 0x00000023
+> > +						       0x00010002 0x0000002b
+> > +						       0x00010003 0x00000033
+> > +						       0x00010004 0x0000003b
+> > +						       0x00010005 0x00000043
+> > +						       0x00010006 0x0000004b
+> > +						       0x00010007 0x00000055
+> > +						       0x00010008 0x0000005d
+> > +						       0x00010009 0x00000067
+> > +						       0x0001000a 0x00000070
+> +
+> > +						       0x00020000 0x00000017
+> > +						       0x00020001 0x00000023
+> > +						       0x00020002 0x0000002d
+> > +						       0x00020003 0x00000037
+> > +						       0x00020004 0x00000041
+> > +						       0x00020005 0x0000004b
+> > +						       0x00020006 0x00000057
+> > +						       0x00020007 0x00000063
+> > +						       0x00020008 0x0000006f
+> +
+> > +						       0x00030000 0x00000015
+> > +						       0x00030001 0x00000021
+> > +						       0x00030002 0x0000002d
+> > +						       0x00030003 0x00000039
+> > +						       0x00030004 0x00000045
+> > +						       0x00030005 0x00000053
+> > +						       0x00030006 0x0000005f
+> > +						       0x00030007 0x00000071>;
+> > +				#thermal-sensor-cells =  <1>;
+> > +			};
+> +
+> > +			thermal-zones {
+> > +				cpu-thermal {
+> > +					polling-delay-passive = <250>;
+> > +					polling-delay = <2000>;
+> > +					thermal-sensors = <&tmu 0>;
+> +
+> > +					trips {
+> > +						cpu_alert: cpu-alert {
+> > +							temperature = <80000>;
+> > +							hysteresis = <2000>;
+> > +							type = "passive";
+> > +						};
+> +
+> > +						cpu-crit {
+> > +							temperature = <90000>;
+> > +							hysteresis = <2000>;
+> > +							type = "critical";
+> > +						};
+> > +					};
+> +
+> > +					cooling-maps {
+> > +						map0 {
+> > +							trip = <&cpu_alert>;
+> > +							cooling-device =
+> > +								<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> > +								<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> > +								<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> > +								<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> > +						};
+> > +					};
+> > +				};
+> +
+> > +				gpu-thermal {
+> > +					polling-delay-passive = <250>;
+> > +					polling-delay = <2000>;
+> > +					thermal-sensors = <&tmu 1>;
+> +
+> > +					trips {
+> > +						gpu-crit {
+> > +							temperature = <90000>;
+> > +							hysteresis = <2000>;
+> > +							type = "critical";
+> > +						};
+> > +					};
+> > +				};
+> +
+> > +				vpu-thermal {
+> > +					polling-delay-passive = <250>;
+> > +					polling-delay = <2000>;
+> > +					thermal-sensors = <&tmu 2>;
+> +
+> > +					trips {
+> > +						vpu-crit {
+> > +							temperature = <90000>;
+> > +							hysteresis = <2000>;
+> > +							type = "critical";
+> > +						};
+> > +					};
+> > +				};
+> > +			};
+> +
+> > >  			wdog1: watchdog@30280000 {
+> >  				compatible = "fsl,imx8mq-wdt", "fsl,imx21-wdt";
+> >  				reg = <0x30280000 0x10000>;
