@@ -1,52 +1,57 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH] dt-bindings: clock: g12a-aoclk: expose CLKID_AO_CTS_OSCIN
-Date: Thu, 21 Mar 2019 10:20:10 +0100
-Message-ID: <20190321092010.14382-1-narmstrong@baylibre.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 3/9] power: supply: axp20x_usb_power:
+ allow disabling input current limiting
+Date: Thu, 21 Mar 2019 10:30:12 +0100
+Message-ID: <20190321093012.kg72voxs5kw5xtzu@flea>
+References: <20190321084850.20769-1-wens@kernel.org>
+ <20190321084850.20769-4-wens@kernel.org>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jbrunet@baylibre.com
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="g72eht37btz5vbkz"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBJ5TZXSAKGQEYWT2QJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190321084850.20769-4-wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-When submitted v2 of the G12A AO-CLK IDs, the CLKID_AO_CTS_OSCIN was moved
-to the internal non-exported bindings, but this clock is necessary for
-the second AO-CEC-B module since it embeds the 32768Hz dual-divider
-clock generator unlike the AO-CEC-A module.
 
-Export it back to the public bindings.
+--g72eht37btz5vbkz
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Fixes: be3d960b0aeb ("dt-bindings: clk: add G12A AO Clock and Reset Bindings")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/clk/meson/g12a-aoclk.h          | 1 -
- include/dt-bindings/clock/g12a-aoclkc.h | 1 +
- 2 files changed, 1 insertion(+), 1 deletion(-)
+Hi,
 
-diff --git a/drivers/clk/meson/g12a-aoclk.h b/drivers/clk/meson/g12a-aoclk.h
-index 666b4493822c..a67c8a7cd7c4 100644
---- a/drivers/clk/meson/g12a-aoclk.h
-+++ b/drivers/clk/meson/g12a-aoclk.h
-@@ -17,7 +17,6 @@
-  * will remain defined here.
-  */
- #define CLKID_AO_SAR_ADC_DIV	17
--#define CLKID_AO_CTS_OSCIN	19
- #define CLKID_AO_32K_PRE	20
- #define CLKID_AO_32K_DIV	21
- #define CLKID_AO_32K_SEL	22
-diff --git a/include/dt-bindings/clock/g12a-aoclkc.h b/include/dt-bindings/clock/g12a-aoclkc.h
-index 5ac66a2eee0f..e916e49ff288 100644
---- a/include/dt-bindings/clock/g12a-aoclkc.h
-+++ b/include/dt-bindings/clock/g12a-aoclkc.h
-@@ -28,6 +28,7 @@
- #define CLKID_AO_CLK81		15
- #define CLKID_AO_SAR_ADC_SEL	16
- #define CLKID_AO_SAR_ADC_CLK	18
-+#define CLKID_AO_CTS_OSCIN	19
- #define CLKID_AO_32K		23
- #define CLKID_AO_CEC		27
- #define CLKID_AO_CTS_RTC_OSCIN	28
--- 
-2.21.0
+The rest of the series is
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+
+On Thu, Mar 21, 2019 at 04:48:44PM +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>
+> The AXP PMICs allow the user to disable current limiting on the VBUS
+> input. While read-out of this setting was already supported by the
+> driver, it did not allow the user to configure the PMIC to disable
+> current limiting.
+>
+> Add support for this.
+>
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+
+Do we really want to do that though? That could have some pretty bad
+consequences.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--g72eht37btz5vbkz--
