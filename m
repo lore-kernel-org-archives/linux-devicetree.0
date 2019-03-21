@@ -1,47 +1,117 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 1/3] dt-bindings: usb: Add usb-phy property to the jz4740-musb node
-Date: Thu, 21 Mar 2019 16:09:54 +0100
-Message-ID: <20190321150956.6629-1-paul@crapouillou.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bin Liu <b-liu@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: lochnagar: Add device tree binding
+	document" to the asoc tree
+Date: Thu, 21 Mar 2019 15:06:37 +0000 (GMT)
+Message-ID: <20190321150637.5E7FB11288EC@debutante.sirena.org.uk>
+References: <20190320173732.8067-1-ckeepax@opensource.cirrus.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20190320173732.8067-1-ckeepax@opensource.cirrus.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a required 'usb-phy' property, to obtain a phandle to the USB PHY
-from devicetree.
+The patch
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+   ASoC: lochnagar: Add device tree binding document
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From d9b27d50340c4c90637ebf24106c9064992e2f2a Mon Sep 17 00:00:00 2001
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Date: Wed, 20 Mar 2019 17:37:31 +0000
+Subject: [PATCH] ASoC: lochnagar: Add device tree binding document
+
+Lochnagar is an evaluation and development board for Cirrus
+Logic Smart CODEC and Amp devices. It allows the connection of
+most Cirrus Logic devices on mini-cards, as well as allowing
+connection of various application processor systems to provide a
+full evaluation platform. This driver supports the board
+controller chip on the Lochnagar board.
+
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../bindings/sound/cirrus,lochnagar.txt       | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
 
-diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt b/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
-index 620355cee63f..23213779f193 100644
---- a/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
-+++ b/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
-@@ -8,9 +8,15 @@ Required properties:
- - interrupt-names: must be "mc"
- - clocks: phandle to the "udc" clock
- - clock-names: must be "udc"
-+- usb-phy: phandle to the USB PHY
- 
- Example:
- 
-+usb_phy: usb-phy@0 {
-+	compatible = "usb-nop-xceiv";
-+	#phy-cells = <0>;
+diff --git a/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
+new file mode 100644
+index 000000000000..41ae2699f07a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
+@@ -0,0 +1,39 @@
++Cirrus Logic Lochnagar Audio Development Board
++
++Lochnagar is an evaluation and development board for Cirrus Logic
++Smart CODEC and Amp devices. It allows the connection of most Cirrus
++Logic devices on mini-cards, as well as allowing connection of
++various application processor systems to provide a full evaluation
++platform.  Audio system topology, clocking and power can all be
++controlled through the Lochnagar, allowing the device under test
++to be used in a variety of possible use cases.
++
++This binding document describes the binding for the audio portion
++of the driver.
++
++This binding must be part of the Lochnagar MFD binding:
++  [4] ../mfd/cirrus,lochnagar.txt
++
++Required properties:
++
++  - compatible : One of the following strings:
++                 "cirrus,lochnagar2-soundcard"
++
++  - #sound-dai-cells : Must be set to 1.
++
++  - clocks : Contains an entry for each entry in clock-names.
++  - clock-names : Must include the following clocks:
++      "mclk" Master clock source for the sound card, should normally
++      be set to LOCHNAGAR_SOUNDCARD_MCLK provided by the Lochnagar
++      clock driver.
++
++Example:
++
++lochnagar-sc {
++	compatible = "cirrus,lochnagar2-soundcard";
++
++	#sound-dai-cells = <1>;
++
++	clocks = <&lochnagar_clk LOCHNAGAR_SOUNDCARD_MCLK>;
++	clock-names = "mclk";
 +};
-+
- udc: usb@13040000 {
- 	compatible = "ingenic,jz4740-musb";
- 	reg = <0x13040000 0x10000>;
-@@ -21,4 +27,6 @@ udc: usb@13040000 {
- 
- 	clocks = <&cgu JZ4740_CLK_UDC>;
- 	clock-names = "udc";
-+
-+	usb-phy = <&usb_phy>;
- };
 -- 
-2.11.0
+2.20.1
