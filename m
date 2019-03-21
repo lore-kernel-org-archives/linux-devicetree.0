@@ -1,91 +1,50 @@
-Return-Path: <SRS0=6MoI=RT=gmail.com=marek.vasut@kernel.org>
-From: marek.vasut@gmail.com
-Subject: [PATCH V3] regulator: gpio: Reword the binding document
-Date: Sat, 16 Mar 2019 21:25:51 +0100
-Message-Id: <20190316202552.21525-1-marek.vasut@gmail.com>
+Return-Path: <SRS0=Xkv+=RY=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.nic.cz ([217.31.204.67]:60411 "EHLO mail.nic.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728615AbfCUSVx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 Mar 2019 14:21:53 -0400
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Subject: [PATCH v1 leds-next 2/3] dt-bindings: leds: Document Turris 1.x LED controller binding
+Date: Thu, 21 Mar 2019 19:21:49 +0100
+Message-Id: <20190321182150.10453-3-marek.behun@nic.cz>
+In-Reply-To: <20190321182150.10453-1-marek.behun@nic.cz>
+References: <20190321182150.10453-1-marek.behun@nic.cz>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To: devicetree@vger.kernel.org
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, Harald Geyer <harald@ccbib.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, linux-renesas-soc@vger.kernel.org
+Sender: devicetree-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org
+Cc: Pavel Machek <pavel@ucw.cz>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Marek Vasut <marek.vasut+renesas@gmail.com>
+This adds device tree binding documentation for the front panel LEDs
+controller of CZ.NIC's Turris 1.x router.
 
-Reword the binding document to make it clear how the propeties work
-and which properties affect which other properties.
-
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Harald Geyer <harald@ccbib.org>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org
-To: devicetree@vger.kernel.org
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
 ---
-V2: - Make "gpios" a mandatory property
-    - Reword "gpio-states" property description
-    - Change "enable-gpio" to "enable-gpios" to match modern DT rules
-V3: - Use gpio-states description from Harald
-Note: The recent gpio-regulator rework caused breakage. While the
-      changes in the gpio-regulator code were according to the DT
-      binding document, they stopped working with older DTs. Make
-      the binding document clearer to prevent such breakage in the
-      future.
----
- .../bindings/regulator/gpio-regulator.txt     | 30 ++++++++++++++-----
- 1 file changed, 22 insertions(+), 8 deletions(-)
+ .../devicetree/bindings/leds/leds-turris.txt         | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-turris.txt
 
-diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-index 1f496159e2bb..dd25e73b5d79 100644
---- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-@@ -4,16 +4,30 @@ Required properties:
- - compatible		: Must be "regulator-gpio".
- - regulator-name	: Defined in regulator.txt as optional, but required
- 			  here.
--- states		: Selection of available voltages and GPIO configs.
--                          if there are no states, then use a fixed regulator
-+- gpios			: Array of one or more GPIO pins used to select the
-+			  regulator voltage/current listed in "states".
-+- states		: Selection of available voltages/currents provided by
-+			  this regulator and matching GPIO configurations to
-+			  achieve them. If there are no states in the "states"
-+			  array, use a fixed regulator instead.
- 
- Optional properties:
--- enable-gpio		: GPIO to use to enable/disable the regulator.
--- gpios			: GPIO group used to control voltage.
--- gpios-states		: gpios pin's initial states array. 0: LOW, 1: HIGH.
--			  defualt is LOW if nothing is specified.
-+- enable-gpios		: GPIO used to enable/disable the regulator.
-+			  Warning, the GPIO phandle flags are ignored and the
-+			  GPIO polarity is controlled solely by the presence
-+			  of "enable-active-high" DT property. This is due to
-+			  compatibility with old DTs.
-+- enable-active-high	: Polarity of "enable-gpio" GPIO is active HIGH.
-+			  Default is active LOW.
-+- gpios-states		: On operating systems, that don't support reading back
-+			  gpio values in output mode (most notably linux), this
-+			  array provides the state of GPIO pins set when
-+			  requesting them from the gpio controller. Systems,
-+			  that are capable of preserving state when requesting
-+			  the lines, are free to ignore this property.
-+			  0: LOW, 1: HIGH. Default is LOW if nothing else
-+			  is specified.
- - startup-delay-us	: Startup time in microseconds.
--- enable-active-high	: Polarity of GPIO is active high (default is low).
- - regulator-type	: Specifies what is being regulated, must be either
- 			  "voltage" or "current", defaults to voltage.
- 
-@@ -30,7 +44,7 @@ Example:
- 		regulator-max-microvolt = <2600000>;
- 		regulator-boot-on;
- 
--		enable-gpio = <&gpio0 23 0x4>;
-+		enable-gpios = <&gpio0 23 0x4>;
- 		gpios = <&gpio0 24 0x4
- 			 &gpio0 25 0x4>;
- 		states = <1800000 0x3
+diff --git a/Documentation/devicetree/bindings/leds/leds-turris.txt b/Documentation/devicetree/bindings/leds/leds-turris.txt
+new file mode 100644
+index 000000000000..0b7548077a06
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-turris.txt
+@@ -0,0 +1,12 @@
++Bindings for LEDs on CZ.NIC's Turris 1.x
++
++Required properties:
++ - compatible:		Should be "cznic,turris-leds"
++ - reg:			Should specify controller address
++
++Example:
++
++	led-controller@3,0 {
++		compatible = "cznic,turris-leds";
++		reg = <0x3 0x0 0x30>;
++	};
 -- 
-2.20.1
+2.19.2
