@@ -1,66 +1,55 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [RESEND PATCH 00/11] add debugfs consumers,
- tracepoints and supports USB Gen2 ISOC
-Date: Thu, 21 Mar 2019 10:53:38 +0800
-Message-ID: <1553136829-14712-1-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [RESEND PATCH 03/11] usb: mtu3: remove unnecessary local variable @req
+Date: Thu, 21 Mar 2019 10:53:41 +0800
+Message-ID: <1553136829-14712-4-git-send-email-chunfeng.yun@mediatek.com>
+References: <1553136829-14712-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1553136829-14712-1-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-arm-kernel@lists.infradead.org
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In order to help debug, this series add more debugfs consumers,
-introduce a few initial tracepoints;
-And support new features introduced by USB3 Gen2 ISOC:
-1. TXCSR/RXCSR registers are adjusted to support greater MULT
-   and MAX_PKT
-2. QMU format is also improved
-last, some small problems are fixed.
+The local variable @req is unnecessary in qmu_tx_zlp_error_handler,
+so remove it.
 
-Chunfeng Yun (11):
-  usb: mtu3: check return value of devm_extcon_register_notifier()
-  usb: mtu3: print useful information also for device and host modes
-  usb: mtu3: remove unnecessary local variable @req
-  usb: mtu3: rebuild the code of getting vbus regulator
-  usb: mtu3: fix transfer error of USB3 Gen2 isoc
-  usb: mtu3: rebuild qmu_gpd struct to prepare to support new QMU format
-  usb: mtu3: supports new QMU format
-  usb: mtu3: add debugfs interface files
-  usb: mtu3: move vbus and mode debugfs interfaces into mtu3_debugfs.c
-  usb: mtu3: add tracepoints to help debug
-  usb: mtu3: add a function to switch mailbox state to string
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ drivers/usb/mtu3/mtu3_qmu.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
- drivers/usb/mtu3/Makefile          |  11 +
- drivers/usb/mtu3/mtu3.h            |  57 ++-
- drivers/usb/mtu3/mtu3_core.c       |  27 +-
- drivers/usb/mtu3/mtu3_debug.h      |  50 +++
- drivers/usb/mtu3/mtu3_debugfs.c    | 539 +++++++++++++++++++++++++++++
- drivers/usb/mtu3/mtu3_dr.c         | 156 ++-------
- drivers/usb/mtu3/mtu3_dr.h         |   4 +
- drivers/usb/mtu3/mtu3_gadget.c     |  20 +-
- drivers/usb/mtu3/mtu3_gadget_ep0.c |   4 +
- drivers/usb/mtu3/mtu3_hw_regs.h    |  48 ++-
- drivers/usb/mtu3/mtu3_plat.c       |  28 +-
- drivers/usb/mtu3/mtu3_qmu.c        | 118 ++++---
- drivers/usb/mtu3/mtu3_qmu.h        |   1 +
- drivers/usb/mtu3/mtu3_trace.c      |  23 ++
- drivers/usb/mtu3/mtu3_trace.h      | 279 +++++++++++++++
- 15 files changed, 1146 insertions(+), 219 deletions(-)
- create mode 100644 drivers/usb/mtu3/mtu3_debug.h
- create mode 100644 drivers/usb/mtu3/mtu3_debugfs.c
- create mode 100644 drivers/usb/mtu3/mtu3_trace.c
- create mode 100644 drivers/usb/mtu3/mtu3_trace.h
-
+diff --git a/drivers/usb/mtu3/mtu3_qmu.c b/drivers/usb/mtu3/mtu3_qmu.c
+index 09f19f70fe8f..f4b5431264c1 100644
+--- a/drivers/usb/mtu3/mtu3_qmu.c
++++ b/drivers/usb/mtu3/mtu3_qmu.c
+@@ -382,16 +382,13 @@ static void qmu_tx_zlp_error_handler(struct mtu3 *mtu, u8 epnum)
+ 	struct mtu3_gpd_ring *ring = &mep->gpd_ring;
+ 	void __iomem *mbase = mtu->mac_base;
+ 	struct qmu_gpd *gpd_current = NULL;
+-	struct usb_request *req = NULL;
+ 	struct mtu3_request *mreq;
+ 	dma_addr_t cur_gpd_dma;
+ 	u32 txcsr = 0;
+ 	int ret;
+ 
+ 	mreq = next_request(mep);
+-	if (mreq && mreq->request.length == 0)
+-		req = &mreq->request;
+-	else
++	if (mreq && mreq->request.length != 0)
+ 		return;
+ 
+ 	cur_gpd_dma = read_txq_cur_addr(mbase, epnum);
+@@ -402,7 +399,7 @@ static void qmu_tx_zlp_error_handler(struct mtu3 *mtu, u8 epnum)
+ 		return;
+ 	}
+ 
+-	dev_dbg(mtu->dev, "%s send ZLP for req=%p\n", __func__, req);
++	dev_dbg(mtu->dev, "%s send ZLP for req=%p\n", __func__, mreq);
+ 
+ 	mtu3_clrbits(mbase, MU3D_EP_TXCR0(mep->epnum), TX_DMAREQEN);
+ 
 -- 
 2.20.1
