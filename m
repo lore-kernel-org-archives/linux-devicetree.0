@@ -1,77 +1,23 @@
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Subject: RE: [PATCH] ARM: dts: imx6qdl-sabresd: change phy-mode to use
- rgmii-id
-Date: Thu, 21 Mar 2019 11:32:20 +0000
-Message-ID: <VI1PR10MB2352D2C805B675A1C4CBDC6AFE420@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
-References: <20190320120604.7D99B3FBE9@swsrvapps-01.diasemi.com>
- <CAOMZO5AHzQJzz3vd5MzYgSSxzPjU9xan1dFh9473BXeiRCOzzg@mail.gmail.com>
- <VI1PR10MB2352C3A55BE8FABAF3B02681FE410@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
- <CAOMZO5By8=j7gZRAdf2-h-5ak-Qo34rqwDL4+HA_97cMXTAnEQ@mail.gmail.com>
- <20190321084240.fveqkhfrbtg7qr4q@fsr-ub1664-175>
- <CAOMZO5Cz0A19P9E61dy79BFF+V2WsAjobqQ1g9TeiJSCY2Nt4A@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] arm64: dts: imx8qxp: fix mbox-cells
+Date: Thu, 21 Mar 2019 19:36:18 +0800
+Message-ID: <20190321113614.GJ12513@dragon>
+References: <20190313093626.18589-1-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5Cz0A19P9E61dy79BFF+V2WsAjobqQ1g9TeiJSCY2Nt4A@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190313093626.18589-1-peng.fan@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>, Abel Vesa <abel.vesa@nxp.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-ARM-KERNEL <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRmFiaW8sDQoNCk9uIDIxIE1hcmNoIDIwMTkgMTE6MTcsIEZhYmlvIEVzdGV2YW0sDQoNCj4g
-U3ViamVjdDogUmU6IFtQQVRDSF0gQVJNOiBkdHM6IGlteDZxZGwtc2FicmVzZDogY2hhbmdlIHBo
-eS1tb2RlIHRvIHVzZSByZ21paS1pZA0KPiANCj4gSGkgQWJlbCwNCj4gDQo+IE9uIFRodSwgTWFy
-IDIxLCAyMDE5IGF0IDU6NDIgQU0gQWJlbCBWZXNhIDxhYmVsLnZlc2FAbnhwLmNvbT4gd3JvdGU6
-DQo+IA0KPiA+ID4gSXQgc2VlbXMgd2UgaGF2ZSBvdGhlciBib2FyZHMgdGhhdCBuZWVkIHRvIGJl
-IGZpeGVkIGFuZCB3ZSBjYW4gbm90DQo+ID4gPiBoYXZlIGFuIG9sZCBkdGIgd2l0aCBmdW5jdGlv
-bmFsIEV0aGVybmV0IHdpdGggYSBuZXcga2VybmVsLg0KPiA+ID4NCj4gPiA+IERvZXMgYW55b25l
-IGtub3cgaWYgdGhpcyBpc3N1ZSBpcyBBUjgwMzEgc3BlY2lmaWM/DQo+ID4NCj4gPiBJIGNhbiBj
-b25maXJtIHRoZSBzYW1lIGZpeCBpcyB3b3JrcyBvbiBpbXg2c3ggdG9vLg0KPiANCj4gaW14NnN4
-LXNhYnJlc2QgYWxzbyB1c2VzIGFuIEFSODAzMSBFdGhlcm5ldCBQSFkuDQo+IA0KPiBJIGFsc28g
-dGVzdGVkIHRoYXQgY2hhbmdpbmcgdGhlIHBoeS1tb2RlIHRvICJyZ21paS1pZCIgZml4ZXMgRXRo
-ZXJuZXQNCj4gb24gcGljby1pbXg3ZCB3aXRoIEFSODAzNS4NCj4gDQo+IFNvIHllcywgd2UgY3Vy
-cmVudGx5IGhhdmUgbG90cyBvZiBicm9rZW4gZHRiJ3MgaW4gbWFpbmxpbmUgYW5kIEkgYW0NCj4g
-d29uZGVyaW5nIHdoYXQgaXMgdGhlIHByb3BlciBmaXggaGVyZS4NCg0KQWdyZWVkIQ0KVGhlIERU
-IHNob3VsZCBiZSBhbiBBQkkuIA0KDQo+IERvZXMgYW55b25lIGtub3cgd2hhdCB3YXMgdGhlIGtl
-cm5lbCBjb21taXQgdGhhdCBpbnRyb2R1Y2VkIHN1Y2gNCj4gcmVncmVzc2lvbnM/DQoNCkkgYmlz
-ZWN0ZWQgdG8gdGhlIG9yaWdpbmFsIGJyZWFrYWdlIChmb3IgdGhlIE5GUyByb290ZnMpIGJhY2sg
-dG8gdGhpcyBjb21taXQ6DQpjb21taXQgMTNkMGFiNjc1MGIyMDk1N2FjMTQ2NmRhNGU0NGRjMGFm
-NzQ2ZmYyOA0KDQpSZXZlcnRpbmcgdGhpcyBjb21taXQgZml4ZWQgdGhlIHByb2JsZW0sIGJ1dCBv
-bmx5IGZvciB0aGUga2VybmVsIHVwIHRvIHRoYXQNCnBvaW50OiBpdCB3YXMgYSBsb25nIHRpbWUg
-YWdvLCBhbmQgc2V2ZXJhbCBvdGhlciBmaXhlcyB3ZXJlIGFkZGVkIGFmdGVyIHRoYXQNCndoaWNo
-IG1lYW50IHRoYXQgYnkgdGhlIHRpbWUgdGhlIGtlcm5lbCBnb3QgdG8gdjUuMCBpdCB3YXMgd29y
-a2luZyBmb3IgbWUNCmFnYWluLg0KDQpJIGJpc2VjdGVkIHRoZSBicmVha2FnZSBiZXR3ZWVuIHY1
-LjAgdG8gdjUuMS1yYzEgYXMgdGhpczoNCmNvbW1pdCAzYWNjYTFkZDE3MDYwMzMyY2ZhYjE1Njkz
-NzMzY2RhZjlmYmExYzkwDQouLi4gd2hpY2ggZG9lc24ndCBtYWtlIHNlbnNlIHRvIG1lLg0KDQpS
-ZWdhcmRzLA0KU3RldmUNCg0KLS0tDQoNCmNvbW1pdCAxM2QwYWI2NzUwYjIwOTU3YWMxNDY2ZGE0
-ZTQ0ZGMwYWY3NDZmZjI4DQpBdXRob3I6IEhlaW5lciBLYWxsd2VpdCA8aGthbGx3ZWl0MUBnbWFp
-bC5jb20+DQpEYXRlOiAgIFdlZCBKYW4gMTYgMDg6MDc6MzggMjAxOSArMDEwMA0KDQogICAgbmV0
-OiBwaHk6IGNoZWNrIHJldHVybiBjb2RlIHdoZW4gcmVxdWVzdGluZyBQSFkgZHJpdmVyIG1vZHVs
-ZQ0KICAgIA0KICAgIFdoZW4gcmVxdWVzdGluZyB0aGUgUEhZIGRyaXZlciBtb2R1bGUgZmFpbHMg
-d2UnbGwgYmluZCB0aGUgZ2VucGh5DQogICAgZHJpdmVyIGxhdGVyLiBUaGlzIGlzbid0IG9idmlv
-dXMgdG8gdGhlIHVzZXIgYW5kIG1heSBjYXVzZSwgZGVwZW5kaW5nDQogICAgb24gdGhlIFBIWSwg
-ZGlmZmVyZW50IHR5cGVzIG9mIGlzc3Vlcy4gVGhlcmVmb3JlIGNoZWNrIHRoZSByZXR1cm4gY29k
-ZQ0KICAgIG9mIHJlcXVlc3RfbW9kdWxlKCkuIE5vdGUgdGhhdCB3ZSBvbmx5IGNoZWNrIGZvciBm
-YWlsdXJlcyBpbiBsb2FkaW5nDQogICAgdGhlIG1vZHVsZSwgbm90IHdoZXRoZXIgYSBtb2R1bGUg
-ZXhpc3RzIGZvciB0aGUgcmVzcGVjdGl2ZSBQSFkgSUQuDQogICAgDQogICAgdjI6DQogICAgLSBh
-ZGQgY29tbWVudCBleHBsYWluaW5nIHdoYXQgaXMgY2hlY2tlZCBhbmQgd2hhdCBpcyBub3QNCiAg
-ICAtIHJldHVybiBlcnJvciBmcm9tIHBoeV9kZXZpY2VfY3JlYXRlKCkgaWYgbG9hZGluZyBtb2R1
-bGUgZmFpbHMNCiAgICANCiAgICBTaWduZWQtb2ZmLWJ5OiBIZWluZXIgS2FsbHdlaXQgPGhrYWxs
-d2VpdDFAZ21haWwuY29tPg0KICAgIFJldmlld2VkLWJ5OiBBbmRyZXcgTHVubiA8YW5kcmV3QGx1
-bm4uY2g+DQogICAgU2lnbmVkLW9mZi1ieTogRGF2aWQgUy4gTWlsbGVyIDxkYXZlbUBkYXZlbWxv
-ZnQubmV0Pg0KDQotLS0NCg0KY29tbWl0IDNhY2NhMWRkMTcwNjAzMzJjZmFiMTU2OTM3MzNjZGFm
-OWZiYTFjOTANCkF1dGhvcjogSGVpbmVyIEthbGx3ZWl0IDxoa2FsbHdlaXQxQGdtYWlsLmNvbT4N
-CkRhdGU6ICAgTW9uIE1hciA0IDE5OjM5OjAzIDIwMTkgKzAxMDANCg0KICAgIG5ldDogZHNhOiBt
-djg4ZTZ4eHg6IGFkZCBjYWxsIHRvIG12ODhlNnh4eF9wb3J0c19jbW9kZV9pbml0IHRvIHByb2Jl
-IGZvciBuZXcgRFNBIGZyYW1ld29yaw0KICAgIA0KICAgIEluIHRoZSBvcmlnaW5hbCBwYXRjaCBJ
-IG1pc3NlZCB0byBhZGQgbXY4OGU2eHh4X3BvcnRzX2Ntb2RlX2luaXQoKQ0KICAgIHRvIHRoZSBz
-ZWNvbmQgcHJvYmUgZnVuY3Rpb24sIHRoZSBvbmUgZm9yIHRoZSBuZXcgRFNBIGZyYW1ld29yay4N
-CiAgICANCiAgICBGaXhlczogZWQ4ZmUyMDIwNWFjICgibmV0OiBkc2E6IG12ODhlNnh4eDogcHJl
-dmVudCBpbnRlcnJ1cHQgc3Rvcm0gY2F1c2VkIGJ5IG12ODhlNjM5MHhfcG9ydF9zZXRfY21vZGUi
-KQ0KICAgIFJlcG9ydGVkLWJ5OiBTaGFva3VuIFpoYW5nIDx6aGFuZ3NoYW9rdW5AaGlzaWxpY29u
-LmNvbT4NCiAgICBTdWdnZXN0ZWQtYnk6IEFuZHJldyBMdW5uIDxhbmRyZXdAbHVubi5jaD4NCiAg
-ICBTaWduZWQtb2ZmLWJ5OiBIZWluZXIgS2FsbHdlaXQgPGhrYWxsd2VpdDFAZ21haWwuY29tPg0K
-ICAgIFJldmlld2VkLWJ5OiBBbmRyZXcgTHVubiA8YW5kcmV3QGx1bm4uY2g+DQogICAgU2lnbmVk
-LW9mZi1ieTogRGF2aWQgUy4gTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0K
+On Wed, Mar 13, 2019 at 09:24:19AM +0000, Peng Fan wrote:
+> Currently lsio_mu1 is used by Linux Kernel with mbox-cells as 2, but
+> actually mu0-4 could be used to communicate with SCU. So fix the
+> mbox-cells.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+
+Applied, thanks.
