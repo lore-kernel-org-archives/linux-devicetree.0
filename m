@@ -1,45 +1,37 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH 0/4] ARM: da850: enable cpufreq in DT mode
-Date: Thu, 21 Mar 2019 16:40:02 +0100
-Message-ID: <CAMRc=MespSLpsknVrMwYVorv0NxAsSL+U9R049Fw_Wqe1_gqkw@mail.gmail.com>
-References: <20190321141010.19612-1-brgl@bgdev.pl> <e4d51b63-bc07-c595-9d73-c4b09eb11341@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "Angus Ainslie (Purism)" <angus@akkea.ca>
+Subject: [PATCH v3 0/5] Add a VCNL4040 light and proximity driver
+Date: Thu, 21 Mar 2019 08:40:42 -0700
+Message-ID: <20190321154047.23236-1-angus@akkea.ca>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e4d51b63-bc07-c595-9d73-c4b09eb11341@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: jic23@kernel.org
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Tomas Novotny <tomas@novotny.cz>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-czw., 21 mar 2019 o 16:29 David Lechner <david@lechnology.com> napisa=C5=82=
-(a):
->
-> On 3/21/19 9:10 AM, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > This series adds cpufreq-dt operating points for da850 boards supported
-> > with device tree (da850-lcdk, da850-lego-ev3, da850-evm) and also
-> > includes a fix for the da850-evm boardfile which checks an unset variab=
-le
-> > to determine the highest available frequency for cpufreq.
->
->
-> I can't find any old threads about this, but I recall that there was a
-> problem with the USB OHCI controller breaking when switching frequencies.
-> It didn't happen all of the time, but often enough that it made using
-> cpufreq unusable for me. Is this still a problem?
->
+Extend the Vishay VCNL4000/4010/4020/4200 driver to work with the VCNL4040
+chip.
 
-Yes, it's still a problem, but it's bug-compatible with the legacy BSP
-from TI (project arago). I've spent some time trying to figure out the
-culprit at the time you were working on the clock driver, but
-eventually gave up. I think it's some kind of a HW issue. The
-controller would simple die after a couple transitions.
+Changes since V2:
+    Added Tested-by tag.
+    Changed 0x00 to 0 for clarity.
 
-Bart
+Changes since V1:
+    Separated byte vs word bug fix.
+    Separated device tree hooks.
+    Separated devicetree binding patches.
 
-> Also, a big-picture question. On boards with fixed regulators, what is
-> the benefit of enabling frequency scaling? The power savings aspect
-> seems negligible (< 1% in my tests) since the voltage cannot be changed.
+Angus Ainslie (Purism) (5):
+  iio: light: vcnl4000 use word writes instead of byte writes
+  iio: light: vcnl4000 add devicetree hooks
+  dt-bindings: iio: light: add vcnl4000 devicetree bindings
+  iio: light: vcnl4000 add support for the VCNL4040 proximity and light
+    sensor
+  dt-bindings: iio: light: add vcnl4040 devicetree bindings
+
+ .../bindings/iio/light/vcnl4000.txt           | 24 ++++++
+ drivers/iio/light/vcnl4000.c                  | 77 ++++++++++++++++---
+ 2 files changed, 91 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4000.txt
+
+-- 
+2.17.1
