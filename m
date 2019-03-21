@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [RESEND PATCH 06/11] usb: mtu3: rebuild qmu_gpd struct to prepare to support new QMU format
-Date: Thu, 21 Mar 2019 10:53:44 +0800
-Message-ID: <1553136829-14712-7-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [RESEND PATCH 09/11] usb: mtu3: move vbus and mode debugfs interfaces into mtu3_debugfs.c
+Date: Thu, 21 Mar 2019 10:53:47 +0800
+Message-ID: <1553136829-14712-10-git-send-email-chunfeng.yun@mediatek.com>
 References: <1553136829-14712-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,239 +12,323 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@
 Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-To support USB3 Gen2 ISOC, the data buffer length need be extended,
-it's hard to make the current qmu_gpd struct compatible, so here
-rebuild qmu_gpd struct and make easy to support new QMU format
+Due to the separated debugfs files are added, move vbus and mode
+debugfs interfaces related with dual-role switch from mtu3_dr.c
+into mtu3_debugfs.c
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/mtu3/mtu3.h     | 45 +++++++++++------------------
- drivers/usb/mtu3/mtu3_qmu.c | 56 +++++++++++++++++--------------------
- 2 files changed, 42 insertions(+), 59 deletions(-)
+ drivers/usb/mtu3/mtu3_debug.h   |   2 +
+ drivers/usb/mtu3/mtu3_debugfs.c | 101 ++++++++++++++++++++++++++++
+ drivers/usb/mtu3/mtu3_dr.c      | 113 +-------------------------------
+ drivers/usb/mtu3/mtu3_dr.h      |   4 ++
+ 4 files changed, 110 insertions(+), 110 deletions(-)
 
-diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
-index e3143f81b6a0..4dda7ed6e24e 100644
---- a/drivers/usb/mtu3/mtu3.h
-+++ b/drivers/usb/mtu3/mtu3.h
-@@ -144,45 +144,32 @@ struct mtu3_fifo_info {
-  *	The format of TX GPD is a little different from RX one.
-  *	And the size of GPD is 16 bytes.
-  *
-- * @flag:
-+ * @dw0_info:
-  *	bit0: Hardware Own (HWO)
-  *	bit1: Buffer Descriptor Present (BDP), always 0, BD is not supported
-  *	bit2: Bypass (BPS), 1: HW skips this GPD if HWO = 1
-  *	bit7: Interrupt On Completion (IOC)
-- * @chksum: This is used to validate the contents of this GPD;
-- *	If TXQ_CS_EN / RXQ_CS_EN bit is set, an interrupt is issued
-- *	when checksum validation fails;
-- *	Checksum value is calculated over the 16 bytes of the GPD by default;
-- * @data_buf_len (RX ONLY): This value indicates the length of
-- *	the assigned data buffer
-- * @tx_ext_addr (TX ONLY): [3:0] are 4 extension bits of @buffer,
-- *	[7:4] are 4 extension bits of @next_gpd
-+ *	bit[31:16]: allow data buffer length (RX ONLY),
-+ *		the buffer length of the data to receive
-+ *	bit[23:16]: extension address (TX ONLY),
-+ *		lower 4 bits are extension bits of @buffer,
-+ *		upper 4 bits are extension bits of @next_gpd
-  * @next_gpd: Physical address of the next GPD
-  * @buffer: Physical address of the data buffer
-- * @buf_len:
-- *	(TX): This value indicates the length of the assigned data buffer
-- *	(RX): The total length of data received
-- * @ext_len: reserved
-- * @rx_ext_addr(RX ONLY): [3:0] are 4 extension bits of @buffer,
-- *	[7:4] are 4 extension bits of @next_gpd
-- * @ext_flag:
-- *	bit5 (TX ONLY): Zero Length Packet (ZLP),
-+ * @dw3_info:
-+ *	bit[15:0]: data buffer length,
-+ *		(TX): the buffer length of the data to transmit
-+ *		(RX): The total length of data received
-+ *	bit[23:16]: extension address (RX ONLY),
-+ *		lower 4 bits are extension bits of @buffer,
-+ *		upper 4 bits are extension bits of @next_gpd
-+ *	bit29: Zero Length Packet (ZLP) (TX ONLY)
+diff --git a/drivers/usb/mtu3/mtu3_debug.h b/drivers/usb/mtu3/mtu3_debug.h
+index 94d39b00403e..d97a48c73469 100644
+--- a/drivers/usb/mtu3/mtu3_debug.h
++++ b/drivers/usb/mtu3/mtu3_debug.h
+@@ -27,11 +27,13 @@ struct mtu3_file_map {
+ 
+ #if IS_ENABLED(CONFIG_DEBUG_FS)
+ void ssusb_dev_debugfs_init(struct ssusb_mtk *ssusb);
++void ssusb_dr_debugfs_init(struct ssusb_mtk *ssusb);
+ void ssusb_debugfs_create_root(struct ssusb_mtk *ssusb);
+ void ssusb_debugfs_remove_root(struct ssusb_mtk *ssusb);
+ 
+ #else
+ static inline void ssusb_dev_debugfs_init(struct ssusb_mtk *ssusb) {}
++static inline void ssusb_dr_debugfs_init(struct ssusb_mtk *ssusb) {}
+ static inline void ssusb_debugfs_create_root(struct ssusb_mtk *ssusb) {}
+ static inline void ssusb_debugfs_remove_root(struct ssusb_mtk *ssusb) {}
+ 
+diff --git a/drivers/usb/mtu3/mtu3_debugfs.c b/drivers/usb/mtu3/mtu3_debugfs.c
+index 7cb1cad5a4b3..62c57ddc554e 100644
+--- a/drivers/usb/mtu3/mtu3_debugfs.c
++++ b/drivers/usb/mtu3/mtu3_debugfs.c
+@@ -10,6 +10,7 @@
+ #include <linux/uaccess.h>
+ 
+ #include "mtu3.h"
++#include "mtu3_dr.h"
+ #include "mtu3_debug.h"
+ 
+ #define dump_register(nm)		\
+@@ -425,6 +426,106 @@ void ssusb_dev_debugfs_init(struct ssusb_mtk *ssusb)
+ 			    mtu, &mtu3_ep_used_fops);
+ }
+ 
++static int ssusb_mode_show(struct seq_file *sf, void *unused)
++{
++	struct ssusb_mtk *ssusb = sf->private;
++
++	seq_printf(sf, "current mode: %s(%s drd)\n(echo device/host)\n",
++		   ssusb->is_host ? "host" : "device",
++		   ssusb->otg_switch.manual_drd_enabled ? "manual" : "auto");
++
++	return 0;
++}
++
++static int ssusb_mode_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, ssusb_mode_show, inode->i_private);
++}
++
++static ssize_t ssusb_mode_write(struct file *file, const char __user *ubuf,
++				size_t count, loff_t *ppos)
++{
++	struct seq_file *sf = file->private_data;
++	struct ssusb_mtk *ssusb = sf->private;
++	char buf[16];
++
++	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
++		return -EFAULT;
++
++	if (!strncmp(buf, "host", 4) && !ssusb->is_host) {
++		ssusb_mode_manual_switch(ssusb, 1);
++	} else if (!strncmp(buf, "device", 6) && ssusb->is_host) {
++		ssusb_mode_manual_switch(ssusb, 0);
++	} else {
++		dev_err(ssusb->dev, "wrong or duplicated setting\n");
++		return -EINVAL;
++	}
++
++	return count;
++}
++
++static const struct file_operations ssusb_mode_fops = {
++	.open = ssusb_mode_open,
++	.write = ssusb_mode_write,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = single_release,
++};
++
++static int ssusb_vbus_show(struct seq_file *sf, void *unused)
++{
++	struct ssusb_mtk *ssusb = sf->private;
++	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
++
++	seq_printf(sf, "vbus state: %s\n(echo on/off)\n",
++		   regulator_is_enabled(otg_sx->vbus) ? "on" : "off");
++
++	return 0;
++}
++
++static int ssusb_vbus_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, ssusb_vbus_show, inode->i_private);
++}
++
++static ssize_t ssusb_vbus_write(struct file *file, const char __user *ubuf,
++				size_t count, loff_t *ppos)
++{
++	struct seq_file *sf = file->private_data;
++	struct ssusb_mtk *ssusb = sf->private;
++	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
++	char buf[16];
++	bool enable;
++
++	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
++		return -EFAULT;
++
++	if (kstrtobool(buf, &enable)) {
++		dev_err(ssusb->dev, "wrong setting\n");
++		return -EINVAL;
++	}
++
++	ssusb_set_vbus(otg_sx, enable);
++
++	return count;
++}
++
++static const struct file_operations ssusb_vbus_fops = {
++	.open = ssusb_vbus_open,
++	.write = ssusb_vbus_write,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = single_release,
++};
++
++void ssusb_dr_debugfs_init(struct ssusb_mtk *ssusb)
++{
++	struct dentry *root = ssusb->dbgfs_root;
++
++	debugfs_create_file("mode", 0644, root, ssusb, &ssusb_mode_fops);
++	debugfs_create_file("vbus", 0644, root, ssusb, &ssusb_vbus_fops);
++}
++
+ void ssusb_debugfs_create_root(struct ssusb_mtk *ssusb)
+ {
+ 	ssusb->dbgfs_root =
+diff --git a/drivers/usb/mtu3/mtu3_dr.c b/drivers/usb/mtu3/mtu3_dr.c
+index 3f86ae1e73e8..ff2956272e15 100644
+--- a/drivers/usb/mtu3/mtu3_dr.c
++++ b/drivers/usb/mtu3/mtu3_dr.c
+@@ -7,16 +7,9 @@
+  * Author: Chunfeng Yun <chunfeng.yun@mediatek.com>
   */
- struct qmu_gpd {
--	__u8 flag;
--	__u8 chksum;
--	union {
--		__le16 data_buf_len;
--		__le16 tx_ext_addr;
--	};
-+	__le32 dw0_info;
- 	__le32 next_gpd;
- 	__le32 buffer;
--	__le16 buf_len;
--	union {
--		__u8 ext_len;
--		__u8 rx_ext_addr;
--	};
--	__u8 ext_flag;
-+	__le32 dw3_info;
- } __packed;
  
- /**
-diff --git a/drivers/usb/mtu3/mtu3_qmu.c b/drivers/usb/mtu3/mtu3_qmu.c
-index f4b5431264c1..7a1919fc9f9e 100644
---- a/drivers/usb/mtu3/mtu3_qmu.c
-+++ b/drivers/usb/mtu3/mtu3_qmu.c
-@@ -29,10 +29,13 @@
- #define GPD_FLAGS_BDP	BIT(1)
- #define GPD_FLAGS_BPS	BIT(2)
- #define GPD_FLAGS_IOC	BIT(7)
-+#define GET_GPD_HWO(gpd)	(le32_to_cpu((gpd)->dw0_info) & GPD_FLAGS_HWO)
+-#include <linux/debugfs.h>
+-#include <linux/irq.h>
+-#include <linux/kernel.h>
+-#include <linux/of_device.h>
+-#include <linux/pinctrl/consumer.h>
+-#include <linux/seq_file.h>
+-#include <linux/uaccess.h>
+-
+ #include "mtu3.h"
+ #include "mtu3_dr.h"
++#include "mtu3_debug.h"
  
--#define GPD_EXT_FLAG_ZLP	BIT(5)
--#define GPD_EXT_NGP(x)		(((x) & 0xf) << 4)
--#define GPD_EXT_BUF(x)		(((x) & 0xf) << 0)
-+#define GPD_RX_BUF_LEN(x)	(((x) & 0xffff) << 16)
-+#define GPD_DATA_LEN(x)		((x) & 0xffff)
-+#define GPD_EXT_FLAG_ZLP	BIT(29)
-+#define GPD_EXT_NGP(x)		(((x) & 0xf) << 20)
-+#define GPD_EXT_BUF(x)		(((x) & 0xf) << 16)
+ #define USB2_PORT 2
+ #define USB3_PORT 3
+@@ -270,7 +263,7 @@ static int ssusb_extcon_register(struct otg_switch_mtk *otg_sx)
+  * This is useful in special cases, such as uses TYPE-A receptacle but also
+  * wants to support dual-role mode.
+  */
+-static void ssusb_mode_manual_switch(struct ssusb_mtk *ssusb, int to_host)
++void ssusb_mode_manual_switch(struct ssusb_mtk *ssusb, int to_host)
+ {
+ 	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
  
- #define HILO_GEN64(hi, lo) (((u64)(hi) << 32) + (lo))
- #define HILO_DMA(hi, lo)	\
-@@ -125,7 +128,7 @@ static void reset_gpd_list(struct mtu3_ep *mep)
- 	struct qmu_gpd *gpd = ring->start;
- 
- 	if (gpd) {
--		gpd->flag &= ~GPD_FLAGS_HWO;
-+		gpd->dw0_info &= cpu_to_le32(~GPD_FLAGS_HWO);
- 		gpd_ring_init(ring, gpd);
+@@ -285,106 +278,6 @@ static void ssusb_mode_manual_switch(struct ssusb_mtk *ssusb, int to_host)
  	}
  }
-@@ -215,15 +218,12 @@ static int mtu3_prepare_tx_gpd(struct mtu3_ep *mep, struct mtu3_request *mreq)
- 	struct qmu_gpd *gpd = ring->enqueue;
- 	struct usb_request *req = &mreq->request;
- 	dma_addr_t enq_dma;
--	u16 ext_addr;
+ 
+-static int ssusb_mode_show(struct seq_file *sf, void *unused)
+-{
+-	struct ssusb_mtk *ssusb = sf->private;
 -
--	/* set all fields to zero as default value */
--	memset(gpd, 0, sizeof(*gpd));
-+	u32 ext_addr;
- 
-+	gpd->dw0_info = 0;	/* SW own it */
- 	gpd->buffer = cpu_to_le32(lower_32_bits(req->dma));
- 	ext_addr = GPD_EXT_BUF(upper_32_bits(req->dma));
--	gpd->buf_len = cpu_to_le16(req->length);
--	gpd->flag |= GPD_FLAGS_IOC;
-+	gpd->dw3_info = cpu_to_le32(GPD_DATA_LEN(req->length));
- 
- 	/* get the next GPD */
- 	enq = advance_enq_gpd(ring);
-@@ -231,15 +231,15 @@ static int mtu3_prepare_tx_gpd(struct mtu3_ep *mep, struct mtu3_request *mreq)
- 	dev_dbg(mep->mtu->dev, "TX-EP%d queue gpd=%p, enq=%p, qdma=%pad\n",
- 		mep->epnum, gpd, enq, &enq_dma);
- 
--	enq->flag &= ~GPD_FLAGS_HWO;
-+	enq->dw0_info &= cpu_to_le32(~GPD_FLAGS_HWO);
- 	gpd->next_gpd = cpu_to_le32(lower_32_bits(enq_dma));
- 	ext_addr |= GPD_EXT_NGP(upper_32_bits(enq_dma));
--	gpd->tx_ext_addr = cpu_to_le16(ext_addr);
-+	gpd->dw0_info = cpu_to_le32(ext_addr);
- 
- 	if (req->zero)
--		gpd->ext_flag |= GPD_EXT_FLAG_ZLP;
-+		gpd->dw3_info |= cpu_to_le32(GPD_EXT_FLAG_ZLP);
- 
--	gpd->flag |= GPD_FLAGS_HWO;
-+	gpd->dw0_info |= cpu_to_le32(GPD_FLAGS_IOC | GPD_FLAGS_HWO);
- 
- 	mreq->gpd = gpd;
- 
-@@ -253,15 +253,12 @@ static int mtu3_prepare_rx_gpd(struct mtu3_ep *mep, struct mtu3_request *mreq)
- 	struct qmu_gpd *gpd = ring->enqueue;
- 	struct usb_request *req = &mreq->request;
- 	dma_addr_t enq_dma;
--	u16 ext_addr;
+-	seq_printf(sf, "current mode: %s(%s drd)\n(echo device/host)\n",
+-		ssusb->is_host ? "host" : "device",
+-		ssusb->otg_switch.manual_drd_enabled ? "manual" : "auto");
 -
--	/* set all fields to zero as default value */
--	memset(gpd, 0, sizeof(*gpd));
-+	u32 ext_addr;
+-	return 0;
+-}
+-
+-static int ssusb_mode_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, ssusb_mode_show, inode->i_private);
+-}
+-
+-static ssize_t ssusb_mode_write(struct file *file,
+-	const char __user *ubuf, size_t count, loff_t *ppos)
+-{
+-	struct seq_file *sf = file->private_data;
+-	struct ssusb_mtk *ssusb = sf->private;
+-	char buf[16];
+-
+-	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
+-		return -EFAULT;
+-
+-	if (!strncmp(buf, "host", 4) && !ssusb->is_host) {
+-		ssusb_mode_manual_switch(ssusb, 1);
+-	} else if (!strncmp(buf, "device", 6) && ssusb->is_host) {
+-		ssusb_mode_manual_switch(ssusb, 0);
+-	} else {
+-		dev_err(ssusb->dev, "wrong or duplicated setting\n");
+-		return -EINVAL;
+-	}
+-
+-	return count;
+-}
+-
+-static const struct file_operations ssusb_mode_fops = {
+-	.open = ssusb_mode_open,
+-	.write = ssusb_mode_write,
+-	.read = seq_read,
+-	.llseek = seq_lseek,
+-	.release = single_release,
+-};
+-
+-static int ssusb_vbus_show(struct seq_file *sf, void *unused)
+-{
+-	struct ssusb_mtk *ssusb = sf->private;
+-	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
+-
+-	seq_printf(sf, "vbus state: %s\n(echo on/off)\n",
+-		regulator_is_enabled(otg_sx->vbus) ? "on" : "off");
+-
+-	return 0;
+-}
+-
+-static int ssusb_vbus_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, ssusb_vbus_show, inode->i_private);
+-}
+-
+-static ssize_t ssusb_vbus_write(struct file *file,
+-	const char __user *ubuf, size_t count, loff_t *ppos)
+-{
+-	struct seq_file *sf = file->private_data;
+-	struct ssusb_mtk *ssusb = sf->private;
+-	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
+-	char buf[16];
+-	bool enable;
+-
+-	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
+-		return -EFAULT;
+-
+-	if (kstrtobool(buf, &enable)) {
+-		dev_err(ssusb->dev, "wrong setting\n");
+-		return -EINVAL;
+-	}
+-
+-	ssusb_set_vbus(otg_sx, enable);
+-
+-	return count;
+-}
+-
+-static const struct file_operations ssusb_vbus_fops = {
+-	.open = ssusb_vbus_open,
+-	.write = ssusb_vbus_write,
+-	.read = seq_read,
+-	.llseek = seq_lseek,
+-	.release = single_release,
+-};
+-
+-static void ssusb_debugfs_init(struct ssusb_mtk *ssusb)
+-{
+-	struct dentry *root = ssusb->dbgfs_root;
+-
+-	debugfs_create_file("mode", 0644, root, ssusb, &ssusb_mode_fops);
+-	debugfs_create_file("vbus", 0644, root, ssusb, &ssusb_vbus_fops);
+-}
+-
+ void ssusb_set_force_mode(struct ssusb_mtk *ssusb,
+ 			  enum mtu3_dr_force_mode mode)
+ {
+@@ -417,7 +310,7 @@ int ssusb_otg_switch_init(struct ssusb_mtk *ssusb)
+ 	INIT_WORK(&otg_sx->vbus_work, ssusb_vbus_work);
  
-+	gpd->dw0_info = 0;	/* SW own it */
- 	gpd->buffer = cpu_to_le32(lower_32_bits(req->dma));
- 	ext_addr = GPD_EXT_BUF(upper_32_bits(req->dma));
--	gpd->data_buf_len = cpu_to_le16(req->length);
--	gpd->flag |= GPD_FLAGS_IOC;
-+	gpd->dw0_info = cpu_to_le32(GPD_RX_BUF_LEN(req->length));
+ 	if (otg_sx->manual_drd_enabled)
+-		ssusb_debugfs_init(ssusb);
++		ssusb_dr_debugfs_init(ssusb);
+ 	else
+ 		ret = ssusb_extcon_register(otg_sx);
  
- 	/* get the next GPD */
- 	enq = advance_enq_gpd(ring);
-@@ -269,11 +266,11 @@ static int mtu3_prepare_rx_gpd(struct mtu3_ep *mep, struct mtu3_request *mreq)
- 	dev_dbg(mep->mtu->dev, "RX-EP%d queue gpd=%p, enq=%p, qdma=%pad\n",
- 		mep->epnum, gpd, enq, &enq_dma);
+diff --git a/drivers/usb/mtu3/mtu3_dr.h b/drivers/usb/mtu3/mtu3_dr.h
+index 50702fdcde28..ba6fe357ce29 100644
+--- a/drivers/usb/mtu3/mtu3_dr.h
++++ b/drivers/usb/mtu3/mtu3_dr.h
+@@ -71,6 +71,7 @@ static inline void ssusb_gadget_exit(struct ssusb_mtk *ssusb)
+ #if IS_ENABLED(CONFIG_USB_MTU3_DUAL_ROLE)
+ int ssusb_otg_switch_init(struct ssusb_mtk *ssusb);
+ void ssusb_otg_switch_exit(struct ssusb_mtk *ssusb);
++void ssusb_mode_manual_switch(struct ssusb_mtk *ssusb, int to_host);
+ int ssusb_set_vbus(struct otg_switch_mtk *otg_sx, int is_on);
+ void ssusb_set_force_mode(struct ssusb_mtk *ssusb,
+ 			  enum mtu3_dr_force_mode mode);
+@@ -85,6 +86,9 @@ static inline int ssusb_otg_switch_init(struct ssusb_mtk *ssusb)
+ static inline void ssusb_otg_switch_exit(struct ssusb_mtk *ssusb)
+ {}
  
--	enq->flag &= ~GPD_FLAGS_HWO;
-+	enq->dw0_info &= cpu_to_le32(~GPD_FLAGS_HWO);
- 	gpd->next_gpd = cpu_to_le32(lower_32_bits(enq_dma));
- 	ext_addr |= GPD_EXT_NGP(upper_32_bits(enq_dma));
--	gpd->rx_ext_addr = cpu_to_le16(ext_addr);
--	gpd->flag |= GPD_FLAGS_HWO;
-+	gpd->dw3_info = cpu_to_le32(ext_addr);
-+	gpd->dw0_info |= cpu_to_le32(GPD_FLAGS_IOC | GPD_FLAGS_HWO);
- 
- 	mreq->gpd = gpd;
- 
-@@ -394,7 +391,7 @@ static void qmu_tx_zlp_error_handler(struct mtu3 *mtu, u8 epnum)
- 	cur_gpd_dma = read_txq_cur_addr(mbase, epnum);
- 	gpd_current = gpd_dma_to_virt(ring, cur_gpd_dma);
- 
--	if (le16_to_cpu(gpd_current->buf_len) != 0) {
-+	if (GPD_DATA_LEN(le32_to_cpu(gpd_current->dw3_info)) != 0) {
- 		dev_err(mtu->dev, "TX EP%d buffer length error(!=0)\n", epnum);
- 		return;
- 	}
-@@ -412,8 +409,7 @@ static void qmu_tx_zlp_error_handler(struct mtu3 *mtu, u8 epnum)
- 	mtu3_setbits(mbase, MU3D_EP_TXCR0(mep->epnum), TX_TXPKTRDY);
- 
- 	/* by pass the current GDP */
--	gpd_current->flag |= GPD_FLAGS_BPS;
--	gpd_current->flag |= GPD_FLAGS_HWO;
-+	gpd_current->dw0_info |= cpu_to_le32(GPD_FLAGS_BPS | GPD_FLAGS_HWO);
- 
- 	/*enable DMAREQEN, switch back to QMU mode */
- 	mtu3_setbits(mbase, MU3D_EP_TXCR0(mep->epnum), TX_DMAREQEN);
-@@ -445,7 +441,7 @@ static void qmu_done_tx(struct mtu3 *mtu, u8 epnum)
- 	dev_dbg(mtu->dev, "%s EP%d, last=%p, current=%p, enq=%p\n",
- 		__func__, epnum, gpd, gpd_current, ring->enqueue);
- 
--	while (gpd != gpd_current && !(gpd->flag & GPD_FLAGS_HWO)) {
-+	while (gpd != gpd_current && !GET_GPD_HWO(gpd)) {
- 
- 		mreq = next_request(mep);
- 
-@@ -455,7 +451,7 @@ static void qmu_done_tx(struct mtu3 *mtu, u8 epnum)
- 		}
- 
- 		request = &mreq->request;
--		request->actual = le16_to_cpu(gpd->buf_len);
-+		request->actual = GPD_DATA_LEN(le32_to_cpu(gpd->dw3_info));
- 		mtu3_req_complete(mep, request, 0);
- 
- 		gpd = advance_deq_gpd(ring);
-@@ -483,7 +479,7 @@ static void qmu_done_rx(struct mtu3 *mtu, u8 epnum)
- 	dev_dbg(mtu->dev, "%s EP%d, last=%p, current=%p, enq=%p\n",
- 		__func__, epnum, gpd, gpd_current, ring->enqueue);
- 
--	while (gpd != gpd_current && !(gpd->flag & GPD_FLAGS_HWO)) {
-+	while (gpd != gpd_current && !GET_GPD_HWO(gpd)) {
- 
- 		mreq = next_request(mep);
- 
-@@ -493,7 +489,7 @@ static void qmu_done_rx(struct mtu3 *mtu, u8 epnum)
- 		}
- 		req = &mreq->request;
- 
--		req->actual = le16_to_cpu(gpd->buf_len);
-+		req->actual = GPD_DATA_LEN(le32_to_cpu(gpd->dw3_info));
- 		mtu3_req_complete(mep, req, 0);
- 
- 		gpd = advance_deq_gpd(ring);
++static inline void
++ssusb_mode_manual_switch(struct ssusb_mtk *ssusb, int to_host) {}
++
+ static inline int ssusb_set_vbus(struct otg_switch_mtk *otg_sx, int is_on)
+ {
+ 	return 0;
 -- 
 2.20.1
