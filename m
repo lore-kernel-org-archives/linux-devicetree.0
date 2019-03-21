@@ -1,28 +1,68 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx6ull: Use the correct style for SPDX
- License Identifier
-Date: Thu, 21 Mar 2019 11:01:54 +0800
-Message-ID: <20190321030152.GB12513@dragon>
-References: <20190311142700.GA5867@nishad>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: RE: [PATCH] arm64: dts: imx8qxp: fix mbox-cells
+Date: Thu, 21 Mar 2019 04:44:59 +0000
+Message-ID: <AM0PR04MB4481E701F964775406CB611888420@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20190313093626.18589-1-peng.fan@nxp.com>
+ <AM0PR04MB4211910FCC3CEDF11EE4B10380440@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190311142700.GA5867@nishad>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishad Kamdar <nishadkamdar@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <AM0PR04MB4211910FCC3CEDF11EE4B10380440@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Aisheng Dong <aisheng.dong@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Anson Huang <anson.huang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "van.freenix@gmail.com" <van.freenix@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 07:57:04PM +0530, Nishad Kamdar wrote:
-> This patch corrects the SPDX License Identifier style
-> in imx6ull-pinfunc-snvs.h.
-> 
-> Changes made by using a script provided by Joe Perches here:
-> https://lkml.org/lkml/2019/2/7/46
-> and making some manual changes.
-> 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
-
-Applied, thanks.
+SGkgU2hhd24sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQWlzaGVu
+ZyBEb25nDQo+IFNlbnQ6IDIwMTnE6jPUwjE1yNUgMTg6MjQNCj4gVG86IFBlbmcgRmFuIDxwZW5n
+LmZhbkBueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNv
+bTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVlckBwZW5ndXRyb25peC5kZTsNCj4ga2VybmVs
+QHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFpbC5jb207IGRsLWxpbnV4LWlteA0KPiA8bGlu
+dXgtaW14QG54cC5jb20+OyBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT47IERhbmll
+bCBCYWx1dGENCj4gPGRhbmllbC5iYWx1dGFAbnhwLmNvbT47IGRldmljZXRyZWVAdmdlci5rZXJu
+ZWwub3JnOw0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IHZhbi5mcmVlbml4QGdtYWlsLmNvbQ0KPiBTdWJq
+ZWN0OiBSRTogW1BBVENIXSBhcm02NDogZHRzOiBpbXg4cXhwOiBmaXggbWJveC1jZWxscw0KPiAN
+Cj4gPiBGcm9tOiBQZW5nIEZhbg0KPiA+DQo+ID4gU3ViamVjdDogW1BBVENIXSBhcm02NDogZHRz
+OiBpbXg4cXhwOiBmaXggbWJveC1jZWxscw0KPiA+DQo+ID4gQ3VycmVudGx5IGxzaW9fbXUxIGlz
+IHVzZWQgYnkgTGludXggS2VybmVsIHdpdGggbWJveC1jZWxscyBhcyAyLCBidXQgYWN0dWFsbHkN
+Cj4gPiBtdTAtNCBjb3VsZCBiZSB1c2VkIHRvIGNvbW11bmljYXRlIHdpdGggU0NVLiBTbyBmaXgg
+dGhlIG1ib3gtY2VsbHMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBQZW5nIEZhbiA8cGVuZy5m
+YW5AbnhwLmNvbT4NCj4gDQo+IFJldmlld2VkLWJ5OiBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9u
+Z0BueHAuY29tPg0KDQpXb3VsZCB5b3UgcGljayB1cCB0aGlzIHBhdGNoPw0KDQpUaGFua3MsDQpQ
+ZW5nLg0KDQo+IA0KPiBSZWdhcmRzDQo+IERvbmcgQWlzaGVuZw0KPiANCj4gPiAtLS0NCj4gPiAg
+YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5kdHNpIHwgNiArKystLS0NCj4g
+PiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gPg0K
+PiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4cXhwLmR0
+c2kNCj4gPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAuZHRzaQ0KPiA+
+IGluZGV4IDRjM2RkOTVlZDQ4OC4uMTY3NjY4MzhhYzc3IDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAuZHRzaQ0KPiA+IEBAIC0zMjgsNyArMzI4LDcg
+QEANCj4gPiAgCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OHF4cC1tdSIsICJmc2wsaW14NnN4LW11
+IjsNCj4gPiAgCQkJcmVnID0gPDB4NWQxYjAwMDAgMHgxMDAwMD47DQo+ID4gIAkJCWludGVycnVw
+dHMgPSA8R0lDX1NQSSAxNzYgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gLQkJCSNtYm94LWNl
+bGxzID0gPDA+Ow0KPiA+ICsJCQkjbWJveC1jZWxscyA9IDwyPjsNCj4gPiAgCQkJc3RhdHVzID0g
+ImRpc2FibGVkIjsNCj4gPiAgCQl9Ow0KPiA+DQo+ID4gQEAgLTM0Myw3ICszNDMsNyBAQA0KPiA+
+ICAJCQljb21wYXRpYmxlID0gImZzbCxpbXg4cXhwLW11IiwgImZzbCxpbXg2c3gtbXUiOw0KPiA+
+ICAJCQlyZWcgPSA8MHg1ZDFlMDAwMCAweDEwMDAwPjsNCj4gPiAgCQkJaW50ZXJydXB0cyA9IDxH
+SUNfU1BJIDE3OSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiAtCQkJI21ib3gtY2VsbHMgPSA8
+MD47DQo+ID4gKwkJCSNtYm94LWNlbGxzID0gPDI+Ow0KPiA+ICAJCQlzdGF0dXMgPSAiZGlzYWJs
+ZWQiOw0KPiA+ICAJCX07DQo+ID4NCj4gPiBAQCAtMzUxLDcgKzM1MSw3IEBADQo+ID4gIAkJCWNv
+bXBhdGlibGUgPSAiZnNsLGlteDhxeHAtbXUiLCAiZnNsLGlteDZzeC1tdSI7DQo+ID4gIAkJCXJl
+ZyA9IDwweDVkMWYwMDAwIDB4MTAwMDA+Ow0KPiA+ICAJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkg
+MTgwIElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+IC0JCQkjbWJveC1jZWxscyA9IDwwPjsNCj4g
+PiArCQkJI21ib3gtY2VsbHMgPSA8Mj47DQo+ID4gIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+
+ID4gIAkJfTsNCj4gPg0KPiA+IC0tDQo+ID4gMi4xNi40DQoNCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
+CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
