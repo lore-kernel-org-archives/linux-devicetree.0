@@ -1,42 +1,196 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 0/4] ARM: da850: enable cpufreq in DT mode
-Date: Fri, 22 Mar 2019 14:31:01 +0100
-Message-ID: <20190322133105.5945-1-brgl@bgdev.pl>
+Subject: [PATCH v2 2/4] ARM: dts: da850: add cpu node and operating points to DT
+Date: Fri, 22 Mar 2019 14:31:03 +0100
+Message-ID: <20190322133105.5945-3-brgl@bgdev.pl>
+References: <20190322133105.5945-1-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190322133105.5945-1-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: David Lechner <david@lechnology.com>
 
-This series adds cpufreq-dt operating points for da850 boards supported
-with device tree (da850-lcdk, da850-lego-ev3, da850-evm) and also
-includes a fix for the da850-evm boardfile which checks an unset variable
-to determine the highest available frequency for cpufreq.
+This adds a cpu node and operating points to the common da850.dtsi file.
 
-Last patch enables CPUFREQ_DT in davinci_all_defconfig.
+Additionally, a regulator is added to the LEGO EV3 board along with
+some board-specific CPU configuration.
 
-v1 -> v2:
-- use the VDCDC3_1.2V regulator as cpu-supply on da850-evm
+Regulators need to be hooked up on other boards to get them working.
 
-Bartosz Golaszewski (2):
-  ARM: davinci: fix cpufreq registration on da850-evm
-  ARM: dts: da850-evm: enable cpufreq
+Signed-off-by: David Lechner <david@lechnology.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ arch/arm/boot/dts/da850-lcdk.dts     | 31 +++++++++++++++
+ arch/arm/boot/dts/da850-lego-ev3.dts | 30 +++++++++++++++
+ arch/arm/boot/dts/da850.dtsi         | 56 ++++++++++++++++++++++++++++
+ 3 files changed, 117 insertions(+)
 
-David Lechner (2):
-  ARM: dts: da850: add cpu node and operating points to DT
-  ARM: davinci_all_defconfig: Enable CPUFREQ_DT
-
- arch/arm/boot/dts/da850-evm.dts         | 12 ++++++
- arch/arm/boot/dts/da850-lcdk.dts        | 31 ++++++++++++++
- arch/arm/boot/dts/da850-lego-ev3.dts    | 30 +++++++++++++
- arch/arm/boot/dts/da850.dtsi            | 56 +++++++++++++++++++++++++
- arch/arm/configs/davinci_all_defconfig  |  1 +
- arch/arm/mach-davinci/board-da850-evm.c | 12 +-----
- 6 files changed, 131 insertions(+), 11 deletions(-)
-
+diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
+index 26f453dc8370..f29ed9010812 100644
+--- a/arch/arm/boot/dts/da850-lcdk.dts
++++ b/arch/arm/boot/dts/da850-lcdk.dts
+@@ -155,12 +155,43 @@
+ 			};
+ 		};
+ 	};
++
++	cvdd: regulator0 {
++		compatible = "regulator-fixed";
++		regulator-name = "cvdd";
++		regulator-min-microvolt = <1300000>;
++		regulator-max-microvolt = <1300000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
+ };
+ 
+ &ref_clk {
+ 	clock-frequency = <24000000>;
+ };
+ 
++&cpu {
++	cpu-supply = <&cvdd>;
++};
++
++/* LCDK has a fixed CVDD of 1.3V, so only op points >= 300MHz are valid */
++
++&opp_100 {
++	status = "disabled";
++};
++
++&opp_200 {
++	status = "disabled";
++};
++
++&opp_375 {
++	status = "okay";
++};
++
++&opp_456 {
++	status = "okay";
++};
++
+ &pmx_core {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/da850-lego-ev3.dts b/arch/arm/boot/dts/da850-lego-ev3.dts
+index 66fcadf0ba91..553717f84483 100644
+--- a/arch/arm/boot/dts/da850-lego-ev3.dts
++++ b/arch/arm/boot/dts/da850-lego-ev3.dts
+@@ -125,6 +125,15 @@
+ 		amp-supply = <&amp>;
+ 	};
+ 
++	cvdd: regulator0 {
++		compatible = "regulator-fixed";
++		regulator-name = "cvdd";
++		regulator-min-microvolt = <1200000>;
++		regulator-max-microvolt = <1200000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
+ 	/*
+ 	 * This is a 5V current limiting regulator that is shared by USB,
+ 	 * the sensor (input) ports, the motor (output) ports and the A/DC.
+@@ -204,6 +213,27 @@
+ 	clock-frequency = <24000000>;
+ };
+ 
++&cpu {
++	cpu-supply = <&cvdd>;
++};
++
++/* since we have a fixed regulator, we can't run at these points */
++&opp_100 {
++	status = "disabled";
++};
++
++&opp_200 {
++	status = "disabled";
++};
++
++/*
++ * The SoC is actually the 456MHz version, but because of the fixed regulator
++ * This is the fastest we can go.
++ */
++&opp_375 {
++	status = "okay";
++};
++
+ &pmx_core {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 559659b399d0..ee61d1253b58 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -20,6 +20,62 @@
+ 		reg = <0xc0000000 0x0>;
+ 	};
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu: cpu@0 {
++			compatible = "arm,arm926ej-s";
++			device_type = "cpu";
++			reg = <0>;
++			clocks = <&psc0 14>;
++			operating-points-v2 = <&opp_table>;
++		};
++	};
++
++	opp_table: opp-table {
++		compatible = "operating-points-v2";
++
++		opp_100: opp100-100000000 {
++			opp-hz = /bits/ 64 <100000000>;
++			opp-microvolt = <1000000 950000 1050000>;
++		};
++
++		opp_200: opp110-200000000 {
++			opp-hz = /bits/ 64 <200000000>;
++			opp-microvolt = <1100000 1050000 1160000>;
++		};
++
++		opp_300: opp120-300000000 {
++			opp-hz = /bits/ 64 <300000000>;
++			opp-microvolt = <1200000 1140000 1320000>;
++		};
++
++		/*
++		 * Original silicon was 300MHz max, so higher frequencies
++		 * need to be enabled on a per-board basis if the chip is
++		 * capable.
++		 */
++
++		opp_375: opp120-375000000 {
++			status = "disabled";
++			opp-hz = /bits/ 64 <375000000>;
++			opp-microvolt = <1200000 1140000 1320000>;
++		};
++
++		opp_415: opp130-415000000 {
++			status = "disabled";
++			opp-hz = /bits/ 64 <415000000>;
++			opp-microvolt = <1300000 1250000 1350000>;
++		};
++
++		opp_456: opp130-456000000 {
++			status = "disabled";
++			opp-hz = /bits/ 64 <456000000>;
++			opp-microvolt = <1300000 1250000 1350000>;
++		};
++	};
++
+ 	arm {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
 2.20.1
