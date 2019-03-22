@@ -1,70 +1,93 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [RFC v4 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Thu, 21 Mar 2019 16:33:46 -0700
-Message-ID: <CAFd5g45u6oX=nK9anAEdfsV+8SET8Zo_Dpy0WfzCna19r_jSyw@mail.gmail.com>
-References: <20190214213729.21702-1-brendanhiggins@google.com>
- <6d9b3b21-1179-3a45-7545-30aa15306cb4@deltatee.com> <CAFd5g47G=mTdk+=wpO+rkyO0+mAbEfPAg=Pr7_507Uek4sdWeA@mail.gmail.com>
- <3bdbe44c-5bd8-db37-89f9-a518cd5a21a8@deltatee.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v2 3/5] devfreq: rk3399_dmc: Pass ODT and auto power down
+ parameters to TF-A.
+Date: Thu, 21 Mar 2019 17:01:07 -0700
+Message-ID: <20190322000107.GU112750@google.com>
+References: <20190319181323.22804-1-gael.portay@collabora.com>
+ <20190319181323.22804-4-gael.portay@collabora.com>
+ <20190320003352.GN112750@google.com>
+ <20190320215013.43zgvyn5frnb3yud@archlinux.localdomain>
+ <20190320220223.GP112750@google.com>
+ <20190321231055.j7z23f3k3rcngq4u@archlinux.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3bdbe44c-5bd8-db37-89f9-a518cd5a21a8@deltatee.com>
+Content-Disposition: inline
+In-Reply-To: <20190321231055.j7z23f3k3rcngq4u@archlinux.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Logan Gunthorpe <logang@deltatee.com>
-Cc: Kees Cook <keescook@google.com>, Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org, Rob Herring <robh@kernel.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>, Michael Ellerman <mpe@ellerman.id.au>, Joe Perches <joe@perches.com>, brakmo@fb.com, Steven Rostedt <rostedt@goodmis.org>, "Bird, Timothy" <Tim.Bird@sony.com>, Kevin Hilman <khilman@baylibre.com>, Julia Lawall <julia.lawall@lip6.fr>, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>, linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>
+To: =?utf-8?B?R2HDq2w=?= PORTAY <gael.portay@collabora.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Derek Basehore <dbasehore@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-rockchip@lists.infradead.org, Randy Li <ayaka@soulik.info>, kernel@collabora.com, linux-arm-kernel@lists.infradead.org, Lin Huang <hl@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 3:27 PM Logan Gunthorpe <logang@deltatee.com> wrote:
->
->
->
-> On 2019-03-21 4:07 p.m., Brendan Higgins wrote:
-> > A couple of points, as for needing CONFIG_PCI; my plan to deal with
-> > that type of thing has been that we would add support for a KUnit/UML
-> > version that is just for KUnit. It would mock out the necessary bits
-> > to provide a fake hardware implementation for anything that might
-> > depend on it. I wrote a prototype for mocking/faking MMIO that I
-> > presented to the list here[1]; it is not part of the current patchset
-> > because we decided it would be best to focus on getting an MVP in, but
-> > I plan on bringing it back up at some point. Anyway, what do you
-> > generally think of this approach?
->
-> Yes, I was wondering if that might be possible. I think that's a great
-> approach but it will unfortunately take a lot of work before larger
-> swaths of the kernel are testable in Kunit with UML. Having more common
-> mocked infrastructure will be great by-product of it though.
+Hi Gaël,
 
-Yeah, it's unfortunate that the best way to do something often takes
-so much longer.
+On Thu, Mar 21, 2019 at 07:10:55PM -0400, Gaël PORTAY wrote:
+> Matthias,
+> 
+> On Wed, Mar 20, 2019 at 03:02:23PM -0700, Matthias Kaehlcke wrote:
+> > Hi Gaël,
+> > 
+> > On Wed, Mar 20, 2019 at 05:50:13PM -0400, Gaël PORTAY wrote:
+> > > Hi Matthias,
+> > > 
+> > > On Tue, Mar 19, 2019 at 05:33:52PM -0700, Matthias Kaehlcke wrote:
+> > > > ...
+> > > > > @@ -95,6 +103,19 @@ static int rk3399_dmcfreq_target(struct device *dev, unsigned long *freq,
+> > > > >  
+> > > > >  	mutex_lock(&dmcfreq->lock);
+> > > > >  
+> > > > > +	if (target_rate >= dmcfreq->odt_dis_freq)
+> > > > > +		odt_enable = true;
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * This makes a SMC call to the TF-A to set the DDR PD (power-down)
+> > > > > +	 * timings and to enable or disable the ODT (on-die termination)
+> > > > > +	 * resistors.
+> > > > > +	 */
+> > > > > +	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, dmcfreq->odt_pd_arg0,
+> > > > > +		      dmcfreq->odt_pd_arg1,
+> > > > > +		      ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD,
+> > > > > +		      odt_enable, 0, 0, 0, &res);
+> > > > 
+> > > > Is it necessary/desirable to make this call for every frequency
+> > > > change? IIUC it should be only needed when odt_enable changes and the
+> > > > driver could track the state. If the DDR frequency doesn't change too
+> > > > often and the overhead of the call is small it shouldn't be really
+> > > > important though.
+> > > >
+> > > 
+> > > I will test your solution first to make sure there is no regression to
+> > > run that call for frequency change only.
+> > 
+> 
+> Oops, I wanted to say when odt_enable changes since last call.
+> 
+> > If there is no frequency change the function returns at the
+> > beginning. My suggestion was to only do the call when 'odt_enable'
+> > changes, i.e. when a change (up or down) passes the 'odt_dis_freq'
+> > threshold.
+> > 
+> 
+> So, for a reason that I ignore, if we try to save unecessary calls to
+> ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD (odt_enable has not changed since
+> last call), we get stalled in the call to ROCKCHIP_SIP_CONFIG_SET_RAGE
+> that follows. The function arm_smccc_smc never returns and the device
+> hard hang.
 
->
-> > Awesome, I looked at the code you posted and it doesn't look like you
-> > have had too many troubles. One thing that stood out to me, why did
-> > you need to put it in the kunit/ dir?
->
-> Yeah, writing the code was super easy. Only after, did I realized I
-> couldn't get it to easily build.
+Thanks for giving it a try!
 
-Yeah, we really need to fix that; unfortunately, broadly addressing
-that problem is really hard and will most likely take a long time.
+Did your code ensure to perform the SMC call for the first frequency
+change? If not the problem could be that the DDR PD timings and ODT
+resistors are not properly configured for the new frequency.
 
->
-> Putting it in the kunit directory was necessary because nothing in the
-> NTB tree builds unless CONFIG_NTB is set (see drivers/Makefile) and
-> CONFIG_NTB depends on CONFIG_PCI. I didn't experiment to see how hard it
-> would be to set CONFIG_NTB without CONFIG_PCI; I assumed it would be tricky.
->
-> > I am looking forward to see what you think!
->
-> Generally, I'm impressed and want to see this work in upstream as soon
-> as possible so I can start to make use of it!
+In case you already did this or it doesn't help I think it's fine to
+just do the call always, we can always revisit this later.
 
-Great to hear! I was trying to get the next revision out this week,
-but addressing some of the comments is taking a little longer than
-expected. I should have something together fairly soon though
-(hopefully next week). Good news is that next revision will be
-non-RFC; most of the feedback has settled down and I think we are
-ready to start figuring out how to merge it. Fingers crossed :-)
+> Thanks to your remark, I have also fixed an issue with the odt_dis_freq
+> value. Its value is initialized to 0 in the probe function. Thus the
+> odt_enable is always true (target_rate > 0). I moved its initialization
+> after the timings are parsed from the device-tree; its value is now none
+> zero (333000000 in my case).
 
-Cheers
+Great!
