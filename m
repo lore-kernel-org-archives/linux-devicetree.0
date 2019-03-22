@@ -1,46 +1,59 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH v5 4/6] dt-bindings: display: sii902x: Remove trailing white
- space
-Date: Fri, 22 Mar 2019 10:06:13 +0200
-Message-ID: <6b2830ade40a42378cffe0db24665b0fdad8ba55.1553241734.git.jsarha@ti.com>
-References: <cover.1553241734.git.jsarha@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.1553241734.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: fabrizio.castro@bp.renesas.com, Songjun.Wu@atmel.com, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, voice.shen@atmel.com
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH V3 1/3] dt-bindings: hwmon: Add tachometer interrupt to pwm-fan
+Date: Fri, 22 Mar 2019 09:24:01 +0100
+Message-ID: <1553243043-19486-2-git-send-email-stefan.wahren@i2se.com>
+References: <1553243043-19486-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1553243043-19486-1-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Robin Murphy <robin.murphy@arm.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
-UmVtb3ZlIHRyYWlsaW5nIHdoaXRlIHNwYWNlIGZyb20gc2lpOTAyeCBkaXNwbGF5IGJyaWRnZSBi
-aW5kaW5nLgoKU2lnbmVkLW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KUmV2aWV3
-ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNv
-bT4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
-c2lpOTAyeC50eHQgfCAyICstCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVs
-ZXRpb24oLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9icmlkZ2Uvc2lpOTAyeC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTAyeC50eHQKaW5kZXggNzJkMmRjNmMzZTZiLi5jNGMx
-ODU1Y2E2NTQgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTAyeC50eHQKQEAgLTUsNyArNSw3IEBAIFJlcXVp
-cmVkIHByb3BlcnRpZXM6CiAJLSByZWc6IGkyYyBhZGRyZXNzIG9mIHRoZSBicmlkZ2UKIAogT3B0
-aW9uYWwgcHJvcGVydGllczoKLQktIGludGVycnVwdHM6IGRlc2NyaWJlIHRoZSBpbnRlcnJ1cHQg
-bGluZSB1c2VkIHRvIGluZm9ybSB0aGUgaG9zdCAKKwktIGludGVycnVwdHM6IGRlc2NyaWJlIHRo
-ZSBpbnRlcnJ1cHQgbGluZSB1c2VkIHRvIGluZm9ybSB0aGUgaG9zdAogCSAgYWJvdXQgaG90cGx1
-ZyBldmVudHMuCiAJLSByZXNldC1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0
-aW9uIGZvciBSU1RfTiBwaW4uCiAKLS0gClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBv
-cmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLiBZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYx
-NTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+This adds the tachometer interrupt to the pwm-fan binding, which is
+necessary for RPM support.
+
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ .../devicetree/bindings/hwmon/pwm-fan.txt          | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+index 49ca5d8..722005f 100644
+--- a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
++++ b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+@@ -7,7 +7,16 @@ Required properties:
+ 			which correspond to thermal cooling states
+ 
+ Optional properties:
+-- fan-supply    : phandle to the regulator that provides power to the fan
++- fan-supply		: phandle to the regulator that provides power to the fan
++- interrupts		: This contains a single interrupt specifier which
++			  describes the tachometer output of the fan as an
++			  interrupt source. The output signal must generate a
++			  defined number of interrupts per fan revolution, which
++			  require that it must be self resetting edge interrupts.
++			  See interrupt-controller/interrupts.txt for the format.
++- pulses-per-revolution : define the tachometer pulses per fan revolution as
++			  an integer (default is 2 interrupts per revolution).
++			  The value must be greater than zero.
+ 
+ Example:
+ 	fan0: pwm-fan {
+@@ -38,3 +47,14 @@ Example:
+ 					};
+ 			     };
+ 		};
++
++Example 2:
++	fan0: pwm-fan {
++		fan0: pwm-fan {
++		compatible = "pwm-fan";
++		pwms = <&pwm 0 40000 0>;
++		fan-supply = <&reg_fan>;
++		interrupt-parent = <&gpio5>;
++		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
++		pulses-per-revolution = <2>;
++	};
+-- 
+2.7.4
