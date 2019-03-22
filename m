@@ -1,33 +1,53 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V3 2/3] Documentation: pwm-fan: Add description for RPM support
-Date: Fri, 22 Mar 2019 09:24:02 +0100
-Message-ID: <1553243043-19486-3-git-send-email-stefan.wahren@i2se.com>
-References: <1553243043-19486-1-git-send-email-stefan.wahren@i2se.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 24/25] dt-bindings: an30259a: Add function and color
+ properties
+Date: Fri, 22 Mar 2019 09:33:27 +0100
+Message-ID: <20190322083327.GB27015@amd>
+References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
+ <20190310182836.20841-25-jacek.anaszewski@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="RASg3xLB4tUQ4RcS"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553243043-19486-1-git-send-email-stefan.wahren@i2se.com>
+Content-Disposition: inline
+In-Reply-To: <20190310182836.20841-25-jacek.anaszewski@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Robin Murphy <robin.murphy@arm.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a short description for the new RPM support of the pwm-fan
-driver.
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- Documentation/hwmon/pwm-fan | 3 +++
- 1 file changed, 3 insertions(+)
+--RASg3xLB4tUQ4RcS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/hwmon/pwm-fan b/Documentation/hwmon/pwm-fan
-index 18529d2..82fe967 100644
---- a/Documentation/hwmon/pwm-fan
-+++ b/Documentation/hwmon/pwm-fan
-@@ -15,3 +15,6 @@ The driver implements a simple interface for driving a fan connected to
- a PWM output. It uses the generic PWM interface, thus it can be used with
- a range of SoCs. The driver exposes the fan to the user space through
- the hwmon's sysfs interface.
-+
-+The fan rotation speed returned via the optional 'fan1_input' is extrapolated
-+from the sampled interrupts from the tachometer signal within 1 second.
--- 
-2.7.4
+On Sun 2019-03-10 19:28:35, Jacek Anaszewski wrote:
+> Refer to new "function" and "color" properties and mark "label"
+> as deprecated.
+>=20
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Simon Shields <simon@lineageos.org>
+
+Patches 6,8,10,14,16,18,20,22:
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--RASg3xLB4tUQ4RcS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyUndcACgkQMOfwapXb+vIwtQCggh9SOWd09m6SKmnyQxrjctBZ
+igYAn0/VmnKV3KqI3g+1AOxhv6op71Ce
+=lb4i
+-----END PGP SIGNATURE-----
+
+--RASg3xLB4tUQ4RcS--
