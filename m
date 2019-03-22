@@ -1,62 +1,49 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v4 1/7] dt-bindings: interconnect: Add a dma interconnect
- name
-Date: Fri, 22 Mar 2019 18:46:37 +0200
-Message-ID: <c2e00120-e6e1-9a43-dd8d-3bd6725d2dff@linaro.org>
-References: <cover.221220f2f28e14ef07cce84e753ac662085d84ff.1552595146.git-series.maxime.ripard@bootlin.com>
- <9512c3223c26c12b02376cf4ba4a74ca29de1132.1552595146.git-series.maxime.ripard@bootlin.com>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH] ARM: dts: rockchip: Add dvs-gpios to rk3288-veyron-jerry
+Date: Fri, 22 Mar 2019 09:52:09 -0700
+Message-ID: <20190322165209.196926-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9512c3223c26c12b02376cf4ba4a74ca29de1132.1552595146.git-series.maxime.ripard@bootlin.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Robin Murphy <robin.murphy@arm.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: mka@chromium.org, ryandcase@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 3/14/19 22:26, Maxime Ripard wrote:
-> The current DT bindings assume that the DMA will be performed by the
-> devices through their parent DT node, and rely on that assumption for the
-> address translation using dma-ranges.
-> 
-> However, some SoCs have devices that will perform DMA through another bus,
-> with separate address translation rules. We therefore need to express that
-> relationship, through the special interconnect name "dma".
+When the rk3288-jerry device tree was first submitted we left out the
+dvs-gpios because I pointed out that the property "dvs-gpios" wasn't
+yet supported upstream [1].  Soon after that the property was added in
+commit bad47ad2eef3 ("regulator: rk808: fixed the overshoot when
+adjust voltage").  ...but we forgot to go back and add the property to
+the jerry device tree file.  Let's do so now.
 
-s/dma/dma-mem/
+NOTE: without this patch, jerry is likely still stable (thanks to the
+fallback of making many small jumps in the rk808 regulator code) but
+it'll take quite a bit longer to make voltage transitions.
 
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+[1] https://lore.kernel.org/linux-arm-kernel/CAD=FV=WwFgjzbk9xF5TU_ie6UnHQMyrZ176D4+jJTWWOoaKC2Q@mail.gmail.com/
 
-Acked-by: Georgi Djakov <georgi.djakov@linaro.org>
+Fixes: f3ee390e4ef2 ("ARM: dts: rockchip: add veyron-jerry board")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-> ---
->  Documentation/devicetree/bindings/interconnect/interconnect.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> index 5a3c575b387a..6f5d23a605b7 100644
-> --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> @@ -51,6 +51,10 @@ interconnect-names : List of interconnect path name strings sorted in the same
->  		     interconnect-names to match interconnect paths with interconnect
->  		     specifier pairs.
->  
-> +                     Reserved interconnect names:
-> +			 * dma-mem: Path from the device to the main memory of
-> +			            the system
-> +
->  Example:
->  
->  	sdhci@7864000 {
-> 
+ arch/arm/boot/dts/rk3288-veyron-jerry.dts | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/rk3288-veyron-jerry.dts b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
+index 2ba89895c33a..cc3019dc38e1 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-jerry.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
+@@ -61,7 +61,9 @@
+ 
+ &rk808 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pmic_int_l>;
++	pinctrl-0 = <&pmic_int_l &dvs_1 &dvs_2>;
++	dvs-gpios = <&gpio7 RK_PB4 GPIO_ACTIVE_HIGH>,
++		    <&gpio7 RK_PB7 GPIO_ACTIVE_HIGH>;
+ 
+ 	regulators {
+ 		mic_vcc: LDO_REG2 {
+-- 
+2.21.0.392.gf8f6787159e-goog
