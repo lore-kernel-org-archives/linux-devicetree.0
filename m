@@ -1,48 +1,32 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of: use correct function prototype for
- of_overlay_fdt_apply()
-Date: Thu, 21 Mar 2019 18:37:34 -0700
-Message-ID: <57043d9a-97d0-1d12-4542-8755d5ef998d@gmail.com>
-References: <20190322002342.24831-1-chris.packham@alliedtelesis.co.nz>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 3/5] ARM: dts: imx50: Add PHY node for usbotg and adjust
+ clocks
+Date: Fri, 22 Mar 2019 09:41:21 +0800
+Message-ID: <20190322014120.GS12513@dragon>
+References: <20190319152421.16179-1-j.neuschaefer@gmx.net>
+ <20190319152421.16179-4-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190322002342.24831-1-chris.packham@alliedtelesis.co.nz>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190319152421.16179-4-j.neuschaefer@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>, robh+dt@kernel.org
-Cc: Hamish Martin <hamish.martin@alliedtelesis.co.nz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Heiko Stuebner <heiko@sntech.de>, Jagan Teki <jagan@amarulasolutions.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 3/21/19 5:23 PM, Chris Packham wrote:
-> When CONFIG_OF_OVERLAY is not enabled the fallback stub for
-> of_overlay_fdt_apply() does not match the prototype for the case when
-> CONFIG_OF_OVERLAY is enabled. Update the stub to use the correct
-> function prototype.
+On Tue, Mar 19, 2019 at 04:24:18PM +0100, Jonathan Neuschäfer wrote:
+> Even though the ChipIdea USB controller binding[1] doesn't specify the
+> properties that reference a PHY as required, the Linux driver
+> requires[2] such a reference.
 > 
-> Fixes: commit 39a751a4cb7e ("of: change overlay apply input data from unflattened to FDT")
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->  include/linux/of.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> The clock situation is like on i.MX53: The USB controller is clocked
+> from IMX5_CLK_USBOH3_GATE and the PHY from IMX5_CLK_USB_PHY1_GATE.
 > 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index e240992e5cb6..28797e1a9982 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -1449,7 +1449,8 @@ int of_overlay_notifier_unregister(struct notifier_block *nb);
->  
->  #else
->  
-> -static inline int of_overlay_fdt_apply(void *overlay_fdt, int *ovcs_id)
-> +static inline int of_overlay_fdt_apply(void *overlay_fdt, u32 overlay_fdt_size,
-> +				       int *ovcs_id)
->  {
->  	return -ENOTSUPP;
->  }
+> [1]: Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> [2]: Search for EINVAL in drivers/usb/chipidea/ci_hdrc_imx.c
 > 
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 
-Thanks!
-
-Reviewed-by: Frank Rowand <frank.rowand@sony.com>
+Applied, thanks.
