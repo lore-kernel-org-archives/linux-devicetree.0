@@ -1,42 +1,33 @@
 From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V3 0/3] hwmon: pwm-fan: Add RPM support
-Date: Fri, 22 Mar 2019 09:24:00 +0100
-Message-ID: <1553243043-19486-1-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH V3 2/3] Documentation: pwm-fan: Add description for RPM support
+Date: Fri, 22 Mar 2019 09:24:02 +0100
+Message-ID: <1553243043-19486-3-git-send-email-stefan.wahren@i2se.com>
+References: <1553243043-19486-1-git-send-email-stefan.wahren@i2se.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1553243043-19486-1-git-send-email-stefan.wahren@i2se.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Robin Murphy <robin.murphy@arm.com>
 Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
-Contrary to the gpio-fan the pwm-fan driver isn't easy to setup
-with pwmconfig/fancontrol because of the missing hwmon sysfs entry
-for actual revolutions per minute. This series adds this feature.
+This adds a short description for the new RPM support of the pwm-fan
+driver.
 
-Changes in V3:
-- rename property interrupt-ratio to pulses-per-revolution
-  to avoid confusion with interrupt binding
-- handle error case pulses-per-revolution = 0
-- bail out properly in case we are unable to request the irq
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ Documentation/hwmon/pwm-fan | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Changes in V2:
-- address Guenter's comments:
-  - improve description of interrupts
-  - use atomic_t to avoid races of the pulse counter
-  - measure sample time to make rpm more reliable under load
-  - make sysfs entry fan1_input conditional
-- add dt-property to define interrupts per fan revolution
-- example for fan with RPM support
-
-
-Stefan Wahren (3):
-  dt-bindings: hwmon: Add tachometer interrupt to pwm-fan
-  Documentation: pwm-fan: Add description for RPM support
-  hwmon: pwm-fan: Add RPM support via external interrupt
-
- .../devicetree/bindings/hwmon/pwm-fan.txt          |  22 ++++-
- Documentation/hwmon/pwm-fan                        |   3 +
- drivers/hwmon/pwm-fan.c                            | 100 ++++++++++++++++++++-
- 3 files changed, 123 insertions(+), 2 deletions(-)
-
+diff --git a/Documentation/hwmon/pwm-fan b/Documentation/hwmon/pwm-fan
+index 18529d2..82fe967 100644
+--- a/Documentation/hwmon/pwm-fan
++++ b/Documentation/hwmon/pwm-fan
+@@ -15,3 +15,6 @@ The driver implements a simple interface for driving a fan connected to
+ a PWM output. It uses the generic PWM interface, thus it can be used with
+ a range of SoCs. The driver exposes the fan to the user space through
+ the hwmon's sysfs interface.
++
++The fan rotation speed returned via the optional 'fan1_input' is extrapolated
++from the sampled interrupts from the tachometer signal within 1 second.
 -- 
 2.7.4
