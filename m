@@ -1,334 +1,212 @@
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: RE: [PATCH v2 3/3] arm64: dts: imx: Add i.mx8mm evk basic dts support
-Date: Fri, 22 Mar 2019 02:10:35 +0000
-Message-ID: <VI1PR0402MB35197D263574ABE4F235839A87430@VI1PR0402MB3519.eurprd04.prod.outlook.com>
-References: <1552369779-7614-1-git-send-email-ping.bai@nxp.com>
- <1552369779-7614-3-git-send-email-ping.bai@nxp.com>
- <20190321084453.GE12513@dragon>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v4] arm64: dts: fsl: imx8mq: enable the multi sensor TMU
+Date: Fri, 22 Mar 2019 10:11:04 +0800
+Message-ID: <20190322021102.GW12513@dragon>
+References: <20190311213124.29325-1-angus@akkea.ca>
+ <20190321125252.4498-1-angus@akkea.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190321084453.GE12513@dragon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190321125252.4498-1-angus@akkea.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc: Fabio Estevam <festevam@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Carlo Caione <ccaione@baylibre.com>, Abel Vesa <abel.vesa@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH v2 3/3] arm64: dts: imx: Add i.mx8mm evk basic dts
-....
-
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> > @@ -0,0 +1,238 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > +/*
-> > + * Copyright 2019 NXP
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "imx8mm.dtsi"
-> > +
-> > +/ {
-> > +	model = "FSL i.MX8MM EVK board";
-> > +	compatible = "fsl,imx8mm-evk", "fsl,imx8mm";
+On Thu, Mar 21, 2019 at 05:52:52AM -0700, Angus Ainslie (Purism) wrote:
+> Add the imx8mq TMU (Thermal management unit) nodes for CPU,
+> GPU, and VPU.
 > 
-> The board compatible should be added to
-> Documentation/devicetree/bindings/arm/fsl.yaml as well.
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 
-Thanks, I will it.
+Subject prefix 'arm64: dts: imx8mq:' would be good enough.  I changed it
+and applied patch.
 
-> > +
-> > +	chosen {
-> > +		bootargs = "console=ttymxc1,115200
-> > +earlycon=ec_imx6q,0x30890000,115200";
+Shawn
+
+> ---
 > 
-> Is it really necessary to have a bootargs in DT?
+> Changes since v3:
 > 
-
-It is not very necessary, I will remove it.
-
-> > +		stdout-path = &uart2;
-> > +	};
-> > +
-> > +	leds {
-> > +		compatible = "gpio-leds";
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pinctrl_gpio_led>;
-> > +
-> > +		status {
-> > +			label = "status";
-> > +			gpios = <&gpio3 16 0>;
+> Moved the annotation.
 > 
-> Use GPIO_ACTIVE_HIGH.
+> Changes since v2:
 > 
-
-OK, thanks
-
-> > +			default-state = "on";
-> > +		};
-> > +	};
-> > +
-> > +	reg_usdhc2_vmmc: regulator-usdhc2 {
-> > +		compatible = "regulator-fixed";
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pinctrl_reg_usdhc2_vmmc>;
-> > +		regulator-name = "VSD_3V3";
-> > +		regulator-min-microvolt = <3300000>;
-> > +		regulator-max-microvolt = <3300000>;
-> > +		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
-> > +		off-on-delay = <20000>;
+> Updated alert and critical temps for commercial parts.
+> Fixed node names.
 > 
-> Unsupported property?
+> Changes since v1:
 > 
-
-Yes, I will remove it
-
-BR
-Jacky
-
-> Shawn
+> Removed references to multi sensor patch.
 > 
-> > +		enable-active-high;
-> > +	};
-> > +};
-> > +
-> > +&fec1 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_fec1>;
-> > +	phy-mode = "rgmii-id";
-> > +	phy-handle = <&ethphy0>;
-> > +	fsl,magic-packet;
-> > +	status = "okay";
-> > +
-> > +	mdio {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		ethphy0: ethernet-phy@0 {
-> > +			compatible = "ethernet-phy-ieee802.3-c22";
-> > +			reg = <0>;
-> > +			at803x,led-act-blind-workaround;
-> > +			at803x,eee-okay;
-> > +			at803x,vddio-1p8v;
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +&uart2 { /* console */
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_uart2>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&usdhc2 {
-> > +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> > +	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-> > +	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
-> > +	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-> > +	cd-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
-> > +	bus-width = <4>;
-> > +	vmmc-supply = <&reg_usdhc2_vmmc>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&usdhc3 {
-> > +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> > +	pinctrl-0 = <&pinctrl_usdhc3>;
-> > +	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
-> > +	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
-> > +	bus-width = <8>;
-> > +	non-removable;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&wdog1 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_wdog>;
-> > +	fsl,ext-reset-output;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&iomuxc {
-> > +	pinctrl-names = "default";
-> > +
-> > +	pinctrl_fec1: fec1grp {
-> > +		fsl,pins = <
-> > +			MX8MM_IOMUXC_ENET_MDC_ENET1_MDC			0x3
-> > +			MX8MM_IOMUXC_ENET_MDIO_ENET1_MDIO		0x3
-> > +			MX8MM_IOMUXC_ENET_TD3_ENET1_RGMII_TD3		0x1f
-> > +			MX8MM_IOMUXC_ENET_TD2_ENET1_RGMII_TD2		0x1f
-> > +			MX8MM_IOMUXC_ENET_TD1_ENET1_RGMII_TD1		0x1f
-> > +			MX8MM_IOMUXC_ENET_TD0_ENET1_RGMII_TD0		0x1f
-> > +			MX8MM_IOMUXC_ENET_RD3_ENET1_RGMII_RD3		0x91
-> > +			MX8MM_IOMUXC_ENET_RD2_ENET1_RGMII_RD2		0x91
-> > +			MX8MM_IOMUXC_ENET_RD1_ENET1_RGMII_RD1		0x91
-> > +			MX8MM_IOMUXC_ENET_RD0_ENET1_RGMII_RD0		0x91
-> > +			MX8MM_IOMUXC_ENET_TXC_ENET1_RGMII_TXC		0x1f
-> > +			MX8MM_IOMUXC_ENET_RXC_ENET1_RGMII_RXC		0x91
-> > +			MX8MM_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL
-> 	0x91
-> > +			MX8MM_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL
-> 	0x1f
-> > +			MX8MM_IOMUXC_SAI2_RXC_GPIO4_IO22		0x19
-> > +		>;
-> > +	};
-> > +
-> > +	pinctrl_gpio_led: gpioledgrp {
-> > +		fsl,pins = <
-> > +			MX8MM_IOMUXC_NAND_READY_B_GPIO3_IO16	0x19
-> > +		>;
-> > +	};
-> > +
-> > +	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
-> > +		fsl,pins = <
-> > +			MX8MM_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
-> > +		>;
-> > +	};
-> > +
-> > +	pinctrl_uart2: uart2grp {
-> > +		fsl,pins = <
-> > +			MX8MM_IOMUXC_UART2_RXD_UART2_DCE_RX	0x140
-> > +			MX8MM_IOMUXC_UART2_TXD_UART2_DCE_TX	0x140
-> > +		>;
-> > +	};
-> > +
-> > +	pinctrl_usdhc2_gpio: usdhc2grpgpio {
-> > +		fsl,pins = <
-> > +			MX8MM_IOMUXC_GPIO1_IO15_GPIO1_IO15	0x1c4
-> > +		>;
-> > +	};
-> > +
-> > +	pinctrl_usdhc2: usdhc2grp {
-> > +		fsl,pins = <
-> > +			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK		0x190
-> > +			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD		0x1d0
-> > +			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0	0x1d0
-> > +			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1	0x1d0
-> > +			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2	0x1d0
-> > +			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3	0x1d0
-> > +			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0x1d0
-> > +		>;
-> > +	};
-> > +
-> > +	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-> > +		fsl,pins = <
-> > +			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK		0x194
-> > +			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD		0x1d4
-> > +			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0	0x1d4
-> > +			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1	0x1d4
-> > +			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2	0x1d4
-> > +			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3	0x1d4
-> > +			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0x1d0
-> > +		>;
-> > +	};
-> > +
-> > +	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-> > +		fsl,pins = <
-> > +			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK		0x196
-> > +			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD		0x1d6
-> > +			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0	0x1d6
-> > +			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1	0x1d6
-> > +			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2	0x1d6
-> > +			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3	0x1d6
-> > +			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0x1d0
-> > +		>;
-> > +	};
-> > +
-> > +	pinctrl_usdhc3: usdhc3grp {
-> > +		fsl,pins = <
-> > +			MX8MM_IOMUXC_NAND_WE_B_USDHC3_CLK		0x190
-> > +			MX8MM_IOMUXC_NAND_WP_B_USDHC3_CMD
-> 	0x1d0
-> > +			MX8MM_IOMUXC_NAND_DATA04_USDHC3_DATA0
-> 	0x1d0
-> > +			MX8MM_IOMUXC_NAND_DATA05_USDHC3_DATA1
-> 	0x1d0
-> > +			MX8MM_IOMUXC_NAND_DATA06_USDHC3_DATA2
-> 	0x1d0
-> > +			MX8MM_IOMUXC_NAND_DATA07_USDHC3_DATA3
-> 	0x1d0
-> > +			MX8MM_IOMUXC_NAND_RE_B_USDHC3_DATA4
-> 	0x1d0
-> > +			MX8MM_IOMUXC_NAND_CE2_B_USDHC3_DATA5
-> 	0x1d0
-> > +			MX8MM_IOMUXC_NAND_CE3_B_USDHC3_DATA6
-> 	0x1d0
-> > +			MX8MM_IOMUXC_NAND_CLE_USDHC3_DATA7
-> 	0x1d0
-> > +			MX8MM_IOMUXC_NAND_CE1_B_USDHC3_STROBE
-> 	0x190
-> > +		>;
-> > +	};
-> > +
-> > +	pinctrl_usdhc3_100mhz: usdhc3grp100mhz {
-> > +		fsl,pins = <
-> > +			MX8MM_IOMUXC_NAND_WE_B_USDHC3_CLK		0x194
-> > +			MX8MM_IOMUXC_NAND_WP_B_USDHC3_CMD
-> 	0x1d4
-> > +			MX8MM_IOMUXC_NAND_DATA04_USDHC3_DATA0
-> 	0x1d4
-> > +			MX8MM_IOMUXC_NAND_DATA05_USDHC3_DATA1
-> 	0x1d4
-> > +			MX8MM_IOMUXC_NAND_DATA06_USDHC3_DATA2
-> 	0x1d4
-> > +			MX8MM_IOMUXC_NAND_DATA07_USDHC3_DATA3
-> 	0x1d4
-> > +			MX8MM_IOMUXC_NAND_RE_B_USDHC3_DATA4
-> 	0x1d4
-> > +			MX8MM_IOMUXC_NAND_CE2_B_USDHC3_DATA5
-> 	0x1d4
-> > +			MX8MM_IOMUXC_NAND_CE3_B_USDHC3_DATA6
-> 	0x1d4
-> > +			MX8MM_IOMUXC_NAND_CLE_USDHC3_DATA7
-> 	0x1d4
-> > +			MX8MM_IOMUXC_NAND_CE1_B_USDHC3_STROBE
-> 	0x194
-> > +		>;
-> > +	};
-> > +
-> > +	pinctrl_usdhc3_200mhz: usdhc3grp200mhz {
-> > +		fsl,pins = <
-> > +			MX8MM_IOMUXC_NAND_WE_B_USDHC3_CLK		0x196
-> > +			MX8MM_IOMUXC_NAND_WP_B_USDHC3_CMD
-> 	0x1d6
-> > +			MX8MM_IOMUXC_NAND_DATA04_USDHC3_DATA0
-> 	0x1d6
-> > +			MX8MM_IOMUXC_NAND_DATA05_USDHC3_DATA1
-> 	0x1d6
-> > +			MX8MM_IOMUXC_NAND_DATA06_USDHC3_DATA2
-> 	0x1d6
-> > +			MX8MM_IOMUXC_NAND_DATA07_USDHC3_DATA3
-> 	0x1d6
-> > +			MX8MM_IOMUXC_NAND_RE_B_USDHC3_DATA4
-> 	0x1d6
-> > +			MX8MM_IOMUXC_NAND_CE2_B_USDHC3_DATA5
-> 	0x1d6
-> > +			MX8MM_IOMUXC_NAND_CE3_B_USDHC3_DATA6
-> 	0x1d6
-> > +			MX8MM_IOMUXC_NAND_CLE_USDHC3_DATA7
-> 	0x1d6
-> > +			MX8MM_IOMUXC_NAND_CE1_B_USDHC3_STROBE
-> 	0x196
-> > +		>;
-> > +	};
-> > +
-> > +	pinctrl_wdog: wdoggrp {
-> > +		fsl,pins = <
-> > +			MX8MM_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B	0xc6
-> > +		>;
-> > +	};
-> > +};
-> > +
-> > --
-> > 1.9.1
-> >
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 118 ++++++++++++++++++++++
+>  1 file changed, 118 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index b39c6c75c043..81d5ce1b1ec1 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -8,6 +8,7 @@
+>  #include <dt-bindings/power/imx8mq-power.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>  #include "imx8mq-pinfunc.h"
+>  
+>  / {
+> @@ -89,6 +90,7 @@
+>  			reg = <0x0>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A53_L2>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A53_1: cpu@1 {
+> @@ -97,6 +99,7 @@
+>  			reg = <0x1>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A53_L2>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A53_2: cpu@2 {
+> @@ -105,6 +108,7 @@
+>  			reg = <0x2>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A53_L2>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A53_3: cpu@3 {
+> @@ -113,6 +117,7 @@
+>  			reg = <0x3>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A53_L2>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A53_L2: l2-cache0 {
+> @@ -210,6 +215,119 @@
+>  				#interrupt-cells = <2>;
+>  			};
+>  
+> +			tmu: tmu@30260000 {
+> +				compatible = "fsl,imx8mq-tmu";
+> +				reg = <0x30260000 0x10000>;
+> +				interrupt = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +				little-endian;
+> +				fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
+> +				fsl,tmu-calibration = <0x00000000 0x00000023
+> +						       0x00000001 0x00000029
+> +						       0x00000002 0x0000002f
+> +						       0x00000003 0x00000035
+> +						       0x00000004 0x0000003d
+> +						       0x00000005 0x00000043
+> +						       0x00000006 0x0000004b
+> +						       0x00000007 0x00000051
+> +						       0x00000008 0x00000057
+> +						       0x00000009 0x0000005f
+> +						       0x0000000a 0x00000067
+> +						       0x0000000b 0x0000006f
+> +
+> +						       0x00010000 0x0000001b
+> +						       0x00010001 0x00000023
+> +						       0x00010002 0x0000002b
+> +						       0x00010003 0x00000033
+> +						       0x00010004 0x0000003b
+> +						       0x00010005 0x00000043
+> +						       0x00010006 0x0000004b
+> +						       0x00010007 0x00000055
+> +						       0x00010008 0x0000005d
+> +						       0x00010009 0x00000067
+> +						       0x0001000a 0x00000070
+> +
+> +						       0x00020000 0x00000017
+> +						       0x00020001 0x00000023
+> +						       0x00020002 0x0000002d
+> +						       0x00020003 0x00000037
+> +						       0x00020004 0x00000041
+> +						       0x00020005 0x0000004b
+> +						       0x00020006 0x00000057
+> +						       0x00020007 0x00000063
+> +						       0x00020008 0x0000006f
+> +
+> +						       0x00030000 0x00000015
+> +						       0x00030001 0x00000021
+> +						       0x00030002 0x0000002d
+> +						       0x00030003 0x00000039
+> +						       0x00030004 0x00000045
+> +						       0x00030005 0x00000053
+> +						       0x00030006 0x0000005f
+> +						       0x00030007 0x00000071>;
+> +				#thermal-sensor-cells =  <1>;
+> +			};
+> +
+> +			thermal-zones {
+> +				cpu-thermal {
+> +					polling-delay-passive = <250>;
+> +					polling-delay = <2000>;
+> +					thermal-sensors = <&tmu 0>;
+> +
+> +					trips {
+> +						cpu_alert: cpu-alert {
+> +							temperature = <80000>;
+> +							hysteresis = <2000>;
+> +							type = "passive";
+> +						};
+> +
+> +						cpu-crit {
+> +							temperature = <90000>;
+> +							hysteresis = <2000>;
+> +							type = "critical";
+> +						};
+> +					};
+> +
+> +					cooling-maps {
+> +						map0 {
+> +							trip = <&cpu_alert>;
+> +							cooling-device =
+> +								<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +								<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +								<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +								<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +						};
+> +					};
+> +				};
+> +
+> +				gpu-thermal {
+> +					polling-delay-passive = <250>;
+> +					polling-delay = <2000>;
+> +					thermal-sensors = <&tmu 1>;
+> +
+> +					trips {
+> +						gpu-crit {
+> +							temperature = <90000>;
+> +							hysteresis = <2000>;
+> +							type = "critical";
+> +						};
+> +					};
+> +				};
+> +
+> +				vpu-thermal {
+> +					polling-delay-passive = <250>;
+> +					polling-delay = <2000>;
+> +					thermal-sensors = <&tmu 2>;
+> +
+> +					trips {
+> +						vpu-crit {
+> +							temperature = <90000>;
+> +							hysteresis = <2000>;
+> +							type = "critical";
+> +						};
+> +					};
+> +				};
+> +			};
+> +
+>  			wdog1: watchdog@30280000 {
+>  				compatible = "fsl,imx8mq-wdt", "fsl,imx21-wdt";
+>  				reg = <0x30280000 0x10000>;
+> -- 
+> 2.17.1
+> 
