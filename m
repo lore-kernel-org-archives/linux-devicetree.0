@@ -1,14 +1,16 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: ls1043a: add crypto node alias also for qds
-Date: Fri, 22 Mar 2019 10:24:40 +0800
-Message-ID: <20190322022439.GB12513@dragon>
-References: <20190320152900.9379-1-horia.geanta@nxp.com>
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: RE: [PATCH v2 3/3] arm64: dts: imx: Add i.mx8mm evk basic dts support
+Date: Fri, 22 Mar 2019 05:53:52 +0000
+Message-ID: <VI1PR0402MB35190875AE87A9F8D62AE18587430@VI1PR0402MB3519.eurprd04.prod.outlook.com>
+References: <1552369779-7614-1-git-send-email-ping.bai@nxp.com>
+ <1552369779-7614-3-git-send-email-ping.bai@nxp.com>
+ <20190321084453.GE12513@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190320152900.9379-1-horia.geanta@nxp.com>
+In-Reply-To: <20190321084453.GE12513@dragon>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,37 +20,27 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Li Yang <leoyang.li@nxp.com>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXIgMjAsIDIwMTkgYXQgMDU6Mjk6MDBQTSArMDIwMCwgSG9yaWEgR2VhbnTEgyB3
-cm90ZToKPiBjcnlwdG8gbm9kZSBhbGlhcyBpcyBuZWVkZWQgYnkgVS1ib290IHRvIGlkZW50aWZ5
-IHRoZSBub2RlIGFuZAo+IHBlcmZvcm0gZml4LXVwcywgbGlrZSBhZGRpbmcgImZzbCxzZWMtZXJh
-IiBwcm9wZXJ0eSBvciBkZWxldGluZwo+IGEgam9iIHJpbmcgY2hpbGQgbm9kZSAoaW4gY2FzZSBB
-Uk0gVEYtQSBpcyBydW5uaW5nKS4KPiAKPiBGaXhlczogZWMwNWU5Y2M2YTZlICgiYXJtNjQ6IGR0
-czogYWRkIExTMTA0M2EtUURTIGJvYXJkIHN1cHBvcnQiKQoKVGhlIHBhdGNoIGlzbid0IHF1YWxp
-ZmllZCBhcyBhIGZpeC4gIEkgZHJvcHBlZCB0aGUgdGFnIGFuZCBhcHBsaWVkIGl0IGFzCi1uZXh0
-IG1hdGVyaWFsLgoKU2hhd24KCj4gU2lnbmVkLW9mZi1ieTogSG9yaWEgR2VhbnTEgyA8aG9yaWEu
-Z2VhbnRhQG54cC5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2Zz
-bC1sczEwNDNhLXJkYi5kdHMgfCAxIC0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
-ZnNsLWxzMTA0M2EuZHRzaSAgICB8IDEgKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
-KCspLCAxIGRlbGV0aW9uKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-ZnJlZXNjYWxlL2ZzbC1sczEwNDNhLXJkYi5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
-Y2FsZS9mc2wtbHMxMDQzYS1yZGIuZHRzCj4gaW5kZXggMTdjYTM1N2U4NTRmLi40MjIzYTIzNTJk
-NDUgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0
-M2EtcmRiLmR0cwo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEw
-NDNhLXJkYi5kdHMKPiBAQCAtMTUsNyArMTUsNiBAQAo+ICAJbW9kZWwgPSAiTFMxMDQzQSBSREIg
-Qm9hcmQiOwo+ICAKPiAgCWFsaWFzZXMgewo+IC0JCWNyeXB0byA9ICZjcnlwdG87Cj4gIAkJc2Vy
-aWFsMCA9ICZkdWFydDA7Cj4gIAkJc2VyaWFsMSA9ICZkdWFydDE7Cj4gIAkJc2VyaWFsMiA9ICZk
-dWFydDI7Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1s
-czEwNDNhLmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQzYS5k
-dHNpCj4gaW5kZXggNzAwNTdiNGU0NmU4Li4xMGM0ODZiZTMyYjMgMTAwNjQ0Cj4gLS0tIGEvYXJj
-aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0M2EuZHRzaQo+ICsrKyBiL2FyY2gv
-YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDNhLmR0c2kKPiBAQCAtMTgsNiArMTgs
-NyBAQAo+ICAJI3NpemUtY2VsbHMgPSA8Mj47Cj4gIAo+ICAJYWxpYXNlcyB7Cj4gKwkJY3J5cHRv
-ID0gJmNyeXB0bzsKPiAgCQlmbWFuMCA9ICZmbWFuMDsKPiAgCQlldGhlcm5ldDAgPSAmZW5ldDA7
-Cj4gIAkJZXRoZXJuZXQxID0gJmVuZXQxOwo+IC0tIAo+IDIuMTcuMQo+IAoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+> Subject: Re: [PATCH v2 3/3] arm64: dts: imx: Add i.mx8mm evk basic dts
+> support
+...
+> > +
+> > +/ {
+> > +	model = "FSL i.MX8MM EVK board";
+> > +	compatible = "fsl,imx8mm-evk", "fsl,imx8mm";
+> 
+> The board compatible should be added to
+> Documentation/devicetree/bindings/arm/fsl.yaml as well.
+
+Hi shawn, I just checked the binding doc in this patchset's 'patch 2/3', I think I have add the binding in the yaml file.
+Anything missed?
+
+BR
+Jacky Bai
+> > +
+> > --
+> > 1.9.1
+> >
