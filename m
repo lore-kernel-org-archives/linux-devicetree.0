@@ -1,71 +1,45 @@
-From: Nava kishore Manne <navam@xilinx.com>
-Subject: RE: [PATCH v4 6/6] dt-bindings: fpga: Add bindings for ZynqMP fpga
- driver
-Date: Fri, 22 Mar 2019 07:16:05 +0000
-Message-ID: <BYAPR02MB47104B7E954002CB4087FC71C2430@BYAPR02MB4710.namprd02.prod.outlook.com>
-References: <20190314140122.23372-1-nava.manne@xilinx.com>
- <20190314140122.23372-7-nava.manne@xilinx.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 3/3] arm64: dts: imx: Add i.mx8mm evk basic dts support
+Date: Fri, 22 Mar 2019 15:49:15 +0800
+Message-ID: <20190322074914.GD12513@dragon>
+References: <1552369779-7614-1-git-send-email-ping.bai@nxp.com>
+ <1552369779-7614-3-git-send-email-ping.bai@nxp.com>
+ <20190321084453.GE12513@dragon>
+ <VI1PR0402MB35190875AE87A9F8D62AE18587430@VI1PR0402MB3519.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190314140122.23372-7-nava.manne@xilinx.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nava kishore Manne <navam@xilinx.com>, "atull@kernel.org" <atull@kernel.org>, "mdf@kernel.org" <mdf@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <VI1PR0402MB35190875AE87A9F8D62AE18587430@VI1PR0402MB3519.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacky Bai <ping.bai@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Ping!!
+On Fri, Mar 22, 2019 at 05:53:52AM +0000, Jacky Bai wrote:
+> > Subject: Re: [PATCH v2 3/3] arm64: dts: imx: Add i.mx8mm evk basic dts
+> > support
+> ...
+> > > +
+> > > +/ {
+> > > +	model = "FSL i.MX8MM EVK board";
+> > > +	compatible = "fsl,imx8mm-evk", "fsl,imx8mm";
+> > 
+> > The board compatible should be added to
+> > Documentation/devicetree/bindings/arm/fsl.yaml as well.
+> 
+> Hi shawn, I just checked the binding doc in this patchset's 'patch 2/3', I think I have add the binding in the yaml file.
+> Anything missed?
 
-> -----Original Message-----
-> From: Nava kishore Manne [mailto:nava.manne@xilinx.com]
-> Sent: Thursday, March 14, 2019 7:31 PM
-> To: atull@kernel.org; mdf@kernel.org; robh+dt@kernel.org;
-> mark.rutland@arm.com; Michal Simek <michals@xilinx.com>; Rajan Vaja
-> <RAJANV@xilinx.com>; Jolly Shah <JOLLYS@xilinx.com>; Nava kishore Manne
-> <navam@xilinx.com>; linux-fpga@vger.kernel.org; devicetree@vger.kernel.or=
-g;
-> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> chinnikishore369@gmail.com
-> Subject: [PATCH v4 6/6] dt-bindings: fpga: Add bindings for ZynqMP fpga d=
-river
->=20
-> Add documentation to describe Xilinx ZynqMP fpga driver bindings.
->=20
-> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
-> ---
-> Changes for v4:
-> 		-Modified binding description as suggested by Moritz Fischer.
-> Changes for v3:
->                 -Removed PCAP as a child node to the FW and Created
-> 		 an independent node since PCAP driver is a consumer
-> 		 not a provider.
->=20
->  .../bindings/fpga/xlnx,zynqmp-pcap-fpga.txt           | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,zynqmp-
-> pcap-fpga.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga=
-.txt
-> b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
-> new file mode 100644
-> index 000000000000..6d7f10775d9b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
-> @@ -0,0 +1,11 @@
-> +Devicetree bindings for Zynq Ultrascale MPSoC FPGA Manager.
-> +The ZynqMP SoC uses the PCAP (Processor configuration Port) to
-> +configure the Programmable Logic (PL). The configuration uses  the firmw=
-are
-> interface.
-> +
-> +Required properties:
-> +- compatible: should contain "xlnx,zynqmp-pcap-fpga"
-> +
-> +Example:
-> +	zynqmp_pcap: pcap {
-> +		compatible =3D "xlnx,zynqmp-pcap-fpga";
-> +	};
-> --
-> 2.18.0
+Ah, sorry.  I overlooked it.
+
+Shawn
