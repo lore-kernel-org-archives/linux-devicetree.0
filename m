@@ -1,54 +1,56 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [RESEND PATCH v6 09/11] leds: max77650: add LEDs support
-Date: Fri, 22 Mar 2019 20:40:44 +0100
-Message-ID: <f2963c2e-b4d0-1fae-3c7f-28fcdb545ee2@gmail.com>
-References: <20190318174228.18194-1-brgl@bgdev.pl>
- <20190318174228.18194-10-brgl@bgdev.pl> <20190322092124.GK27015@amd>
- <CAMRc=Mf1DxF1e63y+HsXtCFxZW8R0XWDLUXGy+4cp3zBS0_qhw@mail.gmail.com>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 1/2] dt-bindings: ARM: dts: rockchip: Add bindings for rk3288-veyron-mighty
+Date: Fri, 22 Mar 2019 12:43:09 -0700
+Message-ID: <20190322194310.61365-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMRc=Mf1DxF1e63y+HsXtCFxZW8R0XWDLUXGy+4cp3zBS0_qhw@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Pavel Machek <pavel@ucw.cz>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: mka@chromium.org, ryandcase@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Alexis Ballier <aballier@gentoo.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Robin Murphy <robin.murphy@arm.com>, Jagan Teki <jagan@amarulasolutions.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Akash Gajjar <Akash_Gajjar@mentor.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 3/22/19 10:53 AM, Bartosz Golaszewski wrote:
-> pt., 22 mar 2019 o 10:21 Pavel Machek <pavel@ucw.cz> napisał(a):
->>
->> On Mon 2019-03-18 18:42:26, Bartosz Golaszewski wrote:
->>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>
->>> This adds basic support for LEDs for the max77650 PMIC. The device has
->>> three current sinks for driving LEDs.
->>>
->>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->>
->> Acked-by: Pavel Machek <pavel@ucw.cz>
->>
->>> +             label = of_get_property(child, "label", NULL);
->>> +             if (!label) {
->>> +                     led->cdev.name = "max77650::";
->>> +             } else {
->>> +                     led->cdev.name = devm_kasprintf(dev, GFP_KERNEL,
->>> +                                                     "max77650:%s", label);
->>> +                     if (!led->cdev.name)
->>> +                             return -ENOMEM;
->>> +             }
->>
->> I'd rather not have the "max77650:" prefix in the LED name (as it is
->> useless).
->>
-> 
-> I was instructed to do so by the LED subsystem maintainer.
+Mighty is basically the same Chromebook as Jaq but it has a full-sized
+SD slot and some different (slightly more rugged) plastics around it.
+Like Jaq, Mighty may show up with various different brandings but all
+of them have the same board inside.
 
-Yes, let's keep things consistent, we will convert it to use generic
-support for LED naming once that support is merged.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 0161b4a66586..89f386852bc8 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -147,7 +147,7 @@ properties:
+           - const: google,gru
+           - const: rockchip,rk3399
+ 
+-      - description: Google Jaq (Haier Chromebook 11 and more)
++      - description: Google Jaq (Haier Chromebook 11 and more w/ uSD)
+         items:
+           - const: google,veyron-jaq-rev5
+           - const: google,veyron-jaq-rev4
+@@ -200,6 +200,17 @@ properties:
+           - const: google,veyron
+           - const: rockchip,rk3288
+ 
++      - description: Google Mighty (Haier Chromebook 11 and more w/ SD)
++        items:
++          - const: google,veyron-mighty-rev5
++          - const: google,veyron-mighty-rev4
++          - const: google,veyron-mighty-rev3
++          - const: google,veyron-mighty-rev2
++          - const: google,veyron-mighty-rev1
++          - const: google,veyron-mighty
++          - const: google,veyron
++          - const: rockchip,rk3288
++
+       - description: Google Minnie (Asus Chromebook Flip C100P)
+         items:
+           - const: google,veyron-minnie-rev4
 -- 
-Best regards,
-Jacek Anaszewski
+2.21.0.392.gf8f6787159e-goog
