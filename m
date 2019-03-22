@@ -1,54 +1,65 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] dt-bindings: hwmon (pwm-fan) Remove dead
- "cooling-*-state" properties
-Date: Fri, 22 Mar 2019 08:46:33 +0800
-Message-ID: <20190322004632.GN12513@dragon>
-References: <afde4ebd929821d63b5172c8e70e15f0725a4b49.1553006788.git.robin.murphy@arm.com>
+From: Alexey Slepov <sir-lexa@yandex.ru>
+Subject: Re: Re: [PATCH V2 2/2] Input: rotaty-encoder - Add DT binding
+ document
+Date: Fri, 22 Mar 2019 02:04:59 +0100
+Message-ID: <f780ef34-474b-3e23-b495-f2e80e87c18b@yandex.ru>
+References: <20190107164249.2342-1-nazgul33@gmail.com>
+ <20190107164249.2342-3-nazgul33@gmail.com> <20190115035221.GA151157@dtor-ws>
+ <20190115202948.GA26482@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <afde4ebd929821d63b5172c8e70e15f0725a4b49.1553006788.git.robin.murphy@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, heiko@sntech.de, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, krzk@kernel.org, jonathanh@nvidia.com, thierry.reding@gmail.com, kgene@kernel.org, linux@roeck-us.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190115202948.GA26482@bogus>
+Content-Language: de-DE
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Donghoon Han <nazgul33@gmail.com>, linux-input@vger.kernel.org, Daniel Mack <daniel@caiaq.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 02:54:04PM +0000, Robin Murphy wrote:
-> The old "cooling-{min,max}-state" properties for thermal bindings were
-> ratified to "cooling-{min,max}-level" by commit eb168b70dea5 ("of:
-> thermal: Fix inconsitency between cooling-*-state and cooling-*-level"),
-> which were later removed entirely by commit e04907dbc259 ("dt-bindings:
-> thermal: Remove "cooling-{min|max}-level" properties").
-> 
-> The pwm-fan binding, however, was apparently in-flight in parallel with
-> that ratification, and so managed to introduce an example of the old
-> properties which escaped the scope of the later cleanup and has thus
-> continued to be dutifully copied for new boards despite being useless.
-> Clean up these remaining undocumented anachronisms to minimise any
-> further confusion.
-> 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> ---
-> 
-> Presented as one big hwmon patch for simplicity, but the DT changes
-> can quite easily be broken out by platform if maintainers prefer.
-> 
-> Robin.
-> 
->  Documentation/devicetree/bindings/hwmon/pwm-fan.txt | 2 --
->  arch/arm/boot/dts/exynos4412-odroidu3.dts           | 2 --
->  arch/arm/boot/dts/exynos5410-odroidxu.dts           | 2 --
->  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi  | 2 --
->  arch/arm/boot/dts/imx6qdl-emcon.dtsi                | 2 --
+Hello,
 
-Acked-by: Shawn Guo <shawnguo@kernel.org>
+i used this rotary-encoder patch in my embedded project and found two 
+errors:
+
+
+First, in drivers/input/misc/rotary_encoder.c,
+at @@ -237,6 +244,16 @@:
+instead of
+
++        if (err)
++            dev_err(dev, "unable to get keycodes: %d\n", err);
++        return err;
+
+it must be
+
++        if (err) {
++            dev_err(dev, "unable to get keycodes: %d\n", err);
++            return err;
++        }
+
+otherwise successful creation of device is not possible.
+
+
+Second, a typo in 
+Documentation/devicetree/bindings/input/rotary-encoder.txt,
+at @@ -48,3 +52,11 @@:
+instead of
+
++            rotary-encoder,relative-keycode = <103>, <108>;
+
+it should be
+
++            rotary-encoder,relative-keycodes = <103>, <108>;
+
+otherwise keycodes are not found.
+
+
+I am sorry, I know that E-Mail style is not good.
+I have no time right now, but I'll be back in two weeks.
+Someone, maybe Mr. Han, could submit a new version of the patch.
+If not, I'll try to do it on my return. (it could take some time, since 
+I am new to patchwork)
+
+Best Regards and thanks
+Alexey Slepov
