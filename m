@@ -1,42 +1,54 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] of: use correct function prototype for of_overlay_fdt_apply()
-Date: Fri, 22 Mar 2019 13:23:41 +1300
-Message-ID: <20190322002342.24831-1-chris.packham@alliedtelesis.co.nz>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] dt-bindings: hwmon (pwm-fan) Remove dead
+ "cooling-*-state" properties
+Date: Fri, 22 Mar 2019 08:46:33 +0800
+Message-ID: <20190322004632.GN12513@dragon>
+References: <afde4ebd929821d63b5172c8e70e15f0725a4b49.1553006788.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, frowand.list@gmail.com
-Cc: Hamish Martin <hamish.martin@alliedtelesis.co.nz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <afde4ebd929821d63b5172c8e70e15f0725a4b49.1553006788.git.robin.murphy@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, heiko@sntech.de, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, krzk@kernel.org, jonathanh@nvidia.com, thierry.reding@gmail.com, kgene@kernel.org, linux@roeck-us.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-When CONFIG_OF_OVERLAY is not enabled the fallback stub for
-of_overlay_fdt_apply() does not match the prototype for the case when
-CONFIG_OF_OVERLAY is enabled. Update the stub to use the correct
-function prototype.
+On Tue, Mar 19, 2019 at 02:54:04PM +0000, Robin Murphy wrote:
+> The old "cooling-{min,max}-state" properties for thermal bindings were
+> ratified to "cooling-{min,max}-level" by commit eb168b70dea5 ("of:
+> thermal: Fix inconsitency between cooling-*-state and cooling-*-level"),
+> which were later removed entirely by commit e04907dbc259 ("dt-bindings:
+> thermal: Remove "cooling-{min|max}-level" properties").
+> 
+> The pwm-fan binding, however, was apparently in-flight in parallel with
+> that ratification, and so managed to introduce an example of the old
+> properties which escaped the scope of the later cleanup and has thus
+> continued to be dutifully copied for new boards despite being useless.
+> Clean up these remaining undocumented anachronisms to minimise any
+> further confusion.
+> 
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+> 
+> Presented as one big hwmon patch for simplicity, but the DT changes
+> can quite easily be broken out by platform if maintainers prefer.
+> 
+> Robin.
+> 
+>  Documentation/devicetree/bindings/hwmon/pwm-fan.txt | 2 --
+>  arch/arm/boot/dts/exynos4412-odroidu3.dts           | 2 --
+>  arch/arm/boot/dts/exynos5410-odroidxu.dts           | 2 --
+>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi  | 2 --
+>  arch/arm/boot/dts/imx6qdl-emcon.dtsi                | 2 --
 
-Fixes: commit 39a751a4cb7e ("of: change overlay apply input data from unf=
-lattened to FDT")
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- include/linux/of.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/of.h b/include/linux/of.h
-index e240992e5cb6..28797e1a9982 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -1449,7 +1449,8 @@ int of_overlay_notifier_unregister(struct notifier_=
-block *nb);
-=20
- #else
-=20
--static inline int of_overlay_fdt_apply(void *overlay_fdt, int *ovcs_id)
-+static inline int of_overlay_fdt_apply(void *overlay_fdt, u32 overlay_fd=
-t_size,
-+				       int *ovcs_id)
- {
- 	return -ENOTSUPP;
- }
---=20
-2.21.0
+Acked-by: Shawn Guo <shawnguo@kernel.org>
