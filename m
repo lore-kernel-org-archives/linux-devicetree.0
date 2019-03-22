@@ -1,35 +1,64 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: change phy-mode to use
- rgmii-id
-Date: Fri, 22 Mar 2019 11:59:59 +0100
-Message-ID: <20190322105959.GD24801@lunn.ch>
-References: <VI1PR10MB2352C3A55BE8FABAF3B02681FE410@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
- <CAOMZO5By8=j7gZRAdf2-h-5ak-Qo34rqwDL4+HA_97cMXTAnEQ@mail.gmail.com>
- <20190321084240.fveqkhfrbtg7qr4q@fsr-ub1664-175>
- <CAOMZO5Cz0A19P9E61dy79BFF+V2WsAjobqQ1g9TeiJSCY2Nt4A@mail.gmail.com>
- <20190322011155.GO12513@dragon>
- <CAOMZO5CBjG_xZWjZof_VOKaLLOCxFz3g7Gz1uTVzD=D5GeQb4g@mail.gmail.com>
- <20190322021521.GY12513@dragon>
- <CAOMZO5CRRg9XD9VovcO5+fdM1DBp12P33T9xgW=cEvTES8yDPA@mail.gmail.com>
- <db0a3a96-d836-f7bd-4773-81fcb7984835@ysoft.com>
- <DB7PR10MB2348358D285E2560F5B5E699FE430@DB7PR10MB2348.EURPRD10.PROD.OUTLOOK.COM>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: [PATCH v2 0/2] Add support for the TI ADS8344 A/DC chips
+Date: Fri, 22 Mar 2019 12:11:06 +0100
+Message-ID: <20190322111108.19383-1-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <DB7PR10MB2348358D285E2560F5B5E699FE430@DB7PR10MB2348.EURPRD10.PROD.OUTLOOK.COM>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-ARM-KERNEL <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> There is a way of doing this to preserve backwards compatibility I think.
-> Maybe deprecating the previous DTS phy-mode and replacing it with a new one,
-> phy-mode-v2 instead?
+Hello,
 
-Hi Steve
+this is the second version of a small series adding the support for
+the Texas Instruments ADS8344 ADC chip. This chip has a 16-bit
+8-Channel ADC and is access directly through SPI.
 
-It needs to be a vendor specific property, atheros,phy-mode, for
-example.
+The first patch add the binding documentation and the second one, the
+driver itself.
 
-   Andrew
+Changelog:
+
+v1->v2:
+
+ - Remove the mention to the #io-channel-cells in the first patch, as
+   there is no consumer.
+
+ - Remove scan_index and scan_type, they are not used.
+
+ - Use defines for building the command and remove the comment.
+
+ - Remove the goto and the label in the probe() function as the label
+   was only use once.
+
+ - Remove the "#ifdef CONFIG_OF", the driver already depends on OF.
+
+ - Don't use of_match_ptr and rename ads8344_dt_id to ads8344_of_match.
+
+Gregory
+
+Gregory CLEMENT (2):
+  dt-bindings: iio: adc: Add bindings for TI ADS8344 A/DC chips
+  iio: adc: Add driver for the TI ADS8344 A/DC chips
+
+ .../bindings/iio/adc/ti-ads8344.txt           |  19 ++
+ drivers/iio/adc/Kconfig                       |  10 +
+ drivers/iio/adc/Makefile                      |   1 +
+ drivers/iio/adc/ti-ads8344.c                  | 200 ++++++++++++++++++
+ 4 files changed, 230 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-ads8344.txt
+ create mode 100644 drivers/iio/adc/ti-ads8344.c
+
+-- 
+2.20.1
