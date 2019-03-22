@@ -1,45 +1,45 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 3/3] arm64: dts: imx: Add i.mx8mm evk basic dts support
-Date: Fri, 22 Mar 2019 15:49:15 +0800
-Message-ID: <20190322074914.GD12513@dragon>
-References: <1552369779-7614-1-git-send-email-ping.bai@nxp.com>
- <1552369779-7614-3-git-send-email-ping.bai@nxp.com>
- <20190321084453.GE12513@dragon>
- <VI1PR0402MB35190875AE87A9F8D62AE18587430@VI1PR0402MB3519.eurprd04.prod.outlook.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v5 0/6] drm/bridge: sii902x: HDMI-audio support and some fixes
+Date: Fri, 22 Mar 2019 10:06:09 +0200
+Message-ID: <cover.1553241734.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <VI1PR0402MB35190875AE87A9F8D62AE18587430@VI1PR0402MB3519.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jacky Bai <ping.bai@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: fabrizio.castro@bp.renesas.com, Songjun.Wu@atmel.com, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, voice.shen@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 05:53:52AM +0000, Jacky Bai wrote:
-> > Subject: Re: [PATCH v2 3/3] arm64: dts: imx: Add i.mx8mm evk basic dts
-> > support
-> ...
-> > > +
-> > > +/ {
-> > > +	model = "FSL i.MX8MM EVK board";
-> > > +	compatible = "fsl,imx8mm-evk", "fsl,imx8mm";
-> > 
-> > The board compatible should be added to
-> > Documentation/devicetree/bindings/arm/fsl.yaml as well.
-> 
-> Hi shawn, I just checked the binding doc in this patchset's 'patch 2/3', I think I have add the binding in the yaml file.
-> Anything missed?
-
-Ah, sorry.  I overlooked it.
-
-Shawn
+VGhlIHNpbCxpMnMtZGF0YS1sYW5lcyBwcm9wZXJ0eSBpcyBzdGlsbCB1bmRlciBuZWdvdGlhdGlv
+bi4gVGhlCnF1ZXN0aW9uIHJlYWxseSBpcyBpZiB0aGVyZSBjb3VsZCBiZSBhIGdlbmVyaWMgYXVk
+aW8gaTJzIHByb3BlcnR5IHRvCmhhbmRsZSB0aGF0LiBhbHNhX2RldmVsIGFkZGVkIHRvIHRoZSBs
+aXN0IG9mIHJlY2lwaWVudHMuCgpDaGFuZ2VzIHNpbmNlIHYzOgotIENoYW5nZSBpMnMtZGF0YS1s
+YW5lcyB0byBzaWwsaTJzLWRhdGEtbGFuZXMKClRoZSBhbHJlYWR5IHJldmlld2VkIHBhdGNoZXMg
+YXJlIGluIGZyb250LiBOb3QgcmV2aWV3ZWQgc3RpbGw6Ci0gImR0LWJpbmRpbmdzOiBkaXNwbGF5
+OiBzaWk5MDJ4OiBBZGQgSERNSSBhdWRpbyBiaW5kaW5ncyIKLSAiZHJtL2JyaWRnZTogc2lpOTAy
+eDogSW1wbGVtZW50IEhETUkgYXVkaW8gc3VwcG9ydCIKClRoZSBwcmV2aW91cyByb3VuZDoKaHR0
+cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9jb3Zlci8xMDg1MjY0My8KCkp5cmkgU2FyaGEgKDUp
+OgogIGRybS9icmlkZ2U6IHNpaTkwMng6IFNldCBvdXRwdXQgbW9kZSB0byBIRE1JIG9yIERWSSBh
+Y2NvcmRpbmcgdG8gRURJRAogIGRybS9icmlkZ2U6IHNpaTkwMng6IHBpeGVsIGNsb2NrIHVuaXQg
+aXMgMTBrSHogaW5zdGVhZCBvZiAxa0h6CiAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IHNpaTkwMng6
+IFJlbW92ZSB0cmFpbGluZyB3aGl0ZSBzcGFjZQogIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBzaWk5
+MDJ4OiBBZGQgSERNSSBhdWRpbyBiaW5kaW5ncwogIGRybS9icmlkZ2U6IHNpaTkwMng6IEltcGxl
+bWVudCBIRE1JIGF1ZGlvIHN1cHBvcnQKClRvbWkgVmFsa2VpbmVuICgxKToKICBkcm0vYnJpZGdl
+OiBzaWk5MDJ4OiBhZGQgaW5wdXRfYnVzX2ZsYWdzCgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
+ZGdlL3NpaTkwMngudHh0ICAgICAgIHwgIDM1ICstCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3Np
+aTkwMnguYyAgICAgICAgICAgICAgfCA0NzggKysrKysrKysrKysrKysrKystCiAyIGZpbGVzIGNo
+YW5nZWQsIDUwNSBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQoKLS0gClRleGFzIEluc3Ry
+dW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLiBZLXR1
+bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5r
+aQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
