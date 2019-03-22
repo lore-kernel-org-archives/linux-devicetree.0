@@ -1,43 +1,40 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 1/3] arm64: dts: imx: Add i.mx8mm dtsi support
-Date: Fri, 22 Mar 2019 10:13:32 +0800
-Message-ID: <20190322021331.GX12513@dragon>
-References: <1552369779-7614-1-git-send-email-ping.bai@nxp.com>
- <20190321082253.GD12513@dragon>
- <VI1PR0402MB351954C0C30D3AD28C77A77187430@VI1PR0402MB3519.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: change phy-mode to use
+ rgmii-id
+Date: Fri, 22 Mar 2019 10:15:22 +0800
+Message-ID: <20190322021521.GY12513@dragon>
+References: <20190320120604.7D99B3FBE9@swsrvapps-01.diasemi.com>
+ <CAOMZO5AHzQJzz3vd5MzYgSSxzPjU9xan1dFh9473BXeiRCOzzg@mail.gmail.com>
+ <VI1PR10MB2352C3A55BE8FABAF3B02681FE410@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
+ <CAOMZO5By8=j7gZRAdf2-h-5ak-Qo34rqwDL4+HA_97cMXTAnEQ@mail.gmail.com>
+ <20190321084240.fveqkhfrbtg7qr4q@fsr-ub1664-175>
+ <CAOMZO5Cz0A19P9E61dy79BFF+V2WsAjobqQ1g9TeiJSCY2Nt4A@mail.gmail.com>
+ <20190322011155.GO12513@dragon>
+ <CAOMZO5CBjG_xZWjZof_VOKaLLOCxFz3g7Gz1uTVzD=D5GeQb4g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <VI1PR0402MB351954C0C30D3AD28C77A77187430@VI1PR0402MB3519.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jacky Bai <ping.bai@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+In-Reply-To: <CAOMZO5CBjG_xZWjZof_VOKaLLOCxFz3g7Gz1uTVzD=D5GeQb4g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Abel Vesa <abel.vesa@nxp.com>, Steve Twiss <stwiss.opensource@diasemi.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-ARM-KERNEL <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 01:55:45AM +0000, Jacky Bai wrote:
-> > > +			gpc: gpc@303a0000 {
-> > 
-> > interrupt-controller for node name?
+On Thu, Mar 21, 2019 at 11:00:18PM -0300, Fabio Estevam wrote:
+> Hi Shawn,
+> 
+> On Thu, Mar 21, 2019 at 10:12 PM Shawn Guo <shawnguo@kernel.org> wrote:
+> 
+> > > So yes, we currently have lots of broken dtb's in mainline and I am
+> > > wondering what is the proper fix here.
 > >
+> > So can we have a single patch fixing all broken i.MX DTBs?
 > 
-> For the i.MX8MM and future i.MX8M serious, it is not very necessary to use GPC as a interrupt controller
-> in linux kernel side. For system suspend, ATF can config the GPC IMRs based on IRQ enable status in GICv3.
-> For cpuidle support, GICv3 has per-CPU core wakeup signals connected to the GPC logic, so GICv3 has the ability
-> to wake up the corresponding CPU core if the IRQ is routed to that CPU core. Additionally, I am thinking to
-> config the GPC as a secure resource in the future.
-> 
-> Maybe, we can remove the GPC node for now. If necessary, we can add it back again?
+> Unfortunately, just by looking at the dts files we do not know if a
+> board uses an AR803x PHY or not, so I am afraid we can not do an
+> automatic conversion.
 
-Sounds good to me.
+At least for those we already know?
 
 Shawn
