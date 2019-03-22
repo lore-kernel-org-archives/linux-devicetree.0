@@ -1,49 +1,96 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] ARM: dts: rockchip: Add dvs-gpios to rk3288-veyron-jerry
-Date: Fri, 22 Mar 2019 09:52:09 -0700
-Message-ID: <20190322165209.196926-1-dianders@chromium.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 5/5] lib/vsprintf: Add %pfw conversion specifier for
+ printing fwnode names
+Date: Fri, 22 Mar 2019 19:21:14 +0200
+Message-ID: <20190322172114.GY9224@smile.fi.intel.com>
+References: <20190322152930.16642-1-sakari.ailus@linux.intel.com>
+ <20190322152930.16642-6-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190322152930.16642-6-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: mka@chromium.org, ryandcase@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When the rk3288-jerry device tree was first submitted we left out the
-dvs-gpios because I pointed out that the property "dvs-gpios" wasn't
-yet supported upstream [1].  Soon after that the property was added in
-commit bad47ad2eef3 ("regulator: rk808: fixed the overshoot when
-adjust voltage").  ...but we forgot to go back and add the property to
-the jerry device tree file.  Let's do so now.
+On Fri, Mar 22, 2019 at 05:29:30PM +0200, Sakari Ailus wrote:
+> Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
+> support printing full path of the node, including its name ("f") and only
+> the node's name ("P") in the printk family of functions. The two flags
+> have equivalent functionality to existing %pOF with the same two modifiers
+> ("f" and "P") on OF based systems. The ability to do the same on ACPI
+> based systems is added by this patch.
 
-NOTE: without this patch, jerry is likely still stable (thanks to the
-fallback of making many small jumps in the rk808 regulator code) but
-it'll take quite a bit longer to make voltage transitions.
+Do we encourage people to use it instead of %pOF cases where it is suitable?
 
-[1] https://lore.kernel.org/linux-arm-kernel/CAD=FV=WwFgjzbk9xF5TU_ie6UnHQMyrZ176D4+jJTWWOoaKC2Q@mail.gmail.com/
+> On ACPI based systems the resulting strings look like
+> 
+> 	\_SB.PCI0.CIO2.port@1.endpoint@0
+> 
+> where the nodes are separated by a dot (".") and the first three are
+> ACPI device nodes and the latter two ACPI data nodes.
 
-Fixes: f3ee390e4ef2 ("ARM: dts: rockchip: add veyron-jerry board")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+Do we support swnode here?
 
- arch/arm/boot/dts/rk3288-veyron-jerry.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> +static noinline_for_stack
+> +char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
+> +		    struct printf_spec spec, const char *fmt)
+> +{
+> +	const char * const modifiers = "fP";
+> +	struct printf_spec str_spec = spec;
+> +	char *buf_start = buf;
+> +	bool pass;
+> +
+> +	str_spec.field_width = -1;
+> +
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-jerry.dts b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-index 2ba89895c33a..cc3019dc38e1 100644
---- a/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-@@ -61,7 +61,9 @@
- 
- &rk808 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pmic_int_l>;
-+	pinctrl-0 = <&pmic_int_l &dvs_1 &dvs_2>;
-+	dvs-gpios = <&gpio7 RK_PB4 GPIO_ACTIVE_HIGH>,
-+		    <&gpio7 RK_PB7 GPIO_ACTIVE_HIGH>;
- 
- 	regulators {
- 		mic_vcc: LDO_REG2 {
+> +	if ((unsigned long)fwnode < PAGE_SIZE)
+> +		return string(buf, end, "(null)", spec);
+
+Just put there a NULL pointer, we would not like to maintain duplicated strings
+over the kernel.
+
+I remember Petr has a patch series related to address space check, though I
+don't remember the status of affairs.
+
+> +
+> +	/* simple case without anything any more format specifiers */
+> +	fmt++;
+> +	if (fmt[0] == '\0' || strcspn(fmt, modifiers) > 0)
+> +		fmt = "f";
+> +
+> +	for (pass = false; strspn(fmt, modifiers); fmt++, pass = true) {
+
+I don't see test cases.
+
+What would we get out of %pfwfffPPPfff?
+
+Hint: I'm expecting above to be equivalent to %pfwf
+
+> +		if (pass) {
+> +			if (buf < end)
+> +				*buf = ':';
+> +			buf++;
+> +		}
+> +
+> +		switch (*fmt) {
+> +		case 'f':	/* full_name */
+> +			buf = fwnode_gen_full_name(fwnode, buf, end);
+> +			break;
+> +		case 'P':	/* name */
+> +			buf = string(buf, end, fwnode_get_name(fwnode),
+> +				     str_spec);
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +	}
+> +
+> +	return widen_string(buf, buf - buf_start, end, spec);
+> +}
+
 -- 
-2.21.0.392.gf8f6787159e-goog
+With Best Regards,
+Andy Shevchenko
