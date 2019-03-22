@@ -1,59 +1,80 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH v7 2/2] drm/panel: simple: Add TFC S9700RTWV43TR-01B 800x480
- panel support
-Date: Fri, 22 Mar 2019 10:33:36 +0200
-Message-ID: <ba4b2c26beec014b7b3c84a27b9413cec7ef2902.1553243203.git.jsarha@ti.com>
-References: <cover.1553243203.git.jsarha@ti.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 04/25] dt-bindings: leds: Add LED_COLOR_NAME definitions
+Date: Fri, 22 Mar 2019 09:35:48 +0100
+Message-ID: <20190322083548.GC27015@amd>
+References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
+ <20190310182836.20841-5-jacek.anaszewski@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.1553243203.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="pAwQNkOnpTn9IO2O"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190310182836.20841-5-jacek.anaszewski@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHN1cHBvcnQgZm9yIFRocmVlIEZpdmUgZGlzcGxheXMgVEZDIFM5NzAwUlRXVjQzVFItMDFC
-IDgwMHg0ODAKcGFuZWwgd2l0aCByZXNpc3RpdmUgdG91Y2ggZm91bmQgb24gVEkncyBBTTMzNVgt
-RVZNLgoKU2lnbmVkLW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KLS0tCiBkcml2
-ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgfCAyOCArKysrKysrKysrKysrKysrKysr
-KysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMjggaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9w
-YW5lbC9wYW5lbC1zaW1wbGUuYwppbmRleCA5YzY5ZTczOWE1MjQuLmNmYTU3ZWU3ODQ4MiAxMDA2
-NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCisrKyBiL2RyaXZl
-cnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwpAQCAtMjI4MSw2ICsyMjgxLDMxIEBAIHN0
-YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBzdGFycnlfa3IxMjJlYTBzcmEgPSB7CiAJfSwK
-IH07CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSB0ZmNfczk3MDBydHd2
-NDN0cl8wMWJfbW9kZSA9IHsKKwkuY2xvY2sgPSAzMDAwMCwKKwkuaGRpc3BsYXkgPSA4MDAsCisJ
-LmhzeW5jX3N0YXJ0ID0gODAwICsgMzksCisJLmhzeW5jX2VuZCA9IDgwMCArIDM5ICsgNDcsCisJ
-Lmh0b3RhbCA9IDgwMCArIDM5ICsgNDcgKyAzOSwKKwkudmRpc3BsYXkgPSA0ODAsCisJLnZzeW5j
-X3N0YXJ0ID0gNDgwICsgMTMsCisJLnZzeW5jX2VuZCA9IDQ4MCArIDEzICsgMiwKKwkudnRvdGFs
-ID0gNDgwICsgMTMgKyAyICsgMjksCisJLnZyZWZyZXNoID0gNjIsCit9OworCitzdGF0aWMgY29u
-c3Qgc3RydWN0IHBhbmVsX2Rlc2MgdGZjX3M5NzAwcnR3djQzdHJfMDFiID0geworCS5tb2RlcyA9
-ICZ0ZmNfczk3MDBydHd2NDN0cl8wMWJfbW9kZSwKKwkubnVtX21vZGVzID0gMSwKKwkuYnBjID0g
-OCwKKwkuc2l6ZSA9IHsKKwkJLndpZHRoID0gMTU1LAorCQkuaGVpZ2h0ID0gOTAsCisJfSwKKwku
-YnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCODg4XzFYMjQsCisJLmJ1c19mbGFncyA9IERS
-TV9CVVNfRkxBR19ERV9ISUdIIHwgRFJNX0JVU19GTEFHX1BJWERBVEFfUE9TRURHRSwKK307CisK
-IHN0YXRpYyBjb25zdCBzdHJ1Y3QgZGlzcGxheV90aW1pbmcgdGlhbm1hX3RtMDcwamRoZzMwX3Rp
-bWluZyA9IHsKIAkucGl4ZWxjbG9jayA9IHsgNjI2MDAwMDAsIDY4MjAwMDAwLCA3ODEwMDAwMCB9
-LAogCS5oYWN0aXZlID0geyAxMjgwLCAxMjgwLCAxMjgwIH0sCkBAIC0yNzE4LDYgKzI3NDMsOSBA
-QCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBwbGF0Zm9ybV9vZl9tYXRjaFtdID0g
-ewogCX0sIHsKIAkJLmNvbXBhdGlibGUgPSAic3RhcnJ5LGtyMTIyZWEwc3JhIiwKIAkJLmRhdGEg
-PSAmc3RhcnJ5X2tyMTIyZWEwc3JhLAorCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAidGZjLHM5NzAw
-cnR3djQzdHItMDFiIiwKKwkJLmRhdGEgPSAmdGZjX3M5NzAwcnR3djQzdHJfMDFiLAogCX0sIHsK
-IAkJLmNvbXBhdGlibGUgPSAidGlhbm1hLHRtMDcwamRoZzMwIiwKIAkJLmRhdGEgPSAmdGlhbm1h
-X3RtMDcwamRoZzMwLAotLSAKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFu
-a2F0dSAyMiwgMDAxODAgSGVsc2lua2kuIFktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQu
-IEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWw=
+
+--pAwQNkOnpTn9IO2O
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun 2019-03-10 19:28:15, Jacek Anaszewski wrote:
+> Add common LED color name definitions for use in Device Tree.
+
+Could we do "LED_COLOR_NAME_" =3D> "LED_COLOR_"?
+
+								Pavel
+
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Baolin Wang <baolin.wang@linaro.org>
+> Cc: Daniel Mack <daniel@zonque.org>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Simon Shields <simon@lineageos.org>
+> ---
+>  include/dt-bindings/leds/common.h | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>=20
+> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds=
+/common.h
+> index ffcd46317307..0e986bb59391 100644
+> --- a/include/dt-bindings/leds/common.h
+> +++ b/include/dt-bindings/leds/common.h
+> @@ -57,4 +57,13 @@
+>  #define LED_FUNCTION_WLAN "wlan"
+>  #define LED_FUNCTION_WPS "wps"
+> =20
+> +/* Standard LED colors */
+> +#define LED_COLOR_NAME_WHITE    "white"
+> +#define LED_COLOR_NAME_RED      "red"
+> +#define LED_COLOR_NAME_GREEN    "green"
+> +#define LED_COLOR_NAME_BLUE     "blue"
+> +#define LED_COLOR_NAME_AMBER    "amber"
+> +#define LED_COLOR_NAME_VIOLET   "violet"
+> +#define LED_COLOR_NAME_YELLOW   "yellow"
+> +
+>  #endif /* __DT_BINDINGS_LEDS_H */
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--pAwQNkOnpTn9IO2O
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyUnmQACgkQMOfwapXb+vJxMgCdHOxOKhMea4/n7TNUWsezfMib
+zB4AoIaGGGyboAeThjrhCWBHftooD4qE
+=D0EN
+-----END PGP SIGNATURE-----
+
+--pAwQNkOnpTn9IO2O--
