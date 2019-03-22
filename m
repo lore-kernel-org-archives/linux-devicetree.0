@@ -1,96 +1,70 @@
-From: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-Subject: [PATCH v3 3/3] arm64: dts: rockchip: Disable DCMDs on RK3399's eMMC
- controller.
-Date: Fri, 22 Mar 2019 12:38:06 +0100
-Message-ID: <20190322113808.16858-3-christoph.muellner@theobroma-systems.com>
-References: <20190322113808.16858-1-christoph.muellner@theobroma-systems.com>
+From: =?utf-8?B?R2HDq2w=?= PORTAY <gael.portay@collabora.com>
+Subject: Re: [PATCH v2 3/5] devfreq: rk3399_dmc: Pass ODT and auto power down
+ parameters to TF-A.
+Date: Fri, 22 Mar 2019 08:45:26 -0400
+Message-ID: <20190322124525.ge5thq4a7c6ufcra@archlinux.localdomain>
+References: <20190319181323.22804-1-gael.portay@collabora.com>
+ <20190319181323.22804-4-gael.portay@collabora.com>
+ <20190320003352.GN112750@google.com>
+ <20190320215013.43zgvyn5frnb3yud@archlinux.localdomain>
+ <20190320220223.GP112750@google.com>
+ <20190321231055.j7z23f3k3rcngq4u@archlinux.localdomain>
+ <20190322000107.GU112750@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190322113808.16858-1-christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Vicente Bergas <vicencb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tony Xie <tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Tomsich <philipp.tomsich-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190322000107.GU112750@google.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Derek Basehore <dbasehore@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-rockchip@lists.infradead.org, Randy Li <ayaka@soulik.info>, kernel@collabora.com, linux-arm-kernel@lists.infradead.org, Lin Huang <hl@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-When using direct commands (DCMDs) on an RK3399, we get spurious
-CQE completion interrupts for the DCMD transaction slot (#31):
+Hi Matthias,
 
-[  931.196520] ------------[ cut here ]------------
-[  931.201702] mmc1: cqhci: spurious TCN for tag 31
-[  931.206906] WARNING: CPU: 0 PID: 1433 at /usr/src/kernel/drivers/mmc/host/cqhci.c:725 cqhci_irq+0x2e4/0x490
-[  931.206909] Modules linked in:
-[  931.206918] CPU: 0 PID: 1433 Comm: irq/29-mmc1 Not tainted 4.19.8-rt6-funkadelic #1
-[  931.206920] Hardware name: Theobroma Systems RK3399-Q7 SoM (DT)
-[  931.206924] pstate: 40000005 (nZcv daif -PAN -UAO)
-[  931.206927] pc : cqhci_irq+0x2e4/0x490
-[  931.206931] lr : cqhci_irq+0x2e4/0x490
-[  931.206933] sp : ffff00000e54bc80
-[  931.206934] x29: ffff00000e54bc80 x28: 0000000000000000
-[  931.206939] x27: 0000000000000001 x26: ffff000008f217e8
-[  931.206944] x25: ffff8000f02ef030 x24: ffff0000091417b0
-[  931.206948] x23: ffff0000090aa000 x22: ffff8000f008b000
-[  931.206953] x21: 0000000000000002 x20: 000000000000001f
-[  931.206957] x19: ffff8000f02ef018 x18: ffffffffffffffff
-[  931.206961] x17: 0000000000000000 x16: 0000000000000000
-[  931.206966] x15: ffff0000090aa6c8 x14: 0720072007200720
-[  931.206970] x13: 0720072007200720 x12: 0720072007200720
-[  931.206975] x11: 0720072007200720 x10: 0720072007200720
-[  931.206980] x9 : 0720072007200720 x8 : 0720072007200720
-[  931.206984] x7 : 0720073107330720 x6 : 00000000000005a0
-[  931.206988] x5 : ffff00000860d4b0 x4 : 0000000000000000
-[  931.206993] x3 : 0000000000000001 x2 : 0000000000000001
-[  931.206997] x1 : 1bde3a91b0d4d900 x0 : 0000000000000000
-[  931.207001] Call trace:
-[  931.207005]  cqhci_irq+0x2e4/0x490
-[  931.207009]  sdhci_arasan_cqhci_irq+0x5c/0x90
-[  931.207013]  sdhci_irq+0x98/0x930
-[  931.207019]  irq_forced_thread_fn+0x2c/0xa0
-[  931.207023]  irq_thread+0x114/0x1c0
-[  931.207027]  kthread+0x128/0x130
-[  931.207032]  ret_from_fork+0x10/0x20
-[  931.207035] ---[ end trace 0000000000000002 ]---
+On Thu, Mar 21, 2019 at 05:01:07PM -0700, Matthias Kaehlcke wrote:
+> > ...
+> > 
+> > So, for a reason that I ignore, if we try to save unecessary calls to
+> > ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD (odt_enable has not changed since
+> > last call), we get stalled in the call to ROCKCHIP_SIP_CONFIG_SET_RAGE
+> > that follows. The function arm_smccc_smc never returns and the device
+> > hard hang.
+> 
+> Thanks for giving it a try!
+> 
+> Did your code ensure to perform the SMC call for the first frequency
+> change? If not the problem could be that the DDR PD timings and ODT
+> resistors are not properly configured for the new frequency.
+> 
 
-The driver shows this message only for the first spurious interrupt
-by using WARN_ONCE(). Changing this to WARN() shows, that this is
-happening quite frequently (up to once a second).
+The DRAM_ODT_PD SMC call is supposed to be performed before the
+DRAM_SET_RATE; unless someone else is doing the set_rate.
 
-Since the eMMC 5.1 specification, where CQE and CQHCI are specified,
-does not mention that spurious TCN interrupts for DCMDs can be simply
-ignored, we must assume that using this feature is not working reliably.
+Does the ODT resistors should be configured for every existing
+frequency?
 
-The current implementation uses DCMD for REQ_OP_FLUSH only, and
-I could not see any performance/power impact when disabling
-this optional feature for RK3399.
+> In case you already did this or it doesn't help I think it's fine to
+> just do the call always, we can always revisit this later.
+> 
 
-Therefore this patch disables DCMDs for RK3399.
+Okay, sounds good.
 
-Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-Signed-off-by: Philipp Tomsich <philipp.tomsich-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
----
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+> > Thanks to your remark, I have also fixed an issue with the odt_dis_freq
+> > value. Its value is initialized to 0 in the probe function. Thus the
+> > odt_enable is always true (target_rate > 0). I moved its initialization
+> > after the timings are parsed from the device-tree; its value is now none
+> > zero (333000000 in my case).
+> 
+> Great!
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index db9d948c0b03..1a16d6ce3ea8 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -333,6 +333,7 @@
- 		phys = <&emmc_phy>;
- 		phy-names = "phy_arasan";
- 		power-domains = <&power RK3399_PD_EMMC>;
-+		disable-cqe-dcmd;
- 		status = "disabled";
- 	};
- 
--- 
-2.11.0
+Gael
