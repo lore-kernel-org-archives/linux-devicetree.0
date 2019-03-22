@@ -1,8 +1,8 @@
-From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: change phy-mode to use
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH] ARM: dts: imx6qdl-sabresd: change phy-mode to use
  rgmii-id
-Date: Fri, 22 Mar 2019 11:20:44 +0100
-Message-ID: <db0a3a96-d836-f7bd-4773-81fcb7984835@ysoft.com>
+Date: Fri, 22 Mar 2019 10:50:56 +0000
+Message-ID: <DB7PR10MB2348358D285E2560F5B5E699FE430@DB7PR10MB2348.EURPRD10.PROD.OUTLOOK.COM>
 References: <20190320120604.7D99B3FBE9@swsrvapps-01.diasemi.com>
  <CAOMZO5AHzQJzz3vd5MzYgSSxzPjU9xan1dFh9473BXeiRCOzzg@mail.gmail.com>
  <VI1PR10MB2352C3A55BE8FABAF3B02681FE410@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
@@ -13,39 +13,54 @@ References: <20190320120604.7D99B3FBE9@swsrvapps-01.diasemi.com>
  <CAOMZO5CBjG_xZWjZof_VOKaLLOCxFz3g7Gz1uTVzD=D5GeQb4g@mail.gmail.com>
  <20190322021521.GY12513@dragon>
  <CAOMZO5CRRg9XD9VovcO5+fdM1DBp12P33T9xgW=cEvTES8yDPA@mail.gmail.com>
+ <db0a3a96-d836-f7bd-4773-81fcb7984835@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5CRRg9XD9VovcO5+fdM1DBp12P33T9xgW=cEvTES8yDPA@mail.gmail.com>
+In-Reply-To: <db0a3a96-d836-f7bd-4773-81fcb7984835@ysoft.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: Abel Vesa <abel.vesa@nxp.com>, Steve Twiss <stwiss.opensource@diasemi.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-ARM-KERNEL <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+To: Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-ARM-KERNEL <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On 22. 03. 19 3:24, Fabio Estevam wrote:
-> On Thu, Mar 21, 2019 at 11:15 PM Shawn Guo <shawnguo@kernel.org> wrote:
-> 
->>> Unfortunately, just by looking at the dts files we do not know if a
->>> board uses an AR803x PHY or not, so I am afraid we can not do an
->>> automatic conversion.
->>
->> At least for those we already know?
-> 
-> Yes, I can help preparing a patch that fixes the i.MX boards we know
-> use AR8031 PHY.
-
-AFACT this issue is not AR803x specific. I was hit by the same problem
-with QCA833x switch on imx6dl-yapp4. Though, we are currently the only
-platform in tree using this chip and Shawn already has the fix in his tree.
-
-I am not aware of any other PHY drivers that my cause problems.
-
-$ git log --oneline v5.0..v5.1-rc1 --grep=RGMII --author=Vinod -- drivers/net/
-6d4cd041f0af net: phy: at803x: disable delay only for RGMII mode
-a968b5e9d587 net: dsa: qca8k: Enable delay for RGMII_ID mode
-5ecdd77c61c8 net: dsa: qca8k: disable delay for RGMII mode
-cd28d1d6e52e net: phy: at803x: Disable phy delay for RGMII mode
-
-Michal
+SGVyZSBhcmUgbXkgdGhvdWdodHMuIA0KDQpPbiAyMiBNYXJjaCAyMDE5IDEwOjIxLCBNaWNoYWwg
+Vm9rw6HEjSB3cm90ZToNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBBUk06IGR0czogaW14NnFk
+bC1zYWJyZXNkOiBjaGFuZ2UgcGh5LW1vZGUgdG8gdXNlIHJnbWlpLWlkDQo+IA0KPiBPbiAyMi4g
+MDMuIDE5IDM6MjQsIEZhYmlvIEVzdGV2YW0gd3JvdGU6DQo+ID4gT24gVGh1LCBNYXIgMjEsIDIw
+MTkgYXQgMTE6MTUgUE0gU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPiB3cm90ZToNCj4g
+Pg0KPiA+Pj4gVW5mb3J0dW5hdGVseSwganVzdCBieSBsb29raW5nIGF0IHRoZSBkdHMgZmlsZXMg
+d2UgZG8gbm90IGtub3cgaWYgYQ0KPiA+Pj4gYm9hcmQgdXNlcyBhbiBBUjgwM3ggUEhZIG9yIG5v
+dCwgc28gSSBhbSBhZnJhaWQgd2UgY2FuIG5vdCBkbyBhbg0KPiA+Pj4gYXV0b21hdGljIGNvbnZl
+cnNpb24uDQo+ID4+DQo+ID4+IEF0IGxlYXN0IGZvciB0aG9zZSB3ZSBhbHJlYWR5IGtub3c/DQo+
+ID4NCj4gPiBZZXMsIEkgY2FuIGhlbHAgcHJlcGFyaW5nIGEgcGF0Y2ggdGhhdCBmaXhlcyB0aGUg
+aS5NWCBib2FyZHMgd2Uga25vdw0KPiA+IHVzZSBBUjgwMzEgUEhZLg0KPiANCj4gQUZBQ1QgdGhp
+cyBpc3N1ZSBpcyBub3QgQVI4MDN4IHNwZWNpZmljLiBJIHdhcyBoaXQgYnkgdGhlIHNhbWUgcHJv
+YmxlbQ0KPiB3aXRoIFFDQTgzM3ggc3dpdGNoIG9uIGlteDZkbC15YXBwNC4gVGhvdWdoLCB3ZSBh
+cmUgY3VycmVudGx5IHRoZSBvbmx5DQo+IHBsYXRmb3JtIGluIHRyZWUgdXNpbmcgdGhpcyBjaGlw
+IGFuZCBTaGF3biBhbHJlYWR5IGhhcyB0aGUgZml4IGluIGhpcyB0cmVlLg0KPiANCj4gSSBhbSBu
+b3QgYXdhcmUgb2YgYW55IG90aGVyIFBIWSBkcml2ZXJzIHRoYXQgbXkgY2F1c2UgcHJvYmxlbXMu
+DQo+IA0KPiAkIGdpdCBsb2cgLS1vbmVsaW5lIHY1LjAuLnY1LjEtcmMxIC0tZ3JlcD1SR01JSSAt
+LWF1dGhvcj1WaW5vZCAtLSBkcml2ZXJzL25ldC8NCj4gNmQ0Y2QwNDFmMGFmIG5ldDogcGh5OiBh
+dDgwM3g6IGRpc2FibGUgZGVsYXkgb25seSBmb3IgUkdNSUkgbW9kZQ0KPiBhOTY4YjVlOWQ1ODcg
+bmV0OiBkc2E6IHFjYThrOiBFbmFibGUgZGVsYXkgZm9yIFJHTUlJX0lEIG1vZGUNCj4gNWVjZGQ3
+N2M2MWM4IG5ldDogZHNhOiBxY2E4azogZGlzYWJsZSBkZWxheSBmb3IgUkdNSUkgbW9kZQ0KPiBj
+ZDI4ZDFkNmU1MmUgbmV0OiBwaHk6IGF0ODAzeDogRGlzYWJsZSBwaHkgZGVsYXkgZm9yIFJHTUlJ
+IG1vZGUNCg0KSWYgdGhpcyBpcyBtb3JlIHdpZGVzcHJlYWQsIGFzIE1pY2hhbCBwb2ludHMgb3V0
+LCB0aGlzIG1pZ2h0IGFmZmVjdCB0aGUgd2F5DQp0aGUgZml4IGlzIGFwcHJvYWNoIHRoZW4/DQoN
+Ck9uIDIxIE1hcmNoIDIwMTkgMTI6NDMgTHVjYXMgU3RhY2ggd3JvdGU6DQoNCj4gPiBTbyB5ZXMs
+IHdlIGN1cnJlbnRseSBoYXZlIGxvdHMgb2YgYnJva2VuIGR0YidzIGluIG1haW5saW5lIGFuZCBJ
+IGFtDQo+ID4gd29uZGVyaW5nIHdoYXQgaXMgdGhlIHByb3BlciBmaXggaGVyZS4NClsuLi5dDQo+
+IGJ1dCBpZiB0aGUgRFQgaXMgY2xlYXJseSBicm9rZW4gYW5kIGZpeGluZyBpdCBpbiBhIGJhY2t3
+YXJkDQo+IGNvbXBhdGlibGUgd2F5IGlzIG5vdCByZWFsbHkgZmVhc2libGUsIEkgd291bGQgYXJn
+dWUgdGhhdCB3ZSBzaG91bGQNCj4gdHJlYXQgYSBEVCBidWcgbGlrZSBhbnkgb3RoZXIgYnVnLg0K
+DQpUaGVyZSBpcyBhIHdheSBvZiBkb2luZyB0aGlzIHRvIHByZXNlcnZlIGJhY2t3YXJkcyBjb21w
+YXRpYmlsaXR5IEkgdGhpbmsuDQpNYXliZSBkZXByZWNhdGluZyB0aGUgcHJldmlvdXMgRFRTIHBo
+eS1tb2RlIGFuZCByZXBsYWNpbmcgaXQgd2l0aCBhIG5ldyBvbmUsDQpwaHktbW9kZS12MiBpbnN0
+ZWFkPw0KDQpBdCB0aGUgbW9tZW50LCB0aGVyZSBpcyBvbmx5IGEgd2VhayBsaW5rIGJldHdlZW4g
+RFRTIGFuZCB0aGUgZHJpdmVyIGluIHRoZSBrZXJuZWwNCndoaWNoICBtYWtlcyBmaW5kaW5nIHRo
+ZSBlcnJvciBkaWZmaWN1bHQuIEFsc28sIGl0IHNlZW1zIHRoYXQgcGFydGx5LCB0aGUgZGlyZWN0
+aW9uIG9mDQpjaGFuZ2UgaXMgY2F1c2VkIGJ5IHNvZnR3YXJlIHdoaWNoIGlzIHB1c2hpbmcgYWx0
+ZXJhdGlvbnMgaW4gdGhlIERUUyAtLSBhbmQgbm90IHRoZQ0Kb3RoZXIgd2F5IHJvdW5kLg0KDQpS
+ZWdhcmRzLA0KU3RldmUNCg==
