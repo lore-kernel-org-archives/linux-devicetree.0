@@ -1,96 +1,54 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 5/5] lib/vsprintf: Add %pfw conversion specifier for
- printing fwnode names
-Date: Fri, 22 Mar 2019 19:21:14 +0200
-Message-ID: <20190322172114.GY9224@smile.fi.intel.com>
-References: <20190322152930.16642-1-sakari.ailus@linux.intel.com>
- <20190322152930.16642-6-sakari.ailus@linux.intel.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [RESEND PATCH v6 09/11] leds: max77650: add LEDs support
+Date: Fri, 22 Mar 2019 20:40:44 +0100
+Message-ID: <f2963c2e-b4d0-1fae-3c7f-28fcdb545ee2@gmail.com>
+References: <20190318174228.18194-1-brgl@bgdev.pl>
+ <20190318174228.18194-10-brgl@bgdev.pl> <20190322092124.GK27015@amd>
+ <CAMRc=Mf1DxF1e63y+HsXtCFxZW8R0XWDLUXGy+4cp3zBS0_qhw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190322152930.16642-6-sakari.ailus@linux.intel.com>
+In-Reply-To: <CAMRc=Mf1DxF1e63y+HsXtCFxZW8R0XWDLUXGy+4cp3zBS0_qhw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Pavel Machek <pavel@ucw.cz>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 05:29:30PM +0200, Sakari Ailus wrote:
-> Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
-> support printing full path of the node, including its name ("f") and only
-> the node's name ("P") in the printk family of functions. The two flags
-> have equivalent functionality to existing %pOF with the same two modifiers
-> ("f" and "P") on OF based systems. The ability to do the same on ACPI
-> based systems is added by this patch.
-
-Do we encourage people to use it instead of %pOF cases where it is suitable?
-
-> On ACPI based systems the resulting strings look like
+On 3/22/19 10:53 AM, Bartosz Golaszewski wrote:
+> pt., 22 mar 2019 o 10:21 Pavel Machek <pavel@ucw.cz> napisał(a):
+>>
+>> On Mon 2019-03-18 18:42:26, Bartosz Golaszewski wrote:
+>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>>
+>>> This adds basic support for LEDs for the max77650 PMIC. The device has
+>>> three current sinks for driving LEDs.
+>>>
+>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>>
+>> Acked-by: Pavel Machek <pavel@ucw.cz>
+>>
+>>> +             label = of_get_property(child, "label", NULL);
+>>> +             if (!label) {
+>>> +                     led->cdev.name = "max77650::";
+>>> +             } else {
+>>> +                     led->cdev.name = devm_kasprintf(dev, GFP_KERNEL,
+>>> +                                                     "max77650:%s", label);
+>>> +                     if (!led->cdev.name)
+>>> +                             return -ENOMEM;
+>>> +             }
+>>
+>> I'd rather not have the "max77650:" prefix in the LED name (as it is
+>> useless).
+>>
 > 
-> 	\_SB.PCI0.CIO2.port@1.endpoint@0
-> 
-> where the nodes are separated by a dot (".") and the first three are
-> ACPI device nodes and the latter two ACPI data nodes.
+> I was instructed to do so by the LED subsystem maintainer.
 
-Do we support swnode here?
-
-> +static noinline_for_stack
-> +char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
-> +		    struct printf_spec spec, const char *fmt)
-> +{
-> +	const char * const modifiers = "fP";
-> +	struct printf_spec str_spec = spec;
-> +	char *buf_start = buf;
-> +	bool pass;
-> +
-> +	str_spec.field_width = -1;
-> +
-
-> +	if ((unsigned long)fwnode < PAGE_SIZE)
-> +		return string(buf, end, "(null)", spec);
-
-Just put there a NULL pointer, we would not like to maintain duplicated strings
-over the kernel.
-
-I remember Petr has a patch series related to address space check, though I
-don't remember the status of affairs.
-
-> +
-> +	/* simple case without anything any more format specifiers */
-> +	fmt++;
-> +	if (fmt[0] == '\0' || strcspn(fmt, modifiers) > 0)
-> +		fmt = "f";
-> +
-> +	for (pass = false; strspn(fmt, modifiers); fmt++, pass = true) {
-
-I don't see test cases.
-
-What would we get out of %pfwfffPPPfff?
-
-Hint: I'm expecting above to be equivalent to %pfwf
-
-> +		if (pass) {
-> +			if (buf < end)
-> +				*buf = ':';
-> +			buf++;
-> +		}
-> +
-> +		switch (*fmt) {
-> +		case 'f':	/* full_name */
-> +			buf = fwnode_gen_full_name(fwnode, buf, end);
-> +			break;
-> +		case 'P':	/* name */
-> +			buf = string(buf, end, fwnode_get_name(fwnode),
-> +				     str_spec);
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +	}
-> +
-> +	return widen_string(buf, buf - buf_start, end, spec);
-> +}
+Yes, let's keep things consistent, we will convert it to use generic
+support for LED naming once that support is merged.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Best regards,
+Jacek Anaszewski
