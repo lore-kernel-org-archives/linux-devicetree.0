@@ -1,133 +1,55 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH 1/2] spi: stm32-qspi: add spi_master_put in release function
-Date: Fri, 22 Mar 2019 15:35:53 +0100
-Message-ID: <1553265354-16433-2-git-send-email-ludovic.Barre@st.com>
-References: <1553265354-16433-1-git-send-email-ludovic.Barre@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 0/5] Device property improvements, add %pfw format specifier
+Date: Fri, 22 Mar 2019 17:29:25 +0200
+Message-ID: <20190322152930.16642-1-sakari.ailus@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553265354-16433-1-git-send-email-ludovic.Barre@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
+To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+Hi all,
 
-This patch adds spi_master_put in release function
-to drop the controller's refcount.
+This set adds functionality into the device property API (counting a
+node's parents as well as obtaining its name) in order to support printing
+fwnode names using a new conversion specifier "%pfw". The names that are
+produced are equivalent to its OF counterpart "%pOF" on OF systems for the
+two supported modifiers ("f" and "P").
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/spi/spi-stm32-qspi.c | 48 +++++++++++++++++++++++++++-----------------
- 1 file changed, 30 insertions(+), 18 deletions(-)
+Printing a node's name is something that's been available on OF for a long
+time and if something is converted to device property API (such as the
+V4L2 fwnode framework) it always got removed of a nice feature that was
+sometimes essential in debugging. With this set, that no longer is the
+case.
 
-diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
-index 7879a52..983584d 100644
---- a/drivers/spi/spi-stm32-qspi.c
-+++ b/drivers/spi/spi-stm32-qspi.c
-@@ -93,6 +93,7 @@ struct stm32_qspi_flash {
- 
- struct stm32_qspi {
- 	struct device *dev;
-+	struct spi_controller *ctrl;
- 	void __iomem *io_base;
- 	void __iomem *mm_base;
- 	resource_size_t mm_size;
-@@ -400,6 +401,7 @@ static void stm32_qspi_release(struct stm32_qspi *qspi)
- 	writel_relaxed(0, qspi->io_base + QSPI_CR);
- 	mutex_destroy(&qspi->lock);
- 	clk_disable_unprepare(qspi->clk);
-+	spi_master_put(qspi->ctrl);
- }
- 
- static int stm32_qspi_probe(struct platform_device *pdev)
-@@ -416,43 +418,56 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	qspi = spi_controller_get_devdata(ctrl);
-+	qspi->ctrl = ctrl;
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "qspi");
- 	qspi->io_base = devm_ioremap_resource(dev, res);
--	if (IS_ERR(qspi->io_base))
--		return PTR_ERR(qspi->io_base);
-+	if (IS_ERR(qspi->io_base)) {
-+		ret = PTR_ERR(qspi->io_base);
-+		goto err;
-+	}
-+
-+	qspi->phys_base = res->start;
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "qspi_mm");
- 	qspi->mm_base = devm_ioremap_resource(dev, res);
--	if (IS_ERR(qspi->mm_base))
--		return PTR_ERR(qspi->mm_base);
-+	if (IS_ERR(qspi->mm_base)) {
-+		ret = PTR_ERR(qspi->mm_base);
-+		goto err;
-+	}
- 
- 	qspi->mm_size = resource_size(res);
--	if (qspi->mm_size > STM32_QSPI_MAX_MMAP_SZ)
--		return -EINVAL;
-+	if (qspi->mm_size > STM32_QSPI_MAX_MMAP_SZ) {
-+		ret = -EINVAL;
-+		goto err;
-+	}
- 
- 	irq = platform_get_irq(pdev, 0);
- 	ret = devm_request_irq(dev, irq, stm32_qspi_irq, 0,
- 			       dev_name(dev), qspi);
- 	if (ret) {
- 		dev_err(dev, "failed to request irq\n");
--		return ret;
-+		goto err;
- 	}
- 
- 	init_completion(&qspi->data_completion);
- 
- 	qspi->clk = devm_clk_get(dev, NULL);
--	if (IS_ERR(qspi->clk))
--		return PTR_ERR(qspi->clk);
-+	if (IS_ERR(qspi->clk)) {
-+		ret = PTR_ERR(qspi->clk);
-+		goto err;
-+	}
- 
- 	qspi->clk_rate = clk_get_rate(qspi->clk);
--	if (!qspi->clk_rate)
--		return -EINVAL;
-+	if (!qspi->clk_rate) {
-+		ret = -EINVAL;
-+		goto err;
-+	}
- 
- 	ret = clk_prepare_enable(qspi->clk);
- 	if (ret) {
- 		dev_err(dev, "can not enable the clock\n");
--		return ret;
-+		goto err;
- 	}
- 
- 	rstc = devm_reset_control_get_exclusive(dev, NULL);
-@@ -475,14 +490,11 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 	ctrl->dev.of_node = dev->of_node;
- 
- 	ret = devm_spi_register_master(dev, ctrl);
--	if (ret)
--		goto err_spi_register;
--
--	return 0;
-+	if (!ret)
-+		return 0;
- 
--err_spi_register:
-+err:
- 	stm32_qspi_release(qspi);
--
- 	return ret;
- }
- 
+This set depends on a cleanup set fully releasing the now-deprecated %pf
+for other use:
+
+<URL:https://lore.kernel.org/lkml/20190322135350.2btpno7vspvewxvk@paasikivi.fi.intel.com/T/#t>
+
+I was a bit hesitant on how much of this should be covered by the fwnode
+ops and how much would be just better to reside in lib/vsprintf.c, but
+opted for putting it to the fwnode interface. This keeps it clean and
+still rather lean on the fwnode ops side while making it possible to add
+other firmware types (although that is unlikely I guess).
+
+Sakari Ailus (5):
+  device property: Add functions for accessing node's parents
+  device property: Add fwnode_get_name for returning the name of a node
+  device property: Add a function to obtain a node's prefix
+  lib/vsprintf: Make use of fwnode API to obtain node names and
+    separators
+  lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
+
+ Documentation/core-api/printk-formats.rst | 24 +++++++++
+ drivers/acpi/property.c                   | 46 ++++++++++++++++
+ drivers/base/property.c                   | 86 ++++++++++++++++++++++++++---
+ drivers/of/property.c                     | 16 ++++++
+ include/linux/fwnode.h                    |  4 ++
+ include/linux/property.h                  |  5 ++
+ lib/vsprintf.c                            | 89 +++++++++++++++++++++++--------
+ scripts/checkpatch.pl                     |  2 +-
+ 8 files changed, 242 insertions(+), 30 deletions(-)
+
 -- 
-2.7.4
+2.11.0
