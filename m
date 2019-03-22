@@ -1,44 +1,118 @@
 From: Christian Lamparter <chunkeey@gmail.com>
-Subject: [PATCH v4 1/4] dt-bindings: net: dsa: qca8k: fix example
-Date: Fri, 22 Mar 2019 01:05:00 +0100
-Message-ID: <20190322000503.22431-1-chunkeey@gmail.com>
+Subject: [PATCH v4 2/4] dt-bindings: net: dsa: qca8k: support internal mdio-bus
+Date: Fri, 22 Mar 2019 01:05:01 +0100
+Message-ID: <20190322000503.22431-2-chunkeey@gmail.com>
+References: <20190322000503.22431-1-chunkeey@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190322000503.22431-1-chunkeey@gmail.com>
 Sender: netdev-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org
 Cc: Florian Fainelli <f.fainelli@gmail.com>, Vivien Didelot <vivien.didelot@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Behun <marek.behun@nic.cz>
 List-Id: devicetree@vger.kernel.org
 
-In the example, the phy at phy@0 is clashing with
-the switch0@0 at the same address. Usually, the switches
-are accessible through pseudo PHYs which in case of the
-qca8k are located at 0x10 - 0x18.
+This patch updates the qca8k's binding to document to the
+approach for using the internal mdio-bus of the supported
+qca8k switches.
 
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
 ---
- Documentation/devicetree/bindings/net/dsa/qca8k.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/net/dsa/qca8k.txt     | 69 +++++++++++++++++--
+ 1 file changed, 64 insertions(+), 5 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-index bbcb255c3150..5eda99e6c86e 100644
+index 5eda99e6c86e..93a7469e70d4 100644
 --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
 +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-@@ -55,12 +55,12 @@ Example:
- 			reg = <4>;
+@@ -12,10 +12,15 @@ Required properties:
+ Subnodes:
+ 
+ The integrated switch subnode should be specified according to the binding
+-described in dsa/dsa.txt. As the QCA8K switches do not have a N:N mapping of
+-port and PHY id, each subnode describing a port needs to have a valid phandle
+-referencing the internal PHY connected to it. The CPU port of this switch is
+-always port 0.
++described in dsa/dsa.txt. If the QCA8K switch is connect to a SoC's external
++mdio-bus each subnode describing a port needs to have a valid phandle
++referencing the internal PHY it is connected to. This is because there's no
++N:N mapping of port and PHY id.
++
++Don't use mixed external and internal mdio-bus configurations, as this is
++not supported by the hardware.
++
++The CPU port of this switch is always port 0.
+ 
+ A CPU port node has the following optional node:
+ 
+@@ -31,8 +36,9 @@ For QCA8K the 'fixed-link' sub-node supports only the following properties:
+ - 'full-duplex' (boolean, optional), to indicate that full duplex is
+   used. When absent, half duplex is assumed.
+ 
+-Example:
++Examples:
+ 
++for the external mdio-bus configuration:
+ 
+ 	&mdio0 {
+ 		phy_port1: phy@0 {
+@@ -108,3 +114,56 @@ Example:
+ 			};
  		};
- 
--		switch0@0 {
+ 	};
++
++for the internal master mdio-bus configuration:
++
++	&mdio0 {
 +		switch@10 {
- 			compatible = "qca,qca8337";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 
--			reg = <0>;
++			compatible = "qca,qca8337";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
 +			reg = <0x10>;
- 
- 			ports {
- 				#address-cells = <1>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					label = "cpu";
++					ethernet = <&gmac1>;
++					phy-mode = "rgmii";
++					fixed-link {
++						speed = 1000;
++						full-duplex;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					label = "lan1";
++				};
++
++				port@2 {
++					reg = <2>;
++					label = "lan2";
++				};
++
++				port@3 {
++					reg = <3>;
++					label = "lan3";
++				};
++
++				port@4 {
++					reg = <4>;
++					label = "lan4";
++				};
++
++				port@5 {
++					reg = <5>;
++					label = "wan";
++				};
++			};
++		};
++	};
 -- 
 2.20.1
