@@ -1,107 +1,346 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC v4 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Thu, 21 Mar 2019 18:23:53 -0700
-Message-ID: <0e6eb370-3e62-e1a5-1b91-bccc5868e8e4@gmail.com>
-References: <20190214213729.21702-1-brendanhiggins@google.com>
- <CAFd5g45F3YUsAjse+Vt5hj5CLjaXrRWgr5zCZZ6CJKc0hboP6Q@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 2/5] ARM: dts: imx50: Add Kobo Aura DTS
+Date: Fri, 22 Mar 2019 09:31:53 +0800
+Message-ID: <20190322013151.GR12513@dragon>
+References: <20190319152421.16179-1-j.neuschaefer@gmx.net>
+ <20190319152421.16179-3-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <CAFd5g45F3YUsAjse+Vt5hj5CLjaXrRWgr5zCZZ6CJKc0hboP6Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kees Cook <keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Luis Chamberlain <mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: brakmo-b10kYP2dOMg@public.gmane.org, Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, Amir Goldstein <amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Sasha Levin <Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Knut Omang <knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Jeff Dike <jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Bird, Timothy" <Tim.Bird-7U/KSKJipcs@public.gmane.org>, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>, Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Kevin Hilman <khilman@bay>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190319152421.16179-3-j.neuschaefer@gmx.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Sascha Hauer <s.hauer@pengutronix.de>, Johan Hovold <johan@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Thierry Reding <treding@nvidia.com>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On 3/4/19 3:01 PM, Brendan Higgins wrote:
-> On Thu, Feb 14, 2019 at 1:38 PM Brendan Higgins
-> <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
->>
->> This patch set proposes KUnit, a lightweight unit testing and mocking
->> framework for the Linux kernel.
->>
-> 
-> <snip>
-> 
->> ## More information on KUnit
->>
->> There is a bunch of documentation near the end of this patch set that
->> describes how to use KUnit and best practices for writing unit tests.
->> For convenience I am hosting the compiled docs here:
->> https://google.github.io/kunit-docs/third_party/kernel/docs/
->> Additionally for convenience, I have applied these patches to a branch:
->> https://kunit.googlesource.com/linux/+/kunit/rfc/5.0-rc5/v4
->> The repo may be cloned with:
->> git clone https://kunit.googlesource.com/linux
->> This patchset is on the kunit/rfc/5.0-rc5/v4 branch.
->>
->> ## Changes Since Last Version
->>
->>  - Got KUnit working on (hypothetically) all architectures (tested on
->>    x86), as per Rob's (and other's) request
->>  - Punting all KUnit features/patches depending on UML for now.
->>  - Broke out UML specific support into arch/um/* as per "[RFC v3 01/19]
->>    kunit: test: add KUnit test runner core", as requested by Luis.
->>  - Added support to kunit_tool to allow it to build kernels in external
->>    directories, as suggested by Kieran.
->>  - Added a UML defconfig, and a config fragment for KUnit as suggested
->>    by Kieran and Luis.
->>  - Cleaned up, and reformatted a bunch of stuff.
->>
->> --
->> 2.21.0.rc0.258.g878e2cd30e-goog
->>
-> 
-> Someone suggested I should send the next revision out as "PATCH"
-> instead of "RFC" since there seems to be general consensus about
-> everything at a high level, with a couple exceptions.
-> 
-> At this time I am planning on sending the next revision out as "[PATCH
-> v1 00/NN] kunit: introduce KUnit, the Linux kernel unit testing
-> framework". Initially I wasn't sure if the next revision should be
-> "[PATCH v1 ...]" or "[PATCH v5 ...]". Please let me know if you have a
-> strong objection to the former.
-> 
-> In the next revision, I will be dropping the last two of three patches
-> for the DT unit tests as there doesn't seem to be enough features
-> currently available to justify the heavy refactoring I did; however, I
+On Tue, Mar 19, 2019 at 04:24:17PM +0100, Jonathan Neusch=E4fer wrote:
+> The Kobo Aura is an e-book reader released in 2013.
+> =
 
-Thank you.
+> With the devicetree in its current state, the kernel will boot and run
+> for about ten seconds. To solve this, the embedded controller needs to
+> be told that the system should stay powered on. This will be done in a
+> later patchset.
+> =
 
+> - The IOMUXC mode bits for the SD interfaces were taken from the
+>   vendor's U-Boot fork.
+> - The bus width of the eMMC is 4 bits in the vendor kernel, but I
+>   achieved better performance with 8 bits.
+> - The SDIO clock frequency for the WiFi chip is 25MHz in the vendor
+>   kernel, but the WiFi chip (BCM43362) supports 50MHz, which works
+>   reliably on this board and gives slightly better performance.
+> - The I2C pins' IOMUXC settings come from the vendor's U-Boot fork.
+> =
 
-> will still include the patch that just converts everything over to
-> KUnit without restructuring the test cases:
-> https://lkml.org/lkml/2019/2/14/1133
+> Signed-off-by: Jonathan Neusch=E4fer <j.neuschaefer@gmx.net>
+> ---
+>  arch/arm/boot/dts/Makefile            |   3 +-
+>  arch/arm/boot/dts/imx50-kobo-aura.dts | 245 ++++++++++++++++++++++++++
+>  2 files changed, 247 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/imx50-kobo-aura.dts
+> =
 
-The link doesn't work for me (don't worry about that), so I'm assuming
-this is:
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index f4f5aeaf3298..0c85156c552b 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -363,7 +363,8 @@ dtb-$(CONFIG_SOC_IMX35) +=3D \
+>  	imx35-eukrea-mbimxsd35-baseboard.dtb \
+>  	imx35-pdk.dtb
+>  dtb-$(CONFIG_SOC_IMX50) +=3D \
+> -	imx50-evk.dtb
+> +	imx50-evk.dtb \
+> +	imx50-kobo-aura.dtb
+>  dtb-$(CONFIG_SOC_IMX51) +=3D \
+>  	imx51-apf51.dtb \
+>  	imx51-apf51dev.dtb \
+> diff --git a/arch/arm/boot/dts/imx50-kobo-aura.dts b/arch/arm/boot/dts/im=
+x50-kobo-aura.dts
+> new file mode 100644
+> index 000000000000..e778a677c752
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx50-kobo-aura.dts
+> @@ -0,0 +1,245 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +// Copyright 2019 Jonathan Neusch=E4fer
+> +//
+> +// The Kobo Aura e-book reader, model N514. The mainboard is marked as E=
+606F0B.
+> +
+> +/dts-v1/;
+> +#include "imx50.dtsi"
+> +#include <dt-bindings/input/input.h>
+> +
+> +/ {
+> +	model =3D "Kobo Aura (N514)";
+> +	compatible =3D "kobo,aura", "fsl,imx50";
 
-   [RFC v4 15/17] of: unittest: migrate tests to run on KUnit
+Board compatible should also be documented.
 
-The conversation on that patch ended after:
+> +
+> +	chosen {
+> +		stdout-path =3D "serial1:115200n8";
+> +	};
+> +
+> +	memory@70000000 {
+> +		device_type =3D "memory";
+> +		reg =3D <0x70000000 0x10000000>;
+> +	};
+> +
+> +	gpio-leds {
+> +		compatible =3D "gpio-leds";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinctrl_leds>;
+> +
+> +		on {
+> +			label =3D "kobo_aura:orange:on";
+> +			gpios =3D <&gpio6 24 GPIO_ACTIVE_LOW>;
+> +			panic-indicator;
+> +		};
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible =3D "gpio-keys";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinctrl_gpiokeys>;
+> +
+> +		power {
+> +			label =3D "Power Button";
+> +			gpios =3D <&gpio4 10 GPIO_ACTIVE_LOW>;
+> +			linux,code =3D <KEY_POWER>;
+> +		};
+> +
+> +		hallsensor {
+> +			label =3D "Hallsensor";
+> +			gpios =3D <&gpio5 15 GPIO_ACTIVE_LOW>;
+> +			linux,code =3D <0>;
 
-   >> After adding patch 15, there are a lot of "unittest internal error" messages.
-   > 
-   > Yeah, I meant to ask you about that. I thought it was due to a change
-   > you made, but after further examination, just now, I found it was my
-   > fault. Sorry for not mentioning that anywhere. I will fix it in v5.
+Use define KEY_RESERVED?
 
-It is not worth my time to look at patch 15 when it is that broken.  So I
-have not done any review of it.
+> +			linux,input-type =3D <5>;
 
-So no, I think you are still in the RFC stage unless you drop patch 15.
+Use define EV_SW?
 
-> 
-> I should have the next revision out in a week or so.
-> 
+> +		};
+> +
+> +		frontlight {
+> +			label =3D "Frontlight";
+> +			gpios =3D <&gpio4 1 GPIO_ACTIVE_LOW>;
+> +			linux,code =3D <KEY_DISPLAYTOGGLE>;
+> +		};
+> +	};
+> +
+> +	sd2_pwrseq: pwrseq {
+> +		compatible =3D "mmc-pwrseq-simple";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinctrl_sd2_reset>;
+> +
+
+Please do not have random newlines.
+
+> +		reset-gpios =3D <&gpio4 17 GPIO_ACTIVE_LOW>;
+> +	};
+> +
+> +	sd2_vmmc: gpio-regulator {
+> +		compatible =3D "regulator-gpio";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinctrl_sd2_vmmc>;
+> +
+> +		regulator-name =3D "vmmc";
+> +		states =3D <3300000 0>;
+> +		regulator-min-microvolt =3D <3300000>;
+> +		regulator-max-microvolt =3D <3300000>;
+> +		enable-gpio =3D <&gpio4 12 GPIO_ACTIVE_LOW>;
+> +		startup-delay-us =3D <100000>;
+> +	};
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl_uart2: uart2 {
+> +		fsl,pins =3D <
+> +			MX50_PAD_UART2_TXD__UART2_TXD_MUX	0x1e4
+> +			MX50_PAD_UART2_RXD__UART2_RXD_MUX	0x1e4
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c1: i2c1 {
+
+Please sort these pinctrl nodes alphabetically.
+
+> +		fsl,pins =3D <
+> +			MX50_PAD_I2C1_SCL__I2C1_SCL		0x400001fd
+> +			MX50_PAD_I2C1_SDA__I2C1_SDA		0x400001fd
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c2: i2c2 {
+> +		fsl,pins =3D <
+> +			MX50_PAD_I2C2_SCL__I2C2_SCL		0x400001fd
+> +			MX50_PAD_I2C2_SDA__I2C2_SDA		0x400001fd
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c3: i2c3 {
+> +		fsl,pins =3D <
+> +			MX50_PAD_I2C3_SCL__I2C3_SCL		0x400001fd
+> +			MX50_PAD_I2C3_SDA__I2C3_SDA		0x400001fd
+> +		>;
+> +	};
+> +
+> +	pinctrl_leds: leds {
+> +		fsl,pins =3D <
+> +			MX50_PAD_PWM1__GPIO6_24			0x0
+> +		>;
+> +	};
+> +
+> +	pinctrl_gpiokeys: gpiokeys {
+> +		fsl,pins =3D <
+> +			MX50_PAD_CSPI_MISO__GPIO4_10		0x0
+> +			MX50_PAD_SD2_D7__GPIO5_15		0x0
+> +			MX50_PAD_KEY_ROW0__GPIO4_1		0x0
+> +		>;
+> +	};
+> +
+> +	pinctrl_sd1: sd1 {
+> +		fsl,pins =3D <
+> +			MX50_PAD_SD1_CMD__ESDHC1_CMD		0x1e4
+> +			MX50_PAD_SD1_CLK__ESDHC1_CLK		0xd4
+> +			MX50_PAD_SD1_D0__ESDHC1_DAT0		0x1d4
+> +			MX50_PAD_SD1_D1__ESDHC1_DAT1		0x1d4
+> +			MX50_PAD_SD1_D2__ESDHC1_DAT2		0x1d4
+> +			MX50_PAD_SD1_D3__ESDHC1_DAT3		0x1d4
+> +
+> +			MX50_PAD_SD2_CD__GPIO5_17		0x0
+> +		>;
+> +	};
+> +
+> +	pinctrl_sd2: sd2 {
+> +		fsl,pins =3D <
+> +			MX50_PAD_SD2_CMD__ESDHC2_CMD		0x1e4
+> +			MX50_PAD_SD2_CLK__ESDHC2_CLK		0xd4
+> +			MX50_PAD_SD2_D0__ESDHC2_DAT0		0x1d4
+> +			MX50_PAD_SD2_D1__ESDHC2_DAT1		0x1d4
+> +			MX50_PAD_SD2_D2__ESDHC2_DAT2		0x1d4
+> +			MX50_PAD_SD2_D3__ESDHC2_DAT3		0x1d4
+> +		>;
+> +	};
+> +
+> +	pinctrl_sd2_reset: sd2-reset {
+> +		fsl,pins =3D <
+> +			MX50_PAD_ECSPI2_MOSI__GPIO4_17		0x0
+> +		>;
+> +	};
+> +
+> +	pinctrl_sd2_vmmc: sd2-vmmc {
+> +		fsl,pins =3D <
+> +			MX50_PAD_ECSPI1_SCLK__GPIO4_12		0x0
+> +		>;
+> +	};
+> +
+> +	pinctrl_sd3: sd3 {
+> +		fsl,pins =3D <
+> +			MX50_PAD_SD3_CMD__ESDHC3_CMD		0x1e4
+> +			MX50_PAD_SD3_CLK__ESDHC3_CLK		0xd4
+> +			MX50_PAD_SD3_D0__ESDHC3_DAT0		0x1d4
+> +			MX50_PAD_SD3_D1__ESDHC3_DAT1		0x1d4
+> +			MX50_PAD_SD3_D2__ESDHC3_DAT2		0x1d4
+> +			MX50_PAD_SD3_D3__ESDHC3_DAT3		0x1d4
+> +			MX50_PAD_SD3_D4__ESDHC3_DAT4		0x1d4
+> +			MX50_PAD_SD3_D5__ESDHC3_DAT5		0x1d4
+> +			MX50_PAD_SD3_D6__ESDHC3_DAT6		0x1d4
+> +			MX50_PAD_SD3_D7__ESDHC3_DAT7		0x1d4
+> +		>;
+> +	};
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_uart2>;
+> +	status =3D "okay";
+> +};
+> +
+> +&i2c1 {
+
+Please sort these labeled nodes alphabetically.
+
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_i2c1>;
+> +	status =3D "okay";
+> +
+> +	/* TODO: ektf2132 touch controller at 0x15 */
+> +};
+> +
+> +&i2c2 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_i2c2>;
+> +	status =3D "okay";
+> +
+> +	/* TODO: TPS65185 PMIC for E Ink at 0x68 */
+> +};
+> +
+> +&i2c3 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_i2c3>;
+> +	status =3D "okay";
+> +
+> +	/* TODO: embedded controller at 0x43 */
+> +};
+> +
+> +&esdhc1 {
+> +	status =3D "okay";
+
+We usually end property list with 'status'.
+
+Shawn
+
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_sd1>;
+> +
+> +	max-frequency =3D <50000000>;
+> +	bus-width =3D <4>;
+> +	cd-gpios =3D <&gpio5 17 GPIO_ACTIVE_LOW>;
+> +	disable-wp;
+> +
+> +	/* External =B5SD card */
+> +};
+> +
+> +&esdhc2 {
+> +	status =3D "okay";
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_sd2>;
+> +
+> +	bus-width =3D <4>;
+> +	max-frequency =3D <50000000>;
+> +	disable-wp;
+> +	mmc-pwrseq =3D <&sd2_pwrseq>;
+> +	vmmc-supply =3D <&sd2_vmmc>;
+> +
+> +	/* CyberTan WC121 SDIO WiFi (BCM43362) */
+> +};
+> +
+> +&esdhc3 {
+> +	status =3D "okay";
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_sd3>;
+> +
+> +	bus-width =3D <8>;
+> +	non-removable;
+> +	max-frequency =3D <50000000>;
+> +	disable-wp;
+> +
+> +	/* Internal eMMC */
+> +};
+> --
+> 2.20.1
+> =
