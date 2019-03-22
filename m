@@ -1,30 +1,54 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: change phy-mode to use rgmii-id
-Date: Thu, 21 Mar 2019 23:24:08 -0300
-Message-ID: <CAOMZO5CRRg9XD9VovcO5+fdM1DBp12P33T9xgW=cEvTES8yDPA@mail.gmail.com>
-References: <20190320120604.7D99B3FBE9@swsrvapps-01.diasemi.com>
- <CAOMZO5AHzQJzz3vd5MzYgSSxzPjU9xan1dFh9473BXeiRCOzzg@mail.gmail.com>
- <VI1PR10MB2352C3A55BE8FABAF3B02681FE410@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
- <CAOMZO5By8=j7gZRAdf2-h-5ak-Qo34rqwDL4+HA_97cMXTAnEQ@mail.gmail.com>
- <20190321084240.fveqkhfrbtg7qr4q@fsr-ub1664-175> <CAOMZO5Cz0A19P9E61dy79BFF+V2WsAjobqQ1g9TeiJSCY2Nt4A@mail.gmail.com>
- <20190322011155.GO12513@dragon> <CAOMZO5CBjG_xZWjZof_VOKaLLOCxFz3g7Gz1uTVzD=D5GeQb4g@mail.gmail.com>
- <20190322021521.GY12513@dragon>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] arm64: dts: ls1043a: add crypto node alias also for qds
+Date: Fri, 22 Mar 2019 10:24:40 +0800
+Message-ID: <20190322022439.GB12513@dragon>
+References: <20190320152900.9379-1-horia.geanta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190322021521.GY12513@dragon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Abel Vesa <abel.vesa@nxp.com>, Steve Twiss <stwiss.opensource@diasemi.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-ARM-KERNEL <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190320152900.9379-1-horia.geanta@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Li Yang <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 11:15 PM Shawn Guo <shawnguo@kernel.org> wrote:
-
-> > Unfortunately, just by looking at the dts files we do not know if a
-> > board uses an AR803x PHY or not, so I am afraid we can not do an
-> > automatic conversion.
->
-> At least for those we already know?
-
-Yes, I can help preparing a patch that fixes the i.MX boards we know
-use AR8031 PHY.
+T24gV2VkLCBNYXIgMjAsIDIwMTkgYXQgMDU6Mjk6MDBQTSArMDIwMCwgSG9yaWEgR2VhbnTEgyB3
+cm90ZToKPiBjcnlwdG8gbm9kZSBhbGlhcyBpcyBuZWVkZWQgYnkgVS1ib290IHRvIGlkZW50aWZ5
+IHRoZSBub2RlIGFuZAo+IHBlcmZvcm0gZml4LXVwcywgbGlrZSBhZGRpbmcgImZzbCxzZWMtZXJh
+IiBwcm9wZXJ0eSBvciBkZWxldGluZwo+IGEgam9iIHJpbmcgY2hpbGQgbm9kZSAoaW4gY2FzZSBB
+Uk0gVEYtQSBpcyBydW5uaW5nKS4KPiAKPiBGaXhlczogZWMwNWU5Y2M2YTZlICgiYXJtNjQ6IGR0
+czogYWRkIExTMTA0M2EtUURTIGJvYXJkIHN1cHBvcnQiKQoKVGhlIHBhdGNoIGlzbid0IHF1YWxp
+ZmllZCBhcyBhIGZpeC4gIEkgZHJvcHBlZCB0aGUgdGFnIGFuZCBhcHBsaWVkIGl0IGFzCi1uZXh0
+IG1hdGVyaWFsLgoKU2hhd24KCj4gU2lnbmVkLW9mZi1ieTogSG9yaWEgR2VhbnTEgyA8aG9yaWEu
+Z2VhbnRhQG54cC5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2Zz
+bC1sczEwNDNhLXJkYi5kdHMgfCAxIC0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
+ZnNsLWxzMTA0M2EuZHRzaSAgICB8IDEgKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
+KCspLCAxIGRlbGV0aW9uKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
+ZnJlZXNjYWxlL2ZzbC1sczEwNDNhLXJkYi5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
+Y2FsZS9mc2wtbHMxMDQzYS1yZGIuZHRzCj4gaW5kZXggMTdjYTM1N2U4NTRmLi40MjIzYTIzNTJk
+NDUgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0
+M2EtcmRiLmR0cwo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEw
+NDNhLXJkYi5kdHMKPiBAQCAtMTUsNyArMTUsNiBAQAo+ICAJbW9kZWwgPSAiTFMxMDQzQSBSREIg
+Qm9hcmQiOwo+ICAKPiAgCWFsaWFzZXMgewo+IC0JCWNyeXB0byA9ICZjcnlwdG87Cj4gIAkJc2Vy
+aWFsMCA9ICZkdWFydDA7Cj4gIAkJc2VyaWFsMSA9ICZkdWFydDE7Cj4gIAkJc2VyaWFsMiA9ICZk
+dWFydDI7Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1s
+czEwNDNhLmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQzYS5k
+dHNpCj4gaW5kZXggNzAwNTdiNGU0NmU4Li4xMGM0ODZiZTMyYjMgMTAwNjQ0Cj4gLS0tIGEvYXJj
+aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0M2EuZHRzaQo+ICsrKyBiL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDNhLmR0c2kKPiBAQCAtMTgsNiArMTgs
+NyBAQAo+ICAJI3NpemUtY2VsbHMgPSA8Mj47Cj4gIAo+ICAJYWxpYXNlcyB7Cj4gKwkJY3J5cHRv
+ID0gJmNyeXB0bzsKPiAgCQlmbWFuMCA9ICZmbWFuMDsKPiAgCQlldGhlcm5ldDAgPSAmZW5ldDA7
+Cj4gIAkJZXRoZXJuZXQxID0gJmVuZXQxOwo+IC0tIAo+IDIuMTcuMQo+IAoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
+aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
