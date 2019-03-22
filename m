@@ -1,60 +1,61 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 04/10] x86, olpc: Use a correct version when making up
- a battery node
-Date: Sat, 23 Mar 2019 00:25:58 +0100 (CET)
-Message-ID: <alpine.DEB.2.21.1903230020270.2157@nanos.tec.linutronix.de>
-References: <20190310162419.11861-1-lkundrak@v3.sk> <20190310162419.11861-5-lkundrak@v3.sk>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 1/1] dt-bindings: clock: meson8b: drop the "ABP" clock
+ definition
+Date: Fri, 22 Mar 2019 16:53:33 -0700
+Message-ID: <7hmulmzcsi.fsf@baylibre.com>
+References: <20190319214123.27219-1-martin.blumenstingl@googlemail.com>
+ <20190319214123.27219-2-martin.blumenstingl@googlemail.com>
+ <b7d2edf1-da66-a09f-5f29-28f37ce3f06b@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190310162419.11861-5-lkundrak@v3.sk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Sebastian Reichel <sre@kernel.org>, Darren Hart <dvhart@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, x86@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b7d2edf1-da66-a09f-5f29-28f37ce3f06b@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, jbrunet@baylibre.com, linux-amlogic@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 10 Mar 2019, Lubomir Rintel wrote:
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-Subject prefix ...
+> On 19/03/2019 22:41, Martin Blumenstingl wrote:
+>> Commit 8e1dd17c8b0e3f ("dt-bindings: clock: meson8b: export the CPU post
+>> dividers") added a new clock ID "CLKID_ABP" which contains a typo. This
+>> was fixed by adding a new (typo-free) #define CLKID_APB in
+>> commit 40d08f774c17ad ("dt-bindings: clock: meson8b: add APB clock
+>> definition").
+>> Now that the new #define is used by the driver we can remove the old
+>> one (because the old one is not used anywhere).
+>> 
+>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>> ---
+>>  include/dt-bindings/clock/meson8b-clkc.h | 1 -
+>>  1 file changed, 1 deletion(-)
+>> 
+>> diff --git a/include/dt-bindings/clock/meson8b-clkc.h b/include/dt-bindings/clock/meson8b-clkc.h
+>> index 8067077a62ca..cd11628f50f8 100644
+>> --- a/include/dt-bindings/clock/meson8b-clkc.h
+>> +++ b/include/dt-bindings/clock/meson8b-clkc.h
+>> @@ -103,7 +103,6 @@
+>>  #define CLKID_MPLL1		94
+>>  #define CLKID_MPLL2		95
+>>  #define CLKID_NAND_CLK		112
+>> -#define CLKID_ABP		124
+>>  #define CLKID_APB		124
+>>  #define CLKID_PERIPH		126
+>>  #define CLKID_AXI		128
+>> 
+>
+> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
 
-> The XO-1 and XO-1.5 batteries apparently differ in an ability to report
-> ambient temperature. We need to use a different compatible string for the
-> XO-1.5 battery.
-> 
-> Previously olpc_dt_fixup() used the presence od the battery node's
+Neil / Jerome, I'm assuming you will queue this via the clk-meson tree?
 
-s/od/of/
-
->  
-> +int olpc_dt_compatible_match(phandle node, const char *compat)
-> +{
-> +	char buf[64];
-> +	int plen;
-> +	char *p;
-> +	int len;
-
-Please coalesce variables of the same type. No point in wasting space.
-
-	char buf[64], *p;
-	int plen, len;
-
-Hmm?
-
-> +
-> +		if (olpc_dt_compatible_match(node, "olpc,xo1-battery")) {
-> +			/* If we have a olpc,xo1-battery compatible, then we're
-> +			 * running a new enough firmware that already has
-> +			 * the dcon node.
-> +			 */
-
-Comment style:
-
-       		 	 /*
-			  * This is a proper multi line comment even
-			  * if networking people use that horrible style
-			  * above.
-			  */
-
-With those nitpicks fixed:
-
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Kevin
