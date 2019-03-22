@@ -1,212 +1,43 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4] arm64: dts: fsl: imx8mq: enable the multi sensor TMU
-Date: Fri, 22 Mar 2019 10:11:04 +0800
-Message-ID: <20190322021102.GW12513@dragon>
-References: <20190311213124.29325-1-angus@akkea.ca>
- <20190321125252.4498-1-angus@akkea.ca>
+Subject: Re: [PATCH v2 1/3] arm64: dts: imx: Add i.mx8mm dtsi support
+Date: Fri, 22 Mar 2019 10:13:32 +0800
+Message-ID: <20190322021331.GX12513@dragon>
+References: <1552369779-7614-1-git-send-email-ping.bai@nxp.com>
+ <20190321082253.GD12513@dragon>
+ <VI1PR0402MB351954C0C30D3AD28C77A77187430@VI1PR0402MB3519.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190321125252.4498-1-angus@akkea.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc: Fabio Estevam <festevam@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Carlo Caione <ccaione@baylibre.com>, Abel Vesa <abel.vesa@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <VI1PR0402MB351954C0C30D3AD28C77A77187430@VI1PR0402MB3519.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacky Bai <ping.bai@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 05:52:52AM -0700, Angus Ainslie (Purism) wrote:
-> Add the imx8mq TMU (Thermal management unit) nodes for CPU,
-> GPU, and VPU.
+On Fri, Mar 22, 2019 at 01:55:45AM +0000, Jacky Bai wrote:
+> > > +			gpc: gpc@303a0000 {
+> > 
+> > interrupt-controller for node name?
+> >
 > 
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> For the i.MX8MM and future i.MX8M serious, it is not very necessary to use GPC as a interrupt controller
+> in linux kernel side. For system suspend, ATF can config the GPC IMRs based on IRQ enable status in GICv3.
+> For cpuidle support, GICv3 has per-CPU core wakeup signals connected to the GPC logic, so GICv3 has the ability
+> to wake up the corresponding CPU core if the IRQ is routed to that CPU core. Additionally, I am thinking to
+> config the GPC as a secure resource in the future.
+> 
+> Maybe, we can remove the GPC node for now. If necessary, we can add it back again?
 
-Subject prefix 'arm64: dts: imx8mq:' would be good enough.  I changed it
-and applied patch.
+Sounds good to me.
 
 Shawn
-
-> ---
-> 
-> Changes since v3:
-> 
-> Moved the annotation.
-> 
-> Changes since v2:
-> 
-> Updated alert and critical temps for commercial parts.
-> Fixed node names.
-> 
-> Changes since v1:
-> 
-> Removed references to multi sensor patch.
-> 
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 118 ++++++++++++++++++++++
->  1 file changed, 118 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index b39c6c75c043..81d5ce1b1ec1 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -8,6 +8,7 @@
->  #include <dt-bindings/power/imx8mq-power.h>
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/thermal/thermal.h>
->  #include "imx8mq-pinfunc.h"
->  
->  / {
-> @@ -89,6 +90,7 @@
->  			reg = <0x0>;
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		A53_1: cpu@1 {
-> @@ -97,6 +99,7 @@
->  			reg = <0x1>;
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		A53_2: cpu@2 {
-> @@ -105,6 +108,7 @@
->  			reg = <0x2>;
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		A53_3: cpu@3 {
-> @@ -113,6 +117,7 @@
->  			reg = <0x3>;
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		A53_L2: l2-cache0 {
-> @@ -210,6 +215,119 @@
->  				#interrupt-cells = <2>;
->  			};
->  
-> +			tmu: tmu@30260000 {
-> +				compatible = "fsl,imx8mq-tmu";
-> +				reg = <0x30260000 0x10000>;
-> +				interrupt = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> +				little-endian;
-> +				fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
-> +				fsl,tmu-calibration = <0x00000000 0x00000023
-> +						       0x00000001 0x00000029
-> +						       0x00000002 0x0000002f
-> +						       0x00000003 0x00000035
-> +						       0x00000004 0x0000003d
-> +						       0x00000005 0x00000043
-> +						       0x00000006 0x0000004b
-> +						       0x00000007 0x00000051
-> +						       0x00000008 0x00000057
-> +						       0x00000009 0x0000005f
-> +						       0x0000000a 0x00000067
-> +						       0x0000000b 0x0000006f
-> +
-> +						       0x00010000 0x0000001b
-> +						       0x00010001 0x00000023
-> +						       0x00010002 0x0000002b
-> +						       0x00010003 0x00000033
-> +						       0x00010004 0x0000003b
-> +						       0x00010005 0x00000043
-> +						       0x00010006 0x0000004b
-> +						       0x00010007 0x00000055
-> +						       0x00010008 0x0000005d
-> +						       0x00010009 0x00000067
-> +						       0x0001000a 0x00000070
-> +
-> +						       0x00020000 0x00000017
-> +						       0x00020001 0x00000023
-> +						       0x00020002 0x0000002d
-> +						       0x00020003 0x00000037
-> +						       0x00020004 0x00000041
-> +						       0x00020005 0x0000004b
-> +						       0x00020006 0x00000057
-> +						       0x00020007 0x00000063
-> +						       0x00020008 0x0000006f
-> +
-> +						       0x00030000 0x00000015
-> +						       0x00030001 0x00000021
-> +						       0x00030002 0x0000002d
-> +						       0x00030003 0x00000039
-> +						       0x00030004 0x00000045
-> +						       0x00030005 0x00000053
-> +						       0x00030006 0x0000005f
-> +						       0x00030007 0x00000071>;
-> +				#thermal-sensor-cells =  <1>;
-> +			};
-> +
-> +			thermal-zones {
-> +				cpu-thermal {
-> +					polling-delay-passive = <250>;
-> +					polling-delay = <2000>;
-> +					thermal-sensors = <&tmu 0>;
-> +
-> +					trips {
-> +						cpu_alert: cpu-alert {
-> +							temperature = <80000>;
-> +							hysteresis = <2000>;
-> +							type = "passive";
-> +						};
-> +
-> +						cpu-crit {
-> +							temperature = <90000>;
-> +							hysteresis = <2000>;
-> +							type = "critical";
-> +						};
-> +					};
-> +
-> +					cooling-maps {
-> +						map0 {
-> +							trip = <&cpu_alert>;
-> +							cooling-device =
-> +								<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +								<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +								<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +								<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +						};
-> +					};
-> +				};
-> +
-> +				gpu-thermal {
-> +					polling-delay-passive = <250>;
-> +					polling-delay = <2000>;
-> +					thermal-sensors = <&tmu 1>;
-> +
-> +					trips {
-> +						gpu-crit {
-> +							temperature = <90000>;
-> +							hysteresis = <2000>;
-> +							type = "critical";
-> +						};
-> +					};
-> +				};
-> +
-> +				vpu-thermal {
-> +					polling-delay-passive = <250>;
-> +					polling-delay = <2000>;
-> +					thermal-sensors = <&tmu 2>;
-> +
-> +					trips {
-> +						vpu-crit {
-> +							temperature = <90000>;
-> +							hysteresis = <2000>;
-> +							type = "critical";
-> +						};
-> +					};
-> +				};
-> +			};
-> +
->  			wdog1: watchdog@30280000 {
->  				compatible = "fsl,imx8mq-wdt", "fsl,imx21-wdt";
->  				reg = <0x30280000 0x10000>;
-> -- 
-> 2.17.1
-> 
