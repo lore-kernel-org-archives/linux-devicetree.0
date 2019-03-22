@@ -1,103 +1,42 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 2/6] dmaengine: sun6i: Add a quirk for additional mbus
- clock
-Date: Fri, 22 Mar 2019 14:03:25 +0100
-Message-ID: <20190322130325.jomwzsntzwjt6zhj@flea>
-References: <20190307165829.9086-1-jernej.skrabec@siol.net>
- <20190307165829.9086-3-jernej.skrabec@siol.net>
- <20190316110753.GH5348@vkoul-mobl>
- <2451376.qVWA8nfu3q@jernej-laptop>
- <20190322125940.GE5348@vkoul-mobl>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 0/4] ARM: da850: enable cpufreq in DT mode
+Date: Fri, 22 Mar 2019 14:31:01 +0100
+Message-ID: <20190322133105.5945-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cx4t6dej4e6ikper"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190322125940.GE5348@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>, wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, dan.j.williams@intel.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
---cx4t6dej4e6ikper
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series adds cpufreq-dt operating points for da850 boards supported
+with device tree (da850-lcdk, da850-lego-ev3, da850-evm) and also
+includes a fix for the da850-evm boardfile which checks an unset variable
+to determine the highest available frequency for cpufreq.
 
-On Fri, Mar 22, 2019 at 06:29:40PM +0530, Vinod Koul wrote:
-> On 16-03-19, 12:23, Jernej =C5=A0krabec wrote:
-> > Hi!
-> >
-> > Dne sobota, 16. marec 2019 ob 12:07:53 CET je Vinod Koul napisal(a):
-> > > On 07-03-19, 17:58, Jernej Skrabec wrote:
-> > > > H6 DMA controller needs additional mbus clock to be enabled.
-> > > >
-> > > > Add a quirk for it and handle it accordingly.
-> > > >
-> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > ---
-> > > >
-> > > >  drivers/dma/sun6i-dma.c | 23 ++++++++++++++++++++++-
-> > > >  1 file changed, 22 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-> > > > index 0cd13f17fc11..761555080325 100644
-> > > > --- a/drivers/dma/sun6i-dma.c
-> > > > +++ b/drivers/dma/sun6i-dma.c
-> > > > @@ -129,6 +129,7 @@ struct sun6i_dma_config {
-> > > >
-> > > >  	u32 dst_burst_lengths;
-> > > >  	u32 src_addr_widths;
-> > > >  	u32 dst_addr_widths;
-> > > >
-> > > > +	bool mbus_clk;
-> > > >
-> > > >  };
-> > > >
-> > > >  /*
-> > > >
-> > > > @@ -182,6 +183,7 @@ struct sun6i_dma_dev {
-> > > >
-> > > >  	struct dma_device	slave;
-> > > >  	void __iomem		*base;
-> > > >  	struct clk		*clk;
-> > > >
-> > > > +	struct clk		*clk_mbus;
-> > >
-> > > So rather than have mbus_clk and then a ptr, why not use the ptr and =
-use
-> > > NULL value to check for..?
-> > >
-> >
-> > I'm not sure what you mean here. clk_mbus will hold a reference to a cl=
-ock
-> > retrieved by devm_clk_get() so it has to be "struct clk *".
-> >
-> > What I'm missing here?
->
-> IIRC there were two variable one clk ptr and one an integer to mark
-> presence, you may be able to skip variable and use ptr..
+Last patch enables CPUFREQ_DT in davinci_all_defconfig.
 
-If we're doing that, then we would effectively make it optional. That
-DMA engine cannot operate without it.
+v1 -> v2:
+- use the VDCDC3_1.2V regulator as cpu-supply on da850-evm
 
-Maxime
+Bartosz Golaszewski (2):
+  ARM: davinci: fix cpufreq registration on da850-evm
+  ARM: dts: da850-evm: enable cpufreq
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+David Lechner (2):
+  ARM: dts: da850: add cpu node and operating points to DT
+  ARM: davinci_all_defconfig: Enable CPUFREQ_DT
 
---cx4t6dej4e6ikper
-Content-Type: application/pgp-signature; name="signature.asc"
+ arch/arm/boot/dts/da850-evm.dts         | 12 ++++++
+ arch/arm/boot/dts/da850-lcdk.dts        | 31 ++++++++++++++
+ arch/arm/boot/dts/da850-lego-ev3.dts    | 30 +++++++++++++
+ arch/arm/boot/dts/da850.dtsi            | 56 +++++++++++++++++++++++++
+ arch/arm/configs/davinci_all_defconfig  |  1 +
+ arch/arm/mach-davinci/board-da850-evm.c | 12 +-----
+ 6 files changed, 131 insertions(+), 11 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXJTdDgAKCRDj7w1vZxhR
-xSbUAP9EeVKNwv86V4iEt039yt/IphxtO7I7GGSmGK6zrirNGAD9EwA3pUdJC38O
-NIazXox9JWvWXSr0N0gbAG+dlU3cRgQ=
-=8KMA
------END PGP SIGNATURE-----
-
---cx4t6dej4e6ikper--
+-- 
+2.20.1
