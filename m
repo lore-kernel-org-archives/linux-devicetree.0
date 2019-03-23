@@ -1,114 +1,215 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [BUG] gpiolib: spi chip select legacy support breaks modern chip select and whitens the GTA04 LCD panel
-Date: Sat, 23 Mar 2019 15:40:29 +0100
-Message-ID: <5488EF42-08DB-4273-95FF-49ED31E27472@goldelico.com>
-References: <7509BFB6-36E4-441A-9F16-7A4FEE7F7CF3@goldelico.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH V3 3/3] hwmon: pwm-fan: Add RPM support via external
+ interrupt
+Date: Sat, 23 Mar 2019 08:03:36 -0700
+Message-ID: <53485197-01e3-1f84-df93-a01164e5cded@roeck-us.net>
+References: <1553243043-19486-1-git-send-email-stefan.wahren@i2se.com>
+ <1553243043-19486-4-git-send-email-stefan.wahren@i2se.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7509BFB6-36E4-441A-9F16-7A4FEE7F7CF3@goldelico.com>
+In-Reply-To: <1553243043-19486-4-git-send-email-stefan.wahren@i2se.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-spi@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>
+To: Stefan Wahren <stefan.wahren@i2se.com>, Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Robin Murphy <robin.murphy@arm.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-I am sorry to report that your patch
+On 3/22/19 1:24 AM, Stefan Wahren wrote:
+> This adds RPM support to the pwm-fan driver in order to use with
+> fancontrol/pwmconfig. This feature is intended for fans with a tachometer
+> output signal, which generate a defined number of pulses per revolution.
+> 
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> ---
+>   drivers/hwmon/pwm-fan.c | 100 +++++++++++++++++++++++++++++++++++++++++++++++-
+>   1 file changed, 99 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> index 167221c..c8fb6a3 100644
+> --- a/drivers/hwmon/pwm-fan.c
+> +++ b/drivers/hwmon/pwm-fan.c
+> @@ -18,6 +18,7 @@
+>   
+>   #include <linux/hwmon.h>
+>   #include <linux/hwmon-sysfs.h>
+> +#include <linux/interrupt.h>
+>   #include <linux/module.h>
+>   #include <linux/mutex.h>
+>   #include <linux/of.h>
+> @@ -26,6 +27,7 @@
+>   #include <linux/regulator/consumer.h>
+>   #include <linux/sysfs.h>
+>   #include <linux/thermal.h>
+> +#include <linux/timer.h>
+>   
+>   #define MAX_PWM 255
+>   
+> @@ -33,6 +35,14 @@ struct pwm_fan_ctx {
+>   	struct mutex lock;
+>   	struct pwm_device *pwm;
+>   	struct regulator *reg_en;
+> +
+> +	int irq;
+> +	atomic_t pulses;
+> +	unsigned int rpm;
+> +	u32 pulses_per_revolution;
+> +	ktime_t sample_start;
+> +	struct timer_list rpm_timer;
+> +
+>   	unsigned int pwm_value;
+>   	unsigned int pwm_fan_state;
+>   	unsigned int pwm_fan_max_state;
+> @@ -40,6 +50,32 @@ struct pwm_fan_ctx {
+>   	struct thermal_cooling_device *cdev;
+>   };
+>   
+> +/* This handler assumes self resetting edge triggered interrupt. */
+> +static irqreturn_t pulse_handler(int irq, void *dev_id)
+> +{
+> +	struct pwm_fan_ctx *ctx = dev_id;
+> +
+> +	/* Avoid possible overflow */
+> +	if (atomic_read(&ctx->pulses) < 100000)
+> +		atomic_inc(&ctx->pulses);
+> +
 
-(1) c1c04cea13dc gpio: of: Fix logic inversion
+100000 * 60 * 1000 = 6,000,000,000, which is already above 32 bit,
+so you still get the overflow.
 
-together with the basic patch
+Any limit would have to be below (0xffffffff / (60 * sample_ms))
+for the maximum expected value of sample_ms.
 
-(2) 6953c57ab172 gpio: of: Handle SPI chipselect legacy bindings
+You could select a working limit, such as 32768 (that is just as arbitrary
+as 100,000, but at least it works up to sample_ms above 2,000), or check
+for overflow when calculating rpm.
 
-leads to a severe regression for our GTA04 board. The symptom was easy =
-to see but really difficult
-to understand: the LCD panel stopped working (did only show white =
-pixels) after upgrading from
-v5.0 to v5.1-rc1.
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static void sample_timer(struct timer_list *t)
+> +{
+> +	struct pwm_fan_ctx *ctx = from_timer(ctx, t, rpm_timer);
+> +	int pulses, sample_ms;
+> +
+> +	pulses = atomic_read(&ctx->pulses);
+> +	atomic_sub(pulses, &ctx->pulses);
+> +	sample_ms = ktime_ms_delta(ktime_get(), ctx->sample_start);
+> +	ctx->rpm = pulses * 60 * sample_ms / 1000 / ctx->pulses_per_revolution;
+> +
+> +	ctx->sample_start = ktime_get();
+> +	mod_timer(&ctx->rpm_timer, jiffies + HZ);
+> +}
+> +
+>   static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
+>   {
+>   	unsigned long period;
+> @@ -100,15 +136,49 @@ static ssize_t pwm_show(struct device *dev, struct device_attribute *attr,
+>   	return sprintf(buf, "%u\n", ctx->pwm_value);
+>   }
+>   
+> +static ssize_t rpm_show(struct device *dev,
+> +			struct device_attribute *attr, char *buf)
+> +{
+> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+> +
+> +	return sprintf(buf, "%u\n", ctx->rpm);
+> +}
+>   
+>   static SENSOR_DEVICE_ATTR_RW(pwm1, pwm, 0);
+> +static SENSOR_DEVICE_ATTR_RO(fan1_input, rpm, 0);
+>   
+>   static struct attribute *pwm_fan_attrs[] = {
+>   	&sensor_dev_attr_pwm1.dev_attr.attr,
+> +	&sensor_dev_attr_fan1_input.dev_attr.attr,
+>   	NULL,
+>   };
+>   
+> -ATTRIBUTE_GROUPS(pwm_fan);
+> +static umode_t pwm_fan_attrs_visible(struct kobject *kobj, struct attribute *a,
+> +				     int n)
+> +{
+> +	struct device *dev = container_of(kobj, struct device, kobj);
+> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+> +	struct device_attribute *devattr;
+> +
+> +	/* Hide fan_input in case no interrupt is available  */
+> +	devattr = container_of(a, struct device_attribute, attr);
+> +	if (devattr == &sensor_dev_attr_fan1_input.dev_attr) {
+> +		if (ctx->irq < 0)
+> +			return 0;
+> +	}
+> +
+> +	return a->mode;
+> +}
+> +
+> +static const struct attribute_group pwm_fan_group = {
+> +	.attrs = pwm_fan_attrs,
+> +	.is_visible = pwm_fan_attrs_visible,
+> +};
+> +
+> +static const struct attribute_group *pwm_fan_groups[] = {
+> +	&pwm_fan_group,
+> +	NULL,
+> +};
+>   
+>   /* thermal cooling device callbacks */
+>   static int pwm_fan_get_max_state(struct thermal_cooling_device *cdev,
+> @@ -261,6 +331,32 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>   		goto err_reg_disable;
+>   	}
+>   
+> +	timer_setup(&ctx->rpm_timer, sample_timer, 0);
+> +
+> +	if (of_property_read_u32(pdev->dev.of_node, "pulses-per-revolution",
+> +				 &ctx->pulses_per_revolution)) {
+> +		ctx->pulses_per_revolution = 2;
+> +	}
+> +
+> +	if (!ctx->pulses_per_revolution) {
+> +		dev_err(&pdev->dev, "pulses-per-revolution can't be zero.\n");
+> +		ret = -EINVAL;
+> +		goto err_pwm_disable;
+> +	}
+> +
+> +	atomic_set(&ctx->pulses, 0);
 
-In a long bisect session, I was able to identify patch (1) as the first =
-bad commit and started
-to analyse what the code is supposed to do and then found the older =
-patch (2).
+Already initialized with 0.
 
-I learned that it tries to handle a legacy "spi-cs-high" property of SPI =
-slaves, but was stopped
-from doing so by a bug (1). So only with both patches, the legacy =
-handler becomes active which
-explains why it was not noticed earlier.
+> +	ctx->irq = platform_get_irq(pdev, 0);
+> +	if (ctx->irq >= 0) {
 
-Now, our GTA04 device tree from 2014 (v3.16-rc1) was already written =
-without any legacy spi properties
-in mind
+I have seen other patches recently, changing this check to > 0.
+I never know what a valid irq is, but it may be prudent to change this to > 0
+(and the check in is_visible to <= 0).
 
-(3) c2e138bc8ed80 ARM: dts: omap3-gta04: Add display support
+Either case, the function can return -EPROBE_DEFER, which should be handled
+and not be ignored.
 
-So it has no spi-cs-high property and just defines constant 0 for the =
-flags (GPIO_ACTIVE_HIGH after
-some fix from 2015) assuming that this is sufficient. And it was until =
-before v5.1-rc1.
+> +		ret = devm_request_irq(&pdev->dev, ctx->irq, pulse_handler, 0,
+> +				       pdev->name, ctx);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "Can't get interrupt working.\n");
+> +			goto err_pwm_disable;
+> +		}
+> +		ctx->sample_start = ktime_get();
+> +		mod_timer(&ctx->rpm_timer, jiffies + HZ);
+> +	}
+> +
+>   	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
+>   						       ctx, pwm_fan_groups);
+>   	if (IS_ERR(hwmon)) {
 
-This is now wrongly turned into an GPIO_ACTIVE_LOW by your legacy fix =
-which makes the panel
-stop feeling responsible to receive any initialization data over SPI.
+del_timer_sync() here ?
 
-Yes, there is a new message in the boot log for this case, but to be =
-honest, nobody did see it
-before I found the code that does print it. A non-working LCD panel was =
-a too distracting indicator
-and could have been everything (most likely drm or the panel driver or =
-clock or regulator or
-dma setup or whatever)...
-
-So your assumption that this case is the exception as stated in commit =
-message of (2) seems not
-to be true. IMHO it should be standard (at least since 2015) that there =
-is GPIO_ACTIVE_HIGH and
-no spi-cs-high. So your patch (2) gives a legacy property a new priority =
-over modern style.
-
-BTW: the spi-cs-high is described as optional and indicative in the =
-bindings document. But it
-now appears to be required to get a cs-high.
-
-By the way, the detection of spi-cs-high still seems to be wrong as of =
-v5.1-rc1. Shouldn't it
-look at the child node for "spi-cs-high" and not the controller node =
-pointer? As far as I understand
-the current code, all such legacy flags are therefore ignored and should =
-break all boards that
-use spi-cs-high and GPIO_ACTIVE_HIGH.
-
-Of course, adding spi-cs-high; (at the controller node!) of our device =
-tree can make it work,
-but I do not like to be forced to introduce a legacy property to our DTS =
-file, just because
-gpio-lib tries to fix a legacy problem in the SPI subsystem (quite =
-mind-twisting cross-subsystem
-dependencies, aren't they?).
-
-The real problem seems to be that the legacy spi-cs-high property itself =
-still exists although
-it should not be needed for ca. 5 years. =46rom all this I conclude that =
-nobody really needs this
-legacy support or does test it. And if he/she does, they should better =
-fix the cs-gpios entries
-in the DTS and remove spi-cs-high completely.
-
-Therefore I would suggest:
-* revert both patches as soon as possible (v5.1-rc series) to remove the =
-unexpected spi legacy
-  code handler from the gpio subsystem.
-* replace all uses of spi-cs-high by correct cs-gpios flags - unless =
-they already are there.
-  fgrep spi-cs-high arch/*/boot/dts/*.dts* shows only a handful of DTS =
-candidates.
-* fix spi-bus.txt documentation to describe this potential pitfall.
-
-Then we can leave our GTA04 display and device tree untouched as from =
-v3.16-rc1 up to v5.0.x.
-
-BR and thanks,
-Nikolaus
+> @@ -306,6 +402,8 @@ static int pwm_fan_remove(struct platform_device *pdev)
+>   	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
+>   
+>   	thermal_cooling_device_unregister(ctx->cdev);
+> +	del_timer_sync(&ctx->rpm_timer);
+> +
+>   	if (ctx->pwm_value)
+>   		pwm_disable(ctx->pwm);
+>   
+> 
