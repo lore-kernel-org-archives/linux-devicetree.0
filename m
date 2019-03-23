@@ -1,68 +1,75 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v2 1/2] EDAC: add EDAC driver for DMC520
-Date: Sat, 23 Mar 2019 10:23:42 +0100
-Message-ID: <20190323092342.GD23698@zn.tnic>
-References: <BN7PR08MB5572D3A5217C4749AC4E7DC4AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/1] dt-bindings: clock: meson8b: drop the "ABP" clock
+ definition
+Date: Sat, 23 Mar 2019 10:54:34 +0100
+Message-ID: <5C96025A.1010005@baylibre.com>
+References: <20190319214123.27219-1-martin.blumenstingl@googlemail.com>
+ <20190319214123.27219-2-martin.blumenstingl@googlemail.com>
+ <b7d2edf1-da66-a09f-5f29-28f37ce3f06b@baylibre.com>
+ <7hmulmzcsi.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <BN7PR08MB5572D3A5217C4749AC4E7DC4AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rui Zhao <ruizhao@outlook.com>, "james.morse@arm.com" <james.morse@arm.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "okaya@kernel.org" <okaya@kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "sashal@kernel.org" <sashal@kernel.org>, "hangl@microsoft.com" <hangl@microsoft.com>, "lewan@microsoft.com" <lewan@microsoft.com>, Rui Zhao <ruizhao@microsoft.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <7hmulmzcsi.fsf@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, jbrunet@baylibre.com, linux-amlogic@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Just some initial comments. The general direction of this should be
-looked at by James.
 
-On Thu, Mar 07, 2019 at 01:24:01AM +0000, Rui Zhao wrote:
-> From: Rui Zhao <ruizhao@microsoft.com>
-> 
-> New driver supports error detection and correction on
-> the devices with ARM DMC-520 memory controller.
-> 
-> Signed-off-by: Rui Zhao <ruizhao@microsoft.com>
-> ---
->  MAINTAINERS                |   6 +
->  drivers/edac/Kconfig       |   7 +
->  drivers/edac/Makefile      |   1 +
->  drivers/edac/dmc520_edac.c | 619 +++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 633 insertions(+)
->  create mode 100644 drivers/edac/dmc520_edac.c
 
-...
+Le 23/03/2019 00:53, Kevin Hilman a =E9crit :
+> Neil Armstrong <narmstrong@baylibre.com> writes:
+> =
 
-> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-> index 716096d..793d64f 100644
-> --- a/drivers/edac/Makefile
-> +++ b/drivers/edac/Makefile
-> @@ -78,3 +78,4 @@ obj-$(CONFIG_EDAC_SYNOPSYS)		+= synopsys_edac.o
->  obj-$(CONFIG_EDAC_XGENE)		+= xgene_edac.o
->  obj-$(CONFIG_EDAC_TI)			+= ti_edac.o
->  obj-$(CONFIG_EDAC_QCOM)			+= qcom_edac.o
-> +obj-$(CONFIG_EDAC_DMC520)		+= dmc520_edac.o
-> diff --git a/drivers/edac/dmc520_edac.c b/drivers/edac/dmc520_edac.c
-> new file mode 100644
-> index 0000000..c70ce4e
-> --- /dev/null
-> +++ b/drivers/edac/dmc520_edac.c
-> @@ -0,0 +1,619 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +// EDAC driver for DMC-520
+>> On 19/03/2019 22:41, Martin Blumenstingl wrote:
+>>> Commit 8e1dd17c8b0e3f ("dt-bindings: clock: meson8b: export the CPU post
+>>> dividers") added a new clock ID "CLKID_ABP" which contains a typo. This
+>>> was fixed by adding a new (typo-free) #define CLKID_APB in
+>>> commit 40d08f774c17ad ("dt-bindings: clock: meson8b: add APB clock
+>>> definition").
+>>> Now that the new #define is used by the driver we can remove the old
+>>> one (because the old one is not used anywhere).
+>>>
+>>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>>> ---
+>>>  include/dt-bindings/clock/meson8b-clkc.h | 1 -
+>>>  1 file changed, 1 deletion(-)
+>>>
+>>> diff --git a/include/dt-bindings/clock/meson8b-clkc.h b/include/dt-bind=
+ings/clock/meson8b-clkc.h
+>>> index 8067077a62ca..cd11628f50f8 100644
+>>> --- a/include/dt-bindings/clock/meson8b-clkc.h
+>>> +++ b/include/dt-bindings/clock/meson8b-clkc.h
+>>> @@ -103,7 +103,6 @@
+>>>  #define CLKID_MPLL1		94
+>>>  #define CLKID_MPLL2		95
+>>>  #define CLKID_NAND_CLK		112
+>>> -#define CLKID_ABP		124
+>>>  #define CLKID_APB		124
+>>>  #define CLKID_PERIPH		126
+>>>  #define CLKID_AXI		128
+>>>
+>>
+>> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+> =
 
-No "//" commenting in .c files. Make sure to have a cursory look at
+> Neil / Jerome, I'm assuming you will queue this via the clk-meson tree?
 
-Documentation/process/submitting-patches.rst
+Yes,
 
-Also, this patch doesn't apply - please redo it against:
+Neil
 
-https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=for-next
+> =
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+> Kevin
+> =
