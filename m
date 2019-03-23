@@ -1,34 +1,52 @@
-From: syzbot <syzbot+f3e3434787332dfc1c47@syzkaller.appspotmail.com>
-Subject: Re: WARNING: bad unlock balance detected! (3)
-Date: Sat, 23 Mar 2019 07:14:00 -0700
-Message-ID: <0000000000003749360584c395ba@google.com>
-References: <000000000000685dc805829e835c@google.com>
+From: qiaozhou <qiaozhou@asrmicro.com>
+Subject: [PATCH 0/7] Add dts files for ASR8751C SoC
+Date: Sat, 23 Mar 2019 22:01:21 +0800
+Message-ID: <1553349688-1946-1-git-send-email-qiaozhou@asrmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <000000000000685dc805829e835c@google.com>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net, devicetree@vger.kernel.org, jbrunet@baylibre.com, khilman@baylibre.com, kuznet@ms2.inr.ac.ru, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, robh+dt@kernel.org, syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: qiaozhou <qiaozhou@asrmicro.com>
 List-Id: devicetree@vger.kernel.org
 
-syzbot has bisected this bug to:
+Add dtsi file for ASR8751C SoC and dts file for ASR8751C AquilaC development
+board. Also add necessary dt-bindings document, header files.
 
-commit ec01fb69ac8034ad6e839b31f9df167a110f868b
-Author: Jerome Brunet <jbrunet@baylibre.com>
-Date:   Wed Jan 16 17:59:47 2019 +0000
+Will add more driver of ASR8751C SoC in later patches. 
 
-     arm64: dts: meson: s400: fix emmc maximum rate
+Qiao Zhou (7):
+  dt-bindings: arm: asr: add ASR8751C bindings
+  dt-bindings: bus: add ASR8751C APB/AXI bindings
+  dt-bindings: clocks: add ASR8751C bindings
+  dt-bindings: serial: add ASR8751C serial bindings
+  dt-bindings: Add header file of ASR8751C clock driver
+  dt-bindings: add header file of ASR8751C pinctrl driver
+  arm64: dts: add dts files for asr Aquilac SoC
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10afb7cf200000
-start commit:   065b6c4c Merge tag 'devicetree-for-5.1' of git://git.kerne..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=12afb7cf200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14afb7cf200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ea4067c9a08ae046
-dashboard link: https://syzkaller.appspot.com/bug?extid=f3e3434787332dfc1c47
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a10577200000
+ .../devicetree/bindings/arm/asr/asr-8751c.txt      |   9 +
+ Documentation/devicetree/bindings/bus/asr,bus.txt  |  42 ++
+ .../devicetree/bindings/clock/asr,clock.txt        |  31 ++
+ .../devicetree/bindings/serial/asr-serial.txt      |  23 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm64/boot/dts/Makefile                       |   1 +
+ arch/arm64/boot/dts/asr/Makefile                   |   2 +
+ arch/arm64/boot/dts/asr/asr8751c-aquilac.dts       |  58 +++
+ arch/arm64/boot/dts/asr/asr8751c-pinctrl.dtsi      | 400 ++++++++++++++++++
+ arch/arm64/boot/dts/asr/asr8751c.dtsi              | 460 +++++++++++++++++++++
+ include/dt-bindings/clock/asr8751c-clk.h           | 252 +++++++++++
+ include/dt-bindings/pinctrl/asr8751c-pinfunc.h     | 341 +++++++++++++++
+ 12 files changed, 1620 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/asr/asr-8751c.txt
+ create mode 100644 Documentation/devicetree/bindings/bus/asr,bus.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/asr,clock.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/asr-serial.txt
+ create mode 100644 arch/arm64/boot/dts/asr/Makefile
+ create mode 100644 arch/arm64/boot/dts/asr/asr8751c-aquilac.dts
+ create mode 100644 arch/arm64/boot/dts/asr/asr8751c-pinctrl.dtsi
+ create mode 100644 arch/arm64/boot/dts/asr/asr8751c.dtsi
+ create mode 100644 include/dt-bindings/clock/asr8751c-clk.h
+ create mode 100644 include/dt-bindings/pinctrl/asr8751c-pinfunc.h
 
-Reported-by: syzbot+f3e3434787332dfc1c47@syzkaller.appspotmail.com
-Fixes: ec01fb69ac80 ("arm64: dts: meson: s400: fix emmc maximum rate")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- 
+2.7.4
