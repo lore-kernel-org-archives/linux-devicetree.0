@@ -1,46 +1,45 @@
-Return-Path: <SRS0=1wp7=R5=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v2 2/5] ARM: dts: imx7s: add multiplexer controls
-Date: Tue, 26 Mar 2019 11:02:24 +0000
-Message-Id: <20190326110227.7324-3-rui.silva@linaro.org>
-In-Reply-To: <20190326110227.7324-1-rui.silva@linaro.org>
-References: <20190326110227.7324-1-rui.silva@linaro.org>
+Return-Path: <SRS0=Xu2X=R2=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from vs10.datenmanufaktur-hosting.net ([213.160.73.65]:36298 "EHLO
+        vs81.iboxed.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727298AbfCWQlo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 23 Mar 2019 12:41:44 -0400
+Date: Sat, 23 Mar 2019 16:41:58 +0000 (UTC)
+From: Alexander Kurz <akurz@blala.de>
+Subject: Re: [PATCH 1/3] ARM: dts: i.MX50: Add i2c, mmc and spi aliases
+In-Reply-To: <20190322014928.GU12513@dragon>
+Message-ID: <alpine.DEB.2.20.1903231639230.10071@blala.de>
+References: <20190315211423.11308-1-akurz@blala.de> <20190322014928.GU12513@dragon>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Content-Type: text/plain; charset=US-ASCII
+Sender: devicetree-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: =?ISO-8859-15?Q?Jonathan_Neusch=E4fer?= <j.neuschaefer@gmx.net>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The IOMUXC General Purpose Register has bitfield to control video bus
-multiplexer to control the CSI input between the MIPI-CSI2 and parallel
-interface. Add that register and mask.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- arch/arm/boot/dts/imx7s.dtsi | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 9a680d3d6424..792efcd2caa1 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -497,8 +497,15 @@
- 
- 			gpr: iomuxc-gpr@30340000 {
- 				compatible = "fsl,imx7d-iomuxc-gpr",
--					"fsl,imx6q-iomuxc-gpr", "syscon";
-+					"fsl,imx6q-iomuxc-gpr", "syscon",
-+					"simple-mfd";
- 				reg = <0x30340000 0x10000>;
-+
-+				mux: mux-controller {
-+					compatible = "mmio-mux";
-+					#mux-control-cells = <0>;
-+					mux-reg-masks = <0x14 0x00000010>;
-+				};
- 			};
- 
- 			ocotp: ocotp-ctrl@30350000 {
--- 
-2.21.0
+On Fri, 22 Mar 2019, Shawn Guo wrote:
+
+> On Fri, Mar 15, 2019 at 09:14:21PM +0000, Alexander Kurz wrote:
+> > Using aliases, the devices will be enumerated properly.
+> > 
+> > Signed-off-by: Alexander Kurz <akurz@blala.de>
+> > ---
+> >  arch/arm/boot/dts/imx50.dtsi | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.dtsi
+> > index ee1e3e8bf4ec..82e7acd7fc2a 100644
+> > --- a/arch/arm/boot/dts/imx50.dtsi
+> > +++ b/arch/arm/boot/dts/imx50.dtsi
+> > @@ -26,11 +26,20 @@
+> >  		gpio3 = &gpio4;
+> >  		gpio4 = &gpio5;
+> >  		gpio5 = &gpio6;
+> > +		i2c0 = &i2c1;
+> > +		i2c1 = &i2c2;
+> 
+> Reminded by Jonathan's patch, i2c3 is missing here.  I just fixed it up.
+> Let's me know if you have a reason for not adding i2c3.
+I have missed i2c3, thanks for checking and fixing it.
+Alexander
