@@ -1,50 +1,48 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 4/4] MAINTAINERS: add maintainer for maxbotix
- ultrasonic driver
-Date: Sun, 24 Mar 2019 12:08:22 +0000
-Message-ID: <20190324120822.3afdd2e4@archlinux>
-References: <20190317203827.ocgsj24itlqzqjvc@arbad>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 0/4] clk: meson8b: add the VPU clock tree
+Date: Sun, 24 Mar 2019 16:11:00 +0100
+Message-ID: <20190324151104.18397-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190317203827.ocgsj24itlqzqjvc@arbad>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Klinger <ak@it-klinger.de>
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, arnd@arndb.de, davem@davemloft.net, gregkh@linuxfoundation.org, johan@kernel.org, khilman@baylibre.com, knaack.h@gmx.de, lars@metafoo.de, linux-kernel@vger.kernel.org, martin.blumenstingl@googlemail.com, mchehab+samsung@kernel.org, m.othacehe@gmail.com, nicolas.ferre@microchip.com, pmeerw@pmeerw.net, robh@kernel.org, songqiang1304521@gmail.com, treding@nvidia.com, techsupport@maxbotix.com
+To: narmstrong@baylibre.com, jbrunet@baylibre.com, linux-amlogic@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 17 Mar 2019 21:38:29 +0100
-Andreas Klinger <ak@it-klinger.de> wrote:
+This adds the VPU clock tree for Meson8, Meson8b and Meson8m2.
+The VPU clock tree is slightly different on all three SoCs. The details
+are explained in patch #4.
 
-> add a maintainer for the newly created ultrasonic driver family of maxbotix
-> 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-Applied.
+Meson8m2 requires the previously unsupported "gp_pll" PLL. This PLL only
+exists on Meson8m2 - Meson8 and Meson8b don't have it.
+A separate clk_hw_onecell_data is introduced for Meson8m2 (using the
+compatible string which is already available) to account for this SoC
+specific clock setup.
 
-Thanks,
+dependencies:
+This series is meant to be applied on top of my other patch from [0]:
+  dt-bindings: clock: meson8b: drop the "ABP" clock definition
 
-Jonathan
+changes since v1 at [1]:
+- fixed typo in the subject of patch #2 (spotted by Neil)
+- collected Reviewed-by tags from Neil (thank you!)
 
-> ---
->  MAINTAINERS | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index dce5c099f43c..fa054f8cc7fb 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9234,6 +9234,13 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/sound/max9860.txt
->  F:	sound/soc/codecs/max9860.*
->  
-> +MAXBOTIX ULTRASONIC RANGER IIO DRIVER
-> +M:	Andreas Klinger <ak@it-klinger.de>
-> +L:	linux-iio@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-> +F:	drivers/iio/proximity/mb1232.c
-> +
->  MAXIM MAX77802 PMIC REGULATOR DEVICE DRIVER
->  M:	Javier Martinez Canillas <javier@dowhile0.org>
->  L:	linux-kernel@vger.kernel.org
+
+[0] https://patchwork.kernel.org/patch/10860387/
+[1] https://patchwork.kernel.org/cover/10860401/
+
+
+Martin Blumenstingl (4):
+  dt-bindings: clock: meson8b: export the VPU clock
+  clk: meson: meson8b: use a separate clock table for Meson8m2
+  clk: meson: meson8b: add support for the GP_PLL clock on Meson8m2
+  clk: meson: meson8b: add the VPU clock trees
+
+ drivers/clk/meson/meson8b.c              | 422 ++++++++++++++++++++++-
+ drivers/clk/meson/meson8b.h              |  12 +-
+ include/dt-bindings/clock/meson8b-clkc.h |   1 +
+ 3 files changed, 433 insertions(+), 2 deletions(-)
+
+-- 
+2.21.0
