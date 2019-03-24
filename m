@@ -1,41 +1,53 @@
-Return-Path: <SRS0=QSCE=RW=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH RESEND] dt-bindings: irqchip: renesas-irqc: Document r8a774c0 support
-Date: Tue, 19 Mar 2019 11:02:01 +0000
-Message-Id: <1552993321-19646-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=xKYj=R3=linaro.org=bjorn.andersson@kernel.org>
+Date: Sun, 24 Mar 2019 10:01:55 -0700
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 0/6] arm64: dts: qcom: qcs404: ethernet and other updates
+Message-ID: <20190324170155.GJ27005@builder>
+References: <20190324163209.17312-1-vkoul@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190324163209.17312-1-vkoul@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Document RZ/G2E (R8A774C0) SoC bindings.
+On Sun 24 Mar 09:32 PDT 2019, Vinod Koul wrote:
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Hello Marc,
+> This series adds ethernet nodes, fixes DMA settings, fixes regulator
+> voltages and lastly adds spmi regulators for QCS404 platform
+> 
 
-I am resending this patch as per our discussion on here:
-https://patchwork.kernel.org/patch/10729743/
+Thanks Vinod, happy to see these on the list.
 
-Thanks,
-Fab
+I picked up patches 1, 2, 3 and 6.
 
- Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt | 1 +
- 1 file changed, 1 insertion(+)
+Regards,
+Bjorn
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-index 8de96a4..f977ea7 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-@@ -16,6 +16,7 @@ Required properties:
-     - "renesas,irqc-r8a7793" (R-Car M2-N)
-     - "renesas,irqc-r8a7794" (R-Car E2)
-     - "renesas,intc-ex-r8a774a1" (RZ/G2M)
-+    - "renesas,intc-ex-r8a774c0" (RZ/G2E)
-     - "renesas,intc-ex-r8a7795" (R-Car H3)
-     - "renesas,intc-ex-r8a7796" (R-Car M3-W)
-     - "renesas,intc-ex-r8a77965" (R-Car M3-N)
--- 
-2.7.4
+> Bjorn Andersson (1):
+>   arm64: dts: qcom: qcs404: Fix voltages for s5 and l3
+> 
+> Jorge Ramirez-Ortiz (1):
+>   arm64: dts: qcom: pms405: add spmi regulators
+> 
+> Khasim Syed Mohammed (1):
+>   arm64: dts: qcom: qcs404: Remove default setting of
+>     controlled-remotely for BAM DMA
+> 
+> Shawn Guo (1):
+>   arm64: dts: qcom: qcs404: Enable blsp1_uart3 for qcs404-evb
+> 
+> Vinod Koul (2):
+>   arm64: dts: qcom: qcs404: Add Ethernet node
+>   arm64: dts: qcom: qcs404: Enable ethernet for EVB-4000
+> 
+>  arch/arm64/boot/dts/qcom/pms405.dtsi         | 20 +++++
+>  arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts | 82 ++++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/qcs404-evb.dtsi     | 24 +++++-
+>  arch/arm64/boot/dts/qcom/qcs404.dtsi         | 23 +++++-
+>  4 files changed, 144 insertions(+), 5 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
