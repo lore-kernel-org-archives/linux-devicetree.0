@@ -1,53 +1,94 @@
-From: Fabien Parent <fparent@baylibre.com>
-Subject: Re: [PATCH 09/24] mmc: mtk-sd: check for valid optional memory resource
-Date: Sun, 24 Mar 2019 16:18:45 +0100
-Message-ID: <CAOwMV_zkHMZv8y_8C9kRCUsPtSbm+vPkJUNzU-_LK5=OhTkiPw@mail.gmail.com>
-References: <20190323211612.860-1-fparent@baylibre.com> <20190323211612.860-10-fparent@baylibre.com>
- <1553398466.26628.0.camel@mtksdaap41>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 1/4] iio: inkern: API for reading available iio
+ channel attribute values
+Date: Sun, 24 Mar 2019 15:27:25 +0000
+Message-ID: <20190324152725.35fed317@archlinux>
+References: <20190323172809.14407-1-contact@artur-rojek.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553398466.26628.0.camel@mtksdaap41>
+In-Reply-To: <20190323172809.14407-1-contact@artur-rojek.eu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, ryder.lee@mediatek.com, linux-watchdog@vger.kernel.org, jjian.zhou@mediatek.com, wenzhen.yu@mediatek.com, Stephane Le Provost <stephane.leprovost@mediatek.com>, sean.wang@kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, yong.mao@mediatek.com, linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org, hsin-hsiung.wang@mediatek.com, linux-serial@vger.kernel.org, linux-clk@vger.kernel.org, Chaotian Jing <chaotian.jing@mediatek.com>, linux-i2c@vger.kernel.org
+To: Artur Rojek <contact@artur-rojek.eu>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 4:34 AM Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
->
-> On Sat, 2019-03-23 at 22:15 +0100, Fabien Parent wrote:
-> > 'top_base' memory region is optional. Check that the resource is valid
-> > before using it. This avoid getting a "invalid resource" error message
-> > printed by the kernel.
-> >
-> > Signed-off-by: Fabien Parent <fparent@baylibre.com>
-> > ---
-> >  drivers/mmc/host/mtk-sd.c | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> > index 833ef0590af8..573aa127d00b 100644
-> > --- a/drivers/mmc/host/mtk-sd.c
-> > +++ b/drivers/mmc/host/mtk-sd.c
-> > @@ -2123,9 +2123,11 @@ static int msdc_drv_probe(struct platform_device *pdev)
-> >       }
-> >
-> >       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > -     host->top_base = devm_ioremap_resource(&pdev->dev, res);
-> > -     if (IS_ERR(host->top_base))
-> > -             host->top_base = NULL;
-> > +     if (ret) {
->
-> This should be res?
+On Sat, 23 Mar 2019 18:28:06 +0100
+Artur Rojek <contact@artur-rojek.eu> wrote:
 
-Indeed. Thanks, I will fix it in v2.
+> Extend the inkern API with a function for reading available
+> attribute values of iio channels.
+> 
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+If this goes through a route other than IIO (otherwise
+I'll just add a signed-off-by...)
 
-> > +             host->top_base = devm_ioremap_resource(&pdev->dev, res);
-> > +             if (IS_ERR(host->top_base))
-> > +                     host->top_base = NULL;
-> > +     }
-> >
-> >       ret = mmc_regulator_get_supply(mmc);
-> >       if (ret)
->
->
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> ---
+> 
+> Changes:
+> 
+> v2: no change
+> 
+>  drivers/iio/inkern.c         | 20 ++++++++++++++++++++
+>  include/linux/iio/consumer.h | 14 ++++++++++++++
+>  2 files changed, 34 insertions(+)
+> 
+> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+> index 06ca3f7fcc44..f19dbde3c945 100644
+> --- a/drivers/iio/inkern.c
+> +++ b/drivers/iio/inkern.c
+> @@ -733,6 +733,26 @@ static int iio_channel_read_avail(struct iio_channel *chan,
+>  						 vals, type, length, info);
+>  }
+>  
+> +int iio_read_avail_channel_attribute(struct iio_channel *chan,
+> +				     const int **vals, int *type, int *length,
+> +				     enum iio_chan_info_enum attribute)
+> +{
+> +	int ret;
+> +
+> +	mutex_lock(&chan->indio_dev->info_exist_lock);
+> +	if (!chan->indio_dev->info) {
+> +		ret = -ENODEV;
+> +		goto err_unlock;
+> +	}
+> +
+> +	ret = iio_channel_read_avail(chan, vals, type, length, attribute);
+> +err_unlock:
+> +	mutex_unlock(&chan->indio_dev->info_exist_lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(iio_read_avail_channel_attribute);
+> +
+>  int iio_read_avail_channel_raw(struct iio_channel *chan,
+>  			       const int **vals, int *length)
+>  {
+> diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
+> index 9887f4f8e2a8..b2d34831ed7c 100644
+> --- a/include/linux/iio/consumer.h
+> +++ b/include/linux/iio/consumer.h
+> @@ -290,6 +290,20 @@ int iio_read_max_channel_raw(struct iio_channel *chan, int *val);
+>  int iio_read_avail_channel_raw(struct iio_channel *chan,
+>  			       const int **vals, int *length);
+>  
+> +/**
+> + * iio_read_avail_channel_attribute() - read available channel attribute values
+> + * @chan:		The channel being queried.
+> + * @vals:		Available values read back.
+> + * @type:		Type of values read back.
+> + * @length:		Number of entries in vals.
+> + * @attribute:		info attribute to be read back.
+> + *
+> + * Returns an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST.
+> + */
+> +int iio_read_avail_channel_attribute(struct iio_channel *chan,
+> +				     const int **vals, int *type, int *length,
+> +				     enum iio_chan_info_enum attribute);
+> +
+>  /**
+>   * iio_get_channel_type() - get the type of a channel
+>   * @channel:		The channel being queried.
