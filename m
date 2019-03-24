@@ -1,41 +1,51 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 17/24] dt-bindings: wdog: mtk-wdt: add support for MT851
-Date: Sun, 24 Mar 2019 08:13:45 -0700
-Message-ID: <741058cb-ef57-bda4-9d36-d7295fab9230@roeck-us.net>
-References: <20190323211612.860-1-fparent@baylibre.com>
- <20190323211612.860-18-fparent@baylibre.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 0/2] clk: meson8b: add the video decoder clocks
+Date: Sun, 24 Mar 2019 16:14:21 +0100
+Message-ID: <20190324151423.19063-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190323211612.860-18-fparent@baylibre.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabien Parent <fparent@baylibre.com>, matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: sean.wang@kernel.org, ryder.lee@mediatek.com, hsin-hsiung.wang@mediatek.com, wenzhen.yu@mediatek.com, chaotian.jing@mediatek.com, yong.mao@mediatek.com, jjian.zhou@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-clk@vger.kernel.org, stephane.leprovost@mediatek.com
+To: narmstrong@baylibre.com, jbrunet@baylibre.com, linux-amlogic@lists.infradead.org, mjourdan@baylibre.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 3/23/19 2:16 PM, Fabien Parent wrote:
-> Add binding documentation of mtk-wdt for MT8516 SoC.
-> 
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+This adds the video decoder clocks for Meson8, Meson8b and Meson8m2.
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+The clock tree on Meson8 differs from the one one Meson8b and Meson8m2.
+Details can be found in patch #2.
 
-> ---
->   Documentation/devicetree/bindings/watchdog/mtk-wdt.txt | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> index 8682d6a93e5b..fd380eb28df5 100644
-> --- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> @@ -9,6 +9,7 @@ Required properties:
->   	"mediatek,mt7622-wdt", "mediatek,mt6589-wdt": for MT7622
->   	"mediatek,mt7623-wdt", "mediatek,mt6589-wdt": for MT7623
->   	"mediatek,mt7629-wdt", "mediatek,mt6589-wdt": for MT7629
-> +	"mediatek,mt8516-wdt", "mediatek,mt6589-wdt": for MT8516
->   
->   - reg : Specifies base physical address and size of the registers.
->   
-> 
+There are some checkpatch warnings in patch #2:
+  WARNING: please, no space before tabs
+I decided to still send the patch because we have the same inconsistency
+with all other clk_hw_onecell_data table entries. Please let me know if
+I should come up with a follow-up patch to clean them all up.
+
+Testing:
+I have not tested this with Maxime's video decoder driver yet.
+However, I manually enabled and set various frequencies for the HCODEC
+clock and verified that clkmsr reports the correct rate.
+
+Dependencies:
+This is meant to be applied on top of my other series from [0]:
+  clk: meson8b: add the VPU clock tree
+
+Changes since v1 at [1]:
+- collected Neil's and Maxime's Reviewed-by (thank you!)
+
+
+[0] https://patchwork.kernel.org/cover/10860401/
+[1] https://patchwork.kernel.org/cover/10860513/
+
+
+Martin Blumenstingl (2):
+  dt-bindings: clock: meson8b: export the video decoder clocks
+  clk: meson: meson8b: add the video decoder clock trees
+
+ drivers/clk/meson/meson8b.c              | 312 +++++++++++++++++++++++
+ drivers/clk/meson/meson8b.h              |  17 +-
+ include/dt-bindings/clock/meson8b-clkc.h |   4 +
+ 3 files changed, 332 insertions(+), 1 deletion(-)
+
+-- 
+2.21.0
