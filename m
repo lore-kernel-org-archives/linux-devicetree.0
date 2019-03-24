@@ -1,48 +1,272 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 0/4] clk: meson8b: add the VPU clock tree
-Date: Sun, 24 Mar 2019 16:11:00 +0100
-Message-ID: <20190324151104.18397-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 4/4] clk: meson: meson8b: add the VPU clock trees
+Date: Sun, 24 Mar 2019 16:11:04 +0100
+Message-ID: <20190324151104.18397-5-martin.blumenstingl@googlemail.com>
+References: <20190324151104.18397-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190324151104.18397-1-martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: narmstrong@baylibre.com, jbrunet@baylibre.com, linux-amlogic@lists.infradead.org
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the VPU clock tree for Meson8, Meson8b and Meson8m2.
-The VPU clock tree is slightly different on all three SoCs. The details
-are explained in patch #4.
+The VPU clock tree is slightly different on all three supported SoCs:
 
-Meson8m2 requires the previously unsupported "gp_pll" PLL. This PLL only
-exists on Meson8m2 - Meson8 and Meson8b don't have it.
-A separate clk_hw_onecell_data is introduced for Meson8m2 (using the
-compatible string which is already available) to account for this SoC
-specific clock setup.
+Meson8 only has an input mux (which chooses between "fclk_div4",
+"fclk_div3", "fclk_div5" and "fclk_div7"), a divider and a gate.
 
-dependencies:
-This series is meant to be applied on top of my other patch from [0]:
-  dt-bindings: clock: meson8b: drop the "ABP" clock definition
+Meson8b has two VPU clock trees, each with an input mux (using the same
+parents as the input mux on Meson8), divider and a gates. The final VPU
+clock is a glitch-free mux which chooses between VPU_1 and VPU_2.
 
-changes since v1 at [1]:
-- fixed typo in the subject of patch #2 (spotted by Neil)
-- collected Reviewed-by tags from Neil (thank you!)
+Meson8m2 uses a similar clock tree as Meson8b but the last input clock
+is different: instead of using "fclk_div7" as input Meson8m2 uses
+"gp_pll". This was probably done in hardware to improve the accuracy of
+the clock because fclk_div7 gives us 2550MHz / 7 = 364.286MHz while
+GP_PLL can achieve 364.0MHz.
 
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/clk/meson/meson8b.c | 167 ++++++++++++++++++++++++++++++++++++
+ drivers/clk/meson/meson8b.h |   9 +-
+ 2 files changed, 175 insertions(+), 1 deletion(-)
 
-[0] https://patchwork.kernel.org/patch/10860387/
-[1] https://patchwork.kernel.org/cover/10860401/
-
-
-Martin Blumenstingl (4):
-  dt-bindings: clock: meson8b: export the VPU clock
-  clk: meson: meson8b: use a separate clock table for Meson8m2
-  clk: meson: meson8b: add support for the GP_PLL clock on Meson8m2
-  clk: meson: meson8b: add the VPU clock trees
-
- drivers/clk/meson/meson8b.c              | 422 ++++++++++++++++++++++-
- drivers/clk/meson/meson8b.h              |  12 +-
- include/dt-bindings/clock/meson8b-clkc.h |   1 +
- 3 files changed, 433 insertions(+), 2 deletions(-)
-
+diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
+index 0d08f1ef7af8..8e091c2d10e6 100644
+--- a/drivers/clk/meson/meson8b.c
++++ b/drivers/clk/meson/meson8b.c
+@@ -1761,6 +1761,147 @@ static struct clk_regmap meson8m2_gp_pll = {
+ 	},
+ };
+ 
++static const char * const mmeson8b_vpu_0_1_parent_names[] = {
++	"fclk_div4", "fclk_div3", "fclk_div5", "fclk_div7"
++};
++
++static const char * const mmeson8m2_vpu_0_1_parent_names[] = {
++	"fclk_div4", "fclk_div3", "fclk_div5", "gp_pll"
++};
++
++static struct clk_regmap meson8b_vpu_0_sel = {
++	.data = &(struct clk_regmap_mux_data){
++		.offset = HHI_VPU_CLK_CNTL,
++		.mask = 0x3,
++		.shift = 9,
++	},
++	.hw.init = &(struct clk_init_data){
++		.name = "vpu_0_sel",
++		.ops = &clk_regmap_mux_ops,
++		.parent_names = mmeson8b_vpu_0_1_parent_names,
++		.num_parents = ARRAY_SIZE(mmeson8b_vpu_0_1_parent_names),
++		.flags = CLK_SET_RATE_PARENT,
++	},
++};
++
++static struct clk_regmap meson8m2_vpu_0_sel = {
++	.data = &(struct clk_regmap_mux_data){
++		.offset = HHI_VPU_CLK_CNTL,
++		.mask = 0x3,
++		.shift = 9,
++	},
++	.hw.init = &(struct clk_init_data){
++		.name = "vpu_0_sel",
++		.ops = &clk_regmap_mux_ops,
++		.parent_names = mmeson8m2_vpu_0_1_parent_names,
++		.num_parents = ARRAY_SIZE(mmeson8m2_vpu_0_1_parent_names),
++		.flags = CLK_SET_RATE_PARENT,
++	},
++};
++
++static struct clk_regmap meson8b_vpu_0_div = {
++	.data = &(struct clk_regmap_div_data){
++		.offset = HHI_VPU_CLK_CNTL,
++		.shift = 0,
++		.width = 7,
++	},
++	.hw.init = &(struct clk_init_data){
++		.name = "vpu_0_div",
++		.ops = &clk_regmap_divider_ops,
++		.parent_names = (const char *[]){ "vpu_0_sel" },
++		.num_parents = 1,
++		.flags = CLK_SET_RATE_PARENT,
++	},
++};
++
++static struct clk_regmap meson8b_vpu_0 = {
++	.data = &(struct clk_regmap_gate_data){
++		.offset = HHI_VPU_CLK_CNTL,
++		.bit_idx = 8,
++	},
++	.hw.init = &(struct clk_init_data) {
++		.name = "vpu_0",
++		.ops = &clk_regmap_gate_ops,
++		.parent_names = (const char *[]){ "vpu_0_div" },
++		.num_parents = 1,
++		.flags = CLK_SET_RATE_PARENT,
++	},
++};
++
++static struct clk_regmap meson8b_vpu_1_sel = {
++	.data = &(struct clk_regmap_mux_data){
++		.offset = HHI_VPU_CLK_CNTL,
++		.mask = 0x3,
++		.shift = 25,
++	},
++	.hw.init = &(struct clk_init_data){
++		.name = "vpu_1_sel",
++		.ops = &clk_regmap_mux_ops,
++		.parent_names = mmeson8b_vpu_0_1_parent_names,
++		.num_parents = ARRAY_SIZE(mmeson8b_vpu_0_1_parent_names),
++		.flags = CLK_SET_RATE_PARENT,
++	},
++};
++
++static struct clk_regmap meson8m2_vpu_1_sel = {
++	.data = &(struct clk_regmap_mux_data){
++		.offset = HHI_VPU_CLK_CNTL,
++		.mask = 0x3,
++		.shift = 25,
++	},
++	.hw.init = &(struct clk_init_data){
++		.name = "vpu_1_sel",
++		.ops = &clk_regmap_mux_ops,
++		.parent_names = mmeson8m2_vpu_0_1_parent_names,
++		.num_parents = ARRAY_SIZE(mmeson8m2_vpu_0_1_parent_names),
++		.flags = CLK_SET_RATE_PARENT,
++	},
++};
++
++static struct clk_regmap meson8b_vpu_1_div = {
++	.data = &(struct clk_regmap_div_data){
++		.offset = HHI_VPU_CLK_CNTL,
++		.shift = 16,
++		.width = 7,
++	},
++	.hw.init = &(struct clk_init_data){
++		.name = "vpu_1_div",
++		.ops = &clk_regmap_divider_ops,
++		.parent_names = (const char *[]){ "vpu_1_sel" },
++		.num_parents = 1,
++		.flags = CLK_SET_RATE_PARENT,
++	},
++};
++
++static struct clk_regmap meson8b_vpu_1 = {
++	.data = &(struct clk_regmap_gate_data){
++		.offset = HHI_VPU_CLK_CNTL,
++		.bit_idx = 24,
++	},
++	.hw.init = &(struct clk_init_data) {
++		.name = "vpu_1",
++		.ops = &clk_regmap_gate_ops,
++		.parent_names = (const char *[]){ "vpu_1_div" },
++		.num_parents = 1,
++		.flags = CLK_SET_RATE_PARENT,
++	},
++};
++
++static struct clk_regmap meson8b_vpu = {
++	.data = &(struct clk_regmap_mux_data){
++		.offset = HHI_VPU_CLK_CNTL,
++		.mask = 1,
++		.shift = 31,
++	},
++	.hw.init = &(struct clk_init_data){
++		.name = "vpu",
++		.ops = &clk_regmap_mux_ops,
++		.parent_names = (const char *[]){ "vpu_0", "vpu_1" },
++		.num_parents = 2,
++		.flags = CLK_SET_RATE_NO_REPARENT,
++	},
++};
++
+ /* Everything Else (EE) domain gates */
+ 
+ static MESON_GATE(meson8b_ddr, HHI_GCLK_MPEG0, 0);
+@@ -2024,6 +2165,9 @@ static struct clk_hw_onecell_data meson8_hw_onecell_data = {
+ 		[CLKID_MALI_0_SEL]	    = &meson8b_mali_0_sel.hw,
+ 		[CLKID_MALI_0_DIV]	    = &meson8b_mali_0_div.hw,
+ 		[CLKID_MALI]		    = &meson8b_mali_0.hw,
++		[CLKID_VPU_0_SEL]	    = &meson8b_vpu_0_sel.hw,
++		[CLKID_VPU_0_DIV]	    = &meson8b_vpu_0_div.hw,
++		[CLKID_VPU]		    = &meson8b_vpu_0.hw,
+ 		[CLK_NR_CLKS]		    = NULL,
+ 	},
+ 	.num = CLK_NR_CLKS,
+@@ -2210,6 +2354,13 @@ static struct clk_hw_onecell_data meson8b_hw_onecell_data = {
+ 		[CLKID_MALI_1_DIV]	    = &meson8b_mali_1_div.hw,
+ 		[CLKID_MALI_1]		    = &meson8b_mali_1.hw,
+ 		[CLKID_MALI]		    = &meson8b_mali.hw,
++		[CLKID_VPU_0_SEL]	    = &meson8b_vpu_0_sel.hw,
++		[CLKID_VPU_0_DIV]	    = &meson8b_vpu_0_div.hw,
++		[CLKID_VPU_0]		    = &meson8b_vpu_0.hw,
++		[CLKID_VPU_1_SEL]	    = &meson8b_vpu_1_sel.hw,
++		[CLKID_VPU_1_DIV]	    = &meson8b_vpu_1_div.hw,
++		[CLKID_VPU_1]		    = &meson8b_vpu_1.hw,
++		[CLKID_VPU]		    = &meson8b_vpu.hw,
+ 		[CLK_NR_CLKS]		    = NULL,
+ 	},
+ 	.num = CLK_NR_CLKS,
+@@ -2398,6 +2549,13 @@ static struct clk_hw_onecell_data meson8m2_hw_onecell_data = {
+ 		[CLKID_MALI]		    = &meson8b_mali.hw,
+ 		[CLKID_GP_PLL_DCO]	    = &meson8m2_gp_pll_dco.hw,
+ 		[CLKID_GP_PLL]		    = &meson8m2_gp_pll.hw,
++		[CLKID_VPU_0_SEL]	    = &meson8m2_vpu_0_sel.hw,
++		[CLKID_VPU_0_DIV]	    = &meson8b_vpu_0_div.hw,
++		[CLKID_VPU_0]		    = &meson8b_vpu_0.hw,
++		[CLKID_VPU_1_SEL]	    = &meson8m2_vpu_1_sel.hw,
++		[CLKID_VPU_1_DIV]	    = &meson8b_vpu_1_div.hw,
++		[CLKID_VPU_1]		    = &meson8b_vpu_1.hw,
++		[CLKID_VPU]		    = &meson8b_vpu.hw,
+ 		[CLK_NR_CLKS]		    = NULL,
+ 	},
+ 	.num = CLK_NR_CLKS,
+@@ -2562,6 +2720,15 @@ static struct clk_regmap *const meson8b_clk_regmaps[] = {
+ 	&meson8b_mali,
+ 	&meson8m2_gp_pll_dco,
+ 	&meson8m2_gp_pll,
++	&meson8b_vpu_0_sel,
++	&meson8m2_vpu_0_sel,
++	&meson8b_vpu_0_div,
++	&meson8b_vpu_0,
++	&meson8b_vpu_1_sel,
++	&meson8m2_vpu_1_sel,
++	&meson8b_vpu_1_div,
++	&meson8b_vpu_1,
++	&meson8b_vpu,
+ };
+ 
+ static const struct meson8b_clk_reset_line {
+diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
+index a45f7102c558..e775f91ccce9 100644
+--- a/drivers/clk/meson/meson8b.h
++++ b/drivers/clk/meson/meson8b.h
+@@ -35,6 +35,7 @@
+ #define HHI_VID_DIVIDER_CNTL		0x198 /* 0x66 offset in data sheet */
+ #define HHI_SYS_CPU_CLK_CNTL0		0x19c /* 0x67 offset in data sheet */
+ #define HHI_MALI_CLK_CNTL		0x1b0 /* 0x6c offset in data sheet */
++#define HHI_VPU_CLK_CNTL		0x1bc /* 0x6f offset in data sheet */
+ #define HHI_HDMI_CLK_CNTL		0x1cc /* 0x73 offset in data sheet */
+ #define HHI_NAND_CLK_CNTL		0x25c /* 0x97 offset in data sheet */
+ #define HHI_MPLL_CNTL			0x280 /* 0xa0 offset in data sheet */
+@@ -149,8 +150,14 @@
+ #define CLKID_MALI_1		180
+ #define CLKID_GP_PLL_DCO	181
+ #define CLKID_GP_PLL		182
++#define CLKID_VPU_0_SEL		183
++#define CLKID_VPU_0_DIV		184
++#define CLKID_VPU_0		185
++#define CLKID_VPU_1_SEL		186
++#define CLKID_VPU_1_DIV		187
++#define CLKID_VPU_1		189
+ 
+-#define CLK_NR_CLKS		183
++#define CLK_NR_CLKS		191
+ 
+ /*
+  * include the CLKID and RESETID that have
 -- 
 2.21.0
