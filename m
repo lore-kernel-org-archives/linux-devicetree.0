@@ -1,433 +1,311 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 2/2] clk: meson: meson8b: add the video decoder clock trees
-Date: Sun, 24 Mar 2019 16:14:23 +0100
-Message-ID: <20190324151423.19063-3-martin.blumenstingl@googlemail.com>
-References: <20190324151423.19063-1-martin.blumenstingl@googlemail.com>
+From: Himanshu Jha <himanshujha199640@gmail.com>
+Subject: Re: [PATCH v2 2/2] iio: adc: Add driver for the TI ADS8344 A/DC chips
+Date: Sun, 24 Mar 2019 20:46:25 +0530
+Message-ID: <20190324151625.GA10047@himanshu-Vostro-3559>
+References: <20190322111108.19383-1-gregory.clement@bootlin.com>
+ <20190322111108.19383-3-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190324151423.19063-1-martin.blumenstingl@googlemail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: narmstrong@baylibre.com, jbrunet@baylibre.com, linux-amlogic@lists.infradead.org, mjourdan@baylibre.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190322111108.19383-3-gregory.clement@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@bootlin.com>, Jonathan Cameron <jic23@kernel.org>
+Cc: devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Lars-Peter Clausen <lars@metafoo.de>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the four video decoder clock trees.
+On Fri, Mar 22, 2019 at 12:11:08PM +0100, Gregory CLEMENT wrote:
+> This adds support for the Texas Instruments ADS8344 ADC chip. This chip
+> has a 16-bit 8-Channel ADC and is access directly through SPI.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
+>  drivers/iio/adc/Kconfig      |  10 ++
+>  drivers/iio/adc/Makefile     |   1 +
+>  drivers/iio/adc/ti-ads8344.c | 200 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 211 insertions(+)
+>  create mode 100644 drivers/iio/adc/ti-ads8344.c
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 76db6e5cc296..447d3a871746 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -967,6 +967,16 @@ config TI_ADS7950
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called ti-ads7950.
+>  
+> +config TI_ADS8344
+> +	tristate "Texas Instruments ADS8344"
+> +	depends on SPI && OF
+> +	help
+> +	  If you say yes here you get support for Texas Instruments ADS8344
+> +	  ADC chips
+> +
+> +	  This driver can also be built as a module. If so, the module will be
+> +	  called ti-ads8344.
+> +
+>  config TI_ADS8688
+>  	tristate "Texas Instruments ADS8688"
+>  	depends on SPI && OF
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index 6fcebd167524..1f3ae934111d 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -87,6 +87,7 @@ obj-$(CONFIG_TI_ADC128S052) += ti-adc128s052.o
+>  obj-$(CONFIG_TI_ADC161S626) += ti-adc161s626.o
+>  obj-$(CONFIG_TI_ADS1015) += ti-ads1015.o
+>  obj-$(CONFIG_TI_ADS7950) += ti-ads7950.o
+> +obj-$(CONFIG_TI_ADS8344) += ti-ads8344.o
+>  obj-$(CONFIG_TI_ADS8688) += ti-ads8688.o
+>  obj-$(CONFIG_TI_ADS124S08) += ti-ads124s08.o
+>  obj-$(CONFIG_TI_AM335X_ADC) += ti_am335x_adc.o
+> diff --git a/drivers/iio/adc/ti-ads8344.c b/drivers/iio/adc/ti-ads8344.c
+> new file mode 100644
+> index 000000000000..649ed05bf1c9
+> --- /dev/null
+> +++ b/drivers/iio/adc/ti-ads8344.c
+> @@ -0,0 +1,200 @@
+> +// SPDX-License-Identifier: GPL-2.0+
 
-VDEC_1 is split into two paths on Meson8b and Meson8m2:
-- input mux called "vdec_1_sel"
-- two dividers ("vdec_1_1_div" and "vdec_1_2_div") and gates ("vdec_1_1"
-  and "vdec_1_2")
-- and an output mux (probably glitch-free) called "vdec_1"
-On Meson8 the VDEC_1 tree is simpler because there's only one path:
-- input mux called "vdec_1_sel"
-- divider ("vdec_1_1_div") and gate ("vdec_1_1")
-- (the gate is used as output directly, there's no mux)
+Inconsistency in License.
 
-The VDEC_HCODEC and VDEC_2 clocks are simple composite clocks each
-consisting of an input mux, divider and a gate.
+>
+> + * ADS8344 16-bit 8-Channel ADC driver
+> + *
+> + * Author: Gregory CLEMENT <gregory.clement@bootlin.com>
+> + *
+> + * Datasheet: http://www.ti.com/lit/ds/symlink/ads8344.pdf
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/module.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/spi/spi.h>
+> +
+> +#define ADS8344_START BIT(7)
+> +#define ADS8344_SINGLE_END BIT(2)
+> +#define ADS8344_CHANNEL(channel) ((channel) << 4)
+> +#define ADS8344_CLOCK_INTERNAL 0x2 /* PD1 = 1 and PD0 = 0 */
+> +
+> +struct ads8344 {
+> +	struct spi_device *spi;
+> +	struct regulator *reg;
+> +	struct mutex lock;
 
-The VDEC_HEVC clock seems to have two paths similar to the VDEC_1 clock.
-However, the register offsets of the second clock path is not known.
-Amlogic's 3.10 kernel (which is used as reference) sets
-HHI_VDEC2_CLK_CNTL[31] to 1 before changing the VDEC_HEVC clock and back
-to 0 afterwards. For now, leave a TODO comment and only add the first
-path.
+This requires a comment explaining its purpose.
+checkpatch issues a warning IIRC.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Maxime Jourdan <mjourdan@baylibre.com>
----
- drivers/clk/meson/meson8b.c | 312 ++++++++++++++++++++++++++++++++++++
- drivers/clk/meson/meson8b.h |  17 +-
- 2 files changed, 328 insertions(+), 1 deletion(-)
+> +
+> +	u8 tx_buf ____cacheline_aligned;
+> +	u16 rx_buf;
+> +};
+> +
+> +#define ADS8344_VOLTAGE_CHANNEL(chan, si)				\
+> +	{								\
+> +		.type = IIO_VOLTAGE,					\
+> +		.indexed = 1,						\
+> +		.channel = chan,					\
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> +	}
+> +
+> +#define ADS8344_VOLTAGE_CHANNEL_DIFF(chan1, chan2, si)			\
+> +	{								\
+> +		.type = IIO_VOLTAGE,					\
+> +		.indexed = 1,						\
+> +		.channel = (chan1),					\
+> +		.channel2 = (chan2),					\
+> +		.differential = 1,					\
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> +	}
+> +
+> +static const struct iio_chan_spec ads8344_channels[] = {
+> +	ADS8344_VOLTAGE_CHANNEL(0, 0),
+> +	ADS8344_VOLTAGE_CHANNEL(1, 4),
+> +	ADS8344_VOLTAGE_CHANNEL(2, 1),
+> +	ADS8344_VOLTAGE_CHANNEL(3, 5),
+> +	ADS8344_VOLTAGE_CHANNEL(4, 2),
+> +	ADS8344_VOLTAGE_CHANNEL(5, 6),
+> +	ADS8344_VOLTAGE_CHANNEL(6, 3),
+> +	ADS8344_VOLTAGE_CHANNEL(7, 7),
+> +	ADS8344_VOLTAGE_CHANNEL_DIFF(0, 1, 8),
+> +	ADS8344_VOLTAGE_CHANNEL_DIFF(2, 3, 9),
+> +	ADS8344_VOLTAGE_CHANNEL_DIFF(4, 5, 10),
+> +	ADS8344_VOLTAGE_CHANNEL_DIFF(6, 7, 11),
+> +	ADS8344_VOLTAGE_CHANNEL_DIFF(1, 0, 12),
+> +	ADS8344_VOLTAGE_CHANNEL_DIFF(3, 2, 13),
+> +	ADS8344_VOLTAGE_CHANNEL_DIFF(5, 4, 14),
+> +	ADS8344_VOLTAGE_CHANNEL_DIFF(7, 6, 15),
+> +};
+> +
+> +static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
+> +				  bool differential)
+> +{
+> +	struct spi_device *spi = adc->spi;
+> +	int ret;
+> +
+> +	adc->tx_buf = ADS8344_START;
+> +	if (!differential)
+> +		adc->tx_buf |= ADS8344_SINGLE_END;
+> +	adc->tx_buf |= ADS8344_CHANNEL(channel);
+> +	adc->tx_buf |= ADS8344_CLOCK_INTERNAL;
+> +
+> +	ret = spi_write(spi, &adc->tx_buf, 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	udelay(9);
+> +
+> +	ret = spi_read(spi, &adc->rx_buf, 2);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return adc->rx_buf;
+> +}
+> +
+> +static int ads8344_read_raw(struct iio_dev *iio,
+> +			    struct iio_chan_spec const *channel, int *value,
+> +			    int *shift, long mask)
+> +{
+> +	struct ads8344 *adc = iio_priv(iio);
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		mutex_lock(&adc->lock);
 
-diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-index 8e091c2d10e6..37cf0f01bb5d 100644
---- a/drivers/clk/meson/meson8b.c
-+++ b/drivers/clk/meson/meson8b.c
-@@ -1902,6 +1902,257 @@ static struct clk_regmap meson8b_vpu = {
- 	},
- };
- 
-+static const char * const meson8b_vdec_parent_names[] = {
-+	"fclk_div4", "fclk_div3", "fclk_div5", "fclk_div7", "mpll2", "mpll1"
-+};
-+
-+static struct clk_regmap meson8b_vdec_1_sel = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_VDEC_CLK_CNTL,
-+		.mask = 0x3,
-+		.shift = 9,
-+		.flags = CLK_MUX_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_1_sel",
-+		.ops = &clk_regmap_mux_ops,
-+		.parent_names = meson8b_vdec_parent_names,
-+		.num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_1_1_div = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_VDEC_CLK_CNTL,
-+		.shift = 0,
-+		.width = 7,
-+		.flags = CLK_DIVIDER_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_1_1_div",
-+		.ops = &clk_regmap_divider_ops,
-+		.parent_names = (const char *[]){ "vdec_1_sel" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_1_1 = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_VDEC_CLK_CNTL,
-+		.bit_idx = 8,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "vdec_1_1",
-+		.ops = &clk_regmap_gate_ops,
-+		.parent_names = (const char *[]){ "vdec_1_1_div" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_1_2_div = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_VDEC3_CLK_CNTL,
-+		.shift = 0,
-+		.width = 7,
-+		.flags = CLK_DIVIDER_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_1_2_div",
-+		.ops = &clk_regmap_divider_ops,
-+		.parent_names = (const char *[]){ "vdec_1_sel" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_1_2 = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_VDEC3_CLK_CNTL,
-+		.bit_idx = 8,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "vdec_1_2",
-+		.ops = &clk_regmap_gate_ops,
-+		.parent_names = (const char *[]){ "vdec_1_2_div" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_1 = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_VDEC3_CLK_CNTL,
-+		.mask = 0x1,
-+		.shift = 15,
-+		.flags = CLK_MUX_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_1",
-+		.ops = &clk_regmap_mux_ops,
-+		.parent_names = (const char *[]){ "vdec_1_1", "vdec_1_2" },
-+		.num_parents = 2,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_hcodec_sel = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_VDEC_CLK_CNTL,
-+		.mask = 0x3,
-+		.shift = 25,
-+		.flags = CLK_MUX_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_hcodec_sel",
-+		.ops = &clk_regmap_mux_ops,
-+		.parent_names = meson8b_vdec_parent_names,
-+		.num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_hcodec_div = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_VDEC_CLK_CNTL,
-+		.shift = 16,
-+		.width = 7,
-+		.flags = CLK_DIVIDER_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_hcodec_div",
-+		.ops = &clk_regmap_divider_ops,
-+		.parent_names = (const char *[]){ "vdec_hcodec_sel" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_hcodec = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_VDEC_CLK_CNTL,
-+		.bit_idx = 24,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "vdec_hcodec",
-+		.ops = &clk_regmap_gate_ops,
-+		.parent_names = (const char *[]){ "vdec_hcodec_div" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_2_sel = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_VDEC2_CLK_CNTL,
-+		.mask = 0x3,
-+		.shift = 9,
-+		.flags = CLK_MUX_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_2_sel",
-+		.ops = &clk_regmap_mux_ops,
-+		.parent_names = meson8b_vdec_parent_names,
-+		.num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_2_div = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_VDEC2_CLK_CNTL,
-+		.shift = 0,
-+		.width = 7,
-+		.flags = CLK_DIVIDER_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_2_div",
-+		.ops = &clk_regmap_divider_ops,
-+		.parent_names = (const char *[]){ "vdec_2_sel" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_2 = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_VDEC2_CLK_CNTL,
-+		.bit_idx = 8,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "vdec_2",
-+		.ops = &clk_regmap_gate_ops,
-+		.parent_names = (const char *[]){ "vdec_2_div" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_hevc_sel = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_VDEC2_CLK_CNTL,
-+		.mask = 0x3,
-+		.shift = 25,
-+		.flags = CLK_MUX_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_hevc_sel",
-+		.ops = &clk_regmap_mux_ops,
-+		.parent_names = meson8b_vdec_parent_names,
-+		.num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_hevc_div = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_VDEC2_CLK_CNTL,
-+		.shift = 16,
-+		.width = 7,
-+		.flags = CLK_DIVIDER_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_hevc_div",
-+		.ops = &clk_regmap_divider_ops,
-+		.parent_names = (const char *[]){ "vdec_hevc_sel" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_hevc_en = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_VDEC2_CLK_CNTL,
-+		.bit_idx = 24,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "vdec_hevc_en",
-+		.ops = &clk_regmap_gate_ops,
-+		.parent_names = (const char *[]){ "vdec_hevc_div" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_hevc = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_VDEC2_CLK_CNTL,
-+		.mask = 0x1,
-+		.shift = 31,
-+		.flags = CLK_MUX_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_hevc",
-+		.ops = &clk_regmap_mux_ops,
-+		/* TODO: The second parent is currently unknown */
-+		.parent_names = (const char *[]){ "vdec_hevc_en" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
- /* Everything Else (EE) domain gates */
- 
- static MESON_GATE(meson8b_ddr, HHI_GCLK_MPEG0, 0);
-@@ -2168,6 +2419,19 @@ static struct clk_hw_onecell_data meson8_hw_onecell_data = {
- 		[CLKID_VPU_0_SEL]	    = &meson8b_vpu_0_sel.hw,
- 		[CLKID_VPU_0_DIV]	    = &meson8b_vpu_0_div.hw,
- 		[CLKID_VPU]		    = &meson8b_vpu_0.hw,
-+		[CLKID_VDEC_1_SEL]	    = &meson8b_vdec_1_sel.hw,
-+		[CLKID_VDEC_1_1_DIV]	    = &meson8b_vdec_1_1_div.hw,
-+		[CLKID_VDEC_1]	   	    = &meson8b_vdec_1_1.hw,
-+		[CLKID_VDEC_HCODEC_SEL]	    = &meson8b_vdec_hcodec_sel.hw,
-+		[CLKID_VDEC_HCODEC_DIV]	    = &meson8b_vdec_hcodec_div.hw,
-+		[CLKID_VDEC_HCODEC]	    = &meson8b_vdec_hcodec.hw,
-+		[CLKID_VDEC_2_SEL]	    = &meson8b_vdec_2_sel.hw,
-+		[CLKID_VDEC_2_DIV]	    = &meson8b_vdec_2_div.hw,
-+		[CLKID_VDEC_2]	    	    = &meson8b_vdec_2.hw,
-+		[CLKID_VDEC_HEVC_SEL]	    = &meson8b_vdec_hevc_sel.hw,
-+		[CLKID_VDEC_HEVC_DIV]	    = &meson8b_vdec_hevc_div.hw,
-+		[CLKID_VDEC_HEVC_EN]	    = &meson8b_vdec_hevc_en.hw,
-+		[CLKID_VDEC_HEVC]	    = &meson8b_vdec_hevc.hw,
- 		[CLK_NR_CLKS]		    = NULL,
- 	},
- 	.num = CLK_NR_CLKS,
-@@ -2361,6 +2625,22 @@ static struct clk_hw_onecell_data meson8b_hw_onecell_data = {
- 		[CLKID_VPU_1_DIV]	    = &meson8b_vpu_1_div.hw,
- 		[CLKID_VPU_1]		    = &meson8b_vpu_1.hw,
- 		[CLKID_VPU]		    = &meson8b_vpu.hw,
-+		[CLKID_VDEC_1_SEL]	    = &meson8b_vdec_1_sel.hw,
-+		[CLKID_VDEC_1_1_DIV]	    = &meson8b_vdec_1_1_div.hw,
-+		[CLKID_VDEC_1_1]	    = &meson8b_vdec_1_1.hw,
-+		[CLKID_VDEC_1_2_DIV]	    = &meson8b_vdec_1_2_div.hw,
-+		[CLKID_VDEC_1_2]	    = &meson8b_vdec_1_2.hw,
-+		[CLKID_VDEC_1]	    	    = &meson8b_vdec_1.hw,
-+		[CLKID_VDEC_HCODEC_SEL]	    = &meson8b_vdec_hcodec_sel.hw,
-+		[CLKID_VDEC_HCODEC_DIV]	    = &meson8b_vdec_hcodec_div.hw,
-+		[CLKID_VDEC_HCODEC]	    = &meson8b_vdec_hcodec.hw,
-+		[CLKID_VDEC_2_SEL]	    = &meson8b_vdec_2_sel.hw,
-+		[CLKID_VDEC_2_DIV]	    = &meson8b_vdec_2_div.hw,
-+		[CLKID_VDEC_2]	    	    = &meson8b_vdec_2.hw,
-+		[CLKID_VDEC_HEVC_SEL]	    = &meson8b_vdec_hevc_sel.hw,
-+		[CLKID_VDEC_HEVC_DIV]	    = &meson8b_vdec_hevc_div.hw,
-+		[CLKID_VDEC_HEVC_EN]	    = &meson8b_vdec_hevc_en.hw,
-+		[CLKID_VDEC_HEVC]	    = &meson8b_vdec_hevc.hw,
- 		[CLK_NR_CLKS]		    = NULL,
- 	},
- 	.num = CLK_NR_CLKS,
-@@ -2556,6 +2836,22 @@ static struct clk_hw_onecell_data meson8m2_hw_onecell_data = {
- 		[CLKID_VPU_1_DIV]	    = &meson8b_vpu_1_div.hw,
- 		[CLKID_VPU_1]		    = &meson8b_vpu_1.hw,
- 		[CLKID_VPU]		    = &meson8b_vpu.hw,
-+		[CLKID_VDEC_1_SEL]	    = &meson8b_vdec_1_sel.hw,
-+		[CLKID_VDEC_1_1_DIV]	    = &meson8b_vdec_1_1_div.hw,
-+		[CLKID_VDEC_1_1]	    = &meson8b_vdec_1_1.hw,
-+		[CLKID_VDEC_1_2_DIV]	    = &meson8b_vdec_1_2_div.hw,
-+		[CLKID_VDEC_1_2]	    = &meson8b_vdec_1_2.hw,
-+		[CLKID_VDEC_1]	    	    = &meson8b_vdec_1.hw,
-+		[CLKID_VDEC_HCODEC_SEL]	    = &meson8b_vdec_hcodec_sel.hw,
-+		[CLKID_VDEC_HCODEC_DIV]	    = &meson8b_vdec_hcodec_div.hw,
-+		[CLKID_VDEC_HCODEC]	    = &meson8b_vdec_hcodec.hw,
-+		[CLKID_VDEC_2_SEL]	    = &meson8b_vdec_2_sel.hw,
-+		[CLKID_VDEC_2_DIV]	    = &meson8b_vdec_2_div.hw,
-+		[CLKID_VDEC_2]	    	    = &meson8b_vdec_2.hw,
-+		[CLKID_VDEC_HEVC_SEL]	    = &meson8b_vdec_hevc_sel.hw,
-+		[CLKID_VDEC_HEVC_DIV]	    = &meson8b_vdec_hevc_div.hw,
-+		[CLKID_VDEC_HEVC_EN]	    = &meson8b_vdec_hevc_en.hw,
-+		[CLKID_VDEC_HEVC]	    = &meson8b_vdec_hevc.hw,
- 		[CLK_NR_CLKS]		    = NULL,
- 	},
- 	.num = CLK_NR_CLKS,
-@@ -2729,6 +3025,22 @@ static struct clk_regmap *const meson8b_clk_regmaps[] = {
- 	&meson8b_vpu_1_div,
- 	&meson8b_vpu_1,
- 	&meson8b_vpu,
-+	&meson8b_vdec_1_sel,
-+	&meson8b_vdec_1_1_div,
-+	&meson8b_vdec_1_1,
-+	&meson8b_vdec_1_2_div,
-+	&meson8b_vdec_1_2,
-+	&meson8b_vdec_1,
-+	&meson8b_vdec_hcodec_sel,
-+	&meson8b_vdec_hcodec_div,
-+	&meson8b_vdec_hcodec,
-+	&meson8b_vdec_2_sel,
-+	&meson8b_vdec_2_div,
-+	&meson8b_vdec_2,
-+	&meson8b_vdec_hevc_sel,
-+	&meson8b_vdec_hevc_div,
-+	&meson8b_vdec_hevc_en,
-+	&meson8b_vdec_hevc,
- };
- 
- static const struct meson8b_clk_reset_line {
-diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
-index e775f91ccce9..ed37196187e6 100644
---- a/drivers/clk/meson/meson8b.h
-+++ b/drivers/clk/meson/meson8b.h
-@@ -37,6 +37,9 @@
- #define HHI_MALI_CLK_CNTL		0x1b0 /* 0x6c offset in data sheet */
- #define HHI_VPU_CLK_CNTL		0x1bc /* 0x6f offset in data sheet */
- #define HHI_HDMI_CLK_CNTL		0x1cc /* 0x73 offset in data sheet */
-+#define HHI_VDEC_CLK_CNTL		0x1e0 /* 0x78 offset in data sheet */
-+#define HHI_VDEC2_CLK_CNTL		0x1e4 /* 0x79 offset in data sheet */
-+#define HHI_VDEC3_CLK_CNTL		0x1e8 /* 0x7a offset in data sheet */
- #define HHI_NAND_CLK_CNTL		0x25c /* 0x97 offset in data sheet */
- #define HHI_MPLL_CNTL			0x280 /* 0xa0 offset in data sheet */
- #define HHI_SYS_PLL_CNTL		0x300 /* 0xc0 offset in data sheet */
-@@ -156,8 +159,20 @@
- #define CLKID_VPU_1_SEL		186
- #define CLKID_VPU_1_DIV		187
- #define CLKID_VPU_1		189
-+#define CLKID_VDEC_1_SEL	191
-+#define CLKID_VDEC_1_1_DIV	192
-+#define CLKID_VDEC_1_1		193
-+#define CLKID_VDEC_1_2_DIV	194
-+#define CLKID_VDEC_1_2		195
-+#define CLKID_VDEC_HCODEC_SEL	197
-+#define CLKID_VDEC_HCODEC_DIV	198
-+#define CLKID_VDEC_2_SEL	200
-+#define CLKID_VDEC_2_DIV	201
-+#define CLKID_VDEC_HEVC_SEL	203
-+#define CLKID_VDEC_HEVC_DIV	204
-+#define CLKID_VDEC_HEVC_EN	205
- 
--#define CLK_NR_CLKS		191
-+#define CLK_NR_CLKS		207
- 
- /*
-  * include the CLKID and RESETID that have
+Just curious:
+What would happen if you don't lock ?
+
+I'm interested in looking for whatever happens in such a case
+and how to exploit it ?
+
+Also, bus transactions are often atomic using their locking/unlocking
+procedures. So, why do we need locking procedures in iio drivers itself ?
+
+> +		*value = ads8344_adc_conversion(adc, channel->scan_index,
+> +						channel->differential);
+> +		mutex_unlock(&adc->lock);
+> +		if (*value < 0)
+> +			return *value;
+> +
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*value = regulator_get_voltage(adc->reg);
+> +		if (*value < 0)
+> +			return *value;
+> +
+> +		/* convert regulator output voltage to mV */
+> +		*value /= 1000;
+> +		*shift = 16;
+> +
+> +		return IIO_VAL_FRACTIONAL_LOG2;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct iio_info ads8344_info = {
+> +	.read_raw = ads8344_read_raw,
+> +};
+> +
+> +static int ads8344_probe(struct spi_device *spi)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct ads8344 *adc;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*adc));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	adc = iio_priv(indio_dev);
+> +	adc->spi = spi;
+> +	mutex_init(&adc->lock);
+> +
+> +	indio_dev->name = dev_name(&spi->dev);
+> +	indio_dev->dev.parent = &spi->dev;
+> +	indio_dev->dev.of_node = spi->dev.of_node;
+> +	indio_dev->info = &ads8344_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = ads8344_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(ads8344_channels);
+> +
+> +	adc->reg = devm_regulator_get(&spi->dev, "vref");
+> +	if (IS_ERR(adc->reg))
+> +		return PTR_ERR(adc->reg);
+> +
+> +	ret = regulator_enable(adc->reg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	spi_set_drvdata(spi, indio_dev);
+> +
+> +	ret = iio_device_register(indio_dev);
+> +	if (ret) {
+> +		regulator_disable(adc->reg);
+> +		return ret;
+> +	}
+
+IDK but it is advised not to mix devm_* with regular functions.
+
+If there is any possibilty to use `devm_add_action_or_reset` here ?
+
+This would help get rid of `ads8344_remove` and help smooth
+unwinding in failure w/o any race.
+
+> +	return 0;
+> +}
+> +
+> +static int ads8344_remove(struct spi_device *spi)
+> +{
+> +	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+> +	struct ads8344 *adc = iio_priv(indio_dev);
+> +
+> +	iio_device_unregister(indio_dev);
+> +	regulator_disable(adc->reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id ads8344_of_match[] = {
+> +	{ .compatible = "ti,ads8344", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, ads8344_dt_ids);
+> +
+> +static struct spi_driver ads8344_driver = {
+> +	.driver = {
+> +		.name = "ads8344",
+> +		.of_match_table = ads8344_of_match,
+> +	},
+> +	.probe = ads8344_probe,
+> +	.remove = ads8344_remove,
+> +};
+> +module_spi_driver(ads8344_driver);
+> +
+> +MODULE_AUTHOR("Gregory CLEMENT <gregory.clement@bootlin.com>");
+> +MODULE_DESCRIPTION("ADS8344 driver");
+
+
+> +MODULE_LICENSE("GPL v2");
+
+this is a mismatch.
+
+
 -- 
-2.21.0
+Himanshu Jha
+Undergraduate Student
+Department of Electronics & Communication
+Guru Tegh Bahadur Institute of Technology
