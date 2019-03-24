@@ -1,48 +1,48 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: RE: [PATCH V3 01/10] mmc: tegra: fix ddr signaling for non-ddr modes
-Date: Sun, 24 Mar 2019 04:49:17 +0000
-Message-ID: <BYAPR12MB3398DDACBBD120C77CABD14FC25D0@BYAPR12MB3398.namprd12.prod.outlook.com>
-References: <1552513552-23423-1-git-send-email-skomatineni@nvidia.com>
- <CAPDyKFp30v1H0KfPFeOc5Ut1dW5tec7cT7NFk6j0VT+DWkAODw@mail.gmail.com>
- <BYAPR12MB339888D3A370E790A29E217EC2420@BYAPR12MB3398.namprd12.prod.outlook.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH] arm64: dts: sdm845: Include the interconnect resources
+ DT header
+Date: Sat, 23 Mar 2019 22:20:23 -0700
+Message-ID: <20190324052023.GG27005@builder>
+References: <20190311140602.12160-1-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR12MB339888D3A370E790A29E217EC2420@BYAPR12MB3398.namprd12.prod.outlook.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190311140602.12160-1-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harjani Ritesh <riteshh@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Aniruddha Tvs Rao <anrao@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: andy.gross@linaro.org, daidavid1@codeaurora.org, evgreen@chromium.org, dianders@chromium.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PiA+DQo+ID4gZGRyX3NpZ25hbGluZyBpcyBzZXQgdG8gdHJ1ZSBmb3IgRERSNTAgYW5kIEREUjUy
-IG1vZGVzIGJ1dCBpcyBub3QgDQo+ID4gc2V0IGJhY2sgdG8gZmFsc2UgZm9yIG90aGVyIG1vZGVz
-LiBUaGlzIHByb2dyYW1zIGluY29ycmVjdCBob3N0IA0KPiA+IGNsb2NrIHdoZW4gbW9kZSBjaGFu
-Z2UgaGFwcGVucyBmcm9tIEREUjUyL0REUjUwIHRvIG90aGVyIFNEUiBvciBIUyANCj4gPiBtb2Rl
-cyBsaWtlIGluY2FzZSBvZiBtbWNfcmV0dW5lIHdoZXJlIGl0IHN3aXRjaGVzIGZyb20gSFM0MDAg
-dG8gSFMgDQo+ID4gRERSIGFuZCB0aGVuIGZyb20gSFMgRERSIHRvIEhTIG1vZGUgYW5kIHRoZW4g
-dG8gSFMyMDAuDQo+ID4NCj4gPiBUaGlzIHBhdGNoIGZpeGVzIHRoZSBkZHJfc2lnbmFsaW5nIHRv
-IHNldCBwcm9wZXJseSBmb3Igbm9uIEREUiBtb2Rlcy4NCj4gPg0KPiA+IFRlc3RlZC1ieTogSm9u
-IEh1bnRlciA8am9uYXRoYW5oQG52aWRpYS5jb20+DQo+ID4gQWNrZWQtYnk6IEFkcmlhbiBIdW50
-ZXIgPGFkcmlhbi5odW50ZXJAaW50ZWwuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFNvd2phbnlh
-IEtvbWF0aW5lbmkgPHNrb21hdGluZW5pQG52aWRpYS5jb20+DQo+DQo+IElzIHRoaXMgYSBmaXgg
-YW5kL29yIHNoYWxsIEkgdGFnIGl0IGZvciBzdGFibGU/DQo+DQo+IFRoZSBzZXJpZXMgbG9va3Mg
-Z29vZCB0byBtZSwgaG93ZXZlciBJIGFtIGF3YWl0aW5nIHR3byBtb3JlIGFja3MgZnJvbSBBZHJp
-YW4gb24gcGF0Y2ggMiBhbmQgcGF0Y2gzLg0KPg0KPiBLaW5kIHJlZ2FyZHMNCj4gVWZmZQ0KPg0K
-Pg0KVGhhbmtzIFVmZmUuIFllcyB0aGlzIGlzIGFwcGxpY2FibGUgZm9yIHN0YWJsZS4NCg0KSnVz
-dCBzZW50IHVwZGF0ZWQgcGF0Y2ggc2VyaWVzIFY0IHdpdGggbWlub3IgZml4IGZvciBhdm9pZGlu
-ZyBidWlsZCBlcnJvciB3YXJuaW5nLg0KRGlkbuKAmXQgc2VlIGVhcmxpZXIgYW5kIGZvdW5kIG1p
-c3NpbmcgLVdlcnJvciBmbGFnIGR1cmluZyBidWlsZC4gU28gZml4ZWQgaW4gVjQuDQoNCj4gPiAt
-LS0NCj4gPiAgZHJpdmVycy9tbWMvaG9zdC9zZGhjaS10ZWdyYS5jIHwgMSArDQo+ID4gIDEgZmls
-ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-bW1jL2hvc3Qvc2RoY2ktdGVncmEuYyANCj4gPiBiL2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2ktdGVn
-cmEuYyBpbmRleCAzMmU2MjkwNGMwZDMuLjQ2MDg2ZGQ0M2JmYg0KPiA+IDEwMDY0NA0KPiA+IC0t
-LSBhL2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2ktdGVncmEuYw0KPiA+ICsrKyBiL2RyaXZlcnMvbW1j
-L2hvc3Qvc2RoY2ktdGVncmEuYw0KPiA+IEBAIC03NzksNiArNzc5LDcgQEAgc3RhdGljIHZvaWQg
-dGVncmFfc2RoY2lfc2V0X3Voc19zaWduYWxpbmcoc3RydWN0IHNkaGNpX2hvc3QgKmhvc3QsDQo+
-ID4gICAgICAgICBib29sIHNldF9kcXNfdHJpbSA9IGZhbHNlOw0KPiA+ICAgICAgICAgYm9vbCBk
-b19oczQwMF9kbGxfY2FsID0gZmFsc2U7DQo+ID4NCj4gPiArICAgICAgIHRlZ3JhX2hvc3QtPmRk
-cl9zaWduYWxpbmcgPSBmYWxzZTsNCj4gPiAgICAgICAgIHN3aXRjaCAodGltaW5nKSB7DQo+ID4g
-ICAgICAgICBjYXNlIE1NQ19USU1JTkdfVUhTX1NEUjUwOg0KPiA+ICAgICAgICAgY2FzZSBNTUNf
-VElNSU5HX1VIU19TRFIxMDQ6DQo+ID4gLS0NCj4gPiAyLjcuNA0KPiA+DQo=
+On Mon 11 Mar 07:06 PDT 2019, Georgi Djakov wrote:
+
+> Include the device tree header for the on-chip interconnect endpoint
+> resources on sdm845 devices. This will allow using the "interconnects"
+> property in DT nodes to describe the interconnect path resources they use.
+> 
+> The sdm845 interconnect provider DT node is already present, but the
+> header file with the resources is not included, so let's fix this.
+> 
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+
+Thanks Georgi, picked up for v5.2 with Evan's r-b.
+
+Regards,
+Bjorn
+
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 5308f1671824..be4d4c5859c0 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -11,6 +11,7 @@
+>  #include <dt-bindings/clock/qcom,lpass-sdm845.h>
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+>  #include <dt-bindings/clock/qcom,videocc-sdm845.h>
+> +#include <dt-bindings/interconnect/qcom,sdm845.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/phy/phy-qcom-qusb2.h>
+>  #include <dt-bindings/reset/qcom,sdm845-aoss.h>
