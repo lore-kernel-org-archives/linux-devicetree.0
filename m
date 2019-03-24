@@ -1,48 +1,73 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: Add vendor prefix for MaxBotix
-Date: Sun, 24 Mar 2019 12:01:39 +0000
-Message-ID: <20190324120139.573814dc@archlinux>
-References: <20190317203458.bgculdjvtt44zkch@arbad>
+Subject: Re: [PATCH v3 2/4] dt-bindings: maxbotix,mb1232: Add MaxBotix i2c
+ ultrasonic rangers
+Date: Sun, 24 Mar 2019 12:03:02 +0000
+Message-ID: <20190324120302.55388208@archlinux>
+References: <20190317203526.4pcwo4gdrrng44v7@arbad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190317203458.bgculdjvtt44zkch@arbad>
+In-Reply-To: <20190317203526.4pcwo4gdrrng44v7@arbad>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andreas Klinger <ak@it-klinger.de>
 Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, arnd@arndb.de, davem@davemloft.net, gregkh@linuxfoundation.org, johan@kernel.org, khilman@baylibre.com, knaack.h@gmx.de, lars@metafoo.de, linux-kernel@vger.kernel.org, martin.blumenstingl@googlemail.com, mchehab+samsung@kernel.org, m.othacehe@gmail.com, nicolas.ferre@microchip.com, pmeerw@pmeerw.net, robh@kernel.org, songqiang1304521@gmail.com, treding@nvidia.com, techsupport@maxbotix.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 17 Mar 2019 21:35:00 +0100
+On Sun, 17 Mar 2019 21:35:27 +0100
 Andreas Klinger <ak@it-klinger.de> wrote:
 
-> Add MaxBotix, which is a vendor of ultrasonic rangers in different
-> varieties and interfaces.
->=20
+> Add doc for dt binding maxbotix,mb1232. This binding is for MaxBotix
+> I2CXL-MaxSonar ultrasonic rangers which share a common i2c interface.
+> 
 > Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> Reviewed-by: Andreas F=C3=A4rber <afaerber@suse.de>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+This seems pretty straight forward so I'll apply it to the togreg branch
+of iio.git and push out as testing.  Still time for any feedback from
+Rob or others though before this goes out as non rebasing.
 
 Thanks,
 
 Jonathan
 
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Docu=
-mentation/devicetree/bindings/vendor-prefixes.txt
-> index 389508584f48..added54a1108 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -225,6 +225,7 @@ lsi	LSI Corp. (LSI Logic)
->  lwn	Liebherr-Werk Nenzing GmbH
->  macnica	Macnica Americas
->  marvell	Marvell Technology Group Ltd.
-> +maxbotix	MaxBotix Inc.
->  maxim	Maxim Integrated Products
->  mbvl	Mobiveil Inc.
->  mcube	mCube
+>  .../bindings/iio/proximity/maxbotix,mb1232.txt     | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+> new file mode 100644
+> index 000000000000..0e9df87eca1d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+> @@ -0,0 +1,31 @@
+> +* MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
+> +  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
+> +  for ranging
+> +
+> +Required properties:
+> + - compatible:		"maxbotix,mb1202",
+> +			"maxbotix,mb1212",
+> +			"maxbotix,mb1222",
+> +			"maxbotix,mb1232",
+> +			"maxbotix,mb1242",
+> +			"maxbotix,mb7040" or
+> +			"maxbotix,mb7137"
+> +
+> + - reg:			i2c address of the device, see also i2c/i2c.txt
+> +
+> +Optional properties:
+> + - interrupt-parent:	Interrupt controller to use
+> +
+> + - interrupts:		Interrupt used to announce the preceding reading
+> +			request has finished and that data is available.
+> +			If no interrupt is specified the device driver
+> +			falls back to wait a fixed amount of time until
+> +			data can be retrieved.
+> +
+> +Example:
+> +proximity@70 {
+> +	compatible = "maxbotix,mb1232";
+> +	reg = <0x70>;
+> +	interrupt-parent = <&gpio2>;
+> +	interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+> +};
