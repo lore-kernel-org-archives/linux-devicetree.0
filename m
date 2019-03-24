@@ -1,32 +1,39 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFT/RFC PATCH v3 2/5] dt-binding: cpu-topology: Move cpu-map to
- a common binding.
-Date: Sun, 24 Mar 2019 16:16:32 -0500
-Message-ID: <CAL_JsqJCJOioe63oAJVS_=jBuwxTtE79xBnOzqscV4yY_6WfOA@mail.gmail.com>
-References: <20190320234806.19748-1-atish.patra@wdc.com> <20190320234806.19748-3-atish.patra@wdc.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: arm: imx: Add the soc binding for
+ imx8mm
+Date: Sun, 24 Mar 2019 16:17:50 -0500
+Message-ID: <CAL_JsqLm+t8PmunAW2kx=jZy6OAaSUdWEpHiLij2W2NyW_N1WA@mail.gmail.com>
+References: <1553247912-21522-1-git-send-email-ping.bai@nxp.com>
+ <1553247912-21522-2-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190320234806.19748-3-atish.patra@wdc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Johan Hovold <johan@kernel.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1553247912-21522-2-git-send-email-ping.bai@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacky Bai <ping.bai@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 6:48 PM Atish Patra <atish.patra@wdc.com> wrote:
+On Fri, Mar 22, 2019 at 4:40 AM Jacky Bai <ping.bai@nxp.com> wrote:
 >
-> cpu-map binding can be used to described cpu topology for both
-> RISC-V & ARM. It makes more sense to move the binding to document
-> to a common place.
+> Add the soc & board binding for i.MX8MM.
 >
-> The relevant discussion can be found here.
-> https://lkml.org/lkml/2018/11/6/19
->
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
->  .../topology.txt => cpu/cpu-topology.txt}     | 82 +++++++++++++++----
->  1 file changed, 66 insertions(+), 16 deletions(-)
->  rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (86%)
+>  change v1->v2:
+>  - fix the indent issue of description line
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
