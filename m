@@ -1,139 +1,66 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 2/2] arm64: dts: qcom: Fully describe the CDSP
-Date: Sun, 24 Mar 2019 10:20:16 -0700
-Message-ID: <20190324172016.1195-3-bjorn.andersson@linaro.org>
-References: <20190324172016.1195-1-bjorn.andersson@linaro.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 3/5] dt-bindings: iio: light: add vcnl4000 devicetree
+ bindings
+Date: Sun, 24 Mar 2019 17:20:36 +0000
+Message-ID: <20190324172036.0208c470@archlinux>
+References: <20190321154047.23236-1-angus@akkea.ca>
+        <20190321154047.23236-4-angus@akkea.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190324172016.1195-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20190321154047.23236-4-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Vinod Koul <vkoul@kernel.org>
-Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tomas Novotny <tomas@novotny.cz>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 88 ++++++++++++++++++----------
- 1 file changed, 57 insertions(+), 31 deletions(-)
+On Thu, 21 Mar 2019 08:40:45 -0700
+"Angus Ainslie (Purism)" <angus@akkea.ca> wrote:
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index f62cd09d965e..c20425aa9ed9 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -113,37 +113,6 @@
- 		};
- 	};
- 
--	remoteproc_cdsp: remoteproc-cdsp {
--		compatible = "qcom,qcs404-cdsp-pas";
--
--		interrupts-extended = <&intc GIC_SPI 229 IRQ_TYPE_EDGE_RISING>,
--				      <&cdsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
--				      <&cdsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
--				      <&cdsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
--				      <&cdsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
--		interrupt-names = "wdog", "fatal", "ready",
--				  "handover", "stop-ack";
--
--		clocks = <&xo_board>;
--		clock-names = "xo";
--
--		memory-region = <&cdsp_fw_mem>;
--
--		qcom,smem-states = <&cdsp_smp2p_out 0>;
--		qcom,smem-state-names = "stop";
--
--		status = "disabled";
--
--		glink-edge {
--			interrupts = <GIC_SPI 141 IRQ_TYPE_EDGE_RISING>;
--
--			qcom,remote-pid = <5>;
--			mboxes = <&apcs_glb 12>;
--
--			label = "cdsp";
--		};
--	};
--
- 	remoteproc_wcss: remoteproc-wcss {
- 		compatible = "qcom,qcs404-wcss-pas";
- 
-@@ -288,6 +257,57 @@
- 			clock-names = "core";
- 		};
- 
-+		remoteproc_cdsp: remoteproc@b00000 {
-+			compatible = "qcom,qcs404-cdsp-pas";
-+			reg = <0x00b00000 0x4040>;
-+
-+			interrupts-extended = <&intc GIC_SPI 229 IRQ_TYPE_EDGE_RISING>,
-+					      <&cdsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+					      <&cdsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+					      <&cdsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+					      <&cdsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog", "fatal", "ready",
-+					  "handover", "stop-ack";
-+
-+			clocks = <&xo_board>,
-+				 <&gcc GCC_CDSP_CFG_AHB_CLK>,
-+				 <&gcc GCC_CDSP_TBU_CLK>,
-+				 <&gcc GCC_BIMC_CDSP_CLK>,
-+				 <&turingcc TURING_WRAPPER_AON_CLK>,
-+				 <&turingcc TURING_Q6SS_AHBS_AON_CLK>,
-+				 <&turingcc TURING_Q6SS_AHBM_AON_CLK>,
-+				 <&turingcc TURING_Q6SS_Q6_AXIM_CLK>;
-+			clock-names = "xo",
-+				      "sway",
-+				      "tbu",
-+				      "bimc",
-+				      "ahb_aon",
-+				      "q6ss_slave",
-+				      "q6ss_master",
-+				      "q6_axim";
-+
-+			resets = <&gcc GCC_CDSP_RESTART>;
-+			reset-names = "restart";
-+
-+			qcom,halt-regs = <&tcsr 0x19004>;
-+
-+			memory-region = <&cdsp_fw_mem>;
-+
-+			qcom,smem-states = <&cdsp_smp2p_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			status = "disabled";
-+
-+			glink-edge {
-+				interrupts = <GIC_SPI 141 IRQ_TYPE_EDGE_RISING>;
-+
-+				qcom,remote-pid = <5>;
-+				mboxes = <&apcs_glb 12>;
-+
-+				label = "cdsp";
-+			};
-+		};
-+
- 		usb3_phy: phy@78000 {
- 			compatible = "qcom,usb-ssphy";
- 			reg = <0x78000 0x400>;
-@@ -506,6 +526,7 @@
- 			compatible = "qcom,gcc-qcs404";
- 			reg = <0x01800000 0x80000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 
- 			assigned-clocks = <&gcc GCC_APSS_AHB_CLK_SRC>;
- 			assigned-clock-rates = <19200000>;
-@@ -516,6 +537,11 @@
- 			reg = <0x01905000 0x20000>;
- 		};
- 
-+		tcsr: syscon@1937000 {
-+			compatible = "syscon";
-+			reg = <0x01937000 0x25000>;
-+		};
-+
- 		spmi_bus: spmi@200f000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg = <0x0200f000 0x001000>,
--- 
-2.18.0
+> Document the vishay VCNL4000 devicetree bindings.
+> 
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+Fairly straight forward, so I'll take this without explicitly waiting
+for a dt ack.  Still plenty of time to add one if Rob or anyone else
+does want to take a look.
+
+Applied to the togreg branch of iio.git and pushed out as testing
+
+Thanks,
+
+Jonathan
+
+> ---
+>  .../bindings/iio/light/vcnl4000.txt           | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4000.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt b/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
+> new file mode 100644
+> index 000000000000..4a9d558a412a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
+> @@ -0,0 +1,22 @@
+> +VISHAY VCNL4000 -  Ambient Light and proximity sensor
+> +
+> +This driver supports the VCNL4000/10/20 and VCNL4200 chips
+> +
+> +Required properties:
+> +
+> +	-compatible: must be one of :
+> +        vishay,vcnl4000
+> +        vishay,vcnl4010
+> +        vishay,vcnl4020
+> +        vishay,vcnl4200
+> +
+> +	-reg: I2C address of the sensor, should be one from below based on the model:
+> +        0x13
+> +        0x51
+> +
+> +Example:
+> +
+> +light-sensor@51 {
+> +	compatible = "vishay,vcnl4200";
+> +	reg = <0x51>;
+> +};
