@@ -1,93 +1,65 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2 9/9] arm64: dts: qcom: msm8998: Add rpmpd node
-Date: Sun, 24 Mar 2019 23:20:07 +0530
-Message-ID: <20190324175007.29040-10-sibis@codeaurora.org>
-References: <20190324175007.29040-1-sibis@codeaurora.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/2] iio: gyro: bmg160: add device tree compatibility
+ table
+Date: Sun, 24 Mar 2019 18:05:03 +0000
+Message-ID: <20190324180503.6dc1e36e@archlinux>
+References: <cover.1552922054.git.hns@goldelico.com>
+        <090c92487ada60e81fca341ef24e5de33a11ec4b.1552922054.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190324175007.29040-1-sibis@codeaurora.org>
+In-Reply-To: <090c92487ada60e81fca341ef24e5de33a11ec4b.1552922054.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, rnayak@codeaurora.org
-Cc: david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-Add the rpmpd node on the msm8998 and define the available levels.
+On Mon, 18 Mar 2019 16:14:14 +0100
+"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 51 +++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+> Add of_match_table.
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+I'm not against doing this, but do note that there is still a back up
+path in which the i2c_device_id table is used to match but without
+the vendor part of the string.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 3fd0769fe648..b7e3e0646b9b 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -4,6 +4,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8998.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
-+#include <dt-bindings/power/qcom-rpmpd.h>
- #include <dt-bindings/gpio/gpio.h>
- 
- / {
-@@ -272,6 +273,56 @@
- 				compatible = "qcom,rpmcc-msm8998", "qcom,rpmcc";
- 				#clock-cells = <1>;
- 			};
-+
-+			rpmpd: power-controller {
-+				compatible = "qcom,msm8998-rpmpd";
-+				#power-domain-cells = <1>;
-+				operating-points-v2 = <&rpmpd_opp_table>;
-+
-+				rpmpd_opp_table: opp-table {
-+					compatible = "operating-points-v2";
-+
-+					rpmpd_opp_ret: opp1 {
-+						opp-level = <RPM_SMD_LEVEL_RETENTION>;
-+					};
-+
-+					rpmpd_opp_ret_plus: opp2 {
-+						opp-level = <RPM_SMD_LEVEL_RETENTION_PLUS>;
-+					};
-+
-+					rpmpd_opp_min_svs: opp3 {
-+						opp-level = <RPM_SMD_LEVEL_MIN_SVS>;
-+					};
-+
-+					rpmpd_opp_low_svs: opp4 {
-+						opp-level = <RPM_SMD_LEVEL_LOW_SVS>;
-+					};
-+
-+					rpmhpd_opp_svs: opp5 {
-+						opp-level = <RPM_SMD_LEVEL_SVS>;
-+					};
-+
-+					rpmhpd_opp_svs_plus: opp6 {
-+						opp-level = <RPM_SMD_LEVEL_SVS_PLUS>;
-+					};
-+
-+					rpmhpd_opp_nom: opp7 {
-+						opp-level = <RPM_SMD_LEVEL_NOM>;
-+					};
-+
-+					rpmhpd_opp_nom_plus: opp8 {
-+						opp-level = <RPM_SMD_LEVEL_NOM_PLUS>;
-+					};
-+
-+					rpmhpd_opp_turbo: opp9 {
-+						opp-level = <RPM_SMD_LEVEL_TURBO>;
-+					};
-+
-+					rpmhpd_opp_turbo_plus: opp10 {
-+						opp-level = <RPM_SMD_LEVEL_BINNING>;
-+					};
-+				};
-+			};
- 		};
- 	};
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I theory the plan is to eventually remove that, but it's not the
+case that this driver could not be probed from devicetree previously.
+
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/gyro/bmg160_i2c.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/iio/gyro/bmg160_i2c.c b/drivers/iio/gyro/bmg160_i2c.c
+> index 90126a5a7663..934a092134f0 100644
+> --- a/drivers/iio/gyro/bmg160_i2c.c
+> +++ b/drivers/iio/gyro/bmg160_i2c.c
+> @@ -54,10 +54,19 @@ static const struct i2c_device_id bmg160_i2c_id[] = {
+>  
+>  MODULE_DEVICE_TABLE(i2c, bmg160_i2c_id);
+>  
+> +static const struct of_device_id bmg160_of_match[] = {
+> +	{ .compatible = "bosch,bmg160" },
+> +	{ .compatible = "bosch,bmi055_gyro" },
+> +	{ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, bmg160_of_match);
+> +
+>  static struct i2c_driver bmg160_i2c_driver = {
+>  	.driver = {
+>  		.name	= "bmg160_i2c",
+>  		.acpi_match_table = ACPI_PTR(bmg160_acpi_match),
+> +		.of_match_table = bmg160_of_match,
+>  		.pm	= &bmg160_pm_ops,
+>  	},
+>  	.probe		= bmg160_i2c_probe,
