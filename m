@@ -1,102 +1,71 @@
-Return-Path: <SRS0=KxQt=R7=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v3 5/5] ARM: dts: imx7s-warp: add ov2680 sensor node
-Date: Thu, 28 Mar 2019 14:25:16 +0000
-Message-Id: <20190328142516.30372-6-rui.silva@linaro.org>
-In-Reply-To: <20190328142516.30372-1-rui.silva@linaro.org>
-References: <20190328142516.30372-1-rui.silva@linaro.org>
+Return-Path: <SRS0=xKYj=R3=linaro.org=bjorn.andersson@kernel.org>
+Date: Sun, 24 Mar 2019 09:57:43 -0700
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 5/6] arm64: dts: qcom: pms405: add spmi regulators
+Message-ID: <20190324165743.GI27005@builder>
+References: <20190324163209.17312-1-vkoul@kernel.org>
+ <20190324163209.17312-6-vkoul@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190324163209.17312-6-vkoul@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Khasim Syed Mohammed <khasim.mohammed@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Warp7 comes with a Omnivision OV2680 sensor, add the node here to make
-complete the camera data path for this system. Add the needed regulator
-to the analog voltage supply, the port and endpoints in mipi_csi node
-and the pinctrl for the reset gpio.
+On Sun 24 Mar 09:32 PDT 2019, Vinod Koul wrote:
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
----
- arch/arm/boot/dts/imx7s-warp.dts | 45 ++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+> From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> 
+> The PMS405 sports 5 SMPS and 13 LDO regulators.
+> 
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@linaro.org>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  arch/arm64/boot/dts/qcom/pms405.dtsi | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/pms405.dtsi b/arch/arm64/boot/dts/qcom/pms405.dtsi
+> index 1bb836d1e8aa..8da4dee1db9b 100644
+> --- a/arch/arm64/boot/dts/qcom/pms405.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/pms405.dtsi
+> @@ -131,4 +131,24 @@
+>  			interrupts = <0x0 0x61 0x1 IRQ_TYPE_NONE>;
+>  		};
+>  	};
+> +
+> +	pms405_1: pms405@1 {
+> +		compatible = "qcom,spmi-pmic";
+> +		reg = <0x1 SPMI_USID>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		regulators {
 
-diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
-index 2d1a0105e6a6..d6b4888fa686 100644
---- a/arch/arm/boot/dts/imx7s-warp.dts
-+++ b/arch/arm/boot/dts/imx7s-warp.dts
-@@ -55,6 +55,14 @@
- 		regulator-always-on;
- 	};
- 
-+	reg_peri_3p15v: regulator-peri-3p15v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "peri_3p15v_reg";
-+		regulator-min-microvolt = <3150000>;
-+		regulator-max-microvolt = <3150000>;
-+		regulator-always-on;
-+	};
-+
- 	sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "imx7-sgtl5000";
-@@ -184,6 +192,27 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-+
-+	ov2680: camera@36 {
-+		compatible = "ovti,ov2680";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ov2680>;
-+		reg = <0x36>;
-+		clocks = <&osc>;
-+		clock-names = "xvclk";
-+		reset-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
-+		DOVDD-supply = <&sw2_reg>;
-+		DVDD-supply = <&sw2_reg>;
-+		AVDD-supply = <&reg_peri_3p15v>;
-+
-+		port {
-+			ov2680_to_mipi: endpoint {
-+				remote-endpoint = <&mipi_from_sensor>;
-+				clock-lanes = <0>;
-+				data-lanes = <1>;
-+			};
-+		};
-+	};
- };
- 
- &i2c3 {
-@@ -221,6 +250,16 @@
- 	clock-frequency = <166000000>;
- 	fsl,csis-hs-settle = <3>;
- 	status = "okay";
-+
-+	port@0 {
-+		reg = <0>;
-+
-+		mipi_from_sensor: endpoint {
-+			remote-endpoint = <&ov2680_to_mipi>;
-+			data-lanes = <1>;
-+		};
-+
-+	};
- };
- 
- &sai1 {
-@@ -347,6 +386,12 @@
- 		>;
- 	};
- 
-+	pinctrl_ov2680: ov2660grp {
-+		fsl,pins = <
-+			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x14
-+		>;
-+	};
-+
- 	pinctrl_sai1: sai1grp {
- 		fsl,pins = <
- 			MX7D_PAD_SAI1_RX_DATA__SAI1_RX_DATA0	0x1f
--- 
-2.21.0
+Label the regulators node and keep the compatible here.  s3-supply and
+pms405_s3 are board specific, so define these in the qcs404-evb.dtsi
+instead.
+
+Also double check the EVB schematics for the name of the line coming out
+of S3; I would assume vdd_apc or something like that.
+
+Regards,
+Bjorn
+
+> +			compatible = "qcom,pms405-regulators";
+> +			vdd_s3-supply = <&pms405_s3>;
+> +
+> +			pms405_s3: s3 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-name = "vdd_cpu";
+> +				regulator-min-microvolt = <1048000>;
+> +				regulator-max-microvolt = <1352000>;
+> +			};
+> +		};
+> +	};
+>  };
+> -- 
+> 2.20.1
+> 
