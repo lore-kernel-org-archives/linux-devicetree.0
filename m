@@ -1,85 +1,51 @@
-Return-Path: <SRS0=RYdj=RH=gmail.com=marek.vasut@kernel.org>
-From: marek.vasut@gmail.com
-Subject: [PATCH V2] regulator: gpio: Reword the binding document
-Date: Mon,  4 Mar 2019 20:40:23 +0100
-Message-Id: <20190304194023.10926-1-marek.vasut@gmail.com>
+Return-Path: <vkoul@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 3/6] arm64: dts: qcom: qcs404: Fix voltages for s5 and l3
+Date: Sun, 24 Mar 2019 22:02:06 +0530
+Message-Id: <20190324163209.17312-4-vkoul@kernel.org>
+In-Reply-To: <20190324163209.17312-1-vkoul@kernel.org>
+References: <20190324163209.17312-1-vkoul@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: devicetree@vger.kernel.org
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, Harald Geyer <harald@ccbib.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, linux-renesas-soc@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Marek Vasut <marek.vasut+renesas@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Reword the binding document to make it clear how the propeties work
-and which properties affect which other properties.
+PMS405 S5 was upstreamed without a voltage and PMS405 L3 is outside the
+acceptable range, causing PCIe to fail. Fix these.
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Harald Geyer <harald@ccbib.org>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org
-To: devicetree@vger.kernel.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
-V2: - Make "gpios" a mandatory property
-    - Reword "gpio-states" property description
-    - Change "enable-gpio" to "enable-gpios" to match modern DT rules
-Note: The recent gpio-regulator rework caused breakage. While the
-      changes in the gpio-regulator code were according to the DT
-      binding document, they stopped working with older DTs. Make
-      the binding document clearer to prevent such breakage in the
-      future.
----
- .../bindings/regulator/gpio-regulator.txt     | 25 +++++++++++++------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-index 1f496159e2bb..d7f8c1b17db6 100644
---- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-@@ -4,16 +4,25 @@ Required properties:
- - compatible		: Must be "regulator-gpio".
- - regulator-name	: Defined in regulator.txt as optional, but required
- 			  here.
--- states		: Selection of available voltages and GPIO configs.
--                          if there are no states, then use a fixed regulator
-+- gpios			: Array of one or more GPIO pins used to select the
-+			  regulator voltage/current listed in "states".
-+- states		: Selection of available voltages/currents provided by
-+			  this regulator and matching GPIO configurations to
-+			  achieve them. If there are no states in the "states"
-+			  array, use a fixed regulator instead.
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+index 50b3589c7f15..323f9633084b 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+@@ -56,8 +56,8 @@
+ 		};
  
- Optional properties:
--- enable-gpio		: GPIO to use to enable/disable the regulator.
--- gpios			: GPIO group used to control voltage.
--- gpios-states		: gpios pin's initial states array. 0: LOW, 1: HIGH.
--			  defualt is LOW if nothing is specified.
-+- enable-gpios		: GPIO used to enable/disable the regulator.
-+			  Warning, the GPIO phandle flags are ignored and the
-+			  GPIO polarity is controlled solely by the presence
-+			  of "enable-active-high" DT property. This is due to
-+			  compatibility with old DTs.
-+- enable-active-high	: Polarity of "enable-gpio" GPIO is active HIGH.
-+			  Default is active LOW.
-+- gpios-states		: State of GPIO pins in "gpios" array that is set until
-+			  changed by the first consumer. 0: LOW, 1: HIGH.
-+			  Default is LOW if nothing else is specified.
- - startup-delay-us	: Startup time in microseconds.
--- enable-active-high	: Polarity of GPIO is active high (default is low).
- - regulator-type	: Specifies what is being regulated, must be either
- 			  "voltage" or "current", defaults to voltage.
+ 		vreg_s5_1p35: s5 {
+-			regulator-min-microvolt = <>;
+-			regulator-max-microvolt = <>;
++			regulator-min-microvolt = <1352000>;
++			regulator-max-microvolt = <1352000>;
+ 		};
  
-@@ -30,7 +39,7 @@ Example:
- 		regulator-max-microvolt = <2600000>;
- 		regulator-boot-on;
+ 		vreg_l1_1p3: l1 {
+@@ -71,7 +71,7 @@
+ 		};
  
--		enable-gpio = <&gpio0 23 0x4>;
-+		enable-gpios = <&gpio0 23 0x4>;
- 		gpios = <&gpio0 24 0x4
- 			 &gpio0 25 0x4>;
- 		states = <1800000 0x3
+ 		vreg_l3_1p05: l3 {
+-			regulator-min-microvolt = <976000>;
++			regulator-min-microvolt = <1050000>;
+ 			regulator-max-microvolt = <1160000>;
+ 		};
+ 
 -- 
-2.19.2
+2.20.1
