@@ -1,63 +1,56 @@
-Return-Path: <SRS0=8nMF=RO=nxp.com=jun.li@kernel.org>
-From: Jun Li <jun.li@nxp.com>
-Subject: [PATCH v3 1/2] dt-bindings: usb: add documentation for typec switch
- via GPIO
-Date: Mon, 11 Mar 2019 10:40:09 +0000
-Message-ID: <1552299557-6306-1-git-send-email-jun.li@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <vkoul@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 1/6] arm64: dts: qcom: qcs404: Add Ethernet node
+Date: Sun, 24 Mar 2019 22:02:04 +0530
+Message-Id: <20190324163209.17312-2-vkoul@kernel.org>
+In-Reply-To: <20190324163209.17312-1-vkoul@kernel.org>
+References: <20190324163209.17312-1-vkoul@kernel.org>
 MIME-Version: 1.0
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Transfer-Encoding: 8bit
+To: Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Some typec super speed active channel switch can be controlled via
-a GPIO, this binding can be used to specify the switch node by
-a GPIO and the remote endpoint of its consumer.
+Add the ethernet node found in QCS404 platform.
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
+Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- .../devicetree/bindings/usb/typec-switch-gpio.txt  | 30 ++++++++++++++++++=
-++++
- 1 file changed, 30 insertions(+)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/typec-switch-gpio.txt b/=
-Documentation/devicetree/bindings/usb/typec-switch-gpio.txt
-new file mode 100644
-index 0000000..4ef76cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/typec-switch-gpio.txt
-@@ -0,0 +1,30 @@
-+Typec orientation switch via a GPIO
-+-----------------------------------
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index e8fd26633d57..32f2f51bbf7f 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -479,6 +479,27 @@
+ 			status = "okay";
+ 		};
+ 
++		ethernet: ethernet@7a80000 {
++			compatible = "qcom,qcs404-ethqos";
++			reg = <0x07a80000 0x10000>,
++				<0x07a96000 0x100>;
++			reg-names = "stmmaceth", "rgmii";
++			clock-names = "stmmaceth", "pclk", "ptp_ref", "rgmii";
++			clocks = <&gcc GCC_ETH_AXI_CLK>,
++				<&gcc GCC_ETH_SLAVE_AHB_CLK>,
++				<&gcc GCC_ETH_PTP_CLK>,
++				<&gcc GCC_ETH_RGMII_CLK>;
++			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq", "eth_lpi";
 +
-+Required properties:
-+- compatible: should be set one of following:
-+	- "nxp,ptn36043" for NXP Type-C SuperSpeed active switch.
++			snps,tso;
++			rx-fifo-depth = <4096>;
++			tx-fifo-depth = <4096>;
 +
-+- gpios: the GPIO used to switch the super speed active channel,
-+		GPIO_ACTIVE_HIGH: GPIO state high for cc1;
-+		GPIO_ACTIVE_LOW:  GPIO state low for cc1.
-+- orientation-switch: must be present.
-+
-+Required sub-node:
-+- port: specify the remote endpoint of typec switch consumer.
-+
-+Example:
-+
-+ptn36043 {
-+	compatible =3D "nxp,ptn36043";
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_ss_sel>;
-+	gpios =3D <&gpio3 15 GPIO_ACTIVE_HIGH>;
-+	orientation-switch;
-+
-+	port {
-+		usb3_data_ss: endpoint {
-+			remote-endpoint =3D <&typec_con_ss>;
++			status = "disabled";
 +		};
-+	};
-+};
---=20
-2.7.4
++
+ 		wifi: wifi@a000000 {
+ 			compatible = "qcom,wcn3990-wifi";
+ 			reg = <0xa000000 0x800000>;
+-- 
+2.20.1
