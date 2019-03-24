@@ -1,70 +1,22 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 2/5] iio: light: vcnl4000 add devicetree hooks
-Date: Sun, 24 Mar 2019 17:19:30 +0000
-Message-ID: <20190324171930.7580e6bb@archlinux>
-References: <20190321154047.23236-1-angus@akkea.ca>
-        <20190321154047.23236-3-angus@akkea.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 0/2] arm64: dts: qcom: qcs404: CDSP for APF support
+Date: Sun, 24 Mar 2019 10:20:14 -0700
+Message-ID: <20190324172016.1195-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190321154047.23236-3-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tomas Novotny <tomas@novotny.cz>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, Vinod Koul <vkoul@kernel.org>
+Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Mar 2019 08:40:44 -0700
-"Angus Ainslie (Purism)" <angus@akkea.ca> wrote:
+Add the clock controller and describe the cdsp in a way that it can be reused
+between different trusted environments.
 
-> Add an of_match table for devicetree probing.
-> 
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+Bjorn Andersson (2):
+  arm64: dts: qcom: qcs404: Add turingcc node
+  arm64: dts: qcom: Fully describe the CDSP
 
-I made a small tweak (see inline) for an issue I'd missed
-previously (which is pretty obscure!)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 100 ++++++++++++++++++---------
+ 1 file changed, 69 insertions(+), 31 deletions(-)
 
-Jonathan
-> ---
->  drivers/iio/light/vcnl4000.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-> index 5e0a8eb83ebc..308cb2d2b641 100644
-> --- a/drivers/iio/light/vcnl4000.c
-> +++ b/drivers/iio/light/vcnl4000.c
-> @@ -363,9 +363,31 @@ static int vcnl4000_probe(struct i2c_client *client,
->  	return devm_iio_device_register(&client->dev, indio_dev);
->  }
->  
-> +static const struct of_device_id vcnl_4000_of_match[] = {
-> +	{
-> +		.compatible = "vishay,vcnl4000",
-> +		.data = "VCNL4000",
-> +	},
-> +	{
-> +		.compatible = "vishay,vcnl4010",
-> +		.data = "VCNL4010",
-> +	},
-> +	{
-> +		.compatible = "vishay,vcnl4010",
-> +		.data = "VCNL4020",
-> +	},
-> +	{
-> +		.compatible = "vishay,vcnl4200",
-> +		.data = "VCNL4200",
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, vcnl4000_of_match);
-> +
->  static struct i2c_driver vcnl4000_driver = {
->  	.driver = {
->  		.name   = VCNL4000_DRV_NAME,
-> +		.of_match_table = of_match_ptr(vcnl_4000_of_match),
-Ah. I'd missed this previously.  Don't use the of_match_ptr
-magic anymore. It prevents ACPI probing via the weird
-DSDT entry that basically says "here be devicetree".
->  	},
->  	.probe  = vcnl4000_probe,
->  	.id_table = vcnl4000_id,
+-- 
+2.18.0
