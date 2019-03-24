@@ -1,189 +1,246 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCH v1] ARM: dts: exynos: Add proper regulator states for suspend-to-mem for odroid-u3
-Date: Sun, 24 Mar 2019 14:02:56 +0530
-Message-ID: <20190324083256.1047-1-linux.amoon@gmail.com>
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Subject: Re: [PATCH v5 01/11] staging: iio: ad7780: add gain & filter gpio
+ support
+Date: Sun, 24 Mar 2019 11:06:09 +0000
+Message-ID: <20190324110609.3cb21436@archlinux>
+References: <cover.1552700652.git.renatogeh@gmail.com>
+        <2687836c5b442990ee50d4efe787a3927c750bbc.1552700652.git.renatogeh@gmail.com>
+        <20190316174640.12810916@archlinux>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190316174640.12810916@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+To: Renato Lui Geh <renatogeh@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, stefan.popa@analog.com, alexandru.Ardelean@analog.com, giuliano.belinassi@usp.br, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add suspend-to-mem node to regulator core to be enabled or disabled
-during system suspend and also support changing the regulator operating
-mode during runtime and when the system enter sleep mode (stand by mode).
+On Sat, 16 Mar 2019 17:46:40 +0000
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-Current patch:
+> On Fri, 15 Mar 2019 23:12:27 -0300
+> Renato Lui Geh <renatogeh@gmail.com> wrote:
+> 
+> > Previously, the AD7780 driver only supported gpio for the 'powerdown'
+> > pin. This commit adds suppport for the 'gain' and 'filter' pin.
+> > 
+> > Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
+> > Signed-off-by: Giuliano Belinassi <giuliano.belinassi@usp.br>
+> > Co-developed-by: Giuliano Belinassi <giuliano.belinassi@usp.br>  
+> Something a little odd happened when trying to use git am on this,
+> but patch was happy so I did it that way. Please give it a quick
+> sanity check once I push the tree out incase we have a real problem.
+> 
+> Applied to the togreg branch of iio.git to be shortly pushed out
+> as testing for the autobuilders to play with it.
 
-Note: Both microSD and eMMC suspend resume works this changes at my end.
+Ah, we missed a 64 bit being divided below. Found by 0day.
 
-regulator-off-in-suspend:
-set the regulator node into suspend state i.e. standby mode during suspend
-operation.
 
-Current changes are based on
-[0] https://www.kernel.org/doc/Documentation/devicetree/bindings/regulator/max77686.txt
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+> > ---
+> > Changes in v3:
+> >  - Renamed ad7780_chip_info's filter to odr
+> >  - Renamed ad778x_filter to ad778x_odr_avail
+> >  - Changed vref variable from unsigned int to unsigned long long to avoid
+> >    overflow
+> >  - Removed unnecessary AD_SD_CHANNEL macro
+> > Changes in v4:
+> >  - Removed useless macro
+> >  - Added default case for switch to suppress warning
+> >  - Removed chunks belonging to filter reading, adding these as a
+> >    patch for itself
+> > Changes in v5:
+> >  - ad778x_odr_avail moved to filter patch
+> >  - Split gain reading to its own patch
+> >  - Init GPIOs in a separate function
+> > 
+> >  drivers/staging/iio/adc/ad7780.c | 114 ++++++++++++++++++++++++++-----
+> >  1 file changed, 96 insertions(+), 18 deletions(-)
+> > 
+> > diff --git a/drivers/staging/iio/adc/ad7780.c b/drivers/staging/iio/adc/ad7780.c
+> > index c4a85789c2db..07e5e35c92a3 100644
+> > --- a/drivers/staging/iio/adc/ad7780.c
+> > +++ b/drivers/staging/iio/adc/ad7780.c
+> > @@ -39,6 +39,9 @@
+> >  #define AD7170_PATTERN		(AD7780_PAT0 | AD7170_PAT2)
+> >  #define AD7170_PATTERN_MASK	(AD7780_PAT0 | AD7780_PAT1 | AD7170_PAT2)
+> >  
+> > +#define AD7780_GAIN_MIDPOINT	64
+> > +#define AD7780_FILTER_MIDPOINT	13350
+> > +
+> >  struct ad7780_chip_info {
+> >  	struct iio_chan_spec	channel;
+> >  	unsigned int		pattern_mask;
+> > @@ -50,7 +53,10 @@ struct ad7780_state {
+> >  	const struct ad7780_chip_info	*chip_info;
+> >  	struct regulator		*reg;
+> >  	struct gpio_desc		*powerdown_gpio;
+> > -	unsigned int	gain;
+> > +	struct gpio_desc		*gain_gpio;
+> > +	struct gpio_desc		*filter_gpio;
+> > +	unsigned int			gain;
+> > +	unsigned int			int_vref_mv;
+> >  
+> >  	struct ad_sigma_delta sd;
+> >  };
+> > @@ -104,8 +110,10 @@ static int ad7780_read_raw(struct iio_dev *indio_dev,
+> >  		voltage_uv = regulator_get_voltage(st->reg);
+> >  		if (voltage_uv < 0)
+> >  			return voltage_uv;
+> > -		*val = (voltage_uv / 1000) * st->gain;
+> > +		voltage_uv /= 1000;
+> > +		*val = voltage_uv * st->gain;
+> >  		*val2 = chan->scan_type.realbits - 1;
+> > +		st->int_vref_mv = voltage_uv;
+> >  		return IIO_VAL_FRACTIONAL_LOG2;
+> >  	case IIO_CHAN_INFO_OFFSET:
+> >  		*val = -(1 << (chan->scan_type.realbits - 1));
+> > @@ -115,6 +123,50 @@ static int ad7780_read_raw(struct iio_dev *indio_dev,
+> >  	return -EINVAL;
+> >  }
+> >  
+> > +static int ad7780_write_raw(struct iio_dev *indio_dev,
+> > +			    struct iio_chan_spec const *chan,
+> > +			    int val,
+> > +			    int val2,
+> > +			    long m)
+> > +{
+> > +	struct ad7780_state *st = iio_priv(indio_dev);
+> > +	const struct ad7780_chip_info *chip_info = st->chip_info;
+> > +	unsigned long long vref;
+> > +	unsigned int full_scale, gain;
+> > +
+> > +	if (!chip_info->is_ad778x)
+> > +		return -EINVAL;
+> > +
+> > +	switch (m) {
+> > +	case IIO_CHAN_INFO_SCALE:
+> > +		if (val != 0)
+> > +			return -EINVAL;
+> > +
+> > +		vref = st->int_vref_mv * 1000000LL;
+> > +		full_scale = 1 << (chip_info->channel.scan_type.realbits - 1);
+> > +		gain = DIV_ROUND_CLOSEST(vref, full_scale);
 
-  Regulators which can be turned off during system suspend:
-	-LDOn	:	2, 6-8, 10-12, 14-16,
-	-BUCKn	:	1-4.
-  Use standard regulator bindings for it ('regulator-off-in-suspend').
+DIV_ROUND_CLOSEST_ULL needed as vref is long long.
 
-drop the suspend off binding which are not supported by the driver.
+I'll fix up.
 
-RFC version
-[1] https://patchwork.kernel.org/patch/10810909/
-These changes had some problem with eMMC not entering into suspend mode.
-with some miss configuration in regulator-off-in-suspend mode.
+Jonathan
 
-Changes from previos patch.
-[2] https://patchwork.kernel.org/patch/10712549/
-
-Set all the non used regulator in suspend-odd state
-LD02, LD03, LD05, LD06, LD07, LD011, LD013, LDO14, LD016
-
-BUCK5, BUCK6, BUCK7 and not confirable as per driver max77686-regulator
----
- .../boot/dts/exynos4412-odroid-common.dtsi    | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-index 08d3a0a7b4eb..375156ad5454 100644
---- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-@@ -288,6 +288,9 @@
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
- 				regulator-always-on;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo3_reg: LDO3 {
-@@ -317,6 +320,9 @@
- 				regulator-min-microvolt = <1000000>;
- 				regulator-max-microvolt = <1000000>;
- 				regulator-always-on;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo7_reg: LDO7 {
-@@ -324,18 +330,27 @@
- 				regulator-min-microvolt = <1000000>;
- 				regulator-max-microvolt = <1000000>;
- 				regulator-always-on;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo8_reg: LDO8 {
- 				regulator-name = "VDD10_HDMI_1.0V";
- 				regulator-min-microvolt = <1000000>;
- 				regulator-max-microvolt = <1000000>;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo10_reg: LDO10 {
- 				regulator-name = "VDDQ_MIPIHSI_1.8V";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo11_reg: LDO11 {
-@@ -343,6 +358,9 @@
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
- 				regulator-always-on;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo12_reg: LDO12 {
-@@ -351,6 +369,9 @@
- 				regulator-max-microvolt = <3300000>;
- 				regulator-always-on;
- 				regulator-boot-on;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo13_reg: LDO13 {
-@@ -367,6 +388,9 @@
- 				regulator-max-microvolt = <1800000>;
- 				regulator-always-on;
- 				regulator-boot-on;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo15_reg: LDO15 {
-@@ -375,6 +399,9 @@
- 				regulator-max-microvolt = <1000000>;
- 				regulator-always-on;
- 				regulator-boot-on;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo16_reg: LDO16 {
-@@ -383,6 +410,9 @@
- 				regulator-max-microvolt = <1800000>;
- 				regulator-always-on;
- 				regulator-boot-on;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo20_reg: LDO20 {
-@@ -421,6 +451,9 @@
- 				regulator-max-microvolt = <1100000>;
- 				regulator-always-on;
- 				regulator-boot-on;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			buck2_reg: BUCK2 {
-@@ -437,6 +470,9 @@
- 				regulator-max-microvolt = <1050000>;
- 				regulator-always-on;
- 				regulator-boot-on;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			buck4_reg: BUCK4 {
-@@ -444,6 +480,9 @@
- 				regulator-min-microvolt = <900000>;
- 				regulator-max-microvolt = <1100000>;
- 				regulator-microvolt-offset = <50000>;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			buck5_reg: BUCK5 {
--- 
-2.21.0
+> > +		gain = DIV_ROUND_CLOSEST(gain, val2);
+> > +		st->gain = gain;
+> > +		if (gain < AD7780_GAIN_MIDPOINT)
+> > +			gain = 0;
+> > +		else
+> > +			gain = 1;
+> > +		gpiod_set_value(st->gain_gpio, gain);
+> > +		break;
+> > +	case IIO_CHAN_INFO_SAMP_FREQ:
+> > +		if (1000*val + val2/1000 < AD7780_FILTER_MIDPOINT)
+> > +			val = 0;
+> > +		else
+> > +			val = 1;
+> > +		gpiod_set_value(st->filter_gpio, val);
+> > +		break;
+> > +	default:
+> > +		break;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int ad7780_postprocess_sample(struct ad_sigma_delta *sigma_delta,
+> >  				     unsigned int raw_sample)
+> >  {
+> > @@ -125,13 +177,6 @@ static int ad7780_postprocess_sample(struct ad_sigma_delta *sigma_delta,
+> >  	    ((raw_sample & chip_info->pattern_mask) != chip_info->pattern))
+> >  		return -EIO;
+> >  
+> > -	if (chip_info->is_ad778x) {
+> > -		if (raw_sample & AD7780_GAIN)
+> > -			st->gain = 1;
+> > -		else
+> > -			st->gain = 128;
+> > -	}
+> > -
+> >  	return 0;
+> >  }
+> >  
+> > @@ -173,8 +218,47 @@ static const struct ad7780_chip_info ad7780_chip_info_tbl[] = {
+> >  
+> >  static const struct iio_info ad7780_info = {
+> >  	.read_raw = ad7780_read_raw,
+> > +	.write_raw = ad7780_write_raw,
+> >  };
+> >  
+> > +static int ad7780_init_gpios(struct device *dev, struct ad7780_state *st)
+> > +{
+> > +	int ret;
+> > +
+> > +	st->powerdown_gpio = devm_gpiod_get_optional(dev,
+> > +						     "powerdown",
+> > +						     GPIOD_OUT_LOW);
+> > +	if (IS_ERR(st->powerdown_gpio)) {
+> > +		ret = PTR_ERR(st->powerdown_gpio);
+> > +		dev_err(dev, "Failed to request powerdown GPIO: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	if (!st->chip_info->is_ad778x)
+> > +		return 0;
+> > +  
+> nitpick: One blank line is always enough. More just reduces the amount of
+> code that can be seen at a time.
+> 
+> > +
+> > +	st->gain_gpio = devm_gpiod_get_optional(dev,
+> > +						"adi,gain",
+> > +						GPIOD_OUT_HIGH);
+> > +	if (IS_ERR(st->gain_gpio)) {
+> > +		ret = PTR_ERR(st->gain_gpio);
+> > +		dev_err(dev, "Failed to request gain GPIO: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	st->filter_gpio = devm_gpiod_get_optional(dev,
+> > +						  "adi,filter",
+> > +						  GPIOD_OUT_HIGH);
+> > +	if (IS_ERR(st->filter_gpio)) {
+> > +		ret = PTR_ERR(st->filter_gpio);
+> > +		dev_err(dev, "Failed to request filter GPIO: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int ad7780_probe(struct spi_device *spi)
+> >  {
+> >  	struct ad7780_state *st;
+> > @@ -212,15 +296,9 @@ static int ad7780_probe(struct spi_device *spi)
+> >  	indio_dev->num_channels = 1;
+> >  	indio_dev->info = &ad7780_info;
+> >  
+> > -	st->powerdown_gpio = devm_gpiod_get_optional(&spi->dev,
+> > -						     "powerdown",
+> > -						     GPIOD_OUT_LOW);
+> > -	if (IS_ERR(st->powerdown_gpio)) {
+> > -		ret = PTR_ERR(st->powerdown_gpio);
+> > -		dev_err(&spi->dev, "Failed to request powerdown GPIO: %d\n",
+> > -			ret);
+> > -		goto error_disable_reg;
+> > -	}
+> > +	ret = ad7780_init_gpios(&spi->dev, st);
+> > +	if (ret)
+> > +		goto error_cleanup_buffer_and_trigger;
+> >  
+> >  	ret = ad_sd_setup_buffer_and_trigger(indio_dev);
+> >  	if (ret)  
+> 
