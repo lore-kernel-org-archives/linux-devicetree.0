@@ -1,102 +1,120 @@
-Return-Path: <SRS0=1wp7=R5=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v2 5/5] ARM: dts: imx7s-warp: add ov2680 sensor node
-Date: Tue, 26 Mar 2019 11:02:27 +0000
-Message-Id: <20190326110227.7324-6-rui.silva@linaro.org>
-In-Reply-To: <20190326110227.7324-1-rui.silva@linaro.org>
-References: <20190326110227.7324-1-rui.silva@linaro.org>
+Return-Path: <vkoul@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 2/6] arm64: dts: qcom: qcs404: Enable ethernet for EVB-4000
+Date: Sun, 24 Mar 2019 22:02:05 +0530
+Message-Id: <20190324163209.17312-3-vkoul@kernel.org>
+In-Reply-To: <20190324163209.17312-1-vkoul@kernel.org>
+References: <20190324163209.17312-1-vkoul@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+To: Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Warp7 comes with a Omnivision OV2680 sensor, add the node here to make
-complete the camera data path for this system. Add the needed regulator
-to the analog voltage supply, the port and endpoints in mipi_csi node
-and the pinctrl for the reset gpio.
+EVB-4000 comes with ethernet so enable it and add pinctrl bindings.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- arch/arm/boot/dts/imx7s-warp.dts | 45 ++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts | 82 ++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
-index 0063fabfcd30..3bcae72d33e2 100644
---- a/arch/arm/boot/dts/imx7s-warp.dts
-+++ b/arch/arm/boot/dts/imx7s-warp.dts
-@@ -55,6 +55,14 @@
- 		regulator-always-on;
- 	};
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts b/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
+index 11269ad3de0d..8234cff414de 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
+@@ -3,9 +3,91 @@
  
-+	reg_peri_3p15v: regulator-peri-3p15v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "peri_3p15v_reg";
-+		regulator-min-microvolt = <3150000>;
-+		regulator-max-microvolt = <3150000>;
-+		regulator-always-on;
-+	};
+ /dts-v1/;
+ 
++#include <dt-bindings/gpio/gpio.h>
+ #include "qcs404-evb.dtsi"
+ 
+ / {
+ 	model = "Qualcomm Technologies, Inc. QCS404 EVB 4000";
+ 	compatible = "qcom,qcs404-evb";
+ };
 +
- 	sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "imx7-sgtl5000";
-@@ -184,6 +192,27 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
++&ethernet {
++	status = "ok";
 +
-+	ov2680: camera@36 {
-+		compatible = "ovti,ov2680";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ov2680>;
-+		reg = <0x36>;
-+		clocks = <&osc>;
-+		clock-names = "xvclk";
-+		reset-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
-+		DOVDD-supply = <&sw2_reg>;
-+		DVDD-supply = <&sw2_reg>;
-+		AVDD-supply = <&reg_peri_3p15v>;
++	snps,reset-gpio = <&tlmm 60 GPIO_ACTIVE_LOW>;
++	snps,reset-active-low;
++	snps,reset-delays-us = <0 10000 10000>;
 +
-+		port {
-+			ov2680_to_mipi: endpoint {
-+				remote-endpoint = <&mipi_from_sensor>;
-+				clock-lanes = <0>;
-+				data-lanes = <1>;
-+			};
++	pinctrl-names = "default";
++	pinctrl-0 = <&ethernet_defaults>;
++
++	phy-handle = <&phy1>;
++	phy-mode = "rgmii";
++	mdio {
++		#address-cells = <0x1>;
++		#size-cells = <0x0>;
++		compatible = "snps,dwmac-mdio";
++		phy1: phy@4 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			device_type = "ethernet-phy";
++			reg = <0x4>;
 +		};
 +	};
- };
- 
- &i2c3 {
-@@ -221,6 +250,16 @@
- 	clock-frequency = <166000000>;
- 	fsl,csis-hs-settle = <3>;
- 	status = "okay";
++};
 +
-+	port@0 {
-+		reg = <0>;
-+
-+		mipi_from_sensor: endpoint {
-+			remote-endpoint = <&ov2680_to_mipi>;
-+			data-lanes = <1>;
++&tlmm {
++	ethernet_defaults: ethernet-defaults {
++		int {
++			pins = "gpio61";
++			function = "rgmii_int";
++			bias-disable;
++			drive-strength = <2>;
 +		};
-+
++		mdc {
++			pins = "gpio76";
++			function = "rgmii_mdc";
++			bias-pull-up;
++		};
++		mdio {
++			pins = "gpio75";
++			function = "rgmii_mdio";
++			bias-pull-up;
++		};
++		tx {
++			pins = "gpio67", "gpio66", "gpio65", "gpio64";
++			function = "rgmii_tx";
++			bias-pull-up;
++			drive-strength = <16>;
++		};
++		rx {
++			pins = "gpio73", "gpio72", "gpio71", "gpio70";
++			function = "rgmii_rx";
++			bias-disable;
++			drive-strength = <2>;
++		};
++		tx-ctl {
++			pins = "gpio68";
++			function = "rgmii_ctl";
++			bias-pull-up;
++			drive-strength = <16>;
++		};
++		rx-ctl {
++			pins = "gpio74";
++			function = "rgmii_ctl";
++			bias-disable;
++			drive-strength = <2>;
++		};
++		tx-ck {
++			pins = "gpio63";
++			function = "rgmii_ck";
++			bias-pull-up;
++			drive-strength = <16>;
++		};
++		rx-ck {
++			pins = "gpio69";
++			function = "rgmii_ck";
++			bias-disable;
++			drive-strength = <2>;
++		};
 +	};
- };
- 
- &sai1 {
-@@ -343,6 +382,12 @@
- 		>;
- 	};
- 
-+	pinctrl_ov2680: ov2660grp {
-+		fsl,pins = <
-+			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x14
-+		>;
-+	};
-+
- 	pinctrl_sai1: sai1grp {
- 		fsl,pins = <
- 			MX7D_PAD_SAI1_RX_DATA__SAI1_RX_DATA0	0x1f
++};
 -- 
-2.21.0
+2.20.1
