@@ -1,72 +1,43 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [BUG] gpiolib: spi chip select legacy support breaks modern chip
- select and whitens the GTA04 LCD panel
-Date: Sun, 24 Mar 2019 05:15:03 +0100
-Message-ID: <CACRpkdb4URKcdZ-=3aG_np86Bp=1ahs+qztM-7yQkSP18ZkE6A@mail.gmail.com>
-References: <7509BFB6-36E4-441A-9F16-7A4FEE7F7CF3@goldelico.com> <5488EF42-08DB-4273-95FF-49ED31E27472@goldelico.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: [PATCH V4 01/10] mmc: tegra: fix ddr signaling for non-ddr modes
+Date: Sat, 23 Mar 2019 21:45:18 -0700
+Message-ID: <1553402727-23130-1-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5488EF42-08DB-4273-95FF-49ED31E27472@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>, Jan Kotas <jank@cadence.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>
+To: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, riteshh@codeaurora.org
+Cc: skomatineni@nvidia.com, thierry.reding@gmail.com, jonathanh@nvidia.com, anrao@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 3:40 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+ddr_signaling is set to true for DDR50 and DDR52 modes but is
+not set back to false for other modes. This programs incorrect
+host clock when mode change happens from DDR52/DDR50 to other
+SDR or HS modes like incase of mmc_retune where it switches
+from HS400 to HS DDR and then from HS DDR to HS mode and then
+to HS200.
 
-> (1) c1c04cea13dc gpio: of: Fix logic inversion
->
-> together with the basic patch
->
-> (2) 6953c57ab172 gpio: of: Handle SPI chipselect legacy bindings
->
-> leads to a severe regression for our GTA04 board.
+This patch fixes the ddr_signaling to set properly for non DDR
+modes.
 
-Sorry! :(
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/mmc/host/sdhci-tegra.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I found the same problem on my Nomadik board.
-
-But I fixed it in that case by introducing a spi-cs-high into the DTS file:
-https://marc.info/?l=linux-arm-kernel&m=155292310015309&w=2
-
-> I learned that it tries to handle a legacy "spi-cs-high" property of SPI slaves, but was stopped
-> from doing so by a bug (1). So only with both patches, the legacy handler becomes active which
-> explains why it was not noticed earlier.
->
-> Now, our GTA04 device tree from 2014 (v3.16-rc1) was already written without any legacy spi properties
-> in mind
-
-I'm sorry about that, however if you look at the DT binding document:
-Documentation/devicetree/bindings/spi/spi-bus.txt
-
-You will see that spi-cs-high is mandatory. So these DTS files are
-incorrect.
-
-> Therefore I would suggest:
-> * revert both patches as soon as possible (v5.1-rc series) to remove the unexpected spi legacy
->   code handler from the gpio subsystem.
-> * replace all uses of spi-cs-high by correct cs-gpios flags - unless they already are there.
->   fgrep spi-cs-high arch/*/boot/dts/*.dts* shows only a handful of DTS candidates.
-> * fix spi-bus.txt documentation to describe this potential pitfall.
-
-This does not work because there are devices that requires spi-cs-high to be
-respected and the DTS second cell GPIO flag to be ignored.
-
-Jan Kotas reported this problem.
-
-They might have deployed DTB binaries that need to keep working, so we
-cannot change it to ignore spi-cs-high like this. (I might give in if it can be
-proven that all of them just recompile the DTS all the time and no
-DTBs are in flash.)
-
-I think in this case the oldest binding wins. The spi-cs-high was there before
-we came up with the scheme to use the flags cell with GPIO phandles.
-
-I think you simply have to patch these GTA04 DTS files to use
-spi-cs-high.
-
-But I'm open to other ideas, let's discuss this.
-
-Yours,
-Linus Walleij
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index 32e62904c0d3..46086dd43bfb 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -779,6 +779,7 @@ static void tegra_sdhci_set_uhs_signaling(struct sdhci_host *host,
+ 	bool set_dqs_trim = false;
+ 	bool do_hs400_dll_cal = false;
+ 
++	tegra_host->ddr_signaling = false;
+ 	switch (timing) {
+ 	case MMC_TIMING_UHS_SDR50:
+ 	case MMC_TIMING_UHS_SDR104:
+-- 
+2.7.4
