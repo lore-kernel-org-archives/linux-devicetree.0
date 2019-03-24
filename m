@@ -1,277 +1,361 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 4/4] power: supply: add Ingenic JZ47xx battery
- driver.
-Date: Sun, 24 Mar 2019 15:31:37 +0000
-Message-ID: <20190324153137.04857cdf@archlinux>
-References: <20190323172809.14407-1-contact@artur-rojek.eu>
-        <20190323172809.14407-4-contact@artur-rojek.eu>
+Subject: Re: [PATCH v2 2/2] iio: adc: Add driver for the TI ADS8344 A/DC chips
+Date: Sun, 24 Mar 2019 16:01:28 +0000
+Message-ID: <20190324160128.0e07ddb6@archlinux>
+References: <20190322111108.19383-1-gregory.clement@bootlin.com>
+ <20190322111108.19383-3-gregory.clement@bootlin.com>
+ <20190324151625.GA10047@himanshu-Vostro-3559>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190323172809.14407-4-contact@artur-rojek.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Artur Rojek <contact@artur-rojek.eu>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190324151625.GA10047@himanshu-Vostro-3559>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Himanshu Jha <himanshujha199640@gmail.com>
+Cc: devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Lars-Peter Clausen <lars@metafoo.de>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-iio@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 23 Mar 2019 18:28:09 +0100
-Artur Rojek <contact@artur-rojek.eu> wrote:
+On Sun, 24 Mar 2019 20:46:25 +0530
+Himanshu Jha <himanshujha199640@gmail.com> wrote:
 
-> Add a driver for battery present on Ingenic JZ47xx SoCs.
-> 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-The IIO parts look fine to me.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> On Fri, Mar 22, 2019 at 12:11:08PM +0100, Gregory CLEMENT wrote:
+> > This adds support for the Texas Instruments ADS8344 ADC chip. This chip
+> > has a 16-bit 8-Channel ADC and is access directly through SPI.
+> > 
+> > Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Hi Gregory / Himanshu,
 
-Sebastian, assuming you are happy with this version, do you have any
-preference for how we handle this series?
+Comments inline, though mostly addressing Himanshu's questions
+as I was here ;)
 
-Probably needs one of us to do an immutable branch with just this
-in it.  I'm happy to do so once all the relevant Acks etc are in
-place, but don't mind if you want to!
+I'm happy with the code, though up to you if you want to look at
+taking everything to device managed allocators.
 
-Thanks,
+Just the license issue that is stopping me applying this.
 
 Jonathan
 
-> ---
+> > ---
+> >  drivers/iio/adc/Kconfig      |  10 ++
+> >  drivers/iio/adc/Makefile     |   1 +
+> >  drivers/iio/adc/ti-ads8344.c | 200 +++++++++++++++++++++++++++++++++++
+> >  3 files changed, 211 insertions(+)
+> >  create mode 100644 drivers/iio/adc/ti-ads8344.c
+> > 
+> > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> > index 76db6e5cc296..447d3a871746 100644
+> > --- a/drivers/iio/adc/Kconfig
+> > +++ b/drivers/iio/adc/Kconfig
+> > @@ -967,6 +967,16 @@ config TI_ADS7950
+> >  	  To compile this driver as a module, choose M here: the
+> >  	  module will be called ti-ads7950.
+> >  
+> > +config TI_ADS8344
+> > +	tristate "Texas Instruments ADS8344"
+> > +	depends on SPI && OF
+> > +	help
+> > +	  If you say yes here you get support for Texas Instruments ADS8344
+> > +	  ADC chips
+> > +
+> > +	  This driver can also be built as a module. If so, the module will be
+> > +	  called ti-ads8344.
+> > +
+> >  config TI_ADS8688
+> >  	tristate "Texas Instruments ADS8688"
+> >  	depends on SPI && OF
+> > diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> > index 6fcebd167524..1f3ae934111d 100644
+> > --- a/drivers/iio/adc/Makefile
+> > +++ b/drivers/iio/adc/Makefile
+> > @@ -87,6 +87,7 @@ obj-$(CONFIG_TI_ADC128S052) += ti-adc128s052.o
+> >  obj-$(CONFIG_TI_ADC161S626) += ti-adc161s626.o
+> >  obj-$(CONFIG_TI_ADS1015) += ti-ads1015.o
+> >  obj-$(CONFIG_TI_ADS7950) += ti-ads7950.o
+> > +obj-$(CONFIG_TI_ADS8344) += ti-ads8344.o
+> >  obj-$(CONFIG_TI_ADS8688) += ti-ads8688.o
+> >  obj-$(CONFIG_TI_ADS124S08) += ti-ads124s08.o
+> >  obj-$(CONFIG_TI_AM335X_ADC) += ti_am335x_adc.o
+> > diff --git a/drivers/iio/adc/ti-ads8344.c b/drivers/iio/adc/ti-ads8344.c
+> > new file mode 100644
+> > index 000000000000..649ed05bf1c9
+> > --- /dev/null
+> > +++ b/drivers/iio/adc/ti-ads8344.c
+> > @@ -0,0 +1,200 @@
+> > +// SPDX-License-Identifier: GPL-2.0+  
 > 
-> Changes:
+> Inconsistency in License.
 > 
-> v2: - rework the return logic in ingenic_battery_get_property,
->     - make index offsets point forward in ingenic_battery_set_scale,
->     - fix spacing around scale_raw[best_idx + 1]
-> 
->  drivers/power/supply/Kconfig           |  11 ++
->  drivers/power/supply/Makefile          |   1 +
->  drivers/power/supply/ingenic-battery.c | 180 +++++++++++++++++++++++++
->  3 files changed, 192 insertions(+)
->  create mode 100644 drivers/power/supply/ingenic-battery.c
-> 
-> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> index e901b9879e7e..9bfb1637ec28 100644
-> --- a/drivers/power/supply/Kconfig
-> +++ b/drivers/power/supply/Kconfig
-> @@ -169,6 +169,17 @@ config BATTERY_COLLIE
->  	  Say Y to enable support for the battery on the Sharp Zaurus
->  	  SL-5500 (collie) models.
->  
-> +config BATTERY_INGENIC
-> +	tristate "Ingenic JZ47xx SoCs battery driver"
-> +	depends on MIPS || COMPILE_TEST
-> +	depends on INGENIC_ADC
-> +	help
-> +	  Choose this option if you want to monitor battery status on
-> +	  Ingenic JZ47xx SoC based devices.
-> +
-> +	  This driver can also be built as a module. If so, the module will be
-> +	  called ingenic-battery.
-> +
->  config BATTERY_IPAQ_MICRO
->  	tristate "iPAQ Atmel Micro ASIC battery driver"
->  	depends on MFD_IPAQ_MICRO
-> diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-> index b731c2a9b695..9e2c481d0187 100644
-> --- a/drivers/power/supply/Makefile
-> +++ b/drivers/power/supply/Makefile
-> @@ -34,6 +34,7 @@ obj-$(CONFIG_BATTERY_PMU)	+= pmu_battery.o
->  obj-$(CONFIG_BATTERY_OLPC)	+= olpc_battery.o
->  obj-$(CONFIG_BATTERY_TOSA)	+= tosa_battery.o
->  obj-$(CONFIG_BATTERY_COLLIE)	+= collie_battery.o
-> +obj-$(CONFIG_BATTERY_INGENIC)	+= ingenic-battery.o
->  obj-$(CONFIG_BATTERY_IPAQ_MICRO) += ipaq_micro_battery.o
->  obj-$(CONFIG_BATTERY_WM97XX)	+= wm97xx_battery.o
->  obj-$(CONFIG_BATTERY_SBS)	+= sbs-battery.o
-> diff --git a/drivers/power/supply/ingenic-battery.c b/drivers/power/supply/ingenic-battery.c
-> new file mode 100644
-> index 000000000000..822aee1c7b64
-> --- /dev/null
-> +++ b/drivers/power/supply/ingenic-battery.c
-> @@ -0,0 +1,180 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Battery driver for the Ingenic JZ47xx SoCs
-> + * Copyright (c) 2019 Artur Rojek <contact@artur-rojek.eu>
-> + *
-> + * based on drivers/power/supply/jz4740-battery.c
-> + */
-> +
-> +#include <linux/iio/consumer.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/power_supply.h>
-> +#include <linux/property.h>
-> +
-> +struct ingenic_battery {
-> +	struct device *dev;
-> +	struct iio_channel *channel;
-> +	struct power_supply_desc desc;
-> +	struct power_supply *battery;
-> +	struct power_supply_battery_info info;
-> +};
-> +
-> +static int ingenic_battery_get_property(struct power_supply *psy,
-> +					enum power_supply_property psp,
-> +					union power_supply_propval *val)
-> +{
-> +	struct ingenic_battery *bat = power_supply_get_drvdata(psy);
-> +	struct power_supply_battery_info *info = &bat->info;
-> +	int ret;
-> +
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_HEALTH:
-> +		ret = iio_read_channel_processed(bat->channel, &val->intval);
-> +		val->intval *= 1000;
-> +		if (val->intval < info->voltage_min_design_uv)
-> +			val->intval = POWER_SUPPLY_HEALTH_DEAD;
-> +		else if (val->intval > info->voltage_max_design_uv)
-> +			val->intval = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
-> +		else
-> +			val->intval = POWER_SUPPLY_HEALTH_GOOD;
-> +		return ret;
-> +	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-> +		ret = iio_read_channel_processed(bat->channel, &val->intval);
-> +		val->intval *= 1000;
-> +		return ret;
-> +	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
-> +		val->intval = info->voltage_min_design_uv;
-> +		return 0;
-> +	case POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN:
-> +		val->intval = info->voltage_max_design_uv;
-> +		return 0;
-> +	default:
-> +		return -EINVAL;
-> +	};
-> +}
-> +
-> +/* Set the most appropriate IIO channel voltage reference scale
-> + * based on the battery's max voltage.
-> + */
-> +static int ingenic_battery_set_scale(struct ingenic_battery *bat)
-> +{
-> +	const int *scale_raw;
-> +	int scale_len, scale_type, best_idx = -1, best_mV, max_raw, i, ret;
-> +	u64 max_mV;
-> +
-> +	ret = iio_read_max_channel_raw(bat->channel, &max_raw);
-> +	if (ret) {
-> +		dev_err(bat->dev, "Unable to read max raw channel value\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = iio_read_avail_channel_attribute(bat->channel, &scale_raw,
-> +					       &scale_type, &scale_len,
-> +					       IIO_CHAN_INFO_SCALE);
-> +	if (ret < 0) {
-> +		dev_err(bat->dev, "Unable to read channel avail scale\n");
-> +		return ret;
-> +	}
-> +	if (ret != IIO_AVAIL_LIST || scale_type != IIO_VAL_FRACTIONAL_LOG2)
-> +		return -EINVAL;
-> +
-> +	max_mV = bat->info.voltage_max_design_uv / 1000;
-> +
-> +	for (i = 0; i < scale_len; i += 2) {
-> +		u64 scale_mV = (max_raw * scale_raw[i]) >> scale_raw[i + 1];
-> +
-> +		if (scale_mV < max_mV)
-> +			continue;
-> +
-> +		if (best_idx >= 0 && scale_mV > best_mV)
-> +			continue;
-> +
-> +		best_mV = scale_mV;
-> +		best_idx = i;
-> +	}
-> +
-> +	if (best_idx < 0) {
-> +		dev_err(bat->dev, "Unable to find matching voltage scale\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	return iio_write_channel_attribute(bat->channel,
-> +					   scale_raw[best_idx],
-> +					   scale_raw[best_idx + 1],
-> +					   IIO_CHAN_INFO_SCALE);
-> +}
-> +
-> +static enum power_supply_property ingenic_battery_properties[] = {
-> +	POWER_SUPPLY_PROP_HEALTH,
-> +	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-> +	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
-> +	POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN,
-> +};
-> +
-> +static int ingenic_battery_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct ingenic_battery *bat;
-> +	struct power_supply_config psy_cfg = {};
-> +	struct power_supply_desc *desc;
-> +	int ret;
-> +
-> +	bat = devm_kzalloc(dev, sizeof(*bat), GFP_KERNEL);
-> +	if (!bat)
-> +		return -ENOMEM;
-> +
-> +	bat->dev = dev;
-> +	bat->channel = devm_iio_channel_get(dev, "battery");
-> +	if (IS_ERR(bat->channel))
-> +		return PTR_ERR(bat->channel);
-> +
-> +	desc = &bat->desc;
-> +	desc->name = "jz-battery";
-> +	desc->type = POWER_SUPPLY_TYPE_BATTERY;
-> +	desc->properties = ingenic_battery_properties;
-> +	desc->num_properties = ARRAY_SIZE(ingenic_battery_properties);
-> +	desc->get_property = ingenic_battery_get_property;
-> +	psy_cfg.drv_data = bat;
-> +	psy_cfg.of_node = dev->of_node;
-> +
-> +	bat->battery = devm_power_supply_register(dev, desc, &psy_cfg);
-> +	if (IS_ERR(bat->battery)) {
-> +		dev_err(dev, "Unable to register battery\n");
-> +		return PTR_ERR(bat->battery);
-> +	}
-> +
-> +	ret = power_supply_get_battery_info(bat->battery, &bat->info);
-> +	if (ret) {
-> +		dev_err(dev, "Unable to get battery info: %d\n", ret);
-> +		return ret;
-> +	}
-> +	if (bat->info.voltage_min_design_uv < 0) {
-> +		dev_err(dev, "Unable to get voltage min design\n");
-> +		return bat->info.voltage_min_design_uv;
-> +	}
-> +	if (bat->info.voltage_max_design_uv < 0) {
-> +		dev_err(dev, "Unable to get voltage max design\n");
-> +		return bat->info.voltage_max_design_uv;
-> +	}
-> +
-> +	return ingenic_battery_set_scale(bat);
-> +}
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id ingenic_battery_of_match[] = {
-> +	{ .compatible = "ingenic,jz4740-battery", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, ingenic_battery_of_match);
-> +#endif
-> +
-> +static struct platform_driver ingenic_battery_driver = {
-> +	.driver = {
-> +		.name = "ingenic-battery",
-> +		.of_match_table = of_match_ptr(ingenic_battery_of_match),
+Good spot.  That alone means we are going to need a v3.
 
-I guess we can be fairly sure no one will even user this with ACPI
-(magic DT) bindings?  That would make this a rare case where the
-of_match_pr protection and ifdef fun is still fine.
+> >
+> > + * ADS8344 16-bit 8-Channel ADC driver
+> > + *
+> > + * Author: Gregory CLEMENT <gregory.clement@bootlin.com>
+> > + *
+> > + * Datasheet: http://www.ti.com/lit/ds/symlink/ads8344.pdf
+> > + */
+> > +
+> > +#include <linux/delay.h>
+> > +#include <linux/iio/buffer.h>
+> > +#include <linux/iio/iio.h>
+> > +#include <linux/module.h>
+> > +#include <linux/regulator/consumer.h>
+> > +#include <linux/spi/spi.h>
+> > +
+> > +#define ADS8344_START BIT(7)
+> > +#define ADS8344_SINGLE_END BIT(2)
+> > +#define ADS8344_CHANNEL(channel) ((channel) << 4)
+> > +#define ADS8344_CLOCK_INTERNAL 0x2 /* PD1 = 1 and PD0 = 0 */
+> > +
+> > +struct ads8344 {
+> > +	struct spi_device *spi;
+> > +	struct regulator *reg;
+> > +	struct mutex lock;  
+> 
+> This requires a comment explaining its purpose.
+> checkpatch issues a warning IIRC.
 
+In this particular case that might have answered the question
+you have below!
+> 
+> > +
+> > +	u8 tx_buf ____cacheline_aligned;
+> > +	u16 rx_buf;
+> > +};
+> > +
+> > +#define ADS8344_VOLTAGE_CHANNEL(chan, si)				\
+> > +	{								\
+> > +		.type = IIO_VOLTAGE,					\
+> > +		.indexed = 1,						\
+> > +		.channel = chan,					\
+> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> > +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> > +	}
+> > +
+> > +#define ADS8344_VOLTAGE_CHANNEL_DIFF(chan1, chan2, si)			\
+> > +	{								\
+> > +		.type = IIO_VOLTAGE,					\
+> > +		.indexed = 1,						\
+> > +		.channel = (chan1),					\
+> > +		.channel2 = (chan2),					\
+> > +		.differential = 1,					\
+> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> > +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> > +	}
+> > +
+> > +static const struct iio_chan_spec ads8344_channels[] = {
+> > +	ADS8344_VOLTAGE_CHANNEL(0, 0),
+> > +	ADS8344_VOLTAGE_CHANNEL(1, 4),
+> > +	ADS8344_VOLTAGE_CHANNEL(2, 1),
+> > +	ADS8344_VOLTAGE_CHANNEL(3, 5),
+> > +	ADS8344_VOLTAGE_CHANNEL(4, 2),
+> > +	ADS8344_VOLTAGE_CHANNEL(5, 6),
+> > +	ADS8344_VOLTAGE_CHANNEL(6, 3),
+> > +	ADS8344_VOLTAGE_CHANNEL(7, 7),
+> > +	ADS8344_VOLTAGE_CHANNEL_DIFF(0, 1, 8),
+> > +	ADS8344_VOLTAGE_CHANNEL_DIFF(2, 3, 9),
+> > +	ADS8344_VOLTAGE_CHANNEL_DIFF(4, 5, 10),
+> > +	ADS8344_VOLTAGE_CHANNEL_DIFF(6, 7, 11),
+> > +	ADS8344_VOLTAGE_CHANNEL_DIFF(1, 0, 12),
+> > +	ADS8344_VOLTAGE_CHANNEL_DIFF(3, 2, 13),
+> > +	ADS8344_VOLTAGE_CHANNEL_DIFF(5, 4, 14),
+> > +	ADS8344_VOLTAGE_CHANNEL_DIFF(7, 6, 15),
+> > +};
+> > +
+> > +static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
+> > +				  bool differential)
+> > +{
+> > +	struct spi_device *spi = adc->spi;
+> > +	int ret;
+> > +
+> > +	adc->tx_buf = ADS8344_START;
+> > +	if (!differential)
+> > +		adc->tx_buf |= ADS8344_SINGLE_END;
+> > +	adc->tx_buf |= ADS8344_CHANNEL(channel);
+> > +	adc->tx_buf |= ADS8344_CLOCK_INTERNAL;
+> > +
+> > +	ret = spi_write(spi, &adc->tx_buf, 1);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	udelay(9);
+> > +
+> > +	ret = spi_read(spi, &adc->rx_buf, 2);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return adc->rx_buf;
+> > +}
+> > +
+> > +static int ads8344_read_raw(struct iio_dev *iio,
+> > +			    struct iio_chan_spec const *channel, int *value,
+> > +			    int *shift, long mask)
+> > +{
+> > +	struct ads8344 *adc = iio_priv(iio);
+> > +
+> > +	switch (mask) {
+> > +	case IIO_CHAN_INFO_RAW:
+> > +		mutex_lock(&adc->lock);  
+> 
+> Just curious:
+> What would happen if you don't lock ?
 
-> +	},
-> +	.probe = ingenic_battery_probe,
-> +};
-> +module_platform_driver(ingenic_battery_driver);
+Well as I'm here I'll answer.  Key here is that there is nothing stopping
+two concurrent reads of a sysfs file.  In this particular case the
+lock is protecting adc->tx_buff and rx_buff.
+
+As a simple example, imagine two calls are reading different channels.
+As they can race, it's possible both reads occur such that we either
+do two bus reads with the same channel set, or we end up doing one
+read after the other, but both functions end up using the same
+buffer contents. Upshot is that we end up reading the wrong channel.
+
+> 
+> I'm interested in looking for whatever happens in such a case
+> and how to exploit it ?
+> 
+> Also, bus transactions are often atomic using their locking/unlocking
+> procedures. So, why do we need locking procedures in iio drivers itself ?
+
+Yes, this could be avoided, but only at the cost of separate buffers, made
+tricky by the dma alignment requirements that mean we can't use them off
+the stack.  One option would be to use spi_write_then_read, which uses
+the SPI bus locking + some local buffers thus avoiding the problem. However
+the need to have a sleep between them stops that option.
+
+You can think of it as the bus locks prevent multiple users of the bus
+(which may be different drivers) and the IIO locks prevent multiple
+users of IIO device instance specific data.  Hence there is no nice
+way to do it with a single lock as they have different / overlapping
+scopes.
+
+> 
+> > +		*value = ads8344_adc_conversion(adc, channel->scan_index,
+> > +						channel->differential);
+> > +		mutex_unlock(&adc->lock);
+> > +		if (*value < 0)
+> > +			return *value;
+> > +
+> > +		return IIO_VAL_INT;
+> > +	case IIO_CHAN_INFO_SCALE:
+> > +		*value = regulator_get_voltage(adc->reg);
+> > +		if (*value < 0)
+> > +			return *value;
+> > +
+> > +		/* convert regulator output voltage to mV */
+> > +		*value /= 1000;
+> > +		*shift = 16;
+> > +
+> > +		return IIO_VAL_FRACTIONAL_LOG2;
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +}
+> > +
+> > +static const struct iio_info ads8344_info = {
+> > +	.read_raw = ads8344_read_raw,
+> > +};
+> > +
+> > +static int ads8344_probe(struct spi_device *spi)
+> > +{
+> > +	struct iio_dev *indio_dev;
+> > +	struct ads8344 *adc;
+> > +	int ret;
+> > +
+> > +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*adc));
+> > +	if (!indio_dev)
+> > +		return -ENOMEM;
+> > +
+> > +	adc = iio_priv(indio_dev);
+> > +	adc->spi = spi;
+> > +	mutex_init(&adc->lock);
+> > +
+> > +	indio_dev->name = dev_name(&spi->dev);
+> > +	indio_dev->dev.parent = &spi->dev;
+> > +	indio_dev->dev.of_node = spi->dev.of_node;
+> > +	indio_dev->info = &ads8344_info;
+> > +	indio_dev->modes = INDIO_DIRECT_MODE;
+> > +	indio_dev->channels = ads8344_channels;
+> > +	indio_dev->num_channels = ARRAY_SIZE(ads8344_channels);
+> > +
+> > +	adc->reg = devm_regulator_get(&spi->dev, "vref");
+> > +	if (IS_ERR(adc->reg))
+> > +		return PTR_ERR(adc->reg);
+> > +
+> > +	ret = regulator_enable(adc->reg);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	spi_set_drvdata(spi, indio_dev);
+> > +
+> > +	ret = iio_device_register(indio_dev);
+> > +	if (ret) {
+> > +		regulator_disable(adc->reg);
+> > +		return ret;
+> > +	}  
+> 
+> IDK but it is advised not to mix devm_* with regular functions.
+> 
+> If there is any possibilty to use `devm_add_action_or_reset` here ?
+> 
+> This would help get rid of `ads8344_remove` and help smooth
+> unwinding in failure w/o any race.
+
+There is no problem as long as you keep in mind that devm_ unwinding
+occurs after remove occurs.  That means that, to maintain ordering
+of remove being the opposite of probe, once you hit something that
+needs unwinding manually, you should use the none devm functions for
+everything after it.
+
+Hence I think what we have here is correct.  The devm_add_action_or_reset
+might be worthwhile to avoid the need to manually unwind anything at
+all though.
+
+> 
+> > +	return 0;
+> > +}
+> > +
+> > +static int ads8344_remove(struct spi_device *spi)
+> > +{
+> > +	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+> > +	struct ads8344 *adc = iio_priv(indio_dev);
+> > +
+> > +	iio_device_unregister(indio_dev);
+> > +	regulator_disable(adc->reg);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id ads8344_of_match[] = {
+> > +	{ .compatible = "ti,ads8344", },
+> > +	{}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, ads8344_dt_ids);
+> > +
+> > +static struct spi_driver ads8344_driver = {
+> > +	.driver = {
+> > +		.name = "ads8344",
+> > +		.of_match_table = ads8344_of_match,
+> > +	},
+> > +	.probe = ads8344_probe,
+> > +	.remove = ads8344_remove,
+> > +};
+> > +module_spi_driver(ads8344_driver);
+> > +
+> > +MODULE_AUTHOR("Gregory CLEMENT <gregory.clement@bootlin.com>");
+> > +MODULE_DESCRIPTION("ADS8344 driver");  
+> 
+> 
+> > +MODULE_LICENSE("GPL v2");  
+> 
+> this is a mismatch.
+> 
+> 
