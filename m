@@ -1,39 +1,28 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: arm: imx: Add the soc binding for
- imx8mm
-Date: Sun, 24 Mar 2019 16:17:50 -0500
-Message-ID: <CAL_JsqLm+t8PmunAW2kx=jZy6OAaSUdWEpHiLij2W2NyW_N1WA@mail.gmail.com>
-References: <1553247912-21522-1-git-send-email-ping.bai@nxp.com>
- <1553247912-21522-2-git-send-email-ping.bai@nxp.com>
+Subject: Re: [PATCH 1/2] dt-bindings: ARM: dts: rockchip: Add bindings for rk3288-veyron-mighty
+Date: Sun, 24 Mar 2019 16:18:45 -0500
+Message-ID: <CAL_JsqK=kt3k=eXn6uuHoRboWMqLFbnqAvAveVmOjOC0+MK5gw@mail.gmail.com>
+References: <20190322194310.61365-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1553247912-21522-2-git-send-email-ping.bai@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jacky Bai <ping.bai@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190322194310.61365-1-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Matthias Kaehlcke <mka@chromium.org>, Ryan Case <ryandcase@chromium.org>, devicetree@vger.kernel.org, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Alexis Ballier <aballier@gentoo.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>, Jagan Teki <jagan@amarulasolutions.com>, Mark Rutland <mark.rutland@arm.com>, Akash Gajjar <Akash_Gajjar@mentor.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 4:40 AM Jacky Bai <ping.bai@nxp.com> wrote:
+On Fri, Mar 22, 2019 at 2:43 PM Douglas Anderson <dianders@chromium.org> wrote:
 >
-> Add the soc & board binding for i.MX8MM.
+> Mighty is basically the same Chromebook as Jaq but it has a full-sized
+> SD slot and some different (slightly more rugged) plastics around it.
+> Like Jaq, Mighty may show up with various different brandings but all
+> of them have the same board inside.
 >
-> Signed-off-by: Jacky Bai <ping.bai@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
->  change v1->v2:
->  - fix the indent issue of description line
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+>
+>  Documentation/devicetree/bindings/arm/rockchip.yaml | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
