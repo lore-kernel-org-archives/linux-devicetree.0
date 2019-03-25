@@ -1,93 +1,77 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 02/14] bus: ti-sysc: Handle missed no-idle property in addition to no-idle-on-init
-Date: Mon, 25 Mar 2019 14:58:37 -0700
-Message-ID: <20190325215849.13182-3-tony@atomide.com>
-References: <20190325215849.13182-1-tony@atomide.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH V0 5/7] dts: arm64: mt8183: Add FD nodes
+Date: Mon, 25 Mar 2019 16:57:28 -0500
+Message-ID: <20190325215728.GA32712@bogus>
+References: <1550648893-42050-1-git-send-email-Jerry-Ch.chen@mediatek.com>
+ <1550648893-42050-6-git-send-email-Jerry-Ch.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190325215849.13182-1-tony@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1550648893-42050-6-git-send-email-Jerry-Ch.chen@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>
+Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, tfiga@chromium.org, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, hans.verkuil@cisco.com, zwisler@chromium.org, frederic.chen@mediatek.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-We have ti,no-idle in use in addition to ti,no-idle-on-init but we're
-missing handling for it in the ti-sysc interconnect target module driver.
+On Wed, Feb 20, 2019 at 03:48:11PM +0800, Jerry-ch Chen wrote:
+> This patch adds nodes for Face Detection (FD) unit. FD is embedded
+> in Mediatek SoCs and works with the co-processor to perform face
+> detection on the input data and image and output detected face result.
+> 
+> Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> index b3d8dfd..45c7e2f 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> @@ -440,6 +440,26 @@
+>  			#clock-cells = <1>;
+>  		};
+>  
+> +		fd_smem: fd_smem {
+> +			compatible = "mediatek,fd_smem";
+> +			mediatek,larb = <&larb5>;
+> +			iommus = <&iommu M4U_PORT_CAM_IMGI>;
 
-Let's also group the idle defines together and update the binding
-documentation for it.
+This doesn't look like an actual h/w device...
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- Documentation/devicetree/bindings/bus/ti-sysc.txt | 2 ++
- arch/arm/mach-omap2/omap_hwmod.c                  | 2 ++
- drivers/bus/ti-sysc.c                             | 5 ++++-
- include/linux/platform_data/ti-sysc.h             | 5 +++--
- 4 files changed, 11 insertions(+), 3 deletions(-)
+> +		};
+> +
+> +		fd:fd@1502b000 {
 
-diff --git a/Documentation/devicetree/bindings/bus/ti-sysc.txt b/Documentation/devicetree/bindings/bus/ti-sysc.txt
---- a/Documentation/devicetree/bindings/bus/ti-sysc.txt
-+++ b/Documentation/devicetree/bindings/bus/ti-sysc.txt
-@@ -94,6 +94,8 @@ Optional properties:
- 
- - ti,no-idle-on-init	interconnect target module should not be idled at init
- 
-+- ti,no-idle		interconnect target module should not be idled
-+
- Example: Single instance of MUSB controller on omap4 using interconnect ranges
- using offsets from l4_cfg second segment (0x4a000000 + 0x80000 = 0x4a0ab000):
- 
-diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
---- a/arch/arm/mach-omap2/omap_hwmod.c
-+++ b/arch/arm/mach-omap2/omap_hwmod.c
-@@ -3675,6 +3675,8 @@ int omap_hwmod_init_module(struct device *dev,
- 	if (error)
- 		return error;
- 
-+	if (data->cfg->quirks & SYSC_QUIRK_NO_IDLE)
-+		oh->flags |= HWMOD_NO_IDLE;
- 	if (data->cfg->quirks & SYSC_QUIRK_NO_IDLE_ON_INIT)
- 		oh->flags |= HWMOD_INIT_NO_IDLE;
- 	if (data->cfg->quirks & SYSC_QUIRK_NO_RESET_ON_INIT)
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -920,7 +920,8 @@ static int sysc_init_module(struct sysc *ddata)
- {
- 	int error;
- 
--	if (ddata->cfg.quirks & SYSC_QUIRK_NO_IDLE_ON_INIT) {
-+	if (ddata->cfg.quirks &
-+	    (SYSC_QUIRK_NO_IDLE | SYSC_QUIRK_NO_IDLE_ON_INIT)) {
- 		ddata->revision = sysc_read_revision(ddata);
- 		goto rev_quirks;
- 	}
-@@ -1281,6 +1282,8 @@ static const struct sysc_dts_quirk sysc_dts_quirks[] = {
- 	  .mask = SYSC_QUIRK_NO_IDLE_ON_INIT, },
- 	{ .name = "ti,no-reset-on-init",
- 	  .mask = SYSC_QUIRK_NO_RESET_ON_INIT, },
-+	{ .name = "ti,no-idle",
-+	  .mask = SYSC_QUIRK_NO_IDLE, },
- };
- 
- static void sysc_parse_dts_quirks(struct sysc *ddata, struct device_node *np,
-diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
---- a/include/linux/platform_data/ti-sysc.h
-+++ b/include/linux/platform_data/ti-sysc.h
-@@ -46,8 +46,9 @@ struct sysc_regbits {
- 	s8 emufree_shift;
- };
- 
--#define SYSC_QUIRK_LEGACY_IDLE		BIT(8)
--#define SYSC_QUIRK_RESET_STATUS		BIT(7)
-+#define SYSC_QUIRK_LEGACY_IDLE		BIT(9)
-+#define SYSC_QUIRK_RESET_STATUS		BIT(8)
-+#define SYSC_QUIRK_NO_IDLE		BIT(7)
- #define SYSC_QUIRK_NO_IDLE_ON_INIT	BIT(6)
- #define SYSC_QUIRK_NO_RESET_ON_INIT	BIT(5)
- #define SYSC_QUIRK_OPT_CLKS_NEEDED	BIT(4)
--- 
-2.21.0
+space after the :  ^
+> +			compatible = "mediatek,fd";
+
+Should be SoC specific.
+
+> +			mediatek,larb = <&larb5>;
+> +			mediatek,vpu = <&vpu>;
+> +			iommus = <&iommu M4U_PORT_CAM_FDVT_RP>,
+> +				 <&iommu M4U_PORT_CAM_FDVT_WR>,
+> +				 <&iommu M4U_PORT_CAM_FDVT_RB>;
+> +			reg = <0 0x1502b000 0 0x1000>;
+> +			interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&imgsys CLK_IMG_FDVT>;
+> +			clock-names = "FD_CLK_IMG_FD";
+> +			smem_device = <&fd_smem>;
+> +		};
+> +
+>  		vdecsys: syscon@16000000 {
+>  			compatible = "mediatek,mt8183-vdecsys", "syscon";
+>  			reg = <0 0x16000000 0 0x1000>;
+> -- 
+> 1.9.1
+> 
