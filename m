@@ -1,58 +1,50 @@
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V4 01/10] mmc: tegra: fix ddr signaling for non-ddr modes
-Date: Mon, 25 Mar 2019 14:27:00 +0100
-Message-ID: <CAPDyKFoBJBunAU_cBocmNGSN5DwDYaLVd_BR6MYwysQKAwUkxw@mail.gmail.com>
-References: <1553402727-23130-1-git-send-email-skomatineni@nvidia.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: mmc: Add disable-cqe-dcmd property.
+Date: Mon, 25 Mar 2019 14:27:12 +0100
+Message-ID: <CAPDyKFqd8LOi=MN9rCKUwgkTxEjikmq3+B1SWGF8z1ykeMfoyg@mail.gmail.com>
+References: <20190322113808.16858-1-christoph.muellner@theobroma-systems.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553402727-23130-1-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <20190322113808.16858-1-christoph.muellner@theobroma-systems.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harjani Ritesh <riteshh@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, anrao@nvidia.com, linux-tegra <linux-tegra@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+To: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Michal Simek <michal.simek@xilinx.com>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Matthias Brugger <matthias.bgg@gmail.com>, Douglas Anderson <dianders@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Lin Huang <hl@rock-chips.com>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Vicente Bergas <vicencb@gmail.com>, Ezequiel Garcia <ezequiel@collabora.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@v>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 24 Mar 2019 at 05:45, Sowjanya Komatineni
-<skomatineni@nvidia.com> wrote:
+On Fri, 22 Mar 2019 at 12:39, Christoph Muellner
+<christoph.muellner@theobroma-systems.com> wrote:
 >
-> ddr_signaling is set to true for DDR50 and DDR52 modes but is
-> not set back to false for other modes. This programs incorrect
-> host clock when mode change happens from DDR52/DDR50 to other
-> SDR or HS modes like incase of mmc_retune where it switches
-> from HS400 to HS DDR and then from HS DDR to HS mode and then
-> to HS200.
+> Add disable-cqe-dcmd as optional property for MMC hosts.
+> This property allows to disable or not enable the direct command
+> features of the command queue engine.
 >
-> This patch fixes the ddr_signaling to set properly for non DDR
-> modes.
->
-> Tested-by: Jon Hunter <jonathanh@nvidia.com>
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
 
-Applied the series for next, except patch 5 and 10 as those are from arm-soc.
-
-In regards to $subject patch I added a stable tag.
+Applied for next, thanks!
 
 Kind regards
 Uffe
 
 
 > ---
->  drivers/mmc/host/sdhci-tegra.c | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> index 32e62904c0d3..46086dd43bfb 100644
-> --- a/drivers/mmc/host/sdhci-tegra.c
-> +++ b/drivers/mmc/host/sdhci-tegra.c
-> @@ -779,6 +779,7 @@ static void tegra_sdhci_set_uhs_signaling(struct sdhci_host *host,
->         bool set_dqs_trim = false;
->         bool do_hs400_dll_cal = false;
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+> index cdbcfd3a4ff2..c269dbe384fe 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -64,6 +64,8 @@ Optional properties:
+>    whether pwrseq-simple is used. Default to 10ms if no available.
+>  - supports-cqe : The presence of this property indicates that the corresponding
+>    MMC host controller supports HW command queue feature.
+> +- disable-cqe-dcmd: This property indicates that the MMC controller's command
+> +  queue engine (CQE) does not support direct commands (DCMDs).
 >
-> +       tegra_host->ddr_signaling = false;
->         switch (timing) {
->         case MMC_TIMING_UHS_SDR50:
->         case MMC_TIMING_UHS_SDR104:
+>  *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+>  polarity properties, we have to fix the meaning of the "normal" and "inverted"
 > --
-> 2.7.4
+> 2.11.0
 >
