@@ -1,81 +1,66 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 1/3] devicetree: bindings: bd718x7: document HW state
- related ROHM specific properties
-Date: Mon, 25 Mar 2019 06:28:30 +0000
-Message-ID: <20190325062830.GV4731@dell>
-References: <cover.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
- <6ed4238fb083f52de0f5f013647b2334bad8ebe4.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
- <20190320130259.GN4731@dell>
- <20190320141701.GA6208@localhost.localdomain>
- <20190321082338.GT4731@dell>
- <74b5d125c5cac75b3ab37ff2202966fb3f3395a1.camel@fi.rohmeurope.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 2/2] sifive: edac: Add EDAC driver for Sifive l2 Cache
+ Controller
+Date: Mon, 25 Mar 2019 07:54:54 +0100
+Message-ID: <20190325065453.GC12016@zn.tnic>
+References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
+ <1552382461-13051-3-git-send-email-yash.shah@sifive.com>
+ <20190312092842.GC28589@zn.tnic>
+ <alpine.DEB.2.21.9999.1903241705460.8028@viisi.sifive.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <74b5d125c5cac75b3ab37ff2202966fb3f3395a1.camel@fi.rohmeurope.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1903241705460.8028@viisi.sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "elven.wang@nxp.com" <elven.wang@nxp.com>, "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>, "broonie@kernel.org" <broonie@kernel.org>, "angus.ainslie@puri.sm" <angus.ainslie@puri.sm>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "anson.huang@nxp.com" <anson.huang@nxp.com>, "matt.vaittinen@fi.rohmeurope.com" <matt.vaittinen@fi.rohmeurope.com>, "yibin.gong@nxp.com" <yibin.gong@nxp.com>, "Haikola, Heikki" <Heikki.Haikola@fi.rohmeurope.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Yash Shah <yash.shah@sifive.com>, linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org, palmer@sifive.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, aou@eecs.berkeley.edu, mchehab@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Mar 2019, Vaittinen, Matti wrote:
+On Sun, Mar 24, 2019 at 05:16:17PM -0700, Paul Walmsley wrote:
+> Looking at the Synopsys,
 
-> On Thu, 2019-03-21 at 08:23 +0000, Lee Jones wrote:
-> > On Wed, 20 Mar 2019, Matti Vaittinen wrote:
-> > 
-> > > Hello Lee, All
-> > > 
-> > > On Wed, Mar 20, 2019 at 01:02:59PM +0000, Lee Jones wrote:
-> > > > On Thu, 14 Feb 2019, Matti Vaittinen wrote:
-> > > > 
-> > > > > Add ROHM BD71837 / BD71847 specific device tree bindings for
-> > > > > controlling the PMIC shutdown/reset states and voltages for
-> > > > > different HW states. The PMIC was designed to be used with NXP
-> > > > > i.MX8 SoC and it supports SNVS low power state which seems to
-> > > > > be typical for NXP i.MX SoCs. However, when SNVS is used we
-> > > > > must
-> > > > > not allow SW to control enabling/disabling those regulators
-> > > > > which
-> > > > > are crucial for system to boot as there is a HW limitation
-> > > > > which
-> > > > > causes SW controlled regulators to be kept shut down after SNVS
-> > > > > reset.
-> > > > > 
-> > > > > Allow setting the SNVS to be used as reset target state and
-> > > > > allow
-> > > > > marking those regulators which are critical for boot.
-> > > > > 
-> > > > > Signed-off-by: Matti Vaittinen <
-> > > > > matti.vaittinen@fi.rohmeurope.com>
-> > > > > ---
-> > > > >  .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  | 17
-> > > > > ++++++++++
-> > > > >  .../bindings/regulator/rohm,bd71837-regulator.txt  | 38
-> > > > > ++++++++++++++++++++++
-> > > > >  2 files changed, 55 insertions(+)
-> > > > 
-> > > > Needs a DT Ack.
-> > > 
-> > > I think this was already applied to regulator tree by Mark:
-> > > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git/commit/?h=for-next&id=f43d1b388f9be4aa47ed42c33659243a675c5c76
-> > > Does it go in via his tree or do we need to apply it in Lee's tree
-> > > too?
-> > 
-> > Why don't I see an email from Mark?
-> 
-> https://lore.kernel.org/lkml/20190214160025.65B8E1126F78@debutante.sirena.org.uk/
-> 
-> Maybe that's what you're looking for?
+Look again at synopsys_edac.
 
-It is, but I need this in my inbox.
+>  Highbank,
 
-Mark, could you please take the time to fix your scripts please?
+Yes, that one and octeon.
+
+> PowerPC 4xx, and
+
+also a single ppc4xx_edac driver.
+
+> TI EDAC drivers,
+
+There's TI drivers, plural? I see only ti_edac.c. Also, per-vendor.
+
+> all of those are clearly for IP block error management, rather than
+> platform error management. Has the upstream guidance changed since
+> those drivers were merged?
+
+There are others which are per-platform and work just fine this way:
+xgene_edac, altera_edac, layerscape_edac, qcom_edac, synopsys_edac...
+
+The problem with per IP block is that if those compilation units would
+need to share info or communicate, then that is impossible nowadays and
+you'd need to build something on your own.
+
+Also, the EDAC core supports only one driver.
+
+> The core issue for us is that we don't have a generalized "ECC management" 
+> IP block.  And I would just as soon not fake one in the DT data, since the 
+> general DT guidance is that the data in DT is meant to describe the actual 
+> hardware.
+
+Look at how the others I mentioned above do it.
+
+> Would it make more sense to put this driver outside of drivers/edac?
+
+If you're not going to need any EDAC facilities - which are not a lot,
+btw :) - you can do whatever you prefer.
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
