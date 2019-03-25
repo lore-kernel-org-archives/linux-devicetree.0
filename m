@@ -1,68 +1,107 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v10 0/9] support ROHM BD70528 PMIC
-Date: Mon, 25 Mar 2019 10:20:13 +0200
-Message-ID: <20190325082013.GC6208@localhost.localdomain>
-References: <cover.1550148989.git.matti.vaittinen@fi.rohmeurope.com>
- <20190228070450.GB3773@localhost.localdomain>
- <20190228081055.GL4118@dell>
- <20190228082248.GC3773@localhost.localdomain>
- <20190325073640.GB6208@localhost.localdomain>
- <20190325080206.GZ4731@dell>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH] arm64: dts: qcom: qcs404-evb: Enable uart3 and add
+ Bluetooth
+Date: Mon, 25 Mar 2019 13:57:50 +0530
+Message-ID: <20190325082750.GO5348@vkoul-mobl>
+References: <20190305070823.11845-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190325080206.GZ4731@dell>
+In-Reply-To: <20190305070823.11845-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: mazziesaccount@gmail.com, Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, bogdan-petru.chircu-mare@nxp.com
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 08:02:06AM +0000, Lee Jones wrote:
-> On Mon, 25 Mar 2019, Matti Vaittinen wrote:
+On 04-03-19, 23:08, Bjorn Andersson wrote:
+> Enable blsp1_uart3, define its pinconf and add the bluetooth node.
 > 
-> > Hello again Lee & all,
-> > 
-> > On Thu, Feb 28, 2019 at 10:22:48AM +0200, Matti Vaittinen wrote:
-> > > On Thu, Feb 28, 2019 at 08:10:55AM +0000, Lee Jones wrote:
-> > > > On Thu, 28 Feb 2019, Matti Vaittinen wrote:
-> > > > 
-> > > > > Hello Lee and Mark,
-> > > > > 
-> > > > > On Thu, Feb 14, 2019 at 03:02:37PM +0200, Matti Vaittinen wrote:
-> > > > > > Patch series introducing support for ROHM BD70528 PMIC
-> > 
-> > I see the 5.1-rc1 and 5.1-rc2 are out. Those contain the regmap-irq
-> > changes the BD70528 MFD driver depends on. Would you like me to rebase
-> > the series to some other tree (which tree/branch? I don't see updated
-> > for-mfd-next branch in kernel.org yet) and resend it? Original patch
-> > series was created on top of the regulator tree.
-> 
-> If you could rebase and resend, that would be great.
-> 
-> You should (very nearly) always base on an upstream tag, so v5.1-rc2
-> would be best in this case.
+> It seems provisioning is lacking a valid BD address, preventing the
+> interface from initializing, so provide a dummy for now.
 
-So always use tag from "kernel/git/torvalds/linux.git" tree? Thanks for
-this guidance :) I'll try getting this rebased and resent today or
-tomorrow.
+This looks good though I need to hand edit the patch order a bit when
+applied on top of the series I sent..
 
-Br,
-	Matti Vaittinen
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Tested-by: Vinod Koul <vkoul@kernel.org>
+
 
 > 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 45 ++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> index 536f735243d2..5c502e6db424 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> @@ -7,6 +7,7 @@
+>  / {
+>  	aliases {
+>  		serial0 = &blsp1_uart2;
+> +		serial1 = &blsp1_uart3;
+>  	};
+>  
+>  	chosen {
+> @@ -19,6 +20,32 @@
+>  		regulator-always-on;
+>  		regulator-boot-on;
+>  	};
+> +
+> +	vdd_ch0_3p3:
+> +	vdd_esmps3_3p3: vdd-esmps3-3p3-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "eSMPS3_3P3";
+> +
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +	};
+> +};
+> +
+> +&blsp1_uart3 {
+> +	status = "okay";
+> +
+> +	bluetooth {
+> +		compatible = "qcom,wcn3990-bt";
+> +		vddio-supply = <&vreg_l6_1p8>;
+> +		vddxo-supply = <&vreg_l5_1p8>;
+> +		vddrf-supply = <&vreg_l1_1p3>;
+> +		vddch0-supply = <&vdd_ch0_3p3>;
+> +
+> +		local-bd-address = [ 02 00 00 00 5a ad ];
+> +
+> +		max-speed = <3200000>;
+> +	};
+>  };
+>  
+>  &remoteproc_adsp {
+> @@ -205,3 +232,21 @@
+>  		bias-disable;
+>  	};
+>  };
+> +
+> +&blsp1_uart3_default {
+> +	cts {
+> +		pins = "gpio84";
+> +		bias-disable;
+> +	};
+> +
+> +	rts-tx {
+> +		pins = "gpio85", "gpio82";
+> +		drive-strength = <2>;
+> +		bias-disable;
+> +	};
+> +
+> +	rx {
+> +		pins = "gpio83";
+> +		bias-pull-up;
+> +	};
+> +};
 > -- 
-> Lee Jones [李琼斯]
-> Linaro Services Technical Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+> 2.18.0
 
 -- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+~Vinod
