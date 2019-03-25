@@ -1,7 +1,7 @@
 From: thor.thayer@linux.intel.com
-Subject: [PATCHv3 2/3] Documentation: dt: edac: Add Stratix10 Peripheral bindings
-Date: Mon, 25 Mar 2019 10:57:55 -0500
-Message-ID: <1553529476-26181-3-git-send-email-thor.thayer@linux.intel.com>
+Subject: [PATCHv3 3/3] arm64: dts: stratix10: Use new Stratix10 EDAC bindings
+Date: Mon, 25 Mar 2019 10:57:56 -0500
+Message-ID: <1553529476-26181-4-git-send-email-thor.thayer@linux.intel.com>
 References: <1553529476-26181-1-git-send-email-thor.thayer@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1553529476-26181-1-git-send-email-thor.thayer@linux.intel.com>
@@ -12,137 +12,75 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Add peripheral bindings for Stratix10 EDAC to capture
-the differences between the ARM64 and ARM32 architecture.
+Use the new Stratix10 binding format for EDAC nodes.
 
 Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 ---
 v2-3 No change
 ---
- .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 106 +++++++++++++++++++++
- 1 file changed, 106 insertions(+)
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 25 ++++++++++++-----------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-index acb211c098c0..8f52206cfd2a 100644
---- a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-+++ b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-@@ -258,6 +258,49 @@ Required Properties:
- - compatible : Should be "altr,sdram-edac-s10"
- - interrupts : Should be single bit error interrupt.
- 
-+On-Chip RAM ECC
-+Required Properties:
-+- compatible      : Should be "altr,socfpga-s10-ocram-ecc"
-+- reg             : Address and size for ECC block registers.
-+- altr,ecc-parent : phandle to parent OCRAM node.
-+- interrupts      : Should be single bit error interrupt.
-+
-+Ethernet FIFO ECC
-+Required Properties:
-+- compatible      : Should be "altr,socfpga-s10-eth-mac-ecc"
-+- reg             : Address and size for ECC block registers.
-+- altr,ecc-parent : phandle to parent Ethernet node.
-+- interrupts      : Should be single bit error interrupt.
-+
-+NAND FIFO ECC
-+Required Properties:
-+- compatible      : Should be "altr,socfpga-s10-nand-ecc"
-+- reg             : Address and size for ECC block registers.
-+- altr,ecc-parent : phandle to parent NAND node.
-+- interrupts      : Should be single bit error interrupt.
-+
-+DMA FIFO ECC
-+Required Properties:
-+- compatible      : Should be "altr,socfpga-s10-dma-ecc"
-+- reg             : Address and size for ECC block registers.
-+- altr,ecc-parent : phandle to parent DMA node.
-+- interrupts      : Should be single bit error interrupt.
-+
-+USB FIFO ECC
-+Required Properties:
-+- compatible      : Should be "altr,socfpga-s10-usb-ecc"
-+- reg             : Address and size for ECC block registers.
-+- altr,ecc-parent : phandle to parent USB node.
-+- interrupts      : Should be single bit error interrupt.
-+
-+SDMMC FIFO ECC
-+Required Properties:
-+- compatible      : Should be "altr,socfpga-s10-sdmmc-ecc"
-+- reg             : Address and size for ECC block registers.
-+- altr,ecc-parent : phandle to parent SD/MMC node.
-+- interrupts      : Should be single bit error interrupt for port A
-+		    and then single bit error interrupt for port B.
-+
- Example:
- 
- 	eccmgr {
-@@ -274,4 +317,67 @@ Example:
- 			compatible = "altr,sdram-edac-s10";
- 			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index e3f5eaa3657d..41109995563c 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -531,11 +531,12 @@
  		};
-+
-+		ocram-ecc@ff8cc000 {
-+			compatible = "altr,socfpga-s10-ocram-ecc";
-+			reg = <ff8cc000 0x100>;
-+			altr,ecc-parent = <&ocram>;
-+			interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		emac0-rx-ecc@ff8c0000 {
-+			compatible = "altr,socfpga-s10-eth-mac-ecc";
-+			reg = <0xff8c0000 0x100>;
-+			altr,ecc-parent = <&gmac0>;
-+			interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		emac0-tx-ecc@ff8c0400 {
-+			compatible = "altr,socfpga-s10-eth-mac-ecc";
-+			reg = <0xff8c0400 0x100>;
-+			altr,ecc-parent = <&gmac0>;
-+			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>'
-+		};
-+
-+		nand-buf-ecc@ff8c8000 {
-+			compatible = "altr,socfpga-s10-nand-ecc";
-+			reg = <0xff8c8000 0x100>;
-+			altr,ecc-parent = <&nand>;
-+			interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		nand-rd-ecc@ff8c8400 {
-+			compatible = "altr,socfpga-s10-nand-ecc";
-+			reg = <0xff8c8400 0x100>;
-+			altr,ecc-parent = <&nand>;
-+			interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		nand-wr-ecc@ff8c8800 {
-+			compatible = "altr,socfpga-s10-nand-ecc";
-+			reg = <0xff8c8800 0x100>;
-+			altr,ecc-parent = <&nand>;
-+			interrupts = <12 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		dma-ecc@ff8c9000 {
-+			compatible = "altr,socfpga-s10-dma-ecc";
-+			reg = <0xff8c9000 0x100>;
-+			altr,ecc-parent = <&pdma>;
-+			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		usb0-ecc@ff8c4000 {
-+			compatible = "altr,socfpga-s10-usb-ecc";
-+			reg = <0xff8c4000 0x100>;
-+			altr,ecc-parent = <&usb0>;
-+			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		sdmmc-ecc@ff8c8c00 {
-+			compatible = "altr,socfpga-s10-sdmmc-ecc";
-+			reg = <0xff8c8c00 0x100>;
-+			altr,ecc-parent = <&mmc>;
-+			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>,
-+				     <15 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
+ 
+ 		eccmgr {
+-			compatible = "altr,socfpga-a10-ecc-manager";
++			compatible = "altr,socfpga-s10-ecc-manager",
++				     "altr,socfpga-a10-ecc-manager";
+ 			altr,sysmgr-syscon = <&sysmgr>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			interrupts = <0 15 4>, <0 95 4>;
++			interrupts = <0 15 4>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+ 			ranges;
+@@ -543,31 +544,31 @@
+ 			sdramedac {
+ 				compatible = "altr,sdram-edac-s10";
+ 				altr,sdr-syscon = <&sdr>;
+-				interrupts = <16 4>, <48 4>;
++				interrupts = <16 4>;
+ 			};
+ 
+ 			usb0-ecc@ff8c4000 {
+-				compatible = "altr,socfpga-usb-ecc";
++				compatible = "altr,socfpga-s10-usb-ecc",
++					     "altr,socfpga-usb-ecc";
+ 				reg = <0xff8c4000 0x100>;
+ 				altr,ecc-parent = <&usb0>;
+-				interrupts = <2 4>,
+-					     <34 4>;
++				interrupts = <2 4>;
+ 			};
+ 
+ 			emac0-rx-ecc@ff8c0000 {
+-				compatible = "altr,socfpga-eth-mac-ecc";
++				compatible = "altr,socfpga-s10-eth-mac-ecc",
++					     "altr,socfpga-eth-mac-ecc";
+ 				reg = <0xff8c0000 0x100>;
+ 				altr,ecc-parent = <&gmac0>;
+-				interrupts = <4 4>,
+-					     <36 4>;
++				interrupts = <4 4>;
+ 			};
+ 
+ 			emac0-tx-ecc@ff8c0400 {
+-				compatible = "altr,socfpga-eth-mac-ecc";
++				compatible = "altr,socfpga-s10-eth-mac-ecc",
++					     "altr,socfpga-eth-mac-ecc";
+ 				reg = <0xff8c0400 0x100>;
+ 				altr,ecc-parent = <&gmac0>;
+-				interrupts = <5 4>,
+-					     <37 4>;
++				interrupts = <5 4>;
+ 			};
+ 
+ 		};
 -- 
 2.7.4
