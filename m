@@ -1,40 +1,87 @@
-Return-Path: <SRS0=/CI9=RE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from kirsty.vergenet.net ([202.4.237.240]:60502 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727697AbfCAJeh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Mar 2019 04:34:37 -0500
-Date: Fri, 1 Mar 2019 10:34:33 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] dt-bindings: power: r8a77965: Remove non-existent
- A3IR power domain
-Message-ID: <20190301093432.palahslxko5byvwh@verge.net.au>
-References: <20190228105119.548-1-geert+renesas@glider.be>
- <TY1PR01MB1770F8D490EB33636F24954AC0750@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+Return-Path: <SRS0=cqG6=R4=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TY1PR01MB1770F8D490EB33636F24954AC0750@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+References: <b2964da9-4389-b277-0e6f-df41f39326b7@cogentembedded.com>
+In-Reply-To: <b2964da9-4389-b277-0e6f-df41f39326b7@cogentembedded.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 25 Mar 2019 19:34:49 +0100
+Message-ID: <CAMuHMdVr4EcgNdBSnAb2zPCopVCyCWNF8ebcWJzzx=FvrVc0QQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: media: Renesas R-Car IMR bindings
+Content-Type: text/plain; charset="UTF-8"
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kbingham@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Feb 28, 2019 at 11:36:28AM +0000, Fabrizio Castro wrote:
-> > From: Geert Uytterhoeven <geert+renesas@glider.be>
-> > Sent: 28 February 2019 10:51
-> > Subject: [PATCH v2] dt-bindings: power: r8a77965: Remove non-existent A3IR power domain
-> > 
-> > The R-Car Gen3 HardWare Manual Errata for Rev. 0.80 (Feb 28, 2018)
-> > removed the A3IR power domain on R-Car M3-N, as this SoC does not have
-> > an Image Processing Unit (IMP-X5).
-> > 
-> > As of commit d8c6557bc93be73e ("arm64: dts: renesas: r8a77965: Remove
-> > non-existent IPMMU-IR"), this definition is no longer used from DT, and
-> > thus can be removed.
-> > 
-> > Fixes: a527709b78b3c997 ("soc: renesas: rcar-sysc: Add R-Car M3-N support")
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+CC Laurent, Kieran
 
-Thanks, applied for v5.2.
+On Mon, Mar 25, 2019 at 7:14 PM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> The image renderer (IMR), or the distortion correction engine, is a
+> drawing processor with a simple instruction system capable of referencing
+> video capture data or data in an external memory as the 2D texture data
+> and performing texture mapping and drawing with respect to any shape that
+> is split into triangular objects.
+>
+> Document  the device tree bindings for the image renderer light extended 4
+> (IMR-LX4) found in the R-Car gen3 SoCs...
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+>
+> ---
+> This patch is against the 'master' branch of the 'media_tree.git' repo.
+>
+> This patch has been split from the large IMR driver patch (which would need
+> much more work), it fixes checkpatch.pl's warnings on the SoC .dtsi files
+> which have been already merged (the bindings didn't change since v1 of the
+> driver patch).
+>
+> Documentation/devicetree/bindings/media/rcar_imr.txt |   27 +++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>
+> Index: media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
+> ===================================================================
+> --- /dev/null
+> +++ media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
+> @@ -0,0 +1,27 @@
+> +Renesas R-Car Image Renderer (Distortion Correction Engine)
+> +-----------------------------------------------------------
+> +
+> +The image renderer, or the distortion correction engine, is a drawing processor
+> +with a simple instruction system capable of referencing video capture data or
+> +data in an external memory as 2D texture data and performing texture mapping
+> +and drawing with respect to any shape that is split into triangular objects.
+> +
+> +Required properties:
+> +
+> +- compatible: "renesas,<soctype>-imr-lx4", "renesas,imr-lx4" as a fallback for
+> +  the image renderer light extended 4 (IMR-LX4) found in the R-Car gen3 SoCs,
+> +  where the examples with <soctype> are:
+> +  - "renesas,r8a7795-imr-lx4" for R-Car H3,
+> +  - "renesas,r8a7796-imr-lx4" for R-Car M3-W.
+> +- reg: offset and length of the register block;
+> +- interrupts: single interrupt specifier;
+> +- clocks: single clock phandle/specifier pair.
+
+power-domains? (they're usually not in the always-on area on R-Car Gen3)
+resets?
+
+> +
+> +Example:
+> +
+> +       imr-lx4@fe860000 {
+> +               compatible = "renesas,r8a7795-imr-lx4", "renesas,imr-lx4";
+> +               reg = <0 0xfe860000 0 0x2000>;
+> +               interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
+> +               clocks = <&cpg CPG_MOD 823>;
+> +       };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
