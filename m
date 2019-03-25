@@ -1,76 +1,56 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v10 0/9] support ROHM BD70528 PMIC
-Date: Mon, 25 Mar 2019 08:02:06 +0000
-Message-ID: <20190325080206.GZ4731@dell>
-References: <cover.1550148989.git.matti.vaittinen@fi.rohmeurope.com>
- <20190228070450.GB3773@localhost.localdomain>
- <20190228081055.GL4118@dell>
- <20190228082248.GC3773@localhost.localdomain>
- <20190325073640.GB6208@localhost.localdomain>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v3 0/5] PHY: Add support for SERDES in TI's AM654 platform
+Date: Mon, 25 Mar 2019 13:38:10 +0530
+Message-ID: <20190325080815.6056-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190325073640.GB6208@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: mazziesaccount@gmail.com, Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, bogdan-petru.chircu-mare@nxp.com
+To: Rob Herring <robh+dt@kernel.org>, Roger Quadros <rogerq@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Mar 2019, Matti Vaittinen wrote:
+This patch series
+  *) adds support for SERDES module in am654
+  *) modifies phy_reset API to invoke pm_runtime_get/pm_runtime_put since
+the reset callback can access registers.
+  *) Add *release* phy_ops to be invoked when the consumer relinquishes
+PHY
 
-> Hello again Lee & all,
-> 
-> On Thu, Feb 28, 2019 at 10:22:48AM +0200, Matti Vaittinen wrote:
-> > On Thu, Feb 28, 2019 at 08:10:55AM +0000, Lee Jones wrote:
-> > > On Thu, 28 Feb 2019, Matti Vaittinen wrote:
-> > > 
-> > > > Hello Lee and Mark,
-> > > > 
-> > > > On Thu, Feb 14, 2019 at 03:02:37PM +0200, Matti Vaittinen wrote:
-> > > > > Patch series introducing support for ROHM BD70528 PMIC
-> 
-> //snip
-> 
-> > > > 
-> > > > The MFD part depends on the regmap-irq changes and I think that most
-> > > > other subsystems want to have the MFD changes in before taking rest of
-> > > > the driver in their trees. So it will be a while untill all the changes
-> > > > are in. It would really be nice to have the drive in-tree sooner - hence
-> > > > I ask if theres a way. (I don't want to push, just ask if it is possible :])
-> > > 
-> > > It's possible, so long as there aren't any build-time dependencies
-> > > between the subsystems.  Immediate acceptance however isn't possible
-> > > due to the impending merge-window which opens in 3 days.
-> > 
-> > Thanks for reply Lee. So merge-window is opening - meaning the 5.1 is
-> > being baked now(?) 
-> > 
-> > Anyays to make it clear - there is build time dependency between MFD and
-> > regmap-irq changes. MFD part won't compile without the changes in regmap
-> > tree. And theres no new Kconfig to depend on or other compile time
-> > checks. So REGMAP changes are required for this MFD portion to compile.
-> 
-> //snip
-> 
-> > Rest of the subsystems (regulator, clk, watchdog, gpio) do all depend on
-> > MFD - but they should have 'depends on' KConfig to MFD meaning they
-> > won't be built without MFD.
-> 
-> I see the 5.1-rc1 and 5.1-rc2 are out. Those contain the regmap-irq
-> changes the BD70528 MFD driver depends on. Would you like me to rebase
-> the series to some other tree (which tree/branch? I don't see updated
-> for-mfd-next branch in kernel.org yet) and resend it? Original patch
-> series was created on top of the regulator tree.
+Changes from v2:
+  *) Fix typos pointed out by rOGER
+  *) Add dt-binding Documentation in a new file ti,phy-am654-serdes.txt
+  *) Add Roger's patch to support all CLKSEL values.
 
-If you could rebase and resend, that would be great.
+Changes from v1:
+  *) Add *release* phy ops
+  *) Populate release phy_ops in phy-am654-serdes to cleanup
+initializations done in of_xlate
 
-You should (very nearly) always base on an upstream tag, so v5.1-rc2
-would be best in this case.
+Kishon Vijay Abraham I (4):
+  phy: core: Add *release* phy_ops invoked when the consumer
+    relinquishes PHY
+  phy: core: Invoke pm_runtime_get_*/pm_runtime_put_* before invoking
+    reset callback
+  dt-bindings: phy: ti: Add dt binding documentation for SERDES in
+    AM654x SoC
+  phy: ti: Add a new SERDES driver for TI's AM654x SoC
+
+Roger Quadros (1):
+  phy: ti: am654-serdes: Support all clksel values
+
+ .../bindings/phy/ti,phy-am654-serdes.txt      |  81 +++
+ drivers/phy/phy-core.c                        |  11 +
+ drivers/phy/ti/Kconfig                        |  12 +
+ drivers/phy/ti/Makefile                       |   1 +
+ drivers/phy/ti/phy-am654-serdes.c             | 573 ++++++++++++++++++
+ include/dt-bindings/phy/phy-am654-serdes.h    |  13 +
+ include/linux/phy/phy.h                       |   2 +
+ 7 files changed, 693 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt
+ create mode 100644 drivers/phy/ti/phy-am654-serdes.c
+ create mode 100644 include/dt-bindings/phy/phy-am654-serdes.h
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.17.1
