@@ -1,281 +1,74 @@
-From: Nicolas Boichat <drinkcat@chromium.org>
-Subject: Re: [PATCH 4/4] pinctrl: add drive for I2C related pins on MT8183
-Date: Mon, 25 Mar 2019 11:25:07 -0700
-Message-ID: <CANMq1KBwjNxi2fMLFna5r0ak56+8paMq1YbLWHEScTzzLqf+Bw@mail.gmail.com>
-References: <20190325122302.5483-1-zhiyong.tao@mediatek.com> <20190325122302.5483-5-zhiyong.tao@mediatek.com>
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH v2 1/2] EDAC: add EDAC driver for DMC520
+Date: Mon, 25 Mar 2019 18:27:52 +0000
+Message-ID: <c1a16ab4-72d9-f736-065c-b80858f85b7b@arm.com>
+References: <BN7PR08MB5572D3A5217C4749AC4E7DC4AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com>
+ <20190323092342.GD23698@zn.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190325122302.5483-5-zhiyong.tao@mediatek.com>
+In-Reply-To: <20190323092342.GD23698@zn.tnic>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, hui.liu@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, chuanjia.liu@mediatek.com, biao.huang@mediatek.com, hongzhou.yang@mediatek.com, Erin Lo <erin.lo@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-gpio@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>, Rui Zhao <ruizhao@outlook.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "okaya@kernel.org" <okaya@kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "sashal@kernel.org" <sashal@kernel.org>, "hangl@microsoft.com" <hangl@microsoft.com>, "lewan@microsoft.com" <lewan@microsoft.com>, Rui Zhao <ruizhao@microsoft.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 5:23 AM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
->
-> This patch provides the advanced drive for I2C used pins on MT8183.
-> The detail strength specification description of the I2C pin:
-> When E1=0/E0=0, the strength is 0.125mA.
-> When E1=0/E0=1, the strength is 0.25mA.
-> When E1=1/E0=0, the strength is 0.5mA.
-> When E1=1/E0=1, the strength is 1mA.
-> For I2C pins, there are existing generic driving setup and the above
-> specific driving setup. I2C pins can only support 2/4/6/8/10/12/14/16mA
-> driving adjustment in generic driving setup. But in specific driving
-> setup, they can support 0.125/0.25/0.5/1mA adjustment.
-> If we enable specific driving setup for I2C pins,
-> the existing generic driving setup will be disabled.
-> For some special features, we need the I2C pins specific driving setup.
-> The specific driving setup is controlled by E1E0EN.
-> So we need add extra vendor driving preperty instead of the generic
-> driving property. We can add "mediatek,drive-strength-adv = <XXX>;"
-> to describe the specific driving setup property.
-> "XXX" means the value of E1E0EN. So the valid arguments of
-> "mediatek,drive-strength-adv" are from 0 to 7.
->
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> ---
->  drivers/pinctrl/mediatek/pinctrl-mt8183.c        | 50 ++++++++++++++++++++++++
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 47 ++++++++++++++++++++++
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h | 11 ++++++
->  drivers/pinctrl/mediatek/pinctrl-paris.c         | 12 ++++++
->  4 files changed, 120 insertions(+)
->
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8183.c b/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> index 6262fd3678ea..2c7409ed16fa 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> @@ -472,6 +472,51 @@ static const struct mtk_pin_field_calc mt8183_pin_r1_range[] = {
->         PIN_FIELD_BASE(133, 133, 8, 0x0D0, 0x10, 13, 1),
->  };
->
-> +static const struct mtk_pin_field_calc mt8183_pin_e1e0en_range[] = {
-> +       PIN_FIELD_BASE(48, 48, 3, 0x0F0, 0x10, 20, 1),
-> +       PIN_FIELD_BASE(49, 49, 3, 0x0F0, 0x10, 15, 1),
-> +       PIN_FIELD_BASE(50, 50, 4, 0x0F0, 0x10, 12, 1),
-> +       PIN_FIELD_BASE(51, 51, 4, 0x0F0, 0x10, 7, 1),
-> +       PIN_FIELD_BASE(81, 81, 5, 0x0F0, 0x10, 12, 1),
-> +       PIN_FIELD_BASE(82, 82, 5, 0x0F0, 0x10, 9, 1),
-> +       PIN_FIELD_BASE(83, 83, 5, 0x0F0, 0x10, 19, 1),
-> +       PIN_FIELD_BASE(84, 84, 5, 0x0F0, 0x10, 22, 1),
-> +       PIN_FIELD_BASE(103, 103, 6, 0x0F0, 0x10, 24, 1),
-> +       PIN_FIELD_BASE(104, 104, 6, 0x0F0, 0x10, 14, 1),
-> +       PIN_FIELD_BASE(105, 105, 6, 0x0F0, 0x10, 27, 1),
-> +       PIN_FIELD_BASE(106, 106, 6, 0x0F0, 0x10, 17, 1),
-> +};
-> +
-> +static const struct mtk_pin_field_calc mt8183_pin_e0_range[] = {
-> +       PIN_FIELD_BASE(48, 48, 3, 0x0F0, 0x10, 21, 1),
-> +       PIN_FIELD_BASE(49, 49, 3, 0x0F0, 0x10, 16, 1),
-> +       PIN_FIELD_BASE(50, 50, 4, 0x0F0, 0x10, 13, 1),
-> +       PIN_FIELD_BASE(51, 51, 4, 0x0F0, 0x10, 8, 1),
-> +       PIN_FIELD_BASE(81, 81, 5, 0x0F0, 0x10, 13, 1),
-> +       PIN_FIELD_BASE(82, 82, 5, 0x0F0, 0x10, 10, 1),
-> +       PIN_FIELD_BASE(83, 83, 5, 0x0F0, 0x10, 20, 1),
-> +       PIN_FIELD_BASE(84, 84, 5, 0x0F0, 0x10, 23, 1),
-> +       PIN_FIELD_BASE(103, 103, 6, 0x0F0, 0x10, 25, 1),
-> +       PIN_FIELD_BASE(104, 104, 6, 0x0F0, 0x10, 15, 1),
-> +       PIN_FIELD_BASE(105, 105, 6, 0x0F0, 0x10, 28, 1),
-> +       PIN_FIELD_BASE(106, 106, 6, 0x0F0, 0x10, 18, 1),
-> +};
-> +
-> +static const struct mtk_pin_field_calc mt8183_pin_e1_range[] = {
-> +       PIN_FIELD_BASE(48, 48, 3, 0x0F0, 0x10, 22, 1),
-> +       PIN_FIELD_BASE(49, 49, 3, 0x0F0, 0x10, 17, 1),
-> +       PIN_FIELD_BASE(50, 50, 4, 0x0F0, 0x10, 14, 1),
-> +       PIN_FIELD_BASE(51, 51, 4, 0x0F0, 0x10, 9, 1),
-> +       PIN_FIELD_BASE(81, 81, 5, 0x0F0, 0x10, 14, 1),
-> +       PIN_FIELD_BASE(82, 82, 5, 0x0F0, 0x10, 11, 1),
-> +       PIN_FIELD_BASE(83, 83, 5, 0x0F0, 0x10, 21, 1),
-> +       PIN_FIELD_BASE(84, 84, 5, 0x0F0, 0x10, 24, 1),
-> +       PIN_FIELD_BASE(103, 103, 6, 0x0F0, 0x10, 26, 1),
-> +       PIN_FIELD_BASE(104, 104, 6, 0x0F0, 0x10, 16, 1),
-> +       PIN_FIELD_BASE(105, 105, 6, 0x0F0, 0x10, 29, 1),
-> +       PIN_FIELD_BASE(106, 106, 6, 0x0F0, 0x10, 19, 1),
-> +};
-> +
->  static const struct mtk_pin_reg_calc mt8183_reg_cals[PINCTRL_PIN_REG_MAX] = {
->         [PINCTRL_PIN_REG_MODE] = MTK_RANGE(mt8183_pin_mode_range),
->         [PINCTRL_PIN_REG_DIR] = MTK_RANGE(mt8183_pin_dir_range),
-> @@ -485,6 +530,9 @@ static const struct mtk_pin_reg_calc mt8183_reg_cals[PINCTRL_PIN_REG_MAX] = {
->         [PINCTRL_PIN_REG_PUPD] = MTK_RANGE(mt8183_pin_pupd_range),
->         [PINCTRL_PIN_REG_R0] = MTK_RANGE(mt8183_pin_r0_range),
->         [PINCTRL_PIN_REG_R1] = MTK_RANGE(mt8183_pin_r1_range),
-> +       [PINCTRL_PIN_REG_DRV_EN] = MTK_RANGE(mt8183_pin_e1e0en_range),
-> +       [PINCTRL_PIN_REG_DRV_E0] = MTK_RANGE(mt8183_pin_e0_range),
-> +       [PINCTRL_PIN_REG_DRV_E1] = MTK_RANGE(mt8183_pin_e1_range),
->  };
->
->  static const char * const mt8183_pinctrl_register_base_names[] = {
-> @@ -517,6 +565,8 @@ static const struct mtk_pin_soc mt8183_data = {
->         .drive_get = mtk_pinconf_drive_get_rev1,
->         .adv_pull_get = mtk_pinconf_adv_pull_get,
->         .adv_pull_set = mtk_pinconf_adv_pull_set,
-> +       .adv_drive_get = mtk_pinconf_adv_drive_get,
-> +       .adv_drive_set = mtk_pinconf_adv_drive_set,
->  };
->
->  static const struct of_device_id mt8183_pinctrl_of_match[] = {
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index b1c368455d30..ef8732e8966b 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> @@ -674,3 +674,50 @@ int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
->
->         return 0;
->  }
-> +
-> +int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
-> +                             const struct mtk_pin_desc *desc, u32 arg)
-> +{
-> +       int err;
-> +
-> +       err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_EN, arg & 1);
+Hi guys,
 
-Should 1, 2, 4 masks be defined as masks somewhere above in this file?
+On 23/03/2019 09:23, Borislav Petkov wrote:
+> On Thu, Mar 07, 2019 at 01:24:01AM +0000, Rui Zhao wrote:
+>> From: Rui Zhao <ruizhao@microsoft.com>
+>>
+>> New driver supports error detection and correction on
+>> the devices with ARM DMC-520 memory controller.
 
-> +       if (err)
-> +               return err;
-> +
-> +       if (arg & 1) {
+A question/suggestion on the direction...
 
-It's the second time you use arg & 1.
+Could we avoid probing the driver based on the root hardware compatible?
+Could we use the device/chip/platform specific one instead?
 
-Maybe define:
-int en = arg & 1;
-int e0 = !!(arg & 2);
-int e1 = !!(arg & 4);
 
-Also, I feel that the code looks a little cleaner if you just return early here:
-if (!(arg & 1))
-   return err;
+We want to avoid per-function edac drivers. If ${my_chip} has edac support for L3 and
+memory, I should have a ${my_chip}_edac driver that pulls in the appropriate L3 and memory
+code, and presents a sensible view to edac_core.
 
-> +               err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_E0,
-> +                                      !!(arg & 2));
-> +               if (err)
-> +                       return err;
-> +
-> +               err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_E1,
-> +                                      !!(arg & 4));
-> +               if (err)
-> +                       return err;
-> +       }
-> +
-> +       return err;
-> +}
-> +
-> +int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
-> +                             const struct mtk_pin_desc *desc, u32 *val)
+Thinking out loud...
 
-Is there any user for this function? If not, why do we even define it?
+You have:
 
-> +{
-> +       u32 en, e0, e1;
-> +       int err;
-> +
-> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_EN, &en);
-> +       if (err)
-> +               return err;
-> +
-> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_E0, &e0);
-> +       if (err)
-> +               return err;
-> +
-> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_E1, &e1);
-> +       if (err)
-> +               return err;
-> +
-> +       *val = (e0 | e1 << 1 | en << 2) & 0x7;
+>> +static const struct of_device_id dmc520_edac_driver_id[] = {
+>> +	{ .compatible = "arm,dmc-520", },
+>> +	{ /* end of table */ }
+>> +};
+>> +
 
-I'm confused. Here, e0 is bit 0, e1 is bit 1, end is bit 2. But above
-in mtk_pinconf_adv_drive_set, it seems to be in this order: en, e0,
-e1?
+If you wanted to add another device with edac support, we'd ask you to create
+${your_chip}_edac driver and pull in the DMC520 and the other device.
 
-> +
-> +       return 0;
-> +}
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> index 6d24522739d9..1b7da42aa1d5 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> @@ -63,6 +63,9 @@ enum {
->         PINCTRL_PIN_REG_IES,
->         PINCTRL_PIN_REG_PULLEN,
->         PINCTRL_PIN_REG_PULLSEL,
-> +       PINCTRL_PIN_REG_DRV_EN,
-> +       PINCTRL_PIN_REG_DRV_E0,
-> +       PINCTRL_PIN_REG_DRV_E1,
->         PINCTRL_PIN_REG_MAX,
->  };
->
-> @@ -224,6 +227,10 @@ struct mtk_pin_soc {
->         int (*adv_pull_get)(struct mtk_pinctrl *hw,
->                             const struct mtk_pin_desc *desc, bool pullup,
->                             u32 *val);
-> +       int (*adv_drive_set)(struct mtk_pinctrl *hw,
-> +                            const struct mtk_pin_desc *desc, u32 arg);
-> +       int (*adv_drive_get)(struct mtk_pinctrl *hw,
-> +                            const struct mtk_pin_desc *desc, u32 *val);
->
->         /* Specific driver data */
->         void                            *driver_data;
-> @@ -287,5 +294,9 @@ int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
->  int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
->                              const struct mtk_pin_desc *desc, bool pullup,
->                              u32 *val);
-> +int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
-> +                             const struct mtk_pin_desc *desc, u32 arg);
-> +int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
-> +                             const struct mtk_pin_desc *desc, u32 *val);
->
->  #endif /* __PINCTRL_MTK_COMMON_V2_H */
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index b59e10852bfb..dcd295f0eb4b 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -20,12 +20,14 @@
->  #define MTK_PIN_CONFIG_RDSEL   (PIN_CONFIG_END + 2)
->  #define MTK_PIN_CONFIG_PU_ADV  (PIN_CONFIG_END + 3)
->  #define MTK_PIN_CONFIG_PD_ADV  (PIN_CONFIG_END + 4)
-> +#define MTK_PIN_CONFIG_DRV_ADV (PIN_CONFIG_END + 5)
->
->  static const struct pinconf_generic_params mtk_custom_bindings[] = {
->         {"mediatek,tdsel",      MTK_PIN_CONFIG_TDSEL,           0},
->         {"mediatek,rdsel",      MTK_PIN_CONFIG_RDSEL,           0},
->         {"mediatek,pull-up-adv", MTK_PIN_CONFIG_PU_ADV,         1},
->         {"mediatek,pull-down-adv", MTK_PIN_CONFIG_PD_ADV,       1},
-> +       {"mediatek,drive-strength-adv", MTK_PIN_CONFIG_DRV_ADV, 2},
->  };
->
->  #ifdef CONFIG_DEBUG_FS
-> @@ -34,6 +36,7 @@ static const struct pin_config_item mtk_conf_items[] = {
->         PCONFDUMP(MTK_PIN_CONFIG_RDSEL, "rdsel", NULL, true),
->         PCONFDUMP(MTK_PIN_CONFIG_PU_ADV, "pu-adv", NULL, true),
->         PCONFDUMP(MTK_PIN_CONFIG_PD_ADV, "pd-adv", NULL, true),
-> +       PCONFDUMP(MTK_PIN_CONFIG_DRV_ADV, "drive-strengt-adv", NULL, true),
+But probing the 'arm,dmc-520' compatible like this leaves us in a tricky place if someone
+else does this: ${their_device} probes the dmc520 like this too, but they can't stop it on
+their platform as it will break yours...
 
-drive-strength-adv
 
->  };
->  #endif
->
-> @@ -311,6 +314,15 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
->                         return -ENOTSUPP;
->                 }
->                 break;
-> +       case MTK_PIN_CONFIG_DRV_ADV:
-> +               if (hw->soc->adv_drive_set) {
-> +                       err = hw->soc->adv_drive_set(hw, desc, arg);
-> +                       if (err)
-> +                               return err;
-> +               } else {
-> +                       return -ENOTSUPP;
-> +               }
-> +               break;
->         default:
->                 err = -ENOTSUPP;
->         }
-> --
-> 2.12.5
->
+It's normal to have a specific compatible, vexpress has:
+| compatible = "arm,vexpress,v2f-2xv6,ca7x3", "arm,vexpress,v2f-2xv6", "arm,vexpress";
+
+Could we do the same here:
+| compatible = "vendor,soc-name-dmc520", "arm,dmc-520";
+
+or even:
+| compatible = "microsoft,product-name-dmc520", "arm,dmc-520";
+if there is some firmware/board configuration that means vendor/soc isn't precise enough.
+
+Then we always probe the driver from "vendor,soc-name-dmc520", never from "arm,dmc520".
+
+This means we grow a list of vendor/soc-name that are using this driver, but if one of
+them wants to support a second edac device, we can remove their vendor/soc-name from the
+list without affecting anyone else.
+
+
+Thanks,
+
+James
