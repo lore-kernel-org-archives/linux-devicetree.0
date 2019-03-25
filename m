@@ -1,66 +1,55 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 2/2] sifive: edac: Add EDAC driver for Sifive l2 Cache
- Controller
-Date: Mon, 25 Mar 2019 07:54:54 +0100
-Message-ID: <20190325065453.GC12016@zn.tnic>
-References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
- <1552382461-13051-3-git-send-email-yash.shah@sifive.com>
- <20190312092842.GC28589@zn.tnic>
- <alpine.DEB.2.21.9999.1903241705460.8028@viisi.sifive.com>
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: RE: [PATCH v3 3/5] devfreq: rk3399_dmc: Pass ODT and auto power
+ down parameters to TF-A.
+Date: Mon, 25 Mar 2019 15:55:15 +0900
+Message-ID: <20190325065515epcms1p4743158f941064730272c8f976d844237@epcms1p4>
+References: <20190321231440.19031-4-gael.portay@collabora.com>
+        <20190321231440.19031-1-gael.portay@collabora.com>
+        <CGME20190321231449epcas1p4ea54b4862fd8552f207f81bce8cb706f@epcms1p4>
+Reply-To: myungjoo.ham@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.9999.1903241705460.8028@viisi.sifive.com>
+In-Reply-To: <20190321231440.19031-4-gael.portay@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Yash Shah <yash.shah@sifive.com>, linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org, palmer@sifive.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, aou@eecs.berkeley.edu, mchehab@kernel.org, devicetree@vger.kernel.org
+To: Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lin Huang <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Derek Basehore <dbasehore@chromium.org>, Randy Li <ayaka@soulik.info>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infra>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?R2HDq2wgUE9SVEFZ?= <gael.portay@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 05:16:17PM -0700, Paul Walmsley wrote:
-> Looking at the Synopsys,
+>From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>
+>Trusted Firmware-A (TF-A) for rk3399 implements a SiP call to get the
+>on-die termination (ODT) and auto power down parameters from kernel,
+>this patch adds the functionality to do this. Also, if DDR clock
+>frequency is lower than the on-die termination (ODT) disable frequency
+>this driver should disable the DDR ODT.
+>
+>Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+>Signed-off-by: Gael PORTAY <gael.portay@collabora.com>
 
-Look again at synopsys_edac.
+Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 
->  Highbank,
 
-Yes, that one and octeon.
+Cheers!
+MyungJoo
 
-> PowerPC 4xx, and
-
-also a single ppc4xx_edac driver.
-
-> TI EDAC drivers,
-
-There's TI drivers, plural? I see only ti_edac.c. Also, per-vendor.
-
-> all of those are clearly for IP block error management, rather than
-> platform error management. Has the upstream guidance changed since
-> those drivers were merged?
-
-There are others which are per-platform and work just fine this way:
-xgene_edac, altera_edac, layerscape_edac, qcom_edac, synopsys_edac...
-
-The problem with per IP block is that if those compilation units would
-need to share info or communicate, then that is impossible nowadays and
-you'd need to build something on your own.
-
-Also, the EDAC core supports only one driver.
-
-> The core issue for us is that we don't have a generalized "ECC management" 
-> IP block.  And I would just as soon not fake one in the DT data, since the 
-> general DT guidance is that the data in DT is meant to describe the actual 
-> hardware.
-
-Look at how the others I mentioned above do it.
-
-> Would it make more sense to put this driver outside of drivers/edac?
-
-If you're not going to need any EDAC facilities - which are not a lot,
-btw :) - you can do whatever you prefer.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+>---
+>
+>Changes in v3:
+>- [PATCH v2 3/5] Add Signed-off-by: Gael PORTAY <gael.portay@collabora.com>.
+>		 Remove comments.
+>		 Move pmu dt parsing after dt-parsing of timings to fix
+>		  data->odt_dis_freq value.
+>
+>Changes in v2: None
+>
+>Changes in v1:
+>- [RFC 3/10] Add an explanation for platform SIP calls.
+>- [RFC 3/10] Change if statement for a switch.
+>- [RFC 3/10] Rename ddr_flag to odt_enable to be more clear.
+>
+> drivers/devfreq/rk3399_dmc.c        | 71 ++++++++++++++++++++++++++++-
+> include/soc/rockchip/rockchip_sip.h |  1 +
+> 2 files changed, 71 insertions(+), 1 deletion(-)
