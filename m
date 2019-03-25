@@ -1,72 +1,91 @@
 From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v2 1/2] EDAC: add EDAC driver for DMC520
-Date: Mon, 25 Mar 2019 18:27:52 +0000
-Message-ID: <c1a16ab4-72d9-f736-065c-b80858f85b7b@arm.com>
-References: <BN7PR08MB5572D3A5217C4749AC4E7DC4AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com>
- <20190323092342.GD23698@zn.tnic>
+Subject: Re: [PATCH v2 2/2] dt-bindings: edac: arm-dmc520.txt
+Date: Mon, 25 Mar 2019 18:30:14 +0000
+Message-ID: <3b740d3a-ba0d-d186-e8f8-6fdf75a36056@arm.com>
+References: <1551921818-2825-1-git-send-email-ruizhao@outlook.com>
+ <BN7PR08MB5572B3388B2D7DC8F6C7F285AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190323092342.GD23698@zn.tnic>
+In-Reply-To: <BN7PR08MB5572B3388B2D7DC8F6C7F285AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com>
 Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>, Rui Zhao <ruizhao@outlook.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "okaya@kernel.org" <okaya@kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "sashal@kernel.org" <sashal@kernel.org>, "hangl@microsoft.com" <hangl@microsoft.com>, "lewan@microsoft.com" <lewan@microsoft.com>, Rui Zhao <ruizhao@microsoft.com>
+To: Rui Zhao <ruizhao@outlook.com>
+Cc: "bp@alien8.de" <bp@alien8.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "okaya@kernel.org" <okaya@kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "sashal@kernel.org" <sashal@kernel.org>, "hangl@microsoft.com" <hangl@microsoft.com>, "lewan@microsoft.com" <lewan@microsoft.com>, Rui Zhao <ruizhao@microsoft.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi guys,
+Hi Rui,
 
-On 23/03/2019 09:23, Borislav Petkov wrote:
-> On Thu, Mar 07, 2019 at 01:24:01AM +0000, Rui Zhao wrote:
->> From: Rui Zhao <ruizhao@microsoft.com>
->>
->> New driver supports error detection and correction on
->> the devices with ARM DMC-520 memory controller.
+On 07/03/2019 01:24, Rui Zhao wrote:
+> From: Rui Zhao <ruizhao@microsoft.com>
+> dt-bindings for new EDAC driver dmc520_edac.c.
 
-A question/suggestion on the direction...
-
-Could we avoid probing the driver based on the root hardware compatible?
-Could we use the device/chip/platform specific one instead?
+(minor nit, the DT folk prefer the binding to come first in the series, this makes it
+easier to review)
 
 
-We want to avoid per-function edac drivers. If ${my_chip} has edac support for L3 and
-memory, I should have a ${my_chip}_edac driver that pulls in the appropriate L3 and memory
-code, and presents a sensible view to edac_core.
+> diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> new file mode 100644
+> index 0000000..7bea7dd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> @@ -0,0 +1,21 @@
+> +* ARM DMC-520 EDAC node
+> +
+> +Required properties:
+> +- compatible		: "arm,dmc-520".
+> +- reg			: Address range of the DMC-520 registers.
+> +- interrupts		: DMC-520 interrupt numbers.
 
-Thinking out loud...
+Your example has two interrupts, what do they correspond to? (It needs to be clear from
+the binding)
 
-You have:
+Because this thing has quite a few, it may be worth naming the ones you use. If someone
+else's platform uses one of the others, they can add it without conflicting with DTs for
+yours.
 
->> +static const struct of_device_id dmc520_edac_driver_id[] = {
->> +	{ .compatible = "arm,dmc-520", },
->> +	{ /* end of table */ }
->> +};
->> +
+Looking through the TRM for things ending in _int, they seem to be:
+* ram_ecc_erc
+* ram_ecc_erd
+* dram_ecc_erc
+* dram_ecc_erd
+* failed_access
+* failed_prog
+* link_err
+* arch_fsm
+* temperature_event
+* phy_request
+* combined_int
 
-If you wanted to add another device with edac support, we'd ask you to create
-${your_chip}_edac driver and pull in the DMC520 and the other device.
-
-But probing the 'arm,dmc-520' compatible like this leaves us in a tricky place if someone
-else does this: ${their_device} probes the dmc520 like this too, but they can't stop it on
-their platform as it will break yours...
+I think this is far too many to enumerate from day one, especially as your platform only
+needs two. Could we name the two you need so that its clear which ones they are, and
+others can be added when someone needs them.
 
 
-It's normal to have a specific compatible, vexpress has:
-| compatible = "arm,vexpress,v2f-2xv6,ca7x3", "arm,vexpress,v2f-2xv6", "arm,vexpress";
+> +- interrupt-mask	: Interrupts to be enabled, refer to interrupt_control
+> +			  register in DMC-520 TRM for interrupt mapping.
 
-Could we do the same here:
-| compatible = "vendor,soc-name-dmc520", "arm,dmc-520";
+This sounds like policy. It would be good to omit the interrupts that aren't wired up. If
+there is a policy like 'use ram not dram on platform Y' we can get the edac driver to do
+that based on of_machine_is_compatible() (as the altera edac driver already does).
 
-or even:
-| compatible = "microsoft,product-name-dmc520", "arm,dmc-520";
-if there is some firmware/board configuration that means vendor/soc isn't precise enough.
 
-Then we always probe the driver from "vendor,soc-name-dmc520", never from "arm,dmc520".
+> +Optional properties:
+> +- interrupt-shared	: set this property if and only if all DMC-520
+> +			  interrupts share the interrupt number.
 
-This means we grow a list of vendor/soc-name that are using this driver, but if one of
-them wants to support a second edac device, we can remove their vendor/soc-name from the
-list without affecting anyone else.
+What if some of them are combined, and some aren't?
+
+(this shared-interrupts was my example of why we need a documented binding to work out
+what is specific to your platofrm)
+
+I'm not sure how this usually gets described in a DT binding ... couldn't we spot this
+from duplicate entries in the interrupts property? If we register them with IRQF_SHARED,
+would it matter?
+
+(We can always tell its our device from the status register, so I think we should use
+IRQF_SHARED regardless.)
 
 
 Thanks,
