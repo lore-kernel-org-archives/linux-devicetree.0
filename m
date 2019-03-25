@@ -1,643 +1,410 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v3 4/5] phy: ti: Add a new SERDES driver for TI's AM654x
- SoC
-Date: Mon, 25 Mar 2019 09:05:36 -0500
-Message-ID: <b8c035a6-acc2-5a40-8eca-72c9a94cef04@ti.com>
-References: <20190325080815.6056-1-kishon@ti.com>
- <20190325080815.6056-5-kishon@ti.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH] dt-bindings: Add schemas for simple-framebuffer
+Date: Mon, 25 Mar 2019 14:54:14 +0100
+Message-ID: <20190325135414.9728-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190325080815.6056-5-kishon@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Roger Quadros <rogerq@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Maxime Jourdan <mjourdan@baylibre.com>, devicetree@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 3/25/19 3:08 AM, Kishon Vijay Abraham I wrote:
-> Add a new SERDES driver for TI's AM654x SoC which configures
-> the SERDES only for PCIe. Support fo USB3 will be added later.
-> 
-> SERDES in am654x has three input clocks (left input, externel reference
-> clock and right input) and two output clocks (left output and right
-> output) in addition to a PLL mux clock which the SERDES uses for Clock
-> Multiplier Unit (CMU refclock).
-> 
-> The PLL mux clock can select from one of the three input clocks.
-> The right output can select between left input and external reference
-> clock while the left output can select between the right input and
-> external reference clock.
-> 
-> The driver has support to select PLL mux and left/right output mux as
-> specified in device tree.
-> 
-> [rogerq@ti.com: Fix boot lockup caused by accessing a structure member
-> (hw->init) allocated in stack of probe() and accessed in get_parent]
-> [rogerq@ti.com: Fix "Failed to find the parent" warnings]
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/phy/ti/Kconfig            |  12 +
->  drivers/phy/ti/Makefile           |   1 +
->  drivers/phy/ti/phy-am654-serdes.c | 539 ++++++++++++++++++++++++++++++
->  3 files changed, 552 insertions(+)
->  create mode 100644 drivers/phy/ti/phy-am654-serdes.c
-> 
-> diff --git a/drivers/phy/ti/Kconfig b/drivers/phy/ti/Kconfig
-> index 7cdc35f8c862..6931c87235b9 100644
-> --- a/drivers/phy/ti/Kconfig
-> +++ b/drivers/phy/ti/Kconfig
-> @@ -20,6 +20,18 @@ config PHY_DM816X_USB
->  	help
->  	  Enable this for dm816x USB to work.
->  
-> +config PHY_AM654_SERDES
-> +	tristate "TI AM654 SERDES support"
-> +	depends on OF && ARCH_K3 || COMPILE_TEST
-> +	depends on COMMON_CLK
-> +	select GENERIC_PHY
-> +	select MULTIPLEXER
-> +	select REGMAP_MMIO
-> +	select MUX_MMIO
-> +	help
-> +	  This option enables support for TI AM654 SerDes PHY used for
-> +	  PCIe.
-> +
->  config OMAP_CONTROL_PHY
->  	tristate "OMAP CONTROL PHY Driver"
->  	depends on ARCH_OMAP2PLUS || COMPILE_TEST
-> diff --git a/drivers/phy/ti/Makefile b/drivers/phy/ti/Makefile
-> index 368de8e1548d..601bbd88f35e 100644
-> --- a/drivers/phy/ti/Makefile
-> +++ b/drivers/phy/ti/Makefile
-> @@ -6,5 +6,6 @@ obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
->  obj-$(CONFIG_TI_PIPE3)			+= phy-ti-pipe3.o
->  obj-$(CONFIG_PHY_TUSB1210)		+= phy-tusb1210.o
->  obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
-> +obj-$(CONFIG_PHY_AM654_SERDES)		+= phy-am654-serdes.o
->  obj-$(CONFIG_PHY_TI_GMII_SEL)		+= phy-gmii-sel.o
->  obj-$(CONFIG_PHY_TI_KEYSTONE_SERDES)	+= phy-keystone-serdes.o
-> diff --git a/drivers/phy/ti/phy-am654-serdes.c b/drivers/phy/ti/phy-am654-serdes.c
-> new file mode 100644
-> index 000000000000..dfbd2d48503d
-> --- /dev/null
-> +++ b/drivers/phy/ti/phy-am654-serdes.c
-> @@ -0,0 +1,539 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/**
-> + * PCIe SERDES driver for AM654x SoC
-> + *
-> + * Copyright (C) 2018 Texas Instruments
+The simple framebuffer is a binding that allows the bootloader to setup a
+framebuffer, describe it in the Device Tree for the OS to pick it up and
+use it as is.
 
-Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
+Replace the current binding by a schema to allow the validation tools to
+check those nodes.
 
-> + * Author: Kishon Vijay Abraham I <kishon@ti.com>
-> + */
-> +
-> +#include <dt-bindings/phy/phy.h>
-> +#include <linux/clk.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/mux/consumer.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +#include <linux/mfd/syscon.h>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Chen-Yu Tsai <wens@csie.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Maxime Jourdan <mjourdan@baylibre.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-alphabetize last item + do we need all of these?
+---
 
-> +
-> +#define CMU_R07C		0x7c
-> +#define CMU_MASTER_CDN_O	BIT(24)
-> +
-> +#define COMLANE_R138		0xb38
-> +#define CONFIG_VERSION_REG_MASK	GENMASK(23, 16)
-> +#define CONFIG_VERSION_REG_SHIFT 16
-> +#define VERSION			0x70
-> +
-> +#define COMLANE_R190		0xb90
-> +#define L1_MASTER_CDN_O		BIT(9)
-> +
-> +#define COMLANE_R194		0xb94
-> +#define CMU_OK_I_0		BIT(19)
-> +
-> +#define SERDES_CTRL		0x1fd0
-> +#define POR_EN			BIT(29)
-> +
-> +#define WIZ_LANEXCTL_STS	0x1fe0
-> +#define TX0_ENABLE_OVL		BIT(31)
-> +#define TX0_ENABLE_MASK		GENMASK(30, 29)
-> +#define TX0_ENABLE_SHIFT	29
-> +#define TX0_DISABLE_STATE	0x0
-> +#define TX0_SLEEP_STATE		0x1
-> +#define TX0_SNOOZE_STATE	0x2
-> +#define TX0_ENABLE_STATE	0x3
-> +#define RX0_ENABLE_OVL		BIT(15)
-> +#define RX0_ENABLE_MASK		GENMASK(14, 13)
-> +#define RX0_ENABLE_SHIFT	13
-> +#define RX0_DISABLE_STATE	0x0
-> +#define RX0_SLEEP_STATE		0x1
-> +#define RX0_SNOOZE_STATE	0x2
-> +#define RX0_ENABLE_STATE	0x3
-> +
-> +#define WIZ_PLL_CTRL		0x1ff4
-> +#define PLL_ENABLE_OVL		BIT(31)
-> +#define PLL_ENABLE_MASK		GENMASK(30, 29)
-> +#define PLL_ENABLE_SHIFT	29
-> +#define PLL_DISABLE_STATE	0x0
-> +#define PLL_SLEEP_STATE		0x1
-> +#define PLL_SNOOZE_STATE	0x2
-> +#define PLL_ENABLE_STATE	0x3
-> +#define PLL_OK			BIT(28)
-> +
-> +#define PLL_LOCK_TIME		100000	/* in microseconds */
-> +#define SLEEP_TIME		100	/* in microseconds */
-> +
-> +#define LANE_USB3		0x0
-> +#define LANE_PCIE0_LANE0	0x1
-> +
-> +#define LANE_PCIE1_LANE0	0x0
-> +#define LANE_PCIE0_LANE1	0x1
-> +
-> +#define SERDES_NUM_CLOCKS	3
-> +
-> +struct serdes_am654_clk_mux {
-> +	struct clk_hw	hw;
-> +	struct regmap	*regmap;
-> +	unsigned int	reg;
-> +	int		*table;
-> +	u32		mask;
-> +	u8		shift;
-> +	struct clk_init_data clk_data;
-> +};
-> +
-> +#define to_serdes_am654_clk_mux(_hw)	\
-> +		container_of(_hw, struct serdes_am654_clk_mux, hw)
-> +
-> +static struct regmap_config serdes_am654_regmap_config = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +	.fast_io = true,
-> +};
-> +
-> +struct serdes_am654 {
-> +	struct regmap		*regmap;
-> +	struct device		*dev;
-> +	struct mux_control	*control;
-> +	bool			busy;
-> +	u32			type;
-> +	struct device_node	*of_node;
-> +	struct clk_onecell_data	clk_data;
-> +	struct clk		*clks[SERDES_NUM_CLOCKS];
-> +};
-> +
-> +static int serdes_am654_enable_pll(struct serdes_am654 *phy)
-> +{
-> +	u32 mask = PLL_ENABLE_OVL | PLL_ENABLE_MASK;
-> +	u32 val = PLL_ENABLE_OVL | (PLL_ENABLE_STATE << PLL_ENABLE_SHIFT);
-> +
-> +	regmap_update_bits(phy->regmap, WIZ_PLL_CTRL, mask, val);
+Rob,
 
+Even though the node itself is properly described, I still end up with some
+validation warnings when the chosen node is validated (basically
+complaining that ranges, and the framebuffer nodes shouldn't be here, since
+we haven't described them in the chosen schemas).
 
-This driver looks like a good candidate for regmap_field
+I've tried to expand it, but I failed, using that patch:
+http://code.bulix.org/mimu5z-634661?raw
 
-> +
-> +	return regmap_read_poll_timeout(phy->regmap, WIZ_PLL_CTRL, val,
-> +					val & PLL_OK, 1000, PLL_LOCK_TIME);
-> +}
-> +
-> +static void serdes_am654_disable_pll(struct serdes_am654 *phy)
-> +{
-> +	u32 mask = PLL_ENABLE_OVL | PLL_ENABLE_MASK;
-> +
-> +	regmap_update_bits(phy->regmap, WIZ_PLL_CTRL, mask, PLL_ENABLE_OVL);
-> +}
-> +
-> +static int serdes_am654_enable_txrx(struct serdes_am654 *phy)
-> +{
-> +	u32 mask;
-> +	u32 val;
-> +
-> +	/* Enable TX */
-> +	mask = TX0_ENABLE_OVL | TX0_ENABLE_MASK;
-> +	val = TX0_ENABLE_OVL | (TX0_ENABLE_STATE << TX0_ENABLE_SHIFT);
-> +	regmap_update_bits(phy->regmap, WIZ_LANEXCTL_STS, mask, val);
-> +
-> +	/* Enable RX */
-> +	mask = RX0_ENABLE_OVL | RX0_ENABLE_MASK;
-> +	val = RX0_ENABLE_OVL | (RX0_ENABLE_STATE << RX0_ENABLE_SHIFT);
-> +	regmap_update_bits(phy->regmap, WIZ_LANEXCTL_STS, mask, val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int serdes_am654_disable_txrx(struct serdes_am654 *phy)
-> +{
-> +	u32 mask;
-> +
-> +	/* Disable TX */
-> +	mask = TX0_ENABLE_OVL | TX0_ENABLE_MASK;
-> +	regmap_update_bits(phy->regmap, WIZ_LANEXCTL_STS, mask, TX0_ENABLE_OVL);
-> +
-> +	/* Disable RX */
-> +	mask = RX0_ENABLE_OVL | RX0_ENABLE_MASK;
-> +	regmap_update_bits(phy->regmap, WIZ_LANEXCTL_STS, mask, RX0_ENABLE_OVL);
-> +
-> +	return 0;
-> +}
-> +
-> +static int serdes_am654_power_on(struct phy *x)
-> +{
-> +	struct serdes_am654 *phy = phy_get_drvdata(x);
-> +	struct device *dev = phy->dev;
-> +	int ret;
-> +	u32 val;
-> +
-> +	ret = serdes_am654_enable_pll(phy);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable PLL\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = serdes_am654_enable_txrx(phy);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable TX RX\n");
-> +		return ret;
-> +	}
-> +
-> +	return regmap_read_poll_timeout(phy->regmap, COMLANE_R194, val,
-> +					val & CMU_OK_I_0, SLEEP_TIME,
-> +					PLL_LOCK_TIME);
-> +}
-> +
-> +static int serdes_am654_power_off(struct phy *x)
-> +{
-> +	struct serdes_am654 *phy = phy_get_drvdata(x);
-> +
-> +	serdes_am654_disable_txrx(phy);
-> +	serdes_am654_disable_pll(phy);
-> +
-> +	return 0;
-> +}
-> +
-> +static int serdes_am654_init(struct phy *x)
-> +{
-> +	struct serdes_am654 *phy = phy_get_drvdata(x);
-> +	u32 mask;
-> +	u32 val;
-> +
-> +	mask = CONFIG_VERSION_REG_MASK;
-> +	val = VERSION << CONFIG_VERSION_REG_SHIFT;
-> +	regmap_update_bits(phy->regmap, COMLANE_R138, mask, val);
-> +
-> +	val = CMU_MASTER_CDN_O;
-> +	regmap_update_bits(phy->regmap, CMU_R07C, val, val);
-> +
-> +	val = L1_MASTER_CDN_O;
-> +	regmap_update_bits(phy->regmap, COMLANE_R190, val, val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int serdes_am654_reset(struct phy *x)
-> +{
-> +	struct serdes_am654 *phy = phy_get_drvdata(x);
-> +	u32 val;
-> +
-> +	val = POR_EN;
-> +	regmap_update_bits(phy->regmap, SERDES_CTRL, val, val);
-> +	mdelay(1);
-> +	regmap_update_bits(phy->regmap, SERDES_CTRL, val, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static void serdes_am654_release(struct phy *x)
-> +{
-> +	struct serdes_am654 *phy = phy_get_drvdata(x);
-> +
-> +	phy->type = PHY_NONE;
-> +	phy->busy = false;
-> +	mux_control_deselect(phy->control);
-> +}
-> +
-> +struct phy *serdes_am654_xlate(struct device *dev, struct of_phandle_args
-> +				 *args)
-> +{
-> +	struct serdes_am654 *am654_phy;
-> +	struct phy *phy;
-> +	int ret;
-> +
-> +	phy = of_phy_simple_xlate(dev, args);
-> +	if (IS_ERR(phy))
-> +		return phy;
-> +
-> +	am654_phy = phy_get_drvdata(phy);
-> +	if (am654_phy->busy)
-> +		return ERR_PTR(-EBUSY);
-> +
-> +	ret = mux_control_select(am654_phy->control, args->args[1]);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to select SERDES Lane Function\n");
-> +		return ERR_PTR(ret);
-> +	}
-> +
-> +	am654_phy->busy = true;
-> +	am654_phy->type = args->args[0];
-> +
-> +	return phy;
-> +}
-> +
-> +static const struct phy_ops ops = {
-> +	.reset		= serdes_am654_reset,
-> +	.init		= serdes_am654_init,
-> +	.power_on	= serdes_am654_power_on,
-> +	.power_off	= serdes_am654_power_off,
-> +	.release	= serdes_am654_release,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static u8 serdes_am654_clk_mux_get_parent(struct clk_hw *hw)
-> +{
-> +	struct serdes_am654_clk_mux *mux = to_serdes_am654_clk_mux(hw);
-> +	unsigned int num_parents = clk_hw_get_num_parents(hw);
-> +	struct regmap *regmap = mux->regmap;
-> +	unsigned int reg = mux->reg;
-> +	unsigned int val;
-> +	int i;
-> +
-> +	regmap_read(regmap, reg, &val);
-> +	val >>= mux->shift;
-> +	val &= mux->mask;
-> +
-> +	for (i = 0; i < num_parents; i++)
-> +		if (mux->table[i] == val)
-> +			return i;
-> +
-> +	/*
-> +	 * No parent? This should never happen!
-> +	 * Verify if we set a valid parent in serdes_am654_clk_register()
-> +	 */
-> +	WARN(1, "Failed to find the parent of %s clock\n", hw->init->name);
-> +
-> +	/* Make the parent lookup to fail */
-> +	return num_parents;
-> +}
-> +
-> +static int serdes_am654_clk_mux_set_parent(struct clk_hw *hw, u8 index)
-> +{
-> +	struct serdes_am654_clk_mux *mux = to_serdes_am654_clk_mux(hw);
-> +	struct regmap *regmap = mux->regmap;
-> +	unsigned int reg = mux->reg;
-> +	int val;
-> +	int ret;
-> +
-> +	val = mux->table[index];
-> +
-> +	if (val == -1)
-> +		return -EINVAL;
-> +
-> +	val <<= mux->shift;
-> +	ret = regmap_update_bits(regmap, reg, mux->mask << mux->shift, val);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct clk_ops serdes_am654_clk_mux_ops = {
-> +	.set_parent = serdes_am654_clk_mux_set_parent,
-> +	.get_parent = serdes_am654_clk_mux_get_parent,
-> +};
-> +
-> +static int mux_table[SERDES_NUM_CLOCKS][3] = {
-> +	/*
-> +	 * The entries represent values for selecting between
-> +	 * {left input, external reference clock, right input}
-> +	 * Only one of Left Output or Right Output should be used since
-> +	 * both left and right output clock uses the same bits and modifying
-> +	 * one clock will impact the other.
-> +	 */
-> +	{ BIT(2),               0, BIT(0) }, /* Mux of CMU refclk */
-> +	{     -1,          BIT(3), BIT(1) }, /* Mux of Left Output */
-> +	{ BIT(1), BIT(3) | BIT(1),     -1 }, /* Mux of Right Output */
-> +};
-> +
-> +static int mux_mask[SERDES_NUM_CLOCKS] = { 0x5, 0xa, 0xa };
-> +
-> +static int serdes_am654_clk_register(struct serdes_am654 *am654_phy,
-> +				     const char *clock_name, int clock_num)
-> +{
-> +	struct device_node *node = am654_phy->of_node;
-> +	struct device *dev = am654_phy->dev;
-> +	struct serdes_am654_clk_mux *mux;
-> +	struct device_node *regmap_node;
-> +	const char **parent_names;
-> +	struct clk_init_data *init;
-> +	unsigned int num_parents;
-> +	struct regmap *regmap;
-> +	const __be32 *addr;
-> +	unsigned int reg;
-> +	struct clk *clk;
-> +
-> +	mux = devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
-> +	if (!mux)
-> +		return -ENOMEM;
-> +
-> +	init = &mux->clk_data;
-> +
-> +	regmap_node = of_parse_phandle(node, "ti,serdes-clk", 0);
-> +	of_node_put(regmap_node);
-> +	if (!regmap_node) {
-> +		dev_err(dev, "Fail to get serdes-clk node\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	regmap = syscon_node_to_regmap(regmap_node->parent);
-> +	if (IS_ERR(regmap)) {
-> +		dev_err(dev, "Fail to get Syscon regmap\n");
-> +		return PTR_ERR(regmap);
-> +	}
-> +
-> +	num_parents = of_clk_get_parent_count(node);
-> +	if (num_parents < 2) {
-> +		dev_err(dev, "SERDES clock must have parents\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	parent_names = devm_kzalloc(dev, (sizeof(char *) * num_parents),
-> +				    GFP_KERNEL);
-> +	if (!parent_names)
-> +		return -ENOMEM;
-> +
-> +	of_clk_parent_fill(node, parent_names, num_parents);
-> +
-> +	addr = of_get_address(regmap_node, 0, NULL, NULL);
-> +	if (!addr)
-> +		return -EINVAL;
-> +
-> +	reg = be32_to_cpu(*addr);
-> +
-> +	init->ops = &serdes_am654_clk_mux_ops;
-> +	init->flags = CLK_SET_RATE_NO_REPARENT;
-> +	init->parent_names = parent_names;
-> +	init->num_parents = num_parents;
-> +	init->name = clock_name;
-> +
-> +	mux->table = mux_table[clock_num];
-> +	mux->regmap = regmap;
-> +	mux->reg = reg;
-> +	mux->shift = 4;
-> +	mux->mask = mux_mask[clock_num];
-> +	mux->hw.init = init;
-> +
-> +	/*
-> +	 * setup a sane default so get_parent() call evaluates
-> +	 * to a valid parent. Index 1 is the safest choice as
-> +	 * the default as it is valid value for all of serdes's
-> +	 * output clocks.
-> +	 */
-> +	serdes_am654_clk_mux_set_parent(&mux->hw, 1);
-> +	clk = devm_clk_register(dev, &mux->hw);
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
-> +
-> +	am654_phy->clks[clock_num] = clk;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id serdes_am654_id_table[] = {
-> +	{
-> +		.compatible = "ti,phy-am654-serdes",
-> +	},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, serdes_am654_id_table);
-> +
-> +static int serdes_am654_probe(struct platform_device *pdev)
-> +{
-> +	struct phy_provider *phy_provider;
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *node = dev->of_node;
-> +	struct clk_onecell_data *clk_data;
-> +	struct serdes_am654 *am654_phy;
-> +	struct mux_control *control;
-> +	const char *clock_name;
-> +	struct regmap *regmap;
-> +	struct resource *res;
-> +	void __iomem *base;
-> +	struct phy *phy;
-> +	int ret;
-> +	int i;
-> +
-> +	am654_phy = devm_kzalloc(dev, sizeof(*am654_phy), GFP_KERNEL);
-> +	if (!am654_phy)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "serdes");
-> +	base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	regmap = devm_regmap_init_mmio(dev, base, &serdes_am654_regmap_config);
-> +	if (IS_ERR(regmap)) {
-> +		dev_err(dev, "Failed to initialize regmap\n");
-> +		return PTR_ERR(regmap);
-> +	}
-> +
-> +	control = devm_mux_control_get(dev, NULL);
-> +	if (IS_ERR(control))
-> +		return PTR_ERR(control);
-> +
-> +	am654_phy->dev = dev;
-> +	am654_phy->of_node = node;
-> +	am654_phy->regmap = regmap;
-> +	am654_phy->control = control;
-> +	am654_phy->type = PHY_NONE;
-> +
-> +	platform_set_drvdata(pdev, am654_phy);
-> +
-> +	for (i = 0; i < SERDES_NUM_CLOCKS; i++) {
-> +		ret = of_property_read_string_index(node, "clock-output-names",
-> +						    i, &clock_name);
-> +		if (ret) {
-> +			dev_err(dev, "Failed to get clock name\n");
-> +			return ret;
-> +		}
-> +
-> +		ret = serdes_am654_clk_register(am654_phy, clock_name, i);
-> +		if (ret) {
-> +			dev_err(dev, "Failed to initialize clock %s\n",
-> +				clock_name);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	clk_data = &am654_phy->clk_data;
-> +	clk_data->clks = am654_phy->clks;
-> +	clk_data->clk_num = SERDES_NUM_CLOCKS;
-> +	ret = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	pm_runtime_enable(dev);
-> +
-> +	phy = devm_phy_create(dev, NULL, &ops);
-> +	if (IS_ERR(phy))
-> +		return PTR_ERR(phy);
-> +
-> +	phy_set_drvdata(phy, am654_phy);
-> +	phy_provider = devm_of_phy_provider_register(dev, serdes_am654_xlate);
-> +	if (IS_ERR(phy_provider)) {
-> +		ret = PTR_ERR(phy_provider);
-> +		goto clk_err;
-> +	}
-> +
-> +	return 0;
-> +
-> +clk_err:
-> +	of_clk_del_provider(node);
-> +
-> +	return ret;
-> +}
-> +
-> +static int serdes_am654_remove(struct platform_device *pdev)
-> +{
-> +	struct serdes_am654 *am654_phy = platform_get_drvdata(pdev);
-> +	struct device_node *node = am654_phy->of_node;
-> +
-> +	pm_runtime_disable(&pdev->dev);
-> +	of_clk_del_provider(node);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver serdes_am654_driver = {
-> +	.probe		= serdes_am654_probe,
-> +	.remove		= serdes_am654_remove,
-> +	.driver		= {
-> +		.name	= "phy-am654",
-> +		.of_match_table = serdes_am654_id_table,
-> +	},
-> +};
-> +module_platform_driver(serdes_am654_driver);
-> +
-> +MODULE_ALIAS("platform:phy-am654");
+I'm a bit lost right now about how to make those nodes being validated and
+not report any warning anymore. I guess one way would be to expand the
+chosen schemas instead. Let me know what you prefer.
+---
+ .../display/amlogic,simple-framebuffer.txt    |  33 ----
+ .../display/simple-framebuffer-sunxi.txt      |  36 ----
+ .../bindings/display/simple-framebuffer.txt   |  91 ----------
+ .../bindings/display/simple-framebuffer.yaml  | 164 ++++++++++++++++++
+ 4 files changed, 164 insertions(+), 160 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/amlogic,simple-framebuffer.txt
+ delete mode 100644 Documentation/devicetree/bindings/display/simple-framebuffer-sunxi.txt
+ delete mode 100644 Documentation/devicetree/bindings/display/simple-framebuffer.txt
+ create mode 100644 Documentation/devicetree/bindings/display/simple-framebuffer.yaml
 
-MODULE_ALIAS not needed here, should get one built from the
-MODULE_DEVICE_TABLE above and only the OF one will get searched anyway.
-
-Andrew
-
-> +MODULE_AUTHOR("Texas Instruments Inc.");
-> +MODULE_DESCRIPTION("TI AM654x SERDES driver");
-> +MODULE_LICENSE("GPL v2");
-> 
+diff --git a/Documentation/devicetree/bindings/display/amlogic,simple-framebuffer.txt b/Documentation/devicetree/bindings/display/amlogic,simple-framebuffer.txt
+deleted file mode 100644
+index aaa6c24c8e70..000000000000
+--- a/Documentation/devicetree/bindings/display/amlogic,simple-framebuffer.txt
++++ /dev/null
+@@ -1,33 +0,0 @@
+-Meson specific Simple Framebuffer bindings
+-
+-This binding documents meson specific extensions to the simple-framebuffer
+-bindings. The meson simplefb u-boot code relies on the devicetree containing
+-pre-populated simplefb nodes.
+-
+-These extensions are intended so that u-boot can select the right node based
+-on which pipeline is being used. As such they are solely intended for
+-firmware / bootloader use, and the OS should ignore them.
+-
+-Required properties:
+-- compatible: "amlogic,simple-framebuffer", "simple-framebuffer"
+-- amlogic,pipeline, one of:
+-  "vpu-cvbs"
+-  "vpu-hdmi"
+-
+-Example:
+-
+-chosen {
+-	#address-cells = <2>;
+-	#size-cells = <2>;
+-	ranges;
+-
+-	simplefb_hdmi: framebuffer-hdmi {
+-		compatible = "amlogic,simple-framebuffer",
+-			     "simple-framebuffer";
+-		amlogic,pipeline = "vpu-hdmi";
+-		clocks = <&clkc CLKID_HDMI_PCLK>,
+-			 <&clkc CLKID_CLK81>,
+-			 <&clkc CLKID_GCLK_VENCI_INT0>;
+-		power-domains = <&pwrc_vpu>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer-sunxi.txt b/Documentation/devicetree/bindings/display/simple-framebuffer-sunxi.txt
+deleted file mode 100644
+index d693b8dc9a62..000000000000
+--- a/Documentation/devicetree/bindings/display/simple-framebuffer-sunxi.txt
++++ /dev/null
+@@ -1,36 +0,0 @@
+-Sunxi specific Simple Framebuffer bindings
+-
+-This binding documents sunxi specific extensions to the simple-framebuffer
+-bindings. The sunxi simplefb u-boot code relies on the devicetree containing
+-pre-populated simplefb nodes.
+-
+-These extensions are intended so that u-boot can select the right node based
+-on which pipeline is being used. As such they are solely intended for
+-firmware / bootloader use, and the OS should ignore them.
+-
+-Required properties:
+-- compatible: "allwinner,simple-framebuffer"
+-- allwinner,pipeline, one of:
+-  "de_be0-lcd0"
+-  "de_be1-lcd1"
+-  "de_be0-lcd0-hdmi"
+-  "de_be1-lcd1-hdmi"
+-  "mixer0-lcd0"
+-  "mixer0-lcd0-hdmi"
+-  "mixer1-lcd1-hdmi"
+-  "mixer1-lcd1-tve"
+-
+-Example:
+-
+-chosen {
+-	#address-cells = <1>;
+-	#size-cells = <1>;
+-	ranges;
+-
+-	framebuffer@0 {
+-		compatible = "allwinner,simple-framebuffer", "simple-framebuffer";
+-		allwinner,pipeline = "de_be0-lcd0-hdmi";
+-		clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
+-			 <&ahb_gates 44>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.txt b/Documentation/devicetree/bindings/display/simple-framebuffer.txt
+deleted file mode 100644
+index 5a9ce511be88..000000000000
+--- a/Documentation/devicetree/bindings/display/simple-framebuffer.txt
++++ /dev/null
+@@ -1,91 +0,0 @@
+-Simple Framebuffer
+-
+-A simple frame-buffer describes a frame-buffer setup by firmware or
+-the bootloader, with the assumption that the display hardware has already
+-been set up to scan out from the memory pointed to by the reg property.
+-
+-Since simplefb nodes represent runtime information they must be sub-nodes of
+-the chosen node (*). Simplefb nodes must be named "framebuffer@<address>".
+-
+-If the devicetree contains nodes for the display hardware used by a simplefb,
+-then the simplefb node must contain a property called "display", which
+-contains a phandle pointing to the primary display hw node, so that the OS
+-knows which simplefb to disable when handing over control to a driver for the
+-real hardware. The bindings for the hw nodes must specify which node is
+-considered the primary node.
+-
+-It is advised to add display# aliases to help the OS determine how to number
+-things. If display# aliases are used, then if the simplefb node contains a
+-"display" property then the /aliases/display# path must point to the display
+-hw node the "display" property points to, otherwise it must point directly
+-to the simplefb node.
+-
+-If a simplefb node represents the preferred console for user interaction,
+-then the chosen node's stdout-path property should point to it, or to the
+-primary display hw node, as with display# aliases. If display aliases are
+-used then it should be set to the alias instead.
+-
+-It is advised that devicetree files contain pre-filled, disabled framebuffer
+-nodes, so that the firmware only needs to update the mode information and
+-enable them. This way if e.g. later on support for more display clocks get
+-added, the simplefb nodes will already contain this info and the firmware
+-does not need to be updated.
+-
+-If pre-filled framebuffer nodes are used, the firmware may need extra
+-information to find the right node. In that case an extra platform specific
+-compatible and platform specific properties should be used and documented,
+-see e.g. simple-framebuffer-sunxi.txt .
+-
+-Required properties:
+-- compatible: "simple-framebuffer"
+-- reg: Should contain the location and size of the framebuffer memory.
+-- width: The width of the framebuffer in pixels.
+-- height: The height of the framebuffer in pixels.
+-- stride: The number of bytes in each line of the framebuffer.
+-- format: The format of the framebuffer surface. Valid values are:
+-  - r5g6b5 (16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b).
+-  - a8b8g8r8 (32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r).
+-
+-Optional properties:
+-- clocks : List of clocks used by the framebuffer.
+-- *-supply : Any number of regulators used by the framebuffer. These should
+-	     be named according to the names in the device's design.
+-
+-  The above resources are expected to already be configured correctly.
+-  The OS must ensure they are not modified or disabled while the simple
+-  framebuffer remains active.
+-
+-- display : phandle pointing to the primary display hardware node
+-
+-Example:
+-
+-aliases {
+-	display0 = &lcdc0;
+-}
+-
+-chosen {
+-	framebuffer0: framebuffer@1d385000 {
+-		compatible = "simple-framebuffer";
+-		reg = <0x1d385000 (1600 * 1200 * 2)>;
+-		width = <1600>;
+-		height = <1200>;
+-		stride = <(1600 * 2)>;
+-		format = "r5g6b5";
+-		clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
+-		lcd-supply = <&reg_dc1sw>;
+-		display = <&lcdc0>;
+-	};
+-	stdout-path = "display0";
+-};
+-
+-soc@1c00000 {
+-	lcdc0: lcdc@1c0c000 {
+-		compatible = "allwinner,sun4i-a10-lcdc";
+-		...
+-	};
+-};
+-
+-
+-*) Older devicetree files may have a compatible = "simple-framebuffer" node
+-in a different place, operating systems must first enumerate any compatible
+-nodes found under chosen and then check for other compatible nodes.
+diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+new file mode 100644
+index 000000000000..9f2245e3f5ba
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+@@ -0,0 +1,164 @@
++# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/simple-framebuffer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Simple Framebuffer Device Tree Bindings
++
++maintainers:
++  - Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
++  - Hans de Goede <hdegoede@redhat.com>
++
++description: |+
++  A simple frame-buffer describes a frame-buffer setup by firmware or
++  the bootloader, with the assumption that the display hardware has
++  already been set up to scan out from the memory pointed to by the
++  reg property.
++
++  Since simplefb nodes represent runtime information they must be
++  sub-nodes of the chosen node (*). Simplefb nodes must be named
++  framebuffer@<address>.
++
++  If the devicetree contains nodes for the display hardware used by a
++  simplefb, then the simplefb node must contain a property called
++  display, which contains a phandle pointing to the primary display
++  hw node, so that the OS knows which simplefb to disable when handing
++  over control to a driver for the real hardware. The bindings for the
++  hw nodes must specify which node is considered the primary node.
++
++  It is advised to add display# aliases to help the OS determine how
++  to number things. If display# aliases are used, then if the simplefb
++  node contains a display property then the /aliases/display# path
++  must point to the display hw node the display property points to,
++  otherwise it must point directly to the simplefb node.
++
++  If a simplefb node represents the preferred console for user
++  interaction, then the chosen node stdout-path property should point
++  to it, or to the primary display hw node, as with display#
++  aliases. If display aliases are used then it should be set to the
++  alias instead.
++
++  It is advised that devicetree files contain pre-filled, disabled
++  framebuffer nodes, so that the firmware only needs to update the
++  mode information and enable them. This way if e.g. later on support
++  for more display clocks get added, the simplefb nodes will already
++  contain this info and the firmware does not need to be updated.
++
++  If pre-filled framebuffer nodes are used, the firmware may need
++  extra information to find the right node. In that case an extra
++  platform specific compatible and platform specific properties should
++  be used and documented.
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - const: allwinner,simple-framebuffer
++          - const: simple-framebuffer
++
++      - items:
++          - const: amlogic,simple-framebuffer
++          - const: simple-framebuffer
++
++      - const: simple-framebuffer
++
++  reg:
++    description: Location and size of the framebuffer memory
++
++  clocks:
++    description: List of clocks used by the framebuffer.
++
++  power-domains:
++    description: List of power domains used by the framebuffer.
++
++  width:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Width of the framebuffer in pixels
++
++  height:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Height of the framebuffer in pixels
++
++  stride:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Number of bytes of a line in the framebuffer
++
++  format:
++    description: Format of the framebuffer
++    oneOf:
++      - const: r5g6b5
++        description: 16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b
++      - const: a8b8g8r8
++        description: 32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r
++
++  display:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: Primary display hardware node
++
++  allwinner,pipeline:
++    description: Pipeline used by the framebuffer on Allwinner SoCs
++    oneOf:
++      - const: de_be0-lcd0
++      - const: de_be0-lcd0-hdmi
++      - const: de_be0-lcd0-tve0
++      - const: de_be1-lcd0
++      - const: de_be1-lcd1-hdmi
++      - const: de_fe0-de_be0-lcd0
++      - const: de_fe0-de_be0-lcd0-hdmi
++      - const: de_fe0-de_be0-lcd0-tve0
++      - const: mixer0-lcd0
++      - const: mixer0-lcd0-hdmi
++      - const: mixer1-lcd1-hdmi
++      - const: mixer1-lcd1-tve
++
++  amlogic,pipeline:
++    description: Pipeline used by the framebuffer on Amlogic SoCs
++    oneOf:
++      - const: vpu-cvbs
++      - const: vpu-hdmi
++
++patternProperties:
++  "^[a-zA-Z0-9-]+-supply$":
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      Regulators used by the framebuffer. These should be named
++      according to the names in the device design.
++
++required:
++  # The binding requires also reg, width, height, stride and format,
++  # but usually they will be filled by the bootloader.
++  - compatible
++
++additionalProperties: false
++
++examples:
++  - |
++    aliases {
++      display0 = &lcdc0;
++    };
++
++    chosen {
++      #address-cells = <1>;
++      #size-cells = <1>;
++      stdout-path = "display0";
++      framebuffer0: framebuffer@1d385000 {
++        compatible = "simple-framebuffer";
++        reg = <0x1d385000 3840000>;
++        width = <1600>;
++        height = <1200>;
++        stride = <3200>;
++        format = "r5g6b5";
++        clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
++        lcd-supply = <&reg_dc1sw>;
++        display = <&lcdc0>;
++      };
++    };
++
++    soc@1c00000 {
++      lcdc0: lcdc@1c0c000 {
++        compatible = "allwinner,sun4i-a10-lcdc";
++      };
++    };
++
++...
+-- 
+2.20.1
