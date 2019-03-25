@@ -1,244 +1,275 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v4 1/2] Bluetooth: hci_qca: Added support for WCN3998
-Date: Mon, 25 Mar 2019 09:21:18 -0700
-Message-ID: <20190325162118.GV112750@google.com>
-References: <1553513800-27611-1-git-send-email-c-hbandi@codeaurora.org>
- <1553513800-27611-2-git-send-email-c-hbandi@codeaurora.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: Add schemas for simple-framebuffer
+Date: Mon, 25 Mar 2019 11:27:36 -0500
+Message-ID: <CAL_JsqKep7B6LKUMRRxonKV48YEHtYow9TjKJwDUVN0S2BX3Ww@mail.gmail.com>
+References: <20190325135414.9728-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1553513800-27611-2-git-send-email-c-hbandi@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Harish Bandi <c-hbandi@codeaurora.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, anubhavg@codeaurora.org, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190325135414.9728-1-maxime.ripard@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Jourdan <mjourdan@baylibre.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 05:06:39PM +0530, Harish Bandi wrote:
-> Added new compatible for WCN3998 and corresponding voltage
-> and current values to WCN3998 compatible.
-> Changed driver code to support WCN3998
-> 
-> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
+On Mon, Mar 25, 2019 at 8:54 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> The simple framebuffer is a binding that allows the bootloader to setup a
+> framebuffer, describe it in the Device Tree for the OS to pick it up and
+> use it as is.
+>
+> Replace the current binding by a schema to allow the validation tools to
+> check those nodes.
+>
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Maxime Jourdan <mjourdan@baylibre.com>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>
 > ---
-> Changes in V4:
-> - Added is_qca_soc_type_wcn399x_family helper function 
-> - to get the soc type is wcn399x or not.
+>
+> Rob,
+>
+> Even though the node itself is properly described, I still end up with some
+> validation warnings when the chosen node is validated (basically
+> complaining that ranges, and the framebuffer nodes shouldn't be here, since
+> we haven't described them in the chosen schemas).
+
+Having 'ranges' is a bit strange because 'chosen' doesn't have an
+address. We can add #address-cells, #size-cells and framebuffer child
+node to the base chosen schema.
+
+> I've tried to expand it, but I failed, using that patch:
+> http://code.bulix.org/mimu5z-634661?raw
+
+That should work, but you will still get warnings from the core
+schema. Also, I guess you really want to match on the child compatible
+which isn't possible with the current tools. I think for now at least,
+we don't need to validate that simple-fb is a child of chosen.
+
+Maybe we could add a '$parent' property which the tools add like
+$nodename. I'd rather wait and see how frequently we need something
+like this.
+
+> I'm a bit lost right now about how to make those nodes being validated and
+> not report any warning anymore. I guess one way would be to expand the
+> chosen schemas instead. Let me know what you prefer.
 > ---
->  drivers/bluetooth/btqca.c   |  4 ++--
->  drivers/bluetooth/btqca.h   |  3 ++-
->  drivers/bluetooth/hci_qca.c | 48 ++++++++++++++++++++++++++++++++-------------
->  3 files changed, 38 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-> index 6122685..70cab13 100644
-> --- a/drivers/bluetooth/btqca.c
-> +++ b/drivers/bluetooth/btqca.c
-> @@ -344,7 +344,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
->  
->  	/* Download rampatch file */
->  	config.type = TLV_TYPE_PATCH;
-> -	if (soc_type == QCA_WCN3990) {
-> +	if (soc_type >= QCA_WCN3990) {
+>  .../display/amlogic,simple-framebuffer.txt    |  33 ----
+>  .../display/simple-framebuffer-sunxi.txt      |  36 ----
+>  .../bindings/display/simple-framebuffer.txt   |  91 ----------
+>  .../bindings/display/simple-framebuffer.yaml  | 164 ++++++++++++++++++
+>  4 files changed, 164 insertions(+), 160 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/amlogic,simple-framebuffer.txt
+>  delete mode 100644 Documentation/devicetree/bindings/display/simple-framebuffer-sunxi.txt
+>  delete mode 100644 Documentation/devicetree/bindings/display/simple-framebuffer.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/simple-framebuffer.yaml
 
-Move qca_is_wcn399x() to btqca.c and use it here. Export the symbol
-and declare the function in btqca.h, so it can be used in hci_qca.c
+[...]
 
->  		/* Firmware files to download are based on ROM version.
->  		 * ROM version is derived from last two bytes of soc_ver.
->  		 */
-> @@ -365,7 +365,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
->  
->  	/* Download NVM configuration */
->  	config.type = TLV_TYPE_NVM;
-> -	if (soc_type == QCA_WCN3990)
-> +	if (soc_type >= QCA_WCN3990)
+> diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+> new file mode 100644
+> index 000000000000..9f2245e3f5ba
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+> @@ -0,0 +1,164 @@
+> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
 
-use qca_is_wcn399x()
+Keep in mind the old files were implicitly GPL2 only. I imagine some
+of this is copied.
 
->  		snprintf(config.fwname, sizeof(config.fwname),
->  			 "qca/crnv%02x.bin", rom_ver);
->  	else
-> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
-> index c72c56e..bd6a902 100644
-> --- a/drivers/bluetooth/btqca.h
-> +++ b/drivers/bluetooth/btqca.h
-> @@ -132,7 +132,8 @@ enum qca_btsoc_type {
->  	QCA_INVALID = -1,
->  	QCA_AR3002,
->  	QCA_ROME,
-> -	QCA_WCN3990
-> +	QCA_WCN3990,
-> +	QCA_WCN3998,
->  };
->  
->  #if IS_ENABLED(CONFIG_BT_QCA)
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index 4ea995d..e238c2b 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -189,6 +189,14 @@ static enum qca_btsoc_type qca_soc_type(struct hci_uart *hu)
->  	return soc_type;
->  }
->  
-> +bool is_qca_soc_type_wcn399x_family(enum qca_btsoc_type soc_type)
+Also, as gregkh says, are you sure you are okay with GPLv9?
 
-This long function name doesn't provide much value and degrades
-readability of the code that uses it. A short name like
-qca_is_wcn399x() is clear enough and friendlier to the code reader's
-eyes.
-
-> +{
-> +	if ((soc_type  == QCA_WCN3990) || (soc_type  == QCA_WCN3998))
-> +		return true;
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/simple-framebuffer.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	return false;
-> +}
+> +title: Simple Framebuffer Device Tree Bindings
 > +
->  static void __serial_clock_on(struct tty_struct *tty)
->  {
->  	/* TODO: Some chipset requires to enable UART clock on client
-> @@ -521,7 +529,7 @@ static int qca_open(struct hci_uart *hu)
->  	if (hu->serdev) {
->  
->  		qcadev = serdev_device_get_drvdata(hu->serdev);
-> -		if (qcadev->btsoc_type != QCA_WCN3990) {
-> +		if (!is_qca_soc_type_wcn399x_family(qcadev->btsoc_type)) {
->  			gpiod_set_value_cansleep(qcadev->bt_en, 1);
->  		} else {
->  			hu->init_speed = qcadev->init_speed;
-> @@ -627,7 +635,7 @@ static int qca_close(struct hci_uart *hu)
->  
->  	if (hu->serdev) {
->  		qcadev = serdev_device_get_drvdata(hu->serdev);
-> -		if (qcadev->btsoc_type == QCA_WCN3990)
-> +		if (is_qca_soc_type_wcn399x_family(qcadev->btsoc_type))
->  			qca_power_shutdown(hu);
->  		else
->  			gpiod_set_value_cansleep(qcadev->bt_en, 0);
-> @@ -1008,7 +1016,7 @@ static int qca_set_baudrate(struct hci_dev *hdev, uint8_t baudrate)
->  		      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
->  
->  	/* Give the controller time to process the request */
-> -	if (qca_soc_type(hu) == QCA_WCN3990)
-> +	if (is_qca_soc_type_wcn399x_family(qca_soc_type(hu)))
->  		msleep(10);
->  	else
->  		msleep(300);
-> @@ -1084,7 +1092,7 @@ static unsigned int qca_get_speed(struct hci_uart *hu,
->  
->  static int qca_check_speeds(struct hci_uart *hu)
->  {
-> -	if (qca_soc_type(hu) == QCA_WCN3990) {
-> +	if (is_qca_soc_type_wcn399x_family(qca_soc_type(hu)) >= QCA_WCN3990) {
-
-Why '>= QCA_WCN3990'?
-
->  		if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
->  		    !qca_get_speed(hu, QCA_OPER_SPEED))
->  			return -EINVAL;
-> @@ -1116,7 +1124,7 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
->  		/* Disable flow control for wcn3990 to deassert RTS while
->  		 * changing the baudrate of chip and host.
->  		 */
-> -		if (soc_type == QCA_WCN3990)
-> +		if (is_qca_soc_type_wcn399x_family(soc_type))
->  			hci_uart_set_flow_control(hu, true);
->  
->  		qca_baudrate = qca_get_baudrate_value(speed);
-> @@ -1128,7 +1136,7 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
->  		host_set_baudrate(hu, speed);
->  
->  error:
-> -		if (soc_type == QCA_WCN3990)
-> +		if (is_qca_soc_type_wcn399x_family(soc_type))
->  			hci_uart_set_flow_control(hu, false);
->  	}
->  
-> @@ -1201,7 +1209,7 @@ static int qca_setup(struct hci_uart *hu)
->  	/* Patch downloading has to be done without IBS mode */
->  	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
->  
-> -	if (soc_type == QCA_WCN3990) {
-> +	if (is_qca_soc_type_wcn399x_family(soc_type)) {
->  		bt_dev_info(hdev, "setting up wcn3990");
->  
->  		/* Enable NON_PERSISTENT_SETUP QUIRK to ensure to execute
-> @@ -1232,7 +1240,7 @@ static int qca_setup(struct hci_uart *hu)
->  		qca_baudrate = qca_get_baudrate_value(speed);
->  	}
->  
-> -	if (soc_type != QCA_WCN3990) {
-> +	if (!is_qca_soc_type_wcn399x_family(soc_type)) {
->  		/* Get QCA version information */
->  		ret = qca_read_soc_version(hdev, &soc_ver);
->  		if (ret)
-> @@ -1257,7 +1265,7 @@ static int qca_setup(struct hci_uart *hu)
->  	}
->  
->  	/* Setup bdaddr */
-> -	if (soc_type == QCA_WCN3990)
-> +	if (is_qca_soc_type_wcn399x_family(soc_type))
->  		hu->hdev->set_bdaddr = qca_set_bdaddr;
->  	else
->  		hu->hdev->set_bdaddr = qca_set_bdaddr_rome;
-> @@ -1280,7 +1288,7 @@ static int qca_setup(struct hci_uart *hu)
->  	.dequeue	= qca_dequeue,
->  };
->  
-> -static const struct qca_vreg_data qca_soc_data = {
-> +static const struct qca_vreg_data qca_soc_data_wcn3990 = {
->  	.soc_type = QCA_WCN3990,
->  	.vregs = (struct qca_vreg []) {
->  		{ "vddio",   1800000, 1900000,  15000  },
-> @@ -1291,6 +1299,17 @@ static int qca_setup(struct hci_uart *hu)
->  	.num_vregs = 4,
->  };
->  
-> +static const struct qca_vreg_data qca_soc_data_wcn3998 = {
-> +	.soc_type = QCA_WCN3998,
-> +	.vregs = (struct qca_vreg []) {
-> +		{ "vddio",   1800000, 1900000,  10000  },
-> +		{ "vddxo",   1800000, 1900000,  80000  },
-> +		{ "vddrf",   1300000, 1352000,  300000 },
-> +		{ "vddch0",  3300000, 3300000,  450000 },
-> +	},
-> +	.num_vregs = 4,
-> +};
+> +maintainers:
+> +  - Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> +  - Hans de Goede <hdegoede@redhat.com>
 > +
->  static void qca_power_shutdown(struct hci_uart *hu)
->  {
->  	struct qca_data *qca = hu->priv;
-> @@ -1424,8 +1443,8 @@ static int qca_serdev_probe(struct serdev_device *serdev)
->  	qcadev->serdev_hu.serdev = serdev;
->  	data = of_device_get_match_data(&serdev->dev);
->  	serdev_device_set_drvdata(serdev, qcadev);
-> -	if (data && data->soc_type == QCA_WCN3990) {
-> -		qcadev->btsoc_type = QCA_WCN3990;
-> +	if (data && is_qca_soc_type_wcn399x_family(data->soc_type)) {
-> +		qcadev->btsoc_type = data->soc_type;
->  		qcadev->bt_power = devm_kzalloc(&serdev->dev,
->  						sizeof(struct qca_power),
->  						GFP_KERNEL);
-> @@ -1489,7 +1508,7 @@ static void qca_serdev_remove(struct serdev_device *serdev)
->  {
->  	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
->  
-> -	if (qcadev->btsoc_type == QCA_WCN3990)
-> +	if (qcadev->btsoc_type >= QCA_WCN3990)
+> +description: |+
+> +  A simple frame-buffer describes a frame-buffer setup by firmware or
+> +  the bootloader, with the assumption that the display hardware has
+> +  already been set up to scan out from the memory pointed to by the
+> +  reg property.
+> +
+> +  Since simplefb nodes represent runtime information they must be
+> +  sub-nodes of the chosen node (*). Simplefb nodes must be named
+> +  framebuffer@<address>.
+> +
+> +  If the devicetree contains nodes for the display hardware used by a
+> +  simplefb, then the simplefb node must contain a property called
+> +  display, which contains a phandle pointing to the primary display
+> +  hw node, so that the OS knows which simplefb to disable when handing
+> +  over control to a driver for the real hardware. The bindings for the
+> +  hw nodes must specify which node is considered the primary node.
+> +
+> +  It is advised to add display# aliases to help the OS determine how
+> +  to number things. If display# aliases are used, then if the simplefb
+> +  node contains a display property then the /aliases/display# path
+> +  must point to the display hw node the display property points to,
+> +  otherwise it must point directly to the simplefb node.
+> +
+> +  If a simplefb node represents the preferred console for user
+> +  interaction, then the chosen node stdout-path property should point
+> +  to it, or to the primary display hw node, as with display#
+> +  aliases. If display aliases are used then it should be set to the
+> +  alias instead.
+> +
+> +  It is advised that devicetree files contain pre-filled, disabled
+> +  framebuffer nodes, so that the firmware only needs to update the
+> +  mode information and enable them. This way if e.g. later on support
+> +  for more display clocks get added, the simplefb nodes will already
+> +  contain this info and the firmware does not need to be updated.
+> +
+> +  If pre-filled framebuffer nodes are used, the firmware may need
+> +  extra information to find the right node. In that case an extra
+> +  platform specific compatible and platform specific properties should
+> +  be used and documented.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - const: allwinner,simple-framebuffer
+> +          - const: simple-framebuffer
+> +
+> +      - items:
+> +          - const: amlogic,simple-framebuffer
+> +          - const: simple-framebuffer
 
-use qca_is_wcn399x()
+I'd write this as:
 
->  		qca_power_shutdown(&qcadev->serdev_hu);
->  	else
->  		clk_disable_unprepare(qcadev->susclk);
-> @@ -1499,7 +1518,8 @@ static void qca_serdev_remove(struct serdev_device *serdev)
->  
->  static const struct of_device_id qca_bluetooth_of_match[] = {
->  	{ .compatible = "qcom,qca6174-bt" },
-> -	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data},
-> +	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data_wcn3990},
-> +	{ .compatible = "qcom,wcn3998-bt", .data = &qca_soc_data_wcn3998},
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, qca_bluetooth_of_match);
+- enum:
+    - allwinner,simple-framebuffer
+    - amlogic,simple-framebuffer
+- const: simple-framebuffer
+
+> +
+> +      - const: simple-framebuffer
+> +
+> +  reg:
+> +    description: Location and size of the framebuffer memory
+> +
+> +  clocks:
+> +    description: List of clocks used by the framebuffer.
+> +
+> +  power-domains:
+> +    description: List of power domains used by the framebuffer.
+> +
+> +  width:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Width of the framebuffer in pixels
+> +
+> +  height:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Height of the framebuffer in pixels
+> +
+> +  stride:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Number of bytes of a line in the framebuffer
+> +
+> +  format:
+> +    description: Format of the framebuffer
+> +    oneOf:
+> +      - const: r5g6b5
+> +        description: 16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b
+> +      - const: a8b8g8r8
+> +        description: 32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r
+
+This can be an enum rather than oneOf and a bunch of const.
+
+> +
+> +  display:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: Primary display hardware node
+> +
+> +  allwinner,pipeline:
+> +    description: Pipeline used by the framebuffer on Allwinner SoCs
+> +    oneOf:
+> +      - const: de_be0-lcd0
+> +      - const: de_be0-lcd0-hdmi
+> +      - const: de_be0-lcd0-tve0
+> +      - const: de_be1-lcd0
+> +      - const: de_be1-lcd1-hdmi
+> +      - const: de_fe0-de_be0-lcd0
+> +      - const: de_fe0-de_be0-lcd0-hdmi
+> +      - const: de_fe0-de_be0-lcd0-tve0
+> +      - const: mixer0-lcd0
+> +      - const: mixer0-lcd0-hdmi
+> +      - const: mixer1-lcd1-hdmi
+> +      - const: mixer1-lcd1-tve
+
+Same here.
+
+> +
+> +  amlogic,pipeline:
+> +    description: Pipeline used by the framebuffer on Amlogic SoCs
+> +    oneOf:
+> +      - const: vpu-cvbs
+> +      - const: vpu-hdmi
+
+Same here.
+
+> +
+> +patternProperties:
+> +  "^[a-zA-Z0-9-]+-supply$":
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Regulators used by the framebuffer. These should be named
+> +      according to the names in the device design.
+> +
+> +required:
+> +  # The binding requires also reg, width, height, stride and format,
+> +  # but usually they will be filled by the bootloader.
+> +  - compatible
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    aliases {
+> +      display0 = &lcdc0;
+> +    };
+> +
+> +    chosen {
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      stdout-path = "display0";
+> +      framebuffer0: framebuffer@1d385000 {
+> +        compatible = "simple-framebuffer";
+> +        reg = <0x1d385000 3840000>;
+> +        width = <1600>;
+> +        height = <1200>;
+> +        stride = <3200>;
+> +        format = "r5g6b5";
+> +        clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
+> +        lcd-supply = <&reg_dc1sw>;
+> +        display = <&lcdc0>;
+> +      };
+> +    };
+> +
+> +    soc@1c00000 {
+> +      lcdc0: lcdc@1c0c000 {
+> +        compatible = "allwinner,sun4i-a10-lcdc";
+> +      };
+> +    };
+> +
+> +...
+> --
+> 2.20.1
+>
