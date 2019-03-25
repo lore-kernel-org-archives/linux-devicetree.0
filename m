@@ -1,94 +1,172 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH V4 07/10] mmc: tegra: add Tegra186 WAR for CQE
-Date: Mon, 25 Mar 2019 12:41:32 +0200
-Message-ID: <f42156ea-dd53-efbc-3412-b82c34458ea2@intel.com>
-References: <1553402727-23130-1-git-send-email-skomatineni@nvidia.com>
- <1553402727-23130-7-git-send-email-skomatineni@nvidia.com>
+From: c-hbandi@codeaurora.org
+Subject: Re: [PATCH v3 2/2] dt-bindings: net: bluetooth: Add device tree
+ bindings for QTI chip wcn3998
+Date: Mon, 25 Mar 2019 17:00:31 +0530
+Message-ID: <8432d8b9743e2b4b6a7195329c808af3@codeaurora.org>
+References: <1552393379-26330-1-git-send-email-c-hbandi@codeaurora.org>
+ <1552393379-26330-3-git-send-email-c-hbandi@codeaurora.org>
+ <20190312165928.GD200579@google.com>
+ <88a923e02073461abb5f3a7674150615@codeaurora.org>
+ <20190314185637.GB112750@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553402727-23130-7-git-send-email-skomatineni@nvidia.com>
-Content-Language: en-US
+In-Reply-To: <20190314185637.GB112750@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, riteshh@codeaurora.org
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, anrao@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, anubhavg@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-bluetooth-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 24/03/19 6:45 AM, Sowjanya Komatineni wrote:
-> Tegra186 CQHCI host has a known bug where CQHCI controller selects
-> DATA_PRESENT_SELECT bit to 1 for DCMDs with R1B response type and
-> since DCMD does not trigger any data transfer, DCMD task complete
-> happens leaving the DATA FSM of host controller in wait state for
-> the data.
-> 
-> This effects the data transfer tasks issued after the DCMDs with
-> R1b response type resulting in timeout.
-> 
-> SW WAR is to set CMD_TIMING to 1 in DCMD task descriptor. This bug
-> and SW WAR is applicable only for Tegra186 and not for Tegra194.
-> 
-> This patch implements this WAR thru NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING
-> for Tegra186 and also implements update_dcmd_desc of cqhci_host_ops
-> interface to set CMD_TIMING bit depending on the NVQUIRK.
-> 
-> Tested-by: Jon Hunter <jonathanh@nvidia.com>
-> Reviewed-by: Ritesh Harjani <riteshh@codeaurora.org>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Hi Matthias,
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+  On 2019-03-15 00:26, Matthias Kaehlcke wrote:
+> Hi Harish,
+> 
+> On Wed, Mar 13, 2019 at 12:00:06PM +0530, c-hbandi@codeaurora.org 
+> wrote:
+>> Hi Matthias,
+>> 
+>> 
+>> On 2019-03-12 22:29, Matthias Kaehlcke wrote:
+>> > +DT folks
+>> >
+>> > Please add them in future versions (script/scripts/get_maintainer.pl
+>> > <patches> should have listed them)
+>> 
+>> [Harish] -- Will add them in new version of patches.
+>> >
+>> > On Tue, Mar 12, 2019 at 05:52:59PM +0530, Harish Bandi wrote:
+>> > > This patch enables regulators for the Qualcomm Bluetooth wcn3998
+>> > > controller.
+>> >
+>> > No, it doesn't.
+>> >
+>> > The next version should probably say something like "Add compatible
+>> > string for the Qualcomm WCN3998 Bluetooth controller.
+>> >
+>> [Harish] -- From new patch onwards will add all patch
+>> version changes and add proper description.
+>> 
+>> > Is there any particular reason why QCA drivers folks use 'wcn' instead
+>> > of 'WCN'? The QCA documentations calls it WCN399x, so I'd suggest to
+>> > consistently use the uppercase name in comments and documentation (and
+>> > log messages?).
+>> >
+>> [Harish] -- I think in DT we need to have small case like wcn,
+> 
+> agreed
+> 
+>> i think that is the reason it started using in code, comments and dt
+>> documentation.
+> 
+> AFAIK there are no hard rules for everything, my suggestion would be:
+> 
+> - use WCN399x
+>   - for general comments/documentation
+>   - commit messages
+>   - in DT context wcn3998-n seems ok
+> - use wcn399x
+>   - for function and variable names
+>   - for compatible strings
+> 
+> For logging: whatever, just be consistent.
 
-> ---
->  drivers/mmc/host/sdhci-tegra.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
+  [Harish] --For Commit messages and all will try to follow change it new 
+patch
+
 > 
-> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> index f1aa0591112a..2f08b6e480df 100644
-> --- a/drivers/mmc/host/sdhci-tegra.c
-> +++ b/drivers/mmc/host/sdhci-tegra.c
-> @@ -106,6 +106,7 @@
->  #define NVQUIRK_HAS_PADCALIB				BIT(6)
->  #define NVQUIRK_NEEDS_PAD_CONTROL			BIT(7)
->  #define NVQUIRK_DIS_CARD_CLK_CONFIG_TAP			BIT(8)
-> +#define NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING		BIT(9)
->  
->  /* SDMMC CQE Base Address for Tegra Host Ver 4.1 and Higher */
->  #define SDHCI_TEGRA_CQE_BASE_ADDR			0xF000
-> @@ -1123,6 +1124,18 @@ static void tegra_sdhci_voltage_switch(struct sdhci_host *host)
->  		tegra_host->pad_calib_required = true;
->  }
->  
-> +static void sdhci_tegra_update_dcmd_desc(struct mmc_host *mmc,
-> +					 struct mmc_request *mrq, u64 *data)
-> +{
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(mmc_priv(mmc));
-> +	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
-> +	const struct sdhci_tegra_soc_data *soc_data = tegra_host->soc_data;
-> +
-> +	if (soc_data->nvquirks & NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING &&
-> +	    mrq->cmd->flags & MMC_RSP_R1B)
-> +		*data |= CQHCI_CMD_TIMING(1);
-> +}
-> +
->  static void sdhci_tegra_cqe_enable(struct mmc_host *mmc)
->  {
->  	struct cqhci_host *cq_host = mmc->cqe_private;
-> @@ -1164,6 +1177,7 @@ static const struct cqhci_host_ops sdhci_tegra_cqhci_ops = {
->  	.enable	= sdhci_tegra_cqe_enable,
->  	.disable = sdhci_cqe_disable,
->  	.dumpregs = sdhci_tegra_dumpregs,
-> +	.update_dcmd_desc = sdhci_tegra_update_dcmd_desc,
->  };
->  
->  static const struct sdhci_ops tegra_sdhci_ops = {
-> @@ -1345,7 +1359,8 @@ static const struct sdhci_tegra_soc_data soc_data_tegra186 = {
->  		    NVQUIRK_HAS_PADCALIB |
->  		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
->  		    NVQUIRK_ENABLE_SDR50 |
-> -		    NVQUIRK_ENABLE_SDR104,
-> +		    NVQUIRK_ENABLE_SDR104 |
-> +		    NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING,
->  	.min_tap_delay = 84,
->  	.max_tap_delay = 136,
->  };
+>> > > Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
+>> > > ---
+>> > > changes in v3:
+>> > > - updated to latest code base.
+>> >
+>> > This comment is useless, please describe what changed wrt the previous
+>> > version.
+>> [Harish] --  added details in v2, and v3 uploaded just to rebase on 
+>> tip of
+>> bluetooth-next
+>> for better understanding of code in review. From new patch onwards 
+>> will add
+>> all patch
+>> version changes and add proper description.
+>> >
+>> > > ---
+>> > >  .../devicetree/bindings/net/qualcomm-bluetooth.txt        | 15
+>> > > +++++++++++++++
+>> > >  1 file changed, 15 insertions(+)
+>> > >
+>> > > diff --git
+>> > > a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>> > > b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>> > > index 824c0e2..1221535 100644
+>> > > --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>> > > +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>> > > @@ -53,3 +53,18 @@ serial@898000 {
+>> > >  		max-speed = <3200000>;
+>> > >  	};
+>> > >  };
+>> > > +
+>> > > +&blsp1_uart3 {
+>> > > +	pinctrl-names = "default";
+>> > > +	pinctrl-0 = <&blsp1_uart3_default>;
+>> > > +	status = "okay";
+>> > > +
+>> > > +	bluetooth: wcn3998-bt {
+>> > > +		compatible = "qcom,wcn3998-bt";
+>> > > +		vddio-supply = <&vreg_l6_1p8>;
+>> > > +		vddxo-supply = <&vreg_l5_1p8>;
+>> > > +		vddrf-supply = <&vreg_s5_1p35>;
+>> > > +		vddch0-supply = <&vdd_ch0_3p3>;
+>> > > +		max-speed = <3200000>;
+>> > > +	};
+>> > > +};
+>> > > \ No newline at end of file
+>> >
+>> > I think the example isn't really needed since it's essentially the
+>> > same as the one for 'qcom,wcn3990-bt'.
+>> >
+>> > But the important part is missing: add the new compatible string under
+>> > ´Required properties´. You also want to update the documentation that
+>> > mentiones 'qcom,wcn3990-bt' to 'qcom,wcn399x-bt' (assuming for now
+>> > that other possible WCN399x chips would be similar).
+>> >
+>> [Harish] -- Will check the DT properties, documentation and update
+>> accordingly in new patch.
+>> 
+>> > You mentioned in an earlier version of the series that there are
+>> > multiple WCN3998 variants with different requirements for
+>> > voltage/current. This seems to suggests that multiple compatible
+>> > strings are needed to distinguish between them.
+>> >
+>> [Harish] -- for now we want to add WCN3998 support only, What i mean 
+>> to say
+>> in my earlier
+>> explanation that. WCN3990 is base variant and on top of that we have
+>> variants like WCN3990,
+>> WCN3998 and WCN3998-0,WCN3998-1 like that..
+>> So I think wcn399x would make sense for this series.
 > 
+> If the variants have relevant differences between them (like different
+> regulator requirements) I think you want unique names, rather than
+> 'wcn399x' (I was referring to comments/documentation with this
+> string).
+> 
+> If there are variants wouldn't your first 'wcn3998' already be a
+> 'wcn3998-n'? If 'wcn3998' without suffix is used I think it needs to
+> be valid for all 'wcn3998-n' variants (it might be less
+> power-efficient though than using the variant specific compatible
+> string), otherwise things get confusing (a 'wcn3998-2' isn't a
+> 'wcn3998'?)
+> 
+
+
+  [Harish] -- for now WCN3990 and WCN3998 only, also wcn3998-2 and 
+wcn3998 are same.
+So for now we are going to have only WCN3990 and WCN3998 for DT.
+
+
+> Thanks
+> 
+> Matthias
