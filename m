@@ -1,77 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH V0 5/7] dts: arm64: mt8183: Add FD nodes
-Date: Mon, 25 Mar 2019 16:57:28 -0500
-Message-ID: <20190325215728.GA32712@bogus>
-References: <1550648893-42050-1-git-send-email-Jerry-Ch.chen@mediatek.com>
- <1550648893-42050-6-git-send-email-Jerry-Ch.chen@mediatek.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2 1/2] EDAC: add EDAC driver for DMC520
+Date: Mon, 25 Mar 2019 23:01:29 +0100
+Message-ID: <20190325220129.GV12016@zn.tnic>
+References: <BN7PR08MB5572D3A5217C4749AC4E7DC4AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com>
+ <20190323092342.GD23698@zn.tnic>
+ <c1a16ab4-72d9-f736-065c-b80858f85b7b@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1550648893-42050-6-git-send-email-Jerry-Ch.chen@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>
-Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, tfiga@chromium.org, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, hans.verkuil@cisco.com, zwisler@chromium.org, frederic.chen@mediatek.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+In-Reply-To: <c1a16ab4-72d9-f736-065c-b80858f85b7b@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: James Morse <james.morse@arm.com>
+Cc: Rui Zhao <ruizhao@outlook.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "okaya@kernel.org" <okaya@kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "sashal@kernel.org" <sashal@kernel.org>, "hangl@microsoft.com" <hangl@microsoft.com>, "lewan@microsoft.com" <lewan@microsoft.com>, Rui Zhao <ruizhao@microsoft.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 20, 2019 at 03:48:11PM +0800, Jerry-ch Chen wrote:
-> This patch adds nodes for Face Detection (FD) unit. FD is embedded
-> in Mediatek SoCs and works with the co-processor to perform face
-> detection on the input data and image and output detected face result.
-> 
-> Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> index b3d8dfd..45c7e2f 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> @@ -440,6 +440,26 @@
->  			#clock-cells = <1>;
->  		};
->  
-> +		fd_smem: fd_smem {
-> +			compatible = "mediatek,fd_smem";
-> +			mediatek,larb = <&larb5>;
-> +			iommus = <&iommu M4U_PORT_CAM_IMGI>;
+On Mon, Mar 25, 2019 at 06:27:52PM +0000, James Morse wrote:
+> or even:
+> | compatible = "microsoft,product-name-dmc520", "arm,dmc-520";
+> if there is some firmware/board configuration that means vendor/soc isn't precise enough.
 
-This doesn't look like an actual h/w device...
+Yap, makes sense to me. If dmc-520 is a memory controller IP, then it
+should be a generic, library-like compilation unit which the platform
+driver, i.e., <microsoft-platform-name>_edac.c or so links with.
 
-> +		};
-> +
-> +		fd:fd@1502b000 {
+-- 
+Regards/Gruss,
+    Boris.
 
-space after the :  ^
-> +			compatible = "mediatek,fd";
-
-Should be SoC specific.
-
-> +			mediatek,larb = <&larb5>;
-> +			mediatek,vpu = <&vpu>;
-> +			iommus = <&iommu M4U_PORT_CAM_FDVT_RP>,
-> +				 <&iommu M4U_PORT_CAM_FDVT_WR>,
-> +				 <&iommu M4U_PORT_CAM_FDVT_RB>;
-> +			reg = <0 0x1502b000 0 0x1000>;
-> +			interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&imgsys CLK_IMG_FDVT>;
-> +			clock-names = "FD_CLK_IMG_FD";
-> +			smem_device = <&fd_smem>;
-> +		};
-> +
->  		vdecsys: syscon@16000000 {
->  			compatible = "mediatek,mt8183-vdecsys", "syscon";
->  			reg = <0 0x16000000 0 0x1000>;
-> -- 
-> 1.9.1
-> 
+Good mailing practices for 400: avoid top-posting and trim the reply.
