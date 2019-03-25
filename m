@@ -1,246 +1,42 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH V2 2/2] spi: stm32-qspi: add dma support
-Date: Mon, 25 Mar 2019 18:01:40 +0100
-Message-ID: <1553533300-29999-3-git-send-email-ludovic.Barre@st.com>
-References: <1553533300-29999-1-git-send-email-ludovic.Barre@st.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v11 6/8] rtc: bd70528: Initial support for ROHM bd70528
+ RTC
+Date: Mon, 25 Mar 2019 18:04:51 +0100
+Message-ID: <20190325170451.GQ30105@piout.net>
+References: <cover.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
+ <901900e12e2a06865b3649ec94af511fcc6443a3.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553533300-29999-1-git-send-email-ludovic.Barre@st.com>
+Content-Disposition: inline
+In-Reply-To: <901900e12e2a06865b3649ec94af511fcc6443a3.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.muta
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+On 25/03/2019 14:06:42+0200, Matti Vaittinen wrote:
+> Support RTC block in ROHM bd70528 power management IC. Support
+> getting and setting the time and date as well as arming an alarm
+> which can also be used to wake the PMIC from standby state.
+> 
+> HW supports wake interrupt only for the next 24 hours (sec, minute
+> and hour information only) so we limit also the alarm interrupt to
+> this 24 hours for the sake of consistency.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-This patch adds the dma support for the stm32-qspi hardware.
-The memory buffer constraints (lowmem, vmalloc, kmap) are taken into
-account by framework. In read mode, the memory map is preferred vs
-dma (due to better throughput). If the dma transfer fails the buffer
-is sent by polling.
+> +	r->time.hour |= BD70528_MASK_RTC_HOUR_24H;
+> +	r->day |= bin2bcd(t->tm_mday);
+> +	r->week |= bin2bcd(t->tm_wday);
+> +	r->month |= bin2bcd(t->tm_mon + 1);
+> +	r->year = bin2bcd(t->tm_year-100);
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/spi/spi-stm32-qspi.c | 136 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 135 insertions(+), 1 deletion(-)
+If you ever have to resend, please add spaces around that -
 
-diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
-index 9875139..11a89aa 100644
---- a/drivers/spi/spi-stm32-qspi.c
-+++ b/drivers/spi/spi-stm32-qspi.c
-@@ -5,6 +5,8 @@
-  */
- #include <linux/bitfield.h>
- #include <linux/clk.h>
-+#include <linux/dmaengine.h>
-+#include <linux/dma-mapping.h>
- #include <linux/errno.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
-@@ -84,6 +86,7 @@
- #define STM32_FIFO_TIMEOUT_US 30000
- #define STM32_BUSY_TIMEOUT_US 100000
- #define STM32_ABT_TIMEOUT_US 100000
-+#define STM32_COMP_TIMEOUT_MS 1000
- 
- struct stm32_qspi_flash {
- 	struct stm32_qspi *qspi;
-@@ -94,6 +97,7 @@ struct stm32_qspi_flash {
- struct stm32_qspi {
- 	struct device *dev;
- 	struct spi_controller *ctrl;
-+	phys_addr_t phys_base;
- 	void __iomem *io_base;
- 	void __iomem *mm_base;
- 	resource_size_t mm_size;
-@@ -103,6 +107,10 @@ struct stm32_qspi {
- 	struct completion data_completion;
- 	u32 fmode;
- 
-+	struct dma_chan *dma_chtx;
-+	struct dma_chan *dma_chrx;
-+	struct completion dma_completion;
-+
- 	u32 cr_reg;
- 	u32 dcr_reg;
- 
-@@ -181,6 +189,81 @@ static int stm32_qspi_tx_mm(struct stm32_qspi *qspi,
- 	return 0;
- }
- 
-+static void stm32_qspi_dma_callback(void *arg)
-+{
-+	struct completion *dma_completion = arg;
-+
-+	complete(dma_completion);
-+}
-+
-+static int stm32_qspi_tx_dma(struct stm32_qspi *qspi,
-+			     const struct spi_mem_op *op)
-+{
-+	struct dma_async_tx_descriptor *desc;
-+	enum dma_transfer_direction dma_dir;
-+	struct dma_chan *dma_ch;
-+	struct sg_table sgt;
-+	dma_cookie_t cookie;
-+	u32 cr, t_out;
-+	int err;
-+
-+	if (op->data.dir == SPI_MEM_DATA_IN) {
-+		dma_dir = DMA_DEV_TO_MEM;
-+		dma_ch = qspi->dma_chrx;
-+	} else {
-+		dma_dir = DMA_MEM_TO_DEV;
-+		dma_ch = qspi->dma_chtx;
-+	}
-+
-+	/*
-+	 * spi_map_buf return -EINVAL if the buffer is not DMA-able
-+	 * (DMA-able: in vmalloc | kmap | virt_addr_valid)
-+	 */
-+	err = spi_controller_dma_map_mem_op_data(qspi->ctrl, op, &sgt);
-+	if (err)
-+		return err;
-+
-+	desc = dmaengine_prep_slave_sg(dma_ch, sgt.sgl, sgt.nents,
-+				       dma_dir, DMA_PREP_INTERRUPT);
-+	if (!desc) {
-+		err = -ENOMEM;
-+		goto out_unmap;
-+	}
-+
-+	cr = readl_relaxed(qspi->io_base + QSPI_CR);
-+
-+	reinit_completion(&qspi->dma_completion);
-+	desc->callback = stm32_qspi_dma_callback;
-+	desc->callback_param = &qspi->dma_completion;
-+	cookie = dmaengine_submit(desc);
-+	err = dma_submit_error(cookie);
-+	if (err)
-+		goto out;
-+
-+	dma_async_issue_pending(dma_ch);
-+
-+	writel_relaxed(cr | CR_DMAEN, qspi->io_base + QSPI_CR);
-+
-+	t_out = sgt.nents * STM32_COMP_TIMEOUT_MS;
-+	if (!wait_for_completion_interruptible_timeout(&qspi->dma_completion,
-+						       msecs_to_jiffies(t_out)))
-+		err = -ETIMEDOUT;
-+
-+	if (dma_async_is_tx_complete(dma_ch, cookie,
-+				     NULL, NULL) != DMA_COMPLETE)
-+		err = -ETIMEDOUT;
-+
-+	if (err)
-+		dmaengine_terminate_all(dma_ch);
-+
-+out:
-+	writel_relaxed(cr & ~CR_DMAEN, qspi->io_base + QSPI_CR);
-+out_unmap:
-+	spi_controller_dma_unmap_mem_op_data(qspi->ctrl, op, &sgt);
-+
-+	return err;
-+}
-+
- static int stm32_qspi_tx(struct stm32_qspi *qspi, const struct spi_mem_op *op)
- {
- 	if (!op->data.nbytes)
-@@ -188,6 +271,10 @@ static int stm32_qspi_tx(struct stm32_qspi *qspi, const struct spi_mem_op *op)
- 
- 	if (qspi->fmode == CCR_FMODE_MM)
- 		return stm32_qspi_tx_mm(qspi, op);
-+	else if ((op->data.dir == SPI_MEM_DATA_IN && qspi->dma_chrx) ||
-+		 (op->data.dir == SPI_MEM_DATA_OUT && qspi->dma_chtx))
-+		if (!stm32_qspi_tx_dma(qspi, op))
-+			return 0;
- 
- 	return stm32_qspi_tx_poll(qspi, op);
- }
-@@ -218,7 +305,7 @@ static int stm32_qspi_wait_cmd(struct stm32_qspi *qspi,
- 	writel_relaxed(cr | CR_TCIE | CR_TEIE, qspi->io_base + QSPI_CR);
- 
- 	if (!wait_for_completion_interruptible_timeout(&qspi->data_completion,
--						msecs_to_jiffies(1000))) {
-+				msecs_to_jiffies(STM32_COMP_TIMEOUT_MS))) {
- 		err = -ETIMEDOUT;
- 	} else {
- 		sr = readl_relaxed(qspi->io_base + QSPI_SR);
-@@ -387,6 +474,49 @@ static int stm32_qspi_setup(struct spi_device *spi)
- 	return 0;
- }
- 
-+static void stm32_qspi_dma_setup(struct stm32_qspi *qspi)
-+{
-+	struct dma_slave_config dma_cfg;
-+	struct device *dev = qspi->dev;
-+
-+	memset(&dma_cfg, 0, sizeof(dma_cfg));
-+
-+	dma_cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-+	dma_cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-+	dma_cfg.src_addr = qspi->phys_base + QSPI_DR;
-+	dma_cfg.dst_addr = qspi->phys_base + QSPI_DR;
-+	dma_cfg.src_maxburst = 4;
-+	dma_cfg.dst_maxburst = 4;
-+
-+	qspi->dma_chrx = dma_request_slave_channel(dev, "rx");
-+	if (qspi->dma_chrx) {
-+		if (dmaengine_slave_config(qspi->dma_chrx, &dma_cfg)) {
-+			dev_err(dev, "dma rx config failed\n");
-+			dma_release_channel(qspi->dma_chrx);
-+			qspi->dma_chrx = NULL;
-+		}
-+	}
-+
-+	qspi->dma_chtx = dma_request_slave_channel(dev, "tx");
-+	if (qspi->dma_chtx) {
-+		if (dmaengine_slave_config(qspi->dma_chtx, &dma_cfg)) {
-+			dev_err(dev, "dma tx config failed\n");
-+			dma_release_channel(qspi->dma_chtx);
-+			qspi->dma_chtx = NULL;
-+		}
-+	}
-+
-+	init_completion(&qspi->dma_completion);
-+}
-+
-+static void stm32_qspi_dma_free(struct stm32_qspi *qspi)
-+{
-+	if (qspi->dma_chtx)
-+		dma_release_channel(qspi->dma_chtx);
-+	if (qspi->dma_chrx)
-+		dma_release_channel(qspi->dma_chrx);
-+}
-+
- /*
-  * no special host constraint, so use default spi_mem_default_supports_op
-  * to check supported mode.
-@@ -399,6 +529,7 @@ static void stm32_qspi_release(struct stm32_qspi *qspi)
- {
- 	/* disable qspi */
- 	writel_relaxed(0, qspi->io_base + QSPI_CR);
-+	stm32_qspi_dma_free(qspi);
- 	mutex_destroy(&qspi->lock);
- 	clk_disable_unprepare(qspi->clk);
- 	spi_master_put(qspi->ctrl);
-@@ -427,6 +558,8 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
-+	qspi->phys_base = res->start;
-+
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "qspi_mm");
- 	qspi->mm_base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(qspi->mm_base)) {
-@@ -477,6 +610,7 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 
- 	qspi->dev = dev;
- 	platform_set_drvdata(pdev, qspi);
-+	stm32_qspi_dma_setup(qspi);
- 	mutex_init(&qspi->lock);
- 
- 	ctrl->mode_bits = SPI_RX_DUAL | SPI_RX_QUAD
+
 -- 
-2.7.4
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
