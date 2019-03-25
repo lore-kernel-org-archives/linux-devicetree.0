@@ -1,224 +1,94 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v1] ARM: dts: exynos: Add proper regulator states for
- suspend-to-mem for odroid-u3
-Date: Mon, 25 Mar 2019 13:56:29 +0100
-Message-ID: <CAJKOXPfUSqTRVa-KsGQ72QbHFf0-69uyAcVbx_SMd6EpePGf4w@mail.gmail.com>
-References: <20190324083256.1047-1-linux.amoon@gmail.com> <CAJKOXPfLyLRwJKWcMCtDg10em2pfWZJzXr8FkFTf1vtavRdoTw@mail.gmail.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [RFC PATCH v2 1/5] mtd: cfi_cmdset_0002: Add support for polling
+ status register
+Date: Mon, 25 Mar 2019 18:27:41 +0530
+Message-ID: <b1961c49-6795-89e7-e154-6270bf43d49c@ti.com>
+References: <20190321174548.9288-1-vigneshr@ti.com>
+ <20190321174548.9288-2-vigneshr@ti.com>
+ <f92362a0678b07d22ccc0f271fe3483dc77364a9.camel@infinera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPfLyLRwJKWcMCtDg10em2pfWZJzXr8FkFTf1vtavRdoTw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <f92362a0678b07d22ccc0f271fe3483dc77364a9.camel@infinera.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "richard@nod.at" <richard@nod.at>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "nsekhar@ti.com" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "masonccyang@mxic.com.tw" <masonccyang@mxic.com.tw>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Mar 2019 at 13:46, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Sun, 24 Mar 2019 at 09:33, Anand Moon <linux.amoon@gmail.com> wrote:
-> >
-> > Add suspend-to-mem node to regulator core to be enabled or disabled
-> > during system suspend and also support changing the regulator operating
-> > mode during runtime and when the system enter sleep mode (stand by mode).
-> >
-> > Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> > Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> > Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> > Current patch:
-> >
-> > Note: Both microSD and eMMC suspend resume works this changes at my end.
-> >
-> > regulator-off-in-suspend:
-> > set the regulator node into suspend state i.e. standby mode during suspend
-> > operation.
-> >
-> > Current changes are based on
-> > [0] https://www.kernel.org/doc/Documentation/devicetree/bindings/regulator/max77686.txt
-> >
-> >   Regulators which can be turned off during system suspend:
-> >         -LDOn   :       2, 6-8, 10-12, 14-16,
-> >         -BUCKn  :       1-4.
-> >   Use standard regulator bindings for it ('regulator-off-in-suspend').
-> >
-> > drop the suspend off binding which are not supported by the driver.
-> >
-> > RFC version
-> > [1] https://patchwork.kernel.org/patch/10810909/
-> > These changes had some problem with eMMC not entering into suspend mode.
-> > with some miss configuration in regulator-off-in-suspend mode.
-> >
-> > Changes from previos patch.
-> > [2] https://patchwork.kernel.org/patch/10712549/
-> >
-> > Set all the non used regulator in suspend-odd state
-> > LD02, LD03, LD05, LD06, LD07, LD011, LD013, LDO14, LD016
-> >
-> > BUCK5, BUCK6, BUCK7 and not confirable as per driver max77686-regulator
-> > ---
-> >  .../boot/dts/exynos4412-odroid-common.dtsi    | 39 +++++++++++++++++++
-> >  1 file changed, 39 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > index 08d3a0a7b4eb..375156ad5454 100644
-> > --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > @@ -288,6 +288,9 @@
-> >                                 regulator-min-microvolt = <1800000>;
-> >                                 regulator-max-microvolt = <1800000>;
-> >                                 regulator-always-on;
-> > +                               regulator-state-mem {
-> > +                                       regulator-off-in-suspend;
->
-> Please maintain proper versioning of patches.
-> First patch sent to lists should be either RFC or v1. Second
-> release/submission is then always v2. Third v3.
->
-> This is third or fourth submission but you marked it as v1. This makes
-> it very difficult to discuss and reference previous versions.
->
-> The commit message did not change since beginning (first version). I
-> asked twice that you need to explain exactly why you put the the
-> regulator to off or on state in suspend. Why?
-> Because:
-> 1. This change looks without justification - once you put on, then you
-> put off, now again on,
-> 2. Anyone reading the code later must know the rationale why this was done,
-> 3. I am not quite sure whether this is good setting so I would be
-> happy to be convinced.
->
-> How to provide such explanation? The best in commit message. Sometimes
-> in the comment in the code, depends.
-> How such explanation could look like? For example like this:
-> f8f3b7fc21b1 ("ARM: dts: exynos: Fix regulators configuration on Peach
-> Pi/Pit Chromebooks")
-> Marek clearly explained why he put the regulators "always-on", even
-> tough we do not know everything about this. More over, he mentions
-> that this fixes specific issue.
->
-> Summarizing, please answer:
-> 1. Why this is made off-in-suspend?
-> 2. Why this can be made off-in-suspend?
->
-> > +                               };
-> >                         };
-> >
-> >                         ldo3_reg: LDO3 {
-> > @@ -317,6 +320,9 @@
-> >                                 regulator-min-microvolt = <1000000>;
-> >                                 regulator-max-microvolt = <1000000>;
-> >                                 regulator-always-on;
-> > +                               regulator-state-mem {
-> > +                                       regulator-off-in-suspend;
-> > +                               };
-> >                         };
-> >
-> >                         ldo7_reg: LDO7 {
-> > @@ -324,18 +330,27 @@
-> >                                 regulator-min-microvolt = <1000000>;
-> >                                 regulator-max-microvolt = <1000000>;
-> >                                 regulator-always-on;
-> > +                               regulator-state-mem {
-> > +                                       regulator-off-in-suspend;
-> > +                               };
-> >                         };
-> >
-> >                         ldo8_reg: LDO8 {
-> >                                 regulator-name = "VDD10_HDMI_1.0V";
-> >                                 regulator-min-microvolt = <1000000>;
-> >                                 regulator-max-microvolt = <1000000>;
-> > +                               regulator-state-mem {
-> > +                                       regulator-off-in-suspend;
-> > +                               };
-> >                         };
-> >
-> >                         ldo10_reg: LDO10 {
-> >                                 regulator-name = "VDDQ_MIPIHSI_1.8V";
-> >                                 regulator-min-microvolt = <1800000>;
-> >                                 regulator-max-microvolt = <1800000>;
-> > +                               regulator-state-mem {
-> > +                                       regulator-off-in-suspend;
-> > +                               };
-> >                         };
-> >
-> >                         ldo11_reg: LDO11 {
-> > @@ -343,6 +358,9 @@
-> >                                 regulator-min-microvolt = <1800000>;
-> >                                 regulator-max-microvolt = <1800000>;
-> >                                 regulator-always-on;
-> > +                               regulator-state-mem {
-> > +                                       regulator-off-in-suspend;
-> > +                               };
-> >                         };
-> >
-> >                         ldo12_reg: LDO12 {
-> > @@ -351,6 +369,9 @@
-> >                                 regulator-max-microvolt = <3300000>;
-> >                                 regulator-always-on;
-> >                                 regulator-boot-on;
-> > +                               regulator-state-mem {
-> > +                                       regulator-off-in-suspend;
-> > +                               };
-> >                         };
-> >
-> >                         ldo13_reg: LDO13 {
-> > @@ -367,6 +388,9 @@
-> >                                 regulator-max-microvolt = <1800000>;
-> >                                 regulator-always-on;
-> >                                 regulator-boot-on;
-> > +                               regulator-state-mem {
-> > +                                       regulator-off-in-suspend;
-> > +                               };
-> >                         };
-> >
-> >                         ldo15_reg: LDO15 {
-> > @@ -375,6 +399,9 @@
-> >                                 regulator-max-microvolt = <1000000>;
-> >                                 regulator-always-on;
-> >                                 regulator-boot-on;
-> > +                               regulator-state-mem {
-> > +                                       regulator-off-in-suspend;
-> > +                               };
-> >                         };
-> >
-> >                         ldo16_reg: LDO16 {
-> > @@ -383,6 +410,9 @@
-> >                                 regulator-max-microvolt = <1800000>;
-> >                                 regulator-always-on;
-> >                                 regulator-boot-on;
-> > +                               regulator-state-mem {
-> > +                                       regulator-off-in-suspend;
-> > +                               };
-> >                         };
-> >
-> >                         ldo20_reg: LDO20 {
-> > @@ -421,6 +451,9 @@
-> >                                 regulator-max-microvolt = <1100000>;
-> >                                 regulator-always-on;
-> >                                 regulator-boot-on;
-> > +                               regulator-state-mem {
-> > +                                       regulator-off-in-suspend;
-> > +                               };
-> >                         };
->
-> I questioned this change two times. You did not answer to my
-> question... If you turn memory bus regulator off, how the memory will
-> work in Suspend-to-Memory mode? I might be missing here something but
-> it just looks suspicious. Maybe the regulator does not supply the
-> memory itself (so refresh works even when it is down), just the
-> interface? I don't know, it just looks suspicious. I need to see
-> proper explanation.
->
-> I am sorry but I will not check other hunks in this patch. Please
-> provide the answers for all my questions here first.
+Hi,
 
-I started digging around this and datasheet describes the regulator
-values in sleep mode. The MIF can be off if C2C is not used. It seems
-that the memory refresh is provided by CKEM regulators (which you
-wanted to turn off in first version of the patch). I am not happy that
-I ask about such information and cannot get it. It is the job of
-submitter to provide rationale.
+On 21/03/19 11:41 PM, Joakim Tjernlund wrote:
+> On Thu, 2019-03-21 at 23:15 +0530, Vignesh Raghavendra wrote:
+>>
+>> HyperFlash devices are compliant with CFI AMD/Fujitsu Extended Command
+>> Set(0x0002) for flash operations, therefore drivers/mtd/chips/cfi_cmdset_0002.c
+>> can be use as is. But these devices do not support DQ polling method of
+>> determining chip ready/good status. These flashes provide Status
+>> Register whose bits can be polled to know status of flash operation.
+>>
+>> Cypress HyperFlash datasheet here[1], talks about CFI Amd/Fujitsu
+>> Extended Query version 1.5. Bit 0 of "Software Features supported" field
+>> of CFI Primary Vendor-Specific Extended Query table indicates
+>> presence/absence of status register and Bit 1 indicates whether or not
+>> DQ polling is supported. Using these bits, its possible to determine
+>> whether flash supports DQ polling or need to use Status Register.
+>>
+>> Add support for polling status register to know device ready/status of
+>> erase/write operations when DQ polling is not supported.
+> 
+> Isn't this new Status scheme just a copy of Intels(cmdset_0001)?
 
-Best regards,
-Krzysztof
+Yes, but with one difference: At the end of program/erase operation,
+device directly enters status register mode and  starts reflecting
+status register content at any address.
+The device remains in the read status register state until another
+command is written to the device. Therefore there is notion of device is
+in "status register read mode" (FL_STATUS) state
+
+But in case of cfi_cmdset_0002, once program/erase operation is
+complete, device returns to previous address space overlay from which
+operation was started from (mostly read mode)
+
+In order to enter status register overlay mode, Read Status command is
+to be written to addr_unlock1(0x555) address. The overlay is in effect
+for one read access, specifically the next read access that follows the
+Status Register Read command
+Therefore code around FL_STATUS state in cfi_cmdset_0001 is not
+applicable to cfi_cmdset_0002 as is.
+
+
+> If so I think the new status impl. in 0002 should borrow from 0001 as this is a
+> hardened and battle tested impl.
+>
+
+In case of cfi_cmdset_0001.c, program/erase is followed by
+inval_cache_and_wait_for_operation() to poll ready bit and based on
+status register value, success or the error handling is done.
+
+Most of the code corresponding to inval_cache_and_wait_for_operation()
+is already in cfi_cmdset_0002.c. So, whats missing in this patch is
+handling and reporting of errors as reflected in status register after
+write/erase failures. I will add that in the next version.
+
+But, I don't see much to borrow apart from error handling sequence.
+Please, let me know if I missed something.
+
+> I know other modern 0002 chips supports both old and new impl. of Status and I world
+> guess that we will see more chips with new Status only.
+> 
+
+Agreed. Newer devices would mostly be CFI 1.5.
+
+-- 
+Regards
+Vignesh
