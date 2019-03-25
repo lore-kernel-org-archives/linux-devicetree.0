@@ -1,43 +1,54 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH] ARM: dts: dra7: Add properties to enable PCIe x2 lane mode
-Date: Mon, 25 Mar 2019 15:15:25 +0530
-Message-ID: <20190325094525.362-1-kishon@ti.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH v2 0/4] clk: meson8b: add the VPU clock tree
+Date: Mon, 25 Mar 2019 10:54:48 +0100
+Message-ID: <2cdcecddbadc41f6e94876c519153f071738f272.camel@baylibre.com>
+References: <20190324151104.18397-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190324151104.18397-1-martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Sekhar Nori <nsekhar@ti.com>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, narmstrong@baylibre.com, linux-amlogic@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-ti,syscon-lane-sel and ti,syscon-lane-conf properties specific to enable
-PCIe x2 lane mode are added here.
+On Sun, 2019-03-24 at 16:11 +0100, Martin Blumenstingl wrote:
+> This adds the VPU clock tree for Meson8, Meson8b and Meson8m2.
+> The VPU clock tree is slightly different on all three SoCs. The details
+> are explained in patch #4.
+> 
+> Meson8m2 requires the previously unsupported "gp_pll" PLL. This PLL only
+> exists on Meson8m2 - Meson8 and Meson8b don't have it.
+> A separate clk_hw_onecell_data is introduced for Meson8m2 (using the
+> compatible string which is already available) to account for this SoC
+> specific clock setup.
+> 
+> dependencies:
+> This series is meant to be applied on top of my other patch from [0]:
+>   dt-bindings: clock: meson8b: drop the "ABP" clock definition
+> 
+> changes since v1 at [1]:
+> - fixed typo in the subject of patch #2 (spotted by Neil)
+> - collected Reviewed-by tags from Neil (thank you!)
+> 
+> 
+> [0] https://patchwork.kernel.org/patch/10860387/
+> [1] https://patchwork.kernel.org/cover/10860401/
+> 
+> 
+> Martin Blumenstingl (4):
+>   dt-bindings: clock: meson8b: export the VPU clock
+>   clk: meson: meson8b: use a separate clock table for Meson8m2
+>   clk: meson: meson8b: add support for the GP_PLL clock on Meson8m2
+>   clk: meson: meson8b: add the VPU clock trees
+> 
+>  drivers/clk/meson/meson8b.c              | 422 ++++++++++++++++++++++-
+>  drivers/clk/meson/meson8b.h              |  12 +-
+>  include/dt-bindings/clock/meson8b-clkc.h |   1 +
+>  3 files changed, 433 insertions(+), 2 deletions(-)
+> 
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
----
- arch/arm/boot/dts/dra7.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Looks sane.
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 2bc9add8b7a5..d87e932f45bd 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -193,6 +193,7 @@
- 				ti,hwmods = "pcie1";
- 				phys = <&pcie1_phy>;
- 				phy-names = "pcie-phy0";
-+				ti,syscon-lane-sel = <&scm_conf_pcie 0x18>;
- 				interrupt-map-mask = <0 0 0 7>;
- 				interrupt-map = <0 0 0 1 &pcie1_intc 1>,
- 						<0 0 0 2 &pcie1_intc 2>,
-@@ -218,6 +219,7 @@
- 				phys = <&pcie1_phy>;
- 				phy-names = "pcie-phy0";
- 				ti,syscon-unaligned-access = <&scm_conf1 0x14 1>;
-+				ti,syscon-lane-sel = <&scm_conf_pcie 0x18>;
- 				status = "disabled";
- 			};
- 		};
--- 
-2.17.1
+Acked-by: Jerome Brunet <jbrunet@baylibre.com>
