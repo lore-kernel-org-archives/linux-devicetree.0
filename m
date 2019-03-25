@@ -1,93 +1,49 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v2 4/9] dt-bindings: power: Add rpm power domain bindings
- for qcs404
-Date: Mon, 25 Mar 2019 09:51:25 +0530
-Message-ID: <6989da8a-d295-0079-ed32-b31fb1272c63@codeaurora.org>
-References: <20190324175007.29040-1-sibis@codeaurora.org>
- <20190324175007.29040-5-sibis@codeaurora.org>
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: RE: [PATCH v3 1/5] devfreq: rockchip-dfi: Move GRF definitions to a
+ common place.
+Date: Mon, 25 Mar 2019 13:48:40 +0900
+Message-ID: <20190325044840epcms1p20afe8dc66d0357e6a97939e1b2bb6e76@epcms1p2>
+References: <20190321231440.19031-2-gael.portay@collabora.com>
+        <20190321231440.19031-1-gael.portay@collabora.com>
+        <CGME20190321231444epcas2p364deab07c3436f4ac78c63cb2d103a0b@epcms1p2>
+Reply-To: myungjoo.ham@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190324175007.29040-5-sibis@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <20190321231440.19031-2-gael.portay@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org
-Cc: david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org
+To: Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lin Huang <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Derek Basehore <dbasehore@chromium.org>, Randy Li <ayaka@soulik.info>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infra>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?R2HDq2wgUE9SVEFZ?= <gael.portay@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
+>From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>
+>Some rk3399 GRF (Generic Register Files) definitions can be used for
+>different drivers. Move these definitions to a common include so we
+>don't need to duplicate these definitions.
+>
+>Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+>Signed-off-by: Gael PORTAY <gael.portay@collabora.com>
+>---
+>
+>Changes in v3:
+>- [PATCH v2 1/5] Add Signed-off-by: Gael PORTAY <gael.portay@collabora.com>.
+>
+>Changes in v2:
+>- [PATCH 1/8] Really add Acked-by: Chanwoo Choi <cw00.choi@samsung.com>.
+>
+>Changes in v1:
+>- [RFC 1/10] Add Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+>- [RFC 1/10] s/Generic/General/ (Robin Murphy)
+>- [RFC 4/10] Removed from the series. I did not found a use case where not holding the mutex causes the issue.
+>- [RFC 7/10] Removed from the series. I did not found a use case where this matters.
+>
+> drivers/devfreq/event/rockchip-dfi.c | 23 +++++++----------------
+> include/soc/rockchip/rk3399_grf.h    | 21 +++++++++++++++++++++
+> 2 files changed, 28 insertions(+), 16 deletions(-)
+> create mode 100644 include/soc/rockchip/rk3399_grf.h
+>
 
-On 3/24/2019 11:20 PM, Sibi Sankar wrote:
-> From: Bjorn Andersson <bjorn.andersson@linaro.org>
-> 
-> Add RPM Power domain bindings for the qcs404 family of SoC
-> 
-> [sibis: Add supported rpmpd states for qcs404]
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-
-SoB ordering seems wrong.
-
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->   .../devicetree/bindings/power/qcom,rpmpd.txt  |  1 +
->   include/dt-bindings/power/qcom-rpmpd.h        | 22 +++++++++++++++++++
->   2 files changed, 23 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> index 980e5413d18f..172ccf940c5c 100644
-> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> @@ -6,6 +6,7 @@ which then translates it into a corresponding voltage on a rail
->   Required Properties:
->    - compatible: Should be one of the following
->   	* qcom,msm8996-rpmpd: RPM Power domain for the msm8996 family of SoC
-> +	* qcom,qcs404-rpmpd: RPM Power domain for the qcs404 family of SoC
->   	* qcom,sdm845-rpmhpd: RPMh Power domain for the sdm845 family of SoC
->    - #power-domain-cells: number of cells in Power domain specifier
->   	must be 1.
-> diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
-> index 87d9c6611682..450378662944 100644
-> --- a/include/dt-bindings/power/qcom-rpmpd.h
-> +++ b/include/dt-bindings/power/qcom-rpmpd.h
-> @@ -36,4 +36,26 @@
->   #define MSM8996_VDDSSCX		5
->   #define MSM8996_VDDSSCX_VFC	6
->   
-> +/* QCS404 Power Domains */
-> +#define QCS404_VDDMX		0
-> +#define QCS404_VDDMX_AO		1
-> +#define QCS404_VDDMX_VFL	2
-> +#define QCS404_LPICX		3
-> +#define QCS404_LPICX_VFL	4
-> +#define QCS404_LPIMX		5
-> +#define QCS404_LPIMX_VFL	6
-> +
-> +/* RPM SMD Power Domain performance levels */
-
-so unlike in the sdm845 case where we map these levels to
-(contiguous) corners before passing it over to rpm, we seem
-to pass these as-is to rpm, right?
-
-Does this work if the user passes some value which does not
-really map to a level defined here?
-For instance if value passed is 17 for instance do we fall back to
-16?
-  
-> +#define RPM_SMD_LEVEL_RETENTION       16
-> +#define RPM_SMD_LEVEL_RETENTION_PLUS  32
-> +#define RPM_SMD_LEVEL_MIN_SVS         48
-> +#define RPM_SMD_LEVEL_LOW_SVS         64
-> +#define RPM_SMD_LEVEL_SVS             128
-> +#define RPM_SMD_LEVEL_SVS_PLUS        192
-> +#define RPM_SMD_LEVEL_NOM             256
-> +#define RPM_SMD_LEVEL_NOM_PLUS        320
-> +#define RPM_SMD_LEVEL_TURBO           384
-> +#define RPM_SMD_LEVEL_TURBO_NO_CPR    416
-> +#define RPM_SMD_LEVEL_BINNING         512
-> +
->   #endif
-> 
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
