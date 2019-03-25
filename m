@@ -1,36 +1,73 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 2/2] edac: sifive: Add EDAC driver for SiFive FU540-C000
- chip
-Date: Mon, 25 Mar 2019 07:57:37 +0100
-Message-ID: <20190325065737.GD12016@zn.tnic>
-References: <1553082728-9232-1-git-send-email-yash.shah@sifive.com>
- <1553082728-9232-3-git-send-email-yash.shah@sifive.com>
- <alpine.DEB.2.21.9999.1903241558210.8028@viisi.sifive.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v10 0/9] support ROHM BD70528 PMIC
+Date: Mon, 25 Mar 2019 09:36:41 +0200
+Message-ID: <20190325073640.GB6208@localhost.localdomain>
+References: <cover.1550148989.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190228070450.GB3773@localhost.localdomain>
+ <20190228081055.GL4118@dell>
+ <20190228082248.GC3773@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.9999.1903241558210.8028@viisi.sifive.com>
+In-Reply-To: <20190228082248.GC3773@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Yash Shah <yash.shah@sifive.com>, linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org, palmer@sifive.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, aou@eecs.berkeley.edu, mchehab@kernel.org, devicetree@vger.kernel.org, sachin.ghadi@sifive.com
+To: Lee Jones <lee.jones@linaro.org>
+Cc: mazziesaccount@gmail.com, Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, bogdan-petru.chircu-mare@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 05:23:27PM -0700, Paul Walmsley wrote:
-> > +	if (!IS_ENABLED(CONFIG_EDAC_DEBUG))
-> > +		return;
+Hello again Lee & all,
+
+On Thu, Feb 28, 2019 at 10:22:48AM +0200, Matti Vaittinen wrote:
+> On Thu, Feb 28, 2019 at 08:10:55AM +0000, Lee Jones wrote:
+> > On Thu, 28 Feb 2019, Matti Vaittinen wrote:
+> > 
+> > > Hello Lee and Mark,
+> > > 
+> > > On Thu, Feb 14, 2019 at 03:02:37PM +0200, Matti Vaittinen wrote:
+> > > > Patch series introducing support for ROHM BD70528 PMIC
+
+//snip
+
+> > > 
+> > > The MFD part depends on the regmap-irq changes and I think that most
+> > > other subsystems want to have the MFD changes in before taking rest of
+> > > the driver in their trees. So it will be a while untill all the changes
+> > > are in. It would really be nice to have the drive in-tree sooner - hence
+> > > I ask if theres a way. (I don't want to push, just ask if it is possible :])
+> > 
+> > It's possible, so long as there aren't any build-time dependencies
+> > between the subsystems.  Immediate acceptance however isn't possible
+> > due to the impending merge-window which opens in 3 days.
 > 
-> Can all of these debugfs functions be wrapped with an #if ... #endif such 
-> that, if CONFIG_EDAC_DEBUG is not set, they will all be stripped out by 
-> the preprocessor?
+> Thanks for reply Lee. So merge-window is opening - meaning the 5.1 is
+> being baked now(?) 
+> 
+> Anyays to make it clear - there is build time dependency between MFD and
+> regmap-irq changes. MFD part won't compile without the changes in regmap
+> tree. And theres no new Kconfig to depend on or other compile time
+> checks. So REGMAP changes are required for this MFD portion to compile.
 
-Why would you make the code more ugly with ifdeffery?
+//snip
 
-Do you have any serious code size constraints so that you absolutely
-need to remove a couple of KBs?
+> Rest of the subsystems (regulator, clk, watchdog, gpio) do all depend on
+> MFD - but they should have 'depends on' KConfig to MFD meaning they
+> won't be built without MFD.
+
+I see the 5.1-rc1 and 5.1-rc2 are out. Those contain the regmap-irq
+changes the BD70528 MFD driver depends on. Would you like me to rebase
+the series to some other tree (which tree/branch? I don't see updated
+for-mfd-next branch in kernel.org yet) and resend it? Original patch
+series was created on top of the regulator tree.
+
+Br,
+	Matti Vaittinen
 
 -- 
-Regards/Gruss,
-    Boris.
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
