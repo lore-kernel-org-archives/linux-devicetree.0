@@ -1,56 +1,62 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v3 0/5] PHY: Add support for SERDES in TI's AM654 platform
-Date: Mon, 25 Mar 2019 13:38:10 +0530
-Message-ID: <20190325080815.6056-1-kishon@ti.com>
+Subject: [PATCH v3 1/5] phy: core: Add *release* phy_ops invoked when the consumer relinquishes PHY
+Date: Mon, 25 Mar 2019 13:38:11 +0530
+Message-ID: <20190325080815.6056-2-kishon@ti.com>
+References: <20190325080815.6056-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190325080815.6056-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Roger Quadros <rogerq@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series
-  *) adds support for SERDES module in am654
-  *) modifies phy_reset API to invoke pm_runtime_get/pm_runtime_put since
-the reset callback can access registers.
-  *) Add *release* phy_ops to be invoked when the consumer relinquishes
-PHY
+Add a new phy_ops *release* invoked when the consumer relinquishes the
+PHY using phy_put/devm_phy_put. The initializations done by the PHY
+driver in of_xlate call back can be can be cleaned up here.
 
-Changes from v2:
-  *) Fix typos pointed out by rOGER
-  *) Add dt-binding Documentation in a new file ti,phy-am654-serdes.txt
-  *) Add Roger's patch to support all CLKSEL values.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/phy/phy-core.c  | 5 +++++
+ include/linux/phy/phy.h | 2 ++
+ 2 files changed, 7 insertions(+)
 
-Changes from v1:
-  *) Add *release* phy ops
-  *) Populate release phy_ops in phy-am654-serdes to cleanup
-initializations done in of_xlate
-
-Kishon Vijay Abraham I (4):
-  phy: core: Add *release* phy_ops invoked when the consumer
-    relinquishes PHY
-  phy: core: Invoke pm_runtime_get_*/pm_runtime_put_* before invoking
-    reset callback
-  dt-bindings: phy: ti: Add dt binding documentation for SERDES in
-    AM654x SoC
-  phy: ti: Add a new SERDES driver for TI's AM654x SoC
-
-Roger Quadros (1):
-  phy: ti: am654-serdes: Support all clksel values
-
- .../bindings/phy/ti,phy-am654-serdes.txt      |  81 +++
- drivers/phy/phy-core.c                        |  11 +
- drivers/phy/ti/Kconfig                        |  12 +
- drivers/phy/ti/Makefile                       |   1 +
- drivers/phy/ti/phy-am654-serdes.c             | 573 ++++++++++++++++++
- include/dt-bindings/phy/phy-am654-serdes.h    |  13 +
- include/linux/phy/phy.h                       |   2 +
- 7 files changed, 693 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt
- create mode 100644 drivers/phy/ti/phy-am654-serdes.c
- create mode 100644 include/dt-bindings/phy/phy-am654-serdes.h
-
+diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+index cb38f6e8614c..b9a4ebf35dd3 100644
+--- a/drivers/phy/phy-core.c
++++ b/drivers/phy/phy-core.c
+@@ -564,6 +564,11 @@ void phy_put(struct phy *phy)
+ 	if (!phy || IS_ERR(phy))
+ 		return;
+ 
++	mutex_lock(&phy->mutex);
++	if (phy->ops->release)
++		phy->ops->release(phy);
++	mutex_unlock(&phy->mutex);
++
+ 	module_put(phy->ops->owner);
+ 	put_device(&phy->dev);
+ }
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index 3f350e2749fe..ef13aea1d370 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -64,6 +64,7 @@ union phy_configure_opts {
+  * @set_mode: set the mode of the phy
+  * @reset: resetting the phy
+  * @calibrate: calibrate the phy
++ * @release: ops to be performed while the consumer relinquishes the PHY
+  * @owner: the module owner containing the ops
+  */
+ struct phy_ops {
+@@ -105,6 +106,7 @@ struct phy_ops {
+ 			    union phy_configure_opts *opts);
+ 	int	(*reset)(struct phy *phy);
+ 	int	(*calibrate)(struct phy *phy);
++	void	(*release)(struct phy *phy);
+ 	struct module *owner;
+ };
+ 
 -- 
 2.17.1
