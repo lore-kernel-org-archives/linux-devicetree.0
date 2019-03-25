@@ -1,41 +1,53 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH V9 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
-Date: Mon, 25 Mar 2019 21:59:14 +0100
-Message-ID: <20190325205914.4gd5tzfyryvbthea@pengutronix.de>
-References: <1553218974-20464-1-git-send-email-Anson.Huang@nxp.com>
- <1553218974-20464-2-git-send-email-Anson.Huang@nxp.com>
- <20190325204137.GA19824@bogus>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 3/4] mfd: ti-lmu: Remove LM3532 backlight driver
+ references
+Date: Mon, 25 Mar 2019 22:11:00 +0100
+Message-ID: <c950b7d3-eeb1-2dc2-b732-3a40d5b3a8b7@gmail.com>
+References: <20190321142838.22985-1-dmurphy@ti.com>
+ <20190321142838.22985-3-dmurphy@ti.com>
+ <8769a95d-179f-6219-0a63-9dd623cdd297@gmail.com> <20190325075317.GW4731@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190325204137.GA19824@bogus>
+In-Reply-To: <20190325075317.GW4731@dell>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Anson Huang <anson.huang@nxp.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "stefan@agner.ch" <stefan@agner.ch>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, Leonard Crestez <leonard.crestez@nxp.com>, Robin Gong <yibin.gong@nxp.com>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, pavel@ucw.cz, tony@atomide.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 03:41:37PM -0500, Rob Herring wrote:
-> On Fri, Mar 22, 2019 at 01:48:05AM +0000, Anson Huang wrote:
-> > Add i.MX TPM(Low Power Timer/Pulse Width Modulation Module) PWM binding.
-> > 
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> > No changes.
+On 3/25/19 8:53 AM, Lee Jones wrote:
+> On Sat, 23 Mar 2019, Jacek Anaszewski wrote:
 > 
-> v9? I don't recall seeing any previous versions.
+>> Hi Lee,
+>>
+>> Can we have your ack for this going via LED tree, please?
+> 
+> Patch looks okay.
+> 
+> You can take it through the LED, but if you do I will need you to send
+> me a pull-request to a minimised immutable branch please.
+> 
+> If you cannot do this, I can apply the set and provide the same to
+> you.
+> 
+> If you choose the former:
+> 
+>    Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> 
+> Please let me know what you decide
+> 
 
-Not sure it actually matters, but you were on Cc: for v7 and v8 at
-least:
+I've been exposing integration branches in the past, but after Linus'
+message [0] I have my doubts now. I wonder if it wouldn't make more
+sense if I just took the patches, and you'd cherry-pick them only in
+case such a need occurs. This way we would avoid this whole merge
+noise, which in an optimistic and very plausible case will not be needed
+at all.
 
-https://www.spinics.net/lists/linux-pwm/msg09300.html
-https://www.spinics.net/lists/linux-pwm/msg09321.html
-
-Best regards
-Uwe
+[0] https://lkml.org/lkml/2017/4/19/1104
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Best regards,
+Jacek Anaszewski
