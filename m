@@ -1,54 +1,36 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 2/2] dt-bindings: i2c-stm32: update optional properties
- for stm32h7/stm32mp1
-Date: Sun, 24 Mar 2019 23:15:14 +0100
-Message-ID: <20190324221514.GD6934@kunai>
-References: <1551885100-22207-1-git-send-email-bich.hemon@st.com>
- <1551885100-22207-3-git-send-email-bich.hemon@st.com>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH 2/2] sifive: edac: Add EDAC driver for Sifive l2 Cache
+ Controller
+Date: Sun, 24 Mar 2019 17:16:17 -0700 (PDT)
+Message-ID: <alpine.DEB.2.21.9999.1903241705460.8028@viisi.sifive.com>
+References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com> <1552382461-13051-3-git-send-email-yash.shah@sifive.com> <20190312092842.GC28589@zn.tnic>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Ycz6tD7Th1CMF4v7"
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1551885100-22207-3-git-send-email-bich.hemon@st.com>
+In-Reply-To: <20190312092842.GC28589@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bich HEMON <bich.hemon@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Pierre Yves MORDRET <pierre-yves.mordret@st.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Yash Shah <yash.shah@sifive.com>, linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org, palmer@sifive.com, paul.walmsley@sifive.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, aou@eecs.berkeley.edu, mchehab@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 12 Mar 2019, Borislav Petkov wrote:
 
---Ycz6tD7Th1CMF4v7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Please no EDAC drivers for a single functional unit with RAS
+> capabilities. Rather, a sifive_edac or riscv_edac driver which covers
+> the whole platform or even architecture and contains support for all the
+> RAS functionality there. See altera_edac, for example.
 
-On Wed, Mar 06, 2019 at 03:11:51PM +0000, Bich HEMON wrote:
-> Add STM32H7 and STM32MP1 in the list of compatible socs for each
-> optional property.
->=20
-> Signed-off-by: Bich Hemon <bich.hemon@st.com>
+Looking at the Synopsys, Highbank, PowerPC 4xx, and TI EDAC drivers, all 
+of those are clearly for IP block error management, rather than platform 
+error management.  Has the upstream guidance changed since those drivers 
+were merged?
 
-Applied to for-next, thanks!
+The core issue for us is that we don't have a generalized "ECC management" 
+IP block.  And I would just as soon not fake one in the DT data, since the 
+general DT guidance is that the data in DT is meant to describe the actual 
+hardware.
+
+Would it make more sense to put this driver outside of drivers/edac?
 
 
---Ycz6tD7Th1CMF4v7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyYAXIACgkQFA3kzBSg
-Kbbubw/+Ki4GDhj9P/Q6W14qePiI/EiVawfSSa0XJykeeQC8SdW3hZNA3Ok5FkZ8
-veAim3LCNHuzGFD4CikYk0m+KlerKd+yQ5vDQGAWad1LVlnBlz8adz0gcbvNICWG
-2dYAtSvj+zwGHEWq8Wd1SliIuIrkxvLUtCBmRBkIfomKBUfl65pFfjc/Oin0rjF+
-/bMexh3B2APxNtdb8wp416Vbm8z7+cAbl42ePnvc9/RQVeqaVQh4oNF1/nQK2jQz
-XPUZNGV7yOUy3Sune7C9LgbM4Eiz/INzPI+3NI/2vd4Hg1iS3T6Svws41R1svFXA
-Hvb3be4MfWBMpcvXb0QZ7kwXcMKKYr0N5jmPm50ieVnptcHEuu6bBEYbiTQpB7Gi
-A/4Z9T9VDGda/6hJKbs2s3pIzCExph9FQV1ycGLDoMD0prdeLb9CFXDQ1EOHlXrW
-7w79Y2ZJqCAaCE3OAq+27YLlqF1Gx6hRd4vCsXjrZQvOLXvLP8CQlDp6U1bUNyKY
-JrfpZMhRYEoBXaRIN0Q8ACTVTYvvGSzAUHNmn2BdKa5ODWdQ7VNZMfeAxQYYfkcO
-/2CfjBuJOspkTPsTICq55utoB4zhwX8RG1TFkgP28nCpjSVM1ZZdGhStNpKirJI/
-ocKT12HDdbE5JHI1mGrIVc/Pnl/U45tm1BlaihI490ZKcUGpd/A=
-=it3W
------END PGP SIGNATURE-----
-
---Ycz6tD7Th1CMF4v7--
+ - Paul
