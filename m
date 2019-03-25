@@ -1,54 +1,67 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 4/4] leds: lm3532: Introduce the lm3532 LED driver
-Date: Mon, 25 Mar 2019 07:35:38 -0500
-Message-ID: <dc24b66c-658e-41aa-c869-42c4a7e812a8@ti.com>
-References: <20190321142838.22985-1-dmurphy@ti.com>
- <20190321142838.22985-4-dmurphy@ti.com> <20190322221654.GG19425@atomide.com>
+From: Zhiyong Tao <zhiyong.tao@mediatek.com>
+Subject: [PATCH RESEND v3 3/4] arm64: dts: mt8183: add pintcrl device node
+Date: Mon, 25 Mar 2019 20:41:36 +0800
+Message-ID: <20190325124137.6117-4-zhiyong.tao@mediatek.com>
+References: <20190325124137.6117-1-zhiyong.tao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190322221654.GG19425@atomide.com>
-Content-Language: en-US
+In-Reply-To: <20190325124137.6117-1-zhiyong.tao@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Sebastian Reichel <sre@kernel.org>
+To: robh+dt@kernel.org, linus.walleij@linaro.org, mark.rutland@arm.com, matthias.bgg@gmail.com, sean.wang@kernel.org
+Cc: srv_heupstream@mediatek.com, zhiyong.tao@mediatek.com, hui.liu@mediatek.com, eddie.huang@mediatek.com, chuanjia.liu@mediatek.com, biao.huang@mediatek.com, hongzhou.yang@mediatek.com, erin.lo@mediatek.com, sean.wang@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Tony
+The commit adds pintcrl device node for mt8183
 
-On 3/22/19 5:16 PM, Tony Lindgren wrote:
-> Hi,
-> 
-> * Dan Murphy <dmurphy@ti.com> [190321 14:29]:
->> Introduce the Texas Instruments LM3532 White LED driver.
->> The driver supports ALS configurability or manual brightness
->> control.
->>
->> The driver also supports associating LED strings with specific
->> control banks in a group or as individually controlled strings.
-> 
-> Thanks for getting this driver done. I need help a bit using
-> this though.. What's the glue to the drm driver?
-> 
-> I can control the backlight brightness just fine via /sys, and
-> backlight shows up as the trigger in /sys/class/leds/lm3532:backlight,
-> but /sys/class/backlight is empty and looks like drm can't find it.
-> 
-> Do I need to enable some additional driver(s) to get this to work
-> with the drm driver?
-> 
+Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-Can you dump or point to the defconfig?
-
-Dan
-
-> Regards,
-> 
-> Tony
-> 
-
-
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 75c4881bbe5e..cf92504e2a9b 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -9,7 +9,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/power/mt8183-power.h>
+-
++#include "mt8183-pinfunc.h"
+ / {
+ 	compatible = "mediatek,mt8183";
+ 	interrupt-parent = <&sysirq>;
+@@ -197,6 +197,30 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		pio: pinctrl@10005000 {
++			compatible = "mediatek,mt8183-pinctrl";
++			reg = <0 0x10005000 0 0x1000>,
++			      <0 0x11f20000 0 0x1000>,
++			      <0 0x11e80000 0 0x1000>,
++			      <0 0x11e70000 0 0x1000>,
++			      <0 0x11e90000 0 0x1000>,
++			      <0 0x11d30000 0 0x1000>,
++			      <0 0x11d20000 0 0x1000>,
++			      <0 0x11c50000 0 0x1000>,
++			      <0 0x11f30000 0 0x1000>,
++			      <0 0x1000b000 0 0x1000>;
++			reg-names = "iocfg0", "iocfg1", "iocfg2",
++				    "iocfg3", "iocfg4", "iocfg5",
++				    "iocfg6", "iocfg7", "iocfg8",
++				    "eint";
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pio 0 0 192>;
++			interrupt-controller;
++			interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
++			#interrupt-cells = <2>;
++		};
++
+ 		scpsys: syscon@10006000 {
+ 			compatible = "mediatek,mt8183-scpsys", "syscon";
+ 			#power-domain-cells = <1>;
 -- 
-------------------
-Dan Murphy
+2.12.5
