@@ -1,47 +1,68 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v3 2/5] phy: core: Invoke pm_runtime_get_*/pm_runtime_put_* before invoking reset callback
-Date: Mon, 25 Mar 2019 13:38:12 +0530
-Message-ID: <20190325080815.6056-3-kishon@ti.com>
-References: <20190325080815.6056-1-kishon@ti.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v10 0/9] support ROHM BD70528 PMIC
+Date: Mon, 25 Mar 2019 10:20:13 +0200
+Message-ID: <20190325082013.GC6208@localhost.localdomain>
+References: <cover.1550148989.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190228070450.GB3773@localhost.localdomain>
+ <20190228081055.GL4118@dell>
+ <20190228082248.GC3773@localhost.localdomain>
+ <20190325073640.GB6208@localhost.localdomain>
+ <20190325080206.GZ4731@dell>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190325080815.6056-1-kishon@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20190325080206.GZ4731@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Roger Quadros <rogerq@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: mazziesaccount@gmail.com, Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, bogdan-petru.chircu-mare@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-PHY drivers may try to access PHY registers in the ->reset() callback.
-Invoke phy_pm_runtime_get_sync() before invoking the ->reset() callback
-so that the PHY drivers don't have to enable clocks by themselves before
-accessing PHY registers.
+On Mon, Mar 25, 2019 at 08:02:06AM +0000, Lee Jones wrote:
+> On Mon, 25 Mar 2019, Matti Vaittinen wrote:
+> 
+> > Hello again Lee & all,
+> > 
+> > On Thu, Feb 28, 2019 at 10:22:48AM +0200, Matti Vaittinen wrote:
+> > > On Thu, Feb 28, 2019 at 08:10:55AM +0000, Lee Jones wrote:
+> > > > On Thu, 28 Feb 2019, Matti Vaittinen wrote:
+> > > > 
+> > > > > Hello Lee and Mark,
+> > > > > 
+> > > > > On Thu, Feb 14, 2019 at 03:02:37PM +0200, Matti Vaittinen wrote:
+> > > > > > Patch series introducing support for ROHM BD70528 PMIC
+> > 
+> > I see the 5.1-rc1 and 5.1-rc2 are out. Those contain the regmap-irq
+> > changes the BD70528 MFD driver depends on. Would you like me to rebase
+> > the series to some other tree (which tree/branch? I don't see updated
+> > for-mfd-next branch in kernel.org yet) and resend it? Original patch
+> > series was created on top of the regulator tree.
+> 
+> If you could rebase and resend, that would be great.
+> 
+> You should (very nearly) always base on an upstream tag, so v5.1-rc2
+> would be best in this case.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/phy/phy-core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+So always use tag from "kernel/git/torvalds/linux.git" tree? Thanks for
+this guidance :) I'll try getting this rebased and resent today or
+tomorrow.
 
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index b9a4ebf35dd3..c147ba843f0b 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -384,10 +384,16 @@ int phy_reset(struct phy *phy)
- 	if (!phy || !phy->ops->reset)
- 		return 0;
- 
-+	ret = phy_pm_runtime_get_sync(phy);
-+	if (ret < 0 && ret != -ENOTSUPP)
-+		return ret;
-+
- 	mutex_lock(&phy->mutex);
- 	ret = phy->ops->reset(phy);
- 	mutex_unlock(&phy->mutex);
- 
-+	phy_pm_runtime_put(phy);
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(phy_reset);
+Br,
+	Matti Vaittinen
+
+> 
+> -- 
+> Lee Jones [李琼斯]
+> Linaro Services Technical Lead
+> Linaro.org │ Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+
 -- 
-2.17.1
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
