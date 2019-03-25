@@ -1,87 +1,110 @@
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: [PATCH] ARM: dts: ls1021: Fix SGMII PCS link remaining down after PHY
- disconnect
-Date: Mon, 25 Mar 2019 09:30:58 +0000
-Message-ID: <1553506240-2584-1-git-send-email-vladimir.oltean@nxp.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 00/26] Add support for PCIe RC and EP mode in TI's
+ AM654 SoC
+Date: Mon, 25 Mar 2019 15:06:55 +0530
+Message-ID: <84369fe5-c627-2feb-8da5-1cfbb965c665@ti.com>
+References: <20190325083501.8088-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190325083501.8088-1-kishon@ti.com>
 Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, Vladimir Oltean <vladimir.oltean@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Murali Karicheri <m-karicheri2@ti.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com
 List-Id: devicetree@vger.kernel.org
 
-Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
-But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
-are pointing towards the same internal PCS. Therefore nobody is
-controlling the internal PCS of eTSEC0.
+Hi,
 
-Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
-initialization. But upon an ifdown/ifup sequence, the code path from
-ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
-the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
-link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
-failure condition, the PHY driver keeps printing
-'803x_aneg_done: SGMII link is not ok'.
+On 25/03/19 2:04 PM, Kishon Vijay Abraham I wrote:
+> Add PCIe RC support for TI's AM654 SoC. The PCIe controller in AM654
+> uses Synopsys core revision 4.90a and uses the same TI wrapper as used
+> in keystone2 with certain modification. Hence AM654 will use the same
+> pci wrapper driver pci-keystone.c
+> 
+> This series was initially part of [1]. This series only includes patches
+> that has to be merged via Lorenzo's tree. The PHY patches and dt patches
+> will be sent separately.
+> 
+> This series is created over keystone MSI cleanup series [2].
+> 
+> This series:
+> *) Cleanup pci-keystone driver so that both RC mode and EP mode of
+>    AM654 can be supported
+> *) Modify epc-core to support allocation of aligned buffers required for
+>    AM654
+> *) Fix ATU unroll identification
+> *) Add support for both host mode and device mode in AM654
+> 
+> Changes from v1:
+> *) Support for legacy interrupt in AM654 is removed (see backgrond here [3])
+> *) Allow of_pci_get_max_link_speed to be used by Endpoint controller
+> driver
+> *) Add support to set max-link-speed from DT in pci-keystone driver
+> *) Update "Reviewed-by: Rob Herring <robh@kernel.org>" tags.
 
-Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS and =
-TWR")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
----
- arch/arm/boot/dts/ls1021a-twr.dts | 9 ++++++++-
- arch/arm/boot/dts/ls1021a.dtsi    | 9 +++++++++
- 2 files changed, 17 insertions(+), 1 deletion(-)
+Looks like I've missed updating the tags in the version that was sent out. I'll
+resend the series. Sorry for the noise.
 
-diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-=
-twr.dts
-index 97e1fb7..9b1fe99 100644
---- a/arch/arm/boot/dts/ls1021a-twr.dts
-+++ b/arch/arm/boot/dts/ls1021a-twr.dts
-@@ -145,7 +145,7 @@
- };
-=20
- &enet0 {
--	tbi-handle =3D <&tbi1>;
-+	tbi-handle =3D <&tbi0>;
- 	phy-handle =3D <&sgmii_phy2>;
- 	phy-connection-type =3D "sgmii";
- 	status =3D "okay";
-@@ -225,6 +225,13 @@
- 	sgmii_phy2: ethernet-phy@2 {
- 		reg =3D <0x2>;
- 	};
-+	tbi0: tbi-phy@1f {
-+		reg =3D <0x1f>;
-+		device_type =3D "tbi-phy";
-+	};
-+};
-+
-+&mdio1 {
- 	tbi1: tbi-phy@1f {
- 		reg =3D <0x1f>;
- 		device_type =3D "tbi-phy";
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dts=
-i
-index b4f2723..3a3d264 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -709,6 +709,15 @@
- 			      <0x0 0x2d10030 0x0 0x4>;
- 		};
-=20
-+		mdio1: mdio@2d64000 {
-+			compatible =3D "gianfar";
-+			device_type =3D "mdio";
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+			reg =3D <0x0 0x2d64000 0x0 0x4000>,
-+			      <0x0 0x2d50030 0x0 0x4>;
-+		};
-+
- 		ptp_clock@2d10e00 {
- 			compatible =3D "fsl,etsec-ptp";
- 			reg =3D <0x0 0x2d10e00 0x0 0xb0>;
---=20
-2.7.4
+Thanks
+Kishon
+
+> 
+> [1] -> https://lore.kernel.org/patchwork/cover/989487/
+> [2] -> https://lkml.org/lkml/2019/3/21/193
+> [3] -> https://lkml.org/lkml/2019/3/19/235
+> 
+> Kishon Vijay Abraham I (26):
+>   PCI: keystone: Add start_link/stop_link dw_pcie_ops
+>   PCI: keystone: Cleanup error_irq configuration
+>   dt-bindings: PCI: keystone: Add "reg-names" binding information
+>   PCI: keystone: Perform host initialization in a single function
+>   PCI: keystone: Use platform_get_resource_byname to get memory
+>     resources
+>   PCI: keystone: Move initializations to appropriate places
+>   dt-bindings: PCI: Add dt-binding to configure PCIe mode
+>   PCI: keystone: Explicitly set the PCIe mode
+>   dt-bindings: PCI: Document "atu" reg-names
+>   PCI: dwc: Enable iATU unroll for endpoint too
+>   PCI: dwc: Fix ATU identification for designware version >= 4.80
+>   PCI: keystone: Prevent ARM32 specific code to be compiled for ARM64
+>   dt-bindings: PCI: Add PCI RC dt binding documentation for AM654
+>   PCI: keystone: Add support for PCIe RC in AM654x Platforms
+>   PCI: keystone: Invoke phy_reset API before enabling PHY
+>   PCI: OF: Allow of_pci_get_max_link_speed() to be used by PCI Endpoint
+>     drivers
+>   PCI: keystone: Add support to set the max link speed from DT
+>   PCI: endpoint: Add support to allocate aligned buffers to be mapped in
+>     BARs
+>   PCI: dwc: Add const qualifier to struct dw_pcie_ep_ops
+>   PCI: dwc: Fix dw_pcie_ep_find_capability to return correct capability
+>     offset
+>   PCI: dwc: Add callbacks for accessing dbi2 address space
+>   PCI: keystone: Add support for PCIe EP in AM654x Platforms
+>   PCI: designware-ep: Configure RESBAR to advertise the smallest size
+>   PCI: designware-ep: Use aligned ATU window for raising MSI interrupts
+>   misc: pci_endpoint_test: Add support to test PCI EP in AM654x
+>   misc: pci_endpoint_test: Fix test_reg_bar to be updated in
+>     pci_endpoint_test
+> 
+>  .../bindings/pci/designware-pcie.txt          |   7 +-
+>  .../devicetree/bindings/pci/pci-keystone.txt  |  14 +-
+>  drivers/misc/pci_endpoint_test.c              |  18 +
+>  drivers/pci/Makefile                          |   2 +-
+>  drivers/pci/controller/dwc/Kconfig            |  25 +-
+>  drivers/pci/controller/dwc/pci-dra7xx.c       |   2 +-
+>  drivers/pci/controller/dwc/pci-keystone.c     | 577 +++++++++++++++---
+>  drivers/pci/controller/dwc/pcie-artpec6.c     |   2 +-
+>  .../pci/controller/dwc/pcie-designware-ep.c   |  55 +-
+>  .../pci/controller/dwc/pcie-designware-host.c |  19 -
+>  .../pci/controller/dwc/pcie-designware-plat.c |   2 +-
+>  drivers/pci/controller/dwc/pcie-designware.c  |  52 ++
+>  drivers/pci/controller/dwc/pcie-designware.h  |  15 +-
+>  drivers/pci/endpoint/functions/pci-epf-test.c |   5 +-
+>  drivers/pci/endpoint/pci-epf-core.c           |  10 +-
+>  drivers/pci/of.c                              |  44 +-
+>  include/linux/pci-epc.h                       |   2 +
+>  include/linux/pci-epf.h                       |   3 +-
+>  18 files changed, 682 insertions(+), 172 deletions(-)
+> 
