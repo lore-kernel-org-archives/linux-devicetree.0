@@ -1,49 +1,76 @@
-From: Mickael Guene <mickael.guene@st.com>
-Subject: [PATCH v2 0/2] Add support for MIPID02 CSI-2 to PARALLEL bridge I2C device
-Date: Mon, 25 Mar 2019 08:55:08 +0100
-Message-ID: <1553500510-153260-1-git-send-email-mickael.guene@st.com>
-References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v10 0/9] support ROHM BD70528 PMIC
+Date: Mon, 25 Mar 2019 08:02:06 +0000
+Message-ID: <20190325080206.GZ4731@dell>
+References: <cover.1550148989.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190228070450.GB3773@localhost.localdomain>
+ <20190228081055.GL4118@dell>
+ <20190228082248.GC3773@localhost.localdomain>
+ <20190325073640.GB6208@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
+Content-Disposition: inline
+In-Reply-To: <20190325073640.GB6208@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: hugues.fruchet@st.com, Mickael Guene <mickael.guene@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Tianshu Qiu <tian.shu.qiu@intel.com>, Ben Kao <ben.kao@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matt Ranostay <matt.ranostay@konsulko.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, Mark Rutland <mark.rutland@arm.com>, Bingbu Cao <bingbu.cao@intel.com>, linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, Akinobu Mita <akinobu.mita@gmail.com>
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: mazziesaccount@gmail.com, Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, bogdan-petru.chircu-mare@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, 25 Mar 2019, Matti Vaittinen wrote:
 
-This is the v2 of my MIPID02 series which introduces support of
-STMicroelectronics MIPID02 CSI-2 to PARALLEL I2C bridge. It allows using a CSI-2
-sensor with a PARALLEL interface. Current driver implementation doesn't support
-CSI-2 second input port usage. It doesn't support also YUV420, RGB565 and RGB444
-input formats.
+> Hello again Lee & all,
+> 
+> On Thu, Feb 28, 2019 at 10:22:48AM +0200, Matti Vaittinen wrote:
+> > On Thu, Feb 28, 2019 at 08:10:55AM +0000, Lee Jones wrote:
+> > > On Thu, 28 Feb 2019, Matti Vaittinen wrote:
+> > > 
+> > > > Hello Lee and Mark,
+> > > > 
+> > > > On Thu, Feb 14, 2019 at 03:02:37PM +0200, Matti Vaittinen wrote:
+> > > > > Patch series introducing support for ROHM BD70528 PMIC
+> 
+> //snip
+> 
+> > > > 
+> > > > The MFD part depends on the regmap-irq changes and I think that most
+> > > > other subsystems want to have the MFD changes in before taking rest of
+> > > > the driver in their trees. So it will be a while untill all the changes
+> > > > are in. It would really be nice to have the drive in-tree sooner - hence
+> > > > I ask if theres a way. (I don't want to push, just ask if it is possible :])
+> > > 
+> > > It's possible, so long as there aren't any build-time dependencies
+> > > between the subsystems.  Immediate acceptance however isn't possible
+> > > due to the impending merge-window which opens in 3 days.
+> > 
+> > Thanks for reply Lee. So merge-window is opening - meaning the 5.1 is
+> > being baked now(?) 
+> > 
+> > Anyays to make it clear - there is build time dependency between MFD and
+> > regmap-irq changes. MFD part won't compile without the changes in regmap
+> > tree. And theres no new Kconfig to depend on or other compile time
+> > checks. So REGMAP changes are required for this MFD portion to compile.
+> 
+> //snip
+> 
+> > Rest of the subsystems (regulator, clk, watchdog, gpio) do all depend on
+> > MFD - but they should have 'depends on' KConfig to MFD meaning they
+> > won't be built without MFD.
+> 
+> I see the 5.1-rc1 and 5.1-rc2 are out. Those contain the regmap-irq
+> changes the BD70528 MFD driver depends on. Would you like me to rebase
+> the series to some other tree (which tree/branch? I don't see updated
+> for-mfd-next branch in kernel.org yet) and resend it? Original patch
+> series was created on top of the regulator tree.
 
-Thanks to Sakari for v1 series review.
+If you could rebase and resend, that would be great.
 
-Changes in v2:
-- Add precision about first CSI-2 port data rate
-- Document endpoints supported properties
-- Rename 'mipid02@14' into generic 'csi2rx@14' in example
-- Merge MAINTAINERS patch 3 into patch 1 and 2
-- Fix line too long in Kconfig
-- Add missing delay after reset release
-- Various style fixes
-- Fix mipid02_stream_enable returning no error when mipid02_find_sensor failed
-
-Mickael Guene (2):
-  dt-bindings: Document MIPID02 bindings
-  media:st-mipid02: MIPID02 CSI-2 to PARALLEL bridge driver
-
- .../bindings/media/i2c/st,st-mipid02.txt           |  83 ++
- MAINTAINERS                                        |   8 +
- drivers/media/i2c/Kconfig                          |  14 +
- drivers/media/i2c/Makefile                         |   1 +
- drivers/media/i2c/st-mipid02.c                     | 877 +++++++++++++++++++++
- 5 files changed, 983 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
- create mode 100644 drivers/media/i2c/st-mipid02.c
+You should (very nearly) always base on an upstream tag, so v5.1-rc2
+would be best in this case.
 
 -- 
-2.7.4
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
