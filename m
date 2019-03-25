@@ -1,401 +1,114 @@
-From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v2 1/2] EDAC: add EDAC driver for DMC520
-Date: Mon, 25 Mar 2019 18:32:19 +0000
-Message-ID: <95fe6765-ef70-99df-5fa3-703cb0c1af0f@arm.com>
-References: <BN7PR08MB5572D3A5217C4749AC4E7DC4AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com>
+From: Leo Li <leoyang.li@nxp.com>
+Subject: RE: [PATCH] ARM: dts: ls1021: Fix SGMII PCS link remaining down after
+ PHY disconnect
+Date: Mon, 25 Mar 2019 18:46:39 +0000
+Message-ID: <AM6PR04MB586318A19F0EE5D9B92B01BC8F5E0@AM6PR04MB5863.eurprd04.prod.outlook.com>
+References: <1553506240-2584-1-git-send-email-vladimir.oltean@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BN7PR08MB5572D3A5217C4749AC4E7DC4AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com>
-Content-Language: en-GB
+In-Reply-To: <1553506240-2584-1-git-send-email-vladimir.oltean@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rui Zhao <ruizhao@outlook.com>
-Cc: "bp@alien8.de" <bp@alien8.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "okaya@kernel.org" <okaya@kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "sashal@kernel.org" <sashal@kernel.org>, "hangl@microsoft.com" <hangl@microsoft.com>, "lewan@microsoft.com" <lewan@microsoft.com>, Rui Zhao <ruizhao@microsoft.com>
+To: Vladimir Oltean <vladimir.oltean@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Claudiu Manoil <claudiu.manoil@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rui,
-
-On 07/03/2019 01:24, Rui Zhao wrote:
-> From: Rui Zhao <ruizhao@microsoft.com>
-> New driver supports error detection and correction on
-> the devices with ARM DMC-520 memory controller.
 
 
-> diff --git a/drivers/edac/dmc520_edac.c b/drivers/edac/dmc520_edac.c
-> new file mode 100644
-> index 0000000..c70ce4e
-> --- /dev/null
-> +++ b/drivers/edac/dmc520_edac.c
-> @@ -0,0 +1,619 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +// EDAC driver for DMC-520
-
-[..]
-
-> +// DMC-520 types, masks and bitfields
-> +#define MEMORY_TYPE_LPDDR3			0
-> +#define MEMORY_TYPE_DDR3			1
-> +#define MEMORY_TYPE_DDR4			2
-> +#define MEMORY_TYPE_LPDDR4			3
-
-(this might be better as an enum as it hints to the compiler that only these
-values can ever happen. An example of where this is handy further down...)
-
-
-> +#define MEMORY_DEV_WIDTH_X4			0
-> +#define MEMORY_DEV_WIDTH_X8			1
-> +#define MEMORY_DEV_WIDTH_X16			2
-> +#define MEMORY_DEV_WIDTH_X32			3
-
-(this might be better as an enum)
-
-
-> +struct dmc520_edac {
-> +	void __iomem *reg_base;
-
-> +	char message[EDAC_MSG_BUF_SIZE];
-
-Does there need to be an irq-safe lock for this mesage buffer?
-Your snprintf() into it in dmc520_handle_dram_ecc_errors(), which is called from both
-dmc520_edac_dram_ue_isr() and dmc520_edac_dram_ce_isr()... if these are wired up as
-different irqs, they could happen on different CPUs concurrently...
-
-
+> -----Original Message-----
+> From: Vladimir Oltean
+> Sent: Monday, March 25, 2019 4:31 AM
+> To: shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; Claudiu Manoil
+> <claudiu.manoil@nxp.com>
+> Cc: robh+dt@kernel.org; linux-arm-kernel@lists.infradead.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> netdev@vger.kernel.org; davem@davemloft.net; Vladimir Oltean
+> <vladimir.oltean@nxp.com>
+> Subject: [PATCH] ARM: dts: ls1021: Fix SGMII PCS link remaining down afte=
+r
+> PHY disconnect
+>=20
+> Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
+> But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
+> are pointing towards the same internal PCS. Therefore nobody is controlli=
+ng
+> the internal PCS of eTSEC0.
+>=20
+> Upon initial ndo_open, the SGMII link is ok by virtue of U-boot initializ=
+ation.
+> But upon an ifdown/ifup sequence, the code path from ndo_open ->
+> init_phy -> gfar_configure_serdes does not get executed for the PCS of
+> eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII link remains
+> down for eTSEC0. On the LS1021A-TWR board, to signal this failure conditi=
+on,
+> the PHY driver keeps printing
+> '803x_aneg_done: SGMII link is not ok'.
+>=20
+> Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS
+> and TWR")
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> ---
+>  arch/arm/boot/dts/ls1021a-twr.dts | 9 ++++++++-
+>  arch/arm/boot/dts/ls1021a.dtsi    | 9 +++++++++
+>  2 files changed, 17 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/ls1021a-twr.dts
+> b/arch/arm/boot/dts/ls1021a-twr.dts
+> index 97e1fb7..9b1fe99 100644
+> --- a/arch/arm/boot/dts/ls1021a-twr.dts
+> +++ b/arch/arm/boot/dts/ls1021a-twr.dts
+> @@ -145,7 +145,7 @@
+>  };
+>=20
+>  &enet0 {
+> -	tbi-handle =3D <&tbi1>;
+> +	tbi-handle =3D <&tbi0>;
+>  	phy-handle =3D <&sgmii_phy2>;
+>  	phy-connection-type =3D "sgmii";
+>  	status =3D "okay";
+> @@ -225,6 +225,13 @@
+>  	sgmii_phy2: ethernet-phy@2 {
+>  		reg =3D <0x2>;
+>  	};
+> +	tbi0: tbi-phy@1f {
+> +		reg =3D <0x1f>;
+> +		device_type =3D "tbi-phy";
+> +	};
 > +};
+> +
+> +&mdio1 {
+>  	tbi1: tbi-phy@1f {
+>  		reg =3D <0x1f>;
+>  		device_type =3D "tbi-phy";
+> diff --git a/arch/arm/boot/dts/ls1021a.dtsi
+> b/arch/arm/boot/dts/ls1021a.dtsi index b4f2723..3a3d264 100644
+> --- a/arch/arm/boot/dts/ls1021a.dtsi
+> +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> @@ -709,6 +709,15 @@
+>  			      <0x0 0x2d10030 0x0 0x4>;
+>  		};
+>=20
+> +		mdio1: mdio@2d64000 {
+> +			compatible =3D "gianfar";
 
+I know it is not your fault to use this compatible string as it already use=
+d this for mdio node in the device tree, but it is somewhat ambiguous to us=
+e the same compatible string as the ethernet controller.  And this dts is t=
+he only one in all kernel device trees using this compatible string for mdi=
+o node.  I would think it will be more clear to use "fsl,etsec2-mdio" or "f=
+sl,etsec2-tbi".
 
-> +static bool dmc520_get_dram_ecc_error_info(struct dmc520_edac *edac,
-> +					   bool is_ce,
-> +					   struct ecc_error_info *info)
-> +{
-> +	u32 reg_offset_low, reg_offset_high;
-> +	u32 reg_val_low, reg_val_high;
-> +	bool valid;
+> +			device_type =3D "mdio";
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +			reg =3D <0x0 0x2d64000 0x0 0x4000>,
+> +			      <0x0 0x2d50030 0x0 0x4>;
+> +		};
 > +
-> +	reg_offset_low = is_ce ? REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_31_00 :
-> +				 REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_31_00;
-> +	reg_offset_high = is_ce ? REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_63_32 :
-> +				  REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_63_32;
-> +
-> +	reg_val_low = dmc520_read_reg(edac, reg_offset_low);
-> +	reg_val_high = dmc520_read_reg(edac, reg_offset_high);
-> +
-> +	valid = (FIELD_GET(REG_FIELD_ERR_INFO_LOW_VALID, reg_val_low) != 0) &&
-> +		(FIELD_GET(REG_FIELD_ERR_INFO_HIGH_VALID, reg_val_high) != 0);
-> +
-> +	if (info) {
-
-I see one caller, dmc520_handle_dram_ecc_errors(), which has info on the stack... is it
-possible for info to be NULL here?
-
-
-> +		if (valid) {
-> +			info->col = FIELD_GET(REG_FIELD_ERR_INFO_LOW_COL,
-> +					      reg_val_low);
-> +			info->row = FIELD_GET(REG_FIELD_ERR_INFO_LOW_ROW,
-> +					      reg_val_low);
-> +			info->rank = FIELD_GET(REG_FIELD_ERR_INFO_LOW_RANK,
-> +					       reg_val_low);
-> +			info->bank = FIELD_GET(REG_FIELD_ERR_INFO_HIGH_BANK,
-> +					       reg_val_high);
-> +		} else {
-> +			memset(info, 0, sizeof(struct ecc_error_info));
-> +		}
-> +	}
-> +
-> +	return valid;
-> +}
-
-> +static enum mem_type dmc520_get_mtype(struct dmc520_edac *edac)
-> +{
-> +	enum mem_type mt;
-> +	u32 reg_val, type;
-> +
-> +	reg_val = dmc520_read_reg(edac, REG_OFFSET_MEMORY_TYPE_NOW);
-> +	type = FIELD_GET(REG_FIELD_MEMORY_TYPE, reg_val);
-> +
-> +	switch (type) {
-> +	case MEMORY_TYPE_LPDDR3:
-> +	case MEMORY_TYPE_DDR3:
-> +		mt = MEM_DDR3;
-> +		break;
-> +
-> +	case MEMORY_TYPE_DDR4:
-> +	case MEMORY_TYPE_LPDDR4:
-> +	default:
-
-Is this default just to shut the compiler warning up?
-If so, you could use an enum and the compiler won't warn for a switch() that has all the
-cases covered.
-
-
-> +		mt = MEM_DDR4;
-> +		break;
-> +	}
-> +	return mt;
-> +}
-
-
-> +static irqreturn_t dmc520_edac_dram_ce_isr(int irq, void *data)
-> +{
-> +	return dmc520_edac_dram_ecc_isr(irq, data, true);
-> +}
-> +
-> +static irqreturn_t dmc520_edac_dram_ue_isr(int irq, void *data)
-> +{
-> +	return dmc520_edac_dram_ecc_isr(irq, data, false);
-> +}
-
-How come these calls aren't folded into the one-size fits all irq handler below?
-If the hardware always sets the status register, does the irqchip driver need to call a
-different helper?
-
-
-> +static irqreturn_t dmc520_edac_all_isr(int irq, void *data)
-> +{
-> +	struct mem_ctl_info *mci;
-> +	struct dmc520_edac *edac;
-> +	u32 status;
-> +
-> +	mci = data;
-> +	edac = mci->pvt_info;
-> +
-> +	status = dmc520_read_reg(edac, REG_OFFSET_INTERRUPT_STATUS);
-> +
-> +	if (status & DRAM_ECC_INT_CE_MASK)
-> +		dmc520_edac_dram_ce_isr(irq, data);
-> +
-> +	if (status & DRAM_ECC_INT_UE_MASK)
-> +		dmc520_edac_dram_ue_isr(irq, data);
-> +
-> +	// Other interrupt handlers can be added
-> +
-> +	return IRQ_HANDLED;
-
-
-Shouldn't there be a way of getting IRQ_NONE out of this?
-
-
-> +}
-
-[...]
-
-
-> +static int count_set_bits(u32 n)
-> +{
-> +	int count;
-> +
-> +	for (count = 0; n != 0; n &= (n - 1))
-> +		count++;
-> +
-> +	return count;
-> +}
-
-Isn't this what hweight() does?
-
-
-
-> +static int dmc520_edac_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev;
-> +	struct dmc520_edac *edac;
-> +	struct mem_ctl_info *mci;
-> +	struct edac_mc_layer layers[1];
-> +	int ret, irq, nintr;
-> +	struct resource *res;
-> +	void __iomem *reg_base;
-> +	u32 status, current_bit, interrupt_mask;
-> +	bool interrupt_shared;
-> +
-> +	dev = &pdev->dev;
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	reg_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(reg_base))
-> +		return PTR_ERR(reg_base);
-> +
-> +	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
-> +	layers[0].size = dmc520_get_rank_count(reg_base);
-> +	layers[0].is_virt_csrow = true;
-> +
-> +	mci = edac_mc_alloc(dmc520_mc_idx++, ARRAY_SIZE(layers), layers,
-> +			    sizeof(struct dmc520_edac));
-> +	if (!mci) {
-> +		edac_printk(KERN_ERR, EDAC_MOD_NAME,
-> +			    "Failed to allocate memory for mc instance\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	edac = mci->pvt_info;
-> +	edac->reg_base = reg_base;
-> +
-> +	if (!dmc520_is_ecc_enabled(edac)) {
-> +		edac_printk(KERN_ERR, EDAC_MOD_NAME, "ECC not enabled\n");
-> +		ret = -ENXIO;
-> +		goto err;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, mci);
-> +
-> +	mci->pdev = dev;
-> +	mci->mtype_cap = MEM_FLAG_DDR3 | MEM_FLAG_DDR4;
-> +	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
-> +	mci->edac_cap = EDAC_FLAG_SECDED;
-> +	mci->scrub_cap = SCRUB_FLAG_HW_SRC;
-> +	mci->scrub_mode = dmc520_is_scrub_configured(edac) ?
-> +			  SCRUB_HW_SRC : SCRUB_NONE;
-> +	mci->ctl_name = EDAC_CTL_NAME;
-> +	mci->dev_name = dev_name(mci->pdev);
-> +	mci->mod_name = EDAC_MOD_NAME;
-> +	mci->ctl_page_to_phys = NULL;
-> +
-> +	edac_op_state = EDAC_OPSTATE_INT;
-> +
-> +	dmc520_init_csrow(mci);
-> +
-> +	ret = edac_mc_add_mc(mci);
-> +	if (ret) {
-> +		edac_printk(KERN_ERR, EDAC_MOD_NAME,
-> +			    "Failed to register with EDAC core\n");
-> +		goto err;
-> +	}
-> +
-> +	interrupt_shared = false;
-> +	interrupt_mask = DRAM_ECC_INT_CE_MASK | DRAM_ECC_INT_UE_MASK;
-> +
-> +	if (dev->of_node) {
-> +		if (of_find_property(dev->of_node, "interrupt-shared", NULL))
-> +			interrupt_shared = true;
-> +
-> +		if (of_property_read_u32(dev->of_node,
-> +					 "interrupt-mask",
-> +					 &interrupt_mask)) {
-> +			edac_printk(KERN_INFO, EDAC_MOD_NAME,
-> +				    "Use default interrupt mask 0x%X\n",
-> +				    interrupt_mask);
-> +		}
-> +
-> +		interrupt_mask &= ALL_INT_MASK;
-> +	}
-> +
-> +	// Clear interrupts
-> +	status = dmc520_read_reg(edac, REG_OFFSET_INTERRUPT_STATUS);
-> +	dmc520_write_reg(edac, 0, REG_OFFSET_INTERRUPT_CONTROL);
-> +	dmc520_write_reg(edac, ALL_INT_MASK, REG_OFFSET_INTERRUPT_CLR);
-> +
-> +	// Reset DRAM CE/UE counters
-> +	if (interrupt_mask & DRAM_ECC_INT_CE_MASK)
-> +		dmc520_get_dram_ecc_error_count(edac, true);
-> +
-> +	if (interrupt_mask & DRAM_ECC_INT_UE_MASK)
-> +		dmc520_get_dram_ecc_error_count(edac, false);
-> +
-> +	nintr = count_set_bits(interrupt_mask);
-> +	if (nintr == 0) {
-> +		edac_printk(KERN_ERR, EDAC_MC,
-> +			    "Invalid interrupt mask 0x%X\n",
-> +			    interrupt_mask);
-> +		ret = -EINVAL;
-> +		goto err;
-
-This is after edac_mc_add_mc(), and on your remove path you have a edac_mc_del_mc(). Is
-that necessary here? Do you need an err_del_mc?
-
-
-
-> +	}
-> +
-> +	current_bit = BIT(0);
-> +	for (irq = 0; irq < nintr; ++irq) {
-> +		irq_handler_t edac_isr;
-> +		int irq_id = platform_get_irq(pdev, irq);
-> +
-> +		if (irq_id < 0) {
-> +			edac_printk(KERN_ERR, EDAC_MC,
-> +				    "Failed to get %s irq\n",
-> +				    irq == 0 ? "CE" : "UE");
-> +			ret = -ENODEV;
-> +			goto err;
-
-err_del_mc?
-
-
-> +		}
-> +
-> +		if (interrupt_shared) {
-> +			edac_isr = dmc520_edac_all_isr;
-> +		} else {
-> +			while (current_bit & ALL_INT_MASK) {
-> +				if (current_bit & interrupt_mask)
-> +					break;
-> +
-> +				current_bit <<= 1;
-> +			}
-> +
-> +			if (current_bit & DRAM_ECC_INT_CE_MASK) {
-> +				edac_isr = dmc520_edac_dram_ce_isr;
-> +			} else if (current_bit & DRAM_ECC_INT_UE_MASK) {
-> +				edac_isr = dmc520_edac_dram_ue_isr;
-> +			} else {
-> +				edac_printk(KERN_ERR, EDAC_MC,
-> +					    "Invalid interrupt bit 0x%X\n",
-> +					    current_bit);
-> +				ret = -EINVAL;
-> +				goto err;
-
-err_del_mc?
-
-> +			}
-> +
-> +			current_bit <<= 1;
-> +		}
-> +
-> +		ret = devm_request_irq(&pdev->dev,
-> +				       irq_id,
-> +				       edac_isr,
-> +				       0,
-> +				       dev_name(&pdev->dev),
-> +				       mci);
-> +		if (ret < 0) {
-> +			edac_printk(KERN_ERR, EDAC_MC,
-> +				    "Failed to request irq %d\n", irq_id);
-> +			goto err;
-
-err_del_mc?
-
-> +		}
-> +
-> +		// Only one irq for all interrupts
-> +		if (interrupt_shared)
-> +			break;
-> +	}
-> +
-> +	// Enable interrupts
-> +	dmc520_write_reg(edac, interrupt_mask, REG_OFFSET_INTERRUPT_CONTROL);
-> +
-> +	return 0;
-> +
-> +err:
-> +	edac_mc_free(mci);
-> +
-> +	return ret;
-> +}
-
-
-[...]
-
-> +MODULE_AUTHOR("Rui Zhao <ruizhao@microsoft.com>");
-> +MODULE_DESCRIPTION("DMC-520 ECC driver");
-
-> +MODULE_LICENSE("GPL v2");
-
-This doesn't match your SPDX tag above:
-| // SPDX-License-Identifier: GPL-2.0+
-
-Can I use a later version?
-
-
-
-Thanks,
-
-James
+>  		ptp_clock@2d10e00 {
+>  			compatible =3D "fsl,etsec-ptp";
+>  			reg =3D <0x0 0x2d10e00 0x0 0xb0>;
+> --
+> 2.7.4
