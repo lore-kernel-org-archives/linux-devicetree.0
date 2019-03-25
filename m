@@ -1,64 +1,73 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 1/3] media: dt-bindings: media: meson-ao-cec: Add G12A AO-CEC-B Compatible
-Date: Mon, 25 Mar 2019 18:34:59 +0100
-Message-ID: <20190325173501.22863-2-narmstrong@baylibre.com>
-References: <20190325173501.22863-1-narmstrong@baylibre.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
+Subject: Re: [PATCH RESEND v3 3/4] arm64: dts: mt8183: add pintcrl device node
+Date: Mon, 25 Mar 2019 11:17:37 -0700
+Message-ID: <CANMq1KCSN11fH0JS72iheDwKjo06ShKiFu+Yn51xVObcvV37GA@mail.gmail.com>
+References: <20190325124137.6117-1-zhiyong.tao@mediatek.com> <20190325124137.6117-4-zhiyong.tao@mediatek.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190325173501.22863-1-narmstrong@baylibre.com>
+In-Reply-To: <20190325124137.6117-4-zhiyong.tao@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: hverkuil@xs4all.nl, mchehab@kernel.org, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, hui.liu@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, chuanjia.liu@mediatek.com, biao.huang@mediatek.com, hongzhou.yang@mediatek.com, Erin Lo <erin.lo@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Amlogic G12A embeds a second CEC controller named AO-CEC-B, and
-the other one is AO-CEC-A described by the current bindings.
+On Mon, Mar 25, 2019 at 5:41 AM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
+>
+> The commit adds pintcrl device node for mt8183
 
-The registers interface is very close but the internal architecture
-is totally different.
+Minor nit: This should say pinctrl (in the commit title as well).
 
-The other difference is the closk source, the AO-CEC-B takes the
-"oscin", the Always-On Oscillator clock, as input and embeds a
-dual-divider clock divider to provide the precise 32768Hz base
-clock for CEC communication.
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../devicetree/bindings/media/meson-ao-cec.txt    | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/media/meson-ao-cec.txt b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
-index 8671bdb08080..d6e2f9cf0aaf 100644
---- a/Documentation/devicetree/bindings/media/meson-ao-cec.txt
-+++ b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
-@@ -4,16 +4,23 @@ The Amlogic Meson AO-CEC module is present is Amlogic SoCs and its purpose is
- to handle communication between HDMI connected devices over the CEC bus.
- 
- Required properties:
--  - compatible : value should be following
--	"amlogic,meson-gx-ao-cec"
-+  - compatible : value should be following depending on the SoC :
-+  	For GXBB, GXL, GXM and G12A (AO_CEC_A module) :
-+  	"amlogic,meson-gx-ao-cec"
-+	For G12A (AO_CEC_B module) :
-+	"amlogic,meson-g12a-ao-cec"
- 
-   - reg : Physical base address of the IP registers and length of memory
- 	  mapped region.
- 
-   - interrupts : AO-CEC interrupt number to the CPU.
-   - clocks : from common clock binding: handle to AO-CEC clock.
--  - clock-names : from common clock binding: must contain "core",
--		  corresponding to entry in the clocks property.
-+  - clock-names : from common clock binding, must contain :
-+		For GXBB, GXL, GXM and G12A (AO_CEC_A module) :
-+		- "core"
-+		For G12A (AO_CEC_B module) :
-+		- "oscin"
-+		corresponding to entry in the clocks property.
-   - hdmi-phandle: phandle to the HDMI controller
- 
- Example:
--- 
-2.21.0
+>
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 26 +++++++++++++++++++++++++-
+>  1 file changed, 25 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> index 75c4881bbe5e..cf92504e2a9b 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> @@ -9,7 +9,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/power/mt8183-power.h>
+> -
+> +#include "mt8183-pinfunc.h"
+>  / {
+>         compatible = "mediatek,mt8183";
+>         interrupt-parent = <&sysirq>;
+> @@ -197,6 +197,30 @@
+>                         #clock-cells = <1>;
+>                 };
+>
+> +               pio: pinctrl@10005000 {
+> +                       compatible = "mediatek,mt8183-pinctrl";
+> +                       reg = <0 0x10005000 0 0x1000>,
+> +                             <0 0x11f20000 0 0x1000>,
+> +                             <0 0x11e80000 0 0x1000>,
+> +                             <0 0x11e70000 0 0x1000>,
+> +                             <0 0x11e90000 0 0x1000>,
+> +                             <0 0x11d30000 0 0x1000>,
+> +                             <0 0x11d20000 0 0x1000>,
+> +                             <0 0x11c50000 0 0x1000>,
+> +                             <0 0x11f30000 0 0x1000>,
+> +                             <0 0x1000b000 0 0x1000>;
+> +                       reg-names = "iocfg0", "iocfg1", "iocfg2",
+> +                                   "iocfg3", "iocfg4", "iocfg5",
+> +                                   "iocfg6", "iocfg7", "iocfg8",
+> +                                   "eint";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&pio 0 0 192>;
+> +                       interrupt-controller;
+> +                       interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
+> +                       #interrupt-cells = <2>;
+> +               };
+> +
+>                 scpsys: syscon@10006000 {
+>                         compatible = "mediatek,mt8183-scpsys", "syscon";
+>                         #power-domain-cells = <1>;
+> --
+> 2.12.5
+>
