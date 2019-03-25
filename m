@@ -1,58 +1,66 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] spi: stm32-qspi: add spi_master_put in release
- function
-Date: Mon, 25 Mar 2019 16:03:13 +0000
-Message-ID: <20190325160313.GJ7284@sirena.org.uk>
-References: <1553265354-16433-1-git-send-email-ludovic.Barre@st.com>
- <1553265354-16433-2-git-send-email-ludovic.Barre@st.com>
+From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+Subject: [PATCH] dt-bindings: display/panel: Add missing unit names
+Date: Mon, 25 Mar 2019 17:08:10 +0100
+Message-ID: <901e836ea06889a9d91a799102b2a6b836d93dcd.1553529797.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tAmVnWIZ6lqEAvSf"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1553265354-16433-2-git-send-email-ludovic.Barre@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: Marek Vasut <marek.vasut@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, devicetree@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Some examples were missing the unit names triggering
 
---tAmVnWIZ6lqEAvSf
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ Warning (unit_address_vs_reg): .../panel: node has a reg or ranges property, but no unit name
 
-On Fri, Mar 22, 2019 at 03:35:53PM +0100, Ludovic Barre wrote:
-> From: Ludovic Barre <ludovic.barre@st.com>
->=20
-> This patch adds spi_master_put in release function
-> to drop the controller's refcount.
+warnings when used verbatim in DTs and running dtc with W=1.
 
-I'm getting build errors with this:
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+---
+ .../devicetree/bindings/display/panel/innolux,p079zca.txt       | 2 +-
+ .../devicetree/bindings/display/panel/innolux,p097pfg.txt       | 2 +-
+ .../devicetree/bindings/display/panel/kingdisplay,kd097d04.txt  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-  CC      drivers/spi/spi-stm32-qspi.o
-drivers/spi/spi-stm32-qspi.c: In function =E2=80=98stm32_qspi_probe=E2=80=
-=99:
-drivers/spi/spi-stm32-qspi.c:430:8: error: =E2=80=98struct stm32_qspi=E2=80=
-=99 has no member named =E2=80=98phys_base=E2=80=99; did you mean =E2=80=98=
-io_base=E2=80=99?
-  qspi->phys_base =3D res->start;
-        ^~~~~~~~~
-        io_base
-
---tAmVnWIZ6lqEAvSf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyY+8AACgkQJNaLcl1U
-h9B0aQf/fdWpPjnowIBjcy1bnS1nYt1V/UZopHw918CDYM0j/ws6gqcZ6hliRlSB
-2WhwMUaq4th49OQOitBHw/kDyQAS7gkfvHhg9LyEL0B5nkVnQDTN8pfnsRj7b/5N
-fjG2AM6bMKjeiyUl97ObpJrDPvNUi6Gp/RwAXVlFLEXMKrN5vnnzaQYEfpctAFp5
-JBMc6n9Qp2Ao5jAHb6Kw0yGqnrFvDDz/Rnp03ofXJJI4T+lvtwp+rUz2R3ZzyRlC
-SHP68Lapg/Jk+AQ3EQexlyR3SpOezzpiDRH4iECxNH98nNX3WmUQJ5u8WjMTGU75
-0eNyyzqbd0DM8wXYWOd0QSHCV0JCaA==
-=T4u8
------END PGP SIGNATURE-----
-
---tAmVnWIZ6lqEAvSf--
+diff --git a/Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt b/Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt
+index d0f55161579a..3ab8c7412cf6 100644
+--- a/Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt
++++ b/Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt
+@@ -12,7 +12,7 @@ Optional properties:
+ Example:
+ 
+ 	&mipi_dsi {
+-		panel {
++		panel@0 {
+ 			compatible = "innolux,p079zca";
+ 			reg = <0>;
+ 			power-supply = <...>;
+diff --git a/Documentation/devicetree/bindings/display/panel/innolux,p097pfg.txt b/Documentation/devicetree/bindings/display/panel/innolux,p097pfg.txt
+index 595d9dfeffd3..d1cab3a8f0fb 100644
+--- a/Documentation/devicetree/bindings/display/panel/innolux,p097pfg.txt
++++ b/Documentation/devicetree/bindings/display/panel/innolux,p097pfg.txt
+@@ -13,7 +13,7 @@ Optional properties:
+ Example:
+ 
+ 	&mipi_dsi {
+-		panel {
++		panel@0 {
+ 			compatible = "innolux,p079zca";
+ 			reg = <0>;
+ 			avdd-supply = <...>;
+diff --git a/Documentation/devicetree/bindings/display/panel/kingdisplay,kd097d04.txt b/Documentation/devicetree/bindings/display/panel/kingdisplay,kd097d04.txt
+index 164a5fa236da..cfefff688614 100644
+--- a/Documentation/devicetree/bindings/display/panel/kingdisplay,kd097d04.txt
++++ b/Documentation/devicetree/bindings/display/panel/kingdisplay,kd097d04.txt
+@@ -12,7 +12,7 @@ Optional properties:
+ Example:
+ 
+ 	&mipi_dsi {
+-		panel {
++		panel@0 {
+ 			compatible = "kingdisplay,kd097d04";
+ 			reg = <0>;
+ 			power-supply = <...>;
+-- 
+2.20.1
