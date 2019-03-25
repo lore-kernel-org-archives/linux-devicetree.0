@@ -1,93 +1,106 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v2 2/2] rtc: Add ASPEED RTC driver
-Date: Mon, 25 Mar 2019 16:43:47 +0100
-Message-ID: <20190325154347.GN30105@piout.net>
-References: <20190325133159.10653-1-joel@jms.id.au>
- <20190325133159.10653-3-joel@jms.id.au>
- <20190325145954.GM30105@piout.net>
- <CACPK8XfFTF2hDzwO33gE=fotEEC-CZztThoaYj98Le9JAsAQ-w@mail.gmail.com>
+From: Andreas Schwab <schwab@suse.de>
+Subject: Re: [PATCH v11 0/2] PWM support for HiFive Unleashed
+Date: Mon, 25 Mar 2019 16:54:53 +0100
+Message-ID: <mvmbm1zueya.fsf@suse.de>
+References: <1553508779-9685-1-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CACPK8XfFTF2hDzwO33gE=fotEEC-CZztThoaYj98Le9JAsAQ-w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, linux-aspeed@lists.ozlabs.org, devicetree <devicetree@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1553508779-9685-1-git-send-email-yash.shah@sifive.com> (Yash
+        Shah's message of "Mon, 25 Mar 2019 15:42:57 +0530")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yash Shah <yash.shah@sifive.com>
+Cc: palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, paul.walmsley@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-On 25/03/2019 15:28:26+0000, Joel Stanley wrote:
-> On Mon, 25 Mar 2019 at 14:59, Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
-> > On 26/03/2019 00:01:59+1030, Joel Stanley wrote:
-> > > +     dev_dbg(dev, "%s: %4d-%02d-%02d %02d:%02d:%02d\n", __func__,
-> > > +                     1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday,
-> > > +                     tm->tm_hour, tm->tm_min, tm->tm_sec);
-> > > +
-> >
-> > We now have %ptR, could you use that?
-> 
-> I tried this:
-> 
->   dev_dbg(dev, "%s: %ptR", __func__, tm);
-> 
-> Yes, that appears to do the job. Can you make the change when applying?
-> 
+On Mär 25 2019, Yash Shah <yash.shah@sifive.com> wrote:
 
-Ok, I'll do that.
+> v11
+> - Change naming convention for pwm_device and pwm_sifive_ddata pointers
+> - Assign of_pwm_xlate_with_flag() to of_xlate func ptr since this driver
+>   use three pwm-cells (Issue reported by Andreas Schwab <schwab@suse.de>
+> - Other minor fixes
 
-> >
-> > > +     rtc->rtc_dev->ops = &aspeed_rtc_ops;
-> > > +     rtc->rtc_dev->range_min = RTC_TIMESTAMP_BEGIN_1900;
-> > > +     rtc->rtc_dev->range_max = 38814989399LL; /* 3199-12-31 23:59:59 */
-> > > +
-> >
-> > I'm curious how many RTC have been properly designed, could you run
-> > rtc-range?
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/rtc-tools.git/tree/rtc-range.c
-> 
-> It appears to pass the test:
-> 
-> Testing 2000-02-28 23:59:59.
-> OK
-> 
-> Testing 2038-01-19 03:14:07.
-> OK
-> 
-> Testing 2069-12-31 23:59:59.
-> OK
-> 
-> Testing 2099-12-31 23:59:59.
-> OK
-> 
-> Testing 2100-02-28 23:59:59.
-> OK
-> 
-> Testing 2106-02-07 06:28:15.
-> OK
-> 
-> Testing 2262-04-11 23:47:16.
-> OK
-> 
-> The qemu model I have for the device failed though. A good test! Are
-> you going to put it in the kernel tree?
-> 
+I still don't see any improvement.  FYI, this is the patch I use for the
+device tree:
 
-I was planning to add more dates to test and detect when the range is
-properly reported by the rtc (right now, it reports a failure) before
-doing so.
+diff --git a/fsbl/ux00_fsbl.dts b/fsbl/ux00_fsbl.dts
+index f27cc22..56e94c0 100644
+--- a/fsbl/ux00_fsbl.dts
++++ b/fsbl/ux00_fsbl.dts
+@@ -432,7 +432,7 @@
+ 			reg-names = "control";
+ 			clocks = <&tlclk>;
+ 			sifive,approx-period = <1000000>;
+-			#pwm-cells = <2>;
++			#pwm-cells = <3>;
+ 		};
+ 		L46: pwm@10021000 {
+ 			compatible = "sifive,pwm0";
+@@ -442,46 +442,46 @@
+ 			reg-names = "control";
+ 			clocks = <&tlclk>;
+ 			sifive,approx-period = <1000000>;
+-			#pwm-cells = <2>;
++			#pwm-cells = <3>;
+ 		};
+ 		pwmleds {
+ 			compatible = "pwm-leds";
+ 			heartbeat {
+-				pwms = <&L45 0 0>;
++				pwms = <&L45 0 1000000 0>;
+ 				max-brightness = <255>;
+ 				linux,default-trigger = "heartbeat";
+ 			};
+ 			mtd {
+-				pwms = <&L45 1 0>;
++				pwms = <&L45 1 1000000 0>;
+ 				max-brightness = <255>;
+ 				linux,default-trigger = "mtd";
+ 			};
+ 			netdev {
+-				pwms = <&L45 2 0>;
++				pwms = <&L45 2 1000000 0>;
+ 				max-brightness = <255>;
+ 				linux,default-trigger = "netdev";
+ 			};
+ 			panic {
+-				pwms = <&L45 3 0>;
++				pwms = <&L45 3 1000000 0>;
+ 				max-brightness = <255>;
+ 				linux,default-trigger = "panic";
+ 			};
+ 			/* These LEDs are on the tester board */
+ /*
+ 			testled {
+-				pwms = <&L46 0 0>;
++				pwms = <&L46 0 1000000 0>;
+ 				max-brightness = <255>;
+ 			};
+ 			green {
+-				pwms = <&L46 1 0>;
++				pwms = <&L46 1 1000000 0>;
+ 				max-brightness = <255>;
+ 			};
+ 			red {
+-				pwms = <&L46 2 0>;
++				pwms = <&L46 2 1000000 0>;
+ 				max-brightness = <255>;
+ 			};
+ 			blue {
+-				pwms = <&L46 3 0>;
++				pwms = <&L46 3 1000000 0>;
+ 				max-brightness = <255>;
+ 			};
+ */
+-- 
+2.21.0
+
+
+Andreas.
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
