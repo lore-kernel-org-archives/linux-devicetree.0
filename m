@@ -1,433 +1,281 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v3 3/3] ARM: dts: vf610: Add ZII SPB4 board
-Date: Mon, 25 Mar 2019 11:22:43 -0700
-Message-ID: <20190325182243.16788-3-andrew.smirnov@gmail.com>
-References: <20190325182243.16788-1-andrew.smirnov@gmail.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
+Subject: Re: [PATCH 4/4] pinctrl: add drive for I2C related pins on MT8183
+Date: Mon, 25 Mar 2019 11:25:07 -0700
+Message-ID: <CANMq1KBwjNxi2fMLFna5r0ak56+8paMq1YbLWHEScTzzLqf+Bw@mail.gmail.com>
+References: <20190325122302.5483-1-zhiyong.tao@mediatek.com> <20190325122302.5483-5-zhiyong.tao@mediatek.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190325182243.16788-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20190325122302.5483-5-zhiyong.tao@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Fabio Estevam <festevam@gmail.com>, Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com
+To: Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, hui.liu@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, chuanjia.liu@mediatek.com, biao.huang@mediatek.com, hongzhou.yang@mediatek.com, Erin Lo <erin.lo@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add Device Tree for VF610 based Zodiac Seat Power Box.
+On Mon, Mar 25, 2019 at 5:23 AM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
+>
+> This patch provides the advanced drive for I2C used pins on MT8183.
+> The detail strength specification description of the I2C pin:
+> When E1=0/E0=0, the strength is 0.125mA.
+> When E1=0/E0=1, the strength is 0.25mA.
+> When E1=1/E0=0, the strength is 0.5mA.
+> When E1=1/E0=1, the strength is 1mA.
+> For I2C pins, there are existing generic driving setup and the above
+> specific driving setup. I2C pins can only support 2/4/6/8/10/12/14/16mA
+> driving adjustment in generic driving setup. But in specific driving
+> setup, they can support 0.125/0.25/0.5/1mA adjustment.
+> If we enable specific driving setup for I2C pins,
+> the existing generic driving setup will be disabled.
+> For some special features, we need the I2C pins specific driving setup.
+> The specific driving setup is controlled by E1E0EN.
+> So we need add extra vendor driving preperty instead of the generic
+> driving property. We can add "mediatek,drive-strength-adv = <XXX>;"
+> to describe the specific driving setup property.
+> "XXX" means the value of E1E0EN. So the valid arguments of
+> "mediatek,drive-strength-adv" are from 0 to 7.
+>
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-mt8183.c        | 50 ++++++++++++++++++++++++
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 47 ++++++++++++++++++++++
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h | 11 ++++++
+>  drivers/pinctrl/mediatek/pinctrl-paris.c         | 12 ++++++
+>  4 files changed, 120 insertions(+)
+>
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8183.c b/drivers/pinctrl/mediatek/pinctrl-mt8183.c
+> index 6262fd3678ea..2c7409ed16fa 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mt8183.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mt8183.c
+> @@ -472,6 +472,51 @@ static const struct mtk_pin_field_calc mt8183_pin_r1_range[] = {
+>         PIN_FIELD_BASE(133, 133, 8, 0x0D0, 0x10, 13, 1),
+>  };
+>
+> +static const struct mtk_pin_field_calc mt8183_pin_e1e0en_range[] = {
+> +       PIN_FIELD_BASE(48, 48, 3, 0x0F0, 0x10, 20, 1),
+> +       PIN_FIELD_BASE(49, 49, 3, 0x0F0, 0x10, 15, 1),
+> +       PIN_FIELD_BASE(50, 50, 4, 0x0F0, 0x10, 12, 1),
+> +       PIN_FIELD_BASE(51, 51, 4, 0x0F0, 0x10, 7, 1),
+> +       PIN_FIELD_BASE(81, 81, 5, 0x0F0, 0x10, 12, 1),
+> +       PIN_FIELD_BASE(82, 82, 5, 0x0F0, 0x10, 9, 1),
+> +       PIN_FIELD_BASE(83, 83, 5, 0x0F0, 0x10, 19, 1),
+> +       PIN_FIELD_BASE(84, 84, 5, 0x0F0, 0x10, 22, 1),
+> +       PIN_FIELD_BASE(103, 103, 6, 0x0F0, 0x10, 24, 1),
+> +       PIN_FIELD_BASE(104, 104, 6, 0x0F0, 0x10, 14, 1),
+> +       PIN_FIELD_BASE(105, 105, 6, 0x0F0, 0x10, 27, 1),
+> +       PIN_FIELD_BASE(106, 106, 6, 0x0F0, 0x10, 17, 1),
+> +};
+> +
+> +static const struct mtk_pin_field_calc mt8183_pin_e0_range[] = {
+> +       PIN_FIELD_BASE(48, 48, 3, 0x0F0, 0x10, 21, 1),
+> +       PIN_FIELD_BASE(49, 49, 3, 0x0F0, 0x10, 16, 1),
+> +       PIN_FIELD_BASE(50, 50, 4, 0x0F0, 0x10, 13, 1),
+> +       PIN_FIELD_BASE(51, 51, 4, 0x0F0, 0x10, 8, 1),
+> +       PIN_FIELD_BASE(81, 81, 5, 0x0F0, 0x10, 13, 1),
+> +       PIN_FIELD_BASE(82, 82, 5, 0x0F0, 0x10, 10, 1),
+> +       PIN_FIELD_BASE(83, 83, 5, 0x0F0, 0x10, 20, 1),
+> +       PIN_FIELD_BASE(84, 84, 5, 0x0F0, 0x10, 23, 1),
+> +       PIN_FIELD_BASE(103, 103, 6, 0x0F0, 0x10, 25, 1),
+> +       PIN_FIELD_BASE(104, 104, 6, 0x0F0, 0x10, 15, 1),
+> +       PIN_FIELD_BASE(105, 105, 6, 0x0F0, 0x10, 28, 1),
+> +       PIN_FIELD_BASE(106, 106, 6, 0x0F0, 0x10, 18, 1),
+> +};
+> +
+> +static const struct mtk_pin_field_calc mt8183_pin_e1_range[] = {
+> +       PIN_FIELD_BASE(48, 48, 3, 0x0F0, 0x10, 22, 1),
+> +       PIN_FIELD_BASE(49, 49, 3, 0x0F0, 0x10, 17, 1),
+> +       PIN_FIELD_BASE(50, 50, 4, 0x0F0, 0x10, 14, 1),
+> +       PIN_FIELD_BASE(51, 51, 4, 0x0F0, 0x10, 9, 1),
+> +       PIN_FIELD_BASE(81, 81, 5, 0x0F0, 0x10, 14, 1),
+> +       PIN_FIELD_BASE(82, 82, 5, 0x0F0, 0x10, 11, 1),
+> +       PIN_FIELD_BASE(83, 83, 5, 0x0F0, 0x10, 21, 1),
+> +       PIN_FIELD_BASE(84, 84, 5, 0x0F0, 0x10, 24, 1),
+> +       PIN_FIELD_BASE(103, 103, 6, 0x0F0, 0x10, 26, 1),
+> +       PIN_FIELD_BASE(104, 104, 6, 0x0F0, 0x10, 16, 1),
+> +       PIN_FIELD_BASE(105, 105, 6, 0x0F0, 0x10, 29, 1),
+> +       PIN_FIELD_BASE(106, 106, 6, 0x0F0, 0x10, 19, 1),
+> +};
+> +
+>  static const struct mtk_pin_reg_calc mt8183_reg_cals[PINCTRL_PIN_REG_MAX] = {
+>         [PINCTRL_PIN_REG_MODE] = MTK_RANGE(mt8183_pin_mode_range),
+>         [PINCTRL_PIN_REG_DIR] = MTK_RANGE(mt8183_pin_dir_range),
+> @@ -485,6 +530,9 @@ static const struct mtk_pin_reg_calc mt8183_reg_cals[PINCTRL_PIN_REG_MAX] = {
+>         [PINCTRL_PIN_REG_PUPD] = MTK_RANGE(mt8183_pin_pupd_range),
+>         [PINCTRL_PIN_REG_R0] = MTK_RANGE(mt8183_pin_r0_range),
+>         [PINCTRL_PIN_REG_R1] = MTK_RANGE(mt8183_pin_r1_range),
+> +       [PINCTRL_PIN_REG_DRV_EN] = MTK_RANGE(mt8183_pin_e1e0en_range),
+> +       [PINCTRL_PIN_REG_DRV_E0] = MTK_RANGE(mt8183_pin_e0_range),
+> +       [PINCTRL_PIN_REG_DRV_E1] = MTK_RANGE(mt8183_pin_e1_range),
+>  };
+>
+>  static const char * const mt8183_pinctrl_register_base_names[] = {
+> @@ -517,6 +565,8 @@ static const struct mtk_pin_soc mt8183_data = {
+>         .drive_get = mtk_pinconf_drive_get_rev1,
+>         .adv_pull_get = mtk_pinconf_adv_pull_get,
+>         .adv_pull_set = mtk_pinconf_adv_pull_set,
+> +       .adv_drive_get = mtk_pinconf_adv_drive_get,
+> +       .adv_drive_set = mtk_pinconf_adv_drive_set,
+>  };
+>
+>  static const struct of_device_id mt8183_pinctrl_of_match[] = {
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> index b1c368455d30..ef8732e8966b 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> @@ -674,3 +674,50 @@ int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
+>
+>         return 0;
+>  }
+> +
+> +int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
+> +                             const struct mtk_pin_desc *desc, u32 arg)
+> +{
+> +       int err;
+> +
+> +       err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_EN, arg & 1);
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-imx@nxp.com
----
+Should 1, 2, 4 masks be defined as masks somewhere above in this file?
 
-Changes since [v2]:
+> +       if (err)
+> +               return err;
+> +
+> +       if (arg & 1) {
 
-    - Collected Reviewed-by from Fabio
+It's the second time you use arg & 1.
 
-    - Fixed whitespace problems
+Maybe define:
+int en = arg & 1;
+int e0 = !!(arg & 2);
+int e1 = !!(arg & 4);
 
-    - Added patches for DT schema
+Also, I feel that the code looks a little cleaner if you just return early here:
+if (!(arg & 1))
+   return err;
 
-Changes since [v1]:
+> +               err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_E0,
+> +                                      !!(arg & 2));
+> +               if (err)
+> +                       return err;
+> +
+> +               err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_E1,
+> +                                      !!(arg & 4));
+> +               if (err)
+> +                       return err;
+> +       }
+> +
+> +       return err;
+> +}
+> +
+> +int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
+> +                             const struct mtk_pin_desc *desc, u32 *val)
 
-    - Change Makefile diff to keep entries in alphabetical order
+Is there any user for this function? If not, why do we even define it?
 
-    - Various node name changes
+> +{
+> +       u32 en, e0, e1;
+> +       int err;
+> +
+> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_EN, &en);
+> +       if (err)
+> +               return err;
+> +
+> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_E0, &e0);
+> +       if (err)
+> +               return err;
+> +
+> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_E1, &e1);
+> +       if (err)
+> +               return err;
+> +
+> +       *val = (e0 | e1 << 1 | en << 2) & 0x7;
 
+I'm confused. Here, e0 is bit 0, e1 is bit 1, end is bit 2. But above
+in mtk_pinconf_adv_drive_set, it seems to be in this order: en, e0,
+e1?
 
-[v2] lkml.kernel.org/r/20190313070224.30124-1-andrew.smirnov@gmail.com
-[v1] lkml.kernel.org/r/20190311184928.25988-1-andrew.smirnov@gmail.com
+> +
+> +       return 0;
+> +}
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> index 6d24522739d9..1b7da42aa1d5 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> @@ -63,6 +63,9 @@ enum {
+>         PINCTRL_PIN_REG_IES,
+>         PINCTRL_PIN_REG_PULLEN,
+>         PINCTRL_PIN_REG_PULLSEL,
+> +       PINCTRL_PIN_REG_DRV_EN,
+> +       PINCTRL_PIN_REG_DRV_E0,
+> +       PINCTRL_PIN_REG_DRV_E1,
+>         PINCTRL_PIN_REG_MAX,
+>  };
+>
+> @@ -224,6 +227,10 @@ struct mtk_pin_soc {
+>         int (*adv_pull_get)(struct mtk_pinctrl *hw,
+>                             const struct mtk_pin_desc *desc, bool pullup,
+>                             u32 *val);
+> +       int (*adv_drive_set)(struct mtk_pinctrl *hw,
+> +                            const struct mtk_pin_desc *desc, u32 arg);
+> +       int (*adv_drive_get)(struct mtk_pinctrl *hw,
+> +                            const struct mtk_pin_desc *desc, u32 *val);
+>
+>         /* Specific driver data */
+>         void                            *driver_data;
+> @@ -287,5 +294,9 @@ int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
+>  int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
+>                              const struct mtk_pin_desc *desc, bool pullup,
+>                              u32 *val);
+> +int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
+> +                             const struct mtk_pin_desc *desc, u32 arg);
+> +int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
+> +                             const struct mtk_pin_desc *desc, u32 *val);
+>
+>  #endif /* __PINCTRL_MTK_COMMON_V2_H */
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> index b59e10852bfb..dcd295f0eb4b 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> @@ -20,12 +20,14 @@
+>  #define MTK_PIN_CONFIG_RDSEL   (PIN_CONFIG_END + 2)
+>  #define MTK_PIN_CONFIG_PU_ADV  (PIN_CONFIG_END + 3)
+>  #define MTK_PIN_CONFIG_PD_ADV  (PIN_CONFIG_END + 4)
+> +#define MTK_PIN_CONFIG_DRV_ADV (PIN_CONFIG_END + 5)
+>
+>  static const struct pinconf_generic_params mtk_custom_bindings[] = {
+>         {"mediatek,tdsel",      MTK_PIN_CONFIG_TDSEL,           0},
+>         {"mediatek,rdsel",      MTK_PIN_CONFIG_RDSEL,           0},
+>         {"mediatek,pull-up-adv", MTK_PIN_CONFIG_PU_ADV,         1},
+>         {"mediatek,pull-down-adv", MTK_PIN_CONFIG_PD_ADV,       1},
+> +       {"mediatek,drive-strength-adv", MTK_PIN_CONFIG_DRV_ADV, 2},
+>  };
+>
+>  #ifdef CONFIG_DEBUG_FS
+> @@ -34,6 +36,7 @@ static const struct pin_config_item mtk_conf_items[] = {
+>         PCONFDUMP(MTK_PIN_CONFIG_RDSEL, "rdsel", NULL, true),
+>         PCONFDUMP(MTK_PIN_CONFIG_PU_ADV, "pu-adv", NULL, true),
+>         PCONFDUMP(MTK_PIN_CONFIG_PD_ADV, "pd-adv", NULL, true),
+> +       PCONFDUMP(MTK_PIN_CONFIG_DRV_ADV, "drive-strengt-adv", NULL, true),
 
+drive-strength-adv
 
- arch/arm/boot/dts/Makefile           |   1 +
- arch/arm/boot/dts/vf610-zii-spb4.dts | 359 +++++++++++++++++++++++++++
- 2 files changed, 360 insertions(+)
- create mode 100644 arch/arm/boot/dts/vf610-zii-spb4.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index f4f5aeaf3298..efefce8efa05 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -606,6 +606,7 @@ dtb-$(CONFIG_SOC_VF610) += \
- 	vf610-zii-dev-rev-b.dtb \
- 	vf610-zii-dev-rev-c.dtb \
- 	vf610-zii-scu4-aib.dtb \
-+	vf610-zii-spb4.dtb \
- 	vf610-zii-ssmb-dtu.dtb \
- 	vf610-zii-ssmb-spu3.dtb
- dtb-$(CONFIG_ARCH_MXS) += \
-diff --git a/arch/arm/boot/dts/vf610-zii-spb4.dts b/arch/arm/boot/dts/vf610-zii-spb4.dts
-new file mode 100644
-index 000000000000..9dde83ccb9d1
---- /dev/null
-+++ b/arch/arm/boot/dts/vf610-zii-spb4.dts
-@@ -0,0 +1,359 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+
-+/*
-+ * Device tree file for ZII's SPB4 board
-+ *
-+ * SPB - Seat Power Box
-+ *
-+ * Copyright (C) 2019 Zodiac Inflight Innovations
-+ */
-+
-+/dts-v1/;
-+#include "vf610.dtsi"
-+
-+/ {
-+	model = "ZII VF610 SPB4 Board";
-+	compatible = "zii,vf610spb4", "zii,vf610dev", "fsl,vf610";
-+
-+	chosen {
-+		stdout-path = &uart0;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+		pinctrl-0 = <&pinctrl_leds_debug>;
-+		pinctrl-names = "default";
-+
-+		led-debug {
-+			label = "zii:green:debug1";
-+			gpios = <&gpio2 18 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+	reg_vcc_3v3_mcu: regulator-vcc-3v3-mcu {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_3v3_mcu";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+&adc0 {
-+	vref-supply = <&reg_vcc_3v3_mcu>;
-+	status = "okay";
-+};
-+
-+&adc1 {
-+	vref-supply = <&reg_vcc_3v3_mcu>;
-+	status = "okay";
-+};
-+
-+&dspi1 {
-+	bus-num = <1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_dspi1>;
-+	status = "okay";
-+
-+	flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "m25p128", "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <50000000>;
-+	};
-+};
-+
-+&edma0 {
-+	status = "okay";
-+};
-+
-+&edma1 {
-+	status = "okay";
-+};
-+
-+&esdhc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_esdhc0>;
-+	bus-width = <8>;
-+	non-removable;
-+	no-1-8-v;
-+	keep-power-in-suspend;
-+	no-sdio;
-+	no-sd;
-+	status = "okay";
-+};
-+
-+&esdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_esdhc1>;
-+	bus-width = <4>;
-+	no-sdio;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	phy-mode = "rmii";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1>;
-+	status = "okay";
-+
-+	fixed-link {
-+		speed = <100>;
-+		full-duplex;
-+	};
-+
-+	mdio1: mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "okay";
-+
-+		switch0: switch0@0 {
-+			compatible = "marvell,mv88e6190";
-+			pinctrl-0 = <&pinctrl_gpio_switch0>;
-+			pinctrl-names = "default";
-+			reg = <0>;
-+			eeprom-length = <65536>;
-+			reset-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;
-+			interrupt-parent = <&gpio3>;
-+			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					label = "cpu";
-+					ethernet = <&fec1>;
-+
-+					fixed-link {
-+						speed = <100>;
-+						full-duplex;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					label = "eth_cu_1000_1";
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					label = "eth_cu_1000_2";
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					label = "eth_cu_1000_3";
-+				};
-+
-+				port@4 {
-+					reg = <4>;
-+					label = "eth_cu_1000_4";
-+				};
-+
-+				port@5 {
-+					reg = <5>;
-+					label = "eth_cu_1000_5";
-+				};
-+
-+				port@6 {
-+					reg = <6>;
-+					label = "eth_cu_1000_6";
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&i2c0 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c0>;
-+	status = "okay";
-+
-+	io-expander@22 {
-+		compatible = "nxp,pca9554";
-+		reg = <0x22>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	eeprom@50 {
-+		compatible = "atmel,24c04";
-+		reg = <0x50>;
-+		label = "nameplate";
-+	};
-+
-+	eeprom@52 {
-+		compatible = "atmel,24c04";
-+		reg = <0x52>;
-+	};
-+};
-+
-+&snvsrtc {
-+	status = "disabled";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart0>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+
-+	rave-sp {
-+		compatible = "zii,rave-sp-rdu2";
-+		current-speed = <1000000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		watchdog {
-+			compatible = "zii,rave-sp-watchdog";
-+		};
-+
-+		eeprom@a3 {
-+			compatible = "zii,rave-sp-eeprom";
-+			reg = <0xa3 0x4000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			zii,eeprom-name = "main-eeprom";
-+		};
-+	};
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart3>;
-+	status = "okay";
-+};
-+
-+&wdoga5 {
-+       status = "disabled";
-+};
-+
-+&iomuxc {
-+	pinctrl_dspi1: dspi1grp {
-+		fsl,pins = <
-+			VF610_PAD_PTD5__DSPI1_CS0		0x1182
-+			VF610_PAD_PTD4__DSPI1_CS1		0x1182
-+			VF610_PAD_PTC6__DSPI1_SIN		0x1181
-+			VF610_PAD_PTC7__DSPI1_SOUT		0x1182
-+			VF610_PAD_PTC8__DSPI1_SCK		0x1182
-+		>;
-+	};
-+
-+	pinctrl_esdhc0: esdhc0grp {
-+		fsl,pins = <
-+			VF610_PAD_PTC0__ESDHC0_CLK		0x31ef
-+			VF610_PAD_PTC1__ESDHC0_CMD		0x31ef
-+			VF610_PAD_PTC2__ESDHC0_DAT0		0x31ef
-+			VF610_PAD_PTC3__ESDHC0_DAT1		0x31ef
-+			VF610_PAD_PTC4__ESDHC0_DAT2		0x31ef
-+			VF610_PAD_PTC5__ESDHC0_DAT3		0x31ef
-+			VF610_PAD_PTD23__ESDHC0_DAT4		0x31ef
-+			VF610_PAD_PTD22__ESDHC0_DAT5		0x31ef
-+			VF610_PAD_PTD21__ESDHC0_DAT6		0x31ef
-+			VF610_PAD_PTD20__ESDHC0_DAT7		0x31ef
-+		>;
-+	};
-+
-+	pinctrl_esdhc1: esdhc1grp {
-+		fsl,pins = <
-+			VF610_PAD_PTA24__ESDHC1_CLK		0x31ef
-+			VF610_PAD_PTA25__ESDHC1_CMD		0x31ef
-+			VF610_PAD_PTA26__ESDHC1_DAT0		0x31ef
-+			VF610_PAD_PTA27__ESDHC1_DAT1		0x31ef
-+			VF610_PAD_PTA28__ESDHC1_DATA2		0x31ef
-+			VF610_PAD_PTA29__ESDHC1_DAT3		0x31ef
-+		>;
-+	};
-+
-+	pinctrl_fec1: fec1grp {
-+		fsl,pins = <
-+			VF610_PAD_PTA6__RMII_CLKIN		0x30d1
-+			VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
-+			VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
-+			VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
-+			VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30d1
-+			VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
-+			VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
-+			VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
-+			VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
-+			VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
-+		>;
-+	};
-+
-+	pinctrl_gpio_switch0: pinctrl-gpio-switch0 {
-+		fsl,pins = <
-+			VF610_PAD_PTE2__GPIO_107		0x31c2
-+			VF610_PAD_PTB28__GPIO_98		0x219d
-+		>;
-+	};
-+
-+	pinctrl_i2c0: i2c0grp {
-+		fsl,pins = <
-+			VF610_PAD_PTB14__I2C0_SCL		0x37ff
-+			VF610_PAD_PTB15__I2C0_SDA		0x37ff
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			VF610_PAD_PTB16__I2C1_SCL		0x37ff
-+			VF610_PAD_PTB17__I2C1_SDA		0x37ff
-+		>;
-+	};
-+
-+	pinctrl_leds_debug: pinctrl-leds-debug {
-+		fsl,pins = <
-+			VF610_PAD_PTD3__GPIO_82			0x31c2
-+		>;
-+	};
-+
-+	pinctrl_uart0: uart0grp {
-+		fsl,pins = <
-+			VF610_PAD_PTB10__UART0_TX		0x21a2
-+			VF610_PAD_PTB11__UART0_RX		0x21a1
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			VF610_PAD_PTB23__UART1_TX		0x21a2
-+			VF610_PAD_PTB24__UART1_RX		0x21a1
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			VF610_PAD_PTD0__UART2_TX		0x21a2
-+			VF610_PAD_PTD1__UART2_RX		0x21a1
-+		>;
-+	};
-+
-+	pinctrl_uart3: uart3grp {
-+		fsl,pins = <
-+			VF610_PAD_PTA30__UART3_TX		0x21a2
-+			VF610_PAD_PTA31__UART3_RX		0x21a1
-+		>;
-+	};
-+};
--- 
-2.20.1
+>  };
+>  #endif
+>
+> @@ -311,6 +314,15 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+>                         return -ENOTSUPP;
+>                 }
+>                 break;
+> +       case MTK_PIN_CONFIG_DRV_ADV:
+> +               if (hw->soc->adv_drive_set) {
+> +                       err = hw->soc->adv_drive_set(hw, desc, arg);
+> +                       if (err)
+> +                               return err;
+> +               } else {
+> +                       return -ENOTSUPP;
+> +               }
+> +               break;
+>         default:
+>                 err = -ENOTSUPP;
+>         }
+> --
+> 2.12.5
+>
