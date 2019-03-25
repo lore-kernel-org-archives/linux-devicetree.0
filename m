@@ -1,236 +1,82 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v2 2/2] rtc: Add ASPEED RTC driver
-Date: Tue, 26 Mar 2019 00:01:59 +1030
-Message-ID: <20190325133159.10653-3-joel@jms.id.au>
-References: <20190325133159.10653-1-joel@jms.id.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190325133159.10653-1-joel@jms.id.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Andrew Jeffery <andrew@aj.id.au>, linux-rtc@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: =?utf-8?Q?Christoph_M=C3=BCllner?=
+        <christoph.muellner@theobroma-systems.com>
+Subject: Re: [PATCH v3 2/3] mmc: sdhci-of-arasan: Add DTS property to disable
+ DCMDs.
+Date: Mon, 25 Mar 2019 14:39:14 +0100
+Message-ID: <2D2515D6-1E11-4EA3-B016-EC37A9E3091D@theobroma-systems.com>
+References: <20190322113808.16858-1-christoph.muellner@theobroma-systems.com>
+ <20190322113808.16858-2-christoph.muellner@theobroma-systems.com>
+ <CAPDyKFrDq-zBsqqe23hj4ynfYnrGxAr0tWxvYEJu8Kvh0i=h9A@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFrDq-zBsqqe23hj4ynfYnrGxAr0tWxvYEJu8Kvh0i=h9A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Michal Simek <michal.simek@xilinx.com>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Matthias Brugger <matthias.bgg@gmail.com>, Douglas Anderson <dianders@chromium.org>, Tony Xie <tony.xie@rock-chips.com>, Randy Li <ayaka@soulik.info>, Vicente Bergas <vicencb@gmail.com>, Ezequiel Garcia <ezequiel@collabora.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux
 List-Id: devicetree@vger.kernel.org
 
-Read and writes the time to the non-battery backed RTC in the ASPEED BMC
-system on chip families.
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
-v2: Address review from Alexandre
- - Use devm_rtc_allocate_device
- - Fill in range_min
- - Direcly fill in tm struct
- - Return EINVAL when RTC is not enabled
+> On 25.03.2019, at 14:27, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> 
+> On Fri, 22 Mar 2019 at 12:39, Christoph Muellner
+> <christoph.muellner@theobroma-systems.com> wrote:
+>> 
+>> Direct commands (DCMDs) are an optional feature of eMMC 5.1's command
+>> queue engine (CQE). The Arasan eMMC 5.1 controller uses the CQHCI,
+>> which exposes a control register bit to enable the feature.
+>> The current implementation sets this bit unconditionally.
+>> 
+>> This patch allows to suppress the feature activation,
+>> by specifying the property disable-cqe-dcmd.
+>> 
+>> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+>> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+>> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> 
+> Applied for next, thanks!
+> 
+> Perhaps both patch1 and patch2 should be tagged for stable? Then
+> please tell me and I can add a tag.
 
-v1: https://lore.kernel.org/linux-arm-kernel/20181003133155.27494-2-joel@jms.id.au/
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- drivers/rtc/Kconfig      |  10 +++
- drivers/rtc/Makefile     |   1 +
- drivers/rtc/rtc-aspeed.c | 152 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 163 insertions(+)
- create mode 100644 drivers/rtc/rtc-aspeed.c
+Hi Ulf,
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index dc0d66e80038..2d0482bc468b 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1841,6 +1841,16 @@ config RTC_DRV_RTD119X
- 	  If you say yes here, you get support for the RTD1295 SoC
- 	  Real Time Clock.
- 
-+config RTC_DRV_ASPEED
-+	tristate "Aspeed RTC"
-+	depends on ARCH_ASPEED || COMPILE_TEST
-+	help
-+	  If you say yes here you get support for the ASPEED AST2400 and
-+	  AST2500 SoC real time clocks.
-+
-+	  This driver can also be built as a module, if so, the module
-+	  will be called "rtc-aspeed".
-+
- comment "HID Sensor RTC drivers"
- 
- config RTC_DRV_HID_SENSOR_TIME
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index fe3962496685..9d997faa2c26 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -34,6 +34,7 @@ obj-$(CONFIG_RTC_DRV_AC100)	+= rtc-ac100.o
- obj-$(CONFIG_RTC_DRV_ARMADA38X)	+= rtc-armada38x.o
- obj-$(CONFIG_RTC_DRV_AS3722)	+= rtc-as3722.o
- obj-$(CONFIG_RTC_DRV_ASM9260)	+= rtc-asm9260.o
-+obj-$(CONFIG_RTC_DRV_ASPEED)	+= rtc-aspeed.o
- obj-$(CONFIG_RTC_DRV_AT91RM9200)+= rtc-at91rm9200.o
- obj-$(CONFIG_RTC_DRV_AT91SAM9)	+= rtc-at91sam9.o
- obj-$(CONFIG_RTC_DRV_AU1XXX)	+= rtc-au1xxx.o
-diff --git a/drivers/rtc/rtc-aspeed.c b/drivers/rtc/rtc-aspeed.c
-new file mode 100644
-index 000000000000..9ddb3121b30d
---- /dev/null
-+++ b/drivers/rtc/rtc-aspeed.c
-@@ -0,0 +1,152 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright 2015 IBM Corp.
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/rtc.h>
-+#include <linux/io.h>
-+
-+struct aspeed_rtc {
-+	struct rtc_device	*rtc_dev;
-+	void __iomem		*base;
-+	spinlock_t		lock;
-+};
-+
-+#define RTC_TIME	0x00
-+#define RTC_YEAR	0x04
-+#define RTC_CTRL	0x10
-+
-+#define RTC_UNLOCK	BIT(1)
-+#define RTC_ENABLE	BIT(0)
-+
-+static int aspeed_rtc_read_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct aspeed_rtc *rtc = dev_get_drvdata(dev);
-+	unsigned int cent, year;
-+	unsigned long flags;
-+	u32 reg1, reg2;
-+
-+	spin_lock_irqsave(&rtc->lock, flags);
-+
-+	if (!(readl(rtc->base + RTC_CTRL) & RTC_ENABLE)) {
-+		spin_unlock_irqrestore(&rtc->lock, flags);
-+		dev_dbg(dev, "%s failing as rtc disabled\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	do {
-+		reg2 = readl(rtc->base + RTC_YEAR);
-+		reg1 = readl(rtc->base + RTC_TIME);
-+	} while (reg2 != readl(rtc->base + RTC_YEAR));
-+
-+	tm->tm_mday = (reg1 >> 24) & 0x1f;
-+	tm->tm_hour = (reg1 >> 16) & 0x1f;
-+	tm->tm_min = (reg1 >> 8) & 0x3f;
-+	tm->tm_sec = (reg1 >> 0) & 0x3f;
-+
-+	cent = (reg2 >> 16) & 0x1f;
-+	year = (reg2 >> 8) & 0x7f;
-+	tm->tm_mon = ((reg2 >>  0) & 0x0f) - 1;
-+	tm->tm_year = year + (cent * 100) - 1900;
-+
-+	dev_dbg(dev, "%s: %4d-%02d-%02d %02d:%02d:%02d\n", __func__,
-+			1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday,
-+			tm->tm_hour, tm->tm_min, tm->tm_sec);
-+
-+	spin_unlock_irqrestore(&rtc->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int aspeed_rtc_set_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct aspeed_rtc *rtc = dev_get_drvdata(dev);
-+	unsigned long flags;
-+	u32 reg1, reg2, ctrl;
-+	int year, cent;
-+
-+	cent = (tm->tm_year + 1900) / 100;
-+	year = tm->tm_year % 100;
-+
-+	reg1 = (tm->tm_mday << 24) | (tm->tm_hour << 16) | (tm->tm_min << 8) |
-+		tm->tm_sec;
-+
-+	reg2 = ((cent & 0x1f) << 16) | ((year & 0x7f) << 8) |
-+		((tm->tm_mon + 1) & 0xf);
-+
-+	spin_lock_irqsave(&rtc->lock, flags);
-+
-+	ctrl = readl(rtc->base + RTC_CTRL);
-+	writel(ctrl | RTC_UNLOCK, rtc->base + RTC_CTRL);
-+
-+	writel(reg1, rtc->base + RTC_TIME);
-+	writel(reg2, rtc->base + RTC_YEAR);
-+
-+	/* Re-lock and ensure enable is set now that a time is programmed */
-+	writel(ctrl | RTC_ENABLE, rtc->base + RTC_CTRL);
-+
-+	spin_unlock_irqrestore(&rtc->lock, flags);
-+
-+	return 0;
-+}
-+
-+static const struct rtc_class_ops aspeed_rtc_ops = {
-+	.read_time = aspeed_rtc_read_time,
-+	.set_time = aspeed_rtc_set_time,
-+};
-+
-+static int aspeed_rtc_probe(struct platform_device *pdev)
-+{
-+	struct aspeed_rtc *rtc;
-+	struct resource *res;
-+	int ret;
-+
-+	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
-+	if (!rtc)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	rtc->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(rtc->base))
-+		return PTR_ERR(rtc->base);
-+
-+	rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
-+	if (IS_ERR(rtc->rtc_dev))
-+		return PTR_ERR(rtc->rtc_dev);
-+
-+	platform_set_drvdata(pdev, rtc);
-+
-+	rtc->rtc_dev->ops = &aspeed_rtc_ops;
-+	rtc->rtc_dev->range_min = RTC_TIMESTAMP_BEGIN_1900;
-+	rtc->rtc_dev->range_max = 38814989399LL; /* 3199-12-31 23:59:59 */
-+
-+	ret = rtc_register_device(rtc->rtc_dev);
-+	if (ret)
-+		return ret;
-+
-+	spin_lock_init(&rtc->lock);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id aspeed_rtc_match[] = {
-+	{ .compatible = "aspeed,ast2400-rtc", },
-+	{ .compatible = "aspeed,ast2500-rtc", },
-+	{ .compatible = "aspeed,ast2600-rtc", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, aspeed_rtc_match);
-+
-+static struct platform_driver aspeed_rtc_driver = {
-+	.driver = {
-+		.name = "aspeed-rtc",
-+		.of_match_table = of_match_ptr(aspeed_rtc_match),
-+	},
-+};
-+
-+module_platform_driver_probe(aspeed_rtc_driver, aspeed_rtc_probe);
-+
-+MODULE_DESCRIPTION("ASPEED RTC driver");
-+MODULE_AUTHOR("Joel Stanley <joel@jms.id.au>");
-+MODULE_LICENSE("GPL");
--- 
-2.20.1
+yes tagging for stable would be nice.
+I guess, the following would fit:
+
+Fixes: 84362d79f436 ("mmc: sdhci-of-arasan: Add CQHCI support for arasan,sdhci-5.1")
+
+Thanks,
+Christoph
+
+> 
+> Kind regards
+> Uffe
+> 
+> 
+> 
+>> ---
+>> drivers/mmc/host/sdhci-of-arasan.c | 5 ++++-
+>> 1 file changed, 4 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+>> index c9e3e050ccc8..88dc3f00a5be 100644
+>> --- a/drivers/mmc/host/sdhci-of-arasan.c
+>> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+>> @@ -832,7 +832,10 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+>>                host->mmc_host_ops.start_signal_voltage_switch =
+>>                                        sdhci_arasan_voltage_switch;
+>>                sdhci_arasan->has_cqe = true;
+>> -               host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
+>> +               host->mmc->caps2 |= MMC_CAP2_CQE;
+>> +
+>> +               if (!of_property_read_bool(np, "disable-cqe-dcmd"))
+>> +                       host->mmc->caps2 |= MMC_CAP2_CQE_DCMD;
+>>        }
+>> 
+>>        ret = sdhci_arasan_add_host(sdhci_arasan);
+>> --
+>> 2.11.0
+>> 
