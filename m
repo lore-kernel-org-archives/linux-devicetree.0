@@ -1,55 +1,96 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2] dt-bindings: imx: update scu resource id headfile
-Date: Mon, 25 Mar 2019 17:30:31 -0500
-Message-ID: <20190325223031.GA22935@bogus>
-References: <1550663846-22698-1-git-send-email-Anson.Huang@nxp.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [RFC v4 08/17] kunit: test: add support for test abort
+Date: Mon, 25 Mar 2019 15:32:07 -0700
+Message-ID: <CAFd5g44eqjN-nVCJuoeYFCxwVa5AorWiAnXe-tFCAc11zDgJFA@mail.gmail.com>
+References: <20190214213729.21702-1-brendanhiggins@google.com>
+ <20190214213729.21702-9-brendanhiggins@google.com> <da1995fa-a362-dfe6-8184-7fcdf2b923e8@gmail.com>
+ <CAFd5g467OV8wTB7zEshgZw8g8=zoq0dLVfwx3wDH-8UA+9GWFA@mail.gmail.com>
+ <0124ed28-466c-e954-ddde-495419630a9f@gmail.com> <CAFd5g47EDmsBWKNiW0jpHW2VG_GWCfe8UO+=ofgM2_ru+_UBQA@mail.gmail.com>
+ <118d89b7-d468-6d68-a48d-4d6d9cefd106@gmail.com> <CAFd5g46AP9yZQ+z+60HGaZuqhJQmfSBw9+r62w4k=cGiMEkqLA@mail.gmail.com>
+ <e29d487f5ca0a5caf4723bc5d96b8a523a53a318.camel@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1550663846-22698-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <e29d487f5ca0a5caf4723bc5d96b8a523a53a318.camel@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Knut Omang <knut.omang@oracle.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@google.com>, Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org, Rob Herring <robh@kernel.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Greg KH <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>, Michael Ellerman <mpe@ellerman.id.au>, Joe Perches <joe@perches.com>, brakmo@fb.com, Steven Rostedt <rostedt@goodmis.org>, "Bird, Timothy" <Tim.Bird@sony.com>, Kevin Hilman <khilman@baylibre.com>, Julia Lawall <julia.lawall@lip6.fr>, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>, linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Feb 2019 12:01:59 +0000, Anson Huang wrote:
-> Update i.MX SCU resource ID table according to latest
-> system controller firmware.
-> 
-> Latest system controller firmware removes below resources
-> which are never be used:
-> 	IMX_SC_R_DC_0_CAPTURE0
-> 	IMX_SC_R_DC_0_CAPTURE1
-> 	IMX_SC_R_DC_0_INTEGRAL0
-> 	IMX_SC_R_DC_0_INTEGRAL1
-> 	IMX_SC_R_DC_0_FRAC1
-> 	IMX_SC_R_DC_1_CAPTURE0
-> 	IMX_SC_R_DC_1_CAPTURE1
-> 	IMX_SC_R_DC_1_INTEGRAL0
-> 	IMX_SC_R_DC_1_INTEGRAL1
-> 	IMX_SC_R_DC_1_FRAC1
-> 	IMX_SC_R_GPU_3_PID0
-> 	IMX_SC_R_M4_0_SIM
-> 	IMX_SC_R_M4_0_WDOG
-> 	IMX_SC_R_M4_1_SIM
-> 	IMX_SC_R_M4_1_WDOG
-> 
-> and also add below resources to support new features:
-> 	IMX_SC_R_PERF
-> 	IMX_SC_R_OCRAM
-> 	IMX_SC_R_DMA_5_CH0
-> 	IMX_SC_R_DMA_5_CH1
-> 	IMX_SC_R_DMA_5_CH2
-> 	IMX_SC_R_DMA_5_CH3
-> 	IMX_SC_R_ATTESTATION
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No changes since V1, just update the commit message to provide more detail info.
-> ---
->  include/dt-bindings/firmware/imx/rsrc.h | 39 +++++++++++++++++++--------------
->  1 file changed, 22 insertions(+), 17 deletions(-)
-> 
+On Fri, Mar 22, 2019 at 12:11 AM Knut Omang <knut.omang@oracle.com> wrote:
+>
+> On Thu, 2019-03-21 at 18:41 -0700, Brendan Higgins wrote:
+> > On Thu, Mar 21, 2019 at 6:10 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> > > On 2/27/19 11:42 PM, Brendan Higgins wrote:
+> > > > On Tue, Feb 19, 2019 at 10:44 PM Frank Rowand <frowand.list@gmail.com>
+> > > > wrote:
+> > > > > On 2/19/19 7:39 PM, Brendan Higgins wrote:
+> > > > > > On Mon, Feb 18, 2019 at 11:52 AM Frank Rowand <frowand.list@gmail.com>
+> > > > > > wrote:
+> > > > > > > On 2/14/19 1:37 PM, Brendan Higgins wrote:
+< snip >
+> > > > > > > kunit_abort() is what will be call as the result of an assert
+> > > > > > > failure.
+> > > > > >
+> > > > > > Yep. Does that need clarified somewhere.
+> > > > > > > BUG(), which is a panic, which is crashing the system is not
+> > > > > > > acceptable
+> > > > > > > in the Linux kernel.  You will just annoy Linus if you submit this.
+> > > > > >
+> > > > > > Sorry, I thought this was an acceptable use case since, a) this should
+> > > > > > never be compiled in a production kernel, b) we are in a pretty bad,
+> > > > > > unpredictable state if we get here and keep going. I think you might
+> > > > > > have said elsewhere that you think "a" is not valid? In any case, I
+> > > > > > can replace this with a WARN, would that be acceptable?
+> > > > >
+> > > > > A WARN may or may not make sense, depending on the context.  It may
+> > > > > be sufficient to simply report a test failure (as in the old version
+> > > > > of case (2) below.
+> > > > >
+> > > > > Answers to "a)" and "b)":
+> > > > >
+> > > > > a) it might be in a production kernel
+> > > >
+> > > > Sorry for a possibly stupid question, how might it be so? Why would
+> > > > someone intentionally build unit tests into a production kernel?
+> > >
+> > > People do things.  Just expect it.
+> >
+> > Huh, alright. I will take your word for it then.
+>
+> I have a better explanation: Production kernels have bugs, unfortunately.
+> And sometimes those need to be investigated on systems than cannot be
+> brought down or affected more than absolutely necessary, maybe via a third party
+> doing the execution. A light weight, precise test (well tested ahead :) ) might
+> be a way of proving or disproving assumptions that can lead to the development
+> and application of a fix.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Sorry, you are not suggesting testing in production are you? To be
+clear, I am not concerned about someone using testing, KUnit, or
+whatever in a *production-like* environment: that's not what we are
+talking about here. My assumption is that no one will deploy tests
+into actual production.
+
+>
+> IMHO you're confusing "building into" with temporary applying, then removing
+> again - like the difference between running a local user space program vs
+> installing it under /usr and have it in everyone's PATH.
+
+I don't really see the point of distinguishing between "building into"
+and "temporary applying" in this case; that's part of my point. Maybe
+it makes sense in whitebox end-to-end testing, but in the case of unit
+testing, I don't think so.
+
+>
+> > > > > a') it is not acceptable in my development kernel either
+>
+> I think one of the fundamental properties of a good test framework is that it
+> should not require changes to the code under test by itself.
+>
+
+Sure, but that has nothing to do with the environment the code/tests
+are running in.
+
+< snip >
+
+Cheers
