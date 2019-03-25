@@ -1,16 +1,15 @@
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [RFC PATCH v2 1/5] mtd: cfi_cmdset_0002: Add support for polling
- status register
-Date: Mon, 25 Mar 2019 18:27:41 +0530
-Message-ID: <b1961c49-6795-89e7-e154-6270bf43d49c@ti.com>
-References: <20190321174548.9288-1-vigneshr@ti.com>
- <20190321174548.9288-2-vigneshr@ti.com>
- <f92362a0678b07d22ccc0f271fe3483dc77364a9.camel@infinera.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH 1/2] dt-bindings: Add external-facing PCIe port property
+Date: Mon, 25 Mar 2019 12:59:48 +0000
+Message-ID: <598b0675-38b2-9e52-d903-016dc548756c@arm.com>
+References: <20190318182124.53859-1-jean-philippe.brucker@arm.com>
+ <20190318182124.53859-2-jean-philippe.brucker@arm.com>
+ <20190320220338.GH251185@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f92362a0678b07d22ccc0f271fe3483dc77364a9.camel@infinera.com>
+In-Reply-To: <20190320220338.GH251185@google.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -21,74 +20,120 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "richard@nod.at" <richard@nod.at>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "nsekhar@ti.com" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "masonccyang@mxic.com.tw" <masonccyang@mxic.com.tw>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <Grant.Likely@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Jeremy Linton <Jeremy.Linton@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Robin Murphy <Robin.Murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 21/03/19 11:41 PM, Joakim Tjernlund wrote:
-> On Thu, 2019-03-21 at 23:15 +0530, Vignesh Raghavendra wrote:
->>
->> HyperFlash devices are compliant with CFI AMD/Fujitsu Extended Command
->> Set(0x0002) for flash operations, therefore drivers/mtd/chips/cfi_cmdset_0002.c
->> can be use as is. But these devices do not support DQ polling method of
->> determining chip ready/good status. These flashes provide Status
->> Register whose bits can be polled to know status of flash operation.
->>
->> Cypress HyperFlash datasheet here[1], talks about CFI Amd/Fujitsu
->> Extended Query version 1.5. Bit 0 of "Software Features supported" field
->> of CFI Primary Vendor-Specific Extended Query table indicates
->> presence/absence of status register and Bit 1 indicates whether or not
->> DQ polling is supported. Using these bits, its possible to determine
->> whether flash supports DQ polling or need to use Status Register.
->>
->> Add support for polling status register to know device ready/status of
->> erase/write operations when DQ polling is not supported.
+On 20/03/2019 22:03, Bjorn Helgaas wrote:
+> On Mon, Mar 18, 2019 at 06:21:23PM +0000, Jean-Philippe Brucker wrote:
+>> Provide a way for the firmware to tell the OS which devices are external
+>> to the machine and therefore untrusted. The property can describe for
+>> example thunderbolt and other hot-pluggable ports, which should always
+>> have the strongest IOMMU protection.
 > 
-> Isn't this new Status scheme just a copy of Intels(cmdset_0001)?
-
-Yes, but with one difference: At the end of program/erase operation,
-device directly enters status register mode and  starts reflecting
-status register content at any address.
-The device remains in the read status register state until another
-command is written to the device. Therefore there is notion of device is
-in "status register read mode" (FL_STATUS) state
-
-But in case of cfi_cmdset_0002, once program/erase operation is
-complete, device returns to previous address space overlay from which
-operation was started from (mostly read mode)
-
-In order to enter status register overlay mode, Read Status command is
-to be written to addr_unlock1(0x555) address. The overlay is in effect
-for one read access, specifically the next read access that follows the
-Status Register Read command
-Therefore code around FL_STATUS state in cfi_cmdset_0001 is not
-applicable to cfi_cmdset_0002 as is.
-
-
-> If so I think the new status impl. in 0002 should borrow from 0001 as this is a
-> hardened and battle tested impl.
->
-
-In case of cfi_cmdset_0001.c, program/erase is followed by
-inval_cache_and_wait_for_operation() to poll ready bit and based on
-status register value, success or the error handling is done.
-
-Most of the code corresponding to inval_cache_and_wait_for_operation()
-is already in cfi_cmdset_0002.c. So, whats missing in this patch is
-handling and reporting of errors as reflected in status register after
-write/erase failures. I will add that in the next version.
-
-But, I don't see much to borrow apart from error handling sequence.
-Please, let me know if I missed something.
-
-> I know other modern 0002 chips supports both old and new impl. of Status and I world
-> guess that we will see more chips with new Status only.
+> s/thunderbolt/Thunderbolt/
 > 
+> I think the important bit is that the port is user-accessible, whether
+> it is hot-pluggable or not, right?
 
-Agreed. Newer devices would mostly be CFI 1.5.
+Yes, I'll change this
 
--- 
-Regards
-Vignesh
+> 
+> I think I'm OK with this from a PCI perspective.
+> 
+>> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+>> ---
+>>  Documentation/devicetree/bindings/pci/pci.txt | 47 +++++++++++++++++++
+>>  1 file changed, 47 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+>> index c77981c5dd18..55cdbc5d2804 100644
+>> --- a/Documentation/devicetree/bindings/pci/pci.txt
+>> +++ b/Documentation/devicetree/bindings/pci/pci.txt
+>> @@ -24,3 +24,50 @@ driver implementation may support the following properties:
+>>     unsupported link speed, for instance, trying to do training for
+>>     unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
+>>     for gen2, and '1' for gen1. Any other values are invalid.
+>> +
+>> +PCI-PCI Bridge properties
+>> +-------------------------
+>> +
+>> +Root ports and switch ports may be described explicitly in the device
+> 
+> Maybe "PCIe root ports and switch ports" since pci.txt seems to apply
+> to both conventional PCI and PCIe?
+
+Ok
+
+> 
+>> +tree, as children of the host bridge node. Even though those devices are
+>> +discoverable by probing, it might be necessary to describe properties that
+>> +aren't provided by standard PCIe capabilities.
+>> +
+>> +Required properties:
+>> +
+>> +- reg:
+>> +   Identifies the PCI-PCI bridge. As defined in the IEEE Std 1275-1994
+>> +   document, it is a five-cell address encoded as (phys.hi phys.mid
+>> +   phys.lo size.hi size.lo). phys.hi should contain the device's BDF as
+>> +   0b00000000 bbbbbbbb dddddfff 00000000. The other cells should be zero.
+>> +
+>> +   The bus number is defined by firmware, through the standard bridge
+>> +   configuration mechanism. If this port is a switch port, then firmware
+>> +   allocates the bus number and writes it into the Secondary Bus Number
+>> +   register of the bridge directly above this port. Otherwise, the bus
+>> +   number of a root port is the first number in the bus-range property,
+>> +   defaulting to zero.
+>> +
+>> +   If firmware leaves the ARI Forwarding Enable bit set in the bridge
+>> +   above this port, then phys.hi contains the 8-bit function number as
+>> +   0b00000000 bbbbbbbb ffffffff 00000000. Note that the PCIe specification
+>> +   recommends that firmware only leaves ARI enabled when it knows that the
+>> +   OS is ARI-aware.
+>> +
+>> +Optional properties:
+>> +
+>> +- external-facing:
+>> +   When present, the port is external facing. All bridges and endpoints
+>> +   downstream of this port are external to the machine.
+> 
+> Maybe include a note about why this is important, ie, we care because
+> malicious devices may be attached to an external port?  I know you
+> have that in the commit log but it would be more visible here.
+> 
+> Elsewhere you use "external-facing", here too for consistency?
+
+Makes sense, I'll add a note. I currently have:
+
+- external-facing:
+   When present, the port is external-facing. All bridges and endpoints
+   downstream of this port are external to the machine. The OS can, for
+   example, use this information to identify devices that cannot be
+   trusted with relaxed DMA protection, as users could easily attach
+   malicious devices to this port.
+
+Thanks for reviewing, I'll resend shortly
+
+Jean
+
+> 
+>> +Example:
+>> +
+>> +pcie@10000000 {
+>> +	compatible = "pci-host-ecam-generic";
+>> +	...
+>> +	pcie@0008 {
+>> +		/* Root port 00:01.0 is external-facing */
+>> +		reg = <0x00000800 0 0 0 0>;
+>> +		external-facing;
+>> +	};
+>> +};
+>> -- 
+>> 2.21.0
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
