@@ -1,73 +1,96 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v10 0/9] support ROHM BD70528 PMIC
-Date: Mon, 25 Mar 2019 09:36:41 +0200
-Message-ID: <20190325073640.GB6208@localhost.localdomain>
-References: <cover.1550148989.git.matti.vaittinen@fi.rohmeurope.com>
- <20190228070450.GB3773@localhost.localdomain>
- <20190228081055.GL4118@dell>
- <20190228082248.GC3773@localhost.localdomain>
+From: Joseph Lo <josephl@nvidia.com>
+Subject: [PATCH 0/8] Add EMC scaling support for Tegra210
+Date: Mon, 25 Mar 2019 15:45:15 +0800
+Message-ID: <20190325074523.26456-1-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190228082248.GC3773@localhost.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: mazziesaccount@gmail.com, Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, bogdan-petru.chircu-mare@nxp.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob
+ Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joseph Lo <josephl@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello again Lee & all,
+This series introduces the EMC clock scaling support for Tegra210. There
+are three parts of this series.
 
-On Thu, Feb 28, 2019 at 10:22:48AM +0200, Matti Vaittinen wrote:
-> On Thu, Feb 28, 2019 at 08:10:55AM +0000, Lee Jones wrote:
-> > On Thu, 28 Feb 2019, Matti Vaittinen wrote:
-> > 
-> > > Hello Lee and Mark,
-> > > 
-> > > On Thu, Feb 14, 2019 at 03:02:37PM +0200, Matti Vaittinen wrote:
-> > > > Patch series introducing support for ROHM BD70528 PMIC
+i. The DT bindings of the EMC table and how to deal with them.
+To support LPDDR4 DRAM devices, the EMC table with timing data must be
+trained before it can be used. The bootloader firmware will help to do
+that at the early boot stage. And help to merge the trained timing data
+into the DTB that EMC driver in the kernel will use later for EMC clock
+scaling.
 
-//snip
+And for backward compatibility to support the upstreaming devices, like
+Jetson TX1 and Shield, the bindings should remain the same. Which means
+we may not able to change the bindings currently.
 
-> > > 
-> > > The MFD part depends on the regmap-irq changes and I think that most
-> > > other subsystems want to have the MFD changes in before taking rest of
-> > > the driver in their trees. So it will be a while untill all the changes
-> > > are in. It would really be nice to have the drive in-tree sooner - hence
-> > > I ask if theres a way. (I don't want to push, just ask if it is possible :])
-> > 
-> > It's possible, so long as there aren't any build-time dependencies
-> > between the subsystems.  Immediate acceptance however isn't possible
-> > due to the impending merge-window which opens in 3 days.
-> 
-> Thanks for reply Lee. So merge-window is opening - meaning the 5.1 is
-> being baked now(?) 
-> 
-> Anyays to make it clear - there is build time dependency between MFD and
-> regmap-irq changes. MFD part won't compile without the changes in regmap
-> tree. And theres no new Kconfig to depend on or other compile time
-> checks. So REGMAP changes are required for this MFD portion to compile.
+ii. The EMC driver will use the trained EMC table with the ram code that
+the platform used to update the EMC registers for clock scaling. And to
+support higher rates (above 800MHz), periodic training is needed. This
+will be done by a timer. And two EMC sources will be used (PLL_M and
+		PLL_MB) for the rate switching above or equal to 665MHz.
+It will check the current source and switch to another one dynamically.
 
-//snip
+iii. The detail sequence for EMC scaling support, this includes how we
+update the table to EMC registers and the periodic training support.
 
-> Rest of the subsystems (regulator, clk, watchdog, gpio) do all depend on
-> MFD - but they should have 'depends on' KConfig to MFD meaning they
-> won't be built without MFD.
+Here are the details and dependency of these patches.
+Patch 1 is the binding document of the EMC node and table.
+Patch 2 is the clock driver update for EMC scaling support. Need to note
+that with the update of the MC clock, the patch 3 (EMC clock driver) and
+patch 6 (EMC node in DT) will be needed to make MC clock to work
+normally.
+Patch 3 is the EMC clock driver. It can get the trained table from the
+firmware and know the current EMC status, like the rate and source
+clock.
+Patch 4 adds more APIs and support code. Tha will be needed for the EMC
+scaling sequence.
+Patch 5 adds the EMC scaling sequence code. With this, we can support
+EMC clock scaling now.
+Patch 6 introduces the EMC node in DT.
+Patch 7 adds EMC table of ram code 0.
+Patch 8 adds EMC table of ram code 1.
 
-I see the 5.1-rc1 and 5.1-rc2 are out. Those contain the regmap-irq
-changes the BD70528 MFD driver depends on. Would you like me to rebase
-the series to some other tree (which tree/branch? I don't see updated
-for-mfd-next branch in kernel.org yet) and resend it? Original patch
-series was created on top of the regulator tree.
+Joseph Lo (8):
+  dt-bindings: memory: tegra: Add Tegra210 EMC bindings
+  clk: tegra: clock changes for emc scaling support on Tegra210
+  memory: tegra: Add Tegra210 EMC clock driver
+  memory: tegra: add EMC scaling support code for Tegra210
+  memory: tegra: Add EMC scaling sequence code for Tegra210
+  arm64: tegra: Add external memory controller node for Tegra210
+  arm64: tegra: Add EMC table of ram code 0 for Tegra210 Shield platform
+  arm64: tegra: Add EMC table of ram code 1 for Tegra210 Shield platform
 
-Br,
-	Matti Vaittinen
+ .../nvidia,tegra210-emc.txt                   |   605 +
+ .../boot/dts/nvidia/tegra210-p2894-emc.dtsi   | 24851 ++++++++++++++++
+ .../arm64/boot/dts/nvidia/tegra210-p2894.dtsi |     1 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi      |    23 +
+ drivers/clk/tegra/clk-tegra210.c              |   112 +-
+ drivers/memory/tegra/Kconfig                  |    10 +
+ drivers/memory/tegra/Makefile                 |     1 +
+ drivers/memory/tegra/tegra210-dt-parse.c      |   340 +
+ drivers/memory/tegra/tegra210-emc-cc-r21021.c |  1962 ++
+ drivers/memory/tegra/tegra210-emc-reg.h       |  1482 +
+ drivers/memory/tegra/tegra210-emc.c           |  1814 ++
+ include/dt-bindings/clock/tegra210-car.h      |     4 +-
+ include/linux/clk/tegra.h                     |     5 +
+ 13 files changed, 31192 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra210-emc.txt
+ create mode 100644 arch/arm64/boot/dts/nvidia/tegra210-p2894-emc.dtsi
+ create mode 100644 drivers/memory/tegra/tegra210-dt-parse.c
+ create mode 100644 drivers/memory/tegra/tegra210-emc-cc-r21021.c
+ create mode 100644 drivers/memory/tegra/tegra210-emc-reg.h
+ create mode 100644 drivers/memory/tegra/tegra210-emc.c
 
 -- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+2.21.0
