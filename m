@@ -1,61 +1,58 @@
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [RFC PATCH v2 2/5] dt-bindings: mtd: Add binding documentation
- for Hyperbus memory devices
-Date: Mon, 25 Mar 2019 18:40:41 +0530
-Message-ID: <43af4200-7734-733a-a227-f3b75bf40457@ti.com>
-References: <20190321174548.9288-1-vigneshr@ti.com>
- <20190321174548.9288-3-vigneshr@ti.com>
- <ca3326cb-1b37-cf9a-f196-3288a539d064@cogentembedded.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 08/24] dt-bindings: mmc: mtk-sd: add mtk-sd support for
+ MT8516
+Date: Mon, 25 Mar 2019 14:26:40 +0100
+Message-ID: <CAPDyKFrAxmBv+1i3qJpD=M1Wq33U2PMfQv_99xDm9MLhLxSWYg@mail.gmail.com>
+References: <20190323211612.860-1-fparent@baylibre.com>
+ <20190323211612.860-9-fparent@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ca3326cb-1b37-cf9a-f196-3288a539d064@cogentembedded.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tudor.ambarus@microchip.com, nsekhar@ti.com, Mason Yang <masonccyang@mxic.com.tw>
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190323211612.860-9-fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+- trimmed cc list
 
-On 24/03/19 9:48 PM, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 03/21/2019 08:45 PM, Vignesh Raghavendra wrote:
-> 
->> Add DT binding documentation for Hyperbus memory devices. Only
->> Hyperflash is supported at the moment.
->>
->> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
->> ---
->>  Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt b/Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
->> new file mode 100644
->> index 000000000000..cb408f80b868
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
->> @@ -0,0 +1,6 @@
->> +Bindings for Hyperflash NOR flash chips compliant with Cypress Hyperbus
->> +specification and supports Cypress CFI specification 1.5 command set.
->> +
->> +Required properties:
->> +- compatible : "cypress,hyperflash" for Hyperflash NOR chips
-> 
->    What about "cfi-flash", shouldn't it be also specified?
+On Sat, 23 Mar 2019 at 22:17, Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+>
+> Add binding documentation of mtk-sd for MT8516 SoCs.
+>
+> Signed-off-by: Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-Oh, right. I missed that. Hyperflash is CFI compliant.
-Will add that next time. Thanks!
+Applied for next, thanks!
 
-> 
->> +- reg : Address where flash's memory mapped space
-> 
-> MBR, Sergei
-> 
+Kind regards
+Uffe
 
--- 
-Regards
-Vignesh
+
+> ---
+>  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> index f5bcda3980cc..91a2ec59e497 100644
+> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> @@ -11,6 +11,7 @@ Required properties:
+>         "mediatek,mt8135-mmc": for mmc host ip compatible with mt8135
+>         "mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
+>         "mediatek,mt8183-mmc": for mmc host ip compatible with mt8183
+> +       "mediatek,mt8516-mmc": for mmc host ip compatible with mt8516
+>         "mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
+>         "mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
+>         "mediatek,mt7622-mmc": for MT7622 SoC
+> --
+> 2.20.1
+>
