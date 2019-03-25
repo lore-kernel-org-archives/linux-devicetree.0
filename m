@@ -1,72 +1,46 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v4 2/2] dt-bindings: net: bluetooth: Add device tree
- bindings for QTI chip WCN3998
-Date: Mon, 25 Mar 2019 12:48:22 +0100
-Message-ID: <3AEE5277-5830-41FC-BC72-F5BE4B34B357@holtmann.org>
-References: <1553513491-25763-1-git-send-email-c-hbandi@codeaurora.org>
- <1553513491-25763-3-git-send-email-c-hbandi@codeaurora.org>
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: 8BIT
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: WARNING: bad unlock balance detected! (3)
+Date: Mon, 25 Mar 2019 12:54:49 +0100
+Message-ID: <e3d9d95fd07502cccf8ef97ba7b2e2adb4eefbb3.camel@baylibre.com>
+References: <0000000000003749360584c395ba@google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553513491-25763-3-git-send-email-c-hbandi@codeaurora.org>
+In-Reply-To: <0000000000003749360584c395ba@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Harish Bandi <c-hbandi@codeaurora.org>
-Cc: Johan Hedberg <johan.hedberg@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, Hemantg <hemantg@codeaurora.org>, linux-arm-msm@vger.kernel.org, Balakrishna Godavarthi <bgodavar@codeaurora.org>, anubhavg@codeaurora.org, devicetree <devicetree@vger.kernel.org>, mark.rutland@arm.com, obh+dt@kernel.org
+To: syzbot <syzbot+f3e3434787332dfc1c47@syzkaller.appspotmail.com>, davem@davemloft.net, devicetree@vger.kernel.org, khilman@baylibre.com, kuznet@ms2.inr.ac.ru, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, robh+dt@kernel.org, syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Harish,
+On Sat, 2019-03-23 at 07:14 -0700, syzbot wrote:
+> syzbot has bisected this bug to:
+> 
+> commit ec01fb69ac8034ad6e839b31f9df167a110f868b
+> Author: Jerome Brunet <jbrunet@baylibre.com>
+> Date:   Wed Jan 16 17:59:47 2019 +0000
+> 
+>      arm64: dts: meson: s400: fix emmc maximum rate
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10afb7cf200000
+> start commit:   065b6c4c Merge tag 'devicetree-for-5.1' of git://git.kerne..
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=12afb7cf200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14afb7cf200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=ea4067c9a08ae046
+> dashboard link: https://syzkaller.appspot.com/bug?extid=f3e3434787332dfc1c47
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a10577200000
+> 
+> Reported-by: syzbot+f3e3434787332dfc1c47@syzkaller.appspotmail.com
+> Fixes: ec01fb69ac80 ("arm64: dts: meson: s400: fix emmc maximum rate")
+> 
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-> This patch enables regulators for the Qualcomm Bluetooth WCN3998
-> controller.
-> 
-> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
-> ---
-> Changes in V4:
-> - Removed new compatible WCN3998
-> - changed wcn3990 to wcn399* to represent wcn399* family
-> ---
-> Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 7 ++++---
-> 1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> index 824c0e2..de9cefa 100644
-> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> @@ -11,20 +11,21 @@ Required properties:
->  - compatible: should contain one of the following:
->    * "qcom,qca6174-bt"
->    * "qcom,wcn3990-bt"
-> +   * "qcom,wcn3998-bt"
-> 
-> Optional properties for compatible string qcom,qca6174-bt:
-> 
->  - enable-gpios: gpio specifier used to enable chip
->  - clocks: clock provided to the controller (SUSCLK_32KHZ)
-> 
-> -Required properties for compatible string qcom,wcn3990-bt:
-> +Required properties for compatible string qcom,wcn399*-bt:
-> 
->  - vddio-supply: VDD_IO supply regulator handle.
->  - vddxo-supply: VDD_XO supply regulator handle.
->  - vddrf-supply: VDD_RF supply regulator handle.
->  - vddch0-supply: VDD_CH0 supply regulator handle.
-> 
-> -Optional properties for compatible string qcom,wcn3990-bt:
-> +Optional properties for compatible string qcom,wcn399*-bt:
-> 
->  - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
-> 
-> @@ -44,7 +45,7 @@ serial@7570000 {
-> 
-> serial@898000 {
-> 	bluetooth {
-> -		compatible = "qcom,wcn3990-bt";
-> +		compatible = "qcom,wcn399*-bt”;
+Hi David,
 
-I am not convinced that examples should have a * in the compatible string. So lets have Rob ack this one.
+I'm not sure I understand what the problem reported is but I don't think a DT
+patch could be the cause of a locking issue on x86.
 
-Regards
+If I missed something, feel free to let me know.
 
-Marcel
+Cheers
+Jerome
