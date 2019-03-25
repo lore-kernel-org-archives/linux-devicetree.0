@@ -1,32 +1,31 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM: dts: exynos: Fix spelling mistake of EXYNOS5420
-Date: Mon, 25 Mar 2019 17:52:33 +0100
-Message-ID: <20190325165233.GA16322@kozik-lap>
-References: <bb0903e066484e02f5dcd0e9cbe94a491a179fba.camel@posteo.de>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH V2 0/2] spi: stm32-qspi: add dma support
+Date: Mon, 25 Mar 2019 18:01:38 +0100
+Message-ID: <1553533300-29999-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <bb0903e066484e02f5dcd0e9cbe94a491a179fba.camel@posteo.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Drung <bdrung@posteo.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 03, 2019 at 09:13:30PM +0100, Benjamin Drung wrote:
-> The SoC name EXYNOS5420 was misspelled.
-> 
-> Signed-off-by: Benjamin Drung <bdrung@posteo.de>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi | 2 +-
+From: Ludovic Barre <ludovic.barre@st.com>
 
-Sorry for late apply but you never sent it to samsung-soc maling list so
-it was not present on Patchwork (and somehow slipped through my filters).
+This patch series adds dma support for the stm32-qspi.
+In read mode, the memory map is preferred vs dma
+(due to better throughput). If the dma transfer fails the buffer is
+sent by polling.
 
-The easiest way is to use scripts/get_maintainers.pl - it will print all
-necessary Cc-addresses.
+V2:
+-fixe build error in patch 1/2 (move qspi->phys_base in patch 2)
 
-Thanks, applied now.
+Ludovic Barre (2):
+  spi: stm32-qspi: add spi_master_put in release function
+  spi: stm32-qspi: add dma support
 
-Best regards,
-Krzysztof
+ drivers/spi/spi-stm32-qspi.c | 182 ++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 163 insertions(+), 19 deletions(-)
+
+-- 
+2.7.4
