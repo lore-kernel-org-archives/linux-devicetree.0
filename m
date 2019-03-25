@@ -1,24 +1,54 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 1/4] ARM: dts: rockchip: Fix gic/efuse sort ordering for rk3288
-Date: Mon, 25 Mar 2019 13:35:29 +0100
-Message-ID: <3934907.Ocf2yJGU5X@phil>
-References: <20190320201402.114309-1-dianders@chromium.org>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH 4/4] leds: lm3532: Introduce the lm3532 LED driver
+Date: Mon, 25 Mar 2019 07:35:38 -0500
+Message-ID: <dc24b66c-658e-41aa-c869-42c4a7e812a8@ti.com>
+References: <20190321142838.22985-1-dmurphy@ti.com>
+ <20190321142838.22985-4-dmurphy@ti.com> <20190322221654.GG19425@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190320201402.114309-1-dianders@chromium.org>
+In-Reply-To: <20190322221654.GG19425@atomide.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: mka@chromium.org, ryandcase@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Sebastian Reichel <sre@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 20. März 2019, 21:13:59 CET schrieb Douglas Anderson:
-> It can be seen that 0xffb40000 < 0xffc01000, thus efuse comes first.
+Tony
+
+On 3/22/19 5:16 PM, Tony Lindgren wrote:
+> Hi,
 > 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> * Dan Murphy <dmurphy@ti.com> [190321 14:29]:
+>> Introduce the Texas Instruments LM3532 White LED driver.
+>> The driver supports ALS configurability or manual brightness
+>> control.
+>>
+>> The driver also supports associating LED strings with specific
+>> control banks in a group or as individually controlled strings.
+> 
+> Thanks for getting this driver done. I need help a bit using
+> this though.. What's the glue to the drm driver?
+> 
+> I can control the backlight brightness just fine via /sys, and
+> backlight shows up as the trigger in /sys/class/leds/lm3532:backlight,
+> but /sys/class/backlight is empty and looks like drm can't find it.
+> 
+> Do I need to enable some additional driver(s) to get this to work
+> with the drm driver?
+> 
 
-applied patch1 for 5.2 and the other 3 as fixes for 5.1
+Can you dump or point to the defconfig?
 
-Thanks
-Heiko
+Dan
+
+> Regards,
+> 
+> Tony
+> 
+
+
+-- 
+------------------
+Dan Murphy
