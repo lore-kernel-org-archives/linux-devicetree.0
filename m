@@ -1,157 +1,64 @@
-From: Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
-Subject: Re: [RFC PATCH v2 1/5] mtd: cfi_cmdset_0002: Add support for polling
- status register
-Date: Mon, 25 Mar 2019 17:24:16 +0000
-Message-ID: <f0be796d3662f5b0016edfe73e8665b466b16d20.camel@infinera.com>
-References: <20190321174548.9288-1-vigneshr@ti.com>
- <20190321174548.9288-2-vigneshr@ti.com>
- <f92362a0678b07d22ccc0f271fe3483dc77364a9.camel@infinera.com>
- <b1961c49-6795-89e7-e154-6270bf43d49c@ti.com>
- <107cd92703919f97f4cf2d9cd279b091bc90518e.camel@infinera.com>
- <08f5424f-3ce3-492a-d2b3-4798993d35b9@ti.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 1/3] media: dt-bindings: media: meson-ao-cec: Add G12A AO-CEC-B Compatible
+Date: Mon, 25 Mar 2019 18:34:59 +0100
+Message-ID: <20190325173501.22863-2-narmstrong@baylibre.com>
+References: <20190325173501.22863-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <08f5424f-3ce3-492a-d2b3-4798993d35b9@ti.com>
-Content-Language: en-US
-Content-ID: <27BEA64DFC81754EA89E13D7400AFCC3@namprd10.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "richard@nod.at" <richard@nod.at>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "nsekhar@ti.com" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "masonccyang@mxic.com.tw" <masonccyang@mxic.com.tw>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190325173501.22863-1-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: hverkuil@xs4all.nl, mchehab@kernel.org, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-03-25 at 22:36 +0530, Vignesh Raghavendra wrote:
-> 
-> On 25/03/19 7:21 PM, Joakim Tjernlund wrote:
-> > On Mon, 2019-03-25 at 18:27 +0530, Vignesh Raghavendra wrote:
-> > > CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you recognize the sender and know the content is safe.
-> > > 
-> > > 
-> > > Hi,
-> > > 
-> > > On 21/03/19 11:41 PM, Joakim Tjernlund wrote:
-> > > > On Thu, 2019-03-21 at 23:15 +0530, Vignesh Raghavendra wrote:
-> > > > > HyperFlash devices are compliant with CFI AMD/Fujitsu Extended Command
-> > > > > Set(0x0002) for flash operations, therefore drivers/mtd/chips/cfi_cmdset_0002.c
-> > > > > can be use as is. But these devices do not support DQ polling method of
-> > > > > determining chip ready/good status. These flashes provide Status
-> > > > > Register whose bits can be polled to know status of flash operation.
-> > > > > 
-> > > > > Cypress HyperFlash datasheet here[1], talks about CFI Amd/Fujitsu
-> > > > > Extended Query version 1.5. Bit 0 of "Software Features supported" field
-> > > > > of CFI Primary Vendor-Specific Extended Query table indicates
-> > > > > presence/absence of status register and Bit 1 indicates whether or not
-> > > > > DQ polling is supported. Using these bits, its possible to determine
-> > > > > whether flash supports DQ polling or need to use Status Register.
-> > > > > 
-> > > > > Add support for polling status register to know device ready/status of
-> > > > > erase/write operations when DQ polling is not supported.
-> > > > 
-> > > > Isn't this new Status scheme just a copy of Intels(cmdset_0001)?
-> > > 
-> > > Yes, but with one difference: At the end of program/erase operation,
-> > > device directly enters status register mode and  starts reflecting
-> > > status register content at any address.
-> > > The device remains in the read status register state until another
-> > > command is written to the device. Therefore there is notion of device is
-> > > in "status register read mode" (FL_STATUS) state
-> > 
-> > That seems to vary and long time ago RMK added this:
-> > 		/* If the flash has finished erasing, then 'erase suspend'
-> > 		 * appears to make some (28F320) flash devices switch to
-> > 		 * 'read' mode.  Make sure that we switch to 'read status'
-> > 		 * mode so we get the right data. --rmk
-> > 		 */
-> > 		map_write(map, CMD(0x70), chip->in_progress_block_addr);
-> > 
-> 
-> This behavior is expected with cmdset_0001. Because "The device remains
-> in the read status register state until another command is written",
-> therefore "erase suspend' command after erase completion will switch
-> device to read mode. And therefore read status is safe thing to do for
-> cmdset_0001.
-> 
-> But in case of cmdset_0002 erase completion will not put device to read
-> status mode and therefore no special status tracking is required.
-> 
-> > > But in case of cfi_cmdset_0002, once program/erase operation is
-> > > complete, device returns to previous address space overlay from which
-> > > operation was started from (mostly read mode)
-> > 
-> > I hope you can do the same as Intel here, issue an explicit Status CMD or you will be in trouble.
-> 
-> Even if we issue Read Status command to enter read status mode, any
-> single subsequent read will put device back to read mode. So, sending
-> explicit Status CMD is of not much use.
-> 
-> As long as cmdset_0002 driver ensures sending Read Status cmd and next
-> single read can be done in one go (ie. mutex held), I don't see any
-> trouble here. This is already take care off.
+The Amlogic G12A embeds a second CEC controller named AO-CEC-B, and
+the other one is AO-CEC-A described by the current bindings.
 
-Ouch, a non sticky Status sounds borken. Are you sure that nothing can change the
-chip between you issue the Status CMD and read out of status bits?
-Like if an erase/suspend/resume completes just after Status CMD but before Status readout?
+The registers interface is very close but the internal architecture
+is totally different.
 
- Jocke
+The other difference is the closk source, the AO-CEC-B takes the
+"oscin", the Always-On Oscillator clock, as input and embeds a
+dual-divider clock divider to provide the precise 32768Hz base
+clock for CEC communication.
 
-> 
-> > Also, I think you need to use the various map_word_xxx as in:
-> > status = map_read(map, chip->in_progress_block_addr);
-> > if (map_word_andequal(map, status, status_OK, status_OK))
-> > 	break;
-> 
-> Yes, I will fixup this patch to use map_word_* wherever necessary in the
-> next revision.
-> 
-> 
-> > otherwise you will break interleaved setups(like two 8-bit flashes in parallel to
-> > form one 16 bit bus). Maybe this is not supported for CMDSET 0002 ?
-> > 
-> 
-> Interleaved is indeed supported by cmdset_0002. Thanks for pointing that
-> out!
-> 
-> >  Jocke
-> > 
-> > > In order to enter status register overlay mode, Read Status command is
-> > > to be written to addr_unlock1(0x555) address. The overlay is in effect
-> > > for one read access, specifically the next read access that follows the
-> > > Status Register Read command
-> > > Therefore code around FL_STATUS state in cfi_cmdset_0001 is not
-> > > applicable to cfi_cmdset_0002 as is.
-> > > 
-> > > 
-> > > > If so I think the new status impl. in 0002 should borrow from 0001 as this is a
-> > > > hardened and battle tested impl.
-> > > > 
-> > > 
-> > > In case of cfi_cmdset_0001.c, program/erase is followed by
-> > > inval_cache_and_wait_for_operation() to poll ready bit and based on
-> > > status register value, success or the error handling is done.
-> > > 
-> > > Most of the code corresponding to inval_cache_and_wait_for_operation()
-> > > is already in cfi_cmdset_0002.c. So, whats missing in this patch is
-> > > handling and reporting of errors as reflected in status register after
-> > > write/erase failures. I will add that in the next version.
-> > > 
-> > > But, I don't see much to borrow apart from error handling sequence.
-> > > Please, let me know if I missed something.
-> > > 
-> > > > I know other modern 0002 chips supports both old and new impl. of Status and I world
-> > > > guess that we will see more chips with new Status only.
-> > > > 
-> > > 
-> > > Agreed. Newer devices would mostly be CFI 1.5.
-> > > 
-> > > --
-> > > Regards
-> > > Vignesh
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../devicetree/bindings/media/meson-ao-cec.txt    | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/media/meson-ao-cec.txt b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
+index 8671bdb08080..d6e2f9cf0aaf 100644
+--- a/Documentation/devicetree/bindings/media/meson-ao-cec.txt
++++ b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
+@@ -4,16 +4,23 @@ The Amlogic Meson AO-CEC module is present is Amlogic SoCs and its purpose is
+ to handle communication between HDMI connected devices over the CEC bus.
+ 
+ Required properties:
+-  - compatible : value should be following
+-	"amlogic,meson-gx-ao-cec"
++  - compatible : value should be following depending on the SoC :
++  	For GXBB, GXL, GXM and G12A (AO_CEC_A module) :
++  	"amlogic,meson-gx-ao-cec"
++	For G12A (AO_CEC_B module) :
++	"amlogic,meson-g12a-ao-cec"
+ 
+   - reg : Physical base address of the IP registers and length of memory
+ 	  mapped region.
+ 
+   - interrupts : AO-CEC interrupt number to the CPU.
+   - clocks : from common clock binding: handle to AO-CEC clock.
+-  - clock-names : from common clock binding: must contain "core",
+-		  corresponding to entry in the clocks property.
++  - clock-names : from common clock binding, must contain :
++		For GXBB, GXL, GXM and G12A (AO_CEC_A module) :
++		- "core"
++		For G12A (AO_CEC_B module) :
++		- "oscin"
++		corresponding to entry in the clocks property.
+   - hdmi-phandle: phandle to the HDMI controller
+ 
+ Example:
+-- 
+2.21.0
