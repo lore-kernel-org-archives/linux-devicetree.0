@@ -1,59 +1,58 @@
-Return-Path: <vkoul@kernel.org>
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4/6] arm64: dts: qcom: qcs404: Enable blsp1_uart3 for qcs404-evb
-Date: Sun, 24 Mar 2019 22:02:07 +0530
-Message-Id: <20190324163209.17312-5-vkoul@kernel.org>
-In-Reply-To: <20190324163209.17312-1-vkoul@kernel.org>
-References: <20190324163209.17312-1-vkoul@kernel.org>
+Return-Path: <SRS0=Jw3F=R4=opensource.cirrus.com=ckeepax@kernel.org>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: [PATCH v2 1/2] hwmon: lochnagar: Add device tree binding document
+Date: Mon, 25 Mar 2019 11:00:19 +0000
+Message-ID: <20190325110020.4349-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Abhinav Asati <asatiabhi@codeaurora.org>, Vinod Koul <vkoul@kernel.org>
+Content-Type: text/plain
+To: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-hwmon@vger.kernel.org, corbet@lwn.net, devicetree@vger.kernel.org, patches@opensource.cirrus.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Shawn Guo <shawn.guo@linaro.org>
+Lochnagar is an evaluation and development board for Cirrus
+Logic Smart CODEC and Amp devices. It allows the connection of
+most Cirrus Logic devices on mini-cards, as well as allowing
+connection of various application processor systems to provide a
+full evaluation platform. This driver supports the board
+controller chip on the Lochnagar board.
 
-It defines pinctrl settings for blsp1_uart3 in board level dts and
-enable the device by toggling 'status'.
-
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-Signed-off-by: Abhinav Asati <asatiabhi@codeaurora.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ .../devicetree/bindings/hwmon/cirrus,lochnagar.txt | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index 323f9633084b..d4fadeaa0bbc 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -7,6 +7,7 @@
- / {
- 	aliases {
- 		serial0 = &blsp1_uart2;
-+		serial1 = &blsp1_uart3;
- 	};
- 
- 	chosen {
-@@ -137,6 +138,11 @@
- };
- 
- &tlmm {
-+	blsp1_uart3_default: blsp1-uart3-default {
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
+diff --git a/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
+new file mode 100644
+index 0000000000000..ffb79ccf51ee3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
+@@ -0,0 +1,26 @@
++Cirrus Logic Lochnagar Audio Development Board
 +
- 	sdc1_on: sdc1-on {
- 		clk {
- 			pins = "sdc1_clk";
-@@ -205,3 +211,7 @@
- 		bias-disable;
- 	};
- };
++Lochnagar is an evaluation and development board for Cirrus Logic
++Smart CODEC and Amp devices. It allows the connection of most Cirrus
++Logic devices on mini-cards, as well as allowing connection of
++various application processor systems to provide a full evaluation
++platform.  Audio system topology, clocking and power can all be
++controlled through the Lochnagar, allowing the device under test
++to be used in a variety of possible use cases.
 +
-+&blsp1_uart3 {
-+	status = "okay";
++This binding document describes the binding for the hardware monitor
++portion of the driver.
++
++This binding must be part of the Lochnagar MFD binding:
++  [4] ../mfd/cirrus,lochnagar.txt
++
++Required properties:
++
++  - compatible : One of the following strings:
++                 "cirrus,lochnagar2-hwmon"
++
++Example:
++
++lochnagar-hwmon {
++	compatible = "cirrus,lochnagar2-hwmon";
 +};
 -- 
-2.20.1
+2.11.0
