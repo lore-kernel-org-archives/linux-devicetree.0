@@ -1,43 +1,60 @@
-From: Ludovic BARRE <ludovic.barre@st.com>
-Subject: Re: [PATCH 1/2] spi: stm32-qspi: add spi_master_put in release
- function
-Date: Mon, 25 Mar 2019 17:19:44 +0100
-Message-ID: <7742cae8-3fcf-a3ba-2807-d5ed100cd8a4@st.com>
-References: <1553265354-16433-1-git-send-email-ludovic.Barre@st.com>
- <1553265354-16433-2-git-send-email-ludovic.Barre@st.com>
- <20190325160313.GJ7284@sirena.org.uk>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH v2 1/2] dt-bindings: ARM: dts: rockchip: Add bindings for rk3288-veyron-mighty
+Date: Mon, 25 Mar 2019 09:20:04 -0700
+Message-ID: <20190325162005.99391-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190325160313.GJ7284@sirena.org.uk>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Marek Vasut <marek.vasut@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, devicetree@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: mka@chromium.org, ryandcase@chromium.org, Douglas Anderson <dianders@chromium.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Alexis Ballier <aballier@gentoo.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Akash Gajjar <Akash_Gajjar@mentor.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-hi Mark
+Mighty is basically the same Chromebook as Jaq but it has a full-sized
+SD slot and some different (slightly more rugged) plastics around it.
+Like Jaq, Mighty may show up with various different brandings but all
+of them have the same board inside.
 
-On 3/25/19 5:03 PM, Mark Brown wrote:
-> On Fri, Mar 22, 2019 at 03:35:53PM +0100, Ludovic Barre wrote:
->> From: Ludovic Barre <ludovic.barre@st.com>
->>
->> This patch adds spi_master_put in release function
->> to drop the controller's refcount.
-> 
-> I'm getting build errors with this:
-> 
->    CC      drivers/spi/spi-stm32-qspi.o
-> drivers/spi/spi-stm32-qspi.c: In function ‘stm32_qspi_probe’:
-> drivers/spi/spi-stm32-qspi.c:430:8: error: ‘struct stm32_qspi’ has no member named ‘phys_base’; did you mean ‘io_base’?
->    qspi->phys_base = res->start;
->          ^~~~~~~~~
->          io_base
-> 
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
 
-I was sure I built each patch, but the fact is there an error :-(
-I resend a serie with this line in the second patch
+Changes in v2:
+- Add Rob Rerring's Reviewed-by tag.
 
-Regards
-Ludo
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 864ee1fddcb0..5c6bbf10abc9 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -147,7 +147,7 @@ properties:
+           - const: google,gru
+           - const: rockchip,rk3399
+ 
+-      - description: Google Jaq (Haier Chromebook 11 and more)
++      - description: Google Jaq (Haier Chromebook 11 and more w/ uSD)
+         items:
+           - const: google,veyron-jaq-rev5
+           - const: google,veyron-jaq-rev4
+@@ -206,6 +206,17 @@ properties:
+           - const: google,veyron
+           - const: rockchip,rk3288
+ 
++      - description: Google Mighty (Haier Chromebook 11 and more w/ SD)
++        items:
++          - const: google,veyron-mighty-rev5
++          - const: google,veyron-mighty-rev4
++          - const: google,veyron-mighty-rev3
++          - const: google,veyron-mighty-rev2
++          - const: google,veyron-mighty-rev1
++          - const: google,veyron-mighty
++          - const: google,veyron
++          - const: rockchip,rk3288
++
+       - description: Google Minnie (Asus Chromebook Flip C100P)
+         items:
+           - const: google,veyron-minnie-rev4
+-- 
+2.21.0.392.gf8f6787159e-goog
