@@ -1,56 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND PATCH v6 02/11] dt-bindings: power: supply: add DT
- bindings for max77650
-Date: Mon, 25 Mar 2019 15:46:09 -0500
-Message-ID: <20190325204609.GA29935@bogus>
-References: <20190318174228.18194-1-brgl@bgdev.pl>
- <20190318174228.18194-3-brgl@bgdev.pl>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH V9 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
+Date: Mon, 25 Mar 2019 21:59:14 +0100
+Message-ID: <20190325205914.4gd5tzfyryvbthea@pengutronix.de>
+References: <1553218974-20464-1-git-send-email-Anson.Huang@nxp.com>
+ <1553218974-20464-2-git-send-email-Anson.Huang@nxp.com>
+ <20190325204137.GA19824@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190318174228.18194-3-brgl@bgdev.pl>
+In-Reply-To: <20190325204137.GA19824@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Anson Huang <anson.huang@nxp.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "stefan@agner.ch" <stefan@agner.ch>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, Leonard Crestez <leonard.crestez@nxp.com>, Robin Gong <yibin.gong@nxp.com>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 06:42:19PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Mon, Mar 25, 2019 at 03:41:37PM -0500, Rob Herring wrote:
+> On Fri, Mar 22, 2019 at 01:48:05AM +0000, Anson Huang wrote:
+> > Add i.MX TPM(Low Power Timer/Pulse Width Modulation Module) PWM binding.
+> > 
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> > No changes.
 > 
-> Add the DT binding document for the battery charger module of max77650.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  .../power/supply/max77650-charger.txt         | 27 +++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/max77650-charger.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/max77650-charger.txt b/Documentation/devicetree/bindings/power/supply/max77650-charger.txt
-> new file mode 100644
-> index 000000000000..d25c95369616
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/max77650-charger.txt
-> @@ -0,0 +1,27 @@
-> +Battery charger driver for MAX77650 PMIC from Maxim Integrated.
-> +
-> +This module is part of the MAX77650 MFD device. For more details
-> +see Documentation/devicetree/bindings/mfd/max77650.txt.
-> +
-> +The charger is represented as a sub-node of the PMIC node on the device tree.
-> +
-> +Required properties:
-> +--------------------
-> +- compatible:		Must be "maxim,max77650-charger"
-> +
-> +Optional properties:
-> +--------------------
-> +- min-microvolt:	Minimum CHGIN regulation voltage (in microvolts). Must be
-> +			one of: 4000000, 4100000, 4200000, 4300000, 4400000,
-> +			4500000, 4600000, 4700000.
-> +- curr-lim-microamp:	CHGIN input current limit (in microamps). Must be one of:
-> +			95000, 190000, 285000, 380000, 475000.
+> v9? I don't recall seeing any previous versions.
 
-These should be common charger properties IMO.
+Not sure it actually matters, but you were on Cc: for v7 and v8 at
+least:
 
-Rob
+https://www.spinics.net/lists/linux-pwm/msg09300.html
+https://www.spinics.net/lists/linux-pwm/msg09321.html
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
