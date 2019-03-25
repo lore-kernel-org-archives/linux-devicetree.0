@@ -1,82 +1,95 @@
-From: =?utf-8?Q?Christoph_M=C3=BCllner?=
-        <christoph.muellner@theobroma-systems.com>
-Subject: Re: [PATCH v3 2/3] mmc: sdhci-of-arasan: Add DTS property to disable
- DCMDs.
-Date: Mon, 25 Mar 2019 14:39:14 +0100
-Message-ID: <2D2515D6-1E11-4EA3-B016-EC37A9E3091D@theobroma-systems.com>
-References: <20190322113808.16858-1-christoph.muellner@theobroma-systems.com>
- <20190322113808.16858-2-christoph.muellner@theobroma-systems.com>
- <CAPDyKFrDq-zBsqqe23hj4ynfYnrGxAr0tWxvYEJu8Kvh0i=h9A@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
+Subject: Re: [RFC PATCH v2 1/5] mtd: cfi_cmdset_0002: Add support for polling
+ status register
+Date: Mon, 25 Mar 2019 13:51:48 +0000
+Message-ID: <107cd92703919f97f4cf2d9cd279b091bc90518e.camel@infinera.com>
+References: <20190321174548.9288-1-vigneshr@ti.com>
+         <20190321174548.9288-2-vigneshr@ti.com>
+         <f92362a0678b07d22ccc0f271fe3483dc77364a9.camel@infinera.com>
+         <b1961c49-6795-89e7-e154-6270bf43d49c@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFrDq-zBsqqe23hj4ynfYnrGxAr0tWxvYEJu8Kvh0i=h9A@mail.gmail.com>
+In-Reply-To: <b1961c49-6795-89e7-e154-6270bf43d49c@ti.com>
+Content-Language: en-US
+Content-ID: <64F643BA9BD1D64099EF7B7EE1AC61D6@namprd10.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Michal Simek <michal.simek@xilinx.com>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Matthias Brugger <matthias.bgg@gmail.com>, Douglas Anderson <dianders@chromium.org>, Tony Xie <tony.xie@rock-chips.com>, Randy Li <ayaka@soulik.info>, Vicente Bergas <vicencb@gmail.com>, Ezequiel Garcia <ezequiel@collabora.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux
+To: "richard@nod.at" <richard@nod.at>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>
+Cc: "nsekhar@ti.com" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "masonccyang@mxic.com.tw" <masonccyang@mxic.com.tw>, "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "arnd@arndb.de" <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-
-> On 25.03.2019, at 14:27, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> 
-> On Fri, 22 Mar 2019 at 12:39, Christoph Muellner
-> <christoph.muellner@theobroma-systems.com> wrote:
->> 
->> Direct commands (DCMDs) are an optional feature of eMMC 5.1's command
->> queue engine (CQE). The Arasan eMMC 5.1 controller uses the CQHCI,
->> which exposes a control register bit to enable the feature.
->> The current implementation sets this bit unconditionally.
->> 
->> This patch allows to suppress the feature activation,
->> by specifying the property disable-cqe-dcmd.
->> 
->> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
->> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
->> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-> 
-> Applied for next, thanks!
-> 
-> Perhaps both patch1 and patch2 should be tagged for stable? Then
-> please tell me and I can add a tag.
-
-Hi Ulf,
-
-yes tagging for stable would be nice.
-I guess, the following would fit:
-
-Fixes: 84362d79f436 ("mmc: sdhci-of-arasan: Add CQHCI support for arasan,sdhci-5.1")
-
-Thanks,
-Christoph
-
-> 
-> Kind regards
-> Uffe
-> 
-> 
-> 
->> ---
->> drivers/mmc/host/sdhci-of-arasan.c | 5 ++++-
->> 1 file changed, 4 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
->> index c9e3e050ccc8..88dc3f00a5be 100644
->> --- a/drivers/mmc/host/sdhci-of-arasan.c
->> +++ b/drivers/mmc/host/sdhci-of-arasan.c
->> @@ -832,7 +832,10 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
->>                host->mmc_host_ops.start_signal_voltage_switch =
->>                                        sdhci_arasan_voltage_switch;
->>                sdhci_arasan->has_cqe = true;
->> -               host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
->> +               host->mmc->caps2 |= MMC_CAP2_CQE;
->> +
->> +               if (!of_property_read_bool(np, "disable-cqe-dcmd"))
->> +                       host->mmc->caps2 |= MMC_CAP2_CQE_DCMD;
->>        }
->> 
->>        ret = sdhci_arasan_add_host(sdhci_arasan);
->> --
->> 2.11.0
->> 
+T24gTW9uLCAyMDE5LTAzLTI1IGF0IDE4OjI3ICswNTMwLCBWaWduZXNoIFJhZ2hhdmVuZHJhIHdy
+b3RlOg0KPiBDQVVUSU9OOiBUaGlzIGVtYWlsIG9yaWdpbmF0ZWQgZnJvbSBvdXRzaWRlIG9mIHRo
+ZSBvcmdhbml6YXRpb24uIERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVu
+bGVzcyB5b3UgcmVjb2duaXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2Fm
+ZS4NCj4gDQo+IA0KPiBIaSwNCj4gDQo+IE9uIDIxLzAzLzE5IDExOjQxIFBNLCBKb2FraW0gVGpl
+cm5sdW5kIHdyb3RlOg0KPiA+IE9uIFRodSwgMjAxOS0wMy0yMSBhdCAyMzoxNSArMDUzMCwgVmln
+bmVzaCBSYWdoYXZlbmRyYSB3cm90ZToNCj4gPiA+IEh5cGVyRmxhc2ggZGV2aWNlcyBhcmUgY29t
+cGxpYW50IHdpdGggQ0ZJIEFNRC9GdWppdHN1IEV4dGVuZGVkIENvbW1hbmQNCj4gPiA+IFNldCgw
+eDAwMDIpIGZvciBmbGFzaCBvcGVyYXRpb25zLCB0aGVyZWZvcmUgZHJpdmVycy9tdGQvY2hpcHMv
+Y2ZpX2NtZHNldF8wMDAyLmMNCj4gPiA+IGNhbiBiZSB1c2UgYXMgaXMuIEJ1dCB0aGVzZSBkZXZp
+Y2VzIGRvIG5vdCBzdXBwb3J0IERRIHBvbGxpbmcgbWV0aG9kIG9mDQo+ID4gPiBkZXRlcm1pbmlu
+ZyBjaGlwIHJlYWR5L2dvb2Qgc3RhdHVzLiBUaGVzZSBmbGFzaGVzIHByb3ZpZGUgU3RhdHVzDQo+
+ID4gPiBSZWdpc3RlciB3aG9zZSBiaXRzIGNhbiBiZSBwb2xsZWQgdG8ga25vdyBzdGF0dXMgb2Yg
+Zmxhc2ggb3BlcmF0aW9uLg0KPiA+ID4gDQo+ID4gPiBDeXByZXNzIEh5cGVyRmxhc2ggZGF0YXNo
+ZWV0IGhlcmVbMV0sIHRhbGtzIGFib3V0IENGSSBBbWQvRnVqaXRzdQ0KPiA+ID4gRXh0ZW5kZWQg
+UXVlcnkgdmVyc2lvbiAxLjUuIEJpdCAwIG9mICJTb2Z0d2FyZSBGZWF0dXJlcyBzdXBwb3J0ZWQi
+IGZpZWxkDQo+ID4gPiBvZiBDRkkgUHJpbWFyeSBWZW5kb3ItU3BlY2lmaWMgRXh0ZW5kZWQgUXVl
+cnkgdGFibGUgaW5kaWNhdGVzDQo+ID4gPiBwcmVzZW5jZS9hYnNlbmNlIG9mIHN0YXR1cyByZWdp
+c3RlciBhbmQgQml0IDEgaW5kaWNhdGVzIHdoZXRoZXIgb3Igbm90DQo+ID4gPiBEUSBwb2xsaW5n
+IGlzIHN1cHBvcnRlZC4gVXNpbmcgdGhlc2UgYml0cywgaXRzIHBvc3NpYmxlIHRvIGRldGVybWlu
+ZQ0KPiA+ID4gd2hldGhlciBmbGFzaCBzdXBwb3J0cyBEUSBwb2xsaW5nIG9yIG5lZWQgdG8gdXNl
+IFN0YXR1cyBSZWdpc3Rlci4NCj4gPiA+IA0KPiA+ID4gQWRkIHN1cHBvcnQgZm9yIHBvbGxpbmcg
+c3RhdHVzIHJlZ2lzdGVyIHRvIGtub3cgZGV2aWNlIHJlYWR5L3N0YXR1cyBvZg0KPiA+ID4gZXJh
+c2Uvd3JpdGUgb3BlcmF0aW9ucyB3aGVuIERRIHBvbGxpbmcgaXMgbm90IHN1cHBvcnRlZC4NCj4g
+PiANCj4gPiBJc24ndCB0aGlzIG5ldyBTdGF0dXMgc2NoZW1lIGp1c3QgYSBjb3B5IG9mIEludGVs
+cyhjbWRzZXRfMDAwMSk/DQo+IA0KPiBZZXMsIGJ1dCB3aXRoIG9uZSBkaWZmZXJlbmNlOiBBdCB0
+aGUgZW5kIG9mIHByb2dyYW0vZXJhc2Ugb3BlcmF0aW9uLA0KPiBkZXZpY2UgZGlyZWN0bHkgZW50
+ZXJzIHN0YXR1cyByZWdpc3RlciBtb2RlIGFuZCAgc3RhcnRzIHJlZmxlY3RpbmcNCj4gc3RhdHVz
+IHJlZ2lzdGVyIGNvbnRlbnQgYXQgYW55IGFkZHJlc3MuDQo+IFRoZSBkZXZpY2UgcmVtYWlucyBp
+biB0aGUgcmVhZCBzdGF0dXMgcmVnaXN0ZXIgc3RhdGUgdW50aWwgYW5vdGhlcg0KPiBjb21tYW5k
+IGlzIHdyaXR0ZW4gdG8gdGhlIGRldmljZS4gVGhlcmVmb3JlIHRoZXJlIGlzIG5vdGlvbiBvZiBk
+ZXZpY2UgaXMNCj4gaW4gInN0YXR1cyByZWdpc3RlciByZWFkIG1vZGUiIChGTF9TVEFUVVMpIHN0
+YXRlDQoNClRoYXQgc2VlbXMgdG8gdmFyeSBhbmQgbG9uZyB0aW1lIGFnbyBSTUsgYWRkZWQgdGhp
+czoNCgkJLyogSWYgdGhlIGZsYXNoIGhhcyBmaW5pc2hlZCBlcmFzaW5nLCB0aGVuICdlcmFzZSBz
+dXNwZW5kJw0KCQkgKiBhcHBlYXJzIHRvIG1ha2Ugc29tZSAoMjhGMzIwKSBmbGFzaCBkZXZpY2Vz
+IHN3aXRjaCB0bw0KCQkgKiAncmVhZCcgbW9kZS4gIE1ha2Ugc3VyZSB0aGF0IHdlIHN3aXRjaCB0
+byAncmVhZCBzdGF0dXMnDQoJCSAqIG1vZGUgc28gd2UgZ2V0IHRoZSByaWdodCBkYXRhLiAtLXJt
+aw0KCQkgKi8NCgkJbWFwX3dyaXRlKG1hcCwgQ01EKDB4NzApLCBjaGlwLT5pbl9wcm9ncmVzc19i
+bG9ja19hZGRyKTsNCg0KPiANCj4gQnV0IGluIGNhc2Ugb2YgY2ZpX2NtZHNldF8wMDAyLCBvbmNl
+IHByb2dyYW0vZXJhc2Ugb3BlcmF0aW9uIGlzDQo+IGNvbXBsZXRlLCBkZXZpY2UgcmV0dXJucyB0
+byBwcmV2aW91cyBhZGRyZXNzIHNwYWNlIG92ZXJsYXkgZnJvbSB3aGljaA0KPiBvcGVyYXRpb24g
+d2FzIHN0YXJ0ZWQgZnJvbSAobW9zdGx5IHJlYWQgbW9kZSkNCg0KSSBob3BlIHlvdSBjYW4gZG8g
+dGhlIHNhbWUgYXMgSW50ZWwgaGVyZSwgaXNzdWUgYW4gZXhwbGljaXQgU3RhdHVzIENNRCBvciB5
+b3Ugd2lsbCBiZSBpbiB0cm91YmxlLg0KDQpBbHNvLCBJIHRoaW5rIHlvdSBuZWVkIHRvIHVzZSB0
+aGUgdmFyaW91cyBtYXBfd29yZF94eHggYXMgaW46DQpzdGF0dXMgPSBtYXBfcmVhZChtYXAsIGNo
+aXAtPmluX3Byb2dyZXNzX2Jsb2NrX2FkZHIpOw0KaWYgKG1hcF93b3JkX2FuZGVxdWFsKG1hcCwg
+c3RhdHVzLCBzdGF0dXNfT0ssIHN0YXR1c19PSykpDQoJYnJlYWs7DQpvdGhlcndpc2UgeW91IHdp
+bGwgYnJlYWsgaW50ZXJsZWF2ZWQgc2V0dXBzKGxpa2UgdHdvIDgtYml0IGZsYXNoZXMgaW4gcGFy
+YWxsZWwgdG8NCmZvcm0gb25lIDE2IGJpdCBidXMpLiBNYXliZSB0aGlzIGlzIG5vdCBzdXBwb3J0
+ZWQgZm9yIENNRFNFVCAwMDAyID8NCg0KIEpvY2tlDQoNCj4gDQo+IEluIG9yZGVyIHRvIGVudGVy
+IHN0YXR1cyByZWdpc3RlciBvdmVybGF5IG1vZGUsIFJlYWQgU3RhdHVzIGNvbW1hbmQgaXMNCj4g
+dG8gYmUgd3JpdHRlbiB0byBhZGRyX3VubG9jazEoMHg1NTUpIGFkZHJlc3MuIFRoZSBvdmVybGF5
+IGlzIGluIGVmZmVjdA0KPiBmb3Igb25lIHJlYWQgYWNjZXNzLCBzcGVjaWZpY2FsbHkgdGhlIG5l
+eHQgcmVhZCBhY2Nlc3MgdGhhdCBmb2xsb3dzIHRoZQ0KPiBTdGF0dXMgUmVnaXN0ZXIgUmVhZCBj
+b21tYW5kDQo+IFRoZXJlZm9yZSBjb2RlIGFyb3VuZCBGTF9TVEFUVVMgc3RhdGUgaW4gY2ZpX2Nt
+ZHNldF8wMDAxIGlzIG5vdA0KPiBhcHBsaWNhYmxlIHRvIGNmaV9jbWRzZXRfMDAwMiBhcyBpcy4N
+Cj4gDQo+IA0KPiA+IElmIHNvIEkgdGhpbmsgdGhlIG5ldyBzdGF0dXMgaW1wbC4gaW4gMDAwMiBz
+aG91bGQgYm9ycm93IGZyb20gMDAwMSBhcyB0aGlzIGlzIGENCj4gPiBoYXJkZW5lZCBhbmQgYmF0
+dGxlIHRlc3RlZCBpbXBsLg0KPiA+IA0KPiANCj4gSW4gY2FzZSBvZiBjZmlfY21kc2V0XzAwMDEu
+YywgcHJvZ3JhbS9lcmFzZSBpcyBmb2xsb3dlZCBieQ0KPiBpbnZhbF9jYWNoZV9hbmRfd2FpdF9m
+b3Jfb3BlcmF0aW9uKCkgdG8gcG9sbCByZWFkeSBiaXQgYW5kIGJhc2VkIG9uDQo+IHN0YXR1cyBy
+ZWdpc3RlciB2YWx1ZSwgc3VjY2VzcyBvciB0aGUgZXJyb3IgaGFuZGxpbmcgaXMgZG9uZS4NCj4g
+DQo+IE1vc3Qgb2YgdGhlIGNvZGUgY29ycmVzcG9uZGluZyB0byBpbnZhbF9jYWNoZV9hbmRfd2Fp
+dF9mb3Jfb3BlcmF0aW9uKCkNCj4gaXMgYWxyZWFkeSBpbiBjZmlfY21kc2V0XzAwMDIuYy4gU28s
+IHdoYXRzIG1pc3NpbmcgaW4gdGhpcyBwYXRjaCBpcw0KPiBoYW5kbGluZyBhbmQgcmVwb3J0aW5n
+IG9mIGVycm9ycyBhcyByZWZsZWN0ZWQgaW4gc3RhdHVzIHJlZ2lzdGVyIGFmdGVyDQo+IHdyaXRl
+L2VyYXNlIGZhaWx1cmVzLiBJIHdpbGwgYWRkIHRoYXQgaW4gdGhlIG5leHQgdmVyc2lvbi4NCj4g
+DQo+IEJ1dCwgSSBkb24ndCBzZWUgbXVjaCB0byBib3Jyb3cgYXBhcnQgZnJvbSBlcnJvciBoYW5k
+bGluZyBzZXF1ZW5jZS4NCj4gUGxlYXNlLCBsZXQgbWUga25vdyBpZiBJIG1pc3NlZCBzb21ldGhp
+bmcuDQo+IA0KPiA+IEkga25vdyBvdGhlciBtb2Rlcm4gMDAwMiBjaGlwcyBzdXBwb3J0cyBib3Ro
+IG9sZCBhbmQgbmV3IGltcGwuIG9mIFN0YXR1cyBhbmQgSSB3b3JsZA0KPiA+IGd1ZXNzIHRoYXQg
+d2Ugd2lsbCBzZWUgbW9yZSBjaGlwcyB3aXRoIG5ldyBTdGF0dXMgb25seS4NCj4gPiANCj4gDQo+
+IEFncmVlZC4gTmV3ZXIgZGV2aWNlcyB3b3VsZCBtb3N0bHkgYmUgQ0ZJIDEuNS4NCj4gDQo+IC0t
+DQo+IFJlZ2FyZHMNCj4gVmlnbmVzaA0KDQo=
