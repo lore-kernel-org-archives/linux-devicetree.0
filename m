@@ -1,44 +1,53 @@
-From: Yash Shah <yash.shah@sifive.com>
-Subject: Re: [PATCH v9 0/2] PWM support for HiFive Unleashed
-Date: Mon, 25 Mar 2019 17:39:42 +0530
-Message-ID: <CAJ2_jOFwDouMNAj8NxLX01bpLV+rG-rFsVh7e_e2ncCBX3qt_Q@mail.gmail.com>
-References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
- <mvmimwotn60.fsf@suse.de> <CAJ2_jOE3RH9FyFg_NATcLEpHv5y89zdh06Ji2x8n3C_gp-wn6A@mail.gmail.com>
- <mvm5zsgp00d.fsf@suse.de> <CAJ2_jOHoNnBF2UwU6G1vdvNrJAUJdGL_RncRAOaXMWoS03cagA@mail.gmail.com>
- <CAJ2_jOFrXcxRS1oYOuYhtuRReTocmPKnoe5GO_3r_B1uAZb+xA@mail.gmail.com> <mvmmuljupwd.fsf@suse.de>
+From: Zhiyong Tao <zhiyong.tao@mediatek.com>
+Subject: [PATCH v3 0/4] PINCTRL: Mediatek pinctrl patch on mt8183
+Date: Mon, 25 Mar 2019 20:22:58 +0800
+Message-ID: <20190325122302.5483-1-zhiyong.tao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <mvmmuljupwd.fsf@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Schwab <schwab@suse.de>
-Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
+To: robh+dt@kernel.org, linus.walleij@linaro.org, mark.rutland@arm.com, matthias.bgg@gmail.com, sean.wang@kernel.org
+Cc: srv_heupstream@mediatek.com, zhiyong.tao@mediatek.com, hui.liu@mediatek.com, eddie.huang@mediatek.com, chuanjia.liu@mediatek.com, biao.huang@mediatek.com, hongzhou.yang@mediatek.com, erin.lo@mediatek.com, sean.wang@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 5:28 PM Andreas Schwab <schwab@suse.de> wrote:
->
-> On M=C3=A4r 25 2019, Yash Shah <yash.shah@sifive.com> wrote:
->
-> > I have sent out the v11 patchset, you can test the heartbeat
-> > application with that patchset.
-> > You still need to make that DT file modification which you previously
-> > did, using fsbl.bin
->
-> Why can't the driver make use of sifive,approx-period?
+This series includes 4 patches:
+1.add pintcrl binding document on mt8183.
+2.add pintcrl file on mt8183.
+3.add pintcrl device node on mt8183.
+4.add drive for I2C related pins on MT8183.
 
-Because as per the review comments and discussions, it has been
-decided that the driver will make use of the conventional interface to
-pass period settings instead of 'sifive,approx-period'.
+Changes in patch v3:
+1)add the patch "dt-bindings: pinctrl: mt8183: add binding document".
+2)add the patch "arm64: dts: mt8183: add pintcrl file".
+3)add the patch "arm64: dts: mt8183: add pintcrl device node".
+4)add more datail information for the specific driving setup in commit message.
+5)use "mediatek,drive-strength-adv" instead of
+  "mediatek,drive-enable-adv" and "mediatek,drive-enable-disable".
+6)change "PINCTRL_PIN_REG_DRV_EN_DIS" to "PINCTRL_PIN_REG_DRV_EN".
+7)change the function "mtk_pinconf_adv_drive_set".
 
-For your reference:
-https://lkml.org/lkml/2019/2/6/159
+Changes in patch v2:
+1)add the details strength specification of the I2c pins.
+2)change "mt8183_pin_drv_en_dis_range" to "mt8183_pin_e1e0en_range".
+3)change "mt8183_pin_drv_e0_range" to "mt8183_pin_e0_range".
+4)change "mt8183_pin_drv_e1_range" to "mt8183_pin_e1_range".
 
->
-> Andreas.
->
-> --
-> Andreas Schwab, SUSE Labs, schwab@suse.de
-> GPG Key fingerprint =3D 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D=
-7
-> "And now for something completely different."
+Zhiyong Tao (4):
+  dt-bindings: pinctrl: mt8183: add binding document
+  arm64: dts: mt8183: add pintcrl file
+  arm64: dts: mt8183: add pintcrl device node
+  pinctrl: add drive for I2C related pins on MT8183
+
+ .../devicetree/bindings/pinctrl/pinctrl-mt8183.txt |  132 +++
+ arch/arm64/boot/dts/mediatek/mt8183-pinfunc.h      | 1120 ++++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi           |   27 +-
+ drivers/pinctrl/mediatek/pinctrl-mt8183.c          |   50 +
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c   |   47 +
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h   |   11 +
+ drivers/pinctrl/mediatek/pinctrl-paris.c           |   12 +
+ 7 files changed, 1398 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-pinfunc.h
+
+--
+2.12.5
