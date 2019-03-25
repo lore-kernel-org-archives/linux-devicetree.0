@@ -1,68 +1,72 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v3 20/26] PCI: dwc: Fix dw_pcie_ep_find_capability to return correct capability offset
-Date: Mon, 25 Mar 2019 15:09:41 +0530
-Message-ID: <20190325093947.32633-21-kishon@ti.com>
-References: <20190325093947.32633-1-kishon@ti.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 0/2] pinctrl: meson: add g12a drive strength support
+Date: Mon, 25 Mar 2019 10:44:00 +0100
+Message-ID: <283b286671a65160ac8ae08b1e1889bc029db363.camel@baylibre.com>
+References: <20190314163725.7918-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190325093947.32633-1-kishon@ti.com>
+In-Reply-To: <20190314163725.7918-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Murali Karicheri <m-karicheri2@ti.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com, Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Jesper Nilsson <jesper.nilsson@axis.com>
+To: Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, =?UTF-8?Q?Go=C5=82aszewski=2C?= Bartosz <bgolaszewski@baylibre.com>Kevin Hilman <khilman@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Guillaume La Roque <glaroque@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-commit beb4641a787df79a ("PCI: dwc: Add MSI-X callbacks handler") while
-adding MSI-X callback handler, introduced dw_pcie_ep_find_capability and
-__dw_pcie_ep_find_next_cap for finding the MSI and MSIX capability.
+On Thu, 2019-03-14 at 17:37 +0100, Jerome Brunet wrote:
+> The purpose of this patchset is to add drive-strength support in meson pinconf
+> driver. This is a new feature that was added on the g12a. It is critical for us
+> to support this since many functions are failing with default pad drive-strength.
+> 
+> Now the slightly annoying part :(
+> The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
+> 'drive-strength' is expressed in mA.
+> 
+> 1) Rounding down the value, we could be requesting a 0mA drive strength.
+>    That would look weird.
+> 2) Rounding up, we can't distinguish between 2.5mA and 3mA
+> 
+> To solve this issue in this in this v1, we chose to document that, on Amlogic,
+> drive-strength is expressed in uA instead of mA.
+> It works well and there is no impact on the other platforms but I'm not sure this
+> is really OK with the DT rules ?
+> 
+> Linus, if this is not OK with you, here are 2 other options we are
+> considering. We would be very interested to get your opinion on the matter:
+> 
+> 1) instead the generic 'drive-strength' property, we could add an amlogic
+> specific property, 'amlogic,drive-strength'. It would be expressed in uA
+> and parsed in amlogic specific code.
+> I think this option is kind of overkill. Expressing drive strength in uA is
+> not really amlogic specific so it does not make much sense, but it would
+> work ...
+> 
+> 2) Add another generic property "drive-strength-uA". The change to do so
+> would be minimal and could be benefit to other platforms later on.
 
-However if MSI or MSIX capability is the last capability (i.e there are
-no additional items in the capabilities list and the Next Capability
-Pointer is set to '0'), __dw_pcie_ep_find_next_cap will return '0'
-even though MSI or MSIX capability may be present. This is because of
-incorrect ordering of "next_cap_ptr" check. Fix it here.
+Hi Linus,
 
-Fixes: beb4641a787df79a142 ("PCI: dwc: Add MSI-X callbacks handler")
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/dwc/pcie-designware-ep.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+I know it has only been 10 days and you must be busy but I was wondering if we
+could get your view on the issue above ?
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index dc6a4bbd3ace..74477ad7467f 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -46,16 +46,19 @@ static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
- 	u8 cap_id, next_cap_ptr;
- 	u16 reg;
- 
-+	if (!cap_ptr)
-+		return 0;
-+
- 	reg = dw_pcie_readw_dbi(pci, cap_ptr);
--	next_cap_ptr = (reg & 0xff00) >> 8;
- 	cap_id = (reg & 0x00ff);
- 
--	if (!next_cap_ptr || cap_id > PCI_CAP_ID_MAX)
-+	if (cap_id > PCI_CAP_ID_MAX)
- 		return 0;
- 
- 	if (cap_id == cap)
- 		return cap_ptr;
- 
-+	next_cap_ptr = (reg & 0xff00) >> 8;
- 	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
- }
- 
-@@ -67,9 +70,6 @@ static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
- 	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
- 	next_cap_ptr = (reg & 0x00ff);
- 
--	if (!next_cap_ptr)
--		return 0;
--
- 	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
- }
- 
--- 
-2.17.1
+Since the vast majority of SoC functions need a drive strength setting, DT
+patches are somehow blocked until we decide which binding to use for it.
+
+Sorry for this early ping.
+Jerome
+
+
+> 
+> Cheers
+> Jerome
+> 
+> Guillaume La Roque (2):
+>   dt-bindings: pinctrl: meson: Add drive-strength property
+>   pinctrl: meson: add support of drive-strength
+> 
+>  .../bindings/pinctrl/meson,pinctrl.txt        |   3 +
+>  drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
+>  drivers/pinctrl/meson/pinctrl-meson.c         | 166 +++++++++++++-----
+>  drivers/pinctrl/meson/pinctrl-meson.h         |  20 ++-
+>  4 files changed, 165 insertions(+), 60 deletions(-)
+> 
