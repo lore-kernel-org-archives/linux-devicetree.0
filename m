@@ -1,415 +1,93 @@
-From: Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
-Subject: [PATCH 2/2] dmaengine: milbeaut: Add Milbeaut AXI DMA controller
-Date: Mon, 25 Mar 2019 13:15:14 +0900
-Message-ID: <1553487314-9185-3-git-send-email-kasai.kazuhiro@socionext.com>
-References: <1553487314-9185-1-git-send-email-kasai.kazuhiro@socionext.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH v2 4/9] dt-bindings: power: Add rpm power domain bindings
+ for qcs404
+Date: Mon, 25 Mar 2019 09:51:25 +0530
+Message-ID: <6989da8a-d295-0079-ed32-b31fb1272c63@codeaurora.org>
+References: <20190324175007.29040-1-sibis@codeaurora.org>
+ <20190324175007.29040-5-sibis@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553487314-9185-1-git-send-email-kasai.kazuhiro@socionext.com>
+In-Reply-To: <20190324175007.29040-5-sibis@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, orito.takao@socionext.com, sugaya.taichi@socionext.com, kanematsu.shinji@socionext.com, jaswinder.singh@linaro.org, masami.hiramatsu@linaro.org, linux-kernel@vger.kernel.org, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
+To: Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org
+Cc: david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add Milbeaut AXI DMA controller. This DMA controller has
-only capable of memory to memory transfer.
 
-Signed-off-by: Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
----
- drivers/dma/Kconfig          |   8 +
- drivers/dma/Makefile         |   1 +
- drivers/dma/xdmac-milbeaut.c | 353 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 362 insertions(+)
- create mode 100644 drivers/dma/xdmac-milbeaut.c
+On 3/24/2019 11:20 PM, Sibi Sankar wrote:
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> 
+> Add RPM Power domain bindings for the qcs404 family of SoC
+> 
+> [sibis: Add supported rpmpd states for qcs404]
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 0b1dfb5..733fe5f 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -612,6 +612,14 @@ config UNIPHIER_MDMAC
- 	  UniPhier platform.  This DMA controller is used as the external
- 	  DMA engine of the SD/eMMC controllers of the LD4, Pro4, sLD8 SoCs.
- 
-+config XDMAC_MILBEAUT
-+       tristate "Milbeaut AXI DMA support"
-+       depends on ARCH_MILBEAUT || COMPILE_TEST
-+       select DMA_ENGINE
-+       help
-+         Support for Milbeaut AXI DMA controller driver. The DMA controller
-+         has only memory to memory capability.
-+
- config XGENE_DMA
- 	tristate "APM X-Gene DMA support"
- 	depends on ARCH_XGENE || COMPILE_TEST
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index 6126e1c..4aab810 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -72,6 +72,7 @@ obj-$(CONFIG_TEGRA20_APB_DMA) += tegra20-apb-dma.o
- obj-$(CONFIG_TEGRA210_ADMA) += tegra210-adma.o
- obj-$(CONFIG_TIMB_DMA) += timb_dma.o
- obj-$(CONFIG_UNIPHIER_MDMAC) += uniphier-mdmac.o
-+obj-$(CONFIG_XDMAC_MILBEAUT) += xdmac-milbeaut.o
- obj-$(CONFIG_XGENE_DMA) += xgene-dma.o
- obj-$(CONFIG_ZX_DMA) += zx_dma.o
- obj-$(CONFIG_ST_FDMA) += st_fdma.o
-diff --git a/drivers/dma/xdmac-milbeaut.c b/drivers/dma/xdmac-milbeaut.c
-new file mode 100644
-index 0000000..7035c61
---- /dev/null
-+++ b/drivers/dma/xdmac-milbeaut.c
-@@ -0,0 +1,353 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Socionext Inc.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/of_dma.h>
-+#include <linux/platform_device.h>
-+
-+#include "dmaengine.h"
-+
-+/* global register */
-+#define M10V_XDACS 0x00
-+
-+/* channel local register */
-+#define M10V_XDTBC 0x10
-+#define M10V_XDSSA 0x14
-+#define M10V_XDDSA 0x18
-+#define M10V_XDSAC 0x1C
-+#define M10V_XDDAC 0x20
-+#define M10V_XDDCC 0x24
-+#define M10V_XDDES 0x28
-+#define M10V_XDDPC 0x2C
-+#define M10V_XDDSD 0x30
-+
-+#define M10V_XDACS_XE BIT(28)
-+
-+#define M10V_XDSAC_SBS	GENMASK(17, 16)
-+#define M10V_XDSAC_SBL	GENMASK(11, 8)
-+
-+#define M10V_XDDAC_DBS	GENMASK(17, 16)
-+#define M10V_XDDAC_DBL	GENMASK(11, 8)
-+
-+#define M10V_XDDES_CE	BIT(28)
-+#define M10V_XDDES_SE	BIT(24)
-+#define M10V_XDDES_SA	BIT(15)
-+#define M10V_XDDES_TF	GENMASK(23, 20)
-+#define M10V_XDDES_EI	BIT(1)
-+#define M10V_XDDES_TI	BIT(0)
-+
-+#define M10V_XDDSD_IS_MASK	GENMASK(3, 0)
-+#define M10V_XDDSD_IS_NORMAL	0x8
-+
-+#define M10V_XDMAC_BUSWIDTHS	(BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
-+				 BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | \
-+				 BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) | \
-+				 BIT(DMA_SLAVE_BUSWIDTH_8_BYTES))
-+
-+#define M10V_XDMAC_CHAN_BASE(base, i)	((base) + (i) * 0x30)
-+
-+#define to_m10v_dma_chan(c)	container_of((c), struct m10v_dma_chan, chan)
-+
-+struct m10v_dma_desc {
-+	struct dma_async_tx_descriptor txd;
-+	size_t len;
-+	dma_addr_t src;
-+	dma_addr_t dst;
-+};
-+
-+struct m10v_dma_chan {
-+	struct dma_chan chan;
-+	struct m10v_dma_device *mdmac;
-+	void __iomem *regs;
-+	int irq;
-+	struct m10v_dma_desc mdesc;
-+	spinlock_t lock;
-+};
-+
-+struct m10v_dma_device {
-+	struct dma_device dmac;
-+	void __iomem *regs;
-+	unsigned int channels;
-+	struct m10v_dma_chan mchan[0];
-+};
-+
-+static void m10v_xdmac_enable_dma(struct m10v_dma_device *mdmac)
-+{
-+	unsigned int val;
-+
-+	val = readl(mdmac->regs + M10V_XDACS);
-+	val &= ~M10V_XDACS_XE;
-+	val |= FIELD_PREP(M10V_XDACS_XE, 1);
-+	writel(val, mdmac->regs + M10V_XDACS);
-+}
-+
-+static void m10v_xdmac_disable_dma(struct m10v_dma_device *mdmac)
-+{
-+	unsigned int val;
-+
-+	val = readl(mdmac->regs + M10V_XDACS);
-+	val &= ~M10V_XDACS_XE;
-+	val |= FIELD_PREP(M10V_XDACS_XE, 0);
-+	writel(val, mdmac->regs + M10V_XDACS);
-+}
-+
-+static void m10v_xdmac_config_chan(struct m10v_dma_chan *mchan)
-+{
-+	u32 val;
-+
-+	val = mchan->mdesc.len - 1;
-+	writel(val, mchan->regs + M10V_XDTBC);
-+
-+	val = mchan->mdesc.src;
-+	writel(val, mchan->regs + M10V_XDSSA);
-+
-+	val = mchan->mdesc.dst;
-+	writel(val, mchan->regs + M10V_XDDSA);
-+
-+	val = readl(mchan->regs + M10V_XDSAC);
-+	val &= ~(M10V_XDSAC_SBS | M10V_XDSAC_SBL);
-+	val |= FIELD_PREP(M10V_XDSAC_SBS, 0x3) |
-+	       FIELD_PREP(M10V_XDSAC_SBL, 0xf);
-+	writel(val, mchan->regs + M10V_XDSAC);
-+
-+	val = readl(mchan->regs + M10V_XDDAC);
-+	val &= ~(M10V_XDDAC_DBS | M10V_XDDAC_DBL);
-+	val |= FIELD_PREP(M10V_XDDAC_DBS, 0x3) |
-+	       FIELD_PREP(M10V_XDDAC_DBL, 0xf);
-+	writel(val, mchan->regs + M10V_XDDAC);
-+}
-+
-+static void m10v_xdmac_enable_chan(struct m10v_dma_chan *mchan)
-+{
-+	u32 val;
-+
-+	val = readl(mchan->regs + M10V_XDDES);
-+	val &= ~(M10V_XDDES_CE |
-+	         M10V_XDDES_SE |
-+	         M10V_XDDES_TF |
-+	         M10V_XDDES_EI |
-+	         M10V_XDDES_TI);
-+	val |= FIELD_PREP(M10V_XDDES_CE, 1) |
-+	       FIELD_PREP(M10V_XDDES_SE, 1) |
-+	       FIELD_PREP(M10V_XDDES_TF, 1) |
-+	       FIELD_PREP(M10V_XDDES_EI, 1) |
-+	       FIELD_PREP(M10V_XDDES_TI, 1);
-+	writel(val, mchan->regs + M10V_XDDES);
-+}
-+
-+static void m10v_xdmac_disable_chan(struct m10v_dma_chan *mchan)
-+{
-+	u32 val;
-+
-+	val = readl(mchan->regs + M10V_XDDES);
-+	val &= ~M10V_XDDES_CE;
-+	val |= FIELD_PREP(M10V_XDDES_CE, 0);
-+	writel(val, mchan->regs + M10V_XDDES);
-+}
-+
-+static irqreturn_t m10v_xdmac_irq(int irq, void *data)
-+{
-+	struct m10v_dma_chan *mchan = data;
-+	unsigned long flags;
-+	u32 val;
-+
-+	val = readl(mchan->regs + M10V_XDDSD);
-+	val = FIELD_GET(M10V_XDDSD_IS_MASK, val);
-+
-+	if (val != M10V_XDDSD_IS_NORMAL)
-+		dev_err(mchan->chan.device->dev, "XDMAC error with status: %x", val);
-+
-+	val = FIELD_PREP(M10V_XDDSD_IS_MASK, 0x0);
-+	writel(val, mchan->regs + M10V_XDDSD);
-+
-+	spin_lock_irqsave(&mchan->lock, flags);
-+	dma_cookie_complete(&mchan->mdesc.txd);
-+	spin_unlock_irqrestore(&mchan->lock, flags);
-+
-+	if (mchan->mdesc.txd.flags & DMA_PREP_INTERRUPT)
-+		dmaengine_desc_get_callback_invoke(&mchan->mdesc.txd, NULL);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void m10v_xdmac_issue_pending(struct dma_chan *chan)
-+{
-+	struct m10v_dma_chan *mchan = to_m10v_dma_chan(chan);
-+
-+	m10v_xdmac_config_chan(mchan);
-+
-+	m10v_xdmac_enable_chan(mchan);
-+}
-+
-+static dma_cookie_t m10v_xdmac_tx_submit(struct dma_async_tx_descriptor *txd)
-+{
-+	struct m10v_dma_chan *mchan = to_m10v_dma_chan(txd->chan);
-+	dma_cookie_t cookie;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&mchan->lock, flags);
-+	cookie = dma_cookie_assign(txd);
-+	spin_unlock_irqrestore(&mchan->lock, flags);
-+
-+	return cookie;
-+}
-+
-+static struct dma_async_tx_descriptor *
-+m10v_xdmac_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
-+			   dma_addr_t src, size_t len, unsigned long flags)
-+{
-+	struct m10v_dma_chan *mchan = to_m10v_dma_chan(chan);
-+
-+	dma_async_tx_descriptor_init(&mchan->mdesc.txd, chan);
-+	mchan->mdesc.txd.tx_submit = m10v_xdmac_tx_submit;
-+	mchan->mdesc.txd.callback = NULL;
-+	mchan->mdesc.txd.flags = flags;
-+	mchan->mdesc.txd.cookie = -EBUSY;
-+
-+	mchan->mdesc.len = len;
-+	mchan->mdesc.src = src;
-+	mchan->mdesc.dst = dst;
-+
-+	return &mchan->mdesc.txd;
-+}
-+
-+static int m10v_xdmac_device_terminate_all(struct dma_chan *chan)
-+{
-+	struct m10v_dma_chan *mchan = to_m10v_dma_chan(chan);
-+
-+	m10v_xdmac_disable_chan(mchan);
-+
-+	return 0;
-+}
-+
-+static int m10v_xdmac_alloc_chan_resources(struct dma_chan *chan)
-+{
-+	struct m10v_dma_chan *mchan = to_m10v_dma_chan(chan);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&mchan->lock, flags);
-+	dma_cookie_init(chan);
-+	spin_unlock_irqrestore(&mchan->lock, flags);
-+
-+	return 1;
-+}
-+
-+static int m10v_xdmac_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct m10v_dma_chan *mchan;
-+	struct m10v_dma_device *mdmac;
-+	struct resource *res;
-+	unsigned int channels;
-+	int ret, i;
-+
-+	ret = device_property_read_u32(&pdev->dev, "dma-channels", &channels);
-+	if (ret) {
-+		dev_err(&pdev->dev, "get dma-channels failed\n");
-+		return ret;
-+	}
-+
-+	mdmac = devm_kzalloc(&pdev->dev,
-+			     struct_size(mdmac, mchan, channels),
-+			     GFP_KERNEL);
-+	if (!mdmac)
-+		return -ENOMEM;
-+
-+	mdmac->channels = channels;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	mdmac->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(mdmac->regs))
-+		return PTR_ERR(mdmac->regs);
-+
-+	INIT_LIST_HEAD(&mdmac->dmac.channels);
-+	for (i = 0; i < mdmac->channels; i++) {
-+		mchan = &mdmac->mchan[i];
-+		mchan->irq = platform_get_irq(pdev, i);
-+		ret = devm_request_irq(&pdev->dev, mchan->irq, m10v_xdmac_irq,
-+				       IRQF_SHARED, dev_name(&pdev->dev), mchan);
-+		if (ret) {
-+			dev_err(&pdev->dev, "failed to request IRQ\n");
-+			return ret;
-+		}
-+		mchan->mdmac = mdmac;
-+		mchan->chan.device = &mdmac->dmac;
-+		list_add_tail(&mchan->chan.device_node,
-+				&mdmac->dmac.channels);
-+
-+		mchan->regs = M10V_XDMAC_CHAN_BASE(mdmac->regs, i);
-+		spin_lock_init(&mchan->lock);
-+	}
-+
-+	dma_cap_set(DMA_MEMCPY, mdmac->dmac.cap_mask);
-+
-+	mdmac->dmac.device_alloc_chan_resources = m10v_xdmac_alloc_chan_resources;
-+	mdmac->dmac.device_prep_dma_memcpy = m10v_xdmac_prep_dma_memcpy;
-+	mdmac->dmac.device_issue_pending = m10v_xdmac_issue_pending;
-+	mdmac->dmac.device_tx_status = dma_cookie_status;
-+	mdmac->dmac.device_terminate_all = m10v_xdmac_device_terminate_all;
-+	mdmac->dmac.src_addr_widths = M10V_XDMAC_BUSWIDTHS;
-+	mdmac->dmac.dst_addr_widths = M10V_XDMAC_BUSWIDTHS;
-+	mdmac->dmac.residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
-+	mdmac->dmac.dev = &pdev->dev;
-+
-+	platform_set_drvdata(pdev, mdmac);
-+
-+	m10v_xdmac_enable_dma(mdmac);
-+
-+	ret = dmaenginem_async_device_register(&mdmac->dmac);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register dmaengine device\n");
-+		return ret;
-+	}
-+
-+	ret = of_dma_controller_register(np, of_dma_simple_xlate, mdmac);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register OF DMA controller\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int m10v_xdmac_remove(struct platform_device *pdev)
-+{
-+	struct m10v_dma_chan *mchan;
-+	struct m10v_dma_device *mdmac = platform_get_drvdata(pdev);
-+	int i;
-+
-+	m10v_xdmac_disable_dma(mdmac);
-+
-+	for (i = 0; i < mdmac->channels; i++) {
-+		mchan = &mdmac->mchan[i];
-+		devm_free_irq(&pdev->dev, mchan->irq, mchan);
-+	}
-+
-+	of_dma_controller_free(pdev->dev.of_node);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id m10v_xdmac_dt_ids[] = {
-+	{.compatible = "socionext,milbeaut-m10v-xdmac",},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, m10v_xdmac_dt_ids);
-+
-+static struct platform_driver m10v_xdmac_driver = {
-+	.driver = {
-+		.name = "m10v-xdmac",
-+		.of_match_table = of_match_ptr(m10v_xdmac_dt_ids),
-+	},
-+	.probe = m10v_xdmac_probe,
-+	.remove = m10v_xdmac_remove,
-+};
-+module_platform_driver(m10v_xdmac_driver);
-+
-+MODULE_AUTHOR("Kazuhiro Kasai <kasai.kazuhiro@socionext.com>");
-+MODULE_DESCRIPTION("Socionext Milbeaut XDMAC driver");
-+MODULE_LICENSE("GPL v2");
+SoB ordering seems wrong.
+
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>   .../devicetree/bindings/power/qcom,rpmpd.txt  |  1 +
+>   include/dt-bindings/power/qcom-rpmpd.h        | 22 +++++++++++++++++++
+>   2 files changed, 23 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> index 980e5413d18f..172ccf940c5c 100644
+> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> @@ -6,6 +6,7 @@ which then translates it into a corresponding voltage on a rail
+>   Required Properties:
+>    - compatible: Should be one of the following
+>   	* qcom,msm8996-rpmpd: RPM Power domain for the msm8996 family of SoC
+> +	* qcom,qcs404-rpmpd: RPM Power domain for the qcs404 family of SoC
+>   	* qcom,sdm845-rpmhpd: RPMh Power domain for the sdm845 family of SoC
+>    - #power-domain-cells: number of cells in Power domain specifier
+>   	must be 1.
+> diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
+> index 87d9c6611682..450378662944 100644
+> --- a/include/dt-bindings/power/qcom-rpmpd.h
+> +++ b/include/dt-bindings/power/qcom-rpmpd.h
+> @@ -36,4 +36,26 @@
+>   #define MSM8996_VDDSSCX		5
+>   #define MSM8996_VDDSSCX_VFC	6
+>   
+> +/* QCS404 Power Domains */
+> +#define QCS404_VDDMX		0
+> +#define QCS404_VDDMX_AO		1
+> +#define QCS404_VDDMX_VFL	2
+> +#define QCS404_LPICX		3
+> +#define QCS404_LPICX_VFL	4
+> +#define QCS404_LPIMX		5
+> +#define QCS404_LPIMX_VFL	6
+> +
+> +/* RPM SMD Power Domain performance levels */
+
+so unlike in the sdm845 case where we map these levels to
+(contiguous) corners before passing it over to rpm, we seem
+to pass these as-is to rpm, right?
+
+Does this work if the user passes some value which does not
+really map to a level defined here?
+For instance if value passed is 17 for instance do we fall back to
+16?
+  
+> +#define RPM_SMD_LEVEL_RETENTION       16
+> +#define RPM_SMD_LEVEL_RETENTION_PLUS  32
+> +#define RPM_SMD_LEVEL_MIN_SVS         48
+> +#define RPM_SMD_LEVEL_LOW_SVS         64
+> +#define RPM_SMD_LEVEL_SVS             128
+> +#define RPM_SMD_LEVEL_SVS_PLUS        192
+> +#define RPM_SMD_LEVEL_NOM             256
+> +#define RPM_SMD_LEVEL_NOM_PLUS        320
+> +#define RPM_SMD_LEVEL_TURBO           384
+> +#define RPM_SMD_LEVEL_TURBO_NO_CPR    416
+> +#define RPM_SMD_LEVEL_BINNING         512
+> +
+>   #endif
+> 
+
 -- 
-1.9.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
