@@ -1,51 +1,59 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: Add external-facing PCIe port property
-Date: Mon, 25 Mar 2019 08:53:12 -0500
-Message-ID: <20190325135312.GQ251185@google.com>
-References: <20190318182124.53859-1-jean-philippe.brucker@arm.com>
- <20190318182124.53859-2-jean-philippe.brucker@arm.com>
- <20190320220338.GH251185@google.com>
- <598b0675-38b2-9e52-d903-016dc548756c@arm.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 2/3] mmc: sdhci-of-arasan: Add DTS property to disable DCMDs.
+Date: Mon, 25 Mar 2019 14:54:16 +0100
+Message-ID: <CAPDyKFrPBY14bvG7ZLON2xTTWEc2a1JjLdeDSkGmtdAZy5hokQ@mail.gmail.com>
+References: <20190322113808.16858-1-christoph.muellner@theobroma-systems.com>
+ <20190322113808.16858-2-christoph.muellner@theobroma-systems.com>
+ <CAPDyKFrDq-zBsqqe23hj4ynfYnrGxAr0tWxvYEJu8Kvh0i=h9A@mail.gmail.com> <2D2515D6-1E11-4EA3-B016-EC37A9E3091D@theobroma-systems.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <598b0675-38b2-9e52-d903-016dc548756c@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <Grant.Likely@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Jeremy Linton <Jeremy.Linton@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Robin Murphy <Robin.Murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2D2515D6-1E11-4EA3-B016-EC37A9E3091D@theobroma-systems.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Christoph_M=C3=BCllner?= <christoph.muellner@theobroma-systems.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Michal Simek <michal.simek@xilinx.com>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Matthias Brugger <matthias.bgg@gmail.com>, Douglas Anderson <dianders@chromium.org>, Tony Xie <tony.xie@rock-chips.com>, Randy Li <ayaka@soulik.info>, Vicente Bergas <vicencb@gmail.com>, Ezequiel Garcia <ezequiel@collabora.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 12:59:48PM +0000, Jean-Philippe Brucker wrote:
-> On 20/03/2019 22:03, Bjorn Helgaas wrote:
-> > On Mon, Mar 18, 2019 at 06:21:23PM +0000, Jean-Philippe Brucker wrote:
+On Mon, 25 Mar 2019 at 14:39, Christoph M=C3=BCllner
+<christoph.muellner@theobroma-systems.com> wrote:
+>
+>
+> > On 25.03.2019, at 14:27, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >
+> > On Fri, 22 Mar 2019 at 12:39, Christoph Muellner
+> > <christoph.muellner@theobroma-systems.com> wrote:
+> >>
+> >> Direct commands (DCMDs) are an optional feature of eMMC 5.1's command
+> >> queue engine (CQE). The Arasan eMMC 5.1 controller uses the CQHCI,
+> >> which exposes a control register bit to enable the feature.
+> >> The current implementation sets this bit unconditionally.
+> >>
+> >> This patch allows to suppress the feature activation,
+> >> by specifying the property disable-cqe-dcmd.
+> >>
+> >> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-system=
+s.com>
+> >> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+> >> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> >
+> > Applied for next, thanks!
+> >
+> > Perhaps both patch1 and patch2 should be tagged for stable? Then
+> > please tell me and I can add a tag.
+>
+> Hi Ulf,
+>
+> yes tagging for stable would be nice.
+> I guess, the following would fit:
+>
+> Fixes: 84362d79f436 ("mmc: sdhci-of-arasan: Add CQHCI support for arasan,=
+sdhci-5.1")
+>
 
-> >> +- external-facing:
-> >> +   When present, the port is external facing. All bridges and endpoints
-> >> +   downstream of this port are external to the machine.
-> > 
-> > Maybe include a note about why this is important, ie, we care because
-> > malicious devices may be attached to an external port?  I know you
-> > have that in the commit log but it would be more visible here.
-> > 
-> > Elsewhere you use "external-facing", here too for consistency?
-> 
-> Makes sense, I'll add a note. I currently have:
-> 
-> - external-facing:
->    When present, the port is external-facing. All bridges and endpoints
->    downstream of this port are external to the machine. The OS can, for
->    example, use this information to identify devices that cannot be
->    trusted with relaxed DMA protection, as users could easily attach
->    malicious devices to this port.
+Great, I have added that to both of the commits and a stable tag. Thanks!
 
-Looks good to me!
+[...]
+
+Kind regards
+Uffe
