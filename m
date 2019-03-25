@@ -1,49 +1,53 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 4/4] leds: lm3532: Introduce the lm3532 LED driver
-Date: Mon, 25 Mar 2019 07:54:44 -0700
-Message-ID: <20190325145444.GK19425@atomide.com>
-References: <20190321142838.22985-1-dmurphy@ti.com>
- <20190321142838.22985-4-dmurphy@ti.com>
- <20190322221654.GG19425@atomide.com>
- <dc24b66c-658e-41aa-c869-42c4a7e812a8@ti.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 2/2] rtc: Add ASPEED RTC driver
+Date: Mon, 25 Mar 2019 15:59:54 +0100
+Message-ID: <20190325145954.GM30105@piout.net>
+References: <20190325133159.10653-1-joel@jms.id.au>
+ <20190325133159.10653-3-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <dc24b66c-658e-41aa-c869-42c4a7e812a8@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Sebastian Reichel <sre@kernel.org>
+In-Reply-To: <20190325133159.10653-3-joel@jms.id.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joel Stanley <joel@jms.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Dan Murphy <dmurphy@ti.com> [190325 12:36]:
-> On 3/22/19 5:16 PM, Tony Lindgren wrote:
-> > I can control the backlight brightness just fine via /sys, and
-> > backlight shows up as the trigger in /sys/class/leds/lm3532:backlight,
-> > but /sys/class/backlight is empty and looks like drm can't find it.
-> > 
-> > Do I need to enable some additional driver(s) to get this to work
-> > with the drm driver?
-> > 
-> 
-> Can you dump or point to the defconfig?
+Hi,
 
-This is just with the omap2plus_defconfig as in the droid4-pending-v5.0
-test branch below [0]. That branch has Sebastian's drm patches. The
-branch also has the older ti-lmu patches that I reverted for testing
-before applying your new series and enabling it in .config.
+This seems mostly good to me.
 
-The drm driver (drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c) just
-does:
+On 26/03/2019 00:01:59+1030, Joel Stanley wrote:
+> +	dev_dbg(dev, "%s: %4d-%02d-%02d %02d:%02d:%02d\n", __func__,
+> +			1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday,
+> +			tm->tm_hour, tm->tm_min, tm->tm_sec);
+> +
 
-backlight = of_parse_phandle(node, "backlight", 0);
-...
+We now have %ptR, could you use that?
 
-That should still work the same, right?
+> +	rtc->rtc_dev->ops = &aspeed_rtc_ops;
+> +	rtc->rtc_dev->range_min = RTC_TIMESTAMP_BEGIN_1900;
+> +	rtc->rtc_dev->range_max = 38814989399LL; /* 3199-12-31 23:59:59 */
+> +
 
-Regards,
+I'm curious how many RTC have been properly designed, could you run
+rtc-range?
 
-Tony
+https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/rtc-tools.git/tree/rtc-range.c
 
+Thanks!
 
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/log/?h=droid4-pending-v5.0
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
