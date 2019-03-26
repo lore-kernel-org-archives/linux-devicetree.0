@@ -1,76 +1,43 @@
-Return-Path: <SRS0=RXn9=R5=cogentembedded.com=sergei.shtylyov@kernel.org>
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2] dt-bindings: media: Renesas R-Car IMR bindings
-Message-ID: <55c5fca2-3ead-17da-e42f-04bdc1fbf1bf@cogentembedded.com>
-Date: Tue, 26 Mar 2019 19:12:19 +0300
+Return-Path: <SRS0=1wp7=R5=linaro.org=rui.silva@kernel.org>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH v2 1/5] ARM: dts: imx7s: add mipi phy power domain
+Date: Tue, 26 Mar 2019 11:02:23 +0000
+Message-Id: <20190326110227.7324-2-rui.silva@linaro.org>
+In-Reply-To: <20190326110227.7324-1-rui.silva@linaro.org>
+References: <20190326110227.7324-1-rui.silva@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh@kernel.org>
+Content-Transfer-Encoding: 8bit
+To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The image renderer (IMR), or the distortion correction engine, is a
-drawing processor with a simple instruction system capable of referencing
-video capture data or data in an external memory as the 2D texture data
-and performing texture mapping and drawing with respect to any shape that
-is split into triangular objects.
+Add power domain index 0 related with mipi-phy to imx7s.
 
-Document  the device tree bindings for the image renderer light extended 4
-(IMR-LX4) found in the R-Car gen3 SoCs...
+While at it rename pcie power-domain node to remove pgc prefix.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Acked-by: Rob Herring <robh@kernel.org>
-
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
-This patch is against the 'master' branch of the 'media_tree.git' repo.
+ arch/arm/boot/dts/imx7s.dtsi | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-This patch has been split from the large IMR driver patch (which would need
-much more work), it fixes checkpatch.pl's warnings on the SoC .dtsi files
-which have been already merged (the bindings didn't change since v1 of the
-driver patch).
-
-Changes in version 2:
-- documented the required "power-domains" and "resets" props, adding them to
-  the example as well.
-
- Documentation/devicetree/bindings/media/rcar_imr.txt |   31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
-
-Index: media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
-===================================================================
---- /dev/null
-+++ media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
-@@ -0,0 +1,31 @@
-+Renesas R-Car Image Renderer (Distortion Correction Engine)
-+-----------------------------------------------------------
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index e88f53a4c7f4..9a680d3d6424 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -606,7 +606,13 @@
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+ 
+-					pgc_pcie_phy: pgc-power-domain@1 {
++					pgc_mipi_phy: power-domain@0 {
++						#power-domain-cells = <0>;
++						reg = <0>;
++						power-supply = <&reg_1p0d>;
++					};
 +
-+The image renderer, or the distortion correction engine, is a drawing processor
-+with a simple instruction system capable of referencing video capture data or
-+data in an external memory as 2D texture data and performing texture mapping
-+and drawing with respect to any shape that is split into triangular objects.
-+
-+Required properties:
-+
-+- compatible: "renesas,<soctype>-imr-lx4", "renesas,imr-lx4" as a fallback for
-+  the image renderer light extended 4 (IMR-LX4) found in the R-Car gen3 SoCs,
-+  where the examples with <soctype> are:
-+  - "renesas,r8a7795-imr-lx4" for R-Car H3,
-+  - "renesas,r8a7796-imr-lx4" for R-Car M3-W.
-+- reg: offset and length of the register block;
-+- interrupts: single interrupt specifier;
-+- clocks: single clock phandle/specifier pair;
-+- power-domains: power domain phandle/specifier pair;
-+- resets: reset phandle/specifier pair.
-+
-+Example:
-+
-+	imr-lx4@fe860000 {
-+		compatible = "renesas,r8a7795-imr-lx4", "renesas,imr-lx4";
-+		reg = <0 0xfe860000 0 0x2000>;
-+		interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg CPG_MOD 823>;
-+		power-domains = <&sysc R8A7795_PD_A3VC>;
-+		resets = <&cpg 823>;
-+	};
++					pgc_pcie_phy: power-domain@1 {
+ 						#power-domain-cells = <0>;
+ 						reg = <1>;
+ 						power-supply = <&reg_1p0d>;
+-- 
+2.21.0
