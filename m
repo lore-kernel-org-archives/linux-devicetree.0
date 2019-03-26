@@ -1,50 +1,61 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 0/7] ARM: dts: stm32: add support of sdmmc1 on stm32
-Date: Tue, 26 Mar 2019 11:22:42 +0100
-Message-ID: <5178f61f-bb8d-f30c-68cd-0bd8d0889a34@st.com>
-References: <1551430068-9456-1-git-send-email-ludovic.Barre@st.com>
+From: Seiya Wang <seiya.wang@mediatek.com>
+Subject: Re: [PATCH v2 1/2] arm64: dts: mt8173: correct cpu type of cpu2 and
+ cpu3 to cortex-a72
+Date: Tue, 26 Mar 2019 18:33:21 +0800
+Message-ID: <1553596401.24277.4.camel@mtksdaap41>
+References: <20190225065112.3400-1-seiya.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551430068-9456-1-git-send-email-ludovic.Barre@st.com>
-Content-Language: en-US
+In-Reply-To: <20190225065112.3400-1-seiya.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ludovic
+On Mon, 2019-02-25 at 14:51 +0800, Seiya Wang wrote:
+> The cpu type of cpu2 and cpu3 should be cortex-a72, not cortex-a57.
+> 
+> Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 44374c506a1c..99675c51577a 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -178,12 +178,12 @@
+>  
+>  		cpu2: cpu@100 {
+>  			device_type = "cpu";
+> -			compatible = "arm,cortex-a57";
+> +			compatible = "arm,cortex-a72";
+>  			reg = <0x100>;
+>  			enable-method = "psci";
+>  			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			#cooling-cells = <2>;
+> -			clocks = <&infracfg CLK_INFRA_CA57SEL>,
+> +			clocks = <&infracfg CLK_INFRA_CA72SEL>,
+>  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+>  			clock-names = "cpu", "intermediate";
+>  			operating-points-v2 = <&cluster1_opp>;
+> @@ -191,12 +191,12 @@
+>  
+>  		cpu3: cpu@101 {
+>  			device_type = "cpu";
+> -			compatible = "arm,cortex-a57";
+> +			compatible = "arm,cortex-a72";
+>  			reg = <0x101>;
+>  			enable-method = "psci";
+>  			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			#cooling-cells = <2>;
+> -			clocks = <&infracfg CLK_INFRA_CA57SEL>,
+> +			clocks = <&infracfg CLK_INFRA_CA72SEL>,
+>  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+>  			clock-names = "cpu", "intermediate";
+>  			operating-points-v2 = <&cluster1_opp>;
 
-On 3/1/19 9:47 AM, Ludovic Barre wrote:
-> From: Ludovic Barre <ludovic.barre@st.com>
-> 
-> This patch series adds support of sdmmc1 on:
-> -stm32h743i (boards: eval, disco)
-> -stm32mp1 (boards: ed1, dk1)
-> 
-> Ludovic Barre (7):
->    ARM: stm32: add AMBA support for stm32 family
->    ARM: dts: stm32: add sdmmc1 support on stm32h743
->    ARM: dts: stm32: add sdmmc1 support on stm32h743i eval board
->    ARM: dts: stm32: add sdmmc1 support on stm32h743i disco board
->    ARM: dts: stm32: add sdmmc1 support on stm32mp157c
->    ARM: dts: stm32: add sdmmc1 support on stm32mp157c ed1 board
->    ARM: dts: stm32: add sdmmc1 support on stm32mp157a dk1 board
-> 
->   arch/arm/boot/dts/stm32h743-pinctrl.dtsi  | 68 +++++++++++++++++++++++++++++++
->   arch/arm/boot/dts/stm32h743.dtsi          | 14 +++++++
->   arch/arm/boot/dts/stm32h743i-disco.dts    | 20 +++++++++
->   arch/arm/boot/dts/stm32h743i-eval.dts     | 23 ++++++++++-
->   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 68 +++++++++++++++++++++++++++++++
->   arch/arm/boot/dts/stm32mp157a-dk1.dts     | 20 +++++++++
->   arch/arm/boot/dts/stm32mp157c-ed1.dts     | 37 +++++++++++++++++
->   arch/arm/boot/dts/stm32mp157c.dtsi        | 14 +++++++
->   arch/arm/mach-stm32/Kconfig               |  5 +--
->   9 files changed, 264 insertions(+), 5 deletions(-)
-> 
-
-Series applied on stm32-next.
-
-Regards
-Alex
+Since CLK_INFRA_CA72SEL has been added in mt8173-clk.h , please review
+this patch. Thanks.
