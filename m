@@ -1,48 +1,40 @@
-Return-Path: <SRS0=qIkx=RS=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from vs10.datenmanufaktur-hosting.net ([213.160.73.65]:36220 "EHLO
-        vs81.iboxed.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726204AbfCOVWY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Mar 2019 17:22:24 -0400
-From: Alexander Kurz <akurz@blala.de>
-Subject: [PATCH 1/3] ARM: dts: i.MX50: Add i2c, mmc and spi aliases
-Date: Fri, 15 Mar 2019 21:14:21 +0000
-Message-Id: <20190315211423.11308-1-akurz@blala.de>
-Sender: devicetree-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Alexander Kurz <akurz@blala.de>
+Return-Path: <SRS0=1wp7=R5=linaro.org=rui.silva@kernel.org>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH v5 5/6] ARM: dts: imx7s-warp: add fxas21002c gyroscope
+Date: Tue, 26 Mar 2019 10:16:50 +0000
+Message-Id: <20190326101651.25056-6-rui.silva@linaro.org>
+In-Reply-To: <20190326101651.25056-1-rui.silva@linaro.org>
+References: <20190326101651.25056-1-rui.silva@linaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Using aliases, the devices will be enumerated properly.
+Add entry to enable the fxas21002c gyroscope in the warp7 board.
 
-Signed-off-by: Alexander Kurz <akurz@blala.de>
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- arch/arm/boot/dts/imx50.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/imx7s-warp.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.dtsi
-index ee1e3e8bf4ec..82e7acd7fc2a 100644
---- a/arch/arm/boot/dts/imx50.dtsi
-+++ b/arch/arm/boot/dts/imx50.dtsi
-@@ -26,11 +26,20 @@
- 		gpio3 = &gpio4;
- 		gpio4 = &gpio5;
- 		gpio5 = &gpio6;
-+		i2c0 = &i2c1;
-+		i2c1 = &i2c2;
-+		mmc0 = &esdhc1;
-+		mmc1 = &esdhc2;
-+		mmc2 = &esdhc3;
-+		mmc3 = &esdhc4;
- 		serial0 = &uart1;
- 		serial1 = &uart2;
- 		serial2 = &uart3;
- 		serial3 = &uart4;
- 		serial4 = &uart5;
-+		spi0 = &ecspi1;
-+		spi1 = &ecspi2;
-+		spi2 = &cspi;
+diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
+index 23431faecaf4..c7dd66828a90 100644
+--- a/arch/arm/boot/dts/imx7s-warp.dts
++++ b/arch/arm/boot/dts/imx7s-warp.dts
+@@ -209,6 +209,13 @@
+ 		compatible = "fsl,mpl3115";
+ 		reg = <0x60>;
  	};
++
++	gyroscope@20 {
++		compatible = "nxp,fxas21002c";
++		reg = <0x20>;
++		vdd-supply = <&reg_peri_3p15v>;
++		vddio-supply = <&reg_peri_3p15v>;
++	};
+ };
  
- 	cpus {
+ &sai1 {
 -- 
-2.11.0
+2.21.0
