@@ -1,61 +1,47 @@
-From: Nava kishore Manne <navam@xilinx.com>
-Subject: RE: [PATCH v4 6/6] dt-bindings: fpga: Add bindings for ZynqMP fpga
- driver
-Date: Tue, 26 Mar 2019 14:06:15 +0000
-Message-ID: <SN6PR02MB47194C1EEA9BDD8F3FE61B75C25F0@SN6PR02MB4719.namprd02.prod.outlook.com>
-References: <20190314140122.23372-1-nava.manne@xilinx.com>
- <20190314140122.23372-7-nava.manne@xilinx.com> <20190315235422.GA29658@bogus>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH 5/5] lib/vsprintf: Add %pfw conversion specifier for
+ printing fwnode names
+Date: Tue, 26 Mar 2019 16:06:33 +0200
+Message-ID: <20190326140633.GE7049@kuha.fi.intel.com>
+References: <20190322152930.16642-1-sakari.ailus@linux.intel.com>
+ <20190322152930.16642-6-sakari.ailus@linux.intel.com>
+ <20190322172114.GY9224@smile.fi.intel.com>
+ <20190324181745.vgckevapfwi7mul7@mara.localdomain>
+ <20190326131353.GY9224@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190315235422.GA29658@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190326131353.GY9224@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "atull@kernel.org" <atull@kernel.org>, "mdf@kernel.org" <mdf@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi,
 
-	Thanks for the response.
-Please find my response inline.
+On Tue, Mar 26, 2019 at 03:13:53PM +0200, Andy Shevchenko wrote:
+> > > > On ACPI based systems the resulting strings look like
+> > > > 
+> > > > 	\_SB.PCI0.CIO2.port@1.endpoint@0
+> > > > 
+> > > > where the nodes are separated by a dot (".") and the first three are
+> > > > ACPI device nodes and the latter two ACPI data nodes.
+> > > 
+> > > Do we support swnode here?
+> > 
+> > Good question. The swnodes have no hierarchy at the moment (they're only
+> > created for a struct device as a parent) and they do not have human-readable
+> > names. So I'd say it's not relevant right now. Should these two change,
+> > support for swnode could (and should) be added later on.
+> 
+> Heikki, what do you think about this?
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Tuesday, March 26, 2019 12:49 AM
-> To: Nava kishore Manne <navam@xilinx.com>
-> Cc: atull@kernel.org; mdf@kernel.org; mark.rutland@arm.com; Michal Simek
-> <michals@xilinx.com>; Rajan Vaja <RAJANV@xilinx.com>; Jolly Shah
-> <JOLLYS@xilinx.com>; linux-fpga@vger.kernel.org; devicetree@vger.kernel.o=
-rg;
-> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> chinnikishore369@gmail.com
-> Subject: Re: [PATCH v4 6/6] dt-bindings: fpga: Add bindings for ZynqMP fp=
-ga
-> driver
->=20
-> On Thu, Mar 14, 2019 at 07:31:22PM +0530, Nava kishore Manne wrote:
-> > Add documentation to describe Xilinx ZynqMP fpga driver bindings.
-> >
-> > Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
-> > ---
-> > Changes for v4:
-> > 		-Modified binding description as suggested by Moritz Fischer.
-> > Changes for v3:
-> >                 -Removed PCAP as a child node to the FW and Created
-> > 		 an independent node since PCAP driver is a consumer
-> > 		 not a provider.
->=20
-> Huh?
->=20
-> It was the fpga-regions that I suggested should perhaps be at the top-lev=
-el. As
-> long as pcap is a function exposed by the firmware it should be a child o=
-f it.
->=20
-Thanks for providing the clarification. Will address the above comments in =
-the next version.
+Well, the swnodes do have hierarchy. That was kind of the whole point
+of introducing them. They now can also be named using "name" property.
+See commit 344798206f171c5abea7ab1f9762fa526d7f539d.
 
-Regards,
-Navakishore.
+thanks,
+
+-- 
+heikki
