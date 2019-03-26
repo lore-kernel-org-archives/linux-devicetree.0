@@ -1,135 +1,126 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v5 0/8] phy: qcom-ufs: Enable regulators to be off in
- suspend
-Date: Tue, 26 Mar 2019 13:18:35 +0530
-Message-ID: <d90e86b9-a330-677c-a70a-d66139473f48@ti.com>
-References: <20190321171800.104681-1-evgreen@chromium.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [RFC PATCH v2 3/5] mtd: Add support for Hyperbus memory devices
+Date: Tue, 26 Mar 2019 10:51:23 +0300
+Message-ID: <02dfcf5d-f7f8-f33a-22b2-462ea92b0702@cogentembedded.com>
+References: <20190321174548.9288-1-vigneshr@ti.com>
+ <20190321174548.9288-4-vigneshr@ti.com>
+ <98e1e3ad-75d3-670f-bcf7-27389cc60a98@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190321171800.104681-1-evgreen@chromium.org>
+In-Reply-To: <98e1e3ad-75d3-670f-bcf7-27389cc60a98@cogentembedded.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@chromium.org>
-Cc: Stephen Boyd <swboyd@chromium.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, devicetree@vger.kernel.org, Pedro Sousa <pedrom.sousa@synopsys.com>, liwei <liwei213@huawei.com>, linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, Bart Van Assche <Bart.VanAssche@wdc.com>, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Subhash Jadavani <subhashj@codeaurora.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh+dt@kernel.org>, Avri Altman <avri.altman@wdc.com>, Mark Rutland <mark.rutland@arm.com>, James
+To: Vignesh Raghavendra <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tudor.ambarus@microchip.com, nsekhar@ti.com, Mason Yang <masonccyang@mxic.com.tw>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 25.03.2019 23:13, Sergei Shtylyov wrote:
 
-On 21/03/19 10:47 PM, Evan Green wrote:
-> The goal with this series is to enable shutting off regulators that power
-> UFS during system suspend.
+>> Cypress' Hyperbus is Low Signal Count, High Performance Double Data Rate
 > 
-> In "the good life" version of this, we'd just disable the regulators
-> in phy_poweroff() and be done with it. Unfortunately, that's not symmetric,
-> as regulators are not enabled during phy_poweron(). Ok, so you might think
-> we could just move the regulator enable and anything else that needs to
-> come along into phy_poweron(), so that we can then undo it all in
-> phy_poweroff(). That's where things get tricky.
+>     It's HyperBus, according to the spec...
 > 
-> The qcom-qmp-phy overloaded the phy_init() and phy_poweron() callbacks,
-> basically to mean "init phase 1" and "init phase 2". There are two phases
-> because they have this phy_reset bit outside of the phy (in the UFS
-> controller registers), and they need to make sure this bit is toggled at
-> specific points in the phy init sequence. So there's this implicit
-> sequence in the init dance between ufs-qcom.c and phy-qcom-qmp.c:
-> 1) ufs-qcom asserts the PHY reset bit.
-> 2) phy-qcom-qmp phy_init() does most of its initialization, but exits early.
-> 3) ufs-qcom deasserts the PHY reset bit.
-> 4) phy-qcom-qmp phy_poweron() finishes its initialization.
+>> Bus interface between a host system master and one or more slave
+>> interfaces. Hyperbus is used to connect microprocessor, microcontroller,
+>> or ASIC devices with random access NOR flash memory (called Hyperflash)
+>> or self refresh DRAM (called HyperRAM).
+>>
+>> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+>> signal and either Single-ended clock(3.0V parts) or Differential clock
+>> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+>> At bus level, it follows a separate protocol described in Hyperbus
+>> specification[1].
 > 
-> This init dance is very difficult to follow in the code (since it's split
-> between two drivers and not spelled out well), and arguably represents a
-> deficiency in the hardware description of these devices.
+>     HyperBus.
+>> Hyperflash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+>> to that of existing parallel NORs. Since Hyperbus is x8 DDR bus,
+>> its equivalent to x16 parallel NOR flash wrt bits per clock cycle. But
+>> Hyperbus operates at >166MHz frequencies.
+>> HyperRAM provides direct random read/write access to flash memory
+>> array.
+>>
+>> But, Hyperbus memory controllers seem to abstract implementation details
 > 
-> In this series I'm proposing tweaking the bindings for the Qualcomm
-> UFS controller and PHY. In it we expose a reset controller from the
-> UFS controller, that is then picked up and used from the PHY code.
-> With this, the phy code can be reorganized to complete its initialization
-> in a single function, removing the implicit two-phase overloading.
+>     HyperBus.
 > 
-> Then I can move most of the phy initialization, including enabling
-> the regulators, into phy_poweron(). Now, when phy_poweroff() is called,
-> the phy actually powers off. This finally disables the regulators
-> and allows me to save power in system suspend.
+>> and expose a simple MMIO interface to access connected flash.
+>>
+>> Add support for registering Hyperflash devices with MTD framework. MTD
 > 
-> Because the UFS PHY reset bit is now toggled in the PHY, rather
-> than in ufs-qcom, this also percolated to all other PHYs using
-> ufs-qcom, which from what I can see is just 8996.
+>     HyperFlash.
 > 
-> I removed the calls to phy_poweroff() during clock gating. This
-> was originally dialing down a clock or two, while leaving the phy powered.
-> I've now changed the semantics of phy_poweroff() to, well, actually power off.
-> This works great for userlands that have set UFS's spm_lvl to 5 (off) like
-> I have, but maybe changes power consumption for devices that have spm_lvl
-> set to 3. I could try to use phy_init() and phy_poweron() as the two
-> different possible transitions (fully off, and clocks off respectively),
-> but I'm not sure if it actually matters, and I like the idea that
-> phy_poweroff() really does power the thing off.
+>> maps framework along with CFI chip support framework are used to support
+>> communicating with flash.
+>>
+>> Framework is modelled along the lines of spi-nor framework. Hyperbus
 > 
-> Also, I don't have an 8996 device to test. If someone is able to test this
-> out and perhaps point out any (hopefully obvious) bugs in the 8996 portion,
-> I'd be grateful.
+>     HyperBus.
 > 
-> This patch is based atop phy-next.
+>> memory controller (HBMC) drivers calls hyperbus_register_device() to
+>> register a single Hyperflash device. Hyperflash core parses MMIO access
+> 
+>     HyperFlash.
+> 
+>> information from DT, sets up the map_info struct, probes CFI flash and
+>> registers it with MTD framework.
+>>
+>> Some HBMC masters need calibration/training sequence[3] to be carried
+>> out, in order for DLL inside the controller to lock, by reading a known
+>> string/pattern. This is done by repeatedly reading CFI Query
+>> Identification String. Calibration needs to be done before trying to detect
+>> flash as part of CFI flash probe.
+>>
+>> HyperRAM is not supported at the moment.
+>>
+>> Hyperbus specification can be found at[1]
+>> Hyperflash datasheet can be found at[2]
+> 
+>    HyperBus & HyperFlash.
+>   
+>> [1] https://www.cypress.com/file/213356/download
+>> [2] https://www.cypress.com/file/213346/download
+>> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+>>      Table 12-5741. HyperFlash Access Sequence
+>>
+>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> [...]
+>> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
+>> new file mode 100644
+>> index 000000000000..4c2876c367fc
+>> --- /dev/null
+>> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
+>> @@ -0,0 +1,183 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +//
+>> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+>> +// Author: Vignesh Raghavendra <vigneshr@ti.com>
+>> +
+>> +#include <linux/err.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mtd/hyperbus.h>
+>> +#include <linux/mtd/map.h>
+>> +#include <linux/mtd/mtd.h>
+>> +#include <linux/mtd/cfi.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/types.h>
+>> +
+>> +#define HYPERBUS_CALIB_COUNT 25
+> 
+>     As I said, this seems platform specific...
+> 
+> [...]
+>> +/* Default calibration routine for use by Hyperbus controller.
+> 
+>     No, there should be easy opt-out from the calibration method.
+> Currently, the driver will have to define its own calibrate method, even
+> if does't need any calibration...
 
-Merged the series except the dts patches.
+    Nevermind -- the method ptr can be NULL, of course, so there's easy opt-out...
 
-Thanks
-Kishon
-> 
-> Changes in v5:
-> - Updated tags
-> 
-> Changes in v4:
-> - Do reset_control_* unconditionally since null is handled (Stephen).
-> - Keep doing reset_control* unconditionally through refactor (Stephen).
-> 
-> Changes in v3:
-> - Refactor to only expose the reset controller in one change (Stephen).
-> - Add period to comment (Stephen).
-> - Reset err to 0 in ignored error case (Stephen).
-> - Add include of reset-controller.h (Stephen)
-> - Refactored to move reset control in a single commit (Stephen)
-> - Use no_pcs_sw_reset as an indicator of UFS reset in qmp-phy (Stephen).
-> - Assign ret = PTR_ERR() earlier, for better reuse (Stephen).
-> - Refactor init => poweron for all PHYs and UFS in one step (Stephen)
-> 
-> Changes in v2:
-> - Added resets to example (Stephen).
-> - Remove include of reset.h (Stephen)
-> - Fix error print of phy_power_on (Stephen)
-> - Comment for reset controller warnings on id != 0 (Stephen)
-> - Add static to ufs_qcom_reset_ops (Stephen).
-> - Use devm_* to get the reset (Stephen)
-> - Clear ufs_reset on error getting it
-> - Remove needless error print (Stephen)
-> - Use devm_ to get the reset (Stephen)
-> - Removed whitespace changes (Stephen)
-> 
-> Evan Green (8):
->   dt-bindings: ufs: Add #reset-cells for Qualcomm controllers
->   dt-bindings: phy-qcom-qmp: Add UFS PHY reset
->   dt-bindings: phy: qcom-ufs: Add resets property
->   arm64: dts: sdm845: Add UFS PHY reset
->   arm64: dts: msm8996: Add UFS PHY reset controller
->   scsi: ufs: qcom: Expose the reset controller for PHY
->   phy: qcom: Utilize UFS reset controller
->   phy: ufs-qcom: Refactor all init steps into phy_poweron
-> 
->  .../devicetree/bindings/phy/qcom-qmp-phy.txt  |   6 +-
->  .../devicetree/bindings/ufs/ufs-qcom.txt      |   5 +-
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |   3 +
->  arch/arm64/boot/dts/qcom/msm8996.dtsi         |   4 +-
->  arch/arm64/boot/dts/qcom/sdm845.dtsi          |   3 +
->  drivers/phy/qualcomm/phy-qcom-qmp.c           | 112 +++++++++--------
->  drivers/phy/qualcomm/phy-qcom-ufs-i.h         |   5 +-
->  drivers/phy/qualcomm/phy-qcom-ufs-qmp-14nm.c  |  25 +---
->  drivers/phy/qualcomm/phy-qcom-ufs-qmp-20nm.c  |  25 +---
->  drivers/phy/qualcomm/phy-qcom-ufs.c           |  57 ++++++---
->  drivers/scsi/ufs/Kconfig                      |   1 +
->  drivers/scsi/ufs/ufs-qcom.c                   | 114 +++++++++++-------
->  drivers/scsi/ufs/ufs-qcom.h                   |   4 +
->  13 files changed, 193 insertions(+), 171 deletions(-)
-> 
+[...]
+
+MBR, Sergei
