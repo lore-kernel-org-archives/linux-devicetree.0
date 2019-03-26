@@ -1,61 +1,65 @@
-From: Seiya Wang <seiya.wang@mediatek.com>
-Subject: Re: [PATCH v2 1/2] arm64: dts: mt8173: correct cpu type of cpu2 and
- cpu3 to cortex-a72
-Date: Tue, 26 Mar 2019 18:33:21 +0800
-Message-ID: <1553596401.24277.4.camel@mtksdaap41>
-References: <20190225065112.3400-1-seiya.wang@mediatek.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [PATCHv2 22/22] dt-bindings: tc358767: add IRQ & HPD support
+Date: Tue, 26 Mar 2019 12:31:46 +0200
+Message-ID: <20190326103146.24795-23-tomi.valkeinen@ti.com>
+References: <20190326103146.24795-1-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190225065112.3400-1-seiya.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190326103146.24795-1-tomi.valkeinen@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, Lucas Stach <l.stach@pengutronix.de>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, Philipp Zabel <p.zabel@pengutronix.de>, Andrey Smirnov <andrew.smirnov@gmail.com>, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Benoit Parrot <bparrot@ti.com>
+Cc: devicetree@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-02-25 at 14:51 +0800, Seiya Wang wrote:
-> The cpu type of cpu2 and cpu3 should be cortex-a72, not cortex-a57.
-> 
-> Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 44374c506a1c..99675c51577a 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -178,12 +178,12 @@
->  
->  		cpu2: cpu@100 {
->  			device_type = "cpu";
-> -			compatible = "arm,cortex-a57";
-> +			compatible = "arm,cortex-a72";
->  			reg = <0x100>;
->  			enable-method = "psci";
->  			cpu-idle-states = <&CPU_SLEEP_0>;
->  			#cooling-cells = <2>;
-> -			clocks = <&infracfg CLK_INFRA_CA57SEL>,
-> +			clocks = <&infracfg CLK_INFRA_CA72SEL>,
->  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
->  			clock-names = "cpu", "intermediate";
->  			operating-points-v2 = <&cluster1_opp>;
-> @@ -191,12 +191,12 @@
->  
->  		cpu3: cpu@101 {
->  			device_type = "cpu";
-> -			compatible = "arm,cortex-a57";
-> +			compatible = "arm,cortex-a72";
->  			reg = <0x101>;
->  			enable-method = "psci";
->  			cpu-idle-states = <&CPU_SLEEP_0>;
->  			#cooling-cells = <2>;
-> -			clocks = <&infracfg CLK_INFRA_CA57SEL>,
-> +			clocks = <&infracfg CLK_INFRA_CA72SEL>,
->  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
->  			clock-names = "cpu", "intermediate";
->  			operating-points-v2 = <&cluster1_opp>;
-
-Since CLK_INFRA_CA72SEL has been added in mt8173-clk.h , please review
-this patch. Thanks.
+QWRkIERUIHByb3BlcnRpZXMgbmVlZGVkIGZvciBJUlEgYW5kIEhQRCBzdXBwb3J0LgoKU2lnbmVk
+LW9mZi1ieTogVG9taSBWYWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KQ2M6IGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnCkNjOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgot
+LS0KCkEgcXVpY2sgc3VtbWFyeSBvZiB0YzM1ODc2NydzIEhQRC9HUElPIHN1cHBvcnQ6Cgp0YzM1
+ODc2NyBoYXMgdHdvIHBpbnMgdGhhdCBjYW4gYmUgdXNlZCBhcyBHUElPcy4gVGhvc2UgY2FuIGJl
+IHVzZWQgZm9yCkhQRCBieSBjb25maWd1cmluZyB0aGUgcGluIGFzIGlucHV0LiB0YzM1ODc2NyBz
+dXBwb3J0cyBIVyBkZXRlY3Rpb24gb2YgYQoic2hvcnQiIEhQRCBwdWxzZSAocHJvZ3JhbW1hYmxl
+IGxlbmd0aCkgd2hpY2ggY2FuIGJlIHVzZWQgdG8gZGV0ZWN0CkRpc3BsYXlQb3J0IElSUSBmcm9t
+IHRoZSBtb25pdG9yLiBBZmFpaywgdGhpcyBraW5kIG9mIHNob3J0IHB1bHNlCmRldGVjdGlvbiBp
+cyBub3QgcG9zc2libGUgd2l0aCBjb21tb24gR1BJT3MgZm91bmQgaW4gU29Dcy4KCldoaWxlIEkg
+dGhpbmsgdGhlIEhQRCBzdXBwb3J0IHdvcmtzIG9rLCBJJ20gdW5zdXJlIGFib3V0IHRoZSBEVCBi
+aW5kaW5nLgpJIGZpcnN0IHRyaWVkIGltcGxlbWVudGluZyB0aGUgSFBEIGFzIGEgZ3Bpb2NoaXAs
+IGJ1dCBmb3IgaW50ZXJydXB0cyBJCnRoZW4gbmVlZGVkIGlycWNoaXAsIGFuZCB0aGUgYW1vdW50
+IG9mIGNvZGUgc3RhcnRlZCB0byBpbmNyZWFzZSBhIGxvdC4KCkkgZGVjaWRlZCB0aGF0IGdwaW9j
+aGlwICsgaXJxY2hpcCBqdXN0IGlzbid0IHdvcnRoIHRoZSBlZmZvcnQgYW5kCmNvbXBsZXhpdHkg
+aGVyZSwgYXMgbW9zdCBsaWtlbHkgdGhlIHBpbnMgd2lsbCBldmVyIGJlIHVzZWQgZm9yIEhQRC4K
+ClNvLCBoZXJlIEkgaGF2ZSBhIHNpbXBsZSAnaHBkLW51bScgRFQgcHJvcGVydHkgdG8gbWFyayB3
+aGljaCAoaWYgYW55KSBvZgp0aGUgdHdvIEdQSU8gcGlucyBpcyB1c2VkIGZvciBIUEQuCgpTdWdn
+ZXN0aW9ucyB3ZWxjb21lLgoKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRn
+ZS90b3NoaWJhLHRjMzU4NzY3LnR4dCAgICB8IDMgKysrCiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNl
+cnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvYnJpZGdlL3Rvc2hpYmEsdGMzNTg3NjcudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Rvc2hpYmEsdGMzNTg3NjcudHh0CmluZGV4
+IGUzZjZhYTZhMjE0ZC4uNzljNzFlN2ViNzFmIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdG9zaGliYSx0YzM1ODc2Ny50eHQKKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Rvc2hp
+YmEsdGMzNTg3NjcudHh0CkBAIC0xMiw2ICsxMiw5IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6CiAg
+ICAgICAgICAgICAgICAgICAgKGFjdGl2ZSBoaWdoIHNodXRkb3duIGlucHV0KQogIC0gcmVzZXQt
+Z3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgUlNUWCBwaW4KICAg
+ICAgICAgICAgICAgICAoYWN0aXZlIGxvdyBzeXN0ZW0gcmVzZXQpCisgLSBpbnRlcnJ1cHQtcGFy
+ZW50OiBwaGFuZGxlIG9mIHRoZSBwYXJlbnQgaW50ZXJydXB0IGNvbnRyb2xsZXIKKyAtIGludGVy
+cnVwdHM6IGludGVycnVwdCBzcGVjaWZpZXIgZm9yIHRoZSBicmlkZ2UncyBpbnRlcnJ1cHQKKyAt
+IGhwZC1udW06IFRDMzU4NzY3IEdQSU8gcGluIG51bWJlciB0byB3aGljaCBIUEQgaXMgY29ubmVj
+dGVkIHRvICgwIG9yIDEpCiAgLSBwb3J0czogdGhlIHBvcnRzIG5vZGUgY2FuIGNvbnRhaW4gdmlk
+ZW8gaW50ZXJmYWNlIHBvcnQgbm9kZXMgdG8gY29ubmVjdAogICAgdG8gYSBEUEkvRFNJIHNvdXJj
+ZSBhbmQgdG8gYW4gZURQL0RQIHNpbmsgYWNjb3JkaW5nIHRvIFsxXVsyXToKICAgICAtIHBvcnRA
+MDogRFNJIGlucHV0IHBvcnQKLS0gClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtr
+YWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUy
+MS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
