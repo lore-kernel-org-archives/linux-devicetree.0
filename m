@@ -1,52 +1,32 @@
-From: Mans Rullgard <mans@mansr.com>
-Subject: [PATCH] ARM: dts: sun7i: fix typos in uart pin mux
-Date: Tue, 26 Mar 2019 11:29:02 +0000
-Message-ID: <20190326112902.30080-1-mans@mansr.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH] dt-bindings: reset: meson-g12a: Add missing USB2 PHY
+ resets
+Date: Tue, 26 Mar 2019 12:33:08 +0100
+Message-ID: <1553599988.6854.5.camel@pengutronix.de>
+References: <20190304104916.3937-1-narmstrong@baylibre.com>
+         <1553078122.7071.6.camel@pengutronix.de> <7hbm2234i3.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7hbm2234i3.fsf@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Werner=20B=C3=B6llmann?= <Werner.Boellmann@fh-dortmund.de>
+To: Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The recently added uart mux options had a few typos.  Fix them.
+Hi Kevin,
 
-Fixes: 43d0fe112585 ("ARM: dts: sun7i: add pinctrl for missing uart mux options")
-Reported-by: Werner Böllmann <Werner.Boellmann@fh-dortmund.de>
-Signed-off-by: Mans Rullgard <mans@mansr.com>
----
- arch/arm/boot/dts/sun7i-a20.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On Fri, 2019-03-22 at 15:53 -0700, Kevin Hilman wrote:
+[...]
+> Could ou make a immtable tag for this in your tree?  This is needed for
+> some upcoming DT users we'd like to queue for the next cycle.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 9f8bd8f3164b..9234cf8f72bf 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -1006,19 +1006,19 @@
- 
- 			/omit-if-no-ref/
- 			uart1_cts_rts_pa_pins: uart1-cts-rts-pa-pins {
--				pins = "PA12", "PIA13";
--				function = "uart2";
-+				pins = "PA12", "PA13";
-+				function = "uart1";
- 			};
- 
- 			/omit-if-no-ref/
- 			uart2_pa_pins: uart2-pa-pins {
--				pins = "PIA2", "PIA3";
-+				pins = "PA2", "PA3";
- 				function = "uart2";
- 			};
- 
- 			/omit-if-no-ref/
- 			uart2_cts_rts_pa_pins: uart2-cts-rts-pa-pins {
--				pins = "PA0", "PIA1";
-+				pins = "PA0", "PA1";
- 				function = "uart2";
- 			};
- 
--- 
-2.21.0
+I have just sent a reset/fixes pull request including this patch.
+Once that gets merged, you can either wait for the next -rc that
+includes it or pull in 
+    git://git.pengutronix.de/pza/linux reset/meson-g12a
+which is just the first patch of the two.
+
+regards
+Philipp
