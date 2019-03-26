@@ -1,36 +1,50 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 1/1] arm64: dts: renesas: use extended audio dmac register
-Date: Tue, 26 Mar 2019 11:09:45 +0100
-Message-ID: <CAMuHMdUOcPhy5D-RagprwZkqOOgNt+4bGfSLQzydydHBOt76kQ@mail.gmail.com>
-References: <20190326095826.4987-1-jiada_wang@mentor.com> <20190326095826.4987-2-jiada_wang@mentor.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 0/7] ARM: dts: stm32: add support of sdmmc1 on stm32
+Date: Tue, 26 Mar 2019 11:22:42 +0100
+Message-ID: <5178f61f-bb8d-f30c-68cd-0bd8d0889a34@st.com>
+References: <1551430068-9456-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190326095826.4987-2-jiada_wang@mentor.com>
+In-Reply-To: <1551430068-9456-1-git-send-email-ludovic.Barre@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiada Wang <jiada_wang@mentor.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Ludovic Barre <ludovic.Barre@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 10:59 AM Jiada Wang <jiada_wang@mentor.com> wrote:
-> Basic audio dmac register only supports busif from 0 to 3,
-> in order to use busif4 ~ busif7, extended audio dmac register
-> need to be used.
->
-> This patch updates H3 (= r8a7795), M3-W (= r8a7796) and
-> M3-N (=r8a77965) to use extended audio dmac register set.
->
-> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+Hi Ludovic
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On 3/1/19 9:47 AM, Ludovic Barre wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
+> 
+> This patch series adds support of sdmmc1 on:
+> -stm32h743i (boards: eval, disco)
+> -stm32mp1 (boards: ed1, dk1)
+> 
+> Ludovic Barre (7):
+>    ARM: stm32: add AMBA support for stm32 family
+>    ARM: dts: stm32: add sdmmc1 support on stm32h743
+>    ARM: dts: stm32: add sdmmc1 support on stm32h743i eval board
+>    ARM: dts: stm32: add sdmmc1 support on stm32h743i disco board
+>    ARM: dts: stm32: add sdmmc1 support on stm32mp157c
+>    ARM: dts: stm32: add sdmmc1 support on stm32mp157c ed1 board
+>    ARM: dts: stm32: add sdmmc1 support on stm32mp157a dk1 board
+> 
+>   arch/arm/boot/dts/stm32h743-pinctrl.dtsi  | 68 +++++++++++++++++++++++++++++++
+>   arch/arm/boot/dts/stm32h743.dtsi          | 14 +++++++
+>   arch/arm/boot/dts/stm32h743i-disco.dts    | 20 +++++++++
+>   arch/arm/boot/dts/stm32h743i-eval.dts     | 23 ++++++++++-
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 68 +++++++++++++++++++++++++++++++
+>   arch/arm/boot/dts/stm32mp157a-dk1.dts     | 20 +++++++++
+>   arch/arm/boot/dts/stm32mp157c-ed1.dts     | 37 +++++++++++++++++
+>   arch/arm/boot/dts/stm32mp157c.dtsi        | 14 +++++++
+>   arch/arm/mach-stm32/Kconfig               |  5 +--
+>   9 files changed, 264 insertions(+), 5 deletions(-)
+> 
 
-Gr{oetje,eeting}s,
+Series applied on stm32-next.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards
+Alex
