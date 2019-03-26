@@ -1,126 +1,89 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [RFC PATCH v2 3/5] mtd: Add support for Hyperbus memory devices
-Date: Tue, 26 Mar 2019 10:51:23 +0300
-Message-ID: <02dfcf5d-f7f8-f33a-22b2-462ea92b0702@cogentembedded.com>
-References: <20190321174548.9288-1-vigneshr@ti.com>
- <20190321174548.9288-4-vigneshr@ti.com>
- <98e1e3ad-75d3-670f-bcf7-27389cc60a98@cogentembedded.com>
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: Re: [PATCH v6 0/3] Stingray USB PHY driver support
+Date: Tue, 26 Mar 2019 13:47:41 +0530
+Message-ID: <CABe79T4zZWA8f3QZzc3xYGQkae-CvXBbMHMN5_b5nDYh86vX3g@mail.gmail.com>
+References: <1552986944-3398-1-git-send-email-srinath.mannam@broadcom.com>
+ <7490f894-3c0b-c7cd-5ff0-4eea6ea2c199@broadcom.com> <1f910861-7d3b-63ad-da79-9515eae2b230@gmail.com>
+ <90db2ec9-c960-8cf5-c5d3-1e8e85d6ad60@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <98e1e3ad-75d3-670f-bcf7-27389cc60a98@cogentembedded.com>
-Content-Language: en-US
+In-Reply-To: <90db2ec9-c960-8cf5-c5d3-1e8e85d6ad60@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh Raghavendra <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tudor.ambarus@microchip.com, nsekhar@ti.com, Mason Yang <masonccyang@mxic.com.tw>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <scott.branden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 25.03.2019 23:13, Sergei Shtylyov wrote:
+On Tue, Mar 26, 2019 at 1:00 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+>
+>
+> On 22/03/19 10:12 PM, Florian Fainelli wrote:
+> > On 3/19/19 11:38 AM, Scott Branden wrote:
+> >> Thanks Srinath and Rob - patch series looks good now.
+> >>
+> >> patch series,
+> >>
+> >> Acked-by: Scott Branden <scott.branden@broadcom.com>
+> >>
+> >
+> > Kishon, can you let me know when you apply patches 1 and 2 so I can
+> > queue up patch 3 for inclusion the 5.2 ARM SoC pull request? Thanks!
+>
+> merged the dt-binding and sr-usb driver, thanks.
 
->> Cypress' Hyperbus is Low Signal Count, High Performance Double Data Rate
-> 
->     It's HyperBus, according to the spec...
-> 
->> Bus interface between a host system master and one or more slave
->> interfaces. Hyperbus is used to connect microprocessor, microcontroller,
->> or ASIC devices with random access NOR flash memory (called Hyperflash)
->> or self refresh DRAM (called HyperRAM).
->>
->> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
->> signal and either Single-ended clock(3.0V parts) or Differential clock
->> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
->> At bus level, it follows a separate protocol described in Hyperbus
->> specification[1].
-> 
->     HyperBus.
->> Hyperflash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
->> to that of existing parallel NORs. Since Hyperbus is x8 DDR bus,
->> its equivalent to x16 parallel NOR flash wrt bits per clock cycle. But
->> Hyperbus operates at >166MHz frequencies.
->> HyperRAM provides direct random read/write access to flash memory
->> array.
->>
->> But, Hyperbus memory controllers seem to abstract implementation details
-> 
->     HyperBus.
-> 
->> and expose a simple MMIO interface to access connected flash.
->>
->> Add support for registering Hyperflash devices with MTD framework. MTD
-> 
->     HyperFlash.
-> 
->> maps framework along with CFI chip support framework are used to support
->> communicating with flash.
->>
->> Framework is modelled along the lines of spi-nor framework. Hyperbus
-> 
->     HyperBus.
-> 
->> memory controller (HBMC) drivers calls hyperbus_register_device() to
->> register a single Hyperflash device. Hyperflash core parses MMIO access
-> 
->     HyperFlash.
-> 
->> information from DT, sets up the map_info struct, probes CFI flash and
->> registers it with MTD framework.
->>
->> Some HBMC masters need calibration/training sequence[3] to be carried
->> out, in order for DLL inside the controller to lock, by reading a known
->> string/pattern. This is done by repeatedly reading CFI Query
->> Identification String. Calibration needs to be done before trying to detect
->> flash as part of CFI flash probe.
->>
->> HyperRAM is not supported at the moment.
->>
->> Hyperbus specification can be found at[1]
->> Hyperflash datasheet can be found at[2]
-> 
->    HyperBus & HyperFlash.
->   
->> [1] https://www.cypress.com/file/213356/download
->> [2] https://www.cypress.com/file/213346/download
->> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
->>      Table 12-5741. HyperFlash Access Sequence
->>
->> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> [...]
->> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
->> new file mode 100644
->> index 000000000000..4c2876c367fc
->> --- /dev/null
->> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
->> @@ -0,0 +1,183 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +//
->> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
->> +// Author: Vignesh Raghavendra <vigneshr@ti.com>
->> +
->> +#include <linux/err.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/mtd/hyperbus.h>
->> +#include <linux/mtd/map.h>
->> +#include <linux/mtd/mtd.h>
->> +#include <linux/mtd/cfi.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/types.h>
->> +
->> +#define HYPERBUS_CALIB_COUNT 25
-> 
->     As I said, this seems platform specific...
-> 
-> [...]
->> +/* Default calibration routine for use by Hyperbus controller.
-> 
->     No, there should be easy opt-out from the calibration method.
-> Currently, the driver will have to define its own calibrate method, even
-> if does't need any calibration...
+Thanks a lot Kishon.
 
-    Nevermind -- the method ptr can be NULL, of course, so there's easy opt-out...
-
-[...]
-
-MBR, Sergei
+Regards,
+Srinath.
+>
+> -Kishon
+> >
+> >>
+> >> On 2019-03-19 2:15 a.m., Srinath Mannam wrote:
+> >>> These patches add Stingray USB PHY driver and its corresponding
+> >>> DT nodes with documentation.
+> >>>
+> >>> This patch set is based on Linux-5.0-rc2.
+> >>>
+> >>> Changes from v5:
+> >>>    - Removed redundant address and size cells in DT nodes.
+> >>>
+> >>> Changes from v4:
+> >>>    - Addressed Rob Herring review comments
+> >>>       - Removed child nodes and added #phy-cells 1
+> >>>       - Added xlate function to get phy using phandle argument.
+> >>>
+> >>> Changes from v3:
+> >>>    - Addressed Rob Herring review comments
+> >>>       - Changed compatible strings.
+> >>>       - updated driver based on new compatible strings.
+> >>>
+> >>> Changes from v2:
+> >>>    - Addressed Kishon review comments
+> >>>    - Updated patchset to Linux-5.0-rc2
+> >>>
+> >>> Changes from v1:
+> >>>    - Addressed Kishon review comments
+> >>>    - phy init call return value handle
+> >>>    Srinath Mannam (3):
+> >>>    dt-bindings: phy: Add Stingray USB PHY binding document
+> >>>    phy: sr-usb: Add Stingray USB PHY driver
+> >>>    arm64: dts: Add USB DT nodes for Stingray SoC
+> >>>
+> >>>   .../bindings/phy/brcm,stingray-usb-phy.txt         |  32 ++
+> >>>   .../boot/dts/broadcom/stingray/stingray-usb.dtsi   |  72 ++++
+> >>>   .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   1 +
+> >>>   drivers/phy/broadcom/Kconfig                       |  11 +
+> >>>   drivers/phy/broadcom/Makefile                      |   1 +
+> >>>   drivers/phy/broadcom/phy-bcm-sr-usb.c              | 393
+> >>> +++++++++++++++++++++
+> >>>   6 files changed, 510 insertions(+)
+> >>>   create mode 100644
+> >>> Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> >>>   create mode 100644
+> >>> arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
+> >>>   create mode 100644 drivers/phy/broadcom/phy-bcm-sr-usb.c
+> >>>
+> >
+> >
