@@ -1,137 +1,49 @@
-Return-Path: <SRS0=1wp7=R5=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v5 3/6] iio: gyro: fxas21002c: add i2c driver
-Date: Tue, 26 Mar 2019 10:16:48 +0000
-Message-Id: <20190326101651.25056-4-rui.silva@linaro.org>
-In-Reply-To: <20190326101651.25056-1-rui.silva@linaro.org>
-References: <20190326101651.25056-1-rui.silva@linaro.org>
+Return-Path: <SRS0=u60/=R5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:42844 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726111AbfCZRmA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 Mar 2019 13:42:00 -0400
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH] ARM: dts: Fix dcan clkctrl clock for am3
+Date: Tue, 26 Mar 2019 10:41:56 -0700
+Message-Id: <20190326174156.35612-1-tony@atomide.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Tero Kristo <t-kristo@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add the real driver to talk over i2c and use the fxas21002c core
-for the main tasks.
+We must not use legacy clock defines for dts clckctrl clocks as the offsets
+will be wrong.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Fixes: 87fc89ced3a7 ("ARM: dts: am335x: Move l4 child devices to probe them with ti-sysc")
+Cc: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- drivers/iio/gyro/Kconfig          |  6 +++
- drivers/iio/gyro/Makefile         |  1 +
- drivers/iio/gyro/fxas21002c_i2c.c | 69 +++++++++++++++++++++++++++++++
- 3 files changed, 76 insertions(+)
- create mode 100644 drivers/iio/gyro/fxas21002c_i2c.c
+ arch/arm/boot/dts/am33xx-l4.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/gyro/Kconfig b/drivers/iio/gyro/Kconfig
-index cfd2cf44bac8..71b6552ee06b 100644
---- a/drivers/iio/gyro/Kconfig
-+++ b/drivers/iio/gyro/Kconfig
-@@ -77,6 +77,8 @@ config FXAS21002C
-        tristate "NXP FXAS21002C Gyro Sensor"
-        select IIO_BUFFER
-        select IIO_TRIGGERED_BUFFER
-+       select FXAS21002C_I2C if (I2C)
-+       depends on I2C
-        help
-          Say yes here to build support for NXP FXAS21002C Tri-axis Gyro
-          Sensor driver connected via I2C or SPI.
-@@ -84,6 +86,10 @@ config FXAS21002C
-          This driver can also be built as a module.  If so, the module
-          will be called fxas21002c_i2c or fxas21002c_spi.
- 
-+config FXAS21002C_I2C
-+       tristate
-+       select REGMAP_I2C
-+
- config HID_SENSOR_GYRO_3D
- 	depends on HID_SENSOR_HUB
- 	select IIO_BUFFER
-diff --git a/drivers/iio/gyro/Makefile b/drivers/iio/gyro/Makefile
-index 247dc600a602..adc18a5eb283 100644
---- a/drivers/iio/gyro/Makefile
-+++ b/drivers/iio/gyro/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_BMG160) += bmg160_core.o
- obj-$(CONFIG_BMG160_I2C) += bmg160_i2c.o
- obj-$(CONFIG_BMG160_SPI) += bmg160_spi.o
- obj-$(CONFIG_FXAS21002C) += fxas21002c_core.o
-+obj-$(CONFIG_FXAS21002C_I2C) += fxas21002c_i2c.o
- 
- obj-$(CONFIG_HID_SENSOR_GYRO_3D) += hid-sensor-gyro-3d.o
- 
-diff --git a/drivers/iio/gyro/fxas21002c_i2c.c b/drivers/iio/gyro/fxas21002c_i2c.c
-new file mode 100644
-index 000000000000..a7807fd97483
---- /dev/null
-+++ b/drivers/iio/gyro/fxas21002c_i2c.c
-@@ -0,0 +1,69 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for NXP FXAS21002C Gyroscope - I2C
-+ *
-+ * Copyright (C) 2018 Linaro Ltd.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+
-+#include "fxas21002c.h"
-+
-+static const struct regmap_config fxas21002c_regmap_i2c_conf = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = FXAS21002C_REG_CTRL3,
-+};
-+
-+static int fxas21002c_i2c_probe(struct i2c_client *i2c)
-+{
-+	struct regmap *regmap;
-+
-+	regmap = devm_regmap_init_i2c(i2c, &fxas21002c_regmap_i2c_conf);
-+	if (IS_ERR(regmap)) {
-+		dev_err(&i2c->dev, "Failed to register i2c regmap: %ld\n",
-+			PTR_ERR(regmap));
-+		return PTR_ERR(regmap);
-+	}
-+
-+	return fxas21002c_core_probe(&i2c->dev, regmap, i2c->irq, i2c->name);
-+}
-+
-+static int fxas21002c_i2c_remove(struct i2c_client *i2c)
-+{
-+	fxas21002c_core_remove(&i2c->dev);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id fxas21002c_i2c_id[] = {
-+	{ "fxas21002c", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, fxas21002c_i2c_id);
-+
-+static const struct of_device_id fxas21002c_i2c_of_match[] = {
-+	{ .compatible = "nxp,fxas21002c", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, fxas21002c_i2c_of_match);
-+
-+static struct i2c_driver fxas21002c_i2c_driver = {
-+	.driver = {
-+		.name = "fxas21002c_i2c",
-+		.pm = &fxas21002c_pm_ops,
-+		.of_match_table = fxas21002c_i2c_of_match,
-+	},
-+	.probe_new	= fxas21002c_i2c_probe,
-+	.remove		= fxas21002c_i2c_remove,
-+	.id_table	= fxas21002c_i2c_id,
-+};
-+module_i2c_driver(fxas21002c_i2c_driver);
-+
-+MODULE_AUTHOR("Rui Miguel Silva <rui.silva@linaro.org>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("FXAS21002C I2C Gyro driver");
+diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+--- a/arch/arm/boot/dts/am33xx-l4.dtsi
++++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+@@ -1762,7 +1762,7 @@
+ 			reg = <0xcc000 0x4>;
+ 			reg-names = "rev";
+ 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
+-			clocks = <&l4ls_clkctrl AM3_D_CAN0_CLKCTRL 0>;
++			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN0_CLKCTRL 0>;
+ 			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+@@ -1785,7 +1785,7 @@
+ 			reg = <0xd0000 0x4>;
+ 			reg-names = "rev";
+ 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
+-			clocks = <&l4ls_clkctrl AM3_D_CAN1_CLKCTRL 0>;
++			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN1_CLKCTRL 0>;
+ 			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
 -- 
 2.21.0
