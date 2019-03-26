@@ -1,89 +1,50 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: Re: [PATCH v6 0/3] Stingray USB PHY driver support
-Date: Tue, 26 Mar 2019 13:47:41 +0530
-Message-ID: <CABe79T4zZWA8f3QZzc3xYGQkae-CvXBbMHMN5_b5nDYh86vX3g@mail.gmail.com>
-References: <1552986944-3398-1-git-send-email-srinath.mannam@broadcom.com>
- <7490f894-3c0b-c7cd-5ff0-4eea6ea2c199@broadcom.com> <1f910861-7d3b-63ad-da79-9515eae2b230@gmail.com>
- <90db2ec9-c960-8cf5-c5d3-1e8e85d6ad60@ti.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: WARNING: bad unlock balance detected! (3)
+Date: Tue, 26 Mar 2019 09:30:18 +0100
+Message-ID: <CACT4Y+ZWY973sS7645uo8gNsU+wOddutZttXzYc9DjvqfPjqgA@mail.gmail.com>
+References: <0000000000003749360584c395ba@google.com> <e3d9d95fd07502cccf8ef97ba7b2e2adb4eefbb3.camel@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <90db2ec9-c960-8cf5-c5d3-1e8e85d6ad60@ti.com>
+In-Reply-To: <e3d9d95fd07502cccf8ef97ba7b2e2adb4eefbb3.camel@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <scott.branden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: syzbot <syzbot+f3e3434787332dfc1c47@syzkaller.appspotmail.com>, David Miller <davem@davemloft.net>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>, linux-amlogic@lists.infradead.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev <netdev@vger.kernel.org>, robh+dt@kernel.org, syzkaller-bugs <syzkaller-bugs@googlegroups.com>, Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 1:00 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+On Mon, Mar 25, 2019 at 12:54 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
 >
->
->
-> On 22/03/19 10:12 PM, Florian Fainelli wrote:
-> > On 3/19/19 11:38 AM, Scott Branden wrote:
-> >> Thanks Srinath and Rob - patch series looks good now.
-> >>
-> >> patch series,
-> >>
-> >> Acked-by: Scott Branden <scott.branden@broadcom.com>
-> >>
+> On Sat, 2019-03-23 at 07:14 -0700, syzbot wrote:
+> > syzbot has bisected this bug to:
 > >
-> > Kishon, can you let me know when you apply patches 1 and 2 so I can
-> > queue up patch 3 for inclusion the 5.2 ARM SoC pull request? Thanks!
+> > commit ec01fb69ac8034ad6e839b31f9df167a110f868b
+> > Author: Jerome Brunet <jbrunet@baylibre.com>
+> > Date:   Wed Jan 16 17:59:47 2019 +0000
+> >
+> >      arm64: dts: meson: s400: fix emmc maximum rate
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10afb7cf200000
+> > start commit:   065b6c4c Merge tag 'devicetree-for-5.1' of git://git.kerne..
+> > git tree:       upstream
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=12afb7cf200000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=14afb7cf200000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=ea4067c9a08ae046
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=f3e3434787332dfc1c47
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a10577200000
+> >
+> > Reported-by: syzbot+f3e3434787332dfc1c47@syzkaller.appspotmail.com
+> > Fixes: ec01fb69ac80 ("arm64: dts: meson: s400: fix emmc maximum rate")
+> >
+> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 >
-> merged the dt-binding and sr-usb driver, thanks.
+> Hi David,
+>
+> I'm not sure I understand what the problem reported is but I don't think a DT
+> patch could be the cause of a locking issue on x86.
+>
+> If I missed something, feel free to let me know.
 
-Thanks a lot Kishon.
+Hi Jerome,
 
-Regards,
-Srinath.
->
-> -Kishon
-> >
-> >>
-> >> On 2019-03-19 2:15 a.m., Srinath Mannam wrote:
-> >>> These patches add Stingray USB PHY driver and its corresponding
-> >>> DT nodes with documentation.
-> >>>
-> >>> This patch set is based on Linux-5.0-rc2.
-> >>>
-> >>> Changes from v5:
-> >>>    - Removed redundant address and size cells in DT nodes.
-> >>>
-> >>> Changes from v4:
-> >>>    - Addressed Rob Herring review comments
-> >>>       - Removed child nodes and added #phy-cells 1
-> >>>       - Added xlate function to get phy using phandle argument.
-> >>>
-> >>> Changes from v3:
-> >>>    - Addressed Rob Herring review comments
-> >>>       - Changed compatible strings.
-> >>>       - updated driver based on new compatible strings.
-> >>>
-> >>> Changes from v2:
-> >>>    - Addressed Kishon review comments
-> >>>    - Updated patchset to Linux-5.0-rc2
-> >>>
-> >>> Changes from v1:
-> >>>    - Addressed Kishon review comments
-> >>>    - phy init call return value handle
-> >>>    Srinath Mannam (3):
-> >>>    dt-bindings: phy: Add Stingray USB PHY binding document
-> >>>    phy: sr-usb: Add Stingray USB PHY driver
-> >>>    arm64: dts: Add USB DT nodes for Stingray SoC
-> >>>
-> >>>   .../bindings/phy/brcm,stingray-usb-phy.txt         |  32 ++
-> >>>   .../boot/dts/broadcom/stingray/stingray-usb.dtsi   |  72 ++++
-> >>>   .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   1 +
-> >>>   drivers/phy/broadcom/Kconfig                       |  11 +
-> >>>   drivers/phy/broadcom/Makefile                      |   1 +
-> >>>   drivers/phy/broadcom/phy-bcm-sr-usb.c              | 393
-> >>> +++++++++++++++++++++
-> >>>   6 files changed, 510 insertions(+)
-> >>>   create mode 100644
-> >>> Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
-> >>>   create mode 100644
-> >>> arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
-> >>>   create mode 100644 drivers/phy/broadcom/phy-bcm-sr-usb.c
-> >>>
-> >
-> >
+I think you are right. It seems that other unrelated kernel bugs have
+diverged bisection into the wrong direction.
