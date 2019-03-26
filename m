@@ -1,66 +1,49 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH v2 3/4] ARM: dts: da850-evm: enable cpufreq
-Date: Tue, 26 Mar 2019 09:15:53 -0500
-Message-ID: <CAHCN7xJLp37dkpTR=ehBntQwD+s5G7M6srmKL-gYEmgDQLv6uw@mail.gmail.com>
-References: <20190322133105.5945-1-brgl@bgdev.pl> <20190322133105.5945-4-brgl@bgdev.pl>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 5/5] lib/vsprintf: Add %pfw conversion specifier for
+ printing fwnode names
+Date: Tue, 26 Mar 2019 16:30:21 +0200
+Message-ID: <20190326143021.GE9224@smile.fi.intel.com>
+References: <20190322152930.16642-1-sakari.ailus@linux.intel.com>
+ <20190322152930.16642-6-sakari.ailus@linux.intel.com>
+ <20190322172114.GY9224@smile.fi.intel.com>
+ <20190324181745.vgckevapfwi7mul7@mara.localdomain>
+ <20190326131353.GY9224@smile.fi.intel.com>
+ <20190326140633.GE7049@kuha.fi.intel.com>
+ <20190326141243.g2x44v65npw4yhw5@paasikivi.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190322133105.5945-4-brgl@bgdev.pl>
+Content-Disposition: inline
+In-Reply-To: <20190326141243.g2x44v65npw4yhw5@paasikivi.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 8:31 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Enable cpufreq-dt support for da850-evm. The cvdd is supplied by the
-> tps6507 pmic with configurable output voltage, so all operating points
-> can be enabled.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  arch/arm/boot/dts/da850-evm.dts | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-> index f04bc3e15332..a0a1b3dccf37 100644
-> --- a/arch/arm/boot/dts/da850-evm.dts
-> +++ b/arch/arm/boot/dts/da850-evm.dts
-> @@ -191,6 +191,18 @@
->         };
->  };
->
-> +&cpu {
-> +       cpu-supply = <&vdcdc3_reg>;
-> +};
-> +
-> +&opp_375 {
-> +       status = "okay";
-> +};
-> +
-> +&opp_456 {
-> +       status = "okay";
-> +};
+On Tue, Mar 26, 2019 at 04:12:43PM +0200, Sakari Ailus wrote:
+> On Tue, Mar 26, 2019 at 04:06:33PM +0200, Heikki Krogerus wrote:
+> > On Tue, Mar 26, 2019 at 03:13:53PM +0200, Andy Shevchenko wrote:
 
-I pulled part number for the processor used in the da850evm that Logic
-PD produces, and it shows a imit of 375MHz.  I cross-referenced the
-processor part number with the description from a distributor, and the
-part number also lists 375MHz, so I think we should leave 456
-disabled.
+> > > > > Do we support swnode here?
+> > > > 
+> > > > Good question. The swnodes have no hierarchy at the moment (they're only
+> > > > created for a struct device as a parent) and they do not have human-readable
+> > > > names. So I'd say it's not relevant right now. Should these two change,
+> > > > support for swnode could (and should) be added later on.
+> > > 
+> > > Heikki, what do you think about this?
+> > 
+> > Well, the swnodes do have hierarchy. That was kind of the whole point
+> > of introducing them. They now can also be named using "name" property.
+> > See commit 344798206f171c5abea7ab1f9762fa526d7f539d.
+> 
+> Right; I saw the function after initially replying to Andy but I missed
+> where the node name came from. :-) Now I know...
+> 
+> I can add support for swnode, too, if you like.
 
-adam
-> +
->  &sata {
->         status = "okay";
->  };
-> --
-> 2.20.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Definitely!
+
+-- 
+With Best Regards,
+Andy Shevchenko
