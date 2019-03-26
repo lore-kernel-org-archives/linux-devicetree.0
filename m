@@ -1,42 +1,38 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v2 0/6] Add nvmem support on STM32
-Date: Tue, 26 Mar 2019 13:27:58 +0100
-Message-ID: <694a9e17-c864-bc11-6fdc-8f9f67e30e7c@st.com>
-References: <1551349196-8956-1-git-send-email-fabrice.gasnier@st.com>
+From: Andreas Klinger <ak@it-klinger.de>
+Subject: [PATCH 0/2] transform devantech-srf04.txt into yaml format
+Date: Tue, 26 Mar 2019 13:30:45 +0100
+Message-ID: <20190326123044.putlbpnkecsley5q@arbad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551349196-8956-1-git-send-email-fabrice.gasnier@st.com>
-Content-Language: en-US
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>, srinivas.kandagatla@linaro.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lionel.debieve@st.com, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrice
+use yaml description language to document Devantech SRF04 ultrasonic iio
+proximity driver
 
-On 2/28/19 11:19 AM, Fabrice Gasnier wrote:
-> Non volatile memory area is available on STM32. It contains various
-> factory programmed information such as unique device ID, analog calibration...
-> This patchset adds:
-> - NVMEM support to access stm32 data cells
-> - helper to read 16 bits cells.
-> 
-> ---
-> Changes in v2:
-> - update "st,stm32f4-otp" compatible as discussed with Rob
-> - add stm32f429 dts
-> - add core helper to read 16 bits cells
-> 
-> Fabrice Gasnier (6):
+Andreas Klinger (2):
+  devantech-srf04.yaml: transform DT binding to YAML
+  devantech-srf04.txt: remove old DT documentation
 
-...
+ .../bindings/iio/proximity/devantech-srf04.txt     | 28 ----------
+ .../bindings/iio/proximity/devantech-srf04.yaml    | 62 ++++++++++++++++++++++
+ 2 files changed, 62 insertions(+), 28 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/proximity/devantech-srf04.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
 
->    ARM: dts: stm32: Add romem and temperature calibration on stm32mp157c
->    ARM: dts: stm32: Add romem and temperature calibration on stm32f429
+-- 
+2.11.0
 
-DT patches applied on stm32-next.
 
-Regards
-Alex
+-- 
+Andreas Klinger
+Grabenreith 27
+84508 Burgkirchen
++49 8623 919966
+ak@it-klinger.de
+www.it-klinger.de
+www.grabenreith.de
