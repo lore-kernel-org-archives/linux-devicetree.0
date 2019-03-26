@@ -1,98 +1,66 @@
-Return-Path: <SRS0=+QYM=R5=analog.com=Michael.Hennerich@kernel.org>
-From: <michael.hennerich@analog.com>
-Subject: [PATCH] power: supply: ltc3651-charger.c: Fix typo in device name
-Date: Tue, 26 Mar 2019 14:57:15 +0100
-Message-ID: <1553608635-29376-1-git-send-email-michael.hennerich@analog.com>
+Return-Path: <SRS0=u60/=R5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr50056.outbound.protection.outlook.com ([40.107.5.56]:51362
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726266AbfCZTXf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 Mar 2019 15:23:35 -0400
+From: Ioana Ciornei <ioana.ciornei@nxp.com>
+Subject: [PATCH 2/2] Documentation: DT: Add entry for DPAA2 console
+Date: Tue, 26 Mar 2019 19:23:31 +0000
+Message-ID: <1553628194-25119-3-git-send-email-ioana.ciornei@nxp.com>
+References: <1553628194-25119-1-git-send-email-ioana.ciornei@nxp.com>
+In-Reply-To: <1553628194-25119-1-git-send-email-ioana.ciornei@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-To: mike.looijmans@topic.nl, sre@kernel.org, robh+dt@kernel.org
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, robin.getz@analog.com, Michael Hennerich <michael.hennerich@analog.com>
+Sender: devicetree-owner@vger.kernel.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ioana Ciornei <ioana.ciornei@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Michael Hennerich <michael.hennerich@analog.com>
+This patch adds a devicetree binding documentation for
+FSL's DPAA2 console.
 
-There never was a device called LTC3651, it always was just LT3651.
-This circumstance makes it pretty difficult to identify what this
-driver is meant to control. This patch is a minimal invasive attempt
-to fix this issue without affecting existing systems.
-
-
-Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 ---
- .../devicetree/bindings/power/supply/ltc3651-charger.txt         | 8 +++++---
- drivers/power/supply/Kconfig                                     | 6 +++---
- drivers/power/supply/ltc3651-charger.c                           | 9 +++------
- 3 files changed, 11 insertions(+), 12 deletions(-)
+ Documentation/devicetree/bindings/misc/fsl,dpaa2-console.txt | 11 ++++++++=
++++
+ MAINTAINERS                                                  |  1 +
+ 2 files changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/fsl,dpaa2-consol=
+e.txt
 
-diff --git a/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt b/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
-index 71f2840..f012449 100644
---- a/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
-+++ b/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
-@@ -1,7 +1,9 @@
--ltc3651-charger
-+Analog Devices LT3651 Charger Power Supply bindings: ltc3651-charger
- 
- Required properties:
-- - compatible: "lltc,ltc3651-charger"
-+- compatible: Should contain one of the following:
-+ * "lltc,ltc3651-charger",
-+ * "lltc,lt3651-charger"
-  - lltc,acpr-gpios: Connect to ACPR output. See remark below.
- 
- Optional properties:
-@@ -20,7 +22,7 @@ attributes to detect changes.
- Example:
- 
- 	charger: battery-charger {
--		compatible = "lltc,ltc3651-charger";
-+		compatible = "lltc,lt3651-charger";
- 		lltc,acpr-gpios = <&gpio0 68 GPIO_ACTIVE_LOW>;
- 		lltc,fault-gpios = <&gpio0 64 GPIO_ACTIVE_LOW>;
- 		lltc,chrg-gpios = <&gpio0 63 GPIO_ACTIVE_LOW>;
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index e901b9879..6816a86 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -476,11 +476,11 @@ config CHARGER_MANAGER
-           with help of suspend_again support.
- 
- config CHARGER_LTC3651
--	tristate "LTC3651 charger"
-+	tristate "Analog Devices LT3651 charger"
- 	depends on GPIOLIB
- 	help
--	  Say Y to include support for the LTC3651 battery charger which reports
--	  its status via GPIO lines.
-+	  Say Y to include support for the Analog Devices (Linear Technology)
-+	  LT3651 battery charger which reports its status via GPIO lines.
- 
- config CHARGER_MAX14577
- 	tristate "Maxim MAX14577/77836 battery charger driver"
-diff --git a/drivers/power/supply/ltc3651-charger.c b/drivers/power/supply/ltc3651-charger.c
-index eea63ff..07ed537 100644
---- a/drivers/power/supply/ltc3651-charger.c
-+++ b/drivers/power/supply/ltc3651-charger.c
-@@ -1,11 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-+ *  Driver for Analog Devices (Linear Technology) LT3651 charger IC.
-  *  Copyright (C) 2017, Topic Embedded Products
-- *  Driver for LTC3651 charger IC.
-- *
-- *  This program is free software; you can redistribute it and/or modify it
-- *  under  the terms of the GNU General  Public License as published by the
-- *  Free Software Foundation;  either version 2 of the License, or (at your
-- *  option) any later version.
-  */
- 
- #include <linux/device.h>
-@@ -190,6 +186,7 @@ static int ltc3651_charger_probe(struct platform_device *pdev)
- 
- static const struct of_device_id ltc3651_charger_match[] = {
- 	{ .compatible = "lltc,ltc3651-charger" },
-+	{ .compatible = "lltc,lt3651-charger" },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, ltc3651_charger_match);
--- 
-2.7.4
+diff --git a/Documentation/devicetree/bindings/misc/fsl,dpaa2-console.txt b=
+/Documentation/devicetree/bindings/misc/fsl,dpaa2-console.txt
+new file mode 100644
+index 000000000000..1442ba5d2d98
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/fsl,dpaa2-console.txt
+@@ -0,0 +1,11 @@
++DPAA2 console support
++
++Required properties:
++
++    - compatible
++        Value type: <string>
++        Definition: Must be "fsl,dpaa2-console".
++    - reg
++        Value type: <prop-encoded-array>
++        Definition: A standard property.  Specifies the region where the M=
+CFBA
++                    (MC firmware base address) register can be found.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 32d444476a90..aed85fc7c783 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6127,6 +6127,7 @@ M:	Li Yang <leoyang.li@nxp.com>
+ L:	linuxppc-dev@lists.ozlabs.org
+ L:	linux-arm-kernel@lists.infradead.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/misc/fsl,dpaa2-console.txt
+ F:	Documentation/devicetree/bindings/soc/fsl/
+ F:	drivers/soc/fsl/
+ F:	include/linux/fsl/
+--=20
+1.9.1
