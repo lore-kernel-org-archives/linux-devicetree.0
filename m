@@ -1,131 +1,268 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
-Date: Tue, 26 Mar 2019 09:43:01 +0000
-Message-ID: <20190326094239.5910-3-daniel.baluta@nxp.com>
-References: <20190326094239.5910-1-daniel.baluta@nxp.com>
+From: c-hbandi@codeaurora.org
+Subject: Re: [PATCH v4 1/2] Bluetooth: hci_qca: Added support for WCN3998
+Date: Tue, 26 Mar 2019 15:23:14 +0530
+Message-ID: <b04e4bb2fa6904e593e6bfaa90992a69@codeaurora.org>
+References: <1553513800-27611-1-git-send-email-c-hbandi@codeaurora.org>
+ <1553513800-27611-2-git-send-email-c-hbandi@codeaurora.org>
+ <20190325162118.GV112750@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190326094239.5910-1-daniel.baluta@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20190325162118.GV112750@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Teo Hall <teo.hall@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, anubhavg@codeaurora.org, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-i.MX8QXP contains a total of 4 EDMA controllers of which
-two are primarily for audio components and the other two
-are for non-audio periperhals.
+Hi Matthias,
 
-This patch adds the EDMA0/EDMA1 nodes used by audio peripherals.
+On 2019-03-25 21:51, Matthias Kaehlcke wrote:
+> On Mon, Mar 25, 2019 at 05:06:39PM +0530, Harish Bandi wrote:
+>> Added new compatible for WCN3998 and corresponding voltage
+>> and current values to WCN3998 compatible.
+>> Changed driver code to support WCN3998
+>> 
+>> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
+>> ---
+>> Changes in V4:
+>> - Added is_qca_soc_type_wcn399x_family helper function
+>> - to get the soc type is wcn399x or not.
+>> ---
+>>  drivers/bluetooth/btqca.c   |  4 ++--
+>>  drivers/bluetooth/btqca.h   |  3 ++-
+>>  drivers/bluetooth/hci_qca.c | 48 
+>> ++++++++++++++++++++++++++++++++-------------
+>>  3 files changed, 38 insertions(+), 17 deletions(-)
+>> 
+>> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+>> index 6122685..70cab13 100644
+>> --- a/drivers/bluetooth/btqca.c
+>> +++ b/drivers/bluetooth/btqca.c
+>> @@ -344,7 +344,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
+>> baudrate,
+>> 
+>>  	/* Download rampatch file */
+>>  	config.type = TLV_TYPE_PATCH;
+>> -	if (soc_type == QCA_WCN3990) {
+>> +	if (soc_type >= QCA_WCN3990) {
+> 
+> Move qca_is_wcn399x() to btqca.c and use it here. Export the symbol
+> and declare the function in btqca.h, so it can be used in hci_qca.c
+[Harish] - ok, will update in new patch
+> 
+>>  		/* Firmware files to download are based on ROM version.
+>>  		 * ROM version is derived from last two bytes of soc_ver.
+>>  		 */
+>> @@ -365,7 +365,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
+>> baudrate,
+>> 
+>>  	/* Download NVM configuration */
+>>  	config.type = TLV_TYPE_NVM;
+>> -	if (soc_type == QCA_WCN3990)
+>> +	if (soc_type >= QCA_WCN3990)
+> 
+> use qca_is_wcn399x()
+[Harish] - ok, will update in new patch
+> 
+>>  		snprintf(config.fwname, sizeof(config.fwname),
+>>  			 "qca/crnv%02x.bin", rom_ver);
+>>  	else
+>> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
+>> index c72c56e..bd6a902 100644
+>> --- a/drivers/bluetooth/btqca.h
+>> +++ b/drivers/bluetooth/btqca.h
+>> @@ -132,7 +132,8 @@ enum qca_btsoc_type {
+>>  	QCA_INVALID = -1,
+>>  	QCA_AR3002,
+>>  	QCA_ROME,
+>> -	QCA_WCN3990
+>> +	QCA_WCN3990,
+>> +	QCA_WCN3998,
+>>  };
+>> 
+>>  #if IS_ENABLED(CONFIG_BT_QCA)
+>> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+>> index 4ea995d..e238c2b 100644
+>> --- a/drivers/bluetooth/hci_qca.c
+>> +++ b/drivers/bluetooth/hci_qca.c
+>> @@ -189,6 +189,14 @@ static enum qca_btsoc_type qca_soc_type(struct 
+>> hci_uart *hu)
+>>  	return soc_type;
+>>  }
+>> 
+>> +bool is_qca_soc_type_wcn399x_family(enum qca_btsoc_type soc_type)
+> 
+> This long function name doesn't provide much value and degrades
+> readability of the code that uses it. A short name like
+> qca_is_wcn399x() is clear enough and friendlier to the code reader's
+> eyes.
+> 
+>> +{
+>> +	if ((soc_type  == QCA_WCN3990) || (soc_type  == QCA_WCN3998))
+>> +		return true;
+>> +
+>> +	return false;
+>> +}
+>> +
+>>  static void __serial_clock_on(struct tty_struct *tty)
+>>  {
+>>  	/* TODO: Some chipset requires to enable UART clock on client
+>> @@ -521,7 +529,7 @@ static int qca_open(struct hci_uart *hu)
+>>  	if (hu->serdev) {
+>> 
+>>  		qcadev = serdev_device_get_drvdata(hu->serdev);
+>> -		if (qcadev->btsoc_type != QCA_WCN3990) {
+>> +		if (!is_qca_soc_type_wcn399x_family(qcadev->btsoc_type)) {
+>>  			gpiod_set_value_cansleep(qcadev->bt_en, 1);
+>>  		} else {
+>>  			hu->init_speed = qcadev->init_speed;
+>> @@ -627,7 +635,7 @@ static int qca_close(struct hci_uart *hu)
+>> 
+>>  	if (hu->serdev) {
+>>  		qcadev = serdev_device_get_drvdata(hu->serdev);
+>> -		if (qcadev->btsoc_type == QCA_WCN3990)
+>> +		if (is_qca_soc_type_wcn399x_family(qcadev->btsoc_type))
+>>  			qca_power_shutdown(hu);
+>>  		else
+>>  			gpiod_set_value_cansleep(qcadev->bt_en, 0);
+>> @@ -1008,7 +1016,7 @@ static int qca_set_baudrate(struct hci_dev 
+>> *hdev, uint8_t baudrate)
+>>  		      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
+>> 
+>>  	/* Give the controller time to process the request */
+>> -	if (qca_soc_type(hu) == QCA_WCN3990)
+>> +	if (is_qca_soc_type_wcn399x_family(qca_soc_type(hu)))
+>>  		msleep(10);
+>>  	else
+>>  		msleep(300);
+>> @@ -1084,7 +1092,7 @@ static unsigned int qca_get_speed(struct 
+>> hci_uart *hu,
+>> 
+>>  static int qca_check_speeds(struct hci_uart *hu)
+>>  {
+>> -	if (qca_soc_type(hu) == QCA_WCN3990) {
+>> +	if (is_qca_soc_type_wcn399x_family(qca_soc_type(hu)) >= QCA_WCN3990) 
+>> {
+> 
+> Why '>= QCA_WCN3990'?
+[Harish] - ok, it should not will check and correct it.
+> 
+>>  		if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
+>>  		    !qca_get_speed(hu, QCA_OPER_SPEED))
+>>  			return -EINVAL;
+>> @@ -1116,7 +1124,7 @@ static int qca_set_speed(struct hci_uart *hu, 
+>> enum qca_speed_type speed_type)
+>>  		/* Disable flow control for wcn3990 to deassert RTS while
+>>  		 * changing the baudrate of chip and host.
+>>  		 */
+>> -		if (soc_type == QCA_WCN3990)
+>> +		if (is_qca_soc_type_wcn399x_family(soc_type))
+>>  			hci_uart_set_flow_control(hu, true);
+>> 
+>>  		qca_baudrate = qca_get_baudrate_value(speed);
+>> @@ -1128,7 +1136,7 @@ static int qca_set_speed(struct hci_uart *hu, 
+>> enum qca_speed_type speed_type)
+>>  		host_set_baudrate(hu, speed);
+>> 
+>>  error:
+>> -		if (soc_type == QCA_WCN3990)
+>> +		if (is_qca_soc_type_wcn399x_family(soc_type))
+>>  			hci_uart_set_flow_control(hu, false);
+>>  	}
+>> 
+>> @@ -1201,7 +1209,7 @@ static int qca_setup(struct hci_uart *hu)
+>>  	/* Patch downloading has to be done without IBS mode */
+>>  	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+>> 
+>> -	if (soc_type == QCA_WCN3990) {
+>> +	if (is_qca_soc_type_wcn399x_family(soc_type)) {
+>>  		bt_dev_info(hdev, "setting up wcn3990");
+>> 
+>>  		/* Enable NON_PERSISTENT_SETUP QUIRK to ensure to execute
+>> @@ -1232,7 +1240,7 @@ static int qca_setup(struct hci_uart *hu)
+>>  		qca_baudrate = qca_get_baudrate_value(speed);
+>>  	}
+>> 
+>> -	if (soc_type != QCA_WCN3990) {
+>> +	if (!is_qca_soc_type_wcn399x_family(soc_type)) {
+>>  		/* Get QCA version information */
+>>  		ret = qca_read_soc_version(hdev, &soc_ver);
+>>  		if (ret)
+>> @@ -1257,7 +1265,7 @@ static int qca_setup(struct hci_uart *hu)
+>>  	}
+>> 
+>>  	/* Setup bdaddr */
+>> -	if (soc_type == QCA_WCN3990)
+>> +	if (is_qca_soc_type_wcn399x_family(soc_type))
+>>  		hu->hdev->set_bdaddr = qca_set_bdaddr;
+>>  	else
+>>  		hu->hdev->set_bdaddr = qca_set_bdaddr_rome;
+>> @@ -1280,7 +1288,7 @@ static int qca_setup(struct hci_uart *hu)
+>>  	.dequeue	= qca_dequeue,
+>>  };
+>> 
+>> -static const struct qca_vreg_data qca_soc_data = {
+>> +static const struct qca_vreg_data qca_soc_data_wcn3990 = {
+>>  	.soc_type = QCA_WCN3990,
+>>  	.vregs = (struct qca_vreg []) {
+>>  		{ "vddio",   1800000, 1900000,  15000  },
+>> @@ -1291,6 +1299,17 @@ static int qca_setup(struct hci_uart *hu)
+>>  	.num_vregs = 4,
+>>  };
+>> 
+>> +static const struct qca_vreg_data qca_soc_data_wcn3998 = {
+>> +	.soc_type = QCA_WCN3998,
+>> +	.vregs = (struct qca_vreg []) {
+>> +		{ "vddio",   1800000, 1900000,  10000  },
+>> +		{ "vddxo",   1800000, 1900000,  80000  },
+>> +		{ "vddrf",   1300000, 1352000,  300000 },
+>> +		{ "vddch0",  3300000, 3300000,  450000 },
+>> +	},
+>> +	.num_vregs = 4,
+>> +};
+>> +
+>>  static void qca_power_shutdown(struct hci_uart *hu)
+>>  {
+>>  	struct qca_data *qca = hu->priv;
+>> @@ -1424,8 +1443,8 @@ static int qca_serdev_probe(struct serdev_device 
+>> *serdev)
+>>  	qcadev->serdev_hu.serdev = serdev;
+>>  	data = of_device_get_match_data(&serdev->dev);
+>>  	serdev_device_set_drvdata(serdev, qcadev);
+>> -	if (data && data->soc_type == QCA_WCN3990) {
+>> -		qcadev->btsoc_type = QCA_WCN3990;
+>> +	if (data && is_qca_soc_type_wcn399x_family(data->soc_type)) {
+>> +		qcadev->btsoc_type = data->soc_type;
+>>  		qcadev->bt_power = devm_kzalloc(&serdev->dev,
+>>  						sizeof(struct qca_power),
+>>  						GFP_KERNEL);
+>> @@ -1489,7 +1508,7 @@ static void qca_serdev_remove(struct 
+>> serdev_device *serdev)
+>>  {
+>>  	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
+>> 
+>> -	if (qcadev->btsoc_type == QCA_WCN3990)
+>> +	if (qcadev->btsoc_type >= QCA_WCN3990)
+> 
+> use qca_is_wcn399x()
+[Harish] - ok, will update in new patch
+> 
+>>  		qca_power_shutdown(&qcadev->serdev_hu);
+>>  	else
+>>  		clk_disable_unprepare(qcadev->susclk);
+>> @@ -1499,7 +1518,8 @@ static void qca_serdev_remove(struct 
+>> serdev_device *serdev)
+>> 
+>>  static const struct of_device_id qca_bluetooth_of_match[] = {
+>>  	{ .compatible = "qcom,qca6174-bt" },
+>> -	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data},
+>> +	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data_wcn3990},
+>> +	{ .compatible = "qcom,wcn3998-bt", .data = &qca_soc_data_wcn3998},
+>>  	{ /* sentinel */ }
+>>  };
+>>  MODULE_DEVICE_TABLE(of, qca_bluetooth_of_match);
 
-EDMA0 contains channels for:
-	* ASRC0
-	* ESAI0
-	* SPDIF0
-	* SAI0, SAI1, SAI2, SAI3
-
-EDMA1 contains channels for:
-	* ASRC1
-	* SAI4, SAI5
-
-See chapter Audio DMA Memory Maps (2.2.3) from i.MX8QXP RM [1]
-
-This patch is based on the dtsi file initially submitted by
-Teo Hall in i.MX NXP internal tree.
-
-[1] https://www.nxp.com/docs/en/reference-manual/IMX8DQXPRM.pdf
-
-Cc: Teo Hall <teo.hall@nxp.com>
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 72 ++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
-ts/freescale/imx8qxp.dtsi
-index 0cb939861a60..9e959deb2499 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -182,6 +182,78 @@
- 			#clock-cells =3D <1>;
- 		};
-=20
-+		edma0: dma-controller@591f0000 {
-+			compatible =3D "fsl,imx8qm-edma";
-+			reg =3D <0x59200000 0x10000>,   /* asrc0 pair A input req */
-+				<0x59210000 0x10000>, /* asrc0 pair B input req */
-+				<0x59220000 0x10000>, /* asrc0 pair C input req */
-+				<0x59230000 0x10000>, /* asrc0 pair A output req */
-+				<0x59240000 0x10000>, /* asrc0 pair B output req */
-+				<0x59250000 0x10000>, /* asrc0 pair C output req */
-+				<0x59260000 0x10000>, /* esai0 rx */
-+				<0x59270000 0x10000>, /* esai0 tx */
-+				<0x59280000 0x10000>, /* spdif0 rx */
-+				<0x59290000 0x10000>, /* spdif0 tx */
-+				<0x592c0000 0x10000>, /* sai0 rx */
-+				<0x592d0000 0x10000>, /* sai0 tx */
-+				<0x592e0000 0x10000>, /* sai1 rx */
-+				<0x592f0000 0x10000>, /* sai1 tx */
-+			#dma-cells =3D <3>;
-+			shared-interrupt;
-+			dma-channels =3D <14>;
-+			interrupts =3D <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,    /* asrc 0 */
-+					<GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 376 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 377 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 378 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 379 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>, /* esai0 */
-+					<GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 457 IRQ_TYPE_LEVEL_HIGH>, /* spdif0 */
-+					<GIC_SPI 459 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>, /* sai0 */
-+					<GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>, /* sai1 */
-+					<GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
-+			interrupt-names =3D "edma0-chan0-rx", "edma0-chan1-rx", /* asrc0 */
-+					"edma0-chan2-rx", "edma0-chan3-tx",
-+					"edma0-chan4-tx", "edma0-chan5-tx",
-+					"edma0-chan6-rx", "edma0-chan7-tx",   /* esai0 */
-+					"edma0-chan8-rx", "edma0-chan9-tx",   /* spdif0 */
-+					"edma0-chan12-rx", "edma0-chan13-tx", /* sai0 */
-+					"edma0-chan14-rx", "edma0-chan15-tx", /* sai1 */
-+		};
-+
-+		edma1: dma-controller@599F0000 {
-+			compatible =3D "fsl,imx8qm-edma";
-+			reg =3D <0x0 0x59A00000 0x0 0x10000>, /* asrc1 */
-+				<0x0 0x59A10000 0x0 0x10000>,
-+				<0x0 0x59A20000 0x0 0x10000>,
-+				<0x0 0x59A30000 0x0 0x10000>,
-+				<0x0 0x59A40000 0x0 0x10000>,
-+				<0x0 0x59A50000 0x0 0x10000>,
-+				<0x0 0x59A80000 0x0 0x10000>, /* sai4 rx */
-+				<0x0 0x59A90000 0x0 0x10000>, /* sai4 tx */
-+				<0x0 0x59AA0000 0x0 0x10000>; /* sai5 tx */
-+			#dma-cells =3D <3>;
-+			shared-interrupt;
-+			dma-channels =3D <9>;
-+			interrupts =3D <GIC_SPI 382 IRQ_TYPE_LEVEL_HIGH>, /* asrc 1 */
-+					<GIC_SPI 383 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 384 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 385 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 386 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 387 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>, /* sai4 */
-+					<GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>; /* sai5 */
-+			interrupt-names =3D "edma1-chan0-rx", "edma1-chan1-rx", /* asrc1 */
-+					"edma1-chan2-rx", "edma1-chan3-tx",
-+					"edma1-chan4-tx", "edma1-chan5-tx",
-+					"edma1-chan8-rx", "edma1-chan9-tx", /* sai4 */
-+					"edma1-chan10-tx"; /* sai5 */
-+		};
-+
- 		adma_lpuart0: serial@5a060000 {
- 			compatible =3D "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
- 			reg =3D <0x5a060000 0x1000>;
---=20
-2.17.1
+Thanks,
+Harish
