@@ -1,81 +1,84 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH v5 0/8] phy: qcom-ufs: Enable regulators to be off in suspend
-Date: Tue, 26 Mar 2019 09:17:48 -0700
-Message-ID: <CAE=gft5c3pS2ksH_oW_+F52gr4r0KnkoUHJXZ7u9vChSAZEovg@mail.gmail.com>
-References: <20190321171800.104681-1-evgreen@chromium.org> <d90e86b9-a330-677c-a70a-d66139473f48@ti.com>
+From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: Re: [PATCH 2/5] ARM: dts: imx50: Add Kobo Aura DTS
+Date: Tue, 26 Mar 2019 17:26:53 +0100
+Message-ID: <20190326162653.GD2095@latitude>
+References: <20190319152421.16179-1-j.neuschaefer@gmx.net>
+ <20190319152421.16179-3-j.neuschaefer@gmx.net>
+ <20190322013151.GR12513@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TiqCXmo5T1hvSQQg"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d90e86b9-a330-677c-a70a-d66139473f48@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20190322013151.GR12513@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Stephen Boyd <swboyd@chromium.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pedro Sousa <pedrom.sousa@synopsys.com>, liwei <liwei213@huawei.com>, SCSI <linux-scsi@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bart Van Assche <Bart.VanAssche@wdc.com>, LKML <linux-kernel@vger.kernel.org>, Subhash Jadavani <subhashj@codeaurora.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh+dt@kernel.org>, Avri Altman <avri.altman@wdc.com>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Heiko Stuebner <heiko@sntech.de>, Jagan Teki <jagan@amarulasolutions.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 12:49 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Hi,
->
-> On 21/03/19 10:47 PM, Evan Green wrote:
-> > The goal with this series is to enable shutting off regulators that power
-> > UFS during system suspend.
-> >
-> > In "the good life" version of this, we'd just disable the regulators
-> > in phy_poweroff() and be done with it. Unfortunately, that's not symmetric,
-> > as regulators are not enabled during phy_poweron(). Ok, so you might think
-> > we could just move the regulator enable and anything else that needs to
-> > come along into phy_poweron(), so that we can then undo it all in
-> > phy_poweroff(). That's where things get tricky.
-> >
-> > The qcom-qmp-phy overloaded the phy_init() and phy_poweron() callbacks,
-> > basically to mean "init phase 1" and "init phase 2". There are two phases
-> > because they have this phy_reset bit outside of the phy (in the UFS
-> > controller registers), and they need to make sure this bit is toggled at
-> > specific points in the phy init sequence. So there's this implicit
-> > sequence in the init dance between ufs-qcom.c and phy-qcom-qmp.c:
-> > 1) ufs-qcom asserts the PHY reset bit.
-> > 2) phy-qcom-qmp phy_init() does most of its initialization, but exits early.
-> > 3) ufs-qcom deasserts the PHY reset bit.
-> > 4) phy-qcom-qmp phy_poweron() finishes its initialization.
-> >
-> > This init dance is very difficult to follow in the code (since it's split
-> > between two drivers and not spelled out well), and arguably represents a
-> > deficiency in the hardware description of these devices.
-> >
-> > In this series I'm proposing tweaking the bindings for the Qualcomm
-> > UFS controller and PHY. In it we expose a reset controller from the
-> > UFS controller, that is then picked up and used from the PHY code.
-> > With this, the phy code can be reorganized to complete its initialization
-> > in a single function, removing the implicit two-phase overloading.
-> >
-> > Then I can move most of the phy initialization, including enabling
-> > the regulators, into phy_poweron(). Now, when phy_poweroff() is called,
-> > the phy actually powers off. This finally disables the regulators
-> > and allows me to save power in system suspend.
-> >
-> > Because the UFS PHY reset bit is now toggled in the PHY, rather
-> > than in ufs-qcom, this also percolated to all other PHYs using
-> > ufs-qcom, which from what I can see is just 8996.
-> >
-> > I removed the calls to phy_poweroff() during clock gating. This
-> > was originally dialing down a clock or two, while leaving the phy powered.
-> > I've now changed the semantics of phy_poweroff() to, well, actually power off.
-> > This works great for userlands that have set UFS's spm_lvl to 5 (off) like
-> > I have, but maybe changes power consumption for devices that have spm_lvl
-> > set to 3. I could try to use phy_init() and phy_poweron() as the two
-> > different possible transitions (fully off, and clocks off respectively),
-> > but I'm not sure if it actually matters, and I like the idea that
-> > phy_poweroff() really does power the thing off.
-> >
-> > Also, I don't have an 8996 device to test. If someone is able to test this
-> > out and perhaps point out any (hopefully obvious) bugs in the 8996 portion,
-> > I'd be grateful.
-> >
-> > This patch is based atop phy-next.
->
-> Merged the series except the dts patches.
 
-Yay, thanks Kishon.
+--TiqCXmo5T1hvSQQg
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Andy, Bjorn, are you able to take the DT patches?
--Evan
+Hi, thanks for your comments. I'll address them in v2.
+
+On Fri, Mar 22, 2019 at 09:31:53AM +0800, Shawn Guo wrote:
+> On Tue, Mar 19, 2019 at 04:24:17PM +0100, Jonathan Neusch=C3=A4fer wrote:
+> > The Kobo Aura is an e-book reader released in 2013.
+[...]
+> > +	sd2_pwrseq: pwrseq {
+> > +		compatible =3D "mmc-pwrseq-simple";
+> > +		pinctrl-names =3D "default";
+> > +		pinctrl-0 =3D <&pinctrl_sd2_reset>;
+> > +
+>=20
+> Please do not have random newlines.
+
+Does that apply to all empty lines between properties?
+
+>=20
+> > +		reset-gpios =3D <&gpio4 17 GPIO_ACTIVE_LOW>;
+> > +	};
+> > +
+[...]
+> > +&iomuxc {
+> > +	pinctrl_uart2: uart2 {
+> > +		fsl,pins =3D <
+> > +			MX50_PAD_UART2_TXD__UART2_TXD_MUX	0x1e4
+> > +			MX50_PAD_UART2_RXD__UART2_RXD_MUX	0x1e4
+> > +		>;
+> > +	};
+> > +
+> > +	pinctrl_i2c1: i2c1 {
+>=20
+> Please sort these pinctrl nodes alphabetically.
+
+It doesn't make a difference here, but should I generally sort by name
+or by label in cases like this one?
+
+
+Jonathan Neusch=C3=A4fer
+
+--TiqCXmo5T1hvSQQg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAlyaUsUACgkQCDBEmo7z
+X9sy1RAAniEdi+8w5/NPyQRbEYP4cdEcBxUhgP9VZXT1QxAxFoRDcYYOF0HUmu2g
+qz5ppATEQ7+/rJZH9KTsOtNKEBW/+QjKs1gNa8ZYE9wWkF/LEz8twQHDv7VsmUbm
+KJSUIOvXDvJ2U8PXLZowPjsOP+I6N7BQkxOGr0pDBcpsrm3INNHZYOXKfRzc5ogU
+OuV6i9UDzS7/A/L2CORuOit/27R9iP0w8noLWgJdwW49Nx2lcnT9QXlFQYqAKvlY
+GV25ht7eNJuPrh1RVm40zh59WT3vYQHS3vyVYoI8heSWx5pP7YuHLRZvUJgahXQ6
+vn781Fz4zqp+7VqDscUk3xsy7K4oG0hsbBqBCUiyIsyz1ndAOEjbDoViCjfJRTeA
+e0cnEX2ZXkm8EknLOSkahcqp1lCthVHdjgd7Q98OAYRCX30uGLlvSgqChZ09kzRF
+RbUL/3EiLeJp58hXSMV0p9JH6ESVleiXmI5VGJT4LLI2SaQ6xtQM+dtta6w/CCsm
+gS16xfRL/znFp4+ZtDFwbInDH/RRj+WWGETruMnX4pLgx+TiEJ57kL0psqDwjGDF
+E8ha2On0qwh6x7VrjdGYvM/PeqkPxYYNJlsXZOUdpk0AQS0WDe/+jQvVIEXxQ9t/
+bi8rxYU3QZFZTT4rkl/wXGhL5bRn35FTqFtmX5SuSfYysJ8rMhg=
+=2tJW
+-----END PGP SIGNATURE-----
+
+--TiqCXmo5T1hvSQQg--
