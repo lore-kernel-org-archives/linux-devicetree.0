@@ -1,117 +1,139 @@
-Return-Path: <SRS0=ESTK=RT=mansr.com=mans@kernel.org>
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Subject: Re: [PATCH v2 0/4] Patches to allow consistent mmc / mmcblk numbering w/ device tree
-References: <1461951139-6109-1-git-send-email-dianders@chromium.org>
-	<yw1x5zsx5wc7.fsf@mansr.com>
-	<CAJ+vNU1PxK-B63Dc3AgzYb9POyxxoF-xPOWBEpxJ+3eVNK8xqw@mail.gmail.com>
-	<d5310138-7fdd-973d-5210-3fc91c4686ee@denx.de>
-Date: Sat, 16 Mar 2019 12:22:22 +0000
-In-Reply-To: <d5310138-7fdd-973d-5210-3fc91c4686ee@denx.de> (Marek Vasut's
-	message of "Sat, 16 Mar 2019 00:00:08 +0100")
-Message-ID: <yw1xftrn2em9.fsf@mansr.com>
+Return-Path: <SRS0=1wp7=R5=linaro.org=rui.silva@kernel.org>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH v5 4/6] iio: gyro: fxas21002c: add spi driver
+Date: Tue, 26 Mar 2019 10:16:49 +0000
+Message-Id: <20190326101651.25056-5-rui.silva@linaro.org>
+In-Reply-To: <20190326101651.25056-1-rui.silva@linaro.org>
+References: <20190326101651.25056-1-rui.silva@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
-To: Marek Vasut <marex@denx.de>
-Cc: Tim Harvey <tharvey@gateworks.com>, Douglas Anderson <dianders@chromium.org>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, shawn.lin@rock-chips.com, Adrian Hunter <adrian.hunter@intel.com>, stefan@agner.ch, Linux MMC List <linux-mmc@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Jisheng Zhang <jszhang@marvell.com>, linux-rockchip@lists.infradead.org, devicetree-spec@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, open list <linux-kernel@vger.kernel.org>, vbyravarasu@nvidia.com, Lars-Peter Clausen <lars@metafoo.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, jonathanh@nvidia.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, grundler@chromium.org, Kumar Gala <galak@codeaurora.org>, lporzio@micron.com, Rob Herring <robh+dt@kernel.org>, chaotian.j ing@mediatek.com, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, sudeep.holla@arm.com, zhonghui.fu@linux.intel.com, kirill.shutemov@linux.intel.com
+Content-Transfer-Encoding: 8bit
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Marek Vasut <marex@denx.de> writes:
+Add driver to talk over spi to a fxas21002c gyroscope device and use
+the core as main controller.
 
-> On 3/15/19 10:52 PM, Tim Harvey wrote:
->> Tim Harvey - Principal Software EngineerGateworks Corporation -
->> http://www.gateworks.com/3026 S. Higuera St. San Luis Obispo CA
->> 93401805-781-2000
->> On Tue, Mar 5, 2019 at 4:39 AM M=E5ns Rullg=E5rd <mans@mansr.com> wrote:
->>>
->>> Douglas Anderson <dianders@chromium.org> writes:
->>>
->>>> This series picks patches from various different places to produce what
->>>> I consider the best solution to getting consistent mmc and mmcblk
->>>> ordering.
->>>>
->>>> Why consistent ordering and why not just use UUIDs?  IMHO consistent
->>>> ordering solves a few different problems:
->>>>
->>>> 1. For poor, feeble-minded humans like me, have sane numbering for
->>>>    devices helps a lot.  When grepping through dmesg it's terribly han=
-dy
->>>>    if a given SDMMC device has a consistent number.  I know that I can
->>>>    do "dmesg | grep mmc0" or "dmesg | grep mmcblk0" to find info about
->>>>    the eMMC.  I know that I can do "dmesg | grep mmc1" to find info
->>>>    about the SD card slot.  I don't want it to matter which one probed
->>>>    first, I don't want it to matter if I'm working on a variant of the
->>>>    hardware that has the SD card slot disabled, and I don't want to ca=
-re
->>>>    what my boot device was.  Worrying about what device number I got
->>>>    increases my cognitive load.
->>>>
->>>> 2. There are cases where it's not trivially easy during development to
->>>>    use the UUID.  Specifically I work a lot with coreboot / depthcharge
->>>>    as a BIOS.  When configured properly, that BIOS has a nice feature =
-to
->>>>    allow you to fetch the kernel and kernel command line from TFTP by
->>>>    pressing Ctrl-N.  In this particular case the BIOS doesn't actually
->>>>    know which disk I'd like for my root filesystem, so it's not so easy
->>>>    for it to put the right UUID into the command line.  For this
->>>>    purpose, knowing that "mmcblk0" will always refer to eMMC is handy.
->>>>
->>>> Changes in v2:
->>>> - Rebased atop mmc-next
->>>> - Stat dynamic allocation after fixed allocation; thanks Wolfram!
->>>> - rk3288 patch new for v2
->>>>
->>>> Douglas Anderson (1):
->>>>   ARM: dts: rockchip: Add mmc aliases for rk3288 platform
->>>>
->>>> Jaehoon Chung (1):
->>>>   Documentation: mmc: Document mmc aliases
->>>>
->>>> Stefan Agner (2):
->>>>   mmc: read mmc alias from device tree
->>>>   mmc: use SD/MMC host ID for block device name ID
->>>>
->>>>  Documentation/devicetree/bindings/mmc/mmc.txt | 11 +++++++++++
->>>>  arch/arm/boot/dts/rk3288.dtsi                 |  4 ++++
->>>>  drivers/mmc/card/block.c                      |  2 +-
->>>>  drivers/mmc/core/host.c                       | 17 ++++++++++++++++-
->>>>  4 files changed, 32 insertions(+), 2 deletions(-)
->>>
->>> Did anyone ever come up with an acceptable solution for this?  After
->>> three years, I'm getting tired of rebasing these patches onto every new
->>> kernel.
->>>
->>> UUIDs or similar are NOT an option for multiple reasons:
->>>
->>> - We have two rootfs partitions for ping-pong updates, so simply
->>>   referring to "the thing with ID foo" doesn't work.
->>>
->>> - Installing said updates needs direct access the device/partition,
->>>   which may not even have a filesystem.
->>>
->>> - The u-boot environment is stored in an eMMC "boot" partition, and
->>>   userspace needs to know where to find it.
->>>
->>> I'm sure I'm not the only one in a similar situation.
->>>
->>> Russel, feel free to shout abuse at me.  I don't care, but it makes you
->>> look stupid.
->>>
->>=20
->> Completely agree here - we need a dt solution that allows us to
->> specify ordering.
->
-> Nope, ordering would be a policy and does not describe hardware, thus it
-> shouldn't be in the DT. Use UUID or PARTUUID, they apply both to raw FS
-> (fsuuid) and to partitions (part uuid). Linux kernel can mount FS using
-> PARTUUID, to support UUID you need initramfs.
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+---
+ drivers/iio/gyro/Kconfig          |  7 +++-
+ drivers/iio/gyro/Makefile         |  1 +
+ drivers/iio/gyro/fxas21002c_spi.c | 70 +++++++++++++++++++++++++++++++
+ 3 files changed, 77 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/iio/gyro/fxas21002c_spi.c
 
-That doesn't address how to find eMMC boot partitions.
-
-I don't care the slightest what the numbering is, as long as it is
-stable.  On some hardware, with an unpatched kernel, the mmc device
-numbering changes depending on whether or not an SD card is inserted on
-boot.  Getting rid of that behaviour is really all I want.
-
---=20
-M=E5ns Rullg=E5rd
+diff --git a/drivers/iio/gyro/Kconfig b/drivers/iio/gyro/Kconfig
+index 71b6552ee06b..61c00cee037d 100644
+--- a/drivers/iio/gyro/Kconfig
++++ b/drivers/iio/gyro/Kconfig
+@@ -78,7 +78,8 @@ config FXAS21002C
+        select IIO_BUFFER
+        select IIO_TRIGGERED_BUFFER
+        select FXAS21002C_I2C if (I2C)
+-       depends on I2C
++       select FXAS21002C_SPI if (SPI)
++       depends on (I2C || SPI_MASTER)
+        help
+          Say yes here to build support for NXP FXAS21002C Tri-axis Gyro
+          Sensor driver connected via I2C or SPI.
+@@ -90,6 +91,10 @@ config FXAS21002C_I2C
+        tristate
+        select REGMAP_I2C
+ 
++config FXAS21002C_SPI
++       tristate
++       select REGMAP_SPI
++
+ config HID_SENSOR_GYRO_3D
+ 	depends on HID_SENSOR_HUB
+ 	select IIO_BUFFER
+diff --git a/drivers/iio/gyro/Makefile b/drivers/iio/gyro/Makefile
+index adc18a5eb283..45cbd5dc644e 100644
+--- a/drivers/iio/gyro/Makefile
++++ b/drivers/iio/gyro/Makefile
+@@ -14,6 +14,7 @@ obj-$(CONFIG_BMG160_I2C) += bmg160_i2c.o
+ obj-$(CONFIG_BMG160_SPI) += bmg160_spi.o
+ obj-$(CONFIG_FXAS21002C) += fxas21002c_core.o
+ obj-$(CONFIG_FXAS21002C_I2C) += fxas21002c_i2c.o
++obj-$(CONFIG_FXAS21002C_SPI) += fxas21002c_spi.o
+ 
+ obj-$(CONFIG_HID_SENSOR_GYRO_3D) += hid-sensor-gyro-3d.o
+ 
+diff --git a/drivers/iio/gyro/fxas21002c_spi.c b/drivers/iio/gyro/fxas21002c_spi.c
+new file mode 100644
+index 000000000000..77ceebef4e34
+--- /dev/null
++++ b/drivers/iio/gyro/fxas21002c_spi.c
+@@ -0,0 +1,70 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Driver for NXP Fxas21002c Gyroscope - SPI
++ *
++ * Copyright (C) 2019 Linaro Ltd.
++ */
++
++#include <linux/err.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/regmap.h>
++#include <linux/spi/spi.h>
++
++#include "fxas21002c.h"
++
++static const struct regmap_config fxas21002c_regmap_spi_conf = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = FXAS21002C_REG_CTRL3,
++};
++
++static int fxas21002c_spi_probe(struct spi_device *spi)
++{
++	const struct spi_device_id *id = spi_get_device_id(spi);
++	struct regmap *regmap;
++
++	regmap = devm_regmap_init_spi(spi, &fxas21002c_regmap_spi_conf);
++	if (IS_ERR(regmap)) {
++		dev_err(&spi->dev, "Failed to register spi regmap: %ld\n",
++			PTR_ERR(regmap));
++		return PTR_ERR(regmap);
++	}
++
++	return fxas21002c_core_probe(&spi->dev, regmap, spi->irq, id->name);
++}
++
++static int fxas21002c_spi_remove(struct spi_device *spi)
++{
++	fxas21002c_core_remove(&spi->dev);
++
++	return 0;
++}
++
++static const struct spi_device_id fxas21002c_spi_id[] = {
++	{ "fxas21002c", 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(spi, fxas21002c_spi_id);
++
++static const struct of_device_id fxas21002c_spi_of_match[] = {
++	{ .compatible = "nxp,fxas21002c", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, fxas21002c_spi_of_match);
++
++static struct spi_driver fxas21002c_spi_driver = {
++	.driver = {
++		.name = "fxas21002c_spi",
++		.pm = &fxas21002c_pm_ops,
++		.of_match_table = fxas21002c_spi_of_match,
++	},
++	.probe		= fxas21002c_spi_probe,
++	.remove		= fxas21002c_spi_remove,
++	.id_table	= fxas21002c_spi_id,
++};
++module_spi_driver(fxas21002c_spi_driver);
++
++MODULE_AUTHOR("Rui Miguel Silva <rui.silva@linaro.org>");
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("FXAS21002C SPI Gyro driver");
+-- 
+2.21.0
