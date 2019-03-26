@@ -1,64 +1,38 @@
-Return-Path: <SRS0=1YM6=R6=opensource.cirrus.com=ckeepax@kernel.org>
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH v3 1/2] hwmon: lochnagar: Add device tree binding document
-Date: Wed, 27 Mar 2019 15:13:27 +0000
-Message-ID: <20190327151328.2491-1-ckeepax@opensource.cirrus.com>
+Return-Path: <SRS0=u60/=R5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr50056.outbound.protection.outlook.com ([40.107.5.56]:51362
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726266AbfCZTXc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 Mar 2019 15:23:32 -0400
+From: Ioana Ciornei <ioana.ciornei@nxp.com>
+Subject: [PATCH 0/2] arm64: dts: add fsl-dpaa2-console node
+Date: Tue, 26 Mar 2019 19:23:29 +0000
+Message-ID: <1553628194-25119-1-git-send-email-ioana.ciornei@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-To: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-hwmon@vger.kernel.org, corbet@lwn.net, devicetree@vger.kernel.org, patches@opensource.cirrus.com
+Sender: devicetree-owner@vger.kernel.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ioana Ciornei <ioana.ciornei@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Lochnagar is an evaluation and development board for Cirrus
-Logic Smart CODEC and Amp devices. It allows the connection of
-most Cirrus Logic devices on mini-cards, as well as allowing
-connection of various application processor systems to provide a
-full evaluation platform. This driver supports the board
-controller chip on the Lochnagar board.
+This patch set adds the fsl-dpaa2-console device tree node for DPAA2 based
+platforms and adds its corresponding documentation.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
+Ioana Ciornei (2):
+  arm64: dts: add fsl-dpaa2-console node for DPAA2 platforms
+  Documentation: DT: Add entry for DPAA2 console
 
-No changes since v2.
+ Documentation/devicetree/bindings/misc/fsl,dpaa2-console.txt | 11 ++++++++=
++++
+ MAINTAINERS                                                  |  1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi               |  5 +++++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi               |  5 +++++
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi               |  5 +++++
+ 5 files changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/fsl,dpaa2-consol=
+e.txt
 
-Thanks,
-Charles
-
- .../devicetree/bindings/hwmon/cirrus,lochnagar.txt | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
-
-diff --git a/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
-new file mode 100644
-index 0000000000000..ffb79ccf51ee3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
-@@ -0,0 +1,26 @@
-+Cirrus Logic Lochnagar Audio Development Board
-+
-+Lochnagar is an evaluation and development board for Cirrus Logic
-+Smart CODEC and Amp devices. It allows the connection of most Cirrus
-+Logic devices on mini-cards, as well as allowing connection of
-+various application processor systems to provide a full evaluation
-+platform.  Audio system topology, clocking and power can all be
-+controlled through the Lochnagar, allowing the device under test
-+to be used in a variety of possible use cases.
-+
-+This binding document describes the binding for the hardware monitor
-+portion of the driver.
-+
-+This binding must be part of the Lochnagar MFD binding:
-+  [4] ../mfd/cirrus,lochnagar.txt
-+
-+Required properties:
-+
-+  - compatible : One of the following strings:
-+                 "cirrus,lochnagar2-hwmon"
-+
-+Example:
-+
-+lochnagar-hwmon {
-+	compatible = "cirrus,lochnagar2-hwmon";
-+};
--- 
-2.11.0
+--=20
+1.9.1
