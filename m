@@ -1,50 +1,27 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V3 2/5] mmc: mmci: define get_dctrl_cfg for legacy variant
-Date: Tue, 26 Mar 2019 18:46:44 +0100
-Message-ID: <CAPDyKFoOugNTxN_g8Co1pBMkTku6+zMU40vqo-e0pZt+1rs9cw@mail.gmail.com>
-References: <1553591470-31419-1-git-send-email-ludovic.Barre@st.com> <1553591470-31419-3-git-send-email-ludovic.Barre@st.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v4 1/4] dt-bindings: net: dsa: qca8k: fix example
+Date: Tue, 26 Mar 2019 10:47:22 -0700 (PDT)
+Message-ID: <20190326.104722.1926726991465471906.davem@davemloft.net>
+References: <20190322000503.22431-1-chunkeey@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553591470-31419-3-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190322000503.22431-1-chunkeey@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: chunkeey@gmail.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch, robh+dt@kernel.org, mark.rutland@arm.com, marek.behun@nic.cz
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 26 Mar 2019 at 10:11, Ludovic Barre <ludovic.Barre@st.com> wrote:
->
-> From: Ludovic Barre <ludovic.barre@st.com>
->
-> This patch defines get_dctrl_cfg callback for legacy variants
-> whatever DMA_ENGINE configuration.
->
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> ---
->  drivers/mmc/host/mmci.c | 31 +++++++++++++++++++++++--------
->  drivers/mmc/host/mmci.h |  3 +++
->  2 files changed, 26 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> index 9e6a2c1..4041e36 100644
-> --- a/drivers/mmc/host/mmci.c
-> +++ b/drivers/mmc/host/mmci.c
-> @@ -46,12 +46,6 @@
->
->  #define DRIVER_NAME "mmci-pl18x"
->
-> -#ifdef CONFIG_DMA_ENGINE
-> -static void mmci_variant_init(struct mmci_host *host);
-> -#else
-> -static inline void mmci_variant_init(struct mmci_host *host) {}
-> -#endif
+From: Christian Lamparter <chunkeey@gmail.com>
+Date: Fri, 22 Mar 2019 01:05:00 +0100
 
-Looks like you are moving the declaration to the header file. I would
-rather keep it here as there is no point in sharing to another c-file
-(at least not yet). The same applies for the new ux500v2 init
-function.
+> In the example, the phy at phy@0 is clashing with
+> the switch0@0 at the same address. Usually, the switches
+> are accessible through pseudo PHYs which in case of the
+> qca8k are located at 0x10 - 0x18.
+> 
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
 
-Other than that, this looks good to me!
-
-Kind regards
-Uffe
+Series applied.
