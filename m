@@ -1,49 +1,76 @@
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH 5/5] lib/vsprintf: Add %pfw conversion specifier for
- printing fwnode names
-Date: Tue, 26 Mar 2019 16:13:07 +0100
-Message-ID: <20190326151307.erqyps6wfvf4on2d@pathway.suse.cz>
-References: <20190322152930.16642-1-sakari.ailus@linux.intel.com>
- <20190322152930.16642-6-sakari.ailus@linux.intel.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: [PATCH 00/10] Add Tegra194 PCIe support
+Date: Tue, 26 Mar 2019 20:43:17 +0530
+Message-ID: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190322152930.16642-6-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, vidyas@nvidia.com, tiwai@suse.de, spujar@nvidia.com, skomatineni@nvidia.com, liviu.dudau@arm.com, krzk@kernel.org, heiko@sntech.de, horms+renesas@verge.net.au, olof@lixom.net, maxime.ripard@bootlin.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, jagan@amarulasolutions.com, enric.balletbo@collabora.com, ezequiel@collabora.com, stefan.wahren@i2se.com, marc.w.gonzalez@free.fr, l.stach@pengutronix.de, tpiepho@impinj.com, hayashi.kunihiko@
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri 2019-03-22 17:29:30, Sakari Ailus wrote:
-> Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
-> support printing full path of the node, including its name ("f") and only
-> the node's name ("P") in the printk family of functions. The two flags
-> have equivalent functionality to existing %pOF with the same two modifiers
-> ("f" and "P") on OF based systems. The ability to do the same on ACPI
-> based systems is added by this patch.
-> 
-> On ACPI based systems the resulting strings look like
-> 
-> 	\_SB.PCI0.CIO2.port@1.endpoint@0
-> 
-> where the nodes are separated by a dot (".") and the first three are
-> ACPI device nodes and the latter two ACPI data nodes.
-> 
-> Depends-on: ("vsprintf: Remove support for %pF and %pf in favour of %pS and %ps")
+Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
+There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
+Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
+Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
+UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
+controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
+core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
+to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
+to PCIe controller
+This patch series
+- Adds support for P2U PHY driver
+- Adds support for PCIe host controller
+- Adds device tree nodes each PCIe controllers
+- Enables nodes applicable to p2972-0000 platform
+- Adds helper APIs in Designware core driver to get capability regs offset
+- Adds defines for new feature registers of PCIe spec revision 4
+- Makes changes in DesignWare core driver to get Tegra194 PCIe working
 
-Reusing obsolete modifiers is dangerous from many reasons:
+Testing done on P2972-0000 platform
+- Able to get PCIe link up with on-board Marvel eSATA controller
+- Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
+- Able to do data transfers with both SATA drives and NVMe cards
 
-   + people might miss the change of the meaning
-   + backporting mistakes
-   + 3rd party modules
+Note
+- Enabling x8 slot on P2972-0000 platform requires pinmux driver for Tegra194.
+  It is being worked on currently and hence Controller:5 (i.e. x8 slot) is
+  disabled in this patch series. A future patch series would enable this.
+Vidya Sagar (10):
+  PCI: save pci_bus pointer in pcie_port structure
+  PCI: perform dbi regs write lock towards the end
+  PCI: dwc: Move config space capability search API
+  PCI: Add #defines for PCIe spec r4.0 features
+  dt-bindings: PCI: tegra: Add device tree support for T194
+  arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT
+  arm64: tegra: Enable PCIe slots in P2972-0000 board
+  phy: tegra: Add PCIe PIPE2UPHY support
+  PCI: tegra: Add Tegra194 PCIe support
+  arm64: Add Tegra194 PCIe driver to defconfig
 
-It might be acceptable if the long term gain is bigger
-than a short time difficulties. But it would be better
-to it a safe way when possible.
+ .../bindings/pci/nvidia,tegra194-pcie.txt          |  209 +++
+ .../devicetree/bindings/phy/phy-tegra194-p2u.txt   |   34 +
+ arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi     |    2 +-
+ arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts |   50 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi           |  473 +++++
+ arch/arm64/configs/defconfig                       |    1 +
+ drivers/pci/controller/dwc/Kconfig                 |   10 +
+ drivers/pci/controller/dwc/Makefile                |    1 +
+ drivers/pci/controller/dwc/pcie-designware-ep.c    |   37 +-
+ drivers/pci/controller/dwc/pcie-designware-host.c  |    4 +-
+ drivers/pci/controller/dwc/pcie-designware.c       |   73 +
+ drivers/pci/controller/dwc/pcie-designware.h       |    4 +
+ drivers/pci/controller/dwc/pcie-tegra194.c         | 1862 ++++++++++++++++++++
+ drivers/phy/tegra/Kconfig                          |    7 +
+ drivers/phy/tegra/Makefile                         |    1 +
+ drivers/phy/tegra/pcie-p2u-tegra194.c              |  138 ++
+ include/uapi/linux/pci_regs.h                      |   22 +-
+ 17 files changed, 2888 insertions(+), 40 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+ create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
+ create mode 100644 drivers/phy/tegra/pcie-p2u-tegra194.c
 
-Fortunately, we could keep the backward compatibility
-for "%pf" and handle only "%pfw*" with the fwnode api.
-
-Best Regards,
-Petr
+-- 
+2.7.4
