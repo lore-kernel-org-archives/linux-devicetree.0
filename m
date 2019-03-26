@@ -1,52 +1,39 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: [PATCH] arm64: dts: msm8998: Add UFS phy reset
-Date: Tue, 26 Mar 2019 10:05:18 -0700
-Message-ID: <20190326170518.157317-1-evgreen@chromium.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v6 3/3] arm64: dts: Add USB DT nodes for Stingray SoC
+Date: Tue, 26 Mar 2019 10:23:21 -0700
+Message-ID: <20190326172321.26289-1-f.fainelli@gmail.com>
+References: <1552986944-3398-1-git-send-email-srinath.mannam@broadcom.com> <1552986944-3398-4-git-send-email-srinath.mannam@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1552986944-3398-4-git-send-email-srinath.mannam@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Gonzalez <marc.w.gonzalez@free.fr>, Andy Gross <andy.gross@linaro.org>
-Cc: Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+To: bcm-kernel-feedback-list@broadcom.com, Srinath Mannam <srinath.mannam@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jayachandran C <jnair@caviumnetworks.com>, Tejun Heo <tj@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-With the new refactoring at [1], the UFS phy now controls its own
-destiny in toggling the phy reset bit within the UFS host controller.
-Add the DT pieces needed to 1) expose the reset controller from the
-HC, and 2) use it from the PHY. This series is based atop linux-next
-plus Marc's series at [2].
+On Tue, 19 Mar 2019 14:45:44 +0530, Srinath Mannam <srinath.mannam@broadcom.com> wrote:
+> Add DT nodes for
+>   - Two xHCI host controllers
+>   - Two BDC Broadcom USB device controller
+>   - Five USB PHY controllers
+> 
+> [xHCI0]      [BDC0]            [xHCI1]            [BDC1]
+>    |           |                  |                 |
+>   ---------------               -----------------------
+>    |           |                 |         |         |
+> [SS-PHY0]   [HS-PHY0]        [SS-PHY1] [HS-PHY2] [HS-PHY1]
+> 
+> [SS-PHY0/HS-PHY0] and [SS-PHY1/HS-PHY1] are combo PHYs has one SS and
+> one HS PHYs. [HS-PHY2] is a single HS PHY.
+> 
+> xHCI use SS-PHY to detect SS devices and HS-PHY to detect HS/FS/LS
+> devices. BDC use SS-PHY in SS mode and HS-PHY in HS mode.
+> 
+> xHCI0 port1 is SS-PHY0, port2 is HS-PHY0.
+> xHCI1 port1 is SS-PHY1, port2 is HS-PHY2 and port3 is HS-PHY1.
+> 
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> ---
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
-
-[1] https://lore.kernel.org/lkml/20190321171800.104681-1-evgreen@chromium.org/
-[2] https://lore.kernel.org/lkml/43768d77-80b7-9cdc-b6e0-08ec4a026c21@free.fr/
-
----
-I haven't tested this. Marc, I'm hoping you'll test this out and hijack this
-patch if it needs any fixups.
-
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 3d0aeb3211de..d59a2c5fe83a 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -990,6 +990,7 @@
- 			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
- 			phys = <&ufsphy_lanes>;
- 			phy-names = "ufsphy";
-+			#reset-cells = <1>;
- 			lanes-per-direction = <2>;
- 			power-domains = <&gcc UFS_GDSC>;
- 
-@@ -1039,6 +1040,7 @@
- 				<&gcc GCC_UFS_CLKREF_CLK>,
- 				<&gcc GCC_UFS_PHY_AUX_CLK>;
- 
-+			resets = <&ufshc 0>;
- 			ufsphy_lanes: lanes@1da7400 {
- 				reg = <0x01da7400 0x128>,
- 				      <0x01da7600 0x1fc>,
--- 
-2.20.1
+Applied to devicetree-arm64/next, thanks!
+--
+Florian
