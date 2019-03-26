@@ -1,60 +1,115 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH 5/5] lib/vsprintf: Add %pfw conversion specifier for
- printing fwnode names
-Date: Tue, 26 Mar 2019 16:30:40 +0200
-Message-ID: <20190326143040.GF7049@kuha.fi.intel.com>
-References: <20190322152930.16642-1-sakari.ailus@linux.intel.com>
- <20190322152930.16642-6-sakari.ailus@linux.intel.com>
- <20190322172114.GY9224@smile.fi.intel.com>
- <20190324181745.vgckevapfwi7mul7@mara.localdomain>
- <20190326131353.GY9224@smile.fi.intel.com>
- <20190326140633.GE7049@kuha.fi.intel.com>
- <20190326141243.g2x44v65npw4yhw5@paasikivi.fi.intel.com>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: [PATCH v5 0/6]dt-bindings: Firmware node binding for ZynqMP core
+Date: Tue, 26 Mar 2019 20:01:23 +0530
+Message-ID: <20190326143129.2608-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190326141243.g2x44v65npw4yhw5@paasikivi.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+To: atull@kernel.org, mdf@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, rajanv@xilinx.com, jollys@xilinx.com, nava.manne@xilinx.com, linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 04:12:43PM +0200, Sakari Ailus wrote:
-> Moi,
-> 
-> On Tue, Mar 26, 2019 at 04:06:33PM +0200, Heikki Krogerus wrote:
-> > Hi,
-> > 
-> > On Tue, Mar 26, 2019 at 03:13:53PM +0200, Andy Shevchenko wrote:
-> > > > > > On ACPI based systems the resulting strings look like
-> > > > > > 
-> > > > > > 	\_SB.PCI0.CIO2.port@1.endpoint@0
-> > > > > > 
-> > > > > > where the nodes are separated by a dot (".") and the first three are
-> > > > > > ACPI device nodes and the latter two ACPI data nodes.
-> > > > > 
-> > > > > Do we support swnode here?
-> > > > 
-> > > > Good question. The swnodes have no hierarchy at the moment (they're only
-> > > > created for a struct device as a parent) and they do not have human-readable
-> > > > names. So I'd say it's not relevant right now. Should these two change,
-> > > > support for swnode could (and should) be added later on.
-> > > 
-> > > Heikki, what do you think about this?
-> > 
-> > Well, the swnodes do have hierarchy. That was kind of the whole point
-> > of introducing them. They now can also be named using "name" property.
-> > See commit 344798206f171c5abea7ab1f9762fa526d7f539d.
-> 
-> Right; I saw the function after initially replying to Andy but I missed
-> where the node name came from. :-) Now I know...
-> 
-> I can add support for swnode, too, if you like.
+Base firmware node and clock child node binding are part of mainline kernel.
+This patchset adds documentation to describe rest of the firmware child node bindings. 
 
-It's up to you.
+Complete firmware DT node example is shown below for ease of understanding:
 
-thanks,
+firmware {
+        zynqmp_firmware: zynqmp-firmware {
+                compatible = "xlnx,zynqmp-firmware";
+                method = "smc";
+                #power-domain-cells = <1>;
+                #reset-cells = <1>;
+
+                zynqmp_clk: clock-controller {
+                        #clock-cells = <1>;
+                        compatible = "xlnx,zynqmp-clk";
+                        clocks = <&pss_ref_clk>, <&video_clk>, <&pss_alt_ref_clk>, <&aux_ref_clk>, <&gt_crx_ref_clk>;
+                        clock-names = "pss_ref_clk", "video_clk", "pss_alt_ref_clk","aux_ref_clk", "gt_crx_ref_clk";
+                };
+
+                zynqmp_power: zynqmp-power {
+                        compatible = "xlnx,zynqmp-power";
+                        interrupts = <0 35 4>;
+                };
+
+                zynqmp_reset: reset-controller {
+                        compatible = "xlnx,zynqmp-reset";
+                        #reset-cells = <1>;
+                };
+ 
+		nvmem_firmware {
+                        compatible = "xlnx,zynqmp-nvmem-fw";
+                        #address-cells = <1>;
+                        #size-cells = <1>;
+
+                        /* Data cells */
+                        soc_revision: soc_revision {
+                                reg = <0x0 0x4>;
+                        };
+                };
+
+		pinctrl0: pinctrl@ff180000 {
+                        compatible = "xlnx,zynqmp-pinctrl";
+
+                        pinctrl_uart1_default: uart1-default {
+                                mux {
+                                        groups = "uart0_4_grp";
+                                        function = "uart0";
+                                };
+
+                                conf {
+                                        groups = "uart0_4_grp";
+                                        slew-rate = <SLEW_RATE_SLOW>;
+                                        io-standard = <IO_STANDARD_LVCMOS18>;
+                                };
+
+                                conf-rx {
+                                        pins = "MIO18";
+                                        bias-high-impedance;
+                                };
+
+                                conf-tx {
+                                        pins = "MIO19";
+                                        bias-disable;
+                                        schmitt-cmos = <PIN_INPUT_TYPE_CMOS>;
+                                };
+                        };
+                };
+
+		zynqmp_pcap: pcap {
+			compatible = "xlnx,zynqmp-pcap-fpga";
+		};
+	};
+};
+		
+Nava kishore Manne (3):
+  dt-bindings: reset: Add bindings for ZynqMP reset driver
+  dt-bindings: nvmem: Add bindings for ZynqMP nvmem driver
+  dt-bindings: fpga: Add bindings for ZynqMP fpga driver
+
+Rajan Vaja (3):
+  dt-bindings: power: Add ZynqMP power domain bindings
+  dt-bindings: soc: Add ZynqMP PM bindings
+  dt-bindings: pinctrl: Add ZynqMP pin controller bindings
+
+ .../bindings/fpga/xlnx,zynqmp-pcap-fpga.txt   |  25 ++
+ .../bindings/nvmem/xlnx,zynqmp-nvmem.txt      |  47 +++
+ .../bindings/pinctrl/xlnx,zynqmp-pinctrl.txt  | 275 ++++++++++++++++++
+ .../power/reset/xlnx,zynqmp-power.txt         |  25 ++
+ .../bindings/power/xlnx,zynqmp-genpd.txt      |  34 +++
+ .../bindings/reset/xlnx,zynqmp-reset.txt      |  52 ++++
+ include/dt-bindings/power/xlnx-zynqmp-power.h |  39 +++
+ .../dt-bindings/reset/xlnx-zynqmp-resets.h    | 130 +++++++++
+ 8 files changed, 627 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+ create mode 100644 Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
+ create mode 100644 Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
+ create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
+ create mode 100644 include/dt-bindings/reset/xlnx-zynqmp-resets.h
 
 -- 
-heikki
+2.18.0
