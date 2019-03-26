@@ -1,69 +1,43 @@
-Return-Path: <SRS0=0oJi=RR=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 1/7] dt-bindings: usb: hd3ss3220 device tree binding document
-Date: Thu, 14 Mar 2019 08:39:29 +0000
-Message-Id: <1552552775-51667-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1552552775-51667-1-git-send-email-biju.das@bp.renesas.com>
-References: <1552552775-51667-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=1wp7=R5=linaro.org=rui.silva@kernel.org>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH v5 6/6] MAINTAINERS: add entry for fxas21002c gyro driver
+Date: Tue, 26 Mar 2019 10:16:51 +0000
+Message-Id: <20190326101651.25056-7-rui.silva@linaro.org>
+In-Reply-To: <20190326101651.25056-1-rui.silva@linaro.org>
+References: <20190326101651.25056-1-rui.silva@linaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree binding document for TI HD3SS3220 Type-C DRP port
-controller driver.
+Add me as maintainer of the nxp fxas21002c gyroscope driver.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
-V1-->V2
-  * Added connector node.
-  * updated the example with connector node.
----
- .../devicetree/bindings/usb/ti,hd3ss3220.txt       | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
+ MAINTAINERS | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
-new file mode 100644
-index 0000000..7f41400
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
-@@ -0,0 +1,37 @@
-+TI HD3SS3220 TypeC DRP Port Controller.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e17ebf70b548..2748e406889c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11107,6 +11107,16 @@ F:	Documentation/ABI/stable/sysfs-bus-nvmem
+ F:	include/linux/nvmem-consumer.h
+ F:	include/linux/nvmem-provider.h
+ 
++NXP FXAS21002C DRIVER
++M:	Rui Miguel Silva <rmfrfs@gmail.com>
++L:	linux-iio@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/iio/gyroscope/fxas21002c.txt
++F:	drivers/iio/gyro/fxas21002c_core.c
++F:	drivers/iio/gyro/fxas21002c.h
++F:	drivers/iio/gyro/fxas21002c_i2c.c
++F:	drivers/iio/gyro/fxas21002c_spi.c
 +
-+Required properties:
-+ - compatible: Must be "ti,hd3ss3220".
-+ - reg: I2C slave address, must be 0x47 or 0x67 based on ADDR pin.
-+ - interrupts: <a b> where a is the interrupt number and b represents an
-+   encoding of the sense and level information for the interrupt.
-+
-+Required sub-node:
-+ - connector : The "usb-c-connector" attached to the hd3ss3220 chip. The
-+   bindings of the connector node are specified in:
-+
-+	Documentation/devicetree/bindings/connector/usb-connector.txt
-+
-+Example:
-+hd3ss3220@47 {
-+	compatible = "ti,hd3ss3220";
-+	reg = <0x47>;
-+	interrupt-parent = <&gpio6>;
-+	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+
-+	usb_con: connector {
-+		compatible = "usb-c-connector";
-+		label = "USB-C";
-+		data-role = "dual";
-+	};
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		hd3ss3220_ep: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&usb3peri_role_switch>;
-+		};
-+	};
-+};
+ NXP SGTL5000 DRIVER
+ M:	Fabio Estevam <festevam@gmail.com>
+ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
 -- 
-2.7.4
+2.21.0
