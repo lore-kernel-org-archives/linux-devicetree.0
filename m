@@ -1,119 +1,95 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] dt-bindings: Add schemas for simple-framebuffer
-Date: Tue, 26 Mar 2019 22:35:26 +0100
-Message-ID: <20190326213526.w3t7fga7uzkkliq7@flea>
-References: <20190325135414.9728-1-maxime.ripard@bootlin.com>
- <CAL_JsqKep7B6LKUMRRxonKV48YEHtYow9TjKJwDUVN0S2BX3Ww@mail.gmail.com>
+From: Angus Ainslie <angus@akkea.ca>
+Subject: Re: [PATCH v6 1/4] arm64: dts: imx8mq: Add SDMA nodes
+Date: Tue, 26 Mar 2019 14:44:21 -0700
+Message-ID: <f5934d5bca4b9241d0ac84de463fbeed@www.akkea.ca>
+References: <20190308120141.3698-1-daniel.baluta@nxp.com>
+ <20190308120141.3698-2-daniel.baluta@nxp.com>
+ <20190319143139.GA24315@dragon>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6419337784756979708=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqKep7B6LKUMRRxonKV48YEHtYow9TjKJwDUVN0S2BX3Ww@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Jourdan <mjourdan@baylibre.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190319143139.GA24315@dragon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, baruch@tkos.co.il, Anson Huang <anson.huang@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, kuninori.morimoto.gx@renesas.com, ccaione@baylibre.com, spencercw@gmail.com, "S.j. Wang" <shengjiu.wang@nxp.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, dl-linux-imx <linux-imx@nxp.com>, kernel@pengutronix.de, Aisheng Dong <aisheng.dong@nxp.com>, agx@sigxcpu.org, festevam@gmail.com, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
+On 2019-03-19 07:31, Shawn Guo wrote:
+> On Fri, Mar 08, 2019 at 12:02:22PM +0000, Daniel Baluta wrote:
+>> SDMA1 is part of AIPS-3 region and SDMA2 is part
+>> of AIPS-1 region.
+>> 
+>> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> 
+> Reviewed-by tag should go after your SoB, since that's the sequence of
+> how they come.
+> 
+>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+>> [initial submit in i.MX internal tree]
+>> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+>> [adaptation for linux-next]
+> 
+> I would see these notes in commit log or even just cover letter.
+> 
+> Shawn
+> 
+>> ---
+>>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 22 ++++++++++++++++++++++
+>>  1 file changed, 22 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi 
+>> b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+>> index 9155bd4784eb..9d48450453fb 100644
+>> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+>> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+>> @@ -234,6 +234,17 @@
+>>  				status = "disabled";
+>>  			};
+>> 
+>> +			sdma2: sdma@302c0000 {
+>> +				compatible = "fsl,imx8mq-sdma","fsl,imx7d-sdma";
+>> +				reg = <0x302c0000 0x10000>;
+>> +				interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
+>> +				clocks = <&clk IMX8MQ_CLK_SDMA2_ROOT>,
+>> +					 <&clk IMX8MQ_CLK_SDMA2_ROOT>;
+>> +				clock-names = "ipg", "ahb";
+>> +				#dma-cells = <3>;
+>> +				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
+>> +			};
+>> +
+>>  			iomuxc: iomuxc@30330000 {
+>>  				compatible = "fsl,imx8mq-iomuxc";
+>>  				reg = <0x30330000 0x10000>;
+>> @@ -575,6 +586,17 @@
+>>  				status = "disabled";
+>>  			};
+>> 
+>> +			sdma1: sdma@30bd0000 {
+>> +				compatible = "fsl, imx8mq-sdma","fsl,imx7d-sdma";
 
---===============6419337784756979708==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mizbkw563ycmwfqp"
-Content-Disposition: inline
+There shouldn't be a space in the imx8mq compatible string.
 
+Angus
 
---mizbkw563ycmwfqp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Mon, Mar 25, 2019 at 11:27:36AM -0500, Rob Herring wrote:
-> On Mon, Mar 25, 2019 at 8:54 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > The simple framebuffer is a binding that allows the bootloader to setup a
-> > framebuffer, describe it in the Device Tree for the OS to pick it up and
-> > use it as is.
-> >
-> > Replace the current binding by a schema to allow the validation tools to
-> > check those nodes.
-> >
-> > Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> > Cc: Chen-Yu Tsai <wens@csie.org>
-> > Cc: Hans de Goede <hdegoede@redhat.com>
-> > Cc: Maxime Jourdan <mjourdan@baylibre.com>
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> >
-> > ---
-> >
-> > Rob,
-> >
-> > Even though the node itself is properly described, I still end up with some
-> > validation warnings when the chosen node is validated (basically
-> > complaining that ranges, and the framebuffer nodes shouldn't be here, since
-> > we haven't described them in the chosen schemas).
->
-> Having 'ranges' is a bit strange because 'chosen' doesn't have an
-> address. We can add #address-cells, #size-cells and framebuffer child
-> node to the base chosen schema.
-
-Maybe that's just cargo cult, but both the amlogic and the sunxi DT
-have ranges in chosen. Shouldn't we need it so that the address is
-decoded properly?
-
-> > I've tried to expand it, but I failed, using that patch:
-> > http://code.bulix.org/mimu5z-634661?raw
->
-> That should work, but you will still get warnings from the core
-> schema. Also, I guess you really want to match on the child compatible
-> which isn't possible with the current tools. I think for now at least,
-> we don't need to validate that simple-fb is a child of chosen.
-
-Ok, so the current patch would be good enough for now I guess.
-
-> Maybe we could add a '$parent' property which the tools add like
-> $nodename. I'd rather wait and see how frequently we need something
-> like this.
-
-ACK.
-
-I'll address the rest of your comments, thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---mizbkw563ycmwfqp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXJqbHgAKCRDj7w1vZxhR
-xdtHAP9BjNYudQekRuOXzOK/yYb2NLPkJLbzftWO+0dhJV+wsAEAnSmxLsszA/ag
-YhS3941NvOU6l1rLXyzFyAInmmG6oAQ=
-=evz6
------END PGP SIGNATURE-----
-
---mizbkw563ycmwfqp--
-
-
---===============6419337784756979708==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============6419337784756979708==--
+>> +				reg = <0x30bd0000 0x10000>;
+>> +				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+>> +				clocks = <&clk IMX8MQ_CLK_SDMA1_ROOT>,
+>> +					 <&clk IMX8MQ_CLK_SDMA1_ROOT>;
+>> +				clock-names = "ipg", "ahb";
+>> +				#dma-cells = <3>;
+>> +				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
+>> +			};
+>> +
+>>  			fec1: ethernet@30be0000 {
+>>  				compatible = "fsl,imx8mq-fec", "fsl,imx6sx-fec";
+>>  				reg = <0x30be0000 0x10000>;
+>> --
+>> 2.17.1
+>> 
+>> 
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
