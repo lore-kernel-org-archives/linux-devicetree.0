@@ -1,73 +1,66 @@
-From: Ibtsam Ul-Haq <ibtsam.haq.0x01@gmail.com>
-Subject: [PATCH v3 2/2] dt-bindings: iio: Add bindings for TI TLA202x ADCs
-Date: Tue, 26 Mar 2019 14:56:20 +0100
-Message-ID: <1553608583-29006-2-git-send-email-ibtsam.haq.0x01@gmail.com>
-References: <1553608583-29006-1-git-send-email-ibtsam.haq.0x01@gmail.com>
+From: Adam Ford <aford173@gmail.com>
+Subject: Re: [PATCH v2 1/4] ARM: davinci: fix cpufreq registration on da850-evm
+Date: Tue, 26 Mar 2019 09:00:21 -0500
+Message-ID: <CAHCN7xJj_aA8XFR6=ZxO-WrfkJRY5fS6NgjHbeqpdfhUnn1apA@mail.gmail.com>
+References: <20190322133105.5945-1-brgl@bgdev.pl> <20190322133105.5945-2-brgl@bgdev.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553608583-29006-1-git-send-email-ibtsam.haq.0x01@gmail.com>
+In-Reply-To: <20190322133105.5945-2-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: Ibtsam Ul-Haq <ibtsam.haq.0x01@gmail.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds devicetree bindings for TI TLA202x ADCs.
+On Fri, Mar 22, 2019 at 8:31 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> The system_rev variable is never set on davinci and is always 0, so
+> we're using the default max operating point of 300MHz. The cvdd supply
+> comes from the tps6507 pmic and the voltage can go all the way to 1.3V
+> so the maximum supported rate should be 456MHz.
 
-Signed-off-by: Ibtsam Ul-Haq <ibtsam.haq.0x01@gmail.com>
----
- .../devicetree/bindings/iio/adc/ti-tla2024.txt     | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-tla2024.txt
+My understanding is that only certain revisions of the silicon can go
+to 456MHz.   The L138's Datasheet lists both a 456 and 375 version.  I
+cannot find a way to read a register to determine which version of the
+silicon is available. Maybe Sekhar can confirm.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/ti-tla2024.txt b/Documentation/devicetree/bindings/iio/adc/ti-tla2024.txt
-new file mode 100644
-index 0000000..a4934df
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/ti-tla2024.txt
-@@ -0,0 +1,45 @@
-+Texas Instruments' TLA2021/TLA2022/TLA2024 12-bit ADC driver
-+
-+Required properties:
-+
-+- compatible: should be one of:
-+  "ti,tla2024"
-+  "ti,tla2022"
-+  "ti,tla2021"
-+
-+- reg: should contain the I2C Address of the device
-+
-+Required subnodes:
-+
-+The ADC channels are configured as subnodes of the ADC.
-+The channels can be single-ended or differential, the input pins are
-+also set in the subnode.
-+
-+Possible channels in TLA2024:
-+  single: <0>, <1>, <2>, <3>
-+  differential: <0 1>, <0 3>, <1 3>, <2 3>
-+
-+In TLA2021/TLA2022 only the differential channel <0 1> is allowed.
-+
-+Example:
-+
-+tla2024_0: adc0@49 {
-+	compatible = "ti,tla2024";
-+	reg = <0x49>;
-+
-+	v0@0 {
-+		single-channel = <0>;
-+	};
-+
-+	v1@1 {
-+		single-channel = <1>;
-+	};
-+
-+	v23@2 {
-+		diff-channels = <2 3>;
-+	};
-+
-+	v01@3 {
-+		diff-channels = <0 1>;
-+	};
-+};
--- 
-2.7.4
+adam
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  arch/arm/mach-davinci/board-da850-evm.c | 12 +-----------
+>  1 file changed, 1 insertion(+), 11 deletions(-)
+>
+> diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
+> index 1fdc9283a8c5..58b2a485b527 100644
+> --- a/arch/arm/mach-davinci/board-da850-evm.c
+> +++ b/arch/arm/mach-davinci/board-da850-evm.c
+> @@ -1155,17 +1155,7 @@ static struct edma_rsv_info *da850_edma_rsv[2] = {
+>  #ifdef CONFIG_CPU_FREQ
+>  static __init int da850_evm_init_cpufreq(void)
+>  {
+> -       switch (system_rev & 0xF) {
+> -       case 3:
+> -               da850_max_speed = 456000;
+> -               break;
+> -       case 2:
+> -               da850_max_speed = 408000;
+> -               break;
+> -       case 1:
+> -               da850_max_speed = 372000;
+> -               break;
+> -       }
+> +       da850_max_speed = 456000;
+>
+>         return da850_register_cpufreq("pll0_sysclk3");
+>  }
+> --
+> 2.20.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
