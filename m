@@ -1,54 +1,98 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 0/8] stm32 m4 remoteproc on STM32MP157c
-Date: Tue, 26 Mar 2019 11:37:11 +0100
-Message-ID: <695af4c3-b3fe-183f-02c7-fd080048b29c@st.com>
-References: <1551795849-13672-1-git-send-email-fabien.dessenne@st.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [RFC PATCH v2 5/5] mtd: hyperbus: Add driver for TI's Hyperbus
+ memory controller
+Date: Tue, 26 Mar 2019 13:40:45 +0300
+Message-ID: <c537220a-63bd-9279-bbf0-fbbb1b4eb10a@cogentembedded.com>
+References: <20190321174548.9288-1-vigneshr@ti.com>
+ <20190321174548.9288-6-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551795849-13672-1-git-send-email-fabien.dessenne@st.com>
-Content-Language: en-US
+In-Reply-To: <20190321174548.9288-6-vigneshr@ti.com>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabien Dessenne <fabien.dessenne@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
-Cc: Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Ludovic Barre <ludovic.barre@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: Vignesh Raghavendra <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tudor.ambarus@microchip.com, nsekhar@ti.com, Mason Yang <masonccyang@mxic.com.tw>
 List-Id: devicetree@vger.kernel.org
 
-Hi fabien
+On 03/21/2019 08:45 PM, Vignesh Raghavendra wrote:
 
-On 3/5/19 3:24 PM, Fabien Dessenne wrote:
-> STMicrolectronics STM32MP157 MPU are based on a Dual Arm Cortex-A7 core and a
-> Cortex-M4.
-> This patchset adds the support of the stm32_rproc driver allowing to control
-> the M4 remote processor.
+> Add driver for Hyperbus memory controller on TI's AM654 SoC. Programming
+> IP is pretty simple and provides direct memory mapped access to
+> connected Flash devices.
 > 
-> Fabien Dessenne (8):
->    dt-bindings: stm32: add bindings for ML-AHB interconnect
->    dt-bindings: remoteproc: add bindings for stm32 remote processor
->      driver
->    remoteproc: stm32: add an ST stm32_rproc driver
->    ARM: dts: stm32: add m4 remoteproc support on STM32MP157c
->    ARM: dts: stm32: declare copro reserved memories on STM32MP157c-ed1
->    ARM: dts: stm32: enable m4 coprocessor support on STM32MP157c-ed1
->    ARM: dts: stm32: declare copro reserved memories on STM32MP157a-dk1
->    ARM: dts: stm32: enable m4 coprocessor support on STM32MP157a-dk1
+> Add basic support for the IP without DMA. Second ChipSelect is not
+> supported for now.
 > 
->   .../devicetree/bindings/arm/stm32/mlahb.txt        |  30 +
->   .../devicetree/bindings/remoteproc/stm32-rproc.txt |  67 +++
->   arch/arm/boot/dts/stm32mp157a-dk1.dts              |  54 ++
->   arch/arm/boot/dts/stm32mp157c-ed1.dts              |  54 ++
->   arch/arm/boot/dts/stm32mp157c.dtsi                 |  21 +
->   drivers/remoteproc/Kconfig                         |  15 +
->   drivers/remoteproc/Makefile                        |   1 +
->   drivers/remoteproc/stm32_rproc.c                   | 624 +++++++++++++++++++++
->   8 files changed, 866 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
->   create mode 100644 Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
->   create mode 100644 drivers/remoteproc/stm32_rproc.c
-> 
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+[...]
+> diff --git a/drivers/mtd/hyperbus/Makefile b/drivers/mtd/hyperbus/Makefile
+> index ca61dedd730d..24abd1d43ade 100644
+> --- a/drivers/mtd/hyperbus/Makefile
+> +++ b/drivers/mtd/hyperbus/Makefile
+> @@ -1,3 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+>  obj-$(CONFIG_MTD_HYPERBUS)	+= hyperbus-core.o
+> +obj-$(CONFIG_HBMC_AM654)	+= hbmc_am654.o
+> diff --git a/drivers/mtd/hyperbus/hbmc_am654.c b/drivers/mtd/hyperbus/hbmc_am654.c
+> new file mode 100644
+> index 000000000000..abf2b0959a35
+> --- /dev/null
+> +++ b/drivers/mtd/hyperbus/hbmc_am654.c
+> @@ -0,0 +1,108 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+> +// Author: Vignesh Raghavendra <vigneshr@ti.com>
+> +
+> +#include <linux/err.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mtd/hyperbus.h>
+> +#include <linux/mtd/mtd.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/types.h>
+> +
+> +struct am654_hbmc_priv {
+> +	struct hyperbus_ctlr ctlr;
+> +	struct hyperbus_device hbdev;
+> +	void __iomem	*regbase;
+> +};
+> +
+> +static const struct hyperbus_ops am654_hbmc_ops = {
+> +	.calibrate = hyperbus_calibrate,
+> +};
+> +
+> +static int am654_hbmc_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct am654_hbmc_priv *priv;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res) {
 
-Concerning DT patches, at first glance I don't see obvious issues. I'll 
-take Dt patches as soon as driver and bindings patches are acked.
+   This is redundant as devm_ioremap_resource() checks for !res anyway.
 
-regards
-Alex
+> +		dev_err(&pdev->dev, "failed to get memory resource\n");
+> +		return -ENOENT;
+> +	}
+> +
+> +	priv->regbase = devm_ioremap_resource(dev, res);
+
+   BTW, there's devm_platform_ioremap_resource() now...
+
+[...]
+
+MBR, Sergei
