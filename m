@@ -1,55 +1,36 @@
-From: Mickael Guene <mickael.guene@st.com>
-Subject: [PATCH v3 0/2] Add support for MIPID02 CSI-2 to PARALLEL bridge I2C device
-Date: Tue, 26 Mar 2019 11:03:38 +0100
-Message-ID: <1553594620-88280-1-git-send-email-mickael.guene@st.com>
-References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 1/1] arm64: dts: renesas: use extended audio dmac register
+Date: Tue, 26 Mar 2019 11:09:45 +0100
+Message-ID: <CAMuHMdUOcPhy5D-RagprwZkqOOgNt+4bGfSLQzydydHBOt76kQ@mail.gmail.com>
+References: <20190326095826.4987-1-jiada_wang@mentor.com> <20190326095826.4987-2-jiada_wang@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
+In-Reply-To: <20190326095826.4987-2-jiada_wang@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: hugues.fruchet@st.com, Mickael Guene <mickael.guene@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Tianshu Qiu <tian.shu.qiu@intel.com>, Ben Kao <ben.kao@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matt Ranostay <matt.ranostay@konsulko.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Petr Cvek <petrcvekcz@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Mark Rutland <mark.rutland@arm.com>, Bingbu Cao <bingbu.cao@intel.com>, linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, Akinobu Mita <akinobu.mita@g>
+To: Jiada Wang <jiada_wang@mentor.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Mar 26, 2019 at 10:59 AM Jiada Wang <jiada_wang@mentor.com> wrote:
+> Basic audio dmac register only supports busif from 0 to 3,
+> in order to use busif4 ~ busif7, extended audio dmac register
+> need to be used.
+>
+> This patch updates H3 (= r8a7795), M3-W (= r8a7796) and
+> M3-N (=r8a77965) to use extended audio dmac register set.
+>
+> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 
-This is the v3 of my MIPID02 series which introduces support of
-STMicroelectronics MIPID02 CSI-2 to PARALLEL I2C bridge. It allows using a CSI-2
-sensor with a PARALLEL interface. Current driver implementation doesn't support
-CSI-2 second input port usage. It doesn't support also YUV420, RGB565 and RGB444
-input formats.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Thanks to Sakari for review.
+Gr{oetje,eeting}s,
 
-Changes in v3:
-- Fix potential wrong error code for mipid02_stream_disable and mipid02_stream_enable
-- Remove useless memset for ep in mipid02_parse_rx_ep and mipid02_parse_tx_ep
-- Add second CSI-2 input pad even if it's not yet supported
-- Add support of get_fmt, set_fmt and link_validate and only access subdev connected to mipid02
-
-Changes in v2:
-- Add precision about first CSI-2 port data rate
-- Document endpoints supported properties
-- Rename 'mipid02@14' into generic 'csi2rx@14' in example
-- Merge MAINTAINERS patch 3 into patch 1 and 2
-- Fix line too long in Kconfig
-- Add missing delay after reset release
-- Various style fixes
-- Fix mipid02_stream_enable returning no error when mipid02_find_sensor failed
-
-Mickael Guene (2):
-  dt-bindings: Document MIPID02 bindings
-  media:st-mipid02: MIPID02 CSI-2 to PARALLEL bridge driver
-
- .../bindings/media/i2c/st,st-mipid02.txt           |   83 ++
- MAINTAINERS                                        |    8 +
- drivers/media/i2c/Kconfig                          |   14 +
- drivers/media/i2c/Makefile                         |    1 +
- drivers/media/i2c/st-mipid02.c                     | 1012 ++++++++++++++++++++
- 5 files changed, 1118 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
- create mode 100644 drivers/media/i2c/st-mipid02.c
+                        Geert
 
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
