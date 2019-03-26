@@ -1,84 +1,52 @@
-From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: Re: [PATCH 2/5] ARM: dts: imx50: Add Kobo Aura DTS
-Date: Tue, 26 Mar 2019 17:26:53 +0100
-Message-ID: <20190326162653.GD2095@latitude>
-References: <20190319152421.16179-1-j.neuschaefer@gmx.net>
- <20190319152421.16179-3-j.neuschaefer@gmx.net>
- <20190322013151.GR12513@dragon>
+From: Evan Green <evgreen@chromium.org>
+Subject: [PATCH] arm64: dts: msm8998: Add UFS phy reset
+Date: Tue, 26 Mar 2019 10:05:18 -0700
+Message-ID: <20190326170518.157317-1-evgreen@chromium.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="TiqCXmo5T1hvSQQg"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190322013151.GR12513@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Heiko Stuebner <heiko@sntech.de>, Jagan Teki <jagan@amarulasolutions.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Marc Gonzalez <marc.w.gonzalez@free.fr>, Andy Gross <andy.gross@linaro.org>
+Cc: Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+With the new refactoring at [1], the UFS phy now controls its own
+destiny in toggling the phy reset bit within the UFS host controller.
+Add the DT pieces needed to 1) expose the reset controller from the
+HC, and 2) use it from the PHY. This series is based atop linux-next
+plus Marc's series at [2].
 
---TiqCXmo5T1hvSQQg
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Evan Green <evgreen@chromium.org>
 
-Hi, thanks for your comments. I'll address them in v2.
+[1] https://lore.kernel.org/lkml/20190321171800.104681-1-evgreen@chromium.org/
+[2] https://lore.kernel.org/lkml/43768d77-80b7-9cdc-b6e0-08ec4a026c21@free.fr/
 
-On Fri, Mar 22, 2019 at 09:31:53AM +0800, Shawn Guo wrote:
-> On Tue, Mar 19, 2019 at 04:24:17PM +0100, Jonathan Neusch=C3=A4fer wrote:
-> > The Kobo Aura is an e-book reader released in 2013.
-[...]
-> > +	sd2_pwrseq: pwrseq {
-> > +		compatible =3D "mmc-pwrseq-simple";
-> > +		pinctrl-names =3D "default";
-> > +		pinctrl-0 =3D <&pinctrl_sd2_reset>;
-> > +
->=20
-> Please do not have random newlines.
+---
+I haven't tested this. Marc, I'm hoping you'll test this out and hijack this
+patch if it needs any fixups.
 
-Does that apply to all empty lines between properties?
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
->=20
-> > +		reset-gpios =3D <&gpio4 17 GPIO_ACTIVE_LOW>;
-> > +	};
-> > +
-[...]
-> > +&iomuxc {
-> > +	pinctrl_uart2: uart2 {
-> > +		fsl,pins =3D <
-> > +			MX50_PAD_UART2_TXD__UART2_TXD_MUX	0x1e4
-> > +			MX50_PAD_UART2_RXD__UART2_RXD_MUX	0x1e4
-> > +		>;
-> > +	};
-> > +
-> > +	pinctrl_i2c1: i2c1 {
->=20
-> Please sort these pinctrl nodes alphabetically.
-
-It doesn't make a difference here, but should I generally sort by name
-or by label in cases like this one?
-
-
-Jonathan Neusch=C3=A4fer
-
---TiqCXmo5T1hvSQQg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAlyaUsUACgkQCDBEmo7z
-X9sy1RAAniEdi+8w5/NPyQRbEYP4cdEcBxUhgP9VZXT1QxAxFoRDcYYOF0HUmu2g
-qz5ppATEQ7+/rJZH9KTsOtNKEBW/+QjKs1gNa8ZYE9wWkF/LEz8twQHDv7VsmUbm
-KJSUIOvXDvJ2U8PXLZowPjsOP+I6N7BQkxOGr0pDBcpsrm3INNHZYOXKfRzc5ogU
-OuV6i9UDzS7/A/L2CORuOit/27R9iP0w8noLWgJdwW49Nx2lcnT9QXlFQYqAKvlY
-GV25ht7eNJuPrh1RVm40zh59WT3vYQHS3vyVYoI8heSWx5pP7YuHLRZvUJgahXQ6
-vn781Fz4zqp+7VqDscUk3xsy7K4oG0hsbBqBCUiyIsyz1ndAOEjbDoViCjfJRTeA
-e0cnEX2ZXkm8EknLOSkahcqp1lCthVHdjgd7Q98OAYRCX30uGLlvSgqChZ09kzRF
-RbUL/3EiLeJp58hXSMV0p9JH6ESVleiXmI5VGJT4LLI2SaQ6xtQM+dtta6w/CCsm
-gS16xfRL/znFp4+ZtDFwbInDH/RRj+WWGETruMnX4pLgx+TiEJ57kL0psqDwjGDF
-E8ha2On0qwh6x7VrjdGYvM/PeqkPxYYNJlsXZOUdpk0AQS0WDe/+jQvVIEXxQ9t/
-bi8rxYU3QZFZTT4rkl/wXGhL5bRn35FTqFtmX5SuSfYysJ8rMhg=
-=2tJW
------END PGP SIGNATURE-----
-
---TiqCXmo5T1hvSQQg--
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index 3d0aeb3211de..d59a2c5fe83a 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -990,6 +990,7 @@
+ 			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
+ 			phys = <&ufsphy_lanes>;
+ 			phy-names = "ufsphy";
++			#reset-cells = <1>;
+ 			lanes-per-direction = <2>;
+ 			power-domains = <&gcc UFS_GDSC>;
+ 
+@@ -1039,6 +1040,7 @@
+ 				<&gcc GCC_UFS_CLKREF_CLK>,
+ 				<&gcc GCC_UFS_PHY_AUX_CLK>;
+ 
++			resets = <&ufshc 0>;
+ 			ufsphy_lanes: lanes@1da7400 {
+ 				reg = <0x01da7400 0x128>,
+ 				      <0x01da7600 0x1fc>,
+-- 
+2.20.1
