@@ -1,50 +1,38 @@
-From: Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: WARNING: bad unlock balance detected! (3)
-Date: Tue, 26 Mar 2019 09:30:18 +0100
-Message-ID: <CACT4Y+ZWY973sS7645uo8gNsU+wOddutZttXzYc9DjvqfPjqgA@mail.gmail.com>
-References: <0000000000003749360584c395ba@google.com> <e3d9d95fd07502cccf8ef97ba7b2e2adb4eefbb3.camel@baylibre.com>
+From: Andreas Schwab <schwab@suse.de>
+Subject: Re: [PATCH v11 0/2] PWM support for HiFive Unleashed
+Date: Tue, 26 Mar 2019 09:44:57 +0100
+Message-ID: <mvmva06t46u.fsf@suse.de>
+References: <1553508779-9685-1-git-send-email-yash.shah@sifive.com>
+        <mvmbm1zueya.fsf@suse.de>
+        <CAJ2_jOFuw2uu7Et1cOkKpaEwVofR5nD_v-rkOgFZbACK4BvHhg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e3d9d95fd07502cccf8ef97ba7b2e2adb4eefbb3.camel@baylibre.com>
+In-Reply-To: <CAJ2_jOFuw2uu7Et1cOkKpaEwVofR5nD_v-rkOgFZbACK4BvHhg@mail.gmail.com>
+        (Yash Shah's message of "Tue, 26 Mar 2019 12:15:11 +0530")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: syzbot <syzbot+f3e3434787332dfc1c47@syzkaller.appspotmail.com>, David Miller <davem@davemloft.net>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>, linux-amlogic@lists.infradead.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev <netdev@vger.kernel.org>, robh+dt@kernel.org, syzkaller-bugs <syzkaller-bugs@googlegroups.com>, Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+To: Yash Shah <yash.shah@sifive.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 12:54 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
->
-> On Sat, 2019-03-23 at 07:14 -0700, syzbot wrote:
-> > syzbot has bisected this bug to:
-> >
-> > commit ec01fb69ac8034ad6e839b31f9df167a110f868b
-> > Author: Jerome Brunet <jbrunet@baylibre.com>
-> > Date:   Wed Jan 16 17:59:47 2019 +0000
-> >
-> >      arm64: dts: meson: s400: fix emmc maximum rate
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10afb7cf200000
-> > start commit:   065b6c4c Merge tag 'devicetree-for-5.1' of git://git.kerne..
-> > git tree:       upstream
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=12afb7cf200000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=14afb7cf200000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=ea4067c9a08ae046
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=f3e3434787332dfc1c47
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a10577200000
-> >
-> > Reported-by: syzbot+f3e3434787332dfc1c47@syzkaller.appspotmail.com
-> > Fixes: ec01fb69ac80 ("arm64: dts: meson: s400: fix emmc maximum rate")
-> >
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
->
-> Hi David,
->
-> I'm not sure I understand what the problem reported is but I don't think a DT
-> patch could be the cause of a locking issue on x86.
->
-> If I missed something, feel free to let me know.
+On Mär 26 2019, Yash Shah <yash.shah@sifive.com> wrote:
 
-Hi Jerome,
+> 'On Mon, Mar 25, 2019 at 9:24 PM Andreas Schwab <schwab@suse.de> wrote:
+>>
+>>
+>> I still don't see any improvement.  FYI, this is the patch I use for the
+>> device tree:
+>>
+>
+> I am sharing you my test environment which has been working for me so
+> that you can duplicate at your end
 
-I think you are right. It seems that other unrelated kernel bugs have
-diverged bisection into the wrong direction.
+Please test your driver with the DT as above.
+
+Andreas.
+
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
