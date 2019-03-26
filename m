@@ -1,46 +1,27 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH V3 3/5] mmc: mmci: qcom: define get_dctrl_cfg
-Date: Tue, 26 Mar 2019 10:11:08 +0100
-Message-ID: <1553591470-31419-4-git-send-email-ludovic.Barre@st.com>
-References: <1553591470-31419-1-git-send-email-ludovic.Barre@st.com>
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH 0/2] Add EDMA0/EDMA1 nodes
+Date: Tue, 26 Mar 2019 09:42:59 +0000
+Message-ID: <20190326094239.5910-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553591470-31419-1-git-send-email-ludovic.Barre@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: srinivas.kandagatla@linaro.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Ludovic Barre <ludovic.barre@st.com>
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Teo Hall <teo.hall@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+First patch documents the fsl,imx8qm-edma string while the second
+adds the two EDMA nodes used by Audio peripherals.
 
-This patch defines get_dctrl_cfg callback for qcom variant.
-qcom variant has a specific block size definition.
+Daniel Baluta (2):
+  bindings: fsl-edma: Document fsl,imx8qm-edma compatbile string
+  arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/mmc/host/mmci_qcom_dml.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../devicetree/bindings/dma/fsl-edma.txt      |  1 +
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi    | 72 +++++++++++++++++++
+ 2 files changed, 73 insertions(+)
 
-diff --git a/drivers/mmc/host/mmci_qcom_dml.c b/drivers/mmc/host/mmci_qcom_dml.c
-index ccc1b18..3af396b 100644
---- a/drivers/mmc/host/mmci_qcom_dml.c
-+++ b/drivers/mmc/host/mmci_qcom_dml.c
-@@ -188,9 +188,15 @@ static int qcom_dma_setup(struct mmci_host *host)
- 	return 0;
- }
- 
-+static u32 qcom_get_dctrl_cfg(struct mmci_host *host)
-+{
-+	return MCI_DPSM_ENABLE | (host->data->blksz << 4);
-+}
-+
- static struct mmci_host_ops qcom_variant_ops = {
- 	.prep_data = mmci_dmae_prep_data,
- 	.unprep_data = mmci_dmae_unprep_data,
-+	.get_datactrl_cfg = qcom_get_dctrl_cfg,
- 	.get_next_data = mmci_dmae_get_next_data,
- 	.dma_setup = qcom_dma_setup,
- 	.dma_release = mmci_dmae_release,
--- 
-2.7.4
+--=20
+2.17.1
