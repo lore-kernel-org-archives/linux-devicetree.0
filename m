@@ -1,50 +1,45 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 3/5] gpio: use new gpio_set_config() helper in more
- places
-Date: Tue, 26 Mar 2019 13:03:02 -0700
-Message-ID: <20190326200302.GA15712@roeck-us.net>
-References: <20190207162859.26252-1-thomas.petazzoni@bootlin.com>
- <20190207162859.26252-4-thomas.petazzoni@bootlin.com>
- <20190316014352.GA6124@roeck-us.net>
- <20190316144519.07805478@windsurf>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v2 6/6] lib/vsprintf: Add %pfw conversion specifier for
+ printing fwnode names
+Date: Tue, 26 Mar 2019 13:18:09 -0700
+Message-ID: <c08956873f4dfd7dc8bd918bf59443de9c2c7b33.camel@perches.com>
+References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
+         <20190326124106.27694-7-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190316144519.07805478@windsurf>
+In-Reply-To: <20190326124106.27694-7-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jan =?iso-8859-1?Q?Kundr=E1t?= <jan.kundrat@cesnet.cz>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 16, 2019 at 02:45:19PM +0100, Thomas Petazzoni wrote:
-> Hello,
-> 
-> On Fri, 15 Mar 2019 18:43:52 -0700
-> Guenter Roeck <linux@roeck-us.net> wrote:
-> 
-> > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > > index cf8a4402fef1..9762a836fec9 100644
-> > > --- a/drivers/gpio/gpiolib.c
-> > > +++ b/drivers/gpio/gpiolib.c
-> > > @@ -2762,7 +2762,7 @@ int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce)
-> > >  	}
-> > >  
-> > >  	config = pinconf_to_config_packed(PIN_CONFIG_INPUT_DEBOUNCE, debounce);
-> > > -	return chip->set_config(chip, gpio_chip_hwgpio(desc), config);
-> > > +	return gpio_set_config(chip, gpio_chip_hwgpio(desc), config);  
-> > 
-> > Are you sure this is correct ? This patch results in a number of tracebacks
-> > in mainline. Reverting it fixes the problem.
-> > 
-> > gpio_set_config() seems to pack config, but it is already packed above.
-> > That seems a bit suspicious.
-> 
-> I'll have a look. In the mean time, I'm fine with the patch being
-> reverted.
-> 
+On Tue, 2019-03-26 at 14:41 +0200, Sakari Ailus wrote:
+> Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
+> support printing full path of the node, including its name ("f") and only
+> the node's name ("P") in the printk family of functions. The two flags
+> have equivalent functionality to existing %pOF with the same two modifiers
+> ("f" and "P") on OF based systems. The ability to do the same on ACPI
+> based systems is added by this patch.
+[]
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+[]
+> @@ -5977,7 +5977,8 @@ sub process {
+>  				while ($fmt =~ /(\%[\*\d\.]*p(\w))/g) {
+>  					$specifier = $1;
+>  					$extension = $2;
+> -					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOx]/) {
+> +					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxf]/ ||
+> +					    $extension =~ /f[^w]/) {
+>  						$bad_specifier = $specifier;
+>  						last;
+>  					}
 
-The problem is still seen in the latest kernel as of last night, and
-I did not see any further activities. Should I send a revert request ?
+You also need to remove the bit about using %pF or %pf below this
 
-Guenter
+					if ($bad_specifier =~ /p[Ff]/) {
+						$ext_type = "Deprecated";
+						$use = " - use %pS instead";
+						$use =~ s/pS/ps/ if ($bad_specifier =~ /pf/);
+					}
