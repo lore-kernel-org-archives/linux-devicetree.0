@@ -1,32 +1,85 @@
-Return-Path: <SRS0=rvea=RI=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from lists.gateworks.com ([108.161.130.12]:45460 "EHLO
-        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfCEVHN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Mar 2019 16:07:13 -0500
-From: Robert Jones <rjones@gateworks.com>
-Subject: [PATCH 0/2] iio: accel: add support for LIS2DE12
-Date: Tue,  5 Mar 2019 12:32:50 -0800
-Message-Id: <20190305203252.13647-1-rjones@gateworks.com>
+Return-Path: <SRS0=u60/=R5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr50056.outbound.protection.outlook.com ([40.107.5.56]:51362
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727492AbfCZTXe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 Mar 2019 15:23:34 -0400
+From: Ioana Ciornei <ioana.ciornei@nxp.com>
+Subject: [PATCH 1/2] arm64: dts: add fsl-dpaa2-console node for DPAA2
+ platforms
+Date: Tue, 26 Mar 2019 19:23:29 +0000
+Message-ID: <1553628194-25119-2-git-send-email-ioana.ciornei@nxp.com>
+References: <1553628194-25119-1-git-send-email-ioana.ciornei@nxp.com>
+In-Reply-To: <1553628194-25119-1-git-send-email-ioana.ciornei@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Robert Jones <rjones@gateworks.com>
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ioana Ciornei <ioana.ciornei@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-- Document the LIS2DE12 device tree binding.
-- Add device tree support for STM LIS2DE12 accelerometer sensors.
-- Add new st_sensor_settings entry for .wai == 0x33 devices with
-  5376Hz capability.
+Add the fsl-dpaa2-console device tree node for the following
+DPAA2 based platforms: LS1088A, LS2080A, LS2088A and LX2160A.
 
-Robert Jones (2):
-  dt-bindings: iio: accel: add LIS2DE12 sensor device binding
-  iio: accel: add support to LIS2DE12
+Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 5 +++++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 5 +++++
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 5 +++++
+ 3 files changed, 15 insertions(+)
 
- .../devicetree/bindings/iio/st-sensors.txt         |  1 +
- drivers/iio/accel/Kconfig                          |  2 +-
- drivers/iio/accel/st_accel.h                       |  2 +
- drivers/iio/accel/st_accel_core.c                  | 76 ++++++++++++++++++++++
- drivers/iio/accel/st_accel_i2c.c                   |  5 ++
- 5 files changed, 85 insertions(+), 1 deletion(-)
-
--- 
-2.9.2
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/bo=
+ot/dts/freescale/fsl-ls1088a.dtsi
+index de93b42b1f51..5eee5db3ed6c 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -571,6 +571,11 @@
+ 			clock-names =3D "apb_pclk", "wdog_clk";
+ 		};
+=20
++		fsl-dpaa2-console@0x08340020 {
++			compatible =3D "fsl,dpaa2-console";
++			reg =3D <0x00000000 0x08340020 0 0x2>;
++		};
++
+ 		fsl_mc: fsl-mc@80c000000 {
+ 			compatible =3D "fsl,qoriq-mc";
+ 			reg =3D <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/bo=
+ot/dts/freescale/fsl-ls208xa.dtsi
+index 6d6ca166f86b..f1521e6d8da0 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+@@ -321,6 +321,11 @@
+ 			};
+ 		};
+=20
++		fsl-dpaa2-console@0x08340020 {
++			compatible =3D "fsl,dpaa2-console";
++			reg =3D <0x00000000 0x08340020 0 0x2>;
++		};
++
+ 		fsl_mc: fsl-mc@80c000000 {
+ 			compatible =3D "fsl,qoriq-mc";
+ 			reg =3D <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/bo=
+ot/dts/freescale/fsl-lx2160a.dtsi
+index 660e78e46268..8febaa517913 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -777,6 +777,11 @@
+ 			dma-coherent;
+ 		};
+=20
++		fsl-dpaa2-console@0x08340020 {
++			compatible =3D "fsl,dpaa2-console";
++			reg =3D <0x00000000 0x08340020 0 0x2>;
++		};
++
+ 		fsl_mc: fsl-mc@80c000000 {
+ 			compatible =3D "fsl,qoriq-mc";
+ 			reg =3D <0x00000008 0x0c000000 0 0x40>,
+--=20
+1.9.1
