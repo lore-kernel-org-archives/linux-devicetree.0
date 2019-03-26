@@ -1,27 +1,49 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: spi: Add device tree binding
- documentation for Zynq QSPI controller
-Date: Tue, 26 Mar 2019 10:12:08 -0500
-Message-ID: <20190326151208.GA12727@bogus>
-References: <1551337313-9499-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH 5/5] lib/vsprintf: Add %pfw conversion specifier for
+ printing fwnode names
+Date: Tue, 26 Mar 2019 16:13:07 +0100
+Message-ID: <20190326151307.erqyps6wfvf4on2d@pathway.suse.cz>
+References: <20190322152930.16642-1-sakari.ailus@linux.intel.com>
+ <20190322152930.16642-6-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1551337313-9499-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
+In-Reply-To: <20190322152930.16642-6-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: robh+dt@kernel.org, michal.simek@xilinx.com, mark.rutland@arm.com, broonie@kernel.org, bbrezillon@kernel.org, horms+renesas@verge.net.au, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, nagasuresh12@gmail.com, Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 28 Feb 2019 12:31:53 +0530, Naga Sureshkumar Relli wrote:
-> This patch adds the dts binding document for Zynq SOC QSPI
-> controller.
+On Fri 2019-03-22 17:29:30, Sakari Ailus wrote:
+> Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
+> support printing full path of the node, including its name ("f") and only
+> the node's name ("P") in the printk family of functions. The two flags
+> have equivalent functionality to existing %pOF with the same two modifiers
+> ("f" and "P") on OF based systems. The ability to do the same on ACPI
+> based systems is added by this patch.
 > 
-> Signed-off-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-> ---
->  .../devicetree/bindings/spi/spi-zynq-qspi.txt      | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
+> On ACPI based systems the resulting strings look like
 > 
+> 	\_SB.PCI0.CIO2.port@1.endpoint@0
+> 
+> where the nodes are separated by a dot (".") and the first three are
+> ACPI device nodes and the latter two ACPI data nodes.
+> 
+> Depends-on: ("vsprintf: Remove support for %pF and %pf in favour of %pS and %ps")
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reusing obsolete modifiers is dangerous from many reasons:
+
+   + people might miss the change of the meaning
+   + backporting mistakes
+   + 3rd party modules
+
+It might be acceptable if the long term gain is bigger
+than a short time difficulties. But it would be better
+to it a safe way when possible.
+
+Fortunately, we could keep the backward compatibility
+for "%pf" and handle only "%pfw*" with the fwnode api.
+
+Best Regards,
+Petr
