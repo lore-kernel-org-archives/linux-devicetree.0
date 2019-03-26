@@ -1,47 +1,52 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v2 3/3] ARM: dts: stm32: Add clock on stm32mp157c syscfg
-Date: Tue, 26 Mar 2019 12:24:02 +0100
-Message-ID: <6f731c00-8430-0459-2d8c-1e250a3d20fb@st.com>
-References: <1544604495-4082-1-git-send-email-fabrice.gasnier@st.com>
- <1544604495-4082-4-git-send-email-fabrice.gasnier@st.com>
+From: Mans Rullgard <mans@mansr.com>
+Subject: [PATCH] ARM: dts: sun7i: fix typos in uart pin mux
+Date: Tue, 26 Mar 2019 11:29:02 +0000
+Message-ID: <20190326112902.30080-1-mans@mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544604495-4082-4-git-send-email-fabrice.gasnier@st.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>, lee.jones@linaro.org, robh+dt@kernel.org
-Cc: mcoquelin.stm32@gmail.com, arnd@arndb.de, mark.rutland@arm.com, gabriel.fernandez@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Werner=20B=C3=B6llmann?= <Werner.Boellmann@fh-dortmund.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrice
+The recently added uart mux options had a few typos.  Fix them.
 
-On 12/12/18 9:48 AM, Fabrice Gasnier wrote:
-> STM32 syscfg needs a clock to access registers.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> ---
->   arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-> index 8bf1c17..61b2a70 100644
-> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-> @@ -820,6 +820,7 @@
->   		syscfg: syscon@50020000 {
->   			compatible = "st,stm32mp157-syscfg", "syscon";
->   			reg = <0x50020000 0x400>;
-> +			clocks = <&rcc SYSCFG>;
->   		};
->   
->   		lptimer2: timer@50021000 {
-> 
+Fixes: 43d0fe112585 ("ARM: dts: sun7i: add pinctrl for missing uart mux options")
+Reported-by: Werner Böllmann <Werner.Boellmann@fh-dortmund.de>
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-For the DT patch:
-
-Applied on stm32-next.
-
-Thanks.
-Alex
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 9f8bd8f3164b..9234cf8f72bf 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -1006,19 +1006,19 @@
+ 
+ 			/omit-if-no-ref/
+ 			uart1_cts_rts_pa_pins: uart1-cts-rts-pa-pins {
+-				pins = "PA12", "PIA13";
+-				function = "uart2";
++				pins = "PA12", "PA13";
++				function = "uart1";
+ 			};
+ 
+ 			/omit-if-no-ref/
+ 			uart2_pa_pins: uart2-pa-pins {
+-				pins = "PIA2", "PIA3";
++				pins = "PA2", "PA3";
+ 				function = "uart2";
+ 			};
+ 
+ 			/omit-if-no-ref/
+ 			uart2_cts_rts_pa_pins: uart2-cts-rts-pa-pins {
+-				pins = "PA0", "PIA1";
++				pins = "PA0", "PA1";
+ 				function = "uart2";
+ 			};
+ 
+-- 
+2.21.0
