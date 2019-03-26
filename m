@@ -1,92 +1,55 @@
-From: c-hbandi@codeaurora.org
-Subject: Re: [PATCH v4 2/2] dt-bindings: net: bluetooth: Add device tree
- bindings for QTI chip WCN3998
-Date: Tue, 26 Mar 2019 15:34:37 +0530
-Message-ID: <0eecb0eec722f9246d2816bb0a2384d5@codeaurora.org>
-References: <1553513800-27611-1-git-send-email-c-hbandi@codeaurora.org>
- <1553513800-27611-3-git-send-email-c-hbandi@codeaurora.org>
- <20190325162935.GW112750@google.com>
+From: Mickael Guene <mickael.guene@st.com>
+Subject: [PATCH v3 0/2] Add support for MIPID02 CSI-2 to PARALLEL bridge I2C device
+Date: Tue, 26 Mar 2019 11:03:38 +0100
+Message-ID: <1553594620-88280-1-git-send-email-mickael.guene@st.com>
+References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190325162935.GW112750@google.com>
+In-Reply-To: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, anubhavg@codeaurora.org, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, linux-bluetooth-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: hugues.fruchet@st.com, Mickael Guene <mickael.guene@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Tianshu Qiu <tian.shu.qiu@intel.com>, Ben Kao <ben.kao@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matt Ranostay <matt.ranostay@konsulko.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Petr Cvek <petrcvekcz@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Mark Rutland <mark.rutland@arm.com>, Bingbu Cao <bingbu.cao@intel.com>, linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, Akinobu Mita <akinobu.mita@g>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+Hi,
 
-On 2019-03-25 21:59, Matthias Kaehlcke wrote:
-> On Mon, Mar 25, 2019 at 05:06:40PM +0530, Harish Bandi wrote:
->> This patch enables regulators for the Qualcomm Bluetooth WCN3998
->> controller.
->> 
->> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
->> ---
->> Changes in V4:
->> - Removed new compatible WCN3998
->> - changed wcn3990 to wcn399* to represent wcn399* family
->> ---
->>  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 7 
->> ++++---
->>  1 file changed, 4 insertions(+), 3 deletions(-)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt 
->> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> index 824c0e2..de9cefa 100644
->> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> @@ -11,20 +11,21 @@ Required properties:
->>   - compatible: should contain one of the following:
->>     * "qcom,qca6174-bt"
->>     * "qcom,wcn3990-bt"
->> +   * "qcom,wcn3998-bt"
->> 
->>  Optional properties for compatible string qcom,qca6174-bt:
->> 
->>   - enable-gpios: gpio specifier used to enable chip
->>   - clocks: clock provided to the controller (SUSCLK_32KHZ)
->> 
->> -Required properties for compatible string qcom,wcn3990-bt:
->> +Required properties for compatible string qcom,wcn399*-bt:
-> 
-> I think in Linux drivers the use of 'x' is more common as a wildcard
-> for a single letter than an asterisk. It is also in line with the
-> function name in the driver, so I would suggest to keep thinkgs
-> consistent and call it wcn399x everywhere.
+This is the v3 of my MIPID02 series which introduces support of
+STMicroelectronics MIPID02 CSI-2 to PARALLEL I2C bridge. It allows using a CSI-2
+sensor with a PARALLEL interface. Current driver implementation doesn't support
+CSI-2 second input port usage. It doesn't support also YUV420, RGB565 and RGB444
+input formats.
 
-[Harish] - ok, will change it to wcn399x
-> 
->> 
->>   - vddio-supply: VDD_IO supply regulator handle.
->>   - vddxo-supply: VDD_XO supply regulator handle.
->>   - vddrf-supply: VDD_RF supply regulator handle.
->>   - vddch0-supply: VDD_CH0 supply regulator handle.
->> 
->> -Optional properties for compatible string qcom,wcn3990-bt:
->> +Optional properties for compatible string qcom,wcn399*-bt:
->> 
->>   - max-speed: see 
->> Documentation/devicetree/bindings/serial/slave-device.txt
->> 
->> @@ -44,7 +45,7 @@ serial@7570000 {
->> 
->>  serial@898000 {
->>  	bluetooth {
->> -		compatible = "qcom,wcn3990-bt";
->> +		compatible = "qcom,wcn399*-bt";
-> 
-> Typically wildcards aren't used in DT examples as Marcel already
-> mentioned on v3. IMO the wildcard degrades the value of the example,
-> rather than enhancing it. I think just listing the compatible string
-> is enough, no need for an wcn3998/x specific example since it's
-> essentialy the same as wcn3990.
-[Harish] - So will keep as wcn3990 only here.
-> 
-> Thanks
-> 
-> Matthias
+Thanks to Sakari for review.
+
+Changes in v3:
+- Fix potential wrong error code for mipid02_stream_disable and mipid02_stream_enable
+- Remove useless memset for ep in mipid02_parse_rx_ep and mipid02_parse_tx_ep
+- Add second CSI-2 input pad even if it's not yet supported
+- Add support of get_fmt, set_fmt and link_validate and only access subdev connected to mipid02
+
+Changes in v2:
+- Add precision about first CSI-2 port data rate
+- Document endpoints supported properties
+- Rename 'mipid02@14' into generic 'csi2rx@14' in example
+- Merge MAINTAINERS patch 3 into patch 1 and 2
+- Fix line too long in Kconfig
+- Add missing delay after reset release
+- Various style fixes
+- Fix mipid02_stream_enable returning no error when mipid02_find_sensor failed
+
+Mickael Guene (2):
+  dt-bindings: Document MIPID02 bindings
+  media:st-mipid02: MIPID02 CSI-2 to PARALLEL bridge driver
+
+ .../bindings/media/i2c/st,st-mipid02.txt           |   83 ++
+ MAINTAINERS                                        |    8 +
+ drivers/media/i2c/Kconfig                          |   14 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/st-mipid02.c                     | 1012 ++++++++++++++++++++
+ 5 files changed, 1118 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+ create mode 100644 drivers/media/i2c/st-mipid02.c
+
+-- 
+2.7.4
