@@ -1,58 +1,71 @@
-From: Andreas Klinger <ak@it-klinger.de>
-Subject: [PATCH 2/2] devantech-srf04.txt: remove old DT documentation
-Date: Tue, 26 Mar 2019 13:31:47 +0100
-Message-ID: <20190326123146.2ru6yu5vea2xha4r@arbad>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v2 0/6] Device property improvements, add %pfw format specifier
+Date: Tue, 26 Mar 2019 14:41:00 +0200
+Message-ID: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-remove the outdated DT documentation of devantech srf04 iio driver which
-is replaced by devantech-srf04.yaml
+Hi all,
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- .../bindings/iio/proximity/devantech-srf04.txt     | 28 ----------------------
- 1 file changed, 28 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/proximity/devantech-srf04.txt
+This set adds functionality into the device property API (counting a
+node's parents as well as obtaining its name) in order to support printing
+fwnode names using a new conversion specifier "%pfw". The names that are
+produced are equivalent to its OF counterpart "%pOF" on OF systems for the
+two supported modifiers ("f" and "P").
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.txt b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.txt
-deleted file mode 100644
-index d4dc7a227e2e..000000000000
---- a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.txt
-+++ /dev/null
-@@ -1,28 +0,0 @@
--* Devantech SRF04 ultrasonic range finder
--  Bit-banging driver using two GPIOs
--
--Required properties:
-- - compatible:	Should be "devantech,srf04"
--
-- - trig-gpios:	Definition of the GPIO for the triggering (output)
--		This GPIO is set for about 10 us by the driver to tell the
--		device it should initiate the measurement cycle.
--
-- - echo-gpios:	Definition of the GPIO for the echo (input)
--		This GPIO is set by the device as soon as an ultrasonic
--		burst is sent out and reset when the first echo is
--		received.
--		Thus this GPIO is set while the ultrasonic waves are doing
--		one round trip.
--		It needs to be an GPIO which is able to deliver an
--		interrupt because the time between two interrupts is
--		measured in the driver.
--		See Documentation/devicetree/bindings/gpio/gpio.txt for
--		information on how to specify a consumer gpio.
--
--Example:
--srf04@0 {
--	compatible = "devantech,srf04";
--	trig-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
--	echo-gpios = <&gpio2  6 GPIO_ACTIVE_HIGH>;
--};
+Printing a node's name is something that's been available on OF for a long
+time and if something is converted to device property API (such as the
+V4L2 fwnode framework) it always got removed of a nice feature that was
+sometimes essential in debugging. With this set, that no longer is the
+case.
+
+This set depends on a cleanup fully releasing the now-deprecated %pf for
+other use:
+
+<URL:https://lore.kernel.org/lkml/20190325211906.GA24180@google.com/T/#t>
+
+I was a bit hesitant on how much of this should be covered by the fwnode
+ops and how much would be just better to reside in lib/vsprintf.c, but
+opted for putting it to the fwnode interface. This keeps it clean in
+vsprintf.c and still rather lean on the fwnode ops side while making it
+possible to add other firmware types (although that is unlikely I guess).
+
+since v1:
+
+- Add patch to remove support for %pf and %pF (depends on another patch
+  removing all use of %pf and %pF) (now 4th patch)
+
+- Fix kerneldoc argument documentation for fwnode_get_name (2nd patch)
+
+- Align kerneldoc style with the rest of drivers/base/property.c (no extra
+  newline after function name)
+
+- Make checkpatch.pl complain about "%pf" not followed by "w" (6th patch)
+
+- WARN_ONCE() on use of invalid conversion specifiers ("%pf" not followed
+  by "w")
+
+Sakari Ailus (6):
+  device property: Add functions for accessing node's parents
+  device property: Add fwnode_get_name for returning the name of a node
+  device property: Add a function to obtain a node's prefix
+  lib/vsprintf: Remove support for %pF and %pf in favour of %pS and %ps
+  lib/vsprintf: Make use of fwnode API to obtain node names and
+    separators
+  lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
+
+ Documentation/core-api/printk-formats.rst |  34 +++++++---
+ drivers/acpi/property.c                   |  46 ++++++++++++++
+ drivers/base/property.c                   |  82 +++++++++++++++++++++---
+ drivers/of/property.c                     |  16 +++++
+ include/linux/fwnode.h                    |   4 ++
+ include/linux/property.h                  |   5 ++
+ lib/vsprintf.c                            | 101 +++++++++++++++++++++---------
+ scripts/checkpatch.pl                     |   4 +-
+ 8 files changed, 245 insertions(+), 47 deletions(-)
+
 -- 
 2.11.0
