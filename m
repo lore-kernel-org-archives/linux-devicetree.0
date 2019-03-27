@@ -1,108 +1,47 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv4 00/28] PCI: refactor Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Date: Wed, 27 Mar 2019 02:11:13 +0000
-Message-ID: <AM6PR04MB5781A99C7DD26F525E7E9A1C84580@AM6PR04MB5781.eurprd04.prod.outlook.com>
-References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
- <20190326173730.GC10666@e107981-ln.cambridge.arm.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v4 0/4] Add support for lradc on A83T
+Date: Wed, 27 Mar 2019 10:16:24 +0800
+Message-ID: <CAGb2v649vo4Neudau+jmE_7egsL6nuTgOezjgfO08w0rQCpbPw@mail.gmail.com>
+References: <20190327002501.4630-1-megous@megous.com>
+Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190326173730.GC10666@e107981-ln.cambridge.arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBBN25PSAKGQEXLB4B7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190327002501.4630-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTG9yZW56bywNCg0KVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzIQ0KDQo+IC0tLS0tT3JpZ2lu
-YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExvcmVuem8gUGllcmFsaXNpIDxsb3JlbnpvLnBpZXJh
-bGlzaUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOoz1MIyN8jVIDE6MzgNCj4gVG86IFoucS4gSG91
-IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7
-IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGJoZWxnYWFzQGdv
-b2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGwu
-c3VicmFobWFueWFAbW9iaXZlaWwuY28uaW47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaQ0K
-PiA8bGVveWFuZy5saUBueHAuY29tPjsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwuZGVh
-Y29uQGFybS5jb207DQo+IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0uaC4gTGlh
-biA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsNCj4gWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54
-cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NCAwMC8yOF0gUENJOiByZWZhY3RvciBNb2Jp
-dmVpbCBkcml2ZXIgYW5kIGFkZCBQQ0llIEdlbjQNCj4gZHJpdmVyIGZvciBOWFAgTGF5ZXJzY2Fw
-ZSBTb0NzDQo+IA0KPiBPbiBNb24sIE1hciAxMSwgMjAxOSBhdCAwOToyOTo1NEFNICswMDAwLCBa
-LnEuIEhvdSB3cm90ZToNCj4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAu
-Y29tPg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBzZXQgaXMgYWltIHRvIHJlZmFjdG9yIHRoZSBNb2Jp
-dmVpbCBkcml2ZXIgYW5kIGFkZCBQQ0llDQo+ID4gc3VwcG9ydCBmb3IgTlhQIExheWVyc2NhcGUg
-c2VyaWVzIFNvQ3MgaW50ZWdyYXRlZCBNb2JpdmVpbCdzIFBDSWUgR2VuNA0KPiA+IGNvbnRyb2xs
-ZXIuDQo+ID4NCj4gPiBIb3UgWmhpcWlhbmcgKDI4KToNCj4gPiAgIFBDSTogbW9iaXZlaWw6IHVu
-aWZvcm0gdGhlIHJlZ2lzdGVyIGFjY2Vzc29ycw0KPiA+ICAgUENJOiBtb2JpdmVpbDogZm9ybWF0
-IHRoZSBjb2RlIHdpdGhvdXQgZnVuY3Rpb24gY2hhbmdlDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBj
-b3JyZWN0IHRoZSByZXR1cm5lZCBlcnJvciBudW1iZXINCj4gPiAgIFBDSTogbW9iaXZlaWw6IHJl
-bW92ZSBmbGFnIE1TSV9GTEFHX01VTFRJX1BDSV9NU0kNCj4gPiAgIFBDSTogbW9iaXZlaWw6IGNv
-cnJlY3QgUENJIGJhc2UgYWRkcmVzcyBpbiBNRU0vSU8gb3V0Ym91bmQgd2luZG93cw0KPiA+ICAg
-UENJOiBtb2JpdmVpbDogcmVwbGFjZSB0aGUgcmVzb3VyY2UgbGlzdCBpdGVyYXRpb24gZnVuY3Rp
-b24NCj4gPiAgIFBDSTogbW9iaXZlaWw6IHVzZSBXSU5fTlVNXzAgZXhwbGljaXRseSBmb3IgQ0ZH
-IG91dGJvdW5kIHdpbmRvdw0KPiA+ICAgUENJOiBtb2JpdmVpbDogdXNlIHRoZSAxc3QgaW5ib3Vu
-ZCB3aW5kb3cgZm9yIE1FTSBpbmJvdW5kDQo+IHRyYW5zYWN0aW9ucw0KPiA+ICAgUENJOiBtb2Jp
-dmVpbDogY29ycmVjdCBpbmJvdW5kL291dGJvdW5kIHdpbmRvdyBzZXR1cCByb3V0aW5lcw0KPiA+
-ICAgUENJOiBtb2JpdmVpbDogZml4IHRoZSBJTlR4IHByb2Nlc3MgZXJyb3INCj4gPiAgIFBDSTog
-bW9iaXZlaWw6IG9ubHkgZml4IHVwIHRoZSBDbGFzcyBDb2RlIGZpZWxkDQo+ID4gICBQQ0k6IG1v
-Yml2ZWlsOiBtb3ZlIG91dCB0aGUgbGluayB1cCB3YWl0aW5nIGZyb20gbW9iaXZlaWxfaG9zdF9p
-bml0DQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBtb3ZlIGlycSBjaGFpbmVkIGhhbmRsZXIgc2V0dXAg
-b3V0IG9mIERUIHBhcnNlDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBpbml0aWFsaXplIFByaW1hcnkv
-U2Vjb25kYXJ5L1N1Ym9yZGluYXRlIGJ1cyBudW1iZXINCj4gPiAgIGR0LWJpbmRpbmdzOiBwY2k6
-IG1vYml2ZWlsOiBjaGFuZ2UgZ3Bpb19zbGF2ZSBhbmQgYXBiX2NzciB0byBvcHRpb25hbA0KPiA+
-ICAgUENJOiBtb2JpdmVpbDogcmVmYWN0b3IgTW9iaXZlaWwgUENJZSBIb3N0IEJyaWRnZSBJUCBk
-cml2ZXINCj4gPiAgIFBDSTogbW9iaXZlaWw6IGZpeCB0aGUgY2hlY2tpbmcgb2YgdmFsaWQgZGV2
-aWNlDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBhZGQgbGluayB1cCBjb25kaXRpb24gY2hlY2sNCj4g
-PiAgIFBDSTogbW9iaXZlaWw6IGNvbnRpbnVlIHRvIGluaXRpYWxpemUgdGhlIGhvc3QgdXBvbiBu
-byBQQ0llIGxpbmsNCj4gPiAgIFBDSTogbW9iaXZlaWw6IGRpc2FibGVkIElCIGFuZCBPQiB3aW5k
-b3dzIHNldCBieSBib290bG9hZGVyDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBhZGQgQnl0ZSBhbmQg
-SGFsZi1Xb3JkIHdpZHRoIHJlZ2lzdGVyIGFjY2Vzc29ycw0KPiA+ICAgUENJOiBtb2JpdmVpbDog
-bWFrZSBtb2JpdmVpbF9ob3N0X2luaXQgY2FuIGJlIHVzZWQgdG8gcmUtaW5pdCBob3N0DQo+ID4g
-ICBkdC1iaW5kaW5nczogcGNpOiBBZGQgTlhQIExheWVyc2NhcGUgU29DcyBQQ0llIEdlbjQgY29u
-dHJvbGxlcg0KPiA+ICAgUENJOiBtb2JpdmVpbDogYWRkIFBDSWUgR2VuNCBSQyBkcml2ZXIgZm9y
-IE5YUCBMYXllcnNjYXBlIFNvQ3MNCj4gPiAgIFBDSTogbW9iaXZlaWw6IGxzX3BjaWVfZzQ6IGFk
-ZCBXb3JrYXJvdW5kIGZvciBBLTAxMTU3Nw0KPiA+ICAgUENJOiBtb2JpdmVpbDogbHNfcGNpZV9n
-NDogYWRkIFdvcmthcm91bmQgZm9yIEEtMDExNDUxDQo+ID4gICBhcm02NDogZHRzOiBmcmVlc2Nh
-bGU6IGx4MjE2MGE6IGFkZCBwY2llIERUIG5vZGVzDQo+ID4gICBhcm02NDogZGVmY29uZmlnOiBF
-bmFibGUgQ09ORklHX1BDSV9MQVlFUlNDQVBFX0dFTjQNCj4gPg0KPiA+ICAuLi4vYmluZGluZ3Mv
-cGNpL2xheWVyc2NhcGUtcGNpLWdlbjQudHh0ICAgICAgfCAgNTIgKysNCj4gPiAgLi4uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcGNpL21vYml2ZWlsLXBjaWUudHh0IHwgICAyICsNCj4gPiAgTUFJTlRB
-SU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDEwICstDQo+ID4gIC4u
-Li9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWx4MjE2MGEuZHRzaSB8IDE2MyArKysrDQo+
-ID4gIGFyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcgICAgICAgICAgICAgICAgICB8ICAgMSAr
-DQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvS2NvbmZpZyAgICAgICAgICAgICAgICB8ICAx
-MSArLQ0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL01ha2VmaWxlICAgICAgICAgICAgICAg
-fCAgIDIgKy0NCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9LY29uZmlnICAg
-ICAgIHwgIDM0ICsNCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9NYWtlZmls
-ZSAgICAgIHwgICA1ICsNCj4gPiAgLi4uL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpLWxheWVyc2Nh
-cGUtZ2VuNC5jIHwgMzA2ICsrKysrKysNCj4gPiAuLi4vY29udHJvbGxlci9tb2JpdmVpbC9wY2ll
-LW1vYml2ZWlsLWhvc3QuYyAgfCA2NDAgKysrKysrKysrKysrKw0KPiA+IC4uLi9jb250cm9sbGVy
-L21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtcGxhdC5jICB8ICA1NCArKw0KPiA+ICAuLi4vcGNpL2Nv
-bnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5jICAgfCAyNDYgKysrKysNCj4gPiAgLi4u
-L3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwuaCAgIHwgMjI5ICsrKysrDQo+
-ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jICAgICAgICB8IDg2MSAt
-LS0tLS0tLS0tLS0tLS0tLS0NCj4gPiAgMTUgZmlsZXMgY2hhbmdlZCwgMTc0MyBpbnNlcnRpb25z
-KCspLCA4NzMgZGVsZXRpb25zKC0pICBjcmVhdGUgbW9kZQ0KPiA+IDEwMDY0NCBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLWdlbjQudHh0DQo+ID4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL0tjb25m
-aWcNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZl
-aWwvTWFrZWZpbGUNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gZHJpdmVycy9wY2kvY29u
-dHJvbGxlci9tb2JpdmVpbC9wY2ktbGF5ZXJzY2FwZS1nZW40LmMNCj4gPiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0DQo+ID4gZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWls
-LWhvc3QuYw0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBkcml2ZXJzL3BjaS9jb250cm9s
-bGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtcGxhdC5jDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwuYw0KPiA+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1v
-Yml2ZWlsLmgNCj4gPiAgZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
-cGNpZS1tb2JpdmVpbC5jDQo+IA0KPiBUaGlzIHBhdGNoIHNlcmllcyBpcyBhIG1peHR1cmUgb2Yg
-Zml4ZXMsIHJlZmFjdG9yaW5nIGFuZCBkZXZlbG9wbWVudCBhbmQgdG8gYmUNCj4gZnJhbmsgaXQg
-aXMgYSBiaXQgaGFyZCB0byByZXZpZXcuIEtlZXBpbmcgaW4gbWluZCBhbGwgdGhlIHJldmlldyBj
-b21tZW50cw0KPiBhbHJlYWR5IHJlY2VpdmVkIGFuZCB0aGF0IEkgZXhwZWN0IHlvdSB0byBpbnRl
-Z3JhdGUsIGRvIHlvdSBtaW5kIHNwbGl0dGluZyBpdCBpbg0KPiBsb2dpY2FsIHNlcmllcyBlYWNo
-IG9uZSBzZXJ2aW5nIGEgc3BlY2lmaWMgcHVycG9zZSAoZWcgZml4ZXMsIExheWVyc2NhcGUgc3Vw
-cG9ydCwNCj4gZXRjLikgPw0KPiANCj4gTGV0J3Mgc3RhcnQgd2l0aCBwb3N0aW5nIGFuZCBtZXJn
-aW5nIHRoZSBmaXhlcyBmaXJzdC4NCg0KVGhhbmtzIGZvciB5b3VyIHN1Z2dlc3Rpb24sIGFuZCB3
-aWxsIHNwbGl0IHRoZW0uDQoNCj4gDQo+IFRoYW5rIHlvdSB2ZXJ5IG11Y2guDQo+IA0KPiBMb3Jl
-bnpvDQoNClRoYW5rcywNClpoaXFpYW5nDQo=
+On Wed, Mar 27, 2019 at 8:25 AM <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
+>
+> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>
+> This series implements r_lradc (low res ADC) support for A83T.
+>
+> This is a continuation of v3 patch series from 2017 by Ziping Chen. I've
+> rebased it on top of linux-next and changed the compatibe string as
+> requested back then.[1]
+>
+> There was some talk of iio based lradc driver back then[2], but noone
+> stepped forward to make it. Let's finish this series, so that it's
+> at least possible to add support for tablet keys on various A83T tablets
+> as that's the main use of lradc module.
+>
+> [1] https://lkml.org/lkml/2017/6/26/558
+>
+> [2] https://lkml.org/lkml/2017/6/27/877
+>
+> Please take a look, and apply the patches if you have no objections.
+
+You need to send this series to the input subsystem maintainer, Dmitry
+Torokhov, and CC the input mailing list. Otherwise the driver and binding
+changes won't be picked up.
+
+ChenYu
