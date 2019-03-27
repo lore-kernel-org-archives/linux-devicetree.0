@@ -1,65 +1,84 @@
-From: Ludovic BARRE <ludovic.barre@st.com>
-Subject: Re: [PATCH V3 2/5] mmc: mmci: define get_dctrl_cfg for legacy variant
-Date: Wed, 27 Mar 2019 09:28:39 +0100
-Message-ID: <b98b0692-c052-c4e1-f525-bf7ef4dffd1d@st.com>
-References: <1553591470-31419-1-git-send-email-ludovic.Barre@st.com>
- <1553591470-31419-3-git-send-email-ludovic.Barre@st.com>
- <CAPDyKFoOugNTxN_g8Co1pBMkTku6+zMU40vqo-e0pZt+1rs9cw@mail.gmail.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
+Date: Wed, 27 Mar 2019 10:51:22 +0200
+Message-ID: <CAEnQRZCb=rZMdBYyYCSCQ3Dba5Nk43BvV6whHx-vNPmox-OOSw@mail.gmail.com>
+References: <20190326094239.5910-1-daniel.baluta@nxp.com> <20190326094239.5910-3-daniel.baluta@nxp.com>
+ <VI1PR04MB4222A8DBC2312E72AAD3AFAE805F0@VI1PR04MB4222.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFoOugNTxN_g8Co1pBMkTku6+zMU40vqo-e0pZt+1rs9cw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <VI1PR04MB4222A8DBC2312E72AAD3AFAE805F0@VI1PR04MB4222.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: Aisheng Dong <aisheng.dong@nxp.com>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Teo Hall <teo.hall@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Mar 26, 2019 at 3:31 PM Aisheng Dong <aisheng.dong@nxp.com> wrote:
+>
+> > From: Daniel Baluta
+> > Sent: Tuesday, March 26, 2019 5:43 PM
+> >
+> > i.MX8QXP contains a total of 4 EDMA controllers of which two are primarily
+> > for audio components and the other two are for non-audio periperhals.
+> >
+> > This patch adds the EDMA0/EDMA1 nodes used by audio peripherals.
+> >
+> > EDMA0 contains channels for:
+> >       * ASRC0
+> >       * ESAI0
+> >       * SPDIF0
+> >       * SAI0, SAI1, SAI2, SAI3
+> >
+> > EDMA1 contains channels for:
+> >       * ASRC1
+> >       * SAI4, SAI5
+> >
+> > See chapter Audio DMA Memory Maps (2.2.3) from i.MX8QXP RM [1]
+> >
+> > This patch is based on the dtsi file initially submitted by Teo Hall in i.MX NXP
+> > internal tree.
+> >
+> > [1] https://www.nxp.com/docs/en/reference-manual/IMX8DQXPRM.pdf
+> >
+> > Cc: Teo Hall <teo.hall@nxp.com>
+> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> > ---
+> >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 72
+> > ++++++++++++++++++++++
+> >  1 file changed, 72 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > index 0cb939861a60..9e959deb2499 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > @@ -182,6 +182,78 @@
+> >                       #clock-cells = <1>;
+> >               };
+> >
+> > +             edma0: dma-controller@591f0000 {
+> > +                     compatible = "fsl,imx8qm-edma";
+
+Thanks for the comment Aisheng!
+
+>
+> Should this be "fsl,imx8qxp-edma"?
+
+Yes, I think that's the more clear approach although in
+our internal tree the edma driver uses only the "fsl,imx8qm-edma
+compatible.
+
+I will go with your suggestion.
 
 
-On 3/26/19 6:46 PM, Ulf Hansson wrote:
-> On Tue, 26 Mar 2019 at 10:11, Ludovic Barre <ludovic.Barre@st.com> wrote:
->>
->> From: Ludovic Barre <ludovic.barre@st.com>
->>
->> This patch defines get_dctrl_cfg callback for legacy variants
->> whatever DMA_ENGINE configuration.
->>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->> ---
->>   drivers/mmc/host/mmci.c | 31 +++++++++++++++++++++++--------
->>   drivers/mmc/host/mmci.h |  3 +++
->>   2 files changed, 26 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
->> index 9e6a2c1..4041e36 100644
->> --- a/drivers/mmc/host/mmci.c
->> +++ b/drivers/mmc/host/mmci.c
->> @@ -46,12 +46,6 @@
->>
->>   #define DRIVER_NAME "mmci-pl18x"
->>
->> -#ifdef CONFIG_DMA_ENGINE
->> -static void mmci_variant_init(struct mmci_host *host);
->> -#else
->> -static inline void mmci_variant_init(struct mmci_host *host) {}
->> -#endif
-> 
-> Looks like you are moving the declaration to the header file. I would
-> rather keep it here as there is no point in sharing to another c-file
-> (at least not yet). The same applies for the new ux500v2 init
-> function.
+> or
+> "fsl,imx8qxp-edma", "fsl,imx8qm-edma"?
 
-no problem, I will resend a V4 to keep mmci and ux500v2 variant init in 
-the c file.
+One thing that it is not clear for me is why there are places
+where we use two compatible strings?
 
-> 
-> Other than that, this looks good to me!
+I understand the situation where are two distinct drivers, but is there
+any other reason to add multiple compatible strings for a node in dts?
 
-thanks
-
-> 
-> Kind regards
-> Uffe
-> 
+thanks,
+Daniel.
