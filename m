@@ -1,57 +1,68 @@
-Return-Path: <SRS0=pm85=R6=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:38648 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfC0KK6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Mar 2019 06:10:58 -0400
-Date: Wed, 27 Mar 2019 11:10:56 +0100
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v1 leds-next 2/3] dt-bindings: leds: Document Turris
- Omnia LED controller binding
-Message-ID: <20190327101056.GA345@amd>
+Return-Path: <SRS0=r0RQ=R6=nic.cz=marek.behun@kernel.org>
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Subject: [PATCH v1 leds-next 2/3] dt-bindings: leds: Document Turris Omnia LED controller binding
+Date: Wed, 27 Mar 2019 05:15:21 +0100
+Message-Id: <20190327041522.27402-3-marek.behun@nic.cz>
+In-Reply-To: <20190327041522.27402-1-marek.behun@nic.cz>
 References: <20190327041522.27402-1-marek.behun@nic.cz>
- <20190327041522.27402-3-marek.behun@nic.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
-Content-Disposition: inline
-In-Reply-To: <20190327041522.27402-3-marek.behun@nic.cz>
-Sender: devicetree-owner@vger.kernel.org
-To: Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc: linux-leds@vger.kernel.org, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To: linux-leds@vger.kernel.org
+Cc: Pavel Machek <pavel@ucw.cz>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+This adds device tree binding documentation for the front panel LEDs
+controller of CZ.NIC's Turris Omnia router.
 
---ikeVEW9yuYc//A+q
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+---
+ .../bindings/leds/leds-turris-omnia.txt       | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-turris-omnia.txt
 
-On Wed 2019-03-27 05:15:21, Marek Beh=FAn wrote:
-> This adds device tree binding documentation for the front panel LEDs
-> controller of CZ.NIC's Turris Omnia router.
->=20
-> Signed-off-by: Marek Beh=FAn <marek.behun@nic.cz>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---ikeVEW9yuYc//A+q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlybTDAACgkQMOfwapXb+vIuyQCgnDhm1aPBT18CQmlge7GVVyOV
-Fj0AnircfKfV/DV6sEeyrbdWyHawf9ri
-=GxmA
------END PGP SIGNATURE-----
-
---ikeVEW9yuYc//A+q--
+diff --git a/Documentation/devicetree/bindings/leds/leds-turris-omnia.txt b/Documentation/devicetree/bindings/leds/leds-turris-omnia.txt
+new file mode 100644
+index 000000000000..15d37471568e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-turris-omnia.txt
+@@ -0,0 +1,35 @@
++Bindings for LEDs on CZ.NIC's Turris Omnia
++
++Required properties:
++ - compatible :		Should be "cznic,turris-omnia-leds"
++ - reg :		I2C slave address
++
++Optional properties (required if any sub-nodes are given):
++ - #address-cells :	Should be 1
++ - #size-cells :	Should be 0
++
++LED sub-nodes can be given for LEDs for which label shall be non-default or
++for which default-trigger is to be set.
++
++LED sub-node properties:
++ - reg :		Must be from 0x0 to 0xb, since there are 12 LEDs on this
++			controller.
++ - label :		(optional)
++   see Documentation/devicetree/bindings/leds/common.txt
++ - linux,default-trigger : (optional)
++   see Documentation/devicetree/bindings/leds/common.txt
++
++Example:
++
++	led-controller@2b {
++		compatible = "cznic,turris-omnia-leds";
++		reg = <0x2b>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		led@0 {
++			reg = <0>;
++			label = "omnia::heartbeat";
++			linux,default-trigger = "heartbeat";
++		};
++	};
+-- 
+2.19.2
