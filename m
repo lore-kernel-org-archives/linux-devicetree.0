@@ -1,131 +1,143 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v2 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
-Date: Wed, 27 Mar 2019 19:03:15 +0000
-Message-ID: <20190327190244.9208-3-daniel.baluta@nxp.com>
-References: <20190327190244.9208-1-daniel.baluta@nxp.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 190/262] ARM: dts: lpc32xx: Remove leading 0x and 0s from bindings notation
+Date: Wed, 27 Mar 2019 14:00:45 -0400
+Message-ID: <20190327180158.10245-190-sashal@kernel.org>
+References: <20190327180158.10245-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190327190244.9208-1-daniel.baluta@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Teo Hall <teo.hall@nxp.com>
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Mathieu Malaterre <malat@debian.org>, Vladimir Zapolskiy <vz@mleia.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-i.MX8QXP contains a total of 4 EDMA controllers of which
-two are primarily for audio components and the other two
-are for non-audio periperhals.
+From: Mathieu Malaterre <malat@debian.org>
 
-This patch adds the EDMA0/EDMA1 nodes used by audio peripherals.
+[ Upstream commit 3e3380d0675d5e20b0af067d60cb947a4348bf9b ]
 
-EDMA0 contains channels for:
-	* ASRC0
-	* ESAI0
-	* SPDIF0
-	* SAI0, SAI1, SAI2, SAI3
+Improve the DTS files by removing all the leading "0x" and zeros to fix
+the following dtc warnings:
 
-EDMA1 contains channels for:
-	* ASRC1
-	* SAI4, SAI5
+Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
 
-See chapter Audio DMA Memory Maps (2.2.3) from i.MX8QXP RM [1]
+and
 
-This patch is based on the dtsi file initially submitted by
-Teo Hall in i.MX NXP internal tree.
+Warning (unit_address_format): Node /XXX unit name should not have leading 0s
 
-[1] https://www.nxp.com/docs/en/reference-manual/IMX8DQXPRM.pdf
+Converted using the following command:
 
-Cc: Teo Hall <teo.hall@nxp.com>
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +
+
+For simplicity, two sed expressions were used to solve each warnings
+separately.
+
+To make the regex expression more robust a few other issues were resolved,
+namely setting unit-address to lower case, and adding a whitespace before
+the opening curly brace:
+
+https://elinux.org/Device_Tree_Linux#Linux_conventions
+
+This will solve as a side effect warning:
+
+Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+
+This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+
+Reported-by: David Daney <ddaney@caviumnetworks.com>
+Suggested-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+[vzapolskiy: fixed commit message to pass checkpatch.pl test]
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 72 ++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ arch/arm/boot/dts/lpc32xx.dtsi | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
-ts/freescale/imx8qxp.dtsi
-index 0cb939861a60..84c7c3eca1a1 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -182,6 +182,78 @@
- 			#clock-cells =3D <1>;
- 		};
-=20
-+		edma0: dma-controller@591f0000 {
-+			compatible =3D "fsl,imx8qxp-edma";
-+			reg =3D <0x59200000 0x10000>,   /* asrc0 pair A input req */
-+				<0x59210000 0x10000>, /* asrc0 pair B input req */
-+				<0x59220000 0x10000>, /* asrc0 pair C input req */
-+				<0x59230000 0x10000>, /* asrc0 pair A output req */
-+				<0x59240000 0x10000>, /* asrc0 pair B output req */
-+				<0x59250000 0x10000>, /* asrc0 pair C output req */
-+				<0x59260000 0x10000>, /* esai0 rx */
-+				<0x59270000 0x10000>, /* esai0 tx */
-+				<0x59280000 0x10000>, /* spdif0 rx */
-+				<0x59290000 0x10000>, /* spdif0 tx */
-+				<0x592c0000 0x10000>, /* sai0 rx */
-+				<0x592d0000 0x10000>, /* sai0 tx */
-+				<0x592e0000 0x10000>, /* sai1 rx */
-+				<0x592f0000 0x10000>, /* sai1 tx */
-+			#dma-cells =3D <3>;
-+			shared-interrupt;
-+			dma-channels =3D <14>;
-+			interrupts =3D <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,    /* asrc 0 */
-+					<GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 376 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 377 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 378 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 379 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>, /* esai0 */
-+					<GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 457 IRQ_TYPE_LEVEL_HIGH>, /* spdif0 */
-+					<GIC_SPI 459 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>, /* sai0 */
-+					<GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>, /* sai1 */
-+					<GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
-+			interrupt-names =3D "edma0-chan0-rx", "edma0-chan1-rx", /* asrc0 */
-+					"edma0-chan2-rx", "edma0-chan3-tx",
-+					"edma0-chan4-tx", "edma0-chan5-tx",
-+					"edma0-chan6-rx", "edma0-chan7-tx",   /* esai0 */
-+					"edma0-chan8-rx", "edma0-chan9-tx",   /* spdif0 */
-+					"edma0-chan12-rx", "edma0-chan13-tx", /* sai0 */
-+					"edma0-chan14-rx", "edma0-chan15-tx", /* sai1 */
-+		};
-+
-+		edma1: dma-controller@599F0000 {
-+			compatible =3D "fsl,imx8qxp-edma";
-+			reg =3D <0x0 0x59A00000 0x0 0x10000>, /* asrc1 */
-+				<0x0 0x59A10000 0x0 0x10000>,
-+				<0x0 0x59A20000 0x0 0x10000>,
-+				<0x0 0x59A30000 0x0 0x10000>,
-+				<0x0 0x59A40000 0x0 0x10000>,
-+				<0x0 0x59A50000 0x0 0x10000>,
-+				<0x0 0x59A80000 0x0 0x10000>, /* sai4 rx */
-+				<0x0 0x59A90000 0x0 0x10000>, /* sai4 tx */
-+				<0x0 0x59AA0000 0x0 0x10000>; /* sai5 tx */
-+			#dma-cells =3D <3>;
-+			shared-interrupt;
-+			dma-channels =3D <9>;
-+			interrupts =3D <GIC_SPI 382 IRQ_TYPE_LEVEL_HIGH>, /* asrc 1 */
-+					<GIC_SPI 383 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 384 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 385 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 386 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 387 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>, /* sai4 */
-+					<GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>; /* sai5 */
-+			interrupt-names =3D "edma1-chan0-rx", "edma1-chan1-rx", /* asrc1 */
-+					"edma1-chan2-rx", "edma1-chan3-tx",
-+					"edma1-chan4-tx", "edma1-chan5-tx",
-+					"edma1-chan8-rx", "edma1-chan9-tx", /* sai4 */
-+					"edma1-chan10-tx"; /* sai5 */
-+		};
-+
- 		adma_lpuart0: serial@5a060000 {
- 			compatible =3D "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
- 			reg =3D <0x5a060000 0x1000>;
---=20
-2.17.1
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index b7303a4e4236..ed0d6fb20122 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -230,7 +230,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			i2s1: i2s@2009C000 {
++			i2s1: i2s@2009c000 {
+ 				compatible = "nxp,lpc3220-i2s";
+ 				reg = <0x2009C000 0x1000>;
+ 			};
+@@ -273,7 +273,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			i2c1: i2c@400A0000 {
++			i2c1: i2c@400a0000 {
+ 				compatible = "nxp,pnx-i2c";
+ 				reg = <0x400A0000 0x100>;
+ 				interrupt-parent = <&sic1>;
+@@ -284,7 +284,7 @@
+ 				clocks = <&clk LPC32XX_CLK_I2C1>;
+ 			};
+ 
+-			i2c2: i2c@400A8000 {
++			i2c2: i2c@400a8000 {
+ 				compatible = "nxp,pnx-i2c";
+ 				reg = <0x400A8000 0x100>;
+ 				interrupt-parent = <&sic1>;
+@@ -295,7 +295,7 @@
+ 				clocks = <&clk LPC32XX_CLK_I2C2>;
+ 			};
+ 
+-			mpwm: mpwm@400E8000 {
++			mpwm: mpwm@400e8000 {
+ 				compatible = "nxp,lpc3220-motor-pwm";
+ 				reg = <0x400E8000 0x78>;
+ 				status = "disabled";
+@@ -394,7 +394,7 @@
+ 				#gpio-cells = <3>; /* bank, pin, flags */
+ 			};
+ 
+-			timer4: timer@4002C000 {
++			timer4: timer@4002c000 {
+ 				compatible = "nxp,lpc3220-timer";
+ 				reg = <0x4002C000 0x1000>;
+ 				interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+@@ -412,7 +412,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			watchdog: watchdog@4003C000 {
++			watchdog: watchdog@4003c000 {
+ 				compatible = "nxp,pnx4008-wdt";
+ 				reg = <0x4003C000 0x1000>;
+ 				clocks = <&clk LPC32XX_CLK_WDOG>;
+@@ -451,7 +451,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			timer1: timer@4004C000 {
++			timer1: timer@4004c000 {
+ 				compatible = "nxp,lpc3220-timer";
+ 				reg = <0x4004C000 0x1000>;
+ 				interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
+@@ -475,7 +475,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			pwm1: pwm@4005C000 {
++			pwm1: pwm@4005c000 {
+ 				compatible = "nxp,lpc3220-pwm";
+ 				reg = <0x4005C000 0x4>;
+ 				clocks = <&clk LPC32XX_CLK_PWM1>;
+@@ -484,7 +484,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			pwm2: pwm@4005C004 {
++			pwm2: pwm@4005c004 {
+ 				compatible = "nxp,lpc3220-pwm";
+ 				reg = <0x4005C004 0x4>;
+ 				clocks = <&clk LPC32XX_CLK_PWM2>;
+-- 
+2.19.1
