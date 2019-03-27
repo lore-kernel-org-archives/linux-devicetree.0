@@ -1,105 +1,33 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 108/192] ARM: dts: meson8b: fix the Ethernet data line signals in eth_rgmii_pins
-Date: Wed, 27 Mar 2019 14:09:00 -0400
-Message-ID: <20190327181025.13507-108-sashal@kernel.org>
-References: <20190327181025.13507-1-sashal@kernel.org>
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH v2 0/2] Add EDMA0/EDMA1 nodes on i.MX8QXP
+Date: Wed, 27 Mar 2019 19:03:09 +0000
+Message-ID: <20190327190244.9208-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Emiliano Ingrassia <ingrassia@epigenesys.com>, =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>, Kevin Hilman <khilman@baylibre.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+First patch documents the fsl,imx8qxp-edma string while the second
+adds the two EDMA nodes used by Audio peripherals on i.MX8QXP
 
-[ Upstream commit 29f0023d01f063feacfc404f0446905aee4f82ee ]
+Changes since v1:
+	* use "fsl,imx8qxp-edma" compatbile instead of "fsl,imx8qm-edma"
+	because this patch adds support for imx8QXP. eDMA driver is similar
+        for 8QM/8QXP but it doesn't have yet support added for these boards
+	so just the compatible string closer to the actual hardware.
 
-According to the Odroid-C1+ schematics the Ethernet TXD1 signal is
-routed to GPIOH_5 and the TXD0 signal is routed to GPIOH_6.
-The public S805 datasheet shows that TXD0 can be routed to DIF_2_P and
-TXD1 can be routed to DIF_2_N instead.
+Daniel Baluta (2):
+  bindings: fsl-edma: Document fsl,imx8qxp-edma compatbile string
+  arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
 
-The pin groups eth_txd0_0 (GPIOH_6) and eth_txd0_1 (DIF_2_P) are both
-configured as Ethernet TXD0 and TXD1 data lines in meson8b.dtsi. At the
-same time eth_txd1_0 (GPIOH_5) and eth_txd1_1 (DIF_2_N) are configured
-as TXD0 and TXD1 data lines as well.
-This results in a bad Ethernet receive performance. Presumably this is
-due to the eth_txd0 and eth_txd1 signal being routed to the wrong pins.
-As a result of that data can only be transmitted on eth_txd2 and
-eth_txd3. However, I have no scope to fully confirm this assumption.
+ .../devicetree/bindings/dma/fsl-edma.txt      |  1 +
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi    | 72 +++++++++++++++++++
+ 2 files changed, 73 insertions(+)
 
-The vendor u-boot sources for Odroid-C1 use the following Ethernet
-pinmux configuration:
-  SET_CBUS_REG_MASK(PERIPHS_PIN_MUX_6, 0x3f4f);
-  SET_CBUS_REG_MASK(PERIPHS_PIN_MUX_7, 0xf00000);
-This translates to the following pin groups in the mainline kernel:
-- register 6 bit  0: eth_rxd1 (DIF_0_P)
-- register 6 bit  1: eth_rxd0 (DIF_0_N)
-- register 6 bit  2: eth_rx_dv (DIF_1_P)
-- register 6 bit  3: eth_rx_clk (DIF_1_N)
-- register 6 bit  6: eth_tx_en (DIF_3_P)
-- register 6 bit  8: eth_ref_clk (DIF_3_N)
-- register 6 bit  9: eth_mdc (DIF_4_P)
-- register 6 bit 10: eth_mdio_en (DIF_4_N)
-- register 6 bit 11: eth_tx_clk (GPIOH_9)
-- register 6 bit 12: eth_txd2 (GPIOH_8)
-- register 6 bit 13: eth_txd3 (GPIOH_7)
-- register 7 bit 20: eth_txd0_0 (GPIOH_6)
-- register 7 bit 21: eth_txd1_0 (GPIOH_5)
-- register 7 bit 22: eth_rxd3 (DIF_2_P)
-- register 7 bit 23: eth_rxd2 (DIF_2_N)
-
-Drop the eth_txd0_1 and eth_txd1_1 groups from eth_rgmii_pins to fix the
-Ethernet transmit performance on Odroid-C1. Also add the eth_rxd2 and
-eth_rxd3 groups so we don't rely on the bootloader to set them up.
-
-iperf3 statistics before this change:
-- transmitting from Odroid-C1: 741 Mbits/sec (0 retries)
-- receiving on Odroid-C1: 199 Mbits/sec (1713 retries)
-
-iperf3 statistics after this change:
-- transmitting from Odroid-C1: 667 Mbits/sec (0 retries)
-- receiving on Odroid-C1: 750 Mbits/sec (0 retries)
-
-Fixes: b96446541d8390 ("ARM: dts: meson8b: extend ethernet controller description")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Emiliano Ingrassia <ingrassia@epigenesys.com>
-Cc: Linus Lüssing <linus.luessing@c0d3.blue>
-Tested-by: Emiliano Ingrassia <ingrassia@epigenesys.com>
-Reviewed-by: Emiliano Ingrassia <ingrassia@epigenesys.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/meson8b.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 08f7f6be7254..5b3e5c50c72f 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -207,9 +207,7 @@
- 				groups = "eth_tx_clk",
- 					 "eth_tx_en",
- 					 "eth_txd1_0",
--					 "eth_txd1_1",
- 					 "eth_txd0_0",
--					 "eth_txd0_1",
- 					 "eth_rx_clk",
- 					 "eth_rx_dv",
- 					 "eth_rxd1",
-@@ -218,7 +216,9 @@
- 					 "eth_mdc",
- 					 "eth_ref_clk",
- 					 "eth_txd2",
--					 "eth_txd3";
-+					 "eth_txd3",
-+					 "eth_rxd3",
-+					 "eth_rxd2";
- 				function = "ethernet";
- 			};
- 		};
--- 
-2.19.1
+--=20
+2.17.1
