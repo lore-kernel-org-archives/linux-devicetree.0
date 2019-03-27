@@ -1,7 +1,7 @@
 From: <yongqiang.niu@mediatek.com>
-Subject: [PATCH v2 05/25] drm/mediatek: split DISP_REG_CONFIG_DSI_SEL setting into another use case
-Date: Wed, 27 Mar 2019 14:19:01 +0800
-Message-ID: <1553667561-25447-6-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v2 12/25] drm/mediatek: add component DITHER
+Date: Wed, 27 Mar 2019 14:19:08 +0800
+Message-ID: <1553667561-25447-13-git-send-email-yongqiang.niu@mediatek.com>
 References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,32 +14,104 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-Here is two modifition in this patch:
-1.bls->dpi0 and rdma1->dsi are differen usecase,
-Split DISP_REG_CONFIG_DSI_SEL setting into anther usecase
-2.remove DISP_REG_CONFIG_DPI_SEL setting, DPI_SEL_IN_BLS is 0 and
-this is same with hardware defautl setting,
+This patch add component DITHER
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 32 +++++++++++++++++++++++++++++
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |  2 ++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index 495ebc5..80dc91f 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -401,10 +401,9 @@ static void mtk_ddp_sout_sel(void __iomem *config_regs,
- 	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
- 		writel_relaxed(BLS_TO_DPI_RDMA1_TO_DSI,
- 			       config_regs + DISP_REG_CONFIG_OUT_SEL);
-+	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
- 		writel_relaxed(DSI_SEL_IN_RDMA,
- 			       config_regs + DISP_REG_CONFIG_DSI_SEL);
--		writel_relaxed(DPI_SEL_IN_BLS,
--			       config_regs + DISP_REG_CONFIG_DPI_SEL);
- 	}
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+index 24152e5..afd6ca2 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+@@ -47,6 +47,12 @@
+ #define CCORR_RELAY_MODE			BIT(0)
+ #define DISP_CCORR_SIZE				0x0030
+ 
++#define DISP_DITHER_EN				0x0000
++#define DITHER_EN				BIT(0)
++#define DISP_DITHER_CFG                        0x0020
++#define DITHER_RELAY_MODE			BIT(0)
++#define DISP_DITHER_SIZE			0x0030
++
+ #define DISP_GAMMA_EN				0x0000
+ #define DISP_GAMMA_CFG				0x0020
+ #define DISP_GAMMA_SIZE				0x0030
+@@ -155,6 +161,24 @@ static void mtk_ccorr_stop(struct mtk_ddp_comp *comp)
+ 	writel_relaxed(0x0, comp->regs + DISP_CCORR_EN);
  }
  
++static void mtk_dither_config(struct mtk_ddp_comp *comp, unsigned int w,
++			      unsigned int h, unsigned int vrefresh,
++			      unsigned int bpc)
++{
++	writel(h << 16 | w, comp->regs + DISP_DITHER_SIZE);
++	writel(DITHER_RELAY_MODE, comp->regs + DISP_DITHER_CFG);
++}
++
++static void mtk_dither_start(struct mtk_ddp_comp *comp)
++{
++	writel(DITHER_EN, comp->regs + DISP_DITHER_EN);
++}
++
++static void mtk_dither_stop(struct mtk_ddp_comp *comp)
++{
++	writel_relaxed(0x0, comp->regs + DISP_DITHER_EN);
++}
++
+ static void mtk_gamma_config(struct mtk_ddp_comp *comp, unsigned int w,
+ 			     unsigned int h, unsigned int vrefresh,
+ 			     unsigned int bpc)
+@@ -209,6 +233,12 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
+ 	.stop = mtk_ccorr_stop,
+ };
+ 
++static const struct mtk_ddp_comp_funcs ddp_dither = {
++	.config = mtk_dither_config,
++	.start = mtk_dither_start,
++	.stop = mtk_dither_stop,
++};
++
+ static const struct mtk_ddp_comp_funcs ddp_gamma = {
+ 	.gamma_set = mtk_gamma_set,
+ 	.config = mtk_gamma_config,
+@@ -234,6 +264,7 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
+ 	[MTK_DISP_CCORR] = "ccorr",
+ 	[MTK_DISP_AAL] = "aal",
+ 	[MTK_DISP_GAMMA] = "gamma",
++	[MTK_DISP_DITHER] = "dither",
+ 	[MTK_DISP_UFOE] = "ufoe",
+ 	[MTK_DSI] = "dsi",
+ 	[MTK_DPI] = "dpi",
+@@ -256,6 +287,7 @@ struct mtk_ddp_comp_match {
+ 	[DDP_COMPONENT_CCORR]	= { MTK_DISP_CCORR,	0, &ddp_ccorr },
+ 	[DDP_COMPONENT_COLOR0]	= { MTK_DISP_COLOR,	0, NULL },
+ 	[DDP_COMPONENT_COLOR1]	= { MTK_DISP_COLOR,	1, NULL },
++	[DDP_COMPONENT_DITHER]	= { MTK_DISP_DITHER,	0, &ddp_dither },
+ 	[DDP_COMPONENT_DPI0]	= { MTK_DPI,		0, NULL },
+ 	[DDP_COMPONENT_DPI1]	= { MTK_DPI,		1, NULL },
+ 	[DDP_COMPONENT_DSI0]	= { MTK_DSI,		0, NULL },
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+index 2c1b006..b76b663 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+@@ -30,6 +30,7 @@ enum mtk_ddp_comp_type {
+ 	MTK_DISP_WDMA,
+ 	MTK_DISP_COLOR,
+ 	MTK_DISP_CCORR,
++	MTK_DISP_DITHER,
+ 	MTK_DISP_AAL,
+ 	MTK_DISP_GAMMA,
+ 	MTK_DISP_UFOE,
+@@ -49,6 +50,7 @@ enum mtk_ddp_comp_id {
+ 	DDP_COMPONENT_CCORR,
+ 	DDP_COMPONENT_COLOR0,
+ 	DDP_COMPONENT_COLOR1,
++	DDP_COMPONENT_DITHER,
+ 	DDP_COMPONENT_DPI0,
+ 	DDP_COMPONENT_DPI1,
+ 	DDP_COMPONENT_DSI0,
 -- 
 1.8.1.1.dirty
