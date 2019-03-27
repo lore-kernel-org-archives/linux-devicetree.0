@@ -1,16 +1,16 @@
-From: Damian Kos <dkos@cadence.com>
-Subject: RE: [PATCH v7 0/4] drm: add support for Cadence MHDP DPI/DP bridge.
-Date: Wed, 27 Mar 2019 14:58:30 +0000
-Message-ID: <BYAPR07MB43111E34594899FC375D16BDCD580@BYAPR07MB4311.namprd07.prod.outlook.com>
-References: <1548846209-16406-1-git-send-email-dkos@cadence.com>
- <0f11a4d8-d576-5af8-b7f4-afe3ff26678f@ti.com>
- <ce6ed2e6-90d5-fc7a-4d6d-ab27d62c5432@ti.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH] dt-bindings: hwmon (pwm-fan) Remove dead
+ "cooling-*-state" properties
+Date: Wed, 27 Mar 2019 16:17:30 +0000
+Message-ID: <14a24871-f22d-a500-8f49-922d0374ddca@arm.com>
+References: <afde4ebd929821d63b5172c8e70e15f0725a4b49.1553006788.git.robin.murphy@arm.com>
+ <CAJKOXPd12YPvL61nu0TDWze4pBuQK=KbJCrc5wh-tACsRQt37g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <ce6ed2e6-90d5-fc7a-4d6d-ab27d62c5432@ti.com>
-Content-Language: en-US
+In-Reply-To: <CAJKOXPd12YPvL61nu0TDWze4pBuQK=KbJCrc5wh-tACsRQt37g@mail.gmail.com>
+Content-Language: en-GB
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,158 +20,60 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, =?utf-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, David Airlie <airlied@linux.ie>, "jbergsagel@ti.com" <jbergsagel@ti.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sandy Huang <hjc@rock-chips.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, Rafal Ciepiela <rafalc@cadence.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel@ffwll.ch>, Anil Joy Varughese <aniljoy@cadence.com>, Piotr Sroka <piotrs@cadence.com>, Sean Paul <sean@poorly.run>, linux-arm-kernel@li
+To: arnd@arndb.de, olof@lixom.net
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, heiko@sntech.de, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, Krzysztof Kozlowski <krzk@kernel.org>, jonathanh@nvidia.com, kgene@kernel.org, thierry.reding@gmail.com, linux-arm-kernel@lists.infradead.org, shawnguo@kernel.org, linux@roeck-us.net
 List-Id: devicetree@vger.kernel.org
 
-PkRhbWlhbiwgcGluZy4NCj4NCj5PbiAzMS8wMS8yMDE5IDE0OjA4LCBUb21pIFZhbGtlaW5lbiB3
-cm90ZToNCj4+IEhpLA0KPj4gDQo+PiBPbiAzMC8wMS8yMDE5IDEzOjAzLCBEYW1pYW4gS29zIHdy
-b3RlOg0KPj4+IEhlbGxvIQ0KPj4+DQo+Pj4gVGhpcyBpcyB0aGUgc2VyaWVzIG9mIHBhdGNoZXMg
-dGhhdCB3aWxsIGFkZCBzdXBwb3J0IGZvciB0aGUgQ2FkZW5jZSdzIERQSS9EUA0KPj4+IGJyaWRn
-ZS4gUGxlYXNlIG5vdGUgdGhhdCB0aGlzIGlzIGEgcHJlbGltaW5hcnkgdmVyc2lvbiBvZiB0aGUg
-ZHJpdmVyIGFuZCB0aGVyZQ0KPj4+IHdpbGwgYmUgbW9yZSBwYXRjaGVzIGluIHRoZSBmdXR1cmUg
-d2l0aCB1cGRhdGVzLCBmaXhlcyBhbmQgaW1wcm92ZW1lbnRzLg0KPj4+IFBsZWFzZSBrZWVwIHRo
-YXQgaW4gbWluZCB3aGVuIGxvb2tpbmcgYXQgRklYTUUvVE9ETy9YWFggY29tbWVudHMuDQo+Pj4N
-Cj4+PiBJbml0aWFsbHksIE1IRFAgZHJpdmVyIHdhcyBkZXZlbG9wZWQgYXMgYSBEUk0gYnJpZGdl
-IGRyaXZlciBhbmQgd2FzIHBsYW5lZCB0bw0KPj4+IGJlIHBsYWNlZCBpbiBkcml2ZXJzL2dwdS9k
-cm0vYnJpZGdlL21oZHAuYy4gIEhvd2V2ZXIsIHRoZXJlIHdhcyBhbHJlYWR5DQo+Pj4gYSBkcml2
-ZXIgZm9yIENhZGVuY2UncyBEUCBjb250cm9sbGVyIGRldmVsb3BlZCBieSBSb2NrQ2hpcCwgYnV0
-IHRoYXQgZHJpdmVyDQo+Pj4gdXNlcyB0aGUgZGlmZmVyZW50IERSTSBmcmFtZXdvcmsgYW5kIGxv
-b2tzIGxpa2UgYSBwYXJ0IG9mIGEgYmlnZ2VyIHN5c3RlbS4NCj4+PiBCb3RoIGNvbnRyb2xsZXJz
-IChpbmNsdWRpbmcgZmlybXdhcmUpIGFyZSBxdWl0ZSBkaWZmZXJlbnQgaW50ZXJuYWxseQ0KPj4+
-IChNU1QvRkVDL0RTQyBzdXBwb3J0LCBsaW5rIHRyYWluaW5nIGRvbmUgYnkgZHJpdmVyLCBhZGRp
-dGlvbmFsIGNvbW1hbmRzLCBJUlEncw0KPj4+IGV0Yy4pIGJ1dCB0aGV5IGhhdmUgc2ltaWxhciBy
-ZWdpc3RlciBtYXAsIGV4Y2VwdCBmb3IgRnJhbWVyL1N0cmVhbWVyICh3aGljaCBpcw0KPj4+IG5v
-dGljZWFibHkgZGlmZmVyZW50KSwgc28gdGhleSBhcHBlYXIgc2ltaWxhci4NCj4+Pg0KPj4+IFRo
-ZSBmb2xsb3dpbmcgcGF0Y2hlcyBjb250YWluOg0KPj4+IC0gTW92aW5nIGNvbW1vbiBjb2RlIHRv
-IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvY2Rucy1taGRwLWNvbW1vbi4qIGFuZA0KPj4+ICAgbW9k
-aWZ5aW5nIGl0IGEgYml0IChtb3N0bHkgbmV3IHByZWZpeGVzIGZvciBmdW5jdGlvbnMgYW5kIGRh
-dGEgdHlwZXMpIHNvIGl0DQo+Pj4gICBjYW4gYmUgdXNlZCBieSB0d28sIGhpZ2hlciBsZXZlbCwg
-ZHJpdmVycy4NCj4+PiAtIE1vZGlmeWluZyBleGlzdGluZyBSb2NrQ2hpcCdzIERQIGRyaXZlciB0
-byB1c2UgdGhlIGNvbW1vbiBjb2RlIGFmdGVyIGNoYW5nZXMNCj4+PiAgIG1hZGUgdG8gaXQgKHVz
-ZSB0aGUgbmV3IGNkbnNfbWhkcF9kZXZpY2Ugc3RydWN0dXJlIGFuZCBuZXcgZnVuY3Rpb24gbmFt
-ZXMpLg0KPj4+IC0gTW9kaWZ5aW5nIERSTSBoZWxwZXJzIGEgYml0LiBTb21lIGFyZSByZXF1aXJl
-ZCBmb3IgbmV3IGRyaXZlciwgc29tZSBhcmUNCj4+PiAgIHVwZGF0ZXMgZnJvbSBEUCAxLjIgdG8g
-MS4zIG9yIDEuNC4NCj4+PiAtIEFkZGluZyBkb2N1bWVudGF0aW9uIGZvciBkZXZpY2UgdHJlZSBi
-aW5kaW5ncy4NCj4+PiAtIEFkZGluZyBwcmVsaW1pbmFyeSBDYWRlbmNlIERQSS9EUCBicmlkZ2Ug
-ZHJpdmVyLg0KPj4+DQo+Pj4gU29tZSBvZiB0aGUgdGhpbmdzIHRoYXQgd2lsbCBiZSBhZGRlZCBs
-YXRlciBvbiBpbmNsdWRlIChidXQgYXJlIG5vdCBsaW1pdGVkDQo+Pj4gdG8pOg0KPj4+IC0gRFND
-IHN1cHBvcnQNCj4+PiAtIEZFQyBzdXBwb3J0DQo+Pj4gLSBIRENQIHN1cHBvcnQNCj4+IA0KPj4g
-QSBmZXcgcmFuZG9tIGNvbW1lbnRzL3F1ZXN0aW9ucyBhZnRlciBhIHF1aWNrIGxvb2sgYXQgdGhl
-IHBhdGNoZXMuDQo+PiANCj4+IFRoZSBuYW1lcyBvZiB0aGUgc291cmNlIGZpbGVzIGFuZCB0aGUg
-a2VybmVsIEtjb25maWcgYXJlIG9ubHkgYWJvdXQNCj4+ICJDYWRlbmNlIERQIi4gQnV0IHRoZSBE
-VCBiaW5kaW5ncyBpcyBmb3IgY2RucyxtaGRwODU0NiwgYW5kIHRoZQ0KPj4gcmVzdWx0aW5nIG1v
-ZHVsZSBmaWxlIGlzIG1oZHA4NTQ2LmtvLiBJIHRoaW5rIG1vcmUgY29uc2lzdGVuY3kgaGVyZQ0K
-Pj4gd291bGQgYmUgZ29vZC4NCj4+IA0KPj4gSSBwcmVzdW1lIHRoZSBwYXJ0IG51bWJlciAob3Ig
-ZmFtaWx5PyBhcmUgdGhlcmUgb3RoZXIgc2ltaWxhciBwYXJ0cyB3aXRoDQo+PiBzaW1pbGFyIHBh
-cnQgbnVtYmVycz8pIGlzIHJlbGV2YW50LCBzbyBpdCBzaG91bGQgYmUgaW4gdGhlIEtjb25maWcN
-Cj4+IG9wdGlvbiBhbmQgaGVscCB0ZXh0LCBhbmQgcHJvYmFibHkgaW4gdGhlIGZpbGUgbmFtZXMg
-dG9vLiBUaGUgbW9kdWxlDQo+PiBuYW1lIHNob3VsZCBoYXZlICJjZG5zIiBwcmVmaXggdGhlcmUs
-IHNpbWlsYXIgdG8gdGhlIHNvdXJjZSBmaWxlcyBhbmQNCj4+IHRoZSBjZG5zLWRzaS5rby4NCj4+
-IA0KPj4gT3IgbWF5YmUgdGhlIHNhbWUgZHJpdmVyIHdpbGwgaGFuZGxlIGFsbCBDYWRlbmNlIERQ
-IHBhcnRzLCBpbiB3aGljaCBjYXNlDQo+PiBnZW5lcmljIGZpbGVuYW1lcyBhcmUgZmluZSwgYnV0
-IHRoZW4gdGhlIHJlc3VsdGluZyBrZXJuZWwgbW9kdWxlIHNob3VsZA0KPj4gYWxzbyBiZSBqdXN0
-ICJjZG5zLW1oZHAua28iLg0KV2Ugd291bGQgYmUgdmVyeSBoYXBweSB0byBoYXZlIGEgc2VwYXJh
-dGUgZHJpdmVyIGZvciBtaGRwODU0NiBpbnN0ZWFkIG9mDQptaXhpbmcgaXQgd2l0aCBSb2NrY2hp
-cCdzIGRyaXZlci4gVW5mb3J0dW5hdGVseSB3ZSBuZWVkIHRvIGhhdmUgb25lIGRyaXZlcg0KZm9y
-IGJvdGggSVAncywgc28gSSdsbCBqdXN0IGNoYW5nZSBtaGRwODU0Ni5rbyB0byBjZG5zLW1oZHAu
-a28uIChVbmxlc3MsDQptYWludGFpbmVycyBnaXZlIHVzIGEgZ3JlZW4gbGlnaHQgZm9yIHRoZSBk
-ZWRpY2F0ZWQgZHJpdmVyPykNCj4+IA0KPj4gSSBzZWUgc29tZSBhdWRpbyBmdW5jdGlvbnMgaW4g
-dGhlIGNvZGUsIGJ1dCBpdCdzIG5vdCBtZW50aW9uZWQgaW4gdGhlIERUDQo+PiBiaW5kaW5ncy4g
-SSdtIG5vdCBhbiBhdWRpbyBndXksIGJ1dCB0aGUgZGlzcGxheSBicmlkZ2VzIHdpdGggYXVkaW8N
-Cj4+IHN1cHBvcnQgSSBoYXZlIHNlZW4gaGF2ZSBoYWQgRFQgYmluZGluZ3MgZm9yIHRoZSBhdWRp
-byBzb3VyY2UgdG9vLiBJcw0KPj4gYXVkaW8gc3VwcG9ydGVkIGluIHRoZSBjdXJyZW50IGRyaXZl
-cj8NCj4+IA0KQXMgZmFyIGFzIEkga25vdywgYXVkaW8gaXMgd29ya2luZywgYnV0IEkgY2FuJ3Qg
-ZG91YmxlIGNoZWNrIGl0IHJpZ2h0IG5vdw0KZHVlIHRvIGhlYXZ5IGxvYWQgb24gbXkgYmFjayBy
-aWdodCBub3cuIEknbGwgdHJ5IHRvIGZpbmQgdGltZSBmb3IgdGhhdCBpbiB0aGUNCm5leHQgd2Vl
-ay4gQnV0LCBsaWtlIEkndmUgbWVudGlvbmVkIGVhcmxpZXIgSSBkb24ndCBzZWUgYSByZWFzb24g
-d2h5IGF1ZGlvDQpjb2RlICh0aGF0IGV4aXN0cyBpbiB0aGUgbWFpbmxpbmUpIHdvdWxkbid0IHdv
-cmsuDQpJJ20gbm90IGFuIGF1ZGlvIGd1eSBteXNlbGYuIFdoZW4gdXBkYXRpbmcgZHQgYmluZGlu
-Z3MgSSB0b29rIHRoZSBkdCBiaW5kaW5ncw0KZm9yIG90aGVyIGJyaWRnZXMgYXMgYW4gZXhhbXBs
-ZSwgYnV0IEkgZGlkIG5vdCBzZWUgYW55IGJpbmRpbmdzIGZvciBhdWRpbyBpbg0KdGhlbS4gSSBk
-aWRuJ3QgY2hlY2sgYWxsIG9mIHRoZW0uIENhbiB5b3UgcGxlYXNlIGxldCBtZSBrbm93IHdoaWNo
-IGJyaWRnZXMNCmFyZSB5b3Ugd2VyZSByZWZlcnJpbmcgdG8/IEluIG91ciB0ZXN0IGVudmlyb25t
-ZW50IHdlIGRpZG4ndCB1c2UgYW55IGF1ZGlvDQpkcml2ZXIgYXMgYXVkaW8gZ2VuZXJhdG9yIGlz
-IHNvIHNpbXBsZSB0aGF0IGl0IGlzIHBhcnQgb2YgdGhlIHJlZ2lzdGVyIHNwYWNlDQpvZiBJUCBh
-bmQgd2UgZGlkbid0IGV2ZW4gbmVlZCB0byBpbmNsdWRlIHRoaXMgZGV2aWNlIGluIC5kdHMgZmls
-ZS4gQXVkaW8gKGxpa2UNCnRoZSB2aWRlbykgaXMgY29uZmlndXJlZCBhbmQgZW5hYmxlZCBieSBj
-b2RlIHRoYXQgaXMgbm90IGluY2x1ZGVkIGluIHRoZSBwYXRjaA0KKGZvciBvYnZpb3VzIHJlYXNv
-bnMpLg0KU28sIGluIHNob3J0LCB5ZXMsIGRyaXZlciBzdXBwb3J0cyBhdWRpbyBhbmQgd2Ugd2ls
-bCBpbmNsdWRlIGRlc2NyaXB0aW9uIGZvcg0KYXVkaW8gaW5wdXQgcG9ydCBpbiB0aGUgZHQgYmlu
-ZGluZ3MuDQo+PiAgVG9taQ0KPj4gDQo+DQo+IC0tIA0KPiBUZXhhcyBJbnN0cnVtZW50cyBGaW5s
-YW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4NCj4gWS10dW5udXMvQnVz
-aW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kNCg0KUmVn
-YXJkcywNCkRhbWlhbg0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogVG9taSBW
-YWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4gDQpTZW50OiBXZWRuZXNkYXksIE1hcmNo
-IDIwLCAyMDE5IDEwOjM0DQpUbzogRGFtaWFuIEtvcyA8ZGtvc0BjYWRlbmNlLmNvbT4NCkNjOiBE
-YXZpZCBBaXJsaWUgPGFpcmxpZWRAbGludXguaWU+OyBEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3
-bGwuY2g+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxt
-YXJrLnJ1dGxhbmRAYXJtLmNvbT47IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+
-OyBMYXVyZW50IFBpbmNoYXJ0IDxMYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+OyBN
-YWFydGVuIExhbmtob3JzdCA8bWFhcnRlbi5sYW5raG9yc3RAbGludXguaW50ZWwuY29tPjsgTWF4
-aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBib290bGluLmNvbT47IFNlYW4gUGF1bCA8c2VhbkBw
-b29ybHkucnVuPjsgU2FuZHkgSHVhbmcgPGhqY0Byb2NrLWNoaXBzLmNvbT47IEhlaWtvIFN0w7xi
-bmVyIDxoZWlrb0BzbnRlY2guZGU+OyBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOyBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsg
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1yb2NrY2hpcEBsaXN0
-cy5pbmZyYWRlYWQub3JnOyBqYmVyZ3NhZ2VsQHRpLmNvbTsgcXVlbnRpbi5zY2h1bHpAYm9vdGxp
-bi5jb207IFBpb3RyIFNyb2thIDxwaW90cnNAY2FkZW5jZS5jb20+OyBSYWZhbCBDaWVwaWVsYSA8
-cmFmYWxjQGNhZGVuY2UuY29tPg0KU3ViamVjdDogUmU6IFtQQVRDSCB2NyAwLzRdIGRybTogYWRk
-IHN1cHBvcnQgZm9yIENhZGVuY2UgTUhEUCBEUEkvRFAgYnJpZGdlLg0KDQpFWFRFUk5BTCBNQUlM
-DQoNCg0KRGFtaWFuLCBwaW5nLg0KDQpPbiAzMS8wMS8yMDE5IDE0OjA4LCBUb21pIFZhbGtlaW5l
-biB3cm90ZToNCj4gSGksDQo+IA0KPiBPbiAzMC8wMS8yMDE5IDEzOjAzLCBEYW1pYW4gS29zIHdy
-b3RlOg0KPj4gSGVsbG8hDQo+Pg0KPj4gVGhpcyBpcyB0aGUgc2VyaWVzIG9mIHBhdGNoZXMgdGhh
-dCB3aWxsIGFkZCBzdXBwb3J0IGZvciB0aGUgQ2FkZW5jZSdzIERQSS9EUA0KPj4gYnJpZGdlLiBQ
-bGVhc2Ugbm90ZSB0aGF0IHRoaXMgaXMgYSBwcmVsaW1pbmFyeSB2ZXJzaW9uIG9mIHRoZSBkcml2
-ZXIgYW5kIHRoZXJlDQo+PiB3aWxsIGJlIG1vcmUgcGF0Y2hlcyBpbiB0aGUgZnV0dXJlIHdpdGgg
-dXBkYXRlcywgZml4ZXMgYW5kIGltcHJvdmVtZW50cy4NCj4+IFBsZWFzZSBrZWVwIHRoYXQgaW4g
-bWluZCB3aGVuIGxvb2tpbmcgYXQgRklYTUUvVE9ETy9YWFggY29tbWVudHMuDQo+Pg0KPj4gSW5p
-dGlhbGx5LCBNSERQIGRyaXZlciB3YXMgZGV2ZWxvcGVkIGFzIGEgRFJNIGJyaWRnZSBkcml2ZXIg
-YW5kIHdhcyBwbGFuZWQgdG8NCj4+IGJlIHBsYWNlZCBpbiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdl
-L21oZHAuYy4gIEhvd2V2ZXIsIHRoZXJlIHdhcyBhbHJlYWR5DQo+PiBhIGRyaXZlciBmb3IgQ2Fk
-ZW5jZSdzIERQIGNvbnRyb2xsZXIgZGV2ZWxvcGVkIGJ5IFJvY2tDaGlwLCBidXQgdGhhdCBkcml2
-ZXINCj4+IHVzZXMgdGhlIGRpZmZlcmVudCBEUk0gZnJhbWV3b3JrIGFuZCBsb29rcyBsaWtlIGEg
-cGFydCBvZiBhIGJpZ2dlciBzeXN0ZW0uDQo+PiBCb3RoIGNvbnRyb2xsZXJzIChpbmNsdWRpbmcg
-ZmlybXdhcmUpIGFyZSBxdWl0ZSBkaWZmZXJlbnQgaW50ZXJuYWxseQ0KPj4gKE1TVC9GRUMvRFND
-IHN1cHBvcnQsIGxpbmsgdHJhaW5pbmcgZG9uZSBieSBkcml2ZXIsIGFkZGl0aW9uYWwgY29tbWFu
-ZHMsIElSUSdzDQo+PiBldGMuKSBidXQgdGhleSBoYXZlIHNpbWlsYXIgcmVnaXN0ZXIgbWFwLCBl
-eGNlcHQgZm9yIEZyYW1lci9TdHJlYW1lciAod2hpY2ggaXMNCj4+IG5vdGljZWFibHkgZGlmZmVy
-ZW50KSwgc28gdGhleSBhcHBlYXIgc2ltaWxhci4NCj4+DQo+PiBUaGUgZm9sbG93aW5nIHBhdGNo
-ZXMgY29udGFpbjoNCj4+IC0gTW92aW5nIGNvbW1vbiBjb2RlIHRvIGRyaXZlcnMvZ3B1L2RybS9i
-cmlkZ2UvY2Rucy1taGRwLWNvbW1vbi4qIGFuZA0KPj4gICBtb2RpZnlpbmcgaXQgYSBiaXQgKG1v
-c3RseSBuZXcgcHJlZml4ZXMgZm9yIGZ1bmN0aW9ucyBhbmQgZGF0YSB0eXBlcykgc28gaXQNCj4+
-ICAgY2FuIGJlIHVzZWQgYnkgdHdvLCBoaWdoZXIgbGV2ZWwsIGRyaXZlcnMuDQo+PiAtIE1vZGlm
-eWluZyBleGlzdGluZyBSb2NrQ2hpcCdzIERQIGRyaXZlciB0byB1c2UgdGhlIGNvbW1vbiBjb2Rl
-IGFmdGVyIGNoYW5nZXMNCj4+ICAgbWFkZSB0byBpdCAodXNlIHRoZSBuZXcgY2Ruc19taGRwX2Rl
-dmljZSBzdHJ1Y3R1cmUgYW5kIG5ldyBmdW5jdGlvbiBuYW1lcykuDQo+PiAtIE1vZGlmeWluZyBE
-Uk0gaGVscGVycyBhIGJpdC4gU29tZSBhcmUgcmVxdWlyZWQgZm9yIG5ldyBkcml2ZXIsIHNvbWUg
-YXJlDQo+PiAgIHVwZGF0ZXMgZnJvbSBEUCAxLjIgdG8gMS4zIG9yIDEuNC4NCj4+IC0gQWRkaW5n
-IGRvY3VtZW50YXRpb24gZm9yIGRldmljZSB0cmVlIGJpbmRpbmdzLg0KPj4gLSBBZGRpbmcgcHJl
-bGltaW5hcnkgQ2FkZW5jZSBEUEkvRFAgYnJpZGdlIGRyaXZlci4NCj4+DQo+PiBTb21lIG9mIHRo
-ZSB0aGluZ3MgdGhhdCB3aWxsIGJlIGFkZGVkIGxhdGVyIG9uIGluY2x1ZGUgKGJ1dCBhcmUgbm90
-IGxpbWl0ZWQNCj4+IHRvKToNCj4+IC0gRFNDIHN1cHBvcnQNCj4+IC0gRkVDIHN1cHBvcnQNCj4+
-IC0gSERDUCBzdXBwb3J0DQo+IA0KPiBBIGZldyByYW5kb20gY29tbWVudHMvcXVlc3Rpb25zIGFm
-dGVyIGEgcXVpY2sgbG9vayBhdCB0aGUgcGF0Y2hlcy4NCj4gDQo+IFRoZSBuYW1lcyBvZiB0aGUg
-c291cmNlIGZpbGVzIGFuZCB0aGUga2VybmVsIEtjb25maWcgYXJlIG9ubHkgYWJvdXQNCj4gIkNh
-ZGVuY2UgRFAiLiBCdXQgdGhlIERUIGJpbmRpbmdzIGlzIGZvciBjZG5zLG1oZHA4NTQ2LCBhbmQg
-dGhlDQo+IHJlc3VsdGluZyBtb2R1bGUgZmlsZSBpcyBtaGRwODU0Ni5rby4gSSB0aGluayBtb3Jl
-IGNvbnNpc3RlbmN5IGhlcmUNCj4gd291bGQgYmUgZ29vZC4NCj4gDQo+IEkgcHJlc3VtZSB0aGUg
-cGFydCBudW1iZXIgKG9yIGZhbWlseT8gYXJlIHRoZXJlIG90aGVyIHNpbWlsYXIgcGFydHMgd2l0
-aA0KPiBzaW1pbGFyIHBhcnQgbnVtYmVycz8pIGlzIHJlbGV2YW50LCBzbyBpdCBzaG91bGQgYmUg
-aW4gdGhlIEtjb25maWcNCj4gb3B0aW9uIGFuZCBoZWxwIHRleHQsIGFuZCBwcm9iYWJseSBpbiB0
-aGUgZmlsZSBuYW1lcyB0b28uIFRoZSBtb2R1bGUNCj4gbmFtZSBzaG91bGQgaGF2ZSAiY2RucyIg
-cHJlZml4IHRoZXJlLCBzaW1pbGFyIHRvIHRoZSBzb3VyY2UgZmlsZXMgYW5kDQo+IHRoZSBjZG5z
-LWRzaS5rby4NCj4gDQo+IE9yIG1heWJlIHRoZSBzYW1lIGRyaXZlciB3aWxsIGhhbmRsZSBhbGwg
-Q2FkZW5jZSBEUCBwYXJ0cywgaW4gd2hpY2ggY2FzZQ0KPiBnZW5lcmljIGZpbGVuYW1lcyBhcmUg
-ZmluZSwgYnV0IHRoZW4gdGhlIHJlc3VsdGluZyBrZXJuZWwgbW9kdWxlIHNob3VsZA0KPiBhbHNv
-IGJlIGp1c3QgImNkbnMtbWhkcC5rbyIuDQo+IA0KPiBJIHNlZSBzb21lIGF1ZGlvIGZ1bmN0aW9u
-cyBpbiB0aGUgY29kZSwgYnV0IGl0J3Mgbm90IG1lbnRpb25lZCBpbiB0aGUgRFQNCj4gYmluZGlu
-Z3MuIEknbSBub3QgYW4gYXVkaW8gZ3V5LCBidXQgdGhlIGRpc3BsYXkgYnJpZGdlcyB3aXRoIGF1
-ZGlvDQo+IHN1cHBvcnQgSSBoYXZlIHNlZW4gaGF2ZSBoYWQgRFQgYmluZGluZ3MgZm9yIHRoZSBh
-dWRpbyBzb3VyY2UgdG9vLiBJcw0KPiBhdWRpbyBzdXBwb3J0ZWQgaW4gdGhlIGN1cnJlbnQgZHJp
-dmVyPw0KPiANCj4gIFRvbWkNCj4gDQoNCi0tIA0KVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBP
-eSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuDQpZLXR1bm51cy9CdXNpbmVzcyBJ
-RDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQ0KX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+[ +Arnd, Olof ]
+
+On 19/03/2019 15:06, Krzysztof Kozlowski wrote:
+> On Tue, 19 Mar 2019 at 15:54, Robin Murphy <robin.murphy@arm.com> wrote:
+>>
+>> The old "cooling-{min,max}-state" properties for thermal bindings were
+>> ratified to "cooling-{min,max}-level" by commit eb168b70dea5 ("of:
+>> thermal: Fix inconsitency between cooling-*-state and cooling-*-level"),
+>> which were later removed entirely by commit e04907dbc259 ("dt-bindings:
+>> thermal: Remove "cooling-{min|max}-level" properties").
+>>
+>> The pwm-fan binding, however, was apparently in-flight in parallel with
+>> that ratification, and so managed to introduce an example of the old
+>> properties which escaped the scope of the later cleanup and has thus
+>> continued to be dutifully copied for new boards despite being useless.
+>> Clean up these remaining undocumented anachronisms to minimise any
+>> further confusion.
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>> ---
+>>
+>> Presented as one big hwmon patch for simplicity, but the DT changes
+>> can quite easily be broken out by platform if maintainers prefer.
+>>
+>> Robin.
+>>
+>>   Documentation/devicetree/bindings/hwmon/pwm-fan.txt | 2 --
+>>   arch/arm/boot/dts/exynos4412-odroidu3.dts           | 2 --
+>>   arch/arm/boot/dts/exynos5410-odroidxu.dts           | 2 --
+>>   arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi  | 2 --
+> 
+> Probably you should send it directly to arm-soc maintainers so it
+> would go with other DT changes. In such case:
+> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+Indeed, it had crossed my mind that routing this through arm-soc might 
+make sense - Arnd, Olof, would you agree? And if so, should I resend to 
+the arm-soc alias or might you be able to pick it directly?
+
+Thanks to everyone for the acks!
+
+Robin.
+
+> 
+> Best regards,
+> Krzysztof
+> 
+>>   arch/arm/boot/dts/imx6qdl-emcon.dtsi                | 2 --
+>>   arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts  | 2 --
+>>   arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi       | 2 --
+>>   arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi       | 2 --
+>>   8 files changed, 16 deletions(-)
+>>
