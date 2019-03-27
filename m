@@ -1,8 +1,8 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v4 4/4] ARM: dts: sun8i: tbs-a711: Add support
- for volume keys input
-Date: Wed, 27 Mar 2019 01:25:01 +0100
-Message-ID: <20190327002501.4630-5-megous@megous.com>
+Subject: [PATCH v4 2/4] dt-bindings: input: Add R_LRADC support
+ for A83T
+Date: Wed, 27 Mar 2019 01:24:59 +0100
+Message-ID: <20190327002501.4630-3-megous@megous.com>
 References: <20190327002501.4630-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
@@ -16,56 +16,41 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-TBS A711 tablet has volume up/down keys connected to r_lradc. Add
-support for these keys.
+Allwinner A83T SoC has a low res ADC like the one in Allwinner A10 SoC.
 
-Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Add binding for it.
+
+Signed-off-by: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ .../devicetree/bindings/input/sun4i-lradc-keys.txt          | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-index 1e840ab5a541..6ecdc11b7059 100644
---- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-@@ -46,6 +46,7 @@
+diff --git a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+index 1458c3179a63..496125c6bfb7 100644
+--- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
++++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+@@ -2,12 +2,14 @@ Allwinner sun4i low res adc attached tablet keys
+ ------------------------------------------------
  
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/pwm/pwm.h>
-+#include <dt-bindings/input/input.h>
+ Required properties:
+- - compatible: "allwinner,sun4i-a10-lradc-keys"
++ - compatible: should be one of the following string:
++		"allwinner,sun4i-a10-lradc-keys"
++		"allwinner,sun8i-a83t-r-lradc"
+  - reg: mmio address range of the chip
+  - interrupts: interrupt to which the chip is connected
+  - vref-supply: powersupply for the lradc reference voltage
  
- / {
- 	model = "TBS A711 Tablet";
-@@ -200,6 +201,25 @@
- 	status = "okay";
- };
+-Each key is represented as a sub-node of "allwinner,sun4i-a10-lradc-keys":
++Each key is represented as a sub-node of the compatible mentioned above:
  
-+&r_lradc {
-+	vref-supply = <&reg_aldo2>;
-+	status = "okay";
-+
-+	button@210 {
-+		label = "Volume Up";
-+		linux,code = <KEY_VOLUMEUP>;
-+		channel = <0>;
-+		voltage = <210000>;
-+	};
-+
-+	button@410 {
-+		label = "Volume Down";
-+		linux,code = <KEY_VOLUMEDOWN>;
-+		channel = <0>;
-+		voltage = <410000>;
-+	};
-+};
-+
- &r_rsb {
- 	status = "okay";
- 
+ Required subnode-properties:
+ 	- label: Descriptive name of the key.
 -- 
 2.21.0
