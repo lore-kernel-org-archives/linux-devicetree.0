@@ -1,43 +1,132 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v11 16/27] pwm: jz4740: Drop dependency on MACH_INGENIC, use COMPILE_TEST
-Date: Thu, 28 Mar 2019 00:16:20 +0100
-Message-ID: <20190327231631.15708-17-paul@crapouillou.net>
-References: <20190327231631.15708-1-paul@crapouillou.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/8] dt-bindings: remoteproc: add bindings for stm32
+ remote processor driver
+Date: Wed, 27 Mar 2019 18:23:01 -0500
+Message-ID: <20190327232301.GA2172@bogus>
+References: <1551795849-13672-1-git-send-email-fabien.dessenne@st.com>
+ <1551795849-13672-3-git-send-email-fabien.dessenne@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190327231631.15708-1-paul@crapouillou.net>
+Content-Disposition: inline
+In-Reply-To: <1551795849-13672-3-git-send-email-fabien.dessenne@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Wim Van Sebroeck <wim@linux-watchdog.org>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Mathieu Malaterre <malat@debian.org>, od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+To: Fabien Dessenne <fabien.dessenne@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Ludovic Barre <ludovic.barre@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Depending on MACH_INGENIC prevent us from creating a generic kernel that
-works on more than one MIPS board. Instead, we just depend on MIPS being
-set.
+On Tue, Mar 05, 2019 at 03:24:03PM +0100, Fabien Dessenne wrote:
+> Add the device tree bindings document for the stm32 remoteproc devices.
+> 
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> ---
+>  .../devicetree/bindings/remoteproc/stm32-rproc.txt | 67 ++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt b/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+> new file mode 100644
+> index 0000000..cc90c88
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+> @@ -0,0 +1,67 @@
+> +STMicroelectronics STM32 Remoteproc
+> +-----------------------------------
+> +This document defines the binding for the remoteproc component that loads and
+> +boots firmwares on the ST32MP family chipset.
+> +
+> +Required properties:
+> +- compatible:	Must be "st,stm32mp1-rproc"
 
-On other architectures, this driver can still be built, thanks to
-COMPILE_TEST. This is used by automated tools to find bugs, for
-instance.
+'rproc' is what this is called in the h/w manual?
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Tested-by: Artur Rojek <contact@artur-rojek.eu>
----
- drivers/pwm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +- reg:		Address ranges of the remote processor dedicated memories.
+> +		The parent node should provide an appropriate ranges property
+> +		for properly translating these into bus addresses.
+> +- resets:	Reference to a reset controller asserting the remote processor.
+> +- reset-names:	Must be "mcu_rst"
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index a1aba52793ee..e73e744a7a71 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -212,7 +212,7 @@ config PWM_IMX27
- 
- config PWM_JZ4740
- 	tristate "Ingenic JZ47xx PWM support"
--	depends on MACH_INGENIC
-+	depends on MIPS || COMPILE_TEST
- 	depends on COMMON_CLK
- 	select INGENIC_TIMER
- 	help
--- 
-2.11.0
+-names is kind of pointless when there is only 1 entry.
+
+> +- st,syscfg-holdboot: Reference to the system configuration which holds the
+> +		remote processor reset hold boot
+> +	1st cell: phandle of syscon block
+> +	2nd cell: register offset containing the hold boot setting
+> +	3rd cell: register bitmask for the hold boot field
+> +- st,syscfg-tz: Reference to the system configuration which holds the RCC trust
+> +		zone mode
+> +	1st cell: phandle to syscon block
+> +	2nd cell: register offset containing the RCC trust zone mode setting
+> +	3rd cell: register bitmask for the RCC trust zone mode bit
+> +
+> +Optional properties:
+> +- interrupt-parent: phandle to the interrupt controller node.
+
+This is implied.
+
+> +- interrupts:	Should contain the watchdog interrupt
+> +- interrupt-names: Must be "wdg"
+
+-names is kind of pointless when there is only 1 entry.
+
+> +- mboxes:	List of phandle and mailbox channel specifiers:
+
+How would one talk to the processor if this is optional?
+
+> +		- a channel (a) used to communicate through virtqueues with the
+> +		  remote proc.
+> +		  Bi-directional channel:
+> +		      - from local to remote = send message
+> +		      - from remote to local = send message ack
+> +		- a channel (b) working the opposite direction of channel (a)
+> +		- a channel (c) used by the local proc to notify the remote proc
+> +		  that it is about to be shut down.
+> +		  Mono-directional channel:
+
+Unidirectional
+
+> +		      - from local to remote, where ACK from the remote means
+> +		        that it is ready for shutdown
+> +- mbox-names:	This property is required if the mboxes property is used.
+> +		- must be "vq0" for channel (a)
+> +		- must be "vq1" for channel (b)
+> +		- must be "shutdown" for channel (c)
+> +- memory-region: list of phandles to the reserved memory regions associated with
+> +		the remoteproc device
+> +		(see ../reserved-memory/reserved-memory.txt)
+
+How many?
+
+> +- st,syscfg-pdds: Reference to the system configuration which holds the remote
+> +		processor deep sleep setting
+> +	1st cell: phandle to syscon block
+> +	2nd cell: register offset containing the deep sleep setting
+> +	3rd cell: register bitmask for the deep sleep bit
+> +- auto_boot:	If defined, when remoteproc is probed, it looks for a default
+> +		firmware and if it finds some, it loads the firmware and starts
+> +		the remote processor.
+
+How do you know what is and isn't default firmware? Seems like this 
+could be accomplished using the standard 'firmware-name' to specify what 
+firmware to load and boot.
+
+> +- recovery:	If defined, remoteproc enables the crash recovery process.
+
+Doesn't seem like a static DT property. This is a feature to enable or 
+something you set on boot to recover?
+
+> +
+> +Example:
+> +	m4_rproc: m4@0 {
+> +		compatible = "st,stm32mp1-rproc";
+> +		reg = <0x00000000 0x10000>,
+> +		      <0x10000000 0x40000>,
+> +		      <0x30000000 0x40000>;
+> +		resets = <&rcc MCU_R>;
+> +		reset-names = "mcu_rst";
+> +		st,syscfg-holdboot = <&rcc 0x10C 0x1>;
+> +		st,syscfg-tz = <&rcc 0x000 0x1>;
+> +	};
+> -- 
+> 2.7.4
+> 
