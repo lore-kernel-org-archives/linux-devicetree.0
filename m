@@ -1,76 +1,67 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v4 5/7] drm/sun4i: Rely on dma interconnect for our RAM
- offset
-Date: Wed, 27 Mar 2019 12:50:47 +0000
-Message-ID: <bdc3ece8-07bf-33a5-ae4f-bb59d9327972@arm.com>
-References: <cover.221220f2f28e14ef07cce84e753ac662085d84ff.1552595146.git-series.maxime.ripard@bootlin.com>
- <99317417302db473ac41ce30295a86e307607fa0.1552595146.git-series.maxime.ripard@bootlin.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <99317417302db473ac41ce30295a86e307607fa0.1552595146.git-series.maxime.ripard@bootlin.com>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: fsl_audmix: Fix kbuild failure" to the asoc tree
+Date: Wed, 27 Mar 2019 12:52:34 +0000 (GMT)
+Message-ID: <20190327125234.3357411288FA@debutante.sirena.org.uk>
+References: <1553678953-31228-1-git-send-email-viorel.suman@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1553678953-31228-1-git-send-email-viorel.suman@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viorel Suman <viorel.suman@nxp.com>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>, Nicolin Chen <nicoleotsuka@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Viorel Suman <viorel.suman@gmail.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTQvMDMvMjAxOSAyMDoyNiwgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBOb3cgdGhhdCB3ZSBj
-YW4gZXhwcmVzcyBvdXIgRE1BIHRvcG9sb2d5LCByZWx5IG9uIHRob3NlIHByb3BlcnR5IGluc3Rl
-YWQgb2YKPiBoYXJkY29kaW5nIGFuIG9mZnNldCBmcm9tIHRoZSBkbWFfYWRkcl90IHdoaWNoIHdh
-c24ndCByZWFsbHkgZ3JlYXQuCj4gCj4gV2Ugc3RpbGwgbmVlZCB0byBhZGQgc29tZSBjb2RlIHRv
-IGRlYWwgd2l0aCB0aGUgb2xkIERUIHRoYXQgd291bGQgbGFjayB0aGF0Cj4gcHJvcGVydHksIGJ1
-dCB3ZSBtb3ZlIHRoZSBvZmZzZXQgdG8gdGhlIERSTSBkZXZpY2UgZG1hX3Bmbl9vZmZzZXQgdG8g
-YmUKPiBhYmxlIHRvIHJlbHkgb24ganVzdCB0aGUgZG1hX2FkZHJfdCBhc3NvY2lhdGVkIHRvIHRo
-ZSBHRU0gb2JqZWN0LgoKQXMgdGhlIGxlYXN0LXdvcnN0IG9wdGlvbiwKCkFja2VkLWJ5OiBSb2Jp
-biBNdXJwaHkgPHJvYmluLm11cnBoeUBhcm0uY29tPgoKPiBBY2tlZC1ieTogRGFuaWVsIFZldHRl
-ciA8ZGFuaWVsLnZldHRlckBmZndsbC5jaD4KPiBTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJk
-IDxtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29tPgo+IC0tLQo+ICAgZHJpdmVycy9ncHUvZHJtL3N1
-bjRpL3N1bjRpX2JhY2tlbmQuYyB8IDI4ICsrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0KPiAg
-IDEgZmlsZSBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQo+IAo+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfYmFja2VuZC5jIGIvZHJpdmVy
-cy9ncHUvZHJtL3N1bjRpL3N1bjRpX2JhY2tlbmQuYwo+IGluZGV4IDRjMGQ1MWY3MzIzNy4uOTNm
-M2NhY2MzZTc0IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9iYWNr
-ZW5kLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfYmFja2VuZC5jCj4gQEAg
-LTM2MSwxMyArMzYxLDYgQEAgaW50IHN1bjRpX2JhY2tlbmRfdXBkYXRlX2xheWVyX2J1ZmZlcihz
-dHJ1Y3Qgc3VuNGlfYmFja2VuZCAqYmFja2VuZCwKPiAgIAlwYWRkciA9IGRybV9mYl9jbWFfZ2V0
-X2dlbV9hZGRyKGZiLCBzdGF0ZSwgMCk7Cj4gICAJRFJNX0RFQlVHX0RSSVZFUigiU2V0dGluZyBi
-dWZmZXIgYWRkcmVzcyB0byAlcGFkXG4iLCAmcGFkZHIpOwo+ICAgCj4gLQkvKgo+IC0JICogYmFj
-a2VuZCBETUEgYWNjZXNzZXMgRFJBTSBkaXJlY3RseSwgYnlwYXNzaW5nIHRoZSBzeXN0ZW0KPiAt
-CSAqIGJ1cy4gQXMgc3VjaCwgdGhlIGFkZHJlc3MgcmFuZ2UgaXMgZGlmZmVyZW50IGFuZCB0aGUg
-YnVmZmVyCj4gLQkgKiBhZGRyZXNzIG5lZWRzIHRvIGJlIGNvcnJlY3RlZC4KPiAtCSAqLwo+IC0J
-cGFkZHIgLT0gUEhZU19PRkZTRVQ7Cj4gLQo+ICAgCWlmIChmYi0+Zm9ybWF0LT5pc195dXYpCj4g
-ICAJCXJldHVybiBzdW40aV9iYWNrZW5kX3VwZGF0ZV95dXZfYnVmZmVyKGJhY2tlbmQsIGZiLCBw
-YWRkcik7Cj4gICAKPiBAQCAtODE0LDYgKzgwNywyNyBAQCBzdGF0aWMgaW50IHN1bjRpX2JhY2tl
-bmRfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKPiAgIAlk
-ZXZfc2V0X2RydmRhdGEoZGV2LCBiYWNrZW5kKTsKPiAgIAlzcGluX2xvY2tfaW5pdCgmYmFja2Vu
-ZC0+ZnJvbnRlbmRfbG9jayk7Cj4gICAKPiArCWlmIChvZl9maW5kX3Byb3BlcnR5KGRldi0+b2Zf
-bm9kZSwgImludGVyY29ubmVjdHMiLCBOVUxMKSkgewo+ICsJCS8qCj4gKwkJICogVGhpcyBhc3N1
-bWUgd2UgaGF2ZSB0aGUgc2FtZSBETUEgY29uc3RyYWludHMgZm9yIGFsbCBvdXIgdGhlCj4gKwkJ
-ICogZGV2aWNlcyBpbiBvdXIgcGlwZWxpbmUgKGFsbCB0aGUgYmFja2VuZHMsIGJ1dCBhbHNvIHRo
-ZQo+ICsJCSAqIGZyb250ZW5kcykuIFRoaXMgc291bmRzIGJhZCwgYnV0IGl0IGhhcyBhbHdheXMg
-YmVlbiB0aGUgY2FzZQo+ICsJCSAqIGZvciB1cywgYW5kIERSTSBkb2Vzbid0IGRvIHBlci1kZXZp
-Y2UgYWxsb2NhdGlvbiBlaXRoZXIsIHNvCj4gKwkJICogd2Ugd291bGQgbmVlZCB0byBmaXggRFJN
-IGZpcnN0Li4uCj4gKwkJICovCj4gKwkJcmV0ID0gb2ZfZG1hX2NvbmZpZ3VyZShkcm0tPmRldiwg
-ZGV2LT5vZl9ub2RlLCB0cnVlKTsKPiArCQlpZiAocmV0KQo+ICsJCQlyZXR1cm4gcmV0Owo+ICsJ
-fSBlbHNlIHsKPiArCQkvKgo+ICsJCSAqIElmIHdlIGRvbid0IGhhdmUgdGhlIGludGVyY29ubmVj
-dCBwcm9wZXJ0eSwgbW9zdCBsaWtlbHkKPiArCQkgKiBiZWNhdXNlIG9mIGFuIG9sZCBEVCwgd2Ug
-bmVlZCB0byBzZXQgdGhlIERNQSBvZmZzZXQgYnkgaGFuZAo+ICsJCSAqIG9uIG91ciBkZXZpY2Ug
-c2luY2UgdGhlIFJBTSBtYXBwaW5nIGlzIGF0IDAgZm9yIHRoZSBETUEgYnVzLAo+ICsJCSAqIHVu
-bGlrZSB0aGUgQ1BVLgo+ICsJCSAqLwo+ICsJCWRybS0+ZGV2LT5kbWFfcGZuX29mZnNldCA9IFBI
-WVNfUEZOX09GRlNFVDsKPiArCX0KPiArCj4gICAJYmFja2VuZC0+ZW5naW5lLm5vZGUgPSBkZXYt
-Pm9mX25vZGU7Cj4gICAJYmFja2VuZC0+ZW5naW5lLm9wcyA9ICZzdW40aV9iYWNrZW5kX2VuZ2lu
-ZV9vcHM7Cj4gICAJYmFja2VuZC0+ZW5naW5lLmlkID0gc3VuNGlfYmFja2VuZF9vZl9nZXRfaWQo
-ZGV2LT5vZl9ub2RlKTsKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVs
+The patch
+
+   ASoC: fsl_audmix: Fix kbuild failure
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 5fb94d46c3179cb7afd805a5a9252111316a926f Mon Sep 17 00:00:00 2001
+From: Viorel Suman <viorel.suman@nxp.com>
+Date: Wed, 27 Mar 2019 09:29:38 +0000
+Subject: [PATCH] ASoC: fsl_audmix: Fix kbuild failure
+
+The format in dev_dbg function must be a constant.
+
+Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/fsl/fsl_audmix.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sound/soc/fsl/fsl_audmix.c b/sound/soc/fsl/fsl_audmix.c
+index 3356cb617713..dabde0342c95 100644
+--- a/sound/soc/fsl/fsl_audmix.c
++++ b/sound/soc/fsl/fsl_audmix.c
+@@ -90,7 +90,7 @@ static int fsl_audmix_state_trans(struct snd_soc_component *comp,
+ 	struct fsl_audmix *priv = snd_soc_component_get_drvdata(comp);
+ 	/* Enforce all required TDMs are started */
+ 	if ((priv->tdms & prm.tdms) != prm.tdms) {
+-		dev_dbg(comp->dev, prm.msg);
++		dev_dbg(comp->dev, "%s", prm.msg);
+ 		return -EINVAL;
+ 	}
+ 
+-- 
+2.20.1
