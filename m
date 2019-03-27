@@ -1,8 +1,8 @@
 Return-Path: <SRS0=Zx4x=R6=pengutronix.de=mfe@kernel.org>
 From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 1/4] Input: ads7846 - convert to devm_ alloc functions
-Date: Wed, 27 Mar 2019 14:39:24 +0100
-Message-Id: <20190327133927.1340-2-m.felsch@pengutronix.de>
+Subject: [PATCH 4/4] Input: ads7846 - add support for general touchscreen bindings
+Date: Wed, 27 Mar 2019 14:39:27 +0100
+Message-Id: <20190327133927.1340-5-m.felsch@pengutronix.de>
 In-Reply-To: <20190327133927.1340-1-m.felsch@pengutronix.de>
 References: <20190327133927.1340-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
@@ -11,103 +11,122 @@ To: dmitry.torokhov@gmail.com, robh+dt@kernel.org
 Cc: kernel@pengutronix.de, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Convert to devm function to drop the 'no-mem' error handling path and
-strip down the remove funciton a bit.
+A few vendor specific bindings are now covered by common bindings.
+
+Let the driver parse the common bindings to make use of common
+inverting and swapping mechnism. Aslo make use of
+touchscreen_report_pos() to ensure the correct inverting-swapping
+order.
+
+The vendor specific properties are used as default (backward
+compatibility) and gets overwritten by common bindings.
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- drivers/input/touchscreen/ads7846.c | 37 ++++++++++++-----------------
- 1 file changed, 15 insertions(+), 22 deletions(-)
+ drivers/input/touchscreen/ads7846.c | 38 +++++++++++++++++++++++------
+ 1 file changed, 30 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/input/touchscreen/ads7846.c b/drivers/input/touchscreen/ads7846.c
-index a2f45aefce08..5a7a8425d619 100644
+index 5a7a8425d619..2fe3b91f1db8 100644
 --- a/drivers/input/touchscreen/ads7846.c
 +++ b/drivers/input/touchscreen/ads7846.c
-@@ -1283,13 +1283,17 @@ static int ads7846_probe(struct spi_device *spi)
- 	if (err < 0)
- 		return err;
+@@ -23,6 +23,7 @@
+ #include <linux/sched.h>
+ #include <linux/delay.h>
+ #include <linux/input.h>
++#include <linux/input/touchscreen.h>
+ #include <linux/interrupt.h>
+ #include <linux/slab.h>
+ #include <linux/pm.h>
+@@ -132,6 +133,8 @@ struct ads7846 {
  
--	ts = kzalloc(sizeof(struct ads7846), GFP_KERNEL);
--	packet = kzalloc(sizeof(struct ads7846_packet), GFP_KERNEL);
--	input_dev = input_allocate_device();
--	if (!ts || !packet || !input_dev) {
--		err = -ENOMEM;
--		goto err_free_mem;
--	}
-+	ts = devm_kzalloc(&spi->dev, sizeof(*ts), GFP_KERNEL);
-+	if (!ts)
-+		return -ENOMEM;
+ 	u16			penirq_recheck_delay_usecs;
+ 
++	struct touchscreen_properties core_prop;
 +
-+	packet = devm_kzalloc(&spi->dev, sizeof(*packet), GFP_KERNEL);
-+	if (!packet)
-+		return -ENOMEM;
-+
-+	input_dev = devm_input_allocate_device(&spi->dev);
-+	if (!input_dev)
-+		return -ENOMEM;
+ 	struct mutex		lock;
+ 	bool			stopped;	/* P: lock */
+ 	bool			disabled;	/* P: lock */
+@@ -826,17 +829,13 @@ static void ads7846_report_state(struct ads7846 *ts)
+ 	if (Rt) {
+ 		struct input_dev *input = ts->input;
  
- 	spi_set_drvdata(spi, ts);
- 
-@@ -1303,10 +1307,8 @@ static int ads7846_probe(struct spi_device *spi)
- 	pdata = dev_get_platdata(&spi->dev);
- 	if (!pdata) {
- 		pdata = ads7846_probe_dt(&spi->dev);
--		if (IS_ERR(pdata)) {
--			err = PTR_ERR(pdata);
--			goto err_free_mem;
--		}
-+		if (IS_ERR(pdata))
-+			return PTR_ERR(pdata);
- 	}
- 
- 	ts->model = pdata->model ? : 7846;
-@@ -1321,7 +1323,7 @@ static int ads7846_probe(struct spi_device *spi)
- 		if (pdata->filter_init != NULL) {
- 			err = pdata->filter_init(pdata, &ts->filter_data);
- 			if (err < 0)
--				goto err_free_mem;
-+				return err;
+-		if (ts->swap_xy)
+-			swap(x, y);
+-
+ 		if (!ts->pendown) {
+ 			input_report_key(input, BTN_TOUCH, 1);
+ 			ts->pendown = true;
+ 			dev_vdbg(&ts->spi->dev, "DOWN\n");
  		}
- 		ts->filter = pdata->filter;
- 		ts->filter_cleanup = pdata->filter_cleanup;
-@@ -1352,7 +1354,6 @@ static int ads7846_probe(struct spi_device *spi)
  
- 	input_dev->name = ts->name;
- 	input_dev->phys = ts->phys;
--	input_dev->dev.parent = &spi->dev;
+-		input_report_abs(input, ABS_X, x);
+-		input_report_abs(input, ABS_Y, y);
++		touchscreen_report_pos(input, &ts->core_prop, x, y, false);
+ 		input_report_abs(input, ABS_PRESSURE, ts->pressure_max - Rt);
  
- 	input_dev->evbit[0] = BIT_MASK(EV_KEY) | BIT_MASK(EV_ABS);
- 	input_dev->keybit[BIT_WORD(BTN_TOUCH)] = BIT_MASK(BTN_TOUCH);
-@@ -1451,10 +1452,7 @@ static int ads7846_probe(struct spi_device *spi)
-  err_cleanup_filter:
- 	if (ts->filter_cleanup)
- 		ts->filter_cleanup(ts->filter_data);
-- err_free_mem:
--	input_free_device(input_dev);
--	kfree(packet);
--	kfree(ts);
+ 		input_sync(input);
+@@ -1188,6 +1187,7 @@ static const struct ads7846_platform_data *ads7846_probe_dt(struct device *dev)
+ 	struct ads7846_platform_data *pdata;
+ 	struct device_node *node = dev->of_node;
+ 	const struct of_device_id *match;
++	u32 value;
+ 
+ 	if (!node) {
+ 		dev_err(dev, "Device does not have associated DT data\n");
+@@ -1226,10 +1226,18 @@ static const struct ads7846_platform_data *ads7846_probe_dt(struct device *dev)
+ 	of_property_read_u16(node, "ti,x-max", &pdata->x_max);
+ 	of_property_read_u16(node, "ti,y-max", &pdata->y_max);
+ 
++	/*
++	 * touchscreen-max-pressure gets parsed during
++	 * touchscreen_parse_properties()
++	 */
+ 	of_property_read_u16(node, "ti,pressure-min", &pdata->pressure_min);
++	if (!of_property_read_u32(node, "touchscreen-min-pressure", &value))
++		pdata->pressure_min = (u16) value;
+ 	of_property_read_u16(node, "ti,pressure-max", &pdata->pressure_max);
+ 
+ 	of_property_read_u16(node, "ti,debounce-max", &pdata->debounce_max);
++	if (!of_property_read_u32(node, "touchscreen-average-samples", &value))
++		pdata->debounce_max = (u16) value;
+ 	of_property_read_u16(node, "ti,debounce-tol", &pdata->debounce_tol);
+ 	of_property_read_u16(node, "ti,debounce-rep", &pdata->debounce_rep);
+ 
+@@ -1314,10 +1322,7 @@ static int ads7846_probe(struct spi_device *spi)
+ 	ts->model = pdata->model ? : 7846;
+ 	ts->vref_delay_usecs = pdata->vref_delay_usecs ? : 100;
+ 	ts->x_plate_ohms = pdata->x_plate_ohms ? : 400;
+-	ts->pressure_max = pdata->pressure_max ? : ~0;
+-
+ 	ts->vref_mv = pdata->vref_mv;
+-	ts->swap_xy = pdata->swap_xy;
+ 
+ 	if (pdata->filter != NULL) {
+ 		if (pdata->filter_init != NULL) {
+@@ -1368,6 +1373,23 @@ static int ads7846_probe(struct spi_device *spi)
+ 	input_set_abs_params(input_dev, ABS_PRESSURE,
+ 			pdata->pressure_min, pdata->pressure_max, 0, 0);
+ 
++	/*
++	 * Parse common framework properties. Must be done here to ensure the
++	 * correct behaviour in case of using the legacy vendor bindings. The
++	 * general binding value overrides the vendor specific one.
++	 */
++	touchscreen_parse_properties(ts->input, false, &ts->core_prop);
++	ts->pressure_max = input_abs_get_max(input_dev, ABS_PRESSURE) ? : ~0;
 +
- 	return err;
- }
++	/*
++	 * Check if legacy ti,swap-xy binding is used instead of
++	 * touchscreen-swapped-x-y
++	 */
++	if (!ts->core_prop.swap_x_y && pdata->swap_xy) {
++		swap(input_dev->absinfo[ABS_X], input_dev->absinfo[ABS_Y]);
++		ts->core_prop.swap_x_y = true;
++	}
++
+ 	ads7846_setup_spi_msg(ts, pdata);
  
-@@ -1467,8 +1465,6 @@ static int ads7846_remove(struct spi_device *spi)
- 	ads7846_disable(ts);
- 	free_irq(ts->spi->irq, ts);
- 
--	input_unregister_device(ts->input);
--
- 	ads784x_hwmon_unregister(spi, ts);
- 
- 	regulator_put(ts->reg);
-@@ -1484,9 +1480,6 @@ static int ads7846_remove(struct spi_device *spi)
- 	if (ts->filter_cleanup)
- 		ts->filter_cleanup(ts->filter_data);
- 
--	kfree(ts->packet);
--	kfree(ts);
--
- 	dev_dbg(&spi->dev, "unregistered touchscreen\n");
- 
- 	return 0;
+ 	ts->reg = regulator_get(&spi->dev, "vcc");
 -- 
 2.20.1
