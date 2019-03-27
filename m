@@ -1,37 +1,57 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt: bindings: add dt entry for XO calibration support
-Date: Wed, 27 Mar 2019 14:36:17 -0500
-Message-ID: <20190327193617.GA18283@bogus>
-References: <20190302050635.17694-1-govinds@codeaurora.org>
- <20190302050635.17694-2-govinds@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: input: add GPIO controllable vibrator
+Date: Wed, 27 Mar 2019 14:43:19 -0500
+Message-ID: <20190327194319.GA20142@bogus>
+References: <20190302141132.21160-1-luca@z3ntu.xyz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190302050635.17694-2-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20190302141132.21160-1-luca@z3ntu.xyz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luca Weiss <luca@z3ntu.xyz>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 02, 2019 at 10:36:34AM +0530, Govind Singh wrote:
-> Add dt binding to get xo calibration data support for wifi rf clock.
+On Sat, Mar 02, 2019 at 03:11:30PM +0100, Luca Weiss wrote:
+> Provide a simple driver for GPIO controllable vibrators.
+> It will be used by the Fairphone 2.
 > 
-> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 > ---
->  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/input/gpio-vibrator.txt  | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/gpio-vibrator.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> index ae661e65354e..ab8042866e83 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> @@ -81,6 +81,7 @@ Optional properties:
->  	Definition: Name of external front end module used. Some valid FEM names
->  		    for example: "microsemi-lx5586", "sky85703-11"
->  		    and "sky85803" etc.
-> +- xo-cal-data: xo cal offset to be configured in xo trim register.
+> diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.txt b/Documentation/devicetree/bindings/input/gpio-vibrator.txt
+> new file mode 100644
+> index 000000000000..9e2e9acf497b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/gpio-vibrator.txt
+> @@ -0,0 +1,16 @@
+> +* GPIO vibrator device tree bindings
+> +
+> +Registers a GPIO device as vibrator, where the vibration motor just has the capability to turn on or off. If the device is connected to a pwm, you should use the pwm-vibrator driver instead.
 
-Should have a vendor prefix.
+Need to wrap line.
 
-Rob
+> +
+> +Required properties:
+> +- compatible: should contain "gpio-vibrator"
+> +- enable-gpios: Should contain a GPIO handle
+> +- vcc-supply: Phandle for the regulator supplying power
+
+This should probably be optional. There may not be a s/w controllable 
+supply.
+
+> +
+> +Example from Fairphone 2:
+> +
+> +vibrator {
+> +	compatible = "gpio-vibrator";
+> +	enable-gpios = <&msmgpio 86 GPIO_ACTIVE_HIGH>;
+> +	vcc-supply = <&pm8941_l18>;
+> +};
+> -- 
+> 2.21.0
+> 
