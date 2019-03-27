@@ -1,54 +1,40 @@
-From: Peter Shih <pihsun@chromium.org>
-Subject: [PATCH v7 5/7] dt-bindings: Add binding for cros-ec-rpmsg.
-Date: Wed, 27 Mar 2019 13:14:47 +0800
-Message-ID: <20190327051450.16222-6-pihsun@chromium.org>
-References: <20190327051450.16222-1-pihsun@chromium.org>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: [PATCH V1 02/26] spi: tegra114: clear packed bit for unpacked mode
+Date: Tue, 26 Mar 2019 22:56:23 -0700
+Message-ID: <1553666207-11414-2-git-send-email-skomatineni@nvidia.com>
+References: <1553666207-11414-1-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190327051450.16222-1-pihsun@chromium.org>
+In-Reply-To: <1553666207-11414-1-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Pi-Hsun Shih <pihsun@chromium.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Guenter Roeck <groeck@chromium.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com, skomatineni@nvidia.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kyarlagadda@nvidia.com
+Cc: ldewangan@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Pi-Hsun Shih <pihsun@chromium.org>
+Fixes: Clear packed bit when not using packed mode.
 
-Add a DT binding documentation for ChromeOS EC driver over rpmsg.
+Packed bit is not cleared when not using packed mode. This results
+in transfer timeouts for the unpacked mode transfers followed by the
+packed mode transfers.
 
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
-Changes from v6:
- - No change.
+ drivers/spi/spi-tegra114.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changes from v5:
- - New patch.
----
- Documentation/devicetree/bindings/mfd/cros-ec.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-index 6245c9b1a68b..4860eabd0f72 100644
---- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
-+++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-@@ -3,7 +3,7 @@ ChromeOS Embedded Controller
- Google's ChromeOS EC is a Cortex-M device which talks to the AP and
- implements various function such as keyboard and battery charging.
+diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+index 5a21bc808bb6..82431115b7c0 100644
+--- a/drivers/spi/spi-tegra114.c
++++ b/drivers/spi/spi-tegra114.c
+@@ -731,6 +731,8 @@ static int tegra_spi_start_transfer_one(struct spi_device *spi,
  
--The EC can be connect through various means (I2C, SPI, LPC) and the
-+The EC can be connect through various means (I2C, SPI, LPC, RPMSG) and the
- compatible string used depends on the interface. Each connection method has
- its own driver which connects to the top level interface-agnostic EC driver.
- Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connect to
-@@ -17,6 +17,9 @@ Required properties (SPI):
- - compatible: "google,cros-ec-spi"
- - reg: SPI chip select
+ 	if (tspi->is_packed)
+ 		command1 |= SPI_PACKED;
++	else
++		command1 &= ~SPI_PACKED;
  
-+Required properties (RPMSG):
-+- compatible: "google,cros-ec-rpmsg"
-+
- Optional properties (SPI):
- - google,cros-ec-spi-pre-delay: Some implementations of the EC need a little
-   time to wake up from sleep before they can receive SPI transfers at a high
+ 	command1 &= ~(SPI_CS_SEL_MASK | SPI_TX_EN | SPI_RX_EN);
+ 	tspi->cur_direction = 0;
 -- 
-2.21.0.392.gf8f6787159e-goog
+2.7.4
