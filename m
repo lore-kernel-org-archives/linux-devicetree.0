@@ -1,31 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: fsl: Add support for ZII i.MX7 RPU2 board
-Date: Wed, 27 Mar 2019 08:12:22 -0500
-Message-ID: <CAL_JsqLQZrioBJN5CO3FMAzMZds=vX-uKvi1Ler2fb=MGOPkZA@mail.gmail.com>
-References: <20190327064150.31549-1-andrew.smirnov@gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2] devantech-srf04.yaml: transform DT binding to YAML
+Date: Wed, 27 Mar 2019 08:13:17 -0500
+Message-ID: <CAL_JsqKV1Qy05oX9wm+Fz1HAkAEe4gE3whCNvafPfxsg6hgp8A@mail.gmail.com>
+References: <20190326133938.oitfjxlx2kou26lm@arbad>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190327064150.31549-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20190326133938.oitfjxlx2kou26lm@arbad>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Fabio Estevam <festevam@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: Jonathan Cameron <jic23@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 1:41 AM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+On Tue, Mar 26, 2019 at 8:40 AM Andreas Klinger <ak@it-klinger.de> wrote:
 >
-> Add support for ZII i.MX7 RPU2 board.
+> devantech-srf04.yaml: yaml devicetree binding for iio ultrasonic
+> proximity driver of devantech srf04
 >
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
+> use devantech-srf04.txt, transform binding into yaml and remove the
+> outdated DT documentation
+>
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 > ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  .../bindings/iio/proximity/devantech-srf04.txt     | 28 ----------
+>  .../bindings/iio/proximity/devantech-srf04.yaml    | 59 ++++++++++++++++++++++
+>  2 files changed, 59 insertions(+), 28 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/proximity/devantech-srf04.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
 
 Reviewed-by: Rob Herring <robh@kernel.org>
