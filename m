@@ -1,48 +1,64 @@
-From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH 4/7] ARM: dts: sun8i: a83t: Add UART2 PB pins
-Date: Wed, 27 Mar 2019 01:18:40 +0100
-Message-ID: <20190327001843.2420-5-megous@megous.com>
-References: <20190327001843.2420-1-megous@megous.com>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v2 3/5] devfreq: rk3399_dmc: Pass ODT and auto power down
+ parameters to TF-A.
+Date: Tue, 26 Mar 2019 17:24:41 -0700
+Message-ID: <20190327002441.GB112750@google.com>
+References: <20190319181323.22804-1-gael.portay@collabora.com>
+ <20190319181323.22804-4-gael.portay@collabora.com>
+ <20190320003352.GN112750@google.com>
+ <20190320215013.43zgvyn5frnb3yud@archlinux.localdomain>
+ <20190320220223.GP112750@google.com>
+ <20190321231055.j7z23f3k3rcngq4u@archlinux.localdomain>
+ <20190322000107.GU112750@google.com>
+ <20190322124525.ge5thq4a7c6ufcra@archlinux.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBB4EC5PSAKGQEYTDACBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20190327001843.2420-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190322124525.ge5thq4a7c6ufcra@archlinux.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?R2HDq2w=?= PORTAY <gael.portay@collabora.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Derek Basehore <dbasehore@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-rockchip@lists.infradead.org, Randy Li <ayaka@soulik.info>, kernel@collabora.com, linux-arm-kernel@lists.infradead.org, Lin Huang <hl@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+On Fri, Mar 22, 2019 at 08:45:26AM -0400, Gaël PORTAY wrote:
+> Hi Matthias,
+> 
+> On Thu, Mar 21, 2019 at 05:01:07PM -0700, Matthias Kaehlcke wrote:
+> > > ...
+> > > 
+> > > So, for a reason that I ignore, if we try to save unecessary calls to
+> > > ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD (odt_enable has not changed since
+> > > last call), we get stalled in the call to ROCKCHIP_SIP_CONFIG_SET_RAGE
+> > > that follows. The function arm_smccc_smc never returns and the device
+> > > hard hang.
+> > 
+> > Thanks for giving it a try!
+> > 
+> > Did your code ensure to perform the SMC call for the first frequency
+> > change? If not the problem could be that the DDR PD timings and ODT
+> > resistors are not properly configured for the new frequency.
+> > 
+> 
+> The DRAM_ODT_PD SMC call is supposed to be performed before the
+> DRAM_SET_RATE; unless someone else is doing the set_rate.
 
-Add pin definitions for UART2 PB pins. These are used on TBS-A711
-tablet.
+However earlier the call wasn't done at all, and that didn't cause
+problems.
 
-Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a83t.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+> Does the ODT resistors should be configured for every existing
+> frequency?
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index e5c39eef1c29..921cfb30ab46 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -768,6 +768,11 @@
- 				pins = "PG8", "PG9";
- 				function = "uart1";
- 			};
-+
-+			uart2_pb_pins: uart2-pb-pins {
-+				pins = "PB0", "PB1";
-+				function = "uart2";
-+			};
- 		};
- 
- 		timer@1c20c00 {
--- 
-2.21.0
+I don't have any background here. My initial assumption would be that
+it should be enough to re-configure them when the frequency passes the
+threshold in either direction.
+
+Anyway, IIUC there shouldn't be more than 5 frequency changes per
+second (polling_ms = 200), and likely no all of them would pass the
+threshold, so it seems limiting the calls (if possible) would be a
+micro-optimization and is probably not worth the hassle :)
+
+Thanks
+
+Matthias
