@@ -1,496 +1,141 @@
-Return-Path: <SRS0=Jw3F=R4=opensource.cirrus.com=ckeepax@kernel.org>
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH v2 2/2] hwmon: lochnagar: Add Lochnagar 2 hardware monitoring driver
-Date: Mon, 25 Mar 2019 11:00:20 +0000
-Message-ID: <20190325110020.4349-2-ckeepax@opensource.cirrus.com>
-In-Reply-To: <20190325110020.4349-1-ckeepax@opensource.cirrus.com>
-References: <20190325110020.4349-1-ckeepax@opensource.cirrus.com>
+Return-Path: <SRS0=Ny74=R6=ideasonboard.com=laurent.pinchart@kernel.org>
+Date: Wed, 27 Mar 2019 02:03:01 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 3/5] ARM: dts: imx7s: Add video mux, csi and mipi_csi
+Message-ID: <20190327000301.GB4842@pendragon.ideasonboard.com>
+References: <20190326110227.7324-1-rui.silva@linaro.org>
+ <20190326110227.7324-4-rui.silva@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-hwmon@vger.kernel.org, corbet@lwn.net, devicetree@vger.kernel.org, patches@opensource.cirrus.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190326110227.7324-4-rui.silva@linaro.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Lucas Tanure <tanureal@opensource.cirrus.com>
+Hi Rui,
 
-Lochnagar is an evaluation and development board for Cirrus
-Logic Smart CODEC and Amp devices. It allows the connection of
-most Cirrus Logic devices on mini-cards, as well as allowing
-connection of various application processor systems to provide a
-full evaluation platform.
+Thank you for the patch.
 
-This driver adds support for the hardware monitoring features of
-the Lochnagar 2 to the hwmon API. Monitoring is provided for
-the board voltages, currents and temperature supported by the
-board controller chip.
+On Tue, Mar 26, 2019 at 11:02:25AM +0000, Rui Miguel Silva wrote:
+> Add device tree nodes for csi, video multiplexer and mipi-csi.
+> 
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> ---
+>  arch/arm/boot/dts/imx7s.dtsi | 70 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+> index 792efcd2caa1..a50e5877fc18 100644
+> --- a/arch/arm/boot/dts/imx7s.dtsi
+> +++ b/arch/arm/boot/dts/imx7s.dtsi
+> @@ -8,6 +8,7 @@
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/reset/imx7-reset.h>
+>  #include "imx7d-pinfunc.h"
+>  
+>  / {
+> @@ -506,6 +507,29 @@
+>  					#mux-control-cells = <0>;
+>  					mux-reg-masks = <0x14 0x00000010>;
+>  				};
+> +
+> +				csi-mux {
 
-Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
+A label would be useful for boards that use a parallel sensor.
 
-Changes since v1:
- - Put includes into alphabetical order
- - Remove lochnagar pointer and use regmap directly
- - Add documentation and overflow protection on float conversion
- - Tighten up delays on waiting for the reading to be available
- - Drop current/voltage sensors from nano to micro volts/amps. The
-   hardware does not have sufficent accuracy for nano scale
-   measurements.
- - Only take one sample for temperature readings as there is no
-   need to average the reading, temps should change slowly.
- - Remove duplicated copyright notice since we already have the
-   SPDX header
+> +					compatible = "video-mux";
+> +					mux-controls = <&mux 0>;
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
 
-Thanks,
-Charles
+Should this have status = "disabled" by default ? And should port@0 be
+defined here with no endpoint, the same way you do for the mipi_csi node ?
 
- Documentation/hwmon/lochnagar   |  56 +++++++
- MAINTAINERS                     |   3 +
- drivers/hwmon/Kconfig           |  10 ++
- drivers/hwmon/Makefile          |   1 +
- drivers/hwmon/lochnagar-hwmon.c | 315 ++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 385 insertions(+)
- create mode 100644 Documentation/hwmon/lochnagar
- create mode 100644 drivers/hwmon/lochnagar-hwmon.c
+> +
+> +					port@1 {
+> +						reg = <1>;
+> +
+> +						csi_mux_from_mipi_vc0: endpoint {
+> +							remote-endpoint = <&mipi_vc0_to_csi_mux>;
+> +						};
+> +					};
+> +
+> +					port@2 {
+> +						reg = <2>;
+> +
+> +						csi_mux_to_csi: endpoint {
+> +							remote-endpoint = <&csi_from_csi_mux>;
+> +						};
+> +					};
+> +				};
+>  			};
+>  
+>  			ocotp: ocotp-ctrl@30350000 {
+> @@ -709,6 +733,23 @@
+>  				status = "disabled";
+>  			};
+>  
+> +			csi: csi@30710000 {
+> +				compatible = "fsl,imx7-csi";
+> +				reg = <0x30710000 0x10000>;
+> +				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX7D_CLK_DUMMY>,
+> +					 <&clks IMX7D_CSI_MCLK_ROOT_CLK>,
+> +					 <&clks IMX7D_CLK_DUMMY>;
+> +				clock-names = "axi", "mclk", "dcic";
+> +				status = "disabled";
+> +
+> +				port {
+> +					csi_from_csi_mux: endpoint {
+> +						remote-endpoint = <&csi_mux_to_csi>;
+> +					};
+> +				};
+> +			};
+> +
+>  			lcdif: lcdif@30730000 {
+>  				compatible = "fsl,imx7d-lcdif", "fsl,imx28-lcdif";
+>  				reg = <0x30730000 0x10000>;
+> @@ -718,6 +759,35 @@
+>  				clock-names = "pix", "axi";
+>  				status = "disabled";
+>  			};
+> +
+> +			mipi_csi: mipi-csi@30750000 {
+> +				compatible = "fsl,imx7-mipi-csi2";
+> +				reg = <0x30750000 0x10000>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX7D_IPG_ROOT_CLK>,
+> +					 <&clks IMX7D_MIPI_CSI_ROOT_CLK>,
+> +					 <&clks IMX7D_MIPI_DPHY_ROOT_CLK>;
+> +				clock-names = "pclk", "wrap", "phy";
+> +				power-domains = <&pgc_mipi_phy>;
+> +				phy-supply = <&reg_1p0d>;
+> +				resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
+> +				reset-names = "mrst";
+> +				status = "disabled";
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +
+> +					mipi_vc0_to_csi_mux: endpoint {
+> +						remote-endpoint = <&csi_mux_from_mipi_vc0>;
+> +					};
+> +				};
+> +			};
+>  		};
+>  
+>  		aips3: aips-bus@30800000 {
 
-diff --git a/Documentation/hwmon/lochnagar b/Documentation/hwmon/lochnagar
-new file mode 100644
-index 0000000000000..7b40b0fffc3e0
---- /dev/null
-+++ b/Documentation/hwmon/lochnagar
-@@ -0,0 +1,56 @@
-+Kernel Driver Lochnagar
-+========================
-+
-+Supported systems:
-+  * Cirrus Logic : Lochnagar 2
-+
-+Author: Lucas A. Tanure Alves
-+
-+Description
-+-----------
-+
-+Lochnagar 2 features built-in Current Monitor circuitry that allows for the
-+measurement of both voltage and current on up to eight of the supply voltage
-+rails provided to the minicards. The Current Monitor does not require any
-+hardware modifications or external circuitry to operate.
-+
-+The current and voltage measurements are obtained through the standard register
-+map interface to the Lochnagar board controller, and can therefore be monitored
-+by software.
-+
-+Sysfs attributes
-+----------------
-+
-+temp1_input   The Lochnagar board temperature (milliCelsius).
-+in0_input     Measured voltage for DBVDD1 (microVolts)
-+in0_label     "DBVDD1"
-+curr1_input   Measured current for DBVDD1 (microAmps)
-+curr1_label   "DBVDD1"
-+in1_input     Measured voltage for 1V8 DSP (microVolts)
-+in1_label     "1V8 DSP"
-+curr2_input   Measured current for 1V8 DSP (microAmps)
-+curr2_label   "1V8 DSP"
-+in2_input     Measured voltage for 1V8 CDC (microVolts)
-+in2_label     "1V8 CDC"
-+curr3_input   Measured current for 1V8 CDC (microAmps)
-+curr3_label   "1V8 CDC"
-+in3_input     Measured voltage for VDDCORE DSP (microVolts)
-+in3_label     "VDDCORE DSP"
-+curr4_input   Measured current for VDDCORE DSP (microAmps)
-+curr4_label   "VDDCORE DSP"
-+in4_input     Measured voltage for AVDD 1V8 (microVolts)
-+in4_label     "AVDD 1V8"
-+curr5_input   Measured current for AVDD 1V8 (microAmps)
-+curr5_label   "AVDD 1V8"
-+curr6_input   Measured current for SYSVDD (microAmps)
-+curr6_label   "SYSVDD"
-+in6_input     Measured voltage for VDDCORE CDC (microVolts)
-+in6_label     "VDDCORE CDC"
-+curr7_input   Measured current for VDDCORE CDC (microAmps)
-+curr7_label   "VDDCORE CDC"
-+in7_input     Measured voltage for MICVDD (microVolts)
-+in7_label     "MICVDD"
-+curr8_input   Measured current for MICVDD (microAmps)
-+curr8_label   "MICVDD"
-+
-+Note: It is not possible to measure voltage on the SYSVDD rail.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e17ebf70b5480..4cd3c281d8b56 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3796,6 +3796,7 @@ M:	Richard Fitzgerald <rf@opensource.cirrus.com>
- L:	patches@opensource.cirrus.com
- S:	Supported
- F:	drivers/clk/clk-lochnagar.c
-+F:	drivers/hwmon/lochnagar-hwmon.c
- F:	drivers/mfd/lochnagar-i2c.c
- F:	drivers/pinctrl/cirrus/pinctrl-lochnagar.c
- F:	drivers/regulator/lochnagar-regulator.c
-@@ -3804,8 +3805,10 @@ F:	include/dt-bindings/pinctrl/lochnagar.h
- F:	include/linux/mfd/lochnagar*
- F:	Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
- F:	Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
-+F:	Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
- F:	Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
- F:	Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
-+F:	Documentation/hwmon/lochnagar
- 
- CISCO FCOE HBA DRIVER
- M:	Satish Kharat <satishkh@cisco.com>
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index d0f1dfe2bcbbd..dedd5febd3aa6 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -705,6 +705,16 @@ config SENSORS_LINEAGE
- 	  This driver can also be built as a module. If so, the module
- 	  will be called lineage-pem.
- 
-+config SENSORS_LOCHNAGAR
-+	tristate "Lochnagar Hardware Monitor"
-+	depends on MFD_LOCHNAGAR
-+	help
-+	  If you say yes here you get support for Lochnagar 2 temperature,
-+	  voltage and current sensors abilities.
-+
-+	  This driver can also be built as a module.  If so, the module
-+	  will be called lochnagar-hwmon.
-+
- config SENSORS_LTC2945
- 	tristate "Linear Technology LTC2945"
- 	depends on I2C
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index f5c7b442e69e5..8db472ea04f00 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -89,6 +89,7 @@ obj-$(CONFIG_SENSORS_JZ4740)	+= jz4740-hwmon.o
- obj-$(CONFIG_SENSORS_K8TEMP)	+= k8temp.o
- obj-$(CONFIG_SENSORS_K10TEMP)	+= k10temp.o
- obj-$(CONFIG_SENSORS_LINEAGE)	+= lineage-pem.o
-+obj-$(CONFIG_SENSORS_LOCHNAGAR)	+= lochnagar-hwmon.o
- obj-$(CONFIG_SENSORS_LM63)	+= lm63.o
- obj-$(CONFIG_SENSORS_LM70)	+= lm70.o
- obj-$(CONFIG_SENSORS_LM73)	+= lm73.o
-diff --git a/drivers/hwmon/lochnagar-hwmon.c b/drivers/hwmon/lochnagar-hwmon.c
-new file mode 100644
-index 0000000000000..cbd15adac7f37
---- /dev/null
-+++ b/drivers/hwmon/lochnagar-hwmon.c
-@@ -0,0 +1,315 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Lochnagar hardware monitoring features
-+ *
-+ * Copyright (c) 2016-2019 Cirrus Logic, Inc. and
-+ *                         Cirrus Logic International Semiconductor Ltd.
-+ *
-+ * Author: Lucas Tanure <tanureal@opensource.cirrus.com>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/hwmon.h>
-+#include <linux/hwmon-sysfs.h>
-+#include <linux/i2c.h>
-+#include <linux/math64.h>
-+#include <linux/mfd/lochnagar.h>
-+#include <linux/mfd/lochnagar2_regs.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+struct lochnagar_hwmon {
-+	struct regmap *regmap;
-+
-+	/* Lock to ensure only a single sensor is read at a time */
-+	struct mutex sensor_lock;
-+};
-+
-+enum lochnagar_measure_mode {
-+	LN2_CURRENT = 0,
-+	LN2_VOLTAGE,
-+	LN2_TEMPERATURE,
-+};
-+
-+static const char * const lochnagar_chan_names[] = {
-+	"DBVDD1",
-+	"1V8 DSP",
-+	"1V8 CDC",
-+	"VDDCORE DSP",
-+	"AVDD 1V8",
-+	"SYSVDD",
-+	"VDDCORE CDC",
-+	"MICVDD",
-+};
-+
-+/**
-+ * float_to_long - Convert ieee754 reading from hardware to an integer
-+ *
-+ * @data: Value read from the hardware
-+ * @precision: Units to multiply up to eg. 1000 = milli, 1000000 = micro
-+ *
-+ * Return: Converted integer reading
-+ *
-+ * Depending on the measurement type the hardware returns an ieee754
-+ * floating point value in either volts, amps or celsius. This function
-+ * will convert that into an integer in a smaller unit such as micro-amps
-+ * or milli-celsius. The hardware does not return NaN, so consideration of
-+ * that is not required.
-+ */
-+static long float_to_long(u32 data, u32 precision)
-+{
-+	u64 man = data & 0x007FFFFF;
-+	int exp = ((data & 0x7F800000) >> 23) - 127 - 23;
-+	bool negative = data & 0x80000000;
-+	long result;
-+
-+	man = (man + (1 << 23)) * precision;
-+
-+	if (fls64(man) + exp > (int)sizeof(long) * 8 - 1)
-+		result = LONG_MAX;
-+	else if (exp < 0)
-+		result = man >> -exp;
-+	else
-+		result = man << exp;
-+
-+	return negative ? -result : result;
-+}
-+
-+static int do_measurement(struct regmap *regmap, int chan,
-+			  enum lochnagar_measure_mode mode, int nsamples)
-+{
-+	unsigned int val;
-+	int ret;
-+
-+	chan = 1 << (chan + LOCHNAGAR2_IMON_MEASURED_CHANNELS_SHIFT);
-+
-+	ret = regmap_write(regmap, LOCHNAGAR2_IMON_CTRL1,
-+			   LOCHNAGAR2_IMON_ENA_MASK | chan | mode);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = regmap_write(regmap, LOCHNAGAR2_IMON_CTRL2, nsamples);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = regmap_write(regmap, LOCHNAGAR2_IMON_CTRL3,
-+			   LOCHNAGAR2_IMON_CONFIGURE_MASK);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret =  regmap_read_poll_timeout(regmap, LOCHNAGAR2_IMON_CTRL3, val,
-+					val & LOCHNAGAR2_IMON_DONE_MASK,
-+					1000, 10000);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = regmap_write(regmap, LOCHNAGAR2_IMON_CTRL3,
-+			   LOCHNAGAR2_IMON_MEASURE_MASK);
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * Actual measurement time is ~1.67mS per sample, approximate
-+	 * this with a 1.5mS per sample msleep and then poll for
-+	 * success upto ~0.17mS * 1023 (max nsamples). Normally for
-+	 * smaller values of nsamples the poll will complete on the
-+	 * first loop due to other latency in the system.
-+	 */
-+	msleep((nsamples * 2) - (nsamples / 2));
-+
-+	ret =  regmap_read_poll_timeout(regmap, LOCHNAGAR2_IMON_CTRL3, val,
-+					val & LOCHNAGAR2_IMON_DONE_MASK,
-+					5000, 200000);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = regmap_write(regmap, LOCHNAGAR2_IMON_CTRL3, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int request_data(struct regmap *regmap, int chan, u32 *data)
-+{
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_write(regmap, LOCHNAGAR2_IMON_CTRL4,
-+			   LOCHNAGAR2_IMON_DATA_REQ_MASK |
-+			   chan << LOCHNAGAR2_IMON_CH_SEL_SHIFT);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret =  regmap_read_poll_timeout(regmap, LOCHNAGAR2_IMON_CTRL4, val,
-+					val & LOCHNAGAR2_IMON_DATA_RDY_MASK,
-+					1000, 10000);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = regmap_read(regmap, LOCHNAGAR2_IMON_DATA1, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	*data = val << 16;
-+
-+	ret = regmap_read(regmap, LOCHNAGAR2_IMON_DATA2, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	*data |= val;
-+
-+	ret = regmap_write(regmap, LOCHNAGAR2_IMON_CTRL4, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int read_sensor(struct device *dev, int chan,
-+		       enum lochnagar_measure_mode mode, int nsamples,
-+		       unsigned int precision, long *val)
-+{
-+	struct lochnagar_hwmon *priv = dev_get_drvdata(dev);
-+	struct regmap *regmap = priv->regmap;
-+	u32 data;
-+	int ret;
-+
-+	mutex_lock(&priv->sensor_lock);
-+
-+	ret = do_measurement(regmap, chan, mode, nsamples);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to perform measurement: %d\n", ret);
-+		goto error;
-+	}
-+
-+	ret = request_data(regmap, chan, &data);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to read measurement: %d\n", ret);
-+		goto error;
-+	}
-+
-+	*val = float_to_long(data, precision);
-+
-+error:
-+	mutex_unlock(&priv->sensor_lock);
-+
-+	return ret;
-+}
-+
-+static umode_t lochnagar_is_visible(const void *drvdata,
-+				    enum hwmon_sensor_types type,
-+				    u32 attr, int chan)
-+{
-+	if (type == hwmon_in && !strcmp("SYSVDD", lochnagar_chan_names[chan]))
-+		return 0;
-+
-+	return 0444;
-+}
-+
-+static int lochnagar_read(struct device *dev, enum hwmon_sensor_types type,
-+			  u32 attr, int chan, long *val)
-+{
-+	switch (type) {
-+	case hwmon_in:
-+		return read_sensor(dev, chan, LN2_VOLTAGE, 1, 1000000, val);
-+	case hwmon_curr:
-+		return read_sensor(dev, chan, LN2_CURRENT, 96, 1000000, val);
-+	case hwmon_temp:
-+		return read_sensor(dev, chan, LN2_TEMPERATURE, 1, 1000, val);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int lochnagar_read_string(struct device *dev,
-+				 enum hwmon_sensor_types type, u32 attr,
-+				 int chan, const char **str)
-+{
-+	switch (type) {
-+	case hwmon_in:
-+	case hwmon_curr:
-+		*str = lochnagar_chan_names[chan];
-+		return 0;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static const struct hwmon_ops lochnagar_ops = {
-+	.is_visible = lochnagar_is_visible,
-+	.read = lochnagar_read,
-+	.read_string = lochnagar_read_string,
-+};
-+
-+static const struct hwmon_channel_info *lochnagar_info[] = {
-+	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
-+	HWMON_CHANNEL_INFO(in,   HWMON_I_INPUT | HWMON_I_LABEL,
-+				 HWMON_I_INPUT | HWMON_I_LABEL,
-+				 HWMON_I_INPUT | HWMON_I_LABEL,
-+				 HWMON_I_INPUT | HWMON_I_LABEL,
-+				 HWMON_I_INPUT | HWMON_I_LABEL,
-+				 HWMON_I_INPUT | HWMON_I_LABEL,
-+				 HWMON_I_INPUT | HWMON_I_LABEL,
-+				 HWMON_I_INPUT | HWMON_I_LABEL),
-+	HWMON_CHANNEL_INFO(curr, HWMON_C_INPUT | HWMON_C_LABEL,
-+				 HWMON_C_INPUT | HWMON_C_LABEL,
-+				 HWMON_C_INPUT | HWMON_C_LABEL,
-+				 HWMON_C_INPUT | HWMON_C_LABEL,
-+				 HWMON_C_INPUT | HWMON_C_LABEL,
-+				 HWMON_C_INPUT | HWMON_C_LABEL,
-+				 HWMON_C_INPUT | HWMON_C_LABEL,
-+				 HWMON_C_INPUT | HWMON_C_LABEL),
-+	NULL
-+};
-+
-+static const struct hwmon_chip_info lochnagar_chip_info = {
-+	.ops = &lochnagar_ops,
-+	.info = lochnagar_info,
-+};
-+
-+static const struct of_device_id lochnagar_of_match[] = {
-+	{ .compatible = "cirrus,lochnagar2-hwmon" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, lochnagar_of_match);
-+
-+static int lochnagar_hwmon_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device *hwmon_dev;
-+	struct lochnagar_hwmon *priv;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	mutex_init(&priv->sensor_lock);
-+	priv->regmap = dev_get_regmap(dev->parent, NULL);
-+	if (!priv->regmap) {
-+		dev_err(dev, "No register map found\n");
-+		return -EINVAL;
-+	}
-+
-+	hwmon_dev = devm_hwmon_device_register_with_info(dev, "Lochnagar", priv,
-+							 &lochnagar_chip_info,
-+							 NULL);
-+
-+	return PTR_ERR_OR_ZERO(hwmon_dev);
-+}
-+
-+static struct platform_driver lochnagar_hwmon_driver = {
-+	.driver = {
-+		.name = "lochnagar-hwmon",
-+		.of_match_table = lochnagar_of_match,
-+	},
-+	.probe = lochnagar_hwmon_probe,
-+};
-+module_platform_driver(lochnagar_hwmon_driver);
-+
-+MODULE_AUTHOR("Lucas Tanure <tanureal@opensource.cirrus.com>");
-+MODULE_DESCRIPTION("Lochnagar hardware monitoring features");
-+MODULE_LICENSE("GPL");
 -- 
-2.11.0
+Regards,
+
+Laurent Pinchart
