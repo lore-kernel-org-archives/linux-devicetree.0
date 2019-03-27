@@ -1,75 +1,97 @@
-From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH RESEND v4 0/4] Add support for lradc on A83T
-Date: Wed, 27 Mar 2019 03:33:35 +0100
-Message-ID: <20190327023339.25975-1-megous@megous.com>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Peter Shih <pihsun@chromium.org>
+Subject: [PATCH v7 1/7] dt-bindings: Add a binding for Mediatek SCP
+Date: Wed, 27 Mar 2019 13:14:43 +0800
+Message-ID: <20190327051450.16222-2-pihsun@chromium.org>
+References: <20190327051450.16222-1-pihsun@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBDWC5PSAKGQEECPHFYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190327051450.16222-1-pihsun@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Pi-Hsun Shih <pihsun@chromium.org>, Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:REMOTE PROCESSOR
+        REMOTEPROC SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC
+        support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC
+        support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+From: Erin Lo <erin.lo@mediatek.com>
 
-(This is a re-send, with input subsystem maintainer added. Sorry,
-for the extra noise, I did only send the v4 to the previous recipients
-of v3, and didn't notice input subsystem was missing back then too.
-Thank you wens for pointing it out.)
+Add a DT binding documentation of SCP for the
+MT8183 SoC from Mediatek.
 
-This series implements r_lradc (low res ADC) support for A83T.
+Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes from v6:
+ - No change.
 
-This is a continuation of v3 patch series from 2017 by Ziping Chen. I've
-rebased it on top of linux-next and changed the compatibe string as
-requested back then.[1]
+Changes from v5:
+ - Remove dependency on CONFIG_RPMSG_MTK_SCP.
 
-There was some talk of iio based lradc driver back then[2], but noone
-stepped forward to make it. Let's finish this series, so that it's
-at least possible to add support for tablet keys on various A83T tablets
-as that's the main use of lradc module.
+Changes from v4:
+ - Add detail of more properties.
+ - Document the usage of mtk,rpmsg-name in subnode from the new design.
 
-[1] https://lkml.org/lkml/2017/6/26/558
+Changes from v3:
+ - No change.
 
-[2] https://lkml.org/lkml/2017/6/27/877
+Changes from v2:
+ - No change. I realized that for this patch series, there's no need to
+   add anything under the mt8183-scp node (neither the mt8183-rpmsg or
+   the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
+   directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
+   created by SCP name service.
 
-Please take a look, and apply the patches if you have no objections.
+Changes from v1:
+ - No change.
+---
+ .../bindings/remoteproc/mtk,scp.txt           | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
 
-regards,
-  Ondrej Jirman
-
-
-Changes for v4:
-- changed comaptible string to allwinner,sun8i-a83t-r-lradc
-  (drop -keys suffix)
-- dropped 0 prefix in the r_lradc DT node
-- added sample A83T lradc user (TBS A711 tablet)
-
-Changes for v3:
-- Fix some issuses raised by Maxime.
-- Added Rob's ACK.
-
-Changes for v2:
-- Add an A83T specific compatible.
-
-Ondrej Jirman (1):
-  ARM: dts: sun8i: tbs-a711: Add support for volume keys input
-
-Ziping Chen (3):
-  input: sun4i-a10-lradc-keys: Add support for A83T
-  dt-bindings: input: Add R_LRADC support for A83T
-  ARM: dts: sunxi: Add R_LRADC support for A83T
-
- .../bindings/input/sun4i-lradc-keys.txt       |  6 ++-
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts     | 20 ++++++++++
- arch/arm/boot/dts/sun8i-a83t.dtsi             |  7 ++++
- drivers/input/keyboard/sun4i-lradc-keys.c     | 38 +++++++++++++++++--
- 4 files changed, 65 insertions(+), 6 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+new file mode 100644
+index 000000000000..3ba668bab14b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+@@ -0,0 +1,36 @@
++Mediatek SCP Bindings
++----------------------------------------
++
++This binding provides support for ARM Cortex M4 Co-processor found on some
++Mediatek SoCs.
++
++Required properties:
++- compatible		Should be "mediatek,mt8183-scp"
++- reg			Should contain the address ranges for the two memory
++			regions, SRAM and CFG.
++- reg-names		Contains the corresponding names for the two memory
++			regions. These should be named "sram" & "cfg".
++- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
++- clock-names		Contains the corresponding name for the clock. This
++			should be named "main".
++
++Subnodes
++--------
++
++Subnodes of the SCP represent rpmsg devices. The names of the devices are not
++important. The properties of these nodes are defined by the individual bindings
++for the rpmsg devices - but must contain the following property:
++
++- mtk,rpmsg-name	Contains the name for the rpmsg device. Used to match
++			the subnode to rpmsg device announced by SCP.
++
++Example:
++
++	scp: scp@10500000 {
++		compatible = "mediatek,mt8183-scp";
++		reg = <0 0x10500000 0 0x80000>,
++		      <0 0x105c0000 0 0x5000>;
++		reg-names = "sram", "cfg";
++		clocks = <&infracfg CLK_INFRA_SCPSYS>;
++		clock-names = "main";
++	};
 -- 
-2.21.0
+2.21.0.392.gf8f6787159e-goog
