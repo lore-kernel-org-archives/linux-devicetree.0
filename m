@@ -1,68 +1,66 @@
-Return-Path: <SRS0=0MHy=RF=gmail.com=marek.vasut@kernel.org>
-Subject: Re: [PATCH] regulator: gpio: Reword the binding document
-References: <20190216174859.15738-1-marek.vasut@gmail.com>
- <E1gv6SG-0000Jv-KB@stardust.g4.wien.funkfeuer.at>
- <83550921-b0ec-fa34-b120-2dd159f256d8@gmail.com>
- <E1gvNOx-0000Kc-Dc@stardust.g4.wien.funkfeuer.at>
- <75846117-242c-6861-ace5-dccf88711208@gmail.com>
- <E1gvSbw-0000K8-Hj@stardust.g4.wien.funkfeuer.at>
- <7a993282-9137-caf4-ca0b-b2c01ea9959c@gmail.com>
- <E1gvfnE-0000Il-Jo@stardust.g4.wien.funkfeuer.at>
- <e2e9e577-b110-fc9b-c129-26f61e862fb4@gmail.com>
- <E1gvrEx-0000K7-Ks@stardust.g4.wien.funkfeuer.at>
- <72363317-8259-eda2-4cd8-4f336f0c155f@gmail.com>
- <E1gw2Ll-0000MN-40@stardust.g4.wien.funkfeuer.at>
-From: Marek Vasut <marek.vasut@gmail.com>
-Message-ID: <fc83b1ce-52e5-b197-4679-69b576233726@gmail.com>
-Date: Sat, 2 Mar 2019 15:55:53 +0100
+Return-Path: <SRS0=pm85=R6=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from kirsty.vergenet.net ([202.4.237.240]:56301 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727488AbfC0MJc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Mar 2019 08:09:32 -0400
+Date: Wed, 27 Mar 2019 13:09:27 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] ARM: dts: rskrza1: Add remaining LEDs
+Message-ID: <20190327120844.4h75vl6v2obeyt6v@verge.net.au>
+References: <20190320194410.14870-1-geert+renesas@glider.be>
+ <20190320194410.14870-3-geert+renesas@glider.be>
 MIME-Version: 1.0
-In-Reply-To: <E1gw2Ll-0000MN-40@stardust.g4.wien.funkfeuer.at>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Harald Geyer <harald@ccbib.org>
-Cc: devicetree@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190320194410.14870-3-geert+renesas@glider.be>
+Sender: devicetree-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 2/19/19 11:10 AM, Harald Geyer wrote:
-> Marek Vasut writes:
->> On 2/18/19 11:18 PM, Harald Geyer wrote:
->>> From the explanations provided by Mark it is clear that this property
->>> is an artifact of the implementation in linux. I think we should document
->>> is as such. How about:
->>>
->>> gpios-states : On operating systems, that don't support reading back gpio
->>> 	       values in output mode (most notably linux), this array
->>> 	       provides the state of GPIO pins set when requesting them
->>> 	       from the gpio controller.
->>
->> That's good.
->>
->>> Systems, that are capable of
->>> 	       preserving state when requesting the lines, are free to
->>> 	       ignore this property.
->>
->> Are they ?
+On Wed, Mar 20, 2019 at 08:44:10PM +0100, Geert Uytterhoeven wrote:
+> Describe the remaining 3 LEDs, which are driven by the first CAT9554
+> port expander.
 > 
-> I think so. Also this seems to be what Mark wrote yesterday:
+> Drop the superfluous status property from the leds node while at it.
 > 
-> | With the GPIO API as it stands it is unfortunately not possible to
-> | preserve the state, if the API were fixed we'd preserve state.
-> 
->> I think there are systems which depend on preconfiguring the
->> GPIO according to this property.
-> 
-> These systems need to preconfigure the GPIOs in firmware anyway, so
-> they should be fine so long as the driver preserves state.
-> 
-> Since the original wording doesn't give any guarantees, I think the
-> new wording doesn't change anything. It just makes it clearer, that
-> there are no guarantees and that some drivers will happily overwrite
-> state when this property is absent.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-OK, so how can we move forward with this ? We discussed a lot, but I
-don't know what we should do about the patch.
+Thanks, applied for v5.2.
 
--- 
-Best regards,
-Marek Vasut
+> ---
+>  arch/arm/boot/dts/r7s72100-rskrza1.dts | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+> index 60e80ecbbf6826bc..ff24301dc1be54de 100644
+> --- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
+> +++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+> @@ -34,12 +34,23 @@
+>  	};
+>  
+>  	leds {
+> -		status = "okay";
+>  		compatible = "gpio-leds";
+>  
+>  		led0 {
+>  			gpios = <&port7 1 GPIO_ACTIVE_LOW>;
+>  		};
+> +
+> +		led1 {
+> +			gpios = <&io_expander1 0 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		led2 {
+> +			gpios = <&io_expander1 1 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		led3 {
+> +			gpios = <&io_expander1 2 GPIO_ACTIVE_LOW>;
+> +		};
+>  	};
+>  };
+>  
+> -- 
+> 2.17.1
+> 
