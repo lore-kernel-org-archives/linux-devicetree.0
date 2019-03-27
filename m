@@ -1,62 +1,92 @@
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH 4/5] lib/vsprintf: Make use of fwnode API to obtain node
- names and separators
-Date: Wed, 27 Mar 2019 13:53:56 +0100
-Message-ID: <20190327125356.s7hockgf5yfyhx52@pathway.suse.cz>
-References: <20190322152930.16642-1-sakari.ailus@linux.intel.com>
- <20190322152930.16642-5-sakari.ailus@linux.intel.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/3] media: dt-bindings: media: meson-ao-cec: Add G12A
+ AO-CEC-B Compatible
+Date: Wed, 27 Mar 2019 14:08:16 +0100
+Message-ID: <74e84d99-dc7e-2779-fed0-e6a9e8324ba7@baylibre.com>
+References: <20190325173501.22863-1-narmstrong@baylibre.com>
+ <20190325173501.22863-2-narmstrong@baylibre.com>
+ <518678c1-2e1d-ca27-55bd-0dd10965354f@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190322152930.16642-5-sakari.ailus@linux.intel.com>
+In-Reply-To: <518678c1-2e1d-ca27-55bd-0dd10965354f@xs4all.nl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>, mchehab@kernel.org, devicetree@vger.kernel.org
+Cc: linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 2019-03-22 17:29:29, Sakari Ailus wrote:
-> Instead of implementing our own means of discovering parent nodes, node
-> names or counting how many parents a node has, use the newly added
-> functions in the fwnode API to obtain that information.
+On 27/03/2019 13:39, Hans Verkuil wrote:
+> On 3/25/19 6:34 PM, Neil Armstrong wrote:
+>> The Amlogic G12A embeds a second CEC controller named AO-CEC-B, and
+>> the other one is AO-CEC-A described by the current bindings.
+>>
+>> The registers interface is very close but the internal architecture
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  lib/vsprintf.c | 37 +++++++++++++++----------------------
->  1 file changed, 15 insertions(+), 22 deletions(-)
+> registers -> register
 > 
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index 5f60b8d41277..91f2a3e4892e 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -37,6 +37,7 @@
->  #include <net/addrconf.h>
->  #include <linux/siphash.h>
->  #include <linux/compiler.h>
-> +#include <linux/property.h>
->  #ifdef CONFIG_BLOCK
->  #include <linux/blkdev.h>
->  #endif
-> @@ -1720,32 +1721,23 @@ char *flags_string(char *buf, char *end, void *flags_ptr, const char *fmt)
->  	return format_flags(buf, end, flags, names);
->  }
->  
-> -static const char *device_node_name_for_depth(const struct device_node *np, int depth)
-> -{
-> -	for ( ; np && depth; depth--)
-> -		np = np->parent;
-> -
-> -	return kbasename(np->full_name);
-> -}
-> -
->  static noinline_for_stack
-> -char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
-> +char *fwnode_gen_full_name(struct fwnode_handle *fwnode, char *buf, char *end)
+>> is totally different.
+>>
+>> The other difference is the closk source, the AO-CEC-B takes the
+> 
+> closk -> clock
+> 
+>> "oscin", the Always-On Oscillator clock, as input and embeds a
+>> dual-divider clock divider to provide the precise 32768Hz base
+>> clock for CEC communication.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  .../devicetree/bindings/media/meson-ao-cec.txt    | 15 +++++++++++----
+>>  1 file changed, 11 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/meson-ao-cec.txt b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
+>> index 8671bdb08080..d6e2f9cf0aaf 100644
+>> --- a/Documentation/devicetree/bindings/media/meson-ao-cec.txt
+>> +++ b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
+>> @@ -4,16 +4,23 @@ The Amlogic Meson AO-CEC module is present is Amlogic SoCs and its purpose is
+>>  to handle communication between HDMI connected devices over the CEC bus.
+>>  
+>>  Required properties:
+>> -  - compatible : value should be following
+>> -	"amlogic,meson-gx-ao-cec"
+>> +  - compatible : value should be following depending on the SoC :
+>> +  	For GXBB, GXL, GXM and G12A (AO_CEC_A module) :
+>> +  	"amlogic,meson-gx-ao-cec"
+>> +	For G12A (AO_CEC_B module) :
+>> +	"amlogic,meson-g12a-ao-cec"
+> 
+> The driver uses "amlogic,meson-g12a-ao-cec-b", so there is a mismatch between
+> the bindings and the driver.
+> 
+> Please repost since it is important that the two correspond.
 
-I first read this as fwnode_get_full_name(), see "get" vs. "gen".
-I guess that it was because there is used also fwnode_get_name().
+Indeed, thanks for spotting this, I'll fix the typos and the compatible in v2
 
-Please, rename it to fwnode_full_name_string() or so ;-)
+Neil
 
-Best Regards,
-Petr
+> 
+> Thanks!
+> 
+> 	Hans
+> 
+>>  
+>>    - reg : Physical base address of the IP registers and length of memory
+>>  	  mapped region.
+>>  
+>>    - interrupts : AO-CEC interrupt number to the CPU.
+>>    - clocks : from common clock binding: handle to AO-CEC clock.
+>> -  - clock-names : from common clock binding: must contain "core",
+>> -		  corresponding to entry in the clocks property.
+>> +  - clock-names : from common clock binding, must contain :
+>> +		For GXBB, GXL, GXM and G12A (AO_CEC_A module) :
+>> +		- "core"
+>> +		For G12A (AO_CEC_B module) :
+>> +		- "oscin"
+>> +		corresponding to entry in the clocks property.
+>>    - hdmi-phandle: phandle to the HDMI controller
+>>  
+>>  Example:
+>>
+> 
