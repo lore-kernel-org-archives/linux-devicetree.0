@@ -1,12 +1,12 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 139/192] ARM: dts: lpc32xx: Remove leading 0x and 0s from bindings notation
-Date: Wed, 27 Mar 2019 14:09:31 -0400
-Message-ID: <20190327181025.13507-139-sashal@kernel.org>
-References: <20190327181025.13507-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 088/123] ARM: dts: lpc32xx: Remove leading 0x and 0s from bindings notation
+Date: Wed, 27 Mar 2019 14:15:52 -0400
+Message-ID: <20190327181628.15899-88-sashal@kernel.org>
+References: <20190327181628.15899-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
+In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Mathieu Malaterre <malat@debian.org>, Vladimir Zapolskiy <vz@mleia.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
@@ -55,7 +55,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index abff7ef7c9cd..4981741377f3 100644
+index d81fe433e3c8..f22a33a01819 100644
 --- a/arch/arm/boot/dts/lpc32xx.dtsi
 +++ b/arch/arm/boot/dts/lpc32xx.dtsi
 @@ -230,7 +230,7 @@
