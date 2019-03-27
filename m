@@ -1,119 +1,84 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v3 3/9] soc: qcom: rpmpd: Modify corner defining macros
-Date: Wed, 27 Mar 2019 18:08:26 +0530
-Message-ID: <20190327123832.11566-4-sibis@codeaurora.org>
-References: <20190327123832.11566-1-sibis@codeaurora.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH 1/3] media: dt-bindings: media: meson-ao-cec: Add G12A
+ AO-CEC-B Compatible
+Date: Wed, 27 Mar 2019 13:39:03 +0100
+Message-ID: <518678c1-2e1d-ca27-55bd-0dd10965354f@xs4all.nl>
+References: <20190325173501.22863-1-narmstrong@baylibre.com>
+ <20190325173501.22863-2-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190327123832.11566-1-sibis@codeaurora.org>
+In-Reply-To: <20190325173501.22863-2-narmstrong@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, rnayak@codeaurora.org
-Cc: david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
+To: Neil Armstrong <narmstrong@baylibre.com>, mchehab@kernel.org, devicetree@vger.kernel.org
+Cc: linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+On 3/25/19 6:34 PM, Neil Armstrong wrote:
+> The Amlogic G12A embeds a second CEC controller named AO-CEC-B, and
+> the other one is AO-CEC-A described by the current bindings.
+> 
+> The registers interface is very close but the internal architecture
 
-QCS404 uses individual resource type magic for each power-domain, so
-adjust the macros slightly to make them reusable for this.
+registers -> register
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-[sibi: Extend rpmpd corner pair to a generic rpmpd pair]
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- drivers/soc/qcom/rpmpd.c | 39 +++++++++++++++++----------------------
- 1 file changed, 17 insertions(+), 22 deletions(-)
+> is totally different.
+> 
+> The other difference is the closk source, the AO-CEC-B takes the
 
-diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
-index 94015ece40e9..ca736ceb969c 100644
---- a/drivers/soc/qcom/rpmpd.c
-+++ b/drivers/soc/qcom/rpmpd.c
-@@ -17,8 +17,8 @@
- #define domain_to_rpmpd(domain) container_of(domain, struct rpmpd, pd)
- 
- /* Resource types */
--#define RPMPD_SMPA 0x61706d73
--#define RPMPD_LDOA 0x616f646c
-+#define RPMPD_SMPA 0x61706d73 /* smpa */
-+#define RPMPD_LDOA 0x616f646c /* ldoa */
- 
- /* Operation Keys */
- #define KEY_CORNER		0x6e726f63 /* corn */
-@@ -27,46 +27,41 @@
- 
- #define MAX_8996_RPMPD_STATE	6
- 
--#define DEFINE_RPMPD_CORNER_SMPA(_platform, _name, _active, r_id)		\
-+#define DEFINE_RPMPD_PAIR(_platform, _name, _active, r_type, r_key,	\
-+			  r_id)						\
- 	static struct rpmpd _platform##_##_active;			\
- 	static struct rpmpd _platform##_##_name = {			\
- 		.pd = {	.name = #_name,	},				\
- 		.peer = &_platform##_##_active,				\
--		.res_type = RPMPD_SMPA,					\
-+		.res_type = RPMPD_##r_type,				\
- 		.res_id = r_id,						\
--		.key = KEY_CORNER,					\
-+		.key = KEY_##r_key,					\
- 	};								\
- 	static struct rpmpd _platform##_##_active = {			\
- 		.pd = { .name = #_active, },				\
- 		.peer = &_platform##_##_name,				\
- 		.active_only = true,					\
--		.res_type = RPMPD_SMPA,					\
-+		.res_type = RPMPD_##r_type,				\
- 		.res_id = r_id,						\
--		.key = KEY_CORNER,					\
-+		.key = KEY_##r_key,					\
- 	}
- 
--#define DEFINE_RPMPD_CORNER_LDOA(_platform, _name, r_id)			\
-+#define DEFINE_RPMPD_CORNER(_platform, _name, r_type, r_id)		\
- 	static struct rpmpd _platform##_##_name = {			\
- 		.pd = { .name = #_name, },				\
--		.res_type = RPMPD_LDOA,					\
-+		.res_type = RPMPD_##r_type,				\
- 		.res_id = r_id,						\
- 		.key = KEY_CORNER,					\
- 	}
- 
--#define DEFINE_RPMPD_VFC(_platform, _name, r_id, r_type)		\
-+#define DEFINE_RPMPD_VFC(_platform, _name, r_type, r_id)		\
- 	static struct rpmpd _platform##_##_name = {			\
- 		.pd = { .name = #_name, },				\
--		.res_type = r_type,					\
-+		.res_type = RPMPD_##r_type,				\
- 		.res_id = r_id,						\
- 		.key = KEY_FLOOR_CORNER,				\
- 	}
- 
--#define DEFINE_RPMPD_VFC_SMPA(_platform, _name, r_id)			\
--	DEFINE_RPMPD_VFC(_platform, _name, r_id, RPMPD_SMPA)
--
--#define DEFINE_RPMPD_VFC_LDOA(_platform, _name, r_id)			\
--	DEFINE_RPMPD_VFC(_platform, _name, r_id, RPMPD_LDOA)
--
- struct rpmpd_req {
- 	__le32 key;
- 	__le32 nbytes;
-@@ -96,12 +91,12 @@ struct rpmpd_desc {
- static DEFINE_MUTEX(rpmpd_lock);
- 
- /* msm8996 RPM Power domains */
--DEFINE_RPMPD_CORNER_SMPA(msm8996, vddcx, vddcx_ao, 1);
--DEFINE_RPMPD_CORNER_SMPA(msm8996, vddmx, vddmx_ao, 2);
--DEFINE_RPMPD_CORNER_LDOA(msm8996, vddsscx, 26);
-+DEFINE_RPMPD_PAIR(msm8996, vddcx, vddcx_ao, SMPA, CORNER, 1);
-+DEFINE_RPMPD_PAIR(msm8996, vddmx, vddmx_ao, SMPA, CORNER, 2);
-+DEFINE_RPMPD_CORNER(msm8996, vddsscx, LDOA, 26);
- 
--DEFINE_RPMPD_VFC_SMPA(msm8996, vddcx_vfc, 1);
--DEFINE_RPMPD_VFC_LDOA(msm8996, vddsscx_vfc, 26);
-+DEFINE_RPMPD_VFC(msm8996, vddcx_vfc, SMPA, 1);
-+DEFINE_RPMPD_VFC(msm8996, vddsscx_vfc, LDOA, 26);
- 
- static struct rpmpd *msm8996_rpmpds[] = {
- 	[MSM8996_VDDCX] =	&msm8996_vddcx,
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+closk -> clock
+
+> "oscin", the Always-On Oscillator clock, as input and embeds a
+> dual-divider clock divider to provide the precise 32768Hz base
+> clock for CEC communication.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../devicetree/bindings/media/meson-ao-cec.txt    | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/meson-ao-cec.txt b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
+> index 8671bdb08080..d6e2f9cf0aaf 100644
+> --- a/Documentation/devicetree/bindings/media/meson-ao-cec.txt
+> +++ b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
+> @@ -4,16 +4,23 @@ The Amlogic Meson AO-CEC module is present is Amlogic SoCs and its purpose is
+>  to handle communication between HDMI connected devices over the CEC bus.
+>  
+>  Required properties:
+> -  - compatible : value should be following
+> -	"amlogic,meson-gx-ao-cec"
+> +  - compatible : value should be following depending on the SoC :
+> +  	For GXBB, GXL, GXM and G12A (AO_CEC_A module) :
+> +  	"amlogic,meson-gx-ao-cec"
+> +	For G12A (AO_CEC_B module) :
+> +	"amlogic,meson-g12a-ao-cec"
+
+The driver uses "amlogic,meson-g12a-ao-cec-b", so there is a mismatch between
+the bindings and the driver.
+
+Please repost since it is important that the two correspond.
+
+Thanks!
+
+	Hans
+
+>  
+>    - reg : Physical base address of the IP registers and length of memory
+>  	  mapped region.
+>  
+>    - interrupts : AO-CEC interrupt number to the CPU.
+>    - clocks : from common clock binding: handle to AO-CEC clock.
+> -  - clock-names : from common clock binding: must contain "core",
+> -		  corresponding to entry in the clocks property.
+> +  - clock-names : from common clock binding, must contain :
+> +		For GXBB, GXL, GXM and G12A (AO_CEC_A module) :
+> +		- "core"
+> +		For G12A (AO_CEC_B module) :
+> +		- "oscin"
+> +		corresponding to entry in the clocks property.
+>    - hdmi-phandle: phandle to the HDMI controller
+>  
+>  Example:
+> 
