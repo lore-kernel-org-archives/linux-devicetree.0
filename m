@@ -1,34 +1,28 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4 1/1] arm64: dts: renesas: use extended audio dmac
- register
-Date: Wed, 27 Mar 2019 12:16:03 +0100
-Message-ID: <20190327111558.yw2wld4oivcw5x7a@verge.net.au>
-References: <20190326095826.4987-1-jiada_wang@mentor.com>
- <20190326095826.4987-2-jiada_wang@mentor.com>
- <CAMuHMdUOcPhy5D-RagprwZkqOOgNt+4bGfSLQzydydHBOt76kQ@mail.gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 1/2] dt-bindings: ARM: dts: rockchip: Add bindings for rk3288-veyron-mighty
+Date: Wed, 27 Mar 2019 13:19:36 +0100
+Message-ID: <1915099.lzZODYNdzv@phil>
+References: <20190325162005.99391-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUOcPhy5D-RagprwZkqOOgNt+4bGfSLQzydydHBOt76kQ@mail.gmail.com>
+In-Reply-To: <20190325162005.99391-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Jiada Wang <jiada_wang@mentor.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: mka@chromium.org, ryandcase@chromium.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Alexis Ballier <aballier@gentoo.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Akash Gajjar <Akash_Gajjar@mentor.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 11:09:45AM +0100, Geert Uytterhoeven wrote:
-> On Tue, Mar 26, 2019 at 10:59 AM Jiada Wang <jiada_wang@mentor.com> wrote:
-> > Basic audio dmac register only supports busif from 0 to 3,
-> > in order to use busif4 ~ busif7, extended audio dmac register
-> > need to be used.
-> >
-> > This patch updates H3 (= r8a7795), M3-W (= r8a7796) and
-> > M3-N (=r8a77965) to use extended audio dmac register set.
-> >
-> > Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+Am Montag, 25. März 2019, 17:20:04 CET schrieb Douglas Anderson:
+> Mighty is basically the same Chromebook as Jaq but it has a full-sized
+> SD slot and some different (slightly more rugged) plastics around it.
+> Like Jaq, Mighty may show up with various different brandings but all
+> of them have the same board inside.
 > 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Thanks Jiada,
+applied both patches for 5.2
 
-applied for v5.2 with Morimoto-san's Ack from v3.
+Thanks
+Heiko
