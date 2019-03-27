@@ -1,12 +1,12 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH 3/7] ARM: dts: sun8i: a83t: Add nodes for UART2-UART4
-Date: Wed, 27 Mar 2019 01:18:39 +0100
-Message-ID: <20190327001843.2420-4-megous@megous.com>
+Subject: [PATCH 4/7] ARM: dts: sun8i: a83t: Add UART2 PB pins
+Date: Wed, 27 Mar 2019 01:18:40 +0100
+Message-ID: <20190327001843.2420-5-megous@megous.com>
 References: <20190327001843.2420-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBB4MC5PSAKGQEK74MLBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBB4EC5PSAKGQEYTDACBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <20190327001843.2420-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,57 +20,29 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-A83T has 5 UART interfaces, but only the first two have their nodes
-defined in sun8i-a83t.dtsi. Add nodes for the missing interfaces.
+Add pin definitions for UART2 PB pins. These are used on TBS-A711
+tablet.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a83t.dtsi | 33 +++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index fcb7ef5ce2df..e5c39eef1c29 100644
+index e5c39eef1c29..921cfb30ab46 100644
 --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
 +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -873,6 +873,39 @@
- 			status = "disabled";
+@@ -768,6 +768,11 @@
+ 				pins = "PG8", "PG9";
+ 				function = "uart1";
+ 			};
++
++			uart2_pb_pins: uart2-pb-pins {
++				pins = "PB0", "PB1";
++				function = "uart2";
++			};
  		};
  
-+		uart2: serial@1c28800 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c28800 0x400>;
-+			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&ccu CLK_BUS_UART2>;
-+			resets = <&ccu RST_BUS_UART2>;
-+			status = "disabled";
-+		};
-+
-+		uart3: serial@1c28c00 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c28c00 0x400>;
-+			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&ccu CLK_BUS_UART3>;
-+			resets = <&ccu RST_BUS_UART3>;
-+			status = "disabled";
-+		};
-+
-+		uart4: serial@1c29000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c29000 0x400>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&ccu CLK_BUS_UART4>;
-+			resets = <&ccu RST_BUS_UART4>;
-+			status = "disabled";
-+		};
-+
- 		i2c0: i2c@1c2ac00 {
- 			compatible = "allwinner,sun8i-a83t-i2c",
- 				     "allwinner,sun6i-a31-i2c";
+ 		timer@1c20c00 {
 -- 
 2.21.0
