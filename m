@@ -1,11 +1,13 @@
 From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v3 0/2] rtc: Add ASPEED RTC driver
-Date: Wed, 27 Mar 2019 11:32:13 +1030
-Message-ID: <20190327010215.10231-1-joel@jms.id.au>
+Subject: [PATCH v3 1/2] dt-bindings: rtc: Add on-chip ASPEED RTC documentation
+Date: Wed, 27 Mar 2019 11:32:14 +1030
+Message-ID: <20190327010215.10231-2-joel@jms.id.au>
+References: <20190327010215.10231-1-joel@jms.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190327010215.10231-1-joel@jms.id.au>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,20 +21,43 @@ To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Alessandro Zummo <a.zummo
 Cc: Andrew Jeffery <andrew@aj.id.au>, linux-rtc@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-v3: Remove unnecessary locking, use ptR
-v2: Address review from Alexandre
+Describe the RTC as used in the ASPEED BMC SoCs.
 
-Joel Stanley (2):
-  dt-bindings: rtc: Add on-chip ASPEED RTC documentation
-  rtc: Add ASPEED RTC driver
-
- .../devicetree/bindings/rtc/rtc-aspeed.txt    |  22 +++
- drivers/rtc/Kconfig                           |  11 ++
- drivers/rtc/Makefile                          |   1 +
- drivers/rtc/rtc-aspeed.c                      | 138 ++++++++++++++++++
- 4 files changed, 172 insertions(+)
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+v3: Add interrupts property
+---
+ .../devicetree/bindings/rtc/rtc-aspeed.txt    | 22 +++++++++++++++++++
+ 1 file changed, 22 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-aspeed.txt
- create mode 100644 drivers/rtc/rtc-aspeed.c
 
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-aspeed.txt b/Documentation/devicetree/bindings/rtc/rtc-aspeed.txt
+new file mode 100644
+index 000000000000..2e956b3dc276
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-aspeed.txt
+@@ -0,0 +1,22 @@
++ASPEED BMC RTC
++==============
++
++Required properties:
++ - compatible: should be one of the following
++   * aspeed,ast2400-rtc for the ast2400
++   * aspeed,ast2500-rtc for the ast2500
++   * aspeed,ast2600-rtc for the ast2600
++
++ - reg: physical base address of the controller and length of memory mapped
++   region
++
++ - interrupts: The interrupt number
++
++Example:
++
++   rtc@1e781000 {
++           compatible = "aspeed,ast2400-rtc";
++           reg = <0x1e781000 0x18>;
++           interrupts = <22>;
++           status = "disabled";
++   };
 -- 
 2.20.1
