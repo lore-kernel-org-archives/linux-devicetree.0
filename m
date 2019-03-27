@@ -1,67 +1,62 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: fsl_audmix: Fix kbuild failure" to the asoc tree
-Date: Wed, 27 Mar 2019 12:52:34 +0000 (GMT)
-Message-ID: <20190327125234.3357411288FA@debutante.sirena.org.uk>
-References: <1553678953-31228-1-git-send-email-viorel.suman@nxp.com>
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH 4/5] lib/vsprintf: Make use of fwnode API to obtain node
+ names and separators
+Date: Wed, 27 Mar 2019 13:53:56 +0100
+Message-ID: <20190327125356.s7hockgf5yfyhx52@pathway.suse.cz>
+References: <20190322152930.16642-1-sakari.ailus@linux.intel.com>
+ <20190322152930.16642-5-sakari.ailus@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553678953-31228-1-git-send-email-viorel.suman@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <20190322152930.16642-5-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viorel Suman <viorel.suman@nxp.com>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>, Nicolin Chen <nicoleotsuka@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Viorel Suman <viorel.suman@gmail.com>, dl-linux-imx <linux-imx@nxp.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Fri 2019-03-22 17:29:29, Sakari Ailus wrote:
+> Instead of implementing our own means of discovering parent nodes, node
+> names or counting how many parents a node has, use the newly added
+> functions in the fwnode API to obtain that information.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  lib/vsprintf.c | 37 +++++++++++++++----------------------
+>  1 file changed, 15 insertions(+), 22 deletions(-)
+> 
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index 5f60b8d41277..91f2a3e4892e 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -37,6 +37,7 @@
+>  #include <net/addrconf.h>
+>  #include <linux/siphash.h>
+>  #include <linux/compiler.h>
+> +#include <linux/property.h>
+>  #ifdef CONFIG_BLOCK
+>  #include <linux/blkdev.h>
+>  #endif
+> @@ -1720,32 +1721,23 @@ char *flags_string(char *buf, char *end, void *flags_ptr, const char *fmt)
+>  	return format_flags(buf, end, flags, names);
+>  }
+>  
+> -static const char *device_node_name_for_depth(const struct device_node *np, int depth)
+> -{
+> -	for ( ; np && depth; depth--)
+> -		np = np->parent;
+> -
+> -	return kbasename(np->full_name);
+> -}
+> -
+>  static noinline_for_stack
+> -char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
+> +char *fwnode_gen_full_name(struct fwnode_handle *fwnode, char *buf, char *end)
 
-   ASoC: fsl_audmix: Fix kbuild failure
+I first read this as fwnode_get_full_name(), see "get" vs. "gen".
+I guess that it was because there is used also fwnode_get_name().
 
-has been applied to the asoc tree at
+Please, rename it to fwnode_full_name_string() or so ;-)
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 5fb94d46c3179cb7afd805a5a9252111316a926f Mon Sep 17 00:00:00 2001
-From: Viorel Suman <viorel.suman@nxp.com>
-Date: Wed, 27 Mar 2019 09:29:38 +0000
-Subject: [PATCH] ASoC: fsl_audmix: Fix kbuild failure
-
-The format in dev_dbg function must be a constant.
-
-Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/fsl/fsl_audmix.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/fsl/fsl_audmix.c b/sound/soc/fsl/fsl_audmix.c
-index 3356cb617713..dabde0342c95 100644
---- a/sound/soc/fsl/fsl_audmix.c
-+++ b/sound/soc/fsl/fsl_audmix.c
-@@ -90,7 +90,7 @@ static int fsl_audmix_state_trans(struct snd_soc_component *comp,
- 	struct fsl_audmix *priv = snd_soc_component_get_drvdata(comp);
- 	/* Enforce all required TDMs are started */
- 	if ((priv->tdms & prm.tdms) != prm.tdms) {
--		dev_dbg(comp->dev, prm.msg);
-+		dev_dbg(comp->dev, "%s", prm.msg);
- 		return -EINVAL;
- 	}
- 
--- 
-2.20.1
+Best Regards,
+Petr
