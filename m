@@ -1,27 +1,76 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3 3/4] arm64: dts: rockchip: Define drive-impedance-ohm for RK3399's emmc-phy.
-Date: Wed, 27 Mar 2019 13:46:52 +0100
-Message-ID: <3316794.yJZ3nBLoSG@phil>
-References: <20190322113456.16324-1-christoph.muellner@theobroma-systems.com> <20190322113456.16324-3-christoph.muellner@theobroma-systems.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v4 5/7] drm/sun4i: Rely on dma interconnect for our RAM
+ offset
+Date: Wed, 27 Mar 2019 12:50:47 +0000
+Message-ID: <bdc3ece8-07bf-33a5-ae4f-bb59d9327972@arm.com>
+References: <cover.221220f2f28e14ef07cce84e753ac662085d84ff.1552595146.git-series.maxime.ripard@bootlin.com>
+ <99317417302db473ac41ce30295a86e307607fa0.1552595146.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190322113456.16324-3-christoph.muellner@theobroma-systems.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawn.lin@rock-chips.com, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Kishon Vijay Abraham I <kishon@ti.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Matthias Brugger <mbrugger@suse.com>, Brian Norris <briannorris@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Douglas Anderson <dianders@chromium.org>, Viresh Kumar <viresh.kumar@linaro.org>, Ezequiel Garcia <ezequiel@collabora.com>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Vicente Bergas <vicencb@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <99317417302db473ac41ce30295a86e307607fa0.1552595146.git-series.maxime.ripard@bootlin.com>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 22. März 2019, 12:34:52 CET schrieb Christoph Muellner:
-> A previous patch introduced the property 'drive-impedance-ohm'
-> for the RK3399's emmc phy node. This patch sets this value
-> explicitly to the default value of 50 Ohm.
-> 
-> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-
-applied patches 3+4 for 5.2
-
-Thanks
-Heiko
+T24gMTQvMDMvMjAxOSAyMDoyNiwgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBOb3cgdGhhdCB3ZSBj
+YW4gZXhwcmVzcyBvdXIgRE1BIHRvcG9sb2d5LCByZWx5IG9uIHRob3NlIHByb3BlcnR5IGluc3Rl
+YWQgb2YKPiBoYXJkY29kaW5nIGFuIG9mZnNldCBmcm9tIHRoZSBkbWFfYWRkcl90IHdoaWNoIHdh
+c24ndCByZWFsbHkgZ3JlYXQuCj4gCj4gV2Ugc3RpbGwgbmVlZCB0byBhZGQgc29tZSBjb2RlIHRv
+IGRlYWwgd2l0aCB0aGUgb2xkIERUIHRoYXQgd291bGQgbGFjayB0aGF0Cj4gcHJvcGVydHksIGJ1
+dCB3ZSBtb3ZlIHRoZSBvZmZzZXQgdG8gdGhlIERSTSBkZXZpY2UgZG1hX3Bmbl9vZmZzZXQgdG8g
+YmUKPiBhYmxlIHRvIHJlbHkgb24ganVzdCB0aGUgZG1hX2FkZHJfdCBhc3NvY2lhdGVkIHRvIHRo
+ZSBHRU0gb2JqZWN0LgoKQXMgdGhlIGxlYXN0LXdvcnN0IG9wdGlvbiwKCkFja2VkLWJ5OiBSb2Jp
+biBNdXJwaHkgPHJvYmluLm11cnBoeUBhcm0uY29tPgoKPiBBY2tlZC1ieTogRGFuaWVsIFZldHRl
+ciA8ZGFuaWVsLnZldHRlckBmZndsbC5jaD4KPiBTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJk
+IDxtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29tPgo+IC0tLQo+ICAgZHJpdmVycy9ncHUvZHJtL3N1
+bjRpL3N1bjRpX2JhY2tlbmQuYyB8IDI4ICsrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0KPiAg
+IDEgZmlsZSBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQo+IAo+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfYmFja2VuZC5jIGIvZHJpdmVy
+cy9ncHUvZHJtL3N1bjRpL3N1bjRpX2JhY2tlbmQuYwo+IGluZGV4IDRjMGQ1MWY3MzIzNy4uOTNm
+M2NhY2MzZTc0IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9iYWNr
+ZW5kLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfYmFja2VuZC5jCj4gQEAg
+LTM2MSwxMyArMzYxLDYgQEAgaW50IHN1bjRpX2JhY2tlbmRfdXBkYXRlX2xheWVyX2J1ZmZlcihz
+dHJ1Y3Qgc3VuNGlfYmFja2VuZCAqYmFja2VuZCwKPiAgIAlwYWRkciA9IGRybV9mYl9jbWFfZ2V0
+X2dlbV9hZGRyKGZiLCBzdGF0ZSwgMCk7Cj4gICAJRFJNX0RFQlVHX0RSSVZFUigiU2V0dGluZyBi
+dWZmZXIgYWRkcmVzcyB0byAlcGFkXG4iLCAmcGFkZHIpOwo+ICAgCj4gLQkvKgo+IC0JICogYmFj
+a2VuZCBETUEgYWNjZXNzZXMgRFJBTSBkaXJlY3RseSwgYnlwYXNzaW5nIHRoZSBzeXN0ZW0KPiAt
+CSAqIGJ1cy4gQXMgc3VjaCwgdGhlIGFkZHJlc3MgcmFuZ2UgaXMgZGlmZmVyZW50IGFuZCB0aGUg
+YnVmZmVyCj4gLQkgKiBhZGRyZXNzIG5lZWRzIHRvIGJlIGNvcnJlY3RlZC4KPiAtCSAqLwo+IC0J
+cGFkZHIgLT0gUEhZU19PRkZTRVQ7Cj4gLQo+ICAgCWlmIChmYi0+Zm9ybWF0LT5pc195dXYpCj4g
+ICAJCXJldHVybiBzdW40aV9iYWNrZW5kX3VwZGF0ZV95dXZfYnVmZmVyKGJhY2tlbmQsIGZiLCBw
+YWRkcik7Cj4gICAKPiBAQCAtODE0LDYgKzgwNywyNyBAQCBzdGF0aWMgaW50IHN1bjRpX2JhY2tl
+bmRfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKPiAgIAlk
+ZXZfc2V0X2RydmRhdGEoZGV2LCBiYWNrZW5kKTsKPiAgIAlzcGluX2xvY2tfaW5pdCgmYmFja2Vu
+ZC0+ZnJvbnRlbmRfbG9jayk7Cj4gICAKPiArCWlmIChvZl9maW5kX3Byb3BlcnR5KGRldi0+b2Zf
+bm9kZSwgImludGVyY29ubmVjdHMiLCBOVUxMKSkgewo+ICsJCS8qCj4gKwkJICogVGhpcyBhc3N1
+bWUgd2UgaGF2ZSB0aGUgc2FtZSBETUEgY29uc3RyYWludHMgZm9yIGFsbCBvdXIgdGhlCj4gKwkJ
+ICogZGV2aWNlcyBpbiBvdXIgcGlwZWxpbmUgKGFsbCB0aGUgYmFja2VuZHMsIGJ1dCBhbHNvIHRo
+ZQo+ICsJCSAqIGZyb250ZW5kcykuIFRoaXMgc291bmRzIGJhZCwgYnV0IGl0IGhhcyBhbHdheXMg
+YmVlbiB0aGUgY2FzZQo+ICsJCSAqIGZvciB1cywgYW5kIERSTSBkb2Vzbid0IGRvIHBlci1kZXZp
+Y2UgYWxsb2NhdGlvbiBlaXRoZXIsIHNvCj4gKwkJICogd2Ugd291bGQgbmVlZCB0byBmaXggRFJN
+IGZpcnN0Li4uCj4gKwkJICovCj4gKwkJcmV0ID0gb2ZfZG1hX2NvbmZpZ3VyZShkcm0tPmRldiwg
+ZGV2LT5vZl9ub2RlLCB0cnVlKTsKPiArCQlpZiAocmV0KQo+ICsJCQlyZXR1cm4gcmV0Owo+ICsJ
+fSBlbHNlIHsKPiArCQkvKgo+ICsJCSAqIElmIHdlIGRvbid0IGhhdmUgdGhlIGludGVyY29ubmVj
+dCBwcm9wZXJ0eSwgbW9zdCBsaWtlbHkKPiArCQkgKiBiZWNhdXNlIG9mIGFuIG9sZCBEVCwgd2Ug
+bmVlZCB0byBzZXQgdGhlIERNQSBvZmZzZXQgYnkgaGFuZAo+ICsJCSAqIG9uIG91ciBkZXZpY2Ug
+c2luY2UgdGhlIFJBTSBtYXBwaW5nIGlzIGF0IDAgZm9yIHRoZSBETUEgYnVzLAo+ICsJCSAqIHVu
+bGlrZSB0aGUgQ1BVLgo+ICsJCSAqLwo+ICsJCWRybS0+ZGV2LT5kbWFfcGZuX29mZnNldCA9IFBI
+WVNfUEZOX09GRlNFVDsKPiArCX0KPiArCj4gICAJYmFja2VuZC0+ZW5naW5lLm5vZGUgPSBkZXYt
+Pm9mX25vZGU7Cj4gICAJYmFja2VuZC0+ZW5naW5lLm9wcyA9ICZzdW40aV9iYWNrZW5kX2VuZ2lu
+ZV9vcHM7Cj4gICAJYmFja2VuZC0+ZW5naW5lLmlkID0gc3VuNGlfYmFja2VuZF9vZl9nZXRfaWQo
+ZGV2LT5vZl9ub2RlKTsKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVs
