@@ -1,72 +1,73 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [RFC 2/2] ASoC: Add MICFIL SoC Digital Audio
- Interface driver.
-Date: Wed, 27 Mar 2019 15:46:33 +0200
-Message-ID: <CAEnQRZBTjaHVPe=iW7f7ohJHNNaZBcPr_hv6dO7ng_CiQjaxdw@mail.gmail.com>
-References: <1544433661-32496-1-git-send-email-cosmin.samoila@nxp.com>
- <1544433661-32496-3-git-send-email-cosmin.samoila@nxp.com>
- <20181212181414.GE6920@sirena.org.uk>
- <f3a0f305-dc96-f8b9-3c57-e45256326e2f@linux.intel.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH 4/5] lib/vsprintf: Make use of fwnode API to obtain node
+ names and separators
+Date: Wed, 27 Mar 2019 15:49:12 +0200
+Message-ID: <20190327134912.knvr4anvbef6iqld@paasikivi.fi.intel.com>
+References: <20190322152930.16642-1-sakari.ailus@linux.intel.com>
+ <20190322152930.16642-5-sakari.ailus@linux.intel.com>
+ <20190327125356.s7hockgf5yfyhx52@pathway.suse.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <f3a0f305-dc96-f8b9-3c57-e45256326e2f@linux.intel.com>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "robh@kernel.org" <robh@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, Mark Brown <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@nxp.com>, "gabrielcsmo@gmail.com" <gabrielcsmo@gmail.com>, Daniel Baluta <daniel.baluta@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190327125356.s7hockgf5yfyhx52@pathway.suse.cz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Petr Mladek <pmladek@suse.com>
+Cc: linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 14, 2018 at 10:09 PM Pierre-Louis Bossart
-<pierre-louis.bossart@linux.intel.com> wrote:
->
->
-> On 12/12/18 12:14 PM, Mark Brown wrote:
-> >> +static irqreturn_t voice_detected_fn(int irq, void *devid)
-> >> +{
-> >> +    struct fsl_micfil *micfil = (struct fsl_micfil *)devid;
-> >> +    struct device *dev = &micfil->pdev->dev;
-> >> +    int ret;
-> >> +
-> >> +    /* disable hwvad */
-> >> +    ret = disable_hwvad(dev, true);
-> >> +    if (ret)
-> >> +            dev_err(dev, "Failed to disable HWVAD module\n");
-> >> +
-> >> +    /* notify userspace that voice was detected */
-> >> +    kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
-> >> +
-> >> +    return IRQ_HANDLED;
-> >> +}
-> > So, this looks like it's intended to be used for keyword detection type
-> > applications (though without the offload DSP that those tend to have).
-> > What the other implementations I've seen have ended up doing is using a
-> > compressed audio stream to return the audio data to userspace, allowing
-> > the audion stream to be paused when no audio is detected.  Your approach
-> > here is a bit more manual and may be more sensible for systems without
-> > the offload DSP however the decision to go outside ALSA and use a
-> > kobject needs to be thought about a bit, we'd want to ensure that
-> > there's a standard way of handling hardware like this so applications
-> > can work as consistently as possible with them.
->
-> There's no mention of any buffer so it's likely plain vanilla VAD here.
-> We've seen two choices to warn userspace of a acoustic event, either use
-> a uevent or a kcontrol. I believe we ended-up chosing the latter on the
-> Intel side in the past and that was also the plan for SOF.
+Hi Petr,
 
-Reviving this discussion about VAD. Do you have any draft patches for
-the interface to send events to user space?
+Thank you for reviewing these patches.
 
-We are now trying to upstream VAD for PDM and we are looking
-at all our options.
+On Wed, Mar 27, 2019 at 01:53:56PM +0100, Petr Mladek wrote:
+> On Fri 2019-03-22 17:29:29, Sakari Ailus wrote:
+> > Instead of implementing our own means of discovering parent nodes, node
+> > names or counting how many parents a node has, use the newly added
+> > functions in the fwnode API to obtain that information.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> >  lib/vsprintf.c | 37 +++++++++++++++----------------------
+> >  1 file changed, 15 insertions(+), 22 deletions(-)
+> > 
+> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> > index 5f60b8d41277..91f2a3e4892e 100644
+> > --- a/lib/vsprintf.c
+> > +++ b/lib/vsprintf.c
+> > @@ -37,6 +37,7 @@
+> >  #include <net/addrconf.h>
+> >  #include <linux/siphash.h>
+> >  #include <linux/compiler.h>
+> > +#include <linux/property.h>
+> >  #ifdef CONFIG_BLOCK
+> >  #include <linux/blkdev.h>
+> >  #endif
+> > @@ -1720,32 +1721,23 @@ char *flags_string(char *buf, char *end, void *flags_ptr, const char *fmt)
+> >  	return format_flags(buf, end, flags, names);
+> >  }
+> >  
+> > -static const char *device_node_name_for_depth(const struct device_node *np, int depth)
+> > -{
+> > -	for ( ; np && depth; depth--)
+> > -		np = np->parent;
+> > -
+> > -	return kbasename(np->full_name);
+> > -}
+> > -
+> >  static noinline_for_stack
+> > -char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
+> > +char *fwnode_gen_full_name(struct fwnode_handle *fwnode, char *buf, char *end)
+> 
+> I first read this as fwnode_get_full_name(), see "get" vs. "gen".
+> I guess that it was because there is used also fwnode_get_name().
+> 
+> Please, rename it to fwnode_full_name_string() or so ;-)
 
-thanks,
-Daniel.
+Works for me.
+
+-- 
+Regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
