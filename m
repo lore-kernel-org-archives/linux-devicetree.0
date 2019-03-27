@@ -1,44 +1,143 @@
-From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: Re: [Potential Spoof] Re: [Potential Spoof] Re: [PATCH] ARM: dts:
- aspeed: tiogapass: Enable VUART
-Date: Wed, 27 Mar 2019 17:45:21 +0000
-Message-ID: <24375A52-CC8E-4CFE-A683-0720B60D1201@fb.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 139/192] ARM: dts: lpc32xx: Remove leading 0x and 0s from bindings notation
+Date: Wed, 27 Mar 2019 14:09:31 -0400
+Message-ID: <20190327181025.13507-139-sashal@kernel.org>
+References: <20190327181025.13507-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Content-ID: <872759AB1137044AA3F96E1009D90452@namprd15.prod.outlook.com>
+In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Mathieu Malaterre <malat@debian.org>, Vladimir Zapolskiy <vz@mleia.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSm9lbCwNClBsZWFzZSBhcHBseSB0aGlzIHBhdGNoLg0KDQpSZWdhcmRzDQotVmlqYXkNCg0K
-77u/T24gMy8xOC8xOSwgMTI6NDYgUE0sICJvcGVuYm1jIG9uIGJlaGFsZiBvZiBWaWpheSBLaGVt
-a2EiIDxvcGVuYm1jLWJvdW5jZXMrdmlqYXlraGVta2E9ZmIuY29tQGxpc3RzLm96bGFicy5vcmcg
-b24gYmVoYWxmIG9mIHZpamF5a2hlbWthQGZiLmNvbT4gd3JvdGU6DQoNCiAgICBIaSBKb2VsLA0K
-ICAgIFBsZWFzZSBhcHBseSB0aGlzIHBhdGNoLg0KICAgIA0KICAgIFJlZ2FyZHMNCiAgICAtVmlq
-YXkNCiAgICANCiAgICBPbiAzLzUvMTksIDEyOjA2IFBNLCAib3BlbmJtYyBvbiBiZWhhbGYgb2Yg
-VmlqYXkgS2hlbWthIiA8b3BlbmJtYy1ib3VuY2VzK3ZpamF5a2hlbWthPWZiLmNvbUBsaXN0cy5v
-emxhYnMub3JnIG9uIGJlaGFsZiBvZiB2aWpheWtoZW1rYUBmYi5jb20+IHdyb3RlOg0KICAgIA0K
-ICAgICAgICBQbGVhc2UgcmV2aWV3IGJlbG93IHBhdGNoLg0KICAgICAgICANCiAgICAgICAgUmVn
-YXJkcw0KICAgICAgICAtVmlqYXkNCiAgICAgICAgDQogICAgICAgIE9uIDEvMzAvMTksIDEwOjE0
-IEFNLCAiVmlqYXkgS2hlbWthIiA8dmlqYXlraGVta2FAZmIuY29tPiB3cm90ZToNCiAgICAgICAg
-DQogICAgICAgICAgICBFbmFibGluZyB2dWFydCBmb3IgRmFjZWJvb2sgdGlvZ2FwYXNzDQogICAg
-ICAgICAgICANCiAgICAgICAgICAgIFNpZ25lZC1vZmYtYnk6IFZpamF5IEtoZW1rYSA8dmlqYXlr
-aGVta2FAZmIuY29tPg0KICAgICAgICAgICAgLS0tDQogICAgICAgICAgICAgYXJjaC9hcm0vYm9v
-dC9kdHMvYXNwZWVkLWJtYy1mYWNlYm9vay10aW9nYXBhc3MuZHRzIHwgNSArKysrKw0KICAgICAg
-ICAgICAgIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykNCiAgICAgICAgICAgIA0KICAg
-ICAgICAgICAgZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJv
-b2stdGlvZ2FwYXNzLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2st
-dGlvZ2FwYXNzLmR0cw0KICAgICAgICAgICAgaW5kZXggNDJlMGQ3YThlOGQwLi5hMDU4ZmIyOTg1
-ZjcgMTAwNjQ0DQogICAgICAgICAgICAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtYm1j
-LWZhY2Vib29rLXRpb2dhcGFzcy5kdHMNCiAgICAgICAgICAgICsrKyBiL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2stdGlvZ2FwYXNzLmR0cw0KICAgICAgICAgICAgQEAgLTY0
-LDYgKzY0LDExIEBADQogICAgICAgICAgICAgCXN0YXR1cyA9ICJva2F5IjsNCiAgICAgICAgICAg
-ICB9Ow0KICAgICAgICAgICAgIA0KICAgICAgICAgICAgKyZ2dWFydCB7DQogICAgICAgICAgICAr
-CS8vIFZVQVJUIEhvc3QgQ29uc29sZQ0KICAgICAgICAgICAgKwlzdGF0dXMgPSAib2theSI7DQog
-ICAgICAgICAgICArfTsNCiAgICAgICAgICAgICsNCiAgICAgICAgICAgICAmdWFydDEgew0KICAg
-ICAgICAgICAgIAkvLyBIb3N0IENvbnNvbGUNCiAgICAgICAgICAgICAJc3RhdHVzID0gIm9rYXki
-Ow0KICAgICAgICAgICAgLS0gDQogICAgICAgICAgICAyLjE3LjENCiAgICAgICAgICAgIA0KICAg
-ICAgICAgICAgDQogICAgICAgIA0KICAgICAgICANCiAgICANCiAgICANCg0K
+From: Mathieu Malaterre <malat@debian.org>
+
+[ Upstream commit 3e3380d0675d5e20b0af067d60cb947a4348bf9b ]
+
+Improve the DTS files by removing all the leading "0x" and zeros to fix
+the following dtc warnings:
+
+Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+
+and
+
+Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+
+Converted using the following command:
+
+find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +
+
+For simplicity, two sed expressions were used to solve each warnings
+separately.
+
+To make the regex expression more robust a few other issues were resolved,
+namely setting unit-address to lower case, and adding a whitespace before
+the opening curly brace:
+
+https://elinux.org/Device_Tree_Linux#Linux_conventions
+
+This will solve as a side effect warning:
+
+Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+
+This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+
+Reported-by: David Daney <ddaney@caviumnetworks.com>
+Suggested-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+[vzapolskiy: fixed commit message to pass checkpatch.pl test]
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/lpc32xx.dtsi | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index abff7ef7c9cd..4981741377f3 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -230,7 +230,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			i2s1: i2s@2009C000 {
++			i2s1: i2s@2009c000 {
+ 				compatible = "nxp,lpc3220-i2s";
+ 				reg = <0x2009C000 0x1000>;
+ 			};
+@@ -273,7 +273,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			i2c1: i2c@400A0000 {
++			i2c1: i2c@400a0000 {
+ 				compatible = "nxp,pnx-i2c";
+ 				reg = <0x400A0000 0x100>;
+ 				interrupt-parent = <&sic1>;
+@@ -284,7 +284,7 @@
+ 				clocks = <&clk LPC32XX_CLK_I2C1>;
+ 			};
+ 
+-			i2c2: i2c@400A8000 {
++			i2c2: i2c@400a8000 {
+ 				compatible = "nxp,pnx-i2c";
+ 				reg = <0x400A8000 0x100>;
+ 				interrupt-parent = <&sic1>;
+@@ -295,7 +295,7 @@
+ 				clocks = <&clk LPC32XX_CLK_I2C2>;
+ 			};
+ 
+-			mpwm: mpwm@400E8000 {
++			mpwm: mpwm@400e8000 {
+ 				compatible = "nxp,lpc3220-motor-pwm";
+ 				reg = <0x400E8000 0x78>;
+ 				status = "disabled";
+@@ -394,7 +394,7 @@
+ 				#gpio-cells = <3>; /* bank, pin, flags */
+ 			};
+ 
+-			timer4: timer@4002C000 {
++			timer4: timer@4002c000 {
+ 				compatible = "nxp,lpc3220-timer";
+ 				reg = <0x4002C000 0x1000>;
+ 				interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+@@ -412,7 +412,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			watchdog: watchdog@4003C000 {
++			watchdog: watchdog@4003c000 {
+ 				compatible = "nxp,pnx4008-wdt";
+ 				reg = <0x4003C000 0x1000>;
+ 				clocks = <&clk LPC32XX_CLK_WDOG>;
+@@ -451,7 +451,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			timer1: timer@4004C000 {
++			timer1: timer@4004c000 {
+ 				compatible = "nxp,lpc3220-timer";
+ 				reg = <0x4004C000 0x1000>;
+ 				interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
+@@ -475,7 +475,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			pwm1: pwm@4005C000 {
++			pwm1: pwm@4005c000 {
+ 				compatible = "nxp,lpc3220-pwm";
+ 				reg = <0x4005C000 0x4>;
+ 				clocks = <&clk LPC32XX_CLK_PWM1>;
+@@ -484,7 +484,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			pwm2: pwm@4005C004 {
++			pwm2: pwm@4005c004 {
+ 				compatible = "nxp,lpc3220-pwm";
+ 				reg = <0x4005C004 0x4>;
+ 				clocks = <&clk LPC32XX_CLK_PWM2>;
+-- 
+2.19.1
