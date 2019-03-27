@@ -1,11 +1,14 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v4 0/4] Add support for lradc on A83T
-Date: Wed, 27 Mar 2019 01:24:57 +0100
-Message-ID: <20190327002501.4630-1-megous@megous.com>
+Subject: [PATCH v4 4/4] ARM: dts: sun8i: tbs-a711: Add support
+ for volume keys input
+Date: Wed, 27 Mar 2019 01:25:01 +0100
+Message-ID: <20190327002501.4630-5-megous@megous.com>
+References: <20190327002501.4630-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-sunxi+bncBDXLF6FR5INBBZEF5PSAKGQEPCDGKMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20190327002501.4630-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,53 +21,51 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-This series implements r_lradc (low res ADC) support for A83T.
+TBS A711 tablet has volume up/down keys connected to r_lradc. Add
+support for these keys.
 
-This is a continuation of v3 patch series from 2017 by Ziping Chen. I've
-rebased it on top of linux-next and changed the compatibe string as
-requested back then.[1]
+Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-There was some talk of iio based lradc driver back then[2], but noone
-stepped forward to make it. Let's finish this series, so that it's
-at least possible to add support for tablet keys on various A83T tablets
-as that's the main use of lradc module.
-
-[1] https://lkml.org/lkml/2017/6/26/558
-
-[2] https://lkml.org/lkml/2017/6/27/877
-
-Please take a look, and apply the patches if you have no objections.
-
-regards,
-  Ondrej Jirman
-
-
-Changes for v4:
-- changed comaptible string to allwinner,sun8i-a83t-r-lradc
-  (drop -keys suffix)
-- dropped 0 prefix in the r_lradc DT node
-- added sample A83T lradc user (TBS A711 tablet)
-
-Changes for v3:
-- Fix some issuses raised by Maxime.
-- Added Rob's ACK.
-
-Changes for v2:
-- Add an A83T specific compatible.
-
-Ondrej Jirman (1):
-  ARM: dts: sun8i: tbs-a711: Add support for volume keys input
-
-Ziping Chen (3):
-  input: sun4i-a10-lradc-keys: Add support for A83T
-  dt-bindings: input: Add R_LRADC support for A83T
-  ARM: dts: sunxi: Add R_LRADC support for A83T
-
- .../bindings/input/sun4i-lradc-keys.txt       |  6 ++-
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts     | 20 ++++++++++
- arch/arm/boot/dts/sun8i-a83t.dtsi             |  7 ++++
- drivers/input/keyboard/sun4i-lradc-keys.c     | 38 +++++++++++++++++--
- 4 files changed, 65 insertions(+), 6 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+index 1e840ab5a541..6ecdc11b7059 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+@@ -46,6 +46,7 @@
+ 
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/pwm/pwm.h>
++#include <dt-bindings/input/input.h>
+ 
+ / {
+ 	model = "TBS A711 Tablet";
+@@ -200,6 +201,25 @@
+ 	status = "okay";
+ };
+ 
++&r_lradc {
++	vref-supply = <&reg_aldo2>;
++	status = "okay";
++
++	button@210 {
++		label = "Volume Up";
++		linux,code = <KEY_VOLUMEUP>;
++		channel = <0>;
++		voltage = <210000>;
++	};
++
++	button@410 {
++		label = "Volume Down";
++		linux,code = <KEY_VOLUMEDOWN>;
++		channel = <0>;
++		voltage = <410000>;
++	};
++};
++
+ &r_rsb {
+ 	status = "okay";
+ 
 -- 
 2.21.0
