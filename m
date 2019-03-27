@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH RFC 1/6] dt-bindings: clk: meson: add g12b periph clock controller bindings
-Date: Wed, 27 Mar 2019 11:33:03 +0100
-Message-ID: <20190327103308.25058-2-narmstrong@baylibre.com>
+Subject: [PATCH RFC 5/6] dt-bindings: arm: amlogic: add Odroid-N2 binding
+Date: Wed, 27 Mar 2019 11:33:07 +0100
+Message-ID: <20190327103308.25058-6-narmstrong@baylibre.com>
 References: <20190327103308.25058-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,29 +12,26 @@ To: khilman@baylibre.com, devicetree@vger.kernel.org
 Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the specific Amlogic G12B clock driver compatible.
-
-G12B clock driver is very close, the main differences are :
-- the clock tree is duplicated for the both clusters, and the
-  SYS_PLL are swapped between the clusters
-- G12A has additional clocks like for CSI an other components
+Add compatible for the Amlogic G12B (S922X) SoC based Odroid-N2 SBC
+from HardKernel.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/arm/amlogic.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-index 5c8b105be4d6..6eaa52092313 100644
---- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-+++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-@@ -10,6 +10,7 @@ Required Properties:
- 		"amlogic,gxl-clkc" for GXL and GXM SoC,
- 		"amlogic,axg-clkc" for AXG SoC.
- 		"amlogic,g12a-clkc" for G12A SoC.
-+		"amlogic,g12b-clkc" for G12B SoC.
- - clocks : list of clock phandle, one for each entry clock-names.
- - clock-names : should contain the following:
-   * "xtal": the platform xtal
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+index 94bbcc646e10..eff41128268e 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.txt
++++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+@@ -116,6 +116,8 @@ Board compatible values (alphabetically, grouped by SoC):
+   - "amediatech,x96-max" (Meson g12a s905x2)
+   - "seirobotics,sei510" (Meson g12a s905x2)
+ 
++  - "hardkernel,odroid-n2" (Meson g12b s922x)
++
+ Amlogic Meson Firmware registers Interface
+ ------------------------------------------
+ 
 -- 
 2.21.0
