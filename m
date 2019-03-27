@@ -1,84 +1,29 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
-Date: Wed, 27 Mar 2019 10:51:22 +0200
-Message-ID: <CAEnQRZCb=rZMdBYyYCSCQ3Dba5Nk43BvV6whHx-vNPmox-OOSw@mail.gmail.com>
-References: <20190326094239.5910-1-daniel.baluta@nxp.com> <20190326094239.5910-3-daniel.baluta@nxp.com>
- <VI1PR04MB4222A8DBC2312E72AAD3AFAE805F0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+From: Andreas Schwab <schwab@suse.de>
+Subject: Re: [PATCH v11 0/2] PWM support for HiFive Unleashed
+Date: Wed, 27 Mar 2019 10:04:25 +0100
+Message-ID: <mvmpnqcsn6u.fsf@suse.de>
+References: <1553508779-9685-1-git-send-email-yash.shah@sifive.com>
+        <mvmbm1zueya.fsf@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB4222A8DBC2312E72AAD3AFAE805F0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+In-Reply-To: <mvmbm1zueya.fsf@suse.de> (Andreas Schwab's message of "Mon, 25
+        Mar 2019 16:54:53 +0100")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aisheng Dong <aisheng.dong@nxp.com>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Teo Hall <teo.hall@nxp.com>
+To: Yash Shah <yash.shah@sifive.com>
+Cc: palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, paul.walmsley@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 3:31 PM Aisheng Dong <aisheng.dong@nxp.com> wrote:
->
-> > From: Daniel Baluta
-> > Sent: Tuesday, March 26, 2019 5:43 PM
-> >
-> > i.MX8QXP contains a total of 4 EDMA controllers of which two are primarily
-> > for audio components and the other two are for non-audio periperhals.
-> >
-> > This patch adds the EDMA0/EDMA1 nodes used by audio peripherals.
-> >
-> > EDMA0 contains channels for:
-> >       * ASRC0
-> >       * ESAI0
-> >       * SPDIF0
-> >       * SAI0, SAI1, SAI2, SAI3
-> >
-> > EDMA1 contains channels for:
-> >       * ASRC1
-> >       * SAI4, SAI5
-> >
-> > See chapter Audio DMA Memory Maps (2.2.3) from i.MX8QXP RM [1]
-> >
-> > This patch is based on the dtsi file initially submitted by Teo Hall in i.MX NXP
-> > internal tree.
-> >
-> > [1] https://www.nxp.com/docs/en/reference-manual/IMX8DQXPRM.pdf
-> >
-> > Cc: Teo Hall <teo.hall@nxp.com>
-> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 72
-> > ++++++++++++++++++++++
-> >  1 file changed, 72 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > index 0cb939861a60..9e959deb2499 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > @@ -182,6 +182,78 @@
-> >                       #clock-cells = <1>;
-> >               };
-> >
-> > +             edma0: dma-controller@591f0000 {
-> > +                     compatible = "fsl,imx8qm-edma";
+I have now found out that the ledtrig modules don't load automatically.
+I would have expected that the linux,default-trigger entries would cause
+the load of the corresponding ledtrig modules.
 
-Thanks for the comment Aisheng!
+But there is another problem, that the leds are on by default.
+Shouldn't they be off by default?
 
->
-> Should this be "fsl,imx8qxp-edma"?
+Andreas.
 
-Yes, I think that's the more clear approach although in
-our internal tree the edma driver uses only the "fsl,imx8qm-edma
-compatible.
-
-I will go with your suggestion.
-
-
-> or
-> "fsl,imx8qxp-edma", "fsl,imx8qm-edma"?
-
-One thing that it is not clear for me is why there are places
-where we use two compatible strings?
-
-I understand the situation where are two distinct drivers, but is there
-any other reason to add multiple compatible strings for a node in dts?
-
-thanks,
-Daniel.
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
