@@ -1,51 +1,271 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
-Date: Wed, 27 Mar 2019 18:36:30 +0200
-Message-ID: <CAEnQRZB17cgunkoaQQPjVdfD0gHWZs=g7ABZPSrzdCy_u_91SA@mail.gmail.com>
-References: <20190326094239.5910-1-daniel.baluta@nxp.com> <20190326094239.5910-3-daniel.baluta@nxp.com>
- <VI1PR04MB4222A8DBC2312E72AAD3AFAE805F0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CAEnQRZCb=rZMdBYyYCSCQ3Dba5Nk43BvV6whHx-vNPmox-OOSw@mail.gmail.com> <1553679236.2561.27.camel@pengutronix.de>
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: Re: [PATCH v6 1/2] Bluetooth: hci_qca: Added support for WCN3998
+Date: Wed, 27 Mar 2019 22:16:40 +0530
+Message-ID: <70d687c0ce670ac6d6ad1e92890ca348@codeaurora.org>
+References: <1553689723-21017-1-git-send-email-c-hbandi@codeaurora.org>
+ <1553689723-21017-2-git-send-email-c-hbandi@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553679236.2561.27.camel@pengutronix.de>
+In-Reply-To: <1553689723-21017-2-git-send-email-c-hbandi@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peng Fan <peng.fan@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, Anson Huang <anson.huang@nxp.com>, Teo Hall <teo.hall@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Harish Bandi <c-hbandi@codeaurora.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, mka@chromium.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, anubhavg@codeaurora.org, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 11:33 AM Lucas Stach <l.stach@pengutronix.de> wrote:
->
-> Hi Daniel,
->
-> Am Mittwoch, den 27.03.2019, 10:51 +0200 schrieb Daniel Baluta:
-> [...]
-> >
-> > > or
-> > > "fsl,imx8qxp-edma", "fsl,imx8qm-edma"?
-> >
-> > One thing that it is not clear for me is why there are places
-> > where we use two compatible strings?
-> >
-> > I understand the situation where are two distinct drivers, but is there
-> > any other reason to add multiple compatible strings for a node in dts?
->
-> We use 2 compatible string where there should not be any differences
-> between the IP blocks of this SoC and a version the driver already
-> supports.
->
-> So if the eDMA driver already supports the software interface for
-> "fsl,imx8qm-edma" and the IP block is compatible with this, we add this
-> to the DT, so the we don't need any driver changes just to support a
-> new SoC. But as you can never be sure if there are subtle differences
-> in the IP block and/or SOC integration when adding the DT support, we
-> also add a more specific compatible to the DT. If it turns out that
-> there are software visible differences, we only need to adapt the
-> driver to check for the more specific compatible to trigger the changed
-> behavior, allowing to keep the DT stable.
+Hi Harish,
 
-Excellent explanation Lucas! For the moment upstream eDMA driver doesn't have
-support for any i.MX8 so I think using "fsl,imx8qxp-edma" should be acceptable.
+On 2019-03-27 17:58, Harish Bandi wrote:
+> Added new compatible for WCN3998 and corresponding voltage
+> and current values to WCN3998 compatible.
+> Changed driver code to support WCN3998
+> 
+> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
+> ---
+> Changes in V6:
+> - changed return value to false in the qca_is_wcn399x()stub
+> ---
+>  drivers/bluetooth/btqca.c   | 13 +++++++++++--
+>  drivers/bluetooth/btqca.h   |  8 +++++++-
+>  drivers/bluetooth/hci_qca.c | 40 
+> ++++++++++++++++++++++++++--------------
+>  3 files changed, 44 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+> index 6122685..383e99f 100644
+> --- a/drivers/bluetooth/btqca.c
+> +++ b/drivers/bluetooth/btqca.c
+> @@ -344,7 +344,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
+> baudrate,
+> 
+>  	/* Download rampatch file */
+>  	config.type = TLV_TYPE_PATCH;
+> -	if (soc_type == QCA_WCN3990) {
+> +	if (qca_is_wcn399x(soc_type)) {
+>  		/* Firmware files to download are based on ROM version.
+>  		 * ROM version is derived from last two bytes of soc_ver.
+>  		 */
+> @@ -365,7 +365,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
+> baudrate,
+> 
+>  	/* Download NVM configuration */
+>  	config.type = TLV_TYPE_NVM;
+> -	if (soc_type == QCA_WCN3990)
+> +	if (qca_is_wcn399x(soc_type))
+>  		snprintf(config.fwname, sizeof(config.fwname),
+>  			 "qca/crnv%02x.bin", rom_ver);
+>  	else
+> @@ -410,6 +410,15 @@ int qca_set_bdaddr(struct hci_dev *hdev, const
+> bdaddr_t *bdaddr)
+>  }
+>  EXPORT_SYMBOL_GPL(qca_set_bdaddr);
+> 
+> +bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
+> +{
+> +	if ((soc_type == QCA_WCN3990) || (soc_type == QCA_WCN3998))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +EXPORT_SYMBOL_GPL(qca_is_wcn399x);
+> +
+>  MODULE_AUTHOR("Ben Young Tae Kim <ytkim@qca.qualcomm.com>");
+>  MODULE_DESCRIPTION("Bluetooth support for Qualcomm Atheros family ver
+> " VERSION);
+>  MODULE_VERSION(VERSION);
+> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
+> index 6fdc25d..0f68c9e7 100644
+> --- a/drivers/bluetooth/btqca.h
+> +++ b/drivers/bluetooth/btqca.h
+> @@ -132,7 +132,8 @@ enum qca_btsoc_type {
+>  	QCA_INVALID = -1,
+>  	QCA_AR3002,
+>  	QCA_ROME,
+> -	QCA_WCN3990
+> +	QCA_WCN3990,
+> +	QCA_WCN3998,
+>  };
+> 
+>  #if IS_ENABLED(CONFIG_BT_QCA)
+> @@ -142,6 +143,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
+> baudrate,
+>  		   enum qca_btsoc_type soc_type, u32 soc_ver);
+>  int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version);
+>  int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr);
+> +bool qca_is_wcn399x(enum qca_btsoc_type soc_type);
+>  #else
+> 
+>  static inline int qca_set_bdaddr_rome(struct hci_dev *hdev, const
+> bdaddr_t *bdaddr)
+> @@ -165,4 +167,8 @@ static inline int qca_set_bdaddr(struct hci_dev
+> *hdev, const bdaddr_t *bdaddr)
+>  	return -EOPNOTSUPP;
+>  }
+> 
+> +static inline bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
+> +{
+> +	return false;
+> +}
+>  #endif
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 4ea995d..4af580a 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -521,7 +521,7 @@ static int qca_open(struct hci_uart *hu)
+>  	if (hu->serdev) {
+> 
+>  		qcadev = serdev_device_get_drvdata(hu->serdev);
+> -		if (qcadev->btsoc_type != QCA_WCN3990) {
+> +		if (!qca_is_wcn399x(qcadev->btsoc_type)) {
+>  			gpiod_set_value_cansleep(qcadev->bt_en, 1);
+>  		} else {
+>  			hu->init_speed = qcadev->init_speed;
+> @@ -627,7 +627,7 @@ static int qca_close(struct hci_uart *hu)
+> 
+>  	if (hu->serdev) {
+>  		qcadev = serdev_device_get_drvdata(hu->serdev);
+> -		if (qcadev->btsoc_type == QCA_WCN3990)
+> +		if (qca_is_wcn399x(qcadev->btsoc_type))
+>  			qca_power_shutdown(hu);
+>  		else
+>  			gpiod_set_value_cansleep(qcadev->bt_en, 0);
+> @@ -1008,7 +1008,7 @@ static int qca_set_baudrate(struct hci_dev
+> *hdev, uint8_t baudrate)
+>  		      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
+> 
+>  	/* Give the controller time to process the request */
+> -	if (qca_soc_type(hu) == QCA_WCN3990)
+> +	if (qca_is_wcn399x(qca_soc_type(hu)))
+>  		msleep(10);
+>  	else
+>  		msleep(300);
+> @@ -1084,7 +1084,7 @@ static unsigned int qca_get_speed(struct hci_uart 
+> *hu,
+> 
+>  static int qca_check_speeds(struct hci_uart *hu)
+>  {
+> -	if (qca_soc_type(hu) == QCA_WCN3990) {
+> +	if (qca_is_wcn399x(qca_soc_type(hu))) {
+>  		if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
+>  		    !qca_get_speed(hu, QCA_OPER_SPEED))
+>  			return -EINVAL;
+> @@ -1116,7 +1116,7 @@ static int qca_set_speed(struct hci_uart *hu,
+> enum qca_speed_type speed_type)
+>  		/* Disable flow control for wcn3990 to deassert RTS while
+>  		 * changing the baudrate of chip and host.
+>  		 */
+> -		if (soc_type == QCA_WCN3990)
+> +		if (qca_is_wcn399x(soc_type))
+>  			hci_uart_set_flow_control(hu, true);
+> 
+>  		qca_baudrate = qca_get_baudrate_value(speed);
+> @@ -1128,7 +1128,7 @@ static int qca_set_speed(struct hci_uart *hu,
+> enum qca_speed_type speed_type)
+>  		host_set_baudrate(hu, speed);
+> 
+>  error:
+> -		if (soc_type == QCA_WCN3990)
+> +		if (qca_is_wcn399x(soc_type))
+>  			hci_uart_set_flow_control(hu, false);
+>  	}
+> 
+> @@ -1201,7 +1201,7 @@ static int qca_setup(struct hci_uart *hu)
+>  	/* Patch downloading has to be done without IBS mode */
+>  	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+> 
+> -	if (soc_type == QCA_WCN3990) {
+> +	if (qca_is_wcn399x(soc_type)) {
+>  		bt_dev_info(hdev, "setting up wcn3990");
 
-Thanks,
-Daniel.
+[Bala]: nit: if you respin the serie.
+              let us make this "wcn3990" string in the info message as 
+wcn399x or with actual chip name.
+
+> 
+>  		/* Enable NON_PERSISTENT_SETUP QUIRK to ensure to execute
+> @@ -1232,7 +1232,7 @@ static int qca_setup(struct hci_uart *hu)
+>  		qca_baudrate = qca_get_baudrate_value(speed);
+>  	}
+> 
+> -	if (soc_type != QCA_WCN3990) {
+> +	if (!qca_is_wcn399x(soc_type)) {
+>  		/* Get QCA version information */
+>  		ret = qca_read_soc_version(hdev, &soc_ver);
+>  		if (ret)
+> @@ -1257,7 +1257,7 @@ static int qca_setup(struct hci_uart *hu)
+>  	}
+> 
+>  	/* Setup bdaddr */
+> -	if (soc_type == QCA_WCN3990)
+> +	if (qca_is_wcn399x(soc_type))
+>  		hu->hdev->set_bdaddr = qca_set_bdaddr;
+>  	else
+>  		hu->hdev->set_bdaddr = qca_set_bdaddr_rome;
+> @@ -1280,7 +1280,7 @@ static int qca_setup(struct hci_uart *hu)
+>  	.dequeue	= qca_dequeue,
+>  };
+> 
+> -static const struct qca_vreg_data qca_soc_data = {
+> +static const struct qca_vreg_data qca_soc_data_wcn3990 = {
+>  	.soc_type = QCA_WCN3990,
+>  	.vregs = (struct qca_vreg []) {
+>  		{ "vddio",   1800000, 1900000,  15000  },
+> @@ -1291,6 +1291,17 @@ static int qca_setup(struct hci_uart *hu)
+>  	.num_vregs = 4,
+>  };
+> 
+> +static const struct qca_vreg_data qca_soc_data_wcn3998 = {
+> +	.soc_type = QCA_WCN3998,
+> +	.vregs = (struct qca_vreg []) {
+> +		{ "vddio",   1800000, 1900000,  10000  },
+> +		{ "vddxo",   1800000, 1900000,  80000  },
+> +		{ "vddrf",   1300000, 1352000,  300000 },
+> +		{ "vddch0",  3300000, 3300000,  450000 },
+> +	},
+> +	.num_vregs = 4,
+> +};
+> +
+>  static void qca_power_shutdown(struct hci_uart *hu)
+>  {
+>  	struct qca_data *qca = hu->priv;
+> @@ -1424,8 +1435,8 @@ static int qca_serdev_probe(struct serdev_device 
+> *serdev)
+>  	qcadev->serdev_hu.serdev = serdev;
+>  	data = of_device_get_match_data(&serdev->dev);
+>  	serdev_device_set_drvdata(serdev, qcadev);
+> -	if (data && data->soc_type == QCA_WCN3990) {
+> -		qcadev->btsoc_type = QCA_WCN3990;
+> +	if (data && qca_is_wcn399x(data->soc_type)) {
+> +		qcadev->btsoc_type = data->soc_type;
+>  		qcadev->bt_power = devm_kzalloc(&serdev->dev,
+>  						sizeof(struct qca_power),
+>  						GFP_KERNEL);
+> @@ -1489,7 +1500,7 @@ static void qca_serdev_remove(struct
+> serdev_device *serdev)
+>  {
+>  	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
+> 
+> -	if (qcadev->btsoc_type == QCA_WCN3990)
+> +	if (qca_is_wcn399x(qcadev->btsoc_type))
+>  		qca_power_shutdown(&qcadev->serdev_hu);
+>  	else
+>  		clk_disable_unprepare(qcadev->susclk);
+> @@ -1499,7 +1510,8 @@ static void qca_serdev_remove(struct
+> serdev_device *serdev)
+> 
+>  static const struct of_device_id qca_bluetooth_of_match[] = {
+>  	{ .compatible = "qcom,qca6174-bt" },
+> -	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data},
+> +	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data_wcn3990},
+> +	{ .compatible = "qcom,wcn3998-bt", .data = &qca_soc_data_wcn3998},
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, qca_bluetooth_of_match);
+
+Reviewed-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+
+-- 
+Regards
+Balakrishna.
