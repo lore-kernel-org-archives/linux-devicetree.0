@@ -1,166 +1,74 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: [PATCH V1 03/26] spi: tegra114: fix for unpacked mode transfers
-Date: Tue, 26 Mar 2019 22:56:24 -0700
-Message-ID: <1553666207-11414-3-git-send-email-skomatineni@nvidia.com>
-References: <1553666207-11414-1-git-send-email-skomatineni@nvidia.com>
+From: <yongqiang.niu@mediatek.com>
+Subject: [PATCH v2 00/25] add drm support for MT8183
+Date: Wed, 27 Mar 2019 14:18:56 +0800
+Message-ID: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553666207-11414-1-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com, skomatineni@nvidia.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kyarlagadda@nvidia.com
-Cc: ldewangan@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+To: ck.hu@mediatek.com, p.zabel@pengutronix.de, robh+dt@kernel.org, matthias.bgg@gmail.com
+Cc: airlied@linux.ie, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Bibby.Hsieh@mediatek.com, yt.shen@mediatek.com, Yongqiang Niu <yongqiang.niu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Fixes: computation of actual bytes to fill/receive in/from FIFO in unpacked
-mode when transfer length is not a multiple of requested bits per word.
+From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-unpacked mode transfers fails when the transfer includes partial bytes in
-the last word.
+This series are based on 5.1-rc1 and provide 25 patches to
+support mediatek SOC MT8183
 
-Total words to be written/read to/from FIFO is computed based on transfer
-length and bits per word. Unpacked mode includes 0 padding bytes for partial
-words to align with bits per word and these extra bytes are also accounted
-for calculating bytes left to transfer in the current driver.
+Changes since v1:
+- fix reviewed issue in v1
+- add dts for mt8183 display nodes
+- adjust display clock control flow in patch 22
+- add vmap support for mediatek drm in patch 23
+- fix page offset issue for mmap function in patch 24
+- enable allow_fb_modifiers for mediatek drm in patch 25
 
-This causes extra bytes access of tx/rx buffers along with buffer index
-position crossing actual length where remain_len becomes negative and due to
-unsigned type, negative value is a 32 bit representation of signed value
-and transferred bytes never meets the actual transfer length resulting in
-transfer timeout and a hang.
+Yongqiang Niu (25):
+  arm64: dts: add display nodes for mt8183
+  dt-bindings: mediatek: add binding for mt8183 display
+  drm/mediatek: add mutex mod into ddp private data
+  drm/mediatek: add mutex sof into ddp private data
+  drm/mediatek: split DISP_REG_CONFIG_DSI_SEL setting into another use
+    case
+  drm/mediatek: redefine mtk_ddp_sout_sel
+  drm/mediatek: move rdma sout from mtk_ddp_mout_en into
+    mtk_ddp_sout_sel
+  drm/mediatek: add ddp component CCORR
+  drm/mediatek: add mmsys private data for ddp path config
+  drm/mediatek: add commponent OVL0_2L
+  drm/mediatek: add component OVL1_2L
+  drm/mediatek: add component DITHER
+  drm/mediatek: add gmc_bits for ovl private data
+  drm/medaitek: add layer_nr for ovl private data
+  drm/mediatek: add function to background color input select for
+    ovl/ovl_2l direct link
+  drm/mediatek: add ddp write register common api
+  drm/mediatek: add background color input select function for
+    ovl/ovl_2l
+  drm/mediatek: add RDMA fifo size error handle
+  drm/mediatek: add function mtk_ddp_comp_get_type
+  drm/mediatek: add ovl0/ovl0_2l usecase
+  drm/mediatek: add support for mediatek SOC MT8183
+  drm/mediatek: adjust ddp clock control flow
+  drm/mediatek: add vmap support for mediatek drm
+  drm/mediatek: respect page offset for PRIME mmap calls
+  drm/mediatek: enable allow_fb_modifiers for mediatek drm
 
-This patch fixes this with proper computation of the actual bytes to fill in
-FIFO during transmit and the actual bytes to read from FIFO during receive
-ignoring 0 padded bytes.
+ .../bindings/display/mediatek/mediatek,disp.txt    |  37 +-
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi           | 107 +++++
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c            |  81 +++-
+ drivers/gpu/drm/mediatek/mtk_disp_rdma.c           |  21 +-
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c            |  68 +++-
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c             | 444 ++++++++++++++++-----
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.h             |  11 +
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        |  87 ++++
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  28 ++
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  61 +++
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h             |   4 +
+ drivers/gpu/drm/mediatek/mtk_drm_gem.c             |  14 +-
+ drivers/gpu/drm/mediatek/mtk_drm_gem.h             |   1 +
+ drivers/gpu/drm/mediatek/mtk_drm_plane.c           |  15 +-
+ 14 files changed, 838 insertions(+), 141 deletions(-)
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/spi/spi-tegra114.c | 43 ++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 36 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index 82431115b7c0..fdba302eb3b6 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -307,10 +307,16 @@ static unsigned tegra_spi_fill_tx_fifo_from_client_txbuf(
- 				x |= (u32)(*tx_buf++) << (i * 8);
- 			tegra_spi_writel(tspi, x, SPI_TX_FIFO);
- 		}
-+
-+		tspi->cur_tx_pos += written_words * tspi->bytes_per_word;
- 	} else {
-+		unsigned int write_bytes;
- 		max_n_32bit = min(tspi->curr_dma_words,  tx_empty_count);
- 		written_words = max_n_32bit;
- 		nbytes = written_words * tspi->bytes_per_word;
-+		if (nbytes > t->len - tspi->cur_pos)
-+			nbytes = t->len - tspi->cur_pos;
-+		write_bytes = nbytes;
- 		for (count = 0; count < max_n_32bit; count++) {
- 			u32 x = 0;
- 
-@@ -319,8 +325,10 @@ static unsigned tegra_spi_fill_tx_fifo_from_client_txbuf(
- 				x |= (u32)(*tx_buf++) << (i * 8);
- 			tegra_spi_writel(tspi, x, SPI_TX_FIFO);
- 		}
-+
-+		tspi->cur_tx_pos += write_bytes;
- 	}
--	tspi->cur_tx_pos += written_words * tspi->bytes_per_word;
-+
- 	return written_words;
- }
- 
-@@ -344,20 +352,27 @@ static unsigned int tegra_spi_read_rx_fifo_to_client_rxbuf(
- 			for (i = 0; len && (i < 4); i++, len--)
- 				*rx_buf++ = (x >> i*8) & 0xFF;
- 		}
--		tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 		read_words += tspi->curr_dma_words;
-+		tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 	} else {
- 		u32 rx_mask = ((u32)1 << t->bits_per_word) - 1;
-+		u8 bytes_per_word = tspi->bytes_per_word;
-+		unsigned int read_bytes;
- 
-+		len = rx_full_count * bytes_per_word;
-+		if (len > t->len - tspi->cur_pos)
-+			len = t->len - tspi->cur_pos;
-+		read_bytes = len;
- 		for (count = 0; count < rx_full_count; count++) {
- 			u32 x = tegra_spi_readl(tspi, SPI_RX_FIFO) & rx_mask;
- 
--			for (i = 0; (i < tspi->bytes_per_word); i++)
-+			for (i = 0; len && (i < bytes_per_word); i++, len--)
- 				*rx_buf++ = (x >> (i*8)) & 0xFF;
- 		}
--		tspi->cur_rx_pos += rx_full_count * tspi->bytes_per_word;
- 		read_words += rx_full_count;
-+		tspi->cur_rx_pos += read_bytes;
- 	}
-+
- 	return read_words;
- }
- 
-@@ -372,12 +387,17 @@ static void tegra_spi_copy_client_txbuf_to_spi_txbuf(
- 		unsigned len = tspi->curr_dma_words * tspi->bytes_per_word;
- 
- 		memcpy(tspi->tx_dma_buf, t->tx_buf + tspi->cur_pos, len);
-+		tspi->cur_tx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 	} else {
- 		unsigned int i;
- 		unsigned int count;
- 		u8 *tx_buf = (u8 *)t->tx_buf + tspi->cur_tx_pos;
- 		unsigned consume = tspi->curr_dma_words * tspi->bytes_per_word;
-+		unsigned int write_bytes;
- 
-+		if (consume > t->len - tspi->cur_pos)
-+			consume = t->len - tspi->cur_pos;
-+		write_bytes = consume;
- 		for (count = 0; count < tspi->curr_dma_words; count++) {
- 			u32 x = 0;
- 
-@@ -386,8 +406,9 @@ static void tegra_spi_copy_client_txbuf_to_spi_txbuf(
- 				x |= (u32)(*tx_buf++) << (i * 8);
- 			tspi->tx_dma_buf[count] = x;
- 		}
-+
-+		tspi->cur_tx_pos += write_bytes;
- 	}
--	tspi->cur_tx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 
- 	/* Make the dma buffer to read by dma */
- 	dma_sync_single_for_device(tspi->dev, tspi->tx_dma_phys,
-@@ -405,20 +426,28 @@ static void tegra_spi_copy_spi_rxbuf_to_client_rxbuf(
- 		unsigned len = tspi->curr_dma_words * tspi->bytes_per_word;
- 
- 		memcpy(t->rx_buf + tspi->cur_rx_pos, tspi->rx_dma_buf, len);
-+		tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 	} else {
- 		unsigned int i;
- 		unsigned int count;
- 		unsigned char *rx_buf = t->rx_buf + tspi->cur_rx_pos;
- 		u32 rx_mask = ((u32)1 << t->bits_per_word) - 1;
-+		unsigned consume = tspi->curr_dma_words * tspi->bytes_per_word;
-+		unsigned int read_bytes;
- 
-+		if (consume > t->len - tspi->cur_pos)
-+			consume = t->len - tspi->cur_pos;
-+		read_bytes = consume;
- 		for (count = 0; count < tspi->curr_dma_words; count++) {
- 			u32 x = tspi->rx_dma_buf[count] & rx_mask;
- 
--			for (i = 0; (i < tspi->bytes_per_word); i++)
-+			for (i = 0; consume && (i < tspi->bytes_per_word);
-+							i++, consume--)
- 				*rx_buf++ = (x >> (i*8)) & 0xFF;
- 		}
-+
-+		tspi->cur_rx_pos += read_bytes;
- 	}
--	tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 
- 	/* Make the dma buffer to read by dma */
- 	dma_sync_single_for_device(tspi->dev, tspi->rx_dma_phys,
 -- 
-2.7.4
+1.8.1.1.dirty
