@@ -1,58 +1,139 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v3 2/2] rtc: Add ASPEED RTC driver
-Date: Wed, 27 Mar 2019 11:37:34 +0100
-Message-ID: <20190327103734.GB3682@piout.net>
-References: <20190327010215.10231-1-joel@jms.id.au>
- <20190327010215.10231-3-joel@jms.id.au>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH 05/10] dt-bindings: PCI: tegra: Add device tree support
+ for T194
+Date: Wed, 27 Mar 2019 16:23:19 +0530
+Message-ID: <43f1a198-fc1f-91ec-0fbb-6aff4d35eeb2@nvidia.com>
+References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
+ <1553613207-3988-6-git-send-email-vidyas@nvidia.com>
+ <b8a7db52-0bc6-2d9d-dd50-7b041f2bf56d@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190327010215.10231-3-joel@jms.id.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b8a7db52-0bc6-2d9d-dd50-7b041f2bf56d@nvidia.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, tiwai@suse.de, spujar@nvidia.com, skomatineni@nvidia.com, liviu.dudau@arm.com, krzk@kernel.org, heiko@sntech.de, horms+renesas@verge.net.au, olof@lixom.net, maxime.ripard@bootlin.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, jagan@amarulasolutions.com, enric.balletbo@collabora.com, ezequiel@collabora.com, stefan.wahren@i2se.com, marc.w.gonzalez@free.fr, l.stach@pengutronix.de, tpiepho@impinj.com, hayashi.kunihiko@socionext.
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-On 27/03/2019 11:32:15+1030, Joel Stanley wrote:
-> Read and writes the time to the non-battery backed RTC in the ASPEED BMC
-> system on chip families.
+On 3/27/2019 3:40 PM, Jon Hunter wrote:
 > 
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> ---
-> v3:
->  - Use %ptR
->  - Remove spinlock, as callback happen under the rtc_device.ops_lock
-> v2: Address review from Alexandre
->  - Use devm_rtc_allocate_device
->  - Fill in range_min
->  - Direcly fill in tm struct
->  - Return EINVAL when RTC is not enabled
+> On 26/03/2019 15:13, Vidya Sagar wrote:
+>> Add support for Tegra194 PCIe controllers. These controllers are based
+>> on Synopsys DesignWare core IP.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>>   .../bindings/pci/nvidia,tegra194-pcie.txt          | 209 +++++++++++++++++++++
+>>   .../devicetree/bindings/phy/phy-tegra194-p2u.txt   |  34 ++++
+>>   2 files changed, 243 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>>   create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>> new file mode 100644
+>> index 000000000000..31527283a0cd
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>> @@ -0,0 +1,209 @@
+>> +NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
+>> +
+>> +This PCIe host controller is based on the Synopsis Designware PCIe IP
+>> +and thus inherits all the common properties defined in designware-pcie.txt.
+>> +
+>> +Required properties:
+>> +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
+>> +- device_type: Must be "pci"
+>> +- reg: A list of physical base address and length for each set of controller
+>> +  registers. Must contain an entry for each entry in the reg-names property.
+>> +- reg-names: Must include the following entries:
+>> +  "appl": Controller's application logic registers
+>> +  "window1": This is the aperture of controller available under 4GB boundary
+>> +             (i.e. within 32-bit space). This aperture is typically used for
+>> +             accessing config space of root port itself and also the connected
+>> +             endpoints (by appropriately programming internal Address
+>> +             Translation Unit's (iATU) out bound region) and also to map
+>> +             prefetchable/non-prefetchable BARs.
+>> +  "config": As per the definition in designware-pcie.txt
+>> +  "atu_dma": iATU and DMA register. This is where the iATU (internal Address
+>> +             Translation Unit) registers of the PCIe core are made available
+>> +             fow SW access.
+>> +  "dbi": The aperture where root port's own configuration registers are
+>> +         available
+>> +  "window2": This is the larger (compared to window1) aperture available above
+>> +             4GB boundary (i.e. in 64-bit space). This is typically used for
+>> +             mapping prefetchable/non-prefetchable BARs of endpoints
+>> +- interrupts: A list of interrupt outputs of the controller. Must contain an
+>> +  entry for each entry in the interrupt-names property.
+>> +- interrupt-names: Must include the following entries:
+>> +  "intr": The Tegra interrupt that is asserted for controller interrupts
+>> +  "msi": The Tegra interrupt that is asserted when an MSI is received
+>> +- bus-range: Range of bus numbers associated with this controller
+>> +- #address-cells: Address representation for root ports (must be 3)
+>> +  - cell 0 specifies the bus and device numbers of the root port:
+>> +    [23:16]: bus number
+>> +    [15:11]: device number
+>> +  - cell 1 denotes the upper 32 address bits and should be 0
+>> +  - cell 2 contains the lower 32 address bits and is used to translate to the
+>> +    CPU address space
+>> +- #size-cells: Size representation for root ports (must be 2)
+>> +- ranges: Describes the translation of addresses for root ports and standard
+>> +  PCI regions. The entries must be 7 cells each, where the first three cells
+>> +  correspond to the address as described for the #address-cells property
+>> +  above, the fourth and fifth cells are for the physical CPU address to
+>> +  translate to and the sixth and seventh cells are as described for the
+>> +  #size-cells property above.
+>> +  - Entries setup the mapping for the standard I/O, memory and
+>> +    prefetchable PCI regions. The first cell determines the type of region
+>> +    that is setup:
+>> +    - 0x81000000: I/O memory region
+>> +    - 0x82000000: non-prefetchable memory region
+>> +    - 0xc2000000: prefetchable memory region
+>> +  Please refer to the standard PCI bus binding document for a more detailed
+>> +  explanation.
+>> +- #interrupt-cells: Size representation for interrupts (must be 1)
+>> +- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
+>> +  Please refer to the standard PCI bus binding document for a more detailed
+>> +  explanation.
+>> +- clocks: Must contain an entry for each entry in clock-names.
+>> +  See ../clocks/clock-bindings.txt for details.
+>> +- clock-names: Must include the following entries:
+>> +  - core_clk
+>> +- resets: Must contain an entry for each entry in reset-names.
+>> +  See ../reset/reset.txt for details.
+>> +- reset-names: Must include the following entries:
+>> +  - core_apb_rst
+>> +  - core_rst
+>> +- phys: Must contain a phandle to P2U PHY for each entry in phy-names.
+>> +- phy-names: Must include an entry for each active lane.
+>> +  "pcie-p2u-N": where N ranges from 0 to one less than the total number of lanes
+>> +- Controller dependent register offsets
+>> +  - nvidia,event-cntr-ctrl: EVENT_COUNTER_CONTROL reg offset
+>> +      0x168 - FPGA
+>> +      0x1a8 - C1, C2 and C3
+>> +      0x1c4 - C4
+>> +      0x1d8 - C0 and C5
+>> +  - nvidia,event-cntr-data: EVENT_COUNTER_DATA reg offset
+>> +      0x16c - FPGA
+>> +      0x1ac - C1, C2 and C3
+>> +      0x1c8 - C4
+>> +      0x1dc - C0 and C5
+>> +- nvidia,controller-id : Controller specific ID
+>> +      0x0 - C0
+>> +      0x1 - C1
+>> +      0x2 - C2
+>> +      0x3 - C3
+>> +      0x4 - C4
+>> +      0x5 - C5
+>> +- vddio-pex-ctl-supply: Regulator supply for PCIe side band signals
 > 
-> v1: https://lore.kernel.org/linux-arm-kernel/20181003133155.27494-2-joel@jms.id.au/
-> 
-> Update kconfig text
-> 
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> ---
->  drivers/rtc/Kconfig      |  11 ++++
->  drivers/rtc/Makefile     |   1 +
->  drivers/rtc/rtc-aspeed.c | 138 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 150 insertions(+)
->  create mode 100644 drivers/rtc/rtc-aspeed.c
-> 
-Applied, thanks.
+> I don't see any power-domains listed here. We should have these for T194
+> right?
+Thanks for catching this.
+Yes. PCIe uses power-domains and I'll add that in the future patch.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> 
+> Cheers
+> Jon
+> 
