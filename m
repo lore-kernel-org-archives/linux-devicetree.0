@@ -1,12 +1,13 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH 5/7] gnss: Add u-blox,neo-6m compatible
-Date: Wed, 27 Mar 2019 01:18:41 +0100
-Message-ID: <20190327001843.2420-6-megous@megous.com>
+Subject: [PATCH 7/7] ARM: dts: sun8i: tbs-a711: Enable UART2
+ (for NEO-6M GPS module)
+Date: Wed, 27 Mar 2019 01:18:43 +0100
+Message-ID: <20190327001843.2420-8-megous@megous.com>
 References: <20190327001843.2420-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBB4EC5PSAKGQEYTDACBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBB4MC5PSAKGQEK74MLBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <20190327001843.2420-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,24 +21,52 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-Add compatible for u-blox NEO-6M GPS module.
+TBS A711 tablet contains u-blox NEO-6M module connected to UART2.
+Enable UART2 to gain access to the module from userspace.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- drivers/gnss/ubx.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/gnss/ubx.c b/drivers/gnss/ubx.c
-index 12568aebb7f6..1ada2fad1d4e 100644
---- a/drivers/gnss/ubx.c
-+++ b/drivers/gnss/ubx.c
-@@ -132,6 +132,7 @@ static void ubx_remove(struct serdev_device *serdev)
- static const struct of_device_id ubx_of_match[] = {
- 	{ .compatible = "u-blox,neo-8" },
- 	{ .compatible = "u-blox,neo-m8" },
-+	{ .compatible = "u-blox,neo-6m" },
- 	{},
+diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+index 347fc0c31fa4..f9e7f5d3eff5 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+@@ -98,6 +98,13 @@
+ 		};
+ 	};
+ 
++	reg_gps: reg-gps {
++		compatible = "regulator-fixed";
++		regulator-name = "gps";
++		regulator-min-microvolt = <3000000>;
++		regulator-max-microvolt = <3000000>;
++	};
++
+ 	reg_vbat: reg-vbat {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vbat";
+@@ -437,6 +444,20 @@
+ 	};
  };
- MODULE_DEVICE_TABLE(of, ubx_of_match);
+ 
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart2_pb_pins>;
++	status = "okay";
++
++	gnss {
++		compatible = "u-blox,neo-6m";
++
++		v-bckp-supply = <&reg_rtc_ldo>;
++		vcc-supply = <&reg_gps>;
++		current-speed = <9600>;
++	};
++};
++
+ &usb_otg {
+ 	dr_mode = "otg";
+ 	status = "okay";
 -- 
 2.21.0
