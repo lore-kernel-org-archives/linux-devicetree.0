@@ -1,57 +1,79 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v5 2/8] i2c: iproc: Add slave mode support
-Date: Wed, 27 Mar 2019 23:41:52 +0100
-Message-ID: <20190327224152.GA19245@kunai>
-References: <20190214175725.60462-1-ray.jui@broadcom.com>
- <20190214175725.60462-3-ray.jui@broadcom.com>
- <20190327221452.GA15396@kunai>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/8] dt-bindings: stm32: add bindings for ML-AHB
+ interconnect
+Date: Wed, 27 Mar 2019 18:07:22 -0500
+Message-ID: <20190327230722.GA13708@bogus>
+References: <1551795849-13672-1-git-send-email-fabien.dessenne@st.com>
+ <1551795849-13672-2-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190327221452.GA15396@kunai>
+In-Reply-To: <1551795849-13672-2-git-send-email-fabien.dessenne@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, Shreesha Rajashekar <shreesha.rajashekar@broadcom.com>, Michael Cheng <ccheng@broadcom.com>
+To: Fabien Dessenne <fabien.dessenne@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Ludovic Barre <ludovic.barre@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Mar 05, 2019 at 03:24:02PM +0100, Fabien Dessenne wrote:
+> Document the ML-AHB interconnect for stm32 SoCs.
+> 
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> ---
+>  .../devicetree/bindings/arm/stm32/mlahb.txt        | 30 ++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/stm32/mlahb.txt b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+> new file mode 100644
+> index 0000000..880cb38
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+> @@ -0,0 +1,30 @@
+> +ML-AHB interconnect bindings
+> +
+> +These bindings describe the STM32 SoCs ML-AHB interconnect bus which connects
+> +a Cortex-M subsystem with dedicated memories.
+> +
+> +Required properties:
+> +- compatible: should be "simple-bus"
 
---4Ckj6UjgE2iN1+kY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+A binding for simple-bus was the first thing that looked odd.
+
+> +- ranges: describes memory addresses translation between the local CPU and the
+> +	   remote Cortex-M processor. Each memory region, is declared with 3
+> +	   parameters:
+> +		 - param 1: device base address (Cortex-M processor address)
+> +		 - param 2: physical base address (local CPU address)
+> +		 - param 3: size of the memory region.
+
+Given that the driver is parsing ranges itself, this looks like abuse of 
+ranges.
+
+What exactly is address 0 supposed to be here? If it is the M4's view of 
+memory, then dma-ranges is what you want to use here.
 
 
-> > +	/* flush TX/RX FIFOs */
-> > +	val =3D (BIT(S_FIFO_RX_FLUSH_SHIFT) | BIT(S_FIFO_TX_FLUSH_SHIFT));
-> > +	writel(val, iproc_i2c->base + S_FIFO_CTRL_OFFSET);
->=20
-> Will flushing FIFOs work when a slave is register while a master
-> transfer is on-going at the same time?
+> +
+> +The Cortex-M remote processor accessed via the mlahb interconnect is described
+> +by a child node.
+> +
+> +Example:
+> +mlahb: mlahb@0 {
 
-Sorry, my bad, this can't happen. Registering a slave is protected by
-the adapter lock.
+Note that the unit-address is wrong here as it should be 38000000.
 
-
---4Ckj6UjgE2iN1+kY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyb/DAACgkQFA3kzBSg
-KbZN8Q//eSDQHv6MeKmwMRekegPzcadxm/hDQDIQUXHCjJ9CvIxQVtlU7qLmmMdv
-zeN78fBCGvLGuKXg+zWWEl/E/7Grp4V9SsAw03/fd3P0t8YfyHEy6qPCkTj12vyW
-di04vwF1BMPRTK2aBYukG+PsyadGkGpusS9foTFGue/53lcksx7g6IgG3jknwSEJ
-RHmbHwMBI3WllQWQp3gcpOudmglHZuqmXbOTkf2BrrMPZ2DqO/GZa0Nv7nlyE7St
-vag7Nbho9kisogNiVUEPC9TT0xYCTGVYBGVeXep5o85zcKacNCow5SAOUoFeIZuP
-3XFGjkxnIIyXlBRR0PIL6KFxRXyN7y2HYfU4qeA8Xet8oHcdfqcRXsSJUGcREo4M
-6VBtZjslLywN92cub+rZkJQ5Kd+5dauPDjYFRyZfUnB5R6kbOK1BOb3B8HjEESEl
-oOSUxAudMSmCSqeqKNP0qTOX8vFXMG9MU71QBpet37OUeHVpjgrw0VNb1BenA61x
-dphA5IB/H8Fi1GIEI5mjl61BgnICJZjPYdqS8hXeB2aQsYr/fhUax7R47FXmESfQ
-kd6N2BW7wZ69HotE7YP3jMc9gJMtjq5oN0/OcLEZVQPR0/hLR3VALb61F7w6Errw
-6kCRUU75IpN2bJKzAej3cf2vAVD1t4hx70F0xuiDQjPzwoHJ/b8=
-=k9RI
------END PGP SIGNATURE-----
-
---4Ckj6UjgE2iN1+kY--
+> +	compatible = "simple-bus";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges = <0x00000000 0x38000000 0x10000>,
+> +		 <0x10000000 0x10000000 0x60000>,
+> +		 <0x30000000 0x30000000 0x60000>;
+> +
+> +	m4_rproc: m4@0 {
+> +		...
+> +	};
+> +};
+> -- 
+> 2.7.4
+> 
