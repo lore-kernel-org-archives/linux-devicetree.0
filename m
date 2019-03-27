@@ -1,138 +1,55 @@
-Return-Path: <SRS0=QSCE=RW=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 2/2] ARM: dts: iwg23s-sbc: Add HDMI support
-Date: Tue, 19 Mar 2019 12:21:39 +0000
-Message-Id: <1552998099-22972-3-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1552998099-22972-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1552998099-22972-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <SRS0=pm85=R6=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from kirsty.vergenet.net ([202.4.237.240]:56273 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbfC0MIF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Mar 2019 08:08:05 -0400
+Date: Wed, 27 Mar 2019 13:08:01 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/2] ARM: dts: rskrza1: Add I2C support
+Message-ID: <20190327120801.2klhf4wzob57kuik@verge.net.au>
+References: <20190320194410.14870-1-geert+renesas@glider.be>
+ <20190320194410.14870-2-geert+renesas@glider.be>
+ <20190322102324.yxnrwnkyhxrzqdg4@verge.net.au>
+ <CAMuHMdWngVfAUZoF7nsZUbZdZYj1zoCNPQoS_eoVh46UzM7OUA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWngVfAUZoF7nsZUbZdZYj1zoCNPQoS_eoVh46UzM7OUA@mail.gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds HDMI video output support to the iwg23s board
-from iWave. Due to a problem with the bootloader not dealing
-with the configuration of one of the pins correctly, we have
-to use a gpio-hog for the interrupt line to make sure the pin
-is configured as GPIO-input when requesting the interrupt.
+On Mon, Mar 25, 2019 at 11:55:50AM +0100, Geert Uytterhoeven wrote:
+> Hi Simon,
+> 
+> On Fri, Mar 22, 2019 at 11:23 AM Simon Horman <horms@verge.net.au> wrote:
+> > On Wed, Mar 20, 2019 at 08:44:09PM +0100, Geert Uytterhoeven wrote:
+> > > Enable the I2C bus, and add the following devices:
+> > >   - Two CAT9554 port expanders (8 GPIOs, interrupt not wired by
+> > >     default),
+> > >   - R1EX24016ASAS0A EEPROM.
+> > >
+> > > The bus also contains a MAX9856 Audio Codec, which is not yet supported.
+> > >
+> > > All devices (incl. the audio codec) are documented to support an I2C bus
+> > > running at 400 kHz.
+> > >
+> > > Pinctrl is based on the RZ/A BSP.
+> > >
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > ---
+> > > Pending acceptance of the DT binding patches documenting the
+> > > "onnn,cat9554" and "renesas,r1ex24016" compatible values.
+> >
+> > Thanks.
+> >
+> > I'm marking this series as deferred pending acceptance of the bindings.
+> > Please repost or ping me once that has happened.
+> 
+> next-20190325 has:
+> 
+>     d333bad1f6f3e0df dt-bindings: at24: add Renesas R1EX24016
+>     5c9f8cfe3cb67dcb dt-bindings: gpio: pca953x: Document onnn,cat9554
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts | 79 +++++++++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-index 77d1824..9f9eb15 100644
---- a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-+++ b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-@@ -22,6 +22,17 @@
- 		stdout-path = "serial1:115200n8";
- 	};
- 
-+	hdmi-out {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con: endpoint {
-+				remote-endpoint = <&bridge_out>;
-+			};
-+		};
-+	};
-+
- 	memory@40000000 {
- 		device_type = "memory";
- 		reg = <0 0x40000000 0 0x20000000>;
-@@ -80,10 +91,34 @@
- 	status = "okay";
- };
- 
-+&du {
-+	pinctrl-0 = <&du0_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	ports {
-+		port@0 {
-+			endpoint {
-+				remote-endpoint = <&bridge_in>;
-+			};
-+		};
-+	};
-+};
-+
- &extal_clk {
- 	clock-frequency = <20000000>;
- };
- 
-+&gpio2 {
-+	interrupt-fixup {
-+		gpio-hog;
-+		gpios = <29 GPIO_ACTIVE_HIGH>;
-+		line-name = "hdmi-hpd-int";
-+		input;
-+	};
-+};
-+
- &i2c3 {
- 	pinctrl-0 = <&i2c3_pins>;
- 	pinctrl-names = "default";
-@@ -97,12 +132,56 @@
- 	};
- };
- 
-+&i2c4 {
-+	pinctrl-0 = <&i2c4_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+	clock-frequency = <100000>;
-+
-+	hdmi@39 {
-+		compatible = "sil,sii9022";
-+		reg = <0x39>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				bridge_in: endpoint {
-+					remote-endpoint = <&du_out_rgb0>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				bridge_out: endpoint {
-+					remote-endpoint = <&hdmi_con>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &pfc {
- 	avb_pins: avb {
- 		groups = "avb_mdio", "avb_gmii_tx_rx";
- 		function = "avb";
- 	};
- 
-+	du0_pins: du0 {
-+		groups = "du0_rgb888", "du0_sync", "du0_disp", "du0_clk0_out";
-+		function = "du0";
-+	};
-+
-+	i2c4_pins: i2c4 {
-+		groups = "i2c4_e";
-+		function = "i2c4";
-+	};
-+
- 	i2c3_pins: i2c3 {
- 		groups = "i2c3_c";
- 		function = "i2c3";
--- 
-2.7.4
+Thanks, applied for v5.2.
