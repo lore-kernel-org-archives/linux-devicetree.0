@@ -1,332 +1,80 @@
-From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH v2 3/3] ARM: dts: imx50: Add Kobo Aura DTS
-Date: Sun, 31 Mar 2019 21:16:02 +0200
-Message-ID: <20190331191602.3921-4-j.neuschaefer@gmx.net>
-References: <20190331191602.3921-1-j.neuschaefer@gmx.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190331191602.3921-1-j.neuschaefer@gmx.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, =?UTF-8?q?Vok=C3=A1=C4=8D=20Michal?= <Michal.Vokac@ysoft.com>, Thierry Reding <treding@nvidia.com>, Kevin Hilman <khilman@baylibre.com>, Heiko Stuebner <heiko@sntech.de>, Jagan Teki <jagan@amarulasolutions.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.orglinux-
-List-Id: devicetree@vger.kernel.org
+Return-Path: <SRS0=Zx4x=R6=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH 3/4] dt-bindings: input: ads7846: replace vendor-bindings by general ones
+Date: Wed, 27 Mar 2019 14:39:26 +0100
+Message-Id: <20190327133927.1340-4-m.felsch@pengutronix.de>
+In-Reply-To: <20190327133927.1340-1-m.felsch@pengutronix.de>
+References: <20190327133927.1340-1-m.felsch@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: dmitry.torokhov@gmail.com, robh+dt@kernel.org
+Cc: kernel@pengutronix.de, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+List-ID: <devicetree@vger.kernel.org>
 
-The Kobo Aura is an e-book reader released in 2013.
+Mark the vendor-bindings as deprecated and replace them by the general
+ones. All deprecated bindings are used as default and gets overwritten by
+the general ones if the user supplies both. This ensures the backward
+compatibility with old dt's.
 
-With the devicetree in its current state, the kernel will boot and run
-for about ten seconds. To solve this, the embedded controller needs to
-be told that the system should stay powered on. This will be done in a
-later patchset.
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ .../bindings/input/touchscreen/ads7846.txt    | 29 ++++++++++++++-----
+ 1 file changed, 21 insertions(+), 8 deletions(-)
 
-- The IOMUXC mode bits for the SD interfaces were taken from the
-  vendor's U-Boot fork.
-- The bus width of the eMMC is 4 bits in the vendor kernel, but I
-  achieved better performance with 8 bits.
-- The SDIO clock frequency for the WiFi chip is 25MHz in the vendor
-  kernel, but the WiFi chip (BCM43362) supports 50MHz, which works
-  reliably on this board and gives slightly better performance.
-- The I2C pins' IOMUXC settings come from the vendor's U-Boot fork.
-
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
-
-v2:
-- Squash patch 4 ("ARM: dts: imx50-kobo-aura: Enable USB support")
-- Sort pinctrl nodes alphabetically, as suggested by Shawn Guo
-- Sort labeled nodes alphabetically, as suggested by Shawn Guo
-- Make "status" the last property, as suggested by Shawn Guo
-- Use KEY_RESERVED and EV_SW, as suggested by Shawn Guo
-- Remove newlines between properties, as suggested by Shawn Guo
-
-v1:
-https://lore.kernel.org/lkml/20190319152421.16179-3-j.neuschaefer@gmx.net/
-=2D--
- arch/arm/boot/dts/Makefile            |   3 +-
- arch/arm/boot/dts/imx50-kobo-aura.dts | 258 ++++++++++++++++++++++++++
- 2 files changed, 260 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/imx50-kobo-aura.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index f4f5aeaf3298..0c85156c552b 100644
-=2D-- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -363,7 +363,8 @@ dtb-$(CONFIG_SOC_IMX35) +=3D \
- 	imx35-eukrea-mbimxsd35-baseboard.dtb \
- 	imx35-pdk.dtb
- dtb-$(CONFIG_SOC_IMX50) +=3D \
--	imx50-evk.dtb
-+	imx50-evk.dtb \
-+	imx50-kobo-aura.dtb
- dtb-$(CONFIG_SOC_IMX51) +=3D \
- 	imx51-apf51.dtb \
- 	imx51-apf51dev.dtb \
-diff --git a/arch/arm/boot/dts/imx50-kobo-aura.dts b/arch/arm/boot/dts/imx=
-50-kobo-aura.dts
-new file mode 100644
-index 000000000000..a0eaf869b913
-=2D-- /dev/null
-+++ b/arch/arm/boot/dts/imx50-kobo-aura.dts
-@@ -0,0 +1,258 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright 2019 Jonathan Neusch=C3=A4fer
-+//
-+// The Kobo Aura e-book reader, model N514. The mainboard is marked as E6=
-06F0B.
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt b/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt
+index ce540ddac902..81f6bda97d3c 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt
+@@ -32,7 +32,6 @@ Optional properties:
+ 					(ADS7846).
+ 	ti,keep-vref-on			set to keep vref on for differential
+ 					measurements as well
+-	ti,swap-xy			swap x and y axis
+ 	ti,settle-delay-usec		Settling time of the analog signals;
+ 					a function of Vcc and the capacitance
+ 					on the X/Y drivers.  If set to non-zero,
+@@ -51,13 +50,6 @@ Optional properties:
+ 					in Ohms (u16).
+ 	ti,x-min			Minimum value on the X axis (u16).
+ 	ti,y-min			Minimum value on the Y axis (u16).
+-	ti,x-max			Maximum value on the X axis (u16).
+-	ti,y-max			Maximum value on the Y axis (u16).
+-	ti,pressure-min			Minimum reported pressure value
+-					(threshold) - u16.
+-	ti,pressure-max			Maximum reported pressure value (u16).
+-	ti,debounce-max			Max number of additional readings per
+-					sample (u16).
+ 	ti,debounce-tol			Tolerance used for filtering (u16).
+ 	ti,debounce-rep			Additional consecutive good readings
+ 					required after the first two (u16).
+@@ -67,7 +59,28 @@ Optional properties:
+ 					line is connected to.
+ 	wakeup-source			use any event on touchscreen as wakeup event.
+ 					(Legacy property support: "linux,wakeup")
++	touchscreen-size-x		General touchscreen binding, see [1].
++	touchscreen-size-y		General touchscreen binding, see [1].
++	touchscreen-max-pressure	General touchscreen binding, see [1].
++	touchscreen-min-pressure	General touchscreen binding, see [1].
++	touchscreen-average-samples	General touchscreen binding, see [1].
++	touchscreen-inverted-x		General touchscreen binding, see [1].
++	touchscreen-inverted-y		General touchscreen binding, see [1].
++	touchscreen-swapped-x-y		General touchscreen binding, see [1].
 +
-+/dts-v1/;
-+#include "imx50.dtsi"
-+#include <dt-bindings/input/input.h>
++[1] All general touchscreen properties are described in
++    Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt.
+ 
++Deprecated properties:
 +
-+/ {
-+	model =3D "Kobo Aura (N514)";
-+	compatible =3D "kobo,aura", "fsl,imx50";
-+
-+	chosen {
-+		stdout-path =3D "serial1:115200n8";
-+	};
-+
-+	memory@70000000 {
-+		device_type =3D "memory";
-+		reg =3D <0x70000000 0x10000000>;
-+	};
-+
-+	gpio-leds {
-+		compatible =3D "gpio-leds";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_leds>;
-+
-+		on {
-+			label =3D "kobo_aura:orange:on";
-+			gpios =3D <&gpio6 24 GPIO_ACTIVE_LOW>;
-+			panic-indicator;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible =3D "gpio-keys";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_gpiokeys>;
-+
-+		power {
-+			label =3D "Power Button";
-+			gpios =3D <&gpio4 10 GPIO_ACTIVE_LOW>;
-+			linux,code =3D <KEY_POWER>;
-+		};
-+
-+		hallsensor {
-+			label =3D "Hallsensor";
-+			gpios =3D <&gpio5 15 GPIO_ACTIVE_LOW>;
-+			linux,code =3D <KEY_RESERVED>;
-+			linux,input-type =3D <EV_SW>;
-+		};
-+
-+		frontlight {
-+			label =3D "Frontlight";
-+			gpios =3D <&gpio4 1 GPIO_ACTIVE_LOW>;
-+			linux,code =3D <KEY_DISPLAYTOGGLE>;
-+		};
-+	};
-+
-+	sd2_pwrseq: pwrseq {
-+		compatible =3D "mmc-pwrseq-simple";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_sd2_reset>;
-+		reset-gpios =3D <&gpio4 17 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	sd2_vmmc: gpio-regulator {
-+		compatible =3D "regulator-gpio";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_sd2_vmmc>;
-+		regulator-name =3D "vmmc";
-+		states =3D <3300000 0>;
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+		enable-gpio =3D <&gpio4 12 GPIO_ACTIVE_LOW>;
-+		startup-delay-us =3D <100000>;
-+	};
-+};
-+
-+&esdhc1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_sd1>;
-+	max-frequency =3D <50000000>;
-+	bus-width =3D <4>;
-+	cd-gpios =3D <&gpio5 17 GPIO_ACTIVE_LOW>;
-+	disable-wp;
-+	status =3D "okay";
-+
-+	/* External =C2=B5SD card */
-+};
-+
-+&esdhc2 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_sd2>;
-+	bus-width =3D <4>;
-+	max-frequency =3D <50000000>;
-+	disable-wp;
-+	mmc-pwrseq =3D <&sd2_pwrseq>;
-+	vmmc-supply =3D <&sd2_vmmc>;
-+	status =3D "okay";
-+
-+	/* CyberTan WC121 SDIO WiFi (BCM43362) */
-+};
-+
-+&esdhc3 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_sd3>;
-+	bus-width =3D <8>;
-+	non-removable;
-+	max-frequency =3D <50000000>;
-+	disable-wp;
-+	status =3D "okay";
-+
-+	/* Internal eMMC */
-+};
-+
-+&i2c1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_i2c1>;
-+	status =3D "okay";
-+
-+	/* TODO: ektf2132 touch controller at 0x15 */
-+};
-+
-+&i2c2 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_i2c2>;
-+	status =3D "okay";
-+
-+	/* TODO: TPS65185 PMIC for E Ink at 0x68 */
-+};
-+
-+&i2c3 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_i2c3>;
-+	status =3D "okay";
-+
-+	/* TODO: embedded controller at 0x43 */
-+};
-+
-+&iomuxc {
-+	pinctrl_gpiokeys: gpiokeys {
-+		fsl,pins =3D <
-+			MX50_PAD_CSPI_MISO__GPIO4_10		0x0
-+			MX50_PAD_SD2_D7__GPIO5_15		0x0
-+			MX50_PAD_KEY_ROW0__GPIO4_1		0x0
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1 {
-+		fsl,pins =3D <
-+			MX50_PAD_I2C1_SCL__I2C1_SCL		0x400001fd
-+			MX50_PAD_I2C1_SDA__I2C1_SDA		0x400001fd
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2 {
-+		fsl,pins =3D <
-+			MX50_PAD_I2C2_SCL__I2C2_SCL		0x400001fd
-+			MX50_PAD_I2C2_SDA__I2C2_SDA		0x400001fd
-+		>;
-+	};
-+
-+	pinctrl_i2c3: i2c3 {
-+		fsl,pins =3D <
-+			MX50_PAD_I2C3_SCL__I2C3_SCL		0x400001fd
-+			MX50_PAD_I2C3_SDA__I2C3_SDA		0x400001fd
-+		>;
-+	};
-+
-+	pinctrl_leds: leds {
-+		fsl,pins =3D <
-+			MX50_PAD_PWM1__GPIO6_24			0x0
-+		>;
-+	};
-+
-+	pinctrl_sd1: sd1 {
-+		fsl,pins =3D <
-+			MX50_PAD_SD1_CMD__ESDHC1_CMD		0x1e4
-+			MX50_PAD_SD1_CLK__ESDHC1_CLK		0xd4
-+			MX50_PAD_SD1_D0__ESDHC1_DAT0		0x1d4
-+			MX50_PAD_SD1_D1__ESDHC1_DAT1		0x1d4
-+			MX50_PAD_SD1_D2__ESDHC1_DAT2		0x1d4
-+			MX50_PAD_SD1_D3__ESDHC1_DAT3		0x1d4
-+
-+			MX50_PAD_SD2_CD__GPIO5_17		0x0
-+		>;
-+	};
-+
-+	pinctrl_sd2: sd2 {
-+		fsl,pins =3D <
-+			MX50_PAD_SD2_CMD__ESDHC2_CMD		0x1e4
-+			MX50_PAD_SD2_CLK__ESDHC2_CLK		0xd4
-+			MX50_PAD_SD2_D0__ESDHC2_DAT0		0x1d4
-+			MX50_PAD_SD2_D1__ESDHC2_DAT1		0x1d4
-+			MX50_PAD_SD2_D2__ESDHC2_DAT2		0x1d4
-+			MX50_PAD_SD2_D3__ESDHC2_DAT3		0x1d4
-+		>;
-+	};
-+
-+	pinctrl_sd2_reset: sd2-reset {
-+		fsl,pins =3D <
-+			MX50_PAD_ECSPI2_MOSI__GPIO4_17		0x0
-+		>;
-+	};
-+
-+	pinctrl_sd2_vmmc: sd2-vmmc {
-+		fsl,pins =3D <
-+			MX50_PAD_ECSPI1_SCLK__GPIO4_12		0x0
-+		>;
-+	};
-+
-+	pinctrl_sd3: sd3 {
-+		fsl,pins =3D <
-+			MX50_PAD_SD3_CMD__ESDHC3_CMD		0x1e4
-+			MX50_PAD_SD3_CLK__ESDHC3_CLK		0xd4
-+			MX50_PAD_SD3_D0__ESDHC3_DAT0		0x1d4
-+			MX50_PAD_SD3_D1__ESDHC3_DAT1		0x1d4
-+			MX50_PAD_SD3_D2__ESDHC3_DAT2		0x1d4
-+			MX50_PAD_SD3_D3__ESDHC3_DAT3		0x1d4
-+			MX50_PAD_SD3_D4__ESDHC3_DAT4		0x1d4
-+			MX50_PAD_SD3_D5__ESDHC3_DAT5		0x1d4
-+			MX50_PAD_SD3_D6__ESDHC3_DAT6		0x1d4
-+			MX50_PAD_SD3_D7__ESDHC3_DAT7		0x1d4
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2 {
-+		fsl,pins =3D <
-+			MX50_PAD_UART2_TXD__UART2_TXD_MUX	0x1e4
-+			MX50_PAD_UART2_RXD__UART2_RXD_MUX	0x1e4
-+		>;
-+	};
-+
-+	pinctrl_usbphy: usbphy {
-+		fsl,pins =3D <
-+			MX50_PAD_ECSPI2_SS0__GPIO4_19		0x0
-+		>;
-+	};
-+};
-+
-+&uart2 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_uart2>;
-+	status =3D "okay";
-+};
-+
-+&usbotg {
-+	phy_type =3D "utmi_wide";
-+	dr_mode =3D "peripheral";
-+	status =3D "okay";
-+};
-+
-+&usbphy0 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_usbphy>;
-+	vbus-detect-gpio =3D <&gpio4 19 GPIO_ACTIVE_LOW>;
-+};
-=2D-
++	ti,swap-xy			swap x and y axis
++	ti,x-max			Maximum value on the X axis (u16).
++	ti,y-max			Maximum value on the Y axis (u16).
++	ti,pressure-min			Minimum reported pressure value
++					(threshold) - u16.
++	ti,pressure-max			Maximum reported pressure value (u16).
++	ti,debounce-max			Max number of additional readings per
++					sample (u16).
+ 
+ Example for a TSC2046 chip connected to an McSPI controller of an OMAP SoC::
+ 
+-- 
 2.20.1
