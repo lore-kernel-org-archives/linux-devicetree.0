@@ -1,48 +1,105 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
-Date: Wed, 27 Mar 2019 10:33:56 +0100
-Message-ID: <1553679236.2561.27.camel@pengutronix.de>
-References: <20190326094239.5910-1-daniel.baluta@nxp.com>
-         <20190326094239.5910-3-daniel.baluta@nxp.com>
-         <VI1PR04MB4222A8DBC2312E72AAD3AFAE805F0@VI1PR04MB4222.eurprd04.prod.outlook.com>
-         <CAEnQRZCb=rZMdBYyYCSCQ3Dba5Nk43BvV6whHx-vNPmox-OOSw@mail.gmail.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v2 02/25] dt-bindings: mediatek: add binding for mt8183
+ display
+Date: Wed, 27 Mar 2019 17:39:47 +0800
+Message-ID: <1553679587.18612.7.camel@mtksdaap41>
+References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1553667561-25447-3-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEnQRZCb=rZMdBYyYCSCQ3Dba5Nk43BvV6whHx-vNPmox-OOSw@mail.gmail.com>
+In-Reply-To: <1553667561-25447-3-git-send-email-yongqiang.niu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peng Fan <peng.fan@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, Anson Huang <anson.huang@nxp.com>, Teo Hall <teo.hall@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: yongqiang.niu@mediatek.com
+Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, matthias.bgg@gmail.com, airlied@linux.ie, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Bibby.Hsieh@mediatek.com, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+Hi, Yongqiang:
 
-Am Mittwoch, den 27.03.2019, 10:51 +0200 schrieb Daniel Baluta:
-[...]
+On Wed, 2019-03-27 at 14:18 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 > 
-> > or
-> > "fsl,imx8qxp-edma", "fsl,imx8qm-edma"?
+> Update device tree binding documention for the display subsystem for
+> Mediatek MT8183 SOCs
 > 
-> One thing that it is not clear for me is why there are places
-> where we use two compatible strings?
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  .../bindings/display/mediatek/mediatek,disp.txt    | 37 ++++++++++++++--------
+>  1 file changed, 23 insertions(+), 14 deletions(-)
 > 
-> I understand the situation where are two distinct drivers, but is there
-> any other reason to add multiple compatible strings for a node in dts?
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> index 8469de5..5467470c 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> @@ -27,20 +27,23 @@ Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt.
+>  
+>  Required properties (all function blocks):
+>  - compatible: "mediatek,<chip>-disp-<function>", one of
+> -	"mediatek,<chip>-disp-ovl"   - overlay (4 layers, blending, csc)
+> -	"mediatek,<chip>-disp-rdma"  - read DMA / line buffer
+> -	"mediatek,<chip>-disp-wdma"  - write DMA
+> -	"mediatek,<chip>-disp-color" - color processor
+> -	"mediatek,<chip>-disp-aal"   - adaptive ambient light controller
+> -	"mediatek,<chip>-disp-gamma" - gamma correction
+> -	"mediatek,<chip>-disp-merge" - merge streams from two RDMA sources
+> -	"mediatek,<chip>-disp-split" - split stream to two encoders
+> -	"mediatek,<chip>-disp-ufoe"  - data compression engine
+> -	"mediatek,<chip>-dsi"        - DSI controller, see mediatek,dsi.txt
+> -	"mediatek,<chip>-dpi"        - DPI controller, see mediatek,dpi.txt
+> -	"mediatek,<chip>-disp-mutex" - display mutex
+> -	"mediatek,<chip>-disp-od"    - overdrive
+> -  the supported chips are mt2701, mt2712 and mt8173.
+> +	"mediatek,<chip>-disp-ovl"   		- overlay (4 layers, blending, csc)
+> +	"mediatek,<chip>-disp-ovl-2l"   	- overlay (2 layers, blending, csc)
 
-We use 2 compatible string where there should not be any differences
-between the IP blocks of this SoC and a version the driver already
-supports.
+I prefer adding disp-ovl-2l to be an independent patch.
 
-So if the eDMA driver already supports the software interface for
-"fsl,imx8qm-edma" and the IP block is compatible with this, we add this
-to the DT, so the we don't need any driver changes just to support a
-new SoC. But as you can never be sure if there are subtle differences
-in the IP block and/or SOC integration when adding the DT support, we
-also add a more specific compatible to the DT. If it turns out that
-there are software visible differences, we only need to adapt the
-driver to check for the more specific compatible to trigger the changed
-behavior, allowing to keep the DT stable.
+> +	"mediatek,<chip>-disp-rdma"  		- read DMA / line buffer
+> +	"mediatek,<chip>-disp-wdma"  		- write DMA
+> +	"mediatek,<chip>-disp-ccorr" 		- color correction
+
+I prefer adding disp-ccorr to be an independent patch.
+
+> +	"mediatek,<chip>-disp-color" 		- color processor
+> +	"mediatek,<chip>-disp-dither" 		- dither
+
+I prefer adding disp-dither to be an independent patch.
+
+> +	"mediatek,<chip>-disp-aal"   		- adaptive ambient light controller
+> +	"mediatek,<chip>-disp-gamma" 		- gamma correction
+> +	"mediatek,<chip>-disp-merge" 		- merge streams from two RDMA sources
+> +	"mediatek,<chip>-disp-split" 		- split stream to two encoders
+> +	"mediatek,<chip>-disp-ufoe"  		- data compression engine
+> +	"mediatek,<chip>-dsi"        		- DSI controller, see mediatek,dsi.txt
+> +	"mediatek,<chip>-dpi"        		- DPI controller, see mediatek,dpi.txt
+> +	"mediatek,<chip>-disp-mutex" 		- display mutex
+> +	"mediatek,<chip>-disp-od"    		- overdrive
+> +  the supported chips are mt2701, mt2712, mt8173 and mt8183.
+>  - reg: Physical base address and length of the function block register space
+>  - interrupts: The interrupt signal from the function block (required, except for
+>    merge and split function blocks).
+> @@ -71,6 +74,12 @@ mmsys: clock-controller@14000000 {
+>  	#clock-cells = <1>;
+>  };
+>  
+> +display_components: dispsys@14000000 {
+> +		compatible = "mediatek,mt8183-display";
+
+"mediatek,mt8183-display" is undefined. I think this should be
+"mediatek,mt8183-mmsys" and you have met the same problem in [1]. You
+may depend on that series to develop your patches.
+
+[1]
+http://lists.infradead.org/pipermail/linux-mediatek/2018-November/015860.html
 
 Regards,
-Lucas
+CK
+
+> +		reg = <0 0x14000000 0 0x1000>;
+> +		power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> +};
+> +
+>  ovl0: ovl@1400c000 {
+>  	compatible = "mediatek,mt8173-disp-ovl";
+>  	reg = <0 0x1400c000 0 0x1000>;
