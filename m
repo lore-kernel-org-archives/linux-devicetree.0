@@ -1,12 +1,12 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 088/123] ARM: dts: lpc32xx: Remove leading 0x and 0s from bindings notation
-Date: Wed, 27 Mar 2019 14:15:52 -0400
-Message-ID: <20190327181628.15899-88-sashal@kernel.org>
-References: <20190327181628.15899-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 63/87] ARM: dts: lpc32xx: Remove leading 0x and 0s from bindings notation
+Date: Wed, 27 Mar 2019 14:20:16 -0400
+Message-ID: <20190327182040.17444-63-sashal@kernel.org>
+References: <20190327182040.17444-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
+In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Mathieu Malaterre <malat@debian.org>, Vladimir Zapolskiy <vz@mleia.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
@@ -55,7 +55,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index d81fe433e3c8..f22a33a01819 100644
+index b5841fab51c1..0d20aadc78bb 100644
 --- a/arch/arm/boot/dts/lpc32xx.dtsi
 +++ b/arch/arm/boot/dts/lpc32xx.dtsi
 @@ -230,7 +230,7 @@
@@ -121,7 +121,7 @@ index d81fe433e3c8..f22a33a01819 100644
  				compatible = "nxp,lpc3220-timer";
  				reg = <0x4004C000 0x1000>;
  				interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
-@@ -475,7 +475,7 @@
+@@ -475,14 +475,14 @@
  				status = "disabled";
  			};
  
@@ -130,7 +130,6 @@ index d81fe433e3c8..f22a33a01819 100644
  				compatible = "nxp,lpc3220-pwm";
  				reg = <0x4005C000 0x4>;
  				clocks = <&clk LPC32XX_CLK_PWM1>;
-@@ -484,7 +484,7 @@
  				status = "disabled";
  			};
  
