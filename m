@@ -1,38 +1,91 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/6] dt-bindings: tq: add compatible for i.MX7 boards
-Date: Wed, 27 Mar 2019 16:02:46 -0500
-Message-ID: <20190327210246.GA14100@bogus>
-References: <20190304165630.18225-1-bruno.thomsen@gmail.com>
- <20190304165630.18225-4-bruno.thomsen@gmail.com>
+From: Patrick Venture <venture@google.com>
+Subject: [PATCH v8 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Date: Wed, 27 Mar 2019 14:21:55 -0700
+Message-ID: <20190327212155.80730-1-venture@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190304165630.18225-4-bruno.thomsen@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bruno Thomsen <bruno.thomsen@gmail.com>
-Cc: markus.niebel@tq-group.com, devicetree@vger.kernel.org, shawnguo@kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, gregkh@linuxfoundation.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 05:56:27PM +0100, Bruno Thomsen wrote:
-> Add documentation about the following TQ boards:
-> - TQMa7S
-> - TQMa7D
-> - MBa7
-> 
-> Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/tq.txt | 35 ++++++++++++++++++++
+Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
 
-This too should go in fsl.yaml. Per board vendor files are gone.
+Signed-off-by: Patrick Venture <venture@google.com>
+---
+Changes for v8:
+- None
+Changes for v7:
+- Moved node under the syscon node it requires
+Changes for v6:
+- None
+Changes for v5:
+- None
+Changes for v4:
+- None
+Changes for v3:
+- None
+Changes for v2:
+- Added comment about syscon required parameter.
+---
+ .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
 
-Rob
+diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+new file mode 100644
+index 0000000000000..088cc4e3dc54b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+@@ -0,0 +1,48 @@
++======================================================================
++Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
++======================================================================
++
++The bridge is available on platforms with the VGA enabled on the Aspeed device.
++In this case, the host has access to a 64KiB window into all of the BMC's
++memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
++has read access to all the regions of memory, however the host only has read
++and write access depending on a register controlled by the BMC.
++
++Required properties:
++===================
++
++ - compatible: must be one of:
++	- "aspeed,ast2400-p2a-ctrl"
++	- "aspeed,ast2500-p2a-ctrl"
++
++ - syscon: handle to syscon device node controlling PCI.
++
++Optional properties:
++===================
++
++- memory-region: A phandle to a reserved_memory region to be used for the PCI
++		to AHB mapping
++
++The p2a-control node should be the child of a syscon node with the required
++property:
++
++- compatible : Should be one of the following:
++		"aspeed,ast2400-scu", "syscon", "simple-mfd"
++		"aspeed,g4-scu", "syscon", "simple-mfd"
++		"aspeed,ast2500-scu", "syscon", "simple-mfd"
++		"aspeed,g5-scu", "syscon", "simple-mfd"
++
++Example:
++
++g4 Example
++----------
++
++syscon: scu@1e6e2000 {
++	compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
++	reg = <0x1e6e2000 0x1a8>;
++
++	p2a: p2a-control {
++		compatible = "aspeed,ast2400-p2a-ctrl";
++		memory-region = <&reserved_memory>;
++	};
++};
+-- 
+2.21.0.392.gf8f6787159e-goog
