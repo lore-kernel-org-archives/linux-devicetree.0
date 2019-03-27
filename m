@@ -1,54 +1,71 @@
-From: Harish Bandi <c-hbandi@codeaurora.org>
-Subject: [PATCH v6 2/2] dt-bindings: net: bluetooth: Add device tree bindings for QTI chip WCN3998
-Date: Wed, 27 Mar 2019 17:58:43 +0530
-Message-ID: <1553689723-21017-3-git-send-email-c-hbandi@codeaurora.org>
-References: <1553689723-21017-1-git-send-email-c-hbandi@codeaurora.org>
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v2 3/6] device property: Add a function to obtain a
+ node's prefix
+Date: Wed, 27 Mar 2019 13:36:59 +0100
+Message-ID: <20190327123659.nna3hqcotnerptiz@pathway.suse.cz>
+References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
+ <20190326124106.27694-4-sakari.ailus@linux.intel.com>
+ <20190326131626.GZ9224@smile.fi.intel.com>
+ <20190326133248.2nrm5javjw4vd2yq@paasikivi.fi.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553689723-21017-1-git-send-email-c-hbandi@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20190326133248.2nrm5javjw4vd2yq@paasikivi.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: marcel@holtmann.org, johan.hedberg@gmail.com
-Cc: mka@chromium.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, anubhavg@codeaurora.org, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Harish Bandi <c-hbandi@codeaurora.org>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables regulators for the Qualcomm Bluetooth WCN3998
-controller.
+On Tue 2019-03-26 15:32:48, Sakari Ailus wrote:
+> Hi Andy,
+> 
+> On Tue, Mar 26, 2019 at 03:16:26PM +0200, Andy Shevchenko wrote:
+> > On Tue, Mar 26, 2019 at 02:41:03PM +0200, Sakari Ailus wrote:
+> > > The prefix is used for printing purpose before a node, and it also works
+> > > as a separator between two nodes.
+> > > 
+> > 
+> > One nit below.
+> > 
+> > > +static const char *
+> > > +acpi_fwnode_get_name_prefix(const struct fwnode_handle *fwnode)
+> > > +{
+> > > +	struct fwnode_handle *parent;
+> > > +
+> > 
+> > > +	parent = fwnode_get_parent(fwnode);
+> > > +	/* Root node. */
+> > 
+> > I guess a comment could be easier to read if it goes before parent assignment
+> > line.
+> 
+> Only if the comments are changed accordingly. What we're doing here is
+> trying to figure out whether this is the root node. I can do that for v3.
 
-Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
----
-Changes in V6:
-- no changes
----
- Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+IMHO, the comment in acpi_fwnode_get_name() is easier to understand:
 
-diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-index 824c0e2..7ef6118 100644
---- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-@@ -11,20 +11,21 @@ Required properties:
-  - compatible: should contain one of the following:
-    * "qcom,qca6174-bt"
-    * "qcom,wcn3990-bt"
-+   * "qcom,wcn3998-bt"
- 
- Optional properties for compatible string qcom,qca6174-bt:
- 
-  - enable-gpios: gpio specifier used to enable chip
-  - clocks: clock provided to the controller (SUSCLK_32KHZ)
- 
--Required properties for compatible string qcom,wcn3990-bt:
-+Required properties for compatible string qcom,wcn399x-bt:
- 
-  - vddio-supply: VDD_IO supply regulator handle.
-  - vddxo-supply: VDD_XO supply regulator handle.
-  - vddrf-supply: VDD_RF supply regulator handle.
-  - vddch0-supply: VDD_CH0 supply regulator handle.
- 
--Optional properties for compatible string qcom,wcn3990-bt:
-+Optional properties for compatible string qcom,wcn399x-bt:
- 
-  - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+/* Is this the root node? */
+
+> > 
+> > > +	if (!parent)
+> > > +		return "";
+> > > +
+> > > +	parent = fwnode_get_next_parent(parent);
+> > > +	/* Second node from the root; no prefix here either. */
+> > 
+> > Ditto.
+
+/* Is this 2nd node from the root? */
+
+> > > +	if (!parent)
+> > > +		return "";
+> > > +
+> > > +	fwnode_handle_put(parent);
+> > > +
+> > > +	/* ACPI device or data node. */
+> > > +	return ".";
+> > > +}
+
+Best Regards,
+Petr
