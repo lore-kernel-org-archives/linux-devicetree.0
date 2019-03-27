@@ -1,242 +1,107 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH 1/4] dt-bindings: firmware: imx-scu: new binding to parse
- clocks from device tree
-Date: Wed, 27 Mar 2019 14:35:02 +0000
-Message-ID: <AM0PR04MB42110F1F251243A165DB9EC680580@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1550771836-10014-1-git-send-email-aisheng.dong@nxp.com>
- <1550771836-10014-2-git-send-email-aisheng.dong@nxp.com>
- <20190326134715.GA4055@bogus>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH V4 4/5] mmc: mmci: stm32: define get_dctrl_cfg
+Date: Wed, 27 Mar 2019 15:44:21 +0100
+Message-ID: <bef06e28-4521-af86-adf4-bc904280707a@st.com>
+References: <1553677532-3539-1-git-send-email-ludovic.Barre@st.com>
+ <1553677532-3539-5-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFrGRojw5jmGZ_J-nmP4bHqd0BnKwyKweAr6aLD4C4NMPQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190326134715.GA4055@bogus>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFrGRojw5jmGZ_J-nmP4bHqd0BnKwyKweAr6aLD4C4NMPQ@mail.gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Tuesday, March 26, 2019 9:47 PM
-> On Thu, Feb 21, 2019 at 06:03:43PM +0000, Aisheng Dong wrote:
-> > There's a few limitations on one cell clock binding (#clock-cells =
-> > <1>) that we have to define all clock IDs for device tree to reference.
-> > This may cause troubles if we want to use common clock IDs for multi
-> > platforms support when the clock of those platforms are mostly the same.
-> > e.g. Current clock IDs name are defined with SS prefix. However the
-> > device may reside in different SS across CPUs, that means the SS
-> > prefix may not valid anymore for a new SoC. Furthermore, the device
-> > availability of those clocks may also vary a bit.
-> >
-> > For such situation, We formerly planned to add all new IDs for each SS
-> > and dynamically check availability for different SoC in driver. That
-> > can be done but that may involve a lot effort and may result in more
-> > changes and duplicated code in driver, also make device tree
-> > upstreaming hard which depends on Clock IDs.
-> >
-> > To relief this situation, we want to move the clock definition into
-> > device tree which can fully decouple the dependency of Clock ID
-> > definition from device tree. And no frequent changes required in clock driver
-> any more.
-> >
-> > Then we can use the existence of clock nodes in device tree to address
-> > the device and clock availability differences across different SoCs.
-> >
-> > For SCU clocks, only two params required, thus two new property created:
-> > rsrc-id = <IMX_SC_R_UART_0>;
-> > clk-type = <IMX_SC_PM_CLK_PER>;
-> >
-> > And as we want to support clock set parent function, 'clocks' property
-> > is also used to pass all the possible input parents.
-> >
-> > Cc: Rob Herring <robh@kernel.org>
-> > Cc: Stephen Boyd <sboyd@kernel.org>
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> > Cc: Sascha Hauer <kernel@pengutronix.de>
-> > Cc: Michael Turquette <mturquette@baylibre.com>
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> > ---
-> >  .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 29
-> ++++++++++++++++------
-> >  include/dt-bindings/firmware/imx/rsrc.h            | 17
-> +++++++++++++
-> >  2 files changed, 38 insertions(+), 8 deletions(-)
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> > b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> > index 72d481c..2816789 100644
-> > --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> > @@ -78,6 +78,19 @@ Required properties:
-> >  			  "fsl,imx8qm-clock"
-> >  			  "fsl,imx8qxp-clock"
-> >  			followed by "fsl,scu-clk"
-> > +- #clock-cells:		Should be 0.
-> > +- rsrc-id:		Resource ID associated with this clock
-> > +- clk-type:		Type of this clock.
-> > +			Refer to <include/dt-bindings/firmware/imx/rsrc.h> for
-> > +			available clock types supported by SCU.
+
+
+On 3/27/19 11:54 AM, Ulf Hansson wrote:
+> On Wed, 27 Mar 2019 at 10:05, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>>
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> This patch defines get_dctrl_cfg callback for sdmmc variant.
+>> sdmmc variant has specific stm32 transfer modes.
+>> sdmmc data transfer mode selection could be:
+>> -Block data transfer ending on block count.
+>> -SDIO multibyte data transfer.
+>> -MMC Stream data transfer (not used).
+>> -Block data transfer ending with STOP_TRANSMISSION command.
+>>
+>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>> ---
+>>   drivers/mmc/host/mmci.h             |  5 +++++
+>>   drivers/mmc/host/mmci_stm32_sdmmc.c | 18 ++++++++++++++++++
+>>   2 files changed, 23 insertions(+)
+>>
+>> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+>> index 35c91d0..82e9f94 100644
+>> --- a/drivers/mmc/host/mmci.h
+>> +++ b/drivers/mmc/host/mmci.h
+>> @@ -131,6 +131,11 @@
+>>   /* Control register extensions in the Qualcomm versions */
+>>   #define MCI_DPSM_QCOM_DATA_PEND        BIT(17)
+>>   #define MCI_DPSM_QCOM_RX_DATA_PEND BIT(20)
+>> +/* Control register extensions in STM32 versions */
+>> +#define MCI_DPSM_STM32_MODE_BLOCK      (0 << 2)
+>> +#define MCI_DPSM_STM32_MODE_SDIO       (1 << 2)
+>> +#define MCI_DPSM_STM32_MODE_STREAM     (2 << 2)
+>> +#define MCI_DPSM_STM32_MODE_BLOCK_STOP (3 << 2)
+>>
+>>   #define MMCIDATACNT            0x030
+>>   #define MMCISTATUS             0x034
+>> diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
+>> index cfbfc6f..8e83ae6 100644
+>> --- a/drivers/mmc/host/mmci_stm32_sdmmc.c
+>> +++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
+>> @@ -265,10 +265,28 @@ static void mmci_sdmmc_set_pwrreg(struct mmci_host *host, unsigned int pwr)
+>>          }
+>>   }
+>>
+>> +static u32 sdmmc_get_dctrl_cfg(struct mmci_host *host)
+>> +{
+>> +       u32 datactrl;
+>> +
+>> +       datactrl = mmci_dctrl_blksz(host);
+>> +
+>> +       if (host->mmc->card && mmc_card_sdio(host->mmc->card) &&
+>> +           host->data->blocks == 1)
+>> +               datactrl |= MCI_DPSM_STM32_MODE_SDIO;
+>> +       else if (host->data->stop && !host->mrq->sbc)
+>> +               datactrl |= MCI_DPSM_STM32_MODE_BLOCK_STOP;
 > 
-> Can't you just make these 2 values clock cells? I'm all for getting rid of made
-> up clock numbers.
+> Just a question here. Does this mean that the controller sends the
+> stop command automatically when a transfer has finished successfully?
+
+The controller not sends the stop command, this bit is just an 
+information for the Data State Machine to know how the data transfer 
+finish.
+
+Regards,
+Ludo
+
 > 
-
-Thanks for the agreement to remove clock IDs.
-
-The 2 values clock cell seems not the best approach for i.MX because it still needs
-to define all clocks in the driver which is exactly we want to avoid now due to some
-special HW characteristic:
-1. clock resources may be allocated to different SW execution partition by firmware
-and A core may not have access rights for those clocks not belong to its partition.
-So we want to describe them in DT according to the partition configuration.
-
-2. Each clock is associated with a different power domain which is better to be
-described in device tree. And clock state will be lost and need restore after power cycle
-of the domain.
-
-Based on above requirements, do you think we can do as below?
-
-//LSIO SS
-lsio_scu_clk: lsio-scu-clock-controller {
-        compatible = "fsl,imx8qxp-clock", "fsl,scu-clk";
-
-        fspi0_clk: clock-fspi0{
-                #clock-cells = <0>;
-                rsrc-id = <IMX_SC_R_FSPI_0>;
-                clk-type = <IMX_SC_PM_CLK_PER>;
-                power-domains = <&pd IMX_SC_R_FSPI_0>;
-        };
-		
-		fspi1_clk: clock-fspi1{
-			...
-		};
-        ...
-};    
-
-/* LPCG clocks */
-lsio_lpcg_clk: lsio-lpcg-clock-controller {
-        compatible = "fsl,imx8qxp-lpcg";
-
-        pwm0_lpcg: clock-controller@5d400000 {
-                reg = <0x5d400000 0x10000>;
-                #clock-cells = <1>;
-                clocks = <&pwm0_clk>, <&pwm0_clk>, <&pwm0_clk>,
-                         <&lsio_bus_clk>, <&pwm0_clk>;
-                bit-offset = <0 4 16 20 24>;
-                clock-output-names = "pwm0_lpcg_ipg_clk",
-                                     "pwm0_lpcg_ipg_hf_clk",
-                                     "pwm0_lpcg_ipg_s_clk",
-                                     "pwm0_lpcg_ipg_slv_clk",
-                                     "pwm0_lpcg_ipg_mstr_clk";
-                power-domains = <&pd IMX_SC_R_PWM_0>;
-                status = "disabled";
-        };
-
-		pwm1_lpcg: clock-controller@5d410000 {
-				...
-		}
-        ...
-};
-
-And for users, it could simply be:
-usdhc1: mmc@5b010000 {
-        clocks = <&sdhc0_lpcg 1>,
-                 <&sdhc0_lpcg 0>,
-                 <&sdhc0_lpcg 2>;
-        clock-names = "ipg", "per", "ahb";
-        assigned-clocks = <&sdhc0_clk>;
-        assigned-clock-rates = <200000000>;
-		....
-};
-
-Regards
-Dong Aisheng
-
-> > +- clock-output-names:	Shall be the corresponding names of the outputs.
-> > +
-> > +Optional properties:
-> > +- clocks:		Shall be the input parent clock(s) phandle for the clock.
-> > +			For multiplexed clocks, the list order must match the hardware
-> > +			programming order.
-> > +
-> > +Legacy Clock binding (DEPRECATED):
-> >  - #clock-cells:		Should be 1. Contains the Clock ID value.
-> >  - clocks:		List of clock specifiers, must contain an entry for
-> >  			each required entry in clock-names @@ -129,6 +142,13 @@
-> lsio_mu1:
-> > mailbox@5d1c0000 {
-> >  	#mbox-cells = <2>;
-> >  };
-> >
-> > +uart0_clk: uart0-clock-controller {
-> > +	compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-clk";
-> > +	#clock-cells = <0>;
-> > +	rsrc-id = <IMX_SC_R_UART_0>;
-> > +	clk-type = <IMX_SC_PM_CLK_PER>;
-> > +};
-> > +
-> >  firmware {
-> >  	scu {
-> >  		compatible = "fsl,imx-scu";
-> > @@ -143,11 +163,6 @@ firmware {
-> >  			  &lsio_mu1 1 2
-> >  			  &lsio_mu1 1 3>;
-> >
-> > -		clk: clk {
-> > -			compatible = "fsl,imx8qxp-clk", "fsl,scu-clk";
-> > -			#clock-cells = <1>;
-> > -		};
-> > -
-> >  		iomuxc {
-> >  			compatible = "fsl,imx8qxp-iomuxc";
-> >
-> > @@ -175,8 +190,6 @@ serial@5a060000 {
-> >  	...
-> >  	pinctrl-names = "default";
-> >  	pinctrl-0 = <&pinctrl_lpuart0>;
-> > -	clocks = <&clk IMX8QXP_UART0_CLK>,
-> > -		 <&clk IMX8QXP_UART0_IPG_CLK>;
-> > -	clock-names = "per", "ipg";
-> > +	clocks = <&uart0_clk>;
-> >  	power-domains = <&pd IMX_SC_R_UART_0>;  }; diff --git
-> > a/include/dt-bindings/firmware/imx/rsrc.h
-> > b/include/dt-bindings/firmware/imx/rsrc.h
-> > index 4481f2d..f650fc3 100644
-> > --- a/include/dt-bindings/firmware/imx/rsrc.h
-> > +++ b/include/dt-bindings/firmware/imx/rsrc.h
-> > @@ -556,4 +556,21 @@
-> >  #define IMX_SC_R_VPU			540
-> >  #define IMX_SC_R_LAST			541
-> >
-> > +/*
-> > + * Defines for SC PM CLK
-> > + */
-> > +#define IMX_SC_PM_CLK_SLV_BUS		0	/* Slave bus clock */
-> > +#define IMX_SC_PM_CLK_MST_BUS		1	/* Master bus clock */
-> > +#define IMX_SC_PM_CLK_PER		2	/* Peripheral clock */
-> > +#define IMX_SC_PM_CLK_PHY		3	/* Phy clock */
-> > +#define IMX_SC_PM_CLK_MISC		4	/* Misc clock */
-> > +#define IMX_SC_PM_CLK_MISC0		0	/* Misc 0 clock */
-> > +#define IMX_SC_PM_CLK_MISC1		1	/* Misc 1 clock */
-> > +#define IMX_SC_PM_CLK_MISC2		2	/* Misc 2 clock */
-> > +#define IMX_SC_PM_CLK_MISC3		3	/* Misc 3 clock */
-> > +#define IMX_SC_PM_CLK_MISC4		4	/* Misc 4 clock */
-> > +#define IMX_SC_PM_CLK_CPU		2	/* CPU clock */
-> > +#define IMX_SC_PM_CLK_PLL		4	/* PLL */
-> > +#define IMX_SC_PM_CLK_BYPASS		4	/* Bypass clock */
-> > +
-> >  #endif /* __DT_BINDINGS_RSCRC_IMX_H */
-> > --
-> > 2.7.4
-> >
+>> +       else
+>> +               datactrl |= MCI_DPSM_STM32_MODE_BLOCK;
+>> +
+>> +       return datactrl;
+>> +}
+>> +
+>>   static struct mmci_host_ops sdmmc_variant_ops = {
+>>          .validate_data = sdmmc_idma_validate_data,
+>>          .prep_data = sdmmc_idma_prep_data,
+>>          .unprep_data = sdmmc_idma_unprep_data,
+>> +       .get_datactrl_cfg = sdmmc_get_dctrl_cfg,
+>>          .dma_setup = sdmmc_idma_setup,
+>>          .dma_start = sdmmc_idma_start,
+>>          .dma_finalize = sdmmc_idma_finalize,
+>> --
+>> 2.7.4
+>>
+> 
+> Kind regards
+> Uffe
+> 
