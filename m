@@ -1,13 +1,12 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH 2/7] ARM: dts: sun8i: tbs-a711: Add node for
- BMA250 accelerometer
-Date: Wed, 27 Mar 2019 01:18:38 +0100
-Message-ID: <20190327001843.2420-3-megous@megous.com>
+Subject: [PATCH 1/7] ARM: dts: sun8i: tbs-a711: Enable bluetooth
+Date: Wed, 27 Mar 2019 01:18:37 +0100
+Message-ID: <20190327001843.2420-2-megous@megous.com>
 References: <20190327001843.2420-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBB4EC5PSAKGQEYTDACBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBB34C5PSAKGQEZHGQNOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <20190327001843.2420-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,39 +20,40 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-A711 tablet has BMA250 accelerometer connected to I2C1 bus. Enable
-both the I2C1 bus and add the accelerometer device to it.
+TBS A711 tablet has a bcm20702a1 bluetooth chip (part of AP6210 WiFi/BT
+module) connected to UART1. Add node for the blutooth chip.
+
+The driver needs brcm/BCM20702A1.hcd firmware file to run.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-index 6aae70c89a1e..347fc0c31fa4 100644
+index 1e840ab5a541..6aae70c89a1e 100644
 --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
 +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-@@ -156,6 +156,21 @@
+@@ -406,7 +406,20 @@
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	uart-has-rtscts;
  	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm20702a1";
++		clocks = <&ac100_rtc 1>;
++		clock-names = "lpo";
++		vbat-supply = <&reg_vbat>;
++		vddio-supply = <&reg_dldo1>;
++		device-wakeup-gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
++		host-wakeup-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
++		shutdown-gpios = <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
++		max-speed = <1500000>;
++	};
  };
  
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+	clock-frequency = <400000>;
-+	status = "okay";
-+
-+	/* Accelerometer */
-+	bma250@18 {
-+		compatible = "bosch,bma250";
-+		reg = <0x18>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 10 IRQ_TYPE_EDGE_RISING>; /* PH10 / EINT10 */
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_dcdc1>;
- 	pinctrl-names = "default";
+ &usb_otg {
 -- 
 2.21.0
