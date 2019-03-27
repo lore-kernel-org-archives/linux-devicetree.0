@@ -1,80 +1,32 @@
 Return-Path: <SRS0=Zx4x=R6=pengutronix.de=mfe@kernel.org>
 From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 3/4] dt-bindings: input: ads7846: replace vendor-bindings by general ones
-Date: Wed, 27 Mar 2019 14:39:26 +0100
-Message-Id: <20190327133927.1340-4-m.felsch@pengutronix.de>
-In-Reply-To: <20190327133927.1340-1-m.felsch@pengutronix.de>
-References: <20190327133927.1340-1-m.felsch@pengutronix.de>
+Subject: [PATCH 0/4] ADS7846 add general touchscreen features
+Date: Wed, 27 Mar 2019 14:39:23 +0100
+Message-Id: <20190327133927.1340-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: dmitry.torokhov@gmail.com, robh+dt@kernel.org
 Cc: kernel@pengutronix.de, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Mark the vendor-bindings as deprecated and replace them by the general
-ones. All deprecated bindings are used as default and gets overwritten by
-the general ones if the user supplies both. This ensures the backward
-compatibility with old dt's.
+Hi,
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- .../bindings/input/touchscreen/ads7846.txt    | 29 ++++++++++++++-----
- 1 file changed, 21 insertions(+), 8 deletions(-)
+The main purpose of this small set is to add support for the general
+touchscreen dt-properties. During this work I also changed the memory
+allocation methods to the devm_* ones to cleanup the error-paths.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt b/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt
-index ce540ddac902..81f6bda97d3c 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt
-@@ -32,7 +32,6 @@ Optional properties:
- 					(ADS7846).
- 	ti,keep-vref-on			set to keep vref on for differential
- 					measurements as well
--	ti,swap-xy			swap x and y axis
- 	ti,settle-delay-usec		Settling time of the analog signals;
- 					a function of Vcc and the capacitance
- 					on the X/Y drivers.  If set to non-zero,
-@@ -51,13 +50,6 @@ Optional properties:
- 					in Ohms (u16).
- 	ti,x-min			Minimum value on the X axis (u16).
- 	ti,y-min			Minimum value on the Y axis (u16).
--	ti,x-max			Maximum value on the X axis (u16).
--	ti,y-max			Maximum value on the Y axis (u16).
--	ti,pressure-min			Minimum reported pressure value
--					(threshold) - u16.
--	ti,pressure-max			Maximum reported pressure value (u16).
--	ti,debounce-max			Max number of additional readings per
--					sample (u16).
- 	ti,debounce-tol			Tolerance used for filtering (u16).
- 	ti,debounce-rep			Additional consecutive good readings
- 					required after the first two (u16).
-@@ -67,7 +59,28 @@ Optional properties:
- 					line is connected to.
- 	wakeup-source			use any event on touchscreen as wakeup event.
- 					(Legacy property support: "linux,wakeup")
-+	touchscreen-size-x		General touchscreen binding, see [1].
-+	touchscreen-size-y		General touchscreen binding, see [1].
-+	touchscreen-max-pressure	General touchscreen binding, see [1].
-+	touchscreen-min-pressure	General touchscreen binding, see [1].
-+	touchscreen-average-samples	General touchscreen binding, see [1].
-+	touchscreen-inverted-x		General touchscreen binding, see [1].
-+	touchscreen-inverted-y		General touchscreen binding, see [1].
-+	touchscreen-swapped-x-y		General touchscreen binding, see [1].
-+
-+[1] All general touchscreen properties are described in
-+    Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt.
- 
-+Deprecated properties:
-+
-+	ti,swap-xy			swap x and y axis
-+	ti,x-max			Maximum value on the X axis (u16).
-+	ti,y-max			Maximum value on the Y axis (u16).
-+	ti,pressure-min			Minimum reported pressure value
-+					(threshold) - u16.
-+	ti,pressure-max			Maximum reported pressure value (u16).
-+	ti,debounce-max			Max number of additional readings per
-+					sample (u16).
- 
- Example for a TSC2046 chip connected to an McSPI controller of an OMAP SoC::
- 
+Regards,
+Marco
+
+Marco Felsch (4):
+  Input: ads7846 - convert to devm_ alloc functions
+  dt-bindings: input: ads7846: fix property description
+  dt-bindings: input: ads7846: replace vendor-bindings by general ones
+  Input: ads7846 - add support for general touchscreen bindings
+
+ .../bindings/input/touchscreen/ads7846.txt    | 29 +++++--
+ drivers/input/touchscreen/ads7846.c           | 75 +++++++++++--------
+ 2 files changed, 66 insertions(+), 38 deletions(-)
+
 -- 
 2.20.1
