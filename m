@@ -1,84 +1,127 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 1/3] media: dt-bindings: media: meson-ao-cec: Add G12A
- AO-CEC-B Compatible
-Date: Wed, 27 Mar 2019 13:39:03 +0100
-Message-ID: <518678c1-2e1d-ca27-55bd-0dd10965354f@xs4all.nl>
-References: <20190325173501.22863-1-narmstrong@baylibre.com>
- <20190325173501.22863-2-narmstrong@baylibre.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v3 5/9] soc: qcom: rpmpd: Add QCS404 power-domains
+Date: Wed, 27 Mar 2019 18:08:28 +0530
+Message-ID: <20190327123832.11566-6-sibis@codeaurora.org>
+References: <20190327123832.11566-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190325173501.22863-2-narmstrong@baylibre.com>
-Content-Language: en-US
+In-Reply-To: <20190327123832.11566-1-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, mchehab@kernel.org, devicetree@vger.kernel.org
-Cc: linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, rnayak@codeaurora.org
+Cc: david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3/25/19 6:34 PM, Neil Armstrong wrote:
-> The Amlogic G12A embeds a second CEC controller named AO-CEC-B, and
-> the other one is AO-CEC-A described by the current bindings.
-> 
-> The registers interface is very close but the internal architecture
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-registers -> register
+Add the shared cx/mx and the low-power-island's cx and mx power-domains
+found on QCS404.
 
-> is totally different.
-> 
-> The other difference is the closk source, the AO-CEC-B takes the
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+[sibi: Fixup corner/vfc with vlfl/vfl]
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ drivers/soc/qcom/rpmpd.c | 52 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 51 insertions(+), 1 deletion(-)
 
-closk -> clock
-
-> "oscin", the Always-On Oscillator clock, as input and embeds a
-> dual-divider clock divider to provide the precise 32768Hz base
-> clock for CEC communication.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../devicetree/bindings/media/meson-ao-cec.txt    | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/meson-ao-cec.txt b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
-> index 8671bdb08080..d6e2f9cf0aaf 100644
-> --- a/Documentation/devicetree/bindings/media/meson-ao-cec.txt
-> +++ b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
-> @@ -4,16 +4,23 @@ The Amlogic Meson AO-CEC module is present is Amlogic SoCs and its purpose is
->  to handle communication between HDMI connected devices over the CEC bus.
->  
->  Required properties:
-> -  - compatible : value should be following
-> -	"amlogic,meson-gx-ao-cec"
-> +  - compatible : value should be following depending on the SoC :
-> +  	For GXBB, GXL, GXM and G12A (AO_CEC_A module) :
-> +  	"amlogic,meson-gx-ao-cec"
-> +	For G12A (AO_CEC_B module) :
-> +	"amlogic,meson-g12a-ao-cec"
-
-The driver uses "amlogic,meson-g12a-ao-cec-b", so there is a mismatch between
-the bindings and the driver.
-
-Please repost since it is important that the two correspond.
-
-Thanks!
-
-	Hans
-
->  
->    - reg : Physical base address of the IP registers and length of memory
->  	  mapped region.
->  
->    - interrupts : AO-CEC interrupt number to the CPU.
->    - clocks : from common clock binding: handle to AO-CEC clock.
-> -  - clock-names : from common clock binding: must contain "core",
-> -		  corresponding to entry in the clocks property.
-> +  - clock-names : from common clock binding, must contain :
-> +		For GXBB, GXL, GXM and G12A (AO_CEC_A module) :
-> +		- "core"
-> +		For G12A (AO_CEC_B module) :
-> +		- "oscin"
-> +		corresponding to entry in the clocks property.
->    - hdmi-phandle: phandle to the HDMI controller
->  
->  Example:
-> 
+diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
+index ca736ceb969c..238a9e02e890 100644
+--- a/drivers/soc/qcom/rpmpd.c
++++ b/drivers/soc/qcom/rpmpd.c
+@@ -19,11 +19,16 @@
+ /* Resource types */
+ #define RPMPD_SMPA 0x61706d73 /* smpa */
+ #define RPMPD_LDOA 0x616f646c /* ldoa */
++#define RPMPD_RWMX 0x786d7772 /* rwmx */
++#define RPMPD_RWLC 0x636c7772 /* rwlc */
++#define RPMPD_RWLM 0x6d6c7772 /* rwlm */
+ 
+ /* Operation Keys */
+ #define KEY_CORNER		0x6e726f63 /* corn */
+ #define KEY_ENABLE		0x6e657773 /* swen */
+ #define KEY_FLOOR_CORNER	0x636676   /* vfc */
++#define KEY_FLOOR_LEVEL		0x6c6676   /* vfl */
++#define KEY_LEVEL		0x6c766c76 /* vlvl */
+ 
+ #define MAX_8996_RPMPD_STATE	6
+ 
+@@ -54,6 +59,14 @@
+ 		.key = KEY_CORNER,					\
+ 	}
+ 
++#define DEFINE_RPMPD_LEVEL(_platform, _name, r_type, r_id)		\
++	static struct rpmpd _platform##_##_name = {			\
++		.pd = { .name = #_name, },				\
++		.res_type = RPMPD_##r_type,				\
++		.res_id = r_id,						\
++		.key = KEY_LEVEL,					\
++	}
++
+ #define DEFINE_RPMPD_VFC(_platform, _name, r_type, r_id)		\
+ 	static struct rpmpd _platform##_##_name = {			\
+ 		.pd = { .name = #_name, },				\
+@@ -62,6 +75,14 @@
+ 		.key = KEY_FLOOR_CORNER,				\
+ 	}
+ 
++#define DEFINE_RPMPD_VFL(_platform, _name, r_type, r_id)		\
++	static struct rpmpd _platform##_##_name = {			\
++		.pd = { .name = #_name, },				\
++		.res_type = RPMPD_##r_type,				\
++		.res_id = r_id,						\
++		.key = KEY_FLOOR_LEVEL,					\
++	}
++
+ struct rpmpd_req {
+ 	__le32 key;
+ 	__le32 nbytes;
+@@ -114,8 +135,35 @@ static const struct rpmpd_desc msm8996_desc = {
+ 	.max_state = MAX_8996_RPMPD_STATE,
+ };
+ 
++/* qcs404 RPM Power domains */
++DEFINE_RPMPD_PAIR(qcs404, vddmx, vddmx_ao, RWMX, LEVEL, 0);
++DEFINE_RPMPD_VFL(qcs404, vddmx_vfl, RWMX, 0);
++
++DEFINE_RPMPD_LEVEL(qcs404, vdd_lpicx, RWLC, 0);
++DEFINE_RPMPD_VFL(qcs404, vdd_lpicx_vfl, RWLC, 0);
++
++DEFINE_RPMPD_LEVEL(qcs404, vdd_lpimx, RWLM, 0);
++DEFINE_RPMPD_VFL(qcs404, vdd_lpimx_vfl, RWLM, 0);
++
++static struct rpmpd *qcs404_rpmpds[] = {
++	[QCS404_VDDMX] = &qcs404_vddmx,
++	[QCS404_VDDMX_AO] = &qcs404_vddmx_ao,
++	[QCS404_VDDMX_VFL] = &qcs404_vddmx_vfl,
++	[QCS404_LPICX] = &qcs404_vdd_lpicx,
++	[QCS404_LPICX_VFL] = &qcs404_vdd_lpicx_vfl,
++	[QCS404_LPIMX] = &qcs404_vdd_lpimx,
++	[QCS404_LPIMX_VFL] = &qcs404_vdd_lpimx_vfl,
++};
++
++static const struct rpmpd_desc qcs404_desc = {
++	.rpmpds = qcs404_rpmpds,
++	.num_pds = ARRAY_SIZE(qcs404_rpmpds),
++	.max_state = RPM_SMD_LEVEL_BINNING,
++};
++
+ static const struct of_device_id rpmpd_match_table[] = {
+ 	{ .compatible = "qcom,msm8996-rpmpd", .data = &msm8996_desc },
++	{ .compatible = "qcom,qcs404-rpmpd", .data = &qcs404_desc },
+ 	{ }
+ };
+ 
+@@ -230,7 +278,9 @@ static int rpmpd_set_performance(struct generic_pm_domain *domain,
+ 
+ 	pd->corner = state;
+ 
+-	if (!pd->enabled && pd->key != KEY_FLOOR_CORNER)
++	/* Always send updates for vfc and vfl */
++	if (!pd->enabled && pd->key != KEY_FLOOR_CORNER &&
++	    pd->key != KEY_FLOOR_LEVEL)
+ 		goto out;
+ 
+ 	ret = rpmpd_aggregate_corner(pd);
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
