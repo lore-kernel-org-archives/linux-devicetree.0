@@ -1,93 +1,86 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v3 9/9] arm64: dts: qcom: msm8998: Add rpmpd node
-Date: Wed, 27 Mar 2019 18:08:32 +0530
-Message-ID: <20190327123832.11566-10-sibis@codeaurora.org>
-References: <20190327123832.11566-1-sibis@codeaurora.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v4 3/7] of: address: Add parent pointer to the
+ __of_translate_address args
+Date: Wed, 27 Mar 2019 12:40:25 +0000
+Message-ID: <8c4b0075-5822-4574-f16e-f00374f3a197@arm.com>
+References: <cover.221220f2f28e14ef07cce84e753ac662085d84ff.1552595146.git-series.maxime.ripard@bootlin.com>
+ <f630f1cb7c481d1e095da73ab11055327e1ce0b6.1552595146.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190327123832.11566-1-sibis@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, rnayak@codeaurora.org
-Cc: david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <f630f1cb7c481d1e095da73ab11055327e1ce0b6.1552595146.git-series.maxime.ripard@bootlin.com>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the rpmpd node on the msm8998 and define the available levels.
-
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 51 +++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 3fd0769fe648..b7e3e0646b9b 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -4,6 +4,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8998.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
-+#include <dt-bindings/power/qcom-rpmpd.h>
- #include <dt-bindings/gpio/gpio.h>
- 
- / {
-@@ -272,6 +273,56 @@
- 				compatible = "qcom,rpmcc-msm8998", "qcom,rpmcc";
- 				#clock-cells = <1>;
- 			};
-+
-+			rpmpd: power-controller {
-+				compatible = "qcom,msm8998-rpmpd";
-+				#power-domain-cells = <1>;
-+				operating-points-v2 = <&rpmpd_opp_table>;
-+
-+				rpmpd_opp_table: opp-table {
-+					compatible = "operating-points-v2";
-+
-+					rpmpd_opp_ret: opp1 {
-+						opp-level = <RPM_SMD_LEVEL_RETENTION>;
-+					};
-+
-+					rpmpd_opp_ret_plus: opp2 {
-+						opp-level = <RPM_SMD_LEVEL_RETENTION_PLUS>;
-+					};
-+
-+					rpmpd_opp_min_svs: opp3 {
-+						opp-level = <RPM_SMD_LEVEL_MIN_SVS>;
-+					};
-+
-+					rpmpd_opp_low_svs: opp4 {
-+						opp-level = <RPM_SMD_LEVEL_LOW_SVS>;
-+					};
-+
-+					rpmhpd_opp_svs: opp5 {
-+						opp-level = <RPM_SMD_LEVEL_SVS>;
-+					};
-+
-+					rpmhpd_opp_svs_plus: opp6 {
-+						opp-level = <RPM_SMD_LEVEL_SVS_PLUS>;
-+					};
-+
-+					rpmhpd_opp_nom: opp7 {
-+						opp-level = <RPM_SMD_LEVEL_NOM>;
-+					};
-+
-+					rpmhpd_opp_nom_plus: opp8 {
-+						opp-level = <RPM_SMD_LEVEL_NOM_PLUS>;
-+					};
-+
-+					rpmhpd_opp_turbo: opp9 {
-+						opp-level = <RPM_SMD_LEVEL_TURBO>;
-+					};
-+
-+					rpmhpd_opp_turbo_plus: opp10 {
-+						opp-level = <RPM_SMD_LEVEL_BINNING>;
-+					};
-+				};
-+			};
- 		};
- 	};
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+T24gMTQvMDMvMjAxOSAyMDoyNiwgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBUaGUgX19vZl90cmFu
+c2xhdGVfYWRkcmVzcyBmdW5jdGlvbiBpcyB1c2VkIHRvIHRyYW5zbGF0ZSB0aGUgZGV2aWNlIHRy
+ZWUKPiBhZGRyZXNzZXMgdG8gcGh5c2ljYWwgYWRkcmVzc2VzIHVzaW5nIHRoZSB2YXJpb3VzIHJh
+bmdlcyBwcm9wZXJ0eSB0byBjcmVhdGUKPiB0aGUgb2Zmc2V0Lgo+IAo+IEhvd2V2ZXIsIGl0J3Mg
+c2hhcmVkIGJldHdlZW4gdGhlIENQVSBhZGRyZXNzZXMgKGJhc2VkIG9uIHRoZSByYW5nZXMKPiBw
+cm9wZXJ0eSkgYW5kIHRoZSBETUEgYWRkcmVzc2VzIChiYXNlZCBvbiBkbWEtcmFuZ2VzKS4gU2lu
+Y2Ugd2UncmUgZ29pbmcgdG8KPiBhZGQgc3VwcG9ydCBmb3IgYSBETUEgcGFyZW50IG5vZGUgdGhh
+dCBpcyBub3QgdGhlIERUIHBhcmVudCBub2RlLCB3ZSBuZWVkCj4gdG8gY2hhbmdlIHRoZSBsb2dp
+YyBhIGJpdCB0byBoYXZlIGFuIG9wdGlvbmFsIHBhcmVudCBub2RlIHRoYXQgd2Ugc2hvdWxkCj4g
+dXNlLgoKTml0OiB0aGUgIm9wdGlvbmFsIHBhcmVudCBub2RlIiBpcyBub3cgYSBjYWxsYmFjayBm
+dW5jdGlvbiBmb3IgCnJldHJpZXZpbmcgdGhlIHJlbGV2YW50IHBhcmVudCBub2RlLgoKPiBTaWdu
+ZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29tPgo+IC0t
+LQo+ICAgZHJpdmVycy9vZi9hZGRyZXNzLmMgfCAxNSArKysrKysrKysrLS0tLS0KPiAgIDEgZmls
+ZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL29mL2FkZHJlc3MuYyBiL2RyaXZlcnMvb2YvYWRkcmVzcy5jCj4gaW5kZXgg
+MjI3MDM3M2IzMGFiLi4xNDBiZDA3MTgwNjcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9vZi9hZGRy
+ZXNzLmMKPiArKysgYi9kcml2ZXJzL29mL2FkZHJlc3MuYwo+IEBAIC01NjksNiArNTY5LDcgQEAg
+c3RhdGljIGludCBvZl90cmFuc2xhdGVfb25lKHN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50LCBz
+dHJ1Y3Qgb2ZfYnVzICpidXMsCj4gICAgKiByZWxhdGl2ZSB0byB0aGF0IG5vZGUuCj4gICAgKi8K
+PiAgIHN0YXRpYyB1NjQgX19vZl90cmFuc2xhdGVfYWRkcmVzcyhzdHJ1Y3QgZGV2aWNlX25vZGUg
+KmRldiwKPiArCQkJCSAgc3RydWN0IGRldmljZV9ub2RlICooKmdldF9wYXJlbnQpKGNvbnN0IHN0
+cnVjdCBkZXZpY2Vfbm9kZSAqKSwKPiAgIAkJCQkgIGNvbnN0IF9fYmUzMiAqaW5fYWRkciwgY29u
+c3QgY2hhciAqcnByb3AsCj4gICAJCQkJICBzdHJ1Y3QgZGV2aWNlX25vZGUgKipob3N0KQo+ICAg
+ewo+IEBAIC01ODUsOSArNTg2LDEwIEBAIHN0YXRpYyB1NjQgX19vZl90cmFuc2xhdGVfYWRkcmVz
+cyhzdHJ1Y3QgZGV2aWNlX25vZGUgKmRldiwKPiAgIAo+ICAgCSpob3N0ID0gTlVMTDsKPiAgIAkv
+KiBHZXQgcGFyZW50ICYgbWF0Y2ggYnVzIHR5cGUgKi8KPiAtCXBhcmVudCA9IG9mX2dldF9wYXJl
+bnQoZGV2KTsKPiArCXBhcmVudCA9IGdldF9wYXJlbnQoZGV2KTsKPiAgIAlpZiAocGFyZW50ID09
+IE5VTEwpCj4gICAJCWdvdG8gYmFpbDsKPiArCgpOaXQ6IHNwdXJpb3VzIHdoaXRlc3BhY2UuCgpP
+dGhlcndpc2UsCgpSZXZpZXdlZC1ieTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNv
+bT4KCj4gICAJYnVzID0gb2ZfbWF0Y2hfYnVzKHBhcmVudCk7Cj4gICAKPiAgIAkvKiBDb3VudCBh
+ZGRyZXNzIGNlbGxzICYgY29weSBhZGRyZXNzIGxvY2FsbHkgKi8KPiBAQCAtNjA5LDcgKzYxMSw3
+IEBAIHN0YXRpYyB1NjQgX19vZl90cmFuc2xhdGVfYWRkcmVzcyhzdHJ1Y3QgZGV2aWNlX25vZGUg
+KmRldiwKPiAgIAkJLyogU3dpdGNoIHRvIHBhcmVudCBidXMgKi8KPiAgIAkJb2Zfbm9kZV9wdXQo
+ZGV2KTsKPiAgIAkJZGV2ID0gcGFyZW50Owo+IC0JCXBhcmVudCA9IG9mX2dldF9wYXJlbnQoZGV2
+KTsKPiArCQlwYXJlbnQgPSBnZXRfcGFyZW50KGRldik7Cj4gICAKPiAgIAkJLyogSWYgcm9vdCwg
+d2UgaGF2ZSBmaW5pc2hlZCAqLwo+ICAgCQlpZiAocGFyZW50ID09IE5VTEwpIHsKPiBAQCAtNjY1
+LDcgKzY2Nyw4IEBAIHU2NCBvZl90cmFuc2xhdGVfYWRkcmVzcyhzdHJ1Y3QgZGV2aWNlX25vZGUg
+KmRldiwgY29uc3QgX19iZTMyICppbl9hZGRyKQo+ICAgCXN0cnVjdCBkZXZpY2Vfbm9kZSAqaG9z
+dDsKPiAgIAl1NjQgcmV0Owo+ICAgCj4gLQlyZXQgPSBfX29mX3RyYW5zbGF0ZV9hZGRyZXNzKGRl
+diwgaW5fYWRkciwgInJhbmdlcyIsICZob3N0KTsKPiArCXJldCA9IF9fb2ZfdHJhbnNsYXRlX2Fk
+ZHJlc3MoZGV2LCBvZl9nZXRfcGFyZW50LAo+ICsJCQkJICAgICBpbl9hZGRyLCAicmFuZ2VzIiwg
+Jmhvc3QpOwo+ICAgCWlmIChob3N0KSB7Cj4gICAJCW9mX25vZGVfcHV0KGhvc3QpOwo+ICAgCQly
+ZXR1cm4gT0ZfQkFEX0FERFI7Cj4gQEAgLTY4MCw3ICs2ODMsOCBAQCB1NjQgb2ZfdHJhbnNsYXRl
+X2RtYV9hZGRyZXNzKHN0cnVjdCBkZXZpY2Vfbm9kZSAqZGV2LCBjb25zdCBfX2JlMzIgKmluX2Fk
+ZHIpCj4gICAJc3RydWN0IGRldmljZV9ub2RlICpob3N0Owo+ICAgCXU2NCByZXQ7Cj4gICAKPiAt
+CXJldCA9IF9fb2ZfdHJhbnNsYXRlX2FkZHJlc3MoZGV2LCBpbl9hZGRyLCAiZG1hLXJhbmdlcyIs
+ICZob3N0KTsKPiArCXJldCA9IF9fb2ZfdHJhbnNsYXRlX2FkZHJlc3MoZGV2LCBvZl9nZXRfcGFy
+ZW50LAo+ICsJCQkJICAgICBpbl9hZGRyLCAiZG1hLXJhbmdlcyIsICZob3N0KTsKPiAgIAo+ICAg
+CWlmIChob3N0KSB7Cj4gICAJCW9mX25vZGVfcHV0KGhvc3QpOwo+IEBAIC03MzYsNyArNzQwLDgg
+QEAgc3RhdGljIHU2NCBvZl90cmFuc2xhdGVfaW9wb3J0KHN0cnVjdCBkZXZpY2Vfbm9kZSAqZGV2
+LCBjb25zdCBfX2JlMzIgKmluX2FkZHIsCj4gICAJdW5zaWduZWQgbG9uZyBwb3J0Owo+ICAgCXN0
+cnVjdCBkZXZpY2Vfbm9kZSAqaG9zdDsKPiAgIAo+IC0JdGFkZHIgPSBfX29mX3RyYW5zbGF0ZV9h
+ZGRyZXNzKGRldiwgaW5fYWRkciwgInJhbmdlcyIsICZob3N0KTsKPiArCXRhZGRyID0gX19vZl90
+cmFuc2xhdGVfYWRkcmVzcyhkZXYsIG9mX2dldF9wYXJlbnQsCj4gKwkJCQkgICAgICAgaW5fYWRk
+ciwgInJhbmdlcyIsICZob3N0KTsKPiAgIAlpZiAoaG9zdCkgewo+ICAgCQkvKiBob3N0LXNwZWNp
+ZmljIHBvcnQgYWNjZXNzICovCj4gICAJCXBvcnQgPSBsb2dpY19waW9fdHJhbnNfaHdhZGRyKCZo
+b3N0LT5md25vZGUsIHRhZGRyLCBzaXplKTsKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVs
