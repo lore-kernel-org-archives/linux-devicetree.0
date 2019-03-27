@@ -1,35 +1,33 @@
-Return-Path: <SRS0=Zx4x=R6=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 2/4] dt-bindings: input: ads7846: fix property description
-Date: Wed, 27 Mar 2019 14:39:25 +0100
-Message-Id: <20190327133927.1340-3-m.felsch@pengutronix.de>
-In-Reply-To: <20190327133927.1340-1-m.felsch@pengutronix.de>
-References: <20190327133927.1340-1-m.felsch@pengutronix.de>
+Return-Path: <robherring2@gmail.com>
+Date: Wed, 27 Mar 2019 14:44:25 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] Input: ili210x - Add DT binding for the Ilitek
+ ILI2117 touch controller
+Message-ID: <20190327194425.GA641@bogus>
+References: <20190302141704.32547-1-marex@denx.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: dmitry.torokhov@gmail.com, robh+dt@kernel.org
-Cc: kernel@pengutronix.de, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190302141704.32547-1-marex@denx.de>
+To: Marek Vasut <marex@denx.de>
+Cc: linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Henrik Rydberg <rydberg@bitmath.org>, Olivier Sobrie <olivier@sobrie.be>, Philipp Puschmann <pp@emlix.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The ti,y-max is used for the maximum value of the Y axis.
+On Sat,  2 Mar 2019 15:17:03 +0100, Marek Vasut wrote:
+> Add DT binding for the Ilitek ILI2117 touch controller, which is yet
+> again a slightly different device in the ILI21xx family.
+> 
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Henrik Rydberg <rydberg@bitmath.org>
+> Cc: Olivier Sobrie <olivier@sobrie.be>
+> Cc: Philipp Puschmann <pp@emlix.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> To: linux-input@vger.kernel.org
+> ---
+>  Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- Documentation/devicetree/bindings/input/touchscreen/ads7846.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt b/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt
-index 04413da51391..ce540ddac902 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt
-@@ -52,7 +52,7 @@ Optional properties:
- 	ti,x-min			Minimum value on the X axis (u16).
- 	ti,y-min			Minimum value on the Y axis (u16).
- 	ti,x-max			Maximum value on the X axis (u16).
--	ti,y-max			Minimum value on the Y axis (u16).
-+	ti,y-max			Maximum value on the Y axis (u16).
- 	ti,pressure-min			Minimum reported pressure value
- 					(threshold) - u16.
- 	ti,pressure-max			Maximum reported pressure value (u16).
--- 
-2.20.1
+Reviewed-by: Rob Herring <robh@kernel.org>
