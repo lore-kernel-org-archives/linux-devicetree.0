@@ -1,12 +1,12 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH 6/7] dt-bindings: gnss: Add u-blox,neo-6m compatible
-Date: Wed, 27 Mar 2019 01:18:42 +0100
-Message-ID: <20190327001843.2420-7-megous@megous.com>
+Subject: [PATCH 5/7] gnss: Add u-blox,neo-6m compatible
+Date: Wed, 27 Mar 2019 01:18:41 +0100
+Message-ID: <20190327001843.2420-6-megous@megous.com>
 References: <20190327001843.2420-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBB4MC5PSAKGQEK74MLBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBB4EC5PSAKGQEYTDACBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <20190327001843.2420-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -24,20 +24,20 @@ Add compatible for u-blox NEO-6M GPS module.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- Documentation/devicetree/bindings/gnss/u-blox.txt | 1 +
+ drivers/gnss/ubx.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/gnss/u-blox.txt b/Documentation/devicetree/bindings/gnss/u-blox.txt
-index e475659cb85f..7cdefd058fe0 100644
---- a/Documentation/devicetree/bindings/gnss/u-blox.txt
-+++ b/Documentation/devicetree/bindings/gnss/u-blox.txt
-@@ -9,6 +9,7 @@ Required properties:
- 
- - compatible	: Must be one of
- 
-+			"u-blox,neo-6m"
- 			"u-blox,neo-8"
- 			"u-blox,neo-m8"
- 
+diff --git a/drivers/gnss/ubx.c b/drivers/gnss/ubx.c
+index 12568aebb7f6..1ada2fad1d4e 100644
+--- a/drivers/gnss/ubx.c
++++ b/drivers/gnss/ubx.c
+@@ -132,6 +132,7 @@ static void ubx_remove(struct serdev_device *serdev)
+ static const struct of_device_id ubx_of_match[] = {
+ 	{ .compatible = "u-blox,neo-8" },
+ 	{ .compatible = "u-blox,neo-m8" },
++	{ .compatible = "u-blox,neo-6m" },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, ubx_of_match);
 -- 
 2.21.0
