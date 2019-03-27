@@ -1,7 +1,7 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v3 7/9] dt-bindings: power: Add rpm power domain bindings for msm8998
-Date: Wed, 27 Mar 2019 18:08:30 +0530
-Message-ID: <20190327123832.11566-8-sibis@codeaurora.org>
+Subject: [PATCH v3 8/9] soc: qcom: rpmpd: Add MSM8998 power-domains
+Date: Wed, 27 Mar 2019 18:08:31 +0530
+Message-ID: <20190327123832.11566-9-sibis@codeaurora.org>
 References: <20190327123832.11566-1-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,49 +12,78 @@ To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, rnaya
 Cc: david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add RPM power domain bindings for the msm8998 family of SoC
+Add the shared cx/mx and sensor sub-system's cx and mx
+power-domains found on MSM8998.
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- .../devicetree/bindings/power/qcom,rpmpd.txt         |  1 +
- include/dt-bindings/power/qcom-rpmpd.h               | 12 ++++++++++++
- 2 files changed, 13 insertions(+)
+ drivers/soc/qcom/rpmpd.c | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-index 172ccf940c5c..eb35b22f9e23 100644
---- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-+++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-@@ -6,6 +6,7 @@ which then translates it into a corresponding voltage on a rail
- Required Properties:
-  - compatible: Should be one of the following
- 	* qcom,msm8996-rpmpd: RPM Power domain for the msm8996 family of SoC
-+	* qcom,msm8998-rpmpd: RPM Power domain for the msm8998 family of SoC
- 	* qcom,qcs404-rpmpd: RPM Power domain for the qcs404 family of SoC
- 	* qcom,sdm845-rpmhpd: RPMh Power domain for the sdm845 family of SoC
-  - #power-domain-cells: number of cells in Power domain specifier
-diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
-index 450378662944..93e36d011527 100644
---- a/include/dt-bindings/power/qcom-rpmpd.h
-+++ b/include/dt-bindings/power/qcom-rpmpd.h
-@@ -36,6 +36,18 @@
- #define MSM8996_VDDSSCX		5
- #define MSM8996_VDDSSCX_VFC	6
+diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
+index 238a9e02e890..706a3f63038e 100644
+--- a/drivers/soc/qcom/rpmpd.c
++++ b/drivers/soc/qcom/rpmpd.c
+@@ -19,9 +19,12 @@
+ /* Resource types */
+ #define RPMPD_SMPA 0x61706d73 /* smpa */
+ #define RPMPD_LDOA 0x616f646c /* ldoa */
++#define RPMPD_RWCX 0x78637772 /* rwcx */
+ #define RPMPD_RWMX 0x786d7772 /* rwmx */
+ #define RPMPD_RWLC 0x636c7772 /* rwlc */
+ #define RPMPD_RWLM 0x6d6c7772 /* rwlm */
++#define RPMPD_RWSC 0x63737772 /* rwsc */
++#define RPMPD_RWSM 0x6d737772 /* rwsm */
  
-+/* MSM8998 Power Domain Indexes */
-+#define MSM8998_VDDCX		0
-+#define MSM8998_VDDCX_AO	1
-+#define MSM8998_VDDCX_VFL	2
-+#define MSM8998_VDDMX		3
-+#define MSM8998_VDDMX_AO	4
-+#define MSM8998_VDDMX_VFL	5
-+#define MSM8998_SSCCX		6
-+#define MSM8998_SSCCX_VFL	7
-+#define MSM8998_SSCMX		8
-+#define MSM8998_SSCMX_VFL	9
+ /* Operation Keys */
+ #define KEY_CORNER		0x6e726f63 /* corn */
+@@ -135,6 +138,38 @@ static const struct rpmpd_desc msm8996_desc = {
+ 	.max_state = MAX_8996_RPMPD_STATE,
+ };
+ 
++/* msm8998 RPM Power domains */
++DEFINE_RPMPD_PAIR(msm8998, vddcx, vddcx_ao, RWCX, LEVEL, 0);
++DEFINE_RPMPD_VFL(msm8998, vddcx_vfl, RWCX, 0);
 +
- /* QCS404 Power Domains */
- #define QCS404_VDDMX		0
- #define QCS404_VDDMX_AO		1
++DEFINE_RPMPD_PAIR(msm8998, vddmx, vddmx_ao, RWMX, LEVEL, 0);
++DEFINE_RPMPD_VFL(msm8998, vddmx_vfl, RWMX, 0);
++
++DEFINE_RPMPD_LEVEL(msm8998, vdd_ssccx, RWSC, 0);
++DEFINE_RPMPD_VFL(msm8998, vdd_ssccx_vfl, RWSC, 0);
++
++DEFINE_RPMPD_LEVEL(msm8998, vdd_sscmx, RWSM, 0);
++DEFINE_RPMPD_VFL(msm8998, vdd_sscmx_vfl, RWSM, 0);
++
++static struct rpmpd *msm8998_rpmpds[] = {
++	[MSM8998_VDDCX] =		&msm8998_vddcx,
++	[MSM8998_VDDCX_AO] =		&msm8998_vddcx_ao,
++	[MSM8998_VDDCX_VFL] =		&msm8998_vddcx_vfl,
++	[MSM8998_VDDMX] =		&msm8998_vddmx,
++	[MSM8998_VDDMX_AO] =		&msm8998_vddmx_ao,
++	[MSM8998_VDDMX_VFL] =		&msm8998_vddmx_vfl,
++	[MSM8998_SSCCX] =		&msm8998_vdd_ssccx,
++	[MSM8998_SSCCX_VFL] =		&msm8998_vdd_ssccx_vfl,
++	[MSM8998_SSCMX] =		&msm8998_vdd_sscmx,
++	[MSM8998_SSCMX_VFL] =		&msm8998_vdd_sscmx_vfl,
++};
++
++static const struct rpmpd_desc msm8998_desc = {
++	.rpmpds = msm8998_rpmpds,
++	.num_pds = ARRAY_SIZE(msm8998_rpmpds),
++	.max_state = RPM_SMD_LEVEL_BINNING,
++};
++
+ /* qcs404 RPM Power domains */
+ DEFINE_RPMPD_PAIR(qcs404, vddmx, vddmx_ao, RWMX, LEVEL, 0);
+ DEFINE_RPMPD_VFL(qcs404, vddmx_vfl, RWMX, 0);
+@@ -163,6 +198,7 @@ static const struct rpmpd_desc qcs404_desc = {
+ 
+ static const struct of_device_id rpmpd_match_table[] = {
+ 	{ .compatible = "qcom,msm8996-rpmpd", .data = &msm8996_desc },
++	{ .compatible = "qcom,msm8998-rpmpd", .data = &msm8998_desc },
+ 	{ .compatible = "qcom,qcs404-rpmpd", .data = &qcs404_desc },
+ 	{ }
+ };
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
