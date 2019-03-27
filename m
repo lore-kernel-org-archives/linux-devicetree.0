@@ -1,24 +1,18 @@
-Return-Path: <SRS0=NEUt=R6=linux.intel.com=sakari.ailus@kernel.org>
-Date: Wed, 27 Mar 2019 11:56:35 +0200
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v2 1/1] device property: Add
- fwnode_graph_get_endpoint_by_id
-Message-ID: <20190327095635.ozf4ttmiuyhm6u72@paasikivi.fi.intel.com>
-References: <20190316113605.12928-1-sakari.ailus@linux.intel.com>
- <CAJZ5v0iNA3VVV_W+wSSJ0wzuByNUwpiEcMatuOT+f7dvQtPBkw@mail.gmail.com>
+Return-Path: <SRS0=o39O=R6=gmail.com=rjwysocki@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20190316113605.12928-1-sakari.ailus@linux.intel.com> <CAJZ5v0iNA3VVV_W+wSSJ0wzuByNUwpiEcMatuOT+f7dvQtPBkw@mail.gmail.com>
 In-Reply-To: <CAJZ5v0iNA3VVV_W+wSSJ0wzuByNUwpiEcMatuOT+f7dvQtPBkw@mail.gmail.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 27 Mar 2019 10:42:23 +0100
+Message-ID: <CAJZ5v0hqzBiLWLCPa5tnTzbayNZ5HOy=gxt_VU_0QQFjHbt6hA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] device property: Add fwnode_graph_get_endpoint_by_id
+Content-Type: text/plain; charset="UTF-8"
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
 Cc: Rob Herring <robh@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Rafael,
-
-Thank you for the review.
-
-On Tue, Mar 26, 2019 at 11:53:25PM +0100, Rafael J. Wysocki wrote:
+ On Tue, Mar 26, 2019 at 11:53 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
 > On Sat, Mar 16, 2019 at 12:36 PM Sakari Ailus
 > <sakari.ailus@linux.intel.com> wrote:
 > >
@@ -60,74 +54,49 @@ On Tue, Mar 26, 2019 at 11:53:25PM +0100, Rafael J. Wysocki wrote:
 > >  /**
 > > + * fwnode_graph_get_endpoint_by_id - get endpoint node by port and endpoint
 > > + *                                  numbers
-> 
+>
 > IMO you can drop "node" from the description line and then it will fit
 > under 80 chars.
-
-Done.
-
-> 
+>
 > > + * @fwnode: pointer to parent fwnode_handle containing the graph
-> 
+>
 > "pointer to" is redundant here IMO.
-
-Fixed.
-
-> 
+>
 > > + * @port: identifier of the port node
 > > + * @endpoint: identifier of the endpoint node under the port node
 > > + * @flags: fwnode graph flags
-> 
+>
 > s/graph/lookup/ ?
-
-Yes.
-
-> 
+>
 > > + *
 > > + * Returns the fwnode handle to the local endpoint corresponding the port and
-> 
+>
 > s/to/of/ ?
-
-Yes.
-
-> 
+>
 > Also there should be "corresponding to the port ..."
-
-I'd say "to" doesn't belong there. I guess neither of us is a native
-speaker so I'd hope to get a comment from one. :-)
-
-> 
+>
 > And I would say "Return ..."
-
-Fixed.
-
-> 
+>
 > > + * endpoint IDs or NULL if not found.
-> 
+>
 > I would say here "If FWNODE_GRAPH_ENDPOINT_NEXT is passed in @flags
 > and the specified endpoint has not been found, look for the closest
 > endpoint ID greater than the specified one and return the endpoint
 > that corresponds to it, if present".
-> 
+>
 > Also "Do not return endpoints that belong to disabled devices, unless
 > FWNODE_GRAPH_DEVICE_DISABLED is passed in @flags".
-
-I replaced the original with this as such.
-
-> 
+>
 > > + *
 > > + * Flags may be set in order to obtain the endpoint instead of just returning
 > > + * the specified one or none at all, or to only return endpoints that belong to
 > > + * a device that is available.
 > > + *
 > > + * Use fwnode_handle_put() on the endpoint fwnode handle when done using it.
-> 
+>
 > I would say "The returned endpoint needs to be released by calling
 > fwnode_handle_put() on it when it is not necessary any more."
-
-How about s/necessary/needed/ ?
-
-> 
+>
 > > + */
 > > +struct fwnode_handle *
 > > +fwnode_graph_get_endpoint_by_id(const struct fwnode_handle *fwnode,
@@ -137,22 +106,14 @@ How about s/necessary/needed/ ?
 > > +       struct fwnode_handle *ep = NULL, *best_ep = NULL;
 > > +       unsigned int best_ep_id = 0;
 > > +       bool endpoint_next = flags & FWNODE_GRAPH_ENDPOINT_NEXT;
-> 
+>
 > I tend to apply !! to things like the right-hand side of the above to
 > get a proper bool value.
-
-It's not necessary: casting any non-zero value to bool is true. I couldn't
-find an authoritative reference tut it's not hard to find examples around
-the kernel, including arch/x86.
-
-> 
+>
 > > +       bool disabled = flags & FWNODE_GRAPH_DEVICE_DISABLED;
-> 
+>
 > I would call this "enabled_only" and reverse its meaning.
-
-Makes sense, that makes the code below easier to follow.
-
-> 
+>
 > > +
 > > +       while ((ep = fwnode_graph_get_next_endpoint(fwnode, ep))) {
 > > +               struct fwnode_endpoint fwnode_ep = { 0 };
@@ -164,22 +125,19 @@ Makes sense, that makes the code below easier to follow.
 > > +                */
 > > +               if (!disabled) {
 > > +                       struct fwnode_handle *dev;
-> 
+>
 > s/dev/dev_node/
-> 
+>
 > bool available;
-> 
+>
 > > +
 > > +                       dev = fwnode_graph_get_remote_port_parent(ep);
-> 
+>
 > available = fwnode_device_is_available(dev_node);
 > fwnode_handle_put(dev_node);
 > if (!available)
 >         continue;
-
-Yes, makes sense.
-
-> 
+>
 > > +
 > > +                       if (!fwnode_device_is_available(dev)) {
 > > +                               fwnode_handle_put(dev);
@@ -200,66 +158,45 @@ Yes, makes sense.
 > > +               /* Is this an exact match? If so, return it immediately. */
 > > +               if (fwnode_ep.id == endpoint)
 > > +                       return ep;
-> 
+>
 > This appears to mean that the endpoint has been reference-counted, but
 > then the reference should be dropped before the "continue" above,
 > shouldn't it?
-
-This is handled by fwnode_graph_get_next_endpoint() which puts the previous
-endpoint on every iteration.
-
-> 
+>
 > > +
 > > +               /* Is an exact match needed? If so, skip this one. */
 > > +               if (!endpoint_next)
 > > +                       continue;
-> 
+>
 > And here?
-> 
+>
 > Besides, the three comments above are redundant IMO (they don't
 > explain anything, but just repeat what the code does).
-
-Well, true; I thought they might be useful to understand what the function
-does. I have no problem removing them.
-
-> 
+>
 > > +
 > > +               /*
 > > +                * Is this endpoint better than we already had?
 > > +                */
-> 
+>
 > I would say in this comment "If the endpoint that has just been found
 > is not the first matching one and the ID of the one found previously
 > is closer to the requested endpoint ID, skip it."
-
-Yes.
-
-> 
+>
 > > +               if (fwnode_ep.id < endpoint ||
 > > +                   (best_ep && best_ep_id < fwnode_ep.id))
-> 
+>
 > Drop the fwnode_ep reference?
-
-fwnode_graph_parse_endpoint() takes no reference.
-
-> 
+>
 > > +                       continue;
 > > +
 > > +               /* Replace the one we had with the newly found one. */
-> 
+>
 > Redundant comment.
-
-Removed.
-
-> 
+>
 > > +               fwnode_handle_put(best_ep);
-> 
+>
 > Does this always work if best_ep is NULL?
-
-Yes, the fwnode API functions (mostly?) are safe to call with NULL fwnode;
-at least this one is.
-
-> 
+>
 > > +               best_ep = fwnode_handle_get(ep);
 > > +               best_ep_id = fwnode_ep.id;
 > > +       }
@@ -285,52 +222,36 @@ at least this one is.
 > > + *
 > > + * @FWNODE_GRAPH_ENDPOINT_NEXT: if no specified endpoint is found, obtain the
 > > + *                             smallest endpoint number greater than specified
-> 
+>
 > "In the no exact match case, look for the closest endpoint ID greater
 > than the specified one."
-
-How about: "In the case of no exact match, ..."?
-
-> 
+>
 > > + * @FWNODE_GRAPH_DEVICE_DISABLED that the device to which the remote
-> 
+>
 > Missing colon.
-
-Fixed.
-
-> 
+>
 > > + *                              endpoint of the given endpoint belongs to,
 > > + *                              may be disabled
-> 
+>
 > "Also return endpoints that belong to disabled devices."
-> 
+>
 > > + */
 > > +enum fwnode_graph_get_endpoint_flags {
 > > +       FWNODE_GRAPH_ENDPOINT_NEXT      = 0x00000001,
-> 
+>
 > BIT(1) ?
-
-BIT(0), BIT(1) below.
-
-> 
+>
 > > +       FWNODE_GRAPH_DEVICE_DISABLED    = 0x00000002,
-> 
+>
 > BIT(2) ?
-> 
+>
 > > +};
-> > +
-> > +struct fwnode_handle *
-> > +fwnode_graph_get_endpoint_by_id(const struct fwnode_handle *fwnode,
-> > +                               u32 port, u32 endpoint,
-> > +                               enum fwnode_graph_get_endpoint_flags flags);
-> > +
-> >  #define fwnode_graph_for_each_endpoint(fwnode, child)                  \
-> >         for (child = NULL;                                              \
-> >              (child = fwnode_graph_get_next_endpoint(fwnode, child)); )
-> > --
 
--- 
-Kind regards,
+Actually, enum types are not particularly suitable for flags in my
+view, because something like
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+FWNODE_GRAPH_ENDPOINT_NEXT | FWNODE_GRAPH_DEVICE_DISABLED
+
+is not really defined within the enum type, for example.
+
+It's better to #define the flags IMO and use unsigned int as the type.
