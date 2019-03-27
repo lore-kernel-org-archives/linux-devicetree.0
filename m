@@ -1,8 +1,7 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH 7/7] ARM: dts: sun8i: tbs-a711: Enable UART2
- (for NEO-6M GPS module)
-Date: Wed, 27 Mar 2019 01:18:43 +0100
-Message-ID: <20190327001843.2420-8-megous@megous.com>
+Subject: [PATCH 3/7] ARM: dts: sun8i: a83t: Add nodes for UART2-UART4
+Date: Wed, 27 Mar 2019 01:18:39 +0100
+Message-ID: <20190327001843.2420-4-megous@megous.com>
 References: <20190327001843.2420-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
@@ -21,52 +20,57 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-TBS A711 tablet contains u-blox NEO-6M module connected to UART2.
-Enable UART2 to gain access to the module from userspace.
+A83T has 5 UART interfaces, but only the first two have their nodes
+defined in sun8i-a83t.dtsi. Add nodes for the missing interfaces.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 33 +++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-index 347fc0c31fa4..f9e7f5d3eff5 100644
---- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-@@ -98,6 +98,13 @@
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index fcb7ef5ce2df..e5c39eef1c29 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -873,6 +873,39 @@
+ 			status = "disabled";
  		};
- 	};
  
-+	reg_gps: reg-gps {
-+		compatible = "regulator-fixed";
-+		regulator-name = "gps";
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+	};
++		uart2: serial@1c28800 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x01c28800 0x400>;
++			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&ccu CLK_BUS_UART2>;
++			resets = <&ccu RST_BUS_UART2>;
++			status = "disabled";
++		};
 +
- 	reg_vbat: reg-vbat {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vbat";
-@@ -437,6 +444,20 @@
- 	};
- };
- 
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pb_pins>;
-+	status = "okay";
++		uart3: serial@1c28c00 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x01c28c00 0x400>;
++			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&ccu CLK_BUS_UART3>;
++			resets = <&ccu RST_BUS_UART3>;
++			status = "disabled";
++		};
 +
-+	gnss {
-+		compatible = "u-blox,neo-6m";
++		uart4: serial@1c29000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x01c29000 0x400>;
++			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&ccu CLK_BUS_UART4>;
++			resets = <&ccu RST_BUS_UART4>;
++			status = "disabled";
++		};
 +
-+		v-bckp-supply = <&reg_rtc_ldo>;
-+		vcc-supply = <&reg_gps>;
-+		current-speed = <9600>;
-+	};
-+};
-+
- &usb_otg {
- 	dr_mode = "otg";
- 	status = "okay";
+ 		i2c0: i2c@1c2ac00 {
+ 			compatible = "allwinner,sun8i-a83t-i2c",
+ 				     "allwinner,sun6i-a31-i2c";
 -- 
 2.21.0
