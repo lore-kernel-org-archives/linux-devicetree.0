@@ -1,79 +1,47 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/8] dt-bindings: stm32: add bindings for ML-AHB
- interconnect
-Date: Wed, 27 Mar 2019 18:07:22 -0500
-Message-ID: <20190327230722.GA13708@bogus>
-References: <1551795849-13672-1-git-send-email-fabien.dessenne@st.com>
- <1551795849-13672-2-git-send-email-fabien.dessenne@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v11 00/27] Ingenic JZ47xx TCU pachset v11
+Date: Thu, 28 Mar 2019 00:16:04 +0100
+Message-ID: <20190327231631.15708-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1551795849-13672-2-git-send-email-fabien.dessenne@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabien Dessenne <fabien.dessenne@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Ludovic Barre <ludovic.barre@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Wim Van Sebroeck <wim@linux-watchdog.org>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Mathieu Malaterre <malat@debian.org>, od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 05, 2019 at 03:24:02PM +0100, Fabien Dessenne wrote:
-> Document the ML-AHB interconnect for stm32 SoCs.
-> 
-> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-> ---
->  .../devicetree/bindings/arm/stm32/mlahb.txt        | 30 ++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/stm32/mlahb.txt b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
-> new file mode 100644
-> index 0000000..880cb38
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
-> @@ -0,0 +1,30 @@
-> +ML-AHB interconnect bindings
-> +
-> +These bindings describe the STM32 SoCs ML-AHB interconnect bus which connects
-> +a Cortex-M subsystem with dedicated memories.
-> +
-> +Required properties:
-> +- compatible: should be "simple-bus"
+Hi,
 
-A binding for simple-bus was the first thing that looked odd.
+This is the v11 of my patchset that adds support to the Timer/Counter
+Unit (TCU) present in the JZ47xx SoCs from Ingenic.
 
-> +- ranges: describes memory addresses translation between the local CPU and the
-> +	   remote Cortex-M processor. Each memory region, is declared with 3
-> +	   parameters:
-> +		 - param 1: device base address (Cortex-M processor address)
-> +		 - param 2: physical base address (local CPU address)
-> +		 - param 3: size of the memory region.
+Changes from v10:
 
-Given that the driver is parsing ranges itself, this looks like abuse of 
-ranges.
+[03/27]: Fix info about default value of ingenic,pwm-channels-mask
 
-What exactly is address 0 supposed to be here? If it is the M4's view of 
-memory, then dma-ranges is what you want to use here.
+[04/27]: - Change prototype of exported function
+           ingenic_tcu_pwm_can_use_chn(), use a struct device * as first
+	   argument.
+	 - Read clocksource using the regmap instead of bypassing it.
+	   Bypassing the regmap makes sense only for the sched_clock where
+	   the read operation must be as fast as possible.
+	 - Fix incorrect format in pr_crit() macro
 
+[05/27]: Use regmap inside the clocksource read functions. Keep bypassing the
+         regmap inside the sched_clock read functions.
 
-> +
-> +The Cortex-M remote processor accessed via the mlahb interconnect is described
-> +by a child node.
-> +
-> +Example:
-> +mlahb: mlahb@0 {
+[12/27]: Add note about abrupt shutdown
 
-Note that the unit-address is wrong here as it should be 38000000.
+[13/27]: - Use pwm_set_chip_data() to hold the clock pointers
+         - Remove unused variable 'jz' in jz4740_pwm_request()
 
-> +	compatible = "simple-bus";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	ranges = <0x00000000 0x38000000 0x10000>,
-> +		 <0x10000000 0x10000000 0x60000>,
-> +		 <0x30000000 0x30000000 0x60000>;
-> +
-> +	m4_rproc: m4@0 {
-> +		...
-> +	};
-> +};
-> -- 
-> 2.7.4
-> 
+[14/27]: - Use proper block-comment style.
+         - Modify commit message to fit the new algorithm used.
+
+[15/27]: Use new version of ingenic_tcu_pwm_can_use_chn()
+
+The other patches have not been modified since v10.
+
+If this patchset passes review, I'd like it to be merged in the MIPS
+tree.
+
+Thanks,
+-Paul
