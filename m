@@ -1,48 +1,113 @@
-Return-Path: <SRS0=DCRz=RF=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-out.m-online.net ([212.18.0.10]:42251 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfCBORM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Mar 2019 09:17:12 -0500
-From: Marek Vasut <marex@denx.de>
-Subject: [PATCH 1/2] Input: ili210x - Add DT binding for the Ilitek ILI2117 touch controller
-Date: Sat,  2 Mar 2019 15:17:03 +0100
-Message-Id: <20190302141704.32547-1-marex@denx.de>
+Return-Path: <SRS0=Zx4x=R6=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH 1/4] Input: ads7846 - convert to devm_ alloc functions
+Date: Wed, 27 Mar 2019 14:39:24 +0100
+Message-Id: <20190327133927.1340-2-m.felsch@pengutronix.de>
+In-Reply-To: <20190327133927.1340-1-m.felsch@pengutronix.de>
+References: <20190327133927.1340-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-input@vger.kernel.org
-Cc: Marek Vasut <marex@denx.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Henrik Rydberg <rydberg@bitmath.org>, Olivier Sobrie <olivier@sobrie.be>, Philipp Puschmann <pp@emlix.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: dmitry.torokhov@gmail.com, robh+dt@kernel.org
+Cc: kernel@pengutronix.de, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add DT binding for the Ilitek ILI2117 touch controller, which is yet
-again a slightly different device in the ILI21xx family.
+Convert to devm function to drop the 'no-mem' error handling path and
+strip down the remove funciton a bit.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Henrik Rydberg <rydberg@bitmath.org>
-Cc: Olivier Sobrie <olivier@sobrie.be>
-Cc: Philipp Puschmann <pp@emlix.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-To: linux-input@vger.kernel.org
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/input/touchscreen/ads7846.c | 37 ++++++++++++-----------------
+ 1 file changed, 15 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
-index b2a76301e632..dc194b2c151a 100644
---- a/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
-+++ b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
-@@ -1,8 +1,9 @@
--Ilitek ILI210x/ILI251x touchscreen controller
-+Ilitek ILI210x/ILI2117/ILI251x touchscreen controller
+diff --git a/drivers/input/touchscreen/ads7846.c b/drivers/input/touchscreen/ads7846.c
+index a2f45aefce08..5a7a8425d619 100644
+--- a/drivers/input/touchscreen/ads7846.c
++++ b/drivers/input/touchscreen/ads7846.c
+@@ -1283,13 +1283,17 @@ static int ads7846_probe(struct spi_device *spi)
+ 	if (err < 0)
+ 		return err;
  
- Required properties:
- - compatible:
-     ilitek,ili210x for ILI210x
-+    ilitek,ili2117 for ILI2117
-     ilitek,ili251x for ILI251x
+-	ts = kzalloc(sizeof(struct ads7846), GFP_KERNEL);
+-	packet = kzalloc(sizeof(struct ads7846_packet), GFP_KERNEL);
+-	input_dev = input_allocate_device();
+-	if (!ts || !packet || !input_dev) {
+-		err = -ENOMEM;
+-		goto err_free_mem;
+-	}
++	ts = devm_kzalloc(&spi->dev, sizeof(*ts), GFP_KERNEL);
++	if (!ts)
++		return -ENOMEM;
++
++	packet = devm_kzalloc(&spi->dev, sizeof(*packet), GFP_KERNEL);
++	if (!packet)
++		return -ENOMEM;
++
++	input_dev = devm_input_allocate_device(&spi->dev);
++	if (!input_dev)
++		return -ENOMEM;
  
- - reg: The I2C address of the device
+ 	spi_set_drvdata(spi, ts);
+ 
+@@ -1303,10 +1307,8 @@ static int ads7846_probe(struct spi_device *spi)
+ 	pdata = dev_get_platdata(&spi->dev);
+ 	if (!pdata) {
+ 		pdata = ads7846_probe_dt(&spi->dev);
+-		if (IS_ERR(pdata)) {
+-			err = PTR_ERR(pdata);
+-			goto err_free_mem;
+-		}
++		if (IS_ERR(pdata))
++			return PTR_ERR(pdata);
+ 	}
+ 
+ 	ts->model = pdata->model ? : 7846;
+@@ -1321,7 +1323,7 @@ static int ads7846_probe(struct spi_device *spi)
+ 		if (pdata->filter_init != NULL) {
+ 			err = pdata->filter_init(pdata, &ts->filter_data);
+ 			if (err < 0)
+-				goto err_free_mem;
++				return err;
+ 		}
+ 		ts->filter = pdata->filter;
+ 		ts->filter_cleanup = pdata->filter_cleanup;
+@@ -1352,7 +1354,6 @@ static int ads7846_probe(struct spi_device *spi)
+ 
+ 	input_dev->name = ts->name;
+ 	input_dev->phys = ts->phys;
+-	input_dev->dev.parent = &spi->dev;
+ 
+ 	input_dev->evbit[0] = BIT_MASK(EV_KEY) | BIT_MASK(EV_ABS);
+ 	input_dev->keybit[BIT_WORD(BTN_TOUCH)] = BIT_MASK(BTN_TOUCH);
+@@ -1451,10 +1452,7 @@ static int ads7846_probe(struct spi_device *spi)
+  err_cleanup_filter:
+ 	if (ts->filter_cleanup)
+ 		ts->filter_cleanup(ts->filter_data);
+- err_free_mem:
+-	input_free_device(input_dev);
+-	kfree(packet);
+-	kfree(ts);
++
+ 	return err;
+ }
+ 
+@@ -1467,8 +1465,6 @@ static int ads7846_remove(struct spi_device *spi)
+ 	ads7846_disable(ts);
+ 	free_irq(ts->spi->irq, ts);
+ 
+-	input_unregister_device(ts->input);
+-
+ 	ads784x_hwmon_unregister(spi, ts);
+ 
+ 	regulator_put(ts->reg);
+@@ -1484,9 +1480,6 @@ static int ads7846_remove(struct spi_device *spi)
+ 	if (ts->filter_cleanup)
+ 		ts->filter_cleanup(ts->filter_data);
+ 
+-	kfree(ts->packet);
+-	kfree(ts);
+-
+ 	dev_dbg(&spi->dev, "unregistered touchscreen\n");
+ 
+ 	return 0;
 -- 
-2.19.2
+2.20.1
