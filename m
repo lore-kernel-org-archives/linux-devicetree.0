@@ -1,71 +1,67 @@
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v2 1/6] device property: Add functions for accessing
- node's parents
-Date: Wed, 27 Mar 2019 13:26:25 +0100
-Message-ID: <20190327122625.eaisnw776vqwhhnh@pathway.suse.cz>
-References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
- <20190326124106.27694-2-sakari.ailus@linux.intel.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 10/10] arm64: Add Tegra194 PCIe driver to defconfig
+Date: Wed, 27 Mar 2019 12:26:49 +0000
+Message-ID: <c5ca34fe-4290-d9b7-cda3-23b4a11ec5d8@nvidia.com>
+References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
+ <1553613207-3988-11-git-send-email-vidyas@nvidia.com>
+ <a0491042-2f24-4ba8-754b-ba3959b77d6f@nvidia.com>
+ <44d7ff1d-c317-6ba2-86c0-981a6356ee9e@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190326124106.27694-2-sakari.ailus@linux.intel.com>
+In-Reply-To: <44d7ff1d-c317-6ba2-86c0-981a6356ee9e@nvidia.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, tiwai@suse.de, spujar@nvidia.com, skomatineni@nvidia.com, liviu.dudau@arm.com, krzk@kernel.org, heiko@sntech.de, horms+renesas@verge.net.au, olof@lixom.net, maxime.ripard@bootlin.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, jagan@amarulasolutions.com, enric.balletbo@collabora.com, ezequiel@collabora.com, stefan.wahren@i2se.com, marc.w.gonzalez@free.fr, l.stach@pengutronix.de, tpiepho@impinj.com, hayashi.kunihiko@socionext.co
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue 2019-03-26 14:41:01, Sakari Ailus wrote:
-> Add two convenience functions for accessing node's parents:
-> 
-> fwnode_count_parents() returns the number of parent nodes a given node
-> has. fwnode_get_nth_parent() returns node's parent at a given distance
-> from the node itself.
-> 
-> Also reorder fwnode_get_parent() in property.c according to the same order
-> as in property.h.
-> 
-> diff --git a/drivers/base/property.c b/drivers/base/property.c
-> index 8b91ab380d14..61eb6ceacc3f 100644
-> --- a/drivers/base/property.c
-> +++ b/drivers/base/property.c
-> @@ -554,17 +567,49 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
->  EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
->  
->  /**
-> - * fwnode_get_parent - Return parent firwmare node
-> - * @fwnode: Firmware whose parent is retrieved
-> + * fwnode_count_parents - Return the number of parents a node has
-> + * @fwnode: The node the parents of which are to be counted
->   *
-> - * Return parent firmware node of the given node if possible or %NULL if no
-> - * parent was available.
-> + * Returns the number of parents a node has.
->   */
-> -struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
-> +unsigned int fwnode_count_parents(struct fwnode_handle *fwnode)
->  {
-> -	return fwnode_call_ptr_op(fwnode, get_parent);
-> +	unsigned int count;
-> +
-> +	fwnode_handle_get(fwnode);
-> +
-> +	for (count = 0; fwnode; count++)
-> +		fwnode = fwnode_get_next_parent(fwnode);
 
-Is it guaranteed that all parents stay when
-fwnode_get_next_parent() releases the reference count
-for each counted member?
+On 27/03/2019 10:12, Vidya Sagar wrote:
+> On 3/27/2019 3:38 PM, Jon Hunter wrote:
+>>
+>> On 26/03/2019 15:13, Vidya Sagar wrote:
+>>> Add PCIe host controller driver for DesignWare core based
+>>> PCIe controller IP present in Tegra194.
+>>>
+>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>> ---
+>>> =C2=A0 arch/arm64/configs/defconfig | 1 +
+>>> =C2=A0 1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfi=
+g
+>>> index 2d9c39033c1a..2ddea5c4e87d 100644
+>>> --- a/arch/arm64/configs/defconfig
+>>> +++ b/arch/arm64/configs/defconfig
+>>> @@ -87,6 +87,7 @@ CONFIG_PCIE_QCOM=3Dy
+>>> =C2=A0 CONFIG_PCIE_ARMADA_8K=3Dy
+>>> =C2=A0 CONFIG_PCIE_KIRIN=3Dy
+>>> =C2=A0 CONFIG_PCIE_HISI_STB=3Dy
+>>> +CONFIG_PCIE_TEGRA194=3Dy
+>>> =C2=A0 CONFIG_ARM64_VA_BITS_48=3Dy
+>>> =C2=A0 CONFIG_SCHED_MC=3Dy
+>>> =C2=A0 CONFIG_NUMA=3Dy
+>>
+>> Maybe building as a module is more appropriate here as I am not sure
+>> that anyone else will want this built-in and it is not critical to
+>> booting AFAIK.
+> Since the DesignWare core framework doesn't yet have support for making
+> this
+> as a module, I added it as a built-in driver. I'll switch it to a module
+> once support is available.
 
-> +
-> +	return count - 1;
+Ah I see. We often get reports/patches if a driver has a removal
+function but is defined in the Kconfig to only support being built-in.
 
-We could start counting from count = -1;
+Does the designware core just need to export some symbols to support it
+being a module? If so it maybe worth adding these as part of the series
+to see if it is acceptable, otherwise it might not get done and there is
+no point us supporting it as a module.
 
->  }
-> -EXPORT_SYMBOL_GPL(fwnode_get_parent);
-> +EXPORT_SYMBOL_GPL(fwnode_count_parents);
-> +
+Cheers
+Jon
 
-Best Regards,
-Petr
+--=20
+nvpublic
