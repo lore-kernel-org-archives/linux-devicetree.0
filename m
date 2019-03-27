@@ -1,32 +1,72 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: arm: fsl: Add support for ZII VF610 SPB4
-Date: Wed, 27 Mar 2019 08:43:10 -0500
-Message-ID: <CAL_Jsq+7m1pRwoXH6ZM-Es-ZMprpazX8xsx6+nPkidKwOEYd=g@mail.gmail.com>
-References: <20190325182243.16788-1-andrew.smirnov@gmail.com> <20190325182243.16788-2-andrew.smirnov@gmail.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [RFC 2/2] ASoC: Add MICFIL SoC Digital Audio
+ Interface driver.
+Date: Wed, 27 Mar 2019 15:46:33 +0200
+Message-ID: <CAEnQRZBTjaHVPe=iW7f7ohJHNNaZBcPr_hv6dO7ng_CiQjaxdw@mail.gmail.com>
+References: <1544433661-32496-1-git-send-email-cosmin.samoila@nxp.com>
+ <1544433661-32496-3-git-send-email-cosmin.samoila@nxp.com>
+ <20181212181414.GE6920@sirena.org.uk>
+ <f3a0f305-dc96-f8b9-3c57-e45256326e2f@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190325182243.16788-2-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Fabio Estevam <festevam@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <f3a0f305-dc96-f8b9-3c57-e45256326e2f@linux.intel.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "robh@kernel.org" <robh@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, Mark Brown <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@nxp.com>, "gabrielcsmo@gmail.com" <gabrielcsmo@gmail.com>, Daniel Baluta <daniel.baluta@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 1:23 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+On Fri, Dec 14, 2018 at 10:09 PM Pierre-Louis Bossart
+<pierre-louis.bossart@linux.intel.com> wrote:
 >
-> Add support for ZII VF610 SPB4.
 >
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> On 12/12/18 12:14 PM, Mark Brown wrote:
+> >> +static irqreturn_t voice_detected_fn(int irq, void *devid)
+> >> +{
+> >> +    struct fsl_micfil *micfil = (struct fsl_micfil *)devid;
+> >> +    struct device *dev = &micfil->pdev->dev;
+> >> +    int ret;
+> >> +
+> >> +    /* disable hwvad */
+> >> +    ret = disable_hwvad(dev, true);
+> >> +    if (ret)
+> >> +            dev_err(dev, "Failed to disable HWVAD module\n");
+> >> +
+> >> +    /* notify userspace that voice was detected */
+> >> +    kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
+> >> +
+> >> +    return IRQ_HANDLED;
+> >> +}
+> > So, this looks like it's intended to be used for keyword detection type
+> > applications (though without the offload DSP that those tend to have).
+> > What the other implementations I've seen have ended up doing is using a
+> > compressed audio stream to return the audio data to userspace, allowing
+> > the audion stream to be paused when no audio is detected.  Your approach
+> > here is a bit more manual and may be more sensible for systems without
+> > the offload DSP however the decision to go outside ALSA and use a
+> > kobject needs to be thought about a bit, we'd want to ensure that
+> > there's a standard way of handling hardware like this so applications
+> > can work as consistently as possible with them.
+>
+> There's no mention of any buffer so it's likely plain vanilla VAD here.
+> We've seen two choices to warn userspace of a acoustic event, either use
+> a uevent or a kcontrol. I believe we ended-up chosing the latter on the
+> Intel side in the past and that was also the plan for SOF.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviving this discussion about VAD. Do you have any draft patches for
+the interface to send events to user space?
+
+We are now trying to upstream VAD for PDM and we are looking
+at all our options.
+
+thanks,
+Daniel.
