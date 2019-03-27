@@ -1,71 +1,27 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v4 4/7] of: address: Add support for the parent DMA bus
-Date: Wed, 27 Mar 2019 12:46:43 +0000
-Message-ID: <077b2e22-eb0d-8a0a-1e47-7dd078da1438@arm.com>
-References: <cover.221220f2f28e14ef07cce84e753ac662085d84ff.1552595146.git-series.maxime.ripard@bootlin.com>
- <1ed042a4c5b8c13c6692e12b2d630d75effbb90a.1552595146.git-series.maxime.ripard@bootlin.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v3 3/4] arm64: dts: rockchip: Define drive-impedance-ohm for RK3399's emmc-phy.
+Date: Wed, 27 Mar 2019 13:46:52 +0100
+Message-ID: <3316794.yJZ3nBLoSG@phil>
+References: <20190322113456.16324-1-christoph.muellner@theobroma-systems.com> <20190322113456.16324-3-christoph.muellner@theobroma-systems.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1ed042a4c5b8c13c6692e12b2d630d75effbb90a.1552595146.git-series.maxime.ripard@bootlin.com>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190322113456.16324-3-christoph.muellner@theobroma-systems.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawn.lin@rock-chips.com, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Kishon Vijay Abraham I <kishon@ti.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Matthias Brugger <mbrugger@suse.com>, Brian Norris <briannorris@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Douglas Anderson <dianders@chromium.org>, Viresh Kumar <viresh.kumar@linaro.org>, Ezequiel Garcia <ezequiel@collabora.com>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Vicente Bergas <vicencb@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTQvMDMvMjAxOSAyMDoyNiwgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBTb21lIFNvQ3MgaGF2
-ZSBkZXZpY2VzIHRoYXQgYXJlIHVzaW5nIGEgc2VwYXJhdGUgYnVzIGZyb20gdGhlIG1haW4gYnVz
-IHRvCj4gcGVyZm9ybSBETUEuCj4gCj4gVGhlc2UgYnVzZXMgbWlnaHQgaGF2ZSBzb21lIHJlc3Ry
-aWN0aW9ucyBhbmQvb3IgZGlmZmVyZW50IG1hcHBpbmcgdGhhbiBmcm9tCj4gdGhlIENQVSBzaWRl
-LCBzbyB3ZSdkIG5lZWQgdG8gZXhwcmVzcyB0aG9zZSB1c2luZyB0aGUgdXN1YWwgZG1hLXJhbmdl
-cywgYnV0Cj4gdXNpbmcgYSBkaWZmZXJlbnQgRFQgbm9kZSB0aGFuIHRoZSBub2RlJ3MgcGFyZW50
-Lgo+IAo+IE5vdyB0aGF0IHRoZSBnZW5lcmljIGludGVyY29ubmVjdCBiaW5kaW5ncyBhcmUgYXZh
-aWxhYmxlLCB3ZSBjYW4gbW9kZWwgYW4KPiBpbnRlcmNvbm5lY3Qgd2l0aCB0aGUgcmVzZXJ2ZWQg
-bmFtZSAiZG1hIiBmb3IgdGhvc2UgdXNlLWNhc2VzLgoKTml0OiBpdCdzICJkbWEtbWVtIiBub3cu
-Cgo+IFNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAYm9vdGxpbi5j
-b20+Cj4gLS0tCj4gICBkcml2ZXJzL29mL2FkZHJlc3MuYyB8IDI5ICsrKysrKysrKysrKysrKysr
-KysrKysrKysrLS0tCj4gICAxIGZpbGUgY2hhbmdlZCwgMjYgaW5zZXJ0aW9ucygrKSwgMyBkZWxl
-dGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9vZi9hZGRyZXNzLmMgYi9kcml2ZXJz
-L29mL2FkZHJlc3MuYwo+IGluZGV4IDE0MGJkMDcxODA2Ny4uOTVlNDdmMmU5MTk4IDEwMDY0NAo+
-IC0tLSBhL2RyaXZlcnMvb2YvYWRkcmVzcy5jCj4gKysrIGIvZHJpdmVycy9vZi9hZGRyZXNzLmMK
-PiBAQCAtNjc4LDE0ICs2NzgsMzEgQEAgdTY0IG9mX3RyYW5zbGF0ZV9hZGRyZXNzKHN0cnVjdCBk
-ZXZpY2Vfbm9kZSAqZGV2LCBjb25zdCBfX2JlMzIgKmluX2FkZHIpCj4gICB9Cj4gICBFWFBPUlRf
-U1lNQk9MKG9mX3RyYW5zbGF0ZV9hZGRyZXNzKTsKPiAgIAo+ICtzdGF0aWMgc3RydWN0IGRldmlj
-ZV9ub2RlICpfX29mX2dldF9kbWFfcGFyZW50KGNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAp
-Cj4gK3sKPiArCXN0cnVjdCBvZl9waGFuZGxlX2FyZ3MgYXJnczsKPiArCWludCByZXQsIGluZGV4
-Owo+ICsKPiArCWluZGV4ID0gb2ZfcHJvcGVydHlfbWF0Y2hfc3RyaW5nKG5wLCAiaW50ZXJjb25u
-ZWN0LW5hbWVzIiwgImRtYS1tZW0iKTsKPiArCWlmIChpbmRleCA8IDApCj4gKwkJcmV0dXJuIG9m
-X2dldF9wYXJlbnQobnApOwo+ICsKPiArCXJldCA9IG9mX3BhcnNlX3BoYW5kbGVfd2l0aF9hcmdz
-KG5wLCAiaW50ZXJjb25uZWN0cyIsCj4gKwkJCQkJICIjaW50ZXJjb25uZWN0LWNlbGxzIiwKPiAr
-CQkJCQkgaW5kZXgsICZhcmdzKTsKPiArCWlmIChyZXQgPCAwKQo+ICsJCXJldHVybiBvZl9nZXRf
-cGFyZW50KG5wKTsKPiArCj4gKwlyZXR1cm4gb2Zfbm9kZV9nZXQoYXJncy5ucCk7Cj4gK30KPiAr
-Cj4gICB1NjQgb2ZfdHJhbnNsYXRlX2RtYV9hZGRyZXNzKHN0cnVjdCBkZXZpY2Vfbm9kZSAqZGV2
-LCBjb25zdCBfX2JlMzIgKmluX2FkZHIpCj4gICB7Cj4gICAJc3RydWN0IGRldmljZV9ub2RlICpo
-b3N0Owo+ICAgCXU2NCByZXQ7Cj4gICAKPiAtCXJldCA9IF9fb2ZfdHJhbnNsYXRlX2FkZHJlc3Mo
-ZGV2LCBvZl9nZXRfcGFyZW50LAo+ICsJcmV0ID0gX19vZl90cmFuc2xhdGVfYWRkcmVzcyhkZXYs
-IF9fb2ZfZ2V0X2RtYV9wYXJlbnQsCj4gICAJCQkJICAgICBpbl9hZGRyLCAiZG1hLXJhbmdlcyIs
-ICZob3N0KTsKPiAtCgpOaXQ6IGlkZWFsbHkgcGF0Y2ggIzMgd291bGRuJ3QgaW50cm9kdWNlIHRo
-YXQgYmxhbmsgbGluZSBpbiB0aGUgZmlyc3QgcGxhY2UuCgpPdGhlcndpc2UsCgpSZXZpZXdlZC1i
-eTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4KCj4gICAJaWYgKGhvc3QpIHsK
-PiAgIAkJb2Zfbm9kZV9wdXQoaG9zdCk7Cj4gICAJCXJldHVybiBPRl9CQURfQUREUjsKPiBAQCAt
-OTEzLDkgKzkzMCwxNSBAQCBpbnQgb2ZfZG1hX2dldF9yYW5nZShzdHJ1Y3QgZGV2aWNlX25vZGUg
-Km5wLCB1NjQgKmRtYV9hZGRyLCB1NjQgKnBhZGRyLCB1NjQgKnNpego+ICAgCQlyZXR1cm4gLUVJ
-TlZBTDsKPiAgIAo+ICAgCXdoaWxlICgxKSB7Cj4gKwkJc3RydWN0IGRldmljZV9ub2RlICpwYXJl
-bnQ7Cj4gKwo+ICAgCQluYWRkciA9IG9mX25fYWRkcl9jZWxscyhub2RlKTsKPiAgIAkJbnNpemUg
-PSBvZl9uX3NpemVfY2VsbHMobm9kZSk7Cj4gLQkJbm9kZSA9IG9mX2dldF9uZXh0X3BhcmVudChu
-b2RlKTsKPiArCj4gKwkJcGFyZW50ID0gX19vZl9nZXRfZG1hX3BhcmVudChub2RlKTsKPiArCQlv
-Zl9ub2RlX3B1dChub2RlKTsKPiArCj4gKwkJbm9kZSA9IHBhcmVudDsKPiAgIAkJaWYgKCFub2Rl
-KQo+ICAgCQkJYnJlYWs7Cj4gICAKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVs
+Am Freitag, 22. März 2019, 12:34:52 CET schrieb Christoph Muellner:
+> A previous patch introduced the property 'drive-impedance-ohm'
+> for the RK3399's emmc phy node. This patch sets this value
+> explicitly to the default value of 50 Ohm.
+> 
+> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+
+applied patches 3+4 for 5.2
+
+Thanks
+Heiko
