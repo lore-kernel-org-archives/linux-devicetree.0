@@ -1,71 +1,47 @@
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v2 3/6] device property: Add a function to obtain a
- node's prefix
-Date: Wed, 27 Mar 2019 13:36:59 +0100
-Message-ID: <20190327123659.nna3hqcotnerptiz@pathway.suse.cz>
-References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
- <20190326124106.27694-4-sakari.ailus@linux.intel.com>
- <20190326131626.GZ9224@smile.fi.intel.com>
- <20190326133248.2nrm5javjw4vd2yq@paasikivi.fi.intel.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v3 0/9] RPMPD for QCS404 and MSM8998
+Date: Wed, 27 Mar 2019 18:08:23 +0530
+Message-ID: <20190327123832.11566-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190326133248.2nrm5javjw4vd2yq@paasikivi.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, rnayak@codeaurora.org
+Cc: david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 2019-03-26 15:32:48, Sakari Ailus wrote:
-> Hi Andy,
-> 
-> On Tue, Mar 26, 2019 at 03:16:26PM +0200, Andy Shevchenko wrote:
-> > On Tue, Mar 26, 2019 at 02:41:03PM +0200, Sakari Ailus wrote:
-> > > The prefix is used for printing purpose before a node, and it also works
-> > > as a separator between two nodes.
-> > > 
-> > 
-> > One nit below.
-> > 
-> > > +static const char *
-> > > +acpi_fwnode_get_name_prefix(const struct fwnode_handle *fwnode)
-> > > +{
-> > > +	struct fwnode_handle *parent;
-> > > +
-> > 
-> > > +	parent = fwnode_get_parent(fwnode);
-> > > +	/* Root node. */
-> > 
-> > I guess a comment could be easier to read if it goes before parent assignment
-> > line.
-> 
-> Only if the comments are changed accordingly. What we're doing here is
-> trying to figure out whether this is the root node. I can do that for v3.
+Re-worked the macros of the rpmpd driver. Add power domains support
+for QCS404 and MSM8998.
 
-IMHO, the comment in acpi_fwnode_get_name() is easier to understand:
+V3:
+* always send level updates to vfc and vfl in set_performance state
+* fixup commit messages [Rajendra]
+* fixup s-o-b ordering
 
-/* Is this the root node? */
+V2:
+* Add rpmpd support for msm8998
+* fixup corner/vfc with vlfl/vfl
 
-> > 
-> > > +	if (!parent)
-> > > +		return "";
-> > > +
-> > > +	parent = fwnode_get_next_parent(parent);
-> > > +	/* Second node from the root; no prefix here either. */
-> > 
-> > Ditto.
+Bjorn Andersson (4):
+  soc: qcom: rpmpd: Modify corner defining macros
+  dt-bindings: power: Add rpm power domain bindings for qcs404
+  soc: qcom: rpmpd: Add QCS404 power-domains
+  arm64: dts: qcom: qcs404: Add rpmpd node
 
-/* Is this 2nd node from the root? */
+Sibi Sankar (5):
+  soc: qcom: rpmpd: fixup rpmpd set performance state
+  soc: qcom: rpmpd: Add support to set rpmpd state to max
+  dt-bindings: power: Add rpm power domain bindings for msm8998
+  soc: qcom: rpmpd: Add MSM8998 power-domains
+  arm64: dts: qcom: msm8998: Add rpmpd node
 
-> > > +	if (!parent)
-> > > +		return "";
-> > > +
-> > > +	fwnode_handle_put(parent);
-> > > +
-> > > +	/* ACPI device or data node. */
-> > > +	return ".";
-> > > +}
+ .../devicetree/bindings/power/qcom,rpmpd.txt  |   2 +
+ arch/arm64/boot/dts/qcom/msm8998.dtsi         |  51 +++++++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |  55 +++++++
+ drivers/soc/qcom/rpmpd.c                      | 135 ++++++++++++++----
+ include/dt-bindings/power/qcom-rpmpd.h        |  34 +++++
+ 5 files changed, 252 insertions(+), 25 deletions(-)
 
-Best Regards,
-Petr
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
