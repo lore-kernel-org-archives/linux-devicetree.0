@@ -1,143 +1,105 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 190/262] ARM: dts: lpc32xx: Remove leading 0x and 0s from bindings notation
-Date: Wed, 27 Mar 2019 14:00:45 -0400
-Message-ID: <20190327180158.10245-190-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 155/262] ARM: dts: meson8b: fix the Ethernet data line signals in eth_rgmii_pins
+Date: Wed, 27 Mar 2019 14:00:10 -0400
+Message-ID: <20190327180158.10245-155-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Mathieu Malaterre <malat@debian.org>, Vladimir Zapolskiy <vz@mleia.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Emiliano Ingrassia <ingrassia@epigenesys.com>, =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>, Kevin Hilman <khilman@baylibre.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Mathieu Malaterre <malat@debian.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 3e3380d0675d5e20b0af067d60cb947a4348bf9b ]
+[ Upstream commit 29f0023d01f063feacfc404f0446905aee4f82ee ]
 
-Improve the DTS files by removing all the leading "0x" and zeros to fix
-the following dtc warnings:
+According to the Odroid-C1+ schematics the Ethernet TXD1 signal is
+routed to GPIOH_5 and the TXD0 signal is routed to GPIOH_6.
+The public S805 datasheet shows that TXD0 can be routed to DIF_2_P and
+TXD1 can be routed to DIF_2_N instead.
 
-Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+The pin groups eth_txd0_0 (GPIOH_6) and eth_txd0_1 (DIF_2_P) are both
+configured as Ethernet TXD0 and TXD1 data lines in meson8b.dtsi. At the
+same time eth_txd1_0 (GPIOH_5) and eth_txd1_1 (DIF_2_N) are configured
+as TXD0 and TXD1 data lines as well.
+This results in a bad Ethernet receive performance. Presumably this is
+due to the eth_txd0 and eth_txd1 signal being routed to the wrong pins.
+As a result of that data can only be transmitted on eth_txd2 and
+eth_txd3. However, I have no scope to fully confirm this assumption.
 
-and
+The vendor u-boot sources for Odroid-C1 use the following Ethernet
+pinmux configuration:
+  SET_CBUS_REG_MASK(PERIPHS_PIN_MUX_6, 0x3f4f);
+  SET_CBUS_REG_MASK(PERIPHS_PIN_MUX_7, 0xf00000);
+This translates to the following pin groups in the mainline kernel:
+- register 6 bit  0: eth_rxd1 (DIF_0_P)
+- register 6 bit  1: eth_rxd0 (DIF_0_N)
+- register 6 bit  2: eth_rx_dv (DIF_1_P)
+- register 6 bit  3: eth_rx_clk (DIF_1_N)
+- register 6 bit  6: eth_tx_en (DIF_3_P)
+- register 6 bit  8: eth_ref_clk (DIF_3_N)
+- register 6 bit  9: eth_mdc (DIF_4_P)
+- register 6 bit 10: eth_mdio_en (DIF_4_N)
+- register 6 bit 11: eth_tx_clk (GPIOH_9)
+- register 6 bit 12: eth_txd2 (GPIOH_8)
+- register 6 bit 13: eth_txd3 (GPIOH_7)
+- register 7 bit 20: eth_txd0_0 (GPIOH_6)
+- register 7 bit 21: eth_txd1_0 (GPIOH_5)
+- register 7 bit 22: eth_rxd3 (DIF_2_P)
+- register 7 bit 23: eth_rxd2 (DIF_2_N)
 
-Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+Drop the eth_txd0_1 and eth_txd1_1 groups from eth_rgmii_pins to fix the
+Ethernet transmit performance on Odroid-C1. Also add the eth_rxd2 and
+eth_rxd3 groups so we don't rely on the bootloader to set them up.
 
-Converted using the following command:
+iperf3 statistics before this change:
+- transmitting from Odroid-C1: 741 Mbits/sec (0 retries)
+- receiving on Odroid-C1: 199 Mbits/sec (1713 retries)
 
-find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +
+iperf3 statistics after this change:
+- transmitting from Odroid-C1: 667 Mbits/sec (0 retries)
+- receiving on Odroid-C1: 750 Mbits/sec (0 retries)
 
-For simplicity, two sed expressions were used to solve each warnings
-separately.
-
-To make the regex expression more robust a few other issues were resolved,
-namely setting unit-address to lower case, and adding a whitespace before
-the opening curly brace:
-
-https://elinux.org/Device_Tree_Linux#Linux_conventions
-
-This will solve as a side effect warning:
-
-Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
-
-This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
-
-Reported-by: David Daney <ddaney@caviumnetworks.com>
-Suggested-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
-[vzapolskiy: fixed commit message to pass checkpatch.pl test]
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Fixes: b96446541d8390 ("ARM: dts: meson8b: extend ethernet controller description")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Emiliano Ingrassia <ingrassia@epigenesys.com>
+Cc: Linus Lüssing <linus.luessing@c0d3.blue>
+Tested-by: Emiliano Ingrassia <ingrassia@epigenesys.com>
+Reviewed-by: Emiliano Ingrassia <ingrassia@epigenesys.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/lpc32xx.dtsi | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/arm/boot/dts/meson8b.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index b7303a4e4236..ed0d6fb20122 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -230,7 +230,7 @@
- 				status = "disabled";
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index 22d775460767..dc125769fe85 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -270,9 +270,7 @@
+ 				groups = "eth_tx_clk",
+ 					 "eth_tx_en",
+ 					 "eth_txd1_0",
+-					 "eth_txd1_1",
+ 					 "eth_txd0_0",
+-					 "eth_txd0_1",
+ 					 "eth_rx_clk",
+ 					 "eth_rx_dv",
+ 					 "eth_rxd1",
+@@ -281,7 +279,9 @@
+ 					 "eth_mdc",
+ 					 "eth_ref_clk",
+ 					 "eth_txd2",
+-					 "eth_txd3";
++					 "eth_txd3",
++					 "eth_rxd3",
++					 "eth_rxd2";
+ 				function = "ethernet";
+ 				bias-disable;
  			};
- 
--			i2s1: i2s@2009C000 {
-+			i2s1: i2s@2009c000 {
- 				compatible = "nxp,lpc3220-i2s";
- 				reg = <0x2009C000 0x1000>;
- 			};
-@@ -273,7 +273,7 @@
- 				status = "disabled";
- 			};
- 
--			i2c1: i2c@400A0000 {
-+			i2c1: i2c@400a0000 {
- 				compatible = "nxp,pnx-i2c";
- 				reg = <0x400A0000 0x100>;
- 				interrupt-parent = <&sic1>;
-@@ -284,7 +284,7 @@
- 				clocks = <&clk LPC32XX_CLK_I2C1>;
- 			};
- 
--			i2c2: i2c@400A8000 {
-+			i2c2: i2c@400a8000 {
- 				compatible = "nxp,pnx-i2c";
- 				reg = <0x400A8000 0x100>;
- 				interrupt-parent = <&sic1>;
-@@ -295,7 +295,7 @@
- 				clocks = <&clk LPC32XX_CLK_I2C2>;
- 			};
- 
--			mpwm: mpwm@400E8000 {
-+			mpwm: mpwm@400e8000 {
- 				compatible = "nxp,lpc3220-motor-pwm";
- 				reg = <0x400E8000 0x78>;
- 				status = "disabled";
-@@ -394,7 +394,7 @@
- 				#gpio-cells = <3>; /* bank, pin, flags */
- 			};
- 
--			timer4: timer@4002C000 {
-+			timer4: timer@4002c000 {
- 				compatible = "nxp,lpc3220-timer";
- 				reg = <0x4002C000 0x1000>;
- 				interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-@@ -412,7 +412,7 @@
- 				status = "disabled";
- 			};
- 
--			watchdog: watchdog@4003C000 {
-+			watchdog: watchdog@4003c000 {
- 				compatible = "nxp,pnx4008-wdt";
- 				reg = <0x4003C000 0x1000>;
- 				clocks = <&clk LPC32XX_CLK_WDOG>;
-@@ -451,7 +451,7 @@
- 				status = "disabled";
- 			};
- 
--			timer1: timer@4004C000 {
-+			timer1: timer@4004c000 {
- 				compatible = "nxp,lpc3220-timer";
- 				reg = <0x4004C000 0x1000>;
- 				interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
-@@ -475,7 +475,7 @@
- 				status = "disabled";
- 			};
- 
--			pwm1: pwm@4005C000 {
-+			pwm1: pwm@4005c000 {
- 				compatible = "nxp,lpc3220-pwm";
- 				reg = <0x4005C000 0x4>;
- 				clocks = <&clk LPC32XX_CLK_PWM1>;
-@@ -484,7 +484,7 @@
- 				status = "disabled";
- 			};
- 
--			pwm2: pwm@4005C004 {
-+			pwm2: pwm@4005c004 {
- 				compatible = "nxp,lpc3220-pwm";
- 				reg = <0x4005C004 0x4>;
- 				clocks = <&clk LPC32XX_CLK_PWM2>;
 -- 
 2.19.1
