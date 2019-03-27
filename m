@@ -1,120 +1,64 @@
-Return-Path: <vkoul@kernel.org>
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 2/6] arm64: dts: qcom: qcs404: Enable ethernet for EVB-4000
-Date: Sun, 24 Mar 2019 22:02:05 +0530
-Message-Id: <20190324163209.17312-3-vkoul@kernel.org>
-In-Reply-To: <20190324163209.17312-1-vkoul@kernel.org>
-References: <20190324163209.17312-1-vkoul@kernel.org>
+Return-Path: <SRS0=1YM6=R6=opensource.cirrus.com=ckeepax@kernel.org>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: [PATCH v3 1/2] hwmon: lochnagar: Add device tree binding document
+Date: Wed, 27 Mar 2019 15:13:27 +0000
+Message-ID: <20190327151328.2491-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>
+Content-Type: text/plain
+To: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-hwmon@vger.kernel.org, corbet@lwn.net, devicetree@vger.kernel.org, patches@opensource.cirrus.com
 List-ID: <devicetree@vger.kernel.org>
 
-EVB-4000 comes with ethernet so enable it and add pinctrl bindings.
+Lochnagar is an evaluation and development board for Cirrus
+Logic Smart CODEC and Amp devices. It allows the connection of
+most Cirrus Logic devices on mini-cards, as well as allowing
+connection of various application processor systems to provide a
+full evaluation platform. This driver supports the board
+controller chip on the Lochnagar board.
 
-Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
- arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts | 82 ++++++++++++++++++++
- 1 file changed, 82 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts b/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
-index 11269ad3de0d..8234cff414de 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
-@@ -3,9 +3,91 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/gpio/gpio.h>
- #include "qcs404-evb.dtsi"
- 
- / {
- 	model = "Qualcomm Technologies, Inc. QCS404 EVB 4000";
- 	compatible = "qcom,qcs404-evb";
- };
+No changes since v2.
+
+Thanks,
+Charles
+
+ .../devicetree/bindings/hwmon/cirrus,lochnagar.txt | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
+
+diff --git a/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
+new file mode 100644
+index 0000000000000..ffb79ccf51ee3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
+@@ -0,0 +1,26 @@
++Cirrus Logic Lochnagar Audio Development Board
 +
-+&ethernet {
-+	status = "ok";
++Lochnagar is an evaluation and development board for Cirrus Logic
++Smart CODEC and Amp devices. It allows the connection of most Cirrus
++Logic devices on mini-cards, as well as allowing connection of
++various application processor systems to provide a full evaluation
++platform.  Audio system topology, clocking and power can all be
++controlled through the Lochnagar, allowing the device under test
++to be used in a variety of possible use cases.
 +
-+	snps,reset-gpio = <&tlmm 60 GPIO_ACTIVE_LOW>;
-+	snps,reset-active-low;
-+	snps,reset-delays-us = <0 10000 10000>;
++This binding document describes the binding for the hardware monitor
++portion of the driver.
 +
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ethernet_defaults>;
++This binding must be part of the Lochnagar MFD binding:
++  [4] ../mfd/cirrus,lochnagar.txt
 +
-+	phy-handle = <&phy1>;
-+	phy-mode = "rgmii";
-+	mdio {
-+		#address-cells = <0x1>;
-+		#size-cells = <0x0>;
-+		compatible = "snps,dwmac-mdio";
-+		phy1: phy@4 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			device_type = "ethernet-phy";
-+			reg = <0x4>;
-+		};
-+	};
-+};
++Required properties:
 +
-+&tlmm {
-+	ethernet_defaults: ethernet-defaults {
-+		int {
-+			pins = "gpio61";
-+			function = "rgmii_int";
-+			bias-disable;
-+			drive-strength = <2>;
-+		};
-+		mdc {
-+			pins = "gpio76";
-+			function = "rgmii_mdc";
-+			bias-pull-up;
-+		};
-+		mdio {
-+			pins = "gpio75";
-+			function = "rgmii_mdio";
-+			bias-pull-up;
-+		};
-+		tx {
-+			pins = "gpio67", "gpio66", "gpio65", "gpio64";
-+			function = "rgmii_tx";
-+			bias-pull-up;
-+			drive-strength = <16>;
-+		};
-+		rx {
-+			pins = "gpio73", "gpio72", "gpio71", "gpio70";
-+			function = "rgmii_rx";
-+			bias-disable;
-+			drive-strength = <2>;
-+		};
-+		tx-ctl {
-+			pins = "gpio68";
-+			function = "rgmii_ctl";
-+			bias-pull-up;
-+			drive-strength = <16>;
-+		};
-+		rx-ctl {
-+			pins = "gpio74";
-+			function = "rgmii_ctl";
-+			bias-disable;
-+			drive-strength = <2>;
-+		};
-+		tx-ck {
-+			pins = "gpio63";
-+			function = "rgmii_ck";
-+			bias-pull-up;
-+			drive-strength = <16>;
-+		};
-+		rx-ck {
-+			pins = "gpio69";
-+			function = "rgmii_ck";
-+			bias-disable;
-+			drive-strength = <2>;
-+		};
-+	};
++  - compatible : One of the following strings:
++                 "cirrus,lochnagar2-hwmon"
++
++Example:
++
++lochnagar-hwmon {
++	compatible = "cirrus,lochnagar2-hwmon";
 +};
 -- 
-2.20.1
+2.11.0
