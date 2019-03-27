@@ -1,81 +1,242 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v2 1/6] device property: Add functions for accessing
- node's parents
-Date: Wed, 27 Mar 2019 16:20:37 +0200
-Message-ID: <20190327142036.jf6puc5uo2mjutbl@paasikivi.fi.intel.com>
-References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
- <20190326124106.27694-2-sakari.ailus@linux.intel.com>
- <20190327122625.eaisnw776vqwhhnh@pathway.suse.cz>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH 1/4] dt-bindings: firmware: imx-scu: new binding to parse
+ clocks from device tree
+Date: Wed, 27 Mar 2019 14:35:02 +0000
+Message-ID: <AM0PR04MB42110F1F251243A165DB9EC680580@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1550771836-10014-1-git-send-email-aisheng.dong@nxp.com>
+ <1550771836-10014-2-git-send-email-aisheng.dong@nxp.com>
+ <20190326134715.GA4055@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190327122625.eaisnw776vqwhhnh@pathway.suse.cz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190326134715.GA4055@bogus>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Petr,
-
-On Wed, Mar 27, 2019 at 01:26:25PM +0100, Petr Mladek wrote:
-> On Tue 2019-03-26 14:41:01, Sakari Ailus wrote:
-> > Add two convenience functions for accessing node's parents:
-> > 
-> > fwnode_count_parents() returns the number of parent nodes a given node
-> > has. fwnode_get_nth_parent() returns node's parent at a given distance
-> > from the node itself.
-> > 
-> > Also reorder fwnode_get_parent() in property.c according to the same order
-> > as in property.h.
-> > 
-> > diff --git a/drivers/base/property.c b/drivers/base/property.c
-> > index 8b91ab380d14..61eb6ceacc3f 100644
-> > --- a/drivers/base/property.c
-> > +++ b/drivers/base/property.c
-> > @@ -554,17 +567,49 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
-> >  EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
-> >  
-> >  /**
-> > - * fwnode_get_parent - Return parent firwmare node
-> > - * @fwnode: Firmware whose parent is retrieved
-> > + * fwnode_count_parents - Return the number of parents a node has
-> > + * @fwnode: The node the parents of which are to be counted
-> >   *
-> > - * Return parent firmware node of the given node if possible or %NULL if no
-> > - * parent was available.
-> > + * Returns the number of parents a node has.
-> >   */
-> > -struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
-> > +unsigned int fwnode_count_parents(struct fwnode_handle *fwnode)
-> >  {
-> > -	return fwnode_call_ptr_op(fwnode, get_parent);
-> > +	unsigned int count;
-> > +
-> > +	fwnode_handle_get(fwnode);
-> > +
-> > +	for (count = 0; fwnode; count++)
-> > +		fwnode = fwnode_get_next_parent(fwnode);
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Tuesday, March 26, 2019 9:47 PM
+> On Thu, Feb 21, 2019 at 06:03:43PM +0000, Aisheng Dong wrote:
+> > There's a few limitations on one cell clock binding (#clock-cells =
+> > <1>) that we have to define all clock IDs for device tree to reference.
+> > This may cause troubles if we want to use common clock IDs for multi
+> > platforms support when the clock of those platforms are mostly the same.
+> > e.g. Current clock IDs name are defined with SS prefix. However the
+> > device may reside in different SS across CPUs, that means the SS
+> > prefix may not valid anymore for a new SoC. Furthermore, the device
+> > availability of those clocks may also vary a bit.
+> >
+> > For such situation, We formerly planned to add all new IDs for each SS
+> > and dynamically check availability for different SoC in driver. That
+> > can be done but that may involve a lot effort and may result in more
+> > changes and duplicated code in driver, also make device tree
+> > upstreaming hard which depends on Clock IDs.
+> >
+> > To relief this situation, we want to move the clock definition into
+> > device tree which can fully decouple the dependency of Clock ID
+> > definition from device tree. And no frequent changes required in clock driver
+> any more.
+> >
+> > Then we can use the existence of clock nodes in device tree to address
+> > the device and clock availability differences across different SoCs.
+> >
+> > For SCU clocks, only two params required, thus two new property created:
+> > rsrc-id = <IMX_SC_R_UART_0>;
+> > clk-type = <IMX_SC_PM_CLK_PER>;
+> >
+> > And as we want to support clock set parent function, 'clocks' property
+> > is also used to pass all the possible input parents.
+> >
+> > Cc: Rob Herring <robh@kernel.org>
+> > Cc: Stephen Boyd <sboyd@kernel.org>
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> > Cc: Sascha Hauer <kernel@pengutronix.de>
+> > Cc: Michael Turquette <mturquette@baylibre.com>
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > ---
+> >  .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 29
+> ++++++++++++++++------
+> >  include/dt-bindings/firmware/imx/rsrc.h            | 17
+> +++++++++++++
+> >  2 files changed, 38 insertions(+), 8 deletions(-)
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > index 72d481c..2816789 100644
+> > --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > @@ -78,6 +78,19 @@ Required properties:
+> >  			  "fsl,imx8qm-clock"
+> >  			  "fsl,imx8qxp-clock"
+> >  			followed by "fsl,scu-clk"
+> > +- #clock-cells:		Should be 0.
+> > +- rsrc-id:		Resource ID associated with this clock
+> > +- clk-type:		Type of this clock.
+> > +			Refer to <include/dt-bindings/firmware/imx/rsrc.h> for
+> > +			available clock types supported by SCU.
 > 
-> Is it guaranteed that all parents stay when
-> fwnode_get_next_parent() releases the reference count
-> for each counted member?
-
-fwnode_get_next_parent() only releases the child node after it has acquired
-the parent. The only implementation with refcounting for single nodes is
-actually OF.
-
+> Can't you just make these 2 values clock cells? I'm all for getting rid of made
+> up clock numbers.
 > 
+
+Thanks for the agreement to remove clock IDs.
+
+The 2 values clock cell seems not the best approach for i.MX because it still needs
+to define all clocks in the driver which is exactly we want to avoid now due to some
+special HW characteristic:
+1. clock resources may be allocated to different SW execution partition by firmware
+and A core may not have access rights for those clocks not belong to its partition.
+So we want to describe them in DT according to the partition configuration.
+
+2. Each clock is associated with a different power domain which is better to be
+described in device tree. And clock state will be lost and need restore after power cycle
+of the domain.
+
+Based on above requirements, do you think we can do as below?
+
+//LSIO SS
+lsio_scu_clk: lsio-scu-clock-controller {
+        compatible = "fsl,imx8qxp-clock", "fsl,scu-clk";
+
+        fspi0_clk: clock-fspi0{
+                #clock-cells = <0>;
+                rsrc-id = <IMX_SC_R_FSPI_0>;
+                clk-type = <IMX_SC_PM_CLK_PER>;
+                power-domains = <&pd IMX_SC_R_FSPI_0>;
+        };
+		
+		fspi1_clk: clock-fspi1{
+			...
+		};
+        ...
+};    
+
+/* LPCG clocks */
+lsio_lpcg_clk: lsio-lpcg-clock-controller {
+        compatible = "fsl,imx8qxp-lpcg";
+
+        pwm0_lpcg: clock-controller@5d400000 {
+                reg = <0x5d400000 0x10000>;
+                #clock-cells = <1>;
+                clocks = <&pwm0_clk>, <&pwm0_clk>, <&pwm0_clk>,
+                         <&lsio_bus_clk>, <&pwm0_clk>;
+                bit-offset = <0 4 16 20 24>;
+                clock-output-names = "pwm0_lpcg_ipg_clk",
+                                     "pwm0_lpcg_ipg_hf_clk",
+                                     "pwm0_lpcg_ipg_s_clk",
+                                     "pwm0_lpcg_ipg_slv_clk",
+                                     "pwm0_lpcg_ipg_mstr_clk";
+                power-domains = <&pd IMX_SC_R_PWM_0>;
+                status = "disabled";
+        };
+
+		pwm1_lpcg: clock-controller@5d410000 {
+				...
+		}
+        ...
+};
+
+And for users, it could simply be:
+usdhc1: mmc@5b010000 {
+        clocks = <&sdhc0_lpcg 1>,
+                 <&sdhc0_lpcg 0>,
+                 <&sdhc0_lpcg 2>;
+        clock-names = "ipg", "per", "ahb";
+        assigned-clocks = <&sdhc0_clk>;
+        assigned-clock-rates = <200000000>;
+		....
+};
+
+Regards
+Dong Aisheng
+
+> > +- clock-output-names:	Shall be the corresponding names of the outputs.
 > > +
-> > +	return count - 1;
-> 
-> We could start counting from count = -1;
-
-We could, but then count would need to be made signed (unless overflowing
-is preferred instead).
-
--- 
-Regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+> > +Optional properties:
+> > +- clocks:		Shall be the input parent clock(s) phandle for the clock.
+> > +			For multiplexed clocks, the list order must match the hardware
+> > +			programming order.
+> > +
+> > +Legacy Clock binding (DEPRECATED):
+> >  - #clock-cells:		Should be 1. Contains the Clock ID value.
+> >  - clocks:		List of clock specifiers, must contain an entry for
+> >  			each required entry in clock-names @@ -129,6 +142,13 @@
+> lsio_mu1:
+> > mailbox@5d1c0000 {
+> >  	#mbox-cells = <2>;
+> >  };
+> >
+> > +uart0_clk: uart0-clock-controller {
+> > +	compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-clk";
+> > +	#clock-cells = <0>;
+> > +	rsrc-id = <IMX_SC_R_UART_0>;
+> > +	clk-type = <IMX_SC_PM_CLK_PER>;
+> > +};
+> > +
+> >  firmware {
+> >  	scu {
+> >  		compatible = "fsl,imx-scu";
+> > @@ -143,11 +163,6 @@ firmware {
+> >  			  &lsio_mu1 1 2
+> >  			  &lsio_mu1 1 3>;
+> >
+> > -		clk: clk {
+> > -			compatible = "fsl,imx8qxp-clk", "fsl,scu-clk";
+> > -			#clock-cells = <1>;
+> > -		};
+> > -
+> >  		iomuxc {
+> >  			compatible = "fsl,imx8qxp-iomuxc";
+> >
+> > @@ -175,8 +190,6 @@ serial@5a060000 {
+> >  	...
+> >  	pinctrl-names = "default";
+> >  	pinctrl-0 = <&pinctrl_lpuart0>;
+> > -	clocks = <&clk IMX8QXP_UART0_CLK>,
+> > -		 <&clk IMX8QXP_UART0_IPG_CLK>;
+> > -	clock-names = "per", "ipg";
+> > +	clocks = <&uart0_clk>;
+> >  	power-domains = <&pd IMX_SC_R_UART_0>;  }; diff --git
+> > a/include/dt-bindings/firmware/imx/rsrc.h
+> > b/include/dt-bindings/firmware/imx/rsrc.h
+> > index 4481f2d..f650fc3 100644
+> > --- a/include/dt-bindings/firmware/imx/rsrc.h
+> > +++ b/include/dt-bindings/firmware/imx/rsrc.h
+> > @@ -556,4 +556,21 @@
+> >  #define IMX_SC_R_VPU			540
+> >  #define IMX_SC_R_LAST			541
+> >
+> > +/*
+> > + * Defines for SC PM CLK
+> > + */
+> > +#define IMX_SC_PM_CLK_SLV_BUS		0	/* Slave bus clock */
+> > +#define IMX_SC_PM_CLK_MST_BUS		1	/* Master bus clock */
+> > +#define IMX_SC_PM_CLK_PER		2	/* Peripheral clock */
+> > +#define IMX_SC_PM_CLK_PHY		3	/* Phy clock */
+> > +#define IMX_SC_PM_CLK_MISC		4	/* Misc clock */
+> > +#define IMX_SC_PM_CLK_MISC0		0	/* Misc 0 clock */
+> > +#define IMX_SC_PM_CLK_MISC1		1	/* Misc 1 clock */
+> > +#define IMX_SC_PM_CLK_MISC2		2	/* Misc 2 clock */
+> > +#define IMX_SC_PM_CLK_MISC3		3	/* Misc 3 clock */
+> > +#define IMX_SC_PM_CLK_MISC4		4	/* Misc 4 clock */
+> > +#define IMX_SC_PM_CLK_CPU		2	/* CPU clock */
+> > +#define IMX_SC_PM_CLK_PLL		4	/* PLL */
+> > +#define IMX_SC_PM_CLK_BYPASS		4	/* Bypass clock */
+> > +
+> >  #endif /* __DT_BINDINGS_RSCRC_IMX_H */
+> > --
+> > 2.7.4
+> >
