@@ -1,32 +1,35 @@
 Return-Path: <SRS0=Zx4x=R6=pengutronix.de=mfe@kernel.org>
 From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 0/4] ADS7846 add general touchscreen features
-Date: Wed, 27 Mar 2019 14:39:23 +0100
-Message-Id: <20190327133927.1340-1-m.felsch@pengutronix.de>
+Subject: [PATCH 2/4] dt-bindings: input: ads7846: fix property description
+Date: Wed, 27 Mar 2019 14:39:25 +0100
+Message-Id: <20190327133927.1340-3-m.felsch@pengutronix.de>
+In-Reply-To: <20190327133927.1340-1-m.felsch@pengutronix.de>
+References: <20190327133927.1340-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: dmitry.torokhov@gmail.com, robh+dt@kernel.org
 Cc: kernel@pengutronix.de, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+The ti,y-max is used for the maximum value of the Y axis.
 
-The main purpose of this small set is to add support for the general
-touchscreen dt-properties. During this work I also changed the memory
-allocation methods to the devm_* ones to cleanup the error-paths.
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ Documentation/devicetree/bindings/input/touchscreen/ads7846.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
-Marco
-
-Marco Felsch (4):
-  Input: ads7846 - convert to devm_ alloc functions
-  dt-bindings: input: ads7846: fix property description
-  dt-bindings: input: ads7846: replace vendor-bindings by general ones
-  Input: ads7846 - add support for general touchscreen bindings
-
- .../bindings/input/touchscreen/ads7846.txt    | 29 +++++--
- drivers/input/touchscreen/ads7846.c           | 75 +++++++++++--------
- 2 files changed, 66 insertions(+), 38 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt b/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt
+index 04413da51391..ce540ddac902 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt
+@@ -52,7 +52,7 @@ Optional properties:
+ 	ti,x-min			Minimum value on the X axis (u16).
+ 	ti,y-min			Minimum value on the Y axis (u16).
+ 	ti,x-max			Maximum value on the X axis (u16).
+-	ti,y-max			Minimum value on the Y axis (u16).
++	ti,y-max			Maximum value on the Y axis (u16).
+ 	ti,pressure-min			Minimum reported pressure value
+ 					(threshold) - u16.
+ 	ti,pressure-max			Maximum reported pressure value (u16).
 -- 
 2.20.1
