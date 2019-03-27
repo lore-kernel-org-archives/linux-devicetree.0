@@ -1,7 +1,7 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v3 2/9] soc: qcom: rpmpd: Add support to set rpmpd state to max
-Date: Wed, 27 Mar 2019 18:08:25 +0530
-Message-ID: <20190327123832.11566-3-sibis@codeaurora.org>
+Subject: [PATCH v3 3/9] soc: qcom: rpmpd: Modify corner defining macros
+Date: Wed, 27 Mar 2019 18:08:26 +0530
+Message-ID: <20190327123832.11566-4-sibis@codeaurora.org>
 References: <20190327123832.11566-1-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,69 +12,108 @@ To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, rnaya
 Cc: david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-rpmpd max state varies across SoCs and SoC families, add support
-in the driver to make it SoC/SoC family specific
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
+QCS404 uses individual resource type magic for each power-domain, so
+adjust the macros slightly to make them reusable for this.
+
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+[sibi: Extend rpmpd corner pair to a generic rpmpd pair]
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- drivers/soc/qcom/rpmpd.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/soc/qcom/rpmpd.c | 39 +++++++++++++++++----------------------
+ 1 file changed, 17 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
-index 235d01870dd8..94015ece40e9 100644
+index 94015ece40e9..ca736ceb969c 100644
 --- a/drivers/soc/qcom/rpmpd.c
 +++ b/drivers/soc/qcom/rpmpd.c
-@@ -25,7 +25,7 @@
- #define KEY_ENABLE		0x6e657773 /* swen */
- #define KEY_FLOOR_CORNER	0x636676   /* vfc */
+@@ -17,8 +17,8 @@
+ #define domain_to_rpmpd(domain) container_of(domain, struct rpmpd, pd)
  
--#define MAX_RPMPD_STATE		6
-+#define MAX_8996_RPMPD_STATE	6
+ /* Resource types */
+-#define RPMPD_SMPA 0x61706d73
+-#define RPMPD_LDOA 0x616f646c
++#define RPMPD_SMPA 0x61706d73 /* smpa */
++#define RPMPD_LDOA 0x616f646c /* ldoa */
  
- #define DEFINE_RPMPD_CORNER_SMPA(_platform, _name, _active, r_id)		\
+ /* Operation Keys */
+ #define KEY_CORNER		0x6e726f63 /* corn */
+@@ -27,46 +27,41 @@
+ 
+ #define MAX_8996_RPMPD_STATE	6
+ 
+-#define DEFINE_RPMPD_CORNER_SMPA(_platform, _name, _active, r_id)		\
++#define DEFINE_RPMPD_PAIR(_platform, _name, _active, r_type, r_key,	\
++			  r_id)						\
  	static struct rpmpd _platform##_##_active;			\
-@@ -83,12 +83,14 @@ struct rpmpd {
- 	const int res_type;
- 	const int res_id;
- 	struct qcom_smd_rpm *rpm;
-+	unsigned int max_state;
+ 	static struct rpmpd _platform##_##_name = {			\
+ 		.pd = {	.name = #_name,	},				\
+ 		.peer = &_platform##_##_active,				\
+-		.res_type = RPMPD_SMPA,					\
++		.res_type = RPMPD_##r_type,				\
+ 		.res_id = r_id,						\
+-		.key = KEY_CORNER,					\
++		.key = KEY_##r_key,					\
+ 	};								\
+ 	static struct rpmpd _platform##_##_active = {			\
+ 		.pd = { .name = #_active, },				\
+ 		.peer = &_platform##_##_name,				\
+ 		.active_only = true,					\
+-		.res_type = RPMPD_SMPA,					\
++		.res_type = RPMPD_##r_type,				\
+ 		.res_id = r_id,						\
+-		.key = KEY_CORNER,					\
++		.key = KEY_##r_key,					\
+ 	}
+ 
+-#define DEFINE_RPMPD_CORNER_LDOA(_platform, _name, r_id)			\
++#define DEFINE_RPMPD_CORNER(_platform, _name, r_type, r_id)		\
+ 	static struct rpmpd _platform##_##_name = {			\
+ 		.pd = { .name = #_name, },				\
+-		.res_type = RPMPD_LDOA,					\
++		.res_type = RPMPD_##r_type,				\
+ 		.res_id = r_id,						\
+ 		.key = KEY_CORNER,					\
+ 	}
+ 
+-#define DEFINE_RPMPD_VFC(_platform, _name, r_id, r_type)		\
++#define DEFINE_RPMPD_VFC(_platform, _name, r_type, r_id)		\
+ 	static struct rpmpd _platform##_##_name = {			\
+ 		.pd = { .name = #_name, },				\
+-		.res_type = r_type,					\
++		.res_type = RPMPD_##r_type,				\
+ 		.res_id = r_id,						\
+ 		.key = KEY_FLOOR_CORNER,				\
+ 	}
+ 
+-#define DEFINE_RPMPD_VFC_SMPA(_platform, _name, r_id)			\
+-	DEFINE_RPMPD_VFC(_platform, _name, r_id, RPMPD_SMPA)
+-
+-#define DEFINE_RPMPD_VFC_LDOA(_platform, _name, r_id)			\
+-	DEFINE_RPMPD_VFC(_platform, _name, r_id, RPMPD_LDOA)
+-
+ struct rpmpd_req {
  	__le32 key;
- };
- 
- struct rpmpd_desc {
- 	struct rpmpd **rpmpds;
- 	size_t num_pds;
-+	unsigned int max_state;
- };
- 
+ 	__le32 nbytes;
+@@ -96,12 +91,12 @@ struct rpmpd_desc {
  static DEFINE_MUTEX(rpmpd_lock);
-@@ -114,6 +116,7 @@ static struct rpmpd *msm8996_rpmpds[] = {
- static const struct rpmpd_desc msm8996_desc = {
- 	.rpmpds = msm8996_rpmpds,
- 	.num_pds = ARRAY_SIZE(msm8996_rpmpds),
-+	.max_state = MAX_8996_RPMPD_STATE,
- };
  
- static const struct of_device_id rpmpd_match_table[] = {
-@@ -225,8 +228,8 @@ static int rpmpd_set_performance(struct generic_pm_domain *domain,
- 	int ret = 0;
- 	struct rpmpd *pd = domain_to_rpmpd(domain);
+ /* msm8996 RPM Power domains */
+-DEFINE_RPMPD_CORNER_SMPA(msm8996, vddcx, vddcx_ao, 1);
+-DEFINE_RPMPD_CORNER_SMPA(msm8996, vddmx, vddmx_ao, 2);
+-DEFINE_RPMPD_CORNER_LDOA(msm8996, vddsscx, 26);
++DEFINE_RPMPD_PAIR(msm8996, vddcx, vddcx_ao, SMPA, CORNER, 1);
++DEFINE_RPMPD_PAIR(msm8996, vddmx, vddmx_ao, SMPA, CORNER, 2);
++DEFINE_RPMPD_CORNER(msm8996, vddsscx, LDOA, 26);
  
--	if (state > MAX_RPMPD_STATE)
--		state = MAX_RPMPD_STATE;
-+	if (state > pd->max_state)
-+		state = pd->max_state;
+-DEFINE_RPMPD_VFC_SMPA(msm8996, vddcx_vfc, 1);
+-DEFINE_RPMPD_VFC_LDOA(msm8996, vddsscx_vfc, 26);
++DEFINE_RPMPD_VFC(msm8996, vddcx_vfc, SMPA, 1);
++DEFINE_RPMPD_VFC(msm8996, vddsscx_vfc, LDOA, 26);
  
- 	mutex_lock(&rpmpd_lock);
- 
-@@ -287,6 +290,7 @@ static int rpmpd_probe(struct platform_device *pdev)
- 		}
- 
- 		rpmpds[i]->rpm = rpm;
-+		rpmpds[i]->max_state = desc->max_state;
- 		rpmpds[i]->pd.power_off = rpmpd_power_off;
- 		rpmpds[i]->pd.power_on = rpmpd_power_on;
- 		rpmpds[i]->pd.set_performance_state = rpmpd_set_performance;
+ static struct rpmpd *msm8996_rpmpds[] = {
+ 	[MSM8996_VDDCX] =	&msm8996_vddcx,
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
