@@ -1,33 +1,39 @@
 From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v2 0/2] Add EDMA0/EDMA1 nodes on i.MX8QXP
-Date: Wed, 27 Mar 2019 19:03:09 +0000
-Message-ID: <20190327190244.9208-1-daniel.baluta@nxp.com>
+Subject: [PATCH v2 1/2] bindings: fsl-edma: Document fsl,imx8qxp-edma
+ compatbile string
+Date: Wed, 27 Mar 2019 19:03:10 +0000
+Message-ID: <20190327190244.9208-2-daniel.baluta@nxp.com>
+References: <20190327190244.9208-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190327190244.9208-1-daniel.baluta@nxp.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: "shawnguo@kernel.org" <shawnguo@kernel.org>
 Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-First patch documents the fsl,imx8qxp-edma string while the second
-adds the two EDMA nodes used by Audio peripherals on i.MX8QXP
+Add imx8qxp edma support.
 
-Changes since v1:
-	* use "fsl,imx8qxp-edma" compatbile instead of "fsl,imx8qm-edma"
-	because this patch adds support for imx8QXP. eDMA driver is similar
-        for 8QM/8QXP but it doesn't have yet support added for these boards
-	so just the compatible string closer to the actual hardware.
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+---
+ Documentation/devicetree/bindings/dma/fsl-edma.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Daniel Baluta (2):
-  bindings: fsl-edma: Document fsl,imx8qxp-edma compatbile string
-  arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
-
- .../devicetree/bindings/dma/fsl-edma.txt      |  1 +
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi    | 72 +++++++++++++++++++
- 2 files changed, 73 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/dma/fsl-edma.txt b/Documenta=
+tion/devicetree/bindings/dma/fsl-edma.txt
+index 97e213e07660..3fab727746dc 100644
+--- a/Documentation/devicetree/bindings/dma/fsl-edma.txt
++++ b/Documentation/devicetree/bindings/dma/fsl-edma.txt
+@@ -9,6 +9,7 @@ group, DMAMUX0 or DMAMUX1, but not both.
+ Required properties:
+ - compatible :
+ 	- "fsl,vf610-edma" for eDMA used similar to that on Vybrid vf610 SoC
++	- "fsl,imx8qxp-edma" for eDMA used similar to that on i.MX8X SoC
+ - reg : Specifies base physical address(s) and size of the eDMA registers.
+ 	The 1st region is eDMA control register's address and size.
+ 	The 2nd and the 3rd regions are programmable channel multiplexing
 --=20
 2.17.1
