@@ -1,44 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
-Date: Thu, 28 Mar 2019 11:50:09 -0500
-Message-ID: <20190328165009.GA25705@bogus>
-References: <20190327212155.80730-1-venture@google.com>
+Subject: Re: [PATCH V10 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
+Date: Thu, 28 Mar 2019 11:51:45 -0500
+Message-ID: <20190328165145.GA30395@bogus>
+References: <1553582817-29519-1-git-send-email-Anson.Huang@nxp.com>
+ <1553582817-29519-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190327212155.80730-1-venture@google.com>
+In-Reply-To: <1553582817-29519-2-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "stefan@agner.ch" <stefan@agner.ch>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, Leonard Crestez <leonard.crestez@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, Robin Gong <yibin.gong@nxp.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Mar 2019 14:21:55 -0700, Patrick Venture wrote:
-> Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+On Tue, 26 Mar 2019 06:52:23 +0000, Anson Huang wrote:
+> Add i.MX TPM(Low Power Timer/Pulse Width Modulation Module) PWM binding.
 > 
-> Signed-off-by: Patrick Venture <venture@google.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
-> Changes for v8:
-> - None
-> Changes for v7:
-> - Moved node under the syscon node it requires
-> Changes for v6:
-> - None
-> Changes for v5:
-> - None
-> Changes for v4:
-> - None
-> Changes for v3:
-> - None
-> Changes for v2:
-> - Added comment about syscon required parameter.
+> Changes since V9:
+> 	- update compatible to contain SoC name;
+> 	- update example;
 > ---
->  .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+>  .../devicetree/bindings/pwm/imx-tpm-pwm.txt        | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
 > 
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
+Reviewed-by: Rob Herring <robh@kernel.org>
