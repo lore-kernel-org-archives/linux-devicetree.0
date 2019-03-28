@@ -1,46 +1,26 @@
-Return-Path: <SRS0=KxQt=R7=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v3 2/5] ARM: dts: imx7s: add multiplexer controls
-Date: Thu, 28 Mar 2019 14:25:13 +0000
-Message-Id: <20190328142516.30372-3-rui.silva@linaro.org>
-In-Reply-To: <20190328142516.30372-1-rui.silva@linaro.org>
-References: <20190328142516.30372-1-rui.silva@linaro.org>
+Return-Path: <robherring2@gmail.com>
+Date: Thu, 28 Mar 2019 11:59:32 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/6] iio: gyro: add DT bindings to fxas21002c
+Message-ID: <20190328165932.GA9373@bogus>
+References: <20190326101651.25056-1-rui.silva@linaro.org>
+ <20190326101651.25056-2-rui.silva@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190326101651.25056-2-rui.silva@linaro.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The IOMUXC General Purpose Register has bitfield to control video bus
-multiplexer to control the CSI input between the MIPI-CSI2 and parallel
-interface. Add that register and mask.
+On Tue, 26 Mar 2019 10:16:46 +0000, Rui Miguel Silva wrote:
+> Add device tree bindings for the FXAS21002C gyroscope.
+> 
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> ---
+>  .../bindings/iio/gyroscope/nxp,fxas21002c.txt | 31 +++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
+> 
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- arch/arm/boot/dts/imx7s.dtsi | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 9a680d3d6424..792efcd2caa1 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -497,8 +497,15 @@
- 
- 			gpr: iomuxc-gpr@30340000 {
- 				compatible = "fsl,imx7d-iomuxc-gpr",
--					"fsl,imx6q-iomuxc-gpr", "syscon";
-+					"fsl,imx6q-iomuxc-gpr", "syscon",
-+					"simple-mfd";
- 				reg = <0x30340000 0x10000>;
-+
-+				mux: mux-controller {
-+					compatible = "mmio-mux";
-+					#mux-control-cells = <0>;
-+					mux-reg-masks = <0x14 0x00000010>;
-+				};
- 			};
- 
- 			ocotp: ocotp-ctrl@30350000 {
--- 
-2.21.0
+Reviewed-by: Rob Herring <robh@kernel.org>
