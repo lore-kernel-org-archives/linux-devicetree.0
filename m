@@ -1,67 +1,77 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/6] dt-bindings: ap806: add the cluster clock node in
- the syscon file
-Date: Thu, 28 Mar 2019 12:13:50 -0500
-Message-ID: <20190328171350.GA26680@bogus>
-References: <20190325124803.28904-1-gregory.clement@bootlin.com>
- <20190325124803.28904-2-gregory.clement@bootlin.com>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH v4 0/7] drm/panel: simple: Add mode support to devicetree
+Date: Thu, 28 Mar 2019 10:17:03 -0700
+Message-ID: <20190328171710.31949-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190325124803.28904-2-gregory.clement@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Sean Paul <seanpaul@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Viresh Kumar <viresh.kumar@linaro.org>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Boris Brezillon <boris.brezillon@collabora.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?q?Enric=20Balletb=C3=B2?= <enric.balletbo@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, mka@chromium.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 01:47:58PM +0100, Gregory CLEMENT wrote:
-> Document the device tree binding for the cluster clock controllers found
-> in the Armada 7K/8K SoCs.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> ---
->  .../arm/marvell/ap806-system-controller.txt   | 25 +++++++++++++++++++
->  1 file changed, 25 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-> index 7b8b8eb0191f..ceeba18b4ac3 100644
-> --- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-> +++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-> @@ -143,3 +143,28 @@ ap_syscon1: system-controller@6f8000 {
->  		#thermal-sensor-cells = <1>;
->  	};
->  };
-> +
-> +Cluster clocks:
-> +---------------
-> +
-> +Device Tree Clock bindings for cluster clock of AP806 Marvell. Each
-> +cluster contain up to 2 CPUs running at the same frequency.
-> +
-> +Required properties:
-> +- compatible: must be  "marvell,ap806-cpu-clock";
-> +- #clock-cells : should be set to 1.
-> +- clocks : shall be the input parents clock phandle for the clock.
-> +
-> +Optional property:
-> + - reg: register range associated the cluser clocks
-
-reg can be optional to use, but should either be there or not.
-
-And there's a typo.
-
-> +
-> +ap_syscon1: system-controller@6f8000 {
-> +	compatible = "syscon", "simple-mfd";
-> +	reg = <0x6f8000 0x1000>;
-> +
-> +	cpu_clk: clock-cpu {
-> +		compatible = "marvell,ap806-cpu-clock";
-> +		clocks = <&ap_clk 0>, <&ap_clk 1>;
-> +		#clock-cells = <1>;
-> +	};
-> +};
-> -- 
-> 2.20.1
-> 
+SSdtIHJldml2aW5nIFNlYW4gUGF1bCdzIG9sZCBwYXRjaHNldCB0byBnZXQgbW9kZSBzdXBwb3J0
+IGluIGRldmljZQp0cmVlLiAgVGhlIGNvdmVyIGxldHRlciBmb3IgaGlzIHYzIGlzIGF0OgpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxOC1GZWJydWFy
+eS8xNjUxNjIuaHRtbAoKSSd2ZSBwdWxsZWQgdG9nZXRoZXIgdGhlIHBhdGNoZXMgdGhhdCBkaWRu
+J3QgbGFuZCBpbiB2MywgYWRkcmVzc2VkCm91dHN0YW5kaW5nIGZlZWRiYWNrLCBhbmQgcmVwb3N0
+ZWQuICBBdG9wIHRoZW0gSSd2ZSBhZGRlZCBwYXRjaGVzIGZvcgpyazMyODgtdmV5cm9uLWplcnJ5
+IGFuZCByazMyODgtdmVyeW9uLW1pbm5pZS4KClBsZWFzZSBsZXQgbWUga25vdyBob3cgdGhleSBs
+b29rLgoKSW4gZ2VuZXJhbCBJIGhhdmUgYWRkZWQgcGVvcGxlIHRvIHRoZSB3aG9sZSBzZXJpZXMg
+d2hvIEkgdGhpbmsgd291bGQKbGlrZSB0aGUgd2hvbGUgc2VyaWVzIGFuZCB0aGVuIGxldCBnZXRf
+bWFpbnRhaW5lciBwaWNrIGV4dHJhIHBlb3BsZSBpdAp0aGlua3MgYXJlIHJlbGV2YW50IHRvIGVh
+Y2ggaW5kaXZpZHVhbCBwYXRjaC4gIElmIEkgc2VlIHlvdSByZXNwb25kIHRvCmFueSBvZiB0aGUg
+cGF0Y2hlcyBpbiB0aGUgc2VyaWVzLCB0aG91Z2gsIEknbGwgYWRkIHlvdSB0byB0aGUgd2hvbGUK
+c2VyaWVzIENjIGxpc3QgbmV4dCB0aW1lLgoKQ2hhbmdlcyBpbiB2NDoKLSBTaW1wbGlmeSBkZXNj
+LiBmb3Igd2hlbiBvdmVycmlkZSBzaG91bGQgYmUgdXNlZCAoVGhpZXJyeS9MYXVyZW50KQotIFJl
+bW92ZWQgUm9iIEggcmV2aWV3IHNpbmNlIGl0J3MgYmVlbiBhIHllYXIgYW5kIHdvcmRpbmcgY2hh
+bmdlZAotIERvbid0IGFkZCBtb2RlIGZyb20gdGltaW5nIGlmIG92ZXJyaWRlIHdhcyBzcGVjaWZp
+ZWQgKFRoaWVycnkpCi0gQWRkIHdhcm5pbmcgaWYgdGltaW5nIGFuZCBmaXhlZCBtb2RlIHdhcyBz
+cGVjaWZpZWQgKFRoaWVycnkpCi0gRG9uJ3QgYWRkIGZpeGVkIG1vZGUgaWYgdGltaW5nIHdhcyBz
+cGVjaWZpZWQgKFRoaWVycnkpCi0gUmVmYWN0b3IvcmVuYW1lIGEgYml0IHRvIGF2b2lkIGV4dHJh
+IGluZGVudGF0aW9uIGZyb20gImlmIiB0ZXN0cwotIGkgc2hvdWxkIGJlIHVuc2lnbmVkIChUaGll
+cnJ5KQotIEFkZCBhbm5veWluZyBXQVJOX09OcyBmb3Igc29tZSBjYXNlcyAoVGhpZXJyeSkKLSBT
+aW1wbGlmeSAnTm8gZGlzcGxheV90aW1pbmcgZm91bmQnIGhhbmRsaW5nIChUaGllcnJ5KQotIFJl
+bmFtZSB0byBwYW5lbF9zaW1wbGVfcGFyc2Vfb3ZlcnJpZGVfbW9kZSgpIChUaGllcnJ5KQotIFJl
+YmFzZSB0byB0b3Agb2YgSGVpa28ncyB0cmVlCi0gQ29udmVydGVkIGNoYW5nZWxvZyB0byBhZnRl
+ci10aGUtY3V0IGZvciBub24tRFJNIGNoYW5nZS4KLSBkaXNwbGF5X3RpbWluZyBmb3IgSW5ub2x1
+eCBuMTE2YmdlIG5ldyBmb3IgdjQuCi0gZGlzcGxheV90aW1pbmcgZm9yIEFVTyBiMTAxZWFuMDEg
+bmV3IGZvciB2NC4KLSByazMyODgtdmV5cm9uLWplcnJ5IHBhdGNoIG5ldyBmb3IgdjQuCi0gcmsz
+Mjg4LXZleXJvbi1taW5uaWUgcGF0Y2ggbmV3IGZvciB2NC4KCkNoYW5nZXMgaW4gdjM6Ci0gR28g
+YmFjayB0byB1c2luZyB0aGUgdGltaW5nIHN1Ym5vZGUgZGlyZWN0bHksIGJ1dCByZW5hbWUgdG8K
+ICBwYW5lbC10aW1pbmcgKFJvYikKLSBObyBsb25nZXIgcGFyc2UgZGlzcGxheS10aW1pbmdzIHN1
+Ym5vZGUsIHVzZSBwYW5lbC10aW1pbmcgKFJvYikKLSBVbndyYXAgdGhlIHRpbWluZyBmcm9tIGRp
+c3BsYXktdGltaW5ncyBhbmQgcmVuYW1lIHBhbmVsLXRpbWluZyAoUm9iKQoKQ2hhbmdlcyBpbiB2
+MjoKLSBTcGxpdCBvdXQgdGhlIGJpbmRpbmcgaW50byBhIG5ldyBwYXRjaCAoUm9iKQotIGRpc3Bs
+YXktdGltaW5ncyBpcyBhIG5ldyBzZWN0aW9uIChSb2IpCi0gVXNlIHRoZSBmdWxsIGRpc3BsYXkt
+dGltaW5ncyBzdWJub2RlIGluc3RlYWQgb2YgcGlja2luZyB0aGUgdGltaW5nCiAgb3V0IChSb2Iv
+VGhpZXJyeSkKLSBQYXJzZSB0aGUgZnVsbCBkaXNwbGF5LXRpbWluZ3Mgbm9kZSAodXNpbmcgdGhl
+IG5hdGl2ZS1tb2RlKSAoUm9iKQotIFdyYXAgdGhlIHRpbWluZyBpbiBkaXNwbGF5LXRpbWluZ3Mg
+bm9kZSB0byBtYXRjaCBiaW5kaW5nIChSb2IvVGhpZXJyeSkKCkRvdWdsYXMgQW5kZXJzb24gKDQp
+OgogIGRybS9wYW5lbDogc2ltcGxlOiBVc2UgZGlzcGxheV90aW1pbmcgZm9yIElubm9sdXggbjEx
+NmJnZQogIGRybS9wYW5lbDogc2ltcGxlOiBVc2UgZGlzcGxheV90aW1pbmcgZm9yIEFVTyBiMTAx
+ZWFuMDEKICBBUk06IGR0czogcm9ja2NoaXA6IFNwZWNpZnkgcmszMjg4LXZleXJvbi1qZXJyeSdz
+IGRpc3BsYXkgdGltaW5ncwogIEFSTTogZHRzOiByb2NrY2hpcDogU3BlY2lmeSByazMyODgtdmV5
+cm9uLW1pbm5pZSdzIGRpc3BsYXkgdGltaW5ncwoKU2VhbiBQYXVsICgzKToKICBkdC1iaW5kaW5n
+czogQWRkIHBhbmVsLXRpbWluZyBzdWJub2RlIHRvIHNpbXBsZS1wYW5lbAogIGRybS9wYW5lbDog
+c2ltcGxlOiBBZGQgYWJpbGl0eSB0byBvdmVycmlkZSB0eXBpY2FsIHRpbWluZwogIGFybTY0OiBk
+dHM6IHJvY2tjaGlwOiBTcGVjaWZ5IG92ZXJyaWRlIG1vZGUgZm9yIGtldmluIHBhbmVsCgogLi4u
+L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2ltcGxlLXBhbmVsLnR4dCAgIHwgIDI0ICsrKwogLi4u
+L2Jvb3QvZHRzL3JrMzI4OC12ZXlyb24tY2hyb21lYm9vay5kdHNpICAgIHwgIDE0ICsrCiBhcmNo
+L2FybS9ib290L2R0cy9yazMyODgtdmV5cm9uLW1pbm5pZS5kdHMgICAgfCAgMTQgKysKIC4uLi9i
+b290L2R0cy9yb2NrY2hpcC9yazMzOTktZ3J1LWtldmluLmR0cyAgICB8ICAxNCArKwogZHJpdmVy
+cy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgIHwgMTcxICsrKysrKysrKysr
+KysrLS0tLQogNSBmaWxlcyBjaGFuZ2VkLCAyMDUgaW5zZXJ0aW9ucygrKSwgMzIgZGVsZXRpb25z
+KC0pCgotLSAKMi4yMS4wLjM5Mi5nZjhmNjc4NzE1OWUtZ29vZwoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
