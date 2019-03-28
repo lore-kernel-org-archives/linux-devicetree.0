@@ -1,67 +1,66 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 03/10] PCI: dwc: Move config space capability search API
-Date: Thu, 28 Mar 2019 13:33:20 +0100
-Message-ID: <20190328123320.GA5518@ulmo>
-References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
- <1553613207-3988-4-git-send-email-vidyas@nvidia.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V4 0/5] mmc: mmci: add get_datactrl_cfg callback
+Date: Thu, 28 Mar 2019 13:52:23 +0100
+Message-ID: <CAPDyKFqi0FwUuB56GQPRtuioNeFSSg-QdtWzk4S6BDnuYbfeAg@mail.gmail.com>
+References: <1553677532-3539-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1553613207-3988-4-git-send-email-vidyas@nvidia.com>
+In-Reply-To: <1553677532-3539-1-git-send-email-ludovic.Barre@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, tiwai@suse.de, spujar@nvidia.com, skomatineni@nvidia.com, liviu.dudau@arm.com, krzk@kernel.org, heiko@sntech.de, horms+renesas@verge.net.au, olof@lixom.net, maxime.ripard@bootlin.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, jagan@amarulasolutions.com, enric.balletbo@collabora.com, ezequiel@collabora.com, stefan.wahren@i2se.com, marc.w.gonzalez@free.fr, l.stach@pengutronix.de, tpiepho@impinj.com, hayashi.kunihiko@socionext.com, yue.wang@amlogic.com, shawn.lin@rock-chips.com, xiaowei.bao@nxp.com, linux-pci@vger.kernel.or
+To: Ludovic Barre <ludovic.Barre@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 27 Mar 2019 at 10:05, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>
+> From: Ludovic Barre <ludovic.barre@st.com>
+>
+> This patch series adds get_datactrl_cfg callback in mmci_host_ops
+> to allow to get datactrl configuration specific at variant.
+>
+> change V4:
+> -keep mmci and ux500v2 variant init in the c file.
+>
+> change V3:
+> -keep the common functions in mmci_start_data. define
+> function used by some variants like an helper
+> (example mmci_dctrl_blks used by mmci and sdmmc).
+> -To be consistent rename callback for ux500v2
+>
+> change V2:
+> -This V2 has been rebased on
+> "mmc: mmci: Cleanup some variant related code" series
+> -add helpers functions to define default datactrl value,
+> each variant could use these helpers to define datactrl
+> and adds their specific bits.
+> -use static in qcom and stm32
+> -regroup mmci_(ux500v2)variant_init in header file
+> to avoid checkpatch warning:
+> "WARNING: externs should be avoided in .c files"
+> -remove unused variant properties:
+>  "datactrl_dpsm_enable"
+>  "blksz_datactrl16"
+>  "blksz_datactrl4"
+>
+> Ludovic Barre (5):
+>   mmc: mmci: add get_datactrl_cfg callback and helper functions
+>   mmc: mmci: define get_dctrl_cfg for legacy variant
+>   mmc: mmci: qcom: define get_dctrl_cfg
+>   mmc: mmci: stm32: define get_dctrl_cfg
+>   mmc: mmci: replace blksz_datactrlXX by get_datactrl_cfg callback
+>
+>  drivers/mmc/host/mmci.c             | 56 +++++++++++++++++--------------------
+>  drivers/mmc/host/mmci.h             | 18 +++++++-----
+>  drivers/mmc/host/mmci_qcom_dml.c    |  6 ++++
+>  drivers/mmc/host/mmci_stm32_sdmmc.c | 18 ++++++++++++
+>  4 files changed, 61 insertions(+), 37 deletions(-)
+>
+> --
+> 2.7.4
+>
 
---zhXaljGHf11kAtnf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied for next, thanks!
 
-On Tue, Mar 26, 2019 at 08:43:20PM +0530, Vidya Sagar wrote:
-> move PCIe config space capability search API to common designware file
-> as this can be used by both host and ep mode codes.
-> It also adds extended capability search APIs.
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 37 +------------
->  drivers/pci/controller/dwc/pcie-designware.c    | 73 +++++++++++++++++++=
-++++++
->  drivers/pci/controller/dwc/pcie-designware.h    |  3 +
->  3 files changed, 78 insertions(+), 35 deletions(-)
-
-Just out of curiosity: is there any reason why this driver needs to
-reimplement this? Couldn't this be made to work using the standard
-pci_find_next_capability() function?
-
-Other than that it might be a good idea to split this into two patches,
-one that moves the existing functionality to the common code and another
-that adds the extra functionality.
-
-Thierry
-
---zhXaljGHf11kAtnf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlycvwQACgkQ3SOs138+
-s6FSHRAAiqfW9pZdlTMf93D0kyVYmJif0pMQT9zO40TPg/fOvnaoMv0VQaSweuGk
-GuZEgZFflhDhQlpu+p9FC58xyabumnSxpuo9Zqlo9VMoClzkmOmNMng4kYFSGcmG
-zKyzoVCOlwgp1yuDeZYJsXfpCcH+IFcnnYGp0+WO4HGqMcGM1VfYhNJs98TFJHaj
-QrUdDrlw54VTiZzZKlqHDAEPtT9QW/u1jHhjPGESPkkW7gJiK3k718eEhNATx1DJ
-cE+fMzbhitGvPB2sNJFWqFRIw43ff8qnsdKqKVTK6Fcx+13wSRz3GPtiGqbu3lwe
-hkz6mo0GT/VKXRlkes8y6n93sUqlndeJAg2WJKhBahgqJVitl9aVzWt/8qzr+FDG
-a4Anyw8h88Mc1MYdBhNE3Fedsm/q324bqCpmcmemLPZmy4tVCeMAu8XuagZq3txg
-HZGzugRI2Avuvq4iJ9hqc6EAPOOja48OUVzQNO7H6ht2qLKeGVeEq9hGuqI0/dYW
-H7djABdlbJTk4qL0Y1aEzc2y66mDkYrAniRbtH7wBcoVJ8kcNT7l+k99hkSDQUxQ
-HZA4HbWEEaOhP7vHs9JWgwtLpgIDAy7gMRJ4drabe02YlSgm5+RAO7SqlIxD9Trh
-t0QXl1CjjHzbqF1coa8XLFirUWskW9p9Y3H86pkuULFyCbjMllI=
-=OOta
------END PGP SIGNATURE-----
-
---zhXaljGHf11kAtnf--
+Kind regards
+Uffe
