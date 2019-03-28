@@ -1,28 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: pinctrl: imx7d: Fix PAD_CTL_DSE_X*
-Date: Thu, 28 Mar 2019 10:20:00 -0500
-Message-ID: <20190328152000.GA24629@bogus>
-References: <20190313142040.26694-1-cquast@hanoverdisplays.com>
+Subject: Re: [PATCH 1/6] dt-bindings: hwlock: add support of shared locks
+Date: Thu, 28 Mar 2019 10:24:53 -0500
+Message-ID: <20190328152453.GA31716@bogus>
+References: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
+ <1552492237-28810-2-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190313142040.26694-1-cquast@hanoverdisplays.com>
+In-Reply-To: <1552492237-28810-2-git-send-email-fabien.dessenne@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org, stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Christina Quast <cquast@hanoverdisplays.com>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jonathan Corbet <corbet@lwn.net>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, Fabien Dessenne <fabien.dessenne@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 13 Mar 2019 15:20:40 +0100, Christina Quast wrote:
-> In the iMX7d datasheet, the PAD_CTL_DSE_X* values are different from
-> the documentation.
+On Wed, 13 Mar 2019 16:50:32 +0100, Fabien Dessenne wrote:
+> Use #hwlock-cells value to define whether the locks can be shared
+> by several users.
 > 
-> Changes since v2:
-> * Changed patch title to 'dt-bindings: pinctrl: imx7d:'
-> 
-> Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 > ---
->  .../devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt       | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  .../devicetree/bindings/hwlock/hwlock.txt          | 27 ++++++++++++++++------
+>  1 file changed, 20 insertions(+), 7 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
