@@ -1,55 +1,43 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v2 05/25] drm/mediatek: split DISP_REG_CONFIG_DSI_SEL
- setting into another use case
-Date: Thu, 28 Mar 2019 11:37:59 +0800
-Message-ID: <1553744279.14682.10.camel@mtksdaap41>
-References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
- <1553667561-25447-6-git-send-email-yongqiang.niu@mediatek.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 1/2] mtd: maps: physmap: Store gpio_values correctly
+Date: Thu, 28 Mar 2019 17:02:15 +1300
+Message-ID: <20190328040217.1895-2-chris.packham@alliedtelesis.co.nz>
+References: <20190328040217.1895-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1553667561-25447-6-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: yongqiang.niu@mediatek.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190328040217.1895-1-chris.packham@alliedtelesis.co.nz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bbrezillon@kernel.org, computersforpeace@gmail.com, dwmw2@infradead.org, marek.vasut@gmail.com, richard@nod.at, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoKCk9uIFdlZCwgMjAxOS0wMy0yNyBhdCAxNDoxOSArMDgwMCwgeW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gSGVyZSBpcyB0d28gbW9kaWZpdGlvbiBpbiB0aGlz
-IHBhdGNoOgo+IDEuYmxzLT5kcGkwIGFuZCByZG1hMS0+ZHNpIGFyZSBkaWZmZXJlbiB1c2VjYXNl
-LAo+IFNwbGl0IERJU1BfUkVHX0NPTkZJR19EU0lfU0VMIHNldHRpbmcgaW50byBhbnRoZXIgdXNl
-Y2FzZQo+IDIucmVtb3ZlIERJU1BfUkVHX0NPTkZJR19EUElfU0VMIHNldHRpbmcsIERQSV9TRUxf
-SU5fQkxTIGlzIDAgYW5kCj4gdGhpcyBpcyBzYW1lIHdpdGggaGFyZHdhcmUgZGVmYXV0bCBzZXR0
-aW5nLAo+IAo+IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVk
-aWF0ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAu
-YyB8IDMgKy0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMiBkZWxldGlvbnMo
-LSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRw
-LmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwo+IGluZGV4IDQ5NWVi
-YzUuLjgwZGM5MWYgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-cm1fZGRwLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwo+
-IEBAIC00MDEsMTAgKzQwMSw5IEBAIHN0YXRpYyB2b2lkIG10a19kZHBfc291dF9zZWwodm9pZCBf
-X2lvbWVtICpjb25maWdfcmVncywKPiAgCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRf
-QkxTICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EUEkwKSB7Cj4gIAkJd3JpdGVsX3JlbGF4ZWQo
-QkxTX1RPX0RQSV9SRE1BMV9UT19EU0ksCj4gIAkJCSAgICAgICBjb25maWdfcmVncyArIERJU1Bf
-UkVHX0NPTkZJR19PVVRfU0VMKTsKPiArCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRf
-UkRNQTEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTApIHsKPiAgCQl3cml0ZWxfcmVsYXhl
-ZChEU0lfU0VMX0lOX1JETUEsCj4gIAkJCSAgICAgICBjb25maWdfcmVncyArIERJU1BfUkVHX0NP
-TkZJR19EU0lfU0VMKTsKPiAtCQl3cml0ZWxfcmVsYXhlZChEUElfU0VMX0lOX0JMUywKPiAtCQkJ
-ICAgICAgIGNvbmZpZ19yZWdzICsgRElTUF9SRUdfQ09ORklHX0RQSV9TRUwpOwoKVGhlIG9yaWdp
-bmFsIGNvZGUgaXMgaW1wbGVtZW50ZWQgYnkgQmliYnkgYW5kIEkgdGhpbmsgTVQyNzAxIGhhcyBz
-b21lCmhhcmR3YXJlIGxpbWl0YXRpb24gc28gdGhlIGNvZGUgd29ya3MgbGlrZSB0aGlzLiBQbGVh
-c2UgbWFrZSBzdXJlIHRoYXQKeW91ciBwYXRjaCB3b3VsZCBtYWtlIG90aGVyIFNvQyB3b3Jrcy4K
-ClJlZ2FyZHMsCkNLCgo+ICAJfQo+ICB9Cj4gIAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbA==
+When the gpio-addr-flash.c driver was merged with physmap-core.c the
+code to store the current gpio_values was lost. This meant that once a
+gpio was asserted it was never de-asserted. Fix this by storing the
+current offset in gpio_values like the old driver used to.
+
+Fixes: commit ba32ce95cbd9 ("mtd: maps: Merge gpio-addr-flash.c into phys=
+map-core.c")
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ drivers/mtd/maps/physmap-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/mtd/maps/physmap-core.c b/drivers/mtd/maps/physmap-c=
+ore.c
+index d9a3e4bebe5d..21b556afc305 100644
+--- a/drivers/mtd/maps/physmap-core.c
++++ b/drivers/mtd/maps/physmap-core.c
+@@ -132,6 +132,8 @@ static void physmap_set_addr_gpios(struct physmap_fla=
+sh_info *info,
+=20
+ 		gpiod_set_value(info->gpios->desc[i], !!(BIT(i) & ofs));
+ 	}
++
++	info->gpio_values =3D ofs;
+ }
+=20
+ #define win_mask(order)		(BIT(order) - 1)
+--=20
+2.21.0
