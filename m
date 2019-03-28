@@ -1,27 +1,39 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: display: amlogic,meson-dw-hdmi: Add
- G12A compatible and ports
-Date: Thu, 28 Mar 2019 10:17:50 -0500
-Message-ID: <20190328151750.GA21381@bogus>
-References: <20190313141030.5958-1-narmstrong@baylibre.com>
- <20190313141030.5958-3-narmstrong@baylibre.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [PATCH 3/4] dt-bindings: Document the new imx8mq-sdma compatible string
+Date: Thu, 28 Mar 2019 17:18:03 +0200
+Message-ID: <CAEnQRZDegwSih4BDsPiYHmoSCjtxCvO3-U+g1X27C6c_KE8fgw@mail.gmail.com>
+References: <20190328133828.20999-1-angus@akkea.ca> <20190328133828.20999-4-angus@akkea.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190313141030.5958-3-narmstrong@baylibre.com>
+In-Reply-To: <20190328133828.20999-4-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vkoul@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Carlo Caione <ccaione@baylibre.com>, Daniel Baluta <daniel.baluta@nxp.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Devicetree List <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 13 Mar 2019 15:10:29 +0100, Neil Armstrong wrote:
-> The Amlogic G12A SoC has a slighly modified DW-HDMI Glue with
-> support for HDMI 2.1 and a different DW-HDMI register access.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+On Thu, Mar 28, 2019 at 3:41 PM Angus Ainslie (Purism) <angus@akkea.ca> wrote:
+>
+> The imx8mq needs to be specified to check the clk ratio.
+>
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 > ---
->  .../devicetree/bindings/display/amlogic,meson-dw-hdmi.txt     | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
+>  Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> index 3c9a57a8443b..9d8bbac27d8b 100644
+> --- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> +++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> @@ -9,6 +9,7 @@ Required properties:
+>        "fsl,imx53-sdma"
+>        "fsl,imx6q-sdma"
+>        "fsl,imx7d-sdma"
+> +      "fsl,imx8mq-sdma"
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+You can drop this patch. It is already in Shwan's for-next branch.
+
+The joy of working in parallel on similar things.
+
+thanks,
+Daniel.
