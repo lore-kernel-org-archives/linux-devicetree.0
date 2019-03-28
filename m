@@ -1,31 +1,96 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/5] dt-bindings: display: Add GiantPlus GPM940B0
- panel documentation
-Date: Thu, 28 Mar 2019 10:39:57 -0500
-Message-ID: <20190328153957.GA20720@bogus>
-References: <20190314122622.7597-1-paul@crapouillou.net>
- <20190314122622.7597-2-paul@crapouillou.net>
+Subject: Re: [PATCH 2/2] dt-bindings: phy: Add binding for Mediatek MT7621
+ PCIe PHY
+Date: Thu, 28 Mar 2019 10:42:38 -0500
+Message-ID: <20190328154238.GA20934@bogus>
+References: <20190314132210.654-1-sergio.paracuellos@gmail.com>
+ <20190314132210.654-3-sergio.paracuellos@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190314122622.7597-2-paul@crapouillou.net>
+In-Reply-To: <20190314132210.654-3-sergio.paracuellos@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, od@zcrc.me, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc: kishon@ti.com, linux-kernel@vger.kernel.org, driverdev-devel@linuxdriverproject.org, devicetree@vger.kernel.org, john@phrozen.org, linux-mips@vger.kernel.org, neil@brown.name
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 14 Mar 2019 13:26:19 +0100, Paul Cercueil wrote:
-> The GPM940B0 is a 3.0" 320x240 24-bit TFT LCD panel.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     v2: New patch
-> 
->  .../devicetree/bindings/display/panel/giantplus,gpm940b0.txt | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
-> 
+On Thu, Mar 14, 2019 at 02:22:10PM +0100, Sergio Paracuellos wrote:
+> Add bindings to describe Mediatek MT7621 PCIe PHY.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Binding should come before the driver.
+
+> 
+> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> ---
+>  .../bindings/phy/mediatek,mt7621-pci-phy.txt  | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt b/Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt
+> new file mode 100644
+> index 000000000000..8addedbe815e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt
+> @@ -0,0 +1,54 @@
+> +Mediatek Mt7621 PCIe PHY
+> +
+> +Required properties:
+> +- compatible: must be "mediatek,mt7621-pci-phy"
+> +- reg: base address and length of the PCIe PHY block
+> +- #address-cells: must be 1
+> +- #size-cells: must be 0
+> +
+> +Each PCIe PHY should be represented by a child node
+> +
+> +Required properties For the child node:
+> +- reg: the PHY ID
+> +0 - PCIe RC 0
+> +1 - PCIe RC 1
+> +- #phy-cells: must be 0
+> +
+> +Example:
+> +	pcie0_phy: pcie-phy@1e149000 {
+> +		compatible = "mediatek,mt7621-pci-phy";
+> +		reg = <0x1e149000 0x0700>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		pcie0_port: pcie-phy@0 {
+> +			reg = <0>;
+> +			#phy-cells = <0>;
+> +		};
+> +
+> +		pcie1_port: pcie-phy@1 {
+> +			reg = <1>;
+> +			#phy-cells = <0>;
+> +		};
+
+If each phy port doesn't have its own resources, then you don't need 
+child nodes. Just set #phy-cells to 1.
+
+> +	};
+> +
+> +	pcie1_phy: pcie-phy@1e14a000 {
+> +		compatible = "mediatek,mt7621-pci-phy";
+> +		reg = <0x1e14a000 0x0700>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		pcie2_port: pcie-phy@0 {
+> +			reg = <0>;
+> +			#phy-cells = <0>;
+> +		};
+> +	};
+> +
+> +	/* users of the PCIe phy */
+> +
+> +	pcie: pcie@1e140000 {
+> +		...
+> +		...
+> +		phys = <&pcie0_port>, <&pcie1_port>, <&pcie2_port>;
+> +		phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
+> +	};
+> -- 
+> 2.19.1
+> 
