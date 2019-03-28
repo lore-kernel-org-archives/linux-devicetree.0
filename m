@@ -1,8 +1,8 @@
 From: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 05/12] soc: mediatek: cmdq: move the CMDQ_IRQ_MASK into
- cmdq driver data
-Date: Thu, 28 Mar 2019 10:19:26 +0800
-Message-ID: <1553739573-19708-6-git-send-email-bibby.hsieh@mediatek.com>
+Subject: [PATCH v3 07/12] soc: mediatek: cmdq: clear the event in cmdq initial
+ flow
+Date: Thu, 28 Mar 2019 10:19:28 +0800
+Message-ID: <1553739573-19708-8-git-send-email-bibby.hsieh@mediatek.com>
 References: <1553739573-19708-1-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,67 +22,76 @@ To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthia
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Houlong Wei <houlong.wei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Frederic Chen <Frederic.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ginny.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The interrupt mask and thread number has positive correlation,
-so we move the CMDQ_IRQ_MASK into cmdq driver data and calculate
-it by thread number.
+GCE hardware stored event information in own internal sysram,
+if the initial value in those sysram is not zero value
+it will cause a situation that gce can wait the event immediately
+after client ask gce to wait event but not really trigger the
+corresponding hardware.
+
+In order to make sure that the wait event function is
+exactly correct, we need to clear the sysram value in
+cmdq initial flow.
+
+Fixes: 623a6143a845 ("mailbox: mediatek: Add Mediatek CMDQ driver")
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/mailbox/mtk-cmdq-mailbox.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/mailbox/mtk-cmdq-mailbox.c       | 5 +++++
+ include/linux/mailbox/mtk-cmdq-mailbox.h | 2 ++
+ include/linux/soc/mediatek/mtk-cmdq.h    | 3 ---
+ 3 files changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index 2281178..87617dc 100644
+index 6db1e2d..4e744cf 100644
 --- a/drivers/mailbox/mtk-cmdq-mailbox.c
 +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -17,7 +17,6 @@
- #include <linux/of_device.h>
+@@ -33,6 +33,7 @@
+ #define CMDQ_THR_END_ADDR		0x24
+ #define CMDQ_THR_WAIT_TOKEN		0x30
+ #define CMDQ_THR_PRIORITY		0x40
++#define CMDQ_SYNC_TOKEN_UPDATE		0x68
  
- #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
--#define CMDQ_IRQ_MASK			0xffff
- #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
+ #define CMDQ_THR_ACTIVE_SLOT_CYCLES	0x3200
+ #define CMDQ_THR_ENABLED		0x1
+@@ -103,8 +104,12 @@ static void cmdq_thread_resume(struct cmdq_thread *thread)
  
- #define CMDQ_CURR_IRQ_STATUS		0x10
-@@ -71,6 +70,7 @@ struct cmdq {
- 	void __iomem		*base;
- 	u32			irq;
- 	u32			thread_nr;
-+	u32			irq_mask;
- 	struct cmdq_thread	*thread;
- 	struct clk		*clock;
- 	bool			suspended;
-@@ -284,11 +284,11 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
- 	unsigned long irq_status, flags = 0L;
- 	int bit;
- 
--	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
--	if (!(irq_status ^ CMDQ_IRQ_MASK))
-+	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & cmdq->irq_mask;
-+	if (!(irq_status ^ cmdq->irq_mask))
- 		return IRQ_NONE;
- 
--	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
-+	for_each_clear_bit(bit, &irq_status, cmdq->thread_nr) {
- 		struct cmdq_thread *thread = &cmdq->thread[bit];
- 
- 		spin_lock_irqsave(&thread->chan->lock, flags);
-@@ -472,6 +472,9 @@ static int cmdq_probe(struct platform_device *pdev)
- 		dev_err(dev, "failed to get irq\n");
- 		return -EINVAL;
- 	}
+ static void cmdq_init(struct cmdq *cmdq)
+ {
++	int i;
 +
-+	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
-+	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
- 	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
- 			       "mtk_cmdq", cmdq);
- 	if (err < 0) {
-@@ -488,7 +491,6 @@ static int cmdq_probe(struct platform_device *pdev)
- 		return PTR_ERR(cmdq->clock);
- 	}
+ 	WARN_ON(clk_enable(cmdq->clock) < 0);
+ 	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
++	for (i = 0; i <= CMDQ_MAX_EVENT; i++)
++		writel(i, cmdq->base + CMDQ_SYNC_TOKEN_UPDATE);
+ 	clk_disable(cmdq->clock);
+ }
  
--	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
- 	cmdq->mbox.dev = dev;
- 	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
- 					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
+diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+index ccb7342..911475da 100644
+--- a/include/linux/mailbox/mtk-cmdq-mailbox.h
++++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+@@ -19,6 +19,8 @@
+ #define CMDQ_WFE_UPDATE			BIT(31)
+ #define CMDQ_WFE_WAIT			BIT(15)
+ #define CMDQ_WFE_WAIT_VALUE		0x1
++/** cmdq event maximum */
++#define CMDQ_MAX_EVENT			0x3ff
+ 
+ /*
+  * CMDQ_CODE_MASK:
+diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+index 54ade13..4e88999 100644
+--- a/include/linux/soc/mediatek/mtk-cmdq.h
++++ b/include/linux/soc/mediatek/mtk-cmdq.h
+@@ -13,9 +13,6 @@
+ 
+ #define CMDQ_NO_TIMEOUT		0xffffffffu
+ 
+-/** cmdq event maximum */
+-#define CMDQ_MAX_EVENT				0x3ff
+-
+ struct cmdq_pkt;
+ 
+ struct cmdq_client {
 -- 
 1.9.1
