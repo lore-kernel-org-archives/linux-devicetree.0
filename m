@@ -1,50 +1,54 @@
-From: Patrick Venture <venture@google.com>
-Subject: Re: [PATCH v8 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
-Date: Thu, 28 Mar 2019 10:03:36 -0700
-Message-ID: <CAO=notxxYF4noXbR1BeVrwqCBHaVCaXy+jPV4OVbex=w=fV+Rg@mail.gmail.com>
-References: <20190327212155.80730-1-venture@google.com> <20190328165009.GA25705@bogus>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH RESEND v7 1/3] dt-bindings: Add vendor prefix for Mixel
+ Inc
+Date: Thu, 28 Mar 2019 18:04:49 +0100
+Message-ID: <16e92716-17dd-abb5-87dc-601414f22d20@suse.de>
+References: <cover.1553674604.git.agx@sigxcpu.org>
+ <e31ffb1d6929e4c961ec90bcdb1ff5e9ecb3380e.1553674604.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190328165009.GA25705@bogus>
+In-Reply-To: <e31ffb1d6929e4c961ec90bcdb1ff5e9ecb3380e.1553674604.git.agx@sigxcpu.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Greg KH <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Heiko Stuebner <heiko@sntech.de>, Johan Hovold <johan@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Robert Chiras <robert.chiras@nxp.com>, Sam Ravnborg <sam@ravnbo>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 9:50 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, 27 Mar 2019 14:21:55 -0700, Patrick Venture wrote:
-> > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
-> >
-> > Signed-off-by: Patrick Venture <venture@google.com>
-> > ---
-> > Changes for v8:
-> > - None
-> > Changes for v7:
-> > - Moved node under the syscon node it requires
-> > Changes for v6:
-> > - None
-> > Changes for v5:
-> > - None
-> > Changes for v4:
-> > - None
-> > Changes for v3:
-> > - None
-> > Changes for v2:
-> > - Added comment about syscon required parameter.
-> > ---
-> >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
-> >  1 file changed, 48 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> >
->
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
->
-> If a tag was not added on purpose, please state why and what changed.
+Am 27.03.19 um 09:19 schrieb Guido Günther:
+> Add vendor prefix "mixel" for Mixel Inc. Will be used for a MIPI DSI
+> PHY driver.
 
-Adding tags in this case is adding a change version?  I was doing this
-to keep the two patches version-synced.  I thought that was required.
-There was a version change in the other patch in this set.
+Nit: s/driver/binding/ (to not be Linux specific)
+
+> 
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 413c6f30ce88..97370889039f 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -249,6 +249,7 @@ mikroe		MikroElektronika d.o.o.
+>  minix	MINIX Technology Ltd.
+>  miramems	MiraMEMS Sensing Technology Co., Ltd.
+>  mitsubishi	Mitsubishi Electric Corporation
+> +mixel	Mixel, Inc.
+>  mosaixtech	Mosaix Technologies, Inc.
+>  motorola	Motorola, Inc.
+>  moxa	Moxa Inc.
+
+Reviewed-by: Andreas Färber <afaerber@suse.de>
+
+in case you still need it for something else in light of Rob's comment.
+
+Regards,
+Andreas
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
