@@ -1,87 +1,145 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH] dt-bindings: usb: dwc2: document the vbus-supply property
-Date: Thu, 28 Mar 2019 21:00:23 +0100
-Message-ID: <CAFBinCDzYDH8NTwedUMaaN-gxtP29FEmvPtrmnQ+d2_N_PZ+=A@mail.gmail.com>
-References: <20190306212431.5779-1-martin.blumenstingl@googlemail.com> <20190327234217.GA8346@bogus>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 03/25] dt-bindings: leds: Add LED_FUNCTION definitions
+Date: Thu, 28 Mar 2019 21:01:28 +0100
+Message-ID: <f916ae77-1807-1e06-7dc3-8b956e1c4c39@gmail.com>
+References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
+ <20190310182836.20841-4-jacek.anaszewski@gmail.com>
+ <20190328000357.GA3399@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190327234217.GA8346@bogus>
+In-Reply-To: <20190328000357.GA3399@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: hminas@synopsys.com, gregkh@linuxfoundation.org, mark.rutland@arm.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, amelie.delaunay@st.com, felipe.balbi@linux.intel.com
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Rob,
 
-On Thu, Mar 28, 2019 at 12:42 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Mar 06, 2019 at 10:24:31PM +0100, Martin Blumenstingl wrote:
-> > Various boards have an external VBUS supply regulator. This regulator
-> > depends on the current mode of the controller which is defined as:
-> > - dr_mode set to either "host" or "peripheral" (fixed value)
-> > - dr_mode set to "otg", based on the OTG status the dwc2 controller
-> >   internally switches between "host" and "peripheral" mode (selection
-> >   happens at runtime)
-> >
-> > Based on the current mode the regulator has to be enabled or disabled:
-> > - host: provide power to the connected USB device, thus the regulator
-> >   has to be enabled
-> > - peripheral: the host device to which the controller is connected
-> >   provides power, thus the regulator has to be disabled
-> >
-> > Add the dt-bindings documentation for this property so .dts authors know
-> > that this property exists and how it behaves.
-> >
-> > Fixes: 531ef5ebea9639 ("usb: dwc2: add support for host mode external vbus supply")
-> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > ---
-> >  Documentation/devicetree/bindings/usb/dwc2.txt | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> > index 6dc3c4a34483..1e8a775a0e72 100644
-> > --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> > +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> > @@ -31,6 +31,10 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
-> >  Optional properties:
-> >  - phys: phy provider specifier
-> >  - phy-names: shall be "usb2-phy"
-> > +- vbus-supply: reference to the VBUS regulator. Depending on the current mode
-> > +  this is enabled (in "host" mode") or disabled (in "peripheral" mode). The
-> > +  regulator is updated if the controller is configured in "otg" mode and the
-> > +  status changes between "host" and "peripheral".
->
-> This is actually wrong IMO unless Vbus is powering the controller
-> itself. If it is just a regulator routed to the USB connector, then the
-> DT should use the usb-connector binding and put vbus-supply there. If
-> the driver needs it, then it can walk the tree/graph and get it. For
-> some reason folks seem to think everything the driver needs has to be in
-> the node associated with the driver.
-I didn't know about the usb-connector binding yet - thank you for
-pointing it out (rather than saying that this is bad without giving a
-reason)!
+Thanks for the review.
 
-do you want me to re-spin this with a notice (stating that this should
-be implemented in another way)?
-I'm asking because I suggested that Neil adds a "vbus-supply" property
-to "dt-bindings: usb: dwc3: Add Amlogic G12A DWC3 Glue Bindings" [0].
-He already added it and you reviewed it (it's easy to miss though, the
-patches are not merged yet though).
+On 3/28/19 1:03 AM, Rob Herring wrote:
+> On Sun, Mar 10, 2019 at 07:28:14PM +0100, Jacek Anaszewski wrote:
+>> Add common LED function definitions for use in Device Tree.
+>> The function names were extracted from existing dts files
+>> after eliminating oddities.
+> 
+> I'd like this to be suggestions of what to use rather than what's
+> already out there. So my comments are in that context.
+> 
+>>
+>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>> Cc: Baolin Wang <baolin.wang@linaro.org>
+>> Cc: Daniel Mack <daniel@zonque.org>
+>> Cc: Dan Murphy <dmurphy@ti.com>
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+>> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> Cc: Simon Shields <simon@lineageos.org>
+>> ---
+>>   include/dt-bindings/leds/common.h | 38 ++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 38 insertions(+)
+>>
+>> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+>> index e171d0a6beb2..ffcd46317307 100644
+>> --- a/include/dt-bindings/leds/common.h
+>> +++ b/include/dt-bindings/leds/common.h
+>> @@ -19,4 +19,42 @@
+>>   #define LEDS_BOOST_ADAPTIVE	1
+>>   #define LEDS_BOOST_FIXED	2
+>>   
+>> +/* Standard LED functions */
+>> +#define LED_FUNCTION_ACTIVITY "activity"
+> 
+> of what?
 
-> </rant>
->
-> I guess given this is already in use:
-I know of at least two consumers:
-- arch/arm/boot/dts/meson8b-ec100.dts (I'm guilty of adding that
-because I thought that the only problem with this binding was the
-missing documentation)
-- (downstream) OpenWrt has switched the lantiq target to use this property: [1]
+We have activity trigger, which provides instant feedback
+on the cpu activity.
 
+This would nicely map to that.
 
-Regards
-Martin
+>> +#define LED_FUNCTION_ADSL "adsl"
+> 
+> wan?
 
+Good point.
 
-[0] https://patchwork.kernel.org/patch/10868515/
-[1] https://git.openwrt.org/?p=openwrt/openwrt.git;a=commitdiff;h=d8b475212bbf9e5f80c1c923a9701dca5ceb23e2
+>> +#define LED_FUNCTION_ALARM "alarm"
+>> +#define LED_FUNCTION_BACKLIGHT "backlight"
+>> +#define LED_FUNCTION_BLUETOOTH "bluetooth"
+>> +#define LED_FUNCTION_BOOT "boot"
+> 
+> What about boot?
+
+Is lit when bootloader code is executed?
+Turned off just before starting the kernel.
+
+>> +#define LED_FUNCTION_CHRG "chrg"
+>> +#define LED_FUNCTION_DEBUG "debug"
+>> +#define LED_FUNCTION_DISK "disk"
+>> +#define LED_FUNCTION_DISK_READ "disk-read"
+>> +#define LED_FUNCTION_DISK_WRITE "disk-write"
+>> +#define LED_FUNCTION_FAULT "fault"
+>> +#define LED_FUNCTION_FLASH "flash"
+>> +#define LED_FUNCTION_HDDERR "hdderr"
+> 
+> disk-err for consistency?
+
+Ack.
+
+>> +#define LED_FUNCTION_HEARTBEAT "heartbeat"
+>> +#define LED_FUNCTION_INDICATOR "indicator"
+>> +#define LED_FUNCTION_INFO "info"
+> 
+> of what?
+
+Right, doesn't make sense alone.
+
+>> +#define LED_FUNCTION_INTERNET "internet"
+> 
+> Same as wan?
+
+OK, to be removed.
+
+>> +#define LED_FUNCTION_LAN "lan"
+>> +#define LED_FUNCTION_MMC "mmc"
+> 
+> Same as disk?
+
+Not sure. The possibility to have separate LEDs for different types of
+mass storage devices could be useful.
+
+>> +#define LED_FUNCTION_NAND "nand"
+>> +#define LED_FUNCTION_ON "on"
+>> +#define LED_FUNCTION_PROGRAMMING "programming"
+>> +#define LED_FUNCTION_PWR "pwr"
+>> +#define LED_FUNCTION_RX "rx"
+>> +#define LED_FUNCTION_SD "sd"
+> 
+>> +#define LED_FUNCTION_SLEEP "sleep"
+>> +#define LED_FUNCTION_STANDBY "standby"
+> 
+> Same things?
+
+Ack. Standby feels more technical so I'd remove "sleep".
+
+>> +#define LED_FUNCTION_STATUS "status"
+>> +#define LED_FUNCTION_TORCH "torch"
+>> +#define LED_FUNCTION_TV "tv"
+>> +#define LED_FUNCTION_TX "tx"
+>> +#define LED_FUNCTION_USB "usb"
+>> +#define LED_FUNCTION_WAN "wan"
+>> +#define LED_FUNCTION_WLAN "wlan"
+>> +#define LED_FUNCTION_WPS "wps"
+>> +
+>>   #endif /* __DT_BINDINGS_LEDS_H */
+>> -- 
+>> 2.11.0
+>>
+> 
+
+-- 
+Best regards,
+Jacek Anaszewski
