@@ -1,85 +1,51 @@
-Return-Path: <SRS0=u60/=R5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr50056.outbound.protection.outlook.com ([40.107.5.56]:51362
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727492AbfCZTXe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 Mar 2019 15:23:34 -0400
-From: Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH 1/2] arm64: dts: add fsl-dpaa2-console node for DPAA2
- platforms
-Date: Tue, 26 Mar 2019 19:23:29 +0000
-Message-ID: <1553628194-25119-2-git-send-email-ioana.ciornei@nxp.com>
-References: <1553628194-25119-1-git-send-email-ioana.ciornei@nxp.com>
-In-Reply-To: <1553628194-25119-1-git-send-email-ioana.ciornei@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=KxQt=R7=linaro.org=rui.silva@kernel.org>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH v3 0/5] ARM: imx7s: add media nodes
+Date: Thu, 28 Mar 2019 14:25:11 +0000
+Message-Id: <20190328142516.30372-1-rui.silva@linaro.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ioana Ciornei <ioana.ciornei@nxp.com>
+Content-Transfer-Encoding: 8bit
+To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add the fsl-dpaa2-console device tree node for the following
-DPAA2 based platforms: LS1088A, LS2080A, LS2088A and LX2160A.
+This series is a continuation of the
+[PATCH v14 00/13] media: staging/imx7: add i.MX7 media driver [0] series.
+All code patches and bindings are already merged, missing only this
+dts patches.
 
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 5 +++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 5 +++++
- arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 5 +++++
- 3 files changed, 15 insertions(+)
+The main difference from the version in the previous series is as
+commented by Laurent:
+ - split of dtsi and dts in 2 patches
+ - push endpoints to imx7s.dtsi
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls1088a.dtsi
-index de93b42b1f51..5eee5db3ed6c 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -571,6 +571,11 @@
- 			clock-names =3D "apb_pclk", "wdog_clk";
- 		};
-=20
-+		fsl-dpaa2-console@0x08340020 {
-+			compatible =3D "fsl,dpaa2-console";
-+			reg =3D <0x00000000 0x08340020 0 0x2>;
-+		};
-+
- 		fsl_mc: fsl-mc@80c000000 {
- 			compatible =3D "fsl,qoriq-mc";
- 			reg =3D <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls208xa.dtsi
-index 6d6ca166f86b..f1521e6d8da0 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -321,6 +321,11 @@
- 			};
- 		};
-=20
-+		fsl-dpaa2-console@0x08340020 {
-+			compatible =3D "fsl,dpaa2-console";
-+			reg =3D <0x00000000 0x08340020 0 0x2>;
-+		};
-+
- 		fsl_mc: fsl-mc@80c000000 {
- 			compatible =3D "fsl,qoriq-mc";
- 			reg =3D <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-lx2160a.dtsi
-index 660e78e46268..8febaa517913 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-@@ -777,6 +777,11 @@
- 			dma-coherent;
- 		};
-=20
-+		fsl-dpaa2-console@0x08340020 {
-+			compatible =3D "fsl,dpaa2-console";
-+			reg =3D <0x00000000 0x08340020 0 0x2>;
-+		};
-+
- 		fsl_mc: fsl-mc@80c000000 {
- 			compatible =3D "fsl,qoriq-mc";
- 			reg =3D <0x00000008 0x0c000000 0 0x40>,
---=20
-1.9.1
+Cheers,
+   Rui
+
+v2->v3:
+Laurent Pinchart:
+  - Add label to csi-mux
+  - Disable csi-mux in imx7s
+  - enable it in warp dts
+  - add port@0 to mux
+
+v1->v2:
+Shawn Guo:
+  - sort alphabetically
+  - hyphen for node name
+  - indent align clocks
+  - send status to end of property list
+
+Rui Miguel Silva (5):
+  ARM: dts: imx7s: add mipi phy power domain
+  ARM: dts: imx7s: add multiplexer controls
+  ARM: dts: imx7s: Add video mux, csi and mipi_csi
+  ARM: dts: imx7s-warp: add csi and mipi_csi node
+  ARM: dts: imx7s-warp: add ov2680 sensor node
+
+ arch/arm/boot/dts/imx7s-warp.dts | 59 ++++++++++++++++++++
+ arch/arm/boot/dts/imx7s.dtsi     | 92 +++++++++++++++++++++++++++++++-
+ 2 files changed, 149 insertions(+), 2 deletions(-)
+
+-- 
+2.21.0
