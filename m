@@ -1,72 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/4] dt-bindings: maxbotix,mb1232: Add MaxBotix i2c
- ultrasonic rangers
-Date: Thu, 28 Mar 2019 12:51:35 -0500
-Message-ID: <20190328175134.GA15033@bogus>
-References: <20190317203526.4pcwo4gdrrng44v7@arbad>
+Subject: Re: [PATCH v3 4/5] dt-bindings: display: armada: Add more compatible
+ strings
+Date: Thu, 28 Mar 2019 12:52:55 -0500
+Message-ID: <20190328175255.GA19100@bogus>
+References: <20190320082057.856943-1-lkundrak@v3.sk>
+ <20190320082057.856943-5-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190317203526.4pcwo4gdrrng44v7@arbad>
+In-Reply-To: <20190320082057.856943-5-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Klinger <ak@it-klinger.de>
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, jic23@kernel.org, mark.rutland@arm.com, afaerber@suse.de, arnd@arndb.de, davem@davemloft.net, gregkh@linuxfoundation.org, johan@kernel.org, khilman@baylibre.com, knaack.h@gmx.de, lars@metafoo.de, linux-kernel@vger.kernel.org, martin.blumenstingl@googlemail.com, mchehab+samsung@kernel.org, m.othacehe@gmail.com, nicolas.ferre@microchip.com, pmeerw@pmeerw.net, songqiang1304521@gmail.com, treding@nvidia.com, techsupport@maxbotix.com
+Cc: Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 09:35:27PM +0100, Andreas Klinger wrote:
-> Add doc for dt binding maxbotix,mb1232. This binding is for MaxBotix
-> I2CXL-MaxSonar ultrasonic rangers which share a common i2c interface.
+On Wed, 20 Mar 2019 09:20:56 +0100, Lubomir Rintel wrote:
+> There's a generic compatible string and the driver will work on a MMP2 as
+> well, using the same binding.
 > 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> 
 > ---
->  .../bindings/iio/proximity/maxbotix,mb1232.txt     | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+> Changes since v2:
+> - Order marvell,armada-lcdc after the model-specific strings.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-> new file mode 100644
-> index 000000000000..0e9df87eca1d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-> @@ -0,0 +1,31 @@
-> +* MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
-> +  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
-> +  for ranging
-> +
-> +Required properties:
-> + - compatible:		"maxbotix,mb1202",
-> +			"maxbotix,mb1212",
-> +			"maxbotix,mb1222",
-> +			"maxbotix,mb1232",
-> +			"maxbotix,mb1242",
-> +			"maxbotix,mb7040" or
-> +			"maxbotix,mb7137"
-> +
-> + - reg:			i2c address of the device, see also i2c/i2c.txt
-> +
-> +Optional properties:
-> + - interrupt-parent:	Interrupt controller to use
-
-Don't need this as it is implied and could be in the parent.
-
-Otherwise,
+> Changes since v1:
+> - Added marvell,armada-lcdc compatible string.
+> 
+>  .../devicetree/bindings/display/marvell,armada-lcdc.txt        | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +
-> + - interrupts:		Interrupt used to announce the preceding reading
-> +			request has finished and that data is available.
-> +			If no interrupt is specified the device driver
-> +			falls back to wait a fixed amount of time until
-> +			data can be retrieved.
-> +
-> +Example:
-> +proximity@70 {
-> +	compatible = "maxbotix,mb1232";
-> +	reg = <0x70>;
-> +	interrupt-parent = <&gpio2>;
-> +	interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> +};
-> -- 
-> 2.11.0
