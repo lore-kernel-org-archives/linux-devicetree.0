@@ -1,27 +1,25 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 7/9] dt-bindings: power: Add rpm power domain bindings
- for msm8998
-Date: Thu, 28 Mar 2019 13:40:44 -0500
-Message-ID: <20190328184044.GA20740@bogus>
-References: <20190327123832.11566-1-sibis@codeaurora.org>
- <20190327123832.11566-8-sibis@codeaurora.org>
+Subject: Re: [PATCH v3 01/12] dt-binding: gce: remove thread-num property
+Date: Thu, 28 Mar 2019 13:41:11 -0500
+Message-ID: <20190328184111.GA21455@bogus>
+References: <1553739573-19708-1-git-send-email-bibby.hsieh@mediatek.com>
+ <1553739573-19708-2-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190327123832.11566-8-sibis@codeaurora.org>
+In-Reply-To: <1553739573-19708-2-git-send-email-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, rnayak@codeaurora.org, david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, CK HU <ck.hu@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediat
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Mar 2019 18:08:30 +0530, Sibi Sankar wrote:
-> Add RPM power domain bindings for the msm8998 family of SoC
+On Thu, 28 Mar 2019 10:19:22 +0800, Bibby Hsieh wrote:
+> "thread-num" is an unused property so we remove it from example.
 > 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 > ---
->  .../devicetree/bindings/power/qcom,rpmpd.txt         |  1 +
->  include/dt-bindings/power/qcom-rpmpd.h               | 12 ++++++++++++
->  2 files changed, 13 insertions(+)
+>  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 1 -
+>  1 file changed, 1 deletion(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
