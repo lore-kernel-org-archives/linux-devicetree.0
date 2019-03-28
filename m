@@ -1,54 +1,48 @@
-From: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-Subject: [LINUX PATCH 1/3] dt-bindings: spi: Add device tree binding documentation for Zynq QSPI controller
-Date: Thu, 28 Mar 2019 16:46:00 +0530
-Message-ID: <1553771760-2011-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
+From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: [PATCH v2 0/2] ARM: dts: sun8i: a83t: Add missing
+ cooling device properties for CPUs
+Date: Thu, 28 Mar 2019 12:31:57 +0100
+Message-ID: <20190328113159.9668-1-megous@megous.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, bbrezillon@kernel.org, robh@kernel.org
-Cc: michals@xilinx.com, mark.rutland@arm.com, horms+renesas@verge.net.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, nagasuresh12@gmail.com, Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBMPB6LSAKGQEGTKZBZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the dts binding document for Zynq SOC QSPI controller.
+From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
----
- .../devicetree/bindings/spi/spi-zynq-qspi.txt      | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
+This series adds some properties to prepare for passive cooling via
+CPU frequency down-regulation, and fixes cpufreq for various CPU hotplug
+situations.
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt b/Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
-new file mode 100644
-index 0000000..16b734a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
-@@ -0,0 +1,25 @@
-+Xilinx Zynq QSPI controller Device Tree Bindings
-+-------------------------------------------------------------------
-+
-+Required properties:
-+- compatible		: Should be "xlnx,zynq-qspi-1.0".
-+- reg			: Physical base address and size of QSPI registers map.
-+- interrupts		: Property with a value describing the interrupt
-+			  number.
-+- clock-names		: List of input clock names - "ref_clk", "pclk"
-+			  (See clock bindings for details).
-+- clocks		: Clock phandles (see clock bindings for details).
-+
-+Optional properties:
-+- num-cs		: Number of chip selects used.
-+
-+Example:
-+	qspi: spi@e000d000 {
-+		compatible = "xlnx,zynq-qspi-1.0";
-+		reg = <0xe000d000 0x1000>;
-+		interrupt-parent = <&intc>;
-+		interrupts = <0 19 4>;
-+		clock-names = "ref_clk", "pclk";
-+		clocks = <&clkc 10>, <&clkc 43>;
-+		num-cs = <1>;
-+	};
+#cooling-cells patch is not strictly necessary now, but now that SID
+changes are soon to be merged, thermal sensor patches are likely to
+follow, and it will be useful in short order, I expect.
+
+Please take a look.
+
+regards,
+  Ondrej Jirman
+
+
+Changes for v2:
+- split the former single patch into a series
+- reformulated descriptions to accommodate the split
+
+Ondrej Jirman (2):
+  ARM: dts: sun8i: a83t: Add missing cooling device properties for CPUs
+  ARM: dts: sun8i: a83t: Add missing CPU clock references
+
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
 -- 
-2.7.4
+2.21.0
