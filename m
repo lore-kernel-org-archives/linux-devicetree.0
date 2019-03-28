@@ -1,32 +1,55 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 23/24] arm64: dts: mediatek: add dtsi for MT8516
-Date: Thu, 28 Mar 2019 14:22:12 -0500
-Message-ID: <CAL_Jsq+Q06O84-MTpgTWGG312VXm_vGOkjMCjtWuS0eZ-j_0yw@mail.gmail.com>
-References: <20190323211612.860-1-fparent@baylibre.com> <20190323211612.860-24-fparent@baylibre.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v3 2/2] coresight: funnel: Support static funnel
+Date: Thu, 28 Mar 2019 19:26:16 +0000
+Message-ID: <799f3f27-6a20-836e-b699-252ebb8e2fdf@arm.com>
+References: <20190328023509.22242-1-leo.yan@linaro.org>
+ <20190328023509.22242-3-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190323211612.860-24-fparent@baylibre.com>
+In-Reply-To: <20190328023509.22242-3-leo.yan@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabien Parent <fparent@baylibre.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sean Wang <sean.wang@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, Wenzhen Yu <wenzhen.yu@mediatek.com>, Chaotian Jing <chaotian.jing@mediatek.com>, Yong Mao <yong.mao@mediatek.com>, jjian.zhou@mediatek.com, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-mmc <linux-mmc@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, open list:SE
+To: leo.yan@linaro.org, mathieu.poirier@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, coresight@lists.linaro.org, shiwanglai@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 4:17 PM Fabien Parent <fparent@baylibre.com> wrote:
->
-> The MT8516 SoC provides the following peripherals: GPIO, UART, USB2,
-> SPI, eMMC, SDIO, NAND, Flash, ADC, I2C, PWM, Timers, IR, Ethernet, and
-> Audio (I2S, SPDIF, TDM).
->
-> This commit is adding the basic dtsi file with the support of the
-> following IOs: GPIO, UART, SPI, eMMC, I2C, Timers.
->
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8516-pinfunc.h | 663 ++++++++++++++++++
->  arch/arm64/boot/dts/mediatek/mt8516.dtsi      | 409 +++++++++++
->  2 files changed, 1072 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt8516-pinfunc.h
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt8516.dtsi
+On 03/28/2019 02:35 AM, Leo Yan wrote:
+> Since CoreSight hardware topology can use a 'hidden' funnel in the
+> trace data path, this kind funnel doesn't have register for accessing
+> and is used by default from hardware design perspective.  Below is an
+> example for related hardware topology:
+> 
+>    +------+  +------+
+>    | cpu0 |->| ETM  |-\
+>    +------+  +------+  \-> +--------+  +-----+
+>     ......                 | Funnel |->| ETF |-\    Hidden funnel
+>    +------+  +------+  /-> +--------+  +-----+  \        |
+>    | cpu3 |->| ETM  |-/                          \       V
+>    +------+  +------+                             \-> +--------+
+>                                                       | Funnel |-> ...
+>    +------+  +------+                             /-> +--------+
+>    | cpu4 |->| ETM  |-\                          /
+>    +------+  +------+  \-> +--------+  +-----+  /
+>     ......                 | Funnel |->| ETF |-/
+>    +------+  +------+  /-> +--------+  +-----+
+>    | cpu7 |->| ETM  |-/
+>    +------+  +------+
+> 
+> The CoreSight funnel driver only supports dynamic funnel with
+> registration register resource, thus it cannot support for the static
+> funnel case and it's impossible to create trace data path for this case.
+> 
+> This patch is to extend CoreSight funnel driver to support both for
+> static funnel and dynamic funnel.  For the dynamic funnel it reuses the
+> code existed in the driver, for static funnel the driver will support
+> device probe if without providing register resource and the driver skips
+> registers accessing when detect the register base is NULL.
+> 
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Wanglai Shi <shiwanglai@hisilicon.com>
+> Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
