@@ -1,55 +1,36 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v3 2/2] coresight: funnel: Support static funnel
-Date: Thu, 28 Mar 2019 19:26:16 +0000
-Message-ID: <799f3f27-6a20-836e-b699-252ebb8e2fdf@arm.com>
-References: <20190328023509.22242-1-leo.yan@linaro.org>
- <20190328023509.22242-3-leo.yan@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: cpu: Fix JSON schema
+Date: Thu, 28 Mar 2019 14:35:54 -0500
+Message-ID: <CAL_JsqJ_LYycXazkdP2Q=e-jynKiX+z5En0bz0AWpDjsevwQTg@mail.gmail.com>
+References: <20190318100521.29109-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190328023509.22242-3-leo.yan@linaro.org>
-Content-Language: en-US
+In-Reply-To: <20190318100521.29109-1-maxime.ripard@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: leo.yan@linaro.org, mathieu.poirier@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, coresight@lists.linaro.org, shiwanglai@hisilicon.com
+To: Maxime Ripard <maxime.ripard@bootlin.com>, ARM-SoC Maintainers <arm@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sugaya Taichi <sugaya.taichi@socionext.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/28/2019 02:35 AM, Leo Yan wrote:
-> Since CoreSight hardware topology can use a 'hidden' funnel in the
-> trace data path, this kind funnel doesn't have register for accessing
-> and is used by default from hardware design perspective.  Below is an
-> example for related hardware topology:
-> 
->    +------+  +------+
->    | cpu0 |->| ETM  |-\
->    +------+  +------+  \-> +--------+  +-----+
->     ......                 | Funnel |->| ETF |-\    Hidden funnel
->    +------+  +------+  /-> +--------+  +-----+  \        |
->    | cpu3 |->| ETM  |-/                          \       V
->    +------+  +------+                             \-> +--------+
->                                                       | Funnel |-> ...
->    +------+  +------+                             /-> +--------+
->    | cpu4 |->| ETM  |-\                          /
->    +------+  +------+  \-> +--------+  +-----+  /
->     ......                 | Funnel |->| ETF |-/
->    +------+  +------+  /-> +--------+  +-----+
->    | cpu7 |->| ETM  |-/
->    +------+  +------+
-> 
-> The CoreSight funnel driver only supports dynamic funnel with
-> registration register resource, thus it cannot support for the static
-> funnel case and it's impossible to create trace data path for this case.
-> 
-> This patch is to extend CoreSight funnel driver to support both for
-> static funnel and dynamic funnel.  For the dynamic funnel it reuses the
-> code existed in the driver, for static funnel the driver will support
-> device probe if without providing register resource and the driver skips
-> registers accessing when detect the register base is NULL.
-> 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Wanglai Shi <shiwanglai@hisilicon.com>
-> Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
++arm-soc
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+On Mon, Mar 18, 2019 at 5:05 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> Commit fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for
+> Milbeaut") added support for a new cpu enable-method, but did so using
+> tabulations to ident. This is however invalid in the syntax, and resulted
+> in a failure when trying to use that schemas for validation.
+>
+> Use spaces instead of tabs to indent to fix this.
+>
+> Fixes: fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+This should be applied to arm-soc tree having the commit.
+
+Rob
