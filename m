@@ -1,77 +1,91 @@
 From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH v4 0/7] drm/panel: simple: Add mode support to devicetree
-Date: Thu, 28 Mar 2019 10:17:03 -0700
-Message-ID: <20190328171710.31949-1-dianders@chromium.org>
+Subject: [PATCH v4 1/7] dt-bindings: Add panel-timing subnode to simple-panel
+Date: Thu, 28 Mar 2019 10:17:04 -0700
+Message-ID: <20190328171710.31949-2-dianders@chromium.org>
+References: <20190328171710.31949-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190328171710.31949-1-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Thierry Reding <thierry.reding@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Sean Paul <seanpaul@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Viresh Kumar <viresh.kumar@linaro.org>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Boris Brezillon <boris.brezillon@collabora.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?q?Enric=20Balletb=C3=B2?= <enric.balletbo@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, mka@chromium.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-rockchip@lists.infradead.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, =?UTF-8?q?Enric=20Balletb=C3=B2?= <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, mka@chromium.org, Doug Anderson <dianders@chromium.org>, Eric Anholt <eric@anholt.net>, Jeffy Chen <jeffy.chen@rock-chips.com>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Daniel Vetter <daniel@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-SSdtIHJldml2aW5nIFNlYW4gUGF1bCdzIG9sZCBwYXRjaHNldCB0byBnZXQgbW9kZSBzdXBwb3J0
-IGluIGRldmljZQp0cmVlLiAgVGhlIGNvdmVyIGxldHRlciBmb3IgaGlzIHYzIGlzIGF0OgpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxOC1GZWJydWFy
-eS8xNjUxNjIuaHRtbAoKSSd2ZSBwdWxsZWQgdG9nZXRoZXIgdGhlIHBhdGNoZXMgdGhhdCBkaWRu
-J3QgbGFuZCBpbiB2MywgYWRkcmVzc2VkCm91dHN0YW5kaW5nIGZlZWRiYWNrLCBhbmQgcmVwb3N0
-ZWQuICBBdG9wIHRoZW0gSSd2ZSBhZGRlZCBwYXRjaGVzIGZvcgpyazMyODgtdmV5cm9uLWplcnJ5
-IGFuZCByazMyODgtdmVyeW9uLW1pbm5pZS4KClBsZWFzZSBsZXQgbWUga25vdyBob3cgdGhleSBs
-b29rLgoKSW4gZ2VuZXJhbCBJIGhhdmUgYWRkZWQgcGVvcGxlIHRvIHRoZSB3aG9sZSBzZXJpZXMg
-d2hvIEkgdGhpbmsgd291bGQKbGlrZSB0aGUgd2hvbGUgc2VyaWVzIGFuZCB0aGVuIGxldCBnZXRf
-bWFpbnRhaW5lciBwaWNrIGV4dHJhIHBlb3BsZSBpdAp0aGlua3MgYXJlIHJlbGV2YW50IHRvIGVh
-Y2ggaW5kaXZpZHVhbCBwYXRjaC4gIElmIEkgc2VlIHlvdSByZXNwb25kIHRvCmFueSBvZiB0aGUg
-cGF0Y2hlcyBpbiB0aGUgc2VyaWVzLCB0aG91Z2gsIEknbGwgYWRkIHlvdSB0byB0aGUgd2hvbGUK
-c2VyaWVzIENjIGxpc3QgbmV4dCB0aW1lLgoKQ2hhbmdlcyBpbiB2NDoKLSBTaW1wbGlmeSBkZXNj
-LiBmb3Igd2hlbiBvdmVycmlkZSBzaG91bGQgYmUgdXNlZCAoVGhpZXJyeS9MYXVyZW50KQotIFJl
-bW92ZWQgUm9iIEggcmV2aWV3IHNpbmNlIGl0J3MgYmVlbiBhIHllYXIgYW5kIHdvcmRpbmcgY2hh
-bmdlZAotIERvbid0IGFkZCBtb2RlIGZyb20gdGltaW5nIGlmIG92ZXJyaWRlIHdhcyBzcGVjaWZp
-ZWQgKFRoaWVycnkpCi0gQWRkIHdhcm5pbmcgaWYgdGltaW5nIGFuZCBmaXhlZCBtb2RlIHdhcyBz
-cGVjaWZpZWQgKFRoaWVycnkpCi0gRG9uJ3QgYWRkIGZpeGVkIG1vZGUgaWYgdGltaW5nIHdhcyBz
-cGVjaWZpZWQgKFRoaWVycnkpCi0gUmVmYWN0b3IvcmVuYW1lIGEgYml0IHRvIGF2b2lkIGV4dHJh
-IGluZGVudGF0aW9uIGZyb20gImlmIiB0ZXN0cwotIGkgc2hvdWxkIGJlIHVuc2lnbmVkIChUaGll
-cnJ5KQotIEFkZCBhbm5veWluZyBXQVJOX09OcyBmb3Igc29tZSBjYXNlcyAoVGhpZXJyeSkKLSBT
-aW1wbGlmeSAnTm8gZGlzcGxheV90aW1pbmcgZm91bmQnIGhhbmRsaW5nIChUaGllcnJ5KQotIFJl
-bmFtZSB0byBwYW5lbF9zaW1wbGVfcGFyc2Vfb3ZlcnJpZGVfbW9kZSgpIChUaGllcnJ5KQotIFJl
-YmFzZSB0byB0b3Agb2YgSGVpa28ncyB0cmVlCi0gQ29udmVydGVkIGNoYW5nZWxvZyB0byBhZnRl
-ci10aGUtY3V0IGZvciBub24tRFJNIGNoYW5nZS4KLSBkaXNwbGF5X3RpbWluZyBmb3IgSW5ub2x1
-eCBuMTE2YmdlIG5ldyBmb3IgdjQuCi0gZGlzcGxheV90aW1pbmcgZm9yIEFVTyBiMTAxZWFuMDEg
-bmV3IGZvciB2NC4KLSByazMyODgtdmV5cm9uLWplcnJ5IHBhdGNoIG5ldyBmb3IgdjQuCi0gcmsz
-Mjg4LXZleXJvbi1taW5uaWUgcGF0Y2ggbmV3IGZvciB2NC4KCkNoYW5nZXMgaW4gdjM6Ci0gR28g
-YmFjayB0byB1c2luZyB0aGUgdGltaW5nIHN1Ym5vZGUgZGlyZWN0bHksIGJ1dCByZW5hbWUgdG8K
-ICBwYW5lbC10aW1pbmcgKFJvYikKLSBObyBsb25nZXIgcGFyc2UgZGlzcGxheS10aW1pbmdzIHN1
-Ym5vZGUsIHVzZSBwYW5lbC10aW1pbmcgKFJvYikKLSBVbndyYXAgdGhlIHRpbWluZyBmcm9tIGRp
-c3BsYXktdGltaW5ncyBhbmQgcmVuYW1lIHBhbmVsLXRpbWluZyAoUm9iKQoKQ2hhbmdlcyBpbiB2
-MjoKLSBTcGxpdCBvdXQgdGhlIGJpbmRpbmcgaW50byBhIG5ldyBwYXRjaCAoUm9iKQotIGRpc3Bs
-YXktdGltaW5ncyBpcyBhIG5ldyBzZWN0aW9uIChSb2IpCi0gVXNlIHRoZSBmdWxsIGRpc3BsYXkt
-dGltaW5ncyBzdWJub2RlIGluc3RlYWQgb2YgcGlja2luZyB0aGUgdGltaW5nCiAgb3V0IChSb2Iv
-VGhpZXJyeSkKLSBQYXJzZSB0aGUgZnVsbCBkaXNwbGF5LXRpbWluZ3Mgbm9kZSAodXNpbmcgdGhl
-IG5hdGl2ZS1tb2RlKSAoUm9iKQotIFdyYXAgdGhlIHRpbWluZyBpbiBkaXNwbGF5LXRpbWluZ3Mg
-bm9kZSB0byBtYXRjaCBiaW5kaW5nIChSb2IvVGhpZXJyeSkKCkRvdWdsYXMgQW5kZXJzb24gKDQp
-OgogIGRybS9wYW5lbDogc2ltcGxlOiBVc2UgZGlzcGxheV90aW1pbmcgZm9yIElubm9sdXggbjEx
-NmJnZQogIGRybS9wYW5lbDogc2ltcGxlOiBVc2UgZGlzcGxheV90aW1pbmcgZm9yIEFVTyBiMTAx
-ZWFuMDEKICBBUk06IGR0czogcm9ja2NoaXA6IFNwZWNpZnkgcmszMjg4LXZleXJvbi1qZXJyeSdz
-IGRpc3BsYXkgdGltaW5ncwogIEFSTTogZHRzOiByb2NrY2hpcDogU3BlY2lmeSByazMyODgtdmV5
-cm9uLW1pbm5pZSdzIGRpc3BsYXkgdGltaW5ncwoKU2VhbiBQYXVsICgzKToKICBkdC1iaW5kaW5n
-czogQWRkIHBhbmVsLXRpbWluZyBzdWJub2RlIHRvIHNpbXBsZS1wYW5lbAogIGRybS9wYW5lbDog
-c2ltcGxlOiBBZGQgYWJpbGl0eSB0byBvdmVycmlkZSB0eXBpY2FsIHRpbWluZwogIGFybTY0OiBk
-dHM6IHJvY2tjaGlwOiBTcGVjaWZ5IG92ZXJyaWRlIG1vZGUgZm9yIGtldmluIHBhbmVsCgogLi4u
-L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2ltcGxlLXBhbmVsLnR4dCAgIHwgIDI0ICsrKwogLi4u
-L2Jvb3QvZHRzL3JrMzI4OC12ZXlyb24tY2hyb21lYm9vay5kdHNpICAgIHwgIDE0ICsrCiBhcmNo
-L2FybS9ib290L2R0cy9yazMyODgtdmV5cm9uLW1pbm5pZS5kdHMgICAgfCAgMTQgKysKIC4uLi9i
-b290L2R0cy9yb2NrY2hpcC9yazMzOTktZ3J1LWtldmluLmR0cyAgICB8ICAxNCArKwogZHJpdmVy
-cy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgIHwgMTcxICsrKysrKysrKysr
-KysrLS0tLQogNSBmaWxlcyBjaGFuZ2VkLCAyMDUgaW5zZXJ0aW9ucygrKSwgMzIgZGVsZXRpb25z
-KC0pCgotLSAKMi4yMS4wLjM5Mi5nZjhmNjc4NzE1OWUtZ29vZwoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+From: Sean Paul <seanpaul@chromium.org>
+
+This patch adds a new subnode to simple-panel allowing us to override
+the typical timing expressed in the panel's display_timing.
+
+Changes in v2:
+ - Split out the binding into a new patch (Rob)
+ - display-timings is a new section (Rob)
+ - Use the full display-timings subnode instead of picking the timing
+   out (Rob/Thierry)
+Changes in v3:
+ - Go back to using the timing subnode directly, but rename to
+   panel-timing (Rob)
+Changes in v4:
+ - Simplify desc. for when override should be used (Thierry/Laurent)
+ - Removed Rob H review since it's been a year and wording changed
+
+Cc: Doug Anderson <dianders@chromium.org>
+Cc: Eric Anholt <eric@anholt.net>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Stéphane Marchesin <marcheu@chromium.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-rockchip@lists.infradead.org
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ .../bindings/display/panel/simple-panel.txt   | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/panel/simple-panel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+index b2b872c710f2..6157f86ddce4 100644
+--- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
++++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+@@ -15,6 +15,18 @@ Optional properties:
+   (hot plug detect) signal, but the signal isn't hooked up so we should
+   hardcode the max delay from the panel spec when powering up the panel.
+ 
++panel-timing subnode
++--------------------
++
++This optional subnode is for devices which require a mode differing
++from the panel's "typical" display timing.  The panel timings provided
++here will be ignored if they are found to be outside of allowable
++ranges for the given panel.
++
++Format information on the panel-timing subnode can be found in
++display-timing.txt.
++
++
+ Example:
+ 
+ 	panel: panel {
+@@ -25,4 +37,16 @@ Example:
+ 		enable-gpios = <&gpio 90 0>;
+ 
+ 		backlight = <&backlight>;
++
++		panel-timing {
++			clock-frequency = <266604720>;
++			hactive = <2400>;
++			hfront-porch = <48>;
++			hback-porch = <84>;
++			hsync-len = <32>;
++			vactive = <1600>;
++			vfront-porch = <3>;
++			vback-porch = <120>;
++			vsync-len = <10>;
++		};
+ 	};
+-- 
+2.21.0.392.gf8f6787159e-goog
