@@ -1,7 +1,7 @@
 From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v3 10/12] soc: mediatek: cmdq: add cmdq_dev_get_subsys function
-Date: Thu, 28 Mar 2019 10:19:31 +0800
-Message-ID: <1553739573-19708-11-git-send-email-bibby.hsieh@mediatek.com>
+Subject: [PATCH v3 11/12] soc: mediatek: cmdq: add cmdq_dev_get_event function
+Date: Thu, 28 Mar 2019 10:19:32 +0800
+Message-ID: <1553739573-19708-12-git-send-email-bibby.hsieh@mediatek.com>
 References: <1553739573-19708-1-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,84 +12,79 @@ To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.
 Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com, Frederic Chen <Frederic.Chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-GCE cannot know the register base address, this function
-can help cmdq client to get the relationship of subsys
-and register base address.
+When client ask gce to clear or wait for event,
+client need to pass event number to the API.
+We suggest client store the event information in device node,
+so we provide an API for client parse the event property.
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 ---
- drivers/soc/mediatek/mtk-cmdq-helper.c | 25 +++++++++++++++++++++++++
- include/linux/soc/mediatek/mtk-cmdq.h  | 18 ++++++++++++++++++
- 2 files changed, 43 insertions(+)
+ drivers/soc/mediatek/mtk-cmdq-helper.c | 32 ++++++++++++++++++++++++++++++++
+ include/linux/soc/mediatek/mtk-cmdq.h  | 12 ++++++++++++
+ 2 files changed, 44 insertions(+)
 
 diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index 80856b8..2def9dc 100644
+index 2def9dc..58ce53c 100644
 --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
 +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -47,6 +47,31 @@ static void cmdq_pkt_instr_encoder(struct cmdq_pkt *pkt, s16 arg_c, s16 arg_b,
- 	pkt->cmd_buf_size += CMDQ_INST_SIZE;
+@@ -72,6 +72,38 @@ struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx)
  }
+ EXPORT_SYMBOL(cmdq_dev_get_subsys);
  
-+struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx)
++s32 cmdq_dev_get_event(struct device *dev, const char *name)
 +{
-+	struct cmdq_subsys *subsys;
++	s32 index = 0;
 +	struct of_phandle_args spec;
++	s32 result;
 +
-+	subsys = devm_kzalloc(dev, sizeof(*subsys), GFP_KERNEL);
-+	if (!subsys)
-+		return NULL;
++	if (!dev)
++		return -EINVAL;
 +
-+	if (of_parse_phandle_with_args(dev->of_node, "mediatek,gce-client-reg",
-+				       "#subsys-cells", idx, &spec)) {
-+		dev_err(dev, "can't parse gce-client-reg property");
++	index = of_property_match_string(dev->of_node,
++					 "mediatek,gce-event-names", name);
++	if (index < 0) {
++		dev_err(dev, "no gce-event-names property or no such event:%s",
++			name);
++
++		return index;
++	}
++
++	if (of_parse_phandle_with_args(dev->of_node, "mediatek,gce-events",
++				       "#event-cells", index, &spec)) {
++		dev_err(dev, "can't parse gce-events property");
 +
 +		return -ENODEV;
 +	}
 +
-+	subsys->id = spec.args[0];
-+	subsys->offset = spec.args[1];
-+	subsys->size = spec.args[2];
++	result = spec.args[0];
 +	of_node_put(spec.np);
 +
-+	return subsys;
++	return result;
 +}
-+EXPORT_SYMBOL(cmdq_dev_get_subsys);
++EXPORT_SYMBOL(cmdq_dev_get_event);
 +
  static void cmdq_client_timeout(struct timer_list *t)
  {
  	struct cmdq_client *client = from_timer(client, t, timer);
 diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index 0651a0b..574006c 100644
+index 574006c..1588435 100644
 --- a/include/linux/soc/mediatek/mtk-cmdq.h
 +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -15,6 +15,12 @@
- 
- struct cmdq_pkt;
- 
-+struct cmdq_subsys {
-+	u8 id;
-+	u16 offset;
-+	u16 size;
-+};
-+
- struct cmdq_client {
- 	spinlock_t lock;
- 	u32 pkt_cnt;
-@@ -142,4 +148,16 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
+@@ -160,4 +160,16 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
   */
- int cmdq_pkt_flush(struct cmdq_pkt *pkt);
+ struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx);
  
 +/**
-+ * cmdq_dev_get_subsys() - parse sub system from the device node of CMDQ client
++ * cmdq_dev_get_event() - parse event from the device node of CMDQ client
 + * @dev:	device of CMDQ mailbox client
-+ * @idx:	the index of desired subsys
++ * @name:	the name of desired event
 + *
-+ * Return: CMDQ subsys pointer
++ * Return: CMDQ event number
 + *
-+ * Help CMDQ client pasing the sub system number
++ * Help CMDQ client pasing the event number
 + * from the device node of CMDQ client.
 + */
-+struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx);
++s32 cmdq_dev_get_event(struct device *dev, const char *name);
 +
  #endif	/* __MTK_CMDQ_H__ */
 -- 
