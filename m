@@ -1,234 +1,93 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: Add support for ZII i.MX7 RPU2 board
-Date: Thu, 28 Mar 2019 22:30:36 -0700
-Message-ID: <CAHQ1cqHiz__CXFZKG_6GanDxNTMzdhTLc_f9Xa-pc8Tb5GyRuw@mail.gmail.com>
-References: <20190327064150.31549-1-andrew.smirnov@gmail.com> <20190327064150.31549-2-andrew.smirnov@gmail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 4/4] leds: lm3532: Introduce the lm3532 LED driver
+Date: Thu, 28 Mar 2019 22:04:37 +0100
+Message-ID: <20190328210437.tcojjqynggk72zo2@earth.universe>
+References: <20190321142838.22985-1-dmurphy@ti.com>
+ <20190321142838.22985-4-dmurphy@ti.com>
+ <20190322221654.GG19425@atomide.com>
+ <dc24b66c-658e-41aa-c869-42c4a7e812a8@ti.com>
+ <20190325145444.GK19425@atomide.com>
+ <044f67e7-e196-a5b9-728b-a7c5f283f56f@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ghrii74l7jnyggtc"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190327064150.31549-2-andrew.smirnov@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <044f67e7-e196-a5b9-728b-a7c5f283f56f@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Dan Murphy <dmurphy@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 11:41 PM Andrey Smirnov
-<andrew.smirnov@gmail.com> wrote:
->
-> Add support for ZII's i.MX7 based Remote Peripheral Unit 2 (RPU2)
-> board.
->
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
->  arch/arm/boot/dts/Makefile           |   1 +
->  arch/arm/boot/dts/imx7d-zii-rpu2.dts | 936 +++++++++++++++++++++++++++
->  2 files changed, 937 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx7d-zii-rpu2.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index efefce8efa05..687222907154 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -586,6 +586,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
->         imx7d-sdb.dtb \
->         imx7d-sdb-reva.dtb \
->         imx7d-sdb-sht11.dtb \
-> +       imx7d-zii-rpu2.dtb \
->         imx7s-colibri-eval-v3.dtb \
->         imx7s-warp.dtb
->  dtb-$(CONFIG_SOC_IMX7ULP) += \
-> diff --git a/arch/arm/boot/dts/imx7d-zii-rpu2.dts b/arch/arm/boot/dts/imx7d-zii-rpu2.dts
-> new file mode 100644
-> index 000000000000..6f36c7d9d214
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx7d-zii-rpu2.dts
-> @@ -0,0 +1,936 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +
-> +/*
-> + * Device tree file for ZII's RPU2 board
-> + *
-> + * RPU - Remote Peripheral Unit
-> + *
-> + * Copyright (C) 2019 Zodiac Inflight Innovations
-> + */
-> +
-> +/dts-v1/;
-> +#include "imx7d.dtsi"
-> +
-> +/ {
-> +       model = "ZII RPU2 Board";
-> +       compatible = "zii,imx7d-rpu2", "fsl,imx7d";
-> +
-> +       chosen {
-> +               stdout-path = &uart1;
-> +       };
-> +
-> +       gpio-leds {
-> +               compatible = "gpio-leds";
-> +               pinctrl-0 = <&pinctrl_leds_debug>;
-> +               pinctrl-names = "default";
-> +
-> +               debug {
-> +                       label = "zii:green:debug1";
-> +                       gpios = <&gpio2 8 GPIO_ACTIVE_HIGH>;
-> +                       linux,default-trigger = "heartbeat";
-> +               };
-> +       };
-> +
-> +       reg_can1_stby: regulator-can1-stby {
-> +               compatible = "regulator-fixed";
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_flexcan1_stby>;
-> +               regulator-name = "can1-3v3";
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +               gpio = <&gpio1 9 GPIO_ACTIVE_HIGH>;
-> +               enable-active-high;
-> +       };
-> +
-> +       reg_can2_stby: regulator-can2-stby {
-> +               compatible = "regulator-fixed";
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_flexcan2_stby>;
-> +               regulator-name = "can2-3v3";
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +               gpio = <&gpio1 8 GPIO_ACTIVE_HIGH>;
-> +               enable-active-high;
-> +       };
-> +
-> +       reg_vref_1v8: regulator-vref-1v8 {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vref-1v8";
-> +               regulator-min-microvolt = <1800000>;
-> +               regulator-max-microvolt = <1800000>;
-> +               regulator-always-on;
-> +       };
-> +
-> +       reg_3p3v: regulator-3p3v {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "GEN_3V3";
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +               regulator-always-on;
-> +       };
-> +
-> +       reg_5p0v_main: regulator-5p0v-main {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "5V_MAIN";
-> +               regulator-min-microvolt = <5000000>;
-> +               regulator-max-microvolt = <5000000>;
-> +               regulator-always-on;
-> +       };
-> +
-> +       sound1 {
-> +               compatible = "simple-audio-card";
-> +               simple-audio-card,name = "Audio Output 1";
-> +               simple-audio-card,format = "i2s";
-> +               simple-audio-card,bitclock-master = <&sound1_codec>;
-> +               simple-audio-card,frame-master = <&sound1_codec>;
-> +               simple-audio-card,widgets =
-> +                       "Headphone", "Headphone Jack";
-> +               simple-audio-card,routing =
-> +                       "Headphone Jack", "HPLEFT",
-> +                       "Headphone Jack", "HPRIGHT",
-> +                       "LEFTIN", "HPL",
-> +                       "RIGHTIN", "HPR";
-> +               simple-audio-card,aux-devs = <&hpa1>;
-> +
-> +               simple-audio-card,cpu {
-> +                       sound-dai = <&sai1>;
-> +               };
-> +
-> +               sound1_codec: simple-audio-card,codec {
-> +                       sound-dai = <&codec1>;
-> +                       clocks = <&cs2000>;
-> +               };
-> +       };
-> +
-> +       sound2 {
-> +               compatible = "simple-audio-card";
-> +               simple-audio-card,name = "Audio Output 2";
-> +               simple-audio-card,format = "i2s";
-> +               simple-audio-card,bitclock-master = <&sound2_codec>;
-> +               simple-audio-card,frame-master = <&sound2_codec>;
-> +               simple-audio-card,widgets =
-> +                       "Headphone", "Headphone Jack";
-> +               simple-audio-card,routing =
-> +                       "Headphone Jack", "HPLEFT",
-> +                       "Headphone Jack", "HPRIGHT",
-> +                       "LEFTIN", "HPL",
-> +                       "RIGHTIN", "HPR";
-> +               simple-audio-card,aux-devs = <&hpa2>;
-> +
-> +               simple-audio-card,cpu {
-> +                       sound-dai = <&sai2>;
-> +               };
-> +
-> +               sound2_codec: simple-audio-card,codec {
-> +                       sound-dai = <&codec2>;
-> +                       clocks = <&cs2000>;
-> +               };
-> +       };
-> +
-> +       sound3 {
-> +               compatible = "simple-audio-card";
-> +               simple-audio-card,name = "Audio Output 3";
-> +               simple-audio-card,format = "i2s";
-> +               simple-audio-card,bitclock-master = <&sound3_codec>;
-> +               simple-audio-card,frame-master = <&sound3_codec>;
-> +               simple-audio-card,widgets =
-> +                       "Headphone", "Headphone Jack";
-> +               simple-audio-card,routing =
-> +                       "Headphone Jack", "HPLEFT",
-> +                       "Headphone Jack", "HPRIGHT",
-> +                       "LEFTIN", "HPL",
-> +                       "RIGHTIN", "HPR";
-> +               simple-audio-card,aux-devs = <&hpa3>;
-> +
-> +               simple-audio-card,cpu {
-> +                       sound-dai = <&sai3>;
-> +               };
-> +
-> +               sound3_codec: simple-audio-card,codec {
-> +                       sound-dai = <&codec3>;
-> +                       clocks = <&cs2000>;
-> +               };
-> +       };
-> +
-> +       cs2000_ref: cs2000-ref {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <24576000>;
-> +       };
-> +
-> +       cs2000_in_dummy: cs2000-in-dummy {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <0>;
-> +       };
-> +};
-> +
-> +&adc1 {
-> +       vref-supply = <&reg_vref_1v8>;
-> +       status = "okay";
-> +};
-> +
-> +&adc2 {
-> +       vref-supply = <&reg_vref_1v8>;
-> +       status = "okay";
-> +};
 
-Tested this patch more and realized that these two above need to be
-properly exposed via HWMON. Will submit an update v2 of this set.
+--ghrii74l7jnyggtc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Andrey Smirnov
+Hi,
+
+On Mon, Mar 25, 2019 at 11:01:18AM -0500, Dan Murphy wrote:
+> On 3/25/19 9:54 AM, Tony Lindgren wrote:
+> > * Dan Murphy <dmurphy@ti.com> [190325 12:36]:
+> >> On 3/22/19 5:16 PM, Tony Lindgren wrote:
+> >>> I can control the backlight brightness just fine via /sys, and
+> >>> backlight shows up as the trigger in /sys/class/leds/lm3532:backlight,
+> >>> but /sys/class/backlight is empty and looks like drm can't find it.
+> >>>
+> >>> Do I need to enable some additional driver(s) to get this to work
+> >>> with the drm driver?
+> >>>
+> >>
+> >> Can you dump or point to the defconfig?
+> >=20
+> > This is just with the omap2plus_defconfig as in the droid4-pending-v5.0
+> > test branch below [0]. That branch has Sebastian's drm patches. The
+> > branch also has the older ti-lmu patches that I reverted for testing
+> > before applying your new series and enabling it in .config.
+> >=20
+> > The drm driver (drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c) just
+> > does:
+> >=20
+> > backlight =3D of_parse_phandle(node, "backlight", 0);
+> > ...
+> >=20
+> > That should still work the same, right?
+>=20
+> Yes it should still work the same.
+> I did not change the node name.
+> So the DRM driver should find the node.
+
+This will not work, since the next line tries to get it as a
+backlight device, but it's an LED device instead:
+
+of_find_backlight_by_node(backlight);
+
+I suppose the backlight device could be instantiated on top
+of the LED device somehow.
+
+(sorry for slow responses; I'm quite busy right now)
+
+-- Sebastian
+
+--ghrii74l7jnyggtc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlydNuIACgkQ2O7X88g7
++ppAog/9HDu2FtUIoAG8EpCXIUENPyp8q7H9suEpjKQ26n6wpdm1aeeAVUG/gUeT
+CqqE77qq4O+k5ENxVK69W5t+8JiERfxLDRKfau53s6tVJ212uEq+8jGvFMr3DPgV
+1ZGb2cAo/L7bGk01X6y6YWDduDM1C7KiVPAdp/Ui1ZJsbmyPTzxVGqchj8zt7pIS
+aPVFvYOQsJ9Zx7661KBPS5+rYted2mJGhnRpLnTxJSJDtRYEq11V//FBkiap4o2p
+B01rAQ0M/733SfuctnuJsyEfCEbJsq5DW0Ailp7YYTTWzfYbBsZgY95IeCOSMJZ7
+Y/8EN95Whe1izlV3tCKqqf3nnQImn5MWFMZL+fGoW18uXxYGIhufwSyfBTUpAvWa
+wVWI/+LFceoex6wsQU3h4MuJKqSwNA+NkLpN5WX1L/l/bgyDD6wpTMT4e/FcaXdC
+AI3x7+T5QZcD2KfaJ7uLUsLZcNv4OvMvGnt9IBO465e4EKqDGnWLcjf8ziIYcf+9
+gQi1VLqKtUclWXHsZLfAfOJzSXF9QD9Q0dn1iWNEzccA/QRLmg+af18urNSQ19j+
+AaE5cwXQK4chIWUVWtzKbkwBS9Z3mj3G71DnVhpR9V6Wwr6z2GZjidAY6mSUhAwu
+HZsslJMaTJaACoV7O/Vu4MRJ4i3m+dkGxhGXak1HHA7WBiyT0I4=
+=tXzm
+-----END PGP SIGNATURE-----
+
+--ghrii74l7jnyggtc--
