@@ -1,34 +1,36 @@
-Return-Path: <SRS0=k+DT=RJ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 2/9] dt-bindings: usb: renesas_usb3: add extcon support
-Date: Wed,  6 Mar 2019 09:07:19 +0000
-Message-Id: <1551863246-11656-3-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1551863246-11656-1-git-send-email-biju.das@bp.renesas.com>
-References: <1551863246-11656-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <robherring2@gmail.com>
+Date: Wed, 27 Mar 2019 19:38:54 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pps: pps-gpio.txt: Add capture-clear
+Message-ID: <20190328003854.GA20330@bogus>
+References: <20190311145951.847-1-bunk@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311145951.847-1-bunk@kernel.org>
+To: Adrian Bunk <bunk@kernel.org>
+Cc: Rodolfo Giometti <giometti@enneenne.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for renesas_usb3 to receive connect and disconnect notification
-using extcon framework.
+On Mon, Mar 11, 2019 at 04:59:50PM +0200, Adrian Bunk wrote:
+> The code was already there but the device tree wiring was missing.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- Documentation/devicetree/bindings/usb/renesas_usb3.txt | 2 ++
- 1 file changed, 2 insertions(+)
+But patch 2 adds the code...
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-index d366555..ae35674 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-@@ -21,6 +21,8 @@ Required properties:
- Optional properties:
-   - phys: phandle + phy specifier pair
-   - phy-names: must be "usb"
-+  - extcon: phandle for the extcon device renesas usb3 uses to detect
-+	    connect/disconnect events.
- 
- Example of R-Car H3 ES1.x:
- 	usb3_peri0: usb@ee020000 {
--- 
-2.7.4
+> 
+> Signed-off-by: Adrian Bunk <bunk@kernel.org>
+> Cc: stable@vger.kernel.org
+
+This is not stable material IMO.
+
+> ---
+>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 1 +
+>  1 file changed, 1 insertion(+)
+
+This was discussed at length recently. I still think this is working 
+around a limitation in the GPIO/interrupt code, but I'm not going to 
+argue more about a single property for a single binding.
+
+With stable dropped:
+
+Acked-by: Rob Herring <robh@kernel.org>
