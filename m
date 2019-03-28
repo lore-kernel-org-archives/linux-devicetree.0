@@ -1,104 +1,71 @@
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v2 1/6] device property: Add functions for accessing
- node's parents
-Date: Thu, 28 Mar 2019 15:10:36 +0100
-Message-ID: <20190328141036.mbns3ei4agnginsg@pathway.suse.cz>
-References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
- <20190326124106.27694-2-sakari.ailus@linux.intel.com>
- <20190327122625.eaisnw776vqwhhnh@pathway.suse.cz>
- <20190327142036.jf6puc5uo2mjutbl@paasikivi.fi.intel.com>
+From: Jonas Gorski <jonas.gorski@gmail.com>
+Subject: [PATCH V2 0/5] mtd: bcm63xxpart: add device tree support
+Date: Thu, 28 Mar 2019 15:19:05 +0100
+Message-ID: <20190328141910.5723-1-jonas.gorski@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190327142036.jf6puc5uo2mjutbl@paasikivi.fi.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 2019-03-27 16:20:37, Sakari Ailus wrote:
-> Hi Petr,
-> 
-> On Wed, Mar 27, 2019 at 01:26:25PM +0100, Petr Mladek wrote:
-> > On Tue 2019-03-26 14:41:01, Sakari Ailus wrote:
-> > > Add two convenience functions for accessing node's parents:
-> > > 
-> > > fwnode_count_parents() returns the number of parent nodes a given node
-> > > has. fwnode_get_nth_parent() returns node's parent at a given distance
-> > > from the node itself.
-> > > 
-> > > Also reorder fwnode_get_parent() in property.c according to the same order
-> > > as in property.h.
-> > > 
-> > > diff --git a/drivers/base/property.c b/drivers/base/property.c
-> > > index 8b91ab380d14..61eb6ceacc3f 100644
-> > > --- a/drivers/base/property.c
-> > > +++ b/drivers/base/property.c
-> > > @@ -554,17 +567,49 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
-> > >  EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
-> > >  
-> > >  /**
-> > > - * fwnode_get_parent - Return parent firwmare node
-> > > - * @fwnode: Firmware whose parent is retrieved
-> > > + * fwnode_count_parents - Return the number of parents a node has
-> > > + * @fwnode: The node the parents of which are to be counted
-> > >   *
-> > > - * Return parent firmware node of the given node if possible or %NULL if no
-> > > - * parent was available.
-> > > + * Returns the number of parents a node has.
-> > >   */
-> > > -struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
-> > > +unsigned int fwnode_count_parents(struct fwnode_handle *fwnode)
-> > >  {
-> > > -	return fwnode_call_ptr_op(fwnode, get_parent);
-> > > +	unsigned int count;
-> > > +
-> > > +	fwnode_handle_get(fwnode);
-> > > +
-> > > +	for (count = 0; fwnode; count++)
-> > > +		fwnode = fwnode_get_next_parent(fwnode);
-> > 
-> > Is it guaranteed that all parents stay when
-> > fwnode_get_next_parent() releases the reference count
-> > for each counted member?
-> 
-> fwnode_get_next_parent() only releases the child node after it has acquired
-> the parent. The only implementation with refcounting for single nodes is
-> actually OF.
+This patchset adds appropriate bindings for parsing various bcm963xx NOR
+flash layouts found in the wild.
 
-I am still a bit confused. The function is later used the following way:
+The image header is quite limited, and only has fixed fields for the
+offsets and sizes of the kernel and rootfs partitions. If any additional
+partitions exist, they need to be described externally, e.g. through
+fixed partition layouts.
 
-	for (depth = fwnode_count_parents(fwnode); depth >= 0; depth--) {
-		struct fwnode_handle *__fwnode =
-			fwnode_get_nth_parent(fwnode, depth);
+The first two patches add the bindings for the full flash parser for the
+"common" case: first erase block bootloader, last erase block nvram,
+reminder available for firmware.
 
-		buf = string(buf, end, fwnode_get_name_prefix(__fwnode),
-			     default_str_spec);
-		buf = string(buf, end, fwnode_get_name(__fwnode),
-			     default_str_spec);
+The third patch splits out the image header parsing into its own parser.
 
-		fwnode_handle_put(__fwnode);
-	}
+Then patches four and five add bindings for the split out parser, to
+support non-trivial cases with additional partitions, or a non-standard
+offset of the firmware partition.
 
-It uses the number to walk the hierarchy over and over again to print
-the path from root.
+These patches have been in used since a while in OpenWrt.
 
-I would expect that parents could not get removed until all children
-are removed. And that the most bottom child (fwnode) must not get
-removed. Otherwise we would access freed memory in each cycle.
+Changes V1 -> V2:
+ * dropped the second example from brcm,bcm963xx-imagetag.txt
+ * added reviewed bys from Rob Herring
 
-Then there is a question why we need to get the reference of the
-parents
-at all.
+Jonas Gorski (5):
+  dt-bindings: mtd: describe the simple BCM963XX NOR flash layout
+  mtd: bcm63xxpart: add of_match_table support
+  mtd: bcm63xxpart: move imagetag parsing to its own parser
+  dt-bindings: mtd: describe BCM963XX ImageTag format and usage
+  mtd: parser_imagetag: add of_match_table support
 
-It might be because we do not need touch refcounting of the parents
-in this scenario. But we are re-using existing functions where
-the ref-counting hang-over is important.
+ .../brcm,bcm963xx-cfe-nor-partitions.txt           |  24 +++
+ .../mtd/partitions/brcm,bcm963xx-imagetag.txt      |  45 +++++
+ drivers/mtd/Kconfig                                |   1 +
+ drivers/mtd/bcm63xxpart.c                          | 163 ++-------------
+ drivers/mtd/parsers/Kconfig                        |  11 +
+ drivers/mtd/parsers/Makefile                       |   1 +
+ drivers/mtd/parsers/parser_imagetag.c              | 222 +++++++++++++++++++++
+ 7 files changed, 320 insertions(+), 147 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-cfe-nor-partitions.txt
+ create mode 100644 Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt
+ create mode 100644 drivers/mtd/parsers/parser_imagetag.c
 
-Or we really need to increase refcounting of parents. Then it looks
-suspicious because we want to traverse the same path several times
-and always have only one node locked (refcounted).
+-- 
+2.13.2
 
-Best Regards,
-Petr
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
