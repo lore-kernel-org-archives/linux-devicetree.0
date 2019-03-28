@@ -1,83 +1,81 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH v4 6/7] ARM: dts: rockchip: Specify rk3288-veyron-jerry's display timings
-Date: Thu, 28 Mar 2019 10:17:09 -0700
-Message-ID: <20190328171710.31949-7-dianders@chromium.org>
-References: <20190328171710.31949-1-dianders@chromium.org>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH v4 1/6] dt-bindings: ap806: add the cluster clock node in the syscon file
+Date: Thu, 28 Mar 2019 18:25:14 +0100
+Message-ID: <87k1gioqrp.fsf@FE-laptop>
+References: <20190325124803.28904-1-gregory.clement@bootlin.com> <20190325124803.28904-2-gregory.clement@bootlin.com> <20190328171350.GA26680@bogus>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190328171710.31949-1-dianders@chromium.org>
+In-Reply-To: <20190328171350.GA26680@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Sean Paul <seanpaul@chromium.org>
-Cc: linux-rockchip@lists.infradead.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, =?UTF-8?q?Enric=20Balletb=C3=B2?= <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, mka@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Let's document the display timings that jerry has been using out in
-the field.  This uses the standard blankings but a slightly slower
-clock rate, thus getting a refresh rate 58.3 Hz.
-
-NOTE: this won't really do anything except cause DRM to properly
-report the refresh rate since vop_crtc_mode_fixup() was rounding the
-pixel clock to 74.25 MHz anyway.  Apparently the adjusted rate isn't
-exposed to userspace so it's important that the rate we're trying to
-achieve is mostly right.
-
-For the downstream kernel change related to this see See
-https://crrev.com/c/324558.
-
-NOTE: minnie will be fixed up in a future patch, so for now we'll just
-delete the panel timings there.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
-Changes in v4:
-- rk3288-veyron-jerry patch new for v4.
-
-Changes in v3: None
-Changes in v2: None
-
- arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi | 14 ++++++++++++++
- arch/arm/boot/dts/rk3288-veyron-minnie.dts      |  2 ++
- 2 files changed, 16 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-index b54746df3661..0b1789b50c21 100644
---- a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-@@ -76,6 +76,20 @@
- 		power-supply = <&vcc33_lcd>;
- 		backlight = <&backlight>;
+Hi Rob,
  
-+		panel-timing {
-+			clock-frequency = <74250000>;
-+			hactive = <1366>;
-+			hfront-porch = <136>;
-+			hback-porch = <60>;
-+			hsync-len = <30>;
-+			hsync-active = <0>;
-+			vactive = <768>;
-+			vfront-porch = <8>;
-+			vback-porch = <12>;
-+			vsync-len = <12>;
-+			vsync-active = <0>;
-+		};
-+
- 		ports {
- 			panel_in: port {
- 				panel_in_edp: endpoint {
-diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-index f95d0c5fcf71..ca7512ade222 100644
---- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-@@ -142,6 +142,8 @@
- &panel {
- 	compatible = "auo,b101ean01", "simple-panel";
- 	power-supply= <&panel_regulator>;
-+
-+	/delete-node/ panel-timing;
- };
- 
- &rk808 {
+ On jeu., mars 28 2019, Rob Herring <robh@kernel.org> wrote:
+
+> On Mon, Mar 25, 2019 at 01:47:58PM +0100, Gregory CLEMENT wrote:
+>> Document the device tree binding for the cluster clock controllers found
+>> in the Armada 7K/8K SoCs.
+>> 
+>> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+>> ---
+>>  .../arm/marvell/ap806-system-controller.txt   | 25 +++++++++++++++++++
+>>  1 file changed, 25 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+>> index 7b8b8eb0191f..ceeba18b4ac3 100644
+>> --- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+>> +++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+>> @@ -143,3 +143,28 @@ ap_syscon1: system-controller@6f8000 {
+>>  		#thermal-sensor-cells = <1>;
+>>  	};
+>>  };
+>> +
+>> +Cluster clocks:
+>> +---------------
+>> +
+>> +Device Tree Clock bindings for cluster clock of AP806 Marvell. Each
+>> +cluster contain up to 2 CPUs running at the same frequency.
+>> +
+>> +Required properties:
+>> +- compatible: must be  "marvell,ap806-cpu-clock";
+>> +- #clock-cells : should be set to 1.
+>> +- clocks : shall be the input parents clock phandle for the clock.
+>> +
+>> +Optional property:
+>> + - reg: register range associated the cluser clocks
+>
+> reg can be optional to use, but should either be there or not.
+
+OK so let's remove it!
+
+Thanks,
+
+Grégory
+
+>
+> And there's a typo.
+>
+>> +
+>> +ap_syscon1: system-controller@6f8000 {
+>> +	compatible = "syscon", "simple-mfd";
+>> +	reg = <0x6f8000 0x1000>;
+>> +
+>> +	cpu_clk: clock-cpu {
+>> +		compatible = "marvell,ap806-cpu-clock";
+>> +		clocks = <&ap_clk 0>, <&ap_clk 1>;
+>> +		#clock-cells = <1>;
+>> +	};
+>> +};
+>> -- 
+>> 2.20.1
+>> 
+
 -- 
-2.21.0.392.gf8f6787159e-goog
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
