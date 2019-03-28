@@ -1,109 +1,65 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
-Date: Thu, 28 Mar 2019 10:53:59 +0200
-Message-ID: <CAEnQRZB8f4rHhsUoefKUB6PN_aRPtSB4y8O_D8N0_s-Zq0_8Vw@mail.gmail.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v2 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
+Date: Thu, 28 Mar 2019 09:25:14 +0000
+Message-ID: <AM0PR04MB4211FDBE2A19E4FEDEFAF03C80590@AM0PR04MB4211.eurprd04.prod.outlook.com>
 References: <20190327190244.9208-1-daniel.baluta@nxp.com>
  <20190327190244.9208-3-daniel.baluta@nxp.com>
  <AM0PR04MB4211B89650EA1AC9133F4EBE80590@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <CAEnQRZB8f4rHhsUoefKUB6PN_aRPtSB4y8O_D8N0_s-Zq0_8Vw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM0PR04MB4211B89650EA1AC9133F4EBE80590@AM0PR04MB4211.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Aisheng Dong <aisheng.dong@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peng Fan <peng.fan@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, Anson Huang <anson.huang@nxp.com>, Teo Hall <teo.hall@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, yibin.gong@nxp.com, "shawnguo@kernel.org" <shawnguo@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAEnQRZB8f4rHhsUoefKUB6PN_aRPtSB4y8O_D8N0_s-Zq0_8Vw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Baluta <daniel.baluta@gmail.com>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Teo Hall <teo.hall@nxp.com>, Robin Gong <yibin.gong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 4:32 AM Aisheng Dong <aisheng.dong@nxp.com> wrote:
->
-> > From: Daniel Baluta
-> > Sent: Thursday, March 28, 2019 3:03 AM
-> >
-> > i.MX8QXP contains a total of 4 EDMA controllers of which two are primarily
-> > for audio components and the other two are for non-audio periperhals.
-> >
-> > This patch adds the EDMA0/EDMA1 nodes used by audio peripherals.
-> >
-> > EDMA0 contains channels for:
-> >       * ASRC0
-> >       * ESAI0
-> >       * SPDIF0
-> >       * SAI0, SAI1, SAI2, SAI3
-> >
-> > EDMA1 contains channels for:
-> >       * ASRC1
-> >       * SAI4, SAI5
-> >
-> > See chapter Audio DMA Memory Maps (2.2.3) from i.MX8QXP RM [1]
-> >
-> > This patch is based on the dtsi file initially submitted by Teo Hall in i.MX NXP
-> > internal tree.
-> >
-> > [1] https://www.nxp.com/docs/en/reference-manual/IMX8DQXPRM.pdf
-> >
-> > Cc: Teo Hall <teo.hall@nxp.com>
-> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 72
-> > ++++++++++++++++++++++
-> >  1 file changed, 72 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > index 0cb939861a60..84c7c3eca1a1 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > @@ -182,6 +182,78 @@
-> >                       #clock-cells = <1>;
-> >               };
-> >
-> > +             edma0: dma-controller@591f0000 {
-> > +                     compatible = "fsl,imx8qxp-edma";
-> > +                     reg = <0x59200000 0x10000>,   /* asrc0 pair A input req */
-> > +                             <0x59210000 0x10000>, /* asrc0 pair B input req */
-> > +                             <0x59220000 0x10000>, /* asrc0 pair C input req */
-> > +                             <0x59230000 0x10000>, /* asrc0 pair A output req */
-> > +                             <0x59240000 0x10000>, /* asrc0 pair B output req */
-> > +                             <0x59250000 0x10000>, /* asrc0 pair C output req */
-> > +                             <0x59260000 0x10000>, /* esai0 rx */
-> > +                             <0x59270000 0x10000>, /* esai0 tx */
-> > +                             <0x59280000 0x10000>, /* spdif0 rx */
-> > +                             <0x59290000 0x10000>, /* spdif0 tx */
-> > +                             <0x592c0000 0x10000>, /* sai0 rx */
-> > +                             <0x592d0000 0x10000>, /* sai0 tx */
-> > +                             <0x592e0000 0x10000>, /* sai1 rx */
-> > +                             <0x592f0000 0x10000>, /* sai1 tx */
-> > +                     #dma-cells = <3>;
->
-> In binding doc, it's 2.
-> - #dma-cells : Must be <2>.
->         The 1st cell specifies the DMAMUX(0 for DMAMUX0 and 1 for DMAMUX1).
->         Specific request source can only be multiplexed by specific channels
->         group called DMAMUX.
->         The 2nd cell specifies the request source(slot) ID.
->
-> Need update binding doc?
->
-> > +                     shared-interrupt;
->
-> Undocumented property?
->
-> Checkpatch did not complain?
-
-Thanks Aisheng for this comment. I think we might need to delay a little bit
-this patch because (as pointed by Yibin) on i.MX8 QXP/QM we use
-fsl-edma-v3 which *is not* yet upstream.
-
-So, lets get back to adding the nodes after Yibin sends edma-v3 patches.
-
-thanks,
-Daniel.
+PiA+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAu
+ZHRzaQ0KPiA+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4cXhwLmR0c2kN
+Cj4gPiA+IGluZGV4IDBjYjkzOTg2MWE2MC4uODRjN2MzZWNhMWExIDEwMDY0NA0KPiA+ID4gLS0t
+IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5kdHNpDQo+ID4gPiArKysg
+Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4cXhwLmR0c2kNCj4gPiA+IEBAIC0x
+ODIsNiArMTgyLDc4IEBADQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgI2Nsb2NrLWNlbGxz
+ID0gPDE+Ow0KPiA+ID4gICAgICAgICAgICAgICB9Ow0KPiA+ID4NCj4gPiA+ICsgICAgICAgICAg
+ICAgZWRtYTA6IGRtYS1jb250cm9sbGVyQDU5MWYwMDAwIHsNCj4gPiA+ICsgICAgICAgICAgICAg
+ICAgICAgICBjb21wYXRpYmxlID0gImZzbCxpbXg4cXhwLWVkbWEiOw0KPiA+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgIHJlZyA9IDwweDU5MjAwMDAwIDB4MTAwMDA+LCAgIC8qIGFzcmMwIHBhaXIg
+QQ0KPiBpbnB1dCByZXEgKi8NCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDww
+eDU5MjEwMDAwIDB4MTAwMDA+LCAvKiBhc3JjMCBwYWlyIEINCj4gaW5wdXQgcmVxICovDQo+ID4g
+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MHg1OTIyMDAwMCAweDEwMDAwPiwgLyog
+YXNyYzAgcGFpciBDDQo+IGlucHV0IHJlcSAqLw0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgPDB4NTkyMzAwMDAgMHgxMDAwMD4sIC8qIGFzcmMwIHBhaXIgQQ0KPiBvdXRwdXQg
+cmVxICovDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MHg1OTI0MDAwMCAw
+eDEwMDAwPiwgLyogYXNyYzAgcGFpciBCDQo+IG91dHB1dCByZXEgKi8NCj4gPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIDwweDU5MjUwMDAwIDB4MTAwMDA+LCAvKiBhc3JjMCBwYWly
+IEMNCj4gb3V0cHV0IHJlcSAqLw0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+PDB4NTkyNjAwMDAgMHgxMDAwMD4sIC8qIGVzYWkwIHJ4ICovDQo+ID4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICA8MHg1OTI3MDAwMCAweDEwMDAwPiwgLyogZXNhaTAgdHggKi8NCj4g
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwweDU5MjgwMDAwIDB4MTAwMDA+LCAv
+KiBzcGRpZjAgcnggKi8NCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwweDU5
+MjkwMDAwIDB4MTAwMDA+LCAvKiBzcGRpZjAgdHggKi8NCj4gPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIDwweDU5MmMwMDAwIDB4MTAwMDA+LCAvKiBzYWkwIHJ4ICovDQo+ID4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MHg1OTJkMDAwMCAweDEwMDAwPiwgLyogc2Fp
+MCB0eCAqLw0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDB4NTkyZTAwMDAg
+MHgxMDAwMD4sIC8qIHNhaTEgcnggKi8NCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIDwweDU5MmYwMDAwIDB4MTAwMDA+LCAvKiBzYWkxIHR4ICovDQo+ID4gPiArICAgICAgICAg
+ICAgICAgICAgICAgI2RtYS1jZWxscyA9IDwzPjsNCj4gPg0KPiA+IEluIGJpbmRpbmcgZG9jLCBp
+dCdzIDIuDQo+ID4gLSAjZG1hLWNlbGxzIDogTXVzdCBiZSA8Mj4uDQo+ID4gICAgICAgICBUaGUg
+MXN0IGNlbGwgc3BlY2lmaWVzIHRoZSBETUFNVVgoMCBmb3IgRE1BTVVYMCBhbmQgMSBmb3INCj4g
+RE1BTVVYMSkuDQo+ID4gICAgICAgICBTcGVjaWZpYyByZXF1ZXN0IHNvdXJjZSBjYW4gb25seSBi
+ZSBtdWx0aXBsZXhlZCBieSBzcGVjaWZpYw0KPiBjaGFubmVscw0KPiA+ICAgICAgICAgZ3JvdXAg
+Y2FsbGVkIERNQU1VWC4NCj4gPiAgICAgICAgIFRoZSAybmQgY2VsbCBzcGVjaWZpZXMgdGhlIHJl
+cXVlc3Qgc291cmNlKHNsb3QpIElELg0KPiA+DQo+ID4gTmVlZCB1cGRhdGUgYmluZGluZyBkb2M/
+DQo+ID4NCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICBzaGFyZWQtaW50ZXJydXB0Ow0KPiA+
+DQo+ID4gVW5kb2N1bWVudGVkIHByb3BlcnR5Pw0KPiA+DQo+ID4gQ2hlY2twYXRjaCBkaWQgbm90
+IGNvbXBsYWluPw0KPiANCj4gVGhhbmtzIEFpc2hlbmcgZm9yIHRoaXMgY29tbWVudC4gSSB0aGlu
+ayB3ZSBtaWdodCBuZWVkIHRvIGRlbGF5IGEgbGl0dGxlIGJpdA0KPiB0aGlzIHBhdGNoIGJlY2F1
+c2UgKGFzIHBvaW50ZWQgYnkgWWliaW4pIG9uIGkuTVg4IFFYUC9RTSB3ZSB1c2UNCj4gZnNsLWVk
+bWEtdjMgd2hpY2ggKmlzIG5vdCogeWV0IHVwc3RyZWFtLg0KPiANCj4gU28sIGxldHMgZ2V0IGJh
+Y2sgdG8gYWRkaW5nIHRoZSBub2RlcyBhZnRlciBZaWJpbiBzZW5kcyBlZG1hLXYzIHBhdGNoZXMu
+DQo+IA0KDQpZZXMsIFlpYmluIGNvdWxkIGNoZWNrIHRoZSBjb21tZW50cyB3aGVuIHJlc2VuZGlu
+ZyB3aXRoIGVkbWEgZHJpdmVyIHN1cHBvcnQuDQoNClJlZ2FyZHMNCkRvbmcgQWlzaGVuZw0KDQo+
+IHRoYW5rcywNCj4gRGFuaWVsLg0K
