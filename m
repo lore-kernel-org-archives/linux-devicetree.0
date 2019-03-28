@@ -1,81 +1,58 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH v4 1/6] dt-bindings: ap806: add the cluster clock node in the syscon file
-Date: Thu, 28 Mar 2019 18:25:14 +0100
-Message-ID: <87k1gioqrp.fsf@FE-laptop>
-References: <20190325124803.28904-1-gregory.clement@bootlin.com> <20190325124803.28904-2-gregory.clement@bootlin.com> <20190328171350.GA26680@bogus>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 0/6] drm/panel: simple: Add mode support to devicetree
+Date: Thu, 28 Mar 2019 10:28:23 -0700
+Message-ID: <CAD=FV=WvKMFMvDAm=2J=_iwyMv6s1DcwyQJ3gkfBpQr_qL-BTg@mail.gmail.com>
+References: <20180208174855.55620-1-seanpaul@chromium.org>
+ <20180312083508.GG23060@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190328171350.GA26680@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180312083508.GG23060@ulmo>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Jeffy Chen <jeffy.chen@rock-chips.com>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
- 
- On jeu., mars 28 2019, Rob Herring <robh@kernel.org> wrote:
-
-> On Mon, Mar 25, 2019 at 01:47:58PM +0100, Gregory CLEMENT wrote:
->> Document the device tree binding for the cluster clock controllers found
->> in the Armada 7K/8K SoCs.
->> 
->> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
->> ---
->>  .../arm/marvell/ap806-system-controller.txt   | 25 +++++++++++++++++++
->>  1 file changed, 25 insertions(+)
->> 
->> diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
->> index 7b8b8eb0191f..ceeba18b4ac3 100644
->> --- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
->> +++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
->> @@ -143,3 +143,28 @@ ap_syscon1: system-controller@6f8000 {
->>  		#thermal-sensor-cells = <1>;
->>  	};
->>  };
->> +
->> +Cluster clocks:
->> +---------------
->> +
->> +Device Tree Clock bindings for cluster clock of AP806 Marvell. Each
->> +cluster contain up to 2 CPUs running at the same frequency.
->> +
->> +Required properties:
->> +- compatible: must be  "marvell,ap806-cpu-clock";
->> +- #clock-cells : should be set to 1.
->> +- clocks : shall be the input parents clock phandle for the clock.
->> +
->> +Optional property:
->> + - reg: register range associated the cluser clocks
->
-> reg can be optional to use, but should either be there or not.
-
-OK so let's remove it!
-
-Thanks,
-
-Grégory
-
->
-> And there's a typo.
->
->> +
->> +ap_syscon1: system-controller@6f8000 {
->> +	compatible = "syscon", "simple-mfd";
->> +	reg = <0x6f8000 0x1000>;
->> +
->> +	cpu_clk: clock-cpu {
->> +		compatible = "marvell,ap806-cpu-clock";
->> +		clocks = <&ap_clk 0>, <&ap_clk 1>;
->> +		#clock-cells = <1>;
->> +	};
->> +};
->> -- 
->> 2.20.1
->> 
-
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+SGksCgpPbiBNb24sIE1hciAxMiwgMjAxOCBhdCAxOjM1IEFNIFRoaWVycnkgUmVkaW5nIDx0aGll
+cnJ5LnJlZGluZ0BnbWFpbC5jb20+IHdyb3RlOgo+Cj4gT24gVGh1LCBGZWIgMDgsIDIwMTggYXQg
+MTI6NDg6NDdQTSAtMDUwMCwgU2VhbiBQYXVsIHdyb3RlOgo+ID4gSGVsbG8hCj4gPgo+ID4gSGVy
+ZSdzIHYzIG9mIHRoZSBzZXQuIEkndmUgcmVpbnRyb2R1Y2VkIHRoZSBzaW5nbGUgZGlzcGxheSB0
+aW1pbmcgbm9kZQo+ID4gaW4gdGhlIGR0IGJpbmRpbmcgZnJvbSB2MSwgYW5kIGxlZnQgdGhlIGlt
+cHJvdmVkIGRvY3MgYW5kIHBhdGNoIHNwbGl0Cj4gPiBmcm9tIHYyLiBJJ3ZlIGFsc28gYWRkZWQg
+YSBwYXRjaCB0byBjbGFyaWZ5IHRoYXQgYSBzaW5nbGUgZGlzcGxheSB0aW1pbmcKPiA+IG5vZGUg
+c2hvdWxkIGFsd2F5cyBiZSBuYW1lZCBwYW5lbC10aW1pbmcsIHdoaWNoIHdhcyBmZWVkYmFjayBm
+cm9tIHYxLgo+ID4KPiA+IENvdmVyIGxldHRlciBmcm9tIHYxICh3YXMgdGhlIHNhbWUgaW4gdjIp
+IGlzIGhlcmU6Cj4gPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmkt
+ZGV2ZWwvMjAxOC1GZWJydWFyeS8xNjQ4ODYuaHRtbAo+ID4KPiA+IFRoYW5rcyBmb3IgdGhlIHJl
+dmlld3Mgc28gZmFyLAo+ID4KPiA+IFNlYW4KPiA+Cj4gPgo+ID4gU2VhbiBQYXVsICg2KToKPiA+
+ICAgZHQtYmluZGluZ3M6IENsYXJpZnkgdGltaW5nIHN1Ym5vZGUgdXNlIGFzIHBhbmVsLXRpbWlu
+Zwo+ID4gICBkdC1iaW5kaW5nczogQWRkIGhlYWRpbmdzIHRvIHNpbXBsZS1wYW5lbCBiaW5kaW5n
+cwo+ID4gICBkdC1iaW5kaW5nczogQWRkIHBhbmVsLXRpbWluZyBzdWJub2RlIHRvIHNpbXBsZS1w
+YW5lbAo+ID4gICBkcm0vcGFuZWw6IHNpbXBsZTogQWRkIGFiaWxpdHkgdG8gb3ZlcnJpZGUgdHlw
+aWNhbCB0aW1pbmcKPiA+ICAgZHJtL3BhbmVsOiBzaW1wbGU6IFVzZSBkaXNwbGF5X3RpbWluZyBm
+b3IgbHExMjNwMWp4MzEKPiA+ICAgYXJtNjQ6IGR0czogcm9ja2NoaXA6IFNwZWNpZnkgb3ZlcnJp
+ZGUgbW9kZSBmb3Iga2V2aW4gcGFuZWwKPiA+Cj4gPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
+ZWwvZGlzcGxheS10aW1pbmcudHh0ICAgICAgfCAgNSArKwo+ID4gIC4uLi9iaW5kaW5ncy9kaXNw
+bGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQgICAgICAgIHwgMzQgKysrKysrKysKPiA+ICBhcmNo
+L2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS1ncnUta2V2aW4uZHRzICB8IDE0ICsrKysK
+PiA+ICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAgICAgICAgICAgICB8
+IDk0ICsrKysrKysrKysrKysrKysrKy0tLS0KPiA+ICA0IGZpbGVzIGNoYW5nZWQsIDEzMiBpbnNl
+cnRpb25zKCspLCAxNSBkZWxldGlvbnMoLSkKPgo+IEkndmUgYXBwbGllZCBwYXRjaGVzIDEsIDIg
+YW5kIDUgb2YgdGhlIHNlcmllcywgMyBhbmQgNCBoYWQgY29tbWVudHMgYW5kCj4gNiB3aWxsIG5l
+ZWQgdG8gZ28gdGhyb3VnaCB0aGUgUm9ja2NoaXAgdHJlZS4KCkJyZWFkY3J1bWJzIGZvciBhbnlv
+bmUgd2hvIHN0dW1ibGVzIHVwb24gdGhpcyB2MyBhbmQgZGlkbid0IG5vdGljZQp0aGF0IHY0IHdh
+cyBwb3N0ZWQgYnkgbWUgaW5zdGVhZCBvZiBTZWFuIFBhdWwuICBUbyBmaW5kIGl0LCBoZWFkIG9u
+Cm92ZXIgdG86CgpodHRwczovL2xrbWwua2VybmVsLm9yZy9yLzIwMTkwMzI4MTcxNzEwLjMxOTQ5
+LTEtZGlhbmRlcnNAY2hyb21pdW0ub3JnCgotRG91ZwpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWw=
