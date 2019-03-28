@@ -1,145 +1,101 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 03/25] dt-bindings: leds: Add LED_FUNCTION definitions
-Date: Thu, 28 Mar 2019 21:01:28 +0100
-Message-ID: <f916ae77-1807-1e06-7dc3-8b956e1c4c39@gmail.com>
-References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
- <20190310182836.20841-4-jacek.anaszewski@gmail.com>
- <20190328000357.GA3399@bogus>
+From: Ezequiel Garcia <ezequiel@collabora.com>
+Subject: Re: [PATCH v4 1/7] dt-bindings: Add panel-timing subnode to
+ simple-panel
+Date: Thu, 28 Mar 2019 17:26:49 -0300
+Message-ID: <f2f82f439f2b7586cb4c83f15122d8d19952d596.camel@collabora.com>
+References: <20190328171710.31949-1-dianders@chromium.org>
+         <20190328171710.31949-2-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190328000357.GA3399@bogus>
-Content-Language: en-US
+In-Reply-To: <20190328171710.31949-2-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
+To: Douglas Anderson <dianders@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Sean Paul <seanpaul@chromium.org>
+Cc: linux-rockchip@lists.infradead.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@collabora.com>, Enric =?ISO-8859-1?Q?Balletb=F2?= <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, mka@chromium.org, Eric Anholt <eric@anholt.net>, Jeffy Chen <jeffy.chen@rock-chips.com>, =?ISO-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Daniel Vetter <daniel@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thanks for the review.
-
-On 3/28/19 1:03 AM, Rob Herring wrote:
-> On Sun, Mar 10, 2019 at 07:28:14PM +0100, Jacek Anaszewski wrote:
->> Add common LED function definitions for use in Device Tree.
->> The function names were extracted from existing dts files
->> after eliminating oddities.
+On Thu, 2019-03-28 at 10:17 -0700, Douglas Anderson wrote:
+> From: Sean Paul <seanpaul@chromium.org>
 > 
-> I'd like this to be suggestions of what to use rather than what's
-> already out there. So my comments are in that context.
+> This patch adds a new subnode to simple-panel allowing us to override
+> the typical timing expressed in the panel's display_timing.
 > 
->>
->> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->> Cc: Baolin Wang <baolin.wang@linaro.org>
->> Cc: Daniel Mack <daniel@zonque.org>
->> Cc: Dan Murphy <dmurphy@ti.com>
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
->> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
->> Cc: Simon Shields <simon@lineageos.org>
->> ---
->>   include/dt-bindings/leds/common.h | 38 ++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 38 insertions(+)
->>
->> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
->> index e171d0a6beb2..ffcd46317307 100644
->> --- a/include/dt-bindings/leds/common.h
->> +++ b/include/dt-bindings/leds/common.h
->> @@ -19,4 +19,42 @@
->>   #define LEDS_BOOST_ADAPTIVE	1
->>   #define LEDS_BOOST_FIXED	2
->>   
->> +/* Standard LED functions */
->> +#define LED_FUNCTION_ACTIVITY "activity"
+> Changes in v2:
+>  - Split out the binding into a new patch (Rob)
+>  - display-timings is a new section (Rob)
+>  - Use the full display-timings subnode instead of picking the timing
+>    out (Rob/Thierry)
+> Changes in v3:
+>  - Go back to using the timing subnode directly, but rename to
+>    panel-timing (Rob)
+> Changes in v4:
+>  - Simplify desc. for when override should be used (Thierry/Laurent)
+>  - Removed Rob H review since it's been a year and wording changed
 > 
-> of what?
-
-We have activity trigger, which provides instant feedback
-on the cpu activity.
-
-This would nicely map to that.
-
->> +#define LED_FUNCTION_ADSL "adsl"
+> Cc: Doug Anderson <dianders@chromium.org>
+> Cc: Eric Anholt <eric@anholt.net>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Stéphane Marchesin <marcheu@chromium.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-rockchip@lists.infradead.org
+> Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
 > 
-> wan?
-
-Good point.
-
->> +#define LED_FUNCTION_ALARM "alarm"
->> +#define LED_FUNCTION_BACKLIGHT "backlight"
->> +#define LED_FUNCTION_BLUETOOTH "bluetooth"
->> +#define LED_FUNCTION_BOOT "boot"
+>  .../bindings/display/panel/simple-panel.txt   | 24 +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 > 
-> What about boot?
+> diff --git a/Documentation/devicetree/bindings/display/panel/simple-panel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> index b2b872c710f2..6157f86ddce4 100644
+> --- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> @@ -15,6 +15,18 @@ Optional properties:
+>    (hot plug detect) signal, but the signal isn't hooked up so we should
+>    hardcode the max delay from the panel spec when powering up the panel.
+>  
+> +panel-timing subnode
+> +--------------------
+> +
+> +This optional subnode is for devices which require a mode differing
+> +from the panel's "typical" display timing.  The panel timings provided
+> +here will be ignored if they are found to be outside of allowable
+> +ranges for the given panel.
+> +
 
-Is lit when bootloader code is executed?
-Turned off just before starting the kernel.
+Is it OK to put this comment about how the implementation
+will behave when values are out of range, given this is just a binding
+spec?
 
->> +#define LED_FUNCTION_CHRG "chrg"
->> +#define LED_FUNCTION_DEBUG "debug"
->> +#define LED_FUNCTION_DISK "disk"
->> +#define LED_FUNCTION_DISK_READ "disk-read"
->> +#define LED_FUNCTION_DISK_WRITE "disk-write"
->> +#define LED_FUNCTION_FAULT "fault"
->> +#define LED_FUNCTION_FLASH "flash"
->> +#define LED_FUNCTION_HDDERR "hdderr"
-> 
-> disk-err for consistency?
+Perhaps -if needed- this sentence can be rephrased to state that,
+e.g. the OS may not be able to apply these values, if the controller
+or device is unable to?
 
-Ack.
-
->> +#define LED_FUNCTION_HEARTBEAT "heartbeat"
->> +#define LED_FUNCTION_INDICATOR "indicator"
->> +#define LED_FUNCTION_INFO "info"
-> 
-> of what?
-
-Right, doesn't make sense alone.
-
->> +#define LED_FUNCTION_INTERNET "internet"
-> 
-> Same as wan?
-
-OK, to be removed.
-
->> +#define LED_FUNCTION_LAN "lan"
->> +#define LED_FUNCTION_MMC "mmc"
-> 
-> Same as disk?
-
-Not sure. The possibility to have separate LEDs for different types of
-mass storage devices could be useful.
-
->> +#define LED_FUNCTION_NAND "nand"
->> +#define LED_FUNCTION_ON "on"
->> +#define LED_FUNCTION_PROGRAMMING "programming"
->> +#define LED_FUNCTION_PWR "pwr"
->> +#define LED_FUNCTION_RX "rx"
->> +#define LED_FUNCTION_SD "sd"
-> 
->> +#define LED_FUNCTION_SLEEP "sleep"
->> +#define LED_FUNCTION_STANDBY "standby"
-> 
-> Same things?
-
-Ack. Standby feels more technical so I'd remove "sleep".
-
->> +#define LED_FUNCTION_STATUS "status"
->> +#define LED_FUNCTION_TORCH "torch"
->> +#define LED_FUNCTION_TV "tv"
->> +#define LED_FUNCTION_TX "tx"
->> +#define LED_FUNCTION_USB "usb"
->> +#define LED_FUNCTION_WAN "wan"
->> +#define LED_FUNCTION_WLAN "wlan"
->> +#define LED_FUNCTION_WPS "wps"
->> +
->>   #endif /* __DT_BINDINGS_LEDS_H */
->> -- 
->> 2.11.0
->>
-> 
-
--- 
-Best regards,
-Jacek Anaszewski
+> +Format information on the panel-timing subnode can be found in
+> +display-timing.txt.
+> +
+> +
+>  Example:
+>  
+>  	panel: panel {
+> @@ -25,4 +37,16 @@ Example:
+>  		enable-gpios = <&gpio 90 0>;
+>  
+>  		backlight = <&backlight>;
+> +
+> +		panel-timing {
+> +			clock-frequency = <266604720>;
+> +			hactive = <2400>;
+> +			hfront-porch = <48>;
+> +			hback-porch = <84>;
+> +			hsync-len = <32>;
+> +			vactive = <1600>;
+> +			vfront-porch = <3>;
+> +			vback-porch = <120>;
+> +			vsync-len = <10>;
+> +		};
+>  	};
