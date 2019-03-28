@@ -1,65 +1,81 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v2 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
-Date: Thu, 28 Mar 2019 09:25:14 +0000
-Message-ID: <AM0PR04MB4211FDBE2A19E4FEDEFAF03C80590@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190327190244.9208-1-daniel.baluta@nxp.com>
- <20190327190244.9208-3-daniel.baluta@nxp.com>
- <AM0PR04MB4211B89650EA1AC9133F4EBE80590@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CAEnQRZB8f4rHhsUoefKUB6PN_aRPtSB4y8O_D8N0_s-Zq0_8Vw@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v2 1/6] device property: Add functions for accessing
+ node's parents
+Date: Thu, 28 Mar 2019 10:38:01 +0100
+Message-ID: <CAJZ5v0hi04yACD9ZzDCaxhJh-uHHpMOu=zZzVf4t5vH=ctaYBg@mail.gmail.com>
+References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
+ <20190326124106.27694-2-sakari.ailus@linux.intel.com> <20190327122625.eaisnw776vqwhhnh@pathway.suse.cz>
+ <20190327142036.jf6puc5uo2mjutbl@paasikivi.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEnQRZB8f4rHhsUoefKUB6PN_aRPtSB4y8O_D8N0_s-Zq0_8Vw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190327142036.jf6puc5uo2mjutbl@paasikivi.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@gmail.com>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Teo Hall <teo.hall@nxp.com>, Robin Gong <yibin.gong@nxp.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Petr Mladek <pmladek@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-PiA+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAu
-ZHRzaQ0KPiA+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4cXhwLmR0c2kN
-Cj4gPiA+IGluZGV4IDBjYjkzOTg2MWE2MC4uODRjN2MzZWNhMWExIDEwMDY0NA0KPiA+ID4gLS0t
-IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5kdHNpDQo+ID4gPiArKysg
-Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4cXhwLmR0c2kNCj4gPiA+IEBAIC0x
-ODIsNiArMTgyLDc4IEBADQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgI2Nsb2NrLWNlbGxz
-ID0gPDE+Ow0KPiA+ID4gICAgICAgICAgICAgICB9Ow0KPiA+ID4NCj4gPiA+ICsgICAgICAgICAg
-ICAgZWRtYTA6IGRtYS1jb250cm9sbGVyQDU5MWYwMDAwIHsNCj4gPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICBjb21wYXRpYmxlID0gImZzbCxpbXg4cXhwLWVkbWEiOw0KPiA+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgIHJlZyA9IDwweDU5MjAwMDAwIDB4MTAwMDA+LCAgIC8qIGFzcmMwIHBhaXIg
-QQ0KPiBpbnB1dCByZXEgKi8NCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDww
-eDU5MjEwMDAwIDB4MTAwMDA+LCAvKiBhc3JjMCBwYWlyIEINCj4gaW5wdXQgcmVxICovDQo+ID4g
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MHg1OTIyMDAwMCAweDEwMDAwPiwgLyog
-YXNyYzAgcGFpciBDDQo+IGlucHV0IHJlcSAqLw0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgPDB4NTkyMzAwMDAgMHgxMDAwMD4sIC8qIGFzcmMwIHBhaXIgQQ0KPiBvdXRwdXQg
-cmVxICovDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MHg1OTI0MDAwMCAw
-eDEwMDAwPiwgLyogYXNyYzAgcGFpciBCDQo+IG91dHB1dCByZXEgKi8NCj4gPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIDwweDU5MjUwMDAwIDB4MTAwMDA+LCAvKiBhc3JjMCBwYWly
-IEMNCj4gb3V0cHV0IHJlcSAqLw0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-PDB4NTkyNjAwMDAgMHgxMDAwMD4sIC8qIGVzYWkwIHJ4ICovDQo+ID4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICA8MHg1OTI3MDAwMCAweDEwMDAwPiwgLyogZXNhaTAgdHggKi8NCj4g
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwweDU5MjgwMDAwIDB4MTAwMDA+LCAv
-KiBzcGRpZjAgcnggKi8NCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwweDU5
-MjkwMDAwIDB4MTAwMDA+LCAvKiBzcGRpZjAgdHggKi8NCj4gPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIDwweDU5MmMwMDAwIDB4MTAwMDA+LCAvKiBzYWkwIHJ4ICovDQo+ID4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MHg1OTJkMDAwMCAweDEwMDAwPiwgLyogc2Fp
-MCB0eCAqLw0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDB4NTkyZTAwMDAg
-MHgxMDAwMD4sIC8qIHNhaTEgcnggKi8NCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIDwweDU5MmYwMDAwIDB4MTAwMDA+LCAvKiBzYWkxIHR4ICovDQo+ID4gPiArICAgICAgICAg
-ICAgICAgICAgICAgI2RtYS1jZWxscyA9IDwzPjsNCj4gPg0KPiA+IEluIGJpbmRpbmcgZG9jLCBp
-dCdzIDIuDQo+ID4gLSAjZG1hLWNlbGxzIDogTXVzdCBiZSA8Mj4uDQo+ID4gICAgICAgICBUaGUg
-MXN0IGNlbGwgc3BlY2lmaWVzIHRoZSBETUFNVVgoMCBmb3IgRE1BTVVYMCBhbmQgMSBmb3INCj4g
-RE1BTVVYMSkuDQo+ID4gICAgICAgICBTcGVjaWZpYyByZXF1ZXN0IHNvdXJjZSBjYW4gb25seSBi
-ZSBtdWx0aXBsZXhlZCBieSBzcGVjaWZpYw0KPiBjaGFubmVscw0KPiA+ICAgICAgICAgZ3JvdXAg
-Y2FsbGVkIERNQU1VWC4NCj4gPiAgICAgICAgIFRoZSAybmQgY2VsbCBzcGVjaWZpZXMgdGhlIHJl
-cXVlc3Qgc291cmNlKHNsb3QpIElELg0KPiA+DQo+ID4gTmVlZCB1cGRhdGUgYmluZGluZyBkb2M/
-DQo+ID4NCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICBzaGFyZWQtaW50ZXJydXB0Ow0KPiA+
-DQo+ID4gVW5kb2N1bWVudGVkIHByb3BlcnR5Pw0KPiA+DQo+ID4gQ2hlY2twYXRjaCBkaWQgbm90
-IGNvbXBsYWluPw0KPiANCj4gVGhhbmtzIEFpc2hlbmcgZm9yIHRoaXMgY29tbWVudC4gSSB0aGlu
-ayB3ZSBtaWdodCBuZWVkIHRvIGRlbGF5IGEgbGl0dGxlIGJpdA0KPiB0aGlzIHBhdGNoIGJlY2F1
-c2UgKGFzIHBvaW50ZWQgYnkgWWliaW4pIG9uIGkuTVg4IFFYUC9RTSB3ZSB1c2UNCj4gZnNsLWVk
-bWEtdjMgd2hpY2ggKmlzIG5vdCogeWV0IHVwc3RyZWFtLg0KPiANCj4gU28sIGxldHMgZ2V0IGJh
-Y2sgdG8gYWRkaW5nIHRoZSBub2RlcyBhZnRlciBZaWJpbiBzZW5kcyBlZG1hLXYzIHBhdGNoZXMu
-DQo+IA0KDQpZZXMsIFlpYmluIGNvdWxkIGNoZWNrIHRoZSBjb21tZW50cyB3aGVuIHJlc2VuZGlu
-ZyB3aXRoIGVkbWEgZHJpdmVyIHN1cHBvcnQuDQoNClJlZ2FyZHMNCkRvbmcgQWlzaGVuZw0KDQo+
-IHRoYW5rcywNCj4gRGFuaWVsLg0K
+On Wed, Mar 27, 2019 at 3:20 PM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+>
+> Hi Petr,
+>
+> On Wed, Mar 27, 2019 at 01:26:25PM +0100, Petr Mladek wrote:
+> > On Tue 2019-03-26 14:41:01, Sakari Ailus wrote:
+> > > Add two convenience functions for accessing node's parents:
+> > >
+> > > fwnode_count_parents() returns the number of parent nodes a given node
+> > > has. fwnode_get_nth_parent() returns node's parent at a given distance
+> > > from the node itself.
+> > >
+> > > Also reorder fwnode_get_parent() in property.c according to the same order
+> > > as in property.h.
+> > >
+> > > diff --git a/drivers/base/property.c b/drivers/base/property.c
+> > > index 8b91ab380d14..61eb6ceacc3f 100644
+> > > --- a/drivers/base/property.c
+> > > +++ b/drivers/base/property.c
+> > > @@ -554,17 +567,49 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
+> > >  EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
+> > >
+> > >  /**
+> > > - * fwnode_get_parent - Return parent firwmare node
+> > > - * @fwnode: Firmware whose parent is retrieved
+> > > + * fwnode_count_parents - Return the number of parents a node has
+> > > + * @fwnode: The node the parents of which are to be counted
+> > >   *
+> > > - * Return parent firmware node of the given node if possible or %NULL if no
+> > > - * parent was available.
+> > > + * Returns the number of parents a node has.
+> > >   */
+> > > -struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
+> > > +unsigned int fwnode_count_parents(struct fwnode_handle *fwnode)
+> > >  {
+> > > -   return fwnode_call_ptr_op(fwnode, get_parent);
+> > > +   unsigned int count;
+> > > +
+> > > +   fwnode_handle_get(fwnode);
+> > > +
+> > > +   for (count = 0; fwnode; count++)
+> > > +           fwnode = fwnode_get_next_parent(fwnode);
+> >
+> > Is it guaranteed that all parents stay when
+> > fwnode_get_next_parent() releases the reference count
+> > for each counted member?
+>
+> fwnode_get_next_parent() only releases the child node after it has acquired
+> the parent. The only implementation with refcounting for single nodes is
+> actually OF.
+>
+> >
+> > > +
+> > > +   return count - 1;
+> >
+> > We could start counting from count = -1;
+>
+> We could, but then count would need to be made signed (unless overflowing
+> is preferred instead).
+
+What if there are no parents?
+
+Or is it guaranteed that there always will be at least one?
