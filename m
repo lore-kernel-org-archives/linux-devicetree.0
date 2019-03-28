@@ -1,66 +1,87 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH 1/2] mtd: maps: physmap: Store gpio_values correctly
-Date: Thu, 28 Mar 2019 19:59:30 +0000
-Message-ID: <1ab4e2f0c6d4404895877ecf539504bd@svr-chch-ex1.atlnz.lc>
-References: <20190328040217.1895-1-chris.packham@alliedtelesis.co.nz>
- <20190328040217.1895-2-chris.packham@alliedtelesis.co.nz>
- <20190328093228.5ab79718@collabora.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH] dt-bindings: usb: dwc2: document the vbus-supply property
+Date: Thu, 28 Mar 2019 21:00:23 +0100
+Message-ID: <CAFBinCDzYDH8NTwedUMaaN-gxtP29FEmvPtrmnQ+d2_N_PZ+=A@mail.gmail.com>
+References: <20190306212431.5779-1-martin.blumenstingl@googlemail.com> <20190327234217.GA8346@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <20190327234217.GA8346@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "richard@nod.at" <richard@nod.at>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: hminas@synopsys.com, gregkh@linuxfoundation.org, mark.rutland@arm.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, amelie.delaunay@st.com, felipe.balbi@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 28/03/19 9:32 PM, Boris Brezillon wrote:=0A=
-> On Thu, 28 Mar 2019 17:02:15 +1300=0A=
-> Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:=0A=
-> =0A=
->> When the gpio-addr-flash.c driver was merged with physmap-core.c the=0A=
->> code to store the current gpio_values was lost. This meant that once a=
-=0A=
->> gpio was asserted it was never de-asserted. Fix this by storing the=0A=
->> current offset in gpio_values like the old driver used to.=0A=
->>=0A=
->> Fixes: commit ba32ce95cbd9 ("mtd: maps: Merge gpio-addr-flash.c into phy=
-smap-core.c")=0A=
-> =0A=
-> You miss=0A=
-> =0A=
-> Cc: <stable@vger.kernel.org>=0A=
-> =0A=
-=0A=
-I wasn't sure. As the original commit said there are no in-tree users of =
-=0A=
-  addr-gpios so maybe no-one else noticed. I'll wait for any other =0A=
-comments and send a v2 with a Cc for stable.=0A=
-=0A=
->> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
-> =0A=
-> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>=0A=
-> =0A=
->> ---=0A=
->>   drivers/mtd/maps/physmap-core.c | 2 ++=0A=
->>   1 file changed, 2 insertions(+)=0A=
->>=0A=
->> diff --git a/drivers/mtd/maps/physmap-core.c b/drivers/mtd/maps/physmap-=
-core.c=0A=
->> index d9a3e4bebe5d..21b556afc305 100644=0A=
->> --- a/drivers/mtd/maps/physmap-core.c=0A=
->> +++ b/drivers/mtd/maps/physmap-core.c=0A=
->> @@ -132,6 +132,8 @@ static void physmap_set_addr_gpios(struct physmap_fl=
-ash_info *info,=0A=
->>   =0A=
->>   		gpiod_set_value(info->gpios->desc[i], !!(BIT(i) & ofs));=0A=
->>   	}=0A=
->> +=0A=
->> +	info->gpio_values =3D ofs;=0A=
->>   }=0A=
->>   =0A=
->>   #define win_mask(order)		(BIT(order) - 1)=0A=
-> =0A=
-> =0A=
-=0A=
+Hi Rob,
+
+On Thu, Mar 28, 2019 at 12:42 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Mar 06, 2019 at 10:24:31PM +0100, Martin Blumenstingl wrote:
+> > Various boards have an external VBUS supply regulator. This regulator
+> > depends on the current mode of the controller which is defined as:
+> > - dr_mode set to either "host" or "peripheral" (fixed value)
+> > - dr_mode set to "otg", based on the OTG status the dwc2 controller
+> >   internally switches between "host" and "peripheral" mode (selection
+> >   happens at runtime)
+> >
+> > Based on the current mode the regulator has to be enabled or disabled:
+> > - host: provide power to the connected USB device, thus the regulator
+> >   has to be enabled
+> > - peripheral: the host device to which the controller is connected
+> >   provides power, thus the regulator has to be disabled
+> >
+> > Add the dt-bindings documentation for this property so .dts authors know
+> > that this property exists and how it behaves.
+> >
+> > Fixes: 531ef5ebea9639 ("usb: dwc2: add support for host mode external vbus supply")
+> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > ---
+> >  Documentation/devicetree/bindings/usb/dwc2.txt | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+> > index 6dc3c4a34483..1e8a775a0e72 100644
+> > --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+> > +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+> > @@ -31,6 +31,10 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
+> >  Optional properties:
+> >  - phys: phy provider specifier
+> >  - phy-names: shall be "usb2-phy"
+> > +- vbus-supply: reference to the VBUS regulator. Depending on the current mode
+> > +  this is enabled (in "host" mode") or disabled (in "peripheral" mode). The
+> > +  regulator is updated if the controller is configured in "otg" mode and the
+> > +  status changes between "host" and "peripheral".
+>
+> This is actually wrong IMO unless Vbus is powering the controller
+> itself. If it is just a regulator routed to the USB connector, then the
+> DT should use the usb-connector binding and put vbus-supply there. If
+> the driver needs it, then it can walk the tree/graph and get it. For
+> some reason folks seem to think everything the driver needs has to be in
+> the node associated with the driver.
+I didn't know about the usb-connector binding yet - thank you for
+pointing it out (rather than saying that this is bad without giving a
+reason)!
+
+do you want me to re-spin this with a notice (stating that this should
+be implemented in another way)?
+I'm asking because I suggested that Neil adds a "vbus-supply" property
+to "dt-bindings: usb: dwc3: Add Amlogic G12A DWC3 Glue Bindings" [0].
+He already added it and you reviewed it (it's easy to miss though, the
+patches are not merged yet though).
+
+> </rant>
+>
+> I guess given this is already in use:
+I know of at least two consumers:
+- arch/arm/boot/dts/meson8b-ec100.dts (I'm guilty of adding that
+because I thought that the only problem with this binding was the
+missing documentation)
+- (downstream) OpenWrt has switched the lantiq target to use this property: [1]
+
+
+Regards
+Martin
+
+
+[0] https://patchwork.kernel.org/patch/10868515/
+[1] https://git.openwrt.org/?p=openwrt/openwrt.git;a=commitdiff;h=d8b475212bbf9e5f80c1c923a9701dca5ceb23e2
