@@ -1,25 +1,68 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/6] dt-bindings: hwlock: update STM32 #hwlock-cells value
-Date: Thu, 28 Mar 2019 10:26:21 -0500
-Message-ID: <20190328152621.GA1398@bogus>
-References: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
- <1552492237-28810-4-git-send-email-fabien.dessenne@st.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH RFC 0/9] Add CPU based scaling support to Passive governor
+Date: Thu, 28 Mar 2019 20:58:13 +0530
+Message-ID: <20190328152822.532-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1552492237-28810-4-git-send-email-fabien.dessenne@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jonathan Corbet <corbet@lwn.net>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, Fabien Dessenne <fabien.dessenne@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: robh+dt@kernel.org, andy.gross@linaro.org, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org, georgi.djakov@linaro.org
+Cc: bjorn.andersson@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org, rnayak@codeaurora.org, cw00.choi@samsung.com, linux-pm@vger.kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, dianders@chromium.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 13 Mar 2019 16:50:34 +0100, Fabien Dessenne wrote:
-> Use a value of 2, so users can share hwlocks.
-> 
-> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-> ---
->  Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
+This RFC series aims to add cpu based scaling support to the passive
+governor and scale DDR with a generic interconnect bandwidth based
+devfreq driver on SDM845 SoC. This series achieves similar functionality
+to Georgi's Patch series (https://patchwork.kernel.org/cover/10850817/)
+and can be used with MSM8916/MSM8996/QCS404 SoCs.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+[patches 1,6 - Add and export export helpers to get avg/peak bandwidth and
+ update voltage of an disabled opp respectively]
+
+[patch 3 - Adds cpu based scaling support to passive governor]
+To achieve this, it listens to CPU frequency transition notifiers
+to keep itself up to date on the current CPU frequency.
+To decide the frequency of the device, the governor depends one of
+the following:
+* Constructs a CPU frequency to device frequency mapping table from
+  required-opps property of the devfreq device's opp_table
+* Scales the device frequency in proportion to the CPU frequency by
+  performing interpolation.
+
+[patch 7 - Parses and updates opps from the frequency/voltage read from
+ the look up tables]
+
+The patch series depends on opp-bw-MBs bindings introduced in:
+https://patchwork.kernel.org/cover/10850817/
+
+Saravana Kannan (2):
+  PM / devfreq: Add cpu based scaling support to passive_governor
+  PM / devfreq: Add devfreq driver for interconnect bandwidth voting
+
+Sibi Sankar (7):
+  OPP: Add and export helpers to get avg/peak bw
+  OPP: Export a number of helpers to prevent code duplication
+  dt-bindings: devfreq: Add bindings for devfreq dev-icbw driver
+  OPP: Add and export helper to update voltage
+  cpufreq: qcom: Add support to update cpu node's OPP tables
+  arm64: dts: qcom: sdm845: Add cpu OPP tables
+  arm64: dts: qcom: sdm845: Add nodes for icbw driver and opp tables
+
+ .../devicetree/bindings/devfreq/icbw.txt      | 146 +++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 262 +++++++++++++++++
+ drivers/cpufreq/qcom-cpufreq-hw.c             |  29 +-
+ drivers/devfreq/Kconfig                       |  19 ++
+ drivers/devfreq/Makefile                      |   1 +
+ drivers/devfreq/devfreq_icbw.c                | 132 +++++++++
+ drivers/devfreq/governor_passive.c            | 276 +++++++++++++++++-
+ drivers/opp/core.c                            | 100 +++++++
+ drivers/opp/of.c                              |  13 +-
+ include/linux/devfreq.h                       |  43 ++-
+ include/linux/pm_opp.h                        |  35 +++
+ 11 files changed, 1044 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/devfreq/icbw.txt
+ create mode 100644 drivers/devfreq/devfreq_icbw.c
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
