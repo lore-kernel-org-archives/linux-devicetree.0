@@ -1,31 +1,81 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 2/4] dmaengine: imx-sdma: Add clock ratio 1:1 check
-Date: Thu, 28 Mar 2019 19:52:03 -0300
-Message-ID: <CAOMZO5DPHCReoQtYcRj01rETdF79sba+tHDJCSrVpCLbq4gW0Q@mail.gmail.com>
-References: <20190328133828.20999-1-angus@akkea.ca> <20190328133828.20999-3-angus@akkea.ca>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v4 1/7] dt-bindings: Add panel-timing subnode to
+ simple-panel
+Date: Thu, 28 Mar 2019 16:50:13 -0700
+Message-ID: <CAD=FV=WOKSHWCHPv9kQT7np6v_ZYBmAsnTpAHJv7zRS_3b46JQ@mail.gmail.com>
+References: <20190328171710.31949-1-dianders@chromium.org>
+ <20190328171710.31949-2-dianders@chromium.org>
+ <f2f82f439f2b7586cb4c83f15122d8d19952d596.camel@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190328133828.20999-3-angus@akkea.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vkoul@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Carlo Caione <ccaione@baylibre.com>, Daniel Baluta <daniel.baluta@nxp.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <f2f82f439f2b7586cb4c83f15122d8d19952d596.camel@collabora.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Ezequiel Garcia <ezequiel@collabora.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Jeffy Chen <jeffy.chen@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Boris Brezillon <boris.brezillon@collabora.com>, =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Angus,
-
-On Thu, Mar 28, 2019 at 10:39 AM Angus Ainslie (Purism) <angus@akkea.ca> wrote:
->
-> On imx8mq B0 chip, AHB/SDMA clock ratio 2:1 can't be supported,
-> since SDMA clock ratio has to be increased to 250Mhz, AHB can't reach
-> to 500Mhz, so use 1:1 instead.
->
-> To limit this change to the imx8mq for now this patch also adds an
-> im8mq-sdma compatible string.
->
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-
-This has already been applied and it is in linux-next:
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20190328&id=25aaa75df1e659901d77085bcdd25eaabf265688
-
-Please send an incremental fix instead.
+SGksCgoKT24gVGh1LCBNYXIgMjgsIDIwMTkgYXQgMToyNyBQTSBFemVxdWllbCBHYXJjaWEgPGV6
+ZXF1aWVsQGNvbGxhYm9yYS5jb20+IHdyb3RlOgo+Cj4gT24gVGh1LCAyMDE5LTAzLTI4IGF0IDEw
+OjE3IC0wNzAwLCBEb3VnbGFzIEFuZGVyc29uIHdyb3RlOgo+ID4gRnJvbTogU2VhbiBQYXVsIDxz
+ZWFucGF1bEBjaHJvbWl1bS5vcmc+Cj4gPgo+ID4gVGhpcyBwYXRjaCBhZGRzIGEgbmV3IHN1Ym5v
+ZGUgdG8gc2ltcGxlLXBhbmVsIGFsbG93aW5nIHVzIHRvIG92ZXJyaWRlCj4gPiB0aGUgdHlwaWNh
+bCB0aW1pbmcgZXhwcmVzc2VkIGluIHRoZSBwYW5lbCdzIGRpc3BsYXlfdGltaW5nLgo+ID4KPiA+
+IENoYW5nZXMgaW4gdjI6Cj4gPiAgLSBTcGxpdCBvdXQgdGhlIGJpbmRpbmcgaW50byBhIG5ldyBw
+YXRjaCAoUm9iKQo+ID4gIC0gZGlzcGxheS10aW1pbmdzIGlzIGEgbmV3IHNlY3Rpb24gKFJvYikK
+PiA+ICAtIFVzZSB0aGUgZnVsbCBkaXNwbGF5LXRpbWluZ3Mgc3Vibm9kZSBpbnN0ZWFkIG9mIHBp
+Y2tpbmcgdGhlIHRpbWluZwo+ID4gICAgb3V0IChSb2IvVGhpZXJyeSkKPiA+IENoYW5nZXMgaW4g
+djM6Cj4gPiAgLSBHbyBiYWNrIHRvIHVzaW5nIHRoZSB0aW1pbmcgc3Vibm9kZSBkaXJlY3RseSwg
+YnV0IHJlbmFtZSB0bwo+ID4gICAgcGFuZWwtdGltaW5nIChSb2IpCj4gPiBDaGFuZ2VzIGluIHY0
+Ogo+ID4gIC0gU2ltcGxpZnkgZGVzYy4gZm9yIHdoZW4gb3ZlcnJpZGUgc2hvdWxkIGJlIHVzZWQg
+KFRoaWVycnkvTGF1cmVudCkKPiA+ICAtIFJlbW92ZWQgUm9iIEggcmV2aWV3IHNpbmNlIGl0J3Mg
+YmVlbiBhIHllYXIgYW5kIHdvcmRpbmcgY2hhbmdlZAo+ID4KPiA+IENjOiBEb3VnIEFuZGVyc29u
+IDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+Cj4gPiBDYzogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0
+Lm5ldD4KPiA+IENjOiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgo+ID4gQ2M6IEpl
+ZmZ5IENoZW4gPGplZmZ5LmNoZW5Acm9jay1jaGlwcy5jb20+Cj4gPiBDYzogUm9iIEhlcnJpbmcg
+PHJvYmgrZHRAa2VybmVsLm9yZz4KPiA+IENjOiBTdMOpcGhhbmUgTWFyY2hlc2luIDxtYXJjaGV1
+QGNocm9taXVtLm9yZz4KPiA+IENjOiBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21h
+aWwuY29tPgo+ID4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4gPiBDYzogZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+ID4gQ2M6IGxpbnV4LXJvY2tjaGlwQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKPiA+IFNpZ25lZC1vZmYtYnk6IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hyb21p
+dW0ub3JnPgo+ID4gU2lnbmVkLW9mZi1ieTogRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hy
+b21pdW0ub3JnPgo+ID4gLS0tCj4gPgo+ID4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Np
+bXBsZS1wYW5lbC50eHQgICB8IDI0ICsrKysrKysrKysrKysrKysrKysKPiA+ICAxIGZpbGUgY2hh
+bmdlZCwgMjQgaW5zZXJ0aW9ucygrKQo+ID4KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2ltcGxlLXBhbmVs
+LnR4dAo+ID4gaW5kZXggYjJiODcyYzcxMGYyLi42MTU3Zjg2ZGRjZTQgMTAwNjQ0Cj4gPiAtLS0g
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUt
+cGFuZWwudHh0Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0Cj4gPiBAQCAtMTUsNiArMTUsMTggQEAgT3B0aW9u
+YWwgcHJvcGVydGllczoKPiA+ICAgIChob3QgcGx1ZyBkZXRlY3QpIHNpZ25hbCwgYnV0IHRoZSBz
+aWduYWwgaXNuJ3QgaG9va2VkIHVwIHNvIHdlIHNob3VsZAo+ID4gICAgaGFyZGNvZGUgdGhlIG1h
+eCBkZWxheSBmcm9tIHRoZSBwYW5lbCBzcGVjIHdoZW4gcG93ZXJpbmcgdXAgdGhlIHBhbmVsLgo+
+ID4KPiA+ICtwYW5lbC10aW1pbmcgc3Vibm9kZQo+ID4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tCj4g
+PiArCj4gPiArVGhpcyBvcHRpb25hbCBzdWJub2RlIGlzIGZvciBkZXZpY2VzIHdoaWNoIHJlcXVp
+cmUgYSBtb2RlIGRpZmZlcmluZwo+ID4gK2Zyb20gdGhlIHBhbmVsJ3MgInR5cGljYWwiIGRpc3Bs
+YXkgdGltaW5nLiAgVGhlIHBhbmVsIHRpbWluZ3MgcHJvdmlkZWQKPiA+ICtoZXJlIHdpbGwgYmUg
+aWdub3JlZCBpZiB0aGV5IGFyZSBmb3VuZCB0byBiZSBvdXRzaWRlIG9mIGFsbG93YWJsZQo+ID4g
+K3JhbmdlcyBmb3IgdGhlIGdpdmVuIHBhbmVsLgo+ID4gKwo+Cj4gSXMgaXQgT0sgdG8gcHV0IHRo
+aXMgY29tbWVudCBhYm91dCBob3cgdGhlIGltcGxlbWVudGF0aW9uCj4gd2lsbCBiZWhhdmUgd2hl
+biB2YWx1ZXMgYXJlIG91dCBvZiByYW5nZSwgZ2l2ZW4gdGhpcyBpcyBqdXN0IGEgYmluZGluZwo+
+IHNwZWM/Cj4KPiBQZXJoYXBzIC1pZiBuZWVkZWQtIHRoaXMgc2VudGVuY2UgY2FuIGJlIHJlcGhy
+YXNlZCB0byBzdGF0ZSB0aGF0LAo+IGUuZy4gdGhlIE9TIG1heSBub3QgYmUgYWJsZSB0byBhcHBs
+eSB0aGVzZSB2YWx1ZXMsIGlmIHRoZSBjb250cm9sbGVyCj4gb3IgZGV2aWNlIGlzIHVuYWJsZSB0
+bz8KCkkgd2lsbCBkZWZlciB0byBSb2IgSC4gb24gdGhpcyBvbmUsIGJ1dCBJJ20gaGFwcHkgdG8g
+c2ltcGx5IHJlbW92ZSB0aGUKbGFzdCBzZW50ZW5jZS4gIEkgd2FzIHRyeWluZyB0byBhZGQgYSBt
+b3JlIE9TLWFnbm9zdGljIHZlcnNpb24gb2YgdGhlCmJ1bGxldCBwb2ludHMgZnJvbSBWMyBidXQg
+YWdyZWUgdGhhdCB3ZSBjb3VsZCBqdXN0IHJlbW92ZSB0aGlzIGZyb20KdGhlIGJpbmRpbmdzIGNv
+bXBsZXRlbHkuCgoKLURvdWcKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVs
