@@ -1,36 +1,39 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: cpu: Fix JSON schema
-Date: Thu, 28 Mar 2019 14:35:54 -0500
-Message-ID: <CAL_JsqJ_LYycXazkdP2Q=e-jynKiX+z5En0bz0AWpDjsevwQTg@mail.gmail.com>
-References: <20190318100521.29109-1-maxime.ripard@bootlin.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH V10 2/5] pwm: Add i.MX TPM PWM driver support
+Date: Thu, 28 Mar 2019 20:36:10 +0100
+Message-ID: <20190328193610.u7d7lywipq5u2237@pengutronix.de>
+References: <1553582817-29519-1-git-send-email-Anson.Huang@nxp.com>
+ <1553582817-29519-3-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190318100521.29109-1-maxime.ripard@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <1553582817-29519-3-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, ARM-SoC Maintainers <arm@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sugaya Taichi <sugaya.taichi@socionext.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "stefan@agner.ch" <stefan@agner.ch>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, Leonard Crestez <leonard.crestez@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, Robin Gong <yibin.gong@nxp.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
 List-Id: devicetree@vger.kernel.org
 
-+arm-soc
+On Tue, Mar 26, 2019 at 06:52:33AM +0000, Anson Huang wrote:
+> i.MX7ULP has TPM(Low Power Timer/Pulse Width Modulation Module)
+> inside, it can support multiple PWM channels, all the channels
+> share same counter and period setting, but each channel can
+> configure its duty and polarity independently.
+> 
+> There are several TPM modules in i.MX7ULP, the number of channels
+> in TPM modules are different, it can be read from each TPM module's
+> PARAM register.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-On Mon, Mar 18, 2019 at 5:05 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Commit fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for
-> Milbeaut") added support for a new cpu enable-method, but did so using
-> tabulations to ident. This is however invalid in the syntax, and resulted
-> in a failure when trying to use that schemas for validation.
->
-> Use spaces instead of tabs to indent to fix this.
->
-> Fixes: fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+I'd like to review this round, but will have to delay it a bit. I will
+hopefully have time for that next week.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Best regards
+Uwe
 
-This should be applied to arm-soc tree having the commit.
-
-Rob
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
