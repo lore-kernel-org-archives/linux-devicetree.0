@@ -1,262 +1,177 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v3 2/2] coresight: funnel: Support static funnel
-Date: Thu, 28 Mar 2019 10:35:09 +0800
-Message-ID: <20190328023509.22242-3-leo.yan@linaro.org>
-References: <20190328023509.22242-1-leo.yan@linaro.org>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v2 04/25] drm/mediatek: add mutex sof into ddp private
+ data
+Date: Thu, 28 Mar 2019 11:02:00 +0800
+Message-ID: <1553742120.14682.3.camel@mtksdaap41>
+References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1553667561-25447-5-git-send-email-yongqiang.niu@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190328023509.22242-1-leo.yan@linaro.org>
+In-Reply-To: <1553667561-25447-5-git-send-email-yongqiang.niu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, coresight@lists.linaro.org, Wanglai Shi <shiwanglai@hisilicon.com>
-Cc: Leo Yan <leo.yan@linaro.org>
+To: yongqiang.niu@mediatek.com
+Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, matthias.bgg@gmail.com, airlied@linux.ie, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Bibby.Hsieh@mediatek.com, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Since CoreSight hardware topology can use a 'hidden' funnel in the
-trace data path, this kind funnel doesn't have register for accessing
-and is used by default from hardware design perspective.  Below is an
-example for related hardware topology:
+Hi, Yongqiang:
 
-  +------+  +------+
-  | cpu0 |->| ETM  |-\
-  +------+  +------+  \-> +--------+  +-----+
-   ......                 | Funnel |->| ETF |-\    Hidden funnel
-  +------+  +------+  /-> +--------+  +-----+  \        |
-  | cpu3 |->| ETM  |-/                          \       V
-  +------+  +------+                             \-> +--------+
-                                                     | Funnel |-> ...
-  +------+  +------+                             /-> +--------+
-  | cpu4 |->| ETM  |-\                          /
-  +------+  +------+  \-> +--------+  +-----+  /
-   ......                 | Funnel |->| ETF |-/
-  +------+  +------+  /-> +--------+  +-----+
-  | cpu7 |->| ETM  |-/
-  +------+  +------+
+On Wed, 2019-03-27 at 14:19 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> mutex0 SOF register offset not always 0x30.
+> for mt8183, that offset will be 0x2C,
+> add this regsiter offset into private data
 
-The CoreSight funnel driver only supports dynamic funnel with
-registration register resource, thus it cannot support for the static
-funnel case and it's impossible to create trace data path for this case.
+I think you do two things in this patch. One is mutex0 SOF register
+offset, and another is making sof value variable. So please split this
+into two patches.
 
-This patch is to extend CoreSight funnel driver to support both for
-static funnel and dynamic funnel.  For the dynamic funnel it reuses the
-code existed in the driver, for static funnel the driver will support
-device probe if without providing register resource and the driver skips
-registers accessing when detect the register base is NULL.
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 51 ++++++++++++++++++++++++++++------
+>  1 file changed, 42 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> index 7f0d46e..495ebc5 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> @@ -42,12 +42,13 @@
+>  #define DISP_REG_CONFIG_DPI_SEL			0x064
+>  
+>  #define MT2701_DISP_MUTEX0_MOD0 0x2C
+> +#define MT2701_DISP_MUTEX0_SOF0  0x30
+>  
+>  #define DISP_REG_MUTEX_EN(n)	(0x20 + 0x20 * (n))
+>  #define DISP_REG_MUTEX(n)	(0x24 + 0x20 * (n))
+>  #define DISP_REG_MUTEX_RST(n)	(0x28 + 0x20 * (n))
+>  #define DISP_REG_MUTEX_MOD(data, n)	((data)->mutex_mod_reg + 0x20 * (n))
+> -#define DISP_REG_MUTEX_SOF(n)	(0x30 + 0x20 * (n))
+> +#define DISP_REG_MUTEX_SOF(data, n)	((data)->mutex_sof_reg + 0x20 * (n))
 
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Wanglai Shi <shiwanglai@hisilicon.com>
-Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- .../hwtracing/coresight/coresight-funnel.c    | 112 +++++++++++++-----
- 1 file changed, 85 insertions(+), 27 deletions(-)
+Even though previous patch's indent is not aligned, I would like you to
+align this indent.
 
-diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
-index 927925151509..2030d2596d90 100644
---- a/drivers/hwtracing/coresight/coresight-funnel.c
-+++ b/drivers/hwtracing/coresight/coresight-funnel.c
-@@ -12,6 +12,7 @@
- #include <linux/err.h>
- #include <linux/fs.h>
- #include <linux/slab.h>
-+#include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/coresight.h>
- #include <linux/amba/bus.h>
-@@ -43,7 +44,7 @@ struct funnel_drvdata {
- 	unsigned long		priority;
- };
- 
--static int funnel_enable_hw(struct funnel_drvdata *drvdata, int port)
-+static int dynamic_funnel_enable_hw(struct funnel_drvdata *drvdata, int port)
- {
- 	u32 functl;
- 	int rc = 0;
-@@ -71,17 +72,19 @@ static int funnel_enable_hw(struct funnel_drvdata *drvdata, int port)
- static int funnel_enable(struct coresight_device *csdev, int inport,
- 			 int outport)
- {
--	int rc;
-+	int rc = 0;
- 	struct funnel_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
- 
--	rc = funnel_enable_hw(drvdata, inport);
-+	if (drvdata->base)
-+		rc = dynamic_funnel_enable_hw(drvdata, inport);
- 
- 	if (!rc)
- 		dev_dbg(drvdata->dev, "FUNNEL inport %d enabled\n", inport);
- 	return rc;
- }
- 
--static void funnel_disable_hw(struct funnel_drvdata *drvdata, int inport)
-+static void dynamic_funnel_disable_hw(struct funnel_drvdata *drvdata,
-+				      int inport)
- {
- 	u32 functl;
- 
-@@ -103,7 +106,8 @@ static void funnel_disable(struct coresight_device *csdev, int inport,
- {
- 	struct funnel_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
- 
--	funnel_disable_hw(drvdata, inport);
-+	if (drvdata->base)
-+		dynamic_funnel_disable_hw(drvdata, inport);
- 
- 	dev_dbg(drvdata->dev, "FUNNEL inport %d disabled\n", inport);
- }
-@@ -177,54 +181,67 @@ static struct attribute *coresight_funnel_attrs[] = {
- };
- ATTRIBUTE_GROUPS(coresight_funnel);
- 
--static int funnel_probe(struct amba_device *adev, const struct amba_id *id)
-+static int funnel_probe(struct device *dev, struct resource *res)
- {
- 	int ret;
- 	void __iomem *base;
--	struct device *dev = &adev->dev;
- 	struct coresight_platform_data *pdata = NULL;
- 	struct funnel_drvdata *drvdata;
--	struct resource *res = &adev->res;
- 	struct coresight_desc desc = { 0 };
--	struct device_node *np = adev->dev.of_node;
-+	struct device_node *np = dev->of_node;
- 
- 	if (np) {
- 		pdata = of_get_coresight_platform_data(dev, np);
- 		if (IS_ERR(pdata))
- 			return PTR_ERR(pdata);
--		adev->dev.platform_data = pdata;
-+		dev->platform_data = pdata;
- 	}
- 
- 	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
- 	if (!drvdata)
- 		return -ENOMEM;
- 
--	drvdata->dev = &adev->dev;
--	drvdata->atclk = devm_clk_get(&adev->dev, "atclk"); /* optional */
-+	drvdata->dev = dev;
-+	drvdata->atclk = devm_clk_get(dev, "atclk"); /* optional */
- 	if (!IS_ERR(drvdata->atclk)) {
- 		ret = clk_prepare_enable(drvdata->atclk);
- 		if (ret)
- 			return ret;
- 	}
--	dev_set_drvdata(dev, drvdata);
- 
--	/* Validity for the resource is already checked by the AMBA core */
--	base = devm_ioremap_resource(dev, res);
--	if (IS_ERR(base))
--		return PTR_ERR(base);
-+	/*
-+	 * Map the device base for dynamic-funnel, which has been
-+	 * validated by AMBA core.
-+	 */
-+	if (res) {
-+		base = devm_ioremap_resource(dev, res);
-+		if (IS_ERR(base)) {
-+			ret = PTR_ERR(base);
-+			goto out_disable_clk;
-+		}
-+		drvdata->base = base;
-+		desc.groups = coresight_funnel_groups;
-+	}
- 
--	drvdata->base = base;
--	pm_runtime_put(&adev->dev);
-+	dev_set_drvdata(dev, drvdata);
- 
- 	desc.type = CORESIGHT_DEV_TYPE_LINK;
- 	desc.subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_MERG;
- 	desc.ops = &funnel_cs_ops;
- 	desc.pdata = pdata;
- 	desc.dev = dev;
--	desc.groups = coresight_funnel_groups;
- 	drvdata->csdev = coresight_register(&desc);
-+	if (IS_ERR(drvdata->csdev)) {
-+		ret = PTR_ERR(drvdata->csdev);
-+		goto out_disable_clk;
-+	}
-+
-+	pm_runtime_put(dev);
- 
--	return PTR_ERR_OR_ZERO(drvdata->csdev);
-+out_disable_clk:
-+	if (ret && !IS_ERR_OR_NULL(drvdata->atclk))
-+		clk_disable_unprepare(drvdata->atclk);
-+	return ret;
- }
- 
- #ifdef CONFIG_PM
-@@ -253,7 +270,48 @@ static const struct dev_pm_ops funnel_dev_pm_ops = {
- 	SET_RUNTIME_PM_OPS(funnel_runtime_suspend, funnel_runtime_resume, NULL)
- };
- 
--static const struct amba_id funnel_ids[] = {
-+static int static_funnel_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	pm_runtime_get_noresume(&pdev->dev);
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
-+	/* Static funnel do not have programming base */
-+	ret = funnel_probe(&pdev->dev, NULL);
-+
-+	if (ret) {
-+		pm_runtime_put_noidle(&pdev->dev);
-+		pm_runtime_disable(&pdev->dev);
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id static_funnel_match[] = {
-+	{.compatible = "arm,coresight-static-funnel"},
-+	{}
-+};
-+
-+static struct platform_driver static_funnel_driver = {
-+	.probe          = static_funnel_probe,
-+	.driver         = {
-+		.name   = "coresight-static-funnel",
-+		.of_match_table = static_funnel_match,
-+		.pm	= &funnel_dev_pm_ops,
-+		.suppress_bind_attrs = true,
-+	},
-+};
-+builtin_platform_driver(static_funnel_driver);
-+
-+static int dynamic_funnel_probe(struct amba_device *adev,
-+				const struct amba_id *id)
-+{
-+	return funnel_probe(&adev->dev, &adev->res);
-+}
-+
-+static const struct amba_id dynamic_funnel_ids[] = {
- 	{
- 		.id     = 0x000bb908,
- 		.mask   = 0x000fffff,
-@@ -266,14 +324,14 @@ static const struct amba_id funnel_ids[] = {
- 	{ 0, 0},
- };
- 
--static struct amba_driver funnel_driver = {
-+static struct amba_driver dynamic_funnel_driver = {
- 	.drv = {
--		.name	= "coresight-funnel",
-+		.name	= "coresight-dynamic-funnel",
- 		.owner	= THIS_MODULE,
- 		.pm	= &funnel_dev_pm_ops,
- 		.suppress_bind_attrs = true,
- 	},
--	.probe		= funnel_probe,
--	.id_table	= funnel_ids,
-+	.probe		= dynamic_funnel_probe,
-+	.id_table	= dynamic_funnel_ids,
- };
--builtin_amba_driver(funnel_driver);
-+builtin_amba_driver(dynamic_funnel_driver);
--- 
-2.17.1
+Regards,
+CK
+
+>  #define DISP_REG_MUTEX_MOD2(n)	(0x34 + 0x20 * (n))
+>  
+>  #define INT_MUTEX				BIT(1)
+> @@ -149,9 +150,22 @@ struct mtk_disp_mutex {
+>  	bool claimed;
+>  };
+>  
+> +enum mtk_ddp_mutex_sof_id {
+> +	DDP_MUTEX_SOF_SINGLE_MODE,
+> +	DDP_MUTEX_SOF_DSI0,
+> +	DDP_MUTEX_SOF_DSI1,
+> +	DDP_MUTEX_SOF_DPI0,
+> +	DDP_MUTEX_SOF_DPI1,
+> +	DDP_MUTEX_SOF_DSI2,
+> +	DDP_MUTEX_SOF_DSI3,
+> +	DDP_MUTEX_SOF_MAX,
+> +};
+> +
+>  struct mtk_ddp_data {
+>  	const unsigned int *mutex_mod;
+> +	const unsigned int *mutex_sof;
+>  	unsigned int mutex_mod_reg;
+> +	unsigned int mutex_sof_reg;
+>  };
+>  
+>  struct mtk_ddp {
+> @@ -209,19 +223,35 @@ struct mtk_ddp {
+>  	[DDP_COMPONENT_WDMA1] = MT8173_MUTEX_MOD_DISP_WDMA1,
+>  };
+>  
+> +static const unsigned int mt2712_mutex_sof[DDP_MUTEX_SOF_MAX] = {
+> +	[DDP_MUTEX_SOF_SINGLE_MODE] = MUTEX_SOF_SINGLE_MODE,
+> +	[DDP_MUTEX_SOF_DSI0] = MUTEX_SOF_DSI0,
+> +	[DDP_MUTEX_SOF_DSI1] = MUTEX_SOF_DSI1,
+> +	[DDP_MUTEX_SOF_DPI0] = MUTEX_SOF_DPI0,
+> +	[DDP_MUTEX_SOF_DPI1] = MUTEX_SOF_DPI1,
+> +	[DDP_MUTEX_SOF_DSI2] = MUTEX_SOF_DSI2,
+> +	[DDP_MUTEX_SOF_DSI3] = MUTEX_SOF_DSI3,
+> +};
+> +
+>  static const struct mtk_ddp_data mt2701_ddp_driver_data = {
+>  	.mutex_mod = mt2701_mutex_mod,
+> +	.mutex_sof = mt2712_mutex_sof,
+>  	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+> +	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
+>  };
+>  
+>  static const struct mtk_ddp_data mt2712_ddp_driver_data = {
+>  	.mutex_mod = mt2712_mutex_mod,
+> +	.mutex_sof = mt2712_mutex_sof,
+>  	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+> +	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
+>  };
+>  
+>  static const struct mtk_ddp_data mt8173_ddp_driver_data = {
+>  	.mutex_mod = mt8173_mutex_mod,
+> +	.mutex_sof = mt2712_mutex_sof,
+>  	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+> +	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
+>  };
+>  
+>  static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
+> @@ -462,28 +492,29 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+>  	struct mtk_ddp *ddp = container_of(mutex, struct mtk_ddp,
+>  					   mutex[mutex->id]);
+>  	unsigned int reg;
+> +	unsigned int sof_id;
+>  	unsigned int offset;
+>  
+>  	WARN_ON(&ddp->mutex[mutex->id] != mutex);
+>  
+>  	switch (id) {
+>  	case DDP_COMPONENT_DSI0:
+> -		reg = MUTEX_SOF_DSI0;
+> +		sof_id = DDP_MUTEX_SOF_DSI0;
+>  		break;
+>  	case DDP_COMPONENT_DSI1:
+> -		reg = MUTEX_SOF_DSI0;
+> +		sof_id = DDP_MUTEX_SOF_DSI0;
+>  		break;
+>  	case DDP_COMPONENT_DSI2:
+> -		reg = MUTEX_SOF_DSI2;
+> +		sof_id = DDP_MUTEX_SOF_DSI2;
+>  		break;
+>  	case DDP_COMPONENT_DSI3:
+> -		reg = MUTEX_SOF_DSI3;
+> +		sof_id = DDP_MUTEX_SOF_DSI3;
+>  		break;
+>  	case DDP_COMPONENT_DPI0:
+> -		reg = MUTEX_SOF_DPI0;
+> +		sof_id = DDP_MUTEX_SOF_DPI0;
+>  		break;
+>  	case DDP_COMPONENT_DPI1:
+> -		reg = MUTEX_SOF_DPI1;
+> +		sof_id = DDP_MUTEX_SOF_DPI1;
+>  		break;
+>  	default:
+>  		if (ddp->data->mutex_mod[id] < 32) {
+> @@ -500,7 +531,8 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+>  		return;
+>  	}
+>  
+> -	writel_relaxed(reg, ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
+> +	writel_relaxed(ddp->data->mutex_sof[sof_id],
+> +		       ddp->regs + DISP_REG_MUTEX_SOF(ddp->data, mutex->id));
+>  }
+>  
+>  void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
+> @@ -521,7 +553,8 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
+>  	case DDP_COMPONENT_DPI0:
+>  	case DDP_COMPONENT_DPI1:
+>  		writel_relaxed(MUTEX_SOF_SINGLE_MODE,
+> -			       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
+> +			       ddp->regs +
+> +			       DISP_REG_MUTEX_SOF(ddp->data, mutex->id));
+>  		break;
+>  	default:
+>  		if (ddp->data->mutex_mod[id] < 32) {
