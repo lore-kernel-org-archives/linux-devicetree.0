@@ -1,31 +1,95 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 mailbox+firmware 6/6] dt-bindings: firmware: Document
- cznic,turris-mox-rwtm binding
-Date: Thu, 28 Mar 2019 12:49:57 -0500
-Message-ID: <20190328174957.GA14880@bogus>
-References: <20190315005926.5994-1-marek.behun@nic.cz>
- <20190315005926.5994-7-marek.behun@nic.cz>
+From: Johan Jonker <jbx6244-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] drm: rockchip: introduce rk3066 hdmi
+Date: Thu, 28 Mar 2019 18:50:35 +0100
+Message-ID: <3f6267ba-82a6-0c58-8a2b-ebce2cb5c650@gmail.com>
+References: <20190306224113.24853-1-jbx6244@gmail.com>
+ <20190306224113.24853-2-jbx6244@gmail.com> <4125149.ebfS1HlHkS@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190315005926.5994-7-marek.behun@nic.cz>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Jassi Brar <jaswinder.singh@linaro.org>, linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, arm@kernel.org, Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <4125149.ebfS1HlHkS@diego>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 15 Mar 2019 01:59:26 +0100, =?UTF-8?q?Marek=20Beh=C3=BAn?= wrote:
-> This adds device tree binding documentation for the driver communicating
-> with the rWTM firmware on Turris Mox.
-> 
-> Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> ---
->  .../firmware/cznic,turris-mox-rwtm.txt        | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/firmware/cznic,turris-mox-rwtm.txt
-> 
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+SGksCgpRdWVzdGlvbiBmb3IgSGVpa28gY3MuIFNlZSBiZWxvdy4KTGV0IG1lIGtub3cgaWYgdGhl
+cmUncyBhIG5lZWQgZm9yIFY2PwoKT24gMy8xOS8xOSAxMjo0NCBQTSwgSGVpa28gU3TDvGJuZXIg
+d3JvdGU6Cgo+IEFtIE1pdHR3b2NoLCA2LiBNw6RyeiAyMDE5LCAyMzo0MToxMCBDRVQgc2Nocmll
+YiBKb2hhbiBKb25rZXI6Cgo+PiArc3RhdGljIGludCByazMwNjZfaGRtaV9jb25uZWN0b3JfZ2V0
+X21vZGVzKHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IpCj4+ICt7Cj4+ICsJc3RydWN0
+IHJrMzA2Nl9oZG1pICpoZG1pID0gdG9fcmszMDY2X2hkbWkoY29ubmVjdG9yKTsKPj4gKwlzdHJ1
+Y3QgZWRpZCAqZWRpZDsKPj4gKwlpbnQgcmV0ID0gMDsKPj4gKwoKSXMgdGhpcyBPSyBvciBkcm9w
+IGl0PwoJaGRtaS0+aGRtaV9kYXRhLnNpbmtfaXNfaGRtaSA9IGZhbHNlOwoKPj4gKwlpZiAoIWhk
+bWktPmRkYykKPj4gKwkJcmV0dXJuIDA7Cj4+ICsKPj4gKwllZGlkID0gZHJtX2dldF9lZGlkKGNv
+bm5lY3RvciwgaGRtaS0+ZGRjKTsKPj4gKwlpZiAoZWRpZCkgewo+PiArCQloZG1pLT5oZG1pX2Rh
+dGEuc2lua19pc19oZG1pID0gZHJtX2RldGVjdF9oZG1pX21vbml0b3IoZWRpZCk7Cj4+ICsJCWRy
+bV9jb25uZWN0b3JfdXBkYXRlX2VkaWRfcHJvcGVydHkoY29ubmVjdG9yLCBlZGlkKTsKPj4gKwkJ
+cmV0ID0gZHJtX2FkZF9lZGlkX21vZGVzKGNvbm5lY3RvciwgZWRpZCk7Cj4+ICsJCWtmcmVlKGVk
+aWQpOwo+PiArCX0KPj4gKwoKPj4gKwo+PiArCXJldHVybiByZXQ7Cj4+ICt9CgoKCj4+ICtzdGF0
+aWMgaW50IHJrMzA2Nl9oZG1pX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNl
+ICptYXN0ZXIsCj4+ICsJCQkgICAgdm9pZCAqZGF0YSkKPj4gK3sKPj4gKwlzdHJ1Y3QgcGxhdGZv
+cm1fZGV2aWNlICpwZGV2ID0gdG9fcGxhdGZvcm1fZGV2aWNlKGRldik7Cj4+ICsJc3RydWN0IGRy
+bV9kZXZpY2UgKmRybSA9IGRhdGE7Cj4+ICsJc3RydWN0IHJrMzA2Nl9oZG1pICpoZG1pOwo+PiAr
+CXN0cnVjdCByZXNvdXJjZSAqaW9yZXM7Cj4+ICsJaW50IGlycTsKPj4gKwlpbnQgcmV0Owo+PiAr
+Cj4+ICsJaGRtaSA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqaGRtaSksIEdGUF9LRVJORUwp
+Owo+PiArCWlmICghaGRtaSkKPj4gKwkJcmV0dXJuIC1FTk9NRU07Cj4+ICsKPj4gKwloZG1pLT5k
+ZXYgPSBkZXY7Cj4+ICsJaGRtaS0+ZHJtX2RldiA9IGRybTsKPj4gKwo+PiArCWlvcmVzID0gcGxh
+dGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsKPj4gKwlpZiAoIWlv
+cmVzKQo+PiArCQlyZXR1cm4gLUVOWElPOwo+PiArCj4+ICsJaGRtaS0+cmVncyA9IGRldm1faW9y
+ZW1hcF9yZXNvdXJjZShkZXYsIGlvcmVzKTsKPj4gKwlpZiAoSVNfRVJSKGhkbWktPnJlZ3MpKQo+
+PiArCQlyZXR1cm4gUFRSX0VSUihoZG1pLT5yZWdzKTsKPj4gKwo+PiArCWlycSA9IHBsYXRmb3Jt
+X2dldF9pcnEocGRldiwgMCk7Cj4+ICsJaWYgKGlycSA8IDApCj4+ICsJCXJldHVybiBpcnE7Cj4+
+ICsKPj4gKwloZG1pLT5oY2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgImhjbGsiKTsKPj4gKwlpZiAo
+SVNfRVJSKGhkbWktPmhjbGspKSB7Cj4+ICsJCWRldl9lcnIoZGV2LCAidW5hYmxlIHRvIGdldCBI
+RE1JIGhjbGsgY2xvY2tcbiIpOwo+PiArCQlyZXR1cm4gUFRSX0VSUihoZG1pLT5oY2xrKTsKPj4g
+Kwl9Cj4+ICsKPj4gKwlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoaGRtaS0+aGNsayk7Cj4+ICsJ
+aWYgKHJldCkgewo+PiArCQlkZXZfZXJyKGRldiwgImNhbm5vdCBlbmFibGUgSERNSSBoY2xrIGNs
+b2NrOiAlZFxuIiwgcmV0KTsKPj4gKwkJcmV0dXJuIHJldDsKPj4gKwl9Cj4+ICsKPj4gKwloZG1p
+LT5ncmYgPSBzeXNjb25fcmVnbWFwX2xvb2t1cF9ieV9waGFuZGxlKGRldi0+b2Zfbm9kZSwKPj4g
+KwkJCQkJCSAgICAicm9ja2NoaXAsZ3JmIik7Cj4+ICsJaWYgKElTX0VSUihoZG1pLT5ncmYpKSB7
+Cj4+ICsJCWRldl9lcnIoZGV2LCAidW5hYmxlIHRvIGdldCByb2NrY2hpcCxncmZcbiIpOwo+PiAr
+CQlyZXQgPSBQVFJfRVJSKGhkbWktPmdyZik7Cj4+ICsJCWdvdG8gZXJyX2Rpc2FibGVfaGNsazsK
+Pj4gKwl9Cj4+ICsKPj4gKwkvKiBpbnRlcm5hbCBoY2xrID0gaGRtaV9oY2xrIC8gMjUgKi8KPj4g
+KwloZG1pX3dyaXRlYihoZG1pLCBIRE1JX0lOVEVSTkFMX0NMS19ESVZJREVSLCAyNSk7Cj4+ICsK
+Pj4gKwloZG1pLT5kZGMgPSByazMwNjZfaGRtaV9pMmNfYWRhcHRlcihoZG1pKTsKPj4gKwlpZiAo
+SVNfRVJSKGhkbWktPmRkYykpIHsKPj4gKwkJcmV0ID0gUFRSX0VSUihoZG1pLT5kZGMpOwo+PiAr
+CQloZG1pLT5kZGMgPSBOVUxMOwo+PiArCQlnb3RvIGVycl9kaXNhYmxlX2hjbGs7Cj4+ICsJfQo+
+PiArCj4+ICsJcmszMDY2X2hkbWlfc2V0X3Bvd2VyX21vZGUoaGRtaSwgSERNSV9TWVNfUE9XRVJf
+TU9ERV9CKTsKPj4gKwl1c2xlZXBfcmFuZ2UoOTk5LCAxMDAwKTsKPj4gKwloZG1pX3dyaXRlYiho
+ZG1pLCBIRE1JX0lOVFJfTUFTSzEsIEhETUlfSU5UUl9IT1RQTFVHKTsKPj4gKwloZG1pX3dyaXRl
+YihoZG1pLCBIRE1JX0lOVFJfTUFTSzIsIDApOwo+PiArCWhkbWlfd3JpdGViKGhkbWksIEhETUlf
+SU5UUl9NQVNLMywgMCk7Cj4+ICsJaGRtaV93cml0ZWIoaGRtaSwgSERNSV9JTlRSX01BU0s0LCAw
+KTsKPj4gKwlyazMwNjZfaGRtaV9zZXRfcG93ZXJfbW9kZShoZG1pLCBIRE1JX1NZU19QT1dFUl9N
+T0RFX0EpOwo+PiArCgpUaGUgZnVuY3Rpb24gcmszMDY2X2hkbWlfcmVnaXN0ZXIoKSBpbml0cyBh
+biBlbmNvZGVyIGFuZCBjb25uZWN0b3IuCgo+PiArCXJldCA9IHJrMzA2Nl9oZG1pX3JlZ2lzdGVy
+KGRybSwgaGRtaSk7Cj4+ICsJaWYgKHJldCkKPj4gKwkJZ290byBlcnJfZGlzYWJsZV9oY2xrOwo+
+IAo+IGdvdG8gZXJyX2Rpc2FibGVfaTJjOwo+IAo+IFNvIHRoYXQgdGhlIGkyYy1hZGFwdGVyIGFs
+c28gZ2V0cyBkaXNhYmxlZCBvbiBlcnJvci4KPiAKPj4gKwlkZXZfc2V0X2RydmRhdGEoZGV2LCBo
+ZG1pKTsKPj4gKwo+PiArCXJldCA9IGRldm1fcmVxdWVzdF90aHJlYWRlZF9pcnEoZGV2LCBpcnEs
+IHJrMzA2Nl9oZG1pX2hhcmRpcnEsCj4+ICsJCQkJCXJrMzA2Nl9oZG1pX2lycSwgSVJRRl9TSEFS
+RUQsCj4+ICsJCQkJCWRldl9uYW1lKGRldiksIGhkbWkpOwo+PiArCWlmIChyZXQpIHsKPj4gKwkJ
+ZGV2X2VycihkZXYsICJmYWlsZWQgdG8gcmVxdWVzdCBoZG1pIGlycTogJWRcbiIsIHJldCk7Cj4+
+ICsJCWdvdG8gZXJyX2Rpc2FibGVfaGNsazsKPiAKCklmIGFuIGVycm9yIGhhcHBlbnMgaGVyZSB0
+aGUgZW5jb2RlciBhbmQgY29ubmVjdG9yIGFsc28gaGF2ZSB0byBiZQpyZW1vdmVkIGxpa2UgaW4g
+dGhlIGlubm8gZHJpdmVyLiBJcyB0aGF0IGNvcnJlY3Q/CkNoYW5nZSB0aGlzIHRvOgoKZ290byBl
+cnJfY2xlYW51cF9oZG1pOwoKPiBnb3RvIGVycl9kaXNhYmxlX2kyYzsKPiAKPj4gKwl9Cj4+ICsK
+Pj4gKwlyZXR1cm4gMDsKPj4gKwo+IAoKV2hhdCBnb3RvIG5hbWUgd291bGQgeW91IGxpa2UgdG8g
+aGF2ZSBoZXJlPwoKZXJyX2NsZWFudXBfaGRtaToKCWhkbWktPmNvbm5lY3Rvci5mdW5jcy0+ZGVz
+dHJveSgmaGRtaS0+Y29ubmVjdG9yKTsKCWhkbWktPmVuY29kZXIuZnVuY3MtPmRlc3Ryb3koJmhk
+bWktPmVuY29kZXIpOwoKPiBlcnJfZGlzYWJsZV9pMmM6Cj4gCWkyY19wdXRfYWRhcHRlcihoZG1p
+LT5kZGMpOwo+IAo+PiArZXJyX2Rpc2FibGVfaGNsazoKPj4gKwljbGtfZGlzYWJsZV91bnByZXBh
+cmUoaGRtaS0+aGNsayk7Cj4+ICsKPj4gKwlyZXR1cm4gcmV0Owo+PiArfQo+PiArCgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgtcm9ja2NoaXAg
+bWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
