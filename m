@@ -1,82 +1,100 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 03/12] dt-binding: gce: add binding for gce event
- property
-Date: Thu, 28 Mar 2019 13:44:25 -0500
-Message-ID: <20190328184425.GA21602@bogus>
-References: <1553739573-19708-1-git-send-email-bibby.hsieh@mediatek.com>
- <1553739573-19708-4-git-send-email-bibby.hsieh@mediatek.com>
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH 1/2] edac: sifive: Add DT documentation for SiFive L2
+ cache Controller
+Date: Thu, 28 Mar 2019 18:47:21 +0000
+Message-ID: <be7246a0-2426-995d-0a24-f104c173d752@arm.com>
+References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
+ <1552382461-13051-2-git-send-email-yash.shah@sifive.com>
+ <20190328131657.GA9056@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1553739573-19708-4-git-send-email-bibby.hsieh@mediatek.com>
+In-Reply-To: <20190328131657.GA9056@bogus>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, CK HU <ck.hu@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com, Frederic Chen <Frederic.Chen@med>
+To: Rob Herring <robh@kernel.org>, Yash Shah <yash.shah@sifive.com>
+Cc: linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org, palmer@sifive.com, paul.walmsley@sifive.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, aou@eecs.berkeley.edu, bp@alien8.de, mchehab@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 10:19:24AM +0800, Bibby Hsieh wrote:
-> Client hardware would send event to GCE hardware,
-> so #event-cells, mediatek,gce-event-names, mediatek,gce-events.
-> present the event.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 17 ++++++++++++++---
->  1 file changed, 14 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> index 1f7f8f2..2f175d6 100644
-> --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> @@ -21,12 +21,21 @@ Required properties:
->  	priority: Priority of GCE thread.
->  	atomic_exec: GCE processing continuous packets of commands in atomic
->  		way.
-> +- #event-cells: Should be 1.
-> +	<&phandle event_number>
-> +	phandle: Label name of a gce node.
-> +	event_number: the event number defined in 'dt-bindings/gce/mt8173-gce.h'
-> +		      or 'dt-binding/gce/mt8183-gce.h'.
+Hi Rob, Yash,
 
-You only need to have a #*-cells if the number is variable.
+On 28/03/2019 13:16, Rob Herring wrote:
+> On Tue, Mar 12, 2019 at 02:51:00PM +0530, Yash Shah wrote:
+>> DT documentation for L2 cache controller added.
 
-What are 'events' here? Sounds like interrupts or MSI?
-
->  
->  Required properties for a client device:
->  - mboxes: Client use mailbox to communicate with GCE, it should have this
->    property and list of phandle, mailbox specifiers.
->  - mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
->    to the register address.
-> +Optional propertier for a client device:
-> +- mediatek,gce-event-names: the event name can be defined by user.
-> +- mediatek,gce-events: u32, the event number defined in
-> +  'dt-bindings/gce/mt8173-gce.h' or 'dt-binding/gce/mt8183-gce.h'.
->  
->  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
->  or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
-> @@ -40,6 +49,7 @@ Example:
->  		clocks = <&infracfg CLK_INFRA_GCE>;
->  		clock-names = "gce";
->  		#mbox-cells = <3>;
-> +		#event-cells = <1>;
->  	};
->  
->  Example for a client device:
-> @@ -49,8 +59,9 @@ Example for a client device:
->  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
->  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
->  		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
-> -		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
-> -				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
-> -
-> +		mediatek,gce-event-names = "rdma0_sof",
-> +					   "rsz0_sof";
-> +		mediatek,gce-events = <&gce CMDQ_EVENT_MDP_RDMA0_SOF>,
-> +				      <&gce CMDQ_EVENT_MDP_RSZ0_SOF>;
->  		...
->  	};
-> -- 
-> 1.9.1
+>> diff --git a/Documentation/devicetree/bindings/edac/sifive-edac-l2.txt b/Documentation/devicetree/bindings/edac/sifive-edac-l2.txt
+>> new file mode 100644
+>> index 0000000..abce09f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/edac/sifive-edac-l2.txt
+>> @@ -0,0 +1,31 @@
+>> +SiFive L2 Cache EDAC driver device tree bindings
+>> +-------------------------------------------------
+>> +This driver uses the EDAC framework to report L2 cache controller ECC errors.
 > 
+> Bindings are for h/w blocks, not drivers. (And Boris may want a single 
+> driver, but bindings should reflect the h/w, not what Linux (currently) 
+> wants.
+
+For h/w block compatibles and edac, I think all we need now is to ensure the DT contains
+the three compatible strings: platform (if there is one), soc and ip-name (if its a
+re-usable thing).
+This is so that linux can pick the biggest of the three (usually platform) to probe the
+driver from, as this lets us capture platform properties we only find out about later.
+
+The single-driver idea is because ras/edac gets done late, (its not necessary to boot
+linux on the board), and the edac core has difficulty with multiple components feeding
+into it.
+
+I don't think we need platform-specific-drivers until someone has a platform that needs
+one for this multiple-component issue. To let us do that later (and possibly your
+customer's customer to do it), we'd like to avoid probing based on the smallest
+compatible, and use the biggest instead.
+This lets us remove the platform-compatible from the L2-cache-controller driver's list,
+and let some platform driver use it as a library instead. This is to avoid 'but not this
+one' checks in the driver.
+
+Yes it results in more one-line patches to enable support in the kernel, but these are
+also statements that this platform/soc supports ras/edac. Its possible to build a soc out
+of components that all support ras, but not have it working end-to-end.
+(oh its optional, was it turned on? Does firmware need to enable something? Is there a
+side-band signal, was it wired up everywhere).
+
+
+> Are the only controls for ECC? Are all the cache attributes discoverable 
+> (size, ways, line size, level, etc.)? 
+
+>> +Example:
+>> +
+>> +cache-controller@2010000 {
+>> +	compatible = "sifive,fu540-c000-ccache", "sifive,ccache0";
+
+/me googles
+fu540-c000 is the soc, but it doesn't have dram, so it must get used in other platforms.
+
+If there is anything the platform/firmware can influence with this thing please ensure
+they have properties in here. (firmware-privilege enables, or pins that have to be tied
+high/lwo)
+
+As an example of the problem we're tring to avoid: someone could re-use the design of
+"sifive,ccache0" in another soc, where the DRAM controller also supports edac. From just
+"sifive,ccache0", they can't tell their system (which needs a multi-component driver) from
+yours, which just needs this one.
+
+There may be a clever way of getting DT to do this...
+
+
+>> +	interrupt-parent = <&plic>;
+>> +	interrupts = <1 2 3>;
+>> +	reg = <0x0 0x2010000 0x0 0x1000 0x0 0x8000000 0x0 0x2000000>;
+>> +	reg-names = "control", "sideband";
+>> +};
+>> -- 
+>> 1.9.1
+>>
+
+
+Thanks,
+
+James
