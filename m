@@ -1,71 +1,71 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 1/2] iio: gyro: bmg160: add device tree compatibility table
-Date: Thu, 28 Mar 2019 17:25:43 +0100
-Message-ID: <E093DD9D-C9DF-4725-8BAC-0451766E0A0C@goldelico.com>
-References: <cover.1552922054.git.hns@goldelico.com> <090c92487ada60e81fca341ef24e5de33a11ec4b.1552922054.git.hns@goldelico.com> <20190324180503.6dc1e36e@archlinux>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 6/6] leds: netdev trigger: allow setting initial
+ values in device tree
+Date: Thu, 28 Mar 2019 11:28:42 -0500
+Message-ID: <20190328162842.GA11865@bogus>
+References: <20190313202615.22883-1-linux@rasmusvillemoes.dk>
+ <20190314140619.3309-1-linux@rasmusvillemoes.dk>
+ <20190314140619.3309-7-linux@rasmusvillemoes.dk>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190324180503.6dc1e36e@archlinux>
+Content-Disposition: inline
+In-Reply-To: <20190314140619.3309-7-linux@rasmusvillemoes.dk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Pavel Machek <pavel@ucw.cz>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
-> Am 24.03.2019 um 19:05 schrieb Jonathan Cameron <jic23@kernel.org>:
+On Thu, Mar 14, 2019 at 03:06:19PM +0100, Rasmus Villemoes wrote:
+> It can be quite convenient to initialize a netdev-triggered LED with a
+> device name and setting the rx,tx,link properties from device tree,
+> instead of having to do that in an init script (or udev rule) in
+> userspace.
 > 
-> On Mon, 18 Mar 2019 16:14:14 +0100
-> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+> My main motivation for this is to be able to switch away from the
+> deprecated CONFIG_CAN_LEDS. The example added to common.txt
+> corresponds to switching linux,default-trigger = "can0-rxtx" to
+> "netdev" and adding the indicated netdev subnode.
 > 
->> Add of_match_table.
->> 
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> I'm not against doing this, but do note that there is still a back up
-> path in which the i2c_device_id table is used to match but without
-> the vendor part of the string.
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> ---
+>  .../devicetree/bindings/leds/common.txt       | 11 +++++++
+>  drivers/leds/trigger/ledtrig-netdev.c         | 30 +++++++++++++++++++
+>  2 files changed, 41 insertions(+)
 > 
-> I theory the plan is to eventually remove that, but it's not the
-> case that this driver could not be probed from devicetree previously.
-> 
-> Applied to the togreg branch of iio.git and pushed out as testing
-> for the autobuilders to play with it.
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index 7cb88460a47c..f8078c4cf6f8 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -43,6 +43,17 @@ Optional properties for child nodes:
+>                  Documentation/ABI/testing/sysfs-class-led-trigger-netdev)
+>                  to reflect the state and activity of a net device.
+>  
+> +                The optional child node netdev can be used to
+> +                configure initial values for the link, rx, tx and
+> +                device_name properties. For example,
+> +
+> +                netdev {
 
-Thanks,
-Nikolaus
+I was going to let the use of netdev slide, but now you have it 
+twice and that's a Linuxism.
 
-> 
-> Thanks,
-> 
-> Jonathan
-> 
->> ---
->> drivers/iio/gyro/bmg160_i2c.c | 9 +++++++++
->> 1 file changed, 9 insertions(+)
->> 
->> diff --git a/drivers/iio/gyro/bmg160_i2c.c b/drivers/iio/gyro/bmg160_i2c.c
->> index 90126a5a7663..934a092134f0 100644
->> --- a/drivers/iio/gyro/bmg160_i2c.c
->> +++ b/drivers/iio/gyro/bmg160_i2c.c
->> @@ -54,10 +54,19 @@ static const struct i2c_device_id bmg160_i2c_id[] = {
->> 
->> MODULE_DEVICE_TABLE(i2c, bmg160_i2c_id);
->> 
->> +static const struct of_device_id bmg160_of_match[] = {
->> +	{ .compatible = "bosch,bmg160" },
->> +	{ .compatible = "bosch,bmi055_gyro" },
->> +	{ }
->> +};
->> +
->> +MODULE_DEVICE_TABLE(of, bmg160_of_match);
->> +
->> static struct i2c_driver bmg160_i2c_driver = {
->> 	.driver = {
->> 		.name	= "bmg160_i2c",
->> 		.acpi_match_table = ACPI_PTR(bmg160_acpi_match),
->> +		.of_match_table = bmg160_of_match,
->> 		.pm	= &bmg160_pm_ops,
->> 	},
->> 	.probe		= bmg160_i2c_probe,
-> 
+> +                    rx;
+> +                    tx;
+> +                    link;
+
+What do these mean?
+
+> +                    device-name = "can0";
+
+can0 is a linux thing and doesn't belong in DT.
+
+> +                };
+
+I really don't like this. What's this going to look like if every 
+trigger wants to add something like this? What's special about netdev 
+leds?
+
+We really need to decouple the Linux LED trigger design from the DT 
+bindings. I have no problem associating LEDs with devices in DT, but it 
+shouldn't just bring the LED trigger design into the bindings.
