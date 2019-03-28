@@ -1,50 +1,53 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 2/2] dt-binding: mtd: physmap: Add example using addr-gpios property
-Date: Thu, 28 Mar 2019 17:02:16 +1300
-Message-ID: <20190328040217.1895-3-chris.packham@alliedtelesis.co.nz>
-References: <20190328040217.1895-1-chris.packham@alliedtelesis.co.nz>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH 0/2] drm: Add ASPEED BMC 'GFX' driver
+Date: Thu, 28 Mar 2019 16:13:14 +1030
+Message-ID: <20190328054316.17939-1-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190328040217.1895-1-chris.packham@alliedtelesis.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bbrezillon@kernel.org, computersforpeace@gmail.com, dwmw2@infradead.org, marek.vasut@gmail.com, richard@nod.at, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, dri-devel@lists.freedesktop.org, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add an example showing how to use the addr-gpios property to deal with a
-system with limited IO space.
-
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- .../devicetree/bindings/mtd/mtd-physmap.txt      | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Docu=
-mentation/devicetree/bindings/mtd/mtd-physmap.txt
-index 7df0dcaccb7d..c69f4f065d23 100644
---- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-+++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-@@ -96,3 +96,19 @@ An example using SRAM:
- 		bank-width =3D <2>;
- 	};
-=20
-+An example using gpio-addrs
-+
-+	flash@20000000 {
-+		#address-cells =3D <1>;
-+		#size-cells =3D <1>;
-+		compatible =3D "cfi-flash", "jedec-flash";
-+		reg =3D <0x20000000 0x02000000>;
-+		ranges =3D <0 0x00000000 0x02000000
-+		          1 0x02000000 0x02000000>;
-+		bank-width =3D <2>;
-+		addr-gpios =3D <&gpio1 2 GPIO_ACTIVE_HIGH>;
-+		partition@0 {
-+			label =3D "test-part1";
-+			reg =3D <0 0x04000000>;
-+		};
-+	};
---=20
-2.21.0
+VGhpcyBkcml2ZXIgaXMgZm9yIHRoZSBBU1BFRUQgQk1DIFNvQydzIEdGWCBkaXNwbGF5IGhhcmR3
+YXJlLiBUaGlzCmRyaXZlciBydW5zIG9uIHRoZSBBUk0gYmFzZWQgQk1DIHN5c3RlbXMsIHVubGlr
+ZSB0aGUgYXN0IGRyaXZlciB3aGljaApydW5zIG9uIGEgaG9zdCBDUFUgYW5kIGlzIGlzIGZvciBh
+IFBDSWUgZ3JhcGhpY3MgZGV2aWNlIHRoYXQgaGFwcGVucyB0bwpsaXZlIGluIHRoZSBCTUMncyBz
+aWxpY29uLCBidXQgaXMgb3RoZXJ3aXNlIGF2YWlsYWJsZSBmb3IgdXNlIGJ5IHRoZQpCTUMuCgpJ
+IHN1Ym1pdHRlZCBhIFJGQyBhYm91dCBhIHllYXIgYWdvLgoKIGh0dHBzOi8vcGF0Y2h3b3JrLmtl
+cm5lbC5vcmcvcGF0Y2gvMTAzMzk2MDUvCgpJJ3ZlIGZpeGVkIGFsbCBvZiB0aGUgaXNzdWVzIEkg
+aGFkIGluIHRoZSBSRkMsIGFuZCBtYWRlIHRoZSBjbGVhbnVwcwp0aGF0IEVyaWMgc3VnZ2VzdGVk
+IGluIHRoYXQgcmV2aWV3LiBUaGlzIHZlcnNpb24gaXMgYmFzZWQgb24KbmV4dC0yMDE5MDMyNy4K
+CkpvZWwgU3RhbmxleSAoMik6CiAgZHQtYmluZGluZ3M6IGdwdTogQWRkIEFTUEVFRCBHRlggYmlu
+ZGluZ3MgZG9jdW1lbnQKICBkcm06IEFkZCBBU1BFRUQgR0ZYIGRyaXZlcgoKIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2dwdS9hc3BlZWQtZ2Z4LnR4dCAgICB8ICA0MSArKysKIGRyaXZlcnMvZ3B1
+L2RybS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICB8ICAgMiArCiBkcml2ZXJzL2dwdS9k
+cm0vTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9ncHUvZHJt
+L2FzcGVlZC9LY29uZmlnICAgICAgICAgICAgICAgIHwgIDE1ICsKIGRyaXZlcnMvZ3B1L2RybS9h
+c3BlZWQvTWFrZWZpbGUgICAgICAgICAgICAgICB8ICAgMyArCiBkcml2ZXJzL2dwdS9kcm0vYXNw
+ZWVkL2FzcGVlZF9nZnguaCAgICAgICAgICAgfCAxMDQgKysrKysrKwogZHJpdmVycy9ncHUvZHJt
+L2FzcGVlZC9hc3BlZWRfZ2Z4X2NydGMuYyAgICAgIHwgMjQ4ICsrKysrKysrKysrKysrKysKIGRy
+aXZlcnMvZ3B1L2RybS9hc3BlZWQvYXNwZWVkX2dmeF9kcnYuYyAgICAgICB8IDI2OSArKysrKysr
+KysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9hc3BlZWQvYXNwZWVkX2dmeF9vdXQuYyAgICAg
+ICB8ICA0OSArKysrCiA5IGZpbGVzIGNoYW5nZWQsIDczMiBpbnNlcnRpb25zKCspCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hc3BlZWQt
+Z2Z4LnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9hc3BlZWQvS2NvbmZp
+ZwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9hc3BlZWQvTWFrZWZpbGUKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYXNwZWVkL2FzcGVlZF9nZnguaAogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9hc3BlZWQvYXNwZWVkX2dmeF9jcnRjLmMK
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYXNwZWVkL2FzcGVlZF9nZnhfZHJ2
+LmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYXNwZWVkL2FzcGVlZF9nZnhf
+b3V0LmMKCi0tIAoyLjIwLjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbA==
