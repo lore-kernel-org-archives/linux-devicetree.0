@@ -1,190 +1,730 @@
-From: "'Mr.Philip Umeh' via Polymer" <polymer-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Reply to her
-Date: Thu, 28 Mar 2019 14:56:49 +0000 (UTC)
-Message-ID: <284776388.12580534.1553785009144@mail.yahoo.com>
-References: <284776388.12580534.1553785009144.ref@mail.yahoo.com>
-Reply-To: "Mr.Philip Umeh" <umehphilip121-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1] arm: dts: mediatek: add basic support for MT7629 SoC
+Date: Thu, 28 Mar 2019 10:06:11 -0500
+Message-ID: <20190328150611.GA6087@bogus>
+References: <a8ca0018ac8a4c5f61a7a1efc9dc5dccd768628b.1552449524.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_Part_12580533_1653571334.1553785009142"
-Return-path: <polymer-dev+bncBAABBNWB6PSAKGQERDFTJLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <https://groups.google.com/group/polymer-dev/post>, <mailto:polymer-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:polymer-dev+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/polymer-dev
-List-Subscribe: <https://groups.google.com/group/polymer-dev/subscribe>, <mailto:polymer-dev+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+998831494619+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/polymer-dev/subscribe>
-To: "payment-issues-ppr6Pe3L7xlBDgjK7y7TUQ@public.gmane.org" <payment-issues-ppr6Pe3L7xlBDgjK7y7TUQ@public.gmane.org>, "sr-users-MiqU8s9CcddCFx1IUOl5ZR2eb7JE58TQ@public.gmane.org" <sr-users-MiqU8s9CcddCFx1IUOl5ZR2eb7JE58TQ@public.gmane.org>, "graphite-TBHja+091Wbby3iVrkZq2A@public.gmane.org" <graphite-TBHja+091Wbby3iVrkZq2A@public.gmane.org>, "open-ONdx8sCX/YOt/hvpvFFPbQ@public.gmane.org" <open-ONdx8sCX/YOt/hvpvFFPbQ@public.gmane.org>, "arm-netbook-Fj0DB6SUpRXNuVmtMlwsDbVCufUGDwFn@public.gmane.org" <arm-netbook-Fj0DB6SUpRXNuVmtMlwsDbVCufUGDwFn@public.gmane.org>, "qtwebengine-X+mzmtYa7I0kk94PDnYflw@public.gmane.org" <qtwebengine-X+mzmtYa7I0kk94PDnYflw@public.gmane.org>, "gentoo-qa-cnFmAm88PdgLnqt3yJz4RQ@public.gmane.org" <gentoo-qa-cnFmAm88PdgLnqt3yJz4RQ@public.gmane.org>, "support-YXbTc25lSAnQT0dZR+AlfA@public.gmane.org" <support-YXbTc25lSAnQT0dZR+AlfA@public.gmane.org>, "problemsdonating-AeOJrEpdGNeGglJvpFV4uA@public.gmane.org" <problemsdonating-AeOJrEpdGNeGglJvpFV4uA@public.gmane.org>, "admin-stAJ6ESoqRxg9hUCZPvPmw@public.gmane.org" <admin-stAJ6ESoqRxg9hUCZPvPmw@public.gmane.org>, "support-J/YgJ1AKnhOELgA04lAiVw@public.gmane.org" <support-J/YgJ1AKnhOELgA04lAiVw@public.gmane.org>, "implementations-list-7qY7E20V6GW4QsDJlTKKhWD2FQJk+8+b@public.gmane.org" <implementations-list-7qY7E20V6GW4QsDJlTKKhWD2FQJk+8+b@public.gmane.org>, "centos-virt-IFYaIzF+flcdnm+yROfE0A@public.gmane.org" <centos-virt-IFYaIzF+flcdnm+yROfE0A@public.gmane.org>, "systemtap-9JcytcrH/bA+uJoB2kUjGw@public.gmane.org" <systemtap-9JcytcrH/bA+uJoB2kUjGw@public.gmane.org>, "digikam-users-RoXCvvDuEio@public.gmane.org" <digikam-users-RoXCvvDuEio@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <a8ca0018ac8a4c5f61a7a1efc9dc5dccd768628b.1552449524.git.ryder.lee@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ryder.lee@kernel.org
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Weijie Gao <weijie.gao@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_12580533_1653571334.1553785009142
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Wed, Mar 13, 2019 at 04:42:15PM +0800, ryder.lee@kernel.org wrote:
+> From: Ryder Lee <ryder.lee@mediatek.com>
+> 
+> This adds basic support for MT7629 reference board.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+> Changes since v1:
+> -Fix unit-address warnings.
+> -Put all the mmio peripherals under a simple-bus node.
+> -Drop all the 'partitions' nodes in flash node.
+> ---
+>  arch/arm/boot/dts/Makefile                |   1 +
+>  arch/arm/boot/dts/mt7629-rfb.dts          | 203 ++++++++++++++++
+>  arch/arm/boot/dts/mt7629.dtsi             | 370 ++++++++++++++++++++++++++++++
+>  include/dt-bindings/reset/mt7629-resets.h |  71 ++++++
+>  4 files changed, 645 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/mt7629-rfb.dts
+>  create mode 100644 arch/arm/boot/dts/mt7629.dtsi
+>  create mode 100644 include/dt-bindings/reset/mt7629-resets.h
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index bd40148..a5a6d9f 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1231,6 +1231,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
+>  	mt7623a-rfb-nand.dtb \
+>  	mt7623n-rfb-emmc.dtb \
+>  	mt7623n-bananapi-bpi-r2.dtb \
+> +	mt7629-rfb.dtb \
+>  	mt8127-moose.dtb \
+>  	mt8135-evbp1.dtb
+>  dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
+> diff --git a/arch/arm/boot/dts/mt7629-rfb.dts b/arch/arm/boot/dts/mt7629-rfb.dts
+> new file mode 100644
+> index 0000000..a47dd7e
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/mt7629-rfb.dts
+> @@ -0,0 +1,203 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + * Author: Ryder Lee <ryder.lee@mediatek.com>
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/input/input.h>
+> +#include "mt7629.dtsi"
+> +
+> +/ {
+> +	model = "MediaTek MT7629 reference board";
+> +	compatible = "mediatek,mt7629-rfb", "mediatek,mt7629";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +
+> +		reset {
+> +			label = "factory";
+> +			linux,code = <KEY_RESTART>;
+> +			gpios = <&pio 60 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		wps {
+> +			label = "wps";
+> +			linux,code = <KEY_WPS_BUTTON>;
+> +			gpios = <&pio 58 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +
+> +	memory@40000000 {
+> +		device_type = "memory";
+> +		reg = <0 0x40000000 0 0x10000000>;
+> +	};
+> +
+> +	reg_3p3v: regulator-3p3v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "fixed-3.3V";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_5v: regulator-5v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "fixed-5V";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +};
+> +
+> +&i2c {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&qspi {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&qspi_pins>;
+> +	status = "okay";
+> +
+> +	flash@0 {
+> +		compatible = "jedec,spi-nor";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +	};
+> +};
+> +
+> +&pio {
+> +	eth_pins: eth-pins {
+> +		mux {
+> +			function = "eth";
+> +			groups = "mdc_mdio";
+> +		};
+> +	};
+> +
+> +	ephy_leds_pins: ephy-leds-pins {
+> +		mux {
+> +			function = "led";
+> +			groups = "gphy_leds_0", "ephy_leds";
+> +		};
+> +	};
+> +
+> +	i2c_pins: i2c-pins {
+> +		mux {
+> +			function = "i2c";
+> +			groups =  "i2c_0";
+> +		};
+> +
+> +		conf {
+> +			pins = "I2C_SDA", "I2C_SCL";
+> +			drive-strength = <4>;
+> +			bias-disable;
+> +		};
+> +	};
+> +
+> +	pcie_pins: pcie-pins {
+> +		mux {
+> +			function = "pcie";
+> +			groups = "pcie_clkreq",
+> +				 "pcie_pereset",
+> +				 "pcie_wake";
+> +		};
+> +	};
+> +
+> +	pwm_pins: pwm-pins {
+> +		mux {
+> +			function = "pwm";
+> +			groups = "pwm_0";
+> +		};
+> +	};
+> +
+> +	/* Serial NAND is shared pin with SPI-NOR */
+> +	serial_nand_pins: serial-nand-pins {
+> +		mux {
+> +			function = "flash";
+> +			groups = "snfi";
+> +		};
+> +	};
+> +
+> +	spi_pins: spi-pins {
+> +		mux {
+> +			function = "spi";
+> +			groups = "spi_0";
+> +		};
+> +	};
+> +
+> +	/* SPI-NOR is shared pin with serial NAND */
+> +	qspi_pins: qspi-pins {
+> +		mux {
+> +			function = "flash";
+> +			groups = "spi_nor";
+> +		};
+> +	};
+> +
+> +	uart0_pins: uart0-pins {
+> +		mux {
+> +			function = "uart";
+> +			groups = "uart0_txd_rxd" ;
+> +		};
+> +	};
+> +
+> +	uart1_pins: uart1-pins {
+> +		mux {
+> +			function = "uart";
+> +			groups = "uart1_0_tx_rx" ;
+> +		};
+> +	};
+> +
+> +	uart2_pins: uart2-pins {
+> +		mux {
+> +			function = "uart";
+> +			groups = "uart2_0_txd_rxd" ;
+> +		};
+> +	};
+> +
+> +	watchdog_pins: watchdog-pins {
+> +		mux {
+> +			function = "watchdog";
+> +			groups = "watchdog";
+> +		};
+> +	};
+> +};
+> +
+> +&spi {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&spi_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&ssusb {
+> +	vusb33-supply = <&reg_3p3v>;
+> +	vbus-supply = <&reg_5v>;
+> +	status = "okay";
+> +};
+> +
+> +&u3phy1 {
+> +	status = "okay";
+> +};
+> +
+> +&watchdog {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&watchdog_pins>;
+> +	status = "okay";
+> +};
+> \ No newline at end of file
 
-Labdien, d=C4=81rgais draugs,
+Fix this.
 
-k=C4=81 tev iet? Gar=C4=81kais laiks,
+> diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
+> new file mode 100644
+> index 0000000..0197660
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/mt7629.dtsi
+> @@ -0,0 +1,370 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + *
+> + * Author: Ryder Lee <ryder.lee@mediatek.com>
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/mt7629-clk.h>
+> +#include <dt-bindings/power/mt7622-power.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/phy/phy.h>
+> +#include <dt-bindings/reset/mt7629-resets.h>
+> +
+> +/ {
+> +	compatible = "mediatek,mt7629";
+> +	interrupt-parent = <&sysirq>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		enable-method = "mediatek,mt6589-smp";
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a7";
+> +			reg = <0x0>;
+> +			clock-frequency = <1250000000>;
+> +			cci-control-port = <&cci_control2>;
+> +		};
+> +
+> +		cpu1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a7";
+> +			reg = <0x1>;
+> +			clock-frequency = <1250000000>;
+> +			cci-control-port = <&cci_control2>;
+> +		};
+> +	};
+> +
+> +	pmu {
+> +		compatible = "arm,cortex-a7-pmu";
+> +		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 9 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-affinity = <&cpu0>, <&cpu1>;
+> +	};
+> +
+> +	clk20m: oscillator-0 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <20000000>;
+> +		clock-output-names = "clk20m";
+> +	};
+> +
+> +	clk40m: oscillator-1 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <40000000>;
+> +		clock-output-names = "clkxtal";
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv7-timer";
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+> +		clock-frequency = <20000000>;
+> +		arm,cpu-registers-not-fw-configured;
 
-Es priec=C4=81jos j=C5=ABs inform=C4=93t parmaniem pan=C4=81kumiem, kas g=
-=C5=ABti, p=C4=81rskaitot l=C4=ABdzek=C4=BCus no jauna Zviedrijas partneras=
-adarb=C4=ABb=C4=81.
+New systems should not have this. Fix the firmware.
 
-Pa=C5=A1laik es esmu Zviedrijainvest=C4=ABciju projektiem ar savu da=C4=BCu=
- no kop=C4=93j=C4=81s summas ar savu partneri. Tikm=C4=93rneaizmirs=C4=ABj=
-=C4=81m j=C5=ABsu pag=C4=81tnes centienus un m=C4=93=C4=A3in=C4=81jumus pal=
-=C4=ABdz=C4=93t man p=C4=81rskait=C4=ABt=C5=A1os l=C4=ABdzek=C4=BCus, neska=
-toties uz to, ka tas mums kaut k=C4=81 neizdev=C4=81s.
+> +	};
+> +
+> +	soc {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
 
-Tagad sazinieties ar manusekret=C4=81ru Togo, vi=C5=86a v=C4=81rds ir Mrs.S=
-vetlana Menska un vi=C5=86as e-pasts: (mrssvetlanamenska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org) .l=C5=
-=ABdziet vi=C5=86ai nos=C5=ABt=C4=ABt jums v=C4=ABzu karti, kas tika public=
-=C4=93ta no $ 800,000.00 noBarclays Bank plc Londonas. kuru es saglab=C4=81=
-ju j=C5=ABsu kompens=C4=81cijai par visiempag=C4=81tnes centieniem un m=C4=
-=93=C4=A3in=C4=81jumiem man pal=C4=ABdz=C4=93t =C5=A1aj=C4=81 jaut=C4=81jum=
-=C4=81. Es =C4=BCoti augstuv=C4=93rt=C4=93ju j=C5=ABsu centienus =C5=A1aj=
-=C4=81 laik=C4=81. T=C4=81p=C4=93c nekautr=C4=93jieties sazin=C4=81ties ar =
-manusekret=C4=81ru Mrs.Svetlana Menska un uzdot vi=C5=86ai, kur jums ir j=
-=C4=81nos=C5=ABta v=C4=ABzas karte.
+Do you really have any addresses and/or sizes greater than 4GB within 
+this node?
 
-L=C5=ABdzu, dariet man zin=C4=81mut=C5=ABl=C4=ABt, kad j=C5=ABs to sa=C5=86=
-emsiet, lai m=C4=93s var=C4=93tu dal=C4=ABties ar prieku p=C4=93c vis=C4=81=
-mcie=C5=A1an=C4=81m taj=C4=81 laik=C4=81. =C5=A1obr=C4=ABd es esmu =C4=BCot=
-i aiz=C5=86emts, jo man un jaunajam partnerimbeidzot ir invest=C4=ABciju pr=
-ojekti, visbeidzot, atcerieties, ka esmu nos=C5=ABt=C4=ABjisnor=C4=81d=C4=
-=ABjumus sekret=C4=81ram j=C5=ABsu v=C4=81rd=C4=81 sa=C5=86emt karti un atz=
-=C4=ABm=C4=93t, ka esmu atst=C4=81jistapu kods un parole ar Londonas banku,=
- lai mans sekret=C4=81rs nevar=C4=93tu piek=C4=BC=C5=ABt j=C5=ABsuv=C4=ABzu=
- kartei, l=C4=ABdz tas nok=C4=BC=C5=ABs j=C5=ABsu rok=C4=81s, t=C4=81p=C4=
-=93c sazinieties ar Mrs.SvetlanaMenska, kura nos=C5=ABt=C4=ABs jums summu b=
-ez kav=C4=93=C5=A1an=C4=81s.
+> +		compatible = "simple-bus";
+> +		ranges;
+> +
+> +		infracfg: syscon@10000000 {
+> +			compatible = "mediatek,mt7629-infracfg", "syscon";
+> +			reg = <0 0x10000000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		pericfg: syscon@10002000 {
+> +			compatible = "mediatek,mt7629-pericfg", "syscon";
+> +			reg = <0 0x10002000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		scpsys: scpsys@10006000 {
+> +			compatible = "mediatek,mt7629-scpsys",
+> +				     "mediatek,mt7622-scpsys";
+> +			#power-domain-cells = <1>;
+> +			reg = <0 0x10006000 0 0x1000>;
+> +			clocks = <&topckgen CLK_TOP_HIF_SEL>;
+> +			clock-names = "hif_sel";
+> +			assigned-clocks = <&topckgen CLK_TOP_HIF_SEL>;
+> +			assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL1_D2>;
+> +			infracfg = <&infracfg>;
+> +		};
+> +
+> +		timer: timer@10009000 {
+> +			compatible = "mediatek,mt7629-timer",
+> +				     "mediatek,mt6765-timer";
+> +			reg = <0 0x10009000 0 0x60>;
+> +			interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clk20m>;
+> +			clock-names = "clk20m";
+> +		};
+> +
+> +		sysirq: interrupt-controller@10200a80 {
+> +			compatible = "mediatek,mt7629-sysirq",
+> +				     "mediatek,mt6577-sysirq";
+> +			reg = <0 0x10200a80 0 0x20>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <3>;
+> +			interrupt-parent = <&gic>;
+> +		};
+> +
+> +		apmixedsys: syscon@10209000 {
+> +			compatible = "mediatek,mt7629-apmixedsys", "syscon";
+> +			reg = <0 0x10209000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		rng: rng@1020f000 {
+> +			compatible = "mediatek,mt7629-rng",
+> +				     "mediatek,mt7623-rng";
+> +			reg = <0 0x1020f000 0 0x100>;
+> +			clocks = <&infracfg CLK_INFRA_TRNG_PD>;
+> +			clock-names = "rng";
+> +		};
+> +
+> +		topckgen: syscon@10210000 {
+> +			compatible = "mediatek,mt7629-topckgen", "syscon";
+> +			reg = <0 0x10210000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		watchdog: watchdog@10212000 {
+> +			compatible = "mediatek,mt7629-wdt",
+> +				     "mediatek,mt6589-wdt";
+> +			reg = <0 0x10212000 0 0x100>;
+> +		};
+> +
+> +		pio: pinctrl@10217000 {
+> +			compatible = "mediatek,mt7629-pinctrl";
+> +			reg = <0 0x10217000 0 0x8000>,
+> +			      <0 0x10005000 0 0x1000>;
+> +			reg-names = "base", "eint";
+> +			gpio-controller;
+> +			gpio-ranges = <&pio 0 0 79>;
+> +			#gpio-cells = <2>;
+> +			#interrupt-cells = <2>;
+> +			interrupt-controller;
+> +			interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-parent = <&gic>;
+> +		};
+> +
+> +		gic: interrupt-controller@10300000 {
+> +			compatible = "arm,gic-400";
+> +			interrupt-controller;
+> +			#interrupt-cells = <3>;
+> +			interrupt-parent = <&gic>;
+> +			reg = <0 0x10310000 0 0x1000>,
+> +			      <0 0x10320000 0 0x1000>,
+> +			      <0 0x10340000 0 0x2000>,
+> +			      <0 0x10360000 0 0x2000>;
+> +		};
+> +
+> +		cci: cci@10390000 {
+> +			compatible = "arm,cci-400";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			reg = <0 0x10390000 0 0x1000>;
+> +			ranges = <0 0 0x10390000 0x10000>;
+> +
+> +			cci_control0: slave-if@1000 {
+> +				compatible = "arm,cci-400-ctrl-if";
+> +				interface-type = "ace-lite";
+> +				reg = <0x1000 0x1000>;
+> +			};
+> +
+> +			cci_control1: slave-if@4000 {
+> +				compatible = "arm,cci-400-ctrl-if";
+> +				interface-type = "ace";
+> +				reg = <0x4000 0x1000>;
+> +			};
+> +
+> +			cci_control2: slave-if@5000 {
+> +				compatible = "arm,cci-400-ctrl-if";
+> +				interface-type = "ace";
+> +				reg = <0x5000 0x1000>;
+> +			};
+> +
+> +			pmu@9000 {
+> +				compatible = "arm,cci-400-pmu,r1";
+> +				reg = <0x9000 0x5000>;
+> +				interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +		};
+> +
+> +		uart0: serial@11002000 {
+> +			compatible = "mediatek,mt7629-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x11002000 0 0x400>;
+> +			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&topckgen CLK_TOP_UART_SEL>,
+> +				 <&pericfg CLK_PERI_UART0_PD>;
+> +			clock-names = "baud", "bus";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart1: serial@11003000 {
+> +			compatible = "mediatek,mt7629-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x11003000 0 0x400>;
+> +			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&topckgen CLK_TOP_UART_SEL>,
+> +				 <&pericfg CLK_PERI_UART1_PD>;
+> +			clock-names = "baud", "bus";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart2: serial@11004000 {
+> +			compatible = "mediatek,mt7629-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x11004000 0 0x400>;
+> +			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&topckgen CLK_TOP_UART_SEL>,
+> +				 <&pericfg CLK_PERI_UART2_PD>;
+> +			clock-names = "baud", "bus";
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c: i2c@11007000 {
+> +			compatible = "mediatek,mt7629-i2c",
+> +				     "mediatek,mt2712-i2c";
+> +			reg = <0 0x11007000 0 0x90>,
+> +				  <0 0x11000100 0 0x80>;
+> +			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_LOW>;
+> +			clock-div = <4>;
+> +			clocks = <&pericfg CLK_PERI_I2C0_PD>,
+> +				 <&pericfg CLK_PERI_AP_DMA_PD>;
+> +			clock-names = "main", "dma";
+> +			assigned-clocks = <&topckgen CLK_TOP_AXI_SEL>;
+> +			assigned-clock-parents = <&topckgen CLK_TOP_SYSPLL1_D2>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		spi: spi@1100a000 {
+> +			compatible = "mediatek,mt7629-spi",
+> +				     "mediatek,mt7622-spi";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0 0x1100a000 0 0x100>;
+> +			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&topckgen CLK_TOP_SYSPLL3_D2>,
+> +				 <&topckgen CLK_TOP_SPI0_SEL>,
+> +				 <&pericfg CLK_PERI_SPI0_PD>;
+> +			clock-names = "parent-clk", "sel-clk", "spi-clk";
+> +			status = "disabled";
+> +		};
+> +
+> +		qspi: spi@11014000 {
+> +			compatible = "mediatek,mt7629-nor",
+> +				     "mediatek,mt8173-nor";
+> +			reg = <0 0x11014000 0 0xe0>;
+> +			clocks = <&pericfg CLK_PERI_FLASH_PD>,
+> +				 <&topckgen CLK_TOP_FLASH_SEL>;
+> +			clock-names = "spi", "sf";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		ssusbsys: syscon@1a000000 {
+> +			compatible = "mediatek,mt7629-ssusbsys", "syscon";
+> +			reg = <0 0x1a000000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+> +		};
+> +
+> +		ssusb: usb@1a0c0000 {
+> +			compatible = "mediatek,mt7629-xhci",
+> +				     "mediatek,mtk-xhci";
+> +			reg = <0 0x1a0c0000 0 0x01000>,
+> +			      <0 0x1a0c3e00 0 0x0100>;
+> +			reg-names = "mac", "ippc";
+> +			interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&ssusbsys CLK_SSUSB_SYS_EN>,
+> +				 <&ssusbsys CLK_SSUSB_REF_EN>,
+> +				 <&ssusbsys CLK_SSUSB_MCU_EN>,
+> +				 <&ssusbsys CLK_SSUSB_DMA_EN>;
+> +			clock-names = "sys_ck", "ref_ck", "mcu_ck", "dma_ck";
+> +			assigned-clocks = <&topckgen CLK_TOP_AXI_SEL>,
+> +					  <&topckgen CLK_TOP_SATA_SEL>,
+> +					  <&topckgen CLK_TOP_HIF_SEL>;
+> +			assigned-clock-parents = <&topckgen CLK_TOP_SYSPLL1_D2>,
+> +						 <&topckgen CLK_TOP_UNIVPLL2_D4>,
+> +						 <&topckgen CLK_TOP_UNIVPLL1_D2>;
+> +			power-domains = <&scpsys MT7622_POWER_DOMAIN_HIF1>;
+> +			phys = <&u2port0 PHY_TYPE_USB2>,
+> +			       <&u3port0 PHY_TYPE_USB3>;
+> +			status = "disabled";
+> +		};
+> +
+> +		u3phy1: usb-phy@1a0c4000 {
+> +			compatible = "mediatek,generic-tphy-v1";
+> +			reg = <0 0x1a0c4000 0 0x300>;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
 
-Sveicieni,
+Only need 1 cell for these.
 
-MR. PHILIP UMEH
+> +			ranges;
+> +			status = "disabled";
+> +
+> +			u2port0: usb-phy@1a0c4300 {
+> +				reg = <0 0x1a0c4300 0 0x100>;
 
-Follow Polymer on Google+: plus.google.com/107187849809354688692
----=20
-You received this message because you are subscribed to the Google Groups "=
-Polymer" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to polymer-dev+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web visit https://groups.google.com/d/msgid/=
-polymer-dev/284776388.12580534.1553785009144%40mail.yahoo.com.
-For more options, visit https://groups.google.com/d/optout.
+Use a non-empty ranges and just provide the offset.
 
-------=_Part_12580533_1653571334.1553785009142
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<html><head></head><body><div style=3D"color:#000; background-color:#fff; f=
-ont-family:=E6=A8=99=E6=A5=B7=E9=AB=94, dfkai-sb;font-size:16px"><div id=3D=
-"yui_3_16_0_ym19_1_1553781684370_2956"><span lang=3D"EN-US" style=3D"font-s=
-ize:12.0pt;line-height:115%;font-family:&quot;Times New Roman&quot;,&quot;s=
-erif&quot;;mso-fareast-font-family:&quot;Times New Roman&quot;;mso-ansi-lan=
-guage:EN-US;mso-fareast-language:FR" id=3D"yui_3_16_0_ym19_1_1553781684370_=
-2957">Labdien, d=C4=81rgais draugs,<o:p id=3D"yui_3_16_0_ym19_1_15537816843=
-70_2958"></o:p></span></div><div id=3D"yui_3_16_0_ym19_1_1553781684370_2959=
-"><span lang=3D"EN-US" style=3D"font-size:12.0pt;line-height:115%;font-fami=
-ly:&quot;Times New Roman&quot;,&quot;serif&quot;;mso-fareast-font-family:&q=
-uot;Times New Roman&quot;;mso-ansi-language:EN-US;mso-fareast-language:FR" =
-id=3D"yui_3_16_0_ym19_1_1553781684370_2960">k=C4=81 tev iet? Gar=C4=81kais =
-laiks,<o:p id=3D"yui_3_16_0_ym19_1_1553781684370_2961"></o:p></span></div><=
-div id=3D"yui_3_16_0_ym19_1_1553781684370_2962"><span lang=3D"EN-US" style=
-=3D"font-size:12.0pt;line-height:115%;font-family:&quot;Times New Roman&quo=
-t;,&quot;serif&quot;;mso-fareast-font-family:&quot;Times New Roman&quot;;ms=
-o-ansi-language:EN-US;mso-fareast-language:FR" id=3D"yui_3_16_0_ym19_1_1553=
-781684370_2963">Es priec=C4=81jos j=C5=ABs inform=C4=93t par
-maniem pan=C4=81kumiem, kas g=C5=ABti, p=C4=81rskaitot l=C4=ABdzek=C4=BCus =
-no jauna Zviedrijas partnera
-sadarb=C4=ABb=C4=81.<o:p id=3D"yui_3_16_0_ym19_1_1553781684370_2964"></o:p>=
-</span></div><div id=3D"yui_3_16_0_ym19_1_1553781684370_2965"><span lang=3D=
-"EN-US" style=3D"font-size:12.0pt;line-height:115%;font-family:&quot;Times =
-New Roman&quot;,&quot;serif&quot;;mso-fareast-font-family:&quot;Times New R=
-oman&quot;;mso-ansi-language:EN-US;mso-fareast-language:FR" id=3D"yui_3_16_=
-0_ym19_1_1553781684370_2966">Pa=C5=A1laik es esmu Zviedrija
-invest=C4=ABciju projektiem ar savu da=C4=BCu no kop=C4=93j=C4=81s summas a=
-r savu partneri. Tikm=C4=93r
-neaizmirs=C4=ABj=C4=81m j=C5=ABsu pag=C4=81tnes centienus un m=C4=93=C4=A3i=
-n=C4=81jumus pal=C4=ABdz=C4=93t man p=C4=81rskait=C4=ABt
-=C5=A1os l=C4=ABdzek=C4=BCus, neskatoties uz to, ka tas mums kaut k=C4=81 n=
-eizdev=C4=81s.<o:p id=3D"yui_3_16_0_ym19_1_1553781684370_2967"></o:p></span=
-></div><div id=3D"yui_3_16_0_ym19_1_1553781684370_2968"><span lang=3D"EN-US=
-" style=3D"font-size:12.0pt;line-height:115%;font-family:&quot;Times New Ro=
-man&quot;,&quot;serif&quot;;mso-fareast-font-family:&quot;Times New Roman&q=
-uot;;mso-ansi-language:EN-US;mso-fareast-language:FR" id=3D"yui_3_16_0_ym19=
-_1_1553781684370_2969">Tagad sazinieties ar manu
-sekret=C4=81ru Togo, vi=C5=86a v=C4=81rds ir Mrs.Svetlana Menska un vi=C5=
-=86as e-pasts: (<a href=3D"mailto:mrssvetlanamenska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" id=3D"yui_3_=
-16_0_ym19_1_1553781684370_2970">mrssvetlanamenska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org</a>) .
-l=C5=ABdziet vi=C5=86ai nos=C5=ABt=C4=ABt jums v=C4=ABzu karti, kas tika pu=
-blic=C4=93ta no $ 800,000.00 no
-Barclays Bank plc Londonas. kuru es saglab=C4=81ju j=C5=ABsu kompens=C4=81c=
-ijai par visiem
-pag=C4=81tnes centieniem un m=C4=93=C4=A3in=C4=81jumiem man pal=C4=ABdz=C4=
-=93t =C5=A1aj=C4=81 jaut=C4=81jum=C4=81. Es =C4=BCoti augstu
-v=C4=93rt=C4=93ju j=C5=ABsu centienus =C5=A1aj=C4=81 laik=C4=81. T=C4=81p=
-=C4=93c nekautr=C4=93jieties sazin=C4=81ties ar manu
-sekret=C4=81ru Mrs.Svetlana Menska un uzdot vi=C5=86ai, kur jums ir j=C4=81=
-nos=C5=ABta v=C4=ABzas karte.<o:p id=3D"yui_3_16_0_ym19_1_1553781684370_297=
-1"></o:p></span></div><div id=3D"yui_3_16_0_ym19_1_1553781684370_2972"><spa=
-n lang=3D"EN-US" style=3D"font-size:12.0pt;line-height:115%;font-family:&qu=
-ot;Times New Roman&quot;,&quot;serif&quot;;mso-fareast-font-family:&quot;Ti=
-mes New Roman&quot;;mso-ansi-language:EN-US;mso-fareast-language:FR" id=3D"=
-yui_3_16_0_ym19_1_1553781684370_2973">L=C5=ABdzu, dariet man zin=C4=81mu
-t=C5=ABl=C4=ABt, kad j=C5=ABs to sa=C5=86emsiet, lai m=C4=93s var=C4=93tu d=
-al=C4=ABties ar prieku p=C4=93c vis=C4=81m
-cie=C5=A1an=C4=81m taj=C4=81 laik=C4=81. =C5=A1obr=C4=ABd es esmu =C4=BCoti=
- aiz=C5=86emts, jo man un jaunajam partnerim
-beidzot ir invest=C4=ABciju projekti, visbeidzot, atcerieties, ka esmu nos=
-=C5=ABt=C4=ABjis
-nor=C4=81d=C4=ABjumus sekret=C4=81ram j=C5=ABsu v=C4=81rd=C4=81 sa=C5=86emt=
- karti un atz=C4=ABm=C4=93t, ka esmu atst=C4=81jis
-tapu kods un parole ar Londonas banku, lai mans sekret=C4=81rs nevar=C4=93t=
-u piek=C4=BC=C5=ABt j=C5=ABsu
-v=C4=ABzu kartei, l=C4=ABdz tas nok=C4=BC=C5=ABs j=C5=ABsu rok=C4=81s, t=C4=
-=81p=C4=93c sazinieties ar Mrs.Svetlana
-Menska, kura nos=C5=ABt=C4=ABs jums summu bez kav=C4=93=C5=A1an=C4=81s.<o:p=
- id=3D"yui_3_16_0_ym19_1_1553781684370_2974"></o:p></span></div><div id=3D"=
-yui_3_16_0_ym19_1_1553781684370_2975"><span lang=3D"EN-US" style=3D"font-si=
-ze:12.0pt;line-height:115%;font-family:&quot;Times New Roman&quot;,&quot;se=
-rif&quot;;mso-fareast-font-family:&quot;Times New Roman&quot;;mso-ansi-lang=
-uage:EN-US;mso-fareast-language:FR" id=3D"yui_3_16_0_ym19_1_1553781684370_2=
-976">Sveicieni,<o:p id=3D"yui_3_16_0_ym19_1_1553781684370_2977"></o:p></spa=
-n></div><div dir=3D"ltr" id=3D"yui_3_16_0_ym19_1_1553781684370_2874">
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div><div dir=3D"ltr" id=3D"yui_3_16_0_ym19_1_1553781684370_2978"><span la=
-ng=3D"EN-US" style=3D"font-size:12.0pt;line-height:115%;font-family:&quot;T=
-imes New Roman&quot;,&quot;serif&quot;;mso-fareast-font-family:&quot;Times =
-New Roman&quot;;mso-ansi-language:EN-US;mso-fareast-language:FR" id=3D"yui_=
-3_16_0_ym19_1_1553781684370_2979">MR. PHILIP UMEH</span></div></div></body>=
-</html>
-
-<p></p>
-
-Follow Polymer on Google+: plus.google.com/107187849809354688692<br />
---- <br />
-You received this message because you are subscribed to the Google Groups &=
-quot;Polymer&quot; group.<br />
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to <a href=3D"mailto:polymer-dev+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">polymer=
--dev+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
-To view this discussion on the web visit <a href=3D"https://groups.google.c=
-om/d/msgid/polymer-dev/284776388.12580534.1553785009144%40mail.yahoo.com?ut=
-m_medium=3Demail&utm_source=3Dfooter">https://groups.google.com/d/msgid/pol=
-ymer-dev/284776388.12580534.1553785009144%40mail.yahoo.com</a>.<br />
-For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
-s://groups.google.com/d/optout</a>.<br />
-
-------=_Part_12580533_1653571334.1553785009142--
+> +				clocks = <&ssusbsys CLK_SSUSB_U2_PHY_EN>;
+> +				clock-names = "ref";
+> +				#phy-cells = <1>;
+> +				status = "okay";
+> +			};
+> +
+> +			u3port0: usb-phy@1a1c4900 {
+> +				reg = <0 0x1a1c4900 0 0x700>;
+> +				clocks = <&clk20m>;
+> +				clock-names = "ref";
+> +				#phy-cells = <1>;
+> +				status = "okay";
+> +			};
+> +		};
+> +
+> +		pciesys: syscon@1a100800 {
+> +			compatible = "mediatek,mt7629-pciesys", "syscon";
+> +			reg = <0 0x1a100800 0 0x1000>;
+> +			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+> +		};
+> +
+> +		ethsys: syscon@1b000000 {
+> +			compatible = "mediatek,mt7629-ethsys", "syscon";
+> +			reg = <0 0x1b000000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+> +		};
+> +
+> +		sgmiisys0: syscon@1b128000 {
+> +			compatible = "mediatek,mt7629-sgmiisys", "syscon";
+> +			reg = <0 0x1b128000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		sgmiisys1: syscon@1b130000 {
+> +			compatible = "mediatek,mt7629-sgmiisys", "syscon";
+> +			reg = <0 0x1b130000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +	};
+> +};
+> diff --git a/include/dt-bindings/reset/mt7629-resets.h b/include/dt-bindings/reset/mt7629-resets.h
+> new file mode 100644
+> index 0000000..6bb8573
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/mt7629-resets.h
+> @@ -0,0 +1,71 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2019 MediaTek Inc.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_RESET_CONTROLLER_MT7629
+> +#define _DT_BINDINGS_RESET_CONTROLLER_MT7629
+> +
+> +/* INFRACFG resets */
+> +#define MT7629_INFRA_EMI_MPU_RST		0
+> +#define MT7629_INFRA_UART5_RST			2
+> +#define MT7629_INFRA_CIRQ_EINT_RST		3
+> +#define MT7629_INFRA_APXGPT_RST			4
+> +#define MT7629_INFRA_SCPSYS_RST			5
+> +#define MT7629_INFRA_KP_RST			6
+> +#define MT7629_INFRA_SPI1_RST			7
+> +#define MT7629_INFRA_SPI4_RST			8
+> +#define MT7629_INFRA_SYSTIMER_RST		9
+> +#define MT7629_INFRA_IRRX_RST			10
+> +#define MT7629_INFRA_AO_BUS_RST			16
+> +#define MT7629_INFRA_EMI_RST			32
+> +#define MT7629_INFRA_APMIXED_RST		35
+> +#define MT7629_INFRA_MIPI_RST			36
+> +#define MT7629_INFRA_TRNG_RST			37
+> +#define MT7629_INFRA_SYSCIRQ_RST		38
+> +#define MT7629_INFRA_MIPI_CSI_RST		39
+> +#define MT7629_INFRA_GCE_FAXI_RST		40
+> +#define MT7629_INFRA_I2C_SRAM_RST		41
+> +#define MT7629_INFRA_IOMMU_RST			47
+> +
+> +/* PERICFG resets */
+> +#define MT7629_PERI_UART0_SW_RST		0
+> +#define MT7629_PERI_UART1_SW_RST		1
+> +#define MT7629_PERI_UART2_SW_RST		2
+> +#define MT7629_PERI_BTIF_SW_RST			6
+> +#define MT7629_PERI_PWN_SW_RST			8
+> +#define MT7629_PERI_DMA_SW_RST			11
+> +#define MT7629_PERI_NFI_SW_RST			14
+> +#define MT7629_PERI_I2C0_SW_RST			22
+> +#define MT7629_PERI_SPI0_SW_RST			33
+> +#define MT7629_PERI_SPI1_SW_RST			34
+> +#define MT7629_PERI_FLASHIF_SW_RST		36
+> +
+> +/* PCIe Subsystem resets */
+> +#define MT7629_PCIE1_CORE_RST			19
+> +#define MT7629_PCIE1_MMIO_RST			20
+> +#define MT7629_PCIE1_HRST			21
+> +#define MT7629_PCIE1_USER_RST			22
+> +#define MT7629_PCIE1_PIPE_RST			23
+> +#define MT7629_PCIE0_CORE_RST			27
+> +#define MT7629_PCIE0_MMIO_RST			28
+> +#define MT7629_PCIE0_HRST			29
+> +#define MT7629_PCIE0_USER_RST			30
+> +#define MT7629_PCIE0_PIPE_RST			31
+> +
+> +/* SSUSB Subsystem resets */
+> +#define MT7629_SSUSB_PHY_PWR_RST		3
+> +#define MT7629_SSUSB_MAC_PWR_RST		4
+> +
+> +/* ETH Subsystem resets */
+> +#define MT7629_ETHSYS_SYS_RST			0
+> +#define MT7629_ETHSYS_MCM_RST			2
+> +#define MT7629_ETHSYS_HSDMA_RST			5
+> +#define MT7629_ETHSYS_FE_RST			6
+> +#define MT7629_ETHSYS_ESW_RST			16
+> +#define MT7629_ETHSYS_GMAC_RST			23
+> +#define MT7629_ETHSYS_EPHY_RST			24
+> +#define MT7629_ETHSYS_CRYPTO_RST		29
+> +#define MT7629_ETHSYS_PPE_RST			31
+> +
+> +#endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT7629 */
+> -- 
+> 1.9.1
+> 
