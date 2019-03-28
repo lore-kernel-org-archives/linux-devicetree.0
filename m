@@ -1,85 +1,70 @@
 From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v2 6/6] lib/vsprintf: Add %pfw conversion specifier for
+Subject: Re: [PATCH 5/5] lib/vsprintf: Add %pfw conversion specifier for
  printing fwnode names
-Date: Thu, 28 Mar 2019 15:29:27 +0100
-Message-ID: <20190328142927.uxd54bqdvrfbfbn7@pathway.suse.cz>
-References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
- <20190326124106.27694-7-sakari.ailus@linux.intel.com>
- <8c6accab-9e0c-c2d4-ce93-ea3ede60f34e@rasmusvillemoes.dk>
- <20190326132450.GB9224@smile.fi.intel.com>
+Date: Thu, 28 Mar 2019 15:35:39 +0100
+Message-ID: <20190328143539.nty4xzwnml47vcj2@pathway.suse.cz>
+References: <20190322152930.16642-1-sakari.ailus@linux.intel.com>
+ <20190322152930.16642-6-sakari.ailus@linux.intel.com>
+ <20190326151307.erqyps6wfvf4on2d@pathway.suse.cz>
+ <20190327141047.bhndwqde7vjz6bad@paasikivi.fi.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190326132450.GB9224@smile.fi.intel.com>
+In-Reply-To: <20190327141047.bhndwqde7vjz6bad@paasikivi.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 2019-03-26 15:24:50, Andy Shevchenko wrote:
-> On Tue, Mar 26, 2019 at 02:11:35PM +0100, Rasmus Villemoes wrote:
-> > On 26/03/2019 13.41, Sakari Ailus wrote:
+On Wed 2019-03-27 16:10:48, Sakari Ailus wrote:
+> Hi Petr,
+> 
+> On Tue, Mar 26, 2019 at 04:13:07PM +0100, Petr Mladek wrote:
+> > On Fri 2019-03-22 17:29:30, Sakari Ailus wrote:
 > > > Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
 > > > support printing full path of the node, including its name ("f") and only
 > > > the node's name ("P") in the printk family of functions. The two flags
 > > > have equivalent functionality to existing %pOF with the same two modifiers
 > > > ("f" and "P") on OF based systems. The ability to do the same on ACPI
 > > > based systems is added by this patch.
-> 
-> > > +	for (pass = false; strspn(fmt, modifiers); fmt++, pass = true) {
-> > > +		if (pass) {
-> > > +			if (buf < end)
-> > > +				*buf = ':';
-> > > +			buf++;
-> > > +		}
-> > > +
-> > > +		switch (*fmt) {
-> > > +		case 'f':	/* full_name */
-> > > +			buf = fwnode_gen_full_name(fwnode, buf, end);
-> > > +			break;
-> > > +		case 'P':	/* name */
-> > > +			buf = string(buf, end, fwnode_get_name(fwnode),
-> > > +				     str_spec);
-> > > +			break;
-> > > +		default:
-> > > +			break;
-> > > +		}
-> > > +	}
+> > > 
+> > > On ACPI based systems the resulting strings look like
+> > > 
+> > > 	\_SB.PCI0.CIO2.port@1.endpoint@0
+> > > 
+> > > where the nodes are separated by a dot (".") and the first three are
+> > > ACPI device nodes and the latter two ACPI data nodes.
+> > > 
+> > > Depends-on: ("vsprintf: Remove support for %pF and %pf in favour of %pS and %ps")
 > > 
-> > This seems awfully complicated. Why would anyone ever pass more than one
-> > of 'f' and 'P'? Why not just
+> > Reusing obsolete modifiers is dangerous from many reasons:
 > > 
-> > switch(*fmt) {
-> > case 'P':
-> >    ...
-> > case 'f':
-> > default:
-> >    ...
-> > }
+> >    + people might miss the change of the meaning
+> >    + backporting mistakes
+> >    + 3rd party modules
 > > 
-> > which avoids the loop and the strcspn. Or, drop the default: case and
-> > don't have logic at all for falling back to 'f' if neither is present.
+> > It might be acceptable if the long term gain is bigger
+> > than a short time difficulties. But it would be better
+> > to it a safe way when possible.
 > > 
-> > > +	return widen_string(buf, buf - buf_start, end, spec);
-> > > +}
+> > Fortunately, we could keep the backward compatibility
+> > for "%pf" and handle only "%pfw*" with the fwnode api.
 > 
-> My point as well (as per sent comments against previous version).
-> Sakari, can you add test cases at the same time?
-> 
-> > >  			return device_node_string(buf, end, ptr, spec, fmt + 1);
-> 
-> > > +			return fwnode_string(buf, end, ptr, spec, fmt + 1);
-> > 
-> > Why not pass fmt+2; we know that fmt+1 points at a 'w'. Just to avoid
-> > doing the fmt++ inside fwnode_string().
-> 
-> I guess in order to be consistent with existing %pOF case. But wouldn't be
-> better to fix %pOF for that sooner or later?
+> The v2 of this patch produces a warning (using WARN_ONCE()) for "%pf" not
+> immediately followed by "w". "%pfw" was not a valid conversion specifier
+> before this set, so we're actually not re-using the exactly same conversion
+> specifiers.
 
-Good question. Are there any %pOF users that would want to use the for
-cycle and printk more values by single %pOF? Would the output be human
-readable without any delimiters or words around?
+I see. I would keep the two patchsets separate. I mean that this
+patchset should expect that the original handling of %pf is still
+there.
+
+The way how to remove or obsolete "%pf" should be handled in
+the patchset removing all %pf users or it can be done
+in a completely separate patch.
+
+The conflict can get handled when merging the two patchsets.
 
 Best Regards,
 Petr
