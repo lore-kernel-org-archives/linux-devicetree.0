@@ -1,39 +1,172 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v11 06/27] MAINTAINERS: Add myself as maintainer for
- Ingenic TCU drivers
-Date: Wed, 27 Mar 2019 18:29:49 -0700
-Message-ID: <fc86715bcd4a6cc7a4765e5b2975842fc0df57ad.camel@perches.com>
-References: <20190327231631.15708-1-paul@crapouillou.net>
-         <20190327231631.15708-7-paul@crapouillou.net>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v2 03/25] drm/mediatek: add mutex mod into ddp private
+ data
+Date: Thu, 28 Mar 2019 09:33:56 +0800
+Message-ID: <1553736836.18612.12.camel@mtksdaap41>
+References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1553667561-25447-4-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190327231631.15708-7-paul@crapouillou.net>
+In-Reply-To: <1553667561-25447-4-git-send-email-yongqiang.niu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Wim Van Sebroeck <wim@linux-watchdog.org>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Mathieu Malaterre <malat@debian.org>, od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
+To: yongqiang.niu@mediatek.com
+Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, matthias.bgg@gmail.com, airlied@linux.ie, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Bibby.Hsieh@mediatek.com, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-03-28 at 00:16 +0100, Paul Cercueil wrote:
-> diff --git a/MAINTAINERS b/MAINTAINERS
-[]
-> @@ -7665,6 +7665,15 @@ L:	linux-mtd@lists.infradead.org
->  S:	Maintained
->  F:	drivers/mtd/nand/raw/jz4780_*
+Hi, Yongqiang:
+
+On Wed, 2019-03-27 at 14:18 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> mutex0 MOD register offset not always 0x2C.
+> for mt8183, that offset will be 0x30,
+> add this regsiter offset into private data
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 53 +++++++++++++++++++++++++---------
+>  1 file changed, 39 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> index 579ce28..7f0d46e 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> @@ -41,10 +41,12 @@
+>  #define DISP_REG_CONFIG_DSI_SEL			0x050
+>  #define DISP_REG_CONFIG_DPI_SEL			0x064
 >  
-> +INGENIC TCU driver
+> +#define MT2701_DISP_MUTEX0_MOD0 0x2C
 
-trivia:
+Lower case, 0x2c.
 
-Generally the section header is all upper case and not mixed case
-$ git grep -i DRIVER -- MAINTAINERS | \
-  grep -v 'drivers/' | grep -v 'MAINTAINERS:[A-Z]:' | \
-  grep -P -i -o 'drivers?' | \
-  sort | uniq -c | sort -rn
-    980 DRIVER
-    181 DRIVERS
-     19 driver
-     12 Driver
-      8 drivers
-      3 Drivers
+> +
+>  #define DISP_REG_MUTEX_EN(n)	(0x20 + 0x20 * (n))
+>  #define DISP_REG_MUTEX(n)	(0x24 + 0x20 * (n))
+>  #define DISP_REG_MUTEX_RST(n)	(0x28 + 0x20 * (n))
+> -#define DISP_REG_MUTEX_MOD(n)	(0x2c + 0x20 * (n))
+> +#define DISP_REG_MUTEX_MOD(data, n)	((data)->mutex_mod_reg + 0x20 * (n))
+
+Why not just define as:
+
+#define DISP_REG_MUTEX_MOD(mutex_mod_reg, n)	(mutex_mod_reg + 0x20 *
+(n))
+
+The mutex_mod_reg inside a structure or not is decided by the caller.
+
+>  #define DISP_REG_MUTEX_SOF(n)	(0x30 + 0x20 * (n))
+>  #define DISP_REG_MUTEX_MOD2(n)	(0x34 + 0x20 * (n))
+>  
+> @@ -147,12 +149,17 @@ struct mtk_disp_mutex {
+>  	bool claimed;
+>  };
+>  
+> +struct mtk_ddp_data {
+> +	const unsigned int *mutex_mod;
+> +	unsigned int mutex_mod_reg;
+
+const
+
+Regards,
+cK
+
+> +};
+> +
+>  struct mtk_ddp {
+>  	struct device			*dev;
+>  	struct clk			*clk;
+>  	void __iomem			*regs;
+>  	struct mtk_disp_mutex		mutex[10];
+> -	const unsigned int		*mutex_mod;
+> +	const struct mtk_ddp_data	*data;
+>  };
+>  
+>  static const unsigned int mt2701_mutex_mod[DDP_COMPONENT_ID_MAX] = {
+> @@ -202,6 +209,21 @@ struct mtk_ddp {
+>  	[DDP_COMPONENT_WDMA1] = MT8173_MUTEX_MOD_DISP_WDMA1,
+>  };
+>  
+> +static const struct mtk_ddp_data mt2701_ddp_driver_data = {
+> +	.mutex_mod = mt2701_mutex_mod,
+> +	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+> +};
+> +
+> +static const struct mtk_ddp_data mt2712_ddp_driver_data = {
+> +	.mutex_mod = mt2712_mutex_mod,
+> +	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+> +};
+> +
+> +static const struct mtk_ddp_data mt8173_ddp_driver_data = {
+> +	.mutex_mod = mt8173_mutex_mod,
+> +	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+> +};
+> +
+>  static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
+>  				    enum mtk_ddp_comp_id next,
+>  				    unsigned int *addr)
+> @@ -464,15 +486,15 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+>  		reg = MUTEX_SOF_DPI1;
+>  		break;
+>  	default:
+> -		if (ddp->mutex_mod[id] < 32) {
+> -			offset = DISP_REG_MUTEX_MOD(mutex->id);
+> +		if (ddp->data->mutex_mod[id] < 32) {
+> +			offset = DISP_REG_MUTEX_MOD(ddp->data, mutex->id);
+>  			reg = readl_relaxed(ddp->regs + offset);
+> -			reg |= 1 << ddp->mutex_mod[id];
+> +			reg |= 1 << ddp->data->mutex_mod[id];
+>  			writel_relaxed(reg, ddp->regs + offset);
+>  		} else {
+>  			offset = DISP_REG_MUTEX_MOD2(mutex->id);
+>  			reg = readl_relaxed(ddp->regs + offset);
+> -			reg |= 1 << (ddp->mutex_mod[id] - 32);
+> +			reg |= 1 << (ddp->data->mutex_mod[id] - 32);
+>  			writel_relaxed(reg, ddp->regs + offset);
+>  		}
+>  		return;
+> @@ -502,15 +524,15 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
+>  			       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
+>  		break;
+>  	default:
+> -		if (ddp->mutex_mod[id] < 32) {
+> -			offset = DISP_REG_MUTEX_MOD(mutex->id);
+> +		if (ddp->data->mutex_mod[id] < 32) {
+> +			offset = DISP_REG_MUTEX_MOD(ddp->data, mutex->id);
+>  			reg = readl_relaxed(ddp->regs + offset);
+> -			reg &= ~(1 << ddp->mutex_mod[id]);
+> +			reg &= ~(1 << ddp->data->mutex_mod[id]);
+>  			writel_relaxed(reg, ddp->regs + offset);
+>  		} else {
+>  			offset = DISP_REG_MUTEX_MOD2(mutex->id);
+>  			reg = readl_relaxed(ddp->regs + offset);
+> -			reg &= ~(1 << (ddp->mutex_mod[id] - 32));
+> +			reg &= ~(1 << (ddp->data->mutex_mod[id] - 32));
+>  			writel_relaxed(reg, ddp->regs + offset);
+>  		}
+>  		break;
+> @@ -585,7 +607,7 @@ static int mtk_ddp_probe(struct platform_device *pdev)
+>  		return PTR_ERR(ddp->regs);
+>  	}
+>  
+> -	ddp->mutex_mod = of_device_get_match_data(dev);
+> +	ddp->data = of_device_get_match_data(dev);
+>  
+>  	platform_set_drvdata(pdev, ddp);
+>  
+> @@ -598,9 +620,12 @@ static int mtk_ddp_remove(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id ddp_driver_dt_match[] = {
+> -	{ .compatible = "mediatek,mt2701-disp-mutex", .data = mt2701_mutex_mod},
+> -	{ .compatible = "mediatek,mt2712-disp-mutex", .data = mt2712_mutex_mod},
+> -	{ .compatible = "mediatek,mt8173-disp-mutex", .data = mt8173_mutex_mod},
+> +	{ .compatible = "mediatek,mt2701-disp-mutex",
+> +	  .data = &mt2701_ddp_driver_data},
+> +	{ .compatible = "mediatek,mt2712-disp-mutex",
+> +	  .data = &mt2712_ddp_driver_data},
+> +	{ .compatible = "mediatek,mt8173-disp-mutex",
+> +	  .data = &mt8173_ddp_driver_data},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, ddp_driver_dt_match);
