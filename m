@@ -1,48 +1,79 @@
-From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v2 0/2] ARM: dts: sun8i: a83t: Add missing
- cooling device properties for CPUs
-Date: Thu, 28 Mar 2019 12:31:57 +0100
-Message-ID: <20190328113159.9668-1-megous@megous.com>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v2 2/6] device property: Add fwnode_get_name for
+ returning the name of a node
+Date: Thu, 28 Mar 2019 13:31:56 +0200
+Message-ID: <20190328113156.o5wfxcww5mphmd6i@kekkonen.localdomain>
+References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
+ <20190326124106.27694-3-sakari.ailus@linux.intel.com>
+ <CAJZ5v0gUZaxyp0Hb228F_PuBhshmQ8v7VFYtv75oZg_Hpo8RTw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBMPB6LSAKGQEGTKZBZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0gUZaxyp0Hb228F_PuBhshmQ8v7VFYtv75oZg_Hpo8RTw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Hi Rafael,
 
-This series adds some properties to prepare for passive cooling via
-CPU frequency down-regulation, and fixes cpufreq for various CPU hotplug
-situations.
+On Thu, Mar 28, 2019 at 10:45:57AM +0100, Rafael J. Wysocki wrote:
+> On Tue, Mar 26, 2019 at 1:41 PM Sakari Ailus
+> <sakari.ailus@linux.intel.com> wrote:
+> >
+> > The fwnode framework did not have means to obtain the name of a node. Add
+> > that now, in form of the fwnode_get_name() function and a corresponding
+> > get_name fwnode op. OF and ACPI support is included.
+> >
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> >  drivers/acpi/property.c  | 24 ++++++++++++++++++++++++
+> >  drivers/base/property.c  | 11 +++++++++++
+> >  drivers/of/property.c    |  6 ++++++
+> >  include/linux/fwnode.h   |  2 ++
+> >  include/linux/property.h |  1 +
+> >  5 files changed, 44 insertions(+)
+> >
+> > diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+> > index 77abe0ec4043..8c9a4c02cde2 100644
+> > --- a/drivers/acpi/property.c
+> > +++ b/drivers/acpi/property.c
+> > @@ -1291,6 +1291,29 @@ acpi_fwnode_get_reference_args(const struct fwnode_handle *fwnode,
+> >                                                   args_count, args);
+> >  }
+> >
+> > +static const char *acpi_fwnode_get_name(const struct fwnode_handle *fwnode)
+> > +{
+> > +       const struct acpi_device *adev;
+> > +       struct fwnode_handle *parent;
+> > +
+> > +       parent = fwnode_get_parent(fwnode);
+> > +       /* Is this the root node? */
+> > +       if (!parent)
+> > +               return "\\";
+> > +
+> > +       fwnode_handle_put(parent);
+> > +
+> > +       if (is_acpi_data_node(fwnode)) {
+> > +               const struct acpi_data_node *dn = to_acpi_data_node(fwnode);
+> > +
+> > +               return dn->name;
+> > +       }
+> > +
+> > +       adev = to_acpi_device_node(fwnode);
+> > +
+> > +       return adev ? acpi_device_bid(adev) : NULL;
+> 
+> I would do
+> 
+> if (WARN_ON(!adev))
+>          return NULL;
+> 
+> return acpi_device_bid(adev);
 
-#cooling-cells patch is not strictly necessary now, but now that SID
-changes are soon to be merged, thermal sensor patches are likely to
-follow, and it will be useful in short order, I expect.
-
-Please take a look.
-
-regards,
-  Ondrej Jirman
-
-
-Changes for v2:
-- split the former single patch into a series
-- reformulated descriptions to accommodate the split
-
-Ondrej Jirman (2):
-  ARM: dts: sun8i: a83t: Add missing cooling device properties for CPUs
-  ARM: dts: sun8i: a83t: Add missing CPU clock references
-
- arch/arm/boot/dts/sun8i-a83t.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Done.
 
 -- 
-2.21.0
+Sakari Ailus
+sakari.ailus@linux.intel.com
