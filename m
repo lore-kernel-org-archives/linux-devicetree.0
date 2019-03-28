@@ -1,26 +1,117 @@
 From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH 0/4] Fix imx8mq ratio 1:1 check
-Date: Thu, 28 Mar 2019 06:38:24 -0700
-Message-ID: <20190328133828.20999-1-angus@akkea.ca>
+Subject: [PATCH 2/4] dmaengine: imx-sdma: Add clock ratio 1:1 check
+Date: Thu, 28 Mar 2019 06:38:26 -0700
+Message-ID: <20190328133828.20999-3-angus@akkea.ca>
+References: <20190328133828.20999-1-angus@akkea.ca>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190328133828.20999-1-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 To: angus@akkea.ca
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vkoul@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Carlo Caione <ccaione@baylibre.com>, Daniel Baluta <daniel.baluta@nxp.com>, =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The imx8mq 1:1 check breaks some earlier imx chips so limit the
-ratio check to the imx8mq.
+On imx8mq B0 chip, AHB/SDMA clock ratio 2:1 can't be supported,
+since SDMA clock ratio has to be increased to 250Mhz, AHB can't reach
+to 500Mhz, so use 1:1 instead.
 
-Angus Ainslie (Purism) (4):
-  arm64: dts: imx8mq: Fix the fsl,imx8mq-sdma compatible string
-  dmaengine: imx-sdma: Add clock ratio 1:1 check
-  dt-bindings: Document the new imx8mq-sdma compatible string
-  arm64: dts: imx8mq: Change ahb clock for imx8mq
+To limit this change to the imx8mq for now this patch also adds an
+im8mq-sdma compatible string.
 
- .../devicetree/bindings/dma/fsl-imx-sdma.txt  |  1 +
- arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  4 +--
- drivers/dma/imx-sdma.c                        | 31 ++++++++++++++++---
- 3 files changed, 30 insertions(+), 6 deletions(-)
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+---
+ drivers/dma/imx-sdma.c | 31 +++++++++++++++++++++++++++----
+ 1 file changed, 27 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 7fae4bf885d5..99d9f431ae2c 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -419,6 +419,7 @@ struct sdma_driver_data {
+ 	int chnenbl0;
+ 	int num_events;
+ 	struct sdma_script_start_addrs	*script_addrs;
++	bool check_ratio;
+ };
+ 
+ struct sdma_engine {
+@@ -441,6 +442,8 @@ struct sdma_engine {
+ 	unsigned int			irq;
+ 	dma_addr_t			bd0_phys;
+ 	struct sdma_buffer_descriptor	*bd0;
++	/* clock ratio for AHB:SDMA core. 1:1 is 1, 2:1 is 0*/
++	bool				clk_ratio;
+ };
+ 
+ static int sdma_config_write(struct dma_chan *chan,
+@@ -555,6 +558,13 @@ static struct sdma_driver_data sdma_imx7d = {
+ 	.script_addrs = &sdma_script_imx7d,
+ };
+ 
++static struct sdma_driver_data sdma_imx8mq = {
++	.chnenbl0 = SDMA_CHNENBL0_IMX35,
++	.num_events = 48,
++	.script_addrs = &sdma_script_imx7d,
++	.check_ratio = 1,
++};
++
+ static const struct platform_device_id sdma_devtypes[] = {
+ 	{
+ 		.name = "imx25-sdma",
+@@ -577,6 +587,9 @@ static const struct platform_device_id sdma_devtypes[] = {
+ 	}, {
+ 		.name = "imx7d-sdma",
+ 		.driver_data = (unsigned long)&sdma_imx7d,
++	}, {
++		.name = "imx8mq-sdma",
++		.driver_data = (unsigned long)&sdma_imx8mq,
+ 	}, {
+ 		/* sentinel */
+ 	}
+@@ -591,6 +604,7 @@ static const struct of_device_id sdma_dt_ids[] = {
+ 	{ .compatible = "fsl,imx31-sdma", .data = &sdma_imx31, },
+ 	{ .compatible = "fsl,imx25-sdma", .data = &sdma_imx25, },
+ 	{ .compatible = "fsl,imx7d-sdma", .data = &sdma_imx7d, },
++	{ .compatible = "fsl,imx8mq-sdma", .data = &sdma_imx8mq, },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, sdma_dt_ids);
+@@ -663,8 +677,11 @@ static int sdma_run_channel0(struct sdma_engine *sdma)
+ 		dev_err(sdma->dev, "Timeout waiting for CH0 ready\n");
+ 
+ 	/* Set bits of CONFIG register with dynamic context switching */
+-	if (readl(sdma->regs + SDMA_H_CONFIG) == 0)
+-		writel_relaxed(SDMA_H_CONFIG_CSM, sdma->regs + SDMA_H_CONFIG);
++	reg = readl(sdma->regs + SDMA_H_CONFIG);
++	if ((reg & SDMA_H_CONFIG_CSM) == 0) {
++		reg |= SDMA_H_CONFIG_CSM;
++		writel_relaxed(reg, sdma->regs + SDMA_H_CONFIG);
++	}
+ 
+ 	return ret;
+ }
+@@ -1847,6 +1864,10 @@ static int sdma_init(struct sdma_engine *sdma)
+ 	if (ret)
+ 		goto disable_clk_ipg;
+ 
++	if (sdma->drvdata->check_ratio &&
++	    (clk_get_rate(sdma->clk_ahb) == clk_get_rate(sdma->clk_ipg)))
++		sdma->clk_ratio = 1;
++
+ 	/* Be sure SDMA has not started yet */
+ 	writel_relaxed(0, sdma->regs + SDMA_H_C0PTR);
+ 
+@@ -1887,8 +1908,10 @@ static int sdma_init(struct sdma_engine *sdma)
+ 	writel_relaxed(0x4050, sdma->regs + SDMA_CHN0ADDR);
+ 
+ 	/* Set bits of CONFIG register but with static context switching */
+-	/* FIXME: Check whether to set ACR bit depending on clock ratios */
+-	writel_relaxed(0, sdma->regs + SDMA_H_CONFIG);
++	if (sdma->clk_ratio)
++		writel_relaxed(SDMA_H_CONFIG_ACR, sdma->regs + SDMA_H_CONFIG);
++	else
++		writel_relaxed(0, sdma->regs + SDMA_H_CONFIG);
+ 
+ 	writel_relaxed(ccb_phys, sdma->regs + SDMA_H_C0PTR);
+ 
 -- 
 2.17.1
