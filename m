@@ -1,10 +1,9 @@
 From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH v4 7/7] ARM: dts: rockchip: Specify rk3288-veyron-minnie's display timings
-Date: Thu, 28 Mar 2019 10:17:10 -0700
-Message-ID: <20190328171710.31949-8-dianders@chromium.org>
+Subject: [PATCH v4 6/7] ARM: dts: rockchip: Specify rk3288-veyron-jerry's display timings
+Date: Thu, 28 Mar 2019 10:17:09 -0700
+Message-ID: <20190328171710.31949-7-dianders@chromium.org>
 References: <20190328171710.31949-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190328171710.31949-1-dianders@chromium.org>
@@ -13,68 +12,70 @@ To: Thierry Reding <thierry.reding@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
 Cc: linux-rockchip@lists.infradead.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, =?UTF-8?q?Enric=20Balletb=C3=B2?= <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, mka@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Just like rk3288-veyron-jerry, we want to be able to use one of the
-fixed PLLs in the system to make the pixel clock for minnie.
+Let's document the display timings that jerry has been using out in
+the field.  This uses the standard blankings but a slightly slower
+clock rate, thus getting a refresh rate 58.3 Hz.
 
-Specifying these timings matches us with how the display is used on
-the downstream Chrome OS kernel.  See https://crrev.com/c/323211.
+NOTE: this won't really do anything except cause DRM to properly
+report the refresh rate since vop_crtc_mode_fixup() was rounding the
+pixel clock to 74.25 MHz anyway.  Apparently the adjusted rate isn't
+exposed to userspace so it's important that the rate we're trying to
+achieve is mostly right.
 
-Unlike jerry, this CL actually changes the timings (though not the
-pixel clock) that is used when using the upstream kernel.  Booting up
-a minnie shows that it ended up with a 66.67 MHz pixel clock but it
-was still using the porches/blankings it would have wanted for a 72.5
-MHz pixel clock.
+For the downstream kernel change related to this see See
+https://crrev.com/c/324558.
 
-NOTE: compared to the downstream kernel, this seems to cause a
-slightly different result reported in the 'modetest' command on a
-Chromebook.  The downstream kernel shows:
-  1280x800 60 1280 1298 1330 1351 800 804 822 830 66667
-
-With this patch we have:
-  1280x800 59 1280 1298 1330 1351 800 804 822 830 66666
-
-Specifically modetest was reporting 60 Hz on the downstream kernel but
-the upstream kernel does the math and comesup with 59 (because we
-actually achieve 59.45 Hz).  Also upstream doesn't round the Hz up
-when converting to kHz--it seems to truncate.
-
-ALSO NOTE: when I look at the EDID from the datasheet, I see:
-  -hsync -vsync
-...but it seems like we've never actually run with that so I've
-continued leaving that out.
+NOTE: minnie will be fixed up in a future patch, so for now we'll just
+delete the panel timings there.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
 Changes in v4:
-- rk3288-veyron-minnie patch new for v4.
+- rk3288-veyron-jerry patch new for v4.
 
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/rk3288-veyron-minnie.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi | 14 ++++++++++++++
+ arch/arm/boot/dts/rk3288-veyron-minnie.dts      |  2 ++
+ 2 files changed, 16 insertions(+)
 
+diff --git a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
+index b54746df3661..0b1789b50c21 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
+@@ -76,6 +76,20 @@
+ 		power-supply = <&vcc33_lcd>;
+ 		backlight = <&backlight>;
+ 
++		panel-timing {
++			clock-frequency = <74250000>;
++			hactive = <1366>;
++			hfront-porch = <136>;
++			hback-porch = <60>;
++			hsync-len = <30>;
++			hsync-active = <0>;
++			vactive = <768>;
++			vfront-porch = <8>;
++			vback-porch = <12>;
++			vsync-len = <12>;
++			vsync-active = <0>;
++		};
++
+ 		ports {
+ 			panel_in: port {
+ 				panel_in_edp: endpoint {
 diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-index ca7512ade222..8179cf9f6e98 100644
+index f95d0c5fcf71..ca7512ade222 100644
 --- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
 +++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-@@ -144,6 +144,18 @@
+@@ -142,6 +142,8 @@
+ &panel {
+ 	compatible = "auo,b101ean01", "simple-panel";
  	power-supply= <&panel_regulator>;
- 
- 	/delete-node/ panel-timing;
 +
-+	panel-timing {
-+		clock-frequency = <66666667>;
-+		hactive = <1280>;
-+		hfront-porch = <18>;
-+		hback-porch = <21>;
-+		hsync-len = <32>;
-+		vactive = <800>;
-+		vfront-porch = <4>;
-+		vback-porch = <8>;
-+		vsync-len = <18>;
-+	};
++	/delete-node/ panel-timing;
  };
  
  &rk808 {
