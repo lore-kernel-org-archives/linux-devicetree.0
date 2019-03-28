@@ -1,45 +1,102 @@
-Return-Path: <SRS0=KptV=RY=nxp.com=anson.huang@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V9 0/4] Add i.MX8QXP system controller watchdog
-Date: Thu, 21 Mar 2019 02:26:29 +0000
-Message-ID: <1553134884-1720-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=KxQt=R7=linaro.org=rui.silva@kernel.org>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH v3 5/5] ARM: dts: imx7s-warp: add ov2680 sensor node
+Date: Thu, 28 Mar 2019 14:25:16 +0000
+Message-Id: <20190328142516.30372-6-rui.silva@linaro.org>
+In-Reply-To: <20190328142516.30372-1-rui.silva@linaro.org>
+References: <20190328142516.30372-1-rui.silva@linaro.org>
 MIME-Version: 1.0
-To: "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, Andy Gross <andy.gross@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Transfer-Encoding: 8bit
+To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-i.MX8QXP is an ARMv8 Cortex-A35 SoC with a Cortex-M4 system controller
-inside, the system controller manages overall power, clock, secure RTC
-and watchdog etc., so Linux kernel running on A35 needs to communicate
-with system controller for watchdog operation, this system controller
-watchdog will call SMC to trap to EL3 secure world ARM-Trusted-Firmware
-and then it will request system controller to do the watchdog operation
-via IPC.
+Warp7 comes with a Omnivision OV2680 sensor, add the node here to make
+complete the camera data path for this system. Add the needed regulator
+to the analog voltage supply, the port and endpoints in mipi_csi node
+and the pinctrl for the reset gpio.
 
-Changes since V8:
-	- change the timeout value to be from DT instead of from module parameter,
-	  and also update the binding doc and dts to add timeout property.
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+---
+ arch/arm/boot/dts/imx7s-warp.dts | 45 ++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-Anson Huang (4):
-  dt-bindings: watchdog: add i.MX system controller watchdog
-  watchdog: imx_sc: Add i.MX system controller watchdog support
-  arm64: defconfig: add support for i.MX system controller watchdog
-  arm64: dts: imx8qxp: add system controller watchdog support
-
- .../bindings/watchdog/fsl-imx-sc-wdt.txt           |  24 +++
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   5 +
- arch/arm64/configs/defconfig                       |   1 +
- drivers/watchdog/Kconfig                           |  16 ++
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/imx_sc_wdt.c                      | 177 +++++++++++++++++=
-++++
- 6 files changed, 224 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-sc-w=
-dt.txt
- create mode 100644 drivers/watchdog/imx_sc_wdt.c
-
---=20
-2.7.4
+diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
+index 2d1a0105e6a6..d6b4888fa686 100644
+--- a/arch/arm/boot/dts/imx7s-warp.dts
++++ b/arch/arm/boot/dts/imx7s-warp.dts
+@@ -55,6 +55,14 @@
+ 		regulator-always-on;
+ 	};
+ 
++	reg_peri_3p15v: regulator-peri-3p15v {
++		compatible = "regulator-fixed";
++		regulator-name = "peri_3p15v_reg";
++		regulator-min-microvolt = <3150000>;
++		regulator-max-microvolt = <3150000>;
++		regulator-always-on;
++	};
++
+ 	sound {
+ 		compatible = "simple-audio-card";
+ 		simple-audio-card,name = "imx7-sgtl5000";
+@@ -184,6 +192,27 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
++
++	ov2680: camera@36 {
++		compatible = "ovti,ov2680";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ov2680>;
++		reg = <0x36>;
++		clocks = <&osc>;
++		clock-names = "xvclk";
++		reset-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
++		DOVDD-supply = <&sw2_reg>;
++		DVDD-supply = <&sw2_reg>;
++		AVDD-supply = <&reg_peri_3p15v>;
++
++		port {
++			ov2680_to_mipi: endpoint {
++				remote-endpoint = <&mipi_from_sensor>;
++				clock-lanes = <0>;
++				data-lanes = <1>;
++			};
++		};
++	};
+ };
+ 
+ &i2c3 {
+@@ -221,6 +250,16 @@
+ 	clock-frequency = <166000000>;
+ 	fsl,csis-hs-settle = <3>;
+ 	status = "okay";
++
++	port@0 {
++		reg = <0>;
++
++		mipi_from_sensor: endpoint {
++			remote-endpoint = <&ov2680_to_mipi>;
++			data-lanes = <1>;
++		};
++
++	};
+ };
+ 
+ &sai1 {
+@@ -347,6 +386,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_ov2680: ov2660grp {
++		fsl,pins = <
++			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x14
++		>;
++	};
++
+ 	pinctrl_sai1: sai1grp {
+ 		fsl,pins = <
+ 			MX7D_PAD_SAI1_RX_DATA__SAI1_RX_DATA0	0x1f
+-- 
+2.21.0
