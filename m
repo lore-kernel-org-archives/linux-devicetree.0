@@ -1,160 +1,120 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v2 2/6] device property: Add fwnode_get_name for returning
- the name of a node
-Date: Thu, 28 Mar 2019 10:45:57 +0100
-Message-ID: <CAJZ5v0gUZaxyp0Hb228F_PuBhshmQ8v7VFYtv75oZg_Hpo8RTw@mail.gmail.com>
-References: <20190326124106.27694-1-sakari.ailus@linux.intel.com> <20190326124106.27694-3-sakari.ailus@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Mason Yang <masonccyang@mxic.com.tw>
+Subject: [PATCH 7/7] mtd: rawnand: Add Macronix NAND block protection driver
+Date: Thu, 28 Mar 2019 18:18:38 +0800
+Message-ID: <1553768318-23149-8-git-send-email-masonccyang@mxic.com.tw>
+References: <1553768318-23149-1-git-send-email-masonccyang@mxic.com.tw>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190326124106.27694-3-sakari.ailus@linux.intel.com>
+In-Reply-To: <1553768318-23149-1-git-send-email-masonccyang@mxic.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>
+To: broonie@kernel.org, marek.vasut@gmail.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bbrezillon@kernel.org, dwmw2@infradead.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, computersforpeace@gmal.com, paul.burton@mips.com, stefan@agner.ch, christophe.kerello@st.com, liang.yang@amlogic.com, geert@linux-m68k.org, devicetree@vger.kernel.org, marcel.ziswiler@toradex.com, linux-mtd@lists.infradead.org, richard@nod.at, miquel.raynal@bootlin.com
+Cc: juliensu@mxic.com.tw, zhengxunli@mxic.com.tw, Mason Yang <masonccyang@mxic.com.tw>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 1:41 PM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> The fwnode framework did not have means to obtain the name of a node. Add
-> that now, in form of the fwnode_get_name() function and a corresponding
-> get_name fwnode op. OF and ACPI support is included.
->
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  drivers/acpi/property.c  | 24 ++++++++++++++++++++++++
->  drivers/base/property.c  | 11 +++++++++++
->  drivers/of/property.c    |  6 ++++++
->  include/linux/fwnode.h   |  2 ++
->  include/linux/property.h |  1 +
->  5 files changed, 44 insertions(+)
->
-> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> index 77abe0ec4043..8c9a4c02cde2 100644
-> --- a/drivers/acpi/property.c
-> +++ b/drivers/acpi/property.c
-> @@ -1291,6 +1291,29 @@ acpi_fwnode_get_reference_args(const struct fwnode_handle *fwnode,
->                                                   args_count, args);
->  }
->
-> +static const char *acpi_fwnode_get_name(const struct fwnode_handle *fwnode)
-> +{
-> +       const struct acpi_device *adev;
-> +       struct fwnode_handle *parent;
-> +
-> +       parent = fwnode_get_parent(fwnode);
-> +       /* Is this the root node? */
-> +       if (!parent)
-> +               return "\\";
-> +
-> +       fwnode_handle_put(parent);
-> +
-> +       if (is_acpi_data_node(fwnode)) {
-> +               const struct acpi_data_node *dn = to_acpi_data_node(fwnode);
-> +
-> +               return dn->name;
-> +       }
-> +
-> +       adev = to_acpi_device_node(fwnode);
-> +
-> +       return adev ? acpi_device_bid(adev) : NULL;
+Add a driver for Macronix NAND block protection function.
 
-I would do
+Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+---
+ drivers/mtd/nand/raw/mxic_nand.c     |  3 +++
+ drivers/mtd/nand/raw/nand_macronix.c | 47 ++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/mxic-mx25f0a.h     |  3 +++
+ 3 files changed, 53 insertions(+)
 
-if (WARN_ON(!adev))
-         return NULL;
-
-return acpi_device_bid(adev);
-
-> +}
-> +
->  static struct fwnode_handle *
->  acpi_fwnode_get_parent(struct fwnode_handle *fwnode)
->  {
-> @@ -1331,6 +1354,7 @@ acpi_fwnode_device_get_match_data(const struct fwnode_handle *fwnode,
->                 .get_parent = acpi_node_get_parent,                     \
->                 .get_next_child_node = acpi_get_next_subnode,           \
->                 .get_named_child_node = acpi_fwnode_get_named_child_node, \
-> +               .get_name = acpi_fwnode_get_name,                       \
->                 .get_reference_args = acpi_fwnode_get_reference_args,   \
->                 .graph_get_next_endpoint =                              \
->                         acpi_graph_get_next_endpoint,                   \
-> diff --git a/drivers/base/property.c b/drivers/base/property.c
-> index 61eb6ceacc3f..04a8591cd1b0 100644
-> --- a/drivers/base/property.c
-> +++ b/drivers/base/property.c
-> @@ -533,6 +533,17 @@ int device_add_properties(struct device *dev,
->  EXPORT_SYMBOL_GPL(device_add_properties);
->
->  /**
-> + * fwnode_get_name - Return the name of a node
-> + * @fwnode: The firmware node
-> + *
-> + * Returns a pointer to the node name.
-> + */
-> +const char *fwnode_get_name(const struct fwnode_handle *fwnode)
-> +{
-> +       return fwnode_call_ptr_op(fwnode, get_name);
-> +}
-> +
-> +/**
->   * fwnode_get_parent - Return parent firwmare node
->   * @fwnode: Firmware whose parent is retrieved
->   *
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index 8631efa1daa1..f0a7b78f2d9f 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -872,6 +872,11 @@ of_fwnode_property_read_string_array(const struct fwnode_handle *fwnode,
->                 of_property_count_strings(node, propname);
->  }
->
-> +static const char *of_fwnode_get_name(const struct fwnode_handle *fwnode)
-> +{
-> +       return kbasename(to_of_node(fwnode)->full_name);
-> +}
-> +
->  static struct fwnode_handle *
->  of_fwnode_get_parent(const struct fwnode_handle *fwnode)
->  {
-> @@ -993,6 +998,7 @@ const struct fwnode_operations of_fwnode_ops = {
->         .property_present = of_fwnode_property_present,
->         .property_read_int_array = of_fwnode_property_read_int_array,
->         .property_read_string_array = of_fwnode_property_read_string_array,
-> +       .get_name = of_fwnode_get_name,
->         .get_parent = of_fwnode_get_parent,
->         .get_next_child_node = of_fwnode_get_next_child_node,
->         .get_named_child_node = of_fwnode_get_named_child_node,
-> diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-> index faebf0ca0686..85b7fa4dc727 100644
-> --- a/include/linux/fwnode.h
-> +++ b/include/linux/fwnode.h
-> @@ -59,6 +59,7 @@ struct fwnode_reference_args {
->   *                              otherwise.
->   * @property_read_string_array: Read an array of string properties. Return zero
->   *                             on success, a negative error code otherwise.
-> + * @get_name: Return the name of an fwnode.
->   * @get_parent: Return the parent of an fwnode.
->   * @get_next_child_node: Return the next child node in an iteration.
->   * @get_named_child_node: Return a child node with a given name.
-> @@ -85,6 +86,7 @@ struct fwnode_operations {
->         (*property_read_string_array)(const struct fwnode_handle *fwnode_handle,
->                                       const char *propname, const char **val,
->                                       size_t nval);
-> +       const char *(*get_name)(const struct fwnode_handle *fwnode);
->         struct fwnode_handle *(*get_parent)(const struct fwnode_handle *fwnode);
->         struct fwnode_handle *
->         (*get_next_child_node)(const struct fwnode_handle *fwnode,
-> diff --git a/include/linux/property.h b/include/linux/property.h
-> index 1164ac974ee8..2f5df900e310 100644
-> --- a/include/linux/property.h
-> +++ b/include/linux/property.h
-> @@ -78,6 +78,7 @@ int fwnode_property_get_reference_args(const struct fwnode_handle *fwnode,
->                                        unsigned int nargs, unsigned int index,
->                                        struct fwnode_reference_args *args);
->
-> +const char *fwnode_get_name(const struct fwnode_handle *fwnode);
->  struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode);
->  struct fwnode_handle *fwnode_get_next_parent(
->         struct fwnode_handle *fwnode);
-> --
+diff --git a/drivers/mtd/nand/raw/mxic_nand.c b/drivers/mtd/nand/raw/mxic_nand.c
+index 03886b2..9307ca2 100644
+--- a/drivers/mtd/nand/raw/mxic_nand.c
++++ b/drivers/mtd/nand/raw/mxic_nand.c
+@@ -262,6 +262,9 @@ static int mx25f0a_nand_probe(struct platform_device *pdev)
+ 	if (err)
+ 		goto fail;
+ 
++	mtd->_lock = mxic_nand_lock;
++	mtd->_unlock = mxic_nand_unlock;
++
+ 	err = mtd_device_register(mtd, NULL, 0);
+ 	if (err)
+ 		goto fail;
+diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
+index a19caa4..db63350 100644
+--- a/drivers/mtd/nand/raw/nand_macronix.c
++++ b/drivers/mtd/nand/raw/nand_macronix.c
+@@ -21,8 +21,12 @@
+ #define MACRONIX_RANDOMIZER_BIT BIT(1)
+ #define MACRONIX_READ_RETRY_MODE 5
+ 
++#define ONFI_FEATURE_ADDR_MXIC_PROTECTION 0xA0
+ #define ONFI_FEATURE_ADDR_MXIC_RANDOMIZER 0xB0
+ 
++#define MXIC_BLOCK_PROTECTION_ALL_LOCK 0x38
++#define MXIC_BLOCK_PROTECTION_ALL_UNLOCK 0x0
++
+ struct nand_onfi_vendor_macronix {
+ 	u8 reserved[1];
+ 	u8 reliability_func;
+@@ -146,6 +150,13 @@ static void macronix_nand_onfi_init(struct nand_chip *chip)
+ 		struct nand_onfi_vendor_macronix *mxic =
+ 				(void *)p->onfi->vendor;
+ 
++		if (p->supports_set_get_features) {
++			set_bit(ONFI_FEATURE_ADDR_MXIC_PROTECTION,
++				p->get_feature_list);
++			set_bit(ONFI_FEATURE_ADDR_MXIC_PROTECTION,
++				p->set_feature_list);
++		}
++
+ 		if (mxic->reliability_func & MACRONIX_READ_RETRY_BIT) {
+ 			chip->read_retries = MACRONIX_READ_RETRY_MODE + 1;
+ 			chip->setup_read_retry =
+@@ -241,3 +252,39 @@ static int macronix_nand_init(struct nand_chip *chip)
+ const struct nand_manufacturer_ops macronix_nand_manuf_ops = {
+ 	.init = macronix_nand_init,
+ };
++
++int mxic_nand_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
++{
++	struct nand_chip *chip = mtd_to_nand(mtd);
++	u8 feature[ONFI_SUBFEATURE_PARAM_LEN] = {0};
++	int ret;
++
++	feature[0] = MXIC_BLOCK_PROTECTION_ALL_LOCK;
++	nand_select_target(chip, 0);
++	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_PROTECTION,
++				feature);
++	nand_deselect_target(chip);
++	if (ret)
++		pr_err("Lock MXIC NAND all blocks failed, err:%d\n", ret);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(mxic_nand_lock);
++
++int mxic_nand_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
++{
++	struct nand_chip *chip = mtd_to_nand(mtd);
++	u8 feature[ONFI_SUBFEATURE_PARAM_LEN] = {0};
++	int ret;
++
++	feature[0] = MXIC_BLOCK_PROTECTION_ALL_UNLOCK;
++	nand_select_target(chip, 0);
++	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_PROTECTION,
++				feature);
++	nand_deselect_target(chip);
++	if (ret)
++		pr_err("Unlock MXIC NAND all blocks failed, err:%d\n", ret);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(mxic_nand_unlock);
+diff --git a/include/linux/mfd/mxic-mx25f0a.h b/include/linux/mfd/mxic-mx25f0a.h
+index 5a8cfc7..cfce992 100644
+--- a/include/linux/mfd/mxic-mx25f0a.h
++++ b/include/linux/mfd/mxic-mx25f0a.h
+@@ -170,4 +170,7 @@ struct mx25f0a_mfd {
+ 	void __iomem *dirmap;
+ };
+ 
++int mxic_nand_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len);
++int mxic_nand_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len);
++
+ #endif // __MFD_MXIC_MX25F0A_H
+-- 
+1.9.1
