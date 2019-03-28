@@ -1,38 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 6/6] dt-bindings: fpga: Add bindings for ZynqMP fpga
- driver
-Date: Thu, 28 Mar 2019 12:00:28 -0500
-Message-ID: <20190328170028.GA10815@bogus>
-References: <20190326143129.2608-1-nava.manne@xilinx.com>
- <20190326143129.2608-7-nava.manne@xilinx.com>
+From: Patrick Venture <venture@google.com>
+Subject: Re: [PATCH v8 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Date: Thu, 28 Mar 2019 10:03:36 -0700
+Message-ID: <CAO=notxxYF4noXbR1BeVrwqCBHaVCaXy+jPV4OVbex=w=fV+Rg@mail.gmail.com>
+References: <20190327212155.80730-1-venture@google.com> <20190328165009.GA25705@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190326143129.2608-7-nava.manne@xilinx.com>
+In-Reply-To: <20190328165009.GA25705@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: atull@kernel.org, mdf@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, rajanv@xilinx.com, jollys@xilinx.com, nava.manne@xilinx.com, linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
+To: Rob Herring <robh@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Greg KH <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 26 Mar 2019 20:01:29 +0530, Nava kishore Manne wrote:
-> Add documentation to describe Xilinx ZynqMP fpga driver
-> bindings.
-> 
-> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
-> ---
-> Changes for v5:
-> 		-Moved pcap node as a child to firwmare
-> 		 node as suggested by Rob.
-> Changes for v4:
-> 		-Modified binding description as suggested by Moritz Fischer.
-> Changes for v3:
-> 		-Removed PCAP as a child node to the FW and Created
-> 		 an independent node since PCAP driver is a consumer
-> 		 not a provider.
-> 
->  .../bindings/fpga/xlnx,zynqmp-pcap-fpga.txt   | 25 +++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
-> 
+On Thu, Mar 28, 2019 at 9:50 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, 27 Mar 2019 14:21:55 -0700, Patrick Venture wrote:
+> > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+> >
+> > Signed-off-by: Patrick Venture <venture@google.com>
+> > ---
+> > Changes for v8:
+> > - None
+> > Changes for v7:
+> > - Moved node under the syscon node it requires
+> > Changes for v6:
+> > - None
+> > Changes for v5:
+> > - None
+> > Changes for v4:
+> > - None
+> > Changes for v3:
+> > - None
+> > Changes for v2:
+> > - Added comment about syscon required parameter.
+> > ---
+> >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
+> >  1 file changed, 48 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> >
+>
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+>
+> If a tag was not added on purpose, please state why and what changed.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Adding tags in this case is adding a change version?  I was doing this
+to keep the two patches version-synced.  I thought that was required.
+There was a version change in the other patch in this set.
