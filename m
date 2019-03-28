@@ -1,34 +1,39 @@
-From: syzbot <syzbot+a979743610b4755d4d57@syzkaller.appspotmail.com>
-Subject: Re: INFO: task hung in evdev_release
-Date: Wed, 27 Mar 2019 18:24:01 -0700
-Message-ID: <000000000000bf3ccd05851d68a7@google.com>
-References: <000000000000f1be430578524a20@google.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v11 06/27] MAINTAINERS: Add myself as maintainer for
+ Ingenic TCU drivers
+Date: Wed, 27 Mar 2019 18:29:49 -0700
+Message-ID: <fc86715bcd4a6cc7a4765e5b2975842fc0df57ad.camel@perches.com>
+References: <20190327231631.15708-1-paul@crapouillou.net>
+         <20190327231631.15708-7-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <000000000000f1be430578524a20@google.com>
+In-Reply-To: <20190327231631.15708-7-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org, broonie@kernel.org, devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, jbrunet@baylibre.com, lgirdwood@gmail.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, rydberg@bitmath.org, syzkaller-bugs@googlegroups.com
+To: Paul Cercueil <paul@crapouillou.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Wim Van Sebroeck <wim@linux-watchdog.org>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Mathieu Malaterre <malat@debian.org>, od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Thu, 2019-03-28 at 00:16 +0100, Paul Cercueil wrote:
+> diff --git a/MAINTAINERS b/MAINTAINERS
+[]
+> @@ -7665,6 +7665,15 @@ L:	linux-mtd@lists.infradead.org
+>  S:	Maintained
+>  F:	drivers/mtd/nand/raw/jz4780_*
+>  
+> +INGENIC TCU driver
 
-commit e32d99af6830c9a8f37b4f2637ef0cdc60fa79fb
-Author: Jerome Brunet <jbrunet@baylibre.com>
-Date:   Tue Jul 17 15:42:50 2018 +0000
+trivia:
 
-     ASoC: meson: add axg fifos DT binding documentation
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13fba69b200000
-start commit:   9dcd936c Merge tag 'for-4.19/dm-fixes-4' of git://git.kern..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1007a69b200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=17fba69b200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=88e9a8a39dc0be2d
-dashboard link: https://syzkaller.appspot.com/bug?extid=a979743610b4755d4d57
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10fcd826400000
-
-Reported-by: syzbot+a979743610b4755d4d57@syzkaller.appspotmail.com
-Fixes: e32d99af6830 ("ASoC: meson: add axg fifos DT binding documentation")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Generally the section header is all upper case and not mixed case
+$ git grep -i DRIVER -- MAINTAINERS | \
+  grep -v 'drivers/' | grep -v 'MAINTAINERS:[A-Z]:' | \
+  grep -P -i -o 'drivers?' | \
+  sort | uniq -c | sort -rn
+    980 DRIVER
+    181 DRIVERS
+     19 driver
+     12 Driver
+      8 drivers
+      3 Drivers
