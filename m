@@ -1,38 +1,60 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 10/14] dt-bindings: arm: sunxi: add
- compatible string for V3/S3/S3L SoCs
-Date: Thu, 28 Mar 2019 08:29:39 -0500
-Message-ID: <20190328132939.GA13841@bogus>
-References: <20190312152256.35574-1-icenowy@aosc.io>
- <20190312152256.35574-11-icenowy@aosc.io>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 3/4] dt-bindings: drm/msm/gpu: Document a5xx / a6xx
+ zap shader region
+Date: Thu, 28 Mar 2019 08:32:15 -0500
+Message-ID: <20190328133215.GA14020@bogus>
+References: <1552414422-9568-1-git-send-email-jcrouse@codeaurora.org>
+ <1552414422-9568-4-git-send-email-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBRMY6PSAKGQEA3YP2DI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190312152256.35574-11-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <1552414422-9568-4-git-send-email-jcrouse@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jordan Crouse <jcrouse@codeaurora.org>
+Cc: freedreno@lists.freedesktop.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Daniel Vetter <daniel@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 12 Mar 2019 23:22:52 +0800, Icenowy Zheng wrote:
-> Allwinner V3/V3s/S3L and SoChip S3 SoCs share the same die, but with
-> different package (V3 is BGA, without co-packaged DRAM, V3s is QFP,
-> with co-packaged DDR2, S3 is BGA, with co-packaged DDR3, S3L is BGA
-> pin-compatible with S3, but with co-packaged DDR2).
+On Tue, Mar 12, 2019 at 12:13:41PM -0600, Jordan Crouse wrote:
+> Describe the zap-shader node that defines a reserved memory region
+> to store the zap shader.
 > 
-> Add compatible strings for Allwinner V3/S3L and SoChip S3 SoCs.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/arm/sunxi.txt | 3 +++
->  1 file changed, 3 insertions(+)
 > 
+>  Documentation/devicetree/bindings/display/msm/gpu.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/msm/gpu.txt b/Documentation/devicetree/bindings/display/msm/gpu.txt
+> index aad1aef..1e6d870 100644
+> --- a/Documentation/devicetree/bindings/display/msm/gpu.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/gpu.txt
+> @@ -25,6 +25,9 @@ Required properties:
+>  - qcom,gmu: For GMU attached devices a phandle to the GMU device that will
+>    control the power for the GPU. Applicable targets:
+>      - qcom,adreno-630.2
+> +- zap-shader: For a5xx and a6xx devices this node contains a memory-region that
+> +  points to reserved memory to store the zap shader that can be used to help
+> +  bring the GPU out of secure mode.
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+This is the properties section and zap-shader is not a property.
+
+But why do you need a child node in the first place? Just add 
+'memory-region' to the parent.
+
+>  
+>  Example 3xx/4xx/a5xx:
+>  
+> @@ -71,5 +74,9 @@ Example a6xx (with GMU):
+>  		operating-points-v2 = <&gpu_opp_table>;
+>  
+>  		qcom,gmu = <&gmu>;
+> +
+> +		zap-shader {
+> +			memory-region = <&zap_shader_region>;
+> +		};
+>  	};
+>  };
+> -- 
+> 2.7.4
+> 
