@@ -1,60 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] edac: sifive: Add DT documentation for SiFive L2
- cache Controller
-Date: Fri, 29 Mar 2019 14:41:05 -0500
-Message-ID: <CAL_JsqLQ1XvQq7L=xA5Z8Y0Xa4Bmp0t2pgxn+hLF+tD=_L7Mvg@mail.gmail.com>
-References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
- <1552382461-13051-2-git-send-email-yash.shah@sifive.com> <20190328131657.GA9056@bogus>
- <be7246a0-2426-995d-0a24-f104c173d752@arm.com> <CAL_Jsq+s77J=Bwiyow2d7Q=e+z+5d64i_cL6xaYn0xdvJDb4Vg@mail.gmail.com>
- <20190329142739.GG21152@zn.tnic>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH 2/2] edac: sifive: Add EDAC driver for SiFive FU540-C000
+ chip
+Date: Fri, 29 Mar 2019 12:45:33 -0700 (PDT)
+Message-ID: <alpine.DEB.2.21.9999.1903291236060.6637@viisi.sifive.com>
+References: <1553082728-9232-1-git-send-email-yash.shah@sifive.com> <1553082728-9232-3-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190329142739.GG21152@zn.tnic>
+In-Reply-To: <1553082728-9232-3-git-send-email-yash.shah@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: James Morse <james.morse@arm.com>, Yash Shah <yash.shah@sifive.com>, linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org
+To: linux-edac@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org, Yash Shah <yash.shah@sifive.com>, james.morse@arm.com, palmer@sifive.com, paul.walmsley@sifive.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, aou@eecs.berkeley.edu, bp@alien8.de, mchehab@kernel.org, devicetree@vger.kernel.org, sachin.ghadi@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 9:27 AM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Fri, Mar 29, 2019 at 09:11:24AM -0500, Rob Herring wrote:
-> > I honestly don't understand the issue with EDAC is here.
->
-> The EDAC core supports only one driver and if you need to load more, you
-> need to dance around that.
->
-> Also, if those drivers need to talk amongst each other, then they need
-> to build something ad-hoc so that they can.
->
-> And the other architectures can very well do one driver per platform -
-> only ARM wants to do this special thing because DT said so. Or whatever.
->
-> > Highbank is separate drivers for L2 ECC (PL310) and DDR. Both are used
-> > on highbank.
->
-> That's because your L2 driver does allocate an edac_device
-> (edac_device_alloc_ctl_info()) and the DDR one an edac_mc
-> (edac_mc_add_mc_with_groups).
->
-> For example, altera_edac does edac_device_alloc_ctl_info() for each IP
-> block just fine. So a single driver *can* work.
->
-> > Only the DDR driver is used midway. (I think we never got around to
-> > how to report A15 L2 ECC errors within Linux.)
-> >
-> > In any case, it's all irrelevant to the DT binding. We don't design
-> > bindings around what some particular OS wants.
->
-> And just because DT dictates one driver per IP block, I'm not going to
-> redesign EDAC to fit that scheme. You or someone else who feels strongly
-> about it, is more than welcome to do so, of course. And then maintain it
-> too.
+On Wed, 20 Mar 2019, Yash Shah wrote:
 
-DT dictates aligning with what the h/w looks like which has little to
-do with OS driver design. I never said you should change EDAC and I
-outlined how things should be handled if it is one driver. DT and OS
-subsystems are independent things. I can't tell you how to design the
-subsystem and you can't dictate DT design (based on EDAC design).
+> This EDAC driver supports:
+> - Initial configuration reporting on bootup via debug logs
+> - ECC event monitoring and reporting through the EDAC framework
+> - ECC event injection
+> 
+> This driver is partially based on pnd2_edac.c and altera_edac.c
+> 
+> Initially L2 Cache controller is added as a subcomponent to
+> this EDAC driver.
+> 
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
 
-Rob
+Based on the discussion with Borislav, we're going to move the L2 driver 
+elsewhere in the tree.  We'll look into creating a platform-specific EDAC 
+driver on top of that.
+
+
+- Paul
