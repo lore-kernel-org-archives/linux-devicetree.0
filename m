@@ -1,72 +1,37 @@
-From: Yu Chen <chenyu56@huawei.com>
-Subject: [PATCH v5 01/13] dt-bindings: phy: Add support for HiSilicon's hi3660 USB PHY
-Date: Fri, 29 Mar 2019 12:13:57 +0800
-Message-ID: <20190329041409.70138-2-chenyu56@huawei.com>
-References: <20190329041409.70138-1-chenyu56@huawei.com>
+From: Harish Bandi <c-hbandi@codeaurora.org>
+Subject: Re: [PATCH v6 2/2] dt-bindings: net: bluetooth: Add device tree
+ bindings for QTI chip WCN3998
+Date: Fri, 29 Mar 2019 10:08:45 +0530
+Message-ID: <273d6b53cec219cb1c1a3432da331c46@codeaurora.org>
+References: <1553689723-21017-1-git-send-email-c-hbandi@codeaurora.org>
+ <1553689723-21017-3-git-send-email-c-hbandi@codeaurora.org>
+ <20190327172905.GE112750@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190329041409.70138-1-chenyu56@huawei.com>
+In-Reply-To: <20190327172905.GE112750@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Binghui Wang <wangbinghui@hisilicon.com>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, anubhavg@codeaurora.org, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds binding documentation for supporting the hi3660 usb
-phy on boards like the HiKey960.
+Hi Matthias,
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Binghui Wang <wangbinghui@hisilicon.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Yu Chen <chenyu56@huawei.com>
----
-v1:
-* Fix some format error as suggested by Rob.
-v2:
-* Change hi3660 usb PHY to hi3660 USB PHY
-v3:
-* Make device node a subnode of usb3_otg_bc register.
-v4:
-* Remove "hisilicon,usb3-otg-bc-syscon" property
----
----
- .../devicetree/bindings/phy/phy-hi3660-usb3.txt    | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
-new file mode 100644
-index 000000000000..e88ba7d92dcb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
-@@ -0,0 +1,26 @@
-+Hisilicon hi3660 USB PHY
-+-----------------------
-+
-+Required properties:
-+- compatible: should be "hisilicon,hi3660-usb-phy"
-+- #phy-cells: must be 0
-+- hisilicon,pericrg-syscon: phandle of syscon used to control phy.
-+- hisilicon,pctrl-syscon: phandle of syscon used to control phy.
-+- hisilicon,eye-diagram-param: parameter set for phy
-+Refer to phy/phy-bindings.txt for the generic PHY binding properties
-+
-+This is a subnode of usb3_otg_bc register node.
-+
-+Example:
-+	usb3_otg_bc: usb3_otg_bc@ff200000 {
-+		compatible = "syscon", "simple-mfd";
-+		reg = <0x0 0xff200000 0x0 0x1000>;
-+
-+		usb-phy {
-+			compatible = "hisilicon,hi3660-usb-phy";
-+			#phy-cells = <0>;
-+			hisilicon,pericrg-syscon = <&crg_ctrl>;
-+			hisilicon,pctrl-syscon = <&pctrl>;
-+			hisilicon,eye-diagram-param = <0x22466e4>;
-+		};
-+	};
--- 
-2.15.0-rc2
+On 2019-03-27 22:59, Matthias Kaehlcke wrote:
+> On Wed, Mar 27, 2019 at 05:58:43PM +0530, Harish Bandi wrote:
+>> This patch enables regulators for the Qualcomm Bluetooth WCN3998
+>> controller.
+> 
+> I commented on this on v3, but you didn't update it:
+> 
+>   No, it doesn't.
+> 
+>   The next version should probably say something like "Add compatible
+>   string for the Qualcomm WCN3998 Bluetooth controller".
+> 
+[Harish] - will take care in next version.
+> Thanks
+> 
+> Matthias
