@@ -1,7 +1,7 @@
 From: Yu Chen <chenyu56@huawei.com>
-Subject: [PATCH v5 05/13] usb: dwc3: Execute GCTL Core Soft Reset while switch mdoe for Hisilicon Kirin Soc
-Date: Fri, 29 Mar 2019 12:14:01 +0800
-Message-ID: <20190329041409.70138-6-chenyu56@huawei.com>
+Subject: [PATCH v5 08/13] usb: roles: Introduce stubs for the exiting functions in role.h.
+Date: Fri, 29 Mar 2019 12:14:04 +0800
+Message-ID: <20190329041409.70138-9-chenyu56@huawei.com>
 References: <20190329041409.70138-1-chenyu56@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,90 +9,68 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190329041409.70138-1-chenyu56@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>
+Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-A GCTL soft reset should be executed when switch mode for dwc3 core
-of Hisilicon Kirin Soc.
+This patch adds stubs for the exiting functions while
+CONFIG_USB_ROLE_SWITCH does not enabled.
 
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Felipe Balbi <balbi@kernel.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: John Stultz <john.stultz@linaro.org>
-Cc: Binghui Wang <wangbinghui@hisilicon.com>
 Signed-off-by: Yu Chen <chenyu56@huawei.com>
 ---
-v4:
-* Add description for 'gctl_reset_quirk'.
----
----
- drivers/usb/dwc3/core.c | 19 +++++++++++++++++++
- drivers/usb/dwc3/core.h |  2 ++
- 2 files changed, 21 insertions(+)
+ include/linux/usb/role.h | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index c3ef6bd2b0d4..fd581d72794a 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -112,6 +112,19 @@ void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)
- 	dwc->current_dr_role = mode;
- }
+diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
+index c05ffa6abda9..da2b9641b877 100644
+--- a/include/linux/usb/role.h
++++ b/include/linux/usb/role.h
+@@ -42,6 +42,8 @@ struct usb_role_switch_desc {
+ 	bool allow_userspace_control;
+ };
  
-+static void dwc3_gctl_core_soft_reset(struct dwc3 *dwc)
++
++#if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
+ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
+ enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
+ struct usb_role_switch *usb_role_switch_get(struct device *dev);
+@@ -51,5 +53,33 @@ struct usb_role_switch *
+ usb_role_switch_register(struct device *parent,
+ 			 const struct usb_role_switch_desc *desc);
+ void usb_role_switch_unregister(struct usb_role_switch *sw);
++#else
++static inline int usb_role_switch_set_role(struct usb_role_switch *sw,
++		enum usb_role role)
 +{
-+	u32 reg;
-+
-+	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
-+	reg |= DWC3_GCTL_CORESOFTRESET;
-+	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
-+
-+	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
-+	reg &= ~DWC3_GCTL_CORESOFTRESET;
-+	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
++	return 0;
 +}
 +
- static void __dwc3_set_mode(struct work_struct *work)
- {
- 	struct dwc3 *dwc = work_to_dwc(work);
-@@ -157,6 +170,10 @@ static void __dwc3_set_mode(struct work_struct *work)
- 
- 	dwc3_set_prtcap(dwc, dwc->desired_dr_role);
- 
-+	/* Execute a GCTL Core Soft Reset when switch mode */
-+	if (dwc->gctl_reset_quirk)
-+		dwc3_gctl_core_soft_reset(dwc);
++static inline enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
++{
++	return USB_ROLE_NONE;
++}
 +
- 	spin_unlock_irqrestore(&dwc->lock, flags);
++static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
++{
++	return ERR_PTR(-ENODEV);
++}
++
++static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
++
++static inline struct usb_role_switch *
++usb_role_switch_register(struct device *parent,
++			 const struct usb_role_switch_desc *desc)
++{
++	return ERR_PTR(-ENODEV);
++}
++
++static inline void usb_role_switch_unregister(struct usb_role_switch *sw) { }
++#endif
  
- 	switch (dwc->desired_dr_role) {
-@@ -1314,6 +1331,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
- 
- 	dwc->dis_split_quirk = device_property_read_bool(dev,
- 				"snps,dis-split-quirk");
-+	dwc->gctl_reset_quirk = device_property_read_bool(dev,
-+				"snps,gctl-reset-quirk");
- 
- 	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
- 	dwc->tx_de_emphasis = tx_de_emphasis;
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 28475e301ad9..6a050d663ec7 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -1035,6 +1035,7 @@ struct dwc3_scratchpad_array {
-  * 	3	- Reserved
-  * @dis_metastability_quirk: set to disable metastability quirk.
-  * @dis_split_quirk: set to disable split boundary.
-+ * @gctl_reset_quirk: set to do a gctl soft-reset while switch operation mode.
-  * @imod_interval: set the interrupt moderation interval in 250ns
-  *                 increments or 0 to disable.
-  */
-@@ -1222,6 +1223,7 @@ struct dwc3 {
- 	unsigned		dis_metastability_quirk:1;
- 
- 	unsigned		dis_split_quirk:1;
-+	unsigned		gctl_reset_quirk:1;
- 
- 	u16			imod_interval;
- };
+ #endif /* __LINUX_USB_ROLE_H */
 -- 
 2.15.0-rc2
