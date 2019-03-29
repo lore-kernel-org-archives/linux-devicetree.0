@@ -1,85 +1,143 @@
-From: Patrick Venture <venture@google.com>
-Subject: Re: [PATCH v8 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
-Date: Fri, 29 Mar 2019 08:11:00 -0700
-Message-ID: <CAO=notynUJGUn3tuJZ_jFPdz23_T1FPyzS46mm5msphLnLW_JA@mail.gmail.com>
-References: <20190327212155.80730-1-venture@google.com> <20190328165009.GA25705@bogus>
- <CAO=notxxYF4noXbR1BeVrwqCBHaVCaXy+jPV4OVbex=w=fV+Rg@mail.gmail.com>
- <CAL_JsqJSvzOQbJSgz7z2wZj9-z=bfhzF_C+662Gnf68TgAPFaA@mail.gmail.com>
- <CAO=notx6K7xTW1VG6BGJFBM5k8EQsWXn3WoWSPSrZRsxkwueSA@mail.gmail.com> <CAO=notxD=5pa5sT15a+VrA7qVNPBoJoTo=5sLxibBxc+HWcG4g@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v9 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD controller
+ driver
+Date: Fri, 29 Mar 2019 18:12:43 +0300
+Message-ID: <5cf42c96-183c-1edd-8397-1de6e3033f33@cogentembedded.com>
+References: <1553847606-18122-1-git-send-email-masonccyang@mxic.com.tw>
+ <1553847606-18122-2-git-send-email-masonccyang@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAO=notxD=5pa5sT15a+VrA7qVNPBoJoTo=5sLxibBxc+HWcG4g@mail.gmail.com>
+In-Reply-To: <1553847606-18122-2-git-send-email-masonccyang@mxic.com.tw>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Greg KH <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org, marek.vasut@gmail.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, lee.jones@linaro.org
+Cc: juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>, zhengxunli@mxic.com.tw
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 7:59 AM Patrick Venture <venture@google.com> wrote:
->
-> On Fri, Mar 29, 2019 at 7:56 AM Patrick Venture <venture@google.com> wrote:
-> >
-> > On Fri, Mar 29, 2019 at 6:38 AM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Thu, Mar 28, 2019 at 12:03 PM Patrick Venture <venture@google.com> wrote:
-> > > >
-> > > > On Thu, Mar 28, 2019 at 9:50 AM Rob Herring <robh@kernel.org> wrote:
-> > > > >
-> > > > > On Wed, 27 Mar 2019 14:21:55 -0700, Patrick Venture wrote:
-> > > > > > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
-> > > > > >
-> > > > > > Signed-off-by: Patrick Venture <venture@google.com>
-> > > > > > ---
-> > > > > > Changes for v8:
-> > > > > > - None
-> > > > > > Changes for v7:
-> > > > > > - Moved node under the syscon node it requires
-> > > > > > Changes for v6:
-> > > > > > - None
-> > > > > > Changes for v5:
-> > > > > > - None
-> > > > > > Changes for v4:
-> > > > > > - None
-> > > > > > Changes for v3:
-> > > > > > - None
-> > > > > > Changes for v2:
-> > > > > > - Added comment about syscon required parameter.
-> > > > > > ---
-> > > > > >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
-> > > > > >  1 file changed, 48 insertions(+)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> > > > > >
-> > > > >
-> > > > > Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> > > > > there's no need to repost patches *only* to add the tags. The upstream
-> > > > > maintainer will do that for acks received on the version they apply.
-> > > > >
-> > > > > If a tag was not added on purpose, please state why and what changed.
-> > > >
-> > > > Adding tags in this case is adding a change version?  I was doing this
-> > > > to keep the two patches version-synced.  I thought that was required.
-> > > > There was a version change in the other patch in this set.
-> > >
-> > > Adding tags is not considered a change. I gave a Reviewed-by in v7.
-> > > Subsequent versions should carry that tag if there's no change (or
-> > > only minor changes) in this patch. What happens in the other patches
-> > > is not really important. Maintainers are not going to go searching
-> > > thru the versions to find all the ack/review tags. And if I've already
-> > > reviewed this, I don't want to look at it again.
-> >
-> > Thank you, I didn't realize that had happened.
->
-> I went back through my email and found the line of your email that
-> included it.  I apologize.
->
-> So, before I send the updated patch with your ack -- do I need to send
-> a v9? or is this just me sending v8 again?
+On 03/29/2019 11:20 AM, Mason Yang wrote:
 
-Sorry.  I see you already answered that when you said that adding a
-tag isn't considered a change.  I have therefore re-sent v8 of this
-patch with your tag added.
+> Add a driver for Renesas R-Car Gen3 RPC-IF MFD controller.
+> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+[...]
+> diff --git a/drivers/mfd/renesas-rpc.c b/drivers/mfd/renesas-rpc.c
+> new file mode 100644
+> index 0000000..c92bb74
+> --- /dev/null
+> +++ b/drivers/mfd/renesas-rpc.c
+> @@ -0,0 +1,140 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (C) 2018 ~ 2019 Renesas Solutions Corp.
+> +// Copyright (C) 2019 Macronix International Co., Ltd.
+> +//
+> +// R-Car Gen3 RPC-IF MFD driver
+> +//
+> +// Author:
+> +//	Mason Yang <masonccyang@mxic.com.tw>
+> +//
+> +
+> +#include <linux/mfd/renesas-rpc.h>
+> +#include <linux/mfd/core.h>
+> +
+> +static const struct mfd_cell rpc_hf_ctlr = {
+> +	.name = "rpc-hf",
+> +	.of_compatible = "renesas,rcar-rpc-hf",
+> +};
+> +
+> +static const struct mfd_cell rpc_spi_ctlr = {
+> +	.name = "rpc-spi",
+> +	.of_compatible = "renesas,rcar-rpc-spi",
+> +};
+> +
+> +static const struct regmap_range rpc_mfd_volatile_ranges[] = {
+> +	regmap_reg_range(RPC_SMRDR0, RPC_SMRDR0),
 
->
-> >
-> > >
-> > > Rob
+   regmap_reg_range((RPC_SMRDR0, RPC_SMRDR1), like Marek noted?
+
+> +	regmap_reg_range(RPC_SMWDR0, RPC_SMWDR0),
+
+   regmap_reg_range((RPC_SMWDR0, RPC_SMWDR1)?
+
+> +static int rpc_mfd_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *ctlr;
+> +	const struct mfd_cell *cell;
+> +	struct resource *res;
+> +	struct rpc_mfd *rpc;
+> +	int ret;
+> +
+> +	ctlr = of_get_next_child(pdev->dev.of_node, NULL);
+
+    The child should be a CFI or JEDEC flash device, no virtual devices,
+please.
+
+[...]
+> +	rpc->rstc = devm_reset_control_get_exclusive(&pdev->dev, NULL);
+> +	if (IS_ERR(rpc->rstc))
+> +		return PTR_ERR(rpc->rstc);
+> +
+> +	platform_set_drvdata(pdev, rpc);
+> +
+> +	ret = devm_mfd_add_devices(&pdev->dev, -1, cell, 1, NULL, 0, NULL);
+> +
+> +	return ret;
+
+	return devm_mfd_add_devices(&pdev->dev, -1, cell, 1, NULL, 0, NULL);
+
+> +}
+> +
+> +static int rpc_mfd_remove(struct platform_device *pdev)
+> +{
+> +	mfd_remove_devices(&pdev->dev);
+
+   Why, if you used devm_mfd_add_devices() in the probe method?
+
+> +	return 0;
+> +}
+[...]
+> diff --git a/include/linux/mfd/renesas-rpc.h b/include/linux/mfd/renesas-rpc.h
+> new file mode 100644
+> index 0000000..209e64f1
+> --- /dev/null
+> +++ b/include/linux/mfd/renesas-rpc.h
+> @@ -0,0 +1,154 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (C) 2018 ~ 2019 Renesas Solutions Corp.
+> +// Copyright (C) 2019 Macronix International Co., Ltd.
+> +//
+> +// R-Car Gen3 RPC-IF MFD driver
+> +//
+> +// Author:
+> +//	Mason Yang <masonccyang@mxic.com.tw>
+> +//
+> +
+> +#ifndef __MFD_RENESAS_RPC_H
+> +#define __MFD_RENESAS_RPC_H
+> +
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/log2.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <linux/mtd/mtd.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/of.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+
+  Is any of these #include's used by the header itself? I don't think so...
+
+> +
+> +#define RPC_CMNCR		0x0000	// R/W
+
+   Not sure we'd need the registers described in the public header after
+we place the common RPC-IF code into the MFD driver. We'll see though...
+
+[...]
+
+MBR, Sergei
