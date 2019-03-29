@@ -1,47 +1,57 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v2 00/13] qcom: dts: thermal cleanups
-Date: Fri, 29 Mar 2019 15:42:06 +0530
-Message-ID: <cover.1553853990.git.amit.kucheria@linaro.org>
+Subject: [PATCH v2 01/13] arm64: dts: msm8998: thermal: split address space into two
+Date: Fri, 29 Mar 2019 15:42:07 +0530
+Message-ID: <e1f41103b412b6809fe43124256e4968c8fae9fd.1553853990.git.amit.kucheria@linaro.org>
+References: <cover.1553853990.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1553853990.git.amit.kucheria@linaro.org>
+In-Reply-To: <cover.1553853990.git.amit.kucheria@linaro.org>
+References: <cover.1553853990.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, David Brown <david.brown@linaro.org>
 Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Changes since v1:
-- Devices that are not associated with cooling-maps use the 'hot' type
-- Remove critical trip from such devices too and restrict that type of CPUs
-- For 8916, add the sensor on the modem
+We've earlier added support to split the register address space into TM
+and SROT regions. Split up the regmap address space into two for msm8998
+that has a similar register layout.
 
-Description:
-- Expose all temperature sensors on msm8916, msm996, msm8998, sdm845
-- split up the register address map for msm8998
-- standardize names of the various thermal-zones across boards to make it
-  easy for test scripts to parse
+The order is important (TM before SROT) because we make an assumption
+that SROT is always the second address space in order to support legacy
+DTs.
 
-Amit Kucheria (13):
-  arm64: dts: msm8998: thermal: split address space into two
-  arm64: dts: msm8998: efficiency is not valid property
-  arm64: dts: msm8916: thermal: Add sensor for modem
-  arm64: dts: msm8996: thermal: Add temperature sensors near major
-    peripherals
-  arm64: dts: msm8998: thermal: Fix the cpu sensor numbers
-  arm64: dts: msm8998: thermal: Fix the gpu sensor number
-  arm64: dts: msm8998: thermal: GPU has two sensors, add the second
-  arm64: dts: msm8998: thermal: Add temperature sensors near major
-    peripherals
-  arm64: dts: sdm845: thermal: Add temperature sensors near major
-    peripherals
-  arm64: dts: msm8998: thermal: Make trip names consistent
-  arm64: dts: msm8916: thermal: Make trip names consistent
-  arm64: dts: msm8996: thermal: Make trip names consistent
-  arm64: dts: msm8916: thermal: Convert camera trip type to hot
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
- arch/arm64/boot/dts/qcom/msm8916.dtsi |  41 +++--
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 174 ++++++++++++++++--
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 242 +++++++++++++++++++++-----
- arch/arm64/boot/dts/qcom/sdm845.dtsi  | 205 ++++++++++++++++++++++
- 4 files changed, 589 insertions(+), 73 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index 3fd0769fe648..ac25e9142cbd 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -590,17 +590,19 @@
+ 			cell-index = <0>;
+ 		};
+ 
+-		tsens0: thermal@10aa000 {
++		tsens0: thermal@10ab000 {
+ 			compatible = "qcom,msm8998-tsens", "qcom,tsens-v2";
+-			reg = <0x10aa000 0x2000>;
++			reg = <0x10ab000 0x1000>, /* TM */
++			      <0x10aa000 0x1000>; /* SROT */
+ 
+ 			#qcom,sensors = <12>;
+ 			#thermal-sensor-cells = <1>;
+ 		};
+ 
+-		tsens1: thermal@10ad000 {
++		tsens1: thermal@10ae000 {
+ 			compatible = "qcom,msm8998-tsens", "qcom,tsens-v2";
+-			reg = <0x10ad000 0x2000>;
++			reg = <0x10ae000 0x1000>, /* TM */
++			      <0x10ad000 0x1000>; /* SROT */
+ 
+ 			#qcom,sensors = <8>;
+ 			#thermal-sensor-cells = <1>;
 -- 
 2.17.1
