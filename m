@@ -1,51 +1,70 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v4 6/7] ARM: dts: rockchip: Specify rk3288-veyron-jerry's display timings
-Date: Fri, 29 Mar 2019 20:20:00 +0100
-Message-ID: <7960623.ZFqGeXkhir@diego>
-References: <20190328171710.31949-1-dianders@chromium.org> <20190328171710.31949-7-dianders@chromium.org>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH net-next v2 3/3] net: phy: meson-gxl: add g12a support
+Date: Fri, 29 Mar 2019 20:22:56 +0100
+Message-ID: <0b7df4e8-8db2-a028-bd1d-6d77cac67110@gmail.com>
+References: <20190329141512.29867-1-jbrunet@baylibre.com>
+ <20190329141512.29867-4-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190328171710.31949-7-dianders@chromium.org>
+In-Reply-To: <20190329141512.29867-4-jbrunet@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, linux-rockchip@lists.infradead.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Enric =?ISO-8859-1?Q?Balletb=F2?= <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, mka@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Kevin Hilman <khilman@baylibre.com>
+Cc: netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 28. März 2019, 18:17:09 CET schrieb Douglas Anderson:
-> Let's document the display timings that jerry has been using out in
-> the field.  This uses the standard blankings but a slightly slower
-> clock rate, thus getting a refresh rate 58.3 Hz.
+On 29.03.2019 15:15, Jerome Brunet wrote:
+> The g12a SoC family uses the type of internal PHY that was used on the
+> gxl family. The quirks of gxl family, like the LPA register corruption,
+> appear to have been resolved on this new SoC generation.
 > 
-> NOTE: this won't really do anything except cause DRM to properly
-> report the refresh rate since vop_crtc_mode_fixup() was rounding the
-> pixel clock to 74.25 MHz anyway.  Apparently the adjusted rate isn't
-> exposed to userspace so it's important that the rate we're trying to
-> achieve is mostly right.
-> 
-> For the downstream kernel change related to this see See
-> https://crrev.com/c/324558.
-> 
-> NOTE: minnie will be fixed up in a future patch, so for now we'll just
-> delete the panel timings there.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
+>  drivers/net/phy/meson-gxl.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> Changes in v4:
-> - rk3288-veyron-jerry patch new for v4.
+> diff --git a/drivers/net/phy/meson-gxl.c b/drivers/net/phy/meson-gxl.c
+> index 0eec2913c289..49cad0f4c79b 100644
+> --- a/drivers/net/phy/meson-gxl.c
+> +++ b/drivers/net/phy/meson-gxl.c
+> @@ -237,11 +237,25 @@ static struct phy_driver meson_gxl_phy[] = {
+>  		.config_intr	= meson_gxl_config_intr,
+>  		.suspend        = genphy_suspend,
+>  		.resume         = genphy_resume,
+> +	}, {
+> +		.phy_id		= 0x01803301,
+> +		.phy_id_mask	= 0xffffffff,
+
+Here you could use the PHY_ID_MATCH_EXACT() macro, see realtek PHY
+driver for an example.
+
+> +		.name		= "Meson G12A Internal PHY",
+> +		.features	= PHY_BASIC_FEATURES,
+> +		.flags		= PHY_IS_INTERNAL,
+> +		.soft_reset     = genphy_soft_reset,
+> +		.aneg_done      = genphy_aneg_done,
+> +		.read_status	= genphy_read_status,
+
+genphy_aneg_done() and genphy_read_status() are used automatically
+as fallback if no callback is defined. You can omit these two lines.
+
+> +		.ack_interrupt	= meson_gxl_ack_interrupt,
+> +		.config_intr	= meson_gxl_config_intr,
+> +		.suspend        = genphy_suspend,
+> +		.resume         = genphy_resume,
+>  	},
+>  };
+>  
+>  static struct mdio_device_id __maybe_unused meson_gxl_tbl[] = {
+>  	{ 0x01814400, 0xfffffff0 },
+> +	{ 0x01803301, 0xffffffff },
+
+Also a candidate for PHY_ID_MATCH_EXACT. In the line before
+PHY_ID_MATCH_MODEL could be used.
+
+>  	{ }
+>  };
+>  
 > 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi | 14 ++++++++++++++
-
-hmm, the commit message explicitly mentions jerry, but this is the
-general panel definition for most veyron-chromebooks (jerry, pinky, jaq,...)?
-
-It does work on both pinky and jerry for me, so I guess just the commit
-message needs a bit adapting?
-
-
-Heiko
