@@ -1,65 +1,30 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/5] ARM: dts: imx50: Add Kobo Aura DTS
-Date: Fri, 29 Mar 2019 10:44:50 +0800
-Message-ID: <20190329024449.GM12513@dragon>
-References: <20190319152421.16179-1-j.neuschaefer@gmx.net>
- <20190319152421.16179-3-j.neuschaefer@gmx.net>
- <20190322013151.GR12513@dragon>
- <20190326162653.GD2095@latitude>
+Subject: Re: [PATCH v3 1/3] dt-bindings: arm: fsl: Add supported ZII VF610
+ boards to DT schema
+Date: Fri, 29 Mar 2019 11:13:31 +0800
+Message-ID: <20190329031330.GP12513@dragon>
+References: <20190325182243.16788-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190326162653.GD2095@latitude>
+In-Reply-To: <20190325182243.16788-1-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Heiko Stuebner <heiko@sntech.de>, Jagan Teki <jagan@amarulasolutions.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 05:26:53PM +0100, Jonathan Neuschäfer wrote:
-> Hi, thanks for your comments. I'll address them in v2.
+On Mon, Mar 25, 2019 at 11:22:41AM -0700, Andrey Smirnov wrote:
+> Add already supported ZII VF610 boards to DT schema.
 > 
-> On Fri, Mar 22, 2019 at 09:31:53AM +0800, Shawn Guo wrote:
-> > On Tue, Mar 19, 2019 at 04:24:17PM +0100, Jonathan Neuschäfer wrote:
-> > > The Kobo Aura is an e-book reader released in 2013.
-> [...]
-> > > +	sd2_pwrseq: pwrseq {
-> > > +		compatible = "mmc-pwrseq-simple";
-> > > +		pinctrl-names = "default";
-> > > +		pinctrl-0 = <&pinctrl_sd2_reset>;
-> > > +
-> > 
-> > Please do not have random newlines.
-> 
-> Does that apply to all empty lines between properties?
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
 
-Yes, that's what we do for i.MX device trees.
-
-> 
-> > 
-> > > +		reset-gpios = <&gpio4 17 GPIO_ACTIVE_LOW>;
-> > > +	};
-> > > +
-> [...]
-> > > +&iomuxc {
-> > > +	pinctrl_uart2: uart2 {
-> > > +		fsl,pins = <
-> > > +			MX50_PAD_UART2_TXD__UART2_TXD_MUX	0x1e4
-> > > +			MX50_PAD_UART2_RXD__UART2_RXD_MUX	0x1e4
-> > > +		>;
-> > > +	};
-> > > +
-> > > +	pinctrl_i2c1: i2c1 {
-> > 
-> > Please sort these pinctrl nodes alphabetically.
-> 
-> It doesn't make a difference here, but should I generally sort by name
-> or by label in cases like this one?
-
-Keep using the naming schema below, and it always makes no difference
-then.
-
-	pinctrl_xxx: xxx
-
-Shawn
+Applied all, thanks.
