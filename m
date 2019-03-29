@@ -1,51 +1,61 @@
-Return-Path: <SRS0=KxQt=R7=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v3 0/5] ARM: imx7s: add media nodes
-Date: Thu, 28 Mar 2019 14:25:11 +0000
-Message-Id: <20190328142516.30372-1-rui.silva@linaro.org>
+Return-Path: <robherring2@gmail.com>
+Date: Fri, 29 Mar 2019 11:21:11 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] power: supply: ltc3651-charger.c: Fix typo in device name
+Message-ID: <20190329162111.GB13068@bogus>
+References: <1553608635-29376-1-git-send-email-michael.hennerich@analog.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553608635-29376-1-git-send-email-michael.hennerich@analog.com>
+To: michael.hennerich@analog.com
+Cc: mike.looijmans@topic.nl, sre@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, robin.getz@analog.com
 List-ID: <devicetree@vger.kernel.org>
 
-This series is a continuation of the
-[PATCH v14 00/13] media: staging/imx7: add i.MX7 media driver [0] series.
-All code patches and bindings are already merged, missing only this
-dts patches.
+On Tue, Mar 26, 2019 at 02:57:15PM +0100, michael.hennerich@analog.com wrote:
+> From: Michael Hennerich <michael.hennerich@analog.com>
 
-The main difference from the version in the previous series is as
-commented by Laurent:
- - split of dtsi and dts in 2 patches
- - push endpoints to imx7s.dtsi
+Seems to be a bit more than 'fix a typo'.
 
-Cheers,
-   Rui
+> 
+> There never was a device called LTC3651, it always was just LT3651.
+> This circumstance makes it pretty difficult to identify what this
+> driver is meant to control. This patch is a minimal invasive attempt
+> to fix this issue without affecting existing systems.
+> 
+> 
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> ---
+>  .../devicetree/bindings/power/supply/ltc3651-charger.txt         | 8 +++++---
+>  drivers/power/supply/Kconfig                                     | 6 +++---
+>  drivers/power/supply/ltc3651-charger.c                           | 9 +++------
+>  3 files changed, 11 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt b/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
+> index 71f2840..f012449 100644
+> --- a/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
+> @@ -1,7 +1,9 @@
+> -ltc3651-charger
+> +Analog Devices LT3651 Charger Power Supply bindings: ltc3651-charger
+>  
+>  Required properties:
+> - - compatible: "lltc,ltc3651-charger"
+> +- compatible: Should contain one of the following:
+> + * "lltc,ltc3651-charger",
 
-v2->v3:
-Laurent Pinchart:
-  - Add label to csi-mux
-  - Disable csi-mux in imx7s
-  - enable it in warp dts
-  - add port@0 to mux
+You should note that this one is deprecated.
 
-v1->v2:
-Shawn Guo:
-  - sort alphabetically
-  - hyphen for node name
-  - indent align clocks
-  - send status to end of property list
-
-Rui Miguel Silva (5):
-  ARM: dts: imx7s: add mipi phy power domain
-  ARM: dts: imx7s: add multiplexer controls
-  ARM: dts: imx7s: Add video mux, csi and mipi_csi
-  ARM: dts: imx7s-warp: add csi and mipi_csi node
-  ARM: dts: imx7s-warp: add ov2680 sensor node
-
- arch/arm/boot/dts/imx7s-warp.dts | 59 ++++++++++++++++++++
- arch/arm/boot/dts/imx7s.dtsi     | 92 +++++++++++++++++++++++++++++++-
- 2 files changed, 149 insertions(+), 2 deletions(-)
-
--- 
-2.21.0
+> + * "lltc,lt3651-charger"
+>   - lltc,acpr-gpios: Connect to ACPR output. See remark below.
+>  
+>  Optional properties:
+> @@ -20,7 +22,7 @@ attributes to detect changes.
+>  Example:
+>  
+>  	charger: battery-charger {
+> -		compatible = "lltc,ltc3651-charger";
+> +		compatible = "lltc,lt3651-charger";
+>  		lltc,acpr-gpios = <&gpio0 68 GPIO_ACTIVE_LOW>;
+>  		lltc,fault-gpios = <&gpio0 64 GPIO_ACTIVE_LOW>;
+>  		lltc,chrg-gpios = <&gpio0 63 GPIO_ACTIVE_LOW>;
