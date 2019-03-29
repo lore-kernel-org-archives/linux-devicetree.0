@@ -1,58 +1,70 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v2] dt-bindings: pinctrl: imx7d: Fix PAD_CTL_DSE_X*
-Date: Fri, 29 Mar 2019 09:28:01 +0000
-Message-ID: <AM0PR04MB4211EBAB9D3DB1772FB51673805A0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190313142040.26694-1-cquast@hanoverdisplays.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v7 0/4] drm: add support for Cadence MHDP DPI/DP bridge.
+Date: Fri, 29 Mar 2019 11:42:51 +0200
+Message-ID: <5f7a3cdf-b5b5-34ef-ca58-b75b9bc1c326@ti.com>
+References: <1548846209-16406-1-git-send-email-dkos@cadence.com>
+ <0f11a4d8-d576-5af8-b7f4-afe3ff26678f@ti.com>
+ <ce6ed2e6-90d5-fc7a-4d6d-ab27d62c5432@ti.com>
+ <BYAPR07MB43111E34594899FC375D16BDCD580@BYAPR07MB4311.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190313142040.26694-1-cquast@hanoverdisplays.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <BYAPR07MB43111E34594899FC375D16BDCD580@BYAPR07MB4311.namprd07.prod.outlook.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christina Quast <cquast@hanoverdisplays.com>
-Cc: "festevam@gmail.com" <festevam@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Damian Kos <dkos@cadence.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Anil Joy Varughese <aniljoy@cadence.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "quentin.schulz@bootlin.com" <quentin.schulz@bootlin.com>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, Piotr Sroka <piotrs@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rafal Ciepiela <rafalc@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, David Airlie <airlied@linux.ie>, "Sarha, Jyri" <jsarha@ti.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> From: Christina Quast [mailto:cquast@hanoverdisplays.com]
-> Sent: Wednesday, March 13, 2019 10:21 PM
->=20
-> In the iMX7d datasheet, the PAD_CTL_DSE_X* values are different from the
-> documentation.
->=20
-> Changes since v2:
-> * Changed patch title to 'dt-bindings: pinctrl: imx7d:'
->=20
-> Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
-
-Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
-
-Regards
-Dong Aisheng
-
-> ---
->  .../devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt       | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.=
-txt
-> b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
-> index 6666277c3acb..8ac1d0851a0f 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
-> @@ -48,9 +48,9 @@ PAD_CTL_HYS                     (1 << 3)
->  PAD_CTL_SRE_SLOW                (1 << 2)
->  PAD_CTL_SRE_FAST                (0 << 2)
->  PAD_CTL_DSE_X1                  (0 << 0)
-> -PAD_CTL_DSE_X2                  (1 << 0)
-> -PAD_CTL_DSE_X3                  (2 << 0)
-> -PAD_CTL_DSE_X4                  (3 << 0)
-> +PAD_CTL_DSE_X4                  (1 << 0)
-> +PAD_CTL_DSE_X2                  (2 << 0)
-> +PAD_CTL_DSE_X6                  (3 << 0)
->=20
->  Examples:
->  While iomuxc-lpsr is intended to be used by dedicated peripherals to tak=
-e
-> --
-> 2.20.1
+T24gMjcvMDMvMjAxOSAxNjo1OCwgRGFtaWFuIEtvcyB3cm90ZToKCj4gV2Ugd291bGQgYmUgdmVy
+eSBoYXBweSB0byBoYXZlIGEgc2VwYXJhdGUgZHJpdmVyIGZvciBtaGRwODU0NiBpbnN0ZWFkIG9m
+Cj4gbWl4aW5nIGl0IHdpdGggUm9ja2NoaXAncyBkcml2ZXIuIFVuZm9ydHVuYXRlbHkgd2UgbmVl
+ZCB0byBoYXZlIG9uZSBkcml2ZXIKPiBmb3IgYm90aCBJUCdzLCBzbyBJJ2xsIGp1c3QgY2hhbmdl
+IG1oZHA4NTQ2LmtvIHRvIGNkbnMtbWhkcC5rby4gKFVubGVzcywKPiBtYWludGFpbmVycyBnaXZl
+IHVzIGEgZ3JlZW4gbGlnaHQgZm9yIHRoZSBkZWRpY2F0ZWQgZHJpdmVyPykKCk9rLiBJIGRvbid0
+IGtub3cgYWJvdXQgdGhlIGRpZmZlcmVuY2VzLCBzbyBJIGNhbid0IHNheSBtdWNoIGhlcmUuIEJ1
+dCBJCmRvIHRoaW5rIHRoYXQgeW91IHNob3VsZG4ndCBjb21iaW5lIGRyaXZlcnMgZm9yIHR3byBk
+aWZmZXJlbnQgSVBzIHVubGVzcwp0aGV5IGFyZSB2ZXJ5IHNpbWlsYXIuIEFuZCBpZiB0d28gZGlm
+ZmVyZW50IElQcyBoYXZlIGEgYmxvY2sgdGhhdCdzIHRoZQpzYW1lL3NpbWlsYXIsIHRoZSBjb2Rl
+IGZvciB0aGF0IGJsb2NrIGNhbiBiZSBleHRyYWN0ZWQgdG8gYSAibGlicmFyeSIKdXNlZCBieSBi
+b3RoIGRyaXZlcnMuCgo+Pj4gSSBzZWUgc29tZSBhdWRpbyBmdW5jdGlvbnMgaW4gdGhlIGNvZGUs
+IGJ1dCBpdCdzIG5vdCBtZW50aW9uZWQgaW4gdGhlIERUCj4+PiBiaW5kaW5ncy4gSSdtIG5vdCBh
+biBhdWRpbyBndXksIGJ1dCB0aGUgZGlzcGxheSBicmlkZ2VzIHdpdGggYXVkaW8KPj4+IHN1cHBv
+cnQgSSBoYXZlIHNlZW4gaGF2ZSBoYWQgRFQgYmluZGluZ3MgZm9yIHRoZSBhdWRpbyBzb3VyY2Ug
+dG9vLiBJcwo+Pj4gYXVkaW8gc3VwcG9ydGVkIGluIHRoZSBjdXJyZW50IGRyaXZlcj8KPj4+Cj4g
+QXMgZmFyIGFzIEkga25vdywgYXVkaW8gaXMgd29ya2luZywgYnV0IEkgY2FuJ3QgZG91YmxlIGNo
+ZWNrIGl0IHJpZ2h0IG5vdwo+IGR1ZSB0byBoZWF2eSBsb2FkIG9uIG15IGJhY2sgcmlnaHQgbm93
+LiBJJ2xsIHRyeSB0byBmaW5kIHRpbWUgZm9yIHRoYXQgaW4gdGhlCj4gbmV4dCB3ZWVrLiBCdXQs
+IGxpa2UgSSd2ZSBtZW50aW9uZWQgZWFybGllciBJIGRvbid0IHNlZSBhIHJlYXNvbiB3aHkgYXVk
+aW8KPiBjb2RlICh0aGF0IGV4aXN0cyBpbiB0aGUgbWFpbmxpbmUpIHdvdWxkbid0IHdvcmsuCj4g
+SSdtIG5vdCBhbiBhdWRpbyBndXkgbXlzZWxmLiBXaGVuIHVwZGF0aW5nIGR0IGJpbmRpbmdzIEkg
+dG9vayB0aGUgZHQgYmluZGluZ3MKPiBmb3Igb3RoZXIgYnJpZGdlcyBhcyBhbiBleGFtcGxlLCBi
+dXQgSSBkaWQgbm90IHNlZSBhbnkgYmluZGluZ3MgZm9yIGF1ZGlvIGluCj4gdGhlbS4gSSBkaWRu
+J3QgY2hlY2sgYWxsIG9mIHRoZW0uIENhbiB5b3UgcGxlYXNlIGxldCBtZSBrbm93IHdoaWNoIGJy
+aWRnZXMKPiBhcmUgeW91IHdlcmUgcmVmZXJyaW5nIHRvPyBJbiBvdXIgdGVzdCBlbnZpcm9ubWVu
+dCB3ZSBkaWRuJ3QgdXNlIGFueSBhdWRpbwo+IGRyaXZlciBhcyBhdWRpbyBnZW5lcmF0b3IgaXMg
+c28gc2ltcGxlIHRoYXQgaXQgaXMgcGFydCBvZiB0aGUgcmVnaXN0ZXIgc3BhY2UKPiBvZiBJUCBh
+bmQgd2UgZGlkbid0IGV2ZW4gbmVlZCB0byBpbmNsdWRlIHRoaXMgZGV2aWNlIGluIC5kdHMgZmls
+ZS4gQXVkaW8gKGxpa2UKPiB0aGUgdmlkZW8pIGlzIGNvbmZpZ3VyZWQgYW5kIGVuYWJsZWQgYnkg
+Y29kZSB0aGF0IGlzIG5vdCBpbmNsdWRlZCBpbiB0aGUgcGF0Y2gKPiAoZm9yIG9idmlvdXMgcmVh
+c29ucykuCj4gU28sIGluIHNob3J0LCB5ZXMsIGRyaXZlciBzdXBwb3J0cyBhdWRpbyBhbmQgd2Ug
+d2lsbCBpbmNsdWRlIGRlc2NyaXB0aW9uIGZvcgo+IGF1ZGlvIGlucHV0IHBvcnQgaW4gdGhlIGR0
+IGJpbmRpbmdzLgoKT2suIEp5cmkgU2FyaGEgPGpzYXJoYUB0aS5jb20+IHJlY2VudGx5IHNlbnQg
+ImRybS9icmlkZ2U6IHNpaTkwMng6CkhETUktYXVkaW8gc3VwcG9ydCBhbmQgc29tZSBmaXhlcyIg
+c2VyaWVzLCBhbmQgSSB0aGluayB0ZGE5OTh4X2Rydi5jCmFsc28gaGFzIHNvbWUgYXVkaW8gc3Vw
+cG9ydC4gQnV0IEknbSBubyBhdWRpbyBndXkgZWl0aGVyID0pLiBJIHdhcyBqdXN0CmN1cmlvdXMg
+YWJvdXQgdGhlIHN0YXR1cyBvZiB0aGUgYXVkaW8uCgogVG9taQoKLS0gClRleGFzIEluc3RydW1l
+bnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51
+cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
