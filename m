@@ -1,81 +1,54 @@
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v2 2/3] dmaengine: imx-sdma: Only check ratio on parts that support 1:1
-Date: Fri, 29 Mar 2019 08:21:29 -0700
-Message-ID: <20190329152130.18411-3-angus@akkea.ca>
-References: <20190328133828.20999-1-angus@akkea.ca>
- <20190329152130.18411-1-angus@akkea.ca>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v2 1/6] device property: Add functions for accessing
+ node's parents
+Date: Fri, 29 Mar 2019 17:31:57 +0200
+Message-ID: <20190329153157.hj2b4mjgfh5q5e2q@kekkonen.localdomain>
+References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
+ <20190326124106.27694-2-sakari.ailus@linux.intel.com>
+ <20190327122625.eaisnw776vqwhhnh@pathway.suse.cz>
+ <20190327142036.jf6puc5uo2mjutbl@paasikivi.fi.intel.com>
+ <20190328141036.mbns3ei4agnginsg@pathway.suse.cz>
+ <20190329130436.4fxzki5kljprhyai@kekkonen.localdomain>
+ <20190329141419.GY9224@smile.fi.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190329152130.18411-1-angus@akkea.ca>
+Content-Disposition: inline
+In-Reply-To: <20190329141419.GY9224@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: angus.ainslie@puri.sm
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vkoul@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Carlo Caione <ccaione@baylibre.com>, Daniel Baluta <daniel.baluta@nxp.com>, =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On imx8mq B0 chip, AHB/SDMA clock ratio 2:1 can't be supported,
-since SDMA clock ratio has to be increased to 250Mhz, AHB can't reach
-to 500Mhz, so use 1:1 instead.
+Hi Andy,
 
-To limit this change to the imx8mq for now this patch also adds an
-im8mq-sdma compatible string.
+On Fri, Mar 29, 2019 at 04:14:19PM +0200, Andy Shevchenko wrote:
+> On Fri, Mar 29, 2019 at 03:04:36PM +0200, Sakari Ailus wrote:
+> > On Thu, Mar 28, 2019 at 03:10:36PM +0100, Petr Mladek wrote:
+> 
+> > You basically have to have a reference to a node until you're done
+> > accessing it. The refcounting in the fwnode framework is based on the OF
+> > API --- otherwise you couldn't access OF nodes using the framework.
+> 
+> > ACPI
+> > does not have those (as you can't dynamically remove nodes).
+> 
+> What about configfs where we can load / unload tables at run time?
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- drivers/dma/imx-sdma.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+Hmm. I have to admit I missed this one.
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 5f3c1378b90e..99d9f431ae2c 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -419,6 +419,7 @@ struct sdma_driver_data {
- 	int chnenbl0;
- 	int num_events;
- 	struct sdma_script_start_addrs	*script_addrs;
-+	bool check_ratio;
- };
- 
- struct sdma_engine {
-@@ -557,6 +558,13 @@ static struct sdma_driver_data sdma_imx7d = {
- 	.script_addrs = &sdma_script_imx7d,
- };
- 
-+static struct sdma_driver_data sdma_imx8mq = {
-+	.chnenbl0 = SDMA_CHNENBL0_IMX35,
-+	.num_events = 48,
-+	.script_addrs = &sdma_script_imx7d,
-+	.check_ratio = 1,
-+};
-+
- static const struct platform_device_id sdma_devtypes[] = {
- 	{
- 		.name = "imx25-sdma",
-@@ -579,6 +587,9 @@ static const struct platform_device_id sdma_devtypes[] = {
- 	}, {
- 		.name = "imx7d-sdma",
- 		.driver_data = (unsigned long)&sdma_imx7d,
-+	}, {
-+		.name = "imx8mq-sdma",
-+		.driver_data = (unsigned long)&sdma_imx8mq,
- 	}, {
- 		/* sentinel */
- 	}
-@@ -593,6 +604,7 @@ static const struct of_device_id sdma_dt_ids[] = {
- 	{ .compatible = "fsl,imx31-sdma", .data = &sdma_imx31, },
- 	{ .compatible = "fsl,imx25-sdma", .data = &sdma_imx25, },
- 	{ .compatible = "fsl,imx7d-sdma", .data = &sdma_imx7d, },
-+	{ .compatible = "fsl,imx8mq-sdma", .data = &sdma_imx8mq, },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, sdma_dt_ids);
-@@ -1852,7 +1864,8 @@ static int sdma_init(struct sdma_engine *sdma)
- 	if (ret)
- 		goto disable_clk_ipg;
- 
--	if (clk_get_rate(sdma->clk_ahb) == clk_get_rate(sdma->clk_ipg))
-+	if (sdma->drvdata->check_ratio &&
-+	    (clk_get_rate(sdma->clk_ahb) == clk_get_rate(sdma->clk_ipg)))
- 		sdma->clk_ratio = 1;
- 
- 	/* Be sure SDMA has not started yet */
+Well, I guess that this feature depends on the user making sure there are
+no references to the tables that are to be removed, as there is no
+refcounting. Let me know if I'm missing something, but nothing appears to
+prevent releasing nodes that are in use.
+
+If that is really so, then refcounting or another mechanism to achieve
+something similar should be added to make removal safe, but this isn't
+related to printing the node names anymore nor such fixes belong to this
+patchset.
+
 -- 
-2.17.1
+Regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
