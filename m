@@ -1,90 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v9 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
- RPC-IF controller bindings
-Date: Fri, 29 Mar 2019 13:49:58 +0300
-Message-ID: <5e841334-7cd7-3b5f-77d2-bb39bf8ec8b7@cogentembedded.com>
-References: <1553847606-18122-1-git-send-email-masonccyang@mxic.com.tw>
- <1553847606-18122-4-git-send-email-masonccyang@mxic.com.tw>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [PATCH 1/4] arm64: dts: imx8mq: Fix the fsl,imx8mq-sdma
+ compatible string
+Date: Fri, 29 Mar 2019 13:20:00 +0200
+Message-ID: <CAEnQRZCjCAhi2OqpSGN8rmGYCqyOmLP=+=L0djcq2C6ksk29LQ@mail.gmail.com>
+References: <20190328133828.20999-1-angus@akkea.ca> <20190328133828.20999-2-angus@akkea.ca>
+ <AM0PR04MB421112C3EE79B279953A9252805A0@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553847606-18122-4-git-send-email-masonccyang@mxic.com.tw>
-Content-Language: en-MW
+In-Reply-To: <AM0PR04MB421112C3EE79B279953A9252805A0@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org, marek.vasut@gmail.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, lee.jones@linaro.org
-Cc: juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>, zhengxunli@mxic.com.tw
+To: Aisheng Dong <aisheng.dong@nxp.com>
+Cc: "Angus Ainslie (Purism)" <angus@akkea.ca>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vkoul@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Carlo Caione <ccaione@baylibre.com>, Daniel Baluta <daniel.baluta@nxp.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dmaengin
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+On Fri, Mar 29, 2019 at 11:11 AM Aisheng Dong <aisheng.dong@nxp.com> wrote:
+>
+> > From: Angus Ainslie (Purism) [mailto:angus@akkea.ca]
+> > Sent: Thursday, March 28, 2019 9:38 PM
+> >
+> > Fix a typo in the compatible string
+> >
+> > Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> > ---
+> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > index 81d5ce1b1ec1..07099f82965e 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > @@ -720,7 +720,7 @@
+> >                       };
+> >
+> >                       sdma1: sdma@30bd0000 {
+> > -                             compatible = "fsl, imx8mq-sdma","fsl,imx7d-sdma";
+> > +                             compatible = "fsl,mx8mq-sdma","fsl,imx7d-sdma";
+>
+> This is a bit strange.
+> If binding doc says like that, probably we'd better fix the typo in binding doc
+> to use the same style.
 
-On 03/29/2019 11:20 AM, Mason Yang wrote:
+Oh, indeed.
 
-> Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD controller.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> ---
->  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt    | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
-> new file mode 100644
-> index 0000000..577986b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
-> @@ -0,0 +1,57 @@
-> +Renesas R-Car Gen3 RPC-IF MFD controller Device Tree Bindings
-> +---------------------------------------------------------------------
-
-   Too many dashes. :-)
-
-> +
-> +Required properties:
-> +- compatible: should be an SoC-specific compatible value, followed by
-> +		"renesas,rcar-gen3-rpc" as a fallback.
-> +		supported SoC-specific values are:
-> +		"renesas,r8a77995-rpc"	(R-Car D3)
-> +- reg: should contain three register areas:
-> +	first for the base address of rpc-if registers,
-> +	second for the direct mapping read mode and
-> +	third for the write buffer area.
-> +- reg-names: should contain "regs", "dirmap" and "wbuf"
-> +- clocks: should contain 1 entries for the module's clock
-> +- clock-names: should contain "rpc"
-
-   What about the "power-domains" and "resets" props?
-
-> +- #address-cells: should be 1
-> +- #size-cells: should be 0
-
-   Why? You don't have the "reg" props in the sub-devices...
-
-> +
-> +Required nodes:
-> +	spi:
-> +	Node for configuring the SPI controller driver.
-> +	Required properties:
-> +		compatible = "renesas,rcar-rpc-spi";
-
-   Sigh... you were supposed to only place the flash device sub-nodes
-under the "main" device node, we don't add the virtual devices to DT,
-there's no matching sub-device in the hardware. You don't have to
-describe these sub-devices in DT, you can register the simple platform
-devices. 
-
-> +
-> +	hf:
-> +	Node for configuring the hyperflash controller driver.
-> +	Required properties:
-> +		compatible = "renesas,rcar-rpc-hf";
-> +
-> +Example:
-> +
-> +	rpc_mfd: rpc-mfd@ee200000 {
-
-   Just "rpc: rpc-if@ee200000, please.
-
-[...]
-
-MBR, Sergei
+Angus, shouldn't this be fsl,imx8mq-sdma instead of fsl,mx8mq-sdma. I
+was just paying
+attention to the extra space in my patch.
