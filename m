@@ -1,57 +1,67 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v2 1/6] device property: Add functions for accessing
- node's parents
-Date: Fri, 29 Mar 2019 16:46:47 +0200
-Message-ID: <20190329144647.uogfwc7wswgbcykj@kekkonen.localdomain>
-References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
- <20190326124106.27694-2-sakari.ailus@linux.intel.com>
- <20190327122625.eaisnw776vqwhhnh@pathway.suse.cz>
- <20190327142036.jf6puc5uo2mjutbl@paasikivi.fi.intel.com>
- <CAJZ5v0hi04yACD9ZzDCaxhJh-uHHpMOu=zZzVf4t5vH=ctaYBg@mail.gmail.com>
- <20190328111307.ppuywzyb3i56pw4h@kekkonen.localdomain>
- <CAJZ5v0gAM_jn-gkmyu7Av+X0W_8g9NGjBEeXC-3-q_Ncb2PEGw@mail.gmail.com>
- <20190329131507.cc4qt5oyd74nvmzt@kekkonen.localdomain>
- <20190329141549.GZ9224@smile.fi.intel.com>
+From: Patrick Venture <venture@google.com>
+Subject: Re: [PATCH v8 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Date: Fri, 29 Mar 2019 07:56:21 -0700
+Message-ID: <CAO=notx6K7xTW1VG6BGJFBM5k8EQsWXn3WoWSPSrZRsxkwueSA@mail.gmail.com>
+References: <20190327212155.80730-1-venture@google.com> <20190328165009.GA25705@bogus>
+ <CAO=notxxYF4noXbR1BeVrwqCBHaVCaXy+jPV4OVbex=w=fV+Rg@mail.gmail.com> <CAL_JsqJSvzOQbJSgz7z2wZj9-z=bfhzF_C+662Gnf68TgAPFaA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190329141549.GZ9224@smile.fi.intel.com>
+In-Reply-To: <CAL_JsqJSvzOQbJSgz7z2wZj9-z=bfhzF_C+662Gnf68TgAPFaA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Petr Mladek <pmladek@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Greg KH <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
+On Fri, Mar 29, 2019 at 6:38 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu, Mar 28, 2019 at 12:03 PM Patrick Venture <venture@google.com> wrote:
+> >
+> > On Thu, Mar 28, 2019 at 9:50 AM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Wed, 27 Mar 2019 14:21:55 -0700, Patrick Venture wrote:
+> > > > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+> > > >
+> > > > Signed-off-by: Patrick Venture <venture@google.com>
+> > > > ---
+> > > > Changes for v8:
+> > > > - None
+> > > > Changes for v7:
+> > > > - Moved node under the syscon node it requires
+> > > > Changes for v6:
+> > > > - None
+> > > > Changes for v5:
+> > > > - None
+> > > > Changes for v4:
+> > > > - None
+> > > > Changes for v3:
+> > > > - None
+> > > > Changes for v2:
+> > > > - Added comment about syscon required parameter.
+> > > > ---
+> > > >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
+> > > >  1 file changed, 48 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> > > >
+> > >
+> > > Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> > > there's no need to repost patches *only* to add the tags. The upstream
+> > > maintainer will do that for acks received on the version they apply.
+> > >
+> > > If a tag was not added on purpose, please state why and what changed.
+> >
+> > Adding tags in this case is adding a change version?  I was doing this
+> > to keep the two patches version-synced.  I thought that was required.
+> > There was a version change in the other patch in this set.
+>
+> Adding tags is not considered a change. I gave a Reviewed-by in v7.
+> Subsequent versions should carry that tag if there's no change (or
+> only minor changes) in this patch. What happens in the other patches
+> is not really important. Maintainers are not going to go searching
+> thru the versions to find all the ack/review tags. And if I've already
+> reviewed this, I don't want to look at it again.
 
-On Fri, Mar 29, 2019 at 04:15:49PM +0200, Andy Shevchenko wrote:
-> On Fri, Mar 29, 2019 at 03:15:07PM +0200, Sakari Ailus wrote:
-> > On Thu, Mar 28, 2019 at 03:52:35PM +0100, Rafael J. Wysocki wrote:
-> > > On Thu, Mar 28, 2019 at 12:13 PM Sakari Ailus
-> > > <sakari.ailus@linux.intel.com> wrote:
-> > > > On Thu, Mar 28, 2019 at 10:38:01AM +0100, Rafael J. Wysocki wrote:
-> > > > > On Wed, Mar 27, 2019 at 3:20 PM Sakari Ailus
-> > > > > <sakari.ailus@linux.intel.com> wrote:
-> > > > > > On Wed, Mar 27, 2019 at 01:26:25PM +0100, Petr Mladek wrote:
-> > > > > > > On Tue 2019-03-26 14:41:01, Sakari Ailus wrote:
-> 
-> > Another option would be changing where the counting starts --- the first
-> > parent. I.e.
-> 
-> Looks better to me, though can you put comment how parents are being counted?
+Thank you, I didn't realize that had happened.
 
-To the code? The kerneldoc comment contains one, and the code below is
-pretty simple.
-
-> 
-> > fwnode = fwnode_get_parent(fwnode);
-> > 
-> > for (count = 0; fwnode; count++)
-> > 	fwnode = fwnode_get_next_parent(fwnode);
-> > 
-> > return count;
-> 
-
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+>
+> Rob
