@@ -1,64 +1,51 @@
 From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v4 2/7] drm/panel: simple: Add ability to override typical
- timing
-Date: Fri, 29 Mar 2019 20:13:33 +0100
-Message-ID: <1637882.fJ8YATuT5C@diego>
-References: <20190328171710.31949-1-dianders@chromium.org>
- <20190328171710.31949-3-dianders@chromium.org>
+Subject: Re: [PATCH v4 6/7] ARM: dts: rockchip: Specify rk3288-veyron-jerry's display timings
+Date: Fri, 29 Mar 2019 20:20:00 +0100
+Message-ID: <7960623.ZFqGeXkhir@diego>
+References: <20190328171710.31949-1-dianders@chromium.org> <20190328171710.31949-7-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190328171710.31949-3-dianders@chromium.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190328171710.31949-7-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Douglas Anderson <dianders@chromium.org>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Jeffy Chen <jeffy.chen@rock-chips.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Boris Brezillon <boris.brezillon@collabora.com>, Enric =?ISO-8859-1?Q?Balletb=F2?= <enric.balletbo@collabora.com>, =?ISO-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>, Ezequiel Garcia <ezequiel@collabora.com>, mka@chromium.org
+Cc: Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, linux-rockchip@lists.infradead.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Enric =?ISO-8859-1?Q?Balletb=F2?= <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, mka@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gRG9ubmVyc3RhZywgMjguIE3DpHJ6IDIwMTksIDE4OjE3OjA1IENFVCBzY2hyaWViIERvdWds
-YXMgQW5kZXJzb246Cj4gRnJvbTogU2VhbiBQYXVsIDxzZWFucGF1bEBjaHJvbWl1bS5vcmc+Cj4g
-Cj4gVGhpcyBwYXRjaCBhZGRzIHRoZSBhYmlsaXR5IHRvIG92ZXJyaWRlIHRoZSB0eXBpY2FsIGRp
-c3BsYXkgdGltaW5nIGZvciBhCj4gZ2l2ZW4gcGFuZWwuIFRoaXMgaXMgdXNlZnVsIGZvciBkZXZp
-Y2VzIHdoaWNoIGhhdmUgdGltaW5nIGNvbnN0cmFpbnRzCj4gdGhhdCBkbyBub3QgYXBwbHkgYWNy
-b3NzIHRoZSBlbnRpcmUgZGlzcGxheSBkcml2ZXIgKGVnOiB0byBhdm9pZAo+IGNyb3NzdGFsayBi
-ZXR3ZWVuIHBhbmVsIGFuZCBkaWdpdGl6ZXIgb24gY2VydGFpbiBsYXB0b3BzKS4gVGhlIHJ1bGVz
-IGFyZQo+IGFzIGZvbGxvd3M6Cj4gCj4gLSBwYW5lbCBtdXN0IG5vdCBzcGVjaWZ5IGZpeGVkIG1v
-ZGUgKHNpbmNlIHRoZSBvdmVycmlkZSBtb2RlIHdpbGwKPiAgIGVpdGhlciBiZSB0aGUgc2FtZSBh
-cyB0aGUgZml4ZWQgbW9kZSwgb3Igd2UnbGwgYmUgdW5hYmxlIHRvCj4gICBjaGVjayB0aGUgYm91
-bmRzIG9mIHRoZSBvdmVycmllZCkKPiAtIHBhbmVsIG11c3Qgc3BlY2lmeSBhdCBsZWFzdCBvbmUg
-ZGlzcGxheV90aW1pbmcgcmFuZ2Ugd2hpY2ggd2lsbCBiZQo+ICAgdXNlZCB0byBlbnN1cmUgdGhl
-IG92ZXJyaWRlIG1vZGUgZml0cyB3aXRoaW4gaXRzIGJvdW5kcwo+IAo+IENoYW5nZXMgaW4gdjI6
-Cj4gIC0gUGFyc2UgdGhlIGZ1bGwgZGlzcGxheS10aW1pbmdzIG5vZGUgKHVzaW5nIHRoZSBuYXRp
-dmUtbW9kZSkgKFJvYikKPiBDaGFuZ2VzIGluIHYzOgo+ICAtIE5vIGxvbmdlciBwYXJzZSBkaXNw
-bGF5LXRpbWluZ3Mgc3Vibm9kZSwgdXNlIHBhbmVsLXRpbWluZyAoUm9iKQo+IENoYW5nZXMgaW4g
-djQ6Cj4gIC0gRG9uJ3QgYWRkIG1vZGUgZnJvbSB0aW1pbmcgaWYgb3ZlcnJpZGUgd2FzIHNwZWNp
-ZmllZCAoVGhpZXJyeSkKPiAgLSBBZGQgd2FybmluZyBpZiB0aW1pbmcgYW5kIGZpeGVkIG1vZGUg
-d2FzIHNwZWNpZmllZCAoVGhpZXJyeSkKPiAgLSBEb24ndCBhZGQgZml4ZWQgbW9kZSBpZiB0aW1p
-bmcgd2FzIHNwZWNpZmllZCAoVGhpZXJyeSkKPiAgLSBSZWZhY3Rvci9yZW5hbWUgYSBiaXQgdG8g
-YXZvaWQgZXh0cmEgaW5kZW50YXRpb24gZnJvbSAiaWYiIHRlc3RzCj4gIC0gaSBzaG91bGQgYmUg
-dW5zaWduZWQgKFRoaWVycnkpCj4gIC0gQWRkIGFubm95aW5nIFdBUk5fT05zIGZvciBzb21lIGNh
-c2VzIChUaGllcnJ5KQo+ICAtIFNpbXBsaWZ5ICdObyBkaXNwbGF5X3RpbWluZyBmb3VuZCcgaGFu
-ZGxpbmcgKFRoaWVycnkpCj4gIC0gUmVuYW1lIHRvIHBhbmVsX3NpbXBsZV9wYXJzZV9vdmVycmlk
-ZV9tb2RlKCkgKFRoaWVycnkpCj4gCj4gQ2M6IERvdWcgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9t
-aXVtLm9yZz4KPiBDYzogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KPiBDYzogSGVpa28g
-U3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiBDYzogSmVmZnkgQ2hlbiA8amVmZnkuY2hlbkBy
-b2NrLWNoaXBzLmNvbT4KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4KPiBD
-YzogU3TDqXBoYW5lIE1hcmNoZXNpbiA8bWFyY2hldUBjaHJvbWl1bS5vcmc+Cj4gQ2M6IFRoaWVy
-cnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+Cj4gQ2M6IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnCj4gQ2M6IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBTaWdu
-ZWQtb2ZmLWJ5OiBTZWFuIFBhdWwgPHNlYW5wYXVsQGNocm9taXVtLm9yZz4KPiBUZXN0ZWQtYnk6
-IEVucmljIEJhbGxldGJvIGkgU2VycmEgPGVucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb20+Cj4g
-U2lnbmVkLW9mZi1ieTogRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgoK
-b24gYSByazMzOTkta2V2aW4gYW5kIHJrMzI4OC1qZXJyeQpUZXN0ZWQtYnk6IEhlaWtvIFN0dWVi
-bmVyIDxoZWlrb0BzbnRlY2guZGU+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVs
+Am Donnerstag, 28. März 2019, 18:17:09 CET schrieb Douglas Anderson:
+> Let's document the display timings that jerry has been using out in
+> the field.  This uses the standard blankings but a slightly slower
+> clock rate, thus getting a refresh rate 58.3 Hz.
+> 
+> NOTE: this won't really do anything except cause DRM to properly
+> report the refresh rate since vop_crtc_mode_fixup() was rounding the
+> pixel clock to 74.25 MHz anyway.  Apparently the adjusted rate isn't
+> exposed to userspace so it's important that the rate we're trying to
+> achieve is mostly right.
+> 
+> For the downstream kernel change related to this see See
+> https://crrev.com/c/324558.
+> 
+> NOTE: minnie will be fixed up in a future patch, so for now we'll just
+> delete the panel timings there.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+> Changes in v4:
+> - rk3288-veyron-jerry patch new for v4.
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi | 14 ++++++++++++++
+
+hmm, the commit message explicitly mentions jerry, but this is the
+general panel definition for most veyron-chromebooks (jerry, pinky, jaq,...)?
+
+It does work on both pinky and jerry for me, so I guess just the commit
+message needs a bit adapting?
+
+
+Heiko
