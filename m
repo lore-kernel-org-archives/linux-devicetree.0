@@ -1,15 +1,14 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH V2 3/5] mtd: bcm63xxpart: move imagetag parsing to its own
- parser
-Date: Thu, 28 Mar 2019 19:19:05 -0700
-Message-ID: <471411ff-bd00-f7c6-7520-6f89d94afa70@gmail.com>
+Subject: Re: [PATCH V2 5/5] mtd: parser_imagetag: add of_match_table support
+Date: Thu, 28 Mar 2019 19:13:46 -0700
+Message-ID: <2c2e524a-11a3-1a27-47db-1a482f5ef789@gmail.com>
 References: <20190328141910.5723-1-jonas.gorski@gmail.com>
- <20190328141910.5723-4-jonas.gorski@gmail.com>
+ <20190328141910.5723-6-jonas.gorski@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20190328141910.5723-4-jonas.gorski@gmail.com>
+In-Reply-To: <20190328141910.5723-6-jonas.gorski@gmail.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
  <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
@@ -27,11 +26,8 @@ List-Id: devicetree@vger.kernel.org
 
 
 On 3/28/2019 7:19 AM, Jonas Gorski wrote:
-> Move the bcm963xx Image Tag parsing into its own partition parser. This
-> Allows reusing the parser with different full flash parsers.
-> 
-> While moving it, rename it to bcm963* to better reflect it isn't chip,
-> but reference implementation specific.
+> Allow matching the imagetag parser for fixed partitions defined in the
+> device tree.
 > 
 > Reviewed-by: Rob Herring <robh@kernel.org>
 > Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
