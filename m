@@ -1,139 +1,62 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 3/5] dt-bindings: phy: ti: Add dt binding documentation
- for SERDES in AM654x SoC
-Date: Fri, 29 Mar 2019 11:43:13 +0530
-Message-ID: <18677fbe-8d84-92eb-3252-ec401e91fb7e@ti.com>
-References: <20190325080815.6056-1-kishon@ti.com>
- <20190325080815.6056-4-kishon@ti.com> <20190328180759.GA32679@bogus>
+From: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+Subject: [PATCH v2 3/4] dt-bindings: devfreq: add compatible for mt8183 cci
+ devfreq
+Date: Fri, 29 Mar 2019 14:46:11 +0800
+Message-ID: <1553841972-19737-4-git-send-email-andrew-sh.cheng@mediatek.com>
+References: <1553841972-19737-1-git-send-email-andrew-sh.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190328180759.GA32679@bogus>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Roger Quadros <rogerq@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1553841972-19737-1-git-send-email-andrew-sh.cheng@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob
+ Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias
+ Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: devicetree@vger.kernel.org, "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>, srv_heupstream@mediatek.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, fan.chen@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+This adds dt-binding documentation of cci devfreq
+for Mediatek MT8183 SoC platform.
 
-On 28/03/19 11:37 PM, Rob Herring wrote:
-> On Mon, Mar 25, 2019 at 01:38:13PM +0530, Kishon Vijay Abraham I wrote:
->> AM654x has two SERDES instances. Each instance has three input clocks
->> (left input, externel reference clock and right input) and two output
->> clocks (left output and right output) in addition to a PLL mux clock
->> which the SERDES uses for Clock Multiplier Unit (CMU refclock).
->> The PLL mux clock can select from one of the three input clocks.
->> The right output can select between left input and external reference
->> clock while the left output can select between the right input and
->> external reference clock.
->>
->> The left and right input reference clock of SERDES0 and SERDES1
->> respectively are connected to the SoC clock. In the case of two lane
->> SERDES personality card, the left input of SERDES1 is connected to
->> the right output of SERDES0 in a chained fashion.
->>
->> See section "Reference Clock Distribution" of AM65x Sitara Processors
->> TRM (SPRUID7 – April 2018) for more details.
->>
->> Add dt-binding documentation in order to represent all these different
->> configurations in device tree.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../bindings/phy/ti,phy-am654-serdes.txt      | 81 +++++++++++++++++++
->>  include/dt-bindings/phy/phy-am654-serdes.h    | 13 +++
->>  2 files changed, 94 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt
->>  create mode 100644 include/dt-bindings/phy/phy-am654-serdes.h
->>
->> diff --git a/Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt b/Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt
->> new file mode 100644
->> index 000000000000..25a9206147ad
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt
->> @@ -0,0 +1,81 @@
->> +TI AM654 SERDES
->> +
->> +Required properties:
->> + - compatible: Should be "ti,phy-am654-serdes"
->> + - reg : Address and length of the register set for the device.
->> + - reg-names: Should be "serdes" which corresponds to the register space
->> +	populated in "reg".
-> 
-> *-names is kind of pointless with only 1 entry.
+Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+---
+ .../bindings/devfreq/mt8183-cci-devfreq.txt           | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
 
-okay. I'll drop this.
-> 
->> + - #phy-cells: determine the number of cells that should be given in the
->> +	phandle while referencing this phy. Should be "2". The 1st cell
->> +	corresponds to the phy type (should be one of the types specified in
->> +	include/dt-bindings/phy/phy.h) and the 2nd cell should be the serdes
->> +	lane function.
->> +	If SERDES0 is referenced 2nd cell should be:
->> +		0 - USB3
->> +		1 - PCIe0 Lane0
->> +		2 - ICSS2 SGMII Lane0
->> +	If SERDES1 is referenced 2nd cell should be:
->> +		0 - PCIe1 Lane0
->> +		1 - PCIe0 Lane1
->> +		2 - ICSS2 SGMII Lane1
->> + - clocks: List of clock-specifiers representing the input to the SERDES.
->> +	Should have 3 items representing the left input clock, external
->> +	reference clock and right input clock in that order.
->> + - clock-output-names: List of clock names for each of the clock outputs of
->> +	SERDES. Should have 3 items for CMU reference clock,
->> +	left output clock and right output clock in that order.
->> + - assigned-clocks: As defined in
->> +	Documentation/devicetree/bindings/clock/clock-bindings.txt
->> + - assigned-clock-parents: As defined in
->> +	Documentation/devicetree/bindings/clock/clock-bindings.txt
->> + - #clock-cells: Should be <1> to choose between the 3 output clocks.
->> +	Defined in Documentation/devicetree/bindings/clock/clock-bindings.txt
->> +
->> +   The following macros are defined in dt-bindings/phy/phy-am654-serdes.h
->> +   for selecting the correct reference clock. This can be used while
->> +   specifying the clocks created by SERDES.
->> +	=> AM654_SERDES_CMU_REFCLK
->> +	=> AM654_SERDES_LO_REFCLK
->> +	=> AM654_SERDES_RO_REFCLK
->> +
->> + - mux-controls: phandle to the multiplexer
-> 
-> What does this mux?
-
-The serdes is muxed between USB, PCIe and SGMII. The mux-controls will help to
-select the SERDES function based on the board configuration.
-> 
->> +
->> +Example:
->> +
->> +Example for SERDES0 is given below. It has 3 clock inputs;
->> +left input reference clock as indicated by <&k3_clks 153 4>, external
->> +reference clock as indicated by <&k3_clks 153 1> and right input
->> +reference clock as indicated by <&serdes1 AM654_SERDES_LO_REFCLK>. (The
->> +right input of SERDES0 is connected to the left output of SERDES1).
->> +
->> +SERDES0 registers 3 clock outputs as indicated in clock-output-names. The
->> +first refers to the CMU reference clock, second refers to the left output
->> +reference clock and the third refers to the right output reference clock.
->> +
->> +The assigned-clocks and assigned-clock-parents is used here to set the
->> +parent of left input reference clock to MAINHSDIV_CLKOUT4 and parent of
->> +CMU reference clock to left input reference clock.
->> +
->> +serdes0: serdes@900000 {
->> +	compatible = "ti,phy-am654-serdes";
->> +	reg = <0x0 0x900000 0x0 0x2000>;
->> +	reg-names = "serdes";
-> 
->> +	#phy-cells = <2>;
->> +	power-domains = <&k3_pds 153>;
-> 
-> Not documented.
-
-Okay. I'll add.
-
-Thanks
-Kishon
+diff --git a/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt b/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
+new file mode 100644
+index 0000000..e2b61cf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
+@@ -0,0 +1,19 @@
++* Mediatek CCI frequency device
++
++Required properties:
++- compatible: should contain "mediatek,mt8183-cci" for cci devfreq
++
++- clocks: for cci devfreq
++
++- clock-names: for cci devfreq driver to reference
++
++- operating-points-v2: for cci devfreq opp table
++
++Example:
++	cci: cci {
++		compatible = "mediatek,cci";
++		clocks = <&apmixedsys CLK_APMIXED_CCIPLL>;
++		clock-names = "cci_clock";
++		operating-points-v2 = <&cci_opp>;
++	};
++
+-- 
+1.8.1.1.dirty
