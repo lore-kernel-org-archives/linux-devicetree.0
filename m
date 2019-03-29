@@ -1,70 +1,60 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH net-next v2 3/3] net: phy: meson-gxl: add g12a support
-Date: Fri, 29 Mar 2019 20:22:56 +0100
-Message-ID: <0b7df4e8-8db2-a028-bd1d-6d77cac67110@gmail.com>
-References: <20190329141512.29867-1-jbrunet@baylibre.com>
- <20190329141512.29867-4-jbrunet@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] edac: sifive: Add DT documentation for SiFive L2
+ cache Controller
+Date: Fri, 29 Mar 2019 14:41:05 -0500
+Message-ID: <CAL_JsqLQ1XvQq7L=xA5Z8Y0Xa4Bmp0t2pgxn+hLF+tD=_L7Mvg@mail.gmail.com>
+References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
+ <1552382461-13051-2-git-send-email-yash.shah@sifive.com> <20190328131657.GA9056@bogus>
+ <be7246a0-2426-995d-0a24-f104c173d752@arm.com> <CAL_Jsq+s77J=Bwiyow2d7Q=e+z+5d64i_cL6xaYn0xdvJDb4Vg@mail.gmail.com>
+ <20190329142739.GG21152@zn.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190329141512.29867-4-jbrunet@baylibre.com>
-Content-Language: en-US
+In-Reply-To: <20190329142739.GG21152@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Kevin Hilman <khilman@baylibre.com>
-Cc: netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: James Morse <james.morse@arm.com>, Yash Shah <yash.shah@sifive.com>, linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 29.03.2019 15:15, Jerome Brunet wrote:
-> The g12a SoC family uses the type of internal PHY that was used on the
-> gxl family. The quirks of gxl family, like the LPA register corruption,
-> appear to have been resolved on this new SoC generation.
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  drivers/net/phy/meson-gxl.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/drivers/net/phy/meson-gxl.c b/drivers/net/phy/meson-gxl.c
-> index 0eec2913c289..49cad0f4c79b 100644
-> --- a/drivers/net/phy/meson-gxl.c
-> +++ b/drivers/net/phy/meson-gxl.c
-> @@ -237,11 +237,25 @@ static struct phy_driver meson_gxl_phy[] = {
->  		.config_intr	= meson_gxl_config_intr,
->  		.suspend        = genphy_suspend,
->  		.resume         = genphy_resume,
-> +	}, {
-> +		.phy_id		= 0x01803301,
-> +		.phy_id_mask	= 0xffffffff,
+On Fri, Mar 29, 2019 at 9:27 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Fri, Mar 29, 2019 at 09:11:24AM -0500, Rob Herring wrote:
+> > I honestly don't understand the issue with EDAC is here.
+>
+> The EDAC core supports only one driver and if you need to load more, you
+> need to dance around that.
+>
+> Also, if those drivers need to talk amongst each other, then they need
+> to build something ad-hoc so that they can.
+>
+> And the other architectures can very well do one driver per platform -
+> only ARM wants to do this special thing because DT said so. Or whatever.
+>
+> > Highbank is separate drivers for L2 ECC (PL310) and DDR. Both are used
+> > on highbank.
+>
+> That's because your L2 driver does allocate an edac_device
+> (edac_device_alloc_ctl_info()) and the DDR one an edac_mc
+> (edac_mc_add_mc_with_groups).
+>
+> For example, altera_edac does edac_device_alloc_ctl_info() for each IP
+> block just fine. So a single driver *can* work.
+>
+> > Only the DDR driver is used midway. (I think we never got around to
+> > how to report A15 L2 ECC errors within Linux.)
+> >
+> > In any case, it's all irrelevant to the DT binding. We don't design
+> > bindings around what some particular OS wants.
+>
+> And just because DT dictates one driver per IP block, I'm not going to
+> redesign EDAC to fit that scheme. You or someone else who feels strongly
+> about it, is more than welcome to do so, of course. And then maintain it
+> too.
 
-Here you could use the PHY_ID_MATCH_EXACT() macro, see realtek PHY
-driver for an example.
+DT dictates aligning with what the h/w looks like which has little to
+do with OS driver design. I never said you should change EDAC and I
+outlined how things should be handled if it is one driver. DT and OS
+subsystems are independent things. I can't tell you how to design the
+subsystem and you can't dictate DT design (based on EDAC design).
 
-> +		.name		= "Meson G12A Internal PHY",
-> +		.features	= PHY_BASIC_FEATURES,
-> +		.flags		= PHY_IS_INTERNAL,
-> +		.soft_reset     = genphy_soft_reset,
-> +		.aneg_done      = genphy_aneg_done,
-> +		.read_status	= genphy_read_status,
-
-genphy_aneg_done() and genphy_read_status() are used automatically
-as fallback if no callback is defined. You can omit these two lines.
-
-> +		.ack_interrupt	= meson_gxl_ack_interrupt,
-> +		.config_intr	= meson_gxl_config_intr,
-> +		.suspend        = genphy_suspend,
-> +		.resume         = genphy_resume,
->  	},
->  };
->  
->  static struct mdio_device_id __maybe_unused meson_gxl_tbl[] = {
->  	{ 0x01814400, 0xfffffff0 },
-> +	{ 0x01803301, 0xffffffff },
-
-Also a candidate for PHY_ID_MATCH_EXACT. In the line before
-PHY_ID_MATCH_MODEL could be used.
-
->  	{ }
->  };
->  
-> 
+Rob
