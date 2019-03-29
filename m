@@ -1,50 +1,74 @@
-Return-Path: <SRS0=Xkv+=RY=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.nic.cz ([217.31.204.67]:60411 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728615AbfCUSVx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 Mar 2019 14:21:53 -0400
-From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH v1 leds-next 2/3] dt-bindings: leds: Document Turris 1.x LED controller binding
-Date: Thu, 21 Mar 2019 19:21:49 +0100
-Message-Id: <20190321182150.10453-3-marek.behun@nic.cz>
-In-Reply-To: <20190321182150.10453-1-marek.behun@nic.cz>
-References: <20190321182150.10453-1-marek.behun@nic.cz>
+Return-Path: <SRS0=iPPE=SA=gmail.com=groeck7@kernel.org>
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Fri, 29 Mar 2019 09:53:07 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v4 1/2] hwmon: lochnagar: Add device tree binding document
+Message-ID: <20190329165307.GA6085@roeck-us.net>
+References: <20190328130937.3756-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org
-Cc: Pavel Machek <pavel@ucw.cz>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190328130937.3756-1-ckeepax@opensource.cirrus.com>
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, corbet@lwn.net, devicetree@vger.kernel.org, patches@opensource.cirrus.com
 List-ID: <devicetree@vger.kernel.org>
 
-This adds device tree binding documentation for the front panel LEDs
-controller of CZ.NIC's Turris 1.x router.
+On Thu, Mar 28, 2019 at 01:09:36PM +0000, Charles Keepax wrote:
+> Lochnagar is an evaluation and development board for Cirrus
+> Logic Smart CODEC and Amp devices. It allows the connection of
+> most Cirrus Logic devices on mini-cards, as well as allowing
+> connection of various application processor systems to provide a
+> full evaluation platform. This driver supports the board
+> controller chip on the Lochnagar board.
+> 
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
----
- .../devicetree/bindings/leds/leds-turris.txt         | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-turris.txt
+Applied to hwmon-next.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-turris.txt b/Documentation/devicetree/bindings/leds/leds-turris.txt
-new file mode 100644
-index 000000000000..0b7548077a06
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-turris.txt
-@@ -0,0 +1,12 @@
-+Bindings for LEDs on CZ.NIC's Turris 1.x
-+
-+Required properties:
-+ - compatible:		Should be "cznic,turris-leds"
-+ - reg:			Should specify controller address
-+
-+Example:
-+
-+	led-controller@3,0 {
-+		compatible = "cznic,turris-leds";
-+		reg = <0x3 0x0 0x30>;
-+	};
--- 
-2.19.2
+Thanks,
+Guenter
+
+> ---
+> 
+> No changes since v3.
+> 
+> Thanks,
+> Charles
+> 
+>  .../devicetree/bindings/hwmon/cirrus,lochnagar.txt | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
+> new file mode 100644
+> index 0000000000000..ffb79ccf51ee3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
+> @@ -0,0 +1,26 @@
+> +Cirrus Logic Lochnagar Audio Development Board
+> +
+> +Lochnagar is an evaluation and development board for Cirrus Logic
+> +Smart CODEC and Amp devices. It allows the connection of most Cirrus
+> +Logic devices on mini-cards, as well as allowing connection of
+> +various application processor systems to provide a full evaluation
+> +platform.  Audio system topology, clocking and power can all be
+> +controlled through the Lochnagar, allowing the device under test
+> +to be used in a variety of possible use cases.
+> +
+> +This binding document describes the binding for the hardware monitor
+> +portion of the driver.
+> +
+> +This binding must be part of the Lochnagar MFD binding:
+> +  [4] ../mfd/cirrus,lochnagar.txt
+> +
+> +Required properties:
+> +
+> +  - compatible : One of the following strings:
+> +                 "cirrus,lochnagar2-hwmon"
+> +
+> +Example:
+> +
+> +lochnagar-hwmon {
+> +	compatible = "cirrus,lochnagar2-hwmon";
+> +};
