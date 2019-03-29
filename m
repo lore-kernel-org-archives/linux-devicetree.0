@@ -1,62 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
-Date: Fri, 29 Mar 2019 08:37:46 -0500
-Message-ID: <CAL_JsqJSvzOQbJSgz7z2wZj9-z=bfhzF_C+662Gnf68TgAPFaA@mail.gmail.com>
-References: <20190327212155.80730-1-venture@google.com> <20190328165009.GA25705@bogus>
- <CAO=notxxYF4noXbR1BeVrwqCBHaVCaXy+jPV4OVbex=w=fV+Rg@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 3/4] ARM: dts: dra7: add PRU-ICSS modules
+Date: Fri, 29 Mar 2019 16:02:25 +0200
+Message-ID: <454fbfc1-e05b-494e-6e27-0945ebed0154@ti.com>
+References: <1549295637-24890-1-git-send-email-rogerq@ti.com>
+ <1549295637-24890-4-git-send-email-rogerq@ti.com>
+ <20190204180359.GM5720@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAO=notxxYF4noXbR1BeVrwqCBHaVCaXy+jPV4OVbex=w=fV+Rg@mail.gmail.com>
+In-Reply-To: <20190204180359.GM5720@atomide.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick Venture <venture@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Greg KH <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Tony Lindgren <tony@atomide.com>
+Cc: s-anna@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, david@lechnology.com, woods.technical@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 12:03 PM Patrick Venture <venture@google.com> wrote:
->
-> On Thu, Mar 28, 2019 at 9:50 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Wed, 27 Mar 2019 14:21:55 -0700, Patrick Venture wrote:
-> > > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
-> > >
-> > > Signed-off-by: Patrick Venture <venture@google.com>
-> > > ---
-> > > Changes for v8:
-> > > - None
-> > > Changes for v7:
-> > > - Moved node under the syscon node it requires
-> > > Changes for v6:
-> > > - None
-> > > Changes for v5:
-> > > - None
-> > > Changes for v4:
-> > > - None
-> > > Changes for v3:
-> > > - None
-> > > Changes for v2:
-> > > - Added comment about syscon required parameter.
-> > > ---
-> > >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
-> > >  1 file changed, 48 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> > >
-> >
-> > Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> > there's no need to repost patches *only* to add the tags. The upstream
-> > maintainer will do that for acks received on the version they apply.
-> >
-> > If a tag was not added on purpose, please state why and what changed.
->
-> Adding tags in this case is adding a change version?  I was doing this
-> to keep the two patches version-synced.  I thought that was required.
-> There was a version change in the other patch in this set.
+Hi Tony,
 
-Adding tags is not considered a change. I gave a Reviewed-by in v7.
-Subsequent versions should carry that tag if there's no change (or
-only minor changes) in this patch. What happens in the other patches
-is not really important. Maintainers are not going to go searching
-thru the versions to find all the ack/review tags. And if I've already
-reviewed this, I don't want to look at it again.
+On 04/02/2019 20:03, Tony Lindgren wrote:
+> * Roger Quadros <rogerq@ti.com> [190204 15:54]:
+>> --- a/arch/arm/boot/dts/dra7.dtsi
+>> +++ b/arch/arm/boot/dts/dra7.dtsi
+>> @@ -167,6 +167,200 @@
+>>  		l4_per3: interconnect@48800000 {
+>>  		};
+>>  
+>> +		pru_icss1: target-module@4b200000 {
+> 
+> I suggest you add these into dra7-pruss.dtsi as they
+> have internal interconnects. And eventually some of
+> the *pruss.dtsi files might become shared :) And we
+> avoid moving these around when we define the l3
+> interconnects and avoid a lot of extra long dtsi
+> line lengths with the added nestedness later on.
 
-Rob
+PRUSS is only present on AM57x variants.
+I will move this to am57x-pruss.dtsi.
+
+This means all AM57x boards will have to include it.
+
+Is this OK?
+
+-- 
+cheers,
+-roger
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
