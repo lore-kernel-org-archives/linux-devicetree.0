@@ -1,62 +1,57 @@
-Return-Path: <SRS0=Ft2S=R7=linux.intel.com=sakari.ailus@kernel.org>
-Date: Thu, 28 Mar 2019 13:48:45 +0200
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v2 6/6] lib/vsprintf: Add %pfw conversion specifier for
- printing fwnode names
-Message-ID: <20190328114845.giusyarjibvg5ru7@kekkonen.localdomain>
-References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
- <20190326124106.27694-7-sakari.ailus@linux.intel.com>
- <c08956873f4dfd7dc8bd918bf59443de9c2c7b33.camel@perches.com>
+Return-Path: <SRS0=iPPE=SA=gmail.com=groeck7@kernel.org>
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Fri, 29 Mar 2019 09:52:21 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] dt-bindings: hwmon: (adc128d818) Specify ti,mode
+ property size
+Message-ID: <20190329165221.GA28218@roeck-us.net>
+References: <20190313141125.GA26062@carlosaurelio.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c08956873f4dfd7dc8bd918bf59443de9c2c7b33.camel@perches.com>
-To: Joe Perches <joe@perches.com>
-Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+In-Reply-To: <20190313141125.GA26062@carlosaurelio.net>
+To: Carlos Menin <menin@carlosaurelio.net>
+Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Joe,
-
-Thanks for the review.
-
-On Tue, Mar 26, 2019 at 01:18:09PM -0700, Joe Perches wrote:
-> On Tue, 2019-03-26 at 14:41 +0200, Sakari Ailus wrote:
-> > Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
-> > support printing full path of the node, including its name ("f") and only
-> > the node's name ("P") in the printk family of functions. The two flags
-> > have equivalent functionality to existing %pOF with the same two modifiers
-> > ("f" and "P") on OF based systems. The ability to do the same on ACPI
-> > based systems is added by this patch.
-> []
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> []
-> > @@ -5977,7 +5977,8 @@ sub process {
-> >  				while ($fmt =~ /(\%[\*\d\.]*p(\w))/g) {
-> >  					$specifier = $1;
-> >  					$extension = $2;
-> > -					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOx]/) {
-> > +					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxf]/ ||
-> > +					    $extension =~ /f[^w]/) {
-> >  						$bad_specifier = $specifier;
-> >  						last;
-> >  					}
+On Wed, Mar 13, 2019 at 11:11:26AM -0300, Carlos Menin wrote:
+> By default, cells in DT are 32-bit in size. The driver reads "ti,mode"
+> using the function of_property_read_u8() which causes the value to be
+> read incorrectly in little-endian architectures if the size is not
+> specified.
 > 
-> You also need to remove the bit about using %pF or %pf below this
+> Make it explicit in the binding documentation that this prorperty must
+> be set as a 8-bit value.
 > 
-> 					if ($bad_specifier =~ /p[Ff]/) {
-> 						$ext_type = "Deprecated";
-> 						$use = " - use %pS instead";
-> 						$use =~ s/pS/ps/ if ($bad_specifier =~ /pf/);
-> 					}
+> Signed-off-by: Carlos Menin <menin@carlosaurelio.net>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-I actually intended to leave this --- it points to anyone accidentally
-trying to use %pf to what it needs to be replaced with. But the Deprecated
-should be replaced with Invalid (i.e. remove that assignment).
+Applied.
 
-How about that?
+Thanks,
+Guenter
 
--- 
-Regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+> ---
+>  Documentation/devicetree/bindings/hwmon/adc128d818.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/adc128d818.txt b/Documentation/devicetree/bindings/hwmon/adc128d818.txt
+> index 08bab0e..d0ae46d 100644
+> --- a/Documentation/devicetree/bindings/hwmon/adc128d818.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/adc128d818.txt
+> @@ -26,7 +26,7 @@ Required node properties:
+>  
+>  Optional node properties:
+>  
+> - - ti,mode:     Operation mode (see above).
+> + - ti,mode:     Operation mode (u8) (see above).
+>  
+>  
+>  Example (operation mode 2):
+> @@ -34,5 +34,5 @@ Example (operation mode 2):
+>  	adc128d818@1d {
+>  		compatible = "ti,adc128d818";
+>  		reg = <0x1d>;
+> -		ti,mode = <2>;
+> +		ti,mode = /bits/ 8 <2>;
+>  	};
