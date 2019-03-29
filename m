@@ -1,30 +1,49 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: arm: fsl: Add supported ZII VF610
- boards to DT schema
-Date: Fri, 29 Mar 2019 11:13:31 +0800
-Message-ID: <20190329031330.GP12513@dragon>
-References: <20190325182243.16788-1-andrew.smirnov@gmail.com>
+From: Yu Chen <chenyu56@huawei.com>
+Subject: [PATCH v5 03/13] usb: dwc3: dwc3-of-simple: Add support for dwc3 of Hisilicon Soc Platform
+Date: Fri, 29 Mar 2019 12:13:59 +0800
+Message-ID: <20190329041409.70138-4-chenyu56@huawei.com>
+References: <20190329041409.70138-1-chenyu56@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190325182243.16788-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20190329041409.70138-1-chenyu56@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 11:22:41AM -0700, Andrey Smirnov wrote:
-> Add already supported ZII VF610 boards to DT schema.
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
+This patch adds support for the poweron and shutdown of dwc3 core
+on Hisilicon Soc Platform.
 
-Applied all, thanks.
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Yu Chen <chenyu56@huawei.com>
+---
+ drivers/usb/dwc3/dwc3-of-simple.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
+index 4c2771c5e727..0ed09d876542 100644
+--- a/drivers/usb/dwc3/dwc3-of-simple.c
++++ b/drivers/usb/dwc3/dwc3-of-simple.c
+@@ -98,7 +98,8 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
+ 	 * Some controllers need to toggle the usb3-otg reset before trying to
+ 	 * initialize the PHY, otherwise the PHY times out.
+ 	 */
+-	if (of_device_is_compatible(np, "rockchip,rk3399-dwc3"))
++	if (of_device_is_compatible(np, "rockchip,rk3399-dwc3") ||
++			of_device_is_compatible(np, "hisilicon,hi3660-dwc3"))
+ 		simple->need_reset = true;
+ 
+ 	if (of_device_is_compatible(np, "amlogic,meson-axg-dwc3") ||
+@@ -243,6 +244,7 @@ static const struct of_device_id of_dwc3_simple_match[] = {
+ 	{ .compatible = "amlogic,meson-axg-dwc3" },
+ 	{ .compatible = "amlogic,meson-gxl-dwc3" },
+ 	{ .compatible = "allwinner,sun50i-h6-dwc3" },
++	{ .compatible = "hisilicon,hi3660-dwc3" },
+ 	{ /* Sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, of_dwc3_simple_match);
+-- 
+2.15.0-rc2
