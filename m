@@ -1,15 +1,14 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH V2 1/5] dt-bindings: mtd: describe the simple BCM963XX NOR
- flash layout
-Date: Thu, 28 Mar 2019 19:12:37 -0700
-Message-ID: <b9d3e33e-538e-4384-0ea9-ae293f60709e@gmail.com>
+Subject: Re: [PATCH V2 2/5] mtd: bcm63xxpart: add of_match_table support
+Date: Thu, 28 Mar 2019 19:12:58 -0700
+Message-ID: <dbbd8258-0e10-5986-ec19-eb57dd10e758@gmail.com>
 References: <20190328141910.5723-1-jonas.gorski@gmail.com>
- <20190328141910.5723-2-jonas.gorski@gmail.com>
+ <20190328141910.5723-3-jonas.gorski@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20190328141910.5723-2-jonas.gorski@gmail.com>
+In-Reply-To: <20190328141910.5723-3-jonas.gorski@gmail.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
  <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
@@ -27,8 +26,8 @@ List-Id: devicetree@vger.kernel.org
 
 
 On 3/28/2019 7:19 AM, Jonas Gorski wrote:
-> Add binding documentation for the standard CFE based BCM963XX flash
-> layout, found in most devices using a BCM63XX SoC with NOR flash.
+> Add of_match_table support to allow using bcm63xxpart as a full flash
+> layout parser from device tree.
 > 
 > Reviewed-by: Rob Herring <robh@kernel.org>
 > Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
