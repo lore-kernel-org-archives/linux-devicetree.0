@@ -1,50 +1,58 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 1/6] device property: Add functions for accessing
- node's parents
-Date: Fri, 29 Mar 2019 16:15:49 +0200
-Message-ID: <20190329141549.GZ9224@smile.fi.intel.com>
-References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
- <20190326124106.27694-2-sakari.ailus@linux.intel.com>
- <20190327122625.eaisnw776vqwhhnh@pathway.suse.cz>
- <20190327142036.jf6puc5uo2mjutbl@paasikivi.fi.intel.com>
- <CAJZ5v0hi04yACD9ZzDCaxhJh-uHHpMOu=zZzVf4t5vH=ctaYBg@mail.gmail.com>
- <20190328111307.ppuywzyb3i56pw4h@kekkonen.localdomain>
- <CAJZ5v0gAM_jn-gkmyu7Av+X0W_8g9NGjBEeXC-3-q_Ncb2PEGw@mail.gmail.com>
- <20190329131507.cc4qt5oyd74nvmzt@kekkonen.localdomain>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/2] edac: sifive: Add DT documentation for SiFive L2
+ cache Controller
+Date: Fri, 29 Mar 2019 15:27:39 +0100
+Message-ID: <20190329142739.GG21152@zn.tnic>
+References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
+ <1552382461-13051-2-git-send-email-yash.shah@sifive.com>
+ <20190328131657.GA9056@bogus>
+ <be7246a0-2426-995d-0a24-f104c173d752@arm.com>
+ <CAL_Jsq+s77J=Bwiyow2d7Q=e+z+5d64i_cL6xaYn0xdvJDb4Vg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190329131507.cc4qt5oyd74nvmzt@kekkonen.localdomain>
+In-Reply-To: <CAL_Jsq+s77J=Bwiyow2d7Q=e+z+5d64i_cL6xaYn0xdvJDb4Vg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Petr Mladek <pmladek@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: James Morse <james.morse@arm.com>, Yash Shah <yash.shah@sifive.com>, linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 03:15:07PM +0200, Sakari Ailus wrote:
-> On Thu, Mar 28, 2019 at 03:52:35PM +0100, Rafael J. Wysocki wrote:
-> > On Thu, Mar 28, 2019 at 12:13 PM Sakari Ailus
-> > <sakari.ailus@linux.intel.com> wrote:
-> > > On Thu, Mar 28, 2019 at 10:38:01AM +0100, Rafael J. Wysocki wrote:
-> > > > On Wed, Mar 27, 2019 at 3:20 PM Sakari Ailus
-> > > > <sakari.ailus@linux.intel.com> wrote:
-> > > > > On Wed, Mar 27, 2019 at 01:26:25PM +0100, Petr Mladek wrote:
-> > > > > > On Tue 2019-03-26 14:41:01, Sakari Ailus wrote:
+On Fri, Mar 29, 2019 at 09:11:24AM -0500, Rob Herring wrote:
+> I honestly don't understand the issue with EDAC is here.
 
-> Another option would be changing where the counting starts --- the first
-> parent. I.e.
+The EDAC core supports only one driver and if you need to load more, you
+need to dance around that.
 
-Looks better to me, though can you put comment how parents are being counted?
+Also, if those drivers need to talk amongst each other, then they need
+to build something ad-hoc so that they can.
 
-> fwnode = fwnode_get_parent(fwnode);
-> 
-> for (count = 0; fwnode; count++)
-> 	fwnode = fwnode_get_next_parent(fwnode);
-> 
-> return count;
+And the other architectures can very well do one driver per platform -
+only ARM wants to do this special thing because DT said so. Or whatever.
 
+> Highbank is separate drivers for L2 ECC (PL310) and DDR. Both are used
+> on highbank.
 
+That's because your L2 driver does allocate an edac_device
+(edac_device_alloc_ctl_info()) and the DDR one an edac_mc
+(edac_mc_add_mc_with_groups).
+
+For example, altera_edac does edac_device_alloc_ctl_info() for each IP
+block just fine. So a single driver *can* work.
+
+> Only the DDR driver is used midway. (I think we never got around to
+> how to report A15 L2 ECC errors within Linux.)
+>
+> In any case, it's all irrelevant to the DT binding. We don't design
+> bindings around what some particular OS wants.
+
+And just because DT dictates one driver per IP block, I'm not going to
+redesign EDAC to fit that scheme. You or someone else who feels strongly
+about it, is more than welcome to do so, of course. And then maintain it
+too.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
