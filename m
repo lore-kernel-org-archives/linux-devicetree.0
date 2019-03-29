@@ -1,33 +1,23 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/4] dt-bindings: arm: fsl: Add support for ZII i.MX7
- RPU2 board
-Date: Fri, 29 Mar 2019 07:36:36 -0500
-Message-ID: <CAL_JsqJZwdeKAiuCmadyCM9kAHiFrDpAqGUFviMNqCGz+B72qw@mail.gmail.com>
-References: <20190329083858.9988-1-andrew.smirnov@gmail.com> <20190329083858.9988-3-andrew.smirnov@gmail.com>
+From: =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
+Subject: [PATCH v1 0/2] add cec pins muxing
+Date: Fri, 29 Mar 2019 13:41:53 +0100
+Message-ID: <1553863315-6652-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190329083858.9988-3-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Fabio Estevam <festevam@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philippe Cornu <philippe.cornu@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 3:39 AM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
->
-> Add support for ZII i.MX7 RPU2 board.
->
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
+Add cec pins muxing 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Yannick Fertré (2):
+  ARM: dts: stm32: add cec pins muxing on stm32mp157
+  ARM: dts: stm32: add sleep pinctrl for cec on stm32mp157c
+
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+-- 
+2.7.4
