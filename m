@@ -1,101 +1,55 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH v9 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
- RPC-IF controller bindings
-Date: Fri, 29 Mar 2019 11:45:59 +0100
-Message-ID: <7a2d3d45-76ec-611d-08cf-f63da17d12f0@gmail.com>
-References: <1553847606-18122-1-git-send-email-masonccyang@mxic.com.tw>
- <1553847606-18122-4-git-send-email-masonccyang@mxic.com.tw>
+From: =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
+Subject: [PATCH] ARM: dts: stm32: add I2C sleep pins muxing on stm32mp157
+Date: Fri, 29 Mar 2019 11:48:20 +0100
+Message-ID: <1553856500-31009-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553847606-18122-4-git-send-email-masonccyang@mxic.com.tw>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, lee.jones@linaro.org
-Cc: juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>, zhengxunli@mxic.com.tw
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philippe Cornu <philippe.cornu@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 3/29/19 9:20 AM, Mason Yang wrote:
-> Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD controller.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> ---
->  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt    | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
-> new file mode 100644
-> index 0000000..577986b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
-> @@ -0,0 +1,57 @@
-> +Renesas R-Car Gen3 RPC-IF MFD controller Device Tree Bindings
-> +---------------------------------------------------------------------
-> +
-> +Required properties:
-> +- compatible: should be an SoC-specific compatible value, followed by
-> +		"renesas,rcar-gen3-rpc" as a fallback.
-> +		supported SoC-specific values are:
-> +		"renesas,r8a77995-rpc"	(R-Car D3)
-> +- reg: should contain three register areas:
-> +	first for the base address of rpc-if registers,
-> +	second for the direct mapping read mode and
-> +	third for the write buffer area.
-> +- reg-names: should contain "regs", "dirmap" and "wbuf"
-> +- clocks: should contain 1 entries for the module's clock
-> +- clock-names: should contain "rpc"
-> +- #address-cells: should be 1
-> +- #size-cells: should be 0
-> +
-> +Required nodes:
-> +	spi:
-> +	Node for configuring the SPI controller driver.
-> +	Required properties:
-> +		compatible = "renesas,rcar-rpc-spi";
-> +
-> +	hf:
-> +	Node for configuring the hyperflash controller driver.
-> +	Required properties:
-> +		compatible = "renesas,rcar-rpc-hf";
-> +
-> +Example:
-> +
-> +	rpc_mfd: rpc-mfd@ee200000 {
-> +		compatible = "renesas,r8a77995-rpc", "renesas,rcar-gen3-rpc";
-> +		reg = <0 0xee200000 0 0x200>, <0 0x08000000 0 0x4000000>,
-> +		      <0 0xee208000 0 0x100>;
-> +		reg-names = "regs", "dirmap", "wbuf";
-> +		clocks = <&cpg CPG_MOD 917>;
-> +		clock-names = "rpc";
-> +		power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-> +		resets = <&cpg 917>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		spi {
-
-Why is this subnode needed ?
-The MFD driver core can just check whether the flash@0 is jedec,spi-nor
-or cfi-flash and select mode of operation based on that.
-
-> +			compatible = "renesas,rcar-rpc-spi";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			flash@0 {
-> +				compatible = "jedec,spi-nor";
-> +				reg = <0>;
-> +				spi-max-frequency = <40000000>;
-> +				spi-tx-bus-width = <1>;
-> +				spi-rx-bus-width = <1>;
-> +			};
-> +		};
-> +	};
-> 
-
-
--- 
-Best regards,
-Marek Vasut
+QWRkIEkyQyBzbGVlcCBwaW5zIG11eGluZyBmb3IgbG93IHBvd2VyIG1vZGUuCgpTaWduZWQtb2Zm
+LWJ5OiBQaWVycmUtWXZlcyBNT1JEUkVUIDxwaWVycmUteXZlcy5tb3JkcmV0QHN0LmNvbT4KU2ln
+bmVkLW9mZi1ieTogWWFubmljayBGZXJ0csOpIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+Ci0tLQog
+YXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJtcDE1Ny1waW5jdHJsLmR0c2kgfCAyOSArKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKykKCmRp
+ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdG0zMm1wMTU3LXBpbmN0cmwuZHRzaSBiL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTctcGluY3RybC5kdHNpCmluZGV4IDkxMDQ4OTYuLmIw
+NDg5OWYgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTctcGluY3RybC5k
+dHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTctcGluY3RybC5kdHNpCkBAIC0y
+MTMsNiArMjEzLDEzIEBACiAJCQkJfTsKIAkJCX07CiAKKwkJCWkyYzFfcGluc19zbGVlcF9hOiBp
+MmMxLTEgeworCQkJCXBpbnMgeworCQkJCQlwaW5tdXggPSA8U1RNMzJfUElOTVVYKCdEJywgMTIs
+IEFOQUxPRyk+LCAvKiBJMkMxX1NDTCAqLworCQkJCQkJIDxTVE0zMl9QSU5NVVgoJ0YnLCAxNSwg
+QU5BTE9HKT47IC8qIEkyQzFfU0RBICovCisJCQkJfTsKKwkJCX07CisKIAkJCWkyYzJfcGluc19h
+OiBpMmMyLTAgewogCQkJCXBpbnMgewogCQkJCQlwaW5tdXggPSA8U1RNMzJfUElOTVVYKCdIJywg
+NCwgQUY0KT4sIC8qIEkyQzJfU0NMICovCkBAIC0yMjMsNiArMjMwLDEzIEBACiAJCQkJfTsKIAkJ
+CX07CiAKKwkJCWkyYzJfcGluc19zbGVlcF9hOiBpMmMyLTEgeworCQkJCXBpbnMgeworCQkJCQlw
+aW5tdXggPSA8U1RNMzJfUElOTVVYKCdIJywgNCwgQU5BTE9HKT4sIC8qIEkyQzJfU0NMICovCisJ
+CQkJCQkgPFNUTTMyX1BJTk1VWCgnSCcsIDUsIEFOQUxPRyk+OyAvKiBJMkMyX1NEQSAqLworCQkJ
+CX07CisJCQl9OworCiAJCQlpMmM1X3BpbnNfYTogaTJjNS0wIHsKIAkJCQlwaW5zIHsKIAkJCQkJ
+cGlubXV4ID0gPFNUTTMyX1BJTk1VWCgnQScsIDExLCBBRjQpPiwgLyogSTJDNV9TQ0wgKi8KQEAg
+LTIzMyw2ICsyNDcsMTQgQEAKIAkJCQl9OwogCQkJfTsKIAorCQkJaTJjNV9waW5zX3NsZWVwX2E6
+IGkyYzUtMSB7CisJCQkJcGlucyB7CisJCQkJCXBpbm11eCA9IDxTVE0zMl9QSU5NVVgoJ0EnLCAx
+MSwgQU5BTE9HKT4sIC8qIEkyQzVfU0NMICovCisJCQkJCQkgPFNUTTMyX1BJTk1VWCgnQScsIDEy
+LCBBTkFMT0cpPjsgLyogSTJDNV9TREEgKi8KKworCQkJCX07CisJCQl9OworCiAJCQltX2NhbjFf
+cGluc19hOiBtLWNhbjEtMCB7CiAJCQkJcGluczEgewogCQkJCQlwaW5tdXggPSA8U1RNMzJfUElO
+TVVYKCdIJywgMTMsIEFGOSk+OyAvKiBDQU4xX1RYICovCkBAIC00MzksNiArNDYxLDEzIEBACiAJ
+CQkJfTsKIAkJCX07CiAKKwkJCWkyYzRfcGluc19zbGVlcF9hOiBpMmM0LTEgeworCQkJCXBpbnMg
+eworCQkJCQlwaW5tdXggPSA8U1RNMzJfUElOTVVYKCdaJywgNCwgQU5BTE9HKT4sIC8qIEkyQzRf
+U0NMICovCisJCQkJCQkgPFNUTTMyX1BJTk1VWCgnWicsIDUsIEFOQUxPRyk+OyAvKiBJMkM0X1NE
+QSAqLworCQkJCX07CisJCQl9OworCiAJCQlzcGkxX3BpbnNfYTogc3BpMS0wIHsKIAkJCQlwaW5z
+MSB7CiAJCQkJCXBpbm11eCA9IDxTVE0zMl9QSU5NVVgoJ1onLCAwLCBBRjUpPiwgLyogU1BJMV9T
+Q0sgKi8KLS0gCjIuNy40CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
