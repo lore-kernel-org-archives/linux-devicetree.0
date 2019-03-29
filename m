@@ -1,178 +1,234 @@
-From: Harish Bandi <c-hbandi@codeaurora.org>
-Subject: Re: [PATCH v6 1/2] Bluetooth: hci_qca: Added support for WCN3998
-Date: Fri, 29 Mar 2019 10:12:51 +0530
-Message-ID: <a75d686f28a2c73562e9bbf5b601d37c@codeaurora.org>
-References: <1553689723-21017-2-git-send-email-c-hbandi@codeaurora.org>
- <201903290535.u5TF12SC%lkp@intel.com> <20190328212320.GF112750@google.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: dts: Add support for ZII i.MX7 RPU2 board
+Date: Thu, 28 Mar 2019 22:30:36 -0700
+Message-ID: <CAHQ1cqHiz__CXFZKG_6GanDxNTMzdhTLc_f9Xa-pc8Tb5GyRuw@mail.gmail.com>
+References: <20190327064150.31549-1-andrew.smirnov@gmail.com> <20190327064150.31549-2-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190328212320.GF112750@google.com>
+In-Reply-To: <20190327064150.31549-2-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, anubhavg@codeaurora.org, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+On Tue, Mar 26, 2019 at 11:41 PM Andrey Smirnov
+<andrew.smirnov@gmail.com> wrote:
+>
+> Add support for ZII's i.MX7 based Remote Peripheral Unit 2 (RPU2)
+> board.
+>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> ---
+>  arch/arm/boot/dts/Makefile           |   1 +
+>  arch/arm/boot/dts/imx7d-zii-rpu2.dts | 936 +++++++++++++++++++++++++++
+>  2 files changed, 937 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx7d-zii-rpu2.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index efefce8efa05..687222907154 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -586,6 +586,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
+>         imx7d-sdb.dtb \
+>         imx7d-sdb-reva.dtb \
+>         imx7d-sdb-sht11.dtb \
+> +       imx7d-zii-rpu2.dtb \
+>         imx7s-colibri-eval-v3.dtb \
+>         imx7s-warp.dtb
+>  dtb-$(CONFIG_SOC_IMX7ULP) += \
+> diff --git a/arch/arm/boot/dts/imx7d-zii-rpu2.dts b/arch/arm/boot/dts/imx7d-zii-rpu2.dts
+> new file mode 100644
+> index 000000000000..6f36c7d9d214
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx7d-zii-rpu2.dts
+> @@ -0,0 +1,936 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +
+> +/*
+> + * Device tree file for ZII's RPU2 board
+> + *
+> + * RPU - Remote Peripheral Unit
+> + *
+> + * Copyright (C) 2019 Zodiac Inflight Innovations
+> + */
+> +
+> +/dts-v1/;
+> +#include "imx7d.dtsi"
+> +
+> +/ {
+> +       model = "ZII RPU2 Board";
+> +       compatible = "zii,imx7d-rpu2", "fsl,imx7d";
+> +
+> +       chosen {
+> +               stdout-path = &uart1;
+> +       };
+> +
+> +       gpio-leds {
+> +               compatible = "gpio-leds";
+> +               pinctrl-0 = <&pinctrl_leds_debug>;
+> +               pinctrl-names = "default";
+> +
+> +               debug {
+> +                       label = "zii:green:debug1";
+> +                       gpios = <&gpio2 8 GPIO_ACTIVE_HIGH>;
+> +                       linux,default-trigger = "heartbeat";
+> +               };
+> +       };
+> +
+> +       reg_can1_stby: regulator-can1-stby {
+> +               compatible = "regulator-fixed";
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&pinctrl_flexcan1_stby>;
+> +               regulator-name = "can1-3v3";
+> +               regulator-min-microvolt = <3300000>;
+> +               regulator-max-microvolt = <3300000>;
+> +               gpio = <&gpio1 9 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +       };
+> +
+> +       reg_can2_stby: regulator-can2-stby {
+> +               compatible = "regulator-fixed";
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&pinctrl_flexcan2_stby>;
+> +               regulator-name = "can2-3v3";
+> +               regulator-min-microvolt = <3300000>;
+> +               regulator-max-microvolt = <3300000>;
+> +               gpio = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +       };
+> +
+> +       reg_vref_1v8: regulator-vref-1v8 {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "vref-1v8";
+> +               regulator-min-microvolt = <1800000>;
+> +               regulator-max-microvolt = <1800000>;
+> +               regulator-always-on;
+> +       };
+> +
+> +       reg_3p3v: regulator-3p3v {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "GEN_3V3";
+> +               regulator-min-microvolt = <3300000>;
+> +               regulator-max-microvolt = <3300000>;
+> +               regulator-always-on;
+> +       };
+> +
+> +       reg_5p0v_main: regulator-5p0v-main {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "5V_MAIN";
+> +               regulator-min-microvolt = <5000000>;
+> +               regulator-max-microvolt = <5000000>;
+> +               regulator-always-on;
+> +       };
+> +
+> +       sound1 {
+> +               compatible = "simple-audio-card";
+> +               simple-audio-card,name = "Audio Output 1";
+> +               simple-audio-card,format = "i2s";
+> +               simple-audio-card,bitclock-master = <&sound1_codec>;
+> +               simple-audio-card,frame-master = <&sound1_codec>;
+> +               simple-audio-card,widgets =
+> +                       "Headphone", "Headphone Jack";
+> +               simple-audio-card,routing =
+> +                       "Headphone Jack", "HPLEFT",
+> +                       "Headphone Jack", "HPRIGHT",
+> +                       "LEFTIN", "HPL",
+> +                       "RIGHTIN", "HPR";
+> +               simple-audio-card,aux-devs = <&hpa1>;
+> +
+> +               simple-audio-card,cpu {
+> +                       sound-dai = <&sai1>;
+> +               };
+> +
+> +               sound1_codec: simple-audio-card,codec {
+> +                       sound-dai = <&codec1>;
+> +                       clocks = <&cs2000>;
+> +               };
+> +       };
+> +
+> +       sound2 {
+> +               compatible = "simple-audio-card";
+> +               simple-audio-card,name = "Audio Output 2";
+> +               simple-audio-card,format = "i2s";
+> +               simple-audio-card,bitclock-master = <&sound2_codec>;
+> +               simple-audio-card,frame-master = <&sound2_codec>;
+> +               simple-audio-card,widgets =
+> +                       "Headphone", "Headphone Jack";
+> +               simple-audio-card,routing =
+> +                       "Headphone Jack", "HPLEFT",
+> +                       "Headphone Jack", "HPRIGHT",
+> +                       "LEFTIN", "HPL",
+> +                       "RIGHTIN", "HPR";
+> +               simple-audio-card,aux-devs = <&hpa2>;
+> +
+> +               simple-audio-card,cpu {
+> +                       sound-dai = <&sai2>;
+> +               };
+> +
+> +               sound2_codec: simple-audio-card,codec {
+> +                       sound-dai = <&codec2>;
+> +                       clocks = <&cs2000>;
+> +               };
+> +       };
+> +
+> +       sound3 {
+> +               compatible = "simple-audio-card";
+> +               simple-audio-card,name = "Audio Output 3";
+> +               simple-audio-card,format = "i2s";
+> +               simple-audio-card,bitclock-master = <&sound3_codec>;
+> +               simple-audio-card,frame-master = <&sound3_codec>;
+> +               simple-audio-card,widgets =
+> +                       "Headphone", "Headphone Jack";
+> +               simple-audio-card,routing =
+> +                       "Headphone Jack", "HPLEFT",
+> +                       "Headphone Jack", "HPRIGHT",
+> +                       "LEFTIN", "HPL",
+> +                       "RIGHTIN", "HPR";
+> +               simple-audio-card,aux-devs = <&hpa3>;
+> +
+> +               simple-audio-card,cpu {
+> +                       sound-dai = <&sai3>;
+> +               };
+> +
+> +               sound3_codec: simple-audio-card,codec {
+> +                       sound-dai = <&codec3>;
+> +                       clocks = <&cs2000>;
+> +               };
+> +       };
+> +
+> +       cs2000_ref: cs2000-ref {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <24576000>;
+> +       };
+> +
+> +       cs2000_in_dummy: cs2000-in-dummy {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <0>;
+> +       };
+> +};
+> +
+> +&adc1 {
+> +       vref-supply = <&reg_vref_1v8>;
+> +       status = "okay";
+> +};
+> +
+> +&adc2 {
+> +       vref-supply = <&reg_vref_1v8>;
+> +       status = "okay";
+> +};
 
-On 2019-03-29 02:53, Matthias Kaehlcke wrote:
-> On Fri, Mar 29, 2019 at 05:05:49AM +0800, kbuild test robot wrote:
->> Hi Harish,
->> 
->> Thank you for the patch! Perhaps something to improve:
->> 
->> [auto build test WARNING on bluetooth-next/master]
->> [also build test WARNING on next-20190328]
->> [cannot apply to v5.1-rc2]
->> [if your patch is applied to the wrong git tree, please drop us a note 
->> to help improve the system]
->> 
->> url:    
->> https://github.com/0day-ci/linux/commits/Harish-Bandi/Bluetooth-hci_qca-Added-support-for-WCN3998/20190328-213357
->> base:   
->> https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git 
->> master
->> config: riscv-allmodconfig (attached as .config)
->> compiler: riscv64-linux-gcc (GCC) 8.1.0
->> reproduce:
->>         wget 
->> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross 
->> -O ~/bin/make.cross
->>         chmod +x ~/bin/make.cross
->>         # save the attached .config to linux build tree
->>         GCC_VERSION=8.1.0 make.cross ARCH=riscv
->> 
->> Note: it may well be a FALSE warning. FWIW you are at least aware of 
->> it now.
->> http://gcc.gnu.org/wiki/Better_Uninitialized_Warnings
->> 
->> All warnings (new ones prefixed by >>):
->> 
->>    drivers/bluetooth/btqca.c: In function 'qca_uart_setup':
->> >> drivers/bluetooth/btqca.c:369:3: warning: 'rom_ver' may be used uninitialized in this function [-Wmaybe-uninitialized]
->>       snprintf(config.fwname, sizeof(config.fwname),
->>       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>         "qca/crnv%02x.bin", rom_ver);
->>         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> 
->> vim +/rom_ver +369 drivers/bluetooth/btqca.c
->> 
->> 83e81961 Ben Young Tae Kim      2015-08-10  333
->> aadebac4 Balakrishna Godavarthi 2018-08-03  334  int 
->> qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
->> aadebac4 Balakrishna Godavarthi 2018-08-03  335  		   enum 
->> qca_btsoc_type soc_type, u32 soc_ver)
->> 83e81961 Ben Young Tae Kim      2015-08-10  336  {
->> 83e81961 Ben Young Tae Kim      2015-08-10  337  	struct rome_config 
->> config;
->> 83e81961 Ben Young Tae Kim      2015-08-10  338  	int err;
->> 4219d468 Balakrishna Godavarthi 2018-08-03  339  	u8 rom_ver;
-> 
-> With the use of qca_is_wcn399x() the compiler can't determine anymore
-> that rom_ver is only read for WCN399x, in which case it is also
-> initialized. Just initialize rom_ver with 0 to keep the compiler happy.
-> 
-[Harish] - sure, will wait for few more comments and address all 
-comments in new patch version.
-
->> 83e81961 Ben Young Tae Kim      2015-08-10  340
->> ba493d4f Balakrishna Godavarthi 2018-08-03  341  	bt_dev_dbg(hdev, 
->> "QCA setup on UART");
->> 83e81961 Ben Young Tae Kim      2015-08-10  342
->> 83e81961 Ben Young Tae Kim      2015-08-10  343  
->> 	config.user_baud_rate = baudrate;
->> 83e81961 Ben Young Tae Kim      2015-08-10  344
->> 83e81961 Ben Young Tae Kim      2015-08-10  345  	/* Download rampatch 
->> file */
->> 83e81961 Ben Young Tae Kim      2015-08-10  346  	config.type = 
->> TLV_TYPE_PATCH;
->> cc8a70bd Harish Bandi           2019-03-27  347  	if 
->> (qca_is_wcn399x(soc_type)) {
->> 4219d468 Balakrishna Godavarthi 2018-08-03  348  		/* Firmware files 
->> to download are based on ROM version.
->> 4219d468 Balakrishna Godavarthi 2018-08-03  349  		 * ROM version is 
->> derived from last two bytes of soc_ver.
->> 4219d468 Balakrishna Godavarthi 2018-08-03  350  		 */
->> 4219d468 Balakrishna Godavarthi 2018-08-03  351  		rom_ver = ((soc_ver 
->> & 0x00000f00) >> 0x04) |
->> 4219d468 Balakrishna Godavarthi 2018-08-03  352  			    (soc_ver & 
->> 0x0000000f);
->> 4219d468 Balakrishna Godavarthi 2018-08-03  353  
->> 		snprintf(config.fwname, sizeof(config.fwname),
->> 4219d468 Balakrishna Godavarthi 2018-08-03  354  			 
->> "qca/crbtfw%02x.tlv", rom_ver);
->> 4219d468 Balakrishna Godavarthi 2018-08-03  355  	} else {
->> 4219d468 Balakrishna Godavarthi 2018-08-03  356  
->> 		snprintf(config.fwname, sizeof(config.fwname),
->> 4219d468 Balakrishna Godavarthi 2018-08-03  357  			 
->> "qca/rampatch_%08x.bin", soc_ver);
->> 4219d468 Balakrishna Godavarthi 2018-08-03  358  	}
->> 4219d468 Balakrishna Godavarthi 2018-08-03  359
->> ba493d4f Balakrishna Godavarthi 2018-08-03  360  	err = 
->> qca_download_firmware(hdev, &config);
->> 83e81961 Ben Young Tae Kim      2015-08-10  361  	if (err < 0) {
->> ba493d4f Balakrishna Godavarthi 2018-08-03  362  		bt_dev_err(hdev, 
->> "QCA Failed to download patch (%d)", err);
->> 83e81961 Ben Young Tae Kim      2015-08-10  363  		return err;
->> 83e81961 Ben Young Tae Kim      2015-08-10  364  	}
->> 83e81961 Ben Young Tae Kim      2015-08-10  365
->> 83e81961 Ben Young Tae Kim      2015-08-10  366  	/* Download NVM 
->> configuration */
->> 83e81961 Ben Young Tae Kim      2015-08-10  367  	config.type = 
->> TLV_TYPE_NVM;
->> cc8a70bd Harish Bandi           2019-03-27  368  	if 
->> (qca_is_wcn399x(soc_type))
->> 4219d468 Balakrishna Godavarthi 2018-08-03 @369  
->> 		snprintf(config.fwname, sizeof(config.fwname),
->> 4219d468 Balakrishna Godavarthi 2018-08-03  370  			 
->> "qca/crnv%02x.bin", rom_ver);
->> 4219d468 Balakrishna Godavarthi 2018-08-03  371  	else
->> 4219d468 Balakrishna Godavarthi 2018-08-03  372  
->> 		snprintf(config.fwname, sizeof(config.fwname),
->> 4219d468 Balakrishna Godavarthi 2018-08-03  373  			 
->> "qca/nvm_%08x.bin", soc_ver);
->> 4219d468 Balakrishna Godavarthi 2018-08-03  374
->> ba493d4f Balakrishna Godavarthi 2018-08-03  375  	err = 
->> qca_download_firmware(hdev, &config);
->> 83e81961 Ben Young Tae Kim      2015-08-10  376  	if (err < 0) {
->> ba493d4f Balakrishna Godavarthi 2018-08-03  377  		bt_dev_err(hdev, 
->> "QCA Failed to download NVM (%d)", err);
->> 83e81961 Ben Young Tae Kim      2015-08-10  378  		return err;
->> 83e81961 Ben Young Tae Kim      2015-08-10  379  	}
->> 83e81961 Ben Young Tae Kim      2015-08-10  380
->> 83e81961 Ben Young Tae Kim      2015-08-10  381  	/* Perform HCI reset 
->> */
->> ba493d4f Balakrishna Godavarthi 2018-08-03  382  	err = 
->> qca_send_reset(hdev);
->> 83e81961 Ben Young Tae Kim      2015-08-10  383  	if (err < 0) {
->> ba493d4f Balakrishna Godavarthi 2018-08-03  384  		bt_dev_err(hdev, 
->> "QCA Failed to run HCI_RESET (%d)", err);
->> 83e81961 Ben Young Tae Kim      2015-08-10  385  		return err;
->> 83e81961 Ben Young Tae Kim      2015-08-10  386  	}
->> 83e81961 Ben Young Tae Kim      2015-08-10  387
->> ba493d4f Balakrishna Godavarthi 2018-08-03  388  	bt_dev_info(hdev, 
->> "QCA setup on UART is completed");
->> 83e81961 Ben Young Tae Kim      2015-08-10  389
->> 83e81961 Ben Young Tae Kim      2015-08-10  390  	return 0;
->> 83e81961 Ben Young Tae Kim      2015-08-10  391  }
->> ba493d4f Balakrishna Godavarthi 2018-08-03  392  
->> EXPORT_SYMBOL_GPL(qca_uart_setup);
->> 83e81961 Ben Young Tae Kim      2015-08-10  393
->> 
->> :::::: The code at line 369 was first introduced by commit
->> :::::: 4219d4686875fdd83df3da00fda5ff0551e0a2d7 Bluetooth: btqca: Add 
->> wcn3990 firmware download support.
->> 
->> :::::: TO: Balakrishna Godavarthi <bgodavar@codeaurora.org>
->> :::::: CC: Marcel Holtmann <marcel@holtmann.org>
->> 
->> ---
->> 0-DAY kernel test infrastructure                Open Source Technology 
->> Center
->> https://lists.01.org/pipermail/kbuild-all                   Intel 
->> Corporation
+Tested this patch more and realized that these two above need to be
+properly exposed via HWMON. Will submit an update v2 of this set.
 
 Thanks,
-Harish
+Andrey Smirnov
