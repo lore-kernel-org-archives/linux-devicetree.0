@@ -1,43 +1,72 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v2 3/4] dt-bindings: arm: fsl: Add support for ZII i.MX7 RPU2 board
-Date: Fri, 29 Mar 2019 01:38:57 -0700
-Message-ID: <20190329083858.9988-3-andrew.smirnov@gmail.com>
-References: <20190329083858.9988-1-andrew.smirnov@gmail.com>
+From: Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH v4 0/9] Introduce STMFX I2C Multi-Function eXpander
+Date: Fri, 29 Mar 2019 08:48:59 +0000
+Message-ID: <b3cdddb0-8177-600c-7108-9a16e9067190@st.com>
+References: <1551260094-32570-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190329083858.9988-1-andrew.smirnov@gmail.com>
+In-Reply-To: <1551260094-32570-1-git-send-email-amelie.delaunay@st.com>
+Content-Language: en-US
+Content-ID: <3D8CEF54348AF443B719CFC0712D73C2@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Rob Herring <robh@kernel.org>, Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for ZII i.MX7 RPU2 board.
-
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index fb0a37bf16b8..18ffe3bfecf7 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -141,6 +141,7 @@ properties:
-         items:
-           - enum:
-               - fsl,imx7d-sdb             # i.MX7 SabreSD Board
-+              - zii,imx7d-rpu2            # ZII RPU2 Board
-           - const: fsl,imx7d
- 
-       - description:
--- 
-2.20.1
+SGksDQoNCkEgZ2VudGxlIHBpbmcgb24gdGhpcyBzZXJpZXMgKG1mZCArIHBpbmN0cmwgcGF0Y2hl
+cywgRFQgcGF0Y2hlcyB3aWxsIGJlIA0KdGFrZW4gaW4gU1RNMzIgc29jIHRyZWUpLg0KDQpSZWdh
+cmRzLA0KQW1lbGllDQoNCk9uIDIvMjcvMTkgMTA6MzQgQU0sIEFtZWxpZSBEZWxhdW5heSB3cm90
+ZToNCj4gVGhpcyBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBTVE1pY3JvZWxlY3Ryb25pY3MgTXVs
+dGktRnVuY3Rpb24gZVhwYW5kZXINCj4gKFNUTUZYKSwgdXNlZCBvbiBzb21lIFNUTTMyIGRpc2Nv
+dmVyeSBhbmQgZXZhbHVhdGlvbiBib2FyZHMuDQo+IA0KPiBTVE1GWCBpcyBhbiBTVE0zMkwxNTIg
+c2xhdmUgY29udHJvbGxlciB3aG9zZSBmaXJtd2FyZSBlbWJlZHMgdGhlIGZvbGxvd2luZw0KPiBm
+ZWF0dXJlczoNCj4gLSBJL08gZXhwYW5kZXIgKDE2IEdQSU9zICsgOCBleHRyYSBpZiB0aGUgb3Ro
+ZXIgZmVhdHVyZXMgYXJlIG5vdCBlbmFibGVkKSwNCj4gLSByZXNpc3RpdmUgdG91Y2hzY3JlZW4g
+Y29udHJvbGxlciwNCj4gLSBJREQgbWVhc3VyZW1lbnQuDQo+IA0KPiBJMkMgc3R1ZmYgYW5kIGNo
+aXAgaW5pdGlhbGl6YXRpb24gaXMgYmFzZWQgb24gYW4gTUZEIHBhcmVudCBkcml2ZXIsIHdoaWNo
+DQo+IHJlZ2lzdGVycyBTVE1GWCBmZWF0dXJlcyBNRkQgY2hpbGRyZW4uDQo+IA0KPiAtLS0NCj4g
+Q2hhbmdlcyBpbiB2NDoNCj4gLSBtZmQ6IG1vdmUgcmVnaXN0ZXJzICNkZWZpbmUgaW50byB0aGUg
+aGVhZGVyDQo+IC0gbWZkOiBtZXJnZSBzdG1meCBhbmQgc3RtZnhfZGRhdGEgc3RydWN0dXJlcyBp
+bnRvIG9uZSBzdG1meCBzdHJ1Y3R1cmUNCj4gLSBtZmQ6IGNoYW5nZSBzdG1meF9jaGlwX2luaXQv
+ZXhpdCBhbmQgc3RtZnhfaXJxX2luaXQvZXhpdCBhcmdzOiB1c2UNCj4gICAgaTJjX2NsaWVudCBz
+dHJ1Y3QgYW5kIGkyY19nZXRfY2xpZW50ZGF0YQ0KPiAtIG1mZDogZml4IHR5cG9zDQo+IC0gbWZk
+OiBhZGQgTUZEIGNlbGxzIGZvciBJREQgYW5kIFRTIGZlYXR1cmVzDQo+IC0gcGluY3RybDogcmV3
+b3JrIHJlZ2lzdGVycyAjZGVmaW5lDQo+IC0gZHRzOiBhZGQgU1RNRlggc3VwcG9ydCBvbiBzdG0z
+Mm1wMTU3Yy1ldjENCj4gQ2hhbmdlcyBpbiB2MzoNCj4gLSBmaXggTUZEIGludGVycnVwdCBiaW5k
+aW5ncw0KPiAtIGZpeCBkcml2ZXJzL21mZC9zdG1meC5jOjEwMzo4OiB3YXJuaW5nOiAnbWFzaycg
+bWF5IGJlIHVzZWQgdW5pbml0aWFsaXplZA0KPiAgICBpbiB0aGlzIGZ1bmN0aW9uDQo+IENoYW5n
+ZXMgaW4gdjI6DQo+IC0gbW92ZSB0byBNRkQgcGFyZW50IGRyaXZlciBmb3IgaTJjIHN0dWZmIGFu
+ZCBjaGlwIGluaXRpYWxpemF0aW9uDQo+IC0gaW1wcm92ZSByZWdtYXAgY29uZmlndXJhdGlvbg0K
+PiAtIHRha2UgYWR2YW50YWdlIG9mIHRoZSB1c2Ugb2YgZ3Bpby1yYW5nZXMNCj4gDQo+IEFtZWxp
+ZSBEZWxhdW5heSAoOSk6DQo+ICAgIGR0LWJpbmRpbmdzOiBtZmQ6IEFkZCBTVCBNdWx0aS1GdW5j
+dGlvbiBlWHBhbmRlciAoU1RNRlgpIGNvcmUgYmluZGluZ3MNCj4gICAgbWZkOiBBZGQgU1QgTXVs
+dGktRnVuY3Rpb24gZVhwYW5kZXIgKFNUTUZYKSBjb3JlIGRyaXZlcg0KPiAgICBkdC1iaW5kaW5n
+czogcGluY3RybDogZG9jdW1lbnQgdGhlIFNUTUZYIHBpbmN0cmwgYmluZGluZ3MNCj4gICAgcGlu
+Y3RybDogQWRkIFNUTUZYIEdQSU8gZXhwYW5kZXIgUGluY3RybC9HUElPIGRyaXZlcg0KPiAgICBB
+Uk06IGR0czogc3RtMzI6IGFkZCBTVE1GWCBzdXBwb3J0IG9uIHN0bTMyNzQ2Zy1ldmFsDQo+ICAg
+IEFSTTogZHRzOiBzdG0zMjogYWRkIGpveXN0aWNrIHN1cHBvcnQgb24gc3RtMzI3NDZnLWV2YWwN
+Cj4gICAgQVJNOiBkdHM6IHN0bTMyOiBhZGQgb3JhbmdlIGFuZCBibHVlIGxlZHMgb24gc3RtMzI3
+NDZnLWV2YWwNCj4gICAgQVJNOiBkdHM6IHN0bTMyOiBhZGQgU1RNRlggc3VwcG9ydCBvbiBzdG0z
+Mm1wMTU3Yy1ldjENCj4gICAgQVJNOiBkdHM6IHN0bTMyOiBhZGQgam95c3RpY2sgc3VwcG9ydCBv
+biBzdG0zMm1wMTU3Yy1ldjENCj4gDQo+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL21mZC9zdG1meC50eHQgICAgfCAgMjggKw0KPiAgIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3BpbmN0cmwvcGluY3RybC1zdG1meC50eHQgIHwgMTE2ICsrKw0KPiAgIGFyY2gvYXJtL2Jvb3Qv
+ZHRzL3N0bTMyNzQ2Zy1ldmFsLmR0cyAgICAgICAgICAgICAgIHwgIDY2ICsrDQo+ICAgYXJjaC9h
+cm0vYm9vdC9kdHMvc3RtMzJtcDE1N2MtZXYxLmR0cyAgICAgICAgICAgICAgfCAgNjAgKysNCj4g
+ICBkcml2ZXJzL21mZC9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAx
+MyArDQo+ICAgZHJpdmVycy9tZmQvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgIDIgKy0NCj4gICBkcml2ZXJzL21mZC9zdG1meC5jICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB8IDU2OCArKysrKysrKysrKysrKw0KPiAgIGRyaXZlcnMvcGluY3RybC9LY29u
+ZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDEyICsNCj4gICBkcml2ZXJzL3BpbmN0
+cmwvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArDQo+ICAgZHJpdmVy
+cy9waW5jdHJsL3BpbmN0cmwtc3RtZnguYyAgICAgICAgICAgICAgICAgICAgfCA4MjAgKysrKysr
+KysrKysrKysrKysrKysrDQo+ICAgaW5jbHVkZS9saW51eC9tZmQvc3RtZnguaCAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfCAxMjMgKysrKw0KPiAgIDExIGZpbGVzIGNoYW5nZWQsIDE4MDggaW5z
+ZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N0bWZ4LnR4dA0KPiAgIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9waW5jdHJs
+LXN0bWZ4LnR4dA0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21mZC9zdG1meC5jDQo+
+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGluY3RybC9waW5jdHJsLXN0bWZ4LmMNCj4g
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9saW51eC9tZmQvc3RtZnguaA0KPiA=
