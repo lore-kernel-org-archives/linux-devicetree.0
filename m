@@ -1,115 +1,62 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v2 1/6] device property: Add functions for accessing
- node's parents
-Date: Fri, 29 Mar 2019 15:15:07 +0200
-Message-ID: <20190329131507.cc4qt5oyd74nvmzt@kekkonen.localdomain>
-References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
- <20190326124106.27694-2-sakari.ailus@linux.intel.com>
- <20190327122625.eaisnw776vqwhhnh@pathway.suse.cz>
- <20190327142036.jf6puc5uo2mjutbl@paasikivi.fi.intel.com>
- <CAJZ5v0hi04yACD9ZzDCaxhJh-uHHpMOu=zZzVf4t5vH=ctaYBg@mail.gmail.com>
- <20190328111307.ppuywzyb3i56pw4h@kekkonen.localdomain>
- <CAJZ5v0gAM_jn-gkmyu7Av+X0W_8g9NGjBEeXC-3-q_Ncb2PEGw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Date: Fri, 29 Mar 2019 08:37:46 -0500
+Message-ID: <CAL_JsqJSvzOQbJSgz7z2wZj9-z=bfhzF_C+662Gnf68TgAPFaA@mail.gmail.com>
+References: <20190327212155.80730-1-venture@google.com> <20190328165009.GA25705@bogus>
+ <CAO=notxxYF4noXbR1BeVrwqCBHaVCaXy+jPV4OVbex=w=fV+Rg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gAM_jn-gkmyu7Av+X0W_8g9NGjBEeXC-3-q_Ncb2PEGw@mail.gmail.com>
+In-Reply-To: <CAO=notxxYF4noXbR1BeVrwqCBHaVCaXy+jPV4OVbex=w=fV+Rg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Petr Mladek <pmladek@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>
+To: Patrick Venture <venture@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Greg KH <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 03:52:35PM +0100, Rafael J. Wysocki wrote:
-> On Thu, Mar 28, 2019 at 12:13 PM Sakari Ailus
-> <sakari.ailus@linux.intel.com> wrote:
+On Thu, Mar 28, 2019 at 12:03 PM Patrick Venture <venture@google.com> wrote:
+>
+> On Thu, Mar 28, 2019 at 9:50 AM Rob Herring <robh@kernel.org> wrote:
 > >
-> > Hi Rafael,
-> >
-> > On Thu, Mar 28, 2019 at 10:38:01AM +0100, Rafael J. Wysocki wrote:
-> > > On Wed, Mar 27, 2019 at 3:20 PM Sakari Ailus
-> > > <sakari.ailus@linux.intel.com> wrote:
-> > > >
-> > > > Hi Petr,
-> > > >
-> > > > On Wed, Mar 27, 2019 at 01:26:25PM +0100, Petr Mladek wrote:
-> > > > > On Tue 2019-03-26 14:41:01, Sakari Ailus wrote:
-> > > > > > Add two convenience functions for accessing node's parents:
-> > > > > >
-> > > > > > fwnode_count_parents() returns the number of parent nodes a given node
-> > > > > > has. fwnode_get_nth_parent() returns node's parent at a given distance
-> > > > > > from the node itself.
-> > > > > >
-> > > > > > Also reorder fwnode_get_parent() in property.c according to the same order
-> > > > > > as in property.h.
-> > > > > >
-> > > > > > diff --git a/drivers/base/property.c b/drivers/base/property.c
-> > > > > > index 8b91ab380d14..61eb6ceacc3f 100644
-> > > > > > --- a/drivers/base/property.c
-> > > > > > +++ b/drivers/base/property.c
-> > > > > > @@ -554,17 +567,49 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
-> > > > > >  EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
-> > > > > >
-> > > > > >  /**
-> > > > > > - * fwnode_get_parent - Return parent firwmare node
-> > > > > > - * @fwnode: Firmware whose parent is retrieved
-> > > > > > + * fwnode_count_parents - Return the number of parents a node has
-> > > > > > + * @fwnode: The node the parents of which are to be counted
-> > > > > >   *
-> > > > > > - * Return parent firmware node of the given node if possible or %NULL if no
-> > > > > > - * parent was available.
-> > > > > > + * Returns the number of parents a node has.
-> > > > > >   */
-> > > > > > -struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
-> > > > > > +unsigned int fwnode_count_parents(struct fwnode_handle *fwnode)
-> > > > > >  {
-> > > > > > -   return fwnode_call_ptr_op(fwnode, get_parent);
-> > > > > > +   unsigned int count;
-> > > > > > +
-> > > > > > +   fwnode_handle_get(fwnode);
-> > > > > > +
-> > > > > > +   for (count = 0; fwnode; count++)
-> > > > > > +           fwnode = fwnode_get_next_parent(fwnode);
-> > > > >
-> > > > > Is it guaranteed that all parents stay when
-> > > > > fwnode_get_next_parent() releases the reference count
-> > > > > for each counted member?
-> > > >
-> > > > fwnode_get_next_parent() only releases the child node after it has acquired
-> > > > the parent. The only implementation with refcounting for single nodes is
-> > > > actually OF.
-> > > >
-> > > > >
-> > > > > > +
-> > > > > > +   return count - 1;
-> > > > >
-> > > > > We could start counting from count = -1;
-> > > >
-> > > > We could, but then count would need to be made signed (unless overflowing
-> > > > is preferred instead).
+> > On Wed, 27 Mar 2019 14:21:55 -0700, Patrick Venture wrote:
+> > > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
 > > >
-> > > What if there are no parents?
+> > > Signed-off-by: Patrick Venture <venture@google.com>
+> > > ---
+> > > Changes for v8:
+> > > - None
+> > > Changes for v7:
+> > > - Moved node under the syscon node it requires
+> > > Changes for v6:
+> > > - None
+> > > Changes for v5:
+> > > - None
+> > > Changes for v4:
+> > > - None
+> > > Changes for v3:
+> > > - None
+> > > Changes for v2:
+> > > - Added comment about syscon required parameter.
+> > > ---
+> > >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
+> > >  1 file changed, 48 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
 > > >
-> > > Or is it guaranteed that there always will be at least one?
 > >
-> > If there are no parents, the function will return 0 --- the node itself is
-> > counted in the loop, too, hence the need to decrement by one.
-> 
-> Right, sorry.
-> 
-> Then I don't see why count cannot be int.  Or call it "iter" to avoid
-> confusion with negative "counts". :-)
+> > Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> > there's no need to repost patches *only* to add the tags. The upstream
+> > maintainer will do that for acks received on the version they apply.
+> >
+> > If a tag was not added on purpose, please state why and what changed.
+>
+> Adding tags in this case is adding a change version?  I was doing this
+> to keep the two patches version-synced.  I thought that was required.
+> There was a version change in the other patch in this set.
 
-Another option would be changing where the counting starts --- the first
-parent. I.e.
+Adding tags is not considered a change. I gave a Reviewed-by in v7.
+Subsequent versions should carry that tag if there's no change (or
+only minor changes) in this patch. What happens in the other patches
+is not really important. Maintainers are not going to go searching
+thru the versions to find all the ack/review tags. And if I've already
+reviewed this, I don't want to look at it again.
 
-fwnode = fwnode_get_parent(fwnode);
-
-for (count = 0; fwnode; count++)
-	fwnode = fwnode_get_next_parent(fwnode);
-
-return count;
-
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Rob
