@@ -1,92 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
-Date: Fri, 29 Mar 2019 14:45:29 -0500
-Message-ID: <CAL_Jsq+0udKJ1ZyfJCvS8GDGXdNiFmGN+mOGNBvf5mqLr31wew@mail.gmail.com>
-References: <20190327212155.80730-1-venture@google.com> <20190328165009.GA25705@bogus>
- <CAO=notxxYF4noXbR1BeVrwqCBHaVCaXy+jPV4OVbex=w=fV+Rg@mail.gmail.com>
- <CAL_JsqJSvzOQbJSgz7z2wZj9-z=bfhzF_C+662Gnf68TgAPFaA@mail.gmail.com>
- <CAO=notx6K7xTW1VG6BGJFBM5k8EQsWXn3WoWSPSrZRsxkwueSA@mail.gmail.com>
- <CAO=notxD=5pa5sT15a+VrA7qVNPBoJoTo=5sLxibBxc+HWcG4g@mail.gmail.com> <CAO=notynUJGUn3tuJZ_jFPdz23_T1FPyzS46mm5msphLnLW_JA@mail.gmail.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/2] edac: sifive: Add DT documentation for SiFive L2
+ cache Controller
+Date: Fri, 29 Mar 2019 21:24:16 +0100
+Message-ID: <20190329202416.GI21152@zn.tnic>
+References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
+ <1552382461-13051-2-git-send-email-yash.shah@sifive.com>
+ <20190328131657.GA9056@bogus>
+ <be7246a0-2426-995d-0a24-f104c173d752@arm.com>
+ <CAL_Jsq+s77J=Bwiyow2d7Q=e+z+5d64i_cL6xaYn0xdvJDb4Vg@mail.gmail.com>
+ <20190329142739.GG21152@zn.tnic>
+ <CAL_JsqLQ1XvQq7L=xA5Z8Y0Xa4Bmp0t2pgxn+hLF+tD=_L7Mvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAO=notynUJGUn3tuJZ_jFPdz23_T1FPyzS46mm5msphLnLW_JA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLQ1XvQq7L=xA5Z8Y0Xa4Bmp0t2pgxn+hLF+tD=_L7Mvg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick Venture <venture@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Greg KH <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: James Morse <james.morse@arm.com>, Yash Shah <yash.shah@sifive.com>, linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 10:11 AM Patrick Venture <venture@google.com> wrote:
->
-> On Fri, Mar 29, 2019 at 7:59 AM Patrick Venture <venture@google.com> wrote:
-> >
-> > On Fri, Mar 29, 2019 at 7:56 AM Patrick Venture <venture@google.com> wrote:
-> > >
-> > > On Fri, Mar 29, 2019 at 6:38 AM Rob Herring <robh@kernel.org> wrote:
-> > > >
-> > > > On Thu, Mar 28, 2019 at 12:03 PM Patrick Venture <venture@google.com> wrote:
-> > > > >
-> > > > > On Thu, Mar 28, 2019 at 9:50 AM Rob Herring <robh@kernel.org> wrote:
-> > > > > >
-> > > > > > On Wed, 27 Mar 2019 14:21:55 -0700, Patrick Venture wrote:
-> > > > > > > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
-> > > > > > >
-> > > > > > > Signed-off-by: Patrick Venture <venture@google.com>
-> > > > > > > ---
-> > > > > > > Changes for v8:
-> > > > > > > - None
-> > > > > > > Changes for v7:
-> > > > > > > - Moved node under the syscon node it requires
-> > > > > > > Changes for v6:
-> > > > > > > - None
-> > > > > > > Changes for v5:
-> > > > > > > - None
-> > > > > > > Changes for v4:
-> > > > > > > - None
-> > > > > > > Changes for v3:
-> > > > > > > - None
-> > > > > > > Changes for v2:
-> > > > > > > - Added comment about syscon required parameter.
-> > > > > > > ---
-> > > > > > >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
-> > > > > > >  1 file changed, 48 insertions(+)
-> > > > > > >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> > > > > > >
-> > > > > >
-> > > > > > Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> > > > > > there's no need to repost patches *only* to add the tags. The upstream
-> > > > > > maintainer will do that for acks received on the version they apply.
-> > > > > >
-> > > > > > If a tag was not added on purpose, please state why and what changed.
-> > > > >
-> > > > > Adding tags in this case is adding a change version?  I was doing this
-> > > > > to keep the two patches version-synced.  I thought that was required.
-> > > > > There was a version change in the other patch in this set.
-> > > >
-> > > > Adding tags is not considered a change. I gave a Reviewed-by in v7.
-> > > > Subsequent versions should carry that tag if there's no change (or
-> > > > only minor changes) in this patch. What happens in the other patches
-> > > > is not really important. Maintainers are not going to go searching
-> > > > thru the versions to find all the ack/review tags. And if I've already
-> > > > reviewed this, I don't want to look at it again.
-> > >
-> > > Thank you, I didn't realize that had happened.
-> >
-> > I went back through my email and found the line of your email that
-> > included it.  I apologize.
-> >
-> > So, before I send the updated patch with your ack -- do I need to send
-> > a v9? or is this just me sending v8 again?
->
-> Sorry.  I see you already answered that when you said that adding a
-> tag isn't considered a change.  I have therefore re-sent v8 of this
-> patch with your tag added.
+On Fri, Mar 29, 2019 at 02:41:05PM -0500, Rob Herring wrote:
+> DT dictates aligning with what the h/w looks like which has little to
+> do with OS driver design.
 
-To repeat my form letter again, you don't need to send a series again
-just to add tags. IOW, if you send a v9, then add the tags. If v8 is
-what a maintainer applies, the maintain will take care of adding them
-(or patchwork does it for us):
+Ok, then, where does this goal for doing a driver or compilation unit
+per IP block come from?
 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
+Because everytime an ARM EDAC driver pops up, we are having the same
+discussion.
+
+> I never said you should change EDAC and I outlined how things should
+> be handled if it is one driver.
+
+Ok, we will add that to the EDAC driver design document we're currently
+working on.
+
+> DT and OS subsystems are independent things. I can't tell you how to
+> design the subsystem and you can't dictate DT design (based on EDAC
+> design).
+
+I don't think I've ever intentionally or unintentionally dictated DT
+design - all I've opposed to is having multiple EDAC drivers on ARM.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
