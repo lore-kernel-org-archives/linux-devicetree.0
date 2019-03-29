@@ -1,51 +1,64 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH 1/4] ARM: dts: imx6: RDU2: Use new CODEC reset pin name
-Date: Fri, 29 Mar 2019 13:13:10 -0500
-Message-ID: <20190329181313.21009-1-afd@ti.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v4 2/7] drm/panel: simple: Add ability to override typical
+ timing
+Date: Fri, 29 Mar 2019 20:13:33 +0100
+Message-ID: <1637882.fJ8YATuT5C@diego>
+References: <20190328171710.31949-1-dianders@chromium.org>
+ <20190328171710.31949-3-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190328171710.31949-3-dianders@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Jeffy Chen <jeffy.chen@rock-chips.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Boris Brezillon <boris.brezillon@collabora.com>, Enric =?ISO-8859-1?Q?Balletb=F2?= <enric.balletbo@collabora.com>, =?ISO-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>, Ezequiel Garcia <ezequiel@collabora.com>, mka@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-The correct DT property for specifying a GPIO used for reset
-is "reset-gpios", the driver now accepts this name, use it here.
-
-Note the GPIO polarity in the driver was ignored before and always
-assumed to be active low, when all the DTs are fixed we will start
-respecting the specified polarity. Switch polarity in DT to the
-currently assumed one, this way when the driver changes the
-behavior will not change.
-
-Signed-off-by: Andrew F. Davis <afd@ti.com>
----
- arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-index 69942c7ff89d..cbf7c9cae565 100644
---- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-@@ -384,7 +384,7 @@
- 		AVDD-supply = <&reg_3p3v>;
- 		IOVDD-supply = <&reg_3p3v>;
- 		DVDD-supply = <&vgen4_reg>;
--		gpio-reset = <&gpio1 2 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
- 	};
- 
- 	accel@1c {
-@@ -572,7 +572,7 @@
- 		AVDD-supply = <&reg_3p3v>;
- 		IOVDD-supply = <&reg_3p3v>;
- 		DVDD-supply = <&vgen4_reg>;
--		gpio-reset = <&gpio1 0 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
- 	};
- 
- 	touchscreen@20 {
--- 
-2.21.0
+QW0gRG9ubmVyc3RhZywgMjguIE3DpHJ6IDIwMTksIDE4OjE3OjA1IENFVCBzY2hyaWViIERvdWds
+YXMgQW5kZXJzb246Cj4gRnJvbTogU2VhbiBQYXVsIDxzZWFucGF1bEBjaHJvbWl1bS5vcmc+Cj4g
+Cj4gVGhpcyBwYXRjaCBhZGRzIHRoZSBhYmlsaXR5IHRvIG92ZXJyaWRlIHRoZSB0eXBpY2FsIGRp
+c3BsYXkgdGltaW5nIGZvciBhCj4gZ2l2ZW4gcGFuZWwuIFRoaXMgaXMgdXNlZnVsIGZvciBkZXZp
+Y2VzIHdoaWNoIGhhdmUgdGltaW5nIGNvbnN0cmFpbnRzCj4gdGhhdCBkbyBub3QgYXBwbHkgYWNy
+b3NzIHRoZSBlbnRpcmUgZGlzcGxheSBkcml2ZXIgKGVnOiB0byBhdm9pZAo+IGNyb3NzdGFsayBi
+ZXR3ZWVuIHBhbmVsIGFuZCBkaWdpdGl6ZXIgb24gY2VydGFpbiBsYXB0b3BzKS4gVGhlIHJ1bGVz
+IGFyZQo+IGFzIGZvbGxvd3M6Cj4gCj4gLSBwYW5lbCBtdXN0IG5vdCBzcGVjaWZ5IGZpeGVkIG1v
+ZGUgKHNpbmNlIHRoZSBvdmVycmlkZSBtb2RlIHdpbGwKPiAgIGVpdGhlciBiZSB0aGUgc2FtZSBh
+cyB0aGUgZml4ZWQgbW9kZSwgb3Igd2UnbGwgYmUgdW5hYmxlIHRvCj4gICBjaGVjayB0aGUgYm91
+bmRzIG9mIHRoZSBvdmVycmllZCkKPiAtIHBhbmVsIG11c3Qgc3BlY2lmeSBhdCBsZWFzdCBvbmUg
+ZGlzcGxheV90aW1pbmcgcmFuZ2Ugd2hpY2ggd2lsbCBiZQo+ICAgdXNlZCB0byBlbnN1cmUgdGhl
+IG92ZXJyaWRlIG1vZGUgZml0cyB3aXRoaW4gaXRzIGJvdW5kcwo+IAo+IENoYW5nZXMgaW4gdjI6
+Cj4gIC0gUGFyc2UgdGhlIGZ1bGwgZGlzcGxheS10aW1pbmdzIG5vZGUgKHVzaW5nIHRoZSBuYXRp
+dmUtbW9kZSkgKFJvYikKPiBDaGFuZ2VzIGluIHYzOgo+ICAtIE5vIGxvbmdlciBwYXJzZSBkaXNw
+bGF5LXRpbWluZ3Mgc3Vibm9kZSwgdXNlIHBhbmVsLXRpbWluZyAoUm9iKQo+IENoYW5nZXMgaW4g
+djQ6Cj4gIC0gRG9uJ3QgYWRkIG1vZGUgZnJvbSB0aW1pbmcgaWYgb3ZlcnJpZGUgd2FzIHNwZWNp
+ZmllZCAoVGhpZXJyeSkKPiAgLSBBZGQgd2FybmluZyBpZiB0aW1pbmcgYW5kIGZpeGVkIG1vZGUg
+d2FzIHNwZWNpZmllZCAoVGhpZXJyeSkKPiAgLSBEb24ndCBhZGQgZml4ZWQgbW9kZSBpZiB0aW1p
+bmcgd2FzIHNwZWNpZmllZCAoVGhpZXJyeSkKPiAgLSBSZWZhY3Rvci9yZW5hbWUgYSBiaXQgdG8g
+YXZvaWQgZXh0cmEgaW5kZW50YXRpb24gZnJvbSAiaWYiIHRlc3RzCj4gIC0gaSBzaG91bGQgYmUg
+dW5zaWduZWQgKFRoaWVycnkpCj4gIC0gQWRkIGFubm95aW5nIFdBUk5fT05zIGZvciBzb21lIGNh
+c2VzIChUaGllcnJ5KQo+ICAtIFNpbXBsaWZ5ICdObyBkaXNwbGF5X3RpbWluZyBmb3VuZCcgaGFu
+ZGxpbmcgKFRoaWVycnkpCj4gIC0gUmVuYW1lIHRvIHBhbmVsX3NpbXBsZV9wYXJzZV9vdmVycmlk
+ZV9tb2RlKCkgKFRoaWVycnkpCj4gCj4gQ2M6IERvdWcgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9t
+aXVtLm9yZz4KPiBDYzogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KPiBDYzogSGVpa28g
+U3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiBDYzogSmVmZnkgQ2hlbiA8amVmZnkuY2hlbkBy
+b2NrLWNoaXBzLmNvbT4KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4KPiBD
+YzogU3TDqXBoYW5lIE1hcmNoZXNpbiA8bWFyY2hldUBjaHJvbWl1bS5vcmc+Cj4gQ2M6IFRoaWVy
+cnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+Cj4gQ2M6IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnCj4gQ2M6IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBTaWdu
+ZWQtb2ZmLWJ5OiBTZWFuIFBhdWwgPHNlYW5wYXVsQGNocm9taXVtLm9yZz4KPiBUZXN0ZWQtYnk6
+IEVucmljIEJhbGxldGJvIGkgU2VycmEgPGVucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb20+Cj4g
+U2lnbmVkLW9mZi1ieTogRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgoK
+b24gYSByazMzOTkta2V2aW4gYW5kIHJrMzI4OC1qZXJyeQpUZXN0ZWQtYnk6IEhlaWtvIFN0dWVi
+bmVyIDxoZWlrb0BzbnRlY2guZGU+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVs
