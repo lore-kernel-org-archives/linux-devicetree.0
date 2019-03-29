@@ -1,72 +1,53 @@
-From: Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCH v4 0/9] Introduce STMFX I2C Multi-Function eXpander
-Date: Fri, 29 Mar 2019 08:48:59 +0000
-Message-ID: <b3cdddb0-8177-600c-7108-9a16e9067190@st.com>
-References: <1551260094-32570-1-git-send-email-amelie.delaunay@st.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH 1/4] arm64: dts: imx8mq: Fix the fsl,imx8mq-sdma
+ compatible string
+Date: Fri, 29 Mar 2019 09:10:27 +0000
+Message-ID: <AM0PR04MB421112C3EE79B279953A9252805A0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190328133828.20999-1-angus@akkea.ca>
+ <20190328133828.20999-2-angus@akkea.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551260094-32570-1-git-send-email-amelie.delaunay@st.com>
+In-Reply-To: <20190328133828.20999-2-angus@akkea.ca>
 Content-Language: en-US
-Content-ID: <3D8CEF54348AF443B719CFC0712D73C2@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
+To: "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vkoul@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Carlo Caione <ccaione@baylibre.com>, Daniel Baluta <daniel.baluta@nxp.com>, =?iso-8859-1?Q?Guido_G=FCnther?= <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCkEgZ2VudGxlIHBpbmcgb24gdGhpcyBzZXJpZXMgKG1mZCArIHBpbmN0cmwgcGF0Y2hl
-cywgRFQgcGF0Y2hlcyB3aWxsIGJlIA0KdGFrZW4gaW4gU1RNMzIgc29jIHRyZWUpLg0KDQpSZWdh
-cmRzLA0KQW1lbGllDQoNCk9uIDIvMjcvMTkgMTA6MzQgQU0sIEFtZWxpZSBEZWxhdW5heSB3cm90
-ZToNCj4gVGhpcyBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBTVE1pY3JvZWxlY3Ryb25pY3MgTXVs
-dGktRnVuY3Rpb24gZVhwYW5kZXINCj4gKFNUTUZYKSwgdXNlZCBvbiBzb21lIFNUTTMyIGRpc2Nv
-dmVyeSBhbmQgZXZhbHVhdGlvbiBib2FyZHMuDQo+IA0KPiBTVE1GWCBpcyBhbiBTVE0zMkwxNTIg
-c2xhdmUgY29udHJvbGxlciB3aG9zZSBmaXJtd2FyZSBlbWJlZHMgdGhlIGZvbGxvd2luZw0KPiBm
-ZWF0dXJlczoNCj4gLSBJL08gZXhwYW5kZXIgKDE2IEdQSU9zICsgOCBleHRyYSBpZiB0aGUgb3Ro
-ZXIgZmVhdHVyZXMgYXJlIG5vdCBlbmFibGVkKSwNCj4gLSByZXNpc3RpdmUgdG91Y2hzY3JlZW4g
-Y29udHJvbGxlciwNCj4gLSBJREQgbWVhc3VyZW1lbnQuDQo+IA0KPiBJMkMgc3R1ZmYgYW5kIGNo
-aXAgaW5pdGlhbGl6YXRpb24gaXMgYmFzZWQgb24gYW4gTUZEIHBhcmVudCBkcml2ZXIsIHdoaWNo
-DQo+IHJlZ2lzdGVycyBTVE1GWCBmZWF0dXJlcyBNRkQgY2hpbGRyZW4uDQo+IA0KPiAtLS0NCj4g
-Q2hhbmdlcyBpbiB2NDoNCj4gLSBtZmQ6IG1vdmUgcmVnaXN0ZXJzICNkZWZpbmUgaW50byB0aGUg
-aGVhZGVyDQo+IC0gbWZkOiBtZXJnZSBzdG1meCBhbmQgc3RtZnhfZGRhdGEgc3RydWN0dXJlcyBp
-bnRvIG9uZSBzdG1meCBzdHJ1Y3R1cmUNCj4gLSBtZmQ6IGNoYW5nZSBzdG1meF9jaGlwX2luaXQv
-ZXhpdCBhbmQgc3RtZnhfaXJxX2luaXQvZXhpdCBhcmdzOiB1c2UNCj4gICAgaTJjX2NsaWVudCBz
-dHJ1Y3QgYW5kIGkyY19nZXRfY2xpZW50ZGF0YQ0KPiAtIG1mZDogZml4IHR5cG9zDQo+IC0gbWZk
-OiBhZGQgTUZEIGNlbGxzIGZvciBJREQgYW5kIFRTIGZlYXR1cmVzDQo+IC0gcGluY3RybDogcmV3
-b3JrIHJlZ2lzdGVycyAjZGVmaW5lDQo+IC0gZHRzOiBhZGQgU1RNRlggc3VwcG9ydCBvbiBzdG0z
-Mm1wMTU3Yy1ldjENCj4gQ2hhbmdlcyBpbiB2MzoNCj4gLSBmaXggTUZEIGludGVycnVwdCBiaW5k
-aW5ncw0KPiAtIGZpeCBkcml2ZXJzL21mZC9zdG1meC5jOjEwMzo4OiB3YXJuaW5nOiAnbWFzaycg
-bWF5IGJlIHVzZWQgdW5pbml0aWFsaXplZA0KPiAgICBpbiB0aGlzIGZ1bmN0aW9uDQo+IENoYW5n
-ZXMgaW4gdjI6DQo+IC0gbW92ZSB0byBNRkQgcGFyZW50IGRyaXZlciBmb3IgaTJjIHN0dWZmIGFu
-ZCBjaGlwIGluaXRpYWxpemF0aW9uDQo+IC0gaW1wcm92ZSByZWdtYXAgY29uZmlndXJhdGlvbg0K
-PiAtIHRha2UgYWR2YW50YWdlIG9mIHRoZSB1c2Ugb2YgZ3Bpby1yYW5nZXMNCj4gDQo+IEFtZWxp
-ZSBEZWxhdW5heSAoOSk6DQo+ICAgIGR0LWJpbmRpbmdzOiBtZmQ6IEFkZCBTVCBNdWx0aS1GdW5j
-dGlvbiBlWHBhbmRlciAoU1RNRlgpIGNvcmUgYmluZGluZ3MNCj4gICAgbWZkOiBBZGQgU1QgTXVs
-dGktRnVuY3Rpb24gZVhwYW5kZXIgKFNUTUZYKSBjb3JlIGRyaXZlcg0KPiAgICBkdC1iaW5kaW5n
-czogcGluY3RybDogZG9jdW1lbnQgdGhlIFNUTUZYIHBpbmN0cmwgYmluZGluZ3MNCj4gICAgcGlu
-Y3RybDogQWRkIFNUTUZYIEdQSU8gZXhwYW5kZXIgUGluY3RybC9HUElPIGRyaXZlcg0KPiAgICBB
-Uk06IGR0czogc3RtMzI6IGFkZCBTVE1GWCBzdXBwb3J0IG9uIHN0bTMyNzQ2Zy1ldmFsDQo+ICAg
-IEFSTTogZHRzOiBzdG0zMjogYWRkIGpveXN0aWNrIHN1cHBvcnQgb24gc3RtMzI3NDZnLWV2YWwN
-Cj4gICAgQVJNOiBkdHM6IHN0bTMyOiBhZGQgb3JhbmdlIGFuZCBibHVlIGxlZHMgb24gc3RtMzI3
-NDZnLWV2YWwNCj4gICAgQVJNOiBkdHM6IHN0bTMyOiBhZGQgU1RNRlggc3VwcG9ydCBvbiBzdG0z
-Mm1wMTU3Yy1ldjENCj4gICAgQVJNOiBkdHM6IHN0bTMyOiBhZGQgam95c3RpY2sgc3VwcG9ydCBv
-biBzdG0zMm1wMTU3Yy1ldjENCj4gDQo+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL21mZC9zdG1meC50eHQgICAgfCAgMjggKw0KPiAgIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3BpbmN0cmwvcGluY3RybC1zdG1meC50eHQgIHwgMTE2ICsrKw0KPiAgIGFyY2gvYXJtL2Jvb3Qv
-ZHRzL3N0bTMyNzQ2Zy1ldmFsLmR0cyAgICAgICAgICAgICAgIHwgIDY2ICsrDQo+ICAgYXJjaC9h
-cm0vYm9vdC9kdHMvc3RtMzJtcDE1N2MtZXYxLmR0cyAgICAgICAgICAgICAgfCAgNjAgKysNCj4g
-ICBkcml2ZXJzL21mZC9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAx
-MyArDQo+ICAgZHJpdmVycy9tZmQvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgfCAgIDIgKy0NCj4gICBkcml2ZXJzL21mZC9zdG1meC5jICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8IDU2OCArKysrKysrKysrKysrKw0KPiAgIGRyaXZlcnMvcGluY3RybC9LY29u
-ZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDEyICsNCj4gICBkcml2ZXJzL3BpbmN0
-cmwvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArDQo+ICAgZHJpdmVy
-cy9waW5jdHJsL3BpbmN0cmwtc3RtZnguYyAgICAgICAgICAgICAgICAgICAgfCA4MjAgKysrKysr
-KysrKysrKysrKysrKysrDQo+ICAgaW5jbHVkZS9saW51eC9tZmQvc3RtZnguaCAgICAgICAgICAg
-ICAgICAgICAgICAgICAgfCAxMjMgKysrKw0KPiAgIDExIGZpbGVzIGNoYW5nZWQsIDE4MDggaW5z
-ZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N0bWZ4LnR4dA0KPiAgIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9waW5jdHJs
-LXN0bWZ4LnR4dA0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21mZC9zdG1meC5jDQo+
-ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGluY3RybC9waW5jdHJsLXN0bWZ4LmMNCj4g
-ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9saW51eC9tZmQvc3RtZnguaA0KPiA=
+> From: Angus Ainslie (Purism) [mailto:angus@akkea.ca]
+> Sent: Thursday, March 28, 2019 9:38 PM
+>=20
+> Fix a typo in the compatible string
+>=20
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index 81d5ce1b1ec1..07099f82965e 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -720,7 +720,7 @@
+>  			};
+>=20
+>  			sdma1: sdma@30bd0000 {
+> -				compatible =3D "fsl, imx8mq-sdma","fsl,imx7d-sdma";
+> +				compatible =3D "fsl,mx8mq-sdma","fsl,imx7d-sdma";
+
+This is a bit strange.
+If binding doc says like that, probably we'd better fix the typo in binding=
+ doc
+to use the same style.
+
+Regards
+Dong Aisheng
+
+>  				reg =3D <0x30bd0000 0x10000>;
+>  				interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+>  				clocks =3D <&clk IMX8MQ_CLK_SDMA1_ROOT>,
+> --
+> 2.17.1
