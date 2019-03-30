@@ -1,7 +1,7 @@
 From: Nishad Kamdar <nishadkamdar@gmail.com>
 Subject: [PATCH v2] ARCH: Use the correct style for SPDX License Identifier
-Date: Sun, 31 Mar 2019 03:51:09 +0530
-Message-ID: <20190330222104.GA14173@nishad>
+Date: Sun, 31 Mar 2019 04:04:29 +0530
+Message-ID: <20190330223423.GA14432@nishad>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -31,6 +31,9 @@ and making some manual changes.
 
 Suggested-by: Joe Perches <joe@perches.com>
 Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+Changes in v2:
+ - Added a note in the patch description.
 ---
  arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h     | 2 +-
  arch/arm64/include/asm/pointer_auth.h             | 2 +-
