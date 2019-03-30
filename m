@@ -1,116 +1,47 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: iio: Add bindings for TI TLA202x
- ADCs
-Date: Sat, 30 Mar 2019 15:58:39 +0000
-Message-ID: <20190330155839.5c438850@archlinux>
-References: <1553608583-29006-1-git-send-email-ibtsam.haq.0x01@gmail.com>
-        <1553608583-29006-2-git-send-email-ibtsam.haq.0x01@gmail.com>
-        <20190328183842.GA9079@bogus>
+Subject: Re: [PATCH v2] devantech-srf04.yaml: transform DT binding to YAML
+Date: Sat, 30 Mar 2019 16:12:00 +0000
+Message-ID: <20190330161200.6d0dec48@archlinux>
+References: <20190326133938.oitfjxlx2kou26lm@arbad>
+        <CAL_JsqKV1Qy05oX9wm+Fz1HAkAEe4gE3whCNvafPfxsg6hgp8A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190328183842.GA9079@bogus>
+In-Reply-To: <CAL_JsqKV1Qy05oX9wm+Fz1HAkAEe4gE3whCNvafPfxsg6hgp8A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ibtsam Ul-Haq <ibtsam.haq.0x01@gmail.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Popa <stefan.popa@analog.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Andreas Klinger <ak@it-klinger.de>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-+CC Stefan for a possible issue in ad7124
+On Wed, 27 Mar 2019 08:13:17 -0500
+Rob Herring <robh+dt@kernel.org> wrote:
 
-On Thu, 28 Mar 2019 13:38:42 -0500
-Rob Herring <robh@kernel.org> wrote:
-
-> On Tue, Mar 26, 2019 at 02:56:20PM +0100, Ibtsam Ul-Haq wrote:
-> > This adds devicetree bindings for TI TLA202x ADCs.
-> > 
-> > Signed-off-by: Ibtsam Ul-Haq <ibtsam.haq.0x01@gmail.com>
+> On Tue, Mar 26, 2019 at 8:40 AM Andreas Klinger <ak@it-klinger.de> wrote:
+> >
+> > devantech-srf04.yaml: yaml devicetree binding for iio ultrasonic
+> > proximity driver of devantech srf04
+> >
+> > use devantech-srf04.txt, transform binding into yaml and remove the
+> > outdated DT documentation
+> >
+> > Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 > > ---
-> >  .../devicetree/bindings/iio/adc/ti-tla2024.txt     | 45 ++++++++++++++++++++++
-> >  1 file changed, 45 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-tla2024.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/ti-tla2024.txt b/Documentation/devicetree/bindings/iio/adc/ti-tla2024.txt
-> > new file mode 100644
-> > index 0000000..a4934df
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/ti-tla2024.txt
-> > @@ -0,0 +1,45 @@
-> > +Texas Instruments' TLA2021/TLA2022/TLA2024 12-bit ADC driver
-> > +
-> > +Required properties:
-> > +
-> > +- compatible: should be one of:
-> > +  "ti,tla2024"
-> > +  "ti,tla2022"
-> > +  "ti,tla2021"
-> > +
-> > +- reg: should contain the I2C Address of the device
-> > +
-> > +Required subnodes:
-> > +
-> > +The ADC channels are configured as subnodes of the ADC.
-> > +The channels can be single-ended or differential, the input pins are
-> > +also set in the subnode.
-> > +
-> > +Possible channels in TLA2024:
-> > +  single: <0>, <1>, <2>, <3>
-> > +  differential: <0 1>, <0 3>, <1 3>, <2 3>
-> > +
-> > +In TLA2021/TLA2022 only the differential channel <0 1> is allowed.
-> > +
-> > +Example:
-> > +
-> > +tla2024_0: adc0@49 {  
+> >  .../bindings/iio/proximity/devantech-srf04.txt     | 28 ----------
+> >  .../bindings/iio/proximity/devantech-srf04.yaml    | 59 ++++++++++++++++++++++
+> >  2 files changed, 59 insertions(+), 28 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/proximity/devantech-srf04.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml  
 > 
-> adc@49
-> 
-> > +	compatible = "ti,tla2024";
-> > +	reg = <0x49>;
-> > +
-> > +	v0@0 {  
-> 
-> Unit-address without 'reg' is not valid.
-> 
-> > +		single-channel = <0>;  
-> 
-> Look at the common adc binding or adi,ad7124.txt for how to do 
-> multi-channel with differential channels.
-Hi Rob.
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Given I've been feeling guilty for ages about never reviewing Rob's original work on
+this (it sat in my todo list for a large number of months before I dropped it because
+it had already merged), I'm very happy to see that it ends up being this simple!
+I guess we have a lot of these change over patches to go ;)
 
-Only difference from the standard doc 
-Documentation/devicetree/bindings/adc/adc.txt
-which should be fixed is that channels are
-channel@0, channel@1 etc
+Applied to the togreg branch of iio.git and pushed out as testing. Does anyone check
+these yet?
 
-Non differential channels aren't in that doc yet but what we have
-here works for me (other than the naming).
-
-Note however, we didn't require reg in that binding so probably
-have something to fix there.  The adi driver you reference does
-have reg in the bindings, though so we should probably just add
-that to the generic doc.
-
-One side note though for Stefan,  What happens if someone provides
-a non contiguous set of reg values or one greater than 3 for the ad7124?  
-e should probably harden the driver against that (or am I missing something).
+Thanks,
 
 Jonathan
-> 
-> > +	};
-> > +
-> > +	v1@1 {
-> > +		single-channel = <1>;
-> > +	};
-> > +
-> > +	v23@2 {
-> > +		diff-channels = <2 3>;
-> > +	};
-> > +
-> > +	v01@3 {
-> > +		diff-channels = <0 1>;
-> > +	};
-> > +};
-> > -- 
-> > 2.7.4
-> >   
