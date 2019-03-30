@@ -1,7 +1,7 @@
 From: Johan Jonker <jbx6244@gmail.com>
-Subject: [PATCH v6 2/4] ARM: dts: rockchip: add rk3066 hdmi nodes
-Date: Sat, 30 Mar 2019 10:56:37 +0100
-Message-ID: <20190330095639.14626-3-jbx6244@gmail.com>
+Subject: [PATCH v6 4/4] dt-bindings: display: rockchip: add document for rk3066 hdmi
+Date: Sat, 30 Mar 2019 10:56:39 +0100
+Message-ID: <20190330095639.14626-5-jbx6244@gmail.com>
 References: <20190330095639.14626-1-jbx6244@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190330095639.14626-1-jbx6244@gmail.com>
@@ -10,42 +10,47 @@ To: heiko@sntech.de
 Cc: hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Zheng Yang <zhengyang@rock-chips.com>
+This patch adds a binding that describes the HDMI controller for
+rk3066.
 
-This patch adds the hdmi nodes to rk3066.
-
-Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/rk3066a.dtsi | 52 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+ .../display/rockchip/rockchip,rk3066-hdmi.txt      | 72 ++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
 
-diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index 653127a37..9c43b985a 100644
---- a/arch/arm/boot/dts/rk3066a.dtsi
-+++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -80,6 +80,10 @@
- 		vop0_out: port {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			vop0_out_hdmi: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&hdmi_in_vop0>;
-+			};
- 		};
- 	};
- 
-@@ -101,6 +105,44 @@
- 		vop1_out: port {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			vop1_out_hdmi: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&hdmi_in_vop1>;
-+			};
-+		};
-+	};
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
+new file mode 100644
+index 000000000..d1ad31bca
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
+@@ -0,0 +1,72 @@
++Rockchip specific extensions for rk3066 HDMI
++============================================
 +
++Required properties:
++- compatible:
++	"rockchip,rk3066-hdmi";
++- reg:
++	Physical base address and length of the controller's registers.
++- clocks, clock-names:
++	Phandle to HDMI controller clock, name should be "hclk".
++- interrupts:
++	HDMI interrupt number.
++- power-domains:
++	Phandle to the RK3066_PD_VIO power domain.
++- rockchip,grf:
++	This soc uses GRF regs to switch the HDMI TX input between vop0 and vop1.
++- ports:
++	Contains one port node with two endpoints, numbered 0 and 1,
++	connected respectively to vop0 and vop1.
++	Contains one port node with one endpoint
++	connected to a hdmi-connector node.
++- pinctrl-0, pinctrl-name:
++	Switch the iomux for the HPD/I2C pins to HDMI function.
++
++Example:
 +	hdmi: hdmi@10116000 {
 +		compatible = "rockchip,rk3066-hdmi";
 +		reg = <0x10116000 0x2000>;
@@ -56,7 +61,6 @@ index 653127a37..9c43b985a 100644
 +		rockchip,grf = <&grf>;
 +		pinctrl-names = "default";
 +		pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
-+		status = "disabled";
 +
 +		ports {
 +			#address-cells = <1>;
@@ -76,14 +80,14 @@ index 653127a37..9c43b985a 100644
 +			};
 +			hdmi_out: port@1 {
 +				reg = <1>;
++				hdmi_out_con: endpoint {
++					remote-endpoint = <&hdmi_con_in>;
++				};
 +			};
- 		};
- 	};
- 
-@@ -415,6 +457,16 @@
- 			};
- 		};
- 
++		};
++	};
++
++&pinctrl {
 +		hdmi {
 +			hdmi_hpd: hdmi-hpd {
 +				rockchip,pins = <0 RK_PA0 1 &pcfg_pull_default>;
@@ -93,9 +97,6 @@ index 653127a37..9c43b985a 100644
 +						<0 RK_PA2 1 &pcfg_pull_none>;
 +			};
 +		};
-+
- 		pwm0 {
- 			pwm0_out: pwm0-out {
- 				rockchip,pins = <RK_GPIO0 3 RK_FUNC_1 &pcfg_pull_none>;
++};
 -- 
 2.11.0
