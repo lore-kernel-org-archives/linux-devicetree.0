@@ -1,71 +1,47 @@
 From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH v2 0/3] ARM: Initial devicetree for Kobo Aura
-Date: Sun, 31 Mar 2019 21:15:59 +0200
-Message-ID: <20190331191602.3921-1-j.neuschaefer@gmx.net>
+Subject: [PATCH v2 2/3] dt-bindings: arm: fsl: Add i.MX50 based boards
+Date: Sun, 31 Mar 2019 21:16:01 +0200
+Message-ID: <20190331191602.3921-3-j.neuschaefer@gmx.net>
+References: <20190331191602.3921-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190331191602.3921-1-j.neuschaefer@gmx.net>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, =?UTF-8?q?Vok=C3=A1=C4=8D=20Michal?= <Michal.Vokac@ysoft.com>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Thierry Reding <treding@nvidia.com>, Fabio Estevam <festevam@gmail.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, =?UTF-8?q?Vok=C3=A1=C4=8D=20Michal?= <Michal.Vokac@ysoft.com>, Thierry Reding <treding@nvidia.com>, Kevin Hilman <khilman@baylibre.com>, Heiko Stuebner <heiko@sntech.de>, Jagan Teki <jagan@amarulasolutions.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.orglinux-
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBzZXJpZXMgYWRkcyBhIGRldmljZXRyZWUgZm9yIHRoZSBpLk1YNTA3LWJhc2VkIEtvYm8g
-QXVyYSBlLWJvb2sKcmVhZGVyLCBhbmQgZml4ZXMgYSBmZXcgdGhpbmdzIGluIGlteDUwLmR0c2kg
-YWxvbmcgdGhlIHdheS4KCnYxOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMTkwMzE5
-MTUyNDIxLjE2MTc5LTEtai5uZXVzY2hhZWZlckBnbXgubmV0LwoKQ2hhbmdlcyBpbiB2MjoKLSBW
-YXJpb3VzIGNsZWFudXBzLCBhcyBzdWdnZXN0ZWQgYnkgU2hhd24gR3VvCi0gUGF0Y2ggImR0LWJp
-bmRpbmdzOiBhcm06IGZzbDogQWRkIGkuTVg1MCBiYXNlZCBib2FyZHMiIGlzIG5ldwotIFNxdWFz
-aGVkIHBhdGNoICJBUk06IGR0czogaW14NTAta29iby1hdXJhOiBFbmFibGUgVVNCIHN1cHBvcnQi
-IGludG8KCXBhdGNoIDMgKCJBUk06IGR0czogaW14NTA6IEFkZCBLb2JvIEF1cmEgRFRTIikKLSBE
-cm9wcGVkIHBhdGNoICJBUk06IGR0czogaW14NTA6IEFkZCBQSFkgbm9kZSBmb3IgdXNib3RnIGFu
-ZCBhZGp1c3QKCWNsb2NrcyIgYmVjYXVzZSBpdCB3YXMgYWxyZWFkeSBtZXJnZWQgaW50byB0aGUg
-aW14IHRyZWUKLSBEcm9wcGVkIHBhdGNoICJBUk06IGR0czogaW14NTA6IEZpeCB0aGUgbnVtYmVy
-aW5nIG9mIHRoZSBJMkMKCWNvbnRyb2xsZXJzIiwgYmVjYXVzZSBhIHNpbWlsYXIgb25lIHdhcyBt
-ZXJnZWQgaW50byB0aGUgaW14IHRyZWUKLSBBZGRlZCBSb2IgSGVycmluZydzIFJldmlld2VkLWJ5
-IHRhZyB0byBwYXRjaCAxICgiZHQtYmluZGluZ3M6IEFkZAoJdmVuZG9yIHByZWZpeCBmb3IgUmFr
-dXRlbiBLb2JvLCBJbmMuIikKCkEgbG90IG9mIGZ1bmN0aW9uYWxpdHkgaXMgc3RpbGwgbWlzc2lu
-ZzoKLSBwb3dlcm9mZi9yZWJvb3QsIFJUQywgYW5kIGJhdHRlcnkgbW9uaXRvcmluZyBzdXBwb3J0
-LCBhcyB3ZWxsIGFzIGEgUFdNCiAgY2hhbm5lbCBmb3IgdGhlIGRpc3BsYXkgYmFja2xpZ2h0IGFy
-ZSBwcm92aWRlZCBieSBhIGN1c3RvbSBlbWJlZGRlZAogIGNvbnRyb2xsZXIsIHdoaWNoIHdpbGwg
-YmUgc3VwcG9ydGVkIGJ5IGEgZnV0dXJlIHBhdGNoc2V0LgogIFRoZSBFQyBkcml2ZXIgd2lsbCBh
-bHNvIHRlbGwgdGhlIEVDIHRvIGtlZXAgdGhlIGJvYXJkIHBvd2VyZWQgb247CiAgb3RoZXJ3aXNl
-IHRoZSBFQyB3aWxsIHBvd2VyIHRoZSBib2FyZCBvZmYgYWZ0ZXIgYWJvdXQgdGVuIHNlY29uZHMK
-ICAocHJlc3VtYWJseSB0byBhdm9pZCBiYXR0ZXJ5IGRyYWluIGlmIHRoZSBPUyBpcyBtaXNzaW5n
-IG9yIGNvcnJ1cHRlZCkKLSBUaGUgdG91Y2hzY3JlZW4gY29udHJvbGxlciwgZUtURjIxMzIsIGN1
-cnJlbnRseSBkb2Vzbid0IGhhdmUgYQogIG1haW5saW5lIGRyaXZlci4KLSBUaGUgZS1wYXBlciBk
-aXNwbGF5IGNvbnRyb2xsZXIgKEVQREMpIGVtYmVkZGVkIGluIHRoZSBpLk1YNTAgU29DIHdpbGwK
-ICBuZWVkIGEgd2hvbGUgbmV3IERSTSBkcml2ZXIsIGRldmljZXRyZWUgYmluZGluZ3MsIGV0Yy4K
-LSBUaGUgVFBTNjUxODUgUE1JQywgd2hpY2ggZ2VuZXJhdGVzIHRoZSB2b2x0YWdlcyBuZWNlc3Nh
-cnkgZm9yIGRyaXZpbmcKICB0aGUgRSBJbmsgcGFuZWwsIGFsc28gbmVlZHMgYSBkcml2ZXIKLSBU
-aGUgYmFja2xpZ2h0IGRvZXNuJ3QgcXVpdGUgZml0IHRoZSBleGlzdGluZyBwd20tYmFja2xpZ2h0
-IERUIGJpbmRpbmcsCiAgYmVjYXVzZSBpdCB1c2VzIGFuIGFkZGl0aW9uYWwgR1BJTyB0byBib29z
-dCB0aGUgYnJpZ2h0bmVzcy4gVGhpcwogIHJlcXVpcmVzIHNvbWUgZGV2aWNldHJlZSB3b3JrCi0g
-TGludXggZG9lc24ndCBjdXJyZW50bHkgc3VwcG9ydCBzdXNwZW5kLXRvLXJhbSBvbiBpLk1YNTAK
-CkluIG9yZGVyIHRvIGtlZXAgdGhlIHN5c3RlbSBydW5uaW5nIHdoZW4gQ09ORklHX1BNIGlzIGVu
-YWJsZWQsIHRoZQpmb2xsb3dpbmcgZml4IGlzIGFsc28gcmVxdWlyZWQ6Cmh0dHBzOi8vbG9yZS5r
-ZXJuZWwub3JnL2xrbWwvMjAxOTAzMjYxODIyNTguMjE5NDUtMS1qLm5ldXNjaGFlZmVyQGdteC5u
-ZXQvCgpNeSBvd24gbm90ZXMgYWJvdXQgdGhpcyBtYWNoaW5lIGNhbiBiZSBmb3VuZCBoZXJlOgpo
-dHRwczovL2dpdGh1Yi5jb20vbmV1c2NoYWVmZXIvbGludXgvd2lraS9Lb2JvLUF1cmEKCkpvbmF0
-aGFuIE5ldXNjaMOkZmVyICgzKToKICBkdC1iaW5kaW5nczogQWRkIHZlbmRvciBwcmVmaXggZm9y
-IFJha3V0ZW4gS29ibywgSW5jLgogIGR0LWJpbmRpbmdzOiBhcm06IGZzbDogQWRkIGkuTVg1MCBi
-YXNlZCBib2FyZHMKICBBUk06IGR0czogaW14NTA6IEFkZCBLb2JvIEF1cmEgRFRTCgogLi4uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1sICAgICAgICAgIHwgICA3ICsKIC4uLi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgICB8ICAgMSArCiBhcmNoL2FybS9i
-b290L2R0cy9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgfCAgIDMgKy0KIGFyY2gvYXJtL2Jv
-b3QvZHRzL2lteDUwLWtvYm8tYXVyYS5kdHMgICAgICAgICB8IDI1OCArKysrKysrKysrKysrKysr
-KysKIDQgZmlsZXMgY2hhbmdlZCwgMjY4IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy9pbXg1MC1rb2JvLWF1cmEuZHRzCgot
-LQoyLjIwLjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
-aW51eC1hcm0ta2VybmVsCg==
+fsl,imx50-evk has been used in a devicetree for a while. kobo,aura will
+be used soon.
+
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+
+v2: New patch, as suggested by Shawn Guo
+=2D--
+ Documentation/devicetree/bindings/arm/fsl.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentatio=
+n/devicetree/bindings/arm/fsl.yaml
+index 7e2cd6ad26bd..618bf58796eb 100644
+=2D-- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -51,6 +51,13 @@ properties:
+           - const: i2se,duckbill-2
+           - const: fsl,imx28
+
++      - description: i.MX50 based Boards
++        items:
++          - enum:
++              - fsl,imx50-evk
++              - kobo,aura
++          - const: fsl,imx50
++
+       - description: i.MX51 Babbage Board
+         items:
+           - enum:
+=2D-
+2.20.1
