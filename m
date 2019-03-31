@@ -1,55 +1,129 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v6 1/4] drm: rockchip: introduce rk3066 hdmi
-Date: Sun, 31 Mar 2019 16:01:15 +0200
-Message-ID: <3503295.Ps5hWAbIar@phil>
-References: <20190330095639.14626-1-jbx6244@gmail.com>
- <20190330095639.14626-2-jbx6244@gmail.com>
+From: Andreas Klinger <ak@it-klinger.de>
+Subject: [PATCH] avia-hx711.yaml: transform DT binding to YAML
+Date: Sun, 31 Mar 2019 17:27:19 +0200
+Message-ID: <20190331152717.j3b3aggx674zrcko@arbad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190330095639.14626-2-jbx6244@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Johan Jonker <jbx6244@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSm9oYW4sCgpBbSBTYW1zdGFnLCAzMC4gTcOkcnogMjAxOSwgMTA6NTY6MzYgQ0VTVCBzY2hy
-aWViIEpvaGFuIEpvbmtlcjoKPiBGcm9tOiBaaGVuZyBZYW5nIDx6aGVuZ3lhbmdAcm9jay1jaGlw
-cy5jb20+Cj4gCj4gVGhlIFJLMzA2NiBIRE1JIFRYIHNlcnZlcyBhcyBpbnRlcmZhY2UgYmV0d2Vl
-biBhIExDRCBDb250cm9sbGVyIGFuZAo+IGEgSERNSSBidXMuIEEgSERNSSBUWCBjb25zaXN0cyBv
-ZiBvbmUgSERNSSB0cmFuc21pdHRlciBjb250cm9sbGVyIGFuZAo+IG9uZSBIRE1JIHRyYW5zbWl0
-dGVyIFBIWS4gVGhlIGludGVyZmFjZSBoYXMgdGhyZWUgKDMpIDgtYml0IGRhdGEgY2hhbm5lbHMK
-PiB3aGljaCBjYW4gYmUgY29uZmlndXJlZCBmb3IgYSBudW1iZXIgb2YgYnVzIHdpZHRocyAoOC8x
-MC8xMi8xNi8yMC8yNC1iaXQpCj4gYW5kIGRpZmZlcmVudCB2aWRlbyBmb3JtYXRzIChSR0IsIFlD
-YkNyKS4KPiAKPiBGZWF0dXJlczoKPiBIRE1JIHZlcnNpb24gMS40YSwgSERDUCByZXZpc2lvbiAx
-LjQgYW5kCj4gRFZJIHZlcnNpb24gMS4wIGNvbXBsaWFudCB0cmFuc21pdHRlci4KPiBTdXBwb3J0
-cyBEVFYgcmVzb2x1dGlvbnMgZnJvbSA0ODBpIHRvIDEwODBpL3AgSEQuCj4gTWFzdGVyIEkyQyBp
-bnRlcmZhY2UgZm9yIGEgRERDIGNvbm5lY3Rpb24uCj4gSERNSSBUWCBzdXBwb3J0cyBtdWx0aXBs
-ZSBwb3dlciBzYXZlIG1vZGVzLgo+IFRoZSBIRE1JIFRYIGlucHV0IGNhbiBzd2l0Y2ggYmV0d2Vl
-biBMQ0RDMCBhbmQgTENEQzEuCj4gKFNvdW5kIHN1cHBvcnQgaXMgbm90IGluY2x1ZGVkIGluIHRo
-aXMgcGF0Y2gpCj4gCj4gU2lnbmVkLW9mZi1ieTogWmhlbmcgWWFuZyA8emhlbmd5YW5nQHJvY2st
-Y2hpcHMuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEpvaGFuIEpvbmtlciA8amJ4NjI0NEBnbWFpbC5j
-b20+CgphcHBsaWVkIHRvIGRybS1taXNjLW5leHQgd2l0aCBhIHNtYWxsaXNoIGNoYW5nZSBhcyBk
-ZXNjcmliZWQgYmVsb3csCnBsZWFzZSBkb3VibGUgY2hlY2suIFswXQoKPiArc3RhdGljIGludAo+
-ICtyazMwNjZfaGRtaV9wcm9iZV9zaW5nbGVfY29ubmVjdG9yX21vZGVzKHN0cnVjdCBkcm1fY29u
-bmVjdG9yICpjb25uZWN0b3IsCj4gKwkJCQkJIHVpbnQzMl90IG1heFgsIHVpbnQzMl90IG1heFkp
-Cj4gK3sKCmluc3RlYWQgb2YKCj4gKwlyZXR1cm4gZHJtX2hlbHBlcl9wcm9iZV9zaW5nbGVfY29u
-bmVjdG9yX21vZGVzKGNvbm5lY3RvciwgMTkyMCwgMTA4MCk7CgppdCBpcyBub3cgZG9pbmcKCisJ
-aWYgKG1heFggPiAxOTIwKQorCQltYXhYID0gMTkyMDsKKwlpZiAobWF4WSA+IDEwODApCisJCW1h
-eFkgPSAxMDgwOworCisJcmV0dXJuIGRybV9oZWxwZXJfcHJvYmVfc2luZ2xlX2Nvbm5lY3Rvcl9t
-b2Rlcyhjb25uZWN0b3IsIG1heFgsIG1heFkpOwoKdG8gdGFrZSBpbnRvIGFjY291bnQgbWF4WCAv
-IG1heFkgYmVpbmcgYWxyZWFkeSBiZWxvdyAxOTIweDEwODAKCj4gK30KCgpIZWlrbwoKWzBdIGh0
-dHBzOi8vY2dpdC5mcmVlZGVza3RvcC5vcmcvZHJtL2RybS1taXNjL2NvbW1pdC8/aWQ9Zjg0ZDNk
-MzdiN2ZiYjAyMmUzM2I3OWQ1NDM3NDQ2NmY2ZmJjNzE4NgoKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+replace avia-hx711.txt by avia-hx711.yaml as yaml devicetree documentation
+for avia hx711 iio adc sensor
+
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+---
+ .../devicetree/bindings/iio/adc/avia-hx711.txt     | 24 --------
+ .../devicetree/bindings/iio/adc/avia-hx711.yaml    | 67 ++++++++++++++++++++++
+ 2 files changed, 67 insertions(+), 24 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+deleted file mode 100644
+index 7222328a3d0d..000000000000
+--- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
++++ /dev/null
+@@ -1,24 +0,0 @@
+-* AVIA HX711 ADC chip for weight cells
+-  Bit-banging driver
+-
+-Required properties:
+- - compatible:	Should be "avia,hx711"
+- - sck-gpios:	Definition of the GPIO for the clock
+- - dout-gpios:	Definition of the GPIO for data-out
+-		See Documentation/devicetree/bindings/gpio/gpio.txt
+- - avdd-supply:	Definition of the regulator used as analog supply
+-
+-Optional properties:
+- - clock-frequency:	Frequency of PD_SCK in Hz
+-			Minimum value allowed is 10 kHz because of maximum
+-			high time of 50 microseconds.
+-
+-Example:
+-weight {
+-	compatible = "avia,hx711";
+-	sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
+-	dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
+-	avdd-suppy = <&avdd>;
+-	clock-frequency = <100000>;
+-};
+-
+diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
+new file mode 100644
+index 000000000000..e4fee0f877ee
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
+@@ -0,0 +1,67 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/iio/adc/avia-hx711.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: AVIA HX711 ADC chip for weight cells
++
++maintainers:
++  - Andreas Klinger <ak@it-klinger.de>
++
++description: |
++  Bit-banging driver using two GPIOs:
++  - sck-gpio gives a clock to the sensor with 24 cycles for data retrieval
++    and up to 3 cycles for selection of the input channel and gain for the
++    next measurement
++  - dout-gpio is the sensor data the sensor responds to the clock
++
++  Specifications about the driver can be found at:
++  http://www.aviaic.com/ENProducts.aspx
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++        - const: avia,hx711
++
++  sck-gpios:
++    description:
++      Definition of the GPIO for the clock (output). In the datasheet it is
++      named PD_SCK
++    maxItems: 1
++
++  dout-gpios:
++    description:
++      Definition of the GPIO for the data-out sent by the sensor in
++      response to the clock (input).
++      See Documentation/devicetree/bindings/gpio/gpio.txt for information
++      on how to specify a consumer gpio.
++    maxItems: 1
++
++  avdd-supply:
++    description:
++      Definition of the regulator used as analog supply
++    maxItems: 1
++
++  clock-frequency:
++    minimum: 20000
++    maximum: 2500000
++    default: 400000
++
++required:
++  - compatible
++  - sck-gpios
++  - dout-gpios
++  - avdd-supply
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    weight {
++        compatible = "avia,hx711";
++        sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
++        dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
++        avdd-suppy = <&avdd>;
++        clock-frequency = <100000>;
++    };
+-- 
+2.11.0
