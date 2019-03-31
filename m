@@ -1,24 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: Add Milbeaut AXI DMA controller bindings
-Date: Sun, 31 Mar 2019 01:41:50 -0500
-Message-ID: <5ca06130.1c69fb81.75bda.974a@mx.google.com>
-References: <1553487314-9185-1-git-send-email-kasai.kazuhiro@socionext.com> <1553487314-9185-2-git-send-email-kasai.kazuhiro@socionext.com>
+Subject: Re: [PATCH] dt-bindings: display/panel: Add missing unit names
+Date: Sun, 31 Mar 2019 01:41:56 -0500
+Message-ID: <5ca06135.1c69fb81.a71f5.6cc6@mx.google.com>
+References: <901e836ea06889a9d91a799102b2a6b836d93dcd.1553529797.git.agx@sigxcpu.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553487314-9185-2-git-send-email-kasai.kazuhiro@socionext.com>
+In-Reply-To: <901e836ea06889a9d91a799102b2a6b836d93dcd.1553529797.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
-Cc: vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, orito.takao@socionext.com, sugaya.taichi@socionext.com, kanematsu.shinji@socionext.com, jaswinder.singh@linaro.org, masami.hiramatsu@linaro.org, linux-kernel@vger.kernel.org
+To: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Mar 2019 13:15:13 +0900, Kazuhiro Kasai wrote:
-> Add Milbeaut AXI DMA controller bindings. This DMA controller has
-> only capable of memory to memory transfer.
+On Mon, 25 Mar 2019 17:08:10 +0100, =?UTF-8?q?Guido=20G=C3=BCnther?= wrote:
+> Some examples were missing the unit names triggering
 > 
-> Signed-off-by: Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
+>  Warning (unit_address_vs_reg): .../panel: node has a reg or ranges property, but no unit name
+> 
+> warnings when used verbatim in DTs and running dtc with W=1.
+> 
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
 > ---
->  .../devicetree/bindings/dma/xdmac-milbeaut.txt     | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/xdmac-milbeaut.txt
+>  .../devicetree/bindings/display/panel/innolux,p079zca.txt       | 2 +-
+>  .../devicetree/bindings/display/panel/innolux,p097pfg.txt       | 2 +-
+>  .../devicetree/bindings/display/panel/kingdisplay,kd097d04.txt  | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
