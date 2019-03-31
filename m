@@ -1,48 +1,34 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH] dt-bindings: arm: correct dt_binding_check parse error
-Date: Sat, 30 Mar 2019 22:42:40 -0400
-Message-ID: <20190331024240.3012-1-masneyb@onstation.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: gpu: mali-midgard: Add resets property
+Date: Sun, 31 Mar 2019 01:40:31 -0500
+Message-ID: <5ca060e1.1c69fb81.ce85d.55f2@mx.google.com>
+References: <20190315135655.28359-1-narmstrong@baylibre.com>
+ <20190315135655.28359-2-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arnd@arndb.de
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, sugaya.taichi@socionext.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190315135655.28359-2-narmstrong@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
 List-Id: devicetree@vger.kernel.org
 
-'make dt_binding_check' fails with the following error:
-
-  Documentation/devicetree/bindings/arm/cpus.yaml:  while scanning a
-  plain scalar
-    in "<unicode string>", line 231, column 19
-  found a tab character that violates indentation
-    in "<unicode string>", line 232, column 1
-  make[1]: *** [Documentation/devicetree/bindings/Makefile:12:
-    Documentation/devicetree/bindings/arm/cpus.example.dts] Error 1
-
-Correct the parse error by replacing the tabs with spaces to keep
-'make dt_binding_check' happy.
-
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Fixes: fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
----
-Issue is in linux-next-20190329.
-
- Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-index 60eab6dc3c0b..591bbd012d63 100644
---- a/Documentation/devicetree/bindings/arm/cpus.yaml
-+++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-@@ -229,7 +229,7 @@ patternProperties:
-                 - renesas,r9a06g032-smp
-                 - rockchip,rk3036-smp
-                 - rockchip,rk3066-smp
--		- socionext,milbeaut-m10v-smp
-+                - socionext,milbeaut-m10v-smp
-                 - ste,dbx500-smp
- 
-       cpu-release-addr:
--- 
-2.20.1
+T24gRnJpLCAxNSBNYXIgMjAxOSAxNDo1Njo1NCArMDEwMCwgTmVpbCBBcm1zdHJvbmcgd3JvdGU6
+Cj4gVGhlIEFtbG9naWMgQVJNIE1hbGkgTWlkZ2FyZCByZXF1aXJlcyByZXNldCBjb250cm9scyB0
+byBwb3dlciBvbiBhbmQKPiBzb2Z0d2FyZSByZXNldCB0aGUgR1BVLCBhZGRzIHRoZXNlIGFzIG9w
+dGlvbmFsIGluIHRoZSBiaW5kaW5ncy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBOZWlsIEFybXN0cm9u
+ZyA8bmFybXN0cm9uZ0BiYXlsaWJyZS5jb20+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4dCAgIHwgMTQgKysrKysrKysrKysrKysKPiAgMSBm
+aWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKykKPiAKClJldmlld2VkLWJ5OiBSb2IgSGVycmlu
+ZyA8cm9iaEBrZXJuZWwub3JnPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVs
