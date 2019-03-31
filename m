@@ -1,74 +1,71 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: [PATCH v3 02/25] dt-bindings: leds: Add LED_FUNCTION definitions
-Date: Sun, 31 Mar 2019 19:54:38 +0200
-Message-ID: <20190331175501.23471-3-jacek.anaszewski@gmail.com>
-References: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, jacek.anaszewski@gmail.com, Baolin Wang <baolin.wang@linaro.org>, Dan Murphy <dmurphy@ti.com>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
+From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: [PATCH v2 0/3] ARM: Initial devicetree for Kobo Aura
+Date: Sun, 31 Mar 2019 21:15:59 +0200
+Message-ID: <20190331191602.3921-1-j.neuschaefer@gmx.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, =?UTF-8?q?Vok=C3=A1=C4=8D=20Michal?= <Michal.Vokac@ysoft.com>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Thierry Reding <treding@nvidia.com>, Fabio Estevam <festevam@gmail.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Add initial set of common LED function definitions for use in Device Tree.
-
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Baolin Wang <baolin.wang@linaro.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Dan Murphy <dmurphy@ti.com>
-Cc: Daniel Mack <daniel@zonque.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Oleh Kravchenko <oleg@kaa.org.ua>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Simon Shields <simon@lineageos.org>
----
- include/dt-bindings/leds/common.h | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
-index e171d0a6beb2..0325db5b4208 100644
---- a/include/dt-bindings/leds/common.h
-+++ b/include/dt-bindings/leds/common.h
-@@ -19,4 +19,40 @@
- #define LEDS_BOOST_ADAPTIVE	1
- #define LEDS_BOOST_FIXED	2
- 
-+/* Standard LED functions */
-+#define LED_FUNCTION_ACTIVITY "activity"
-+#define LED_FUNCTION_ALARM "alarm"
-+#define LED_FUNCTION_BACKLIGHT "backlight"
-+#define LED_FUNCTION_BLUETOOTH "bluetooth"
-+#define LED_FUNCTION_BOOT "boot"
-+#define LED_FUNCTION_CHARGE "charge"
-+#define LED_FUNCTION_DEBUG "debug"
-+#define LED_FUNCTION_DISK "disk"
-+#define LED_FUNCTION_DISK_ERR "disk-err"
-+#define LED_FUNCTION_DISK_READ "disk-read"
-+#define LED_FUNCTION_DISK_WRITE "disk-write"
-+#define LED_FUNCTION_FAULT "fault"
-+#define LED_FUNCTION_FLASH "flash"
-+#define LED_FUNCTION_HEARTBEAT "heartbeat"
-+#define LED_FUNCTION_INDICATOR "indicator"
-+#define LED_FUNCTION_KEYBOARD "keyboard"
-+#define LED_FUNCTION_KEYPAD "keypad"
-+#define LED_FUNCTION_LAN "lan"
-+#define LED_FUNCTION_MMC "mmc"
-+#define LED_FUNCTION_NAND "nand"
-+#define LED_FUNCTION_ON "on"
-+#define LED_FUNCTION_PROGRAMMING "programming"
-+#define LED_FUNCTION_POWER "power"
-+#define LED_FUNCTION_RX "rx"
-+#define LED_FUNCTION_SD "sd"
-+#define LED_FUNCTION_STANDBY "standby"
-+#define LED_FUNCTION_STATUS "status"
-+#define LED_FUNCTION_TORCH "torch"
-+#define LED_FUNCTION_TV "tv"
-+#define LED_FUNCTION_TX "tx"
-+#define LED_FUNCTION_USB "usb"
-+#define LED_FUNCTION_WAN "wan"
-+#define LED_FUNCTION_WLAN "wlan"
-+#define LED_FUNCTION_WPS "wps"
-+
- #endif /* __DT_BINDINGS_LEDS_H */
--- 
-2.11.0
+VGhpcyBzZXJpZXMgYWRkcyBhIGRldmljZXRyZWUgZm9yIHRoZSBpLk1YNTA3LWJhc2VkIEtvYm8g
+QXVyYSBlLWJvb2sKcmVhZGVyLCBhbmQgZml4ZXMgYSBmZXcgdGhpbmdzIGluIGlteDUwLmR0c2kg
+YWxvbmcgdGhlIHdheS4KCnYxOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMTkwMzE5
+MTUyNDIxLjE2MTc5LTEtai5uZXVzY2hhZWZlckBnbXgubmV0LwoKQ2hhbmdlcyBpbiB2MjoKLSBW
+YXJpb3VzIGNsZWFudXBzLCBhcyBzdWdnZXN0ZWQgYnkgU2hhd24gR3VvCi0gUGF0Y2ggImR0LWJp
+bmRpbmdzOiBhcm06IGZzbDogQWRkIGkuTVg1MCBiYXNlZCBib2FyZHMiIGlzIG5ldwotIFNxdWFz
+aGVkIHBhdGNoICJBUk06IGR0czogaW14NTAta29iby1hdXJhOiBFbmFibGUgVVNCIHN1cHBvcnQi
+IGludG8KCXBhdGNoIDMgKCJBUk06IGR0czogaW14NTA6IEFkZCBLb2JvIEF1cmEgRFRTIikKLSBE
+cm9wcGVkIHBhdGNoICJBUk06IGR0czogaW14NTA6IEFkZCBQSFkgbm9kZSBmb3IgdXNib3RnIGFu
+ZCBhZGp1c3QKCWNsb2NrcyIgYmVjYXVzZSBpdCB3YXMgYWxyZWFkeSBtZXJnZWQgaW50byB0aGUg
+aW14IHRyZWUKLSBEcm9wcGVkIHBhdGNoICJBUk06IGR0czogaW14NTA6IEZpeCB0aGUgbnVtYmVy
+aW5nIG9mIHRoZSBJMkMKCWNvbnRyb2xsZXJzIiwgYmVjYXVzZSBhIHNpbWlsYXIgb25lIHdhcyBt
+ZXJnZWQgaW50byB0aGUgaW14IHRyZWUKLSBBZGRlZCBSb2IgSGVycmluZydzIFJldmlld2VkLWJ5
+IHRhZyB0byBwYXRjaCAxICgiZHQtYmluZGluZ3M6IEFkZAoJdmVuZG9yIHByZWZpeCBmb3IgUmFr
+dXRlbiBLb2JvLCBJbmMuIikKCkEgbG90IG9mIGZ1bmN0aW9uYWxpdHkgaXMgc3RpbGwgbWlzc2lu
+ZzoKLSBwb3dlcm9mZi9yZWJvb3QsIFJUQywgYW5kIGJhdHRlcnkgbW9uaXRvcmluZyBzdXBwb3J0
+LCBhcyB3ZWxsIGFzIGEgUFdNCiAgY2hhbm5lbCBmb3IgdGhlIGRpc3BsYXkgYmFja2xpZ2h0IGFy
+ZSBwcm92aWRlZCBieSBhIGN1c3RvbSBlbWJlZGRlZAogIGNvbnRyb2xsZXIsIHdoaWNoIHdpbGwg
+YmUgc3VwcG9ydGVkIGJ5IGEgZnV0dXJlIHBhdGNoc2V0LgogIFRoZSBFQyBkcml2ZXIgd2lsbCBh
+bHNvIHRlbGwgdGhlIEVDIHRvIGtlZXAgdGhlIGJvYXJkIHBvd2VyZWQgb247CiAgb3RoZXJ3aXNl
+IHRoZSBFQyB3aWxsIHBvd2VyIHRoZSBib2FyZCBvZmYgYWZ0ZXIgYWJvdXQgdGVuIHNlY29uZHMK
+ICAocHJlc3VtYWJseSB0byBhdm9pZCBiYXR0ZXJ5IGRyYWluIGlmIHRoZSBPUyBpcyBtaXNzaW5n
+IG9yIGNvcnJ1cHRlZCkKLSBUaGUgdG91Y2hzY3JlZW4gY29udHJvbGxlciwgZUtURjIxMzIsIGN1
+cnJlbnRseSBkb2Vzbid0IGhhdmUgYQogIG1haW5saW5lIGRyaXZlci4KLSBUaGUgZS1wYXBlciBk
+aXNwbGF5IGNvbnRyb2xsZXIgKEVQREMpIGVtYmVkZGVkIGluIHRoZSBpLk1YNTAgU29DIHdpbGwK
+ICBuZWVkIGEgd2hvbGUgbmV3IERSTSBkcml2ZXIsIGRldmljZXRyZWUgYmluZGluZ3MsIGV0Yy4K
+LSBUaGUgVFBTNjUxODUgUE1JQywgd2hpY2ggZ2VuZXJhdGVzIHRoZSB2b2x0YWdlcyBuZWNlc3Nh
+cnkgZm9yIGRyaXZpbmcKICB0aGUgRSBJbmsgcGFuZWwsIGFsc28gbmVlZHMgYSBkcml2ZXIKLSBU
+aGUgYmFja2xpZ2h0IGRvZXNuJ3QgcXVpdGUgZml0IHRoZSBleGlzdGluZyBwd20tYmFja2xpZ2h0
+IERUIGJpbmRpbmcsCiAgYmVjYXVzZSBpdCB1c2VzIGFuIGFkZGl0aW9uYWwgR1BJTyB0byBib29z
+dCB0aGUgYnJpZ2h0bmVzcy4gVGhpcwogIHJlcXVpcmVzIHNvbWUgZGV2aWNldHJlZSB3b3JrCi0g
+TGludXggZG9lc24ndCBjdXJyZW50bHkgc3VwcG9ydCBzdXNwZW5kLXRvLXJhbSBvbiBpLk1YNTAK
+CkluIG9yZGVyIHRvIGtlZXAgdGhlIHN5c3RlbSBydW5uaW5nIHdoZW4gQ09ORklHX1BNIGlzIGVu
+YWJsZWQsIHRoZQpmb2xsb3dpbmcgZml4IGlzIGFsc28gcmVxdWlyZWQ6Cmh0dHBzOi8vbG9yZS5r
+ZXJuZWwub3JnL2xrbWwvMjAxOTAzMjYxODIyNTguMjE5NDUtMS1qLm5ldXNjaGFlZmVyQGdteC5u
+ZXQvCgpNeSBvd24gbm90ZXMgYWJvdXQgdGhpcyBtYWNoaW5lIGNhbiBiZSBmb3VuZCBoZXJlOgpo
+dHRwczovL2dpdGh1Yi5jb20vbmV1c2NoYWVmZXIvbGludXgvd2lraS9Lb2JvLUF1cmEKCkpvbmF0
+aGFuIE5ldXNjaMOkZmVyICgzKToKICBkdC1iaW5kaW5nczogQWRkIHZlbmRvciBwcmVmaXggZm9y
+IFJha3V0ZW4gS29ibywgSW5jLgogIGR0LWJpbmRpbmdzOiBhcm06IGZzbDogQWRkIGkuTVg1MCBi
+YXNlZCBib2FyZHMKICBBUk06IGR0czogaW14NTA6IEFkZCBLb2JvIEF1cmEgRFRTCgogLi4uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1sICAgICAgICAgIHwgICA3ICsKIC4uLi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgICB8ICAgMSArCiBhcmNoL2FybS9i
+b290L2R0cy9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgfCAgIDMgKy0KIGFyY2gvYXJtL2Jv
+b3QvZHRzL2lteDUwLWtvYm8tYXVyYS5kdHMgICAgICAgICB8IDI1OCArKysrKysrKysrKysrKysr
+KysKIDQgZmlsZXMgY2hhbmdlZCwgMjY4IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy9pbXg1MC1rb2JvLWF1cmEuZHRzCgot
+LQoyLjIwLjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
+aW51eC1hcm0ta2VybmVsCg==
