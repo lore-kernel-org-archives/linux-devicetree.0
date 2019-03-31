@@ -1,64 +1,82 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [BUG/PATCH 3/4] gpiolib: make legacy handling for spi-cs-high optional
-Date: Sun, 31 Mar 2019 12:07:22 +0200
-Message-ID: <83b5c3ddee26c6f5e4b3b21d8a4346da5956de11.1554026842.git.hns@goldelico.com>
-References: <cover.1554026842.git.hns@goldelico.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 2/4] dt-bindings: maxbotix,mb1232: Add MaxBotix i2c
+ ultrasonic rangers
+Date: Sun, 31 Mar 2019 11:34:07 +0100
+Message-ID: <20190331113407.5df5f41d@archlinux>
+References: <20190317203526.4pcwo4gdrrng44v7@arbad>
+        <20190328175134.GA15033@bogus>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1554026842.git.hns@goldelico.com>
+In-Reply-To: <20190328175134.GA15033@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org, "H. Nikolaus Schaller" <hns@goldelico.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Andreas Klinger <ak@it-klinger.de>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, mark.rutland@arm.com, afaerber@suse.de, arnd@arndb.de, davem@davemloft.net, gregkh@linuxfoundation.org, johan@kernel.org, khilman@baylibre.com, knaack.h@gmx.de, lars@metafoo.de, linux-kernel@vger.kernel.org, martin.blumenstingl@googlemail.com, mchehab+samsung@kernel.org, m.othacehe@gmail.com, nicolas.ferre@microchip.com, pmeerw@pmeerw.net, songqiang1304521@gmail.com, treding@nvidia.com, techsupport@maxbotix.com
 List-Id: devicetree@vger.kernel.org
 
-It is better to make legacy support a config option instead
-of requiring non-legacy device tree files to be updated.
+On Thu, 28 Mar 2019 12:51:35 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/gpio/Kconfig      | 8 ++++++++
- drivers/gpio/gpiolib-of.c | 2 ++
- 2 files changed, 10 insertions(+)
+> On Sun, Mar 17, 2019 at 09:35:27PM +0100, Andreas Klinger wrote:
+> > Add doc for dt binding maxbotix,mb1232. This binding is for MaxBotix
+> > I2CXL-MaxSonar ultrasonic rangers which share a common i2c interface.
+> > 
+> > Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> > ---
+> >  .../bindings/iio/proximity/maxbotix,mb1232.txt     | 31 ++++++++++++++++++++++
+> >  1 file changed, 31 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+> > new file mode 100644
+> > index 000000000000..0e9df87eca1d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+> > @@ -0,0 +1,31 @@
+> > +* MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
+> > +  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
+> > +  for ranging
+> > +
+> > +Required properties:
+> > + - compatible:		"maxbotix,mb1202",
+> > +			"maxbotix,mb1212",
+> > +			"maxbotix,mb1222",
+> > +			"maxbotix,mb1232",
+> > +			"maxbotix,mb1242",
+> > +			"maxbotix,mb7040" or
+> > +			"maxbotix,mb7137"
+> > +
+> > + - reg:			i2c address of the device, see also i2c/i2c.txt
+> > +
+> > +Optional properties:
+> > + - interrupt-parent:	Interrupt controller to use  
+> 
+> Don't need this as it is implied and could be in the parent.
+> 
+> Otherwise,
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+I tidied that up.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 3f50526a771f..1a82619727c1 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -39,6 +39,14 @@ config OF_GPIO
- 	depends on OF
- 	depends on HAS_IOMEM
- 
-+config SPI_CS_HIGH_LEGACY_HANDLING
-+	def_bool n
-+	depends on OF_GPIO
-+	help
-+	   This enables a legacy handler which decodes the boolean spi-cs-high
-+	   property found in some DTS/DTB to correctly work with cs-gpios
-+	   with GPIO_ACTIVE_HIGH.
-+
- config GPIO_ACPI
- 	def_bool y
- 	depends on ACPI
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 8b9c3ab70f6e..a22d2233458b 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -114,6 +114,7 @@ static void of_gpio_flags_quirks(struct device_node *np,
- 			of_node_full_name(np));
- 	}
- 
-+#if defined(CONFIG_SPI_CS_HIGH_LEGACY_HANDLING)
- 	/*
- 	 * Legacy handling of SPI active high chip select. If we have a
- 	 * property named "cs-gpios" we need to inspect the child node
-@@ -158,6 +159,7 @@ static void of_gpio_flags_quirks(struct device_node *np,
- 			}
- 		}
- 	}
-+#endif
- }
- 
- /**
--- 
-2.19.1
+Thanks,
+
+Jonathan
+
+> 
+> > +
+> > + - interrupts:		Interrupt used to announce the preceding reading
+> > +			request has finished and that data is available.
+> > +			If no interrupt is specified the device driver
+> > +			falls back to wait a fixed amount of time until
+> > +			data can be retrieved.
+> > +
+> > +Example:
+> > +proximity@70 {
+> > +	compatible = "maxbotix,mb1232";
+> > +	reg = <0x70>;
+> > +	interrupt-parent = <&gpio2>;
+> > +	interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+> > +};
+> > -- 
+> > 2.11.0  
