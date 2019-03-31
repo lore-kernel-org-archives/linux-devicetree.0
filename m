@@ -1,86 +1,68 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/7] dt-bindings: bus: add ASR8751C APB/AXI bindings
-Date: Sun, 31 Mar 2019 01:41:30 -0500
-Message-ID: <20190331011030.GA24804@bogus>
-References: <1553349688-1946-1-git-send-email-qiaozhou@asrmicro.com>
- <1553349688-1946-3-git-send-email-qiaozhou@asrmicro.com>
+Subject: Re: [PATCH] ARM: l2x0: add L210 write allocate override flag
+Date: Sun, 31 Mar 2019 01:40:34 -0500
+Message-ID: <5ca060e4.1c69fb81.b2f88.98ae@mx.google.com>
+References: <20190318083053.24197-1-linus.walleij@linaro.org>
+ <20190318140439.xmfh66mbktpd55l2@shell.armlinux.org.uk>
+ <CACRpkdba=cp-jGvh+pN_Qg5cTFM+=052wiijQMra81QOG62cVQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1553349688-1946-3-git-send-email-qiaozhou@asrmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: qiaozhou <qiaozhou@asrmicro.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <CACRpkdba=cp-jGvh+pN_Qg5cTFM+=052wiijQMra81QOG62cVQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King - ARM Linux admin <linux@armlinux.org.uk>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 10:01:23PM +0800, qiaozhou wrote:
-> From: Qiao Zhou <qiaozhou@asrmicro.com>
+On Mon, Mar 18, 2019 at 11:14:05PM +0100, Linus Walleij wrote:
+> On Mon, Mar 18, 2019 at 3:04 PM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> > On Mon, Mar 18, 2019 at 09:30:53AM +0100, Linus Walleij wrote:
+> > > This adds support for setting the flag bit "write allocate
+> > > override" to the L210 variant.
+> > >
+> > > The "write allocate override" bit is used on the Nomadik STn8815
+> > > and is necessary to properly make use of the L210 cache on that
+> > > machine without sporadic crashes.
+> > >
+> > > After this the platform can boot and run without any out-of-tree
+> > > patches.
+> >
+> > This is not something that should be done by the kernel but by the
+> > firmware - needing this bit set is a basic requirement of having
+> > the caches enabled, and if (eg) the boot loader enables the caches
+> > it too will suffer this problem.
 > 
-> Add binding documentation for ASR8751C AXI/APB bus that are used
-> to interface with peripherals. AXI/APB bus follow standard AXI/APB
-> protocols.
+> I see your point. This U-Boot port does not enable the cache, I guess
+> because it was a bit unusual for ARM926EJ-S machines to have
+> L2 cache at  the time, and I remember U-Boot was not using L2CC for
+> a long time (maybe still not?).
 > 
-> Signed-off-by: qiaozhou <qiaozhou@asrmicro.com>
-> ---
->  Documentation/devicetree/bindings/bus/asr,bus.txt | 42 +++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/asr,bus.txt
+> The Nomadik was unstable for years and then I looked at the
+> outoftree vendor kernel and saw that it sets this bit and since I did that
+> it has been rock solid.
 > 
-> diff --git a/Documentation/devicetree/bindings/bus/asr,bus.txt b/Documentation/devicetree/bindings/bus/asr,bus.txt
-> new file mode 100644
-> index 0000000..cbb1b6e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/asr,bus.txt
-> @@ -0,0 +1,42 @@
-> +* ASR AXI/APB Simple Bus
-> +
-> +This file documents core properties in ASR AXI and APB bus.
-> +
-> +The ASR8751C SoC has APB and AXI buses for cores to access its
-> +controllers, suchas i2c, sdh, rtc, clock, power management registers
-
-s/suchas/such as/
-
-> +etc. Most ASR SoCs share the common architecture for buses.
-> +Generally APB and AXI bus have a source clock and power control, and
-> +clock rate can be changed and power can be shutdown in low power mode.
-
-Then where are the clocks?
-
-> +
-> +Required properties for AXI bus:
-> +- compatible: should be "asr,axi-bus", "simple-bus".
-> +- #address-cells: could be 1, or 2
-> +- #size-cells: could be 1, or 2
-> +- reg: iomem address of AXI bus registers
-> +- ranges: register ranges
-> +
-> +Example:
-> +	axi@d4200000 {	/* AXI */
-> +		compatible = "asr,axi-bus", "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		reg = <0 0xd4200000 0 0x00200000>;
-> +		ranges = <0 0 0 0xffffffff>;
-> +
-> +	};
-> +
-> +Required properties for APB bus:
-> +- compatible: should be "asr,apb-bus", "simple-bus".
-> +- #address-cells: could be 1, or 2
-> +- #size-cells: could be 1, or 2
-> +- reg: iomem address of APB bus registers
-> +- ranges: register ranges
-> +
-> +Example:
-> +	apb@d4000000 {	/* APB */
-> +		compatible = "asr,apb-bus", "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		reg = <0 0xd4000000 0 0x00200000>;
-> +		ranges = <0 0 0 0xffffffff>;
-> +	};
-> -- 
-> 2.7.4
+> I can of course try to recompile and reflash the U-Boot for this
+> board but it is stored in NAND flash and if I break it, ugh, I have
+> toasted this board and I only have one. So I'm scared about that.
 > 
+> I have been carrying this as an out-of-tree patch for years and I can of
+> course continue to do so, I just felt it was a bit sad so I tried
+> to diet down the previous patch to the single bit the Nomadik
+> needs to set up for it's L2CC to work.
+
+I'm okay with the property as properties for every last L2x0 
+register bit pretty much already happened. However, can't you set the 
+bit in the machine desc l2c_aux_val?
+
+Rob
