@@ -1,82 +1,64 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 2/4] dt-bindings: maxbotix,mb1232: Add MaxBotix i2c
- ultrasonic rangers
-Date: Sun, 31 Mar 2019 11:34:07 +0100
-Message-ID: <20190331113407.5df5f41d@archlinux>
-References: <20190317203526.4pcwo4gdrrng44v7@arbad>
-        <20190328175134.GA15033@bogus>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: 'reg: property has invalid length' with new JSON-schema bindings
+Date: Sun, 31 Mar 2019 06:39:00 -0400
+Message-ID: <20190331103900.GA10428@basecamp>
+References: <20190331022653.GA8727@basecamp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190328175134.GA15033@bogus>
+Content-Disposition: inline
+In-Reply-To: <20190331022653.GA8727@basecamp>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Andreas Klinger <ak@it-klinger.de>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, mark.rutland@arm.com, afaerber@suse.de, arnd@arndb.de, davem@davemloft.net, gregkh@linuxfoundation.org, johan@kernel.org, khilman@baylibre.com, knaack.h@gmx.de, lars@metafoo.de, linux-kernel@vger.kernel.org, martin.blumenstingl@googlemail.com, mchehab+samsung@kernel.org, m.othacehe@gmail.com, nicolas.ferre@microchip.com, pmeerw@pmeerw.net, songqiang1304521@gmail.com, treding@nvidia.com, techsupport@maxbotix.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 28 Mar 2019 12:51:35 -0500
-Rob Herring <robh@kernel.org> wrote:
-
-> On Sun, Mar 17, 2019 at 09:35:27PM +0100, Andreas Klinger wrote:
-> > Add doc for dt binding maxbotix,mb1232. This binding is for MaxBotix
-> > I2CXL-MaxSonar ultrasonic rangers which share a common i2c interface.
-> > 
-> > Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> > ---
-> >  .../bindings/iio/proximity/maxbotix,mb1232.txt     | 31 ++++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-> > new file mode 100644
-> > index 000000000000..0e9df87eca1d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-> > @@ -0,0 +1,31 @@
-> > +* MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
-> > +  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
-> > +  for ranging
-> > +
-> > +Required properties:
-> > + - compatible:		"maxbotix,mb1202",
-> > +			"maxbotix,mb1212",
-> > +			"maxbotix,mb1222",
-> > +			"maxbotix,mb1232",
-> > +			"maxbotix,mb1242",
-> > +			"maxbotix,mb7040" or
-> > +			"maxbotix,mb7137"
-> > +
-> > + - reg:			i2c address of the device, see also i2c/i2c.txt
-> > +
-> > +Optional properties:
-> > + - interrupt-parent:	Interrupt controller to use  
+On Sat, Mar 30, 2019 at 10:26:53PM -0400, Brian Masney wrote:
+> I'm finishing up a patch series that adds device tree support for a
+> backlight driver and I made the bindings use the new JSON schema. I'm
+> running into a problem with the reg property in the examples and I can
+> reproduce the issue by adding an example to the trivial bindings:
 > 
-> Don't need this as it is implied and could be in the parent.
+> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml
+> b/Documentation/devicetree/bindings/trivial-devices.yaml
+> index d79fb22bde39..bdab6a015db4 100644
+> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
+> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+> @@ -341,4 +341,10 @@ required:
+>    - compatible
+>    - reg
+>  
+> +examples:
+> +  - |
+> +    isl29028@38 {
+> +        compatible = "isil,isl29028";
+> +        reg = <0x38>;
+> +    };
+>  ...
 > 
-> Otherwise,
+> 'make dt_binding_check' fails with the following error:
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-I tidied that up.
+>   Documentation/devicetree/bindings/trivial-devices.example.dts:11.5-18:
+>     Warning (reg_format): /isl29028@38:reg: property has invalid length
+>     (4 bytes) (#address-cells == 1, #size-cells == 1)
+>   ...
+>   Documentation/devicetree/bindings/trivial-devices.example.dtb:
+>     Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
 
-Thanks,
+I make the check happy by including an i2c node in my example.
 
-Jonathan
+examples:
+  - |
+    i2c {
+        #address-cells = <1>;
+        #size-cells = <0>;
 
-> 
-> > +
-> > + - interrupts:		Interrupt used to announce the preceding reading
-> > +			request has finished and that data is available.
-> > +			If no interrupt is specified the device driver
-> > +			falls back to wait a fixed amount of time until
-> > +			data can be retrieved.
-> > +
-> > +Example:
-> > +proximity@70 {
-> > +	compatible = "maxbotix,mb1232";
-> > +	reg = <0x70>;
-> > +	interrupt-parent = <&gpio2>;
-> > +	interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> > +};
-> > -- 
-> > 2.11.0  
+        isl29028@38 {
+                compatible = "isil,isl29028";
+                reg = <0x38>;
+        };
+    };
+
+Sorry about the noise.
+
+Brian
