@@ -1,37 +1,55 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v6 4/4] dt-bindings: display: rockchip: add document for
- rk3066 hdmi
-Date: Sun, 31 Mar 2019 15:57:17 +0200
-Message-ID: <8942337.6SUkryshbf@phil>
+Subject: Re: [PATCH v6 1/4] drm: rockchip: introduce rk3066 hdmi
+Date: Sun, 31 Mar 2019 16:01:15 +0200
+Message-ID: <3503295.Ps5hWAbIar@phil>
 References: <20190330095639.14626-1-jbx6244@gmail.com>
- <20190330095639.14626-5-jbx6244@gmail.com>
+ <20190330095639.14626-2-jbx6244@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190330095639.14626-5-jbx6244@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190330095639.14626-2-jbx6244@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Johan Jonker <jbx6244@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, hjc@rock-chips.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, daniel@ffwll.ch, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 30. M=E4rz 2019, 10:56:39 CEST schrieb Johan Jonker:
-> This patch adds a binding that describes the HDMI controller for
-> rk3066.
-> =
-
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-applied to drm-misc-next, so should land in 5.2
-
-Thanks
-Heiko
+SGkgSm9oYW4sCgpBbSBTYW1zdGFnLCAzMC4gTcOkcnogMjAxOSwgMTA6NTY6MzYgQ0VTVCBzY2hy
+aWViIEpvaGFuIEpvbmtlcjoKPiBGcm9tOiBaaGVuZyBZYW5nIDx6aGVuZ3lhbmdAcm9jay1jaGlw
+cy5jb20+Cj4gCj4gVGhlIFJLMzA2NiBIRE1JIFRYIHNlcnZlcyBhcyBpbnRlcmZhY2UgYmV0d2Vl
+biBhIExDRCBDb250cm9sbGVyIGFuZAo+IGEgSERNSSBidXMuIEEgSERNSSBUWCBjb25zaXN0cyBv
+ZiBvbmUgSERNSSB0cmFuc21pdHRlciBjb250cm9sbGVyIGFuZAo+IG9uZSBIRE1JIHRyYW5zbWl0
+dGVyIFBIWS4gVGhlIGludGVyZmFjZSBoYXMgdGhyZWUgKDMpIDgtYml0IGRhdGEgY2hhbm5lbHMK
+PiB3aGljaCBjYW4gYmUgY29uZmlndXJlZCBmb3IgYSBudW1iZXIgb2YgYnVzIHdpZHRocyAoOC8x
+MC8xMi8xNi8yMC8yNC1iaXQpCj4gYW5kIGRpZmZlcmVudCB2aWRlbyBmb3JtYXRzIChSR0IsIFlD
+YkNyKS4KPiAKPiBGZWF0dXJlczoKPiBIRE1JIHZlcnNpb24gMS40YSwgSERDUCByZXZpc2lvbiAx
+LjQgYW5kCj4gRFZJIHZlcnNpb24gMS4wIGNvbXBsaWFudCB0cmFuc21pdHRlci4KPiBTdXBwb3J0
+cyBEVFYgcmVzb2x1dGlvbnMgZnJvbSA0ODBpIHRvIDEwODBpL3AgSEQuCj4gTWFzdGVyIEkyQyBp
+bnRlcmZhY2UgZm9yIGEgRERDIGNvbm5lY3Rpb24uCj4gSERNSSBUWCBzdXBwb3J0cyBtdWx0aXBs
+ZSBwb3dlciBzYXZlIG1vZGVzLgo+IFRoZSBIRE1JIFRYIGlucHV0IGNhbiBzd2l0Y2ggYmV0d2Vl
+biBMQ0RDMCBhbmQgTENEQzEuCj4gKFNvdW5kIHN1cHBvcnQgaXMgbm90IGluY2x1ZGVkIGluIHRo
+aXMgcGF0Y2gpCj4gCj4gU2lnbmVkLW9mZi1ieTogWmhlbmcgWWFuZyA8emhlbmd5YW5nQHJvY2st
+Y2hpcHMuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEpvaGFuIEpvbmtlciA8amJ4NjI0NEBnbWFpbC5j
+b20+CgphcHBsaWVkIHRvIGRybS1taXNjLW5leHQgd2l0aCBhIHNtYWxsaXNoIGNoYW5nZSBhcyBk
+ZXNjcmliZWQgYmVsb3csCnBsZWFzZSBkb3VibGUgY2hlY2suIFswXQoKPiArc3RhdGljIGludAo+
+ICtyazMwNjZfaGRtaV9wcm9iZV9zaW5nbGVfY29ubmVjdG9yX21vZGVzKHN0cnVjdCBkcm1fY29u
+bmVjdG9yICpjb25uZWN0b3IsCj4gKwkJCQkJIHVpbnQzMl90IG1heFgsIHVpbnQzMl90IG1heFkp
+Cj4gK3sKCmluc3RlYWQgb2YKCj4gKwlyZXR1cm4gZHJtX2hlbHBlcl9wcm9iZV9zaW5nbGVfY29u
+bmVjdG9yX21vZGVzKGNvbm5lY3RvciwgMTkyMCwgMTA4MCk7CgppdCBpcyBub3cgZG9pbmcKCisJ
+aWYgKG1heFggPiAxOTIwKQorCQltYXhYID0gMTkyMDsKKwlpZiAobWF4WSA+IDEwODApCisJCW1h
+eFkgPSAxMDgwOworCisJcmV0dXJuIGRybV9oZWxwZXJfcHJvYmVfc2luZ2xlX2Nvbm5lY3Rvcl9t
+b2Rlcyhjb25uZWN0b3IsIG1heFgsIG1heFkpOwoKdG8gdGFrZSBpbnRvIGFjY291bnQgbWF4WCAv
+IG1heFkgYmVpbmcgYWxyZWFkeSBiZWxvdyAxOTIweDEwODAKCj4gK30KCgpIZWlrbwoKWzBdIGh0
+dHBzOi8vY2dpdC5mcmVlZGVza3RvcC5vcmcvZHJtL2RybS1taXNjL2NvbW1pdC8/aWQ9Zjg0ZDNk
+MzdiN2ZiYjAyMmUzM2I3OWQ1NDM3NDQ2NmY2ZmJjNzE4NgoKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
