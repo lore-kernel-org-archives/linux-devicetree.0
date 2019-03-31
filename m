@@ -1,61 +1,72 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: counter: Add Milbeaut Updown
- Counter
-Date: Sun, 31 Mar 2019 01:42:04 -0500
-Message-ID: <20190331015228.GA27625@bogus>
-References: <1553581989-13525-1-git-send-email-kanematsu.shinji@socionext.com>
+Subject: Re: [PATCHv2 22/22] dt-bindings: tc358767: add IRQ & HPD support
+Date: Sun, 31 Mar 2019 01:42:07 -0500
+Message-ID: <5ca06140.1c69fb81.ff9a3.8660@mx.google.com>
+References: <20190326103146.24795-1-tomi.valkeinen@ti.com>
+ <20190326103146.24795-23-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1553581989-13525-1-git-send-email-kanematsu.shinji@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shinji Kanematsu <kanematsu.shinji@socionext.com>
-Cc: jic23@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, orito.takao@socionext.com, sugaya.taichi@socionext.com, kasai.kazuhiro@socionext.com
+In-Reply-To: <20190326103146.24795-23-tomi.valkeinen@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 03:33:09PM +0900, Shinji Kanematsu wrote:
-> Add documentation for Milbeaut Updown Counter device
-> quadrature encoder and counter binding.
-> 
-> Signed-off-by: Shinji Kanematsu <kanematsu.shinji@socionext.com>
-> ---
->  .../bindings/iio/counter/milbeaut-updown_cnt.txt   | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt b/Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
-> new file mode 100644
-> index 0000000..6771567
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
-> @@ -0,0 +1,22 @@
-> +SOCIONEXT Milbeaut Updown counter
-> +
-> +Required properties:
-> +- compatible:       Must be "socionext,milbeaut-updown-counter".
-> +- reg:              Offset and length of the device's register set.
-> +- clocks:           Phandle to the clock used by the Updown counter module.
-> +- clock-names:      Must be "mux".
-> +- interrupts:       SPI number of the device's set.
-> +- cms_type:         connected_device
-> +                     1: updown button  (updown counter mode)
-> +                     2: rotary encoder (phase difference counter mode)
-
-We should have a common property for describing what's attached. 
-IIRC, just had a similar binding recently.
-
-> +
-> +Example:
-> +
-> +	updown0: updown@1e002000 {
-> +		compatible = "socionext,milbeaut-updown-counter";
-> +		reg = <0x1e002000 0x20>;
-> +		clocks = <&clk 4>;
-> +		clock-names = "mux";
-> +		interrupts = <0 104 0x4>;
-> +		cms_type = <1>;
-> +	};
-> -- 
-> 1.9.1
-> 
+T24gVHVlLCBNYXIgMjYsIDIwMTkgYXQgMTI6MzE6NDZQTSArMDIwMCwgVG9taSBWYWxrZWluZW4g
+d3JvdGU6Cj4gQWRkIERUIHByb3BlcnRpZXMgbmVlZGVkIGZvciBJUlEgYW5kIEhQRCBzdXBwb3J0
+Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IFRvbWkgVmFsa2VpbmVuIDx0b21pLnZhbGtlaW5lbkB0aS5j
+b20+Cj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4gQ2M6IFJvYiBIZXJyaW5nIDxy
+b2JoQGtlcm5lbC5vcmc+Cj4gLS0tCj4gCj4gQSBxdWljayBzdW1tYXJ5IG9mIHRjMzU4NzY3J3Mg
+SFBEL0dQSU8gc3VwcG9ydDoKPiAKPiB0YzM1ODc2NyBoYXMgdHdvIHBpbnMgdGhhdCBjYW4gYmUg
+dXNlZCBhcyBHUElPcy4gVGhvc2UgY2FuIGJlIHVzZWQgZm9yCj4gSFBEIGJ5IGNvbmZpZ3VyaW5n
+IHRoZSBwaW4gYXMgaW5wdXQuIHRjMzU4NzY3IHN1cHBvcnRzIEhXIGRldGVjdGlvbiBvZiBhCj4g
+InNob3J0IiBIUEQgcHVsc2UgKHByb2dyYW1tYWJsZSBsZW5ndGgpIHdoaWNoIGNhbiBiZSB1c2Vk
+IHRvIGRldGVjdAo+IERpc3BsYXlQb3J0IElSUSBmcm9tIHRoZSBtb25pdG9yLiBBZmFpaywgdGhp
+cyBraW5kIG9mIHNob3J0IHB1bHNlCj4gZGV0ZWN0aW9uIGlzIG5vdCBwb3NzaWJsZSB3aXRoIGNv
+bW1vbiBHUElPcyBmb3VuZCBpbiBTb0NzLgo+IAo+IFdoaWxlIEkgdGhpbmsgdGhlIEhQRCBzdXBw
+b3J0IHdvcmtzIG9rLCBJJ20gdW5zdXJlIGFib3V0IHRoZSBEVCBiaW5kaW5nLgo+IEkgZmlyc3Qg
+dHJpZWQgaW1wbGVtZW50aW5nIHRoZSBIUEQgYXMgYSBncGlvY2hpcCwgYnV0IGZvciBpbnRlcnJ1
+cHRzIEkKPiB0aGVuIG5lZWRlZCBpcnFjaGlwLCBhbmQgdGhlIGFtb3VudCBvZiBjb2RlIHN0YXJ0
+ZWQgdG8gaW5jcmVhc2UgYSBsb3QuCj4gCj4gSSBkZWNpZGVkIHRoYXQgZ3Bpb2NoaXAgKyBpcnFj
+aGlwIGp1c3QgaXNuJ3Qgd29ydGggdGhlIGVmZm9ydCBhbmQKPiBjb21wbGV4aXR5IGhlcmUsIGFz
+IG1vc3QgbGlrZWx5IHRoZSBwaW5zIHdpbGwgZXZlciBiZSB1c2VkIGZvciBIUEQuCj4gCj4gU28s
+IGhlcmUgSSBoYXZlIGEgc2ltcGxlICdocGQtbnVtJyBEVCBwcm9wZXJ0eSB0byBtYXJrIHdoaWNo
+IChpZiBhbnkpIG9mCj4gdGhlIHR3byBHUElPIHBpbnMgaXMgdXNlZCBmb3IgSFBELgoKVGhlcmUn
+cyBzaW1pbGFyIHByb3BlcnRpZXMgZm9yIG90aGVyIGNoaXBzIHdoZXJlIHNvbWUgc2lnbmFsIGhh
+cyBhIApzZWxlY3RhYmxlIHBpbiBhc3NpZ25tZW50LgoKPiAKPiBTdWdnZXN0aW9ucyB3ZWxjb21l
+Lgo+IAo+IAo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90b3NoaWJh
+LHRjMzU4NzY3LnR4dCAgICB8IDMgKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMo
+KykKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvYnJpZGdlL3Rvc2hpYmEsdGMzNTg3NjcudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Rvc2hpYmEsdGMzNTg3NjcudHh0Cj4gaW5kZXgg
+ZTNmNmFhNmEyMTRkLi43OWM3MWU3ZWI3MWYgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Rvc2hpYmEsdGMzNTg3NjcudHh0Cj4g
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Rv
+c2hpYmEsdGMzNTg3NjcudHh0Cj4gQEAgLTEyLDYgKzEyLDkgQEAgT3B0aW9uYWwgcHJvcGVydGll
+czoKPiAgICAgICAgICAgICAgICAgICAgIChhY3RpdmUgaGlnaCBzaHV0ZG93biBpbnB1dCkKPiAg
+IC0gcmVzZXQtZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgUlNU
+WCBwaW4KPiAgICAgICAgICAgICAgICAgIChhY3RpdmUgbG93IHN5c3RlbSByZXNldCkKPiArIC0g
+aW50ZXJydXB0LXBhcmVudDogcGhhbmRsZSBvZiB0aGUgcGFyZW50IGludGVycnVwdCBjb250cm9s
+bGVyCgpEcm9wIHRoaXMsIGl0IGlzIGltcGxpZWQgb3IgaW4gdGhlIHBhcmVudC4KCj4gKyAtIGlu
+dGVycnVwdHM6IGludGVycnVwdCBzcGVjaWZpZXIgZm9yIHRoZSBicmlkZ2UncyBpbnRlcnJ1cHQK
+PiArIC0gaHBkLW51bTogVEMzNTg3NjcgR1BJTyBwaW4gbnVtYmVyIHRvIHdoaWNoIEhQRCBpcyBj
+b25uZWN0ZWQgdG8gKDAgb3IgMSkKCnRpLGhwZC1waW4KCj4gICAtIHBvcnRzOiB0aGUgcG9ydHMg
+bm9kZSBjYW4gY29udGFpbiB2aWRlbyBpbnRlcmZhY2UgcG9ydCBub2RlcyB0byBjb25uZWN0Cj4g
+ICAgIHRvIGEgRFBJL0RTSSBzb3VyY2UgYW5kIHRvIGFuIGVEUC9EUCBzaW5rIGFjY29yZGluZyB0
+byBbMV1bMl06Cj4gICAgICAtIHBvcnRAMDogRFNJIGlucHV0IHBvcnQKPiAtLSAKPiBUZXhhcyBJ
+bnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4K
+PiBZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBI
+ZWxzaW5raQo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
