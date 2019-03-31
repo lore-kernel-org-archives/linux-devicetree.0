@@ -1,68 +1,84 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] ARM: l2x0: add L210 write allocate override flag
-Date: Sun, 31 Mar 2019 01:40:34 -0500
-Message-ID: <5ca060e4.1c69fb81.b2f88.98ae@mx.google.com>
-References: <20190318083053.24197-1-linus.walleij@linaro.org>
- <20190318140439.xmfh66mbktpd55l2@shell.armlinux.org.uk>
- <CACRpkdba=cp-jGvh+pN_Qg5cTFM+=052wiijQMra81QOG62cVQ@mail.gmail.com>
+Subject: Re: [PATCH 3/7] dt-bindings: clocks: add ASR8751C bindings
+Date: Sun, 31 Mar 2019 01:41:33 -0500
+Message-ID: <5ca0611f.1c69fb81.662b9.c6a0@mx.google.com>
+References: <1553349688-1946-1-git-send-email-qiaozhou@asrmicro.com>
+ <1553349688-1946-4-git-send-email-qiaozhou@asrmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdba=cp-jGvh+pN_Qg5cTFM+=052wiijQMra81QOG62cVQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King - ARM Linux admin <linux@armlinux.org.uk>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1553349688-1946-4-git-send-email-qiaozhou@asrmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: qiaozhou <qiaozhou@asrmicro.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 11:14:05PM +0100, Linus Walleij wrote:
-> On Mon, Mar 18, 2019 at 3:04 PM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> > On Mon, Mar 18, 2019 at 09:30:53AM +0100, Linus Walleij wrote:
-> > > This adds support for setting the flag bit "write allocate
-> > > override" to the L210 variant.
-> > >
-> > > The "write allocate override" bit is used on the Nomadik STn8815
-> > > and is necessary to properly make use of the L210 cache on that
-> > > machine without sporadic crashes.
-> > >
-> > > After this the platform can boot and run without any out-of-tree
-> > > patches.
-> >
-> > This is not something that should be done by the kernel but by the
-> > firmware - needing this bit set is a basic requirement of having
-> > the caches enabled, and if (eg) the boot loader enables the caches
-> > it too will suffer this problem.
+On Sat, Mar 23, 2019 at 10:01:24PM +0800, qiaozhou wrote:
+> From: Qiao Zhou <qiaozhou@asrmicro.com>
 > 
-> I see your point. This U-Boot port does not enable the cache, I guess
-> because it was a bit unusual for ARM926EJ-S machines to have
-> L2 cache at  the time, and I remember U-Boot was not using L2CC for
-> a long time (maybe still not?).
+> Add binding documentation for ASR8751C clocks, which are general gating
+> fixed rate and fixed ratio clocks derived from system PLL, external
+> oscillator. These clocks control registers are distributed on different
+> sub-controller-unit on SoCs, like APMU, MPMU, CIU etc.
 > 
-> The Nomadik was unstable for years and then I looked at the
-> outoftree vendor kernel and saw that it sets this bit and since I did that
-> it has been rock solid.
-> 
-> I can of course try to recompile and reflash the U-Boot for this
-> board but it is stored in NAND flash and if I break it, ugh, I have
-> toasted this board and I only have one. So I'm scared about that.
-> 
-> I have been carrying this as an out-of-tree patch for years and I can of
-> course continue to do so, I just felt it was a bit sad so I tried
-> to diet down the previous patch to the single bit the Nomadik
-> needs to set up for it's L2CC to work.
+> Signed-off-by: qiaozhou <qiaozhou@asrmicro.com>
+> ---
+>  .../devicetree/bindings/clock/asr,clock.txt        | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/asr,clock.txt
 
-I'm okay with the property as properties for every last L2x0 
-register bit pretty much already happened. However, can't you set the 
-bit in the machine desc l2c_aux_val?
+Patch 5 can be combined with this one. It is part of the binding.
 
-Rob
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/asr,clock.txt b/Documentation/devicetree/bindings/clock/asr,clock.txt
+> new file mode 100644
+> index 0000000..93082a4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/asr,clock.txt
+> @@ -0,0 +1,31 @@
+> +* Clock Controller of ASR8751C SoCs
+> +
+> +clock subsystem generates and supplies clock to various controllers within the
+> +ASR8751C SoC.
+> +
+> +Required Properties:
+> +
+> +- compatible: should be "asr,8751c-clock"
+> +
+> +- reg: iomem address and length of the clock subsystem. There are 7 places in
+> +  SOC has clock control logic: "mpmu", "apmu", "apbc", "apbs", "ciu", "dciu",
+> +  "ddrc".
+
+You should probably have a node for each of these blocks if they are 
+separate blocks. DT nodes should match h/w blocks.
+
+> +- reg-names: register names of each sub control logic.
+> +- interrupts : Should be the interrupt number
+
+However, how do all the blocks have a single interrupt unless it's a 
+shared interrupt.
+
+> +- #clock-cells: should be 1.
+
+Clock controllers need some input clocks to have any output clocks.
+
+> +
+> +Example:
+> +
+> +	soc_clocks: clocks@d4050000{
+> +		compatible = "asr,8751c-clock";
+> +		reg = <0x0 0xd4050000 0x0 0x209c>,
+> +		      <0x0 0xd4282800 0x0 0x400>,
+> +		      <0x0 0xd4015000 0x0 0x1000>,
+> +		      <0x0 0xd4090000 0x0 0x1000>,
+> +		      <0x0 0xd4282c00 0x0 0x400>,
+> +		      <0x0 0xd8440000 0x0 0x98>,
+> +		      <0x0 0xd4200000 0x0 0x4280>;
+> +		reg-names = "mpmu", "apmu", "apbc", "apbs", "ciu", "dciu", "ddrc";
+> +		interrupts = <0 96 IRQ_TYPE_LEVEL_HIGH>;
+> +		#clock-cells = <1>;
+> +	};
+> -- 
+> 2.7.4
+> 
