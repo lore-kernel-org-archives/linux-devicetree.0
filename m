@@ -1,126 +1,161 @@
-Return-Path: <SRS0=1wp7=R5=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v5 0/6] iio: gyro: add fxas21002c driver
-Date: Tue, 26 Mar 2019 10:16:45 +0000
-Message-Id: <20190326101651.25056-1-rui.silva@linaro.org>
+Return-Path: <robherring2@gmail.com>
+Message-ID: <5ca0614f.1c69fb81.67416.5f0d@mx.google.com>
+Date: Sun, 31 Mar 2019 01:42:22 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC][PATCH v1] spi: Introduce custom GPIO chip select for slave
+ devices
+References: <20190326212918.18541-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190326212918.18541-1-andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Ferry Toth <fntoth@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
-This series introduce a NXP fxas21002c tri axis gyroscope driver [0]
-It add a core implementaiton plus an i2c and spi.
+On Tue, Mar 26, 2019 at 11:29:18PM +0200, Andy Shevchenko wrote:
+> The SPI hardware interface requires to have clock, data, and chip select
+> lines to communicate with a certain chip on the bus.
+> 
+> Historically the chip select lines were related to the SPI controller
+> itself ("native" mode), however there is no technical obstacles to make
+> any controllable pin as chip select. And thus no limitation to the
+> amount of chip select pins should be put in such case.
+> 
+> As a result here is a proposal to logically split "native" and GPIO chip
+> select pins and make it possible for slave device to choose which pin it
+> will use.
 
-This device can be found in the warp7 board [1], where it was tested.
+Doesn't the h/w design choose?
 
----
-Cheers,
-   Rui
+> 
+> Rationale points here are:
+> - it's actually not a business of the SPI controller to know what
+> resource might be used as a chip select except "native" ones
 
-v4->v5:
-Jonathan Cameron:
-  - remove init ret
-  - change handle of iio register, buffer and trigger in probe and
-   remove (I think this is what you mean, Jonathan)
+Not the business of the slave to know either.
 
-v3->v4:
-Tomasz Duszynski:
-  - mention irq flags in bindings
-  - add reference to drive-open-drain in bindings
-  - fix headers files
-  - drop comas in of_device_id sentinel
-  - drop of_match_ptr
-  - use probe_new
+> - some of the controllers would like to request GPIOs as soon as the
+> controller itself is being registered, which is an artificial limitation
+> of what GPIOs and when can be used as CS pins
 
-Jonathan Cameron:
-  - disable vdd regulator in case of vddio fail
-  - use devm_add_action_or_reset
-  - simpler functions returns
-  - remove noisy dev_info
-  - remove EAGAIN from runtime_suspend
+Fix the controller driver implementation then?
 
-v2->v3:
-Jonathan Cameron:
-  - cacheline aligned (DMA safe buffer)
-     Great presentation [2] and links in the presentation, thanks
-  - global renaming, including filenames, fxas2100x->fxas21002c
-  - provide spi info in dts bidings
-  - Remove SPI_MASTER in Kconfig i2c patch and move it to right patch
-  - remove extra blank line in comment
-  - add break range_value_from_fs after found
-  - in range_value_from_fs use local variable
-  - remove mode check at mode_set
-  - combine two if statements in mode_set
-  - in scale_get return 0 and let caller to set IIO_VAL_FRACTIONAL
-  - remove dev_err from vdd_io regulator get
-  - handle regulator error path
-  - devm_add_action
-  - check unwind order
-  - simplify data in _suspend and alike
-  - disable regulators at suspend
-  - error handling at _resume
-  - return -EAGAIN at runtime_resume
+> - as a continuation of previous point the CS pin can't be reused at
+> runtime until entire controller will gone, the easy example that can
+> come up is MMC SPI where we can multiplex GPIO CS based on card
+> detection
+> - (I dunno if DT overlays allow to expand amount of CS pins at run-time)
 
-Rob Herring:
-   - Set label as gyroscope
+In theory yes, but the problem with much of it is whether the kernel can 
+deal with new or changing properties (hint: it can't).
 
-- add interrupt to bindings
-- add entry to maintainers
+> - last, but not least, is a firmware, that can't be modified by user on
+> a board where some pins still available for general purpose use and user
+> would like to re-use them for custom SPI slave device
+> 
+> The split itself is simple an introduction of the "spi-cs-gpios"
+> property for the slave device. SPI core will handle this for all
+> supported controllers.
+> 
+> Known issues / TODO list:
+> - needs flag to handle such cases to avoid freeing controller owned
+> GPIO descriptors
+> - clean up is not correct in error path
+> - device tree support
 
+I'm not seeing anything new we can't already accomplish with DT 
+bindings.
 
-v1->v2:
-Peter Meerwal-Stadler:
-  - changed (c) to current year
-  - add regmap include file in .h
-  - fix comments s/cuttof/cutoff/
-  - add more info in mutex comment
-  - check value in range_fs_from_value
-  - ret not checked in range_value_from_fs
-  - move mode to enum type
-  - remove line between value get and validation of value in all file
-  - pre-write, regmap_field_write, post_write refactoring
-  - check val2 and val == 0 in write raw
-  - check in_anglvel_scale: 7.8125?
-  - trigger_handler: 2 => sizeof(s16)
-  - check buffer size
-  - print %02% to output chip id
-  - remove !! as state is bool
-  - trigger probe return devm_iio_trigger_register
-  - remove error msg in case of devm_iio_device_register
-Fabio Estebam:
-  - rename FXAS2100X to FXAS21002
-  - change compatible nxp,fxas2100x to the exact support
-  - add VDD and VDDIO regulators in bindings and driver
+> - split patch to device tree bindings and main part
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> - it is sent as RFC to gather opinions
+> - it has been tested on x86 hardware with 74x164 SPI GPIO expander connected
+> 
+>  .../devicetree/bindings/spi/spi-bus.txt        |  5 ++++-
+>  drivers/spi/spi.c                              | 18 +++++++++++++++---
+>  2 files changed, 19 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> index 1f6e86f787ef..7f5ff64efc7d 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> @@ -69,6 +69,8 @@ All slave nodes can contain the following optional properties:
+>  		    phase (CPHA) mode.
+>  - spi-cs-high     - Empty property indicating device requires chip select
+>  		    active high.
+> +- spi-cs-gpios    - Custom chip select for this device, when provided reg
+> +		    property must be 0.
 
-[0]: https://www.nxp.com/docs/en/data-sheet/FXAS21002.pdf
-[1]: https://www.element14.com/community/community/designcenter/single-board-computers/warp7/overview
-[2]: https://events.linuxfoundation.org/wp-content/uploads/2017/12/20181023-Wolfram-Sang-ELCE18-safe_dma_buffers.pdf
+Having multiple nodes at address 0 is not valid in DT. So this wouldn't 
+work it CS0 is used or you wanted to do this with multiple slaves.
 
-Rui Miguel Silva (6):
-  iio: gyro: add DT bindings to fxas21002c
-  iio: gyro: add core driver for fxas21002c
-  iio: gyro: fxas21002c: add i2c driver
-  iio: gyro: fxas21002c: add spi driver
-  ARM: dts: imx7s-warp: add fxas21002c gyroscope
-  MAINTAINERS: add entry for fxas21002c gyro driver
-
- .../bindings/iio/gyroscope/nxp,fxas21002c.txt |   31 +
- MAINTAINERS                                   |   10 +
- arch/arm/boot/dts/imx7s-warp.dts              |    7 +
- drivers/iio/gyro/Kconfig                      |   22 +
- drivers/iio/gyro/Makefile                     |    3 +
- drivers/iio/gyro/fxas21002c.h                 |  151 +++
- drivers/iio/gyro/fxas21002c_core.c            | 1006 +++++++++++++++++
- drivers/iio/gyro/fxas21002c_i2c.c             |   69 ++
- drivers/iio/gyro/fxas21002c_spi.c             |   70 ++
- 9 files changed, 1369 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
- create mode 100644 drivers/iio/gyro/fxas21002c.h
- create mode 100644 drivers/iio/gyro/fxas21002c_core.c
- create mode 100644 drivers/iio/gyro/fxas21002c_i2c.c
- create mode 100644 drivers/iio/gyro/fxas21002c_spi.c
-
--- 
-2.21.0
+>  - spi-3wire       - Empty property indicating device requires 3-wire mode.
+>  - spi-lsb-first   - Empty property indicating device requires LSB first mode.
+>  - spi-tx-bus-width - The bus width (number of data wires) that is used for MOSI.
+> @@ -86,7 +88,8 @@ only 1 (SINGLE), 2 (DUAL) and 4 (QUAD).
+>  Dual/Quad mode is not allowed when 3-wire mode is used.
+>  
+>  If a gpio chipselect is used for the SPI slave the gpio number will be passed
+> -via the SPI master node cs-gpios property.
+> +via the SPI master node cs-gpios property or, when it's not possible, via
+> +spi-cs-gpios property in slave configuration.
+>  
+>  SPI example for an MPC5200 SPI bus:
+>  	spi@f00 {
+> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> index 93986f879b09..111e9705eb96 100644
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -535,7 +535,8 @@ static int spi_dev_check(struct device *dev, void *data)
+>  	struct spi_device *new_spi = data;
+>  
+>  	if (spi->controller == new_spi->controller &&
+> -	    spi->chip_select == new_spi->chip_select)
+> +	    spi->chip_select == new_spi->chip_select &&
+> +	    !new_spi->cs_gpiod)
+>  		return -EBUSY;
+>  	return 0;
+>  }
+> @@ -580,7 +581,9 @@ int spi_add_device(struct spi_device *spi)
+>  	}
+>  
+>  	/* Descriptors take precedence */
+> -	if (ctlr->cs_gpiods)
+> +	if (spi->cs_gpiod)
+> +		dev_dbg(dev, "chipselect is provided by slave\n");
+> +	else if (ctlr->cs_gpiods)
+>  		spi->cs_gpiod = ctlr->cs_gpiods[spi->chip_select];
+>  	else if (ctlr->cs_gpios)
+>  		spi->cs_gpio = ctlr->cs_gpios[spi->chip_select];
+> @@ -693,8 +696,11 @@ void spi_unregister_device(struct spi_device *spi)
+>  		of_node_clear_flag(spi->dev.of_node, OF_POPULATED);
+>  		of_node_put(spi->dev.of_node);
+>  	}
+> -	if (ACPI_COMPANION(&spi->dev))
+> +	if (ACPI_COMPANION(&spi->dev)) {
+> +		gpiod_put(spi->cs_gpiod);
+> +		spi->cs_gpiod = NULL;
+>  		acpi_device_clear_enumerated(ACPI_COMPANION(&spi->dev));
+> +	}
+>  	device_unregister(&spi->dev);
+>  }
+>  EXPORT_SYMBOL_GPL(spi_unregister_device);
+> @@ -1910,6 +1916,12 @@ static acpi_status acpi_register_spi_device(struct spi_controller *ctlr,
+>  	if (spi->irq < 0)
+>  		spi->irq = acpi_dev_gpio_irq_get(adev, 0);
+>  
+> +	spi->cs_gpiod = gpiod_get_optional(&spi->dev, "spi-cs", GPIOD_ASIS);
+> +	if (IS_ERR(spi->cs_gpiod)) {
+> +		spi_dev_put(spi);
+> +		return AE_OK;
+> +	}
+> +
+>  	acpi_device_set_enumerated(adev);
+>  
+>  	adev->power.flags.ignore_parent = true;
+> -- 
+> 2.20.1
+> 
