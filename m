@@ -1,56 +1,22 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/6] dt-bindings: connector: add optional properties
- for Type-B
-Date: Sun, 31 Mar 2019 01:40:28 -0500
-Message-ID: <5ca060de.1c69fb81.12138.c73c@mx.google.com>
-References: <1552635513-2378-1-git-send-email-chunfeng.yun@mediatek.com>
- <1552635513-2378-2-git-send-email-chunfeng.yun@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Subject: Re: [PATCH 2/2] dt-bindings: iio: add Bosch BMG160 gyroscope sensor
+Date: Sun, 31 Mar 2019 01:40:40 -0500
+Message-ID: <5ca060ea.1c69fb81.4ef19.df63@mx.google.com>
+References: <cover.1552922054.git.hns@goldelico.com> <1664da2e7a9cb687eece1f27501d275219bcc4ed.1552922054.git.hns@goldelico.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1552635513-2378-2-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <1664da2e7a9cb687eece1f27501d275219bcc4ed.1552922054.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Cc: Jonathan Cameron <jic23@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 03:38:28PM +0800, Chunfeng Yun wrote:
-> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
-> usb-b-connector
+On Mon, 18 Mar 2019 16:14:15 +0100, "H. Nikolaus Schaller" wrote:
+> Define bindings for "bosch,bmg160" and "bosch,bmi055_gyro".
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 > ---
-> v2 changes:
->   1. describe more clear for vbus-gpios and vbus-supply suggested by Hans
-> ---
->  .../devicetree/bindings/connector/usb-connector.txt      | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  .../bindings/iio/gyroscope/bmg160.txt         | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/bmg160.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> index a9a2f2fc44f2..1c4ed6c9afa8 100644
-> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
-> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> @@ -17,6 +17,15 @@ Optional properties:
->  - self-powered: Set this property if the usb device that has its own power
->    source.
->  
-> +Optional properties for usb-b-connector:
-> +- id-gpios: gpio for USB ID pin.
-> +- vbus-gpios: gpio for USB VBUS pin, used to detect presence of VBUS 5V.
-> +  see gpio/gpio.txt.
 
-Please make it explicit that this is an input gpio. An output GPIO 
-controlling a Vbus regulator should be modelled as a regulator.
-
-> +- vbus-supply: a phandle to the regulator for USB VBUS if needed.
-> +- pinctrl-names : a pinctrl state named "default" is optional
-> +- pinctrl-0 : pin control group
-> +  see pinctrl/pinctrl-bindings.txt
-> +
->  Optional properties for usb-c-connector:
->  - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
->    connector has power support.
-> -- 
-> 2.20.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
