@@ -1,48 +1,56 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: meson: Add drive-strength
- property
-Date: Sun, 31 Mar 2019 01:40:26 -0500
-Message-ID: <20190330212830.GA28281@bogus>
-References: <20190314163725.7918-1-jbrunet@baylibre.com>
- <20190314163725.7918-2-jbrunet@baylibre.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: connector: add optional properties
+ for Type-B
+Date: Sun, 31 Mar 2019 01:40:28 -0500
+Message-ID: <5ca060de.1c69fb81.12138.c73c@mx.google.com>
+References: <1552635513-2378-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1552635513-2378-2-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190314163725.7918-2-jbrunet@baylibre.com>
+In-Reply-To: <1552635513-2378-2-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Guillaume La Roque <glaroque@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 05:37:24PM +0100, Jerome Brunet wrote:
-> From: Guillaume La Roque <glaroque@baylibre.com>
+On Fri, Mar 15, 2019 at 03:38:28PM +0800, Chunfeng Yun wrote:
+> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+> usb-b-connector
 > 
-> Add optional drive-strength property
-> 
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 > ---
->  Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 3 +++
->  1 file changed, 3 insertions(+)
+> v2 changes:
+>   1. describe more clear for vbus-gpios and vbus-supply suggested by Hans
+> ---
+>  .../devicetree/bindings/connector/usb-connector.txt      | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-> index a47dd990a8d3..4e3d5a27c91c 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-> @@ -51,6 +51,9 @@ Configuration nodes support the generic properties "bias-disable",
->  "bias-pull-up" and "bias-pull-down", described in file
->  pinctrl-bindings.txt
+> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> index a9a2f2fc44f2..1c4ed6c9afa8 100644
+> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> @@ -17,6 +17,15 @@ Optional properties:
+>  - self-powered: Set this property if the usb device that has its own power
+>    source.
 >  
-> +Optional properties :
-> + - drive-strength: Drive strength for the specified pins in uA.
+> +Optional properties for usb-b-connector:
+> +- id-gpios: gpio for USB ID pin.
+> +- vbus-gpios: gpio for USB VBUS pin, used to detect presence of VBUS 5V.
+> +  see gpio/gpio.txt.
 
-The standard definition says this is in mA.
+Please make it explicit that this is an input gpio. An output GPIO 
+controlling a Vbus regulator should be modelled as a regulator.
 
+> +- vbus-supply: a phandle to the regulator for USB VBUS if needed.
+> +- pinctrl-names : a pinctrl state named "default" is optional
+> +- pinctrl-0 : pin control group
+> +  see pinctrl/pinctrl-bindings.txt
 > +
->  === Example ===
->  
->  	pinctrl: pinctrl@c1109880 {
+>  Optional properties for usb-c-connector:
+>  - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
+>    connector has power support.
 > -- 
 > 2.20.1
 > 
