@@ -1,138 +1,149 @@
-From: Andreas Klinger <ak@it-klinger.de>
-Subject: [PATCH] bmp085.yaml: transform DT documentation of iio sensor into
- YAML
-Date: Sun, 31 Mar 2019 18:47:56 +0200
-Message-ID: <20190331164753.xifw6kkiwdg4xpzo@arbad>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: [PATCH v3 00/25] Add generic support for composing LED class device name
+Date: Sun, 31 Mar 2019 19:54:36 +0200
+Message-ID: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, masneyb@onstation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, jacek.anaszewski@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-use bmp085.txt and change it into yaml format
+Changes from v2:
 
-fix links to datasheets in replaced documentation
+- removed from drivers the responsibility of calling led_compose_name()
+- added struct device* argument to led_compose_name() to allow using
+  dev_<level> logging functions for more informative logs
+- adjusted the list of LED_FUNCTION definitions according to the v2 review
+  remarks
+- renamed default_desc to default_label in the struct led_init_data
+- added led-enumerator DT property to the common LED bindings
+- removed LED_COLOR_NAME definitions from include/dt-bindings/leds/common.h
+- change DT color property type from string to integer
+- change struct initialization list to explicit property assignment in leds-sc27xx-bltc.c
+- use led->client->name for led_hw_name in leds-lm3692x.c
+- few other minor improvements to docs etc.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- .../devicetree/bindings/iio/pressure/bmp085.txt    | 27 --------
- .../devicetree/bindings/iio/pressure/bmp085.yaml   | 71 ++++++++++++++++++++++
- 2 files changed, 71 insertions(+), 27 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/pressure/bmp085.txt
- create mode 100644 Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
+Changes from v1:
 
-diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
-deleted file mode 100644
-index 61c72e63c584..000000000000
---- a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--BMP085/BMP18x/BMP28x digital pressure sensors
--
--Required properties:
--- compatible: must be one of:
--  "bosch,bmp085"
--  "bosch,bmp180"
--  "bosch,bmp280"
--  "bosch,bme280"
--
--Optional properties:
--- interrupts: interrupt mapping for IRQ
--- reset-gpios: a GPIO line handling reset of the sensor: as the line is
--  active low, it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
--- vddd-supply: digital voltage regulator (see regulator/regulator.txt)
--- vdda-supply: analog voltage regulator (see regulator/regulator.txt)
--
--Example:
--
--pressure@77 {
--	compatible = "bosch,bmp085";
--	reg = <0x77>;
--	interrupt-parent = <&gpio0>;
--	interrupts = <25 IRQ_TYPE_EDGE_RISING>;
--	reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
--	vddd-supply = <&foo>;
--	vdda-supply = <&bar>;
--};
-diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
-new file mode 100644
-index 000000000000..884f889c1ca5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
-@@ -0,0 +1,71 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/pressure/bmp085.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: BMP085/BMP180/BMP280/BME280 pressure iio sensors
-+
-+maintainers:
-+  - Andreas Klinger <ak@it-klinger.de>
-+
-+description: |
-+  Pressure, temperature and humidity iio sensors with i2c and spi interfaces
-+
-+  Specifications about the sensor can be found at:
-+    https://www.bosch-sensortec.com/bst/products/all_products/bmp180
-+    https://www.bosch-sensortec.com/bst/products/all_products/bmp280
-+    https://www.bosch-sensortec.com/bst/products/all_products/bme280
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+        - enum:
-+          - bosch,bmp085
-+          - bosch,bmp180
-+          - bosch,bmp280
-+          - bosch,bme280
-+
-+  vddd-supply:
-+    description:
-+      digital voltage regulator (see regulator/regulator.txt)
-+    maxItems: 1
-+
-+  vdda-supply:
-+    description:
-+      analog voltage regulator (see regulator/regulator.txt)
-+    maxItems: 1
-+
-+  reset-gpios:
-+    description:
-+      A GPIO line handling reset of the sensor. As the line is active low,
-+      it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      interrupt mapping for IRQ (BMP085 only)
-+
-+required:
-+  - compatible
-+  - vddd-supply
-+  - vdda-supply
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c0 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      pressure@77 {
-+          compatible = "bosch,bmp085";
-+          reg = <0x77>;
-+          interrupt-parent = <&gpio0>;
-+          interrupts = <25 IRQ_TYPE_EDGE_RISING>;
-+          reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
-+          vddd-supply = <&foo>;
-+          vdda-supply = <&bar>;
-+      };
-+    };
+- improved led_parse_properties() to parse label property at first
+  and return immediately after parsing succeeds
+- added tool get_led_device_info.sh for retrieving LED class device's
+  parent device related information
+- extended LED naming section of Documentation/leds/leds-class.txt
+- adjusted the list of LED_FUNCTION definitions according to the v1 review
+  remarks
+- added standard LED_COLOR_NAME definitions
+- removed functions.h and moved both LED_FUNCTION and LED_COLOR_NAME
+  definitions to include/dt-bindings/common.h
+- rebased leds-as3645a changes on top of the patch switching to fwnode
+  property API
+- updated DT bindings to use new LED_COLOR_NAME definitions
+- improved common LED bindings to not use address unit for sub-nodes
+  without reg property
+
+Generally I still insist on deprecating label property and devicename
+section of LED name. The tool I added for obtaining LED device name
+proves availability of the related information in other places in
+the sysfs. Other discussed use cases are covered in the updated
+Documentation/leds/leds-class.txt.
+
+Beside that, I tried also to create macros for automatic composition
+of "-N" suffixed LED functions, so that it would not be necessary
+to pollute common.h with plenty repetitions of the same function,
+differing only with the postfix. Unfortunately, the preprocessor
+of the dtc compiler seems not to accept string concatenetation.
+I.e. it is not possible to to the following assighment:
+
+function = "hdd""-1"
+
+If anyone knows how to obviate this shortocoming please let me know.
+
+Original cover letter:
+
+LED class device naming pattern included devicename section, which had
+unpleasant effect of varying userspace interface dependent on underlaying
+hardware. Moreover, this information was redundant in the LED name, since
+the LED controller name could have been obtained from sysfs device group
+
+This patch set introduces a led_compose_name() function in the LED core,
+which unifies and simplifies LED class device name composition. This
+change is accompanied by the improvements in the common LED DT bindings
+where two new properties are introduced: "function" and "color" . The two
+deprecate the old "label" property which was leaving too much room for
+interpretation, leading to inconsistent LED naming.
+
+There are also changes in LED DT node naming, which are in line with
+DT maintainer's request from [0].
+
+Since some DT LED naming unification, related to not including devicename
+section in "label" DT property, is being requested during reviews of new
+LED class drivers for almost a year now, then those drivers are the first
+candidates for optimalization and the first users of the new
+led_compose_name() API. The modifications were tested with Qemu,
+by stubbing the driver internals where hardware interaction was needed
+for proper probing.
+
+Thanks,
+Jacek Anaszewski
+
+Jacek Anaszewski (25):
+  leds: class: Improve LED and LED flash class registration API
+  dt-bindings: leds: Add LED_FUNCTION definitions
+  dt-bindings: leds: Add LED_COLOR_ID definitions
+  dt-bindings: leds: Add function, color and led-enumerator properties
+  leds: core: Add support for composing LED class device names
+  dt-bindings: sc27xx-blt: Add function and color properties
+  leds: sc27xx-blt: Use generic support for composing LED names
+  dt-bindings: lt3593: Add function and color properties
+  leds: lt3593: Use generic support for composing LED names
+  dt-bindings: lp8860: Add function and color properties
+  leds: lp8860: Use generic support for composing LED names
+  dt-bindings: lm3692x: Add function and color properties
+  leds: lm3692x: Use generic support for composing LED names
+  dt-bindings: lm36010: Add function and color properties
+  leds: lm3601x: Use generic support for composing LED names
+  dt-bindings: cr0014114: Add function and color properties
+  leds: cr0014114: Use generic support for composing LED names
+  dt-bindings: aat1290: Add function and color properties
+  leds: aat1290: Use generic support for composing LED names
+  dt-bindings: as3645a: Add function and color properties
+  leds: as3645a: Use generic support for composing LED names
+  dt-bindings: leds-gpio: Add function and color properties
+  leds: gpio: Use generic support for composing LED names
+  dt-bindings: an30259a: Add function and color properties
+  leds: an30259a: Use generic support for composing LED names
+
+ .../devicetree/bindings/leds/ams,as3645a.txt       | 22 +++--
+ Documentation/devicetree/bindings/leds/common.txt  | 61 ++++++++++++--
+ .../devicetree/bindings/leds/leds-aat1290.txt      | 12 ++-
+ .../devicetree/bindings/leds/leds-an30259a.txt     | 22 +++--
+ .../devicetree/bindings/leds/leds-cr0014114.txt    | 26 ++++--
+ .../devicetree/bindings/leds/leds-gpio.txt         | 23 ++++--
+ .../devicetree/bindings/leds/leds-lm3601x.txt      | 10 ++-
+ .../devicetree/bindings/leds/leds-lm3692x.txt      |  9 +-
+ .../devicetree/bindings/leds/leds-lp8860.txt       |  9 +-
+ .../devicetree/bindings/leds/leds-lt3593.txt       | 11 ++-
+ .../devicetree/bindings/leds/leds-sc27xx-bltc.txt  | 10 ++-
+ Documentation/leds/leds-class.txt                  | 27 +++++-
+ drivers/leds/led-class-flash.c                     |  9 +-
+ drivers/leds/led-class.c                           | 58 +++++++++----
+ drivers/leds/led-core.c                            | 96 ++++++++++++++++++++++
+ drivers/leds/leds-aat1290.c                        | 14 ++--
+ drivers/leds/leds-an30259a.c                       | 25 +++---
+ drivers/leds/leds-as3645a.c                        | 69 ++++++----------
+ drivers/leds/leds-cr0014114.c                      | 33 +++-----
+ drivers/leds/leds-gpio.c                           | 23 +++---
+ drivers/leds/leds-lm3601x.c                        | 38 ++++-----
+ drivers/leds/leds-lm3692x.c                        | 22 ++---
+ drivers/leds/leds-lp8860.c                         | 35 ++++----
+ drivers/leds/leds-lt3593.c                         | 20 ++---
+ drivers/leds/leds-sc27xx-bltc.c                    | 22 ++---
+ include/dt-bindings/leds/common.h                  | 47 +++++++++++
+ include/linux/led-class-flash.h                    | 15 ++--
+ include/linux/leds.h                               | 78 +++++++++++++++---
+ tools/leds/get_led_device_info.sh                  | 81 ++++++++++++++++++
+ 29 files changed, 660 insertions(+), 267 deletions(-)
+ create mode 100755 tools/leds/get_led_device_info.sh
+
 -- 
 2.11.0
