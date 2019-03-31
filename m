@@ -1,44 +1,138 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v5 5/5] drm: rockchip: add fixed screen size DVI-D support for rk3066 hdmi
-Date: Sun, 31 Mar 2019 18:19:45 +0200
-Message-ID: <4928946.oK5HkskicG@phil>
-References: <20190321001440.31057-1-jbx6244@gmail.com> <20190321001440.31057-6-jbx6244@gmail.com>
+From: Andreas Klinger <ak@it-klinger.de>
+Subject: [PATCH] bmp085.yaml: transform DT documentation of iio sensor into
+ YAML
+Date: Sun, 31 Mar 2019 18:47:56 +0200
+Message-ID: <20190331164753.xifw6kkiwdg4xpzo@arbad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190321001440.31057-6-jbx6244@gmail.com>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Jonker <jbx6244@gmail.com>
-Cc: hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, masneyb@onstation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Johan,
+use bmp085.txt and change it into yaml format
 
-Am Donnerstag, 21. März 2019, 01:14:40 CEST schrieb Johan Jonker:
-> Add fixed screen size DVI-D support
-> for rk3066 hdmi with an extra patch.
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+fix links to datasheets in replaced documentation
 
-> +static const struct drm_display_mode edid_cea_modes[] = {
-> +	/* 4 - 1280x720@60Hz 16:9 */
-> +	{ DRM_MODE("1280x720", DRM_MODE_TYPE_DRIVER, 74250, 1280, 1390,
-> +		   1430, 1650, 0, 720, 725, 730, 750, 0,
-> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> +	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-> +};
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+---
+ .../devicetree/bindings/iio/pressure/bmp085.txt    | 27 --------
+ .../devicetree/bindings/iio/pressure/bmp085.yaml   | 71 ++++++++++++++++++++++
+ 2 files changed, 71 insertions(+), 27 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
 
-you already dropped this patch from v6, but just for completeness sake,
-I don't think there should be a static mode for dvi displays.
-
-Similar to hdmi, dvi also can use ddc to read the monitor edid and some
-sort of static mode might behave badly if for example a display with less
-than this 720p is connected.
-
-I think I remember reading in the Rockchip tree that they added that for
-the case reading the edid fails, but if that happens the reading should
-be fixed and not worked around a failure :-)
-
-
-Heiko
+diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+deleted file mode 100644
+index 61c72e63c584..000000000000
+--- a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
++++ /dev/null
+@@ -1,27 +0,0 @@
+-BMP085/BMP18x/BMP28x digital pressure sensors
+-
+-Required properties:
+-- compatible: must be one of:
+-  "bosch,bmp085"
+-  "bosch,bmp180"
+-  "bosch,bmp280"
+-  "bosch,bme280"
+-
+-Optional properties:
+-- interrupts: interrupt mapping for IRQ
+-- reset-gpios: a GPIO line handling reset of the sensor: as the line is
+-  active low, it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
+-- vddd-supply: digital voltage regulator (see regulator/regulator.txt)
+-- vdda-supply: analog voltage regulator (see regulator/regulator.txt)
+-
+-Example:
+-
+-pressure@77 {
+-	compatible = "bosch,bmp085";
+-	reg = <0x77>;
+-	interrupt-parent = <&gpio0>;
+-	interrupts = <25 IRQ_TYPE_EDGE_RISING>;
+-	reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
+-	vddd-supply = <&foo>;
+-	vdda-supply = <&bar>;
+-};
+diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
+new file mode 100644
+index 000000000000..884f889c1ca5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/pressure/bmp085.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: BMP085/BMP180/BMP280/BME280 pressure iio sensors
++
++maintainers:
++  - Andreas Klinger <ak@it-klinger.de>
++
++description: |
++  Pressure, temperature and humidity iio sensors with i2c and spi interfaces
++
++  Specifications about the sensor can be found at:
++    https://www.bosch-sensortec.com/bst/products/all_products/bmp180
++    https://www.bosch-sensortec.com/bst/products/all_products/bmp280
++    https://www.bosch-sensortec.com/bst/products/all_products/bme280
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++        - enum:
++          - bosch,bmp085
++          - bosch,bmp180
++          - bosch,bmp280
++          - bosch,bme280
++
++  vddd-supply:
++    description:
++      digital voltage regulator (see regulator/regulator.txt)
++    maxItems: 1
++
++  vdda-supply:
++    description:
++      analog voltage regulator (see regulator/regulator.txt)
++    maxItems: 1
++
++  reset-gpios:
++    description:
++      A GPIO line handling reset of the sensor. As the line is active low,
++      it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
++    maxItems: 1
++
++  interrupts:
++    description:
++      interrupt mapping for IRQ (BMP085 only)
++
++required:
++  - compatible
++  - vddd-supply
++  - vdda-supply
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      pressure@77 {
++          compatible = "bosch,bmp085";
++          reg = <0x77>;
++          interrupt-parent = <&gpio0>;
++          interrupts = <25 IRQ_TYPE_EDGE_RISING>;
++          reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
++          vddd-supply = <&foo>;
++          vdda-supply = <&bar>;
++      };
++    };
+-- 
+2.11.0
