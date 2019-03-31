@@ -1,55 +1,48 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: 'reg: property has invalid length' with new JSON-schema bindings
-Date: Sat, 30 Mar 2019 22:26:53 -0400
-Message-ID: <20190331022653.GA8727@basecamp>
+Subject: [PATCH] dt-bindings: arm: correct dt_binding_check parse error
+Date: Sat, 30 Mar 2019 22:42:40 -0400
+Message-ID: <20190331024240.3012-1-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: arnd@arndb.de
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, sugaya.taichi@socionext.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
-
-Hi Rob,
-
-I'm finishing up a patch series that adds device tree support for a
-backlight driver and I made the bindings use the new JSON schema. I'm
-running into a problem with the reg property in the examples and I can
-reproduce the issue by adding an example to the trivial bindings:
-
-diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml
-b/Documentation/devicetree/bindings/trivial-devices.yaml
-index d79fb22bde39..bdab6a015db4 100644
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -341,4 +341,10 @@ required:
-   - compatible
-   - reg
- 
-+examples:
-+  - |
-+    isl29028@38 {
-+        compatible = "isil,isl29028";
-+        reg = <0x38>;
-+    };
- ...
 
 'make dt_binding_check' fails with the following error:
 
-  Documentation/devicetree/bindings/trivial-devices.example.dts:11.5-18:
-    Warning (reg_format): /isl29028@38:reg: property has invalid length
-    (4 bytes) (#address-cells == 1, #size-cells == 1)
-  ...
-  Documentation/devicetree/bindings/trivial-devices.example.dtb:
-    Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+  Documentation/devicetree/bindings/arm/cpus.yaml:  while scanning a
+  plain scalar
+    in "<unicode string>", line 231, column 19
+  found a tab character that violates indentation
+    in "<unicode string>", line 232, column 1
+  make[1]: *** [Documentation/devicetree/bindings/Makefile:12:
+    Documentation/devicetree/bindings/arm/cpus.example.dts] Error 1
 
-I see that dt-extract-example hard codes those two cell values to 1:
-https://github.com/robherring/yaml-bindings/blob/master/tools/dt-extract-example
+Correct the parse error by replacing the tabs with spaces to keep
+'make dt_binding_check' happy.
 
-The I2C buses for my board (qcom-msm8974) sets #size-cells to 0. Do you
-have any suggestions for how I can correct this issue? I can make the
-binding check happy by adding a length (reg = <0x38 0x4>;) but I assume
-that we shouldn't do that for I2C addresses like this.
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Fixes: fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
+---
+Issue is in linux-next-20190329.
 
-Brian
+ Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+index 60eab6dc3c0b..591bbd012d63 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.yaml
++++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+@@ -229,7 +229,7 @@ patternProperties:
+                 - renesas,r9a06g032-smp
+                 - rockchip,rk3036-smp
+                 - rockchip,rk3066-smp
+-		- socionext,milbeaut-m10v-smp
++                - socionext,milbeaut-m10v-smp
+                 - ste,dbx500-smp
+ 
+       cpu-release-addr:
+-- 
+2.20.1
