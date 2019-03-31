@@ -1,36 +1,48 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/5] dt-bindings: arm: atmel: add bindings for PIT64B
-Date: Sun, 31 Mar 2019 01:40:23 -0500
-Message-ID: <5ca060d9.1c69fb81.b8ed9.b975@mx.google.com>
-References: <1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com>
- <1552580772-8499-2-git-send-email-claudiu.beznea@microchip.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: meson: Add drive-strength
+ property
+Date: Sun, 31 Mar 2019 01:40:26 -0500
+Message-ID: <20190330212830.GA28281@bogus>
+References: <20190314163725.7918-1-jbrunet@baylibre.com>
+ <20190314163725.7918-2-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1552580772-8499-2-git-send-email-claudiu.beznea@microchip.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, tglx@linutronix.de, Claudiu.Beznea@microchip.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20190314163725.7918-2-jbrunet@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Guillaume La Roque <glaroque@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 14 Mar 2019 16:26:35 +0000, <Claudiu.Beznea@microchip.com> wrote:
-> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+On Thu, Mar 14, 2019 at 05:37:24PM +0100, Jerome Brunet wrote:
+> From: Guillaume La Roque <glaroque@baylibre.com>
 > 
-> Add device tree bindings for PIT64B timer.
+> Add optional drive-strength property
 > 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
->  Documentation/devicetree/bindings/arm/atmel-sysregs.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+> index a47dd990a8d3..4e3d5a27c91c 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+> @@ -51,6 +51,9 @@ Configuration nodes support the generic properties "bias-disable",
+>  "bias-pull-up" and "bias-pull-down", described in file
+>  pinctrl-bindings.txt
+>  
+> +Optional properties :
+> + - drive-strength: Drive strength for the specified pins in uA.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The standard definition says this is in mA.
+
+> +
+>  === Example ===
+>  
+>  	pinctrl: pinctrl@c1109880 {
+> -- 
+> 2.20.1
+> 
