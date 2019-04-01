@@ -1,16 +1,15 @@
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: RE: [PATCH v2 2/4] opp: add API which get max freq by voltage
-Date: Mon, 01 Apr 2019 11:30:47 +0900
-Message-ID: <20190401023047epcms1p888e2dba45fcbc1de98d71d8a37acb976@epcms1p8>
-References: <1553841972-19737-3-git-send-email-andrew-sh.cheng@mediatek.com>
- <1553841972-19737-1-git-send-email-andrew-sh.cheng@mediatek.com>
- <CGME20190329064632epcas2p4d10ea099bfea4ad682d7312a75bfbe68@epcms1p8>
-Reply-To: myungjoo.ham@samsung.com
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V5 1/4] dt-bindings: fsl: scu: add general interrupt
+ support
+Date: Mon, 1 Apr 2019 02:38:11 +0000
+Message-ID: <DB3PR0402MB391688AEF1B5EEEFE07315EEF5550@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1552878291-22866-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1553841972-19737-3-git-send-email-andrew-sh.cheng@mediatek.com>
+In-Reply-To: <1552878291-22866-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,34 +19,79 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael
- J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "fan.chen@mediatek.com" <fan.chen@mediatek.com>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
->This API will get voltage as input parameter.
->Search all opp items for the item which with max frequency,
->and the voltae is smaller than provided voltage.
->
->Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
->---
-> drivers/opp/core.c     | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++
-> include/linux/pm_opp.h |  8 ++++++++
-> 2 files changed, 63 insertions(+)
->
->diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
->index 24c757a..57deef9 100644
->--- a/include/linux/pm_opp.h
->+++ b/include/linux/pm_opp.h
->@@ -102,6 +102,8 @@ struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
-> 
-> struct dev_pm_opp *dev_pm_opp_find_freq_floor(struct device *dev,
-> 					      unsigned long *freq);
->+struct dev_pm_opp *dev_pm_opp_find_max_freq_by_volt(struct device *dev,
->+					      unsigned long u_volt);
-
-For the symmetricity, wouldn't it be better to name it
-dev_pm_opp_find_volt_ceiling(dev, u_volt); ?
-
-Cheers,
-MyungJoo
+UGluZy4uLg0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+IEZyb206IEFuc29uIEh1YW5nIFttYWlsdG86QW5zb24uSHVhbmdAbnhw
+LmNvbV0NCj4gU2VudDogMjAxOcTqM9TCMTjI1SAxMToxMA0KPiBUbzogcm9iaCtkdEBrZXJuZWwu
+b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsNCj4gcy5oYXVl
+ckBwZW5ndXRyb25peC5kZTsga2VybmVsQHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFpbC5j
+b207DQo+IGEuenVtbW9AdG93ZXJ0ZWNoLml0OyBhbGV4YW5kcmUuYmVsbG9uaUBib290bGluLmNv
+bTsgQWlzaGVuZyBEb25nDQo+IDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47IHVsZi5oYW5zc29uQGxp
+bmFyby5vcmc7IERhbmllbCBCYWx1dGENCj4gPGRhbmllbC5iYWx1dGFAbnhwLmNvbT47IGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsg
+bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4gcnRjQHZnZXIu
+a2VybmVsLm9yZw0KPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3Vi
+amVjdDogW1BBVENIIFY1IDEvNF0gZHQtYmluZGluZ3M6IGZzbDogc2N1OiBhZGQgZ2VuZXJhbCBp
+bnRlcnJ1cHQgc3VwcG9ydA0KPiANCj4gQWRkIHNjdSBnZW5lcmFsIGludGVycnVwdCBmdW5jdGlv
+biBzdXBwb3J0Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5n
+QG54cC5jb20+DQo+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0K
+PiBSZXZpZXdlZC1ieTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCj4gLS0t
+DQo+IENoYW5nZXMgc2luY2UgVjQ6DQo+IAktIGFkZCBtdSBhbGlhc2UgaW5mbyBhbmQgZXhhbXBs
+ZSBpbiBiaW5kaW5nIGRvYy4NCj4gLS0tDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0v
+ZnJlZXNjYWxlL2ZzbCxzY3UudHh0ICB8IDI5ICsrKysrKysrKysrKysrKysrLS0NCj4gLS0tDQo+
+ICAxIGZpbGUgY2hhbmdlZCwgMjMgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkNCj4gDQo+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVz
+Y2FsZS9mc2wsc2N1LnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9h
+cm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0DQo+IGluZGV4IDcyZDQ4MWMuLjVkN2RiYWIgMTAwNjQ0
+DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxl
+L2ZzbCxzY3UudHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9h
+cm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0DQo+IEBAIC0yMiw5ICsyMiwxMSBAQCBSZXF1aXJlZCBw
+cm9wZXJ0aWVzOg0KPiAgLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAgLSBjb21wYXRpYmxlOglzaG91
+bGQgYmUgImZzbCxpbXgtc2N1Ii4NCj4gIC0gbWJveC1uYW1lczoJc2hvdWxkIGluY2x1ZGUgInR4
+MCIsICJ0eDEiLCAidHgyIiwgInR4MyIsDQo+IC0JCQkgICAgICAgInJ4MCIsICJyeDEiLCAicngy
+IiwgInJ4MyIuDQo+IC0tIG1ib3hlczoJTGlzdCBvZiBwaGFuZGxlIG9mIDQgTVUgY2hhbm5lbHMg
+Zm9yIHR4IGFuZCA0IE1VIGNoYW5uZWxzDQo+IC0JCWZvciByeC4gQWxsIDggTVUgY2hhbm5lbHMg
+bXVzdCBiZSBpbiB0aGUgc2FtZSBNVSBpbnN0YW5jZS4NCj4gKwkJCSAgICAgICAicngwIiwgInJ4
+MSIsICJyeDIiLCAicngzIjsNCj4gKwkJaW5jbHVkZSAiZ2lwMyIgaWYgd2FudCB0byBzdXBwb3J0
+IGdlbmVyYWwgTVUgaW50ZXJydXB0Lg0KPiArLSBtYm94ZXM6CUxpc3Qgb2YgcGhhbmRsZSBvZiA0
+IE1VIGNoYW5uZWxzIGZvciB0eCwgNCBNVSBjaGFubmVscyBmb3INCj4gKwkJcngsIGFuZCAxIG9w
+dGlvbmFsIE1VIGNoYW5uZWwgZm9yIGdlbmVyYWwgaW50ZXJydXB0Lg0KPiArCQlBbGwgTVUgY2hh
+bm5lbHMgbXVzdCBiZSBpbiB0aGUgc2FtZSBNVSBpbnN0YW5jZS4NCj4gIAkJQ3Jvc3MgaW5zdGFu
+Y2VzIGFyZSBub3QgYWxsb3dlZC4gVGhlIE1VIGluc3RhbmNlIGNhbiBvbmx5DQo+ICAJCWJlIG9u
+ZSBvZiBMU0lPIE1VMH5NNCBmb3IgaW14OHF4cCBhbmQgaW14OHFtLiBVc2Vycw0KPiBuZWVkDQo+
+ICAJCXRvIG1ha2Ugc3VyZSB1c2UgdGhlIG9uZSB3aGljaCBpcyBub3QgY29uZmxpY3Qgd2l0aCBv
+dGhlciBAQA0KPiAtMzQsNiArMzYsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAgCQlDaGFu
+bmVsIDEgbXVzdCBiZSAidHgxIiBvciAicngxIi4NCj4gIAkJQ2hhbm5lbCAyIG11c3QgYmUgInR4
+MiIgb3IgInJ4MiIuDQo+ICAJCUNoYW5uZWwgMyBtdXN0IGJlICJ0eDMiIG9yICJyeDMiLg0KPiAr
+CQlHZW5lcmFsIGludGVycnVwdCByeCBjaGFubmVsIG11c3QgYmUgImdpcDMiLg0KPiAgCQllLmcu
+DQo+ICAJCW1ib3hlcyA9IDwmbHNpb19tdTEgMCAwDQo+ICAJCQkgICZsc2lvX211MSAwIDENCj4g
+QEAgLTQyLDEwICs0NSwxOCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAgCQkJICAmbHNpb19t
+dTEgMSAwDQo+ICAJCQkgICZsc2lvX211MSAxIDENCj4gIAkJCSAgJmxzaW9fbXUxIDEgMg0KPiAt
+CQkJICAmbHNpb19tdTEgMSAzPjsNCj4gKwkJCSAgJmxzaW9fbXUxIDEgMw0KPiArCQkJICAmbHNp
+b19tdTEgMyAzPjsNCj4gIAkJU2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
+YWlsYm94L2ZzbCxtdS50eHQNCj4gIAkJZm9yIGRldGFpbGVkIG1haWxib3ggYmluZGluZy4NCj4g
+DQo+ICtOb3RlOiBFYWNoIG11IHdoaWNoIHN1cHBvcnRzIGdlbmVyYWwgaW50ZXJydXB0IHNob3Vs
+ZCBoYXZlIGFuIGFsaWFzDQo+ICtjb3JyZWN0bHkgbnVtYmVyZWQgaW4gImFsaWFzZXMiIG5vZGUu
+DQo+ICtlLmcuDQo+ICthbGlhc2VzIHsNCj4gKwltdTEgPSAmbHNpb19tdTE7DQo+ICt9Ow0KPiAr
+DQo+ICBpLk1YIFNDVSBDbGllbnQgRGV2aWNlIE5vZGU6DQo+ICA9PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gDQo+IEBAIC0xMjQs
+NiArMTM1LDEwIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+IA0KPiAgRXhhbXBsZSAoaW14OHF4
+cCk6DQo+ICAtLS0tLS0tLS0tLS0tDQo+ICthbGlhc2VzIHsNCj4gKwltdTEgPSAmbHNpb19tdTE7
+DQo+ICt9Ow0KPiArDQo+ICBsc2lvX211MTogbWFpbGJveEA1ZDFjMDAwMCB7DQo+ICAJLi4uDQo+
+ICAJI21ib3gtY2VsbHMgPSA8Mj47DQo+IEBAIC0xMzMsNyArMTQ4LDggQEAgZmlybXdhcmUgew0K
+PiAgCXNjdSB7DQo+ICAJCWNvbXBhdGlibGUgPSAiZnNsLGlteC1zY3UiOw0KPiAgCQltYm94LW5h
+bWVzID0gInR4MCIsICJ0eDEiLCAidHgyIiwgInR4MyIsDQo+IC0JCQkgICAgICJyeDAiLCAicngx
+IiwgInJ4MiIsICJyeDMiOw0KPiArCQkJICAgICAicngwIiwgInJ4MSIsICJyeDIiLCAicngzIiwN
+Cj4gKwkJCSAgICAgImdpcDMiOw0KPiAgCQltYm94ZXMgPSA8JmxzaW9fbXUxIDAgMA0KPiAgCQkJ
+ICAmbHNpb19tdTEgMCAxDQo+ICAJCQkgICZsc2lvX211MSAwIDINCj4gQEAgLTE0MSw3ICsxNTcs
+OCBAQCBmaXJtd2FyZSB7DQo+ICAJCQkgICZsc2lvX211MSAxIDANCj4gIAkJCSAgJmxzaW9fbXUx
+IDEgMQ0KPiAgCQkJICAmbHNpb19tdTEgMSAyDQo+IC0JCQkgICZsc2lvX211MSAxIDM+Ow0KPiAr
+CQkJICAmbHNpb19tdTEgMSAzDQo+ICsJCQkgICZsc2lvX211MSAzIDM+Ow0KPiANCj4gIAkJY2xr
+OiBjbGsgew0KPiAgCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OHF4cC1jbGsiLCAiZnNsLHNjdS1j
+bGsiOw0KPiAtLQ0KPiAyLjcuNA0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
