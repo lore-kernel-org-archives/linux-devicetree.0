@@ -1,252 +1,53 @@
-Return-Path: <SRS0=zCA2=RE=pengutronix.de=mfe@kernel.org>
-Date: Fri, 1 Mar 2019 11:26:48 +0100
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH 1/3] media: dt-bindings: add bindings for Toshiba TC358746
-Message-ID: <20190301102648.aim4h3632tuuras6@pengutronix.de>
-References: <20181218141240.3056-1-m.felsch@pengutronix.de>
- <20181218141240.3056-2-m.felsch@pengutronix.de>
- <20190213175648.l3x2zeych4qj7km7@uno.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190213175648.l3x2zeych4qj7km7@uno.localdomain>
-To: Jacopo Mondi <jacopo@jmondi.org>
-Cc: hans.verkuil@cisco.com, sakari.ailus@linux.intel.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, graphics@pengutronix.de
-List-ID: <devicetree@vger.kernel.org>
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: RE: [PATCH v2 2/4] opp: add API which get max freq by voltage
+Date: Mon, 01 Apr 2019 11:30:47 +0900
+Message-ID: <20190401023047epcms1p888e2dba45fcbc1de98d71d8a37acb976@epcms1p8>
+References: <1553841972-19737-3-git-send-email-andrew-sh.cheng@mediatek.com>
+ <1553841972-19737-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <CGME20190329064632epcas2p4d10ea099bfea4ad682d7312a75bfbe68@epcms1p8>
+Reply-To: myungjoo.ham@samsung.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1553841972-19737-3-git-send-email-andrew-sh.cheng@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael
+ J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "fan.chen@mediatek.com" <fan.chen@mediatek.com>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+List-Id: devicetree@vger.kernel.org
 
-On 19-02-13 18:57, Jacopo Mondi wrote:
-> Hi Marco,
->     thanks for the patch.
+>This API will get voltage as input parameter.
+>Search all opp items for the item which with max frequency,
+>and the voltae is smaller than provided voltage.
+>
+>Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+>---
+> drivers/opp/core.c     | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++
+> include/linux/pm_opp.h |  8 ++++++++
+> 2 files changed, 63 insertions(+)
+>
+>diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+>index 24c757a..57deef9 100644
+>--- a/include/linux/pm_opp.h
+>+++ b/include/linux/pm_opp.h
+>@@ -102,6 +102,8 @@ struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
 > 
-> I have some comments, which I hope might get the ball rolling...
+> struct dev_pm_opp *dev_pm_opp_find_freq_floor(struct device *dev,
+> 					      unsigned long *freq);
+>+struct dev_pm_opp *dev_pm_opp_find_max_freq_by_volt(struct device *dev,
+>+					      unsigned long u_volt);
 
-Hi Jacopo,
+For the symmetricity, wouldn't it be better to name it
+dev_pm_opp_find_volt_ceiling(dev, u_volt); ?
 
-thanks for your review and sorry for the late response. My schedule was
-a bit filled.
-
-> 
-> On Tue, Dec 18, 2018 at 03:12:38PM +0100, Marco Felsch wrote:
-> > Add corresponding dt-bindings for the Toshiba tc358746 device.
-> >
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > ---
-> >  .../bindings/media/i2c/toshiba,tc358746.txt   | 80 +++++++++++++++++++
-> >  1 file changed, 80 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
-> > new file mode 100644
-> > index 000000000000..499733df744a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
-> > @@ -0,0 +1,80 @@
-> > +* Toshiba TC358746 Parallel to MIPI CSI2-TX or MIPI CSI2-RX to Parallel Bridge
-> > +
-> > +The Toshiba TC358746 is a bridge that converts a Parallel-in stream to MIPI CSI-2 TX
-> 
-> nit:
-> s/is a bridge that/is a bridge device that/
-> or drop is a bridge completely?
-
-You're right, I will drop this statement.
-
-> 
-> > +or a MIPI CSI-2 RX stream into a Parallel-out. It is programmable through I2C.
-> 
-> From the thin public available datasheet, it seems to support SPI as
-> programming interface, but only when doing Parallel->CSI-2. I would
-> mention that.
-
-You're right, the SPI interface is only supported in that mode.
-
-Should I add something like:
-It is programmable trough I2C and SPI. The SPI interface is only
-supported in parallel-in -> csi-out mode.
- 
-> > +
-> > +Required Properties:
-> > +
-> > +- compatible: should be "toshiba,tc358746"
-> > +- reg: should be <0x0e>
-> 
-> nit: s/should/shall
-
-Okay.
-
-> > +- clocks: should contain a phandle link to the reference clock source
-> 
-> just "phandle to the reference clock source" ?
-
-Okay.
-
-> > +- clock-names: the clock input is named "refclk".
-> 
-> According to the clock bindings this is optional, and since you have
-> a single clock I would drop it.
-
-Yes it's optional, but the device can also act as clock provider (not
-now, patches in my personal queue for rework). So I won't drop it since
-I never linked the generic clock-bindings.
-
-> > +
-> > +Optional Properties:
-> > +
-> > +- reset-gpios: gpio phandle GPIO connected to the reset pin
-> 
-> would you drop one of the two "gpio" here. Like ": phandle to the GPIO
-> connected to the reset input pin"
-
-Okay.
-
-> > +
-> > +Parallel Endpoint:
-> 
-> Here I got confused. The chip supports 2 inputs (parallel and CSI-2)
-> and two outputs (parallel and CSI-2 again). You mention endpoints
-> propery only here, but it seems from the example you want two ports,
-> with one endpoint child-node each.
-
-Nope, the device has one CSI and one Parallel interface. These
-interfaces can be configured as receiver or as transmitter (according to
-the selected mode). I got you but I remember also the discussion with
-Mauro, Hans, Sakari about the TVP5150 ports. The result of that
-discussion was "don't introduce 'virtual' ports". If I got you right
-your Idea will introduce virtual ports too:
-
-/* Parallel */
-port@0{
-	port@0 { ... }; /* input case */
-	port@1 { ... }; /* output case */
-};
-
-/* CSI */
-port@1{
-	port@0 { ... }; /* input case */
-	port@1 { ... }; /* output case */
-};
-
-> Even if the driver does not support CSI-2->Parallel at the moment,
-> bindings should be future-proof, so I would reserve the first two
-> ports for the inputs, and the last two for the output, or, considering
-> that the two input-output combinations are mutually exclusive, provide
-> one "input" port with two optional endpoints, and one "output" port with
-> two optional endpoints.
-
-I wouldn't map the combinations to the device tree since it is the
-hw-abstraction and the signals still routed to the same pads. The only
-difference in the CSI-2->Parallel case is the timing calculation which
-is out of scope for the dt.
-
-> In both cases only one input and one output at the time could be
-> described in DT. Up to you, maybe others have different ideas as
-> well...
-> 
-> > +
-> > +Required Properties:
-> > +
-> > +- reg: should be <0>
-> > +- bus-width: the data bus width e.g. <8> for eight bit bus, or <16>
-> > +	     for sixteen bit wide bus.
-> 
-> The chip seems to support up to 24 bits of data bus width
-
-You're right, I will change that.
-
-> > +
-> > +MIPI CSI-2 Endpoint:
-> > +
-> > +Required Properties:
-> > +
-> > +- reg: should be <1>
-> > +- data-lanes: should be <1 2 3 4> for four-lane operation,
-> > +	      or <1 2> for two-lane operation
-> > +- clock-lanes: should be <0>
-> 
-> Can this be changed? If the chip does not allow lane re-ordering you
-> could drop this.
-
-Nope it can't. Only the data-lanes can be disabled seperatly so I added
-the data-lanes property to determine that number and for the sake of
-completeness I added the clock-lanes property.
-
-> 
-> > +- link-frequencies: List of allowed link frequencies in Hz. Each frequency is
-> > +		    expressed as a 64-bit big-endian integer. The frequency
-> > +		    is half of the bps per lane due to DDR transmission.
-> 
-> Does the chip supports a limited set of bus frequencies, or are this
-> "hints" ? I admit this property actually puzzles me, so I might got it
-> wrong..
-
-That's not that easy to answer. The user can add different link-freq.
-the driver can choose. This is relevant for the Parallel-in --> CSI-out.
-If the external pclk is to slow (due to dyn. fps change) and the link-freq.
-is to fast the internally pixel buffer throws underrun interrupts. The
-user notice that by green pixel artifacts. If the user adds more
-possible link-freq. the driver will switch to that one wich full fill
-the timings to avoid a fifo underrun.
-
-> 
-> Thanks
->    j
-
-Regards,
-Marco
-
-> > +
-> > +Optional Properties:
-> > +
-> > +- clock-noncontinuous: Presence of this boolean property decides whether the
-> > +		       MIPI CSI-2 clock is continuous or non-continuous.
-> > +
-> > +For further information on the endpoint node properties, see
-> > +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > +
-> > +Example:
-> > +
-> > +&i2c {
-> > +	tc358746: tc358746@0e {
-> > +		reg = <0x0e>;
-> > +		compatible = "toshiba,tc358746";
-> > +		pinctrl-names = "default";
-> > +		clocks = <&clk_cam_ref>;
-> > +		clock-names = "refclk";
-> > +		reset-gpios = <&gpio3 2 GPIO_ACTIVE_LOW>;
-> > +
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		port@0 {
-> > +			reg = <0>;
-> > +
-> > +			tc358746_parallel_in: endpoint {
-> > +				bus-width = <8>;
-> > +				remote-endpoint = <&micron_parallel_out>;
-> > +			};
-> > +		};
-> > +
-> > +		port@1 {
-> > +			reg = <1>;
-> > +
-> > +			tc358746_mipi2_out: endpoint {
-> > +				remote-endpoint = <&mipi_csi2_in>;
-> > +				data-lanes = <1 2>;
-> > +				clock-lanes = <0>;
-> > +				clock-noncontinuous;
-> > +				link-frequencies = /bits/ 64 <216000000>;
-> > +			};
-> > +		};
-> > +	};
-> > +};
-> > --
-> > 2.19.1
-> >
-
-
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Cheers,
+MyungJoo
