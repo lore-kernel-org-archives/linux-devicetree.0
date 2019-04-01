@@ -1,75 +1,63 @@
-From: <maoguang.meng@mediatek.com>
-Subject: [PATCH,v1] media: mtk-vcodec: fix vp9 content playback error with show exist frame
-Date: Mon, 1 Apr 2019 16:18:38 +0800
-Message-ID: <1554106718-23107-1-git-send-email-maoguang.meng@mediatek.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 1/3] media: dt-bindings: media: meson-ao-cec: Add G12A AO-CEC-B Compatible
+Date: Mon,  1 Apr 2019 10:19:57 +0200
+Message-ID: <20190401081959.16474-2-narmstrong@baylibre.com>
+References: <20190401081959.16474-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190401081959.16474-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, Tiffany Lin <tiffany.lin@mediatek.com>
-Cc: Longfei Wang <longfei.wang@mediatek.com>, Yunfei Dong <yunfei.dong@mediatek.com>, gtk_ruiwang@mediatek.com, Mauro Carvalho Chehab <mchehab@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Maoguang Meng <maoguang.meng@mediatek.com>
+To: hverkuil@xs4all.nl, mchehab@kernel.org, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Maoguang Meng <maoguang.meng@mediatek.com>
+The Amlogic G12A embeds a second CEC controller named AO-CEC-B, and
+the other one is AO-CEC-A described by the current bindings.
 
-Update referenced frame buffer's reference count when playing vp9
-content which has show_existing_frame flag, and copy enough buffer
-data to current shown frame.
+The register interface is very close but the internal architecture
+is totally different.
 
-Signed-off-by: Maoguang Meng <maoguang.meng@mediatek.com>
+The other difference is the clock source, the AO-CEC-B takes the
+"oscin", the Always-On Oscillator clock, as input and embeds a
+dual-divider clock divider to provide the precise 32768Hz base
+clock for CEC communication.
+
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../media/platform/mtk-vcodec/vdec/vdec_vp9_if.c   |   16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ .../devicetree/bindings/media/meson-ao-cec.txt      | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-index bc8349b..d950837 100644
---- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-+++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-@@ -481,15 +481,15 @@ static void vp9_swap_frm_bufs(struct vdec_vp9_inst *inst)
- 		 */
- 		if ((frm_to_show->fb != NULL) &&
- 			(inst->cur_fb->base_y.size >=
--			frm_to_show->fb->base_y.size)) {
-+			frm_to_show->fb->base_y.size) &&
-+			(inst->cur_fb->base_c.size >=
-+			frm_to_show->fb->base_c.size)) {
- 			memcpy((void *)inst->cur_fb->base_y.va,
- 				(void *)frm_to_show->fb->base_y.va,
--				vsi->buf_w *
--				vsi->buf_h);
-+				frm_to_show->fb->base_y.size);
- 			memcpy((void *)inst->cur_fb->base_c.va,
- 				(void *)frm_to_show->fb->base_c.va,
--				vsi->buf_w *
--				vsi->buf_h / 2);
-+				frm_to_show->fb->base_c.size);
- 		} else {
- 			/* After resolution change case, current CAPTURE buffer
- 			 * may have less buffer size than frm_to_show buffer
-@@ -895,7 +895,7 @@ static int vdec_vp9_decode(unsigned long h_vdec, struct mtk_vcodec_mem *bs,
+diff --git a/Documentation/devicetree/bindings/media/meson-ao-cec.txt b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
+index 8671bdb08080..c67fc41d4aa2 100644
+--- a/Documentation/devicetree/bindings/media/meson-ao-cec.txt
++++ b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
+@@ -4,16 +4,23 @@ The Amlogic Meson AO-CEC module is present is Amlogic SoCs and its purpose is
+ to handle communication between HDMI connected devices over the CEC bus.
  
- 		if (vsi->resolution_changed) {
- 			if (!vp9_alloc_work_buf(inst)) {
--				ret = -EINVAL;
-+				ret = -EIO;
- 				goto DECODE_ERROR;
- 			}
- 		}
-@@ -924,14 +924,12 @@ static int vdec_vp9_decode(unsigned long h_vdec, struct mtk_vcodec_mem *bs,
+ Required properties:
+-  - compatible : value should be following
++  - compatible : value should be following depending on the SoC :
++	For GXBB, GXL, GXM and G12A (AO_CEC_A module) :
+ 	"amlogic,meson-gx-ao-cec"
++	For G12A (AO_CEC_B module) :
++	"amlogic,meson-g12a-ao-cec"
  
- 		if (vsi->show_existing_frame && (vsi->frm_to_show_idx <
- 					VP9_MAX_FRM_BUF_NUM)) {
--			mtk_vcodec_err(inst,
-+			mtk_vcodec_debug(inst,
- 				"Skip Decode drv->new_fb_idx=%d, drv->frm_to_show_idx=%d",
- 				vsi->new_fb_idx, vsi->frm_to_show_idx);
+   - reg : Physical base address of the IP registers and length of memory
+ 	  mapped region.
  
- 			vp9_ref_cnt_fb(inst, &vsi->new_fb_idx,
- 					vsi->frm_to_show_idx);
--			ret = -EINVAL;
--			goto DECODE_ERROR;
- 		}
+   - interrupts : AO-CEC interrupt number to the CPU.
+   - clocks : from common clock binding: handle to AO-CEC clock.
+-  - clock-names : from common clock binding: must contain "core",
+-		  corresponding to entry in the clocks property.
++  - clock-names : from common clock binding, must contain :
++		For GXBB, GXL, GXM and G12A (AO_CEC_A module) :
++		- "core"
++		For G12A (AO_CEC_B module) :
++		- "oscin"
++		corresponding to entry in the clocks property.
+   - hdmi-phandle: phandle to the HDMI controller
  
- 		/* VPU assign the buffer pointer in its address space,
+ Example:
 -- 
-1.7.9.5
+2.21.0
