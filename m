@@ -1,47 +1,35 @@
-From: Moritz Fischer <mdf@kernel.org>
-Subject: Re: [PATCH v5 6/6] dt-bindings: fpga: Add bindings for ZynqMP fpga
- driver
-Date: Mon, 1 Apr 2019 15:05:55 -0700
-Message-ID: <20190401220555.GA2716@archbook>
-References: <20190326143129.2608-1-nava.manne@xilinx.com>
- <20190326143129.2608-7-nava.manne@xilinx.com>
- <20190328170028.GA10815@bogus>
- <CANk1AXTcwb1oJL5Uq-H-Q41-n8SXtamObSedMHSa_smZ8Xr1fw@mail.gmail.com>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: backlight: add lm3630a bindings
+Date: Mon, 1 Apr 2019 19:04:05 -0400
+Message-ID: <20190401230405.GA7877@basecamp>
+References: <20190401103034.21062-1-masneyb@onstation.org>
+ <20190401103034.21062-3-masneyb@onstation.org>
+ <20190401213926.GD14681@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CANk1AXTcwb1oJL5Uq-H-Q41-n8SXtamObSedMHSa_smZ8Xr1fw@mail.gmail.com>
+In-Reply-To: <20190401213926.GD14681@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Nava kishore Manne <nava.manne@xilinx.com>, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rajan Vaja <rajanv@xilinx.com>, Jolly Shah <jollys@xilinx.com>, linux-fpga@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, kishore m <chinnikishore369@gmail.com>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org, jacek.anaszewski@gmail.com, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, dmurphy@ti.com, jonathan@marek.ca
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 03:50:08PM -0500, Alan Tull wrote:
-> On Thu, Mar 28, 2019 at 12:00 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Tue, 26 Mar 2019 20:01:29 +0530, Nava kishore Manne wrote:
-> > > Add documentation to describe Xilinx ZynqMP fpga driver
-> > > bindings.
-> > >
-> > > Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
-> > > ---
-> > > Changes for v5:
-> > >               -Moved pcap node as a child to firwmare
-> > >                node as suggested by Rob.
-> > > Changes for v4:
-> > >               -Modified binding description as suggested by Moritz Fischer.
-> > > Changes for v3:
-> > >               -Removed PCAP as a child node to the FW and Created
-> > >                an independent node since PCAP driver is a consumer
-> > >                not a provider.
-> > >
-> > >  .../bindings/fpga/xlnx,zynqmp-pcap-fpga.txt   | 25 +++++++++++++++++++
-> > >  1 file changed, 25 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
-> > >
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
+On Mon, Apr 01, 2019 at 11:39:26PM +0200, Pavel Machek wrote:
+> On Mon 2019-04-01 06:30:33, Brian Masney wrote:
+> > Add new backlight bindings for the TI LM3630A dual-string white LED.
+> > 
+> > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > ---
+> >  .../leds/backlight/lm3630a-backlight.yaml     | 112
+> ++++++++++++++++++
 > 
-> Acked-by: Alan Tull <atull@kernel.org>
-Acked-by: Moritz Fischer <mdf@kernel.org>
+> What is that? Is it future of all the bindings?
+> 
+> Up to device tree people, I guess, but...
+
+Yes, this is the future format of the bindings so that automated
+validation can be performed. See
+Documentation/devicetree/writing-schema.md.
+
+Brian
