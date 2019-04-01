@@ -1,43 +1,58 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/1] clk: meson8b: remove CLKID with typo ("ABP" -> "APB")
-Date: Mon, 1 Apr 2019 10:34:34 +0200
-Message-ID: <9b7b7257-0c33-35bc-c383-5350d1640ca2@baylibre.com>
-References: <20190319214123.27219-1-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH] dt-bindings: clock: g12a-aoclk: expose CLKID_AO_CTS_OSCIN
+Date: Mon, 1 Apr 2019 10:37:09 +0200
+Message-ID: <b6b984ff-6825-1e99-ff5c-9afc4258f0f7@baylibre.com>
+References: <20190321092010.14382-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190319214123.27219-1-martin.blumenstingl@googlemail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190321092010.14382-1-narmstrong@baylibre.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, jbrunet@baylibre.com, linux-amlogic@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: jbrunet@baylibre.com
+Cc: linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/03/2019 22:41, Martin Blumenstingl wrote:
-> This is a follow-up of my previous series from [0]:
->   clk: meson8b: fix typo "ABP" -> "APB"
+On 21/03/2019 10:20, Neil Armstrong wrote:
+> When submitted v2 of the G12A AO-CLK IDs, the CLKID_AO_CTS_OSCIN was moved
+> to the internal non-exported bindings, but this clock is necessary for
+> the second AO-CEC-B module since it embeds the 32768Hz dual-divider
+> clock generator unlike the AO-CEC-A module.
 > 
-> The previous series introduced a fixed CLKID. Nothing uses the CLKID
-> with the typo anymore so it's removed with this patch.
+> Export it back to the public bindings.
 > 
+> Fixes: be3d960b0aeb ("dt-bindings: clk: add G12A AO Clock and Reset Bindings")
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/clk/meson/g12a-aoclk.h          | 1 -
+>  include/dt-bindings/clock/g12a-aoclkc.h | 1 +
+>  2 files changed, 1 insertion(+), 1 deletion(-)
 > 
-> [0] https://patchwork.kernel.org/cover/10804943/
-> 
-> 
-> Martin Blumenstingl (1):
->   dt-bindings: clock: meson8b: drop the "ABP" clock definition
-> 
->  include/dt-bindings/clock/meson8b-clkc.h | 1 -
->  1 file changed, 1 deletion(-)
+> diff --git a/drivers/clk/meson/g12a-aoclk.h b/drivers/clk/meson/g12a-aoclk.h
+> index 666b4493822c..a67c8a7cd7c4 100644
+> --- a/drivers/clk/meson/g12a-aoclk.h
+> +++ b/drivers/clk/meson/g12a-aoclk.h
+> @@ -17,7 +17,6 @@
+>   * will remain defined here.
+>   */
+>  #define CLKID_AO_SAR_ADC_DIV	17
+> -#define CLKID_AO_CTS_OSCIN	19
+>  #define CLKID_AO_32K_PRE	20
+>  #define CLKID_AO_32K_DIV	21
+>  #define CLKID_AO_32K_SEL	22
+> diff --git a/include/dt-bindings/clock/g12a-aoclkc.h b/include/dt-bindings/clock/g12a-aoclkc.h
+> index 5ac66a2eee0f..e916e49ff288 100644
+> --- a/include/dt-bindings/clock/g12a-aoclkc.h
+> +++ b/include/dt-bindings/clock/g12a-aoclkc.h
+> @@ -28,6 +28,7 @@
+>  #define CLKID_AO_CLK81		15
+>  #define CLKID_AO_SAR_ADC_SEL	16
+>  #define CLKID_AO_SAR_ADC_CLK	18
+> +#define CLKID_AO_CTS_OSCIN	19
+>  #define CLKID_AO_32K		23
+>  #define CLKID_AO_CEC		27
+>  #define CLKID_AO_CTS_RTC_OSCIN	28
 > 
 
 Applied to next/headers for Linux 5.2-rc1
