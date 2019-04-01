@@ -1,58 +1,68 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v5 7/7] ARM: dts: sun5i: Add the MBUS controller
-Date: Mon,  1 Apr 2019 10:56:47 +0200
-Message-ID: <e3ee2d8579ec9332e26b9fa85bb478a28f1578b7.1554108995.git-series.maxime.ripard@bootlin.com>
-References: <cover.f8909884585996f28d97f4ef95efbcab19527dc4.1554108995.git-series.maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] dt-bindings: cpu: Fix JSON schema
+Date: Mon, 1 Apr 2019 11:10:50 +0200
+Message-ID: <20190401091050.cwph7xlpv3pmkwnq@flea>
+References: <20190318100521.29109-1-maxime.ripard@bootlin.com>
+ <CAL_JsqJ_LYycXazkdP2Q=e-jynKiX+z5En0bz0AWpDjsevwQTg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.f8909884585996f28d97f4ef95efbcab19527dc4.1554108995.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Robin Murphy <robin.murphy@arm.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2tjdwgjf4v6o3rdy"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJ_LYycXazkdP2Q=e-jynKiX+z5En0bz0AWpDjsevwQTg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ARM-SoC Maintainers <arm@kernel.org>, Sugaya Taichi <sugaya.taichi@socionext.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIE1CVVMgKGFuZCBpdHMgYXNzb2NpYXRlZCBjb250cm9sbGVyKSBpcyB0aGUgYnVzIGluIHRo
-ZSBBbGx3aW5uZXIgU29Dcwp0aGF0IERNQSBkZXZpY2VzIHVzZSBpbiB0aGUgc3lzdGVtIHRvIGFj
-Y2VzcyB0aGUgbWVtb3J5LgoKQW1vbmcgb3RoZXIgdGhpbmdzIChhbmQgZGVwZW5kaW5nIG9uIHRo
-ZSBTb0MgZ2VuZXJhdGlvbiksIGl0IGNhbiBhbHNvCmVuZm9yY2UgcHJpb3JpdGllcyBvciByZXBv
-cnQgYmFuZHdpZHRoIHVzYWdlcyBvbiBhIHBlci1tYXN0ZXIgYmFzaXMuCgpPbmUgb2YgdGhlIG1v
-c3Qgbm90YWJsZSB0aGluZyBpcyB0aGF0IGluc3RlYWQgb2YgaGF2aW5nIHRoZSBzYW1lIG1hcHBp
-bmcKZm9yIHRoZSBSQU0gdGhhbiB0aGUgQ1BVLCBpdCBtYXBzIGl0IGF0IGFkZHJlc3MgMCwgd2hp
-Y2ggbWVhbnMgd2UnbGwgaGF2ZQp0byBkbyBhZGRyZXNzIHRyYW5zbGF0aW9uIHRoYW5rcyB0byB0
-aGUgZG1hLXJhbmdlcyBwcm9wZXJ0eS4KClNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1h
-eGltZS5yaXBhcmRAYm9vdGxpbi5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvc3VuNWkuZHRz
-aSB8IDEzICsrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspCgpk
-aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuNWkuZHRzaSBiL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL3N1bjVpLmR0c2kKaW5kZXggZjY5YWIyODg2NzhiLi5mYjRlNTU0ODRiMWEgMTAwNjQ0Ci0t
-LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjVpLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-c3VuNWkuZHRzaQpAQCAtMTI3LDYgKzEyNyw3IEBACiAJCWNvbXBhdGlibGUgPSAic2ltcGxlLWJ1
-cyI7CiAJCSNhZGRyZXNzLWNlbGxzID0gPDE+OwogCQkjc2l6ZS1jZWxscyA9IDwxPjsKKwkJZG1h
-LXJhbmdlczsKIAkJcmFuZ2VzOwogCiAJCXN5c3RlbS1jb250cm9sQDFjMDAwMDAgewpAQCAtMTgx
-LDYgKzE4MiwxNCBAQAogCQkJfTsKIAkJfTsKIAorCQltYnVzOiBkcmFtLWNvbnRyb2xsZXJAMWMw
-MTAwMCB7CisJCQljb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW41aS1hMTMtbWJ1cyI7CisJCQly
-ZWcgPSA8MHgwMWMwMTAwMCAweDEwMDA+OworCQkJY2xvY2tzID0gPCZjY3UgQ0xLX01CVVM+Owor
-CQkJZG1hLXJhbmdlcyA9IDwweDAwMDAwMDAwIDB4NDAwMDAwMDAgMHgyMDAwMDAwMD47CisJCQkj
-aW50ZXJjb25uZWN0LWNlbGxzID0gPDE+OworCQl9OworCiAJCWRtYTogZG1hLWNvbnRyb2xsZXJA
-MWMwMjAwMCB7CiAJCQljb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW40aS1hMTAtZG1hIjsKIAkJ
-CXJlZyA9IDwweDAxYzAyMDAwIDB4MTAwMD47CkBAIC03MjMsNiArNzMyLDggQEAKIAkJCWNsb2Nr
-LW5hbWVzID0gImFoYiIsICJtb2QiLAogCQkJCSAgICAgICJyYW0iOwogCQkJcmVzZXRzID0gPCZj
-Y3UgUlNUX0RFX0ZFPjsKKwkJCWludGVyY29ubmVjdHMgPSA8Jm1idXMgMTk+OworCQkJaW50ZXJj
-b25uZWN0LW5hbWVzID0gImRtYS1tZW0iOwogCQkJc3RhdHVzID0gImRpc2FibGVkIjsKIAogCQkJ
-cG9ydHMgewpAQCAtNzQ4LDYgKzc1OSw4IEBACiAJCQljbG9jay1uYW1lcyA9ICJhaGIiLCAibW9k
-IiwKIAkJCQkgICAgICAicmFtIjsKIAkJCXJlc2V0cyA9IDwmY2N1IFJTVF9ERV9CRT47CisJCQlp
-bnRlcmNvbm5lY3RzID0gPCZtYnVzIDE4PjsKKwkJCWludGVyY29ubmVjdC1uYW1lcyA9ICJkbWEt
-bWVtIjsKIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CiAKIAkJCWFzc2lnbmVkLWNsb2NrcyA9IDwm
-Y2N1IENMS19ERV9CRT47Ci0tIApnaXQtc2VyaWVzIDAuOS4xCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+
+--2tjdwgjf4v6o3rdy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Sugaya, Arnd, Olof,
+
+On Thu, Mar 28, 2019 at 02:35:54PM -0500, Rob Herring wrote:
+> +arm-soc
+>
+> On Mon, Mar 18, 2019 at 5:05 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > Commit fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for
+> > Milbeaut") added support for a new cpu enable-method, but did so using
+> > tabulations to ident. This is however invalid in the syntax, and resulted
+> > in a failure when trying to use that schemas for validation.
+> >
+> > Use spaces instead of tabs to indent to fix this.
+> >
+> > Fixes: fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> This should be applied to arm-soc tree having the commit.
+
+Could you pick up that patch?
+
+Thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--2tjdwgjf4v6o3rdy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKHVmgAKCRDj7w1vZxhR
+xW1YAQCR/A/H5YjdmsVxCdhdYOcorF7S6Kum5Nfjp8cTGgEPmwEAttw3vzwXSa4I
+TDaAxsQ3rSpABs4PIS2QDbqgIU2b0wY=
+=qVao
+-----END PGP SIGNATURE-----
+
+--2tjdwgjf4v6o3rdy--
