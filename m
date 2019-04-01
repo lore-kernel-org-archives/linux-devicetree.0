@@ -1,34 +1,56 @@
-From: <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH 5/5] MAINTAINERS: add timer-microchip-pit64c.c
-Date: Mon, 1 Apr 2019 08:41:57 +0000
-Message-ID: <e069e024-1295-76d0-ba24-25937499e641@microchip.com>
-References: <1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com>
- <1552580772-8499-6-git-send-email-claudiu.beznea@microchip.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 0/2] clk: meson8b: add the video decoder clocks
+Date: Mon, 1 Apr 2019 10:43:31 +0200
+Message-ID: <f50b6527-67c5-7720-f19d-77b662f9c369@baylibre.com>
+References: <20190324151423.19063-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552580772-8499-6-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <20190324151423.19063-1-martin.blumenstingl@googlemail.com>
 Content-Language: en-US
-Content-ID: <53848906608B764D86069D656426F903@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu.Beznea@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, daniel.lezcano@linaro.org, tglx@linutronix.de
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, jbrunet@baylibre.com, linux-amlogic@lists.infradead.org, mjourdan@baylibre.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTQvMDMvMjAxOSBhdCAxNzoyNiwgQ2xhdWRpdSBCZXpuZWEgLSBNMTgwNjMgd3JvdGU6DQo+
-IEZyb206IENsYXVkaXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tPg0KPiAN
-Cj4gQWRkIHRpbWVyLW1pY3JvY2hpcC1waXQ2NGIuYyBhcyBtYWludGFpbmVkIGZpbGUuDQo+IA0K
-PiBTaWduZWQtb2ZmLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFAbWljcm9jaGlw
-LmNvbT4NCg0KQWNrZWQtYnk6IE5pY29sYXMgRmVycmUgPG5pY29sYXMuZmVycmVAbWljcm9jaGlw
-LmNvbT4NCg0KPiAtLS0NCj4gICBNQUlOVEFJTkVSUyB8IDEgKw0KPiAgIDEgZmlsZSBjaGFuZ2Vk
-LCAxIGluc2VydGlvbigrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRB
-SU5FUlMNCj4gaW5kZXggODViYzgxOTg2N2RhLi41YWY5NDdjOWYzNTAgMTAwNjQ0DQo+IC0tLSBh
-L01BSU5UQUlORVJTDQo+ICsrKyBiL01BSU5UQUlORVJTDQo+IEBAIC0xMDAyMyw2ICsxMDAyMyw3
-IEBAIEw6CWxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZyAobW9kZXJhdGVkIGZv
-ciBub24tc3Vic2NyaWJlcnMpDQo+ICAgUzoJU3VwcG9ydGVkDQo+ICAgRjoJZHJpdmVycy9taXNj
-L2F0bWVsX3RjbGliLmMNCj4gICBGOglkcml2ZXJzL2Nsb2Nrc291cmNlL3RjYl9jbGtzcmMuYw0K
-PiArRjoJZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1taWNyb2NoaXAtcGl0NjRiLmMNCj4gICAN
-Cj4gICBNSUNST0NISVAgVVNCQSBVREMgRFJJVkVSDQo+ICAgTToJQ3Jpc3RpYW4gQmlyc2FuIDxj
-cmlzdGlhbi5iaXJzYW5AbWljcm9jaGlwLmNvbT4NCj4gDQoNCg0KLS0gDQpOaWNvbGFzIEZlcnJl
-DQo=
+On 24/03/2019 16:14, Martin Blumenstingl wrote:
+> This adds the video decoder clocks for Meson8, Meson8b and Meson8m2.
+> 
+> The clock tree on Meson8 differs from the one one Meson8b and Meson8m2.
+> Details can be found in patch #2.
+> 
+> There are some checkpatch warnings in patch #2:
+>   WARNING: please, no space before tabs
+> I decided to still send the patch because we have the same inconsistency
+> with all other clk_hw_onecell_data table entries. Please let me know if
+> I should come up with a follow-up patch to clean them all up.
+> 
+> Testing:
+> I have not tested this with Maxime's video decoder driver yet.
+> However, I manually enabled and set various frequencies for the HCODEC
+> clock and verified that clkmsr reports the correct rate.
+> 
+> Dependencies:
+> This is meant to be applied on top of my other series from [0]:
+>   clk: meson8b: add the VPU clock tree
+> 
+> Changes since v1 at [1]:
+> - collected Neil's and Maxime's Reviewed-by (thank you!)
+> 
+> 
+> [0] https://patchwork.kernel.org/cover/10860401/
+> [1] https://patchwork.kernel.org/cover/10860513/
+> 
+> 
+> Martin Blumenstingl (2):
+>   dt-bindings: clock: meson8b: export the video decoder clocks
+>   clk: meson: meson8b: add the video decoder clock trees
+> 
+>  drivers/clk/meson/meson8b.c              | 312 +++++++++++++++++++++++
+>  drivers/clk/meson/meson8b.h              |  17 +-
+>  include/dt-bindings/clock/meson8b-clkc.h |   4 +
+>  3 files changed, 332 insertions(+), 1 deletion(-)
+> 
+
+Applied [1] to next/headers and [2] to next/drivers for Linux 5.2-rc1
