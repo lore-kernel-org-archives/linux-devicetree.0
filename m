@@ -1,48 +1,71 @@
-Return-Path: <SRS0=5T1w=SH=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v5 13/13] media: tvp5150: make debug output more readable
-Date: Fri,  5 Apr 2019 08:03:17 +0200
-Message-Id: <20190405060317.11240-14-m.felsch@pengutronix.de>
-In-Reply-To: <20190405060317.11240-1-m.felsch@pengutronix.de>
-References: <20190405060317.11240-1-m.felsch@pengutronix.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org
-Cc: p.zabel@pengutronix.de, javierm@redhat.co, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Return-Path: <SRS0=akoX=SD=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 07/12] ARM: dts: r8a77470: Add USB PHY DT support
+Date: Mon,  1 Apr 2019 13:53:47 +0100
+Message-Id: <1554123232-58942-8-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
+References: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The debug output for tvp5150_selmux() isn't really intuitive. Register
-values are printed decimal formatted and the input/output driver states
-are printed as enum. Even more the "normal" output enum mapps to zero so
-a active output will printing output=0 and a inactive output=1.
+Define the r8a77470 generic part of the USB PHY device node.
 
-Change this by brinting the register values hex formatted and the states
-as more readable string.
-
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 ---
- drivers/media/i2c/tvp5150.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+V1-->V2
+ * New patch
+---
+ arch/arm/boot/dts/r8a77470.dtsi | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index 6af04db45b7e..469dc7e24ae9 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -302,9 +302,12 @@ static void tvp5150_selmux(struct v4l2_subdev *sd)
- 		break;
- 	}
+diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
+index 493cf2b..d6438fb 100644
+--- a/arch/arm/boot/dts/r8a77470.dtsi
++++ b/arch/arm/boot/dts/r8a77470.dtsi
+@@ -325,6 +325,42 @@
+ 			status = "disabled";
+ 		};
  
--	dev_dbg_lvl(sd->dev, 1, debug, "Selecting video route: route input=%i, output=%i => tvp5150 input=%i, opmode=%i\n",
--			decoder->input, decoder->output,
--			input, opmode);
-+	dev_dbg_lvl(sd->dev, 1, debug,
-+		    "Selecting video route: route input=%s, output=%s => tvp5150 input=0x%02x, opmode=0x%02x\n",
-+		    decoder->input == 0 ? "aip1a" :
-+		    decoder->input == 2 ? "aip1b" : "svideo",
-+		    decoder->output == 0 ? "normal" : "black-frame-gen",
-+		    input, opmode);
- 
- 	regmap_write(decoder->regmap, TVP5150_OP_MODE_CTL, opmode);
- 	regmap_write(decoder->regmap, TVP5150_VD_IN_SRC_SEL_1, input);
++		usbphy0: usb-phy@e6590100 {
++			compatible = "renesas,usb-phy-r8a77470",
++				     "renesas,rcar-gen2-usb-phy";
++			reg = <0 0xe6590100 0 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			clocks = <&cpg CPG_MOD 704>;
++			clock-names = "usbhs";
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 704>;
++			status = "disabled";
++
++			usb0: usb-channel@0 {
++				reg = <0>;
++				#phy-cells = <1>;
++			};
++		};
++
++		usbphy1: usb-phy@e6598100 {
++			compatible = "renesas,usb-phy-r8a77470",
++				     "renesas,rcar-gen2-usb-phy";
++			reg = <0 0xe6598100 0 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			clocks = <&cpg CPG_MOD 706>;
++			clock-names = "usbhs";
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 706>;
++			status = "disabled";
++
++			usb1: usb-channel@0 {
++				reg = <0>;
++				#phy-cells = <1>;
++			};
++		};
++
+ 		usb_dmac00: dma-controller@e65a0000 {
+ 			compatible = "renesas,r8a77470-usb-dmac",
+ 				     "renesas,usb-dmac";
 -- 
-2.20.1
+2.7.4
