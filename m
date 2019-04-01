@@ -1,167 +1,82 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 10/15] phy: mvebu-cp110-comphy: Add PCIe support
-Date: Mon,  1 Apr 2019 18:51:26 +0200
-Message-ID: <20190401165131.23370-11-miquel.raynal@bootlin.com>
-References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH v5 0/7] drm/panel: simple: Add mode support to devicetree
+Date: Mon,  1 Apr 2019 10:17:17 -0700
+Message-ID: <20190401171724.215780-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190401165131.23370-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Sean Paul <seanpaul@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Viresh Kumar <viresh.kumar@linaro.org>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Boris Brezillon <boris.brezillon@collabora.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?q?Enric=20Balletb=C3=B2?= <enric.balletbo@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, mka@chromium.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add PCIe support by filling the COMPHY modes table.
-
-Also add a new macro to generate the right value for the firmware
-depending on the width (PCI x1, x2, x4, etc). The width will be passed
-by the core as the "submode" argument of the ->set_mode() callback. If
-this argument is zero, default to x1 mode.
-
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 36 +++++++++++++++++---
- 1 file changed, 32 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-index ab1f46b1dbe1..d66412b38ff7 100644
---- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-+++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-@@ -126,6 +126,7 @@
-  * [ 5-11]: COMPHY port index
-  * [12-16]: COMPHY mode
-  * [17]: Clock source
-+ * [18-20]: PCIe width (x1, x2, x4)
-  */
- #define COMPHY_FW_POL_OFFSET	0
- #define COMPHY_FW_POL_MASK	GENMASK(1, 0)
-@@ -136,21 +137,28 @@
- #define COMPHY_FW_PORT_MASK	GENMASK(11, 8)
- #define COMPHY_FW_MODE_OFFSET	12
- #define COMPHY_FW_MODE_MASK	GENMASK(16, 12)
-+#define COMPHY_FW_WIDTH_OFFSET	18
-+#define COMPHY_FW_WIDTH_MASK	GENMASK(20, 18)
- 
--#define COMPHY_FW_PARAM_FULL(mode, port, speed, pol)			\
-+#define COMPHY_FW_PARAM_FULL(mode, port, speed, pol, width)		\
- 	((((pol) << COMPHY_FW_POL_OFFSET) & COMPHY_FW_POL_MASK) |	\
- 	 (((mode) << COMPHY_FW_MODE_OFFSET) & COMPHY_FW_MODE_MASK) |	\
- 	 (((port) << COMPHY_FW_PORT_OFFSET) & COMPHY_FW_PORT_MASK) |	\
--	 (((speed) << COMPHY_FW_SPEED_OFFSET) & COMPHY_FW_SPEED_MASK))
-+	 (((speed) << COMPHY_FW_SPEED_OFFSET) & COMPHY_FW_SPEED_MASK) |	\
-+	 (((width) << COMPHY_FW_WIDTH_OFFSET) & COMPHY_FW_WIDTH_MASK))
- 
- #define COMPHY_FW_PARAM(mode, port)					\
--	COMPHY_FW_PARAM_FULL(mode, port, COMPHY_FW_SPEED_MAX, 0)
-+	COMPHY_FW_PARAM_FULL(mode, port, COMPHY_FW_SPEED_MAX, 0, 0)
-+
-+#define COMPHY_FW_PARAM_PCIE(mode, port, width)				\
-+	COMPHY_FW_PARAM_FULL(mode, port, 0x3F, 0, width)
- 
- #define COMPHY_FW_MODE_SATA		0x1
- #define COMPHY_FW_MODE_SGMII		0x2 /* SGMII 1G */
- #define COMPHY_FW_MODE_HS_SGMII		0x3 /* SGMII 2.5G */
- #define COMPHY_FW_MODE_USB3H		0x4
- #define COMPHY_FW_MODE_USB3D		0x5
-+#define COMPHY_FW_MODE_PCIE		0x6
- #define COMPHY_FW_MODE_RXAUI		0x7
- #define COMPHY_FW_MODE_SFI		0x9 /* XFI: 0x8 (is treated like SFI) */
- 
-@@ -185,6 +193,7 @@ struct mvebu_comphy_conf {
- 
- static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
- 	/* lane 0 */
-+	GEN_CONF(0, 0, PHY_MODE_PCIE, COMPHY_FW_MODE_PCIE),
- 	ETH_CONF(0, 1, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
- 	ETH_CONF(0, 1, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
- 	GEN_CONF(0, 1, PHY_MODE_SATA, COMPHY_FW_MODE_SATA),
-@@ -192,6 +201,7 @@ static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
- 	GEN_CONF(1, 0, PHY_MODE_USB_HOST_SS, COMPHY_FW_MODE_USB3H),
- 	GEN_CONF(1, 0, PHY_MODE_USB_DEVICE_SS, COMPHY_FW_MODE_USB3D),
- 	GEN_CONF(1, 0, PHY_MODE_SATA, COMPHY_FW_MODE_SATA),
-+	GEN_CONF(1, 0, PHY_MODE_PCIE, COMPHY_FW_MODE_PCIE),
- 	ETH_CONF(1, 2, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
- 	ETH_CONF(1, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
- 	/* lane 2 */
-@@ -201,7 +211,9 @@ static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
- 	ETH_CONF(2, 0, PHY_INTERFACE_MODE_10GKR, 0x1, COMPHY_FW_MODE_SFI),
- 	GEN_CONF(2, 0, PHY_MODE_USB_HOST_SS, COMPHY_FW_MODE_USB3H),
- 	GEN_CONF(2, 0, PHY_MODE_SATA, COMPHY_FW_MODE_SATA),
-+	GEN_CONF(2, 0, PHY_MODE_PCIE, COMPHY_FW_MODE_PCIE),
- 	/* lane 3 */
-+	GEN_CONF(3, 0, PHY_MODE_PCIE, COMPHY_FW_MODE_PCIE),
- 	ETH_CONF(3, 1, PHY_INTERFACE_MODE_SGMII, 0x2, COMPHY_FW_MODE_SGMII),
- 	ETH_CONF(3, 1, PHY_INTERFACE_MODE_2500BASEX, 0x2, COMPHY_FW_MODE_HS_SGMII),
- 	ETH_CONF(3, 1, PHY_INTERFACE_MODE_RXAUI, -1, COMPHY_FW_MODE_RXAUI),
-@@ -214,6 +226,7 @@ static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
- 	ETH_CONF(4, 0, PHY_INTERFACE_MODE_RXAUI, -1, COMPHY_FW_MODE_RXAUI),
- 	GEN_CONF(4, 0, PHY_MODE_USB_DEVICE_SS, COMPHY_FW_MODE_USB3D),
- 	GEN_CONF(4, 1, PHY_MODE_USB_HOST_SS, COMPHY_FW_MODE_USB3H),
-+	GEN_CONF(4, 1, PHY_MODE_PCIE, COMPHY_FW_MODE_PCIE),
- 	ETH_CONF(4, 1, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
- 	ETH_CONF(4, 1, PHY_INTERFACE_MODE_2500BASEX, -1, COMPHY_FW_MODE_HS_SGMII),
- 	ETH_CONF(4, 1, PHY_INTERFACE_MODE_10GKR, -1, COMPHY_FW_MODE_SFI),
-@@ -222,6 +235,7 @@ static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
- 	GEN_CONF(5, 1, PHY_MODE_SATA, COMPHY_FW_MODE_SATA),
- 	ETH_CONF(5, 2, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
- 	ETH_CONF(5, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
-+	GEN_CONF(5, 2, PHY_MODE_PCIE, COMPHY_FW_MODE_PCIE),
- };
- 
- struct mvebu_comphy_priv {
-@@ -253,6 +267,8 @@ static int mvebu_comphy_get_mode(bool fw_mode, int lane, int port,
- 				 enum phy_mode mode, int submode)
- {
- 	int i, n = ARRAY_SIZE(mvebu_comphy_cp110_modes);
-+	/* Ignore PCIe submode: it represents the width */
-+	bool ignore_submode = (mode == PHY_MODE_PCIE);
- 	const struct mvebu_comphy_conf *conf;
- 
- 	/* Unused PHY mux value is 0x0 */
-@@ -264,7 +280,7 @@ static int mvebu_comphy_get_mode(bool fw_mode, int lane, int port,
- 		if (conf->lane == lane &&
- 		    conf->port == port &&
- 		    conf->mode == mode &&
--		    conf->submode == submode)
-+		    (conf->submode == submode || ignore_submode))
- 			break;
- 	}
- 
-@@ -656,6 +672,13 @@ static int mvebu_comphy_power_on(struct phy *phy)
- 		dev_dbg(priv->dev, "set lane %d to SATA mode\n", lane->id);
- 		fw_param = COMPHY_FW_PARAM(fw_mode, lane->port);
- 		break;
-+	case PHY_MODE_PCIE:
-+		hide_error = true;
-+		dev_dbg(priv->dev, "set lane %d to PCIe mode (x%d)\n", lane->id,
-+			lane->submode);
-+		fw_param = COMPHY_FW_PARAM_PCIE(fw_mode, lane->port,
-+						lane->submode);
-+		break;
- 	default:
- 		dev_err(priv->dev, "unsupported PHY mode (%d)\n", lane->mode);
- 		return -ENOTSUPP;
-@@ -684,6 +707,11 @@ static int mvebu_comphy_set_mode(struct phy *phy,
- 
- 	lane->mode = mode;
- 	lane->submode = submode;
-+
-+	/* PCIe submode represents the width */
-+	if (mode == PHY_MODE_PCIE && !lane->submode)
-+		lane->submode = 1;
-+
- 	return 0;
- }
- 
--- 
-2.19.1
+SSdtIHJldml2aW5nIFNlYW4gUGF1bCdzIG9sZCBwYXRjaHNldCB0byBnZXQgbW9kZSBzdXBwb3J0
+IGluIGRldmljZQp0cmVlLiAgVGhlIGNvdmVyIGxldHRlciBmb3IgaGlzIHYzIGlzIGF0OgpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxOC1GZWJydWFy
+eS8xNjUxNjIuaHRtbAoKTm8gY29kZSBpcyBkaWZmZXJlbnQgYmV0d2VlbiB2NCBhbmQgdjUsIGp1
+c3QgY29tbWl0IG1lc3NhZ2VzIGFuZCB0ZXh0CmluIHRoZSBiaW5kaW5ncy4KCkkndmUgcHVsbGVk
+IHRvZ2V0aGVyIHRoZSBwYXRjaGVzIHRoYXQgZGlkbid0IGxhbmQgaW4gdjMsIGFkZHJlc3NlZApv
+dXRzdGFuZGluZyBmZWVkYmFjaywgYW5kIHJlcG9zdGVkLiAgQXRvcCB0aGVtIEkndmUgYWRkZWQg
+cGF0Y2hlcyBmb3IKcmszMjg4LXZleXJvbi1jaHJvbWVib29rICh1c2VkIGZvciBqYXEsIGplcnJ5
+LCBtaWdodHksIHNwZWVkeSkgYW5kCnJrMzI4OC12ZXJ5b24tbWlubmllLgoKUGxlYXNlIGxldCBt
+ZSBrbm93IGhvdyB0aGV5IGxvb2suCgpJbiBnZW5lcmFsIEkgaGF2ZSBhZGRlZCBwZW9wbGUgdG8g
+dGhlIHdob2xlIHNlcmllcyB3aG8gSSB0aGluayB3b3VsZApsaWtlIHRoZSB3aG9sZSBzZXJpZXMg
+YW5kIHRoZW4gbGV0IGdldF9tYWludGFpbmVyIHBpY2sgZXh0cmEgcGVvcGxlIGl0CnRoaW5rcyBh
+cmUgcmVsZXZhbnQgdG8gZWFjaCBpbmRpdmlkdWFsIHBhdGNoLiAgSWYgSSBzZWUgeW91IHJlc3Bv
+bmQgdG8KYW55IG9mIHRoZSBwYXRjaGVzIGluIHRoZSBzZXJpZXMsIHRob3VnaCwgSSdsbCBhZGQg
+eW91IHRvIHRoZSB3aG9sZQpzZXJpZXMgQ2MgbGlzdCBuZXh0IHRpbWUuCgpDaGFuZ2VzIGluIHY1
+OgotIFJlbW92ZWQgYml0IGFib3V0IE9TIG1heSBpZ25vcmUgKFJvYi9FemVxdWllbCkKLSBBZGRl
+ZCBIZWlrbydzIFRlc3RlZC1ieQotIEl0J3Mgbm90IGp1c3QgamVycnksIGl0J3MgbW9zdCByazMy
+ODggQ2hyb21lYm9va3MgKEhlaWtvKQoKQ2hhbmdlcyBpbiB2NDoKLSBTaW1wbGlmeSBkZXNjLiBm
+b3Igd2hlbiBvdmVycmlkZSBzaG91bGQgYmUgdXNlZCAoVGhpZXJyeS9MYXVyZW50KQotIFJlbW92
+ZWQgUm9iIEggcmV2aWV3IHNpbmNlIGl0J3MgYmVlbiBhIHllYXIgYW5kIHdvcmRpbmcgY2hhbmdl
+ZAotIERvbid0IGFkZCBtb2RlIGZyb20gdGltaW5nIGlmIG92ZXJyaWRlIHdhcyBzcGVjaWZpZWQg
+KFRoaWVycnkpCi0gQWRkIHdhcm5pbmcgaWYgdGltaW5nIGFuZCBmaXhlZCBtb2RlIHdhcyBzcGVj
+aWZpZWQgKFRoaWVycnkpCi0gRG9uJ3QgYWRkIGZpeGVkIG1vZGUgaWYgdGltaW5nIHdhcyBzcGVj
+aWZpZWQgKFRoaWVycnkpCi0gUmVmYWN0b3IvcmVuYW1lIGEgYml0IHRvIGF2b2lkIGV4dHJhIGlu
+ZGVudGF0aW9uIGZyb20gImlmIiB0ZXN0cwotIGkgc2hvdWxkIGJlIHVuc2lnbmVkIChUaGllcnJ5
+KQotIEFkZCBhbm5veWluZyBXQVJOX09OcyBmb3Igc29tZSBjYXNlcyAoVGhpZXJyeSkKLSBTaW1w
+bGlmeSAnTm8gZGlzcGxheV90aW1pbmcgZm91bmQnIGhhbmRsaW5nIChUaGllcnJ5KQotIFJlbmFt
+ZSB0byBwYW5lbF9zaW1wbGVfcGFyc2Vfb3ZlcnJpZGVfbW9kZSgpIChUaGllcnJ5KQotIFJlYmFz
+ZSB0byB0b3Agb2YgSGVpa28ncyB0cmVlCi0gQ29udmVydGVkIGNoYW5nZWxvZyB0byBhZnRlci10
+aGUtY3V0IGZvciBub24tRFJNIGNoYW5nZS4KLSBkaXNwbGF5X3RpbWluZyBmb3IgSW5ub2x1eCBu
+MTE2YmdlIG5ldyBmb3IgdjQuCi0gZGlzcGxheV90aW1pbmcgZm9yIEFVTyBiMTAxZWFuMDEgbmV3
+IGZvciB2NC4KLSByazMyODgtdmV5cm9uLWplcnJ5IHBhdGNoIG5ldyBmb3IgdjQuCi0gcmszMjg4
+LXZleXJvbi1taW5uaWUgcGF0Y2ggbmV3IGZvciB2NC4KCkNoYW5nZXMgaW4gdjM6Ci0gR28gYmFj
+ayB0byB1c2luZyB0aGUgdGltaW5nIHN1Ym5vZGUgZGlyZWN0bHksIGJ1dCByZW5hbWUgdG8KICBw
+YW5lbC10aW1pbmcgKFJvYikKLSBObyBsb25nZXIgcGFyc2UgZGlzcGxheS10aW1pbmdzIHN1Ym5v
+ZGUsIHVzZSBwYW5lbC10aW1pbmcgKFJvYikKLSBVbndyYXAgdGhlIHRpbWluZyBmcm9tIGRpc3Bs
+YXktdGltaW5ncyBhbmQgcmVuYW1lIHBhbmVsLXRpbWluZyAoUm9iKQoKQ2hhbmdlcyBpbiB2MjoK
+LSBTcGxpdCBvdXQgdGhlIGJpbmRpbmcgaW50byBhIG5ldyBwYXRjaCAoUm9iKQotIGRpc3BsYXkt
+dGltaW5ncyBpcyBhIG5ldyBzZWN0aW9uIChSb2IpCi0gVXNlIHRoZSBmdWxsIGRpc3BsYXktdGlt
+aW5ncyBzdWJub2RlIGluc3RlYWQgb2YgcGlja2luZyB0aGUgdGltaW5nCiAgb3V0IChSb2IvVGhp
+ZXJyeSkKLSBQYXJzZSB0aGUgZnVsbCBkaXNwbGF5LXRpbWluZ3Mgbm9kZSAodXNpbmcgdGhlIG5h
+dGl2ZS1tb2RlKSAoUm9iKQotIFdyYXAgdGhlIHRpbWluZyBpbiBkaXNwbGF5LXRpbWluZ3Mgbm9k
+ZSB0byBtYXRjaCBiaW5kaW5nIChSb2IvVGhpZXJyeSkKCkRvdWdsYXMgQW5kZXJzb24gKDQpOgog
+IGRybS9wYW5lbDogc2ltcGxlOiBVc2UgZGlzcGxheV90aW1pbmcgZm9yIElubm9sdXggbjExNmJn
+ZQogIGRybS9wYW5lbDogc2ltcGxlOiBVc2UgZGlzcGxheV90aW1pbmcgZm9yIEFVTyBiMTAxZWFu
+MDEKICBBUk06IGR0czogcm9ja2NoaXA6IFNwZWNpZnkgcmszMjg4LXZleXJvbi1jaHJvbWVib29r
+J3MgZGlzcGxheSB0aW1pbmdzCiAgQVJNOiBkdHM6IHJvY2tjaGlwOiBTcGVjaWZ5IHJrMzI4OC12
+ZXlyb24tbWlubmllJ3MgZGlzcGxheSB0aW1pbmdzCgpTZWFuIFBhdWwgKDMpOgogIGR0LWJpbmRp
+bmdzOiBBZGQgcGFuZWwtdGltaW5nIHN1Ym5vZGUgdG8gc2ltcGxlLXBhbmVsCiAgZHJtL3BhbmVs
+OiBzaW1wbGU6IEFkZCBhYmlsaXR5IHRvIG92ZXJyaWRlIHR5cGljYWwgdGltaW5nCiAgYXJtNjQ6
+IGR0czogcm9ja2NoaXA6IFNwZWNpZnkgb3ZlcnJpZGUgbW9kZSBmb3Iga2V2aW4gcGFuZWwKCiAu
+Li4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0ICAgfCAgMjIgKysrCiAu
+Li4vYm9vdC9kdHMvcmszMjg4LXZleXJvbi1jaHJvbWVib29rLmR0c2kgICAgfCAgMTQgKysKIGFy
+Y2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC12ZXlyb24tbWlubmllLmR0cyAgICB8ICAxNCArKwogLi4u
+L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS1ncnUta2V2aW4uZHRzICAgIHwgIDE0ICsrCiBkcml2
+ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAgICAgICAgfCAxNzEgKysrKysrKysr
+KysrKystLS0tCiA1IGZpbGVzIGNoYW5nZWQsIDIwMyBpbnNlcnRpb25zKCspLCAzMiBkZWxldGlv
+bnMoLSkKCi0tIAoyLjIxLjAuMzkyLmdmOGY2Nzg3MTU5ZS1nb29nCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
