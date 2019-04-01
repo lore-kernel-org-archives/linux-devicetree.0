@@ -1,75 +1,35 @@
-Return-Path: <SRS0=/YiW=SE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr740087.outbound.protection.outlook.com ([40.107.74.87]:18608
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725778AbfDBFGj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 2 Apr 2019 01:06:39 -0400
-From: <shubhrajyoti.datta@gmail.com>
-Subject: [PATCHv2 2/2] serial: uartps: Add support for nortscts
-Date: Tue, 2 Apr 2019 10:36:18 +0530
-Message-ID: <1554181578-13362-3-git-send-email-shubhrajyoti.datta@gmail.com>
-In-Reply-To: <1554181578-13362-1-git-send-email-shubhrajyoti.datta@gmail.com>
-References: <1554181578-13362-1-git-send-email-shubhrajyoti.datta@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: michal.simek@xilinx.com, gregkh@linuxfoundation.org, jslaby@suse.com, robh+dt@kernel.org, linux-serial@vger.kernel.org, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Return-Path: <SRS0=akoX=SD=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 06/12] dt-bindings: usb: renesas_usbhs: Add support for r8a77470
+Date: Mon,  1 Apr 2019 13:53:46 +0100
+Message-Id: <1554123232-58942-7-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
+References: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Document support for RZ/G1C (R8A77470) SoC.
 
-Having modem control is configurable. Add support for the same by
-adding a nortscts property.
-
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 ---
- drivers/tty/serial/xilinx_uartps.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+V1-->V2
+  * New patch
+---
+ Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index 9a7f943..1035339 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -193,6 +193,7 @@ struct cdns_uart {
- 	int			id;
- 	struct notifier_block	clk_rate_change_nb;
- 	u32			quirks;
-+	bool nortscts;
- };
- struct cdns_platform_data {
- 	u32 quirks;
-@@ -1004,6 +1005,11 @@ static void cdns_uart_config_port(struct uart_port *port, int flags)
-  */
- static unsigned int cdns_uart_get_mctrl(struct uart_port *port)
- {
-+	struct cdns_uart *cdns_uart_data = port->private_data;
-+
-+	if (cdns_uart_data->nortscts)
-+		return 0;
-+
- 	return TIOCM_CTS | TIOCM_DSR | TIOCM_CAR;
- }
- 
-@@ -1011,6 +1017,10 @@ static void cdns_uart_set_mctrl(struct uart_port *port, unsigned int mctrl)
- {
- 	u32 val;
- 	u32 mode_reg;
-+	struct cdns_uart *cdns_uart_data = port->private_data;
-+
-+	if (cdns_uart_data->nortscts)
-+		return;
- 
- 	val = readl(port->membase + CDNS_UART_MODEMCR);
- 	mode_reg = readl(port->membase + CDNS_UART_MR);
-@@ -1669,6 +1679,8 @@ static int cdns_uart_probe(struct platform_device *pdev)
- 		console_port = NULL;
- #endif
- 
-+	cdns_uart_data->nortscts = of_property_read_bool(pdev->dev.of_node,
-+							 "xlnx,uart-nortscts");
- 	return 0;
- 
- err_out_pm_disable:
+diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+index d93b6a1..b8acc2a 100644
+--- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
++++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+@@ -6,6 +6,7 @@ Required properties:
+ 	- "renesas,usbhs-r8a7743" for r8a7743 (RZ/G1M) compatible device
+ 	- "renesas,usbhs-r8a7744" for r8a7744 (RZ/G1N) compatible device
+ 	- "renesas,usbhs-r8a7745" for r8a7745 (RZ/G1E) compatible device
++	- "renesas,usbhs-r8a77470" for r8a77470 (RZ/G1C) compatible device
+ 	- "renesas,usbhs-r8a774a1" for r8a774a1 (RZ/G2M) compatible device
+ 	- "renesas,usbhs-r8a774c0" for r8a774c0 (RZ/G2E) compatible device
+ 	- "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
 -- 
-2.1.1
+2.7.4
