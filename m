@@ -1,44 +1,124 @@
-Return-Path: <SRS0=9vUV=SG=codeaurora.org=kvalo@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 3/4] mwifiex: Flag wake-up interrupt as IRQ_NOAUTOEN
- rather than disabling it too late
-From: Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190224140426.3267-4-marc.zyngier@arm.com>
-References: <20190224140426.3267-4-marc.zyngier@arm.com>
-Message-Id: <20190404102251.6C12561A86@smtp.codeaurora.org>
-Date: Thu,  4 Apr 2019 10:22:50 +0000 (UTC)
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Amitkumar Karwar <amitkarwar@gmail.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Ganapathi Bhat <gbhat@marvell.com>, Heiko Stuebner <heiko@sntech.de>, Nishant Sarmukadam <nishants@marvell.com>, Rob Herring <robh+dt@kernel.org>, Xinming Hu <huxinming820@gmail.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Return-Path: <SRS0=akoX=SD=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 01/12] dt-bindings: phy: rcar-gen2: Add r8a77470 support
+Date: Mon,  1 Apr 2019 13:53:41 +0100
+Message-Id: <1554123232-58942-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
+References: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Marc Zyngier <marc.zyngier@arm.com> wrote:
+Add USB PHY support for r8a77470 SoC. Renesas RZ/G1C (R8A77470)
+USB PHY is similar to the R-Car Gen2 family, but has the below
+feature compared to other RZ/G1 and R-Car Gen2/3 SoCs
 
-> The mwifiex driver makes unsafe assumptions about the state of the
-> wake-up interrupt. It requests it and only then disable it. Of
-> course, the interrupt may be screaming for whatever reason at that
-> time, and the handler will then be called without the interrupt
-> having been registered with the PM/wakeup subsystem. Oops.
-> 
-> The right way to handle this kind of situation is to flag the
-> interrupt with IRQ_NOAUTOEN before requesting it. It will then
-> stay disabled until someone (the wake-up subsystem) enables it.
-> 
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
+It has a shared pll reset for usbphy0/usbphy1 and this register
+reside in usbphy0 block.
 
-Failed to apply:
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+---
+V1-->V2
+  * Incorporated Rob's review comment
+    https://patchwork.kernel.org/patch/10655853/
+---
+ .../devicetree/bindings/phy/rcar-gen2-phy.txt      | 57 ++++++++++++++++++++--
+ 1 file changed, 53 insertions(+), 4 deletions(-)
 
-fatal: sha1 information is lacking or useless (drivers/net/wireless/marvell/mwifiex/main.c).
-error: could not build fake ancestor
-Applying: mwifiex: Flag wake-up interrupt as IRQ_NOAUTOEN rather than disabling it too late
-Patch failed at 0001 mwifiex: Flag wake-up interrupt as IRQ_NOAUTOEN rather than disabling it too late
-The copy of the patch that failed is found in: .git/rebase-apply/patch
-
-Patch set to Changes Requested.
-
+diff --git a/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt b/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
+index 4f0879a..ac96d64 100644
+--- a/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
++++ b/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
+@@ -7,6 +7,7 @@ Required properties:
+ - compatible: "renesas,usb-phy-r8a7743" if the device is a part of R8A7743 SoC.
+ 	      "renesas,usb-phy-r8a7744" if the device is a part of R8A7744 SoC.
+ 	      "renesas,usb-phy-r8a7745" if the device is a part of R8A7745 SoC.
++	      "renesas,usb-phy-r8a77470" if the device is a part of R8A77470 SoC.
+ 	      "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
+ 	      "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
+ 	      "renesas,usb-phy-r8a7794" if the device is a part of R8A7794 SoC.
+@@ -30,7 +31,7 @@ channels. These subnodes must contain the following properties:
+ - #phy-cells: see phy-bindings.txt in the same directory, must be <1>.
+ 
+ The phandle's argument in the PHY specifier is the USB controller selector for
+-the USB channel; see the selector meanings below:
++the USB channel other than r8a77470 SoC; see the selector meanings below:
+ 
+ +-----------+---------------+---------------+
+ |\ Selector |               |               |
+@@ -41,6 +42,16 @@ the USB channel; see the selector meanings below:
+ | 2         | PCI EHCI/OHCI | xHCI          |
+ +-----------+---------------+---------------+
+ 
++For r8a77470 SoC;see the selector meaning below:
++
+++-----------+---------------+---------------+
++|\ Selector |               |               |
+++ --------- +       0       |       1       |
++| Channel  \|               |               |
+++-----------+---------------+---------------+
++| 0         | EHCI/OHCI     | HS-USB        |
+++-----------+---------------+---------------+
++
+ Example (Lager board):
+ 
+ 	usb-phy@e6590100 {
+@@ -48,15 +59,53 @@ Example (Lager board):
+ 		reg = <0 0xe6590100 0 0x100>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
++		clocks = <&cpg CPG_MOD 704>;
+ 		clock-names = "usbhs";
++		power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
++		resets = <&cpg 704>;
+ 
+-		usb-channel@0 {
++		usb0: usb-channel@0 {
+ 			reg = <0>;
+ 			#phy-cells = <1>;
+ 		};
+-		usb-channel@2 {
++		usb2: usb-channel@2 {
+ 			reg = <2>;
+ 			#phy-cells = <1>;
+ 		};
+ 	};
++
++Example (iWave RZ/G1C sbc):
++
++	usbphy0: usb-phy0@e6590100 {
++		compatible = "renesas,usb-phy-r8a77470",
++			     "renesas,rcar-gen2-usb-phy";
++		reg = <0 0xe6590100 0 0x100>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clocks = <&cpg CPG_MOD 704>;
++		clock-names = "usbhs";
++		power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++		resets = <&cpg 704>;
++
++		usb0: usb-channel@0 {
++			reg = <0>;
++			#phy-cells = <1>;
++		};
++	};
++
++	usbphy1: usb-phy@e6598100 {
++		compatible = "renesas,usb-phy-r8a77470",
++			     "renesas,rcar-gen2-usb-phy";
++		reg = <0 0xe6598100 0 0x100>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clocks = <&cpg CPG_MOD 706>;
++		clock-names = "usbhs";
++		power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++		resets = <&cpg 706>;
++
++		usb1: usb-channel@0 {
++			reg = <0>;
++			#phy-cells = <1>;
++		};
++	};
 -- 
-https://patchwork.kernel.org/patch/10827971/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.7.4
