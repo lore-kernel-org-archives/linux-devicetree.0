@@ -1,72 +1,130 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/7] spi: Patch Macronix MX25F0A SPI controller driver
-Date: Mon, 1 Apr 2019 14:51:27 +0700
-Message-ID: <20190401075127.GM2059@sirena.org.uk>
-References: <1553768318-23149-1-git-send-email-masonccyang@mxic.com.tw>
- <1553768318-23149-4-git-send-email-masonccyang@mxic.com.tw>
+From: Joseph Lo <josephl@nvidia.com>
+Subject: Re: [PATCH 1/8] dt-bindings: memory: tegra: Add Tegra210 EMC bindings
+Date: Mon, 1 Apr 2019 15:57:47 +0800
+Message-ID: <7d680700-d2f2-7b6c-a8bf-dca6d54dbf2c@nvidia.com>
+References: <20190325074523.26456-1-josephl@nvidia.com>
+ <20190325074523.26456-2-josephl@nvidia.com>
+ <5ca06133.1c69fb81.11ebf.91ce@mx.google.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0723319962662507437=="
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1553768318-23149-4-git-send-email-masonccyang@mxic.com.tw>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Mason Yang <masonccyang@mxic.com.tw>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, juliensu@mxic.com.tw, christophe.kerello@st.com, richard@nod.at, bbrezillon@kernel.org, marcel.ziswiler@toradex.com, dwmw2@infradead.org, miquel.raynal@bootlin.com, linux-kernel@vger.kernel.org, stefan@agner.ch, linux-spi@vger.kernel.org, marek.vasut@gmail.com, paul.burton@mips.com, robh+dt@kernel.org, geert@linux-m68k.org, linux-mtd@lists.infradead.org, computersforpeace@gmal.com, liang.yang@amlogic.com, lee.jones@linaro.org, zhengxunli@mxic.com.tw
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5ca06133.1c69fb81.11ebf.91ce@mx.google.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 3/31/19 2:41 PM, Rob Herring wrote:
+> On Mon, Mar 25, 2019 at 03:45:16PM +0800, Joseph Lo wrote:
+>> Add the binding document for the external memory controller (EMC) which
+>> communicates with external LPDDR4 devices. It includes the bindings of
+>> the EMC node and the EMC table of different rates.
+>>
+>> To support high rates for LPDDR4, the EMC table must be trained before
+>> it can be used for runtime clock switching. It has been done by firmware
+>> and merged to the table that Linux kernel uses. For backward
+>> compatibility with the devices that had been launched on the market, like
+>> Shield and Jetson platforms, the bindings in the EMC table should remain
+>> the same. So the firmware can recognize them and merge the trained EMC
+>> table for the kernel.
 
---===============0723319962662507437==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xtx0sNU5lZ46KfgK"
-Content-Disposition: inline
+Hi Rob,
 
+Thanks for reviewing.
 
---xtx0sNU5lZ46KfgK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+> Overall seems pretty bloated. How much of this really varies by board
+> vs. just being a dump of all the register values to stuff?
 
-On Thu, Mar 28, 2019 at 06:18:34PM +0800, Mason Yang wrote:
-> Patch a MFD driver for Macronix MX25F0A SPI controller.
->=20
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+Most of them are register values. And by different SDRAM devices that 
+could be used on the same platform (use ram code to identify them), the 
+value could be different.
 
-I can't tell what this commit is supposed to do based on this commit
-message which makes it hard to review :(
+> 
+> Primarily, I'm leary of getting a similar binding for every vendor's DDR
+> setup.
+> 
+> Some mostly trivial comments follow.
 
---xtx0sNU5lZ46KfgK
-Content-Type: application/pgp-signature; name="signature.asc"
+Really sorry about that. I understand these basic rules for DT bindings, 
+but the case here is that these un-reviewed bindings have been used in 
+the firmware on the shipped products. To support the same with the 
+upstream kernel and consider the firmware blob may not be updated, we 
+have no choice to just use the same bindings in the upstream kernel.
 
------BEGIN PGP SIGNATURE-----
+How can we deal with this case?
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyhwv4ACgkQJNaLcl1U
-h9DLegf+I4q4dklppx9CBbUDzY7TJuYMR9fUaHEJ+PERL25QB7175CTrJAMJwNUT
-VYMvdLaDFLhYbL5W340U3TsnndEAr5Ad+8UyN6UKyLnDEJ9St1a+mF+s3bGIDh/y
-9eoAmlwLizsthxqUJvBRh7ZhvKvwhSqfJ4AsiNFhXfq1BnPeYks5pHRtzAa2Y4Qn
-2y6UJEi9pKVrl2Dd8Uer91pO51KSbeT8ScjjbDd8/mD1kTNTxejhvJyzrT2jiqnh
-Zqhjwv1kZB6Nx4IvOiLD5SeRi0QPV987Z95qpDgo2EBeY81zRHEt4wcACe95mGcf
-6+BzLYW9fOms8zU/qBIE5kPY923RZw==
-=IEo0
------END PGP SIGNATURE-----
+> 
+snip.
+>> +Example:
+>> +	external-memory-controller@7001b000 {
+>> +		compatible = "nvidia,tegra21-emc", "nvidia,tegra210-emc";
+>> +		reg = <0x0 0x7001b000 0x0 0x1000>,
+>> +		      <0x0 0x7001e000 0x0 0x1000>,
+>> +		      <0x0 0x7001f000 0x0 0x1000>;
+>> +		clocks = <&tegra_car TEGRA210_CLK_EMC>,
+>> +		         <&tegra_car TEGRA210_CLK_PLL_M>,
+>> +			 <&tegra_car TEGRA210_CLK_PLL_C>,
+>> +			 <&tegra_car TEGRA210_CLK_PLL_P>,
+>> +			 <&tegra_car TEGRA210_CLK_CLK_M>,
+>> +			 <&tegra_car TEGRA210_CLK_PLL_M_UD>,
+>> +			 <&tegra_car TEGRA210_CLK_PLL_MB_UD>,
+>> +			 <&tegra_car TEGRA210_CLK_PLL_MB>,
+>> +			 <&tegra_car TEGRA210_CLK_PLL_P_UD>;
+>> +		clock-names = "emc", "pll_m", "pll_c", "pll_p", "clk_m",
+>> +			      "pll_m_ud", "pll_mb_ud", "pll_mb", "pll_p_ud";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		nvidia,memory-controller = <&mc>;
+>> +		nvidia,use-ram-code;
+>> +
+>> +		emc-table@0 {
+> 
+> Unit address without reg is not valid.
+> 
+>> +			nvidia,ram-code = <0>;
+>> +			emc-table@40800 {
+> 
+> And here.
+> 
 
---xtx0sNU5lZ46KfgK--
+Will fix this.
+Thanks,
+Joseph
 
-
---===============0723319962662507437==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
-
---===============0723319962662507437==--
+>> +				compatible = "nvidia,tegra21-emc-table";
+>> +				...
+>> +			};
+>> +			emc-table@204000 {
+>> +				...
+>> +			};
+>> +			...
+>> +		};
+>> +
+>> +		emc-table@1 {
+>> +			nvidia,ram-code = <1>;
+>> +			emc-table@40800 {
+>> +				compatible = "nvidia,tegra21-emc-table";
+>> +				...
+>> +			};
+>> +			emc-table@204000 {
+>> +				...
+>> +			};
+>> +			...
+>> +		};
+>> +	};
+>> -- 
+>> 2.21.0
+>>
+> 
