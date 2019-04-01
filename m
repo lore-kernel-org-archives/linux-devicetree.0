@@ -1,50 +1,43 @@
-From: megous@megous.com
-Subject: [PATCH v2 1/5] ARM: dts: sun8i: tbs-a711: Add node for BMA250 accelerometer
-Date: Mon,  1 Apr 2019 13:56:12 +0200
-Message-ID: <20190401115616.21337-2-megous@megous.com>
+From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: [PATCH v2 4/5] dt-bindings: gnss: Add u-blox,neo-6m compatible
+Date: Mon,  1 Apr 2019 13:56:15 +0200
+Message-ID: <20190401115616.21337-5-megous@megous.com>
 References: <20190401115616.21337-1-megous@megous.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190401115616.21337-1-megous@megous.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: maxime.ripard@free-electrons.com, wens@csie.org, robh@kernel.org, johan@kernel.org, mark.rutland@arm.com
-Cc: Ondrej Jirman <megous@megous.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBZXYQ7SQKGQEON6X4OI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20190401115616.21337-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-A711 tablet has BMA250 accelerometer connected to I2C1 bus. Enable
-both the I2C1 bus and add the accelerometer device to it.
+Add compatible for u-blox NEO-6M GPS module.
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ Documentation/devicetree/bindings/gnss/u-blox.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-index 1e840ab5a541..d70fe04b66f0 100644
---- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-@@ -156,6 +156,19 @@
- 	status = "okay";
- };
+diff --git a/Documentation/devicetree/bindings/gnss/u-blox.txt b/Documentation/devicetree/bindings/gnss/u-blox.txt
+index e475659cb85f..7cdefd058fe0 100644
+--- a/Documentation/devicetree/bindings/gnss/u-blox.txt
++++ b/Documentation/devicetree/bindings/gnss/u-blox.txt
+@@ -9,6 +9,7 @@ Required properties:
  
-+&i2c1 {
-+	clock-frequency = <400000>;
-+	status = "okay";
-+
-+	/* Accelerometer */
-+	accelerometer@18 {
-+		compatible = "bosch,bma250";
-+		reg = <0x18>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 10 IRQ_TYPE_EDGE_RISING>; /* PH10 / EINT10 */
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_dcdc1>;
- 	pinctrl-names = "default";
+ - compatible	: Must be one of
+ 
++			"u-blox,neo-6m"
+ 			"u-blox,neo-8"
+ 			"u-blox,neo-m8"
+ 
 -- 
 2.21.0
