@@ -1,82 +1,38 @@
-Return-Path: <SRS0=1iwi=SY=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.bugwerft.de ([46.23.86.59]:50078 "EHLO mail.bugwerft.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726305AbfDVIfv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Apr 2019 04:35:51 -0400
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 1/2] input: touch: eeti: move ISR code to own function
-Date: Mon, 22 Apr 2019 10:35:39 +0200
-Message-Id: <20190422083540.8380-1-daniel@zonque.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, robh+dt@kernel.org
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=akoX=SD=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 12/12] ARM: dts: iwg23s-sbc: Enable HS-USB
+Date: Mon,  1 Apr 2019 13:53:52 +0100
+Message-Id: <1554123232-58942-13-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
+References: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Move the ISR handling code to its own function and change the logic to bail
-immediately in case of .running is false or if the attn_gpio is available
-but unasserted.
+Enable HS-USB device for the iWave SBC based on RZ/G1C.
 
-This allows us to call the function at any time to check for the state of
-attn_gpio.
-
-Signed-off-by: Daniel Mack <daniel@zonque.org>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 ---
- drivers/input/touchscreen/eeti_ts.c | 30 +++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+V1-->V2
+ * New patch
+---
+ arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/input/touchscreen/eeti_ts.c b/drivers/input/touchscreen/eeti_ts.c
-index 7fe41965c5d1..f5724aaa815b 100644
---- a/drivers/input/touchscreen/eeti_ts.c
-+++ b/drivers/input/touchscreen/eeti_ts.c
-@@ -75,14 +75,19 @@ static void eeti_ts_report_event(struct eeti_ts *eeti, u8 *buf)
- 	input_sync(eeti->input);
- }
+diff --git a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
+index f84ec16..c8fbc7f 100644
+--- a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
++++ b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
+@@ -123,6 +123,10 @@
+ 	};
+ };
  
--static irqreturn_t eeti_ts_isr(int irq, void *dev_id)
-+static void eeti_ts_read(struct eeti_ts *eeti)
- {
--	struct eeti_ts *eeti = dev_id;
--	int len;
--	int error;
-+	int len, error;
- 	char buf[6];
- 
--	do {
-+	for (;;) {
-+		if (!eeti->running)
-+			break;
++&hsusb0 {
++	status = "okay";
++};
 +
-+		if (eeti->attn_gpio &&
-+		    gpiod_get_value_cansleep(eeti->attn_gpio) == 0)
-+			break;
-+
- 		len = i2c_master_recv(eeti->client, buf, sizeof(buf));
- 		if (len != sizeof(buf)) {
- 			error = len < 0 ? len : -EIO;
-@@ -92,12 +97,17 @@ static irqreturn_t eeti_ts_isr(int irq, void *dev_id)
- 			break;
- 		}
- 
--		if (buf[0] & 0x80) {
--			/* Motion packet */
-+		/* Motion packet */
-+		if (buf[0] & 0x80)
- 			eeti_ts_report_event(eeti, buf);
--		}
--	} while (eeti->running &&
--		 eeti->attn_gpio && gpiod_get_value_cansleep(eeti->attn_gpio));
-+	}
-+}
-+
-+static irqreturn_t eeti_ts_isr(int irq, void *dev_id)
-+{
-+	struct eeti_ts *eeti = dev_id;
-+
-+	eeti_ts_read(eeti);
- 
- 	return IRQ_HANDLED;
- }
+ &i2c3 {
+ 	pinctrl-0 = <&i2c3_pins>;
+ 	pinctrl-names = "default";
 -- 
-2.20.1
+2.7.4
