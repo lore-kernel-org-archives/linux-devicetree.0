@@ -1,44 +1,53 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH] ARM: dts: imx6sll: add cooling-cells for cpu-freq cooling
- device
-Date: Mon, 1 Apr 2019 02:51:11 +0000
-Message-ID: <1554086786-3691-1-git-send-email-Anson.Huang@nxp.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: INFO: task hung in evdev_release
+Date: Mon, 1 Apr 2019 04:01:40 +0100
+Message-ID: <20190401030140.GA2059@sirena.org.uk>
+References: <000000000000f1be430578524a20@google.com>
+ <000000000000bf3ccd05851d68a7@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <000000000000bf3ccd05851d68a7@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: syzbot <syzbot+a979743610b4755d4d57@syzkaller.appspotmail.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, jbrunet@baylibre.com, lgirdwood@gmail.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, rydberg@bitmath.org, syzkaller-bugs@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Add #cooling-cells for i.MX6SLL cpu-freq cooling device usage.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6sll.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+--AqsLC8rIMeq19msA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
-index 62847c6..bffdad1 100644
---- a/arch/arm/boot/dts/imx6sll.dtsi
-+++ b/arch/arm/boot/dts/imx6sll.dtsi
-@@ -64,6 +64,7 @@
- 				198000		1175000
- 			>;
- 			clock-latency = <61036>; /* two CLK32 periods */
-+			#cooling-cells = <2>;
- 			clocks = <&clks IMX6SLL_CLK_ARM>,
- 				 <&clks IMX6SLL_CLK_PLL2_PFD2>,
- 				 <&clks IMX6SLL_CLK_STEP>,
--- 
-2.7.4
+On Wed, Mar 27, 2019 at 06:24:01PM -0700, syzbot wrote:
+
+> syzbot has bisected this bug to:
+
+This bug being...
+
+> commit e32d99af6830c9a8f37b4f2637ef0cdc60fa79fb
+> Author: Jerome Brunet <jbrunet@baylibre.com>
+> Date:   Tue Jul 17 15:42:50 2018 +0000
+>=20
+>     ASoC: meson: add axg fifos DT binding documentation
+
+This is fairly clearly a false bisection result.
+
+--AqsLC8rIMeq19msA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyhfxIACgkQJNaLcl1U
+h9CYJgf/UNLYpBORuC8ySyXKjv9u88zc9YzTYOz9msumtsKzL05CjdW72UucOcW+
+xF71zVLPkWxpOiiz1GY0i6KR6T/H2BZ/nOLm+RK57DE+d06FNkrZY5WFkoqBT8WV
+HjOs/QJYpH+tIlirwTzrnxp1ADaROD6otZfhVhFsQGE3VoYIPn9A7quYaEbVMHeM
+i6/Bs/q1g3K6B3zrBEueeGS4bew2Pha8Jd33/BBOCbiODNnIuBuCeOUc5LLcyVJg
+BdewxSIh7TU+bAvJvFNYEtOJTM1hbMNv23ZH/GETjakfjql014dpzzN77zdRhnBO
+XWgjVW7HaG0ycAwLYu1hbc+F9VoI7A==
+=RbAG
+-----END PGP SIGNATURE-----
+
+--AqsLC8rIMeq19msA--
