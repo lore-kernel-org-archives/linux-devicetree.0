@@ -1,193 +1,137 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 15/15] arm64: dts: marvell: Convert 7k/8k usb-phy properties
- to phy-supply
-Date: Mon,  1 Apr 2019 18:51:31 +0200
-Message-ID: <20190401165131.23370-16-miquel.raynal@bootlin.com>
-References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
+From: Andreas Klinger <ak@it-klinger.de>
+Subject: [PATCH v2] bmp085.yaml: transform DT documentation of iio sensor
+ into YAML
+Date: Mon, 1 Apr 2019 19:31:44 +0200
+Message-ID: <20190401173142.cunj5iwz2ox454qx@arbad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190401165131.23370-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, masneyb@onstation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Update Aramda 7k/8k DTs to use the phy-supply property of the (recent)
-generic PHY framework instead of the (legacy) usb-phy preperty. Both
-enable the supply when the PHY is enabled.
+use bmp085.txt and change it into yaml format
 
-The COMPHY nodes only provide SERDES lanes configuration. The power
-supply that is represented by the phy-supply property is just a
-regulator wired to the USB connector, hence the creation of connector
-nodes as child of the COMPHY nodes and the supply attached to it.
+fix links to datasheets in replaced documentation
 
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 ---
- .../arm64/boot/dts/marvell/armada-7040-db.dts | 26 ++++++++++---------
- .../marvell/armada-8040-clearfog-gt-8k.dts    | 13 +++++-----
- .../arm64/boot/dts/marvell/armada-8040-db.dts | 13 +++++-----
- .../boot/dts/marvell/armada-8040-mcbin.dtsi   | 13 +++++-----
- 4 files changed, 35 insertions(+), 30 deletions(-)
+ .../devicetree/bindings/iio/pressure/bmp085.txt    | 27 ---------
+ .../devicetree/bindings/iio/pressure/bmp085.yaml   | 70 ++++++++++++++++++++++
+ 2 files changed, 70 insertions(+), 27 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-7040-db.dts b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
-index 131ce4229db0..4b8df359b1cc 100644
---- a/arch/arm64/boot/dts/marvell/armada-7040-db.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
-@@ -45,16 +45,6 @@
- 		enable-active-high;
- 		gpio = <&expander0 1 GPIO_ACTIVE_HIGH>;
- 	};
+diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+deleted file mode 100644
+index 61c72e63c584..000000000000
+--- a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
++++ /dev/null
+@@ -1,27 +0,0 @@
+-BMP085/BMP18x/BMP28x digital pressure sensors
 -
--	cp0_usb3_0_phy: cp0-usb3-0-phy {
--		compatible = "usb-nop-xceiv";
--		vcc-supply = <&cp0_reg_usb3_0_vbus>;
--	};
+-Required properties:
+-- compatible: must be one of:
+-  "bosch,bmp085"
+-  "bosch,bmp180"
+-  "bosch,bmp280"
+-  "bosch,bme280"
 -
--	cp0_usb3_1_phy: cp0-usb3-1-phy {
--		compatible = "usb-nop-xceiv";
--		vcc-supply = <&cp0_reg_usb3_1_vbus>;
--	};
- };
- 
- &i2c0 {
-@@ -200,15 +190,27 @@
- 	};
- };
- 
-+&cp0_comphy1 {
-+	cp0_usbh0_con: connector {
-+		compatible = "usb-a-connector";
-+		phy-supply = <&cp0_reg_usb3_0_vbus>;
-+	};
-+};
-+
- &cp0_usb3_0 {
--	usb-phy = <&cp0_usb3_0_phy>;
- 	phys = <&cp0_comphy1 0>;
- 	phy-names = "cp0-usb3h0-comphy";
- 	status = "okay";
- };
- 
-+&cp0_comphy4 {
-+	cp0_usbh1_con: connector {
-+		compatible = "usb-a-connector";
-+		phy-supply = <&cp0_reg_usb3_1_vbus>;
-+	};
-+};
-+
- &cp0_usb3_1 {
--	usb-phy = <&cp0_usb3_1_phy>;
- 	phys = <&cp0_comphy4 1>;
- 	phy-names = "cp0-usb3h1-comphy";
- 	status = "okay";
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-index b3716d206fbf..58b7e859b61d 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-@@ -51,11 +51,6 @@
- 		status = "okay";
- 	};
- 
--	usb3h0_phy: usb3_phy0 {
--		compatible = "usb-nop-xceiv";
--		vcc-supply = <&v_5v0_usb3_hst_vbus>;
--	};
+-Optional properties:
+-- interrupts: interrupt mapping for IRQ
+-- reset-gpios: a GPIO line handling reset of the sensor: as the line is
+-  active low, it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
+-- vddd-supply: digital voltage regulator (see regulator/regulator.txt)
+-- vdda-supply: analog voltage regulator (see regulator/regulator.txt)
 -
- 	sfp_cp0_eth0: sfp-cp0-eth0 {
- 		compatible = "sff,sfp";
- 		i2c-bus = <&cp0_i2c1>;
-@@ -462,8 +457,14 @@
- 	};
- };
- 
-+&cp1_comphy2 {
-+	cp1_usbh0_con: connector {
-+		compatible = "usb-a-connector";
-+		phy-supply = <&v_5v0_usb3_hst_vbus>;
-+	};
-+};
-+
- &cp1_usb3_0 {
--	usb-phy = <&usb3h0_phy>;
- 	phys = <&cp1_comphy2 0>;
- 	phy-names = "cp1-usb3h0-comphy";
- 	status = "okay";
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-db.dts b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-index 91c51188650a..f73cb3a96393 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-@@ -52,11 +52,6 @@
- 		vcc-supply = <&cp0_reg_usb3_0_vbus>;
- 	};
- 
--	cp0_usb3_1_phy: cp0-usb3-1-phy {
--		compatible = "usb-nop-xceiv";
--		vcc-supply = <&cp0_reg_usb3_1_vbus>;
--	};
+-Example:
 -
- 	cp1_reg_usb3_0_vbus: cp1-usb3-0-vbus {
- 		compatible = "regulator-fixed";
- 		regulator-name = "cp1-usb3h0-vbus";
-@@ -167,9 +162,15 @@
- 	status = "okay";
- };
- 
-+&cp0_comphy4 {
-+	cp0_usbh1_con: connector {
-+		compatible = "usb-a-connector";
-+		phy-supply = <&cp0_reg_usb3_1_vbus>;
-+	};
-+};
+-pressure@77 {
+-	compatible = "bosch,bmp085";
+-	reg = <0x77>;
+-	interrupt-parent = <&gpio0>;
+-	interrupts = <25 IRQ_TYPE_EDGE_RISING>;
+-	reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
+-	vddd-supply = <&foo>;
+-	vdda-supply = <&bar>;
+-};
+diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
+new file mode 100644
+index 000000000000..c6721a7e8938
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
+@@ -0,0 +1,70 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/pressure/bmp085.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- /* CON10 on CP0 expansion */
- &cp0_usb3_1 {
--	usb-phy = <&cp0_usb3_1_phy>;
- 	phys = <&cp0_comphy4 1>;
- 	phy-names = "cp0-usb3h1-comphy";
- 	status = "okay";
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-index 0639437ab4b4..061533589356 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-@@ -61,11 +61,6 @@
- 		status = "okay";
- 	};
- 
--	usb3h0_phy: usb3_phy0 {
--		compatible = "usb-nop-xceiv";
--		vcc-supply = <&v_5v0_usb3_hst_vbus>;
--	};
--
- 	sfp_eth0: sfp-eth0 {
- 		/* CON15,16 - CPM lane 4 */
- 		compatible = "sff,sfp";
-@@ -357,9 +352,15 @@
- 	};
- };
- 
-+&cp1_comphy2 {
-+	cp1_usbh0_con: connector {
-+		compatible = "usb-a-connector";
-+		phy-supply = <&v_5v0_usb3_hst_vbus>;
-+	};
-+};
++title: BMP085/BMP180/BMP280/BME280 pressure iio sensors
 +
- &cp1_usb3_0 {
- 	/* CPS Lane 2 - CON7 */
--	usb-phy = <&usb3h0_phy>;
- 	phys = <&cp1_comphy2 0>;
- 	phy-names = "cp1-usb3h0-comphy";
- 	status = "okay";
++maintainers:
++  - Andreas Klinger <ak@it-klinger.de>
++
++description: |
++  Pressure, temperature and humidity iio sensors with i2c and spi interfaces
++
++  Specifications about the sensor can be found at:
++    https://www.bosch-sensortec.com/bst/products/all_products/bmp180
++    https://www.bosch-sensortec.com/bst/products/all_products/bmp280
++    https://www.bosch-sensortec.com/bst/products/all_products/bme280
++
++properties:
++  compatible:
++    enum:
++      - bosch,bmp085
++      - bosch,bmp180
++      - bosch,bmp280
++      - bosch,bme280
++
++  vddd-supply:
++    description:
++      digital voltage regulator (see regulator/regulator.txt)
++    maxItems: 1
++
++  vdda-supply:
++    description:
++      analog voltage regulator (see regulator/regulator.txt)
++    maxItems: 1
++
++  reset-gpios:
++    description:
++      A GPIO line handling reset of the sensor. As the line is active low,
++      it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
++    maxItems: 1
++
++  interrupts:
++    description:
++      interrupt mapping for IRQ (BMP085 only)
++    maxItems: 1
++
++required:
++  - compatible
++  - vddd-supply
++  - vdda-supply
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      pressure@77 {
++          compatible = "bosch,bmp085";
++          reg = <0x77>;
++          interrupt-parent = <&gpio0>;
++          interrupts = <25 IRQ_TYPE_EDGE_RISING>;
++          reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
++          vddd-supply = <&foo>;
++          vdda-supply = <&bar>;
++      };
++    };
 -- 
-2.19.1
+2.11.0
