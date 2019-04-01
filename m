@@ -1,140 +1,97 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v4] dt-bindings: gpu: add bindings for the ARM Mali Bifrost GPU
-Date: Mon,  1 Apr 2019 10:09:49 +0200
-Message-ID: <20190401080949.14550-1-narmstrong@baylibre.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 08/14] clk: sunxi-ng: v3s: add Allwinner V3 support
+Date: Mon, 1 Apr 2019 10:15:24 +0200
+Message-ID: <20190401081524.bickdv7kr4kcnsgm@flea>
+References: <20190312152256.35574-1-icenowy@aosc.io>
+ <20190312152256.35574-9-icenowy@aosc.io>
+ <20190328132721.GA32178@bogus>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jc3kve7lqqq7wqjx"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190328132721.GA32178@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: daniel@ffwll.ch, robh@kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Icenowy Zheng <icenowy@aosc.io>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Jagan Teki <jagan@amarulasolutions.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Add the bindings for the Bifrost family of ARM Mali GPUs.
 
-The Bifrost GPU architecture is similar to the Midgard family,
-but with a different Shader Core & Execution Engine structures.
+--jc3kve7lqqq7wqjx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Bindings are based on the Midgard family bindings, but the inner
-architectural changes makes it a separate family needing separate
-bindings.
+On Thu, Mar 28, 2019 at 08:27:21AM -0500, Rob Herring wrote:
+> On Tue, Mar 12, 2019 at 11:22:50PM +0800, Icenowy Zheng wrote:
+> > Allwinner V3 has the same main die with V3s, but with more pins wired.
+> > There's a I2S bus on V3 that is not available on V3s.
+> >
+> > Add the V3-only peripheral's clocks and reset to the V3s CCU driver,
+> > bound to a new V3 compatible string. The driver name is not changed
+> > because it's part of the device tree binding (the header file name).
+> >
+> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > ---
+> >  drivers/clk/sunxi-ng/ccu-sun8i-v3s.c      | 225 +++++++++++++++++++++-
+> >  drivers/clk/sunxi-ng/ccu-sun8i-v3s.h      |   2 +-
+> >  include/dt-bindings/clock/sun8i-v3s-ccu.h |   4 +
+> >  include/dt-bindings/reset/sun8i-v3s-ccu.h |   3 +
+> >  4 files changed, 231 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+> > index cbba04f5f761..81450ea8faa2 100644
+> > --- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+> > +++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+> > @@ -242,6 +242,8 @@ static SUNXI_CCU_GATE(bus_codec_clk,	"bus-codec",	"apb1",
+> >  		      0x068, BIT(0), 0);
+> >  static SUNXI_CCU_GATE(bus_pio_clk,	"bus-pio",	"apb1",
+> >  		      0x068, BIT(5), 0);
+> > +static SUNXI_CCU_GATE(bus_i2s0_clk,	"bus-i2s0",	"apb1",
+> > +		      0x068, BIT(12), 0);
+> >
+> >  static SUNXI_CCU_GATE(bus_i2c0_clk,	"bus-i2c0",	"apb2",
+> >  		      0x06c, BIT(0), 0);
+> > @@ -313,6 +315,11 @@ static SUNXI_CCU_MP_WITH_MUX_GATE(spi0_clk, "spi0", mod0_default_parents, 0x0a0,
+> >  				  BIT(31),	/* gate */
+> >  				  0);
+> >
+> > +static const char * const i2s_parents[] = { "pll-audio-8x", "pll-audio-4x",
+> > +					    "pll-audio-2x", "pll-audio" };
+> > +static SUNXI_CCU_MUX_WITH_GATE(i2s0_clk, "i2s0", i2s_parents,
+> > +			       0x0b0, 16, 2, BIT(31), CLK_SET_RATE_PARENT);
+> > +
+> >  static SUNXI_CCU_GATE(usb_phy0_clk,	"usb-phy0",	"osc24M",
+> >  		      0x0cc, BIT(8), 0);
+> >  static SUNXI_CCU_GATE(usb_ohci0_clk,	"usb-ohci0",	"osc24M",
+> > @@ -445,6 +452,80 @@ static struct ccu_common *sun8i_v3s_ccu_clks[] = {
+> >  	&mipi_csi_clk.common,
+> >  };
+> >
+> > +static struct ccu_common *sun8i_v3_ccu_clks[] = {
+>
+> Seems like a bunch of duplication for just 2 differences in clocks.
+> Can't you keep the definitions the same and just skip registering the
+> clocks not present?
 
-The Bifrost GPUs are present in a number of recent SoCs, like the
-Amlogic G12A Family, and many other vendors.
-The Amlogic vendor specific compatible is added to handle the
-specific IP integration differences and dependencies.
+I'd rather not, this can lead to access to registers that might not be
+there when the CCF will read / write that clock
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../bindings/gpu/arm,mali-bifrost.txt         | 92 +++++++++++++++++++
- 1 file changed, 92 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+Maxime
 
-Changes since v3:
-- Added note about discoverable model/revision
-- Enforced fixed defined irq order
-- Fixed typo in accommodate
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Changes since v2:
-- moved to a single compatible since HW is fully discoverable
+--jc3kve7lqqq7wqjx
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
-new file mode 100644
-index 000000000000..711c9ead17a2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
-@@ -0,0 +1,92 @@
-+ARM Mali Bifrost GPU
-+====================
-+
-+Required properties:
-+
-+- compatible :
-+  * Since Mali Bifrost GPU model/revision if fully discoverable by reading
-+    some determined registers, must contain the following:
-+    + "arm,mali-bifrost"
-+  * which must be preceded by one of the following vendor specifics:
-+    + "amlogic,meson-g12a-mali"
-+
-+- reg : Physical base address of the device and length of the register area.
-+
-+- interrupts : Contains the three IRQ lines required by Mali Bifrost devices,
-+  in the following defined order.
-+
-+- interrupt-names : Contains the names of IRQ resources in this exact defined
-+  order: "job", "mmu", "gpu".
-+
-+Optional properties:
-+
-+- clocks : Phandle to clock for the Mali Bifrost device.
-+
-+- mali-supply : Phandle to regulator for the Mali device. Refer to
-+  Documentation/devicetree/bindings/regulator/regulator.txt for details.
-+
-+- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
-+  for details.
-+
-+- resets : Phandle of the GPU reset line.
-+
-+Vendor-specific bindings
-+------------------------
-+
-+The Mali GPU is integrated very differently from one SoC to
-+another. In order to accommodate those differences, you have the option
-+to specify one more vendor-specific compatible, among:
-+
-+- "amlogic,meson-g12a-mali"
-+  Required properties:
-+  - resets : Should contain phandles of :
-+    + GPU reset line
-+    + GPU APB glue reset line
-+
-+Example for a Mali-G31:
-+
-+gpu@ffa30000 {
-+	compatible = "amlogic,meson-g12a-mali", "arm,mali-bifrost";
-+	reg = <0xffe40000 0x10000>;
-+	interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
-+	interrupt-names = "job", "mmu", "gpu";
-+	clocks = <&clk CLKID_MALI>;
-+	mali-supply = <&vdd_gpu>;
-+	operating-points-v2 = <&gpu_opp_table>;
-+	resets = <&reset RESET_DVALIN_CAPB3>, <&reset RESET_DVALIN>;
-+};
-+
-+gpu_opp_table: opp_table0 {
-+	compatible = "operating-points-v2";
-+
-+	opp@533000000 {
-+		opp-hz = /bits/ 64 <533000000>;
-+		opp-microvolt = <1250000>;
-+	};
-+	opp@450000000 {
-+		opp-hz = /bits/ 64 <450000000>;
-+		opp-microvolt = <1150000>;
-+	};
-+	opp@400000000 {
-+		opp-hz = /bits/ 64 <400000000>;
-+		opp-microvolt = <1125000>;
-+	};
-+	opp@350000000 {
-+		opp-hz = /bits/ 64 <350000000>;
-+		opp-microvolt = <1075000>;
-+	};
-+	opp@266000000 {
-+		opp-hz = /bits/ 64 <266000000>;
-+		opp-microvolt = <1025000>;
-+	};
-+	opp@160000000 {
-+		opp-hz = /bits/ 64 <160000000>;
-+		opp-microvolt = <925000>;
-+	};
-+	opp@100000000 {
-+		opp-hz = /bits/ 64 <100000000>;
-+		opp-microvolt = <912500>;
-+	};
-+};
--- 
-2.21.0
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKHInAAKCRDj7w1vZxhR
+xZ+WAP92QhUeKofhCPBW2R6w+MmaHaURTZ1S7Q0dQwrc7GzGIwEAnITh/XSIMAU7
+l1W4aXbf1ct2/M9dDexttVTYemsRmwc=
+=QvxI
+-----END PGP SIGNATURE-----
+
+--jc3kve7lqqq7wqjx--
