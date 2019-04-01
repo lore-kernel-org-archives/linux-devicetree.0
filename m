@@ -1,7 +1,8 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v2 3/5] gnss: Add u-blox,neo-6m compatible
-Date: Mon,  1 Apr 2019 13:56:14 +0200
-Message-ID: <20190401115616.21337-4-megous@megous.com>
+Subject: [PATCH v2 5/5] ARM: dts: sun8i: tbs-a711: Enable UART2
+ (for NEO-6M GPS module)
+Date: Mon,  1 Apr 2019 13:56:16 +0200
+Message-ID: <20190401115616.21337-6-megous@megous.com>
 References: <20190401115616.21337-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
@@ -20,24 +21,52 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-Add compatible for u-blox NEO-6M GPS module.
+TBS A711 tablet contains u-blox NEO-6M module connected to UART2.
+Enable UART2 to gain access to the module from userspace.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- drivers/gnss/ubx.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/gnss/ubx.c b/drivers/gnss/ubx.c
-index 12568aebb7f6..1ada2fad1d4e 100644
---- a/drivers/gnss/ubx.c
-+++ b/drivers/gnss/ubx.c
-@@ -132,6 +132,7 @@ static void ubx_remove(struct serdev_device *serdev)
- static const struct of_device_id ubx_of_match[] = {
- 	{ .compatible = "u-blox,neo-8" },
- 	{ .compatible = "u-blox,neo-m8" },
-+	{ .compatible = "u-blox,neo-6m" },
- 	{},
+diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+index d70fe04b66f0..fd170bc45927 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+@@ -98,6 +98,13 @@
+ 		};
+ 	};
+ 
++	reg_gps: reg-gps {
++		compatible = "regulator-fixed";
++		regulator-name = "gps";
++		regulator-min-microvolt = <3000000>;
++		regulator-max-microvolt = <3000000>;
++	};
++
+ 	reg_vbat: reg-vbat {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vbat";
+@@ -422,6 +429,20 @@
+ 	status = "okay";
  };
- MODULE_DEVICE_TABLE(of, ubx_of_match);
+ 
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart2_pb_pins>;
++	status = "okay";
++
++	gnss {
++		compatible = "u-blox,neo-6m";
++
++		v-bckp-supply = <&reg_rtc_ldo>;
++		vcc-supply = <&reg_gps>;
++		current-speed = <9600>;
++	};
++};
++
+ &usb_otg {
+ 	dr_mode = "otg";
+ 	status = "okay";
 -- 
 2.21.0
