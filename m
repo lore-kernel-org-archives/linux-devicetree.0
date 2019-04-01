@@ -1,12 +1,13 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 1/4] dt-bindings: mtd: Add YAML schemas for the generic NAND
- options
-Date: Mon,  1 Apr 2019 23:13:53 +0200
-Message-ID: <75ad3b89e4a6f8ad5bc414c3dccbb1f99361495a.1554153146.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH 4/4] ARM: dts: sunxi: Remove useless address and size cells
+Date: Mon,  1 Apr 2019 23:13:56 +0200
+Message-ID: <8774db23f87fe401f8ac7b775decba3cde2a56ea.1554153146.git-series.maxime.ripard@bootlin.com>
+References: <75ad3b89e4a6f8ad5bc414c3dccbb1f99361495a.1554153146.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <75ad3b89e4a6f8ad5bc414c3dccbb1f99361495a.1554153146.git-series.maxime.ripard@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,153 +21,40 @@ To: Boris Brezillon <boris.brezillon@collabora.com>, Mark Rutland <mark.rutland@
 Cc: Maxime Ripard <maxime.ripard@bootlin.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The NAND chips in MTD have a bunch of generic options that are needed in a
-device tree. Add a YAML schemas for those.
+The NAND chips in our DTs have address and size cells, even though they
+don't have any child nodes. Remove them.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- Documentation/devicetree/bindings/mtd/nand-controller.yaml | 131 +++++++-
- 1 file changed, 131 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/nand-controller.yaml
+ arch/arm/boot/dts/sun5i-gr8-chip-pro.dts             | 2 --
+ arch/arm/boot/dts/sun8i-r16-nintendo-nes-classic.dts | 2 --
+ 2 files changed, 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-new file mode 100644
-index 000000000000..05b1afb34972
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-@@ -0,0 +1,131 @@
-+# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NAND Chip and NAND Controller Generic Binding
-+
-+maintainers:
-+  - Boris Brezillon <bbrezillon@kernel.org>
-+  - Miquel Raynal <miquel.raynal@bootlin.com>
-+  - Richard Weinberger <richard@nod.at>
-+
-+description: |
-+  The NAND controller should be represented with its own DT node, and
-+  all NAND chips attached to this controller should be defined as
-+  children nodes of the NAND controller. This representation should be
-+  enforced even for simple controllers supporting only one chip.
-+
-+  The ECC strength and ECC step size properties define the correction
-+  capability of a controller. Together, they say a controller can
-+  correct {strength} bit errors per {size} bytes.
-+
-+  The interpretation of these parameters is implementation-defined, so
-+  not all implementations must support all possible
-+  combinations. However, implementations are encouraged to further
-+  specify the value(s) they support.
-+
-+properties:
-+  $nodename:
-+    pattern: "^nand-controller(@.*)?"
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+  ranges: true
-+
-+patternProperties:
-+  "^nand@[a-z0-9]$":
-+    properties:
-+      reg:
-+        description:
-+          Contains the native Ready/Busy IDs.
-+
-+      nand-ecc-mode:
-+        allOf:
-+          - $ref: /schemas/types.yaml#/definitions/string
-+          - enum: [ none, soft, hw, hw_syndrome, hw_oob_first, on-die ]
-+        description:
-+          Operation mode of the NAND ecc mode. soft_bch is deprecated
-+          and should be replaced by soft and nand-ecc-algo
-+
-+      nand-ecc-algo:
-+        allOf:
-+          - $ref: /schemas/types.yaml#/definitions/string
-+          - enum: [ hamming, bch, rs ]
-+        description:
-+          Algorithm of NAND ECC.
-+
-+      nand-bus-width:
-+        allOf:
-+          - $ref: /schemas/types.yaml#/definitions/uint32
-+          - enum: [ 8, 16 ]
-+          - default: 8
-+        description:
-+          Bus width to the NAND chip
-+
-+      nand-on-flash-bbt:
-+        $ref: /schemas/types.yaml#/definitions/flag
-+        description:
-+          Enable the on-flash Bad Block Table
-+
-+      nand-ecc-strength:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          Number of bits to correct per ECC step.
-+
-+      nand-ecc-step-size:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          Number of data bytes covered by a single ECC step.
-+
-+      nand-ecc-maximize:
-+        $ref: /schemas/types.yaml#/definitions/flag
-+        description:
-+          Whether or not the ECC strength should be maximized. The
-+          maximum ECC strength is both controller and chip
-+          dependent. The controller side has to select the ECC config
-+          providing the best strength and taking the OOB area size
-+          constraint into account.  This is particularly useful when
-+          only the in-band area is used by the upper layers, and you
-+          want to make your NAND as reliable as possible.
-+
-+      nand-is-boot-medium:
-+        $ref: /schemas/types.yaml#/definitions/flag
-+        description:
-+          Whether or not the NAND chip is a boot medium. Drivers might
-+          use this information to select ECC algorithms supported by
-+          the boot ROM or similar restrictions.
-+
-+      nand-rb:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          Contains the native Ready/Busy IDs.
-+
-+    required:
-+      - reg
-+
-+required:
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+examples:
-+  - |
-+    nand-controller {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      /* controller specific properties */
-+
-+      nand@0 {
-+        reg = <0>;
-+        nand-ecc-mode = "soft";
-+        nand-ecc-algo = "bch";
-+
-+        /* controller specific properties */
-+      };
-+    };
-
-base-commit: aa63f222af3e5991099ebcecca7c474d8285c7c4
+diff --git a/arch/arm/boot/dts/sun5i-gr8-chip-pro.dts b/arch/arm/boot/dts/sun5i-gr8-chip-pro.dts
+index 533a4ecc05e2..a32cde3e32eb 100644
+--- a/arch/arm/boot/dts/sun5i-gr8-chip-pro.dts
++++ b/arch/arm/boot/dts/sun5i-gr8-chip-pro.dts
+@@ -133,8 +133,6 @@
+ 	status = "okay";
+ 
+ 	nand@0 {
+-		#address-cells = <2>;
+-		#size-cells = <2>;
+ 		reg = <0>;
+ 		allwinner,rb = <0>;
+ 		nand-ecc-mode = "hw";
+diff --git a/arch/arm/boot/dts/sun8i-r16-nintendo-nes-classic.dts b/arch/arm/boot/dts/sun8i-r16-nintendo-nes-classic.dts
+index 32cf1ab33aab..246dec5846a4 100644
+--- a/arch/arm/boot/dts/sun8i-r16-nintendo-nes-classic.dts
++++ b/arch/arm/boot/dts/sun8i-r16-nintendo-nes-classic.dts
+@@ -34,8 +34,6 @@
+ 
+ 	/* 2Gb Macronix MX30LF2G18AC (3V) */
+ 	nand@0 {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+ 		reg = <0>;
+ 		allwinner,rb = <0>;
+ 		nand-ecc-mode = "hw";
 -- 
 git-series 0.9.1
