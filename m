@@ -1,7 +1,7 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v2 2/5] ARM: dts: sun8i: a83t: Add UART2 PB pins
-Date: Mon,  1 Apr 2019 13:56:13 +0200
-Message-ID: <20190401115616.21337-3-megous@megous.com>
+Subject: [PATCH v2 3/5] gnss: Add u-blox,neo-6m compatible
+Date: Mon,  1 Apr 2019 13:56:14 +0200
+Message-ID: <20190401115616.21337-4-megous@megous.com>
 References: <20190401115616.21337-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
@@ -20,30 +20,24 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-Add pin definitions for UART2 PB pins. These are used on TBS-A711
-tablet.
+Add compatible for u-blox NEO-6M GPS module.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a83t.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gnss/ubx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index fcb7ef5ce2df..0176049d9815 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -768,6 +768,12 @@
- 				pins = "PG8", "PG9";
- 				function = "uart1";
- 			};
-+
-+			/omit-if-no-ref/
-+			uart2_pb_pins: uart2-pb-pins {
-+				pins = "PB0", "PB1";
-+				function = "uart2";
-+			};
- 		};
- 
- 		timer@1c20c00 {
+diff --git a/drivers/gnss/ubx.c b/drivers/gnss/ubx.c
+index 12568aebb7f6..1ada2fad1d4e 100644
+--- a/drivers/gnss/ubx.c
++++ b/drivers/gnss/ubx.c
+@@ -132,6 +132,7 @@ static void ubx_remove(struct serdev_device *serdev)
+ static const struct of_device_id ubx_of_match[] = {
+ 	{ .compatible = "u-blox,neo-8" },
+ 	{ .compatible = "u-blox,neo-m8" },
++	{ .compatible = "u-blox,neo-6m" },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, ubx_of_match);
 -- 
 2.21.0
