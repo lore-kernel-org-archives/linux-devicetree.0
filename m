@@ -1,106 +1,69 @@
-Return-Path: <SRS0=MvHc=SL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:29790 "EHLO
-        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfDIIw3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Apr 2019 04:52:29 -0400
-From: Cao Van Dong <cv-dong@jinso.co.jp>
-Subject: [PATCH 03/11] ARM: dts: r8a77470: Add PWM support
-Date: Tue,  9 Apr 2019 17:51:44 +0900
-Message-Id: <1554799912-24764-4-git-send-email-cv-dong@jinso.co.jp>
-In-Reply-To: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
-References: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org
-Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
+Return-Path: <SRS0=O27d=SD=gmail.com=shubhrajyoti.datta@kernel.org>
+From: <shubhrajyoti.datta@gmail.com>
+Subject: [PATCH 2/2] serial: uartps: Add support for nomodem
+Date: Mon, 1 Apr 2019 22:07:20 +0530
+Message-ID: <1554136640-25194-3-git-send-email-shubhrajyoti.datta@gmail.com>
+In-Reply-To: <1554136640-25194-1-git-send-email-shubhrajyoti.datta@gmail.com>
+References: <1554136640-25194-1-git-send-email-shubhrajyoti.datta@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: devicetree@vger.kernel.org
+Cc: michal.simek@xilinx.com, gregkh@linuxfoundation.org, jslaby@suse.com, robh+dt@kernel.org, linux-serial@vger.kernel.org, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add pwm{0|1|2|3|4|5|6} nodes to dtsi for PWM support on the RZ/G1C (r8a77470) SoC.
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
+Having modem control is configurable. Add support for the same by
+adding a nomodem property.
+
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 ---
- arch/arm/boot/dts/r8a77470.dtsi | 70 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+ drivers/tty/serial/xilinx_uartps.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index a7d3f88..848280f 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -684,6 +684,76 @@
- 			status = "disabled";
- 		};
+diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
+index 9a7f943..3138d7e 100644
+--- a/drivers/tty/serial/xilinx_uartps.c
++++ b/drivers/tty/serial/xilinx_uartps.c
+@@ -193,6 +193,7 @@ struct cdns_uart {
+ 	int			id;
+ 	struct notifier_block	clk_rate_change_nb;
+ 	u32			quirks;
++	bool nomodem;
+ };
+ struct cdns_platform_data {
+ 	u32 quirks;
+@@ -1004,6 +1005,11 @@ static void cdns_uart_config_port(struct uart_port *port, int flags)
+  */
+ static unsigned int cdns_uart_get_mctrl(struct uart_port *port)
+ {
++	struct cdns_uart *cdns_uart_data = port->private_data;
++
++	if (cdns_uart_data->nomodem)
++		return 0;
++
+ 	return TIOCM_CTS | TIOCM_DSR | TIOCM_CAR;
+ }
  
-+		pwm0: pwm@e6e30000 {
-+			compatible = "renesas,pwm-r8a77470", "renesas,pwm-rcar";
-+			reg = <0 0xe6e30000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc r8a77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
+@@ -1011,6 +1017,10 @@ static void cdns_uart_set_mctrl(struct uart_port *port, unsigned int mctrl)
+ {
+ 	u32 val;
+ 	u32 mode_reg;
++	struct cdns_uart *cdns_uart_data = port->private_data;
 +
-+		pwm1: pwm@e6e31000 {
-+			compatible = "renesas,pwm-r8a77470", "renesas,pwm-rcar";
-+			reg = <0 0xe6e31000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc r8a77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		pwm2: pwm@e6e32000 {
-+			compatible = "renesas,pwm-r8a77470", "renesas,pwm-rcar";
-+			reg = <0 0xe6e32000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc r8a77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		pwm3: pwm@e6e33000 {
-+			compatible = "renesas,pwm-r8a77470", "renesas,pwm-rcar";
-+			reg = <0 0xe6e33000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc r8a77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		pwm4: pwm@e6e34000 {
-+			compatible = "renesas,pwm-r8a77470", "renesas,pwm-rcar";
-+			reg = <0 0xe6e34000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc r8a77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		pwm5: pwm@e6e35000 {
-+			compatible = "renesas,pwm-r8a77470", "renesas,pwm-rcar";
-+			reg = <0 0xe6e35000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc r8a77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		pwm6: pwm@e6e36000 {
-+			compatible = "renesas,pwm-r8a77470", "renesas,pwm-rcar";
-+			reg = <0 0xe6e36000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc r8a77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
- 		sdhi0: sd@ee100000 {
- 			compatible = "renesas,sdhi-r8a77470",
- 				     "renesas,rcar-gen2-sdhi";
++	if (cdns_uart_data->nomodem)
++		return;
+ 
+ 	val = readl(port->membase + CDNS_UART_MODEMCR);
+ 	mode_reg = readl(port->membase + CDNS_UART_MR);
+@@ -1669,6 +1679,8 @@ static int cdns_uart_probe(struct platform_device *pdev)
+ 		console_port = NULL;
+ #endif
+ 
++	cdns_uart_data->nomodem = of_property_read_bool(pdev->dev.of_node,
++							"xlnx,uart-nomodem");
+ 	return 0;
+ 
+ err_out_pm_disable:
 -- 
-2.7.4
+2.1.1
