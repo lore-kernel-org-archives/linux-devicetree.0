@@ -1,57 +1,54 @@
-From: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-Subject: [LINUX PATCH v2 1/3] dt-bindings: spi: Add device tree binding documentation for Zynq QSPI controller
-Date: Mon, 1 Apr 2019 13:28:32 +0530
-Message-ID: <1554105512-18758-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 1/7] ARM: dts: sun8i: tbs-a711: Enable bluetooth
+Date: Mon, 1 Apr 2019 10:00:07 +0200
+Message-ID: <20190401080007.6vzxijc6vsktg72h@flea>
+References: <20190327001843.2420-1-megous@megous.com>
+ <20190327001843.2420-2-megous@megous.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4exob3luluxypp5j"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190327001843.2420-2-megous@megous.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, bbrezillon@kernel.org, robh@kernel.org
-Cc: michals@xilinx.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, nagasuresh12@gmail.com, Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+To: megous@megous.com
+Cc: wens@csie.org, robh@kernel.org, johan@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the dts binding document for Zynq SOC QSPI controller.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
----
-Changes in v2
- - None
----
- .../devicetree/bindings/spi/spi-zynq-qspi.txt      | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
+--4exob3luluxypp5j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt b/Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
-new file mode 100644
-index 0000000..16b734a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
-@@ -0,0 +1,25 @@
-+Xilinx Zynq QSPI controller Device Tree Bindings
-+-------------------------------------------------------------------
-+
-+Required properties:
-+- compatible		: Should be "xlnx,zynq-qspi-1.0".
-+- reg			: Physical base address and size of QSPI registers map.
-+- interrupts		: Property with a value describing the interrupt
-+			  number.
-+- clock-names		: List of input clock names - "ref_clk", "pclk"
-+			  (See clock bindings for details).
-+- clocks		: Clock phandles (see clock bindings for details).
-+
-+Optional properties:
-+- num-cs		: Number of chip selects used.
-+
-+Example:
-+	qspi: spi@e000d000 {
-+		compatible = "xlnx,zynq-qspi-1.0";
-+		reg = <0xe000d000 0x1000>;
-+		interrupt-parent = <&intc>;
-+		interrupts = <0 19 4>;
-+		clock-names = "ref_clk", "pclk";
-+		clocks = <&clkc 10>, <&clkc 43>;
-+		num-cs = <1>;
-+	};
--- 
-2.7.4
+Hi,
+
+On Wed, Mar 27, 2019 at 01:18:37AM +0100, megous@megous.com wrote:
+> From: Ondrej Jirman <megous@megous.com>
+>
+> TBS A711 tablet has a bcm20702a1 bluetooth chip (part of AP6210 WiFi/BT
+> module) connected to UART1. Add node for the blutooth chip.
+>
+> The driver needs brcm/BCM20702A1.hcd firmware file to run.
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+
+Applied, thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--4exob3luluxypp5j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKHFBwAKCRDj7w1vZxhR
+xXyLAP9bCWtNRTIAWTermq835YSBaQ22WJyb57nv83ywICiwqAEAok5eYrU4JfaB
+nDiL02nHvIGGBQRuO2NiiLkRoPaShgU=
+=t0jz
+-----END PGP SIGNATURE-----
+
+--4exob3luluxypp5j--
