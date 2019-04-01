@@ -1,76 +1,85 @@
-Return-Path: <SRS0=qFGJ=SG=gmail.com=thierry.reding@kernel.org>
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 2/8] ARM: tegra: apalis: Move PLL power supplies to XUSB pad controller
-Date: Thu,  4 Apr 2019 13:25:05 +0200
-Message-Id: <20190404112511.28118-2-thierry.reding@gmail.com>
-In-Reply-To: <20190404112511.28118-1-thierry.reding@gmail.com>
-References: <20190404112511.28118-1-thierry.reding@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=akoX=SD=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 09/12] ARM: dts: r8a77470: Add USB2.0 Host (EHCI/OHCI) device
+Date: Mon,  1 Apr 2019 13:53:49 +0100
+Message-Id: <1554123232-58942-10-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
+References: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Thierry Reding <treding@nvidia.com>
+Define the r8a77470 generic part of the USB2.0 Host Controller device
+nodes (ehci[01]/ohci[01]).
 
-The XUSB pad controller is responsible for supplying power to the PLLs
-used to drive the various USB, PCI and SATA pads. Move the PLL power
-supplies from the PCIe and XUSB controllers to the XUSB pad controller
-to make sure they are available when needed.
-
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 ---
- arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi | 7 +++++++
- arch/arm/boot/dts/tegra124-apalis.dtsi      | 5 +++++
- 2 files changed, 12 insertions(+)
+V1-->V2
+ * New patch
+---
+ arch/arm/boot/dts/r8a77470.dtsi | 50 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-diff --git a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-index 367eb8c86098..691dd0f628e5 100644
---- a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-+++ b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-@@ -17,6 +17,7 @@
+diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
+index d6438fb..c8a4651 100644
+--- a/arch/arm/boot/dts/r8a77470.dtsi
++++ b/arch/arm/boot/dts/r8a77470.dtsi
+@@ -624,6 +624,56 @@
+ 			status = "disabled";
+ 		};
  
- 	pcie@1003000 {
- 		status = "okay";
++		ohci0: usb@ee080000 {
++			compatible = "generic-ohci";
++			reg = <0 0xee080000 0 0x100>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 703>;
++			phys = <&usb0 0>;
++			phy-names = "usb";
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 703>;
++			status = "disabled";
++		};
 +
- 		avddio-pex-supply = <&reg_1v05_vdd>;
- 		avdd-pex-pll-supply = <&reg_1v05_vdd>;
- 		avdd-pll-erefe-supply = <&reg_1v05_avdd>;
-@@ -1796,6 +1797,7 @@
- 		       <&{/padctl@7009f000/pads/usb2/lanes/usb2-2}>,
- 		       <&{/padctl@7009f000/pads/pcie/lanes/pcie-0}>;
- 		phy-names = "usb2-0", "usb3-1", "usb2-1", "usb2-2", "usb3-0";
++		ohci1: usb@ee0c0000 {
++			compatible = "generic-ohci";
++			reg = <0 0xee0c0000 0 0x100>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 705>;
++			phys = <&usb0 1>, <&usb1 0>;
++			phy-names = "usb";
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 705>;
++			status = "disabled";
++		};
 +
- 		avddio-pex-supply = <&reg_1v05_vdd>;
- 		avdd-pll-erefe-supply = <&reg_1v05_avdd>;
- 		avdd-pll-utmip-supply = <&reg_1v8_vddio>;
-@@ -1807,6 +1809,11 @@
- 	};
- 
- 	padctl@7009f000 {
-+		avdd-pll-utmip-supply = <&reg_1v8_vddio>;
-+		avdd-pll-erefe-supply = <&reg_1v05_avdd>;
-+		avdd-pex-pll-supply = <&reg_1v05_vdd>;
-+		hvdd-pex-pll-e-supply = <&reg_module_3v3>;
++		ehci0: usb@ee080100 {
++			compatible = "renesas,ehci-r8a77470";
++			reg = <0 0xee080100 0 0x800>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 703>;
++			phys = <&usb0 0>;
++			phy-names = "usb";
++			companion = <&ohci0>;
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 703>;
++			status = "disabled";
++		};
 +
- 		pads {
- 			usb2 {
- 				status = "okay";
-diff --git a/arch/arm/boot/dts/tegra124-apalis.dtsi b/arch/arm/boot/dts/tegra124-apalis.dtsi
-index 13c93cd507d8..1da6fe1925a3 100644
---- a/arch/arm/boot/dts/tegra124-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra124-apalis.dtsi
-@@ -1837,6 +1837,11 @@
- 	};
- 
- 	padctl@7009f000 {
-+		avdd-pll-utmip-supply = <&reg_1v8_vddio>;
-+		avdd-pll-erefe-supply = <&reg_1v05_avdd>;
-+		avdd-pex-pll-supply = <&reg_1v05_vdd>;
-+		hvdd-pex-pll-e-supply = <&reg_module_3v3>;
++		ehci1: usb@ee0c0100 {
++			compatible = "renesas,ehci-r8a77470";
++			reg = <0 0xee0c0100 0 0x800>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 705>;
++			phys = <&usb0 1>, <&usb1 0>;
++			phy-names = "usb";
++			companion = <&ohci1>;
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 705>;
++			status = "disabled";
++		};
 +
- 		pads {
- 			usb2 {
- 				status = "okay";
+ 		sdhi0: sd@ee100000 {
+ 			compatible = "renesas,sdhi-r8a77470",
+ 				     "renesas,rcar-gen2-sdhi";
 -- 
-2.21.0
+2.7.4
