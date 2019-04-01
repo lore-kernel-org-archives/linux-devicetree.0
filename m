@@ -1,54 +1,62 @@
-Return-Path: <SRS0=5T1w=SH=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v5 08/13] media: tvp5150: initialize subdev before parsing device tree
-Date: Fri,  5 Apr 2019 08:03:12 +0200
-Message-Id: <20190405060317.11240-9-m.felsch@pengutronix.de>
-In-Reply-To: <20190405060317.11240-1-m.felsch@pengutronix.de>
-References: <20190405060317.11240-1-m.felsch@pengutronix.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org
-Cc: p.zabel@pengutronix.de, javierm@redhat.co, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Michael Tretter <m.tretter@pengutronix.de>
+Return-Path: <SRS0=akoX=SD=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 00/12] Add USB2.0 support
+Date: Mon,  1 Apr 2019 13:53:40 +0100
+Message-Id: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Biju Das <biju.das@bp.renesas.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Michael Tretter <m.tretter@pengutronix.de>
+This series adds USB 2.0 support for the RZ/G1C SoC. RZ/G1C
+SoC is similar to R-Car Gen2 SoC, but there are some differences
 
-There are several debug prints in the tvp5150_parse_dt() function, which
-do not print the prefix, because the v4l2_subdev is not initialized, yet.
+- It has a shared pll reset register for hsusb0/hsusb1 and this register 
+  reside in hsusb0 block.
 
-Initialize the v4l2_subdev before parsing the device tree to fix the
-debug messages.
+- Each USB host needs to deassert the pll reset of hsusb block apart from
+  initializing interrupt enable,OVC detection timer and suspend/resume timer
+  register.
 
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/media/i2c/tvp5150.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+To address the above scenarios, created a ehci-r8a77470 host controller
+driver.
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index d126127628c5..82a9cb9bf736 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -1974,6 +1974,9 @@ static int tvp5150_probe(struct i2c_client *c,
- 
- 	core->regmap = map;
- 	sd = &core->sd;
-+	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
-+	sd->internal_ops = &tvp5150_internal_ops;
-+	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
- 
- 	if (IS_ENABLED(CONFIG_OF) && np) {
- 		res = tvp5150_parse_dt(core, np);
-@@ -1986,10 +1989,6 @@ static int tvp5150_probe(struct i2c_client *c,
- 		core->mbus_type = V4L2_MBUS_BT656;
- 	}
- 
--	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
--	sd->internal_ops = &tvp5150_internal_ops;
--	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
--
- 	res = tvp5150_mc_init(sd);
- 	if (res)
- 		goto err_cleanup_dt;
+This patchset is based on linux_next next-20190401 branch.
+
+V1-->V2
+ * Incorporated Rob's review comment
+   Ref: https://patchwork.kernel.org/patch/10655853/
+ * Incorporated Shimoda-San's review comment
+   Ref: https://patchwork.kernel.org/patch/10655855/
+ * Created ehci-r8a77470 host driver.
+
+Biju Das (12):
+  dt-bindings: phy: rcar-gen2: Add r8a77470 support
+  phy: renesas: phy-rcar-gen2: Add support for r8a77470
+  dt-bindings: usb: ehci-r8a77470 devicetree binding document
+  usb: host: ehci-r8a77470: Add EHCI support for Renesas RZ/G1C devices
+  ARM: shmobile: Enable USB [EO]HCI HCD PLATFORM support in
+    shmobile_defconfig
+  dt-bindings: usb: renesas_usbhs: Add support for r8a77470
+  ARM: dts: r8a77470: Add USB PHY DT support
+  ARM: dts: iwg23s-sbc: Enable USB Phy[01]
+  ARM: dts: r8a77470: Add USB2.0 Host (EHCI/OHCI) device
+  ARM: dts: iwg23s-sbc: Enable USB USB2.0 Host
+  ARM: dts: r8a77470: Add HSUSB device nodes
+  ARM: dts: iwg23s-sbc: Enable HS-USB
+
+ .../devicetree/bindings/phy/rcar-gen2-phy.txt      |  57 +++-
+ .../devicetree/bindings/usb/ehci-r8a77470.txt      |  35 +++
+ .../devicetree/bindings/usb/renesas_usbhs.txt      |   1 +
+ arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts          |  36 +++
+ arch/arm/boot/dts/r8a77470.dtsi                    | 121 ++++++++
+ arch/arm/configs/shmobile_defconfig                |   2 +
+ drivers/phy/renesas/phy-rcar-gen2.c                |  88 +++++-
+ drivers/usb/host/Kconfig                           |   9 +
+ drivers/usb/host/Makefile                          |   1 +
+ drivers/usb/host/ehci-r8a77470.c                   | 327 +++++++++++++++++++++
+ 10 files changed, 671 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/ehci-r8a77470.txt
+ create mode 100644 drivers/usb/host/ehci-r8a77470.c
+
 -- 
-2.20.1
+2.7.4
