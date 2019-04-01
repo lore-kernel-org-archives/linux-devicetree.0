@@ -1,84 +1,108 @@
-From: Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [PATCH v5 00/13] Add support for usb on Hikey960
-Date: Mon, 1 Apr 2019 15:57:03 +0100
-Message-ID: <867b3cd6-85d5-e87c-0973-ac48d13fb18b@arm.com>
-References: <20190329041409.70138-1-chenyu56@huawei.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v2 2/7] dt-bindings: phy: Add binding for Qualcomm PCIe2
+ PHY
+Date: Mon, 1 Apr 2019 15:58:54 +0100
+Message-ID: <20190401145854.GA6234@e107981-ln.cambridge.arm.com>
+References: <20190219060407.15263-1-bjorn.andersson@linaro.org>
+ <20190219060407.15263-3-bjorn.andersson@linaro.org>
+ <20190222195758.GA26984@bogus>
+ <20190227042545.GE5511@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190329041409.70138-1-chenyu56@huawei.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190227042545.GE5511@minitux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yu Chen <chenyu56@huawei.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 29/03/2019 04:13, Yu Chen wrote:
-> The patchset adds support for usb functionality of Hikey960, includes:
-> - usb phy driver for Hisilicon Kirin Soc hi3660
-> - usb driver for HiKey960 board
-> - some adjustment in dwc3 and usb role driver
-> - dts for support usb of HiKey960
+On Tue, Feb 26, 2019 at 08:25:45PM -0800, Bjorn Andersson wrote:
+> On Fri 22 Feb 11:57 PST 2019, Rob Herring wrote:
 > 
-> ---
-> v5:
-> * Split modification of usb role into two patches, the first one introduces
-> stubs for the exiting functions, and the second adds notifier functions.
-> ---
+> > On Mon, Feb 18, 2019 at 10:04:02PM -0800, Bjorn Andersson wrote:
+> > > The Qualcomm PCIe2 PHY is a Synopsys based PCIe PHY found in a number of
+> > > Qualcomm platforms, add a binding to describe this.
+> > > 
+> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > ---
+> > >  .../bindings/phy/qcom-pcie2-phy.txt           | 40 +++++++++++++++++++
+> > >  1 file changed, 40 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+> > > new file mode 100644
+> > > index 000000000000..7da02f9d78c7
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+> > > @@ -0,0 +1,40 @@
+> > > +Qualcomm PCIe2 PHY controller
+> > > +=============================
+> > > +
+> > > +The Qualcomm PCIe2 PHY is a Synopsys based phy found in a number of Qualcomm
+> > > +platforms.
+> > > +
+> > > +Required properties:
+> > > + - compatible: compatible list, should be:
+> > > +	       "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy"
+> > > +
+> > > + - reg: offset and length of the PHY register set.
+> > > + - #phy-cells: must be 0.
+> > > +
+> > > + - clocks: a clock-specifier pair for the "pipe" clock
+> > > +
+> > > + - vdda-vp-supply: phandle to low voltage regulator
+> > > + - vdda-vph-supply: phandle to high voltage regulator
+> > > +
+> > > + - resets: reset-specifier pairs for the "phy" and "pipe" resets
+> > > + - reset-names: list of resets, should contain:
+> > > +		"phy" and "pipe"
+> > > +
+> > > + - clock-output-names: name of the outgoing clock signal from the PHY PLL
+> > 
+> > Not valid to have this without '#clock-cells'.
+> > 
 > 
+> This happens to work today as we don't describe &gcc's dependency on
+> this, but just rely on the global clock namespace. But it should be
+> there, so I'll respin this.
 
-Ran the usual tests, still works fine for me.
-
-Tested-by: Valentin Schneider <valentin.schneider@arm.com>
+Should I drop this series from the PCI queue waiting for v3 then ?
 
 Thanks,
-Valentin
+Lorenzo
 
-> Yu Chen (13):
->   dt-bindings: phy: Add support for HiSilicon's hi3660 USB PHY
->   dt-bindings: misc: Add bindings for HiSilicon usb hub and data role
->     switch functionality on HiKey960
->   usb: dwc3: dwc3-of-simple: Add support for dwc3 of Hisilicon Soc
->     Platform
->   usb: dwc3: Add splitdisable quirk for Hisilicon Kirin Soc
->   usb: dwc3: Execute GCTL Core Soft Reset while switch mdoe for
->     Hisilicon Kirin Soc
->   usb: dwc3: Increase timeout for CmdAct cleared by device controller
->   phy: Add usb phy support for hi3660 Soc of Hisilicon
->   usb: roles: Introduce stubs for the exiting functions in role.h.
->   usb: roles: Add usb role switch notifier.
->   usb: dwc3: Registering a role switch in the DRD code.
->   hikey960: Support usb functionality of Hikey960
->   usb: gadget: Add configfs attribuite for controling
->     match_existing_only
->   dts: hi3660: Add support for usb on Hikey960
+> > Though I'm confused how this and the input clock name seem to match.
+> > 
 > 
->  .../bindings/misc/hisilicon-hikey-usb.txt          |  52 +++++
->  .../devicetree/bindings/phy/phy-hi3660-usb3.txt    |  26 +++
->  MAINTAINERS                                        |   8 +
->  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts  |  53 +++++
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |  73 +++++++
->  drivers/misc/Kconfig                               |   6 +
->  drivers/misc/Makefile                              |   1 +
->  drivers/misc/hisi_hikey_usb.c                      | 162 ++++++++++++++
->  drivers/phy/hisilicon/Kconfig                      |  10 +
->  drivers/phy/hisilicon/Makefile                     |   1 +
->  drivers/phy/hisilicon/phy-hi3660-usb3.c            | 233 +++++++++++++++++++++
->  drivers/usb/dwc3/Kconfig                           |   1 +
->  drivers/usb/dwc3/core.c                            |  45 ++++
->  drivers/usb/dwc3/core.h                            |  15 ++
->  drivers/usb/dwc3/drd.c                             |  63 +++++-
->  drivers/usb/dwc3/dwc3-of-simple.c                  |   4 +-
->  drivers/usb/dwc3/gadget.c                          |   2 +-
->  drivers/usb/gadget/configfs.c                      |  32 +++
->  drivers/usb/roles/class.c                          |  20 +-
->  include/linux/usb/role.h                           |  46 ++++
->  20 files changed, 849 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
->  create mode 100644 drivers/misc/hisi_hikey_usb.c
->  create mode 100644 drivers/phy/hisilicon/phy-hi3660-usb3.c
+> The PHY generates the clock we call "pcie_0_pipe_clk" which is fed into
+> the global clock controller (gcc), where it can be gated (and divided)
+> and then fed back to both the PHY and the controller as
+> "gcc_pcie_0_pipe_clk".
 > 
+> 
+> Thanks for the review Rob.
+> 
+> Regards,
+> Bjorn
+> 
+> > > +
+> > > +Example:
+> > > + phy@7786000 {
+> > > +	compatible = "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy";
+> > > +	reg = <0x07786000 0xb8>;
+> > > +
+> > > +	clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
+> > > +	resets = <&gcc GCC_PCIEPHY_0_PHY_BCR>,
+> > > +	         <&gcc GCC_PCIE_0_PIPE_ARES>;
+> > > +	reset-names = "phy", "pipe";
+> > > +
+> > > +	vdda-vp-supply = <&vreg_l3_1p05>;
+> > > +	vdda-vph-supply = <&vreg_l5_1p8>;
+> > > +
+> > > +	clock-output-names = "pcie_0_pipe_clk";
+> > > +	#phy-cells = <0>;
+> > > + };
+> > > -- 
+> > > 2.18.0
+> > > 
