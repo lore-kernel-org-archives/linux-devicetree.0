@@ -1,69 +1,39 @@
-From: Harish Bandi <c-hbandi@codeaurora.org>
-Subject: Re: [PATCH v6 2/2] dt-bindings: net: bluetooth: Add device tree
- bindings for QTI chip WCN3998
-Date: Mon, 01 Apr 2019 18:09:23 +0530
-Message-ID: <e671ad7dee39bf5a0237f7d00553bf4c@codeaurora.org>
-References: <1553689723-21017-1-git-send-email-c-hbandi@codeaurora.org>
- <1553689723-21017-3-git-send-email-c-hbandi@codeaurora.org>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 0/2] drm/bridge: ti-tfp410: Handle bus-format for 24/12 lines
+ selection
+Date: Mon, 1 Apr 2019 15:41:41 +0300
+Message-ID: <20190401124143.17179-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553689723-21017-3-git-send-email-c-hbandi@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: marcel@holtmann.org, johan.hedberg@gmail.com
-Cc: mka@chromium.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, anubhavg@codeaurora.org, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, linux-bluetooth-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, a.hajda@samsung.com, jsarha@ti.com
+Cc: airlied@linux.ie, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Could you please help to review DT bindings patch.
-
-
-On 2019-03-27 17:58, Harish Bandi wrote:
-> This patch enables regulators for the Qualcomm Bluetooth WCN3998
-> controller.
-> 
-> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
-> ---
-> Changes in V6:
-> - no changes
-> ---
->  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> index 824c0e2..7ef6118 100644
-> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> @@ -11,20 +11,21 @@ Required properties:
->   - compatible: should contain one of the following:
->     * "qcom,qca6174-bt"
->     * "qcom,wcn3990-bt"
-> +   * "qcom,wcn3998-bt"
-> 
->  Optional properties for compatible string qcom,qca6174-bt:
-> 
->   - enable-gpios: gpio specifier used to enable chip
->   - clocks: clock provided to the controller (SUSCLK_32KHZ)
-> 
-> -Required properties for compatible string qcom,wcn3990-bt:
-> +Required properties for compatible string qcom,wcn399x-bt:
-> 
->   - vddio-supply: VDD_IO supply regulator handle.
->   - vddxo-supply: VDD_XO supply regulator handle.
->   - vddrf-supply: VDD_RF supply regulator handle.
->   - vddch0-supply: VDD_CH0 supply regulator handle.
-> 
-> -Optional properties for compatible string qcom,wcn3990-bt:
-> +Optional properties for compatible string qcom,wcn399x-bt:
-> 
->   - max-speed: see 
-> Documentation/devicetree/bindings/serial/slave-device.txt
-
-
-Thanks,
-Harish
+SGksCgpUaGUgVEZQNDEwIHN1cHBvcnRzIDI0IGJpdCwgc2luZ2xlLWVkZ2UgYW5kIDEyIGJpdCwg
+ZHVhbC1lZGdlIG1vZGVzLgpEZXBlbmRpbmcgb24gaG93IG1hbnkgd2lyZXMgYXJlIHVzZWQgKDI0
+LzEyKSB0aGUgZHJpdmVyIGNhbiBzZXQgdGhlIGNvcnJlY3QKYnVzX2Zvcm1hdC4KCkluIGNhc2Ug
+dGhlIGJ1cy13aWR0aCBpcyBub3Qgc3BlY2lmaWVkIChvbGQgRFQgYmxvYnMpIGFzc3VtZSAyNCBs
+aW5lcyBhcyB0aGUKZHJpdmVyIGFzc3VtZWQgdGhhdCBpbiB0aGUgcGFzdCBhbmQgYWxsIGJvYXJk
+cyB1c2luZyB0ZnA0MTAgdWF2ZSB0aGlzIHNldHVwLgoKUmVnYXJkcywKUGV0ZXIKLS0tClBldGVy
+IFVqZmFsdXNpICgyKToKICBkdC1iaW5kaW5nczogZGlzcGxheTogdGZwNDEwOiBBZGQgYnVzLXdp
+ZHRoIHBhcmFtZXRlciBwcm9wZXJ0eQogIGRybS9icmlkZ2U6IHRpLXRmcDQxMDogU2V0IHRoZSBi
+dXNfZm9ybWF0CgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHRmcDQxMC50eHQgICAg
+ICAgfCAxMCArKysrKysrKystCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RpLXRmcDQxMC5jICAg
+ICAgICAgICAgICB8IDE3ICsrKysrKysrKysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQsIDI2IGlu
+c2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCi0tIApQZXRlcgoKVGV4YXMgSW5zdHJ1bWVudHMg
+RmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuClktdHVubnVzL0J1
+c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
