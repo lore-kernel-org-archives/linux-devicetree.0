@@ -1,128 +1,47 @@
-From: Andreas Klinger <ak@it-klinger.de>
-Subject: [PATCH v2] avia-hx711.yaml: transform DT binding to YAML
-Date: Mon, 1 Apr 2019 19:33:54 +0200
-Message-ID: <20190401173353.g4k5vb6flsfgtaaj@arbad>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: RE: [PATCH V3 05/10] arm64: tegra: fix default tap and trim values
+Date: Mon, 1 Apr 2019 17:42:58 +0000
+Message-ID: <BYAPR12MB339845B4C5A37468841E256AC2550@BYAPR12MB3398.namprd12.prod.outlook.com>
+References: <1552513552-23423-1-git-send-email-skomatineni@nvidia.com>
+ <1552513552-23423-5-git-send-email-skomatineni@nvidia.com>
+ <CAPDyKFq4ZVaMmvefuVqGs84E7xg5VgvU-Ecq1MYJdmBhuEm7xA@mail.gmail.com>
+ <BYAPR12MB3398F91B190D9B1C56FDC4F7C2420@BYAPR12MB3398.namprd12.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <BYAPR12MB3398F91B190D9B1C56FDC4F7C2420@BYAPR12MB3398.namprd12.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harjani Ritesh <riteshh@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Aniruddha Tvs Rao <anrao@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-replace avia-hx711.txt by avia-hx711.yaml as yaml devicetree
-documentation for avia hx711 iio adc sensor
-
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- .../devicetree/bindings/iio/adc/avia-hx711.txt     | 24 --------
- .../devicetree/bindings/iio/adc/avia-hx711.yaml    | 66 ++++++++++++++++++++++
- 2 files changed, 66 insertions(+), 24 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
- create mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-deleted file mode 100644
-index 7222328a3d0d..000000000000
---- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--* AVIA HX711 ADC chip for weight cells
--  Bit-banging driver
--
--Required properties:
-- - compatible:	Should be "avia,hx711"
-- - sck-gpios:	Definition of the GPIO for the clock
-- - dout-gpios:	Definition of the GPIO for data-out
--		See Documentation/devicetree/bindings/gpio/gpio.txt
-- - avdd-supply:	Definition of the regulator used as analog supply
--
--Optional properties:
-- - clock-frequency:	Frequency of PD_SCK in Hz
--			Minimum value allowed is 10 kHz because of maximum
--			high time of 50 microseconds.
--
--Example:
--weight {
--	compatible = "avia,hx711";
--	sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
--	dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
--	avdd-suppy = <&avdd>;
--	clock-frequency = <100000>;
--};
--
-diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
-new file mode 100644
-index 000000000000..8a4100ceeaf2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/iio/adc/avia-hx711.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: AVIA HX711 ADC chip for weight cells
-+
-+maintainers:
-+  - Andreas Klinger <ak@it-klinger.de>
-+
-+description: |
-+  Bit-banging driver using two GPIOs:
-+  - sck-gpio gives a clock to the sensor with 24 cycles for data retrieval
-+    and up to 3 cycles for selection of the input channel and gain for the
-+    next measurement
-+  - dout-gpio is the sensor data the sensor responds to the clock
-+
-+  Specifications about the driver can be found at:
-+  http://www.aviaic.com/ENProducts.aspx
-+
-+properties:
-+  compatible:
-+    enum:
-+      - avia,hx711
-+
-+  sck-gpios:
-+    description:
-+      Definition of the GPIO for the clock (output). In the datasheet it is
-+      named PD_SCK
-+    maxItems: 1
-+
-+  dout-gpios:
-+    description:
-+      Definition of the GPIO for the data-out sent by the sensor in
-+      response to the clock (input).
-+      See Documentation/devicetree/bindings/gpio/gpio.txt for information
-+      on how to specify a consumer gpio.
-+    maxItems: 1
-+
-+  avdd-supply:
-+    description:
-+      Definition of the regulator used as analog supply
-+    maxItems: 1
-+
-+  clock-frequency:
-+    minimum: 20000
-+    maximum: 2500000
-+    default: 400000
-+
-+required:
-+  - compatible
-+  - sck-gpios
-+  - dout-gpios
-+  - avdd-supply
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    weight {
-+        compatible = "avia,hx711";
-+        sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
-+        dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
-+        avdd-suppy = <&avdd>;
-+        clock-frequency = <100000>;
-+    };
--- 
-2.11.0
+PiA+ID4NCj4gPiA+IERlZmF1bHQgdGFwIGFuZCB0cmltIHZhbHVlcyBhcmUgaW5jb3JyZWN0IGZv
+ciBUZWdyYTE4NiBTRE1NQzQuDQo+ID4gPiBUaGlzIHBhdGNoIGZpeGVzIGl0Lg0KPiA+ID4NCj4g
+PiA+IFRlc3RlZC1ieTogSm9uIEh1bnRlciA8am9uYXRoYW5oQG52aWRpYS5jb20+DQo+ID4gPiBT
+aWduZWQtb2ZmLWJ5OiBTb3dqYW55YSBLb21hdGluZW5pIDxza29tYXRpbmVuaUBudmlkaWEuY29t
+Pg0KPiA+DQo+ID4gSXMgdGhpcyBhIGZpeCBhbmQvb3IgZm9yIHN0YWJsZT8NCj4gPg0KPiA+IElu
+IGVpdGhlciBjYXNlLCBJIGFtIGxlYXZpbmcgdGhpcyBmb3IgYXJtLXNvYy4NCj4gPg0KPiA+IEtp
+bmQgcmVnYXJkcw0KPiA+IFVmZmUNCj4gPg0KPg0KPiBUaGFua3MgVWZmZS4gWWVzIHRoaXMgaXMg
+YXBwbGljYWJsZSBmb3Igc3RhYmxlLg0KDQpJIGRvbuKAmXQgc2VlIGFueSBjb25maXJtYXRpb24g
+b2YgdGhpcyBiZWluZyBhcHBsaWVkIGJ5IGFybS1zb2MuDQpTbyB0aG91Z2h0IHRvIHJlLWNoZWNr
+IGlmIHRoaXMgaXMgYXBwbGllZD8NCg0KPiA+ID4gLS0tDQo+ID4gPiAgYXJjaC9hcm02NC9ib290
+L2R0cy9udmlkaWEvdGVncmExODYuZHRzaSB8IDQgKystLQ0KPiA+ID4gIDEgZmlsZSBjaGFuZ2Vk
+LCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4gPg0KPiA+ID4gZGlmZiAtLWdp
+dCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbnZpZGlhL3RlZ3JhMTg2LmR0c2kgDQo+ID4gPiBiL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvbnZpZGlhL3RlZ3JhMTg2LmR0c2kNCj4gPiA+IGluZGV4IDk3YWVi
+OTQ2ZWQ1ZS4uNDcyZjU1ZmU5NDg4IDEwMDY0NA0KPiA+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290
+L2R0cy9udmlkaWEvdGVncmExODYuZHRzaQ0KPiA+ID4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0
+cy9udmlkaWEvdGVncmExODYuZHRzaQ0KPiA+ID4gQEAgLTMxNyw4ICszMTcsOCBAQA0KPiA+ID4g
+ICAgICAgICAgICAgICAgIG52aWRpYSxwYWQtYXV0b2NhbC1wdWxsLWRvd24tb2Zmc2V0LTF2OC10
+aW1lb3V0ID0gPDB4MGE+Ow0KPiA+ID4gICAgICAgICAgICAgICAgIG52aWRpYSxwYWQtYXV0b2Nh
+bC1wdWxsLXVwLW9mZnNldC0zdjMtdGltZW91dCA9IDwweDBhPjsNCj4gPiA+ICAgICAgICAgICAg
+ICAgICBudmlkaWEscGFkLWF1dG9jYWwtcHVsbC1kb3duLW9mZnNldC0zdjMtdGltZW91dCA9IDww
+eDBhPjsNCj4gPiA+IC0gICAgICAgICAgICAgICBudmlkaWEsZGVmYXVsdC10YXAgPSA8MHg1PjsN
+Cj4gPiA+IC0gICAgICAgICAgICAgICBudmlkaWEsZGVmYXVsdC10cmltID0gPDB4OT47DQo+ID4g
+PiArICAgICAgICAgICAgICAgbnZpZGlhLGRlZmF1bHQtdGFwID0gPDB4OT47DQo+ID4gPiArICAg
+ICAgICAgICAgICAgbnZpZGlhLGRlZmF1bHQtdHJpbSA9IDwweDU+Ow0KPiA+ID4gICAgICAgICAg
+ICAgICAgIG52aWRpYSxkcXMtdHJpbSA9IDw2Mz47DQo+ID4gPiAgICAgICAgICAgICAgICAgbW1j
+LWhzNDAwLTFfOHY7DQo+ID4gPiAgICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsN
+Cj4gPiA+IC0tDQo+ID4gPiAyLjcuNA0KPiA+ID4NCg==
