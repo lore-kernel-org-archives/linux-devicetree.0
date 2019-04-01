@@ -1,36 +1,154 @@
-From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v3 1/2] dt: bindings: add dt entry for XO calibration support
-Date: Mon,  1 Apr 2019 14:49:25 +0530
-Message-ID: <20190401091926.19119-2-govinds@codeaurora.org>
-References: <20190401091926.19119-1-govinds@codeaurora.org>
+From: Steven Price <steven.price@arm.com>
+Subject: Re: [PATCH v4] dt-bindings: gpu: add bindings for the ARM Mali
+ Bifrost GPU
+Date: Mon, 1 Apr 2019 11:00:57 +0100
+Message-ID: <1640dd7b-3576-d9ce-0641-6b6a64a87275@arm.com>
+References: <20190401080949.14550-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20190401091926.19119-1-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190401080949.14550-1-narmstrong@baylibre.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, daniel@ffwll.ch, robh@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add dt binding to get xo calibration data support for wifi rf clock.
+On 01/04/2019 09:09, Neil Armstrong wrote:
+> Add the bindings for the Bifrost family of ARM Mali GPUs.
+> 
+> The Bifrost GPU architecture is similar to the Midgard family,
+> but with a different Shader Core & Execution Engine structures.
+> 
+> Bindings are based on the Midgard family bindings, but the inner
+> architectural changes makes it a separate family needing separate
+> bindings.
+> 
+> The Bifrost GPUs are present in a number of recent SoCs, like the
+> Amlogic G12A Family, and many other vendors.
+> The Amlogic vendor specific compatible is added to handle the
+> specific IP integration differences and dependencies.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../bindings/gpu/arm,mali-bifrost.txt         | 92 +++++++++++++++++++
+>  1 file changed, 92 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+> 
+> Changes since v3:
+> - Added note about discoverable model/revision
+> - Enforced fixed defined irq order
+> - Fixed typo in accommodate
+> 
+> Changes since v2:
+> - moved to a single compatible since HW is fully discoverable
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+> new file mode 100644
+> index 000000000000..711c9ead17a2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+> @@ -0,0 +1,92 @@
+> +ARM Mali Bifrost GPU
+> +====================
+> +
+> +Required properties:
+> +
+> +- compatible :
+> +  * Since Mali Bifrost GPU model/revision if fully discoverable by reading
+                                             ^^
+s/if/is/
 
-Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 1 +
- 1 file changed, 1 insertion(+)
+> +    some determined registers, must contain the following:
+> +    + "arm,mali-bifrost"
+> +  * which must be preceded by one of the following vendor specifics:
+> +    + "amlogic,meson-g12a-mali"
+> +
+> +- reg : Physical base address of the device and length of the register area.
+> +
+> +- interrupts : Contains the three IRQ lines required by Mali Bifrost devices,
+> +  in the following defined order.
+> +
+> +- interrupt-names : Contains the names of IRQ resources in this exact defined
+> +  order: "job", "mmu", "gpu".
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-index ae661e65354e..81859507db67 100644
---- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-@@ -81,6 +81,7 @@ Optional properties:
- 	Definition: Name of external front end module used. Some valid FEM names
- 		    for example: "microsemi-lx5586", "sky85703-11"
- 		    and "sky85803" etc.
-+- qcom,xo-cal-data: xo cal offset to be configured in xo trim register.
- 
- Example (to supply PCI based wifi block details):
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Is there any point in having "interrupt-names" if we're fixing the
+order? Although I guess it helps match the Midgard bindings.
+
+Steve
+
+> +
+> +Optional properties:
+> +
+> +- clocks : Phandle to clock for the Mali Bifrost device.
+> +
+> +- mali-supply : Phandle to regulator for the Mali device. Refer to
+> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
+> +
+> +- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
+> +  for details.
+> +
+> +- resets : Phandle of the GPU reset line.
+> +
+> +Vendor-specific bindings
+> +------------------------
+> +
+> +The Mali GPU is integrated very differently from one SoC to
+> +another. In order to accommodate those differences, you have the option
+> +to specify one more vendor-specific compatible, among:
+> +
+> +- "amlogic,meson-g12a-mali"
+> +  Required properties:
+> +  - resets : Should contain phandles of :
+> +    + GPU reset line
+> +    + GPU APB glue reset line
+> +
+> +Example for a Mali-G31:
+> +
+> +gpu@ffa30000 {
+> +	compatible = "amlogic,meson-g12a-mali", "arm,mali-bifrost";
+> +	reg = <0xffe40000 0x10000>;
+> +	interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
+> +	interrupt-names = "job", "mmu", "gpu";
+> +	clocks = <&clk CLKID_MALI>;
+> +	mali-supply = <&vdd_gpu>;
+> +	operating-points-v2 = <&gpu_opp_table>;
+> +	resets = <&reset RESET_DVALIN_CAPB3>, <&reset RESET_DVALIN>;
+> +};
+> +
+> +gpu_opp_table: opp_table0 {
+> +	compatible = "operating-points-v2";
+> +
+> +	opp@533000000 {
+> +		opp-hz = /bits/ 64 <533000000>;
+> +		opp-microvolt = <1250000>;
+> +	};
+> +	opp@450000000 {
+> +		opp-hz = /bits/ 64 <450000000>;
+> +		opp-microvolt = <1150000>;
+> +	};
+> +	opp@400000000 {
+> +		opp-hz = /bits/ 64 <400000000>;
+> +		opp-microvolt = <1125000>;
+> +	};
+> +	opp@350000000 {
+> +		opp-hz = /bits/ 64 <350000000>;
+> +		opp-microvolt = <1075000>;
+> +	};
+> +	opp@266000000 {
+> +		opp-hz = /bits/ 64 <266000000>;
+> +		opp-microvolt = <1025000>;
+> +	};
+> +	opp@160000000 {
+> +		opp-hz = /bits/ 64 <160000000>;
+> +		opp-microvolt = <925000>;
+> +	};
+> +	opp@100000000 {
+> +		opp-hz = /bits/ 64 <100000000>;
+> +		opp-microvolt = <912500>;
+> +	};
+> +};
+> 
