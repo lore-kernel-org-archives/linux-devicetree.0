@@ -1,16 +1,16 @@
 From: <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH 4/5] MAINTAINERS: add myself as maintainer
-Date: Mon, 1 Apr 2019 08:41:42 +0000
-Message-ID: <659d6568-73fc-ef1c-2b67-65193d0d72e1@microchip.com>
+Subject: Re: [PATCH 5/5] MAINTAINERS: add timer-microchip-pit64c.c
+Date: Mon, 1 Apr 2019 08:41:57 +0000
+Message-ID: <e069e024-1295-76d0-ba24-25937499e641@microchip.com>
 References: <1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com>
- <1552580772-8499-5-git-send-email-claudiu.beznea@microchip.com>
+ <1552580772-8499-6-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552580772-8499-5-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <1552580772-8499-6-git-send-email-claudiu.beznea@microchip.com>
 Content-Language: en-US
-Content-ID: <88AB4AE1932BF040AAC3F4BCA17A5DAB@namprd11.prod.outlook.com>
+Content-ID: <53848906608B764D86069D656426F903@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Claudiu.Beznea@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, daniel.lezcano@linaro.org, tglx@linutronix.de
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
@@ -18,17 +18,17 @@ List-Id: devicetree@vger.kernel.org
 
 T24gMTQvMDMvMjAxOSBhdCAxNzoyNiwgQ2xhdWRpdSBCZXpuZWEgLSBNMTgwNjMgd3JvdGU6DQo+
 IEZyb206IENsYXVkaXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tPg0KPiAN
-Cj4gQWRkIG15c2VsZiBhcyBtYWludGFpbmVyIGZvciBNaWNyb2NoaXAgdGltZXJzIGFuZCBjbG9j
-a3NvdXJjZQ0KPiBkcml2ZXJzLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQ2xhdWRpdSBCZXpuZWEg
-PGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQoNCkFja2VkLWJ5OiBOaWNvbGFzIEZlcnJl
-IDxuaWNvbGFzLmZlcnJlQG1pY3JvY2hpcC5jb20+DQoNClRoYW5rcyBDbGF1ZGl1IQ0KDQo+IC0t
-LQ0KPiAgIE1BSU5UQUlORVJTIHwgMSArDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
-KCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJTkVSUw0KPiBpbmRl
-eCAwOTQ4ZDY1OTJlYTUuLjg1YmM4MTk4NjdkYSAxMDA2NDQNCj4gLS0tIGEvTUFJTlRBSU5FUlMN
-Cj4gKysrIGIvTUFJTlRBSU5FUlMNCj4gQEAgLTEwMDE4LDYgKzEwMDE4LDcgQEAgRjoJaW5jbHVk
-ZS9saW51eC9hdG1lbC1zc2MuaA0KPiAgIA0KPiAgIE1JQ1JPQ0hJUCBUSU1FUlMgQU5EIENMT0NL
-U09VUkNFIERSSVZFUlMNCj4gICBNOglOaWNvbGFzIEZlcnJlIDxuaWNvbGFzLmZlcnJlQG1pY3Jv
-Y2hpcC5jb20+DQo+ICtNOglDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFAbWljcm9jaGlw
-LmNvbT4NCj4gICBMOglsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcgKG1vZGVy
-YXRlZCBmb3Igbm9uLXN1YnNjcmliZXJzKQ0KPiAgIFM6CVN1cHBvcnRlZA0KPiAgIEY6CWRyaXZl
-cnMvbWlzYy9hdG1lbF90Y2xpYi5jDQo+IA0KDQoNCi0tIA0KTmljb2xhcyBGZXJyZQ0K
+Cj4gQWRkIHRpbWVyLW1pY3JvY2hpcC1waXQ2NGIuYyBhcyBtYWludGFpbmVkIGZpbGUuDQo+IA0K
+PiBTaWduZWQtb2ZmLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFAbWljcm9jaGlw
+LmNvbT4NCg0KQWNrZWQtYnk6IE5pY29sYXMgRmVycmUgPG5pY29sYXMuZmVycmVAbWljcm9jaGlw
+LmNvbT4NCg0KPiAtLS0NCj4gICBNQUlOVEFJTkVSUyB8IDEgKw0KPiAgIDEgZmlsZSBjaGFuZ2Vk
+LCAxIGluc2VydGlvbigrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRB
+SU5FUlMNCj4gaW5kZXggODViYzgxOTg2N2RhLi41YWY5NDdjOWYzNTAgMTAwNjQ0DQo+IC0tLSBh
+L01BSU5UQUlORVJTDQo+ICsrKyBiL01BSU5UQUlORVJTDQo+IEBAIC0xMDAyMyw2ICsxMDAyMyw3
+IEBAIEw6CWxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZyAobW9kZXJhdGVkIGZv
+ciBub24tc3Vic2NyaWJlcnMpDQo+ICAgUzoJU3VwcG9ydGVkDQo+ICAgRjoJZHJpdmVycy9taXNj
+L2F0bWVsX3RjbGliLmMNCj4gICBGOglkcml2ZXJzL2Nsb2Nrc291cmNlL3RjYl9jbGtzcmMuYw0K
+PiArRjoJZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1taWNyb2NoaXAtcGl0NjRiLmMNCj4gICAN
+Cj4gICBNSUNST0NISVAgVVNCQSBVREMgRFJJVkVSDQo+ICAgTToJQ3Jpc3RpYW4gQmlyc2FuIDxj
+cmlzdGlhbi5iaXJzYW5AbWljcm9jaGlwLmNvbT4NCj4gDQoNCg0KLS0gDQpOaWNvbGFzIEZlcnJl
+DQo=
