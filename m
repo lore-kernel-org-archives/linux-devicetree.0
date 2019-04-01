@@ -1,396 +1,339 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v2] dt-bindings: Add schemas for simple-framebuffer
-Date: Mon,  1 Apr 2019 13:06:59 +0200
-Message-ID: <20190401110659.2251-1-maxime.ripard@bootlin.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH 05/10] dt-bindings: PCI: tegra: Add device tree support
+ for T194
+Date: Mon, 1 Apr 2019 16:48:42 +0530
+Message-ID: <5ef50168-2476-1088-7156-8a4488d7a2e1@nvidia.com>
+References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
+ <1553613207-3988-6-git-send-email-vidyas@nvidia.com>
+ <5ca06149.1c69fb81.720fd.79e1@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Maxime Jourdan <mjourdan@baylibre.com>, devicetree@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5ca06149.1c69fb81.720fd.79e1@mx.google.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: bhelgaas@google.com, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, tiwai@suse.de, spujar@nvidia.com, skomatineni@nvidia.com, liviu.dudau@arm.com, krzk@kernel.org, heiko@sntech.de, horms+renesas@verge.net.au, olof@lixom.net, maxime.ripard@bootlin.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, jagan@amarulasolutions.com, enric.balletbo@collabora.com, ezequiel@collabora.com, stefan.wahren@i2se.com, marc.w.gonzalez@free.fr, l.stach@pengutronix.de, tpiepho@impinj.com, hayashi.kunihiko@socionext.com, yue.wang@amlogic.comsh
 List-Id: devicetree@vger.kernel.org
 
-The simple framebuffer is a binding that allows the bootloader to setup a
-framebuffer, describe it in the Device Tree for the OS to pick it up and
-use it as is.
+On 3/31/2019 12:12 PM, Rob Herring wrote:
+> On Tue, Mar 26, 2019 at 08:43:22PM +0530, Vidya Sagar wrote:
+>> Add support for Tegra194 PCIe controllers. These controllers are based
+>> on Synopsys DesignWare core IP.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>>   .../bindings/pci/nvidia,tegra194-pcie.txt          | 209 +++++++++++++++++++++
+>>   .../devicetree/bindings/phy/phy-tegra194-p2u.txt   |  34 ++++
+>>   2 files changed, 243 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>>   create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>> new file mode 100644
+>> index 000000000000..31527283a0cd
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>> @@ -0,0 +1,209 @@
+>> +NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
+>> +
+>> +This PCIe host controller is based on the Synopsis Designware PCIe IP
+>> +and thus inherits all the common properties defined in designware-pcie.txt.
+>> +
+>> +Required properties:
+>> +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
+>> +- device_type: Must be "pci"
+>> +- reg: A list of physical base address and length for each set of controller
+>> +  registers. Must contain an entry for each entry in the reg-names property.
+>> +- reg-names: Must include the following entries:
+>> +  "appl": Controller's application logic registers
+>> +  "window1": This is the aperture of controller available under 4GB boundary
+>> +             (i.e. within 32-bit space). This aperture is typically used for
+>> +             accessing config space of root port itself and also the connected
+>> +             endpoints (by appropriately programming internal Address
+>> +             Translation Unit's (iATU) out bound region) and also to map
+>> +             prefetchable/non-prefetchable BARs.
+> 
+> This is usually represented in 'ranges' for BARs.
+I added window1 and window2 as the umbrella apertures that each PCIe controller has
+and gave a description of how each aperture *can* be used. This is an overview and as
+such these two entries are not directly used by the driver.
+'ranges' property gives us the information as to how exactly are window1 and window2
+apertures used.
+Thierry Reding also gave few comments about these entries. If this is confusing,
+I'm ok to remove them as well. Please let me know.
 
-Replace the current binding by a schema to allow the validation tools to
-check those nodes.
+> 
+>> +  "config": As per the definition in designware-pcie.txt
+>> +  "atu_dma": iATU and DMA register. This is where the iATU (internal Address
+>> +             Translation Unit) registers of the PCIe core are made available
+>> +             fow SW access.
+>> +  "dbi": The aperture where root port's own configuration registers are
+>> +         available
+>> +  "window2": This is the larger (compared to window1) aperture available above
+>> +             4GB boundary (i.e. in 64-bit space). This is typically used for
+>> +             mapping prefetchable/non-prefetchable BARs of endpoints
+>> +- interrupts: A list of interrupt outputs of the controller. Must contain an
+>> +  entry for each entry in the interrupt-names property.
+>> +- interrupt-names: Must include the following entries:
+>> +  "intr": The Tegra interrupt that is asserted for controller interrupts
+>> +  "msi": The Tegra interrupt that is asserted when an MSI is received
+>> +- bus-range: Range of bus numbers associated with this controller
+>> +- #address-cells: Address representation for root ports (must be 3)
+>> +  - cell 0 specifies the bus and device numbers of the root port:
+>> +    [23:16]: bus number
+>> +    [15:11]: device number
+>> +  - cell 1 denotes the upper 32 address bits and should be 0
+>> +  - cell 2 contains the lower 32 address bits and is used to translate to the
+>> +    CPU address space
+>> +- #size-cells: Size representation for root ports (must be 2)
+>> +- ranges: Describes the translation of addresses for root ports and standard
+>> +  PCI regions. The entries must be 7 cells each, where the first three cells
+>> +  correspond to the address as described for the #address-cells property
+>> +  above, the fourth and fifth cells are for the physical CPU address to
+>> +  translate to and the sixth and seventh cells are as described for the
+>> +  #size-cells property above.
+>> +  - Entries setup the mapping for the standard I/O, memory and
+>> +    prefetchable PCI regions. The first cell determines the type of region
+>> +    that is setup:
+>> +    - 0x81000000: I/O memory region
+>> +    - 0x82000000: non-prefetchable memory region
+>> +    - 0xc2000000: prefetchable memory region
+>> +  Please refer to the standard PCI bus binding document for a more detailed
+>> +  explanation.
+>> +- #interrupt-cells: Size representation for interrupts (must be 1)
+>> +- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
+>> +  Please refer to the standard PCI bus binding document for a more detailed
+>> +  explanation.
+>> +- clocks: Must contain an entry for each entry in clock-names.
+>> +  See ../clocks/clock-bindings.txt for details.
+>> +- clock-names: Must include the following entries:
+>> +  - core_clk
+>> +- resets: Must contain an entry for each entry in reset-names.
+>> +  See ../reset/reset.txt for details.
+>> +- reset-names: Must include the following entries:
+>> +  - core_apb_rst
+>> +  - core_rst
+>> +- phys: Must contain a phandle to P2U PHY for each entry in phy-names.
+>> +- phy-names: Must include an entry for each active lane.
+>> +  "pcie-p2u-N": where N ranges from 0 to one less than the total number of lanes
+>> +- Controller dependent register offsets
+>> +  - nvidia,event-cntr-ctrl: EVENT_COUNTER_CONTROL reg offset
+>> +      0x168 - FPGA
+>> +      0x1a8 - C1, C2 and C3
+>> +      0x1c4 - C4
+>> +      0x1d8 - C0 and C5
+>> +  - nvidia,event-cntr-data: EVENT_COUNTER_DATA reg offset
+>> +      0x16c - FPGA
+>> +      0x1ac - C1, C2 and C3
+>> +      0x1c8 - C4
+>> +      0x1dc - C0 and C5
+>> +- nvidia,controller-id : Controller specific ID
+>> +      0x0 - C0
+>> +      0x1 - C1
+>> +      0x2 - C2
+>> +      0x3 - C3
+>> +      0x4 - C4
+>> +      0x5 - C5
+>> +- vddio-pex-ctl-supply: Regulator supply for PCIe side band signals
+>> +
+>> +Optional properties:
+>> +- nvidia,max-speed: limits controllers max speed to this value.
+>> +    1 - Gen-1 (2.5 GT/s)
+>> +    2 - Gen-2 (5 GT/s)
+>> +    3 - Gen-3 (8 GT/s)
+>> +    4 - Gen-4 (16 GT/s)
+>> +- nvidia,init-speed: limits controllers init speed to this value.
+>> +    1 - Gen-1 (2. 5 GT/s)
+>> +    2 - Gen-2 (5 GT/s)
+>> +    3 - Gen-3 (8 GT/s)
+>> +    4 - Gen-4 (16 GT/s)
+> 
+> Don't we have standard speed properties?
+Not that I'm aware of. If you come across any, please do let me know and
+I'll change these.
 
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Maxime Jourdan <mjourdan@baylibre.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> 
+> Why do we need 2 values?
+max-speed configures the controller to advertise the speed mentioned through
+this flag, whereas, init-speed gets the link up at this speed and software
+can further take the link speed to a different speed by retraining the link.
+This is to give flexibility to developers depending on the platform.
 
----
+> 
+>> +- nvidia,disable-aspm-states : controls advertisement of ASPM states
+>> +    bit-0 to '1' : disables advertisement of ASPM-L0s
+>> +    bit-1 to '1' : disables advertisement of ASPM-L1. This also disables
+>> +                 advertisement of ASPM-L1.1 and ASPM-L1.2
+>> +    bit-2 to '1' : disables advertisement of ASPM-L1.1
+>> +    bit-3 to '1' : disables advertisement of ASPM-L1.2
+> 
+> Seems like these too should be common.
+This flag controls the advertisement of different ASPM states by root port.
+Again, I'm not aware of any common method for this.
+  
+> 
+>> +- nvidia,disable-clock-request : gives a hint to driver that there is no
+>> +    CLKREQ signal routing on board
+>> +- nvidia,update-fc-fixup : needs it to improve perf when a platform is designed
+>> +    in such a way that it satisfies at least one of the following conditions
+>> +    1. If C0/C4/C5 run at x1/x2 link widths (irrespective of speed and MPS)
+>> +    2. If C0/C1/C2/C3/C4/C5 operate at their respective max link widths and
+> 
+> What is Cx?
+Cx is the Controller with its ID.
 
-Changes from v1:
-  - Switched to enum where it made sense
-  - Updated the SPDX license identifier
----
- .../display/amlogic,simple-framebuffer.txt    |  33 ----
- .../display/simple-framebuffer-sunxi.txt      |  36 ----
- .../bindings/display/simple-framebuffer.txt   |  91 ----------
- .../bindings/display/simple-framebuffer.yaml  | 160 ++++++++++++++++++
- 4 files changed, 160 insertions(+), 160 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/amlogic,simple-framebuffer.txt
- delete mode 100644 Documentation/devicetree/bindings/display/simple-framebuffer-sunxi.txt
- delete mode 100644 Documentation/devicetree/bindings/display/simple-framebuffer.txt
- create mode 100644 Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+> 
+>> +       a) speed is Gen-2 and MPS is 256B
+>> +       b) speed is >= Gen-3 with any MPS
+>> +- nvidia,cdm-check : Enables CDM checking. For more information, refer Synopsis
+>> +    DesignWare Cores  PCI Express Controller Databook r4.90a Chapter S.4
+>> +- nvidia,enable-power-down : Enables power down of respective controller and
+>> +    corresponding PLLs if they are not shared by any other entity
+>> +- "nvidia,pex-wake" : Add PEX_WAKE gpio number to provide wake support.
+>> +- "nvidia,plat-gpios" : Add gpio number that needs to be configured before
+>> +   system goes for enumeration. There could be platforms where enabling 3.3V and
+>> +   12V power supplies are done through GPIOs, in which case, list of all such
+>> +   GPIOs can be specified through this property.
+> 
+> These should be split out to their specific function.
+Enabling Power rails is just an example and depending on the platform, there could be
+some on-board muxes which are controlled through GPIOs and all such platform specific
+configuration can be handled through this flag.
 
-diff --git a/Documentation/devicetree/bindings/display/amlogic,simple-framebuffer.txt b/Documentation/devicetree/bindings/display/amlogic,simple-framebuffer.txt
-deleted file mode 100644
-index aaa6c24c8e70..000000000000
---- a/Documentation/devicetree/bindings/display/amlogic,simple-framebuffer.txt
-+++ /dev/null
-@@ -1,33 +0,0 @@
--Meson specific Simple Framebuffer bindings
--
--This binding documents meson specific extensions to the simple-framebuffer
--bindings. The meson simplefb u-boot code relies on the devicetree containing
--pre-populated simplefb nodes.
--
--These extensions are intended so that u-boot can select the right node based
--on which pipeline is being used. As such they are solely intended for
--firmware / bootloader use, and the OS should ignore them.
--
--Required properties:
--- compatible: "amlogic,simple-framebuffer", "simple-framebuffer"
--- amlogic,pipeline, one of:
--  "vpu-cvbs"
--  "vpu-hdmi"
--
--Example:
--
--chosen {
--	#address-cells = <2>;
--	#size-cells = <2>;
--	ranges;
--
--	simplefb_hdmi: framebuffer-hdmi {
--		compatible = "amlogic,simple-framebuffer",
--			     "simple-framebuffer";
--		amlogic,pipeline = "vpu-hdmi";
--		clocks = <&clkc CLKID_HDMI_PCLK>,
--			 <&clkc CLKID_CLK81>,
--			 <&clkc CLKID_GCLK_VENCI_INT0>;
--		power-domains = <&pwrc_vpu>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer-sunxi.txt b/Documentation/devicetree/bindings/display/simple-framebuffer-sunxi.txt
-deleted file mode 100644
-index d693b8dc9a62..000000000000
---- a/Documentation/devicetree/bindings/display/simple-framebuffer-sunxi.txt
-+++ /dev/null
-@@ -1,36 +0,0 @@
--Sunxi specific Simple Framebuffer bindings
--
--This binding documents sunxi specific extensions to the simple-framebuffer
--bindings. The sunxi simplefb u-boot code relies on the devicetree containing
--pre-populated simplefb nodes.
--
--These extensions are intended so that u-boot can select the right node based
--on which pipeline is being used. As such they are solely intended for
--firmware / bootloader use, and the OS should ignore them.
--
--Required properties:
--- compatible: "allwinner,simple-framebuffer"
--- allwinner,pipeline, one of:
--  "de_be0-lcd0"
--  "de_be1-lcd1"
--  "de_be0-lcd0-hdmi"
--  "de_be1-lcd1-hdmi"
--  "mixer0-lcd0"
--  "mixer0-lcd0-hdmi"
--  "mixer1-lcd1-hdmi"
--  "mixer1-lcd1-tve"
--
--Example:
--
--chosen {
--	#address-cells = <1>;
--	#size-cells = <1>;
--	ranges;
--
--	framebuffer@0 {
--		compatible = "allwinner,simple-framebuffer", "simple-framebuffer";
--		allwinner,pipeline = "de_be0-lcd0-hdmi";
--		clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
--			 <&ahb_gates 44>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.txt b/Documentation/devicetree/bindings/display/simple-framebuffer.txt
-deleted file mode 100644
-index 5a9ce511be88..000000000000
---- a/Documentation/devicetree/bindings/display/simple-framebuffer.txt
-+++ /dev/null
-@@ -1,91 +0,0 @@
--Simple Framebuffer
--
--A simple frame-buffer describes a frame-buffer setup by firmware or
--the bootloader, with the assumption that the display hardware has already
--been set up to scan out from the memory pointed to by the reg property.
--
--Since simplefb nodes represent runtime information they must be sub-nodes of
--the chosen node (*). Simplefb nodes must be named "framebuffer@<address>".
--
--If the devicetree contains nodes for the display hardware used by a simplefb,
--then the simplefb node must contain a property called "display", which
--contains a phandle pointing to the primary display hw node, so that the OS
--knows which simplefb to disable when handing over control to a driver for the
--real hardware. The bindings for the hw nodes must specify which node is
--considered the primary node.
--
--It is advised to add display# aliases to help the OS determine how to number
--things. If display# aliases are used, then if the simplefb node contains a
--"display" property then the /aliases/display# path must point to the display
--hw node the "display" property points to, otherwise it must point directly
--to the simplefb node.
--
--If a simplefb node represents the preferred console for user interaction,
--then the chosen node's stdout-path property should point to it, or to the
--primary display hw node, as with display# aliases. If display aliases are
--used then it should be set to the alias instead.
--
--It is advised that devicetree files contain pre-filled, disabled framebuffer
--nodes, so that the firmware only needs to update the mode information and
--enable them. This way if e.g. later on support for more display clocks get
--added, the simplefb nodes will already contain this info and the firmware
--does not need to be updated.
--
--If pre-filled framebuffer nodes are used, the firmware may need extra
--information to find the right node. In that case an extra platform specific
--compatible and platform specific properties should be used and documented,
--see e.g. simple-framebuffer-sunxi.txt .
--
--Required properties:
--- compatible: "simple-framebuffer"
--- reg: Should contain the location and size of the framebuffer memory.
--- width: The width of the framebuffer in pixels.
--- height: The height of the framebuffer in pixels.
--- stride: The number of bytes in each line of the framebuffer.
--- format: The format of the framebuffer surface. Valid values are:
--  - r5g6b5 (16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b).
--  - a8b8g8r8 (32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r).
--
--Optional properties:
--- clocks : List of clocks used by the framebuffer.
--- *-supply : Any number of regulators used by the framebuffer. These should
--	     be named according to the names in the device's design.
--
--  The above resources are expected to already be configured correctly.
--  The OS must ensure they are not modified or disabled while the simple
--  framebuffer remains active.
--
--- display : phandle pointing to the primary display hardware node
--
--Example:
--
--aliases {
--	display0 = &lcdc0;
--}
--
--chosen {
--	framebuffer0: framebuffer@1d385000 {
--		compatible = "simple-framebuffer";
--		reg = <0x1d385000 (1600 * 1200 * 2)>;
--		width = <1600>;
--		height = <1200>;
--		stride = <(1600 * 2)>;
--		format = "r5g6b5";
--		clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
--		lcd-supply = <&reg_dc1sw>;
--		display = <&lcdc0>;
--	};
--	stdout-path = "display0";
--};
--
--soc@1c00000 {
--	lcdc0: lcdc@1c0c000 {
--		compatible = "allwinner,sun4i-a10-lcdc";
--		...
--	};
--};
--
--
--*) Older devicetree files may have a compatible = "simple-framebuffer" node
--in a different place, operating systems must first enumerate any compatible
--nodes found under chosen and then check for other compatible nodes.
-diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
-new file mode 100644
-index 000000000000..b052d76cf8b6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
-@@ -0,0 +1,160 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/simple-framebuffer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Simple Framebuffer Device Tree Bindings
-+
-+maintainers:
-+  - Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-+  - Hans de Goede <hdegoede@redhat.com>
-+
-+description: |+
-+  A simple frame-buffer describes a frame-buffer setup by firmware or
-+  the bootloader, with the assumption that the display hardware has
-+  already been set up to scan out from the memory pointed to by the
-+  reg property.
-+
-+  Since simplefb nodes represent runtime information they must be
-+  sub-nodes of the chosen node (*). Simplefb nodes must be named
-+  framebuffer@<address>.
-+
-+  If the devicetree contains nodes for the display hardware used by a
-+  simplefb, then the simplefb node must contain a property called
-+  display, which contains a phandle pointing to the primary display
-+  hw node, so that the OS knows which simplefb to disable when handing
-+  over control to a driver for the real hardware. The bindings for the
-+  hw nodes must specify which node is considered the primary node.
-+
-+  It is advised to add display# aliases to help the OS determine how
-+  to number things. If display# aliases are used, then if the simplefb
-+  node contains a display property then the /aliases/display# path
-+  must point to the display hw node the display property points to,
-+  otherwise it must point directly to the simplefb node.
-+
-+  If a simplefb node represents the preferred console for user
-+  interaction, then the chosen node stdout-path property should point
-+  to it, or to the primary display hw node, as with display#
-+  aliases. If display aliases are used then it should be set to the
-+  alias instead.
-+
-+  It is advised that devicetree files contain pre-filled, disabled
-+  framebuffer nodes, so that the firmware only needs to update the
-+  mode information and enable them. This way if e.g. later on support
-+  for more display clocks get added, the simplefb nodes will already
-+  contain this info and the firmware does not need to be updated.
-+
-+  If pre-filled framebuffer nodes are used, the firmware may need
-+  extra information to find the right node. In that case an extra
-+  platform specific compatible and platform specific properties should
-+  be used and documented.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - allwinner,simple-framebuffer
-+          - amlogic,simple-framebuffer
-+      - const: simple-framebuffer
-+
-+  reg:
-+    description: Location and size of the framebuffer memory
-+
-+  clocks:
-+    description: List of clocks used by the framebuffer.
-+
-+  power-domains:
-+    description: List of power domains used by the framebuffer.
-+
-+  width:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Width of the framebuffer in pixels
-+
-+  height:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Height of the framebuffer in pixels
-+
-+  stride:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Number of bytes of a line in the framebuffer
-+
-+  format:
-+    description: >
-+      Format of the framebuffer:
-+        * `a8b8g8r8` - 32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r
-+        * `r5g6b5` - 16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b
-+    enum:
-+      - a8b8g8r8
-+      - r5g6b5
-+
-+  display:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: Primary display hardware node
-+
-+  allwinner,pipeline:
-+    description: Pipeline used by the framebuffer on Allwinner SoCs
-+    enum:
-+      - de_be0-lcd0
-+      - de_be0-lcd0-hdmi
-+      - de_be0-lcd0-tve0
-+      - de_be1-lcd0
-+      - de_be1-lcd1-hdmi
-+      - de_fe0-de_be0-lcd0
-+      - de_fe0-de_be0-lcd0-hdmi
-+      - de_fe0-de_be0-lcd0-tve0
-+      - mixer0-lcd0
-+      - mixer0-lcd0-hdmi
-+      - mixer1-lcd1-hdmi
-+      - mixer1-lcd1-tve
-+
-+  amlogic,pipeline:
-+    description: Pipeline used by the framebuffer on Amlogic SoCs
-+    enum:
-+      - vpu-cvbs
-+      - vpu-hdmi
-+
-+patternProperties:
-+  "^[a-zA-Z0-9-]+-supply$":
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      Regulators used by the framebuffer. These should be named
-+      according to the names in the device design.
-+
-+required:
-+  # The binding requires also reg, width, height, stride and format,
-+  # but usually they will be filled by the bootloader.
-+  - compatible
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    aliases {
-+      display0 = &lcdc0;
-+    };
-+
-+    chosen {
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+      stdout-path = "display0";
-+      framebuffer0: framebuffer@1d385000 {
-+        compatible = "simple-framebuffer";
-+        reg = <0x1d385000 3840000>;
-+        width = <1600>;
-+        height = <1200>;
-+        stride = <3200>;
-+        format = "r5g6b5";
-+        clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
-+        lcd-supply = <&reg_dc1sw>;
-+        display = <&lcdc0>;
-+      };
-+    };
-+
-+    soc@1c00000 {
-+      lcdc0: lcdc@1c0c000 {
-+        compatible = "allwinner,sun4i-a10-lcdc";
-+      };
-+    };
-+
-+...
--- 
-2.20.1
+> 
+>> +- "nvidia,aspm-cmrt" : Common Mode Restore time for proper operation of ASPM to
+>> +   be specified in microseconds
+>> +- "nvidia,aspm-pwr-on-t" : Power On time for proper operation of ASPM to be
+>> +   specified in microseconds
+>> +- "nvidia,aspm-l0s-entrance-latency" : ASPM L0s entrance latency to be specified
+>> +   in microseconds
+> 
+> properties with units need unit suffixes as defined in
+> property-units.txt.
+Done. I'll take care of this in next patch series.
+
+> 
+>> +
+>> +Examples:
+>> +=========
+>> +
+>> +Tegra194:
+>> +--------
+>> +
+>> +SoC DTSI:
+>> +
+>> +	pcie@14180000 {
+>> +		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
+>> +		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
+>> +		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
+>> +		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) */
+>> +		       0x00 0x38040000 0x0 0x00040000>; /* iATU_DMA reg space (256K)  */
+>> +		reg-names = "appl", "config", "atu_dma";
+>> +
+>> +		status = "disabled";
+>> +
+>> +		#address-cells = <3>;
+>> +		#size-cells = <2>;
+>> +		device_type = "pci";
+>> +		num-lanes = <8>;
+>> +		linux,pci-domain = <0>;
+>> +
+>> +		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_0>;
+>> +		clock-names = "core_clk";
+>> +
+>> +		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_0_APB>,
+>> +			 <&bpmp TEGRA194_RESET_PEX0_CORE_0>;
+>> +		reset-names = "core_apb_rst", "core_rst";
+>> +
+>> +		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,	/* controller interrupt */
+>> +			     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;	/* MSI interrupt */
+>> +		interrupt-names = "intr", "msi";
+>> +
+>> +		#interrupt-cells = <1>;
+>> +		interrupt-map-mask = <0 0 0 0>;
+>> +		interrupt-map = <0 0 0 0 &gic 0 72 0x04>;
+>> +
+>> +		nvidia,bpmp = <&bpmp>;
+>> +
+>> +		nvidia,max-speed = <4>;
+>> +		nvidia,disable-aspm-states = <0xf>;
+>> +		nvidia,controller-id = <&bpmp 0x0>;
+>> +		nvidia,aux-clk-freq = <0x13>;
+>> +		nvidia,preset-init = <0x5>;
+>> +		nvidia,aspm-cmrt = <0x3C>;
+>> +		nvidia,aspm-pwr-on-t = <0x14>;
+>> +		nvidia,aspm-l0s-entrance-latency = <0x3>;
+>> +
+>> +		bus-range = <0x0 0xff>;
+>> +		ranges = <0x81000000 0x0 0x38100000 0x0 0x38100000 0x0 0x00100000      /* downstream I/O (1MB) */
+>> +			  0x82000000 0x0 0x38200000 0x0 0x38200000 0x0 0x01E00000      /* non-prefetchable memory (30MB) */
+>> +			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>;  /* prefetchable memory (16GB) */
+>> +
+>> +		nvidia,cfg-link-cap-l1sub = <0x1c4>;
+>> +		nvidia,cap-pl16g-status = <0x174>;
+>> +		nvidia,cap-pl16g-cap-off = <0x188>;
+>> +		nvidia,event-cntr-ctrl = <0x1d8>;
+>> +		nvidia,event-cntr-data = <0x1dc>;
+>> +		nvidia,dl-feature-cap = <0x30c>;
+>> +	};
+>> +
+>> +Board DTS:
+>> +
+>> +	pcie@14180000 {
+>> +		status = "okay";
+>> +
+>> +		vddio-pex-ctl-supply = <&vdd_1v8ao>;
+>> +
+>> +		phys = <&p2u_2>,
+>> +		       <&p2u_3>,
+>> +		       <&p2u_4>,
+>> +		       <&p2u_5>;
+>> +		phy-names = "pcie-p2u-0", "pcie-p2u-1", "pcie-p2u-2",
+>> +			    "pcie-p2u-3";
+>> +	};
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+>> new file mode 100644
+>> index 000000000000..cc0de8e8e8db
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+>> @@ -0,0 +1,34 @@
+>> +NVIDIA Tegra194 P2U binding
+>> +
+>> +Tegra194 has two PHY bricks namely HSIO (High Speed IO) and NVHS (NVIDIA High
+>> +Speed) each interfacing with 12 and 8 P2U instances respectively.
+>> +A P2U instance is a glue logic between Synopsys DesignWare Core PCIe IP's PIPE
+>> +interface and PHY of HSIO/NVHS bricks. Each P2U instance represents one PCIe
+>> +lane.
+>> +
+>> +Required properties:
+>> +- compatible: For Tegra19x, must contain "nvidia,tegra194-phy-p2u".
+>> +- reg: Should be the physical address space and length of respective each P2U
+>> +       instance.
+>> +- reg-names: Must include the entry "base".
+>> +
+>> +Required properties for PHY port node:
+>> +- #phy-cells: Defined by generic PHY bindings.  Must be 0.
+>> +
+>> +Refer to phy/phy-bindings.txt for the generic PHY binding properties.
+>> +
+>> +Example:
+>> +
+>> +hsio-p2u {
+>> +	compatible = "simple-bus";
+>> +	#address-cells = <2>;
+>> +	#size-cells = <2>;
+>> +	ranges;
+>> +	p2u_0: p2u@03e10000 {
+>> +		compatible = "nvidia,tegra194-phy-p2u";
+>> +		reg = <0x0 0x03e10000 0x0 0x00010000>;
+>> +		reg-names = "base";
+>> +
+>> +		#phy-cells = <0>;
+>> +	};
+>> +}
+>> -- 
+>> 2.7.4
+>>
+> 
