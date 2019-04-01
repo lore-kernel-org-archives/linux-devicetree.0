@@ -1,47 +1,212 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH v5 1/8] i2c: iproc: Extend I2C read up to 255 bytes
-Date: Mon, 1 Apr 2019 14:35:16 -0700
-Message-ID: <f89a0e5f-14f1-b9a2-44f6-67ff0eaf761c@broadcom.com>
-References: <20190214175725.60462-1-ray.jui@broadcom.com>
- <20190214175725.60462-2-ray.jui@broadcom.com> <20190327221732.GB15396@kunai>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 2/3] dt-bindings: backlight: add lm3630a bindings
+Date: Mon, 1 Apr 2019 23:39:26 +0200
+Message-ID: <20190401213926.GD14681@amd>
+References: <20190401103034.21062-1-masneyb@onstation.org>
+ <20190401103034.21062-3-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190327221732.GB15396@kunai>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, Shreesha Rajashekar <shreesha@broadcom.com>
+Content-Type: multipart/mixed; boundary="===============2072447569=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190401103034.21062-3-masneyb@onstation.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brian Masney <masneyb@onstation.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, jonathan@marek.ca, b.zolnierkie@samsung.com, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, linux-fbdev@vger.kernel.org, lee.jones@linaro.org, linux-leds@vger.kernel.org, dmurphy@ti.com
 List-Id: devicetree@vger.kernel.org
 
 
+--===============2072447569==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0/kgSOzhNoDC5T3a"
+Content-Disposition: inline
 
-On 3/27/2019 3:17 PM, Wolfram Sang wrote:
-> 
->> +		if (!((readl(iproc_i2c->base +
->> +		M_FIFO_CTRL_OFFSET) >>
->> +		M_FIFO_RX_CNT_SHIFT) &
->> +		M_FIFO_RX_CNT_MASK))
-> 
-> Don't be too strict with the 80 char limit. I think the above is hardly
-> readable...
-> 
 
-Right, that makes sense. Will change to make it more readable than
-trying to be compliant to the < 80 chars rule.
+--0/kgSOzhNoDC5T3a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> +			break;
->> +
->> +		msg->buf[iproc_i2c->rx_bytes] =
->> +			(readl(iproc_i2c->base + M_RX_OFFSET) >>
->> +			M_RX_DATA_SHIFT) & M_RX_DATA_MASK;
-> 
-> ... this here is MUCH better.
-> 
-> Rest looks good.
-> 
+On Mon 2019-04-01 06:30:33, Brian Masney wrote:
+> Add new backlight bindings for the TI LM3630A dual-string white LED.
+>=20
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+>  .../leds/backlight/lm3630a-backlight.yaml     | 112
+++++++++++++++++++
 
-Thanks,
+What is that? Is it future of all the bindings?
 
-Ray
+Up to device tree people, I guess, but...
+
+								Pavel
+
+
+>  1 file changed, 112 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/lm36=
+30a-backlight.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-bac=
+klight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-back=
+light.yaml
+> new file mode 100644
+> index 000000000000..42a8c59d237a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.=
+yaml
+> @@ -0,0 +1,112 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/backlight/lm3630a-backlight.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI LM3630A High-Efficiency Dual-String White LED
+> +
+> +maintainers:
+> +  - Lee Jones <lee.jones@linaro.org>
+> +  - Daniel Thompson <daniel.thompson@linaro.org>
+> +  - Jingoo Han <jingoohan1@gmail.com>
+> +
+> +description: |
+> +  The LM3630A is a current-mode boost converter which supplies the power=
+ and
+> +  controls the current in up to two strings of 10 LEDs per string.
+> +  https://www.ti.com/product/LM3630A
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,lm3630a
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  ti,linear-mapping-mode:
+> +    description: |
+> +      Enable linear mapping mode. If disabled, then it will use exponent=
+ial
+> +      mapping mode in which the ramp up/down appears to have a more unif=
+orm
+> +      tranisiton to the human eye.
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +patternProperties:
+> +  "^led*$":
+> +    type: object
+> +    description: |
+> +      Properties for a string of connected LEDs.
+> +
+> +    properties:
+> +      label:
+> +        description: |
+> +          The label for this LED. If omitted, the label is taken from th=
+e node
+> +          name (excluding the unit address). It has to uniquely identify=
+ a
+> +          device, i.e. no other LED class device can be assigned the sam=
+e label.
+> +
+> +      led-sources:
+> +        description: |
+> +          List of device current outputs the LED is connected to.
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +          - minItems: 1
+> +            maxItems: 2
+> +            items:
+> +              minimum: 0
+> +              maximum: 1
+> +
+> +      default-brightness:
+> +        description: Default brightness level on boot.
+> +        minimum: 0
+> +        maximum: 255
+> +
+> +      max-brightness:
+> +        description: Maximum brightness level on boot.
+> +        minimum: 0
+> +        maximum: 255
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells =3D <1>;
+> +        #size-cells =3D <0>;
+> +
+> +        lm3630a_bl@38 {
+> +                compatible =3D "ti,lm3630a";
+> +                status =3D "ok";
+> +                reg =3D <0x38>;
+> +
+> +                led {
+> +                        label =3D "main-lcd";
+> +                        led-sources =3D <0 1>;
+> +                        default-brightness =3D <200>;
+> +                        max-brightness =3D <255>;
+> +                };
+> +        };
+> +    };
+> +  - |
+> +    i2c {
+> +        #address-cells =3D <1>;
+> +        #size-cells =3D <0>;
+> +
+> +        lm3630a_bl@38 {
+> +                compatible =3D "ti,lm3630a";
+> +                status =3D "ok";
+> +                reg =3D <0x38>;
+> +
+> +                led-bank-a {
+> +                        led-sources =3D <0>;
+> +                        default-brightness =3D <150>;
+> +                        ti,linear-mapping-mode;
+> +                };
+> +
+> +                led-bank-b {
+> +                        led-sources =3D <1>;
+> +                        default-brightness =3D <225>;
+> +                        ti,linear-mapping-mode;
+> +                };
+> +        };
+> +    };
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--0/kgSOzhNoDC5T3a
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyihQ4ACgkQMOfwapXb+vIfoQCfcCWyn261+00n1ZKQWmnRY17y
+TXgAmwTgIztadic89rxpKLptExhxP5If
+=/ISU
+-----END PGP SIGNATURE-----
+
+--0/kgSOzhNoDC5T3a--
+
+--===============2072447569==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+
+--===============2072447569==--
