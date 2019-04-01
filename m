@@ -1,14 +1,12 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V5 1/4] dt-bindings: fsl: scu: add general interrupt
- support
-Date: Mon, 1 Apr 2019 02:38:11 +0000
-Message-ID: <DB3PR0402MB391688AEF1B5EEEFE07315EEF5550@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1552878291-22866-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx6sll: add cooling-cells for cpu-freq cooling
+ device
+Date: Mon, 1 Apr 2019 02:51:11 +0000
+Message-ID: <1554086786-3691-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1552878291-22866-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -19,79 +17,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-UGluZy4uLg0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+IEZyb206IEFuc29uIEh1YW5nIFttYWlsdG86QW5zb24uSHVhbmdAbnhw
-LmNvbV0NCj4gU2VudDogMjAxOcTqM9TCMTjI1SAxMToxMA0KPiBUbzogcm9iaCtkdEBrZXJuZWwu
-b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsNCj4gcy5oYXVl
-ckBwZW5ndXRyb25peC5kZTsga2VybmVsQHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFpbC5j
-b207DQo+IGEuenVtbW9AdG93ZXJ0ZWNoLml0OyBhbGV4YW5kcmUuYmVsbG9uaUBib290bGluLmNv
-bTsgQWlzaGVuZyBEb25nDQo+IDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47IHVsZi5oYW5zc29uQGxp
-bmFyby5vcmc7IERhbmllbCBCYWx1dGENCj4gPGRhbmllbC5iYWx1dGFAbnhwLmNvbT47IGRldmlj
-ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsg
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4gcnRjQHZnZXIu
-a2VybmVsLm9yZw0KPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3Vi
-amVjdDogW1BBVENIIFY1IDEvNF0gZHQtYmluZGluZ3M6IGZzbDogc2N1OiBhZGQgZ2VuZXJhbCBp
-bnRlcnJ1cHQgc3VwcG9ydA0KPiANCj4gQWRkIHNjdSBnZW5lcmFsIGludGVycnVwdCBmdW5jdGlv
-biBzdXBwb3J0Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5n
-QG54cC5jb20+DQo+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0K
-PiBSZXZpZXdlZC1ieTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCj4gLS0t
-DQo+IENoYW5nZXMgc2luY2UgVjQ6DQo+IAktIGFkZCBtdSBhbGlhc2UgaW5mbyBhbmQgZXhhbXBs
-ZSBpbiBiaW5kaW5nIGRvYy4NCj4gLS0tDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0v
-ZnJlZXNjYWxlL2ZzbCxzY3UudHh0ICB8IDI5ICsrKysrKysrKysrKysrKysrLS0NCj4gLS0tDQo+
-ICAxIGZpbGUgY2hhbmdlZCwgMjMgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkNCj4gDQo+
-IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVz
-Y2FsZS9mc2wsc2N1LnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9h
-cm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0DQo+IGluZGV4IDcyZDQ4MWMuLjVkN2RiYWIgMTAwNjQ0
-DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxl
-L2ZzbCxzY3UudHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9h
-cm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0DQo+IEBAIC0yMiw5ICsyMiwxMSBAQCBSZXF1aXJlZCBw
-cm9wZXJ0aWVzOg0KPiAgLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAgLSBjb21wYXRpYmxlOglzaG91
-bGQgYmUgImZzbCxpbXgtc2N1Ii4NCj4gIC0gbWJveC1uYW1lczoJc2hvdWxkIGluY2x1ZGUgInR4
-MCIsICJ0eDEiLCAidHgyIiwgInR4MyIsDQo+IC0JCQkgICAgICAgInJ4MCIsICJyeDEiLCAicngy
-IiwgInJ4MyIuDQo+IC0tIG1ib3hlczoJTGlzdCBvZiBwaGFuZGxlIG9mIDQgTVUgY2hhbm5lbHMg
-Zm9yIHR4IGFuZCA0IE1VIGNoYW5uZWxzDQo+IC0JCWZvciByeC4gQWxsIDggTVUgY2hhbm5lbHMg
-bXVzdCBiZSBpbiB0aGUgc2FtZSBNVSBpbnN0YW5jZS4NCj4gKwkJCSAgICAgICAicngwIiwgInJ4
-MSIsICJyeDIiLCAicngzIjsNCj4gKwkJaW5jbHVkZSAiZ2lwMyIgaWYgd2FudCB0byBzdXBwb3J0
-IGdlbmVyYWwgTVUgaW50ZXJydXB0Lg0KPiArLSBtYm94ZXM6CUxpc3Qgb2YgcGhhbmRsZSBvZiA0
-IE1VIGNoYW5uZWxzIGZvciB0eCwgNCBNVSBjaGFubmVscyBmb3INCj4gKwkJcngsIGFuZCAxIG9w
-dGlvbmFsIE1VIGNoYW5uZWwgZm9yIGdlbmVyYWwgaW50ZXJydXB0Lg0KPiArCQlBbGwgTVUgY2hh
-bm5lbHMgbXVzdCBiZSBpbiB0aGUgc2FtZSBNVSBpbnN0YW5jZS4NCj4gIAkJQ3Jvc3MgaW5zdGFu
-Y2VzIGFyZSBub3QgYWxsb3dlZC4gVGhlIE1VIGluc3RhbmNlIGNhbiBvbmx5DQo+ICAJCWJlIG9u
-ZSBvZiBMU0lPIE1VMH5NNCBmb3IgaW14OHF4cCBhbmQgaW14OHFtLiBVc2Vycw0KPiBuZWVkDQo+
-ICAJCXRvIG1ha2Ugc3VyZSB1c2UgdGhlIG9uZSB3aGljaCBpcyBub3QgY29uZmxpY3Qgd2l0aCBv
-dGhlciBAQA0KPiAtMzQsNiArMzYsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAgCQlDaGFu
-bmVsIDEgbXVzdCBiZSAidHgxIiBvciAicngxIi4NCj4gIAkJQ2hhbm5lbCAyIG11c3QgYmUgInR4
-MiIgb3IgInJ4MiIuDQo+ICAJCUNoYW5uZWwgMyBtdXN0IGJlICJ0eDMiIG9yICJyeDMiLg0KPiAr
-CQlHZW5lcmFsIGludGVycnVwdCByeCBjaGFubmVsIG11c3QgYmUgImdpcDMiLg0KPiAgCQllLmcu
-DQo+ICAJCW1ib3hlcyA9IDwmbHNpb19tdTEgMCAwDQo+ICAJCQkgICZsc2lvX211MSAwIDENCj4g
-QEAgLTQyLDEwICs0NSwxOCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAgCQkJICAmbHNpb19t
-dTEgMSAwDQo+ICAJCQkgICZsc2lvX211MSAxIDENCj4gIAkJCSAgJmxzaW9fbXUxIDEgMg0KPiAt
-CQkJICAmbHNpb19tdTEgMSAzPjsNCj4gKwkJCSAgJmxzaW9fbXUxIDEgMw0KPiArCQkJICAmbHNp
-b19tdTEgMyAzPjsNCj4gIAkJU2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
-YWlsYm94L2ZzbCxtdS50eHQNCj4gIAkJZm9yIGRldGFpbGVkIG1haWxib3ggYmluZGluZy4NCj4g
-DQo+ICtOb3RlOiBFYWNoIG11IHdoaWNoIHN1cHBvcnRzIGdlbmVyYWwgaW50ZXJydXB0IHNob3Vs
-ZCBoYXZlIGFuIGFsaWFzDQo+ICtjb3JyZWN0bHkgbnVtYmVyZWQgaW4gImFsaWFzZXMiIG5vZGUu
-DQo+ICtlLmcuDQo+ICthbGlhc2VzIHsNCj4gKwltdTEgPSAmbHNpb19tdTE7DQo+ICt9Ow0KPiAr
-DQo+ICBpLk1YIFNDVSBDbGllbnQgRGV2aWNlIE5vZGU6DQo+ICA9PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gDQo+IEBAIC0xMjQs
-NiArMTM1LDEwIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+IA0KPiAgRXhhbXBsZSAoaW14OHF4
-cCk6DQo+ICAtLS0tLS0tLS0tLS0tDQo+ICthbGlhc2VzIHsNCj4gKwltdTEgPSAmbHNpb19tdTE7
-DQo+ICt9Ow0KPiArDQo+ICBsc2lvX211MTogbWFpbGJveEA1ZDFjMDAwMCB7DQo+ICAJLi4uDQo+
-ICAJI21ib3gtY2VsbHMgPSA8Mj47DQo+IEBAIC0xMzMsNyArMTQ4LDggQEAgZmlybXdhcmUgew0K
-PiAgCXNjdSB7DQo+ICAJCWNvbXBhdGlibGUgPSAiZnNsLGlteC1zY3UiOw0KPiAgCQltYm94LW5h
-bWVzID0gInR4MCIsICJ0eDEiLCAidHgyIiwgInR4MyIsDQo+IC0JCQkgICAgICJyeDAiLCAicngx
-IiwgInJ4MiIsICJyeDMiOw0KPiArCQkJICAgICAicngwIiwgInJ4MSIsICJyeDIiLCAicngzIiwN
-Cj4gKwkJCSAgICAgImdpcDMiOw0KPiAgCQltYm94ZXMgPSA8JmxzaW9fbXUxIDAgMA0KPiAgCQkJ
-ICAmbHNpb19tdTEgMCAxDQo+ICAJCQkgICZsc2lvX211MSAwIDINCj4gQEAgLTE0MSw3ICsxNTcs
-OCBAQCBmaXJtd2FyZSB7DQo+ICAJCQkgICZsc2lvX211MSAxIDANCj4gIAkJCSAgJmxzaW9fbXUx
-IDEgMQ0KPiAgCQkJICAmbHNpb19tdTEgMSAyDQo+IC0JCQkgICZsc2lvX211MSAxIDM+Ow0KPiAr
-CQkJICAmbHNpb19tdTEgMSAzDQo+ICsJCQkgICZsc2lvX211MSAzIDM+Ow0KPiANCj4gIAkJY2xr
-OiBjbGsgew0KPiAgCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OHF4cC1jbGsiLCAiZnNsLHNjdS1j
-bGsiOw0KPiAtLQ0KPiAyLjcuNA0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Add #cooling-cells for i.MX6SLL cpu-freq cooling device usage.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6sll.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
+index 62847c6..bffdad1 100644
+--- a/arch/arm/boot/dts/imx6sll.dtsi
++++ b/arch/arm/boot/dts/imx6sll.dtsi
+@@ -64,6 +64,7 @@
+ 				198000		1175000
+ 			>;
+ 			clock-latency = <61036>; /* two CLK32 periods */
++			#cooling-cells = <2>;
+ 			clocks = <&clks IMX6SLL_CLK_ARM>,
+ 				 <&clks IMX6SLL_CLK_PLL2_PFD2>,
+ 				 <&clks IMX6SLL_CLK_STEP>,
+-- 
+2.7.4
