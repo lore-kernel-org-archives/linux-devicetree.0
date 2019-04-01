@@ -1,66 +1,88 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 2/2] drm/bridge: ti-tfp410: Set the bus_format
-Date: Mon, 1 Apr 2019 15:41:43 +0300
-Message-ID: <20190401124143.17179-3-peter.ujfalusi@ti.com>
-References: <20190401124143.17179-1-peter.ujfalusi@ti.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH 10/10] arm64: Add Tegra194 PCIe driver to defconfig
+Date: Mon, 1 Apr 2019 18:15:54 +0530
+Message-ID: <ce284ba7-324d-3943-f439-9602175506c8@nvidia.com>
+References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
+ <1553613207-3988-11-git-send-email-vidyas@nvidia.com>
+ <a0491042-2f24-4ba8-754b-ba3959b77d6f@nvidia.com>
+ <44d7ff1d-c317-6ba2-86c0-981a6356ee9e@nvidia.com>
+ <c5ca34fe-4290-d9b7-cda3-23b4a11ec5d8@nvidia.com>
+ <20190328161138.1b37d232@xhacker.debian>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190401124143.17179-1-peter.ujfalusi@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, a.hajda@samsung.com, jsarha@ti.com
-Cc: airlied@linux.ie, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190328161138.1b37d232@xhacker.debian>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Jon Hunter <jonathanh@nvidia.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "heiko@sntech.de" <heiko@sntech.de>, "hayashi.kunihiko@socionext.com" <hayashi.kunihiko@socionext.com>, "tiwai@suse.de" <tiwai@suse.de>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "spujar@nvidia.com" <spujar@nvidia.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "kthota@nvidia.com" <kthota@nvidia.com>, "mperttunen@nvidia.com" <mperttunen@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "krzk@kernel.org" <krzk@kernel.org>, "kishon@ti.com" <kishon@ti.com>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFRGUDQxMCBzdXBwb3J0cyAyNCBiaXQsIHNpbmdsZS1lZGdlIGFuZCAxMiBiaXQsIGR1YWwt
-ZWRnZSBtb2Rlcy4KRGVwZW5kaW5nIG9uIGhvdyBtYW55IHdpcmVzIGFyZSB1c2VkICgyNC8xMikg
-dGhlIGRyaXZlciBjYW4gc2V0IHRoZSBjb3JyZWN0CmJ1c19mb3JtYXQuCgpJZiB0aGUgaW5mb3Jt
-YXRpb24gaXMgbm90IGF2YWlsYWJsZSBpbiBEVCB0aGVuIGFzc3VtZSAyNCBiaXQsIHNpbmdsZS1l
-ZGdlCnNldHVwLgoKU2lnbmVkLW9mZi1ieTogUGV0ZXIgVWpmYWx1c2kgPHBldGVyLnVqZmFsdXNp
-QHRpLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RpLXRmcDQxMC5jIHwgMTcgKysr
-KysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxNyBpbnNlcnRpb25zKCspCgpkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aS10ZnA0MTAuYyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9icmlkZ2UvdGktdGZwNDEwLmMKaW5kZXggNmZjODMxZWIzODA0Li44YjBlNzFiZDNjYTcgMTAw
-NjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGktdGZwNDEwLmMKKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL2JyaWRnZS90aS10ZnA0MTAuYwpAQCAtMjksNiArMjksNyBAQCBzdHJ1Y3QgdGZw
-NDEwIHsKIAlzdHJ1Y3QgZHJtX2Nvbm5lY3Rvcgljb25uZWN0b3I7CiAJdW5zaWduZWQgaW50CQlj
-b25uZWN0b3JfdHlwZTsKIAorCXUzMgkJCWJ1c19mb3JtYXQ7CiAJc3RydWN0IGkyY19hZGFwdGVy
-CSpkZGM7CiAJc3RydWN0IGdwaW9fZGVzYwkqaHBkOwogCWludAkJCWhwZF9pcnE7CkBAIC0xMzks
-NiArMTQwLDkgQEAgc3RhdGljIGludCB0ZnA0MTBfYXR0YWNoKHN0cnVjdCBkcm1fYnJpZGdlICpi
-cmlkZ2UpCiAJCXJldHVybiByZXQ7CiAJfQogCisJZHJtX2Rpc3BsYXlfaW5mb19zZXRfYnVzX2Zv
-cm1hdHMoJmR2aS0+Y29ubmVjdG9yLmRpc3BsYXlfaW5mbywKKwkJCQkJICZkdmktPmJ1c19mb3Jt
-YXQsIDEpOworCiAJZHJtX2Nvbm5lY3Rvcl9hdHRhY2hfZW5jb2RlcigmZHZpLT5jb25uZWN0b3Is
-CiAJCQkJCSAgYnJpZGdlLT5lbmNvZGVyKTsKIApAQCAtMTk3LDYgKzIwMSw3IEBAIHN0YXRpYyBp
-bnQgdGZwNDEwX3BhcnNlX3RpbWluZ3Moc3RydWN0IHRmcDQxMCAqZHZpLCBib29sIGkyYykKIAlz
-dHJ1Y3QgZHJtX2JyaWRnZV90aW1pbmdzICp0aW1pbmdzID0gJmR2aS0+dGltaW5nczsKIAlzdHJ1
-Y3QgZGV2aWNlX25vZGUgKmVwOwogCXUzMiBwY2xrX3NhbXBsZSA9IDA7CisJdTMyIGJ1c193aWR0
-aCA9IDI0OwogCXMzMiBkZXNrZXcgPSAwOwogCiAJLyogU3RhcnQgd2l0aCBkZWZhdWx0cy4gKi8K
-QEAgLTIyMSw2ICsyMjYsNyBAQCBzdGF0aWMgaW50IHRmcDQxMF9wYXJzZV90aW1pbmdzKHN0cnVj
-dCB0ZnA0MTAgKmR2aSwgYm9vbCBpMmMpCiAKIAkvKiBHZXQgdGhlIHNhbXBsaW5nIGVkZ2UgZnJv
-bSB0aGUgZW5kcG9pbnQuICovCiAJb2ZfcHJvcGVydHlfcmVhZF91MzIoZXAsICJwY2xrLXNhbXBs
-ZSIsICZwY2xrX3NhbXBsZSk7CisJb2ZfcHJvcGVydHlfcmVhZF91MzIoZXAsICJidXMtd2lkdGgi
-LCAmYnVzX3dpZHRoKTsKIAlvZl9ub2RlX3B1dChlcCk7CiAKIAl0aW1pbmdzLT5pbnB1dF9idXNf
-ZmxhZ3MgPSBEUk1fQlVTX0ZMQUdfREVfSElHSDsKQEAgLTIzOCw2ICsyNDQsMTcgQEAgc3RhdGlj
-IGludCB0ZnA0MTBfcGFyc2VfdGltaW5ncyhzdHJ1Y3QgdGZwNDEwICpkdmksIGJvb2wgaTJjKQog
-CQlyZXR1cm4gLUVJTlZBTDsKIAl9CiAKKwlzd2l0Y2ggKGJ1c193aWR0aCkgeworCWNhc2UgMTI6
-CisJCWR2aS0+YnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCODg4XzJYMTJfTEU7CisJCWJy
-ZWFrOworCWNhc2UgMjQ6CisJCWR2aS0+YnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCODg4
-XzFYMjQ7CisJCWJyZWFrOworCWRlZmF1bHQ6CisJCXJldHVybiAtRUlOVkFMOworCX0KKwogCS8q
-IEdldCB0aGUgc2V0dXAgYW5kIGhvbGQgdGltZSBmcm9tIHZlbmRvci1zcGVjaWZpYyBwcm9wZXJ0
-aWVzLiAqLwogCW9mX3Byb3BlcnR5X3JlYWRfdTMyKGR2aS0+ZGV2LT5vZl9ub2RlLCAidGksZGVz
-a2V3IiwgKHUzMiAqKSZkZXNrZXcpOwogCWlmIChkZXNrZXcgPCAtNCB8fCBkZXNrZXcgPiAzKQot
-LSAKUGV0ZXIKClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIs
-IDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFp
-a2thL0RvbWljaWxlOiBIZWxzaW5raQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVs
+On 3/28/2019 1:49 PM, Jisheng Zhang wrote:
+> On Wed, 27 Mar 2019 12:26:49 +0000 Jon Hunter wrote:
+> 
+>>
+>>
+>> On 27/03/2019 10:12, Vidya Sagar wrote:
+>>> On 3/27/2019 3:38 PM, Jon Hunter wrote:
+>>>>
+>>>> On 26/03/2019 15:13, Vidya Sagar wrote:
+>>>>> Add PCIe host controller driver for DesignWare core based
+>>>>> PCIe controller IP present in Tegra194.
+>>>>>
+>>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>>>> ---
+>>>>>    arch/arm64/configs/defconfig | 1 +
+>>>>>    1 file changed, 1 insertion(+)
+>>>>>
+>>>>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+>>>>> index 2d9c39033c1a..2ddea5c4e87d 100644
+>>>>> --- a/arch/arm64/configs/defconfig
+>>>>> +++ b/arch/arm64/configs/defconfig
+>>>>> @@ -87,6 +87,7 @@ CONFIG_PCIE_QCOM=y
+>>>>>    CONFIG_PCIE_ARMADA_8K=y
+>>>>>    CONFIG_PCIE_KIRIN=y
+>>>>>    CONFIG_PCIE_HISI_STB=y
+>>>>> +CONFIG_PCIE_TEGRA194=y
+>>>>>    CONFIG_ARM64_VA_BITS_48=y
+>>>>>    CONFIG_SCHED_MC=y
+>>>>>    CONFIG_NUMA=y
+>>>>
+>>>> Maybe building as a module is more appropriate here as I am not sure
+>>>> that anyone else will want this built-in and it is not critical to
+>>>> booting AFAIK.
+>>> Since the DesignWare core framework doesn't yet have support for making
+>>> this
+>>> as a module, I added it as a built-in driver. I'll switch it to a module
+>>> once support is available.
+>>
+>> Ah I see. We often get reports/patches if a driver has a removal
+>> function but is defined in the Kconfig to only support being built-in.
+>>
+>> Does the designware core just need to export some symbols to support it
+>> being a module? If so it maybe worth adding these as part of the series
+>> to see if it is acceptable, otherwise it might not get done and there is
+>> no point us supporting it as a module.
+> 
+> After https://lkml.org/lkml/2019/3/18/363
+> 
+> we could implement the "remove"
+> 
+> Thanks
+> 
+Thanks Jisheng for the link. I'll verify my code with your patch set and update
+the result.
+@Jonathan, once Jisheng's patch set gets accepted, I'll make PCIE_TEGRA194 as a
+module.
+
+Thanks,
+Vidya Sagar
