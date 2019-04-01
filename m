@@ -1,60 +1,95 @@
 From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-Subject: [PATCH v8 1/2] dt-bindings: phy: Add documentation for mixel dphy
-Date: Mon,  1 Apr 2019 12:13:35 +0200
-Message-ID: <15b5adaeae3d5ab9020f98d067394a581522f6f4.1554113192.git.agx@sigxcpu.org>
-References: <cover.1554113192.git.agx@sigxcpu.org>
+Subject: [PATCH v8 0/2] Mixel MIPI DPHY support for NXPs i.MX8 SOCs
+Date: Mon,  1 Apr 2019 12:13:34 +0200
+Message-ID: <cover.1554113192.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1554113192.git.agx@sigxcpu.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Heiko Stuebner <heiko@sntech.de>, Johan Hovold <johan@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Robert
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Heiko Stuebner <heiko@sntech.de>, Johan Hovold <johan@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Robert Chiras <robert.chiras@nxp.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the MIXEL DPHY IP as found on NXP's i.MX8MQ SoCs.
-
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
----
- .../bindings/phy/mixel,mipi-dsi-phy.txt       | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
-new file mode 100644
-index 000000000000..9b23407233c0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
-@@ -0,0 +1,29 @@
-+Mixel DSI PHY for i.MX8
-+
-+The Mixel MIPI-DSI PHY IP block is e.g. found on i.MX8 platforms (along the
-+MIPI-DSI IP from Northwest Logic). It represents the physical layer for the
-+electrical signals for DSI.
-+
-+Required properties:
-+- compatible: Must be:
-+  - "fsl,imx8mq-mipi-dphy"
-+- clocks: Must contain an entry for each entry in clock-names.
-+- clock-names: Must contain the following entries:
-+  - "phy_ref": phandle and specifier referring to the DPHY ref clock
-+- reg: the register range of the PHY controller
-+- #phy-cells: number of cells in PHY, as defined in
-+  Documentation/devicetree/bindings/phy/phy-bindings.txt
-+  this must be <0>
-+
-+Optional properties:
-+- power-domains: phandle to power domain
-+
-+Example:
-+	dphy: dphy@30a0030 {
-+		compatible = "fsl,imx8mq-mipi-dphy";
-+		clocks = <&clk IMX8MQ_CLK_DSI_PHY_REF>;
-+		clock-names = "phy_ref";
-+		reg = <0x30a00300 0x100>;
-+		power-domains = <&pd_mipi0>;
-+		#phy-cells = <0>;
-+        };
--- 
-2.20.1
+VGhpcyBhZGRzIGluaXRpYWwgc3VwcG9ydCBmb3IgdGhlIE1peGVsIElQIGJhc2VkIG1pcGkgZHBo
+eSBhcyBmb3VuZCBvbiBpLk1YOApwcm9jZXNzb3JzLiAgSXQgaGFzIHN1cHBvcnQgZm9yIHRoZSBp
+Lk1YOE1RLCBzdXBwb3J0IGZvciBvdGhlciB2YXJpYW50cyBjYW4gYmUKYWRkZWQgLSBvbmNlIHRo
+ZSBwbGF0Zm9ybSBzcGVjaWZpYyBwYXJ0cyBhcmUgaW4gLSB2aWEgdGhlIHByb3ZpZGVkIGRldmRh
+dGEuClRoZSBkcml2ZXIgaXMgc29tZXdoYXQgYmFzZWQgb24gd2hhdCdzIGZvdW5kIGluIE5YUHMg
+QlNQLgoKUHVibGljIGRvY3VtZW50YXRpb24gb24gdGhlIERQSFkncyByZWdpc3RlcnMgaXMgY3Vy
+cmVudGx5IHRoaW4gaW4gdGhlIGkuTVg4CnJlZmVyZW5jZSBtYW51YWxzIChldmVuIG9uIHRoZSBp
+Lk1YOFFYUCBmb3JtIDExLzE4KSBzbyBtb3N0IG9mIHRoZSB2YWx1ZXMgd2VyZQp0YWtlbiBmcm9t
+IGV4aXN0aW5nIGRyaXZlcnMuIE5ld2VyIE5YUCBkcml2ZXJzIGhhdmUgYSBiaXQgbW9yZSBkZXRh
+aWxzIHNvIHdoZXJlCnBvc3NpYmxlIHRoZSB0aW1pbmdzIGFyZSBjYWxjdWxhdGVkIGFuZCB2YWxp
+ZGF0ZWQuCgpJJ3ZlIGFsc28gc2VudCBvdXQgYW4gaW5pdGlhbCB2ZXJzaW9uIG9mIGEgTldMIG1p
+cGkgZHNpIGhvc3QgY29udHJvbGxlciBkcml2ZXIKdXNpbmcgdGhpczoKCiAgICBodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxOS1NYXJjaC8yMDk2ODUu
+aHRtbAoKUm9iZXJ0IENoaXJhcyAodGhlIGF1dGhvciBvZiB0aGUgY29ycmVzcG9uZGluZyBkcml2
+ZXIgaW4gTlhQcyB2ZW5kb3IgdHJlZSkgZ290CnRoaXMgZHJpdmVyIHRvIHdvcmsgaW4gaGlzIHRy
+ZWUgYXMgd2VsbDoKCiAgICBodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9hcm0ta2VybmVs
+L21zZzcxMTk1MC5odG1sCgpDaGFuZ2VzIGZyb20gdjcKKiBBcyBwZXIgcmV2aWV3IGNvbW1lbnRz
+IGZyb20gUm9iIEhlcnJpbmcKICAqIFVzZSBmc2wsIGFzIHZlbmRvciBwcmVmaXgKICAqIERyb3Ag
+Y2hhbmdlcyB0byB2ZW5kb3ItcHJlZml4ZXMudHh0IGR1ZSB0byB0aGF0CiAgKiBTaG9ydGVuIG1p
+eGVsX2RwaHkgdG8gZHBoeSBpbiB0aGUgZXhhbXBsZQoqIEZpeCBhbiBpbmRlbnRhdGlvbiBlcnJv
+ciBub3RpY2VkIGJ5IGNoZWNrcGF0Y2ggdGhhdCBnb3QgaW50cm9kdWNlZCBpbiB2NgoqIFVzZSBs
+b3dlcmNhc2UgbGV0dGVycyBpbiBoZXggYWRkcmVzc2VzIGluIERUIGJpbmRpbmdzIGV4YW1wbGUK
+CkNoYW5nZXMgZnJvbSB2NgoqIERlcGVuZCBvbiBIQVNfSU9NRU0gKGZpeGVzIGEgYnVpbGQgcHJv
+YmxlbSBvbiBVTSBzcG90dGVkIGJ5IGtidWlsZCkKCkNoYW5nZXMgZnJvbSB2NQoqIEZpeCBidWls
+ZCBwcm9ibGVtcyBvbiBtaXBzIChzcG90dGVkIGJ5IHRoZSBrYnVpbGQgdGVzdCByb2JvdCkgYnkg
+dXNpbmcgdTMyCiAgY29uc2lzdGVudGx5IGFuZCBsb25nIGxvbmcgZm9yIGxwX3QuCgpDaGFuZ2Vz
+IGZyb20gdjQKKiBCdWlsZCBieSBkZWZhdWx0IG9uIEFSQ0hfTVhDICYmIEFSTTY0CgpDaGFuZ2Vz
+IGZvcm0gdjMKKiBDaGVjayBjb3JyZWN0IHZhcmlhYmxlIGFmdGVyIGRldm1faW9yZW1hcF9yZXNv
+dXJjZQoqIEFkZCBSb2JlcnQgQ2hpcmFzIGFzIENvLWF1dGhvcmVkLWJ5IHNpbmNlIGhlJ3MgdGhl
+IGF1dGhvcgogIG9mIHRoZSBkcml2ZXIgaW4gTlhQcyBCU1AuCgpDaGFuZ2VzIGZyb20gdjIKKiBB
+cyBwZXIgcmV2aWV3IGNvbW1lbnRzIGZyb20gRmFiaW8gRXN0ZXZhbQogICogS0NvbmZpZzogc2Vs
+ZWN0IFJFR01BUF9NTUlPCiAgKiBEcm9wIHBoeV9yZWFkCiAgKiBEb24ndCBtYWtlIHBoeV93cml0
+ZSBpbmxpbmUKICAqIFJlbW92ZSBkdXBsaWNhdGUgZGVidWdnaW5nIG91dHB1dAogICogQ29tbWVu
+dCBzdHlsZSBhbmQgdHlwbyBmaXhlcwogICogQWRkICNkZWZpbmVzJ3MgZm9yIFBMTCBsb2NrIHRp
+bWluZyB2YWx1ZXMKICAqIFJldHVybiBjb3JyZWN0IGVycm9yIHZhbHVlIHdoZW4gUExMIGZhaWxz
+IHRvIGxvY2sKICAqIENoZWNrIGVycm9yIHdoZW4gZW5hYmxpbmcgY2xvY2sKICAqIFVzZSBkZXZt
+X2lvcmVtYXBfcmVzb3VyY2UKKiBBcyBwZXIgcmV2aWV3IGNvbW1lbnRzIGZyb20gUm9iZXJ0IENo
+aXJhcwogICogRGVhc3NlcnQgUERfRFBIWSBhZnRlciBQTEwgbG9jayAoYXMgcGVyIG1peGVsIHJl
+ZiBtYW51YWwpCiAgKiBBc3NlcnQgUERfe0RQSFksUExMfSBiZWZvcmUgcG93ZXIgb24gKGFzIHBl
+ciBtaXhlbCByZWYgbWFudWFsKW1hbnVhbAoqIEFkZCBleGl0IHBoeV9vcCB0byByZXNldCBDTi9D
+TS9DTwoKQ2hhbmdlcyBmcm9tIHYxCiogQXMgcGVyIHJldmlldyBjb21tZW50cyBmcm9tIEZhYmlv
+IEVzdGV2YW0KICAqIEtjb25maWc6IHRyaXN0YXRlIG1peGVsIGRwaHkgc3VwcG9ydC4KICAqIERy
+b3AgdW51c2VkICdyZXQnIGluIG1peGVsX2RwaHlfcmVmX3Bvd2VyX29mZi4KICAqIE1hdGNoIHZh
+bHVlcyBvZiBEUEhZX1JYTHtQUlAsRFJQfSB0byB0aG9zZSBvZgogICAgaHR0cHM6Ly9zb3VyY2Uu
+Y29kZWF1cm9yYS5vcmcvZXh0ZXJuYWwvaW14L2xpbnV4LWlteC9sb2cvP2g9aW14XzQuMTQuNzhf
+MS4wLjBfZ2EKICAgIFRoZSBwcmV2aW91cyB2YWx1ZXMgd2VyZSBiYXNlZCBvbiA0LjkuCiAgKiBV
+c2UgcmVzb3VyY2Ugc2l6ZSBvbiBkZXZtX2lvcmVtYXAsIHdlIGhhdmUgdGhhdCBpbiBkdCBhbHJl
+YWR5LgogICogVXNlIHJlZ21hcCBzbyBpdCdzIHNpbXBsZSB0byBkdW1wIHRoZSByZWdpc3RlcnMu
+CiAgKiBVc2UgcmVnbWFwX3JlYWRfcG9sbF90aW1lb3V0IGluc3RlYWQgb2Ygb3BlbiBjb2RlZCBs
+b29wLgogICogQWRkIHVuZG9jdW1lbnRlZCByeGhzX3NldHRsZSByZWdpc3RlcgoqIEFzIHBlciBy
+ZXZpZXcgY29tbWVudHMgZnJvbSBTYW0gUmF2bmJvcmcKICAqIE1vdmUgZHJpdmVyIHRvIGQvcGh5
+L2ZyZWVzY2FsZS8KICAqIE1vdmUgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXIgdG8gdG9wIG9mIGZp
+bGUuCiAgKiBEcm9wICcvKiAjZGVmaW5lIERFQlVHIDEgKi8nLgogICogVXNlIEdQTC0yLjArIHNp
+bmNlIHRoZSB2ZW5kb3IgZHJpdmVyIHVzZXMgdGhhdCBhcyB3ZWxsLgogICogRHJvcCB0aGUgbXV0
+ZXgsIHJlZ2lzdGVyIGFjY2VzcyBpcyBub3cgcHJvdGVjdGVkIGJ5IHJlZ21hcC4KICAqIEZpeCB2
+YXJpb3VzIHN0eWxlIC8gaW5kZW50YXRpb24gaXNzdWVzLgoqIENoZWNrIGZvciByZWdpc3RlciBy
+ZWFkLCB3cml0ZSBhbmQgaW9yZW1hcCBlcnJvcnMKKiBJbXByb3ZlIHBoeSB0aW1pbmcgY2FsY3Vs
+YXRpb25zCiAgKiBVc2UgTFAgY2xvY2sgcmF0ZSB3aGVyZSBzZW5zaWJsZSwgY2hlY2sgZm9yIGVy
+cm9ycwogICogVXNlIGFkIGhvYyBmb3J1bXVsYXMgZm9yIHRpbWluZ3MgaW52b2x2aW5nIGhzIGNs
+b2NrCiogU3dpdGNoIGZyb20gZHBoeV9vcHMgdG8gZGV2ZGF0YS4gT3RoZXIgaS5NWDggdmFyaWFu
+dHMKICBkaWZmZXIgaW4gcmVnaXN0ZXIgbGF5b3V0IHRvbwoqIEFkZCBNaXhlbCBJbmMgdG8gdmVu
+ZG9yLXByZWZpeGVzLnR4dAoKR3VpZG8gR8O8bnRoZXIgKDIpOgogIGR0LWJpbmRpbmdzOiBwaHk6
+IEFkZCBkb2N1bWVudGF0aW9uIGZvciBtaXhlbCBkcGh5CiAgcGh5OiBBZGQgZHJpdmVyIGZvciBt
+aXhlbCBtaXBpIGRwaHkgZm91bmQgb24gTlhQJ3MgaS5NWDggU29DcwoKIC4uLi9iaW5kaW5ncy9w
+aHkvbWl4ZWwsbWlwaS1kc2ktcGh5LnR4dCAgICAgICB8ICAyOSArCiBkcml2ZXJzL3BoeS9mcmVl
+c2NhbGUvS2NvbmZpZyAgICAgICAgICAgICAgICAgfCAgMTEgKwogZHJpdmVycy9waHkvZnJlZXNj
+YWxlL01ha2VmaWxlICAgICAgICAgICAgICAgIHwgICAxICsKIC4uLi9waHkvZnJlZXNjYWxlL3Bo
+eS1mc2wtaW14OC1taXBpLWRwaHkuYyAgICB8IDUwNiArKysrKysrKysrKysrKysrKysKIDQgZmls
+ZXMgY2hhbmdlZCwgNTQ3IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L21peGVsLG1pcGktZHNpLXBoeS50eHQKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BoeS9mcmVlc2NhbGUvcGh5LWZzbC1pbXg4LW1pcGkt
+ZHBoeS5jCgotLSAKMi4yMC4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWw=
