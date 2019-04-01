@@ -1,38 +1,43 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v6 00/13] Ingenic NAND patchset v6
-Date: Mon, 1 Apr 2019 17:25:19 +0200
-Message-ID: <20190401172519.4b7a42df@xps13>
-References: <20190319145403.31627-1-paul@crapouillou.net>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH V5 4/4] rtc: imx-sc: add rtc alarm support
+Date: Mon, 1 Apr 2019 17:26:22 +0200
+Message-ID: <20190401152622.GL3430@piout.net>
+References: <1552878291-22866-1-git-send-email-Anson.Huang@nxp.com>
+ <1552878291-22866-4-git-send-email-Anson.Huang@nxp.com>
+ <20190401131130.GE3430@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190319145403.31627-1-paul@crapouillou.net>
+Content-Disposition: inline
+In-Reply-To: <20190401131130.GE3430@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Harvey Hunt <harveyhuntnexus@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
-
-Paul Cercueil <paul@crapouillou.net> wrote on Tue, 19 Mar 2019 15:53:50
-+0100:
-
-> Hi,
+On 01/04/2019 15:11:30+0200, Alexandre Belloni wrote:
+> On 18/03/2019 03:10:06+0000, Anson Huang wrote:
+> > Add i.MX system controller RTC alarm support, the RTC alarm
+> > is implemented via SIP(silicon provider) runtime service call
+> > and ARM-Trusted-Firmware will communicate with system controller
+> > via MU(message unit) IPC to set RTC alarm. When RTC alarm fires,
+> > system controller will generate a common MU irq event and notify
+> > system controller RTC driver to handle the irq event.
+> > 
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> > No function changes, just update imx_scu_irq_register_notifier() function name
+> > according to SCU IRQ function name change.
+> > ---
+> >  drivers/rtc/rtc-imx-sc.c | 112 +++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 112 insertions(+)
+> > 
+> Applied, thanks.
 > 
-> Changes from V5 include just a typo correction in patch 09/13, and the
-> introduction of the patch 13/13 which is new.
-> 
-> The rest is untouched.
-> 
-> Thanks,
-> -Paul
-> 
 
+Actually, that is not the one I applied.
 
-Applied to git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
-on nand/next.
-
-
-Thanks,
-Miquèl
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
