@@ -1,60 +1,28 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH 2/2] drm: Add ASPEED GFX driver
-Date: Mon, 1 Apr 2019 20:48:31 +0200
-Message-ID: <20190401184831.GA14599@ravnborg.org>
-References: <20190328054316.17939-1-joel@jms.id.au>
- <20190328054316.17939-3-joel@jms.id.au>
- <730c140f-b4a2-7df9-3d90-9d47d720f643@tronnes.org>
+From: Roy Pledge <roy.pledge@nxp.com>
+Subject: of_reserved_mem()/kexec interaction
+Date: Mon, 1 Apr 2019 19:09:02 +0000
+Message-ID: <DB6PR0402MB2727C7111A5BDBB07F05E29886550@DB6PR0402MB2727.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <730c140f-b4a2-7df9-3d90-9d47d720f643@tronnes.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
-Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, linux-aspeed@lists.ozlabs.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSm9lbC4KClJlcGx5aW5nIHRvIE5vcmFsZidzIG1haWwgYXMgSSBsb3N0IHRoZSBvcmlnaW5h
-bCBtYWlsLgoKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXNwZWVkL2FzcGVlZF9n
-ZnhfY3J0Yy5jIGIvZHJpdmVycy9ncHUvZHJtL2FzcGVlZC9hc3BlZWRfZ2Z4X2NydGMuYwo+ID4g
-bmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uZTJkMWQ3NDk3MzUy
-Cj4gPiAtLS0gL2Rldi9udWxsCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYXNwZWVkL2FzcGVl
-ZF9nZnhfY3J0Yy5jCj4gPiBAQCAtMCwwICsxLDI0OCBAQAo+ID4gKy8vIFNQRFgtTGljZW5zZS1J
-ZGVudGlmaWVyOiBHUEwtMi4wKwo+ID4gKy8vIENvcHlyaWdodCAyMDE4IElCTSBDb3Jwb3JhdGlv
-bgo+ID4gKwo+ID4gKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgv
-cmVzZXQuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+Cj4gPiArCj4gPiArI2luY2x1
-ZGUgPGRybS9kcm1fY3J0Y19oZWxwZXIuaD4KPiA+ICsjaW5jbHVkZSA8ZHJtL2RybV9kZXZpY2Uu
-aD4KPiA+ICsjaW5jbHVkZSA8ZHJtL2RybV9mYl9jbWFfaGVscGVyLmg+Cj4gPiArI2luY2x1ZGUg
-PGRybS9kcm1fZ2VtX2NtYV9oZWxwZXIuaD4KPiA+ICsjaW5jbHVkZSA8ZHJtL2RybV9zaW1wbGVf
-a21zX2hlbHBlci5oPgo+ID4gKyNpbmNsdWRlIDxkcm0vZHJtX2dlbV9mcmFtZWJ1ZmZlcl9oZWxw
-ZXIuaD4KPiA+ICsjaW5jbHVkZSA8ZHJtL2RybV9wYW5lbC5oPgo+IAo+IEkgcHJlZmVyIGluY2x1
-ZGVzIHNvcnRlZCBhbHBoYWJldGljYWxseSwgYnV0IG5vIHJlcXVpcmVtZW50LgpQbGVhc2Ugc29y
-dCB0aGVtIGFzIE5vcmFsZiBzdWdnZXN0LCBhcyB0aGlzIG1ha2VzIGl0IG11Y2ggbW9yZSBvYnZp
-b3VzCndoZW4gb25lIGlzIGFkZGluZyBhIGR1cGxpY2F0ZSBoZWFkZXIuCgo+ID4gKwo+ID4gKwlw
-cml2LT5yc3QgPSBkZXZtX3Jlc2V0X2NvbnRyb2xfZ2V0X2V4Y2x1c2l2ZSgmcGRldi0+ZGV2LCBO
-VUxMKTsKPiA+ICsJaWYgKElTX0VSUihwcml2LT5yc3QpKSB7Cj4gPiArCQlkZXZfZXJyKCZwZGV2
-LT5kZXYsCj4gPiArCQkJIm1pc3Npbmcgb3IgaW52YWxpZCByZXNldCBjb250cm9sbGVyIGRldmlj
-ZSB0cmVlIGVudHJ5Iik7CkFkZCBlcnJvciBjb2RlIHRvIHlvdXIgZGV2X2VycigpIGNhbGxzLCBz
-byBvbmUgbGF0ZXIgYmV0dGVyCmNhbiB0ZWxsIHdoYXQgd2FzIHdyb25nIGlmIHJpdmVyIGZhaWxz
-IHRvIGxvYWQuClNhbWUgZ29lcyBmb3Igb3RoZXIgZGV2X3h4eCBjYWxscyBpbiB0aGlzIGZ1bmN0
-aW9uIC8gZGlydmVyLgooTW9zdCBkZXZfeHh4IGhhdmUgdGhlIHJldHVybiBjb2RlLCBvbmx5IGEg
-ZmV3IHNlZW1zIHRvIG1pc3MgaXQpCgo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNl
-X2lkIGFzcGVlZF9nZnhfbWF0Y2hbXSA9IHsKPiA+ICsJeyAuY29tcGF0aWJsZSA9ICJhc3BlZWQs
-YXN0MjQwMC1nZngiIH0sCj4gPiArCXsgLmNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI1MDAtZ2Z4
-IiB9LAo+ID4gKwl7IH0KTWFueSBkcml2ZXJzIHB1dCBhIC8qIHNlbnRpbmVsICovIGNvbW1lbnQg
-aW5zaWRlIHRoZSBlbXB0eSB7fQoKV2l0aCB0aGUgZmV3IHRoaW5ncyBzdWdnZXN0ZWQgYWJvdmUg
-Y29uc2lkZXJlZCB0aGlzIGlzClJldmlld2VkLWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9y
-Zy5vcmc+CgoJU2FtCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bA==
+Hi Rob,=0A=
+=0A=
+Not sure if you're the right person to address this to but if not=0A=
+hopefully someone on the list can assist me.=0A=
+=0A=
+I'm trying to understand if memory reserved in the device tree via the=0A=
+"reserved-memory" facility is preserved during a kexec system call,=0A=
+i.e., is the memory at the same location with the contents undisturbed=0A=
+when the new kernel starts?=0A=
+=0A=
+Thanks=0A=
+=0A=
+Roy=0A=
+=0A=
