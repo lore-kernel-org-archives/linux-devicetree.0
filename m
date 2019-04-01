@@ -1,46 +1,67 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH 03/10] PCI: dwc: Move config space capability search API
-Date: Mon, 1 Apr 2019 17:16:59 +0530
-Message-ID: <5a438b16-53bc-dee3-ea9d-14048547dc29@nvidia.com>
-References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
- <1553613207-3988-4-git-send-email-vidyas@nvidia.com>
- <20190328123320.GA5518@ulmo>
+From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: [PATCH v2 0/5] Add bluetooth, gps and accelerometer to
+ TBS A711
+Date: Mon,  1 Apr 2019 13:56:11 +0200
+Message-ID: <20190401115616.21337-1-megous@megous.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190328123320.GA5518@ulmo>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, tiwai@suse.de, spujar@nvidia.com, skomatineni@nvidia.com, liviu.dudau@arm.com, krzk@kernel.org, heiko@sntech.de, horms+renesas@verge.net.au, olof@lixom.net, maxime.ripard@bootlin.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, jagan@amarulasolutions.com, enric.balletbo@collabora.com, ezequiel@collabora.com, stefan.wahren@i2se.com, marc.w.gonzalez@free.fr, l.stach@pengutronix.de, tpiepho@impinj.com, hayashi.kunihiko@socionext.com, yue.wang@amlogic.com, shawn.li
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBZHYQ7SQKGQET4ECTHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 3/28/2019 6:03 PM, Thierry Reding wrote:
-> On Tue, Mar 26, 2019 at 08:43:20PM +0530, Vidya Sagar wrote:
->> move PCIe config space capability search API to common designware file
->> as this can be used by both host and ep mode codes.
->> It also adds extended capability search APIs.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-designware-ep.c | 37 +------------
->>   drivers/pci/controller/dwc/pcie-designware.c    | 73 +++++++++++++++++++++++++
->>   drivers/pci/controller/dwc/pcie-designware.h    |  3 +
->>   3 files changed, 78 insertions(+), 35 deletions(-)
-> 
-> Just out of curiosity: is there any reason why this driver needs to
-> reimplement this? Couldn't this be made to work using the standard
-> pci_find_next_capability() function?
-> 
-> Other than that it might be a good idea to split this into two patches,
-> one that moves the existing functionality to the common code and another
-> that adds the extra functionality.
-> 
-> Thierry
-> 
-pci_find_next_capability() API expects struct pci_dev * pointer and this can only
-be used after PCIe devices got enumerated. APIs added in this patch solves the issue
-of getting capability offsets before PCIe enumeration. FWIW, APIs in this patch
-take struct dw_pcie * pointer as input.
-As you suggested, I'll split this into two patches in my next series.
+From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+
+This series enables some peripherals on TBS A711 tablet that already
+have mainline drivers:
+
+- GPS u-blox neo-6m (via gnss u-blox driver)
+- Bluetooth (via recently added OF support in the Broadcom
+  bluetooth driver)
+- Accelermomter BMA-250 (hooked to the I2C bus)
+
+It also modifies A83T DTSI and adds missing UART interfaces.
+
+I've added additional compatible to the gnss/u-blox driver for NEO-6M,
+because this board uses this module, and I don't think I can use
+the existing compatible for u-blox,neo-m8, even as a fallback.
+
+Please take a look, and apply the patches if you have no objections.
+
+Many of the patches will go through the sunxi tree, but I'm not
+sure who will want to take the GPS patches.
+
+regards,
+  Ondrej Jirman
+
+
+Changes in v2:
+- dropped already applied patches from the series (bluetooth,
+  a83t uarts)
+- added /omit-if-no-ref/ to "uart2-pb-pins"
+- renamed node "bma250" to "accelerometer"
+- removed pinctrl properties that are already in base dtsi
+  (i2c1_pins)
+
+Ondrej Jirman (5):
+  ARM: dts: sun8i: tbs-a711: Add node for BMA250 accelerometer
+  ARM: dts: sun8i: a83t: Add UART2 PB pins
+  gnss: Add u-blox,neo-6m compatible
+  dt-bindings: gnss: Add u-blox,neo-6m compatible
+  ARM: dts: sun8i: tbs-a711: Enable UART2 (for NEO-6M GPS module)
+
+ .../devicetree/bindings/gnss/u-blox.txt       |  1 +
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts     | 34 +++++++++++++++++++
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |  6 ++++
+ drivers/gnss/ubx.c                            |  1 +
+ 4 files changed, 42 insertions(+)
+
+-- 
+2.21.0
