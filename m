@@ -1,56 +1,71 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 11/15] phy: mvebu-cp110-comphy: Update comment about powering
- off all lanes at boot
-Date: Mon,  1 Apr 2019 18:51:27 +0200
-Message-ID: <20190401165131.23370-12-miquel.raynal@bootlin.com>
-References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190401165131.23370-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [BUG/PATCH 1/4] DTS: GTA04: SPI / gpiolib: work around a regression that unhides a broken legacy handler, which makes the gta04 display inoperable
+Date: Mon, 1 Apr 2019 18:56:51 +0200
+Message-ID: <06C7464E-FAF2-4AA6-9FF4-629E9C97F86A@goldelico.com>
+References: <cover.1554026842.git.hns@goldelico.com> <e8d784f7fb06fd3a6a92bc730f919352c4ad4411.1554026842.git.hns@goldelico.com> <20190401164617.GH49658@atomide.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190401164617.GH49658@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-Now that all COMPHY modes are supported by the driver, update the
-comment stating that mvebu_comphy_power_off() should be called for
-each lane. This is still wrong because for compatibility reasons, it
-might break users running an old firmware (the driver only uses SMC
-calls for SATA, USB and PCIe configuration, there is no code in Linux
-to fallback on in these cases.
+Hi Tony,
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> Am 01.04.2019 um 18:46 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> Hi,
+>=20
+> * H. Nikolaus Schaller <hns@goldelico.com> [190331 10:08]:
+>> This is an ugly workaround for a regression introduced into v5.1-rc1 =
+by
+>>=20
+>> <c1c04cea13dc234ce9a4504879ddd36ea524d880>
+>=20
+> You should standardized commit references like this instead:
+>=20
+> c1c04cea13dc ("gpio: of: Fix logic inversion")
+>=20
+> Then please also include a proper Fixes tag.
+>=20
+> You can configure an alias for it to make things easier:
+>=20
+> git log --abbrev=3D12 --pretty=3Dformat:"%h (\"%s\")"
+>=20
+>> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
+>> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+>> @@ -114,6 +114,7 @@
+>> 		gpio-miso =3D <&gpio1 18 GPIO_ACTIVE_HIGH>;
+>> 		gpio-mosi =3D <&gpio1 20 GPIO_ACTIVE_HIGH>;
+>> 		cs-gpios =3D <&gpio1 19 GPIO_ACTIVE_HIGH>;
+>> +		spi-cs-high;	/* make the legacy handler in gpiolib =
+not intervene */
+>> 		num-chipselects =3D <1>;
+>>=20
+>> 		/* lcd panel */
+>> @@ -123,6 +124,7 @@
+>> 			spi-max-frequency =3D <100000>;
+>> 			spi-cpol;
+>> 			spi-cpha;
+>> +			spi-cs-high;	/* here is where it should be =
+but this is ignored by a bug in the gpiolib handler */
+>>=20
+>> 			backlight=3D <&backlight>;
+>> 			label =3D "lcd";
+>=20
+> So what's the plan with this fix? Add this for v5.2-rc cycle,
+> then revert it later? I'd probably go directly for the proper
+> fix if possible.
 
-diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-index d66412b38ff7..6f6c26c1c622 100644
---- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-+++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-@@ -841,9 +841,11 @@ static int mvebu_comphy_probe(struct platform_device *pdev)
- 		phy_set_drvdata(phy, lane);
- 
- 		/*
--		 * Once all modes are supported in this driver we should call
-+		 * All modes are supported in this driver so we could call
- 		 * mvebu_comphy_power_off(phy) here to avoid relying on the
--		 * bootloader/firmware configuration.
-+		 * bootloader/firmware configuration, but for compatibility
-+		 * reasons we cannot de-configure the COMPHY without being sure
-+		 * that the firmware is up-to-date and fully-featured.
- 		 */
- 	}
- 
--- 
-2.19.1
+Well, I learned just some minutes ago that a new patch for gpiolib
+came through 5.1-rc3 which does fix this.
+
+It seems to check for "cs-gpios" and then disable the legacy handling.
+
+This means that we do not need to patch the DTS at all.
+
+BR and thanks,
+Nikolaus
