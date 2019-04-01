@@ -1,189 +1,47 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 3/3] backlight: lm3630a: add device tree supprt
-Date: Mon, 1 Apr 2019 23:48:47 +0200
-Message-ID: <20190401214847.GE14681@amd>
-References: <20190401103034.21062-1-masneyb@onstation.org>
- <20190401103034.21062-4-masneyb@onstation.org>
+From: Moritz Fischer <mdf@kernel.org>
+Subject: Re: [PATCH v5 6/6] dt-bindings: fpga: Add bindings for ZynqMP fpga
+ driver
+Date: Mon, 1 Apr 2019 15:05:55 -0700
+Message-ID: <20190401220555.GA2716@archbook>
+References: <20190326143129.2608-1-nava.manne@xilinx.com>
+ <20190326143129.2608-7-nava.manne@xilinx.com>
+ <20190328170028.GA10815@bogus>
+ <CANk1AXTcwb1oJL5Uq-H-Q41-n8SXtamObSedMHSa_smZ8Xr1fw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0033664947=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190401103034.21062-4-masneyb@onstation.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brian Masney <masneyb@onstation.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, jonathan@marek.ca, b.zolnierkie@samsung.com, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, linux-fbdev@vger.kernel.org, lee.jones@linaro.org, linux-leds@vger.kernel.org, dmurphy@ti.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CANk1AXTcwb1oJL5Uq-H-Q41-n8SXtamObSedMHSa_smZ8Xr1fw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Tull <atull@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Nava kishore Manne <nava.manne@xilinx.com>, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rajan Vaja <rajanv@xilinx.com>, Jolly Shah <jollys@xilinx.com>, linux-fpga@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, kishore m <chinnikishore369@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---===============0033664947==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DqhR8hV3EnoxUkKN"
-Content-Disposition: inline
-
-
---DqhR8hV3EnoxUkKN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon 2019-04-01 06:30:34, Brian Masney wrote:
-> Add device tree support to the lm3630a driver and allow configuring
-> independently on both banks the mapping mode (linear or exponential),
-> initial and maximum LED brightness.
->=20
-> Driver was tested on a LG Nexus 5 (hammerhead) phone.
->=20
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  drivers/video/backlight/lm3630a_bl.c | 69 ++++++++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
->=20
-> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlig=
-ht/lm3630a_bl.c
-> index ef2553f452ca..96fbc1273dda 100644
-> --- a/drivers/video/backlight/lm3630a_bl.c
-> +++ b/drivers/video/backlight/lm3630a_bl.c
-> @@ -35,6 +35,9 @@
->  #define REG_MAX		0x50
-> =20
->  #define INT_DEBOUNCE_MSEC	10
-> +
-> +#define LM3630A_MAX_SOURCES	2
-> +
->  struct lm3630a_chip {
->  	struct device *dev;
->  	struct delayed_work work;
-> @@ -364,6 +367,64 @@ static const struct regmap_config lm3630a_regmap =3D=
- {
->  	.max_register =3D REG_MAX,
->  };
-> =20
-> +static void lm3630a_parse_dt(struct lm3630a_chip *pchip)
-> +{
-> +	u32 sources[LM3630A_MAX_SOURCES], val;
-> +	struct device_node *child_node;
-> +	int num_sources, ret, i;
-> +	bool linear;
-> +
-> +	for_each_available_child_of_node(pchip->dev->of_node, child_node) {
-> +		num_sources =3D of_property_count_u32_elems(child_node,
-> +							  "led-sources");
-> +		if (num_sources < 0)
-> +			continue;
-> +
-> +		if (num_sources > LM3630A_MAX_SOURCES)
-> +			num_sources =3D LM3630A_MAX_SOURCES;
-> +
-> +		ret =3D of_property_read_u32_array(child_node, "led-sources",
-> +						 sources, num_sources);
-> +		if (ret) {
-> +			dev_err(pchip->dev,
-> +				"Error parsing led-sources node: %d\n", ret);
-> +			return;
-> +		}
-> +
-> +		linear =3D of_property_read_bool(child_node,
-> +					       "ti,linear-mapping-mode");
-> +
-> +		for (i =3D 0; i < num_sources; i++) {
-> +			if (sources[i] =3D=3D 0)
-> +				pchip->pdata->leda_ctrl =3D linear ?
-> +					LM3630A_LEDA_ENABLE_LINEAR :
-> +					LM3630A_LEDA_ENABLE;
-> +			else if (sources[i] =3D=3D 1)
-> +				pchip->pdata->ledb_ctrl =3D linear ?
-> +					LM3630A_LEDB_ENABLE_LINEAR :
-> +					LM3630A_LEDB_ENABLE;
-
-This makes my head spin.
-
-So ... we can have multiple LEDs, each can have up to two
-sources.. and the settings are really per source, not per LED.
-
-But you do not test for overlaps. What prevents me from having
-
-   foo {
-       led_sources =3D <0>;
-       ti,linear-mapping-mode;
-   }
-   bar {
-       led_sources =3D <0>;
-   }
-
-(I.e. conflicting settings for a source?)
-
-Plus I do not see parsing of led labels etc...
-
-> +			ret =3D of_property_read_u32(child_node,
-> +						   "default-brightness", &val);
-> +			if (!ret) {
-> +				if (sources[i] =3D=3D 0)
-> +					pchip->pdata->leda_init_brt =3D val;
-> +				else if (sources[i] =3D=3D 1)
-> +					pchip->pdata->ledb_init_brt =3D val;
-> +			}
-> +
-> +			ret =3D of_property_read_u32(child_node, "max-brightness",
-> +						   &val);
-> +			if (!ret) {
-> +				if (sources[i] =3D=3D 0)
-> +					pchip->pdata->leda_max_brt =3D val;
-> +				else if (sources[i] =3D=3D 1)
-> +					pchip->pdata->ledb_max_brt =3D val;
-> +			}
-> +		}
-> +	};
-
-Extra ";"
-
-> +}
-> +
->  static int lm3630a_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *id)
->  {
-> @@ -405,6 +466,7 @@ static int lm3630a_probe(struct i2c_client *client,
->  		pdata->ledb_init_brt =3D LM3630A_MAX_BRIGHTNESS;
->  	}
->  	pchip->pdata =3D pdata;
-> +	lm3630a_parse_dt(pchip);
-
-I'd expect abort if we are using dt and dt parsing fails.
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---DqhR8hV3EnoxUkKN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlyihz8ACgkQMOfwapXb+vIE4ACeMdpxk/6BCAiO8WWDcfB5Tl89
-7EgAnRM1tWG7/UUqMYrJeinnXGnd24zj
-=Su8z
------END PGP SIGNATURE-----
-
---DqhR8hV3EnoxUkKN--
-
---===============0033664947==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============0033664947==--
+On Mon, Apr 01, 2019 at 03:50:08PM -0500, Alan Tull wrote:
+> On Thu, Mar 28, 2019 at 12:00 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Tue, 26 Mar 2019 20:01:29 +0530, Nava kishore Manne wrote:
+> > > Add documentation to describe Xilinx ZynqMP fpga driver
+> > > bindings.
+> > >
+> > > Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+> > > ---
+> > > Changes for v5:
+> > >               -Moved pcap node as a child to firwmare
+> > >                node as suggested by Rob.
+> > > Changes for v4:
+> > >               -Modified binding description as suggested by Moritz Fischer.
+> > > Changes for v3:
+> > >               -Removed PCAP as a child node to the FW and Created
+> > >                an independent node since PCAP driver is a consumer
+> > >                not a provider.
+> > >
+> > >  .../bindings/fpga/xlnx,zynqmp-pcap-fpga.txt   | 25 +++++++++++++++++++
+> > >  1 file changed, 25 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+> > >
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> Acked-by: Alan Tull <atull@kernel.org>
+Acked-by: Moritz Fischer <mdf@kernel.org>
