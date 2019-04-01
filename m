@@ -1,51 +1,33 @@
-Return-Path: <SRS0=Ks1j=SF=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V3 11/13] ARM: dts: iwg23s-sbc: Enable USB USB2.0 Host
-Date: Wed,  3 Apr 2019 11:28:42 +0100
-Message-Id: <1554287324-22312-12-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1554287324-22312-1-git-send-email-biju.das@bp.renesas.com>
-References: <1554287324-22312-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=Md7O=SD=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr750051.outbound.protection.outlook.com ([40.107.75.51]:9696
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728007AbfDAQhe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 1 Apr 2019 12:37:34 -0400
+From: <shubhrajyoti.datta@gmail.com>
+Subject: [PATCH 0/2] serial: uartps: Add modem support
+Date: Mon, 1 Apr 2019 22:07:18 +0530
+Message-ID: <1554136640-25194-1-git-send-email-shubhrajyoti.datta@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: michal.simek@xilinx.com, gregkh@linuxfoundation.org, jslaby@suse.com, robh+dt@kernel.org, linux-serial@vger.kernel.org, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Enable USB2.0 host on the iwg23s sbc.
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-V2-->V3
- * No change
-V1-->V2
- * No change
----
- arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Add support for nomodem.
+To add support for same.
+ 
 
-diff --git a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-index 7ae7ee1..366832c 100644
---- a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-+++ b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-@@ -106,6 +106,10 @@
- 	};
- };
- 
-+&ehci1 {
-+	status = "okay";
-+};
-+
- &extal_clk {
- 	clock-frequency = <20000000>;
- };
-@@ -166,6 +170,10 @@
- 	};
- };
- 
-+&ohci1 {
-+	status = "okay";
-+};
-+
- &pfc {
- 	avb_pins: avb {
- 		groups = "avb_mdio", "avb_gmii_tx_rx";
+Shubhrajyoti Datta (2):
+  dt-bindings: xilinx-uartps: Add support for nomodem
+  serial: uartps: Add support for nomodem
+
+ Documentation/devicetree/bindings/serial/cdns,uart.txt |  4 ++++
+ drivers/tty/serial/xilinx_uartps.c                     | 12 ++++++++++++
+ 2 files changed, 16 insertions(+)
+
 -- 
-2.7.4
+2.1.1
