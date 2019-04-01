@@ -1,8 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 12/15] arm64: dts: marvell: Add 7k/8k per-port PHYs in SATA
- nodes
-Date: Mon,  1 Apr 2019 18:51:28 +0200
-Message-ID: <20190401165131.23370-13-miquel.raynal@bootlin.com>
+Subject: [PATCH 10/15] phy: mvebu-cp110-comphy: Add PCIe support
+Date: Mon,  1 Apr 2019 18:51:26 +0200
+Message-ID: <20190401165131.23370-11-miquel.raynal@bootlin.com>
 References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,123 +21,147 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Fill-in the missing SATA phys/phy-names DT properties of Armada 7k/8k
-based boards.
+Add PCIe support by filling the COMPHY modes table.
+
+Also add a new macro to generate the right value for the firmware
+depending on the width (PCI x1, x2, x4, etc). The width will be passed
+by the core as the "submode" argument of the ->set_mode() callback. If
+this argument is zero, default to x1 mode.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- arch/arm64/boot/dts/marvell/armada-7040-db.dts |  5 +++++
- .../dts/marvell/armada-8040-clearfog-gt-8k.dts |  5 +++++
- arch/arm64/boot/dts/marvell/armada-8040-db.dts | 18 ++++++++++++++++++
- .../boot/dts/marvell/armada-8040-mcbin.dtsi    | 18 ++++++++++++++++--
- 4 files changed, 44 insertions(+), 2 deletions(-)
+ drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 36 +++++++++++++++++---
+ 1 file changed, 32 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-7040-db.dts b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
-index d20d84ce7ca8..0ece9d5b16b4 100644
---- a/arch/arm64/boot/dts/marvell/armada-7040-db.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
-@@ -191,6 +191,11 @@
+diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+index ab1f46b1dbe1..d66412b38ff7 100644
+--- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
++++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+@@ -126,6 +126,7 @@
+  * [ 5-11]: COMPHY port index
+  * [12-16]: COMPHY mode
+  * [17]: Clock source
++ * [18-20]: PCIe width (x1, x2, x4)
+  */
+ #define COMPHY_FW_POL_OFFSET	0
+ #define COMPHY_FW_POL_MASK	GENMASK(1, 0)
+@@ -136,21 +137,28 @@
+ #define COMPHY_FW_PORT_MASK	GENMASK(11, 8)
+ #define COMPHY_FW_MODE_OFFSET	12
+ #define COMPHY_FW_MODE_MASK	GENMASK(16, 12)
++#define COMPHY_FW_WIDTH_OFFSET	18
++#define COMPHY_FW_WIDTH_MASK	GENMASK(20, 18)
  
- &cp0_sata0 {
- 	status = "okay";
+-#define COMPHY_FW_PARAM_FULL(mode, port, speed, pol)			\
++#define COMPHY_FW_PARAM_FULL(mode, port, speed, pol, width)		\
+ 	((((pol) << COMPHY_FW_POL_OFFSET) & COMPHY_FW_POL_MASK) |	\
+ 	 (((mode) << COMPHY_FW_MODE_OFFSET) & COMPHY_FW_MODE_MASK) |	\
+ 	 (((port) << COMPHY_FW_PORT_OFFSET) & COMPHY_FW_PORT_MASK) |	\
+-	 (((speed) << COMPHY_FW_SPEED_OFFSET) & COMPHY_FW_SPEED_MASK))
++	 (((speed) << COMPHY_FW_SPEED_OFFSET) & COMPHY_FW_SPEED_MASK) |	\
++	 (((width) << COMPHY_FW_WIDTH_OFFSET) & COMPHY_FW_WIDTH_MASK))
+ 
+ #define COMPHY_FW_PARAM(mode, port)					\
+-	COMPHY_FW_PARAM_FULL(mode, port, COMPHY_FW_SPEED_MAX, 0)
++	COMPHY_FW_PARAM_FULL(mode, port, COMPHY_FW_SPEED_MAX, 0, 0)
 +
-+	sata-port@1 {
-+		phys = <&cp0_comphy3 1>;
-+		phy-names = "cp0-sata1-phy";
-+	};
++#define COMPHY_FW_PARAM_PCIE(mode, port, width)				\
++	COMPHY_FW_PARAM_FULL(mode, port, 0x3F, 0, width)
+ 
+ #define COMPHY_FW_MODE_SATA		0x1
+ #define COMPHY_FW_MODE_SGMII		0x2 /* SGMII 1G */
+ #define COMPHY_FW_MODE_HS_SGMII		0x3 /* SGMII 2.5G */
+ #define COMPHY_FW_MODE_USB3H		0x4
+ #define COMPHY_FW_MODE_USB3D		0x5
++#define COMPHY_FW_MODE_PCIE		0x6
+ #define COMPHY_FW_MODE_RXAUI		0x7
+ #define COMPHY_FW_MODE_SFI		0x9 /* XFI: 0x8 (is treated like SFI) */
+ 
+@@ -185,6 +193,7 @@ struct mvebu_comphy_conf {
+ 
+ static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
+ 	/* lane 0 */
++	GEN_CONF(0, 0, PHY_MODE_PCIE, COMPHY_FW_MODE_PCIE),
+ 	ETH_CONF(0, 1, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
+ 	ETH_CONF(0, 1, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
+ 	GEN_CONF(0, 1, PHY_MODE_SATA, COMPHY_FW_MODE_SATA),
+@@ -192,6 +201,7 @@ static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
+ 	GEN_CONF(1, 0, PHY_MODE_USB_HOST_SS, COMPHY_FW_MODE_USB3H),
+ 	GEN_CONF(1, 0, PHY_MODE_USB_DEVICE_SS, COMPHY_FW_MODE_USB3D),
+ 	GEN_CONF(1, 0, PHY_MODE_SATA, COMPHY_FW_MODE_SATA),
++	GEN_CONF(1, 0, PHY_MODE_PCIE, COMPHY_FW_MODE_PCIE),
+ 	ETH_CONF(1, 2, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
+ 	ETH_CONF(1, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
+ 	/* lane 2 */
+@@ -201,7 +211,9 @@ static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
+ 	ETH_CONF(2, 0, PHY_INTERFACE_MODE_10GKR, 0x1, COMPHY_FW_MODE_SFI),
+ 	GEN_CONF(2, 0, PHY_MODE_USB_HOST_SS, COMPHY_FW_MODE_USB3H),
+ 	GEN_CONF(2, 0, PHY_MODE_SATA, COMPHY_FW_MODE_SATA),
++	GEN_CONF(2, 0, PHY_MODE_PCIE, COMPHY_FW_MODE_PCIE),
+ 	/* lane 3 */
++	GEN_CONF(3, 0, PHY_MODE_PCIE, COMPHY_FW_MODE_PCIE),
+ 	ETH_CONF(3, 1, PHY_INTERFACE_MODE_SGMII, 0x2, COMPHY_FW_MODE_SGMII),
+ 	ETH_CONF(3, 1, PHY_INTERFACE_MODE_2500BASEX, 0x2, COMPHY_FW_MODE_HS_SGMII),
+ 	ETH_CONF(3, 1, PHY_INTERFACE_MODE_RXAUI, -1, COMPHY_FW_MODE_RXAUI),
+@@ -214,6 +226,7 @@ static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
+ 	ETH_CONF(4, 0, PHY_INTERFACE_MODE_RXAUI, -1, COMPHY_FW_MODE_RXAUI),
+ 	GEN_CONF(4, 0, PHY_MODE_USB_DEVICE_SS, COMPHY_FW_MODE_USB3D),
+ 	GEN_CONF(4, 1, PHY_MODE_USB_HOST_SS, COMPHY_FW_MODE_USB3H),
++	GEN_CONF(4, 1, PHY_MODE_PCIE, COMPHY_FW_MODE_PCIE),
+ 	ETH_CONF(4, 1, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
+ 	ETH_CONF(4, 1, PHY_INTERFACE_MODE_2500BASEX, -1, COMPHY_FW_MODE_HS_SGMII),
+ 	ETH_CONF(4, 1, PHY_INTERFACE_MODE_10GKR, -1, COMPHY_FW_MODE_SFI),
+@@ -222,6 +235,7 @@ static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
+ 	GEN_CONF(5, 1, PHY_MODE_SATA, COMPHY_FW_MODE_SATA),
+ 	ETH_CONF(5, 2, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
+ 	ETH_CONF(5, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
++	GEN_CONF(5, 2, PHY_MODE_PCIE, COMPHY_FW_MODE_PCIE),
  };
  
- &cp0_usb3_0 {
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-index 2468762283a5..4ee063d2b16d 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-@@ -336,6 +336,11 @@
- &cp1_sata0 {
- 	pinctrl-0 = <&cp0_pci1_reset_pins>;
- 	status = "okay";
+ struct mvebu_comphy_priv {
+@@ -253,6 +267,8 @@ static int mvebu_comphy_get_mode(bool fw_mode, int lane, int port,
+ 				 enum phy_mode mode, int submode)
+ {
+ 	int i, n = ARRAY_SIZE(mvebu_comphy_cp110_modes);
++	/* Ignore PCIe submode: it represents the width */
++	bool ignore_submode = (mode == PHY_MODE_PCIE);
+ 	const struct mvebu_comphy_conf *conf;
+ 
+ 	/* Unused PHY mux value is 0x0 */
+@@ -264,7 +280,7 @@ static int mvebu_comphy_get_mode(bool fw_mode, int lane, int port,
+ 		if (conf->lane == lane &&
+ 		    conf->port == port &&
+ 		    conf->mode == mode &&
+-		    conf->submode == submode)
++		    (conf->submode == submode || ignore_submode))
+ 			break;
+ 	}
+ 
+@@ -656,6 +672,13 @@ static int mvebu_comphy_power_on(struct phy *phy)
+ 		dev_dbg(priv->dev, "set lane %d to SATA mode\n", lane->id);
+ 		fw_param = COMPHY_FW_PARAM(fw_mode, lane->port);
+ 		break;
++	case PHY_MODE_PCIE:
++		hide_error = true;
++		dev_dbg(priv->dev, "set lane %d to PCIe mode (x%d)\n", lane->id,
++			lane->submode);
++		fw_param = COMPHY_FW_PARAM_PCIE(fw_mode, lane->port,
++						lane->submode);
++		break;
+ 	default:
+ 		dev_err(priv->dev, "unsupported PHY mode (%d)\n", lane->mode);
+ 		return -ENOTSUPP;
+@@ -684,6 +707,11 @@ static int mvebu_comphy_set_mode(struct phy *phy,
+ 
+ 	lane->mode = mode;
+ 	lane->submode = submode;
 +
-+	sata-port@1 {
-+		phys = <&cp1_comphy0 1>;
-+		phy-names = "cp1-sata1-phy";
-+	};
- };
- 
- &cp1_mdio {
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-db.dts b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-index 9f4f939ab65f..a2e75609b1ad 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-@@ -146,6 +146,15 @@
- /* CON4 on CP0 expansion */
- &cp0_sata0 {
- 	status = "okay";
++	/* PCIe submode represents the width */
++	if (mode == PHY_MODE_PCIE && !lane->submode)
++		lane->submode = 1;
 +
-+	sata-port@0 {
-+		phys = <&cp0_comphy1 0>;
-+		phy-names = "cp0-sata0-phy";
-+	};
-+	sata-port@1 {
-+		phys = <&cp0_comphy3 1>;
-+		phy-names = "cp0-sata1-phy";
-+	};
- };
+ 	return 0;
+ }
  
- /* CON9 on CP0 expansion */
-@@ -276,6 +285,15 @@
- /* CON4 on CP1 expansion */
- &cp1_sata0 {
- 	status = "okay";
-+
-+	sata-port@0 {
-+		phys = <&cp1_comphy1 0>;
-+		phy-names = "cp1-sata0-phy";
-+	};
-+	sata-port@1 {
-+		phys = <&cp1_comphy3 1>;
-+		phy-names = "cp1-sata1-phy";
-+	};
- };
- 
- /* CON9 on CP1 expansion */
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-index 329f8ceeebea..28d380769506 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-@@ -237,8 +237,13 @@
- };
- 
- &cp0_sata0 {
--	/* CPM Lane 0 - U29 */
-+	/* CPM Lane 5 - U29 */
- 	status = "okay";
-+
-+	sata-port@1 {
-+		phys = <&cp0_comphy5 1>;
-+		phy-names = "cp0-sata1-phy";
-+	};
- };
- 
- &cp0_sdhci0 {
-@@ -322,9 +327,18 @@
- };
- 
- &cp1_sata0 {
-+	status = "okay";
-+
- 	/* CPS Lane 1 - U32 */
-+	sata-port@0 {
-+		phys = <&cp1_comphy1 0>;
-+		phy-names = "cp1-sata0-phy";
-+	};
- 	/* CPS Lane 3 - U31 */
--	status = "okay";
-+	sata-port@1 {
-+		phys = <&cp1_comphy3 1>;
-+		phy-names = "cp1-sata1-phy";
-+	};
- };
- 
- &cp1_spi1 {
 -- 
 2.19.1
