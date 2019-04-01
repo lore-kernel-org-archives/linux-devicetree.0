@@ -1,14 +1,11 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 01/15] phy: mvebu-cp110-comphy: Explicitly initialize the lane
- submode
-Date: Mon,  1 Apr 2019 18:51:17 +0200
-Message-ID: <20190401165131.23370-2-miquel.raynal@bootlin.com>
-References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
+Subject: [PATCH 00/15] Enhance CP110 COMPHY support
+Date: Mon,  1 Apr 2019 18:51:16 +0200
+Message-ID: <20190401165131.23370-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190401165131.23370-1-miquel.raynal@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,24 +19,52 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Explicitly set the lane submode (enum) to a known invalid value.
-
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-index d98e0451f6a1..3f50a1521f01 100644
---- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-+++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-@@ -635,6 +635,7 @@ static int mvebu_comphy_probe(struct platform_device *pdev)
- 
- 		lane->priv = priv;
- 		lane->mode = PHY_MODE_INVALID;
-+		lane->submode = PHY_INTERFACE_MODE_NA;
- 		lane->id = val;
- 		lane->port = -1;
- 		phy_set_drvdata(phy, lane);
--- 
-2.19.1
+QXJtYWRhIENQMTEwIGhhdmUgYSBDT01QSFkgSVAgd2hpY2ggc3VwcG9ydHMgY29uZmlndXJpbmcg
+U0VSREVTIGxhbmVzCmluIG9uZSBtb2RlLCBlaXRoZXI6Ci0gU0FUQQotIFVTQjMgaG9zdAotIFBD
+SWUgKHNldmVyYWwgd2lkdGgpCi0gRXRoZXJuZXQgKHNldmVyYWwgbW9kZXMpCgpBcyBvZiB0b2Rh
+eSwgb25seSBhIGZldyBFdGhlcm5ldCBtb2RlcyBhcmUgc3VwcG9ydGVkIGFuZCB0aGUgY29kZSBp
+cwplbWJlZGRlZCBpbiB0aGUgTGludXggZHJpdmVyLiBBIG1vcmUgY29tcGxldGUgQ09NUEhZIGRy
+aXZlciB0aGF0IGNhbgpiZSB1c2VkIGJ5IGJvdGggTGludXggYW5kIFUtQm9vdCBpcyBlbWJlZGRl
+ZCBpbiB0aGUgZmlybXdhcmUgYW5kIGNhbgpiZSBydW4gdGhyb3VnaCBTTUMgY2FsbHMuCgpGaXJz
+dCB0aGUgY3VycmVudCBDT01QSFkgZHJpdmVyIGlzIHVwZGF0ZWQgdG8gdXNlIFNNQyBjYWxscyBi
+dXQKZmFsbGJhY2tzIHRvIHRoZSBhbHJlYWR5IGV4aXN0aW5nIGZ1bmN0aW9ucyBpZiB0aGUgZmly
+bXdhcmUgaXMgbm90CnVwLXRvLWRhdGUuIFRoZW4sIG1vcmUgRXRoZXJuZXQgbW9kZXMgYXJlIGFk
+ZGVkICh0aHJvdWdoIFNNQyBjYWxscwpvbmx5KS4gU0FUQSwgVVNCM0ggYW5kIFBDSWUgbW9kZXMg
+YXJlIGFsc28gc3VwcG9ydGVkIG9uZSBieSBvbmUuCgpUaGVyZSBpcyBvbmUgc3VidGxlIGRpZmZl
+cmVuY2Ugd2l0aCB0aGUgUENJZSBmdW5jdGlvbnM6IHdlIG11c3QgdGVsbAp0aGUgZmlybXdhcmUg
+dGhlIG51bWJlciBvZiBsYW5lcyB0byBjb25maWd1cmUgKHgxLCB4MiBvciB4NCkuIFRoaXMKcGFy
+YW1ldGVyIGRlcGVuZHMgb24gdGhlIG51bWJlciBvZiBlbnRyaWVzIGluIHRoZSAncGh5cycgcHJv
+cGVydHkKZGVzY3JpYmluZyB0aGUgUENJZSBQSFkuIFdlIHVzZSB0aGUgInN1Ym1vZGUiIHBhcmFt
+ZXRlciBvZiB0aGUgZ2VuZXJpYwpQSFkgQVBJIHRvIGNhcnJ5IHRoaXMgdmFsdWUuIFRoZSBBcm1h
+ZGEtOGsgUENJZSBkcml2ZXIgaGFzIGJlZW4KdXBkYXRlZCB0byBmb2xsb3cgdGhpcyBpZGVhLCBz
+ZWUgWzFdLgoKRmluYWxseSwgYXMgcG9pbnRlZCBieSBSb2IgZHVyaW5nIGEgcmV2aWV3LCB0aGVy
+ZSBpcyBhIHBoeS1zdXBwbHkKcHJvcGVydHkgKHBhcnQgb2YgdGhlIGdlbmVyaWMgUEhZIGZyYW1l
+d29yaykgd2hpY2ggaXMgc3VwcG9zZWQgdG8gdGFrZQpvdmVyIHRoZSB1c2ItcGh5IHByb3BlcnR5
+LCB3aGlsZSBhdCBtb2RpZnlpbmcgUEhZIHByb3BlcnRpZXMsIHdlIGRvCnRoZSB0cmFuc2xhdGlv
+biBmb3IgQ09NUEhZIFBIWXMuCgpbMV0gaHR0cDovL3BhdGNod29yay5vemxhYnMub3JnL3BhdGNo
+LzEwNzI3NjMvCgpUaGFua3MsCk1pcXXDqGwKCgpNaXF1ZWwgUmF5bmFsICgxNSk6CiAgcGh5OiBt
+dmVidS1jcDExMC1jb21waHk6IEV4cGxpY2l0bHkgaW5pdGlhbGl6ZSB0aGUgbGFuZSBzdWJtb2Rl
+CiAgcGh5OiBtdmVidS1jcDExMC1jb21waHk6IEFkZCBTTUMgY2FsbCBzdXBwb3J0CiAgcGh5OiBt
+dmVidS1jcDExMC1jb21waHk6IExpc3QgYWxyZWFkeSBzdXBwb3J0ZWQgRXRoZXJuZXQgbW9kZXMK
+ICBwaHk6IG12ZWJ1LWNwMTEwLWNvbXBoeTogQWRkIFJYQVVJIHN1cHBvcnQKICBwaHk6IG12ZWJ1
+LWNwMTEwLWNvbXBoeTogUmVuYW1lIHRoZSBtYWNybyBoYW5kbGluZyBvbmx5IEV0aGVybmV0IG1v
+ZGVzCiAgcGh5OiBtdmVidS1jcDExMC1jb21waHk6IEFsbG93IG5vbi1FdGhlcm5ldCBtb2RlcyB0
+byBiZSBjb25maWd1cmVkCiAgcGh5OiBtdmVidS1jcDExMC1jb21waHk6IEFkZCBVU0IzIGhvc3Qv
+ZGV2aWNlIHN1cHBvcnQKICBwaHk6IG12ZWJ1LWNwMTEwLWNvbXBoeTogQWRkIFNBVEEgc3VwcG9y
+dAogIHBoeTogbXZlYnUtY3AxMTAtY29tcGh5OiBDb3NtZXRpYyBjaGFuZ2UgaW4gYSBoZWxwZXIK
+ICBwaHk6IG12ZWJ1LWNwMTEwLWNvbXBoeTogQWRkIFBDSWUgc3VwcG9ydAogIHBoeTogbXZlYnUt
+Y3AxMTAtY29tcGh5OiBVcGRhdGUgY29tbWVudCBhYm91dCBwb3dlcmluZyBvZmYgYWxsIGxhbmVz
+CiAgICBhdCBib290CiAgYXJtNjQ6IGR0czogbWFydmVsbDogQWRkIDdrLzhrIHBlci1wb3J0IFBI
+WXMgaW4gU0FUQSBub2RlcwogIGFybTY0OiBkdHM6IG1hcnZlbGw6IEFkZCA3ay84ayBQSFlzIGlu
+IFVTQjMgbm9kZXMKICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBBZGQgN2svOGsgUEhZcyBpbiBQQ0ll
+IG5vZGVzCiAgYXJtNjQ6IGR0czogbWFydmVsbDogQ29udmVydCA3ay84ayB1c2ItcGh5IHByb3Bl
+cnRpZXMgdG8gcGh5LXN1cHBseQoKIC4uLi9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS03
+MDQwLWRiLmR0cyB8ICAzNyArKy0KIC4uLi9tYXJ2ZWxsL2FybWFkYS04MDQwLWNsZWFyZm9nLWd0
+LThrLmR0cyAgICB8ICAyMiArLQogLi4uL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTgw
+NDAtZGIuZHRzIHwgIDQzICsrLQogLi4uL2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTgwNDAtbWNi
+aW4uZHRzaSAgIHwgIDM3ICsrLQogZHJpdmVycy9waHkvbWFydmVsbC9waHktbXZlYnUtY3AxMTAt
+Y29tcGh5LmMgIHwgMjkzICsrKysrKysrKysrKysrKy0tLQogNSBmaWxlcyBjaGFuZ2VkLCAzNTUg
+aW5zZXJ0aW9ucygrKSwgNzcgZGVsZXRpb25zKC0pCgotLSAKMi4xOS4xCgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
+aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
