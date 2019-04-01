@@ -1,12 +1,13 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v2 0/5] Add bluetooth, gps and accelerometer to
- TBS A711
-Date: Mon,  1 Apr 2019 13:56:11 +0200
-Message-ID: <20190401115616.21337-1-megous@megous.com>
+Subject: [PATCH v2 2/5] ARM: dts: sun8i: a83t: Add UART2 PB pins
+Date: Mon,  1 Apr 2019 13:56:13 +0200
+Message-ID: <20190401115616.21337-3-megous@megous.com>
+References: <20190401115616.21337-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBZHYQ7SQKGQET4ECTHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBZPYQ7SQKGQEDYHW5EA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20190401115616.21337-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -19,49 +20,30 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-This series enables some peripherals on TBS A711 tablet that already
-have mainline drivers:
+Add pin definitions for UART2 PB pins. These are used on TBS-A711
+tablet.
 
-- GPS u-blox neo-6m (via gnss u-blox driver)
-- Bluetooth (via recently added OF support in the Broadcom
-  bluetooth driver)
-- Accelermomter BMA-250 (hooked to the I2C bus)
+Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-It also modifies A83T DTSI and adds missing UART interfaces.
-
-I've added additional compatible to the gnss/u-blox driver for NEO-6M,
-because this board uses this module, and I don't think I can use
-the existing compatible for u-blox,neo-m8, even as a fallback.
-
-Please take a look, and apply the patches if you have no objections.
-
-Many of the patches will go through the sunxi tree, but I'm not
-sure who will want to take the GPS patches.
-
-regards,
-  Ondrej Jirman
-
-
-Changes in v2:
-- dropped already applied patches from the series (bluetooth,
-  a83t uarts)
-- added /omit-if-no-ref/ to "uart2-pb-pins"
-- renamed node "bma250" to "accelerometer"
-- removed pinctrl properties that are already in base dtsi
-  (i2c1_pins)
-
-Ondrej Jirman (5):
-  ARM: dts: sun8i: tbs-a711: Add node for BMA250 accelerometer
-  ARM: dts: sun8i: a83t: Add UART2 PB pins
-  gnss: Add u-blox,neo-6m compatible
-  dt-bindings: gnss: Add u-blox,neo-6m compatible
-  ARM: dts: sun8i: tbs-a711: Enable UART2 (for NEO-6M GPS module)
-
- .../devicetree/bindings/gnss/u-blox.txt       |  1 +
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts     | 34 +++++++++++++++++++
- arch/arm/boot/dts/sun8i-a83t.dtsi             |  6 ++++
- drivers/gnss/ubx.c                            |  1 +
- 4 files changed, 42 insertions(+)
-
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index fcb7ef5ce2df..0176049d9815 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -768,6 +768,12 @@
+ 				pins = "PG8", "PG9";
+ 				function = "uart1";
+ 			};
++
++			/omit-if-no-ref/
++			uart2_pb_pins: uart2-pb-pins {
++				pins = "PB0", "PB1";
++				function = "uart2";
++			};
+ 		};
+ 
+ 		timer@1c20c00 {
 -- 
 2.21.0
