@@ -1,40 +1,65 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: Add Lenovo Miix 630
-Date: Mon, 1 Apr 2019 11:51:53 +0100
-Message-ID: <20190401105153.GE4187@dell>
-References: <20190326185525.20781-1-jeffrey.l.hugo@gmail.com>
+From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
+Subject: Re: [PATCH] dt-bindings: cpu: Fix JSON schema
+Date: Mon, 1 Apr 2019 19:52:06 +0900
+Message-ID: <78bb248e-56b8-b825-e763-583f75148eb3@socionext.com>
+References: <20190318100521.29109-1-maxime.ripard@bootlin.com>
+ <CAL_JsqJ_LYycXazkdP2Q=e-jynKiX+z5En0bz0AWpDjsevwQTg@mail.gmail.com>
+ <20190401091050.cwph7xlpv3pmkwnq@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190326185525.20781-1-jeffrey.l.hugo@gmail.com>
+In-Reply-To: <20190401091050.cwph7xlpv3pmkwnq@flea>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, ARM-SoC Maintainers <arm@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 26 Mar 2019, Jeffrey Hugo wrote:
+Hi Maxime,
 
-> This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
-> functionality includes USB (host), microSD-card, keyboard, and trackpad.
+Thanks for pointing my bug.
+
+On 2019/04/01 18:10, Maxime Ripard wrote:
+> Hi Sugaya, Arnd, Olof,
 > 
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile             |   1 +
->  arch/arm64/boot/dts/qcom/msm8998-cls.dtsi     | 278 ++++++++++++++++++
+> On Thu, Mar 28, 2019 at 02:35:54PM -0500, Rob Herring wrote:
+>> +arm-soc
+>>
+>> On Mon, Mar 18, 2019 at 5:05 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>>>
+>>> Commit fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for
+>>> Milbeaut") added support for a new cpu enable-method, but did so using
+>>> tabulations to ident. This is however invalid in the syntax, and resulted
+>>> in a failure when trying to use that schemas for validation.
+>>>
+>>> Use spaces instead of tabs to indent to fix this.
+>>>
+>>> Fixes: fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
+>>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>
+>> This should be applied to arm-soc tree having the commit.
+> 
+> Could you pick up that patch?
+> 
 
-What is cls?
+I got it.
+My mission is to resubmit your fix-patch added my singned-off tag and
+Rob's reviewed tag...right?
 
-How much of this will be reusable with the other laptops?
+Thanks,
+Sugaya Taichi
 
->  .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  33 +++
->  3 files changed, 312 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/msm8998-cls.dtsi
->  create mode 100644 arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> Thanks!
+> Maxime
+> 
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+> 
