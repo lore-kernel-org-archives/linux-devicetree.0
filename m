@@ -1,38 +1,54 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH V5 4/4] rtc: imx-sc: add rtc alarm support
-Date: Mon, 1 Apr 2019 15:11:30 +0200
-Message-ID: <20190401131130.GE3430@piout.net>
-References: <1552878291-22866-1-git-send-email-Anson.Huang@nxp.com>
- <1552878291-22866-4-git-send-email-Anson.Huang@nxp.com>
+From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: [PATCH v3 0/1] ARM: dts: sun8i: a83t: Add missing
+ cooling device properties for CPUs
+Date: Mon,  1 Apr 2019 15:36:09 +0200
+Message-ID: <20190401133610.17916-1-megous@megous.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1552878291-22866-4-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBTFHRDSQKGQEHFBHT7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 18/03/2019 03:10:06+0000, Anson Huang wrote:
-> Add i.MX system controller RTC alarm support, the RTC alarm
-> is implemented via SIP(silicon provider) runtime service call
-> and ARM-Trusted-Firmware will communicate with system controller
-> via MU(message unit) IPC to set RTC alarm. When RTC alarm fires,
-> system controller will generate a common MU irq event and notify
-> system controller RTC driver to handle the irq event.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No function changes, just update imx_scu_irq_register_notifier() function name
-> according to SCU IRQ function name change.
-> ---
->  drivers/rtc/rtc-imx-sc.c | 112 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 112 insertions(+)
-> 
-Applied, thanks.
+From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+
+(Part of the series was already applied, so this only contains the
+remaining patch.)
+
+This series adds some properties to prepare for passive cooling via
+CPU frequency down-regulation, and fixes cpufreq for various CPU hotplug
+situations.
+
+#cooling-cells patch is not strictly necessary now, but now that SID
+changes are soon to be merged, thermal sensor patches are likely to
+follow, and it will be useful in short order, I expect.
+
+Please take a look.
+
+regards,
+  Ondrej Jirman
+
+
+Changes for v2:
+- split the former single patch into a series
+- reformulated descriptions to accommodate the split
+Changes for v3:
+- removed already applied patch
+- re-ordered clock properties
+- removed clock-names (not needed and not documented)
+
+Ondrej Jirman (1):
+  ARM: dts: sun8i: a83t: Add missing CPU clock references
+
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.21.0
