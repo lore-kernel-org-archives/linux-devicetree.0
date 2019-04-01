@@ -1,80 +1,38 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH] dt-bindings: cpu: Fix JSON schema
-Date: Mon, 1 Apr 2019 22:02:29 +0900
-Message-ID: <b6cb709b-7b1a-6bab-6f93-bcb565be18fb@socionext.com>
-References: <20190318100521.29109-1-maxime.ripard@bootlin.com>
- <CAL_JsqJ_LYycXazkdP2Q=e-jynKiX+z5En0bz0AWpDjsevwQTg@mail.gmail.com>
- <20190401091050.cwph7xlpv3pmkwnq@flea>
- <78bb248e-56b8-b825-e763-583f75148eb3@socionext.com>
- <20190401113546.d6p2mg2y47abhumz@flea>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH V5 4/4] rtc: imx-sc: add rtc alarm support
+Date: Mon, 1 Apr 2019 15:11:30 +0200
+Message-ID: <20190401131130.GE3430@piout.net>
+References: <1552878291-22866-1-git-send-email-Anson.Huang@nxp.com>
+ <1552878291-22866-4-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190401113546.d6p2mg2y47abhumz@flea>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1552878291-22866-4-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 18/03/2019 03:10:06+0000, Anson Huang wrote:
+> Add i.MX system controller RTC alarm support, the RTC alarm
+> is implemented via SIP(silicon provider) runtime service call
+> and ARM-Trusted-Firmware will communicate with system controller
+> via MU(message unit) IPC to set RTC alarm. When RTC alarm fires,
+> system controller will generate a common MU irq event and notify
+> system controller RTC driver to handle the irq event.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> No function changes, just update imx_scu_irq_register_notifier() function name
+> according to SCU IRQ function name change.
+> ---
+>  drivers/rtc/rtc-imx-sc.c | 112 +++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 112 insertions(+)
+> 
+Applied, thanks.
 
-On 2019/04/01 20:35, Maxime Ripard wrote:
-> Hi,
-> 
-> On Mon, Apr 01, 2019 at 07:52:06PM +0900, Sugaya, Taichi wrote:
->> On 2019/04/01 18:10, Maxime Ripard wrote:
->>> Hi Sugaya, Arnd, Olof,
->>>
->>> On Thu, Mar 28, 2019 at 02:35:54PM -0500, Rob Herring wrote:
->>>> +arm-soc
->>>>
->>>> On Mon, Mar 18, 2019 at 5:05 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->>>>>
->>>>> Commit fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for
->>>>> Milbeaut") added support for a new cpu enable-method, but did so using
->>>>> tabulations to ident. This is however invalid in the syntax, and resulted
->>>>> in a failure when trying to use that schemas for validation.
->>>>>
->>>>> Use spaces instead of tabs to indent to fix this.
->>>>>
->>>>> Fixes: fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
->>>>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->>>>> ---
->>>>>    Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
->>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> Reviewed-by: Rob Herring <robh@kernel.org>
->>>>
->>>> This should be applied to arm-soc tree having the commit.
->>>
->>> Could you pick up that patch?
->>
->> I got it.
->> My mission is to resubmit your fix-patch added my singned-off tag and
->> Rob's reviewed tag...right?
-> 
-> If you are part of arm-soc and send your pull requests to Arnd and
-> Olof, simply pick it up in the same branch than the initial patch was
-> in. And when you apply that patch, you indeed need to add your
-> Signed-off-by (note that most commands to commit have an option to do
-> that automatically: -s and that includes git am) and the Rob's
-> reviewed-by.
-> 
-> Then, send a new pull request to arm-soc.
-> 
-
-Okay, thanks for your suggestion.
-I try to make pull request!
-
-Thanks,
-Sugaya Taichi
-
-> Maxime
-> 
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-> 
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
