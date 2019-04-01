@@ -1,61 +1,45 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [BUG/PATCH 1/4] DTS: GTA04: SPI / gpiolib: work around a
- regression that unhides a broken legacy handler, which makes the gta04
- display inoperable
-Date: Mon, 1 Apr 2019 09:46:17 -0700
-Message-ID: <20190401164617.GH49658@atomide.com>
-References: <cover.1554026842.git.hns@goldelico.com>
- <e8d784f7fb06fd3a6a92bc730f919352c4ad4411.1554026842.git.hns@goldelico.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 01/15] phy: mvebu-cp110-comphy: Explicitly initialize the lane
+ submode
+Date: Mon,  1 Apr 2019 18:51:17 +0200
+Message-ID: <20190401165131.23370-2-miquel.raynal@bootlin.com>
+References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e8d784f7fb06fd3a6a92bc730f919352c4ad4411.1554026842.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190401165131.23370-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Explicitly set the lane submode (enum) to a known invalid value.
 
-* H. Nikolaus Schaller <hns@goldelico.com> [190331 10:08]:
-> This is an ugly workaround for a regression introduced into v5.1-rc1 by
-> 
-> <c1c04cea13dc234ce9a4504879ddd36ea524d880>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-You should standardized commit references like this instead:
-
-c1c04cea13dc ("gpio: of: Fix logic inversion")
-
-Then please also include a proper Fixes tag.
-
-You can configure an alias for it to make things easier:
-
-git log --abbrev=12 --pretty=format:"%h (\"%s\")"
-
-> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
-> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-> @@ -114,6 +114,7 @@
->  		gpio-miso = <&gpio1 18 GPIO_ACTIVE_HIGH>;
->  		gpio-mosi = <&gpio1 20 GPIO_ACTIVE_HIGH>;
->  		cs-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
-> +		spi-cs-high;	/* make the legacy handler in gpiolib not intervene */
->  		num-chipselects = <1>;
->  
->  		/* lcd panel */
-> @@ -123,6 +124,7 @@
->  			spi-max-frequency = <100000>;
->  			spi-cpol;
->  			spi-cpha;
-> +			spi-cs-high;	/* here is where it should be but this is ignored by a bug in the gpiolib handler */
->  
->  			backlight= <&backlight>;
->  			label = "lcd";
-
-So what's the plan with this fix? Add this for v5.2-rc cycle,
-then revert it later? I'd probably go directly for the proper
-fix if possible.
-
-Regards,
-
-Tony
+diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+index d98e0451f6a1..3f50a1521f01 100644
+--- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
++++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+@@ -635,6 +635,7 @@ static int mvebu_comphy_probe(struct platform_device *pdev)
+ 
+ 		lane->priv = priv;
+ 		lane->mode = PHY_MODE_INVALID;
++		lane->submode = PHY_INTERFACE_MODE_NA;
+ 		lane->id = val;
+ 		lane->port = -1;
+ 		phy_set_drvdata(phy, lane);
+-- 
+2.19.1
