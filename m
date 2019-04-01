@@ -1,86 +1,46 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] dt-bindings: cpu: Fix JSON schema
-Date: Mon, 1 Apr 2019 13:35:46 +0200
-Message-ID: <20190401113546.d6p2mg2y47abhumz@flea>
-References: <20190318100521.29109-1-maxime.ripard@bootlin.com>
- <CAL_JsqJ_LYycXazkdP2Q=e-jynKiX+z5En0bz0AWpDjsevwQTg@mail.gmail.com>
- <20190401091050.cwph7xlpv3pmkwnq@flea>
- <78bb248e-56b8-b825-e763-583f75148eb3@socionext.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH 03/10] PCI: dwc: Move config space capability search API
+Date: Mon, 1 Apr 2019 17:16:59 +0530
+Message-ID: <5a438b16-53bc-dee3-ea9d-14048547dc29@nvidia.com>
+References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
+ <1553613207-3988-4-git-send-email-vidyas@nvidia.com>
+ <20190328123320.GA5518@ulmo>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mrhlaajohf3mazqc"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <78bb248e-56b8-b825-e763-583f75148eb3@socionext.com>
+In-Reply-To: <20190328123320.GA5518@ulmo>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Cc: ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, tiwai@suse.de, spujar@nvidia.com, skomatineni@nvidia.com, liviu.dudau@arm.com, krzk@kernel.org, heiko@sntech.de, horms+renesas@verge.net.au, olof@lixom.net, maxime.ripard@bootlin.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, jagan@amarulasolutions.com, enric.balletbo@collabora.com, ezequiel@collabora.com, stefan.wahren@i2se.com, marc.w.gonzalez@free.fr, l.stach@pengutronix.de, tpiepho@impinj.com, hayashi.kunihiko@socionext.com, yue.wang@amlogic.com, shawn.li
 List-Id: devicetree@vger.kernel.org
 
-
---mrhlaajohf3mazqc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Mon, Apr 01, 2019 at 07:52:06PM +0900, Sugaya, Taichi wrote:
-> On 2019/04/01 18:10, Maxime Ripard wrote:
-> > Hi Sugaya, Arnd, Olof,
-> >
-> > On Thu, Mar 28, 2019 at 02:35:54PM -0500, Rob Herring wrote:
-> > > +arm-soc
-> > >
-> > > On Mon, Mar 18, 2019 at 5:05 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > >
-> > > > Commit fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for
-> > > > Milbeaut") added support for a new cpu enable-method, but did so using
-> > > > tabulations to ident. This is however invalid in the syntax, and resulted
-> > > > in a failure when trying to use that schemas for validation.
-> > > >
-> > > > Use spaces instead of tabs to indent to fix this.
-> > > >
-> > > > Fixes: fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
-> > > > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > > > ---
-> > > >   Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
-> > > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > >
-> > > This should be applied to arm-soc tree having the commit.
-> >
-> > Could you pick up that patch?
->
-> I got it.
-> My mission is to resubmit your fix-patch added my singned-off tag and
-> Rob's reviewed tag...right?
-
-If you are part of arm-soc and send your pull requests to Arnd and
-Olof, simply pick it up in the same branch than the initial patch was
-in. And when you apply that patch, you indeed need to add your
-Signed-off-by (note that most commands to commit have an option to do
-that automatically: -s and that includes git am) and the Rob's
-reviewed-by.
-
-Then, send a new pull request to arm-soc.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---mrhlaajohf3mazqc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKH3kgAKCRDj7w1vZxhR
-xSL3AQDrgfZOkHK4T4gxJF6v0mtZCGaGa8Yc76ZGGit66rqfywEA4kvj9lAQXzXB
-/zdngK0XDtuXe4MeZLh3Sju4MTz6iQc=
-=25qQ
------END PGP SIGNATURE-----
-
---mrhlaajohf3mazqc--
+On 3/28/2019 6:03 PM, Thierry Reding wrote:
+> On Tue, Mar 26, 2019 at 08:43:20PM +0530, Vidya Sagar wrote:
+>> move PCIe config space capability search API to common designware file
+>> as this can be used by both host and ep mode codes.
+>> It also adds extended capability search APIs.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-designware-ep.c | 37 +------------
+>>   drivers/pci/controller/dwc/pcie-designware.c    | 73 +++++++++++++++++++++++++
+>>   drivers/pci/controller/dwc/pcie-designware.h    |  3 +
+>>   3 files changed, 78 insertions(+), 35 deletions(-)
+> 
+> Just out of curiosity: is there any reason why this driver needs to
+> reimplement this? Couldn't this be made to work using the standard
+> pci_find_next_capability() function?
+> 
+> Other than that it might be a good idea to split this into two patches,
+> one that moves the existing functionality to the common code and another
+> that adds the extra functionality.
+> 
+> Thierry
+> 
+pci_find_next_capability() API expects struct pci_dev * pointer and this can only
+be used after PCIe devices got enumerated. APIs added in this patch solves the issue
+of getting capability offsets before PCIe enumeration. FWIW, APIs in this patch
+take struct dw_pcie * pointer as input.
+As you suggested, I'll split this into two patches in my next series.
