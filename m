@@ -1,102 +1,61 @@
-From: Maxime Jourdan <mjourdan@baylibre.com>
-Subject: [PATCH v5 1/4] dt-bindings: media: add Amlogic Video Decoder Bindings
-Date: Mon,  1 Apr 2019 15:38:42 +0200
-Message-ID: <20190401133845.4171-2-mjourdan@baylibre.com>
-References: <20190401133845.4171-1-mjourdan@baylibre.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: Add Lenovo Miix 630
+Date: Mon, 1 Apr 2019 08:13:38 -0600
+Message-ID: <CAOCk7Np53o69xQw83V1sfO2uv1-NFSGtbsTqH-5K1m1Rdaf-GA@mail.gmail.com>
+References: <20190326185525.20781-1-jeffrey.l.hugo@gmail.com> <20190401105153.GE4187@dell>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190401133845.4171-1-mjourdan@baylibre.com>
+In-Reply-To: <20190401105153.GE4187@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Maxime Jourdan <mjourdan@baylibre.com>, Hans Verkuil <hans.verkuil@cisco.com>, Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: bjorn.andersson@linaro.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the meson vdec dts node.
+Hi Lee.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
----
- .../bindings/media/amlogic,vdec.txt           | 71 +++++++++++++++++++
- 1 file changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/amlogic,vdec.txt
+On Mon, Apr 1, 2019 at 4:52 AM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Tue, 26 Mar 2019, Jeffrey Hugo wrote:
+>
+> > This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
+> > functionality includes USB (host), microSD-card, keyboard, and trackpad=
+.
+> >
+> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > ---
+> >  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+> >  arch/arm64/boot/dts/qcom/msm8998-cls.dtsi     | 278 ++++++++++++++++++
+>
+> What is cls?
 
-diff --git a/Documentation/devicetree/bindings/media/amlogic,vdec.txt b/Documentation/devicetree/bindings/media/amlogic,vdec.txt
-new file mode 100644
-index 000000000000..aabdd01bcf32
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/amlogic,vdec.txt
-@@ -0,0 +1,71 @@
-+Amlogic Video Decoder
-+================================
-+
-+The video decoding IP lies within the DOS memory region,
-+except for the hardware bitstream parser that makes use of an undocumented
-+region.
-+
-+It makes use of the following blocks:
-+
-+- ESPARSER is a bitstream parser that outputs to a VIFIFO. Further VDEC blocks
-+then feed from this VIFIFO.
-+- VDEC_1 can decode MPEG-1, MPEG-2, MPEG-4 part 2, MJPEG, H.263, H.264, VC-1.
-+- VDEC_HEVC can decode HEVC and VP9.
-+
-+Both VDEC_1 and VDEC_HEVC share the "vdec" IRQ and as such cannot run
-+concurrently.
-+
-+Device Tree Bindings:
-+---------------------
-+
-+VDEC: Video Decoder
-+--------------------------
-+
-+Required properties:
-+- compatible: value should be different for each SoC family as :
-+	- GXBB (S905) : "amlogic,gxbb-vdec"
-+	- GXL (S905X, S905D) : "amlogic,gxl-vdec"
-+	- GXM (S912) : "amlogic,gxm-vdec"
-+- reg: base address and size of he following memory-mapped regions :
-+	- dos
-+	- esparser
-+- reg-names: should contain the names of the previous memory regions
-+- interrupts: should contain the following IRQs:
-+	- vdec
-+	- esparser
-+- interrupt-names: should contain the names of the previous interrupts
-+- amlogic,ao-sysctrl: should point to the AOBUS sysctrl node
-+- amlogic,canvas: should point to a canvas provider node
-+- clocks: should contain the following clocks :
-+	- dos_parser
-+	- dos
-+	- vdec_1
-+	- vdec_hevc
-+- clock-names: should contain the names of the previous clocks
-+- resets: should contain the parser reset
-+- reset-names: should be "esparser"
-+
-+Example:
-+
-+vdec: video-decoder@c8820000 {
-+	compatible = "amlogic,gxbb-vdec";
-+	reg = <0x0 0xc8820000 0x0 0x10000>,
-+	      <0x0 0xc110a580 0x0 0xe4>;
-+	reg-names = "dos", "esparser";
-+
-+	interrupts = <GIC_SPI 44 IRQ_TYPE_EDGE_RISING>,
-+		     <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
-+	interrupt-names = "vdec", "esparser";
-+
-+	amlogic,ao-sysctrl = <&sysctrl_AO>;
-+	amlogic,canvas = <&canvas>;
-+
-+	clocks = <&clkc CLKID_DOS_PARSER>,
-+		 <&clkc CLKID_DOS>,
-+		 <&clkc CLKID_VDEC_1>,
-+		 <&clkc CLKID_VDEC_HEVC>;
-+	clock-names = "dos_parser", "dos", "vdec_1", "vdec_hevc";
-+
-+	resets = <&reset RESET_PARSER>;
-+	reset-names = "esparser";
-+};
--- 
-2.21.0
+Clamshell.  I left a comment in the file that is intended to clarify
+this.  If one does some digging, they should find a fair number of
+"cls" references within the firmware and windows.
+
+>
+> How much of this will be reusable with the other laptops?
+
+The intent is that all the common stuff, which I expect is >90%, is in
+the cls.dtsi so that we don't have multiple copies of it.  Variances,
+such as the SD detect GPIO stuff we've discovered would be in the
+individual dtb.  Or at-least, that is the idea.  I'm open to
+suggestions.
+
+I'm unable to post dts files based on the HP/Asus at this time, but
+hopefully that changes soon.  Otherwise, Its my goal that this
+provides a good framework for adding those devices.
+
+>
+> >  .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  33 +++
+> >  3 files changed, 312 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8998-cls.dtsi
+> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dt=
+s
+>
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> Linaro Services Technical Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
