@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 07/15] phy: mvebu-cp110-comphy: Add USB3 host/device support
-Date: Mon,  1 Apr 2019 18:51:23 +0200
-Message-ID: <20190401165131.23370-8-miquel.raynal@bootlin.com>
+Subject: [PATCH 09/15] phy: mvebu-cp110-comphy: Cosmetic change in a helper
+Date: Mon,  1 Apr 2019 18:51:25 +0200
+Message-ID: <20190401165131.23370-10-miquel.raynal@bootlin.com>
 References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,85 +21,53 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add USB3 host/device support by adding the right entries in the COMPHY
-modes table. A new macro is created to instantiate a "generic" mode
-ie. not an Ethernet one. This macro will be re-used when adding SATA
-support.
+Before adding more logic, simplify a bit the writing of the
+mvebu_comphy_get_mode() helper by using a pointer instead of
+referencing a configuration with the entire table name.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 24 ++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-index 21431e3e085a..3eb92a629dcc 100644
+index 7e25469919eb..ab1f46b1dbe1 100644
 --- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
 +++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-@@ -148,6 +148,8 @@
+@@ -253,16 +253,18 @@ static int mvebu_comphy_get_mode(bool fw_mode, int lane, int port,
+ 				 enum phy_mode mode, int submode)
+ {
+ 	int i, n = ARRAY_SIZE(mvebu_comphy_cp110_modes);
++	const struct mvebu_comphy_conf *conf;
  
- #define COMPHY_FW_MODE_SGMII		0x2 /* SGMII 1G */
- #define COMPHY_FW_MODE_HS_SGMII		0x3 /* SGMII 2.5G */
-+#define COMPHY_FW_MODE_USB3H		0x4
-+#define COMPHY_FW_MODE_USB3D		0x5
- #define COMPHY_FW_MODE_RXAUI		0x7
- #define COMPHY_FW_MODE_SFI		0x9 /* XFI: 0x8 (is treated like SFI) */
+ 	/* Unused PHY mux value is 0x0 */
+ 	if (mode == PHY_MODE_INVALID)
+ 		return 0;
  
-@@ -170,11 +172,23 @@ struct mvebu_comphy_conf {
- 		.fw_mode = _fw,				\
+ 	for (i = 0; i < n; i++) {
+-		if (mvebu_comphy_cp110_modes[i].lane == lane &&
+-		    mvebu_comphy_cp110_modes[i].port == port &&
+-		    mvebu_comphy_cp110_modes[i].mode == mode &&
+-		    mvebu_comphy_cp110_modes[i].submode == submode)
++		conf = &mvebu_comphy_cp110_modes[i];
++		if (conf->lane == lane &&
++		    conf->port == port &&
++		    conf->mode == mode &&
++		    conf->submode == submode)
+ 			break;
  	}
  
-+#define GEN_CONF(_lane, _port, _mode, _fw)		\
-+	{						\
-+		.lane = _lane,				\
-+		.port = _port,				\
-+		.mode = _mode,				\
-+		.submode = PHY_INTERFACE_MODE_NA,	\
-+		.mux = -1,				\
-+		.fw_mode = _fw,				\
-+	}
-+
- static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
- 	/* lane 0 */
- 	ETH_CONF(0, 1, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
- 	ETH_CONF(0, 1, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
- 	/* lane 1 */
-+	GEN_CONF(1, 0, PHY_MODE_USB_HOST_SS, COMPHY_FW_MODE_USB3H),
-+	GEN_CONF(1, 0, PHY_MODE_USB_DEVICE_SS, COMPHY_FW_MODE_USB3D),
- 	ETH_CONF(1, 2, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
- 	ETH_CONF(1, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
- 	/* lane 2 */
-@@ -182,15 +196,19 @@ static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
- 	ETH_CONF(2, 0, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
- 	ETH_CONF(2, 0, PHY_INTERFACE_MODE_RXAUI, -1, COMPHY_FW_MODE_RXAUI),
- 	ETH_CONF(2, 0, PHY_INTERFACE_MODE_10GKR, 0x1, COMPHY_FW_MODE_SFI),
-+	GEN_CONF(2, 0, PHY_MODE_USB_HOST_SS, COMPHY_FW_MODE_USB3H),
- 	/* lane 3 */
- 	ETH_CONF(3, 1, PHY_INTERFACE_MODE_SGMII, 0x2, COMPHY_FW_MODE_SGMII),
- 	ETH_CONF(3, 1, PHY_INTERFACE_MODE_2500BASEX, 0x2, COMPHY_FW_MODE_HS_SGMII),
- 	ETH_CONF(3, 1, PHY_INTERFACE_MODE_RXAUI, -1, COMPHY_FW_MODE_RXAUI),
-+	GEN_CONF(3, 1, PHY_MODE_USB_HOST_SS, COMPHY_FW_MODE_USB3H),
- 	/* lane 4 */
- 	ETH_CONF(4, 0, PHY_INTERFACE_MODE_SGMII, 0x2, COMPHY_FW_MODE_SGMII),
- 	ETH_CONF(4, 0, PHY_INTERFACE_MODE_2500BASEX, 0x2, COMPHY_FW_MODE_HS_SGMII),
- 	ETH_CONF(4, 0, PHY_INTERFACE_MODE_10GKR, 0x2, COMPHY_FW_MODE_SFI),
- 	ETH_CONF(4, 0, PHY_INTERFACE_MODE_RXAUI, -1, COMPHY_FW_MODE_RXAUI),
-+	GEN_CONF(4, 0, PHY_MODE_USB_DEVICE_SS, COMPHY_FW_MODE_USB3D),
-+	GEN_CONF(4, 1, PHY_MODE_USB_HOST_SS, COMPHY_FW_MODE_USB3H),
- 	ETH_CONF(4, 1, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
- 	ETH_CONF(4, 1, PHY_INTERFACE_MODE_2500BASEX, -1, COMPHY_FW_MODE_HS_SGMII),
- 	ETH_CONF(4, 1, PHY_INTERFACE_MODE_10GKR, -1, COMPHY_FW_MODE_SFI),
-@@ -619,6 +637,12 @@ static int mvebu_comphy_power_on(struct phy *phy)
- 			return -ENOTSUPP;
- 		}
- 		break;
-+	case PHY_MODE_USB_HOST_SS:
-+	case PHY_MODE_USB_DEVICE_SS:
-+		hide_error = true;
-+		dev_dbg(priv->dev, "set lane %d to USB3 mode\n", lane->id);
-+		fw_param = COMPHY_FW_PARAM(fw_mode, lane->port);
-+		break;
- 	default:
- 		dev_err(priv->dev, "unsupported PHY mode (%d)\n", lane->mode);
- 		return -ENOTSUPP;
+@@ -270,9 +272,9 @@ static int mvebu_comphy_get_mode(bool fw_mode, int lane, int port,
+ 		return -EINVAL;
+ 
+ 	if (fw_mode)
+-		return mvebu_comphy_cp110_modes[i].fw_mode;
++		return conf->fw_mode;
+ 	else
+-		return mvebu_comphy_cp110_modes[i].mux;
++		return conf->mux;
+ }
+ 
+ static inline int mvebu_comphy_get_mux(int lane, int port,
 -- 
 2.19.1
