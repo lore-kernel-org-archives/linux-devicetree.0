@@ -1,102 +1,45 @@
-From: Yuantian Tang <andy.tang@nxp.com>
-Subject: [PATCH v4] arm64: dts: ls1088a: add one more thermal zone node
-Date: Mon,  1 Apr 2019 11:29:05 +0800
-Message-ID: <20190401032905.32711-1-andy.tang@nxp.com>
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: RE: [PATCH v2 4/4] devfreq: add mediatek cci devfreq
+Date: Mon, 01 Apr 2019 13:18:43 +0900
+Message-ID: <20190401041843epcms1p10a664023cf0556e42afe118a1d84daad@epcms1p1>
+References: <1553841972-19737-5-git-send-email-andrew-sh.cheng@mediatek.com>
+        <1553841972-19737-1-git-send-email-andrew-sh.cheng@mediatek.com>
+        <CGME20190329064636epcas1p13633ae078ef83ceda0b8189df1399753@epcms1p1>
+Reply-To: myungjoo.ham@samsung.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1553841972-19737-5-git-send-email-andrew-sh.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, daniel.lezcano@linaro.org, rui.zhang@intel.com, edubezval@gmail.com, Yuantian Tang <andy.tang@nxp.com>
+To: Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "fan.chen@mediatek.com" <fan.chen@mediatek.com>, "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core cluster
-sensor is used to monitor the temperature of core and SoC platform is for
-platform. The current dts only support the first sensor.
-This patch adds the second sensor node to dts to enable it.
+>This adds a devfreq driver for the Cache Coherent Interconnect (CCI)
+>of the Mediatek MT8183.
+>
+>On the MT8183 the CCI is supplied by the same regulator as the LITTLE
+>cores. The driver is notified when the regulator voltage changes
+>(driven by cpufreq) and adjusts the CCI frequency to the maximum
+>possible value.
+>
+>Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+>---
+> drivers/devfreq/Kconfig              |  10 ++
+> drivers/devfreq/Makefile             |   1 +
+> drivers/devfreq/mt8183-cci-devfreq.c | 235 +++++++++++++++++++++++++++++++++++
+> 3 files changed, 246 insertions(+)
+> create mode 100644 drivers/devfreq/mt8183-cci-devfreq.c
+>
 
-Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
----
-v4:
-	- use hyphen instead of underscore in node name
-v3:
-	- use more descriptive name for each zone
-v2:
-	- Add more information about sensors to description
-PS: In order to keep consistency to the first thermal-zone node, there will
-be "WARNING: line over 80 characters" warnings.
+1. It appears that proc_reg_uV might be used before initialization.
+It would be appropriate to initialize it at the probe function.
 
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   43 +++++++++++++++++++++--
- 1 files changed, 39 insertions(+), 4 deletions(-)
+2. Because you are already using OPP, why don't you rely on
+OPP fully? (use OPP from CPUFreq drivers as well in order to get
+OPP events automatically.) Anyway, this is a minor item that does
+not need to be corrected.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 661137f..d6d4ff2 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -129,19 +129,19 @@
- 	};
- 
- 	thermal-zones {
--		cpu_thermal: cpu-thermal {
-+		core-cluster-thermal {
- 			polling-delay-passive = <1000>;
- 			polling-delay = <5000>;
- 			thermal-sensors = <&tmu 0>;
- 
- 			trips {
--				cpu_alert: cpu-alert {
-+				core_cluster_alert: core-cluster-alert {
- 					temperature = <85000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit: cpu-crit {
-+				core_cluster_crit: core-cluster-crit {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "critical";
-@@ -150,7 +150,42 @@
- 
- 			cooling-maps {
- 				map0 {
--					trip = <&cpu_alert>;
-+					trip = <&core_cluster_alert>;
-+					cooling-device =
-+						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		platform-thermal {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
-+			thermal-sensors = <&tmu 1>;
-+
-+			trips {
-+				platform_alert: platform-alert {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				platform_crit: platform-crit {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&platform_alert>;
- 					cooling-device =
- 						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
- 						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--- 
-1.7.1
+Cheers
+MyungJoo
