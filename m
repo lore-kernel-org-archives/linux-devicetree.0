@@ -1,95 +1,87 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 0/9] Introduce STMFX I2C Multi-Function eXpander
-Date: Mon, 1 Apr 2019 11:19:34 +0100
-Message-ID: <20190401101934.GC4187@dell>
-References: <1551260094-32570-1-git-send-email-amelie.delaunay@st.com>
- <b3cdddb0-8177-600c-7108-9a16e9067190@st.com>
+From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Subject: Re: [PATCH RESEND v7 2/3] dt-bindings: phy: Add documentation for
+ mixel dphy
+Date: Mon, 1 Apr 2019 12:23:32 +0200
+Message-ID: <20190401102332.GA23517@bogon.m.sigxcpu.org>
+References: <cover.1553674604.git.agx@sigxcpu.org>
+ <3319783f60fedd7f0029dd60a51c76a75003fe05.1553674604.git.agx@sigxcpu.org>
+ <20190328165729.GA32345@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <b3cdddb0-8177-600c-7108-9a16e9067190@st.com>
+In-Reply-To: <20190328165729.GA32345@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amelie DELAUNAY <amelie.delaunay@st.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Heiko Stuebner <heiko@sntech.de>, Johan Hovold <johan@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Robert Chiras <robert.chiras@nxp.com>, Sam
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 29 Mar 2019, Amelie DELAUNAY wrote:
+Hi Rob,
 
-> Hi,
-> 
-> A gentle ping on this series (mfd + pinctrl patches, DT patches will be 
-> taken in STM32 soc tree).
-
-I currently have over 100 reviews in my backlog.
-
-Please be patient.  You are on the list.
-
-> On 2/27/19 10:34 AM, Amelie Delaunay wrote:
-> > This series adds support for STMicroelectronics Multi-Function eXpander
-> > (STMFX), used on some STM32 discovery and evaluation boards.
+On Thu, Mar 28, 2019 at 11:57:29AM -0500, Rob Herring wrote:
+> On Wed, Mar 27, 2019 at 09:20:00AM +0100, Guido G�nther wrote:
+> > Add support for the MIXEL DPHY IP as found in the NXP's i.MX8MQ.
 > > 
-> > STMFX is an STM32L152 slave controller whose firmware embeds the following
-> > features:
-> > - I/O expander (16 GPIOs + 8 extra if the other features are not enabled),
-> > - resistive touchscreen controller,
-> > - IDD measurement.
-> > 
-> > I2C stuff and chip initialization is based on an MFD parent driver, which
-> > registers STMFX features MFD children.
-> > 
+> > Signed-off-by: Guido G�nther <agx@sigxcpu.org>
+> > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 > > ---
-> > Changes in v4:
-> > - mfd: move registers #define into the header
-> > - mfd: merge stmfx and stmfx_ddata structures into one stmfx structure
-> > - mfd: change stmfx_chip_init/exit and stmfx_irq_init/exit args: use
-> >    i2c_client struct and i2c_get_clientdata
-> > - mfd: fix typos
-> > - mfd: add MFD cells for IDD and TS features
-> > - pinctrl: rework registers #define
-> > - dts: add STMFX support on stm32mp157c-ev1
-> > Changes in v3:
-> > - fix MFD interrupt bindings
-> > - fix drivers/mfd/stmfx.c:103:8: warning: 'mask' may be used uninitialized
-> >    in this function
-> > Changes in v2:
-> > - move to MFD parent driver for i2c stuff and chip initialization
-> > - improve regmap configuration
-> > - take advantage of the use of gpio-ranges
+> >  .../bindings/phy/mixel,mipi-dsi-phy.txt       | 29 +++++++++++++++++++
+> >  1 file changed, 29 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
 > > 
-> > Amelie Delaunay (9):
-> >    dt-bindings: mfd: Add ST Multi-Function eXpander (STMFX) core bindings
-> >    mfd: Add ST Multi-Function eXpander (STMFX) core driver
-> >    dt-bindings: pinctrl: document the STMFX pinctrl bindings
-> >    pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver
-> >    ARM: dts: stm32: add STMFX support on stm32746g-eval
-> >    ARM: dts: stm32: add joystick support on stm32746g-eval
-> >    ARM: dts: stm32: add orange and blue leds on stm32746g-eval
-> >    ARM: dts: stm32: add STMFX support on stm32mp157c-ev1
-> >    ARM: dts: stm32: add joystick support on stm32mp157c-ev1
-> > 
-> >   Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 +
-> >   .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 +++
-> >   arch/arm/boot/dts/stm32746g-eval.dts               |  66 ++
-> >   arch/arm/boot/dts/stm32mp157c-ev1.dts              |  60 ++
-> >   drivers/mfd/Kconfig                                |  13 +
-> >   drivers/mfd/Makefile                               |   2 +-
-> >   drivers/mfd/stmfx.c                                | 568 ++++++++++++++
-> >   drivers/pinctrl/Kconfig                            |  12 +
-> >   drivers/pinctrl/Makefile                           |   1 +
-> >   drivers/pinctrl/pinctrl-stmfx.c                    | 820 +++++++++++++++++++++
-> >   include/linux/mfd/stmfx.h                          | 123 ++++
-> >   11 files changed, 1808 insertions(+), 1 deletion(-)
-> >   create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
-> >   create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
-> >   create mode 100644 drivers/mfd/stmfx.c
-> >   create mode 100644 drivers/pinctrl/pinctrl-stmfx.c
-> >   create mode 100644 include/linux/mfd/stmfx.h
-> > 
+> > diff --git a/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
+> > new file mode 100644
+> > index 000000000000..d3646580412a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
+> > @@ -0,0 +1,29 @@
+> > +Mixel DSI PHY for i.MX8
+> > +
+> > +The Mixel MIPI-DSI PHY IP block is e.g. found on i.MX8 platforms (along the
+> > +MIPI-DSI IP from Northwest Logic). It represents the physical layer for the
+> > +electrical signals for DSI.
+> > +
+> > +Required properties:
+> > +- compatible: Must be:
+> > +  - "mixel,imx8mq-mipi-dphy"
+> 
+> If you had a fallback for mixel, then it would make sense, but as this 
+> is imx8mq specifc 'fsl' should be the vendor prefix.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Fixed in v8.
+
+> 
+> > +- clocks: Must contain an entry for each entry in clock-names.
+> > +- clock-names: Must contain the following entries:
+> > +  - "phy_ref": phandle and specifier referring to the DPHY ref clock
+> > +- reg: the register range of the PHY controller
+> > +- #phy-cells: number of cells in PHY, as defined in
+> > +  Documentation/devicetree/bindings/phy/phy-bindings.txt
+> > +  this must be <0>
+> > +
+> > +Optional properties:
+> > +- power-domains: phandle to power domain
+> > +
+> > +Example:
+> > +	mipi_dphy: mipi_dphy@30A0030 {
+> 
+> mipi-dphy@... or just dphy@...
+
+And this one as well.
+Thanks for the review!
+ -- Guido
+
+>
+> 
+> > +		compatible = "mixel,imx8mq-mipi-dphy";
+> > +		clocks = <&clk IMX8MQ_CLK_DSI_PHY_REF>;
+> > +		clock-names = "phy_ref";
+> > +		reg = <0x30A00300 0x100>;
+> > +		power-domains = <&pd_mipi0>;
+> > +		#phy-cells = <0>;
+> > +        };
+> > -- 
+> > 2.20.1
+> > 
+> 
