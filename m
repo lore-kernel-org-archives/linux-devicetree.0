@@ -1,133 +1,36 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v2 3/3] backlight: lm3630a: add device tree supprt
-Date: Mon,  1 Apr 2019 06:30:34 -0400
-Message-ID: <20190401103034.21062-4-masneyb@onstation.org>
-References: <20190401103034.21062-1-masneyb@onstation.org>
+From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+Subject: [PATCH v5 1/3] dt-bindings: Add vendor prefix for ROCKTECH DISPLAYS LIMITED
+Date: Mon,  1 Apr 2019 12:35:33 +0200
+Message-ID: <b8db03faa344c834e6cc81eef1eca154e1a1bd90.1554114302.git.agx@sigxcpu.org>
+References: <cover.1554114302.git.agx@sigxcpu.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190401103034.21062-1-masneyb@onstation.org>
+In-Reply-To: <cover.1554114302.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org
-Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, dmurphy@ti.com, jonathan@marek.ca
+To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Jagan Teki <jagan@amarulasolutions.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Johan Hovold <johan@kernel.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support to the lm3630a driver and allow configuring
-independently on both banks the mapping mode (linear or exponential),
-initial and maximum LED brightness.
+Add ROCKTECH DISPLAYS LIMITED (https://rocktech.com.hk) LCD panel
+supplier.
 
-Driver was tested on a LG Nexus 5 (hammerhead) phone.
-
-Signed-off-by: Brian Masney <masneyb@onstation.org>
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
 ---
- drivers/video/backlight/lm3630a_bl.c | 69 ++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-index ef2553f452ca..96fbc1273dda 100644
---- a/drivers/video/backlight/lm3630a_bl.c
-+++ b/drivers/video/backlight/lm3630a_bl.c
-@@ -35,6 +35,9 @@
- #define REG_MAX		0x50
- 
- #define INT_DEBOUNCE_MSEC	10
-+
-+#define LM3630A_MAX_SOURCES	2
-+
- struct lm3630a_chip {
- 	struct device *dev;
- 	struct delayed_work work;
-@@ -364,6 +367,64 @@ static const struct regmap_config lm3630a_regmap = {
- 	.max_register = REG_MAX,
- };
- 
-+static void lm3630a_parse_dt(struct lm3630a_chip *pchip)
-+{
-+	u32 sources[LM3630A_MAX_SOURCES], val;
-+	struct device_node *child_node;
-+	int num_sources, ret, i;
-+	bool linear;
-+
-+	for_each_available_child_of_node(pchip->dev->of_node, child_node) {
-+		num_sources = of_property_count_u32_elems(child_node,
-+							  "led-sources");
-+		if (num_sources < 0)
-+			continue;
-+
-+		if (num_sources > LM3630A_MAX_SOURCES)
-+			num_sources = LM3630A_MAX_SOURCES;
-+
-+		ret = of_property_read_u32_array(child_node, "led-sources",
-+						 sources, num_sources);
-+		if (ret) {
-+			dev_err(pchip->dev,
-+				"Error parsing led-sources node: %d\n", ret);
-+			return;
-+		}
-+
-+		linear = of_property_read_bool(child_node,
-+					       "ti,linear-mapping-mode");
-+
-+		for (i = 0; i < num_sources; i++) {
-+			if (sources[i] == 0)
-+				pchip->pdata->leda_ctrl = linear ?
-+					LM3630A_LEDA_ENABLE_LINEAR :
-+					LM3630A_LEDA_ENABLE;
-+			else if (sources[i] == 1)
-+				pchip->pdata->ledb_ctrl = linear ?
-+					LM3630A_LEDB_ENABLE_LINEAR :
-+					LM3630A_LEDB_ENABLE;
-+
-+			ret = of_property_read_u32(child_node,
-+						   "default-brightness", &val);
-+			if (!ret) {
-+				if (sources[i] == 0)
-+					pchip->pdata->leda_init_brt = val;
-+				else if (sources[i] == 1)
-+					pchip->pdata->ledb_init_brt = val;
-+			}
-+
-+			ret = of_property_read_u32(child_node, "max-brightness",
-+						   &val);
-+			if (!ret) {
-+				if (sources[i] == 0)
-+					pchip->pdata->leda_max_brt = val;
-+				else if (sources[i] == 1)
-+					pchip->pdata->ledb_max_brt = val;
-+			}
-+		}
-+	};
-+}
-+
- static int lm3630a_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
-@@ -405,6 +466,7 @@ static int lm3630a_probe(struct i2c_client *client,
- 		pdata->ledb_init_brt = LM3630A_MAX_BRIGHTNESS;
- 	}
- 	pchip->pdata = pdata;
-+	lm3630a_parse_dt(pchip);
- 
- 	/* chip initialize */
- 	rval = lm3630a_chip_init(pchip);
-@@ -470,11 +532,18 @@ static const struct i2c_device_id lm3630a_id[] = {
- 	{}
- };
- 
-+static const struct of_device_id lm3630a_match_table[] = {
-+	{ .compatible = "ti,lm3630a", },
-+	{ },
-+};
-+
-+
- MODULE_DEVICE_TABLE(i2c, lm3630a_id);
- 
- static struct i2c_driver lm3630a_i2c_driver = {
- 	.driver = {
- 		   .name = LM3630A_NAME,
-+		   .of_match_table = lm3630a_match_table,
- 		   },
- 	.probe = lm3630a_probe,
- 	.remove = lm3630a_remove,
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index fae55f50b2d3..326a4b278186 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -346,6 +346,7 @@ ricoh	Ricoh Co. Ltd.
+ rikomagic	Rikomagic Tech Corp. Ltd
+ riscv	RISC-V Foundation
+ rockchip	Fuzhou Rockchip Electronics Co., Ltd
++rocktech	ROCKTECH DISPLAYS LIMITED
+ rohm	ROHM Semiconductor Co., Ltd
+ ronbo   Ronbo Electronics
+ roofull	Shenzhen Roofull Technology Co, Ltd
 -- 
 2.20.1
