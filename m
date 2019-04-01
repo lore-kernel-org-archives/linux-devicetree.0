@@ -1,176 +1,119 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 2/4] dt-bindings: mtd: sunxi-nand: Add YAML schemas
-Date: Mon,  1 Apr 2019 23:13:54 +0200
-Message-ID: <5bbd086f909e2331103fbf9afbe75cc5b8782f36.1554153146.git-series.maxime.ripard@bootlin.com>
-References: <75ad3b89e4a6f8ad5bc414c3dccbb1f99361495a.1554153146.git-series.maxime.ripard@bootlin.com>
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH v5 2/8] i2c: iproc: Add slave mode support
+Date: Mon, 1 Apr 2019 14:33:47 -0700
+Message-ID: <c67178db-9459-b424-a29a-23bb0e0c5ca9@broadcom.com>
+References: <20190214175725.60462-1-ray.jui@broadcom.com>
+ <20190214175725.60462-3-ray.jui@broadcom.com> <20190327221452.GA15396@kunai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <75ad3b89e4a6f8ad5bc414c3dccbb1f99361495a.1554153146.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@collabora.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190327221452.GA15396@kunai>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, Shreesha Rajashekar <shreesha.rajashekar@broadcom.com>, Michael Cheng <ccheng@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Switch the DT binding to a YAML schema to enable the DT validation.
+Hi Wolfram/Rayagonda,
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml | 81 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- Documentation/devicetree/bindings/mtd/sunxi-nand.txt                | 48 +-------------------------------------------
- 2 files changed, 81 insertions(+), 48 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
- delete mode 100644 Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+On 3/27/2019 3:14 PM, Wolfram Sang wrote:
+> 
+>> +static void bcm_iproc_i2c_slave_init(
+>> +	struct bcm_iproc_i2c_dev *iproc_i2c, bool need_reset)
+>> +{
+>> +	u32 val;
+>> +
+>> +	if (need_reset) {
+>> +		/* put controller in reset */
+>> +		val = readl(iproc_i2c->base + CFG_OFFSET);
+>> +		val |= BIT(CFG_RESET_SHIFT);
+>> +		writel(val, iproc_i2c->base + CFG_OFFSET);
+>> +
+>> +		/* wait 100 usec per spec */
+>> +		udelay(100);
+>> +
+>> +		/* bring controller out of reset */
+>> +		val &= ~(BIT(CFG_RESET_SHIFT));
+>> +		writel(val, iproc_i2c->base + CFG_OFFSET);
+>> +	}
+>> +
+>> +	/* flush TX/RX FIFOs */
+>> +	val = (BIT(S_FIFO_RX_FLUSH_SHIFT) | BIT(S_FIFO_TX_FLUSH_SHIFT));
+>> +	writel(val, iproc_i2c->base + S_FIFO_CTRL_OFFSET);
+> 
+> Will flushing FIFOs work when a slave is register while a master
+> transfer is on-going at the same time?
+> 
 
-diff --git a/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml b/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
-new file mode 100644
-index 000000000000..174294b9e9c6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
-@@ -0,0 +1,81 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mtd/allwinner,sun4i-a10-nand.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 NAND Controller Device Tree Bindings
-+
-+allOf:
-+  - $ref: "nand-controller.yaml"
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <maxime.ripard@bootlin.com>
-+
-+properties:
-+  "#address-cells": true
-+  "#size-cells": true
-+
-+  compatible:
-+    const: allwinner,sun4i-a10-nand
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Bus Clock
-+      - description: Module Clock
-+
-+  clock-names:
-+    items:
-+      - const: ahb
-+      - const: mod
-+
-+  resets:
-+    maxItems: 1
-+
-+  reset-names:
-+    const: ahb
-+
-+  dmas:
-+    maxItems: 1
-+
-+  dma-names:
-+    const: rxtx
-+
-+  pinctrl-names: true
-+
-+patternProperties:
-+  "^pinctrl-[0-9]+$": true
-+
-+  "^nand@[a-z0-9]+$":
-+    properties:
-+      reg:
-+        maxItems: 1
-+
-+      nand-ecc-mode: true
-+      nand-ecc-step-size: true
-+      nand-ecc-strength: true
-+
-+      allwinner,rb:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          Contains the native Ready/Busy IDs.
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+...
-diff --git a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-deleted file mode 100644
-index dcd5a5d80dc0..000000000000
---- a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-+++ /dev/null
-@@ -1,48 +0,0 @@
--Allwinner NAND Flash Controller (NFC)
--
--Required properties:
--- compatible : "allwinner,sun4i-a10-nand".
--- reg : shall contain registers location and length for data and reg.
--- interrupts : shall define the nand controller interrupt.
--- #address-cells: shall be set to 1. Encode the nand CS.
--- #size-cells : shall be set to 0.
--- clocks : shall reference nand controller clocks.
--- clock-names : nand controller internal clock names. Shall contain :
--    * "ahb" : AHB gating clock
--    * "mod" : nand controller clock
--
--Optional properties:
--- dmas : shall reference DMA channel associated to the NAND controller.
--- dma-names : shall be "rxtx".
--
--Optional children nodes:
--Children nodes represent the available nand chips.
--
--Optional properties:
--- reset : phandle + reset specifier pair
--- reset-names : must contain "ahb"
--- allwinner,rb : shall contain the native Ready/Busy ids.
--- nand-ecc-mode : one of the supported ECC modes ("hw", "soft", "soft_bch" or
--		  "none")
--
--see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
--
--
--Examples:
--nfc: nand@1c03000 {
--	compatible = "allwinner,sun4i-a10-nand";
--	reg = <0x01c03000 0x1000>;
--	interrupts = <0 37 1>;
--	clocks = <&ahb_gates 13>, <&nand_clk>;
--	clock-names = "ahb", "mod";
--	#address-cells = <1>;
--	#size-cells = <0>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&nand_pins_a &nand_cs0_pins_a &nand_rb0_pins_a>;
--
--	nand@0 {
--		reg = <0>;
--		allwinner,rb = <0>;
--		nand-ecc-mode = "soft_bch";
--	};
--};
--- 
-git-series 0.9.1
+Okay, as you pointed out in a subsequent email, this can't happen.
+
+>> +
+>> +	/* RANDOM SLAVE STRETCH time - 20ms*/
+> 
+> What is a "random stretch time"? 20ms sounds like a lot. Also, missing
+> space before comment terminator.
+> 
+
+Rayagonda,
+
+Could you please help to comment on the choice of the 20 ms to allow
+clock stretch from the slave? In probably all cases, the slave should
+not need more than 1 ms? 20 ms does seem way too long as Wolfram pointed
+out.
+
+Will fix the missing space before comment terminator.
+
+>> @@ -224,22 +473,25 @@ static int bcm_iproc_i2c_init(struct bcm_iproc_i2c_dev *iproc_i2c)
+>>  
+>>  	/* put controller in reset */
+>>  	val = readl(iproc_i2c->base + CFG_OFFSET);
+>> -	val |= 1 << CFG_RESET_SHIFT;
+>> -	val &= ~(1 << CFG_EN_SHIFT);
+>> +	val |= BIT(CFG_RESET_SHIFT);
+>> +	val &= ~(BIT(CFG_EN_SHIFT));
+>>  	writel(val, iproc_i2c->base + CFG_OFFSET);
+>>  
+>>  	/* wait 100 usec per spec */
+>>  	udelay(100);
+>>  
+>>  	/* bring controller out of reset */
+>> -	val &= ~(1 << CFG_RESET_SHIFT);
+>> +	val &= ~(BIT(CFG_RESET_SHIFT));
+>>  	writel(val, iproc_i2c->base + CFG_OFFSET);
+>>  
+>>  	/* flush TX/RX FIFOs and set RX FIFO threshold to zero */
+>> -	val = (1 << M_FIFO_RX_FLUSH_SHIFT) | (1 << M_FIFO_TX_FLUSH_SHIFT);
+>> +	val = (BIT(M_FIFO_RX_FLUSH_SHIFT) | BIT(M_FIFO_TX_FLUSH_SHIFT));
+>>  	writel(val, iproc_i2c->base + M_FIFO_CTRL_OFFSET);
+>>  	/* disable all interrupts */
+>> -	writel(0, iproc_i2c->base + IE_OFFSET);
+>> +	val = readl(iproc_i2c->base + IE_OFFSET);
+>> +	val &= ~(IE_M_ALL_INTERRUPT_MASK <<
+>> +			IE_M_ALL_INTERRUPT_SHIFT);
+>> +	writel(val, iproc_i2c->base + IE_OFFSET);
+> 
+> This block looks unrelated, but I won't be too strict here...
+> 
+>> +	case M_CMD_STATUS_FIFO_UNDERRUN:
+>> +		dev_dbg(iproc_i2c->device, "FIFO under-run\n");
+>> +		return -ENXIO;
+>> +
+>> +	case M_CMD_STATUS_RX_FIFO_FULL:
+>> +		dev_dbg(iproc_i2c->device, "Master Rx FIFO full > 10ms\n");
+>> +		return -ETIMEDOUT;
+>> +
+> 
+> ... however, this looks really unrelated to me. This is about master
+> transmission, or?
+
+This should be submitted in a separate commit. Will do that in the next
+iteration of patch series.
+
+> 
+> Rest looks OK.
+> 
+
+Thanks,
+
+Ray
