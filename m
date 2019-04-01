@@ -1,59 +1,123 @@
-Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH 00/30] Enable Tegra PCIe root port features
-Date: Thu, 11 Apr 2019 22:33:25 +0530
-Message-ID: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=2SFV=SD=mxic.com.tw=masonccyang@kernel.org>
+In-Reply-To: <20190401075127.GM2059@sirena.org.uk>
+References: <1553768318-23149-1-git-send-email-masonccyang@mxic.com.tw> <1553768318-23149-4-git-send-email-masonccyang@mxic.com.tw> <20190401075127.GM2059@sirena.org.uk>
+Subject: Re: [PATCH 3/7] spi: Patch Macronix MX25F0A SPI controller driver
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Message-ID: <OF6330725D.D8B22FE6-ON482583CF.002C1D09-482583CF.002C4396@mxic.com.tw>
+From: masonccyang@mxic.com.tw
+Date: Mon, 1 Apr 2019 16:03:31 +0800
+Content-Type: multipart/alternative; boundary="=_alternative 002C4396482583CF_="
+To: Mark Brown <broonie@kernel.org>
+Cc: bbrezillon@kernel.org, christophe.kerello@st.com, computersforpeace@gmal.com, devicetree@vger.kernel.org, dwmw2@infradead.org, geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, marcel.ziswiler@toradex.com, marek.vasut@gmail.com, mark.rutland@arm.com, miquel.raynal@bootlin.com, paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
 List-ID: <devicetree@vger.kernel.org>
 
-This series of patches adds,
-- Tegra root port features like Gen2, AER, etc
-- Power and perf optimizations
-- Fixes like "power up sequence", "dev_err prints", etc
+This is a multipart message in MIME format.
+--=_alternative 002C4396482583CF_=
+Content-Type: text/plain; charset="Big5"
+Content-Transfer-Encoding: base64
 
-These series of patches are tested on Tegra186 based Jetson-TX2, Tegra210
-based Jetson-TX1 and T124 based Jetson-TK1 platforms.
 
-Manikanta Maddireddy (30):
-  soc/tegra: pmc: Export tegra_powergate_power_on()
-  PCI: tegra: Fix PCIe host power up sequence
-  PCI: tegra: Move REFCLK pad settings out of phy_power_on()
-  PCI: tegra: Add PCIe Gen2 link speed support
-  PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
-  PCI: tegra: Program UPHY electrical settings for Tegra210
-  PCI: tegra: Enable opportunistic update FC and ACK
-  PCI: tegra: Disable AFI dynamic clock gating
-  PCI: tegra: Process pending DLL transactions before entering L1 or L2
-  PCI: tegra: Enable PCIe xclk clock clamping
-  PCI: tegra: Increase the deskew retry time
-  PCI: tegra: Add SW fixup for RAW violations
-  PCI: tegra: Update flow control threshold in Tegra210
-  PCI: tegra: Set target speed as Gen1 before link up
-  PCI: tegra: Fix PLLE powerdown issue due to CLKREQ# signal
-  PCI: tegra: Program AFI_CACHE* registers only for Tegra20
-  PCI: tegra: Use switch statements in tegra_pcie_isr()
-  PCI: tegra: Change PRSNT_SENSE irq log to debug
-  PCI: tegra: Use legacy irq for port service drivers
-  PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of soc struct
-  PCI: tegra: Add "pci" type check before parsing child device tree node
-  PCI: tegra: Access endpoint config only if PCIe link is up
-  dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
-  arm64: tegra: Add PEX DPD states as pinctrl properties
-  PCI: tegra: Put PEX CLK & BIAS pads in DPD mode
-  dt-bindings: pci: tegra: Document nvidia,plat-gpios optional prop
-  PCI: tegra: Add support to configure platform GPIOs
-  dt-bindings: pci: tegra: Document nvidia,rst-gpio optional prop
-  PCI: tegra: Add support for GPIO based PCIe reset
-  PCI: tegra: Change link retry log level to INFO
+SGkgTWFyaywNCg0KPiAiTWFyayBCcm93biIgPGJyb29uaWVAa2VybmVsLm9yZz4gDQo+IDIwMTkv
+MDQvMDEgpFWkyCAwMzo1Mg0KPiANCj4gVG8NCj4gDQo+ICJNYXNvbiBZYW5nIiA8bWFzb25jY3lh
+bmdAbXhpYy5jb20udHc+LCANCj4gDQo+IGNjDQo+IA0KPiBtYXJlay52YXN1dEBnbWFpbC5jb20s
+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsIGxpbnV4LQ0KPiBzcGlAdmdlci5rZXJuZWwu
+b3JnLCBiYnJlemlsbG9uQGtlcm5lbC5vcmcsIGR3bXcyQGluZnJhZGVhZC5vcmcsIA0KPiBsZWUu
+am9uZXNAbGluYXJvLm9yZywgcm9iaCtkdEBrZXJuZWwub3JnLCBtYXJrLnJ1dGxhbmRAYXJtLmNv
+bSwgDQo+IGNvbXB1dGVyc2ZvcnBlYWNlQGdtYWwuY29tLCBwYXVsLmJ1cnRvbkBtaXBzLmNvbSwg
+c3RlZmFuQGFnbmVyLmNoLCANCj4gY2hyaXN0b3BoZS5rZXJlbGxvQHN0LmNvbSwgbGlhbmcueWFu
+Z0BhbWxvZ2ljLmNvbSwgZ2VlcnRAbGludXgtDQo+IG02OGsub3JnLCBkZXZpY2V0cmVlQHZnZXIu
+a2VybmVsLm9yZywgbWFyY2VsLnppc3dpbGVyQHRvcmFkZXguY29tLCANCj4gbGludXgtbXRkQGxp
+c3RzLmluZnJhZGVhZC5vcmcsIHJpY2hhcmRAbm9kLmF0LCANCj4gbWlxdWVsLnJheW5hbEBib290
+bGluLmNvbSwganVsaWVuc3VAbXhpYy5jb20udHcsIHpoZW5neHVubGlAbXhpYy5jb20udHcNCj4g
+DQo+IFN1YmplY3QNCj4gDQo+IFJlOiBbUEFUQ0ggMy83XSBzcGk6IFBhdGNoIE1hY3Jvbml4IE1Y
+MjVGMEEgU1BJIGNvbnRyb2xsZXIgZHJpdmVyDQo+IA0KPiBPbiBUaHUsIE1hciAyOCwgMjAxOSBh
+dCAwNjoxODozNFBNICswODAwLCBNYXNvbiBZYW5nIHdyb3RlOg0KPiA+IFBhdGNoIGEgTUZEIGRy
+aXZlciBmb3IgTWFjcm9uaXggTVgyNUYwQSBTUEkgY29udHJvbGxlci4NCj4gPiANCj4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBNYXNvbiBZYW5nIDxtYXNvbmNjeWFuZ0BteGljLmNvbS50dz4NCj4gDQo+IEkg
+Y2FuJ3QgdGVsbCB3aGF0IHRoaXMgY29tbWl0IGlzIHN1cHBvc2VkIHRvIGRvIGJhc2VkIG9uIHRo
+aXMgY29tbWl0DQo+IG1lc3NhZ2Ugd2hpY2ggbWFrZXMgaXQgaGFyZCB0byByZXZpZXcgOigNCg0K
+T29wcywgc29ycnkgIQ0KSSB3aWxsIHNlcGFyYXRlIHRoZXNlIHBhdGNoc2V0IGFuZCByZXN1Ym1p
+dCBpdCBsYXRlci4NCg0KYmVzdCByZWdhcmRzLA0KTWFzb24NCg0KDQpDT05GSURFTlRJQUxJVFkg
+Tk9URToNCg0KVGhpcyBlLW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBtYXkgY29udGFpbiBjb25m
+aWRlbnRpYWwgaW5mb3JtYXRpb24gDQphbmQvb3IgcGVyc29uYWwgZGF0YSwgd2hpY2ggaXMgcHJv
+dGVjdGVkIGJ5IGFwcGxpY2FibGUgbGF3cy4gUGxlYXNlIGJlIA0KcmVtaW5kZWQgdGhhdCBkdXBs
+aWNhdGlvbiwgZGlzY2xvc3VyZSwgZGlzdHJpYnV0aW9uLCBvciB1c2Ugb2YgdGhpcyBlLW1haWwg
+DQooYW5kL29yIGl0cyBhdHRhY2htZW50cykgb3IgYW55IHBhcnQgdGhlcmVvZiBpcyBwcm9oaWJp
+dGVkLiBJZiB5b3UgcmVjZWl2ZSANCnRoaXMgZS1tYWlsIGluIGVycm9yLCBwbGVhc2Ugbm90aWZ5
+IHVzIGltbWVkaWF0ZWx5IGFuZCBkZWxldGUgdGhpcyBtYWlsIGFzIA0Kd2VsbCBhcyBpdHMgYXR0
+YWNobWVudChzKSBmcm9tIHlvdXIgc3lzdGVtLiBJbiBhZGRpdGlvbiwgcGxlYXNlIGJlIA0KaW5m
+b3JtZWQgdGhhdCBjb2xsZWN0aW9uLCBwcm9jZXNzaW5nLCBhbmQvb3IgdXNlIG9mIHBlcnNvbmFs
+IGRhdGEgaXMgDQpwcm9oaWJpdGVkIHVubGVzcyBleHByZXNzbHkgcGVybWl0dGVkIGJ5IHBlcnNv
+bmFsIGRhdGEgcHJvdGVjdGlvbiBsYXdzLiANClRoYW5rIHlvdSBmb3IgeW91ciBhdHRlbnRpb24g
+YW5kIGNvb3BlcmF0aW9uLg0KDQpNYWNyb25peCBJbnRlcm5hdGlvbmFsIENvLiwgTHRkLg0KDQo9
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT0NCg0KDQoNCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCg0KQ09ORklERU5USUFMSVRZ
+IE5PVEU6DQoNClRoaXMgZS1tYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgbWF5IGNvbnRhaW4gY29u
+ZmlkZW50aWFsIGluZm9ybWF0aW9uIGFuZC9vciBwZXJzb25hbCBkYXRhLCB3aGljaCBpcyBwcm90
+ZWN0ZWQgYnkgYXBwbGljYWJsZSBsYXdzLiBQbGVhc2UgYmUgcmVtaW5kZWQgdGhhdCBkdXBsaWNh
+dGlvbiwgZGlzY2xvc3VyZSwgZGlzdHJpYnV0aW9uLCBvciB1c2Ugb2YgdGhpcyBlLW1haWwgKGFu
+ZC9vciBpdHMgYXR0YWNobWVudHMpIG9yIGFueSBwYXJ0IHRoZXJlb2YgaXMgcHJvaGliaXRlZC4g
+SWYgeW91IHJlY2VpdmUgdGhpcyBlLW1haWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdXMgaW1t
+ZWRpYXRlbHkgYW5kIGRlbGV0ZSB0aGlzIG1haWwgYXMgd2VsbCBhcyBpdHMgYXR0YWNobWVudChz
+KSBmcm9tIHlvdXIgc3lzdGVtLiBJbiBhZGRpdGlvbiwgcGxlYXNlIGJlIGluZm9ybWVkIHRoYXQg
+Y29sbGVjdGlvbiwgcHJvY2Vzc2luZywgYW5kL29yIHVzZSBvZiBwZXJzb25hbCBkYXRhIGlzIHBy
+b2hpYml0ZWQgdW5sZXNzIGV4cHJlc3NseSBwZXJtaXR0ZWQgYnkgcGVyc29uYWwgZGF0YSBwcm90
+ZWN0aW9uIGxhd3MuIFRoYW5rIHlvdSBmb3IgeW91ciBhdHRlbnRpb24gYW5kIGNvb3BlcmF0aW9u
+Lg0KDQpNYWNyb25peCBJbnRlcm5hdGlvbmFsIENvLiwgTHRkLg0KDQo9PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCg==
 
- .../bindings/pci/nvidia,tegra20-pcie.txt      |  15 +
- arch/arm64/boot/dts/nvidia/tegra210.dtsi      |  19 +
- drivers/pci/controller/pci-tegra.c            | 696 ++++++++++++++++--
- drivers/soc/tegra/pmc.c                       |   1 +
- 4 files changed, 656 insertions(+), 75 deletions(-)
+--=_alternative 002C4396482583CF_=
+Content-Type: text/html; charset="Big5"
+Content-Transfer-Encoding: base64
 
--- 
-2.17.1
+
+PHR0Pjxmb250IHNpemU9Mj5IaSBNYXJrLDwvZm9udD48L3R0Pg0KPGJyPjx0dD48Zm9udCBzaXpl
+PTI+PGJyPg0KJmd0OyAmcXVvdDtNYXJrIEJyb3duJnF1b3Q7ICZsdDticm9vbmllQGtlcm5lbC5v
+cmcmZ3Q7IDwvZm9udD48L3R0Pg0KPGJyPjx0dD48Zm9udCBzaXplPTI+Jmd0OyAyMDE5LzA0LzAx
+IKRVpMggMDM6NTI8L2ZvbnQ+PC90dD4NCjxicj48dHQ+PGZvbnQgc2l6ZT0yPiZndDsgPGJyPg0K
+Jmd0OyBUbzwvZm9udD48L3R0Pg0KPGJyPjx0dD48Zm9udCBzaXplPTI+Jmd0OyA8YnI+DQomZ3Q7
+ICZxdW90O01hc29uIFlhbmcmcXVvdDsgJmx0O21hc29uY2N5YW5nQG14aWMuY29tLnR3Jmd0Oywg
+PC9mb250PjwvdHQ+DQo8YnI+PHR0Pjxmb250IHNpemU9Mj4mZ3Q7IDxicj4NCiZndDsgY2M8L2Zv
+bnQ+PC90dD4NCjxicj48dHQ+PGZvbnQgc2l6ZT0yPiZndDsgPGJyPg0KJmd0OyBtYXJlay52YXN1
+dEBnbWFpbC5jb20sIGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsIGxpbnV4LTxicj4NCiZn
+dDsgc3BpQHZnZXIua2VybmVsLm9yZywgYmJyZXppbGxvbkBrZXJuZWwub3JnLCBkd213MkBpbmZy
+YWRlYWQub3JnLCA8YnI+DQomZ3Q7IGxlZS5qb25lc0BsaW5hcm8ub3JnLCByb2JoK2R0QGtlcm5l
+bC5vcmcsIG1hcmsucnV0bGFuZEBhcm0uY29tLCA8YnI+DQomZ3Q7IGNvbXB1dGVyc2ZvcnBlYWNl
+QGdtYWwuY29tLCBwYXVsLmJ1cnRvbkBtaXBzLmNvbSwgc3RlZmFuQGFnbmVyLmNoLA0KPGJyPg0K
+Jmd0OyBjaHJpc3RvcGhlLmtlcmVsbG9Ac3QuY29tLCBsaWFuZy55YW5nQGFtbG9naWMuY29tLCBn
+ZWVydEBsaW51eC08YnI+DQomZ3Q7IG02OGsub3JnLCBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+ZywgbWFyY2VsLnppc3dpbGVyQHRvcmFkZXguY29tLA0KPGJyPg0KJmd0OyBsaW51eC1tdGRAbGlz
+dHMuaW5mcmFkZWFkLm9yZywgcmljaGFyZEBub2QuYXQsIDxicj4NCiZndDsgbWlxdWVsLnJheW5h
+bEBib290bGluLmNvbSwganVsaWVuc3VAbXhpYy5jb20udHcsIHpoZW5neHVubGlAbXhpYy5jb20u
+dHc8L2ZvbnQ+PC90dD4NCjxicj48dHQ+PGZvbnQgc2l6ZT0yPiZndDsgPGJyPg0KJmd0OyBTdWJq
+ZWN0PC9mb250PjwvdHQ+DQo8YnI+PHR0Pjxmb250IHNpemU9Mj4mZ3Q7IDxicj4NCiZndDsgUmU6
+IFtQQVRDSCAzLzddIHNwaTogUGF0Y2ggTWFjcm9uaXggTVgyNUYwQSBTUEkgY29udHJvbGxlciBk
+cml2ZXI8L2ZvbnQ+PC90dD4NCjxicj48dHQ+PGZvbnQgc2l6ZT0yPiZndDsgPGJyPg0KJmd0OyBP
+biBUaHUsIE1hciAyOCwgMjAxOSBhdCAwNjoxODozNFBNICswODAwLCBNYXNvbiBZYW5nIHdyb3Rl
+Ojxicj4NCiZndDsgJmd0OyBQYXRjaCBhIE1GRCBkcml2ZXIgZm9yIE1hY3Jvbml4IE1YMjVGMEEg
+U1BJIGNvbnRyb2xsZXIuPGJyPg0KJmd0OyAmZ3Q7IDxicj4NCiZndDsgJmd0OyBTaWduZWQtb2Zm
+LWJ5OiBNYXNvbiBZYW5nICZsdDttYXNvbmNjeWFuZ0BteGljLmNvbS50dyZndDs8YnI+DQomZ3Q7
+IDxicj4NCiZndDsgSSBjYW4ndCB0ZWxsIHdoYXQgdGhpcyBjb21taXQgaXMgc3VwcG9zZWQgdG8g
+ZG8gYmFzZWQgb24gdGhpcyBjb21taXQ8YnI+DQomZ3Q7IG1lc3NhZ2Ugd2hpY2ggbWFrZXMgaXQg
+aGFyZCB0byByZXZpZXcgOig8L2ZvbnQ+PC90dD4NCjxicj4NCjxicj48dHQ+PGZvbnQgc2l6ZT0y
+Pk9vcHMsIHNvcnJ5ICE8L2ZvbnQ+PC90dD4NCjxicj48dHQ+PGZvbnQgc2l6ZT0yPkkgd2lsbCBz
+ZXBhcmF0ZSB0aGVzZSBwYXRjaHNldCBhbmQgcmVzdWJtaXQgaXQgbGF0ZXIuPC9mb250PjwvdHQ+
+DQo8YnI+DQo8YnI+PHR0Pjxmb250IHNpemU9Mj5iZXN0IHJlZ2FyZHMsPC9mb250PjwvdHQ+DQo8
+YnI+PHR0Pjxmb250IHNpemU9Mj5NYXNvbjxicj4NCjxicj4NCjxicj4NCkNPTkZJREVOVElBTElU
+WSBOT1RFOjxicj4NCjxicj4NClRoaXMgZS1tYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgbWF5IGNv
+bnRhaW4gY29uZmlkZW50aWFsIGluZm9ybWF0aW9uIGFuZC9vcg0KcGVyc29uYWwgZGF0YSwgd2hp
+Y2ggaXMgcHJvdGVjdGVkIGJ5IGFwcGxpY2FibGUgbGF3cy4gUGxlYXNlIGJlIHJlbWluZGVkDQp0
+aGF0IGR1cGxpY2F0aW9uLCBkaXNjbG9zdXJlLCBkaXN0cmlidXRpb24sIG9yIHVzZSBvZiB0aGlz
+IGUtbWFpbCAoYW5kL29yDQppdHMgYXR0YWNobWVudHMpIG9yIGFueSBwYXJ0IHRoZXJlb2YgaXMg
+cHJvaGliaXRlZC4gSWYgeW91IHJlY2VpdmUgdGhpcw0KZS1tYWlsIGluIGVycm9yLCBwbGVhc2Ug
+bm90aWZ5IHVzIGltbWVkaWF0ZWx5IGFuZCBkZWxldGUgdGhpcyBtYWlsIGFzIHdlbGwNCmFzIGl0
+cyBhdHRhY2htZW50KHMpIGZyb20geW91ciBzeXN0ZW0uIEluIGFkZGl0aW9uLCBwbGVhc2UgYmUg
+aW5mb3JtZWQNCnRoYXQgY29sbGVjdGlvbiwgcHJvY2Vzc2luZywgYW5kL29yIHVzZSBvZiBwZXJz
+b25hbCBkYXRhIGlzIHByb2hpYml0ZWQNCnVubGVzcyBleHByZXNzbHkgcGVybWl0dGVkIGJ5IHBl
+cnNvbmFsIGRhdGEgcHJvdGVjdGlvbiBsYXdzLiBUaGFuayB5b3UNCmZvciB5b3VyIGF0dGVudGlv
+biBhbmQgY29vcGVyYXRpb24uPGJyPg0KPGJyPg0KTWFjcm9uaXggSW50ZXJuYXRpb25hbCBDby4s
+IEx0ZC48YnI+DQo8YnI+DQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT08YnI+DQo8L2ZvbnQ+PC90dD4NCg==
+
+--=_alternative 002C4396482583CF_=--
