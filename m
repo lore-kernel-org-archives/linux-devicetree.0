@@ -1,67 +1,193 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH v5 6/7] ARM: dts: rockchip: Specify rk3288-veyron-chromebook's
- display timings
-Date: Mon,  1 Apr 2019 10:17:23 -0700
-Message-ID: <20190401171724.215780-7-dianders@chromium.org>
-References: <20190401171724.215780-1-dianders@chromium.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 15/15] arm64: dts: marvell: Convert 7k/8k usb-phy properties
+ to phy-supply
+Date: Mon,  1 Apr 2019 18:51:31 +0200
+Message-ID: <20190401165131.23370-16-miquel.raynal@bootlin.com>
+References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190401171724.215780-1-dianders@chromium.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Sean Paul <seanpaul@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Boris Brezillon <boris.brezillon@collabora.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?q?Enric=20Balletb=C3=B2?= <enric.balletbo@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, mka@chromium.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190401165131.23370-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-TGV0J3MgZG9jdW1lbnQgdGhlIGRpc3BsYXkgdGltaW5ncyB0aGF0IG1vc3QgdmV5cm9uIGNocm9t
-ZWJvb2tzIChsaWtlCmphcSwgamVycnksIG1pZ2h0eSwgc3BlZWR5KSBoYXZlIGJlZW4gdXNpbmcg
-b3V0IGluIHRoZSBmaWVsZC4gIFRoaXMKdXNlcyB0aGUgc3RhbmRhcmQgYmxhbmtpbmdzIGJ1dCBh
-IHNsaWdodGx5IHNsb3dlciBjbG9jayByYXRlLCB0aHVzCmdldHRpbmcgYSByZWZyZXNoIHJhdGUg
-NTguMyBIei4KCk5PVEU6IHRoaXMgd29uJ3QgcmVhbGx5IGRvIGFueXRoaW5nIGV4Y2VwdCBjYXVz
-ZSBEUk0gdG8gcHJvcGVybHkKcmVwb3J0IHRoZSByZWZyZXNoIHJhdGUgc2luY2Ugdm9wX2NydGNf
-bW9kZV9maXh1cCgpIHdhcyByb3VuZGluZyB0aGUKcGl4ZWwgY2xvY2sgdG8gNzQuMjUgTUh6IGFu
-eXdheS4gIEFwcGFyZW50bHkgdGhlIGFkanVzdGVkIHJhdGUgaXNuJ3QKZXhwb3NlZCB0byB1c2Vy
-c3BhY2Ugc28gaXQncyBpbXBvcnRhbnQgdGhhdCB0aGUgcmF0ZSB3ZSdyZSB0cnlpbmcgdG8KYWNo
-aWV2ZSBpcyBtb3N0bHkgcmlnaHQuCgpGb3IgdGhlIGRvd25zdHJlYW0ga2VybmVsIGNoYW5nZSBy
-ZWxhdGVkIHRvIHRoaXMgc2VlIFNlZQpodHRwczovL2NycmV2LmNvbS9jLzMyNDU1OC4KCk5PVEU6
-IG1pbm5pZSB1c2VzIGEgZGlmZmVyZW50IHBhbmVsIHdpbGwgYmUgZml4ZWQgdXAgaW4gYSBmdXR1
-cmUKcGF0Y2gsIHNvIGZvciBub3cgd2UnbGwganVzdCBkZWxldGUgdGhlIHBhbmVsIHRpbWluZ3Mg
-dGhlcmUuCgpTaWduZWQtb2ZmLWJ5OiBEb3VnbGFzIEFuZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1
-bS5vcmc+Ci0tLQoKQ2hhbmdlcyBpbiB2NToKLSBJdCdzIG5vdCBqdXN0IGplcnJ5LCBpdCdzIG1v
-c3QgcmszMjg4IENocm9tZWJvb2tzIChIZWlrbykKCkNoYW5nZXMgaW4gdjQ6Ci0gcmszMjg4LXZl
-eXJvbi1qZXJyeSBwYXRjaCBuZXcgZm9yIHY0LgoKQ2hhbmdlcyBpbiB2MzogTm9uZQpDaGFuZ2Vz
-IGluIHYyOiBOb25lCgogYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LXZleXJvbi1jaHJvbWVib29r
-LmR0c2kgfCAxNCArKysrKysrKysrKysrKwogYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LXZleXJv
-bi1taW5uaWUuZHRzICAgICAgfCAgMiArKwogMiBmaWxlcyBjaGFuZ2VkLCAxNiBpbnNlcnRpb25z
-KCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LXZleXJvbi1jaHJvbWVi
-b29rLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9yazMyODgtdmV5cm9uLWNocm9tZWJvb2suZHRz
-aQppbmRleCBiNTQ3NDZkZjM2NjEuLjBiMTc4OWI1MGMyMSAxMDA2NDQKLS0tIGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvcmszMjg4LXZleXJvbi1jaHJvbWVib29rLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvcmszMjg4LXZleXJvbi1jaHJvbWVib29rLmR0c2kKQEAgLTc2LDYgKzc2LDIwIEBACiAJ
-CXBvd2VyLXN1cHBseSA9IDwmdmNjMzNfbGNkPjsKIAkJYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+
-OwogCisJCXBhbmVsLXRpbWluZyB7CisJCQljbG9jay1mcmVxdWVuY3kgPSA8NzQyNTAwMDA+Owor
-CQkJaGFjdGl2ZSA9IDwxMzY2PjsKKwkJCWhmcm9udC1wb3JjaCA9IDwxMzY+OworCQkJaGJhY2st
-cG9yY2ggPSA8NjA+OworCQkJaHN5bmMtbGVuID0gPDMwPjsKKwkJCWhzeW5jLWFjdGl2ZSA9IDww
-PjsKKwkJCXZhY3RpdmUgPSA8NzY4PjsKKwkJCXZmcm9udC1wb3JjaCA9IDw4PjsKKwkJCXZiYWNr
-LXBvcmNoID0gPDEyPjsKKwkJCXZzeW5jLWxlbiA9IDwxMj47CisJCQl2c3luYy1hY3RpdmUgPSA8
-MD47CisJCX07CisKIAkJcG9ydHMgewogCQkJcGFuZWxfaW46IHBvcnQgewogCQkJCXBhbmVsX2lu
-X2VkcDogZW5kcG9pbnQgewpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LXZl
-eXJvbi1taW5uaWUuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LXZleXJvbi1taW5uaWUu
-ZHRzCmluZGV4IGY5NWQwYzVmY2Y3MS4uY2E3NTEyYWRlMjIyIDEwMDY0NAotLS0gYS9hcmNoL2Fy
-bS9ib290L2R0cy9yazMyODgtdmV5cm9uLW1pbm5pZS5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvcmszMjg4LXZleXJvbi1taW5uaWUuZHRzCkBAIC0xNDIsNiArMTQyLDggQEAKICZwYW5lbCB7
-CiAJY29tcGF0aWJsZSA9ICJhdW8sYjEwMWVhbjAxIiwgInNpbXBsZS1wYW5lbCI7CiAJcG93ZXIt
-c3VwcGx5PSA8JnBhbmVsX3JlZ3VsYXRvcj47CisKKwkvZGVsZXRlLW5vZGUvIHBhbmVsLXRpbWlu
-ZzsKIH07CiAKICZyazgwOCB7Ci0tIAoyLjIxLjAuMzkyLmdmOGY2Nzg3MTU5ZS1nb29nCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Update Aramda 7k/8k DTs to use the phy-supply property of the (recent)
+generic PHY framework instead of the (legacy) usb-phy preperty. Both
+enable the supply when the PHY is enabled.
+
+The COMPHY nodes only provide SERDES lanes configuration. The power
+supply that is represented by the phy-supply property is just a
+regulator wired to the USB connector, hence the creation of connector
+nodes as child of the COMPHY nodes and the supply attached to it.
+
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ .../arm64/boot/dts/marvell/armada-7040-db.dts | 26 ++++++++++---------
+ .../marvell/armada-8040-clearfog-gt-8k.dts    | 13 +++++-----
+ .../arm64/boot/dts/marvell/armada-8040-db.dts | 13 +++++-----
+ .../boot/dts/marvell/armada-8040-mcbin.dtsi   | 13 +++++-----
+ 4 files changed, 35 insertions(+), 30 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/marvell/armada-7040-db.dts b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
+index 131ce4229db0..4b8df359b1cc 100644
+--- a/arch/arm64/boot/dts/marvell/armada-7040-db.dts
++++ b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
+@@ -45,16 +45,6 @@
+ 		enable-active-high;
+ 		gpio = <&expander0 1 GPIO_ACTIVE_HIGH>;
+ 	};
+-
+-	cp0_usb3_0_phy: cp0-usb3-0-phy {
+-		compatible = "usb-nop-xceiv";
+-		vcc-supply = <&cp0_reg_usb3_0_vbus>;
+-	};
+-
+-	cp0_usb3_1_phy: cp0-usb3-1-phy {
+-		compatible = "usb-nop-xceiv";
+-		vcc-supply = <&cp0_reg_usb3_1_vbus>;
+-	};
+ };
+ 
+ &i2c0 {
+@@ -200,15 +190,27 @@
+ 	};
+ };
+ 
++&cp0_comphy1 {
++	cp0_usbh0_con: connector {
++		compatible = "usb-a-connector";
++		phy-supply = <&cp0_reg_usb3_0_vbus>;
++	};
++};
++
+ &cp0_usb3_0 {
+-	usb-phy = <&cp0_usb3_0_phy>;
+ 	phys = <&cp0_comphy1 0>;
+ 	phy-names = "cp0-usb3h0-comphy";
+ 	status = "okay";
+ };
+ 
++&cp0_comphy4 {
++	cp0_usbh1_con: connector {
++		compatible = "usb-a-connector";
++		phy-supply = <&cp0_reg_usb3_1_vbus>;
++	};
++};
++
+ &cp0_usb3_1 {
+-	usb-phy = <&cp0_usb3_1_phy>;
+ 	phys = <&cp0_comphy4 1>;
+ 	phy-names = "cp0-usb3h1-comphy";
+ 	status = "okay";
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+index b3716d206fbf..58b7e859b61d 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
++++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+@@ -51,11 +51,6 @@
+ 		status = "okay";
+ 	};
+ 
+-	usb3h0_phy: usb3_phy0 {
+-		compatible = "usb-nop-xceiv";
+-		vcc-supply = <&v_5v0_usb3_hst_vbus>;
+-	};
+-
+ 	sfp_cp0_eth0: sfp-cp0-eth0 {
+ 		compatible = "sff,sfp";
+ 		i2c-bus = <&cp0_i2c1>;
+@@ -462,8 +457,14 @@
+ 	};
+ };
+ 
++&cp1_comphy2 {
++	cp1_usbh0_con: connector {
++		compatible = "usb-a-connector";
++		phy-supply = <&v_5v0_usb3_hst_vbus>;
++	};
++};
++
+ &cp1_usb3_0 {
+-	usb-phy = <&usb3h0_phy>;
+ 	phys = <&cp1_comphy2 0>;
+ 	phy-names = "cp1-usb3h0-comphy";
+ 	status = "okay";
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-db.dts b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+index 91c51188650a..f73cb3a96393 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-db.dts
++++ b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+@@ -52,11 +52,6 @@
+ 		vcc-supply = <&cp0_reg_usb3_0_vbus>;
+ 	};
+ 
+-	cp0_usb3_1_phy: cp0-usb3-1-phy {
+-		compatible = "usb-nop-xceiv";
+-		vcc-supply = <&cp0_reg_usb3_1_vbus>;
+-	};
+-
+ 	cp1_reg_usb3_0_vbus: cp1-usb3-0-vbus {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "cp1-usb3h0-vbus";
+@@ -167,9 +162,15 @@
+ 	status = "okay";
+ };
+ 
++&cp0_comphy4 {
++	cp0_usbh1_con: connector {
++		compatible = "usb-a-connector";
++		phy-supply = <&cp0_reg_usb3_1_vbus>;
++	};
++};
++
+ /* CON10 on CP0 expansion */
+ &cp0_usb3_1 {
+-	usb-phy = <&cp0_usb3_1_phy>;
+ 	phys = <&cp0_comphy4 1>;
+ 	phy-names = "cp0-usb3h1-comphy";
+ 	status = "okay";
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
+index 0639437ab4b4..061533589356 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
+@@ -61,11 +61,6 @@
+ 		status = "okay";
+ 	};
+ 
+-	usb3h0_phy: usb3_phy0 {
+-		compatible = "usb-nop-xceiv";
+-		vcc-supply = <&v_5v0_usb3_hst_vbus>;
+-	};
+-
+ 	sfp_eth0: sfp-eth0 {
+ 		/* CON15,16 - CPM lane 4 */
+ 		compatible = "sff,sfp";
+@@ -357,9 +352,15 @@
+ 	};
+ };
+ 
++&cp1_comphy2 {
++	cp1_usbh0_con: connector {
++		compatible = "usb-a-connector";
++		phy-supply = <&v_5v0_usb3_hst_vbus>;
++	};
++};
++
+ &cp1_usb3_0 {
+ 	/* CPS Lane 2 - CON7 */
+-	usb-phy = <&usb3h0_phy>;
+ 	phys = <&cp1_comphy2 0>;
+ 	phy-names = "cp1-usb3h0-comphy";
+ 	status = "okay";
+-- 
+2.19.1
