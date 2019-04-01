@@ -1,63 +1,77 @@
-From: Jordan Crouse <jcrouse@codeaurora.org>
-Subject: Re: [PATCH v1 3/4] dt-bindings: drm/msm/gpu: Document a5xx / a6xx
- zap shader region
-Date: Mon, 1 Apr 2019 10:13:24 -0600
-Message-ID: <20190401161324.GC10168@jcrouse1-lnx.qualcomm.com>
-References: <1552414422-9568-1-git-send-email-jcrouse@codeaurora.org>
- <1552414422-9568-4-git-send-email-jcrouse@codeaurora.org>
- <20190328133215.GA14020@bogus>
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH 1/2] edac: sifive: Add DT documentation for SiFive L2
+ cache Controller
+Date: Mon, 1 Apr 2019 17:36:01 +0100
+Message-ID: <8e574cfa-29d9-0f0a-d670-c4869bd262c4@arm.com>
+References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
+ <1552382461-13051-2-git-send-email-yash.shah@sifive.com>
+ <20190328131657.GA9056@bogus> <be7246a0-2426-995d-0a24-f104c173d752@arm.com>
+ <CAL_Jsq+s77J=Bwiyow2d7Q=e+z+5d64i_cL6xaYn0xdvJDb4Vg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190328133215.GA14020@bogus>
+In-Reply-To: <CAL_Jsq+s77J=Bwiyow2d7Q=e+z+5d64i_cL6xaYn0xdvJDb4Vg@mail.gmail.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: freedreno@lists.freedesktop.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: Yash Shah <yash.shah@sifive.com>, linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Borislav Petkov <bp@alien8.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 08:32:15AM -0500, Rob Herring wrote:
-> On Tue, Mar 12, 2019 at 12:13:41PM -0600, Jordan Crouse wrote:
-> > Describe the zap-shader node that defines a reserved memory region
-> > to store the zap shader.
-> > 
-> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> > ---
-> > 
-> >  Documentation/devicetree/bindings/display/msm/gpu.txt | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/display/msm/gpu.txt b/Documentation/devicetree/bindings/display/msm/gpu.txt
-> > index aad1aef..1e6d870 100644
-> > --- a/Documentation/devicetree/bindings/display/msm/gpu.txt
-> > +++ b/Documentation/devicetree/bindings/display/msm/gpu.txt
-> > @@ -25,6 +25,9 @@ Required properties:
-> >  - qcom,gmu: For GMU attached devices a phandle to the GMU device that will
-> >    control the power for the GPU. Applicable targets:
-> >      - qcom,adreno-630.2
-> > +- zap-shader: For a5xx and a6xx devices this node contains a memory-region that
-> > +  points to reserved memory to store the zap shader that can be used to help
-> > +  bring the GPU out of secure mode.
+Hi Rob,
+
+On 29/03/2019 14:11, Rob Herring wrote:
+> On Thu, Mar 28, 2019 at 1:47 PM James Morse <james.morse@arm.com> wrote:
+>> On 28/03/2019 13:16, Rob Herring wrote:
+>>> On Tue, Mar 12, 2019 at 02:51:00PM +0530, Yash Shah wrote:
+>>>> DT documentation for L2 cache controller added.
+
+>>>> diff --git a/Documentation/devicetree/bindings/edac/sifive-edac-l2.txt b/Documentation/devicetree/bindings/edac/sifive-edac-l2.txt
+>>>> new file mode 100644
+>>>> index 0000000..abce09f
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/edac/sifive-edac-l2.txt
+>>>> @@ -0,0 +1,31 @@
+>>>> +SiFive L2 Cache EDAC driver device tree bindings
+>>>> +-------------------------------------------------
+>>>> +This driver uses the EDAC framework to report L2 cache controller ECC errors.
+>>>
+>>> Bindings are for h/w blocks, not drivers. (And Boris may want a single
+>>> driver, but bindings should reflect the h/w, not what Linux (currently)
+>>> wants.
+>>
+>> For h/w block compatibles and edac, I think all we need now is to ensure the DT contains
+>> the three compatible strings: platform (if there is one), soc and ip-name (if its a
+>> re-usable thing).
+>> This is so that linux can pick the biggest of the three (usually platform) to probe the
+>> driver from, as this lets us capture platform properties we only find out about later.
 > 
-> This is the properties section and zap-shader is not a property.
+> DT is not the only what to instantiate drivers. If the OS really wants
+> to have a single driver for multiple h/w blocks, then it needs to
+> instantiate a driver itself (based on the top-level compatible
+> probably) and then that driver can find the DT nodes it needs itself.
 
-Thanks, I can fix that.
+I think this is where we are heading. (but I need to get my head round this top-level thing).
 
-> But why do you need a child node in the first place? Just add 
-> 'memory-region' to the parent.
+Can the OS do both, depending on the platform?
+e.g. on a system with one component the driver runs 'standalone', whereas on a bigger
+system with multiple components the same driver is used as a library by something else.
 
-Two reasons.  First, this memory is locked in the secure world once the MDT
-loader is run and it isn't really intended for CPU access. If the parent device
-tries to set up DMA operations thinking it has access to the memory it might not
-work out very well.  Putting it in a child makes it clear that this is a special
-chunk of memory for a special case.
+I don't see how this would work if the common component's DT entry looks the same on both
+platforms. Wouldn't this depend on the order stuff is done in, or 'but not this one'
+checks in the driver?
 
-The second reason is that not all target platforms require the zap shader, so it
-would be nice to have it as a child node so that it could be removed on target
-platforms that don't need it.
 
-Jordan
+> In any case, it's all irrelevant to the DT binding. We don't design
+> bindings around what some particular OS wants.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I agree.
+
+What we want to do is spot the problems on the horizon so we either have the right
+information in the DT today, or at least know what it looks like so we don't cause a
+regression when a new platform makes previous behaviour generic/a-library.
+
+
+Thanks,
+
+James
