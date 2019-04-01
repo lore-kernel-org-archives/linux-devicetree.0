@@ -1,165 +1,77 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v4] dt-bindings: gpu: add bindings for the ARM Mali
- Bifrost GPU
-Date: Mon, 1 Apr 2019 13:24:40 +0200
-Message-ID: <d26f1ce9-c56c-5e51-37f5-0689aa198dc0@baylibre.com>
-References: <20190401080949.14550-1-narmstrong@baylibre.com>
- <1640dd7b-3576-d9ce-0641-6b6a64a87275@arm.com>
+From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: sun8i: a83t: Add missing
+ CPU clock references
+Date: Mon, 1 Apr 2019 13:30:47 +0200
+Message-ID: <20190401113047.uudhhl7zecdskfrb@core.my.home>
+References: <20190328113159.9668-1-megous@megous.com>
+ <20190328113159.9668-3-megous@megous.com>
+ <20190401082242.ashnencaiubbidor@flea>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1640dd7b-3576-d9ce-0641-6b6a64a87275@arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steven Price <steven.price@arm.com>, daniel@ffwll.ch, robh@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDXLF6FR5INBB2PMQ7SQKGQE64TEECI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20190401082242.ashnencaiubbidor@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/04/2019 12:00, Steven Price wrote:
-> On 01/04/2019 09:09, Neil Armstrong wrote:
->> Add the bindings for the Bifrost family of ARM Mali GPUs.
->>
->> The Bifrost GPU architecture is similar to the Midgard family,
->> but with a different Shader Core & Execution Engine structures.
->>
->> Bindings are based on the Midgard family bindings, but the inner
->> architectural changes makes it a separate family needing separate
->> bindings.
->>
->> The Bifrost GPUs are present in a number of recent SoCs, like the
->> Amlogic G12A Family, and many other vendors.
->> The Amlogic vendor specific compatible is added to handle the
->> specific IP integration differences and dependencies.
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  .../bindings/gpu/arm,mali-bifrost.txt         | 92 +++++++++++++++++++
->>  1 file changed, 92 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
->>
->> Changes since v3:
->> - Added note about discoverable model/revision
->> - Enforced fixed defined irq order
->> - Fixed typo in accommodate
->>
->> Changes since v2:
->> - moved to a single compatible since HW is fully discoverable
->>
->> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
->> new file mode 100644
->> index 000000000000..711c9ead17a2
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
->> @@ -0,0 +1,92 @@
->> +ARM Mali Bifrost GPU
->> +====================
->> +
->> +Required properties:
->> +
->> +- compatible :
->> +  * Since Mali Bifrost GPU model/revision if fully discoverable by reading
->                                              ^^
-> s/if/is/
+Hello Maxime,
 
-Thanks for pointing this.
+On Mon, Apr 01, 2019 at 10:22:42AM +0200, Maxime Ripard wrote:
+> Hi,
+> 
+> On Thu, Mar 28, 2019 at 12:31:59PM +0100, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
+> > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> >
+> > A83T DTSI has cpu clocks defined only on the first CPU in each cluster.
+> > We can bring down any CPU in the cluster, so we need to define clock
+> > for each CPU, so that the system knows what clock to use if the first
+> > CPU is down.
+> >
+> > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/sun8i-a83t.dtsi | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > index 7a40b7d77ec0..1b0b025b9250 100644
+> > --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > @@ -73,6 +73,8 @@
+> >  		};
+> >
+> >  		cpu@1 {
+> > +			clocks = <&ccu CLK_C0CPUX>;
+> 
+> Usually we'll have the compatible first
 
-> 
->> +    some determined registers, must contain the following:
->> +    + "arm,mali-bifrost"
->> +  * which must be preceded by one of the following vendor specifics:
->> +    + "amlogic,meson-g12a-mali"
->> +
->> +- reg : Physical base address of the device and length of the register area.
->> +
->> +- interrupts : Contains the three IRQ lines required by Mali Bifrost devices,
->> +  in the following defined order.
->> +
->> +- interrupt-names : Contains the names of IRQ resources in this exact defined
->> +  order: "job", "mmu", "gpu".
-> 
-> Is there any point in having "interrupt-names" if we're fixing the
-> order? Although I guess it helps match the Midgard bindings.
+I'll re-order it.
 
-Exact.
+> > +			clock-names = "cpu";
+> 
+> And that's not documented anywhere?
 
-Neil
+Cpufreq doesn't use CPU clock names, except for the mediatek cpufreq driver.
 
+It's not docummented explicitly, except it's used as part of examples in
+bindings/opp/opp.txt.
+
+I guess I can safely drop it, but other will probably keep using it, because
+it's part of the examples.
+
+thank you and regards,
+  Ondrej
+
+> Maxime
 > 
-> Steve
-> 
->> +
->> +Optional properties:
->> +
->> +- clocks : Phandle to clock for the Mali Bifrost device.
->> +
->> +- mali-supply : Phandle to regulator for the Mali device. Refer to
->> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
->> +
->> +- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
->> +  for details.
->> +
->> +- resets : Phandle of the GPU reset line.
->> +
->> +Vendor-specific bindings
->> +------------------------
->> +
->> +The Mali GPU is integrated very differently from one SoC to
->> +another. In order to accommodate those differences, you have the option
->> +to specify one more vendor-specific compatible, among:
->> +
->> +- "amlogic,meson-g12a-mali"
->> +  Required properties:
->> +  - resets : Should contain phandles of :
->> +    + GPU reset line
->> +    + GPU APB glue reset line
->> +
->> +Example for a Mali-G31:
->> +
->> +gpu@ffa30000 {
->> +	compatible = "amlogic,meson-g12a-mali", "arm,mali-bifrost";
->> +	reg = <0xffe40000 0x10000>;
->> +	interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
->> +		     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
->> +		     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
->> +	interrupt-names = "job", "mmu", "gpu";
->> +	clocks = <&clk CLKID_MALI>;
->> +	mali-supply = <&vdd_gpu>;
->> +	operating-points-v2 = <&gpu_opp_table>;
->> +	resets = <&reset RESET_DVALIN_CAPB3>, <&reset RESET_DVALIN>;
->> +};
->> +
->> +gpu_opp_table: opp_table0 {
->> +	compatible = "operating-points-v2";
->> +
->> +	opp@533000000 {
->> +		opp-hz = /bits/ 64 <533000000>;
->> +		opp-microvolt = <1250000>;
->> +	};
->> +	opp@450000000 {
->> +		opp-hz = /bits/ 64 <450000000>;
->> +		opp-microvolt = <1150000>;
->> +	};
->> +	opp@400000000 {
->> +		opp-hz = /bits/ 64 <400000000>;
->> +		opp-microvolt = <1125000>;
->> +	};
->> +	opp@350000000 {
->> +		opp-hz = /bits/ 64 <350000000>;
->> +		opp-microvolt = <1075000>;
->> +	};
->> +	opp@266000000 {
->> +		opp-hz = /bits/ 64 <266000000>;
->> +		opp-microvolt = <1025000>;
->> +	};
->> +	opp@160000000 {
->> +		opp-hz = /bits/ 64 <160000000>;
->> +		opp-microvolt = <925000>;
->> +	};
->> +	opp@100000000 {
->> +		opp-hz = /bits/ 64 <100000000>;
->> +		opp-microvolt = <912500>;
->> +	};
->> +};
->>
-> 
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
