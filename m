@@ -1,74 +1,52 @@
-From: =?UTF-8?B?S2FuZW1hdHN1LCBTaGluamkv5YW85p2+IOS8uOasoQ==?=
-        <kanematsu.shinji@socionext.com>
-Subject: Re: [PATCH 0/2] Add Updown Counter support for Milbeaut M10V SoC
-Date: Tue, 2 Apr 2019 11:12:32 +0900
-Message-ID: <9522af01-1017-08d5-73c7-8b81b749c29a@socionext.com>
-References: <1553581954-13487-1-git-send-email-kanematsu.shinji@socionext.com>
- <20190330183603.55886d4f@archlinux>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH v2 0/3] drm: Add ASPEED BMC 'GFX' driver
+Date: Tue,  2 Apr 2019 12:49:30 +1030
+Message-ID: <20190402021933.13071-1-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190330183603.55886d4f@archlinux>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, orito.takao@socionext.com, sugaya.taichi@socionext.com, kasai.kazuhiro@socionext.com, William Breathitt Gray <vilhelm.gray@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Andrew Jeffery <andrew@aj.id.au>, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
-
-On 2019/03/31 3:36, Jonathan Cameron wrote:
-> On Tue, 26 Mar 2019 15:32:34 +0900
-> Shinji Kanematsu <kanematsu.shinji@socionext.com> wrote:
-> 
->> This is a series of patch which adds Updown Counter support on
->> Milbeaut M10V SoC.
->>
->> The Updown Counter counts input pulse signal from external quadrature encoder.
->> It also has input pulse signal counter function.
-> Hi Shinji,
-> 
-> Are you aware of the counter subsystem that has been proposed (and
-> as far as I am concerned is ready to be merged)?
-> 
-> https://patchwork.kernel.org/project/linux-iio/list/?series=147
-> (I think that's the latest version posted)..
-> William, perhaps you could give an update?
-> 
-> (bad luck, you are getting popular ;)
-> 
-> I'll take a quick review as it stands, as some issues may carry over.
-> I appreciate that it's always unfortunate to try to upstream stuff at the
-> same time as a new framework is being developed / upstreamed, but I don't
-> intend to take any additional counter drivers into IIO.  We just
-> end up having to maintain old interfaces in more and more drivers.
-> 
-
-Thank you for your reply.
-I just learned that upstream requires the counter subsystem.
-Detailed information was given by William.
-
-Thank you,
-Kanematsu
-
-> Thanks,
-> 
-> Jonathan
-> 
->>
->> Shinji Kanematsu (2):
->>    dt-bindings: iio: counter: Add Milbeaut Updown Counter
->>    iio: counter: Add support for Milbeaut Updown Counter
->>
->>   .../bindings/iio/counter/milbeaut-updown_cnt.txt   |  22 ++
->>   drivers/iio/counter/Kconfig                        |  12 +
->>   drivers/iio/counter/Makefile                       |   1 +
->>   drivers/iio/counter/milbeaut-updown.h              |  38 ++
->>   drivers/iio/counter/milbeaut-updown_cnt.c          | 385 +++++++++++++++++++++
->>   5 files changed, 458 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
->>   create mode 100644 drivers/iio/counter/milbeaut-updown.h
->>   create mode 100644 drivers/iio/counter/milbeaut-updown_cnt.c
->>
-> 
+djI6IEFkZHJlc3MgcmV2aWV3IGZyb20gTm9yYWxmIGFuZCBEYW5pZWwsIGFkZCBtYWludGFpbmVy
+cyBwYXRjaAoKVGhpcyBkcml2ZXIgaXMgZm9yIHRoZSBBU1BFRUQgQk1DIFNvQydzIEdGWCBkaXNw
+bGF5IGhhcmR3YXJlLiBUaGlzCmRyaXZlciBydW5zIG9uIHRoZSBBUk0gYmFzZWQgQk1DIHN5c3Rl
+bXMsIHVubGlrZSB0aGUgYXN0IGRyaXZlciB3aGljaApydW5zIG9uIGEgaG9zdCBDUFUgYW5kIGlz
+IGlzIGZvciBhIFBDSWUgZ3JhcGhpY3MgZGV2aWNlIHRoYXQgaGFwcGVucyB0bwpsaXZlIGluIHRo
+ZSBCTUMncyBzaWxpY29uLCBidXQgaXMgb3RoZXJ3aXNlIGF2YWlsYWJsZSBmb3IgdXNlIGJ5IHRo
+ZQpCTUMuCgpKb2VsIFN0YW5sZXkgKDMpOgogIGR0LWJpbmRpbmdzOiBncHU6IEFkZCBBU1BFRUQg
+R0ZYIGJpbmRpbmdzIGRvY3VtZW50CiAgZHJtOiBBZGQgQVNQRUVEIEdGWCBkcml2ZXIKICBNQUlO
+VEFJTkVSUzogQWRkIEFTUEVFRCBCTUMgR0ZYIERSTSBkcml2ZXIgZW50cnkKCiAuLi4vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9ncHUvYXNwZWVkLWdmeC50eHQgICAgfCAgNDEgKysrCiBNQUlOVEFJTkVS
+UyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDggKwogZHJpdmVycy9ncHUv
+ZHJtL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKIGRyaXZlcnMvZ3B1L2Ry
+bS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0v
+YXNwZWVkL0tjb25maWcgICAgICAgICAgICAgICAgfCAgMTQgKwogZHJpdmVycy9ncHUvZHJtL2Fz
+cGVlZC9NYWtlZmlsZSAgICAgICAgICAgICAgIHwgICAzICsKIGRyaXZlcnMvZ3B1L2RybS9hc3Bl
+ZWQvYXNwZWVkX2dmeC5oICAgICAgICAgICB8IDEwNCArKysrKysrCiBkcml2ZXJzL2dwdS9kcm0v
+YXNwZWVkL2FzcGVlZF9nZnhfY3J0Yy5jICAgICAgfCAyMzkgKysrKysrKysrKysrKysrKwogZHJp
+dmVycy9ncHUvZHJtL2FzcGVlZC9hc3BlZWRfZ2Z4X2Rydi5jICAgICAgIHwgMjY2ICsrKysrKysr
+KysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL2FzcGVlZC9hc3BlZWRfZ2Z4X291dC5jICAgICAg
+IHwgIDQyICsrKwogMTAgZmlsZXMgY2hhbmdlZCwgNzIwIGluc2VydGlvbnMoKykKIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FzcGVlZC1n
+ZngudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2FzcGVlZC9LY29uZmln
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2FzcGVlZC9NYWtlZmlsZQogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9hc3BlZWQvYXNwZWVkX2dmeC5oCiBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2FzcGVlZC9hc3BlZWRfZ2Z4X2NydGMuYwog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9hc3BlZWQvYXNwZWVkX2dmeF9kcnYu
+YwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9hc3BlZWQvYXNwZWVkX2dmeF9v
+dXQuYwoKLS0gCjIuMjAuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVs
