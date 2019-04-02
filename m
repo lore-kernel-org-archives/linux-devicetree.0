@@ -1,47 +1,123 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [BUG/PATCH 0/4] gpiolib: fix issues with legacy spi-cs-high handling
-Date: Tue, 2 Apr 2019 10:19:19 +0700
-Message-ID: <CACRpkdaM4t6c5gkLxv6CS559o_X=r14oP4=VoEhzyH4Du9socg@mail.gmail.com>
-References: <cover.1554026842.git.hns@goldelico.com> <2D0BC383-A57A-4C36-AC48-539B4E8811C0@goldelico.com>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: Re: [PATCH v8 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Date: Mon, 01 Apr 2019 23:42:53 -0400
+Message-ID: <e33bc539-2350-4b7d-9833-df270383b062@www.fastmail.com>
+References: <20190329151025.204094-1-venture@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2D0BC383-A57A-4C36-AC48-539B4E8811C0@goldelico.com>
+In-Reply-To: <20190329151025.204094-1-venture@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linux-OMAP <linux-omap@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+To: Patrick Venture <venture@google.com>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, Joel Stanley <joel@jms.id.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 1, 2019 at 11:59 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+Hi Patrick,
 
-> I learned just some minutes ago that a new patch for gpiolib
-> came through 5.1-rc3 which does fix this in almost the same way
-> as I proposed.
+I held off on reviewing this until we'd hashed out what we needed in the driver.
 
-I am sorry for not being very attentive, I have been travelling.
-I collected the most urgent fixes and this was fixed as part of
-that quick patchup.
+I have some comments below.
 
-> Except that it seems to check for "cs-gpios" and then disable the
-> legacy handling.
+On Sat, 30 Mar 2019, at 01:40, Patrick Venture wrote:
+> Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+> 
+> Signed-off-by: Patrick Venture <venture@google.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes for v8:
+> - None
+> Changes for v7:
+> - Moved node under the syscon node it requires
+> Changes for v6:
+> - None
+> Changes for v5:
+> - None
+> Changes for v4:
+> - None
+> Changes for v3:
+> - None
+> Changes for v2:
+> - Added comment about syscon required parameter.
+> ---
+>  .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt 
+> b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> new file mode 100644
+> index 0000000000000..088cc4e3dc54b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> @@ -0,0 +1,48 @@
+> +======================================================================
+> +Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge 
+> Control Driver
+> +======================================================================
+> +
+> +The bridge is available on platforms with the VGA enabled on the 
+> Aspeed device.
+> +In this case, the host has access to a 64KiB window into all of the 
+> BMC's
+> +memory.  The BMC can disable this bridge.  If the bridge is enabled, 
+> the host
+> +has read access to all the regions of memory, however the host only 
+> has read
+> +and write access depending on a register controlled by the BMC.
+> +
+> +Required properties:
+> +===================
+> +
+> + - compatible: must be one of:
+> +	- "aspeed,ast2400-p2a-ctrl"
+> +	- "aspeed,ast2500-p2a-ctrl"
+> +
+> + - syscon: handle to syscon device node controlling PCI.
 
-Yups.
+The p2a-ctrl node is meant to be a child of the syscon. I noted this in my review
+of the associated driver - you need to remove the description of the syscon
+property.
 
-> So we do not need to add a config option for this legacy
-> handling (although I'd prefer to have it anyways to remove
-> some dead code).
+> +
+> +Optional properties:
+> +===================
+> +
+> +- memory-region: A phandle to a reserved_memory region to be used for 
+> the PCI
+> +		to AHB mapping
+> +
+> +The p2a-control node should be the child of a syscon node with the 
+> required
+> +property:
+> +
+> +- compatible : Should be one of the following:
+> +		"aspeed,ast2400-scu", "syscon", "simple-mfd"
+> +		"aspeed,g4-scu", "syscon", "simple-mfd"
+> +		"aspeed,ast2500-scu", "syscon", "simple-mfd"
+> +		"aspeed,g5-scu", "syscon", "simple-mfd"
+
+The note above should go where you've described the syscon property above.
+
+Cheers,
+
+Andrew
+
+> +
+> +Example:
+> +
+> +g4 Example
+> +----------
+> +
+> +syscon: scu@1e6e2000 {
+> +	compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
+> +	reg = <0x1e6e2000 0x1a8>;
+> +
+> +	p2a: p2a-control {
+> +		compatible = "aspeed,ast2400-p2a-ctrl";
+> +		memory-region = <&reserved_memory>;
+> +	};
+> +};
+> -- 
+> 2.21.0.392.gf8f6787159e-goog
+> 
 >
-> Summary: this series can now be ignored.
-
-OK please verify that we are doing things right now, the big
-worry I have is some interrim DTBs that use the GPIO flag
-GPIO_ACTIVE_HIGH, which is zero and therefore often the
-default, and expect it to actually work, while the SPI bindings
-by definition will ignore that and make the line active low.
-
-I'm not very happy about this but it is a result of how we quickly
-implemented some bindings in the past while the GPIO flags
-were not yet standardized.
-
-Yours,
-Linus Walleij
