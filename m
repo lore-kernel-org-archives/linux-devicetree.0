@@ -1,96 +1,118 @@
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v2 9/9] rtc: Add support for the MediaTek MT6358 RTC
-Date: Tue, 2 Apr 2019 16:06:27 +0200
-Message-ID: <20190402140627.GC22216@piout.net>
+Subject: Re: [PATCH v2 8/9] rtc: mt6397: fix alarm register overwrite
+Date: Tue, 2 Apr 2019 16:07:15 +0200
+Message-ID: <20190402140715.GD22216@piout.net>
 References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1552275991-34648-10-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1553161886.13384.7.camel@mtksdaap41>
+ <1552275991-34648-9-git-send-email-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1553161886.13384.7.camel@mtksdaap41>
+In-Reply-To: <1552275991-34648-9-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Eddie Huang <eddie.huang@mediatek.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Alessandro Zummo <a.zummo@towertech.it>, Marc Zyngier <marc.zyngier@arm.com>, Ran Bi <ran.bi@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-mediatek@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Eddie Huang <eddie.huang@mediatek.com>, Marc Zyngier <marc.zyngier@arm.com>, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Ran Bi <ran.bi@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 21/03/2019 17:51:26+0800, Yingjoe Chen wrote:
+On 11/03/2019 11:46:30+0800, Hsin-Hsiung Wang wrote:
+> From: Ran Bi <ran.bi@mediatek.com>
 > 
-> Hi,
+> Alarm registers high byte was reserved for other functions.
+> This add mask in alarm registers operation functions.
+> This also fix error condition in interrupt handler.
 > 
+> Fixes: fc2979118f3f ("rtc: mediatek: Add MT6397 RTC driver")
 > 
-> Should use 'rtc: mt6397: ' as prefix for this patch.
-> 
-> 
-> On Mon, 2019-03-11 at 11:46 +0800, Hsin-Hsiung Wang wrote:
-> > From: Ran Bi <ran.bi@mediatek.com>
-> > 
-> > This add support for the MediaTek MT6358 RTC. MT6397 mfd will pass
-> > RTC_WRTGR address offset to RTC driver.
-> > 
-> > Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> > ---
-> >  drivers/rtc/rtc-mt6397.c | 16 ++++++++++++++--
-> >  1 file changed, 14 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> > index f85f1fc..c8a0090 100644
-> > --- a/drivers/rtc/rtc-mt6397.c
-> > +++ b/drivers/rtc/rtc-mt6397.c
-> > @@ -27,7 +27,7 @@
-> >  #define RTC_BBPU		0x0000
-> >  #define RTC_BBPU_CBUSY		BIT(6)
-> >  
-> > -#define RTC_WRTGR		0x003c
-> > +#define RTC_WRTGR_DEFAULT	0x003c
-> >  
-> >  #define RTC_IRQ_STA		0x0002
-> >  #define RTC_IRQ_STA_AL		BIT(0)
-> > @@ -78,6 +78,7 @@ struct mt6397_rtc {
-> >  	struct regmap		*regmap;
-> >  	int			irq;
-> >  	u32			addr_base;
-> > +	u32			wrtgr_offset;
-> >  };
-> >  
-> >  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
-> > @@ -86,7 +87,8 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
-> >  	int ret;
-> >  	u32 data;
-> >  
-> > -	ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
-> > +	ret = regmap_write(rtc->regmap,
-> > +			   rtc->addr_base + rtc->wrtgr_offset, 1);
-> >  	if (ret < 0)
-> >  		return ret;
-> >  
-> > @@ -341,6 +343,15 @@ static int mtk_rtc_probe(struct platform_device *pdev)
-> >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >  	rtc->addr_base = res->start;
-> >  
-> > +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
-> > +	if (res) {
-> > +		rtc->wrtgr_offset = res->start;
-> > +		dev_info(&pdev->dev, "register offset:%d\n", rtc->wrtgr_offset);
-> > +	} else {
-> > +		rtc->wrtgr_offset = RTC_WRTGR_DEFAULT;
-> > +		dev_err(&pdev->dev, "Failed to get register offset\n");
-> > +	}
-> > +
-> 
-> Since this will be passed by MFD, do we still need to keep the DEFAULT?
-> Any case this platform_get_resource will failed?
-> 
-> It's too bad HW changed this offset, but I'm not sure about passing this
-> information from MFD. We have 1 register that have different offset now,
-> and might have others for future chips, adding each one by
-> IORESOURCE_IRQ doesn't looks like a good solution. Keeping this
-> information in RTC driver only also looks better.
-> 
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-I agree, this would be better.
-
+> ---
+>  drivers/rtc/rtc-mt6397.c | 47 +++++++++++++++++++++++++++++++++--------------
+>  1 file changed, 33 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index e9a25ec..f85f1fc 100644
+> --- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -55,6 +55,14 @@
+>  
+>  #define RTC_AL_SEC		0x0018
+>  
+> +#define RTC_AL_SEC_MASK		0x003f
+> +#define RTC_AL_MIN_MASK		0x003f
+> +#define RTC_AL_HOU_MASK		0x001f
+> +#define RTC_AL_DOM_MASK		0x001f
+> +#define RTC_AL_DOW_MASK		0x0007
+> +#define RTC_AL_MTH_MASK		0x000f
+> +#define RTC_AL_YEA_MASK		0x007f
+> +
+>  #define RTC_PDN2		0x002e
+>  #define RTC_PDN2_PWRON_ALARM	BIT(4)
+>  
+> @@ -111,7 +119,7 @@ static irqreturn_t mtk_rtc_irq_handler_thread(int irq, void *data)
+>  		irqen = irqsta & ~RTC_IRQ_EN_AL;
+>  		mutex_lock(&rtc->lock);
+>  		if (regmap_write(rtc->regmap, rtc->addr_base + RTC_IRQ_EN,
+> -				 irqen) < 0)
+> +				 irqen) == 0)
+>  			mtk_rtc_write_trigger(rtc);
+>  		mutex_unlock(&rtc->lock);
+>  
+> @@ -233,12 +241,12 @@ static int mtk_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
+>  	alm->pending = !!(pdn2 & RTC_PDN2_PWRON_ALARM);
+>  	mutex_unlock(&rtc->lock);
+>  
+> -	tm->tm_sec = data[RTC_OFFSET_SEC];
+> -	tm->tm_min = data[RTC_OFFSET_MIN];
+> -	tm->tm_hour = data[RTC_OFFSET_HOUR];
+> -	tm->tm_mday = data[RTC_OFFSET_DOM];
+> -	tm->tm_mon = data[RTC_OFFSET_MTH];
+> -	tm->tm_year = data[RTC_OFFSET_YEAR];
+> +	tm->tm_sec = data[RTC_OFFSET_SEC] & RTC_AL_SEC_MASK;
+> +	tm->tm_min = data[RTC_OFFSET_MIN] & RTC_AL_MIN_MASK;
+> +	tm->tm_hour = data[RTC_OFFSET_HOUR] & RTC_AL_HOU_MASK;
+> +	tm->tm_mday = data[RTC_OFFSET_DOM] & RTC_AL_DOM_MASK;
+> +	tm->tm_mon = data[RTC_OFFSET_MTH] & RTC_AL_MTH_MASK;
+> +	tm->tm_year = data[RTC_OFFSET_YEAR] & RTC_AL_YEA_MASK;
+>  
+>  	tm->tm_year += RTC_MIN_YEAR_OFFSET;
+>  	tm->tm_mon--;
+> @@ -259,14 +267,25 @@ static int mtk_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
+>  	tm->tm_year -= RTC_MIN_YEAR_OFFSET;
+>  	tm->tm_mon++;
+>  
+> -	data[RTC_OFFSET_SEC] = tm->tm_sec;
+> -	data[RTC_OFFSET_MIN] = tm->tm_min;
+> -	data[RTC_OFFSET_HOUR] = tm->tm_hour;
+> -	data[RTC_OFFSET_DOM] = tm->tm_mday;
+> -	data[RTC_OFFSET_MTH] = tm->tm_mon;
+> -	data[RTC_OFFSET_YEAR] = tm->tm_year;
+> -
+>  	mutex_lock(&rtc->lock);
+> +	ret = regmap_bulk_read(rtc->regmap, rtc->addr_base + RTC_AL_SEC,
+> +			       data, RTC_OFFSET_COUNT);
+> +	if (ret < 0)
+> +		goto exit;
+> +
+> +	data[RTC_OFFSET_SEC] = ((data[RTC_OFFSET_SEC] & ~(RTC_AL_SEC_MASK)) |
+> +				(tm->tm_sec & RTC_AL_SEC_MASK));
+> +	data[RTC_OFFSET_MIN] = ((data[RTC_OFFSET_MIN] & ~(RTC_AL_MIN_MASK)) |
+> +				(tm->tm_min & RTC_AL_MIN_MASK));
+> +	data[RTC_OFFSET_HOUR] = ((data[RTC_OFFSET_HOUR] & ~(RTC_AL_HOU_MASK)) |
+> +				(tm->tm_hour & RTC_AL_HOU_MASK));
+> +	data[RTC_OFFSET_DOM] = ((data[RTC_OFFSET_DOM] & ~(RTC_AL_DOM_MASK)) |
+> +				(tm->tm_mday & RTC_AL_DOM_MASK));
+> +	data[RTC_OFFSET_MTH] = ((data[RTC_OFFSET_MTH] & ~(RTC_AL_MTH_MASK)) |
+> +				(tm->tm_mon & RTC_AL_MTH_MASK));
+> +	data[RTC_OFFSET_YEAR] = ((data[RTC_OFFSET_YEAR] & ~(RTC_AL_YEA_MASK)) |
+> +				(tm->tm_year & RTC_AL_YEA_MASK));
+> +
+>  	if (alm->enabled) {
+>  		ret = regmap_bulk_write(rtc->regmap,
+>  					rtc->addr_base + RTC_AL_SEC,
+> -- 
+> 1.9.1
+> 
 
 -- 
 Alexandre Belloni, Bootlin
