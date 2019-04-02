@@ -1,98 +1,93 @@
-From: "Andrew Jeffery" <andrew@aj.id.au>
-Subject: Re: [PATCH v2 1/3] dt-bindings: gpu: Add ASPEED GFX bindings document
-Date: Mon, 01 Apr 2019 23:08:04 -0400
-Message-ID: <d67700c0-c302-403b-b765-555484e85eca@www.fastmail.com>
-References: <20190402021933.13071-1-joel@jms.id.au>
- <20190402021933.13071-2-joel@jms.id.au>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 7/9] mfd: axp20x: add USB power supply
+ mfd cell to AXP813
+Date: Tue, 2 Apr 2019 04:15:48 +0100
+Message-ID: <20190402031548.GF4187@dell>
+References: <20190321084850.20769-1-wens@kernel.org>
+ <20190321084850.20769-8-wens@kernel.org>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190402021933.13071-2-joel@jms.id.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, David Airlie <airlied@linux.ie>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, dri-devel@lists.freedesktop.org, =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBB3NHRPSQKGQE5SPMC5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190321084850.20769-8-wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 21 Mar 2019, Chen-Yu Tsai wrote:
 
+> From: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+>=20
+> The AXP813 has a VBUS power input. Now that the axp20x_usb_power driver
+> supports this variant, we can add an mfd cell for it to use it.
+>=20
+> Signed-off-by: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> [wens-jdAy2FN1RRM@public.gmane.org: add commit message]
+> Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-On Tue, 2 Apr 2019, at 12:49, Joel Stanley wrote:
-> This describes the ASPEED BMC SoC's display controller.
-> 
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
+This patch looks orthogonal.
+
+Unless anyone screams, I'm going to apply it.
+
 > ---
->  .../devicetree/bindings/gpu/aspeed-gfx.txt    | 41 +++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpu/aspeed-gfx.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpu/aspeed-gfx.txt 
-> b/Documentation/devicetree/bindings/gpu/aspeed-gfx.txt
-> new file mode 100644
-> index 000000000000..a74033332668
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/aspeed-gfx.txt
-> @@ -0,0 +1,41 @@
-> +Device tree configuration for the GFX display deivce on the AST2500 
-> SoCs.
-> +
-> +Required properties:
-> +  - compatible
-> +    * Must be one of the following:
-> +      + aspeed,ast2500-gfx
-> +      + aspeed,ast2400-gfx
-> +    * In addition, the ASPEED pinctrl bindings require the 'syscon' 
-> property to
-> +      be present
-
-Lets remove [1] now that we have this document as what you've described
-here is a super-set. Happy for that to be a follow-up patch, so:
-
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-
-[1] Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
-
-> +
-> +  - reg: Physical base address and length of the GFX registers
-> +
-> +  - interrupts: interrupt number for the GFX device
-> +
-> +  - clocks: clock number used to generate the pixel clock
-> +
-> +  - resets: reset line that must be released to use the GFX device
-> +
-> +  - memory-region:
-> +    Phandle to a memory region to allocate from, as defined in
-> +    
-> Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> +
-> +
-> +Example:
-> +
-> +gfx: display@1e6e6000 {
-> +	compatible = "aspeed,ast2500-gfx", "syscon";
-> +	reg = <0x1e6e6000 0x1000>;
-> +	reg-io-width = <4>;
-> +	clocks = <&syscon ASPEED_CLK_GATE_D1CLK>;
-> +	resets = <&syscon ASPEED_RESET_CRT1>;
-> +	interrupts = <0x19>;
-> +	memory-region = <&gfx_memory>;
+>=20
+> Changes since v1:
+>   - Made axp803_usb_power_supply_resources[] constant
+>   - Added Lee's acked-by
+> ---
+>  drivers/mfd/axp20x.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>=20
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> index 3c97f2c0fdfe..902f9f27e748 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp20x.c
+> @@ -198,6 +198,12 @@ static const struct resource axp22x_usb_power_supply=
+_resources[] =3D {
+>  	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
+>  };
+> =20
+> +/* AXP803 and AXP813/AXP818 share the same interrupts */
+> +static const struct resource axp803_usb_power_supply_resources[] =3D {
+> +	DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_PLUGIN, "VBUS_PLUGIN"),
+> +	DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
 > +};
 > +
-> +gfx_memory: framebuffer {
-> +	size = <0x01000000>;
-> +	alignment = <0x01000000>;
-> +	compatible = "shared-dma-pool";
-> +	reusable;
-> +};
-> -- 
-> 2.20.1
-> 
->
+>  static const struct resource axp22x_pek_resources[] =3D {
+>  	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_PEK_RIS_EDGE, "PEK_DBR"),
+>  	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_PEK_FAL_EDGE, "PEK_DBF"),
+> @@ -793,6 +799,11 @@ static const struct mfd_cell axp813_cells[] =3D {
+>  		.of_compatible	=3D "x-powers,axp813-ac-power-supply",
+>  		.num_resources	=3D ARRAY_SIZE(axp20x_ac_power_supply_resources),
+>  		.resources	=3D axp20x_ac_power_supply_resources,
+> +	}, {
+> +		.name		=3D "axp20x-usb-power-supply",
+> +		.num_resources	=3D ARRAY_SIZE(axp803_usb_power_supply_resources),
+> +		.resources	=3D axp803_usb_power_supply_resources,
+> +		.of_compatible	=3D "x-powers,axp813-usb-power-supply",
+>  	},
+>  };
+> =20
+
+--=20
+Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+Linaro Services Technical Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
