@@ -1,122 +1,53 @@
-Return-Path: <SRS0=9N3P=SS=nxp.com=anson.huang@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V12 3/5] thermal: imx_sc: add i.MX system controller thermal
- support
-Date: Tue, 16 Apr 2019 03:22:25 +0000
-Message-ID: <1555384609-7030-3-git-send-email-Anson.Huang@nxp.com>
-References: <1555384609-7030-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1555384609-7030-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=YTt1=SE=gmail.com=shubhrajyoti.datta@kernel.org>
 MIME-Version: 1.0
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Peng Fan <peng.fan@nxp.com>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "agross@kernel.org" <agross@kernel.org>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+References: <1554136640-25194-1-git-send-email-shubhrajyoti.datta@gmail.com>
+ <1554136640-25194-2-git-send-email-shubhrajyoti.datta@gmail.com> <20190401170954.GA19314@kroah.com>
+In-Reply-To: <20190401170954.GA19314@kroah.com>
+From: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Date: Tue, 2 Apr 2019 12:41:17 +0530
+Message-ID: <CAKfKVtEhmPxEPK1z1UM3o_4rvGj7TvrfXUuJBOee6SiLCcRSAQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: xilinx-uartps: Add support for nomodem
+Content-Type: text/plain; charset="UTF-8"
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, jslaby@suse.com, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-aS5NWDhRWFAgaXMgYW4gQVJNdjggU29DIHdoaWNoIGhhcyBhIENvcnRleC1NNCBzeXN0ZW0gY29u
-dHJvbGxlcg0KaW5zaWRlLCB0aGUgc3lzdGVtIGNvbnRyb2xsZXIgaXMgaW4gY2hhcmdlIG9mIGNv
-bnRyb2xsaW5nIHBvd2VyLA0KY2xvY2sgYW5kIHRoZXJtYWwgc2Vuc29ycyBldGMuLg0KDQpUaGlz
-IHBhdGNoIGFkZHMgaS5NWCBzeXN0ZW0gY29udHJvbGxlciB0aGVybWFsIGRyaXZlciBzdXBwb3J0
-LA0KTGludXgga2VybmVsIGhhcyB0byBjb21tdW5pY2F0ZSB3aXRoIHN5c3RlbSBjb250cm9sbGVy
-IHZpYSBNVQ0KKG1lc3NhZ2UgdW5pdCkgSVBDIHRvIGdldCBlYWNoIHRoZXJtYWwgc2Vuc29yJ3Mg
-dGVtcGVyYXR1cmUsDQppdCBzdXBwb3J0cyBtdWx0aXBsZSBzZW5zb3JzIHdoaWNoIGFyZSBwYXNz
-ZWQgZnJvbSBkZXZpY2UgdHJlZSwNCnBsZWFzZSBzZWUgdGhlIGJpbmRpbmcgZG9jIGZvciBkZXRh
-aWxzLg0KDQpTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4N
-Ci0tLQ0KQ2hhbmdlcyBzaW5jZSBWMTE6DQoJLSBtb3ZlIHRoZSBBUEkgb2YgZ2V0dGluZyB0aGVy
-bWFsIHpvbmUgc2Vuc29yIElEIHRvIG9mLXRoZXJtYWwuYyBhcyBnZW5lcmljIEFQSTsNCgktIHJl
-bW92ZSB1bm5lY2Vzc2FyeSBfX3BhY2tlZC4NCi0tLQ0KIGRyaXZlcnMvdGhlcm1hbC9LY29uZmln
-ICAgICAgICAgIHwgIDExICsrKysNCiBkcml2ZXJzL3RoZXJtYWwvTWFrZWZpbGUgICAgICAgICB8
-ICAgMSArDQogZHJpdmVycy90aGVybWFsL2lteF9zY190aGVybWFsLmMgfCAxMzcgKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQogMyBmaWxlcyBjaGFuZ2VkLCAxNDkgaW5z
-ZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3RoZXJtYWwvaW14X3NjX3Ro
-ZXJtYWwuYw0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy90aGVybWFsL0tjb25maWcgYi9kcml2ZXJz
-L3RoZXJtYWwvS2NvbmZpZw0KaW5kZXggNjUzYWEyNy4uNGU0ZmE3ZSAxMDA2NDQNCi0tLSBhL2Ry
-aXZlcnMvdGhlcm1hbC9LY29uZmlnDQorKysgYi9kcml2ZXJzL3RoZXJtYWwvS2NvbmZpZw0KQEAg
-LTIyMyw2ICsyMjMsMTcgQEAgY29uZmlnIElNWF9USEVSTUFMDQogCSAgY3B1ZnJlcSBpcyB1c2Vk
-IGFzIHRoZSBjb29saW5nIGRldmljZSB0byB0aHJvdHRsZSBDUFVzIHdoZW4gdGhlDQogCSAgcGFz
-c2l2ZSB0cmlwIGlzIGNyb3NzZWQuDQogDQorY29uZmlnIElNWF9TQ19USEVSTUFMDQorCXRyaXN0
-YXRlICJUZW1wZXJhdHVyZSBzZW5zb3IgZHJpdmVyIGZvciBOWFAgaS5NWCBTb0NzIHdpdGggU3lz
-dGVtIENvbnRyb2xsZXIiDQorCWRlcGVuZHMgb24gKEFSQ0hfTVhDICYmIElNWF9TQ1UpIHx8IENP
-TVBJTEVfVEVTVA0KKwlkZXBlbmRzIG9uIE9GDQorCWhlbHANCisJICBTdXBwb3J0IGZvciBUZW1w
-ZXJhdHVyZSBNb25pdG9yIChURU1QTU9OKSBmb3VuZCBvbiBOWFAgaS5NWCBTb0NzIHdpdGgNCisJ
-ICBzeXN0ZW0gY29udHJvbGxlciBpbnNpZGUsIExpbnV4IGtlcm5lbCBoYXMgdG8gY29tbXVuaWNh
-dGUgd2l0aCBzeXN0ZW0NCisJICBjb250cm9sbGVyIHZpYSBNVSAobWVzc2FnZSB1bml0KSBJUEMg
-dG8gZ2V0IHRlbXBlcmF0dXJlIGZyb20gdGhlcm1hbA0KKwkgIHNlbnNvci4gSXQgc3VwcG9ydHMg
-b25lIGNyaXRpY2FsIHRyaXAgcG9pbnQgYW5kIG9uZQ0KKwkgIHBhc3NpdmUgdHJpcCBwb2ludCBm
-b3IgZWFjaCB0aGVybWFsIHNlbnNvci4NCisNCiBjb25maWcgTUFYNzc2MjBfVEhFUk1BTA0KIAl0
-cmlzdGF0ZSAiVGVtcGVyYXR1cmUgc2Vuc29yIGRyaXZlciBmb3IgTWF4aW0gTUFYNzc2MjAgUE1J
-QyINCiAJZGVwZW5kcyBvbiBNRkRfTUFYNzc2MjANCmRpZmYgLS1naXQgYS9kcml2ZXJzL3RoZXJt
-YWwvTWFrZWZpbGUgYi9kcml2ZXJzL3RoZXJtYWwvTWFrZWZpbGUNCmluZGV4IDQ4NmQ2ODIuLjQw
-NjI2MjcgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3RoZXJtYWwvTWFrZWZpbGUNCisrKyBiL2RyaXZl
-cnMvdGhlcm1hbC9NYWtlZmlsZQ0KQEAgLTQwLDYgKzQwLDcgQEAgb2JqLSQoQ09ORklHX0RCODUw
-MF9USEVSTUFMKQkrPSBkYjg1MDBfdGhlcm1hbC5vDQogb2JqLSQoQ09ORklHX0FSTUFEQV9USEVS
-TUFMKQkrPSBhcm1hZGFfdGhlcm1hbC5vDQogb2JqLSQoQ09ORklHX1RBTkdPX1RIRVJNQUwpCSs9
-IHRhbmdvX3RoZXJtYWwubw0KIG9iai0kKENPTkZJR19JTVhfVEhFUk1BTCkJKz0gaW14X3RoZXJt
-YWwubw0KK29iai0kKENPTkZJR19JTVhfU0NfVEhFUk1BTCkJKz0gaW14X3NjX3RoZXJtYWwubw0K
-IG9iai0kKENPTkZJR19NQVg3NzYyMF9USEVSTUFMKQkrPSBtYXg3NzYyMF90aGVybWFsLm8NCiBv
-YmotJChDT05GSUdfUU9SSVFfVEhFUk1BTCkJKz0gcW9yaXFfdGhlcm1hbC5vDQogb2JqLSQoQ09O
-RklHX0RBOTA2Ml9USEVSTUFMKQkrPSBkYTkwNjItdGhlcm1hbC5vDQpkaWZmIC0tZ2l0IGEvZHJp
-dmVycy90aGVybWFsL2lteF9zY190aGVybWFsLmMgYi9kcml2ZXJzL3RoZXJtYWwvaW14X3NjX3Ro
-ZXJtYWwuYw0KbmV3IGZpbGUgbW9kZSAxMDA2NDQNCmluZGV4IDAwMDAwMDAuLmRjZjE2ZmMNCi0t
-LSAvZGV2L251bGwNCisrKyBiL2RyaXZlcnMvdGhlcm1hbC9pbXhfc2NfdGhlcm1hbC5jDQpAQCAt
-MCwwICsxLDEzNyBAQA0KKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wKw0KKy8q
-DQorICogQ29weXJpZ2h0IDIwMTgtMjAxOSBOWFAuDQorICovDQorDQorI2luY2x1ZGUgPGxpbnV4
-L2Vyci5oPg0KKyNpbmNsdWRlIDxsaW51eC9maXJtd2FyZS9pbXgvc2NpLmg+DQorI2luY2x1ZGUg
-PGxpbnV4L21vZHVsZS5oPg0KKyNpbmNsdWRlIDxsaW51eC9vZi5oPg0KKyNpbmNsdWRlIDxsaW51
-eC9vZl9kZXZpY2UuaD4NCisjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQorI2lu
-Y2x1ZGUgPGxpbnV4L3NsYWIuaD4NCisjaW5jbHVkZSA8bGludXgvdGhlcm1hbC5oPg0KKw0KKyNp
-bmNsdWRlICJ0aGVybWFsX2NvcmUuaCINCisNCisjZGVmaW5lIElNWF9TQ19NSVNDX0ZVTkNfR0VU
-X1RFTVAJMTMNCisjZGVmaW5lIElNWF9TQ19DX1RFTVAJCQkwDQorDQorc3RhdGljIHN0cnVjdCBp
-bXhfc2NfaXBjICp0aGVybWFsX2lwY19oYW5kbGU7DQorDQorc3RydWN0IGlteF9zY19zZW5zb3Ig
-ew0KKwlzdHJ1Y3QgdGhlcm1hbF96b25lX2RldmljZSAqdHpkOw0KKwl1MzIgcmVzb3VyY2VfaWQ7
-DQorfTsNCisNCitzdHJ1Y3QgcmVxX2dldF90ZW1wIHsNCisJdTE2IHJlc291cmNlX2lkOw0KKwl1
-OCB0eXBlOw0KK30gX19wYWNrZWQ7DQorDQorc3RydWN0IHJlc3BfZ2V0X3RlbXAgew0KKwl1MTYg
-Y2Vsc2l1czsNCisJdTggdGVudGhzOw0KK30gX19wYWNrZWQ7DQorDQorc3RydWN0IGlteF9zY19t
-c2dfbWlzY19nZXRfdGVtcCB7DQorCXN0cnVjdCBpbXhfc2NfcnBjX21zZyBoZHI7DQorCXVuaW9u
-IHsNCisJCXN0cnVjdCByZXFfZ2V0X3RlbXAgcmVxOw0KKwkJc3RydWN0IHJlc3BfZ2V0X3RlbXAg
-cmVzcDsNCisJfSBkYXRhOw0KK307DQorDQorc3RhdGljIGludCBpbXhfc2NfdGhlcm1hbF9nZXRf
-dGVtcCh2b2lkICpkYXRhLCBpbnQgKnRlbXApDQorew0KKwlzdHJ1Y3QgaW14X3NjX21zZ19taXNj
-X2dldF90ZW1wIG1zZzsNCisJc3RydWN0IGlteF9zY19ycGNfbXNnICpoZHIgPSAmbXNnLmhkcjsN
-CisJc3RydWN0IGlteF9zY19zZW5zb3IgKnNlbnNvciA9IGRhdGE7DQorCWludCByZXQ7DQorDQor
-CW1zZy5kYXRhLnJlcS5yZXNvdXJjZV9pZCA9IHNlbnNvci0+cmVzb3VyY2VfaWQ7DQorCW1zZy5k
-YXRhLnJlcS50eXBlID0gSU1YX1NDX0NfVEVNUDsNCisNCisJaGRyLT52ZXIgPSBJTVhfU0NfUlBD
-X1ZFUlNJT047DQorCWhkci0+c3ZjID0gSU1YX1NDX1JQQ19TVkNfTUlTQzsNCisJaGRyLT5mdW5j
-ID0gSU1YX1NDX01JU0NfRlVOQ19HRVRfVEVNUDsNCisJaGRyLT5zaXplID0gMjsNCisNCisJcmV0
-ID0gaW14X3NjdV9jYWxsX3JwYyh0aGVybWFsX2lwY19oYW5kbGUsICZtc2csIHRydWUpOw0KKwlp
-ZiAocmV0KSB7DQorCQlwcl9lcnIoInJlYWQgdGVtcCBzZW5zb3IgJWQgZmFpbGVkLCByZXQgJWRc
-biIsDQorCQkJc2Vuc29yLT5yZXNvdXJjZV9pZCwgcmV0KTsNCisJCXJldHVybiByZXQ7DQorCX0N
-CisNCisJKnRlbXAgPSBtc2cuZGF0YS5yZXNwLmNlbHNpdXMgKiAxMDAwICsgbXNnLmRhdGEucmVz
-cC50ZW50aHMgKiAxMDA7DQorDQorCXJldHVybiAwOw0KK30NCisNCitzdGF0aWMgY29uc3Qgc3Ry
-dWN0IHRoZXJtYWxfem9uZV9vZl9kZXZpY2Vfb3BzIGlteF9zY190aGVybWFsX29wcyA9IHsNCisJ
-LmdldF90ZW1wID0gaW14X3NjX3RoZXJtYWxfZ2V0X3RlbXAsDQorfTsNCisNCitzdGF0aWMgaW50
-IGlteF9zY190aGVybWFsX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQorew0K
-KwlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wLCAqY2hpbGQ7DQorCWludCByZXQ7DQorDQorCXJldCA9
-IGlteF9zY3VfZ2V0X2hhbmRsZSgmdGhlcm1hbF9pcGNfaGFuZGxlKTsNCisJaWYgKHJldCkNCisJ
-CXJldHVybiByZXQ7DQorDQorCW5wID0gb2ZfZmluZF9ub2RlX2J5X25hbWUoTlVMTCwgInRoZXJt
-YWwtem9uZXMiKTsNCisJaWYgKCFucCkNCisJCXJldHVybiAtRU5PREVWOw0KKw0KKwlmb3JfZWFj
-aF9hdmFpbGFibGVfY2hpbGRfb2Zfbm9kZShucCwgY2hpbGQpIHsNCisJCXN0cnVjdCBvZl9waGFu
-ZGxlX2FyZ3Mgc2Vuc29yX3NwZWNzOw0KKwkJc3RydWN0IGlteF9zY19zZW5zb3IgKnNlbnNvciA9
-DQorCQkJZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigqc2Vuc29yKSwgR0ZQX0tFUk5F
-TCk7DQorCQlpZiAoIXNlbnNvcikNCisJCQlyZXR1cm4gLUVOT01FTTsNCisNCisJCXJldCA9IHRo
-ZXJtYWxfem9uZV9vZl9nZXRfc2Vuc29yX2lkKGNoaWxkLA0KKwkJCQkJCSAgICAmc2Vuc29yX3Nw
-ZWNzLA0KKwkJCQkJCSAgICAmc2Vuc29yLT5yZXNvdXJjZV9pZCk7DQorCQlpZiAocmV0IDwgMCkg
-ew0KKwkJCWRldl9lcnIoJnBkZXYtPmRldiwNCisJCQkJImZhaWxlZCB0byBnZXQgdmFsaWQgc2Vu
-c29yIHJlc291cmNlIGlkOiAlZFxuIiwNCisJCQkJcmV0KTsNCisJCQlicmVhazsNCisJCX0NCisN
-CisJCXNlbnNvci0+dHpkID0gZGV2bV90aGVybWFsX3pvbmVfb2Zfc2Vuc29yX3JlZ2lzdGVyKCZw
-ZGV2LT5kZXYsDQorCQkJCQkJCQkgICBzZW5zb3ItPnJlc291cmNlX2lkLA0KKwkJCQkJCQkJICAg
-c2Vuc29yLA0KKwkJCQkJCQkJICAgJmlteF9zY190aGVybWFsX29wcyk7DQorCQlpZiAoSVNfRVJS
-KHNlbnNvci0+dHpkKSkgew0KKwkJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byByZWdp
-c3RlciB0aGVybWFsIHpvbmVcbiIpOw0KKwkJCXJldCA9IFBUUl9FUlIoc2Vuc29yLT50emQpOw0K
-KwkJCWJyZWFrOw0KKwkJfQ0KKwl9DQorDQorCXJldHVybiByZXQ7DQorfQ0KKw0KK3N0YXRpYyBj
-b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGlteF9zY190aGVybWFsX3RhYmxlW10gPSB7DQorCXsg
-LmNvbXBhdGlibGUgPSAiZnNsLGlteC1zYy10aGVybWFsIiwgfSwNCisJe30NCit9Ow0KK01PRFVM
-RV9ERVZJQ0VfVEFCTEUob2YsIGlteF9zY190aGVybWFsX3RhYmxlKTsNCisNCitzdGF0aWMgc3Ry
-dWN0IHBsYXRmb3JtX2RyaXZlciBpbXhfc2NfdGhlcm1hbF9kcml2ZXIgPSB7DQorCQkucHJvYmUg
-PSBpbXhfc2NfdGhlcm1hbF9wcm9iZSwNCisJCS5kcml2ZXIgPSB7DQorCQkJLm5hbWUgPSAiaW14
-LXNjLXRoZXJtYWwiLA0KKwkJCS5vZl9tYXRjaF90YWJsZSA9IGlteF9zY190aGVybWFsX3RhYmxl
-LA0KKwkJfSwNCit9Ow0KK21vZHVsZV9wbGF0Zm9ybV9kcml2ZXIoaW14X3NjX3RoZXJtYWxfZHJp
-dmVyKTsNCisNCitNT0RVTEVfQVVUSE9SKCJBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNv
-bT4iKTsNCitNT0RVTEVfREVTQ1JJUFRJT04oIlRoZXJtYWwgZHJpdmVyIGZvciBOWFAgaS5NWCBT
-b0NzIHdpdGggc3lzdGVtIGNvbnRyb2xsZXIiKTsNCitNT0RVTEVfTElDRU5TRSgiR1BMIHYyIik7
-DQotLSANCjIuNy40DQoNCg==
+Hi Greg ,
+
+Thanks for the review.
+
+On Mon, Apr 1, 2019 at 11:09 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Apr 01, 2019 at 10:07:19PM +0530, shubhrajyoti.datta@gmail.com wrote:
+> > From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> >
+> > Vivado has a configurationo for selecting the modem control.
+> > Add a dt binding to check for the same.
+> >
+> > Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> > ---
+> >  Documentation/devicetree/bindings/serial/cdns,uart.txt | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/serial/cdns,uart.txt b/Documentation/devicetree/bindings/serial/cdns,uart.txt
+> > index 227bb77..3e96619 100644
+> > --- a/Documentation/devicetree/bindings/serial/cdns,uart.txt
+> > +++ b/Documentation/devicetree/bindings/serial/cdns,uart.txt
+> > @@ -12,6 +12,10 @@ Required properties:
+> >    See ../clocks/clock-bindings.txt for details.
+> >
+> >
+> > +Optional properties:
+> > +- xlnx,nomodem: The presence of this property indicates that the
+> > +    UART does not support modem lines for RTS/CTS hardware flow control.
+>
+> Shouldn't that be something like "noflowcontrol" or "nortscts"?  "modem"
+> has nothing to do with rts/cts flow control, right?
+
+Updated in the v2.
+
+Thanks
+>
+> thanks,
+>
+> greg k-h
