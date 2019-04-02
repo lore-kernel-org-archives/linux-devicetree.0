@@ -1,73 +1,52 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: backlight: add lm3630a bindings
-Date: Tue, 2 Apr 2019 09:24:40 -0400
-Message-ID: <20190402132440.GA10359@basecamp>
-References: <20190401103034.21062-1-masneyb@onstation.org>
- <20190401103034.21062-3-masneyb@onstation.org>
- <68229e7f-4749-cde5-f541-793ab614084d@ti.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH v7 0/4] input: touchscreen: Add goodix GT5553 CTP support
+Date: Tue, 2 Apr 2019 19:00:26 +0530
+Message-ID: <CAMty3ZBKGpsGLJ8Z-WEOH+puULrh5BjREn+608dUmTMUW9Qhqg@mail.gmail.com>
+References: <20190321082104.2874-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <68229e7f-4749-cde5-f541-793ab614084d@ti.com>
+In-Reply-To: <20190321082104.2874-1-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, jonathan@marek.ca
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Rob Herring <robh+dt@kernel.org>
+Cc: Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 07:56:55AM -0500, Dan Murphy wrote:
-> This would connect control bank B to control bank A.  Or just use a flag to denote to connect them
-> and not use led-sources.  But led-sources is the property of choice.
-> 
-> led@0 {
-> 	reg = <0>;
-> 	led-sources = < 0 1 >;
-> 	label = "main-lcd";
-> 	default-brightness = <200>;
-> 	max-brightness = <255>;
-> };
+On Thu, Mar 21, 2019 at 1:51 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+>
+> This is v7 patchset for supporting goodix GT5553 CTP. Here is the
+> previous version[1]
+>
+> Changes for v5:
+> - rebase on linux-next
+> Changes for v5:
+> - document bindings for required regulators, which are need during
+>   power-on sequence
+> - enable, disable required regulators as described in power-on sequence
+>   using normal regulator calls
+> - update the proper commi messages
+> Changes for v4:
+> - document AVDD22, DVDD12, VDDIO as optional properties
+> - use regulator bulk calls, for get, enable and disable functionalities
+> Changes for v4:
+> - devm_add_action_or_reset for disabling regulator
+> Changes for v3:
+> - add cover-letter
+> - s/ADVV28/AVDD28 on commit head
+> - fix few typo
+> Changes for v2:
+> - Rename vcc-supply with AVDD28-supply
+> - disable regulator in remove
+> - fix to setup regulator in probe code
+> - add chipdata
+> - drop example node in dt-bindings
+>
+> [1] https://patchwork.kernel.org/cover/10819645/
+>
+> Jagan Teki (4):
+>   dt-bindings: input: touchscreen: goodix: Document regulator properties
+>   Input: goodix - Add regulators suppot
+>   dt-bindings: input: touchscreen: goodix: Add GT5663 compatible
+>   Input: goodix - Add GT5663 CTP support
 
-OK, I see. I wondered how we could do that in device tree.
-
-> > +    properties:
-> > +      label:
-> > +        description: |
-> > +          The label for this LED. If omitted, the label is taken from the node
-> > +          name (excluding the unit address). It has to uniquely identify a
-> > +          device, i.e. no other LED class device can be assigned the same label.
-> > +
-> > +      led-sources:
-> > +        description: |
-> > +          List of device current outputs the LED is connected to.
-> > +        allOf:
-> > +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +          - minItems: 1
-> > +            maxItems: 2
-> > +            items:
-> > +              minimum: 0
-> > +              maximum: 1
-> > +
-> 
-> label and led-sources are already defined in the common.txt no need to redefine them here.
-
-If I'm going to use the new-style bindings, then I'll need to convert
-common.txt over to use the new format as well so that the automated
-schema validations will work. I'm willing to do that work if there is
-interest from the LED / backlight maintainers. The main issue is that
-there are 62 references to the file common.txt in the directory
-Documentation/devicetree/bindings/leds/. Would the maintainers prefer:
-
-- Once common.txt is converted to common.yaml, make common.txt only
-  have a line stating that the common bindings were moved into
-  common.yaml. We can remove this file once all of the other bindings
-  are converted to the new-style format.
-
-- Update all references to common.txt to common.yaml. (1 patch or 62
-  patches?)
-
-- Or, just go with the older-style binding format for now.
-
-Thanks Dan for your other comments. They make sense and I'll incorporate
-those changes into my next version.
-
-Brian
+Ping?
