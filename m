@@ -1,53 +1,74 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH 2/2] drm: Add ASPEED GFX driver
-Date: Tue, 2 Apr 2019 02:09:19 +0000
-Message-ID: <CACPK8Xf8Vz+pfJd1jo4Mzce9=vNoKk_Osvi3Tbdu3KSTmgmBkA@mail.gmail.com>
-References: <20190328054316.17939-1-joel@jms.id.au>
- <20190328054316.17939-3-joel@jms.id.au>
- <20190328075317.GR2665@phenom.ffwll.local>
+From: =?UTF-8?B?S2FuZW1hdHN1LCBTaGluamkv5YW85p2+IOS8uOasoQ==?=
+        <kanematsu.shinji@socionext.com>
+Subject: Re: [PATCH 0/2] Add Updown Counter support for Milbeaut M10V SoC
+Date: Tue, 2 Apr 2019 11:12:32 +0900
+Message-ID: <9522af01-1017-08d5-73c7-8b81b749c29a@socionext.com>
+References: <1553581954-13487-1-git-send-email-kanematsu.shinji@socionext.com>
+ <20190330183603.55886d4f@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190328075317.GR2665@phenom.ffwll.local>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>, =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org, Maxime Ripard <maxime.ripard@bootlin.com>, Andrew Jeffery <andrew@aj.id.au>, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190330183603.55886d4f@archlinux>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, orito.takao@socionext.com, sugaya.taichi@socionext.com, kasai.kazuhiro@socionext.com, William Breathitt Gray <vilhelm.gray@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyOCBNYXIgMjAxOSBhdCAwNzo1MywgRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xs
-LmNoPiB3cm90ZToKCj4gPiArc3RhdGljIGludCBhc3BlZWRfZ2Z4X2dldF9tb2RlcyhzdHJ1Y3Qg
-ZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yKQo+ID4gK3sKPiA+ICsgICAgIHJldHVybiBkcm1fYWRk
-X21vZGVzX25vZWRpZChjb25uZWN0b3IsIDgwMCwgNjAwKTsKPgo+IElzIHRoaXMgdGhlIG9ubHkg
-bW9kZSB5b3UgZG8sIG9yIGp1c3QgYSBkZWZhdWx0PyBJaXJjIGlmIHlvdSByZXBvcnQKPiAiY29u
-bmVjdGVkIiwgeW91J2xsIGdldCB0aGlzIGFzIG9uZSBvZiB0aGUgZmFsbGJhY2sgbW9kZXMgYWxy
-ZWFkeS4KCkkgdGhpcyBpcyB0aGUgb25seSBtb2RlIHdlIGNhbiBkbyB3aXRoIHRoZSBjbG9jayB0
-aGF0IHdlIGhhdmUgYXZhaWxhYmxlLgoKPiBWZXJ5IG5pY2UgZHJpdmVyIQo+Cj4gQWNrZWQtYnk6
-IERhbmllbCBWZXR0ZXIgPGRhbmllbC52ZXR0ZXJAZmZ3bGwuY2g+CgpUaGFua3MhCgo+IEZvciBt
-ZXJnaW5nL21haW50ZW5hbmNlLCBkbyB5b3Ugd2FudCB0byBwdXQgdGhpcyBpbnRvIGRybS1taXNj
-Pwo+Cj4gaHR0cHM6Ly9kcm0ucGFnZXMuZnJlZWRlc2t0b3Aub3JnL21haW50YWluZXItdG9vbHMv
-Y29tbWl0dGVyLWRybS1taXNjLmh0bWwjc21hbGwtZHJpdmVycwoKVGhhdCBtYWtlcyBzZW5zZS4g
-SSdsbCBzZW5kIG91dCBhIHYyIHdpdGggdGhlIGNoYW5nZXMgeW91IGFuZCBOb3JhbGYKc3VnZ2Vz
-dGVkLCBhbmQgYSBtYWludGFpbmVycyBwYXRjaCwgb25jZSBJJ3ZlIGdpdmVuIGl0IGEgc3BpbiBv
-bgpoYXJkd2FyZS4KCj4gV2UgY291bGQgYWxzbyBvZmZpY2lhbGx5IHB1dCBkcm0vYXN0IGluIHRo
-ZXJlLCBpZiB5b3Ugd2FudCB0byBtYWludGFpbgo+IHRoYXQgdG9vLgoKSSBoYXZlbid0IGhhZCBt
-dWNoIHRvIGRvIHdpdGggdGhhdCBkcml2ZXIgKGl0J3MgcGh5c2ljYWxseSBpbnNpZGUgdGhlCkJN
-QywgYnV0IGEgZGlmZmVyZW50IHBpZWNlIG9mIGhhcmR3YXJlKS4gSSBjYW4gcHJvYmFibHkgYmUg
-aW5jbHVkZWQgc28KSSdtIG9uIGNjIGZvciBjaGFuZ2VzLgoKQ2hlZXJzLAoKSm9lbAoKCj4KPiBF
-aXRoZXIgd2F5LCBwYXRjaCBhbHNvIG5lZWRzIGEgTUFJTlRBSU5FUlMgZW50cnkuCj4gLURhbmll
-bAo+IC0tCj4gRGFuaWVsIFZldHRlcgo+IFNvZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3Jh
-dGlvbgo+IGh0dHA6Ly9ibG9nLmZmd2xsLmNoCj4KPiBfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwo+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cj4g
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+Hi Jonathan,
+
+On 2019/03/31 3:36, Jonathan Cameron wrote:
+> On Tue, 26 Mar 2019 15:32:34 +0900
+> Shinji Kanematsu <kanematsu.shinji@socionext.com> wrote:
+> 
+>> This is a series of patch which adds Updown Counter support on
+>> Milbeaut M10V SoC.
+>>
+>> The Updown Counter counts input pulse signal from external quadrature encoder.
+>> It also has input pulse signal counter function.
+> Hi Shinji,
+> 
+> Are you aware of the counter subsystem that has been proposed (and
+> as far as I am concerned is ready to be merged)?
+> 
+> https://patchwork.kernel.org/project/linux-iio/list/?series=147
+> (I think that's the latest version posted)..
+> William, perhaps you could give an update?
+> 
+> (bad luck, you are getting popular ;)
+> 
+> I'll take a quick review as it stands, as some issues may carry over.
+> I appreciate that it's always unfortunate to try to upstream stuff at the
+> same time as a new framework is being developed / upstreamed, but I don't
+> intend to take any additional counter drivers into IIO.  We just
+> end up having to maintain old interfaces in more and more drivers.
+> 
+
+Thank you for your reply.
+I just learned that upstream requires the counter subsystem.
+Detailed information was given by William.
+
+Thank you,
+Kanematsu
+
+> Thanks,
+> 
+> Jonathan
+> 
+>>
+>> Shinji Kanematsu (2):
+>>    dt-bindings: iio: counter: Add Milbeaut Updown Counter
+>>    iio: counter: Add support for Milbeaut Updown Counter
+>>
+>>   .../bindings/iio/counter/milbeaut-updown_cnt.txt   |  22 ++
+>>   drivers/iio/counter/Kconfig                        |  12 +
+>>   drivers/iio/counter/Makefile                       |   1 +
+>>   drivers/iio/counter/milbeaut-updown.h              |  38 ++
+>>   drivers/iio/counter/milbeaut-updown_cnt.c          | 385 +++++++++++++++++++++
+>>   5 files changed, 458 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
+>>   create mode 100644 drivers/iio/counter/milbeaut-updown.h
+>>   create mode 100644 drivers/iio/counter/milbeaut-updown_cnt.c
+>>
+> 
