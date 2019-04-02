@@ -1,102 +1,40 @@
-From: =?UTF-8?B?S2FuZW1hdHN1LCBTaGluamkv5YW85p2+IOS8uOasoQ==?=
-        <kanematsu.shinji@socionext.com>
-Subject: Re: [PATCH 0/2] Add Updown Counter support for Milbeaut M10V SoC
-Date: Tue, 2 Apr 2019 15:22:22 +0900
-Message-ID: <bddfd8ca-c82a-68f8-ba05-45ce6df9bd4f@socionext.com>
-References: <1553581954-13487-1-git-send-email-kanematsu.shinji@socionext.com>
- <20190330183603.55886d4f@archlinux> <20190331020932.GA4108@icarus>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v2 2/3] drm: Add ASPEED GFX driver
+Date: Tue, 2 Apr 2019 08:25:55 +0200
+Message-ID: <20190402062555.GA14723@ravnborg.org>
+References: <20190402021933.13071-1-joel@jms.id.au>
+ <20190402021933.13071-3-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190331020932.GA4108@icarus>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: William Breathitt Gray <vilhelm.gray@gmail.com>, Jonathan Cameron <jic23@kernel.org>
-Cc: kanematsu.shinji@socionext.com, robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, orito.takao@socionext.com, sugaya.taichi@socionext.com, kasai.kazuhiro@socionext.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190402021933.13071-3-joel@jms.id.au>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Joel Stanley <joel@jms.id.au>
+Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel@lists.freedesktop.org, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi William,
-
-On 2019/03/31 11:09, William Breathitt Gray wrote:
-> On Sat, Mar 30, 2019 at 06:36:03PM +0000, Jonathan Cameron wrote:
->> On Tue, 26 Mar 2019 15:32:34 +0900
->> Shinji Kanematsu <kanematsu.shinji@socionext.com> wrote:
->>
->>> This is a series of patch which adds Updown Counter support on
->>> Milbeaut M10V SoC.
->>>
->>> The Updown Counter counts input pulse signal from external quadrature encoder.
->>> It also has input pulse signal counter function.
->> Hi Shinji,
->>
->> Are you aware of the counter subsystem that has been proposed (and
->> as far as I am concerned is ready to be merged)?
->>
->> https://patchwork.kernel.org/project/linux-iio/list/?series=147
->> (I think that's the latest version posted)..
->> William, perhaps you could give an update?
->>
->> (bad luck, you are getting popular ;)
->>
->> I'll take a quick review as it stands, as some issues may carry over.
->> I appreciate that it's always unfortunate to try to upstream stuff at the
->> same time as a new framework is being developed / upstreamed, but I don't
->> intend to take any additional counter drivers into IIO.  We just
->> end up having to maintain old interfaces in more and more drivers.
->>
->> Thanks,
->>
->> Jonathan
-> 
-> Shinji,
-> 
-> If you reimplement this driver to use the new Generic Counter API, I can
-> pick it up and include it with my next patchset submission. Please base
-> your patches ontop of the "generic_counter_v10" branch from my personal
-> repository:
-> 
-> https://gitlab.com/vilhelmgray/iio/commits/generic_counter_v10
-> 
-> Documentation can be found at:
-> 
-> 	Documentation/driver-api/generic-counter.rst
-> 	Documentation/ABI/testing/sysfs-bus-counter
-> 
-> Look at the existing drivers inside the drivers/counter directory to
-> serve as references:
-> 
-> 	drivers/counter/ftm-quaddec.c
-> 	drivers/counter/stm32-timer-cnt.c
-> 
-> If you have any troubles or difficulties with the API, send me a message
-> and I will be happy to help. :-)
-> 
-
-Thank you for your information.
-I read and understand the new Generic Counter API.
-
-Thank you,
-Kanematsu
-
-> Thank you,
-> 
-> William Breathitt Gray
-> 
->>
->>>
->>> Shinji Kanematsu (2):
->>>    dt-bindings: iio: counter: Add Milbeaut Updown Counter
->>>    iio: counter: Add support for Milbeaut Updown Counter
->>>
->>>   .../bindings/iio/counter/milbeaut-updown_cnt.txt   |  22 ++
->>>   drivers/iio/counter/Kconfig                        |  12 +
->>>   drivers/iio/counter/Makefile                       |   1 +
->>>   drivers/iio/counter/milbeaut-updown.h              |  38 ++
->>>   drivers/iio/counter/milbeaut-updown_cnt.c          | 385 +++++++++++++++++++++
->>>   5 files changed, 458 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
->>>   create mode 100644 drivers/iio/counter/milbeaut-updown.h
->>>   create mode 100644 drivers/iio/counter/milbeaut-updown_cnt.c
->>>
->>
+SGkgSm9lbAoKPiBpbmRleCAwMDAwMDAwMDAwMDAuLmZiNTZlNDI1YmQ0OAo+IC0tLSAvZGV2L251
+bGwKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYXNwZWVkL2FzcGVlZF9nZnguaAo+IEBAIC0wLDAg
+KzEsMTA0IEBACj4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wKwo+ICsvLyBD
+b3B5cmlnaHQgMjAxOCBJQk0gQ29ycG9yYXRpb24KPiArCj4gKyNpbmNsdWRlIDxkcm0vZHJtUC5o
+Pgo+ICsjaW5jbHVkZSA8ZHJtL2RybV9zaW1wbGVfa21zX2hlbHBlci5oPgoKQSBkcm1QLmggaW5j
+bHVkZSB3YXMgbGVmdCBoZXJlLCBjYW4gd2UgaGF2ZSB0aGlzIHJlbW92ZWQgdG9vLgoKPiArCj4g
+K3N0YXRpYyBzdHJ1Y3QgZHJtX2RyaXZlciBhc3BlZWRfZ2Z4X2RyaXZlciA9IHsKPiArCS5kcml2
+ZXJfZmVhdHVyZXMgICAgICAgID0gRFJJVkVSX0dFTSB8IERSSVZFUl9NT0RFU0VUIHwKPiArCQkJ
+CURSSVZFUl9QUklNRSB8IERSSVZFUl9BVE9NSUMgfAo+ICsJCQkJRFJJVkVSX0hBVkVfSVJRLApE
+UklWRVJfSEFWRV9JUlEgaXMgb2Jzb2xldGUgYW5kIG5vdCBuZWVkZWQgYW55bW9yZS4KU2VlIGRy
+bV9kcnYuaCBmb3IgZGV0YWlscy4KCldpdGggdGhlc2UgZmV3IHRoaW5ncyBmaXhlZDoKUmV2aWV3
+ZWQtYnk6IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9yZz4KX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
