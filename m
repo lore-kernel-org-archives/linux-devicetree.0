@@ -1,42 +1,44 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v2 0/5] Add bluetooth, gps and accelerometer to TBS A711
-Date: Tue, 2 Apr 2019 10:28:52 +0200
-Message-ID: <20190402082852.GL12562@localhost>
-References: <20190401115616.21337-1-megous@megous.com>
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH 04/15] phy: mvebu-cp110-comphy: Add RXAUI support
+Date: Tue, 2 Apr 2019 10:43:49 +0200
+Message-ID: <20190402104349.2d61ed39@bootlin.com>
+References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
+ <20190401165131.23370-5-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190401115616.21337-1-megous@megous.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: megous@megous.com
-Cc: maxime.ripard@free-electrons.com, wens@csie.org, robh@kernel.org, johan@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190401165131.23370-5-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 01:56:11PM +0200, megous@megous.com wrote:
-> From: Ondrej Jirman <megous@megous.com>
-> 
-> This series enables some peripherals on TBS A711 tablet that already
-> have mainline drivers:
-> 
-> - GPS u-blox neo-6m (via gnss u-blox driver)
-> - Bluetooth (via recently added OF support in the Broadcom
->   bluetooth driver)
-> - Accelermomter BMA-250 (hooked to the I2C bus)
-> 
-> It also modifies A83T DTSI and adds missing UART interfaces.
-> 
-> I've added additional compatible to the gnss/u-blox driver for NEO-6M,
-> because this board uses this module, and I don't think I can use
-> the existing compatible for u-blox,neo-m8, even as a fallback.
-> 
-> Please take a look, and apply the patches if you have no objections.
-> 
-> Many of the patches will go through the sunxi tree, but I'm not
-> sure who will want to take the GPS patches.
+Hi Miquel,
 
-I'll take the GPS patches through my tree once I've had a chance to
-review them. Perhaps easiest to resend the corresponding dts change once
-that is done.
+On Mon,  1 Apr 2019 18:51:20 +0200
+Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-Johan
+>Add support for RXAUI mode by adding an entry in the COMPHY modes list.
+>
+>There is nothing more to handle besides avoiding to return an error to
+>the caller: someone using a DT updated with the right 'phys' property
+>with an old firmware would get an error when initializing the lanes in
+>RXAUI mode, while it could have already been initialized by eg. the
+>bootloader. It would prevent the interface to work with no reason.
+
+However, this would mask-away errors that could occur when we have a
+correct firmware and DT.
+
+Maybe we should simply return the error, this mode isn't supported in
+PPv2 yet so I don't expect this to break any existing setups.
+
+Maxime
