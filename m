@@ -1,41 +1,54 @@
-From: Stephen Hemminger <stephen@networkplumber.org>
-Subject: Re: [PATCH 2/2] ftpm: firmware TPM running in TEE
-Date: Tue, 2 Apr 2019 13:56:43 -0700
-Message-ID: <20190402135643.02443863@shemminger-XPS-13-9360>
-References: <20190402193316.15144-1-sashal@kernel.org>
-        <20190402193316.15144-2-sashal@kernel.org>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH 3/5] media: dt-bindings: aspeed-video: Add missing
+ memory-region property
+Date: Tue, 2 Apr 2019 14:05:49 -0700
+Message-ID: <c715fe6d-d443-c9b4-0a58-29941e0ed539@linux.intel.com>
+References: <1554229504-5661-1-git-send-email-eajames@linux.ibm.com>
+ <1554229504-5661-4-git-send-email-eajames@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190402193316.15144-2-sashal@kernel.org>
+In-Reply-To: <1554229504-5661-4-git-send-email-eajames@linux.ibm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sasha Levin <sashal@kernel.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca, Microsoft Linux Kernel List <linux-kernel@microsoft.com>, "Bryan Kelly (CSI)" <bryankel@microsoft.com>, Thirupathaiah Annapureddy <thiruan@microsoft.com>, Sudhakar Evuri <suredd@microsoft.com>, arnd@arndb.de, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
+To: Eddie James <eajames@linux.ibm.com>, linux-media@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, mturquette@baylibre.com, linux-kernel@vger.kernel.org, sboyd@kernel.org, robh+dt@kernel.org, mchehab@kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2 Apr 2019 12:33:16 -0700
-"Sasha Levin" <sashal@kernel.org> wrote:
+Hi Eddie,
 
-> +/*
-> + * ftpm_tee_tpm_op_recv retrieve fTPM response.
-> + * @param: chip, the tpm_chip description as specified in
-> driver/char/tpm/tpm.h.
-> + * @param: buf,	the buffer to store data.
-> + * @param: count, the number of bytes to read.
-> + * @return: In case of success the number of bytes received.
-> + *	    In other case, a < 0 value describing the issue.
-> + */
+On 4/2/2019 11:25 AM, Eddie James wrote:
+> Missed documenting this property in the initial commit.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> ---
+>   Documentation/devicetree/bindings/media/aspeed-video.txt | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/aspeed-video.txt b/Documentation/devicetree/bindings/media/aspeed-video.txt
+> index 78b464a..346c2d3 100644
+> --- a/Documentation/devicetree/bindings/media/aspeed-video.txt
+> +++ b/Documentation/devicetree/bindings/media/aspeed-video.txt
+> @@ -14,6 +14,11 @@ Required properties:
+>   			the VE
+>    - interrupts:		the interrupt associated with the VE on this platform
+>   
+> +Optional properties:
+> + - memory-region:
+> +	phandle to a memory region to allocate from, as defined in
+> +	Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> +
+>   Example:
+>   
+>   video-engine@1e700000 {
+> @@ -23,4 +28,5 @@ video-engine@1e700000 {
+>       clock-names = "vclk", "eclk";
+>       resets = <&syscon ASPEED_RESET_VIDEO>;
+>       interrupts = <7>;
+> +    memory-region = <&video_engine_memory>
 
-You are using a docbook style comment but it doesn't start with
-docbook prefix.
+nit: a semicolon at the end of the line.
 
-/**
- * ftpm_tee_tpm_op_recv retrieve fTPM response.
- *
- * @param: chip, the tpm_chip description as specified in driver/char/tpm/tpm.h.
- * @param: buf,	the buffer to store data.
- * @param: count, the number of bytes to read.
- * @return: In case of success the number of bytes received.
- *	    In other case, a < 0 value describing the issue.
- */
+>   };
+> 
