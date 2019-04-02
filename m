@@ -1,332 +1,843 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 05/10] dt-bindings: PCI: tegra: Add device tree support
- for T194
-Date: Tue, 2 Apr 2019 16:35:58 +0200
-Message-ID: <20190402143558.GD8017@ulmo>
-References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
- <1553613207-3988-6-git-send-email-vidyas@nvidia.com>
- <20190328131508.GB5518@ulmo>
- <e5a12742-2dfa-e8c8-2a29-24838f4fa939@nvidia.com>
- <20190401150740.GB4874@ulmo>
- <c3190fbe-d197-a810-6bd4-d53c6e375bc5@nvidia.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH 01/14] arm64: dts: imx8qxp: orginize dts in subsystems
+Date: Tue, 2 Apr 2019 14:38:34 +0000
+Message-ID: <AM0PR04MB4211470819F4B81A3E2570C180560@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1550773093-13349-1-git-send-email-aisheng.dong@nxp.com>
+ <1550773093-13349-2-git-send-email-aisheng.dong@nxp.com>
+ <20190402041624.GA4138@X250>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="SFyWQ0h3ruR435lw"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c3190fbe-d197-a810-6bd4-d53c6e375bc5@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, tiwai@suse.de, spujar@nvidia.com, skomatineni@nvidia.com, liviu.dudau@arm.com, krzk@kernel.org, heiko@sntech.de, horms+renesas@verge.net.au, olof@lixom.net, maxime.ripard@bootlin.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, jagan@amarulasolutions.com, enric.balletbo@collabora.com, ezequiel@collabora.com, stefan.wahren@i2se.com, marc.w.gonzalez@free.fr, l.stach@pengutronix.de, tpiepho@impinj.com, hayashi.kunihiko@socionext.com, yue.wang@amlogic.com, shawn.lin@rock-chips.com, xiaowei.bao@nxp.com, linux-pci@vger.kernel.or
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190402041624.GA4138@X250>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+> From: Shawn Guo [mailto:shawnguo@kernel.org]
+> Sent: Tuesday, April 2, 2019 12:16 PM
+> 
+> On Thu, Feb 21, 2019 at 06:24:51PM +0000, Aisheng Dong wrote:
+> > MX8 SoC is comprised of a few HW subsystems while some of them can be
+> > reused in the different SoCs. So let's re-orginize them into
+> > subsystems in device tree as well for the possible reuse of the common part.
+> >
+> > Note, as there's still no devices of hsio subsys, so removed it first
+> > instead of creating a subsys headfile with no devices.
+> > They will be added back when new devices added.
+> >
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> > Cc: Sascha Hauer <kernel@pengutronix.de>
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > ---
+> >  arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi    |  75 +++++
+> >  arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi    |  95 +++++++
+> >  arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi    | 124 ++++++++
+> >  arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi |  29 ++
+> > arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi |  25 ++
+> > arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi |  57 ++++
+> >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi         | 311
+> +--------------------
+> >  7 files changed, 412 insertions(+), 304 deletions(-)  create mode
+> > 100644 arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
+> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
+> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
+> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi
+> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi
+> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
+> > b/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
+> > new file mode 100644
+> > index 0000000..f6f2b94
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
+> > @@ -0,0 +1,75 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Copyright 2018 NXP
+> > + *	Dong Aisheng <aisheng.dong@nxp.com>
+> > + */
+> > +
+> > +adma_subsys: bus@59000000 {
+> 
+> I'm a bit concerned by that the unit-address is part of the subsystem definition.
+> If the subsystem is integrated in a SoC on different address, the while idea will
+> be broken.
+> 
 
---SFyWQ0h3ruR435lw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, I understand the concern.
+AFAICT HW design team usually will guarantee the SS IO base alignment
+in order to maintain the SW compatibility.
+And besides MX8QM/QXP, I also checked two new derived SoCs which are all
+the same.
+Thus I think it's worth to try.
 
-On Tue, Apr 02, 2019 at 05:11:25PM +0530, Vidya Sagar wrote:
-> On 4/1/2019 8:37 PM, Thierry Reding wrote:
-> > On Mon, Apr 01, 2019 at 03:31:54PM +0530, Vidya Sagar wrote:
-> > > On 3/28/2019 6:45 PM, Thierry Reding wrote:
-> > > > On Tue, Mar 26, 2019 at 08:43:22PM +0530, Vidya Sagar wrote:
-> > > > > Add support for Tegra194 PCIe controllers. These controllers are =
-based
-> > > > > on Synopsys DesignWare core IP.
-> > > > >=20
-> > > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > > > ---
-> > > > >    .../bindings/pci/nvidia,tegra194-pcie.txt          | 209 +++++=
-++++++++++++++++
-> > > > >    .../devicetree/bindings/phy/phy-tegra194-p2u.txt   |  34 ++++
-> > > > >    2 files changed, 243 insertions(+)
-> > > > >    create mode 100644 Documentation/devicetree/bindings/pci/nvidi=
-a,tegra194-pcie.txt
-> > > > >    create mode 100644 Documentation/devicetree/bindings/phy/phy-t=
-egra194-p2u.txt
-> > > > >=20
-> > > > > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra19=
-4-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> > > > > new file mode 100644
-> > > > > index 000000000000..31527283a0cd
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.=
-txt
-> > > > > @@ -0,0 +1,209 @@
-> > > > > +NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
-> > > > > +
-> > > > > +This PCIe host controller is based on the Synopsis Designware PC=
-Ie IP
-> > > > > +and thus inherits all the common properties defined in designwar=
-e-pcie.txt.
-> > > > > +
-> > > > > +Required properties:
-> > > > > +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
-> > > > > +- device_type: Must be "pci"
-> > > > > +- reg: A list of physical base address and length for each set o=
-f controller
-> > > > > +  registers. Must contain an entry for each entry in the reg-nam=
-es property.
-> > > > > +- reg-names: Must include the following entries:
-> > > > > +  "appl": Controller's application logic registers
-> > > > > +  "window1": This is the aperture of controller available under =
-4GB boundary
-> > > > > +             (i.e. within 32-bit space). This aperture is typica=
-lly used for
-> > > > > +             accessing config space of root port itself and also=
- the connected
-> > > > > +             endpoints (by appropriately programming internal Ad=
-dress
-> > > > > +             Translation Unit's (iATU) out bound region) and als=
-o to map
-> > > > > +             prefetchable/non-prefetchable BARs.
-> > > > > +  "config": As per the definition in designware-pcie.txt
-> > > >=20
-> > > > I see that you set this to a 256 KiB region for all controllers. Si=
-nce
-> > > > each function can have up to 4 KiB of extended configuration space,=
- that
-> > > > means you have space to address:
-> > > >=20
-> > > >       256 KiB =3D 4 KiB * 8 functions * 8 devices
-> > > >=20
-> > > > Each bus can have up to 32 devices (including the root port) and th=
-ere
-> > > > can be 256 busses, so I wonder how this is supposed to work. How do=
-es
-> > > > the mapping work for configuration space? Does the controller allow
-> > > > moving this 256 KiB window around so that more devices' configurati=
-on
-> > > > space can be accessed?
-> > > We are not using ECAM here instead only pick 4KB region from this 256=
- KB region
-> > > and program iATU (internal Address Translation Unit) of PCIe with the=
- B:D:F of
-> > > the configuration space that is of interest to be able to view the re=
-spective
-> > > config space in that 4KB space. It is a hardware requirement to reser=
-ve 256KB of
-> > > space (though we use only 4K to access configuration space of any dow=
-nstream B:D:F)
-> >=20
-> > Okay, sounds good. I'm wondering if we should maybe note here that
-> > window1 needs to be a 256 KiB window if that's what the hardware
-> > requires.
-> I'll be removing window1 and window2 as they seem to cause unnecessary co=
-nfusion
->=20
-> >=20
-> > > > > +  "atu_dma": iATU and DMA register. This is where the iATU (inte=
-rnal Address
-> > > > > +             Translation Unit) registers of the PCIe core are ma=
-de available
-> > > > > +             fow SW access.
-> > > > > +  "dbi": The aperture where root port's own configuration regist=
-ers are
-> > > > > +         available
-> > > >=20
-> > > > This is slightly confusing because you already said in the descript=
-ion
-> > > > of "window1" that it is used to access the configuration space of t=
-he
-> > > > root port itself.
-> > > >=20
-> > > > Is the root port configuration space available via the regular
-> > > > configuration space registers?
-> > > Root port configuration space is hidden by default and 'dbi' property=
- tells us
-> > > where we would like to *view* it. For this, we use a portion of windo=
-w-1 aperture
-> > > and use it as 'dbi' base to *view* the config space of root port.
-> > > Basically Window-1 and window-2 are the umbrella entries (which I add=
-ed based on
-> > > suggestion from Stephen Warren <swarren@nvidia.com> ) to give a compl=
-ete picture of
-> > > number of apertures available and what they are used for. The windows=
- 1 & 2 as such
-> > > are not used by the driver directly.
-> >=20
-> > So I'm not exactly sure I understand how this works. Does the "dbi"
-> > entry contain a physical address and size of the aperture that we want
-> > to map into a subregion of "window-1"? Is this part of a region where
-> > similar subregions exist for all of the controllers? Could the offset
-> > into such a region be derived from the controller ID?
-> DBI region is not available for SW immediately after power on. Address wh=
-ere we would
-> like to see 'dbi' needs to be programmed in one of the APPL registers. Si=
-nce window1
-> is one of the apertures (under 4GB boundary) available for each controlle=
-r (one window1
-> aperture per controller), we are reserving some portion of window1 to vie=
-w DBI registers.
-> Provided 'window1' is available in DT, 'dbi' can be derived run time also=
-=2E I added it
-> explicitly to so give more clarity on where it is being reserved (just li=
-ke how window2
-> aperture usage is explicitly mentioned through 'ranges'). If the correct =
-approach
-> is to have only 'window1' and derive 'dbi' in the code, I'll change it to=
- that way.
-> Please let me know.
+Regards
+Dong Aisheng
 
-If there are no other requirements other than being in window1, then I
-think it's fine to drop "dbi" here. From what you say elsewhere the
-window1 aperture is 256 KiB and we can partition it as we like, right?
-If so, I don't think there's a need to expose it in a more fine-grained
-way.
-
-One exception may be if other values in DT depend on the value. In that
-case it would be good to have them all in DT so that they can be
-validated.
-
-Having this information in two places technically would require us to
-check that the data is consistent. If we allocate from window1 at
-runtime, things become much easier.
-
-[...]
-> > > > > +- vddio-pex-ctl-supply: Regulator supply for PCIe side band sign=
-als
-> > > > > +
-> > > > > +Optional properties:
-> > > > > +- nvidia,max-speed: limits controllers max speed to this value.
-> > > > > +    1 - Gen-1 (2.5 GT/s)
-> > > > > +    2 - Gen-2 (5 GT/s)
-> > > > > +    3 - Gen-3 (8 GT/s)
-> > > > > +    4 - Gen-4 (16 GT/s)
-> > > > > +- nvidia,init-speed: limits controllers init speed to this value.
-> > > > > +    1 - Gen-1 (2. 5 GT/s)
-> > > > > +    2 - Gen-2 (5 GT/s)
-> > > > > +    3 - Gen-3 (8 GT/s)
-> > > > > +    4 - Gen-4 (16 GT/s)
-> > > > > +- nvidia,disable-aspm-states : controls advertisement of ASPM st=
-ates
-> > > > > +    bit-0 to '1' : disables advertisement of ASPM-L0s
-> > > > > +    bit-1 to '1' : disables advertisement of ASPM-L1. This also =
-disables
-> > > > > +                 advertisement of ASPM-L1.1 and ASPM-L1.2
-> > > > > +    bit-2 to '1' : disables advertisement of ASPM-L1.1
-> > > > > +    bit-3 to '1' : disables advertisement of ASPM-L1.2
-> > > >=20
-> > > > These seem more like configuration options rather than hardware
-> > > > description.
-> > > Yes. Since the platforms like Jetson-Xavier based on T194 are going t=
-o go in
-> > > open market, we are providing these configuration options and hence t=
-hey are
-> > > optional
-> >=20
-> > Under what circumstances would we want to disable certain ASPM states?
-> > My understanding is that PCI device drivers can already disable
-> > individual ASPM states if they don't support them, so why would we ever
-> > want to disable advertisement of certain ASPM states?
-> Well, this is given to give more flexibility while debugging and given th=
-at there is going
-> to be only one config for different platforms in future, it may be possib=
-le to have ASPM
-> config enabled by default and having this DT option would give more contr=
-olled enablement
-> of ASPM states by controlling the advertisement of ASPM states by root po=
-rt.
-
-Again, I think if this is primarily for debugging purposes I think there
-are better ways. If you need to modify and reflash the DTB in order to
-debug, that's suboptimal. Ideally you'd want something that you can just
-enable at runtime (via a module parameter, or a kernel command-line
-option, for example). That will allow you to do some debugging without
-having to rebuild and reflash.
-
-> > > > > +- nvidia,enable-power-down : Enables power down of respective co=
-ntroller and
-> > > > > +    corresponding PLLs if they are not shared by any other entity
-> > > >=20
-> > > > Wouldn't we want this to be the default? Why keep things powered up=
- if
-> > > > they are not needed?
-> > > There could be platforms (automotive based), where it is not required=
- to power down
-> > > controllers and hence needed a flag to control powering down of contr=
-ollers
-> >=20
-> > Is it harmful to power down the controllers on such platforms? It
-> > strikes me as odd to leave something enabled if it isn't needed,
-> > independent of the platform.
-> It is not harmful as such. This is just a flexibility. Also, this might b=
-e required for
-> hot-plug feature.
-> Are you saying that we should have controller getting powered down as def=
-ault and a flag
-> to stop that happening? i.e. something like 'nvidia,disable-power-down' ?
-
-Yeah, I think by default we should always power down hardware if it
-isn't needed. But I don't see why we would need to disable power down.
-What's the use-case? You say this "might be required for hotplug", so
-it sounds like this is not something that has currently been tested? I
-prefer not to have bindings that are based on guesses, because that is
-likely to result in bindings that don't actually meet the real
-requirements and that becomes nasty to maintain in the long run. So if
-we don't currently have a case where we need to keep the controller
-powered on, let's just disable them by default and drop this from the
-bindings. We can always add this back in a backwards-compatible manner
-if it turns out that we do need it. At that point we'll also have more
-data about the context, so we can design better bindings.
-
-> > > > > +Tegra194:
-> > > > > +--------
-> > > > > +
-> > > > > +SoC DTSI:
-> > > > > +
-> > > > > +	pcie@14180000 {
-> > > > > +		compatible =3D "nvidia,tegra194-pcie", "snps,dw-pcie";
-> > > >=20
-> > > > It doesn't seem to me like claiming compatibility with "snps,dw-pci=
-e" is
-> > > > correct. There's a bunch of NVIDIA- or Tegra-specific properties be=
-low
-> > > > and code in the driver. Would this device be able to function if no
-> > > > driver was binding against the "nvidia,tegra194-pcie" compatible st=
-ring?
-> > > > Would it work if you left that out? I don't think so, so we should =
-also
-> > > > not list it here.
-> > > It is required for designware specific code to work properly. It is s=
-pecified
-> > > by ../designware-pcie.txt file
-> >=20
-> > That sounds like a bug to me. Why does the driver need that? I mean the
-> > Tegra instantiation clearly isn't going to work if the driver matches on
-> > that compatible string, so by definition it is not compatible.
-> >=20
-> > Rob, was this intentional? Seems like all other users of the DesignWare
-> > PCIe core use the same scheme, so perhaps I'm missing something?
-> This is the standard usage procedure across all Designware based implemen=
-tations.
-> Probably Rob can give more info on this.
-
-If everyone does this, I suppose it's fine. Maybe Rob can confirm that
-this is really the way it was meant to be, or whether we should take
-action now before propagating this any further.
-
-Thierry
-
---SFyWQ0h3ruR435lw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyjc0sACgkQ3SOs138+
-s6FIdg//cMAkMaPne37Cxe0/scyORcpF2gHlhneRFFXb8fuDxwLY2DeTFXdF5NJc
-bjcsDzSkqqKZFXz4tKWiEO8Ow6Y29hdNrhNJLuLMOG33hg+zD5qMi5s18JtYVytt
-j6eCpZAls7+YoLx6B3J9L73ZxzzhOZRJGK2vfP+yxyN9CRZm873bqiaYEF2mudOk
-b5YLcBHj1W1VmhUqqexMgHVZ3cRPJZKG9n/jIBSQXstjnIgD+wf9luT7DhlM5K6h
-3/ctasTq46uP3uYHCxkI4gRMUxzLj2hRO/fA6tsXtS8kSAiQXLyGbX0gMVioaPPH
-BLKGBv2ABAT52jwjfCZrLi1hR2HEPRcwSkaR94MW2Wy345AVP52zQAscClqwdURH
-/hC5IxvyX+avPmpxK7FZJvSpsEQQh9bUCz7pZ1Thlm9Pd+8O3vC/w4yZRO1ys5wi
-6ssmTnO7ulTmTxvPBbK3Z9IkNShIMWXQgz1XXEsjsGb0WvGXJcf2fCSVjDpLAhCS
-gb7yGat8HVOPiMtYbAaR+T+TtnTLvVn4yi0ePNVYfHN0jeyYx1Kc7w3CP/oeAJF4
-H4uDy5ykjRX6ztrhjNb19UgvtiFSarSuCy7l/2a9WJuvlg7YlpkMV2R/JNXgqsw9
-gX4PLjF5ko04u9gw6Z1GOXhKGXadEnO1zzNTbO4b+qEfbUZCOoM=
-=osYe
------END PGP SIGNATURE-----
-
---SFyWQ0h3ruR435lw--
+> Shawn
+> 
+> > +	compatible = "simple-bus";
+> > +	#address-cells = <1>;
+> > +	#size-cells = <1>;
+> > +	ranges = <0x59000000 0x0 0x59000000 0x2000000>;
+> > +
+> > +	adma_lpcg: clock-controller@59000000 {
+> > +		reg = <0x59000000 0x2000000>;
+> > +		#clock-cells = <1>;
+> > +	};
+> > +
+> > +	adma_lpuart0: serial@5a060000 {
+> > +		reg = <0x5a060000 0x1000>;
+> > +		interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
+> > +		interrupt-parent = <&gic>;
+> > +		clocks = <&adma_lpcg IMX_ADMA_LPCG_UART0_BAUD_CLK>;
+> > +		clock-names = "ipg";
+> > +		power-domains = <&pd IMX_SC_R_UART_0>;
+> > +		status = "disabled";
+> > +	};
+> > +
+> > +	adma_i2c0: i2c@5a800000 {
+> > +		reg = <0x5a800000 0x4000>;
+> > +		interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
+> > +		interrupt-parent = <&gic>;
+> > +		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C0_CLK>;
+> > +		clock-names = "per";
+> > +		assigned-clocks = <&clk IMX_ADMA_I2C0_CLK>;
+> > +		assigned-clock-rates = <24000000>;
+> > +		power-domains = <&pd IMX_SC_R_I2C_0>;
+> > +		status = "disabled";
+> > +	};
+> > +
+> > +	adma_i2c1: i2c@5a810000 {
+> > +		reg = <0x5a810000 0x4000>;
+> > +		interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
+> > +		interrupt-parent = <&gic>;
+> > +		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C1_CLK>;
+> > +		clock-names = "per";
+> > +		assigned-clocks = <&clk IMX_ADMA_I2C1_CLK>;
+> > +		assigned-clock-rates = <24000000>;
+> > +		power-domains = <&pd IMX_SC_R_I2C_1>;
+> > +		status = "disabled";
+> > +	};
+> > +
+> > +	adma_i2c2: i2c@5a820000 {
+> > +		reg = <0x5a820000 0x4000>;
+> > +		interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
+> > +		interrupt-parent = <&gic>;
+> > +		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C2_CLK>;
+> > +		clock-names = "per";
+> > +		assigned-clocks = <&clk IMX_ADMA_I2C2_CLK>;
+> > +		assigned-clock-rates = <24000000>;
+> > +		power-domains = <&pd IMX_SC_R_I2C_2>;
+> > +		status = "disabled";
+> > +	};
+> > +
+> > +	adma_i2c3: i2c@5a830000 {
+> > +		reg = <0x5a830000 0x4000>;
+> > +		interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
+> > +		interrupt-parent = <&gic>;
+> > +		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C3_CLK>;
+> > +		clock-names = "per";
+> > +		assigned-clocks = <&clk IMX_ADMA_I2C3_CLK>;
+> > +		assigned-clock-rates = <24000000>;
+> > +		power-domains = <&pd IMX_SC_R_I2C_3>;
+> > +		status = "disabled";
+> > +	};
+> > +};
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
+> > b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
+> > new file mode 100644
+> > index 0000000..ac5131d
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
+> > @@ -0,0 +1,95 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Copyright 2018 NXP
+> > + *	Dong Aisheng <aisheng.dong@nxp.com>
+> > + */
+> > +
+> > +conn_subsys: bus@5b000000 {
+> > +	compatible = "simple-bus";
+> > +	#address-cells = <1>;
+> > +	#size-cells = <1>;
+> > +	ranges = <0x5b000000 0x0 0x5b000000 0x1000000>;
+> > +
+> > +	conn_lpcg: clock-controller@5b200000 {
+> > +		reg = <0x5b200000 0xb0000>;
+> > +		#clock-cells = <1>;
+> > +	};
+> > +
+> > +	usdhc1: mmc@5b010000 {
+> > +		interrupt-parent = <&gic>;
+> > +		interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
+> > +		reg = <0x5b010000 0x10000>;
+> > +		clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC0_IPG_CLK>,
+> > +			 <&conn_lpcg IMX_CONN_LPCG_SDHC0_PER_CLK>,
+> > +			 <&conn_lpcg IMX_CONN_LPCG_SDHC0_HCLK>;
+> > +		clock-names = "ipg", "per", "ahb";
+> > +		assigned-clocks = <&clk IMX_CONN_SDHC0_CLK>;
+> > +		assigned-clock-rates = <200000000>;
+> > +		power-domains = <&pd IMX_SC_R_SDHC_0>;
+> > +		status = "disabled";
+> > +	};
+> > +
+> > +	usdhc2: mmc@5b020000 {
+> > +		interrupt-parent = <&gic>;
+> > +		interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
+> > +		reg = <0x5b020000 0x10000>;
+> > +		clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC1_IPG_CLK>,
+> > +			 <&conn_lpcg IMX_CONN_LPCG_SDHC1_PER_CLK>,
+> > +			 <&conn_lpcg IMX_CONN_LPCG_SDHC1_HCLK>;
+> > +		clock-names = "ipg", "per", "ahb";
+> > +		assigned-clocks = <&clk IMX_CONN_SDHC1_CLK>;
+> > +		assigned-clock-rates = <200000000>;
+> > +		power-domains = <&pd IMX_SC_R_SDHC_1>;
+> > +		fsl,tuning-start-tap = <20>;
+> > +		fsl,tuning-step= <2>;
+> > +		status = "disabled";
+> > +	};
+> > +
+> > +	usdhc3: mmc@5b030000 {
+> > +		interrupt-parent = <&gic>;
+> > +		interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_HIGH>;
+> > +		reg = <0x5b030000 0x10000>;
+> > +		clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC2_IPG_CLK>,
+> > +			 <&conn_lpcg IMX_CONN_LPCG_SDHC2_PER_CLK>,
+> > +			 <&conn_lpcg IMX_CONN_LPCG_SDHC2_HCLK>;
+> > +		clock-names = "ipg", "per", "ahb";
+> > +		assigned-clocks = <&clk IMX_CONN_SDHC2_CLK>;
+> > +		assigned-clock-rates = <200000000>;
+> > +		power-domains = <&pd IMX_SC_R_SDHC_2>;
+> > +		status = "disabled";
+> > +	};
+> > +
+> > +	fec1: ethernet@5b040000 {
+> > +		reg = <0x5b040000 0x10000>;
+> > +		interrupts = <GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>,
+> > +			     <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+> > +			     <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>,
+> > +			     <GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH>;
+> > +		clocks = <&conn_lpcg IMX_CONN_LPCG_ENET0_IPG_CLK>,
+> > +			 <&conn_lpcg IMX_CONN_LPCG_ENET0_AHB_CLK>,
+> > +			 <&conn_lpcg IMX_CONN_LPCG_ENET0_TX_CLK>,
+> > +			 <&conn_lpcg IMX_CONN_LPCG_ENET0_ROOT_CLK>;
+> > +		clock-names = "ipg", "ahb", "enet_clk_ref", "ptp";
+> > +		fsl,num-tx-queues=<3>;
+> > +		fsl,num-rx-queues=<3>;
+> > +		power-domains = <&pd IMX_SC_R_ENET_0>;
+> > +		status = "disabled";
+> > +	};
+> > +
+> > +	fec2: ethernet@5b050000 {
+> > +		reg = <0x5b050000 0x10000>;
+> > +		interrupts = <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH>,
+> > +				<GIC_SPI 260 IRQ_TYPE_LEVEL_HIGH>,
+> > +				<GIC_SPI 261 IRQ_TYPE_LEVEL_HIGH>,
+> > +				<GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
+> > +		clocks = <&conn_lpcg IMX_CONN_LPCG_ENET1_IPG_CLK>,
+> > +			 <&conn_lpcg IMX_CONN_LPCG_ENET1_AHB_CLK>,
+> > +			 <&conn_lpcg IMX_CONN_LPCG_ENET1_TX_CLK>,
+> > +			 <&conn_lpcg IMX_CONN_LPCG_ENET1_ROOT_CLK>;
+> > +		clock-names = "ipg", "ahb", "enet_clk_ref", "ptp";
+> > +		fsl,num-tx-queues=<3>;
+> > +		fsl,num-rx-queues=<3>;
+> > +		power-domains = <&pd IMX_SC_R_ENET_1>;
+> > +		status = "disabled";
+> > +	};
+> > +};
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
+> > b/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
+> > new file mode 100644
+> > index 0000000..1c6ba8d
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
+> > @@ -0,0 +1,124 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Copyright 2018 NXP
+> > + *	Dong Aisheng <aisheng.dong@nxp.com>
+> > + */
+> > +
+> > +lsio_subsys: bus@5d000000 {
+> > +	compatible = "simple-bus";
+> > +	#address-cells = <1>;
+> > +	#size-cells = <1>;
+> > +	ranges = <0x5d000000 0x0 0x5d000000 0x1000000>;
+> > +
+> > +	lsio_lpcg: clock-controller@5d400000 {
+> > +		reg = <0x5d400000 0x400000>;
+> > +		#clock-cells = <1>;
+> > +	};
+> > +
+> > +	lsio_mu0: mailbox@5d1b0000 {
+> > +		reg = <0x5d1b0000 0x10000>;
+> > +		interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+> > +		#mbox-cells = <0>;
+> > +		status = "disabled";
+> > +	};
+> > +
+> > +	lsio_mu1: mailbox@5d1c0000 {
+> > +		reg = <0x5d1c0000 0x10000>;
+> > +		interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
+> > +		#mbox-cells = <2>;
+> > +	};
+> > +
+> > +	lsio_mu3: mailbox@5d1e0000 {
+> > +		reg = <0x5d1e0000 0x10000>;
+> > +		interrupts = <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
+> > +		#mbox-cells = <0>;
+> > +		status = "disabled";
+> > +	};
+> > +
+> > +	lsio_mu4: mailbox@5d1f0000 {
+> > +		reg = <0x5d1f0000 0x10000>;
+> > +		interrupts = <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
+> > +		#mbox-cells = <0>;
+> > +		status = "disabled";
+> > +	};
+> > +
+> > +	lsio_gpio0: gpio@5d080000 {
+> > +		reg = <0x5d080000 0x10000>;
+> > +		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
+> > +		gpio-controller;
+> > +		#gpio-cells = <2>;
+> > +		interrupt-controller;
+> > +		#interrupt-cells = <2>;
+> > +		power-domains = <&pd IMX_SC_R_GPIO_0>;
+> > +	};
+> > +
+> > +	lsio_gpio1: gpio@5d090000 {
+> > +		reg = <0x5d090000 0x10000>;
+> > +		interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
+> > +		gpio-controller;
+> > +		#gpio-cells = <2>;
+> > +		interrupt-controller;
+> > +		#interrupt-cells = <2>;
+> > +		power-domains = <&pd IMX_SC_R_GPIO_1>;
+> > +	};
+> > +
+> > +	lsio_gpio2: gpio@5d0a0000 {
+> > +		reg = <0x5d0a0000 0x10000>;
+> > +		interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
+> > +		gpio-controller;
+> > +		#gpio-cells = <2>;
+> > +		interrupt-controller;
+> > +		#interrupt-cells = <2>;
+> > +		power-domains = <&pd IMX_SC_R_GPIO_2>;
+> > +	};
+> > +
+> > +	lsio_gpio3: gpio@5d0b0000 {
+> > +		reg = <0x5d0b0000 0x10000>;
+> > +		interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
+> > +		gpio-controller;
+> > +		#gpio-cells = <2>;
+> > +		interrupt-controller;
+> > +		#interrupt-cells = <2>;
+> > +		power-domains = <&pd IMX_SC_R_GPIO_3>;
+> > +	};
+> > +
+> > +	lsio_gpio4: gpio@5d0c0000 {
+> > +		reg = <0x5d0c0000 0x10000>;
+> > +		interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
+> > +		gpio-controller;
+> > +		#gpio-cells = <2>;
+> > +		interrupt-controller;
+> > +		#interrupt-cells = <2>;
+> > +		power-domains = <&pd IMX_SC_R_GPIO_4>;
+> > +	};
+> > +
+> > +	lsio_gpio5: gpio@5d0d0000 {
+> > +		reg = <0x5d0d0000 0x10000>;
+> > +		interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+> > +		gpio-controller;
+> > +		#gpio-cells = <2>;
+> > +		interrupt-controller;
+> > +		#interrupt-cells = <2>;
+> > +		power-domains = <&pd IMX_SC_R_GPIO_5>;
+> > +	};
+> > +
+> > +	lsio_gpio6: gpio@5d0e0000 {
+> > +		reg = <0x5d0e0000 0x10000>;
+> > +		interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
+> > +		gpio-controller;
+> > +		#gpio-cells = <2>;
+> > +		interrupt-controller;
+> > +		#interrupt-cells = <2>;
+> > +		power-domains = <&pd IMX_SC_R_GPIO_6>;
+> > +	};
+> > +
+> > +	lsio_gpio7: gpio@5d0f0000 {
+> > +		reg = <0x5d0f0000 0x10000>;
+> > +		interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
+> > +		gpio-controller;
+> > +		#gpio-cells = <2>;
+> > +		interrupt-controller;
+> > +		#interrupt-cells = <2>;
+> > +		power-domains = <&pd IMX_SC_R_GPIO_7>;
+> > +	};
+> > +};
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi
+> > b/arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi
+> > new file mode 100644
+> > index 0000000..2486c72
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi
+> > @@ -0,0 +1,29 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Copyright 2018 NXP
+> > + *	Dong Aisheng <aisheng.dong@nxp.com>
+> > + */
+> > +
+> > +&adma_lpcg {
+> > +	compatible = "fsl,imx8qxp-lpcg-adma"; };
+> > +
+> > +&adma_lpuart0 {
+> > +	compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart"; };
+> > +
+> > +&adma_i2c0 {
+> > +	compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c"; };
+> > +
+> > +&adma_i2c1 {
+> > +	compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c"; };
+> > +
+> > +&adma_i2c2 {
+> > +	compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c"; };
+> > +
+> > +&adma_i2c3 {
+> > +	compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c"; };
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi
+> > b/arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi
+> > new file mode 100644
+> > index 0000000..27a3b46
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi
+> > @@ -0,0 +1,25 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Copyright 2018 NXP
+> > + *	Dong Aisheng <aisheng.dong@nxp.com>
+> > + */
+> > +
+> > +&conn_lpcg {
+> > +	compatible = "fsl,imx8qxp-lpcg-conn"; };
+> > +
+> > +&usdhc1 {
+> > +	compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc"; };
+> > +
+> > +&usdhc2 {
+> > +	compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc"; };
+> > +
+> > +&fec1 {
+> > +	compatible = "fsl,imx8qxp-fec", "fsl,imx6sx-fec"; };
+> > +
+> > +&fec2 {
+> > +	compatible = "fsl,imx8qxp-fec", "fsl,imx6sx-fec"; };
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi
+> > b/arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi
+> > new file mode 100644
+> > index 0000000..842849b
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi
+> > @@ -0,0 +1,57 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Copyright 2018 NXP
+> > + *	Dong Aisheng <aisheng.dong@nxp.com>
+> > + */
+> > +
+> > +&lsio_lpcg {
+> > +	compatible = "fsl,imx8qxp-lpcg-lsio"; };
+> > +
+> > +&lsio_mu0 {
+> > +	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu"; };
+> > +
+> > +&lsio_mu1 {
+> > +	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu"; };
+> > +
+> > +&lsio_mu3 {
+> > +	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu"; };
+> > +
+> > +&lsio_mu4 {
+> > +	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu"; };
+> > +
+> > +&lsio_gpio0 {
+> > +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio"; };
+> > +
+> > +&lsio_gpio1 {
+> > +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio"; };
+> > +
+> > +&lsio_gpio2 {
+> > +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio"; };
+> > +
+> > +&lsio_gpio3 {
+> > +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio"; };
+> > +
+> > +&lsio_gpio4 {
+> > +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio"; };
+> > +
+> > +&lsio_gpio5 {
+> > +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio"; };
+> > +
+> > +&lsio_gpio6 {
+> > +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio"; };
+> > +
+> > +&lsio_gpio7 {
+> > +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio"; };
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > index 4c3dd95..c27043c 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > @@ -139,308 +139,11 @@
+> >  		clock-frequency = <24000000>;
+> >  		clock-output-names = "xtal_24MHz";
+> >  	};
+> > -
+> > -	adma_subsys: bus@59000000 {
+> > -		compatible = "simple-bus";
+> > -		#address-cells = <1>;
+> > -		#size-cells = <1>;
+> > -		ranges = <0x59000000 0x0 0x59000000 0x2000000>;
+> > -
+> > -		adma_lpcg: clock-controller@59000000 {
+> > -			compatible = "fsl,imx8qxp-lpcg-adma";
+> > -			reg = <0x59000000 0x2000000>;
+> > -			#clock-cells = <1>;
+> > -		};
+> > -
+> > -		adma_lpuart0: serial@5a060000 {
+> > -			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
+> > -			reg = <0x5a060000 0x1000>;
+> > -			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
+> > -			interrupt-parent = <&gic>;
+> > -			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART0_BAUD_CLK>;
+> > -			clock-names = "ipg";
+> > -			power-domains = <&pd IMX_SC_R_UART_0>;
+> > -			status = "disabled";
+> > -		};
+> > -
+> > -		adma_i2c0: i2c@5a800000 {
+> > -			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+> > -			reg = <0x5a800000 0x4000>;
+> > -			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
+> > -			interrupt-parent = <&gic>;
+> > -			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C0_CLK>;
+> > -			clock-names = "per";
+> > -			assigned-clocks = <&clk IMX_ADMA_I2C0_CLK>;
+> > -			assigned-clock-rates = <24000000>;
+> > -			power-domains = <&pd IMX_SC_R_I2C_0>;
+> > -			status = "disabled";
+> > -		};
+> > -
+> > -		adma_i2c1: i2c@5a810000 {
+> > -			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+> > -			reg = <0x5a810000 0x4000>;
+> > -			interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
+> > -			interrupt-parent = <&gic>;
+> > -			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C1_CLK>;
+> > -			clock-names = "per";
+> > -			assigned-clocks = <&clk IMX_ADMA_I2C1_CLK>;
+> > -			assigned-clock-rates = <24000000>;
+> > -			power-domains = <&pd IMX_SC_R_I2C_1>;
+> > -			status = "disabled";
+> > -		};
+> > -
+> > -		adma_i2c2: i2c@5a820000 {
+> > -			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+> > -			reg = <0x5a820000 0x4000>;
+> > -			interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
+> > -			interrupt-parent = <&gic>;
+> > -			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C2_CLK>;
+> > -			clock-names = "per";
+> > -			assigned-clocks = <&clk IMX_ADMA_I2C2_CLK>;
+> > -			assigned-clock-rates = <24000000>;
+> > -			power-domains = <&pd IMX_SC_R_I2C_2>;
+> > -			status = "disabled";
+> > -		};
+> > -
+> > -		adma_i2c3: i2c@5a830000 {
+> > -			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+> > -			reg = <0x5a830000 0x4000>;
+> > -			interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
+> > -			interrupt-parent = <&gic>;
+> > -			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C3_CLK>;
+> > -			clock-names = "per";
+> > -			assigned-clocks = <&clk IMX_ADMA_I2C3_CLK>;
+> > -			assigned-clock-rates = <24000000>;
+> > -			power-domains = <&pd IMX_SC_R_I2C_3>;
+> > -			status = "disabled";
+> > -		};
+> > -	};
+> > -
+> > -	conn_subsys: bus@5b000000 {
+> > -		compatible = "simple-bus";
+> > -		#address-cells = <1>;
+> > -		#size-cells = <1>;
+> > -		ranges = <0x5b000000 0x0 0x5b000000 0x1000000>;
+> > -
+> > -		conn_lpcg: clock-controller@5b200000 {
+> > -			compatible = "fsl,imx8qxp-lpcg-conn";
+> > -			reg = <0x5b200000 0xb0000>;
+> > -			#clock-cells = <1>;
+> > -		};
+> > -
+> > -		usdhc1: mmc@5b010000 {
+> > -			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
+> > -			interrupt-parent = <&gic>;
+> > -			interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
+> > -			reg = <0x5b010000 0x10000>;
+> > -			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC0_IPG_CLK>,
+> > -				 <&conn_lpcg IMX_CONN_LPCG_SDHC0_PER_CLK>,
+> > -				 <&conn_lpcg IMX_CONN_LPCG_SDHC0_HCLK>;
+> > -			clock-names = "ipg", "per", "ahb";
+> > -			assigned-clocks = <&clk IMX_CONN_SDHC0_CLK>;
+> > -			assigned-clock-rates = <200000000>;
+> > -			power-domains = <&pd IMX_SC_R_SDHC_0>;
+> > -			status = "disabled";
+> > -		};
+> > -
+> > -		usdhc2: mmc@5b020000 {
+> > -			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
+> > -			interrupt-parent = <&gic>;
+> > -			interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
+> > -			reg = <0x5b020000 0x10000>;
+> > -			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC1_IPG_CLK>,
+> > -				 <&conn_lpcg IMX_CONN_LPCG_SDHC1_PER_CLK>,
+> > -				 <&conn_lpcg IMX_CONN_LPCG_SDHC1_HCLK>;
+> > -			clock-names = "ipg", "per", "ahb";
+> > -			assigned-clocks = <&clk IMX_CONN_SDHC1_CLK>;
+> > -			assigned-clock-rates = <200000000>;
+> > -			power-domains = <&pd IMX_SC_R_SDHC_1>;
+> > -			fsl,tuning-start-tap = <20>;
+> > -			fsl,tuning-step= <2>;
+> > -			status = "disabled";
+> > -		};
+> > -
+> > -		usdhc3: mmc@5b030000 {
+> > -			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
+> > -			interrupt-parent = <&gic>;
+> > -			interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_HIGH>;
+> > -			reg = <0x5b030000 0x10000>;
+> > -			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC2_IPG_CLK>,
+> > -				 <&conn_lpcg IMX_CONN_LPCG_SDHC2_PER_CLK>,
+> > -				 <&conn_lpcg IMX_CONN_LPCG_SDHC2_HCLK>;
+> > -			clock-names = "ipg", "per", "ahb";
+> > -			assigned-clocks = <&clk IMX_CONN_SDHC2_CLK>;
+> > -			assigned-clock-rates = <200000000>;
+> > -			power-domains = <&pd IMX_SC_R_SDHC_2>;
+> > -			status = "disabled";
+> > -		};
+> > -
+> > -		fec1: ethernet@5b040000 {
+> > -			compatible = "fsl,imx8qxp-fec", "fsl,imx6sx-fec";
+> > -			reg = <0x5b040000 0x10000>;
+> > -			interrupts = <GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>,
+> > -				     <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+> > -				     <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>,
+> > -				     <GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH>;
+> > -			clocks = <&conn_lpcg IMX_CONN_LPCG_ENET0_IPG_CLK>,
+> > -				 <&conn_lpcg IMX_CONN_LPCG_ENET0_AHB_CLK>,
+> > -				 <&conn_lpcg IMX_CONN_LPCG_ENET0_TX_CLK>,
+> > -				 <&conn_lpcg IMX_CONN_LPCG_ENET0_ROOT_CLK>;
+> > -			clock-names = "ipg", "ahb", "enet_clk_ref", "ptp";
+> > -			fsl,num-tx-queues=<3>;
+> > -			fsl,num-rx-queues=<3>;
+> > -			power-domains = <&pd IMX_SC_R_ENET_0>;
+> > -			status = "disabled";
+> > -		};
+> > -
+> > -		fec2: ethernet@5b050000 {
+> > -			compatible = "fsl,imx8qxp-fec", "fsl,imx6sx-fec";
+> > -			reg = <0x5b050000 0x10000>;
+> > -			interrupts = <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH>,
+> > -					<GIC_SPI 260 IRQ_TYPE_LEVEL_HIGH>,
+> > -					<GIC_SPI 261 IRQ_TYPE_LEVEL_HIGH>,
+> > -					<GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
+> > -			clocks = <&conn_lpcg IMX_CONN_LPCG_ENET1_IPG_CLK>,
+> > -				 <&conn_lpcg IMX_CONN_LPCG_ENET1_AHB_CLK>,
+> > -				 <&conn_lpcg IMX_CONN_LPCG_ENET1_TX_CLK>,
+> > -				 <&conn_lpcg IMX_CONN_LPCG_ENET1_ROOT_CLK>;
+> > -			clock-names = "ipg", "ahb", "enet_clk_ref", "ptp";
+> > -			fsl,num-tx-queues=<3>;
+> > -			fsl,num-rx-queues=<3>;
+> > -			power-domains = <&pd IMX_SC_R_ENET_1>;
+> > -			status = "disabled";
+> > -		};
+> > -	};
+> > -
+> > -	lsio_subsys: bus@5d000000 {
+> > -		compatible = "simple-bus";
+> > -		#address-cells = <1>;
+> > -		#size-cells = <1>;
+> > -		ranges = <0x5d000000 0x0 0x5d000000 0x1000000>;
+> > -
+> > -		lsio_lpcg: clock-controller@5d400000 {
+> > -			compatible = "fsl,imx8qxp-lpcg-lsio";
+> > -			reg = <0x5d400000 0x400000>;
+> > -			#clock-cells = <1>;
+> > -		};
+> > -
+> > -		lsio_mu0: mailbox@5d1b0000 {
+> > -			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+> > -			reg = <0x5d1b0000 0x10000>;
+> > -			interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+> > -			#mbox-cells = <0>;
+> > -			status = "disabled";
+> > -		};
+> > -
+> > -		lsio_mu1: mailbox@5d1c0000 {
+> > -			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+> > -			reg = <0x5d1c0000 0x10000>;
+> > -			interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
+> > -			#mbox-cells = <2>;
+> > -		};
+> > -
+> > -		lsio_mu3: mailbox@5d1e0000 {
+> > -			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+> > -			reg = <0x5d1e0000 0x10000>;
+> > -			interrupts = <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
+> > -			#mbox-cells = <0>;
+> > -			status = "disabled";
+> > -		};
+> > -
+> > -		lsio_mu4: mailbox@5d1f0000 {
+> > -			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+> > -			reg = <0x5d1f0000 0x10000>;
+> > -			interrupts = <GIC_SPI 180 IRQ_TYPE_LEVEL_HIGH>;
+> > -			#mbox-cells = <0>;
+> > -			status = "disabled";
+> > -		};
+> > -
+> > -		lsio_gpio0: gpio@5d080000 {
+> > -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> > -			reg = <0x5d080000 0x10000>;
+> > -			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
+> > -			gpio-controller;
+> > -			#gpio-cells = <2>;
+> > -			interrupt-controller;
+> > -			#interrupt-cells = <2>;
+> > -			power-domains = <&pd IMX_SC_R_GPIO_0>;
+> > -		};
+> > -
+> > -		lsio_gpio1: gpio@5d090000 {
+> > -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> > -			reg = <0x5d090000 0x10000>;
+> > -			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
+> > -			gpio-controller;
+> > -			#gpio-cells = <2>;
+> > -			interrupt-controller;
+> > -			#interrupt-cells = <2>;
+> > -			power-domains = <&pd IMX_SC_R_GPIO_1>;
+> > -		};
+> > -
+> > -		lsio_gpio2: gpio@5d0a0000 {
+> > -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> > -			reg = <0x5d0a0000 0x10000>;
+> > -			interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
+> > -			gpio-controller;
+> > -			#gpio-cells = <2>;
+> > -			interrupt-controller;
+> > -			#interrupt-cells = <2>;
+> > -			power-domains = <&pd IMX_SC_R_GPIO_2>;
+> > -		};
+> > -
+> > -		lsio_gpio3: gpio@5d0b0000 {
+> > -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> > -			reg = <0x5d0b0000 0x10000>;
+> > -			interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
+> > -			gpio-controller;
+> > -			#gpio-cells = <2>;
+> > -			interrupt-controller;
+> > -			#interrupt-cells = <2>;
+> > -			power-domains = <&pd IMX_SC_R_GPIO_3>;
+> > -		};
+> > -
+> > -		lsio_gpio4: gpio@5d0c0000 {
+> > -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> > -			reg = <0x5d0c0000 0x10000>;
+> > -			interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
+> > -			gpio-controller;
+> > -			#gpio-cells = <2>;
+> > -			interrupt-controller;
+> > -			#interrupt-cells = <2>;
+> > -			power-domains = <&pd IMX_SC_R_GPIO_4>;
+> > -		};
+> > -
+> > -		lsio_gpio5: gpio@5d0d0000 {
+> > -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> > -			reg = <0x5d0d0000 0x10000>;
+> > -			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+> > -			gpio-controller;
+> > -			#gpio-cells = <2>;
+> > -			interrupt-controller;
+> > -			#interrupt-cells = <2>;
+> > -			power-domains = <&pd IMX_SC_R_GPIO_5>;
+> > -		};
+> > -
+> > -		lsio_gpio6: gpio@5d0e0000 {
+> > -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> > -			reg = <0x5d0e0000 0x10000>;
+> > -			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
+> > -			gpio-controller;
+> > -			#gpio-cells = <2>;
+> > -			interrupt-controller;
+> > -			#interrupt-cells = <2>;
+> > -			power-domains = <&pd IMX_SC_R_GPIO_6>;
+> > -		};
+> > -
+> > -		lsio_gpio7: gpio@5d0f0000 {
+> > -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> > -			reg = <0x5d0f0000 0x10000>;
+> > -			interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
+> > -			gpio-controller;
+> > -			#gpio-cells = <2>;
+> > -			interrupt-controller;
+> > -			#interrupt-cells = <2>;
+> > -			power-domains = <&pd IMX_SC_R_GPIO_7>;
+> > -		};
+> > -	};
+> > +	#include "imx8-ss-adma.dtsi"
+> > +	#include "imx8-ss-conn.dtsi"
+> > +	#include "imx8-ss-lsio.dtsi"
+> >  };
+> > +
+> > +#include "imx8qxp-ss-adma.dtsi"
+> > +#include "imx8qxp-ss-conn.dtsi"
+> > +#include "imx8qxp-ss-lsio.dtsi"
+> > --
+> > 2.7.4
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Flists
+> > .infradead.org%2Fmailman%2Flistinfo%2Flinux-arm-kernel&amp;data=02%7
+> C0
+> >
+> 1%7Caisheng.dong%40nxp.com%7Cf4c92b89211c4d3b92fd08d6b7220016%7
+> C686ea1
+> >
+> d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C636897753996272452&amp;s
+> data=Od%2
+> >
+> BfKuGlZHAmXMFHA3ZP9N7zUcUPha%2BskU%2FAABLd5F0%3D&amp;reserve
+> d=0
