@@ -1,59 +1,51 @@
 From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V4 1/3] dt-bindings: hwmon: Add tachometer interrupt to pwm-fan
-Date: Tue,  2 Apr 2019 16:21:48 +0200
-Message-ID: <1554214910-29925-2-git-send-email-stefan.wahren@i2se.com>
-References: <1554214910-29925-1-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH V4 0/3] hwmon: pwm-fan: Add RPM support
+Date: Tue,  2 Apr 2019 16:21:47 +0200
+Message-ID: <1554214910-29925-1-git-send-email-stefan.wahren@i2se.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554214910-29925-1-git-send-email-stefan.wahren@i2se.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Robin Murphy <robin.murphy@arm.com>
 Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the tachometer interrupt to the pwm-fan binding, which is
-necessary for RPM support.
+Contrary to the gpio-fan the pwm-fan driver isn't easy to setup
+with pwmconfig/fancontrol because of the missing hwmon sysfs entry
+for actual revolutions per minute. This series adds this feature.
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/hwmon/pwm-fan.txt | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+Changes in V4:
+- remove copy & paste artifact in dt-binding example
+- switch to u64 for rpm calculation
+- drop overflow handling and init atomic
+- handle 0 not as valid irq
+- reduce range of pulses_per_revolution
+- handle probe defer of platform_get_irq
+- delete timer properly in bail-out path
 
-diff --git a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-index 49ca5d8..6ced829b 100644
---- a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-+++ b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-@@ -7,7 +7,16 @@ Required properties:
- 			which correspond to thermal cooling states
- 
- Optional properties:
--- fan-supply    : phandle to the regulator that provides power to the fan
-+- fan-supply		: phandle to the regulator that provides power to the fan
-+- interrupts		: This contains a single interrupt specifier which
-+			  describes the tachometer output of the fan as an
-+			  interrupt source. The output signal must generate a
-+			  defined number of interrupts per fan revolution, which
-+			  require that it must be self resetting edge interrupts.
-+			  See interrupt-controller/interrupts.txt for the format.
-+- pulses-per-revolution : define the tachometer pulses per fan revolution as
-+			  an integer (default is 2 interrupts per revolution).
-+			  The value must be greater than zero.
- 
- Example:
- 	fan0: pwm-fan {
-@@ -38,3 +47,13 @@ Example:
- 					};
- 			     };
- 		};
-+
-+Example 2:
-+	fan0: pwm-fan {
-+		compatible = "pwm-fan";
-+		pwms = <&pwm 0 40000 0>;
-+		fan-supply = <&reg_fan>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
-+		pulses-per-revolution = <2>;
-+	};
+Changes in V3:
+- rename property interrupt-ratio to pulses-per-revolution
+  to avoid confusion with interrupt binding
+- handle error case pulses-per-revolution = 0
+- bail out properly in case we are unable to request the irq
+
+Changes in V2:
+- address Guenter's comments:
+  - improve description of interrupts
+  - use atomic_t to avoid races of the pulse counter
+  - measure sample time to make rpm more reliable under load
+  - make sysfs entry fan1_input conditional
+- add dt-property to define interrupts per fan revolution
+- example for fan with RPM support
+
+
+Stefan Wahren (3):
+  dt-bindings: hwmon: Add tachometer interrupt to pwm-fan
+  Documentation: pwm-fan: Add description for RPM support
+  hwmon: pwm-fan: Add RPM support via external interrupt
+
+ .../devicetree/bindings/hwmon/pwm-fan.txt          |  21 +++-
+ Documentation/hwmon/pwm-fan                        |   3 +
+ drivers/hwmon/pwm-fan.c                            | 111 ++++++++++++++++++++-
+ 3 files changed, 130 insertions(+), 5 deletions(-)
+
 -- 
 2.7.4
