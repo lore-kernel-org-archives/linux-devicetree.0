@@ -1,89 +1,65 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH] dt-bindings: cpu: Fix JSON schema
-Date: Tue, 2 Apr 2019 20:42:02 +0900
-Message-ID: <b3ecf5c5-9b1a-eb8b-95c2-c30a94c8bdd8@socionext.com>
-References: <20190318100521.29109-1-maxime.ripard@bootlin.com>
- <CAL_JsqJ_LYycXazkdP2Q=e-jynKiX+z5En0bz0AWpDjsevwQTg@mail.gmail.com>
- <20190401091050.cwph7xlpv3pmkwnq@flea>
- <78bb248e-56b8-b825-e763-583f75148eb3@socionext.com>
- <20190401113546.d6p2mg2y47abhumz@flea>
- <b6cb709b-7b1a-6bab-6f93-bcb565be18fb@socionext.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/2] dt-bindings: display: tfp410: Add bus-width
+ parameter property
+Date: Tue, 2 Apr 2019 14:45:21 +0300
+Message-ID: <20190402114521.GV4805@pendragon.ideasonboard.com>
+References: <20190401124143.17179-1-peter.ujfalusi@ti.com>
+ <20190401124143.17179-2-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b6cb709b-7b1a-6bab-6f93-bcb565be18fb@socionext.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190401124143.17179-2-peter.ujfalusi@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com, jsarha@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2019/04/01 22:02, Sugaya, Taichi wrote:
-> Hi,
-> 
-> On 2019/04/01 20:35, Maxime Ripard wrote:
->> Hi,
->>
->> On Mon, Apr 01, 2019 at 07:52:06PM +0900, Sugaya, Taichi wrote:
->>> On 2019/04/01 18:10, Maxime Ripard wrote:
->>>> Hi Sugaya, Arnd, Olof,
->>>>
->>>> On Thu, Mar 28, 2019 at 02:35:54PM -0500, Rob Herring wrote:
->>>>> +arm-soc
->>>>>
->>>>> On Mon, Mar 18, 2019 at 5:05 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->>>>>>
->>>>>> Commit fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for
->>>>>> Milbeaut") added support for a new cpu enable-method, but did so using
->>>>>> tabulations to ident. This is however invalid in the syntax, and resulted
->>>>>> in a failure when trying to use that schemas for validation.
->>>>>>
->>>>>> Use spaces instead of tabs to indent to fix this.
->>>>>>
->>>>>> Fixes: fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
->>>>>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->>>>>> ---
->>>>>>    Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
->>>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> Reviewed-by: Rob Herring <robh@kernel.org>
->>>>>
->>>>> This should be applied to arm-soc tree having the commit.
->>>>
->>>> Could you pick up that patch?
->>>
->>> I got it.
->>> My mission is to resubmit your fix-patch added my singned-off tag and
->>> Rob's reviewed tag...right?
->>
->> If you are part of arm-soc and send your pull requests to Arnd and
->> Olof, simply pick it up in the same branch than the initial patch was
->> in. And when you apply that patch, you indeed need to add your
->> Signed-off-by (note that most commands to commit have an option to do
->> that automatically: -s and that includes git am) and the Rob's
->> reviewed-by.
->>
->> Then, send a new pull request to arm-soc.
->>
-> 
-> Okay, thanks for your suggestion.
-> I try to make pull request!
-> 
-
-Sorry I realized that I couldn't make a private repository, so I'll send my Ack instead.
-
-Acked-by: Sugaya Taichi <sugaya.taichi@socionext.com>
-
-> Thanks,
-> Sugaya Taichi
-> 
->> Maxime
->>
->> -- 
->> Maxime Ripard, Bootlin
->> Embedded Linux and Kernel engineering
->> https://bootlin.com
->>
+SGkgUGV0ZXIsCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIE1vbiwgQXByIDAxLCAyMDE5
+IGF0IDAzOjQxOjQyUE0gKzAzMDAsIFBldGVyIFVqZmFsdXNpIHdyb3RlOgo+IHRmcDQxMCBjYW4g
+YmUgY29ubmVjdCB0byBob3N0IHByb2Nlc3NvciBpbiAyNGJpdCwgc2luZ2xlLWVkZ2UgKDI0IGxp
+bmVzKSBvcgo+IDEyYml0LCBkdWFsLWVkZ2UgKDEyIGxpbmVzKS4KPiAKPiBBZGQgYnVzLXdpZHRo
+IHRvIHRoZSBkb2N1bWVudGF0aW9uIHNvIGl0IGNhbiBiZSB1c2VkIHRvIHNlbGVjdCBiZXR3ZWVu
+IHRoZQo+IHR3byBjb25uZWN0aW9uIHNjaGVtZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBV
+amZhbHVzaSA8cGV0ZXIudWpmYWx1c2lAdGkuY29tPgoKUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGlu
+Y2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KCj4gLS0tCj4gIC4uLi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHRmcDQxMC50eHQgICB8IDEwICsr
+KysrKysrKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
+KQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9icmlkZ2UvdGksdGZwNDEwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0ZnA0MTAudHh0Cj4gaW5kZXggM2Y5MDNhZjkzOTQ5Li41
+ZmY0ZjY0ZWY4ZTggMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHRmcDQxMC50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksdGZwNDEwLnR4dAo+IEBAIC0xOCw3
+ICsxOCwxNCBAQCBUaGlzIGRldmljZSBoYXMgdHdvIHZpZGVvIHBvcnRzLiBUaGVpciBjb25uZWN0
+aW9ucyBhcmUgbW9kZWxlZCB1c2luZyB0aGUgT0YKPiAgZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVk
+IGluIFsxXS4gRWFjaCBwb3J0IG5vZGUgc2hhbGwgaGF2ZSBhIHNpbmdsZSBlbmRwb2ludC4KPiAg
+Cj4gIC0gUG9ydCAwIGlzIHRoZSBEUEkgaW5wdXQgcG9ydC4gSXRzIGVuZHBvaW50IHN1Ym5vZGUg
+c2hhbGwgY29udGFpbiBhCj4gLSAgcGNsay1zYW1wbGUgcHJvcGVydHkgYW5kIGEgcmVtb3RlLWVu
+ZHBvaW50IHByb3BlcnR5IGFzIHNwZWNpZmllZCBpbiBbMV0uCj4gKyAgcGNsay1zYW1wbGUgYW5k
+IGJ1cy13aWR0aCBwcm9wZXJ0eSBhbmQgYSByZW1vdGUtZW5kcG9pbnQgcHJvcGVydHkgYXMgc3Bl
+Y2lmaWVkCj4gKyAgaW4gWzFdLgo+ICsgIC0gSWYgcGNsay1zYW1wbGUgaXMgbm90IGRlZmluZWQs
+IHBjbGstc2FtcGxlID0gMCBzaG91bGQgYmUgYXNzdW1lZCBmb3IKPiArICAgIGJhY2t3YXJkIGNv
+bXBhdGliaWxpdHkuCj4gKyAgLSBJZiBidXMtd2lkdGggaXMgbm90IGRlZmluZWQgdGhlbiBidXMt
+d2lkdGggPSAyNCBzaG91bGQgYmUgYXNzdW1lZCBmb3IKPiArICAgIGJhY2t3YXJkIGNvbXBhdGli
+aWxpdHkuCj4gKyAgICBidXMtd2lkdGggPSAyNDogMjQgZGF0YSBsaW5lcyBhcmUgY29ubmVjdGVk
+IGFuZCBzaW5nbGUtZWRnZSBtb2RlCj4gKyAgICBidXMtd2lkdGggPSAxMjogMTIgZGF0YSBsaW5l
+cyBhcmUgY29ubmVjdGVkIGFuZCBkdWFsLWVkZ2UgbW9kZQo+ICAKPiAgLSBQb3J0IDEgaXMgdGhl
+IERWSSBvdXRwdXQgcG9ydC4gSXRzIGVuZHBvaW50IHN1Ym5vZGUgc2hhbGwgY29udGFpbiBhCj4g
+ICAgcmVtb3RlLWVuZHBvaW50IHByb3BlcnR5IGlzIHNwZWNpZmllZCBpbiBbMV0uCj4gQEAgLTQz
+LDYgKzUwLDcgQEAgdGZwNDEwOiBlbmNvZGVyQDAgewo+ICAKPiAgCQkJdGZwNDEwX2luOiBlbmRw
+b2ludEAwIHsKPiAgCQkJCXBjbGstc2FtcGxlID0gPDE+Owo+ICsJCQkJYnVzLXdpZHRoID0gPDI0
+PjsKPiAgCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHBpX291dD47Cj4gIAkJCX07Cj4gIAkJfTsK
+Ci0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydApfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWw=
