@@ -1,39 +1,69 @@
-From: James Morse <james.morse@arm.com>
-Subject: Re: of_reserved_mem()/kexec interaction
-Date: Tue, 2 Apr 2019 11:14:25 +0100
-Message-ID: <f48b0010-a136-48a4-bfc7-7bbaf91b4da9@arm.com>
-References: <DB6PR0402MB2727C7111A5BDBB07F05E29886550@DB6PR0402MB2727.eurprd04.prod.outlook.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v5 6/8] dt-bindings: i2c: iproc: add "brcm,iproc-nic-i2c"
+ compatible string
+Date: Tue, 2 Apr 2019 12:17:57 +0200
+Message-ID: <20190402101757.GC2960@kunai>
+References: <20190214175725.60462-1-ray.jui@broadcom.com>
+ <20190214175725.60462-7-ray.jui@broadcom.com>
+ <20190327222439.GC15396@kunai>
+ <0b97cacd-9bf4-135a-b2ee-1d51ab380b1c@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="aT9PWwzfKXlsBJM1"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB6PR0402MB2727C7111A5BDBB07F05E29886550@DB6PR0402MB2727.eurprd04.prod.outlook.com>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <0b97cacd-9bf4-135a-b2ee-1d51ab380b1c@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roy Pledge <roy.pledge@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Ray Jui <ray.jui@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Roy,
 
-On 01/04/2019 20:09, Roy Pledge wrote:
-> I'm trying to understand if memory reserved in the device tree via the
-> "reserved-memory" facility is preserved during a kexec system call,
-> i.e., is the memory at the same location with the contents undisturbed
-> when the new kernel starts?
-
-If the reservation is a static-allocation (so the address appears in the DT) then the new
-kernel should know this is reserved too, and not touch it.
-
-If its a dynamic-allocation, the address isn't in the DT, so the new kernel can't know. It
-will dynamically allocate a new reservation, which may be in a different place. If the
-data didn't matter at the first-boot, it probably doesn't matter over subsequent kexec either.
-
-As an outlier: the gic has some funny requirements around this. It needs to dynamically
-allocate a page during first-boot that is preserved over kexec. It does this using
-efi_mem_reserve_persistent().
+--aT9PWwzfKXlsBJM1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
-Thanks,
+> Note APE is a co-processor that is not visible from the Linux running
+> from the host processor.
+>=20
+> "brcm,iproc-nic-i2c" here is introduced to allow the I2C port from APE
+> to be completely owned by the host CPU, to meet the requirement of
+> certain use cases. At the same time, the control of the I2C port from
+> APE will be disabled.
+>=20
+> The "brcm,ape-hsls-addr-mask" defines the address translation and be
+> programmed into some configuration registers to allow the host to
+> directly access the I2C registers of APE. Note those configuration
+> registers are owned by the host, and that address is not APE's address
+> space nor the host is intending to take over the control of APE.
+>=20
+> Therefore, I think it makes way more sense to use an address mask type
+> of DT property here.
 
-James
+Thanks for the explanation! Well, since Rob is already OK with it, then
+so am I.
+
+
+--aT9PWwzfKXlsBJM1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyjNtEACgkQFA3kzBSg
+KbZsNhAAqxsHCfBYJ33tztPs31q8C+sO9ENStERBsehhnKVof2x0ArFYXmPzyOU4
+J/Fc7OM9vVZhYoogbIxSZvL0ixi/v1WYDCQiyxAEOKOb4kr35gdawRM41KgP9390
+9Re6BIB0MdW5pvgoTz2Kypd6StyIHOlinvjC1eSedA4/CXd4n7e5e1k85UqopYpk
+7gY1CzTrZ073k/hE6WR9cRmj17TxyWnhQNJw7tmcc+5DUmaOVaNy+n2tUBF40W1a
+ALldjj+BwY4oIir4jmfGar4DWUBNW8LYKfZHY63FC9CWPkjNNpSA60yH9V2ZM5wd
+LznGq3MBfS6V4yVGaFHkJRp9BQRgkTe1kLxDrNskDxxYfjVcuavf4c7xgdsIXi+m
+KDY5voyZxIf5tVq6J/J3fYw2KYn4Ep1DL7RJ0kA/9fmfYD0l+KXTTs+v/ofipWsR
+N8+0aJ2xH77H8XoFJtaFqdcVtJmZu+RUXq8O2TvhVxQ7KgHFMW0RyaflJSxcspR/
+eMZBLKvCvZrsyZzYf/AH8merQtDWXlO0a7mgc5MbZflZFtWyCOXmBI14o67y6EyA
+S60JTbEsLfO7NLvpK2P1DvY2CT9I3UGQPupTBR3vDh5lj3E4Cek9UC+KZ+v4I9CQ
+DfDshJFLrmPetrEvx2auDtKuhdI86a7/BwCV3yYqQsqcb/ZsOh0=
+=c8Wy
+-----END PGP SIGNATURE-----
+
+--aT9PWwzfKXlsBJM1--
