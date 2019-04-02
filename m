@@ -1,229 +1,84 @@
-Return-Path: <SRS0=vThj=SN=flygoat.com=jiaxun.yang@kernel.org>
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v2 6/6] MIPS: Loongson32: dts: add ls1b & ls1c
-Date: Thu, 11 Apr 2019 20:19:15 +0800
-Message-Id: <20190411121915.8040-7-jiaxun.yang@flygoat.com>
-In-Reply-To: <20190411121915.8040-1-jiaxun.yang@flygoat.com>
-References: <20190312091520.8863-2-jiaxun.yang@flygoat.com>
- <20190411121915.8040-1-jiaxun.yang@flygoat.com>
+Return-Path: <SRS0=mx8/=SE=in.bosch.com=ArunKumar.Prakash@kernel.org>
+From: ArunKumar.Prakash <ArunKumar.Prakash@in.bosch.com>
+Subject: [PATCH] of: overlay: Fix for possible kfree() on already freed memory
+Message-ID: <0171a15f-a1fc-bcc6-f10d-1bc0e401eadd@in.bosch.com>
+Date: Tue, 2 Apr 2019 06:53:25 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org, paul.burton@mips.com, robh+dt@kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add devicetree skeleton for ls1b and ls1c.
+While applying an overlay, on an error return from
+init_overlay_changeset(), of_overlay_apply()
+frees memory pointed by the function arguments 'fdt' and 'tree';
+free_overlay_changeset() is then called which tries to free memory
+at the same location as 'fdt' aka 'ovcs->fdt' and
+'tree' aka 'ovcs->overlay_tree'.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+This can produce kernel Oops/BUG_ON() assertion.
+This is fixed by making sure elements in ovcs are zero/NULL initialized
+until _all_ checks for errors pass.
+
+Below kernel OOPS occurred when a device tree overlay
+with an invalid target/target-path is applied.
+
+OF: overlay: find target, node: /fragment@2, path '/external-pcb' not found
+OF: overlay: init_overlay_changeset() failed, ret = -22
+------------[ cut here ]------------
+kernel BUG at mm/slub.c:3892!
+Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+
+------------[manual cut]------------------
+task: ffff8004c1529c00 task.stack: ffff00001eea8000
+PC is at kfree+0xe4/0x238
+LR is at free_overlay_changeset+0x8c/0xac
+pc : [<ffff0000081d13e0>] lr : [<ffff0000085b29e8>] ps
+x0 : ffff7e0012795d20
+Process cat (pid: 2586, stack limit = 0xffff00001eea8000)
+Call trace:
+Exception stack(0xffff00001eeaba20 to 0xffff00001eeabb60)
+[<ffff0000081d13e0>] kfree+0xe4/0x238
+[<ffff0000085b29e8>] free_overlay_changeset+0x8c/0xac
+[<ffff0000085b33a0>] of_overlay_fdt_apply+0x4d4/0x614
+[<ffff0000085ac2e8>] create_overlay+0xac/0x104
+[<ffff0000085ac3a4>] cfs_overlay_item_dtbo_write+0x64/0x98
+[<ffff00000825dda8>] configfs_release_bin_file+0x58/0x98
+[<ffff0000081e587c>] __fput+0xe4/0x1a8
+[<ffff0000081e5998>] ____fput+0xc/0x14
+[<ffff0000080b9da0>] task_work_run+0x88/0xa4
+[<ffff0000080a0968>] do_exit+0x428/0x8f4
+[<ffff0000080a0ea4>] do_group_exit+0x40/0x98
+[<ffff0000080a0f0c>] __wake_up_parent+0x0/0x28
+
+Signed-off-by: Arun Kumar Prakash <ArunKumar.Prakash@in.bosch.com>
 ---
- arch/mips/boot/dts/loongson/Makefile  |   6 ++
- arch/mips/boot/dts/loongson/ls1b.dts  |  30 ++++++++
- arch/mips/boot/dts/loongson/ls1c.dts  |  34 +++++++++
- arch/mips/boot/dts/loongson/ls1x.dtsi | 103 ++++++++++++++++++++++++++
- 4 files changed, 173 insertions(+)
- create mode 100644 arch/mips/boot/dts/loongson/Makefile
- create mode 100644 arch/mips/boot/dts/loongson/ls1b.dts
- create mode 100644 arch/mips/boot/dts/loongson/ls1c.dts
- create mode 100644 arch/mips/boot/dts/loongson/ls1x.dtsi
+ drivers/of/overlay.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/boot/dts/loongson/Makefile b/arch/mips/boot/dts/loongson/Makefile
-new file mode 100644
-index 000000000000..447801568f33
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0
-+dtb-$(CONFIG_LOONGSON1_LS1B)	+= ls1b.dtb
-+
-+dtb-$(CONFIG_LOONGSON1_LS1B)	+= ls1c.dtb
-+
-+obj-$(CONFIG_BUILTIN_DTB)	+= $(addsuffix .o, $(dtb-y))
-diff --git a/arch/mips/boot/dts/loongson/ls1b.dts b/arch/mips/boot/dts/loongson/ls1b.dts
-new file mode 100644
-index 000000000000..11b516c77d22
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls1b.dts
-@@ -0,0 +1,30 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com>
-+ */
-+
-+/dts-v1/;
-+#include <ls1x.dtsi>
-+
-+/ {
-+	model = "Loongson LS1B";
-+
-+	cpus {
-+	#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "loongson,ls1b";
-+			reg = <0>;
-+		};
-+	};
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-\ No newline at end of file
-diff --git a/arch/mips/boot/dts/loongson/ls1c.dts b/arch/mips/boot/dts/loongson/ls1c.dts
-new file mode 100644
-index 000000000000..edca46234cfc
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls1c.dts
-@@ -0,0 +1,34 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com>
-+ */
-+
-+/dts-v1/;
-+#include <ls1x.dtsi>
-+
-+/ {
-+	model = "Loongson LS1C";
-+
-+	cpus {
-+	#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "loongson,ls1c";
-+			reg = <0>;
-+		};
-+	};
-+};
-+
-+&platintc4 {
-+	status = "okay";
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-\ No newline at end of file
-diff --git a/arch/mips/boot/dts/loongson/ls1x.dtsi b/arch/mips/boot/dts/loongson/ls1x.dtsi
-new file mode 100644
-index 000000000000..1aca0c990fea
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls1x.dtsi
-@@ -0,0 +1,103 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com>
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+
-+/ {
-+    #address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	cpu_intc: interrupt-controller {
-+		#address-cells = <0>;
-+		compatible = "mti,cpu-interrupt-controller";
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		compatible = "simple-bus";
-+		ranges;
-+
-+
-+		platintc0: interrupt-controller@1fd01040 {
-+			compatible = "loongson,ls1x-intc";
-+			reg = <0x1fd01040 0x18>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+
-+			interrupt-parent = <&cpu_intc>;
-+			interrupts = <2>;
-+		};
-+
-+		platintc1: interrupt-controller@1fd01058 {
-+			compatible = "loongson,ls1x-intc";
-+			reg = <0x1fd01058 0x18>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+
-+			interrupt-parent = <&cpu_intc>;
-+			interrupts = <3>;
-+		};
-+
-+		platintc2: interrupt-controller@1fd01070 {
-+			compatible = "loongson,ls1x-intc";
-+			reg = <0x1fd01070 0x18>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+
-+			interrupt-parent = <&cpu_intc>;
-+			interrupts = <4>;
-+		};
-+
-+		platintc3: interrupt-controller@1fd01088 {
-+			compatible = "loongson,ls1x-intc";
-+			reg = <0x1fd01088 0x18>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+
-+			interrupt-parent = <&cpu_intc>;
-+			interrupts = <5>;
-+		};
-+
-+		platintc4: interrupt-controller@1fd010a0 {
-+			compatible = "loongson,ls1x-intc";
-+			reg = <0x1fd010a0 0x18>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+
-+			interrupt-parent = <&cpu_intc>;
-+			interrupts = <6>;
-+			status = "disabled";
-+		};
-+
-+		ehci0: usb@1fe20000 {
-+			compatible = "generic-ehci";
-+			reg = <0x1fe20000 0x100>;
-+			interrupt-parent = <&platintc1>;
-+			interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+			};
-+
-+		ohci0: usb@1fe28000 {
-+			compatible = "generic-ohci";
-+			reg = <0x1fe28000 0x100>;
-+			interrupt-parent = <&platintc1>;
-+			interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+			};
-+
-+	};
-+};
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index 68c281d..a0908ce 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -569,9 +569,6 @@ static int init_overlay_changeset(struct overlay_changeset *ovcs,
+ 	if (!of_node_is_root(tree))
+ 		pr_debug("%s() tree is not root\n", __func__);
+ 
+-	ovcs->overlay_tree = tree;
+-	ovcs->fdt = fdt;
+-
+ 	INIT_LIST_HEAD(&ovcs->ovcs_list);
+ 
+ 	of_changeset_init(&ovcs->cset);
+@@ -650,6 +647,8 @@ static int init_overlay_changeset(struct overlay_changeset *ovcs,
+ 	ovcs->id = id;
+ 	ovcs->count = cnt;
+ 	ovcs->fragments = fragments;
++	ovcs->overlay_tree = tree;
++	ovcs->fdt = fdt;
+ 
+ 	return 0;
+ 
 -- 
-2.21.0
+2.7.4
