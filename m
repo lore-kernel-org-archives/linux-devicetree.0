@@ -1,34 +1,43 @@
 From: Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH 0/5] Aspeed: Enable video engine
-Date: Tue,  2 Apr 2019 18:24:59 +0000
-Message-ID: <1554229504-5661-1-git-send-email-eajames@linux.ibm.com>
+Subject: [PATCH 3/5] media: dt-bindings: aspeed-video: Add missing memory-region property
+Date: Tue,  2 Apr 2019 18:25:02 +0000
+Message-ID: <1554229504-5661-4-git-send-email-eajames@linux.ibm.com>
+References: <1554229504-5661-1-git-send-email-eajames@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1554229504-5661-1-git-send-email-eajames@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-media@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, joel@jms.id.au, andrew@aj.id.au, mchehab@kernel.org, linux-clk@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series enables the video engine on Aspeed BMC platforms. The video engine
-clocking is added to the Aspeed clock driver. The use of the video engine reset
-line, originally planned to be made externally available in the clock driver,
-is removed from the video engine driver. Finally a node for the video engine is
-added to the AST2500 devicetree.
-The series also includes a missing property for reserved memory in the
-devicetree documentation, and a small change to make the video engine driver
-start without reserved memory.
+Missed documenting this property in the initial commit.
 
-Eddie James (5):
-  media: platform: Aspeed: Remove use of reset line
-  media: platform: Aspeed: Make reserved memory optional
-  media: dt-bindings: aspeed-video: Add missing memory-region property
-  clk: Aspeed: Setup video engine clocking
-  ARM: dts: aspeed-g5: Add video engine
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+---
+ Documentation/devicetree/bindings/media/aspeed-video.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
- .../devicetree/bindings/media/aspeed-video.txt     |  6 ++++
- arch/arm/boot/dts/aspeed-g5.dtsi                   | 10 ++++++
- drivers/clk/clk-aspeed.c                           | 42 ++++++++++++++++++++--
- drivers/media/platform/aspeed-video.c              | 33 ++++-------------
- 4 files changed, 61 insertions(+), 30 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/media/aspeed-video.txt b/Documentation/devicetree/bindings/media/aspeed-video.txt
+index 78b464a..346c2d3 100644
+--- a/Documentation/devicetree/bindings/media/aspeed-video.txt
++++ b/Documentation/devicetree/bindings/media/aspeed-video.txt
+@@ -14,6 +14,11 @@ Required properties:
+ 			the VE
+  - interrupts:		the interrupt associated with the VE on this platform
+ 
++Optional properties:
++ - memory-region:
++	phandle to a memory region to allocate from, as defined in
++	Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
++
+ Example:
+ 
+ video-engine@1e700000 {
+@@ -23,4 +28,5 @@ video-engine@1e700000 {
+     clock-names = "vclk", "eclk";
+     resets = <&syscon ASPEED_RESET_VIDEO>;
+     interrupts = <7>;
++    memory-region = <&video_engine_memory>
+ };
 -- 
 1.8.3.1
