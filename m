@@ -1,146 +1,97 @@
-Return-Path: <SRS0=A9sX=SF=ideasonboard.com=laurent.pinchart@kernel.org>
-Date: Wed, 3 Apr 2019 13:11:14 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 3/5] ARM: dts: imx7s: Add video mux, csi and mipi_csi
-Message-ID: <20190403101114.GC12646@pendragon.ideasonboard.com>
-References: <20190328142516.30372-1-rui.silva@linaro.org>
- <20190328142516.30372-4-rui.silva@linaro.org>
+Return-Path: <SRS0=5rLq=SE=googlemail.com=chrysh.ng@kernel.org>
+From: Christina Quast <cquast@hanoverdisplays.com>
+Subject: [PATCH v2 4/6] ARM: dts: am335x: boneblack-common: Replaced register offsets with defines
+Date: Tue,  2 Apr 2019 18:09:49 +0200
+Message-Id: <20190402160949.14190-5-cquast@hanoverdisplays.com>
+In-Reply-To: <20190402160949.14190-1-cquast@hanoverdisplays.com>
+References: <20190314150524.GB19425@atomide.com>
+ <20190402160949.14190-1-cquast@hanoverdisplays.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190328142516.30372-4-rui.silva@linaro.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Cc: Christina Quast <cquast@hanoverdisplays.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, Russell King <linux@armlinux.org.uk>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Rui,
+The defines are taken from dt-bindings/pinctrl/am33xx.h
 
-Thank you for the patch.
+Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
+---
+ .../arm/boot/dts/am335x-boneblack-common.dtsi | 54 +++++++++----------
+ 1 file changed, 27 insertions(+), 27 deletions(-)
 
-On Thu, Mar 28, 2019 at 02:25:14PM +0000, Rui Miguel Silva wrote:
-> Add device tree nodes for csi, video multiplexer and mipi-csi.
-> 
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> ---
->  arch/arm/boot/dts/imx7s.dtsi | 75 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 75 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-> index 792efcd2caa1..3286838105c6 100644
-> --- a/arch/arm/boot/dts/imx7s.dtsi
-> +++ b/arch/arm/boot/dts/imx7s.dtsi
-> @@ -8,6 +8,7 @@
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/input/input.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/reset/imx7-reset.h>
->  #include "imx7d-pinfunc.h"
->  
->  / {
-> @@ -506,6 +507,34 @@
->  					#mux-control-cells = <0>;
->  					mux-reg-masks = <0x14 0x00000010>;
->  				};
-> +
-> +				video_mux: csi-mux {
-
-I wonder if the node should be renamed from csi-mux to video-mux, and
-possibly the label from video_mux to csi_mux (video_mux is a bit generic
-and may lead to name clashes). Apart from that,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> +					compatible = "video-mux";
-> +					mux-controls = <&mux 0>;
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +					status = "disabled";
-> +
-> +					port@0 {
-> +						reg = <0>;
-> +					};
-> +
-> +					port@1 {
-> +						reg = <1>;
-> +
-> +						csi_mux_from_mipi_vc0: endpoint {
-> +							remote-endpoint = <&mipi_vc0_to_csi_mux>;
-> +						};
-> +					};
-> +
-> +					port@2 {
-> +						reg = <2>;
-> +
-> +						csi_mux_to_csi: endpoint {
-> +							remote-endpoint = <&csi_from_csi_mux>;
-> +						};
-> +					};
-> +				};
->  			};
->  
->  			ocotp: ocotp-ctrl@30350000 {
-> @@ -709,6 +738,23 @@
->  				status = "disabled";
->  			};
->  
-> +			csi: csi@30710000 {
-> +				compatible = "fsl,imx7-csi";
-> +				reg = <0x30710000 0x10000>;
-> +				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clks IMX7D_CLK_DUMMY>,
-> +					 <&clks IMX7D_CSI_MCLK_ROOT_CLK>,
-> +					 <&clks IMX7D_CLK_DUMMY>;
-> +				clock-names = "axi", "mclk", "dcic";
-> +				status = "disabled";
-> +
-> +				port {
-> +					csi_from_csi_mux: endpoint {
-> +						remote-endpoint = <&csi_mux_to_csi>;
-> +					};
-> +				};
-> +			};
-> +
->  			lcdif: lcdif@30730000 {
->  				compatible = "fsl,imx7d-lcdif", "fsl,imx28-lcdif";
->  				reg = <0x30730000 0x10000>;
-> @@ -718,6 +764,35 @@
->  				clock-names = "pix", "axi";
->  				status = "disabled";
->  			};
-> +
-> +			mipi_csi: mipi-csi@30750000 {
-> +				compatible = "fsl,imx7-mipi-csi2";
-> +				reg = <0x30750000 0x10000>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clks IMX7D_IPG_ROOT_CLK>,
-> +					 <&clks IMX7D_MIPI_CSI_ROOT_CLK>,
-> +					 <&clks IMX7D_MIPI_DPHY_ROOT_CLK>;
-> +				clock-names = "pclk", "wrap", "phy";
-> +				power-domains = <&pgc_mipi_phy>;
-> +				phy-supply = <&reg_1p0d>;
-> +				resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
-> +				reset-names = "mrst";
-> +				status = "disabled";
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +
-> +					mipi_vc0_to_csi_mux: endpoint {
-> +						remote-endpoint = <&csi_mux_from_mipi_vc0>;
-> +					};
-> +				};
-> +			};
->  		};
->  
->  		aips3: aips-bus@30800000 {
-
+diff --git a/arch/arm/boot/dts/am335x-boneblack-common.dtsi b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
+index e543c2bee8c2..283e288b6e42 100644
+--- a/arch/arm/boot/dts/am335x-boneblack-common.dtsi
++++ b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
+@@ -30,43 +30,43 @@
+ &am33xx_pinmux {
+ 	nxp_hdmi_bonelt_pins: nxp_hdmi_bonelt_pins {
+ 		pinctrl-single,pins = <
+-			AM33XX_IOPAD(0x9b0, PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* xdma_event_intr0 */
+-			AM33XX_IOPAD(0x8a0, PIN_OUTPUT | MUX_MODE0)		/* lcd_data0.lcd_data0 */
+-			AM33XX_IOPAD(0x8a4, PIN_OUTPUT | MUX_MODE0)		/* lcd_data1.lcd_data1 */
+-			AM33XX_IOPAD(0x8a8, PIN_OUTPUT | MUX_MODE0)		/* lcd_data2.lcd_data2 */
+-			AM33XX_IOPAD(0x8ac, PIN_OUTPUT | MUX_MODE0)		/* lcd_data3.lcd_data3 */
+-			AM33XX_IOPAD(0x8b0, PIN_OUTPUT | MUX_MODE0)		/* lcd_data4.lcd_data4 */
+-			AM33XX_IOPAD(0x8b4, PIN_OUTPUT | MUX_MODE0)		/* lcd_data5.lcd_data5 */
+-			AM33XX_IOPAD(0x8b8, PIN_OUTPUT | MUX_MODE0)		/* lcd_data6.lcd_data6 */
+-			AM33XX_IOPAD(0x8bc, PIN_OUTPUT | MUX_MODE0)		/* lcd_data7.lcd_data7 */
+-			AM33XX_IOPAD(0x8c0, PIN_OUTPUT | MUX_MODE0)		/* lcd_data8.lcd_data8 */
+-			AM33XX_IOPAD(0x8c4, PIN_OUTPUT | MUX_MODE0)		/* lcd_data9.lcd_data9 */
+-			AM33XX_IOPAD(0x8c8, PIN_OUTPUT | MUX_MODE0)		/* lcd_data10.lcd_data10 */
+-			AM33XX_IOPAD(0x8cc, PIN_OUTPUT | MUX_MODE0)		/* lcd_data11.lcd_data11 */
+-			AM33XX_IOPAD(0x8d0, PIN_OUTPUT | MUX_MODE0)		/* lcd_data12.lcd_data12 */
+-			AM33XX_IOPAD(0x8d4, PIN_OUTPUT | MUX_MODE0)		/* lcd_data13.lcd_data13 */
+-			AM33XX_IOPAD(0x8d8, PIN_OUTPUT | MUX_MODE0)		/* lcd_data14.lcd_data14 */
+-			AM33XX_IOPAD(0x8dc, PIN_OUTPUT | MUX_MODE0)		/* lcd_data15.lcd_data15 */
+-			AM33XX_IOPAD(0x8e0, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* lcd_vsync.lcd_vsync */
+-			AM33XX_IOPAD(0x8e4, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* lcd_hsync.lcd_hsync */
+-			AM33XX_IOPAD(0x8e8, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* lcd_pclk.lcd_pclk */
+-			AM33XX_IOPAD(0x8ec, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* lcd_ac_bias_en.lcd_ac_bias_en */
++			AM33XX_PADCONF(AM335X_PIN_XDMA_EVENT_INTR0, PIN_OUTPUT_PULLDOWN, MUX_MODE3)
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA0, PIN_OUTPUT, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA1, PIN_OUTPUT, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA2, PIN_OUTPUT, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA3, PIN_OUTPUT, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA4, PIN_OUTPUT, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA5, PIN_OUTPUT, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA6, PIN_OUTPUT, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA7, PIN_OUTPUT, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA8, PIN_OUTPUT, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA9, PIN_OUTPUT, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA10, PIN_OUTPUT, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA11, PIN_OUTPUT, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA12, PIN_OUTPUT, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA13, PIN_OUTPUT, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA14, PIN_OUTPUT, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA15, PIN_OUTPUT, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_VSYNC, PIN_OUTPUT_PULLDOWN, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_HSYNC, PIN_OUTPUT_PULLDOWN, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_PCLK, PIN_OUTPUT_PULLDOWN, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_LCD_AC_BIAS_EN, PIN_OUTPUT_PULLDOWN, MUX_MODE0)
+ 		>;
+ 	};
+ 
+ 	nxp_hdmi_bonelt_off_pins: nxp_hdmi_bonelt_off_pins {
+ 		pinctrl-single,pins = <
+-			AM33XX_IOPAD(0x9b0, PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* xdma_event_intr0 */
++			AM33XX_PADCONF(AM335X_PIN_XDMA_EVENT_INTR0, PIN_OUTPUT_PULLDOWN, MUX_MODE3)
+ 		>;
+ 	};
+ 
+ 	mcasp0_pins: mcasp0_pins {
+ 		pinctrl-single,pins = <
+-			AM33XX_IOPAD(0x9ac, PIN_INPUT_PULLUP | MUX_MODE0) /* mcasp0_ahcklx.mcasp0_ahclkx */
+-			AM33XX_IOPAD(0x99c, PIN_OUTPUT_PULLDOWN | MUX_MODE2) /* mcasp0_ahclkr.mcasp0_axr2*/
+-			AM33XX_IOPAD(0x994, PIN_OUTPUT_PULLUP | MUX_MODE0) /* mcasp0_fsx.mcasp0_fsx */
+-			AM33XX_IOPAD(0x990, PIN_OUTPUT_PULLDOWN | MUX_MODE0) /* mcasp0_aclkx.mcasp0_aclkx */
+-			AM33XX_IOPAD(0x86c, PIN_OUTPUT_PULLDOWN | MUX_MODE7) /* gpmc_a11.GPIO1_27 */
++			AM33XX_PADCONF(AM335X_PIN_MCASP0_AHCLKX, PIN_INPUT_PULLUP, MUX_MODE0) /* mcasp0_ahcklx.mcasp0_ahclkx */
++			AM33XX_PADCONF(AM335X_PIN_MCASP0_AHCLKR, PIN_OUTPUT_PULLDOWN, MUX_MODE2) /* mcasp0_ahclkr.mcasp0_axr2*/
++			AM33XX_PADCONF(AM335X_PIN_MCASP0_FSX, PIN_OUTPUT_PULLUP, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_MCASP0_ACLKX, PIN_OUTPUT_PULLDOWN, MUX_MODE0)
++			AM33XX_PADCONF(AM335X_PIN_GPMC_A11, PIN_OUTPUT_PULLDOWN, MUX_MODE7) /* gpmc_a11.GPIO1_27 */
+ 		>;
+ 	};
+ };
 -- 
-Regards,
-
-Laurent Pinchart
+2.20.1
