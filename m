@@ -1,299 +1,317 @@
-Return-Path: <SRS0=ovSU=SK=mxic.com.tw=masonccyang@kernel.org>
-In-Reply-To: <20190403115146.GR11301@dell>
-References: <1553768318-23149-1-git-send-email-masonccyang@mxic.com.tw> <1553768318-23149-5-git-send-email-masonccyang@mxic.com.tw> <20190403115146.GR11301@dell>
+Return-Path: <SRS0=FHWM=SE=mxic.com.tw=masonccyang@kernel.org>
+In-Reply-To: <20190401193431.3e8788a0@xps13>
+References: <1553768318-23149-1-git-send-email-masonccyang@mxic.com.tw>	<1553768318-23149-5-git-send-email-masonccyang@mxic.com.tw> <20190401193431.3e8788a0@xps13>
 Subject: Re: [PATCH 4/7] dt-bindings: mfd: Document Macronix MX25F0A controller
  bindings
 MIME-Version: 1.0
-Message-ID: <OFC75B8F2E.52EEEED2-ON482583D6.0006E8F0-482583D6.0007AD12@mxic.com.tw>
+Message-ID: <OF9E5442F6.B542597C-ON482583D0.0020591E-482583D0.00216580@mxic.com.tw>
 From: masonccyang@mxic.com.tw
-Date: Mon, 8 Apr 2019 09:23:50 +0800
-Content-Type: multipart/alternative; boundary="=_alternative 0007AD11482583D6_="
-To: Lee Jones <lee.jones@linaro.org>
-Cc: bbrezillon@kernel.org, broonie@kernel.org, christophe.kerello@st.com, computersforpeace@gmal.com, devicetree@vger.kernel.org, dwmw2@infradead.org, geert@linux-m68k.org, juliensu@mxic.com.tw, liang.yang@amlogic.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, marcel.ziswiler@toradex.com, marek.vasut@gmail.com, mark.rutland@arm.com, miquel.raynal@bootlin.com, paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
+Date: Tue, 2 Apr 2019 14:04:45 +0800
+Content-Type: multipart/alternative; boundary="=_alternative 00216580482583D0_="
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: bbrezillon@kernel.org, broonie@kernel.org, christophe.kerello@st.com, computersforpeace@gmail.com, devicetree@vger.kernel.org, dwmw2@infradead.org, geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, marcel.ziswiler@toradex.com, marek.vasut@gmail.com, mark.rutland@arm.com, paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
 List-ID: <devicetree@vger.kernel.org>
 
 This is a multipart message in MIME format.
---=_alternative 0007AD11482583D6_=
-Content-Type: text/plain; charset="GB2312"
-Content-Transfer-Encoding: base64
+--=_alternative 00216580482583D0_=
+Content-Type: text/plain; charset="US-ASCII"
 
 
-SGkgSm9uZXMsDQoNClVzaW5nIE1GRCBmb3IgbXgyNWYwYSBkdWUgdG8gaXQncyBhIG11bHRpIGZ1
-bmN0aW9uIGRldmljZQ0KY29udHJvbGxlciBmb3IgU1BJIGFuZCByYXctbmFuZC4gDQoNCkp1c3Qg
-bGlrZSBSZW5lc2FzIFItQ2FyIEdlbjMgUlBDLUlGIGNvbnRyb2xsZXIgZm9yIFNQSSBhbmQgSHlw
-ZXJmbGFzaC4NCg0KU29tZSBjb21tZW50cyBmcm9tIE1hcmVrIGFuZCBvdGhlciBtYWludGFpbmVy
-cyB0byBhZGQgYSBNRkQgZHJpdmVyIA0KZm9yIFJQQy1JRiBjb250cm9sbGVyLg0KDQpiZXN0IHJl
-Z2FyZHMsDQpNYXNvbg0KDQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwODc2
-NTk1LyANCg0KDQo+ICJMZWUgSm9uZXMiIDxsZWUuam9uZXNAbGluYXJvLm9yZz4gDQo+IDIwMTkv
-MDQvMDMgz8LO5yAwNzo1Mg0KPiANCj4gVG8NCj4gDQoNCj4gPiAtLS0NCj4gPiAgLi4uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvbWZkL214aWMtbXgyNWYwYS50eHQgICAgICAgfCA2NiArKysrKysrKysN
-Cj4gKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNjYgaW5zZXJ0aW9ucygrKQ0K
-PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgDQpEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbWZkL214aWMtbXgyNWYwYS50eHQNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9teGljLQ0KPiBteDI1ZjBhLnR4dCBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvbXhpYy1teDI1ZjBhLnR4dA0KPiA+IG5l
-dyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uNTNiNDgzOQ0KPiA+IC0tLSAv
-ZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZk
-L214aWMtbXgyNWYwYS50eHQNCj4gPiBAQCAtMCwwICsxLDY2IEBADQo+ID4gK01hY3Jvbml4IE1Y
-MjVGMEEgTXVsdGktRnVuY3Rpb24gRGV2aWNlIFRyZWUgQmluZGluZ3MNCj4gPiArLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ICsNCj4gPiAr
-TVgyNUYwQSBpcyBhIE11bHRpRnVuY3Rpb24gRGV2aWNlIHdpdGggU1BJIGFuZCByYXcgTkFORCwg
-d2hpY2gNCj4gPiArc3VwcG9ydHMgZWl0aGVyIHNwaSBob3N0IGNvbnRyb2xsZXIgb3IgcmF3IG5h
-bmQgY29udHJvbGxlci4NCj4gPiArDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKy0g
-Y29tcGF0aWJsZTogc2hvdWxkIGJlICJteGljLG14MjVmMGEtbWZkIg0KPiA+ICstICNhZGRyZXNz
-LWNlbGxzOiBzaG91bGQgYmUgMQ0KPiA+ICstICNzaXplLWNlbGxzOiBzaG91bGQgYmUgMA0KPiA+
-ICstIHJlZzogc2hvdWxkIGNvbnRhaW4gMiBlbnRyaWVzLCBvbmUgZm9yIHRoZSByZWdpc3RlcnMg
-YW5kIG9uZSANCj4gZm9yIHRoZSBkaXJlY3QNCj4gPiArICAgICAgIG1hcHBpbmcgYXJlYSBpbiBT
-UEkgbW9kZS4NCj4gPiArLSByZWctbmFtZXM6IHNob3VsZCBjb250YWluICJyZWdzIiBhbmQgImRp
-cm1hcCINCj4gPiArLSBpbnRlcnJ1cHRzOiBpbnRlcnJ1cHQgbGluZSBjb25uZWN0ZWQgdG8gdGhp
-cyBNRkQgY29udHJvbGxlcg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgbm9kZXM6DQo+ID4gKyAtIHNw
-aSA6DQo+ID4gKyAgIE5vZGUgZm9yIGNvbmZpZ3VyaW5nIHRoZSBTUEkgY29udHJvbGxlciBkcml2
-ZXIuDQo+ID4gKyAgIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKyAgICAgIC0gY29tcGF0aWJs
-ZSA9ICJteGljeSxteDI1ZjBhLXNwaSI7DQo+ID4gKyAgICAgIC0gY2xvY2stbmFtZXM6IHNob3Vs
-ZCBjb250YWluICJwc19jbGsiLCAic2VuZF9jbGsiIGFuZA0KPiA+ICsgICAgICAgICAgICAgICAg
-InNlbmRfZGx5X2NsayINCj4gPiArICAgICAgLSBjbG9ja3M6IHNob3VsZCBjb250YWluIDMgZW50
-cmllcyBmb3IgdGhlICJwc19jbGsiLCAic2VuZF9jbGsiDQo+ID4gKyAgICAgICAgICAgYW5kICJz
-ZW5kX2RseV9jbGsiIGNsb2Nrcw0KPiA+ICsNCj4gPiArLSBuYW5kIDoNCj4gPiArICAgTm9kZSBm
-b3IgY29uZmlndXJpbmcgdGhlIHJhdyBuYW5kIGNvbnRyb2xsZXIgZHJpdmVyLg0KPiA+ICsgICBS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICsgICAgICAtIGNvbXBhdGlibGUgPSAibXhpY3ksbXgy
-NWYwYS1uYW5kLWN0bHIiOw0KPiA+ICsgICAgICAtIG5hbmQtZWNjLW1vZGUgPSAic29mdCI7DQo+
-ID4gKyAgICAgIC0gbmFuZC1lY2MtYWxnbyA9ICJiY2giOw0KPiA+ICsNCj4gPiArRXhhbXBsZToN
-Cj4gPiArDQo+ID4gKyAgIG14aWM6IG14MjVmMGEtbWZkQDQzYzMwMDAwIHsNCj4gDQo+IEknbSBu
-b3Qgc3VyZSBJIHVuZGVyc3RhbmQgd2h5IHlvdSBhcmUgdXNpbmcgYW4gTUZEIGZvciB0aGlzLg0K
-PiANCj4gPiArICAgICAgY29tcGF0aWJsZSA9ICJteGljLG14MjVmMGEtbWZkIjsNCj4gPiArICAg
-ICAgcmVnID0gPDB4NDNjMzAwMDAgMHgxMDAwMD4sIDwweGEwMDAwMDAwIDB4NDAwMDAwMD47DQo+
-ID4gKyAgICAgIHJlZy1uYW1lcyA9ICJyZWdzIiwgImRpcm1hcCI7DQo+ID4gKyAgICAgICNhZGRy
-ZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsNCj4gPiArDQo+
-ID4gKyAgICAgIC8qIGVpdGhlciBzcGkgb3IgbmFuZCAqLw0KPiA+ICsgICAgICBzcGkgew0KPiA+
-ICsgICAgICAgICBjb21wYXRpYmxlID0gIm14aWN5LG14MjVmMGEtc3BpIjsNCj4gPiArICAgICAg
-ICAgY2xvY2tzID0gPCZjbGt3aXphcmQgMD4sIDwmY2xrd2l6YXJkIDE+LCA8JmNsa2MgMTU+Ow0K
-PiA+ICsgICAgICAgICBjbG9jay1uYW1lcyA9ICJzZW5kX2NsayIsICJzZW5kX2RseV9jbGsiLCAi
-cHNfY2xrIjsNCj4gPiArICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gKyAgICAg
-ICAgICNzaXplLWNlbGxzID0gPDA+Ow0KPiA+ICsNCj4gPiArICAgICAgICAgZmxhc2hAMCB7DQo+
-ID4gKyAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiamVkZWMsc3BpLW5vciI7DQo+ID4gKyAgICAg
-ICAgICAgIHJlZyA9IDwwPjsNCj4gPiArICAgICAgICAgICAgc3BpLW1heC1mcmVxdWVuY3kgPSA8
-MjUwMDAwMDA+Ow0KPiA+ICsgICAgICAgICAgICBzcGktdHgtYnVzLXdpZHRoID0gPDQ+Ow0KPiA+
-ICsgICAgICAgICAgICBzcGktcngtYnVzLXdpZHRoID0gPDQ+Ow0KPiA+ICsgICAgICAgICB9Ow0K
-PiA+ICsgICAgICB9Ow0KPiA+ICsNCj4gPiArICAgICAgbmFuZCB7DQo+ID4gKyAgICAgICAgIGNv
-bXBhdGlibGUgPSAibXhpY3ksbXgyNWYwYS1uYW5kLWN0bHIiOw0KPiA+ICsgICAgICAgICBuYW5k
-LWVjYy1tb2RlID0gInNvZnQiOw0KPiA+ICsgICAgICAgICBuYW5kLWVjYy1hbGdvID0gImJjaCI7
-DQo+ID4gKyAgICAgICAgIG5hbmQtZWNjLXN0ZXAtc2l6ZSA9IDw1MTI+Ow0KPiA+ICsgICAgICAg
-ICBuYW5kLWVjYy1zdHJlbmd0aCA9IDw4PjsNCj4gPiArICAgICAgfTsNCj4gPiArICAgfTsNCj4g
-DQo+IFdoeSBub3QganVzdCBzZWxlY3Qgb25lIHVzaW5nIGRldmljZSB0cmVlIGFsb25lLCBieToN
-Cj4gDQo+ICAgIHNwaUA0M2MzMDAwMCB7DQo+ICAgICAgIGNvbXBhdGlibGUgPSAibXhpY3ksbXgy
-NWYwYS1zcGkiOw0KPiAgICAgICByZWcgPSA8MHg0M2MzMDAwMCAweDEwMDAwPiwgPDB4YTAwMDAw
-MDAgMHg0MDAwMDAwPjsNCj4gICAgICAgcmVnLW5hbWVzID0gInJlZ3MiLCAiZGlybWFwIjsNCj4g
-ICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICAgICAgICNzaXplLWNlbGxzID0gPDA+Ow0K
-PiAgICAgICBjbG9ja3MgPSA8JmNsa3dpemFyZCAwPiwgPCZjbGt3aXphcmQgMT4sIDwmY2xrYyAx
-NT47DQo+ICAgICAgIGNsb2NrLW5hbWVzID0gInNlbmRfY2xrIiwgInNlbmRfZGx5X2NsayIsICJw
-c19jbGsiOw0KPiAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gICAgICAgI3NpemUtY2Vs
-bHMgPSA8MD47DQo+IA0KPiAgICAgICBmbGFzaEAwIHsNCj4gICAgICAgICAgY29tcGF0aWJsZSA9
-ICJqZWRlYyxzcGktbm9yIjsNCj4gICAgICAgICAgcmVnID0gPDA+Ow0KPiAgICAgICAgICBzcGkt
-bWF4LWZyZXF1ZW5jeSA9IDwyNTAwMDAwMD47DQo+ICAgICAgICAgIHNwaS10eC1idXMtd2lkdGgg
-PSA8ND47DQo+ICAgICAgICAgIHNwaS1yeC1idXMtd2lkdGggPSA8ND47DQo+ICAgICAgIH07DQo+
-ICAgIH07DQo+IA0KPiBPUiAuLi4NCj4gDQo+ICAgIG5hbmRANDNjMzAwMDAgew0KPiAgICAgICBj
-b21wYXRpYmxlID0gIm14aWN5LG14MjVmMGEtbmFuZC1jdGxyIjsNCj4gICAgICAgcmVnID0gPDB4
-NDNjMzAwMDAgMHgxMDAwMD4sIDwweGEwMDAwMDAwIDB4NDAwMDAwMD47DQo+ICAgICAgIHJlZy1u
-YW1lcyA9ICJyZWdzIiwgImRpcm1hcCI7DQo+ICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0K
-PiAgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsNCj4gICAgICAgbmFuZC1lY2MtbW9kZSA9ICJzb2Z0
-IjsNCj4gICAgICAgbmFuZC1lY2MtYWxnbyA9ICJiY2giOw0KPiAgICAgICBuYW5kLWVjYy1zdGVw
-LXNpemUgPSA8NTEyPjsNCj4gICAgICAgbmFuZC1lY2Mtc3RyZW5ndGggPSA8OD47DQo+ICAgIH07
-DQo+IA0KPiAtLSANCj4gTGVlIEpvbmVzIFvA7sfty7ldDQo+IExpbmFybyBTZXJ2aWNlcyBUZWNo
-bmljYWwgTGVhZA0KPiBMaW5hcm8ub3JnIKmmIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0g
-U29Dcw0KPiBGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nDQoNCg0KQ09O
-RklERU5USUFMSVRZIE5PVEU6DQoNClRoaXMgZS1tYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgbWF5
-IGNvbnRhaW4gY29uZmlkZW50aWFsIGluZm9ybWF0aW9uIA0KYW5kL29yIHBlcnNvbmFsIGRhdGEs
-IHdoaWNoIGlzIHByb3RlY3RlZCBieSBhcHBsaWNhYmxlIGxhd3MuIFBsZWFzZSBiZSANCnJlbWlu
-ZGVkIHRoYXQgZHVwbGljYXRpb24sIGRpc2Nsb3N1cmUsIGRpc3RyaWJ1dGlvbiwgb3IgdXNlIG9m
-IHRoaXMgZS1tYWlsIA0KKGFuZC9vciBpdHMgYXR0YWNobWVudHMpIG9yIGFueSBwYXJ0IHRoZXJl
-b2YgaXMgcHJvaGliaXRlZC4gSWYgeW91IHJlY2VpdmUgDQp0aGlzIGUtbWFpbCBpbiBlcnJvciwg
-cGxlYXNlIG5vdGlmeSB1cyBpbW1lZGlhdGVseSBhbmQgZGVsZXRlIHRoaXMgbWFpbCBhcyANCndl
-bGwgYXMgaXRzIGF0dGFjaG1lbnQocykgZnJvbSB5b3VyIHN5c3RlbS4gSW4gYWRkaXRpb24sIHBs
-ZWFzZSBiZSANCmluZm9ybWVkIHRoYXQgY29sbGVjdGlvbiwgcHJvY2Vzc2luZywgYW5kL29yIHVz
-ZSBvZiBwZXJzb25hbCBkYXRhIGlzIA0KcHJvaGliaXRlZCB1bmxlc3MgZXhwcmVzc2x5IHBlcm1p
-dHRlZCBieSBwZXJzb25hbCBkYXRhIHByb3RlY3Rpb24gbGF3cy4gDQpUaGFuayB5b3UgZm9yIHlv
-dXIgYXR0ZW50aW9uIGFuZCBjb29wZXJhdGlvbi4NCg0KTWFjcm9uaXggSW50ZXJuYXRpb25hbCBD
-by4sIEx0ZC4NCg0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09DQoNCg0KDQo9PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQoNCkNP
-TkZJREVOVElBTElUWSBOT1RFOg0KDQpUaGlzIGUtbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIG1h
-eSBjb250YWluIGNvbmZpZGVudGlhbCBpbmZvcm1hdGlvbiBhbmQvb3IgcGVyc29uYWwgZGF0YSwg
-d2hpY2ggaXMgcHJvdGVjdGVkIGJ5IGFwcGxpY2FibGUgbGF3cy4gUGxlYXNlIGJlIHJlbWluZGVk
-IHRoYXQgZHVwbGljYXRpb24sIGRpc2Nsb3N1cmUsIGRpc3RyaWJ1dGlvbiwgb3IgdXNlIG9mIHRo
-aXMgZS1tYWlsIChhbmQvb3IgaXRzIGF0dGFjaG1lbnRzKSBvciBhbnkgcGFydCB0aGVyZW9mIGlz
-IHByb2hpYml0ZWQuIElmIHlvdSByZWNlaXZlIHRoaXMgZS1tYWlsIGluIGVycm9yLCBwbGVhc2Ug
-bm90aWZ5IHVzIGltbWVkaWF0ZWx5IGFuZCBkZWxldGUgdGhpcyBtYWlsIGFzIHdlbGwgYXMgaXRz
-IGF0dGFjaG1lbnQocykgZnJvbSB5b3VyIHN5c3RlbS4gSW4gYWRkaXRpb24sIHBsZWFzZSBiZSBp
-bmZvcm1lZCB0aGF0IGNvbGxlY3Rpb24sIHByb2Nlc3NpbmcsIGFuZC9vciB1c2Ugb2YgcGVyc29u
-YWwgZGF0YSBpcyBwcm9oaWJpdGVkIHVubGVzcyBleHByZXNzbHkgcGVybWl0dGVkIGJ5IHBlcnNv
-bmFsIGRhdGEgcHJvdGVjdGlvbiBsYXdzLiBUaGFuayB5b3UgZm9yIHlvdXIgYXR0ZW50aW9uIGFu
-ZCBjb29wZXJhdGlvbi4NCg0KTWFjcm9uaXggSW50ZXJuYXRpb25hbCBDby4sIEx0ZC4NCg0KPT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09DQo=
-
---=_alternative 0007AD11482583D6_=
-Content-Type: text/html; charset="GB2312"
-Content-Transfer-Encoding: base64
+Hi Miquel,
 
 
-PHR0Pjxmb250IHNpemU9Mj5IaSBKb25lcyw8L2ZvbnQ+PC90dD4NCjxicj4NCjxicj48dHQ+PGZv
-bnQgc2l6ZT0yPlVzaW5nIE1GRCBmb3IgbXgyNWYwYSBkdWUgdG8gaXQncyBhIG11bHRpIGZ1bmN0
-aW9uDQpkZXZpY2U8L2ZvbnQ+PC90dD4NCjxicj48dHQ+PGZvbnQgc2l6ZT0yPmNvbnRyb2xsZXIg
-Zm9yIFNQSSBhbmQgcmF3LW5hbmQuIDwvZm9udD48L3R0Pg0KPGJyPg0KPGJyPjx0dD48Zm9udCBz
-aXplPTI+SnVzdCBsaWtlIFJlbmVzYXMgUi1DYXIgR2VuMyBSUEMtSUYgY29udHJvbGxlciBmb3IN
-ClNQSSBhbmQgSHlwZXJmbGFzaC48L2ZvbnQ+PC90dD4NCjxicj4NCjxicj48dHQ+PGZvbnQgc2l6
-ZT0yPlNvbWUgY29tbWVudHMgZnJvbSBNYXJlayBhbmQgb3RoZXIgbWFpbnRhaW5lcnMgdG8NCmFk
-ZCBhIE1GRCBkcml2ZXIgPC9mb250PjwvdHQ+DQo8YnI+PHR0Pjxmb250IHNpemU9Mj5mb3IgUlBD
-LUlGIGNvbnRyb2xsZXIuPC9mb250PjwvdHQ+DQo8YnI+DQo8YnI+PHR0Pjxmb250IHNpemU9Mj5i
-ZXN0IHJlZ2FyZHMsPC9mb250PjwvdHQ+DQo8YnI+PHR0Pjxmb250IHNpemU9Mj5NYXNvbjwvZm9u
-dD48L3R0Pg0KPGJyPg0KPGJyPjxhIGhyZWY9aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
-YXRjaC8xMDg3NjU5NS8+PGZvbnQgc2l6ZT0zIGNvbG9yPWJsdWU+PHU+aHR0cHM6Ly9wYXRjaHdv
-cmsua2VybmVsLm9yZy9wYXRjaC8xMDg3NjU5NS88L3U+PC9mb250PjwvYT48Zm9udCBzaXplPTM+
-DQo8L2ZvbnQ+DQo8YnI+DQo8YnI+PHR0Pjxmb250IHNpemU9Mj48YnI+DQomZ3Q7ICZxdW90O0xl
-ZSBKb25lcyZxdW90OyAmbHQ7bGVlLmpvbmVzQGxpbmFyby5vcmcmZ3Q7IDwvZm9udD48L3R0Pg0K
-PGJyPjx0dD48Zm9udCBzaXplPTI+Jmd0OyAyMDE5LzA0LzAzIM/CzucgMDc6NTI8L2ZvbnQ+PC90
-dD4NCjxicj48dHQ+PGZvbnQgc2l6ZT0yPiZndDsgPGJyPg0KJmd0OyBUbzwvZm9udD48L3R0Pg0K
-PGJyPjx0dD48Zm9udCBzaXplPTI+Jmd0OyA8YnI+DQo8YnI+DQomZ3Q7ICZndDsgLS0tPGJyPg0K
-Jmd0OyAmZ3Q7ICZuYnNwOy4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9teGljLW14MjVmMGEu
-dHh0ICZuYnNwOyAmbmJzcDsNCiZuYnNwOyB8IDY2ICsrKysrKysrKzxicj4NCiZndDsgKysrKysr
-KysrKysrKzxicj4NCiZndDsgJmd0OyAmbmJzcDsxIGZpbGUgY2hhbmdlZCwgNjYgaW5zZXJ0aW9u
-cygrKTxicj4NCiZndDsgJmd0OyAmbmJzcDtjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9teGljLW14MjVmMGEudHh0PGJyPg0KJmd0OyAmZ3Q7
-IDxicj4NCiZndDsgJmd0OyBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL21mZC9teGljLTxicj4NCiZndDsgbXgyNWYwYS50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvbWZkL214aWMtbXgyNWYwYS50eHQ8YnI+DQomZ3Q7ICZndDsgbmV3
-IGZpbGUgbW9kZSAxMDA2NDQ8YnI+DQomZ3Q7ICZndDsgaW5kZXggMDAwMDAwMC4uNTNiNDgzOTxi
-cj4NCiZndDsgJmd0OyAtLS0gL2Rldi9udWxsPGJyPg0KJmd0OyAmZ3Q7ICsrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvbXhpYy1teDI1ZjBhLnR4dDxicj4NCiZndDsg
-Jmd0OyBAQCAtMCwwICsxLDY2IEBAPGJyPg0KJmd0OyAmZ3Q7ICtNYWNyb25peCBNWDI1RjBBIE11
-bHRpLUZ1bmN0aW9uIERldmljZSBUcmVlIEJpbmRpbmdzPGJyPg0KJmd0OyAmZ3Q7ICstLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPGJyPg0KJmd0OyAm
-Z3Q7ICs8YnI+DQomZ3Q7ICZndDsgK01YMjVGMEEgaXMgYSBNdWx0aUZ1bmN0aW9uIERldmljZSB3
-aXRoIFNQSSBhbmQgcmF3IE5BTkQsIHdoaWNoPGJyPg0KJmd0OyAmZ3Q7ICtzdXBwb3J0cyBlaXRo
-ZXIgc3BpIGhvc3QgY29udHJvbGxlciBvciByYXcgbmFuZCBjb250cm9sbGVyLjxicj4NCiZndDsg
-Jmd0OyArPGJyPg0KJmd0OyAmZ3Q7ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOjxicj4NCiZndDsgJmd0
-OyArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgJnF1b3Q7bXhpYyxteDI1ZjBhLW1mZCZxdW90Ozxi
-cj4NCiZndDsgJmd0OyArLSAjYWRkcmVzcy1jZWxsczogc2hvdWxkIGJlIDE8YnI+DQomZ3Q7ICZn
-dDsgKy0gI3NpemUtY2VsbHM6IHNob3VsZCBiZSAwPGJyPg0KJmd0OyAmZ3Q7ICstIHJlZzogc2hv
-dWxkIGNvbnRhaW4gMiBlbnRyaWVzLCBvbmUgZm9yIHRoZSByZWdpc3RlcnMgYW5kIG9uZQ0KPGJy
-Pg0KJmd0OyBmb3IgdGhlIGRpcmVjdDxicj4NCiZndDsgJmd0OyArICZuYnNwOyAmbmJzcDsgJm5i
-c3A7IG1hcHBpbmcgYXJlYSBpbiBTUEkgbW9kZS48YnI+DQomZ3Q7ICZndDsgKy0gcmVnLW5hbWVz
-OiBzaG91bGQgY29udGFpbiAmcXVvdDtyZWdzJnF1b3Q7IGFuZCAmcXVvdDtkaXJtYXAmcXVvdDs8
-YnI+DQomZ3Q7ICZndDsgKy0gaW50ZXJydXB0czogaW50ZXJydXB0IGxpbmUgY29ubmVjdGVkIHRv
-IHRoaXMgTUZEIGNvbnRyb2xsZXI8YnI+DQomZ3Q7ICZndDsgKzxicj4NCiZndDsgJmd0OyArUmVx
-dWlyZWQgbm9kZXM6PGJyPg0KJmd0OyAmZ3Q7ICsgLSBzcGkgOjxicj4NCiZndDsgJmd0OyArICZu
-YnNwOyBOb2RlIGZvciBjb25maWd1cmluZyB0aGUgU1BJIGNvbnRyb2xsZXIgZHJpdmVyLjxicj4N
-CiZndDsgJmd0OyArICZuYnNwOyBSZXF1aXJlZCBwcm9wZXJ0aWVzOjxicj4NCiZndDsgJmd0OyAr
-ICZuYnNwOyAmbmJzcDsgJm5ic3A7LSBjb21wYXRpYmxlID0gJnF1b3Q7bXhpY3ksbXgyNWYwYS1z
-cGkmcXVvdDs7PGJyPg0KJmd0OyAmZ3Q7ICsgJm5ic3A7ICZuYnNwOyAmbmJzcDstIGNsb2NrLW5h
-bWVzOiBzaG91bGQgY29udGFpbiAmcXVvdDtwc19jbGsmcXVvdDssDQomcXVvdDtzZW5kX2NsayZx
-dW90OyBhbmQ8YnI+DQomZ3Q7ICZndDsgKyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5i
-c3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7JnF1b3Q7c2VuZF9kbHlfY2xrJnF1b3Q7PGJyPg0KJmd0
-OyAmZ3Q7ICsgJm5ic3A7ICZuYnNwOyAmbmJzcDstIGNsb2Nrczogc2hvdWxkIGNvbnRhaW4gMyBl
-bnRyaWVzIGZvcg0KdGhlICZxdW90O3BzX2NsayZxdW90OywgJnF1b3Q7c2VuZF9jbGsmcXVvdDs8
-YnI+DQomZ3Q7ICZndDsgKyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7IGFuZCAm
-cXVvdDtzZW5kX2RseV9jbGsmcXVvdDsNCmNsb2Nrczxicj4NCiZndDsgJmd0OyArPGJyPg0KJmd0
-OyAmZ3Q7ICstIG5hbmQgOjxicj4NCiZndDsgJmd0OyArICZuYnNwOyBOb2RlIGZvciBjb25maWd1
-cmluZyB0aGUgcmF3IG5hbmQgY29udHJvbGxlciBkcml2ZXIuPGJyPg0KJmd0OyAmZ3Q7ICsgJm5i
-c3A7IFJlcXVpcmVkIHByb3BlcnRpZXM6PGJyPg0KJmd0OyAmZ3Q7ICsgJm5ic3A7ICZuYnNwOyAm
-bmJzcDstIGNvbXBhdGlibGUgPSAmcXVvdDtteGljeSxteDI1ZjBhLW5hbmQtY3RsciZxdW90Ozs8
-YnI+DQomZ3Q7ICZndDsgKyAmbmJzcDsgJm5ic3A7ICZuYnNwOy0gbmFuZC1lY2MtbW9kZSA9ICZx
-dW90O3NvZnQmcXVvdDs7PGJyPg0KJmd0OyAmZ3Q7ICsgJm5ic3A7ICZuYnNwOyAmbmJzcDstIG5h
-bmQtZWNjLWFsZ28gPSAmcXVvdDtiY2gmcXVvdDs7PGJyPg0KJmd0OyAmZ3Q7ICs8YnI+DQomZ3Q7
-ICZndDsgK0V4YW1wbGU6PGJyPg0KJmd0OyAmZ3Q7ICs8YnI+DQomZ3Q7ICZndDsgKyAmbmJzcDsg
-bXhpYzogbXgyNWYwYS1tZmRANDNjMzAwMDAgezxicj4NCiZndDsgPGJyPg0KJmd0OyBJJ20gbm90
-IHN1cmUgSSB1bmRlcnN0YW5kIHdoeSB5b3UgYXJlIHVzaW5nIGFuIE1GRCBmb3IgdGhpcy48YnI+
-DQomZ3Q7IDxicj4NCiZndDsgJmd0OyArICZuYnNwOyAmbmJzcDsgJm5ic3A7Y29tcGF0aWJsZSA9
-ICZxdW90O214aWMsbXgyNWYwYS1tZmQmcXVvdDs7PGJyPg0KJmd0OyAmZ3Q7ICsgJm5ic3A7ICZu
-YnNwOyAmbmJzcDtyZWcgPSAmbHQ7MHg0M2MzMDAwMCAweDEwMDAwJmd0OywgJmx0OzB4YTAwMDAw
-MDANCjB4NDAwMDAwMCZndDs7PGJyPg0KJmd0OyAmZ3Q7ICsgJm5ic3A7ICZuYnNwOyAmbmJzcDty
-ZWctbmFtZXMgPSAmcXVvdDtyZWdzJnF1b3Q7LCAmcXVvdDtkaXJtYXAmcXVvdDs7PGJyPg0KJmd0
-OyAmZ3Q7ICsgJm5ic3A7ICZuYnNwOyAmbmJzcDsjYWRkcmVzcy1jZWxscyA9ICZsdDsxJmd0Ozs8
-YnI+DQomZ3Q7ICZndDsgKyAmbmJzcDsgJm5ic3A7ICZuYnNwOyNzaXplLWNlbGxzID0gJmx0OzAm
-Z3Q7Ozxicj4NCiZndDsgJmd0OyArPGJyPg0KJmd0OyAmZ3Q7ICsgJm5ic3A7ICZuYnNwOyAmbmJz
-cDsvKiBlaXRoZXIgc3BpIG9yIG5hbmQgKi88YnI+DQomZ3Q7ICZndDsgKyAmbmJzcDsgJm5ic3A7
-ICZuYnNwO3NwaSB7PGJyPg0KJmd0OyAmZ3Q7ICsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7
-IGNvbXBhdGlibGUgPSAmcXVvdDtteGljeSxteDI1ZjBhLXNwaSZxdW90Ozs8YnI+DQomZ3Q7ICZn
-dDsgKyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgY2xvY2tzID0gJmx0OyZhbXA7Y2xrd2l6
-YXJkIDAmZ3Q7LA0KJmx0OyZhbXA7Y2xrd2l6YXJkIDEmZ3Q7LCAmbHQ7JmFtcDtjbGtjIDE1Jmd0
-Ozs8YnI+DQomZ3Q7ICZndDsgKyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgY2xvY2stbmFt
-ZXMgPSAmcXVvdDtzZW5kX2NsayZxdW90OywNCiZxdW90O3NlbmRfZGx5X2NsayZxdW90OywgJnF1
-b3Q7cHNfY2xrJnF1b3Q7Ozxicj4NCiZndDsgJmd0OyArICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZu
-YnNwOyAjYWRkcmVzcy1jZWxscyA9ICZsdDsxJmd0Ozs8YnI+DQomZ3Q7ICZndDsgKyAmbmJzcDsg
-Jm5ic3A7ICZuYnNwOyAmbmJzcDsgI3NpemUtY2VsbHMgPSAmbHQ7MCZndDs7PGJyPg0KJmd0OyAm
-Z3Q7ICs8YnI+DQomZ3Q7ICZndDsgKyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgZmxhc2hA
-MCB7PGJyPg0KJmd0OyAmZ3Q7ICsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAm
-bmJzcDtjb21wYXRpYmxlID0gJnF1b3Q7amVkZWMsc3BpLW5vciZxdW90Ozs8YnI+DQomZ3Q7ICZn
-dDsgKyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwO3JlZyA9ICZsdDsw
-Jmd0Ozs8YnI+DQomZ3Q7ICZndDsgKyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7
-ICZuYnNwO3NwaS1tYXgtZnJlcXVlbmN5DQo9ICZsdDsyNTAwMDAwMCZndDs7PGJyPg0KJmd0OyAm
-Z3Q7ICsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDtzcGktdHgtYnVz
-LXdpZHRoID0NCiZsdDs0Jmd0Ozs8YnI+DQomZ3Q7ICZndDsgKyAmbmJzcDsgJm5ic3A7ICZuYnNw
-OyAmbmJzcDsgJm5ic3A7ICZuYnNwO3NwaS1yeC1idXMtd2lkdGggPQ0KJmx0OzQmZ3Q7Ozxicj4N
-CiZndDsgJmd0OyArICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyB9Ozxicj4NCiZndDsgJmd0
-OyArICZuYnNwOyAmbmJzcDsgJm5ic3A7fTs8YnI+DQomZ3Q7ICZndDsgKzxicj4NCiZndDsgJmd0
-OyArICZuYnNwOyAmbmJzcDsgJm5ic3A7bmFuZCB7PGJyPg0KJmd0OyAmZ3Q7ICsgJm5ic3A7ICZu
-YnNwOyAmbmJzcDsgJm5ic3A7IGNvbXBhdGlibGUgPSAmcXVvdDtteGljeSxteDI1ZjBhLW5hbmQt
-Y3RsciZxdW90Ozs8YnI+DQomZ3Q7ICZndDsgKyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsg
-bmFuZC1lY2MtbW9kZSA9ICZxdW90O3NvZnQmcXVvdDs7PGJyPg0KJmd0OyAmZ3Q7ICsgJm5ic3A7
-ICZuYnNwOyAmbmJzcDsgJm5ic3A7IG5hbmQtZWNjLWFsZ28gPSAmcXVvdDtiY2gmcXVvdDs7PGJy
-Pg0KJmd0OyAmZ3Q7ICsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7IG5hbmQtZWNjLXN0ZXAt
-c2l6ZSA9ICZsdDs1MTImZ3Q7Ozxicj4NCiZndDsgJmd0OyArICZuYnNwOyAmbmJzcDsgJm5ic3A7
-ICZuYnNwOyBuYW5kLWVjYy1zdHJlbmd0aCA9ICZsdDs4Jmd0Ozs8YnI+DQomZ3Q7ICZndDsgKyAm
-bmJzcDsgJm5ic3A7ICZuYnNwO307PGJyPg0KJmd0OyAmZ3Q7ICsgJm5ic3A7IH07PGJyPg0KJmd0
-OyA8YnI+DQomZ3Q7IFdoeSBub3QganVzdCBzZWxlY3Qgb25lIHVzaW5nIGRldmljZSB0cmVlIGFs
-b25lLCBieTo8YnI+DQomZ3Q7IDxicj4NCiZndDsgJm5ic3A7ICZuYnNwO3NwaUA0M2MzMDAwMCB7
-PGJyPg0KJmd0OyAmbmJzcDsgJm5ic3A7ICZuYnNwOyBjb21wYXRpYmxlID0gJnF1b3Q7bXhpY3ks
-bXgyNWYwYS1zcGkmcXVvdDs7PGJyPg0KJmd0OyAmbmJzcDsgJm5ic3A7ICZuYnNwOyByZWcgPSAm
-bHQ7MHg0M2MzMDAwMCAweDEwMDAwJmd0OywgJmx0OzB4YTAwMDAwMDANCjB4NDAwMDAwMCZndDs7
-PGJyPg0KJmd0OyAmbmJzcDsgJm5ic3A7ICZuYnNwOyByZWctbmFtZXMgPSAmcXVvdDtyZWdzJnF1
-b3Q7LCAmcXVvdDtkaXJtYXAmcXVvdDs7PGJyPg0KJmd0OyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAj
-YWRkcmVzcy1jZWxscyA9ICZsdDsxJmd0Ozs8YnI+DQomZ3Q7ICZuYnNwOyAmbmJzcDsgJm5ic3A7
-ICNzaXplLWNlbGxzID0gJmx0OzAmZ3Q7Ozxicj4NCiZndDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsg
-Y2xvY2tzID0gJmx0OyZhbXA7Y2xrd2l6YXJkIDAmZ3Q7LCAmbHQ7JmFtcDtjbGt3aXphcmQNCjEm
-Z3Q7LCAmbHQ7JmFtcDtjbGtjIDE1Jmd0Ozs8YnI+DQomZ3Q7ICZuYnNwOyAmbmJzcDsgJm5ic3A7
-IGNsb2NrLW5hbWVzID0gJnF1b3Q7c2VuZF9jbGsmcXVvdDssICZxdW90O3NlbmRfZGx5X2NsayZx
-dW90OywNCiZxdW90O3BzX2NsayZxdW90Ozs8YnI+DQomZ3Q7ICZuYnNwOyAmbmJzcDsgJm5ic3A7
-ICNhZGRyZXNzLWNlbGxzID0gJmx0OzEmZ3Q7Ozxicj4NCiZndDsgJm5ic3A7ICZuYnNwOyAmbmJz
-cDsgI3NpemUtY2VsbHMgPSAmbHQ7MCZndDs7PGJyPg0KJmd0OyA8YnI+DQomZ3Q7ICZuYnNwOyAm
-bmJzcDsgJm5ic3A7IGZsYXNoQDAgezxicj4NCiZndDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5i
-c3A7ICZuYnNwO2NvbXBhdGlibGUgPSAmcXVvdDtqZWRlYyxzcGktbm9yJnF1b3Q7Ozxicj4NCiZn
-dDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwO3JlZyA9ICZsdDswJmd0Ozs8YnI+
-DQomZ3Q7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDtzcGktbWF4LWZyZXF1ZW5j
-eSA9ICZsdDsyNTAwMDAwMCZndDs7PGJyPg0KJmd0OyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJz
-cDsgJm5ic3A7c3BpLXR4LWJ1cy13aWR0aCA9ICZsdDs0Jmd0Ozs8YnI+DQomZ3Q7ICZuYnNwOyAm
-bmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDtzcGktcngtYnVzLXdpZHRoID0gJmx0OzQmZ3Q7Ozxi
-cj4NCiZndDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgfTs8YnI+DQomZ3Q7ICZuYnNwOyAmbmJzcDt9
-Ozxicj4NCiZndDsgPGJyPg0KJmd0OyBPUiAuLi48YnI+DQomZ3Q7IDxicj4NCiZndDsgJm5ic3A7
-ICZuYnNwO25hbmRANDNjMzAwMDAgezxicj4NCiZndDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgY29t
-cGF0aWJsZSA9ICZxdW90O214aWN5LG14MjVmMGEtbmFuZC1jdGxyJnF1b3Q7Ozxicj4NCiZndDsg
-Jm5ic3A7ICZuYnNwOyAmbmJzcDsgcmVnID0gJmx0OzB4NDNjMzAwMDAgMHgxMDAwMCZndDssICZs
-dDsweGEwMDAwMDAwDQoweDQwMDAwMDAmZ3Q7Ozxicj4NCiZndDsgJm5ic3A7ICZuYnNwOyAmbmJz
-cDsgcmVnLW5hbWVzID0gJnF1b3Q7cmVncyZxdW90OywgJnF1b3Q7ZGlybWFwJnF1b3Q7Ozxicj4N
-CiZndDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgI2FkZHJlc3MtY2VsbHMgPSAmbHQ7MSZndDs7PGJy
-Pg0KJmd0OyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAjc2l6ZS1jZWxscyA9ICZsdDswJmd0Ozs8YnI+
-DQomZ3Q7ICZuYnNwOyAmbmJzcDsgJm5ic3A7IG5hbmQtZWNjLW1vZGUgPSAmcXVvdDtzb2Z0JnF1
-b3Q7Ozxicj4NCiZndDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgbmFuZC1lY2MtYWxnbyA9ICZxdW90
-O2JjaCZxdW90Ozs8YnI+DQomZ3Q7ICZuYnNwOyAmbmJzcDsgJm5ic3A7IG5hbmQtZWNjLXN0ZXAt
-c2l6ZSA9ICZsdDs1MTImZ3Q7Ozxicj4NCiZndDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgbmFuZC1l
-Y2Mtc3RyZW5ndGggPSAmbHQ7OCZndDs7PGJyPg0KJmd0OyAmbmJzcDsgJm5ic3A7fTs8YnI+DQom
-Z3Q7IDxicj4NCiZndDsgLS0gPGJyPg0KJmd0OyBMZWUgSm9uZXMgW8Dux+3LuV08YnI+DQomZ3Q7
-IExpbmFybyBTZXJ2aWNlcyBUZWNobmljYWwgTGVhZDxicj4NCiZndDsgTGluYXJvLm9yZyCppiBP
-cGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3M8YnI+DQomZ3Q7IEZvbGxvdyBMaW5hcm86
-IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2c8YnI+DQo8YnI+DQo8YnI+DQpDT05GSURFTlRJQUxJ
-VFkgTk9URTo8YnI+DQo8YnI+DQpUaGlzIGUtbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIG1heSBj
-b250YWluIGNvbmZpZGVudGlhbCBpbmZvcm1hdGlvbiBhbmQvb3INCnBlcnNvbmFsIGRhdGEsIHdo
-aWNoIGlzIHByb3RlY3RlZCBieSBhcHBsaWNhYmxlIGxhd3MuIFBsZWFzZSBiZSByZW1pbmRlZA0K
-dGhhdCBkdXBsaWNhdGlvbiwgZGlzY2xvc3VyZSwgZGlzdHJpYnV0aW9uLCBvciB1c2Ugb2YgdGhp
-cyBlLW1haWwgKGFuZC9vcg0KaXRzIGF0dGFjaG1lbnRzKSBvciBhbnkgcGFydCB0aGVyZW9mIGlz
-IHByb2hpYml0ZWQuIElmIHlvdSByZWNlaXZlIHRoaXMNCmUtbWFpbCBpbiBlcnJvciwgcGxlYXNl
-IG5vdGlmeSB1cyBpbW1lZGlhdGVseSBhbmQgZGVsZXRlIHRoaXMgbWFpbCBhcyB3ZWxsDQphcyBp
-dHMgYXR0YWNobWVudChzKSBmcm9tIHlvdXIgc3lzdGVtLiBJbiBhZGRpdGlvbiwgcGxlYXNlIGJl
-IGluZm9ybWVkDQp0aGF0IGNvbGxlY3Rpb24sIHByb2Nlc3NpbmcsIGFuZC9vciB1c2Ugb2YgcGVy
-c29uYWwgZGF0YSBpcyBwcm9oaWJpdGVkDQp1bmxlc3MgZXhwcmVzc2x5IHBlcm1pdHRlZCBieSBw
-ZXJzb25hbCBkYXRhIHByb3RlY3Rpb24gbGF3cy4gVGhhbmsgeW91DQpmb3IgeW91ciBhdHRlbnRp
-b24gYW5kIGNvb3BlcmF0aW9uLjxicj4NCjxicj4NCk1hY3Jvbml4IEludGVybmF0aW9uYWwgQ28u
-LCBMdGQuPGJyPg0KPGJyPg0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PGJyPg0KPC9mb250PjwvdHQ+DQo=
+> > Document the bindings used by the Macronix MX25F0A MFD controller.
+> > 
+> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> > ---
+> >  .../devicetree/bindings/mfd/mxic-mx25f0a.txt       | 66 +++++++++
+> +++++++++++++
+> >  1 file changed, 66 insertions(+)
+> >  create mode 100644 
+Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/mxic-
+> mx25f0a.txt b/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
+> > new file mode 100644
+> > index 0000000..53b4839
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
+> > @@ -0,0 +1,66 @@
+> > +Macronix MX25F0A Multi-Function Device Tree Bindings
+> > +----------------------------------------------------
+> > +
+> > +MX25F0A is a MultiFunction Device with SPI and raw NAND, which
+> > +supports either spi host controller or raw nand controller.
+> > +
+> > +Required properties:
+> > +- compatible: should be "mxic,mx25f0a-mfd"
+> 
+> Should probably be "mxic,mx25f0a"
 
---=_alternative 0007AD11482583D6_=--
+okay,
+
+> 
+> > +- #address-cells: should be 1
+> > +- #size-cells: should be 0
+> > +- reg: should contain 2 entries, one for the registers and one 
+> for the direct
+> > +       mapping area in SPI mode.
+> > +- reg-names: should contain "regs" and "dirmap"
+> > +- interrupts: interrupt line connected to this MFD controller
+> > +
+> > +Required nodes:
+> > + - spi :
+> > +   Node for configuring the SPI controller driver.
+> > +   Required properties:
+> > +      - compatible = "mxicy,mx25f0a-spi";
+> > +      - clock-names: should contain "ps_clk", "send_clk" and
+> > +                "send_dly_clk"
+> > +      - clocks: should contain 3 entries for the "ps_clk", "send_clk"
+> > +           and "send_dly_clk" clocks
+> > +
+> > +- nand :
+> > +   Node for configuring the raw nand controller driver.
+> > +   Required properties:
+> > +      - compatible = "mxicy,mx25f0a-nand-ctlr";
+> > +      - nand-ecc-mode = "soft";
+> > +      - nand-ecc-algo = "bch";
+> 
+> You can have only one node at a time. You can add a mxic,mode property
+> being either "spi-controller" or "nand-controller".
+> 
+
+okay, to add mode property or just "jedec,spi-nor" for spi-controller
+and the other is for nand-controller.
+
+> > +
+> > +Example:
+> > +
+> > +   mxic: mx25f0a-mfd@43c30000 {
+> > +      compatible = "mxic,mx25f0a-mfd";
+> > +      reg = <0x43c30000 0x10000>, <0xa0000000 0x4000000>;
+> > +      reg-names = "regs", "dirmap";
+> > +      #address-cells = <1>;
+> > +      #size-cells = <0>;
+> > +
+> > +      /* either spi or nand */
+> > +      spi {
+> > +         compatible = "mxicy,mx25f0a-spi";
+> > +         clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
+> > +         clock-names = "send_clk", "send_dly_clk", "ps_clk";
+> > +         #address-cells = <1>;
+> > +         #size-cells = <0>;
+> > +
+> > +         flash@0 {
+> > +            compatible = "jedec,spi-nor";
+> > +            reg = <0>;
+> > +            spi-max-frequency = <25000000>;
+> > +            spi-tx-bus-width = <4>;
+> > +            spi-rx-bus-width = <4>;
+> > +         };
+> > +      };
+> > +
+> > +      nand {
+> > +         compatible = "mxicy,mx25f0a-nand-ctlr";
+> > +         nand-ecc-mode = "soft";
+> > +         nand-ecc-algo = "bch";
+> > +         nand-ecc-step-size = <512>;
+> > +         nand-ecc-strength = <8>;
+> 
+> Are you sure you want soft correction? (I have not checked the driver
+> yet). 
+
+yes, currently.
+
+For hw correction, I prefer to drop the two step-size/strength
+> properties. These values will be derived depending on the chip's
+> requirements.
+> 
+yes, step-size/strength are just for soft bch and they will be removed
+for hw correction.
+
+BTW, I will separate these patchset and resubmit it later by Mark's 
+comments.
+
+thanks & best regards,
+Mason
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+--=_alternative 00216580482583D0_=
+Content-Type: text/html; charset="US-ASCII"
+
+
+<tt><font size=2>Hi Miquel,<br>
+</font></tt>
+<br><tt><font size=2><br>
+&gt; &gt; Document the bindings used by the Macronix MX25F0A MFD controller.<br>
+&gt; &gt; <br>
+&gt; &gt; Signed-off-by: Mason Yang &lt;masonccyang@mxic.com.tw&gt;<br>
+&gt; &gt; ---<br>
+&gt; &gt; &nbsp;.../devicetree/bindings/mfd/mxic-mx25f0a.txt &nbsp; &nbsp;
+&nbsp; | 66 +++++++++<br>
+&gt; +++++++++++++<br>
+&gt; &gt; &nbsp;1 file changed, 66 insertions(+)<br>
+&gt; &gt; &nbsp;create mode 100644 Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt<br>
+&gt; &gt; <br>
+&gt; &gt; diff --git a/Documentation/devicetree/bindings/mfd/mxic-<br>
+&gt; mx25f0a.txt b/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt<br>
+&gt; &gt; new file mode 100644<br>
+&gt; &gt; index 0000000..53b4839<br>
+&gt; &gt; --- /dev/null<br>
+&gt; &gt; +++ b/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt<br>
+&gt; &gt; @@ -0,0 +1,66 @@<br>
+&gt; &gt; +Macronix MX25F0A Multi-Function Device Tree Bindings<br>
+&gt; &gt; +----------------------------------------------------<br>
+&gt; &gt; +<br>
+&gt; &gt; +MX25F0A is a MultiFunction Device with SPI and raw NAND, which<br>
+&gt; &gt; +supports either spi host controller or raw nand controller.<br>
+&gt; &gt; +<br>
+&gt; &gt; +Required properties:<br>
+&gt; &gt; +- compatible: should be &quot;mxic,mx25f0a-mfd&quot;<br>
+&gt; <br>
+&gt; Should probably be &quot;mxic,mx25f0a&quot;</font></tt>
+<br>
+<br><tt><font size=2>okay,</font></tt>
+<br><tt><font size=2><br>
+&gt; <br>
+&gt; &gt; +- #address-cells: should be 1<br>
+&gt; &gt; +- #size-cells: should be 0<br>
+&gt; &gt; +- reg: should contain 2 entries, one for the registers and one
+<br>
+&gt; for the direct<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; mapping area in SPI mode.<br>
+&gt; &gt; +- reg-names: should contain &quot;regs&quot; and &quot;dirmap&quot;<br>
+&gt; &gt; +- interrupts: interrupt line connected to this MFD controller<br>
+&gt; &gt; +<br>
+&gt; &gt; +Required nodes:<br>
+&gt; &gt; + - spi :<br>
+&gt; &gt; + &nbsp; Node for configuring the SPI controller driver.<br>
+&gt; &gt; + &nbsp; Required properties:<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp;- compatible = &quot;mxicy,mx25f0a-spi&quot;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp;- clock-names: should contain &quot;ps_clk&quot;,
+&quot;send_clk&quot; and<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&quot;send_dly_clk&quot;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp;- clocks: should contain 3 entries for
+the &quot;ps_clk&quot;, &quot;send_clk&quot;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; and &quot;send_dly_clk&quot;
+clocks<br>
+&gt; &gt; +<br>
+&gt; &gt; +- nand :<br>
+&gt; &gt; + &nbsp; Node for configuring the raw nand controller driver.<br>
+&gt; &gt; + &nbsp; Required properties:<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp;- compatible = &quot;mxicy,mx25f0a-nand-ctlr&quot;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp;- nand-ecc-mode = &quot;soft&quot;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp;- nand-ecc-algo = &quot;bch&quot;;<br>
+&gt; <br>
+&gt; You can have only one node at a time. You can add a mxic,mode property<br>
+&gt; being either &quot;spi-controller&quot; or &quot;nand-controller&quot;.<br>
+&gt; </font></tt>
+<br>
+<br><tt><font size=2>okay, to add mode property or just &quot;jedec,spi-nor&quot;
+for spi-controller</font></tt>
+<br><tt><font size=2>and the other is for nand-controller.</font></tt>
+<br><tt><font size=2><br>
+&gt; &gt; +<br>
+&gt; &gt; +Example:<br>
+&gt; &gt; +<br>
+&gt; &gt; + &nbsp; mxic: mx25f0a-mfd@43c30000 {<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp;compatible = &quot;mxic,mx25f0a-mfd&quot;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp;reg = &lt;0x43c30000 0x10000&gt;, &lt;0xa0000000
+0x4000000&gt;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp;reg-names = &quot;regs&quot;, &quot;dirmap&quot;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp;#address-cells = &lt;1&gt;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp;#size-cells = &lt;0&gt;;<br>
+&gt; &gt; +<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp;/* either spi or nand */<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp;spi {<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; compatible = &quot;mxicy,mx25f0a-spi&quot;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; clocks = &lt;&amp;clkwizard 0&gt;,
+&lt;&amp;clkwizard 1&gt;, &lt;&amp;clkc 15&gt;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; clock-names = &quot;send_clk&quot;,
+&quot;send_dly_clk&quot;, &quot;ps_clk&quot;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; #address-cells = &lt;1&gt;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; #size-cells = &lt;0&gt;;<br>
+&gt; &gt; +<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; flash@0 {<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;compatible = &quot;jedec,spi-nor&quot;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;reg = &lt;0&gt;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;spi-max-frequency
+= &lt;25000000&gt;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;spi-tx-bus-width =
+&lt;4&gt;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;spi-rx-bus-width =
+&lt;4&gt;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; };<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp;};<br>
+&gt; &gt; +<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp;nand {<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; compatible = &quot;mxicy,mx25f0a-nand-ctlr&quot;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; nand-ecc-mode = &quot;soft&quot;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; nand-ecc-algo = &quot;bch&quot;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; nand-ecc-step-size = &lt;512&gt;;<br>
+&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; nand-ecc-strength = &lt;8&gt;;<br>
+&gt; <br>
+&gt; Are you sure you want soft correction? (I have not checked the driver<br>
+&gt; yet). </font></tt>
+<br>
+<br><tt><font size=2>yes, currently.</font></tt>
+<br>
+<br><tt><font size=2>For hw correction, I prefer to drop the two step-size/strength<br>
+&gt; properties. These values will be derived depending on the chip's<br>
+&gt; requirements.<br>
+&gt; <br>
+yes, step-size/strength are just for soft bch and they will be removed</font></tt>
+<br><tt><font size=2>for hw correction.<br>
+<br>
+BTW, I will separate these patchset and resubmit it later by Mark's comments.</font></tt>
+<br>
+<br><tt><font size=2>thanks &amp; best regards,</font></tt>
+<br><tt><font size=2>Mason</font></tt>
+<br><tt><font size=2><br>
+<br>
+CONFIDENTIALITY NOTE:<br>
+<br>
+This e-mail and any attachments may contain confidential information and/or
+personal data, which is protected by applicable laws. Please be reminded
+that duplication, disclosure, distribution, or use of this e-mail (and/or
+its attachments) or any part thereof is prohibited. If you receive this
+e-mail in error, please notify us immediately and delete this mail as well
+as its attachment(s) from your system. In addition, please be informed
+that collection, processing, and/or use of personal data is prohibited
+unless expressly permitted by personal data protection laws. Thank you
+for your attention and cooperation.<br>
+<br>
+Macronix International Co., Ltd.<br>
+<br>
+=====================================================================<br>
+</font></tt>
+
+--=_alternative 00216580482583D0_=--
