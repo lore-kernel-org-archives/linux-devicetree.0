@@ -1,40 +1,44 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESEND PATCH v6 01/11] dt-bindings: mfd: add DT bindings for
- max77650
-Date: Tue, 2 Apr 2019 08:25:20 +0100
-Message-ID: <20190402072520.GF4187@dell>
-References: <20190318174228.18194-1-brgl@bgdev.pl>
- <20190318174228.18194-2-brgl@bgdev.pl>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v6 0/6] drm/bridge: sii902x: HDMI-audio support and some fixes
+Date: Tue, 2 Apr 2019 10:29:09 +0300
+Message-ID: <cover.1554146714.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190318174228.18194-2-brgl@bgdev.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: fabrizio.castro@bp.renesas.com, Songjun.Wu@atmel.com, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, voice.shen@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 18 Mar 2019, Bartosz Golaszewski wrote:
-
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Add a DT binding document for max77650 ultra-low power PMIC. This
-> describes the core mfd device and the GPIO module.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/mfd/max77650.txt      | 46 +++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
-
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Q2hhbmdlcyBzaW5jZSB2NToKLSBBZGQgIiNzb3VuZC1kYWktY2VsbHMiIHRvIGJpbmRpbmcgZG9j
+dW1lbnQuIENvbmZpZ3VyZSBhdWRpbyBpZiB0aGlzCiAgcHJvcGVydHkgZXhzaXN0cy4KLSBNYWtl
+IHNpbCxpMnMtZGF0YS1sYW5lcyBwcm9wZXJ0eSBvcHRpb25hbCB3aXRoIGRlZmF1bHQgYmVoYXZp
+b3VyCgpUaGUgYWxyZWFkeSByZXZpZXdlZCBwYXRjaGVzIGFyZSBpbiBmcm9udC4gTm90IHJldmll
+d2VkIHN0aWxsOgotICJkdC1iaW5kaW5nczogZGlzcGxheTogc2lpOTAyeDogQWRkIEhETUkgYXVk
+aW8gYmluZGluZ3MiCi0gImRybS9icmlkZ2U6IHNpaTkwMng6IEltcGxlbWVudCBIRE1JIGF1ZGlv
+IHN1cHBvcnQiCgpUaGUgcHJldmlvdXMgcm91bmQ6Cmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
+cmcvY292ZXIvMTA4NjUyMTUvCgpKeXJpIFNhcmhhICg1KToKICBkcm0vYnJpZGdlOiBzaWk5MDJ4
+OiBTZXQgb3V0cHV0IG1vZGUgdG8gSERNSSBvciBEVkkgYWNjb3JkaW5nIHRvIEVESUQKICBkcm0v
+YnJpZGdlOiBzaWk5MDJ4OiBwaXhlbCBjbG9jayB1bml0IGlzIDEwa0h6IGluc3RlYWQgb2YgMWtI
+egogIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBzaWk5MDJ4OiBSZW1vdmUgdHJhaWxpbmcgd2hpdGUg
+c3BhY2UKICBkdC1iaW5kaW5nczogZGlzcGxheTogc2lpOTAyeDogQWRkIEhETUkgYXVkaW8gYmlu
+ZGluZ3MKICBkcm0vYnJpZGdlOiBzaWk5MDJ4OiBJbXBsZW1lbnQgSERNSSBhdWRpbyBzdXBwb3J0
+CgpUb21pIFZhbGtlaW5lbiAoMSk6CiAgZHJtL2JyaWRnZTogc2lpOTAyeDogYWRkIGlucHV0X2J1
+c19mbGFncwoKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dCAgICAgICB8
+ICAzOSArLQogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMgICAgICAgICAgICAgIHwg
+NDg2ICsrKysrKysrKysrKysrKysrLQogMiBmaWxlcyBjaGFuZ2VkLCA1MTcgaW5zZXJ0aW9ucygr
+KSwgOCBkZWxldGlvbnMoLSkKCi0tIApUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jr
+a2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4gWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1
+MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
