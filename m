@@ -1,109 +1,33 @@
-From: William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: [PATCH v10 00/18] Introduce the Counter subsystem
-Date: Tue,  2 Apr 2019 15:30:35 +0900
-Message-ID: <cover.1554184734.git.vilhelm.gray@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 1/6] mfd: rk808: remove the id_table
+Date: Tue, 2 Apr 2019 07:30:11 +0100
+Message-ID: <20190402063011.GY4187@dell>
+References: <20190102102002.29245-1-tony.xie@rock-chips.com>
+ <20190102102002.29245-2-tony.xie@rock-chips.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190102102002.29245-2-tony.xie@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org
-Cc: jic23@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, akpm@linux-foundation.org, david@lechnology.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, daniel.lezcano@linaro.org, tglx@linutronix.de, thierry.reding@gmail.com, esben@haabendal.dk, linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, patrick.havelange@essensium.com, William Breathitt Gray <vilhelm.gray@gmail.com>
+To: Tony Xie <tony.xie@rock-chips.com>
+Cc: heiko@sntech.de, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Changes in v10:
-  - Fix minor typographical errors in documentation
-  - Merge the FlexTimer Module Quadrature decoder counter driver patches
+On Wed, 02 Jan 2019, Tony Xie wrote:
 
-This revision is functionally identical to the last; changes in this
-version were made to fix minor typos in the documentation files and also
-to pull in the new FTM quadrature decoder counter driver.
+> Remove the id_table because it's not used.
+> 
+> Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
+> ---
+>  drivers/mfd/rk808.c | 9 ---------
+>  1 file changed, 9 deletions(-)
 
-The Generic Counter API has been and is still in a feature freeze until
-it is merged into the mainline. The following features will be
-investigated after the merge: interrupt support for counter devices, and
-a character device interface for low-latency applications.
-
-Benjamin Gaignard (2):
-  counter: Add STM32 Timer quadrature encoder
-  dt-bindings: counter: Document stm32 quadrature encoder
-
-Fabrice Gasnier (2):
-  counter: stm32-lptimer: add counter device
-  dt-bindings: counter: Adjust dt-bindings for STM32 lptimer move
-
-Patrick Havelange (7):
-  include/fsl: add common FlexTimer #defines in a separate header.
-  drivers/pwm: pwm-fsl-ftm: use common header for FlexTimer #defines
-  drivers/clocksource: timer-fsl-ftm: use common header for FlexTimer
-    #defines
-  dt-bindings: counter: ftm-quaddec
-  counter: add FlexTimer Module Quadrature decoder counter driver
-  counter: ftm-quaddec: Documentation: Add specific counter sysfs
-    documentation
-  LS1021A: dtsi: add ftm quad decoder entries
-
-William Breathitt Gray (7):
-  counter: Introduce the Generic Counter interface
-  counter: Documentation: Add Generic Counter sysfs documentation
-  docs: Add Generic Counter interface documentation
-  iio: 104-quad-8: Update license boilerplate
-  counter: 104-quad-8: Add Generic Counter interface support
-  counter: 104-quad-8: Documentation: Add Generic Counter sysfs
-    documentation
-  iio: counter: Add deprecation markings for IIO Counter attributes
-
- Documentation/ABI/testing/sysfs-bus-counter   |  230 +++
- .../ABI/testing/sysfs-bus-counter-104-quad-8  |   36 +
- .../ABI/testing/sysfs-bus-counter-ftm-quaddec |   16 +
- Documentation/ABI/testing/sysfs-bus-iio       |    8 +
- .../testing/sysfs-bus-iio-counter-104-quad-8  |   16 +
- .../bindings/counter/ftm-quaddec.txt          |   18 +
- .../{iio => }/counter/stm32-lptimer-cnt.txt   |    0
- .../bindings/counter/stm32-timer-cnt.txt      |   31 +
- .../devicetree/bindings/mfd/stm32-lptimer.txt |    2 +-
- .../devicetree/bindings/mfd/stm32-timers.txt  |    7 +
- Documentation/driver-api/generic-counter.rst  |  342 ++++
- Documentation/driver-api/index.rst            |    1 +
- MAINTAINERS                                   |   15 +-
- arch/arm/boot/dts/ls1021a.dtsi                |   28 +
- drivers/Kconfig                               |    2 +
- drivers/Makefile                              |    1 +
- drivers/clocksource/timer-fsl-ftm.c           |   15 +-
- drivers/{iio => }/counter/104-quad-8.c        |  782 +++++++-
- drivers/counter/Kconfig                       |   60 +
- drivers/counter/Makefile                      |   10 +
- drivers/counter/counter.c                     | 1567 +++++++++++++++++
- drivers/counter/ftm-quaddec.c                 |  356 ++++
- drivers/{iio => }/counter/stm32-lptimer-cnt.c |  361 +++-
- drivers/counter/stm32-timer-cnt.c             |  390 ++++
- drivers/iio/Kconfig                           |    1 -
- drivers/iio/Makefile                          |    1 -
- drivers/iio/counter/Kconfig                   |   34 -
- drivers/iio/counter/Makefile                  |    8 -
- drivers/pwm/pwm-fsl-ftm.c                     |   44 +-
- include/linux/counter.h                       |  510 ++++++
- include/linux/counter_enum.h                  |   45 +
- include/linux/fsl/ftm.h                       |   88 +
- 32 files changed, 4877 insertions(+), 148 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-counter
- create mode 100644 Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
- create mode 100644 Documentation/ABI/testing/sysfs-bus-counter-ftm-quaddec
- create mode 100644 Documentation/devicetree/bindings/counter/ftm-quaddec.txt
- rename Documentation/devicetree/bindings/{iio => }/counter/stm32-lptimer-cnt.txt (100%)
- create mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
- create mode 100644 Documentation/driver-api/generic-counter.rst
- rename drivers/{iio => }/counter/104-quad-8.c (44%)
- create mode 100644 drivers/counter/Kconfig
- create mode 100644 drivers/counter/Makefile
- create mode 100644 drivers/counter/counter.c
- create mode 100644 drivers/counter/ftm-quaddec.c
- rename drivers/{iio => }/counter/stm32-lptimer-cnt.c (51%)
- create mode 100644 drivers/counter/stm32-timer-cnt.c
- delete mode 100644 drivers/iio/counter/Kconfig
- delete mode 100644 drivers/iio/counter/Makefile
- create mode 100644 include/linux/counter.h
- create mode 100644 include/linux/counter_enum.h
- create mode 100644 include/linux/fsl/ftm.h
+Applied, thanks.
 
 -- 
-2.21.0
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
