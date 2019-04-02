@@ -1,85 +1,158 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [BUG] gpiolib: spi chip select legacy support breaks modern chip
- select and whitens the GTA04 LCD panel
-Date: Tue, 2 Apr 2019 12:31:43 +0700
-Message-ID: <20190402053143.GZ2059@sirena.org.uk>
-References: <7509BFB6-36E4-441A-9F16-7A4FEE7F7CF3@goldelico.com>
- <5488EF42-08DB-4273-95FF-49ED31E27472@goldelico.com>
- <CACRpkdb4URKcdZ-=3aG_np86Bp=1ahs+qztM-7yQkSP18ZkE6A@mail.gmail.com>
- <2286C331-4AFC-46A9-B8C4-8A8BA9CD33C2@goldelico.com>
- <CACRpkda4k_Vaoo1qEaZ3nv8bA4tcrPEN6oT-v+n9HRdA6=5Xvg@mail.gmail.com>
- <2D2D13C2-0D3E-47CD-946B-81DBBF3C43E6@goldelico.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 1/4] dt-bindings: mtd: Add YAML schemas for the generic
+ NAND options
+Date: Tue, 2 Apr 2019 08:15:05 +0200
+Message-ID: <20190402061505.34r53q75spqtuqcv@flea>
+References: <75ad3b89e4a6f8ad5bc414c3dccbb1f99361495a.1554153146.git-series.maxime.ripard@bootlin.com>
+ <CAL_JsqLSfitzkb8P5xQ+cCmcSeL6fTjQ3rVPJ2qiNdSXyps-sw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="f8lmXUvqnCdFQPaI"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <2D2D13C2-0D3E-47CD-946B-81DBBF3C43E6@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Kumar Gala <galak@codeaurora.org>, Wolfgang Ocker <weo@reccoware.de>, Jan Kotas <jank@cadence.com>, LKML <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <CAL_JsqLSfitzkb8P5xQ+cCmcSeL6fTjQ3rVPJ2qiNdSXyps-sw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Boris Brezillon <boris.brezillon@collabora.com>, MTD Maling List <linux-mtd@lists.infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
---f8lmXUvqnCdFQPaI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, Apr 01, 2019 at 08:58:49PM -0500, Rob Herring wrote:
+> On Mon, Apr 1, 2019 at 4:14 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > The NAND chips in MTD have a bunch of generic options that are needed in a
+> > device tree. Add a YAML schemas for those.
+> >
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > ---
+> >  Documentation/devicetree/bindings/mtd/nand-controller.yaml | 131 +++++++-
+> >  1 file changed, 131 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> > new file mode 100644
+> > index 000000000000..05b1afb34972
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> > @@ -0,0 +1,131 @@
+> > +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: NAND Chip and NAND Controller Generic Binding
+> > +
+> > +maintainers:
+> > +  - Boris Brezillon <bbrezillon@kernel.org>
+> > +  - Miquel Raynal <miquel.raynal@bootlin.com>
+> > +  - Richard Weinberger <richard@nod.at>
+> > +
+> > +description: |
+> > +  The NAND controller should be represented with its own DT node, and
+> > +  all NAND chips attached to this controller should be defined as
+> > +  children nodes of the NAND controller. This representation should be
+> > +  enforced even for simple controllers supporting only one chip.
+> > +
+> > +  The ECC strength and ECC step size properties define the correction
+> > +  capability of a controller. Together, they say a controller can
+> > +  correct {strength} bit errors per {size} bytes.
+> > +
+> > +  The interpretation of these parameters is implementation-defined, so
+> > +  not all implementations must support all possible
+> > +  combinations. However, implementations are encouraged to further
+> > +  specify the value(s) they support.
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: "^nand-controller(@.*)?"
+> > +
+> > +  "#address-cells":
+> > +    const: 1
+> > +
+> > +  "#size-cells":
+> > +    const: 0
+> > +
+> > +  ranges: true
+>
+> 'ranges' should not be here as nand chip addresses are not translatable.
 
-On Tue, Apr 02, 2019 at 07:05:35AM +0200, H. Nikolaus Schaller wrote:
-> > Am 02.04.2019 um 06:02 schrieb Linus Walleij <linus.walleij@linaro.org>:
+Apparently, some are. It was part of the original binding, hence why
+it's there.
 
-Please delete unneeded context from mails when replying.  Doing this
-makes it much easier to find your reply in the message, helping ensure
-it won't be missed by people scrolling through the irrelevant quoted
-material.
+https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/mtd/nand.txt#L16
 
-> >>> This does not work because there are devices that requires spi-cs-high to be
-> >>> respected and the DTS second cell GPIO flag to be ignored.
+> > +
+> > +patternProperties:
+> > +  "^nand@[a-z0-9]$":
+> > +    properties:
+> > +      reg:
+> > +        description:
+> > +          Contains the native Ready/Busy IDs.
+> > +
+> > +      nand-ecc-mode:
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/string
+> > +          - enum: [ none, soft, hw, hw_syndrome, hw_oob_first, on-die ]
+> > +        description:
+> > +          Operation mode of the NAND ecc mode. soft_bch is deprecated
+> > +          and should be replaced by soft and nand-ecc-algo
+> > +
+> > +      nand-ecc-algo:
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/string
+> > +          - enum: [ hamming, bch, rs ]
+> > +        description:
+> > +          Algorithm of NAND ECC.
+> > +
+> > +      nand-bus-width:
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint32
+> > +          - enum: [ 8, 16 ]
+> > +          - default: 8
+> > +        description:
+> > +          Bus width to the NAND chip
+> > +
+> > +      nand-on-flash-bbt:
+> > +        $ref: /schemas/types.yaml#/definitions/flag
+> > +        description:
+> > +          Enable the on-flash Bad Block Table
+> > +
+> > +      nand-ecc-strength:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        description:
+> > +          Number of bits to correct per ECC step.
+>
+> Is there a range we can define here? Certainly there's a minimum
+> values of at least 1.
 
-> >> Then, those should be fixed...
+It doesn't look like there is from a quick grep. The DT seems to be in
+the 4 - 32 range, but I'm not sure if it would make sense to have
+something higher.
 
-> > This can't be done because some old systems (mostly powerpc)
-> > added between 2008-2013 do not know about GPIO flags and
-> > have DTBs deployed in firmware that need to keep working.
-> > They cannot be fixed.
+I'll let Miquel and Boris comment.
 
-> The question is if it is even possible to deploy a new kernel
-> for such devices and if anyone wants to do...
+> > +
+> > +      nand-ecc-step-size:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        description:
+> > +          Number of data bytes covered by a single ECC step.
+>
+> Same here.
 
-It's relatively common, especially with older devices, for people to be
-perfectly happy to update the kernel and do so frequently but unwilling
-to update the bootloader as the procedure for recovering a broken
-bootloader is difficult or perhaps not even possible.
+Thanks!
+Maxime
 
-> This also gives another idea: make it depend on "powerpc".
-
-That won't fly, the code has always been architecture neutral.
-
-> > Dunno about this, it looks fragile, I would prefer to keep all working.
-> > But I will listen to reason.
-
-> Reason why I propose a CONFIG option is:
-
-> if someone is able to compile and deploy a v5.1 kernel for some device which
-> has (old) and problematic DTB in ROM he/she must have access to the .config.
-> So it is easy to modify it to enable legacy handling of spi-cs-high. And keep
-> it disabled for all others.
-
-This assumes people aren't able to run a distro kernel...
-
---f8lmXUvqnCdFQPaI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyi878ACgkQJNaLcl1U
-h9Dr7gf7BfQONvr81GpZnUgSfuBnJyN72/vNn0cIcsziIvOgxrIzu9l6UlaBidZ/
-Xin24wsVrTfpg4nw+cV3fEbZfWIWaymiWo6DqlMA/GF6VIzDm16a1DPVND/u9CU2
-2FOFi8C5rWfmQ+GfkIjubFggPKG/VyVGteXgFb1Lqo3JB0OvzoOmThgioO6MaW6A
-8F+d5eQiy/eSWg0sMobsQhkEb6z1e2M+XHK3btuQKDF8O4iwsTtoPO56yLrk0PIO
-G3a7Uudgn7uN6vbSzT5Wknkjp2ksO6dvb9lydfXvSskfapkvyD/8xJ4I4dj8i/vo
-8gUop6f64Uj+QE4x0kfobpnWzPMBqQ==
-=Z6Hm
------END PGP SIGNATURE-----
-
---f8lmXUvqnCdFQPaI--
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
