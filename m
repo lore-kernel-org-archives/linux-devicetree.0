@@ -1,84 +1,42 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v6 5/6] dt-bindings: display: sii902x: Add HDMI audio
- bindings
-Date: Tue, 2 Apr 2019 11:27:15 +0300
-Message-ID: <d4ee03e7-c4de-6232-7efb-12ed693ca84a@ti.com>
-References: <cover.1554146714.git.jsarha@ti.com>
- <4a0573f42112a1070c2d48ecc4a4e89838842cfc.1554146714.git.jsarha@ti.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 0/5] Add bluetooth, gps and accelerometer to TBS A711
+Date: Tue, 2 Apr 2019 10:28:52 +0200
+Message-ID: <20190402082852.GL12562@localhost>
+References: <20190401115616.21337-1-megous@megous.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <4a0573f42112a1070c2d48ecc4a4e89838842cfc.1554146714.git.jsarha@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: fabrizio.castro@bp.renesas.com, Songjun.Wu@atmel.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, voice.shen@atmel.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190401115616.21337-1-megous@megous.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: megous@megous.com
+Cc: maxime.ripard@free-electrons.com, wens@csie.org, robh@kernel.org, johan@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwMi8wNC8yMDE5IDEwLjI5LCBKeXJpIFNhcmhhIHdyb3RlOgo+IFRoZSBzaWk5MDJ4IGNo
-aXAgZmFtaWx5IHN1cHBvcnRzIGFsc28gSERNSSBhdWRpby4gQWRkIGJpbmRpbmcgZm9yCj4gZGVz
-Y3JpYmluZyB0aGUgbmVjZXNzYXJ5IGkycyBhbmQgbWNsayB3aXJpbmcgZm9yIGl0LgoKUmV2aWV3
-ZWQtYnk6IFBldGVyIFVqZmFsdXNpIDxwZXRlci51amZhbHVzaUB0aS5jb20+Cgo+IFNpZ25lZC1v
-ZmYtYnk6IEp5cmkgU2FyaGEgPGpzYXJoYUB0aS5jb20+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9k
-aXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dCAgICAgICB8IDM3ICsrKysrKysrKysrKysrKysrKysK
-PiAgMSBmaWxlIGNoYW5nZWQsIDM3IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkw
-MngudHh0Cj4gaW5kZXggYzRjMTg1NWNhNjU0Li5kMTI0YTVmZWRhYjEgMTAwNjQ0Cj4gLS0tIGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngu
-dHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
-ZGdlL3NpaTkwMngudHh0Cj4gQEAgLTksNiArOSwzNyBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+
-ICAJICBhYm91dCBob3RwbHVnIGV2ZW50cy4KPiAgCS0gcmVzZXQtZ3Bpb3M6IE9GIGRldmljZS10
-cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgUlNUX04gcGluLgo+ICAKPiArCUhETUkgYXVkaW8g
-cHJvcGVydGllczoKPiArCS0gI3NvdW5kLWRhaS1jZWxsczogPDA+IG9yIDwxPi4gPDA+IGlmIG9u
-bHkgaTJzIG9yIHNwZGlmIHBpbgo+ICsJICAgaXMgd2lyZWQsIDwxPiBpZiB0aGUgYm90aCBhcmUg
-d2lyZWQuIEhETUkgYXVkaW8gaXMKPiArCSAgIGNvbmZpZ3VyZWQgb25seSBpZiB0aGlzIHByb3Bl
-cnR5IGlzIGZvdW5kLgo+ICsJLSBzaWwsaTJzLWRhdGEtbGFuZXM6IEFycmF5IG9mIHVwIHRvIDQg
-aW50ZWdlcnMgd2l0aCB2YWx1ZXMgb2YgMC0zCj4gKwkgICBFYWNoIGludGVnZXIgaW5kaWNhdGVz
-IHdoaWNoIGkycyBwaW4gaXMgY29ubmVjdGVkIHRvIHdoaWNoCj4gKwkgICBhdWRpbyBmaWZvLiBU
-aGUgZmlyc3QgaW50ZWdlciBzZWxlY3RzIGkycyBhdWRpbyBwaW4gZm9yIHRoZQo+ICsJICAgZmly
-c3QgYXVkaW8gZmlmbyMwIChIRE1JIGNoYW5uZWxzIDEmMiksIHNlY29uZCBmb3IgZmlmbyMxCj4g
-KwkgICAoSERNSSBjaGFubmVscyAzJjQpLCBhbmQgc28gb24uIFRoZXJlIGlzIDQgZmlmb3MgYW5k
-IDQgaTJzCj4gKwkgICBwaW5zIChTRDAgLSBTRDMpLiBBbnkgaTJzIHBpbiBjYW4gYmUgY29ubmVj
-dGVkIHRvIGFueSBmaWZvLAo+ICsJICAgYnV0IHRoZXJlIGNhbiBiZSBubyBnYXBzLiBFLmcuIGFu
-IGkycyBwaW4gbXVzdCBiZSBtYXBwZWQgdG8KPiArCSAgIGZpZm8jMCBhbmQgZmlmbyMxIGJlZm9y
-ZSBtYXBwaW5nIGEgY2hhbm5lbCB0byBmaWZvIzIuIERlZmF1bHQKPiArCSAgIHZhbHVlIGlzIDww
-PiwgZGVzY3JpYmluZyBTRDAgcGluIGJlaWdpbmcgcm91dGVkIHRvIGhkbWkgYXVkaW8KPiArCSAg
-IGZpZm8gIzAuCj4gKwktIGNsb2NrczogcGhhbmRsZSBhbmQgY2xvY2sgc3BlY2lmaWVyIGZvciBl
-YWNoIGNsb2NrIGxpc3RlZCBpbgo+ICsgICAgICAgICAgIHRoZSBjbG9jay1uYW1lcyBwcm9wZXJ0
-eQo+ICsJLSBjbG9jay1uYW1lczogIm1jbGsiCj4gKwkgICBEZXNjcmliZXMgU0lJOTAyeCBNQ0xL
-IGlucHV0LiBNQ0xLIGlzIHVzZWQgdG8gcHJvZHVjZQo+ICsJICAgSERNSSBhdWRpbyBDVFMgdmFs
-dWVzLiBUaGlzIHByb3BlcnR5IGlzIHJlcXVpcmVkIGlmCj4gKwkgICAiI3NvdW5kLWRhaS1jZWxs
-cyItcHJvcGVydHkgaXMgcHJlc2VudC4gVGhpcyBwcm9wZXJ0eSBmb2xsb3dzCj4gKwkgICBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmluZGluZ3MudHh0Cj4g
-KwkgICBjb25zdW1lciBiaW5kaW5nLgo+ICsKPiArCUlmIEhETUkgYXVkaW8gaXMgY29uZmlndXJl
-ZCB0aGUgc2lpOTAyeCBkZXZpY2UgYmVjb21lcyBhbiBBU29DCj4gKwljb2RlYyBjb21wb25lbnQs
-IHRoYXQgY2FuIGJlIHVzZWQgaW4gY29uZmlndXJpbmcgZnVsbCBhdWRpbwo+ICsJZGV2aWNlcyB3
-aXRoIEFTb0Mgc2ltcGxlLWNhcmQgb3IgYXVkaW8tZ3JhcGgtY2FyZC4gU2VlIHRoZWlyCj4gKwli
-aW5kaW5nIGRvY3VtZW50cyBvbiBob3cgdG8gZGVzY3JpYmUgaG93IHRoZSBzaWk5MDJ4IGRldmlj
-ZSBpcwo+ICsJY29ubmVjdGVkIHRvIHRoZSByZXN0IG9mIHRoZSBhdWRpbyBzeXN0ZW06Cj4gKwlE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvc2ltcGxlLWNhcmQudHh0Cj4g
-KwlEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvYXVkaW8tZ3JhcGgtY2Fy
-ZC50eHQKPiArCj4gIE9wdGlvbmFsIHN1Ym5vZGVzOgo+ICAJLSB2aWRlbyBpbnB1dDogdGhpcyBz
-dWJub2RlIGNhbiBjb250YWluIGEgdmlkZW8gaW5wdXQgcG9ydCBub2RlCj4gIAkgIHRvIGNvbm5l
-Y3QgdGhlIGJyaWRnZSB0byBhIGRpc3BsYXkgY29udHJvbGxlciBvdXRwdXQgKFNlZSB0aGlzCj4g
-QEAgLTIxLDYgKzUyLDEyIEBAIEV4YW1wbGU6Cj4gIAkJY29tcGF0aWJsZSA9ICJzaWwsc2lpOTAy
-MiI7Cj4gIAkJcmVnID0gPDB4Mzk+Owo+ICAJCXJlc2V0LWdwaW9zID0gPCZwaW9BIDEgMD47Cj4g
-Kwo+ICsJCSNzb3VuZC1kYWktY2VsbHMgPSA8MD47Cj4gKwkJaTJzLWRhdGEtbGFuZXMgPSA8IDAg
-MSAyID47Cj4gKwkJY2xvY2tzID0gPCZtY2xrPjsKPiArCQljbG9jay1uYW1lcyA9ICJtY2xrIjsK
-PiArCj4gIAkJcG9ydHMgewo+ICAJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiAgCQkJI3NpemUt
-Y2VsbHMgPSA8MD47Cj4gCgotIFDDqXRlcgoKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwg
-UG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuClktdHVubnVzL0J1c2luZXNzIElEOiAw
-NjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Mon, Apr 01, 2019 at 01:56:11PM +0200, megous@megous.com wrote:
+> From: Ondrej Jirman <megous@megous.com>
+> 
+> This series enables some peripherals on TBS A711 tablet that already
+> have mainline drivers:
+> 
+> - GPS u-blox neo-6m (via gnss u-blox driver)
+> - Bluetooth (via recently added OF support in the Broadcom
+>   bluetooth driver)
+> - Accelermomter BMA-250 (hooked to the I2C bus)
+> 
+> It also modifies A83T DTSI and adds missing UART interfaces.
+> 
+> I've added additional compatible to the gnss/u-blox driver for NEO-6M,
+> because this board uses this module, and I don't think I can use
+> the existing compatible for u-blox,neo-m8, even as a fallback.
+> 
+> Please take a look, and apply the patches if you have no objections.
+> 
+> Many of the patches will go through the sunxi tree, but I'm not
+> sure who will want to take the GPS patches.
+
+I'll take the GPS patches through my tree once I've had a chance to
+review them. Perhaps easiest to resend the corresponding dts change once
+that is done.
+
+Johan
