@@ -1,97 +1,132 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v8 02/15] drm/sun4i: tcon: Compute DCLK
- dividers based on format, lanes
-Date: Tue, 2 Apr 2019 19:03:39 +0530
-Message-ID: <CAMty3ZD7yPg9hJNw9Yy1SYKPMPsmt3n1PD6PkyE9KJNpcTyZVA@mail.gmail.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH v8 01/15] drm/sun4i: dsi: Fix video start delay computation
+Date: Tue, 2 Apr 2019 19:04:30 +0530
+Message-ID: <CAMty3ZA9x356e1y_aajSpviycnPR8GA0794BCR6dKMRYuw=zOg@mail.gmail.com>
 References: <20190311133637.18334-1-jagan@amarulasolutions.com>
- <20190311133637.18334-3-jagan@amarulasolutions.com> <20190311153847.oz6ruqmptaq2befn@flea>
- <CAMty3ZChz=s7gdQyX9KnsAp1t5FrpouXGK74-r0SKJ89yJN67Q@mail.gmail.com>
- <20190319105307.omowzyhqu33e3pzy@flea> <CAMty3ZCjTLLw+zAfPKD3qZx_o9yti4MD0XL0Ve7VG1_6ToJ=pg@mail.gmail.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+ <20190311133637.18334-2-jagan@amarulasolutions.com> <20190311153734.izg44ijwqqh2vpxc@flea>
+ <CAMty3ZDDARP02qMJZ9CXeiMv=kghoiUHgEAV9b4q+SrbLss40Q@mail.gmail.com>
+ <20190319102520.ldgjtyzrphuib3td@flea> <CAMty3ZC+dTVuc2TWR=cqKNbrZe6j2vnwfXAqg6RbvduvY_63LA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBP6JRXSQKGQEEQVIYPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAMty3ZCjTLLw+zAfPKD3qZx_o9yti4MD0XL0Ve7VG1_6ToJ=pg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMty3ZC+dTVuc2TWR=cqKNbrZe6j2vnwfXAqg6RbvduvY_63LA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi Maxime,
 
-On Thu, Mar 21, 2019 at 7:40 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+On Thu, Mar 21, 2019 at 8:08 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
 >
-> On Tue, Mar 19, 2019 at 4:23 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Tue, Mar 19, 2019 at 3:55 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 > >
-> > On Mon, Mar 11, 2019 at 09:36:27PM +0530, Jagan Teki wrote:
-> > > On Mon, Mar 11, 2019 at 9:08 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > On Mon, Mar 11, 2019 at 09:31:11PM +0530, Jagan Teki wrote:
+> > > On Mon, Mar 11, 2019 at 9:07 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 > > > >
-> > > > On Mon, Mar 11, 2019 at 07:06:24PM +0530, Jagan Teki wrote:
-> > > > > pll-video => pll-mipi => tcon0 => tcon0-pixel-clock is the typical
-> > > > > MIPI clock topology in Allwinner DSI controller.
+> > > > On Mon, Mar 11, 2019 at 07:06:23PM +0530, Jagan Teki wrote:
+> > > > > Vertical video start delay is computed by excluding vertical front
+> > > > > porch value from total vertical timings.
 > > > > >
-> > > > > TCON dotclock driver is computing the desired DCLK divider based on
-> > > > > panel pixel clock along with input DCLK min, max divider values from
-> > > > > tcon driver and that would eventually set the pll-mipi clock rate.
+> > > > > This clearly confirmed from BSP code and here how it computed,
 > > > > >
-> > > > > The current code allows the TCON clock divider to have a default 4
-> > > > > for min, max ranges that would fail to compute the desired pll-mipi
-> > > > > rate while supporting new panels.
+> > > > > (drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
+> > > > > u32 vfp = panel->lcd_vt - panel->lcd_y - panel->lcd_vbp;
+> > > > > => (panel->lcd_vt) - panel->lcd_y - (panel->lcd_vbp)
+> > > > > => (timmings->ver_front_porch + panel->lcd_vbp + panel->lcd_y)
+> > > > >    - panel->lcd_y - (panel->lcd_vbp)
+> > > > > => timmings->ver_front_porch + panel->lcd_vbp + panel->lcd_y
+> > > > >                            - panel->lcd_y - panel->lcd_vbp
+> > > > > => timmings->ver_front_porch
 > > > > >
-> > > > > So, add the computation logic 'format/lanes' to dclk min and max dividers
-> > > > > and instead of default 4. This computation logic align with Allwinner A64
-> > > > > BSP, hoping that would work even for A33.
+> > > > > But the current driver is assuming it can exclude vertical front
+> > > > > porch along with vertical sync values from total vertical timings,
+> > > > > which resulting wrong start delay indeed wrong picture rendering
+> > > > > in the panel.
 > > > >
-> > > > Last time we discussed this, we found out that this wasn't the case,
-> > > > even in the BSP.
+> > > > Same story here: which panel, which datasheet, which "wrong picture
+> > > > rendering"?
 > > >
-> > > This was the case for BSP to compute pll-mipi not for TCON_DSI clock
-> > > register, SUN4I_TCON0_DCLK_REG, which marked the divider 4 by default.
-> > >
-> > > > What compelling evidence have you found that makes you say otherwise?
-> > >
-> > > divider 4 isn't worked, this I would mentioned before as well.
-> >
-> > Maybe you mentionned it before, but it's nowhere to be found in your
-> > commit log.
+> > > It's bananapi,s070wv20-ct16 DSI
 >
-> I have added it in 3rd paragraph in commit message, may be you missed
-> it or you may look for different text.
+> 2. as I said before, it is the same panel for both RGB and DSI, and
+> ICN6211 bridge is converter for RGB-to-DSI. we don't have any specific
+> programming or detailed datasheet from this except BSP DSI panel
+> sequence along with BSP panel timings which are similar to RGB one.
 >
-> "The current code allows the TCON clock divider to have a default 4
-> for min, max ranges that would fail to compute the desired pll-mipi
-> rate while supporting new panels."
+> 3. wrong picture rendering is something sprightliness followed by
+> colors jerks, which I couldn't explain it properly ie reason I
+> mentioned some generic term for understanding.
 >
 > >
-> > > Tested this on 4 different panels, and below are the desired divider values
-> > > and pll-mipi clock rate with respect to pixel clock frequency.
-> > >
-> > > - 55MHz pixel clock with 4-lane panel, and the desired DSI clock divider
-> > >   is 6 with the output parent clock rate of 330MHz.
-> > > - 30MHz pixel clock with 4-lane panel, and the desired DSI clock divider
-> > >   is 6 with parent clock rate of 180MHz.
-> > > - 27.5Mhz pixel clock with 2-lane pane, and the desired DSI clock divider
-> > >   is 12 with the output parent clock rate of 330MHz.
-> > > - 147MHz pixel clock with 4-lane panel, and the desired DSI clock divider
-> > >   is 6 with the output parent clock rate of 882MHz.
-> > >
-> > > BSP trying to use this format/lane to compute dsi divider that in-turn
-> > > using pll-mipi set_rate but TCON0_DCLK_REG keep constant 4.
+> > You're answering one out of three questions.
 > >
-> > Feel free to reply to
-> > http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/629596.html
+> > > > > Example: timings, where it produces the issue.
+> > > > > {
+> > > > >       .vdisplay       = 600,
+> > > > >       .vsync_start    = 600 + 12,
+> > > > >       .vsync_end      = 600 + 12 + 2,
+> > > > >       .vtotal         = 600 + 12 + 2 + 21,
+> > > > > }
+> > > >
+> > > > Can you 100% trust those timings?
+> > >
+> > > ie. reason, I have given the Mainline timings [1]. The above timings
+> > > are wrongly mentioned actual timings are from [1]
+> >
+> > You're still answering partially here. Those timings are working for
+> > RGB, you have no proof that we need to make the same adjustments for
+> > DSI.
 >
-> Yes, I have replied at that time itself, please check.
+> It is RGB to DSI bridge on the same panel, as I explained above and it
+> would shared same timings. I can confirm or proved it from BSP panel
+> timings which are working. indeed same timings are been in Mainline
+> tree, we can trust them atleast.
 >
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/629673.html
+> >
+> > > > > It produces the desired start delay value as 19 but the correct working
+> > > > > value should be 513.
+> > > > >
+> > > > > So, Fix it by computing proper video start delay.
+> > > > >
+> > > > > Fixes: 69006ef0ecb1 ("drm/sun4i: dsi: Change the start delay calculation")
+> > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > ---
+> > > > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 10 ++++++++--
+> > > > >  1 file changed, 8 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > > > index 62a508420227..8d6292c0158b 100644
+> > > > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > > > @@ -364,8 +364,14 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
+> > > > >  static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
+> > > > >                                          struct drm_display_mode *mode)
+> > > > >  {
+> > > > > -     u16 start = clamp(mode->vtotal - mode->vdisplay - 10, 8, 100);
+> > > > > -     u16 delay = mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
+> > > > > +     u16 delay = mode->vtotal - (mode->vsync_start - mode->vdisplay);
+> > > > > +
+> > > > > +     /**
+> > > > > +      * BSP comment:
+> > > > > +      * put start_delay to tcon. set ready sync early to dramfreq,
+> > > > > +      * so set start_delay 1
+> > > > > +      */
+> > > >
+> > > > That doesn't make any sense to me... What does it mean?
+> > >
+> > > Which is meaning as above stated as "BSP comment" from here[2]
+> >
+> > It doesn't matter where you took it from. If you cannot explain what
+> > happen, putting a random label that doesn't explain anything will not
+> > help.
 >
-> Here I have taken the pixel clock to 30Mhz for example in Bananapi
-> panel, and the above gist the pixel is 148Mhz from another panel.
+> I have no idea or document to refer why this 1 would be added. so I
+> used same comment from BSP like many places on sun4i does. w/o this +1
+> the delay is computed to 512 which is not working and with this the
+> desired delay is 513 which is perfectly working.
+>
+> If you have any idea on this, please share so-that I can add it in
+> comment otherwise.
 
 Any further comments?
