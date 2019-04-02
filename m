@@ -1,212 +1,65 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: backlight: add lm3630a bindings
-Date: Tue, 2 Apr 2019 07:56:55 -0500
-Message-ID: <68229e7f-4749-cde5-f541-793ab614084d@ti.com>
-References: <20190401103034.21062-1-masneyb@onstation.org>
- <20190401103034.21062-3-masneyb@onstation.org>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v2 1/8] mmc: sdhci: Get rid of finish_tasklet
+Date: Tue, 2 Apr 2019 16:12:29 +0300
+Message-ID: <99e1b9cb-8eef-9ef2-4caa-3d5c98e9c6f3@intel.com>
+References: <20190215192033.24203-1-faiz_abbas@ti.com>
+ <20190215192033.24203-2-faiz_abbas@ti.com>
+ <CAPDyKFqN4s1CZa9z5C3YzCUO01V-=Xhtao5352Pmytd-Tusv9A@mail.gmail.com>
+ <65f24027-005a-4372-8819-45e6a360bfce@intel.com>
+ <987a3616-8530-7247-ce00-6513a6c2d4bc@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190401103034.21062-3-masneyb@onstation.org>
+In-Reply-To: <987a3616-8530-7247-ce00-6513a6c2d4bc@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>, lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org
-Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, jonathan@marek.ca
+To: Faiz Abbas <faiz_abbas@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon <kishon@ti.com>, Chunyan Zhang <zhang.chunyan@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello
-
-On 4/1/19 5:30 AM, Brian Masney wrote:
-> Add new backlight bindings for the TI LM3630A dual-string white LED.
+On 2/04/19 10:59 AM, Faiz Abbas wrote:
+> Hi Adrian,
 > 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  .../leds/backlight/lm3630a-backlight.yaml     | 112 ++++++++++++++++++
->  1 file changed, 112 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+> On 26/03/19 1:03 PM, Adrian Hunter wrote:
+>> On 18/03/19 11:33 AM, Ulf Hansson wrote:
+>>> + Arnd, Grygorii
+>>>
+>>> On Fri, 15 Feb 2019 at 20:17, Faiz Abbas <faiz_abbas@ti.com> wrote:
+>>>>
+>>>> sdhci.c has two bottom halves implemented. A threaded_irq for handling
+>>>> card insert/remove operations and a tasklet for finishing mmc requests.
+>>>> With the addition of external dma support, dmaengine APIs need to
+>>>> terminate in non-atomic context before unmapping the dma buffers.
+>>>>
+>>>> To facilitate this, remove the finish_tasklet and move the call of
+>>>> sdhci_request_done() to the threaded_irq() callback. Also move the
+>>>> interrupt result variable to sdhci_host so it can be populated from
+>>>> anywhere inside the sdhci_irq handler.
+>>>>
+>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>>>
+>>> Adrian, I think it makes sense to apply this patch, even if there is
+>>> very minor negative impact throughput wise.
+>>>
+>>> To me, it doesn't seems like MMC/SD/SDIO has good justification for
+>>> using tasklets, besides from the legacy point of view, of course.
+>>> Instead, I think we should try to move all mmc hosts into using
+>>> threaded IRQs.
+>>>
+>>> So, what do you think? Can you overlook the throughput drop and
+>>> instead we can try to recover this on top with other optimizations?
+>>
+>> I tend to favour good results as expressed here:
+>>
+>> 	https://lkml.org/lkml/2007/6/22/360
+>>
+>> So I want to do optimization first.
+>>
+>> But performance is not the only problem with the patch.  Give me a few
+>> days and I will see what I can come up with.
+>>
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> new file mode 100644
-> index 000000000000..42a8c59d237a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> @@ -0,0 +1,112 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/backlight/lm3630a-backlight.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TI LM3630A High-Efficiency Dual-String White LED
-> +
-> +maintainers:
-> +  - Lee Jones <lee.jones@linaro.org>
-> +  - Daniel Thompson <daniel.thompson@linaro.org>
-> +  - Jingoo Han <jingoohan1@gmail.com>
-> +
-> +description: |
-> +  The LM3630A is a current-mode boost converter which supplies the power and
-> +  controls the current in up to two strings of 10 LEDs per string.
-> +  https://www.ti.com/product/LM3630A
-> +
-> +properties:
-> +  compatible:
-> +    const: ti,lm3630a
-> +
-> +  reg:
-> +    maxItems: 1
-> +
+> Gentle ping on this.
 
-No description on the reg here.  Assumed to be the i2c address?
-
-> +  ti,linear-mapping-mode:
-> +    description: |
-> +      Enable linear mapping mode. If disabled, then it will use exponential
-> +      mapping mode in which the ramp up/down appears to have a more uniform
-> +      tranisiton to the human eye.
-
-s/tranisiton/transition
-
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +patternProperties:
-> +  "^led*$":
-> +    type: object
-> +    description: |
-> +      Properties for a string of connected LEDs.
-> +
-
-I have written a few of these drivers that have control bank support to control.  We have
-been defining the reg property as the control bank id
-
-reg 0 - Control bank A
-reg 1 - Control bank B
-
-Then use the led-sources to define what outputs are associated with which control bank.
-
-This way the hardware can just have CB B enabled without CB A.
-
-something like below would allow just control bank B to be enabled.
-
-led@1 {
-	reg = <1>;
-	label = "main-lcd";
-	default-brightness = <200>;
-	max-brightness = <255>;
-};
-
-This would connect control bank B to control bank A.  Or just use a flag to denote to connect them
-and not use led-sources.  But led-sources is the property of choice.
-
-led@0 {
-	reg = <0>;
-	led-sources = < 0 1 >;
-	label = "main-lcd";
-	default-brightness = <200>;
-	max-brightness = <255>;
-};
-
-And just the presence of 2 child nodes would indicate individual bank control
-led@0 {
-	reg = <0>;
-	label = "main-lcd";
-	default-brightness = <200>;
-	max-brightness = <255>;
-};
-
-led@1 {
-	reg = <1>;
-	label = "main-keypad";
-	default-brightness = <200>;
-	max-brightness = <255>;
-};
-
-> +    properties:
-> +      label:
-> +        description: |
-> +          The label for this LED. If omitted, the label is taken from the node
-> +          name (excluding the unit address). It has to uniquely identify a
-> +          device, i.e. no other LED class device can be assigned the same label.
-> +
-> +      led-sources:
-> +        description: |
-> +          List of device current outputs the LED is connected to.
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +          - minItems: 1
-> +            maxItems: 2
-> +            items:
-> +              minimum: 0
-> +              maximum: 1
-> +
-
-label and led-sources are already defined in the common.txt no need to redefine them here.
-
-> +      default-brightness:
-> +        description: Default brightness level on boot.
-> +        minimum: 0
-> +        maximum: 255
-> +
-> +      max-brightness:
-> +        description: Maximum brightness level on boot.
-
-This is not the max brightness on boot.  This is the max brightness that is allowed during runtime.
-
-Dan
-
-> +        minimum: 0
-> +        maximum: 255
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        lm3630a_bl@38 {
-> +                compatible = "ti,lm3630a";
-> +                status = "ok";
-> +                reg = <0x38>;
-> +
-> +                led {
-> +                        label = "main-lcd";
-> +                        led-sources = <0 1>;
-> +                        default-brightness = <200>;
-> +                        max-brightness = <255>;
-> +                };
-> +        };
-> +    };
-> +  - |
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        lm3630a_bl@38 {
-> +                compatible = "ti,lm3630a";
-> +                status = "ok";
-> +                reg = <0x38>;
-> +
-> +                led-bank-a {
-> +                        led-sources = <0>;
-> +                        default-brightness = <150>;
-> +                        ti,linear-mapping-mode;
-> +                };
-> +
-> +                led-bank-b {
-> +                        led-sources = <1>;
-> +                        default-brightness = <225>;
-> +                        ti,linear-mapping-mode;
-> +                };
-> +        };
-> +    };
-> 
-
-
--- 
-------------------
-Dan Murphy
+Working on it :-)
