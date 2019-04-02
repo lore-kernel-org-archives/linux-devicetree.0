@@ -1,115 +1,263 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 4/4] ARM: dts: sunxi: Remove useless address and size cells
-Date: Tue, 2 Apr 2019 13:11:38 +0200
-Message-ID: <20190402111138.d2qnitlri3audk7r@flea>
-References: <75ad3b89e4a6f8ad5bc414c3dccbb1f99361495a.1554153146.git-series.maxime.ripard@bootlin.com>
- <8774db23f87fe401f8ac7b775decba3cde2a56ea.1554153146.git-series.maxime.ripard@bootlin.com>
- <20190402101952.657ee274@xps13>
+From: Beniamin Bia <beniamin.bia@analog.com>
+Subject: [PATCH 1/3] iio: adc: ad7606: Move oversampling options in chip info and rework *_avail attributes
+Date: Tue, 2 Apr 2019 16:18:39 +0300
+Message-ID: <20190402131841.8430-1-beniamin.bia@analog.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3244941292241639283=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190402101952.657ee274@xps13>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Boris Brezillon <boris.brezillon@collabora.com>, linux-mtd@lists.infradead.org, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, biabeniamin@outlook.com, Stefan Popa <stefan.popa@analog.com>, Beniamin Bia <beniamin.bia@analog.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Stefan Popa <stefan.popa@analog.com>
 
---===============3244941292241639283==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jyvuwjnoisiuqv2e"
-Content-Disposition: inline
+Available oversampling ratios and scales can be shown by calling a
+common ad7606_show_avail function which takes as parameters the array
+which stores the values, together with the size of the array.
 
+Oversampling options are now defined in chip info
+structure and they are loaded at probe.
 
---jyvuwjnoisiuqv2e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Has_Oversampling attribute was removed because oversampling_num was added
+and it is not needed anymore.
 
-On Tue, Apr 02, 2019 at 10:19:52AM +0200, Miquel Raynal wrote:
-> Hi Maxime,
->
-> Maxime Ripard <maxime.ripard@bootlin.com> wrote on Mon,  1 Apr 2019
-> 23:13:56 +0200:
->
-> > The NAND chips in our DTs have address and size cells, even though they
-> > don't have any child nodes. Remove them.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > ---
-> >  arch/arm/boot/dts/sun5i-gr8-chip-pro.dts             | 2 --
-> >  arch/arm/boot/dts/sun8i-r16-nintendo-nes-classic.dts | 2 --
-> >  2 files changed, 4 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/sun5i-gr8-chip-pro.dts b/arch/arm/boot/dts/sun5i-gr8-chip-pro.dts
-> > index 533a4ecc05e2..a32cde3e32eb 100644
-> > --- a/arch/arm/boot/dts/sun5i-gr8-chip-pro.dts
-> > +++ b/arch/arm/boot/dts/sun5i-gr8-chip-pro.dts
-> > @@ -133,8 +133,6 @@
-> >  	status = "okay";
-> >
-> >  	nand@0 {
-> > -		#address-cells = <2>;
-> > -		#size-cells = <2>;
-> >  		reg = <0>;
-> >  		allwinner,rb = <0>;
-> >  		nand-ecc-mode = "hw";
-> > diff --git a/arch/arm/boot/dts/sun8i-r16-nintendo-nes-classic.dts b/arch/arm/boot/dts/sun8i-r16-nintendo-nes-classic.dts
-> > index 32cf1ab33aab..246dec5846a4 100644
-> > --- a/arch/arm/boot/dts/sun8i-r16-nintendo-nes-classic.dts
-> > +++ b/arch/arm/boot/dts/sun8i-r16-nintendo-nes-classic.dts
-> > @@ -34,8 +34,6 @@
-> >
-> >  	/* 2Gb Macronix MX30LF2G18AC (3V) */
-> >  	nand@0 {
-> > -		#address-cells = <1>;
-> > -		#size-cells = <1>;
-> >  		reg = <0>;
-> >  		allwinner,rb = <0>;
-> >  		nand-ecc-mode = "hw";
->
->
-> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+The purpose of this patch is to deal with the scale_avail and
+oversampling_avail arrays in a generic way. This makes it easier to add
+support for new devices which will work with different scales and
+oversampling ratios. It is also an intermediate step for adding support
+for ad7616 which has different oversampling sampling ratios available.
 
-Applied 3 and 4, thanks!
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+---
+ drivers/iio/adc/ad7606.c | 74 ++++++++++++++++++++++++++++------------
+ drivers/iio/adc/ad7606.h | 16 +++++++--
+ 2 files changed, 67 insertions(+), 23 deletions(-)
 
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---jyvuwjnoisiuqv2e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKNDagAKCRDj7w1vZxhR
-xUaQAP9A+69BOUo8X/jrSFvJ5KW/vBUAT8LQyk85JrIidgr9HgEA14ZaNVdq58Qd
-mtku/ItH4H8wKVKIGWHw3FTEXg9GpAI=
-=AHB1
------END PGP SIGNATURE-----
-
---jyvuwjnoisiuqv2e--
-
-
---===============3244941292241639283==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============3244941292241639283==--
+diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+index ebb8de03bbce..6b87ed410c93 100644
+--- a/drivers/iio/adc/ad7606.c
++++ b/drivers/iio/adc/ad7606.c
+@@ -31,7 +31,7 @@
+  * Scales are computed as 5000/32768 and 10000/32768 respectively,
+  * so that when applied to the raw values they provide mV values
+  */
+-static const unsigned int scale_avail[2] = {
++static const unsigned int ad7606_scale_avail[2] = {
+ 	152588, 305176
+ };
+ 
+@@ -154,7 +154,7 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
+ 		return IIO_VAL_INT;
+ 	case IIO_CHAN_INFO_SCALE:
+ 		*val = 0;
+-		*val2 = scale_avail[st->range];
++		*val2 = st->scale_avail[st->range];
+ 		return IIO_VAL_INT_PLUS_MICRO;
+ 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+ 		*val = st->oversampling;
+@@ -163,21 +163,31 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
+ 	return -EINVAL;
+ }
+ 
+-static ssize_t in_voltage_scale_available_show(struct device *dev,
+-					       struct device_attribute *attr,
+-					       char *buf)
++static ssize_t ad7606_show_avail(char *buf, const unsigned int *vals,
++				 unsigned int n, bool micros)
+ {
+-	int i, len = 0;
+-
+-	for (i = 0; i < ARRAY_SIZE(scale_avail); i++)
+-		len += scnprintf(buf + len, PAGE_SIZE - len, "0.%06u ",
+-				 scale_avail[i]);
++	size_t len = 0;
++	int i;
+ 
++	for (i = 0; i < n; i++) {
++		len += scnprintf(buf + len, PAGE_SIZE - len,
++			micros ? "0.%06u " : "%u ", vals[i]);
++	}
+ 	buf[len - 1] = '\n';
+ 
+ 	return len;
+ }
+ 
++static ssize_t in_voltage_scale_available_show(struct device *dev,
++					       struct device_attribute *attr,
++					       char *buf)
++{
++	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
++	struct ad7606_state *st = iio_priv(indio_dev);
++
++	return ad7606_show_avail(buf, st->scale_avail, st->num_scales, true);
++}
++
+ static IIO_DEVICE_ATTR_RO(in_voltage_scale_available, 0);
+ 
+ static int ad7606_write_raw(struct iio_dev *indio_dev,
+@@ -193,7 +203,7 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_SCALE:
+ 		mutex_lock(&st->lock);
+-		i = find_closest(val2, scale_avail, ARRAY_SIZE(scale_avail));
++		i = find_closest(val2, st->scale_avail, st->num_scales);
+ 		gpiod_set_value(st->gpio_range, i);
+ 		st->range = i;
+ 		mutex_unlock(&st->lock);
+@@ -202,15 +212,15 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
+ 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+ 		if (val2)
+ 			return -EINVAL;
+-		i = find_closest(val, ad7606_oversampling_avail,
+-				 ARRAY_SIZE(ad7606_oversampling_avail));
++		i = find_closest(val, st->oversampling_avail,
++				 st->num_os_ratios);
+ 
+ 		values[0] = i;
+ 
+ 		mutex_lock(&st->lock);
+ 		gpiod_set_array_value(ARRAY_SIZE(values), st->gpio_os->desc,
+ 				      st->gpio_os->info, values);
+-		st->oversampling = ad7606_oversampling_avail[i];
++		st->oversampling = st->oversampling_avail[i];
+ 		mutex_unlock(&st->lock);
+ 
+ 		return 0;
+@@ -219,11 +229,23 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
+ 	}
+ }
+ 
+-static IIO_CONST_ATTR(oversampling_ratio_available, "1 2 4 8 16 32 64");
++static ssize_t ad7606_oversampling_ratio_avail(struct device *dev,
++					       struct device_attribute *attr,
++					       char *buf)
++{
++	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
++	struct ad7606_state *st = iio_priv(indio_dev);
++
++	return ad7606_show_avail(buf, st->oversampling_avail,
++				 st->num_os_ratios, false);
++}
++
++static IIO_DEVICE_ATTR(oversampling_ratio_available, 0444,
++		       ad7606_oversampling_ratio_avail, NULL, 0);
+ 
+ static struct attribute *ad7606_attributes_os_and_range[] = {
+ 	&iio_dev_attr_in_voltage_scale_available.dev_attr.attr,
+-	&iio_const_attr_oversampling_ratio_available.dev_attr.attr,
++	&iio_dev_attr_oversampling_ratio_available.dev_attr.attr,
+ 	NULL,
+ };
+ 
+@@ -232,7 +254,7 @@ static const struct attribute_group ad7606_attribute_group_os_and_range = {
+ };
+ 
+ static struct attribute *ad7606_attributes_os[] = {
+-	&iio_const_attr_oversampling_ratio_available.dev_attr.attr,
++	&iio_dev_attr_oversampling_ratio_available.dev_attr.attr,
+ 	NULL,
+ };
+ 
+@@ -301,17 +323,20 @@ static const struct ad7606_chip_info ad7606_chip_info_tbl[] = {
+ 	[ID_AD7606_8] = {
+ 		.channels = ad7606_channels,
+ 		.num_channels = 9,
+-		.has_oversampling = true,
++		.oversampling_avail = ad7606_oversampling_avail,
++		.oversampling_num = ARRAY_SIZE(ad7606_oversampling_avail),
+ 	},
+ 	[ID_AD7606_6] = {
+ 		.channels = ad7606_channels,
+ 		.num_channels = 7,
+-		.has_oversampling = true,
++		.oversampling_avail = ad7606_oversampling_avail,
++		.oversampling_num = ARRAY_SIZE(ad7606_oversampling_avail),
+ 	},
+ 	[ID_AD7606_4] = {
+ 		.channels = ad7606_channels,
+ 		.num_channels = 5,
+-		.has_oversampling = true,
++		.oversampling_avail = ad7606_oversampling_avail,
++		.oversampling_num = ARRAY_SIZE(ad7606_oversampling_avail),
+ 	},
+ };
+ 
+@@ -343,7 +368,7 @@ static int ad7606_request_gpios(struct ad7606_state *st)
+ 	if (IS_ERR(st->gpio_frstdata))
+ 		return PTR_ERR(st->gpio_frstdata);
+ 
+-	if (!st->chip_info->has_oversampling)
++	if (!st->chip_info->oversampling_num)
+ 		return 0;
+ 
+ 	st->gpio_os = devm_gpiod_get_array_optional(dev,
+@@ -467,6 +492,8 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
+ 	/* tied to logic low, analog input range is +/- 5V */
+ 	st->range = 0;
+ 	st->oversampling = 1;
++	st->scale_avail = ad7606_scale_avail;
++	st->num_scales = ARRAY_SIZE(ad7606_scale_avail);
+ 
+ 	st->reg = devm_regulator_get(dev, "avcc");
+ 	if (IS_ERR(st->reg))
+@@ -484,6 +511,11 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
+ 
+ 	st->chip_info = &ad7606_chip_info_tbl[id];
+ 
++	if (st->chip_info->oversampling_num) {
++		st->oversampling_avail = st->chip_info->oversampling_avail;
++		st->num_os_ratios = st->chip_info->oversampling_num;
++	}
++
+ 	ret = ad7606_request_gpios(st);
+ 	if (ret)
+ 		return ret;
+diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
+index 5d12410f68e1..8c91bd427c4e 100644
+--- a/drivers/iio/adc/ad7606.h
++++ b/drivers/iio/adc/ad7606.h
+@@ -12,12 +12,15 @@
+  * struct ad7606_chip_info - chip specific information
+  * @channels:		channel specification
+  * @num_channels:	number of channels
+- * @has_oversampling:   whether the device has oversampling support
++ * @oversampling_avail	pointer to the array which stores the available
++ *			oversampling ratios.
++ * @oversampling_num	number of elements stored in oversampling_avail array
+  */
+ struct ad7606_chip_info {
+ 	const struct iio_chan_spec	*channels;
+ 	unsigned int			num_channels;
+-	bool				has_oversampling;
++	const unsigned int		*oversampling_avail;
++	unsigned int			oversampling_num;
+ };
+ 
+ /**
+@@ -29,6 +32,11 @@ struct ad7606_chip_info {
+  * @range		voltage range selection, selects which scale to apply
+  * @oversampling	oversampling selection
+  * @base_address	address from where to read data in parallel operation
++ * @scale_avail		pointer to the array which stores the available scales
++ * @num_scales		number of elements stored in the scale_avail array
++ * @oversampling_avail	pointer to the array which stores the available
++ *			oversampling ratios.
++ * @num_os_ratios	number of elements stored in oversampling_avail array
+  * @lock		protect sensor state from concurrent accesses to GPIOs
+  * @gpio_convst	GPIO descriptor for conversion start signal (CONVST)
+  * @gpio_reset		GPIO descriptor for device hard-reset
+@@ -50,6 +58,10 @@ struct ad7606_state {
+ 	unsigned int			range;
+ 	unsigned int			oversampling;
+ 	void __iomem			*base_address;
++	const unsigned int		*scale_avail;
++	unsigned int			num_scales;
++	const unsigned int		*oversampling_avail;
++	unsigned int			num_os_ratios;
+ 
+ 	struct mutex			lock; /* protect sensor state */
+ 	struct gpio_desc		*gpio_convst;
+-- 
+2.17.1
