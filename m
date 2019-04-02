@@ -1,1329 +1,833 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v5 7/9] mtd: rawnand: denali: decouple controller and NAND chips
-Date: Tue,  2 Apr 2019 13:03:07 +0900
-Message-ID: <1554177789-15414-8-git-send-email-yamada.masahiro@socionext.com>
-References: <1554177789-15414-1-git-send-email-yamada.masahiro@socionext.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 01/14] arm64: dts: imx8qxp: orginize dts in subsystems
+Date: Tue, 2 Apr 2019 11:16:27 +0700
+Message-ID: <20190402041624.GA4138@X250>
+References: <1550773093-13349-1-git-send-email-aisheng.dong@nxp.com>
+ <1550773093-13349-2-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554177789-15414-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Boris Brezillon <bbrezillon@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1550773093-13349-2-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Aisheng Dong <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently, this driver sticks to the legacy NAND model because it was
-upstreamed before commit 2d472aba15ff ("mtd: nand: document the NAND
-controller/NAND chip DT representation"). However, relying on the
-dummy_controller is already deprecated.
+On Thu, Feb 21, 2019 at 06:24:51PM +0000, Aisheng Dong wrote:
+> MX8 SoC is comprised of a few HW subsystems while some of them can be
+> reused in the different SoCs. So let's re-orginize them into subsystems
+> in device tree as well for the possible reuse of the common part.
+> 
+> Note, as there's still no devices of hsio subsys, so removed it
+> first instead of creating a subsys headfile with no devices.
+> They will be added back when new devices added.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi    |  75 +++++
+>  arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi    |  95 +++++++
+>  arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi    | 124 ++++++++
+>  arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi |  29 ++
+>  arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi |  25 ++
+>  arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi |  57 ++++
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi         | 311 +--------------------
+>  7 files changed, 412 insertions(+), 304 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
+> new file mode 100644
+> index 0000000..f6f2b94
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
+> @@ -0,0 +1,75 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright 2018 NXP
+> + *	Dong Aisheng <aisheng.dong@nxp.com>
+> + */
+> +
+> +adma_subsys: bus@59000000 {
 
-Switch over to the new controller/chip representation.
+I'm a bit concerned by that the unit-address is part of the subsystem
+definition.  If the subsystem is integrated in a SoC on different
+address, the while idea will be broken.
 
-The struct denali_nand_info has been split into denali_controller
-and denali_chip, to contain the controller data, per-chip data,
-respectively.
+Shawn
 
-One problem is, this commit changes the DT binding. So, as always,
-the backward compatibility must be taken into consideration.
-
-In the new binding, the controller node expects
-
-  #address-cells = <1>;
-  #size-cells = <0>;
-
-... since the child nodes represent NAND chips.
-
-In the old binding, the controller node may have subnodes, but they
-are MTD partitions.
-
-The denali_dt_is_legacy_binding() exploits it to distinguish old/new
-platforms.
-
-Going forward, the old binding is only allowed for existing DT files.
-I updated the binding document.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
-
-Changes in v5: None
-Changes in v4: None
-Changes in v3:
- - simplify mtd->name fallback
- - Add Rob's Ack
-
-Changes in v2: None
-
- .../devicetree/bindings/mtd/denali-nand.txt        |  40 +-
- drivers/mtd/nand/raw/denali.c                      | 430 ++++++++++++---------
- drivers/mtd/nand/raw/denali.h                      | 114 +++++-
- drivers/mtd/nand/raw/denali_dt.c                   |  98 ++++-
- drivers/mtd/nand/raw/denali_pci.c                  |  30 +-
- 5 files changed, 482 insertions(+), 230 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-index f33da87..b14b675 100644
---- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-@@ -7,34 +7,48 @@ Required properties:
-       "socionext,uniphier-denali-nand-v5b"  - for Socionext UniPhier (v5b)
-   - reg : should contain registers location and length for data and reg.
-   - reg-names: Should contain the reg names "nand_data" and "denali_reg"
-+  - #address-cells: should be 1. The cell encodes the chip select connection.
-+  - #size-cells : should be 0.
-   - interrupts : The interrupt number.
-   - clocks: should contain phandle of the controller core clock, the bus
-     interface clock, and the ECC circuit clock.
-   - clock-names: should contain "nand", "nand_x", "ecc"
- 
--Optional properties:
--  - nand-ecc-step-size: see nand.txt for details.  If present, the value must be
--      512        for "altr,socfpga-denali-nand"
--      1024       for "socionext,uniphier-denali-nand-v5a"
--      1024       for "socionext,uniphier-denali-nand-v5b"
--  - nand-ecc-strength: see nand.txt for details.  Valid values are:
--      8, 15      for "altr,socfpga-denali-nand"
--      8, 16, 24  for "socionext,uniphier-denali-nand-v5a"
--      8, 16      for "socionext,uniphier-denali-nand-v5b"
--  - nand-ecc-maximize: see nand.txt for details
--
--The device tree may optionally contain sub-nodes describing partitions of the
-+Sub-nodes:
-+  Sub-nodes represent available NAND chips.
-+
-+  Required properties:
-+    - reg: should contain the bank ID of the controller to which each chip
-+      select is connected.
-+
-+  Optional properties:
-+    - nand-ecc-step-size: see nand.txt for details.
-+      If present, the value must be
-+        512        for "altr,socfpga-denali-nand"
-+        1024       for "socionext,uniphier-denali-nand-v5a"
-+        1024       for "socionext,uniphier-denali-nand-v5b"
-+    - nand-ecc-strength: see nand.txt for details. Valid values are:
-+        8, 15      for "altr,socfpga-denali-nand"
-+        8, 16, 24  for "socionext,uniphier-denali-nand-v5a"
-+        8, 16      for "socionext,uniphier-denali-nand-v5b"
-+    - nand-ecc-maximize: see nand.txt for details
-+
-+The chip nodes may optionally contain sub-nodes describing partitions of the
- address space. See partition.txt for more detail.
- 
- Examples:
- 
- nand: nand@ff900000 {
- 	#address-cells = <1>;
--	#size-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "altr,socfpga-denali-nand";
- 	reg = <0xff900000 0x20>, <0xffb80000 0x1000>;
- 	reg-names = "nand_data", "denali_reg";
- 	clocks = <&nand_clk>, <&nand_x_clk>, <&nand_ecc_clk>;
- 	clock-names = "nand", "nand_x", "ecc";
- 	interrupts = <0 144 4>;
-+
-+	nand@0 {
-+		reg = <0>;
-+	}
- };
-diff --git a/drivers/mtd/nand/raw/denali.c b/drivers/mtd/nand/raw/denali.c
-index a501d9e..8722762 100644
---- a/drivers/mtd/nand/raw/denali.c
-+++ b/drivers/mtd/nand/raw/denali.c
-@@ -3,7 +3,7 @@
-  * NAND Flash Controller Device Driver
-  * Copyright © 2009-2010, Intel Corporation and its suppliers.
-  *
-- * Copyright (c) 2017 Socionext Inc.
-+ * Copyright (c) 2017-2019 Socionext Inc.
-  *   Reworked by Masahiro Yamada <yamada.masahiro@socionext.com>
-  */
- 
-@@ -42,14 +42,15 @@
- #define DENALI_INVALID_BANK	-1
- #define DENALI_NR_BANKS		4
- 
--static inline struct denali_nand_info *mtd_to_denali(struct mtd_info *mtd)
-+static struct denali_chip *to_denali_chip(struct nand_chip *chip)
- {
--	return container_of(mtd_to_nand(mtd), struct denali_nand_info, nand);
-+	return container_of(chip, struct denali_chip, chip);
- }
- 
--static struct denali_nand_info *to_denali(struct nand_chip *chip)
-+static struct denali_controller *to_denali_controller(struct nand_chip *chip)
- {
--	return container_of(chip, struct denali_nand_info, nand);
-+	return container_of(chip->controller, struct denali_controller,
-+			    controller);
- }
- 
- /*
-@@ -57,12 +58,12 @@ static struct denali_nand_info *to_denali(struct nand_chip *chip)
-  * type, bank, block, and page address).  The slave data is the actual data to
-  * be transferred.  This mode requires 28 bits of address region allocated.
-  */
--static u32 denali_direct_read(struct denali_nand_info *denali, u32 addr)
-+static u32 denali_direct_read(struct denali_controller *denali, u32 addr)
- {
- 	return ioread32(denali->host + addr);
- }
- 
--static void denali_direct_write(struct denali_nand_info *denali, u32 addr,
-+static void denali_direct_write(struct denali_controller *denali, u32 addr,
- 				u32 data)
- {
- 	iowrite32(data, denali->host + addr);
-@@ -74,35 +75,20 @@ static void denali_direct_write(struct denali_nand_info *denali, u32 addr,
-  * control information and transferred data are latched by the registers in
-  * the translation module.
-  */
--static u32 denali_indexed_read(struct denali_nand_info *denali, u32 addr)
-+static u32 denali_indexed_read(struct denali_controller *denali, u32 addr)
- {
- 	iowrite32(addr, denali->host + DENALI_INDEXED_CTRL);
- 	return ioread32(denali->host + DENALI_INDEXED_DATA);
- }
- 
--static void denali_indexed_write(struct denali_nand_info *denali, u32 addr,
-+static void denali_indexed_write(struct denali_controller *denali, u32 addr,
- 				 u32 data)
- {
- 	iowrite32(addr, denali->host + DENALI_INDEXED_CTRL);
- 	iowrite32(data, denali->host + DENALI_INDEXED_DATA);
- }
- 
--/*
-- * Use the configuration feature register to determine the maximum number of
-- * banks that the hardware supports.
-- */
--static void denali_detect_max_banks(struct denali_nand_info *denali)
--{
--	uint32_t features = ioread32(denali->reg + FEATURES);
--
--	denali->max_banks = 1 << FIELD_GET(FEATURES__N_BANKS, features);
--
--	/* the encoding changed from rev 5.0 to 5.1 */
--	if (denali->revision < 0x0501)
--		denali->max_banks <<= 1;
--}
--
--static void denali_enable_irq(struct denali_nand_info *denali)
-+static void denali_enable_irq(struct denali_controller *denali)
- {
- 	int i;
- 
-@@ -111,7 +97,7 @@ static void denali_enable_irq(struct denali_nand_info *denali)
- 	iowrite32(GLOBAL_INT_EN_FLAG, denali->reg + GLOBAL_INT_ENABLE);
- }
- 
--static void denali_disable_irq(struct denali_nand_info *denali)
-+static void denali_disable_irq(struct denali_controller *denali)
- {
- 	int i;
- 
-@@ -120,14 +106,14 @@ static void denali_disable_irq(struct denali_nand_info *denali)
- 	iowrite32(0, denali->reg + GLOBAL_INT_ENABLE);
- }
- 
--static void denali_clear_irq(struct denali_nand_info *denali,
-+static void denali_clear_irq(struct denali_controller *denali,
- 			     int bank, uint32_t irq_status)
- {
- 	/* write one to clear bits */
- 	iowrite32(irq_status, denali->reg + INTR_STATUS(bank));
- }
- 
--static void denali_clear_irq_all(struct denali_nand_info *denali)
-+static void denali_clear_irq_all(struct denali_controller *denali)
- {
- 	int i;
- 
-@@ -137,7 +123,7 @@ static void denali_clear_irq_all(struct denali_nand_info *denali)
- 
- static irqreturn_t denali_isr(int irq, void *dev_id)
- {
--	struct denali_nand_info *denali = dev_id;
-+	struct denali_controller *denali = dev_id;
- 	irqreturn_t ret = IRQ_NONE;
- 	uint32_t irq_status;
- 	int i;
-@@ -165,7 +151,7 @@ static irqreturn_t denali_isr(int irq, void *dev_id)
- 	return ret;
- }
- 
--static void denali_reset_irq(struct denali_nand_info *denali)
-+static void denali_reset_irq(struct denali_controller *denali)
- {
- 	unsigned long flags;
- 
-@@ -175,8 +161,7 @@ static void denali_reset_irq(struct denali_nand_info *denali)
- 	spin_unlock_irqrestore(&denali->irq_lock, flags);
- }
- 
--static uint32_t denali_wait_for_irq(struct denali_nand_info *denali,
--				    uint32_t irq_mask)
-+static u32 denali_wait_for_irq(struct denali_controller *denali, u32 irq_mask)
- {
- 	unsigned long time_left, flags;
- 	uint32_t irq_status;
-@@ -208,9 +193,41 @@ static uint32_t denali_wait_for_irq(struct denali_nand_info *denali,
- 
- static void denali_select_target(struct nand_chip *chip, int cs)
- {
--	struct denali_nand_info *denali = to_denali(chip);
-+	struct denali_controller *denali = to_denali_controller(chip);
-+	struct denali_chip_sel *sel = &to_denali_chip(chip)->sels[cs];
-+	struct mtd_info *mtd = nand_to_mtd(chip);
-+
-+	denali->active_bank = sel->bank;
- 
--	denali->active_bank = cs;
-+	iowrite32(1 << (chip->phys_erase_shift - chip->page_shift),
-+		  denali->reg + PAGES_PER_BLOCK);
-+	iowrite32(chip->options & NAND_BUSWIDTH_16 ? 1 : 0,
-+		  denali->reg + DEVICE_WIDTH);
-+	iowrite32(mtd->writesize, denali->reg + DEVICE_MAIN_AREA_SIZE);
-+	iowrite32(mtd->oobsize, denali->reg + DEVICE_SPARE_AREA_SIZE);
-+	iowrite32(chip->options & NAND_ROW_ADDR_3 ?
-+		  0 : TWO_ROW_ADDR_CYCLES__FLAG,
-+		  denali->reg + TWO_ROW_ADDR_CYCLES);
-+	iowrite32(FIELD_PREP(ECC_CORRECTION__ERASE_THRESHOLD, 1) |
-+		  FIELD_PREP(ECC_CORRECTION__VALUE, chip->ecc.strength),
-+		  denali->reg + ECC_CORRECTION);
-+	iowrite32(chip->ecc.size, denali->reg + CFG_DATA_BLOCK_SIZE);
-+	iowrite32(chip->ecc.size, denali->reg + CFG_LAST_DATA_BLOCK_SIZE);
-+	iowrite32(chip->ecc.steps, denali->reg + CFG_NUM_DATA_BLOCKS);
-+
-+	if (chip->options & NAND_KEEP_TIMINGS)
-+		return;
-+
-+	/* update timing registers unless NAND_KEEP_TIMINGS is set */
-+	iowrite32(sel->hwhr2_and_we_2_re, denali->reg + TWHR2_AND_WE_2_RE);
-+	iowrite32(sel->tcwaw_and_addr_2_data,
-+		  denali->reg + TCWAW_AND_ADDR_2_DATA);
-+	iowrite32(sel->re_2_we, denali->reg + RE_2_WE);
-+	iowrite32(sel->acc_clks, denali->reg + ACC_CLKS);
-+	iowrite32(sel->rdwr_en_lo_cnt, denali->reg + RDWR_EN_LO_CNT);
-+	iowrite32(sel->rdwr_en_hi_cnt, denali->reg + RDWR_EN_HI_CNT);
-+	iowrite32(sel->cs_setup_cnt, denali->reg + CS_SETUP_CNT);
-+	iowrite32(sel->re_2_re, denali->reg + RE_2_RE);
- }
- 
- static int denali_change_column(struct nand_chip *chip, unsigned int offset,
-@@ -226,7 +243,7 @@ static int denali_change_column(struct nand_chip *chip, unsigned int offset,
- 
- static int denali_payload_xfer(struct nand_chip *chip, void *buf, bool write)
- {
--	struct denali_nand_info *denali = to_denali(chip);
-+	struct denali_controller *denali = to_denali_controller(chip);
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 	struct nand_ecc_ctrl *ecc = &chip->ecc;
- 	int writesize = mtd->writesize;
-@@ -263,7 +280,7 @@ static int denali_payload_xfer(struct nand_chip *chip, void *buf, bool write)
- 
- static int denali_oob_xfer(struct nand_chip *chip, void *buf, bool write)
- {
--	struct denali_nand_info *denali = to_denali(chip);
-+	struct denali_controller *denali = to_denali_controller(chip);
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 	struct nand_ecc_ctrl *ecc = &chip->ecc;
- 	int writesize = mtd->writesize;
-@@ -393,7 +410,7 @@ static int denali_check_erased_page(struct nand_chip *chip, u8 *buf,
- 				    unsigned long uncor_ecc_flags,
- 				    unsigned int max_bitflips)
- {
--	struct denali_nand_info *denali = to_denali(chip);
-+	struct denali_controller *denali = to_denali_controller(chip);
- 	struct mtd_ecc_stats *ecc_stats = &nand_to_mtd(chip)->ecc_stats;
- 	uint8_t *ecc_code = chip->oob_poi + denali->oob_skip_bytes;
- 	int ecc_steps = chip->ecc.steps;
-@@ -426,7 +443,7 @@ static int denali_check_erased_page(struct nand_chip *chip, u8 *buf,
- static int denali_hw_ecc_fixup(struct nand_chip *chip,
- 			       unsigned long *uncor_ecc_flags)
- {
--	struct denali_nand_info *denali = to_denali(chip);
-+	struct denali_controller *denali = to_denali_controller(chip);
- 	struct mtd_ecc_stats *ecc_stats = &nand_to_mtd(chip)->ecc_stats;
- 	int bank = denali->active_bank;
- 	uint32_t ecc_cor;
-@@ -461,7 +478,7 @@ static int denali_hw_ecc_fixup(struct nand_chip *chip,
- static int denali_sw_ecc_fixup(struct nand_chip *chip,
- 			       unsigned long *uncor_ecc_flags, uint8_t *buf)
- {
--	struct denali_nand_info *denali = to_denali(chip);
-+	struct denali_controller *denali = to_denali_controller(chip);
- 	struct mtd_ecc_stats *ecc_stats = &nand_to_mtd(chip)->ecc_stats;
- 	unsigned int ecc_size = chip->ecc.size;
- 	unsigned int bitflips = 0;
-@@ -532,7 +549,7 @@ static int denali_sw_ecc_fixup(struct nand_chip *chip,
- 	return max_bitflips;
- }
- 
--static void denali_setup_dma64(struct denali_nand_info *denali,
-+static void denali_setup_dma64(struct denali_controller *denali,
- 			       dma_addr_t dma_addr, int page, bool write)
- {
- 	uint32_t mode;
-@@ -557,7 +574,7 @@ static void denali_setup_dma64(struct denali_nand_info *denali,
- 	denali->host_write(denali, mode, upper_32_bits(dma_addr));
- }
- 
--static void denali_setup_dma32(struct denali_nand_info *denali,
-+static void denali_setup_dma32(struct denali_controller *denali,
- 			       dma_addr_t dma_addr, int page, bool write)
- {
- 	uint32_t mode;
-@@ -581,7 +598,7 @@ static void denali_setup_dma32(struct denali_nand_info *denali,
- 	denali->host_write(denali, mode | 0x14000, 0x2400);
- }
- 
--static int denali_pio_read(struct denali_nand_info *denali, u32 *buf,
-+static int denali_pio_read(struct denali_controller *denali, u32 *buf,
- 			   size_t size, int page)
- {
- 	u32 addr = DENALI_MAP01 | DENALI_BANK(denali) | page;
-@@ -608,7 +625,7 @@ static int denali_pio_read(struct denali_nand_info *denali, u32 *buf,
- 	return irq_status & ecc_err_mask ? -EBADMSG : 0;
- }
- 
--static int denali_pio_write(struct denali_nand_info *denali, const u32 *buf,
-+static int denali_pio_write(struct denali_controller *denali, const u32 *buf,
- 			    size_t size, int page)
- {
- 	u32 addr = DENALI_MAP01 | DENALI_BANK(denali) | page;
-@@ -628,7 +645,7 @@ static int denali_pio_write(struct denali_nand_info *denali, const u32 *buf,
- 	return 0;
- }
- 
--static int denali_pio_xfer(struct denali_nand_info *denali, void *buf,
-+static int denali_pio_xfer(struct denali_controller *denali, void *buf,
- 			   size_t size, int page, bool write)
- {
- 	if (write)
-@@ -637,7 +654,7 @@ static int denali_pio_xfer(struct denali_nand_info *denali, void *buf,
- 		return denali_pio_read(denali, buf, size, page);
- }
- 
--static int denali_dma_xfer(struct denali_nand_info *denali, void *buf,
-+static int denali_dma_xfer(struct denali_controller *denali, void *buf,
- 			   size_t size, int page, bool write)
- {
- 	dma_addr_t dma_addr;
-@@ -697,7 +714,7 @@ static int denali_dma_xfer(struct denali_nand_info *denali, void *buf,
- static int denali_page_xfer(struct nand_chip *chip, void *buf, size_t size,
- 			    int page, bool write)
- {
--	struct denali_nand_info *denali = to_denali(chip);
-+	struct denali_controller *denali = to_denali_controller(chip);
- 
- 	denali_select_target(chip, chip->cur_cs);
- 
-@@ -710,8 +727,8 @@ static int denali_page_xfer(struct nand_chip *chip, void *buf, size_t size,
- static int denali_read_page(struct nand_chip *chip, uint8_t *buf,
- 			    int oob_required, int page)
- {
-+	struct denali_controller *denali = to_denali_controller(chip);
- 	struct mtd_info *mtd = nand_to_mtd(chip);
--	struct denali_nand_info *denali = mtd_to_denali(mtd);
- 	unsigned long uncor_ecc_flags = 0;
- 	int stat = 0;
- 	int ret;
-@@ -751,7 +768,8 @@ static int denali_write_page(struct nand_chip *chip, const uint8_t *buf,
- static int denali_setup_data_interface(struct nand_chip *chip, int chipnr,
- 				       const struct nand_data_interface *conf)
- {
--	struct denali_nand_info *denali = mtd_to_denali(nand_to_mtd(chip));
-+	struct denali_controller *denali = to_denali_controller(chip);
-+	struct denali_chip_sel *sel;
- 	const struct nand_sdr_timings *timings;
- 	unsigned long t_x, mult_x;
- 	int acc_clks, re_2_we, re_2_re, we_2_re, addr_2_data;
-@@ -780,6 +798,8 @@ static int denali_setup_data_interface(struct nand_chip *chip, int chipnr,
- 	if (chipnr == NAND_DATA_IFACE_CHECK_ONLY)
- 		return 0;
- 
-+	sel = &to_denali_chip(chip)->sels[chipnr];
-+
- 	/* tREA -> ACC_CLKS */
- 	acc_clks = DIV_ROUND_UP(timings->tREA_max, t_x);
- 	acc_clks = min_t(int, acc_clks, ACC_CLKS__VALUE);
-@@ -787,7 +807,7 @@ static int denali_setup_data_interface(struct nand_chip *chip, int chipnr,
- 	tmp = ioread32(denali->reg + ACC_CLKS);
- 	tmp &= ~ACC_CLKS__VALUE;
- 	tmp |= FIELD_PREP(ACC_CLKS__VALUE, acc_clks);
--	iowrite32(tmp, denali->reg + ACC_CLKS);
-+	sel->acc_clks = tmp;
- 
- 	/* tRWH -> RE_2_WE */
- 	re_2_we = DIV_ROUND_UP(timings->tRHW_min, t_x);
-@@ -796,7 +816,7 @@ static int denali_setup_data_interface(struct nand_chip *chip, int chipnr,
- 	tmp = ioread32(denali->reg + RE_2_WE);
- 	tmp &= ~RE_2_WE__VALUE;
- 	tmp |= FIELD_PREP(RE_2_WE__VALUE, re_2_we);
--	iowrite32(tmp, denali->reg + RE_2_WE);
-+	sel->re_2_we = tmp;
- 
- 	/* tRHZ -> RE_2_RE */
- 	re_2_re = DIV_ROUND_UP(timings->tRHZ_max, t_x);
-@@ -805,7 +825,7 @@ static int denali_setup_data_interface(struct nand_chip *chip, int chipnr,
- 	tmp = ioread32(denali->reg + RE_2_RE);
- 	tmp &= ~RE_2_RE__VALUE;
- 	tmp |= FIELD_PREP(RE_2_RE__VALUE, re_2_re);
--	iowrite32(tmp, denali->reg + RE_2_RE);
-+	sel->re_2_re = tmp;
- 
- 	/*
- 	 * tCCS, tWHR -> WE_2_RE
-@@ -819,7 +839,7 @@ static int denali_setup_data_interface(struct nand_chip *chip, int chipnr,
- 	tmp = ioread32(denali->reg + TWHR2_AND_WE_2_RE);
- 	tmp &= ~TWHR2_AND_WE_2_RE__WE_2_RE;
- 	tmp |= FIELD_PREP(TWHR2_AND_WE_2_RE__WE_2_RE, we_2_re);
--	iowrite32(tmp, denali->reg + TWHR2_AND_WE_2_RE);
-+	sel->hwhr2_and_we_2_re = tmp;
- 
- 	/* tADL -> ADDR_2_DATA */
- 
-@@ -834,7 +854,7 @@ static int denali_setup_data_interface(struct nand_chip *chip, int chipnr,
- 	tmp = ioread32(denali->reg + TCWAW_AND_ADDR_2_DATA);
- 	tmp &= ~TCWAW_AND_ADDR_2_DATA__ADDR_2_DATA;
- 	tmp |= FIELD_PREP(TCWAW_AND_ADDR_2_DATA__ADDR_2_DATA, addr_2_data);
--	iowrite32(tmp, denali->reg + TCWAW_AND_ADDR_2_DATA);
-+	sel->tcwaw_and_addr_2_data = tmp;
- 
- 	/* tREH, tWH -> RDWR_EN_HI_CNT */
- 	rdwr_en_hi = DIV_ROUND_UP(max(timings->tREH_min, timings->tWH_min),
-@@ -844,7 +864,7 @@ static int denali_setup_data_interface(struct nand_chip *chip, int chipnr,
- 	tmp = ioread32(denali->reg + RDWR_EN_HI_CNT);
- 	tmp &= ~RDWR_EN_HI_CNT__VALUE;
- 	tmp |= FIELD_PREP(RDWR_EN_HI_CNT__VALUE, rdwr_en_hi);
--	iowrite32(tmp, denali->reg + RDWR_EN_HI_CNT);
-+	sel->rdwr_en_hi_cnt = tmp;
- 
- 	/* tRP, tWP -> RDWR_EN_LO_CNT */
- 	rdwr_en_lo = DIV_ROUND_UP(max(timings->tRP_min, timings->tWP_min), t_x);
-@@ -857,7 +877,7 @@ static int denali_setup_data_interface(struct nand_chip *chip, int chipnr,
- 	tmp = ioread32(denali->reg + RDWR_EN_LO_CNT);
- 	tmp &= ~RDWR_EN_LO_CNT__VALUE;
- 	tmp |= FIELD_PREP(RDWR_EN_LO_CNT__VALUE, rdwr_en_lo);
--	iowrite32(tmp, denali->reg + RDWR_EN_LO_CNT);
-+	sel->rdwr_en_lo_cnt = tmp;
- 
- 	/* tCS, tCEA -> CS_SETUP_CNT */
- 	cs_setup = max3((int)DIV_ROUND_UP(timings->tCS_min, t_x) - rdwr_en_lo,
-@@ -868,40 +888,11 @@ static int denali_setup_data_interface(struct nand_chip *chip, int chipnr,
- 	tmp = ioread32(denali->reg + CS_SETUP_CNT);
- 	tmp &= ~CS_SETUP_CNT__VALUE;
- 	tmp |= FIELD_PREP(CS_SETUP_CNT__VALUE, cs_setup);
--	iowrite32(tmp, denali->reg + CS_SETUP_CNT);
-+	sel->cs_setup_cnt = tmp;
- 
- 	return 0;
- }
- 
--static void denali_hw_init(struct denali_nand_info *denali)
--{
--	/*
--	 * The REVISION register may not be reliable.  Platforms are allowed to
--	 * override it.
--	 */
--	if (!denali->revision)
--		denali->revision = swab16(ioread32(denali->reg + REVISION));
--
--	/*
--	 * Set how many bytes should be skipped before writing data in OOB.
--	 * If a non-zero value has already been set (by firmware or something),
--	 * just use it.  Otherwise, set the driver default.
--	 */
--	denali->oob_skip_bytes = ioread32(denali->reg + SPARE_AREA_SKIP_BYTES);
--	if (!denali->oob_skip_bytes) {
--		denali->oob_skip_bytes = DENALI_DEFAULT_OOB_SKIP_BYTES;
--		iowrite32(denali->oob_skip_bytes,
--			  denali->reg + SPARE_AREA_SKIP_BYTES);
--	}
--
--	denali_detect_max_banks(denali);
--	iowrite32(0, denali->reg + TRANSFER_SPARE_REG);
--	iowrite32(0x0F, denali->reg + RB_PIN_ENABLED);
--	iowrite32(CHIP_EN_DONT_CARE__FLAG, denali->reg + CHIP_ENABLE_DONT_CARE);
--	iowrite32(ECC_ENABLE__FLAG, denali->reg + ECC_ENABLE);
--	iowrite32(0xffff, denali->reg + SPARE_AREA_MARKER);
--}
--
- int denali_calc_ecc_bytes(int step_size, int strength)
- {
- 	/* BCH code.  Denali requires ecc.bytes to be multiple of 2 */
-@@ -912,10 +903,10 @@ EXPORT_SYMBOL(denali_calc_ecc_bytes);
- static int denali_ooblayout_ecc(struct mtd_info *mtd, int section,
- 				struct mtd_oob_region *oobregion)
- {
--	struct denali_nand_info *denali = mtd_to_denali(mtd);
- 	struct nand_chip *chip = mtd_to_nand(mtd);
-+	struct denali_controller *denali = to_denali_controller(chip);
- 
--	if (section)
-+	if (section > 0)
- 		return -ERANGE;
- 
- 	oobregion->offset = denali->oob_skip_bytes;
-@@ -927,10 +918,10 @@ static int denali_ooblayout_ecc(struct mtd_info *mtd, int section,
- static int denali_ooblayout_free(struct mtd_info *mtd, int section,
- 				 struct mtd_oob_region *oobregion)
- {
--	struct denali_nand_info *denali = mtd_to_denali(mtd);
- 	struct nand_chip *chip = mtd_to_nand(mtd);
-+	struct denali_controller *denali = to_denali_controller(chip);
- 
--	if (section)
-+	if (section > 0)
- 		return -ERANGE;
- 
- 	oobregion->offset = chip->ecc.total + denali->oob_skip_bytes;
-@@ -946,7 +937,7 @@ static const struct mtd_ooblayout_ops denali_ooblayout_ops = {
- 
- static int denali_multidev_fixup(struct nand_chip *chip)
- {
--	struct denali_nand_info *denali = to_denali(chip);
-+	struct denali_controller *denali = to_denali_controller(chip);
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 
- 	/*
-@@ -997,38 +988,10 @@ static int denali_multidev_fixup(struct nand_chip *chip)
- 
- static int denali_attach_chip(struct nand_chip *chip)
- {
-+	struct denali_controller *denali = to_denali_controller(chip);
- 	struct mtd_info *mtd = nand_to_mtd(chip);
--	struct denali_nand_info *denali = mtd_to_denali(mtd);
- 	int ret;
- 
--	if (ioread32(denali->reg + FEATURES) & FEATURES__DMA)
--		denali->dma_avail = true;
--
--	if (denali->dma_avail) {
--		int dma_bit = denali->caps & DENALI_CAP_DMA_64BIT ? 64 : 32;
--
--		ret = dma_set_mask(denali->dev, DMA_BIT_MASK(dma_bit));
--		if (ret) {
--			dev_info(denali->dev,
--				 "Failed to set DMA mask. Disabling DMA.\n");
--			denali->dma_avail = false;
--		}
--	}
--
--	if (denali->dma_avail) {
--		chip->options |= NAND_USE_BOUNCE_BUFFER;
--		chip->buf_align = 16;
--		if (denali->caps & DENALI_CAP_DMA_64BIT)
--			denali->setup_dma = denali_setup_dma64;
--		else
--			denali->setup_dma = denali_setup_dma32;
--	}
--
--	chip->bbt_options |= NAND_BBT_USE_FLASH;
--	chip->bbt_options |= NAND_BBT_NO_OOB;
--	chip->ecc.mode = NAND_ECC_HW_SYNDROME;
--	chip->options |= NAND_NO_SUBPAGE_WRITE;
--
- 	ret = nand_ecc_choose_conf(chip, denali->ecc_caps,
- 				   mtd->oobsize - denali->oob_skip_bytes);
- 	if (ret) {
-@@ -1040,33 +1003,6 @@ static int denali_attach_chip(struct nand_chip *chip)
- 		"chosen ECC settings: step=%d, strength=%d, bytes=%d\n",
- 		chip->ecc.size, chip->ecc.strength, chip->ecc.bytes);
- 
--	iowrite32(FIELD_PREP(ECC_CORRECTION__ERASE_THRESHOLD, 1) |
--		  FIELD_PREP(ECC_CORRECTION__VALUE, chip->ecc.strength),
--		  denali->reg + ECC_CORRECTION);
--	iowrite32(mtd->erasesize / mtd->writesize,
--		  denali->reg + PAGES_PER_BLOCK);
--	iowrite32(chip->options & NAND_BUSWIDTH_16 ? 1 : 0,
--		  denali->reg + DEVICE_WIDTH);
--	iowrite32(chip->options & NAND_ROW_ADDR_3 ? 0 : TWO_ROW_ADDR_CYCLES__FLAG,
--		  denali->reg + TWO_ROW_ADDR_CYCLES);
--	iowrite32(mtd->writesize, denali->reg + DEVICE_MAIN_AREA_SIZE);
--	iowrite32(mtd->oobsize, denali->reg + DEVICE_SPARE_AREA_SIZE);
--
--	iowrite32(chip->ecc.size, denali->reg + CFG_DATA_BLOCK_SIZE);
--	iowrite32(chip->ecc.size, denali->reg + CFG_LAST_DATA_BLOCK_SIZE);
--	/* chip->ecc.steps is set by nand_scan_tail(); not available here */
--	iowrite32(mtd->writesize / chip->ecc.size,
--		  denali->reg + CFG_NUM_DATA_BLOCKS);
--
--	mtd_set_ooblayout(mtd, &denali_ooblayout_ops);
--
--	chip->ecc.read_page = denali_read_page;
--	chip->ecc.read_page_raw = denali_read_page_raw;
--	chip->ecc.write_page = denali_write_page;
--	chip->ecc.write_page_raw = denali_write_page_raw;
--	chip->ecc.read_oob = denali_read_oob;
--	chip->ecc.write_oob = denali_write_oob;
--
- 	ret = denali_multidev_fixup(chip);
- 	if (ret)
- 		return ret;
-@@ -1074,7 +1010,7 @@ static int denali_attach_chip(struct nand_chip *chip)
- 	return 0;
- }
- 
--static void denali_exec_in8(struct denali_nand_info *denali, u32 type,
-+static void denali_exec_in8(struct denali_controller *denali, u32 type,
- 			    u8 *buf, unsigned int len)
- {
- 	int i;
-@@ -1083,7 +1019,7 @@ static void denali_exec_in8(struct denali_nand_info *denali, u32 type,
- 		buf[i] = denali->host_read(denali, type | DENALI_BANK(denali));
- }
- 
--static void denali_exec_in16(struct denali_nand_info *denali, u32 type,
-+static void denali_exec_in16(struct denali_controller *denali, u32 type,
- 			     u8 *buf, unsigned int len)
- {
- 	u32 data;
-@@ -1097,7 +1033,7 @@ static void denali_exec_in16(struct denali_nand_info *denali, u32 type,
- 	}
- }
- 
--static void denali_exec_in(struct denali_nand_info *denali, u32 type,
-+static void denali_exec_in(struct denali_controller *denali, u32 type,
- 			   u8 *buf, unsigned int len, bool width16)
- {
- 	if (width16)
-@@ -1106,7 +1042,7 @@ static void denali_exec_in(struct denali_nand_info *denali, u32 type,
- 		denali_exec_in8(denali, type, buf, len);
- }
- 
--static void denali_exec_out8(struct denali_nand_info *denali, u32 type,
-+static void denali_exec_out8(struct denali_controller *denali, u32 type,
- 			     const u8 *buf, unsigned int len)
- {
- 	int i;
-@@ -1115,7 +1051,7 @@ static void denali_exec_out8(struct denali_nand_info *denali, u32 type,
- 		denali->host_write(denali, type | DENALI_BANK(denali), buf[i]);
- }
- 
--static void denali_exec_out16(struct denali_nand_info *denali, u32 type,
-+static void denali_exec_out16(struct denali_controller *denali, u32 type,
- 			      const u8 *buf, unsigned int len)
- {
- 	int i;
-@@ -1125,7 +1061,7 @@ static void denali_exec_out16(struct denali_nand_info *denali, u32 type,
- 				   buf[i + 1] << 16 | buf[i]);
- }
- 
--static void denali_exec_out(struct denali_nand_info *denali, u32 type,
-+static void denali_exec_out(struct denali_controller *denali, u32 type,
- 			    const u8 *buf, unsigned int len, bool width16)
- {
- 	if (width16)
-@@ -1134,7 +1070,7 @@ static void denali_exec_out(struct denali_nand_info *denali, u32 type,
- 		denali_exec_out8(denali, type, buf, len);
- }
- 
--static int denali_exec_waitrdy(struct denali_nand_info *denali)
-+static int denali_exec_waitrdy(struct denali_controller *denali)
- {
- 	u32 irq_stat;
- 
-@@ -1150,7 +1086,7 @@ static int denali_exec_waitrdy(struct denali_nand_info *denali)
- static int denali_exec_instr(struct nand_chip *chip,
- 			     const struct nand_op_instr *instr)
- {
--	struct denali_nand_info *denali = to_denali(chip);
-+	struct denali_controller *denali = to_denali_controller(chip);
- 
- 	switch (instr->type) {
- 	case NAND_OP_CMD_INSTR:
-@@ -1200,7 +1136,7 @@ static int denali_exec_op(struct nand_chip *chip,
- 	 * Some commands contain NAND_OP_WAITRDY_INSTR.
- 	 * irq must be cleared here to catch the R/B# interrupt there.
- 	 */
--	denali_reset_irq(to_denali(chip));
-+	denali_reset_irq(to_denali_controller(chip));
- 
- 	for (i = 0; i < op->ninstrs; i++) {
- 		ret = denali_exec_instr(chip, &op->instrs[i]);
-@@ -1217,53 +1153,80 @@ static const struct nand_controller_ops denali_controller_ops = {
- 	.setup_data_interface = denali_setup_data_interface,
- };
- 
--int denali_init(struct denali_nand_info *denali)
-+int denali_chip_init(struct denali_controller *denali,
-+		     struct denali_chip *dchip)
- {
--	struct nand_chip *chip = &denali->nand;
-+	struct nand_chip *chip = &dchip->chip;
- 	struct mtd_info *mtd = nand_to_mtd(chip);
--	u32 features = ioread32(denali->reg + FEATURES);
--	int ret;
-+	struct denali_chip *dchip2;
-+	int i, j, ret;
- 
--	mtd->dev.parent = denali->dev;
--	denali_hw_init(denali);
-+	chip->controller = &denali->controller;
- 
--	init_completion(&denali->complete);
--	spin_lock_init(&denali->irq_lock);
-+	/* sanity checks for bank numbers */
-+	for (i = 0; i < dchip->nsels; i++) {
-+		unsigned int bank = dchip->sels[i].bank;
- 
--	denali_clear_irq_all(denali);
-+		if (bank >= denali->nbanks) {
-+			dev_err(denali->dev, "unsupported bank %d\n", bank);
-+			return -EINVAL;
-+		}
- 
--	ret = devm_request_irq(denali->dev, denali->irq, denali_isr,
--			       IRQF_SHARED, DENALI_NAND_NAME, denali);
--	if (ret) {
--		dev_err(denali->dev, "Unable to request IRQ\n");
--		return ret;
--	}
-+		for (j = 0; j < i; j++) {
-+			if (bank == dchip->sels[j].bank) {
-+				dev_err(denali->dev,
-+					"bank %d is assigned twice in the same chip\n",
-+					bank);
-+				return -EINVAL;
-+			}
-+		}
- 
--	denali_enable_irq(denali);
-+		list_for_each_entry(dchip2, &denali->chips, node) {
-+			for (j = 0; j < dchip2->nsels; j++) {
-+				if (bank == dchip2->sels[j].bank) {
-+					dev_err(denali->dev,
-+						"bank %d is already used\n",
-+						bank);
-+					return -EINVAL;
-+				}
-+			}
-+		}
-+	}
- 
--	denali->active_bank = DENALI_INVALID_BANK;
-+	mtd->dev.parent = denali->dev;
- 
--	nand_set_flash_node(chip, denali->dev->of_node);
--	/* Fallback to the default name if DT did not give "label" property */
--	if (!mtd->name)
-+	/*
-+	 * Fallback to the default name if DT did not give "label" property.
-+	 * Use "label" property if multiple chips are connected.
-+	 */
-+	if (!mtd->name && list_empty(&denali->chips))
- 		mtd->name = "denali-nand";
- 
--	if (features & FEATURES__INDEX_ADDR) {
--		denali->host_read = denali_indexed_read;
--		denali->host_write = denali_indexed_write;
--	} else {
--		denali->host_read = denali_direct_read;
--		denali->host_write = denali_direct_write;
-+	if (denali->dma_avail) {
-+		chip->options |= NAND_USE_BOUNCE_BUFFER;
-+		chip->buf_align = 16;
- 	}
- 
- 	/* clk rate info is needed for setup_data_interface */
- 	if (!denali->clk_rate || !denali->clk_x_rate)
- 		chip->options |= NAND_KEEP_TIMINGS;
- 
--	chip->legacy.dummy_controller.ops = &denali_controller_ops;
--	ret = nand_scan(chip, denali->max_banks);
-+	chip->bbt_options |= NAND_BBT_USE_FLASH;
-+	chip->bbt_options |= NAND_BBT_NO_OOB;
-+	chip->options |= NAND_NO_SUBPAGE_WRITE;
-+	chip->ecc.mode = NAND_ECC_HW_SYNDROME;
-+	chip->ecc.read_page = denali_read_page;
-+	chip->ecc.write_page = denali_write_page;
-+	chip->ecc.read_page_raw = denali_read_page_raw;
-+	chip->ecc.write_page_raw = denali_write_page_raw;
-+	chip->ecc.read_oob = denali_read_oob;
-+	chip->ecc.write_oob = denali_write_oob;
-+
-+	mtd_set_ooblayout(mtd, &denali_ooblayout_ops);
-+
-+	ret = nand_scan(chip, dchip->nsels);
- 	if (ret)
--		goto disable_irq;
-+		return ret;
- 
- 	ret = mtd_device_register(mtd, NULL, 0);
- 	if (ret) {
-@@ -1271,20 +1234,111 @@ int denali_init(struct denali_nand_info *denali)
- 		goto cleanup_nand;
- 	}
- 
-+	list_add_tail(&dchip->node, &denali->chips);
-+
- 	return 0;
- 
- cleanup_nand:
- 	nand_cleanup(chip);
--disable_irq:
--	denali_disable_irq(denali);
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(denali_chip_init);
-+
-+int denali_init(struct denali_controller *denali)
-+{
-+	u32 features = ioread32(denali->reg + FEATURES);
-+	int ret;
-+
-+	nand_controller_init(&denali->controller);
-+	denali->controller.ops = &denali_controller_ops;
-+	init_completion(&denali->complete);
-+	spin_lock_init(&denali->irq_lock);
-+	INIT_LIST_HEAD(&denali->chips);
-+	denali->active_bank = DENALI_INVALID_BANK;
-+
-+	/*
-+	 * The REVISION register may not be reliable. Platforms are allowed to
-+	 * override it.
-+	 */
-+	if (!denali->revision)
-+		denali->revision = swab16(ioread32(denali->reg + REVISION));
-+
-+	denali->nbanks = 1 << FIELD_GET(FEATURES__N_BANKS, features);
-+
-+	/* the encoding changed from rev 5.0 to 5.1 */
-+	if (denali->revision < 0x0501)
-+		denali->nbanks <<= 1;
-+
-+	if (features & FEATURES__DMA)
-+		denali->dma_avail = true;
-+
-+	if (denali->dma_avail) {
-+		int dma_bit = denali->caps & DENALI_CAP_DMA_64BIT ? 64 : 32;
-+
-+		ret = dma_set_mask(denali->dev, DMA_BIT_MASK(dma_bit));
-+		if (ret) {
-+			dev_info(denali->dev,
-+				 "Failed to set DMA mask. Disabling DMA.\n");
-+			denali->dma_avail = false;
-+		}
-+	}
-+
-+	if (denali->dma_avail) {
-+		if (denali->caps & DENALI_CAP_DMA_64BIT)
-+			denali->setup_dma = denali_setup_dma64;
-+		else
-+			denali->setup_dma = denali_setup_dma32;
-+	}
-+
-+	if (features & FEATURES__INDEX_ADDR) {
-+		denali->host_read = denali_indexed_read;
-+		denali->host_write = denali_indexed_write;
-+	} else {
-+		denali->host_read = denali_direct_read;
-+		denali->host_write = denali_direct_write;
-+	}
-+
-+	/*
-+	 * Set how many bytes should be skipped before writing data in OOB.
-+	 * If a non-zero value has already been set (by firmware or something),
-+	 * just use it. Otherwise, set the driver's default.
-+	 */
-+	denali->oob_skip_bytes = ioread32(denali->reg + SPARE_AREA_SKIP_BYTES);
-+	if (!denali->oob_skip_bytes) {
-+		denali->oob_skip_bytes = DENALI_DEFAULT_OOB_SKIP_BYTES;
-+		iowrite32(denali->oob_skip_bytes,
-+			  denali->reg + SPARE_AREA_SKIP_BYTES);
-+	}
-+
-+	iowrite32(0, denali->reg + TRANSFER_SPARE_REG);
-+	iowrite32(GENMASK(denali->nbanks - 1, 0), denali->reg + RB_PIN_ENABLED);
-+	iowrite32(CHIP_EN_DONT_CARE__FLAG, denali->reg + CHIP_ENABLE_DONT_CARE);
-+	iowrite32(ECC_ENABLE__FLAG, denali->reg + ECC_ENABLE);
-+	iowrite32(0xffff, denali->reg + SPARE_AREA_MARKER);
-+
-+	denali_clear_irq_all(denali);
-+
-+	ret = devm_request_irq(denali->dev, denali->irq, denali_isr,
-+			       IRQF_SHARED, DENALI_NAND_NAME, denali);
-+	if (ret) {
-+		dev_err(denali->dev, "Unable to request IRQ\n");
-+		return ret;
-+	}
-+
-+	denali_enable_irq(denali);
-+
-+	return 0;
-+}
- EXPORT_SYMBOL(denali_init);
- 
--void denali_remove(struct denali_nand_info *denali)
-+void denali_remove(struct denali_controller *denali)
- {
--	nand_release(&denali->nand);
-+	struct denali_chip *dchip;
-+
-+	list_for_each_entry(dchip, &denali->chips, node)
-+		nand_release(&dchip->chip);
-+
- 	denali_disable_irq(denali);
- }
- EXPORT_SYMBOL(denali_remove);
-diff --git a/drivers/mtd/nand/raw/denali.h b/drivers/mtd/nand/raw/denali.h
-index d2603c6..e5cdcda 100644
---- a/drivers/mtd/nand/raw/denali.h
-+++ b/drivers/mtd/nand/raw/denali.h
-@@ -9,6 +9,7 @@
- 
- #include <linux/bits.h>
- #include <linux/completion.h>
-+#include <linux/list.h>
- #include <linux/mtd/rawnand.h>
- #include <linux/spinlock_types.h>
- #include <linux/types.h>
-@@ -290,29 +291,98 @@
- #define     CHNL_ACTIVE__CHANNEL2			BIT(2)
- #define     CHNL_ACTIVE__CHANNEL3			BIT(3)
- 
--struct denali_nand_info {
--	struct nand_chip nand;
--	unsigned long clk_rate;		/* core clock rate */
--	unsigned long clk_x_rate;	/* bus interface clock rate */
--	int active_bank;		/* currently selected bank */
-+/**
-+ * struct denali_chip_sel - per-CS data of Denali NAND
-+ *
-+ * @bank:                  bank id of the controller this CS is connected to
-+ * @hwhr2_and_we_2_re:     value of timing register HWHR2_AND_WE_2_RE
-+ * @tcwaw_and_addr_2_data: value of timing register TCWAW_AND_ADDR_2_DATA
-+ * @re_2_we:               value of timing register RE_2_WE
-+ * @acc_clks:              value of timing register ACC_CLKS
-+ * @rdwr_en_lo_cnt:        value of timing register RDWR_EN_LO_CNT
-+ * @rdwr_en_hi_cnt:        value of timing register RDWR_EN_HI_CNT
-+ * @cs_setup_cnt:          value of timing register CS_SETUP_CNT
-+ * @re_2_re:               value of timing register RE_2_RE
-+ */
-+struct denali_chip_sel {
-+	int bank;
-+	u32 hwhr2_and_we_2_re;
-+	u32 tcwaw_and_addr_2_data;
-+	u32 re_2_we;
-+	u32 acc_clks;
-+	u32 rdwr_en_lo_cnt;
-+	u32 rdwr_en_hi_cnt;
-+	u32 cs_setup_cnt;
-+	u32 re_2_re;
-+};
-+
-+/**
-+ * struct denali_chip - per-chip data of Denali NAND
-+ *
-+ * @chip:  base NAND chip structure
-+ * @node:  node to be used to associate this chip with the controller
-+ * @nsels: the number of CS lines of this chip
-+ * @sels:  the array of per-cs data
-+ */
-+struct denali_chip {
-+	struct nand_chip chip;
-+	struct list_head node;
-+	unsigned int nsels;
-+	struct denali_chip_sel sels[0];
-+};
-+
-+/**
-+ * struct denali_controller - Denali NAND controller data
-+ *
-+ * @controller:     base NAND controller structure
-+ * @dev:            device
-+ * @chips:          the list of chips attached to this controller
-+ * @clk_rate:       frequency of core clock
-+ * @clk_x_rate:     frequency of bus interface clock
-+ * @reg:            base of Register Interface
-+ * @host:           base of Host Data/Command interface
-+ * @complete:       completion used to wait for interrupts
-+ * @irq:            interrupt number
-+ * @irq_mask:       interrupt bits the controller is waiting for
-+ * @irq_status:     interrupt bits of events that have happened
-+ * @irq_lock:       lock to protect @irq_mask and @irq_status
-+ * @dma_avail:      set if DMA engine is available
-+ * @devs_per_cs:    number of devices connected in parallel
-+ * @oob_skip_bytes: number of bytes in OOB skipped by the ECC engine
-+ * @active_bank:    active bank id
-+ * @nbanks:         the number of banks supported by this controller
-+ * @revision:       IP revision
-+ * @caps:           controller capabilities that cannot be detected run-time
-+ * @ecc_caps:       ECC engine capabilities
-+ * @host_read:      callback for read access of Host Data/Command Interface
-+ * @host_write:     callback for write access of Host Data/Command Interface
-+ * @setup_dma:      callback for setup of the Data DMA
-+ */
-+struct denali_controller {
-+	struct nand_controller controller;
- 	struct device *dev;
--	void __iomem *reg;		/* Register Interface */
--	void __iomem *host;		/* Host Data/Command Interface */
-+	struct list_head chips;
-+	unsigned long clk_rate;
-+	unsigned long clk_x_rate;
-+	void __iomem *reg;
-+	void __iomem *host;
- 	struct completion complete;
--	spinlock_t irq_lock;		/* protect irq_mask and irq_status */
--	u32 irq_mask;			/* interrupts we are waiting for */
--	u32 irq_status;			/* interrupts that have happened */
- 	int irq;
--	bool dma_avail;			/* can support DMA? */
--	int devs_per_cs;		/* devices connected in parallel */
--	int oob_skip_bytes;		/* number of bytes reserved for BBM */
--	int max_banks;
--	unsigned int revision;		/* IP revision */
--	unsigned int caps;		/* IP capability (or quirk) */
-+	u32 irq_mask;
-+	u32 irq_status;
-+	spinlock_t irq_lock;
-+	bool dma_avail;
-+	int devs_per_cs;
-+	int oob_skip_bytes;
-+	int active_bank;
-+	int nbanks;
-+	unsigned int revision;
-+	unsigned int caps;
- 	const struct nand_ecc_caps *ecc_caps;
--	u32 (*host_read)(struct denali_nand_info *denali, u32 addr);
--	void (*host_write)(struct denali_nand_info *denali, u32 addr, u32 data);
--	void (*setup_dma)(struct denali_nand_info *denali, dma_addr_t dma_addr,
-+	u32 (*host_read)(struct denali_controller *denali, u32 addr);
-+	void (*host_write)(struct denali_controller *denali, u32 addr,
-+			   u32 data);
-+	void (*setup_dma)(struct denali_controller *denali, dma_addr_t dma_addr,
- 			  int page, bool write);
- };
- 
-@@ -320,7 +390,9 @@ struct denali_nand_info {
- #define DENALI_CAP_DMA_64BIT			BIT(1)
- 
- int denali_calc_ecc_bytes(int step_size, int strength);
--int denali_init(struct denali_nand_info *denali);
--void denali_remove(struct denali_nand_info *denali);
-+int denali_chip_init(struct denali_controller *denali,
-+		     struct denali_chip *dchip);
-+int denali_init(struct denali_controller *denali);
-+void denali_remove(struct denali_controller *denali);
- 
- #endif /* __DENALI_H__ */
-diff --git a/drivers/mtd/nand/raw/denali_dt.c b/drivers/mtd/nand/raw/denali_dt.c
-index 0b5ae24..5e14836 100644
---- a/drivers/mtd/nand/raw/denali_dt.c
-+++ b/drivers/mtd/nand/raw/denali_dt.c
-@@ -18,7 +18,7 @@
- #include "denali.h"
- 
- struct denali_dt {
--	struct denali_nand_info	denali;
-+	struct denali_controller controller;
- 	struct clk *clk;	/* core clock */
- 	struct clk *clk_x;	/* bus interface clock */
- 	struct clk *clk_ecc;	/* ECC circuit clock */
-@@ -71,19 +71,92 @@ static const struct of_device_id denali_nand_dt_ids[] = {
- };
- MODULE_DEVICE_TABLE(of, denali_nand_dt_ids);
- 
-+static int denali_dt_chip_init(struct denali_controller *denali,
-+			       struct device_node *chip_np)
-+{
-+	struct denali_chip *dchip;
-+	u32 bank;
-+	int nsels, i, ret;
-+
-+	nsels = of_property_count_u32_elems(chip_np, "reg");
-+	if (nsels < 0)
-+		return nsels;
-+
-+	dchip = devm_kzalloc(denali->dev, struct_size(dchip, sels, nsels),
-+			     GFP_KERNEL);
-+	if (!dchip)
-+		return -ENOMEM;
-+
-+	dchip->nsels = nsels;
-+
-+	for (i = 0; i < nsels; i++) {
-+		ret = of_property_read_u32_index(chip_np, "reg", i, &bank);
-+		if (ret)
-+			return ret;
-+
-+		dchip->sels[i].bank = bank;
-+
-+		nand_set_flash_node(&dchip->chip, chip_np);
-+	}
-+
-+	return denali_chip_init(denali, dchip);
-+}
-+
-+/* Backward compatibility for old platforms */
-+static int denali_dt_legacy_chip_init(struct denali_controller *denali)
-+{
-+	struct denali_chip *dchip;
-+	int nsels, i;
-+
-+	nsels = denali->nbanks;
-+
-+	dchip = devm_kzalloc(denali->dev, struct_size(dchip, sels, nsels),
-+			     GFP_KERNEL);
-+	if (!dchip)
-+		return -ENOMEM;
-+
-+	dchip->nsels = nsels;
-+
-+	for (i = 0; i < nsels; i++)
-+		dchip->sels[i].bank = i;
-+
-+	nand_set_flash_node(&dchip->chip, denali->dev->of_node);
-+
-+	return denali_chip_init(denali, dchip);
-+}
-+
-+/*
-+ * Check the DT binding.
-+ * The new binding expects chip subnodes in the controller node.
-+ * So, #address-cells = <1>; #size-cells = <0>; are required.
-+ * Check the #size-cells to distinguish the binding.
-+ */
-+static bool denali_dt_is_legacy_binding(struct device_node *np)
-+{
-+	u32 cells;
-+	int ret;
-+
-+	ret = of_property_read_u32(np, "#size-cells", &cells);
-+	if (ret)
-+		return true;
-+
-+	return cells != 0;
-+}
-+
- static int denali_dt_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct resource *res;
- 	struct denali_dt *dt;
- 	const struct denali_dt_data *data;
--	struct denali_nand_info *denali;
-+	struct denali_controller *denali;
-+	struct device_node *np;
- 	int ret;
- 
- 	dt = devm_kzalloc(dev, sizeof(*dt), GFP_KERNEL);
- 	if (!dt)
- 		return -ENOMEM;
--	denali = &dt->denali;
-+	denali = &dt->controller;
- 
- 	data = of_device_get_match_data(dev);
- 	if (data) {
-@@ -140,9 +213,26 @@ static int denali_dt_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto out_disable_clk_ecc;
- 
-+	if (denali_dt_is_legacy_binding(dev->of_node)) {
-+		ret = denali_dt_legacy_chip_init(denali);
-+		if (ret)
-+			goto out_remove_denali;
-+	} else {
-+		for_each_child_of_node(dev->of_node, np) {
-+			ret = denali_dt_chip_init(denali, np);
-+			if (ret) {
-+				of_node_put(np);
-+				goto out_remove_denali;
-+			}
-+		}
-+	}
-+
- 	platform_set_drvdata(pdev, dt);
-+
- 	return 0;
- 
-+out_remove_denali:
-+	denali_remove(denali);
- out_disable_clk_ecc:
- 	clk_disable_unprepare(dt->clk_ecc);
- out_disable_clk_x:
-@@ -157,7 +247,7 @@ static int denali_dt_remove(struct platform_device *pdev)
- {
- 	struct denali_dt *dt = platform_get_drvdata(pdev);
- 
--	denali_remove(&dt->denali);
-+	denali_remove(&dt->controller);
- 	clk_disable_unprepare(dt->clk_ecc);
- 	clk_disable_unprepare(dt->clk_x);
- 	clk_disable_unprepare(dt->clk);
-diff --git a/drivers/mtd/nand/raw/denali_pci.c b/drivers/mtd/nand/raw/denali_pci.c
-index 02eb599..d62aa52 100644
---- a/drivers/mtd/nand/raw/denali_pci.c
-+++ b/drivers/mtd/nand/raw/denali_pci.c
-@@ -29,10 +29,11 @@ NAND_ECC_CAPS_SINGLE(denali_pci_ecc_caps, denali_calc_ecc_bytes, 512, 8, 15);
- 
- static int denali_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
- {
--	int ret;
- 	resource_size_t csr_base, mem_base;
- 	unsigned long csr_len, mem_len;
--	struct denali_nand_info *denali;
-+	struct denali_controller *denali;
-+	struct denali_chip *dchip;
-+	int nsels, ret, i;
- 
- 	denali = devm_kzalloc(&dev->dev, sizeof(*denali), GFP_KERNEL);
- 	if (!denali)
-@@ -64,7 +65,6 @@ static int denali_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	denali->dev = &dev->dev;
- 	denali->irq = dev->irq;
- 	denali->ecc_caps = &denali_pci_ecc_caps;
--	denali->nand.ecc.options |= NAND_ECC_MAXIMIZE;
- 	denali->clk_rate = 50000000;		/* 50 MHz */
- 	denali->clk_x_rate = 200000000;		/* 200 MHz */
- 
-@@ -91,10 +91,32 @@ static int denali_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	if (ret)
- 		goto out_unmap_host;
- 
-+	nsels = denali->nbanks;
-+
-+	dchip = devm_kzalloc(denali->dev, struct_size(dchip, sels, nsels),
-+			     GFP_KERNEL);
-+	if (!dchip) {
-+		ret = -ENOMEM;
-+		goto out_remove_denali;
-+	}
-+
-+	dchip->chip.ecc.options |= NAND_ECC_MAXIMIZE;
-+
-+	dchip->nsels = nsels;
-+
-+	for (i = 0; i < nsels; i++)
-+		dchip->sels[i].bank = i;
-+
-+	ret = denali_chip_init(denali, dchip);
-+	if (ret)
-+		goto out_remove_denali;
-+
- 	pci_set_drvdata(dev, denali);
- 
- 	return 0;
- 
-+out_remove_denali:
-+	denali_remove(denali);
- out_unmap_host:
- 	iounmap(denali->host);
- out_unmap_reg:
-@@ -104,7 +126,7 @@ static int denali_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 
- static void denali_pci_remove(struct pci_dev *dev)
- {
--	struct denali_nand_info *denali = pci_get_drvdata(dev);
-+	struct denali_controller *denali = pci_get_drvdata(dev);
- 
- 	denali_remove(denali);
- 	iounmap(denali->reg);
--- 
-2.7.4
+> +	compatible = "simple-bus";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges = <0x59000000 0x0 0x59000000 0x2000000>;
+> +
+> +	adma_lpcg: clock-controller@59000000 {
+> +		reg = <0x59000000 0x2000000>;
+> +		#clock-cells = <1>;
+> +	};
+> +
+> +	adma_lpuart0: serial@5a060000 {
+> +		reg = <0x5a060000 0x1000>;
+> +		interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-parent = <&gic>;
+> +		clocks = <&adma_lpcg IMX_ADMA_LPCG_UART0_BAUD_CLK>;
+> +		clock-names = "ipg";
+> +		power-domains = <&pd IMX_SC_R_UART_0>;
+> +		status = "disabled";
+> +	};
+> +
+> +	adma_i2c0: i2c@5a800000 {
+> +		reg = <0x5a800000 0x4000>;
+> +		interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-parent = <&gic>;
+> +		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C0_CLK>;
+> +		clock-names = "per";
+> +		assigned-clocks = <&clk IMX_ADMA_I2C0_CLK>;
+> +		assigned-clock-rates = <24000000>;
+> +		power-domains = <&pd IMX_SC_R_I2C_0>;
+> +		status = "disabled";
+> +	};
+> +
+> +	adma_i2c1: i2c@5a810000 {
+> +		reg = <0x5a810000 0x4000>;
+> +		interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-parent = <&gic>;
+> +		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C1_CLK>;
+> +		clock-names = "per";
+> +		assigned-clocks = <&clk IMX_ADMA_I2C1_CLK>;
+> +		assigned-clock-rates = <24000000>;
+> +		power-domains = <&pd IMX_SC_R_I2C_1>;
+> +		status = "disabled";
+> +	};
+> +
+> +	adma_i2c2: i2c@5a820000 {
+> +		reg = <0x5a820000 0x4000>;
+> +		interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-parent = <&gic>;
+> +		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C2_CLK>;
+> +		clock-names = "per";
+> +		assigned-clocks = <&clk IMX_ADMA_I2C2_CLK>;
+> +		assigned-clock-rates = <24000000>;
+> +		power-domains = <&pd IMX_SC_R_I2C_2>;
+> +		status = "disabled";
+> +	};
+> +
+> +	adma_i2c3: i2c@5a830000 {
+> +		reg = <0x5a830000 0x4000>;
+> +		interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-parent = <&gic>;
+> +		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C3_CLK>;
+> +		clock-names = "per";
+> +		assigned-clocks = <&clk IMX_ADMA_I2C3_CLK>;
+> +		assigned-clock-rates = <24000000>;
+> +		power-domains = <&pd IMX_SC_R_I2C_3>;
+> +		status = "disabled";
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
+> new file mode 100644
+> index 0000000..ac5131d
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
+> @@ -0,0 +1,95 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright 2018 NXP
+> + *	Dong Aisheng <aisheng.dong@nxp.com>
+> + */
+> +
+> +conn_subsys: bus@5b000000 {
+> +	compatible = "simple-bus";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges = <0x5b000000 0x0 0x5b000000 0x1000000>;
+> +
+> +	conn_lpcg: clock-controller@5b200000 {
+> +		reg = <0x5b200000 0xb0000>;
+> +		#clock-cells = <1>;
+> +	};
+> +
+> +	usdhc1: mmc@5b010000 {
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
+> +		reg = <0x5b010000 0x10000>;
+> +		clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC0_IPG_CLK>,
+> +			 <&conn_lpcg IMX_CONN_LPCG_SDHC0_PER_CLK>,
+> +			 <&conn_lpcg IMX_CONN_LPCG_SDHC0_HCLK>;
+> +		clock-names = "ipg", "per", "ahb";
+> +		assigned-clocks = <&clk IMX_CONN_SDHC0_CLK>;
+> +		assigned-clock-rates = <200000000>;
+> +		power-domains = <&pd IMX_SC_R_SDHC_0>;
+> +		status = "disabled";
+> +	};
+> +
+> +	usdhc2: mmc@5b020000 {
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
+> +		reg = <0x5b020000 0x10000>;
+> +		clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC1_IPG_CLK>,
+> +			 <&conn_lpcg IMX_CONN_LPCG_SDHC1_PER_CLK>,
+> +			 <&conn_lpcg IMX_CONN_LPCG_SDHC1_HCLK>;
+> +		clock-names = "ipg", "per", "ahb";
+> +		assigned-clocks = <&clk IMX_CONN_SDHC1_CLK>;
+> +		assigned-clock-rates = <200000000>;
+> +		power-domains = <&pd IMX_SC_R_SDHC_1>;
+> +		fsl,tuning-start-tap = <20>;
+> +		fsl,tuning-step= <2>;
+> +		status = "disabled";
+> +	};
+> +
+> +	usdhc3: mmc@5b030000 {
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_HIGH>;
+> +		reg = <0x5b030000 0x10000>;
+> +		clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC2_IPG_CLK>,
+> +			 <&conn_lpcg IMX_CONN_LPCG_SDHC2_PER_CLK>,
+> +			 <&conn_lpcg IMX_CONN_LPCG_SDHC2_HCLK>;
+> +		clock-names = "ipg", "per", "ahb";
+> +		assigned-clocks = <&clk IMX_CONN_SDHC2_CLK>;
+> +		assigned-clock-rates = <200000000>;
+> +		power-domains = <&pd IMX_SC_R_SDHC_2>;
+> +		status = "disabled";
+> +	};
+> +
+> +	fec1: ethernet@5b040000 {
+> +		reg = <0x5b040000 0x10000>;
+> +		interrupts = <GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&conn_lpcg IMX_CONN_LPCG_ENET0_IPG_CLK>,
+> +			 <&conn_lpcg IMX_CONN_LPCG_ENET0_AHB_CLK>,
+> +			 <&conn_lpcg IMX_CONN_LPCG_ENET0_TX_CLK>,
+> +			 <&conn_lpcg IMX_CONN_LPCG_ENET0_ROOT_CLK>;
+> +		clock-names = "ipg", "ahb", "enet_clk_ref", "ptp";
+> +		fsl,num-tx-queues=<3>;
+> +		fsl,num-rx-queues=<3>;
+> +		power-domains = <&pd IMX_SC_R_ENET_0>;
+> +		status = "disabled";
+> +	};
+> +
+> +	fec2: ethernet@5b050000 {
+> +		reg = <0x5b050000 0x10000>;
+> +		interrupts = <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH>,
+> +				<GIC_SPI 260 IRQ_TYPE_LEVEL_HIGH>,
+> +				<GIC_SPI 261 IRQ_TYPE_LEVEL_HIGH>,
+> +				<GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&conn_lpcg IMX_CONN_LPCG_ENET1_IPG_CLK>,
+> +			 <&conn_lpcg IMX_CONN_LPCG_ENET1_AHB_CLK>,
+> +			 <&conn_lpcg IMX_CONN_LPCG_ENET1_TX_CLK>,
+> +			 <&conn_lpcg IMX_CONN_LPCG_ENET1_ROOT_CLK>;
+> +		clock-names = "ipg", "ahb", "enet_clk_ref", "ptp";
+> +		fsl,num-tx-queues=<3>;
+> +		fsl,num-rx-queues=<3>;
+> +		power-domains = <&pd IMX_SC_R_ENET_1>;
+> +		status = "disabled";
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
+> new file mode 100644
+> index 0000000..1c6ba8d
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
+> @@ -0,0 +1,124 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright 2018 NXP
+> + *	Dong Aisheng <aisheng.dong@nxp.com>
+> + */
+> +
+> +lsio_subsys: bus@5d000000 {
+> +	compatible = "simple-bus";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges = <0x5d000000 0x0 0x5d000000 0x1000000>;
+> +
+> +	lsio_lpcg: clock-controller@5d400000 {
+> +		reg = <0x5d400000 0x400000>;
+> +		#clock-cells = <1>;
+> +	};
+> +
+> +	lsio_mu0: mailbox@5d1b0000 {
+> +		reg = <0x5d1b0000 0x10000>;
+> +		interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+> +		#mbox-cells = <0>;
+> +		status = "disabled";
+> +	};
+> +
+> +	lsio_mu1: mailbox@5d1c0000 {
+> +		reg = <0x5d1c0000 0x10000>;
+> +		interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
+> +		#mbox-cells = <2>;
+> +	};
+> +
+> +	lsio_mu3: mailbox@5d1e0000 {
+> +		reg = <0x5d1e0000 0x10000>;
+> +		interrupts = <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
+> +		#mbox-cells = <0>;
+> +		status = "disabled";
+> +	};
+> +
+> +	lsio_mu4: mailbox@5d1f0000 {
+> +		reg = <0x5d1f0000 0x10000>;
+> +		interrupts = <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
+> +		#mbox-cells = <0>;
+> +		status = "disabled";
+> +	};
+> +
+> +	lsio_gpio0: gpio@5d080000 {
+> +		reg = <0x5d080000 0x10000>;
+> +		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		power-domains = <&pd IMX_SC_R_GPIO_0>;
+> +	};
+> +
+> +	lsio_gpio1: gpio@5d090000 {
+> +		reg = <0x5d090000 0x10000>;
+> +		interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		power-domains = <&pd IMX_SC_R_GPIO_1>;
+> +	};
+> +
+> +	lsio_gpio2: gpio@5d0a0000 {
+> +		reg = <0x5d0a0000 0x10000>;
+> +		interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		power-domains = <&pd IMX_SC_R_GPIO_2>;
+> +	};
+> +
+> +	lsio_gpio3: gpio@5d0b0000 {
+> +		reg = <0x5d0b0000 0x10000>;
+> +		interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		power-domains = <&pd IMX_SC_R_GPIO_3>;
+> +	};
+> +
+> +	lsio_gpio4: gpio@5d0c0000 {
+> +		reg = <0x5d0c0000 0x10000>;
+> +		interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		power-domains = <&pd IMX_SC_R_GPIO_4>;
+> +	};
+> +
+> +	lsio_gpio5: gpio@5d0d0000 {
+> +		reg = <0x5d0d0000 0x10000>;
+> +		interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		power-domains = <&pd IMX_SC_R_GPIO_5>;
+> +	};
+> +
+> +	lsio_gpio6: gpio@5d0e0000 {
+> +		reg = <0x5d0e0000 0x10000>;
+> +		interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		power-domains = <&pd IMX_SC_R_GPIO_6>;
+> +	};
+> +
+> +	lsio_gpio7: gpio@5d0f0000 {
+> +		reg = <0x5d0f0000 0x10000>;
+> +		interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		power-domains = <&pd IMX_SC_R_GPIO_7>;
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi
+> new file mode 100644
+> index 0000000..2486c72
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi
+> @@ -0,0 +1,29 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright 2018 NXP
+> + *	Dong Aisheng <aisheng.dong@nxp.com>
+> + */
+> +
+> +&adma_lpcg {
+> +	compatible = "fsl,imx8qxp-lpcg-adma";
+> +};
+> +
+> +&adma_lpuart0 {
+> +	compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
+> +};
+> +
+> +&adma_i2c0 {
+> +	compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+> +};
+> +
+> +&adma_i2c1 {
+> +	compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+> +};
+> +
+> +&adma_i2c2 {
+> +	compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+> +};
+> +
+> +&adma_i2c3 {
+> +	compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+> +};
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi
+> new file mode 100644
+> index 0000000..27a3b46
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi
+> @@ -0,0 +1,25 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright 2018 NXP
+> + *	Dong Aisheng <aisheng.dong@nxp.com>
+> + */
+> +
+> +&conn_lpcg {
+> +	compatible = "fsl,imx8qxp-lpcg-conn";
+> +};
+> +
+> +&usdhc1 {
+> +	compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
+> +};
+> +
+> +&usdhc2 {
+> +	compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
+> +};
+> +
+> +&fec1 {
+> +	compatible = "fsl,imx8qxp-fec", "fsl,imx6sx-fec";
+> +};
+> +
+> +&fec2 {
+> +	compatible = "fsl,imx8qxp-fec", "fsl,imx6sx-fec";
+> +};
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi
+> new file mode 100644
+> index 0000000..842849b
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi
+> @@ -0,0 +1,57 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright 2018 NXP
+> + *	Dong Aisheng <aisheng.dong@nxp.com>
+> + */
+> +
+> +&lsio_lpcg {
+> +	compatible = "fsl,imx8qxp-lpcg-lsio";
+> +};
+> +
+> +&lsio_mu0 {
+> +	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+> +};
+> +
+> +&lsio_mu1 {
+> +	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+> +};
+> +
+> +&lsio_mu3 {
+> +	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+> +};
+> +
+> +&lsio_mu4 {
+> +	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+> +};
+> +
+> +&lsio_gpio0 {
+> +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> +};
+> +
+> +&lsio_gpio1 {
+> +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> +};
+> +
+> +&lsio_gpio2 {
+> +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> +};
+> +
+> +&lsio_gpio3 {
+> +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> +};
+> +
+> +&lsio_gpio4 {
+> +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> +};
+> +
+> +&lsio_gpio5 {
+> +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> +};
+> +
+> +&lsio_gpio6 {
+> +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> +};
+> +
+> +&lsio_gpio7 {
+> +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> +};
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> index 4c3dd95..c27043c 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -139,308 +139,11 @@
+>  		clock-frequency = <24000000>;
+>  		clock-output-names = "xtal_24MHz";
+>  	};
+> -
+> -	adma_subsys: bus@59000000 {
+> -		compatible = "simple-bus";
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -		ranges = <0x59000000 0x0 0x59000000 0x2000000>;
+> -
+> -		adma_lpcg: clock-controller@59000000 {
+> -			compatible = "fsl,imx8qxp-lpcg-adma";
+> -			reg = <0x59000000 0x2000000>;
+> -			#clock-cells = <1>;
+> -		};
+> -
+> -		adma_lpuart0: serial@5a060000 {
+> -			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
+> -			reg = <0x5a060000 0x1000>;
+> -			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
+> -			interrupt-parent = <&gic>;
+> -			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART0_BAUD_CLK>;
+> -			clock-names = "ipg";
+> -			power-domains = <&pd IMX_SC_R_UART_0>;
+> -			status = "disabled";
+> -		};
+> -
+> -		adma_i2c0: i2c@5a800000 {
+> -			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+> -			reg = <0x5a800000 0x4000>;
+> -			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
+> -			interrupt-parent = <&gic>;
+> -			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C0_CLK>;
+> -			clock-names = "per";
+> -			assigned-clocks = <&clk IMX_ADMA_I2C0_CLK>;
+> -			assigned-clock-rates = <24000000>;
+> -			power-domains = <&pd IMX_SC_R_I2C_0>;
+> -			status = "disabled";
+> -		};
+> -
+> -		adma_i2c1: i2c@5a810000 {
+> -			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+> -			reg = <0x5a810000 0x4000>;
+> -			interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
+> -			interrupt-parent = <&gic>;
+> -			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C1_CLK>;
+> -			clock-names = "per";
+> -			assigned-clocks = <&clk IMX_ADMA_I2C1_CLK>;
+> -			assigned-clock-rates = <24000000>;
+> -			power-domains = <&pd IMX_SC_R_I2C_1>;
+> -			status = "disabled";
+> -		};
+> -
+> -		adma_i2c2: i2c@5a820000 {
+> -			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+> -			reg = <0x5a820000 0x4000>;
+> -			interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
+> -			interrupt-parent = <&gic>;
+> -			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C2_CLK>;
+> -			clock-names = "per";
+> -			assigned-clocks = <&clk IMX_ADMA_I2C2_CLK>;
+> -			assigned-clock-rates = <24000000>;
+> -			power-domains = <&pd IMX_SC_R_I2C_2>;
+> -			status = "disabled";
+> -		};
+> -
+> -		adma_i2c3: i2c@5a830000 {
+> -			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+> -			reg = <0x5a830000 0x4000>;
+> -			interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
+> -			interrupt-parent = <&gic>;
+> -			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C3_CLK>;
+> -			clock-names = "per";
+> -			assigned-clocks = <&clk IMX_ADMA_I2C3_CLK>;
+> -			assigned-clock-rates = <24000000>;
+> -			power-domains = <&pd IMX_SC_R_I2C_3>;
+> -			status = "disabled";
+> -		};
+> -	};
+> -
+> -	conn_subsys: bus@5b000000 {
+> -		compatible = "simple-bus";
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -		ranges = <0x5b000000 0x0 0x5b000000 0x1000000>;
+> -
+> -		conn_lpcg: clock-controller@5b200000 {
+> -			compatible = "fsl,imx8qxp-lpcg-conn";
+> -			reg = <0x5b200000 0xb0000>;
+> -			#clock-cells = <1>;
+> -		};
+> -
+> -		usdhc1: mmc@5b010000 {
+> -			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
+> -			interrupt-parent = <&gic>;
+> -			interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
+> -			reg = <0x5b010000 0x10000>;
+> -			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC0_IPG_CLK>,
+> -				 <&conn_lpcg IMX_CONN_LPCG_SDHC0_PER_CLK>,
+> -				 <&conn_lpcg IMX_CONN_LPCG_SDHC0_HCLK>;
+> -			clock-names = "ipg", "per", "ahb";
+> -			assigned-clocks = <&clk IMX_CONN_SDHC0_CLK>;
+> -			assigned-clock-rates = <200000000>;
+> -			power-domains = <&pd IMX_SC_R_SDHC_0>;
+> -			status = "disabled";
+> -		};
+> -
+> -		usdhc2: mmc@5b020000 {
+> -			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
+> -			interrupt-parent = <&gic>;
+> -			interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
+> -			reg = <0x5b020000 0x10000>;
+> -			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC1_IPG_CLK>,
+> -				 <&conn_lpcg IMX_CONN_LPCG_SDHC1_PER_CLK>,
+> -				 <&conn_lpcg IMX_CONN_LPCG_SDHC1_HCLK>;
+> -			clock-names = "ipg", "per", "ahb";
+> -			assigned-clocks = <&clk IMX_CONN_SDHC1_CLK>;
+> -			assigned-clock-rates = <200000000>;
+> -			power-domains = <&pd IMX_SC_R_SDHC_1>;
+> -			fsl,tuning-start-tap = <20>;
+> -			fsl,tuning-step= <2>;
+> -			status = "disabled";
+> -		};
+> -
+> -		usdhc3: mmc@5b030000 {
+> -			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
+> -			interrupt-parent = <&gic>;
+> -			interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_HIGH>;
+> -			reg = <0x5b030000 0x10000>;
+> -			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC2_IPG_CLK>,
+> -				 <&conn_lpcg IMX_CONN_LPCG_SDHC2_PER_CLK>,
+> -				 <&conn_lpcg IMX_CONN_LPCG_SDHC2_HCLK>;
+> -			clock-names = "ipg", "per", "ahb";
+> -			assigned-clocks = <&clk IMX_CONN_SDHC2_CLK>;
+> -			assigned-clock-rates = <200000000>;
+> -			power-domains = <&pd IMX_SC_R_SDHC_2>;
+> -			status = "disabled";
+> -		};
+> -
+> -		fec1: ethernet@5b040000 {
+> -			compatible = "fsl,imx8qxp-fec", "fsl,imx6sx-fec";
+> -			reg = <0x5b040000 0x10000>;
+> -			interrupts = <GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>,
+> -				     <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+> -				     <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>,
+> -				     <GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH>;
+> -			clocks = <&conn_lpcg IMX_CONN_LPCG_ENET0_IPG_CLK>,
+> -				 <&conn_lpcg IMX_CONN_LPCG_ENET0_AHB_CLK>,
+> -				 <&conn_lpcg IMX_CONN_LPCG_ENET0_TX_CLK>,
+> -				 <&conn_lpcg IMX_CONN_LPCG_ENET0_ROOT_CLK>;
+> -			clock-names = "ipg", "ahb", "enet_clk_ref", "ptp";
+> -			fsl,num-tx-queues=<3>;
+> -			fsl,num-rx-queues=<3>;
+> -			power-domains = <&pd IMX_SC_R_ENET_0>;
+> -			status = "disabled";
+> -		};
+> -
+> -		fec2: ethernet@5b050000 {
+> -			compatible = "fsl,imx8qxp-fec", "fsl,imx6sx-fec";
+> -			reg = <0x5b050000 0x10000>;
+> -			interrupts = <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH>,
+> -					<GIC_SPI 260 IRQ_TYPE_LEVEL_HIGH>,
+> -					<GIC_SPI 261 IRQ_TYPE_LEVEL_HIGH>,
+> -					<GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
+> -			clocks = <&conn_lpcg IMX_CONN_LPCG_ENET1_IPG_CLK>,
+> -				 <&conn_lpcg IMX_CONN_LPCG_ENET1_AHB_CLK>,
+> -				 <&conn_lpcg IMX_CONN_LPCG_ENET1_TX_CLK>,
+> -				 <&conn_lpcg IMX_CONN_LPCG_ENET1_ROOT_CLK>;
+> -			clock-names = "ipg", "ahb", "enet_clk_ref", "ptp";
+> -			fsl,num-tx-queues=<3>;
+> -			fsl,num-rx-queues=<3>;
+> -			power-domains = <&pd IMX_SC_R_ENET_1>;
+> -			status = "disabled";
+> -		};
+> -	};
+> -
+> -	lsio_subsys: bus@5d000000 {
+> -		compatible = "simple-bus";
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -		ranges = <0x5d000000 0x0 0x5d000000 0x1000000>;
+> -
+> -		lsio_lpcg: clock-controller@5d400000 {
+> -			compatible = "fsl,imx8qxp-lpcg-lsio";
+> -			reg = <0x5d400000 0x400000>;
+> -			#clock-cells = <1>;
+> -		};
+> -
+> -		lsio_mu0: mailbox@5d1b0000 {
+> -			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+> -			reg = <0x5d1b0000 0x10000>;
+> -			interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+> -			#mbox-cells = <0>;
+> -			status = "disabled";
+> -		};
+> -
+> -		lsio_mu1: mailbox@5d1c0000 {
+> -			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+> -			reg = <0x5d1c0000 0x10000>;
+> -			interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
+> -			#mbox-cells = <2>;
+> -		};
+> -
+> -		lsio_mu3: mailbox@5d1e0000 {
+> -			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+> -			reg = <0x5d1e0000 0x10000>;
+> -			interrupts = <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
+> -			#mbox-cells = <0>;
+> -			status = "disabled";
+> -		};
+> -
+> -		lsio_mu4: mailbox@5d1f0000 {
+> -			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+> -			reg = <0x5d1f0000 0x10000>;
+> -			interrupts = <GIC_SPI 180 IRQ_TYPE_LEVEL_HIGH>;
+> -			#mbox-cells = <0>;
+> -			status = "disabled";
+> -		};
+> -
+> -		lsio_gpio0: gpio@5d080000 {
+> -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> -			reg = <0x5d080000 0x10000>;
+> -			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
+> -			gpio-controller;
+> -			#gpio-cells = <2>;
+> -			interrupt-controller;
+> -			#interrupt-cells = <2>;
+> -			power-domains = <&pd IMX_SC_R_GPIO_0>;
+> -		};
+> -
+> -		lsio_gpio1: gpio@5d090000 {
+> -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> -			reg = <0x5d090000 0x10000>;
+> -			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
+> -			gpio-controller;
+> -			#gpio-cells = <2>;
+> -			interrupt-controller;
+> -			#interrupt-cells = <2>;
+> -			power-domains = <&pd IMX_SC_R_GPIO_1>;
+> -		};
+> -
+> -		lsio_gpio2: gpio@5d0a0000 {
+> -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> -			reg = <0x5d0a0000 0x10000>;
+> -			interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
+> -			gpio-controller;
+> -			#gpio-cells = <2>;
+> -			interrupt-controller;
+> -			#interrupt-cells = <2>;
+> -			power-domains = <&pd IMX_SC_R_GPIO_2>;
+> -		};
+> -
+> -		lsio_gpio3: gpio@5d0b0000 {
+> -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> -			reg = <0x5d0b0000 0x10000>;
+> -			interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
+> -			gpio-controller;
+> -			#gpio-cells = <2>;
+> -			interrupt-controller;
+> -			#interrupt-cells = <2>;
+> -			power-domains = <&pd IMX_SC_R_GPIO_3>;
+> -		};
+> -
+> -		lsio_gpio4: gpio@5d0c0000 {
+> -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> -			reg = <0x5d0c0000 0x10000>;
+> -			interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
+> -			gpio-controller;
+> -			#gpio-cells = <2>;
+> -			interrupt-controller;
+> -			#interrupt-cells = <2>;
+> -			power-domains = <&pd IMX_SC_R_GPIO_4>;
+> -		};
+> -
+> -		lsio_gpio5: gpio@5d0d0000 {
+> -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> -			reg = <0x5d0d0000 0x10000>;
+> -			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+> -			gpio-controller;
+> -			#gpio-cells = <2>;
+> -			interrupt-controller;
+> -			#interrupt-cells = <2>;
+> -			power-domains = <&pd IMX_SC_R_GPIO_5>;
+> -		};
+> -
+> -		lsio_gpio6: gpio@5d0e0000 {
+> -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> -			reg = <0x5d0e0000 0x10000>;
+> -			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
+> -			gpio-controller;
+> -			#gpio-cells = <2>;
+> -			interrupt-controller;
+> -			#interrupt-cells = <2>;
+> -			power-domains = <&pd IMX_SC_R_GPIO_6>;
+> -		};
+> -
+> -		lsio_gpio7: gpio@5d0f0000 {
+> -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
+> -			reg = <0x5d0f0000 0x10000>;
+> -			interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
+> -			gpio-controller;
+> -			#gpio-cells = <2>;
+> -			interrupt-controller;
+> -			#interrupt-cells = <2>;
+> -			power-domains = <&pd IMX_SC_R_GPIO_7>;
+> -		};
+> -	};
+> +	#include "imx8-ss-adma.dtsi"
+> +	#include "imx8-ss-conn.dtsi"
+> +	#include "imx8-ss-lsio.dtsi"
+>  };
+> +
+> +#include "imx8qxp-ss-adma.dtsi"
+> +#include "imx8qxp-ss-conn.dtsi"
+> +#include "imx8qxp-ss-lsio.dtsi"
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
