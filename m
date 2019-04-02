@@ -1,158 +1,102 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 1/4] dt-bindings: mtd: Add YAML schemas for the generic
- NAND options
-Date: Tue, 2 Apr 2019 08:15:05 +0200
-Message-ID: <20190402061505.34r53q75spqtuqcv@flea>
-References: <75ad3b89e4a6f8ad5bc414c3dccbb1f99361495a.1554153146.git-series.maxime.ripard@bootlin.com>
- <CAL_JsqLSfitzkb8P5xQ+cCmcSeL6fTjQ3rVPJ2qiNdSXyps-sw@mail.gmail.com>
+From: =?UTF-8?B?S2FuZW1hdHN1LCBTaGluamkv5YW85p2+IOS8uOasoQ==?=
+        <kanematsu.shinji@socionext.com>
+Subject: Re: [PATCH 0/2] Add Updown Counter support for Milbeaut M10V SoC
+Date: Tue, 2 Apr 2019 15:22:22 +0900
+Message-ID: <bddfd8ca-c82a-68f8-ba05-45ce6df9bd4f@socionext.com>
+References: <1553581954-13487-1-git-send-email-kanematsu.shinji@socionext.com>
+ <20190330183603.55886d4f@archlinux> <20190331020932.GA4108@icarus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLSfitzkb8P5xQ+cCmcSeL6fTjQ3rVPJ2qiNdSXyps-sw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Boris Brezillon <boris.brezillon@collabora.com>, MTD Maling List <linux-mtd@lists.infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190331020932.GA4108@icarus>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: William Breathitt Gray <vilhelm.gray@gmail.com>, Jonathan Cameron <jic23@kernel.org>
+Cc: kanematsu.shinji@socionext.com, robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, orito.takao@socionext.com, sugaya.taichi@socionext.com, kasai.kazuhiro@socionext.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi William,
 
-On Mon, Apr 01, 2019 at 08:58:49PM -0500, Rob Herring wrote:
-> On Mon, Apr 1, 2019 at 4:14 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > The NAND chips in MTD have a bunch of generic options that are needed in a
-> > device tree. Add a YAML schemas for those.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > ---
-> >  Documentation/devicetree/bindings/mtd/nand-controller.yaml | 131 +++++++-
-> >  1 file changed, 131 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> > new file mode 100644
-> > index 000000000000..05b1afb34972
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> > @@ -0,0 +1,131 @@
-> > +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: NAND Chip and NAND Controller Generic Binding
-> > +
-> > +maintainers:
-> > +  - Boris Brezillon <bbrezillon@kernel.org>
-> > +  - Miquel Raynal <miquel.raynal@bootlin.com>
-> > +  - Richard Weinberger <richard@nod.at>
-> > +
-> > +description: |
-> > +  The NAND controller should be represented with its own DT node, and
-> > +  all NAND chips attached to this controller should be defined as
-> > +  children nodes of the NAND controller. This representation should be
-> > +  enforced even for simple controllers supporting only one chip.
-> > +
-> > +  The ECC strength and ECC step size properties define the correction
-> > +  capability of a controller. Together, they say a controller can
-> > +  correct {strength} bit errors per {size} bytes.
-> > +
-> > +  The interpretation of these parameters is implementation-defined, so
-> > +  not all implementations must support all possible
-> > +  combinations. However, implementations are encouraged to further
-> > +  specify the value(s) they support.
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    pattern: "^nand-controller(@.*)?"
-> > +
-> > +  "#address-cells":
-> > +    const: 1
-> > +
-> > +  "#size-cells":
-> > +    const: 0
-> > +
-> > +  ranges: true
->
-> 'ranges' should not be here as nand chip addresses are not translatable.
+On 2019/03/31 11:09, William Breathitt Gray wrote:
+> On Sat, Mar 30, 2019 at 06:36:03PM +0000, Jonathan Cameron wrote:
+>> On Tue, 26 Mar 2019 15:32:34 +0900
+>> Shinji Kanematsu <kanematsu.shinji@socionext.com> wrote:
+>>
+>>> This is a series of patch which adds Updown Counter support on
+>>> Milbeaut M10V SoC.
+>>>
+>>> The Updown Counter counts input pulse signal from external quadrature encoder.
+>>> It also has input pulse signal counter function.
+>> Hi Shinji,
+>>
+>> Are you aware of the counter subsystem that has been proposed (and
+>> as far as I am concerned is ready to be merged)?
+>>
+>> https://patchwork.kernel.org/project/linux-iio/list/?series=147
+>> (I think that's the latest version posted)..
+>> William, perhaps you could give an update?
+>>
+>> (bad luck, you are getting popular ;)
+>>
+>> I'll take a quick review as it stands, as some issues may carry over.
+>> I appreciate that it's always unfortunate to try to upstream stuff at the
+>> same time as a new framework is being developed / upstreamed, but I don't
+>> intend to take any additional counter drivers into IIO.  We just
+>> end up having to maintain old interfaces in more and more drivers.
+>>
+>> Thanks,
+>>
+>> Jonathan
+> 
+> Shinji,
+> 
+> If you reimplement this driver to use the new Generic Counter API, I can
+> pick it up and include it with my next patchset submission. Please base
+> your patches ontop of the "generic_counter_v10" branch from my personal
+> repository:
+> 
+> https://gitlab.com/vilhelmgray/iio/commits/generic_counter_v10
+> 
+> Documentation can be found at:
+> 
+> 	Documentation/driver-api/generic-counter.rst
+> 	Documentation/ABI/testing/sysfs-bus-counter
+> 
+> Look at the existing drivers inside the drivers/counter directory to
+> serve as references:
+> 
+> 	drivers/counter/ftm-quaddec.c
+> 	drivers/counter/stm32-timer-cnt.c
+> 
+> If you have any troubles or difficulties with the API, send me a message
+> and I will be happy to help. :-)
+> 
 
-Apparently, some are. It was part of the original binding, hence why
-it's there.
+Thank you for your information.
+I read and understand the new Generic Counter API.
 
-https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/mtd/nand.txt#L16
+Thank you,
+Kanematsu
 
-> > +
-> > +patternProperties:
-> > +  "^nand@[a-z0-9]$":
-> > +    properties:
-> > +      reg:
-> > +        description:
-> > +          Contains the native Ready/Busy IDs.
-> > +
-> > +      nand-ecc-mode:
-> > +        allOf:
-> > +          - $ref: /schemas/types.yaml#/definitions/string
-> > +          - enum: [ none, soft, hw, hw_syndrome, hw_oob_first, on-die ]
-> > +        description:
-> > +          Operation mode of the NAND ecc mode. soft_bch is deprecated
-> > +          and should be replaced by soft and nand-ecc-algo
-> > +
-> > +      nand-ecc-algo:
-> > +        allOf:
-> > +          - $ref: /schemas/types.yaml#/definitions/string
-> > +          - enum: [ hamming, bch, rs ]
-> > +        description:
-> > +          Algorithm of NAND ECC.
-> > +
-> > +      nand-bus-width:
-> > +        allOf:
-> > +          - $ref: /schemas/types.yaml#/definitions/uint32
-> > +          - enum: [ 8, 16 ]
-> > +          - default: 8
-> > +        description:
-> > +          Bus width to the NAND chip
-> > +
-> > +      nand-on-flash-bbt:
-> > +        $ref: /schemas/types.yaml#/definitions/flag
-> > +        description:
-> > +          Enable the on-flash Bad Block Table
-> > +
-> > +      nand-ecc-strength:
-> > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > +        description:
-> > +          Number of bits to correct per ECC step.
->
-> Is there a range we can define here? Certainly there's a minimum
-> values of at least 1.
-
-It doesn't look like there is from a quick grep. The DT seems to be in
-the 4 - 32 range, but I'm not sure if it would make sense to have
-something higher.
-
-I'll let Miquel and Boris comment.
-
-> > +
-> > +      nand-ecc-step-size:
-> > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > +        description:
-> > +          Number of data bytes covered by a single ECC step.
->
-> Same here.
-
-Thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> Thank you,
+> 
+> William Breathitt Gray
+> 
+>>
+>>>
+>>> Shinji Kanematsu (2):
+>>>    dt-bindings: iio: counter: Add Milbeaut Updown Counter
+>>>    iio: counter: Add support for Milbeaut Updown Counter
+>>>
+>>>   .../bindings/iio/counter/milbeaut-updown_cnt.txt   |  22 ++
+>>>   drivers/iio/counter/Kconfig                        |  12 +
+>>>   drivers/iio/counter/Makefile                       |   1 +
+>>>   drivers/iio/counter/milbeaut-updown.h              |  38 ++
+>>>   drivers/iio/counter/milbeaut-updown_cnt.c          | 385 +++++++++++++++++++++
+>>>   5 files changed, 458 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
+>>>   create mode 100644 drivers/iio/counter/milbeaut-updown.h
+>>>   create mode 100644 drivers/iio/counter/milbeaut-updown_cnt.c
+>>>
+>>
