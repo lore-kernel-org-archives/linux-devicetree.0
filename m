@@ -1,46 +1,30 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH v2 3/3] backlight: lm3630a: add device tree supprt
-Date: Mon, 1 Apr 2019 20:02:17 -0400
-Message-ID: <20190402000217.GA8315@basecamp>
-References: <20190401103034.21062-1-masneyb@onstation.org>
- <20190401103034.21062-4-masneyb@onstation.org>
- <20190401214847.GE14681@amd>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2] bmp085.yaml: transform DT documentation of iio sensor
+ into YAML
+Date: Mon, 1 Apr 2019 20:46:54 -0500
+Message-ID: <CAL_JsqKY2Sh=L7OZVHjovAq9YK0qubGKpRMezA+7H0b1Gq2oXA@mail.gmail.com>
+References: <20190401173142.cunj5iwz2ox454qx@arbad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190401214847.GE14681@amd>
+In-Reply-To: <20190401173142.cunj5iwz2ox454qx@arbad>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org, jacek.anaszewski@gmail.com, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, dmurphy@ti.com, jonathan@marek.ca
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: Jonathan Cameron <jic23@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Brian Masney <masneyb@onstation.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 11:48:47PM +0200, Pavel Machek wrote:
-> So ... we can have multiple LEDs, each can have up to two
-> sources.. and the settings are really per source, not per LED.
-> 
-> But you do not test for overlaps. What prevents me from having
-> 
->    foo {
->        led_sources = <0>;
->        ti,linear-mapping-mode;
->    }
->    bar {
->        led_sources = <0>;
->    }
-> 
-> (I.e. conflicting settings for a source?)
+On Mon, Apr 1, 2019 at 12:32 PM Andreas Klinger <ak@it-klinger.de> wrote:
+>
+> use bmp085.txt and change it into yaml format
+>
+> fix links to datasheets in replaced documentation
+>
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> ---
+>  .../devicetree/bindings/iio/pressure/bmp085.txt    | 27 ---------
+>  .../devicetree/bindings/iio/pressure/bmp085.yaml   | 70 ++++++++++++++++++++++
+>  2 files changed, 70 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
 
-In this case, it will go with the settings for 'bar'. I didn't check for
-the conflicting settings since I was going for consistency with the
-other two backlight drivers that already have the led-sources property:
-arcxcnn_bl.c and sky81452-backlight.c. I can add the additional check
-to fail if a source has already been encountered.
-
-> Plus I do not see parsing of led labels etc...
-
-OK... I can fix that up plus your other two comments.
-
-Thanks,
-
-Brian
+Reviewed-by: Rob Herring <robh@kernel.org>
