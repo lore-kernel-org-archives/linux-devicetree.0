@@ -1,82 +1,64 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESEND PATCH v6 05/11] mfd: core: document mfd_add_devices()
-Date: Tue, 2 Apr 2019 08:41:03 +0100
-Message-ID: <20190402074103.GG4187@dell>
-References: <20190318174228.18194-1-brgl@bgdev.pl>
- <20190318174228.18194-6-brgl@bgdev.pl>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: Re: [PATCH v2 1/8] mmc: sdhci: Get rid of finish_tasklet
+Date: Tue, 2 Apr 2019 13:29:10 +0530
+Message-ID: <987a3616-8530-7247-ce00-6513a6c2d4bc@ti.com>
+References: <20190215192033.24203-1-faiz_abbas@ti.com>
+ <20190215192033.24203-2-faiz_abbas@ti.com>
+ <CAPDyKFqN4s1CZa9z5C3YzCUO01V-=Xhtao5352Pmytd-Tusv9A@mail.gmail.com>
+ <65f24027-005a-4372-8819-45e6a360bfce@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190318174228.18194-6-brgl@bgdev.pl>
+In-Reply-To: <65f24027-005a-4372-8819-45e6a360bfce@intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon <kishon@ti.com>, Chunyan Zhang <zhang.chunyan@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 18 Mar 2019, Bartosz Golaszewski wrote:
+Hi Adrian,
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On 26/03/19 1:03 PM, Adrian Hunter wrote:
+> On 18/03/19 11:33 AM, Ulf Hansson wrote:
+>> + Arnd, Grygorii
+>>
+>> On Fri, 15 Feb 2019 at 20:17, Faiz Abbas <faiz_abbas@ti.com> wrote:
+>>>
+>>> sdhci.c has two bottom halves implemented. A threaded_irq for handling
+>>> card insert/remove operations and a tasklet for finishing mmc requests.
+>>> With the addition of external dma support, dmaengine APIs need to
+>>> terminate in non-atomic context before unmapping the dma buffers.
+>>>
+>>> To facilitate this, remove the finish_tasklet and move the call of
+>>> sdhci_request_done() to the threaded_irq() callback. Also move the
+>>> interrupt result variable to sdhci_host so it can be populated from
+>>> anywhere inside the sdhci_irq handler.
+>>>
+>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>>
+>> Adrian, I think it makes sense to apply this patch, even if there is
+>> very minor negative impact throughput wise.
+>>
+>> To me, it doesn't seems like MMC/SD/SDIO has good justification for
+>> using tasklets, besides from the legacy point of view, of course.
+>> Instead, I think we should try to move all mmc hosts into using
+>> threaded IRQs.
+>>
+>> So, what do you think? Can you overlook the throughput drop and
+>> instead we can try to recover this on top with other optimizations?
 > 
-> Add a kernel doc for mfd_add_devices().
+> I tend to favour good results as expressed here:
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  drivers/mfd/mfd-core.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+> 	https://lkml.org/lkml/2007/6/22/360
 > 
-> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> index 94e3f32ce935..0898a8db1747 100644
-> --- a/drivers/mfd/mfd-core.c
-> +++ b/drivers/mfd/mfd-core.c
-> @@ -269,6 +269,20 @@ static int mfd_add_device(struct device *parent, int id,
->  	return ret;
->  }
->  
-> +/**
-> + * mfd_add_devices - register a set of child devices
+> So I want to do optimization first.
+> 
+> But performance is not the only problem with the patch.  Give me a few
+> days and I will see what I can come up with.
+> 
 
-"register child devices"
+Gentle ping on this.
 
-> + *
-> + * @parent: Parent device for all sub-nodes.
-> + * @id: Platform device id. If >= 0, each sub-device will have its cell_id
-> + *      added to this number and use it as the platform device id.
-> + * @cells: Array of mfd cells describing sub-devices.
-> + * @n_devs: Number of sub-devices to register.
-> + * @mem_base: Parent register range resource for sub-devices.
-> + * @irq_base: Base of the range of virtual interrupt numbers allocated for
-> + *            this MFD device. Unused if @domain is specified.
-> + * @domain: Interrupt domain used to create mappings for HW interrupt numbers
-> + *          specificed in sub-devices' IRQ resources.
-
-Spelling.
-
-> + */
->  int mfd_add_devices(struct device *parent, int id,
->  		    const struct mfd_cell *cells, int n_devs,
->  		    struct resource *mem_base,
-
-How about this:
-
-/**
- * mfd_add_devices - register child devices
- *
- * @parent:	Pointer to parent device.
- * @id:		Can be PLATFORM_DEVID_AUTO to let the Platform API take care
- * 		of device numbering, or will be added to a device's cell_id.
- * @cells:	Array of (struct mfd_cell)s describing child devices.
- * @n_devs:	Number of child devices to register.
- * @mem_base:	Parent register range resource for child devices.
- * @irq_base:	Base of the range of virtual interrupt numbers allocated for
- * 		this MFD device. Unused if @domain is specified.
- * @domain:	Interrupt domain to create mappings for hardware interrupts.
- */
-
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks,
+Faiz
