@@ -1,148 +1,253 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [RFC PATCH 2/5] dt: bindings: Add multicolor class dt bindings
- documention
-Date: Tue, 2 Apr 2019 22:40:12 +0200
-Message-ID: <660390a5-0c3a-cfcf-119d-817f86d1659d@gmail.com>
-References: <20190401173400.14238-1-dmurphy@ti.com>
- <20190401173400.14238-3-dmurphy@ti.com> <20190401212921.GB14681@amd>
- <f8655180-0c3a-7292-3a49-57d997473992@ti.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH V4 3/3] hwmon: pwm-fan: Add RPM support via external
+ interrupt
+Date: Tue, 2 Apr 2019 13:55:38 -0700
+Message-ID: <20190402205538.GA15543@roeck-us.net>
+References: <1554214910-29925-1-git-send-email-stefan.wahren@i2se.com>
+ <1554214910-29925-4-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f8655180-0c3a-7292-3a49-57d997473992@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1554214910-29925-4-git-send-email-stefan.wahren@i2se.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: robh+dt@kernel.org, marek.behun@nic.cz, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/2/19 1:40 PM, Dan Murphy wrote:
-> Pavel
+On Tue, Apr 02, 2019 at 04:21:50PM +0200, Stefan Wahren wrote:
+> This adds RPM support to the pwm-fan driver in order to use with
+> fancontrol/pwmconfig. This feature is intended for fans with a tachometer
+> output signal, which generate a defined number of pulses per revolution.
 > 
-> On 4/1/19 4:29 PM, Pavel Machek wrote:
->> Hi!
->>
->>
->>>   .../bindings/leds/leds-class-multicolor.txt   | 140 ++++++++++++++++++
->>>   1 file changed, 140 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->>> new file mode 100644
->>> index 000000000000..4b1a26104c79
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->>> @@ -0,0 +1,140 @@
->>> +* Multicolor LED properties
->>> +
->>> +Multicolor LEDs can consist of a RGB, RGBW or a RGBA LED clusters.  These devices
->>> +can be grouped together and also provide a modeling mechanism so that the
->>> +cluster LEDs can vary in hue and intensity to produce a wide range of colors.
->>> +
->>> +The nodes and properties defined in this document are unique to the multicolor
->>> +LED class.  Common LED nodes and properties are inherited from the common.txt
->>> +within this documentation directory.
->>> +
->>> +Required LED Child properties:
->>> +	- color : This is the color ID of the LED.  Definitions can be found
->>> +		  in include/linux/leds/common.txt
->>> +
->>> +Optional LED Child properties:
->>> +	- available-brightness-models : This is the phandle to the brightness-model
->>> +					node(s) that this LED cluster can support.
->>> +
->>> +Required Brightness model properties
->>> +	- led-brightness-model : This flag alerts the device driver and class
->>> +				 code that this node is a brightness model node
->>> +				 and to process the properties differently.
->>> +
->>> +Required Brightness model child properties
->>> +	- model_name : This is the name of the model presented to the user.  This
->>> +		       should be a color that the LED cluster can produce for
->>> +		       the device it is attached to.
->>> +	- layout : This is the LED layout for the levels.  This layout will
->>> +		   determine the color order of the levels.  The layout and
->>> +		   level-x properties array should be the same size.
->>> +	- level-x : These are the values for the LEDs to produce the color that
->>> +		    is defined.  These values are placed in the array according
->>> +		    to the layout property.
->>
->>> +led-controller@30 {
->>> +	#address-cells = <1>;
->>> +	#size-cells = <0>;
->>> +	compatible = "ti,lp5024";
->>> +	reg = <0x29>;
->>> +
->>> +	lp5024_model_yellow: brightness-models {
->>> +		led-brightness-model;
->>> +		model@0 {
->>> +			model_name = "yellow";
->>> +			layout = <LED_COLOR_ID_RED
->>> +				  LED_COLOR_ID_GREEN
->>> +				  LED_COLOR_ID_BLUE>;
->>> +			level-1 = <255 227 40>;
->>> +			level-2 = <255 240 136>;
->>> +			level-3 = <255 247 196>;
->>> +		};
->>> +	};
->>
->> I don't think this works. RGB LED can show millions of colors. Do you
->> propose to have millions of entries in dts?
->> 									Pavel
->>
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> ---
+>  drivers/hwmon/pwm-fan.c | 111 ++++++++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 107 insertions(+), 4 deletions(-)
 > 
-> I have had off line conversations with Jacek about this brightness model node.
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> index 167221c..3245a49 100644
+> --- a/drivers/hwmon/pwm-fan.c
+> +++ b/drivers/hwmon/pwm-fan.c
+> @@ -18,6 +18,7 @@
+>  
+>  #include <linux/hwmon.h>
+>  #include <linux/hwmon-sysfs.h>
+> +#include <linux/interrupt.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  #include <linux/of.h>
+> @@ -26,6 +27,7 @@
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/thermal.h>
+> +#include <linux/timer.h>
+>  
+>  #define MAX_PWM 255
+>  
+> @@ -33,6 +35,14 @@ struct pwm_fan_ctx {
+>  	struct mutex lock;
+>  	struct pwm_device *pwm;
+>  	struct regulator *reg_en;
+> +
+> +	int irq;
+> +	atomic_t pulses;
+> +	unsigned int rpm;
+> +	u8 pulses_per_revolution;
+> +	ktime_t sample_start;
+> +	struct timer_list rpm_timer;
+> +
+>  	unsigned int pwm_value;
+>  	unsigned int pwm_fan_state;
+>  	unsigned int pwm_fan_max_state;
+> @@ -40,6 +50,32 @@ struct pwm_fan_ctx {
+>  	struct thermal_cooling_device *cdev;
+>  };
+>  
+> +/* This handler assumes self resetting edge triggered interrupt. */
+> +static irqreturn_t pulse_handler(int irq, void *dev_id)
+> +{
+> +	struct pwm_fan_ctx *ctx = dev_id;
+> +
+> +	atomic_inc(&ctx->pulses);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static void sample_timer(struct timer_list *t)
+> +{
+> +	struct pwm_fan_ctx *ctx = from_timer(ctx, t, rpm_timer);
+> +	int pulses;
+> +	u64 tmp;
+> +
+> +	pulses = atomic_read(&ctx->pulses);
+> +	atomic_sub(pulses, &ctx->pulses);
+> +	tmp = (u64)pulses * ktime_ms_delta(ktime_get(), ctx->sample_start) * 60;
+> +	do_div(tmp, ctx->pulses_per_revolution * 1000);
+> +	ctx->rpm = tmp;
+> +
+> +	ctx->sample_start = ktime_get();
+> +	mod_timer(&ctx->rpm_timer, jiffies + HZ);
+> +}
+> +
+>  static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
+>  {
+>  	unsigned long period;
+> @@ -100,15 +136,49 @@ static ssize_t pwm_show(struct device *dev, struct device_attribute *attr,
+>  	return sprintf(buf, "%u\n", ctx->pwm_value);
+>  }
+>  
+> +static ssize_t rpm_show(struct device *dev,
+> +			struct device_attribute *attr, char *buf)
+> +{
+> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+> +
+> +	return sprintf(buf, "%u\n", ctx->rpm);
+> +}
+>  
+>  static SENSOR_DEVICE_ATTR_RW(pwm1, pwm, 0);
+> +static SENSOR_DEVICE_ATTR_RO(fan1_input, rpm, 0);
+>  
+>  static struct attribute *pwm_fan_attrs[] = {
+>  	&sensor_dev_attr_pwm1.dev_attr.attr,
+> +	&sensor_dev_attr_fan1_input.dev_attr.attr,
+>  	NULL,
+>  };
+>  
+> -ATTRIBUTE_GROUPS(pwm_fan);
+> +static umode_t pwm_fan_attrs_visible(struct kobject *kobj, struct attribute *a,
+> +				     int n)
+> +{
+> +	struct device *dev = container_of(kobj, struct device, kobj);
+> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+> +	struct device_attribute *devattr;
+> +
+> +	/* Hide fan_input in case no interrupt is available  */
+> +	devattr = container_of(a, struct device_attribute, attr);
+> +	if (devattr == &sensor_dev_attr_fan1_input.dev_attr) {
+> +		if (ctx->irq <= 0)
+> +			return 0;
+> +	}
+
+Side note: This can be easier written as 
+	if (n == 1 && ctx->irq <= 0)
+		return 0;
+
+Not that it matters much.
+
+> +
+> +	return a->mode;
+> +}
+> +
+> +static const struct attribute_group pwm_fan_group = {
+> +	.attrs = pwm_fan_attrs,
+> +	.is_visible = pwm_fan_attrs_visible,
+> +};
+> +
+> +static const struct attribute_group *pwm_fan_groups[] = {
+> +	&pwm_fan_group,
+> +	NULL,
+> +};
+>  
+>  /* thermal cooling device callbacks */
+>  static int pwm_fan_get_max_state(struct thermal_cooling_device *cdev,
+> @@ -261,17 +331,45 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>  		goto err_reg_disable;
+>  	}
+>  
+> +	timer_setup(&ctx->rpm_timer, sample_timer, 0);
+> +
+> +	if (of_property_read_u8(pdev->dev.of_node, "pulses-per-revolution",
+
+This does not work: The property is not defined as u8. You have to either
+use of_property_read_u32() or declare the property as u8.
+
+[ Sorry, I didn't know until recently that this is necessary ]
+
+> +				&ctx->pulses_per_revolution)) {
+> +		ctx->pulses_per_revolution = 2;
+> +	}
+> +
+> +	if (!ctx->pulses_per_revolution) {
+> +		dev_err(&pdev->dev, "pulses-per-revolution can't be zero.\n");
+> +		ret = -EINVAL;
+> +		goto err_pwm_disable;
+> +	}
+> +
+> +	ctx->irq = platform_get_irq(pdev, 0);
+> +	if (ctx->irq == -EPROBE_DEFER) {
+> +		ret = ctx->irq;
+> +		goto err_pwm_disable;
+
+It might be better to call platform_get_irq() and to do do this check
+first, before enabling the regulator (in practice before calling
+devm_regulator_get_optional). It doesn't make sense to enable the
+regulator only to disable it because the irq is not yet available.
+
+> +	} else if (ctx->irq > 0) {
+
+As written, this else is unnecessary, and static checkers will complain
+about it.
+
+> +		ret = devm_request_irq(&pdev->dev, ctx->irq, pulse_handler, 0,
+> +				       pdev->name, ctx);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "Can't get interrupt working.\n");
+> +			goto err_pwm_disable;
+> +		}
+> +		ctx->sample_start = ktime_get();
+> +		mod_timer(&ctx->rpm_timer, jiffies + HZ);
+> +	}
+> +
+>  	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
+>  						       ctx, pwm_fan_groups);
+>  	if (IS_ERR(hwmon)) {
+>  		dev_err(&pdev->dev, "Failed to register hwmon device\n");
+>  		ret = PTR_ERR(hwmon);
+> -		goto err_pwm_disable;
+> +		goto err_del_timer;
+>  	}
+>  
+>  	ret = pwm_fan_of_get_cooling_data(&pdev->dev, ctx);
+>  	if (ret)
+> -		return ret;
+> +		goto err_del_timer;
+
+Outch. This is buggy and should have been "goto err_pwm_disable;".
+It needs to be fixed with a separate patch, and first, so we can
+backport it. Can you do that ?
+
+>  
+>  	ctx->pwm_fan_state = ctx->pwm_fan_max_state;
+>  	if (IS_ENABLED(CONFIG_THERMAL)) {
+> @@ -282,7 +380,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>  			dev_err(&pdev->dev,
+>  				"Failed to register pwm-fan as cooling device");
+>  			ret = PTR_ERR(cdev);
+> -			goto err_pwm_disable;
+> +			goto err_del_timer;
+>  		}
+>  		ctx->cdev = cdev;
+>  		thermal_cdev_update(cdev);
+> @@ -290,6 +388,9 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>  
+>  	return 0;
+>  
+> +err_del_timer:
+> +	del_timer_sync(&ctx->rpm_timer);
+> +
+>  err_pwm_disable:
+>  	state.enabled = false;
+>  	pwm_apply_state(ctx->pwm, &state);
+> @@ -306,6 +407,8 @@ static int pwm_fan_remove(struct platform_device *pdev)
+>  	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
+>  
+>  	thermal_cooling_device_unregister(ctx->cdev);
+> +	del_timer_sync(&ctx->rpm_timer);
+> +
+>  	if (ctx->pwm_value)
+>  		pwm_disable(ctx->pwm);
+>  
+> -- 
+> 2.7.4
 > 
-> Your concern was actually one of my concerns as well.  Not only millions of entries but also having a huge
-> DT binary.
-> 
-> We wanted to RFC this to get feedback.  And this is why I have not added any support for this in the framework code.
-
-We all know that nobody sane is going to add millions of color entries.
-It is just a holistic solution to the problem, without the need to worry
-about different colors being produced by different LED elements, either
-due to their inherent properties, due to different parameters of LED
-controllers and board designs, or due to aging. Of course the last
-case will be possible to fix only by update of DTB blob.
-
-Regarding the possible size of DTB blob, I made some calculations and
-even compiled sample dts. Here is my reasoning from one of the replies
-to Dan during our private discussion:
-
--------------------------------------------------------------------------
-
-Brightness models will be reusable between modules. There could be
-arbitrary number of brightness models, limited only by maximum dtb blob
-size.
-
-In uboot it can be configured with "setenv fdt_high". For the dtbs
-appended to zImage for ARM the limit is 2MB AFAIK. Brightness models
-will be what consumes the most of memory with this proposed DT design.
-
-Let's calculate.
-
-4 bytes for single brightness value (we allow for values > 255).
-
-I think quite exaggerated exemplary quantities:
-
-number of colors in the mcled_dev: 10
-number of levels per model: 256
-number of models: 100
-
-bytes required = 4 * 10 * 256 * 100 = 1024000, i.e. less than 1MB
-
-And average mainline dtbs usually don't exceed 100kB, so I think
-we are safe. I've even just tried it out by adding such 10 models
-of 255 levels * 10 values * 4-byte to versatile-pb.dts and I got dtb
-size ~150kB.
-
-But to be sure it would be good to get early ack from DT guys.
-
--------------------------------------------------------------------------
-
-And now is this moment - we'd like to hear the feedback from DT guys.
-
--- 
-Best regards,
-Jacek Anaszewski
