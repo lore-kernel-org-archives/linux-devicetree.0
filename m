@@ -1,45 +1,73 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [Letux-kernel] [BUG] gpiolib: spi chip select legacy support
- breaks modern chip select and whitens the GTA04 LCD panel
-Date: Tue, 2 Apr 2019 11:18:39 +0700
-Message-ID: <CACRpkdaqz+_j_n0kuduGqOb38W6ETyOzUgaiZVX3CQWXN2_zbQ@mail.gmail.com>
-References: <7509BFB6-36E4-441A-9F16-7A4FEE7F7CF3@goldelico.com>
- <5488EF42-08DB-4273-95FF-49ED31E27472@goldelico.com> <CACRpkdb4URKcdZ-=3aG_np86Bp=1ahs+qztM-7yQkSP18ZkE6A@mail.gmail.com>
- <2286C331-4AFC-46A9-B8C4-8A8BA9CD33C2@goldelico.com> <20190330193259.5054655e@aktux>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V1 19/26] DT bindings: spi: add spi client device
+ properties
+Date: Tue, 2 Apr 2019 11:52:01 +0700
+Message-ID: <20190402045200.GS2059@sirena.org.uk>
+References: <1553666207-11414-1-git-send-email-skomatineni@nvidia.com>
+ <1553666207-11414-19-git-send-email-skomatineni@nvidia.com>
+ <20190401073723.GH2059@sirena.org.uk>
+ <BYAPR12MB3398F515727D46DE21C54FD6C2550@BYAPR12MB3398.namprd12.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xUq7mlTLx96rFlBf"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190330193259.5054655e@aktux>
+Content-Disposition: inline
+In-Reply-To: <BYAPR12MB3398F515727D46DE21C54FD6C2550@BYAPR12MB3398.namprd12.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, devicetree <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jan Kotas <jank@cadence.com>, kernel@pyra-handheld.com
+To: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Krishna Yarlagadda <kyarlagadda@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 31, 2019 at 1:33 AM Andreas Kemnade <andreas@kemnade.info> wrote:
 
-> > > But I fixed it in that case by introducing a spi-cs-high into the DTS file:
-> > > https://marc.info/?l=linux-arm-kernel&m=155292310015309&w=2
-> >
-> > Yes, that of course works and is our temporary solution.
-> >
-> > And I see that you also have it on the controller node and not the slave node.
-> >
-> So if I get it right is a check added for undocumented properties
-> (nothing about  spi-cs-high  in controller node in the bindings
-> documentation, only in the slave node) in the two patches mentioned.
->
-> And then you add that undocumented property to a dts file in your "fix".
->
-> That all sounds strange to me.
+--xUq7mlTLx96rFlBf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yeah it sounds strange because it is strange :)
+On Mon, Apr 01, 2019 at 05:59:57PM +0000, Sowjanya Komatineni wrote:
 
-I was simply confused and wrong. Sometimes we all do very uniformed
-things, today it was me.
+Please fix your mail client to word wrap within paragraphs at something
+substantially less than 80 columns.  Doing this makes your messages much
+easier to read and reply to.
 
-The flag should of course be on the slave node.
+> > > +spi-client device controller properties:
+> > > +- nvidia,cs-setup-clk-count: CS setup timing parameter.
+> > > +- nvidia,cs-hold-clk-count: CS hold timing parameter.
+> > > +- nvidia,cs-inactive-cycles: CS inactive delay in terms of clock=20
+> > > +between
+> > > +  transfers.
 
-So now I have to fix my fix.
+> > Why are these being done as nVidia specific properties rather than
+> > generic ones and why are these being configured in DT rather than by
+> > the client driver?  If the devices have particular timing
+> > requirements for chip select presumably that's going to apply no
+> > matter what controller or system they're used with so it seems best
+> > to configure this in the client driver and have an API that any
+> > controller can implement.
 
-Yours,
-Linus Walleij
+> These are implemented thru DT as Tegra SPI is master and master controls =
+the timing.
+> Some SPI slaves have specific requirements of certain CS setup/hold time =
+and inactive cycles which SPI master should meet when driving during transf=
+er and Tegra SPI controller supports tuning these parameters.
+
+This doesn't address the issue at all, obviously the timings for the SPI
+bus are going to be impelemented by the controller but that's not the
+issue.
+
+--xUq7mlTLx96rFlBf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyi6nAACgkQJNaLcl1U
+h9DYhwf/cafHrRWzRugYSCrehLshbVA+er54g9/ZcsiAAz4d1eXY5krepBIVxNRW
+ekTXpqsXiu7eCEOlOZw4CHzJ/mf5dbJPdE9Y6MadhP8U+wqSHK7s8OD4cXOeq2qq
++s9vk5zpFmq4UMsoxFGM0IPRkU2C8dylcgDZndYLHaYowRGEMCfTJXGljfHDR6OQ
+2IQ8Gv8lG88TNPlteORHsICEcukqJ9P0VPfuszoEbIF+vTwp73e0wJZHnVMAVC//
+C9s8e9swMavIef92Aq4WSo9xCBHT6RqDlgOASZoGkQhcIzSMDSTOfTF76kxmOOhb
+l5c2qXXcuzBH5bEgAv8G+knbRa3hoQ==
+=K2T2
+-----END PGP SIGNATURE-----
+
+--xUq7mlTLx96rFlBf--
