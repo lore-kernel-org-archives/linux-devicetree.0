@@ -1,39 +1,52 @@
-From: Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH 2/5] media: platform: Aspeed: Make reserved memory optional
-Date: Tue,  2 Apr 2019 18:25:01 +0000
-Message-ID: <1554229504-5661-3-git-send-email-eajames@linux.ibm.com>
-References: <1554229504-5661-1-git-send-email-eajames@linux.ibm.com>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH v4 3/3] fpga manager: Adding FPGA Manager support for
+ Xilinx zynqmp
+Date: Tue, 2 Apr 2019 13:27:23 -0500
+Message-ID: <CANk1AXQEMLt5Vk9LhsmBg9U0Twknr1oy-myoL_0vZ4pqSu3DwQ@mail.gmail.com>
+References: <20190402123123.915-1-nava.manne@xilinx.com> <20190402123123.915-4-nava.manne@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554229504-5661-1-git-send-email-eajames@linux.ibm.com>
+In-Reply-To: <20190402123123.915-4-nava.manne@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, joel@jms.id.au, andrew@aj.id.au, mchehab@kernel.org, linux-clk@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
+To: Nava kishore Manne <nava.manne@xilinx.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rajan Vaja <rajanv@xilinx.com>, Jolly Shah <jollys@xilinx.com>, linux-fpga@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, kishore m <chinnikishore369@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Reserved memory doesn't need to be required; system memory would work
-fine.
+On Tue, Apr 2, 2019 at 7:32 AM Nava kishore Manne <nava.manne@xilinx.com> wrote:
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- drivers/media/platform/aspeed-video.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+Hi Nava,
 
-diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
-index 55c55a6..8144fe3 100644
---- a/drivers/media/platform/aspeed-video.c
-+++ b/drivers/media/platform/aspeed-video.c
-@@ -1608,11 +1608,7 @@ static int aspeed_video_init(struct aspeed_video *video)
- 		return PTR_ERR(video->vclk);
- 	}
- 
--	rc = of_reserved_mem_device_init(dev);
--	if (rc) {
--		dev_err(dev, "Unable to reserve memory\n");
--		return rc;
--	}
-+	of_reserved_mem_device_init(dev);
- 
- 	rc = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
- 	if (rc) {
--- 
-1.8.3.1
+Looks good.
+
+>
+> This patch adds FPGA Manager support for the Xilinx
+> ZynqMP chip.
+>
+> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+Acked-by: Alan Tull <atull@kernel.org>
+
+> ---
+> Changes for v4:
+>                 -Updated the Fpga Mgr registrations call's
+>                  to 5.0
+>                 -Removed dma_set_mask_and_coherent() As the FW
+>                  supports only 32-bit address operations.
+>
+> Changes for v3:
+>                 -Created patches on top of 5.0-rc5.
+>                  No functional changes.
+>
+> Changes for v2:
+>                 -Fixed some minor coding issues as suggested by
+>                  Moritz
+>
+> Changes for v1:
+>                 -None.
+>
+> Changes for RFC-V2:
+>                 -Updated the Fpga Mgr registrations call's
+>                  to 4.18
+
+Thanks,
+Alan
