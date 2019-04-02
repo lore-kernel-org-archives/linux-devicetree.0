@@ -1,93 +1,47 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 7/9] mfd: axp20x: add USB power supply
- mfd cell to AXP813
-Date: Tue, 2 Apr 2019 04:15:48 +0100
-Message-ID: <20190402031548.GF4187@dell>
-References: <20190321084850.20769-1-wens@kernel.org>
- <20190321084850.20769-8-wens@kernel.org>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [BUG/PATCH 0/4] gpiolib: fix issues with legacy spi-cs-high handling
+Date: Tue, 2 Apr 2019 10:19:19 +0700
+Message-ID: <CACRpkdaM4t6c5gkLxv6CS559o_X=r14oP4=VoEhzyH4Du9socg@mail.gmail.com>
+References: <cover.1554026842.git.hns@goldelico.com> <2D0BC383-A57A-4C36-AC48-539B4E8811C0@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBB3NHRPSQKGQE5SPMC5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190321084850.20769-8-wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2D0BC383-A57A-4C36-AC48-539B4E8811C0@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linux-OMAP <linux-omap@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Mar 2019, Chen-Yu Tsai wrote:
+On Mon, Apr 1, 2019 at 11:59 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
 
-> From: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
->=20
-> The AXP813 has a VBUS power input. Now that the axp20x_usb_power driver
-> supports this variant, we can add an mfd cell for it to use it.
->=20
-> Signed-off-by: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> [wens-jdAy2FN1RRM@public.gmane.org: add commit message]
-> Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> I learned just some minutes ago that a new patch for gpiolib
+> came through 5.1-rc3 which does fix this in almost the same way
+> as I proposed.
 
-This patch looks orthogonal.
+I am sorry for not being very attentive, I have been travelling.
+I collected the most urgent fixes and this was fixed as part of
+that quick patchup.
 
-Unless anyone screams, I'm going to apply it.
+> Except that it seems to check for "cs-gpios" and then disable the
+> legacy handling.
 
-> ---
->=20
-> Changes since v1:
->   - Made axp803_usb_power_supply_resources[] constant
->   - Added Lee's acked-by
-> ---
->  drivers/mfd/axp20x.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index 3c97f2c0fdfe..902f9f27e748 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -198,6 +198,12 @@ static const struct resource axp22x_usb_power_supply=
-_resources[] =3D {
->  	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
->  };
-> =20
-> +/* AXP803 and AXP813/AXP818 share the same interrupts */
-> +static const struct resource axp803_usb_power_supply_resources[] =3D {
-> +	DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_PLUGIN, "VBUS_PLUGIN"),
-> +	DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
-> +};
-> +
->  static const struct resource axp22x_pek_resources[] =3D {
->  	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_PEK_RIS_EDGE, "PEK_DBR"),
->  	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_PEK_FAL_EDGE, "PEK_DBF"),
-> @@ -793,6 +799,11 @@ static const struct mfd_cell axp813_cells[] =3D {
->  		.of_compatible	=3D "x-powers,axp813-ac-power-supply",
->  		.num_resources	=3D ARRAY_SIZE(axp20x_ac_power_supply_resources),
->  		.resources	=3D axp20x_ac_power_supply_resources,
-> +	}, {
-> +		.name		=3D "axp20x-usb-power-supply",
-> +		.num_resources	=3D ARRAY_SIZE(axp803_usb_power_supply_resources),
-> +		.resources	=3D axp803_usb_power_supply_resources,
-> +		.of_compatible	=3D "x-powers,axp813-usb-power-supply",
->  	},
->  };
-> =20
+Yups.
 
---=20
-Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-Linaro Services Technical Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> So we do not need to add a config option for this legacy
+> handling (although I'd prefer to have it anyways to remove
+> some dead code).
+>
+> Summary: this series can now be ignored.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+OK please verify that we are doing things right now, the big
+worry I have is some interrim DTBs that use the GPIO flag
+GPIO_ACTIVE_HIGH, which is zero and therefore often the
+default, and expect it to actually work, while the SPI bindings
+by definition will ignore that and make the line active low.
+
+I'm not very happy about this but it is a result of how we quickly
+implemented some bindings in the past while the GPIO flags
+were not yet standardized.
+
+Yours,
+Linus Walleij
