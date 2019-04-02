@@ -1,16 +1,14 @@
-From: Joseph Lo <josephl@nvidia.com>
-Subject: Re: [PATCH 1/8] dt-bindings: memory: tegra: Add Tegra210 EMC bindings
-Date: Tue, 2 Apr 2019 10:26:33 +0800
-Message-ID: <d77f1605-a499-81af-bb14-aeaa0e083cff@nvidia.com>
-References: <20190325074523.26456-1-josephl@nvidia.com>
- <20190325074523.26456-2-josephl@nvidia.com>
- <dab337a7-195c-d03f-8b3a-bccf08b23d70@gmail.com>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: Re: [PATCH v2 1/3] dt-bindings: gpu: Add ASPEED GFX bindings document
+Date: Mon, 01 Apr 2019 23:08:04 -0400
+Message-ID: <d67700c0-c302-403b-b765-555484e85eca@www.fastmail.com>
+References: <20190402021933.13071-1-joel@jms.id.au>
+ <20190402021933.13071-2-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <dab337a7-195c-d03f-8b3a-bccf08b23d70@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190402021933.13071-2-joel@jms.id.au>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,94 +18,81 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Joel Stanley <joel@jms.id.au>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, David Airlie <airlied@linux.ie>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, dri-devel@lists.freedesktop.org, =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gNC8xLzE5IDg6MTIgUE0sIERtaXRyeSBPc2lwZW5rbyB3cm90ZToKPiAyNS4wMy4yMDE5IDEw
-OjQ1LCBKb3NlcGggTG8g0L/QuNGI0LXRgjoKPj4gQWRkIHRoZSBiaW5kaW5nIGRvY3VtZW50IGZv
-ciB0aGUgZXh0ZXJuYWwgbWVtb3J5IGNvbnRyb2xsZXIgKEVNQykgd2hpY2gKPj4gY29tbXVuaWNh
-dGVzIHdpdGggZXh0ZXJuYWwgTFBERFI0IGRldmljZXMuIEl0IGluY2x1ZGVzIHRoZSBiaW5kaW5n
-cyBvZgo+PiB0aGUgRU1DIG5vZGUgYW5kIHRoZSBFTUMgdGFibGUgb2YgZGlmZmVyZW50IHJhdGVz
-Lgo+Pgo+PiBUbyBzdXBwb3J0IGhpZ2ggcmF0ZXMgZm9yIExQRERSNCwgdGhlIEVNQyB0YWJsZSBt
-dXN0IGJlIHRyYWluZWQgYmVmb3JlCj4+IGl0IGNhbiBiZSB1c2VkIGZvciBydW50aW1lIGNsb2Nr
-IHN3aXRjaGluZy4gSXQgaGFzIGJlZW4gZG9uZSBieSBmaXJtd2FyZQo+PiBhbmQgbWVyZ2VkIHRv
-IHRoZSB0YWJsZSB0aGF0IExpbnV4IGtlcm5lbCB1c2VzLiBGb3IgYmFja3dhcmQKPj4gY29tcGF0
-aWJpbGl0eSB3aXRoIHRoZSBkZXZpY2VzIHRoYXQgaGFkIGJlZW4gbGF1bmNoZWQgb24gdGhlIG1h
-cmtldCwgbGlrZQo+PiBTaGllbGQgYW5kIEpldHNvbiBwbGF0Zm9ybXMsIHRoZSBiaW5kaW5ncyBp
-biB0aGUgRU1DIHRhYmxlIHNob3VsZCByZW1haW4KPj4gdGhlIHNhbWUuIFNvIHRoZSBmaXJtd2Fy
-ZSBjYW4gcmVjb2duaXplIHRoZW0gYW5kIG1lcmdlIHRoZSB0cmFpbmVkIEVNQwo+PiB0YWJsZSBm
-b3IgdGhlIGtlcm5lbC4KPj4KPj4gQmFzZWQgb24gdGhlIHdvcmsgb2YgUGV0ZXIgRGUgU2Nocmlq
-dmVyIDxwZGVzY2hyaWp2ZXJAbnZpZGlhLmNvbT4uCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEpvc2Vw
-aCBMbyA8am9zZXBobEBudmlkaWEuY29tPgo+PiAtLS0KPj4gICAuLi4vbnZpZGlhLHRlZ3JhMjEw
-LWVtYy50eHQgICAgICAgICAgICAgICAgICAgfCA2MDUgKysrKysrKysrKysrKysrKysrCj4+ICAg
-MSBmaWxlIGNoYW5nZWQsIDYwNSBpbnNlcnRpb25zKCspCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1vcnktY29udHJvbGxlcnMvbnZp
-ZGlhLHRlZ3JhMjEwLWVtYy50eHQKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9tZW1vcnktY29udHJvbGxlcnMvbnZpZGlhLHRlZ3JhMjEwLWVtYy50
-eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJz
-L252aWRpYSx0ZWdyYTIxMC1lbWMudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4
-IDAwMDAwMDAwMDAwMC4uMWY2YjZkZjZkMzdiCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lbW9yeS1jb250cm9sbGVycy9udmlkaWEs
-dGVncmEyMTAtZW1jLnR4dAo+PiBAQCAtMCwwICsxLDYwNSBAQAo+PiArTlZJRElBIFRlZ3JhMjEw
-IFNvQyBFTUMgKGV4dGVybmFsIG1lbW9yeSBjb250cm9sbGVyKQo+PiArPT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQpzbmlwCj4+ICstIG52aWRpYSxl
-bWMtdHJhaW5pbmctbW9kLXJlZ3MgOgo+PiArLSBudmlkaWEsZW1jLXNhdmUtcmVzdG9yZS1tb2Qt
-cmVncyA6Cj4+ICsJZGVwcmVjYXRlZCwga2VlcCBmb3IgZm9yIGJhY2t3YXJkIGNvbXBhdGliaWxp
-dHkKPiAKPiBUaGlzIGlzIGEgbmV3IGJpbmRpbmcsIHNvLi4gYmFja3dhcmQgY29tcGF0aWJpbGl0
-eSB3aXRoIHdoYXQ/IFNvbWUgb2xkIHZlcnNpb24gb2YgZG93bnN0cmVhbSBib290bG9hZGVyPyBE
-byB5b3UgcmVhbGx5IG5lZWQgaXQ/Cj4gClllcywgYmFja3dhcmQgY29tcGF0aWJpbGl0eSBmb3Ig
-dGhlIGZpcm13YXJlIHRoYXQgaGVscHMgdG8gZG8gdGhlIAppbml0aWFsIEREUjQgdHJhaW5pbmcg
-YmVmb3JlIHdlIGNhbiB1c2UgdGhhdC4gQWx0aG91Z2ggdGhlIGtlcm5lbCAKZG9lc24ndCB1c2Ug
-dGhhdCBmb3IgRU1DIHNjYWxpbmcsIHRoZSBmaXJtd2FyZSBzdGlsbCB1c2VzIHRoZXNlIGJpbmRp
-bmdzIAphbmQgdXBkYXRlcyB0aGVtLgoKPj4gKy0gbnZpZGlhLGVtYy1idXJzdC1tYy1yZWdzIDog
-dmFsdWVzIGZvciB0aGUgZm9sbG93aW5nIHJlZ2lzdGVycwo+PiArCQkJICAgICAoU2VlIFRSTSAx
-OC4xMC4xIGZvciByZWdpc3RlciBkZXNjcmlwdGlvbnMpCj4+ICsJTUNfRU1FTV9BUkJfQ0ZHCj4+
-ICsJTUNfRU1FTV9BUkJfT1VUU1RBTkRJTkdfUkVRCj4+ICsJTUNfRU1FTV9BUkJfUkVGUEJfSFBf
-Q1RSTAo+PiArCU1DX0VNRU1fQVJCX1JFRlBCX0JBTktfQ1RSTAo+PiArCU1DX0VNRU1fQVJCX1RJ
-TUlOR19SQ0QKPj4gKwlNQ19FTUVNX0FSQl9USU1JTkdfUlAKPj4gKwlNQ19FTUVNX0FSQl9USU1J
-TkdfUkMKPj4gKwlNQ19FTUVNX0FSQl9USU1JTkdfUkFTCj4+ICsJTUNfRU1FTV9BUkJfVElNSU5H
-X0ZBVwo+PiArCU1DX0VNRU1fQVJCX1RJTUlOR19SUkQKPj4gKwlNQ19FTUVNX0FSQl9USU1JTkdf
-UkFQMlBSRQo+PiArCU1DX0VNRU1fQVJCX1RJTUlOR19XQVAyUFJFCj4+ICsJTUNfRU1FTV9BUkJf
-VElNSU5HX1IyUgo+PiArCU1DX0VNRU1fQVJCX1RJTUlOR19XMlcKPj4gKwlNQ19FTUVNX0FSQl9U
-SU1JTkdfUjJXCj4+ICsJTUNfRU1FTV9BUkJfVElNSU5HX0NDRE1XCj4+ICsJTUNfRU1FTV9BUkJf
-VElNSU5HX1cyUgo+PiArCU1DX0VNRU1fQVJCX1RJTUlOR19SRkNQQgo+PiArCU1DX0VNRU1fQVJC
-X0RBX1RVUk5TCj4+ICsJTUNfRU1FTV9BUkJfREFfQ09WRVJTCj4+ICsJTUNfRU1FTV9BUkJfTUlT
-QzAKPj4gKwlNQ19FTUVNX0FSQl9NSVNDMQo+PiArCU1DX0VNRU1fQVJCX01JU0MyCj4+ICsJTUNf
-RU1FTV9BUkJfUklORzFfVEhST1RUTEUKPj4gKwlNQ19FTUVNX0FSQl9ESFlTVF9DVFJMCj4+ICsJ
-TUNfRU1FTV9BUkJfREhZU1RfVElNRU9VVF9VVElMXzAKPj4gKwlNQ19FTUVNX0FSQl9ESFlTVF9U
-SU1FT1VUX1VUSUxfMQo+PiArCU1DX0VNRU1fQVJCX0RIWVNUX1RJTUVPVVRfVVRJTF8yCj4+ICsJ
-TUNfRU1FTV9BUkJfREhZU1RfVElNRU9VVF9VVElMXzMKPj4gKwlNQ19FTUVNX0FSQl9ESFlTVF9U
-SU1FT1VUX1VUSUxfNAo+PiArCU1DX0VNRU1fQVJCX0RIWVNUX1RJTUVPVVRfVVRJTF81Cj4+ICsJ
-TUNfRU1FTV9BUkJfREhZU1RfVElNRU9VVF9VVElMXzYKPj4gKwlNQ19FTUVNX0FSQl9ESFlTVF9U
-SU1FT1VUX1VUSUxfNwo+PiArLSBudmlkaWEsZW1jLWxhLXNjYWxlLXJlZ3MgOiB2YWx1ZXMgZm9y
-IHRoZSBmb2xsb3dpbmcgcmVnaXN0ZXJzCj4+ICsJCQkgICAgIChTZWUgVFJNIDE4LjEwLjEgZm9y
-IHJlZ2lzdGVyIGRlc2NyaXB0aW9ucykKPj4gKwlNQ19NTExfTVBDT1JFUl9QVFNBX1JBVEUKPj4g
-KwlNQ19GVE9QX1BUU0FfUkFURQo+PiArCU1DX1BUU0FfR1JBTlRfREVDUkVNRU5UCj4+ICsJTUNf
-TEFURU5DWV9BTExPV0FOQ0VfWFVTQl8wCj4+ICsJTUNfTEFURU5DWV9BTExPV0FOQ0VfWFVTQl8x
-Cj4+ICsJTUNfTEFURU5DWV9BTExPV0FOQ0VfVFNFQ18wCj4+ICsJTUNfTEFURU5DWV9BTExPV0FO
-Q0VfU0RNTUNBXzAKPj4gKwlNQ19MQVRFTkNZX0FMTE9XQU5DRV9TRE1NQ0FBXzAKPj4gKwlNQ19M
-QVRFTkNZX0FMTE9XQU5DRV9TRE1NQ18wCj4+ICsJTUNfTEFURU5DWV9BTExPV0FOQ0VfU0RNTUNB
-Ql8wCj4+ICsJTUNfTEFURU5DWV9BTExPV0FOQ0VfUFBDU18wCj4+ICsJTUNfTEFURU5DWV9BTExP
-V0FOQ0VfUFBDU18xCj4+ICsJTUNfTEFURU5DWV9BTExPV0FOQ0VfTVBDT1JFXzAKPj4gKwlNQ19M
-QVRFTkNZX0FMTE9XQU5DRV9IQ18wCj4+ICsJTUNfTEFURU5DWV9BTExPV0FOQ0VfSENfMQo+PiAr
-CU1DX0xBVEVOQ1lfQUxMT1dBTkNFX0FWUENfMAo+PiArCU1DX0xBVEVOQ1lfQUxMT1dBTkNFX0dQ
-VV8wCj4+ICsJTUNfTEFURU5DWV9BTExPV0FOQ0VfR1BVMl8wCj4+ICsJTUNfTEFURU5DWV9BTExP
-V0FOQ0VfTlZFTkNfMAo+PiArCU1DX0xBVEVOQ1lfQUxMT1dBTkNFX05WREVDXzAKPj4gKwlNQ19M
-QVRFTkNZX0FMTE9XQU5DRV9WSUNfMAo+PiArCU1DX0xBVEVOQ1lfQUxMT1dBTkNFX1ZJMl8wCj4+
-ICsJTUNfTEFURU5DWV9BTExPV0FOQ0VfSVNQMl8wCj4+ICsJTUNfTEFURU5DWV9BTExPV0FOQ0Vf
-SVNQMl8xCj4gCj4gU2hvdWxkbid0IHRoaXMgYmUgYSBwYXJ0IG9mIGEgIk1lbW9yeSBDb250cm9s
-bGVyIiBiaW5kaW5nIGxpa2UgaXQgaXMgZG9uZSBmb3IgVDEyND8KPiAKClRoZSBUZWdyYSBTb0Nz
-IGJlZm9yZSBUZWdyYTEzMiBvbmx5IHN1cHBvcnRzIEREUjMgb3IgRERSMi4gVGhlIEVNQyB0YWJs
-ZSAKZG9lc24ndCBpbmNsdWRlIHRoZSBzZXR0aW5ncyBvZiBsYXRlbmN5IGFsbG93YW5jZSByZWdp
-c3RlcnMuIEZvciB0aGUgCkREUjQgc3VwcG9ydCBvbiBUZWdyYTIxMCwgd2Ugd2lsbCBkeW5hbWlj
-YWxseSBzY2FsZSB0aGVzZSBsYXRlbmN5IAphbGxvd2FuY2UgcmVnaXN0ZXJzIGFzIHdlbGwgdG8g
-c3VwcG9ydCBmYXN0ZXIgY2xvY2sgcmF0ZS4gU28gdGhlIAphcmJpdHJhdGlvbiBjYW4gYmUgYWRh
-cHRlZCBhY2NvcmRpbmcgdG8gdGhlIHJhdGUgc3dpdGNoaW5nLgoKQW5kIHRoZSBFTUMgc2NhbGlu
-ZyBzZXF1ZW5jZSBmb3IgRERSMyBhbmQgRERSNCBpcyBxdWl0ZSBkaWZmZXJlbnQuIFNvIAp0aGUg
-RU1DIHNjYWxpbmcgc2VxdWVuY2UgZm9yIFRlZ3JhMTI0IGNhbm5vdCBiZSB1c2VkIGZvciBUZWdy
-YTIxMC4gU2FtZSAKYXMgdGhlIEVNQyB0YWJsZSBiaW5kaW5ncy4KClRoYW5rcywKSm9zZXBoCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0t
-a2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
-bmVsCg==
+
+
+On Tue, 2 Apr 2019, at 12:49, Joel Stanley wrote:
+> This describes the ASPEED BMC SoC's display controller.
+> 
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> ---
+>  .../devicetree/bindings/gpu/aspeed-gfx.txt    | 41 +++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpu/aspeed-gfx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/aspeed-gfx.txt 
+> b/Documentation/devicetree/bindings/gpu/aspeed-gfx.txt
+> new file mode 100644
+> index 000000000000..a74033332668
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/aspeed-gfx.txt
+> @@ -0,0 +1,41 @@
+> +Device tree configuration for the GFX display deivce on the AST2500 
+> SoCs.
+> +
+> +Required properties:
+> +  - compatible
+> +    * Must be one of the following:
+> +      + aspeed,ast2500-gfx
+> +      + aspeed,ast2400-gfx
+> +    * In addition, the ASPEED pinctrl bindings require the 'syscon' 
+> property to
+> +      be present
+
+Lets remove [1] now that we have this document as what you've described
+here is a super-set. Happy for that to be a follow-up patch, so:
+
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+
+[1] Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
+
+> +
+> +  - reg: Physical base address and length of the GFX registers
+> +
+> +  - interrupts: interrupt number for the GFX device
+> +
+> +  - clocks: clock number used to generate the pixel clock
+> +
+> +  - resets: reset line that must be released to use the GFX device
+> +
+> +  - memory-region:
+> +    Phandle to a memory region to allocate from, as defined in
+> +    
+> Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> +
+> +
+> +Example:
+> +
+> +gfx: display@1e6e6000 {
+> +	compatible = "aspeed,ast2500-gfx", "syscon";
+> +	reg = <0x1e6e6000 0x1000>;
+> +	reg-io-width = <4>;
+> +	clocks = <&syscon ASPEED_CLK_GATE_D1CLK>;
+> +	resets = <&syscon ASPEED_RESET_CRT1>;
+> +	interrupts = <0x19>;
+> +	memory-region = <&gfx_memory>;
+> +};
+> +
+> +gfx_memory: framebuffer {
+> +	size = <0x01000000>;
+> +	alignment = <0x01000000>;
+> +	compatible = "shared-dma-pool";
+> +	reusable;
+> +};
+> -- 
+> 2.20.1
+> 
+>
