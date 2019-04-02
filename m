@@ -1,843 +1,116 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH 01/14] arm64: dts: imx8qxp: orginize dts in subsystems
-Date: Tue, 2 Apr 2019 14:38:34 +0000
-Message-ID: <AM0PR04MB4211470819F4B81A3E2570C180560@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1550773093-13349-1-git-send-email-aisheng.dong@nxp.com>
- <1550773093-13349-2-git-send-email-aisheng.dong@nxp.com>
- <20190402041624.GA4138@X250>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v8 02/15] drm/sun4i: tcon: Compute DCLK
+ dividers based on format, lanes
+Date: Tue, 2 Apr 2019 16:39:56 +0200
+Message-ID: <20190402143956.xu2yuyfditx5pbvw@flea>
+References: <20190311133637.18334-1-jagan@amarulasolutions.com>
+ <20190311133637.18334-3-jagan@amarulasolutions.com>
+ <20190311153847.oz6ruqmptaq2befn@flea>
+ <CAMty3ZChz=s7gdQyX9KnsAp1t5FrpouXGK74-r0SKJ89yJN67Q@mail.gmail.com>
+ <20190319105307.omowzyhqu33e3pzy@flea>
+ <CAMty3ZCjTLLw+zAfPKD3qZx_o9yti4MD0XL0Ve7VG1_6ToJ=pg@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190402041624.GA4138@X250>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="bq55zguk5gxjx22z"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQXIRXSQKGQERJ345KI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZCjTLLw+zAfPKD3qZx_o9yti4MD0XL0Ve7VG1_6ToJ=pg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> From: Shawn Guo [mailto:shawnguo@kernel.org]
-> Sent: Tuesday, April 2, 2019 12:16 PM
-> 
-> On Thu, Feb 21, 2019 at 06:24:51PM +0000, Aisheng Dong wrote:
-> > MX8 SoC is comprised of a few HW subsystems while some of them can be
-> > reused in the different SoCs. So let's re-orginize them into
-> > subsystems in device tree as well for the possible reuse of the common part.
-> >
-> > Note, as there's still no devices of hsio subsys, so removed it first
-> > instead of creating a subsys headfile with no devices.
-> > They will be added back when new devices added.
-> >
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> > Cc: Sascha Hauer <kernel@pengutronix.de>
-> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi    |  75 +++++
-> >  arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi    |  95 +++++++
-> >  arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi    | 124 ++++++++
-> >  arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi |  29 ++
-> > arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi |  25 ++
-> > arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi |  57 ++++
-> >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi         | 311
-> +--------------------
-> >  7 files changed, 412 insertions(+), 304 deletions(-)  create mode
-> > 100644 arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
-> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
-> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
-> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi
-> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi
-> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
-> > new file mode 100644
-> > index 0000000..f6f2b94
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
-> > @@ -0,0 +1,75 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright 2018 NXP
-> > + *	Dong Aisheng <aisheng.dong@nxp.com>
-> > + */
-> > +
-> > +adma_subsys: bus@59000000 {
-> 
-> I'm a bit concerned by that the unit-address is part of the subsystem definition.
-> If the subsystem is integrated in a SoC on different address, the while idea will
-> be broken.
-> 
 
-Yes, I understand the concern.
-AFAICT HW design team usually will guarantee the SS IO base alignment
-in order to maintain the SW compatibility.
-And besides MX8QM/QXP, I also checked two new derived SoCs which are all
-the same.
-Thus I think it's worth to try.
+--bq55zguk5gxjx22z
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Regards
-Dong Aisheng
+On Thu, Mar 21, 2019 at 07:40:32PM +0530, Jagan Teki wrote:
+> On Tue, Mar 19, 2019 at 4:23 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >
+> > On Mon, Mar 11, 2019 at 09:36:27PM +0530, Jagan Teki wrote:
+> > > On Mon, Mar 11, 2019 at 9:08 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > >
+> > > > On Mon, Mar 11, 2019 at 07:06:24PM +0530, Jagan Teki wrote:
+> > > > > pll-video => pll-mipi => tcon0 => tcon0-pixel-clock is the typical
+> > > > > MIPI clock topology in Allwinner DSI controller.
+> > > > >
+> > > > > TCON dotclock driver is computing the desired DCLK divider based on
+> > > > > panel pixel clock along with input DCLK min, max divider values from
+> > > > > tcon driver and that would eventually set the pll-mipi clock rate.
+> > > > >
+> > > > > The current code allows the TCON clock divider to have a default 4
+> > > > > for min, max ranges that would fail to compute the desired pll-mipi
+> > > > > rate while supporting new panels.
+> > > > >
+> > > > > So, add the computation logic 'format/lanes' to dclk min and max dividers
+> > > > > and instead of default 4. This computation logic align with Allwinner A64
+> > > > > BSP, hoping that would work even for A33.
+> > > >
+> > > > Last time we discussed this, we found out that this wasn't the case,
+> > > > even in the BSP.
+> > >
+> > > This was the case for BSP to compute pll-mipi not for TCON_DSI clock
+> > > register, SUN4I_TCON0_DCLK_REG, which marked the divider 4 by default.
+> > >
+> > > > What compelling evidence have you found that makes you say otherwise?
+> > >
+> > > divider 4 isn't worked, this I would mentioned before as well.
+> >
+> > Maybe you mentionned it before, but it's nowhere to be found in your
+> > commit log.
+>
+> I have added it in 3rd paragraph in commit message, may be you missed
+> it or you may look for different text.
+>
+> "The current code allows the TCON clock divider to have a default 4
+> for min, max ranges that would fail to compute the desired pll-mipi
+> rate while supporting new panels."
 
-> Shawn
-> 
-> > +	compatible = "simple-bus";
-> > +	#address-cells = <1>;
-> > +	#size-cells = <1>;
-> > +	ranges = <0x59000000 0x0 0x59000000 0x2000000>;
-> > +
-> > +	adma_lpcg: clock-controller@59000000 {
-> > +		reg = <0x59000000 0x2000000>;
-> > +		#clock-cells = <1>;
-> > +	};
-> > +
-> > +	adma_lpuart0: serial@5a060000 {
-> > +		reg = <0x5a060000 0x1000>;
-> > +		interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
-> > +		interrupt-parent = <&gic>;
-> > +		clocks = <&adma_lpcg IMX_ADMA_LPCG_UART0_BAUD_CLK>;
-> > +		clock-names = "ipg";
-> > +		power-domains = <&pd IMX_SC_R_UART_0>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	adma_i2c0: i2c@5a800000 {
-> > +		reg = <0x5a800000 0x4000>;
-> > +		interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
-> > +		interrupt-parent = <&gic>;
-> > +		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C0_CLK>;
-> > +		clock-names = "per";
-> > +		assigned-clocks = <&clk IMX_ADMA_I2C0_CLK>;
-> > +		assigned-clock-rates = <24000000>;
-> > +		power-domains = <&pd IMX_SC_R_I2C_0>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	adma_i2c1: i2c@5a810000 {
-> > +		reg = <0x5a810000 0x4000>;
-> > +		interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
-> > +		interrupt-parent = <&gic>;
-> > +		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C1_CLK>;
-> > +		clock-names = "per";
-> > +		assigned-clocks = <&clk IMX_ADMA_I2C1_CLK>;
-> > +		assigned-clock-rates = <24000000>;
-> > +		power-domains = <&pd IMX_SC_R_I2C_1>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	adma_i2c2: i2c@5a820000 {
-> > +		reg = <0x5a820000 0x4000>;
-> > +		interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
-> > +		interrupt-parent = <&gic>;
-> > +		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C2_CLK>;
-> > +		clock-names = "per";
-> > +		assigned-clocks = <&clk IMX_ADMA_I2C2_CLK>;
-> > +		assigned-clock-rates = <24000000>;
-> > +		power-domains = <&pd IMX_SC_R_I2C_2>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	adma_i2c3: i2c@5a830000 {
-> > +		reg = <0x5a830000 0x4000>;
-> > +		interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
-> > +		interrupt-parent = <&gic>;
-> > +		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C3_CLK>;
-> > +		clock-names = "per";
-> > +		assigned-clocks = <&clk IMX_ADMA_I2C3_CLK>;
-> > +		assigned-clock-rates = <24000000>;
-> > +		power-domains = <&pd IMX_SC_R_I2C_3>;
-> > +		status = "disabled";
-> > +	};
-> > +};
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
-> > new file mode 100644
-> > index 0000000..ac5131d
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
-> > @@ -0,0 +1,95 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright 2018 NXP
-> > + *	Dong Aisheng <aisheng.dong@nxp.com>
-> > + */
-> > +
-> > +conn_subsys: bus@5b000000 {
-> > +	compatible = "simple-bus";
-> > +	#address-cells = <1>;
-> > +	#size-cells = <1>;
-> > +	ranges = <0x5b000000 0x0 0x5b000000 0x1000000>;
-> > +
-> > +	conn_lpcg: clock-controller@5b200000 {
-> > +		reg = <0x5b200000 0xb0000>;
-> > +		#clock-cells = <1>;
-> > +	};
-> > +
-> > +	usdhc1: mmc@5b010000 {
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
-> > +		reg = <0x5b010000 0x10000>;
-> > +		clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC0_IPG_CLK>,
-> > +			 <&conn_lpcg IMX_CONN_LPCG_SDHC0_PER_CLK>,
-> > +			 <&conn_lpcg IMX_CONN_LPCG_SDHC0_HCLK>;
-> > +		clock-names = "ipg", "per", "ahb";
-> > +		assigned-clocks = <&clk IMX_CONN_SDHC0_CLK>;
-> > +		assigned-clock-rates = <200000000>;
-> > +		power-domains = <&pd IMX_SC_R_SDHC_0>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	usdhc2: mmc@5b020000 {
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
-> > +		reg = <0x5b020000 0x10000>;
-> > +		clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC1_IPG_CLK>,
-> > +			 <&conn_lpcg IMX_CONN_LPCG_SDHC1_PER_CLK>,
-> > +			 <&conn_lpcg IMX_CONN_LPCG_SDHC1_HCLK>;
-> > +		clock-names = "ipg", "per", "ahb";
-> > +		assigned-clocks = <&clk IMX_CONN_SDHC1_CLK>;
-> > +		assigned-clock-rates = <200000000>;
-> > +		power-domains = <&pd IMX_SC_R_SDHC_1>;
-> > +		fsl,tuning-start-tap = <20>;
-> > +		fsl,tuning-step= <2>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	usdhc3: mmc@5b030000 {
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_HIGH>;
-> > +		reg = <0x5b030000 0x10000>;
-> > +		clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC2_IPG_CLK>,
-> > +			 <&conn_lpcg IMX_CONN_LPCG_SDHC2_PER_CLK>,
-> > +			 <&conn_lpcg IMX_CONN_LPCG_SDHC2_HCLK>;
-> > +		clock-names = "ipg", "per", "ahb";
-> > +		assigned-clocks = <&clk IMX_CONN_SDHC2_CLK>;
-> > +		assigned-clock-rates = <200000000>;
-> > +		power-domains = <&pd IMX_SC_R_SDHC_2>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	fec1: ethernet@5b040000 {
-> > +		reg = <0x5b040000 0x10000>;
-> > +		interrupts = <GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH>;
-> > +		clocks = <&conn_lpcg IMX_CONN_LPCG_ENET0_IPG_CLK>,
-> > +			 <&conn_lpcg IMX_CONN_LPCG_ENET0_AHB_CLK>,
-> > +			 <&conn_lpcg IMX_CONN_LPCG_ENET0_TX_CLK>,
-> > +			 <&conn_lpcg IMX_CONN_LPCG_ENET0_ROOT_CLK>;
-> > +		clock-names = "ipg", "ahb", "enet_clk_ref", "ptp";
-> > +		fsl,num-tx-queues=<3>;
-> > +		fsl,num-rx-queues=<3>;
-> > +		power-domains = <&pd IMX_SC_R_ENET_0>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	fec2: ethernet@5b050000 {
-> > +		reg = <0x5b050000 0x10000>;
-> > +		interrupts = <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH>,
-> > +				<GIC_SPI 260 IRQ_TYPE_LEVEL_HIGH>,
-> > +				<GIC_SPI 261 IRQ_TYPE_LEVEL_HIGH>,
-> > +				<GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
-> > +		clocks = <&conn_lpcg IMX_CONN_LPCG_ENET1_IPG_CLK>,
-> > +			 <&conn_lpcg IMX_CONN_LPCG_ENET1_AHB_CLK>,
-> > +			 <&conn_lpcg IMX_CONN_LPCG_ENET1_TX_CLK>,
-> > +			 <&conn_lpcg IMX_CONN_LPCG_ENET1_ROOT_CLK>;
-> > +		clock-names = "ipg", "ahb", "enet_clk_ref", "ptp";
-> > +		fsl,num-tx-queues=<3>;
-> > +		fsl,num-rx-queues=<3>;
-> > +		power-domains = <&pd IMX_SC_R_ENET_1>;
-> > +		status = "disabled";
-> > +	};
-> > +};
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
-> > new file mode 100644
-> > index 0000000..1c6ba8d
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
-> > @@ -0,0 +1,124 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright 2018 NXP
-> > + *	Dong Aisheng <aisheng.dong@nxp.com>
-> > + */
-> > +
-> > +lsio_subsys: bus@5d000000 {
-> > +	compatible = "simple-bus";
-> > +	#address-cells = <1>;
-> > +	#size-cells = <1>;
-> > +	ranges = <0x5d000000 0x0 0x5d000000 0x1000000>;
-> > +
-> > +	lsio_lpcg: clock-controller@5d400000 {
-> > +		reg = <0x5d400000 0x400000>;
-> > +		#clock-cells = <1>;
-> > +	};
-> > +
-> > +	lsio_mu0: mailbox@5d1b0000 {
-> > +		reg = <0x5d1b0000 0x10000>;
-> > +		interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
-> > +		#mbox-cells = <0>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	lsio_mu1: mailbox@5d1c0000 {
-> > +		reg = <0x5d1c0000 0x10000>;
-> > +		interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
-> > +		#mbox-cells = <2>;
-> > +	};
-> > +
-> > +	lsio_mu3: mailbox@5d1e0000 {
-> > +		reg = <0x5d1e0000 0x10000>;
-> > +		interrupts = <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
-> > +		#mbox-cells = <0>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	lsio_mu4: mailbox@5d1f0000 {
-> > +		reg = <0x5d1f0000 0x10000>;
-> > +		interrupts = <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
-> > +		#mbox-cells = <0>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	lsio_gpio0: gpio@5d080000 {
-> > +		reg = <0x5d080000 0x10000>;
-> > +		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
-> > +		gpio-controller;
-> > +		#gpio-cells = <2>;
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <2>;
-> > +		power-domains = <&pd IMX_SC_R_GPIO_0>;
-> > +	};
-> > +
-> > +	lsio_gpio1: gpio@5d090000 {
-> > +		reg = <0x5d090000 0x10000>;
-> > +		interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
-> > +		gpio-controller;
-> > +		#gpio-cells = <2>;
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <2>;
-> > +		power-domains = <&pd IMX_SC_R_GPIO_1>;
-> > +	};
-> > +
-> > +	lsio_gpio2: gpio@5d0a0000 {
-> > +		reg = <0x5d0a0000 0x10000>;
-> > +		interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-> > +		gpio-controller;
-> > +		#gpio-cells = <2>;
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <2>;
-> > +		power-domains = <&pd IMX_SC_R_GPIO_2>;
-> > +	};
-> > +
-> > +	lsio_gpio3: gpio@5d0b0000 {
-> > +		reg = <0x5d0b0000 0x10000>;
-> > +		interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
-> > +		gpio-controller;
-> > +		#gpio-cells = <2>;
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <2>;
-> > +		power-domains = <&pd IMX_SC_R_GPIO_3>;
-> > +	};
-> > +
-> > +	lsio_gpio4: gpio@5d0c0000 {
-> > +		reg = <0x5d0c0000 0x10000>;
-> > +		interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
-> > +		gpio-controller;
-> > +		#gpio-cells = <2>;
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <2>;
-> > +		power-domains = <&pd IMX_SC_R_GPIO_4>;
-> > +	};
-> > +
-> > +	lsio_gpio5: gpio@5d0d0000 {
-> > +		reg = <0x5d0d0000 0x10000>;
-> > +		interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
-> > +		gpio-controller;
-> > +		#gpio-cells = <2>;
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <2>;
-> > +		power-domains = <&pd IMX_SC_R_GPIO_5>;
-> > +	};
-> > +
-> > +	lsio_gpio6: gpio@5d0e0000 {
-> > +		reg = <0x5d0e0000 0x10000>;
-> > +		interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
-> > +		gpio-controller;
-> > +		#gpio-cells = <2>;
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <2>;
-> > +		power-domains = <&pd IMX_SC_R_GPIO_6>;
-> > +	};
-> > +
-> > +	lsio_gpio7: gpio@5d0f0000 {
-> > +		reg = <0x5d0f0000 0x10000>;
-> > +		interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-> > +		gpio-controller;
-> > +		#gpio-cells = <2>;
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <2>;
-> > +		power-domains = <&pd IMX_SC_R_GPIO_7>;
-> > +	};
-> > +};
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi
-> > new file mode 100644
-> > index 0000000..2486c72
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi
-> > @@ -0,0 +1,29 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright 2018 NXP
-> > + *	Dong Aisheng <aisheng.dong@nxp.com>
-> > + */
-> > +
-> > +&adma_lpcg {
-> > +	compatible = "fsl,imx8qxp-lpcg-adma"; };
-> > +
-> > +&adma_lpuart0 {
-> > +	compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart"; };
-> > +
-> > +&adma_i2c0 {
-> > +	compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c"; };
-> > +
-> > +&adma_i2c1 {
-> > +	compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c"; };
-> > +
-> > +&adma_i2c2 {
-> > +	compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c"; };
-> > +
-> > +&adma_i2c3 {
-> > +	compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c"; };
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi
-> > new file mode 100644
-> > index 0000000..27a3b46
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi
-> > @@ -0,0 +1,25 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright 2018 NXP
-> > + *	Dong Aisheng <aisheng.dong@nxp.com>
-> > + */
-> > +
-> > +&conn_lpcg {
-> > +	compatible = "fsl,imx8qxp-lpcg-conn"; };
-> > +
-> > +&usdhc1 {
-> > +	compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc"; };
-> > +
-> > +&usdhc2 {
-> > +	compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc"; };
-> > +
-> > +&fec1 {
-> > +	compatible = "fsl,imx8qxp-fec", "fsl,imx6sx-fec"; };
-> > +
-> > +&fec2 {
-> > +	compatible = "fsl,imx8qxp-fec", "fsl,imx6sx-fec"; };
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi
-> > new file mode 100644
-> > index 0000000..842849b
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi
-> > @@ -0,0 +1,57 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright 2018 NXP
-> > + *	Dong Aisheng <aisheng.dong@nxp.com>
-> > + */
-> > +
-> > +&lsio_lpcg {
-> > +	compatible = "fsl,imx8qxp-lpcg-lsio"; };
-> > +
-> > +&lsio_mu0 {
-> > +	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu"; };
-> > +
-> > +&lsio_mu1 {
-> > +	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu"; };
-> > +
-> > +&lsio_mu3 {
-> > +	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu"; };
-> > +
-> > +&lsio_mu4 {
-> > +	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu"; };
-> > +
-> > +&lsio_gpio0 {
-> > +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio"; };
-> > +
-> > +&lsio_gpio1 {
-> > +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio"; };
-> > +
-> > +&lsio_gpio2 {
-> > +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio"; };
-> > +
-> > +&lsio_gpio3 {
-> > +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio"; };
-> > +
-> > +&lsio_gpio4 {
-> > +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio"; };
-> > +
-> > +&lsio_gpio5 {
-> > +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio"; };
-> > +
-> > +&lsio_gpio6 {
-> > +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio"; };
-> > +
-> > +&lsio_gpio7 {
-> > +	compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio"; };
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > index 4c3dd95..c27043c 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > @@ -139,308 +139,11 @@
-> >  		clock-frequency = <24000000>;
-> >  		clock-output-names = "xtal_24MHz";
-> >  	};
-> > -
-> > -	adma_subsys: bus@59000000 {
-> > -		compatible = "simple-bus";
-> > -		#address-cells = <1>;
-> > -		#size-cells = <1>;
-> > -		ranges = <0x59000000 0x0 0x59000000 0x2000000>;
-> > -
-> > -		adma_lpcg: clock-controller@59000000 {
-> > -			compatible = "fsl,imx8qxp-lpcg-adma";
-> > -			reg = <0x59000000 0x2000000>;
-> > -			#clock-cells = <1>;
-> > -		};
-> > -
-> > -		adma_lpuart0: serial@5a060000 {
-> > -			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
-> > -			reg = <0x5a060000 0x1000>;
-> > -			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
-> > -			interrupt-parent = <&gic>;
-> > -			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART0_BAUD_CLK>;
-> > -			clock-names = "ipg";
-> > -			power-domains = <&pd IMX_SC_R_UART_0>;
-> > -			status = "disabled";
-> > -		};
-> > -
-> > -		adma_i2c0: i2c@5a800000 {
-> > -			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
-> > -			reg = <0x5a800000 0x4000>;
-> > -			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
-> > -			interrupt-parent = <&gic>;
-> > -			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C0_CLK>;
-> > -			clock-names = "per";
-> > -			assigned-clocks = <&clk IMX_ADMA_I2C0_CLK>;
-> > -			assigned-clock-rates = <24000000>;
-> > -			power-domains = <&pd IMX_SC_R_I2C_0>;
-> > -			status = "disabled";
-> > -		};
-> > -
-> > -		adma_i2c1: i2c@5a810000 {
-> > -			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
-> > -			reg = <0x5a810000 0x4000>;
-> > -			interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
-> > -			interrupt-parent = <&gic>;
-> > -			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C1_CLK>;
-> > -			clock-names = "per";
-> > -			assigned-clocks = <&clk IMX_ADMA_I2C1_CLK>;
-> > -			assigned-clock-rates = <24000000>;
-> > -			power-domains = <&pd IMX_SC_R_I2C_1>;
-> > -			status = "disabled";
-> > -		};
-> > -
-> > -		adma_i2c2: i2c@5a820000 {
-> > -			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
-> > -			reg = <0x5a820000 0x4000>;
-> > -			interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
-> > -			interrupt-parent = <&gic>;
-> > -			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C2_CLK>;
-> > -			clock-names = "per";
-> > -			assigned-clocks = <&clk IMX_ADMA_I2C2_CLK>;
-> > -			assigned-clock-rates = <24000000>;
-> > -			power-domains = <&pd IMX_SC_R_I2C_2>;
-> > -			status = "disabled";
-> > -		};
-> > -
-> > -		adma_i2c3: i2c@5a830000 {
-> > -			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
-> > -			reg = <0x5a830000 0x4000>;
-> > -			interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
-> > -			interrupt-parent = <&gic>;
-> > -			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C3_CLK>;
-> > -			clock-names = "per";
-> > -			assigned-clocks = <&clk IMX_ADMA_I2C3_CLK>;
-> > -			assigned-clock-rates = <24000000>;
-> > -			power-domains = <&pd IMX_SC_R_I2C_3>;
-> > -			status = "disabled";
-> > -		};
-> > -	};
-> > -
-> > -	conn_subsys: bus@5b000000 {
-> > -		compatible = "simple-bus";
-> > -		#address-cells = <1>;
-> > -		#size-cells = <1>;
-> > -		ranges = <0x5b000000 0x0 0x5b000000 0x1000000>;
-> > -
-> > -		conn_lpcg: clock-controller@5b200000 {
-> > -			compatible = "fsl,imx8qxp-lpcg-conn";
-> > -			reg = <0x5b200000 0xb0000>;
-> > -			#clock-cells = <1>;
-> > -		};
-> > -
-> > -		usdhc1: mmc@5b010000 {
-> > -			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
-> > -			interrupt-parent = <&gic>;
-> > -			interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
-> > -			reg = <0x5b010000 0x10000>;
-> > -			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC0_IPG_CLK>,
-> > -				 <&conn_lpcg IMX_CONN_LPCG_SDHC0_PER_CLK>,
-> > -				 <&conn_lpcg IMX_CONN_LPCG_SDHC0_HCLK>;
-> > -			clock-names = "ipg", "per", "ahb";
-> > -			assigned-clocks = <&clk IMX_CONN_SDHC0_CLK>;
-> > -			assigned-clock-rates = <200000000>;
-> > -			power-domains = <&pd IMX_SC_R_SDHC_0>;
-> > -			status = "disabled";
-> > -		};
-> > -
-> > -		usdhc2: mmc@5b020000 {
-> > -			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
-> > -			interrupt-parent = <&gic>;
-> > -			interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
-> > -			reg = <0x5b020000 0x10000>;
-> > -			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC1_IPG_CLK>,
-> > -				 <&conn_lpcg IMX_CONN_LPCG_SDHC1_PER_CLK>,
-> > -				 <&conn_lpcg IMX_CONN_LPCG_SDHC1_HCLK>;
-> > -			clock-names = "ipg", "per", "ahb";
-> > -			assigned-clocks = <&clk IMX_CONN_SDHC1_CLK>;
-> > -			assigned-clock-rates = <200000000>;
-> > -			power-domains = <&pd IMX_SC_R_SDHC_1>;
-> > -			fsl,tuning-start-tap = <20>;
-> > -			fsl,tuning-step= <2>;
-> > -			status = "disabled";
-> > -		};
-> > -
-> > -		usdhc3: mmc@5b030000 {
-> > -			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
-> > -			interrupt-parent = <&gic>;
-> > -			interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_HIGH>;
-> > -			reg = <0x5b030000 0x10000>;
-> > -			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC2_IPG_CLK>,
-> > -				 <&conn_lpcg IMX_CONN_LPCG_SDHC2_PER_CLK>,
-> > -				 <&conn_lpcg IMX_CONN_LPCG_SDHC2_HCLK>;
-> > -			clock-names = "ipg", "per", "ahb";
-> > -			assigned-clocks = <&clk IMX_CONN_SDHC2_CLK>;
-> > -			assigned-clock-rates = <200000000>;
-> > -			power-domains = <&pd IMX_SC_R_SDHC_2>;
-> > -			status = "disabled";
-> > -		};
-> > -
-> > -		fec1: ethernet@5b040000 {
-> > -			compatible = "fsl,imx8qxp-fec", "fsl,imx6sx-fec";
-> > -			reg = <0x5b040000 0x10000>;
-> > -			interrupts = <GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>,
-> > -				     <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
-> > -				     <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>,
-> > -				     <GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH>;
-> > -			clocks = <&conn_lpcg IMX_CONN_LPCG_ENET0_IPG_CLK>,
-> > -				 <&conn_lpcg IMX_CONN_LPCG_ENET0_AHB_CLK>,
-> > -				 <&conn_lpcg IMX_CONN_LPCG_ENET0_TX_CLK>,
-> > -				 <&conn_lpcg IMX_CONN_LPCG_ENET0_ROOT_CLK>;
-> > -			clock-names = "ipg", "ahb", "enet_clk_ref", "ptp";
-> > -			fsl,num-tx-queues=<3>;
-> > -			fsl,num-rx-queues=<3>;
-> > -			power-domains = <&pd IMX_SC_R_ENET_0>;
-> > -			status = "disabled";
-> > -		};
-> > -
-> > -		fec2: ethernet@5b050000 {
-> > -			compatible = "fsl,imx8qxp-fec", "fsl,imx6sx-fec";
-> > -			reg = <0x5b050000 0x10000>;
-> > -			interrupts = <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH>,
-> > -					<GIC_SPI 260 IRQ_TYPE_LEVEL_HIGH>,
-> > -					<GIC_SPI 261 IRQ_TYPE_LEVEL_HIGH>,
-> > -					<GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
-> > -			clocks = <&conn_lpcg IMX_CONN_LPCG_ENET1_IPG_CLK>,
-> > -				 <&conn_lpcg IMX_CONN_LPCG_ENET1_AHB_CLK>,
-> > -				 <&conn_lpcg IMX_CONN_LPCG_ENET1_TX_CLK>,
-> > -				 <&conn_lpcg IMX_CONN_LPCG_ENET1_ROOT_CLK>;
-> > -			clock-names = "ipg", "ahb", "enet_clk_ref", "ptp";
-> > -			fsl,num-tx-queues=<3>;
-> > -			fsl,num-rx-queues=<3>;
-> > -			power-domains = <&pd IMX_SC_R_ENET_1>;
-> > -			status = "disabled";
-> > -		};
-> > -	};
-> > -
-> > -	lsio_subsys: bus@5d000000 {
-> > -		compatible = "simple-bus";
-> > -		#address-cells = <1>;
-> > -		#size-cells = <1>;
-> > -		ranges = <0x5d000000 0x0 0x5d000000 0x1000000>;
-> > -
-> > -		lsio_lpcg: clock-controller@5d400000 {
-> > -			compatible = "fsl,imx8qxp-lpcg-lsio";
-> > -			reg = <0x5d400000 0x400000>;
-> > -			#clock-cells = <1>;
-> > -		};
-> > -
-> > -		lsio_mu0: mailbox@5d1b0000 {
-> > -			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
-> > -			reg = <0x5d1b0000 0x10000>;
-> > -			interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
-> > -			#mbox-cells = <0>;
-> > -			status = "disabled";
-> > -		};
-> > -
-> > -		lsio_mu1: mailbox@5d1c0000 {
-> > -			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
-> > -			reg = <0x5d1c0000 0x10000>;
-> > -			interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
-> > -			#mbox-cells = <2>;
-> > -		};
-> > -
-> > -		lsio_mu3: mailbox@5d1e0000 {
-> > -			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
-> > -			reg = <0x5d1e0000 0x10000>;
-> > -			interrupts = <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
-> > -			#mbox-cells = <0>;
-> > -			status = "disabled";
-> > -		};
-> > -
-> > -		lsio_mu4: mailbox@5d1f0000 {
-> > -			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
-> > -			reg = <0x5d1f0000 0x10000>;
-> > -			interrupts = <GIC_SPI 180 IRQ_TYPE_LEVEL_HIGH>;
-> > -			#mbox-cells = <0>;
-> > -			status = "disabled";
-> > -		};
-> > -
-> > -		lsio_gpio0: gpio@5d080000 {
-> > -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
-> > -			reg = <0x5d080000 0x10000>;
-> > -			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
-> > -			gpio-controller;
-> > -			#gpio-cells = <2>;
-> > -			interrupt-controller;
-> > -			#interrupt-cells = <2>;
-> > -			power-domains = <&pd IMX_SC_R_GPIO_0>;
-> > -		};
-> > -
-> > -		lsio_gpio1: gpio@5d090000 {
-> > -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
-> > -			reg = <0x5d090000 0x10000>;
-> > -			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
-> > -			gpio-controller;
-> > -			#gpio-cells = <2>;
-> > -			interrupt-controller;
-> > -			#interrupt-cells = <2>;
-> > -			power-domains = <&pd IMX_SC_R_GPIO_1>;
-> > -		};
-> > -
-> > -		lsio_gpio2: gpio@5d0a0000 {
-> > -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
-> > -			reg = <0x5d0a0000 0x10000>;
-> > -			interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-> > -			gpio-controller;
-> > -			#gpio-cells = <2>;
-> > -			interrupt-controller;
-> > -			#interrupt-cells = <2>;
-> > -			power-domains = <&pd IMX_SC_R_GPIO_2>;
-> > -		};
-> > -
-> > -		lsio_gpio3: gpio@5d0b0000 {
-> > -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
-> > -			reg = <0x5d0b0000 0x10000>;
-> > -			interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
-> > -			gpio-controller;
-> > -			#gpio-cells = <2>;
-> > -			interrupt-controller;
-> > -			#interrupt-cells = <2>;
-> > -			power-domains = <&pd IMX_SC_R_GPIO_3>;
-> > -		};
-> > -
-> > -		lsio_gpio4: gpio@5d0c0000 {
-> > -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
-> > -			reg = <0x5d0c0000 0x10000>;
-> > -			interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
-> > -			gpio-controller;
-> > -			#gpio-cells = <2>;
-> > -			interrupt-controller;
-> > -			#interrupt-cells = <2>;
-> > -			power-domains = <&pd IMX_SC_R_GPIO_4>;
-> > -		};
-> > -
-> > -		lsio_gpio5: gpio@5d0d0000 {
-> > -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
-> > -			reg = <0x5d0d0000 0x10000>;
-> > -			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
-> > -			gpio-controller;
-> > -			#gpio-cells = <2>;
-> > -			interrupt-controller;
-> > -			#interrupt-cells = <2>;
-> > -			power-domains = <&pd IMX_SC_R_GPIO_5>;
-> > -		};
-> > -
-> > -		lsio_gpio6: gpio@5d0e0000 {
-> > -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
-> > -			reg = <0x5d0e0000 0x10000>;
-> > -			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
-> > -			gpio-controller;
-> > -			#gpio-cells = <2>;
-> > -			interrupt-controller;
-> > -			#interrupt-cells = <2>;
-> > -			power-domains = <&pd IMX_SC_R_GPIO_6>;
-> > -		};
-> > -
-> > -		lsio_gpio7: gpio@5d0f0000 {
-> > -			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
-> > -			reg = <0x5d0f0000 0x10000>;
-> > -			interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-> > -			gpio-controller;
-> > -			#gpio-cells = <2>;
-> > -			interrupt-controller;
-> > -			#interrupt-cells = <2>;
-> > -			power-domains = <&pd IMX_SC_R_GPIO_7>;
-> > -		};
-> > -	};
-> > +	#include "imx8-ss-adma.dtsi"
-> > +	#include "imx8-ss-conn.dtsi"
-> > +	#include "imx8-ss-lsio.dtsi"
-> >  };
-> > +
-> > +#include "imx8qxp-ss-adma.dtsi"
-> > +#include "imx8qxp-ss-conn.dtsi"
-> > +#include "imx8qxp-ss-lsio.dtsi"
-> > --
-> > 2.7.4
+And you're still not explaining *why* that is an issue, and what makes
+you think that your solution is the right one.
+
+Seriously, I feel like this discussion is going in circles. I've been
+asking for that since your very first version.
+
+> > > Tested this on 4 different panels, and below are the desired divider values
+> > > and pll-mipi clock rate with respect to pixel clock frequency.
+> > >
+> > > - 55MHz pixel clock with 4-lane panel, and the desired DSI clock divider
+> > >   is 6 with the output parent clock rate of 330MHz.
+> > > - 30MHz pixel clock with 4-lane panel, and the desired DSI clock divider
+> > >   is 6 with parent clock rate of 180MHz.
+> > > - 27.5Mhz pixel clock with 2-lane pane, and the desired DSI clock divider
+> > >   is 12 with the output parent clock rate of 330MHz.
+> > > - 147MHz pixel clock with 4-lane panel, and the desired DSI clock divider
+> > >   is 6 with the output parent clock rate of 882MHz.
+> > >
+> > > BSP trying to use this format/lane to compute dsi divider that in-turn
+> > > using pll-mipi set_rate but TCON0_DCLK_REG keep constant 4.
 > >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Flists
-> > .infradead.org%2Fmailman%2Flistinfo%2Flinux-arm-kernel&amp;data=02%7
-> C0
-> >
-> 1%7Caisheng.dong%40nxp.com%7Cf4c92b89211c4d3b92fd08d6b7220016%7
-> C686ea1
-> >
-> d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C636897753996272452&amp;s
-> data=Od%2
-> >
-> BfKuGlZHAmXMFHA3ZP9N7zUcUPha%2BskU%2FAABLd5F0%3D&amp;reserve
-> d=0
+> > Feel free to reply to
+> > http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/629596.html
+>
+> Yes, I have replied at that time itself, please check.
+>
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/629673.html
+>
+> Here I have taken the pixel clock to 30Mhz for example in Bananapi
+> panel, and the above gist the pixel is 148Mhz from another panel.
+
+Again, without providing any reference, just making vague statements.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--bq55zguk5gxjx22z--
