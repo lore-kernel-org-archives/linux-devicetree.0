@@ -1,71 +1,62 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [BUG] gpiolib: spi chip select legacy support breaks modern chip select and whitens the GTA04 LCD panel
-Date: Tue, 2 Apr 2019 08:37:23 +0200
-Message-ID: <F8ACE730-B498-41E2-A486-923C760807F8@goldelico.com>
-References: <7509BFB6-36E4-441A-9F16-7A4FEE7F7CF3@goldelico.com> <5488EF42-08DB-4273-95FF-49ED31E27472@goldelico.com> <CACRpkdb4URKcdZ-=3aG_np86Bp=1ahs+qztM-7yQkSP18ZkE6A@mail.gmail.com> <2286C331-4AFC-46A9-B8C4-8A8BA9CD33C2@goldelico.com> <CACRpkda4k_Vaoo1qEaZ3nv8bA4tcrPEN6oT-v+n9HRdA6=5Xvg@mail.gmail.com> <2D2D13C2-0D3E-47CD-946B-81DBBF3C43E6@goldelico.com> <20190402053143.GZ2059@sirena.org.uk>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [GIT PULL] Immutable branch between MFD, ARM and Net due for the 5.2
+ merge window
+Date: Tue, 2 Apr 2019 07:43:17 +0100
+Message-ID: <20190402064317.GA4187@dell>
+References: <1552342688-6663-1-git-send-email-thor.thayer@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190402053143.GZ2059@sirena.org.uk>
+Content-Disposition: inline
+In-Reply-To: <1552342688-6663-1-git-send-email-thor.thayer@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Kumar Gala <galak@codeaurora.org>, Wolfgang Ocker <weo@reccoware.de>, Jan Kotas <jank@cadence.com>, LKML <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+To: thor.thayer@linux.intel.com
+Cc: arnd@arndb.de, dinguyen@kernel.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, olof@lixom.net, davem@davemloft.net, mcoquelin.stm32@gmail.com, mchehab+samsung@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Enjoy!
 
-> Am 02.04.2019 um 07:31 schrieb Mark Brown <broonie@kernel.org>:
->=20
-> It's relatively common, especially with older devices, for people to =
-be
-> perfectly happy to update the kernel and do so frequently but =
-unwilling
-> to update the bootloader as the procedure for recovering a broken
-> bootloader is difficult or perhaps not even possible.
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
 
-Yes, that is the case Linus tries to solve, where it is not even =
-possible
-to modify the DTB. No idea how it could be solved if it would not be
-possible to change our 6 years old DTB.
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
 
-Fortunately we do not need to change it at all with the latest check for
-cs-gpios.
+are available in the Git repository at:
 
->=20
->> This also gives another idea: make it depend on "powerpc".
->=20
-> That won't fly, the code has always been architecture neutral.
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-arm-net-5.2
 
-Ok. Just an idea.
+for you to fetch changes up to 8f4ebe9b331ef3d39c8375ff38c623f26dbc1735:
 
->=20
->>> Dunno about this, it looks fragile, I would prefer to keep all =
-working.
->>> But I will listen to reason.
->=20
->> Reason why I propose a CONFIG option is:
->=20
->> if someone is able to compile and deploy a v5.1 kernel for some =
-device which
->> has (old) and problematic DTB in ROM he/she must have access to the =
-.config.
->> So it is easy to modify it to enable legacy handling of spi-cs-high. =
-And keep
->> it disabled for all others.
->=20
-> This assumes people aren't able to run a distro kernel...
+  arm64: dts: stratix10: New System Manager compatible (2019-04-02 07:38:27 +0100)
 
-Yes, indeed.
+----------------------------------------------------------------
+Immutable branch between MFD, ARM and Net due for the 5.2 merge window
 
-I have learned from Linus that the problem with legacy spi-cs-high are =
-mostly embedded
-powerpc systems deployed between 2008 and 2013 where the boot-loader =
-can't be
-changed. And where the dts is not maintained on kernel.org.
+----------------------------------------------------------------
+Thor Thayer (6):
+      mfd: altera-sysmgr: Add SOCFPGA System Manager
+      dt-bindings: arm: socfpga: Add S10 System Manager binding
+      ARM: socfpga_defconfig: Enable CONFIG_MTD_ALTERA_SYSMGR
+      arm64: defconfig: Enable CONFIG_MTD_ALTERA_SYSMGR
+      net: stmmac: socfpga: Use shared System Manager driver
+      arm64: dts: stratix10: New System Manager compatible
 
-IMHO it is very unlikely that they are running distro kernels. Or is =
-there an example
-of such a system?
+ .../bindings/arm/altera/socfpga-system.txt         |  12 ++
+ MAINTAINERS                                        |   6 +
+ arch/arm/configs/socfpga_defconfig                 |   1 +
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |   2 +-
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/mfd/Kconfig                                |  10 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/altera-sysmgr.c                        | 211 +++++++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    |   5 +-
+ include/linux/mfd/altera-sysmgr.h                  |  29 +++
+ 10 files changed, 275 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/mfd/altera-sysmgr.c
+ create mode 100644 include/linux/mfd/altera-sysmgr.h
 
-BR and thanks,
-Nikolaus
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
