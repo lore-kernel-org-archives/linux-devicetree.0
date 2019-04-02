@@ -1,77 +1,82 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH v6 5/6] dt-bindings: display: sii902x: Add HDMI audio bindings
-Date: Tue, 2 Apr 2019 10:29:14 +0300
-Message-ID: <4a0573f42112a1070c2d48ecc4a4e89838842cfc.1554146714.git.jsarha@ti.com>
-References: <cover.1554146714.git.jsarha@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RESEND PATCH v6 05/11] mfd: core: document mfd_add_devices()
+Date: Tue, 2 Apr 2019 08:41:03 +0100
+Message-ID: <20190402074103.GG4187@dell>
+References: <20190318174228.18194-1-brgl@bgdev.pl>
+ <20190318174228.18194-6-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.1554146714.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: fabrizio.castro@bp.renesas.com, Songjun.Wu@atmel.com, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, voice.shen@atmel.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190318174228.18194-6-brgl@bgdev.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHNpaTkwMnggY2hpcCBmYW1pbHkgc3VwcG9ydHMgYWxzbyBIRE1JIGF1ZGlvLiBBZGQgYmlu
-ZGluZyBmb3IKZGVzY3JpYmluZyB0aGUgbmVjZXNzYXJ5IGkycyBhbmQgbWNsayB3aXJpbmcgZm9y
-IGl0LgoKU2lnbmVkLW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KLS0tCiAuLi4v
-YmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTAyeC50eHQgICAgICAgfCAzNyArKysrKysrKysr
-KysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMzcgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9z
-aWk5MDJ4LnR4dAppbmRleCBjNGMxODU1Y2E2NTQuLmQxMjRhNWZlZGFiMSAxMDA2NDQKLS0tIGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngu
-dHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRn
-ZS9zaWk5MDJ4LnR4dApAQCAtOSw2ICs5LDM3IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6CiAJICBh
-Ym91dCBob3RwbHVnIGV2ZW50cy4KIAktIHJlc2V0LWdwaW9zOiBPRiBkZXZpY2UtdHJlZSBncGlv
-IHNwZWNpZmljYXRpb24gZm9yIFJTVF9OIHBpbi4KIAorCUhETUkgYXVkaW8gcHJvcGVydGllczoK
-KwktICNzb3VuZC1kYWktY2VsbHM6IDwwPiBvciA8MT4uIDwwPiBpZiBvbmx5IGkycyBvciBzcGRp
-ZiBwaW4KKwkgICBpcyB3aXJlZCwgPDE+IGlmIHRoZSBib3RoIGFyZSB3aXJlZC4gSERNSSBhdWRp
-byBpcworCSAgIGNvbmZpZ3VyZWQgb25seSBpZiB0aGlzIHByb3BlcnR5IGlzIGZvdW5kLgorCS0g
-c2lsLGkycy1kYXRhLWxhbmVzOiBBcnJheSBvZiB1cCB0byA0IGludGVnZXJzIHdpdGggdmFsdWVz
-IG9mIDAtMworCSAgIEVhY2ggaW50ZWdlciBpbmRpY2F0ZXMgd2hpY2ggaTJzIHBpbiBpcyBjb25u
-ZWN0ZWQgdG8gd2hpY2gKKwkgICBhdWRpbyBmaWZvLiBUaGUgZmlyc3QgaW50ZWdlciBzZWxlY3Rz
-IGkycyBhdWRpbyBwaW4gZm9yIHRoZQorCSAgIGZpcnN0IGF1ZGlvIGZpZm8jMCAoSERNSSBjaGFu
-bmVscyAxJjIpLCBzZWNvbmQgZm9yIGZpZm8jMQorCSAgIChIRE1JIGNoYW5uZWxzIDMmNCksIGFu
-ZCBzbyBvbi4gVGhlcmUgaXMgNCBmaWZvcyBhbmQgNCBpMnMKKwkgICBwaW5zIChTRDAgLSBTRDMp
-LiBBbnkgaTJzIHBpbiBjYW4gYmUgY29ubmVjdGVkIHRvIGFueSBmaWZvLAorCSAgIGJ1dCB0aGVy
-ZSBjYW4gYmUgbm8gZ2Fwcy4gRS5nLiBhbiBpMnMgcGluIG11c3QgYmUgbWFwcGVkIHRvCisJICAg
-ZmlmbyMwIGFuZCBmaWZvIzEgYmVmb3JlIG1hcHBpbmcgYSBjaGFubmVsIHRvIGZpZm8jMi4gRGVm
-YXVsdAorCSAgIHZhbHVlIGlzIDwwPiwgZGVzY3JpYmluZyBTRDAgcGluIGJlaWdpbmcgcm91dGVk
-IHRvIGhkbWkgYXVkaW8KKwkgICBmaWZvICMwLgorCS0gY2xvY2tzOiBwaGFuZGxlIGFuZCBjbG9j
-ayBzcGVjaWZpZXIgZm9yIGVhY2ggY2xvY2sgbGlzdGVkIGluCisgICAgICAgICAgIHRoZSBjbG9j
-ay1uYW1lcyBwcm9wZXJ0eQorCS0gY2xvY2stbmFtZXM6ICJtY2xrIgorCSAgIERlc2NyaWJlcyBT
-SUk5MDJ4IE1DTEsgaW5wdXQuIE1DTEsgaXMgdXNlZCB0byBwcm9kdWNlCisJICAgSERNSSBhdWRp
-byBDVFMgdmFsdWVzLiBUaGlzIHByb3BlcnR5IGlzIHJlcXVpcmVkIGlmCisJICAgIiNzb3VuZC1k
-YWktY2VsbHMiLXByb3BlcnR5IGlzIHByZXNlbnQuIFRoaXMgcHJvcGVydHkgZm9sbG93cworCSAg
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jbG9jay1iaW5kaW5ncy50
-eHQKKwkgICBjb25zdW1lciBiaW5kaW5nLgorCisJSWYgSERNSSBhdWRpbyBpcyBjb25maWd1cmVk
-IHRoZSBzaWk5MDJ4IGRldmljZSBiZWNvbWVzIGFuIEFTb0MKKwljb2RlYyBjb21wb25lbnQsIHRo
-YXQgY2FuIGJlIHVzZWQgaW4gY29uZmlndXJpbmcgZnVsbCBhdWRpbworCWRldmljZXMgd2l0aCBB
-U29DIHNpbXBsZS1jYXJkIG9yIGF1ZGlvLWdyYXBoLWNhcmQuIFNlZSB0aGVpcgorCWJpbmRpbmcg
-ZG9jdW1lbnRzIG9uIGhvdyB0byBkZXNjcmliZSBob3cgdGhlIHNpaTkwMnggZGV2aWNlIGlzCisJ
-Y29ubmVjdGVkIHRvIHRoZSByZXN0IG9mIHRoZSBhdWRpbyBzeXN0ZW06CisJRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3NpbXBsZS1jYXJkLnR4dAorCURvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9hdWRpby1ncmFwaC1jYXJkLnR4dAorCiBPcHRp
-b25hbCBzdWJub2RlczoKIAktIHZpZGVvIGlucHV0OiB0aGlzIHN1Ym5vZGUgY2FuIGNvbnRhaW4g
-YSB2aWRlbyBpbnB1dCBwb3J0IG5vZGUKIAkgIHRvIGNvbm5lY3QgdGhlIGJyaWRnZSB0byBhIGRp
-c3BsYXkgY29udHJvbGxlciBvdXRwdXQgKFNlZSB0aGlzCkBAIC0yMSw2ICs1MiwxMiBAQCBFeGFt
-cGxlOgogCQljb21wYXRpYmxlID0gInNpbCxzaWk5MDIyIjsKIAkJcmVnID0gPDB4Mzk+OwogCQly
-ZXNldC1ncGlvcyA9IDwmcGlvQSAxIDA+OworCisJCSNzb3VuZC1kYWktY2VsbHMgPSA8MD47CisJ
-CWkycy1kYXRhLWxhbmVzID0gPCAwIDEgMiA+OworCQljbG9ja3MgPSA8Jm1jbGs+OworCQljbG9j
-ay1uYW1lcyA9ICJtY2xrIjsKKwogCQlwb3J0cyB7CiAJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsK
-IAkJCSNzaXplLWNlbGxzID0gPDA+OwotLSAKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwg
-UG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuIFktdHVubnVzL0J1c2luZXNzIElEOiAw
-NjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Mon, 18 Mar 2019, Bartosz Golaszewski wrote:
+
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Add a kernel doc for mfd_add_devices().
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/mfd/mfd-core.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+> index 94e3f32ce935..0898a8db1747 100644
+> --- a/drivers/mfd/mfd-core.c
+> +++ b/drivers/mfd/mfd-core.c
+> @@ -269,6 +269,20 @@ static int mfd_add_device(struct device *parent, int id,
+>  	return ret;
+>  }
+>  
+> +/**
+> + * mfd_add_devices - register a set of child devices
+
+"register child devices"
+
+> + *
+> + * @parent: Parent device for all sub-nodes.
+> + * @id: Platform device id. If >= 0, each sub-device will have its cell_id
+> + *      added to this number and use it as the platform device id.
+> + * @cells: Array of mfd cells describing sub-devices.
+> + * @n_devs: Number of sub-devices to register.
+> + * @mem_base: Parent register range resource for sub-devices.
+> + * @irq_base: Base of the range of virtual interrupt numbers allocated for
+> + *            this MFD device. Unused if @domain is specified.
+> + * @domain: Interrupt domain used to create mappings for HW interrupt numbers
+> + *          specificed in sub-devices' IRQ resources.
+
+Spelling.
+
+> + */
+>  int mfd_add_devices(struct device *parent, int id,
+>  		    const struct mfd_cell *cells, int n_devs,
+>  		    struct resource *mem_base,
+
+How about this:
+
+/**
+ * mfd_add_devices - register child devices
+ *
+ * @parent:	Pointer to parent device.
+ * @id:		Can be PLATFORM_DEVID_AUTO to let the Platform API take care
+ * 		of device numbering, or will be added to a device's cell_id.
+ * @cells:	Array of (struct mfd_cell)s describing child devices.
+ * @n_devs:	Number of child devices to register.
+ * @mem_base:	Parent register range resource for child devices.
+ * @irq_base:	Base of the range of virtual interrupt numbers allocated for
+ * 		this MFD device. Unused if @domain is specified.
+ * @domain:	Interrupt domain to create mappings for hardware interrupts.
+ */
+
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
