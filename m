@@ -1,185 +1,70 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/4] dt-bindings: mtd: sunxi-nand: Add YAML schemas
-Date: Mon, 1 Apr 2019 21:02:02 -0500
-Message-ID: <CAL_JsqKaaFH2AKKLV91n_RjL5_56ozheLJNtrE=0t+ygm=pxxg@mail.gmail.com>
-References: <75ad3b89e4a6f8ad5bc414c3dccbb1f99361495a.1554153146.git-series.maxime.ripard@bootlin.com>
- <5bbd086f909e2331103fbf9afbe75cc5b8782f36.1554153146.git-series.maxime.ripard@bootlin.com>
+From: <orito.takao@socionext.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: mmc: sdhci-fujitsu.txt: add miilbeaut
+ driver
+Date: Tue, 2 Apr 2019 02:05:46 +0000
+Message-ID: <20190402110537.CB01.F0D17A80@socionext.com>
+References: <1553579617-6139-1-git-send-email-orito.takao@socionext.com>
+ <5ca0613a.1c69fb81.6e7bf.859e@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5bbd086f909e2331103fbf9afbe75cc5b8782f36.1554153146.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Boris Brezillon <boris.brezillon@collabora.com>, MTD Maling List <linux-mtd@lists.infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5ca0613a.1c69fb81.6e7bf.859e@mx.google.com>
+Content-Language: ja-JP
+Content-ID: <35894A9848BD52409BD292B2CA5BE79D@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh@kernel.org
+Cc: ulf.hansson@linaro.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, sugaya.taichi@socionext.com, kasai.kazuhiro@socionext.com, kanematsu.shinji@socionext.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 1, 2019 at 4:14 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Switch the DT binding to a YAML schema to enable the DT validation.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml | 81 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
->  Documentation/devicetree/bindings/mtd/sunxi-nand.txt                | 48 +-------------------------------------------
->  2 files changed, 81 insertions(+), 48 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mtd/sunxi-nand.txt
->
-> diff --git a/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml b/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
-> new file mode 100644
-> index 000000000000..174294b9e9c6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
-> @@ -0,0 +1,81 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mtd/allwinner,sun4i-a10-nand.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner A10 NAND Controller Device Tree Bindings
-> +
-> +allOf:
-> +  - $ref: "nand-controller.yaml"
-> +
-> +maintainers:
-> +  - Chen-Yu Tsai <wens@csie.org>
-> +  - Maxime Ripard <maxime.ripard@bootlin.com>
-> +
-> +properties:
-> +  "#address-cells": true
-> +  "#size-cells": true
-> +
-> +  compatible:
-> +    const: allwinner,sun4i-a10-nand
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Bus Clock
-> +      - description: Module Clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ahb
-> +      - const: mod
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  reset-names:
-> +    const: ahb
-> +
-> +  dmas:
-> +    maxItems: 1
-> +
-> +  dma-names:
-> +    const: rxtx
-> +
-> +  pinctrl-names: true
-> +
-> +patternProperties:
-> +  "^pinctrl-[0-9]+$": true
-> +
-> +  "^nand@[a-z0-9]+$":
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-
-min/max value of reg values?
-
-> +
-> +      nand-ecc-mode: true
-> +      nand-ecc-step-size: true
-> +      nand-ecc-strength: true
-
-Surely the h/w has further constraints on possible values?
-
-> +
-> +      allwinner,rb:
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        description:
-> +          Contains the native Ready/Busy IDs.
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-> deleted file mode 100644
-> index dcd5a5d80dc0..000000000000
-> --- a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-> +++ /dev/null
-> @@ -1,48 +0,0 @@
-> -Allwinner NAND Flash Controller (NFC)
-> -
-> -Required properties:
-> -- compatible : "allwinner,sun4i-a10-nand".
-> -- reg : shall contain registers location and length for data and reg.
-> -- interrupts : shall define the nand controller interrupt.
-> -- #address-cells: shall be set to 1. Encode the nand CS.
-> -- #size-cells : shall be set to 0.
-> -- clocks : shall reference nand controller clocks.
-> -- clock-names : nand controller internal clock names. Shall contain :
-> -    * "ahb" : AHB gating clock
-> -    * "mod" : nand controller clock
-> -
-> -Optional properties:
-> -- dmas : shall reference DMA channel associated to the NAND controller.
-> -- dma-names : shall be "rxtx".
-> -
-> -Optional children nodes:
-> -Children nodes represent the available nand chips.
-> -
-> -Optional properties:
-> -- reset : phandle + reset specifier pair
-> -- reset-names : must contain "ahb"
-> -- allwinner,rb : shall contain the native Ready/Busy ids.
-> -- nand-ecc-mode : one of the supported ECC modes ("hw", "soft", "soft_bch" or
-> -                 "none")
-> -
-> -see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
-> -
-> -
-> -Examples:
-> -nfc: nand@1c03000 {
-> -       compatible = "allwinner,sun4i-a10-nand";
-> -       reg = <0x01c03000 0x1000>;
-> -       interrupts = <0 37 1>;
-> -       clocks = <&ahb_gates 13>, <&nand_clk>;
-> -       clock-names = "ahb", "mod";
-> -       #address-cells = <1>;
-> -       #size-cells = <0>;
-> -       pinctrl-names = "default";
-> -       pinctrl-0 = <&nand_pins_a &nand_cs0_pins_a &nand_rb0_pins_a>;
-> -
-> -       nand@0 {
-> -               reg = <0>;
-> -               allwinner,rb = <0>;
-> -               nand-ecc-mode = "soft_bch";
-> -       };
-> -};
-> --
-> git-series 0.9.1
+DQpIaQ0KDQo+IE9uIFR1ZSwgTWFyIDI2LCAyMDE5IGF0IDAyOjUzOjM3UE0gKzA5MDAsIFRha2Fv
+IE9yaXRvIHdyb3RlOg0KPiA+IEFkZCBuZXcgY29tcGF0aWJsZSBkZXNjcmlwdGlvbiBmb3IgTWls
+YmVhdXQgU29DLiBTb2Npb25leHQNCj4gPiBpbmhlcml0cyBGX1NESDMwIElQIGZyb20gRnVqaXRz
+dS4gVGhlbiBuZXcgU29jIHNlcmllcyAiTWlsYmVhdXQiDQo+ID4gaGFzIEZfU0RIMzAgY29udHJv
+bGxlciBzcGVjaWZpZWQgYnkgInNvY2lvbmV4dCxtaWxiZWF1dC1tMTB2LXNkaGNpLTMuMCIuDQo+
+IA0KPiBTdWJqZWN0IGlzIHdyb25nLCB5b3UncmUgbm90IGFkZGluZyBhIGRyaXZlci4NCg0KT0ss
+IEkgd2lsbCBjaGFuZ2UgImR0LWJpbmRpbmdzOiBtbWM6IHNkaGNpLWZ1aml0c3UudHh0OiBhZGQg
+bWlsYmVhdXQgc3VwcG9ydCINCg0KPiANCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBUYWthbyBP
+cml0byA8b3JpdG8udGFrYW9Ac29jaW9uZXh0LmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvbW1jL3NkaGNpLWZ1aml0c3UudHh0ICAgICAgfCAyMiArKysrKysrKysr
+KysrKysrKysrLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxOSBpbnNlcnRpb25zKCspLCAzIGRl
+bGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbW1jL3NkaGNpLWZ1aml0c3UudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL21tYy9zZGhjaS1mdWppdHN1LnR4dA0KPiA+IGluZGV4IDNlZTkyNjMuLjQw
+NTgxMWYgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L21tYy9zZGhjaS1mdWppdHN1LnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9tbWMvc2RoY2ktZnVqaXRzdS50eHQNCj4gPiBAQCAtMSwxMCArMSwxMCBAQA0K
+PiA+IC0qIEZ1aml0c3UgU0RIQ0kgY29udHJvbGxlcg0KPiA+ICsqIEZ1aml0c3UvU29jaW9uZXh0
+IFNESENJIGNvbnRyb2xsZXINCj4gPiAgDQo+ID4gIFRoaXMgZmlsZSBkb2N1bWVudHMgZGlmZmVy
+ZW5jZXMgYmV0d2VlbiB0aGUgY29yZSBwcm9wZXJ0aWVzIGluIG1tYy50eHQNCj4gPiAtYW5kIHRo
+ZSBwcm9wZXJ0aWVzIHVzZWQgYnkgdGhlIHNkaGNpX2Zfc2RoMzAgZHJpdmVyLg0KPiA+ICthbmQg
+dGhlIHByb3BlcnRpZXMgdXNlZCBieSB0aGUgc2RoY2lfZl9zZGgzMC4NCj4gPiAgDQo+ID4gIFJl
+cXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gLS0gY29tcGF0aWJsZTogImZ1aml0c3UsbWI4NnM3MC1z
+ZGhjaS0zLjAiDQo+ID4gKy0gY29tcGF0aWJsZTogImZ1aml0c3UsbWI4NnM3MC1zZGhjaS0zLjAi
+LCAic29jaW9uZXh0LG1pbGJlYXV0LW0xMHYtc2RoY2ktMy4wIg0KPiANCj4gT25lIHBlciBsaW5l
+IHBsZWFzZS4NCg0KSSBzZWUsIEkgd2lsbCBmaXguDQoNCj4gDQo+ID4gIC0gY2xvY2tzOiBNdXN0
+IGNvbnRhaW4gYW4gZW50cnkgZm9yIGVhY2ggZW50cnkgaW4gY2xvY2stbmFtZXMuIEl0IGlzIGEN
+Cj4gPiAgICBsaXN0IG9mIHBoYW5kbGVzIGFuZCBjbG9jay1zcGVjaWZpZXIgcGFpcnMuDQo+ID4g
+ICAgU2VlIC4uL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50eHQgZm9yIGRldGFpbHMuDQo+ID4gQEAg
+LTE3LDYgKzE3LDggQEAgT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiAgICBhcyB0aGUgVkNDUS9W
+RERfSU8gc3VwcGx5IGluIHRoZSBlTU1DL1NEIHNwZWNzLg0KPiA+ICAtIGZ1aml0c3UsY21kLWRh
+dC1kZWxheS1zZWxlY3Q6IGJvb2xlYW4gcHJvcGVydHkgaW5kaWNhdGluZyB0aGF0IHRoaXMgaG9z
+dA0KPiA+ICAgIHJlcXVpcmVzIHRoZSBDTURfREFUX0RFTEFZIGNvbnRyb2wgdG8gYmUgZW5hYmxl
+ZC4NCj4gPiArLSBzbmksbW1jLXBvd2VyLWdwaW86IHNldCBwcm9wZXJ0eSBpbmRpY2F0aW5nIHRo
+YXQgcG93ZXIgb24gb3Igb2ZmIG5lZWRzDQo+ID4gKyAgY29udHJvbCBvZiBncGlvLiBUaGlzIGlz
+IGZvciBvbmx5ICJzb2Npb25leHQsbWlsYmVhdXQtbTEwdi1zZGhjaS0zLjAiLg0KPiANCj4gcy8t
+Z3Bpby8tZ3Bpb3MvDQoNCkkgd2lsbCBmaXguDQoNCj4gDQo+ID4gIA0KPiA+ICBFeGFtcGxlOg0K
+PiA+ICANCj4gPiBAQCAtMzAsMyArMzIsMTcgQEAgRXhhbXBsZToNCj4gPiAgCQljbG9ja3MgPSA8
+JmNsb2NrIDIgMiAwPiwgPCZjbG9jayAyIDMgMD47DQo+ID4gIAkJY2xvY2stbmFtZXMgPSAiaWZh
+Y2UiLCAiY29yZSI7DQo+ID4gIAl9Ow0KPiA+ICsNCj4gPiArRXhzYW1wbGUyOg0KPiA+ICsJc2Ro
+Y2kzOiBtbWNAMWIwMTAwMDAgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAic29jaW9uZXh0LG1pbGJl
+YXV0LW0xMHYtc2RoY2ktMy4wIjsNCj4gPiArCQlyZWcgPSA8MHgxYjAxMDAwMCAweDEwMDAwPjsN
+Cj4gPiArCQlpbnRlcnJ1cHRzID0gPDAgMjY1IDB4ND47DQo+ID4gKwkJdm9sdGFnZS1yYW5nZXMg
+PSA8MzMwMCAzMzAwPjsNCj4gPiArCQlidXMtd2lkdGggPSA8ND47DQo+ID4gKwkJY2xvY2tzID0g
+PCZ1aHMxY2xrMj4sIDwmYWhiX2Nsaz47DQo+ID4gKwkJY2xvY2stbmFtZXMgPSAiY29yZSIsICJp
+ZmFjZSI7DQo+ID4gKwkJY2FwLXNkaW8taXJxOw0KPiA+ICsJCXNuaSxtbWMtcG93ZXItZ3BpbyA9
+IDwmcGluY3RybCA1MyBHUElPX0FDVElWRV9ISUdIPjsNCj4gPiArCQkJICAgZnVqaXRzdSxjbWQt
+ZGF0LWRlbGF5LXNlbGVjdDsNCj4gDQo+IEluZGVudGF0aW9uIHByb2JsZW0uDQoNClNvcnJ5LCBJ
+IHdpbGwgZml4Lg0KDQpUaGFuayB5b3UNCk9yaXRvDQoNCj4gDQo+ID4gKwl9Ow0KPiA+IC0tIA0K
+PiA+IDEuOS4xDQo+ID4gDQo+ID4gDQoNCi0tIA0KVGFrYW8gT3JpdG8gPG9yaXRvLnRha2FvQHNv
+Y2lvbmV4dC5jb20+DQo=
