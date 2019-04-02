@@ -1,76 +1,109 @@
-From: =?UTF-8?B?S2FuZW1hdHN1LCBTaGluamkv5YW85p2+IOS8uOasoQ==?=
-        <kanematsu.shinji@socionext.com>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: counter: Add Milbeaut Updown
- Counter
-Date: Tue, 2 Apr 2019 15:26:07 +0900
-Message-ID: <976d5e2a-4bb8-3314-453b-921d06ba8ec6@socionext.com>
-References: <1553581989-13525-1-git-send-email-kanematsu.shinji@socionext.com>
- <20190331015228.GA27625@bogus>
+From: William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH v10 00/18] Introduce the Counter subsystem
+Date: Tue,  2 Apr 2019 15:30:35 +0900
+Message-ID: <cover.1554184734.git.vilhelm.gray@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190331015228.GA27625@bogus>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: kanematsu.shinji@socionext.com, jic23@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, orito.takao@socionext.com, sugaya.taichi@socionext.com, kasai.kazuhiro@socionext.com
+To: gregkh@linuxfoundation.org
+Cc: jic23@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, akpm@linux-foundation.org, david@lechnology.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, daniel.lezcano@linaro.org, tglx@linutronix.de, thierry.reding@gmail.com, esben@haabendal.dk, linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, patrick.havelange@essensium.com, William Breathitt Gray <vilhelm.gray@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Changes in v10:
+  - Fix minor typographical errors in documentation
+  - Merge the FlexTimer Module Quadrature decoder counter driver patches
 
-Thank you for your review.
+This revision is functionally identical to the last; changes in this
+version were made to fix minor typos in the documentation files and also
+to pull in the new FTM quadrature decoder counter driver.
 
-On 2019/03/31 15:42, Rob Herring wrote:
-> On Tue, Mar 26, 2019 at 03:33:09PM +0900, Shinji Kanematsu wrote:
->> Add documentation for Milbeaut Updown Counter device
->> quadrature encoder and counter binding.
->>
->> Signed-off-by: Shinji Kanematsu <kanematsu.shinji@socionext.com>
->> ---
->>   .../bindings/iio/counter/milbeaut-updown_cnt.txt   | 22 ++++++++++++++++++++++
->>   1 file changed, 22 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
->>
->> diff --git a/Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt b/Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
->> new file mode 100644
->> index 0000000..6771567
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
->> @@ -0,0 +1,22 @@
->> +SOCIONEXT Milbeaut Updown counter
->> +
->> +Required properties:
->> +- compatible:       Must be "socionext,milbeaut-updown-counter".
->> +- reg:              Offset and length of the device's register set.
->> +- clocks:           Phandle to the clock used by the Updown counter module.
->> +- clock-names:      Must be "mux".
->> +- interrupts:       SPI number of the device's set.
->> +- cms_type:         connected_device
->> +                     1: updown button  (updown counter mode)
->> +                     2: rotary encoder (phase difference counter mode)
-> 
-> We should have a common property for describing what's attached.
-> IIRC, just had a similar binding recently.
-> 
+The Generic Counter API has been and is still in a feature freeze until
+it is merged into the mainline. The following features will be
+investigated after the merge: interrupt support for counter devices, and
+a character device interface for low-latency applications.
 
-OK, I search the similar binding.
+Benjamin Gaignard (2):
+  counter: Add STM32 Timer quadrature encoder
+  dt-bindings: counter: Document stm32 quadrature encoder
 
-Thank you,
-Kanematsu
+Fabrice Gasnier (2):
+  counter: stm32-lptimer: add counter device
+  dt-bindings: counter: Adjust dt-bindings for STM32 lptimer move
 
->> +
->> +Example:
->> +
->> +	updown0: updown@1e002000 {
->> +		compatible = "socionext,milbeaut-updown-counter";
->> +		reg = <0x1e002000 0x20>;
->> +		clocks = <&clk 4>;
->> +		clock-names = "mux";
->> +		interrupts = <0 104 0x4>;
->> +		cms_type = <1>;
->> +	};
->> -- 
->> 1.9.1
->>
-> 
+Patrick Havelange (7):
+  include/fsl: add common FlexTimer #defines in a separate header.
+  drivers/pwm: pwm-fsl-ftm: use common header for FlexTimer #defines
+  drivers/clocksource: timer-fsl-ftm: use common header for FlexTimer
+    #defines
+  dt-bindings: counter: ftm-quaddec
+  counter: add FlexTimer Module Quadrature decoder counter driver
+  counter: ftm-quaddec: Documentation: Add specific counter sysfs
+    documentation
+  LS1021A: dtsi: add ftm quad decoder entries
+
+William Breathitt Gray (7):
+  counter: Introduce the Generic Counter interface
+  counter: Documentation: Add Generic Counter sysfs documentation
+  docs: Add Generic Counter interface documentation
+  iio: 104-quad-8: Update license boilerplate
+  counter: 104-quad-8: Add Generic Counter interface support
+  counter: 104-quad-8: Documentation: Add Generic Counter sysfs
+    documentation
+  iio: counter: Add deprecation markings for IIO Counter attributes
+
+ Documentation/ABI/testing/sysfs-bus-counter   |  230 +++
+ .../ABI/testing/sysfs-bus-counter-104-quad-8  |   36 +
+ .../ABI/testing/sysfs-bus-counter-ftm-quaddec |   16 +
+ Documentation/ABI/testing/sysfs-bus-iio       |    8 +
+ .../testing/sysfs-bus-iio-counter-104-quad-8  |   16 +
+ .../bindings/counter/ftm-quaddec.txt          |   18 +
+ .../{iio => }/counter/stm32-lptimer-cnt.txt   |    0
+ .../bindings/counter/stm32-timer-cnt.txt      |   31 +
+ .../devicetree/bindings/mfd/stm32-lptimer.txt |    2 +-
+ .../devicetree/bindings/mfd/stm32-timers.txt  |    7 +
+ Documentation/driver-api/generic-counter.rst  |  342 ++++
+ Documentation/driver-api/index.rst            |    1 +
+ MAINTAINERS                                   |   15 +-
+ arch/arm/boot/dts/ls1021a.dtsi                |   28 +
+ drivers/Kconfig                               |    2 +
+ drivers/Makefile                              |    1 +
+ drivers/clocksource/timer-fsl-ftm.c           |   15 +-
+ drivers/{iio => }/counter/104-quad-8.c        |  782 +++++++-
+ drivers/counter/Kconfig                       |   60 +
+ drivers/counter/Makefile                      |   10 +
+ drivers/counter/counter.c                     | 1567 +++++++++++++++++
+ drivers/counter/ftm-quaddec.c                 |  356 ++++
+ drivers/{iio => }/counter/stm32-lptimer-cnt.c |  361 +++-
+ drivers/counter/stm32-timer-cnt.c             |  390 ++++
+ drivers/iio/Kconfig                           |    1 -
+ drivers/iio/Makefile                          |    1 -
+ drivers/iio/counter/Kconfig                   |   34 -
+ drivers/iio/counter/Makefile                  |    8 -
+ drivers/pwm/pwm-fsl-ftm.c                     |   44 +-
+ include/linux/counter.h                       |  510 ++++++
+ include/linux/counter_enum.h                  |   45 +
+ include/linux/fsl/ftm.h                       |   88 +
+ 32 files changed, 4877 insertions(+), 148 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-counter
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-counter-ftm-quaddec
+ create mode 100644 Documentation/devicetree/bindings/counter/ftm-quaddec.txt
+ rename Documentation/devicetree/bindings/{iio => }/counter/stm32-lptimer-cnt.txt (100%)
+ create mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+ create mode 100644 Documentation/driver-api/generic-counter.rst
+ rename drivers/{iio => }/counter/104-quad-8.c (44%)
+ create mode 100644 drivers/counter/Kconfig
+ create mode 100644 drivers/counter/Makefile
+ create mode 100644 drivers/counter/counter.c
+ create mode 100644 drivers/counter/ftm-quaddec.c
+ rename drivers/{iio => }/counter/stm32-lptimer-cnt.c (51%)
+ create mode 100644 drivers/counter/stm32-timer-cnt.c
+ delete mode 100644 drivers/iio/counter/Kconfig
+ delete mode 100644 drivers/iio/counter/Makefile
+ create mode 100644 include/linux/counter.h
+ create mode 100644 include/linux/counter_enum.h
+ create mode 100644 include/linux/fsl/ftm.h
+
+-- 
+2.21.0
