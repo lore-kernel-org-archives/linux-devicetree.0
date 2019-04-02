@@ -1,58 +1,149 @@
 From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: [PATCH v4 2/3] dt-bindings: fpga: Add bindings for ZynqMP fpga driver
-Date: Tue, 2 Apr 2019 18:01:22 +0530
-Message-ID: <20190402123123.915-3-nava.manne@xilinx.com>
+Subject: [PATCH v4 1/3] firmware: xilinx: Add fpga API's
+Date: Tue, 2 Apr 2019 18:01:21 +0530
+Message-ID: <20190402123123.915-2-nava.manne@xilinx.com>
 References: <20190402123123.915-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190402123123.915-1-nava.manne@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: atull@kernel.org, mdf@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, rajanv@xilinx.com, jollys@xilinx.com, nava.manne@xilinx.com, linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add documentation to describe Xilinx ZynqMP fpga driver
-bindings.
+This Patch Adds fpga API's to support the Bitstream loading
+by using firmware interface.
 
 Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Alan Tull <atull@kernel.org>
-Acked-by: Moritz Fischer <mdf@kernel.org>
 ---
- .../bindings/fpga/xlnx,zynqmp-pcap-fpga.txt   | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+Changes for v4:
+		-None.
 
-diff --git a/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
-new file mode 100644
-index 000000000000..3052bf619dd5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
-@@ -0,0 +1,25 @@
-+Devicetree bindings for Zynq Ultrascale MPSoC FPGA Manager.
-+The ZynqMP SoC uses the PCAP (Processor configuration Port) to configure the
-+Programmable Logic (PL). The configuration uses  the firmware interface.
+Chnages for v3:
+		-Created patches on top of 5.0-rc5.
+		 No functional changes.
+
+Changes for v2:
+		-Added Firmware FPGA Manager flags As suggested by
+		 Moritz.
+
+Changes for v1:
+		-None.
+
+Changes for RFC-V2:
+		-New Patch
+
+ drivers/firmware/xilinx/zynqmp.c     | 46 ++++++++++++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h | 10 ++++++
+ 2 files changed, 56 insertions(+)
+
+diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+index 98f936125643..7159a90abc44 100644
+--- a/drivers/firmware/xilinx/zynqmp.c
++++ b/drivers/firmware/xilinx/zynqmp.c
+@@ -537,6 +537,50 @@ static int zynqmp_pm_reset_get_status(const enum zynqmp_pm_reset reset,
+ 	return ret;
+ }
+ 
++/*
++ * zynqmp_pm_fpga_load - Perform the fpga load
++ * @address:	Address to write to
++ * @size:	pl bitstream size
++ * @flags:
++ *	BIT(0) - Bit-stream type.
++ *		 0 - Full Bitstream.
++ *		 1 - Partial Bitstream.
++ *
++ * This function provides access to pmufw. To transfer
++ * the required bitstream into PL.
++ *
++ * Return: Returns status, either success or error+reason
++ */
++static int zynqmp_pm_fpga_load(const u64 address, const u32 size,
++			       const u32 flags)
++{
++	return zynqmp_pm_invoke_fn(PM_FPGA_LOAD, lower_32_bits(address),
++				   upper_32_bits(address), size, flags, NULL);
++}
 +
-+Required properties:
-+- compatible: should contain "xlnx,zynqmp-pcap-fpga"
++/**
++ * zynqmp_pm_fpga_get_status - Read value from PCAP status register
++ * @value: Value to read
++ *
++ * This function provides access to the xilfpga library to get
++ * the PCAP status
++ *
++ * Return: Returns status, either success or error+reason
++ */
++static int zynqmp_pm_fpga_get_status(u32 *value)
++{
++	u32 ret_payload[PAYLOAD_ARG_CNT];
++	int ret;
 +
-+Example for full FPGA configuration:
++	if (!value)
++		return -EINVAL;
 +
-+	fpga-region0 {
-+		compatible = "fpga-region";
-+		fpga-mgr = <&zynqmp_pcap>;
-+		#address-cells = <0x1>;
-+		#size-cells = <0x1>;
-+	};
++	ret = zynqmp_pm_invoke_fn(PM_FPGA_GET_STATUS, 0, 0, 0, 0, ret_payload);
++	*value = ret_payload[1];
 +
-+	firmware {
-+		zynqmp_firmware: zynqmp-firmware {
-+			compatible = "xlnx,zynqmp-firmware";
-+			method = "smc";
-+			zynqmp_pcap: pcap {
-+				compatible = "xlnx,zynqmp-pcap-fpga";
-+			};
-+		};
-+	};
++	return ret;
++}
++
+ /**
+  * zynqmp_pm_init_finalize() - PM call to inform firmware that the caller
+  *			       master has initialized its own power management
+@@ -640,6 +684,8 @@ static const struct zynqmp_eemi_ops eemi_ops = {
+ 	.request_node = zynqmp_pm_request_node,
+ 	.release_node = zynqmp_pm_release_node,
+ 	.set_requirement = zynqmp_pm_set_requirement,
++	.fpga_load = zynqmp_pm_fpga_load,
++	.fpga_get_status = zynqmp_pm_fpga_get_status,
+ };
+ 
+ /**
+diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+index 642dab10f65d..4df226b6ab0f 100644
+--- a/include/linux/firmware/xlnx-zynqmp.h
++++ b/include/linux/firmware/xlnx-zynqmp.h
+@@ -48,6 +48,12 @@
+ #define	ZYNQMP_PM_CAPABILITY_WAKEUP	0x4U
+ #define	ZYNQMP_PM_CAPABILITY_POWER	0x8U
+ 
++/*
++ * Firmware FPGA Manager flags
++ * XILINX_ZYNQMP_PM_FPGA_PARTIAL: FPGA partial reconfiguration
++ */
++#define XILINX_ZYNQMP_PM_FPGA_PARTIAL	BIT(0)
++
+ enum pm_api_id {
+ 	PM_GET_API_VERSION = 1,
+ 	PM_REQUEST_NODE = 13,
+@@ -56,6 +62,8 @@ enum pm_api_id {
+ 	PM_RESET_ASSERT = 17,
+ 	PM_RESET_GET_STATUS,
+ 	PM_PM_INIT_FINALIZE = 21,
++	PM_FPGA_LOAD = 22,
++	PM_FPGA_GET_STATUS,
+ 	PM_GET_CHIPID = 24,
+ 	PM_IOCTL = 34,
+ 	PM_QUERY_DATA,
+@@ -258,6 +266,8 @@ struct zynqmp_pm_query_data {
+ struct zynqmp_eemi_ops {
+ 	int (*get_api_version)(u32 *version);
+ 	int (*get_chipid)(u32 *idcode, u32 *version);
++	int (*fpga_load)(const u64 address, const u32 size, const u32 flags);
++	int (*fpga_get_status)(u32 *value);
+ 	int (*query_data)(struct zynqmp_pm_query_data qdata, u32 *out);
+ 	int (*clock_enable)(u32 clock_id);
+ 	int (*clock_disable)(u32 clock_id);
 -- 
 2.18.0
