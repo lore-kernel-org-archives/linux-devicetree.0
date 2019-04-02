@@ -1,129 +1,118 @@
-Return-Path: <SRS0=5rLq=SE=googlemail.com=chrysh.ng@kernel.org>
-From: Christina Quast <cquast@hanoverdisplays.com>
-Subject: [PATCH v2 6/6] ARM: dts: am335x: pocketbeagle: Replaced register offsets with defines
-Date: Tue,  2 Apr 2019 18:09:51 +0200
-Message-Id: <20190402160949.14190-7-cquast@hanoverdisplays.com>
-In-Reply-To: <20190402160949.14190-1-cquast@hanoverdisplays.com>
-References: <20190314150524.GB19425@atomide.com>
- <20190402160949.14190-1-cquast@hanoverdisplays.com>
+Return-Path: <SRS0=/YiW=SE=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54066 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728748AbfDBQY1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 2 Apr 2019 12:24:27 -0400
+Date: Tue, 2 Apr 2019 17:24:23 +0100
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: PCI: microsemi: Add DT Bindings for
+ Microsemi PCIe host controller
+Message-ID: <20190402162423.GB30068@e107981-ln.cambridge.arm.com>
+References: <20190215162424.564-1-daire.mcnamara@microchip.com>
+ <20190215162424.564-3-daire.mcnamara@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Cc: Christina Quast <cquast@hanoverdisplays.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, Russell King <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190215162424.564-3-daire.mcnamara@microchip.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Daire McNamara <daire.mcnamara@microchip.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The defines are taken from dt-bindings/pinctrl/am33xx.h
+On Fri, Feb 15, 2019 at 04:24:23PM +0000, Daire McNamara wrote:
+> This patch adds documentation for the DT bindings for Microsemi/Microchip
+> PolarFire PCIe controller when configured in host (Root Complex) mode.
+> 
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> ---
+>  .../bindings/pci/microsemi-pcie.txt           | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/microsemi-pcie.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/microsemi-pcie.txt b/Documentation/devicetree/bindings/pci/microsemi-pcie.txt
+> new file mode 100644
+> index 000000000000..a16e48806edc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/microsemi-pcie.txt
+> @@ -0,0 +1,65 @@
+> +* Microsemi AXI PCIe Root Port Bridge DT description
+> +
+> +Required properties:
+> +- #address-cells: Address representation for root ports, set to <3>
+> +- #size-cells: Size representation for root ports, set to <2>
+> +- #interrupt-cells: specifies the number of cells needed to encode an
+> +	interrupt source. The value must be 1.
+> +- compatible: Should contain "microsemi,ms-pf-axi-pcie-host"
+> +- reg: Should contain AXI PCIe registers location and length
+> +- device_type: must be "pci"
+> +- interrupts: Should contain AXI PCIe interrupt
+> +- interrupt-map-mask,
+> +  interrupt-map: standard PCI properties to define the mapping of the
+> +	PCI interface to interrupt numbers.
+> +- ranges: ranges for the PCI memory regions (I/O space region is not
+> +	supported by hardware)
+> +	Please refer to the standard PCI bus binding document for a more
+> +	detailed explanation
+> +
+> +Optional properties for PolarFire:
+> +- bus-range: PCI bus numbers covered
+> +
+> +Interrupt controller child node
+> ++++++++++++++++++++++++++++++++
+> +Required properties:
+> +- interrupt-controller: identifies the node as an interrupt controller
+> +- #address-cells: specifies the number of cells needed to encode an
+> +	address. The value must be 0.
+> +- #interrupt-cells: specifies the number of cells needed to encode an
+> +	interrupt source. The value must be 1.
+> +
+> +NOTE:
+> +The core provides a single interrupt for both INTx/MSI messages. So,
+> +create an interrupt controller node to support 'interrupt-map' DT
+> +functionality.  The driver will create an IRQ domain for this map, decode
+> +the four INTx interrupts in ISR and route them to this domain.
+> +
+> +
+> +Example:
+> +++++++++
+> +AloeVera:
+> +
+> +	pcie: pcie@2030000000 {
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		#interrupt-cells = <1>;
+> +		compatible = "microsemi,ms-pf-axi-pcie-host";
+> +		device_type = "pci";
+> +		bus-range = <0x01 0x7f>;
+> +		interrupt-map = <0 0 0 1 &pcie_intc 1>,
+> +				<0 0 0 2 &pcie_intc 2>,
+> +				<0 0 0 3 &pcie_intc 3>,
+> +				<0 0 0 4 &pcie_intc 4>;
 
-Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
----
- arch/arm/boot/dts/am335x-pocketbeagle.dts | 56 +++++++++++------------
- 1 file changed, 28 insertions(+), 28 deletions(-)
+This is wrong. It should be:
 
-diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-index 62fe5cab9fae..ff4f919d22f6 100644
---- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
-+++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-@@ -62,74 +62,74 @@
- &am33xx_pinmux {
- 	i2c2_pins: pinmux-i2c2-pins {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x97c, PIN_INPUT_PULLUP | MUX_MODE3)	/* (D17) uart1_rtsn.I2C2_SCL */
--			AM33XX_IOPAD(0x978, PIN_INPUT_PULLUP | MUX_MODE3)	/* (D18) uart1_ctsn.I2C2_SDA */
-+			AM33XX_PADCONF(AM335X_PIN_UART1_RTSN, PIN_INPUT_PULLUP, MUX_MODE3)	/* (D17) uart1_rtsn.I2C2_SCL */
-+			AM33XX_PADCONF(AM335X_PIN_UART1_CTSN, PIN_INPUT_PULLUP, MUX_MODE3)	/* (D18) uart1_ctsn.I2C2_SDA */
- 		>;
- 	};
- 
- 	ehrpwm0_pins: pinmux-ehrpwm0-pins {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x990, PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* (A13) mcasp0_aclkx.ehrpwm0A */
-+			AM33XX_PADCONF(AM335X_PIN_MCASP0_ACLKX, PIN_OUTPUT_PULLDOWN, MUX_MODE1)	/* (A13) mcasp0_aclkx.ehrpwm0A */
- 		>;
- 	};
- 
- 	ehrpwm1_pins: pinmux-ehrpwm1-pins {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x848, PIN_OUTPUT_PULLDOWN | MUX_MODE6)	/* (U14) gpmc_a2.ehrpwm1A */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_A2, PIN_OUTPUT_PULLDOWN, MUX_MODE6)	/* (U14) gpmc_a2.ehrpwm1A */
- 		>;
- 	};
- 
- 	mmc0_pins: pinmux-mmc0-pins {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x960, PIN_INPUT | MUX_MODE7)		/* (C15) spi0_cs1.gpio0[6] */
--			AM33XX_IOPAD(0x8fc, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G16) mmc0_dat0.mmc0_dat0 */
--			AM33XX_IOPAD(0x8f8, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G15) mmc0_dat1.mmc0_dat1 */
--			AM33XX_IOPAD(0x8f4, PIN_INPUT_PULLUP | MUX_MODE0)	/* (F18) mmc0_dat2.mmc0_dat2 */
--			AM33XX_IOPAD(0x8f0, PIN_INPUT_PULLUP | MUX_MODE0)	/* (F17) mmc0_dat3.mmc0_dat3 */
--			AM33XX_IOPAD(0x904, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G18) mmc0_cmd.mmc0_cmd */
--			AM33XX_IOPAD(0x900, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G17) mmc0_clk.mmc0_clk */
--			AM33XX_IOPAD(0x9a0, PIN_INPUT | MUX_MODE4)		/* (B12) mcasp0_aclkr.mmc0_sdwp */
-+			AM33XX_PADCONF(AM335X_PIN_SPI0_CS1, PIN_INPUT, MUX_MODE7)		/* (C15) spi0_cs1.gpio0[6] */
-+			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT0, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT1, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT2, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT3, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MMC0_CMD, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MMC0_CLK, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MCASP0_ACLKR, PIN_INPUT, MUX_MODE4)		/* (B12) mcasp0_aclkr.mmc0_sdwp */
- 		>;
- 	};
- 
- 	spi0_pins: pinmux-spi0-pins {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x950, PIN_INPUT_PULLUP | MUX_MODE0)	/* (A17) spi0_sclk.spi0_sclk */
--			AM33XX_IOPAD(0x954, PIN_INPUT_PULLUP | MUX_MODE0)	/* (B17) spi0_d0.spi0_d0 */
--			AM33XX_IOPAD(0x958, PIN_INPUT_PULLUP | MUX_MODE0)	/* (B16) spi0_d1.spi0_d1 */
--			AM33XX_IOPAD(0x95c, PIN_INPUT_PULLUP | MUX_MODE0)	/* (A16) spi0_cs0.spi0_cs0 */
-+			AM33XX_PADCONF(AM335X_PIN_SPI0_SCLK, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_SPI0_D0, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_SPI0_D1, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_SPI0_CS0, PIN_INPUT_PULLUP, MUX_MODE0)
- 		>;
- 	};
- 
- 	spi1_pins: pinmux-spi1-pins {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x964, PIN_INPUT_PULLUP | MUX_MODE4)	/* (C18) eCAP0_in_PWM0_out.spi1_sclk */
--			AM33XX_IOPAD(0x968, PIN_INPUT_PULLUP | MUX_MODE4)	/* (E18) uart0_ctsn.spi1_d0 */
--			AM33XX_IOPAD(0x96c, PIN_INPUT_PULLUP | MUX_MODE4)	/* (E17) uart0_rtsn.spi1_d1 */
--			AM33XX_IOPAD(0x9b0, PIN_INPUT_PULLUP | MUX_MODE4)	/* (A15) xdma_event_intr0.spi1_cs1 */
-+			AM33XX_PADCONF(AM335X_PIN_ECAP0_IN_PWM0_OUT, PIN_INPUT_PULLUP, MUX_MODE4)	/* (C18) eCAP0_in_PWM0_out.spi1_sclk */
-+			AM33XX_PADCONF(AM335X_PIN_UART0_CTSN, PIN_INPUT_PULLUP, MUX_MODE4)	/* (E18) uart0_ctsn.spi1_d0 */
-+			AM33XX_PADCONF(AM335X_PIN_UART0_RTSN, PIN_INPUT_PULLUP, MUX_MODE4)	/* (E17) uart0_rtsn.spi1_d1 */
-+			AM33XX_PADCONF(AM335X_PIN_XDMA_EVENT_INTR0, PIN_INPUT_PULLUP, MUX_MODE4)	/* (A15) xdma_event_intr0.spi1_cs1 */
- 		>;
- 	};
- 
- 	usr_leds_pins: pinmux-usr-leds-pins {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x854, PIN_OUTPUT | MUX_MODE7)		/* (V15) gpmc_a5.gpio1[21] - USR_LED_0 */
--			AM33XX_IOPAD(0x858, PIN_OUTPUT | MUX_MODE7)		/* (U15) gpmc_a6.gpio1[22] - USR_LED_1 */
--			AM33XX_IOPAD(0x85c, PIN_OUTPUT | MUX_MODE7)		/* (T15) gpmc_a7.gpio1[23] - USR_LED_2 */
--			AM33XX_IOPAD(0x860, PIN_OUTPUT | MUX_MODE7)		/* (V16) gpmc_a8.gpio1[24] - USR_LED_3 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_A5, PIN_OUTPUT, MUX_MODE7)		/* (V15) gpmc_a5.gpio1[21] - USR_LED_0 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_A6, PIN_OUTPUT, MUX_MODE7)		/* (U15) gpmc_a6.gpio1[22] - USR_LED_1 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_A7, PIN_OUTPUT, MUX_MODE7)		/* (T15) gpmc_a7.gpio1[23] - USR_LED_2 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_A8, PIN_OUTPUT, MUX_MODE7)		/* (V16) gpmc_a8.gpio1[24] - USR_LED_3 */
- 		>;
- 	};
- 
- 	uart0_pins: pinmux-uart0-pins {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x970, PIN_INPUT_PULLUP | MUX_MODE0)	/* (E15) uart0_rxd.uart0_rxd */
--			AM33XX_IOPAD(0x974, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* (E16) uart0_txd.uart0_txd */
-+			AM33XX_PADCONF(AM335X_PIN_UART0_RXD, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_UART0_TXD, PIN_OUTPUT_PULLDOWN, MUX_MODE0)
- 		>;
- 	};
- 
- 	uart4_pins: pinmux-uart4-pins {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x870, PIN_INPUT_PULLUP | MUX_MODE6)	/* (T17) gpmc_wait0.uart4_rxd */
--			AM33XX_IOPAD(0x874, PIN_OUTPUT_PULLDOWN | MUX_MODE6)	/* (U17) gpmc_wpn.uart4_txd */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_WAIT0, PIN_INPUT_PULLUP, MUX_MODE6)	/* (T17) gpmc_wait0.uart4_rxd */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_WPN, PIN_OUTPUT_PULLDOWN, MUX_MODE6)	/* (U17) gpmc_wpn.uart4_txd */
- 		>;
- 	};
- };
--- 
-2.20.1
+		interrupt-map = <0 0 0 1 &pcie_intc 0>,
+				<0 0 0 2 &pcie_intc 1>,
+				<0 0 0 3 &pcie_intc 2>,
+				<0 0 0 4 &pcie_intc 3>;
+
+We are mapping INT{A#,B#,C#,D#} to input [0,1,2,3] of the
+interrupt controller.
+
+Lorenzo
+
+> +		interrupt-map-mask = <0 0 0 7>;
+> +		interrupt-parent = <&L4>;
+> +		interrupts = <32>;
+> +		ranges = <0x3000000 0 0x40000000 0x0 0x40000000 0x0 0x20000000>;
+> +		reg = <0x20 0x30000000 0x0 0x4000000 0x20 0x0 0x0 0x100000>;
+> +		reg-names = "control", "apb";
+> +		pcie_intc: interrupt-controller {
+> +			#address-cells = <0>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-controller;
+> +		};
+> +	};
+> -- 
+> 2.17.0
+> 
