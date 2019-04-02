@@ -1,14 +1,15 @@
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH 04/15] phy: mvebu-cp110-comphy: Add RXAUI support
-Date: Tue, 2 Apr 2019 10:43:49 +0200
-Message-ID: <20190402104349.2d61ed39@bootlin.com>
-References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
- <20190401165131.23370-5-miquel.raynal@bootlin.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: mtd: Add YAML schemas for the generic
+ NAND options
+Date: Tue, 2 Apr 2019 03:49:41 -0500
+Message-ID: <CAL_Jsq+yfng=wZtKuTdjbLHvz-+QGxG=EKkhH6JckpPNG_nFwQ@mail.gmail.com>
+References: <75ad3b89e4a6f8ad5bc414c3dccbb1f99361495a.1554153146.git-series.maxime.ripard@bootlin.com>
+ <20190402101917.4f38b9a4@xps13>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190401165131.23370-5-miquel.raynal@bootlin.com>
+In-Reply-To: <20190402101917.4f38b9a4@xps13>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,26 +20,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Boris Brezillon <boris.brezillon@collabora.com>, MTD Maling List <linux-mtd@lists.infradead.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
-
-On Mon,  1 Apr 2019 18:51:20 +0200
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-
->Add support for RXAUI mode by adding an entry in the COMPHY modes list.
+On Tue, Apr 2, 2019 at 3:19 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 >
->There is nothing more to handle besides avoiding to return an error to
->the caller: someone using a DT updated with the right 'phys' property
->with an old firmware would get an error when initializing the lanes in
->RXAUI mode, while it could have already been initialized by eg. the
->bootloader. It would prevent the interface to work with no reason.
+> Hi Maxime,
+>
+> Maxime Ripard <maxime.ripard@bootlin.com> wrote on Mon,  1 Apr 2019
+> 23:13:53 +0200:
+>
+> > The NAND chips in MTD have a bunch of generic options that are needed in a
+> > device tree. Add a YAML schemas for those.
+> >
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > ---
+> >  Documentation/devicetree/bindings/mtd/nand-controller.yaml | 131 +++++++-
+> >  1 file changed, 131 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> > new file mode 100644
+> > index 000000000000..05b1afb34972
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> > @@ -0,0 +1,131 @@
+> > +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: NAND Chip and NAND Controller Generic Binding
+> > +
+> > +maintainers:
+> > +  - Boris Brezillon <bbrezillon@kernel.org>
+>
+> Unfortunately Boris is leaving.
+>
+> > +  - Miquel Raynal <miquel.raynal@bootlin.com>
+> > +  - Richard Weinberger <richard@nod.at>
+>
+> Is this really needed? There is already a section for that purpose in
+> MAINTAINERS.
 
-However, this would mask-away errors that could occur when we have a
-correct firmware and DT.
+Yes, because MAINTAINERS is a kernel file and bindings are somewhat
+independent. And I found most binding files don't have a maintainer
+(other than me as default).
 
-Maybe we should simply return the error, this mode isn't supported in
-PPv2 yet so I don't expect this to break any existing setups.
+If we ever go to per subsystem/directory MAiNTAiNERS files, then we
+can easily generate one from bindings for the kernel.
 
-Maxime
+Rob
