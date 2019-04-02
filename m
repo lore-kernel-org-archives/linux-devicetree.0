@@ -1,128 +1,60 @@
-From: Patrick Venture <venture@google.com>
-Subject: Re: [PATCH v8 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
-Date: Tue, 2 Apr 2019 14:24:29 -0700
-Message-ID: <CAO=noty_jSMLatu5Z-h03hrQ=uozd1eX8SSG=iGNeB+D4W6LQw@mail.gmail.com>
-References: <20190329151025.204094-1-venture@google.com> <e33bc539-2350-4b7d-9833-df270383b062@www.fastmail.com>
+From: Li Yang <leoyang.li@nxp.com>
+Subject: Re: [PATCH v1 2/4] soc/fsl/guts: Add definition for LX2160A
+Date: Tue, 2 Apr 2019 18:05:18 -0500
+Message-ID: <CADRPPNTcY6fMJZDmsWzPzkn1hMzsoJh15-Gchepg_vJLxL=zcw@mail.gmail.com>
+References: <1551132245-6089-1-git-send-email-vabhav.sharma@nxp.com> <1551132245-6089-3-git-send-email-vabhav.sharma@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e33bc539-2350-4b7d-9833-df270383b062@www.fastmail.com>
+In-Reply-To: <1551132245-6089-3-git-send-email-vabhav.sharma@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>
+To: Vabhav Sharma <vabhav.sharma@nxp.com>
+Cc: "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "oss@buserror.net" <oss@buserror.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-kernel-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 1, 2019 at 8:42 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+On Tue, Feb 26, 2019 at 4:12 AM Vabhav Sharma <vabhav.sharma@nxp.com> wrote:
 >
-> Hi Patrick,
->
-> I held off on reviewing this until we'd hashed out what we needed in the driver.
->
-> I have some comments below.
->
-> On Sat, 30 Mar 2019, at 01:40, Patrick Venture wrote:
-> > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
-> >
-> > Signed-off-by: Patrick Venture <venture@google.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > ---
-> > Changes for v8:
-> > - None
-> > Changes for v7:
-> > - Moved node under the syscon node it requires
-> > Changes for v6:
-> > - None
-> > Changes for v5:
-> > - None
-> > Changes for v4:
-> > - None
-> > Changes for v3:
-> > - None
-> > Changes for v2:
-> > - Added comment about syscon required parameter.
-> > ---
-> >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
-> >  1 file changed, 48 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> > b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> > new file mode 100644
-> > index 0000000000000..088cc4e3dc54b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> > @@ -0,0 +1,48 @@
-> > +======================================================================
-> > +Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge
-> > Control Driver
-> > +======================================================================
-> > +
-> > +The bridge is available on platforms with the VGA enabled on the
-> > Aspeed device.
-> > +In this case, the host has access to a 64KiB window into all of the
-> > BMC's
-> > +memory.  The BMC can disable this bridge.  If the bridge is enabled,
-> > the host
-> > +has read access to all the regions of memory, however the host only
-> > has read
-> > +and write access depending on a register controlled by the BMC.
-> > +
-> > +Required properties:
-> > +===================
-> > +
-> > + - compatible: must be one of:
-> > +     - "aspeed,ast2400-p2a-ctrl"
-> > +     - "aspeed,ast2500-p2a-ctrl"
-> > +
-> > + - syscon: handle to syscon device node controlling PCI.
->
-> The p2a-ctrl node is meant to be a child of the syscon. I noted this in my review
-> of the associated driver - you need to remove the description of the syscon
-> property.
+> Adding compatible string "lx2160a-dcfg" to
+> initialize guts driver for lx2160 and SoC die
+> attribute definition for LX2160A
 
-Roger that, I'll take a hack at cleaning this up later this week (I'm OOO).
 
+Applied to branch next.  Thanks.
+
+Regards,
+Leo
 >
-> > +
-> > +Optional properties:
-> > +===================
-> > +
-> > +- memory-region: A phandle to a reserved_memory region to be used for
-> > the PCI
-> > +             to AHB mapping
-> > +
-> > +The p2a-control node should be the child of a syscon node with the
-> > required
-> > +property:
-> > +
-> > +- compatible : Should be one of the following:
-> > +             "aspeed,ast2400-scu", "syscon", "simple-mfd"
-> > +             "aspeed,g4-scu", "syscon", "simple-mfd"
-> > +             "aspeed,ast2500-scu", "syscon", "simple-mfd"
-> > +             "aspeed,g5-scu", "syscon", "simple-mfd"
+> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+> Acked-by: Li Yang <leoyang.li@nxp.com>
+> ---
+>  drivers/soc/fsl/guts.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 >
-> The note above should go where you've described the syscon property above.
+> diff --git a/drivers/soc/fsl/guts.c b/drivers/soc/fsl/guts.c
+> index 302e0c8..bcab1ee 100644
+> --- a/drivers/soc/fsl/guts.c
+> +++ b/drivers/soc/fsl/guts.c
+> @@ -100,6 +100,11 @@ static const struct fsl_soc_die_attr fsl_soc_die[] = {
+>           .svr          = 0x87000000,
+>           .mask         = 0xfff70000,
+>         },
+> +       /* Die: LX2160A, SoC: LX2160A/LX2120A/LX2080A */
+> +       { .die          = "LX2160A",
+> +         .svr          = 0x87360000,
+> +         .mask         = 0xff3f0000,
+> +       },
+>         { },
+>  };
 >
-> Cheers,
+> @@ -222,6 +227,7 @@ static const struct of_device_id fsl_guts_of_match[] = {
+>         { .compatible = "fsl,ls1088a-dcfg", },
+>         { .compatible = "fsl,ls1012a-dcfg", },
+>         { .compatible = "fsl,ls1046a-dcfg", },
+> +       { .compatible = "fsl,lx2160a-dcfg", },
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(of, fsl_guts_of_match);
+> --
+> 2.7.4
 >
-> Andrew
->
-> > +
-> > +Example:
-> > +
-> > +g4 Example
-> > +----------
-> > +
-> > +syscon: scu@1e6e2000 {
-> > +     compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
-> > +     reg = <0x1e6e2000 0x1a8>;
-> > +
-> > +     p2a: p2a-control {
-> > +             compatible = "aspeed,ast2400-p2a-ctrl";
-> > +             memory-region = <&reserved_memory>;
-> > +     };
-> > +};
-> > --
-> > 2.21.0.392.gf8f6787159e-goog
-> >
-> >
