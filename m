@@ -1,52 +1,34 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH v5 7/8] i2c: iproc: add NIC I2C support
-Date: Tue, 2 Apr 2019 10:57:33 -0700
-Message-ID: <a1a7a9c9-be4e-c582-d0d5-feccba4022ab@broadcom.com>
-References: <20190214175725.60462-1-ray.jui@broadcom.com>
- <20190214175725.60462-8-ray.jui@broadcom.com> <20190402102733.GD2960@kunai>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Eddie James <eajames@linux.ibm.com>
+Subject: [PATCH 0/5] Aspeed: Enable video engine
+Date: Tue,  2 Apr 2019 18:24:33 +0000
+Message-ID: <1554229478-5621-1-git-send-email-eajames@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190402102733.GD2960@kunai>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+To: linux-media@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, joel@jms.id.au, linux-clk@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This series enables the video engine on Aspeed BMC platforms. The video engine
+clocking is added to the Aspeed clock driver. The use of the video engine reset
+line, originally planned to be made externally available in the clock driver,
+is removed from the video engine driver. Finally a node for the video engine is
+added to the AST2500 devicetree.
+The series also includes a missing property for reserved memory in the
+devicetree documentation, and a small change to make the video engine driver
+start without reserved memory.
 
+Eddie James (5):
+  media: platform: Aspeed: Remove use of reset line
+  media: platform: Aspeed: Make reserved memory optional
+  media: dt-bindings: aspeed-video: Add missing memory-region property
+  clk: Aspeed: Setup video engine clocking
+  ARM: dts: aspeed-g5: Add video engine
 
-On 4/2/2019 3:27 AM, Wolfram Sang wrote:
-> 
->> +#define IDM_CTRL_DIRECT_OFFSET       0x00
-> 
-> And this IDM thing is also never used outside of the I2C context? In
-> other words, it also doesn't need a seperate DT node?
-> 
-> 
+ .../devicetree/bindings/media/aspeed-video.txt     |  6 ++++
+ arch/arm/boot/dts/aspeed-g5.dtsi                   | 10 ++++++
+ drivers/clk/clk-aspeed.c                           | 42 ++++++++++++++++++++--
+ drivers/media/platform/aspeed-video.c              | 33 ++++-------------
+ 4 files changed, 61 insertions(+), 30 deletions(-)
 
-That is correct. Only in the I2C context in our use case.
-
->> +	/* indicates no slave mode support */
->> +	bool no_slave;
-> 
-> I would suggest to not use a flag, but to nullify the {un}reg_slave
-> callbacks in probe depending on the type. That will also tell the
-> i2c-core that slave functionality is not supported. And you can use if
-> (!algo->reg_slave) as a flag, too.
-> 
-
-Yes. Great idea. I'll make the change and remove reg_slave.
-
->> +	iproc_i2c->type =
->> +		(enum bcm_iproc_i2c_type) of_device_get_match_data(&pdev->dev);
-> 
-> No need to cast a void*.
-> 
-
-Yes will fix.
-
-Thanks,
-
-Ray
+-- 
+1.8.3.1
