@@ -1,7 +1,7 @@
 From: Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH 4/5] clk: Aspeed: Setup video engine clocking
-Date: Tue,  2 Apr 2019 18:25:03 +0000
-Message-ID: <1554229504-5661-5-git-send-email-eajames@linux.ibm.com>
+Subject: [PATCH 1/5] media: platform: Aspeed: Remove use of reset line
+Date: Tue,  2 Apr 2019 18:25:00 +0000
+Message-ID: <1554229504-5661-2-git-send-email-eajames@linux.ibm.com>
 References: <1554229504-5661-1-git-send-email-eajames@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1554229504-5661-1-git-send-email-eajames@linux.ibm.com>
@@ -10,109 +10,88 @@ To: linux-media@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, joel@jms.id.au, andrew@aj.id.au, mchehab@kernel.org, linux-clk@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add eclk mux and clock divider table. Also change the video engine reset
-to the correct clock; it was previously on the video capture but needs
-to be on the video engine clock.
+The reset line is toggled by enabling the clocks, so it's not necessary
+to manually toggle the reset as well.
 
 Signed-off-by: Eddie James <eajames@linux.ibm.com>
 ---
- drivers/clk/clk-aspeed.c | 42 +++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 39 insertions(+), 3 deletions(-)
+ drivers/media/platform/aspeed-video.c | 27 +++++----------------------
+ 1 file changed, 5 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/clk/clk-aspeed.c b/drivers/clk/clk-aspeed.c
-index 5961367..42b4df6 100644
---- a/drivers/clk/clk-aspeed.c
-+++ b/drivers/clk/clk-aspeed.c
-@@ -87,10 +87,10 @@ struct aspeed_clk_gate {
- /* TODO: ask Aspeed about the actual parent data */
- static const struct aspeed_gate_data aspeed_gates[] = {
- 	/*				 clk rst   name			parent	flags */
--	[ASPEED_CLK_GATE_ECLK] =	{  0, -1, "eclk-gate",		"eclk",	0 }, /* Video Engine */
-+	[ASPEED_CLK_GATE_ECLK] =	{  0,  6, "eclk-gate",		"eclk",	0 }, /* Video Engine */
- 	[ASPEED_CLK_GATE_GCLK] =	{  1,  7, "gclk-gate",		NULL,	0 }, /* 2D engine */
- 	[ASPEED_CLK_GATE_MCLK] =	{  2, -1, "mclk-gate",		"mpll",	CLK_IS_CRITICAL }, /* SDRAM */
--	[ASPEED_CLK_GATE_VCLK] =	{  3,  6, "vclk-gate",		NULL,	0 }, /* Video Capture */
-+	[ASPEED_CLK_GATE_VCLK] =	{  3, -1, "vclk-gate",		NULL,	0 }, /* Video Capture */
- 	[ASPEED_CLK_GATE_BCLK] =	{  4,  8, "bclk-gate",		"bclk",	CLK_IS_CRITICAL }, /* PCIe/PCI */
- 	[ASPEED_CLK_GATE_DCLK] =	{  5, -1, "dclk-gate",		NULL,	CLK_IS_CRITICAL }, /* DAC */
- 	[ASPEED_CLK_GATE_REFCLK] =	{  6, -1, "refclk-gate",	"clkin", CLK_IS_CRITICAL },
-@@ -113,6 +113,24 @@ struct aspeed_clk_gate {
- 	[ASPEED_CLK_GATE_LHCCLK] =	{ 28, -1, "lhclk-gate",		"lhclk", 0 }, /* LPC master/LPC+ */
- };
+diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
+index 692e08e..55c55a6 100644
+--- a/drivers/media/platform/aspeed-video.c
++++ b/drivers/media/platform/aspeed-video.c
+@@ -14,7 +14,6 @@
+ #include <linux/of_irq.h>
+ #include <linux/of_reserved_mem.h>
+ #include <linux/platform_device.h>
+-#include <linux/reset.h>
+ #include <linux/sched.h>
+ #include <linux/spinlock.h>
+ #include <linux/string.h>
+@@ -208,7 +207,6 @@ struct aspeed_video {
+ 	void __iomem *base;
+ 	struct clk *eclk;
+ 	struct clk *vclk;
+-	struct reset_control *rst;
  
-+static const char * const eclk_parent_names[] = {
-+	"mpll",
-+	"hpll",
-+	"dpll",
-+};
+ 	struct device *dev;
+ 	struct v4l2_ctrl_handler ctrl_handler;
+@@ -483,19 +481,10 @@ static void aspeed_video_enable_mode_detect(struct aspeed_video *video)
+ 	aspeed_video_update(video, VE_SEQ_CTRL, 0, VE_SEQ_CTRL_TRIG_MODE_DET);
+ }
+ 
+-static void aspeed_video_reset(struct aspeed_video *video)
+-{
+-	/* Reset the engine */
+-	reset_control_assert(video->rst);
+-
+-	/* Don't usleep here; function may be called in interrupt context */
+-	udelay(100);
+-	reset_control_deassert(video->rst);
+-}
+-
+ static void aspeed_video_off(struct aspeed_video *video)
+ {
+-	aspeed_video_reset(video);
++	/* Disable interrupts */
++	aspeed_video_write(video, VE_INTERRUPT_CTRL, 0);
+ 
+ 	/* Turn off the relevant clocks */
+ 	clk_disable_unprepare(video->vclk);
+@@ -507,8 +496,6 @@ static void aspeed_video_on(struct aspeed_video *video)
+ 	/* Turn on the relevant clocks */
+ 	clk_prepare_enable(video->eclk);
+ 	clk_prepare_enable(video->vclk);
+-
+-	aspeed_video_reset(video);
+ }
+ 
+ static void aspeed_video_bufs_done(struct aspeed_video *video,
+@@ -1464,7 +1451,9 @@ static void aspeed_video_stop_streaming(struct vb2_queue *q)
+ 		 * Need to force stop any DMA and try and get HW into a good
+ 		 * state for future calls to start streaming again.
+ 		 */
+-		aspeed_video_reset(video);
++		aspeed_video_off(video);
++		aspeed_video_on(video);
 +
-+static const struct clk_div_table ast2500_eclk_div_table[] = {
-+	{ 0x0, 2 },
-+	{ 0x1, 2 },
-+	{ 0x2, 3 },
-+	{ 0x3, 4 },
-+	{ 0x4, 5 },
-+	{ 0x5, 6 },
-+	{ 0x6, 7 },
-+	{ 0x7, 8 },
-+	{ 0 }
-+};
-+
- static const struct clk_div_table ast2500_mac_div_table[] = {
- 	{ 0x0, 4 }, /* Yep, really. Aspeed confirmed this is correct */
- 	{ 0x1, 4 },
-@@ -192,18 +210,21 @@ static struct clk_hw *aspeed_ast2500_calc_pll(const char *name, u32 val)
+ 		aspeed_video_init_regs(video);
  
- struct aspeed_clk_soc_data {
- 	const struct clk_div_table *div_table;
-+	const struct clk_div_table *eclk_div_table;
- 	const struct clk_div_table *mac_div_table;
- 	struct clk_hw *(*calc_pll)(const char *name, u32 val);
- };
+ 		aspeed_video_get_resolution(video);
+@@ -1619,12 +1608,6 @@ static int aspeed_video_init(struct aspeed_video *video)
+ 		return PTR_ERR(video->vclk);
+ 	}
  
- static const struct aspeed_clk_soc_data ast2500_data = {
- 	.div_table = ast2500_div_table,
-+	.eclk_div_table = ast2500_eclk_div_table,
- 	.mac_div_table = ast2500_mac_div_table,
- 	.calc_pll = aspeed_ast2500_calc_pll,
- };
- 
- static const struct aspeed_clk_soc_data ast2400_data = {
- 	.div_table = ast2400_div_table,
-+	.eclk_div_table = ast2400_div_table,
- 	.mac_div_table = ast2400_div_table,
- 	.calc_pll = aspeed_ast2400_calc_pll,
- };
-@@ -522,6 +543,22 @@ static int aspeed_clk_probe(struct platform_device *pdev)
- 		return PTR_ERR(hw);
- 	aspeed_clk_data->hws[ASPEED_CLK_24M] = hw;
- 
-+	hw = clk_hw_register_mux(dev, "eclk-mux", eclk_parent_names,
-+				 ARRAY_SIZE(eclk_parent_names), 0,
-+				 scu_base + ASPEED_CLK_SELECTION, 2, 0x3, 0,
-+				 &aspeed_clk_lock);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+	aspeed_clk_data->hws[ASPEED_CLK_ECLK_MUX] = hw;
-+
-+	hw = clk_hw_register_divider_table(dev, "eclk", "eclk-mux", 0,
-+					   scu_base + ASPEED_CLK_SELECTION, 28,
-+					   3, 0, soc_data->eclk_div_table,
-+					   &aspeed_clk_lock);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+	aspeed_clk_data->hws[ASPEED_CLK_ECLK] = hw;
-+
- 	/*
- 	 * TODO: There are a number of clocks that not included in this driver
- 	 * as more information is required:
-@@ -531,7 +568,6 @@ static int aspeed_clk_probe(struct platform_device *pdev)
- 	 *   RGMII
- 	 *   RMII
- 	 *   UART[1..5] clock source mux
--	 *   Video Engine (ECLK) mux and clock divider
- 	 */
- 
- 	for (i = 0; i < ARRAY_SIZE(aspeed_gates); i++) {
+-	video->rst = devm_reset_control_get_exclusive(dev, NULL);
+-	if (IS_ERR(video->rst)) {
+-		dev_err(dev, "Unable to get VE reset\n");
+-		return PTR_ERR(video->rst);
+-	}
+-
+ 	rc = of_reserved_mem_device_init(dev);
+ 	if (rc) {
+ 		dev_err(dev, "Unable to reserve memory\n");
 -- 
 1.8.3.1
