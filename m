@@ -1,134 +1,84 @@
-From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Subject: Re: [PATCH v5 2/8] i2c: iproc: Add slave mode support
-Date: Tue, 2 Apr 2019 13:54:56 +0530
-Message-ID: <CAHO=5PG=wsYZqa0+BVbvSKgWg9NgDOrDc8J2DoXn4BRRWmDvRg@mail.gmail.com>
-References: <20190214175725.60462-1-ray.jui@broadcom.com> <20190214175725.60462-3-ray.jui@broadcom.com>
- <20190327221452.GA15396@kunai> <c67178db-9459-b424-a29a-23bb0e0c5ca9@broadcom.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v6 5/6] dt-bindings: display: sii902x: Add HDMI audio
+ bindings
+Date: Tue, 2 Apr 2019 11:27:15 +0300
+Message-ID: <d4ee03e7-c4de-6232-7efb-12ed693ca84a@ti.com>
+References: <cover.1554146714.git.jsarha@ti.com>
+ <4a0573f42112a1070c2d48ecc4a4e89838842cfc.1554146714.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c67178db-9459-b424-a29a-23bb0e0c5ca9@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Shreesha Rajashekar <shreesha.rajashekar@broadcom.com>, Michael Cheng <ccheng@broadcom.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <4a0573f42112a1070c2d48ecc4a4e89838842cfc.1554146714.git.jsarha@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: fabrizio.castro@bp.renesas.com, Songjun.Wu@atmel.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, voice.shen@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Ray/Wolfram,
-
-On Tue, Apr 2, 2019 at 3:03 AM Ray Jui <ray.jui@broadcom.com> wrote:
->
-> Hi Wolfram/Rayagonda,
->
-> On 3/27/2019 3:14 PM, Wolfram Sang wrote:
-> >
-> >> +static void bcm_iproc_i2c_slave_init(
-> >> +    struct bcm_iproc_i2c_dev *iproc_i2c, bool need_reset)
-> >> +{
-> >> +    u32 val;
-> >> +
-> >> +    if (need_reset) {
-> >> +            /* put controller in reset */
-> >> +            val = readl(iproc_i2c->base + CFG_OFFSET);
-> >> +            val |= BIT(CFG_RESET_SHIFT);
-> >> +            writel(val, iproc_i2c->base + CFG_OFFSET);
-> >> +
-> >> +            /* wait 100 usec per spec */
-> >> +            udelay(100);
-> >> +
-> >> +            /* bring controller out of reset */
-> >> +            val &= ~(BIT(CFG_RESET_SHIFT));
-> >> +            writel(val, iproc_i2c->base + CFG_OFFSET);
-> >> +    }
-> >> +
-> >> +    /* flush TX/RX FIFOs */
-> >> +    val = (BIT(S_FIFO_RX_FLUSH_SHIFT) | BIT(S_FIFO_TX_FLUSH_SHIFT));
-> >> +    writel(val, iproc_i2c->base + S_FIFO_CTRL_OFFSET);
-> >
-> > Will flushing FIFOs work when a slave is register while a master
-> > transfer is on-going at the same time?
-> >
->
-> Okay, as you pointed out in a subsequent email, this can't happen.
->
-> >> +
-> >> +    /* RANDOM SLAVE STRETCH time - 20ms*/
-> >
-> > What is a "random stretch time"? 20ms sounds like a lot. Also, missing
-> > space before comment terminator.
-> >
->
-> Rayagonda,
->
-> Could you please help to comment on the choice of the 20 ms to allow
-> clock stretch from the slave? In probably all cases, the slave should
-> not need more than 1 ms? 20 ms does seem way too long as Wolfram pointed
-> out.
-
-In fact we are programming max slave stretch time  ie 25ms, comment
-should be correcting.
-Its maximum time for slave to complete read/write operation, if slave
-is done with read/write then clock will not be stretched further, it
-will be released immediately.
-Hence I feel no harm in programming max timeout value.
-Also determining correct slave stretch is very subjective and depends
-on slave type as well.
-
-Best regards,
-Rayagonda
-
->
-> Will fix the missing space before comment terminator.
->
-> >> @@ -224,22 +473,25 @@ static int bcm_iproc_i2c_init(struct bcm_iproc_i2c_dev *iproc_i2c)
-> >>
-> >>      /* put controller in reset */
-> >>      val = readl(iproc_i2c->base + CFG_OFFSET);
-> >> -    val |= 1 << CFG_RESET_SHIFT;
-> >> -    val &= ~(1 << CFG_EN_SHIFT);
-> >> +    val |= BIT(CFG_RESET_SHIFT);
-> >> +    val &= ~(BIT(CFG_EN_SHIFT));
-> >>      writel(val, iproc_i2c->base + CFG_OFFSET);
-> >>
-> >>      /* wait 100 usec per spec */
-> >>      udelay(100);
-> >>
-> >>      /* bring controller out of reset */
-> >> -    val &= ~(1 << CFG_RESET_SHIFT);
-> >> +    val &= ~(BIT(CFG_RESET_SHIFT));
-> >>      writel(val, iproc_i2c->base + CFG_OFFSET);
-> >>
-> >>      /* flush TX/RX FIFOs and set RX FIFO threshold to zero */
-> >> -    val = (1 << M_FIFO_RX_FLUSH_SHIFT) | (1 << M_FIFO_TX_FLUSH_SHIFT);
-> >> +    val = (BIT(M_FIFO_RX_FLUSH_SHIFT) | BIT(M_FIFO_TX_FLUSH_SHIFT));
-> >>      writel(val, iproc_i2c->base + M_FIFO_CTRL_OFFSET);
-> >>      /* disable all interrupts */
-> >> -    writel(0, iproc_i2c->base + IE_OFFSET);
-> >> +    val = readl(iproc_i2c->base + IE_OFFSET);
-> >> +    val &= ~(IE_M_ALL_INTERRUPT_MASK <<
-> >> +                    IE_M_ALL_INTERRUPT_SHIFT);
-> >> +    writel(val, iproc_i2c->base + IE_OFFSET);
-> >
-> > This block looks unrelated, but I won't be too strict here...
-> >
-> >> +    case M_CMD_STATUS_FIFO_UNDERRUN:
-> >> +            dev_dbg(iproc_i2c->device, "FIFO under-run\n");
-> >> +            return -ENXIO;
-> >> +
-> >> +    case M_CMD_STATUS_RX_FIFO_FULL:
-> >> +            dev_dbg(iproc_i2c->device, "Master Rx FIFO full > 10ms\n");
-> >> +            return -ETIMEDOUT;
-> >> +
-> >
-> > ... however, this looks really unrelated to me. This is about master
-> > transmission, or?
->
-> This should be submitted in a separate commit. Will do that in the next
-> iteration of patch series.
->
-> >
-> > Rest looks OK.
-> >
->
-> Thanks,
->
-> Ray
+CgpPbiAwMi8wNC8yMDE5IDEwLjI5LCBKeXJpIFNhcmhhIHdyb3RlOgo+IFRoZSBzaWk5MDJ4IGNo
+aXAgZmFtaWx5IHN1cHBvcnRzIGFsc28gSERNSSBhdWRpby4gQWRkIGJpbmRpbmcgZm9yCj4gZGVz
+Y3JpYmluZyB0aGUgbmVjZXNzYXJ5IGkycyBhbmQgbWNsayB3aXJpbmcgZm9yIGl0LgoKUmV2aWV3
+ZWQtYnk6IFBldGVyIFVqZmFsdXNpIDxwZXRlci51amZhbHVzaUB0aS5jb20+Cgo+IFNpZ25lZC1v
+ZmYtYnk6IEp5cmkgU2FyaGEgPGpzYXJoYUB0aS5jb20+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9k
+aXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dCAgICAgICB8IDM3ICsrKysrKysrKysrKysrKysrKysK
+PiAgMSBmaWxlIGNoYW5nZWQsIDM3IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkw
+MngudHh0Cj4gaW5kZXggYzRjMTg1NWNhNjU0Li5kMTI0YTVmZWRhYjEgMTAwNjQ0Cj4gLS0tIGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngu
+dHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
+ZGdlL3NpaTkwMngudHh0Cj4gQEAgLTksNiArOSwzNyBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+
+ICAJICBhYm91dCBob3RwbHVnIGV2ZW50cy4KPiAgCS0gcmVzZXQtZ3Bpb3M6IE9GIGRldmljZS10
+cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgUlNUX04gcGluLgo+ICAKPiArCUhETUkgYXVkaW8g
+cHJvcGVydGllczoKPiArCS0gI3NvdW5kLWRhaS1jZWxsczogPDA+IG9yIDwxPi4gPDA+IGlmIG9u
+bHkgaTJzIG9yIHNwZGlmIHBpbgo+ICsJICAgaXMgd2lyZWQsIDwxPiBpZiB0aGUgYm90aCBhcmUg
+d2lyZWQuIEhETUkgYXVkaW8gaXMKPiArCSAgIGNvbmZpZ3VyZWQgb25seSBpZiB0aGlzIHByb3Bl
+cnR5IGlzIGZvdW5kLgo+ICsJLSBzaWwsaTJzLWRhdGEtbGFuZXM6IEFycmF5IG9mIHVwIHRvIDQg
+aW50ZWdlcnMgd2l0aCB2YWx1ZXMgb2YgMC0zCj4gKwkgICBFYWNoIGludGVnZXIgaW5kaWNhdGVz
+IHdoaWNoIGkycyBwaW4gaXMgY29ubmVjdGVkIHRvIHdoaWNoCj4gKwkgICBhdWRpbyBmaWZvLiBU
+aGUgZmlyc3QgaW50ZWdlciBzZWxlY3RzIGkycyBhdWRpbyBwaW4gZm9yIHRoZQo+ICsJICAgZmly
+c3QgYXVkaW8gZmlmbyMwIChIRE1JIGNoYW5uZWxzIDEmMiksIHNlY29uZCBmb3IgZmlmbyMxCj4g
+KwkgICAoSERNSSBjaGFubmVscyAzJjQpLCBhbmQgc28gb24uIFRoZXJlIGlzIDQgZmlmb3MgYW5k
+IDQgaTJzCj4gKwkgICBwaW5zIChTRDAgLSBTRDMpLiBBbnkgaTJzIHBpbiBjYW4gYmUgY29ubmVj
+dGVkIHRvIGFueSBmaWZvLAo+ICsJICAgYnV0IHRoZXJlIGNhbiBiZSBubyBnYXBzLiBFLmcuIGFu
+IGkycyBwaW4gbXVzdCBiZSBtYXBwZWQgdG8KPiArCSAgIGZpZm8jMCBhbmQgZmlmbyMxIGJlZm9y
+ZSBtYXBwaW5nIGEgY2hhbm5lbCB0byBmaWZvIzIuIERlZmF1bHQKPiArCSAgIHZhbHVlIGlzIDww
+PiwgZGVzY3JpYmluZyBTRDAgcGluIGJlaWdpbmcgcm91dGVkIHRvIGhkbWkgYXVkaW8KPiArCSAg
+IGZpZm8gIzAuCj4gKwktIGNsb2NrczogcGhhbmRsZSBhbmQgY2xvY2sgc3BlY2lmaWVyIGZvciBl
+YWNoIGNsb2NrIGxpc3RlZCBpbgo+ICsgICAgICAgICAgIHRoZSBjbG9jay1uYW1lcyBwcm9wZXJ0
+eQo+ICsJLSBjbG9jay1uYW1lczogIm1jbGsiCj4gKwkgICBEZXNjcmliZXMgU0lJOTAyeCBNQ0xL
+IGlucHV0LiBNQ0xLIGlzIHVzZWQgdG8gcHJvZHVjZQo+ICsJICAgSERNSSBhdWRpbyBDVFMgdmFs
+dWVzLiBUaGlzIHByb3BlcnR5IGlzIHJlcXVpcmVkIGlmCj4gKwkgICAiI3NvdW5kLWRhaS1jZWxs
+cyItcHJvcGVydHkgaXMgcHJlc2VudC4gVGhpcyBwcm9wZXJ0eSBmb2xsb3dzCj4gKwkgICBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmluZGluZ3MudHh0Cj4g
+KwkgICBjb25zdW1lciBiaW5kaW5nLgo+ICsKPiArCUlmIEhETUkgYXVkaW8gaXMgY29uZmlndXJl
+ZCB0aGUgc2lpOTAyeCBkZXZpY2UgYmVjb21lcyBhbiBBU29DCj4gKwljb2RlYyBjb21wb25lbnQs
+IHRoYXQgY2FuIGJlIHVzZWQgaW4gY29uZmlndXJpbmcgZnVsbCBhdWRpbwo+ICsJZGV2aWNlcyB3
+aXRoIEFTb0Mgc2ltcGxlLWNhcmQgb3IgYXVkaW8tZ3JhcGgtY2FyZC4gU2VlIHRoZWlyCj4gKwli
+aW5kaW5nIGRvY3VtZW50cyBvbiBob3cgdG8gZGVzY3JpYmUgaG93IHRoZSBzaWk5MDJ4IGRldmlj
+ZSBpcwo+ICsJY29ubmVjdGVkIHRvIHRoZSByZXN0IG9mIHRoZSBhdWRpbyBzeXN0ZW06Cj4gKwlE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvc2ltcGxlLWNhcmQudHh0Cj4g
+KwlEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvYXVkaW8tZ3JhcGgtY2Fy
+ZC50eHQKPiArCj4gIE9wdGlvbmFsIHN1Ym5vZGVzOgo+ICAJLSB2aWRlbyBpbnB1dDogdGhpcyBz
+dWJub2RlIGNhbiBjb250YWluIGEgdmlkZW8gaW5wdXQgcG9ydCBub2RlCj4gIAkgIHRvIGNvbm5l
+Y3QgdGhlIGJyaWRnZSB0byBhIGRpc3BsYXkgY29udHJvbGxlciBvdXRwdXQgKFNlZSB0aGlzCj4g
+QEAgLTIxLDYgKzUyLDEyIEBAIEV4YW1wbGU6Cj4gIAkJY29tcGF0aWJsZSA9ICJzaWwsc2lpOTAy
+MiI7Cj4gIAkJcmVnID0gPDB4Mzk+Owo+ICAJCXJlc2V0LWdwaW9zID0gPCZwaW9BIDEgMD47Cj4g
+Kwo+ICsJCSNzb3VuZC1kYWktY2VsbHMgPSA8MD47Cj4gKwkJaTJzLWRhdGEtbGFuZXMgPSA8IDAg
+MSAyID47Cj4gKwkJY2xvY2tzID0gPCZtY2xrPjsKPiArCQljbG9jay1uYW1lcyA9ICJtY2xrIjsK
+PiArCj4gIAkJcG9ydHMgewo+ICAJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiAgCQkJI3NpemUt
+Y2VsbHMgPSA8MD47Cj4gCgotIFDDqXRlcgoKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwg
+UG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuClktdHVubnVzL0J1c2luZXNzIElEOiAw
+NjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
