@@ -1,14 +1,14 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: mtd: Add YAML schemas for the generic
- NAND options
-Date: Mon, 1 Apr 2019 20:58:49 -0500
-Message-ID: <CAL_JsqLSfitzkb8P5xQ+cCmcSeL6fTjQ3rVPJ2qiNdSXyps-sw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] dt-bindings: mtd: sunxi-nand: Add YAML schemas
+Date: Mon, 1 Apr 2019 21:02:02 -0500
+Message-ID: <CAL_JsqKaaFH2AKKLV91n_RjL5_56ozheLJNtrE=0t+ygm=pxxg@mail.gmail.com>
 References: <75ad3b89e4a6f8ad5bc414c3dccbb1f99361495a.1554153146.git-series.maxime.ripard@bootlin.com>
+ <5bbd086f909e2331103fbf9afbe75cc5b8782f36.1554153146.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <75ad3b89e4a6f8ad5bc414c3dccbb1f99361495a.1554153146.git-series.maxime.ripard@bootlin.com>
+In-Reply-To: <5bbd086f909e2331103fbf9afbe75cc5b8782f36.1554153146.git-series.maxime.ripard@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,163 +24,162 @@ List-Id: devicetree@vger.kernel.org
 
 On Mon, Apr 1, 2019 at 4:14 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> The NAND chips in MTD have a bunch of generic options that are needed in a
-> device tree. Add a YAML schemas for those.
+> Switch the DT binding to a YAML schema to enable the DT validation.
 >
 > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 > ---
->  Documentation/devicetree/bindings/mtd/nand-controller.yaml | 131 +++++++-
->  1 file changed, 131 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/nand-controller.yaml
+>  Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml | 81 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  Documentation/devicetree/bindings/mtd/sunxi-nand.txt                | 48 +-------------------------------------------
+>  2 files changed, 81 insertions(+), 48 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/mtd/sunxi-nand.txt
 >
-> diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> diff --git a/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml b/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
 > new file mode 100644
-> index 000000000000..05b1afb34972
+> index 000000000000..174294b9e9c6
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> @@ -0,0 +1,131 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
+> +++ b/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
+> @@ -0,0 +1,81 @@
+> +# SPDX-License-Identifier: GPL-2.0
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
+> +$id: http://devicetree.org/schemas/mtd/allwinner,sun4i-a10-nand.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: NAND Chip and NAND Controller Generic Binding
+> +title: Allwinner A10 NAND Controller Device Tree Bindings
+> +
+> +allOf:
+> +  - $ref: "nand-controller.yaml"
 > +
 > +maintainers:
-> +  - Boris Brezillon <bbrezillon@kernel.org>
-> +  - Miquel Raynal <miquel.raynal@bootlin.com>
-> +  - Richard Weinberger <richard@nod.at>
-> +
-> +description: |
-> +  The NAND controller should be represented with its own DT node, and
-> +  all NAND chips attached to this controller should be defined as
-> +  children nodes of the NAND controller. This representation should be
-> +  enforced even for simple controllers supporting only one chip.
-> +
-> +  The ECC strength and ECC step size properties define the correction
-> +  capability of a controller. Together, they say a controller can
-> +  correct {strength} bit errors per {size} bytes.
-> +
-> +  The interpretation of these parameters is implementation-defined, so
-> +  not all implementations must support all possible
-> +  combinations. However, implementations are encouraged to further
-> +  specify the value(s) they support.
+> +  - Chen-Yu Tsai <wens@csie.org>
+> +  - Maxime Ripard <maxime.ripard@bootlin.com>
 > +
 > +properties:
-> +  $nodename:
-> +    pattern: "^nand-controller(@.*)?"
+> +  "#address-cells": true
+> +  "#size-cells": true
 > +
-> +  "#address-cells":
-> +    const: 1
+> +  compatible:
+> +    const: allwinner,sun4i-a10-nand
 > +
-> +  "#size-cells":
-> +    const: 0
+> +  reg:
+> +    maxItems: 1
 > +
-> +  ranges: true
-
-'ranges' should not be here as nand chip addresses are not translatable.
-
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Bus Clock
+> +      - description: Module Clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ahb
+> +      - const: mod
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  reset-names:
+> +    const: ahb
+> +
+> +  dmas:
+> +    maxItems: 1
+> +
+> +  dma-names:
+> +    const: rxtx
+> +
+> +  pinctrl-names: true
 > +
 > +patternProperties:
-> +  "^nand@[a-z0-9]$":
+> +  "^pinctrl-[0-9]+$": true
+> +
+> +  "^nand@[a-z0-9]+$":
 > +    properties:
 > +      reg:
-> +        description:
-> +          Contains the native Ready/Busy IDs.
-> +
-> +      nand-ecc-mode:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/string
-> +          - enum: [ none, soft, hw, hw_syndrome, hw_oob_first, on-die ]
-> +        description:
-> +          Operation mode of the NAND ecc mode. soft_bch is deprecated
-> +          and should be replaced by soft and nand-ecc-algo
-> +
-> +      nand-ecc-algo:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/string
-> +          - enum: [ hamming, bch, rs ]
-> +        description:
-> +          Algorithm of NAND ECC.
-> +
-> +      nand-bus-width:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32
-> +          - enum: [ 8, 16 ]
-> +          - default: 8
-> +        description:
-> +          Bus width to the NAND chip
-> +
-> +      nand-on-flash-bbt:
-> +        $ref: /schemas/types.yaml#/definitions/flag
-> +        description:
-> +          Enable the on-flash Bad Block Table
-> +
-> +      nand-ecc-strength:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description:
-> +          Number of bits to correct per ECC step.
+> +        maxItems: 1
 
-Is there a range we can define here? Certainly there's a minimum
-values of at least 1.
+min/max value of reg values?
 
 > +
-> +      nand-ecc-step-size:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description:
-> +          Number of data bytes covered by a single ECC step.
+> +      nand-ecc-mode: true
+> +      nand-ecc-step-size: true
+> +      nand-ecc-strength: true
 
-Same here.
+Surely the h/w has further constraints on possible values?
 
 > +
-> +      nand-ecc-maximize:
-> +        $ref: /schemas/types.yaml#/definitions/flag
-> +        description:
-> +          Whether or not the ECC strength should be maximized. The
-> +          maximum ECC strength is both controller and chip
-> +          dependent. The controller side has to select the ECC config
-> +          providing the best strength and taking the OOB area size
-> +          constraint into account.  This is particularly useful when
-> +          only the in-band area is used by the upper layers, and you
-> +          want to make your NAND as reliable as possible.
-> +
-> +      nand-is-boot-medium:
-> +        $ref: /schemas/types.yaml#/definitions/flag
-> +        description:
-> +          Whether or not the NAND chip is a boot medium. Drivers might
-> +          use this information to select ECC algorithms supported by
-> +          the boot ROM or similar restrictions.
-> +
-> +      nand-rb:
+> +      allwinner,rb:
 > +        $ref: /schemas/types.yaml#/definitions/uint32-array
 > +        description:
 > +          Contains the native Ready/Busy IDs.
 > +
-> +    required:
-> +      - reg
+> +    additionalProperties: false
 > +
 > +required:
-> +  - "#address-cells"
-> +  - "#size-cells"
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
 > +
-> +examples:
-> +  - |
-> +    nand-controller {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
+> +additionalProperties: false
 > +
-> +      /* controller specific properties */
-> +
-> +      nand@0 {
-> +        reg = <0>;
-> +        nand-ecc-mode = "soft";
-> +        nand-ecc-algo = "bch";
-> +
-> +        /* controller specific properties */
-> +      };
-> +    };
->
-> base-commit: aa63f222af3e5991099ebcecca7c474d8285c7c4
+> +...
+> diff --git a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+> deleted file mode 100644
+> index dcd5a5d80dc0..000000000000
+> --- a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+> +++ /dev/null
+> @@ -1,48 +0,0 @@
+> -Allwinner NAND Flash Controller (NFC)
+> -
+> -Required properties:
+> -- compatible : "allwinner,sun4i-a10-nand".
+> -- reg : shall contain registers location and length for data and reg.
+> -- interrupts : shall define the nand controller interrupt.
+> -- #address-cells: shall be set to 1. Encode the nand CS.
+> -- #size-cells : shall be set to 0.
+> -- clocks : shall reference nand controller clocks.
+> -- clock-names : nand controller internal clock names. Shall contain :
+> -    * "ahb" : AHB gating clock
+> -    * "mod" : nand controller clock
+> -
+> -Optional properties:
+> -- dmas : shall reference DMA channel associated to the NAND controller.
+> -- dma-names : shall be "rxtx".
+> -
+> -Optional children nodes:
+> -Children nodes represent the available nand chips.
+> -
+> -Optional properties:
+> -- reset : phandle + reset specifier pair
+> -- reset-names : must contain "ahb"
+> -- allwinner,rb : shall contain the native Ready/Busy ids.
+> -- nand-ecc-mode : one of the supported ECC modes ("hw", "soft", "soft_bch" or
+> -                 "none")
+> -
+> -see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
+> -
+> -
+> -Examples:
+> -nfc: nand@1c03000 {
+> -       compatible = "allwinner,sun4i-a10-nand";
+> -       reg = <0x01c03000 0x1000>;
+> -       interrupts = <0 37 1>;
+> -       clocks = <&ahb_gates 13>, <&nand_clk>;
+> -       clock-names = "ahb", "mod";
+> -       #address-cells = <1>;
+> -       #size-cells = <0>;
+> -       pinctrl-names = "default";
+> -       pinctrl-0 = <&nand_pins_a &nand_cs0_pins_a &nand_rb0_pins_a>;
+> -
+> -       nand@0 {
+> -               reg = <0>;
+> -               allwinner,rb = <0>;
+> -               nand-ecc-mode = "soft_bch";
+> -       };
+> -};
 > --
 > git-series 0.9.1
