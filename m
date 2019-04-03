@@ -1,196 +1,48 @@
-From: Bruno Thomsen <bruno.thomsen@gmail.com>
-Subject: [PATCH v2 5/5] ARM: dts: tq imx7d board support
-Date: Wed,  3 Apr 2019 08:44:27 +0200
-Message-ID: <20190403064427.30041-6-bruno.thomsen@gmail.com>
-References: <20190304165630.18225-1-bruno.thomsen@gmail.com>
- <20190403064427.30041-1-bruno.thomsen@gmail.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v3 3/3] MAINTAINERS: Add ASPEED BMC GFX DRM driver entry
+Date: Wed, 3 Apr 2019 09:11:16 +0200
+Message-ID: <20190403071115.GO2665@phenom.ffwll.local>
+References: <20190403001909.31637-1-joel@jms.id.au>
+ <20190403001909.31637-4-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190403064427.30041-1-bruno.thomsen@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, laa@kamstrup.com, festevam@gmail.com, s.hauer@pengutronix.de, clemens.ml@gmx.net, bruno.thomsen@gmail.com, bth@kamstrup.com, ksc@kamstrup.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org, markus.niebel@tq-group.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190403001909.31637-4-joel@jms.id.au>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Joel Stanley <joel@jms.id.au>
+Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the TQ TQMa7D SoM together with
-the MBa7 carrier board and it's based on the NXP i.MX7Dual SoC.
-
-Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
----
-v2:
-- Use generic node name and specific node label on ethernet-phy device.
-- Removed tq,imx7d-tqma7 (SoM) compatible string.
-
- arch/arm/boot/dts/Makefile         |   1 +
- arch/arm/boot/dts/imx7d-mba7.dts   | 119 +++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx7d-tqma7.dtsi |  11 +++
- 3 files changed, 131 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx7d-mba7.dts
- create mode 100644 arch/arm/boot/dts/imx7d-tqma7.dtsi
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 250c0890e5ac..80ab51dcd81e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -579,6 +579,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
- 	imx7d-cl-som-imx7.dtb \
- 	imx7d-colibri-emmc-eval-v3.dtb \
- 	imx7d-colibri-eval-v3.dtb \
-+	imx7d-mba7.dtb \
- 	imx7d-nitrogen7.dtb \
- 	imx7d-pico-hobbit.dtb \
- 	imx7d-pico-pi.dtb \
-diff --git a/arch/arm/boot/dts/imx7d-mba7.dts b/arch/arm/boot/dts/imx7d-mba7.dts
-new file mode 100644
-index 000000000000..221274c73dbd
---- /dev/null
-+++ b/arch/arm/boot/dts/imx7d-mba7.dts
-@@ -0,0 +1,119 @@
-+// SPDX-License-Identifier: GPL-2.0 OR X11
-+/*
-+ * Device Tree Source for TQ Systems TQMa7D board on MBa7 carrier board.
-+ *
-+ * Copyright (C) 2016 TQ Systems GmbH
-+ * Author: Markus Niebel <Markus.Niebel@tq-group.com>
-+ * Copyright (C) 2019 Bruno Thomsen <bruno.thomsen@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx7d-tqma7.dtsi"
-+#include "imx7-mba7.dtsi"
-+
-+/ {
-+	model = "TQ Systems TQMa7D board on MBa7 carrier board";
-+	compatible = "tq,imx7d-mba7", "fsl,imx7d";
-+};
-+
-+&fec2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet2>;
-+	phy-mode = "rgmii-id";
-+	phy-reset-gpios = <&gpio2 28 GPIO_ACTIVE_LOW>;
-+	phy-reset-duration = <1>;
-+	phy-reset-delay = <1>;
-+	phy-supply = <&reg_fec2_pwdn>;
-+	phy-handle = <&ethphy2_0>;
-+	fsl,magic-packet;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy2_0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+			ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_50_NS>;
-+			ti,tx-internal-delay = <DP83867_RGMIIDCTL_2_50_NS>;
-+			ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+			/* LED1: Link/Activity, LED2: error */
-+			ti,led-function = <0x0db0>;
-+			/* active low, LED1/2 driven by phy */
-+			ti,led-ctrl = <0x1001>;
-+		};
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog_mba7_1>;
-+
-+	pinctrl_enet2: enet2grp {
-+		fsl,pins = <
-+			MX7D_PAD_SD2_CD_B__ENET2_MDIO			0x02
-+			MX7D_PAD_SD2_WP__ENET2_MDC			0x00
-+			MX7D_PAD_EPDC_GDSP__ENET2_RGMII_TXC		0x71
-+			MX7D_PAD_EPDC_SDCE2__ENET2_RGMII_TD0		0x71
-+			MX7D_PAD_EPDC_SDCE3__ENET2_RGMII_TD1		0x71
-+			MX7D_PAD_EPDC_GDCLK__ENET2_RGMII_TD2		0x71
-+			MX7D_PAD_EPDC_GDOE__ENET2_RGMII_TD3		0x71
-+			MX7D_PAD_EPDC_GDRL__ENET2_RGMII_TX_CTL		0x71
-+			MX7D_PAD_EPDC_SDCE1__ENET2_RGMII_RXC		0x79
-+			MX7D_PAD_EPDC_SDCLK__ENET2_RGMII_RD0		0x79
-+			MX7D_PAD_EPDC_SDLE__ENET2_RGMII_RD1		0x79
-+			MX7D_PAD_EPDC_SDOE__ENET2_RGMII_RD2		0x79
-+			MX7D_PAD_EPDC_SDSHR__ENET2_RGMII_RD3		0x79
-+			MX7D_PAD_EPDC_SDCE0__ENET2_RGMII_RX_CTL		0x79
-+			/* Reset: SION, 100kPU, SRE_FAST, DSE_X1 */
-+			MX7D_PAD_EPDC_BDR0__GPIO2_IO28		0x40000070
-+			/* INT/PWDN: SION, 100kPU, HYS, SRE_FAST, DSE_X1 */
-+			MX7D_PAD_EPDC_PWR_STAT__GPIO2_IO31	0x40000078
-+		>;
-+	};
-+
-+	pinctrl_pcie: pciegrp {
-+		fsl,pins = <
-+			/* #pcie_wake */
-+			MX7D_PAD_EPDC_PWR_COM__GPIO2_IO30		0x70
-+			/* #pcie_rst */
-+			MX7D_PAD_SD2_CLK__GPIO5_IO12			0x70
-+			/* #pcie_dis */
-+			MX7D_PAD_EPDC_BDR1__GPIO2_IO29			0x70
-+		>;
-+	};
-+};
-+
-+&iomuxc_lpsr {
-+	pinctrl_usbotg2: usbotg2grp {
-+		fsl,pins = <
-+			MX7D_PAD_LPSR_GPIO1_IO06__USB_OTG2_OC	0x5c
-+			MX7D_PAD_LPSR_GPIO1_IO07__GPIO1_IO7	0x59
-+		>;
-+	};
-+};
-+
-+&pcie {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pcie>;
-+	/* 1.5V logically from 3.3V */
-+	/* probe deferral not supported */
-+	/* pcie-bus-supply = <&reg_mpcie_1v5>; */
-+	reset-gpio = <&gpio5 12 GPIO_ACTIVE_LOW>;
-+	disable-gpio = <&gpio2 29 GPIO_ACTIVE_LOW>;
-+	power-on-gpio = <&gpio2 30 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg2>;
-+	vbus-supply = <&reg_usb_otg2_vbus>;
-+	srp-disable;
-+	hnp-disable;
-+	adp-disable;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx7d-tqma7.dtsi b/arch/arm/boot/dts/imx7d-tqma7.dtsi
-new file mode 100644
-index 000000000000..8ad3048dac0d
---- /dev/null
-+++ b/arch/arm/boot/dts/imx7d-tqma7.dtsi
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0 OR X11
-+/*
-+ * Device Tree Include file for TQ Systems TQMa7D board with NXP i.MX7Dual SoC.
-+ *
-+ * Copyright (C) 2016 TQ Systems GmbH
-+ * Author: Markus Niebel <Markus.Niebel@tq-group.com>
-+ * Copyright (C) 2019 Bruno Thomsen <bruno.thomsen@gmail.com>
-+ */
-+
-+#include "imx7d.dtsi"
-+#include "imx7-tqma7.dtsi"
--- 
-2.20.1
+T24gV2VkLCBBcHIgMDMsIDIwMTkgYXQgMTA6NDk6MDlBTSArMTAzMCwgSm9lbCBTdGFubGV5IHdy
+b3RlOgo+IFRoaXMgaGFyZHdhcmUgaXMgZm91bmQgaW5zaWRlIEFTUEVFRCBCYXNlYm9hcmQgTWFu
+YWdlbWVudCBDb250cm9sbGVyCj4gKEJNQykgc3lzdGVtIG9uIGNoaXBzLiBJdCBpcyBjYWxsZWQg
+dGhlICdTT0MgRGlzcGxheSBDb250cm9sbGVyJyBvciAnR0ZYJy4KPiAKPiBTaWduZWQtb2ZmLWJ5
+OiBKb2VsIFN0YW5sZXkgPGpvZWxAam1zLmlkLmF1Pgo+IC0tLQo+ICBNQUlOVEFJTkVSUyB8IDgg
+KysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1n
+aXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTCj4gaW5kZXggYzE4ZjVmMTBjZjkxLi5jM2Fk
+NzMwZTI2ZjMgMTAwNjQ0Cj4gLS0tIGEvTUFJTlRBSU5FUlMKPiArKysgYi9NQUlOVEFJTkVSUwo+
+IEBAIC00OTA5LDYgKzQ5MDksMTQgQEAgTToJRGF2ZSBBaXJsaWUgPGFpcmxpZWRAcmVkaGF0LmNv
+bT4KPiAgUzoJT2RkIEZpeGVzCj4gIEY6CWRyaXZlcnMvZ3B1L2RybS9hc3QvCj4gIAo+ICtEUk0g
+RFJJVkVSIEZPUiBBU1BFRUQgQk1DIEdGWAo+ICtNOiAJSm9lbCBTdGFubGV5IDxqb2VsQGptcy5p
+ZC5hdT4KPiArTDoJbGludXgtYXNwZWVkQGxpc3RzLm96bGFicy5vcmcKPiArVDoJZ2l0IGdpdDov
+L2Fub25naXQuZnJlZWRlc2t0b3Aub3JnL2RybS9kcm0tbWlzYwoKRG8geW91IGhhdmUgdGhlIGZk
+byBhY2NvdW50IHJlcXVlc3QgZm9yIGRybS1taXNjIGFscmVhZHk/Ci1EYW5pZWwKCj4gK1M6CVN1
+cHBvcnRlZAo+ICtGOglkcml2ZXJzL2dwdS9kcm0vYXNwZWVkLwo+ICtGOglEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FzcGVlZC1nZngudHh0Cj4gKwo+ICBEUk0gRFJJVkVS
+IEZPUiBCT0NIUyBWSVJUVUFMIEdQVQo+ICBNOglHZXJkIEhvZmZtYW5uIDxrcmF4ZWxAcmVkaGF0
+LmNvbT4KPiAgTDoJdmlydHVhbGl6YXRpb25AbGlzdHMubGludXgtZm91bmRhdGlvbi5vcmcKPiAt
+LSAKPiAyLjIwLjEKPiAKCi0tIApEYW5pZWwgVmV0dGVyClNvZnR3YXJlIEVuZ2luZWVyLCBJbnRl
+bCBDb3Jwb3JhdGlvbgpodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
