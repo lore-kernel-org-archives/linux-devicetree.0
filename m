@@ -1,52 +1,121 @@
-From: Olivier Moysan <olivier.moysan@st.com>
-Subject: [PATCH 7/7] ASoC: cs42l51: add adc volume control
-Date: Wed, 3 Apr 2019 15:23:37 +0200
-Message-ID: <1554297817-14154-8-git-send-email-olivier.moysan@st.com>
-References: <1554297817-14154-1-git-send-email-olivier.moysan@st.com>
+From: <VenkataRajesh.Kalakodima@in.bosch.com>
+Subject: [PATCH 6/8] drm: rcar-du: Implement atomic_check to check for gamma and ctm properties
+Date: Wed, 3 Apr 2019 18:44:42 +0530
+Message-ID: <1554297284-14009-7-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
+References: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1554297817-14154-1-git-send-email-olivier.moysan@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org, olivier.moysan@st.com, arnaud.pouliquen@st.com, benjamin.gaignard@st.com, apatard@mandriva.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>, Harsha M M <harsha.manjulamallikarjun@in.bosch.com>
 List-Id: devicetree@vger.kernel.org
 
-Add ADC boost volume control for CS42L51 codec.
+From: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+    Implement atomic helper check and allocate memory necessary for
+    lut and clu tables
+
+Signed-off-by: Harsha M M <harsha.manjulamallikarjun@in.bosch.com>
+
+      - Resolved checkpatch errors
+      - Resolved merge conflicts according to latest version
+Signed-off-by: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
 ---
- sound/soc/codecs/cs42l51.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 58 ++++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/rcar-du/rcar_du_crtc.h |  3 +-
+ 2 files changed, 60 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/cs42l51.c b/sound/soc/codecs/cs42l51.c
-index 25f17c0051e4..991e4ebd7a04 100644
---- a/sound/soc/codecs/cs42l51.c
-+++ b/sound/soc/codecs/cs42l51.c
-@@ -123,6 +123,7 @@ static const DECLARE_TLV_DB_SCALE(tone_tlv, -1050, 150, 0);
- static const DECLARE_TLV_DB_SCALE(aout_tlv, -10200, 50, 0);
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+index 864fb94..a00b7a7 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+@@ -622,6 +622,63 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
+  * CRTC Functions
+  */
  
- static const DECLARE_TLV_DB_SCALE(boost_tlv, 1600, 1600, 0);
-+static const DECLARE_TLV_DB_SCALE(adc_boost_tlv, 2000, 2000, 0);
- static const char *chan_mix[] = {
- 	"L R",
- 	"L+R",
-@@ -151,6 +152,8 @@ static const struct snd_kcontrol_new cs42l51_snd_controls[] = {
- 	SOC_SINGLE("Zero Cross Switch", CS42L51_DAC_CTL, 0, 0, 0),
- 	SOC_DOUBLE_TLV("Mic Boost Volume",
- 			CS42L51_MIC_CTL, 0, 1, 1, 0, boost_tlv),
-+	SOC_DOUBLE_TLV("ADC Boost Volume",
-+		       CS42L51_MIC_CTL, 5, 6, 1, 0, adc_boost_tlv),
- 	SOC_SINGLE_TLV("Bass Volume", CS42L51_TONE_CTL, 0, 0xf, 1, tone_tlv),
- 	SOC_SINGLE_TLV("Treble Volume", CS42L51_TONE_CTL, 4, 0xf, 1, tone_tlv),
- 	SOC_ENUM_EXT("PCM channel mixer",
++static bool rcar_du_crtc_is_ctm_updated(struct drm_crtc *crtc,
++					struct drm_crtc_state *state)
++{
++	return (state->color_mgmt_changed && state->ctm &&
++		crtc->state->ctm &&
++		(crtc->state->ctm->base.id != state->ctm->base.id));
++}
++
++static bool rcar_du_crtc_is_gamma_updated(struct drm_crtc *crtc,
++					  struct drm_crtc_state *state)
++{
++	return (state->color_mgmt_changed && state->gamma_lut &&
++		crtc->state->gamma_lut &&
++		(crtc->state->gamma_lut->base.id != state->gamma_lut->base.id));
++}
++
++static int rcar_du_crtc_cmm_atomic_check(struct drm_crtc *crtc,
++					 struct drm_crtc_state *state)
++{
++	int ret = 0;
++	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
++
++	/*Check gamma update and allocate memory*/
++	if (rcar_du_crtc_is_gamma_updated(crtc, state) &&
++	    !rcrtc->lut_handle) {
++		ret = rcar_du_cmm_lut_valid((crtc->state->gamma_lut->length /
++					     sizeof(struct drm_color_lut)));
++		if (ret >= 0) {
++			rcrtc->lut_handle =
++				rcar_du_cmm_alloc_lut(rcrtc->cmm_handle);
++			if (!rcrtc->lut_handle)
++				ret = -ENOMEM;
++		}
++	}
++
++	/*Check update of ctm and allocate memory*/
++	if (ret >= 0 && rcar_du_crtc_is_ctm_updated(crtc, state) &&
++	    !rcrtc->clu_handle) {
++		rcrtc->clu_handle = rcar_du_cmm_alloc_clu(rcrtc->cmm_handle);
++		if (!rcrtc->clu_handle) {
++			if (!rcrtc->lut_handle) {
++				rcar_du_cmm_free_lut(rcrtc->lut_handle);
++				rcrtc->lut_handle = NULL;
++			}
++			ret = -ENOMEM;
++		}
++	}
++
++	return ret;
++}
++
++static int rcar_du_crtc_atomic_check(struct drm_crtc *crtc,
++				     struct drm_crtc_state *state)
++{
++	return rcar_du_crtc_cmm_atomic_check(crtc, state);
++}
++
+ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
+ 				       struct drm_crtc_state *old_state)
+ {
+@@ -708,6 +765,7 @@ static const struct drm_crtc_helper_funcs crtc_helper_funcs = {
+ 	.atomic_flush = rcar_du_crtc_atomic_flush,
+ 	.atomic_enable = rcar_du_crtc_atomic_enable,
+ 	.atomic_disable = rcar_du_crtc_atomic_disable,
++	.atomic_check = rcar_du_crtc_atomic_check,
+ };
+ 
+ static struct drm_crtc_state *
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
+index 5b85de4..b79080e 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
++++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
+@@ -70,7 +70,8 @@ struct rcar_du_crtc {
+ 	int lvds_ch;
+ 
+ 	void *cmm_handle;
+-
++	void *lut_handle;
++	void *clu_handle;
+ };
+ 
+ #define to_rcar_crtc(c)	container_of(c, struct rcar_du_crtc, crtc)
 -- 
 2.7.4
