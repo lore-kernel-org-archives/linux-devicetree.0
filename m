@@ -1,31 +1,35 @@
-From: Pascal PAILLET-LME <p.paillet@st.com>
-Subject: [PATCH 0/3] Add support for STPMIC1
-Date: Wed, 3 Apr 2019 13:40:54 +0000
-Message-ID: <1554298852-9955-1-git-send-email-p.paillet@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+From: Sugar Zhang <sugar.zhang@rock-chips.com>
+Subject: [PATCH v1 0/12] Patches to update pdm for rockchip socs
+Date: Wed,  3 Apr 2019 21:40:44 +0800
+Message-ID: <1554298856-59028-1-git-send-email-sugar.zhang@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "biju.das@bp.renesas.com" <biju.das@bp.renesas.com>, Yannick FERTRE <yannick.fertre@st.com>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.i>
-Cc: Pascal PAILLET-LME <p.paillet@st.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
+To: heiko@sntech.de, broonie@kernel.org
+Cc: linux-rockchip@lists.infradead.org, Sugar Zhang <sugar.zhang@rock-chips.com>, Jaroslav Kysela <perex@perex.cz>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for STPMIC1 on:
-- stm32mp157c ed1 board
-- stm32mp157a dk1 board
-- arm multi_v7_defconfig
+These patches to add support pdm for rk322x/rk1808/rk3308/px30 socs
+and fix some issues.
 
-Pascal Paillet (3):
-  ARM: dts: stm32: add stpmic1 support on stm32mp157c ed1 board
-  ARM: dts: stm32: add stpmic1 support on stm32mp157a dk1 board
-  ARM: multi_v7_defconfig: Enable support for STPMIC1
 
- arch/arm/boot/dts/stm32mp157a-dk1.dts | 157 ++++++++++++++++++++++++++++++++--
- arch/arm/boot/dts/stm32mp157c-ed1.dts | 155 +++++++++++++++++++++++++++++----
- arch/arm/configs/multi_v7_defconfig   |   4 +
- 3 files changed, 292 insertions(+), 24 deletions(-)
+Sugar Zhang (12):
+  ASoC: rockchip: pdm: fix regmap_ops hang issue
+  ASoC: rockchip: pdm: using left justified store mode
+  ASoC: rockchip: pdm: add default regs
+  ASoC: rockchip: pdm: optimize clear logic
+  ASoC: rockchip: pdm: change dma burst to 8
+  ASoC: rockchip: pdm: fixup pdm fractional div
+  dt-bindings: sound: rockchip: add compatible for rk3308/px30
+  ASoC: rockchip: pdm: add compatible for rk1808
+  dt-bindings: sound: add compatible for rk1808
+  ASoC: rockchip: pdm: adjust waterlevel in frame unit
+  ASoC: rockchip: pdm: Mark RXFIFO_DATA as volatile and precious
+  ASoC: rockchip: pdm: Correct PDM_CTRL0 reg value
+
+ .../devicetree/bindings/sound/rockchip,pdm.txt     |   5 +
+ sound/soc/rockchip/rockchip_pdm.c                  | 209 ++++++++++++++++-----
+ sound/soc/rockchip/rockchip_pdm.h                  |  12 ++
+ 3 files changed, 180 insertions(+), 46 deletions(-)
 
 -- 
-1.9.1
+2.7.4
