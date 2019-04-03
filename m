@@ -1,61 +1,92 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v7 4/4] Input: goodix - Add GT5663 CTP support
-Date: Wed, 3 Apr 2019 16:09:39 -0700
-Message-ID: <20190403230939.GH53104@dtor-ws>
-References: <20190321082104.2874-1-jagan@amarulasolutions.com>
- <20190321082104.2874-5-jagan@amarulasolutions.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 4/4] leds: lm3532: Introduce the lm3532 LED driver
+Date: Wed, 3 Apr 2019 16:55:00 -0700
+Message-ID: <20190403235500.GU49658@atomide.com>
+References: <20190321142838.22985-1-dmurphy@ti.com>
+ <20190321142838.22985-4-dmurphy@ti.com>
+ <20190322221654.GG19425@atomide.com>
+ <dc24b66c-658e-41aa-c869-42c4a7e812a8@ti.com>
+ <20190325145444.GK19425@atomide.com>
+ <044f67e7-e196-a5b9-728b-a7c5f283f56f@ti.com>
+ <20190328210437.tcojjqynggk72zo2@earth.universe>
+ <20190403200600.GT49658@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190321082104.2874-5-jagan@amarulasolutions.com>
+In-Reply-To: <20190403200600.GT49658@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Bastien Nocera <hadess@hadess.net>, Rob Herring <robh+dt@kernel.org>, Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 01:51:04PM +0530, Jagan Teki wrote:
-> GT5663 is capacitive touch controller with customized smart
-> wakeup gestures.
+* Tony Lindgren <tony@atomide.com> [190403 13:06]:
+> * Sebastian Reichel <sre@kernel.org> [190329 05:36]:
+> > Hi,
+> > 
+> > On Mon, Mar 25, 2019 at 11:01:18AM -0500, Dan Murphy wrote:
+> > > On 3/25/19 9:54 AM, Tony Lindgren wrote:
+> > > > * Dan Murphy <dmurphy@ti.com> [190325 12:36]:
+> > > >> On 3/22/19 5:16 PM, Tony Lindgren wrote:
+> > > >>> I can control the backlight brightness just fine via /sys, and
+> > > >>> backlight shows up as the trigger in /sys/class/leds/lm3532:backlight,
+> > > >>> but /sys/class/backlight is empty and looks like drm can't find it.
+> > > >>>
+> > > >>> Do I need to enable some additional driver(s) to get this to work
+> > > >>> with the drm driver?
+> > > >>>
+> > > >>
+> > > >> Can you dump or point to the defconfig?
+> > > > 
+> > > > This is just with the omap2plus_defconfig as in the droid4-pending-v5.0
+> > > > test branch below [0]. That branch has Sebastian's drm patches. The
+> > > > branch also has the older ti-lmu patches that I reverted for testing
+> > > > before applying your new series and enabling it in .config.
+> > > > 
+> > > > The drm driver (drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c) just
+> > > > does:
+> > > > 
+> > > > backlight = of_parse_phandle(node, "backlight", 0);
+> > > > ...
+> > > > 
+> > > > That should still work the same, right?
+> > > 
+> > > Yes it should still work the same.
+> > > I did not change the node name.
+> > > So the DRM driver should find the node.
+> > 
+> > This will not work, since the next line tries to get it as a
+> > backlight device, but it's an LED device instead:
+> > 
+> > of_find_backlight_by_node(backlight);
+> > 
+> > I suppose the backlight device could be instantiated on top
+> > of the LED device somehow.
 > 
-> Add support for it by adding compatible and supported chip data.
+> Hmm yeah I thought setting the ledtrig-backlight for it
+> would do the trick. But after thinking about it there might
+> be some backlight lifecycle issues with that where everything
+> would need to be torn down for the panel to change the
+> backlight trigger. I think the panel driver(s) assume the
+> backlight to always be there at probe time. Well this is
+> just based on just guessing.. I might be wrong.
 > 
-> The chip data on GT5663 is similar to GT1151, like
-> - config data register has 0x8050 address
-> - config data register max len is 240
-> - config data checksum has 16-bit
-> 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> I have no issues using of_find_backlight_by_node() like
+> other panels.
 
-Applied, thank you.
+Oh sorry, I did not read the code before replying.
+I somehow thought of_find_backlight_by_node() should be
+used for LEDs but that's for backlight still :)
 
-> ---
->  drivers/input/touchscreen/goodix.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-> index de5b80a08f41..c558b091749c 100644
-> --- a/drivers/input/touchscreen/goodix.c
-> +++ b/drivers/input/touchscreen/goodix.c
-> @@ -219,6 +219,7 @@ static const struct goodix_chip_data *goodix_get_chip_data(u16 id)
->  {
->  	switch (id) {
->  	case 1151:
-> +	case 5663:
->  	case 5688:
->  		return &gt1x_chip_data;
->  
-> @@ -1003,6 +1004,7 @@ MODULE_DEVICE_TABLE(acpi, goodix_acpi_match);
->  #ifdef CONFIG_OF
->  static const struct of_device_id goodix_of_match[] = {
->  	{ .compatible = "goodix,gt1151" },
-> +	{ .compatible = "goodix,gt5663" },
->  	{ .compatible = "goodix,gt5688" },
->  	{ .compatible = "goodix,gt911" },
->  	{ .compatible = "goodix,gt9110" },
-> -- 
-> 2.18.0.321.gffc6fa0e3
-> 
+Looks like all we need to do is leave out the backlight
+line from dts, we don't need to do anything with
+of_find_backlight_by_node(). Having ledtrig-backlight
+configured means lm3532 will just use the notifier
+for FB_EVENT_BLANK.
 
--- 
-Dmitry
+I'll reply to the dts patch and ack the test, looks
+like we're good to go as far as I'm concerned.
+
+Regards,
+
+Tony
