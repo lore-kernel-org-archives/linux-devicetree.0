@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [v3 PATCH 3/6] dt-bindings: usb: mtu3: add properties about USB Role Switch
-Date: Wed, 3 Apr 2019 10:09:11 +0800
-Message-ID: <1554257354-7440-4-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [v3 PATCH 4/6] usb: roles: add API to get usb_role_switch by node
+Date: Wed, 3 Apr 2019 10:09:12 +0800
+Message-ID: <1554257354-7440-5-git-send-email-chunfeng.yun@mediatek.com>
 References: <1554257354-7440-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,53 +12,85 @@ To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation
 Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, Alan Stern <stern@rowland.harvard.edu>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Now the USB Role Switch is supported, so add properties about it
+Add fwnode_usb_role_switch_get() to make easier to get
+usb_role_switch by fwnode which register it.
+It's useful when there is not device_connection registered
+between two drivers and only knows the fwnode which register
+usb_role_switch.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
-v3: no changes
+v3 changes:
+  1. use fwnodes instead of node suggested by Andy
+  2. rebuild the API suggested by Heikki
 
-v2 changes:
-  1. fix typo
-  2. refer new binding about connector property
+v2 no changes
 ---
- .../devicetree/bindings/usb/mediatek,mtu3.txt          | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/usb/roles/class.c | 31 +++++++++++++++++++++++++++++++
+ include/linux/usb/role.h  |  2 ++
+ 2 files changed, 33 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-index 3382b5cb471d..6e004c4a89af 100644
---- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-@@ -27,7 +27,9 @@ Optional properties:
-  - ranges : allows valid 1:1 translation between child's address space and
- 	parent's address space
-  - extcon : external connector for vbus and idpin changes detection, needed
--	when supports dual-role mode.
-+	when supports dual-role mode; it's consiedered valid for compatibility
-+	reasons, and not allowed for new bindings, use the property
-+	usb-role-switch instead.
-  - vbus-supply : reference to the VBUS regulator, needed when supports
- 	dual-role mode.
-  - pinctrl-names : a pinctrl state named "default" is optional, and need be
-@@ -36,7 +38,8 @@ Optional properties:
- 	is not set.
-  - pinctrl-0 : pin control group
- 	See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
--
-+ - usb-role-switch : use USB Role Switch to support dual-role switch, but
-+	not extcon
-  - maximum-speed : valid arguments are "super-speed", "high-speed" and
- 	"full-speed"; refer to usb/generic.txt
-  - enable-manual-drd : supports manual dual-role switch via debugfs; usually
-@@ -61,6 +64,9 @@ The xhci should be added as subnode to mtu3 as shown in the following example
- if host mode is enabled. The DT binding details of xhci can be found in:
- Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
+diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+index f45d8df5cfb8..5ecb57f8960b 100644
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -12,6 +12,7 @@
+ #include <linux/device.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
++#include <linux/of.h>
+ #include <linux/slab.h>
  
-+The port would be added as subnode if use usb-role-switch property
-+	see graph.txt
+ static struct class *role_class;
+@@ -135,6 +136,36 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(usb_role_switch_get);
+ 
++static int __switch_match_fwnode(struct device *dev, const void *fwnode)
++{
++	return dev_fwnode(dev->parent) == (const struct fwnode_handle *)fwnode;
++}
 +
- Example:
- ssusb: usb@11271000 {
- 	compatible = "mediatek,mt8173-mtu3";
++/**
++ * fwnode_usb_role_switch_get - Find USB role switch by it's parent fwnode
++ * @fwnode: The fwnode that register USB role switch
++ *
++ * Finds and returns role switch registered by @fwnode. The reference count
++ * for the found switch is incremented.
++ */
++struct usb_role_switch *
++fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
++{
++	struct usb_role_switch *sw;
++	struct device *dev;
++
++	dev = class_find_device(role_class, NULL, fwnode,
++				__switch_match_fwnode);
++	if (!dev)
++		return ERR_PTR(-EPROBE_DEFER);
++
++	sw = to_role_switch(dev);
++	WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
++
++	return sw;
++}
++EXPORT_SYMBOL_GPL(fwnode_usb_role_switch_get);
++
+ /**
+  * usb_role_switch_put - Release handle to a switch
+  * @sw: USB Role Switch
+diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
+index c05ffa6abda9..d21cd55d9e45 100644
+--- a/include/linux/usb/role.h
++++ b/include/linux/usb/role.h
+@@ -46,6 +46,8 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
+ enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
+ struct usb_role_switch *usb_role_switch_get(struct device *dev);
+ void usb_role_switch_put(struct usb_role_switch *sw);
++struct usb_role_switch *
++fwnode_usb_role_switch_get(struct fwnode_handle *fwnode);
+ 
+ struct usb_role_switch *
+ usb_role_switch_register(struct device *parent,
 -- 
 2.20.1
