@@ -1,35 +1,46 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 00/14] Support for Allwinner V3/S3L and
- Sochip S3
-Date: Wed, 3 Apr 2019 16:34:04 +0700
-Message-ID: <CACRpkdY5m1vuJKGJxFhPKyi-h_7F4O32oWuobf51x+=gkSp2cA@mail.gmail.com>
-References: <20190312152256.35574-1-icenowy@aosc.io>
-Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v4 3/5] media: sunxi: Add A10 CSI driver
+Date: Wed, 3 Apr 2019 12:37:58 +0300
+Message-ID: <20190403093758.z2wlnx5ck6ck36ib@paasikivi.fi.intel.com>
+References: <cover.2aba8cbd95630d87f927465cc2beb881936c83d9.1553010938.git-series.maxime.ripard@bootlin.com>
+ <bf348ec10d4444dd80eab0caddc4e2d3ce3131d4.1553010938.git-series.maxime.ripard@bootlin.com>
+ <20190403091221.qd5ivgcoviazccv7@paasikivi.fi.intel.com>
+ <20190403092655.engthyfinpxvndh4@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDE6RCFOWIARBGX4SHSQKGQEW35D6TQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190312152256.35574-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:GPIO SUBSYSTEM" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190403092655.engthyfinpxvndh4@flea>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 10:24 PM Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+On Wed, Apr 03, 2019 at 11:26:55AM +0200, Maxime Ripard wrote:
+> Hi Sakari,
+> 
+> On Wed, Apr 03, 2019 at 12:12:21PM +0300, Sakari Ailus wrote:
+> > Thanks for the update and my apologies for the late review.
+> >
+> > On Tue, Mar 19, 2019 at 04:55:46PM +0100, Maxime Ripard wrote:
+> > > The older CSI drivers have camera capture interface different from the one
+> > > in the newer ones.
+> > >
+> > > This IP is pretty simple. Some variants (one controller out of two
+> > > instances on some SoCs) have an ISP embedded, but there's no code that make
+> > > use of it, so we ignored that part for now.
+> > >
+> > > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> >
+> > Could you add a sub-device for the CSI-2 receiver, please?
+> >
+> > See e.g. drivers/media/pci/intel/ipu3/ipu3-cio2.c for an example.
+> 
+> It's confusing, I know, but this isn't a MIPI-CSI receiver. The IP is
+> called CSI, but it's only capable of handling parallel and BT656.
 
-> This patchset tries to add support for Allwinner V3/S3L and Sochip S3.
+Right, for the parallel (or Bt.656) receiver then.
 
-I see there is some review comments on this patch set so I am waiting
-for v2.
-
-When we have something Maxime, Rob etc has ACKed, I suggest I merge
-the pinctrl stuff into an immutable branch in the pinctrl tree so that it can
-be pulled in to ARM SoC if need be (for DTS files to compile for example).
-
-Yours,
-Linus Walleij
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
