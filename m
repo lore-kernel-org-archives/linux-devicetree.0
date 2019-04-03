@@ -1,15 +1,15 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 1/3] dt-bindings: phy: rcar-gen3-phy-usb2: Revise
- #phy-cells property
-Date: Wed, 3 Apr 2019 10:35:29 +0000
-Message-ID: <TY1PR01MB17708AF072E039D362FDE659C0570@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+Subject: RE: [PATCH 2/3] phy: renesas: rcar-gen3-usb2: Use pdev's device
+ pointer on dev_vdbg()
+Date: Wed, 3 Apr 2019 10:36:57 +0000
+Message-ID: <TY1PR01MB1770A0BBFF5253357A15AA61C0570@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 References: <1554120083-29990-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1554120083-29990-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1554120083-29990-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554120083-29990-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1554120083-29990-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
@@ -23,51 +23,82 @@ Thank you for your patch!
 > From: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.=
 org> On Behalf Of Yoshihiro Shimoda
 > Sent: 01 April 2019 13:01
-> Subject: [PATCH 1/3] dt-bindings: phy: rcar-gen3-phy-usb2: Revise #phy-ce=
-lls property
+> Subject: [PATCH 2/3] phy: renesas: rcar-gen3-usb2: Use pdev's device poin=
+ter on dev_vdbg()
 >=20
-> To have the detailed property on each PHY specifier, this patch revices
-
-s/revices/revises/g
-
-> the #phy-cells property.
+> To implement multiple phy instances in the future, this patch uses
+> pdev's device pointer on dev_vdbg() instead of the phy's device
+> pointer.
 >=20
 > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+
 > ---
->  Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+>  drivers/phy/renesas/phy-rcar-gen3-usb2.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
 >=20
-> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt=
- b/Documentation/devicetree/bindings/phy/rcar-gen3-
-> phy-usb2.txt
-> index ad9c290..7f0d4bf 100644
-> --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> @@ -27,7 +27,12 @@ Required properties:
+> diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renes=
+as/phy-rcar-gen3-usb2.c
+> index 0a34782..4bdb2ed 100644
+> --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+> +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+> @@ -80,6 +80,7 @@
 >=20
->  - reg: offset and length of the partial USB 2.0 Host register block.
->  - clocks: clock phandle and specifier pair(s).
-> -- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
-> +- #phy-cells: see phy-bindings.txt in the same directory, must be <1>.
-> +
-> +The phandle's argument in the PHY specifier is the INT_STATUS bit of con=
-troller:
-
->From the driver we are also looking for value 0, as in rcar_gen3_get_dr_mod=
-e we
-have a for loop that starts from 0, and we call of_usb_get_dr_mode_by_phy w=
-ith
-arg0 =3D=3D 0, why are we leaving this out from this list?
-
-Thanks,
-Fab
-
-> +- 1 =3D USBH_INTA (OHCI)
-> +- 2 =3D USBH_INTB (EHCI)
-> +- 3 =3D UCOM_INT (OTG and BC)
+>  struct rcar_gen3_chan {
+>  	void __iomem *base;
+> +	struct device *dev;	/* platform_device's device */
+>  	struct extcon_dev *extcon;
+>  	struct phy *phy;
+>  	struct regulator *vbus;
+> @@ -120,7 +121,7 @@ static void rcar_gen3_set_host_mode(struct rcar_gen3_=
+chan *ch, int host)
+>  	void __iomem *usb2_base =3D ch->base;
+>  	u32 val =3D readl(usb2_base + USB2_COMMCTRL);
 >=20
->  Optional properties:
->  To use a USB channel where USB 2.0 Host and HSUSB (USB 2.0 Peripheral) a=
-re
+> -	dev_vdbg(&ch->phy->dev, "%s: %08x, %d\n", __func__, val, host);
+> +	dev_vdbg(ch->dev, "%s: %08x, %d\n", __func__, val, host);
+>  	if (host)
+>  		val &=3D ~USB2_COMMCTRL_OTG_PERI;
+>  	else
+> @@ -133,7 +134,7 @@ static void rcar_gen3_set_linectrl(struct rcar_gen3_c=
+han *ch, int dp, int dm)
+>  	void __iomem *usb2_base =3D ch->base;
+>  	u32 val =3D readl(usb2_base + USB2_LINECTRL1);
+>=20
+> -	dev_vdbg(&ch->phy->dev, "%s: %08x, %d, %d\n", __func__, val, dp, dm);
+> +	dev_vdbg(ch->dev, "%s: %08x, %d, %d\n", __func__, val, dp, dm);
+>  	val &=3D ~(USB2_LINECTRL1_DP_RPD | USB2_LINECTRL1_DM_RPD);
+>  	if (dp)
+>  		val |=3D USB2_LINECTRL1_DP_RPD;
+> @@ -147,7 +148,7 @@ static void rcar_gen3_enable_vbus_ctrl(struct rcar_ge=
+n3_chan *ch, int vbus)
+>  	void __iomem *usb2_base =3D ch->base;
+>  	u32 val =3D readl(usb2_base + USB2_ADPCTRL);
+>=20
+> -	dev_vdbg(&ch->phy->dev, "%s: %08x, %d\n", __func__, val, vbus);
+> +	dev_vdbg(ch->dev, "%s: %08x, %d\n", __func__, val, vbus);
+>  	if (vbus)
+>  		val |=3D USB2_ADPCTRL_DRVVBUS;
+>  	else
+> @@ -401,7 +402,7 @@ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, vo=
+id *_ch)
+>  	irqreturn_t ret =3D IRQ_NONE;
+>=20
+>  	if (status & USB2_OBINT_BITS) {
+> -		dev_vdbg(&ch->phy->dev, "%s: %08x\n", __func__, status);
+> +		dev_vdbg(ch->dev, "%s: %08x\n", __func__, status);
+>  		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
+>  		rcar_gen3_device_recognition(ch);
+>  		ret =3D IRQ_HANDLED;
+> @@ -499,6 +500,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_d=
+evice *pdev)
+>=20
+>  	platform_set_drvdata(pdev, channel);
+>  	phy_set_drvdata(channel->phy, channel);
+> +	channel->dev =3D dev;
+>=20
+>  	provider =3D devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+>  	if (IS_ERR(provider)) {
 > --
 > 2.7.4
