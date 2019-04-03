@@ -1,202 +1,54 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v5 0/3] drm/panel: Support Rocktech jh057n00900 DSI panel
-Date: Wed, 3 Apr 2019 23:07:38 +0200
-Message-ID: <20190403210738.GA9173@ravnborg.org>
-References: <cover.1554114302.git.agx@sigxcpu.org>
- <20190403161735.GN5238@ulmo>
- <1ed5eb3af4df6b2dd1544c7b696e034ed5c94f06.camel@perches.com>
- <c2f6a9f0ea59dc1491a8429a51afe56e488dfb3c.camel@perches.com>
+From: "Leonidas P. Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] arm64: dts: rockchip: eMMC additions for rk3328-roc-cc
+Date: Thu,  4 Apr 2019 00:50:51 +0300
+Message-ID: <20190403215051.29536-1-papadakospan@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c2f6a9f0ea59dc1491a8429a51afe56e488dfb3c.camel@perches.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Jagan Teki <jagan@amarulasolutions.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Johan Hovold <johan@kernel.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.ke
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Leonidas P. Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Joe.
+The eMMC 5.x that Libre Computer provide for their boards supports HS200 mode.
+The support is already included in the dts for their newest board:
 
-Thanks for your patch.
+La Frite (AML-S805X-AC)
+dts: arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts
 
-> ---
->  drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c | 210 +++++++++++++--------
->  1 file changed, 136 insertions(+), 74 deletions(-)
+That same eMMC is supported in the ROC-RK3328-CC:
+https://www.loverpi.com/products/libre-computer-board-emmc-5-x-module
 
-Hmmm, add more lines than it deletes.
+This increases the speed of the eMMC significantly.
 
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-> index 158a6d548068..7862863db5f7 100644
-> --- a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-> +++ b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-> @@ -20,27 +20,6 @@
->  
->  #define DRV_NAME "panel-rocktech-jh057n00900"
->  
-> -/* Manufacturer specific Commands send via DSI */
-> -#define ST7703_CMD_ALL_PIXEL_OFF 0x22
-> -#define ST7703_CMD_ALL_PIXEL_ON	 0x23
-> -#define ST7703_CMD_SETDISP	 0xB2
-> -#define ST7703_CMD_SETRGBIF	 0xB3
-> -#define ST7703_CMD_SETCYC	 0xB4
-> -#define ST7703_CMD_SETBGP	 0xB5
-> -#define ST7703_CMD_SETVCOM	 0xB6
-> -#define ST7703_CMD_SETOTP	 0xB7
-> -#define ST7703_CMD_SETPOWER_EXT	 0xB8
-> -#define ST7703_CMD_SETEXTC	 0xB9
-> -#define ST7703_CMD_SETMIPI	 0xBA
-> -#define ST7703_CMD_SETVDC	 0xBC
-> -#define ST7703_CMD_SETSCR	 0xC0
-> -#define ST7703_CMD_SETPOWER	 0xC1
-> -#define ST7703_CMD_SETPANEL	 0xCC
-> -#define ST7703_CMD_SETGAMMA	 0xE0
-> -#define ST7703_CMD_SETEQ	 0xE3
-> -#define ST7703_CMD_SETGIP1	 0xE9
-> -#define ST7703_CMD_SETGIP2	 0xEA
-> -
->  struct jh057n {
->  	struct device *dev;
->  	struct drm_panel panel;
-> @@ -51,75 +30,153 @@ struct jh057n {
->  	struct dentry *debugfs;
->  };
->  
-> +struct st7703_cmd {
-> +	const size_t	size;
-> +	const u8	data[];
-> +};
-> +
-> +#define st7703_cmd_data(cmd, ...)					\
-> +	.size = 1 + (sizeof((u8[]){__VA_ARGS__})/sizeof(u8)),		\
-> +	.data = {cmd, __VA_ARGS__}
-> +
-> +/* Manufacturer specific Commands send via DSI */
-> +static const struct st7703_cmd ST7703_CMD_ALL_PIXEL_OFF = {
-> +	st7703_cmd_data(0x22)
-> +};
-> +static const struct st7703_cmd ST7703_CMD_ALL_PIXEL_ON = {
-> +	st7703_cmd_data(0x23)
-> +};
-> +static const struct st7703_cmd ST7703_CMD_SETDISP = {
-> +	st7703_cmd_data(0xB2,
-> +			0xF0, 0x12, 0x30)
-> +};
-> +static const struct st7703_cmd ST7703_CMD_SETRGBIF = {
-> +	st7703_cmd_data(0xB3,
-> +			0x10, 0x10, 0x05, 0x05, 0x03, 0xFF, 0x00, 0x00,
-> +			0x00, 0x00)
-> +};
-> +static const struct st7703_cmd ST7703_CMD_SETCYC = {
-> +	st7703_cmd_data(0xB4,
-> +			0x80)
-> +};
-> +static const struct st7703_cmd ST7703_CMD_SETBGP = {
-> +	st7703_cmd_data(0xB5,
-> +			0x08, 0x08)
-> +};
-> +static const struct st7703_cmd ST7703_CMD_SETVCOM = {
-> +	st7703_cmd_data(0xB6,
-> +			0x3F, 0x3F)
-> +};
-> +static const struct st7703_cmd ST7703_CMD_SETOTP = {
-> +	st7703_cmd_data(0xB7)
-> +};
-> +static const struct st7703_cmd ST7703_CMD_SETPOWER_EXT = {
-> +	st7703_cmd_data(0xB8)
-> +};
-> +static const struct st7703_cmd ST7703_CMD_SETEXTC = {
-> +	st7703_cmd_data(0xB9,
-> +			0xF1, 0x12, 0x83)
-> +};
-> +static const struct st7703_cmd ST7703_CMD_SETMIPI = {
-> +	st7703_cmd_data(0xBA)
-> +};
-> +static const struct st7703_cmd ST7703_CMD_SETVDC = {
-> +	st7703_cmd_data(0xBC,
-> +			0x4E)
-> +};
-> +static const struct st7703_cmd ST7703_CMD_SETSCR = {
-> +	st7703_cmd_data(0xC0,
-> +			0x73, 0x73, 0x50, 0x50, 0x00, 0x00, 0x08, 0x70,
-> +			0x00)
-> +};
-> +static const struct st7703_cmd ST7703_CMD_SETPOWER = {
-> +	st7703_cmd_data(0xC1)
-> +};
-> +static const struct st7703_cmd ST7703_CMD_SETPANEL = {
-> +	st7703_cmd_data(0xCC,
-> +			0x0B)
-> +};
-> +static const struct st7703_cmd ST7703_CMD_SETGAMMA = {
-> +	st7703_cmd_data(0xE0,
-> +			0x00, 0x09, 0x0E, 0x29, 0x2D, 0x3C, 0x41, 0x37,
-> +			0x07, 0x0B, 0x0D, 0x10, 0x11, 0x0F, 0x10, 0x11,
-> +			0x18, 0x00, 0x09, 0x0E, 0x29, 0x2D, 0x3C, 0x41,
-> +			0x37, 0x07, 0x0B, 0x0D, 0x10, 0x11, 0x0F, 0x10,
-> +			0x11, 0x18)
-> +};
-> +static const struct st7703_cmd ST7703_CMD_SETEQ = {
-> +	st7703_cmd_data(0xE3,
-> +			0x07, 0x07, 0x0B, 0x0B, 0x03, 0x0B, 0x00, 0x00,
-> +			0x00, 0x00, 0xFF, 0x00, 0xC0, 0x10)
-> +};
-> +static const struct st7703_cmd ST7703_CMD_SETGIP1 = {
-> +	st7703_cmd_data(0xE9,
-> +			0x82, 0x10, 0x06, 0x05, 0x9E, 0x0A, 0xA5, 0x12,
-> +			0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
-> +			0x0C, 0x00, 0x03, 0x00, 0x00, 0x00, 0x0C, 0x00,
-> +			0x03, 0x00, 0x00, 0x00, 0x75, 0x75, 0x31, 0x88,
-> +			0x88, 0x88, 0x88, 0x88, 0x88, 0x13, 0x88, 0x64,
-> +			0x64, 0x20, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
-> +			0x02, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
-> +};
-> +
-> +static const struct st7703_cmd ST7703_CMD_SETGIP2 = {
-> +	st7703_cmd_data(0xEA,
-> +			0x02, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +			0x00, 0x00, 0x00, 0x00, 0x02, 0x46, 0x02, 0x88,
-> +			0x88, 0x88, 0x88, 0x88, 0x88, 0x64, 0x88, 0x13,
-> +			0x57, 0x13, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
-> +			0x75, 0x88, 0x23, 0x14, 0x00, 0x00, 0x02, 0x00,
-> +			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x30, 0x0A,
-> +			0xA5, 0x00, 0x00, 0x00, 0x00)
-> +};
-> +
->  static inline struct jh057n *panel_to_jh057n(struct drm_panel *panel)
->  {
->  	return container_of(panel, struct jh057n, panel);
->  }
->  
-> -#define dsi_generic_write_seq(dsi, seq...) do {				\
-> -		static const u8 d[] = { seq };				\
-> -		int ret;						\
-> -		ret = mipi_dsi_generic_write(dsi, d, ARRAY_SIZE(d));	\
-> -		if (ret < 0)						\
-> -			return ret;					\
-> -	} while (0)
-The above macro was the one triggering this patch.
-And frankly it looks nice and simple.
+Signed-off-by: Leonidas P. Papadakos <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-The old code is IMO more readable.
-- We have all the commands listed in the order they
-  are used and in a rahter compatch format.
-- It is obvious when we need delays.
-- We have traditional #defines for the constants we know
-
-This macro:
-> +#define st7703_cmd_data(cmd, ...)                                    \
-> +     .size = 1 + (sizeof((u8[]){__VA_ARGS__})/sizeof(u8)),           \
-> +     .data = {cmd, __VA_ARGS__}
-is again IMO not easier to follow than the above.
-
-This is all to some extent bikeshedding, but I suggest
-to keep the current code.
-It is simple and it is tested.
-
-Thanks for trying to come up with a better solution.
-
-	Sam
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+index c213ad74d..c3cf56107 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+@@ -122,6 +122,10 @@
+ &emmc {
+ 	bus-width = <8>;
+ 	cap-mmc-highspeed;
++	disable-wp;
++	max-frequency = <200000000>;
++	mmc-ddr-1_8v;
++	mmc-hs200-1_8v;
+ 	non-removable;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
+-- 
+2.21.0
