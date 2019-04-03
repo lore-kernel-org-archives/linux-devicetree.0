@@ -1,127 +1,62 @@
-From: Leo Li <leoyang.li@nxp.com>
-Subject: RE: [PATCH v1 1/4] dt-bindings: arm64: add compatible for LX2160A
-Date: Wed, 3 Apr 2019 22:01:13 +0000
-Message-ID: <AM6PR04MB5863C5DC8063C2B8F5BF9F088F570@AM6PR04MB5863.eurprd04.prod.outlook.com>
-References: <1551132245-6089-1-git-send-email-vabhav.sharma@nxp.com>
- <1551132245-6089-2-git-send-email-vabhav.sharma@nxp.com>
- <VI1PR04MB480070B517B9D9961C9E8187F3570@VI1PR04MB4800.eurprd04.prod.outlook.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v6 0/9] iProc I2C slave mode and NIC mode
+Date: Wed, 3 Apr 2019 15:20:14 -0700
+Message-ID: <06dff712-151b-f188-d154-3130d56d01d8@gmail.com>
+References: <20190403011830.3254-1-ray.jui@broadcom.com>
+ <20190403204423.btgtke3tmt7pkr3j@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB480070B517B9D9961C9E8187F3570@VI1PR04MB4800.eurprd04.prod.outlook.com>
+In-Reply-To: <20190403204423.btgtke3tmt7pkr3j@ninjato>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vabhav Sharma <vabhav.sharma@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>, Andy Tang <andy.tang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Wolfram Sang <wsa@the-dreams.de>, Ray Jui <ray.jui@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 4/3/19 1:44 PM, Wolfram Sang wrote:
+> On Tue, Apr 02, 2019 at 06:18:21PM -0700, Ray Jui wrote:
+>> This patch series adds the following support to the iProc I2C driver:
+>> - Increase maximum read transfer size to 255 bytes
+>> - I2C slave mode
+>> - Polling mode
+>> - NIC I2C mode
+>>
+>> This patch series is based on kernel v5.1-rc3 and available at:
+>> https://github.com/Broadcom/arm64-linux.git
+>> branch: i2c-slave-v6
+>>
+>> Changes from v5:
+>>  - Address various comments from Wolfram
+> 
+> In the future, please write in detail what you changed. I review so many
+> patches that I can't recall all my comments on every patch.
+> 
+> That being said, all patches applied to for-next, thanks!
+
+OK, I will drop patch #9 from my queue then, thanks.
+
+> 
+> Can be fixed incrementally, my code checkers complain about:
+> 
+>     CPPCHECK
+> drivers/i2c/busses/i2c-bcm-iproc.c:720:14: warning: Shifting signed 32-bit value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
+>     val |= 1 << M_TX_WR_STATUS_SHIFT;
+>              ^
+> drivers/i2c/busses/i2c-bcm-iproc.c:847:13: warning: Shifting signed 32-bit value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
+>  val &= ~(1 << TIM_CFG_MODE_400_SHIFT);
+>             ^
+> drivers/i2c/busses/i2c-bcm-iproc.c:998:13: warning: Shifting signed 32-bit value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
+>  val &= ~(1 << TIM_CFG_MODE_400_SHIFT);
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
 
-> -----Original Message-----
-> From: Vabhav Sharma
-> Sent: Wednesday, April 3, 2019 3:28 AM
-> To: robh+dt@kernel.org; mark.rutland@arm.com
-> Cc: Leo Li <leoyang.li@nxp.com>; Meenakshi Aggarwal
-> <meenakshi.aggarwal@nxp.com>; Andy Tang <andy.tang@nxp.com>;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: RE: [PATCH v1 1/4] dt-bindings: arm64: add compatible for LX2160=
-A
->=20
-> Hello Maintainers,
-> Please merge below patch.
->=20
-> Regards,
-> Vabhav
->=20
-> > -----Original Message-----
-> > From: Vabhav Sharma <vabhav.sharma@nxp.com>
-> > Sent: Tuesday, February 26, 2019 3:41 PM
-> > To: sudeep.holla@arm.com; oss@buserror.net;
-> > linux-kernel@vger.kernel.org; devicetree@vger.kernel.org;
-> > robh+dt@kernel.org; mark.rutland@arm.com;
-> > linuxppc-dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org;
-> > mturquette@baylibre.com; sboyd@kernel.org; rjw@rjwysocki.net;
-> > viresh.kumar@linaro.org; linux-clk@vger.kernel.org; linux-
-> > pm@vger.kernel.org; linux-kernel-owner@vger.kernel.org;
-> > catalin.marinas@arm.com; will.deacon@arm.com;
-> > gregkh@linuxfoundation.org; arnd@arndb.de;
-> > kstewart@linuxfoundation.org; yamada.masahiro@socionext.com; Leo Li
-> > <leoyang.li@nxp.com>; shawnguo@kernel.org
-> > Cc: linux@armlinux.org.uk; adrian.hunter@intel.com;
-> > ulf.hansson@linaro.org; Vabhav Sharma <vabhav.sharma@nxp.com>
-> > Subject: [PATCH v1 1/4] dt-bindings: arm64: add compatible for LX2160A
-> >
-> > Add compatible for LX2160A SoC,QDS and RDB board Add lx2160a
-> > compatible for clockgen and dcfg
-> >
-> > Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  .../bindings/arm/freescale/fsl,layerscape-dcfg.txt           |  2 +-
-> >  Documentation/devicetree/bindings/arm/fsl.txt                | 12
-> ++++++++++++
-> >  Documentation/devicetree/bindings/clock/qoriq-clock.txt      |  1 +
-> >  3 files changed, 14 insertions(+), 1 deletion(-)
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/arm/freescale/fsl,layerscape-
-> > dcfg.txt
-> > b/Documentation/devicetree/bindings/arm/freescale/fsl,layerscape-
-> > dcfg.txt
-> > index b5cb374..dc76046 100644
-> > --- a/Documentation/devicetree/bindings/arm/freescale/fsl,layerscape-
-> > dcfg.txt
-> > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,layerscape-d
-> > +++ cf
-> > +++ g.txt
-> > @@ -8,7 +8,7 @@ Required properties:
-> >    - compatible: Should contain a chip-specific compatible string,
-> >  	Chip-specific strings are of the form "fsl,<chip>-dcfg",
-> >  	The following <chip>s are known to be supported:
-> > -	ls1012a, ls1021a, ls1043a, ls1046a, ls2080a.
-> > +	ls1012a, ls1021a, ls1043a, ls1046a, ls2080a, lx2160a.
-> >
-> >    - reg : should contain base address and length of DCFG
-> > memory-mapped registers
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/fsl.txt
-> > b/Documentation/devicetree/bindings/arm/fsl.txt
-> > index 7fbc424..baef162 100644
-> > --- a/Documentation/devicetree/bindings/arm/fsl.txt
-> > +++ b/Documentation/devicetree/bindings/arm/fsl.txt
-
-This file has been converted to yaml format in mainline kernel.  Please res=
-pin the patch in order to apply.
-
-> > @@ -235,3 +235,15 @@ Required root node properties:
-> >  LS2088A ARMv8 based RDB Board
-> >  Required root node properties:
-> >      - compatible =3D "fsl,ls2088a-rdb", "fsl,ls2088a";
-> > +
-> > +LX2160A SoC
-> > +Required root node properties:
-> > +    - compatible =3D "fsl,lx2160a";
-> > +
-> > +LX2160A ARMv8 based QDS Board
-> > +Required root node properties:
-> > +    - compatible =3D "fsl,lx2160a-qds", "fsl,lx2160a";
-> > +
-> > +LX2160A ARMv8 based RDB Board
-> > +Required root node properties:
-> > +    - compatible =3D "fsl,lx2160a-rdb", "fsl,lx2160a";
-> > diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-> > b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-> > index c655f28..f322989 100644
-> > --- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-> > +++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-> > @@ -43,6 +43,7 @@ Required properties:
-> >  	* "fsl,ls1046a-clockgen"
-> >  	* "fsl,ls1088a-clockgen"
-> >  	* "fsl,ls2080a-clockgen"
-> > +	* "fsl,lx2160a-clockgen"
-> >  	Chassis-version clock strings include:
-> >  	* "fsl,qoriq-clockgen-1.0": for chassis 1.0 clocks
-> >  	* "fsl,qoriq-clockgen-2.0": for chassis 2.0 clocks
-> > --
-> > 2.7.4
+-- 
+Florian
