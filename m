@@ -1,7 +1,7 @@
 From: Bruno Thomsen <bruno.thomsen@gmail.com>
-Subject: [PATCH v2 1/5] dt-bindings: add vendor prefix for TQ Systems GmbH
-Date: Wed,  3 Apr 2019 08:44:23 +0200
-Message-ID: <20190403064427.30041-2-bruno.thomsen@gmail.com>
+Subject: [PATCH v2 2/5] dt-bindings: arm: add TQ boards
+Date: Wed,  3 Apr 2019 08:44:24 +0200
+Message-ID: <20190403064427.30041-3-bruno.thomsen@gmail.com>
 References: <20190304165630.18225-1-bruno.thomsen@gmail.com>
  <20190403064427.30041-1-bruno.thomsen@gmail.com>
 Mime-Version: 1.0
@@ -22,27 +22,41 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: devicetree@vger.kernel.org, laa@kamstrup.com, festevam@gmail.com, s.hauer@pengutronix.de, clemens.ml@gmx.net, bruno.thomsen@gmail.com, bth@kamstrup.com, ksc@kamstrup.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org, markus.niebel@tq-group.com
 List-Id: devicetree@vger.kernel.org
 
-TQ is a German embedded System-on-Module manufacture.
+MBa is a series of Carrier Boards / Single Board Computers (SBC) for
+evaluation of TQMa SoMs.
+The MBa7 carrier board can only interface with TQMa7 modules.
+The TQMa7 module can only be mounted with NXP i.MX7 Solo or Dual SoCs.
+Primary compatible strings are of the form "tq,<SoC>-<SBC>".
 
 Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
 ---
 v2:
-- No changes.
+- Patch v1 2/6 and 3/6 has been merged as they both modify the new fsl.yaml.
 
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/arm/fsl.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 8162b0eb4b50..cb18dfa0fcb5 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -415,6 +415,7 @@ toumaz	Toumaz
- tpk	TPK U.S.A. LLC
- tplink	TP-LINK Technologies Co., Ltd.
- tpo	TPO
-+tq	TQ Systems GmbH
- tronfy	Tronfy
- tronsmart	Tronsmart
- truly	Truly Semiconductors Limited
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 7e2cd6ad26bd..0610d85eb0fa 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -137,10 +137,17 @@ properties:
+           - const: fsl,imx6ull # This seems odd. Should be last?
+           - const: fsl,imx6ulz
+ 
++      - description: i.MX7S based Boards
++        items:
++          - enum:
++              - tq,imx7s-mba7             # i.MX7S TQ MBa7 with TQMa7S SoM
++          - const: fsl,imx7s
++
+       - description: i.MX7D based Boards
+         items:
+           - enum:
+               - fsl,imx7d-sdb             # i.MX7 SabreSD Board
++              - tq,imx7d-mba7             # i.MX7D TQ MBa7 with TQMa7D SoM
+           - const: fsl,imx7d
+ 
+       - description:
 -- 
 2.20.1
