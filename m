@@ -1,96 +1,47 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v2 1/4] ARM: davinci: fix cpufreq registration on da850-evm
-Date: Wed, 3 Apr 2019 14:50:23 +0200
-Message-ID: <CAMRc=MdYhaED30Xu8oJiJD7F9z=SPu6u+1p32mQnX0tEL=iOiA@mail.gmail.com>
-References: <20190322133105.5945-1-brgl@bgdev.pl> <20190322133105.5945-2-brgl@bgdev.pl>
- <CAHCN7xJj_aA8XFR6=ZxO-WrfkJRY5fS6NgjHbeqpdfhUnn1apA@mail.gmail.com>
- <CAMpxmJVBTny7kzADSZHQXk_ZUjnRaNWu0Ly3WC8v+zPmR8Dizg@mail.gmail.com> <bb734e20-d2c7-73f4-e2c5-3b810ccf4c81@ti.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] hwmon: pwm-fan: Disable PWM if fetching cooling data
+ fails
+Date: Wed, 3 Apr 2019 06:18:39 -0700
+Message-ID: <20190403131839.GA31325@roeck-us.net>
+References: <1554295713-18656-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bb734e20-d2c7-73f4-e2c5-3b810ccf4c81@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <stable-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1554295713-18656-1-git-send-email-stefan.wahren@i2se.com>
+Sender: stable-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Robin Murphy <robin.murphy@arm.com>, Lukasz Majewski <l.majewski@samsung.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "# 4 . 14" <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-=C5=9Br., 27 mar 2019 o 12:14 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a):
->
-> Hi Bart,
->
-> On 26/03/19 11:21 PM, Bartosz Golaszewski wrote:
-> > wt., 26 mar 2019 o 15:00 Adam Ford <aford173@gmail.com> napisa=C5=82(a)=
-:
-> >>
-> >> On Fri, Mar 22, 2019 at 8:31 AM Bartosz Golaszewski <brgl@bgdev.pl> wr=
-ote:
-> >>>
-> >>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>>
-> >>> The system_rev variable is never set on davinci and is always 0, so
-> >>> we're using the default max operating point of 300MHz. The cvdd suppl=
-y
-> >>> comes from the tps6507 pmic and the voltage can go all the way to 1.3=
-V
-> >>> so the maximum supported rate should be 456MHz.
-> >>
-> >> My understanding is that only certain revisions of the silicon can go
-> >> to 456MHz.   The L138's Datasheet lists both a 456 and 375 version.  I
-> >> cannot find a way to read a register to determine which version of the
-> >> silicon is available. Maybe Sekhar can confirm.
-> >>
-> >
-> > Commit 28bd2c341120 ("davinci: am18x/da850/omap-l138 evm: add support
-> > for higher speed grades") mentions the following:
-> >
-> > ---
-> > U-Boot on the EVM sets up ATAG_REVISION to inform the OS
-> > regarding the speed grade supported by the silicon. We use
-> > this information to pass on the speed grade information to
-> > the SoC code.
-> > ---
-> >
-> > Should the system_rev somehow reflect that revision? Any way I can chec=
-k it?
->
-> Can you check if the procedure in doc/README.davinci in U-Boot sources
-> still works?
->
-> Environment Variables
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> The DA850 EVM allows the user to specify the maximum cpu clock allowed by=
- the
-> silicon, in Hz, via an environment variable "maxcpuclk".
->
-> The maximum clock rate allowed depends on the silicon populated on the EV=
-M.
-> Please make sure you understand the restrictions placed on this clock in =
-the
-> device specific datasheet before setting up this variable. This informati=
-on is
-> passed to the Linux kernel using the ATAG_REVISION atag.
->
-> If "maxcpuclk" is not defined, the configuration CONFIG_DA850_EVM_MAX_CPU=
-_CLK
-> is used to obtain this information.
->
-> Thanks,
-> Sekhar
+On Wed, Apr 03, 2019 at 02:48:33PM +0200, Stefan Wahren wrote:
+> In case pwm_fan_of_get_cooling_data() fails we should disable the PWM
+> just like in the other error cases.
+> 
+> Reported-by: Guenter Rock <linux@roeck-us.net>
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Fixes: 2e5219c77183 ("hwmon: (pwm-fan) Read PWM FAN configuration from device tree")
+> Cc: <stable@vger.kernel.org> # 4.14
 
-Hi Sekhar,
+Applied.
 
-I built the current upstream u-boot and the get_board_rev() function
-for da850-evm doesn't seem to be called at all. For instance the
-lego-ev3 platform does this:
+Thanks,
+Guenter
 
-./lego/ev3/legoev3.c:108: board_rev =3D get_board_rev();
-
-but in davinci this function seems to be unused and I don't see it
-called from any other core u-boot component. I don't see any commit
-that would mention this function but there are a lot of commits
-removing get_board_rev() for other boards in git log. Is it possible
-it stopped being used at some point?
-
-Bart
+> ---
+>  drivers/hwmon/pwm-fan.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> index 167221c..e4c5197 100644
+> --- a/drivers/hwmon/pwm-fan.c
+> +++ b/drivers/hwmon/pwm-fan.c
+> @@ -271,7 +271,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>  
+>  	ret = pwm_fan_of_get_cooling_data(&pdev->dev, ctx);
+>  	if (ret)
+> -		return ret;
+> +		goto err_pwm_disable;
+>  
+>  	ctx->pwm_fan_state = ctx->pwm_fan_max_state;
+>  	if (IS_ENABLED(CONFIG_THERMAL)) {
