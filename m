@@ -1,113 +1,65 @@
-Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH 04/30] PCI: tegra: Add PCIe Gen2 link speed support
-Date: Thu, 11 Apr 2019 22:33:29 +0530
-Message-ID: <20190411170355.6882-5-mmaddireddy@nvidia.com>
-In-Reply-To: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Return-Path: <SRS0=Ks1j=SF=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH V3 00/13] Add USB2.0 support
+Date: Wed,  3 Apr 2019 11:28:31 +0100
+Message-Id: <1554287324-22312-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Tegra124, 132, 210 and 186 support Gen2 link speed. After PCIe link is up
-in Gen1, set target link speed as Gen2 and retrain link. Link switches to
-Gen2 speed if Gen2 capable end point is connected, else link stays in Gen1.
+This series adds USB 2.0 support for the RZ/G1C SoC. RZ/G1C
+SoC is similar to R-Car Gen2 SoC, but there are some differences
 
-Per PCIe 4.0r0.9 sec 7.6.3.7 implementation note, driver need to wait for
-PCIe LTSSM to come back from recovery before retraining the link.
+- It has a shared pll reset register for hsusb0/hsusb1 and this register 
+  reside in hsusb0 block.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
----
- drivers/pci/controller/pci-tegra.c | 61 ++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
+- Each USB host needs to deassert the pll reset of hsusb block apart from
+  initializing interrupt enable,OVC detection timer and suspend/resume timer
+  register.
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index a61ce9d475b4..6ccda82735f8 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -191,6 +191,8 @@
- #define  RP_LINK_CONTROL_STATUS_DL_LINK_ACTIVE	0x20000000
- #define  RP_LINK_CONTROL_STATUS_LINKSTAT_MASK	0x3fff0000
- 
-+#define RP_LINK_CONTROL_STATUS_2		0x000000b0
-+
- #define PADS_CTL_SEL		0x0000009c
- 
- #define PADS_CTL		0x000000a0
-@@ -2096,6 +2098,62 @@ static void tegra_pcie_apply_pad_settings(struct tegra_pcie *pcie)
- 		pads_writel(pcie, soc->pads_refclk_cfg1, PADS_REFCLK_CFG1);
- }
- 
-+#define LINK_RETRAIN_TIMEOUT 100000
-+
-+static void tegra_pcie_change_link_speed(struct tegra_pcie *pcie)
-+{
-+	struct device *dev = pcie->dev;
-+	struct tegra_pcie_port *port, *tmp;
-+	ktime_t deadline;
-+	u32 val;
-+
-+	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-+		/*
-+		 * Link Capabilities 2 register is hardwired to 0 in Tegra,
-+		 * so no need to read it before setting target speed.
-+		 */
-+		val = readl(port->base + RP_LINK_CONTROL_STATUS_2);
-+		val &= ~PCI_EXP_LNKSTA_CLS;
-+		val |= PCI_EXP_LNKSTA_CLS_5_0GB;
-+		writel(val, port->base + RP_LINK_CONTROL_STATUS_2);
-+
-+		/*
-+		 * Poll until link comes back from recovery to avoid race
-+		 * condition.
-+		 */
-+		deadline = ktime_add_us(ktime_get(), LINK_RETRAIN_TIMEOUT);
-+		for (;;) {
-+			val = readl(port->base + RP_LINK_CONTROL_STATUS);
-+			if (!(val & PCI_EXP_LNKSTA_LT))
-+				break;
-+			if (ktime_after(ktime_get(), deadline))
-+				break;
-+			usleep_range(2000, 3000);
-+		}
-+		if (val & PCI_EXP_LNKSTA_LT)
-+			dev_err(dev, "PCIe port %u link is still in recovery\n",
-+				port->index);
-+
-+		/* Retrain the link */
-+		val = readl(port->base + RP_LINK_CONTROL_STATUS);
-+		val |= PCI_EXP_LNKCTL_RL;
-+		writel(val, port->base + RP_LINK_CONTROL_STATUS);
-+
-+		deadline = ktime_add_us(ktime_get(), LINK_RETRAIN_TIMEOUT);
-+		for (;;) {
-+			val = readl(port->base + RP_LINK_CONTROL_STATUS);
-+			if (!(val & PCI_EXP_LNKSTA_LT))
-+				break;
-+			if (ktime_after(ktime_get(), deadline))
-+				break;
-+			usleep_range(2000, 3000);
-+		}
-+		if (val & PCI_EXP_LNKSTA_LT)
-+			dev_err(dev, "link retrain of PCIe port %u failed\n",
-+				port->index);
-+	}
-+}
-+
- static void tegra_pcie_enable_ports(struct tegra_pcie *pcie)
- {
- 	struct device *dev = pcie->dev;
-@@ -2122,6 +2180,9 @@ static void tegra_pcie_enable_ports(struct tegra_pcie *pcie)
- 		tegra_pcie_port_disable(port);
- 		tegra_pcie_port_free(port);
- 	}
-+
-+	if (pcie->soc->has_gen2)
-+		tegra_pcie_change_link_speed(pcie);
- }
- 
- static void tegra_pcie_disable_ports(struct tegra_pcie *pcie)
+To address the above scenarios, created a ehci-r8a77470 host controller
+driver.
+
+This patchset is based on linux_next next-20190401 branch.
+
+V2-->V3
+ * Incorporated Alan's review comment for dropping ehci-r8a77470 host driver
+ * Incorporated shimoda-san's comments.
+   Ref: https://patchwork.kernel.org/patch/10879899/
+
+V1-->V2
+ * Incorporated Rob's review comment
+   Ref: https://patchwork.kernel.org/patch/10655853/
+ * Incorporated Shimoda-San's review comment
+   Ref: https://patchwork.kernel.org/patch/10655855/
+ * Created ehci-r8a77470 host driver.
+
+Biju Das (13):
+  dt-bindings: phy: rcar-gen2: Add r8a77470 support
+  phy: renesas: phy-rcar-gen2: Add support for r8a77470
+  dt-bindings: rcar-gen3-phy-usb2: Add r8a77470 support
+  phy: rcar-gen3-usb2: Add support for r8a77470
+  ARM: shmobile: Enable PHY_RCAR_GEN3_USB2 in shmobile_defconfig
+  dt-bindings: usb: renesas_usbhs: Add support for r8a77470
+  ARM: shmobile: Enable USB [EO]HCI HCD PLATFORM support in
+    shmobile_defconfig
+  ARM: dts: r8a77470: Add USB PHY DT support
+  ARM: dts: iwg23s-sbc: Enable USB Phy[01]
+  ARM: dts: r8a77470: Add USB2.0 Host (EHCI/OHCI) device
+  ARM: dts: iwg23s-sbc: Enable USB USB2.0 Host
+  ARM: dts: r8a77470: Add HSUSB device nodes
+  ARM: dts: iwg23s-sbc: Enable HS-USB
+
+ .../devicetree/bindings/phy/rcar-gen2-phy.txt      |  57 ++++++++-
+ .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |   6 +-
+ .../devicetree/bindings/usb/renesas_usbhs.txt      |   1 +
+ arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts          |  44 +++++++
+ arch/arm/boot/dts/r8a77470.dtsi                    | 141 +++++++++++++++++++++
+ arch/arm/configs/shmobile_defconfig                |   3 +
+ drivers/phy/renesas/Kconfig                        |   2 +-
+ drivers/phy/renesas/phy-rcar-gen2.c                |  86 ++++++++++++-
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c           |  19 ++-
+ 9 files changed, 349 insertions(+), 10 deletions(-)
+
 -- 
-2.17.1
+2.7.4
