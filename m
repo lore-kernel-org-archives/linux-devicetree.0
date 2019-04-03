@@ -1,49 +1,96 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: mtd: sunxi-nand: Add YAML schemas
-Date: Tue, 2 Apr 2019 20:25:59 -0500
-Message-ID: <CAL_JsqLrdFAhdbjVi0ZoCOM6ajEOdQeLpkSKBsZ90X+UvfkLmA@mail.gmail.com>
-References: <74b8a52ce98b09d7906f988c107793a86c0c5f6b.1554216856.git-series.maxime.ripard@bootlin.com>
- <079279c3713042bdcc76ea27907d5f75bcb483fc.1554216856.git-series.maxime.ripard@bootlin.com>
+From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
+Subject: Re: [PATCH] dt-bindings: cpu: Fix JSON schema
+Date: Wed, 3 Apr 2019 10:29:27 +0900
+Message-ID: <c08031d4-d719-b91b-8789-b526ee80efe4@socionext.com>
+References: <20190318100521.29109-1-maxime.ripard@bootlin.com>
+ <CAL_JsqJ_LYycXazkdP2Q=e-jynKiX+z5En0bz0AWpDjsevwQTg@mail.gmail.com>
+ <20190401091050.cwph7xlpv3pmkwnq@flea>
+ <78bb248e-56b8-b825-e763-583f75148eb3@socionext.com>
+ <20190401113546.d6p2mg2y47abhumz@flea>
+ <b6cb709b-7b1a-6bab-6f93-bcb565be18fb@socionext.com>
+ <b3ecf5c5-9b1a-eb8b-95c2-c30a94c8bdd8@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <079279c3713042bdcc76ea27907d5f75bcb483fc.1554216856.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b3ecf5c5-9b1a-eb8b-95c2-c30a94c8bdd8@socionext.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
 To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Boris Brezillon <boris.brezillon@collabora.com>, MTD Maling List <linux-mtd@lists.infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Cc: ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 2, 2019 at 9:54 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Switch the DT binding to a YAML schema to enable the DT validation.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> ---
->
-> Changes from v1
->   - Added controller constraints to the generic options
-> ---
->  Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml | 96 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
->  Documentation/devicetree/bindings/mtd/sunxi-nand.txt                | 48 +------------------------------------
->  2 files changed, 96 insertions(+), 48 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mtd/sunxi-nand.txt
 
-Same 'a-f' comment here, but otherwise,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On 2019/04/02 20:42, Sugaya, Taichi wrote:
+> Hi,
+> 
+> On 2019/04/01 22:02, Sugaya, Taichi wrote:
+>> Hi,
+>>
+>> On 2019/04/01 20:35, Maxime Ripard wrote:
+>>> Hi,
+>>>
+>>> On Mon, Apr 01, 2019 at 07:52:06PM +0900, Sugaya, Taichi wrote:
+>>>> On 2019/04/01 18:10, Maxime Ripard wrote:
+>>>>> Hi Sugaya, Arnd, Olof,
+>>>>>
+>>>>> On Thu, Mar 28, 2019 at 02:35:54PM -0500, Rob Herring wrote:
+>>>>>> +arm-soc
+>>>>>>
+>>>>>> On Mon, Mar 18, 2019 at 5:05 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>>>>>>>
+>>>>>>> Commit fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for
+>>>>>>> Milbeaut") added support for a new cpu enable-method, but did so using
+>>>>>>> tabulations to ident. This is however invalid in the syntax, and resulted
+>>>>>>> in a failure when trying to use that schemas for validation.
+>>>>>>>
+>>>>>>> Use spaces instead of tabs to indent to fix this.
+>>>>>>>
+>>>>>>> Fixes: fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
+>>>>>>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>>>>>>> ---
+>>>>>>>    Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
+>>>>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>
+>>>>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>>>>>
+>>>>>> This should be applied to arm-soc tree having the commit.
+>>>>>
+>>>>> Could you pick up that patch?
+>>>>
+>>>> I got it.
+>>>> My mission is to resubmit your fix-patch added my singned-off tag and
+>>>> Rob's reviewed tag...right?
+>>>
+>>> If you are part of arm-soc and send your pull requests to Arnd and
+>>> Olof, simply pick it up in the same branch than the initial patch was
+>>> in. And when you apply that patch, you indeed need to add your
+>>> Signed-off-by (note that most commands to commit have an option to do
+>>> that automatically: -s and that includes git am) and the Rob's
+>>> reviewed-by.
+>>>
+>>> Then, send a new pull request to arm-soc.
+>>>
+>>
+>> Okay, thanks for your suggestion.
+>> I try to make pull request!
+>>
+> 
+> Sorry I realized that I couldn't make a private repository, so I'll send my Ack instead.
 
-And thanks for being an early adopter. Let me know if you have any
-feedback on the schema or pain points.
+One correction: "a public repository"
 
-Rob
+> 
+> Acked-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+> 
+>> Thanks,
+>> Sugaya Taichi
+>>
+>>> Maxime
+>>>
+>>> -- 
+>>> Maxime Ripard, Bootlin
+>>> Embedded Linux and Kernel engineering
+>>> https://bootlin.com
+>>>
