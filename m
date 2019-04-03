@@ -1,241 +1,89 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH V4 3/3] hwmon: pwm-fan: Add RPM support via external
- interrupt
-Date: Wed, 3 Apr 2019 18:23:04 +0200
-Message-ID: <7653a567-ae91-0890-f318-fd971b69274b@i2se.com>
-References: <1554214910-29925-1-git-send-email-stefan.wahren@i2se.com>
- <1554214910-29925-4-git-send-email-stefan.wahren@i2se.com>
- <20190402205538.GA15543@roeck-us.net>
- <31ef4637-fa95-3800-20cf-96be2a5ecae4@i2se.com>
- <40c0bee8-3a24-66f8-615f-ec36ae7721ef@arm.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 3/5] media: uapi: Add RGB bus formats for the
+ GiantPlus GPM940B0 panel
+Date: Wed, 3 Apr 2019 18:32:59 +0200
+Message-ID: <20190403163259.GS5238@ulmo>
+References: <20190314122622.7597-1-paul@crapouillou.net>
+ <20190314122622.7597-3-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="D+M1YvVlDncl3vD5"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <40c0bee8-3a24-66f8-615f-ec36ae7721ef@arm.com>
-Content-Language: de-DE
+Content-Disposition: inline
+In-Reply-To: <20190314122622.7597-3-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, od@zcrc.me, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 03.04.2019 um 17:59 schrieb Robin Murphy:
-> On 03/04/2019 10:55, Stefan Wahren wrote:
->> Hi Guenter,
->>
->> Am 02.04.19 um 22:55 schrieb Guenter Roeck:
->>> On Tue, Apr 02, 2019 at 04:21:50PM +0200, Stefan Wahren wrote:
->>>> This adds RPM support to the pwm-fan driver in order to use with
->>>> fancontrol/pwmconfig. This feature is intended for fans with a 
->>>> tachometer
->>>> output signal, which generate a defined number of pulses per 
->>>> revolution.
->>>>
->>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->>>> ---
->>>>   drivers/hwmon/pwm-fan.c | 111 
->>>> ++++++++++++++++++++++++++++++++++++++++++++++--
->>>>   1 file changed, 107 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
->>>> index 167221c..3245a49 100644
->>>> --- a/drivers/hwmon/pwm-fan.c
->>>> +++ b/drivers/hwmon/pwm-fan.c
->>>> @@ -18,6 +18,7 @@
->>>>     #include <linux/hwmon.h>
->>>>   #include <linux/hwmon-sysfs.h>
->>>> +#include <linux/interrupt.h>
->>>>   #include <linux/module.h>
->>>>   #include <linux/mutex.h>
->>>>   #include <linux/of.h>
->>>> @@ -26,6 +27,7 @@
->>>>   #include <linux/regulator/consumer.h>
->>>>   #include <linux/sysfs.h>
->>>>   #include <linux/thermal.h>
->>>> +#include <linux/timer.h>
->>>>     #define MAX_PWM 255
->>>>   @@ -33,6 +35,14 @@ struct pwm_fan_ctx {
->>>>       struct mutex lock;
->>>>       struct pwm_device *pwm;
->>>>       struct regulator *reg_en;
->>>> +
->>>> +    int irq;
->>>> +    atomic_t pulses;
->>>> +    unsigned int rpm;
->>>> +    u8 pulses_per_revolution;
->>>> +    ktime_t sample_start;
->>>> +    struct timer_list rpm_timer;
->>>> +
->>>>       unsigned int pwm_value;
->>>>       unsigned int pwm_fan_state;
->>>>       unsigned int pwm_fan_max_state;
->>>> @@ -40,6 +50,32 @@ struct pwm_fan_ctx {
->>>>       struct thermal_cooling_device *cdev;
->>>>   };
->>>>   +/* This handler assumes self resetting edge triggered interrupt. */
->>>> +static irqreturn_t pulse_handler(int irq, void *dev_id)
->>>> +{
->>>> +    struct pwm_fan_ctx *ctx = dev_id;
->>>> +
->>>> +    atomic_inc(&ctx->pulses);
->>>> +
->>>> +    return IRQ_HANDLED;
->>>> +}
->>>> +
->>>> +static void sample_timer(struct timer_list *t)
->>>> +{
->>>> +    struct pwm_fan_ctx *ctx = from_timer(ctx, t, rpm_timer);
->>>> +    int pulses;
->>>> +    u64 tmp;
->>>> +
->>>> +    pulses = atomic_read(&ctx->pulses);
->>>> +    atomic_sub(pulses, &ctx->pulses);
->>>> +    tmp = (u64)pulses * ktime_ms_delta(ktime_get(), 
->>>> ctx->sample_start) * 60;
->>>> +    do_div(tmp, ctx->pulses_per_revolution * 1000);
->>>> +    ctx->rpm = tmp;
->>>> +
->>>> +    ctx->sample_start = ktime_get();
->>>> +    mod_timer(&ctx->rpm_timer, jiffies + HZ);
->>>> +}
->>>> +
->>>>   static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
->>>>   {
->>>>       unsigned long period;
->>>> @@ -100,15 +136,49 @@ static ssize_t pwm_show(struct device *dev, 
->>>> struct device_attribute *attr,
->>>>       return sprintf(buf, "%u\n", ctx->pwm_value);
->>>>   }
->>>>   +static ssize_t rpm_show(struct device *dev,
->>>> +            struct device_attribute *attr, char *buf)
->>>> +{
->>>> +    struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
->>>> +
->>>> +    return sprintf(buf, "%u\n", ctx->rpm);
->>>> +}
->>>>     static SENSOR_DEVICE_ATTR_RW(pwm1, pwm, 0);
->>>> +static SENSOR_DEVICE_ATTR_RO(fan1_input, rpm, 0);
->>>>     static struct attribute *pwm_fan_attrs[] = {
->>>>       &sensor_dev_attr_pwm1.dev_attr.attr,
->>>> +    &sensor_dev_attr_fan1_input.dev_attr.attr,
->>>>       NULL,
->>>>   };
->>>>   -ATTRIBUTE_GROUPS(pwm_fan);
->>>> +static umode_t pwm_fan_attrs_visible(struct kobject *kobj, struct 
->>>> attribute *a,
->>>> +                     int n)
->>>> +{
->>>> +    struct device *dev = container_of(kobj, struct device, kobj);
->>>> +    struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
->>>> +    struct device_attribute *devattr;
->>>> +
->>>> +    /* Hide fan_input in case no interrupt is available  */
->>>> +    devattr = container_of(a, struct device_attribute, attr);
->>>> +    if (devattr == &sensor_dev_attr_fan1_input.dev_attr) {
->>>> +        if (ctx->irq <= 0)
->>>> +            return 0;
->>>> +    }
->>> Side note: This can be easier written as
->>>     if (n == 1 && ctx->irq <= 0)
->>>         return 0;
->>>
->>> Not that it matters much.
->>>
->>>> +
->>>> +    return a->mode;
->>>> +}
->>>> +
->>>> +static const struct attribute_group pwm_fan_group = {
->>>> +    .attrs = pwm_fan_attrs,
->>>> +    .is_visible = pwm_fan_attrs_visible,
->>>> +};
->>>> +
->>>> +static const struct attribute_group *pwm_fan_groups[] = {
->>>> +    &pwm_fan_group,
->>>> +    NULL,
->>>> +};
->>>>     /* thermal cooling device callbacks */
->>>>   static int pwm_fan_get_max_state(struct thermal_cooling_device 
->>>> *cdev,
->>>> @@ -261,17 +331,45 @@ static int pwm_fan_probe(struct 
->>>> platform_device *pdev)
->>>>           goto err_reg_disable;
->>>>       }
->>>>   +    timer_setup(&ctx->rpm_timer, sample_timer, 0);
->>>> +
->>>> +    if (of_property_read_u8(pdev->dev.of_node, 
->>>> "pulses-per-revolution",
->>> This does not work: The property is not defined as u8. You have to 
->>> either
->>> use of_property_read_u32() or declare the property as u8.
->> pulses_per_revolution is defined as u8 since this version
->
-> The variable might be, but the "pulses-per-revolution" property itself 
-> is not being defined with the appropriate DT type ("/bits/ 8") in the 
-> binding, and thus will be stored as a regular 32-bit cell, for which 
-> reading it as a u8 array may or may not work correctly depending on 
-> endianness.
->
-> TBH, unless there's a real need for a specific binary format in the 
-> FDT, I don't think it's usually worth the bother of using irregular DT 
-> types, especially when the practical impact amounts to possibly saving 
-> up to 3 bytes for a property which usually won't need to be specified 
-> anyway. I'd just do something like:
->
->     u32 ppr = 2;
->
->     of_property_read_u32(np, "pulses-per-revolution", &ppr);
->     ctx->pulses_per_revolution = ppr;
 
-My intention was to avoid another overflow in case the device tree 
-provides unrealistic values ( my expected range 1 - 10 ). Saving space 
-would be a benefit, but i'm okay with this suggestion.
+--D+M1YvVlDncl3vD5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
->>>
->>> [ Sorry, I didn't know until recently that this is necessary ]
->>>
->>>> + &ctx->pulses_per_revolution)) {
->>>> +        ctx->pulses_per_revolution = 2;
->>>> +    }
->>>> +
->>>> +    if (!ctx->pulses_per_revolution) {
->>>> +        dev_err(&pdev->dev, "pulses-per-revolution can't be 
->>>> zero.\n");
->>>> +        ret = -EINVAL;
->>>> +        goto err_pwm_disable;
->>>> +    }
->>>> +
->>>> +    ctx->irq = platform_get_irq(pdev, 0);
->>>> +    if (ctx->irq == -EPROBE_DEFER) {
->>>> +        ret = ctx->irq;
->>>> +        goto err_pwm_disable;
->>> It might be better to call platform_get_irq() and to do do this check
->>> first, before enabling the regulator (in practice before calling
->>> devm_regulator_get_optional). It doesn't make sense to enable the
->>> regulator only to disable it because the irq is not yet available.
->>>
->>>> +    } else if (ctx->irq > 0) {
->>> As written, this else is unnecessary, and static checkers will complain
->>> about it.
->>>
->>>> +        ret = devm_request_irq(&pdev->dev, ctx->irq, 
->>>> pulse_handler, 0,
->>>> +                       pdev->name, ctx);
->>>> +        if (ret) {
->>>> +            dev_err(&pdev->dev, "Can't get interrupt working.\n");
->>>> +            goto err_pwm_disable;
->
-> We could still continue without RPM support at this point, couldn't 
-> we? Or is this a deliberate "if that failed, then who knows how messed 
-> up the system is..." kind of thing?
+On Thu, Mar 14, 2019 at 01:26:20PM +0100, Paul Cercueil wrote:
+> The GiantPlus GPM940B0 is a 24-bit TFT panel where the RGB components
+> are transferred sequentially on a 8-bit bus.
+>=20
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>=20
+> Notes:
+>     v2: New patch
+>=20
+>  include/uapi/linux/media-bus-format.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-In case someone specified an interrupt, the user expect it to work. This 
-helps to identify broken DT faster.
+Please make sure you Cc the media maintainers on this one when you send
+the next version. Adding them now.
 
-The gpio-fan also have optional irq support and also bail out if 
-devm_request_irq fails.
+>=20
+> diff --git a/include/uapi/linux/media-bus-format.h b/include/uapi/linux/m=
+edia-bus-format.h
+> index d6a5a3bfe6c4..f31724d6cd40 100644
+> --- a/include/uapi/linux/media-bus-format.h
+> +++ b/include/uapi/linux/media-bus-format.h
+> @@ -34,7 +34,7 @@
+> =20
+>  #define MEDIA_BUS_FMT_FIXED			0x0001
+> =20
+> -/* RGB - next is	0x101b */
+> +/* RGB - next is	0x101d */
+>  #define MEDIA_BUS_FMT_RGB444_1X12		0x1016
+>  #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_BE	0x1001
+>  #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE	0x1002
+> @@ -54,6 +54,8 @@
+>  #define MEDIA_BUS_FMT_RGB888_1X24		0x100a
+>  #define MEDIA_BUS_FMT_RGB888_2X12_BE		0x100b
+>  #define MEDIA_BUS_FMT_RGB888_2X12_LE		0x100c
+> +#define MEDIA_BUS_FMT_RGB888_3X8_BE		0x101b
+> +#define MEDIA_BUS_FMT_RGB888_3X8_LE		0x101c
 
-Btw i will add the return code into the error message.
+The list looks roughly sorted, but these are not. That said, there are
+others that don't seem like they are sorted either. All the more
+important to get feedback from the media maintainers.
 
-Stefan
+Thierry
+
+--D+M1YvVlDncl3vD5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyk4DoACgkQ3SOs138+
+s6HScg/9GyEDoCdxMtlPqDRYKP5xRAlt0XNtZfHL5ibuM/8vU6LU6b5JqAZIpi4a
+vJSzJitF9SE7vm7nBcmjZlKvxrOL9AusPveEVlmxuXniokaG5l+H5Tj2so7ut3hc
+ogYvh5Ofi9IgaI/PDkkfkqHdKABo+khmgorlMALjAhEyUC+315D4LU/bcoxpycgz
+gZNjhlzSeTgG7VIbbnl8lyoMgVJvwktahzO2RDkV4gDmLeJXmQY7Tq8ADE6RWKls
+xejx/kyRwdvPl87nESKw5qbtHY0Z4cAwnH9j/MDsYPtvFKCei9fJj+7/5nByGtuV
+O9cdE7aKo26mzLOOEH7vc8+bMBYllIgBILmDyGC/KCbXN4ATWABX7Wg8g7oM+xaS
+n8vfaRG627LIOYRNq3XTRutW17mFyjze8D1e1RHNIVEUrX0OtDA4g2hIQn2lm7o2
+zb/FfV7AH24L7n4z9i/uy5GOrAZseztoThqUt2MnRhVr2BXY5mt4caV3LEHMDdBJ
+qR7BpJbn2gZ3b+IITh8468TdowwMhEDoGEALIv8FeaKXePyKdPmDF03fSueMOfj4
+4PFN4yHOADhz5XdP2tG+Lnl0vIOxImAf4bBOzYRXXpu19j1WfgAYNgLXI+RExKuJ
+sHnXe+Jm2Jtj417ICallpwjt/YVaBvM3ONvsTgi3uNmPYq1zOWk=
+=yjYj
+-----END PGP SIGNATURE-----
+
+--D+M1YvVlDncl3vD5--
