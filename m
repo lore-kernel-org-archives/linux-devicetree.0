@@ -1,94 +1,107 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v11 2/8] mfd: bd70528: Support ROHM bd70528 PMIC - core
-Date: Wed, 3 Apr 2019 11:47:32 +0300
-Message-ID: <20190403084732.GA3493@localhost.localdomain>
-References: <cover.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
- <39efebe0396dd42de30d37c6f3c1ef2926c90210.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
- <20190403073152.GM4187@dell>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: mtd: sunxi-nand: Add YAML schemas
+Date: Wed, 3 Apr 2019 10:49:38 +0200
+Message-ID: <20190403084938.nk5po4w7ljy5bniw@flea>
+References: <74b8a52ce98b09d7906f988c107793a86c0c5f6b.1554216856.git-series.maxime.ripard@bootlin.com>
+ <079279c3713042bdcc76ea27907d5f75bcb483fc.1554216856.git-series.maxime.ripard@bootlin.com>
+ <CAL_JsqLrdFAhdbjVi0ZoCOM6ajEOdQeLpkSKBsZ90X+UvfkLmA@mail.gmail.com>
+ <20190403074418.by3cmvtmdcbovyw5@flea>
+ <CAL_Jsq+bivuKJ107tiQDb9EN2S+AyK89+CzfcofioXcqGLLqjA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190403073152.GM4187@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, heikki.haikola@fi.rohmeurop
+Content-Type: multipart/mixed; boundary="===============7225824869344414350=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_Jsq+bivuKJ107tiQDb9EN2S+AyK89+CzfcofioXcqGLLqjA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Boris Brezillon <boris.brezillon@collabora.com>, MTD Maling List <linux-mtd@lists.infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Lee,
 
-Thanks for taking a look on this again =) I agree with most of the
-comments and correct them at next version.
+--===============7225824869344414350==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="a76thyva57lxv6lt"
+Content-Disposition: inline
 
-On Wed, Apr 03, 2019 at 08:31:52AM +0100, Lee Jones wrote:
-> On Mon, 25 Mar 2019, Matti Vaittinen wrote:
-> 
-> > ROHM BD70528MWV is an ultra-low quiescent current general
-> > purpose single-chip power management IC for battery-powered
-> > portable devices.
-> > 
-> > Add MFD core which enables chip access for following subdevices:
-> > 	- regulators/LED drivers
-> > 	- battery-charger
-> > 	- gpios
-> > 	- 32.768kHz clk
-> > 	- RTC
-> > 	- watchdog
-> > 
-> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > + * Mapping of main IRQ register bits to sub irq register offsets so
-> 
-> "sub-IRQ"
-> 
-> > + * that we can access corect sub IRQ registers based on bits that
-> 
-> "sub IRQ" is also fine, but please standardise.
-> 
-> I do prefer "sub-IRQ" though.
 
-I'll go with "sub-IRQ" then
+--a76thyva57lxv6lt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > +
-> > +#define WD_CTRL_MAGIC1 0x55
-> > +#define WD_CTRL_MAGIC2 0xAA
-> > +/**
-> > + * bd70528_wdt_set - arm or disarm watchdog timer
-> > + *
-> > + * @data:	device data for the PMIC instance we want to operate on
-> > + * @enable:	new state of WDT. zero to disable, non zero to enable
-> > + * @old_state:	previous state of WDT will be filled here
-> > + *
-> > + * Arm or disarm WDT on BD70528 PMIC. Expected to be called only by
-> > + * BD70528 RTC and BD70528 WDT drivers. The rtc_timer_lock must be taken
-> > + * by calling bd70528_wdt_lock before calling bd70528_wdt_set.
-> > + */
-> > +int bd70528_wdt_set(struct rohm_regmap_dev *data, int enable, int *old_state)
-> 
-> Why doesn't this reside in the watchdog driver?
+On Wed, Apr 03, 2019 at 03:33:42AM -0500, Rob Herring wrote:
+> > The other one that might be more problematic is that it also tries to
+> > validate nodes that are not enabled. For in-SoC components that don't
+> > rely on anything external, it's fine, however, for components that
+> > would require something that is connected on the board (like a
+> > regulator, a phy, a GPIO, whatever), then we can't have all the
+> > required resources in the DTSI, and boards that don't use that
+> > component (and keep it disabled) will emit warning that this
+> > particular property is missing.
+> >
+> > I've tried to look into it but couldn't find an easy fix for that in
+> > the tooling, so I've opened a github issue for this. Let me know if
+> > it's not appropriate.
+>
+> Yeah, I need to go look at that. Skipping disabled nodes shouldn't be
+> too hard to do within the tool. This came up before I think and I've
+> resisted because I don't want to skip validating at least what is
+> there. Maybe the better solution would be to drop 'required' from
+> schema when validating disabled nodes. (At least, I think just
+> 'required' is the problem?)
 
-If my memory serves me right we shortly discussed this already during v8
-review ;) Cant blame you though as I have seen some of the mail traffic
-going through your inbox :D
+I thought about something along those lines too, since indeed the only
+thing that causes troube is required.
 
-The motivation to have the functions exported from MFD is to not create
-sirect dependency between RTC and WDT. There may be cases where we want
-to leave either RTC or WDT out of compilation. MFD is always needed so
-the dependency from MFD to RTC/WDT does not harm.
+> The complication would be we'd need 2 sets of schemas and select the
+> right one for each node.
 
-(Here's some discussion necromancy if you are interested in re-reading
-how we did end up with this implementation:
-https://lore.kernel.org/lkml/20190212091723.GZ20638@dell/)
+You mean two instances of the schema in the tool, right? Not two
+schema files? Do you expect any drawback to that (like
+performance-wise maybe, if we have more schemas with more complicated
+select patterns)?
 
-I hope you are still Ok with having the WDT control functions in MFD.
+> Another way to implement it would be just to filter out the warning
+> messages.
 
-Best Regards
-    Matti Vaittinen
+That would work too I guess :)
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+Maxime
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--a76thyva57lxv6lt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKRzogAKCRDj7w1vZxhR
+xac1AP0QLbbbxWvLkIPGe2zrWPi6nKLa/QhvRdMWM3ZbsDeZAgEA2a953gpc7deu
+ZRklMgGMaC2SedAc09yfEV12U/V2OAU=
+=qt3G
+-----END PGP SIGNATURE-----
+
+--a76thyva57lxv6lt--
+
+
+--===============7225824869344414350==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============7225824869344414350==--
