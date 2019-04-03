@@ -1,50 +1,82 @@
-From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: Re: [PATCH 02/15] phy: mvebu-cp110-comphy: Add SMC call support
-Date: Wed, 3 Apr 2019 11:02:15 +0200
-Message-ID: <CAH76GKOJkrQnMVYFCQJKrvX++5kH4be95ytR7CaL8V5duL27yw@mail.gmail.com>
-References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
- <20190401165131.23370-3-miquel.raynal@bootlin.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v8 01/11] dt-bindings: mfd: add DT bindings for max77650
+Date: Wed,  3 Apr 2019 11:00:58 +0200
+Message-ID: <20190403090108.24788-2-brgl@bgdev.pl>
+References: <20190403090108.24788-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190401165131.23370-3-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Marcin Wojtas <mw@semihalf.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190403090108.24788-1-brgl@bgdev.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWlxdWVsLAoKcG9uLiwgMSBrd2kgMjAxOSBvIDE4OjUyIE1pcXVlbCBSYXluYWwgPG1pcXVl
-bC5yYXluYWxAYm9vdGxpbi5jb20+IG5hcGlzYcWCKGEpOgo+ICtzdGF0aWMgaW50IG12ZWJ1X2Nv
-bXBoeV9wb3dlcl9vbihzdHJ1Y3QgcGh5ICpwaHkpCj4gK3sKPiArICAgICAgIHN0cnVjdCBtdmVi
-dV9jb21waHlfbGFuZSAqbGFuZSA9IHBoeV9nZXRfZHJ2ZGF0YShwaHkpOwo+ICsgICAgICAgc3Ry
-dWN0IG12ZWJ1X2NvbXBoeV9wcml2ICpwcml2ID0gbGFuZS0+cHJpdjsKPiArICAgICAgIHUzMiBm
-d19wYXJhbSA9IDA7Cj4gKyAgICAgICBpbnQgZndfbW9kZTsKPiArICAgICAgIGludCByZXQ7Cj4g
-Kwo+ICsgICAgICAgZndfbW9kZSA9IG12ZWJ1X2NvbXBoeV9nZXRfZndfbW9kZShsYW5lLT5pZCwg
-bGFuZS0+cG9ydCwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-bGFuZS0+bW9kZSwgbGFuZS0+c3VibW9kZSk7Cj4gKyAgICAgICBpZiAoZndfbW9kZSA8IDApCj4g
-KyAgICAgICAgICAgICAgIGdvdG8gdHJ5X2xlZ2FjeTsKPiArCj4gKyAgICAgICAvKiBUcnkgU01D
-IGZsb3cgZmlyc3QgKi8KPiArICAgICAgIHN3aXRjaCAobGFuZS0+bW9kZSkgewo+ICsgICAgICAg
-Y2FzZSBQSFlfTU9ERV9FVEhFUk5FVDoKPiArICAgICAgICAgICAgICAgZGV2X2RiZyhwcml2LT5k
-ZXYsICJzZXQgbGFuZSAlZCB0byBFdGhlcm5ldCBtb2RlXG4iLCBsYW5lLT5pZCk7Cj4gKyAgICAg
-ICAgICAgICAgIHN3aXRjaCAobGFuZS0+c3VibW9kZSkgewo+ICsgICAgICAgICAgICAgICBjYXNl
-IFBIWV9JTlRFUkZBQ0VfTU9ERV9TR01JSToKPiArICAgICAgICAgICAgICAgY2FzZSBQSFlfSU5U
-RVJGQUNFX01PREVfMjUwMEJBU0VYOgo+ICsgICAgICAgICAgICAgICBjYXNlIFBIWV9JTlRFUkZB
-Q0VfTU9ERV8xMEdLUjoKPiArICAgICAgICAgICAgICAgICAgICAgICBmd19wYXJhbSA9IENPTVBI
-WV9GV19QQVJBTShmd19tb2RlLCBsYW5lLT5wb3J0KTsKCkl0IHNlZW1zIGl0IHdpbGwgbm90IHdv
-cmsgZm9yIFNHTUlJIGFuZCAyNTAwQkFTRVguIEl0IGlzIGJlY2F1c2UgeW91CmFyZSBzZXR0aW5n
-IG1heCBzcGVlZCBmb3IgYWxsIGNvbXBoeSBtb2RlcyBpbnNpZGUgQ09NUEhZX0ZXX1BBUkFNCm1h
-Y3JvIHdoaWNoIGlzIHdyb25nLiBEaWQgeW91IHRlc3QgaXQ/CkJUVyBjYW4geW91IHBvaW50IHRv
-IHNvbWUgcHVibGljIHRlbXBvcmFyeSBnaXQgYnJhbmNoIHdoZXJlIHRoaXMKcGF0Y2hzZXQgY2Fu
-IGJlIGZvdW5kPwoKcmVnYXJkcywKR3J6ZWdvcnoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+Add a DT binding document for max77650 ultra-low power PMIC. This
+describes the core mfd device and the GPIO module.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+---
+ .../devicetree/bindings/mfd/max77650.txt      | 46 +++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/max77650.txt b/Documentation/devicetree/bindings/mfd/max77650.txt
+new file mode 100644
+index 000000000000..b529d8d19335
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/max77650.txt
+@@ -0,0 +1,46 @@
++MAX77650 ultra low-power PMIC from Maxim Integrated.
++
++Required properties:
++-------------------
++- compatible:		Must be "maxim,max77650"
++- reg:			I2C device address.
++- interrupts:		The interrupt on the parent the controller is
++			connected to.
++- interrupt-controller: Marks the device node as an interrupt controller.
++- #interrupt-cells:	Must be <2>.
++
++- gpio-controller:	Marks the device node as a gpio controller.
++- #gpio-cells:		Must be <2>. The first cell is the pin number and
++			the second cell is used to specify the gpio active
++			state.
++
++Optional properties:
++--------------------
++gpio-line-names:	Single string containing the name of the GPIO line.
++
++The GPIO-controller module is represented as part of the top-level PMIC
++node. The device exposes a single GPIO line.
++
++For device-tree bindings of other sub-modules (regulator, power supply,
++LEDs and onkey) refer to the binding documents under the respective
++sub-system directories.
++
++For more details on GPIO bindings, please refer to the generic GPIO DT
++binding document <devicetree/bindings/gpio/gpio.txt>.
++
++Example:
++--------
++
++	pmic@48 {
++		compatible = "maxim,max77650";
++		reg = <0x48>;
++
++		interrupt-controller;
++		interrupt-parent = <&gpio2>;
++		#interrupt-cells = <2>;
++		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-line-names = "max77650-charger";
++	};
+-- 
+2.21.0
