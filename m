@@ -1,69 +1,73 @@
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: [PATCH v3 1/2] dt-bindings: timer: Add binding doc for nxp system
- counter timer
-Date: Wed, 3 Apr 2019 10:20:25 +0000
-Message-ID: <1554287101-16189-1-git-send-email-ping.bai@nxp.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 1/3] dt-bindings: phy: rcar-gen3-phy-usb2: Revise
+ #phy-cells property
+Date: Wed, 3 Apr 2019 10:35:29 +0000
+Message-ID: <TY1PR01MB17708AF072E039D362FDE659C0570@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1554120083-29990-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1554120083-29990-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1554120083-29990-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Bai Ping <ping.bai@nxp.com>
+Hello Yoshihiro-san,
 
-Add the binding doc for nxp system counter timer module.
+Thank you for your patch!
 
-Signed-off-by: Bai Ping <ping.bai@nxp.com>
----
-change v1->v2
- - remove the blank line at EOF
-change v2->v3
- - update the binding example based on the driver change
----
- .../devicetree/bindings/timer/nxp,sysctr-timer.txt | 25 ++++++++++++++++++=
-++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/nxp,sysctr-time=
-r.txt
+> From: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.=
+org> On Behalf Of Yoshihiro Shimoda
+> Sent: 01 April 2019 13:01
+> Subject: [PATCH 1/3] dt-bindings: phy: rcar-gen3-phy-usb2: Revise #phy-ce=
+lls property
+>=20
+> To have the detailed property on each PHY specifier, this patch revices
 
-diff --git a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt b=
-/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
-new file mode 100644
-index 0000000..d576599
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
-@@ -0,0 +1,25 @@
-+NXP System Counter Module(sys_ctr)
-+
-+The system counter(sys_ctr) is a programmable system counter which provide=
-s
-+a shared time base to Cortex A15, A7, A53, A73, etc. it is intended for us=
-e in
-+applications where the counter is always powered and support multiple,
-+unrelated clocks. The compare frame inside can be used for timer purpose.
-+
-+Required properties:
-+
-+- compatible :      should be "nxp,sysctr-timer"
-+- reg :             Specifies the base physical address and size of the co=
-mapre
-+                    frame and the counter control, read & compare.
-+- interrupts :      should be the first compare frames' interrupt
-+- clocks : 	    Specifies the counter clock.
-+- clock-names: 	    Specifies the clock's name of this module
-+
-+Example:
-+
-+	system_counter: timer@306a0000 {
-+		compatible =3D "nxp,sysctr-timer";
-+		reg =3D <0x306a0000 0x20000>;/* system-counter-rd & compare */
-+		clocks =3D <&clk_8m>;
-+		clock-names =3D "per";
-+		interrupts =3D <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+	};
---=20
-1.9.1
+s/revices/revises/g
+
+> the #phy-cells property.
+>=20
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt=
+ b/Documentation/devicetree/bindings/phy/rcar-gen3-
+> phy-usb2.txt
+> index ad9c290..7f0d4bf 100644
+> --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> @@ -27,7 +27,12 @@ Required properties:
+>=20
+>  - reg: offset and length of the partial USB 2.0 Host register block.
+>  - clocks: clock phandle and specifier pair(s).
+> -- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
+> +- #phy-cells: see phy-bindings.txt in the same directory, must be <1>.
+> +
+> +The phandle's argument in the PHY specifier is the INT_STATUS bit of con=
+troller:
+
+>From the driver we are also looking for value 0, as in rcar_gen3_get_dr_mod=
+e we
+have a for loop that starts from 0, and we call of_usb_get_dr_mode_by_phy w=
+ith
+arg0 =3D=3D 0, why are we leaving this out from this list?
+
+Thanks,
+Fab
+
+> +- 1 =3D USBH_INTA (OHCI)
+> +- 2 =3D USBH_INTB (EHCI)
+> +- 3 =3D UCOM_INT (OTG and BC)
+>=20
+>  Optional properties:
+>  To use a USB channel where USB 2.0 Host and HSUSB (USB 2.0 Peripheral) a=
+re
+> --
+> 2.7.4
