@@ -1,258 +1,358 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH 09/10] PCI: tegra: Add Tegra194 PCIe support
-Date: Wed, 3 Apr 2019 15:13:09 +0530
-Message-ID: <dcbfbb32-9980-7ee4-89cd-baedfe624ce5@nvidia.com>
-References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
- <1553613207-3988-10-git-send-email-vidyas@nvidia.com>
- <20190329203159.GG24180@google.com>
- <5eb9599c-a6d6-d3a3-beef-5225ed7393f9@nvidia.com>
- <20190402183110.GE141706@google.com>
+From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Subject: Re: [PATCH 02/15] phy: mvebu-cp110-comphy: Add SMC call support
+Date: Wed, 3 Apr 2019 10:48:44 +0100
+Message-ID: <20190403094844.stcoqhh433fqkqa5@shell.armlinux.org.uk>
+References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
+ <20190401165131.23370-3-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190402183110.GE141706@google.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, tiwai@suse.de, spujar@nvidia.com, skomatineni@nvidia.com, liviu.dudau@arm.com, krzk@kernel.org, heiko@sntech.de, horms+renesas@verge.net.au, olof@lixom.net, maxime.ripard@bootlin.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, jagan@amarulasolutions.com, enric.balletbo@collabora.com, ezequiel@collabora.com, stefan.wahren@i2se.com, marc.w.gonzalez@free.fr, l.stach@pengutronix.de, tpiepho@impinj.com, hayashi.kunihiko@socionext.com, yue.wang@amlogic.com, sha
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190401165131.23370-3-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 4/3/2019 12:01 AM, Bjorn Helgaas wrote:
-> On Tue, Apr 02, 2019 at 12:47:48PM +0530, Vidya Sagar wrote:
->> On 3/30/2019 2:22 AM, Bjorn Helgaas wrote:
->>> On Tue, Mar 26, 2019 at 08:43:26PM +0530, Vidya Sagar wrote:
->>>> Add support for Synopsys DesignWare core IP based PCIe host controller
->>>> present in Tegra194 SoC.
+On Mon, Apr 01, 2019 at 06:51:18PM +0200, Miquel Raynal wrote:
+> Keep the exact same list of supported configurations but first try to
+> use the firmware's implementation. If it fails, try the legacy method:
+> Linux implementation.
 > 
->>>> +#include "../../pcie/portdrv.h"
->>>
->>> What's this for?  I didn't see any obvious uses of things from
->>> portdrv.h, but I didn't actually try to build without it.
->> This is for pcie_pme_disable_msi() API. Since this is defined in portdrv.h
->> file, I'm including it here.
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 200 +++++++++++++++----
+>  1 file changed, 164 insertions(+), 36 deletions(-)
 > 
-> Hmm, OK, I missed that.  If you need pcie_pme_disable_msi(), you
-> definitely need portdrv.h.  But you're still a singleton in terms of
-> including it, so it leads to follow-up questions:
-> 
->    - Why does this chip require pcie_pme_disable_msi()?  The only other
->      use is a DMI quirk for "MSI Wind U-100", added by c39fae1416d5
->      ("PCI PM: Make it possible to force using INTx for PCIe PME
->      signaling").
-Because Tegra194 doesn't support raising PME interrupts through MSI line.
-> 
->    - Is this a workaround for a Tegra194 defect?  If so, it should be
->      separated out and identified as such.  Otherwise it will get
->      copied to other places where it doesn't belong.
-This is a guideline from the hardware team that MSI for PME should be disabled.
-I'll make an explicit comment in the code that it is specific to Tegra194.
-> 
->    - You only call it from the .runtime_resume() hook.  That doesn't
->      make sense to me: if you never suspend, you never disable MSI for
->      PME signaling.
-.runtime_resume() not only gets called during resume, but also in normal path
-as we are using PM framework and pm_runtime_get_sync() gets called finally
-in the probe which executes .runtime_resume() hook.
+> diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+> index 3f50a1521f01..4aaf161503d6 100644
+> --- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+> +++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+> @@ -5,6 +5,7 @@
+>   * Antoine Tenart <antoine.tenart@free-electrons.com>
+>   */
+>  
+> +#include <linux/arm-smccc.h>
+>  #include <linux/io.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/mfd/syscon.h>
+> @@ -115,51 +116,88 @@
+>  #define MVEBU_COMPHY_LANES	6
+>  #define MVEBU_COMPHY_PORTS	3
+>  
+> +#define COMPHY_SIP_POWER_ON	0x82000001
+> +#define COMPHY_SIP_POWER_OFF	0x82000002
+> +
+> +/*
+> + * A lane is described by the following bitfields:
+> + * [ 1- 0]: COMPHY polarity invertion
+> + * [ 2- 7]: COMPHY speed
+> + * [ 5-11]: COMPHY port index
+> + * [12-16]: COMPHY mode
+> + * [17]: Clock source
+> + */
+> +#define COMPHY_FW_POL_OFFSET	0
+> +#define COMPHY_FW_POL_MASK	GENMASK(1, 0)
+> +#define COMPHY_FW_SPEED_OFFSET	2
+> +#define COMPHY_FW_SPEED_MASK	GENMASK(7, 2)
+> +#define COMPHY_FW_SPEED_MAX	COMPHY_FW_SPEED_MASK
+> +#define COMPHY_FW_PORT_OFFSET	8
+> +#define COMPHY_FW_PORT_MASK	GENMASK(11, 8)
+> +#define COMPHY_FW_MODE_OFFSET	12
+> +#define COMPHY_FW_MODE_MASK	GENMASK(16, 12)
+> +
+> +#define COMPHY_FW_PARAM_FULL(mode, port, speed, pol)			\
+> +	((((pol) << COMPHY_FW_POL_OFFSET) & COMPHY_FW_POL_MASK) |	\
+> +	 (((mode) << COMPHY_FW_MODE_OFFSET) & COMPHY_FW_MODE_MASK) |	\
+> +	 (((port) << COMPHY_FW_PORT_OFFSET) & COMPHY_FW_PORT_MASK) |	\
+> +	 (((speed) << COMPHY_FW_SPEED_OFFSET) & COMPHY_FW_SPEED_MASK))
+> +
+> +#define COMPHY_FW_PARAM(mode, port)					\
+> +	COMPHY_FW_PARAM_FULL(mode, port, COMPHY_FW_SPEED_MAX, 0)
+> +
+> +#define COMPHY_FW_MODE_SGMII		0x2 /* SGMII 1G */
+> +#define COMPHY_FW_MODE_HS_SGMII		0x3 /* SGMII 2.5G */
+> +#define COMPHY_FW_MODE_SFI		0x9 /* XFI: 0x8 (is treated like SFI) */
+> +
+>  struct mvebu_comphy_conf {
+>  	enum phy_mode mode;
+>  	int submode;
+>  	unsigned lane;
+>  	unsigned port;
+>  	u32 mux;
+> +	u32 fw_mode;
+>  };
+>  
+> -#define MVEBU_COMPHY_CONF(_lane, _port, _submode, _mux)	\
+> +#define MVEBU_COMPHY_CONF(_lane, _port, _submode, _mux, _fw)	\
+>  	{						\
+>  		.lane = _lane,				\
+>  		.port = _port,				\
+>  		.mode = PHY_MODE_ETHERNET,		\
+>  		.submode = _submode,			\
+>  		.mux = _mux,				\
+> +		.fw_mode = _fw,				\
+>  	}
+>  
+>  static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
+>  	/* lane 0 */
+> -	MVEBU_COMPHY_CONF(0, 1, PHY_INTERFACE_MODE_SGMII, 0x1),
+> -	MVEBU_COMPHY_CONF(0, 1, PHY_INTERFACE_MODE_2500BASEX, 0x1),
+> +	MVEBU_COMPHY_CONF(0, 1, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
+> +	MVEBU_COMPHY_CONF(0, 1, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
+>  	/* lane 1 */
+> -	MVEBU_COMPHY_CONF(1, 2, PHY_INTERFACE_MODE_SGMII, 0x1),
+> -	MVEBU_COMPHY_CONF(1, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1),
+> +	MVEBU_COMPHY_CONF(1, 2, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
+> +	MVEBU_COMPHY_CONF(1, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
+>  	/* lane 2 */
+> -	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_SGMII, 0x1),
+> -	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_2500BASEX, 0x1),
+> -	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_10GKR, 0x1),
+> +	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
+> +	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
+> +	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_10GKR, 0x1, COMPHY_FW_MODE_SFI),
+>  	/* lane 3 */
+> -	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_SGMII, 0x2),
+> -	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_2500BASEX, 0x2),
+> +	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_SGMII, 0x2, COMPHY_FW_MODE_SGMII),
+> +	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_2500BASEX, 0x2, COMPHY_FW_MODE_HS_SGMII),
+>  	/* lane 4 */
+> -	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_SGMII, 0x2),
+> -	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_2500BASEX, 0x2),
+> -	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_10GKR, 0x2),
+> -	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_SGMII, 0x1),
+> +	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_SGMII, 0x2, COMPHY_FW_MODE_SGMII),
+> +	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_2500BASEX, 0x2, COMPHY_FW_MODE_HS_SGMII),
+> +	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_10GKR, 0x2, COMPHY_FW_MODE_SFI),
+> +	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
+>  	/* lane 5 */
+> -	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_SGMII, 0x1),
+> -	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1),
+> +	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
+> +	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
+>  };
+>  
+>  struct mvebu_comphy_priv {
+>  	void __iomem *base;
+>  	struct regmap *regmap;
+>  	struct device *dev;
+> +	unsigned long cp_phys;
+>  };
+>  
+>  struct mvebu_comphy_lane {
+> @@ -170,8 +208,18 @@ struct mvebu_comphy_lane {
+>  	int port;
+>  };
+>  
+> -static int mvebu_comphy_get_mux(int lane, int port,
+> -				enum phy_mode mode, int submode)
+> +static int mvebu_comphy_smc(unsigned long function, unsigned long phys,
+> +			    unsigned long lane, unsigned long mode)
+> +{
+> +	struct arm_smccc_res res;
+> +
+> +	arm_smccc_smc(function, phys, lane, mode, 0, 0, 0, 0, &res);
 
-> 
->>>> +	val_w = dw_pcie_readw_dbi(pci, CFG_LINK_STATUS);
->>>> +	while (!(val_w & PCI_EXP_LNKSTA_DLLLA)) {
->>>> +		if (!count) {
->>>> +			val = readl(pcie->appl_base + APPL_DEBUG);
->>>> +			val &= APPL_DEBUG_LTSSM_STATE_MASK;
->>>> +			val >>= APPL_DEBUG_LTSSM_STATE_SHIFT;
->>>> +			tmp = readl(pcie->appl_base + APPL_LINK_STATUS);
->>>> +			tmp &= APPL_LINK_STATUS_RDLH_LINK_UP;
->>>> +			if (val == 0x11 && !tmp) {
->>>> +				dev_info(pci->dev, "link is down in DLL");
->>>> +				dev_info(pci->dev,
->>>> +					 "trying again with DLFE disabled\n");
->>>> +				/* disable LTSSM */
->>>> +				val = readl(pcie->appl_base + APPL_CTRL);
->>>> +				val &= ~APPL_CTRL_LTSSM_EN;
->>>> +				writel(val, pcie->appl_base + APPL_CTRL);
->>>> +
->>>> +				reset_control_assert(pcie->core_rst);
->>>> +				reset_control_deassert(pcie->core_rst);
->>>> +
->>>> +				offset =
->>>> +				dw_pcie_find_ext_capability(pci,
->>>> +							    PCI_EXT_CAP_ID_DLF)
->>>> +				+ PCI_DLF_CAP;
->>>
->>> This capability offset doesn't change, does it?  Could it be computed
->>> outside the loop?
->> This is the only place where DLF offset is needed and gets calculated and this
->> scenario is very rare as so far only a legacy ASMedia USB3.0 card requires DLF
->> to be disabled to get PCIe link up. So, I thought of calculating the offset
->> here itself instead of using a separate variable.
-> 
-> Hmm.  Sounds like this is essentially a quirk to work around some
-> hardware issue in Tegra194.
-> 
-> Is there some way you can pull this out into a separate function so it
-> doesn't clutter the normal path and it's more obvious that it's a
-> workaround?
-> 
->>>> +				val = dw_pcie_readl_dbi(pci, offset);
->>>> +				val &= ~DL_FEATURE_EXCHANGE_EN;
->>>> +				dw_pcie_writel_dbi(pci, offset, val);
->>>> +
->>>> +				tegra_pcie_dw_host_init(&pcie->pci.pp);
->>>
->>> This looks like some sort of "wait for link up" retry loop, but a
->>> recursive call seems a little unusual.  My 5 second analysis is that
->>> the loop could run this 200 times, and you sure don't want the
->>> possibility of a 200-deep call chain.  Is there way to split out the
->>> host init from the link-up polling?
->> Again, this recursive calling comes into picture only for a legacy ASMedia
->> USB3.0 card and it is going to be a 1-deep call chain as the recursion takes
->> place only once depending on the condition. Apart from the legacy ASMedia card,
->> there is no other card at this point in time out of a huge number of cards that we have
->> tested.
-> 
-> We need to be able to analyze the code without spending time working
-> out what arcane PCIe spec details might limit this to fewer than 200
-> iterations, or relying on assumptions about how many cards have been
-> tested.
-> 
-> If you can restructure this so the "wait for link up" loop looks like
-> all the other drivers, and the DLF issue is separated out and just
-> causes a retry of the "wait for link up", I think that will help a
-> lot.
-As per Thierry Reding's suggestion, I'll be using a goto statement to avoid
-recursion and that should simplify things here.
+Before we switch to using the ATF implementation, I have serious
+concerns about the API here.  The physical address is passed from
+the kernel to ATF for the hardware, and ATF does very little
+validation of that address.
 
-> 
->>>> +static void tegra_pcie_dw_scan_bus(struct pcie_port *pp)
->>>> +{
->>>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>>> +	struct tegra_pcie_dw *pcie = dw_pcie_to_tegra_pcie(pci);
->>>> +	u32 speed;
->>>> +
->>>> +	if (!tegra_pcie_dw_link_up(pci))
->>>> +		return;
->>>> +
->>>> +	speed = (dw_pcie_readw_dbi(pci, CFG_LINK_STATUS) & PCI_EXP_LNKSTA_CLS);
->>>> +	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
->>>
->>> I don't understand what's happening here.  This is named
->>> tegra_pcie_dw_scan_bus(), but it doesn't actually scan anything.
->>> Maybe it's just a bad name for the dw_pcie_host_ops hook
->>> (ks_pcie_v3_65_scan_bus() is the only other .scan_bus()
->>> implementation, and it doesn't scan anything either).
->>>
->>> dw_pcie_host_init() calls pci_scan_root_bus_bridge(), which actually
->>> *does* scan the bus, but it does it before calling
->>> pp->ops->scan_bus().  I'd say by the time we get to
->>> pci_scan_root_bus_bridge(), the device-specific init should be all
->>> done and we should be using only generic PCI core interfaces.
->>>
->>> Maybe this stuff could/should be done in the ->host_init() hook?  The
->>> code between ->host_init() and ->scan_bus() is all generic code with
->>> no device-specific stuff, so I don't know why we need both hooks.
->> Agree. At least whatever I'm going here as part of scan_bus can be moved to
->> host_init() itslef. I'm not sure about the original intention of the scan_bus
->> but my understanding is that, after PCIe sub-system enumerates all devices, if
->> something needs to be done, then, probably scan_bus() can be implemented for that.
->> I had some other code initially which was accessing downstream devices, hence I
->> implemented scan_bus(), but, now, given all that is gone, I can move this code to
->> host_init() itself.
-> 
-> That'd be perfect.  I suspect ks_pcie_v3_65_scan_bus() is left over
-> from before the generic PCI core scan interface, and it could probably
-> be moved to host_init() as well.
-I think so.
+This means that it's trivially possible to overrun arrays in ATF,
+and even get ATF to read/write other areas of memory.
 
-> 
->>>> +static void tegra_pcie_downstream_dev_to_D0(struct tegra_pcie_dw *pcie)
->>>> +{
->>>> +	struct pci_dev *pdev = NULL;
->>>
->>> Unnecessary initialization.
->> Done.
->>
->>>> +	struct pci_bus *child;
->>>> +	struct pcie_port *pp = &pcie->pci.pp;
->>>> +
->>>> +	list_for_each_entry(child, &pp->bus->children, node) {
->>>> +		/* Bring downstream devices to D0 if they are not already in */
->>>> +		if (child->parent == pp->bus) {
->>>> +			pdev = pci_get_slot(child, PCI_DEVFN(0, 0));
->>>> +			pci_dev_put(pdev);
->>>> +			if (!pdev)
->>>> +				break;
->>>
->>> I don't really like this dance with iterating over the bus children,
->>> comparing parent to pp->bus, pci_get_slot(), pci_dev_put(), etc.
->>>
->>> I guess the idea is to bring only the directly-downstream devices to
->>> D0, not to do it for things deeper in the hierarchy?
->> Yes.
->>
->>> Is this some Tegra-specific wrinkle?  I don't think other drivers do
->>> this.
->> With Tegra PCIe controller, if the downstream device is in non-D0 states,
->> link doesn't go into L2 state. We observed this behavior with some of the
->> devices and the solution would be to bring them to D0 state and then attempt
->> sending PME_TurnOff message to put the link to L2 state.
->> Since spec also supports this mechanism (Rev.4.0 Ver.1.0 Page #428), we chose
->> to implement this.
-> 
-> Sounds like a Tegra oddity that should be documented as such so it
-> doesn't get copied elsewhere.
-I'll add a comment explicitly to state the same.
+I would rather this issue was resolved before the kernel starts to
+use what is a badly defined interface.
 
+> +
+> +	return res.a0;
+> +}
+> +
+> +static int mvebu_comphy_get_mode(bool fw_mode, int lane, int port,
+> +				 enum phy_mode mode, int submode)
+>  {
+>  	int i, n = ARRAY_SIZE(mvebu_comphy_cp110_modes);
+>  
+> @@ -190,7 +238,22 @@ static int mvebu_comphy_get_mux(int lane, int port,
+>  	if (i == n)
+>  		return -EINVAL;
+>  
+> -	return mvebu_comphy_cp110_modes[i].mux;
+> +	if (fw_mode)
+> +		return mvebu_comphy_cp110_modes[i].fw_mode;
+> +	else
+> +		return mvebu_comphy_cp110_modes[i].mux;
+> +}
+> +
+> +static inline int mvebu_comphy_get_mux(int lane, int port,
+> +				       enum phy_mode mode, int submode)
+> +{
+> +	return mvebu_comphy_get_mode(false, lane, port, mode, submode);
+> +}
+> +
+> +static inline int mvebu_comphy_get_fw_mode(int lane, int port,
+> +					   enum phy_mode mode, int submode)
+> +{
+> +	return mvebu_comphy_get_mode(true, lane, port, mode, submode);
+>  }
+>  
+>  static void mvebu_comphy_ethernet_init_reset(struct mvebu_comphy_lane *lane)
+> @@ -476,7 +539,7 @@ static int mvebu_comphy_set_mode_10gkr(struct phy *phy)
+>  	return mvebu_comphy_init_plls(lane);
+>  }
+>  
+> -static int mvebu_comphy_power_on(struct phy *phy)
+> +static int mvebu_comphy_power_on_legacy(struct phy *phy)
+>  {
+>  	struct mvebu_comphy_lane *lane = phy_get_drvdata(phy);
+>  	struct mvebu_comphy_priv *priv = lane->priv;
+> @@ -517,6 +580,50 @@ static int mvebu_comphy_power_on(struct phy *phy)
+>  	return ret;
+>  }
+>  
+> +static int mvebu_comphy_power_on(struct phy *phy)
+> +{
+> +	struct mvebu_comphy_lane *lane = phy_get_drvdata(phy);
+> +	struct mvebu_comphy_priv *priv = lane->priv;
+> +	u32 fw_param = 0;
+> +	int fw_mode;
+> +	int ret;
+> +
+> +	fw_mode = mvebu_comphy_get_fw_mode(lane->id, lane->port,
+> +					   lane->mode, lane->submode);
+> +	if (fw_mode < 0)
+> +		goto try_legacy;
+> +
+> +	/* Try SMC flow first */
+> +	switch (lane->mode) {
+> +	case PHY_MODE_ETHERNET:
+> +		dev_dbg(priv->dev, "set lane %d to Ethernet mode\n", lane->id);
+> +		switch (lane->submode) {
+> +		case PHY_INTERFACE_MODE_SGMII:
+> +		case PHY_INTERFACE_MODE_2500BASEX:
+> +		case PHY_INTERFACE_MODE_10GKR:
+> +			fw_param = COMPHY_FW_PARAM(fw_mode, lane->port);
+> +			break;
+> +		default:
+> +			dev_err(priv->dev, "unsupported Ethernet mode (%d)\n",
+> +				lane->submode);
+> +			return -ENOTSUPP;
+> +		}
+> +		break;
+> +	default:
+> +		dev_err(priv->dev, "unsupported PHY mode (%d)\n", lane->mode);
+> +		return -ENOTSUPP;
+> +	}
+> +
+> +	ret = mvebu_comphy_smc(COMPHY_SIP_POWER_ON, priv->cp_phys, lane->id,
+> +			       fw_param);
+> +	if (!ret)
+> +		return ret;
+> +
+> +try_legacy:
+> +	/* Fallback to Linux's implementation */
+> +	return mvebu_comphy_power_on_legacy(phy);
+> +}
+> +
+>  static int mvebu_comphy_set_mode(struct phy *phy,
+>  				 enum phy_mode mode, int submode)
+>  {
+> @@ -528,7 +635,7 @@ static int mvebu_comphy_set_mode(struct phy *phy,
+>  	if (submode == PHY_INTERFACE_MODE_1000BASEX)
+>  		submode = PHY_INTERFACE_MODE_SGMII;
+>  
+> -	if (mvebu_comphy_get_mux(lane->id, lane->port, mode, submode) < 0)
+> +	if (mvebu_comphy_get_fw_mode(lane->id, lane->port, mode, submode) < 0)
+>  		return -EINVAL;
+>  
+>  	lane->mode = mode;
+> @@ -536,27 +643,42 @@ static int mvebu_comphy_set_mode(struct phy *phy,
+>  	return 0;
+>  }
+>  
+> +static int mvebu_comphy_power_off_legacy(struct phy *phy)
+> +{
+> +	struct mvebu_comphy_lane *lane = phy_get_drvdata(phy);
+> +	struct mvebu_comphy_priv *priv = lane->priv;
+> +	u32 val;
+> +
+> +	val = readl(priv->base + MVEBU_COMPHY_SERDES_CFG1(lane->id));
+> +	val &= ~(MVEBU_COMPHY_SERDES_CFG1_RESET |
+> +		 MVEBU_COMPHY_SERDES_CFG1_CORE_RESET |
+> +		 MVEBU_COMPHY_SERDES_CFG1_RF_RESET);
+> +	writel(val, priv->base + MVEBU_COMPHY_SERDES_CFG1(lane->id));
+> +
+> +	regmap_read(priv->regmap, MVEBU_COMPHY_SELECTOR, &val);
+> +	val &= ~(0xf << MVEBU_COMPHY_SELECTOR_PHY(lane->id));
+> +	regmap_write(priv->regmap, MVEBU_COMPHY_SELECTOR, val);
+> +
+> +	regmap_read(priv->regmap, MVEBU_COMPHY_PIPE_SELECTOR, &val);
+> +	val &= ~(0xf << MVEBU_COMPHY_PIPE_SELECTOR_PIPE(lane->id));
+> +	regmap_write(priv->regmap, MVEBU_COMPHY_PIPE_SELECTOR, val);
+> +
+> +	return 0;
+> +}
+> +
+>  static int mvebu_comphy_power_off(struct phy *phy)
+>  {
+>  	struct mvebu_comphy_lane *lane = phy_get_drvdata(phy);
+>  	struct mvebu_comphy_priv *priv = lane->priv;
+> -	u32 val;
+> +	int ret;
+>  
+> -	val = readl(priv->base + MVEBU_COMPHY_SERDES_CFG1(lane->id));
+> -	val &= ~(MVEBU_COMPHY_SERDES_CFG1_RESET |
+> -		 MVEBU_COMPHY_SERDES_CFG1_CORE_RESET |
+> -		 MVEBU_COMPHY_SERDES_CFG1_RF_RESET);
+> -	writel(val, priv->base + MVEBU_COMPHY_SERDES_CFG1(lane->id));
+> +	ret = mvebu_comphy_smc(COMPHY_SIP_POWER_OFF, priv->cp_phys,
+> +			       lane->id, 0);
+> +	if (!ret)
+> +		return ret;
+>  
+> -	regmap_read(priv->regmap, MVEBU_COMPHY_SELECTOR, &val);
+> -	val &= ~(0xf << MVEBU_COMPHY_SELECTOR_PHY(lane->id));
+> -	regmap_write(priv->regmap, MVEBU_COMPHY_SELECTOR, val);
+> -
+> -	regmap_read(priv->regmap, MVEBU_COMPHY_PIPE_SELECTOR, &val);
+> -	val &= ~(0xf << MVEBU_COMPHY_PIPE_SELECTOR_PIPE(lane->id));
+> -	regmap_write(priv->regmap, MVEBU_COMPHY_PIPE_SELECTOR, val);
+> -
+> -	return 0;
+> +	/* Fallback to Linux's implementation */
+> +	return mvebu_comphy_power_off_legacy(phy);
+>  }
+>  
+>  static const struct phy_ops mvebu_comphy_ops = {
+> @@ -607,6 +729,12 @@ static int mvebu_comphy_probe(struct platform_device *pdev)
+>  	if (IS_ERR(priv->base))
+>  		return PTR_ERR(priv->base);
+>  
+> +	/*
+> +	 * Hack to retrieve a physical offset relative to this CP that will be
+> +	 * given to the firmware
+> +	 */
+> +	priv->cp_phys = res->start;
+> +
+>  	for_each_available_child_of_node(pdev->dev.of_node, child) {
+>  		struct mvebu_comphy_lane *lane;
+>  		struct phy *phy;
+> -- 
+> 2.19.1
 > 
->>> I see that an earlier patch added "bus" to struct pcie_port.  I think
->>> it would be better to somehow connect to the pci_host_bridge struct.
->>> Several other drivers already do this; see uses of
->>> pci_host_bridge_from_priv().
->> All non-DesignWare based implementations save their private data structure
->> in 'private' pointer of struct pci_host_bridge and use pci_host_bridge_from_priv()
->> to get it back. But, DesignWare based implementations save pcie_port in 'sysdata'
->> and nothing in 'private' pointer. So,  I'm not sure if pci_host_bridge_from_priv()
->> can be used in this case. Please do let me know if you think otherwise.
 > 
-> DesignWare-based drivers should have a way to retrieve the
-> pci_host_bridge pointer.  It doesn't have to be *exactly* the
-> same as non-DesignWare drivers, but it should be similar.
-I gave my reasoning as to why with the current code, it is not possible to get the
-pci_host_bridge structure pointer from struct pcie_port pointer in another thread as
-a reply to Thierry Reding's comments. Since Jishen'g changes to support remove functionality
-are accepted, I think using bus pointer saved in struct pcie_port pointer shouldn't be
-any issue now. Please do let me know if that is something not acceptable.
 
-> 
->>> That would give you the bus, as well as flags like no_ext_tags,
->>> native_aer, etc, which this driver, being a host bridge driver that's
->>> responsible for this part of the firmware/OS interface, may
->>> conceivably need.
-> 
->>>> +static int tegra_pcie_dw_runtime_suspend(struct device *dev)
->>>> +{
->>>> +	struct tegra_pcie_dw *pcie = dev_get_drvdata(dev);
->>>> +
->>>> +	tegra_pcie_downstream_dev_to_D0(pcie);
->>>> +
->>>> +	pci_stop_root_bus(pcie->pci.pp.bus);
->>>> +	pci_remove_root_bus(pcie->pci.pp.bus);
->>>
->>> Why are you calling these?  No other drivers do this except in their
->>> .remove() methods.  Is there something special about Tegra, or is this
->>> something the other drivers *should* be doing?
->> Since this API is called by remove, I'm removing the hierarchy to safely
->> bring down all the devices. I'll have to re-visit this part as
->> Jisheng Zhang's patches https://patchwork.kernel.org/project/linux-pci/list/?series=98559
->> are now approved and I need to verify this part after cherry-picking
->> Jisheng's changes.
-> 
-> Tegra194 should do this the same way as other drivers, independent of
-> Jisheng's changes.
-When other Designware implementations add remove functionality, even they should
-be calling these APIs (Jisheng also mentioned the same in his commit message)
-
-> 
-> Bjorn
-> 
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
