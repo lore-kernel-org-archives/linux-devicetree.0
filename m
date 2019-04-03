@@ -1,7 +1,7 @@
 From: Bruno Thomsen <bruno.thomsen@gmail.com>
-Subject: [PATCH v2 2/5] dt-bindings: arm: add TQ boards
-Date: Wed,  3 Apr 2019 08:44:24 +0200
-Message-ID: <20190403064427.30041-3-bruno.thomsen@gmail.com>
+Subject: [PATCH v2 4/5] ARM: dts: tq imx7s board support
+Date: Wed,  3 Apr 2019 08:44:26 +0200
+Message-ID: <20190403064427.30041-5-bruno.thomsen@gmail.com>
 References: <20190304165630.18225-1-bruno.thomsen@gmail.com>
  <20190403064427.30041-1-bruno.thomsen@gmail.com>
 Mime-Version: 1.0
@@ -22,41 +22,73 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: devicetree@vger.kernel.org, laa@kamstrup.com, festevam@gmail.com, s.hauer@pengutronix.de, clemens.ml@gmx.net, bruno.thomsen@gmail.com, bth@kamstrup.com, ksc@kamstrup.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org, markus.niebel@tq-group.com
 List-Id: devicetree@vger.kernel.org
 
-MBa is a series of Carrier Boards / Single Board Computers (SBC) for
-evaluation of TQMa SoMs.
-The MBa7 carrier board can only interface with TQMa7 modules.
-The TQMa7 module can only be mounted with NXP i.MX7 Solo or Dual SoCs.
-Primary compatible strings are of the form "tq,<SoC>-<SBC>".
+This adds support for the TQ TQMa7S SoM together with
+the MBa7 carrier board and it's based on the NXP i.MX7Solo SoC.
 
 Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
 ---
 v2:
-- Patch v1 2/6 and 3/6 has been merged as they both modify the new fsl.yaml.
+- Removed tq,imx7s-tqma7 (SoM) compatible string.
 
- Documentation/devicetree/bindings/arm/fsl.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/Makefile         |  1 +
+ arch/arm/boot/dts/imx7s-mba7.dts   | 18 ++++++++++++++++++
+ arch/arm/boot/dts/imx7s-tqma7.dtsi | 11 +++++++++++
+ 3 files changed, 30 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx7s-mba7.dts
+ create mode 100644 arch/arm/boot/dts/imx7s-tqma7.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 7e2cd6ad26bd..0610d85eb0fa 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -137,10 +137,17 @@ properties:
-           - const: fsl,imx6ull # This seems odd. Should be last?
-           - const: fsl,imx6ulz
- 
-+      - description: i.MX7S based Boards
-+        items:
-+          - enum:
-+              - tq,imx7s-mba7             # i.MX7S TQ MBa7 with TQMa7S SoM
-+          - const: fsl,imx7s
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index f4f5aeaf3298..250c0890e5ac 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -587,6 +587,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
+ 	imx7d-sdb-reva.dtb \
+ 	imx7d-sdb-sht11.dtb \
+ 	imx7s-colibri-eval-v3.dtb \
++	imx7s-mba7.dtb \
+ 	imx7s-warp.dtb
+ dtb-$(CONFIG_SOC_IMX7ULP) += \
+ 	imx7ulp-evk.dtb
+diff --git a/arch/arm/boot/dts/imx7s-mba7.dts b/arch/arm/boot/dts/imx7s-mba7.dts
+new file mode 100644
+index 000000000000..a143d566a38b
+--- /dev/null
++++ b/arch/arm/boot/dts/imx7s-mba7.dts
+@@ -0,0 +1,18 @@
++// SPDX-License-Identifier: GPL-2.0 OR X11
++/*
++ * Device Tree Source for TQ Systems TQMa7S board on MBa7 carrier board.
++ *
++ * Copyright (C) 2016 TQ Systems GmbH
++ * Author: Markus Niebel <Markus.Niebel@tq-group.com>
++ * Copyright (C) 2019 Bruno Thomsen <bruno.thomsen@gmail.com>
++ */
 +
-       - description: i.MX7D based Boards
-         items:
-           - enum:
-               - fsl,imx7d-sdb             # i.MX7 SabreSD Board
-+              - tq,imx7d-mba7             # i.MX7D TQ MBa7 with TQMa7D SoM
-           - const: fsl,imx7d
- 
-       - description:
++/dts-v1/;
++
++#include "imx7s-tqma7.dtsi"
++#include "imx7-mba7.dtsi"
++
++/ {
++	model = "TQ Systems TQMa7S board on MBa7 carrier board";
++	compatible = "tq,imx7s-mba7", "fsl,imx7s";
++};
+diff --git a/arch/arm/boot/dts/imx7s-tqma7.dtsi b/arch/arm/boot/dts/imx7s-tqma7.dtsi
+new file mode 100644
+index 000000000000..5f5433eb7dd7
+--- /dev/null
++++ b/arch/arm/boot/dts/imx7s-tqma7.dtsi
+@@ -0,0 +1,11 @@
++// SPDX-License-Identifier: GPL-2.0 OR X11
++/*
++ * Device Tree Include file for TQ Systems TQMa7S board with NXP i.MX7Solo SoC.
++ *
++ * Copyright (C) 2016 TQ Systems GmbH
++ * Author: Markus Niebel <Markus.Niebel@tq-group.com>
++ * Copyright (C) 2019 Bruno Thomsen <bruno.thomsen@gmail.com>
++ */
++
++#include "imx7s.dtsi"
++#include "imx7-tqma7.dtsi"
 -- 
 2.20.1
