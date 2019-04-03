@@ -1,86 +1,122 @@
-Return-Path: <SRS0=akoX=SD=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 11/12] ARM: dts: r8a77470: Add HSUSB device nodes
-Date: Mon,  1 Apr 2019 13:53:51 +0100
-Message-Id: <1554123232-58942-12-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
-References: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=tc1g=SF=fb.com=prvs=999640231c=vijaykhemka@kernel.org>
+From: Vijay Khemka <vijaykhemka@fb.com>
+Subject: Re: [PATCH] ARM: dts: aspeed: tiogapass: Enable VUART
+Date: Wed, 3 Apr 2019 22:32:04 +0000
+Message-ID: <CY4PR15MB1269927DE5C991C43BAF025CDD570@CY4PR15MB1269.namprd15.prod.outlook.com>
+References: <24375A52-CC8E-4CFE-A683-0720B60D1201@fb.com>
+In-Reply-To: <24375A52-CC8E-4CFE-A683-0720B60D1201@fb.com>
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_CY4PR15MB1269927DE5C991C43BAF025CDD570CY4PR15MB1269namp_"
+MIME-Version: 1.0
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "joel@jms.id.au" <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-aspeed @ lists . ozlabs . org  <linux-aspeed@lists.ozlabs.org>, linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Define the r8a77470 generic part of the HSUSB0/1 device nodes.
+--_000_CY4PR15MB1269927DE5C991C43BAF025CDD570CY4PR15MB1269namp_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Currently the renesas_usbhs driver doesn't handle multiple phys and we
-don't have a proper hardware to validate such driver changes.
+SGkgSm9lbCwNClBsZWFzZSBhcHBseSB0aGlzIHBhdGNoIHRvIGtlcm5lbCA1LjAuDQoNClJlZ2Fy
+ZHMNCi1WaWpheQ0KDQrvu79PbiAzLzE4LzE5LCAxMjo0NiBQTSwgIm9wZW5ibWMgb24gYmVoYWxm
+IG9mIFZpamF5IEtoZW1rYSIgPG9wZW5ibWMtYm91bmNlcyt2aWpheWtoZW1rYT1mYi5jb21AbGlz
+dHMub3psYWJzLm9yZyBvbiBiZWhhbGYgb2YgdmlqYXlraGVta2FAZmIuY29tPiB3cm90ZToNCg0K
+ICAgIEhpIEpvZWwsDQogICAgUGxlYXNlIGFwcGx5IHRoaXMgcGF0Y2guDQoNCiAgICBSZWdhcmRz
+DQogICAgLVZpamF5DQoNCiAgICBPbiAzLzUvMTksIDEyOjA2IFBNLCAib3BlbmJtYyBvbiBiZWhh
+bGYgb2YgVmlqYXkgS2hlbWthIiA8b3BlbmJtYy1ib3VuY2VzK3ZpamF5a2hlbWthPWZiLmNvbUBs
+aXN0cy5vemxhYnMub3JnIG9uIGJlaGFsZiBvZiB2aWpheWtoZW1rYUBmYi5jb20+IHdyb3RlOg0K
+DQogICAgICAgIFBsZWFzZSByZXZpZXcgYmVsb3cgcGF0Y2guDQoNCiAgICAgICAgUmVnYXJkcw0K
+ICAgICAgICAtVmlqYXkNCg0KICAgICAgICBPbiAxLzMwLzE5LCAxMDoxNCBBTSwgIlZpamF5IEto
+ZW1rYSIgPHZpamF5a2hlbWthQGZiLmNvbT4gd3JvdGU6DQoNCiAgICAgICAgICAgIEVuYWJsaW5n
+IHZ1YXJ0IGZvciBGYWNlYm9vayB0aW9nYXBhc3MNCg0KICAgICAgICAgICAgU2lnbmVkLW9mZi1i
+eTogVmlqYXkgS2hlbWthIDx2aWpheWtoZW1rYUBmYi5jb20+DQogICAgICAgICAgICAtLS0NCiAg
+ICAgICAgICAgICBhcmNoL2FybS9ib290L2R0cy9hc3BlZWQtYm1jLWZhY2Vib29rLXRpb2dhcGFz
+cy5kdHMgfCA1ICsrKysrDQogICAgICAgICAgICAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9u
+cygrKQ0KDQogICAgICAgICAgICBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVk
+LWJtYy1mYWNlYm9vay10aW9nYXBhc3MuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJt
+Yy1mYWNlYm9vay10aW9nYXBhc3MuZHRzDQogICAgICAgICAgICBpbmRleCA0MmUwZDdhOGU4ZDAu
+LmEwNThmYjI5ODVmNyAxMDA2NDQNCiAgICAgICAgICAgIC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRz
+L2FzcGVlZC1ibWMtZmFjZWJvb2stdGlvZ2FwYXNzLmR0cw0KICAgICAgICAgICAgKysrIGIvYXJj
+aC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1mYWNlYm9vay10aW9nYXBhc3MuZHRzDQogICAgICAg
+ICAgICBAQCAtNjQsNiArNjQsMTEgQEANCiAgICAgICAgICAgICAgICBzdGF0dXMgPSAib2theSI7
+DQogICAgICAgICAgICAgfTsNCg0KICAgICAgICAgICAgKyZ2dWFydCB7DQogICAgICAgICAgICAr
+ICAgLy8gVlVBUlQgSG9zdCBDb25zb2xlDQogICAgICAgICAgICArICAgc3RhdHVzID0gIm9rYXki
+Ow0KICAgICAgICAgICAgK307DQogICAgICAgICAgICArDQogICAgICAgICAgICAgJnVhcnQxIHsN
+CiAgICAgICAgICAgICAgICAvLyBIb3N0IENvbnNvbGUNCiAgICAgICAgICAgICAgICBzdGF0dXMg
+PSAib2theSI7DQogICAgICAgICAgICAtLQ0KICAgICAgICAgICAgMi4xNy4xDQoNCg0KDQoNCg0K
+DQoNCg==
 
-So for hsusb1 it is assumed that usbphy0 will be enabled by either
-channel0 host or device.
+--_000_CY4PR15MB1269927DE5C991C43BAF025CDD570CY4PR15MB1269namp_
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-In future, if any boards support hsusb1, we will need to add multiple phy
-support in the renesas_usbhs driver and override the board dts to enable
-the same. 
+PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
+dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIgc3R5bGU9
+ImRpc3BsYXk6bm9uZTsiPiBQIHttYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO30gPC9zdHls
+ZT4NCjwvaGVhZD4NCjxib2R5IGRpcj0ibHRyIj4NCjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBD
+YWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNv
+bG9yOiByZ2IoMCwgMCwgMCk7Ij4NCkhpIEpvZWwsPGJyPg0KPC9kaXY+DQo8ZGl2Pjxmb250IHNp
+emU9IjIiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTFwdDsiPg0KPGRpdiBjbGFzcz0iUGxhaW5U
+ZXh0Ij5QbGVhc2UgYXBwbHkgdGhpcyBwYXRjaCB0byBrZXJuZWwgNS4wLjxicj4NCjxicj4NClJl
+Z2FyZHM8YnI+DQotVmlqYXk8YnI+DQo8YnI+DQrvu79PbiAzLzE4LzE5LCAxMjo0NiBQTSwgJnF1
+b3Q7b3BlbmJtYyBvbiBiZWhhbGYgb2YgVmlqYXkgS2hlbWthJnF1b3Q7ICZsdDtvcGVuYm1jLWJv
+dW5jZXMmIzQzO3ZpamF5a2hlbWthPWZiLmNvbUBsaXN0cy5vemxhYnMub3JnIG9uIGJlaGFsZiBv
+ZiB2aWpheWtoZW1rYUBmYi5jb20mZ3Q7IHdyb3RlOjxicj4NCjxicj4NCiZuYnNwOyZuYnNwOyZu
+YnNwOyBIaSBKb2VsLDxicj4NCiZuYnNwOyZuYnNwOyZuYnNwOyBQbGVhc2UgYXBwbHkgdGhpcyBw
+YXRjaC48YnI+DQo8YnI+DQombmJzcDsmbmJzcDsmbmJzcDsgUmVnYXJkczxicj4NCiZuYnNwOyZu
+YnNwOyZuYnNwOyAtVmlqYXk8YnI+DQo8YnI+DQombmJzcDsmbmJzcDsmbmJzcDsgT24gMy81LzE5
+LCAxMjowNiBQTSwgJnF1b3Q7b3BlbmJtYyBvbiBiZWhhbGYgb2YgVmlqYXkgS2hlbWthJnF1b3Q7
+ICZsdDtvcGVuYm1jLWJvdW5jZXMmIzQzO3ZpamF5a2hlbWthPWZiLmNvbUBsaXN0cy5vemxhYnMu
+b3JnIG9uIGJlaGFsZiBvZiB2aWpheWtoZW1rYUBmYi5jb20mZ3Q7IHdyb3RlOjxicj4NCjxicj4N
+CiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBQbGVhc2UgcmV2aWV3
+IGJlbG93IHBhdGNoLjxicj4NCjxicj4NCiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyBSZWdhcmRzPGJyPg0KJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7IC1WaWpheTxicj4NCjxicj4NCiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyBPbiAxLzMwLzE5LCAxMDoxNCBBTSwgJnF1b3Q7VmlqYXkgS2hlbWthJnF1
+b3Q7ICZsdDt2aWpheWtoZW1rYUBmYi5jb20mZ3Q7IHdyb3RlOjxicj4NCjxicj4NCiZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyBFbmFibGluZyB2dWFydCBmb3IgRmFjZWJvb2sgdGlvZ2FwYXNzPGJyPg0KPGJyPg0KJm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7IFNpZ25lZC1vZmYtYnk6IFZpamF5IEtoZW1rYSAmbHQ7dmlqYXlraGVta2FAZmIuY29tJmd0
+Ozxicj4NCiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyAtLS08YnI+DQombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgYXJjaC9hcm0vYm9vdC9k
+dHMvYXNwZWVkLWJtYy1mYWNlYm9vay10aW9nYXBhc3MuZHRzIHwgNSAmIzQzOyYjNDM7JiM0Mzsm
+IzQzOyYjNDM7PGJyPg0KJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlv
+bnMoJiM0MzspPGJyPg0KPGJyPg0KJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290
+L2R0cy9hc3BlZWQtYm1jLWZhY2Vib29rLXRpb2dhcGFzcy5kdHMgYi9hcmNoL2FybS9ib290L2R0
+cy9hc3BlZWQtYm1jLWZhY2Vib29rLXRpb2dhcGFzcy5kdHM8YnI+DQombmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgaW5kZXgg
+NDJlMGQ3YThlOGQwLi5hMDU4ZmIyOTg1ZjcgMTAwNjQ0PGJyPg0KJm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IC0tLSBhL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2stdGlvZ2FwYXNzLmR0czxicj4NCiZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyAmIzQzOyYjNDM7JiM0MzsgYi9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtYm1jLWZh
+Y2Vib29rLXRpb2dhcGFzcy5kdHM8YnI+DQombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgQEAgLTY0LDYgJiM0Mzs2NCwxMSBA
+QDxicj4NCiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBzdGF0dXMgPSAmcXVvdDtv
+a2F5JnF1b3Q7Ozxicj4NCiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyB9Ozxicj4NCjxicj4NCiZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAm
+IzQzOyZhbXA7dnVhcnQgezxicj4NCiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAmIzQzOyZuYnNwOyZuYnNwOyAvLyBWVUFS
+VCBIb3N0IENvbnNvbGU8YnI+DQombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgJiM0MzsmbmJzcDsmbmJzcDsgc3RhdHVzID0g
+JnF1b3Q7b2theSZxdW90Ozs8YnI+DQombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgJiM0Mzt9Ozxicj4NCiZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAm
+IzQzOzxicj4NCiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAmYW1wO3VhcnQxIHs8YnI+DQombmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsgLy8gSG9zdCBDb25zb2xlPGJyPg0KJm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7IHN0YXR1cyA9ICZxdW90O29rYXkmcXVvdDs7PGJyPg0KJm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7IC0tPGJyPg0KJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDIuMTcuMTxicj4NCjxicj4NCjxicj4NCjxicj4NCjxicj4N
+Cjxicj4NCjxicj4NCjxicj4NCjwvZGl2Pg0KPC9zcGFuPjwvZm9udD48L2Rpdj4NCjwvYm9keT4N
+CjwvaHRtbD4NCg==
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-V1-->V2
- * New patch
----
- arch/arm/boot/dts/r8a77470.dtsi | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index c8a4651..d1037d7 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -325,6 +325,23 @@
- 			status = "disabled";
- 		};
- 
-+		hsusb0: hsusb@e6590000 {
-+			compatible = "renesas,usbhs-r8a77470",
-+				     "renesas,rcar-gen2-usbhs";
-+			reg = <0 0xe6590000 0 0x100>;
-+			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 704>;
-+			dmas = <&usb_dmac00 0>, <&usb_dmac00 1>,
-+			       <&usb_dmac10 0>, <&usb_dmac10 1>;
-+			dma-names = "ch0", "ch1", "ch2", "ch3";
-+			renesas,buswait = <4>;
-+			phys = <&usb0 1>;
-+			phy-names = "usb";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 704>;
-+			status = "disabled";
-+		};
-+
- 		usbphy0: usb-phy@e6590100 {
- 			compatible = "renesas,usb-phy-r8a77470",
- 				     "renesas,rcar-gen2-usb-phy";
-@@ -343,6 +360,24 @@
- 			};
- 		};
- 
-+		hsusb1: hsusb@e6598000 {
-+			compatible = "renesas,usbhs-r8a77470",
-+				     "renesas,rcar-gen2-usbhs";
-+			reg = <0 0xe6598000 0 0x100>;
-+			interrupts = <GIC_SPI 291 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 706>;
-+			dmas = <&usb_dmac01 0>, <&usb_dmac01 1>,
-+			       <&usb_dmac11 0>, <&usb_dmac11 1>;
-+			dma-names = "ch0", "ch1", "ch2", "ch3";
-+			renesas,buswait = <4>;
-+			/* We need to turn on usbphy0 to make usbphy1 to work */
-+			phys = <&usb1 1>;
-+			phy-names = "usb";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 706>;
-+			status = "disabled";
-+		};
-+
- 		usbphy1: usb-phy@e6598100 {
- 			compatible = "renesas,usb-phy-r8a77470",
- 				     "renesas,rcar-gen2-usb-phy";
--- 
-2.7.4
+--_000_CY4PR15MB1269927DE5C991C43BAF025CDD570CY4PR15MB1269namp_--
