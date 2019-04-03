@@ -1,16 +1,15 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 15/15] arm64: dts: marvell: Convert 7k/8k usb-phy
- properties to phy-supply
-Date: Wed, 3 Apr 2019 10:06:42 +0200
-Message-ID: <20190403100642.24648945@xps13>
-References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
- <20190401165131.23370-16-miquel.raynal@bootlin.com>
- <CAFBinCDG5vpSpvq=1XUZzu7RA-pDEcEqgrPr65BZ5esuGyGPjA@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 08/10] phy: tegra: Add PCIe PIPE2UPHY support
+Date: Wed, 3 Apr 2019 13:35:21 +0530
+Message-ID: <ee9bba31-c9ac-9275-6f55-f71fea1a33a0@ti.com>
+References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
+ <1553613207-3988-9-git-send-email-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFBinCDG5vpSpvq=1XUZzu7RA-pDEcEqgrPr65BZ5esuGyGPjA@mail.gmail.com>
+In-Reply-To: <1553613207-3988-9-git-send-email-vidyas@nvidia.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,71 +19,186 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, tiwai@suse.de, spujar@nvidia.com, skomatineni@nvidia.com, liviu.dudau@arm.com, krzk@kernel.org, heiko@sntech.de, horms+renesas@verge.net.au, olof@lixom.net, maxime.ripard@bootlin.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, jagan@amarulasolutions.com, enric.balletbo@collabora.com, ezequiel@collabora.com, stefan.wahren@i2se.com, marc.w.gonzalez@free.fr, l.stach@pengutronix.de, tpiepho@impinj.com, hayashi.kunihiko@socionext.com, yue.wang@amlogic.com, shawn.lin@rock-chips.com, xiaowei.bao@nxp.com
+Cc: devicetree@vger.kernel.org, mmaddireddy@nvidia.com, kthota@nvidia.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFydGluLAoKUm9iLCBhIGZldyBxdWVzdGlvbnMgZm9yIHlvdSBiZWxvdyA6KQoKTWFydGlu
-IEJsdW1lbnN0aW5nbCA8bWFydGluLmJsdW1lbnN0aW5nbEBnb29nbGVtYWlsLmNvbT4gd3JvdGUg
-b24gVHVlLAoyIEFwciAyMDE5IDIxOjM1OjI2ICswMjAwOgoKPiBIaSBNaXF1ZWwsCj4gCj4gdGhh
-bmsgeW91IGZvciBrZWVwaW5nIG1lIGluIHRoZSBsb29wIQo+IAo+IE9uIE1vbiwgQXByIDEsIDIw
-MTkgYXQgNjo1MiBQTSBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPiB3
-cm90ZToKPiA+Cj4gPiBVcGRhdGUgQXJhbWRhIDdrLzhrIERUcyB0byB1c2UgdGhlIHBoeS1zdXBw
-bHkgcHJvcGVydHkgb2YgdGhlIChyZWNlbnQpCj4gPiBnZW5lcmljIFBIWSBmcmFtZXdvcmsgaW5z
-dGVhZCBvZiB0aGUgKGxlZ2FjeSkgdXNiLXBoeSBwcmVwZXJ0eS4gQm90aAo+ID4gZW5hYmxlIHRo
-ZSBzdXBwbHkgd2hlbiB0aGUgUEhZIGlzIGVuYWJsZWQuCj4gPgo+ID4gVGhlIENPTVBIWSBub2Rl
-cyBvbmx5IHByb3ZpZGUgU0VSREVTIGxhbmVzIGNvbmZpZ3VyYXRpb24uIFRoZSBwb3dlcgo+ID4g
-c3VwcGx5IHRoYXQgaXMgcmVwcmVzZW50ZWQgYnkgdGhlIHBoeS1zdXBwbHkgcHJvcGVydHkgaXMg
-anVzdCBhCj4gPiByZWd1bGF0b3Igd2lyZWQgdG8gdGhlIFVTQiBjb25uZWN0b3IsIGhlbmNlIHRo
-ZSBjcmVhdGlvbiBvZiBjb25uZWN0b3IKPiA+IG5vZGVzIGFzIGNoaWxkIG9mIHRoZSBDT01QSFkg
-bm9kZXMgYW5kIHRoZSBzdXBwbHkgYXR0YWNoZWQgdG8gaXQuICAKPiBzaG91bGRuJ3QgdGhpcyBh
-bHNvIGJlIHJlZmxlY3RlZCBpbiB0aGUgZHQtYmluZGluZ3M/CgpJIGRvbid0IHRoaW5rIGl0IGRl
-c2VydmVzIGFuIHVwZGF0ZSBpbiB0aGUgYmluZGluZ3MgYXMgdGhpcyBpcyBqdXN0IGFuCnVwZGF0
-ZSBmb3IgYSBiZXR0ZXIgaGFyZHdhcmUgcmVwcmVzZW50YXRpb24uIFRoZSBDT01QSFkgYmxvY2sg
-aXMKYWxyZWFkeSBkb2N1bWVudGVkLCB0aGUgY29ubmVjdG9yIG9uZSB0b28uIEkgdGhvdWdodCBh
-ZGRpbmcgYSBjb25uZWN0b3IKbm9kZSBpbiB0aGUgQ09NUEhZIG5vZGUgd2FzIG9rYXkgd2hlbiBJ
-IHJlYWQgUm9iJ3MgYW5zd2VyIHRvIHlvdXIKc2VyaWVzIGFzIHRoaXMgaGFzIG5vdGhpbmcgdG8g
-ZG8gd2l0aCB0aGUgSVAgaXRzZWxmIGJ1dCBpcyBqdXN0CmRlc2NyaWJpbmcgaG93IHRoZSBib2Fy
-ZCBpcyBidWlsdC4gTWF5YmUgUm9iIGNhbiBjb25maXJtIHRoaXM/Cgo+IAo+ID4gQ2M6IE1hcnRp
-biBCbHVtZW5zdGluZ2wgPG1hcnRpbi5ibHVtZW5zdGluZ2xAZ29vZ2xlbWFpbC5jb20+Cj4gPiBT
-aWduZWQtb2ZmLWJ5OiBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPgo+
-ID4gLS0tCj4gPiAgLi4uL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTcwNDAtZGIuZHRz
-IHwgMjYgKysrKysrKysrKy0tLS0tLS0tLQo+ID4gIC4uLi9tYXJ2ZWxsL2FybWFkYS04MDQwLWNs
-ZWFyZm9nLWd0LThrLmR0cyAgICB8IDEzICsrKysrLS0tLS0KPiA+ICAuLi4vYXJtNjQvYm9vdC9k
-dHMvbWFydmVsbC9hcm1hZGEtODA0MC1kYi5kdHMgfCAxMyArKysrKy0tLS0tCj4gPiAgLi4uL2Jv
-b3QvZHRzL21hcnZlbGwvYXJtYWRhLTgwNDAtbWNiaW4uZHRzaSAgIHwgMTMgKysrKystLS0tLQo+
-ID4gIDQgZmlsZXMgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKSwgMzAgZGVsZXRpb25zKC0pCj4g
-Pgo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtNzA0
-MC1kYi5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTcwNDAtZGIuZHRz
-Cj4gPiBpbmRleCAxMzFjZTQyMjlkYjAuLjRiOGRmMzU5YjFjYyAxMDA2NDQKPiA+IC0tLSBhL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtNzA0MC1kYi5kdHMKPiA+ICsrKyBiL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtNzA0MC1kYi5kdHMKPiA+IEBAIC00NSwx
-NiArNDUsNiBAQAo+ID4gICAgICAgICAgICAgICAgIGVuYWJsZS1hY3RpdmUtaGlnaDsKPiA+ICAg
-ICAgICAgICAgICAgICBncGlvID0gPCZleHBhbmRlcjAgMSBHUElPX0FDVElWRV9ISUdIPjsKPiA+
-ICAgICAgICAgfTsKPiA+IC0KPiA+IC0gICAgICAgY3AwX3VzYjNfMF9waHk6IGNwMC11c2IzLTAt
-cGh5IHsKPiA+IC0gICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInVzYi1ub3AteGNlaXYiOwo+
-ID4gLSAgICAgICAgICAgICAgIHZjYy1zdXBwbHkgPSA8JmNwMF9yZWdfdXNiM18wX3ZidXM+Owo+
-ID4gLSAgICAgICB9Owo+ID4gLQo+ID4gLSAgICAgICBjcDBfdXNiM18xX3BoeTogY3AwLXVzYjMt
-MS1waHkgewo+ID4gLSAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAidXNiLW5vcC14Y2VpdiI7
-Cj4gPiAtICAgICAgICAgICAgICAgdmNjLXN1cHBseSA9IDwmY3AwX3JlZ191c2IzXzFfdmJ1cz47
-Cj4gPiAtICAgICAgIH07Cj4gPiAgfTsKPiA+Cj4gPiAgJmkyYzAgewo+ID4gQEAgLTIwMCwxNSAr
-MTkwLDI3IEBACj4gPiAgICAgICAgIH07Cj4gPiAgfTsKPiA+Cj4gPiArJmNwMF9jb21waHkxIHsK
-PiA+ICsgICAgICAgY3AwX3VzYmgwX2NvbjogY29ubmVjdG9yIHsKPiA+ICsgICAgICAgICAgICAg
-ICBjb21wYXRpYmxlID0gInVzYi1hLWNvbm5lY3RvciI7Cj4gPiArICAgICAgICAgICAgICAgcGh5
-LXN1cHBseSA9IDwmY3AwX3JlZ191c2IzXzBfdmJ1cz47Cj4gPiArICAgICAgIH07Cj4gPiArfTsg
-IAo+IChkaXNjbGFpbWVyOiBJIGRvbid0IGhhdmUgYW55IGJvYXJkIHdpdGggYSBtYXJ2ZWxsIFNv
-Qywgc28gSSBkb24ndAo+IHVuZGVyc3RhbmQgaG93IGl0IHdvcmtzIGFuZCBJIGNhbid0IGRlYnVn
-IGl0KQo+IEkga25vdyBhYm91dCB0aGUgInBoeS1zdXBwbHkiIHByb3BlcnR5IGluc2lkZSB0aGUg
-UEhZIG5vZGUgaXRzZWxmCj4gKHRoYXQgd291bGQgYmUgY3AwX2NvbXBoeTEgaW4gdGhpcyBjYXNl
-KS4KPiBUaGUgY29ubmVjdG9yIGJpbmRpbmcgZG9lcyBub3QgbWVudGlvbiBhIHBoeS1zdXBwbHkg
-cHJvcGVydHk6Cj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nvbm5lY3Rvci91
-c2ItY29ubmVjdG9yLnR4dAoKVGhhdCdzIHJpZ2h0LCBjYW4gUm9iIGNvbmZpcm0gdGhhdCB0aGlz
-IGlzIHZhbGlkPyBJZiB5ZXMgSSBjYW4gYWRkIGFuCm9wdGlvbmFsICJwaHktc3VwcGx5IiBwcm9w
-ZXJ0eSB0aGVyZS4KCj4gSSBkb24ndCB1bmRlcnN0YW5kIHdoaWNoIGRyaXZlciBlbmFibGVzIHRo
-ZSBwaHktc3VwcGx5IHdoZW4gaXQncyBwYXJ0Cj4gb2YgYSAiY29ubmVjdG9yIiBjaGlsZC1ub2Rl
-Lgo+IGRvIHlvdSBoYXZlIGEgaGludCB3aGVyZSBJIHNob3VsZCBzdGFydCBsb29raW5nPwoKSSBo
-b25lc3RseSBoYXZlIG5vIGlkZWEsIGJ1dCBhcHBhcmVudGx5IGl0IHdvcmtzLgoKClRoYW5rcywK
-TWlxdcOobAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+Hi,
+
+On 26/03/19 8:43 PM, Vidya Sagar wrote:
+> Synopsys DesignWare core based PCIe controllers in Tegra 194 SoC interface
+> with Universal PHY (UPHY) module through a PIPE2UPHY (P2U) module.
+> For each PCIe lane of a controller, there is a P2U unit instantiated at
+> hardware level. This driver provides support for the programming required
+> for each P2U that is going to be used for a PCIe controller.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  drivers/phy/tegra/Kconfig             |   7 ++
+>  drivers/phy/tegra/Makefile            |   1 +
+>  drivers/phy/tegra/pcie-p2u-tegra194.c | 138 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 146 insertions(+)
+>  create mode 100644 drivers/phy/tegra/pcie-p2u-tegra194.c
+> 
+> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
+> index a3b1de953fb7..1460c060fa70 100644
+> --- a/drivers/phy/tegra/Kconfig
+> +++ b/drivers/phy/tegra/Kconfig
+> @@ -6,3 +6,10 @@ config PHY_TEGRA_XUSB
+>  
+>  	  To compile this driver as a module, choose M here: the module will
+>  	  be called phy-tegra-xusb.
+> +
+> +config PHY_TEGRA194_PCIE_P2U
+> +        tristate "NVIDIA Tegra P2U PHY Driver"
+> +        depends on ARCH_TEGRA
+
+COMPILE_TEST
+> +        select GENERIC_PHY
+> +        help
+> +          Enable this to support the P2U (PIPE to UPHY) that is part of Tegra 19x SOCs.
+> diff --git a/drivers/phy/tegra/Makefile b/drivers/phy/tegra/Makefile
+> index 898589238fd9..f85b2c86643d 100644
+> --- a/drivers/phy/tegra/Makefile
+> +++ b/drivers/phy/tegra/Makefile
+> @@ -4,3 +4,4 @@ phy-tegra-xusb-y += xusb.o
+>  phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_124_SOC) += xusb-tegra124.o
+>  phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_132_SOC) += xusb-tegra124.o
+>  phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_210_SOC) += xusb-tegra210.o
+> +obj-$(CONFIG_PHY_TEGRA194_PCIE_P2U) += pcie-p2u-tegra194.o
+> diff --git a/drivers/phy/tegra/pcie-p2u-tegra194.c b/drivers/phy/tegra/pcie-p2u-tegra194.c
+> new file mode 100644
+> index 000000000000..bb2412ec4765
+> --- /dev/null
+> +++ b/drivers/phy/tegra/pcie-p2u-tegra194.c
+> @@ -0,0 +1,138 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * P2U (PIPE to UPHY) driver for Tegra T194 SoC
+> + *
+> + * Copyright (C) 2018 NVIDIA Corporation.
+
+2019
+> + *
+> + * Author: Vidya Sagar <vidyas@nvidia.com>
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/of.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/delay.h>
+> +#include <linux/of_platform.h>
+> +#include <soc/tegra/bpmp-abi.h>
+> +
+> +#define P2U_PERIODIC_EQ_CTRL_GEN3	0xc0
+> +#define P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN		BIT(0)
+> +#define P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
+> +#define P2U_PERIODIC_EQ_CTRL_GEN4	0xc4
+> +#define P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
+> +
+> +#define P2U_RX_DEBOUNCE_TIME				0xa4
+> +#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK	0xFFFF
+> +#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL		160
+> +
+> +struct tegra_p2u {
+> +	void __iomem		*base;
+> +};
+> +
+> +static int tegra_p2u_power_off(struct phy *x)
+> +{
+> +	return 0;
+
+Empty phy_ops are not required.
+> +}
+> +
+> +static int tegra_p2u_power_on(struct phy *x)
+> +{
+> +	u32 val;
+> +	struct tegra_p2u *phy = phy_get_drvdata(x);
+> +
+> +	val = readl(phy->base + P2U_PERIODIC_EQ_CTRL_GEN3);
+> +	val &= ~P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN;
+> +	val |= P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN;
+> +	writel(val, phy->base + P2U_PERIODIC_EQ_CTRL_GEN3);
+> +
+> +	val = readl(phy->base + P2U_PERIODIC_EQ_CTRL_GEN4);
+> +	val |= P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN;
+> +	writel(val, phy->base + P2U_PERIODIC_EQ_CTRL_GEN4);
+> +
+> +	val = readl(phy->base + P2U_RX_DEBOUNCE_TIME);
+> +	val &= ~P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK;
+> +	val |= P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL;
+> +	writel(val, phy->base + P2U_RX_DEBOUNCE_TIME);
+
+This looks more like a init configuration rather than power on.
+> +
+> +	return 0;
+> +}
+> +
+> +static int tegra_p2u_init(struct phy *x)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int tegra_p2u_exit(struct phy *x)
+> +{
+> +	return 0;
+> +}
+
+Empty functions are not required.
+> +
+> +static const struct phy_ops ops = {
+> +	.init		= tegra_p2u_init,
+> +	.exit		= tegra_p2u_exit,
+> +	.power_on	= tegra_p2u_power_on,
+> +	.power_off	= tegra_p2u_power_off,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static int tegra_p2u_probe(struct platform_device *pdev)
+> +{
+> +	struct tegra_p2u *phy;
+> +	struct phy *generic_phy;
+> +	struct phy_provider *phy_provider;
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *res;
+> +
+> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+> +	if (!phy)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "base");
+> +	phy->base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(phy->base))
+> +		return PTR_ERR(phy->base);
+> +
+> +	platform_set_drvdata(pdev, phy);
+> +
+> +	generic_phy = devm_phy_create(dev, NULL, &ops);
+> +	if (IS_ERR(generic_phy))
+> +		return PTR_ERR(generic_phy);
+> +
+> +	phy_set_drvdata(generic_phy, phy);
+> +
+> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> +	if (IS_ERR(phy_provider))
+> +		return PTR_ERR(phy_provider);
+> +
+
+return PTR_ERR_OR_ZERO(phy_provider);
+> +	return 0;
+> +}
+> +
+> +static int tegra_p2u_remove(struct platform_device *pdev)
+> +{
+> +	return 0;
+> +}
+
+not required.
+
+Thanks
+Kishon
