@@ -1,36 +1,108 @@
-From: =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
-Subject: [PATCH v1 5/5] ARM: dts: stm32: remove phy-dsi-supply property on
- stm32mp157c-dk2 board
-Date: Wed, 3 Apr 2019 10:16:29 +0200
-Message-ID: <1554279389-27377-6-git-send-email-yannick.fertre@st.com>
-References: <1554279389-27377-1-git-send-email-yannick.fertre@st.com>
+From: Vabhav Sharma <vabhav.sharma@nxp.com>
+Subject: RE: [PATCH v1 1/4] dt-bindings: arm64: add compatible for LX2160A
+Date: Wed, 3 Apr 2019 08:27:38 +0000
+Message-ID: <VI1PR04MB480070B517B9D9961C9E8187F3570@VI1PR04MB4800.eurprd04.prod.outlook.com>
+References: <1551132245-6089-1-git-send-email-vabhav.sharma@nxp.com>
+ <1551132245-6089-2-git-send-email-vabhav.sharma@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1554279389-27377-1-git-send-email-yannick.fertre@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yannick Fertre <yannick.fertre@st.com>, Philippe Cornu <philippe.cornu@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>, Vincent Abriou <vincent.abriou@st.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1551132245-6089-2-git-send-email-vabhav.sharma@nxp.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: Leo Li <leoyang.li@nxp.com>, Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>, Andy Tang <andy.tang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwcm9wZXJ0eSBpcyBhbHJlYWR5IGRlZmluZWQgaW50byBzdG0zMm1wMTU3Yy5kdHNpIGZp
-bGUuCgpTaWduZWQtb2ZmLWJ5OiBZYW5uaWNrIEZlcnRyw6kgPHlhbm5pY2suZmVydHJlQHN0LmNv
-bT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9zdG0zMm1wMTU3Yy1kazIuZHRzIHwgMSAtCiAxIGZp
-bGUgY2hhbmdlZCwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L3N0bTMybXAxNTdjLWRrMi5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9zdG0zMm1wMTU3Yy1kazIu
-ZHRzCmluZGV4IDlhODFkMmQuLmQ0MDM4ZTcgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L3N0bTMybXAxNTdjLWRrMi5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJtcDE1N2Mt
-ZGsyLmR0cwpAQCAtMTcsNyArMTcsNiBAQAogCSNhZGRyZXNzLWNlbGxzID0gPDE+OwogCSNzaXpl
-LWNlbGxzID0gPDA+OwogCXN0YXR1cyA9ICJva2F5IjsKLQlwaHktZHNpLXN1cHBseSA9IDwmcmVn
-MTg+OwogCiAJcG9ydHMgewogCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKLS0gCjIuNy40CgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Hello Maintainers,
+Please merge below patch.
+
+Regards,
+Vabhav
+
+> -----Original Message-----
+> From: Vabhav Sharma <vabhav.sharma@nxp.com>
+> Sent: Tuesday, February 26, 2019 3:41 PM
+> To: sudeep.holla@arm.com; oss@buserror.net; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; robh+dt@kernel.org; mark.rutland@arm.com;
+> linuxppc-dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org;
+> mturquette@baylibre.com; sboyd@kernel.org; rjw@rjwysocki.net;
+> viresh.kumar@linaro.org; linux-clk@vger.kernel.org; linux-
+> pm@vger.kernel.org; linux-kernel-owner@vger.kernel.org;
+> catalin.marinas@arm.com; will.deacon@arm.com;
+> gregkh@linuxfoundation.org; arnd@arndb.de;
+> kstewart@linuxfoundation.org; yamada.masahiro@socionext.com; Leo Li
+> <leoyang.li@nxp.com>; shawnguo@kernel.org
+> Cc: linux@armlinux.org.uk; adrian.hunter@intel.com;
+> ulf.hansson@linaro.org; Vabhav Sharma <vabhav.sharma@nxp.com>
+> Subject: [PATCH v1 1/4] dt-bindings: arm64: add compatible for LX2160A
+>=20
+> Add compatible for LX2160A SoC,QDS and RDB board Add lx2160a
+> compatible for clockgen and dcfg
+>=20
+> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/arm/freescale/fsl,layerscape-dcfg.txt           |  2 +-
+>  Documentation/devicetree/bindings/arm/fsl.txt                | 12 ++++++=
+++++++
+>  Documentation/devicetree/bindings/clock/qoriq-clock.txt      |  1 +
+>  3 files changed, 14 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,layersca=
+pe-
+> dcfg.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,layerscape=
+-
+> dcfg.txt
+> index b5cb374..dc76046 100644
+> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,layerscape-
+> dcfg.txt
+> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,layerscape-dcf
+> +++ g.txt
+> @@ -8,7 +8,7 @@ Required properties:
+>    - compatible: Should contain a chip-specific compatible string,
+>  	Chip-specific strings are of the form "fsl,<chip>-dcfg",
+>  	The following <chip>s are known to be supported:
+> -	ls1012a, ls1021a, ls1043a, ls1046a, ls2080a.
+> +	ls1012a, ls1021a, ls1043a, ls1046a, ls2080a, lx2160a.
+>=20
+>    - reg : should contain base address and length of DCFG memory-mapped
+> registers
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt
+> b/Documentation/devicetree/bindings/arm/fsl.txt
+> index 7fbc424..baef162 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.txt
+> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
+> @@ -235,3 +235,15 @@ Required root node properties:
+>  LS2088A ARMv8 based RDB Board
+>  Required root node properties:
+>      - compatible =3D "fsl,ls2088a-rdb", "fsl,ls2088a";
+> +
+> +LX2160A SoC
+> +Required root node properties:
+> +    - compatible =3D "fsl,lx2160a";
+> +
+> +LX2160A ARMv8 based QDS Board
+> +Required root node properties:
+> +    - compatible =3D "fsl,lx2160a-qds", "fsl,lx2160a";
+> +
+> +LX2160A ARMv8 based RDB Board
+> +Required root node properties:
+> +    - compatible =3D "fsl,lx2160a-rdb", "fsl,lx2160a";
+> diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> index c655f28..f322989 100644
+> --- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> @@ -43,6 +43,7 @@ Required properties:
+>  	* "fsl,ls1046a-clockgen"
+>  	* "fsl,ls1088a-clockgen"
+>  	* "fsl,ls2080a-clockgen"
+> +	* "fsl,lx2160a-clockgen"
+>  	Chassis-version clock strings include:
+>  	* "fsl,qoriq-clockgen-1.0": for chassis 1.0 clocks
+>  	* "fsl,qoriq-clockgen-2.0": for chassis 2.0 clocks
+> --
+> 2.7.4
