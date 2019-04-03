@@ -1,94 +1,102 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v11 2/8] mfd: bd70528: Support ROHM bd70528 PMIC - core
-Date: Wed, 3 Apr 2019 10:30:15 +0100
-Message-ID: <20190403093015.GJ11301@dell>
-References: <cover.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
- <39efebe0396dd42de30d37c6f3c1ef2926c90210.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
- <20190403073152.GM4187@dell>
- <20190403084732.GA3493@localhost.localdomain>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: Add binding documentation for TI
+ syscon gate clock
+Date: Wed, 3 Apr 2019 12:30:05 +0300
+Message-ID: <a998b977-99ef-876e-a226-4f1738392f9f@ti.com>
+References: <20190312090518.28666-1-vigneshr@ti.com>
+ <20190312090518.28666-2-vigneshr@ti.com> <20190328123142.GA6229@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190403084732.GA3493@localhost.localdomain>
+In-Reply-To: <20190328123142.GA6229@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, heikki.haikola@fi.rohmeurop
+To: Rob Herring <robh@kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 03 Apr 2019, Matti Vaittinen wrote:
+On 28/03/2019 14:31, Rob Herring wrote:
+> On Tue, Mar 12, 2019 at 02:35:17PM +0530, Vignesh Raghavendra wrote:
+>> Add dt bindings for TI syscon gate clock.
+>>
+>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+>> ---
+>>   .../bindings/clock/ti,syscon-gate-clock.txt   | 35 +++++++++++++++++++
+>>   1 file changed, 35 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/ti,syscon-gate-clock.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/ti,syscon-gate-clock.txt b/Documentation/devicetree/bindings/clock/ti,syscon-gate-clock.txt
+>> new file mode 100644
+>> index 000000000000..f2bc4281ddba
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/ti,syscon-gate-clock.txt
+>> @@ -0,0 +1,35 @@
+>> +TI syscon gate clock
+>> +
+>> +The gate clock node must be provided inside a system controller node.
+>> +
+>> +Required:
+>> +- comaptible: Must be "ti,syscon-gate-clock"
+>> +- reg: Offset of register that controls the clock within syscon regmap
+>> +- ti,clock-bit-idx: bit index that control gate/ungating of clock
+>> +- clocks: phandle to the clock parent
+>> +- #clock-cells: must be <0>
+>> +
+>> +Example:
+>> +	ctrlmmr_epwm_ctrl: syscon@104140{
+>> +		compatible = "syscon", "simple-bus";
+> 
+> Can't be both of these...
 
-> Hello Lee,
-> 
-> Thanks for taking a look on this again =) I agree with most of the
-> comments and correct them at next version.
-> 
-> On Wed, Apr 03, 2019 at 08:31:52AM +0100, Lee Jones wrote:
-> > On Mon, 25 Mar 2019, Matti Vaittinen wrote:
-> > 
-> > > ROHM BD70528MWV is an ultra-low quiescent current general
-> > > purpose single-chip power management IC for battery-powered
-> > > portable devices.
-> > > 
-> > > Add MFD core which enables chip access for following subdevices:
-> > > 	- regulators/LED drivers
-> > > 	- battery-charger
-> > > 	- gpios
-> > > 	- 32.768kHz clk
-> > > 	- RTC
-> > > 	- watchdog
-> > > 
-> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > + * Mapping of main IRQ register bits to sub irq register offsets so
-> > 
-> > "sub-IRQ"
-> > 
-> > > + * that we can access corect sub IRQ registers based on bits that
-> > 
-> > "sub IRQ" is also fine, but please standardise.
-> > 
-> > I do prefer "sub-IRQ" though.
-> 
-> I'll go with "sub-IRQ" then
-> 
-> > > +
-> > > +#define WD_CTRL_MAGIC1 0x55
-> > > +#define WD_CTRL_MAGIC2 0xAA
-> > > +/**
-> > > + * bd70528_wdt_set - arm or disarm watchdog timer
-> > > + *
-> > > + * @data:	device data for the PMIC instance we want to operate on
-> > > + * @enable:	new state of WDT. zero to disable, non zero to enable
-> > > + * @old_state:	previous state of WDT will be filled here
-> > > + *
-> > > + * Arm or disarm WDT on BD70528 PMIC. Expected to be called only by
-> > > + * BD70528 RTC and BD70528 WDT drivers. The rtc_timer_lock must be taken
-> > > + * by calling bd70528_wdt_lock before calling bd70528_wdt_set.
-> > > + */
-> > > +int bd70528_wdt_set(struct rohm_regmap_dev *data, int enable, int *old_state)
-> > 
-> > Why doesn't this reside in the watchdog driver?
-> 
-> If my memory serves me right we shortly discussed this already during v8
-> review ;) Cant blame you though as I have seen some of the mail traffic
-> going through your inbox :D
-> 
-> The motivation to have the functions exported from MFD is to not create
-> sirect dependency between RTC and WDT. There may be cases where we want
-> to leave either RTC or WDT out of compilation. MFD is always needed so
-> the dependency from MFD to RTC/WDT does not harm.
-> 
-> (Here's some discussion necromancy if you are interested in re-reading
-> how we did end up with this implementation:
-> https://lore.kernel.org/lkml/20190212091723.GZ20638@dell/)
-> 
-> I hope you are still Ok with having the WDT control functions in MFD.
+Is this a hard requirement? We seem to have few instances in the various 
+DTS files for various vendors where this is done, syscon is paired with 
+simple-mfd or simple-bus, or something else.
 
-OOI, why does the RTC need to control the WDT?
+Basically, syscon by itself does not probe its children, and you can't 
+have the simple syscon support from kernel side if you don't have the 
+syscon compatible. Alternative is that we don't add any of the syscon 
+children under the syscon but add them as separate nodes outside it.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+The above is not an issue for this patch itself if we ditch the separate 
+clock nodes, but it is more of a question about the syscon functionality 
+itself.
+
+-Tero
+
+> 
+>> +		reg = <0x0 0x104140 0x0 0x18>;
+>> +		ranges = <0x0 0x0 0x104140>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		ehrpwm0_tbclk: clk@0 {
+>> +			compatible = "ti,syscon-gate-clock";
+>> +			reg = <0x0>;
+>> +			#clock-cells = <0>;
+>> +			clocks = <&k3_clks 40 0>;
+>> +			ti,clock-bit-idx = <0>;
+> 
+> This would imply you have multiple nodes at one address which is
+> discouraged.
+> 
+>> +		};
+> 
+> We generally don't describe clocks as 1 clock per node. Give the parent
+> a specific compatible and make it a clock provider.
+> 
+>> +
+>> +		ehrpwm1_tbclk: clk@4 {
+>> +			compatible = "ti,syscon-gate-clock";
+>> +			reg = <0x4>;
+>> +			#clock-cells = <0>;
+>> +			clocks = <&k3_clks 41 0>;
+>> +			ti,clock-bit-idx = <0>;
+>> +		};
+>> +	};
+>> -- 
+>> 2.21.0
+>>
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
