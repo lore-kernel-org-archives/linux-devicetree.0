@@ -1,305 +1,135 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [PATCH v12 1/8] mfd: regulator: clk: split rohm-bd718x7.h
-Date: Wed, 3 Apr 2019 15:38:40 +0300
-Message-ID: <81d7136a77a2786c122a1cbf3289c96c51ded79f.1554294791.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1554294791.git.matti.vaittinen@fi.rohmeurope.com>
+From: Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH 2/2] ftpm: firmware TPM running in TEE
+Date: Wed, 3 Apr 2019 09:40:44 -0300
+Message-ID: <20190403124044.GA15230@ziepe.ca>
+References: <20190402193316.15144-1-sashal@kernel.org>
+ <20190402193316.15144-2-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1554294791.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20190402193316.15144-2-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mazziesaccount@gmail.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.ro
+To: Sasha Levin <sashal@kernel.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, linux-kernel@microsoft.com, bryankel@microsoft.com, thiruan@microsoft.com, suredd@microsoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Split the bd718x7.h to ROHM common and bd718x7 specific parts
-so that we do not need to add same things in every new ROHM
-PMIC header. Please note that this change requires changes also
-in bd718x7 sub-device drivers for regulators and clk.
+On Tue, Apr 02, 2019 at 03:33:16PM -0400, Sasha Levin wrote:
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Acked-by: Mark Brown <broonie@kernel.org>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/clk/clk-bd718x7.c             |  6 +++---
- drivers/mfd/rohm-bd718x7.c            | 23 ++++++++++++-----------
- drivers/regulator/bd718x7-regulator.c | 25 +++++++++++++------------
- include/linux/mfd/rohm-bd718x7.h      | 22 ++++++++--------------
- include/linux/mfd/rohm-generic.h      | 20 ++++++++++++++++++++
- 5 files changed, 56 insertions(+), 40 deletions(-)
- create mode 100644 include/linux/mfd/rohm-generic.h
+> +/*
+> + * Undo what has been done in ftpm_tee_probe
+> + */
+> +static void ftpm_tee_deinit(struct ftpm_tee_private *pvt_data)
+> +{
+> +	/* Release the chip */
+> +	if (pvt_data->state & STATE_REGISTERED_FLAG)
+> +		tpm_chip_unregister(pvt_data->chip);
+> +
+> +	if (pvt_data->ctx != NULL)	{
+> +
+> +		/* Free the shared memory pool */
+> +		if (pvt_data->state & STATE_TEE_SHMALLOC_FLAG)
+> +			tee_shm_free(pvt_data->shm);
+> +
+> +		/* close the existing session with fTPM TA*/
+> +		if (pvt_data->state & STATE_TEE_OPENED_FLAG)
+> +			tee_client_close_session(pvt_data->ctx,
+> +				pvt_data->session);
+> +
+> +		/* close the context with TEE driver */
+> +		tee_client_close_context(pvt_data->ctx);
+> +	}
 
-diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
-index 60422c72d142..461228ebf703 100644
---- a/drivers/clk/clk-bd718x7.c
-+++ b/drivers/clk/clk-bd718x7.c
-@@ -17,7 +17,7 @@ struct bd718xx_clk {
- 	u8 reg;
- 	u8 mask;
- 	struct platform_device *pdev;
--	struct bd718xx *mfd;
-+	struct rohm_regmap_dev *mfd;
- };
- 
- static int bd71837_clk_set(struct clk_hw *hw, int status)
-@@ -68,7 +68,7 @@ static int bd71837_clk_probe(struct platform_device *pdev)
- 	int rval = -ENOMEM;
- 	const char *parent_clk;
- 	struct device *parent = pdev->dev.parent;
--	struct bd718xx *mfd = dev_get_drvdata(parent);
-+	struct rohm_regmap_dev *mfd = dev_get_drvdata(parent);
- 	struct clk_init_data init = {
- 		.name = "bd718xx-32k-out",
- 		.ops = &bd71837_clk_ops,
-@@ -119,5 +119,5 @@ static struct platform_driver bd71837_clk = {
- module_platform_driver(bd71837_clk);
- 
- MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
--MODULE_DESCRIPTION("BD71837 chip clk driver");
-+MODULE_DESCRIPTION("BD71837/BD71847 chip clk driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
-index a29d529a96f4..7beb444a57cb 100644
---- a/drivers/mfd/rohm-bd718x7.c
-+++ b/drivers/mfd/rohm-bd718x7.c
-@@ -98,18 +98,19 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 		return -ENOMEM;
- 
- 	bd718xx->chip_irq = i2c->irq;
--	bd718xx->chip_type = (unsigned int)(uintptr_t)
-+	bd718xx->chip.chip_type = (unsigned int)(uintptr_t)
- 				of_device_get_match_data(&i2c->dev);
--	bd718xx->dev = &i2c->dev;
-+	bd718xx->chip.dev = &i2c->dev;
- 	dev_set_drvdata(&i2c->dev, bd718xx);
- 
--	bd718xx->regmap = devm_regmap_init_i2c(i2c, &bd718xx_regmap_config);
--	if (IS_ERR(bd718xx->regmap)) {
-+	bd718xx->chip.regmap = devm_regmap_init_i2c(i2c,
-+						    &bd718xx_regmap_config);
-+	if (IS_ERR(bd718xx->chip.regmap)) {
- 		dev_err(&i2c->dev, "regmap initialization failed\n");
--		return PTR_ERR(bd718xx->regmap);
-+		return PTR_ERR(bd718xx->chip.regmap);
- 	}
- 
--	ret = devm_regmap_add_irq_chip(&i2c->dev, bd718xx->regmap,
-+	ret = devm_regmap_add_irq_chip(&i2c->dev, bd718xx->chip.regmap,
- 				       bd718xx->chip_irq, IRQF_ONESHOT, 0,
- 				       &bd718xx_irq_chip, &bd718xx->irq_data);
- 	if (ret) {
-@@ -118,7 +119,7 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 	}
- 
- 	/* Configure short press to 10 milliseconds */
--	ret = regmap_update_bits(bd718xx->regmap,
-+	ret = regmap_update_bits(bd718xx->chip.regmap,
- 				 BD718XX_REG_PWRONCONFIG0,
- 				 BD718XX_PWRBTN_PRESS_DURATION_MASK,
- 				 BD718XX_PWRBTN_SHORT_PRESS_10MS);
-@@ -129,7 +130,7 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 	}
- 
- 	/* Configure long press to 10 seconds */
--	ret = regmap_update_bits(bd718xx->regmap,
-+	ret = regmap_update_bits(bd718xx->chip.regmap,
- 				 BD718XX_REG_PWRONCONFIG1,
- 				 BD718XX_PWRBTN_PRESS_DURATION_MASK,
- 				 BD718XX_PWRBTN_LONG_PRESS_10S);
-@@ -149,7 +150,7 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 
- 	button.irq = ret;
- 
--	ret = devm_mfd_add_devices(bd718xx->dev, PLATFORM_DEVID_AUTO,
-+	ret = devm_mfd_add_devices(bd718xx->chip.dev, PLATFORM_DEVID_AUTO,
- 				   bd718xx_mfd_cells,
- 				   ARRAY_SIZE(bd718xx_mfd_cells), NULL, 0,
- 				   regmap_irq_get_domain(bd718xx->irq_data));
-@@ -162,11 +163,11 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- static const struct of_device_id bd718xx_of_match[] = {
- 	{
- 		.compatible = "rohm,bd71837",
--		.data = (void *)BD718XX_TYPE_BD71837,
-+		.data = (void *)ROHM_CHIP_TYPE_BD71837,
- 	},
- 	{
- 		.compatible = "rohm,bd71847",
--		.data = (void *)BD718XX_TYPE_BD71847,
-+		.data = (void *)ROHM_CHIP_TYPE_BD71847,
- 	},
- 	{ }
- };
-diff --git a/drivers/regulator/bd718x7-regulator.c b/drivers/regulator/bd718x7-regulator.c
-index b2191be49670..1c8c8497ac0a 100644
---- a/drivers/regulator/bd718x7-regulator.c
-+++ b/drivers/regulator/bd718x7-regulator.c
-@@ -1152,12 +1152,12 @@ static int bd718xx_probe(struct platform_device *pdev)
- {
- 	struct bd718xx *mfd;
- 	struct regulator_config config = { 0 };
--	struct bd718xx_pmic_inits pmic_regulators[] = {
--		[BD718XX_TYPE_BD71837] = {
-+	struct bd718xx_pmic_inits pmic_regulators[ROHM_CHIP_TYPE_AMOUNT] = {
-+		[ROHM_CHIP_TYPE_BD71837] = {
- 			.r_datas = bd71837_regulators,
- 			.r_amount = ARRAY_SIZE(bd71837_regulators),
- 		},
--		[BD718XX_TYPE_BD71847] = {
-+		[ROHM_CHIP_TYPE_BD71847] = {
- 			.r_datas = bd71847_regulators,
- 			.r_amount = ARRAY_SIZE(bd71847_regulators),
- 		},
-@@ -1173,15 +1173,15 @@ static int bd718xx_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
--	if (mfd->chip_type >= BD718XX_TYPE_AMOUNT ||
--	    !pmic_regulators[mfd->chip_type].r_datas) {
-+	if (mfd->chip.chip_type >= ROHM_CHIP_TYPE_AMOUNT ||
-+	    !pmic_regulators[mfd->chip.chip_type].r_datas) {
- 		dev_err(&pdev->dev, "Unsupported chip type\n");
- 		err = -EINVAL;
- 		goto err;
- 	}
- 
- 	/* Register LOCK release */
--	err = regmap_update_bits(mfd->regmap, BD718XX_REG_REGLOCK,
-+	err = regmap_update_bits(mfd->chip.regmap, BD718XX_REG_REGLOCK,
- 				 (REGLOCK_PWRSEQ | REGLOCK_VREG), 0);
- 	if (err) {
- 		dev_err(&pdev->dev, "Failed to unlock PMIC (%d)\n", err);
-@@ -1200,7 +1200,8 @@ static int bd718xx_probe(struct platform_device *pdev)
- 	 * bit allowing HW defaults for power rails to be used
- 	 */
- 	if (!use_snvs) {
--		err = regmap_update_bits(mfd->regmap, BD718XX_REG_TRANS_COND1,
-+		err = regmap_update_bits(mfd->chip.regmap,
-+					 BD718XX_REG_TRANS_COND1,
- 					 BD718XX_ON_REQ_POWEROFF_MASK |
- 					 BD718XX_SWRESET_POWEROFF_MASK |
- 					 BD718XX_WDOG_POWEROFF_MASK |
-@@ -1215,17 +1216,17 @@ static int bd718xx_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	for (i = 0; i < pmic_regulators[mfd->chip_type].r_amount; i++) {
-+	for (i = 0; i < pmic_regulators[mfd->chip.chip_type].r_amount; i++) {
- 
- 		const struct regulator_desc *desc;
- 		struct regulator_dev *rdev;
- 		const struct bd718xx_regulator_data *r;
- 
--		r = &pmic_regulators[mfd->chip_type].r_datas[i];
-+		r = &pmic_regulators[mfd->chip.chip_type].r_datas[i];
- 		desc = &r->desc;
- 
- 		config.dev = pdev->dev.parent;
--		config.regmap = mfd->regmap;
-+		config.regmap = mfd->chip.regmap;
- 
- 		rdev = devm_regulator_register(&pdev->dev, desc, &config);
- 		if (IS_ERR(rdev)) {
-@@ -1254,7 +1255,7 @@ static int bd718xx_probe(struct platform_device *pdev)
- 		 */
- 		if (!use_snvs || !rdev->constraints->always_on ||
- 		    !rdev->constraints->boot_on) {
--			err = regmap_update_bits(mfd->regmap, r->init.reg,
-+			err = regmap_update_bits(mfd->chip.regmap, r->init.reg,
- 						 r->init.mask, r->init.val);
- 			if (err) {
- 				dev_err(&pdev->dev,
-@@ -1264,7 +1265,7 @@ static int bd718xx_probe(struct platform_device *pdev)
- 			}
- 		}
- 		for (j = 0; j < r->additional_init_amnt; j++) {
--			err = regmap_update_bits(mfd->regmap,
-+			err = regmap_update_bits(mfd->chip.regmap,
- 						 r->additional_inits[j].reg,
- 						 r->additional_inits[j].mask,
- 						 r->additional_inits[j].val);
-diff --git a/include/linux/mfd/rohm-bd718x7.h b/include/linux/mfd/rohm-bd718x7.h
-index fd194bfc836f..7f2dbde402a1 100644
---- a/include/linux/mfd/rohm-bd718x7.h
-+++ b/include/linux/mfd/rohm-bd718x7.h
-@@ -4,14 +4,9 @@
- #ifndef __LINUX_MFD_BD718XX_H__
- #define __LINUX_MFD_BD718XX_H__
- 
-+#include <linux/mfd/rohm-generic.h>
- #include <linux/regmap.h>
- 
--enum {
--	BD718XX_TYPE_BD71837 = 0,
--	BD718XX_TYPE_BD71847,
--	BD718XX_TYPE_AMOUNT
--};
--
- enum {
- 	BD718XX_BUCK1 = 0,
- 	BD718XX_BUCK2,
-@@ -321,18 +316,17 @@ enum {
- 	BD718XX_PWRBTN_LONG_PRESS_15S
- };
- 
--struct bd718xx_clk;
--
- struct bd718xx {
--	unsigned int chip_type;
--	struct device *dev;
--	struct regmap *regmap;
--	unsigned long int id;
-+	/*
-+	 * Please keep this as the first member here as some
-+	 * drivers (clk) supporting more than one chip may only know this
-+	 * generic struct 'struct rohm_regmap_dev' and assume it is
-+	 * the first chunk of parent device's private data.
-+	 */
-+	struct rohm_regmap_dev chip;
- 
- 	int chip_irq;
- 	struct regmap_irq_chip_data *irq_data;
--
--	struct bd718xx_clk *clk;
- };
- 
- #endif /* __LINUX_MFD_BD718XX_H__ */
-diff --git a/include/linux/mfd/rohm-generic.h b/include/linux/mfd/rohm-generic.h
-new file mode 100644
-index 000000000000..bff15ac26f2c
---- /dev/null
-+++ b/include/linux/mfd/rohm-generic.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/* Copyright (C) 2018 ROHM Semiconductors */
-+
-+#ifndef __LINUX_MFD_ROHM_H__
-+#define __LINUX_MFD_ROHM_H__
-+
-+enum {
-+	ROHM_CHIP_TYPE_BD71837 = 0,
-+	ROHM_CHIP_TYPE_BD71847,
-+	ROHM_CHIP_TYPE_BD70528,
-+	ROHM_CHIP_TYPE_AMOUNT
-+};
-+
-+struct rohm_regmap_dev {
-+	unsigned int chip_type;
-+	struct device *dev;
-+	struct regmap *regmap;
-+};
-+
-+#endif
--- 
-2.17.2
+all these flags are ugly, just use a normal goto unwind during probe
+please
 
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+> +
+> +	/* memory allocated with devm_kzalloc() is freed automatically */
+> +}
+> +
+> +/*
+> + * ftpm_tee_probe initialize the fTPM
+> + * @param: pdev, the platform_device description.
+> + * @return: 0 in case of success.
+> + *	 or a negative value describing the error.
+> + */
+> +static int ftpm_tee_probe(struct platform_device *pdev)
+> +{
+> +	int rc;
+> +	struct tpm_chip *chip;
+> +	struct device *dev = &pdev->dev;
+> +	struct ftpm_tee_private *pvt_data = NULL;
+> +	struct tee_ioctl_open_session_arg sess_arg;
+> +
+> +	dev_dbg(dev, "%s++\n", __func__);
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Please don't push tracing like this to the upstream kernel, we have
+ftrace and what not to do this generally :(
+
+> +	pvt_data = devm_kzalloc(dev, sizeof(struct ftpm_tee_private),
+> +				GFP_KERNEL);
+> +	if (!pvt_data)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(dev, pvt_data);
+> +
+> +	/* Open context with TEE driver */
+> +	pvt_data->ctx = tee_client_open_context(NULL, ftpm_tee_match, NULL,
+> +						NULL);
+> +	if (IS_ERR(pvt_data->ctx))	{
+> +		dev_err(dev, "%s:tee_client_open_context failed\n", __func__);
+> +		return -EPROBE_DEFER;
+> +	}
+> +
+> +	/* Open a session with fTPM TA*/
+> +	memset(&sess_arg, 0, sizeof(sess_arg));
+> +	memcpy(sess_arg.uuid, ftpm_ta_uuid.b, TEE_IOCTL_UUID_LEN);
+> +	sess_arg.clnt_login = TEE_IOCTL_LOGIN_PUBLIC;
+> +	sess_arg.num_params = 0;
+> +
+> +	rc = tee_client_open_session(pvt_data->ctx, &sess_arg, NULL);
+> +	if ((rc < 0) || (sess_arg.ret != 0)) {
+> +		dev_err(dev, "%s:tee_client_open_session failed, err=%x\n",
+> +			__func__, sess_arg.ret);
+> +		rc = -EINVAL;
+> +		goto out;
+> +	}
+> +	pvt_data->session = sess_arg.session;
+> +	pvt_data->state |= STATE_TEE_OPENED_FLAG;
+> +
+> +	/* Allocate dynamic shared memory with fTPM TA */
+> +	pvt_data->shm = tee_shm_alloc(pvt_data->ctx,
+> +				(MAX_COMMAND_SIZE + MAX_RESPONSE_SIZE),
+> +				TEE_SHM_MAPPED | TEE_SHM_DMA_BUF);
+> +	if (IS_ERR(pvt_data->shm)) {
+> +		dev_err(dev, "%s:tee_shm_alloc failed\n", __func__);
+> +		rc = -ENOMEM;
+> +		goto out;
+> +	}
+> +	pvt_data->state |= STATE_TEE_SHMALLOC_FLAG;
+> +
+> +	/* Allocate new struct tpm_chip instance */
+> +	chip = tpm_chip_alloc(dev, &ftpm_tee_tpm_ops);
+
+Why not tpmm_chip_alloc ? Using devm in other places
+
+Doesn't this leak memory? I don't see a put_device cleanup for chip_alloc?
+
+> +	if (IS_ERR(chip)) {
+> +		dev_err(dev, "%s:tpm_chip_alloc failed\n", __func__);
+> +		rc = PTR_ERR(chip);
+> +		goto out;
+> +	}
+> +
+> +	pvt_data->chip = chip;
+> +	pvt_data->chip->flags |= TPM_CHIP_FLAG_TPM2;
+> +
+> +	/* Create a character device for the fTPM */
+> +	rc = tpm_chip_register(pvt_data->chip);
+
+It is a bad idea to do things after tpm_chip_register, it should be
+the last thing done during probe except for error cleanup via a goto
+unwind.
+
+Jason
