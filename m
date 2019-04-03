@@ -1,76 +1,100 @@
 Return-Path: <SRS0=U7QJ=SF=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr30061.outbound.protection.outlook.com ([40.107.3.61]:10313
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726064AbfDCNDY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:03:24 -0400
-From: Wen He <wen.he_1@nxp.com>
-Subject: RE: [PATCH 1/2] arm64: dts: ls1028a: Add properties for Mali DP500
+Received: from mail.kernel.org ([198.145.29.99]:39672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725963AbfDCKOS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 3 Apr 2019 06:14:18 -0400
+Date: Wed, 3 Apr 2019 17:14:10 +0700
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/2] arm64: dts: ls1028a: Add properties for Mali DP500
  node
-Date: Wed, 3 Apr 2019 13:03:17 +0000
-Message-ID: <AM6PR0402MB3382FEA0EC535DCD0A94635EE2570@AM6PR0402MB3382.eurprd04.prod.outlook.com>
+Message-ID: <20190403101409.GH7932@X250>
 References: <20190328035309.18703-1-wen.he_1@nxp.com>
- <20190403101409.GH7932@X250>
-In-Reply-To: <20190403101409.GH7932@X250>
-Content-Language: en-US
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190328035309.18703-1-wen.he_1@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
+To: Wen He <wen.he_1@nxp.com>
 Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>, "brian.starkey@arm.com" <brian.starkey@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIFttYWls
-dG86c2hhd25ndW9Aa2VybmVsLm9yZ10NCj4gU2VudDogMjAxOcTqNNTCM8jVIDE4OjE0DQo+IFRv
-OiBXZW4gSGUgPHdlbi5oZV8xQG54cC5jb20+DQo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+Ow0KPiBsaXZpdS5kdWRhdUBhcm0uY29t
-OyBicmlhbi5zdGFya2V5QGFybS5jb20NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIGFybTY0
-OiBkdHM6IGxzMTAyOGE6IEFkZCBwcm9wZXJ0aWVzIGZvciBNYWxpIERQNTAwDQo+IG5vZGUNCj4g
-DQo+IE9uIFRodSwgTWFyIDI4LCAyMDE5IGF0IDAzOjUxOjQ2QU0gKzAwMDAsIFdlbiBIZSB3cm90
-ZToNCj4gPiBUaGUgTFMxMDI4QSBoYXMgYSBMQ0QgY29udHJvbGxlciBhbmQgRGlzcGxheXBvcnQg
-aW50ZXJmYWNlIHRoYXQNCj4gPiBjb25uZWN0cyB0byBlRFAgYW5kIERpc3BsYXlwb3J0IGNvbm5l
-Y3RvcnMgb24gdGhlIExTMTAyOEEgYm9hcmQuDQo+ID4NCj4gPiBUaGlzIHBhdGNoIGVuYWJsZXMg
-dGhlIExDRCBjb250cm9sbGVyIGRyaXZlciBvbiB0aGUgTFMxMDI4QS4NCj4gPg0KPiA+IFNpZ25l
-ZC1vZmYtYnk6IEFsaXNvbiBXYW5nIDxhbGlzb24ud2FuZ0BueHAuY29tPg0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IFdlbiBIZSA8d2VuLmhlXzFAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2FybTY0
-L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpIHwgMzcNCj4gPiArKysrKysrKysr
-KysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzNyBpbnNlcnRpb25zKCspDQo+ID4NCj4g
-PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEu
-ZHRzaQ0KPiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRz
-aQ0KPiA+IGluZGV4IDhkZDM1MDFiMTMzMy4uMGQ1OTYzYmI0NmM1IDEwMDY0NA0KPiA+IC0tLSBh
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gPiArKysg
-Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+ID4gQEAg
-LTcwLDYgKzcwLDI3IEBADQo+ID4gIAkJY2xvY2stb3V0cHV0LW5hbWVzID0gInN5c2NsayI7DQo+
-ID4gIAl9Ow0KPiA+DQo+ID4gKwlkcGNsazogZHBjbGsgew0KPiANCj4gUGxlYXNlIGZvbGxvdyB0
-aGUgbmFtaW5nIGNvbnZlbnRpb24gImNsb2NrLXh4eCIuDQo+IA0KPiA+ICsJCWNvbXBhdGlibGUg
-PSAiZml4ZWQtY2xvY2siOw0KPiA+ICsJCSNjbG9jay1jZWxscyA9IDwwPjsNCj4gPiArCQljbG9j
-ay1mcmVxdWVuY3kgPSA8MjcwMDAwMDA+Ow0KPiA+ICsJCWNsb2NrLW91dHB1dC1uYW1lcz0gImRw
-Y2xrIjsNCj4gPiArCX07DQo+ID4gKw0KPiA+ICsJYWNsazogYWNsayB7DQo+ID4gKwkJY29tcGF0
-aWJsZSA9ICJmaXhlZC1jbG9jayI7DQo+ID4gKwkJI2Nsb2NrLWNlbGxzID0gPDA+Ow0KPiA+ICsJ
-CWNsb2NrLWZyZXF1ZW5jeSA9IDw2NTAwMDAwMDA+Ow0KPiA+ICsJCWNsb2NrLW91dHB1dC1uYW1l
-cz0gImFjbGsiOw0KPiA+ICsJfTsNCj4gPiArDQo+ID4gKwlwY2xrOiBwY2xrIHsNCj4gPiArCQlj
-b21wYXRpYmxlID0gImZpeGVkLWNsb2NrIjsNCj4gPiArCQkjY2xvY2stY2VsbHMgPSA8MD47DQo+
-ID4gKwkJY2xvY2stZnJlcXVlbmN5ID0gPDY1MDAwMDAwMD47DQo+ID4gKwkJY2xvY2stb3V0cHV0
-LW5hbWVzPSAicGNsayI7DQo+ID4gKwl9Ow0KPiA+ICsNCj4gPiAgCXJlYm9vdCB7DQo+ID4gIAkJ
-Y29tcGF0aWJsZSA9InN5c2Nvbi1yZWJvb3QiOw0KPiA+ICAJCXJlZ21hcCA9IDwmZGNmZz47DQo+
-ID4gQEAgLTQzMyw0ICs0NTQsMjAgQEANCj4gPiAgCQkJfTsNCj4gPiAgCQl9Ow0KPiA+ICAJfTsN
-Cj4gPiArDQo+ID4gKwlkcDA6IG1hbGlkcEBmMDgwMDAwIHsNCj4gDQo+IFRoZSBub2RlIG5hbWUg
-c2hvdWxkIGJlIHNvbWV0aGluZyBnZW5lcmljLiAgVGhlIHJlY29tbWVuZGF0aW9uIGZyb20NCj4g
-RGV2aWNldHJlZSBTcGVjaWZpY2F0aW9uIGlzICdkaXNwbGF5Jy4NCj4gDQoNClRoYXQgZGVmaW5p
-dGlvbiBmb2xsb3dpbmcgYnkgbWFsaWRwIERldmljZXRyZWUgYmluZGluZ3MgZmlsZS4NCklmIHVz
-ZSBuYW1lIGlzICdkaXNwbGF5JywgaG93IHRvIGRlZmluZSBkaXNwbGF5IHBvcnQgY29udHJvbGxl
-cj8gdGhpcyBvbmx5IGlzIExDRCBjb250cm9sbGVyIGR0cyBub2RlLg0KDQo+ID4gKwkJY29tcGF0
-aWJsZSA9ICJhcm0sbWFsaS1kcDUwMCI7DQo+ID4gKwkJcmVnID0gPDB4MCAweGYwODAwMDAgMHgw
-IDB4MTAwMDA+Ow0KPiA+ICsJCWludGVycnVwdHMgPSA8MCAyMjIgSVJRX1RZUEVfTEVWRUxfSElH
-SD4sDQo+ID4gKwkJCSAgICAgPDAgMjIzIElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICsJCWlu
-dGVycnVwdC1uYW1lcyA9ICJERSIsICJTRSI7DQo+ID4gKwkJY2xvY2tzID0gPCZkcGNsaz4sIDwm
-YWNsaz4sIDwmYWNsaz4sIDwmcGNsaz47DQo+ID4gKwkJY2xvY2stbmFtZXMgPSAicHhsY2xrIiwg
-Im1jbGsiLCAiYWNsayIsICJwY2xrIjsNCj4gPiArCQlhcm0sbWFsaWRwLW91dHB1dC1wb3J0LWxp
-bmVzID0gL2JpdHMvIDggPDggOCA4PjsNCj4gDQo+IFBsZWFzZSBoYXZlIGEgbmV3bGluZSBiZXR3
-ZWVuIHByb3BlcnRpZXMgYW5kIGNoaWxkIG5vZGUuDQo+IA0KPiBTaGF3bg0KPiANCg0KU3VyZSwg
-YnV0IEkgc2VlIHRoZSBtYWlsIGRldmljZXRyZWUgYmluZGluZyBkb2Vzbid0IGhhdmUgYSBibGFu
-ayBsaW5lLiBTbyBJIHJlbW92ZWQgaXQuDQpJcyBuZWVkIHRvIGFkZCBhIG5ld2xpbmU/DQoNCkJl
-c3QgUmVnYXJkcywNCldlbg0KDQo+ID4gKwkJcG9ydCB7DQo+ID4gKwkJCWRwMF9vdXQ6IGVuZHBv
-aW50IHsNCj4gPiArDQo+ID4gKwkJCX07DQo+ID4gKwkJfTsNCj4gPiArCX07DQo+ID4gIH07DQo+
-ID4gLS0NCj4gPiAyLjE3LjENCj4gPg0K
+On Thu, Mar 28, 2019 at 03:51:46AM +0000, Wen He wrote:
+> The LS1028A has a LCD controller and Displayport interface that
+> connects to eDP and Displayport connectors on the LS1028A board.
+> 
+> This patch enables the LCD controller driver on the LS1028A.
+> 
+> Signed-off-by: Alison Wang <alison.wang@nxp.com>
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
+> ---
+>  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 37 +++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 8dd3501b1333..0d5963bb46c5 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -70,6 +70,27 @@
+>  		clock-output-names = "sysclk";
+>  	};
+>  
+> +	dpclk: dpclk {
+
+Please follow the naming convention "clock-xxx".
+
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <27000000>;
+> +		clock-output-names= "dpclk";
+> +	};
+> +
+> +	aclk: aclk {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <650000000>;
+> +		clock-output-names= "aclk";
+> +	};
+> +
+> +	pclk: pclk {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <650000000>;
+> +		clock-output-names= "pclk";
+> +	};
+> +
+>  	reboot {
+>  		compatible ="syscon-reboot";
+>  		regmap = <&dcfg>;
+> @@ -433,4 +454,20 @@
+>  			};
+>  		};
+>  	};
+> +
+> +	dp0: malidp@f080000 {
+
+The node name should be something generic.  The recommendation from
+Devicetree Specification is 'display'.
+
+> +		compatible = "arm,mali-dp500";
+> +		reg = <0x0 0xf080000 0x0 0x10000>;
+> +		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <0 223 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "DE", "SE";
+> +		clocks = <&dpclk>, <&aclk>, <&aclk>, <&pclk>;
+> +		clock-names = "pxlclk", "mclk", "aclk", "pclk";
+> +		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
+
+Please have a newline between properties and child node.
+
+Shawn
+
+> +		port {
+> +			dp0_out: endpoint {
+> +
+> +			};
+> +		};
+> +	};
+>  };
+> -- 
+> 2.17.1
+> 
