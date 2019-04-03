@@ -1,79 +1,60 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: backlight: add lm3630a bindings
-Date: Tue, 2 Apr 2019 20:50:09 -0500
-Message-ID: <CAL_JsqKCJ0hwBX1P2abLjfMPZow3SJGO65PQ1Fa+Qz9DFHCXSg@mail.gmail.com>
-References: <20190401103034.21062-1-masneyb@onstation.org>
- <20190401103034.21062-3-masneyb@onstation.org>
- <68229e7f-4749-cde5-f541-793ab614084d@ti.com>
- <20190402132440.GA10359@basecamp>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [v3 PATCH 0/6] add USB Type-B GPIO connector driver
+Date: Wed, 3 Apr 2019 10:09:08 +0800
+Message-ID: <1554257354-7440-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190402132440.GA10359@basecamp>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brian Masney <masneyb@onstation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Jonathan Marek <jonathan@marek.ca>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, Alan Stern <stern@rowland.harvard.edu>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBcHIgMiwgMjAxOSBhdCA4OjI0IEFNIEJyaWFuIE1hc25leSA8bWFzbmV5YkBvbnN0
-YXRpb24ub3JnPiB3cm90ZToKPgo+IE9uIFR1ZSwgQXByIDAyLCAyMDE5IGF0IDA3OjU2OjU1QU0g
-LTA1MDAsIERhbiBNdXJwaHkgd3JvdGU6Cj4gPiBUaGlzIHdvdWxkIGNvbm5lY3QgY29udHJvbCBi
-YW5rIEIgdG8gY29udHJvbCBiYW5rIEEuICBPciBqdXN0IHVzZSBhIGZsYWcgdG8gZGVub3RlIHRv
-IGNvbm5lY3QgdGhlbQo+ID4gYW5kIG5vdCB1c2UgbGVkLXNvdXJjZXMuICBCdXQgbGVkLXNvdXJj
-ZXMgaXMgdGhlIHByb3BlcnR5IG9mIGNob2ljZS4KPiA+Cj4gPiBsZWRAMCB7Cj4gPiAgICAgICBy
-ZWcgPSA8MD47Cj4gPiAgICAgICBsZWQtc291cmNlcyA9IDwgMCAxID47Cj4gPiAgICAgICBsYWJl
-bCA9ICJtYWluLWxjZCI7Cj4gPiAgICAgICBkZWZhdWx0LWJyaWdodG5lc3MgPSA8MjAwPjsKPiA+
-ICAgICAgIG1heC1icmlnaHRuZXNzID0gPDI1NT47Cj4gPiB9Owo+Cj4gT0ssIEkgc2VlLiBJIHdv
-bmRlcmVkIGhvdyB3ZSBjb3VsZCBkbyB0aGF0IGluIGRldmljZSB0cmVlLgo+Cj4gPiA+ICsgICAg
-cHJvcGVydGllczoKPiA+ID4gKyAgICAgIGxhYmVsOgo+ID4gPiArICAgICAgICBkZXNjcmlwdGlv
-bjogfAo+ID4gPiArICAgICAgICAgIFRoZSBsYWJlbCBmb3IgdGhpcyBMRUQuIElmIG9taXR0ZWQs
-IHRoZSBsYWJlbCBpcyB0YWtlbiBmcm9tIHRoZSBub2RlCj4gPiA+ICsgICAgICAgICAgbmFtZSAo
-ZXhjbHVkaW5nIHRoZSB1bml0IGFkZHJlc3MpLiBJdCBoYXMgdG8gdW5pcXVlbHkgaWRlbnRpZnkg
-YQo+ID4gPiArICAgICAgICAgIGRldmljZSwgaS5lLiBubyBvdGhlciBMRUQgY2xhc3MgZGV2aWNl
-IGNhbiBiZSBhc3NpZ25lZCB0aGUgc2FtZSBsYWJlbC4KPiA+ID4gKwo+ID4gPiArICAgICAgbGVk
-LXNvdXJjZXM6Cj4gPiA+ICsgICAgICAgIGRlc2NyaXB0aW9uOiB8Cj4gPiA+ICsgICAgICAgICAg
-TGlzdCBvZiBkZXZpY2UgY3VycmVudCBvdXRwdXRzIHRoZSBMRUQgaXMgY29ubmVjdGVkIHRvLgo+
-ID4gPiArICAgICAgICBhbGxPZjoKPiA+ID4gKyAgICAgICAgICAtICRyZWY6IC9zY2hlbWFzL3R5
-cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMi1hcnJheQo+ID4gPiArICAgICAgICAgIC0gbWlu
-SXRlbXM6IDEKPiA+ID4gKyAgICAgICAgICAgIG1heEl0ZW1zOiAyCj4gPiA+ICsgICAgICAgICAg
-ICBpdGVtczoKPiA+ID4gKyAgICAgICAgICAgICAgbWluaW11bTogMAo+ID4gPiArICAgICAgICAg
-ICAgICBtYXhpbXVtOiAxCj4gPiA+ICsKPiA+Cj4gPiBsYWJlbCBhbmQgbGVkLXNvdXJjZXMgYXJl
-IGFscmVhZHkgZGVmaW5lZCBpbiB0aGUgY29tbW9uLnR4dCBubyBuZWVkIHRvIHJlZGVmaW5lIHRo
-ZW0gaGVyZS4KPgo+IElmIEknbSBnb2luZyB0byB1c2UgdGhlIG5ldy1zdHlsZSBiaW5kaW5ncywg
-dGhlbiBJJ2xsIG5lZWQgdG8gY29udmVydAo+IGNvbW1vbi50eHQgb3ZlciB0byB1c2UgdGhlIG5l
-dyBmb3JtYXQgYXMgd2VsbCBzbyB0aGF0IHRoZSBhdXRvbWF0ZWQKPiBzY2hlbWEgdmFsaWRhdGlv
-bnMgd2lsbCB3b3JrLiBJJ20gd2lsbGluZyB0byBkbyB0aGF0IHdvcmsgaWYgdGhlcmUgaXMKPiBp
-bnRlcmVzdCBmcm9tIHRoZSBMRUQgLyBiYWNrbGlnaHQgbWFpbnRhaW5lcnMuIFRoZSBtYWluIGlz
-c3VlIGlzIHRoYXQKPiB0aGVyZSBhcmUgNjIgcmVmZXJlbmNlcyB0byB0aGUgZmlsZSBjb21tb24u
-dHh0IGluIHRoZSBkaXJlY3RvcnkKPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-bGVkcy8uIFdvdWxkIHRoZSBtYWludGFpbmVycyBwcmVmZXI6CgpUaGF0IHdvdWxkIGJlIGF3ZXNv
-bWUuCgo+IC0gT25jZSBjb21tb24udHh0IGlzIGNvbnZlcnRlZCB0byBjb21tb24ueWFtbCwgbWFr
-ZSBjb21tb24udHh0IG9ubHkKPiAgIGhhdmUgYSBsaW5lIHN0YXRpbmcgdGhhdCB0aGUgY29tbW9u
-IGJpbmRpbmdzIHdlcmUgbW92ZWQgaW50bwo+ICAgY29tbW9uLnlhbWwuIFdlIGNhbiByZW1vdmUg
-dGhpcyBmaWxlIG9uY2UgYWxsIG9mIHRoZSBvdGhlciBiaW5kaW5ncwo+ICAgYXJlIGNvbnZlcnRl
-ZCB0byB0aGUgbmV3LXN0eWxlIGZvcm1hdC4KPgo+IC0gVXBkYXRlIGFsbCByZWZlcmVuY2VzIHRv
-IGNvbW1vbi50eHQgdG8gY29tbW9uLnlhbWwuICgxIHBhdGNoIG9yIDYyCj4gICBwYXRjaGVzPykK
-CkknZCBwcm9iYWJseSBnbyB3aXRoIHRoZSBmb3JtZXIgaWYgSSBoYWQgdG8gcGljay4gVGhlIHJl
-YWwKY29tcGxpY2F0aW9uIGhlcmUgaXMgdGhlcmUncyBzb21lIG90aGVyIGNoYW5nZXMgaW4gZmxp
-Z2h0LgoKPgo+IC0gT3IsIGp1c3QgZ28gd2l0aCB0aGUgb2xkZXItc3R5bGUgYmluZGluZyBmb3Jt
-YXQgZm9yIG5vdy4KCkknbSBva2F5IGlmIHlvdSB3cml0ZSBpdCB3aXRoIHRoZSBhc3N1bXB0aW9u
-IHRoYXQgdGhlIGNvbW1vbgpwcm9wZXJ0aWVzIGhhdmUgYSBzY2hlbWEgZXZlbiBpZiB0aGV5IGRv
-bid0IHlldC4gQWxsIHRoYXQgbWVhbnMgaXMgeW91CmRvbid0IG5lZWQgdG8gZGVmaW5lIHRoZSB0
-eXBlLCBidXQgb25seSB0aGUgYWRkaXRpb25hbCBjb25zdHJhaW50cy4KVGhlcmUgZG9lc24ndCBo
-YXZlIHRvIGJlIGEgcmVmZXJlbmNlIGJhY2sgdG8gdGhlIGNvbW1vbiBwcm9wZXJ0eQoodGhvc2Ug
-cmVmZXJlbmNlcyB0ZW5kIHRvIGdldCBicm9rZW4gYXMgd2UgY2FuIHNlZSBoZXJlKS4gV2l0aApl
-dmVyeXRoaW5nIGFzIHN0cnVjdHVyZWQgZGF0YSwgd2UgY291bGQgZXZlbiBnZW5lcmF0ZSByZWZl
-cmVuY2VzIG9yCmhhdmUgc29tZSB0b29sIHRoYXQgY2FuIGxvb2t1cCB0aGUgY29tbW9uIGRlZmlu
-aXRpb25zLgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bA==
+Because the USB Connector is introduced and the requirement of
+usb-connector.txt binding, the old way using extcon to support
+USB Dual-Role switch is now deprecated, meanwhile there is no
+available common driver when use Type-B connector, typically
+using an input GPIO to detect USB ID pin.
+This patch series introduce a Type-B GPIO connector driver and try
+to replace the function provided by extcon-usb-gpio driver.
+
+v3 changes:
+  1. add GPIO direction, and use fixed-regulator for GPIO controlled
+    VBUS regulator suggested by Rob;
+  2. rebuild fwnode_usb_role_switch_get() suggested by Andy and Heikki
+  3. treat the type-B connector as a virtual device;
+  4. change file name of driver again
+  5. select USB_ROLE_SWITCH in mtu3/Kconfig suggested by Heikki
+  6. rename ssusb_mode_manual_switch() to ssusb_mode_switch()
+
+v2 changes:
+ 1. make binding clear, and add a extra compatible suggested by Hans
+
+Chunfeng Yun (6):
+  dt-bindings: connector: add optional properties for Type-B
+  dt-bindings: usb: add binding for Type-B GPIO connector driver
+  dt-bindings: usb: mtu3: add properties about USB Role Switch
+  usb: roles: add API to get usb_role_switch by node
+  usb: roles: add USB Type-B GPIO connector driver
+  usb: mtu3: register a USB Role Switch for dual role mode
+
+ .../bindings/connector/usb-connector.txt      |  14 +
+ .../devicetree/bindings/usb/mediatek,mtu3.txt |  10 +-
+ .../bindings/usb/typeb-conn-gpio.txt          |  49 +++
+ drivers/usb/mtu3/Kconfig                      |   1 +
+ drivers/usb/mtu3/mtu3.h                       |   5 +
+ drivers/usb/mtu3/mtu3_debugfs.c               |   4 +-
+ drivers/usb/mtu3/mtu3_dr.c                    |  47 ++-
+ drivers/usb/mtu3/mtu3_dr.h                    |   6 +-
+ drivers/usb/mtu3/mtu3_plat.c                  |   3 +-
+ drivers/usb/roles/Kconfig                     |  11 +
+ drivers/usb/roles/Makefile                    |   1 +
+ drivers/usb/roles/class.c                     |  31 ++
+ drivers/usb/roles/typeb-conn-gpio.c           | 301 ++++++++++++++++++
+ include/linux/usb/role.h                      |   2 +
+ 14 files changed, 476 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
+ create mode 100644 drivers/usb/roles/typeb-conn-gpio.c
+
+-- 
+2.20.1
