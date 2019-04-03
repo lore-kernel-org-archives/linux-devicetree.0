@@ -1,211 +1,367 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH 08/10] phy: tegra: Add PCIe PIPE2UPHY support
-Date: Wed, 3 Apr 2019 16:15:25 +0530
-Message-ID: <e60c1bb8-2b30-50b0-4864-6e0db8797b2c@nvidia.com>
-References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
- <1553613207-3988-9-git-send-email-vidyas@nvidia.com>
- <ee9bba31-c9ac-9275-6f55-f71fea1a33a0@ti.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 3/3] phy: renesas: rcar-gen3-usb2: enable/disable
+ independent irqs
+Date: Wed, 3 Apr 2019 10:49:20 +0000
+Message-ID: <TY1PR01MB17706362E3C2AB67C3ABD1E7C0570@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1554120083-29990-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1554120083-29990-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ee9bba31-c9ac-9275-6f55-f71fea1a33a0@ti.com>
+In-Reply-To: <1554120083-29990-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, tiwai@suse.de, spujar@nvidia.com, skomatineni@nvidia.com, liviu.dudau@arm.com, krzk@kernel.org, heiko@sntech.de, horms+renesas@verge.net.au, olof@lixom.net, maxime.ripard@bootlin.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, jagan@amarulasolutions.com, enric.balletbo@collabora.com, ezequiel@collabora.com, stefan.wahren@i2se.com, marc.w.gonzalez@free.fr, l.stach@pengutronix.de, tpiepho@impinj.com, hayashi.kunihik
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com
+To: "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 4/3/2019 1:35 PM, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On 26/03/19 8:43 PM, Vidya Sagar wrote:
->> Synopsys DesignWare core based PCIe controllers in Tegra 194 SoC interface
->> with Universal PHY (UPHY) module through a PIPE2UPHY (P2U) module.
->> For each PCIe lane of a controller, there is a P2U unit instantiated at
->> hardware level. This driver provides support for the programming required
->> for each P2U that is going to be used for a PCIe controller.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->>   drivers/phy/tegra/Kconfig             |   7 ++
->>   drivers/phy/tegra/Makefile            |   1 +
->>   drivers/phy/tegra/pcie-p2u-tegra194.c | 138 ++++++++++++++++++++++++++++++++++
->>   3 files changed, 146 insertions(+)
->>   create mode 100644 drivers/phy/tegra/pcie-p2u-tegra194.c
->>
->> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
->> index a3b1de953fb7..1460c060fa70 100644
->> --- a/drivers/phy/tegra/Kconfig
->> +++ b/drivers/phy/tegra/Kconfig
->> @@ -6,3 +6,10 @@ config PHY_TEGRA_XUSB
->>   
->>   	  To compile this driver as a module, choose M here: the module will
->>   	  be called phy-tegra-xusb.
->> +
->> +config PHY_TEGRA194_PCIE_P2U
->> +        tristate "NVIDIA Tegra P2U PHY Driver"
->> +        depends on ARCH_TEGRA
-> 
-> COMPILE_TEST
-Done.
+Hello Yoshihiro-san,
 
->> +        select GENERIC_PHY
->> +        help
->> +          Enable this to support the P2U (PIPE to UPHY) that is part of Tegra 19x SOCs.
->> diff --git a/drivers/phy/tegra/Makefile b/drivers/phy/tegra/Makefile
->> index 898589238fd9..f85b2c86643d 100644
->> --- a/drivers/phy/tegra/Makefile
->> +++ b/drivers/phy/tegra/Makefile
->> @@ -4,3 +4,4 @@ phy-tegra-xusb-y += xusb.o
->>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_124_SOC) += xusb-tegra124.o
->>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_132_SOC) += xusb-tegra124.o
->>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_210_SOC) += xusb-tegra210.o
->> +obj-$(CONFIG_PHY_TEGRA194_PCIE_P2U) += pcie-p2u-tegra194.o
->> diff --git a/drivers/phy/tegra/pcie-p2u-tegra194.c b/drivers/phy/tegra/pcie-p2u-tegra194.c
->> new file mode 100644
->> index 000000000000..bb2412ec4765
->> --- /dev/null
->> +++ b/drivers/phy/tegra/pcie-p2u-tegra194.c
->> @@ -0,0 +1,138 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * P2U (PIPE to UPHY) driver for Tegra T194 SoC
->> + *
->> + * Copyright (C) 2018 NVIDIA Corporation.
-> 
-> 2019
-Done.
+Thank you for your partch!
 
->> + *
->> + * Author: Vidya Sagar <vidyas@nvidia.com>
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/of.h>
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/delay.h>
->> +#include <linux/of_platform.h>
->> +#include <soc/tegra/bpmp-abi.h>
->> +
->> +#define P2U_PERIODIC_EQ_CTRL_GEN3	0xc0
->> +#define P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN		BIT(0)
->> +#define P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
->> +#define P2U_PERIODIC_EQ_CTRL_GEN4	0xc4
->> +#define P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
->> +
->> +#define P2U_RX_DEBOUNCE_TIME				0xa4
->> +#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK	0xFFFF
->> +#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL		160
->> +
->> +struct tegra_p2u {
->> +	void __iomem		*base;
->> +};
->> +
->> +static int tegra_p2u_power_off(struct phy *x)
->> +{
->> +	return 0;
-> 
-> Empty phy_ops are not required.
-Done.
+> From: devicetree-owner@vger.kernel.org <devicetree-owner@vger.kernel.org>=
+ On Behalf Of Yoshihiro Shimoda
+> Sent: 01 April 2019 13:01
+> Subject: [PATCH 3/3] phy: renesas: rcar-gen3-usb2: enable/disable indepen=
+dent irqs
+>=20
+> Since the previous code enabled/disabled the irqs both OHCI and EHCI,
+> it is possible to cause unexpected interruptions. To avoid this,
+> this patch creates multiple phy instances from phandle and
+> enables/disables independent irqs by the instances.
+>=20
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
->> +}
->> +
->> +static int tegra_p2u_power_on(struct phy *x)
->> +{
->> +	u32 val;
->> +	struct tegra_p2u *phy = phy_get_drvdata(x);
->> +
->> +	val = readl(phy->base + P2U_PERIODIC_EQ_CTRL_GEN3);
->> +	val &= ~P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN;
->> +	val |= P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN;
->> +	writel(val, phy->base + P2U_PERIODIC_EQ_CTRL_GEN3);
->> +
->> +	val = readl(phy->base + P2U_PERIODIC_EQ_CTRL_GEN4);
->> +	val |= P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN;
->> +	writel(val, phy->base + P2U_PERIODIC_EQ_CTRL_GEN4);
->> +
->> +	val = readl(phy->base + P2U_RX_DEBOUNCE_TIME);
->> +	val &= ~P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK;
->> +	val |= P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL;
->> +	writel(val, phy->base + P2U_RX_DEBOUNCE_TIME);
-> 
-> This looks more like a init configuration rather than power on.
->> +
->> +	return 0;
->> +}
->> +
->> +static int tegra_p2u_init(struct phy *x)
->> +{
->> +	return 0;
->> +}
->> +
->> +static int tegra_p2u_exit(struct phy *x)
->> +{
->> +	return 0;
->> +}
-> 
-> Empty functions are not required.
-Done.
+Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Tested-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
->> +
->> +static const struct phy_ops ops = {
->> +	.init		= tegra_p2u_init,
->> +	.exit		= tegra_p2u_exit,
->> +	.power_on	= tegra_p2u_power_on,
->> +	.power_off	= tegra_p2u_power_off,
->> +	.owner		= THIS_MODULE,
->> +};
->> +
->> +static int tegra_p2u_probe(struct platform_device *pdev)
->> +{
->> +	struct tegra_p2u *phy;
->> +	struct phy *generic_phy;
->> +	struct phy_provider *phy_provider;
->> +	struct device *dev = &pdev->dev;
->> +	struct resource *res;
->> +
->> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
->> +	if (!phy)
->> +		return -ENOMEM;
->> +
->> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "base");
->> +	phy->base = devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(phy->base))
->> +		return PTR_ERR(phy->base);
->> +
->> +	platform_set_drvdata(pdev, phy);
->> +
->> +	generic_phy = devm_phy_create(dev, NULL, &ops);
->> +	if (IS_ERR(generic_phy))
->> +		return PTR_ERR(generic_phy);
->> +
->> +	phy_set_drvdata(generic_phy, phy);
->> +
->> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
->> +	if (IS_ERR(phy_provider))
->> +		return PTR_ERR(phy_provider);
->> +
-> 
-> return PTR_ERR_OR_ZERO(phy_provider);
-Done.
+> ---
+>  drivers/phy/renesas/phy-rcar-gen3-usb2.c | 181 +++++++++++++++++++++++++=
++-----
+>  1 file changed, 156 insertions(+), 25 deletions(-)
+>=20
+> diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renes=
+as/phy-rcar-gen3-usb2.c
+> index 4bdb2ed..bbe0fe5 100644
+> --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+> +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+> @@ -37,11 +37,8 @@
+>=20
+>  /* INT_ENABLE */
+>  #define USB2_INT_ENABLE_UCOM_INTEN	BIT(3)
+> -#define USB2_INT_ENABLE_USBH_INTB_EN	BIT(2)
+> -#define USB2_INT_ENABLE_USBH_INTA_EN	BIT(1)
+> -#define USB2_INT_ENABLE_INIT		(USB2_INT_ENABLE_UCOM_INTEN | \
+> -					 USB2_INT_ENABLE_USBH_INTB_EN | \
+> -					 USB2_INT_ENABLE_USBH_INTA_EN)
+> +#define USB2_INT_ENABLE_USBH_INTB_EN	BIT(2)	/* For EHCI */
+> +#define USB2_INT_ENABLE_USBH_INTA_EN	BIT(1)	/* For OHCI */
+>=20
+>  /* USBCTR */
+>  #define USB2_USBCTR_DIRPD	BIT(2)
+> @@ -78,11 +75,33 @@
+>  #define USB2_ADPCTRL_IDPULLUP		BIT(5)	/* 1 =3D ID sampling is enabled */
+>  #define USB2_ADPCTRL_DRVVBUS		BIT(4)
+>=20
+> +#define NUM_OF_PHYS			4
+> +#define PHY_INDEX_BOTH_HC		0
+> +#define PHY_INDEX_OHCI			1
+> +#define PHY_INDEX_EHCI			2
+> +#define PHY_INDEX_HSUSB			3
+> +
+> +static const u32 rcar_gen3_int_enable[NUM_OF_PHYS] =3D {
+> +	USB2_INT_ENABLE_USBH_INTB_EN | USB2_INT_ENABLE_USBH_INTA_EN,
+> +	USB2_INT_ENABLE_USBH_INTA_EN,
+> +	USB2_INT_ENABLE_USBH_INTB_EN,
+> +	0
+> +};
+> +
+> +struct rcar_gen3_phy {
+> +	struct phy *phy;
+> +	struct rcar_gen3_chan *ch;
+> +	u32 int_enable_bits;
+> +	bool initialized;
+> +	bool otg_initialized;
+> +	bool powered;
+> +};
+> +
+>  struct rcar_gen3_chan {
+>  	void __iomem *base;
+>  	struct device *dev;	/* platform_device's device */
+>  	struct extcon_dev *extcon;
+> -	struct phy *phy;
+> +	struct rcar_gen3_phy rphys[NUM_OF_PHYS];
+>  	struct regulator *vbus;
+>  	struct work_struct work;
+>  	enum usb_dr_mode dr_mode;
+> @@ -250,6 +269,42 @@ static enum phy_mode rcar_gen3_get_phy_mode(struct r=
+car_gen3_chan *ch)
+>  	return PHY_MODE_USB_DEVICE;
+>  }
+>=20
+> +static bool rcar_gen3_is_any_rphy_initialized(struct rcar_gen3_chan *ch)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; i < NUM_OF_PHYS; i++) {
+> +		if (ch->rphys[i].initialized)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +static bool rcar_gen3_needs_init_otg(struct rcar_gen3_chan *ch)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; i < NUM_OF_PHYS; i++) {
+> +		if (ch->rphys[i].otg_initialized)
+> +			return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +static bool rcar_gen3_are_all_rphys_power_off(struct rcar_gen3_chan *ch)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; i < NUM_OF_PHYS; i++) {
+> +		if (ch->rphys[i].powered)
+> +			return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+>  static ssize_t role_store(struct device *dev, struct device_attribute *a=
+ttr,
+>  			  const char *buf, size_t count)
+>  {
+> @@ -257,7 +312,7 @@ static ssize_t role_store(struct device *dev, struct =
+device_attribute *attr,
+>  	bool is_b_device;
+>  	enum phy_mode cur_mode, new_mode;
+>=20
+> -	if (!ch->is_otg_channel || !ch->phy->init_count)
+> +	if (!ch->is_otg_channel || !rcar_gen3_is_any_rphy_initialized(ch))
+>  		return -EIO;
+>=20
+>  	if (!strncmp(buf, "host", strlen("host")))
+> @@ -295,7 +350,7 @@ static ssize_t role_show(struct device *dev, struct d=
+evice_attribute *attr,
+>  {
+>  	struct rcar_gen3_chan *ch =3D dev_get_drvdata(dev);
+>=20
+> -	if (!ch->is_otg_channel || !ch->phy->init_count)
+> +	if (!ch->is_otg_channel || !rcar_gen3_is_any_rphy_initialized(ch))
+>  		return -EIO;
+>=20
+>  	return sprintf(buf, "%s\n", rcar_gen3_is_host(ch) ? "host" :
+> @@ -329,37 +384,62 @@ static void rcar_gen3_init_otg(struct rcar_gen3_cha=
+n *ch)
+>=20
+>  static int rcar_gen3_phy_usb2_init(struct phy *p)
+>  {
+> -	struct rcar_gen3_chan *channel =3D phy_get_drvdata(p);
+> +	struct rcar_gen3_phy *rphy =3D phy_get_drvdata(p);
+> +	struct rcar_gen3_chan *channel =3D rphy->ch;
+>  	void __iomem *usb2_base =3D channel->base;
+> +	u32 val;
+>=20
+>  	/* Initialize USB2 part */
+> -	writel(USB2_INT_ENABLE_INIT, usb2_base + USB2_INT_ENABLE);
+> +	val =3D readl(usb2_base + USB2_INT_ENABLE);
+> +	val |=3D USB2_INT_ENABLE_UCOM_INTEN | rphy->int_enable_bits;
+> +	writel(val, usb2_base + USB2_INT_ENABLE);
+>  	writel(USB2_SPD_RSM_TIMSET_INIT, usb2_base + USB2_SPD_RSM_TIMSET);
+>  	writel(USB2_OC_TIMSET_INIT, usb2_base + USB2_OC_TIMSET);
+>=20
+>  	/* Initialize otg part */
+> -	if (channel->is_otg_channel)
+> -		rcar_gen3_init_otg(channel);
+> +	if (channel->is_otg_channel) {
+> +		if (rcar_gen3_needs_init_otg(channel))
+> +			rcar_gen3_init_otg(channel);
+> +		rphy->otg_initialized =3D true;
+> +	}
+> +
+> +	rphy->initialized =3D true;
+>=20
+>  	return 0;
+>  }
+>=20
+>  static int rcar_gen3_phy_usb2_exit(struct phy *p)
+>  {
+> -	struct rcar_gen3_chan *channel =3D phy_get_drvdata(p);
+> +	struct rcar_gen3_phy *rphy =3D phy_get_drvdata(p);
+> +	struct rcar_gen3_chan *channel =3D rphy->ch;
+> +	void __iomem *usb2_base =3D channel->base;
+> +	u32 val;
+>=20
+> -	writel(0, channel->base + USB2_INT_ENABLE);
+> +	rphy->initialized =3D false;
+> +
+> +	if (channel->is_otg_channel)
+> +		rphy->otg_initialized =3D false;
+> +
+> +	val =3D readl(usb2_base + USB2_INT_ENABLE);
+> +	val &=3D ~rphy->int_enable_bits;
+> +	if (!rcar_gen3_is_any_rphy_initialized(channel))
+> +		val &=3D ~USB2_INT_ENABLE_UCOM_INTEN;
+> +	writel(val, usb2_base + USB2_INT_ENABLE);
+>=20
+>  	return 0;
+>  }
+>=20
+>  static int rcar_gen3_phy_usb2_power_on(struct phy *p)
+>  {
+> -	struct rcar_gen3_chan *channel =3D phy_get_drvdata(p);
+> +	struct rcar_gen3_phy *rphy =3D phy_get_drvdata(p);
+> +	struct rcar_gen3_chan *channel =3D rphy->ch;
+>  	void __iomem *usb2_base =3D channel->base;
+>  	u32 val;
+>  	int ret;
+>=20
+> +	if (!rcar_gen3_are_all_rphys_power_off(channel))
+> +		return 0;
+> +
+>  	if (channel->vbus) {
+>  		ret =3D regulator_enable(channel->vbus);
+>  		if (ret)
+> @@ -372,14 +452,22 @@ static int rcar_gen3_phy_usb2_power_on(struct phy *=
+p)
+>  	val &=3D ~USB2_USBCTR_PLL_RST;
+>  	writel(val, usb2_base + USB2_USBCTR);
+>=20
+> +	rphy->powered =3D true;
+> +
+>  	return 0;
+>  }
+>=20
+>  static int rcar_gen3_phy_usb2_power_off(struct phy *p)
+>  {
+> -	struct rcar_gen3_chan *channel =3D phy_get_drvdata(p);
+> +	struct rcar_gen3_phy *rphy =3D phy_get_drvdata(p);
+> +	struct rcar_gen3_chan *channel =3D rphy->ch;
+>  	int ret =3D 0;
+>=20
+> +	rphy->powered =3D false;
+> +
+> +	if (!rcar_gen3_are_all_rphys_power_off(channel))
+> +		return 0;
+> +
+>  	if (channel->vbus)
+>  		ret =3D regulator_disable(channel->vbus);
+>=20
+> @@ -426,13 +514,51 @@ static const unsigned int rcar_gen3_phy_cable[] =3D=
+ {
+>  	EXTCON_NONE,
+>  };
+>=20
+> +static struct phy *rcar_gen3_phy_usb2_xlate(struct device *dev,
+> +					    struct of_phandle_args *args)
+> +{
+> +	struct rcar_gen3_chan *ch =3D dev_get_drvdata(dev);
+> +
+> +	if (args->args_count =3D=3D 0)	/* For old version dts */
+> +		return ch->rphys[PHY_INDEX_BOTH_HC].phy;
+> +	else if (args->args_count > 1)	/* Prevent invalid args count */
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	if (args->args[0] >=3D NUM_OF_PHYS)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	return ch->rphys[args->args[0]].phy;
+> +}
+> +
+> +static enum usb_dr_mode rcar_gen3_get_dr_mode(struct device_node *np)
+> +{
+> +	enum usb_dr_mode candidate =3D USB_DR_MODE_UNKNOWN, tmp;
+> +	int i;
+> +
+> +	/*
+> +	 * If one of device nodes has other dr_mode except UNKNOWN,
+> +	 * this function returns UNKNOWN.
+> +	 */
+> +	for (i =3D 0; i < NUM_OF_PHYS; i++) {
+> +		tmp =3D of_usb_get_dr_mode_by_phy(np, i);
 
->> +	return 0;
->> +}
->> +
->> +static int tegra_p2u_remove(struct platform_device *pdev)
->> +{
->> +	return 0;
->> +}
-> 
-> not required.
-I think this is still required as this driver can be made as a module right?
+We are calling of_usb_get_dr_mode_by_phy with i =3D=3D 0, but we don't docu=
+ment it
+in the dt-bindings document?
 
-> 
-> Thanks
-> Kishon
-> 
+> +		if (tmp !=3D USB_DR_MODE_UNKNOWN) {
+> +			if (candidate =3D=3D USB_DR_MODE_UNKNOWN)
+> +				candidate =3D tmp;
+> +			else if (candidate !=3D tmp)
+> +				return USB_DR_MODE_UNKNOWN;
+> +		}
+> +	}
+> +
+> +	return candidate;
+> +}
+> +
+>  static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev =3D &pdev->dev;
+>  	struct rcar_gen3_chan *channel;
+>  	struct phy_provider *provider;
+>  	struct resource *res;
+> -	int irq, ret =3D 0;
+> +	int irq, ret =3D 0, i;
+>=20
+>  	if (!dev->of_node) {
+>  		dev_err(dev, "This driver needs device tree\n");
+> @@ -458,7 +584,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_d=
+evice *pdev)
+>  			dev_err(dev, "No irq handler (%d)\n", irq);
+>  	}
+>=20
+> -	channel->dr_mode =3D of_usb_get_dr_mode_by_phy(dev->of_node, 0);
+> +	channel->dr_mode =3D rcar_gen3_get_dr_mode(dev->of_node);
+>  	if (channel->dr_mode !=3D USB_DR_MODE_UNKNOWN) {
+>  		int ret;
+>=20
+> @@ -482,11 +608,17 @@ static int rcar_gen3_phy_usb2_probe(struct platform=
+_device *pdev)
+>  	 * And then, phy-core will manage runtime pm for this device.
+>  	 */
+>  	pm_runtime_enable(dev);
+> -	channel->phy =3D devm_phy_create(dev, NULL, &rcar_gen3_phy_usb2_ops);
+> -	if (IS_ERR(channel->phy)) {
+> -		dev_err(dev, "Failed to create USB2 PHY\n");
+> -		ret =3D PTR_ERR(channel->phy);
+> -		goto error;
+> +	for (i =3D 0; i < NUM_OF_PHYS; i++) {
+> +		channel->rphys[i].phy =3D devm_phy_create(dev, NULL,
+> +						  &rcar_gen3_phy_usb2_ops);
+> +		if (IS_ERR(channel->rphys[i].phy)) {
+> +			dev_err(dev, "Failed to create USB2 PHY\n");
+> +			ret =3D PTR_ERR(channel->rphys[i].phy);
+> +			goto error;
+> +		}
+> +		channel->rphys[i].ch =3D channel;
+> +		channel->rphys[i].int_enable_bits =3D rcar_gen3_int_enable[i];
+> +		phy_set_drvdata(channel->rphys[i].phy, &channel->rphys[i]);
+>  	}
+>=20
+>  	channel->vbus =3D devm_regulator_get_optional(dev, "vbus");
+> @@ -499,10 +631,9 @@ static int rcar_gen3_phy_usb2_probe(struct platform_=
+device *pdev)
+>  	}
+>=20
+>  	platform_set_drvdata(pdev, channel);
+> -	phy_set_drvdata(channel->phy, channel);
+>  	channel->dev =3D dev;
+>=20
+> -	provider =3D devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> +	provider =3D devm_of_phy_provider_register(dev, rcar_gen3_phy_usb2_xlat=
+e);
+>  	if (IS_ERR(provider)) {
+>  		dev_err(dev, "Failed to register PHY provider\n");
+>  		ret =3D PTR_ERR(provider);
+> --
+> 2.7.4
