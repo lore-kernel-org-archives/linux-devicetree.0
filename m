@@ -1,110 +1,235 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v11 2/8] mfd: bd70528: Support ROHM bd70528 PMIC - core
-Date: Wed, 3 Apr 2019 13:10:03 +0300
-Message-ID: <20190403101003.GC3493@localhost.localdomain>
-References: <cover.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
- <39efebe0396dd42de30d37c6f3c1ef2926c90210.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
- <20190403073152.GM4187@dell>
- <20190403084732.GA3493@localhost.localdomain>
- <20190403093015.GJ11301@dell>
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: [PATCH v3 2/2] driver: clocksource: Add nxp system counter timer
+ driver support
+Date: Wed, 3 Apr 2019 10:20:31 +0000
+Message-ID: <1554287101-16189-2-git-send-email-ping.bai@nxp.com>
+References: <1554287101-16189-1-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190403093015.GJ11301@dell>
+In-Reply-To: <1554287101-16189-1-git-send-email-ping.bai@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, heikki.haikola@fi.rohmeurop
+To: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 10:30:15AM +0100, Lee Jones wrote:
-> On Wed, 03 Apr 2019, Matti Vaittinen wrote:
-> 
-> > Hello Lee,
-> > 
-> > Thanks for taking a look on this again =) I agree with most of the
-> > comments and correct them at next version.
-> > 
-> > On Wed, Apr 03, 2019 at 08:31:52AM +0100, Lee Jones wrote:
-> > > On Mon, 25 Mar 2019, Matti Vaittinen wrote:
-> > > 
-> > > > ROHM BD70528MWV is an ultra-low quiescent current general
-> > > > purpose single-chip power management IC for battery-powered
-> > > > portable devices.
-> > > > 
-> > > > Add MFD core which enables chip access for following subdevices:
-> > > > 	- regulators/LED drivers
-> > > > 	- battery-charger
-> > > > 	- gpios
-> > > > 	- 32.768kHz clk
-> > > > 	- RTC
-> > > > 	- watchdog
-> > > > 
-> > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > > + * Mapping of main IRQ register bits to sub irq register offsets so
-> > > 
-> > > "sub-IRQ"
-> > > 
-> > > > + * that we can access corect sub IRQ registers based on bits that
-> > > 
-> > > "sub IRQ" is also fine, but please standardise.
-> > > 
-> > > I do prefer "sub-IRQ" though.
-> > 
-> > I'll go with "sub-IRQ" then
-> > 
-> > > > +
-> > > > +#define WD_CTRL_MAGIC1 0x55
-> > > > +#define WD_CTRL_MAGIC2 0xAA
-> > > > +/**
-> > > > + * bd70528_wdt_set - arm or disarm watchdog timer
-> > > > + *
-> > > > + * @data:	device data for the PMIC instance we want to operate on
-> > > > + * @enable:	new state of WDT. zero to disable, non zero to enable
-> > > > + * @old_state:	previous state of WDT will be filled here
-> > > > + *
-> > > > + * Arm or disarm WDT on BD70528 PMIC. Expected to be called only by
-> > > > + * BD70528 RTC and BD70528 WDT drivers. The rtc_timer_lock must be taken
-> > > > + * by calling bd70528_wdt_lock before calling bd70528_wdt_set.
-> > > > + */
-> > > > +int bd70528_wdt_set(struct rohm_regmap_dev *data, int enable, int *old_state)
-> > > 
-> > > Why doesn't this reside in the watchdog driver?
-> > 
-> > If my memory serves me right we shortly discussed this already during v8
-> > review ;) Cant blame you though as I have seen some of the mail traffic
-> > going through your inbox :D
-> > 
-> > The motivation to have the functions exported from MFD is to not create
-> > sirect dependency between RTC and WDT. There may be cases where we want
-> > to leave either RTC or WDT out of compilation. MFD is always needed so
-> > the dependency from MFD to RTC/WDT does not harm.
-> > 
-> > (Here's some discussion necromancy if you are interested in re-reading
-> > how we did end up with this implementation:
-> > https://lore.kernel.org/lkml/20190212091723.GZ20638@dell/)
-> > 
-> > I hope you are still Ok with having the WDT control functions in MFD.
-> 
-> OOI, why does the RTC need to control the WDT?
+From: Bai Ping <ping.bai@nxp.com>
 
-I thought I had a comment about this somewhere in code... O_o Must have
-been in some development branch I had :/
+The system counter (sys_ctr) is a programmable system counter
+which provides a shared time base to the Cortex A15, A7, A53 etc cores.
+It is intended for use in applications where the counter is always
+powered on and supports multiple, unrelated clocks. The sys_ctr hardware
+supports:
+ - 56-bit counter width (roll-over time greater than 40 years)
+ - compare frame(64-bit compare value) contains programmable interrupt
+   generation
 
-Anyways, setting the RTC counter may cause watchdog to trigger. It is not
-further explained why but I would guess watchdog uses RTC counter to check
-if it should've been pinged already. So RTC needs to disable watch dog for
-the duration of hwclock setting and enable it again after the new time is
-set. I can add a comment about this to MFD driver if it helps :)
+Signed-off-by: Bai Ping <ping.bai@nxp.com>
+---
+change v1->v2:
+ - no change=20
+change v2->v3:
+ - remove the clocksource, we only need to use this module for timer purpos=
+e,
+   so register it as clockevent is enough.
+ - use the timer_of_init to init the irq, clock, etc.
+ - remove some unnecessary comments.
+---
+ drivers/clocksource/Kconfig            |   7 ++
+ drivers/clocksource/Makefile           |   1 +
+ drivers/clocksource/timer-imx-sysctr.c | 149 +++++++++++++++++++++++++++++=
+++++
+ 3 files changed, 157 insertions(+)
+ create mode 100644 drivers/clocksource/timer-imx-sysctr.c
 
-Br,
-	Matti Vaittinen
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 171502a..90cd908 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -598,6 +598,13 @@ config CLKSRC_IMX_TPM
+ 	  Enable this option to use IMX Timer/PWM Module (TPM) timer as
+ 	  clocksource.
+=20
++config TIMER_IMX_SYS_CTR
++	bool "i.MX system counter timer" if COMPILE_TEST
++	depends on ARCH_MXC
++	select TIMER_OF
++	help
++	  Enable this option to use i.MX system counter timer for clockevent.
++
+ config CLKSRC_ST_LPC
+ 	bool "Low power clocksource found in the LPC" if COMPILE_TEST
+ 	select TIMER_OF if OF
+diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+index be6e0fb..bc5ce50 100644
+--- a/drivers/clocksource/Makefile
++++ b/drivers/clocksource/Makefile
+@@ -73,6 +73,7 @@ obj-$(CONFIG_CLKSRC_MIPS_GIC)		+=3D mips-gic-timer.o
+ obj-$(CONFIG_CLKSRC_TANGO_XTAL)		+=3D timer-tango-xtal.o
+ obj-$(CONFIG_CLKSRC_IMX_GPT)		+=3D timer-imx-gpt.o
+ obj-$(CONFIG_CLKSRC_IMX_TPM)		+=3D timer-imx-tpm.o
++obj-$(CONFIG_TIMER_IMX_SYS_CTR)		+=3D timer-imx-sysctr.o
+ obj-$(CONFIG_ASM9260_TIMER)		+=3D asm9260_timer.o
+ obj-$(CONFIG_H8300_TMR8)		+=3D h8300_timer8.o
+ obj-$(CONFIG_H8300_TMR16)		+=3D h8300_timer16.o
+diff --git a/drivers/clocksource/timer-imx-sysctr.c b/drivers/clocksource/t=
+imer-imx-sysctr.c
+new file mode 100644
+index 0000000..d3afc3b
+--- /dev/null
++++ b/drivers/clocksource/timer-imx-sysctr.c
+@@ -0,0 +1,149 @@
++// SPDX-License-Identifier: GPL-2.0+
++//
++// Copyright 2017-2019 NXP
++
++#include <linux/interrupt.h>
++#include <linux/clockchips.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++
++#include "timer-of.h"
++
++#define CMP_OFFSET	0x10000
++
++#define CNTCV_LO	0x8
++#define CNTCV_HI	0xc
++#define CMPCV_LO	(CMP_OFFSET + 0x20)
++#define CMPCV_HI	(CMP_OFFSET + 0x24)
++#define CMPCR		(CMP_OFFSET + 0x2c)
++
++#define SYS_CTR_EN		0x1
++#define SYS_CTR_IRQ_MASK	0x2
++
++static void __iomem *sys_ctr_base;
++
++static void sysctr_timer_enable(bool enable)
++{
++	u32 val;
++
++	val =3D readl(sys_ctr_base + CMPCR);
++	val &=3D ~SYS_CTR_EN;
++	if (enable)
++		val |=3D SYS_CTR_EN;
++
++	writel(val, sys_ctr_base + CMPCR);
++}
++
++static void sysctr_irq_acknowledge(void)
++{
++	/*
++	 * clear the enable bit(EN =3D0) will clear
++	 * the status bit(ISTAT =3D 0), then the interrupt
++	 * signal will be negated(acknowledged).
++	 */
++	sysctr_timer_enable(false);
++}
++
++static inline u64 sysctr_read_counter(void)
++{
++	u32 cnt_hi, tmp_hi, cnt_lo;
++
++	do {
++		cnt_hi =3D readl_relaxed(sys_ctr_base + CNTCV_HI);
++		cnt_lo =3D readl_relaxed(sys_ctr_base + CNTCV_LO);
++		tmp_hi =3D readl_relaxed(sys_ctr_base + CNTCV_HI);
++	} while (tmp_hi !=3D cnt_hi);
++
++	return  ((u64) cnt_hi << 32) | cnt_lo;
++}
++
++static int sysctr_set_next_event(unsigned long delta,
++				 struct clock_event_device *evt)
++{
++	u32 cmp_hi, cmp_lo;
++	u64 next;
++
++	sysctr_timer_enable(false);
++
++	next =3D sysctr_read_counter();
++
++	next +=3D delta;
++
++	cmp_hi =3D (next >> 32) & 0x00fffff;
++	cmp_lo =3D next & 0xffffffff;
++
++	writel_relaxed(cmp_hi, sys_ctr_base + CMPCV_HI);
++	writel_relaxed(cmp_lo, sys_ctr_base + CMPCV_LO);
++
++	sysctr_timer_enable(true);
++
++	return 0;
++}
++
++static int sysctr_set_state_oneshot(struct clock_event_device *evt)
++{
++	sysctr_timer_enable(true);
++
++	return 0;
++}
++
++static int sysctr_set_state_shutdown(struct clock_event_device *evt)
++{
++	sysctr_timer_enable(false);
++
++	return 0;
++}
++
++static irqreturn_t sysctr_timer_interrupt(int irq, void *dev_id)
++{
++	struct clock_event_device *evt =3D dev_id;
++
++	sysctr_irq_acknowledge();
++
++	evt->event_handler(evt);
++
++	return IRQ_HANDLED;
++}
++
++static struct timer_of to_sysctr =3D {
++	.flags =3D TIMER_OF_IRQ | TIMER_OF_CLOCK | TIMER_OF_BASE,
++	.clkevt =3D {
++		.name			=3D "i.MX system counter timer",
++		.features		=3D CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_DYNIRQ,
++		.set_state_oneshot	=3D sysctr_set_state_oneshot,
++		.set_next_event		=3D sysctr_set_next_event,
++		.set_state_shutdown	=3D sysctr_set_state_shutdown,
++		.rating			=3D 200,
++	},
++	.of_irq =3D {
++		.handler		=3D sysctr_timer_interrupt,
++		.flags			=3D IRQF_TIMER | IRQF_IRQPOLL,
++	},
++	.of_clk =3D {
++		.name =3D "per",
++	},
++};
++
++static void __init sysctr_clockevent_init(void)
++{
++	to_sysctr.clkevt.cpumask =3D cpumask_of(0);
++
++	clockevents_config_and_register(&to_sysctr.clkevt, timer_of_rate(&to_sysc=
+tr),
++					0xff, 0x7fffffff);
++}
++
++static int __init sysctr_timer_init(struct device_node *np)
++{
++	int ret =3D 0;
++
++	ret =3D timer_of_init(np, &to_sysctr);
++	if (ret)
++		return ret;
++
++	sys_ctr_base =3D timer_of_base(&to_sysctr);
++
++	sysctr_clockevent_init();
++
++	return 0;
++}
++TIMER_OF_DECLARE(sysctr_timer, "nxp,sysctr-timer", sysctr_timer_init);
+--=20
+1.9.1
