@@ -1,74 +1,55 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 3/4] mfd: ti-lmu: Remove LM3532 backlight driver
- references
-Date: Wed, 3 Apr 2019 19:45:08 +0200
-Message-ID: <8b771488-a914-0d75-6e9b-9a67b4c5017e@gmail.com>
-References: <20190321142838.22985-1-dmurphy@ti.com>
- <20190321142838.22985-3-dmurphy@ti.com>
- <8769a95d-179f-6219-0a63-9dd623cdd297@gmail.com> <20190325075317.GW4731@dell>
- <c950b7d3-eeb1-2dc2-b732-3a40d5b3a8b7@gmail.com>
- <20190403075709.GD11301@dell>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 1/3] Input: lpc32xx-key - add clocks property and fix DT
+ binding example
+Date: Wed, 3 Apr 2019 10:53:10 -0700
+Message-ID: <20190403175310.GB53104@dtor-ws>
+References: <20190126142921.16041-1-vz@mleia.com>
+ <20190126142921.16041-2-vz@mleia.com> <20190223004158.GA3951@bogus>
+ <41befcd7-5ca4-34c9-6929-1ae1d706b108@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190403075709.GD11301@dell>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, pavel@ucw.cz, tony@atomide.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <41befcd7-5ca4-34c9-6929-1ae1d706b108@mleia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sylvain Lemieux <slemieux.tyco@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 4/3/19 9:57 AM, Lee Jones wrote:
-> On Mon, 25 Mar 2019, Jacek Anaszewski wrote:
+On Sat, Feb 23, 2019 at 01:38:01PM +0200, Vladimir Zapolskiy wrote:
+> Hi Dmitry,
 > 
->> On 3/25/19 8:53 AM, Lee Jones wrote:
->>> On Sat, 23 Mar 2019, Jacek Anaszewski wrote:
->>>
->>>> Hi Lee,
->>>>
->>>> Can we have your ack for this going via LED tree, please?
->>>
->>> Patch looks okay.
->>>
->>> You can take it through the LED, but if you do I will need you to send
->>> me a pull-request to a minimised immutable branch please.
->>>
->>> If you cannot do this, I can apply the set and provide the same to
->>> you.
->>>
->>> If you choose the former:
->>>
->>>     Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
->>>
->>> Please let me know what you decide
->>>
->>
->> I've been exposing integration branches in the past, but after Linus'
->> message [0] I have my doubts now. I wonder if it wouldn't make more
->> sense if I just took the patches, and you'd cherry-pick them only in
->> case such a need occurs. This way we would avoid this whole merge
->> noise, which in an optimistic and very plausible case will not be needed
->> at all.
->>
->> [0] https://lkml.org/lkml/2017/4/19/1104
+> On 02/23/2019 02:41 AM, Rob Herring wrote:
+> > On Sat, 26 Jan 2019 16:29:19 +0200, Vladimir Zapolskiy wrote:
+> >> The keypad controller on NXP LPC32xx requires its clock gate to be open,
+> >> therefore add description of the requires 'clocks' property.
+> >>
+> >> In addition adjust the example by adding description of required 'clocks'
+> >> property and by fixing 'interrupts' property.
+> >>
+> >> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+> >> ---
+> >>  Documentation/devicetree/bindings/input/lpc32xx-key.txt | 5 ++++-
+> >>  1 file changed, 4 insertions(+), 1 deletion(-)
+> >>
+> > 
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > 
 > 
-> That email is 2 years old, and does not seem relevant to what we're
-> trying to achieve.  I've only ever had issues when *not* creating
-> immutable branches for these, cross subsystem scenarios.  The
-> shared branches I create are always minimalist and never change.
+> can you please pull this documentation change through Linux input branch?
 > 
-> I'm happy to take the patches and create a suitable pull-request for
-> you if you are uncomfortable with the process.  I just need your Ack
-> to do so.  Up to you.
+> The two other dts changes have been already included into arm-soc.
 
-I don't have any problem with the process. The clear gain of cherry
-picking is more linear history. And the branch can be always created
-when such a need occurs in linux-next.
-
-That being said, I will send you a pull request once we sort out
-the problem with obtaining a reference to the backlight node.
+Applied, thank you.
 
 -- 
-Best regards,
-Jacek Anaszewski
+Dmitry
