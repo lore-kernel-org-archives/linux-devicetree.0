@@ -1,96 +1,89 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [v3 PATCH 4/6] usb: roles: add API to get usb_role_switch by node
-Date: Wed, 3 Apr 2019 10:09:12 +0800
-Message-ID: <1554257354-7440-5-git-send-email-chunfeng.yun@mediatek.com>
-References: <1554257354-7440-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Jerry-ch Chen <Jerry-ch.Chen@mediatek.com>
+Subject: Re: [RFC PATCH V0 5/7] dts: arm64: mt8183: Add FD nodes
+Date: Wed, 3 Apr 2019 10:26:54 +0800
+Message-ID: <1554258414.11458.27.camel@mtksdccf07>
+References: <1550648893-42050-1-git-send-email-Jerry-Ch.chen@mediatek.com>
+ <1550648893-42050-6-git-send-email-Jerry-Ch.chen@mediatek.com>
+ <20190325215728.GA32712@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554257354-7440-1-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, Alan Stern <stern@rowland.harvard.edu>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190325215728.GA32712@bogus>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sean Cheng =?UTF-8?Q?=28=E9=84=AD=E6=98=87=E5=BC=98=29?= <Sean.Cheng@mediatek.com>, "laurent.pinchart+renesas@ideasonboard.com" <laurent.pinchart+renesas@ideasonboard.com>, Rynn Wu =?UTF-8?Q?=28=E5=90=B3=E8=82=B2=E6=81=A9=29?= <Rynn.Wu@mediatek.com>, Christie Yu =?UTF-8?Q?=28=E6=B8=B8=E9=9B=85=E6=83=A0=29?= <christie.yu@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Holmes Chiou =?UTF-8?Q?=28=E9=82=B1=E6=8C=BA=29?= <holmes.chiou@mediatek.com>, Jerry-ch.chen@mediatek.com, "tfiga@chromium.org" <tfiga@chromium.org>, Jungo Lin =?UTF-8?Q?=28=E6=9E=97=E6=98=8E=E4=BF=8A=29?= <jungo.lin@mediatek.com>, Sj Huang =?UTF-8?Q?=28=E9=BB=83=E4=BF=A1=E7=92=8B=29?= <sj.huang@mediatek.com>, "yuzhao@chromium.org" <yuzhao@chromium.org>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "zwisler@chromium.org" <zwisler@>
 List-Id: devicetree@vger.kernel.org
 
-Add fwnode_usb_role_switch_get() to make easier to get
-usb_role_switch by fwnode which register it.
-It's useful when there is not device_connection registered
-between two drivers and only knows the fwnode which register
-usb_role_switch.
+On Tue, 2019-03-26 at 05:57 +0800, Rob Herring wrote:
+> On Wed, Feb 20, 2019 at 03:48:11PM +0800, Jerry-ch Chen wrote:
+> > This patch adds nodes for Face Detection (FD) unit. FD is embedded
+> > in Mediatek SoCs and works with the co-processor to perform face
+> > detection on the input data and image and output detected face result.
+> > 
+> > Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
+> > ---
+> >  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 20 ++++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > index b3d8dfd..45c7e2f 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > @@ -440,6 +440,26 @@
+> >  			#clock-cells = <1>;
+> >  		};
+> >  
+> > +		fd_smem: fd_smem {
+> > +			compatible = "mediatek,fd_smem";
+> > +			mediatek,larb = <&larb5>;
+> > +			iommus = <&iommu M4U_PORT_CAM_IMGI>;
+> 
+> This doesn't look like an actual h/w device...
+> 
+Thank you for your comments.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
-v3 changes:
-  1. use fwnodes instead of node suggested by Andy
-  2. rebuild the API suggested by Heikki
+fd_smem is not an actual h/w device and it will not be used in the
+future. We are going to remove the fd smem driver and fd_smem node.
 
-v2 no changes
----
- drivers/usb/roles/class.c | 31 +++++++++++++++++++++++++++++++
- include/linux/usb/role.h  |  2 ++
- 2 files changed, 33 insertions(+)
+> > +		};
+> > +
+> > +		fd:fd@1502b000 {
+> 
+> space after the :  ^
+will be fixed.
 
-diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-index f45d8df5cfb8..5ecb57f8960b 100644
---- a/drivers/usb/roles/class.c
-+++ b/drivers/usb/roles/class.c
-@@ -12,6 +12,7 @@
- #include <linux/device.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/of.h>
- #include <linux/slab.h>
- 
- static struct class *role_class;
-@@ -135,6 +136,36 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(usb_role_switch_get);
- 
-+static int __switch_match_fwnode(struct device *dev, const void *fwnode)
-+{
-+	return dev_fwnode(dev->parent) == (const struct fwnode_handle *)fwnode;
-+}
-+
-+/**
-+ * fwnode_usb_role_switch_get - Find USB role switch by it's parent fwnode
-+ * @fwnode: The fwnode that register USB role switch
-+ *
-+ * Finds and returns role switch registered by @fwnode. The reference count
-+ * for the found switch is incremented.
-+ */
-+struct usb_role_switch *
-+fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
-+{
-+	struct usb_role_switch *sw;
-+	struct device *dev;
-+
-+	dev = class_find_device(role_class, NULL, fwnode,
-+				__switch_match_fwnode);
-+	if (!dev)
-+		return ERR_PTR(-EPROBE_DEFER);
-+
-+	sw = to_role_switch(dev);
-+	WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
-+
-+	return sw;
-+}
-+EXPORT_SYMBOL_GPL(fwnode_usb_role_switch_get);
-+
- /**
-  * usb_role_switch_put - Release handle to a switch
-  * @sw: USB Role Switch
-diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
-index c05ffa6abda9..d21cd55d9e45 100644
---- a/include/linux/usb/role.h
-+++ b/include/linux/usb/role.h
-@@ -46,6 +46,8 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
- enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
- struct usb_role_switch *usb_role_switch_get(struct device *dev);
- void usb_role_switch_put(struct usb_role_switch *sw);
-+struct usb_role_switch *
-+fwnode_usb_role_switch_get(struct fwnode_handle *fwnode);
- 
- struct usb_role_switch *
- usb_role_switch_register(struct device *parent,
--- 
-2.20.1
+> > +			compatible = "mediatek,fd";
+> 
+> Should be SoC specific.
+> 
+will be fixed as "mediatek, mt8183-fd".
+
+Thanks and Best Regards
+Jerry
+> > +			mediatek,larb = <&larb5>;
+> > +			mediatek,vpu = <&vpu>;
+> > +			iommus = <&iommu M4U_PORT_CAM_FDVT_RP>,
+> > +				 <&iommu M4U_PORT_CAM_FDVT_WR>,
+> > +				 <&iommu M4U_PORT_CAM_FDVT_RB>;
+> > +			reg = <0 0x1502b000 0 0x1000>;
+> > +			interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_LOW>;
+> > +			clocks = <&imgsys CLK_IMG_FDVT>;
+> > +			clock-names = "FD_CLK_IMG_FD";
+> > +			smem_device = <&fd_smem>;
+> > +		};
+> > +
+> >  		vdecsys: syscon@16000000 {
+> >  			compatible = "mediatek,mt8183-vdecsys", "syscon";
+> >  			reg = <0 0x16000000 0 0x1000>;
+> > -- 
+> > 1.9.1
+> > 
