@@ -1,77 +1,112 @@
-From: Flavio Suligoi <f.suligoi@asem.it>
-Subject: RE: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
-Date: Wed, 3 Apr 2019 15:49:03 +0000
-Message-ID: <fd4bef0bb64e4b6fbdf74cbebaa12de3@asem.it>
-References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
- <1554303165-24813-2-git-send-email-f.suligoi@asem.it>
- <20190403150824.GO22216@piout.net> <452a4cf1410a41c8b6f767ac6258482e@asem.it>
- <20190403153143.GQ22216@piout.net>
+From: Adam Ford <aford173@gmail.com>
+Subject: Re: [PATCH v2 1/4] ARM: davinci: fix cpufreq registration on da850-evm
+Date: Wed, 3 Apr 2019 10:49:46 -0500
+Message-ID: <CAHCN7x+-GRBygMt9APi9sf19PQksfmXk9sOZUo-1YY40RhUmng@mail.gmail.com>
+References: <20190322133105.5945-1-brgl@bgdev.pl> <20190322133105.5945-2-brgl@bgdev.pl>
+ <CAHCN7xJj_aA8XFR6=ZxO-WrfkJRY5fS6NgjHbeqpdfhUnn1apA@mail.gmail.com>
+ <CAMpxmJVBTny7kzADSZHQXk_ZUjnRaNWu0Ly3WC8v+zPmR8Dizg@mail.gmail.com>
+ <bb734e20-d2c7-73f4-e2c5-3b810ccf4c81@ti.com> <CAMRc=MdYhaED30Xu8oJiJD7F9z=SPu6u+1p32mQnX0tEL=iOiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190403153143.GQ22216@piout.net>
-Content-Language: en-US
+In-Reply-To: <CAMRc=MdYhaED30Xu8oJiJD7F9z=SPu6u+1p32mQnX0tEL=iOiA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> > > On 03/04/2019 16:52:45+0200, Flavio Suligoi wrote:
-> > > > The pcf2127 has an automatic battery-low detection function.
-> > > >
-> > > > In case of battery-low event, an interrupt generation through
-> > > > the pin INTn (active low) can be enabled, setting the flag BLIE
-> > > > in the register Control_3.
-> > > >
-> > > > This function is activated by the "battery-low-hw-alarm" DT
-> property.
-> > > >
-> > > > Example of use for an NXP i.MX7D board:
-> > > >
-> > > > &i2c3 {
-> > > > 	clock-frequency = <100000>;
-> > > > 	pinctrl-names = "default";
-> > > > 	pinctrl-0 = <&pinctrl_i2c3>;
-> > > > 	status = "okay";
-> > > >
-> > > > 	pcf2127@51 {
-> > > > 		compatible = "nxp,pcf2127";
-> > > > 		reg = <0x51>;
-> > > > 		battery-low-hw-alarm;
-> > > > 		status = "okay";
-> > > > 	};
-> > > > };
-> > > >
-> > >
-> > > So I'm curious, how do you then use that signal? I have a (not yet
-> sent)
-> > > series adding alarm support for the pcf2127. The issue having BLIE is
-> > > that then this will prevent the alarm to work properly.
-> > >
-> > > So my guess is that you have nINT connected to an LED or something
-> that
-> > > the user can see?
-> > >
+On Wed, Apr 3, 2019 at 7:50 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> =C5=9Br., 27 mar 2019 o 12:14 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a=
+):
 > >
-> > I'm working on our custom embedded board with an NXP i.MX7D,
-> > developed here, in Asem (www.asem.it).
-> > The nINT pin is connected to a GPIO of the MX7 and then
-> > used by an applicative sw, to generate an alarm for the user.
+> > Hi Bart,
 > >
-> 
-> Then, you should probably not enable BLIE because this will cause issues
-> with the alarm functionnality.. It is certainly enough to use
-> RTC_VL_READ periodically.
+> > On 26/03/19 11:21 PM, Bartosz Golaszewski wrote:
+> > > wt., 26 mar 2019 o 15:00 Adam Ford <aford173@gmail.com> napisa=C5=82(=
+a):
+> > >>
+> > >> On Fri, Mar 22, 2019 at 8:31 AM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+> > >>>
+> > >>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >>>
+> > >>> The system_rev variable is never set on davinci and is always 0, so
+> > >>> we're using the default max operating point of 300MHz. The cvdd sup=
+ply
+> > >>> comes from the tps6507 pmic and the voltage can go all the way to 1=
+.3V
+> > >>> so the maximum supported rate should be 456MHz.
+> > >>
+> > >> My understanding is that only certain revisions of the silicon can g=
+o
+> > >> to 456MHz.   The L138's Datasheet lists both a 456 and 375 version. =
+ I
+> > >> cannot find a way to read a register to determine which version of t=
+he
+> > >> silicon is available. Maybe Sekhar can confirm.
+> > >>
+> > >
+> > > Commit 28bd2c341120 ("davinci: am18x/da850/omap-l138 evm: add support
+> > > for higher speed grades") mentions the following:
+> > >
+> > > ---
+> > > U-Boot on the EVM sets up ATAG_REVISION to inform the OS
+> > > regarding the speed grade supported by the silicon. We use
+> > > this information to pass on the speed grade information to
+> > > the SoC code.
+> > > ---
+> > >
+> > > Should the system_rev somehow reflect that revision? Any way I can ch=
+eck it?
+> >
+> > Can you check if the procedure in doc/README.davinci in U-Boot sources
+> > still works?
+> >
+> > Environment Variables
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > The DA850 EVM allows the user to specify the maximum cpu clock allowed =
+by the
+> > silicon, in Hz, via an environment variable "maxcpuclk".
+> >
+> > The maximum clock rate allowed depends on the silicon populated on the =
+EVM.
+> > Please make sure you understand the restrictions placed on this clock i=
+n the
+> > device specific datasheet before setting up this variable. This informa=
+tion is
+> > passed to the Linux kernel using the ATAG_REVISION atag.
+> >
+> > If "maxcpuclk" is not defined, the configuration CONFIG_DA850_EVM_MAX_C=
+PU_CLK
+> > is used to obtain this information.
+> >
+> > Thanks,
+> > Sekhar
+>
+> Hi Sekhar,
+>
+> I built the current upstream u-boot and the get_board_rev() function
+> for da850-evm doesn't seem to be called at all. For instance the
+> lego-ev3 platform does this:
+>
+> ./lego/ev3/legoev3.c:108: board_rev =3D get_board_rev();
+>
+> but in davinci this function seems to be unused and I don't see it
+> called from any other core u-boot component. I don't see any commit
+> that would mention this function but there are a lot of commits
+> removing get_board_rev() for other boards in git log. Is it possible
+> it stopped being used at some point?
 
-We use the nINT signaling solution because of this pin, in addition
-to be used by the CPU, can be also connected to an external connector,
-available for the final user.
-Anyway, even if the BLIE is set, the sw low voltage alarm works,
-with the message (displayed about every 12 minutes):
+Look for setup_revision_tag in arch/arm/lib/bootm.c
 
-rtc-pcf2127-i2c 2-0051: low voltage detected, check/replace RTC battery.
+The function appears to be called from there.
 
-What kind of issues did you find with BLIE enabled?
+There is a __weak reference in the header file which I think allows
+people to remove them without breaking bootm.
 
-Flavio
+adam
+>
+> Bart
