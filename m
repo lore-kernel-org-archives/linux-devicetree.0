@@ -1,8 +1,8 @@
 From: Pascal PAILLET-LME <p.paillet@st.com>
-Subject: [PATCH 2/3] ARM: dts: stm32: add stpmic1 support on stm32mp157a dk1
+Subject: [PATCH 1/3] ARM: dts: stm32: add stpmic1 support on stm32mp157c ed1
  board
 Date: Wed, 3 Apr 2019 13:40:55 +0000
-Message-ID: <1554298852-9955-3-git-send-email-p.paillet@st.com>
+Message-ID: <1554298852-9955-2-git-send-email-p.paillet@st.com>
 References: <1554298852-9955-1-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,53 +23,54 @@ To: "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <a
 Cc: Pascal PAILLET-LME <p.paillet@st.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds stpmic1 support on stm32mp157a dk1 board.
+This patch adds stpmic1 support on stm32mp157c ed1 board.
 The STPMIC1 is a PMIC from STMicroelectronics. The STPMIC1 integrates 10
 regulators, 3 power switches, a watchdog and an input for a power on key.
 
 Signed-off-by: Pascal Paillet <p.paillet@st.com>
 ---
- arch/arm/boot/dts/stm32mp157a-dk1.dts | 157 ++++++++++++++++++++++++++++++++--
- 1 file changed, 149 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/stm32mp157c-ed1.dts | 155 ++++++++++++++++++++++++++++++----
+ 1 file changed, 139 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-index 1b1886d..b25b551 100644
---- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -9,6 +9,7 @@
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+index 9fd7943..678b0f1 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -8,6 +8,7 @@
  #include "stm32mp157c.dtsi"
  #include "stm32mp157-pinctrl.dtsi"
  #include <dt-bindings/gpio/gpio.h>
 +#include <dt-bindings/mfd/st,stpmic1.h>
  
  / {
- 	model = "STMicroelectronics STM32MP157A-DK1 Discovery Board";
-@@ -36,14 +37,6 @@
- 			default-state = "off";
- 		};
+ 	model = "STMicroelectronics STM32MP157C eval daughter";
+@@ -42,22 +43,6 @@
+ 		regulator-always-on;
  	};
--
--	v3v3: regulator-3v3 {
+ 
+-	vdd_sd: regulator-vdd_sd {
 -		compatible = "regulator-fixed";
--		regulator-name = "v3v3";
+-		regulator-name = "vdd_sd";
 -		regulator-min-microvolt = <3300000>;
 -		regulator-max-microvolt = <3300000>;
 -		regulator-always-on;
 -	};
- };
- 
- &ethernet0 {
-@@ -65,6 +58,154 @@
- 	};
- };
- 
-+
-+&i2c4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c4_pins_a>;
-+	i2c-scl-rising-time-ns = <185>;
-+	i2c-scl-falling-time-ns = <20>;
-+	status = "okay";
+-
+-	vdd_usb: vdd-usb {
+-		compatible = "regulator-fixed";
+-		regulator-name = "vdd_usb";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-		regulator-always-on;
+-	};
+-
+ 	sd_switch: regulator-sd_switch {
+ 		compatible = "regulator-gpio";
+ 		regulator-name = "sd_switch";
+@@ -82,6 +67,144 @@
+ 	i2c-scl-rising-time-ns = <185>;
+ 	i2c-scl-falling-time-ns = <20>;
+ 	status = "okay";
 +	/delete-property/dmas;
 +	/delete-property/dma-names;
 +
@@ -84,7 +85,9 @@ index 1b1886d..b25b551 100644
 +		regulators {
 +			compatible = "st,stpmic1-regulators";
 +			ldo1-supply = <&v3v3>;
++			ldo2-supply = <&v3v3>;
 +			ldo3-supply = <&vdd_ddr>;
++			ldo5-supply = <&v3v3>;
 +			ldo6-supply = <&v3v3>;
 +			pwr_sw1-supply = <&bst_out>;
 +			pwr_sw2-supply = <&bst_out>;
@@ -126,19 +129,17 @@ index 1b1886d..b25b551 100644
 +				regulator-initial-mode = <0>;
 +			};
 +
-+			v1v8_audio: ldo1 {
-+				regulator-name = "v1v8_audio";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
++			vdda: ldo1 {
++				regulator-name = "vdda";
++				regulator-min-microvolt = <2900000>;
++				regulator-max-microvolt = <2900000>;
 +				interrupts = <IT_CURLIM_LDO1 0>;
 +			};
 +
-+			v3v3_hdmi: ldo2 {
-+				regulator-name = "v3v3_hdmi";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
++			v2v8: ldo2 {
++				regulator-name = "v2v8";
++				regulator-min-microvolt = <2800000>;
++				regulator-max-microvolt = <2800000>;
 +				interrupts = <IT_CURLIM_LDO2 0>;
 +			};
 +
@@ -157,19 +158,18 @@ index 1b1886d..b25b551 100644
 +				interrupts = <IT_CURLIM_LDO4 0>;
 +			};
 +
-+			vdda: ldo5 {
-+				regulator-name = "vdda";
++			vdd_sd: ldo5 {
++				regulator-name = "vdd_sd";
 +				regulator-min-microvolt = <2900000>;
 +				regulator-max-microvolt = <2900000>;
 +				interrupts = <IT_CURLIM_LDO5 0>;
 +				regulator-boot-on;
 +			};
 +
-+			v1v2_hdmi: ldo6 {
-+				regulator-name = "v1v2_hdmi";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-always-on;
++			v1v8: ldo6 {
++				regulator-name = "v1v8";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
 +				interrupts = <IT_CURLIM_LDO6 0>;
 +			};
 +
@@ -179,10 +179,10 @@ index 1b1886d..b25b551 100644
 +				regulator-over-current-protection;
 +			};
 +
-+			 bst_out: boost {
++			bst_out: boost {
 +				regulator-name = "bst_out";
 +				interrupts = <IT_OCP_BOOST 0>;
-+			 };
++			};
 +
 +			vbus_otg: pwr_sw1 {
 +				regulator-name = "vbus_otg";
@@ -209,10 +209,8 @@ index 1b1886d..b25b551 100644
 +			status = "disabled";
 +		};
 +	};
-+};
-+
- &ipcc {
- 	status = "okay";
  };
+ 
+ &ipcc {
 -- 
 1.9.1
