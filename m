@@ -1,89 +1,90 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 3/5] media: uapi: Add RGB bus formats for the
- GiantPlus GPM940B0 panel
-Date: Wed, 3 Apr 2019 18:32:59 +0200
-Message-ID: <20190403163259.GS5238@ulmo>
-References: <20190314122622.7597-1-paul@crapouillou.net>
- <20190314122622.7597-3-paul@crapouillou.net>
+Subject: Re: [PATCH] arm64: tegra: Add supply for temperature sensor on P2888
+Date: Wed, 3 Apr 2019 18:44:38 +0200
+Message-ID: <20190403164438.GB1837@ulmo>
+References: <1551197275-8977-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="D+M1YvVlDncl3vD5"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190314122622.7597-3-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, od@zcrc.me, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============4886747560968068056=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1551197275-8977-1-git-send-email-jonathanh@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---D+M1YvVlDncl3vD5
+--===============4886747560968068056==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="MW5yreqqjyrRcusr"
+Content-Disposition: inline
+
+
+--MW5yreqqjyrRcusr
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 14, 2019 at 01:26:20PM +0100, Paul Cercueil wrote:
-> The GiantPlus GPM940B0 is a 24-bit TFT panel where the RGB components
-> are transferred sequentially on a 8-bit bus.
+On Tue, Feb 26, 2019 at 04:07:55PM +0000, Jon Hunter wrote:
+> The VCC supply property is not populated for the temperature sensor on
+> the P2888 board and so the following warning is observed on boot ...
 >=20
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>  lm90 0-004c: 0-004c supply vcc not found, using dummy regulator
+>=20
+> On the P2888 board, the VCC supply for the temperature sensor is
+> connected to the 'vdd_1v8ls' rail. Add the 'vcc-supply' property for
+> the temperature sensor to prevent this warning message from occurring.
+>=20
+> Fixes: 8b457812f54b ('arm64: tegra: Add temperature sensor on P2888')
+>=20
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
 > ---
->=20
-> Notes:
->     v2: New patch
->=20
->  include/uapi/linux/media-bus-format.h | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
 
-Please make sure you Cc the media maintainers on this one when you send
-the next version. Adding them now.
-
->=20
-> diff --git a/include/uapi/linux/media-bus-format.h b/include/uapi/linux/m=
-edia-bus-format.h
-> index d6a5a3bfe6c4..f31724d6cd40 100644
-> --- a/include/uapi/linux/media-bus-format.h
-> +++ b/include/uapi/linux/media-bus-format.h
-> @@ -34,7 +34,7 @@
-> =20
->  #define MEDIA_BUS_FMT_FIXED			0x0001
-> =20
-> -/* RGB - next is	0x101b */
-> +/* RGB - next is	0x101d */
->  #define MEDIA_BUS_FMT_RGB444_1X12		0x1016
->  #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_BE	0x1001
->  #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE	0x1002
-> @@ -54,6 +54,8 @@
->  #define MEDIA_BUS_FMT_RGB888_1X24		0x100a
->  #define MEDIA_BUS_FMT_RGB888_2X12_BE		0x100b
->  #define MEDIA_BUS_FMT_RGB888_2X12_LE		0x100c
-> +#define MEDIA_BUS_FMT_RGB888_3X8_BE		0x101b
-> +#define MEDIA_BUS_FMT_RGB888_3X8_LE		0x101c
-
-The list looks roughly sorted, but these are not. That said, there are
-others that don't seem like they are sorted either. All the more
-important to get feedback from the media maintainers.
+Applied to for-5.2/arm64/dt, thanks.
 
 Thierry
 
---D+M1YvVlDncl3vD5
+--MW5yreqqjyrRcusr
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyk4DoACgkQ3SOs138+
-s6HScg/9GyEDoCdxMtlPqDRYKP5xRAlt0XNtZfHL5ibuM/8vU6LU6b5JqAZIpi4a
-vJSzJitF9SE7vm7nBcmjZlKvxrOL9AusPveEVlmxuXniokaG5l+H5Tj2so7ut3hc
-ogYvh5Ofi9IgaI/PDkkfkqHdKABo+khmgorlMALjAhEyUC+315D4LU/bcoxpycgz
-gZNjhlzSeTgG7VIbbnl8lyoMgVJvwktahzO2RDkV4gDmLeJXmQY7Tq8ADE6RWKls
-xejx/kyRwdvPl87nESKw5qbtHY0Z4cAwnH9j/MDsYPtvFKCei9fJj+7/5nByGtuV
-O9cdE7aKo26mzLOOEH7vc8+bMBYllIgBILmDyGC/KCbXN4ATWABX7Wg8g7oM+xaS
-n8vfaRG627LIOYRNq3XTRutW17mFyjze8D1e1RHNIVEUrX0OtDA4g2hIQn2lm7o2
-zb/FfV7AH24L7n4z9i/uy5GOrAZseztoThqUt2MnRhVr2BXY5mt4caV3LEHMDdBJ
-qR7BpJbn2gZ3b+IITh8468TdowwMhEDoGEALIv8FeaKXePyKdPmDF03fSueMOfj4
-4PFN4yHOADhz5XdP2tG+Lnl0vIOxImAf4bBOzYRXXpu19j1WfgAYNgLXI+RExKuJ
-sHnXe+Jm2Jtj417ICallpwjt/YVaBvM3ONvsTgi3uNmPYq1zOWk=
-=yjYj
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyk4vYACgkQ3SOs138+
+s6FUEQ//YuT+Fpg6a53SNAHGjxJG1EySQgWf7edGCG8qaJZeOy54tpJfCz/EJBk7
+2LP63gFfkJzdwpPRgh2jJABHaKBrTJwYihuHj5vfIvzlhrg3hgLN8Qx6Ki523y5L
+fRVnTww43Wa7j+4fSxoYHyqsfe1ong0dbWbCVlayLAtoXnhPWC31xDT0rq2UanTs
+idUNr19yiVaHxs+Wo0gLcR33BfZi2oa+RjrpsrySnyy71iG33EjjLTUH4Xq56YQk
+yeJeSPyscvteQkzYgber7+FNT8hC/LtCcDkLtAu95/dyoqVrQbBSQqsIoMSLe0ol
+ZdGidhN5a/SErsaq1Qe3gOkwztvg58bztFJZr7/cwJcZvb+fHU94hlNRVNkq+mIR
+dFWH7qkvTHN10A+KEsbqayMOfFVfJA6elg3ufdp3udPV6jNZiBufHE6UlAO1ELuA
+gCIh+UoV8Bj6YGKPlu73wLwH2UnhsPMvCDmpszBICJ8AcT2ctfKYvOTFvLifB6JD
+7mlDbYgVQPLVMoVZNeyaJSAZ55zcJDCZNFbGMQFYpZFR/ZRvXDA7afMd0uqOC2ZE
+r1A06L8dGvQs7LGOPvNYnpxGN8NYLrCxcNETlf/Aipsbu3Zn7AxMZ3P7zvkcn1hd
+RbeT7uIAbE9kPfClm14se08Jh1oXRez2/vUYQl7BzJbRuU0TgKo=
+=Tq16
 -----END PGP SIGNATURE-----
 
---D+M1YvVlDncl3vD5--
+--MW5yreqqjyrRcusr--
+
+
+--===============4886747560968068056==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============4886747560968068056==--
