@@ -1,12 +1,11 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] arm64: tegra: Add supply for temperature sensor on P2888
-Date: Wed, 3 Apr 2019 18:44:38 +0200
-Message-ID: <20190403164438.GB1837@ulmo>
-References: <1551197275-8977-1-git-send-email-jonathanh@nvidia.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH] arm64: dts: imx: add Zii Ultra board support
+Date: Wed,  3 Apr 2019 18:45:55 +0200
+Message-ID: <20190403164555.13941-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4886747560968068056=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1551197275-8977-1-git-send-email-jonathanh@nvidia.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,75 +15,879 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>, patchwork-lst@pengutronix.de, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, Chris Healy <cphealy@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+The Zii Ultra design, also known as RDU3, is the i.MX8M based successor
+to the the i.MX6 based RDU2. This adds the basic board support for all
+components which are supported by the upstream kernel at this time.
 
---===============4886747560968068056==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MW5yreqqjyrRcusr"
-Content-Disposition: inline
+The board comes in 2 different versions, called RMB3 and Zest, which
+are derived from the same design, but have different layouts and a
+few small differences in the populated components.
 
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+---
+ arch/arm64/boot/dts/freescale/Makefile        |   2 +
+ .../dts/freescale/imx8mq-zii-ultra-rmb3.dts   |  95 +++
+ .../dts/freescale/imx8mq-zii-ultra-zest.dts   |  24 +
+ .../boot/dts/freescale/imx8mq-zii-ultra.dtsi  | 703 ++++++++++++++++++
+ 4 files changed, 824 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-zii-ultra-rmb3.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-zii-ultra-zest.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
 
---MW5yreqqjyrRcusr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Feb 26, 2019 at 04:07:55PM +0000, Jon Hunter wrote:
-> The VCC supply property is not populated for the temperature sensor on
-> the P2888 board and so the following warning is observed on boot ...
->=20
->  lm90 0-004c: 0-004c supply vcc not found, using dummy regulator
->=20
-> On the P2888 board, the VCC supply for the temperature sensor is
-> connected to the 'vdd_1v8ls' rail. Add the 'vcc-supply' property for
-> the temperature sensor to prevent this warning message from occurring.
->=20
-> Fixes: 8b457812f54b ('arm64: tegra: Add temperature sensor on P2888')
->=20
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-
-Applied to for-5.2/arm64/dt, thanks.
-
-Thierry
-
---MW5yreqqjyrRcusr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyk4vYACgkQ3SOs138+
-s6FUEQ//YuT+Fpg6a53SNAHGjxJG1EySQgWf7edGCG8qaJZeOy54tpJfCz/EJBk7
-2LP63gFfkJzdwpPRgh2jJABHaKBrTJwYihuHj5vfIvzlhrg3hgLN8Qx6Ki523y5L
-fRVnTww43Wa7j+4fSxoYHyqsfe1ong0dbWbCVlayLAtoXnhPWC31xDT0rq2UanTs
-idUNr19yiVaHxs+Wo0gLcR33BfZi2oa+RjrpsrySnyy71iG33EjjLTUH4Xq56YQk
-yeJeSPyscvteQkzYgber7+FNT8hC/LtCcDkLtAu95/dyoqVrQbBSQqsIoMSLe0ol
-ZdGidhN5a/SErsaq1Qe3gOkwztvg58bztFJZr7/cwJcZvb+fHU94hlNRVNkq+mIR
-dFWH7qkvTHN10A+KEsbqayMOfFVfJA6elg3ufdp3udPV6jNZiBufHE6UlAO1ELuA
-gCIh+UoV8Bj6YGKPlu73wLwH2UnhsPMvCDmpszBICJ8AcT2ctfKYvOTFvLifB6JD
-7mlDbYgVQPLVMoVZNeyaJSAZ55zcJDCZNFbGMQFYpZFR/ZRvXDA7afMd0uqOC2ZE
-r1A06L8dGvQs7LGOPvNYnpxGN8NYLrCxcNETlf/Aipsbu3Zn7AxMZ3P7zvkcn1hd
-RbeT7uIAbE9kPfClm14se08Jh1oXRez2/vUYQl7BzJbRuU0TgKo=
-=Tq16
------END PGP SIGNATURE-----
-
---MW5yreqqjyrRcusr--
-
-
---===============4886747560968068056==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============4886747560968068056==--
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index 984554343c83..0bd122f60549 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -22,4 +22,6 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
+ 
+ dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
++dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
++dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra-rmb3.dts b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra-rmb3.dts
+new file mode 100644
+index 000000000000..7442f7f7fcba
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra-rmb3.dts
+@@ -0,0 +1,95 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright (C) 2019 Zodiac Inflight Innovations
++ */
++
++/dts-v1/;
++
++#include "imx8mq-zii-ultra.dtsi"
++
++/ {
++	model = "ZII i.MX8MQ Ultra RMB3 Board";
++	compatible = "zii,imx8mq-ultra-rmb3", "zii,imx8mq-ultra", "fsl,imx8mq";
++};
++
++&ecspi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi1>;
++	cs-gpios = <&gpio5 9 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	nor_flash: flash@0 {
++		compatible = "st,n25q128a13", "jedec,spi-nor";
++		spi-max-frequency = <20000000>;
++		reg = <0>;
++	};
++};
++
++&i2c2 {
++	temp-sense@48 {
++		compatible = "national,lm75";
++		reg = <0x48>;
++	};
++};
++
++&i2c4 {
++	touchscreen@20 {
++		compatible = "syna,rmi4-i2c";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ts>;
++		reg = <0x20>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		rmi4-f01@1 {
++			reg = <0x1>;
++			syna,nosleep-mode = <2>;
++		};
++
++		rmi4-f11@11 {
++			reg = <0x11>;
++			touchscreen-inverted-x;
++			touchscreen-swapped-x-y;
++			syna,sensor-type = <1>;
++		};
++
++		rmi4-f12@12 {
++			reg = <0x12>;
++			touchscreen-inverted-x;
++			touchscreen-swapped-x-y;
++			syna,sensor-type = <1>;
++		};
++	};
++
++	eeti_touch: eeti_i2c@2a {
++		compatible = "eeti,exc3000";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ts>;
++		reg = <0x2a>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
++		touchscreen-inverted-x;
++		touchscreen-swapped-x-y;
++		status = "disabled";
++	};
++};
++
++&usbhub {
++	swap-dx-lanes = <0>;
++};
++
++&iomuxc {
++	pinctrl_ecspi1: ecspi1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_ECSPI1_SS0_GPIO5_IO9	0x19
++			MX8MQ_IOMUXC_ECSPI1_SCLK_ECSPI1_SCLK	0x82
++			MX8MQ_IOMUXC_ECSPI1_MISO_ECSPI1_MISO	0x82
++			MX8MQ_IOMUXC_ECSPI1_MOSI_ECSPI1_MOSI	0x82
++		>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra-zest.dts b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra-zest.dts
+new file mode 100644
+index 000000000000..1084d9330403
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra-zest.dts
+@@ -0,0 +1,24 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright (C) 2019 Zodiac Inflight Innovations
++ */
++
++/dts-v1/;
++
++#include "imx8mq-zii-ultra.dtsi"
++
++/ {
++	model = "ZII i.MX8MQ Ultra Zest Board";
++	compatible = "zii,imx8mq-ultra-zest", "zii,imx8mq-ultra", "fsl,imx8mq";
++};
++
++&i2c4 {
++	touchscreen@4a {
++		compatible = "atmel,maxtouch";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ts>;
++		reg = <0x4a>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
+new file mode 100644
+index 000000000000..f34c9d1f635f
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
+@@ -0,0 +1,703 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright (C) 2019 Zodiac Inflight Innovations
++ */
++
++#include "imx8mq.dtsi"
++
++/ {
++	aliases {
++		mdio-gpio0 = &mdio0;
++		rtc0 = &ds1341;
++	};
++
++	chosen {
++		stdout-path = &uart1;
++	};
++
++	mdio0: bitbang-mdio {
++		compatible = "virtual,mdio-gpio";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_mdio_bitbang>, <&pinctrl_fec1_phy_reset>;
++		gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>, /* MDC */
++			<&gpio1 14 GPIO_ACTIVE_HIGH>; /* MDIO */
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		phy0: ethernet-phy@0 {
++			reg = <0>;
++			reset-gpios = <&gpio1 29 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	reg_12p0_main: regulator-12p0-main {
++		compatible = "regulator-fixed";
++		regulator-name = "12V_MAIN";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
++
++	reg_5p0_main: regulator-5p0-main {
++		compatible = "regulator-fixed";
++		vin-supply = <&reg_12p0_main>;
++		regulator-name = "5V_MAIN";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
++
++	reg_3p3_main: regulator-3p3-main {
++		compatible = "regulator-fixed";
++		vin-supply = <&reg_12p0_main>;
++		regulator-name = "3V3V_MAIN";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	reg_5p0_user_usb: regulator-5p0-user-usb {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_reg_user_usb>;
++		vin-supply = <&reg_5p0_main>;
++		regulator-name = "5V_USER_USB";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio3 12 GPIO_ACTIVE_LOW>;
++		startup-delay-us = <1000>;
++	};
++
++	reg_usdhc2_vmmc: regulator-vsd-3v3 {
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_reg_usdhc2>;
++		compatible = "regulator-fixed";
++		vin-supply = <&reg_3p3_main>;
++		regulator-name = "3V3_SD";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	reg_arm: regulator-arm {
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_reg_arm>;
++		compatible = "regulator-gpio";
++		vin-supply = <&reg_12p0_main>;
++		regulator-name = "0V9_ARM";
++		regulator-min-microvolt = <900000>;
++		regulator-max-microvolt = <1000000>;
++		gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
++		states = <1000000 0x0
++		           900000 0x1>;
++		regulator-always-on;
++	};
++};
++
++&A53_0 {
++	cpu-supply = <&reg_arm>;
++};
++
++&A53_1 {
++	cpu-supply = <&reg_arm>;
++};
++
++&A53_2 {
++	cpu-supply = <&reg_arm>;
++};
++
++&A53_3 {
++	cpu-supply = <&reg_arm>;
++};
++
++&fec1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec1>;
++
++	phy-handle = <&phy0>;
++	phy-mode = "rmii";
++	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "okay";
++
++		switch: switch@0 {
++			compatible = "marvell,mv88e6085";
++			pinctrl-0 = <&pinctrl_switch_irq>;
++			pinctrl-names = "default";
++			reg = <0>;
++			dsa,member = <0 0>;
++			eeprom-length = <512>;
++			interrupt-parent = <&gpio1>;
++			interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					label = "gigabit_proc";
++					phy-handle = <&switchphy0>;
++				};
++
++				port@1 {
++					reg = <1>;
++					label = "netaux";
++					phy-handle = <&switchphy1>;
++				};
++
++				port@2 {
++					reg = <2>;
++					label = "cpu";
++					ethernet = <&fec1>;
++
++					fixed-link {
++						speed = <100>;
++						full-duplex;
++					};
++				};
++
++				port@3 {
++					reg = <3>;
++					label = "netright";
++					phy-handle = <&switchphy3>;
++				};
++
++				port@4 {
++					reg = <4>;
++					label = "netleft";
++					phy-handle = <&switchphy4>;
++				};
++			};
++
++			mdio {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				switchphy0: switchphy@0 {
++					reg = <0>;
++					interrupt-parent = <&switch>;
++					interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++				};
++
++				switchphy1: switchphy@1 {
++					reg = <1>;
++					interrupt-parent = <&switch>;
++					interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
++				};
++
++				switchphy2: switchphy@2 {
++					reg = <2>;
++					interrupt-parent = <&switch>;
++					interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
++				};
++
++				switchphy3: switchphy@3 {
++					reg = <3>;
++					interrupt-parent = <&switch>;
++					interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
++				};
++
++				switchphy4: switchphy@4 {
++					reg = <4>;
++					interrupt-parent = <&switch>;
++					interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
++				};
++			};
++		};
++	};
++};
++
++&gpio3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_gpio3_hog>;
++
++	usb-emulation {
++		gpio-hog;
++		gpios = <10 GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "usb-emulation";
++	};
++
++	usb-mode1 {
++		gpio-hog;
++		gpios = <11 GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "usb-mode1";
++	};
++
++	usb-mode2 {
++		gpio-hog;
++		gpios = <13 GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "usb-mode2";
++	};
++};
++
++&i2c1 {
++	clock-frequency = <400000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++};
++
++&i2c2 {
++	clock-frequency = <400000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++
++	pmic@8 {
++		compatible = "fsl,pfuze100";
++		reg = <0x8>;
++
++		regulators {
++			sw1a_reg: sw1ab {
++				regulator-min-microvolt = <825000>;
++				regulator-max-microvolt = <1100000>;
++			};
++
++			sw1c_reg: sw1c {
++				regulator-min-microvolt = <825000>;
++				regulator-max-microvolt = <1100000>;
++			};
++
++			sw2_reg: sw2 {
++				regulator-min-microvolt = <1100000>;
++				regulator-max-microvolt = <1100000>;
++				regulator-always-on;
++			};
++
++			sw3a_reg: sw3ab {
++				regulator-min-microvolt = <825000>;
++				regulator-max-microvolt = <1100000>;
++				regulator-always-on;
++			};
++
++			sw4_reg: sw4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++			};
++
++			swbst_reg: swbst {
++				regulator-min-microvolt = <5000000>;
++				regulator-max-microvolt = <5150000>;
++			};
++
++			snvs_reg: vsnvs {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-always-on;
++			};
++
++			vref_reg: vrefddr {
++				regulator-always-on;
++			};
++
++			vgen1_reg: vgen1 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++			};
++
++			vgen2_reg: vgen2 {
++				regulator-min-microvolt = <850000>;
++				regulator-max-microvolt = <975000>;
++				regulator-always-on;
++			};
++
++			vgen3_reg: vgen3 {
++				regulator-min-microvolt = <1675000>;
++				regulator-max-microvolt = <1975000>;
++				regulator-always-on;
++			};
++
++			vgen4_reg: vgen4 {
++				regulator-min-microvolt = <1625000>;
++				regulator-max-microvolt = <1875000>;
++				regulator-always-on;
++			};
++
++			vgen5_reg: vgen5 {
++				regulator-min-microvolt = <3075000>;
++				regulator-max-microvolt = <3625000>;
++				regulator-always-on;
++			};
++
++			vgen6_reg: vgen6 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++			};
++		};
++	};
++
++	eeprom@54 {
++		compatible = "atmel,24c128";
++		reg = <0x54>;
++	};
++
++	ds1341: rtc@68 {
++		compatible = "dallas,ds1341";
++		reg = <0x68>;
++	};
++};
++
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++
++	usbhub: usbhub@2c {
++		compatible ="microchip,usb2513b";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_usbhub>;
++		reg = <0x2c>;
++		reset-gpios = <&gpio3 25 GPIO_ACTIVE_LOW>;
++	};
++};
++
++&i2c4 {
++	clock-frequency = <400000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c4>;
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++
++	rave-sp {
++		compatible = "zii,rave-sp-rdu2";
++		current-speed = <1000000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		watchdog {
++			compatible = "zii,rave-sp-watchdog";
++		};
++
++		backlight {
++			compatible = "zii,rave-sp-backlight";
++		};
++
++		pwrbutton {
++			compatible = "zii,rave-sp-pwrbutton";
++		};
++
++		eeprom@a3 {
++			compatible = "zii,rave-sp-eeprom";
++			reg = <0xa3 0x4000>;
++			zii,eeprom-name = "dds-eeprom";
++		};
++
++		eeprom@a4 {
++			compatible = "zii,rave-sp-eeprom";
++			reg = <0xa4 0x4000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			zii,eeprom-name = "main-eeprom";
++		};
++	};
++};
++
++&usb3_phy0 {
++	vbus-supply = <&reg_5p0_user_usb>;
++	status = "okay";
++};
++
++&usb_dwc3_0 {
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usb3_phy1 {
++	vbus-supply = <&reg_5p0_main>;
++	status = "okay";
++};
++
++&usb_dwc3_1 {
++	dr_mode = "host";
++	status = "okay";
++};
++
++&pcie0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pcie0>;
++	reset-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
++&pcie1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pcie1>;
++	reset-gpio = <&gpio1 6 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
++&pgc_gpu {
++	power-supply = <&sw1a_reg>;
++};
++
++&pgc_vpu {
++	power-supply = <&sw1c_reg>;
++};
++
++&usdhc1 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
++	vqmmc-supply = <&sw4_reg>;
++	bus-width = <8>;
++	non-removable;
++	no-sd;
++	no-sdio;
++	status = "okay";
++};
++
++&usdhc2 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc2>;
++	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
++	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
++	vmmc-supply = <&reg_usdhc2_vmmc>;
++	status = "okay";
++};
++
++&snvs_rtc {
++	status = "disabled";
++};
++
++&iomuxc {
++	pinctrl_fec1: fec1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC			0x3
++			MX8MQ_IOMUXC_ENET_MDIO_ENET1_MDIO		0x23
++			MX8MQ_IOMUXC_ENET_TD1_ENET1_RGMII_TD1		0x1f
++			MX8MQ_IOMUXC_ENET_TD0_ENET1_RGMII_TD0		0x1f
++			MX8MQ_IOMUXC_ENET_RD1_ENET1_RGMII_RD1		0x91
++			MX8MQ_IOMUXC_ENET_RD0_ENET1_RGMII_RD0		0x91
++			MX8MQ_IOMUXC_ENET_TD2_ENET1_TX_CLK		0x1f
++			MX8MQ_IOMUXC_ENET_RXC_ENET1_RX_ER		0x91
++			MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
++			MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
++		>;
++	};
++
++	pinctrl_fec1_phy_reset: fec1phyresetgrp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_ENET_RD3_GPIO1_IO29		0x11
++		>;
++	};
++
++	pinctrl_gpio3_hog: gpio3hoggrp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_NAND_DATA04_GPIO3_IO10		0x6
++			MX8MQ_IOMUXC_NAND_DATA05_GPIO3_IO11		0x6
++			MX8MQ_IOMUXC_NAND_DATA07_GPIO3_IO13		0x6
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
++			MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA			0x4000007f
++		>;
++	};
++
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_I2C2_SCL_I2C2_SCL			0x4000007f
++			MX8MQ_IOMUXC_I2C2_SDA_I2C2_SDA			0x4000007f
++		>;
++	};
++
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_I2C3_SCL_I2C3_SCL			0x4000007f
++			MX8MQ_IOMUXC_I2C3_SDA_I2C3_SDA			0x4000007f
++		>;
++	};
++
++	pinctrl_i2c4: i2c4grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_I2C4_SCL_I2C4_SCL			0x4000007f
++			MX8MQ_IOMUXC_I2C4_SDA_I2C4_SDA			0x4000007f
++		>;
++	};
++
++	pinctrl_mdio_bitbang: bitbangmdiogrp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_GPIO1_IO13_GPIO1_IO13		0x44
++			MX8MQ_IOMUXC_GPIO1_IO14_GPIO1_IO14		0x64
++		>;
++	};
++
++	pinctrl_pcie0: pcie0grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_UART4_RXD_PCIE1_CLKREQ_B		0x66
++			MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3		0x6
++		>;
++	};
++
++	pinctrl_pcie1: pcie1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_UART4_TXD_PCIE2_CLKREQ_B		0x66
++			MX8MQ_IOMUXC_GPIO1_IO06_GPIO1_IO6		0x6
++		>;
++	};
++
++	pinctrl_reg_arm: regarmgrp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_NAND_READY_B_GPIO3_IO16		0x19
++		>;
++	};
++
++	pinctrl_reg_usdhc2: regusdhc2grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD2_RESET_B_GPIO2_IO19		0x41
++		>;
++	};
++
++	pinctrl_reg_user_usb: reguserusbgrp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_NAND_DATA06_GPIO3_IO12		0x6
++		>;
++	};
++
++	pinctrl_switch_irq: switchgrp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_GPIO1_IO15_GPIO1_IO15		0x41
++		>;
++	};
++
++	pinctrl_ts: tsgrp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_GPIO1_IO11_GPIO1_IO11		0x96
++			MX8MQ_IOMUXC_GPIO1_IO12_GPIO1_IO12		0x96
++		>;
++	};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX		0x49
++			MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX		0x49
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_UART2_RXD_UART2_DCE_RX		0x49
++			MX8MQ_IOMUXC_UART2_TXD_UART2_DCE_TX		0x49
++		>;
++	};
++
++	pinctrl_usbhub: usbhubgrp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SAI5_MCLK_GPIO3_IO25		0x41
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x83
++			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc3
++			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc3
++			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc3
++			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc3
++			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc3
++			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc3
++			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc3
++			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc3
++			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc3
++			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x83
++			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
++		>;
++	};
++
++	pinctrl_usdhc1_100mhz: usdhc1-100grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x85
++			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc5
++			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc5
++			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc5
++			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc5
++			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc5
++			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc5
++			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc5
++			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc5
++			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc5
++			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x85
++			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
++		>;
++	};
++
++	pinctrl_usdhc1_200mhz: usdhc1-200grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x87
++			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc7
++			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc7
++			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc7
++			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc7
++			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc7
++			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc7
++			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc7
++			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc7
++			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc7
++			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x87
++			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
++		>;
++	};
++
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x83
++			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc3
++			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc3
++			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc3
++			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc3
++			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc3
++			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
++		>;
++	};
++
++	pinctrl_usdhc2_100mhz: usdhc2-100grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x85
++			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc5
++			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc5
++			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc5
++			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc5
++			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc5
++			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
++		>;
++	};
++
++	pinctrl_usdhc2_200mhz: usdhc2-200grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x87
++			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc7
++			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc7
++			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc7
++			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc7
++			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc7
++			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
++		>;
++	};
++};
+-- 
+2.20.1
