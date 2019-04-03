@@ -1,136 +1,119 @@
-From: Nicolas Boichat <drinkcat@chromium.org>
-Subject: Re: [PATCH v2 2/4] opp: add API which get max freq by voltage
-Date: Wed, 3 Apr 2019 12:32:05 +0800
-Message-ID: <CANMq1KB6x77F9Vo_wXK-M1Qt0Mo9VP3MfgKBAON18cHMts_kwg@mail.gmail.com>
-References: <1553841972-19737-1-git-send-email-andrew-sh.cheng@mediatek.com> <1553841972-19737-3-git-send-email-andrew-sh.cheng@mediatek.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH 05/10] dt-bindings: PCI: tegra: Add device tree support
+ for T194
+Date: Wed, 3 Apr 2019 10:59:13 +0530
+Message-ID: <418d270d-120e-f33b-a525-a0677ab9343d@nvidia.com>
+References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
+ <1553613207-3988-6-git-send-email-vidyas@nvidia.com>
+ <5ca06149.1c69fb81.720fd.79e1@mx.google.com>
+ <5ef50168-2476-1088-7156-8a4488d7a2e1@nvidia.com>
+ <20190401143138.GA4874@ulmo>
+ <67f9b726-c075-0291-7777-8f10ecc9e29d@nvidia.com>
+ <20190402142031.GC8017@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553841972-19737-3-git-send-email-andrew-sh.cheng@mediatek.com>
+In-Reply-To: <20190402142031.GC8017@ulmo>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-pm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Fan Chen <fan.chen@mediatek.com>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh@kernel.org>
+Cc: bhelgaas@google.com, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, tiwai@suse.de, spujar@nvidia.com, skomatineni@nvidia.com, liviu.dudau@arm.com, krzk@kernel.org, heiko@sntech.de, horms+renesas@verge.net.au, olof@lixom.net, maxime.ripard@bootlin.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, jagan@amarulasolutions.com, enric.balletbo@collabora.com, ezequiel@collabora.com, stefan.wahren@i2se.com, marc.w.gonzalez@free.fr, l.stach@pengutronix.de, tpiepho@impinj.com, hayashi.kunihiko@socionext.com, yue.wang@amlogic.com, shawn.lin@rock-chips.com, xiaowei.ba
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 2:46 PM Andrew-sh.Cheng
-<andrew-sh.cheng@mediatek.com> wrote:
->
-> This API will get voltage as input parameter.
-> Search all opp items for the item which with max frequency,
-> and the voltae is smaller than provided voltage.
->
-> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-> ---
->  drivers/opp/core.c     | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pm_opp.h |  8 ++++++++
->  2 files changed, 63 insertions(+)
->
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 0420f7e..7323cd9 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -526,6 +526,61 @@ struct dev_pm_opp *dev_pm_opp_find_freq_floor(struct device *dev,
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_opp_find_freq_floor);
->
-> +/**
-> + * dev_pm_opp_find_max_freq_by_volt() - Search for a opp with max freq
-> + * under provided voltage
-> + * @dev:       device for which we do this operation
-> + * @u_volt:    provided voltage
-> + *
-> + * Search for the matching available OPP which provide voltage can support.
-> + *
-> + * Return: matching *opp, else returns ERR_PTR in case of error
-> + * and should be handled using IS_ERR.
-> + * Error return values can be:
-> + * EINVAL:     for bad pointer
-> + * ERANGE:     no match found for search
-> + * ENODEV:     if device not found in list of registered devices
-> + *
-> + * The callers are required to call dev_pm_opp_put() for the returned OPP after
-> + * use.
-> + */
-> +struct dev_pm_opp *dev_pm_opp_find_max_freq_by_volt(struct device *dev,
-> +                                             unsigned long u_volt)
-> +{
-> +       struct opp_table *opp_table;
-> +       struct dev_pm_opp *temp_opp, *opp = ERR_PTR(-ERANGE);
-> +
-> +       if (!dev || !u_volt) {
-> +               dev_err(dev, "%s: Invalid argument volt=%d\n", __func__,
-> +                       u_volt);
+On 4/2/2019 7:50 PM, Thierry Reding wrote:
+> On Tue, Apr 02, 2019 at 02:46:27PM +0530, Vidya Sagar wrote:
+>> On 4/1/2019 8:01 PM, Thierry Reding wrote:
+>>> On Mon, Apr 01, 2019 at 04:48:42PM +0530, Vidya Sagar wrote:
+>>>> On 3/31/2019 12:12 PM, Rob Herring wrote:
+>>>>> On Tue, Mar 26, 2019 at 08:43:22PM +0530, Vidya Sagar wrote:
+> [...]
+>>>>>> +Optional properties:
+>>>>>> +- nvidia,max-speed: limits controllers max speed to this value.
+>>>>>> +    1 - Gen-1 (2.5 GT/s)
+>>>>>> +    2 - Gen-2 (5 GT/s)
+>>>>>> +    3 - Gen-3 (8 GT/s)
+>>>>>> +    4 - Gen-4 (16 GT/s)
+>>>>>> +- nvidia,init-speed: limits controllers init speed to this value.
+>>>>>> +    1 - Gen-1 (2. 5 GT/s)
+>>>>>> +    2 - Gen-2 (5 GT/s)
+>>>>>> +    3 - Gen-3 (8 GT/s)
+>>>>>> +    4 - Gen-4 (16 GT/s)
+>>>>>
+>>>>> Don't we have standard speed properties?
+>>>> Not that I'm aware of. If you come across any, please do let me know and
+>>>> I'll change these.
+>>>
+>>> See Documentation/devicetree/bindings/pci/pci.txt, max-link-speed.
+>>> There's a standard of_pci_get_max_link_speed() property that reads it
+>>> from device tree.
+>> Thanks for the pointer. I'll switch to this in the next patch.
+>>
+>>>
+>>>>> Why do we need 2 values?
+>>>> max-speed configures the controller to advertise the speed mentioned through
+>>>> this flag, whereas, init-speed gets the link up at this speed and software
+>>>> can further take the link speed to a different speed by retraining the link.
+>>>> This is to give flexibility to developers depending on the platform.
+>>>
+>>> This seems to me like overcomplicating things. Couldn't we do something
+>>> like start in the slowest mode by default and then upgrade if endpoints
+>>> support higher speeds?
+>>>
+>>> I'm assuming that the maximum speed is already fixed by the IP hardware
+>>> instantiation, so why would we want to limit it additionally? Similarly,
+>>> what's the use-case for setting the initial link speed to something
+>>> other than the lowest speed?
+>> You are right that maximum speed supported by hardware is fixed and through
+>> max-link-speed DT option, flexibility is given to limit it to the desired speed
+>> for a controller on a given platform. As mentioned in the documentation for max-link-speed,
+>> this is a strategy to avoid unnecessary operation for unsupported link speed.
+>> There is no real use-case as such even for setting the initial link speed, but it is
+>> there to give flexibility (for any debugging) to get the link up at a certain speed
+>> and then take it to a higher speed at a later point of time. Please note that, hardware
+>> as such already has the capability to take the link to maximum speed agreed by both
+>> upstream and downstream ports. 'nvidia,init-speed' is only to give more flexibility
+>> while debugging. I'm OK to remove it if this is not adding much value here.
+> 
+> If this is primarily used for debugging or troubleshooting, maybe making
+> it a module parameter is a better choice?
+> 
+> I can see how max-link-speed might be good in certain situations where a
+> board layout may mandate that a link speed slower than the one supported
+> by the hardware is used, but I can't imagine a case where the initial
+> link speed would have to be limited based on the hardware designe.
+> 
+> Rob, do you know of any other cases where something like this is being
+> used?
+Fair enough. I'll make max-link-speed as an optional DT parameter and
+leave 'nvidia,init-speed' to Rob to decided whether it is OK to have it
+or it is not acceptable.
 
-u_volt is an unsigned long, so you should use %lu.
+> 
+>>>>>> +- nvidia,disable-aspm-states : controls advertisement of ASPM states
+>>>>>> +    bit-0 to '1' : disables advertisement of ASPM-L0s
+>>>>>> +    bit-1 to '1' : disables advertisement of ASPM-L1. This also disables
+>>>>>> +                 advertisement of ASPM-L1.1 and ASPM-L1.2
+>>>>>> +    bit-2 to '1' : disables advertisement of ASPM-L1.1
+>>>>>> +    bit-3 to '1' : disables advertisement of ASPM-L1.2
+>>>>>
+>>>>> Seems like these too should be common.
+>>>> This flag controls the advertisement of different ASPM states by root port.
+>>>> Again, I'm not aware of any common method for this.
+>>>
+>>> rockchip-pcie-host.txt documents an "aspm-no-l0s" property that prevents
+>>> the root complex from advertising L0s. Sounds like maybe following a
+>>> similar scheme would be best for consistency. I think we'll also want
+>>> these to be non-NVIDIA specific, so drop the "nvidia," prefix and maybe
+>>> document them in pci.txt so that they can be more broadly used.
+>> Since we have ASPM-L0s, L1, L1.1 and L1.2 states, I prefer to have just one entry
+>> with different bit positions indicating which particular state should not be
+>> advertised by root port. Do you see any particular advantage to have 4 different options?
+>> If having one options is fine, I'll remove "nvidia," and document it in pci.txt.
+> 
+> I don't care strongly either way. It's really up to Rob to decide.
+Rob, please let us know your comments on this also.
 
-drivers/opp/core.c:582:3: error: format '%d' expects argument of type
-'int', but argument 4 has type 'long unsigned int' [-Werror=format=]
-  chromeos-kernel-4_19-4.19.32-r271:    dev_err(dev, "%s: Invalid
-argument volt=%d\n", __func__,
-  chromeos-kernel-4_19-4.19.32-r271:    ^
-
-> +               return ERR_PTR(-EINVAL);
-> +       }
-> +
-> +       opp_table = _find_opp_table(dev);
-> +       if (IS_ERR(opp_table))
-> +               return ERR_CAST(opp_table);
-> +
-> +       mutex_lock(&opp_table->lock);
-> +
-> +       list_for_each_entry(temp_opp, &opp_table->opp_list, node) {
-> +               if (temp_opp->available) {
-> +                       /* go to the next node, before choosing prev */
-> +                       if (temp_opp->supplies[0].u_volt > u_volt)
-> +                               break;
-> +                       opp = temp_opp;
-> +               }
-> +       }
-> +
-> +       /* Increment the reference count of OPP */
-> +       if (!IS_ERR(opp))
-> +               dev_pm_opp_get(opp);
-> +       mutex_unlock(&opp_table->lock);
-> +       dev_pm_opp_put_opp_table(opp_table);
-> +
-> +       return opp;
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_opp_find_max_freq_by_volt);
-> +
->  static int _set_opp_voltage(struct device *dev, struct regulator *reg,
->                             struct dev_pm_opp_supply *supply)
->  {
-> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-> index 24c757a..57deef9 100644
-> --- a/include/linux/pm_opp.h
-> +++ b/include/linux/pm_opp.h
-> @@ -102,6 +102,8 @@ struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
->
->  struct dev_pm_opp *dev_pm_opp_find_freq_floor(struct device *dev,
->                                               unsigned long *freq);
-> +struct dev_pm_opp *dev_pm_opp_find_max_freq_by_volt(struct device *dev,
-> +                                             unsigned long u_volt);
->
->  struct dev_pm_opp *dev_pm_opp_find_freq_ceil(struct device *dev,
->                                              unsigned long *freq);
-> @@ -207,6 +209,12 @@ static inline struct dev_pm_opp *dev_pm_opp_find_freq_floor(struct device *dev,
->         return ERR_PTR(-ENOTSUPP);
->  }
->
-> +static inline struct dev_pm_opp *dev_pm_opp_find_max_freq_by_volt(struct device *dev,
-> +                                             unsigned long u_volt)
-> +{
-> +       return ERR_PTR(-ENOTSUPP);
-> +}
-> +
->  static inline struct dev_pm_opp *dev_pm_opp_find_freq_ceil(struct device *dev,
->                                         unsigned long *freq)
->  {
-> --
-> 1.8.1.1.dirty
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> 
+> Thierry
+> 
