@@ -1,60 +1,241 @@
-From: Flavio Suligoi <f.suligoi@asem.it>
-Subject: RE: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
-Date: Wed, 3 Apr 2019 16:20:51 +0000
-Message-ID: <c7b5ccba38ee423a816d481cac151688@asem.it>
-References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
- <1554303165-24813-2-git-send-email-f.suligoi@asem.it>
- <20190403150824.GO22216@piout.net> <452a4cf1410a41c8b6f767ac6258482e@asem.it>
- <20190403153143.GQ22216@piout.net> <fd4bef0bb64e4b6fbdf74cbebaa12de3@asem.it>
- <20190403155654.GR22216@piout.net> <8367f68a023d468f8235810b0cf583bc@asem.it>
- <20190403161529.GS22216@piout.net>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH V4 3/3] hwmon: pwm-fan: Add RPM support via external
+ interrupt
+Date: Wed, 3 Apr 2019 18:23:04 +0200
+Message-ID: <7653a567-ae91-0890-f318-fd971b69274b@i2se.com>
+References: <1554214910-29925-1-git-send-email-stefan.wahren@i2se.com>
+ <1554214910-29925-4-git-send-email-stefan.wahren@i2se.com>
+ <20190402205538.GA15543@roeck-us.net>
+ <31ef4637-fa95-3800-20cf-96be2a5ecae4@i2se.com>
+ <40c0bee8-3a24-66f8-615f-ec36ae7721ef@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190403161529.GS22216@piout.net>
-Content-Language: en-US
+In-Reply-To: <40c0bee8-3a24-66f8-615f-ec36ae7721ef@arm.com>
+Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> On 03/04/2019 16:09:14+0000, Flavio Suligoi wrote:
-> > Hi,
-> >
-> > > On 03/04/2019 15:49:03+0000, Flavio Suligoi wrote:
-> > > > > Then, you should probably not enable BLIE because this will cause
-> > > issues
-> > > > > with the alarm functionnality.. It is certainly enough to use
-> > > > > RTC_VL_READ periodically.
-> > > >
-> > > > We use the nINT signaling solution because of this pin, in addition
-> > > > to be used by the CPU, can be also connected to an external
-> connector,
-> > > > available for the final user.
-> > > > Anyway, even if the BLIE is set, the sw low voltage alarm works,
-> > > > with the message (displayed about every 12 minutes):
-> > > >
-> > >
-> > > I agree the DT property makes sense when the nINT pin is not connected
-> > > to the CPU. But if it is, then you have an issue that nINT will be
-> > > pulled low until the user changes the battery, meaning that you will
-> > > not get any alarm interrupt anymore, possibly leading to a system that
-> > > is not waking up anymore.
-> >
-> > Ah, ok, thanks for the info.
-> > I know this, but in our specific case, this is not a problem,
-> > since we don't use the nINT for other purposes, but only for
-> > a battery low indicator. On the contrary, in our case, it's better
-> > that the alarm signal remains low until the battery is changed.
-> >
-> > Anyway, I can specify this collateral effect in a specific file for the
-> > Pcf2127 in the DT bindings Documentation. What do you think?
-> >
-> 
-> This is fine as-is, I'll handle that in my series adding alarm support
-> because there will be no issues until then.
+Am 03.04.2019 um 17:59 schrieb Robin Murphy:
+> On 03/04/2019 10:55, Stefan Wahren wrote:
+>> Hi Guenter,
+>>
+>> Am 02.04.19 um 22:55 schrieb Guenter Roeck:
+>>> On Tue, Apr 02, 2019 at 04:21:50PM +0200, Stefan Wahren wrote:
+>>>> This adds RPM support to the pwm-fan driver in order to use with
+>>>> fancontrol/pwmconfig. This feature is intended for fans with a 
+>>>> tachometer
+>>>> output signal, which generate a defined number of pulses per 
+>>>> revolution.
+>>>>
+>>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+>>>> ---
+>>>>   drivers/hwmon/pwm-fan.c | 111 
+>>>> ++++++++++++++++++++++++++++++++++++++++++++++--
+>>>>   1 file changed, 107 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+>>>> index 167221c..3245a49 100644
+>>>> --- a/drivers/hwmon/pwm-fan.c
+>>>> +++ b/drivers/hwmon/pwm-fan.c
+>>>> @@ -18,6 +18,7 @@
+>>>>     #include <linux/hwmon.h>
+>>>>   #include <linux/hwmon-sysfs.h>
+>>>> +#include <linux/interrupt.h>
+>>>>   #include <linux/module.h>
+>>>>   #include <linux/mutex.h>
+>>>>   #include <linux/of.h>
+>>>> @@ -26,6 +27,7 @@
+>>>>   #include <linux/regulator/consumer.h>
+>>>>   #include <linux/sysfs.h>
+>>>>   #include <linux/thermal.h>
+>>>> +#include <linux/timer.h>
+>>>>     #define MAX_PWM 255
+>>>>   @@ -33,6 +35,14 @@ struct pwm_fan_ctx {
+>>>>       struct mutex lock;
+>>>>       struct pwm_device *pwm;
+>>>>       struct regulator *reg_en;
+>>>> +
+>>>> +    int irq;
+>>>> +    atomic_t pulses;
+>>>> +    unsigned int rpm;
+>>>> +    u8 pulses_per_revolution;
+>>>> +    ktime_t sample_start;
+>>>> +    struct timer_list rpm_timer;
+>>>> +
+>>>>       unsigned int pwm_value;
+>>>>       unsigned int pwm_fan_state;
+>>>>       unsigned int pwm_fan_max_state;
+>>>> @@ -40,6 +50,32 @@ struct pwm_fan_ctx {
+>>>>       struct thermal_cooling_device *cdev;
+>>>>   };
+>>>>   +/* This handler assumes self resetting edge triggered interrupt. */
+>>>> +static irqreturn_t pulse_handler(int irq, void *dev_id)
+>>>> +{
+>>>> +    struct pwm_fan_ctx *ctx = dev_id;
+>>>> +
+>>>> +    atomic_inc(&ctx->pulses);
+>>>> +
+>>>> +    return IRQ_HANDLED;
+>>>> +}
+>>>> +
+>>>> +static void sample_timer(struct timer_list *t)
+>>>> +{
+>>>> +    struct pwm_fan_ctx *ctx = from_timer(ctx, t, rpm_timer);
+>>>> +    int pulses;
+>>>> +    u64 tmp;
+>>>> +
+>>>> +    pulses = atomic_read(&ctx->pulses);
+>>>> +    atomic_sub(pulses, &ctx->pulses);
+>>>> +    tmp = (u64)pulses * ktime_ms_delta(ktime_get(), 
+>>>> ctx->sample_start) * 60;
+>>>> +    do_div(tmp, ctx->pulses_per_revolution * 1000);
+>>>> +    ctx->rpm = tmp;
+>>>> +
+>>>> +    ctx->sample_start = ktime_get();
+>>>> +    mod_timer(&ctx->rpm_timer, jiffies + HZ);
+>>>> +}
+>>>> +
+>>>>   static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
+>>>>   {
+>>>>       unsigned long period;
+>>>> @@ -100,15 +136,49 @@ static ssize_t pwm_show(struct device *dev, 
+>>>> struct device_attribute *attr,
+>>>>       return sprintf(buf, "%u\n", ctx->pwm_value);
+>>>>   }
+>>>>   +static ssize_t rpm_show(struct device *dev,
+>>>> +            struct device_attribute *attr, char *buf)
+>>>> +{
+>>>> +    struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+>>>> +
+>>>> +    return sprintf(buf, "%u\n", ctx->rpm);
+>>>> +}
+>>>>     static SENSOR_DEVICE_ATTR_RW(pwm1, pwm, 0);
+>>>> +static SENSOR_DEVICE_ATTR_RO(fan1_input, rpm, 0);
+>>>>     static struct attribute *pwm_fan_attrs[] = {
+>>>>       &sensor_dev_attr_pwm1.dev_attr.attr,
+>>>> +    &sensor_dev_attr_fan1_input.dev_attr.attr,
+>>>>       NULL,
+>>>>   };
+>>>>   -ATTRIBUTE_GROUPS(pwm_fan);
+>>>> +static umode_t pwm_fan_attrs_visible(struct kobject *kobj, struct 
+>>>> attribute *a,
+>>>> +                     int n)
+>>>> +{
+>>>> +    struct device *dev = container_of(kobj, struct device, kobj);
+>>>> +    struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+>>>> +    struct device_attribute *devattr;
+>>>> +
+>>>> +    /* Hide fan_input in case no interrupt is available  */
+>>>> +    devattr = container_of(a, struct device_attribute, attr);
+>>>> +    if (devattr == &sensor_dev_attr_fan1_input.dev_attr) {
+>>>> +        if (ctx->irq <= 0)
+>>>> +            return 0;
+>>>> +    }
+>>> Side note: This can be easier written as
+>>>     if (n == 1 && ctx->irq <= 0)
+>>>         return 0;
+>>>
+>>> Not that it matters much.
+>>>
+>>>> +
+>>>> +    return a->mode;
+>>>> +}
+>>>> +
+>>>> +static const struct attribute_group pwm_fan_group = {
+>>>> +    .attrs = pwm_fan_attrs,
+>>>> +    .is_visible = pwm_fan_attrs_visible,
+>>>> +};
+>>>> +
+>>>> +static const struct attribute_group *pwm_fan_groups[] = {
+>>>> +    &pwm_fan_group,
+>>>> +    NULL,
+>>>> +};
+>>>>     /* thermal cooling device callbacks */
+>>>>   static int pwm_fan_get_max_state(struct thermal_cooling_device 
+>>>> *cdev,
+>>>> @@ -261,17 +331,45 @@ static int pwm_fan_probe(struct 
+>>>> platform_device *pdev)
+>>>>           goto err_reg_disable;
+>>>>       }
+>>>>   +    timer_setup(&ctx->rpm_timer, sample_timer, 0);
+>>>> +
+>>>> +    if (of_property_read_u8(pdev->dev.of_node, 
+>>>> "pulses-per-revolution",
+>>> This does not work: The property is not defined as u8. You have to 
+>>> either
+>>> use of_property_read_u32() or declare the property as u8.
+>> pulses_per_revolution is defined as u8 since this version
+>
+> The variable might be, but the "pulses-per-revolution" property itself 
+> is not being defined with the appropriate DT type ("/bits/ 8") in the 
+> binding, and thus will be stored as a regular 32-bit cell, for which 
+> reading it as a u8 array may or may not work correctly depending on 
+> endianness.
+>
+> TBH, unless there's a real need for a specific binary format in the 
+> FDT, I don't think it's usually worth the bother of using irregular DT 
+> types, especially when the practical impact amounts to possibly saving 
+> up to 3 bytes for a property which usually won't need to be specified 
+> anyway. I'd just do something like:
+>
+>     u32 ppr = 2;
+>
+>     of_property_read_u32(np, "pulses-per-revolution", &ppr);
+>     ctx->pulses_per_revolution = ppr;
 
-Ok, thanks
+My intention was to avoid another overflow in case the device tree 
+provides unrealistic values ( my expected range 1 - 10 ). Saving space 
+would be a benefit, but i'm okay with this suggestion.
 
-Flavio Suligoi
+>
+>>>
+>>> [ Sorry, I didn't know until recently that this is necessary ]
+>>>
+>>>> + &ctx->pulses_per_revolution)) {
+>>>> +        ctx->pulses_per_revolution = 2;
+>>>> +    }
+>>>> +
+>>>> +    if (!ctx->pulses_per_revolution) {
+>>>> +        dev_err(&pdev->dev, "pulses-per-revolution can't be 
+>>>> zero.\n");
+>>>> +        ret = -EINVAL;
+>>>> +        goto err_pwm_disable;
+>>>> +    }
+>>>> +
+>>>> +    ctx->irq = platform_get_irq(pdev, 0);
+>>>> +    if (ctx->irq == -EPROBE_DEFER) {
+>>>> +        ret = ctx->irq;
+>>>> +        goto err_pwm_disable;
+>>> It might be better to call platform_get_irq() and to do do this check
+>>> first, before enabling the regulator (in practice before calling
+>>> devm_regulator_get_optional). It doesn't make sense to enable the
+>>> regulator only to disable it because the irq is not yet available.
+>>>
+>>>> +    } else if (ctx->irq > 0) {
+>>> As written, this else is unnecessary, and static checkers will complain
+>>> about it.
+>>>
+>>>> +        ret = devm_request_irq(&pdev->dev, ctx->irq, 
+>>>> pulse_handler, 0,
+>>>> +                       pdev->name, ctx);
+>>>> +        if (ret) {
+>>>> +            dev_err(&pdev->dev, "Can't get interrupt working.\n");
+>>>> +            goto err_pwm_disable;
+>
+> We could still continue without RPM support at this point, couldn't 
+> we? Or is this a deliberate "if that failed, then who knows how messed 
+> up the system is..." kind of thing?
+
+In case someone specified an interrupt, the user expect it to work. This 
+helps to identify broken DT faster.
+
+The gpio-fan also have optional irq support and also bail out if 
+devm_request_irq fails.
+
+Btw i will add the return code into the error message.
+
+Stefan
