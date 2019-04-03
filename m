@@ -1,62 +1,73 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v6 0/9] iProc I2C slave mode and NIC mode
-Date: Wed, 3 Apr 2019 15:20:14 -0700
-Message-ID: <06dff712-151b-f188-d154-3130d56d01d8@gmail.com>
-References: <20190403011830.3254-1-ray.jui@broadcom.com>
- <20190403204423.btgtke3tmt7pkr3j@ninjato>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: dts: Add support for ZII i.MX7 RPU2 board
+Date: Wed, 3 Apr 2019 19:56:53 -0300
+Message-ID: <CAOMZO5BZCGzJddFdbXKFYu8YPf-sWrpidf-B8JKi-KXPFR4Kmg@mail.gmail.com>
+References: <20190327064150.31549-1-andrew.smirnov@gmail.com> <20190327064150.31549-2-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190403204423.btgtke3tmt7pkr3j@ninjato>
-Content-Language: en-US
+In-Reply-To: <20190327064150.31549-2-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Ray Jui <ray.jui@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4/3/19 1:44 PM, Wolfram Sang wrote:
-> On Tue, Apr 02, 2019 at 06:18:21PM -0700, Ray Jui wrote:
->> This patch series adds the following support to the iProc I2C driver:
->> - Increase maximum read transfer size to 255 bytes
->> - I2C slave mode
->> - Polling mode
->> - NIC I2C mode
->>
->> This patch series is based on kernel v5.1-rc3 and available at:
->> https://github.com/Broadcom/arm64-linux.git
->> branch: i2c-slave-v6
->>
->> Changes from v5:
->>  - Address various comments from Wolfram
-> 
-> In the future, please write in detail what you changed. I review so many
-> patches that I can't recall all my comments on every patch.
-> 
-> That being said, all patches applied to for-next, thanks!
+Hi Andrey,
 
-OK, I will drop patch #9 from my queue then, thanks.
+This looks good. Only some minor comments:
 
-> 
-> Can be fixed incrementally, my code checkers complain about:
-> 
->     CPPCHECK
-> drivers/i2c/busses/i2c-bcm-iproc.c:720:14: warning: Shifting signed 32-bit value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
->     val |= 1 << M_TX_WR_STATUS_SHIFT;
->              ^
-> drivers/i2c/busses/i2c-bcm-iproc.c:847:13: warning: Shifting signed 32-bit value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
->  val &= ~(1 << TIM_CFG_MODE_400_SHIFT);
->             ^
-> drivers/i2c/busses/i2c-bcm-iproc.c:998:13: warning: Shifting signed 32-bit value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
->  val &= ~(1 << TIM_CFG_MODE_400_SHIFT);
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+On Wed, Mar 27, 2019 at 3:41 AM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
 
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx7d-zii-rpu2.dts
+> @@ -0,0 +1,936 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +
+Shawn mentioned on a prior submission of mine that this empty line is
+not needed.
 
--- 
-Florian
+> +       cs2000_ref: cs2000-ref {
+
+generic node name, please.
+
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <24576000>;
+> +       };
+> +
+> +       cs2000_in_dummy: cs2000-in-dummy {
+
+generic node name, please.
+
+> +&ecspi1 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_ecspi1>;
+> +       status = "okay";
+> +
+> +       cs-gpios = <&gpio4 19 GPIO_ACTIVE_HIGH>;
+
+status property usually is the last one. So please move cs-gpios prior
+to status.
+
+> +
+> +       flash@0 {
+> +               compatible = "jedec,spi-nor";
+> +               spi-max-frequency = <20000000>;
+> +               reg = <0>;
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +       };
+> +};
+> +
+
+> +&i2c1 {
+> +       clock-frequency = <100000>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_i2c1>;
+> +       status = "okay";
+> +
+> +       pmic: pfuze3000@8 {
+
+pmic@8
+
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
