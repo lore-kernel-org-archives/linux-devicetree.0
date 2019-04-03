@@ -1,96 +1,79 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH] dt-bindings: cpu: Fix JSON schema
-Date: Wed, 3 Apr 2019 10:29:27 +0900
-Message-ID: <c08031d4-d719-b91b-8789-b526ee80efe4@socionext.com>
-References: <20190318100521.29109-1-maxime.ripard@bootlin.com>
- <CAL_JsqJ_LYycXazkdP2Q=e-jynKiX+z5En0bz0AWpDjsevwQTg@mail.gmail.com>
- <20190401091050.cwph7xlpv3pmkwnq@flea>
- <78bb248e-56b8-b825-e763-583f75148eb3@socionext.com>
- <20190401113546.d6p2mg2y47abhumz@flea>
- <b6cb709b-7b1a-6bab-6f93-bcb565be18fb@socionext.com>
- <b3ecf5c5-9b1a-eb8b-95c2-c30a94c8bdd8@socionext.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: backlight: add lm3630a bindings
+Date: Tue, 2 Apr 2019 20:50:09 -0500
+Message-ID: <CAL_JsqKCJ0hwBX1P2abLjfMPZow3SJGO65PQ1Fa+Qz9DFHCXSg@mail.gmail.com>
+References: <20190401103034.21062-1-masneyb@onstation.org>
+ <20190401103034.21062-3-masneyb@onstation.org>
+ <68229e7f-4749-cde5-f541-793ab614084d@ti.com>
+ <20190402132440.GA10359@basecamp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b3ecf5c5-9b1a-eb8b-95c2-c30a94c8bdd8@socionext.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190402132440.GA10359@basecamp>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brian Masney <masneyb@onstation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Jonathan Marek <jonathan@marek.ca>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2019/04/02 20:42, Sugaya, Taichi wrote:
-> Hi,
-> 
-> On 2019/04/01 22:02, Sugaya, Taichi wrote:
->> Hi,
->>
->> On 2019/04/01 20:35, Maxime Ripard wrote:
->>> Hi,
->>>
->>> On Mon, Apr 01, 2019 at 07:52:06PM +0900, Sugaya, Taichi wrote:
->>>> On 2019/04/01 18:10, Maxime Ripard wrote:
->>>>> Hi Sugaya, Arnd, Olof,
->>>>>
->>>>> On Thu, Mar 28, 2019 at 02:35:54PM -0500, Rob Herring wrote:
->>>>>> +arm-soc
->>>>>>
->>>>>> On Mon, Mar 18, 2019 at 5:05 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->>>>>>>
->>>>>>> Commit fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for
->>>>>>> Milbeaut") added support for a new cpu enable-method, but did so using
->>>>>>> tabulations to ident. This is however invalid in the syntax, and resulted
->>>>>>> in a failure when trying to use that schemas for validation.
->>>>>>>
->>>>>>> Use spaces instead of tabs to indent to fix this.
->>>>>>>
->>>>>>> Fixes: fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
->>>>>>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->>>>>>> ---
->>>>>>>    Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
->>>>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> Reviewed-by: Rob Herring <robh@kernel.org>
->>>>>>
->>>>>> This should be applied to arm-soc tree having the commit.
->>>>>
->>>>> Could you pick up that patch?
->>>>
->>>> I got it.
->>>> My mission is to resubmit your fix-patch added my singned-off tag and
->>>> Rob's reviewed tag...right?
->>>
->>> If you are part of arm-soc and send your pull requests to Arnd and
->>> Olof, simply pick it up in the same branch than the initial patch was
->>> in. And when you apply that patch, you indeed need to add your
->>> Signed-off-by (note that most commands to commit have an option to do
->>> that automatically: -s and that includes git am) and the Rob's
->>> reviewed-by.
->>>
->>> Then, send a new pull request to arm-soc.
->>>
->>
->> Okay, thanks for your suggestion.
->> I try to make pull request!
->>
-> 
-> Sorry I realized that I couldn't make a private repository, so I'll send my Ack instead.
-
-One correction: "a public repository"
-
-> 
-> Acked-by: Sugaya Taichi <sugaya.taichi@socionext.com>
-> 
->> Thanks,
->> Sugaya Taichi
->>
->>> Maxime
->>>
->>> -- 
->>> Maxime Ripard, Bootlin
->>> Embedded Linux and Kernel engineering
->>> https://bootlin.com
->>>
+T24gVHVlLCBBcHIgMiwgMjAxOSBhdCA4OjI0IEFNIEJyaWFuIE1hc25leSA8bWFzbmV5YkBvbnN0
+YXRpb24ub3JnPiB3cm90ZToKPgo+IE9uIFR1ZSwgQXByIDAyLCAyMDE5IGF0IDA3OjU2OjU1QU0g
+LTA1MDAsIERhbiBNdXJwaHkgd3JvdGU6Cj4gPiBUaGlzIHdvdWxkIGNvbm5lY3QgY29udHJvbCBi
+YW5rIEIgdG8gY29udHJvbCBiYW5rIEEuICBPciBqdXN0IHVzZSBhIGZsYWcgdG8gZGVub3RlIHRv
+IGNvbm5lY3QgdGhlbQo+ID4gYW5kIG5vdCB1c2UgbGVkLXNvdXJjZXMuICBCdXQgbGVkLXNvdXJj
+ZXMgaXMgdGhlIHByb3BlcnR5IG9mIGNob2ljZS4KPiA+Cj4gPiBsZWRAMCB7Cj4gPiAgICAgICBy
+ZWcgPSA8MD47Cj4gPiAgICAgICBsZWQtc291cmNlcyA9IDwgMCAxID47Cj4gPiAgICAgICBsYWJl
+bCA9ICJtYWluLWxjZCI7Cj4gPiAgICAgICBkZWZhdWx0LWJyaWdodG5lc3MgPSA8MjAwPjsKPiA+
+ICAgICAgIG1heC1icmlnaHRuZXNzID0gPDI1NT47Cj4gPiB9Owo+Cj4gT0ssIEkgc2VlLiBJIHdv
+bmRlcmVkIGhvdyB3ZSBjb3VsZCBkbyB0aGF0IGluIGRldmljZSB0cmVlLgo+Cj4gPiA+ICsgICAg
+cHJvcGVydGllczoKPiA+ID4gKyAgICAgIGxhYmVsOgo+ID4gPiArICAgICAgICBkZXNjcmlwdGlv
+bjogfAo+ID4gPiArICAgICAgICAgIFRoZSBsYWJlbCBmb3IgdGhpcyBMRUQuIElmIG9taXR0ZWQs
+IHRoZSBsYWJlbCBpcyB0YWtlbiBmcm9tIHRoZSBub2RlCj4gPiA+ICsgICAgICAgICAgbmFtZSAo
+ZXhjbHVkaW5nIHRoZSB1bml0IGFkZHJlc3MpLiBJdCBoYXMgdG8gdW5pcXVlbHkgaWRlbnRpZnkg
+YQo+ID4gPiArICAgICAgICAgIGRldmljZSwgaS5lLiBubyBvdGhlciBMRUQgY2xhc3MgZGV2aWNl
+IGNhbiBiZSBhc3NpZ25lZCB0aGUgc2FtZSBsYWJlbC4KPiA+ID4gKwo+ID4gPiArICAgICAgbGVk
+LXNvdXJjZXM6Cj4gPiA+ICsgICAgICAgIGRlc2NyaXB0aW9uOiB8Cj4gPiA+ICsgICAgICAgICAg
+TGlzdCBvZiBkZXZpY2UgY3VycmVudCBvdXRwdXRzIHRoZSBMRUQgaXMgY29ubmVjdGVkIHRvLgo+
+ID4gPiArICAgICAgICBhbGxPZjoKPiA+ID4gKyAgICAgICAgICAtICRyZWY6IC9zY2hlbWFzL3R5
+cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMi1hcnJheQo+ID4gPiArICAgICAgICAgIC0gbWlu
+SXRlbXM6IDEKPiA+ID4gKyAgICAgICAgICAgIG1heEl0ZW1zOiAyCj4gPiA+ICsgICAgICAgICAg
+ICBpdGVtczoKPiA+ID4gKyAgICAgICAgICAgICAgbWluaW11bTogMAo+ID4gPiArICAgICAgICAg
+ICAgICBtYXhpbXVtOiAxCj4gPiA+ICsKPiA+Cj4gPiBsYWJlbCBhbmQgbGVkLXNvdXJjZXMgYXJl
+IGFscmVhZHkgZGVmaW5lZCBpbiB0aGUgY29tbW9uLnR4dCBubyBuZWVkIHRvIHJlZGVmaW5lIHRo
+ZW0gaGVyZS4KPgo+IElmIEknbSBnb2luZyB0byB1c2UgdGhlIG5ldy1zdHlsZSBiaW5kaW5ncywg
+dGhlbiBJJ2xsIG5lZWQgdG8gY29udmVydAo+IGNvbW1vbi50eHQgb3ZlciB0byB1c2UgdGhlIG5l
+dyBmb3JtYXQgYXMgd2VsbCBzbyB0aGF0IHRoZSBhdXRvbWF0ZWQKPiBzY2hlbWEgdmFsaWRhdGlv
+bnMgd2lsbCB3b3JrLiBJJ20gd2lsbGluZyB0byBkbyB0aGF0IHdvcmsgaWYgdGhlcmUgaXMKPiBp
+bnRlcmVzdCBmcm9tIHRoZSBMRUQgLyBiYWNrbGlnaHQgbWFpbnRhaW5lcnMuIFRoZSBtYWluIGlz
+c3VlIGlzIHRoYXQKPiB0aGVyZSBhcmUgNjIgcmVmZXJlbmNlcyB0byB0aGUgZmlsZSBjb21tb24u
+dHh0IGluIHRoZSBkaXJlY3RvcnkKPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+bGVkcy8uIFdvdWxkIHRoZSBtYWludGFpbmVycyBwcmVmZXI6CgpUaGF0IHdvdWxkIGJlIGF3ZXNv
+bWUuCgo+IC0gT25jZSBjb21tb24udHh0IGlzIGNvbnZlcnRlZCB0byBjb21tb24ueWFtbCwgbWFr
+ZSBjb21tb24udHh0IG9ubHkKPiAgIGhhdmUgYSBsaW5lIHN0YXRpbmcgdGhhdCB0aGUgY29tbW9u
+IGJpbmRpbmdzIHdlcmUgbW92ZWQgaW50bwo+ICAgY29tbW9uLnlhbWwuIFdlIGNhbiByZW1vdmUg
+dGhpcyBmaWxlIG9uY2UgYWxsIG9mIHRoZSBvdGhlciBiaW5kaW5ncwo+ICAgYXJlIGNvbnZlcnRl
+ZCB0byB0aGUgbmV3LXN0eWxlIGZvcm1hdC4KPgo+IC0gVXBkYXRlIGFsbCByZWZlcmVuY2VzIHRv
+IGNvbW1vbi50eHQgdG8gY29tbW9uLnlhbWwuICgxIHBhdGNoIG9yIDYyCj4gICBwYXRjaGVzPykK
+CkknZCBwcm9iYWJseSBnbyB3aXRoIHRoZSBmb3JtZXIgaWYgSSBoYWQgdG8gcGljay4gVGhlIHJl
+YWwKY29tcGxpY2F0aW9uIGhlcmUgaXMgdGhlcmUncyBzb21lIG90aGVyIGNoYW5nZXMgaW4gZmxp
+Z2h0LgoKPgo+IC0gT3IsIGp1c3QgZ28gd2l0aCB0aGUgb2xkZXItc3R5bGUgYmluZGluZyBmb3Jt
+YXQgZm9yIG5vdy4KCkknbSBva2F5IGlmIHlvdSB3cml0ZSBpdCB3aXRoIHRoZSBhc3N1bXB0aW9u
+IHRoYXQgdGhlIGNvbW1vbgpwcm9wZXJ0aWVzIGhhdmUgYSBzY2hlbWEgZXZlbiBpZiB0aGV5IGRv
+bid0IHlldC4gQWxsIHRoYXQgbWVhbnMgaXMgeW91CmRvbid0IG5lZWQgdG8gZGVmaW5lIHRoZSB0
+eXBlLCBidXQgb25seSB0aGUgYWRkaXRpb25hbCBjb25zdHJhaW50cy4KVGhlcmUgZG9lc24ndCBo
+YXZlIHRvIGJlIGEgcmVmZXJlbmNlIGJhY2sgdG8gdGhlIGNvbW1vbiBwcm9wZXJ0eQoodGhvc2Ug
+cmVmZXJlbmNlcyB0ZW5kIHRvIGdldCBicm9rZW4gYXMgd2UgY2FuIHNlZSBoZXJlKS4gV2l0aApl
+dmVyeXRoaW5nIGFzIHN0cnVjdHVyZWQgZGF0YSwgd2UgY291bGQgZXZlbiBnZW5lcmF0ZSByZWZl
+cmVuY2VzIG9yCmhhdmUgc29tZSB0b29sIHRoYXQgY2FuIGxvb2t1cCB0aGUgY29tbW9uIGRlZmlu
+aXRpb25zLgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bA==
