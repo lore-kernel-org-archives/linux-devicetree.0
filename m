@@ -1,65 +1,202 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH v6 0/9] iProc I2C slave mode and NIC mode
-Date: Wed, 3 Apr 2019 13:56:54 -0700
-Message-ID: <a34e914a-ac8e-421e-f75c-f595bc678219@broadcom.com>
-References: <20190403011830.3254-1-ray.jui@broadcom.com>
- <20190403204423.btgtke3tmt7pkr3j@ninjato>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v5 0/3] drm/panel: Support Rocktech jh057n00900 DSI panel
+Date: Wed, 3 Apr 2019 23:07:38 +0200
+Message-ID: <20190403210738.GA9173@ravnborg.org>
+References: <cover.1554114302.git.agx@sigxcpu.org>
+ <20190403161735.GN5238@ulmo>
+ <1ed5eb3af4df6b2dd1544c7b696e034ed5c94f06.camel@perches.com>
+ <c2f6a9f0ea59dc1491a8429a51afe56e488dfb3c.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190403204423.btgtke3tmt7pkr3j@ninjato>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <c2f6a9f0ea59dc1491a8429a51afe56e488dfb3c.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+To: Joe Perches <joe@perches.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Jagan Teki <jagan@amarulasolutions.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Johan Hovold <johan@kernel.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.ke
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+Hi Joe.
 
-On 4/3/2019 1:44 PM, Wolfram Sang wrote:
-> On Tue, Apr 02, 2019 at 06:18:21PM -0700, Ray Jui wrote:
->> This patch series adds the following support to the iProc I2C driver:
->> - Increase maximum read transfer size to 255 bytes
->> - I2C slave mode
->> - Polling mode
->> - NIC I2C mode
->>
->> This patch series is based on kernel v5.1-rc3 and available at:
->> https://github.com/Broadcom/arm64-linux.git
->> branch: i2c-slave-v6
->>
->> Changes from v5:
->>  - Address various comments from Wolfram
+Thanks for your patch.
+
+> ---
+>  drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c | 210 +++++++++++++--------
+>  1 file changed, 136 insertions(+), 74 deletions(-)
+
+Hmmm, add more lines than it deletes.
+
 > 
-> In the future, please write in detail what you changed. I review so many
-> patches that I can't recall all my comments on every patch.
-> 
+> diff --git a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> index 158a6d548068..7862863db5f7 100644
+> --- a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> +++ b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> @@ -20,27 +20,6 @@
+>  
+>  #define DRV_NAME "panel-rocktech-jh057n00900"
+>  
+> -/* Manufacturer specific Commands send via DSI */
+> -#define ST7703_CMD_ALL_PIXEL_OFF 0x22
+> -#define ST7703_CMD_ALL_PIXEL_ON	 0x23
+> -#define ST7703_CMD_SETDISP	 0xB2
+> -#define ST7703_CMD_SETRGBIF	 0xB3
+> -#define ST7703_CMD_SETCYC	 0xB4
+> -#define ST7703_CMD_SETBGP	 0xB5
+> -#define ST7703_CMD_SETVCOM	 0xB6
+> -#define ST7703_CMD_SETOTP	 0xB7
+> -#define ST7703_CMD_SETPOWER_EXT	 0xB8
+> -#define ST7703_CMD_SETEXTC	 0xB9
+> -#define ST7703_CMD_SETMIPI	 0xBA
+> -#define ST7703_CMD_SETVDC	 0xBC
+> -#define ST7703_CMD_SETSCR	 0xC0
+> -#define ST7703_CMD_SETPOWER	 0xC1
+> -#define ST7703_CMD_SETPANEL	 0xCC
+> -#define ST7703_CMD_SETGAMMA	 0xE0
+> -#define ST7703_CMD_SETEQ	 0xE3
+> -#define ST7703_CMD_SETGIP1	 0xE9
+> -#define ST7703_CMD_SETGIP2	 0xEA
+> -
+>  struct jh057n {
+>  	struct device *dev;
+>  	struct drm_panel panel;
+> @@ -51,75 +30,153 @@ struct jh057n {
+>  	struct dentry *debugfs;
+>  };
+>  
+> +struct st7703_cmd {
+> +	const size_t	size;
+> +	const u8	data[];
+> +};
+> +
+> +#define st7703_cmd_data(cmd, ...)					\
+> +	.size = 1 + (sizeof((u8[]){__VA_ARGS__})/sizeof(u8)),		\
+> +	.data = {cmd, __VA_ARGS__}
+> +
+> +/* Manufacturer specific Commands send via DSI */
+> +static const struct st7703_cmd ST7703_CMD_ALL_PIXEL_OFF = {
+> +	st7703_cmd_data(0x22)
+> +};
+> +static const struct st7703_cmd ST7703_CMD_ALL_PIXEL_ON = {
+> +	st7703_cmd_data(0x23)
+> +};
+> +static const struct st7703_cmd ST7703_CMD_SETDISP = {
+> +	st7703_cmd_data(0xB2,
+> +			0xF0, 0x12, 0x30)
+> +};
+> +static const struct st7703_cmd ST7703_CMD_SETRGBIF = {
+> +	st7703_cmd_data(0xB3,
+> +			0x10, 0x10, 0x05, 0x05, 0x03, 0xFF, 0x00, 0x00,
+> +			0x00, 0x00)
+> +};
+> +static const struct st7703_cmd ST7703_CMD_SETCYC = {
+> +	st7703_cmd_data(0xB4,
+> +			0x80)
+> +};
+> +static const struct st7703_cmd ST7703_CMD_SETBGP = {
+> +	st7703_cmd_data(0xB5,
+> +			0x08, 0x08)
+> +};
+> +static const struct st7703_cmd ST7703_CMD_SETVCOM = {
+> +	st7703_cmd_data(0xB6,
+> +			0x3F, 0x3F)
+> +};
+> +static const struct st7703_cmd ST7703_CMD_SETOTP = {
+> +	st7703_cmd_data(0xB7)
+> +};
+> +static const struct st7703_cmd ST7703_CMD_SETPOWER_EXT = {
+> +	st7703_cmd_data(0xB8)
+> +};
+> +static const struct st7703_cmd ST7703_CMD_SETEXTC = {
+> +	st7703_cmd_data(0xB9,
+> +			0xF1, 0x12, 0x83)
+> +};
+> +static const struct st7703_cmd ST7703_CMD_SETMIPI = {
+> +	st7703_cmd_data(0xBA)
+> +};
+> +static const struct st7703_cmd ST7703_CMD_SETVDC = {
+> +	st7703_cmd_data(0xBC,
+> +			0x4E)
+> +};
+> +static const struct st7703_cmd ST7703_CMD_SETSCR = {
+> +	st7703_cmd_data(0xC0,
+> +			0x73, 0x73, 0x50, 0x50, 0x00, 0x00, 0x08, 0x70,
+> +			0x00)
+> +};
+> +static const struct st7703_cmd ST7703_CMD_SETPOWER = {
+> +	st7703_cmd_data(0xC1)
+> +};
+> +static const struct st7703_cmd ST7703_CMD_SETPANEL = {
+> +	st7703_cmd_data(0xCC,
+> +			0x0B)
+> +};
+> +static const struct st7703_cmd ST7703_CMD_SETGAMMA = {
+> +	st7703_cmd_data(0xE0,
+> +			0x00, 0x09, 0x0E, 0x29, 0x2D, 0x3C, 0x41, 0x37,
+> +			0x07, 0x0B, 0x0D, 0x10, 0x11, 0x0F, 0x10, 0x11,
+> +			0x18, 0x00, 0x09, 0x0E, 0x29, 0x2D, 0x3C, 0x41,
+> +			0x37, 0x07, 0x0B, 0x0D, 0x10, 0x11, 0x0F, 0x10,
+> +			0x11, 0x18)
+> +};
+> +static const struct st7703_cmd ST7703_CMD_SETEQ = {
+> +	st7703_cmd_data(0xE3,
+> +			0x07, 0x07, 0x0B, 0x0B, 0x03, 0x0B, 0x00, 0x00,
+> +			0x00, 0x00, 0xFF, 0x00, 0xC0, 0x10)
+> +};
+> +static const struct st7703_cmd ST7703_CMD_SETGIP1 = {
+> +	st7703_cmd_data(0xE9,
+> +			0x82, 0x10, 0x06, 0x05, 0x9E, 0x0A, 0xA5, 0x12,
+> +			0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
+> +			0x0C, 0x00, 0x03, 0x00, 0x00, 0x00, 0x0C, 0x00,
+> +			0x03, 0x00, 0x00, 0x00, 0x75, 0x75, 0x31, 0x88,
+> +			0x88, 0x88, 0x88, 0x88, 0x88, 0x13, 0x88, 0x64,
+> +			0x64, 0x20, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> +			0x02, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
+> +};
+> +
+> +static const struct st7703_cmd ST7703_CMD_SETGIP2 = {
+> +	st7703_cmd_data(0xEA,
+> +			0x02, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +			0x00, 0x00, 0x00, 0x00, 0x02, 0x46, 0x02, 0x88,
+> +			0x88, 0x88, 0x88, 0x88, 0x88, 0x64, 0x88, 0x13,
+> +			0x57, 0x13, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> +			0x75, 0x88, 0x23, 0x14, 0x00, 0x00, 0x02, 0x00,
+> +			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x30, 0x0A,
+> +			0xA5, 0x00, 0x00, 0x00, 0x00)
+> +};
+> +
+>  static inline struct jh057n *panel_to_jh057n(struct drm_panel *panel)
+>  {
+>  	return container_of(panel, struct jh057n, panel);
+>  }
+>  
+> -#define dsi_generic_write_seq(dsi, seq...) do {				\
+> -		static const u8 d[] = { seq };				\
+> -		int ret;						\
+> -		ret = mipi_dsi_generic_write(dsi, d, ARRAY_SIZE(d));	\
+> -		if (ret < 0)						\
+> -			return ret;					\
+> -	} while (0)
+The above macro was the one triggering this patch.
+And frankly it looks nice and simple.
 
-Sure will do next time.
+The old code is IMO more readable.
+- We have all the commands listed in the order they
+  are used and in a rahter compatch format.
+- It is obvious when we need delays.
+- We have traditional #defines for the constants we know
 
-> That being said, all patches applied to for-next, thanks!
-> 
+This macro:
+> +#define st7703_cmd_data(cmd, ...)                                    \
+> +     .size = 1 + (sizeof((u8[]){__VA_ARGS__})/sizeof(u8)),           \
+> +     .data = {cmd, __VA_ARGS__}
+is again IMO not easier to follow than the above.
 
-Thanks!
+This is all to some extent bikeshedding, but I suggest
+to keep the current code.
+It is simple and it is tested.
 
-> Can be fixed incrementally, my code checkers complain about:
-> 
->     CPPCHECK
-> drivers/i2c/busses/i2c-bcm-iproc.c:720:14: warning: Shifting signed 32-bit value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
->     val |= 1 << M_TX_WR_STATUS_SHIFT;
->              ^
-> drivers/i2c/busses/i2c-bcm-iproc.c:847:13: warning: Shifting signed 32-bit value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
->  val &= ~(1 << TIM_CFG_MODE_400_SHIFT);
->             ^
-> drivers/i2c/busses/i2c-bcm-iproc.c:998:13: warning: Shifting signed 32-bit value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
->  val &= ~(1 << TIM_CFG_MODE_400_SHIFT);
-> 
+Thanks for trying to come up with a better solution.
 
-I'll submit an incremental patch to fix the above warnings. I think we
-can convert all '1 << XXX' syntax in this driver to 'BIT(XXX)'. It will
-fix all of the above warnings and make the code more readable.
-
-Thanks,
-
-Ray
+	Sam
