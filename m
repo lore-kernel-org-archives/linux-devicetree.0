@@ -1,68 +1,90 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 3/4] mfd: ti-lmu: Remove LM3532 backlight driver
- references
-Date: Wed, 3 Apr 2019 08:57:09 +0100
-Message-ID: <20190403075709.GD11301@dell>
-References: <20190321142838.22985-1-dmurphy@ti.com>
- <20190321142838.22985-3-dmurphy@ti.com>
- <8769a95d-179f-6219-0a63-9dd623cdd297@gmail.com>
- <20190325075317.GW4731@dell>
- <c950b7d3-eeb1-2dc2-b732-3a40d5b3a8b7@gmail.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 15/15] arm64: dts: marvell: Convert 7k/8k usb-phy
+ properties to phy-supply
+Date: Wed, 3 Apr 2019 10:06:42 +0200
+Message-ID: <20190403100642.24648945@xps13>
+References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
+ <20190401165131.23370-16-miquel.raynal@bootlin.com>
+ <CAFBinCDG5vpSpvq=1XUZzu7RA-pDEcEqgrPr65BZ5esuGyGPjA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c950b7d3-eeb1-2dc2-b732-3a40d5b3a8b7@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, pavel@ucw.cz, tony@atomide.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAFBinCDG5vpSpvq=1XUZzu7RA-pDEcEqgrPr65BZ5esuGyGPjA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Mar 2019, Jacek Anaszewski wrote:
-
-> On 3/25/19 8:53 AM, Lee Jones wrote:
-> > On Sat, 23 Mar 2019, Jacek Anaszewski wrote:
-> > 
-> > > Hi Lee,
-> > > 
-> > > Can we have your ack for this going via LED tree, please?
-> > 
-> > Patch looks okay.
-> > 
-> > You can take it through the LED, but if you do I will need you to send
-> > me a pull-request to a minimised immutable branch please.
-> > 
-> > If you cannot do this, I can apply the set and provide the same to
-> > you.
-> > 
-> > If you choose the former:
-> > 
-> >    Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> > 
-> > Please let me know what you decide
-> > 
-> 
-> I've been exposing integration branches in the past, but after Linus'
-> message [0] I have my doubts now. I wonder if it wouldn't make more
-> sense if I just took the patches, and you'd cherry-pick them only in
-> case such a need occurs. This way we would avoid this whole merge
-> noise, which in an optimistic and very plausible case will not be needed
-> at all.
-> 
-> [0] https://lkml.org/lkml/2017/4/19/1104
-
-That email is 2 years old, and does not seem relevant to what we're
-trying to achieve.  I've only ever had issues when *not* creating
-immutable branches for these, cross subsystem scenarios.  The
-shared branches I create are always minimalist and never change.
-
-I'm happy to take the patches and create a suitable pull-request for
-you if you are uncomfortable with the process.  I just need your Ack
-to do so.  Up to you.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+SGkgTWFydGluLAoKUm9iLCBhIGZldyBxdWVzdGlvbnMgZm9yIHlvdSBiZWxvdyA6KQoKTWFydGlu
+IEJsdW1lbnN0aW5nbCA8bWFydGluLmJsdW1lbnN0aW5nbEBnb29nbGVtYWlsLmNvbT4gd3JvdGUg
+b24gVHVlLAoyIEFwciAyMDE5IDIxOjM1OjI2ICswMjAwOgoKPiBIaSBNaXF1ZWwsCj4gCj4gdGhh
+bmsgeW91IGZvciBrZWVwaW5nIG1lIGluIHRoZSBsb29wIQo+IAo+IE9uIE1vbiwgQXByIDEsIDIw
+MTkgYXQgNjo1MiBQTSBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPiB3
+cm90ZToKPiA+Cj4gPiBVcGRhdGUgQXJhbWRhIDdrLzhrIERUcyB0byB1c2UgdGhlIHBoeS1zdXBw
+bHkgcHJvcGVydHkgb2YgdGhlIChyZWNlbnQpCj4gPiBnZW5lcmljIFBIWSBmcmFtZXdvcmsgaW5z
+dGVhZCBvZiB0aGUgKGxlZ2FjeSkgdXNiLXBoeSBwcmVwZXJ0eS4gQm90aAo+ID4gZW5hYmxlIHRo
+ZSBzdXBwbHkgd2hlbiB0aGUgUEhZIGlzIGVuYWJsZWQuCj4gPgo+ID4gVGhlIENPTVBIWSBub2Rl
+cyBvbmx5IHByb3ZpZGUgU0VSREVTIGxhbmVzIGNvbmZpZ3VyYXRpb24uIFRoZSBwb3dlcgo+ID4g
+c3VwcGx5IHRoYXQgaXMgcmVwcmVzZW50ZWQgYnkgdGhlIHBoeS1zdXBwbHkgcHJvcGVydHkgaXMg
+anVzdCBhCj4gPiByZWd1bGF0b3Igd2lyZWQgdG8gdGhlIFVTQiBjb25uZWN0b3IsIGhlbmNlIHRo
+ZSBjcmVhdGlvbiBvZiBjb25uZWN0b3IKPiA+IG5vZGVzIGFzIGNoaWxkIG9mIHRoZSBDT01QSFkg
+bm9kZXMgYW5kIHRoZSBzdXBwbHkgYXR0YWNoZWQgdG8gaXQuICAKPiBzaG91bGRuJ3QgdGhpcyBh
+bHNvIGJlIHJlZmxlY3RlZCBpbiB0aGUgZHQtYmluZGluZ3M/CgpJIGRvbid0IHRoaW5rIGl0IGRl
+c2VydmVzIGFuIHVwZGF0ZSBpbiB0aGUgYmluZGluZ3MgYXMgdGhpcyBpcyBqdXN0IGFuCnVwZGF0
+ZSBmb3IgYSBiZXR0ZXIgaGFyZHdhcmUgcmVwcmVzZW50YXRpb24uIFRoZSBDT01QSFkgYmxvY2sg
+aXMKYWxyZWFkeSBkb2N1bWVudGVkLCB0aGUgY29ubmVjdG9yIG9uZSB0b28uIEkgdGhvdWdodCBh
+ZGRpbmcgYSBjb25uZWN0b3IKbm9kZSBpbiB0aGUgQ09NUEhZIG5vZGUgd2FzIG9rYXkgd2hlbiBJ
+IHJlYWQgUm9iJ3MgYW5zd2VyIHRvIHlvdXIKc2VyaWVzIGFzIHRoaXMgaGFzIG5vdGhpbmcgdG8g
+ZG8gd2l0aCB0aGUgSVAgaXRzZWxmIGJ1dCBpcyBqdXN0CmRlc2NyaWJpbmcgaG93IHRoZSBib2Fy
+ZCBpcyBidWlsdC4gTWF5YmUgUm9iIGNhbiBjb25maXJtIHRoaXM/Cgo+IAo+ID4gQ2M6IE1hcnRp
+biBCbHVtZW5zdGluZ2wgPG1hcnRpbi5ibHVtZW5zdGluZ2xAZ29vZ2xlbWFpbC5jb20+Cj4gPiBT
+aWduZWQtb2ZmLWJ5OiBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPgo+
+ID4gLS0tCj4gPiAgLi4uL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTcwNDAtZGIuZHRz
+IHwgMjYgKysrKysrKysrKy0tLS0tLS0tLQo+ID4gIC4uLi9tYXJ2ZWxsL2FybWFkYS04MDQwLWNs
+ZWFyZm9nLWd0LThrLmR0cyAgICB8IDEzICsrKysrLS0tLS0KPiA+ICAuLi4vYXJtNjQvYm9vdC9k
+dHMvbWFydmVsbC9hcm1hZGEtODA0MC1kYi5kdHMgfCAxMyArKysrKy0tLS0tCj4gPiAgLi4uL2Jv
+b3QvZHRzL21hcnZlbGwvYXJtYWRhLTgwNDAtbWNiaW4uZHRzaSAgIHwgMTMgKysrKystLS0tLQo+
+ID4gIDQgZmlsZXMgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKSwgMzAgZGVsZXRpb25zKC0pCj4g
+Pgo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtNzA0
+MC1kYi5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTcwNDAtZGIuZHRz
+Cj4gPiBpbmRleCAxMzFjZTQyMjlkYjAuLjRiOGRmMzU5YjFjYyAxMDA2NDQKPiA+IC0tLSBhL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtNzA0MC1kYi5kdHMKPiA+ICsrKyBiL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtNzA0MC1kYi5kdHMKPiA+IEBAIC00NSwx
+NiArNDUsNiBAQAo+ID4gICAgICAgICAgICAgICAgIGVuYWJsZS1hY3RpdmUtaGlnaDsKPiA+ICAg
+ICAgICAgICAgICAgICBncGlvID0gPCZleHBhbmRlcjAgMSBHUElPX0FDVElWRV9ISUdIPjsKPiA+
+ICAgICAgICAgfTsKPiA+IC0KPiA+IC0gICAgICAgY3AwX3VzYjNfMF9waHk6IGNwMC11c2IzLTAt
+cGh5IHsKPiA+IC0gICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInVzYi1ub3AteGNlaXYiOwo+
+ID4gLSAgICAgICAgICAgICAgIHZjYy1zdXBwbHkgPSA8JmNwMF9yZWdfdXNiM18wX3ZidXM+Owo+
+ID4gLSAgICAgICB9Owo+ID4gLQo+ID4gLSAgICAgICBjcDBfdXNiM18xX3BoeTogY3AwLXVzYjMt
+MS1waHkgewo+ID4gLSAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAidXNiLW5vcC14Y2VpdiI7
+Cj4gPiAtICAgICAgICAgICAgICAgdmNjLXN1cHBseSA9IDwmY3AwX3JlZ191c2IzXzFfdmJ1cz47
+Cj4gPiAtICAgICAgIH07Cj4gPiAgfTsKPiA+Cj4gPiAgJmkyYzAgewo+ID4gQEAgLTIwMCwxNSAr
+MTkwLDI3IEBACj4gPiAgICAgICAgIH07Cj4gPiAgfTsKPiA+Cj4gPiArJmNwMF9jb21waHkxIHsK
+PiA+ICsgICAgICAgY3AwX3VzYmgwX2NvbjogY29ubmVjdG9yIHsKPiA+ICsgICAgICAgICAgICAg
+ICBjb21wYXRpYmxlID0gInVzYi1hLWNvbm5lY3RvciI7Cj4gPiArICAgICAgICAgICAgICAgcGh5
+LXN1cHBseSA9IDwmY3AwX3JlZ191c2IzXzBfdmJ1cz47Cj4gPiArICAgICAgIH07Cj4gPiArfTsg
+IAo+IChkaXNjbGFpbWVyOiBJIGRvbid0IGhhdmUgYW55IGJvYXJkIHdpdGggYSBtYXJ2ZWxsIFNv
+Qywgc28gSSBkb24ndAo+IHVuZGVyc3RhbmQgaG93IGl0IHdvcmtzIGFuZCBJIGNhbid0IGRlYnVn
+IGl0KQo+IEkga25vdyBhYm91dCB0aGUgInBoeS1zdXBwbHkiIHByb3BlcnR5IGluc2lkZSB0aGUg
+UEhZIG5vZGUgaXRzZWxmCj4gKHRoYXQgd291bGQgYmUgY3AwX2NvbXBoeTEgaW4gdGhpcyBjYXNl
+KS4KPiBUaGUgY29ubmVjdG9yIGJpbmRpbmcgZG9lcyBub3QgbWVudGlvbiBhIHBoeS1zdXBwbHkg
+cHJvcGVydHk6Cj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nvbm5lY3Rvci91
+c2ItY29ubmVjdG9yLnR4dAoKVGhhdCdzIHJpZ2h0LCBjYW4gUm9iIGNvbmZpcm0gdGhhdCB0aGlz
+IGlzIHZhbGlkPyBJZiB5ZXMgSSBjYW4gYWRkIGFuCm9wdGlvbmFsICJwaHktc3VwcGx5IiBwcm9w
+ZXJ0eSB0aGVyZS4KCj4gSSBkb24ndCB1bmRlcnN0YW5kIHdoaWNoIGRyaXZlciBlbmFibGVzIHRo
+ZSBwaHktc3VwcGx5IHdoZW4gaXQncyBwYXJ0Cj4gb2YgYSAiY29ubmVjdG9yIiBjaGlsZC1ub2Rl
+Lgo+IGRvIHlvdSBoYXZlIGEgaGludCB3aGVyZSBJIHNob3VsZCBzdGFydCBsb29raW5nPwoKSSBo
+b25lc3RseSBoYXZlIG5vIGlkZWEsIGJ1dCBhcHBhcmVudGx5IGl0IHdvcmtzLgoKClRoYW5rcywK
+TWlxdcOobAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
