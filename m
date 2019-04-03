@@ -1,223 +1,371 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH V4 3/3] hwmon: pwm-fan: Add RPM support via external
- interrupt
-Date: Wed, 3 Apr 2019 11:55:00 +0200
-Message-ID: <31ef4637-fa95-3800-20cf-96be2a5ecae4@i2se.com>
-References: <1554214910-29925-1-git-send-email-stefan.wahren@i2se.com>
- <1554214910-29925-4-git-send-email-stefan.wahren@i2se.com>
- <20190402205538.GA15543@roeck-us.net>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 2/9] mfd: Add ST Multi-Function eXpander (STMFX) core
+ driver
+Date: Wed, 3 Apr 2019 11:01:01 +0100
+Message-ID: <20190403100101.GK11301@dell>
+References: <1551260094-32570-1-git-send-email-amelie.delaunay@st.com>
+ <1551260094-32570-3-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190402205538.GA15543@roeck-us.net>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1551260094-32570-3-git-send-email-amelie.delaunay@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Amelie Delaunay <amelie.delaunay@st.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+On Wed, 27 Feb 2019, Amelie Delaunay wrote:
 
-Am 02.04.19 um 22:55 schrieb Guenter Roeck:
-> On Tue, Apr 02, 2019 at 04:21:50PM +0200, Stefan Wahren wrote:
->> This adds RPM support to the pwm-fan driver in order to use with
->> fancontrol/pwmconfig. This feature is intended for fans with a tachometer
->> output signal, which generate a defined number of pulses per revolution.
->>
->> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->> ---
->>  drivers/hwmon/pwm-fan.c | 111 ++++++++++++++++++++++++++++++++++++++++++++++--
->>  1 file changed, 107 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
->> index 167221c..3245a49 100644
->> --- a/drivers/hwmon/pwm-fan.c
->> +++ b/drivers/hwmon/pwm-fan.c
->> @@ -18,6 +18,7 @@
->>  
->>  #include <linux/hwmon.h>
->>  #include <linux/hwmon-sysfs.h>
->> +#include <linux/interrupt.h>
->>  #include <linux/module.h>
->>  #include <linux/mutex.h>
->>  #include <linux/of.h>
->> @@ -26,6 +27,7 @@
->>  #include <linux/regulator/consumer.h>
->>  #include <linux/sysfs.h>
->>  #include <linux/thermal.h>
->> +#include <linux/timer.h>
->>  
->>  #define MAX_PWM 255
->>  
->> @@ -33,6 +35,14 @@ struct pwm_fan_ctx {
->>  	struct mutex lock;
->>  	struct pwm_device *pwm;
->>  	struct regulator *reg_en;
->> +
->> +	int irq;
->> +	atomic_t pulses;
->> +	unsigned int rpm;
->> +	u8 pulses_per_revolution;
->> +	ktime_t sample_start;
->> +	struct timer_list rpm_timer;
->> +
->>  	unsigned int pwm_value;
->>  	unsigned int pwm_fan_state;
->>  	unsigned int pwm_fan_max_state;
->> @@ -40,6 +50,32 @@ struct pwm_fan_ctx {
->>  	struct thermal_cooling_device *cdev;
->>  };
->>  
->> +/* This handler assumes self resetting edge triggered interrupt. */
->> +static irqreturn_t pulse_handler(int irq, void *dev_id)
->> +{
->> +	struct pwm_fan_ctx *ctx = dev_id;
->> +
->> +	atomic_inc(&ctx->pulses);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static void sample_timer(struct timer_list *t)
->> +{
->> +	struct pwm_fan_ctx *ctx = from_timer(ctx, t, rpm_timer);
->> +	int pulses;
->> +	u64 tmp;
->> +
->> +	pulses = atomic_read(&ctx->pulses);
->> +	atomic_sub(pulses, &ctx->pulses);
->> +	tmp = (u64)pulses * ktime_ms_delta(ktime_get(), ctx->sample_start) * 60;
->> +	do_div(tmp, ctx->pulses_per_revolution * 1000);
->> +	ctx->rpm = tmp;
->> +
->> +	ctx->sample_start = ktime_get();
->> +	mod_timer(&ctx->rpm_timer, jiffies + HZ);
->> +}
->> +
->>  static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
->>  {
->>  	unsigned long period;
->> @@ -100,15 +136,49 @@ static ssize_t pwm_show(struct device *dev, struct device_attribute *attr,
->>  	return sprintf(buf, "%u\n", ctx->pwm_value);
->>  }
->>  
->> +static ssize_t rpm_show(struct device *dev,
->> +			struct device_attribute *attr, char *buf)
->> +{
->> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
->> +
->> +	return sprintf(buf, "%u\n", ctx->rpm);
->> +}
->>  
->>  static SENSOR_DEVICE_ATTR_RW(pwm1, pwm, 0);
->> +static SENSOR_DEVICE_ATTR_RO(fan1_input, rpm, 0);
->>  
->>  static struct attribute *pwm_fan_attrs[] = {
->>  	&sensor_dev_attr_pwm1.dev_attr.attr,
->> +	&sensor_dev_attr_fan1_input.dev_attr.attr,
->>  	NULL,
->>  };
->>  
->> -ATTRIBUTE_GROUPS(pwm_fan);
->> +static umode_t pwm_fan_attrs_visible(struct kobject *kobj, struct attribute *a,
->> +				     int n)
->> +{
->> +	struct device *dev = container_of(kobj, struct device, kobj);
->> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
->> +	struct device_attribute *devattr;
->> +
->> +	/* Hide fan_input in case no interrupt is available  */
->> +	devattr = container_of(a, struct device_attribute, attr);
->> +	if (devattr == &sensor_dev_attr_fan1_input.dev_attr) {
->> +		if (ctx->irq <= 0)
->> +			return 0;
->> +	}
-> Side note: This can be easier written as 
-> 	if (n == 1 && ctx->irq <= 0)
-> 		return 0;
->
-> Not that it matters much.
->
->> +
->> +	return a->mode;
->> +}
->> +
->> +static const struct attribute_group pwm_fan_group = {
->> +	.attrs = pwm_fan_attrs,
->> +	.is_visible = pwm_fan_attrs_visible,
->> +};
->> +
->> +static const struct attribute_group *pwm_fan_groups[] = {
->> +	&pwm_fan_group,
->> +	NULL,
->> +};
->>  
->>  /* thermal cooling device callbacks */
->>  static int pwm_fan_get_max_state(struct thermal_cooling_device *cdev,
->> @@ -261,17 +331,45 @@ static int pwm_fan_probe(struct platform_device *pdev)
->>  		goto err_reg_disable;
->>  	}
->>  
->> +	timer_setup(&ctx->rpm_timer, sample_timer, 0);
->> +
->> +	if (of_property_read_u8(pdev->dev.of_node, "pulses-per-revolution",
-> This does not work: The property is not defined as u8. You have to either
-> use of_property_read_u32() or declare the property as u8.
-pulses_per_revolution is defined as u8 since this version
->
-> [ Sorry, I didn't know until recently that this is necessary ]
->
->> +				&ctx->pulses_per_revolution)) {
->> +		ctx->pulses_per_revolution = 2;
->> +	}
->> +
->> +	if (!ctx->pulses_per_revolution) {
->> +		dev_err(&pdev->dev, "pulses-per-revolution can't be zero.\n");
->> +		ret = -EINVAL;
->> +		goto err_pwm_disable;
->> +	}
->> +
->> +	ctx->irq = platform_get_irq(pdev, 0);
->> +	if (ctx->irq == -EPROBE_DEFER) {
->> +		ret = ctx->irq;
->> +		goto err_pwm_disable;
-> It might be better to call platform_get_irq() and to do do this check
-> first, before enabling the regulator (in practice before calling
-> devm_regulator_get_optional). It doesn't make sense to enable the
-> regulator only to disable it because the irq is not yet available.
->
->> +	} else if (ctx->irq > 0) {
-> As written, this else is unnecessary, and static checkers will complain
-> about it.
->
->> +		ret = devm_request_irq(&pdev->dev, ctx->irq, pulse_handler, 0,
->> +				       pdev->name, ctx);
->> +		if (ret) {
->> +			dev_err(&pdev->dev, "Can't get interrupt working.\n");
->> +			goto err_pwm_disable;
->> +		}
->> +		ctx->sample_start = ktime_get();
->> +		mod_timer(&ctx->rpm_timer, jiffies + HZ);
->> +	}
->> +
->>  	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
->>  						       ctx, pwm_fan_groups);
->>  	if (IS_ERR(hwmon)) {
->>  		dev_err(&pdev->dev, "Failed to register hwmon device\n");
->>  		ret = PTR_ERR(hwmon);
->> -		goto err_pwm_disable;
->> +		goto err_del_timer;
->>  	}
->>  
->>  	ret = pwm_fan_of_get_cooling_data(&pdev->dev, ctx);
->>  	if (ret)
->> -		return ret;
->> +		goto err_del_timer;
-> Outch. This is buggy and should have been "goto err_pwm_disable;".
-> It needs to be fixed with a separate patch, and first, so we can
-> backport it. Can you do that ?
+> STMicroelectronics Multi-Function eXpander (STMFX) is a slave controller
+> using I2C for communication with the main MCU. Main features are:
+> - 16 fast GPIOs individually configurable in input/output
+> - 8 alternate GPIOs individually configurable in input/output when other
+> STMFX functions are not used
+> - Main MCU IDD measurement
+> - Resistive touchscreen controller
+> 
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> ---
+>  drivers/mfd/Kconfig       |  13 ++
+>  drivers/mfd/Makefile      |   2 +-
+>  drivers/mfd/stmfx.c       | 568 ++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/stmfx.h | 123 ++++++++++
+>  4 files changed, 705 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/mfd/stmfx.c
+>  create mode 100644 include/linux/mfd/stmfx.h
 
-Sure
+Very nice first attempt for what is a pretty complex driver.
 
-Stefan
+Just a couple of nits below.
+
+[...]
+
+> +static int stmfx_chip_init(struct i2c_client *client)
+> +{
+> +	struct stmfx *stmfx = i2c_get_clientdata(client);
+> +	u32 id;
+> +	u8 version[2];
+> +	int ret;
+> +
+> +	stmfx->vdd = devm_regulator_get_optional(&client->dev, "vdd");
+> +	if (IS_ERR(stmfx->vdd)) {
+> +		ret = PTR_ERR(stmfx->vdd);
+> +		if (ret != -ENODEV) {
+> +			if (ret != -EPROBE_DEFER)
+> +				dev_err(&client->dev,
+> +					"No VDD regulator found:%d\n", ret);
+
+Actually -ENODEV means this, which is okay.
+
+In this case we failed to obtain a provided regulator.
+
+> +			return ret;
+> +		}
+> +	} else {
+
+	if (IS_ERR(stmfx->vdd) && PTR_ERR(stmfx->vdd) == -EPROBE_DEFER) {
+		return PTR_ERR(stmfx->vdd);
+	} else (IS_ERR(stmfx->vdd) && PTR_ERR(stmfx->vdd) == -ENODEV) {
+		stmfx->vdd = NULL;
+	} else (IS_ERR(stmfx->vdd))) {
+		dev_err(&client->dev, "Failed to get VDD regulator:%d\n", ret);
+		return PTR_ERR(stmfx->vdd);
+	}
+
+	if (stmfx->vdd) {
+
+> +		ret = regulator_enable(stmfx->vdd);
+> +		if (ret) {
+> +			dev_err(&client->dev, "VDD enable failed: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+
+[...]
+
+> +static const struct resource stmfx_ts_resources[] = {
+> +	DEFINE_RES_IRQ(STMFX_REG_IRQ_SRC_EN_TS_DET),
+> +	DEFINE_RES_IRQ(STMFX_REG_IRQ_SRC_EN_TS_NE),
+> +	DEFINE_RES_IRQ(STMFX_REG_IRQ_SRC_EN_TS_TH),
+> +	DEFINE_RES_IRQ(STMFX_REG_IRQ_SRC_EN_TS_FULL),
+> +	DEFINE_RES_IRQ(STMFX_REG_IRQ_SRC_EN_TS_OVF),
+> +};
+
+Please move everything from here --------------->
+
+> +static struct mfd_cell stmfx_cells[] = {
+> +	{
+> +		.of_compatible = "st,stmfx-0300-pinctrl",
+> +		.name = "stmfx-pinctrl",
+> +		.resources = stmfx_pinctrl_resources,
+> +		.num_resources = ARRAY_SIZE(stmfx_pinctrl_resources),
+> +	},
+> +	{
+> +		.of_compatible = "st,stmfx-0300-idd",
+> +		.name = "stmfx-idd",
+> +		.resources = stmfx_idd_resources,
+> +		.num_resources = ARRAY_SIZE(stmfx_idd_resources),
+> +	},
+> +	{
+> +		.of_compatible = "st,stmfx-0300-ts",
+> +		.name = "stmfx-ts",
+> +		.resources = stmfx_ts_resources,
+> +		.num_resources = ARRAY_SIZE(stmfx_ts_resources),
+> +	},
+> +};
+> +
+> +static bool stmfx_reg_volatile(struct device *dev, unsigned int reg)
+> +{
+> +	switch (reg) {
+> +	case STMFX_REG_SYS_CTRL:
+> +	case STMFX_REG_IRQ_SRC_EN:
+> +	case STMFX_REG_IRQ_PENDING:
+> +	case STMFX_REG_IRQ_GPI_PENDING1:
+> +	case STMFX_REG_IRQ_GPI_PENDING2:
+> +	case STMFX_REG_IRQ_GPI_PENDING3:
+> +	case STMFX_REG_GPIO_STATE1:
+> +	case STMFX_REG_GPIO_STATE2:
+> +	case STMFX_REG_GPIO_STATE3:
+> +	case STMFX_REG_IRQ_GPI_SRC1:
+> +	case STMFX_REG_IRQ_GPI_SRC2:
+> +	case STMFX_REG_IRQ_GPI_SRC3:
+> +	case STMFX_REG_GPO_SET1:
+> +	case STMFX_REG_GPO_SET2:
+> +	case STMFX_REG_GPO_SET3:
+> +	case STMFX_REG_GPO_CLR1:
+> +	case STMFX_REG_GPO_CLR2:
+> +	case STMFX_REG_GPO_CLR3:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +static bool stmfx_reg_writeable(struct device *dev, unsigned int reg)
+> +{
+> +	return (reg >= STMFX_REG_SYS_CTRL);
+> +}
+> +
+> +static const struct regmap_config stmfx_regmap_config = {
+> +	.reg_bits	= 8,
+> +	.reg_stride	= 1,
+> +	.val_bits	= 8,
+> +	.max_register	= STMFX_REG_MAX,
+> +	.volatile_reg	= stmfx_reg_volatile,
+> +	.writeable_reg	= stmfx_reg_writeable,
+> +	.cache_type	= REGCACHE_RBTREE,
+> +};
+
+----------------------->
+
+... to here, up to the top, just below the includes.
+
+> +static int stmfx_probe(struct i2c_client *client,
+> +		       const struct i2c_device_id *id)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct stmfx *stmfx;
+> +	int i, ret;
+> +
+> +	stmfx = devm_kzalloc(dev, sizeof(*stmfx), GFP_KERNEL);
+> +	if (!stmfx)
+> +		return -ENOMEM;
+> +
+> +	i2c_set_clientdata(client, stmfx);
+> +
+> +	stmfx->dev = dev;
+> +
+> +	stmfx->map = devm_regmap_init_i2c(client, &stmfx_regmap_config);
+> +	if (IS_ERR(stmfx->map)) {
+> +		ret = PTR_ERR(stmfx->map);
+> +		dev_err(dev, "Failed to allocate register map: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	mutex_init(&stmfx->lock);
+> +
+> +	ret = stmfx_chip_init(client);
+> +	if (ret) {
+> +		if (ret == -ETIMEDOUT)
+> +			return -EPROBE_DEFER;
+> +		return ret;
+> +	}
+> +
+> +	if (client->irq < 0) {
+> +		dev_err(dev, "Failed to get IRQ: %d\n", client->irq);
+> +		ret = client->irq;
+> +		goto err_chip_exit;
+> +	}
+> +
+> +	ret = stmfx_irq_init(client);
+> +	if (ret)
+> +		goto err_chip_exit;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(stmfx_cells); i++) {
+> +		stmfx_cells[i].platform_data = stmfx;
+> +		stmfx_cells[i].pdata_size = sizeof(struct stmfx);
+> +	}
+
+Pass this though dev_get_drvdata() instead.
+
+...
+
+Actually, didn't you already set this with i2c_set_clientdata()?  That
+does exactly the same thing.  So you can get this back from the client
+via i2c_get_clientdata().  No need to send it though platform data.
+
+> +	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
+> +				   stmfx_cells, ARRAY_SIZE(stmfx_cells), NULL,
+> +				   0, stmfx->irq_domain);
+> +	if (ret)
+> +		goto err_irq_exit;
+> +
+> +	return 0;
+> +
+> +err_irq_exit:
+> +	stmfx_irq_exit(client);
+> +err_chip_exit:
+> +	stmfx_chip_exit(client);
+> +
+> +	return ret;
+> +}
+> +
+> +static int stmfx_remove(struct i2c_client *client)
+> +{
+> +	stmfx_irq_exit(client);
+> +
+> +	return stmfx_chip_exit(client);
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int stmfx_backup_regs(struct stmfx *stmfx)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_raw_read(stmfx->map, STMFX_REG_SYS_CTRL,
+> +			      &stmfx->bkp_sysctrl, sizeof(stmfx->bkp_sysctrl));
+> +	if (ret)
+> +		return ret;
+
+'\n' here.
+
+> +	ret = regmap_raw_read(stmfx->map, STMFX_REG_IRQ_OUT_PIN,
+> +			      &stmfx->bkp_irqoutpin,
+> +			      sizeof(stmfx->bkp_irqoutpin));
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int stmfx_restore_regs(struct stmfx *stmfx)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_raw_write(stmfx->map, STMFX_REG_SYS_CTRL,
+> +			       &stmfx->bkp_sysctrl, sizeof(stmfx->bkp_sysctrl));
+> +	if (ret)
+> +		return ret;
+
+'\n' here.
+
+> +	ret = regmap_raw_write(stmfx->map, STMFX_REG_IRQ_OUT_PIN,
+> +			       &stmfx->bkp_irqoutpin,
+> +			       sizeof(stmfx->bkp_irqoutpin));
+> +	if (ret)
+> +		return ret;
+
+'\n' here.
+
+> +	ret = regmap_raw_write(stmfx->map, STMFX_REG_IRQ_SRC_EN,
+> +			       &stmfx->irq_src, sizeof(stmfx->irq_src));
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int stmfx_suspend(struct device *dev)
+> +{
+> +	struct stmfx *stmfx = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = stmfx_backup_regs(stmfx);
+
+Don't think you need a separate function for this.  Just move the
+regmap_raw_write() commands here.
+
+> +	if (ret) {
+> +		dev_err(stmfx->dev, "Registers backup failure\n");
+> +		return ret;
+> +	}
+> +
+> +	if (!IS_ERR(stmfx->vdd)) {
+> +		ret = regulator_disable(stmfx->vdd);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int stmfx_resume(struct device *dev)
+> +{
+> +	struct stmfx *stmfx = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	if (!IS_ERR(stmfx->vdd)) {
+> +		ret = regulator_enable(stmfx->vdd);
+> +		if (ret) {
+> +			dev_err(stmfx->dev,
+> +				"VDD enable failed: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	ret = stmfx_restore_regs(stmfx);
+
+As above.
+
+> +	if (ret) {
+> +		dev_err(stmfx->dev, "Registers restoration failure\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(stmfx_dev_pm_ops, stmfx_suspend, stmfx_resume);
+> +
+> +static const struct of_device_id stmfx_of_match[] = {
+> +	{ .compatible = "st,stmfx-0300", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, stmfx_of_match);
+> +
+> +static struct i2c_driver stmfx_driver = {
+> +	.driver = {
+> +		.name = "stmfx-core",
+> +		.of_match_table = of_match_ptr(stmfx_of_match),
+> +		.pm = &stmfx_dev_pm_ops,
+> +	},
+> +	.probe = stmfx_probe,
+> +	.remove = stmfx_remove,
+> +};
+> +module_i2c_driver(stmfx_driver);
+> +
+> +MODULE_DESCRIPTION("STMFX core driver");
+> +MODULE_AUTHOR("Amelie Delaunay <amelie.delaunay@st.com>");
+> +MODULE_LICENSE("GPL v2");
+
+[...]
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
