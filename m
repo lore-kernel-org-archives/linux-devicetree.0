@@ -1,7 +1,7 @@
 From: Bruno Thomsen <bruno.thomsen@gmail.com>
-Subject: [PATCH v2 3/5] ARM: dts: tq imx7 common board support
-Date: Wed,  3 Apr 2019 08:44:25 +0200
-Message-ID: <20190403064427.30041-4-bruno.thomsen@gmail.com>
+Subject: [PATCH v2 5/5] ARM: dts: tq imx7d board support
+Date: Wed,  3 Apr 2019 08:44:27 +0200
+Message-ID: <20190403064427.30041-6-bruno.thomsen@gmail.com>
 References: <20190304165630.18225-1-bruno.thomsen@gmail.com>
  <20190403064427.30041-1-bruno.thomsen@gmail.com>
 Mime-Version: 1.0
@@ -22,243 +22,68 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: devicetree@vger.kernel.org, laa@kamstrup.com, festevam@gmail.com, s.hauer@pengutronix.de, clemens.ml@gmx.net, bruno.thomsen@gmail.com, bth@kamstrup.com, ksc@kamstrup.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org, markus.niebel@tq-group.com
 List-Id: devicetree@vger.kernel.org
 
-This adds TQMa7 and MBa7 board support.
-TQMa7 can be mounted with either i.MX7 Solo or Dual.
-All TQMa7 board variants can be mounted in MBa7 carrier board.
+This adds support for the TQ TQMa7D SoM together with
+the MBa7 carrier board and it's based on the NXP i.MX7Dual SoC.
 
 Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
 ---
 v2:
-- Use hyphen in node name.
-- Removed unneeded status in gpio-leds.
-- Dropped regulator container together with reg property on reg_xx.
-- Use num-chipselects property and not fsl,spi-num-chipselects.
-- Use uart-has-rtscts property and not fsl,uart-has-rtscts.
-- Removed unsupported fsl,wdog_b property.
-- Use generic node name and specific node label on multiple devices like:
-  ethernet-phy, temperature-sensor, audio-codec, gpio-expander, eeprom,
-  temperature-sensor-eeprom, pmic, rtc.
-- Fixed dallas,ds1339 compatible string.
-- Fixed national,lm75 compatible string.
-- Removed a few extra newlines.
+- Use generic node name and specific node label on ethernet-phy device.
+- Removed tq,imx7d-tqma7 (SoM) compatible string.
 
- arch/arm/boot/dts/imx7-mba7.dtsi  | 563 ++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx7-tqma7.dtsi | 232 ++++++++++++
- 2 files changed, 795 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx7-mba7.dtsi
- create mode 100644 arch/arm/boot/dts/imx7-tqma7.dtsi
+ arch/arm/boot/dts/Makefile         |   1 +
+ arch/arm/boot/dts/imx7d-mba7.dts   | 119 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx7d-tqma7.dtsi |  11 +++
+ 3 files changed, 131 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx7d-mba7.dts
+ create mode 100644 arch/arm/boot/dts/imx7d-tqma7.dtsi
 
-diff --git a/arch/arm/boot/dts/imx7-mba7.dtsi b/arch/arm/boot/dts/imx7-mba7.dtsi
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 250c0890e5ac..80ab51dcd81e 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -579,6 +579,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
+ 	imx7d-cl-som-imx7.dtb \
+ 	imx7d-colibri-emmc-eval-v3.dtb \
+ 	imx7d-colibri-eval-v3.dtb \
++	imx7d-mba7.dtb \
+ 	imx7d-nitrogen7.dtb \
+ 	imx7d-pico-hobbit.dtb \
+ 	imx7d-pico-pi.dtb \
+diff --git a/arch/arm/boot/dts/imx7d-mba7.dts b/arch/arm/boot/dts/imx7d-mba7.dts
 new file mode 100644
-index 000000000000..a880a698bdaf
+index 000000000000..221274c73dbd
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx7-mba7.dtsi
-@@ -0,0 +1,563 @@
++++ b/arch/arm/boot/dts/imx7d-mba7.dts
+@@ -0,0 +1,119 @@
 +// SPDX-License-Identifier: GPL-2.0 OR X11
 +/*
-+ * Device Tree Include file for TQ Systems MBa7 carrier board.
++ * Device Tree Source for TQ Systems TQMa7D board on MBa7 carrier board.
 + *
 + * Copyright (C) 2016 TQ Systems GmbH
 + * Author: Markus Niebel <Markus.Niebel@tq-group.com>
 + * Copyright (C) 2019 Bruno Thomsen <bruno.thomsen@gmail.com>
-+ *
-+ * Note: This file does not include nodes for all peripheral devices.
-+ * As device driver coverage increases additional nodes can be added.
 + */
 +
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/net/ti-dp83867.h>
++/dts-v1/;
++
++#include "imx7d-tqma7.dtsi"
++#include "imx7-mba7.dtsi"
 +
 +/ {
-+	beeper {
-+		compatible = "gpio-beeper";
-+		gpios = <&pca9555 0 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	chosen {
-+		bootargs="ttymxc5,115200";
-+		linux,stdout-path = &uart6;
-+		stdout-path = &uart6;
-+	};
-+
-+	gpio_buttons: gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		button-0 {
-+			/* #SWITCH_A */
-+			label = "S11";
-+			linux,code = <KEY_1>;
-+			gpios = <&pca9555 13 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		button-1 {
-+			/* #SWITCH_B */
-+			label = "S12";
-+			linux,code = <KEY_2>;
-+			gpios = <&pca9555 14 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		button-2 {
-+			/* #SWITCH_C */
-+			label = "S13";
-+			linux,code = <KEY_3>;
-+			gpios = <&pca9555 15 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+
-+		led1 {
-+			label = "led1";
-+			gpios = <&pca9555 8 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-on";
-+		};
-+
-+		led2 {
-+			label = "led2";
-+			gpios = <&pca9555 9 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+	reg_sd1_vmmc: regulator-sd1-vmmc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC3V3_SD1";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_fec1_pwdn: regulator-fec1-pwdn {
-+		compatible = "regulator-fixed";
-+		regulator-name = "PWDN_FEC1";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		gpio = <&gpio1 9 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_fec2_pwdn: regulator-fec2-pwdn {
-+		compatible = "regulator-fixed";
-+		regulator-name = "PWDN_FEC2";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		gpio = <&gpio2 31 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VBUS_USBOTG1";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_usb_otg2_vbus: regulator-usb-otg2-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VBUS_USBOTG2";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio1 7 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_mpcie_1v5: regulator-mpcie-1v5 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC1V5_MPCIE";
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <1500000>;
-+		gpio = <&pca9555 12 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	reg_mpcie_3v3: regulator-mpcie-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC3V3_MPCIE";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&pca9555 10 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	reg_mba_12v0: regulator-mba-12v0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC12V0_MBA7";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		gpio = <&pca9555 11 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_lvds_transmitter: regulator-lvds-transmitter {
-+		compatible = "regulator-fixed";
-+		regulator-name = "#SHTDN_LVDS";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&pca9555 1 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_vref_1v8: regulator-vref-1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC1V8_REF";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+		vin-supply = <&sw2_reg>;
-+	};
-+
-+	reg_audio_3v3: regulator-audio-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC3V3_AUDIO";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
++	model = "TQ Systems TQMa7D board on MBa7 carrier board";
++	compatible = "tq,imx7d-mba7", "fsl,imx7d";
 +};
 +
-+&adc1 {
-+	vref-supply = <&reg_vref_1v8>;
-+	status = "okay";
-+};
-+
-+&adc2 {
-+	vref-supply = <&reg_vref_1v8>;
-+	status = "okay";
-+};
-+
-+&ecspi1 {
++&fec2 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi1>;
-+	num-chipselects = <3>;
-+	cs-gpios = <&gpio4 0 GPIO_ACTIVE_LOW>, <&gpio4 1 GPIO_ACTIVE_LOW>,
-+		   <&gpio4 2 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&ecspi2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi2>;
-+	num-chipselects = <1>;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet1>;
++	pinctrl-0 = <&pinctrl_enet2>;
 +	phy-mode = "rgmii-id";
-+	phy-reset-gpios = <&gpio7 15 GPIO_ACTIVE_LOW>;
++	phy-reset-gpios = <&gpio2 28 GPIO_ACTIVE_LOW>;
 +	phy-reset-duration = <1>;
 +	phy-reset-delay = <1>;
-+	phy-supply = <&reg_fec1_pwdn>;
-+	phy-handle = <&ethphy1_0>;
++	phy-supply = <&reg_fec2_pwdn>;
++	phy-handle = <&ethphy2_0>;
 +	fsl,magic-packet;
 +	status = "okay";
 +
@@ -266,594 +91,106 @@ index 000000000000..a880a698bdaf
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
-+		ethphy1_0: ethernet-phy@0 {
++		ethphy2_0: ethernet-phy@0 {
 +			compatible = "ethernet-phy-ieee802.3-c22";
 +			reg = <0>;
 +			ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_50_NS>;
 +			ti,tx-internal-delay = <DP83867_RGMIIDCTL_2_50_NS>;
 +			ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+			/* LED1: Link/Activity, LED2: Error */
++			/* LED1: Link/Activity, LED2: error */
 +			ti,led-function = <0x0db0>;
-+			/* Active low, LED1 and LED2 driven by phy */
++			/* active low, LED1/2 driven by phy */
 +			ti,led-ctrl = <0x1001>;
 +		};
 +	};
-+};
-+
-+&flexcan1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	status = "okay";
-+};
-+
-+&flexcan2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan2>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	lm75: temperature-sensor@49 {
-+		compatible = "national,lm75";
-+		reg = <0x49>;
-+	};
-+};
-+
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+
-+	tlv320aic32x4: audio-codec@18 {
-+		compatible = "ti,tlv320aic32x4";
-+		reg = <0x18>;
-+		clocks = <&clks IMX7D_AUDIO_MCLK_ROOT_CLK>;
-+		clock-names = "mclk";
-+		ldoin-supply = <&reg_audio_3v3>;
-+		iov-supply = <&reg_audio_3v3>;
-+	};
-+
-+	pca9555: gpio-expander@20 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x20>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_pca9555>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&gpio7>;
-+		interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+};
-+
-+&i2c3 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+	status = "okay";
 +};
 +
 +&iomuxc {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pinctrl_hog_mba7_1>;
 +
-+	pinctrl_ecspi1: ecspi1grp {
++	pinctrl_enet2: enet2grp {
 +		fsl,pins = <
-+			MX7D_PAD_ECSPI1_MISO__ECSPI1_MISO		0x7c
-+			MX7D_PAD_ECSPI1_MOSI__ECSPI1_MOSI		0x74
-+			MX7D_PAD_ECSPI1_SCLK__ECSPI1_SCLK		0x74
-+			MX7D_PAD_UART1_RX_DATA__GPIO4_IO0		0x74
-+			MX7D_PAD_UART1_TX_DATA__GPIO4_IO1		0x74
-+			MX7D_PAD_UART2_RX_DATA__GPIO4_IO2		0x74
-+		>;
-+	};
-+
-+	pinctrl_ecspi2: ecspi2grp {
-+		fsl,pins = <
-+			MX7D_PAD_ECSPI2_MISO__ECSPI2_MISO		0x7c
-+			MX7D_PAD_ECSPI2_MOSI__ECSPI2_MOSI		0x74
-+			MX7D_PAD_ECSPI2_SCLK__ECSPI2_SCLK		0x74
-+			MX7D_PAD_ECSPI2_SS0__ECSPI2_SS0			0x74
-+		>;
-+	};
-+
-+	pinctrl_enet1: enet1grp {
-+		fsl,pins = <
-+			MX7D_PAD_GPIO1_IO10__ENET1_MDIO			0x02
-+			MX7D_PAD_GPIO1_IO11__ENET1_MDC			0x00
-+			MX7D_PAD_ENET1_RGMII_TXC__ENET1_RGMII_TXC	0x71
-+			MX7D_PAD_ENET1_RGMII_TD0__ENET1_RGMII_TD0	0x71
-+			MX7D_PAD_ENET1_RGMII_TD1__ENET1_RGMII_TD1	0x71
-+			MX7D_PAD_ENET1_RGMII_TD2__ENET1_RGMII_TD2	0x71
-+			MX7D_PAD_ENET1_RGMII_TD3__ENET1_RGMII_TD3	0x71
-+			MX7D_PAD_ENET1_RGMII_TX_CTL__ENET1_RGMII_TX_CTL	0x71
-+			MX7D_PAD_ENET1_RGMII_RXC__ENET1_RGMII_RXC	0x79
-+			MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0	0x79
-+			MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1	0x79
-+			MX7D_PAD_ENET1_RGMII_RD2__ENET1_RGMII_RD2	0x79
-+			MX7D_PAD_ENET1_RGMII_RD3__ENET1_RGMII_RD3	0x79
-+			MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL	0x79
++			MX7D_PAD_SD2_CD_B__ENET2_MDIO			0x02
++			MX7D_PAD_SD2_WP__ENET2_MDC			0x00
++			MX7D_PAD_EPDC_GDSP__ENET2_RGMII_TXC		0x71
++			MX7D_PAD_EPDC_SDCE2__ENET2_RGMII_TD0		0x71
++			MX7D_PAD_EPDC_SDCE3__ENET2_RGMII_TD1		0x71
++			MX7D_PAD_EPDC_GDCLK__ENET2_RGMII_TD2		0x71
++			MX7D_PAD_EPDC_GDOE__ENET2_RGMII_TD3		0x71
++			MX7D_PAD_EPDC_GDRL__ENET2_RGMII_TX_CTL		0x71
++			MX7D_PAD_EPDC_SDCE1__ENET2_RGMII_RXC		0x79
++			MX7D_PAD_EPDC_SDCLK__ENET2_RGMII_RD0		0x79
++			MX7D_PAD_EPDC_SDLE__ENET2_RGMII_RD1		0x79
++			MX7D_PAD_EPDC_SDOE__ENET2_RGMII_RD2		0x79
++			MX7D_PAD_EPDC_SDSHR__ENET2_RGMII_RD3		0x79
++			MX7D_PAD_EPDC_SDCE0__ENET2_RGMII_RX_CTL		0x79
 +			/* Reset: SION, 100kPU, SRE_FAST, DSE_X1 */
-+			MX7D_PAD_ENET1_COL__GPIO7_IO15		0x40000070
++			MX7D_PAD_EPDC_BDR0__GPIO2_IO28		0x40000070
 +			/* INT/PWDN: SION, 100kPU, HYS, SRE_FAST, DSE_X1 */
-+			MX7D_PAD_GPIO1_IO09__GPIO1_IO9		0x40000078
++			MX7D_PAD_EPDC_PWR_STAT__GPIO2_IO31	0x40000078
 +		>;
 +	};
 +
-+	pinctrl_flexcan1: flexcan1grp {
++	pinctrl_pcie: pciegrp {
 +		fsl,pins = <
-+			MX7D_PAD_GPIO1_IO12__FLEXCAN1_RX	0x5a
-+			MX7D_PAD_GPIO1_IO13__FLEXCAN1_TX	0x52
-+		>;
-+	};
-+
-+	pinctrl_flexcan2: flexcan2grp {
-+		fsl,pins = <
-+			MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX	0x5a
-+			MX7D_PAD_GPIO1_IO15__FLEXCAN2_TX	0x52
-+		>;
-+	};
-+
-+	pinctrl_hog_mba7_1: hogmba71grp {
-+		fsl,pins = <
-+			/* Limitation: WDOG2_B / WDOG2_RESET not usable */
-+			MX7D_PAD_ENET1_RX_CLK__GPIO7_IO13	0x4000007c
-+			MX7D_PAD_ENET1_CRS__GPIO7_IO14		0x40000074
-+			/* #BOOT_EN */
-+			MX7D_PAD_UART2_TX_DATA__GPIO4_IO3	0x40000010
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX7D_PAD_I2C2_SCL__I2C2_SCL		0x40000078
-+			MX7D_PAD_I2C2_SDA__I2C2_SDA		0x40000078
-+		>;
-+	};
-+
-+	pinctrl_i2c3: i2c3grp {
-+		fsl,pins = <
-+			MX7D_PAD_I2C3_SCL__I2C3_SCL		0x40000078
-+			MX7D_PAD_I2C3_SDA__I2C3_SDA		0x40000078
-+		>;
-+	};
-+
-+
-+	pinctrl_pca9555: pca95550grp {
-+		fsl,pins = <
-+			MX7D_PAD_ENET1_TX_CLK__GPIO7_IO12	0x78
-+		>;
-+	};
-+
-+	pinctrl_uart3: uart3grp {
-+		fsl,pins = <
-+			MX7D_PAD_UART3_RX_DATA__UART3_DCE_RX	0x7e
-+			MX7D_PAD_UART3_TX_DATA__UART3_DCE_TX	0x76
-+			MX7D_PAD_UART3_CTS_B__UART3_DCE_CTS	0x76
-+			MX7D_PAD_UART3_RTS_B__UART3_DCE_RTS	0x7e
-+		>;
-+	};
-+
-+	pinctrl_uart4: uart4grp {
-+		fsl,pins = <
-+			MX7D_PAD_SAI2_TX_SYNC__UART4_DCE_RX	0x7e
-+			MX7D_PAD_SAI2_TX_BCLK__UART4_DCE_TX	0x76
-+			MX7D_PAD_SAI2_RX_DATA__UART4_DCE_CTS	0x76
-+			MX7D_PAD_SAI2_TX_DATA__UART4_DCE_RTS	0x7e
-+		>;
-+	};
-+
-+	pinctrl_uart5: uart5grp {
-+		fsl,pins = <
-+			MX7D_PAD_I2C4_SCL__UART5_DCE_RX		0x7e
-+			MX7D_PAD_I2C4_SDA__UART5_DCE_TX		0x76
-+		>;
-+	};
-+
-+	pinctrl_uart6: uart6grp {
-+		fsl,pins = <
-+			MX7D_PAD_EPDC_DATA08__UART6_DCE_RX	0x7d
-+			MX7D_PAD_EPDC_DATA09__UART6_DCE_TX	0x75
-+			MX7D_PAD_EPDC_DATA11__UART6_DCE_CTS	0x75
-+			MX7D_PAD_EPDC_DATA10__UART6_DCE_RTS	0x7d
-+		>;
-+	};
-+
-+	pinctrl_uart7: uart7grp {
-+		fsl,pins = <
-+			MX7D_PAD_EPDC_DATA12__UART7_DCE_RX	0x7e
-+			MX7D_PAD_EPDC_DATA13__UART7_DCE_TX	0x76
-+			MX7D_PAD_EPDC_DATA15__UART7_DCE_CTS	0x76
-+			/* Limitation: RTS is not connected */
-+			MX7D_PAD_EPDC_DATA14__UART7_DCE_RTS	0x7e
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_gpio: usdhc1grp_gpio {
-+		fsl,pins = <
-+			/* WP */
-+			MX7D_PAD_SD1_WP__GPIO5_IO1		0x7c
-+			/* CD */
-+			MX7D_PAD_SD1_CD_B__GPIO5_IO0		0x7c
-+			/* VSELECT */
-+			MX7D_PAD_GPIO1_IO08__SD1_VSELECT	0x59
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			MX7D_PAD_SD1_CMD__SD1_CMD		0x5e
-+			MX7D_PAD_SD1_CLK__SD1_CLK		0x57
-+			MX7D_PAD_SD1_DATA0__SD1_DATA0		0x5e
-+			MX7D_PAD_SD1_DATA1__SD1_DATA1		0x5e
-+			MX7D_PAD_SD1_DATA2__SD1_DATA2		0x5e
-+			MX7D_PAD_SD1_DATA3__SD1_DATA3		0x5e
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
-+		fsl,pins = <
-+			MX7D_PAD_SD1_CMD__SD1_CMD		0x5a
-+			MX7D_PAD_SD1_CLK__SD1_CLK		0x57
-+			MX7D_PAD_SD1_DATA0__SD1_DATA0		0x5a
-+			MX7D_PAD_SD1_DATA1__SD1_DATA1		0x5a
-+			MX7D_PAD_SD1_DATA2__SD1_DATA2		0x5a
-+			MX7D_PAD_SD1_DATA3__SD1_DATA3		0x5a
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
-+		fsl,pins = <
-+			MX7D_PAD_SD1_CMD__SD1_CMD		0x5b
-+			MX7D_PAD_SD1_CLK__SD1_CLK		0x57
-+			MX7D_PAD_SD1_DATA0__SD1_DATA0		0x5b
-+			MX7D_PAD_SD1_DATA1__SD1_DATA1		0x5b
-+			MX7D_PAD_SD1_DATA2__SD1_DATA2		0x5b
-+			MX7D_PAD_SD1_DATA3__SD1_DATA3		0x5b
++			/* #pcie_wake */
++			MX7D_PAD_EPDC_PWR_COM__GPIO2_IO30		0x70
++			/* #pcie_rst */
++			MX7D_PAD_SD2_CLK__GPIO5_IO12			0x70
++			/* #pcie_dis */
++			MX7D_PAD_EPDC_BDR1__GPIO2_IO29			0x70
 +		>;
 +	};
 +};
 +
 +&iomuxc_lpsr {
-+	pinctrl_pwm1: pwm1grp {
++	pinctrl_usbotg2: usbotg2grp {
 +		fsl,pins = <
-+			/* LCD_CONTRAST */
-+			MX7D_PAD_LPSR_GPIO1_IO01__PWM1_OUT	0x50
-+		>;
-+	};
-+
-+	pinctrl_usbotg1: usbotg1grp {
-+		fsl,pins = <
-+			MX7D_PAD_LPSR_GPIO1_IO04__USB_OTG1_OC	0x5c
-+			MX7D_PAD_LPSR_GPIO1_IO05__GPIO1_IO5	0x59
-+		>;
-+	};
-+
-+	pinctrl_wdog1: wdog1grp {
-+		fsl,pins = <
-+			MX7D_PAD_LPSR_GPIO1_IO00__WDOG1_WDOG_B	0x30
++			MX7D_PAD_LPSR_GPIO1_IO06__USB_OTG2_OC	0x5c
++			MX7D_PAD_LPSR_GPIO1_IO07__GPIO1_IO7	0x59
 +		>;
 +	};
 +};
 +
-+&pwm1 {
++&pcie {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm1>;
++	pinctrl-0 = <&pinctrl_pcie>;
++	/* 1.5V logically from 3.3V */
++	/* probe deferral not supported */
++	/* pcie-bus-supply = <&reg_mpcie_1v5>; */
++	reset-gpio = <&gpio5 12 GPIO_ACTIVE_LOW>;
++	disable-gpio = <&gpio2 29 GPIO_ACTIVE_LOW>;
++	power-on-gpio = <&gpio2 30 GPIO_ACTIVE_LOW>;
 +	status = "okay";
 +};
 +
-+&uart3 {
++&usbotg2 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart3>;
-+	assigned-clocks = <&clks IMX7D_UART3_ROOT_SRC>;
-+	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
-+	assigned-clocks = <&clks IMX7D_UART4_ROOT_SRC>;
-+	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart5>;
-+	assigned-clocks = <&clks IMX7D_UART5_ROOT_SRC>;
-+	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
-+	status = "okay";
-+};
-+
-+&uart6 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart6>;
-+	assigned-clocks = <&clks IMX7D_UART6_ROOT_SRC>;
-+	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
-+	status = "okay";
-+};
-+
-+&uart7 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart7>;
-+	assigned-clocks = <&clks IMX7D_UART7_ROOT_SRC>;
-+	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&usbh {
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg1>;
-+	vbus-supply = <&reg_usb_otg1_vbus>;
++	pinctrl-0 = <&pinctrl_usbotg2>;
++	vbus-supply = <&reg_usb_otg2_vbus>;
 +	srp-disable;
 +	hnp-disable;
 +	adp-disable;
 +	dr_mode = "host";
 +	status = "okay";
 +};
-+
-+&usdhc1 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc1>, <&pinctrl_usdhc1_gpio>;
-+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>, <&pinctrl_usdhc1_gpio>;
-+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>, <&pinctrl_usdhc1_gpio>;
-+	cd-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
-+	wp-gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
-+	vmmc-supply = <&reg_sd1_vmmc>;
-+	bus-width = <4>;
-+	no-1-8-v;
-+	status = "okay";
-+};
-+
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog1>;
-+};
-diff --git a/arch/arm/boot/dts/imx7-tqma7.dtsi b/arch/arm/boot/dts/imx7-tqma7.dtsi
+diff --git a/arch/arm/boot/dts/imx7d-tqma7.dtsi b/arch/arm/boot/dts/imx7d-tqma7.dtsi
 new file mode 100644
-index 000000000000..85fe461e5e67
+index 000000000000..8ad3048dac0d
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx7-tqma7.dtsi
-@@ -0,0 +1,232 @@
++++ b/arch/arm/boot/dts/imx7d-tqma7.dtsi
+@@ -0,0 +1,11 @@
 +// SPDX-License-Identifier: GPL-2.0 OR X11
 +/*
-+ * Device Tree Include file for TQ Systems TQMa7x boards with full mounted PCB.
++ * Device Tree Include file for TQ Systems TQMa7D board with NXP i.MX7Dual SoC.
 + *
 + * Copyright (C) 2016 TQ Systems GmbH
 + * Author: Markus Niebel <Markus.Niebel@tq-group.com>
 + * Copyright (C) 2019 Bruno Thomsen <bruno.thomsen@gmail.com>
 + */
 +
-+/ {
-+	memory@80000000 {
-+		device_type = "memory";
-+		/* 512 MB - default configuration */
-+		reg = <0x80000000 0x20000000>;
-+	};
-+};
-+
-+&cpu0 {
-+	arm-supply = <&sw1a_reg>;
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	clock-frequency = <100000>;
-+	status = "okay";
-+
-+	pfuze3000: pmic@8 {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_pmic1>;
-+		compatible = "fsl,pfuze3000";
-+		reg = <0x08>;
-+
-+		regulators {
-+			sw1a_reg: sw1a {
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			/* use sw1c_reg to align with pfuze100/pfuze200 */
-+			sw1c_reg: sw1b {
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1475000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw2_reg: sw2 {
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <1850000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3a_reg: sw3 {
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <1650000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			swbst_reg: swbst {
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5150000>;
-+			};
-+
-+			snvs_reg: vsnvs {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vref_reg: vrefddr {
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vgen1_reg: vldo1 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen2_reg: vldo2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen3_reg: vccsd {
-+				regulator-min-microvolt = <2850000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen4_reg: v33 {
-+				regulator-min-microvolt = <2850000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen5_reg: vldo3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen6_reg: vldo4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+
-+	/* NXP SE97BTP with temperature sensor + eeprom */
-+	se97b: temperature-sensor-eeprom@1e {
-+		compatible = "nxp,se97b", "jedec,jc-42.4-temp";
-+		reg = <0x1e>;
-+		status = "okay";
-+	};
-+
-+	/* ST M24C64 */
-+	m24c64: eeprom@50 {
-+		compatible = "atmel,24c64";
-+		reg = <0x50>;
-+		pagesize = <32>;
-+		status = "okay";
-+	};
-+
-+	at24c02: eeprom@56 {
-+		compatible = "atmel,24c02";
-+		reg = <0x56>;
-+		pagesize = <16>;
-+		status = "okay";
-+	};
-+
-+	ds1339: rtc@68 {
-+		compatible = "dallas,ds1339";
-+		reg = <0x68>;
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX7D_PAD_I2C1_SDA__I2C1_SDA	0x40000078
-+			MX7D_PAD_I2C1_SCL__I2C1_SCL	0x40000078
-+		>;
-+	};
-+
-+	pinctrl_pmic1: pmic1grp {
-+		fsl,pins = <
-+			MX7D_PAD_SD2_RESET_B__GPIO5_IO11	0x4000005C
-+		>;
-+	};
-+
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
-+			MX7D_PAD_SD3_CLK__SD3_CLK		0x56
-+			MX7D_PAD_SD3_DATA0__SD3_DATA0		0x59
-+			MX7D_PAD_SD3_DATA1__SD3_DATA1		0x59
-+			MX7D_PAD_SD3_DATA2__SD3_DATA2		0x59
-+			MX7D_PAD_SD3_DATA3__SD3_DATA3		0x59
-+			MX7D_PAD_SD3_DATA4__SD3_DATA4		0x59
-+			MX7D_PAD_SD3_DATA5__SD3_DATA5		0x59
-+			MX7D_PAD_SD3_DATA6__SD3_DATA6		0x59
-+			MX7D_PAD_SD3_DATA7__SD3_DATA7		0x59
-+			MX7D_PAD_SD3_STROBE__SD3_STROBE		0x19
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_100mhz: usdhc3grp_100mhz {
-+		fsl,pins = <
-+			MX7D_PAD_SD3_CMD__SD3_CMD               0x5a
-+			MX7D_PAD_SD3_CLK__SD3_CLK               0x51
-+			MX7D_PAD_SD3_DATA0__SD3_DATA0           0x5a
-+			MX7D_PAD_SD3_DATA1__SD3_DATA1           0x5a
-+			MX7D_PAD_SD3_DATA2__SD3_DATA2           0x5a
-+			MX7D_PAD_SD3_DATA3__SD3_DATA3           0x5a
-+			MX7D_PAD_SD3_DATA4__SD3_DATA4           0x5a
-+			MX7D_PAD_SD3_DATA5__SD3_DATA5           0x5a
-+			MX7D_PAD_SD3_DATA6__SD3_DATA6           0x5a
-+			MX7D_PAD_SD3_DATA7__SD3_DATA7           0x5a
-+			MX7D_PAD_SD3_STROBE__SD3_STROBE         0x1a
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_200mhz: usdhc3grp_200mhz {
-+		fsl,pins = <
-+			MX7D_PAD_SD3_CMD__SD3_CMD               0x5b
-+			MX7D_PAD_SD3_CLK__SD3_CLK               0x51
-+			MX7D_PAD_SD3_DATA0__SD3_DATA0           0x5b
-+			MX7D_PAD_SD3_DATA1__SD3_DATA1           0x5b
-+			MX7D_PAD_SD3_DATA2__SD3_DATA2           0x5b
-+			MX7D_PAD_SD3_DATA3__SD3_DATA3           0x5b
-+			MX7D_PAD_SD3_DATA4__SD3_DATA4           0x5b
-+			MX7D_PAD_SD3_DATA5__SD3_DATA5           0x5b
-+			MX7D_PAD_SD3_DATA6__SD3_DATA6           0x5b
-+			MX7D_PAD_SD3_DATA7__SD3_DATA7           0x5b
-+			MX7D_PAD_SD3_STROBE__SD3_STROBE         0x1b
-+		>;
-+	};
-+};
-+
-+&sdma {
-+	status = "okay";
-+};
-+
-+&usdhc3 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
-+	assigned-clocks = <&clks IMX7D_USDHC3_ROOT_CLK>;
-+	assigned-clock-rates = <400000000>;
-+	bus-width = <8>;
-+	non-removable;
-+	vmmc-supply = <&vgen4_reg>;
-+	vqmmc-supply = <&sw2_reg>;
-+	status = "okay";
-+};
-+
-+&wdog1 {
-+	status = "okay";
-+};
++#include "imx7d.dtsi"
++#include "imx7-tqma7.dtsi"
 -- 
 2.20.1
