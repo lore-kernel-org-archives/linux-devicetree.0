@@ -1,49 +1,81 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH 2/2] ftpm: firmware TPM running in TEE
-Date: Wed, 3 Apr 2019 21:27:28 +0300
-Message-ID: <20190403182728.GA17451@linux.intel.com>
-References: <20190402193316.15144-1-sashal@kernel.org>
- <20190402193316.15144-2-sashal@kernel.org>
- <20190403181827.GB17006@linux.intel.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 4/4] leds: lm3532: Introduce the lm3532 LED driver
+Date: Wed, 3 Apr 2019 13:06:00 -0700
+Message-ID: <20190403200600.GT49658@atomide.com>
+References: <20190321142838.22985-1-dmurphy@ti.com>
+ <20190321142838.22985-4-dmurphy@ti.com>
+ <20190322221654.GG19425@atomide.com>
+ <dc24b66c-658e-41aa-c869-42c4a7e812a8@ti.com>
+ <20190325145444.GK19425@atomide.com>
+ <044f67e7-e196-a5b9-728b-a7c5f283f56f@ti.com>
+ <20190328210437.tcojjqynggk72zo2@earth.universe>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190403181827.GB17006@linux.intel.com>
+In-Reply-To: <20190328210437.tcojjqynggk72zo2@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sasha Levin <sashal@kernel.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca, linux-kernel@microsoft.com, bryankel@microsoft.com, thiruan@microsoft.com, suredd@microsoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 09:18:27PM +0300, Jarkko Sakkinen wrote:
-> On Tue, Apr 02, 2019 at 03:33:16PM -0400, Sasha Levin wrote:
-> > This patch adds support for a software-only implementation of a TPM
-> > running in TEE.
-> > 
-> > There is extensive documentation of the design here:
-> > https://www.microsoft.com/en-us/research/publication/ftpm-software-implementation-tpm-chip/ .
-> > 
-> > As well as reference code for the firmware available here:
-> > https://github.com/Microsoft/ms-tpm-20-ref/tree/master/Samples/ARM32-FirmwareTPM
-> > 
-> > Signed-off-by: Thirupathaiah Annapureddy <thiruan@microsoft.com>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+* Sebastian Reichel <sre@kernel.org> [190329 05:36]:
+> Hi,
 > 
-> What is the context anyway? I mean tpm_crb already supports fTPM running
-> in TZ.
+> On Mon, Mar 25, 2019 at 11:01:18AM -0500, Dan Murphy wrote:
+> > On 3/25/19 9:54 AM, Tony Lindgren wrote:
+> > > * Dan Murphy <dmurphy@ti.com> [190325 12:36]:
+> > >> On 3/22/19 5:16 PM, Tony Lindgren wrote:
+> > >>> I can control the backlight brightness just fine via /sys, and
+> > >>> backlight shows up as the trigger in /sys/class/leds/lm3532:backlight,
+> > >>> but /sys/class/backlight is empty and looks like drm can't find it.
+> > >>>
+> > >>> Do I need to enable some additional driver(s) to get this to work
+> > >>> with the drm driver?
+> > >>>
+> > >>
+> > >> Can you dump or point to the defconfig?
+> > > 
+> > > This is just with the omap2plus_defconfig as in the droid4-pending-v5.0
+> > > test branch below [0]. That branch has Sebastian's drm patches. The
+> > > branch also has the older ti-lmu patches that I reverted for testing
+> > > before applying your new series and enabling it in .config.
+> > > 
+> > > The drm driver (drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c) just
+> > > does:
+> > > 
+> > > backlight = of_parse_phandle(node, "backlight", 0);
+> > > ...
+> > > 
+> > > That should still work the same, right?
+> > 
+> > Yes it should still work the same.
+> > I did not change the node name.
+> > So the DRM driver should find the node.
+> 
+> This will not work, since the next line tries to get it as a
+> backlight device, but it's an LED device instead:
+> 
+> of_find_backlight_by_node(backlight);
+> 
+> I suppose the backlight device could be instantiated on top
+> of the LED device somehow.
 
-Might take 2-3 weeks before I have time to go through ftpm1.pdf with
-full concentration. I did search through the PDF for CRB and found
-zero hits.
+Hmm yeah I thought setting the ledtrig-backlight for it
+would do the trick. But after thinking about it there might
+be some backlight lifecycle issues with that where everything
+would need to be torn down for the panel to change the
+backlight trigger. I think the panel driver(s) assume the
+backlight to always be there at probe time. Well this is
+just based on just guessing.. I might be wrong.
 
-The commit message should absolutely better explain what is going on
-and preferably there should be some more broad documentation in
-Documentation/security/tpm.
+I have no issues using of_find_backlight_by_node() like
+other panels.
 
-Now this is just a random code dump and nothing else.
+> (sorry for slow responses; I'm quite busy right now)
 
-Also, I have zero idea how to test this. Any recommendations on ARM
-board that can be easily used to test custom TZ applications would be
-nice.
+No problem.
 
-/Jarkko
+Regards,
+
+Tony
