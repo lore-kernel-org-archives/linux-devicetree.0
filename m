@@ -1,7 +1,7 @@
 From: <VenkataRajesh.Kalakodima@in.bosch.com>
-Subject: [PATCH 6/8] drm: rcar-du: Implement atomic_check to check for gamma and ctm properties
-Date: Wed, 3 Apr 2019 18:44:42 +0530
-Message-ID: <1554297284-14009-7-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
+Subject: [PATCH 7/8] drm: rcar-du: update gamma and ctm properties in commit tail
+Date: Wed, 3 Apr 2019 18:44:43 +0530
+Message-ID: <1554297284-14009-8-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
 References: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,108 +14,98 @@ List-Id: devicetree@vger.kernel.org
 
 From: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
 
-    Implement atomic helper check and allocate memory necessary for
-    lut and clu tables
+Update gamma and ctm properties if there is a change.
 
 Signed-off-by: Harsha M M <harsha.manjulamallikarjun@in.bosch.com>
 
-      - Resolved checkpatch errors
-      - Resolved merge conflicts according to latest version
+   - Fix compilation issues when for_each_crtc_in_state is not defined
+   - Resolved checkpatch errors
+   - Resolved merge conflicts according to latest version
+
 Signed-off-by: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
 ---
- drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 58 ++++++++++++++++++++++++++++++++++
- drivers/gpu/drm/rcar-du/rcar_du_crtc.h |  3 +-
- 2 files changed, 60 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/rcar-du/rcar_du_kms.c | 25 +++++++++++++++++++++++++
+ include/drm/drm_atomic.h              | 25 +++++++++++++++++++++++++
+ 2 files changed, 50 insertions(+)
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-index 864fb94..a00b7a7 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-@@ -622,6 +622,63 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
-  * CRTC Functions
-  */
- 
-+static bool rcar_du_crtc_is_ctm_updated(struct drm_crtc *crtc,
-+					struct drm_crtc_state *state)
-+{
-+	return (state->color_mgmt_changed && state->ctm &&
-+		crtc->state->ctm &&
-+		(crtc->state->ctm->base.id != state->ctm->base.id));
-+}
-+
-+static bool rcar_du_crtc_is_gamma_updated(struct drm_crtc *crtc,
-+					  struct drm_crtc_state *state)
-+{
-+	return (state->color_mgmt_changed && state->gamma_lut &&
-+		crtc->state->gamma_lut &&
-+		(crtc->state->gamma_lut->base.id != state->gamma_lut->base.id));
-+}
-+
-+static int rcar_du_crtc_cmm_atomic_check(struct drm_crtc *crtc,
-+					 struct drm_crtc_state *state)
-+{
-+	int ret = 0;
-+	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
-+
-+	/*Check gamma update and allocate memory*/
-+	if (rcar_du_crtc_is_gamma_updated(crtc, state) &&
-+	    !rcrtc->lut_handle) {
-+		ret = rcar_du_cmm_lut_valid((crtc->state->gamma_lut->length /
-+					     sizeof(struct drm_color_lut)));
-+		if (ret >= 0) {
-+			rcrtc->lut_handle =
-+				rcar_du_cmm_alloc_lut(rcrtc->cmm_handle);
-+			if (!rcrtc->lut_handle)
-+				ret = -ENOMEM;
-+		}
-+	}
-+
-+	/*Check update of ctm and allocate memory*/
-+	if (ret >= 0 && rcar_du_crtc_is_ctm_updated(crtc, state) &&
-+	    !rcrtc->clu_handle) {
-+		rcrtc->clu_handle = rcar_du_cmm_alloc_clu(rcrtc->cmm_handle);
-+		if (!rcrtc->clu_handle) {
-+			if (!rcrtc->lut_handle) {
-+				rcar_du_cmm_free_lut(rcrtc->lut_handle);
-+				rcrtc->lut_handle = NULL;
-+			}
-+			ret = -ENOMEM;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static int rcar_du_crtc_atomic_check(struct drm_crtc *crtc,
-+				     struct drm_crtc_state *state)
-+{
-+	return rcar_du_crtc_cmm_atomic_check(crtc, state);
-+}
-+
- static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
- 				       struct drm_crtc_state *old_state)
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+index f0bc7cc..4d9a19c 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+@@ -246,6 +246,10 @@ static int rcar_du_atomic_check(struct drm_device *dev,
+ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
  {
-@@ -708,6 +765,7 @@ static const struct drm_crtc_helper_funcs crtc_helper_funcs = {
- 	.atomic_flush = rcar_du_crtc_atomic_flush,
- 	.atomic_enable = rcar_du_crtc_atomic_enable,
- 	.atomic_disable = rcar_du_crtc_atomic_disable,
-+	.atomic_check = rcar_du_crtc_atomic_check,
- };
+ 	struct drm_device *dev = old_state->dev;
++	struct drm_crtc *crtc;
++	struct drm_crtc_state *crtc_state;
++	struct rcar_du_crtc *rcrtc;
++	int i;
  
- static struct drm_crtc_state *
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
-index 5b85de4..b79080e 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
-@@ -70,7 +70,8 @@ struct rcar_du_crtc {
- 	int lvds_ch;
+ 	/* Apply the atomic update. */
+ 	drm_atomic_helper_commit_modeset_disables(dev, old_state);
+@@ -253,6 +257,27 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
+ 					DRM_PLANE_COMMIT_ACTIVE_ONLY);
+ 	drm_atomic_helper_commit_modeset_enables(dev, old_state);
  
- 	void *cmm_handle;
--
-+	void *lut_handle;
-+	void *clu_handle;
- };
++	/* Update gamma and ctm properties for all crtc in present
++	 * state. Update is done only if there is a change
++	 */
++	for_each_crtc_in_state(old_state, crtc, crtc_state, i) {
++		rcrtc = to_rcar_crtc(crtc);
++
++		if (rcrtc->lut_handle) {
++			rcar_du_cmm_update_lut_and_free
++			  (rcrtc->lut_handle,
++			   (struct drm_color_lut *)crtc->state->gamma_lut->data,
++			   (crtc->state->gamma_lut->length /
++			   sizeof(struct drm_color_lut)));
++			rcrtc->lut_handle = NULL;
++		}
++		if (rcrtc->clu_handle) {
++			rcar_du_cmm_update_clu_and_free
++			  (rcrtc->clu_handle,
++			   (struct drm_color_ctm *)crtc->state->ctm->data);
++			rcrtc->clu_handle = NULL;
++		}
++	}
+ 	drm_atomic_helper_commit_hw_done(old_state);
+ 	drm_atomic_helper_wait_for_flip_done(dev, old_state);
  
- #define to_rcar_crtc(c)	container_of(c, struct rcar_du_crtc, crtc)
+diff --git a/include/drm/drm_atomic.h b/include/drm/drm_atomic.h
+index 1e71315..d22ccd8 100644
+--- a/include/drm/drm_atomic.h
++++ b/include/drm/drm_atomic.h
+@@ -693,6 +693,31 @@ void drm_state_dump(struct drm_device *dev, struct drm_printer *p);
+ 			     (new_connector_state) = (__state)->connectors[__i].new_state, 1))
+ 
+ /**
++ * for_each_crtc_in_state - iterate over all connectors in an atomic update
++ * @__state: &struct drm_atomic_state pointer
++ * @crtc: &struct drm_crtc iteration cursor
++ * @crtc_state: &struct drm_crtc_state iteration cursor
++ * @__i: int iteration cursor, for macro-internal use
++ *
++ * This iterates over all CRTCs in an atomic update. Note that before the
++ * software state is committed (by calling drm_atomic_helper_swap_state(), this
++ * points to the new state, while afterwards it points to the old state. Due to
++ * this tricky confusion this macro is deprecated.
++ *
++ * FIXME:
++ *
++ * Replace all usage of this with one of the explicit iterators below and then
++ * remove this macro.
++ */
++#define for_each_crtc_in_state(__state, crtc, crtc_state, __i)	\
++	for ((__i) = 0;						\
++	     ((__i) < ((__state)->dev->mode_config.num_crtc)) &&	\
++	     ((crtc) = ((__state)->crtcs[__i].ptr),			\
++	     (crtc_state) = ((__state)->crtcs[__i].state), 1);	\
++	     (__i)++)						\
++		for_each_if(crtc_state)
++
++/**
+  * for_each_oldnew_crtc_in_state - iterate over all CRTCs in an atomic update
+  * @__state: &struct drm_atomic_state pointer
+  * @crtc: &struct drm_crtc iteration cursor
 -- 
 2.7.4
