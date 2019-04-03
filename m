@@ -1,54 +1,127 @@
-From: "Leonidas P. Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] arm64: dts: rockchip: eMMC additions for rk3328-roc-cc
-Date: Thu,  4 Apr 2019 00:50:51 +0300
-Message-ID: <20190403215051.29536-1-papadakospan@gmail.com>
+From: Leo Li <leoyang.li@nxp.com>
+Subject: RE: [PATCH v1 1/4] dt-bindings: arm64: add compatible for LX2160A
+Date: Wed, 3 Apr 2019 22:01:13 +0000
+Message-ID: <AM6PR04MB5863C5DC8063C2B8F5BF9F088F570@AM6PR04MB5863.eurprd04.prod.outlook.com>
+References: <1551132245-6089-1-git-send-email-vabhav.sharma@nxp.com>
+ <1551132245-6089-2-git-send-email-vabhav.sharma@nxp.com>
+ <VI1PR04MB480070B517B9D9961C9E8187F3570@VI1PR04MB4800.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Leonidas P. Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <VI1PR04MB480070B517B9D9961C9E8187F3570@VI1PR04MB4800.eurprd04.prod.outlook.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vabhav Sharma <vabhav.sharma@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>, Andy Tang <andy.tang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The eMMC 5.x that Libre Computer provide for their boards supports HS200 mode.
-The support is already included in the dts for their newest board:
 
-La Frite (AML-S805X-AC)
-dts: arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts
 
-That same eMMC is supported in the ROC-RK3328-CC:
-https://www.loverpi.com/products/libre-computer-board-emmc-5-x-module
+> -----Original Message-----
+> From: Vabhav Sharma
+> Sent: Wednesday, April 3, 2019 3:28 AM
+> To: robh+dt@kernel.org; mark.rutland@arm.com
+> Cc: Leo Li <leoyang.li@nxp.com>; Meenakshi Aggarwal
+> <meenakshi.aggarwal@nxp.com>; Andy Tang <andy.tang@nxp.com>;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: RE: [PATCH v1 1/4] dt-bindings: arm64: add compatible for LX2160=
+A
+>=20
+> Hello Maintainers,
+> Please merge below patch.
+>=20
+> Regards,
+> Vabhav
+>=20
+> > -----Original Message-----
+> > From: Vabhav Sharma <vabhav.sharma@nxp.com>
+> > Sent: Tuesday, February 26, 2019 3:41 PM
+> > To: sudeep.holla@arm.com; oss@buserror.net;
+> > linux-kernel@vger.kernel.org; devicetree@vger.kernel.org;
+> > robh+dt@kernel.org; mark.rutland@arm.com;
+> > linuxppc-dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org;
+> > mturquette@baylibre.com; sboyd@kernel.org; rjw@rjwysocki.net;
+> > viresh.kumar@linaro.org; linux-clk@vger.kernel.org; linux-
+> > pm@vger.kernel.org; linux-kernel-owner@vger.kernel.org;
+> > catalin.marinas@arm.com; will.deacon@arm.com;
+> > gregkh@linuxfoundation.org; arnd@arndb.de;
+> > kstewart@linuxfoundation.org; yamada.masahiro@socionext.com; Leo Li
+> > <leoyang.li@nxp.com>; shawnguo@kernel.org
+> > Cc: linux@armlinux.org.uk; adrian.hunter@intel.com;
+> > ulf.hansson@linaro.org; Vabhav Sharma <vabhav.sharma@nxp.com>
+> > Subject: [PATCH v1 1/4] dt-bindings: arm64: add compatible for LX2160A
+> >
+> > Add compatible for LX2160A SoC,QDS and RDB board Add lx2160a
+> > compatible for clockgen and dcfg
+> >
+> > Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../bindings/arm/freescale/fsl,layerscape-dcfg.txt           |  2 +-
+> >  Documentation/devicetree/bindings/arm/fsl.txt                | 12
+> ++++++++++++
+> >  Documentation/devicetree/bindings/clock/qoriq-clock.txt      |  1 +
+> >  3 files changed, 14 insertions(+), 1 deletion(-)
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/arm/freescale/fsl,layerscape-
+> > dcfg.txt
+> > b/Documentation/devicetree/bindings/arm/freescale/fsl,layerscape-
+> > dcfg.txt
+> > index b5cb374..dc76046 100644
+> > --- a/Documentation/devicetree/bindings/arm/freescale/fsl,layerscape-
+> > dcfg.txt
+> > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,layerscape-d
+> > +++ cf
+> > +++ g.txt
+> > @@ -8,7 +8,7 @@ Required properties:
+> >    - compatible: Should contain a chip-specific compatible string,
+> >  	Chip-specific strings are of the form "fsl,<chip>-dcfg",
+> >  	The following <chip>s are known to be supported:
+> > -	ls1012a, ls1021a, ls1043a, ls1046a, ls2080a.
+> > +	ls1012a, ls1021a, ls1043a, ls1046a, ls2080a, lx2160a.
+> >
+> >    - reg : should contain base address and length of DCFG
+> > memory-mapped registers
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/fsl.txt
+> > b/Documentation/devicetree/bindings/arm/fsl.txt
+> > index 7fbc424..baef162 100644
+> > --- a/Documentation/devicetree/bindings/arm/fsl.txt
+> > +++ b/Documentation/devicetree/bindings/arm/fsl.txt
 
-This increases the speed of the eMMC significantly.
+This file has been converted to yaml format in mainline kernel.  Please res=
+pin the patch in order to apply.
 
-Signed-off-by: Leonidas P. Papadakos <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-index c213ad74d..c3cf56107 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-@@ -122,6 +122,10 @@
- &emmc {
- 	bus-width = <8>;
- 	cap-mmc-highspeed;
-+	disable-wp;
-+	max-frequency = <200000000>;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
- 	non-removable;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
--- 
-2.21.0
+> > @@ -235,3 +235,15 @@ Required root node properties:
+> >  LS2088A ARMv8 based RDB Board
+> >  Required root node properties:
+> >      - compatible =3D "fsl,ls2088a-rdb", "fsl,ls2088a";
+> > +
+> > +LX2160A SoC
+> > +Required root node properties:
+> > +    - compatible =3D "fsl,lx2160a";
+> > +
+> > +LX2160A ARMv8 based QDS Board
+> > +Required root node properties:
+> > +    - compatible =3D "fsl,lx2160a-qds", "fsl,lx2160a";
+> > +
+> > +LX2160A ARMv8 based RDB Board
+> > +Required root node properties:
+> > +    - compatible =3D "fsl,lx2160a-rdb", "fsl,lx2160a";
+> > diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > index c655f28..f322989 100644
+> > --- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > +++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > @@ -43,6 +43,7 @@ Required properties:
+> >  	* "fsl,ls1046a-clockgen"
+> >  	* "fsl,ls1088a-clockgen"
+> >  	* "fsl,ls2080a-clockgen"
+> > +	* "fsl,lx2160a-clockgen"
+> >  	Chassis-version clock strings include:
+> >  	* "fsl,qoriq-clockgen-1.0": for chassis 1.0 clocks
+> >  	* "fsl,qoriq-clockgen-2.0": for chassis 2.0 clocks
+> > --
+> > 2.7.4
