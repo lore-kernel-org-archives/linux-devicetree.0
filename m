@@ -1,69 +1,48 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v11 4/8] dt-bindings: mfd: Document first ROHM BD70528
- bindings
-Date: Wed, 3 Apr 2019 12:04:06 +0300
-Message-ID: <20190403090406.GB3493@localhost.localdomain>
-References: <cover.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
- <c674ef76ca0a3298e6b13ade4ab29775edf36a76.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
- <20190403073426.GN4187@dell>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v4 3/5] media: sunxi: Add A10 CSI driver
+Date: Wed, 3 Apr 2019 12:12:21 +0300
+Message-ID: <20190403091221.qd5ivgcoviazccv7@paasikivi.fi.intel.com>
+References: <cover.2aba8cbd95630d87f927465cc2beb881936c83d9.1553010938.git-series.maxime.ripard@bootlin.com>
+ <bf348ec10d4444dd80eab0caddc4e2d3ce3131d4.1553010938.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190403073426.GN4187@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, heikki.haikola@fi.rohmeurop
+In-Reply-To: <bf348ec10d4444dd80eab0caddc4e2d3ce3131d4.1553010938.git-series.maxime.ripard@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-And thanks again for fixing the language. Appreciated!
+Hi Maxime,
 
-On Wed, Apr 03, 2019 at 08:34:26AM +0100, Lee Jones wrote:
-> On Mon, 25 Mar 2019, Matti Vaittinen wrote:
+Thanks for the update and my apologies for the late review.
+
+On Tue, Mar 19, 2019 at 04:55:46PM +0100, Maxime Ripard wrote:
+> The older CSI drivers have camera capture interface different from the one
+> in the newer ones.
 > 
-> > Document bindings for regulators (3 bucks, 3 LDOs and 2 LED
-> > drivers) and 4 GPIO pins which can be configured for I/O or
-> > as interrupt sources withe configurable trigger levels.
-> > 
-> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> > ---
-> >  .../bindings/mfd/rohm,bd70528-pmic.txt        | 102 ++++++++++++++++++
-> >  1 file changed, 102 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-> > new file mode 100644
-> > index 000000000000..120462c17904
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-> > @@ -0,0 +1,102 @@
-> > +* ROHM BD70528 Power Management Integrated Circuit bindings
-> > +
-> > +BD70528MWV is an ultra-low quiescet current general purpose single-chip
+> This IP is pretty simple. Some variants (one controller out of two
+> instances on some SoCs) have an ISP embedded, but there's no code that make
+> use of it, so we ignored that part for now.
 > 
-> What does 'quiescet' mean?
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-I guess you knew what I meant =) Quiescent - I'll fix the typo.
+Could you add a sub-device for the CSI-2 receiver, please?
 
-> "general purpose, single-chip,"
-
-Rules for using commas are far beyond my skills. I was bad in it at
-Finnish classes. Not to even mention English. Actually, the teacher
-suggested us to rather leave out the commas than trying to place them
-correctly in English sentences. Guess the rules are not that simple =)
-
-So I'll just add them as you suggested =)
-
-Br,
-	Matti Vaittinen
+See e.g. drivers/media/pci/intel/ipu3/ipu3-cio2.c for an example.
 
 -- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+Regards,
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Sakari Ailus
+sakari.ailus@linux.intel.com
