@@ -1,358 +1,223 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH 02/15] phy: mvebu-cp110-comphy: Add SMC call support
-Date: Wed, 3 Apr 2019 10:48:44 +0100
-Message-ID: <20190403094844.stcoqhh433fqkqa5@shell.armlinux.org.uk>
-References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
- <20190401165131.23370-3-miquel.raynal@bootlin.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH V4 3/3] hwmon: pwm-fan: Add RPM support via external
+ interrupt
+Date: Wed, 3 Apr 2019 11:55:00 +0200
+Message-ID: <31ef4637-fa95-3800-20cf-96be2a5ecae4@i2se.com>
+References: <1554214910-29925-1-git-send-email-stefan.wahren@i2se.com>
+ <1554214910-29925-4-git-send-email-stefan.wahren@i2se.com>
+ <20190402205538.GA15543@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190401165131.23370-3-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190402205538.GA15543@roeck-us.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 06:51:18PM +0200, Miquel Raynal wrote:
-> Keep the exact same list of supported configurations but first try to
-> use the firmware's implementation. If it fails, try the legacy method:
-> Linux implementation.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 200 +++++++++++++++----
->  1 file changed, 164 insertions(+), 36 deletions(-)
-> 
-> diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-> index 3f50a1521f01..4aaf161503d6 100644
-> --- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-> +++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-> @@ -5,6 +5,7 @@
->   * Antoine Tenart <antoine.tenart@free-electrons.com>
->   */
->  
-> +#include <linux/arm-smccc.h>
->  #include <linux/io.h>
->  #include <linux/iopoll.h>
->  #include <linux/mfd/syscon.h>
-> @@ -115,51 +116,88 @@
->  #define MVEBU_COMPHY_LANES	6
->  #define MVEBU_COMPHY_PORTS	3
->  
-> +#define COMPHY_SIP_POWER_ON	0x82000001
-> +#define COMPHY_SIP_POWER_OFF	0x82000002
-> +
-> +/*
-> + * A lane is described by the following bitfields:
-> + * [ 1- 0]: COMPHY polarity invertion
-> + * [ 2- 7]: COMPHY speed
-> + * [ 5-11]: COMPHY port index
-> + * [12-16]: COMPHY mode
-> + * [17]: Clock source
-> + */
-> +#define COMPHY_FW_POL_OFFSET	0
-> +#define COMPHY_FW_POL_MASK	GENMASK(1, 0)
-> +#define COMPHY_FW_SPEED_OFFSET	2
-> +#define COMPHY_FW_SPEED_MASK	GENMASK(7, 2)
-> +#define COMPHY_FW_SPEED_MAX	COMPHY_FW_SPEED_MASK
-> +#define COMPHY_FW_PORT_OFFSET	8
-> +#define COMPHY_FW_PORT_MASK	GENMASK(11, 8)
-> +#define COMPHY_FW_MODE_OFFSET	12
-> +#define COMPHY_FW_MODE_MASK	GENMASK(16, 12)
-> +
-> +#define COMPHY_FW_PARAM_FULL(mode, port, speed, pol)			\
-> +	((((pol) << COMPHY_FW_POL_OFFSET) & COMPHY_FW_POL_MASK) |	\
-> +	 (((mode) << COMPHY_FW_MODE_OFFSET) & COMPHY_FW_MODE_MASK) |	\
-> +	 (((port) << COMPHY_FW_PORT_OFFSET) & COMPHY_FW_PORT_MASK) |	\
-> +	 (((speed) << COMPHY_FW_SPEED_OFFSET) & COMPHY_FW_SPEED_MASK))
-> +
-> +#define COMPHY_FW_PARAM(mode, port)					\
-> +	COMPHY_FW_PARAM_FULL(mode, port, COMPHY_FW_SPEED_MAX, 0)
-> +
-> +#define COMPHY_FW_MODE_SGMII		0x2 /* SGMII 1G */
-> +#define COMPHY_FW_MODE_HS_SGMII		0x3 /* SGMII 2.5G */
-> +#define COMPHY_FW_MODE_SFI		0x9 /* XFI: 0x8 (is treated like SFI) */
-> +
->  struct mvebu_comphy_conf {
->  	enum phy_mode mode;
->  	int submode;
->  	unsigned lane;
->  	unsigned port;
->  	u32 mux;
-> +	u32 fw_mode;
->  };
->  
-> -#define MVEBU_COMPHY_CONF(_lane, _port, _submode, _mux)	\
-> +#define MVEBU_COMPHY_CONF(_lane, _port, _submode, _mux, _fw)	\
->  	{						\
->  		.lane = _lane,				\
->  		.port = _port,				\
->  		.mode = PHY_MODE_ETHERNET,		\
->  		.submode = _submode,			\
->  		.mux = _mux,				\
-> +		.fw_mode = _fw,				\
->  	}
->  
->  static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
->  	/* lane 0 */
-> -	MVEBU_COMPHY_CONF(0, 1, PHY_INTERFACE_MODE_SGMII, 0x1),
-> -	MVEBU_COMPHY_CONF(0, 1, PHY_INTERFACE_MODE_2500BASEX, 0x1),
-> +	MVEBU_COMPHY_CONF(0, 1, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
-> +	MVEBU_COMPHY_CONF(0, 1, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
->  	/* lane 1 */
-> -	MVEBU_COMPHY_CONF(1, 2, PHY_INTERFACE_MODE_SGMII, 0x1),
-> -	MVEBU_COMPHY_CONF(1, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1),
-> +	MVEBU_COMPHY_CONF(1, 2, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
-> +	MVEBU_COMPHY_CONF(1, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
->  	/* lane 2 */
-> -	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_SGMII, 0x1),
-> -	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_2500BASEX, 0x1),
-> -	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_10GKR, 0x1),
-> +	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
-> +	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
-> +	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_10GKR, 0x1, COMPHY_FW_MODE_SFI),
->  	/* lane 3 */
-> -	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_SGMII, 0x2),
-> -	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_2500BASEX, 0x2),
-> +	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_SGMII, 0x2, COMPHY_FW_MODE_SGMII),
-> +	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_2500BASEX, 0x2, COMPHY_FW_MODE_HS_SGMII),
->  	/* lane 4 */
-> -	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_SGMII, 0x2),
-> -	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_2500BASEX, 0x2),
-> -	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_10GKR, 0x2),
-> -	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_SGMII, 0x1),
-> +	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_SGMII, 0x2, COMPHY_FW_MODE_SGMII),
-> +	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_2500BASEX, 0x2, COMPHY_FW_MODE_HS_SGMII),
-> +	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_10GKR, 0x2, COMPHY_FW_MODE_SFI),
-> +	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
->  	/* lane 5 */
-> -	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_SGMII, 0x1),
-> -	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1),
-> +	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
-> +	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
->  };
->  
->  struct mvebu_comphy_priv {
->  	void __iomem *base;
->  	struct regmap *regmap;
->  	struct device *dev;
-> +	unsigned long cp_phys;
->  };
->  
->  struct mvebu_comphy_lane {
-> @@ -170,8 +208,18 @@ struct mvebu_comphy_lane {
->  	int port;
->  };
->  
-> -static int mvebu_comphy_get_mux(int lane, int port,
-> -				enum phy_mode mode, int submode)
-> +static int mvebu_comphy_smc(unsigned long function, unsigned long phys,
-> +			    unsigned long lane, unsigned long mode)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_smc(function, phys, lane, mode, 0, 0, 0, 0, &res);
+Hi Guenter,
 
-Before we switch to using the ATF implementation, I have serious
-concerns about the API here.  The physical address is passed from
-the kernel to ATF for the hardware, and ATF does very little
-validation of that address.
+Am 02.04.19 um 22:55 schrieb Guenter Roeck:
+> On Tue, Apr 02, 2019 at 04:21:50PM +0200, Stefan Wahren wrote:
+>> This adds RPM support to the pwm-fan driver in order to use with
+>> fancontrol/pwmconfig. This feature is intended for fans with a tachometer
+>> output signal, which generate a defined number of pulses per revolution.
+>>
+>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+>> ---
+>>  drivers/hwmon/pwm-fan.c | 111 ++++++++++++++++++++++++++++++++++++++++++++++--
+>>  1 file changed, 107 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+>> index 167221c..3245a49 100644
+>> --- a/drivers/hwmon/pwm-fan.c
+>> +++ b/drivers/hwmon/pwm-fan.c
+>> @@ -18,6 +18,7 @@
+>>  
+>>  #include <linux/hwmon.h>
+>>  #include <linux/hwmon-sysfs.h>
+>> +#include <linux/interrupt.h>
+>>  #include <linux/module.h>
+>>  #include <linux/mutex.h>
+>>  #include <linux/of.h>
+>> @@ -26,6 +27,7 @@
+>>  #include <linux/regulator/consumer.h>
+>>  #include <linux/sysfs.h>
+>>  #include <linux/thermal.h>
+>> +#include <linux/timer.h>
+>>  
+>>  #define MAX_PWM 255
+>>  
+>> @@ -33,6 +35,14 @@ struct pwm_fan_ctx {
+>>  	struct mutex lock;
+>>  	struct pwm_device *pwm;
+>>  	struct regulator *reg_en;
+>> +
+>> +	int irq;
+>> +	atomic_t pulses;
+>> +	unsigned int rpm;
+>> +	u8 pulses_per_revolution;
+>> +	ktime_t sample_start;
+>> +	struct timer_list rpm_timer;
+>> +
+>>  	unsigned int pwm_value;
+>>  	unsigned int pwm_fan_state;
+>>  	unsigned int pwm_fan_max_state;
+>> @@ -40,6 +50,32 @@ struct pwm_fan_ctx {
+>>  	struct thermal_cooling_device *cdev;
+>>  };
+>>  
+>> +/* This handler assumes self resetting edge triggered interrupt. */
+>> +static irqreturn_t pulse_handler(int irq, void *dev_id)
+>> +{
+>> +	struct pwm_fan_ctx *ctx = dev_id;
+>> +
+>> +	atomic_inc(&ctx->pulses);
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +static void sample_timer(struct timer_list *t)
+>> +{
+>> +	struct pwm_fan_ctx *ctx = from_timer(ctx, t, rpm_timer);
+>> +	int pulses;
+>> +	u64 tmp;
+>> +
+>> +	pulses = atomic_read(&ctx->pulses);
+>> +	atomic_sub(pulses, &ctx->pulses);
+>> +	tmp = (u64)pulses * ktime_ms_delta(ktime_get(), ctx->sample_start) * 60;
+>> +	do_div(tmp, ctx->pulses_per_revolution * 1000);
+>> +	ctx->rpm = tmp;
+>> +
+>> +	ctx->sample_start = ktime_get();
+>> +	mod_timer(&ctx->rpm_timer, jiffies + HZ);
+>> +}
+>> +
+>>  static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
+>>  {
+>>  	unsigned long period;
+>> @@ -100,15 +136,49 @@ static ssize_t pwm_show(struct device *dev, struct device_attribute *attr,
+>>  	return sprintf(buf, "%u\n", ctx->pwm_value);
+>>  }
+>>  
+>> +static ssize_t rpm_show(struct device *dev,
+>> +			struct device_attribute *attr, char *buf)
+>> +{
+>> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+>> +
+>> +	return sprintf(buf, "%u\n", ctx->rpm);
+>> +}
+>>  
+>>  static SENSOR_DEVICE_ATTR_RW(pwm1, pwm, 0);
+>> +static SENSOR_DEVICE_ATTR_RO(fan1_input, rpm, 0);
+>>  
+>>  static struct attribute *pwm_fan_attrs[] = {
+>>  	&sensor_dev_attr_pwm1.dev_attr.attr,
+>> +	&sensor_dev_attr_fan1_input.dev_attr.attr,
+>>  	NULL,
+>>  };
+>>  
+>> -ATTRIBUTE_GROUPS(pwm_fan);
+>> +static umode_t pwm_fan_attrs_visible(struct kobject *kobj, struct attribute *a,
+>> +				     int n)
+>> +{
+>> +	struct device *dev = container_of(kobj, struct device, kobj);
+>> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+>> +	struct device_attribute *devattr;
+>> +
+>> +	/* Hide fan_input in case no interrupt is available  */
+>> +	devattr = container_of(a, struct device_attribute, attr);
+>> +	if (devattr == &sensor_dev_attr_fan1_input.dev_attr) {
+>> +		if (ctx->irq <= 0)
+>> +			return 0;
+>> +	}
+> Side note: This can be easier written as 
+> 	if (n == 1 && ctx->irq <= 0)
+> 		return 0;
+>
+> Not that it matters much.
+>
+>> +
+>> +	return a->mode;
+>> +}
+>> +
+>> +static const struct attribute_group pwm_fan_group = {
+>> +	.attrs = pwm_fan_attrs,
+>> +	.is_visible = pwm_fan_attrs_visible,
+>> +};
+>> +
+>> +static const struct attribute_group *pwm_fan_groups[] = {
+>> +	&pwm_fan_group,
+>> +	NULL,
+>> +};
+>>  
+>>  /* thermal cooling device callbacks */
+>>  static int pwm_fan_get_max_state(struct thermal_cooling_device *cdev,
+>> @@ -261,17 +331,45 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>>  		goto err_reg_disable;
+>>  	}
+>>  
+>> +	timer_setup(&ctx->rpm_timer, sample_timer, 0);
+>> +
+>> +	if (of_property_read_u8(pdev->dev.of_node, "pulses-per-revolution",
+> This does not work: The property is not defined as u8. You have to either
+> use of_property_read_u32() or declare the property as u8.
+pulses_per_revolution is defined as u8 since this version
+>
+> [ Sorry, I didn't know until recently that this is necessary ]
+>
+>> +				&ctx->pulses_per_revolution)) {
+>> +		ctx->pulses_per_revolution = 2;
+>> +	}
+>> +
+>> +	if (!ctx->pulses_per_revolution) {
+>> +		dev_err(&pdev->dev, "pulses-per-revolution can't be zero.\n");
+>> +		ret = -EINVAL;
+>> +		goto err_pwm_disable;
+>> +	}
+>> +
+>> +	ctx->irq = platform_get_irq(pdev, 0);
+>> +	if (ctx->irq == -EPROBE_DEFER) {
+>> +		ret = ctx->irq;
+>> +		goto err_pwm_disable;
+> It might be better to call platform_get_irq() and to do do this check
+> first, before enabling the regulator (in practice before calling
+> devm_regulator_get_optional). It doesn't make sense to enable the
+> regulator only to disable it because the irq is not yet available.
+>
+>> +	} else if (ctx->irq > 0) {
+> As written, this else is unnecessary, and static checkers will complain
+> about it.
+>
+>> +		ret = devm_request_irq(&pdev->dev, ctx->irq, pulse_handler, 0,
+>> +				       pdev->name, ctx);
+>> +		if (ret) {
+>> +			dev_err(&pdev->dev, "Can't get interrupt working.\n");
+>> +			goto err_pwm_disable;
+>> +		}
+>> +		ctx->sample_start = ktime_get();
+>> +		mod_timer(&ctx->rpm_timer, jiffies + HZ);
+>> +	}
+>> +
+>>  	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
+>>  						       ctx, pwm_fan_groups);
+>>  	if (IS_ERR(hwmon)) {
+>>  		dev_err(&pdev->dev, "Failed to register hwmon device\n");
+>>  		ret = PTR_ERR(hwmon);
+>> -		goto err_pwm_disable;
+>> +		goto err_del_timer;
+>>  	}
+>>  
+>>  	ret = pwm_fan_of_get_cooling_data(&pdev->dev, ctx);
+>>  	if (ret)
+>> -		return ret;
+>> +		goto err_del_timer;
+> Outch. This is buggy and should have been "goto err_pwm_disable;".
+> It needs to be fixed with a separate patch, and first, so we can
+> backport it. Can you do that ?
 
-This means that it's trivially possible to overrun arrays in ATF,
-and even get ATF to read/write other areas of memory.
+Sure
 
-I would rather this issue was resolved before the kernel starts to
-use what is a badly defined interface.
-
-> +
-> +	return res.a0;
-> +}
-> +
-> +static int mvebu_comphy_get_mode(bool fw_mode, int lane, int port,
-> +				 enum phy_mode mode, int submode)
->  {
->  	int i, n = ARRAY_SIZE(mvebu_comphy_cp110_modes);
->  
-> @@ -190,7 +238,22 @@ static int mvebu_comphy_get_mux(int lane, int port,
->  	if (i == n)
->  		return -EINVAL;
->  
-> -	return mvebu_comphy_cp110_modes[i].mux;
-> +	if (fw_mode)
-> +		return mvebu_comphy_cp110_modes[i].fw_mode;
-> +	else
-> +		return mvebu_comphy_cp110_modes[i].mux;
-> +}
-> +
-> +static inline int mvebu_comphy_get_mux(int lane, int port,
-> +				       enum phy_mode mode, int submode)
-> +{
-> +	return mvebu_comphy_get_mode(false, lane, port, mode, submode);
-> +}
-> +
-> +static inline int mvebu_comphy_get_fw_mode(int lane, int port,
-> +					   enum phy_mode mode, int submode)
-> +{
-> +	return mvebu_comphy_get_mode(true, lane, port, mode, submode);
->  }
->  
->  static void mvebu_comphy_ethernet_init_reset(struct mvebu_comphy_lane *lane)
-> @@ -476,7 +539,7 @@ static int mvebu_comphy_set_mode_10gkr(struct phy *phy)
->  	return mvebu_comphy_init_plls(lane);
->  }
->  
-> -static int mvebu_comphy_power_on(struct phy *phy)
-> +static int mvebu_comphy_power_on_legacy(struct phy *phy)
->  {
->  	struct mvebu_comphy_lane *lane = phy_get_drvdata(phy);
->  	struct mvebu_comphy_priv *priv = lane->priv;
-> @@ -517,6 +580,50 @@ static int mvebu_comphy_power_on(struct phy *phy)
->  	return ret;
->  }
->  
-> +static int mvebu_comphy_power_on(struct phy *phy)
-> +{
-> +	struct mvebu_comphy_lane *lane = phy_get_drvdata(phy);
-> +	struct mvebu_comphy_priv *priv = lane->priv;
-> +	u32 fw_param = 0;
-> +	int fw_mode;
-> +	int ret;
-> +
-> +	fw_mode = mvebu_comphy_get_fw_mode(lane->id, lane->port,
-> +					   lane->mode, lane->submode);
-> +	if (fw_mode < 0)
-> +		goto try_legacy;
-> +
-> +	/* Try SMC flow first */
-> +	switch (lane->mode) {
-> +	case PHY_MODE_ETHERNET:
-> +		dev_dbg(priv->dev, "set lane %d to Ethernet mode\n", lane->id);
-> +		switch (lane->submode) {
-> +		case PHY_INTERFACE_MODE_SGMII:
-> +		case PHY_INTERFACE_MODE_2500BASEX:
-> +		case PHY_INTERFACE_MODE_10GKR:
-> +			fw_param = COMPHY_FW_PARAM(fw_mode, lane->port);
-> +			break;
-> +		default:
-> +			dev_err(priv->dev, "unsupported Ethernet mode (%d)\n",
-> +				lane->submode);
-> +			return -ENOTSUPP;
-> +		}
-> +		break;
-> +	default:
-> +		dev_err(priv->dev, "unsupported PHY mode (%d)\n", lane->mode);
-> +		return -ENOTSUPP;
-> +	}
-> +
-> +	ret = mvebu_comphy_smc(COMPHY_SIP_POWER_ON, priv->cp_phys, lane->id,
-> +			       fw_param);
-> +	if (!ret)
-> +		return ret;
-> +
-> +try_legacy:
-> +	/* Fallback to Linux's implementation */
-> +	return mvebu_comphy_power_on_legacy(phy);
-> +}
-> +
->  static int mvebu_comphy_set_mode(struct phy *phy,
->  				 enum phy_mode mode, int submode)
->  {
-> @@ -528,7 +635,7 @@ static int mvebu_comphy_set_mode(struct phy *phy,
->  	if (submode == PHY_INTERFACE_MODE_1000BASEX)
->  		submode = PHY_INTERFACE_MODE_SGMII;
->  
-> -	if (mvebu_comphy_get_mux(lane->id, lane->port, mode, submode) < 0)
-> +	if (mvebu_comphy_get_fw_mode(lane->id, lane->port, mode, submode) < 0)
->  		return -EINVAL;
->  
->  	lane->mode = mode;
-> @@ -536,27 +643,42 @@ static int mvebu_comphy_set_mode(struct phy *phy,
->  	return 0;
->  }
->  
-> +static int mvebu_comphy_power_off_legacy(struct phy *phy)
-> +{
-> +	struct mvebu_comphy_lane *lane = phy_get_drvdata(phy);
-> +	struct mvebu_comphy_priv *priv = lane->priv;
-> +	u32 val;
-> +
-> +	val = readl(priv->base + MVEBU_COMPHY_SERDES_CFG1(lane->id));
-> +	val &= ~(MVEBU_COMPHY_SERDES_CFG1_RESET |
-> +		 MVEBU_COMPHY_SERDES_CFG1_CORE_RESET |
-> +		 MVEBU_COMPHY_SERDES_CFG1_RF_RESET);
-> +	writel(val, priv->base + MVEBU_COMPHY_SERDES_CFG1(lane->id));
-> +
-> +	regmap_read(priv->regmap, MVEBU_COMPHY_SELECTOR, &val);
-> +	val &= ~(0xf << MVEBU_COMPHY_SELECTOR_PHY(lane->id));
-> +	regmap_write(priv->regmap, MVEBU_COMPHY_SELECTOR, val);
-> +
-> +	regmap_read(priv->regmap, MVEBU_COMPHY_PIPE_SELECTOR, &val);
-> +	val &= ~(0xf << MVEBU_COMPHY_PIPE_SELECTOR_PIPE(lane->id));
-> +	regmap_write(priv->regmap, MVEBU_COMPHY_PIPE_SELECTOR, val);
-> +
-> +	return 0;
-> +}
-> +
->  static int mvebu_comphy_power_off(struct phy *phy)
->  {
->  	struct mvebu_comphy_lane *lane = phy_get_drvdata(phy);
->  	struct mvebu_comphy_priv *priv = lane->priv;
-> -	u32 val;
-> +	int ret;
->  
-> -	val = readl(priv->base + MVEBU_COMPHY_SERDES_CFG1(lane->id));
-> -	val &= ~(MVEBU_COMPHY_SERDES_CFG1_RESET |
-> -		 MVEBU_COMPHY_SERDES_CFG1_CORE_RESET |
-> -		 MVEBU_COMPHY_SERDES_CFG1_RF_RESET);
-> -	writel(val, priv->base + MVEBU_COMPHY_SERDES_CFG1(lane->id));
-> +	ret = mvebu_comphy_smc(COMPHY_SIP_POWER_OFF, priv->cp_phys,
-> +			       lane->id, 0);
-> +	if (!ret)
-> +		return ret;
->  
-> -	regmap_read(priv->regmap, MVEBU_COMPHY_SELECTOR, &val);
-> -	val &= ~(0xf << MVEBU_COMPHY_SELECTOR_PHY(lane->id));
-> -	regmap_write(priv->regmap, MVEBU_COMPHY_SELECTOR, val);
-> -
-> -	regmap_read(priv->regmap, MVEBU_COMPHY_PIPE_SELECTOR, &val);
-> -	val &= ~(0xf << MVEBU_COMPHY_PIPE_SELECTOR_PIPE(lane->id));
-> -	regmap_write(priv->regmap, MVEBU_COMPHY_PIPE_SELECTOR, val);
-> -
-> -	return 0;
-> +	/* Fallback to Linux's implementation */
-> +	return mvebu_comphy_power_off_legacy(phy);
->  }
->  
->  static const struct phy_ops mvebu_comphy_ops = {
-> @@ -607,6 +729,12 @@ static int mvebu_comphy_probe(struct platform_device *pdev)
->  	if (IS_ERR(priv->base))
->  		return PTR_ERR(priv->base);
->  
-> +	/*
-> +	 * Hack to retrieve a physical offset relative to this CP that will be
-> +	 * given to the firmware
-> +	 */
-> +	priv->cp_phys = res->start;
-> +
->  	for_each_available_child_of_node(pdev->dev.of_node, child) {
->  		struct mvebu_comphy_lane *lane;
->  		struct phy *phy;
-> -- 
-> 2.19.1
-> 
-> 
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Stefan
