@@ -1,251 +1,218 @@
-From: <VenkataRajesh.Kalakodima@in.bosch.com>
-Subject: [PATCH 8/8] drm: rcar-du: Add shutdown callback function in platform_driver
-Date: Wed, 3 Apr 2019 18:44:44 +0530
-Message-ID: <1554297284-14009-9-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
-References: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
+From: Pascal PAILLET-LME <p.paillet@st.com>
+Subject: [PATCH 2/3] ARM: dts: stm32: add stpmic1 support on stm32mp157a dk1
+ board
+Date: Wed, 3 Apr 2019 13:40:55 +0000
+Message-ID: <1554298852-9955-3-git-send-email-p.paillet@st.com>
+References: <1554298852-9955-1-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>, Koji Matsuoka <koji.matsuoka.xm@renesas.com>, Steve Longerbeam <steve_longerbeam@mentor.com>, Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1554298852-9955-1-git-send-email-p.paillet@st.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "biju.das@bp.renesas.com" <biju.das@bp.renesas.com>, Yannick FERTRE <yannick.fertre@st.com>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Pascal PAILLET-LME <p.paillet@st.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
 List-Id: devicetree@vger.kernel.org
 
-From: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
+This patch adds stpmic1 support on stm32mp157a dk1 board.
+The STPMIC1 is a PMIC from STMicroelectronics. The STPMIC1 integrates 10
+regulators, 3 power switches, a watchdog and an input for a power on key.
 
-When rebooting, the Display driver is accessing H/W (reading DDR).
-Therefore, there is a problem of hanging when setting DDR to self
-refresh mode.
-
-This patch implement the shutdown function and solve this problem
-by stopping H/W access.
-
-In addtion, on the ulcb board, since initial values of versaclock
-are used as they are, signals are not output when initializing to
-0 with shutdown, so this patch excludes processing to initialize
-versaclock to 0.
-drm: rcar-du: Add HDMI control clock when S2RAM
-
-Signed-off-by: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
-
-(cherry picked from horms/renesas-bsp commit 3cfda6331c4069800dd4434427284aba8e6f1ed6)
-[slongerbeam: keep integer i in rcar_du_pm_shutdown(), needed because of
- 050e54d87f ("drm: rcar-du: drm: rcar-du: Add DU CMM support")]
-
-Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-
-drm: rcar-du: cmm: lut and clu backup not required during
- shutdown
-rcar_du_cmm_pm_suspend function copies LUT and CLU hardare
-register values to memory. In the patch which adds DU CMM
-support (https://github.com/renesas-rcar/du_cmm/commit/
-9a65d02119e4ae405a89a850463a6a0d0f2c1ecb), the intention of
-the author was to backup the registers during suspend and
-restore it on resume. But rcar_du_cmm_pm_suspend was also
-called on system shutdown. Though it does not cause any harm,
-it is not required during shutdown as it does not make sense
-to backup. This patch ensures that rcar_du_cmm_pm_suspend is
-called only during suspend
-
-Fixes: https://github.com/renesas-rcar/du_cmm/commit/9a65d02119e4ae405a89a850463a6a0d0f2c1ecb
-
-Signed-off-by: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
-
-      - Resolved checkpatch errors
-      - Resolved merge conflicts according to latest version
-
-Signed-off-by: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
+Signed-off-by: Pascal Paillet <p.paillet@st.com>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 35 ++++++++++++++++++++
- drivers/gpu/drm/rcar-du/rcar_du_drv.c     | 54 +++++++++++++++++++++++++------
- drivers/gpu/drm/rcar-du/rcar_du_encoder.c |  2 +-
- drivers/gpu/drm/rcar-du/rcar_du_encoder.h |  1 +
- include/drm/bridge/dw_hdmi.h              |  1 +
- 5 files changed, 83 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/stm32mp157a-dk1.dts | 157 ++++++++++++++++++++++++++++++++--
+ 1 file changed, 149 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 5971976..aa257d7 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -2033,6 +2033,41 @@ static void dw_hdmi_bridge_enable(struct drm_bridge *bridge)
- 	mutex_unlock(&hdmi->mutex);
- }
+diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+index 1b1886d..b25b551 100644
+--- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
++++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+@@ -9,6 +9,7 @@
+ #include "stm32mp157c.dtsi"
+ #include "stm32mp157-pinctrl.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/mfd/st,stpmic1.h>
  
-+/*
-+ * This function controls clocks of dw_hdmi through drm_bridge
-+ * at system suspend/resume.
-+ * Arguments:
-+ *  bridge: drm_bridge that contains dw_hdmi.
-+ *  flag: controlled flag.
-+ *		false: is used when suspend.
-+ *		true: is used when resume.
-+ */
-+void dw_hdmi_s2r_ctrl(struct drm_bridge *bridge, int flag)
-+{
-+	struct dw_hdmi *hdmi = bridge->driver_private;
-+
-+	if (!hdmi)
-+		return;
-+
-+	if (flag) { /* enable clk */
-+		if (hdmi->isfr_clk)
-+			clk_prepare_enable(hdmi->isfr_clk);
-+		if (hdmi->iahb_clk)
-+			clk_prepare_enable(hdmi->iahb_clk);
-+
-+		initialize_hdmi_ih_mutes(hdmi);
-+		dw_hdmi_setup_i2c(hdmi);
-+		dw_hdmi_i2c_init(hdmi);
-+		dw_hdmi_phy_setup_hpd(hdmi, NULL);
-+	} else { /* disable clk */
-+		if (hdmi->isfr_clk)
-+			clk_disable_unprepare(hdmi->isfr_clk);
-+		if (hdmi->iahb_clk)
-+			clk_disable_unprepare(hdmi->iahb_clk);
-+	}
-+}
-+EXPORT_SYMBOL_GPL(dw_hdmi_s2r_ctrl);
-+
- static const struct drm_bridge_funcs dw_hdmi_bridge_funcs = {
- 	.attach = dw_hdmi_bridge_attach,
- 	.enable = dw_hdmi_bridge_enable,
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-index 838b7c9..9eb63b0 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-@@ -21,6 +21,7 @@
- #include <linux/slab.h>
- #include <linux/wait.h>
- 
-+#include <drm/bridge/dw_hdmi.h>
- #include <drm/drmP.h>
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_crtc_helper.h>
-@@ -368,18 +369,14 @@ static struct drm_driver rcar_du_driver = {
-  */
- 
- #ifdef CONFIG_PM_SLEEP
--static int rcar_du_pm_suspend(struct device *dev)
-+static int rcar_du_pm_shutdown(struct device *dev)
- {
- 	struct rcar_du_device *rcdu = dev_get_drvdata(dev);
- 	struct drm_atomic_state *state;
--	int i;
+ / {
+ 	model = "STMicroelectronics STM32MP157A-DK1 Discovery Board";
+@@ -36,14 +37,6 @@
+ 			default-state = "off";
+ 		};
+ 	};
 -
--	if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM)) {
--		for (i = 0; i < rcdu->num_crtcs; ++i)
--			rcar_du_cmm_pm_suspend(&rcdu->crtcs[i]);
--	}
--
--	drm_kms_helper_poll_disable(rcdu->ddev);
-+#if IS_ENABLED(CONFIG_DRM_RCAR_DW_HDMI)
-+	struct drm_encoder *encoder;
-+#endif
-+		drm_kms_helper_poll_disable(rcdu->ddev);
- 	drm_fbdev_cma_set_suspend_unlocked(rcdu->fbdev, true);
- 
- 	state = drm_atomic_helper_suspend(rcdu->ddev);
-@@ -389,11 +386,43 @@ static int rcar_du_pm_suspend(struct device *dev)
- 		return PTR_ERR(state);
- 	}
- 
-+#if IS_ENABLED(CONFIG_DRM_RCAR_DW_HDMI)
-+	list_for_each_entry(encoder,
-+			    &rcdu->ddev->mode_config.encoder_list,
-+			    head) {
-+		struct rcar_du_encoder *renc = to_rcar_encoder(encoder);
-+
-+		if (renc->bridge && (renc->output == RCAR_DU_OUTPUT_HDMI0 ||
-+				     renc->output == RCAR_DU_OUTPUT_HDMI1))
-+			dw_hdmi_s2r_ctrl(encoder->bridge, false);
-+	}
-+#endif
- 	rcdu->suspend_state = state;
- 
- 	return 0;
- }
- 
-+static int rcar_du_pm_suspend(struct device *dev)
-+{
-+	struct rcar_du_device *rcdu = dev_get_drvdata(dev);
-+
-+	int i, ret;
-+
-+	if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM)) {
-+		for (i = 0; i < rcdu->num_crtcs; ++i)
-+			rcar_du_cmm_pm_suspend(&rcdu->crtcs[i]);
-+	}
-+
-+	ret = rcar_du_pm_shutdown(dev);
-+
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < rcdu->num_crtcs; ++i)
-+		clk_set_rate(rcdu->crtcs[i].extclock, 0);
-+	return 0;
-+}
-+
- static int rcar_du_pm_resume(struct device *dev)
- {
- 	struct rcar_du_device *rcdu = dev_get_drvdata(dev);
-@@ -504,6 +533,12 @@ static int rcar_du_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static void rcar_du_shutdown(struct platform_device *pdev)
-+{
-+#ifdef CONFIG_PM_SLEEP
-+	rcar_du_pm_shutdown(&pdev->dev);
-+#endif
-+}
- static struct platform_driver rcar_du_platform_driver = {
- 	.probe		= rcar_du_probe,
- 	.remove		= rcar_du_remove,
-@@ -512,6 +547,7 @@ static struct platform_driver rcar_du_platform_driver = {
- 		.pm	= &rcar_du_pm_ops,
- 		.of_match_table = rcar_du_of_table,
- 	},
-+	.shutdown       = rcar_du_shutdown,
+-	v3v3: regulator-3v3 {
+-		compatible = "regulator-fixed";
+-		regulator-name = "v3v3";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-		regulator-always-on;
+-	};
  };
  
- static int __init rcar_du_init(void)
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_encoder.c b/drivers/gpu/drm/rcar-du/rcar_du_encoder.c
-index f9c933d..98df8a2 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_encoder.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_encoder.c
-@@ -62,7 +62,7 @@ int rcar_du_encoder_init(struct rcar_du_device *rcdu,
- 
- 	dev_dbg(rcdu->dev, "initializing encoder %pOF for output %u\n",
- 		enc_node, output);
--
-+	renc->bridge = bridge;
- 	/* Locate the DRM bridge from the encoder DT node. */
- 	bridge = of_drm_find_bridge(enc_node);
- 	if (!bridge) {
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_encoder.h b/drivers/gpu/drm/rcar-du/rcar_du_encoder.h
-index 2d2abca..cc5bfcb 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_encoder.h
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_encoder.h
-@@ -23,6 +23,7 @@ struct rcar_du_device;
- struct rcar_du_encoder {
- 	struct drm_encoder base;
- 	enum rcar_du_output output;
-+	struct drm_bridge *bridge;
+ &ethernet0 {
+@@ -65,6 +58,154 @@
+ 	};
  };
  
- #define to_rcar_encoder(e) \
-diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-index ccb5aa8..36383cf4 100644
---- a/include/drm/bridge/dw_hdmi.h
-+++ b/include/drm/bridge/dw_hdmi.h
-@@ -171,5 +171,6 @@ enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
- void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
- 			    bool force, bool disabled, bool rxsense);
- void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data);
-+void dw_hdmi_s2r_ctrl(struct drm_bridge *bridge, int flag);
- 
- #endif /* __IMX_HDMI_H__ */
++
++&i2c4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c4_pins_a>;
++	i2c-scl-rising-time-ns = <185>;
++	i2c-scl-falling-time-ns = <20>;
++	status = "okay";
++	/delete-property/dmas;
++	/delete-property/dma-names;
++
++	pmic: stpmic@33 {
++		compatible = "st,stpmic1";
++		reg = <0x33>;
++		interrupts-extended = <&gpioa 0 IRQ_TYPE_EDGE_FALLING>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		status = "okay";
++
++		regulators {
++			compatible = "st,stpmic1-regulators";
++			ldo1-supply = <&v3v3>;
++			ldo3-supply = <&vdd_ddr>;
++			ldo6-supply = <&v3v3>;
++			pwr_sw1-supply = <&bst_out>;
++			pwr_sw2-supply = <&bst_out>;
++
++			vddcore: buck1 {
++				regulator-name = "vddcore";
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
++				regulator-initial-mode = <0>;
++				regulator-over-current-protection;
++			};
++
++			vdd_ddr: buck2 {
++				regulator-name = "vdd_ddr";
++				regulator-min-microvolt = <1350000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
++				regulator-initial-mode = <0>;
++				regulator-over-current-protection;
++			};
++
++			vdd: buck3 {
++				regulator-name = "vdd";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				st,mask-reset;
++				regulator-initial-mode = <0>;
++				regulator-over-current-protection;
++			};
++
++			v3v3: buck4 {
++				regulator-name = "v3v3";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				regulator-over-current-protection;
++				regulator-initial-mode = <0>;
++			};
++
++			v1v8_audio: ldo1 {
++				regulator-name = "v1v8_audio";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++				interrupts = <IT_CURLIM_LDO1 0>;
++			};
++
++			v3v3_hdmi: ldo2 {
++				regulator-name = "v3v3_hdmi";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				interrupts = <IT_CURLIM_LDO2 0>;
++			};
++
++			vtt_ddr: ldo3 {
++				regulator-name = "vtt_ddr";
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <750000>;
++				regulator-always-on;
++				regulator-over-current-protection;
++			};
++
++			vdd_usb: ldo4 {
++				regulator-name = "vdd_usb";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				interrupts = <IT_CURLIM_LDO4 0>;
++			};
++
++			vdda: ldo5 {
++				regulator-name = "vdda";
++				regulator-min-microvolt = <2900000>;
++				regulator-max-microvolt = <2900000>;
++				interrupts = <IT_CURLIM_LDO5 0>;
++				regulator-boot-on;
++			};
++
++			v1v2_hdmi: ldo6 {
++				regulator-name = "v1v2_hdmi";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++				regulator-always-on;
++				interrupts = <IT_CURLIM_LDO6 0>;
++			};
++
++			vref_ddr: vref_ddr {
++				regulator-name = "vref_ddr";
++				regulator-always-on;
++				regulator-over-current-protection;
++			};
++
++			 bst_out: boost {
++				regulator-name = "bst_out";
++				interrupts = <IT_OCP_BOOST 0>;
++			 };
++
++			vbus_otg: pwr_sw1 {
++				regulator-name = "vbus_otg";
++				interrupts = <IT_OCP_OTG 0>;
++			 };
++
++			 vbus_sw: pwr_sw2 {
++				regulator-name = "vbus_sw";
++				interrupts = <IT_OCP_SWOUT 0>;
++				regulator-active-discharge;
++			 };
++		};
++
++		onkey {
++			compatible = "st,stpmic1-onkey";
++			interrupts = <IT_PONKEY_F 0>, <IT_PONKEY_R 0>;
++			interrupt-names = "onkey-falling", "onkey-rising";
++			power-off-time-sec = <10>;
++			status = "okay";
++		};
++
++		watchdog {
++			compatible = "st,stpmic1-wdt";
++			status = "disabled";
++		};
++	};
++};
++
+ &ipcc {
+ 	status = "okay";
+ };
 -- 
-2.7.4
+1.9.1
