@@ -1,63 +1,48 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [PATCH] dt-bindings: clock: sifive: add FU540-C000 PRCI clock constants
-Date: Wed,  3 Apr 2019 17:38:20 -0700
-Message-ID: <20190404003820.10679-1-paul.walmsley@sifive.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] edac: sifive: Add DT documentation for SiFive L2
+ cache Controller
+Date: Wed, 3 Apr 2019 20:04:08 -0500
+Message-ID: <CAL_Jsq+NMapJqM4N_kpeojvrS_W19vPLfMzdiENy6FjcOiqoDA@mail.gmail.com>
+References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
+ <1552382461-13051-2-git-send-email-yash.shah@sifive.com> <20190328131657.GA9056@bogus>
+ <be7246a0-2426-995d-0a24-f104c173d752@arm.com> <CAL_Jsq+s77J=Bwiyow2d7Q=e+z+5d64i_cL6xaYn0xdvJDb4Vg@mail.gmail.com>
+ <20190329142739.GG21152@zn.tnic> <CAL_JsqLQ1XvQq7L=xA5Z8Y0Xa4Bmp0t2pgxn+hLF+tD=_L7Mvg@mail.gmail.com>
+ <20190329202416.GI21152@zn.tnic>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190329202416.GI21152@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mark.rutland@arm.com, robh+dt@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, wesley@sifive.com, paul.walmsley@sifive.com, palmer@sifive.com
+To: Borislav Petkov <bp@alien8.de>
+Cc: James Morse <james.morse@arm.com>, Yash Shah <yash.shah@sifive.com>, linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add preprocessor macros for the important PRCI output clocks
-that are needed by both the FU540 PRCI driver and DT data.
-Details are available in the FU540 manual in Chapter 7 of
+On Fri, Mar 29, 2019 at 3:24 PM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Fri, Mar 29, 2019 at 02:41:05PM -0500, Rob Herring wrote:
+> > DT dictates aligning with what the h/w looks like which has little to
+> > do with OS driver design.
+>
+> Ok, then, where does this goal for doing a driver or compilation unit
+> per IP block come from?
+>
+> Because everytime an ARM EDAC driver pops up, we are having the same
+> discussion.
+>
+> > I never said you should change EDAC and I outlined how things should
+> > be handled if it is one driver.
+>
+> Ok, we will add that to the EDAC driver design document we're currently
+> working on.
+>
+> > DT and OS subsystems are independent things. I can't tell you how to
+> > design the subsystem and you can't dictate DT design (based on EDAC
+> > design).
+>
+> I don't think I've ever intentionally or unintentionally dictated DT
+> design - all I've opposed to is having multiple EDAC drivers on ARM.
 
-    https://static.dev.sifive.com/FU540-C000-v1.0.pdf
+No, but folks just extend 1 driver to mean 1 DT node because that's
+easy and certainly the more common case.
 
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Wesley Terpstra <wesley@sifive.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-riscv@lists.infradead.org
----
-Rob, Mark: this patch is a prerequisite for both the FU540 DT data
-and for the FU540 PRCI clock driver patch series.  To prevent one
-of those patch series from depending on the other, I'd like to ask
-Palmer to merge this patch in one of his -rc pull requests.  Could
-I get an ack from one or both of you for this purpose?  Thanks.
-
-include/dt-bindings/clock/sifive-fu540-prci.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 include/dt-bindings/clock/sifive-fu540-prci.h
-
-diff --git a/include/dt-bindings/clock/sifive-fu540-prci.h b/include/dt-bindings/clock/sifive-fu540-prci.h
-new file mode 100644
-index 000000000000..6a0b70a37d78
---- /dev/null
-+++ b/include/dt-bindings/clock/sifive-fu540-prci.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2018-2019 SiFive, Inc.
-+ * Wesley Terpstra
-+ * Paul Walmsley
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_SIFIVE_FU540_PRCI_H
-+#define __DT_BINDINGS_CLOCK_SIFIVE_FU540_PRCI_H
-+
-+/* Clock indexes for use by Device Tree data and the PRCI driver */
-+
-+#define PRCI_CLK_COREPLL	       0
-+#define PRCI_CLK_DDRPLL		       1
-+#define PRCI_CLK_GEMGXLPLL	       2
-+#define PRCI_CLK_TLCLK		       3
-+
-+#endif
--- 
-2.20.1
+Rob
