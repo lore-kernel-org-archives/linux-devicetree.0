@@ -1,150 +1,41 @@
-From: thor.thayer@linux.intel.com
-Subject: [RESEND PATCHv3 2/3] Documentation: dt: edac: Add Stratix10 Peripheral bindings
-Date: Thu,  4 Apr 2019 09:36:36 -0500
-Message-ID: <1554388597-28019-3-git-send-email-thor.thayer@linux.intel.com>
-References: <1554388597-28019-1-git-send-email-thor.thayer@linux.intel.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 1/6] dt-bindings: clk: meson: add g12b periph clock controller bindings
+Date: Thu,  4 Apr 2019 17:05:13 +0200
+Message-ID: <20190404150518.30337-2-narmstrong@baylibre.com>
+References: <20190404150518.30337-1-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554388597-28019-1-git-send-email-thor.thayer@linux.intel.com>
+In-Reply-To: <20190404150518.30337-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bp@alien8.de, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: mchehab@kernel.org, james.morse@arm.com, thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+To: khilman@baylibre.com, devicetree@vger.kernel.org, jbrunet@baylibre.com
+Cc: baylibre-upstreaming@groups.io, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+This patch adds the specific Amlogic G12B clock driver compatible.
 
-Add peripheral bindings for Stratix10 EDAC to capture
-the differences between the ARM64 and ARM32 architecture.
+G12B clock driver is very close, the main differences are :
+- the clock tree is duplicated for the both clusters, and the
+  SYS_PLL are swapped between the clusters
+- G12A has additional clocks like for CSI an other components
 
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-v2-3  No change.
-Resend adds Reviewed-by
----
- .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 106 +++++++++++++++++++++
- 1 file changed, 106 insertions(+)
+ Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-index acb211c098c0..8f52206cfd2a 100644
---- a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-+++ b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-@@ -258,6 +258,49 @@ Required Properties:
- - compatible : Should be "altr,sdram-edac-s10"
- - interrupts : Should be single bit error interrupt.
- 
-+On-Chip RAM ECC
-+Required Properties:
-+- compatible      : Should be "altr,socfpga-s10-ocram-ecc"
-+- reg             : Address and size for ECC block registers.
-+- altr,ecc-parent : phandle to parent OCRAM node.
-+- interrupts      : Should be single bit error interrupt.
-+
-+Ethernet FIFO ECC
-+Required Properties:
-+- compatible      : Should be "altr,socfpga-s10-eth-mac-ecc"
-+- reg             : Address and size for ECC block registers.
-+- altr,ecc-parent : phandle to parent Ethernet node.
-+- interrupts      : Should be single bit error interrupt.
-+
-+NAND FIFO ECC
-+Required Properties:
-+- compatible      : Should be "altr,socfpga-s10-nand-ecc"
-+- reg             : Address and size for ECC block registers.
-+- altr,ecc-parent : phandle to parent NAND node.
-+- interrupts      : Should be single bit error interrupt.
-+
-+DMA FIFO ECC
-+Required Properties:
-+- compatible      : Should be "altr,socfpga-s10-dma-ecc"
-+- reg             : Address and size for ECC block registers.
-+- altr,ecc-parent : phandle to parent DMA node.
-+- interrupts      : Should be single bit error interrupt.
-+
-+USB FIFO ECC
-+Required Properties:
-+- compatible      : Should be "altr,socfpga-s10-usb-ecc"
-+- reg             : Address and size for ECC block registers.
-+- altr,ecc-parent : phandle to parent USB node.
-+- interrupts      : Should be single bit error interrupt.
-+
-+SDMMC FIFO ECC
-+Required Properties:
-+- compatible      : Should be "altr,socfpga-s10-sdmmc-ecc"
-+- reg             : Address and size for ECC block registers.
-+- altr,ecc-parent : phandle to parent SD/MMC node.
-+- interrupts      : Should be single bit error interrupt for port A
-+		    and then single bit error interrupt for port B.
-+
- Example:
- 
- 	eccmgr {
-@@ -274,4 +317,67 @@ Example:
- 			compatible = "altr,sdram-edac-s10";
- 			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
- 		};
-+
-+		ocram-ecc@ff8cc000 {
-+			compatible = "altr,socfpga-s10-ocram-ecc";
-+			reg = <ff8cc000 0x100>;
-+			altr,ecc-parent = <&ocram>;
-+			interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		emac0-rx-ecc@ff8c0000 {
-+			compatible = "altr,socfpga-s10-eth-mac-ecc";
-+			reg = <0xff8c0000 0x100>;
-+			altr,ecc-parent = <&gmac0>;
-+			interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		emac0-tx-ecc@ff8c0400 {
-+			compatible = "altr,socfpga-s10-eth-mac-ecc";
-+			reg = <0xff8c0400 0x100>;
-+			altr,ecc-parent = <&gmac0>;
-+			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>'
-+		};
-+
-+		nand-buf-ecc@ff8c8000 {
-+			compatible = "altr,socfpga-s10-nand-ecc";
-+			reg = <0xff8c8000 0x100>;
-+			altr,ecc-parent = <&nand>;
-+			interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		nand-rd-ecc@ff8c8400 {
-+			compatible = "altr,socfpga-s10-nand-ecc";
-+			reg = <0xff8c8400 0x100>;
-+			altr,ecc-parent = <&nand>;
-+			interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		nand-wr-ecc@ff8c8800 {
-+			compatible = "altr,socfpga-s10-nand-ecc";
-+			reg = <0xff8c8800 0x100>;
-+			altr,ecc-parent = <&nand>;
-+			interrupts = <12 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		dma-ecc@ff8c9000 {
-+			compatible = "altr,socfpga-s10-dma-ecc";
-+			reg = <0xff8c9000 0x100>;
-+			altr,ecc-parent = <&pdma>;
-+			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		usb0-ecc@ff8c4000 {
-+			compatible = "altr,socfpga-s10-usb-ecc";
-+			reg = <0xff8c4000 0x100>;
-+			altr,ecc-parent = <&usb0>;
-+			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		sdmmc-ecc@ff8c8c00 {
-+			compatible = "altr,socfpga-s10-sdmmc-ecc";
-+			reg = <0xff8c8c00 0x100>;
-+			altr,ecc-parent = <&mmc>;
-+			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>,
-+				     <15 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+index 5c8b105be4d6..6eaa52092313 100644
+--- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
++++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+@@ -10,6 +10,7 @@ Required Properties:
+ 		"amlogic,gxl-clkc" for GXL and GXM SoC,
+ 		"amlogic,axg-clkc" for AXG SoC.
+ 		"amlogic,g12a-clkc" for G12A SoC.
++		"amlogic,g12b-clkc" for G12B SoC.
+ - clocks : list of clock phandle, one for each entry clock-names.
+ - clock-names : should contain the following:
+   * "xtal": the platform xtal
 -- 
-2.7.4
+2.21.0
