@@ -1,203 +1,173 @@
-Return-Path: <SRS0=5rLq=SE=googlemail.com=chrysh.ng@kernel.org>
-From: Christina Quast <cquast@hanoverdisplays.com>
-Subject: [PATCH v2 3/6] ARM: dts: am335x: bone-common: Replaced register offsets with defines
-Date: Tue,  2 Apr 2019 18:09:48 +0200
-Message-Id: <20190402160949.14190-4-cquast@hanoverdisplays.com>
-In-Reply-To: <20190402160949.14190-1-cquast@hanoverdisplays.com>
-References: <20190314150524.GB19425@atomide.com>
- <20190402160949.14190-1-cquast@hanoverdisplays.com>
+Return-Path: <SRS0=gswU=SG=linaro.org=rui.silva@kernel.org>
+References: <20190328142516.30372-1-rui.silva@linaro.org> <20190328142516.30372-4-rui.silva@linaro.org> <20190403101114.GC12646@pendragon.ideasonboard.com>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: Re: [PATCH v3 3/5] ARM: dts: imx7s: Add video mux, csi and mipi_csi
+In-reply-to: <20190403101114.GC12646@pendragon.ideasonboard.com>
+Date: Thu, 04 Apr 2019 05:10:21 +0100
+Message-ID: <m3ftqyfm1e.fsf@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Cc: Christina Quast <cquast@hanoverdisplays.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, Russell King <linux@armlinux.org.uk>
+Content-Type: text/plain; format=flowed
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The defines are taken from dt-bindings/pinctrl/am33xx.h
+Hi Laurent,
+On Wed 03 Apr 2019 at 11:11, Laurent Pinchart wrote:
+> Hi Rui,
+>
+> Thank you for the patch.
+>
+> On Thu, Mar 28, 2019 at 02:25:14PM +0000, Rui Miguel Silva 
+> wrote:
+>> Add device tree nodes for csi, video multiplexer and mipi-csi.
+>> 
+>> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+>> ---
+>>  arch/arm/boot/dts/imx7s.dtsi | 75 
+>>  ++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 75 insertions(+)
+>> 
+>> diff --git a/arch/arm/boot/dts/imx7s.dtsi 
+>> b/arch/arm/boot/dts/imx7s.dtsi
+>> index 792efcd2caa1..3286838105c6 100644
+>> --- a/arch/arm/boot/dts/imx7s.dtsi
+>> +++ b/arch/arm/boot/dts/imx7s.dtsi
+>> @@ -8,6 +8,7 @@
+>>  #include <dt-bindings/gpio/gpio.h>
+>>  #include <dt-bindings/input/input.h>
+>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include <dt-bindings/reset/imx7-reset.h>
+>>  #include "imx7d-pinfunc.h"
+>>  
+>>  / {
+>> @@ -506,6 +507,34 @@
+>>  					#mux-control-cells = <0>;
+>>  					mux-reg-masks = <0x14 
+>>  0x00000010>;
+>>  				};
+>> +
+>> +				video_mux: csi-mux {
+>
+> I wonder if the node should be renamed from csi-mux to 
+> video-mux, and
+> possibly the label from video_mux to csi_mux (video_mux is a bit 
+> generic
+> and may lead to name clashes). Apart from that,
+>
+> Reviewed-by: Laurent Pinchart 
+> <laurent.pinchart@ideasonboard.com>
 
-Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
+Thanks for the review.
+
 ---
- arch/arm/boot/dts/am335x-bone-common.dtsi | 116 +++++++++++-----------
- 1 file changed, 58 insertions(+), 58 deletions(-)
+Cheers,
+	Rui
 
-diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-index 456eef57ef89..42cfc3b37c32 100644
---- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-@@ -71,118 +71,118 @@
- 
- 	user_leds_s0: user_leds_s0 {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x854, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a5.gpio1_21 */
--			AM33XX_IOPAD(0x858, PIN_OUTPUT_PULLUP | MUX_MODE7)	/* gpmc_a6.gpio1_22 */
--			AM33XX_IOPAD(0x85c, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a7.gpio1_23 */
--			AM33XX_IOPAD(0x860, PIN_OUTPUT_PULLUP | MUX_MODE7)	/* gpmc_a8.gpio1_24 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_A5, PIN_OUTPUT_PULLDOWN, MUX_MODE7)	/* gpmc_a5.gpio1_21 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_A6, PIN_OUTPUT_PULLUP, MUX_MODE7)	/* gpmc_a6.gpio1_22 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_A7, PIN_OUTPUT_PULLDOWN, MUX_MODE7)	/* gpmc_a7.gpio1_23 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_A8, PIN_OUTPUT_PULLUP, MUX_MODE7)	/* gpmc_a8.gpio1_24 */
- 		>;
- 	};
- 
- 	i2c0_pins: pinmux_i2c0_pins {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x988, PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c0_sda.i2c0_sda */
--			AM33XX_IOPAD(0x98c, PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c0_scl.i2c0_scl */
-+			AM33XX_PADCONF(AM335X_PIN_I2C0_SDA, PIN_INPUT_PULLUP, MUX_MODE0)	/* i2c0_sda.i2c0_sda */
-+			AM33XX_PADCONF(AM335X_PIN_I2C0_SCL, PIN_INPUT_PULLUP, MUX_MODE0)	/* i2c0_scl.i2c0_scl */
- 		>;
- 	};
- 
- 	i2c2_pins: pinmux_i2c2_pins {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x978, PIN_INPUT_PULLUP | MUX_MODE3)	/* uart1_ctsn.i2c2_sda */
--			AM33XX_IOPAD(0x97c, PIN_INPUT_PULLUP | MUX_MODE3)	/* uart1_rtsn.i2c2_scl */
-+			AM33XX_PADCONF(AM335X_PIN_UART1_CTSN, PIN_INPUT_PULLUP, MUX_MODE3)	/* uart1_ctsn.i2c2_sda */
-+			AM33XX_PADCONF(AM335X_PIN_UART1_RTSN, PIN_INPUT_PULLUP, MUX_MODE3)	/* uart1_rtsn.i2c2_scl */
- 		>;
- 	};
- 
- 	uart0_pins: pinmux_uart0_pins {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x970, PIN_INPUT_PULLUP | MUX_MODE0)	/* uart0_rxd.uart0_rxd */
--			AM33XX_IOPAD(0x974, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* uart0_txd.uart0_txd */
-+			AM33XX_PADCONF(AM335X_PIN_UART0_RXD, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_UART0_TXD, PIN_OUTPUT_PULLDOWN, MUX_MODE0)
- 		>;
- 	};
- 
- 	clkout2_pin: pinmux_clkout2_pin {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x9b4, PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* xdma_event_intr1.clkout2 */
-+			AM33XX_PADCONF(AM335X_PIN_XDMA_EVENT_INTR1, PIN_OUTPUT_PULLDOWN, MUX_MODE3)	/* xdma_event_intr1.clkout2 */
- 		>;
- 	};
- 
- 	cpsw_default: cpsw_default {
- 		pinctrl-single,pins = <
- 			/* Slave 1 */
--			AM33XX_IOPAD(0x910, PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxerr.mii1_rxerr */
--			AM33XX_IOPAD(0x914, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txen.mii1_txen */
--			AM33XX_IOPAD(0x918, PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxdv.mii1_rxdv */
--			AM33XX_IOPAD(0x91c, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txd3.mii1_txd3 */
--			AM33XX_IOPAD(0x920, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txd2.mii1_txd2 */
--			AM33XX_IOPAD(0x924, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txd1.mii1_txd1 */
--			AM33XX_IOPAD(0x928, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txd0.mii1_txd0 */
--			AM33XX_IOPAD(0x92c, PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_txclk.mii1_txclk */
--			AM33XX_IOPAD(0x930, PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxclk.mii1_rxclk */
--			AM33XX_IOPAD(0x934, PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxd3.mii1_rxd3 */
--			AM33XX_IOPAD(0x938, PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxd2.mii1_rxd2 */
--			AM33XX_IOPAD(0x93c, PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxd1.mii1_rxd1 */
--			AM33XX_IOPAD(0x940, PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxd0.mii1_rxd0 */
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RX_ER, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TX_EN, PIN_OUTPUT_PULLDOWN, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RX_DV, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD3, PIN_OUTPUT_PULLDOWN, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD2, PIN_OUTPUT_PULLDOWN, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD1, PIN_OUTPUT_PULLDOWN, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD0, PIN_OUTPUT_PULLDOWN, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TX_CLK, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RX_CLK, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD3, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD2, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD1, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD0, PIN_INPUT_PULLUP, MUX_MODE0)
- 		>;
- 	};
- 
- 	cpsw_sleep: cpsw_sleep {
- 		pinctrl-single,pins = <
- 			/* Slave 1 reset value */
--			AM33XX_IOPAD(0x910, PIN_INPUT_PULLDOWN | MUX_MODE7)
--			AM33XX_IOPAD(0x914, PIN_INPUT_PULLDOWN | MUX_MODE7)
--			AM33XX_IOPAD(0x918, PIN_INPUT_PULLDOWN | MUX_MODE7)
--			AM33XX_IOPAD(0x91c, PIN_INPUT_PULLDOWN | MUX_MODE7)
--			AM33XX_IOPAD(0x920, PIN_INPUT_PULLDOWN | MUX_MODE7)
--			AM33XX_IOPAD(0x924, PIN_INPUT_PULLDOWN | MUX_MODE7)
--			AM33XX_IOPAD(0x928, PIN_INPUT_PULLDOWN | MUX_MODE7)
--			AM33XX_IOPAD(0x92c, PIN_INPUT_PULLDOWN | MUX_MODE7)
--			AM33XX_IOPAD(0x930, PIN_INPUT_PULLDOWN | MUX_MODE7)
--			AM33XX_IOPAD(0x934, PIN_INPUT_PULLDOWN | MUX_MODE7)
--			AM33XX_IOPAD(0x938, PIN_INPUT_PULLDOWN | MUX_MODE7)
--			AM33XX_IOPAD(0x93c, PIN_INPUT_PULLDOWN | MUX_MODE7)
--			AM33XX_IOPAD(0x940, PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RX_ER, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TX_EN, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RX_DV, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD3, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD2, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD1, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD0, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TX_CLK, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RX_CLK, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD3, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD2, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD1, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD0, PIN_INPUT_PULLDOWN, MUX_MODE7)
- 		>;
- 	};
- 
- 	davinci_mdio_default: davinci_mdio_default {
- 		pinctrl-single,pins = <
- 			/* MDIO */
--			AM33XX_IOPAD(0x948, PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE0)	/* mdio_data.mdio_data */
--			AM33XX_IOPAD(0x94c, PIN_OUTPUT_PULLUP | MUX_MODE0)			/* mdio_clk.mdio_clk */
-+			AM33XX_PADCONF(AM335X_PIN_MDIO, PIN_INPUT_PULLUP | SLEWCTRL_FAST, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MDC, PIN_OUTPUT_PULLUP, MUX_MODE0)
- 		>;
- 	};
- 
- 	davinci_mdio_sleep: davinci_mdio_sleep {
- 		pinctrl-single,pins = <
- 			/* MDIO reset value */
--			AM33XX_IOPAD(0x948, PIN_INPUT_PULLDOWN | MUX_MODE7)
--			AM33XX_IOPAD(0x94c, PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MDIO, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MDC, PIN_INPUT_PULLDOWN, MUX_MODE7)
- 		>;
- 	};
- 
- 	mmc1_pins: pinmux_mmc1_pins {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x960, PIN_INPUT | MUX_MODE7)		/* spio0_cs1.gpio0_6 */
--			AM33XX_IOPAD(0x8fc, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat0.mmc0_dat0 */
--			AM33XX_IOPAD(0x8f8, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat1.mmc0_dat1 */
--			AM33XX_IOPAD(0x8f4, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat2.mmc0_dat2 */
--			AM33XX_IOPAD(0x8f0, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat3.mmc0_dat3 */
--			AM33XX_IOPAD(0x904, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_cmd.mmc0_cmd */
--			AM33XX_IOPAD(0x900, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_clk.mmc0_clk */
-+			AM33XX_PADCONF(AM335X_PIN_SPI0_CS1, PIN_INPUT, MUX_MODE7)		/* spio0_cs1.gpio0_6 */
-+			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT0, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT1, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT2, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT3, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MMC0_CMD, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MMC0_CLK, PIN_INPUT_PULLUP, MUX_MODE0)
- 		>;
- 	};
- 
- 	emmc_pins: pinmux_emmc_pins {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x880, PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_csn1.mmc1_clk */
--			AM33XX_IOPAD(0x884, PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_csn2.mmc1_cmd */
--			AM33XX_IOPAD(0x800, PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad0.mmc1_dat0 */
--			AM33XX_IOPAD(0x804, PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad1.mmc1_dat1 */
--			AM33XX_IOPAD(0x808, PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad2.mmc1_dat2 */
--			AM33XX_IOPAD(0x80c, PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad3.mmc1_dat3 */
--			AM33XX_IOPAD(0x810, PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad4.mmc1_dat4 */
--			AM33XX_IOPAD(0x814, PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad5.mmc1_dat5 */
--			AM33XX_IOPAD(0x818, PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad6.mmc1_dat6 */
--			AM33XX_IOPAD(0x81c, PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad7.mmc1_dat7 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_CSN1, PIN_INPUT_PULLUP, MUX_MODE2) /* gpmc_csn1.mmc1_clk */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_CSN2, PIN_INPUT_PULLUP, MUX_MODE2) /* gpmc_csn2.mmc1_cmd */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD0, PIN_INPUT_PULLUP, MUX_MODE1) /* gpmc_ad0.mmc1_dat0 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD1, PIN_INPUT_PULLUP, MUX_MODE1) /* gpmc_ad1.mmc1_dat1 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD2, PIN_INPUT_PULLUP, MUX_MODE1) /* gpmc_ad2.mmc1_dat2 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD3, PIN_INPUT_PULLUP, MUX_MODE1) /* gpmc_ad3.mmc1_dat3 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD4, PIN_INPUT_PULLUP, MUX_MODE1) /* gpmc_ad4.mmc1_dat4 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD5, PIN_INPUT_PULLUP, MUX_MODE1) /* gpmc_ad5.mmc1_dat5 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD6, PIN_INPUT_PULLUP, MUX_MODE1) /* gpmc_ad6.mmc1_dat6 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD7, PIN_INPUT_PULLUP, MUX_MODE1) /* gpmc_ad7.mmc1_dat7 */
- 		>;
- 	};
- };
--- 
-2.20.1
+>
+>> +					compatible = "video-mux";
+>> +					mux-controls = <&mux 0>;
+>> +					#address-cells = <1>;
+>> +					#size-cells = <0>;
+>> +					status = "disabled";
+>> +
+>> +					port@0 {
+>> +						reg = <0>;
+>> +					};
+>> +
+>> +					port@1 {
+>> +						reg = <1>;
+>> +
+>> + 
+>> csi_mux_from_mipi_vc0: endpoint {
+>> + 
+>> remote-endpoint = <&mipi_vc0_to_csi_mux>;
+>> +						};
+>> +					};
+>> +
+>> +					port@2 {
+>> +						reg = <2>;
+>> +
+>> +						csi_mux_to_csi: 
+>> endpoint {
+>> + 
+>> remote-endpoint = <&csi_from_csi_mux>;
+>> +						};
+>> +					};
+>> +				};
+>>  			};
+>>  
+>>  			ocotp: ocotp-ctrl@30350000 {
+>> @@ -709,6 +738,23 @@
+>>  				status = "disabled";
+>>  			};
+>>  
+>> +			csi: csi@30710000 {
+>> +				compatible = "fsl,imx7-csi";
+>> +				reg = <0x30710000 0x10000>;
+>> +				interrupts = <GIC_SPI 7 
+>> IRQ_TYPE_LEVEL_HIGH>;
+>> +				clocks = <&clks IMX7D_CLK_DUMMY>,
+>> +					 <&clks 
+>> IMX7D_CSI_MCLK_ROOT_CLK>,
+>> +					 <&clks IMX7D_CLK_DUMMY>;
+>> +				clock-names = "axi", "mclk", 
+>> "dcic";
+>> +				status = "disabled";
+>> +
+>> +				port {
+>> +					csi_from_csi_mux: endpoint 
+>> {
+>> +						remote-endpoint = 
+>> <&csi_mux_to_csi>;
+>> +					};
+>> +				};
+>> +			};
+>> +
+>>  			lcdif: lcdif@30730000 {
+>>  				compatible = "fsl,imx7d-lcdif", 
+>>  "fsl,imx28-lcdif";
+>>  				reg = <0x30730000 0x10000>;
+>> @@ -718,6 +764,35 @@
+>>  				clock-names = "pix", "axi";
+>>  				status = "disabled";
+>>  			};
+>> +
+>> +			mipi_csi: mipi-csi@30750000 {
+>> +				compatible = "fsl,imx7-mipi-csi2";
+>> +				reg = <0x30750000 0x10000>;
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +				interrupts = <GIC_SPI 25 
+>> IRQ_TYPE_LEVEL_HIGH>;
+>> +				clocks = <&clks 
+>> IMX7D_IPG_ROOT_CLK>,
+>> +					 <&clks 
+>> IMX7D_MIPI_CSI_ROOT_CLK>,
+>> +					 <&clks 
+>> IMX7D_MIPI_DPHY_ROOT_CLK>;
+>> +				clock-names = "pclk", "wrap", 
+>> "phy";
+>> +				power-domains = <&pgc_mipi_phy>;
+>> +				phy-supply = <&reg_1p0d>;
+>> +				resets = <&src 
+>> IMX7_RESET_MIPI_PHY_MRST>;
+>> +				reset-names = "mrst";
+>> +				status = "disabled";
+>> +
+>> +				port@0 {
+>> +					reg = <0>;
+>> +				};
+>> +
+>> +				port@1 {
+>> +					reg = <1>;
+>> +
+>> +					mipi_vc0_to_csi_mux: 
+>> endpoint {
+>> +						remote-endpoint = 
+>> <&csi_mux_from_mipi_vc0>;
+>> +					};
+>> +				};
+>> +			};
+>>  		};
+>>  
+>>  		aips3: aips-bus@30800000 {
