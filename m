@@ -1,62 +1,43 @@
-Return-Path: <SRS0=HVR0=S2=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V5 8/9] arm64: dts: renesas: r8a774c0-cat874: Enable USB3.0 host/peripheral device node
-Date: Wed, 24 Apr 2019 10:22:22 +0100
-Message-Id: <1556097743-12717-9-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1556097743-12717-1-git-send-email-biju.das@bp.renesas.com>
-References: <1556097743-12717-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=qFGJ=SG=gmail.com=thierry.reding@kernel.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH 6/8] arm64: tegra: jetson-tx1: Move PLL power supplies to XUSB pad controller
+Date: Thu,  4 Apr 2019 13:25:09 +0200
+Message-Id: <20190404112511.28118-6-thierry.reding@gmail.com>
+In-Reply-To: <20190404112511.28118-1-thierry.reding@gmail.com>
+References: <20190404112511.28118-1-thierry.reding@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch enables USB3.0 host/peripheral device node for r8a774c0
-cat874 board.
+From: Thierry Reding <treding@nvidia.com>
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-V4-->V5
-  * No change
-V3-->V4
-  * No change
-V2-->V3
-  * No change
-V1-->V2
-  * No change
----
- arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+The XUSB pad controller is responsible for supplying power to the PLLs
+used to drive the various USB, PCI and SATA pads. Move the PLL power
+supplies from the PCIe and XUSB controllers to the XUSB pad controller
+to make sure they are available when needed.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-index 013a48c..b9ae7db 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-@@ -134,6 +134,11 @@
- 		function = "sdhi0";
- 		power-source = <1800>;
- 	};
-+
-+	usb30_pins: usb30 {
-+		groups = "usb30", "usb30_id";
-+		function = "usb30";
-+	};
- };
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+index 95e890d8a119..a7dc319214a4 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+@@ -1352,6 +1352,11 @@
+ 	padctl@7009f000 {
+ 		status = "okay";
  
- &rwdt {
-@@ -166,3 +171,15 @@
- 	renesas,no-otg-pins;
- 	status = "okay";
- };
++		avdd-pll-utmip-supply = <&vdd_1v8>;
++		avdd-pll-uerefe-supply = <&avdd_1v05_pll>;
++		dvdd-pex-pll-supply = <&vdd_pex_1v05>;
++		hvdd-pex-pll-e-supply = <&vdd_1v8>;
 +
-+&usb3_peri0 {
-+	companion = <&xhci0>;
-+	status = "okay";
-+};
-+
-+&xhci0 {
-+	pinctrl-0 = <&usb30_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
+ 		pads {
+ 			usb2 {
+ 				status = "okay";
 -- 
-2.7.4
+2.21.0
