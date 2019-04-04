@@ -1,72 +1,66 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Using device tree overlays in Linux
-Date: Thu, 4 Apr 2019 01:50:20 +0000
-Message-ID: <71fb0ff289e84c55bd92ecd96bc9aa76@svr-chch-ex1.atlnz.lc>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH=5d_arm64=3a_dts=3a_rockchip=3a_eMMC_additi?=
+ =?UTF-8?B?b25zIGZvciByazMzMjgtcm9jLWNj44CQ6K+35rOo5oSP77yM6YKu5Lu255SxbGlu?=
+ =?UTF-8?Q?ux-rockchip-bounces+shawn=2elin=3drock-chips=2ecom=40lists=2einfr?=
+ =?UTF-8?B?YWRlYWQub3Jn5Luj5Y+R44CR?=
+Date: Thu, 4 Apr 2019 09:54:25 +0800
+Message-ID: <1c00cc1e-fbe4-ad3b-fb9a-877284322f04@rock-chips.com>
+References: <20190403215051.29536-1-papadakospan@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190403215051.29536-1-papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: "Leonidas P. Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,=0A=
-=0A=
-I'm implementing support for some modular Linux based systems using =0A=
-device tree overlays. The code is working but it seems a little more =0A=
-fiddly that than it should be so I'm wondering if I'm doing it right.=0A=
-=0A=
-An example of what I'm doing is=0A=
-=0A=
-=0A=
-arch/arm/boot/dts/Makefile:=0A=
-DTC_FLAGS_myboard +=3D -@=0A=
-=0A=
-drivers/foo/Makefile:=0A=
-obj-y +=3D myplugin.dtb.o=0A=
-obj-y +=3D mydriver.o=0A=
-=0A=
-drivers/foo/myplugin.dts:=0A=
-/dts-v1/;=0A=
-/plugin/;=0A=
-/{=0A=
-	fragment@0 {=0A=
-		target =3D <&i2c0>;=0A=
-		__overlay__ {=0A=
-			gpio@74 {=0A=
-				compatible =3D "nxp,pca9539";=0A=
-				reg =3D <0x74>=0A=
-			};=0A=
-		};=0A=
-	};=0A=
-};=0A=
-=0A=
-drivers/foo/mydriver.c:=0A=
-extern uint8_t __dtb_myplugin_begin[];=0A=
-extern uint8_t __dtb_myplugin_end[];=0A=
-=0A=
-int mydriver_probe(struct platform_device *pdev)=0A=
-{=0A=
-	u32 size =3D __dtb_myplugin_end - __dtb_myplugin_begin;=0A=
-	int overlay_id;=0A=
-	int ret;=0A=
-	=0A=
-	ret =3D of_overlay_fdt_apply(__dtb_myplugin_begin,=0A=
-				   size, &overlay_id);=0A=
-	return ret;=0A=
-}=0A=
-=0A=
-=0A=
-The first issue is that I need to add -@ to the DTC_FLAGS for my board =0A=
-dtb. I kind of understand that I only need -@ if my overlay targets =0A=
-something symbolic so I might not need it but I was surprised that there =
-=0A=
-wasn't a Kconfig option that makes this happen automatically.=0A=
-=0A=
-externing things in C files makes checkpatch.pl complain. I see the =0A=
-of/unittests.c and rcar_du_of.c hide this with a macro. I was again =0A=
-surprised that there wasn't a common macro to declare these.=0A=
-=0A=
-=0A=
+On 2019/4/4 5:50, Leonidas P. Papadakos wrote:
+> The eMMC 5.x that Libre Computer provide for their boards supports HS200 mode.
+> The support is already included in the dts for their newest board:
+> 
+> La Frite (AML-S805X-AC)
+> dts: arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts
+> 
+> That same eMMC is supported in the ROC-RK3328-CC:
+> https://www.loverpi.com/products/libre-computer-board-emmc-5-x-module
+> 
+> This increases the speed of the eMMC significantly.
+> 
+> Signed-off-by: Leonidas P. Papadakos <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>   arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+> index c213ad74d..c3cf56107 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+> @@ -122,6 +122,10 @@
+>   &emmc {
+>   	bus-width = <8>;
+>   	cap-mmc-highspeed;
+> +	disable-wp;
+
+disable-wp isn't needed.
+
+> +	max-frequency = <200000000>;
+
+AFAIK, the 200Mhz eMMC SI for rk3328 is not so good for MP,
+so I suggest you to limit it to 150MHz.:)
+
+> +	mmc-ddr-1_8v;
+> +	mmc-hs200-1_8v;
+>   	non-removable;
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
+> 
