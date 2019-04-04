@@ -1,88 +1,76 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: [RESEND][PATCH 1/3] arm64: dts: hi3660: Add dma to uart nodes
-Date: Thu,  4 Apr 2019 01:16:26 -0700
-Message-ID: <1554365788-25610-2-git-send-email-john.stultz@linaro.org>
-References: <1554365788-25610-1-git-send-email-john.stultz@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1554365788-25610-1-git-send-email-john.stultz@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: lkml <linux-kernel@vger.kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ryan Grachek <ryan@edited.us>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Tanglei Han <hantanglei@huawei.com>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-arm-kernel@lists.infradead.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "dt-bindings: sound: rockchip: add compatible for rk3308/px30" to the asoc tree
+Date: Thu,  4 Apr 2019 15:16:43 +0700 (+07)
+Message-ID: <20190404081643.E1230441D3E@finisterre.ee.mobilebroadband>
+References: <1554349995-23944-1-git-send-email-sugar.zhang@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1554349995-23944-1-git-send-email-sugar.zhang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sugar Zhang <sugar.zhang@rock-chips.com>
+Cc: Mark Brown <broonie@kernel.org>, heiko@sntech.debroonie@kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.orgalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Try to add DMA support to the uart nodes following
-the assignments made in the dts from the victoria vendor kernel
-here:
-https://consumer.huawei.com/en/opensource/detail/?siteCode=worldwide&keywords=p10&fileType=openSourceSoftware&pageSize=10&curPage=1
+The patch
 
-Cc: Tanglei Han <hantanglei@huawei.com>
-Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
-Cc: Ryan Grachek <ryan@edited.us>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Wei Xu <xuwei5@hisilicon.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
-v3:
-* Remove dma enablment on uart0 which would use reserved channel 0
----
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+   dt-bindings: sound: rockchip: add compatible for rk3308/px30
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index 1734675..37a997a 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -484,6 +484,8 @@
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xfdf00000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-+			dma-names = "rx", "tx";
-+			dmas =  <&dma0 2 &dma0 3>;
- 			clocks = <&crg_ctrl HI3660_CLK_GATE_UART1>,
- 				 <&crg_ctrl HI3660_CLK_GATE_UART1>;
- 			clock-names = "uartclk", "apb_pclk";
-@@ -496,6 +498,8 @@
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xfdf03000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-+			dma-names = "rx", "tx";
-+			dmas =  <&dma0 4 &dma0 5>;
- 			clocks = <&crg_ctrl HI3660_CLK_GATE_UART2>,
- 				 <&crg_ctrl HI3660_PCLK>;
- 			clock-names = "uartclk", "apb_pclk";
-@@ -520,6 +524,8 @@
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xfdf01000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
-+			dma-names = "rx", "tx";
-+			dmas =  <&dma0 6 &dma0 7>;
- 			clocks = <&crg_ctrl HI3660_CLK_GATE_UART4>,
- 				 <&crg_ctrl HI3660_CLK_GATE_UART4>;
- 			clock-names = "uartclk", "apb_pclk";
-@@ -532,6 +538,8 @@
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xfdf05000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+			dma-names = "rx", "tx";
-+			dmas =  <&dma0 8 &dma0 9>;
- 			clocks = <&crg_ctrl HI3660_CLK_GATE_UART5>,
- 				 <&crg_ctrl HI3660_CLK_GATE_UART5>;
- 			clock-names = "uartclk", "apb_pclk";
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 6bfff707985fff14fa79c851e53f9630e76a4860 Mon Sep 17 00:00:00 2001
+From: Sugar Zhang <sugar.zhang@rock-chips.com>
+Date: Thu, 4 Apr 2019 11:53:15 +0800
+Subject: [PATCH] dt-bindings: sound: rockchip: add compatible for rk3308/px30
+
+This patch adds bindings for rk3308/px30.
+
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/rockchip,pdm.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/rockchip,pdm.txt b/Documentation/devicetree/bindings/sound/rockchip,pdm.txt
+index 47f164fbd1d7..3e0eb7354ba6 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip,pdm.txt
++++ b/Documentation/devicetree/bindings/sound/rockchip,pdm.txt
+@@ -3,6 +3,8 @@
+ Required properties:
+ 
+ - compatible: "rockchip,pdm"
++  - "rockchip,px30-pdm"
++  - "rockchip,rk3308-pdm"
+ - reg: physical base address of the controller and length of memory mapped
+   region.
+ - dmas: DMA specifiers for rx dma. See the DMA client binding,
+@@ -12,6 +14,8 @@ Required properties:
+ - clock-names: should contain following:
+    - "pdm_hclk": clock for PDM BUS
+    - "pdm_clk" : clock for PDM controller
++- resets: a list of phandle + reset-specifer paris, one for each entry in reset-names.
++- reset-names: reset names, should include "pdm-m".
+ - pinctrl-names: Must contain a "default" entry.
+ - pinctrl-N: One property must exist for each entry in
+ 	     pinctrl-names. See ../pinctrl/pinctrl-bindings.txt
 -- 
-2.7.4
+2.20.1
