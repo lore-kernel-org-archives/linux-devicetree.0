@@ -1,31 +1,134 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v8 09/11] leds: max77650: add LEDs support
-Date: Thu, 4 Apr 2019 15:22:26 +0200
-Message-ID: <20190404132226.GA6190@xo-6d-61-c0.localdomain>
-References: <20190403090108.24788-1-brgl@bgdev.pl>
- <20190403090108.24788-10-brgl@bgdev.pl>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v5 09/13] usb: roles: Add usb role switch notifier.
+Date: Thu, 4 Apr 2019 16:26:02 +0300
+Message-ID: <20190404132602.GE21319@kuha.fi.intel.com>
+References: <20190329041409.70138-1-chenyu56@huawei.com>
+ <20190329041409.70138-10-chenyu56@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190403090108.24788-10-brgl@bgdev.pl>
+In-Reply-To: <20190329041409.70138-10-chenyu56@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Yu Chen <chenyu56@huawei.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 2019-04-03 11:01:06, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Fri, Mar 29, 2019 at 12:14:05PM +0800, Yu Chen wrote:
+> This patch adds notifier for drivers want to be informed of the usb role
+> switch.
 > 
-> This adds basic support for LEDs for the max77650 PMIC. The device has
-> three current sinks for driving LEDs.
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+
+> ---
+> v5:
+> * Split the patch into two patches, the first one introduces stubs for the
+> exiting functions, and this patch adds notifier functions.
+> ---
+> ---
+>  drivers/usb/roles/class.c | 20 +++++++++++++++++++-
+>  include/linux/usb/role.h  | 16 ++++++++++++++++
+>  2 files changed, 35 insertions(+), 1 deletion(-)
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+> index f45d8df5cfb8..e2caaa665d6e 100644
+> --- a/drivers/usb/roles/class.c
+> +++ b/drivers/usb/roles/class.c
+> @@ -20,6 +20,7 @@ struct usb_role_switch {
+>  	struct device dev;
+>  	struct mutex lock; /* device lock*/
+>  	enum usb_role role;
+> +	struct blocking_notifier_head nh;
+>  
+>  	/* From descriptor */
+>  	struct device *usb2_port;
+> @@ -49,8 +50,10 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
+>  	mutex_lock(&sw->lock);
+>  
+>  	ret = sw->set(sw->dev.parent, role);
+> -	if (!ret)
+> +	if (!ret) {
+>  		sw->role = role;
+> +		blocking_notifier_call_chain(&sw->nh, role, NULL);
+> +	}
+>  
+>  	mutex_unlock(&sw->lock);
+>  
+> @@ -58,6 +61,20 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
+>  }
+>  EXPORT_SYMBOL_GPL(usb_role_switch_set_role);
+>  
+> +int usb_role_switch_register_notifier(struct usb_role_switch *sw,
+> +				      struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_register(&sw->nh, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(usb_role_switch_register_notifier);
+> +
+> +int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
+> +					struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_unregister(&sw->nh, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(usb_role_switch_unregister_notifier);
+> +
+>  /**
+>   * usb_role_switch_get_role - Get the USB role for a switch
+>   * @sw: USB role switch
+> @@ -271,6 +288,7 @@ usb_role_switch_register(struct device *parent,
+>  		return ERR_PTR(-ENOMEM);
+>  
+>  	mutex_init(&sw->lock);
+> +	BLOCKING_INIT_NOTIFIER_HEAD(&sw->nh);
+>  
+>  	sw->allow_userspace_control = desc->allow_userspace_control;
+>  	sw->usb2_port = desc->usb2_port;
+> diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
+> index da2b9641b877..99d8b8e4fe61 100644
+> --- a/include/linux/usb/role.h
+> +++ b/include/linux/usb/role.h
+> @@ -53,6 +53,10 @@ struct usb_role_switch *
+>  usb_role_switch_register(struct device *parent,
+>  			 const struct usb_role_switch_desc *desc);
+>  void usb_role_switch_unregister(struct usb_role_switch *sw);
+> +int usb_role_switch_register_notifier(struct usb_role_switch *sw,
+> +				      struct notifier_block *nb);
+> +int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
+> +					struct notifier_block *nb);
+>  #else
+>  static inline int usb_role_switch_set_role(struct usb_role_switch *sw,
+>  		enum usb_role role)
+> @@ -80,6 +84,18 @@ usb_role_switch_register(struct device *parent,
+>  }
+>  
+>  static inline void usb_role_switch_unregister(struct usb_role_switch *sw) { }
+> +
+> +static int usb_role_switch_register_notifier(struct usb_role_switch *sw,
+> +				      struct notifier_block *nb)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
+> +					struct notifier_block *nb)
+> +{
+> +	return -ENODEV;
+> +}
+>  #endif
+>  
+>  #endif /* __LINUX_USB_ROLE_H */
+> -- 
+> 2.15.0-rc2
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
+thanks,
 
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+heikki
