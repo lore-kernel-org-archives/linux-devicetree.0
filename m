@@ -1,41 +1,46 @@
-From: Colin King <colin.king@canonical.com>
-Subject: [PATCH][V2] Documentation: bus: ti-sysc: fix spelling mistakes "multipe" and "interconnet"
-Date: Thu,  4 Apr 2019 12:16:57 +0100
-Message-ID: <20190404111657.21477-1-colin.king@canonical.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH V4 2/4] drivers/perf: imx_ddr: Add ddr performance
+ counter support
+Date: Thu, 4 Apr 2019 12:17:14 +0100
+Message-ID: <20190404111714.GA26392@fuggles.cambridge.arm.com>
+References: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
+ <1550253761-26841-2-git-send-email-Frank.Li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Faiz Abbas <faiz_abbas@ti.com>, devicetree@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1550253761-26841-2-git-send-email-Frank.Li@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Frank Li <frank.li@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi Frank,
 
-There is are a couple of spelling mistakes in the Documentation. Fix them.
+On Fri, Feb 15, 2019 at 06:03:11PM +0000, Frank Li wrote:
+> Add ddr performance monitor support for iMX8QXP
+> 
+> There are 4 counters for ddr perfomance events.
+> counter 0 is dedicated for cycles.
+> you choose any up to 3 no cycles events.
+> 
+> for example:
+> 
+> perf stat -a -e ddr0/read-access/,ddr0/write-access/,ddr0/precharge/ ls
+> perf stat -a -e ddr0/cycles/,ddr0/read-access/,ddr0/write-access/ ls
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
+Could you elaborate a bit on DDR_CAP_AXI_ID, please? Specifically, how
+does the COUNTER_DPCR1 register work and what happens if I specify two
+simultaneous events with different values in config1? I'm a little wary
+of taking raw user input and throwing it straight into a device register!
 
-V2: Add fix to interconnect, thanks to Mukesh Ojha for spotting that
-
----
- Documentation/devicetree/bindings/bus/ti-sysc.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/bus/ti-sysc.txt b/Documentation/devicetree/bindings/bus/ti-sysc.txt
-index 85a23f551f02..cf0e1d6d6f2e 100644
---- a/Documentation/devicetree/bindings/bus/ti-sysc.txt
-+++ b/Documentation/devicetree/bindings/bus/ti-sysc.txt
-@@ -131,6 +131,6 @@ using offsets from l4_cfg second segment (0x4a000000 + 0x80000 = 0x4a0ab000):
- 		};
- 	};
- 
--Note that other SoCs, such as am335x can have multipe child devices. On am335x
-+Note that other SoCs, such as am335x can have multiple child devices. On am335x
- there are two MUSB instances, two USB PHY instances, and a single CPPI41 DMA
--instance as children of a single interconnet target module.
-+instance as children of a single interconnect target module.
--- 
-2.20.1
+Will
