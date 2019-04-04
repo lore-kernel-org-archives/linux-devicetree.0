@@ -1,299 +1,122 @@
-From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-Subject: Re: [PATCH 5/8] drm: rcar-du: Implement interfaces to set clu and
- lut using drm data structures
-Date: Thu, 4 Apr 2019 18:40:17 +0300
-Message-ID: <20190404154017.GG3888@intel.com>
-References: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
- <1554297284-14009-6-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
- <20190404075047.GP2665@phenom.ffwll.local>
+From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Subject: Re: [PATCH] drm/panel: Rocktech jh057n00900: Add terminating
+ newlines to logging
+Date: Thu, 4 Apr 2019 17:48:50 +0200
+Message-ID: <20190404154850.GA19334@bogon.m.sigxcpu.org>
+References: <cover.1554114302.git.agx@sigxcpu.org>
+ <20190403161735.GN5238@ulmo>
+ <1ed5eb3af4df6b2dd1544c7b696e034ed5c94f06.camel@perches.com>
+ <20190404105359.GA8255@bogon.m.sigxcpu.org>
+ <da6f2344396555034cf2476c8338b0ce1c56e0a7.camel@perches.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190404075047.GP2665@phenom.ffwll.local>
+In-Reply-To: <da6f2344396555034cf2476c8338b0ce1c56e0a7.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: VenkataRajesh.Kalakodima@in.bosch.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, Harsha M M <harsha.manjulamallikarjun@in.bosch.com>
+To: Joe Perches <joe@perches.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Jagan Teki <jagan@amarulasolutions.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Johan Hovold <johan@kernel.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 09:50:47AM +0200, Daniel Vetter wrote:
-> On Wed, Apr 03, 2019 at 06:44:41PM +0530, VenkataRajesh.Kalakodima@in.bosch.com wrote:
-> > From: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
-> > 
-> > Impelement interfaces in cmm to set clu and lut tables using standard
-> > drm data structures as input.
-> > 
-> > Signed-off-by: Harsha M M <harsha.manjulamallikarjun@in.bosch.com>
-> > 
-> >       - Resolved checkpatch errors
-> >       - Resolved merge conflicts according to latest version
-> > 
-> > Signed-off-by: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
-> > ---
-> >  drivers/gpu/drm/rcar-du/rcar_du_cmm.c  | 256 +++++++++++++++++++++++++++++++--
-> >  drivers/gpu/drm/rcar-du/rcar_du_crtc.h |  11 ++
-> >  2 files changed, 254 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_cmm.c b/drivers/gpu/drm/rcar-du/rcar_du_cmm.c
-> > index 7983039..af4668f 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_du_cmm.c
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_cmm.c
-> > @@ -114,6 +114,8 @@ struct rcar_du_cmm_pending_event {
-> >  	struct drm_gem_object *gem_obj;
-> >  	struct rcar_du_cmm *du_cmm;
-> >  	struct rcar_du_cmm_file_priv *fpriv;
-> > +	unsigned int *lut_buf;
-> > +	unsigned int *clu_buf;
-> >  };
-> >  
-> >  struct cmm_module_t {
-> > @@ -238,14 +240,6 @@ static long long diff_timevals(struct timeval *start, struct timeval *end)
-> >  }
-> >  #endif
-> >  
-> > -static void du_cmm_clk(struct rcar_du_cmm *du_cmm, bool on)
-> > -{
-> > -	if (on)
-> > -		clk_prepare_enable(du_cmm->clock);
-> > -	else
-> > -		clk_disable_unprepare(du_cmm->clock);
-> > -}
-> > -
-> >  static void rcar_du_cmm_queue_lut_update(struct rcar_du_cmm_pending_event *p)
-> >  {
-> >  	mutex_lock(&cmm_event_lock);
-> > @@ -284,6 +278,223 @@ static void rcar_du_cmm_queue_clu_update(struct rcar_du_cmm_pending_event *p)
-> >  	drm_crtc_vblank_get(&p->du_cmm->rcrtc->crtc);
-> >  }
-> >  
-> > +static s64 rcar_du_cmm_multiply_coeff(unsigned int color, s64 coeff)
-> > +{
-> > +	s64 r_val;
-> > +	bool is_neg = false;
-> > +
-> > +	if (coeff & BIT_ULL(63)) {
-> > +		is_neg = true;
-> > +		coeff &= ~BIT_ULL(63);
-> > +	}
-> > +
-> > +	r_val = DIV_ROUND_CLOSEST(((s64)(color * coeff)), BIT_ULL(32));
-> > +
-> > +	if (is_neg)
-> > +		return -r_val;
-> > +
-> > +	return r_val;
-> > +}
-> > +
-> > +static unsigned int rcar_du_cmm_scalar_product(unsigned int r, unsigned int g,
-> > +					       unsigned int b, s64 coeff1,
-> > +					       s64 coeff2, s64 coeff3)
-> > +{
-> > +	s64 product;
-> > +
-> > +	product = rcar_du_cmm_multiply_coeff(r, coeff1)
-> > +			+ rcar_du_cmm_multiply_coeff(g, coeff2)
-> > +			+ rcar_du_cmm_multiply_coeff(b, coeff3);
-> > +
-> > +	return (unsigned int)clamp_val(product, 0, U8_MAX);
-> > +}
-> > +
-> > +#ifdef DEBUG_PROCE_TIME
-> > +static long long diff_timevals(struct timeval *start, struct timeval *end)
-> > +{
-> > +	return (end->tv_sec * 1000000LL + end->tv_usec) -
-> > +		(start->tv_sec * 1000000LL + start->tv_usec);
-> > +}
-> > +#endif
-> > +
-> > +void *rcar_du_cmm_alloc_lut(void *cmm_handle)
-> > +{
-> > +	struct rcar_du_cmm_pending_event *p;
-> > +
-> > +	if (!cmm_handle)
-> > +		return NULL;
-> > +
-> > +	p = kzalloc(sizeof(*p), GFP_KERNEL);
-> > +	if (!p)
-> > +		return NULL;
-> > +
-> > +	p->gem_obj = NULL;
-> > +	p->event = CMM_EVENT_LUT_DONE;
-> > +	p->stat = QUE_STAT_PENDING;
-> > +	p->callback_data = 0;
-> > +	p->du_cmm = cmm_handle;
-> > +	p->fpriv = NULL;
-> > +	p->lut_buf = kmalloc(CMM_LUT_NUM * 4, GFP_KERNEL);
-> > +	if (!p->lut_buf) {
-> > +		kfree(p);
-> > +		return NULL;
-> > +	}
-> > +
-> > +	return p;
-> > +}
-> > +
-> > +void rcar_du_cmm_free_lut(void *lut_handle)
-> > +{
-> > +	struct rcar_du_cmm_pending_event *p =
-> > +			(struct rcar_du_cmm_pending_event *)lut_handle;
-> > +
-> > +	kfree(p->lut_buf);
-> > +	kfree(p);
-> > +}
-> > +
-> > +int rcar_du_cmm_lut_valid(unsigned int lut_length)
-> > +{
-> > +	return (lut_length == CMM_LUT_NUM) ? 0 : -EINVAL;
-> > +}
-> > +
-> > +void rcar_du_cmm_update_lut_and_free(void *lut_handle,
-> > +				     struct drm_color_lut *lut,
-> > +				     unsigned int lut_length)
-> > +{
-> > +	struct rcar_du_cmm_pending_event *p =
-> > +			(struct rcar_du_cmm_pending_event *)lut_handle;
-> > +	unsigned int color;
-> > +
-> > +	if (!p)
-> > +		return;
-> > +
-> > +	if (rcar_du_cmm_lut_valid(lut_length))
-> > +		return;
-> > +
-> > +	/* Convert drm_color_lut to the format handled by hardware */
-> > +	for (color = 0; color < lut_length; color++) {
-> > +		p->lut_buf[color] = 0;
-> > +		p->lut_buf[color] |= drm_color_lut_extract(lut[color].red, 8)
-> > +					<< 16;
-> > +		p->lut_buf[color] |= drm_color_lut_extract(lut[color].green, 8)
-> > +					<< 8;
-> > +		p->lut_buf[color] |= drm_color_lut_extract(lut[color].blue, 8);
-> > +	}
-> > +	rcar_du_cmm_queue_lut_update(p);
-> > +}
-> > +
-> > +void *rcar_du_cmm_alloc_clu(void *cmm_handle)
-> > +{
-> > +	struct rcar_du_cmm_pending_event *p;
-> > +
-> > +	if (!cmm_handle)
-> > +		return NULL;
-> > +
-> > +	p = kzalloc(sizeof(*p), GFP_KERNEL);
-> > +	if (!p)
-> > +		return NULL;
-> > +
-> > +	p->gem_obj = NULL;
-> > +	p->event = CMM_EVENT_CLU_DONE;
-> > +	p->stat = QUE_STAT_PENDING;
-> > +	p->callback_data = 0;
-> > +	p->du_cmm = cmm_handle;
-> > +	p->fpriv = NULL;
-> > +	p->clu_buf = kmalloc(CMM_CLU_NUM * 4, GFP_KERNEL);
-> > +	if (!p->clu_buf) {
-> > +		kfree(p);
-> > +		return NULL;
-> > +	}
-> > +
-> > +	return p;
-> > +}
-> > +
-> > +void rcar_du_cmm_free_clu(void *clu_handle)
-> > +{
-> > +	struct rcar_du_cmm_pending_event *p =
-> > +			(struct rcar_du_cmm_pending_event *)clu_handle;
-> > +
-> > +	kfree(p->clu_buf);
-> > +	kfree(p);
-> > +}
-> > +
-> > +void rcar_du_cmm_update_clu_and_free(void *clu_handle,
-> > +				     struct drm_color_ctm *ctm)
-> > +{
-> > +	struct rcar_du_cmm_pending_event *p =
-> > +			(struct rcar_du_cmm_pending_event *)clu_handle;
-> > +	unsigned int r_loop;
-> > +	unsigned int g_loop;
-> > +	unsigned int b_loop;
-> > +	unsigned int step_size;
-> > +	unsigned int step_fraction;
-> > +	unsigned int clu_index = 0;
-> > +
-> > +	if (!p)
-> > +		return;
-> > +
-> > +	step_size = U8_MAX / (CMM_CLU_SAMPLES - 1);
-> > +	step_fraction = U8_MAX % (CMM_CLU_SAMPLES - 1);
-> > +
-> > +	/*Update clu table*/
-> > +	for (b_loop = 0; b_loop < CMM_CLU_SAMPLES; b_loop++) {
-> > +		unsigned int b;
-> > +
-> > +		b = (b_loop * step_size) +
-> > +		    DIV_ROUND_CLOSEST((b_loop * step_fraction),
-> > +				      (CMM_CLU_SAMPLES - 1));
-> > +
-> > +		for (g_loop = 0; g_loop < CMM_CLU_SAMPLES; g_loop++) {
-> > +			unsigned int g;
-> > +
-> > +			g = (g_loop * step_size) +
-> > +			    DIV_ROUND_CLOSEST((g_loop * step_fraction),
-> > +					      (CMM_CLU_SAMPLES - 1));
-> > +
-> > +			for (r_loop = 0; r_loop < CMM_CLU_SAMPLES; r_loop++) {
-> > +				unsigned int r;
-> > +				unsigned int r_val;
-> > +				unsigned int g_val;
-> > +				unsigned int b_val;
-> > +
-> > +				r = (r_loop * step_size) +
-> > +				    DIV_ROUND_CLOSEST((r_loop * step_fraction),
-> > +						      (CMM_CLU_SAMPLES - 1));
-> > +
-> > +				p->clu_buf[clu_index] = 0;
-> > +
-> > +				r_val =	rcar_du_cmm_scalar_product
-> > +						(r, g, b,
-> > +						 ctm->matrix[0], ctm->matrix[1],
-> > +						 ctm->matrix[2]);
-> > +
-> > +				g_val =	rcar_du_cmm_scalar_product
-> > +						(r, g, b,
-> > +						 ctm->matrix[3], ctm->matrix[4],
-> > +						 ctm->matrix[5]);
-> > +
-> > +				b_val =	rcar_du_cmm_scalar_product
-> > +						(r, g, b,
-> > +						 ctm->matrix[6], ctm->matrix[7],
-> > +						 ctm->matrix[8]);
-> > +
-> > +				p->clu_buf[clu_index++] = (r_val << 16) |
-> > +							  (g_val << 8) | b_val;
-> > +			}
-> > +		}
-> > +	}
-> > +
-> > +	rcar_du_cmm_queue_clu_update(p);
-> > +}
+Hi Joe,
+On Thu, Apr 04, 2019 at 08:06:09AM -0700, Joe Perches wrote:
+> These were missing '\n' terminations, add them.
 > 
-> Just quick drive-by: I think there's some interested (definitely from
-> intel, I pinged the relevant people from our team) to expose a 3D LUT
-> directly to userspace. I'm not sure whether we can do both 3D-LUT and
-> color matrix, and I'm also not sure whether remapping the ctm to a 3d-lut
-> is the best thing to do. Otoh adding new uapi is always a bunch more work.
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> index 158a6d548068..d88ea8da2ec2 100644
+> --- a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> +++ b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> @@ -123,7 +123,7 @@ static int jh057n_init_sequence(struct jh057n *ctx)
+>  
+>  	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+>  	if (ret < 0) {
+> -		DRM_DEV_ERROR(dev, "Failed to exit sleep mode");
+> +		DRM_DEV_ERROR(dev, "Failed to exit sleep mode\n");
+>  		return ret;
+>  	}
+>  	/* Panel is operational 120 msec after reset */
+> @@ -132,7 +132,7 @@ static int jh057n_init_sequence(struct jh057n *ctx)
+>  	if (ret)
+>  		return ret;
+>  
+> -	DRM_DEV_DEBUG_DRIVER(dev, "Panel init sequence done");
+> +	DRM_DEV_DEBUG_DRIVER(dev, "Panel init sequence done\n");
+>  	return 0;
+>  }
+>  
+> @@ -172,7 +172,7 @@ static int jh057n_prepare(struct drm_panel *panel)
+>  	if (ctx->prepared)
+>  		return 0;
+>  
+> -	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Resetting the panel.");
+> +	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Resetting the panel\n");
+>  	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+>  	usleep_range(20, 40);
+>  	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
+> @@ -180,7 +180,8 @@ static int jh057n_prepare(struct drm_panel *panel)
+>  
+>  	ret = jh057n_init_sequence(ctx);
+>  	if (ret < 0) {
+> -		DRM_DEV_ERROR(ctx->dev, "Panel init sequence failed: %d", ret);
+> +		DRM_DEV_ERROR(ctx->dev, "Panel init sequence failed: %d\n",
+> +			      ret);
+>  		return ret;
+>  	}
+>  
+> @@ -212,7 +213,7 @@ static int jh057n_get_modes(struct drm_panel *panel)
+>  
+>  	mode = drm_mode_duplicate(panel->drm, &default_mode);
+>  	if (!mode) {
+> -		DRM_DEV_ERROR(ctx->dev, "Failed to add mode %ux%u@%u",
+> +		DRM_DEV_ERROR(ctx->dev, "Failed to add mode %ux%u@%u\n",
+>  			      default_mode.hdisplay, default_mode.vdisplay,
+>  			      default_mode.vrefresh);
+>  		return -ENOMEM;
+> @@ -241,7 +242,7 @@ static int allpixelson_set(void *data, u64 val)
+>  	struct jh057n *ctx = data;
+>  	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+>  
+> -	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Setting all pixels on");
+> +	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Setting all pixels on\n");
+>  	dsi_generic_write_seq(dsi, ST7703_CMD_ALL_PIXEL_ON);
+>  	msleep(val * 1000);
+>  	/* Reset the panel to get video back */
+> @@ -290,7 +291,7 @@ static int jh057n_probe(struct mipi_dsi_device *dsi)
+>  
+>  	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+>  	if (IS_ERR(ctx->reset_gpio)) {
+> -		DRM_DEV_ERROR(dev, "cannot get reset gpio");
+> +		DRM_DEV_ERROR(dev, "cannot get reset gpio\n");
+>  		return PTR_ERR(ctx->reset_gpio);
+>  	}
+>  
+> @@ -315,12 +316,12 @@ static int jh057n_probe(struct mipi_dsi_device *dsi)
+>  
+>  	ret = mipi_dsi_attach(dsi);
+>  	if (ret < 0) {
+> -		DRM_DEV_ERROR(dev, "mipi_dsi_attach failed. Is host ready?");
+> +		DRM_DEV_ERROR(dev, "mipi_dsi_attach failed. Is host ready?\n");
+>  		drm_panel_remove(&ctx->panel);
+>  		return ret;
+>  	}
+>  
+> -	DRM_DEV_INFO(dev, "%ux%u@%u %ubpp dsi %udl - ready",
+> +	DRM_DEV_INFO(dev, "%ux%u@%u %ubpp dsi %udl - ready\n",
+>  		     default_mode.hdisplay, default_mode.vdisplay,
+>  		     default_mode.vrefresh,
+>  		     mipi_dsi_pixel_format_to_bpp(dsi->format), dsi->lanes);
+> 
 
-We're already thinking about extending the uapi a bit, so I
-don't think including a 3D LUT in there would be too hard.
+Reviewed-By: Guido Günther <agx@sigxcpu.org>
 
-Couple of things we'd need to figure out:
-- is a single 3D LUT attachment point sufficient? On our hw I
-  believe the 3D LUT sits after the gamma LUT in the pipeline
-- is a cube sufficient or would some hardware have different
-  number of entries for each dimension (not sure why that would be)?
-- need to agree in which order the entries would be stored in the
-  blob
-- and of course the big question: is anyone going to work on
-  userspace that would make use of this?
+Thanks,
+ -- Guido
 
--- 
-Ville Syrjälä
-Intel
+P.S.: The cc: list is huge, is there a reason for going way past what
+get_maintainers puts out for this patch?
