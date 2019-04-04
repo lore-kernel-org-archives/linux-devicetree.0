@@ -1,46 +1,49 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 2/3] usb: musb: jz4740: Let the platform probe the PHY
-Date: Thu,  4 Apr 2019 11:47:38 +0200
-Message-ID: <20190404094739.23503-2-paul@crapouillou.net>
-References: <20190404094739.23503-1-paul@crapouillou.net>
+From: Mukesh Ojha <mojha@codeaurora.org>
+Subject: Re: [PATCH] Documentation: bus: ti-sysc: fix spelling mistake
+ "multipe" -> "multiple"
+Date: Thu, 4 Apr 2019 14:24:23 +0530
+Message-ID: <b9ac4a18-1863-3f4b-b5b8-718ec05d9de2@codeaurora.org>
+References: <20190404081529.15394-1-colin.king@canonical.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190404094739.23503-1-paul@crapouillou.net>
+In-Reply-To: <20190404081529.15394-1-colin.king@canonical.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bin Liu <b-liu@ti.com>
-Cc: od@zcrc.me, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+To: Colin King <colin.king@canonical.com>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Faiz Abbas <faiz_abbas@ti.com>, devicetree@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-By registering a generic USB PHY from within the driver, we may shadow
-the USB PHY registered by the platform, which might be different.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+On 4/4/2019 1:45 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> There is a spelling mistake in the Documentation. Fix it.
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>   Documentation/devicetree/bindings/bus/ti-sysc.txt | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/bus/ti-sysc.txt b/Documentation/devicetree/bindings/bus/ti-sysc.txt
+> index 85a23f551f02..8eec4c384000 100644
+> --- a/Documentation/devicetree/bindings/bus/ti-sysc.txt
+> +++ b/Documentation/devicetree/bindings/bus/ti-sysc.txt
+> @@ -131,6 +131,6 @@ using offsets from l4_cfg second segment (0x4a000000 + 0x80000 = 0x4a0ab000):
+>   		};
+>   	};
+>   
+> -Note that other SoCs, such as am335x can have multipe child devices. On am335x
+> +Note that other SoCs, such as am335x can have multiple child devices. On am335x
 
-Notes:
-    v2: No change
+>   there are two MUSB instances, two USB PHY instances, and a single CPPI41 DMA
+>   instance as children of a single interconnet target module.
 
- drivers/usb/musb/jz4740.c | 2 --
- 1 file changed, 2 deletions(-)
+s/interconnet/interconnect
 
-diff --git a/drivers/usb/musb/jz4740.c b/drivers/usb/musb/jz4740.c
-index a60627bf7be3..ad35e09f90bd 100644
---- a/drivers/usb/musb/jz4740.c
-+++ b/drivers/usb/musb/jz4740.c
-@@ -74,7 +74,6 @@ static struct musb_hdrc_platform_data jz4740_musb_platform_data = {
- 
- static int jz4740_musb_init(struct musb *musb)
- {
--	usb_phy_generic_register();
- 	musb->xceiv = usb_get_phy(USB_PHY_TYPE_USB2);
- 	if (IS_ERR(musb->xceiv)) {
- 		pr_err("HS UDC: no transceiver configured\n");
-@@ -183,7 +182,6 @@ static int jz4740_remove(struct platform_device *pdev)
- 	struct jz4740_glue	*glue = platform_get_drvdata(pdev);
- 
- 	platform_device_unregister(glue->musb);
--	usb_phy_generic_unregister(pdev);
- 	clk_disable_unprepare(glue->clk);
- 
- 	return 0;
--- 
-2.11.0
+fix this as well.
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+
+Cheers,
+-Mukesh
