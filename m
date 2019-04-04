@@ -1,46 +1,47 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH V4 2/4] drivers/perf: imx_ddr: Add ddr performance
- counter support
-Date: Thu, 4 Apr 2019 12:17:14 +0100
-Message-ID: <20190404111714.GA26392@fuggles.cambridge.arm.com>
-References: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
- <1550253761-26841-2-git-send-email-Frank.Li@nxp.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/6] ASoC: meson: add g12a SoC family support
+Date: Thu,  4 Apr 2019 13:17:27 +0200
+Message-ID: <20190404111733.28705-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1550253761-26841-2-git-send-email-Frank.Li@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Li <frank.li@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Maxime Jourdan <mjourdan@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+The Amlogic g12a SoC family audio subsystem derives from the one found
+in the axg SoC family.
 
-On Fri, Feb 15, 2019 at 06:03:11PM +0000, Frank Li wrote:
-> Add ddr performance monitor support for iMX8QXP
-> 
-> There are 4 counters for ddr perfomance events.
-> counter 0 is dedicated for cycles.
-> you choose any up to 3 no cycles events.
-> 
-> for example:
-> 
-> perf stat -a -e ddr0/read-access/,ddr0/write-access/,ddr0/precharge/ ls
-> perf stat -a -e ddr0/cycles/,ddr0/read-access/,ddr0/write-access/ ls
+To add support for the g12a in the existing elements, this patchset deals
+with following differences compared to the axg family:
+ * fifos must set an initial start address within the buffer.
+   The fifo pointer shall be reset to this address on startup.
+ * frddrs may now play on up to 3 output interfaces simultaneously.
+ * tdmout formatters need a different signal skew offset.
 
-Could you elaborate a bit on DDR_CAP_AXI_ID, please? Specifically, how
-does the COUNTER_DPCR1 register work and what happens if I specify two
-simultaneous events with different values in config1? I'm a little wary
-of taking raw user input and throwing it straight into a device register!
+Jerome Brunet (6):
+  ASoC: meson: add g12a compatibles
+  ASoC: meson: axg-fifo: add g12a support
+  ASoC: meson: axg-toddr: add g12a support
+  ASoC: meson: axg-frddr: add g12a support
+  ASoC: meson: axg-tdm-formatter: rework quirks settings
+  ASoC: meson: axg-tdmout: add g12a support
 
-Will
+ .../bindings/sound/amlogic,axg-fifo.txt       |   4 +-
+ .../bindings/sound/amlogic,axg-pdm.txt        |   3 +-
+ .../bindings/sound/amlogic,axg-spdifin.txt    |   3 +-
+ .../bindings/sound/amlogic,axg-spdifout.txt   |   3 +-
+ .../sound/amlogic,axg-tdm-formatters.txt      |   4 +-
+ sound/soc/meson/axg-fifo.c                    |  34 ++++-
+ sound/soc/meson/axg-fifo.h                    |   2 +
+ sound/soc/meson/axg-frddr.c                   | 143 +++++++++++++++++-
+ sound/soc/meson/axg-tdm-formatter.c           |   6 +-
+ sound/soc/meson/axg-tdm-formatter.h           |  11 +-
+ sound/soc/meson/axg-tdmin.c                   |  16 +-
+ sound/soc/meson/axg-tdmout.c                  |  29 +++-
+ sound/soc/meson/axg-toddr.c                   |  53 +++++++
+ 13 files changed, 286 insertions(+), 25 deletions(-)
+
+-- 
+2.20.1
