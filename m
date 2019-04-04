@@ -1,42 +1,55 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RESEND v4 1/4] input: sun4i-a10-lradc-keys:
- Add support for A83T
-Date: Thu, 4 Apr 2019 11:49:15 -0700
-Message-ID: <20190404184915.GB116898@dtor-ws>
-References: <20190327023339.25975-1-megous@megous.com>
- <20190327023339.25975-2-megous@megous.com>
-Reply-To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH] drm/panel: Rocktech jh057n00900: Add terminating
+ newlines to logging
+Date: Thu, 04 Apr 2019 11:55:17 -0700
+Message-ID: <ab5f36952d2125f5ed9706aa58b64ab10fecf531.camel@perches.com>
+References: <cover.1554114302.git.agx@sigxcpu.org>
+         <20190403161735.GN5238@ulmo>
+         <1ed5eb3af4df6b2dd1544c7b696e034ed5c94f06.camel@perches.com>
+         <20190404105359.GA8255@bogon.m.sigxcpu.org>
+         <da6f2344396555034cf2476c8338b0ce1c56e0a7.camel@perches.com>
+         <20190404170040.GA23897@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDP6N55ZUYDRBL5DTHSQKGQEJQAHTOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190327023339.25975-2-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190404170040.GA23897@ravnborg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Jagan Teki <jagan@amarulasolutions.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Johan Hovold <johan@kernel.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.ke
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 03:33:36AM +0100, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
-> From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Thu, 2019-04-04 at 19:00 +0200, Sam Ravnborg wrote:
+> Hi Joe.
 > 
-> Allwinner A83T SoC has a low res adc like the one in Allwinner A10 SoC,
-> however, the A10 SoC's vref of lradc internally is divided by 2/3 and
-> the A83T SoC's vref of lradc internally is divided by 3/4, thus add
-> a hardware variant for it to be compatible with various devices.
+> On Thu, Apr 04, 2019 at 08:06:09AM -0700, Joe Perches wrote:
+> > These were missing '\n' terminations, add them.
+> > 
+> > Signed-off-by: Joe Perches <joe@perches.com>
+> > ---
+> >  drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c | 19 ++++++++++---------
+> >  1 file changed, 10 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> > index 158a6d548068..d88ea8da2ec2 100644
+> > --- a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> > +++ b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> > @@ -123,7 +123,7 @@ static int jh057n_init_sequence(struct jh057n *ctx)
+> >  
+> >  	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+> >  	if (ret < 0) {
+> > -		DRM_DEV_ERROR(dev, "Failed to exit sleep mode");
+> > +		DRM_DEV_ERROR(dev, "Failed to exit sleep mode\n");
 > 
-> Signed-off-by: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> I was under the impression that newlines was optional these days.
+> Should we always use them with logging?
 
-Applied, this and binding patch; the dts changes should go through other
-relevant trees I believe.
+Yes.
 
-Thanks.
+The general problem is KERN_CONT/pr_cont uses where interleaving
+is still possible from multiple threads.
 
--- 
-Dmitry
+> I did not find any obvious clues in linux/printk.h
+
+I'll see about adding something one day to the Documentation.
+Likely in coding-style.rst.
