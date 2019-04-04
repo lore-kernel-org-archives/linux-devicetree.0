@@ -1,105 +1,305 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 7/8] drm: rcar-du: update gamma and ctm properties in
- commit tail
-Date: Thu, 4 Apr 2019 13:19:23 +0300
-Message-ID: <20190404101923.GG5800@pendragon.ideasonboard.com>
-References: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
- <1554297284-14009-8-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v13 1/8] mfd: regulator: clk: split rohm-bd718x7.h
+Date: Thu, 4 Apr 2019 13:20:20 +0300
+Message-ID: <e935c9655c7732d94f8c20f8066d87bf53075615.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1554297284-14009-8-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: VenkataRajesh.Kalakodima@in.bosch.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Harsha M M <harsha.manjulamallikarjun@in.bosch.com>, linux-clk@vger.kernel.org
+In-Reply-To: <cover.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mazziesaccount@gmail.com
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.ro
 List-Id: devicetree@vger.kernel.org
 
-SGkgS2FsYWtvZGltYSwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gV2VkLCBBcHIgMDMs
-IDIwMTkgYXQgMDY6NDQ6NDNQTSArMDUzMCwgVmVua2F0YVJhamVzaC5LYWxha29kaW1hQGluLmJv
-c2NoLmNvbSB3cm90ZToKPiBGcm9tOiBrYWxha29kaW1hIHZlbmthdGEgcmFqZXNoIDx2ZW5rYXRh
-cmFqZXNoLmthbGFrb2RpbWFAaW4uYm9zY2guY29tPgo+IAo+IFVwZGF0ZSBnYW1tYSBhbmQgY3Rt
-IHByb3BlcnRpZXMgaWYgdGhlcmUgaXMgYSBjaGFuZ2UuCj4gCj4gU2lnbmVkLW9mZi1ieTogSGFy
-c2hhIE0gTSA8aGFyc2hhLm1hbmp1bGFtYWxsaWthcmp1bkBpbi5ib3NjaC5jb20+Cj4gCj4gICAg
-LSBGaXggY29tcGlsYXRpb24gaXNzdWVzIHdoZW4gZm9yX2VhY2hfY3J0Y19pbl9zdGF0ZSBpcyBu
-b3QgZGVmaW5lZAo+ICAgIC0gUmVzb2x2ZWQgY2hlY2twYXRjaCBlcnJvcnMKPiAgICAtIFJlc29s
-dmVkIG1lcmdlIGNvbmZsaWN0cyBhY2NvcmRpbmcgdG8gbGF0ZXN0IHZlcnNpb24KPiAKPiBTaWdu
-ZWQtb2ZmLWJ5OiBrYWxha29kaW1hIHZlbmthdGEgcmFqZXNoIDx2ZW5rYXRhcmFqZXNoLmthbGFr
-b2RpbWFAaW4uYm9zY2guY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2Fy
-X2R1X2ttcy5jIHwgMjUgKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICBpbmNsdWRlL2RybS9k
-cm1fYXRvbWljLmggICAgICAgICAgICAgIHwgMjUgKysrKysrKysrKysrKysrKysrKysrKysrKwo+
-ICAyIGZpbGVzIGNoYW5nZWQsIDUwIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9rbXMuYyBiL2RyaXZlcnMvZ3B1L2RybS9yY2Fy
-LWR1L3JjYXJfZHVfa21zLmMKPiBpbmRleCBmMGJjN2NjLi40ZDlhMTljIDEwMDY0NAo+IC0tLSBh
-L2RyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfa21zLmMKPiArKysgYi9kcml2ZXJzL2dw
-dS9kcm0vcmNhci1kdS9yY2FyX2R1X2ttcy5jCj4gQEAgLTI0Niw2ICsyNDYsMTAgQEAgc3RhdGlj
-IGludCByY2FyX2R1X2F0b21pY19jaGVjayhzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAo+ICBzdGF0
-aWMgdm9pZCByY2FyX2R1X2F0b21pY19jb21taXRfdGFpbChzdHJ1Y3QgZHJtX2F0b21pY19zdGF0
-ZSAqb2xkX3N0YXRlKQo+ICB7Cj4gIAlzdHJ1Y3QgZHJtX2RldmljZSAqZGV2ID0gb2xkX3N0YXRl
-LT5kZXY7Cj4gKwlzdHJ1Y3QgZHJtX2NydGMgKmNydGM7Cj4gKwlzdHJ1Y3QgZHJtX2NydGNfc3Rh
-dGUgKmNydGNfc3RhdGU7Cj4gKwlzdHJ1Y3QgcmNhcl9kdV9jcnRjICpyY3J0YzsKPiArCWludCBp
-Owo+ICAKPiAgCS8qIEFwcGx5IHRoZSBhdG9taWMgdXBkYXRlLiAqLwo+ICAJZHJtX2F0b21pY19o
-ZWxwZXJfY29tbWl0X21vZGVzZXRfZGlzYWJsZXMoZGV2LCBvbGRfc3RhdGUpOwo+IEBAIC0yNTMs
-NiArMjU3LDI3IEBAIHN0YXRpYyB2b2lkIHJjYXJfZHVfYXRvbWljX2NvbW1pdF90YWlsKHN0cnVj
-dCBkcm1fYXRvbWljX3N0YXRlICpvbGRfc3RhdGUpCj4gIAkJCQkJRFJNX1BMQU5FX0NPTU1JVF9B
-Q1RJVkVfT05MWSk7Cj4gIAlkcm1fYXRvbWljX2hlbHBlcl9jb21taXRfbW9kZXNldF9lbmFibGVz
-KGRldiwgb2xkX3N0YXRlKTsKPiAgCj4gKwkvKiBVcGRhdGUgZ2FtbWEgYW5kIGN0bSBwcm9wZXJ0
-aWVzIGZvciBhbGwgY3J0YyBpbiBwcmVzZW50Cj4gKwkgKiBzdGF0ZS4gVXBkYXRlIGlzIGRvbmUg
-b25seSBpZiB0aGVyZSBpcyBhIGNoYW5nZQo+ICsJICovCj4gKwlmb3JfZWFjaF9jcnRjX2luX3N0
-YXRlKG9sZF9zdGF0ZSwgY3J0YywgY3J0Y19zdGF0ZSwgaSkgewo+ICsJCXJjcnRjID0gdG9fcmNh
-cl9jcnRjKGNydGMpOwo+ICsKPiArCQlpZiAocmNydGMtPmx1dF9oYW5kbGUpIHsKPiArCQkJcmNh
-cl9kdV9jbW1fdXBkYXRlX2x1dF9hbmRfZnJlZQo+ICsJCQkgIChyY3J0Yy0+bHV0X2hhbmRsZSwK
-PiArCQkJICAgKHN0cnVjdCBkcm1fY29sb3JfbHV0ICopY3J0Yy0+c3RhdGUtPmdhbW1hX2x1dC0+
-ZGF0YSwKPiArCQkJICAgKGNydGMtPnN0YXRlLT5nYW1tYV9sdXQtPmxlbmd0aCAvCj4gKwkJCSAg
-IHNpemVvZihzdHJ1Y3QgZHJtX2NvbG9yX2x1dCkpKTsKPiArCQkJcmNydGMtPmx1dF9oYW5kbGUg
-PSBOVUxMOwo+ICsJCX0KPiArCQlpZiAocmNydGMtPmNsdV9oYW5kbGUpIHsKPiArCQkJcmNhcl9k
-dV9jbW1fdXBkYXRlX2NsdV9hbmRfZnJlZQo+ICsJCQkgIChyY3J0Yy0+Y2x1X2hhbmRsZSwKPiAr
-CQkJICAgKHN0cnVjdCBkcm1fY29sb3JfY3RtICopY3J0Yy0+c3RhdGUtPmN0bS0+ZGF0YSk7Cj4g
-KwkJCXJjcnRjLT5jbHVfaGFuZGxlID0gTlVMTDsKPiArCQl9Cj4gKwl9Cj4gIAlkcm1fYXRvbWlj
-X2hlbHBlcl9jb21taXRfaHdfZG9uZShvbGRfc3RhdGUpOwo+ICAJZHJtX2F0b21pY19oZWxwZXJf
-d2FpdF9mb3JfZmxpcF9kb25lKGRldiwgb2xkX3N0YXRlKTsKCldlJ3JlIGluIHRoZSBwcm9jZXNz
-IG9mIHJld29ya2luZyB0aGUgY29tbWl0IHRhaWwgaGFuZGxlciwgc28gSSBleHBlY3QKbWFqb3Ig
-Y2hhbmdlcyB3aWxsIGJlIG5lZWRlZCBoZXJlLgoKPiAgCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUv
-ZHJtL2RybV9hdG9taWMuaCBiL2luY2x1ZGUvZHJtL2RybV9hdG9taWMuaAo+IGluZGV4IDFlNzEz
-MTUuLmQyMmNjZDggMTAwNjQ0Cj4gLS0tIGEvaW5jbHVkZS9kcm0vZHJtX2F0b21pYy5oCj4gKysr
-IGIvaW5jbHVkZS9kcm0vZHJtX2F0b21pYy5oCj4gQEAgLTY5Myw2ICs2OTMsMzEgQEAgdm9pZCBk
-cm1fc3RhdGVfZHVtcChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LCBzdHJ1Y3QgZHJtX3ByaW50ZXIg
-KnApOwo+ICAJCQkgICAgIChuZXdfY29ubmVjdG9yX3N0YXRlKSA9IChfX3N0YXRlKS0+Y29ubmVj
-dG9yc1tfX2ldLm5ld19zdGF0ZSwgMSkpCj4gIAo+ICAvKioKPiArICogZm9yX2VhY2hfY3J0Y19p
-bl9zdGF0ZSAtIGl0ZXJhdGUgb3ZlciBhbGwgY29ubmVjdG9ycyBpbiBhbiBhdG9taWMgdXBkYXRl
-Cj4gKyAqIEBfX3N0YXRlOiAmc3RydWN0IGRybV9hdG9taWNfc3RhdGUgcG9pbnRlcgo+ICsgKiBA
-Y3J0YzogJnN0cnVjdCBkcm1fY3J0YyBpdGVyYXRpb24gY3Vyc29yCj4gKyAqIEBjcnRjX3N0YXRl
-OiAmc3RydWN0IGRybV9jcnRjX3N0YXRlIGl0ZXJhdGlvbiBjdXJzb3IKPiArICogQF9faTogaW50
-IGl0ZXJhdGlvbiBjdXJzb3IsIGZvciBtYWNyby1pbnRlcm5hbCB1c2UKPiArICoKPiArICogVGhp
-cyBpdGVyYXRlcyBvdmVyIGFsbCBDUlRDcyBpbiBhbiBhdG9taWMgdXBkYXRlLiBOb3RlIHRoYXQg
-YmVmb3JlIHRoZQo+ICsgKiBzb2Z0d2FyZSBzdGF0ZSBpcyBjb21taXR0ZWQgKGJ5IGNhbGxpbmcg
-ZHJtX2F0b21pY19oZWxwZXJfc3dhcF9zdGF0ZSgpLCB0aGlzCj4gKyAqIHBvaW50cyB0byB0aGUg
-bmV3IHN0YXRlLCB3aGlsZSBhZnRlcndhcmRzIGl0IHBvaW50cyB0byB0aGUgb2xkIHN0YXRlLiBE
-dWUgdG8KPiArICogdGhpcyB0cmlja3kgY29uZnVzaW9uIHRoaXMgbWFjcm8gaXMgZGVwcmVjYXRl
-ZC4KPiArICoKPiArICogRklYTUU6Cj4gKyAqCj4gKyAqIFJlcGxhY2UgYWxsIHVzYWdlIG9mIHRo
-aXMgd2l0aCBvbmUgb2YgdGhlIGV4cGxpY2l0IGl0ZXJhdG9ycyBiZWxvdyBhbmQgdGhlbgo+ICsg
-KiByZW1vdmUgdGhpcyBtYWNyby4KClRoZW4gZG9uJ3QgYWRkIGl0IDotKSBJbiBnZW5lcmFsIHlv
-dSBzaG91bGQgbG9vayBhdCB0aGUgY29kZSB5b3Ugd2FudCB0bwp1cHN0cmVhbSwgdGhpcyBmZWVs
-cyBsaWtlIGl0IHdhcyBhIGJsaW5kIGNvcHkgZnJvbSBhIEJTUCB3aXRob3V0IGdpdmluZwppdCBt
-dWNoIGNvbnNpZGVyYXRpb24uCgo+ICsgKi8KPiArI2RlZmluZSBmb3JfZWFjaF9jcnRjX2luX3N0
-YXRlKF9fc3RhdGUsIGNydGMsIGNydGNfc3RhdGUsIF9faSkJXAo+ICsJZm9yICgoX19pKSA9IDA7
-CQkJCQkJXAo+ICsJICAgICAoKF9faSkgPCAoKF9fc3RhdGUpLT5kZXYtPm1vZGVfY29uZmlnLm51
-bV9jcnRjKSkgJiYJXAo+ICsJICAgICAoKGNydGMpID0gKChfX3N0YXRlKS0+Y3J0Y3NbX19pXS5w
-dHIpLAkJCVwKPiArCSAgICAgKGNydGNfc3RhdGUpID0gKChfX3N0YXRlKS0+Y3J0Y3NbX19pXS5z
-dGF0ZSksIDEpOwlcCj4gKwkgICAgIChfX2kpKyspCQkJCQkJXAo+ICsJCWZvcl9lYWNoX2lmKGNy
-dGNfc3RhdGUpCj4gKwo+ICsvKioKPiAgICogZm9yX2VhY2hfb2xkbmV3X2NydGNfaW5fc3RhdGUg
-LSBpdGVyYXRlIG92ZXIgYWxsIENSVENzIGluIGFuIGF0b21pYyB1cGRhdGUKPiAgICogQF9fc3Rh
-dGU6ICZzdHJ1Y3QgZHJtX2F0b21pY19zdGF0ZSBwb2ludGVyCj4gICAqIEBjcnRjOiAmc3RydWN0
-IGRybV9jcnRjIGl0ZXJhdGlvbiBjdXJzb3IKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFy
-dApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Split the bd718x7.h to ROHM common and bd718x7 specific parts
+so that we do not need to add same things in every new ROHM
+PMIC header. Please note that this change requires changes also
+in bd718x7 sub-device drivers for regulators and clk.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-by: Mark Brown <broonie@kernel.org>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/clk/clk-bd718x7.c             |  6 +++---
+ drivers/mfd/rohm-bd718x7.c            | 23 ++++++++++++-----------
+ drivers/regulator/bd718x7-regulator.c | 25 +++++++++++++------------
+ include/linux/mfd/rohm-bd718x7.h      | 22 ++++++++--------------
+ include/linux/mfd/rohm-generic.h      | 20 ++++++++++++++++++++
+ 5 files changed, 56 insertions(+), 40 deletions(-)
+ create mode 100644 include/linux/mfd/rohm-generic.h
+
+diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
+index 60422c72d142..461228ebf703 100644
+--- a/drivers/clk/clk-bd718x7.c
++++ b/drivers/clk/clk-bd718x7.c
+@@ -17,7 +17,7 @@ struct bd718xx_clk {
+ 	u8 reg;
+ 	u8 mask;
+ 	struct platform_device *pdev;
+-	struct bd718xx *mfd;
++	struct rohm_regmap_dev *mfd;
+ };
+ 
+ static int bd71837_clk_set(struct clk_hw *hw, int status)
+@@ -68,7 +68,7 @@ static int bd71837_clk_probe(struct platform_device *pdev)
+ 	int rval = -ENOMEM;
+ 	const char *parent_clk;
+ 	struct device *parent = pdev->dev.parent;
+-	struct bd718xx *mfd = dev_get_drvdata(parent);
++	struct rohm_regmap_dev *mfd = dev_get_drvdata(parent);
+ 	struct clk_init_data init = {
+ 		.name = "bd718xx-32k-out",
+ 		.ops = &bd71837_clk_ops,
+@@ -119,5 +119,5 @@ static struct platform_driver bd71837_clk = {
+ module_platform_driver(bd71837_clk);
+ 
+ MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
+-MODULE_DESCRIPTION("BD71837 chip clk driver");
++MODULE_DESCRIPTION("BD71837/BD71847 chip clk driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
+index a29d529a96f4..7beb444a57cb 100644
+--- a/drivers/mfd/rohm-bd718x7.c
++++ b/drivers/mfd/rohm-bd718x7.c
+@@ -98,18 +98,19 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
+ 		return -ENOMEM;
+ 
+ 	bd718xx->chip_irq = i2c->irq;
+-	bd718xx->chip_type = (unsigned int)(uintptr_t)
++	bd718xx->chip.chip_type = (unsigned int)(uintptr_t)
+ 				of_device_get_match_data(&i2c->dev);
+-	bd718xx->dev = &i2c->dev;
++	bd718xx->chip.dev = &i2c->dev;
+ 	dev_set_drvdata(&i2c->dev, bd718xx);
+ 
+-	bd718xx->regmap = devm_regmap_init_i2c(i2c, &bd718xx_regmap_config);
+-	if (IS_ERR(bd718xx->regmap)) {
++	bd718xx->chip.regmap = devm_regmap_init_i2c(i2c,
++						    &bd718xx_regmap_config);
++	if (IS_ERR(bd718xx->chip.regmap)) {
+ 		dev_err(&i2c->dev, "regmap initialization failed\n");
+-		return PTR_ERR(bd718xx->regmap);
++		return PTR_ERR(bd718xx->chip.regmap);
+ 	}
+ 
+-	ret = devm_regmap_add_irq_chip(&i2c->dev, bd718xx->regmap,
++	ret = devm_regmap_add_irq_chip(&i2c->dev, bd718xx->chip.regmap,
+ 				       bd718xx->chip_irq, IRQF_ONESHOT, 0,
+ 				       &bd718xx_irq_chip, &bd718xx->irq_data);
+ 	if (ret) {
+@@ -118,7 +119,7 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
+ 	}
+ 
+ 	/* Configure short press to 10 milliseconds */
+-	ret = regmap_update_bits(bd718xx->regmap,
++	ret = regmap_update_bits(bd718xx->chip.regmap,
+ 				 BD718XX_REG_PWRONCONFIG0,
+ 				 BD718XX_PWRBTN_PRESS_DURATION_MASK,
+ 				 BD718XX_PWRBTN_SHORT_PRESS_10MS);
+@@ -129,7 +130,7 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
+ 	}
+ 
+ 	/* Configure long press to 10 seconds */
+-	ret = regmap_update_bits(bd718xx->regmap,
++	ret = regmap_update_bits(bd718xx->chip.regmap,
+ 				 BD718XX_REG_PWRONCONFIG1,
+ 				 BD718XX_PWRBTN_PRESS_DURATION_MASK,
+ 				 BD718XX_PWRBTN_LONG_PRESS_10S);
+@@ -149,7 +150,7 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
+ 
+ 	button.irq = ret;
+ 
+-	ret = devm_mfd_add_devices(bd718xx->dev, PLATFORM_DEVID_AUTO,
++	ret = devm_mfd_add_devices(bd718xx->chip.dev, PLATFORM_DEVID_AUTO,
+ 				   bd718xx_mfd_cells,
+ 				   ARRAY_SIZE(bd718xx_mfd_cells), NULL, 0,
+ 				   regmap_irq_get_domain(bd718xx->irq_data));
+@@ -162,11 +163,11 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
+ static const struct of_device_id bd718xx_of_match[] = {
+ 	{
+ 		.compatible = "rohm,bd71837",
+-		.data = (void *)BD718XX_TYPE_BD71837,
++		.data = (void *)ROHM_CHIP_TYPE_BD71837,
+ 	},
+ 	{
+ 		.compatible = "rohm,bd71847",
+-		.data = (void *)BD718XX_TYPE_BD71847,
++		.data = (void *)ROHM_CHIP_TYPE_BD71847,
+ 	},
+ 	{ }
+ };
+diff --git a/drivers/regulator/bd718x7-regulator.c b/drivers/regulator/bd718x7-regulator.c
+index b2191be49670..1c8c8497ac0a 100644
+--- a/drivers/regulator/bd718x7-regulator.c
++++ b/drivers/regulator/bd718x7-regulator.c
+@@ -1152,12 +1152,12 @@ static int bd718xx_probe(struct platform_device *pdev)
+ {
+ 	struct bd718xx *mfd;
+ 	struct regulator_config config = { 0 };
+-	struct bd718xx_pmic_inits pmic_regulators[] = {
+-		[BD718XX_TYPE_BD71837] = {
++	struct bd718xx_pmic_inits pmic_regulators[ROHM_CHIP_TYPE_AMOUNT] = {
++		[ROHM_CHIP_TYPE_BD71837] = {
+ 			.r_datas = bd71837_regulators,
+ 			.r_amount = ARRAY_SIZE(bd71837_regulators),
+ 		},
+-		[BD718XX_TYPE_BD71847] = {
++		[ROHM_CHIP_TYPE_BD71847] = {
+ 			.r_datas = bd71847_regulators,
+ 			.r_amount = ARRAY_SIZE(bd71847_regulators),
+ 		},
+@@ -1173,15 +1173,15 @@ static int bd718xx_probe(struct platform_device *pdev)
+ 		goto err;
+ 	}
+ 
+-	if (mfd->chip_type >= BD718XX_TYPE_AMOUNT ||
+-	    !pmic_regulators[mfd->chip_type].r_datas) {
++	if (mfd->chip.chip_type >= ROHM_CHIP_TYPE_AMOUNT ||
++	    !pmic_regulators[mfd->chip.chip_type].r_datas) {
+ 		dev_err(&pdev->dev, "Unsupported chip type\n");
+ 		err = -EINVAL;
+ 		goto err;
+ 	}
+ 
+ 	/* Register LOCK release */
+-	err = regmap_update_bits(mfd->regmap, BD718XX_REG_REGLOCK,
++	err = regmap_update_bits(mfd->chip.regmap, BD718XX_REG_REGLOCK,
+ 				 (REGLOCK_PWRSEQ | REGLOCK_VREG), 0);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "Failed to unlock PMIC (%d)\n", err);
+@@ -1200,7 +1200,8 @@ static int bd718xx_probe(struct platform_device *pdev)
+ 	 * bit allowing HW defaults for power rails to be used
+ 	 */
+ 	if (!use_snvs) {
+-		err = regmap_update_bits(mfd->regmap, BD718XX_REG_TRANS_COND1,
++		err = regmap_update_bits(mfd->chip.regmap,
++					 BD718XX_REG_TRANS_COND1,
+ 					 BD718XX_ON_REQ_POWEROFF_MASK |
+ 					 BD718XX_SWRESET_POWEROFF_MASK |
+ 					 BD718XX_WDOG_POWEROFF_MASK |
+@@ -1215,17 +1216,17 @@ static int bd718xx_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	for (i = 0; i < pmic_regulators[mfd->chip_type].r_amount; i++) {
++	for (i = 0; i < pmic_regulators[mfd->chip.chip_type].r_amount; i++) {
+ 
+ 		const struct regulator_desc *desc;
+ 		struct regulator_dev *rdev;
+ 		const struct bd718xx_regulator_data *r;
+ 
+-		r = &pmic_regulators[mfd->chip_type].r_datas[i];
++		r = &pmic_regulators[mfd->chip.chip_type].r_datas[i];
+ 		desc = &r->desc;
+ 
+ 		config.dev = pdev->dev.parent;
+-		config.regmap = mfd->regmap;
++		config.regmap = mfd->chip.regmap;
+ 
+ 		rdev = devm_regulator_register(&pdev->dev, desc, &config);
+ 		if (IS_ERR(rdev)) {
+@@ -1254,7 +1255,7 @@ static int bd718xx_probe(struct platform_device *pdev)
+ 		 */
+ 		if (!use_snvs || !rdev->constraints->always_on ||
+ 		    !rdev->constraints->boot_on) {
+-			err = regmap_update_bits(mfd->regmap, r->init.reg,
++			err = regmap_update_bits(mfd->chip.regmap, r->init.reg,
+ 						 r->init.mask, r->init.val);
+ 			if (err) {
+ 				dev_err(&pdev->dev,
+@@ -1264,7 +1265,7 @@ static int bd718xx_probe(struct platform_device *pdev)
+ 			}
+ 		}
+ 		for (j = 0; j < r->additional_init_amnt; j++) {
+-			err = regmap_update_bits(mfd->regmap,
++			err = regmap_update_bits(mfd->chip.regmap,
+ 						 r->additional_inits[j].reg,
+ 						 r->additional_inits[j].mask,
+ 						 r->additional_inits[j].val);
+diff --git a/include/linux/mfd/rohm-bd718x7.h b/include/linux/mfd/rohm-bd718x7.h
+index fd194bfc836f..7f2dbde402a1 100644
+--- a/include/linux/mfd/rohm-bd718x7.h
++++ b/include/linux/mfd/rohm-bd718x7.h
+@@ -4,14 +4,9 @@
+ #ifndef __LINUX_MFD_BD718XX_H__
+ #define __LINUX_MFD_BD718XX_H__
+ 
++#include <linux/mfd/rohm-generic.h>
+ #include <linux/regmap.h>
+ 
+-enum {
+-	BD718XX_TYPE_BD71837 = 0,
+-	BD718XX_TYPE_BD71847,
+-	BD718XX_TYPE_AMOUNT
+-};
+-
+ enum {
+ 	BD718XX_BUCK1 = 0,
+ 	BD718XX_BUCK2,
+@@ -321,18 +316,17 @@ enum {
+ 	BD718XX_PWRBTN_LONG_PRESS_15S
+ };
+ 
+-struct bd718xx_clk;
+-
+ struct bd718xx {
+-	unsigned int chip_type;
+-	struct device *dev;
+-	struct regmap *regmap;
+-	unsigned long int id;
++	/*
++	 * Please keep this as the first member here as some
++	 * drivers (clk) supporting more than one chip may only know this
++	 * generic struct 'struct rohm_regmap_dev' and assume it is
++	 * the first chunk of parent device's private data.
++	 */
++	struct rohm_regmap_dev chip;
+ 
+ 	int chip_irq;
+ 	struct regmap_irq_chip_data *irq_data;
+-
+-	struct bd718xx_clk *clk;
+ };
+ 
+ #endif /* __LINUX_MFD_BD718XX_H__ */
+diff --git a/include/linux/mfd/rohm-generic.h b/include/linux/mfd/rohm-generic.h
+new file mode 100644
+index 000000000000..bff15ac26f2c
+--- /dev/null
++++ b/include/linux/mfd/rohm-generic.h
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/* Copyright (C) 2018 ROHM Semiconductors */
++
++#ifndef __LINUX_MFD_ROHM_H__
++#define __LINUX_MFD_ROHM_H__
++
++enum {
++	ROHM_CHIP_TYPE_BD71837 = 0,
++	ROHM_CHIP_TYPE_BD71847,
++	ROHM_CHIP_TYPE_BD70528,
++	ROHM_CHIP_TYPE_AMOUNT
++};
++
++struct rohm_regmap_dev {
++	unsigned int chip_type;
++	struct device *dev;
++	struct regmap *regmap;
++};
++
++#endif
+-- 
+2.17.2
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
