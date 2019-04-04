@@ -1,53 +1,105 @@
-From: Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH 3/4] mwifiex: Flag wake-up interrupt as IRQ_NOAUTOEN
- rather than disabling it too late
-Date: Thu,  4 Apr 2019 10:22:50 +0000 (UTC)
-Message-ID: <20190404102251.0C5FA60A43@smtp.codeaurora.org>
-References: <20190224140426.3267-4-marc.zyngier@arm.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v13 3/8] clk: bd718x7: Support ROHM BD70528 clk block
+Date: Thu, 4 Apr 2019 13:24:30 +0300
+Message-ID: <f8c54c4603e036ce433bdec45b730fda8a9a04a9.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190224140426.3267-4-marc.zyngier@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Ganapathi Bhat <gbhat@marvell.com>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Xinming Hu <huxinming820@gmail.com>, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, Amitkumar Karwar <amitkarwar@gmail.com>, linux-rockchip@lists.infradead.org, Nishant Sarmukadam <nishants@marvell.com>, Rob Herring <robh+dt@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mazziesaccount@gmail.com
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.ro
 List-Id: devicetree@vger.kernel.org
 
-Marc Zyngier <marc.zyngier@arm.com> wrote:
+ROHM BD70528 is an ultra low power PMIC with similar 32K clk as
+bd718x7. Only difference (from clk perspective) is register address.
+Add support for controlling BD70528 clk using bd718x7 driver.
 
-> The mwifiex driver makes unsafe assumptions about the state of the
-> wake-up interrupt. It requests it and only then disable it. Of
-> course, the interrupt may be screaming for whatever reason at that
-> time, and the handler will then be called without the interrupt
-> having been registered with the PM/wakeup subsystem. Oops.
-> 
-> The right way to handle this kind of situation is to flag the
-> interrupt with IRQ_NOAUTOEN before requesting it. It will then
-> stay disabled until someone (the wake-up subsystem) enables it.
-> 
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+---
+Changelog v13:
+- No changes
 
-Failed to apply:
+Changelog v12:
+- No changes
 
-fatal: sha1 information is lacking or useless (drivers/net/wireless/marvell/mwifiex/main.c).
-error: could not build fake ancestor
-Applying: mwifiex: Flag wake-up interrupt as IRQ_NOAUTOEN rather than disabling it too late
-Patch failed at 0001 mwifiex: Flag wake-up interrupt as IRQ_NOAUTOEN rather than disabling it too late
-The copy of the patch that failed is found in: .git/rebase-apply/patch
+ drivers/clk/Kconfig       |  6 +++---
+ drivers/clk/clk-bd718x7.c | 20 ++++++++++++++++----
+ 2 files changed, 19 insertions(+), 7 deletions(-)
 
-Patch set to Changes Requested.
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index e705aab9e38b..86828939d095 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -285,10 +285,10 @@ config COMMON_CLK_STM32H7
+ 
+ config COMMON_CLK_BD718XX
+ 	tristate "Clock driver for ROHM BD718x7 PMIC"
+-	depends on MFD_ROHM_BD718XX
++	depends on MFD_ROHM_BD718XX || MFD_ROHM_BD70528
+ 	help
+-	  This driver supports ROHM BD71837 and ROHM BD71847
+-	  PMICs clock gates.
++	  This driver supports ROHM BD71837, ROHM BD71847 and
++	  ROHM BD70528 PMICs clock gates.
+ 
+ config COMMON_CLK_FIXED_MMIO
+ 	bool "Clock driver for Memory Mapped Fixed values"
+diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
+index 461228ebf703..ae6e5baee330 100644
+--- a/drivers/clk/clk-bd718x7.c
++++ b/drivers/clk/clk-bd718x7.c
+@@ -8,6 +8,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/mfd/rohm-bd718x7.h>
++#include <linux/mfd/rohm-bd70528.h>
+ #include <linux/clk-provider.h>
+ #include <linux/clkdev.h>
+ #include <linux/regmap.h>
+@@ -86,9 +87,20 @@ static int bd71837_clk_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "No parent clk found\n");
+ 		return -EINVAL;
+ 	}
+-
+-	c->reg = BD718XX_REG_OUT32K;
+-	c->mask = BD718XX_OUT32K_EN;
++	switch (mfd->chip_type) {
++	case ROHM_CHIP_TYPE_BD71837:
++	case ROHM_CHIP_TYPE_BD71847:
++		c->reg = BD718XX_REG_OUT32K;
++		c->mask = BD718XX_OUT32K_EN;
++		break;
++	case ROHM_CHIP_TYPE_BD70528:
++		c->reg = BD70528_REG_CLK_OUT;
++		c->mask = BD70528_CLK_OUT_EN_MASK;
++		break;
++	default:
++		dev_err(&pdev->dev, "Unknown clk chip\n");
++		return -EINVAL;
++	}
+ 	c->mfd = mfd;
+ 	c->pdev = pdev;
+ 	c->hw.init = &init;
+@@ -119,5 +131,5 @@ static struct platform_driver bd71837_clk = {
+ module_platform_driver(bd71837_clk);
+ 
+ MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
+-MODULE_DESCRIPTION("BD71837/BD71847 chip clk driver");
++MODULE_DESCRIPTION("BD71837/BD71847/BD70528 chip clk driver");
+ MODULE_LICENSE("GPL");
+-- 
+2.17.2
+
 
 -- 
-https://patchwork.kernel.org/patch/10827971/
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
