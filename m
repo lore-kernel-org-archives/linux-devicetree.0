@@ -1,81 +1,43 @@
-Return-Path: <SRS0=HVR0=S2=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V5 0/9] Add USB3.0 and TI HD3SS3220 driver support
-Date: Wed, 24 Apr 2019 10:22:14 +0100
-Message-Id: <1556097743-12717-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=qFGJ=SG=gmail.com=thierry.reding@kernel.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH 3/8] ARM: tegra: jetson-tk1: Move PLL power supplies to XUSB pad controller
+Date: Thu,  4 Apr 2019 13:25:06 +0200
+Message-Id: <20190404112511.28118-3-thierry.reding@gmail.com>
+In-Reply-To: <20190404112511.28118-1-thierry.reding@gmail.com>
+References: <20190404112511.28118-1-thierry.reding@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This series adds USB 3.0 support for the CAT874 platform, including a
-new driver for the TI HD3SS3220 USB Type-C DRP port controller.
+From: Thierry Reding <treding@nvidia.com>
 
-This patch series supports:
-1) Host hotplug operation
-2) Device hot plug operation
-3) USB type-C data_role switch
-   (Tested with 2 RZ/G2E boards connected with a Type-C cable)
+The XUSB pad controller is responsible for supplying power to the PLLs
+used to drive the various USB, PCI and SATA pads. Move the PLL power
+supplies from the PCIe and XUSB controllers to the XUSB pad controller
+to make sure they are available when needed.
 
-This patchset is based on linux_next next-20190423 branch.
-V4-->V5
-  * Incorporated Heikki's review comment.
-    (https://patchwork.kernel.org/patch/10902531/)
-  * Patch 1 is a dependency patch to make the compilation successful.
-    (https://patchwork.kernel.org/patch/10909971/)
-  * Patch 2 is also dependency patch to make the compilation successful.
-    Rebased on top of Patch1 and fixed Heikki's review comments
-    (https://patchwork.kernel.org/patch/10882555/)
-  * Incorporated Shimoda-San's review comment.
-    (https://patchwork.kernel.org/patch/10902535/)
-V3-->V4
-  * Incorporated Chunfeng Yun's review comment
-    (https://patchwork.kernel.org/project/linux-usb/list/?submitter=133171)
-  * Used fwnode API's to get roleswitch handle
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ arch/arm/boot/dts/tegra124-jetson-tk1.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-V2-->V3
-  * Used the new API to usb_role_switch by node to find the remote endpoint
-    (https://patchwork.kernel.org/patch/10882555/)
-  * Added renesas,usb-role-switch property
-  * Incorporated shimoda-san's review comment
-    (https://patchwork.kernel.org/patch/10852507/)
-
-V1-->V2
-  * Use USB role class instead of extcon to receive connect and disconnect
-    events and also for the dual role switch.
-  * Dropped patch 6
-  * Squashed patch 8 and patch 9
-  * https://patchwork.kernel.org/cover/10840641/
-
-
-Biju Das (7):
-  dt-bindings: usb: hd3ss3220 device tree binding document
-  dt-bindings: usb: renesas_usb3: Add renesas,usb-role-switch property
-  usb: typec: driver for TI HD3SS3220 USB Type-C DRP port controller
-  usb: gadget: udc: renesas_usb3: Use usb_role_switch framework
-  arm64: defconfig: enable TYPEC_HD3SS3220 config option
-  arm64: dts: renesas: r8a774c0-cat874: Enable USB3.0 host/peripheral
-    device node
-  arm64: dts: renesas: r8a774c0-cat874: Enable usb role switch support
-
-Chunfeng Yun (1):
-  usb: roles: add API to get usb_role_switch by node
-
-Yu Chen (1):
-  usb: roles: Introduce stubs for the exiting functions in role.h.
-
- .../devicetree/bindings/usb/renesas_usb3.txt       |  22 ++
- .../devicetree/bindings/usb/ti,hd3ss3220.txt       |  37 +++
- arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts    |  56 +++++
- arch/arm64/configs/defconfig                       |   2 +
- drivers/usb/gadget/udc/renesas_usb3.c              |  92 ++++++-
- drivers/usb/roles/class.c                          |  25 ++
- drivers/usb/typec/Kconfig                          |  10 +
- drivers/usb/typec/Makefile                         |   1 +
- drivers/usb/typec/hd3ss3220.c                      | 263 +++++++++++++++++++++
- include/linux/usb/role.h                           |  38 +++
- 10 files changed, 539 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
- create mode 100644 drivers/usb/typec/hd3ss3220.c
-
+diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+index 33bbb1c5285d..d5fd642f8b77 100644
+--- a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
++++ b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+@@ -1721,6 +1721,11 @@
+ 	padctl@7009f000 {
+ 		status = "okay";
+ 
++		avdd-pll-utmip-supply = <&vddio_1v8>;
++		avdd-pll-erefe-supply = <&avdd_1v05_run>;
++		avdd-pex-pll-supply = <&vdd_1v05_run>;
++		hvdd-pex-pll-e-supply = <&vdd_3v3_lp0>;
++
+ 		pads {
+ 			usb2 {
+ 				status = "okay";
 -- 
-2.7.4
+2.21.0
