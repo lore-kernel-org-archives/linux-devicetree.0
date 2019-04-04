@@ -1,38 +1,47 @@
-From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [RESEND 2/2] arm64: dts: sunxi: h6: Add device node for SID
-Date: Thu,  4 Apr 2019 12:57:26 -0400
-Message-ID: <20190404165726.13149-3-tiny.windzz@gmail.com>
-References: <20190404165726.13149-1-tiny.windzz@gmail.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH] drm/panel: Rocktech jh057n00900: Add terminating
+ newlines to logging
+Date: Thu, 4 Apr 2019 19:00:40 +0200
+Message-ID: <20190404170040.GA23897@ravnborg.org>
+References: <cover.1554114302.git.agx@sigxcpu.org>
+ <20190403161735.GN5238@ulmo>
+ <1ed5eb3af4df6b2dd1544c7b696e034ed5c94f06.camel@perches.com>
+ <20190404105359.GA8255@bogon.m.sigxcpu.org>
+ <da6f2344396555034cf2476c8338b0ce1c56e0a7.camel@perches.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190404165726.13149-1-tiny.windzz@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <da6f2344396555034cf2476c8338b0ce1c56e0a7.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: maxime.ripard@bootlin.com, wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, srinivas.kandagatla@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
+To: Joe Perches <joe@perches.com>
+Cc: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Jagan Teki <jagan@amarulasolutions.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Johan Hovold <johan@kernel.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.ke
 List-Id: devicetree@vger.kernel.org
 
-The device tree binding already lists compatible strings for H6
-SoCs, so add a device node for iy.
+Hi Joe.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+On Thu, Apr 04, 2019 at 08:06:09AM -0700, Joe Perches wrote:
+> These were missing '\n' terminations, add them.
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> index 158a6d548068..d88ea8da2ec2 100644
+> --- a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> +++ b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> @@ -123,7 +123,7 @@ static int jh057n_init_sequence(struct jh057n *ctx)
+>  
+>  	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+>  	if (ret < 0) {
+> -		DRM_DEV_ERROR(dev, "Failed to exit sleep mode");
+> +		DRM_DEV_ERROR(dev, "Failed to exit sleep mode\n");
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index c9e861a50a63..cbeb587d2eed 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -192,6 +192,11 @@
- 			#reset-cells = <1>;
- 		};
- 
-+		sid: sid@3006000 {
-+			compatible = "allwinner,sun50i-h6-sid";
-+			reg = <0x3006000 0x400>;
-+		};
-+
- 		pio: pinctrl@300b000 {
- 			compatible = "allwinner,sun50i-h6-pinctrl";
- 			reg = <0x0300b000 0x400>;
--- 
-2.17.0
+I was under the impression that newlines was optional these days.
+Should we always use them with logging?
+
+I did not find any obvious clues in linux/printk.h
+
+	Sam
