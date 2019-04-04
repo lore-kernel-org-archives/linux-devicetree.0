@@ -1,95 +1,74 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v11 2/8] mfd: bd70528: Support ROHM bd70528 PMIC - core
-Date: Thu, 4 Apr 2019 09:21:53 +0100
-Message-ID: <20190404082153.GP6830@dell>
-References: <20190403093015.GJ11301@dell>
- <20190403101003.GC3493@localhost.localdomain>
- <20190403112559.GP11301@dell>
- <85b20828bb4fb51e6df1d5d9d1c1f667db3a7c48.camel@fi.rohmeurope.com>
- <20190404025234.GB6830@dell>
- <6775a75d1ee3ab96123d84b077881beedc358d12.camel@fi.rohmeurope.com>
- <20190404065452.GD6830@dell>
- <20190404072449.GE3493@localhost.localdomain>
- <20190404075640.GV22216@piout.net>
- <70a8a87a403eb2ab8f0aad2a26456de8a162f363.camel@fi.rohmeurope.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH 1/8] dt-bindings: memory: tegra: Add Tegra210 EMC bindings
+Date: Thu, 4 Apr 2019 12:17:35 +0300
+Message-ID: <6bd34a19-26e0-6bdd-ce89-4a30d35e9823@gmail.com>
+References: <20190325074523.26456-1-josephl@nvidia.com>
+ <20190325074523.26456-2-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <70a8a87a403eb2ab8f0aad2a26456de8a162f363.camel@fi.rohmeurope.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc: "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "sre@kernel.org" <sre@kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "mark.rutland@arm.com" <mark.rutland@arm.com>linux
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190325074523.26456-2-josephl@nvidia.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 04 Apr 2019, Vaittinen, Matti wrote:
-
-> Hello Alexandre,
-> 
-> On Thu, 2019-04-04 at 09:56 +0200, Alexandre Belloni wrote:
-> > On 04/04/2019 10:24:49+0300, Matti Vaittinen wrote:
-> > > On Thu, Apr 04, 2019 at 07:54:52AM +0100, Lee Jones wrote:
-> > > > On Thu, 04 Apr 2019, Vaittinen, Matti wrote:
-> > > > 
-> > > > > Actually, now that I thik of it the right way to do this would
-> > > > > have
-> > > > > been the function pointer in parent data as was done in
-> > > > > original patch
-> > > > > set. HW-colleagues tend to re-use HW blocks, and we like to re-
-> > > > > use our
-> > > > > drivers. If the next PMIC from ROHM uses same RTC block but
-> > > > > does not
-> > > > > provide watchdog - then it is cleanest solution to fall back to
-> > > > > function pointer and leave it to NULL when there is no WDT or
-> > > > > when WDT
-> > > > > is unused. Another option is to export dummy function - which
-> > > > > is not so
-> > > > > nice.
-> > > > 
-> > > > I think the converse is true.
-> > > > 
-> > > > Pointers to functions outside of a subsystem API context are
-> > > > generally
-> > > > horrible.  It's much nicer to call a function which can be easily
-> > > > stubbed out in a header file based on a Kconfig option.  It's how
-> > > > most
-> > > > kernel APIs work.
-> > > 
-> > > I hate to admit but I see your point. This nicely solves any issues
-> > > in
-> > > syncronizing the startup for driver providing function pointer and
-> > > for
-> > > driver using it.
-> > > 
-> > 
-> > Wouldn't it be easier to register the watchdog driver as part of the
-> > RTC
-> > driver?
-> > 
-> > As I see it, the wdt is just a glorified RTC alarm.
-> 
-> Do you suggest me to put all the stuff now placed in
-> drivers/watchdog/bd70528_wdt.c into rtc driver? It would be doable -
-> but I'd rather kept the WDT independent module so that it can be left
-> out of config if WDT needs not to be used. And same with RTC. Also, re-
-> use of RTC driver in HW which does not include WDT is easier when WDT
-> is a separate module. To me it looks much cleaner to have the WDT as
-> own module than polluting the RTC driver with config ifdefs.
-
-I haven't looked at the code, but I agree with this in principle.
-
-I'm a firm believer of having functionality in the most appropriate
-subsystem.  IMHO, if a device can be neatly split 9/10 it should be.
-
-> But from HW perspective you are correct. The WDT in BD70528 seems to be
-> kind of RTC alarm which shuts of the PMIC if triggered.
-> 
-> Br,
-> 	Matti Vaittinen
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+MjUuMDMuMjAxOSAxMDo0NSwgSm9zZXBoIExvINC/0LjRiNC10YI6Cj4gQWRkIHRoZSBiaW5kaW5n
+IGRvY3VtZW50IGZvciB0aGUgZXh0ZXJuYWwgbWVtb3J5IGNvbnRyb2xsZXIgKEVNQykgd2hpY2gK
+PiBjb21tdW5pY2F0ZXMgd2l0aCBleHRlcm5hbCBMUEREUjQgZGV2aWNlcy4gSXQgaW5jbHVkZXMg
+dGhlIGJpbmRpbmdzIG9mCj4gdGhlIEVNQyBub2RlIGFuZCB0aGUgRU1DIHRhYmxlIG9mIGRpZmZl
+cmVudCByYXRlcy4KPiAKPiBUbyBzdXBwb3J0IGhpZ2ggcmF0ZXMgZm9yIExQRERSNCwgdGhlIEVN
+QyB0YWJsZSBtdXN0IGJlIHRyYWluZWQgYmVmb3JlCj4gaXQgY2FuIGJlIHVzZWQgZm9yIHJ1bnRp
+bWUgY2xvY2sgc3dpdGNoaW5nLiBJdCBoYXMgYmVlbiBkb25lIGJ5IGZpcm13YXJlCj4gYW5kIG1l
+cmdlZCB0byB0aGUgdGFibGUgdGhhdCBMaW51eCBrZXJuZWwgdXNlcy4gRm9yIGJhY2t3YXJkCj4g
+Y29tcGF0aWJpbGl0eSB3aXRoIHRoZSBkZXZpY2VzIHRoYXQgaGFkIGJlZW4gbGF1bmNoZWQgb24g
+dGhlIG1hcmtldCwgbGlrZQo+IFNoaWVsZCBhbmQgSmV0c29uIHBsYXRmb3JtcywgdGhlIGJpbmRp
+bmdzIGluIHRoZSBFTUMgdGFibGUgc2hvdWxkIHJlbWFpbgo+IHRoZSBzYW1lLiBTbyB0aGUgZmly
+bXdhcmUgY2FuIHJlY29nbml6ZSB0aGVtIGFuZCBtZXJnZSB0aGUgdHJhaW5lZCBFTUMKPiB0YWJs
+ZSBmb3IgdGhlIGtlcm5lbC4KPiAKPiBCYXNlZCBvbiB0aGUgd29yayBvZiBQZXRlciBEZSBTY2hy
+aWp2ZXIgPHBkZXNjaHJpanZlckBudmlkaWEuY29tPi4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKb3Nl
+cGggTG8gPGpvc2VwaGxAbnZpZGlhLmNvbT4KPiAtLS0KPiAgLi4uL252aWRpYSx0ZWdyYTIxMC1l
+bWMudHh0ICAgICAgICAgICAgICAgICAgIHwgNjA1ICsrKysrKysrKysrKysrKysrKwo+ICAxIGZp
+bGUgY2hhbmdlZCwgNjA1IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1vcnktY29udHJvbGxlcnMvbnZpZGlhLHRl
+Z3JhMjEwLWVtYy50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21lbW9yeS1jb250cm9sbGVycy9udmlkaWEsdGVncmEyMTAtZW1jLnR4dCBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1vcnktY29udHJvbGxlcnMvbnZpZGlh
+LHRlZ3JhMjEwLWVtYy50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAw
+MDAwMC4uMWY2YjZkZjZkMzdiCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1vcnktY29udHJvbGxlcnMvbnZpZGlhLHRlZ3JhMjEwLWVt
+Yy50eHQKPiBAQCAtMCwwICsxLDYwNSBAQAo+ICtOVklESUEgVGVncmEyMTAgU29DIEVNQyAoZXh0
+ZXJuYWwgbWVtb3J5IGNvbnRyb2xsZXIpCj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT0KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXMgOgo+ICst
+IGNvbXBhdGlibGUgOiBzaG91bGQgYmUgIm52aWRpYSx0ZWdyYTIxLWVtYyIsICJudmlkaWEsdGVn
+cmEyMTAtZW1jIi4KPiArLSByZWcgOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBv
+ZiB0aGUgY29udHJvbGxlcidzIHJlZ2lzdGVycy4KPiArLSBjbG9ja3MgOiBwaGFuZGxlcyBvZiB0
+aGUgcG9zc2libGUgc291cmNlIGNsb2Nrcwo+ICstIGNsb2NrLW5hbWVzIDogbmFtZXMgb2YgdGhl
+IHBvc3NpYmxlIHNvdXJjZSBjbG9ja3MKPiArLSAjYWRkcmVzcy1jZWxscyA6IHNob3VsZCBiZSAx
+Cj4gKy0gI3NpemUtY2VsbHMgOiBzaG91bGQgYmUgMAo+ICstIG52aWRpYSxtZW1vcnktY29udHJv
+bGxlciA6IHBoYW5kbGUgb2YgdGhlIG1lbW9yeSBjb250cm9sbGVyLgo+ICstIG52aWRpYSx1c2Ut
+cmFtLWNvZGUgOiBib29sZWFuLCBpbmRpY2F0ZXMgd2hldGhlciB3ZSBzaG91bGQgdXNlIFJBTV9D
+T0RFIGluCj4gKwkJICAgICAgICB0aGUgcmVnaXN0ZXIgdG8gZmluZCBtYXRjaGluZyBlbWMtdGFi
+bGUgbm9kZXMKPiArCgpUaGUgImludGVycnVwdHMiIHByb3BlcnR5IGlzIG1pc3NpbmcuIFlvdSBj
+b3VsZCB1c2UgdGhlIENMSyBoYW5kc2hha2UgZXZlbnQgdG8gd2FpdCBmb3IgdGhlIGNsb2NrIHJh
+dGUgY2hhbmdlIGNvbXBsZXRpb24gaW5zdGVhZCBvZiBwb2xsaW5nIHRoZSByZWdpc3RlciBpZiB5
+b3UgZGlkbid0IHJlbHkgb24gdGhlIGRvd25zdHJlYW0gYmluZGluZywgc2VlIFQyMCBkcml2ZXIg
+Zm9yIHRoZSBleGFtcGxlLiBCVFcsIEknbSB3b25kZXJpbmcgaWYgeW91J3JlIGdvaW5nIHRvIHB1
+c2ggb3RoZXIgZG93bnN0cmVhbSBiaW5kaW5ncyB0byB1cHN0cmVhbS4uIGFwcGFyZW50bHkgRU1D
+IHdvbid0IGJlIHRoZSBvbmx5IGJpbmRpbmcgdGhhdCB0aGF0IGNvdWxkIGRpdmVyZ2UgZnJvbSB0
+aGUgdXBzdHJlYW0gYW5kIHRoZW4gaXQncyBub3Qgb2J2aW91cyB3aGV0aGVyIHRoZSBsb2NrZWQt
+ZG93biB2YXJpYW50IG9mIFQyMTAgaXMgc3VwcG9ydGFibGUgYnkgdXBzdHJlYW0gYXQgYWxsLgoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
+LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
+cm5lbAo=
