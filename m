@@ -1,438 +1,270 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v8 06/11] mfd: max77650: new core mfd driver
-Date: Thu, 4 Apr 2019 09:30:52 +0200
-Message-ID: <CAMRc=Mcfgw+tAM+B_phMX6x4qUHiTd6Yn2OnT4_dQ7AzypD-cg@mail.gmail.com>
-References: <20190403090108.24788-1-brgl@bgdev.pl> <20190403090108.24788-7-brgl@bgdev.pl>
- <20190404071538.GH6830@dell>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 8/8] drm: rcar-du: Add shutdown callback function in
+ platform_driver
+Date: Thu, 4 Apr 2019 09:47:06 +0200
+Message-ID: <20190404074706.GO2665@phenom.ffwll.local>
+References: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
+ <1554297284-14009-9-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190404071538.GH6830@dell>
+Content-Disposition: inline
+In-Reply-To: <1554297284-14009-9-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: VenkataRajesh.Kalakodima@in.bosch.com
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>, Steve Longerbeam <steve_longerbeam@mentor.com>, Koji Matsuoka <koji.matsuoka.xm@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-czw., 4 kwi 2019 o 09:15 Lee Jones <lee.jones@linaro.org> napisa=C5=82(a):
->
-> On Wed, 03 Apr 2019, Bartosz Golaszewski wrote:
->
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Add the core mfd driver for max77650 PMIC. We define five sub-devices
-> > for which the drivers will be added in subsequent patches.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> >  drivers/mfd/Kconfig          |  14 +++
-> >  drivers/mfd/Makefile         |   1 +
-> >  drivers/mfd/max77650.c       | 234 +++++++++++++++++++++++++++++++++++
-> >  include/linux/mfd/max77650.h |  59 +++++++++
-> >  4 files changed, 308 insertions(+)
-> >  create mode 100644 drivers/mfd/max77650.c
-> >  create mode 100644 include/linux/mfd/max77650.h
-> >
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index 0ce2d8dfc5f1..ade04e124aa0 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -733,6 +733,20 @@ config MFD_MAX77620
-> >         provides common support for accessing the device; additional dr=
-ivers
-> >         must be enabled in order to use the functionality of the device=
-.
-> >
-> > +config MFD_MAX77650
-> > +     tristate "Maxim MAX77650/77651 PMIC Support"
-> > +     depends on I2C
-> > +     depends on OF || COMPILE_TEST
-> > +     select MFD_CORE
-> > +     select REGMAP_I2C
-> > +     help
-> > +       Say Y here to add support for Maxim Semiconductor MAX77650 and
-> > +       MAX77651 Power Management ICs. This is the core multifunction
-> > +       driver for interacting with the device. The module name is
-> > +       'max77650'. Additional drivers can be enabled in order to use
-> > +       the following functionalities of the device: GPIO, regulator,
-> > +       charger, LED, onkey.
-> > +
-> >  config MFD_MAX77686
-> >       tristate "Maxim Semiconductor MAX77686/802 PMIC Support"
-> >       depends on I2C
-> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > index b4569ed7f3f3..5727d099c16f 100644
-> > --- a/drivers/mfd/Makefile
-> > +++ b/drivers/mfd/Makefile
-> > @@ -155,6 +155,7 @@ obj-$(CONFIG_MFD_DA9150)  +=3D da9150-core.o
-> >
-> >  obj-$(CONFIG_MFD_MAX14577)   +=3D max14577.o
-> >  obj-$(CONFIG_MFD_MAX77620)   +=3D max77620.o
-> > +obj-$(CONFIG_MFD_MAX77650)   +=3D max77650.o
-> >  obj-$(CONFIG_MFD_MAX77686)   +=3D max77686.o
-> >  obj-$(CONFIG_MFD_MAX77693)   +=3D max77693.o
-> >  obj-$(CONFIG_MFD_MAX77843)   +=3D max77843.o
-> > diff --git a/drivers/mfd/max77650.c b/drivers/mfd/max77650.c
-> > new file mode 100644
-> > index 000000000000..7a6c0a5cf602
-> > --- /dev/null
-> > +++ b/drivers/mfd/max77650.c
-> > @@ -0,0 +1,234 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +//
-> > +// Copyright (C) 2018 BayLibre SAS
-> > +// Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > +//
-> > +// Core MFD driver for MAXIM 77650/77651 charger/power-supply.
-> > +// Programming manual: https://pdfserv.maximintegrated.com/en/an/AN642=
-8.pdf
-> > +
-> > +#include <linux/i2c.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/irq.h>
-> > +#include <linux/mfd/core.h>
-> > +#include <linux/mfd/max77650.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/regmap.h>
-> > +
-> > +#define MAX77650_INT_GPI_F_MSK               BIT(0)
-> > +#define MAX77650_INT_GPI_R_MSK               BIT(1)
-> > +#define MAX77650_INT_GPI_MSK \
-> > +                     (MAX77650_INT_GPI_F_MSK | MAX77650_INT_GPI_R_MSK)
-> > +#define MAX77650_INT_nEN_F_MSK               BIT(2)
-> > +#define MAX77650_INT_nEN_R_MSK               BIT(3)
-> > +#define MAX77650_INT_TJAL1_R_MSK     BIT(4)
-> > +#define MAX77650_INT_TJAL2_R_MSK     BIT(5)
-> > +#define MAX77650_INT_DOD_R_MSK               BIT(6)
-> > +
-> > +#define MAX77650_INT_THM_MSK         BIT(0)
-> > +#define MAX77650_INT_CHG_MSK         BIT(1)
-> > +#define MAX77650_INT_CHGIN_MSK               BIT(2)
-> > +#define MAX77650_INT_TJ_REG_MSK              BIT(3)
-> > +#define MAX77650_INT_CHGIN_CTRL_MSK  BIT(4)
-> > +#define MAX77650_INT_SYS_CTRL_MSK    BIT(5)
-> > +#define MAX77650_INT_SYS_CNFG_MSK    BIT(6)
-> > +
-> > +#define MAX77650_INT_GLBL_OFFSET     0
-> > +#define MAX77650_INT_CHG_OFFSET              1
-> > +
-> > +#define MAX77650_SBIA_LPM_MASK               BIT(5)
-> > +#define MAX77650_SBIA_LPM_DISABLED   0x00
-> > +
-> > +enum {
-> > +     MAX77650_INT_GPI,
-> > +     MAX77650_INT_nEN_F,
-> > +     MAX77650_INT_nEN_R,
-> > +     MAX77650_INT_TJAL1_R,
-> > +     MAX77650_INT_TJAL2_R,
-> > +     MAX77650_INT_DOD_R,
-> > +     MAX77650_INT_THM,
-> > +     MAX77650_INT_CHG,
-> > +     MAX77650_INT_CHGIN,
-> > +     MAX77650_INT_TJ_REG,
-> > +     MAX77650_INT_CHGIN_CTRL,
-> > +     MAX77650_INT_SYS_CTRL,
-> > +     MAX77650_INT_SYS_CNFG,
-> > +};
-> > +
-> > +static const struct resource max77650_charger_resources[] =3D {
-> > +     DEFINE_RES_IRQ_NAMED(MAX77650_INT_CHG, "CHG"),
-> > +     DEFINE_RES_IRQ_NAMED(MAX77650_INT_CHGIN, "CHGIN"),
-> > +};
-> > +
-> > +static const struct resource max77650_gpio_resources[] =3D {
-> > +     DEFINE_RES_IRQ_NAMED(MAX77650_INT_GPI, "GPI"),
-> > +};
-> > +
-> > +static const struct resource max77650_onkey_resources[] =3D {
-> > +     DEFINE_RES_IRQ_NAMED(MAX77650_INT_nEN_F, "nEN_F"),
-> > +     DEFINE_RES_IRQ_NAMED(MAX77650_INT_nEN_R, "nEN_R"),
-> > +};
-> > +
-> > +static const struct mfd_cell max77650_cells[] =3D {
-> > +     {
-> > +             .name           =3D "max77650-regulator",
-> > +             .of_compatible  =3D "maxim,max77650-regulator",
->
-> > +     },
-> > +     {
->
-> Nit: Place these all on the same line, like:
->
->         }, {
->
-> > +             .name           =3D "max77650-charger",
-> > +             .of_compatible  =3D "maxim,max77650-charger",
-> > +             .resources      =3D max77650_charger_resources,
-> > +             .num_resources  =3D ARRAY_SIZE(max77650_charger_resources=
-),
-> > +     },
-> > +     {
-> > +             .name           =3D "max77650-gpio",
-> > +             .of_compatible  =3D "maxim,max77650-gpio",
-> > +             .resources      =3D max77650_gpio_resources,
-> > +             .num_resources  =3D ARRAY_SIZE(max77650_gpio_resources),
-> > +     },
-> > +     {
-> > +             .name           =3D "max77650-led",
-> > +             .of_compatible  =3D "maxim,max77650-led",
-> > +     },
-> > +     {
-> > +             .name           =3D "max77650-onkey",
-> > +             .of_compatible  =3D "maxim,max77650-onkey",
-> > +             .resources      =3D max77650_onkey_resources,
-> > +             .num_resources  =3D ARRAY_SIZE(max77650_onkey_resources),
-> > +     },
-> > +};
-> > +
-> > +static const struct regmap_irq max77650_irqs[] =3D {
-> > +     [MAX77650_INT_GPI] =3D {
-> > +             .reg_offset             =3D MAX77650_INT_GLBL_OFFSET,
-> > +             .mask                   =3D MAX77650_INT_GPI_MSK,
-> > +             .type =3D {
-> > +                     .type_falling_val       =3D MAX77650_INT_GPI_F_MS=
-K,
-> > +                     .type_rising_val        =3D MAX77650_INT_GPI_R_MS=
-K,
-> > +                     .types_supported        =3D IRQ_TYPE_EDGE_BOTH,
->
-> Not really a fan of these silly double/triple tabs everywhere.  I like
-> a straight line as much as anyone, but I'd probably remove them from
-> here.
->
-> > +             },
-> > +     },
-> > +     REGMAP_IRQ_REG(MAX77650_INT_nEN_F,
-> > +                    MAX77650_INT_GLBL_OFFSET, MAX77650_INT_nEN_F_MSK),
-> > +     REGMAP_IRQ_REG(MAX77650_INT_nEN_R,
-> > +                    MAX77650_INT_GLBL_OFFSET, MAX77650_INT_nEN_R_MSK),
-> > +     REGMAP_IRQ_REG(MAX77650_INT_TJAL1_R,
-> > +                    MAX77650_INT_GLBL_OFFSET, MAX77650_INT_TJAL1_R_MSK=
-),
-> > +     REGMAP_IRQ_REG(MAX77650_INT_TJAL2_R,
-> > +                    MAX77650_INT_GLBL_OFFSET, MAX77650_INT_TJAL2_R_MSK=
-),
-> > +     REGMAP_IRQ_REG(MAX77650_INT_DOD_R,
-> > +                    MAX77650_INT_GLBL_OFFSET, MAX77650_INT_DOD_R_MSK),
-> > +     REGMAP_IRQ_REG(MAX77650_INT_THM,
-> > +                    MAX77650_INT_CHG_OFFSET, MAX77650_INT_THM_MSK),
-> > +     REGMAP_IRQ_REG(MAX77650_INT_CHG,
-> > +                    MAX77650_INT_CHG_OFFSET, MAX77650_INT_CHG_MSK),
-> > +     REGMAP_IRQ_REG(MAX77650_INT_CHGIN,
-> > +                    MAX77650_INT_CHG_OFFSET, MAX77650_INT_CHGIN_MSK),
-> > +     REGMAP_IRQ_REG(MAX77650_INT_TJ_REG,
-> > +                    MAX77650_INT_CHG_OFFSET, MAX77650_INT_TJ_REG_MSK),
-> > +     REGMAP_IRQ_REG(MAX77650_INT_CHGIN_CTRL,
-> > +                    MAX77650_INT_CHG_OFFSET, MAX77650_INT_CHGIN_CTRL_M=
-SK),
-> > +     REGMAP_IRQ_REG(MAX77650_INT_SYS_CTRL,
-> > +                    MAX77650_INT_CHG_OFFSET, MAX77650_INT_SYS_CTRL_MSK=
-),
-> > +     REGMAP_IRQ_REG(MAX77650_INT_SYS_CNFG,
-> > +                    MAX77650_INT_CHG_OFFSET, MAX77650_INT_SYS_CNFG_MSK=
-),
-> > +};
-> > +
-> > +static const struct regmap_irq_chip max77650_irq_chip =3D {
-> > +     .name                   =3D "max77650-irq",
-> > +     .irqs                   =3D max77650_irqs,
-> > +     .num_irqs               =3D ARRAY_SIZE(max77650_irqs),
-> > +     .num_regs               =3D 2,
-> > +     .status_base            =3D MAX77650_REG_INT_GLBL,
-> > +     .mask_base              =3D MAX77650_REG_INTM_GLBL,
-> > +     .type_in_mask           =3D true,
-> > +     .type_invert            =3D true,
-> > +     .init_ack_masked        =3D true,
-> > +     .clear_on_unmask        =3D true,
-> > +};
-> > +
-> > +static const struct regmap_config max77650_regmap_config =3D {
-> > +     .name           =3D "max77650",
-> > +     .reg_bits       =3D 8,
-> > +     .val_bits       =3D 8,
-> > +};
-> > +
-> > +static int max77650_i2c_probe(struct i2c_client *i2c)
-> > +{
-> > +     struct regmap_irq_chip_data *irq_data;
-> > +     struct device *dev =3D &i2c->dev;
-> > +     struct irq_domain *domain;
-> > +     struct regmap *map;
-> > +     unsigned int val;
-> > +     int rv;
-> > +
-> > +     map =3D devm_regmap_init_i2c(i2c, &max77650_regmap_config);
-> > +     if (IS_ERR(map)) {
-> > +             dev_err(dev, "unable to initialize i2c regmap\n");
->
-> "Unable to initialise I2C Regmap"
->
-> > +             return PTR_ERR(map);
-> > +     }
-> > +
-> > +     rv =3D regmap_read(map, MAX77650_REG_CID, &val);
-> > +     if (rv) {
-> > +             dev_err(dev, "unable to read the CID from device\n");
->
-> "Unable to read Chip ID"
->
-> > +             return rv;
-> > +     }
-> > +
-> > +     switch (MAX77650_CID_BITS(val)) {
-> > +     case MAX77650_CID_77650A:
-> > +     case MAX77650_CID_77650C:
-> > +     case MAX77650_CID_77651A:
-> > +     case MAX77650_CID_77651B:
-> > +             break;
-> > +     default:
->
-> So you're exiting silently here.  What is the user going to think?
->
-> "Chip not supported - ID: %d"
->
-> > +             return -ENODEV;
-> > +     }
-> > +
-> > +     /*
-> > +      * This IC has a low-power mode which reduces the quiescent curre=
-nt
-> > +      * consumption to ~5.6uA but is only suitable for systems consumi=
-ng
-> > +      * less than ~2mA. Since this is not likely the case even on
-> > +      * linux-based wearables - keep the chip in normal power mode.
-> > +      */
-> > +     rv =3D regmap_update_bits(map,
-> > +                             MAX77650_REG_CNFG_GLBL,
-> > +                             MAX77650_SBIA_LPM_MASK,
-> > +                             MAX77650_SBIA_LPM_DISABLED);
-> > +     if (rv) {
-> > +             dev_err(dev, "unable to change the power mode\n");
->
-> "Unable ..."
->
-> > +             return rv;
-> > +     }
-> > +
-> > +     rv =3D devm_regmap_add_irq_chip(dev, map, i2c->irq,
-> > +                                   IRQF_ONESHOT | IRQF_SHARED, 0,
-> > +                                   &max77650_irq_chip, &irq_data);
-> > +     if (rv) {
-> > +             dev_err(dev, "unable to add the regmap irq chip\n");
->
-> "Unable to add Regmap IRQ chip"
->
-> > +             return rv;
-> > +     }
-> > +
-> > +     domain =3D regmap_irq_get_domain(irq_data);
->
-> No error checking?
->
+On Wed, Apr 03, 2019 at 06:44:44PM +0530, VenkataRajesh.Kalakodima@in.bosch.com wrote:
+> From: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
+> 
+> When rebooting, the Display driver is accessing H/W (reading DDR).
+> Therefore, there is a problem of hanging when setting DDR to self
+> refresh mode.
+> 
+> This patch implement the shutdown function and solve this problem
+> by stopping H/W access.
+> 
+> In addtion, on the ulcb board, since initial values of versaclock
+> are used as they are, signals are not output when initializing to
+> 0 with shutdown, so this patch excludes processing to initialize
+> versaclock to 0.
+> drm: rcar-du: Add HDMI control clock when S2RAM
+> 
+> Signed-off-by: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
+> 
+> (cherry picked from horms/renesas-bsp commit 3cfda6331c4069800dd4434427284aba8e6f1ed6)
+> [slongerbeam: keep integer i in rcar_du_pm_shutdown(), needed because of
+>  050e54d87f ("drm: rcar-du: drm: rcar-du: Add DU CMM support")]
+> 
+> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 
-This can only fail is irq_data is NULL and since the previous function
-succeeded we know it isn't.
+Maybe look into drm_atomic_helper_shutdown instead of hand-rolling? That
+should disable all display related stuff for you.
+-Daniel
 
-Bart
+> 
+> drm: rcar-du: cmm: lut and clu backup not required during
+>  shutdown
+> rcar_du_cmm_pm_suspend function copies LUT and CLU hardare
+> register values to memory. In the patch which adds DU CMM
+> support (https://github.com/renesas-rcar/du_cmm/commit/
+> 9a65d02119e4ae405a89a850463a6a0d0f2c1ecb), the intention of
+> the author was to backup the registers during suspend and
+> restore it on resume. But rcar_du_cmm_pm_suspend was also
+> called on system shutdown. Though it does not cause any harm,
+> it is not required during shutdown as it does not make sense
+> to backup. This patch ensures that rcar_du_cmm_pm_suspend is
+> called only during suspend
+> 
+> Fixes: https://github.com/renesas-rcar/du_cmm/commit/9a65d02119e4ae405a89a850463a6a0d0f2c1ecb
+> 
+> Signed-off-by: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
+> 
+>       - Resolved checkpatch errors
+>       - Resolved merge conflicts according to latest version
+> 
+> Signed-off-by: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 35 ++++++++++++++++++++
+>  drivers/gpu/drm/rcar-du/rcar_du_drv.c     | 54 +++++++++++++++++++++++++------
+>  drivers/gpu/drm/rcar-du/rcar_du_encoder.c |  2 +-
+>  drivers/gpu/drm/rcar-du/rcar_du_encoder.h |  1 +
+>  include/drm/bridge/dw_hdmi.h              |  1 +
+>  5 files changed, 83 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index 5971976..aa257d7 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -2033,6 +2033,41 @@ static void dw_hdmi_bridge_enable(struct drm_bridge *bridge)
+>  	mutex_unlock(&hdmi->mutex);
+>  }
+>  
+> +/*
+> + * This function controls clocks of dw_hdmi through drm_bridge
+> + * at system suspend/resume.
+> + * Arguments:
+> + *  bridge: drm_bridge that contains dw_hdmi.
+> + *  flag: controlled flag.
+> + *		false: is used when suspend.
+> + *		true: is used when resume.
+> + */
+> +void dw_hdmi_s2r_ctrl(struct drm_bridge *bridge, int flag)
+> +{
+> +	struct dw_hdmi *hdmi = bridge->driver_private;
+> +
+> +	if (!hdmi)
+> +		return;
+> +
+> +	if (flag) { /* enable clk */
+> +		if (hdmi->isfr_clk)
+> +			clk_prepare_enable(hdmi->isfr_clk);
+> +		if (hdmi->iahb_clk)
+> +			clk_prepare_enable(hdmi->iahb_clk);
+> +
+> +		initialize_hdmi_ih_mutes(hdmi);
+> +		dw_hdmi_setup_i2c(hdmi);
+> +		dw_hdmi_i2c_init(hdmi);
+> +		dw_hdmi_phy_setup_hpd(hdmi, NULL);
+> +	} else { /* disable clk */
+> +		if (hdmi->isfr_clk)
+> +			clk_disable_unprepare(hdmi->isfr_clk);
+> +		if (hdmi->iahb_clk)
+> +			clk_disable_unprepare(hdmi->iahb_clk);
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(dw_hdmi_s2r_ctrl);
+> +
+>  static const struct drm_bridge_funcs dw_hdmi_bridge_funcs = {
+>  	.attach = dw_hdmi_bridge_attach,
+>  	.enable = dw_hdmi_bridge_enable,
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> index 838b7c9..9eb63b0 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/wait.h>
+>  
+> +#include <drm/bridge/dw_hdmi.h>
+>  #include <drm/drmP.h>
+>  #include <drm/drm_atomic_helper.h>
+>  #include <drm/drm_crtc_helper.h>
+> @@ -368,18 +369,14 @@ static struct drm_driver rcar_du_driver = {
+>   */
+>  
+>  #ifdef CONFIG_PM_SLEEP
+> -static int rcar_du_pm_suspend(struct device *dev)
+> +static int rcar_du_pm_shutdown(struct device *dev)
+>  {
+>  	struct rcar_du_device *rcdu = dev_get_drvdata(dev);
+>  	struct drm_atomic_state *state;
+> -	int i;
+> -
+> -	if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM)) {
+> -		for (i = 0; i < rcdu->num_crtcs; ++i)
+> -			rcar_du_cmm_pm_suspend(&rcdu->crtcs[i]);
+> -	}
+> -
+> -	drm_kms_helper_poll_disable(rcdu->ddev);
+> +#if IS_ENABLED(CONFIG_DRM_RCAR_DW_HDMI)
+> +	struct drm_encoder *encoder;
+> +#endif
+> +		drm_kms_helper_poll_disable(rcdu->ddev);
+>  	drm_fbdev_cma_set_suspend_unlocked(rcdu->fbdev, true);
+>  
+>  	state = drm_atomic_helper_suspend(rcdu->ddev);
+> @@ -389,11 +386,43 @@ static int rcar_du_pm_suspend(struct device *dev)
+>  		return PTR_ERR(state);
+>  	}
+>  
+> +#if IS_ENABLED(CONFIG_DRM_RCAR_DW_HDMI)
+> +	list_for_each_entry(encoder,
+> +			    &rcdu->ddev->mode_config.encoder_list,
+> +			    head) {
+> +		struct rcar_du_encoder *renc = to_rcar_encoder(encoder);
+> +
+> +		if (renc->bridge && (renc->output == RCAR_DU_OUTPUT_HDMI0 ||
+> +				     renc->output == RCAR_DU_OUTPUT_HDMI1))
+> +			dw_hdmi_s2r_ctrl(encoder->bridge, false);
+> +	}
+> +#endif
+>  	rcdu->suspend_state = state;
+>  
+>  	return 0;
+>  }
+>  
+> +static int rcar_du_pm_suspend(struct device *dev)
+> +{
+> +	struct rcar_du_device *rcdu = dev_get_drvdata(dev);
+> +
+> +	int i, ret;
+> +
+> +	if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM)) {
+> +		for (i = 0; i < rcdu->num_crtcs; ++i)
+> +			rcar_du_cmm_pm_suspend(&rcdu->crtcs[i]);
+> +	}
+> +
+> +	ret = rcar_du_pm_shutdown(dev);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < rcdu->num_crtcs; ++i)
+> +		clk_set_rate(rcdu->crtcs[i].extclock, 0);
+> +	return 0;
+> +}
+> +
+>  static int rcar_du_pm_resume(struct device *dev)
+>  {
+>  	struct rcar_du_device *rcdu = dev_get_drvdata(dev);
+> @@ -504,6 +533,12 @@ static int rcar_du_probe(struct platform_device *pdev)
+>  	return ret;
+>  }
+>  
+> +static void rcar_du_shutdown(struct platform_device *pdev)
+> +{
+> +#ifdef CONFIG_PM_SLEEP
+> +	rcar_du_pm_shutdown(&pdev->dev);
+> +#endif
+> +}
+>  static struct platform_driver rcar_du_platform_driver = {
+>  	.probe		= rcar_du_probe,
+>  	.remove		= rcar_du_remove,
+> @@ -512,6 +547,7 @@ static struct platform_driver rcar_du_platform_driver = {
+>  		.pm	= &rcar_du_pm_ops,
+>  		.of_match_table = rcar_du_of_table,
+>  	},
+> +	.shutdown       = rcar_du_shutdown,
+>  };
+>  
+>  static int __init rcar_du_init(void)
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_encoder.c b/drivers/gpu/drm/rcar-du/rcar_du_encoder.c
+> index f9c933d..98df8a2 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_encoder.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_encoder.c
+> @@ -62,7 +62,7 @@ int rcar_du_encoder_init(struct rcar_du_device *rcdu,
+>  
+>  	dev_dbg(rcdu->dev, "initializing encoder %pOF for output %u\n",
+>  		enc_node, output);
+> -
+> +	renc->bridge = bridge;
+>  	/* Locate the DRM bridge from the encoder DT node. */
+>  	bridge = of_drm_find_bridge(enc_node);
+>  	if (!bridge) {
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_encoder.h b/drivers/gpu/drm/rcar-du/rcar_du_encoder.h
+> index 2d2abca..cc5bfcb 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_encoder.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_encoder.h
+> @@ -23,6 +23,7 @@ struct rcar_du_device;
+>  struct rcar_du_encoder {
+>  	struct drm_encoder base;
+>  	enum rcar_du_output output;
+> +	struct drm_bridge *bridge;
+>  };
+>  
+>  #define to_rcar_encoder(e) \
+> diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
+> index ccb5aa8..36383cf4 100644
+> --- a/include/drm/bridge/dw_hdmi.h
+> +++ b/include/drm/bridge/dw_hdmi.h
+> @@ -171,5 +171,6 @@ enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
+>  void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
+>  			    bool force, bool disabled, bool rxsense);
+>  void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data);
+> +void dw_hdmi_s2r_ctrl(struct drm_bridge *bridge, int flag);
+>  
+>  #endif /* __IMX_HDMI_H__ */
+> -- 
+> 2.7.4
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-> > +     return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
-> > +                                 max77650_cells, ARRAY_SIZE(max77650_c=
-ells),
-> > +                                 NULL, 0, domain);
-> > +}
-> > +
-> > +static const struct of_device_id max77650_of_match[] =3D {
-> > +     { .compatible =3D "maxim,max77650" },
-> > +     { }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, max77650_of_match);
-> > +
-> > +static struct i2c_driver max77650_i2c_driver =3D {
-> > +     .driver =3D {
-> > +             .name =3D "max77650",
-> > +             .of_match_table =3D of_match_ptr(max77650_of_match),
-> > +     },
-> > +     .probe_new =3D max77650_i2c_probe,
->
-> I wrote this years ago.  Hasn't it gone away yet?
->
-> > +};
-> > +module_i2c_driver(max77650_i2c_driver);
-> > +
-> > +MODULE_DESCRIPTION("MAXIM 77650/77651 multi-function core driver");
-> > +MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski@baylibre.com>");
-> > +MODULE_LICENSE("GPL v2");
-> > diff --git a/include/linux/mfd/max77650.h b/include/linux/mfd/max77650.=
-h
-> > new file mode 100644
-> > index 000000000000..c809e211a8cd
-> > --- /dev/null
-> > +++ b/include/linux/mfd/max77650.h
-> > @@ -0,0 +1,59 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright (C) 2018 BayLibre SAS
-> > + * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > + *
-> > + * Common definitions for MAXIM 77650/77651 charger/power-supply.
-> > + */
-> > +
-> > +#ifndef MAX77650_H
-> > +#define MAX77650_H
-> > +
-> > +#include <linux/bits.h>
-> > +
-> > +#define MAX77650_REG_INT_GLBL                0x00
-> > +#define MAX77650_REG_INT_CHG         0x01
-> > +#define MAX77650_REG_STAT_CHG_A              0x02
-> > +#define MAX77650_REG_STAT_CHG_B              0x03
-> > +#define MAX77650_REG_ERCFLAG         0x04
-> > +#define MAX77650_REG_STAT_GLBL               0x05
-> > +#define MAX77650_REG_INTM_GLBL               0x06
-> > +#define MAX77650_REG_INTM_CHG                0x07
-> > +#define MAX77650_REG_CNFG_GLBL               0x10
-> > +#define MAX77650_REG_CID             0x11
-> > +#define MAX77650_REG_CNFG_GPIO               0x12
-> > +#define MAX77650_REG_CNFG_CHG_A              0x18
-> > +#define MAX77650_REG_CNFG_CHG_B              0x19
-> > +#define MAX77650_REG_CNFG_CHG_C              0x1a
-> > +#define MAX77650_REG_CNFG_CHG_D              0x1b
-> > +#define MAX77650_REG_CNFG_CHG_E              0x1c
-> > +#define MAX77650_REG_CNFG_CHG_F              0x1d
-> > +#define MAX77650_REG_CNFG_CHG_G              0x1e
-> > +#define MAX77650_REG_CNFG_CHG_H              0x1f
-> > +#define MAX77650_REG_CNFG_CHG_I              0x20
-> > +#define MAX77650_REG_CNFG_SBB_TOP    0x28
-> > +#define MAX77650_REG_CNFG_SBB0_A     0x29
-> > +#define MAX77650_REG_CNFG_SBB0_B     0x2a
-> > +#define MAX77650_REG_CNFG_SBB1_A     0x2b
-> > +#define MAX77650_REG_CNFG_SBB1_B     0x2c
-> > +#define MAX77650_REG_CNFG_SBB2_A     0x2d
-> > +#define MAX77650_REG_CNFG_SBB2_B     0x2e
-> > +#define MAX77650_REG_CNFG_LDO_A              0x38
-> > +#define MAX77650_REG_CNFG_LDO_B              0x39
-> > +#define MAX77650_REG_CNFG_LED0_A     0x40
-> > +#define MAX77650_REG_CNFG_LED1_A     0x41
-> > +#define MAX77650_REG_CNFG_LED2_A     0x42
-> > +#define MAX77650_REG_CNFG_LED0_B     0x43
-> > +#define MAX77650_REG_CNFG_LED1_B     0x44
-> > +#define MAX77650_REG_CNFG_LED2_B     0x45
-> > +#define MAX77650_REG_CNFG_LED_TOP    0x46
-> > +
-> > +#define MAX77650_CID_MASK            GENMASK(3, 0)
-> > +#define MAX77650_CID_BITS(_reg)              (_reg & MAX77650_CID_MASK=
-)
-> > +
-> > +#define MAX77650_CID_77650A          0x03
-> > +#define MAX77650_CID_77650C          0x0a
-> > +#define MAX77650_CID_77651A          0x06
-> > +#define MAX77650_CID_77651B          0x08
-> > +
-> > +#endif /* MAX77650_H */
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Linaro Services Technical Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
