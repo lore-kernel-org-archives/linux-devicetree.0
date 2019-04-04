@@ -1,36 +1,42 @@
-From: Colin King <colin.king@canonical.com>
-Subject: [PATCH] Documentation: bus: ti-sysc: fix spelling mistake "multipe" -> "multiple"
-Date: Thu,  4 Apr 2019 09:15:29 +0100
-Message-ID: <20190404081529.15394-1-colin.king@canonical.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+From: John Stultz <john.stultz@linaro.org>
+Subject: [RESEND][PATCH 0/3] DMA dts changes for hi3660
+Date: Thu,  4 Apr 2019 01:16:25 -0700
+Message-ID: <1554365788-25610-1-git-send-email-john.stultz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Faiz Abbas <faiz_abbas@ti.com>, devicetree@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+To: lkml <linux-kernel@vger.kernel.org>
+Cc: John Stultz <john.stultz@linaro.org>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Here are a few dts changes which didn't get picked up
+for the last merge window to enable support for code
+changes that did land in v5.1.
 
-There is a spelling mistake in the Documentation. Fix it.
+Let me know if you have any objecitons or feedback!
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- Documentation/devicetree/bindings/bus/ti-sysc.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+thanks
+-john
 
-diff --git a/Documentation/devicetree/bindings/bus/ti-sysc.txt b/Documentation/devicetree/bindings/bus/ti-sysc.txt
-index 85a23f551f02..8eec4c384000 100644
---- a/Documentation/devicetree/bindings/bus/ti-sysc.txt
-+++ b/Documentation/devicetree/bindings/bus/ti-sysc.txt
-@@ -131,6 +131,6 @@ using offsets from l4_cfg second segment (0x4a000000 + 0x80000 = 0x4a0ab000):
- 		};
- 	};
- 
--Note that other SoCs, such as am335x can have multipe child devices. On am335x
-+Note that other SoCs, such as am335x can have multiple child devices. On am335x
- there are two MUSB instances, two USB PHY instances, and a single CPPI41 DMA
- instance as children of a single interconnet target module.
+Cc: Tanglei Han <hantanglei@huawei.com>
+Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
+Cc: Ryan Grachek <ryan@edited.us>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Wei Xu <xuwei5@hisilicon.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org
+
+
+John Stultz (2):
+  arm64: dts: hi3660: Add dma to uart nodes
+  arm64: dts: hi3660: Fixup unofficial dma-min-chan to dma-channel-mask
+
+Youlin Wang (1):
+  arm64: dts: hi3660: Add hisi asp dma device
+
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+
 -- 
-2.20.1
+2.7.4
