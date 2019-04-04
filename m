@@ -1,73 +1,39 @@
-From: "Andrew Jeffery" <andrew@aj.id.au>
-Subject: =?UTF-8?Q?Re:_[PATCH_2/5]_media:_platform:_Aspeed:_Make_reserved_memory_?=
- =?UTF-8?Q?optional?=
-Date: Wed, 03 Apr 2019 22:16:34 -0400
-Message-ID: <e6bfc462-da83-4c2e-9f33-24727e5afd00@www.fastmail.com>
-References: <1554229504-5661-1-git-send-email-eajames@linux.ibm.com>
- <1554229504-5661-3-git-send-email-eajames@linux.ibm.com>
- <7effb2de-cc91-47af-88a2-a0075262e9c4@www.fastmail.com>
- <dd017f44-5d1d-d657-b159-c9dbaadd795f@linux.vnet.ibm.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] of: Documentation: Correct return value from of_overlay_fdt_apply
+Date: Thu,  4 Apr 2019 15:25:55 +1300
+Message-ID: <20190404022555.29382-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <dd017f44-5d1d-d657-b159-c9dbaadd795f@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.vnet.ibm.com>, Eddie James <eajames@linux.ibm.com>, linux-media@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Joel Stanley <joel@jms.id.au>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org, mark.rutland@arm.com, Rob Herring <robh+dt@kernel.org>
+To: pantelis.antoniou@konsulko.com, frowand.list@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
+The return from of_overlay_fdt_apply() just indicates success or fail.
+The cookie is returned via reference.
 
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ Documentation/devicetree/overlay-notes.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On Thu, 4 Apr 2019, at 01:05, Eddie James wrote:
-> 
-> On 4/3/19 1:01 AM, Andrew Jeffery wrote:
-> >
-> > On Wed, 3 Apr 2019, at 04:55, Eddie James wrote:
-> >> Reserved memory doesn't need to be required; system memory would work
-> >> fine.
-> > I had to do a bit of legwork to understand what you were doing here. My
-> > understanding is that we allocate out of the default CMA region if the
-> > memory-region property isn't specified. Is that what you're expecting?
-> > Could be helpful to be a little less terse in the commit message.
-> 
-> 
-> Correct.
-> 
-> 
-> >
-> >> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> >> ---
-> >>   drivers/media/platform/aspeed-video.c | 6 +-----
-> >>   1 file changed, 1 insertion(+), 5 deletions(-)
-> >>
-> >> diff --git a/drivers/media/platform/aspeed-video.c
-> >> b/drivers/media/platform/aspeed-video.c
-> >> index 55c55a6..8144fe3 100644
-> >> --- a/drivers/media/platform/aspeed-video.c
-> >> +++ b/drivers/media/platform/aspeed-video.c
-> >> @@ -1608,11 +1608,7 @@ static int aspeed_video_init(struct aspeed_video
-> >> *video)
-> >>   		return PTR_ERR(video->vclk);
-> >>   	}
-> >>   
-> >> -	rc = of_reserved_mem_device_init(dev);
-> >> -	if (rc) {
-> >> -		dev_err(dev, "Unable to reserve memory\n");
-> >> -		return rc;
-> >> -	}
-> >> +	of_reserved_mem_device_init(dev);
-> > You're ignoring *all* errors here with the expectation that the cause is the
-> > missing memory-region property. However, other errors can propagate
-> > out of of_reserved_mem_device_init() - e.g. ENOMEM. Rather than remove
-> > error checking, I think you should explicitly test for ENODEV, which is what is
-> > returned if the memory-region property is absent.
-> 
-> 
-> But it doesn't matter if it fails for any reason, any DMA allocation 
-> should fall back to default CMA memory. In the case of ENOMEM or other 
-> errors, then the later calls to allocate DMA may fail and we can deal 
-> with it then.
-
-Fair enough then. I think it deserves a comment, but up to you.
-
-Andrew
+diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/d=
+evicetree/overlay-notes.txt
+index 725fb8d255c1..62f2003d6205 100644
+--- a/Documentation/devicetree/overlay-notes.txt
++++ b/Documentation/devicetree/overlay-notes.txt
+@@ -88,7 +88,8 @@ Overlay in-kernel API
+ The API is quite easy to use.
+=20
+ 1. Call of_overlay_fdt_apply() to create and apply an overlay changeset.=
+ The
+-return value is an error or a cookie identifying this overlay.
++return indicates success or failure. A a cookie identifying this overlay=
+ is
++returned via reference on success.
+=20
+ 2. Call of_overlay_remove() to remove and cleanup the overlay changeset
+ previously created via the call to of_overlay_fdt_apply(). Removal of an
+--=20
+2.21.0
