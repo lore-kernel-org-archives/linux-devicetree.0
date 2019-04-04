@@ -1,87 +1,80 @@
-From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] ARM: dts: sun8i: tbs-a711: Enable
- UART2 (for NEO-6M GPS module)
-Date: Thu, 4 Apr 2019 14:43:22 +0200
-Message-ID: <20190404124322.aejij7qomgoco37u@core.my.home>
-References: <20190401115616.21337-1-megous@megous.com>
- <20190401115616.21337-6-megous@megous.com>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH net-next v3 1/4] dt-bindings: net: phy: add g12a mdio mux documentation
+Date: Thu,  4 Apr 2019 15:11:44 +0200
+Message-ID: <20190404131147.31156-2-jbrunet@baylibre.com>
+References: <20190404131147.31156-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBB27XS7SQKGQEF23STFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20190401115616.21337-6-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190404131147.31156-1-jbrunet@baylibre.com>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller" <davem@davemloft.net>, Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Maxime,
+Add documentation for the device tree bindings of the MDIO mux of Amlogic
+g12a SoC family
 
-On Mon, Apr 01, 2019 at 01:56:16PM +0200, megous via linux-sunxi wrote:
-> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> 
-> TBS A711 tablet contains u-blox NEO-6M module connected to UART2.
-> Enable UART2 to gain access to the module from userspace.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ .../bindings/net/mdio-mux-meson-g12a.txt      | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/mdio-mux-meson-g12a.txt
 
-Other GPS bits are now applied (thank you, Johan), so if this last bit
-can go in too via a sunxi tree, the series will be complete.
-
-thank you,
-  Ondrej
-
-> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> index d70fe04b66f0..fd170bc45927 100644
-> --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> @@ -98,6 +98,13 @@
->  		};
->  	};
->  
-> +	reg_gps: reg-gps {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "gps";
-> +		regulator-min-microvolt = <3000000>;
-> +		regulator-max-microvolt = <3000000>;
-> +	};
-> +
->  	reg_vbat: reg-vbat {
->  		compatible = "regulator-fixed";
->  		regulator-name = "vbat";
-> @@ -422,6 +429,20 @@
->  	status = "okay";
->  };
->  
-> +&uart2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart2_pb_pins>;
-> +	status = "okay";
-> +
-> +	gnss {
-> +		compatible = "u-blox,neo-6m";
-> +
-> +		v-bckp-supply = <&reg_rtc_ldo>;
-> +		vcc-supply = <&reg_gps>;
-> +		current-speed = <9600>;
-> +	};
-> +};
-> +
->  &usb_otg {
->  	dr_mode = "otg";
->  	status = "okay";
-> -- 
-> 2.21.0
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+diff --git a/Documentation/devicetree/bindings/net/mdio-mux-meson-g12a.txt b/Documentation/devicetree/bindings/net/mdio-mux-meson-g12a.txt
+new file mode 100644
+index 000000000000..3a96cbed9294
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/mdio-mux-meson-g12a.txt
+@@ -0,0 +1,48 @@
++Properties for the MDIO bus multiplexer/glue of Amlogic G12a SoC family.
++
++This is a special case of a MDIO bus multiplexer. It allows to choose between
++the internal mdio bus leading to the embedded 10/100 PHY or the external
++MDIO bus.
++
++Required properties in addition to the generic multiplexer properties:
++- compatible : amlogic,g12a-mdio-mux
++- reg: physical address and length of the multiplexer/glue registers
++- clocks: list of clock phandle, one for each entry clock-names.
++- clock-names: should contain the following:
++  * "pclk"   : peripheral clock.
++  * "clkin0" : platform crytal
++  * "clkin1" : SoC 50MHz MPLL
++
++Example :
++
++mdio_mux: mdio-multiplexer@4c000 {
++	compatible = "amlogic,g12a-mdio-mux";
++	reg = <0x0 0x4c000 0x0 0xa4>;
++	clocks = <&clkc CLKID_ETH_PHY>,
++		 <&xtal>,
++		 <&clkc CLKID_MPLL_5OM>;
++	clock-names = "pclk", "clkin0", "clkin1";
++	mdio-parent-bus = <&mdio0>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	ext_mdio: mdio@0 {
++		reg = <0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	int_mdio: mdio@1 {
++		reg = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		internal_ephy: ethernet-phy@8 {
++			compatible = "ethernet-phy-id0180.3301",
++				     "ethernet-phy-ieee802.3-c22";
++			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
++			reg = <8>;
++			max-speed = <100>;
++		};
++	};
++};
+-- 
+2.20.1
