@@ -1,74 +1,611 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH 1/8] dt-bindings: memory: tegra: Add Tegra210 EMC bindings
-Date: Thu, 4 Apr 2019 12:17:35 +0300
-Message-ID: <6bd34a19-26e0-6bdd-ce89-4a30d35e9823@gmail.com>
-References: <20190325074523.26456-1-josephl@nvidia.com>
- <20190325074523.26456-2-josephl@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190325074523.26456-2-josephl@nvidia.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Igor Opaniuk <igor.opaniuk@toradex.com>
+Subject: [PATCH v1 1/1] ARM: dts: colibri: introduce dts with UHS-I support enabled
+Date: Thu,  4 Apr 2019 11:19:19 +0200
+Message-ID: <20190404091919.30772-1-igor.opaniuk@toradex.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, marcel@ziswiler.com
 List-Id: devicetree@vger.kernel.org
 
-MjUuMDMuMjAxOSAxMDo0NSwgSm9zZXBoIExvINC/0LjRiNC10YI6Cj4gQWRkIHRoZSBiaW5kaW5n
-IGRvY3VtZW50IGZvciB0aGUgZXh0ZXJuYWwgbWVtb3J5IGNvbnRyb2xsZXIgKEVNQykgd2hpY2gK
-PiBjb21tdW5pY2F0ZXMgd2l0aCBleHRlcm5hbCBMUEREUjQgZGV2aWNlcy4gSXQgaW5jbHVkZXMg
-dGhlIGJpbmRpbmdzIG9mCj4gdGhlIEVNQyBub2RlIGFuZCB0aGUgRU1DIHRhYmxlIG9mIGRpZmZl
-cmVudCByYXRlcy4KPiAKPiBUbyBzdXBwb3J0IGhpZ2ggcmF0ZXMgZm9yIExQRERSNCwgdGhlIEVN
-QyB0YWJsZSBtdXN0IGJlIHRyYWluZWQgYmVmb3JlCj4gaXQgY2FuIGJlIHVzZWQgZm9yIHJ1bnRp
-bWUgY2xvY2sgc3dpdGNoaW5nLiBJdCBoYXMgYmVlbiBkb25lIGJ5IGZpcm13YXJlCj4gYW5kIG1l
-cmdlZCB0byB0aGUgdGFibGUgdGhhdCBMaW51eCBrZXJuZWwgdXNlcy4gRm9yIGJhY2t3YXJkCj4g
-Y29tcGF0aWJpbGl0eSB3aXRoIHRoZSBkZXZpY2VzIHRoYXQgaGFkIGJlZW4gbGF1bmNoZWQgb24g
-dGhlIG1hcmtldCwgbGlrZQo+IFNoaWVsZCBhbmQgSmV0c29uIHBsYXRmb3JtcywgdGhlIGJpbmRp
-bmdzIGluIHRoZSBFTUMgdGFibGUgc2hvdWxkIHJlbWFpbgo+IHRoZSBzYW1lLiBTbyB0aGUgZmly
-bXdhcmUgY2FuIHJlY29nbml6ZSB0aGVtIGFuZCBtZXJnZSB0aGUgdHJhaW5lZCBFTUMKPiB0YWJs
-ZSBmb3IgdGhlIGtlcm5lbC4KPiAKPiBCYXNlZCBvbiB0aGUgd29yayBvZiBQZXRlciBEZSBTY2hy
-aWp2ZXIgPHBkZXNjaHJpanZlckBudmlkaWEuY29tPi4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKb3Nl
-cGggTG8gPGpvc2VwaGxAbnZpZGlhLmNvbT4KPiAtLS0KPiAgLi4uL252aWRpYSx0ZWdyYTIxMC1l
-bWMudHh0ICAgICAgICAgICAgICAgICAgIHwgNjA1ICsrKysrKysrKysrKysrKysrKwo+ICAxIGZp
-bGUgY2hhbmdlZCwgNjA1IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1vcnktY29udHJvbGxlcnMvbnZpZGlhLHRl
-Z3JhMjEwLWVtYy50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL21lbW9yeS1jb250cm9sbGVycy9udmlkaWEsdGVncmEyMTAtZW1jLnR4dCBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1vcnktY29udHJvbGxlcnMvbnZpZGlh
-LHRlZ3JhMjEwLWVtYy50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAw
-MDAwMC4uMWY2YjZkZjZkMzdiCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1vcnktY29udHJvbGxlcnMvbnZpZGlhLHRlZ3JhMjEwLWVt
-Yy50eHQKPiBAQCAtMCwwICsxLDYwNSBAQAo+ICtOVklESUEgVGVncmEyMTAgU29DIEVNQyAoZXh0
-ZXJuYWwgbWVtb3J5IGNvbnRyb2xsZXIpCj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT0KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXMgOgo+ICst
-IGNvbXBhdGlibGUgOiBzaG91bGQgYmUgIm52aWRpYSx0ZWdyYTIxLWVtYyIsICJudmlkaWEsdGVn
-cmEyMTAtZW1jIi4KPiArLSByZWcgOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBv
-ZiB0aGUgY29udHJvbGxlcidzIHJlZ2lzdGVycy4KPiArLSBjbG9ja3MgOiBwaGFuZGxlcyBvZiB0
-aGUgcG9zc2libGUgc291cmNlIGNsb2Nrcwo+ICstIGNsb2NrLW5hbWVzIDogbmFtZXMgb2YgdGhl
-IHBvc3NpYmxlIHNvdXJjZSBjbG9ja3MKPiArLSAjYWRkcmVzcy1jZWxscyA6IHNob3VsZCBiZSAx
-Cj4gKy0gI3NpemUtY2VsbHMgOiBzaG91bGQgYmUgMAo+ICstIG52aWRpYSxtZW1vcnktY29udHJv
-bGxlciA6IHBoYW5kbGUgb2YgdGhlIG1lbW9yeSBjb250cm9sbGVyLgo+ICstIG52aWRpYSx1c2Ut
-cmFtLWNvZGUgOiBib29sZWFuLCBpbmRpY2F0ZXMgd2hldGhlciB3ZSBzaG91bGQgdXNlIFJBTV9D
-T0RFIGluCj4gKwkJICAgICAgICB0aGUgcmVnaXN0ZXIgdG8gZmluZCBtYXRjaGluZyBlbWMtdGFi
-bGUgbm9kZXMKPiArCgpUaGUgImludGVycnVwdHMiIHByb3BlcnR5IGlzIG1pc3NpbmcuIFlvdSBj
-b3VsZCB1c2UgdGhlIENMSyBoYW5kc2hha2UgZXZlbnQgdG8gd2FpdCBmb3IgdGhlIGNsb2NrIHJh
-dGUgY2hhbmdlIGNvbXBsZXRpb24gaW5zdGVhZCBvZiBwb2xsaW5nIHRoZSByZWdpc3RlciBpZiB5
-b3UgZGlkbid0IHJlbHkgb24gdGhlIGRvd25zdHJlYW0gYmluZGluZywgc2VlIFQyMCBkcml2ZXIg
-Zm9yIHRoZSBleGFtcGxlLiBCVFcsIEknbSB3b25kZXJpbmcgaWYgeW91J3JlIGdvaW5nIHRvIHB1
-c2ggb3RoZXIgZG93bnN0cmVhbSBiaW5kaW5ncyB0byB1cHN0cmVhbS4uIGFwcGFyZW50bHkgRU1D
-IHdvbid0IGJlIHRoZSBvbmx5IGJpbmRpbmcgdGhhdCB0aGF0IGNvdWxkIGRpdmVyZ2UgZnJvbSB0
-aGUgdXBzdHJlYW0gYW5kIHRoZW4gaXQncyBub3Qgb2J2aW91cyB3aGV0aGVyIHRoZSBsb2NrZWQt
-ZG93biB2YXJpYW50IG9mIFQyMTAgaXMgc3VwcG9ydGFibGUgYnkgdXBzdHJlYW0gYXQgYWxsLgoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
-LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
-cm5lbAo=
+Introduce DTS for Colibri iMX6DL with proper configuration for VGEN3,
+which allows that rail to be automatically switched to 1.8 volts for
+proper UHS-I operation mode.
+
+Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+---
+ arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts  | 245 +-----------------
+ arch/arm/boot/dts/imx6dl-colibri-eval-v3.dtsi | 213 +++++++++++++++
+ .../boot/dts/imx6dl-colibri-uhs-eval-v3.dts   |  29 +++
+ arch/arm/boot/dts/imx6qdl-colibri.dtsi        |  36 ++-
+ 4 files changed, 278 insertions(+), 245 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6dl-colibri-eval-v3.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6dl-colibri-uhs-eval-v3.dts
+
+diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+index 9a5d6c94cca4..14d7f359d8d6 100644
+--- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
++++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+@@ -1,258 +1,19 @@
++// SPDX-License-Identifier: GPL-2.0 OR X11
+ /*
+- * Copyright 2014-2016 Toradex AG
+- * Copyright 2012 Freescale Semiconductor, Inc.
+- * Copyright 2011 Linaro Ltd.
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
++ * Copyright 2019 Toradex AG
+  */
+ 
+ /dts-v1/;
+ 
+-#include <dt-bindings/input/input.h>
+-#include <dt-bindings/interrupt-controller/irq.h>
+-#include "imx6dl.dtsi"
+-#include "imx6qdl-colibri.dtsi"
++#include "imx6dl-colibri-eval-v3.dtsi"
+ 
+ / {
+ 	model = "Toradex Colibri iMX6DL/S on Colibri Evaluation Board V3";
+ 	compatible = "toradex,colibri_imx6dl-eval-v3", "toradex,colibri_imx6dl",
+ 		     "fsl,imx6dl";
+-
+-	/* Will be filled by the bootloader */
+-	memory@10000000 {
+-		device_type = "memory";
+-		reg = <0x10000000 0>;
+-	};
+-
+-	aliases {
+-		i2c0 = &i2c2;
+-		i2c1 = &i2c3;
+-	};
+-
+-	aliases {
+-		rtc0 = &rtc_i2c;
+-		rtc1 = &snvs_rtc;
+-	};
+-
+-	chosen {
+-		stdout-path = "serial0:115200n8";
+-	};
+-
+-	/* Fixed crystal dedicated to mcp251x */
+-	clk16m: clock-16m {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <16000000>;
+-		clock-output-names = "clk16m";
+-	};
+-
+-	gpio-keys {
+-		compatible = "gpio-keys";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_gpio_keys>;
+-
+-		wakeup {
+-			label = "Wake-Up";
+-			gpios = <&gpio2 22 GPIO_ACTIVE_HIGH>; /* SODIMM 45 */
+-			linux,code = <KEY_WAKEUP>;
+-			debounce-interval = <10>;
+-			wakeup-source;
+-		};
+-	};
+-
+-	lcd_display: disp0 {
+-		compatible = "fsl,imx-parallel-display";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		interface-pix-fmt = "bgr666";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_ipu1_lcdif>;
+-		status = "okay";
+-
+-		port@0 {
+-			reg = <0>;
+-
+-			lcd_display_in: endpoint {
+-				remote-endpoint = <&ipu1_di0_disp0>;
+-			};
+-		};
+-
+-		port@1 {
+-			reg = <1>;
+-
+-			lcd_display_out: endpoint {
+-				remote-endpoint = <&lcd_panel_in>;
+-			};
+-		};
+-	};
+-
+-	panel: panel {
+-		/*
+-		 * edt,et057090dhu: EDT 5.7" LCD TFT
+-		 * edt,et070080dh6: EDT 7.0" LCD TFT
+-		 */
+-		compatible = "edt,et057090dhu";
+-		backlight = <&backlight>;
+-
+-		port {
+-			lcd_panel_in: endpoint {
+-				remote-endpoint = <&lcd_display_out>;
+-			};
+-		};
+-	};
+-};
+-
+-&backlight {
+-	brightness-levels = <0 127 191 223 239 247 251 255>;
+-	default-brightness-level = <1>;
+-	status = "okay";
+-};
+-
+-/* Colibri SSP */
+-&ecspi4 {
+-	status = "okay";
+-
+-	mcp251x0: mcp251x@0 {
+-		compatible = "microchip,mcp2515";
+-		reg = <0>;
+-		clocks = <&clk16m>;
+-		interrupt-parent = <&gpio3>;
+-		interrupts = <27 0x2>;
+-		spi-max-frequency = <10000000>;
+-		status = "okay";
+-	};
+-};
+-
+-&hdmi {
+-	status = "okay";
+-};
+-
+-/*
+- * Colibri I2C: I2C3_SDA/SCL on SODIMM 194/196 (e.g. RTC on carrier board)
+- */
+-&i2c3 {
+-	status = "okay";
+-
+-	/* M41T0M6 real time clock on carrier board */
+-	rtc_i2c: rtc@68 {
+-		compatible = "st,m41t0";
+-		reg = <0x68>;
+-	};
+-};
+-
+-&ipu1_di0_disp0 {
+-	remote-endpoint = <&lcd_display_in>;
+-};
+-
+-&pwm1 {
+-	status = "okay";
+-};
+-
+-&pwm2 {
+-	status = "okay";
+-};
+-
+-&pwm3 {
+-	status = "okay";
+-};
+-
+-&pwm4 {
+-	status = "okay";
+-};
+-
+-&reg_usb_host_vbus {
+-	status = "okay";
+-};
+-
+-&uart1 {
+-	status = "okay";
+-};
+-
+-&uart2 {
+-	status = "okay";
+-};
+-
+-&uart3 {
+-	status = "okay";
+-};
+-
+-&usbh1 {
+-	vbus-supply = <&reg_usb_host_vbus>;
+-	status = "okay";
+-};
+-
+-&usbotg {
+-	status = "okay";
+ };
+ 
+ /* Colibri MMC */
+ &usdhc1 {
+ 	status = "okay";
+ };
+-
+-&weim {
+-	status = "okay";
+-
+-	/* weim memory map: 32MB on CS0, CS1, CS2 and CS3 */
+-	ranges = <0 0 0x08000000 0x02000000
+-		  1 0 0x0a000000 0x02000000
+-		  2 0 0x0c000000 0x02000000
+-		  3 0 0x0e000000 0x02000000>;
+-
+-	/* SRAM on Colibri nEXT_CS0 */
+-	sram@0,0 {
+-		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
+-		reg = <0 0 0x00010000>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		bank-width = <2>;
+-		fsl,weim-cs-timing = <0x00010081 0x00000000 0x04000000
+-				      0x00000000 0x04000040 0x00000000>;
+-	};
+-
+-	/* SRAM on Colibri nEXT_CS1 */
+-	sram@1,0 {
+-		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
+-		reg = <1 0 0x00010000>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		bank-width = <2>;
+-		fsl,weim-cs-timing = <0x00010081 0x00000000 0x04000000
+-				      0x00000000 0x04000040 0x00000000>;
+-	};
+-};
+diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dtsi
+new file mode 100644
+index 000000000000..3e73fcaca057
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dtsi
+@@ -0,0 +1,213 @@
++// SPDX-License-Identifier: GPL-2.0 OR X11
++/*
++ * Copyright 2014-2016 Toradex AG
++ * Copyright 2012 Freescale Semiconductor, Inc.
++ * Copyright 2011 Linaro Ltd.
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include "imx6dl.dtsi"
++#include "imx6qdl-colibri.dtsi"
++
++/ {
++	/* Will be filled by the bootloader */
++	memory@10000000 {
++		device_type = "memory";
++		reg = <0x10000000 0>;
++	};
++
++	aliases {
++		i2c0 = &i2c2;
++		i2c1 = &i2c3;
++	};
++
++	aliases {
++		rtc0 = &rtc_i2c;
++		rtc1 = &snvs_rtc;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	/* Fixed crystal dedicated to mcp251x */
++	clk16m: clock-16m {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <16000000>;
++		clock-output-names = "clk16m";
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_keys>;
++
++		wakeup {
++			label = "Wake-Up";
++			gpios = <&gpio2 22 GPIO_ACTIVE_HIGH>; /* SODIMM 45 */
++			linux,code = <KEY_WAKEUP>;
++			debounce-interval = <10>;
++			wakeup-source;
++		};
++	};
++
++	lcd_display: disp0 {
++		compatible = "fsl,imx-parallel-display";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		interface-pix-fmt = "bgr666";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ipu1_lcdif>;
++		status = "okay";
++
++		port@0 {
++			reg = <0>;
++
++			lcd_display_in: endpoint {
++				remote-endpoint = <&ipu1_di0_disp0>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			lcd_display_out: endpoint {
++				remote-endpoint = <&lcd_panel_in>;
++			};
++		};
++	};
++
++	panel: panel {
++		/*
++		 * edt,et057090dhu: EDT 5.7" LCD TFT
++		 * edt,et070080dh6: EDT 7.0" LCD TFT
++		 */
++		compatible = "edt,et057090dhu";
++		backlight = <&backlight>;
++
++		port {
++			lcd_panel_in: endpoint {
++				remote-endpoint = <&lcd_display_out>;
++			};
++		};
++	};
++};
++
++&backlight {
++	brightness-levels = <0 127 191 223 239 247 251 255>;
++	default-brightness-level = <1>;
++	status = "okay";
++};
++
++/* Colibri SSP */
++&ecspi4 {
++	status = "okay";
++
++	mcp251x0: mcp251x@0 {
++		compatible = "microchip,mcp2515";
++		reg = <0>;
++		clocks = <&clk16m>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <27 0x2>;
++		spi-max-frequency = <10000000>;
++		status = "okay";
++	};
++};
++
++&hdmi {
++	status = "okay";
++};
++
++/*
++ * Colibri I2C: I2C3_SDA/SCL on SODIMM 194/196 (e.g. RTC on carrier board)
++ */
++&i2c3 {
++	status = "okay";
++
++	/* M41T0M6 real time clock on carrier board */
++	rtc_i2c: rtc@68 {
++		compatible = "st,m41t0";
++		reg = <0x68>;
++	};
++};
++
++&ipu1_di0_disp0 {
++	remote-endpoint = <&lcd_display_in>;
++};
++
++&pwm1 {
++	status = "okay";
++};
++
++&pwm2 {
++	status = "okay";
++};
++
++&pwm3 {
++	status = "okay";
++};
++
++&pwm4 {
++	status = "okay";
++};
++
++&reg_usb_host_vbus {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&uart3 {
++	status = "okay";
++};
++
++&usbh1 {
++	vbus-supply = <&reg_usb_host_vbus>;
++	status = "okay";
++};
++
++&usbotg {
++	status = "okay";
++};
++
++&weim {
++	status = "okay";
++
++	/* weim memory map: 32MB on CS0, CS1, CS2 and CS3 */
++	ranges = <0 0 0x08000000 0x02000000
++		  1 0 0x0a000000 0x02000000
++		  2 0 0x0c000000 0x02000000
++		  3 0 0x0e000000 0x02000000>;
++
++	/* SRAM on Colibri nEXT_CS0 */
++	sram@0,0 {
++		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
++		reg = <0 0 0x00010000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		bank-width = <2>;
++		fsl,weim-cs-timing = <0x00010081 0x00000000 0x04000000
++				      0x00000000 0x04000040 0x00000000>;
++	};
++
++	/* SRAM on Colibri nEXT_CS1 */
++	sram@1,0 {
++		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
++		reg = <1 0 0x00010000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		bank-width = <2>;
++		fsl,weim-cs-timing = <0x00010081 0x00000000 0x04000000
++				      0x00000000 0x04000040 0x00000000>;
++	};
++};
+diff --git a/arch/arm/boot/dts/imx6dl-colibri-uhs-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-uhs-eval-v3.dts
+new file mode 100644
+index 000000000000..9a18b5c70752
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-colibri-uhs-eval-v3.dts
+@@ -0,0 +1,29 @@
++// SPDX-License-Identifier: GPL-2.0 OR X11
++/*
++ * Copyright 2019 Toradex AG
++ */
++
++/dts-v1/;
++
++#include "imx6dl-colibri-eval-v3.dtsi"
++
++/ {
++	model = "Toradex Colibri iMX6DL/S on Colibri Ev. Board V3 with UHS-I";
++	compatible = "toradex,colibri_imx6dl-eval-v3", "toradex,colibri_imx6dl",
++		     "fsl,imx6dl";
++};
++
++/* Colibri MMC with UHS-I support*/
++&usdhc1 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_mmc_cd>;
++	pinctrl-1 = <&pinctrl_usdhc1_100mhz &pinctrl_mmc_cd>;
++	pinctrl-2 = <&pinctrl_usdhc1_200mhz &pinctrl_mmc_cd>;
++	vqmmc-supply = <&vgen3_reg>;
++	sd-uhs-sdr12;
++	sd-uhs-sdr25;
++	sd-uhs-sdr50;
++	sd-uhs-sdr104;
++	status = "okay";
++	/delete-property/no-1-8-v;
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+index 1beac22266ed..8eed89634a45 100644
+--- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+@@ -215,7 +215,12 @@
+ 				regulator-always-on;
+ 			};
+ 
+-			/* vgen3: unused */
++			vgen3_reg: vgen3 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
+ 
+ 			vgen4_reg: vgen4 {
+ 				regulator-min-microvolt = <1800000>;
+@@ -385,12 +390,15 @@
+ &usdhc1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_mmc_cd>;
++	no-1-8-v;
+ 	cd-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>; /* MMCD */
+ 	disable-wp;
+-	vqmmc-supply = <&reg_module_3v3>;
++	enable-sdio-wakeup;
++	keep-power-in-suspend;
+ 	bus-width = <4>;
+-	no-1-8-v;
+ 	status = "disabled";
++	cap-sd-highspeed;
++	vmmc-supply = <&reg_module_3v3>;
+ };
+ 
+ /* eMMC */
+@@ -698,6 +706,28 @@
+ 		>;
+ 	};
+ 
++	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_CMD__SD1_CMD    0x170b1
++			MX6QDL_PAD_SD1_CLK__SD1_CLK    0x100b1
++			MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x170b1
++			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x170b1
++			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x170b1
++			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x170b1
++		>;
++	};
++
++	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_CMD__SD1_CMD    0x170f1
++			MX6QDL_PAD_SD1_CLK__SD1_CLK    0x100f1
++			MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x170f1
++			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x170f1
++			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x170f1
++			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x170f1
++		>;
++	};
++
+ 	pinctrl_weim_cs0: weimcs0grp {
+ 		fsl,pins = <
+ 			/* nEXT_CS0 */
+-- 
+2.17.1
