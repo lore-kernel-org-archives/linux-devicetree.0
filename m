@@ -1,132 +1,72 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/8] dt-bindings: stm32: add bindings for ML-AHB
- interconnect
-Date: Wed, 3 Apr 2019 20:29:33 -0500
-Message-ID: <CAL_JsqK3BboUTW5TObyAjZCb5T0M-uVYt8pLYjPX598OgcuxkA@mail.gmail.com>
-References: <1551795849-13672-1-git-send-email-fabien.dessenne@st.com>
- <1551795849-13672-2-git-send-email-fabien.dessenne@st.com>
- <20190327230722.GA13708@bogus> <41b7bd91-7c14-9227-381e-f0e751ae4079@st.com>
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Subject: Using device tree overlays in Linux
+Date: Thu, 4 Apr 2019 01:50:20 +0000
+Message-ID: <71fb0ff289e84c55bd92ecd96bc9aa76@svr-chch-ex1.atlnz.lc>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <41b7bd91-7c14-9227-381e-f0e751ae4079@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabien DESSENNE <fabien.dessenne@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Loic PALLARDY <loic.pallardy@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ludovic BARRE <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
- On Fri, Mar 29, 2019 at 10:59 AM Fabien DESSENNE
-<fabien.dessenne@st.com> wrote:
->
-> Hi Rob,
->
-> Let me clarify the context and the reason of the proposed approach.
->
-> The remoteproc framework deals with 'carveout' memory regions.
->  From the remoteproc_core.c:
->
->   * Some remote processors will ask us to allocate them physically contiguous
->   * memory regions (which we call "carveouts"), and map them to specific
->   * device addresses (which are hardcoded in the firmware). They may also have
->   * dedicated memory regions internal to the processors, and use them either
->   * exclusively or alongside carveouts.
->   *
->   * They may then ask us to copy objects into specific device addresses (e.g.
->   * code/data sections) or expose us certain symbols in other device address
->   * (e.g. their trace buffer).
->
-> For this, the remoteproc drivers have to register these memory regions
-> providing their memory mapping remote processor view / local processor
-> view. See rproc_mem_entry_init() and rproc_add_carveout().
->
-> An implementation solution consists in declaring the memory mapping inside
-> the remoteproc driver. (Ex: imx_rproc_att_imx7d[] from imx_rproc.c)
->
-> For the stm32 rproc driver that we are introducing, we would like to have
-> something more flexible than hardcoded values.
-
-I need an explanation that is not in terms of remoteproc. That's a Linux thing.
-
-> One reason for this, is that some memory parts can be accessed through
-> different 2 bus port, with different addresses and access speed, and we
-> would like to let the user customize this.
->
-> Using DeviceTree "ranges" seems to fit with these requirements.
-
-'ranges' is strictly about the cpu's (running Linux) view of the
-system. 'dma-ranges' is for the device's (the remoteproc) view of
-memory. You simply cannot redefine them for your own custom use.
-
-If the cpu has 2 views of the same memory, then you can use ranges to
-describe that.
-
-> If you think that this is not the right approach, please let me know if you
-> think about something better.
->
-> See also below my answer to your specific remarks
->
-> BR
->
-> On 28/03/2019 12:07 AM, Rob Herring wrote:
->
-> > On Tue, Mar 05, 2019 at 03:24:02PM +0100, Fabien Dessenne wrote:
-> >> Document the ML-AHB interconnect for stm32 SoCs.
-> >>
-> >> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-> >> ---
-> >>   .../devicetree/bindings/arm/stm32/mlahb.txt        | 30 ++++++++++++++++++++++
-> >>   1 file changed, 30 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/arm/stm32/mlahb.txt b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
-> >> new file mode 100644
-> >> index 0000000..880cb38
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
-> >> @@ -0,0 +1,30 @@
-> >> +ML-AHB interconnect bindings
-> >> +
-> >> +These bindings describe the STM32 SoCs ML-AHB interconnect bus which connects
-> >> +a Cortex-M subsystem with dedicated memories.
-> >> +
-> >> +Required properties:
-> >> +- compatible: should be "simple-bus"
-> > A binding for simple-bus was the first thing that looked odd.
->
-> Since we want to use "ranges" (or "dma-ranges"), we need to define a parent-bus.
-> This bus has nothing specific, so it is a "simple-bus"
-
-Okay, fair enough.
-
-> >> +- ranges: describes memory addresses translation between the local CPU and the
-> >> +       remote Cortex-M processor. Each memory region, is declared with 3
-> >> +       parameters:
-> >> +             - param 1: device base address (Cortex-M processor address)
-> >> +             - param 2: physical base address (local CPU address)
-> >> +             - param 3: size of the memory region.
-> > Given that the driver is parsing ranges itself, this looks like abuse of
-> > ranges.
->
-> That's correct. As explained above, we need to provide the remoteproc framework
-> with carveout mappings.
->
-> >
-> > What exactly is address 0 supposed to be here? If it is the M4's view of
-> > memory, then dma-ranges is what you want to use here.
->
-> "dma-ranges" is probably more appropriated here. But the driver still needs to
-> parse this property.
-
-That is more acceptable assuming what's in dma-ranges matches the
-standard definition.
-
-Rob
+Hi,=0A=
+=0A=
+I'm implementing support for some modular Linux based systems using =0A=
+device tree overlays. The code is working but it seems a little more =0A=
+fiddly that than it should be so I'm wondering if I'm doing it right.=0A=
+=0A=
+An example of what I'm doing is=0A=
+=0A=
+=0A=
+arch/arm/boot/dts/Makefile:=0A=
+DTC_FLAGS_myboard +=3D -@=0A=
+=0A=
+drivers/foo/Makefile:=0A=
+obj-y +=3D myplugin.dtb.o=0A=
+obj-y +=3D mydriver.o=0A=
+=0A=
+drivers/foo/myplugin.dts:=0A=
+/dts-v1/;=0A=
+/plugin/;=0A=
+/{=0A=
+	fragment@0 {=0A=
+		target =3D <&i2c0>;=0A=
+		__overlay__ {=0A=
+			gpio@74 {=0A=
+				compatible =3D "nxp,pca9539";=0A=
+				reg =3D <0x74>=0A=
+			};=0A=
+		};=0A=
+	};=0A=
+};=0A=
+=0A=
+drivers/foo/mydriver.c:=0A=
+extern uint8_t __dtb_myplugin_begin[];=0A=
+extern uint8_t __dtb_myplugin_end[];=0A=
+=0A=
+int mydriver_probe(struct platform_device *pdev)=0A=
+{=0A=
+	u32 size =3D __dtb_myplugin_end - __dtb_myplugin_begin;=0A=
+	int overlay_id;=0A=
+	int ret;=0A=
+	=0A=
+	ret =3D of_overlay_fdt_apply(__dtb_myplugin_begin,=0A=
+				   size, &overlay_id);=0A=
+	return ret;=0A=
+}=0A=
+=0A=
+=0A=
+The first issue is that I need to add -@ to the DTC_FLAGS for my board =0A=
+dtb. I kind of understand that I only need -@ if my overlay targets =0A=
+something symbolic so I might not need it but I was surprised that there =
+=0A=
+wasn't a Kconfig option that makes this happen automatically.=0A=
+=0A=
+externing things in C files makes checkpatch.pl complain. I see the =0A=
+of/unittests.c and rcar_du_of.c hide this with a macro. I was again =0A=
+surprised that there wasn't a common macro to declare these.=0A=
+=0A=
+=0A=
