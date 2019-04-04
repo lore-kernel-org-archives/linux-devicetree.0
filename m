@@ -1,63 +1,46 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 3/3] ARM: dts: sunxi: Improve sun8i NAND transfers by using DMA
-Date: Thu,  4 Apr 2019 18:21:11 +0200
-Message-ID: <20190404162111.22618-4-miquel.raynal@bootlin.com>
-References: <20190404162111.22618-1-miquel.raynal@bootlin.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 1/2] dt-bindings: phy-imx8mq-usb: add optional vbus supply
+ regulator
+Date: Thu,  4 Apr 2019 18:41:47 +0200
+Message-ID: <20190404164148.11140-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20190404162111.22618-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Vignesh Raghavendra <vigneshr@ti.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, Li Jun <jun.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-In the current state, sun8i NAND controllers use PIO during
-transfers. Throughput can be increased thanks to the use of DMA
-(mostly during reads, because of the ECC pipelining feature).
+Add a vbus supply regulator phandle, so the PHY can enable the VBUS
+voltage rail when powering up.
 
-Besides the usual addition of DMA DT properties, because the sun8i
-NAND DMA handling is different than for older SoCs, we must also
-update the compatible which has recently been introduced for this
-purpose.
-
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 ---
- arch/arm/boot/dts/sun8i-a23-a33.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/phy/fsl,imx8mq-usb-phy.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-index 14a7d0288b45..f928b4bceb22 100644
---- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-@@ -162,11 +162,13 @@
- 		};
+diff --git a/Documentation/devicetree/bindings/phy/fsl,imx8mq-usb-phy.txt b/Documentation/devicetree/bindings/phy/fsl,imx8mq-usb-phy.txt
+index a22e853d710c..ed47e5cd067e 100644
+--- a/Documentation/devicetree/bindings/phy/fsl,imx8mq-usb-phy.txt
++++ b/Documentation/devicetree/bindings/phy/fsl,imx8mq-usb-phy.txt
+@@ -7,6 +7,9 @@ Required properties:
+ - clocks:	phandles to the clocks for each clock listed in clock-names
+ - clock-names:	must contain "phy"
  
- 		nfc: nand@1c03000 {
--			compatible = "allwinner,sun4i-a10-nand";
-+			compatible = "allwinner,sun8i-a33-nand-controller";
- 			reg = <0x01c03000 0x1000>;
- 			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_NAND>, <&ccu CLK_NAND>;
- 			clock-names = "ahb", "mod";
-+			dmas = <&dma 5>;
-+			dma-names = "rxtx";
- 			resets = <&ccu RST_BUS_NAND>;
- 			reset-names = "ahb";
- 			pinctrl-names = "default";
++Optional properties:
++- vbus-supply: A phandle to the regulator for USB VBUS.
++
+ Example:
+ 	usb3_phy0: phy@381f0040 {
+ 		compatible = "fsl,imx8mq-usb-phy";
 -- 
-2.19.1
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+2.20.1
