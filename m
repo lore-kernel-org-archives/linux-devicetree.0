@@ -1,88 +1,56 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v5 08/13] usb: roles: Introduce stubs for the exiting
- functions in role.h.
-Date: Thu, 4 Apr 2019 16:25:28 +0300
-Message-ID: <20190404132528.GD21319@kuha.fi.intel.com>
-References: <20190329041409.70138-1-chenyu56@huawei.com>
- <20190329041409.70138-9-chenyu56@huawei.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 05/25] dt-bindings: leds: Add function and color
+ properties
+Date: Thu, 4 Apr 2019 15:21:52 +0200
+Message-ID: <20190404132152.GA6124@xo-6d-61-c0.localdomain>
+References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
+ <20190310182836.20841-6-jacek.anaszewski@gmail.com>
+ <98c1a41e-77bb-5ffd-b5b3-772a28c0f0a6@ti.com>
+ <796a13a7-fb8c-9b5b-6bd5-dfb7458731fe@gmail.com>
+ <232b6154-cccd-c1f9-80c3-438098f3ab08@gmail.com>
+ <20190328002341.GB22901@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190329041409.70138-9-chenyu56@huawei.com>
+In-Reply-To: <20190328002341.GB22901@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yu Chen <chenyu56@huawei.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 12:14:04PM +0800, Yu Chen wrote:
-> This patch adds stubs for the exiting functions while
-> CONFIG_USB_ROLE_SWITCH does not enabled.
+
+> > > > > +- function: LED functon. Use one of the LED_FUNCTION_* prefixed
+> > > > > definitions
+> > > > > +        from the header include/dt-bindings/leds/common.h.
+> > > > > +        If there is no matching LED_FUNCTION available, add a new one.
+> > > > > +- color : Color of the LED. Use one of the LED_COLOR_NAME_*
+> > > > > prefixed definitions
+> > > > > +        from the header include/dt-bindings/leds/common.h.
+> > > > > +        If there is no matching LED_COLOR_NAME available, add a
+> > > > > new one.
+> > > > > +
+> > > > 
+> > > > I am assuming multi color can re-use this property as well?
+> > > 
+> > > I intended it to be a string, but indeed it would be better if we will
+> > > make it an integer to be consistent with the discussed LED multi color
+> > > design.
+> > 
+> > Going further, I wonder if it would make sense to make function also
+> > an integer. This way we could enforce use of LED functions known
+> > to kernel.
 > 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: John Stultz <john.stultz@linaro.org>
-> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> I think if we did that, then we'd just need to keep label. I think we 
+> need to allow for populating a string in DT matching a sticker next to 
+> an LED on a device.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Well, there's often icon next to the LED... and we already use "label" for
+something else. New property might make sense, but again, icons will make it tricky.
 
-> ---
->  include/linux/usb/role.h | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
-> index c05ffa6abda9..da2b9641b877 100644
-> --- a/include/linux/usb/role.h
-> +++ b/include/linux/usb/role.h
-> @@ -42,6 +42,8 @@ struct usb_role_switch_desc {
->  	bool allow_userspace_control;
->  };
->  
-> +
-> +#if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
->  int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
->  enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
->  struct usb_role_switch *usb_role_switch_get(struct device *dev);
-> @@ -51,5 +53,33 @@ struct usb_role_switch *
->  usb_role_switch_register(struct device *parent,
->  			 const struct usb_role_switch_desc *desc);
->  void usb_role_switch_unregister(struct usb_role_switch *sw);
-> +#else
-> +static inline int usb_role_switch_set_role(struct usb_role_switch *sw,
-> +		enum usb_role role)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
-> +{
-> +	return USB_ROLE_NONE;
-> +}
-> +
-> +static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
-> +{
-> +	return ERR_PTR(-ENODEV);
-> +}
-> +
-> +static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
-> +
-> +static inline struct usb_role_switch *
-> +usb_role_switch_register(struct device *parent,
-> +			 const struct usb_role_switch_desc *desc)
-> +{
-> +	return ERR_PTR(-ENODEV);
-> +}
-> +
-> +static inline void usb_role_switch_unregister(struct usb_role_switch *sw) { }
-> +#endif
->  
->  #endif /* __LINUX_USB_ROLE_H */
-> -- 
-> 2.15.0-rc2
-
-thanks,
+									Pavel
 
 -- 
-heikki
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
