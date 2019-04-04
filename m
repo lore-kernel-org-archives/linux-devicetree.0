@@ -1,113 +1,51 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 0/8] v4.19.0 Added Color Management Module
-Date: Thu, 4 Apr 2019 12:46:34 +0300
-Message-ID: <20190404094634.GC5800@pendragon.ideasonboard.com>
-References: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
- <20190404094531.GB5800@pendragon.ideasonboard.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190404094531.GB5800@pendragon.ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: VenkataRajesh.Kalakodima@in.bosch.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 1/3] dt-bindings: usb: Add usb-phy property to the jz4740-musb node
+Date: Thu,  4 Apr 2019 11:47:37 +0200
+Message-ID: <20190404094739.23503-1-paul@crapouillou.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bin Liu <b-liu@ti.com>
+Cc: od@zcrc.me, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBBcHIgMDQsIDIwMTkgYXQgMTI6NDU6MzFQTSArMDMwMCwgTGF1cmVudCBQaW5jaGFy
-dCB3cm90ZToKPiBIaSBLYWxha29kaW1hLAo+IAo+IFRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoK
-QW5kIEkgZm9yZ290IHRvIG1lbnRpb24sIHBsZWFzZSBDQyBtZSBvbiBhbGwgcGF0Y2hlcyB0byB0
-aGUgRFUgZHJpdmVyLgpUaGUgc2NyaXB0L2dldF9tYWludGFpbmVyLnBsIHNjcmlwdCBzaG91bGQg
-aGF2ZSB0b2xkIHlvdSBhYm91dCB0aGF0Lgo+IAo+IE9uIFdlZCwgQXByIDAzLCAyMDE5IGF0IDA2
-OjQ0OjM2UE0gKzA1MzAsIFZlbmthdGFSYWplc2guS2FsYWtvZGltYUBpbi5ib3NjaC5jb20gd3Jv
-dGU6Cj4gPiBGcm9tOiBrYWxha29kaW1hIHZlbmthdGEgcmFqZXNoIDx2ZW5rYXRhcmFqZXNoLmth
-bGFrb2RpbWFAaW4uYm9zY2guY29tPgo+ID4gCj4gPiBUaGlzIHBhdGNoc2V0IGFkZHMgcmNhci0g
-ZGlzcGxheSB1bml0IGNvbG9yIG1hbmFnZW1lbnQgbW9kdWxlIChDTU0pCj4gPiBmdW5jdGlvbiBm
-ZWF0dXJlLCBXaGljaCBhbGxvd3MgY29ycmVjdGlvbiBhbmQgYWRqdXN0bWVudCBvZiB0aGUKPiA+
-IGRpc3BsYXkgZGF0YSwgdGhyb3VnaCB1cGRhdGluZyBMb29rIHVwIHRhYmxlIChnYW1tYSkgYW5k
-ICBDdWJpYyBsb29rCj4gPiB1cCB0YWJsZSAoQ1RNKSAgcHJvcGVydHkgdmFsdWVzIAo+ID4gCj4g
-PiBCYXNlIGNvbG9yIG1hbmFnZW1lbnQgbW9kdWxlIHJlZmVyZW5jZSBjb2RlIHRha2VuIGZyb20g
-YmVsb3cgbGluaywKPiA+IGh0dHBzOi8vZ2l0aHViLmNvbS9yZW5lc2FzLXJjYXIvZHVfY21tIC4K
-PiA+IC0gSW4gYWJvdmUgY29kZSwgbW9kaWZpZWQgdmFyaWFibGUgbmFtaW5nw6LigqzihKJzIGFu
-ZCByZW1vdmVkIHVuIHVzZWQKPiA+ICAgZnVuY3Rpb25hbGl0aWVzLgo+ID4gLSBJbnRyb2R1Y2Ug
-bmV3IGZ1bmN0aW9ucyBmb3IgcXVldWVpbmcgY3ViaWMgbG9vayB1cCB0YWJsZSBhbmQgbG9vayB1
-cAo+ID4gICB0YWJsZSBldmVudHMuCj4gPiAKPiA+IC0gSW1wbGVtZW50ZWQgaW50ZXJmYWNlcyBp
-biBjb2xvciBtYW5hZ2VtZW50IG1vZHVsZSB0byBzZXQgQ0xVIC9MVVQKPiA+ICAgdGFibGUgdXNp
-bmcgc3RhbmRhcmQgRFJNIGRhdGEgc3RydWN0dXJlcyBhcyBpbnB1dC4KPiA+ICAgTG9vayB1cCB0
-YWJsZSBpcyBhIDFELUxVVCB0aGF0IGNvbnZlcnRzIGVhY2ggb2YgdGhyZWUtY29sb3IKPiA+ICAg
-Y29tcG9uZW50cyBieSB1c2luZyBhIGxvb2t1cCB0YWJsZS4gTFVUIGlzIHVzZWQgZm9yIGdhbW1h
-Cj4gPiAgIGNvcnJlY3Rpb24uCQkJCQkJCQo+ID4gICBDdWJpYyBsb29rIHVwIHRhYmxlIGlzIGEg
-dGhyZWUtZGltZW5zaW9uYWwgTFVUICgzRC1MVVQpIHRoYXQKPiA+ICAgY29udmVydHMgdGhlIGlu
-cHV0IHRocmVlLWNvbG9yLWNvbXBvbmVudCBkYXRhIGludG8gZGVzaXJlZCB0aHJlZQo+ID4gICBj
-b2xvciBDb21wb25lbnRzIGJ5IHVzaW5nIGEgbG9va3VwIHRhYmxlCj4gPiAKPiA+IC0gSW1wbGVt
-ZW50ZWQgYXRvbWljIGNoZWNrIGhlbHBlciBmdW5jdGlvbnMgZm9yIGVuYWJsZS9kaXNhYmxlIExV
-VCBhbmQKPiA+ICAgQ0xVIChHYW1tYSBhbmQgQ29sb3IgVHJhbnNmb3JtYXRpb24gTWF0cml4IHBy
-b3BlcnRpZXMpLgo+ID4gLSBBbGxvY2F0ZWQgbWVtb3J5IG5lY2Vzc2FyeSBmb3IgY3ViaWMgbG9v
-ayB1cCB0YWJsZSBhbmQgbG9vayB1cCB0YWJsZQo+ID4gICBhbmQgYWRkZWQgbW9kZSBmaXggdXAg
-Y2FsbGJhY2sgZnVuY3Rpb24KPiA+IC0gQWRkZWQgdXBkYXRlIGdhbW1hIGFuZCBjb2xvciB0cmFu
-c2Zvcm1hdGlvbiBtYXRyaXggcHJvcGVydGllcyBpbgo+ID4gICBjb21taXQgdGFpbCBmdW5jdGlv
-biwgSWYgYW55IGNoYW5nZSBpbiBwcm9wZXJ0eSB2YWx1ZXMuCj4gPiAKPiA+IGthbGFrb2RpbWEg
-dmVua2F0YSByYWplc2ggKDgpOgo+ID4gICBkcm06IEFkZCBEVSBDTU0gc3VwcG9ydCBmdW5jdGlv
-bnMKPiA+ICAgZHJtOiBBZGQgRFUgQ01NIHN1cHBvcnQgYm9vdCBhbmQgY2xrIGNoYW5nZXMKPiA+
-ICAgZHJtOiByY2FyLWR1OiBHaXZlIGEgbmFtZSB0byBjbHUgdGFibGUgc2FtcGxlcwo+ID4gICBk
-cm06IHJjYXItZHU6IFJlZmFjdG9yIHRoZSBjb2RlIHdpdGggbmV3IGZ1bmN0aW9ucwo+ID4gICBk
-cm06IHJjYXItZHU6IEltcGxlbWVudCBpbnRlcmZhY2VzIHRvIHNldCBjbHUgYW5kIGx1dCB1c2lu
-ZyBkcm0gZGF0YQo+ID4gICAgIHN0cnVjdHVyZXMKPiA+ICAgZHJtOiByY2FyLWR1OiBJbXBsZW1l
-bnQgYXRvbWljX2NoZWNrIHRvIGNoZWNrIGZvciBnYW1tYSBhbmQgY3RtCj4gPiAgICAgcHJvcGVy
-dGllcwo+ID4gICBkcm06IHJjYXItZHU6IHVwZGF0ZSBnYW1tYSBhbmQgY3RtIHByb3BlcnRpZXMg
-aW4gY29tbWl0IHRhaWwKPiA+ICAgZHJtOiByY2FyLWR1OiBBZGQgc2h1dGRvd24gY2FsbGJhY2sg
-ZnVuY3Rpb24gaW4gcGxhdGZvcm1fZHJpdmVyCj4gPiAKPiA+ICAuLi4vYm9vdC9kdHMvcmVuZXNh
-cy9yOGE3Nzk1LWVzMS1zYWx2YXRvci14LmR0cyAgICB8ICAgIDUgKwo+ID4gIGFyY2gvYXJtNjQv
-Ym9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk1LXNhbHZhdG9yLXguZHRzIHwgICAgNSArCj4gPiAgLi4u
-L2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NS1zYWx2YXRvci14cy5kdHMgfCAgICA1ICsK
-PiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NS5kdHNpICAgICAgICAgICB8
-ICAgMjkgKy0KPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5Ni1zYWx2YXRv
-ci14LmR0cyB8ICAgIDYgKy0KPiA+ICAuLi4vYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk2
-LXNhbHZhdG9yLXhzLmR0cyB8ICAgIDQgKwo+ID4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNh
-cy9yOGE3Nzk2LmR0c2kgICAgICAgICAgIHwgICAyNSArLQo+ID4gIC4uLi9hcm02NC9ib290L2R0
-cy9yZW5lc2FzL3I4YTc3OTY1LXNhbHZhdG9yLXguZHRzIHwgICAgNyArLQo+ID4gIC4uLi9ib290
-L2R0cy9yZW5lc2FzL3I4YTc3OTY1LXNhbHZhdG9yLXhzLmR0cyAgICAgIHwgICAgNyArLQo+ID4g
-IGFyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk2NS5kdHNpICAgICAgICAgIHwgICAy
-NyArLQo+ID4gIGRyaXZlcnMvY2xrL3JlbmVzYXMvcjhhNzc5NS1jcGctbXNzci5jICAgICAgICAg
-ICAgIHwgICAgNCArCj4gPiAgZHJpdmVycy9jbGsvcmVuZXNhcy9yOGE3Nzk2LWNwZy1tc3NyLmMg
-ICAgICAgICAgICAgfCAgICAzICsKPiA+ICBkcml2ZXJzL2Nsay9yZW5lc2FzL3I4YTc3OTY1LWNw
-Zy1tc3NyLmMgICAgICAgICAgICB8ICAxMDYgKy0KPiA+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdl
-L3N5bm9wc3lzL2R3LWhkbWkuYyAgICAgICAgICB8ICAgMzUgKwo+ID4gIGRyaXZlcnMvZ3B1L2Ry
-bS9yY2FyLWR1L01ha2VmaWxlICAgICAgICAgICAgICAgICAgIHwgICAgMiArCj4gPiAgZHJpdmVy
-cy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9jbW0uYyAgICAgICAgICAgICAgfCAxNDcwICsrKysr
-KysrKysrKysrKysrKysrCj4gPiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9jcnRj
-LmMgICAgICAgICAgICAgfCAgIDgyICsrCj4gPiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNh
-cl9kdV9jcnRjLmggICAgICAgICAgICAgfCAgIDI4ICsKPiA+ICBkcml2ZXJzL2dwdS9kcm0vcmNh
-ci1kdS9yY2FyX2R1X2Rydi5jICAgICAgICAgICAgICB8ICAgODUgKy0KPiA+ICBkcml2ZXJzL2dw
-dS9kcm0vcmNhci1kdS9yY2FyX2R1X2Rydi5oICAgICAgICAgICAgICB8ICAgMTYgKy0KPiA+ICBk
-cml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2VuY29kZXIuYyAgICAgICAgICB8ICAgIDIg
-Ky0KPiA+ICBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2VuY29kZXIuaCAgICAgICAg
-ICB8ICAgIDEgKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfZ3JvdXAuYyAg
-ICAgICAgICAgIHwgICAgNSArCj4gPiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9r
-bXMuYyAgICAgICAgICAgICAgfCAgIDI1ICsKPiA+ICBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9y
-Y2FyX2R1X3JlZ3MuaCAgICAgICAgICAgICB8ICAgOTIgKysKPiA+ICBpbmNsdWRlL2RybS9icmlk
-Z2UvZHdfaGRtaS5oICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKwo+ID4gIGluY2x1ZGUv
-ZHJtL2RybV9hdG9taWMuaCAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyNSArCj4gPiAg
-aW5jbHVkZS9kcm0vZHJtX2lvY3RsLmggICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICA3
-ICsKPiA+ICAyOCBmaWxlcyBjaGFuZ2VkLCAyMDgyIGluc2VydGlvbnMoKyksIDI3IGRlbGV0aW9u
-cygtKQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2Fy
-X2R1X2NtbS5jCj4gCj4gRmlyc3Qgb2YgYWxsLCBwbGVhc2Ugc3BsaXQgY2hhbmdlcyB0byBEVCwg
-dG8gdGhlIGNsb2NrIGRyaXZlcnMsIHRvIHRoZQo+IGR3LWhkbWkgZHJpdmVyLCB0byB0aGUgRFJN
-IGNvcmUgYW5kIHRvIHRoZSBSLUNhciBEVSBkcml2ZXIgaW4gc2VwYXJhdGUKPiBwYXRjaGVzLCB3
-aXRoIGFwcHJvcHJpYXRlIHN1YmplY3QgbGluZXMgcHJlZml4ZXMgZm9yIGVhY2ggb2YgdGhlbS4g
-QXMKPiB5b3UncmUgbW9kaWZ5aW5nIERUIGJpbmRuZ3MsIHlvdSBhbHNvIG5lZWQgdG8gdXBkYXRl
-IHRoZSBiaW5kaW5ncwo+IGRvY3VtZW50YXRpb24sIHdoaWNoIHNob3VsZCBnbyB0byBhIHBhdGNo
-IG9mIGl0cyBvd24uCj4gCj4gLS0gCj4gUmVnYXJkcywKPiAKPiBMYXVyZW50IFBpbmNoYXJ0Cgot
-LSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVs
+Add a required 'usb-phy' property, to obtain a phandle to the USB PHY
+from devicetree.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+
+Notes:
+    v2: Change "usb-phy" DT property to "phys"
+
+ Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt b/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
+index 620355cee63f..16808721f3ff 100644
+--- a/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
++++ b/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
+@@ -8,9 +8,15 @@ Required properties:
+ - interrupt-names: must be "mc"
+ - clocks: phandle to the "udc" clock
+ - clock-names: must be "udc"
++- phys: phandle to the USB PHY
+ 
+ Example:
+ 
++usb_phy: usb-phy@0 {
++	compatible = "usb-nop-xceiv";
++	#phy-cells = <0>;
++};
++
+ udc: usb@13040000 {
+ 	compatible = "ingenic,jz4740-musb";
+ 	reg = <0x13040000 0x10000>;
+@@ -21,4 +27,6 @@ udc: usb@13040000 {
+ 
+ 	clocks = <&cgu JZ4740_CLK_UDC>;
+ 	clock-names = "udc";
++
++	phys = <&usb_phy>;
+ };
+-- 
+2.11.0
