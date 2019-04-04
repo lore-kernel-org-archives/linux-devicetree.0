@@ -1,42 +1,56 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v3 00/25] Add generic support for composing LED class
- device name
-Date: Thu, 4 Apr 2019 21:18:58 +0200
-Message-ID: <c1ebb90a-2474-d279-0600-0f6707a7b1a6@gmail.com>
-References: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
- <20190404132157.GB6124@xo-6d-61-c0.localdomain>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH 4/4] leds: lm3532: Introduce the lm3532 LED driver
+Date: Thu, 4 Apr 2019 14:23:34 -0500
+Message-ID: <f278edc7-1614-0410-9aa7-2e3a6fc7818b@ti.com>
+References: <20190321142838.22985-1-dmurphy@ti.com>
+ <20190321142838.22985-4-dmurphy@ti.com> <20190404000909.GY49658@atomide.com>
+ <f4c0a946-fd0f-0071-0039-cfaea2f27ccc@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190404132157.GB6124@xo-6d-61-c0.localdomain>
+In-Reply-To: <f4c0a946-fd0f-0071-0039-cfaea2f27ccc@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Tony Lindgren <tony@atomide.com>
+Cc: robh+dt@kernel.org, pavel@ucw.cz, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Sebastian Reichel <sre@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+Tony
 
-On 4/4/19 3:21 PM, Pavel Machek wrote:
-> Hi!
+On 4/4/19 1:48 PM, Jacek Anaszewski wrote:
+> Hi Tony,
 > 
-> I have not yet gone through the series in great detail.
+> Thanks for the feedback.
 > 
-> This will change the userland ABI, right? Now, I understand that old ABI is bad, but
-> will it break someone's code?
+> On 4/4/19 2:09 AM, Tony Lindgren wrote:
+>> * Dan Murphy <dmurphy@ti.com> [190321 14:29]:
+>>> Introduce the Texas Instruments LM3532 White LED driver.
+>>> The driver supports ALS configurability or manual brightness
+>>> control.
+>>>
+>>> The driver also supports associating LED strings with specific
+>>> control banks in a group or as individually controlled strings.
+>>
+>> I'm seeing slightly different naming under /sys/class/leds:
+>>
+>> lm3532:backlight
+>> lm3532:platform::kbd_backlight
+> 
+> The problem is in the "platform:" being a part of DT
+> label property. It should not be included there if devicename
+> section is added in the driver.
+> 
 
-It will not break anyone since the generic support for composing
-LED names is used only if struct init_data is provided. Otherwise
-led_cdev->name property is taken as is for the LED class device name.
+Feel free to make it whatever you want I am not married to the naming convention for Droid 4.
+It was a suggestion in the code review
 
-Moreover, it is safe to switch many of existing DT (or fwnode in
-general) based drivers to using generic mechanism.
-If the DT provides label property it will be concatenated with the
-led_hw_name provided by the driver. The problem would be only with
-the drivers whose bindings erroneously require devicename section
-in the label. They will need to be left intact.
+https://lore.kernel.org/patchwork/patch/1048806/
+
+<snip>
+
+
 
 -- 
-Best regards,
-Jacek Anaszewski
+------------------
+Dan Murphy
