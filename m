@@ -1,37 +1,58 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: [PATCH v1 17/17] MAINTAINERS: add proc sysctl KUnit test to PROC
- SYSCTL section
-Date: Thu,  4 Apr 2019 15:06:52 -0700
-Message-ID: <20190404220652.19765-18-brendanhiggins@google.com>
-References: <20190404220652.19765-1-brendanhiggins@google.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH RESEND v6 0/6] add i2c support for mt8183
+Date: Fri, 5 Apr 2019 01:09:16 +0200
+Message-ID: <20190404230916.GA964@kunai>
+References: <1554208560-14817-1-git-send-email-qii.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190404220652.19765-1-brendanhiggins@google.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: corbet@lwn.net, frowand.list@gmail.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org, shuah@kernel.org, yamada.masahiro@socionext.com
-Cc: pmladek@suse.com, linux-doc@vger.kernel.org, amir73il@gmail.com, Brendan Higgins <brendanhiggins@google.com>, dri-devel@lists.freedesktop.org, Alexander.Levin@microsoft.com, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, khilman@baylibre.com, knut.omang@oracle.com, wfg@linux.intel.com, joel@jms.id.au, jdike@addtoit.com, dan.carpenter@oracle.com, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, Tim.Bird@sony.com, linux-um@lists.infradead.org, rostedt@goodmis.org, julia.lawall@lip6.fr, dan.j.williams@intel.com, kunit-dev@googlegroups.com, richard@nod.at, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, mpe@ellerman.id.au, linux-fsdevel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1554208560-14817-1-git-send-email-qii.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Qii Wang <qii.wang@mediatek.com>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, xinping.qian@mediatek.com, liguo.zhang@mediatek.com, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGVudHJ5IGZvciB0aGUgbmV3IHByb2Mgc3lzY3RsIEtVbml0IHRlc3QgdG8gdGhlIFBST0Mg
-U1lTQ1RMIHNlY3Rpb24uCgpTaWduZWQtb2ZmLWJ5OiBCcmVuZGFuIEhpZ2dpbnMgPGJyZW5kYW5o
-aWdnaW5zQGdvb2dsZS5jb20+Ci0tLQogTUFJTlRBSU5FUlMgfCAxICsKIDEgZmlsZSBjaGFuZ2Vk
-LCAxIGluc2VydGlvbigrKQoKZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRBSU5FUlMK
-aW5kZXggZmMyY2VkYmQ5YjQzZS4uMDMwNTRlNGM2Mzg2YyAxMDA2NDQKLS0tIGEvTUFJTlRBSU5F
-UlMKKysrIGIvTUFJTlRBSU5FUlMKQEAgLTEyNTIzLDYgKzEyNTIzLDcgQEAgUzoJTWFpbnRhaW5l
-ZAogRjoJZnMvcHJvYy9wcm9jX3N5c2N0bC5jCiBGOglpbmNsdWRlL2xpbnV4L3N5c2N0bC5oCiBG
-OglrZXJuZWwvc3lzY3RsLmMKK0Y6CWtlcm5lbC9zeXNjdGwtdGVzdC5jCiBGOgl0b29scy90ZXN0
-aW5nL3NlbGZ0ZXN0cy9zeXNjdGwvCiAKIFBTMyBORVRXT1JLIFNVUFBPUlQKLS0gCjIuMjEuMC4z
-OTIuZ2Y4ZjY3ODcxNTllLWdvb2cKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbA==
+
+--J2SCkAp4GZ/dPZZf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Apr 02, 2019 at 08:35:54PM +0800, Qii Wang wrote:
+> This series are based on 5.1-rc1 and the patch
+> https://patchwork.kernel.org/patch/10856987/(for dts)
+> We provide six patches to support mt8183 IC.
+>=20
+> Main changes compared to v5:
+> --add i2c controller nodes in mt8183.dtsi
+> --add a note that old i2c controllers also have I2C_ARB_LOST bit
+> --add a flag(ltiming_adjust) to avoid unnecessary settings
+> --add Reviewed-by from Rob Herring, Nicolas and Matthias
+
+Well, it seems you missed Rob's Rev-by. No need to resend, I can add it.
+I just wonder if Matthias wants to have another look at this?
+
+
+--J2SCkAp4GZ/dPZZf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlymjpgACgkQFA3kzBSg
+KbY0tA/+MJxfAKLYnkDVA9r9dddlyeI37eVD1M5GLY8LjOg1UGxOmbTv2jFvfwqO
+gFuEQiFmtsIPRTPiA/1xLkeM8QxrRPOKacsBcrXLhrobjDiTG8xm/7cSrp1RdDMJ
+8yjLIr/4YihJ7HLGEGygrRqSfFnY5VuTfoXyCjAwWWvgkkx+4h8uN/eKesGWTHZO
+1P2jTTTldpDZoYY6QTZ++x00oSJ+9VxJCs7a1ZtVEHBKDQAUtE1OTnbZy6TOWjm9
+FifVc+YCHcmQo8eEKsHudqOqFg9bUeCAr4eM01rP7EU5eJrF2nsl8JYgmqDhiDvd
+6K1rlRdtmF34oi5WnlWt6q0GtdnNUfaZgXRw3ct7U+USc9O47zyjQpVj2cLYTECv
+/49D37usj+bx7VajndEyaSMAXxInwFk5Rn0BJYQIOkvvdj/MMDI2z3bHZkHJXUjl
+3JpR4GYR/3j01Smoa+iL/exOjWO1QCf8ew/P49LE1K5+AoXxWQmk/jO175Z3sC7k
+DqXKn2oKohT+ZwxzO4RdjQxtcItlMx38qswxzUlLiVwM8qZIx5SkSD//VFDc+FO5
+RE1hSAVGQ9kWNdX/HQ9HtEryMsMzX2iZNBUh77BHJ3lJIi3L8qy9yQ93I/wehaym
+jIxklKE1d/6823idNwK2rFOLbRRjjE/r6JsOmPANHbYZBFNyPO0=
+=jqBi
+-----END PGP SIGNATURE-----
+
+--J2SCkAp4GZ/dPZZf--
