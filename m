@@ -1,232 +1,105 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [PATCH v13 0/8] support ROHM BD70528 PMIC
-Date: Thu, 4 Apr 2019 13:18:29 +0300
-Message-ID: <cover.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 7/8] drm: rcar-du: update gamma and ctm properties in
+ commit tail
+Date: Thu, 4 Apr 2019 13:19:23 +0300
+Message-ID: <20190404101923.GG5800@pendragon.ideasonboard.com>
+References: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
+ <1554297284-14009-8-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mazziesaccount@gmail.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.ro
+In-Reply-To: <1554297284-14009-8-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: VenkataRajesh.Kalakodima@in.bosch.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Harsha M M <harsha.manjulamallikarjun@in.bosch.com>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Patch series introducing support for ROHM BD70528 PMIC
-
-ROHM BD70528 is a programmable Power Management IC for battery
-powered 'ultra low power' systems like the pre-announced NXP
-i.MX7 ULP. This patch series introduces support for the PMIC. Please
-note that this driver only supports HW setup where PMIC is connected
-to I2C on A7 core. The other scenario is to use M4 as a power manager
-and connect pmic to M4. On such setups the A7 can only access pmic
-via M4 core using RPMSG virtio. Such setup depends on RPMSG
-implementation on M4 core and is currently not supported by this
-patch series.
-
-RTC block of the bd70528 can support 'wake' irq which wakes PMIC
-from standby state. Wake irq's can be armed to wake up system up
-to 24 hours from arming. bd70528 can also generate alarm interrupts
-which can be armed to occur years after triggering. The RTC driver
-does always arm both the waker and alarm irqs and does not utilize
-longer period of alarm interrupts. All the RTC timers are limited
-to occur within the next 24 hours. Any suggestions on more elegant
-timer support are welcome =)
-
-GPIO portion of bd70528 driver adds I/O support for driving GPIO
-pins or reading the state. The interrupt functionality is provided
-by regmap-irq. Current GPIO driver is not aware of whether the pin(s)
-are used for I/O or interrupts and it is up-to driver user to
-ensure there is no misconfiguration or "double use".
-
-The power-supply patch included in series is only poorly tested as I
-lack of hardware with real battery connected. Reset and ADC are not
-supported by this series.
-
-Changelog v13:
-- Moved WDT enable/disable code from MFD to WDT
-- Added WDT enable/disable stubs for cases where WDT is omitted from
-  Kconfig
-
-Changelog v12:
-- No functional changes
-- Fixed styling issues pointed by Lee Jones
-- Fixed styling issues pointed by Alexandre Belloni
-- Fixed various styling issues
-
-Changelog v11:
-- No functional changes
-- Rebased on linux 5.1-rc2
-- Dropped patch 9 which was already applied by Mark
-- renamed dt-bindings patch as suggested by Rob
-  
-Changelog v10:
-- Exported locking functions for RTC lock and as a result dropped hid
-  the struct bd70528 from sub-devices who no longer needed it.
-- removed linux/gpio.h header from GPIO driver.
-
-Changelog v9: Changes suggested by Lee Jones
-- MFD, DT-binding, RTC and WDT changed
-- DT-bindings: Spelling fixes
-- RTC and WDT: Use exported function instead of function pointer for WDT
-  arming/disarming
-- MFD: Export WDT arming/disarming function instead of providing a
-  pointer to it.
-- Various styling fixes.
-
-Changelog v8:
-- regulators(*), wdt, gpio, rtc, mfd(*) and dt-bindings unchanged.
-  (*)Patches 1-3 squashed to not break bisecting.
-
-- removed unnecessary newline from clk
-- fixed possible use of uninitialized 'reg' from power-supply.
-  Found by 0-day tests and reported by Dan Carpenter.
-
-Changelog v7:
-Only patch 2 changed.
-- Avoid out-of-array-bounds access at regulator probe if unsupported
-  chip type is passed to bd718x7 regulator driver.
-
-Changelog v6:
-Only patch 10 changed.
-- styling fixes pointed by Gunter Roeck
-- dropped RFC tag
-
-Changelog v5 (RFC):
-Only patch 7 changed.
-- Explained why lock is not needed at GPIO value getting
-- removed ampersands from function pointer assignments.
-
-Changelog v4 (RFC):
-patches 1,2,3,4,5,10 are unchanged from v3
-DT-binding fixes suggested by Rob Herring:
-- drop interrupt-parent
-- drop clock-frequency
-- change pmic node name to a generic one
-RTC:
-- enable RTC block's irqs before registering rtc
-GPIO fixes after initial testing:
-- fix getting GPIO value when direction is output
-POWER:
-- Add ASCII art intended to clarify the charger HW state machine
-
-Changelog v3 (RFC):
-patches 1,2,3,4,5,6,7,8 and 10 are unchanged from v2
-RTC fixups suggested by Guenter Roeck:
-- create bd70528_set_time_locked function in order to simplify
-  error handling and to make mutex lock/unlock path more obvious
-- don't ignore errors on bd70528_set_time_locked
-- simplify bd70528_read_alarm enabled condition setting
-- add __packed to structs where members are mapped to HW registers
-- remove unnecessary brackets from enable condition in set_wake
-RTC: fixups suggested by Alessandro Belloni
-- don't use deprecated devm_rtc_device_register
-- add alarm_irq_enable callback
-- add range_min and range_max
-WDT:
-- add regmap and mutex pointers to WDT data so that they can be accessed
-  without dereferencing the parent data
-- remove parent data pointer from WDT data
-- embed struct watchdog_device into WDT data in order to avoid double
-  allocation.
-GPIO:
-- remove unused header as pointed by Linus Walleij
-POWER:
-- do not copy the whole MFD data (especially the mutex to avoid
-  all possibilities of accidentally using the copy of a mutex)
-
-Changelog v2 (RFC): Mainly feedback from Guenter Roeck:
-- patches 1, 2, 3, 4, 5, 9 are unchanged.
-- mfd: own mutex for each bd70528 instance - embed in struct bd70528
-- watchdog: do not copy parent device data
-- watchdog: fix deadlock caused by double locked mutex
-- watchdog: set initial timeouts and WDT parent information
-- watchdog: remove unnecessary ping function from ops
-- watchdog: and the comment regarding it
-- watchdog: allocate watchdog struct in order to allow multiple WDG
-  instances
-- rtc: bd70528 fix the order of mutex unlock and re-enabling RTC based
-  timers
-- rtc: fix the irq mask register address
-- power: fix the irq mask register address
-- regulator/regmap-irq: Drop the patches 1, 8 and 9 from original series
-  as those were already applied by Mark 
-
-Patch 1:
-	split the bd718x7.h to generic and chip specific portions.
-	(breaks compilation without patch 2 and 3)
-	- adapt bd718x7.h changes to bd718x7 regulator driver
-	- adapt bd718x7.h changes to bd718x7 clk driver
-Patch 2:
-	add MFD core support for bd70528
-Patch 3:
-	support bd70528 clk using bd718x7 clk driver
-Patch 4:
-	document DT bindings for BD70528
-Patch 5:
-	support BD70528 GPIO block
-Patch 6:
-	support BD70528 RTC
-Patch 7:
-	support BD70528 battery charger
-Patch 8:
-	support BD70528 watchdog
-
-This patch series is based on Linus' v5.1-rc2 tag.
-
----
-
-Matti Vaittinen (8):
-  mfd: regulator: clk: split rohm-bd718x7.h
-  mfd: bd70528: Support ROHM bd70528 PMIC - core
-  clk: bd718x7: Support ROHM BD70528 clk block
-  dt-bindings: mfd: Document first ROHM BD70528 bindings
-  gpio: Initial support for ROHM bd70528 GPIO block
-  rtc: bd70528: Initial support for ROHM bd70528 RTC
-  power: supply: Initial support for ROHM BD70528 PMIC charger block
-  watchdog: bd70528: Initial support for ROHM BD70528 watchdog block
-
- .../bindings/mfd/rohm,bd70528-pmic.txt        | 102 +++
- drivers/clk/Kconfig                           |   6 +-
- drivers/clk/clk-bd718x7.c                     |  24 +-
- drivers/gpio/Kconfig                          |  11 +
- drivers/gpio/Makefile                         |   1 +
- drivers/gpio/gpio-bd70528.c                   | 232 ++++++
- drivers/mfd/Kconfig                           |  17 +
- drivers/mfd/Makefile                          |   1 +
- drivers/mfd/rohm-bd70528.c                    | 316 ++++++++
- drivers/mfd/rohm-bd718x7.c                    |  23 +-
- drivers/power/supply/Kconfig                  |   9 +
- drivers/power/supply/Makefile                 |   1 +
- drivers/power/supply/bd70528-charger.c        | 742 ++++++++++++++++++
- drivers/regulator/bd718x7-regulator.c         |  25 +-
- drivers/rtc/Kconfig                           |   8 +
- drivers/rtc/Makefile                          |   1 +
- drivers/rtc/rtc-bd70528.c                     | 500 ++++++++++++
- drivers/watchdog/Kconfig                      |  12 +
- drivers/watchdog/Makefile                     |   1 +
- drivers/watchdog/bd70528_wdt.c                | 290 +++++++
- include/linux/mfd/rohm-bd70528.h              | 408 ++++++++++
- include/linux/mfd/rohm-bd718x7.h              |  22 +-
- include/linux/mfd/rohm-generic.h              |  20 +
- 23 files changed, 2726 insertions(+), 46 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
- create mode 100644 drivers/gpio/gpio-bd70528.c
- create mode 100644 drivers/mfd/rohm-bd70528.c
- create mode 100644 drivers/power/supply/bd70528-charger.c
- create mode 100644 drivers/rtc/rtc-bd70528.c
- create mode 100644 drivers/watchdog/bd70528_wdt.c
- create mode 100644 include/linux/mfd/rohm-bd70528.h
- create mode 100644 include/linux/mfd/rohm-generic.h
-
--- 
-2.17.2
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+SGkgS2FsYWtvZGltYSwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gV2VkLCBBcHIgMDMs
+IDIwMTkgYXQgMDY6NDQ6NDNQTSArMDUzMCwgVmVua2F0YVJhamVzaC5LYWxha29kaW1hQGluLmJv
+c2NoLmNvbSB3cm90ZToKPiBGcm9tOiBrYWxha29kaW1hIHZlbmthdGEgcmFqZXNoIDx2ZW5rYXRh
+cmFqZXNoLmthbGFrb2RpbWFAaW4uYm9zY2guY29tPgo+IAo+IFVwZGF0ZSBnYW1tYSBhbmQgY3Rt
+IHByb3BlcnRpZXMgaWYgdGhlcmUgaXMgYSBjaGFuZ2UuCj4gCj4gU2lnbmVkLW9mZi1ieTogSGFy
+c2hhIE0gTSA8aGFyc2hhLm1hbmp1bGFtYWxsaWthcmp1bkBpbi5ib3NjaC5jb20+Cj4gCj4gICAg
+LSBGaXggY29tcGlsYXRpb24gaXNzdWVzIHdoZW4gZm9yX2VhY2hfY3J0Y19pbl9zdGF0ZSBpcyBu
+b3QgZGVmaW5lZAo+ICAgIC0gUmVzb2x2ZWQgY2hlY2twYXRjaCBlcnJvcnMKPiAgICAtIFJlc29s
+dmVkIG1lcmdlIGNvbmZsaWN0cyBhY2NvcmRpbmcgdG8gbGF0ZXN0IHZlcnNpb24KPiAKPiBTaWdu
+ZWQtb2ZmLWJ5OiBrYWxha29kaW1hIHZlbmthdGEgcmFqZXNoIDx2ZW5rYXRhcmFqZXNoLmthbGFr
+b2RpbWFAaW4uYm9zY2guY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2Fy
+X2R1X2ttcy5jIHwgMjUgKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICBpbmNsdWRlL2RybS9k
+cm1fYXRvbWljLmggICAgICAgICAgICAgIHwgMjUgKysrKysrKysrKysrKysrKysrKysrKysrKwo+
+ICAyIGZpbGVzIGNoYW5nZWQsIDUwIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9rbXMuYyBiL2RyaXZlcnMvZ3B1L2RybS9yY2Fy
+LWR1L3JjYXJfZHVfa21zLmMKPiBpbmRleCBmMGJjN2NjLi40ZDlhMTljIDEwMDY0NAo+IC0tLSBh
+L2RyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfa21zLmMKPiArKysgYi9kcml2ZXJzL2dw
+dS9kcm0vcmNhci1kdS9yY2FyX2R1X2ttcy5jCj4gQEAgLTI0Niw2ICsyNDYsMTAgQEAgc3RhdGlj
+IGludCByY2FyX2R1X2F0b21pY19jaGVjayhzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAo+ICBzdGF0
+aWMgdm9pZCByY2FyX2R1X2F0b21pY19jb21taXRfdGFpbChzdHJ1Y3QgZHJtX2F0b21pY19zdGF0
+ZSAqb2xkX3N0YXRlKQo+ICB7Cj4gIAlzdHJ1Y3QgZHJtX2RldmljZSAqZGV2ID0gb2xkX3N0YXRl
+LT5kZXY7Cj4gKwlzdHJ1Y3QgZHJtX2NydGMgKmNydGM7Cj4gKwlzdHJ1Y3QgZHJtX2NydGNfc3Rh
+dGUgKmNydGNfc3RhdGU7Cj4gKwlzdHJ1Y3QgcmNhcl9kdV9jcnRjICpyY3J0YzsKPiArCWludCBp
+Owo+ICAKPiAgCS8qIEFwcGx5IHRoZSBhdG9taWMgdXBkYXRlLiAqLwo+ICAJZHJtX2F0b21pY19o
+ZWxwZXJfY29tbWl0X21vZGVzZXRfZGlzYWJsZXMoZGV2LCBvbGRfc3RhdGUpOwo+IEBAIC0yNTMs
+NiArMjU3LDI3IEBAIHN0YXRpYyB2b2lkIHJjYXJfZHVfYXRvbWljX2NvbW1pdF90YWlsKHN0cnVj
+dCBkcm1fYXRvbWljX3N0YXRlICpvbGRfc3RhdGUpCj4gIAkJCQkJRFJNX1BMQU5FX0NPTU1JVF9B
+Q1RJVkVfT05MWSk7Cj4gIAlkcm1fYXRvbWljX2hlbHBlcl9jb21taXRfbW9kZXNldF9lbmFibGVz
+KGRldiwgb2xkX3N0YXRlKTsKPiAgCj4gKwkvKiBVcGRhdGUgZ2FtbWEgYW5kIGN0bSBwcm9wZXJ0
+aWVzIGZvciBhbGwgY3J0YyBpbiBwcmVzZW50Cj4gKwkgKiBzdGF0ZS4gVXBkYXRlIGlzIGRvbmUg
+b25seSBpZiB0aGVyZSBpcyBhIGNoYW5nZQo+ICsJICovCj4gKwlmb3JfZWFjaF9jcnRjX2luX3N0
+YXRlKG9sZF9zdGF0ZSwgY3J0YywgY3J0Y19zdGF0ZSwgaSkgewo+ICsJCXJjcnRjID0gdG9fcmNh
+cl9jcnRjKGNydGMpOwo+ICsKPiArCQlpZiAocmNydGMtPmx1dF9oYW5kbGUpIHsKPiArCQkJcmNh
+cl9kdV9jbW1fdXBkYXRlX2x1dF9hbmRfZnJlZQo+ICsJCQkgIChyY3J0Yy0+bHV0X2hhbmRsZSwK
+PiArCQkJICAgKHN0cnVjdCBkcm1fY29sb3JfbHV0ICopY3J0Yy0+c3RhdGUtPmdhbW1hX2x1dC0+
+ZGF0YSwKPiArCQkJICAgKGNydGMtPnN0YXRlLT5nYW1tYV9sdXQtPmxlbmd0aCAvCj4gKwkJCSAg
+IHNpemVvZihzdHJ1Y3QgZHJtX2NvbG9yX2x1dCkpKTsKPiArCQkJcmNydGMtPmx1dF9oYW5kbGUg
+PSBOVUxMOwo+ICsJCX0KPiArCQlpZiAocmNydGMtPmNsdV9oYW5kbGUpIHsKPiArCQkJcmNhcl9k
+dV9jbW1fdXBkYXRlX2NsdV9hbmRfZnJlZQo+ICsJCQkgIChyY3J0Yy0+Y2x1X2hhbmRsZSwKPiAr
+CQkJICAgKHN0cnVjdCBkcm1fY29sb3JfY3RtICopY3J0Yy0+c3RhdGUtPmN0bS0+ZGF0YSk7Cj4g
+KwkJCXJjcnRjLT5jbHVfaGFuZGxlID0gTlVMTDsKPiArCQl9Cj4gKwl9Cj4gIAlkcm1fYXRvbWlj
+X2hlbHBlcl9jb21taXRfaHdfZG9uZShvbGRfc3RhdGUpOwo+ICAJZHJtX2F0b21pY19oZWxwZXJf
+d2FpdF9mb3JfZmxpcF9kb25lKGRldiwgb2xkX3N0YXRlKTsKCldlJ3JlIGluIHRoZSBwcm9jZXNz
+IG9mIHJld29ya2luZyB0aGUgY29tbWl0IHRhaWwgaGFuZGxlciwgc28gSSBleHBlY3QKbWFqb3Ig
+Y2hhbmdlcyB3aWxsIGJlIG5lZWRlZCBoZXJlLgoKPiAgCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUv
+ZHJtL2RybV9hdG9taWMuaCBiL2luY2x1ZGUvZHJtL2RybV9hdG9taWMuaAo+IGluZGV4IDFlNzEz
+MTUuLmQyMmNjZDggMTAwNjQ0Cj4gLS0tIGEvaW5jbHVkZS9kcm0vZHJtX2F0b21pYy5oCj4gKysr
+IGIvaW5jbHVkZS9kcm0vZHJtX2F0b21pYy5oCj4gQEAgLTY5Myw2ICs2OTMsMzEgQEAgdm9pZCBk
+cm1fc3RhdGVfZHVtcChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LCBzdHJ1Y3QgZHJtX3ByaW50ZXIg
+KnApOwo+ICAJCQkgICAgIChuZXdfY29ubmVjdG9yX3N0YXRlKSA9IChfX3N0YXRlKS0+Y29ubmVj
+dG9yc1tfX2ldLm5ld19zdGF0ZSwgMSkpCj4gIAo+ICAvKioKPiArICogZm9yX2VhY2hfY3J0Y19p
+bl9zdGF0ZSAtIGl0ZXJhdGUgb3ZlciBhbGwgY29ubmVjdG9ycyBpbiBhbiBhdG9taWMgdXBkYXRl
+Cj4gKyAqIEBfX3N0YXRlOiAmc3RydWN0IGRybV9hdG9taWNfc3RhdGUgcG9pbnRlcgo+ICsgKiBA
+Y3J0YzogJnN0cnVjdCBkcm1fY3J0YyBpdGVyYXRpb24gY3Vyc29yCj4gKyAqIEBjcnRjX3N0YXRl
+OiAmc3RydWN0IGRybV9jcnRjX3N0YXRlIGl0ZXJhdGlvbiBjdXJzb3IKPiArICogQF9faTogaW50
+IGl0ZXJhdGlvbiBjdXJzb3IsIGZvciBtYWNyby1pbnRlcm5hbCB1c2UKPiArICoKPiArICogVGhp
+cyBpdGVyYXRlcyBvdmVyIGFsbCBDUlRDcyBpbiBhbiBhdG9taWMgdXBkYXRlLiBOb3RlIHRoYXQg
+YmVmb3JlIHRoZQo+ICsgKiBzb2Z0d2FyZSBzdGF0ZSBpcyBjb21taXR0ZWQgKGJ5IGNhbGxpbmcg
+ZHJtX2F0b21pY19oZWxwZXJfc3dhcF9zdGF0ZSgpLCB0aGlzCj4gKyAqIHBvaW50cyB0byB0aGUg
+bmV3IHN0YXRlLCB3aGlsZSBhZnRlcndhcmRzIGl0IHBvaW50cyB0byB0aGUgb2xkIHN0YXRlLiBE
+dWUgdG8KPiArICogdGhpcyB0cmlja3kgY29uZnVzaW9uIHRoaXMgbWFjcm8gaXMgZGVwcmVjYXRl
+ZC4KPiArICoKPiArICogRklYTUU6Cj4gKyAqCj4gKyAqIFJlcGxhY2UgYWxsIHVzYWdlIG9mIHRo
+aXMgd2l0aCBvbmUgb2YgdGhlIGV4cGxpY2l0IGl0ZXJhdG9ycyBiZWxvdyBhbmQgdGhlbgo+ICsg
+KiByZW1vdmUgdGhpcyBtYWNyby4KClRoZW4gZG9uJ3QgYWRkIGl0IDotKSBJbiBnZW5lcmFsIHlv
+dSBzaG91bGQgbG9vayBhdCB0aGUgY29kZSB5b3Ugd2FudCB0bwp1cHN0cmVhbSwgdGhpcyBmZWVs
+cyBsaWtlIGl0IHdhcyBhIGJsaW5kIGNvcHkgZnJvbSBhIEJTUCB3aXRob3V0IGdpdmluZwppdCBt
+dWNoIGNvbnNpZGVyYXRpb24uCgo+ICsgKi8KPiArI2RlZmluZSBmb3JfZWFjaF9jcnRjX2luX3N0
+YXRlKF9fc3RhdGUsIGNydGMsIGNydGNfc3RhdGUsIF9faSkJXAo+ICsJZm9yICgoX19pKSA9IDA7
+CQkJCQkJXAo+ICsJICAgICAoKF9faSkgPCAoKF9fc3RhdGUpLT5kZXYtPm1vZGVfY29uZmlnLm51
+bV9jcnRjKSkgJiYJXAo+ICsJICAgICAoKGNydGMpID0gKChfX3N0YXRlKS0+Y3J0Y3NbX19pXS5w
+dHIpLAkJCVwKPiArCSAgICAgKGNydGNfc3RhdGUpID0gKChfX3N0YXRlKS0+Y3J0Y3NbX19pXS5z
+dGF0ZSksIDEpOwlcCj4gKwkgICAgIChfX2kpKyspCQkJCQkJXAo+ICsJCWZvcl9lYWNoX2lmKGNy
+dGNfc3RhdGUpCj4gKwo+ICsvKioKPiAgICogZm9yX2VhY2hfb2xkbmV3X2NydGNfaW5fc3RhdGUg
+LSBpdGVyYXRlIG92ZXIgYWxsIENSVENzIGluIGFuIGF0b21pYyB1cGRhdGUKPiAgICogQF9fc3Rh
+dGU6ICZzdHJ1Y3QgZHJtX2F0b21pY19zdGF0ZSBwb2ludGVyCj4gICAqIEBjcnRjOiAmc3RydWN0
+IGRybV9jcnRjIGl0ZXJhdGlvbiBjdXJzb3IKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFy
+dApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
