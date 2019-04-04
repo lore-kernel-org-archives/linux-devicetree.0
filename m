@@ -1,51 +1,25 @@
-Return-Path: <SRS0=pQYc=SK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:44924 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726693AbfDHWKb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Apr 2019 18:10:31 -0400
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 0/2] Add l4 abe dts data for omap4
-Date: Mon,  8 Apr 2019 15:10:19 -0700
-Message-Id: <20190408221021.2620-1-tony@atomide.com>
+Return-Path: <SRS0=Zpqn=SG=verge.net.au=horms@kernel.org>
+Date: Thu, 4 Apr 2019 12:34:46 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 4/4] arm64: dts: renesas: r8a77995: draak: Remove hsusb
+ node
+Message-ID: <20190404103446.d5n2bnsuieyuli3v@verge.net.au>
+References: <1551438348-22119-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1551438348-22119-5-git-send-email-fabrizio.castro@bp.renesas.com>
+ <TY1PR01MB177003CB9BCE22BAC2FE83A9C0570@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TY1PR01MB177003CB9BCE22BAC2FE83A9C0570@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi all,
+On Wed, Apr 03, 2019 at 10:26:18AM +0000, Fabrizio Castro wrote:
+> Hello Simon,
+> 
+> I would like to drop this patch.
 
-Here are l4-abe.dtsi related changes for omap4. These are against Linux next,
-and depend on the related ti-syc interconnect target module driver changes
-in thread "[PATCH 00/14] ti-sysc changes to probe devices with dts data only".
+Thanks Fabrizio,
 
-If testing against other branches than Linux next, you should make sure at
-least the following mcpdm clock related fixes are applied:
-
-d17a718db40d ("clk: ti: clkctrl: Fix clkdm_name regression for TI_CLK_CLKCTRL_COMPAT")
-5ae51d67aec9 ("clk: clk-twl6040: Fix imprecise external abort for pdmclk")
-aeecaefa6355 ("mfd: twl6040: Fix device init errors for ACCCTL register")
-
-Regards,
-
-Tony
-
-
-Tony Lindgren (2):
-  ARM: dts: Add common mcpdm dts file for omap4
-  ARM: dts: Add l4 abe interconnect hierarchy and ti-sysc data for omap4
-
- arch/arm/boot/dts/omap4-duovero.dtsi      |  21 +-
- arch/arm/boot/dts/omap4-l4-abe.dtsi       | 501 ++++++++++++++++++++++
- arch/arm/boot/dts/omap4-mcpdm.dtsi        |  44 ++
- arch/arm/boot/dts/omap4-panda-common.dtsi |  21 +-
- arch/arm/boot/dts/omap4-sdp.dts           |  21 +-
- arch/arm/boot/dts/omap4-var-som-om44.dtsi |  21 +-
- arch/arm/boot/dts/omap4.dtsi              | 192 +--------
- 7 files changed, 553 insertions(+), 268 deletions(-)
- create mode 100644 arch/arm/boot/dts/omap4-l4-abe.dtsi
- create mode 100644 arch/arm/boot/dts/omap4-mcpdm.dtsi
-
--- 
-2.21.0
+I have marked it as "Rejected" in patchwork.
