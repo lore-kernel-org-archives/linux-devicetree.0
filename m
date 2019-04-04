@@ -1,56 +1,59 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH net-next v3 0/4] net: phy: add Amlogic g12a support
-Date: Thu,  4 Apr 2019 15:11:43 +0200
-Message-ID: <20190404131147.31156-1-jbrunet@baylibre.com>
+Subject: [PATCH net-next v3 4/4] net: phy: meson-gxl: clean-up gxl variant driver
+Date: Thu,  4 Apr 2019 15:11:47 +0200
+Message-ID: <20190404131147.31156-5-jbrunet@baylibre.com>
+References: <20190404131147.31156-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190404131147.31156-1-jbrunet@baylibre.com>
+Sender: netdev-owner@vger.kernel.org
 To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller" <davem@davemloft.net>, Kevin Hilman <khilman@baylibre.com>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds the necessary bits to support network on the Amlogic
-g12a SoC family.
+The purpose of this change is to align the gxl and g12a driver
+declaration.
 
-Only the internal PHY and related MDIO mux needed to be addressed.
-The GMAC remains compatible with axg SoC family
+Like on the g12a variant, remove genphy_aneg_done() from the driver
+declaration as the net phy framework will default to it anyway.
 
-This series has been tested on the u200 (S905D2) with both the internal
-and external (Realtek) PHYs.
+Also, the gxl phy id should be an exact match as well, so let's change
+this and use the macro provided.
 
-Change since v2 [1]:
-* Change 'clk part' Reviewed-by as suggested
-* Remove default callback from phy drivers
-* Use exact match PHY macros
-* Default MDIO g12a as module if ARCH_MESON is enabled
-* Don't print error on probe defer in the g12a mdio mux
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ drivers/net/phy/meson-gxl.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Change since v1 [0]:
-* drop '_' from function name unrelated to locking
-* fix peripheral clock disable on error
-* fix variable declaration reverse Xmas trees
-* fix Kconfig dependency on CCF
-  (Actually needed for 'struct clk_hw', Thx Andrew !)
-* Minor fix in the DT exemple as reported by Rob
-
-[0] https://lkml.kernel.org/r/20190314140135.19184-1-jbrunet@baylibre.com
-[1] https://lkml.kernel.org/r/20190329141512.29867-1-jbrunet@baylibre.com
-
-Jerome Brunet (4):
-  dt-bindings: net: phy: add g12a mdio mux documentation
-  net: phy: add amlogic g12a mdio mux support
-  net: phy: meson-gxl: add g12a support
-  net: phy: meson-gxl: clean-up gxl variant driver
-
- .../bindings/net/mdio-mux-meson-g12a.txt      |  48 +++
- drivers/net/phy/Kconfig                       |  11 +
- drivers/net/phy/Makefile                      |   1 +
- drivers/net/phy/mdio-mux-meson-g12a.c         | 380 ++++++++++++++++++
- drivers/net/phy/meson-gxl.c                   |  17 +-
- 5 files changed, 453 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/mdio-mux-meson-g12a.txt
- create mode 100644 drivers/net/phy/mdio-mux-meson-g12a.c
-
+diff --git a/drivers/net/phy/meson-gxl.c b/drivers/net/phy/meson-gxl.c
+index 2033c93a46ca..6d4a8c508ec0 100644
+--- a/drivers/net/phy/meson-gxl.c
++++ b/drivers/net/phy/meson-gxl.c
+@@ -224,14 +224,12 @@ static int meson_gxl_config_intr(struct phy_device *phydev)
+ 
+ static struct phy_driver meson_gxl_phy[] = {
+ 	{
+-		.phy_id		= 0x01814400,
+-		.phy_id_mask	= 0xfffffff0,
++		PHY_ID_MATCH_EXACT(0x01814400),
+ 		.name		= "Meson GXL Internal PHY",
+ 		.features	= PHY_BASIC_FEATURES,
+ 		.flags		= PHY_IS_INTERNAL,
+ 		.soft_reset     = genphy_soft_reset,
+ 		.config_init	= meson_gxl_config_init,
+-		.aneg_done      = genphy_aneg_done,
+ 		.read_status	= meson_gxl_read_status,
+ 		.ack_interrupt	= meson_gxl_ack_interrupt,
+ 		.config_intr	= meson_gxl_config_intr,
+@@ -251,7 +249,7 @@ static struct phy_driver meson_gxl_phy[] = {
+ };
+ 
+ static struct mdio_device_id __maybe_unused meson_gxl_tbl[] = {
+-	{ 0x01814400, 0xfffffff0 },
++	{ PHY_ID_MATCH_VENDOR(0x01814400) },
+ 	{ PHY_ID_MATCH_VENDOR(0x01803301) },
+ 	{ }
+ };
 -- 
 2.20.1
