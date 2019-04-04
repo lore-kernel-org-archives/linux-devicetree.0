@@ -1,83 +1,132 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] edac: sifive: Add DT documentation for SiFive L2
- cache Controller
-Date: Wed, 3 Apr 2019 20:17:40 -0500
-Message-ID: <CAL_JsqK4drKZy1OOv_5T6KQBkoo=J+rJ2DDAVtqLY73ZVGG-jA@mail.gmail.com>
-References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
- <1552382461-13051-2-git-send-email-yash.shah@sifive.com> <20190328131657.GA9056@bogus>
- <be7246a0-2426-995d-0a24-f104c173d752@arm.com> <CAL_Jsq+s77J=Bwiyow2d7Q=e+z+5d64i_cL6xaYn0xdvJDb4Vg@mail.gmail.com>
- <8e574cfa-29d9-0f0a-d670-c4869bd262c4@arm.com>
+Subject: Re: [PATCH 1/8] dt-bindings: stm32: add bindings for ML-AHB
+ interconnect
+Date: Wed, 3 Apr 2019 20:29:33 -0500
+Message-ID: <CAL_JsqK3BboUTW5TObyAjZCb5T0M-uVYt8pLYjPX598OgcuxkA@mail.gmail.com>
+References: <1551795849-13672-1-git-send-email-fabien.dessenne@st.com>
+ <1551795849-13672-2-git-send-email-fabien.dessenne@st.com>
+ <20190327230722.GA13708@bogus> <41b7bd91-7c14-9227-381e-f0e751ae4079@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8e574cfa-29d9-0f0a-d670-c4869bd262c4@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Morse <james.morse@arm.com>
-Cc: Yash Shah <yash.shah@sifive.com>, linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Borislav Petkov <bp@alien8.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <41b7bd91-7c14-9227-381e-f0e751ae4079@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabien DESSENNE <fabien.dessenne@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Loic PALLARDY <loic.pallardy@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ludovic BARRE <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 1, 2019 at 11:36 AM James Morse <james.morse@arm.com> wrote:
+ On Fri, Mar 29, 2019 at 10:59 AM Fabien DESSENNE
+<fabien.dessenne@st.com> wrote:
 >
 > Hi Rob,
 >
-> On 29/03/2019 14:11, Rob Herring wrote:
-> > On Thu, Mar 28, 2019 at 1:47 PM James Morse <james.morse@arm.com> wrote:
-> >> On 28/03/2019 13:16, Rob Herring wrote:
-> >>> On Tue, Mar 12, 2019 at 02:51:00PM +0530, Yash Shah wrote:
-> >>>> DT documentation for L2 cache controller added.
+> Let me clarify the context and the reason of the proposed approach.
 >
-> >>>> diff --git a/Documentation/devicetree/bindings/edac/sifive-edac-l2.txt b/Documentation/devicetree/bindings/edac/sifive-edac-l2.txt
-> >>>> new file mode 100644
-> >>>> index 0000000..abce09f
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/edac/sifive-edac-l2.txt
-> >>>> @@ -0,0 +1,31 @@
-> >>>> +SiFive L2 Cache EDAC driver device tree bindings
-> >>>> +-------------------------------------------------
-> >>>> +This driver uses the EDAC framework to report L2 cache controller ECC errors.
-> >>>
-> >>> Bindings are for h/w blocks, not drivers. (And Boris may want a single
-> >>> driver, but bindings should reflect the h/w, not what Linux (currently)
-> >>> wants.
+> The remoteproc framework deals with 'carveout' memory regions.
+>  From the remoteproc_core.c:
+>
+>   * Some remote processors will ask us to allocate them physically contiguous
+>   * memory regions (which we call "carveouts"), and map them to specific
+>   * device addresses (which are hardcoded in the firmware). They may also have
+>   * dedicated memory regions internal to the processors, and use them either
+>   * exclusively or alongside carveouts.
+>   *
+>   * They may then ask us to copy objects into specific device addresses (e.g.
+>   * code/data sections) or expose us certain symbols in other device address
+>   * (e.g. their trace buffer).
+>
+> For this, the remoteproc drivers have to register these memory regions
+> providing their memory mapping remote processor view / local processor
+> view. See rproc_mem_entry_init() and rproc_add_carveout().
+>
+> An implementation solution consists in declaring the memory mapping inside
+> the remoteproc driver. (Ex: imx_rproc_att_imx7d[] from imx_rproc.c)
+>
+> For the stm32 rproc driver that we are introducing, we would like to have
+> something more flexible than hardcoded values.
+
+I need an explanation that is not in terms of remoteproc. That's a Linux thing.
+
+> One reason for this, is that some memory parts can be accessed through
+> different 2 bus port, with different addresses and access speed, and we
+> would like to let the user customize this.
+>
+> Using DeviceTree "ranges" seems to fit with these requirements.
+
+'ranges' is strictly about the cpu's (running Linux) view of the
+system. 'dma-ranges' is for the device's (the remoteproc) view of
+memory. You simply cannot redefine them for your own custom use.
+
+If the cpu has 2 views of the same memory, then you can use ranges to
+describe that.
+
+> If you think that this is not the right approach, please let me know if you
+> think about something better.
+>
+> See also below my answer to your specific remarks
+>
+> BR
+>
+> On 28/03/2019 12:07 AM, Rob Herring wrote:
+>
+> > On Tue, Mar 05, 2019 at 03:24:02PM +0100, Fabien Dessenne wrote:
+> >> Document the ML-AHB interconnect for stm32 SoCs.
 > >>
-> >> For h/w block compatibles and edac, I think all we need now is to ensure the DT contains
-> >> the three compatible strings: platform (if there is one), soc and ip-name (if its a
-> >> re-usable thing).
-> >> This is so that linux can pick the biggest of the three (usually platform) to probe the
-> >> driver from, as this lets us capture platform properties we only find out about later.
+> >> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> >> ---
+> >>   .../devicetree/bindings/arm/stm32/mlahb.txt        | 30 ++++++++++++++++++++++
+> >>   1 file changed, 30 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/arm/stm32/mlahb.txt b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+> >> new file mode 100644
+> >> index 0000000..880cb38
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+> >> @@ -0,0 +1,30 @@
+> >> +ML-AHB interconnect bindings
+> >> +
+> >> +These bindings describe the STM32 SoCs ML-AHB interconnect bus which connects
+> >> +a Cortex-M subsystem with dedicated memories.
+> >> +
+> >> +Required properties:
+> >> +- compatible: should be "simple-bus"
+> > A binding for simple-bus was the first thing that looked odd.
+>
+> Since we want to use "ranges" (or "dma-ranges"), we need to define a parent-bus.
+> This bus has nothing specific, so it is a "simple-bus"
+
+Okay, fair enough.
+
+> >> +- ranges: describes memory addresses translation between the local CPU and the
+> >> +       remote Cortex-M processor. Each memory region, is declared with 3
+> >> +       parameters:
+> >> +             - param 1: device base address (Cortex-M processor address)
+> >> +             - param 2: physical base address (local CPU address)
+> >> +             - param 3: size of the memory region.
+> > Given that the driver is parsing ranges itself, this looks like abuse of
+> > ranges.
+>
+> That's correct. As explained above, we need to provide the remoteproc framework
+> with carveout mappings.
+>
 > >
-> > DT is not the only what to instantiate drivers. If the OS really wants
-> > to have a single driver for multiple h/w blocks, then it needs to
-> > instantiate a driver itself (based on the top-level compatible
-> > probably) and then that driver can find the DT nodes it needs itself.
+> > What exactly is address 0 supposed to be here? If it is the M4's view of
+> > memory, then dma-ranges is what you want to use here.
 >
-> I think this is where we are heading. (but I need to get my head round this top-level thing).
->
-> Can the OS do both, depending on the platform?
-> e.g. on a system with one component the driver runs 'standalone', whereas on a bigger
-> system with multiple components the same driver is used as a library by something else.
->
-> I don't see how this would work if the common component's DT entry looks the same on both
-> platforms. Wouldn't this depend on the order stuff is done in, or 'but not this one'
-> checks in the driver?
+> "dma-ranges" is probably more appropriated here. But the driver still needs to
+> parse this property.
 
-Yeah, it could get a bit messy. I think we'd have to always do things
-as described above for anything using that set of components. If you
-truly have some set of multiple blocks and any combination of them can
-appear, then we shouldn't be trying to have a single driver and EDAC
-needs to change to support that IMO. However, I'd guess things are not
-that stable to have many different combinations of components. SoCs
-have new DDR controllers practically every generation for example.
-
-> > In any case, it's all irrelevant to the DT binding. We don't design
-> > bindings around what some particular OS wants.
->
-> I agree.
->
-> What we want to do is spot the problems on the horizon so we either have the right
-> information in the DT today, or at least know what it looks like so we don't cause a
-> regression when a new platform makes previous behaviour generic/a-library.
-
-If we follow what the current OS wants, then what is right will change.
+That is more acceptable assuming what's in dma-ranges matches the
+standard definition.
 
 Rob
