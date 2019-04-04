@@ -1,49 +1,57 @@
-From: Mukesh Ojha <mojha@codeaurora.org>
-Subject: Re: [PATCH][V2] Documentation: bus: ti-sysc: fix spelling mistakes
- "multipe" and "interconnet"
-Date: Thu, 4 Apr 2019 16:53:07 +0530
-Message-ID: <46156ce3-7b5d-2545-41f2-5816ae9c1a5a@codeaurora.org>
-References: <20190404111657.21477-1-colin.king@canonical.com>
+From: "Leonidas P. Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] arm64: dts: rockchip: eMMC additions for rk3328-roc-cc
+Date: Thu,  4 Apr 2019 14:23:29 +0300
+Message-ID: <20190404112329.8157-1-papadakospan@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190404111657.21477-1-colin.king@canonical.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Colin King <colin.king@canonical.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Faiz Abbas <faiz_abbas@ti.com>, devicetree@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Leonidas P. Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The eMMC 5.x that Libre Computer provide for their boards supports HS200 mode.
+The support is already included in the dts for their newest board:
 
-On 4/4/2019 4:46 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There is are a couple of spelling mistakes in the Documentation. Fix them.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+La Frite (AML-S805X-AC)
+dts: arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts
 
-Cheers,
--Mukesh
-> ---
->
-> V2: Add fix to interconnect, thanks to Mukesh Ojha for spotting that
->
-> ---
->   Documentation/devicetree/bindings/bus/ti-sysc.txt | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/bus/ti-sysc.txt b/Documentation/devicetree/bindings/bus/ti-sysc.txt
-> index 85a23f551f02..cf0e1d6d6f2e 100644
-> --- a/Documentation/devicetree/bindings/bus/ti-sysc.txt
-> +++ b/Documentation/devicetree/bindings/bus/ti-sysc.txt
-> @@ -131,6 +131,6 @@ using offsets from l4_cfg second segment (0x4a000000 + 0x80000 = 0x4a0ab000):
->   		};
->   	};
->   
-> -Note that other SoCs, such as am335x can have multipe child devices. On am335x
-> +Note that other SoCs, such as am335x can have multiple child devices. On am335x
->   there are two MUSB instances, two USB PHY instances, and a single CPPI41 DMA
-> -instance as children of a single interconnet target module.
-> +instance as children of a single interconnect target module.
+That same eMMC is supported in the ROC-RK3328-CC:
+https://www.loverpi.com/products/libre-computer-board-emmc-5-x-module
+
+This increases the speed of the eMMC significantly.
+
+Signed-off-by: Leonidas P. Papadakos <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Changes since v1:
+- disable-wp isn't needed.
+- limit max_frequency to 150MHz for rk3328
+
+ arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+index c213ad74d..db3246995 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+@@ -122,6 +122,9 @@
+ &emmc {
+ 	bus-width = <8>;
+ 	cap-mmc-highspeed;
++	max-frequency = <150000000>;
++	mmc-ddr-1_8v;
++	mmc-hs200-1_8v;
+ 	non-removable;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
+-- 
+2.21.0
