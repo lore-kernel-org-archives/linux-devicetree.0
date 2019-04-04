@@ -1,109 +1,102 @@
-From: Joe Perches <joe@perches.com>
-Subject: [PATCH] drm/panel: Rocktech jh057n00900: Add terminating newlines
- to logging
-Date: Thu, 04 Apr 2019 08:06:09 -0700
-Message-ID: <da6f2344396555034cf2476c8338b0ce1c56e0a7.camel@perches.com>
-References: <cover.1554114302.git.agx@sigxcpu.org>
-         <20190403161735.GN5238@ulmo>
-         <1ed5eb3af4df6b2dd1544c7b696e034ed5c94f06.camel@perches.com>
-         <20190404105359.GA8255@bogon.m.sigxcpu.org>
+From: Patrick Venture <venture@google.com>
+Subject: [PATCH v9 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Date: Thu,  4 Apr 2019 08:25:44 -0700
+Message-ID: <20190404152544.214988-1-venture@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190404105359.GA8255@bogon.m.sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Jagan Teki <jagan@amarulasolutions.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Johan Hovold <johan@kernel.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
+To: venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, gregkh@linuxfoundation.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-These were missing '\n' terminations, add them.
+Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
 
-Signed-off-by: Joe Perches <joe@perches.com>
+Signed-off-by: Patrick Venture <venture@google.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+Changes for v9:
+ - Added missing details about syscon parent
+Changes for v8:
+- None
+Changes for v7:
+- Moved node under the syscon node it requires
+Changes for v6:
+- None
+Changes for v5:
+- None
+Changes for v4:
+- None
+Changes for v3:
+- None
+Changes for v2:
+- Added comment about syscon required parameter.
+---
+ .../bindings/misc/aspeed-p2a-ctrl.txt         | 56 +++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
 
-diff --git a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-index 158a6d548068..d88ea8da2ec2 100644
---- a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-+++ b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-@@ -123,7 +123,7 @@ static int jh057n_init_sequence(struct jh057n *ctx)
- 
- 	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
- 	if (ret < 0) {
--		DRM_DEV_ERROR(dev, "Failed to exit sleep mode");
-+		DRM_DEV_ERROR(dev, "Failed to exit sleep mode\n");
- 		return ret;
- 	}
- 	/* Panel is operational 120 msec after reset */
-@@ -132,7 +132,7 @@ static int jh057n_init_sequence(struct jh057n *ctx)
- 	if (ret)
- 		return ret;
- 
--	DRM_DEV_DEBUG_DRIVER(dev, "Panel init sequence done");
-+	DRM_DEV_DEBUG_DRIVER(dev, "Panel init sequence done\n");
- 	return 0;
- }
- 
-@@ -172,7 +172,7 @@ static int jh057n_prepare(struct drm_panel *panel)
- 	if (ctx->prepared)
- 		return 0;
- 
--	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Resetting the panel.");
-+	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Resetting the panel\n");
- 	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
- 	usleep_range(20, 40);
- 	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-@@ -180,7 +180,8 @@ static int jh057n_prepare(struct drm_panel *panel)
- 
- 	ret = jh057n_init_sequence(ctx);
- 	if (ret < 0) {
--		DRM_DEV_ERROR(ctx->dev, "Panel init sequence failed: %d", ret);
-+		DRM_DEV_ERROR(ctx->dev, "Panel init sequence failed: %d\n",
-+			      ret);
- 		return ret;
- 	}
- 
-@@ -212,7 +213,7 @@ static int jh057n_get_modes(struct drm_panel *panel)
- 
- 	mode = drm_mode_duplicate(panel->drm, &default_mode);
- 	if (!mode) {
--		DRM_DEV_ERROR(ctx->dev, "Failed to add mode %ux%u@%u",
-+		DRM_DEV_ERROR(ctx->dev, "Failed to add mode %ux%u@%u\n",
- 			      default_mode.hdisplay, default_mode.vdisplay,
- 			      default_mode.vrefresh);
- 		return -ENOMEM;
-@@ -241,7 +242,7 @@ static int allpixelson_set(void *data, u64 val)
- 	struct jh057n *ctx = data;
- 	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
- 
--	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Setting all pixels on");
-+	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Setting all pixels on\n");
- 	dsi_generic_write_seq(dsi, ST7703_CMD_ALL_PIXEL_ON);
- 	msleep(val * 1000);
- 	/* Reset the panel to get video back */
-@@ -290,7 +291,7 @@ static int jh057n_probe(struct mipi_dsi_device *dsi)
- 
- 	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
- 	if (IS_ERR(ctx->reset_gpio)) {
--		DRM_DEV_ERROR(dev, "cannot get reset gpio");
-+		DRM_DEV_ERROR(dev, "cannot get reset gpio\n");
- 		return PTR_ERR(ctx->reset_gpio);
- 	}
- 
-@@ -315,12 +316,12 @@ static int jh057n_probe(struct mipi_dsi_device *dsi)
- 
- 	ret = mipi_dsi_attach(dsi);
- 	if (ret < 0) {
--		DRM_DEV_ERROR(dev, "mipi_dsi_attach failed. Is host ready?");
-+		DRM_DEV_ERROR(dev, "mipi_dsi_attach failed. Is host ready?\n");
- 		drm_panel_remove(&ctx->panel);
- 		return ret;
- 	}
- 
--	DRM_DEV_INFO(dev, "%ux%u@%u %ubpp dsi %udl - ready",
-+	DRM_DEV_INFO(dev, "%ux%u@%u %ubpp dsi %udl - ready\n",
- 		     default_mode.hdisplay, default_mode.vdisplay,
- 		     default_mode.vrefresh,
- 		     mipi_dsi_pixel_format_to_bpp(dsi->format), dsi->lanes);
+diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+new file mode 100644
+index 0000000000000..05ed654848b60
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+@@ -0,0 +1,56 @@
++======================================================================
++Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
++======================================================================
++
++The bridge is available on platforms with the VGA enabled on the Aspeed device.
++In this case, the host has access to a 64KiB window into all of the BMC's
++memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
++has read access to all the regions of memory, however the host only has read
++and write access depending on a register controlled by the BMC.
++
++Required properties:
++===================
++
++ - compatible: must be one of:
++	- "aspeed,ast2400-p2a-ctrl"
++	- "aspeed,ast2500-p2a-ctrl"
++
++Optional properties:
++===================
++
++- memory-region: A phandle to a reserved_memory region to be used for the PCI
++		to AHB mapping
++
++The p2a-control node should be the child of a syscon node with the required
++property:
++
++- compatible : Should be one of the following:
++		"aspeed,ast2400-scu", "syscon", "simple-mfd"
++		"aspeed,g4-scu", "syscon", "simple-mfd"
++		"aspeed,ast2500-scu", "syscon", "simple-mfd"
++		"aspeed,g5-scu", "syscon", "simple-mfd"
++
++The aspeed-p2a-ctrl node should be the child of a syscon node with the required
++property:
++
++- compatible : Should be one of the following:
++		"aspeed,ast2400-scu", "syscon", "simple-mfd"
++		"aspeed,g4-scu", "syscon", "simple-mfd"
++		"aspeed,ast2500-scu", "syscon", "simple-mfd"
++		"aspeed,g5-scu", "syscon", "simple-mfd"
++
++Example
++===================
++
++g4 Example
++----------
++
++syscon: scu@1e6e2000 {
++	compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
++	reg = <0x1e6e2000 0x1a8>;
++
++	p2a: p2a-control {
++		compatible = "aspeed,ast2400-p2a-ctrl";
++		memory-region = <&reserved_memory>;
++	};
++};
+-- 
+2.21.0.392.gf8f6787159e-goog
