@@ -1,132 +1,45 @@
-Return-Path: <SRS0=FHWM=SE=mxic.com.tw=masonccyang@kernel.org>
-In-Reply-To: <7a2d3d45-76ec-611d-08cf-f63da17d12f0@gmail.com>
-References: <1553847606-18122-1-git-send-email-masonccyang@mxic.com.tw> <1553847606-18122-4-git-send-email-masonccyang@mxic.com.tw> <7a2d3d45-76ec-611d-08cf-f63da17d12f0@gmail.com>
-Subject: Re: [PATCH v9 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF
- controller bindings
+Return-Path: <SRS0=Z6F2=SG=linaro.org=linus.walleij@kernel.org>
 MIME-Version: 1.0
-Message-ID: <OF30B0B31C.83718533-ON482583D0.001CF6D4-482583D0.001D9551@mxic.com.tw>
-From: masonccyang@mxic.com.tw
-Date: Tue, 2 Apr 2019 13:23:06 +0800
-Content-Type: multipart/alternative; boundary="=_alternative 001D9550482583D0_="
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, sergei.shtylyov@cogentembedded.com, zhengxunli@mxic.com.tw
+References: <20190316202552.21525-1-marek.vasut@gmail.com>
+In-Reply-To: <20190316202552.21525-1-marek.vasut@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 4 Apr 2019 12:13:22 +0700
+Message-ID: <CACRpkdZNfNOhR=H5=ECVfsc-mDhk1RkovV56p3bUp2-KY0oWWQ@mail.gmail.com>
+Subject: Re: [PATCH V3] regulator: gpio: Reword the binding document
+Content-Type: text/plain; charset="UTF-8"
+To: Mark Vasut <marek.vasut@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Marek Vasut <marek.vasut+renesas@gmail.com>, Harald Geyer <harald@ccbib.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This is a multipart message in MIME format.
---=_alternative 001D9550482583D0_=
-Content-Type: text/plain; charset="US-ASCII"
+On Sun, Mar 17, 2019 at 3:25 AM <marek.vasut@gmail.com> wrote:
 
+> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+>
+> Reword the binding document to make it clear how the propeties work
+> and which properties affect which other properties.
+>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> Cc: Harald Geyer <harald@ccbib.org>
+> Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: linux-renesas-soc@vger.kernel.org
+> To: devicetree@vger.kernel.org
+> ---
+> V2: - Make "gpios" a mandatory property
+>     - Reword "gpio-states" property description
+>     - Change "enable-gpio" to "enable-gpios" to match modern DT rules
+> V3: - Use gpio-states description from Harald
+> Note: The recent gpio-regulator rework caused breakage. While the
+>       changes in the gpio-regulator code were according to the DT
+>       binding document, they stopped working with older DTs. Make
+>       the binding document clearer to prevent such breakage in the
+>       future.
 
-Hi Marek,
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> > +
-> > +Example:
-> > +
-> > +   rpc_mfd: rpc-mfd@ee200000 {
-> > +      compatible = "renesas,r8a77995-rpc", "renesas,rcar-gen3-rpc";
-> > +      reg = <0 0xee200000 0 0x200>, <0 0x08000000 0 0x4000000>,
-> > +            <0 0xee208000 0 0x100>;
-> > +      reg-names = "regs", "dirmap", "wbuf";
-> > +      clocks = <&cpg CPG_MOD 917>;
-> > +      clock-names = "rpc";
-> > +      power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-> > +      resets = <&cpg 917>;
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      spi {
-> 
-> Why is this subnode needed ?
-> The MFD driver core can just check whether the flash@0 is jedec,spi-nor
-> or cfi-flash and select mode of operation based on that.
-> 
+Thanks for fixing this!
 
-okay, I will remove this virtual node and patch code based on your 
-comments.
-
-thanks & best regards,
-Mason
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
---=_alternative 001D9550482583D0_=
-Content-Type: text/html; charset="US-ASCII"
-
-
-<tt><font size=2>Hi Marek,</font></tt>
-<br>
-<br><tt><font size=2>&gt; &gt; +<br>
-&gt; &gt; +Example:<br>
-&gt; &gt; +<br>
-&gt; &gt; + &nbsp; rpc_mfd: rpc-mfd@ee200000 {<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;compatible = &quot;renesas,r8a77995-rpc&quot;,
-&quot;renesas,rcar-gen3-rpc&quot;;<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;reg = &lt;0 0xee200000 0 0x200&gt;, &lt;0
-0x08000000 0 0x4000000&gt;,<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;0 0xee208000 0
-0x100&gt;;<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;reg-names = &quot;regs&quot;, &quot;dirmap&quot;,
-&quot;wbuf&quot;;<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;clocks = &lt;&amp;cpg CPG_MOD 917&gt;;<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;clock-names = &quot;rpc&quot;;<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;power-domains = &lt;&amp;sysc R8A77995_PD_ALWAYS_ON&gt;;<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;resets = &lt;&amp;cpg 917&gt;;<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;#address-cells = &lt;1&gt;;<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;#size-cells = &lt;0&gt;;<br>
-&gt; &gt; +<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;spi {<br>
-&gt; <br>
-&gt; Why is this subnode needed ?<br>
-&gt; The MFD driver core can just check whether the flash@0 is jedec,spi-nor<br>
-&gt; or cfi-flash and select mode of operation based on that.<br>
-&gt; <br>
-<br>
-okay, I will remove this virtual node and patch code based on your comments.</font></tt>
-<br>
-<br><tt><font size=2>thanks &amp; best regards,</font></tt>
-<br><tt><font size=2>Mason<br>
-<br>
-CONFIDENTIALITY NOTE:<br>
-<br>
-This e-mail and any attachments may contain confidential information and/or
-personal data, which is protected by applicable laws. Please be reminded
-that duplication, disclosure, distribution, or use of this e-mail (and/or
-its attachments) or any part thereof is prohibited. If you receive this
-e-mail in error, please notify us immediately and delete this mail as well
-as its attachment(s) from your system. In addition, please be informed
-that collection, processing, and/or use of personal data is prohibited
-unless expressly permitted by personal data protection laws. Thank you
-for your attention and cooperation.<br>
-<br>
-Macronix International Co., Ltd.<br>
-<br>
-=====================================================================<br>
-</font></tt>
-
---=_alternative 001D9550482583D0_=--
+Yours,
+Linus Walleij
