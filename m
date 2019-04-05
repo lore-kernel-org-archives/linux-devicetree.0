@@ -1,279 +1,123 @@
-From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 2/2] dt-bindings: cpufreq: Document operating-points-v2-sunxi-cpu
-Date: Fri,  5 Apr 2019 06:24:55 -0400
-Message-ID: <20190405102455.15311-3-tiny.windzz@gmail.com>
-References: <20190405102455.15311-1-tiny.windzz@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190405102455.15311-1-tiny.windzz@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tiny.windzz@gmail.com, vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 2/3] mtd: rawnand: sunxi: Add DMA support for sun8i
+Date: Fri, 5 Apr 2019 12:55:59 +0200
+Message-ID: <20190405105559.sqdhoa54ne7l4svj@flea>
+References: <20190404162111.22618-1-miquel.raynal@bootlin.com>
+ <20190404162111.22618-3-miquel.raynal@bootlin.com>
+ <20190405091607.2dzckvyqibs7xmew@flea>
+ <20190405113742.184234ca@xps13>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============7629681438652547007=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190405113742.184234ca@xps13>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Allwinner Process Voltage Scaling Tables defines the voltage and
-frequency value  based on the speedbin blown in the efuse combination.
-The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-provide the OPP framework with required information.
-This is used to determine the voltage and frequency value for each
-OPP of operating-points-v2 table when it is parsed by the OPP framework.
 
-This change adds documentation for the DT bindings.
-The "operating-points-v2-sunxi-cpu" DT extends the "operating-points-v2"
-with following parameters:
-- nvmem-cells (NVMEM area containig the speedbin information)
-- opp-supported-hw: A single 32 bit bitmap value,
-  representing compatible HW:
-			0:      speedbin 0
-			1:      speedbin 1
-			2:      speedbin 2
-			3-31:   unused
+--===============7629681438652547007==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yfur7fxwepooyuj5"
+Content-Disposition: inline
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
----
- .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 235 ++++++++++++++++++
- 1 file changed, 235 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
 
-diff --git a/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-new file mode 100644
-index 000000000000..80201d4e5147
---- /dev/null
-+++ b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-@@ -0,0 +1,235 @@
-+Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
-+===================================
-+
-+For some SoCs, the CPU frequency subset and voltage value of each OPP
-+varies based on the silicon variant in use. Allwinner Process Voltage
-+Scaling Tables defines the voltage and frequency value  based on the
-+speedbin blown in the efuse combination. The sunxi-cpufreq-nvmem driver
-+reads the efuse value from the SoC to provide the OPP framework with
-+required information.
-+
-+Required properties:
-+--------------------
-+In 'cpus' nodes:
-+- operating-points-v2: Phandle to the operating-points-v2 table to use.
-+
-+In 'operating-points-v2' table:
-+- compatible: Should be
-+	- 'operating-points-v2-sunxi-cpu'.
-+- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
-+		efuse registers that has information about the
-+		speedbin that is used to select the right frequency/voltage
-+		value pair.
-+		Please refer the for nvmem-cells
-+		bindings Documentation/devicetree/bindings/nvmem/nvmem.txt
-+		and also examples below.
-+
-+In every OPP node:
-+- opp-supported-hw: A single 32 bit bitmap value, representing compatible HW.
-+		    Bitmap:
-+			0:	speedbin 0
-+			1:	speedbin 1
-+			2:	speedbin 2
-+			3-31:	unused
-+
-+Example 1:
-+---------
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0>;
-+			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <1>;
-+			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <2>;
-+			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <3>;
-+			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
-+		};
-+        };
-+
-+	cpu_opp_table: opp_table {
-+		compatible = "operating-points-v2-sunxi-cpu";
-+		nvmem-cells = <&speedbin_efuse>;
-+		opp-shared;
-+
-+		opp-480000000-0 {
-+			opp-hz = /bits/ 64 <480000000>;
-+			opp-microvolt = <880000>;
-+			opp-supported-hw = <0x1>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-720000000-0 {
-+			opp-hz = /bits/ 64 <720000000>;
-+			opp-microvolt = <880000>;
-+			opp-supported-hw = <0x1>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-816000000-0 {
-+			opp-hz = /bits/ 64 <816000000>;
-+			opp-microvolt = <880000>;
-+			opp-supported-hw = <0x1>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-888000000-0 {
-+			opp-hz = /bits/ 64 <888000000>;
-+			opp-microvolt = <940000>;
-+			opp-supported-hw = <0x1>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-1080000000-0 {
-+			opp-hz = /bits/ 64 <1080000000>;
-+			opp-microvolt = <1060000>;
-+			opp-supported-hw = <0x1>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-1320000000-0 {
-+			opp-hz = /bits/ 64 <1320000000>;
-+			opp-microvolt = <1160000>;
-+			opp-supported-hw = <0x1>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-1488000000-0 {
-+			opp-hz = /bits/ 64 <1488000000>;
-+			opp-microvolt = <1160000>;
-+			opp-supported-hw = <0x1>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+
-+		opp-480000000-1 {
-+			opp-hz = /bits/ 64 <480000000>;
-+			opp-microvolt = <820000>;
-+			opp-supported-hw = <0x2>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-720000000-1 {
-+			opp-hz = /bits/ 64 <720000000>;
-+			opp-microvolt = <820000>;
-+			opp-supported-hw = <0x2>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-816000000-1 {
-+			opp-hz = /bits/ 64 <816000000>;
-+			opp-microvolt = <820000>;
-+			opp-supported-hw = <0x2>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-888000000-1 {
-+			opp-hz = /bits/ 64 <888000000>;
-+			opp-microvolt = <820000>;
-+			opp-supported-hw = <0x2>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-1080000000-1 {
-+			opp-hz = /bits/ 64 <1080000000>;
-+			opp-microvolt = <880000>;
-+			opp-supported-hw = <0x2>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-1320000000-1 {
-+			opp-hz = /bits/ 64 <1320000000>;
-+			opp-microvolt = <940000>;
-+			opp-supported-hw = <0x2>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-1488000000-1 {
-+			opp-hz = /bits/ 64 <1488000000>;
-+			opp-microvolt = <1000000>;
-+			opp-supported-hw = <0x2>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+
-+		opp-480000000-2 {
-+			opp-hz = /bits/ 64 <480000000>;
-+			opp-microvolt = <800000>;
-+			opp-supported-hw = <0x4>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-720000000-2 {
-+			opp-hz = /bits/ 64 <720000000>;
-+			opp-microvolt = <800000>;
-+			opp-supported-hw = <0x4>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-816000000-2 {
-+			opp-hz = /bits/ 64 <816000000>;
-+			opp-microvolt = <800000>;
-+			opp-supported-hw = <0x4>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-888000000-2 {
-+			opp-hz = /bits/ 64 <888000000>;
-+			opp-microvolt = <800000>;
-+			opp-supported-hw = <0x4>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-1080000000-2 {
-+			opp-hz = /bits/ 64 <1080000000>;
-+			opp-microvolt = <840000>;
-+			opp-supported-hw = <0x4>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-1320000000-2 {
-+			opp-hz = /bits/ 64 <1320000000>;
-+			opp-microvolt = <900000>;
-+			opp-supported-hw = <0x4>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-1488000000-2 {
-+			opp-hz = /bits/ 64 <1488000000>;
-+			opp-microvolt = <960000>;
-+			opp-supported-hw = <0x4>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+	};
-+
-+....
-+soc {
-+....
-+	sid: sid@3006000 {
-+		compatible = "allwinner,sun50i-h6-sid";
-+		reg = <0x03006000 0x400>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		....
-+		speedbin_efuse: speed@1c {
-+			reg = <0x1c 4>;
-+		};
-+        };
-+};
--- 
-2.17.0
+--yfur7fxwepooyuj5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Apr 05, 2019 at 11:37:42AM +0200, Miquel Raynal wrote:
+> Hi Maxime,
+>
+> Maxime Ripard <maxime.ripard@bootlin.com> wrote on Fri, 5 Apr 2019
+> 11:16:07 +0200:
+>
+> > On Thu, Apr 04, 2019 at 06:21:10PM +0200, Miquel Raynal wrote:
+> > > Allwinner NAND controllers can make use of DMA to enhance the I/O
+> > > throughput thanks to ECC pipelining. DMA handling with sun8i NAND IP
+> > > is a bit different than with the older SoCs, hence the introduction of
+> > > a new compatible to handle:
+> > > * the differences between register offsets,
+> > > * the burst length change from 4 to minimum 8,
+> > > * drive SRAM accesses through the AHB bus instead of the MBUS.
+> > >
+> > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > > ---
+> > >  drivers/mtd/nand/raw/sunxi_nand.c | 75 ++++++++++++++++++++++++++++---
+> > >  1 file changed, 68 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/drivers/mtd/nand/raw/sunxi_nand.c b/drivers/mtd/nand/raw/sunxi_nand.c
+> > > index 4282bc477761..49cd5067adaa 100644
+> > > --- a/drivers/mtd/nand/raw/sunxi_nand.c
+> > > +++ b/drivers/mtd/nand/raw/sunxi_nand.c
+> > > @@ -42,7 +42,8 @@
+> > >  #define NFC_REG_CMD		0x0024
+> > >  #define NFC_REG_RCMD_SET	0x0028
+> > >  #define NFC_REG_WCMD_SET	0x002C
+> > > -#define NFC_REG_IO_DATA		0x0030
+> > > +#define NFC_REG_A10_IO_DATA	0x0030
+> > > +#define NFC_REG_A33_IO_DATA	0x0300
+> > >  #define NFC_REG_ECC_CTL		0x0034
+> > >  #define NFC_REG_ECC_ST		0x0038
+> > >  #define NFC_REG_DEBUG		0x003C
+> > > @@ -200,6 +201,22 @@ static inline struct sunxi_nand_chip *to_sunxi_nand(struct nand_chip *nand)
+> > >  	return container_of(nand, struct sunxi_nand_chip, nand);
+> > >  }
+> > >
+> > > +/*
+> > > + * NAND Controller capabilities structure: stores NAND controller capabilities
+> > > + * for distinction between compatible strings.
+> > > + *
+> > > + * @sram_through_ahb:	On A33, we choose to access the internal RAM through AHB
+> > > + *                      instead of MBUS (less configuration). A10+ use the MBUS
+> >
+> > What do you mean by A10+ ?
+>
+> I meant A1x, A2x SoCs. Not sure it matches a product line for you, so
+> please suggest something to mean "SoCs which are not A33" (so far I
+> think all worked without this).
+
+The list is pretty small, so we can just name them. That would be the
+A10, A10s A13 and A20.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--yfur7fxwepooyuj5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKc0PwAKCRDj7w1vZxhR
+xUIkAPsHjjcpWcz3SEiKc81Acr2w9YZPgxUkjws0K+WDTYn6cgEA+x8itrphUkN9
+VvATo4mA2v5yHHel0t3VX3zWHf2HUg4=
+=HOQK
+-----END PGP SIGNATURE-----
+
+--yfur7fxwepooyuj5--
+
+
+--===============7629681438652547007==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============7629681438652547007==--
