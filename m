@@ -1,13 +1,13 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH 07/12] arm64: dts: allwinner: orange-pi-3:
- Enable ethernet
-Date: Sat,  6 Apr 2019 01:45:09 +0200
-Message-ID: <20190405234514.6183-8-megous@megous.com>
+Subject: [PATCH 09/12] pinctrl: sunxi: Prepare for alternative
+ bias voltage setting methods
+Date: Sat,  6 Apr 2019 01:45:11 +0200
+Message-ID: <20190405234514.6183-10-megous@megous.com>
 References: <20190405234514.6183-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBFORT7SQKGQEWSYP7AQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBFWRT7SQKGQEDE6K6VQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <20190405234514.6183-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,98 +21,106 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-Orange Pi 3 has two regulators that power the Realtek RTL8211E.
-According to the phy datasheet, both regulators need to be enabled
-at the same time, but we can only specify a single phy-supply in
-the DT.
-
-This can be achieved by making one regulator depedning on the
-other via vin-supply. While it's not a technically correct
-description of the hardware, it achieves the purpose.
-
-All values of RX/TX delay were tested exhaustively and a middle
-one of the working values was chosen.
+H6 has a different I/O voltage bias setting method than A80. Prepare
+existing code for using alternative bias voltage setting methods.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c |  2 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 38 ++++++++++++-----------
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  4 ++-
+ 3 files changed, 24 insertions(+), 20 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 644946749088..5270142527f5 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -15,6 +15,7 @@
- 
- 	aliases {
- 		serial0 = &uart0;
-+		ethernet0 = &emac;
- 	};
- 
- 	chosen {
-@@ -64,6 +65,27 @@
- 		regulator-max-microvolt = <5000000>;
- 		regulator-always-on;
- 	};
-+
-+	/*
-+	 * The board uses 2.5V RGMII signalling. Power sequence
-+	 * to enable the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2)
-+	 * power rails at the same time and to wait 100ms.
-+	 */
-+	reg_gmac_2v5: gmac-2v5 {
-+                compatible = "regulator-fixed";
-+                regulator-name = "gmac-2v5";
-+                regulator-min-microvolt = <2500000>;
-+                regulator-max-microvolt = <2500000>;
-+                startup-delay-us = <100000>;
-+                enable-active-high;
-+                gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
-+
-+                /* The real parent of gmac-2v5 is reg_vcc5v, but we need
-+                 * to enable two regulators to power the phy. This is one
-+                 * way to achieve that.
-+                 */
-+                vin-supply = <&reg_aldo2>; /* GMAC-3V3 */
-+        };
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
+index da37d594a13d..3aa210079b18 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
+@@ -722,7 +722,7 @@ static const struct sunxi_pinctrl_desc sun9i_a80_pinctrl_data = {
+ 	.npins = ARRAY_SIZE(sun9i_a80_pins),
+ 	.irq_banks = 5,
+ 	.disable_strict_mode = true,
+-	.has_io_bias_cfg = true,
++	.io_bias_cfg_variant = IO_BIAS_CFG_V1,
  };
  
- &cpu0 {
-@@ -82,6 +104,17 @@
- 	status = "okay";
+ static int sun9i_a80_pinctrl_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index 8dd25caea2cf..9f329fec77cf 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -610,7 +610,7 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+ 	u32 val, reg;
+ 	int uV;
+ 
+-	if (!pctl->desc->has_io_bias_cfg)
++	if (!pctl->desc->io_bias_cfg_variant)
+ 		return 0;
+ 
+ 	uV = regulator_get_voltage(supply);
+@@ -621,23 +621,25 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+ 	if (uV == 0)
+ 		return 0;
+ 
+-	/* Configured value must be equal or greater to actual voltage */
+-	if (uV <= 1800000)
+-		val = 0x0; /* 1.8V */
+-	else if (uV <= 2500000)
+-		val = 0x6; /* 2.5V */
+-	else if (uV <= 2800000)
+-		val = 0x9; /* 2.8V */
+-	else if (uV <= 3000000)
+-		val = 0xA; /* 3.0V */
+-	else
+-		val = 0xD; /* 3.3V */
+-
+-	pin -= pctl->desc->pin_base;
+-
+-	reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
+-	reg &= ~IO_BIAS_MASK;
+-	writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
++	if (pctl->desc->io_bias_cfg_variant == IO_BIAS_CFG_V1) {
++		/* Configured value must be equal or greater to actual voltage */
++		if (uV <= 1800000)
++			val = 0x0; /* 1.8V */
++		else if (uV <= 2500000)
++			val = 0x6; /* 2.5V */
++		else if (uV <= 2800000)
++			val = 0x9; /* 2.8V */
++		else if (uV <= 3000000)
++			val = 0xA; /* 3.0V */
++		else
++			val = 0xD; /* 3.3V */
++
++		pin -= pctl->desc->pin_base;
++
++		reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
++		reg &= ~IO_BIAS_MASK;
++		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
++	}
+ 
+ 	return 0;
+ }
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+index ee15ab067b5f..476772f91dba 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+@@ -95,6 +95,8 @@
+ #define PINCTRL_SUN7I_A20	BIT(7)
+ #define PINCTRL_SUN8I_R40	BIT(8)
+ 
++#define IO_BIAS_CFG_V1		1
++
+ struct sunxi_desc_function {
+ 	unsigned long	variant;
+ 	const char	*name;
+@@ -117,7 +119,7 @@ struct sunxi_pinctrl_desc {
+ 	const unsigned int		*irq_bank_map;
+ 	bool				irq_read_needs_mux;
+ 	bool				disable_strict_mode;
+-	bool				has_io_bias_cfg;
++	int				io_bias_cfg_variant;
  };
  
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ext_rgmii_pins>;
-+	phy-mode = "rgmii";
-+	phy-handle = <&ext_rgmii_phy>;
-+	phy-supply = <&reg_gmac_2v5>;
-+	allwinner,rx-delay-ps = <1500>;
-+	allwinner,tx-delay-ps = <700>;
-+	status = "okay";
-+};
-+
- &hdmi {
- 	ddc-supply = <&reg_ddc>;
- 	status = "okay";
-@@ -93,6 +126,17 @@
- 	};
- };
- 
-+&mdio {
-+	ext_rgmii_phy: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
-+
-+		reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
-+		reset-assert-us = <15000>;
-+		reset-deassert-us = <40000>;
-+	};
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>;
+ struct sunxi_pinctrl_function {
 -- 
 2.21.0
