@@ -1,18 +1,19 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 Subject: Re: [PATCH v2 5/5] ARM: dts: sun50i: h6: Introduce
  Beelink GS1 board
-Date: Fri, 5 Apr 2019 17:10:35 +0200
-Message-ID: <20190405151035.233r2pwabsf777ix@flea>
+Date: Fri, 5 Apr 2019 17:11:00 +0200
+Message-ID: <20190405151100.jjjg55z7sg35ijxw@flea>
 References: <20190405122446.2101-1-peron.clem@gmail.com>
  <20190405122446.2101-5-peron.clem@gmail.com>
+ <CAJiuCcfbnR+Jfj8Je_4HwgycCBEe92sx6zqwqgXpeiMe2jKL-Q@mail.gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zh3wncgztcqhaxzy"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3W7TXSQKGQEDDBUOIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="vydzdtbzehqip32c"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBBXATXSQKGQE7LQ6PSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190405122446.2101-5-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAJiuCcfbnR+Jfj8Je_4HwgycCBEe92sx6zqwqgXpeiMe2jKL-Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,66 +25,32 @@ Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai 
 List-Id: devicetree@vger.kernel.org
 
 
---zh3wncgztcqhaxzy
+--vydzdtbzehqip32c
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 05, 2019 at 02:24:46PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> Beelink GS1 is an Allwinner H6 based TV box,
-> which support:
-> - Allwinner H6 Quad-core 64-bit ARM Cortex-A53
-> - GPU Mali-T720
-> - 2GB LPDDR3 RAM
-> - AXP805 PMIC
-> - 1Gbps GMAC via RTL8211E
-> - FN-Link 6222B-SRB Wifi/BT
-> - 1x USB 2.0 Host and 1x USB 3.0 Host
-> - HDMI port
-> - S/PDIF Tx
-> - IR receiver
-> - 5V/2A DC power supply
+On Fri, Apr 05, 2019 at 02:53:35PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> Hi,
 >
-> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
+> Adding this r_pio regulators make a new error in the bootlog :
 >
-> Thanks to Jagan and Icenowy, most of this devicetree is taken from their =
-works on
-> the OrangePi One Plus and Pine H64.
+> [    0.346843] sun50i-h6-r-pinctrl 7022000.pinctrl: Couldn't get bank
+> PL regulator
+> [    0.346853] sun50i-h6-r-pinctrl 7022000.pinctrl: request() failed for =
+pin 352
+> [    0.346862] sun50i-h6-r-pinctrl 7022000.pinctrl: pin-352
+> (7081400.i2c) status -517
+> [    0.346871] sun50i-h6-r-pinctrl 7022000.pinctrl: could not request
+> pin 352 (PL0) from group PL0  on device 7022000.pinctrl
+> [    0.346878] mv64xxx_i2c 7081400.i2c: Error applying setting,
+> reverse things back
 >
-> Changes in v2 (Thanks to Maxime Ripard):
->  - move MMC pinctrl to SOC dtsi
->  - add board to Sunxi YAML file
->  - add PIO/R_PIO regulators
->  - remove always_on from SDIO regulators
->
->
->  .../devicetree/bindings/arm/sunxi.yaml        |   5 +
->  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
->  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   | 256 ++++++++++++++++++
->  3 files changed, 262 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.d=
-ts
->
-> diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documenta=
-tion/devicetree/bindings/arm/sunxi.yaml
-> index 11563d3f7c65..9ab9b266881d 100644
-> --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-> +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> @@ -136,6 +136,11 @@ properties:
->            - const: lemaker,bananapro
->            - const: allwinner,sun7i-a20
->
-> +      - description: Beelink GS1
-> +        items:
-> +          - const: azw,beelink-gs1
-> +          - const: allwinner,sun50i-h6
-> +
+> PL0 and PL1 are SCK/SDA for the PMIC :(
 
-Can you make that a separate patch?
+How was this DT tested then?
 
 Maxime
-
 
 --
 Maxime Ripard, Bootlin
@@ -97,15 +64,15 @@ To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 For more options, visit https://groups.google.com/d/optout.
 
---zh3wncgztcqhaxzy
+--vydzdtbzehqip32c
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKdv6wAKCRDj7w1vZxhR
-xVP3APsEyf4HBq3KxDxWMrXONlbBSDKNfZpLf/1RQEWpyY6NfAD/cILffRdU7sT8
-aS8akdYHh2iCZRAcoxBCmwU7NSGhxgI=
-=sq4w
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKdwBAAKCRDj7w1vZxhR
+xRckAP4wZ46tgKZYKDJhYKIgcd4LHvEUq6BNr/w1FqxiVL6TswEA6p6RUzr55f9c
+tpfmanzizb77MMjF9zA6P9bPohY6EgM=
+=3hKq
 -----END PGP SIGNATURE-----
 
---zh3wncgztcqhaxzy--
+--vydzdtbzehqip32c--
