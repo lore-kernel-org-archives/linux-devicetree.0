@@ -1,138 +1,371 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 2/3] mtd: rawnand: sunxi: Add DMA support for sun8i
-Date: Fri, 5 Apr 2019 14:47:10 +0200
-Message-ID: <20190405124710.ydsvbdwmhdirkssu@flea>
-References: <20190404162111.22618-1-miquel.raynal@bootlin.com>
- <20190404162111.22618-3-miquel.raynal@bootlin.com>
- <20190405091607.2dzckvyqibs7xmew@flea>
- <20190405113742.184234ca@xps13>
- <20190405105559.sqdhoa54ne7l4svj@flea>
- <20190405142554.44e3da68@xps13>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v2 5/5] ARM: dts: sun50i: h6: Introduce Beelink GS1 board
+Date: Fri, 5 Apr 2019 14:53:35 +0200
+Message-ID: <CAJiuCcfbnR+Jfj8Je_4HwgycCBEe92sx6zqwqgXpeiMe2jKL-Q@mail.gmail.com>
+References: <20190405122446.2101-1-peron.clem@gmail.com> <20190405122446.2101-5-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2090324502132887959=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190405142554.44e3da68@xps13>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190405122446.2101-5-peron.clem@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---===============2090324502132887959==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2ezg7hokwsr42x7c"
-Content-Disposition: inline
+Adding this r_pio regulators make a new error in the bootlog :
 
+[    0.346843] sun50i-h6-r-pinctrl 7022000.pinctrl: Couldn't get bank
+PL regulator
+[    0.346853] sun50i-h6-r-pinctrl 7022000.pinctrl: request() failed for pi=
+n 352
+[    0.346862] sun50i-h6-r-pinctrl 7022000.pinctrl: pin-352
+(7081400.i2c) status -517
+[    0.346871] sun50i-h6-r-pinctrl 7022000.pinctrl: could not request
+pin 352 (PL0) from group PL0  on device 7022000.pinctrl
+[    0.346878] mv64xxx_i2c 7081400.i2c: Error applying setting,
+reverse things back
 
---2ezg7hokwsr42x7c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+PL0 and PL1 are SCK/SDA for the PMIC :(
 
-On Fri, Apr 05, 2019 at 02:25:54PM +0200, Miquel Raynal wrote:
-> Hi Maxime,
+Clement
+
+On Fri, 5 Apr 2019 at 14:21, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>=
+ wrote:
 >
-> Maxime Ripard <maxime.ripard@bootlin.com> wrote on Fri, 5 Apr 2019
-> 12:55:59 +0200:
+> Beelink GS1 is an Allwinner H6 based TV box,
+> which support:
+> - Allwinner H6 Quad-core 64-bit ARM Cortex-A53
+> - GPU Mali-T720
+> - 2GB LPDDR3 RAM
+> - AXP805 PMIC
+> - 1Gbps GMAC via RTL8211E
+> - FN-Link 6222B-SRB Wifi/BT
+> - 1x USB 2.0 Host and 1x USB 3.0 Host
+> - HDMI port
+> - S/PDIF Tx
+> - IR receiver
+> - 5V/2A DC power supply
 >
-> > On Fri, Apr 05, 2019 at 11:37:42AM +0200, Miquel Raynal wrote:
-> > > Hi Maxime,
-> > >
-> > > Maxime Ripard <maxime.ripard@bootlin.com> wrote on Fri, 5 Apr 2019
-> > > 11:16:07 +0200:
-> > >
-> > > > On Thu, Apr 04, 2019 at 06:21:10PM +0200, Miquel Raynal wrote:
-> > > > > Allwinner NAND controllers can make use of DMA to enhance the I/O
-> > > > > throughput thanks to ECC pipelining. DMA handling with sun8i NAND IP
-> > > > > is a bit different than with the older SoCs, hence the introduction of
-> > > > > a new compatible to handle:
-> > > > > * the differences between register offsets,
-> > > > > * the burst length change from 4 to minimum 8,
-> > > > > * drive SRAM accesses through the AHB bus instead of the MBUS.
-> > > > >
-> > > > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > > > > ---
-> > > > >  drivers/mtd/nand/raw/sunxi_nand.c | 75 ++++++++++++++++++++++++++++---
-> > > > >  1 file changed, 68 insertions(+), 7 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/mtd/nand/raw/sunxi_nand.c b/drivers/mtd/nand/raw/sunxi_nand.c
-> > > > > index 4282bc477761..49cd5067adaa 100644
-> > > > > --- a/drivers/mtd/nand/raw/sunxi_nand.c
-> > > > > +++ b/drivers/mtd/nand/raw/sunxi_nand.c
-> > > > > @@ -42,7 +42,8 @@
-> > > > >  #define NFC_REG_CMD		0x0024
-> > > > >  #define NFC_REG_RCMD_SET	0x0028
-> > > > >  #define NFC_REG_WCMD_SET	0x002C
-> > > > > -#define NFC_REG_IO_DATA		0x0030
-> > > > > +#define NFC_REG_A10_IO_DATA	0x0030
-> > > > > +#define NFC_REG_A33_IO_DATA	0x0300
-> > > > >  #define NFC_REG_ECC_CTL		0x0034
-> > > > >  #define NFC_REG_ECC_ST		0x0038
-> > > > >  #define NFC_REG_DEBUG		0x003C
-> > > > > @@ -200,6 +201,22 @@ static inline struct sunxi_nand_chip *to_sunxi_nand(struct nand_chip *nand)
-> > > > >  	return container_of(nand, struct sunxi_nand_chip, nand);
-> > > > >  }
-> > > > >
-> > > > > +/*
-> > > > > + * NAND Controller capabilities structure: stores NAND controller capabilities
-> > > > > + * for distinction between compatible strings.
-> > > > > + *
-> > > > > + * @sram_through_ahb:	On A33, we choose to access the internal RAM through AHB
-> > > > > + *                      instead of MBUS (less configuration). A10+ use the MBUS
-> > > >
-> > > > What do you mean by A10+ ?
-> > >
-> > > I meant A1x, A2x SoCs. Not sure it matches a product line for you, so
-> > > please suggest something to mean "SoCs which are not A33" (so far I
-> > > think all worked without this).
-> >
-> > The list is pretty small, so we can just name them. That would be the
-> > A10, A10s A13 and A20.
+> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> ---
 >
-> You really need a "A10+"-like acronym for these ;)
-
-A10, A10s, A13, A20 and GR8 but not A23, A31, A33, A64, A80, A83t, or
-any SoC that is still not out yet.
-
-A10+ doesn't look like the most appropriate fit for that list :)
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---2ezg7hokwsr42x7c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKdOTgAKCRDj7w1vZxhR
-xVudAQCuuBo4cUMlYpc/L9/XqCL1JgdDSdvM7USvJj88SlJyKgEAnn8vc1GQRpPi
-F+zE4Wn8ipxtE58MCbyCEx7+360LLg4=
-=uozU
------END PGP SIGNATURE-----
-
---2ezg7hokwsr42x7c--
-
-
---===============2090324502132887959==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2090324502132887959==--
+> Thanks to Jagan and Icenowy, most of this devicetree is taken from their =
+works on
+> the OrangePi One Plus and Pine H64.
+>
+> Changes in v2 (Thanks to Maxime Ripard):
+>  - move MMC pinctrl to SOC dtsi
+>  - add board to Sunxi YAML file
+>  - add PIO/R_PIO regulators
+>  - remove always_on from SDIO regulators
+>
+>
+>  .../devicetree/bindings/arm/sunxi.yaml        |   5 +
+>  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+>  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   | 256 ++++++++++++++++++
+>  3 files changed, 262 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.d=
+ts
+>
+> diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documenta=
+tion/devicetree/bindings/arm/sunxi.yaml
+> index 11563d3f7c65..9ab9b266881d 100644
+> --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
+> +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+> @@ -136,6 +136,11 @@ properties:
+>            - const: lemaker,bananapro
+>            - const: allwinner,sun7i-a20
+>
+> +      - description: Beelink GS1
+> +        items:
+> +          - const: azw,beelink-gs1
+> +          - const: allwinner,sun50i-h6
+> +
+>        - description: Beelink X2
+>          items:
+>            - const: roofull,beelink-x2
+> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts=
+/allwinner/Makefile
+> index e4dce2f6fa3a..2dd806a3d5c9 100644
+> --- a/arch/arm64/boot/dts/allwinner/Makefile
+> +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> @@ -20,6 +20,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-pc2.dt=
+b
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-prime.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus2.dtb
+> +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-beelink-gs1.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-lite2.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-one-plus.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-pine-h64.dtb
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/ar=
+ch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+> new file mode 100644
+> index 000000000000..d820a138522b
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+> @@ -0,0 +1,256 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+> +/*
+> + * Copyright (C) 2019 Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "sun50i-h6.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +       model =3D "Beelink GS1";
+> +       compatible =3D "azw,beelink-gs1", "allwinner,sun50i-h6";
+> +
+> +       aliases {
+> +               ethernet0 =3D &emac;
+> +               serial0 =3D &uart0;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path =3D "serial0:115200n8";
+> +       };
+> +
+> +       connector {
+> +               compatible =3D "hdmi-connector";
+> +               type =3D "a";
+> +
+> +               port {
+> +                       hdmi_con_in: endpoint {
+> +                               remote-endpoint =3D <&hdmi_out_con>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       leds {
+> +               compatible =3D "gpio-leds";
+> +
+> +               power {
+> +                       label =3D "beelink:white:power";
+> +                       gpios =3D <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 *=
+/
+> +                       default-state =3D "on";
+> +               };
+> +       };
+> +
+> +       reg_vcc5v: vcc5v {
+> +               /* board wide 5V supply directly from the DC jack */
+> +               compatible =3D "regulator-fixed";
+> +               regulator-name =3D "vcc-5v";
+> +               regulator-min-microvolt =3D <5000000>;
+> +               regulator-max-microvolt =3D <5000000>;
+> +               regulator-always-on;
+> +       };
+> +};
+> +
+> +&de {
+> +       status =3D "okay";
+> +};
+> +
+> +&ehci0 {
+> +       status =3D "okay";
+> +};
+> +
+> +&emac {
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&ext_rgmii_pins>;
+> +       phy-mode =3D "rgmii";
+> +       phy-handle =3D <&ext_rgmii_phy>;
+> +       phy-supply =3D <&reg_aldo2>;
+> +       allwinner,rx-delay-ps =3D <0>;
+> +       allwinner,tx-delay-ps =3D <0>;
+> +       status =3D "okay";
+> +};
+> +
+> +&hdmi {
+> +       status =3D "okay";
+> +};
+> +
+> +&hdmi_out {
+> +       hdmi_out_con: endpoint {
+> +               remote-endpoint =3D <&hdmi_con_in>;
+> +       };
+> +};
+> +
+> +&mdio {
+> +       ext_rgmii_phy: ethernet-phy@1 {
+> +               compatible =3D "ethernet-phy-ieee802.3-c22";
+> +               reg =3D <1>;
+> +       };
+> +};
+> +
+> +&mmc0 {
+> +       vmmc-supply =3D <&reg_cldo1>;
+> +       cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>;
+> +       bus-width =3D <4>;
+> +       status =3D "okay";
+> +};
+> +
+> +&mmc2 {
+> +       vmmc-supply =3D <&reg_cldo1>;
+> +       vqmmc-supply =3D <&reg_bldo2>;
+> +       non-removable;
+> +       cap-mmc-hw-reset;
+> +       bus-width =3D <8>;
+> +       status =3D "okay";
+> +};
+> +
+> +&ohci0 {
+> +       status =3D "okay";
+> +};
+> +
+> +&pio {
+> +       vcc-pd-supply =3D <&reg_cldo1>;
+> +       vcc-pg-supply =3D <&reg_aldo1>;
+> +};
+> +
+> +&r_i2c {
+> +       status =3D "okay";
+> +
+> +       axp805: pmic@36 {
+> +               compatible =3D "x-powers,axp805", "x-powers,axp806";
+> +               reg =3D <0x36>;
+> +               interrupt-parent =3D <&r_intc>;
+> +               interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
+> +               interrupt-controller;
+> +               #interrupt-cells =3D <1>;
+> +               x-powers,self-working-mode;
+> +               vina-supply =3D <&reg_vcc5v>;
+> +               vinb-supply =3D <&reg_vcc5v>;
+> +               vinc-supply =3D <&reg_vcc5v>;
+> +               vind-supply =3D <&reg_vcc5v>;
+> +               vine-supply =3D <&reg_vcc5v>;
+> +               aldoin-supply =3D <&reg_vcc5v>;
+> +               bldoin-supply =3D <&reg_vcc5v>;
+> +               cldoin-supply =3D <&reg_vcc5v>;
+> +
+> +               regulators {
+> +                       reg_aldo1: aldo1 {
+> +                               regulator-always-on;
+> +                               regulator-min-microvolt =3D <3300000>;
+> +                               regulator-max-microvolt =3D <3300000>;
+> +                               regulator-name =3D "vcc-pl";
+> +                       };
+> +
+> +                       reg_aldo2: aldo2 {
+> +                               regulator-min-microvolt =3D <3300000>;
+> +                               regulator-max-microvolt =3D <3300000>;
+> +                               regulator-name =3D "vcc-ac200";
+> +                               regulator-enable-ramp-delay =3D <100000>;
+> +                       };
+> +
+> +                       reg_aldo3: aldo3 {
+> +                               regulator-always-on;
+> +                               regulator-min-microvolt =3D <3300000>;
+> +                               regulator-max-microvolt =3D <3300000>;
+> +                               regulator-name =3D "vcc25-dram";
+> +                       };
+> +
+> +                       reg_bldo1: bldo1 {
+> +                               regulator-always-on;
+> +                               regulator-min-microvolt =3D <1800000>;
+> +                               regulator-max-microvolt =3D <1800000>;
+> +                               regulator-name =3D "vcc-bias-pll";
+> +                       };
+> +
+> +                       reg_bldo2: bldo2 {
+> +                               regulator-always-on;
+> +                               regulator-min-microvolt =3D <1800000>;
+> +                               regulator-max-microvolt =3D <1800000>;
+> +                               regulator-name =3D "vcc-efuse-pcie-hdmi-i=
+o";
+> +                       };
+> +
+> +                       reg_bldo3: bldo3 {
+> +                               regulator-always-on;
+> +                               regulator-min-microvolt =3D <1800000>;
+> +                               regulator-max-microvolt =3D <1800000>;
+> +                               regulator-name =3D "vcc-dcxoio";
+> +                       };
+> +
+> +                       bldo4 {
+> +                               /* unused */
+> +                       };
+> +
+> +                       reg_cldo1: cldo1 {
+> +                               regulator-always-on;
+> +                               regulator-min-microvolt =3D <3300000>;
+> +                               regulator-max-microvolt =3D <3300000>;
+> +                               regulator-name =3D "vcc-3v3";
+> +                       };
+> +
+> +                       reg_cldo2: cldo2 {
+> +                               regulator-min-microvolt =3D <3300000>;
+> +                               regulator-max-microvolt =3D <3300000>;
+> +                               regulator-name =3D "vcc-wifi-1";
+> +                       };
+> +
+> +                       reg_cldo3: cldo3 {
+> +                               regulator-min-microvolt =3D <3300000>;
+> +                               regulator-max-microvolt =3D <3300000>;
+> +                               regulator-name =3D "vcc-wifi-2";
+> +                       };
+> +
+> +                       reg_dcdca: dcdca {
+> +                               regulator-always-on;
+> +                               regulator-min-microvolt =3D <810000>;
+> +                               regulator-max-microvolt =3D <1080000>;
+> +                               regulator-name =3D "vdd-cpu";
+> +                       };
+> +
+> +                       reg_dcdcc: dcdcc {
+> +                               regulator-min-microvolt =3D <810000>;
+> +                               regulator-max-microvolt =3D <1080000>;
+> +                               regulator-name =3D "vdd-gpu";
+> +                       };
+> +
+> +                       reg_dcdcd: dcdcd {
+> +                               regulator-always-on;
+> +                               regulator-min-microvolt =3D <960000>;
+> +                               regulator-max-microvolt =3D <960000>;
+> +                               regulator-name =3D "vdd-sys";
+> +                       };
+> +
+> +                       reg_dcdce: dcdce {
+> +                               regulator-always-on;
+> +                               regulator-min-microvolt =3D <1200000>;
+> +                               regulator-max-microvolt =3D <1200000>;
+> +                               regulator-name =3D "vcc-dram";
+> +                       };
+> +
+> +                       sw {
+> +                               /* unused */
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +&r_pio {
+> +       vcc-pl-supply =3D <&reg_aldo1>;
+> +       vcc-pm-supply =3D <&reg_aldo1>;
+> +};
+> +
+> +&uart0 {
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&uart0_ph_pins>;
+> +       status =3D "okay";
+> +};
+> +
+> +&usb2otg {
+> +       dr_mode =3D "host";
+> +       status =3D "okay";
+> +};
+> +
+> +&usb2phy {
+> +       usb0_vbus-supply =3D <&reg_vcc5v>;
+> +       status =3D "okay";
+> +};
+> --
+> 2.17.1
+>
