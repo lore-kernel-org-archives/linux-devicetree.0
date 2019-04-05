@@ -1,187 +1,144 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 09/10] PCI: tegra: Add Tegra194 PCIe support
-Date: Fri, 5 Apr 2019 13:58:42 -0500
-Message-ID: <20190405185842.GC26522@google.com>
-References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
- <1553613207-3988-10-git-send-email-vidyas@nvidia.com>
- <20190329203159.GG24180@google.com>
- <5eb9599c-a6d6-d3a3-beef-5225ed7393f9@nvidia.com>
- <20190402183110.GE141706@google.com>
- <dcbfbb32-9980-7ee4-89cd-baedfe624ce5@nvidia.com>
- <20190403173641.GI141706@google.com>
- <6cc7e047-bc7e-fa60-88ba-0b69c3d5a3f0@nvidia.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 05/25] leds: core: Add support for composing LED class
+ device names
+Date: Fri, 5 Apr 2019 22:08:25 +0200
+Message-ID: <d7cc2c82-db99-c9a0-dc09-474b6a213865@gmail.com>
+References: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
+ <20190331175501.23471-6-jacek.anaszewski@gmail.com>
+ <eda766d7-3974-0e1f-3025-59c0aa840b14@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6cc7e047-bc7e-fa60-88ba-0b69c3d5a3f0@nvidia.com>
+In-Reply-To: <eda766d7-3974-0e1f-3025-59c0aa840b14@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, tiwai@suse.de, spujar@nvidia.com, skomatineni@nvidia.com, liviu.dudau@arm.com, krzk@kernel.org, heiko@sntech.de, horms+renesas@verge.net.au, olof@lixom.net, maxime.ripard@bootlin.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, jagan@amarulasolutions.com, enric.balletbo@collabora.com, ezequiel@collabora.com, stefan.wahren@i2se.com, marc.w.gonzalez@free.fr, l.stach@pengutronix.de, tpiepho@impinj.com, hayashi.kunihiko@socionext.com, yue.wang@amlogic.com, shawn.lin@rock-chips.com, xiaowei.bao@nxp.com, devicetree@vger.ker
+To: Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 01:23:51AM +0530, Vidya Sagar wrote:
-> On 4/3/2019 11:06 PM, Bjorn Helgaas wrote:
-> > On Wed, Apr 03, 2019 at 03:13:09PM +0530, Vidya Sagar wrote:
-> > > On 4/3/2019 12:01 AM, Bjorn Helgaas wrote:
-> > > > On Tue, Apr 02, 2019 at 12:47:48PM +0530, Vidya Sagar wrote:
-> > > > > On 3/30/2019 2:22 AM, Bjorn Helgaas wrote:
-> > > > > > On Tue, Mar 26, 2019 at 08:43:26PM +0530, Vidya Sagar wrote:
-> > > > > > > Add support for Synopsys DesignWare core IP based PCIe host controller
-> > > > > > > present in Tegra194 SoC.
-> > > > 
-> > > >     - Why does this chip require pcie_pme_disable_msi()?  The only other
-> > > >       use is a DMI quirk for "MSI Wind U-100", added by c39fae1416d5
-> > > >       ("PCI PM: Make it possible to force using INTx for PCIe PME
-> > > >       signaling").
-> > > 
-> > > Because Tegra194 doesn't support raising PME interrupts through MSI line.
-> > 
-> > What does the spec say about this?  Is hardware supposed to
-> > support MSI for PME?  Given that MSI Wind U-100 and Tegra194 are
-> > the only two cases we know about where PME via MSI isn't
-> > supported, it seems like there must be either a requirement for
-> > that or some mechanism for the OS to figure this out, e.g., a
-> > capability bit.
->
-> AFAIU, Spec doesn't say anything about whether PME interrupt should
-> be through MSI or by other means. As far as Tegra194 is concerned,
-> there are only two interrupt lanes that go from PCIe IP to GIC, one
-> being legacy interrupt (that represents legacy interrupts coming
-> over PCIe bus from downstream devices and also the events happening
-> internal to root port) and the other being MSI interrupt (that
-> represents MSI interrupts coming over PCIe bus from downstream
-> devices). Since hardware folks had a choice to route PME interrupts
-> either through legacy interrupt line or through MSI interrupt line
-> and legacy interrupt line was chosen as a design choice. That being
-> the case at hardware level, I tried to inform the same through
-> pcie_pme_disable_msi() to PCIe sub-system that PME interrupts are
-> not expected over MSI.
+Hi Dan,
 
-There's something wrong here.  Either the question of how PME is
-signaled is generic and the spec provides a way for the OS to discover
-that method, or it's part of the device-specific architecture that
-each host bridge driver has to know about its device.  If the former,
-we need to make the PCI core smart enough to figure it out.  If the
-latter, we need a better interface than this ad hoc
-pcie_pme_disable_msi() thing.  But if it is truly the latter, your
-current code is sufficient and we can refine it over time.
+Thank you for the review.
 
-> > > > > > I see that an earlier patch added "bus" to struct pcie_port.
-> > > > > > I think it would be better to somehow connect to the
-> > > > > > pci_host_bridge struct.  Several other drivers already do
-> > > > > > this; see uses of pci_host_bridge_from_priv().
-> > > > > 
-> > > > > All non-DesignWare based implementations save their private data
-> > > > > structure in 'private' pointer of struct pci_host_bridge and use
-> > > > > pci_host_bridge_from_priv() to get it back. But, DesignWare
-> > > > > based implementations save pcie_port in 'sysdata' and nothing in
-> > > > > 'private' pointer. So,  I'm not sure if
-> > > > > pci_host_bridge_from_priv() can be used in this case. Please do
-> > > > > let me know if you think otherwise.
-> > > > 
-> > > > DesignWare-based drivers should have a way to retrieve the
-> > > > pci_host_bridge pointer.  It doesn't have to be *exactly* the same
-> > > > as non-DesignWare drivers, but it should be similar.
-> > > 
-> > > I gave my reasoning as to why with the current code, it is not
-> > > possible to get the pci_host_bridge structure pointer from struct
-> > > pcie_port pointer in another thread as a reply to Thierry Reding's
-> > > comments. Since Jishen'g changes to support remove functionality are
-> > > accepted, I think using bus pointer saved in struct pcie_port
-> > > pointer shouldn't be any issue now. Please do let me know if that is
-> > > something not acceptable.
-> > > 
-> > > > > > That would give you the bus, as well as flags like
-> > > > > > no_ext_tags, native_aer, etc, which this driver, being a host
-> > > > > > bridge driver that's responsible for this part of the
-> > > > > > firmware/OS interface, may conceivably need.
-> > 
-> > I think saving the pp->root_bus pointer as Jisheng's patch does is a
-> > sub-optimal solution.  If we figure out how to save the
-> > pci_host_bridge pointer, we automatically get the root bus pointer as
-> > well.
-> > 
-> > It may require some restructuring to save the pci_host_bridge pointer,
-> > but I doubt it's really *impossible*.
->
-> Is it OK to save pci_host_bridge pointer in pcie_port structure
-> directly? I see that as another way to get pci_host_bridge pointer
-> from pcie_port structure. My understanding is that, to get
-> pci_host_bridge pointer, either pcie_port structure should be part
-> of pci_host_bridge structure (which is the case with all non-DW
-> implementations) or pcie_port should have a pointer to some
-> structure which is directly (and not by means of a pointer) part of
-> pci_host_bridge structure so that container_of() can be used to get
-> pci_host_bridge.  As I see, there is no data object of
-> pci_host_bridge whose pointer is saved in pcie_port structure. In
-> fact, in reverse, pcie_port's struct dev pointer is saved as parent
-> to pci_host_bridge's struct dev. So, another way would be to iterate
-> over the children of pcie_port's struct dev pointer to find
-> pci_host_bridge's dev pointer and from there get pci_host_bridge
-> through container_of. But, I think is complicating it more than
-> using bus pointer from pcie_port. I'm not sure if I'm able to convey
-> the issue I'm facing here to get pci_host_bridge from pcie_port, but
-> doing any other thing seems complicating it even more.
+On 4/5/19 1:45 PM, Dan Murphy wrote:
+> Jacek
+> 
+> On 3/31/19 12:54 PM, Jacek Anaszewski wrote:
+>> Add generic support for composing LED class device name basing on
+>> fwnode_handle data. The function composes device name according to
+>> either a new <color:function> pattern or the legacy
+>> <devicename:color:function> pattern. The decision on using the
+>> particular pattern is made basing on whether fwnode contains new
+>> "function" and "color" properties, or the legacy "label" proeprty.
+>>
+>> Backward compatibility with in-driver hard-coded LED class device
+>> names is assured thanks to the default_label and led_hw_name properties
+>> of newly introduced struct led_init_data.
+>>
+>> In case none of the aforementioned properties was found, then, for OF
+>> nodes, the node name is adopted for LED class device name.
+>>
+>> At the occassion of amending the Documentation/leds/leds-class.txt
+>> unify spelling: colour -> color.
+>>
+>> Alongside these changes added is a new tool - tools/leds/get_led_device_info.sh.
+>> The tool allows retrieving details of a LED class device's parent device,
+>> which proves that getting rid of a devicename section from LED name pattern
+>> is justified since this information is already available in sysfs.
+>>
+>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>> Cc: Baolin Wang <baolin.wang@linaro.org>
+>> Cc: Pavel Machek <pavel@ucw.cz>
+>> Cc: Dan Murphy <dmurphy@ti.com>
+>> Cc: Daniel Mack <daniel@zonque.org>
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+>> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> Cc: Simon Shields <simon@lineageos.org>
+>> ---
+>>   Documentation/leds/leds-class.txt | 27 +++++++++--
+>>   drivers/leds/led-class.c          | 29 ++++++++++--
+>>   drivers/leds/led-core.c           | 96 +++++++++++++++++++++++++++++++++++++++
+>>   include/linux/leds.h              | 43 ++++++++++++++++++
+>>   tools/leds/get_led_device_info.sh | 81 +++++++++++++++++++++++++++++++++
+>>   5 files changed, 270 insertions(+), 6 deletions(-)
+>>   create mode 100755 tools/leds/get_led_device_info.sh
+>>
+>> diff --git a/Documentation/leds/leds-class.txt b/Documentation/leds/leds-class.txt
+>> index 8b39cc6b03ee..11e19c3c2e4d 100644
+>> --- a/Documentation/leds/leds-class.txt
+>> +++ b/Documentation/leds/leds-class.txt
+>> @@ -43,14 +43,35 @@ LED Device Naming
+>>   
+>>   Is currently of the form:
+>>   
+>> -"devicename:colour:function"
+>> -
+>> -There have been calls for LED properties such as colour to be exported as
+>> +"color:function"
+>> +
+>> +There might be still LED class drivers around using "devicename:color:function"
+>> +naming pattern, but the "devicename" section is now deprecated since it used
+>> +to convey information that was already available in the sysfs, like product
+>> +name. There is a tool (tools/leds/get_led_device_info.sh) available for
+>> +retrieving that information per a LED class device.
+>> +
+>> +Associations with other devices, like network ones, should be defined
+>> +via LED trigger mechanism. This approach is applied by some of wireless
+>> +network drivers that create triggers dynamically and incorporate phy
+>> +name into the trigger name. On the other hand input subsystem offers LED - input
+>> +bridge (drivers/input/input-leds.c) for exposing keyboard LEDs as LED class
+>> +devices. The get_led_device_info.sh script has support for retrieving related
+>> +input device node name. Should it support discovery of associations between
+>> +LEDs and other subsystems, please don't hesitate to submit a relevant patch.
+>> +
+>> +There have been calls for LED properties such as color to be exported as
+>>   individual led class attributes. As a solution which doesn't incur as much
+>>   overhead, I suggest these become part of the device name. The naming scheme
+>>   above leaves scope for further attributes should they be needed. If sections
+>>   of the name don't apply, just leave that section blank.
+>>   
+>> +Please also keep in mind that LED subsystem has a protection against LED name
+>> +conflict. It adds numerical suffix (e.g. "_1", "_2", "_3" etc.) to the requested
+>> +LED class device name in case it is already in use. In order to prevent LED core
+>> +from assigning these suffixes in an arbitrary order the led-enumerator fwnode
+>> +property can be used for differentiation of LEDs that share common function
+>> +and/or color. In this case enumerators will be prepended with "-" character.
+>>   
+>>   Brightness setting API
+>>   ======================
+>> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+>> index 2f09156b0c63..bfd46a9bba63 100644
+>> --- a/drivers/leds/led-class.c
+>> +++ b/drivers/leds/led-class.c
+>> @@ -26,6 +26,18 @@
+>>   
+>>   static struct class *leds_class;
+>>   
+>> +const char *led_colors[LED_COLOR_ID_COUNT] = {
+>> +	[LED_COLOR_ID_WHITE] = "white",
+>> +	[LED_COLOR_ID_RED] = "red",
+>> +	[LED_COLOR_ID_GREEN] = "green",
+>> +	[LED_COLOR_ID_BLUE] = "blue",
+>> +	[LED_COLOR_ID_AMBER] = "amber",
+>> +	[LED_COLOR_ID_VIOLET] = "violet",
+>> +	[LED_COLOR_ID_YELLOW] = "yellow",
+>> +	[LED_COLOR_ID_IR] = "ir",
+>> +};
+>> +EXPORT_SYMBOL_GPL(led_colors);
+>> +
+> 
+> Why is this exported when it is only used here?
+> 
+> I can re-use this array for the multi color framework so I don't oppose it being exported.
 
-What I suspect should happen eventually is the DWC driver should call
-devm_pci_alloc_host_bridge() directly, as all the non-DWC drivers do.
-That would require a little reorganization of the DWC data structures,
-but it would be good to be more consistent.
+I did that specifically for that purpose :-)
 
-For now, I think stashing the pointer in pcie_port or dw_pcie would be
-OK.  I'm not 100% clear on the difference, but it looks like either
-should be common across all the DWC drivers, which is what we want.
+> Reviewed-by: Dan Murphy <dmurphy@ti.com>
 
-(Tangent, dw_pcie_host_init() currently uses pci_alloc_host_bridge(),
-not devm_pci_alloc_host_bridge(), even though it uses other devm
-interfaces.  This looks like a probable buglet.)
+Thanks!
 
-(Tangent 2, devm_pci_alloc_host_bridge() doesn't initialize
-bridge->native_aer, etc, as pci_alloc_host_bridge() does.  This looks
-like my fault from 02bfeb484230 ("PCI/portdrv: Simplify PCIe feature
-permission checking"), and it probably means none of those PCIe
-services work correctly for these native host bridge drivers.)
-
-> > > > > > > +static int tegra_pcie_dw_runtime_suspend(struct device *dev)
-> > > > > > > +{
-> > > > > > > +	struct tegra_pcie_dw *pcie = dev_get_drvdata(dev);
-> > > > > > > +
-> > > > > > > +	tegra_pcie_downstream_dev_to_D0(pcie);
-> > > > > > > +
-> > > > > > > +	pci_stop_root_bus(pcie->pci.pp.bus);
-> > > > > > > +	pci_remove_root_bus(pcie->pci.pp.bus);
-> > > > > > 
-> > > > > > Why are you calling these?  No other drivers do this except in
-> > > > > > their .remove() methods.  Is there something special about
-> > > > > > Tegra, or is this something the other drivers *should* be
-> > > > > > doing?
-> > > > > 
-> > > > > Since this API is called by remove, I'm removing the hierarchy
-> > > > > to safely bring down all the devices. I'll have to re-visit this
-> > > > > part as Jisheng Zhang's patches
-> > > > > https://patchwork.kernel.org/project/linux-pci/list/?series=98559
-> > > > > are now approved and I need to verify this part after
-> > > > > cherry-picking Jisheng's changes.
-> > > > 
-> > > > Tegra194 should do this the same way as other drivers, independent
-> > > > of Jisheng's changes.
-> > > 
-> > > When other Designware implementations add remove functionality, even
-> > > they should be calling these APIs (Jisheng also mentioned the same
-> > > in his commit message)
-> > 
-> > My point is that these APIs should be called from driver .remove()
-> > methods, not from .runtime_suspend() methods.
->
-> .remove() internally calls pm_runtime_put_sync() API which calls
-> .runtime_suspend(). I made a new patch to add a host_deinit() call
-> which make all these calls. Since host_init() is called from inside
-> .runtime_resume() of this driver, to be in sync, I'm now calling
-> host_deinit() from inside .runtime_suspend() API.
-
-I think this is wrong.  pci_stop_root_bus() will detach all the
-drivers from all the devices.  We don't want to do that if we're
-merely runtime suspending the host bridge, do we?
-
-Bjorn
+-- 
+Best regards,
+Jacek Anaszewski
