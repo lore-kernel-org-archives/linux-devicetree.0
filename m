@@ -1,33 +1,37 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v11 04/27] clocksource: Add a new timer-ingenic driver
-Date: Fri, 5 Apr 2019 22:44:31 +0200 (CEST)
-Message-ID: <alpine.DEB.2.21.1904052241240.1802@nanos.tec.linutronix.de>
-References: <20190327231631.15708-1-paul@crapouillou.net> <20190327231631.15708-5-paul@crapouillou.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH v5 0/5] Allwinner H6 USB3 support
+Date: Sat,  6 Apr 2019 04:57:31 +0800
+Message-ID: <20190405205736.55177-1-icenowy@aosc.io>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190327231631.15708-5-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mathieu Malaterre <malat@debian.org>, od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 28 Mar 2019, Paul Cercueil wrote:
+This patchset adds device tree binding and driver support for Allwinner
+H6 USB3 PHY. The controller is just a DWC3 controller from Synposys.
 
-> This driver handles the TCU (Timer Counter Unit) present on the Ingenic
-> JZ47xx SoCs, and provides the kernel with a system timer, and optionally
-> with a clocksource and a sched_clock.
-> 
-> It also provides clocks and interrupt handling to client drivers.
+Because of the suggest of Rob Herring, this revision uses the USB
+connector device tree binding, and enhanced it by adding Vbus supply
+property to it.
 
-Why on earth has a timer driver clock and interrupt chip drivers in it?
+Icenowy Zheng (5):
+  dt-bindings: usb-connector: add Vbus regulator for Type-A/B
+  dt-bindings: phy: add binding for Allwinner USB3 PHY
+  phy: allwinner: add phy driver for USB3 PHY on Allwinner H6 SoC
+  arm64: allwinner: dts: h6: add USB3 device nodes
+  arm64: allwinner: dts: h6: enable USB3 port on Pine H64
 
-We have different subsystems for good reasons. Please split this apart and
-add the support to the appropriate subsystems, clocksource, irqchip, clk
+ .../bindings/connector/usb-connector.txt      |   3 +
+ .../bindings/phy/sun50i-usb3-phy.txt          |  28 ++
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  13 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  32 +++
+ drivers/phy/allwinner/Kconfig                 |  12 +
+ drivers/phy/allwinner/Makefile                |   1 +
+ drivers/phy/allwinner/phy-sun50i-usb3.c       | 260 ++++++++++++++++++
+ 7 files changed, 349 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
+ create mode 100644 drivers/phy/allwinner/phy-sun50i-usb3.c
 
-Thanks,
-
-	tglx
-
-
- 
+-- 
+2.18.1
