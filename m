@@ -1,261 +1,593 @@
-Return-Path: <SRS0=qoK5=SH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48843 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729989AbfDEGEF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Apr 2019 02:04:05 -0400
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v5 04/13] partial revert of "[media] tvp5150: add HW input connectors support"
-Date: Fri,  5 Apr 2019 08:03:08 +0200
-Message-Id: <20190405060317.11240-5-m.felsch@pengutronix.de>
-In-Reply-To: <20190405060317.11240-1-m.felsch@pengutronix.de>
-References: <20190405060317.11240-1-m.felsch@pengutronix.de>
+Return-Path: <dinguyen@kernel.org>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCH 1/2] arm64: dts: agilex: Add initial support for Intel's Agilex SoCFPGA
+Date: Fri,  5 Apr 2019 10:50:38 -0500
+Message-Id: <20190405155039.8957-1-dinguyen@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org
-Cc: p.zabel@pengutronix.de, javierm@redhat.co, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Javier Martinez Canillas <javierm@redhat.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Rob Herring <robh@kernel.org>
+To: devicetree@vger.kernel.org
+Cc: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Javier Martinez Canillas <javierm@redhat.com>
+Add the initial device tree files for Intel's Agilex SoCFPGA platform.
 
-Commit f7b4b54e6364 ("[media] tvp5150: add HW input connectors support")
-added input signals support for the tvp5150, but the approach was found
-to be incorrect so the corresponding DT binding commit 82c2ffeb217a
-("[media] tvp5150: document input connectors DT bindings") was reverted.
-
-This left the driver with an undocumented (and wrong) DT parsing logic,
-so lets get rid of this code as well until the input connectors support
-is implemented properly.
-
-It's a partial revert due other patches added on top of mentioned commit
-not allowing the commit to be reverted cleanly anymore. But all the code
-related to the DT parsing logic and input entities creation are removed.
-
-Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-[m.felsch@pengutronix.de: rm TVP5150_INPUT_NUM define]
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 ---
- drivers/media/i2c/tvp5150.c         | 141 ----------------------------
- include/dt-bindings/media/tvp5150.h |   2 -
- 2 files changed, 143 deletions(-)
+ arch/arm64/Kconfig.platforms                  |   5 +
+ arch/arm64/boot/dts/Makefile                  |   1 +
+ arch/arm64/boot/dts/intel/Makefile            |   1 +
+ arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 444 ++++++++++++++++++
+ .../boot/dts/intel/socfpga_agilex_socdk.dts   |  75 +++
+ 5 files changed, 526 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/intel/Makefile
+ create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+ create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index eaddd977ba40..89da921c8886 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -53,8 +53,6 @@ struct tvp5150 {
- 	struct v4l2_subdev sd;
- #ifdef CONFIG_MEDIA_CONTROLLER
- 	struct media_pad pads[TVP5150_NUM_PADS];
--	struct media_entity input_ent[TVP5150_INPUT_NUM];
--	struct media_pad input_pad[TVP5150_INPUT_NUM];
- #endif
- 	struct v4l2_ctrl_handler hdl;
- 	struct v4l2_rect rect;
-@@ -1169,40 +1167,6 @@ static int tvp5150_enum_frame_size(struct v4l2_subdev *sd,
- 	return 0;
- }
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 70498a033cf5..ca9f4422afa2 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -7,6 +7,11 @@ config ARCH_ACTIONS
+ 	help
+ 	  This enables support for the Actions Semiconductor S900 SoC family.
  
--/****************************************************************************
--			Media entity ops
-- ****************************************************************************/
--
--#ifdef CONFIG_MEDIA_CONTROLLER
--static int tvp5150_link_setup(struct media_entity *entity,
--			      const struct media_pad *local,
--			      const struct media_pad *remote, u32 flags)
--{
--	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(entity);
--	struct tvp5150 *decoder = to_tvp5150(sd);
--	int i;
--
--	for (i = 0; i < TVP5150_INPUT_NUM; i++) {
--		if (remote->entity == &decoder->input_ent[i])
--			break;
--	}
--
--	/* Do nothing for entities that are not input connectors */
--	if (i == TVP5150_INPUT_NUM)
--		return 0;
--
--	decoder->input = i;
--
--	tvp5150_selmux(sd);
--
--	return 0;
--}
--
--static const struct media_entity_operations tvp5150_sd_media_ops = {
--	.link_setup = tvp5150_link_setup,
--};
--#endif
--
- /****************************************************************************
- 			I2C Command
-  ****************************************************************************/
-@@ -1350,42 +1314,6 @@ static int tvp5150_g_tuner(struct v4l2_subdev *sd, struct v4l2_tuner *vt)
- 	return 0;
- }
- 
--static int tvp5150_registered(struct v4l2_subdev *sd)
--{
--#ifdef CONFIG_MEDIA_CONTROLLER
--	struct tvp5150 *decoder = to_tvp5150(sd);
--	int ret = 0;
--	int i;
--
--	for (i = 0; i < TVP5150_INPUT_NUM; i++) {
--		struct media_entity *input = &decoder->input_ent[i];
--		struct media_pad *pad = &decoder->input_pad[i];
--
--		if (!input->name)
--			continue;
--
--		decoder->input_pad[i].flags = MEDIA_PAD_FL_SOURCE;
--
--		ret = media_entity_pads_init(input, 1, pad);
--		if (ret < 0)
--			return ret;
--
--		ret = media_device_register_entity(sd->v4l2_dev->mdev, input);
--		if (ret < 0)
--			return ret;
--
--		ret = media_create_pad_link(input, 0, &sd->entity,
--					    TVP5150_PAD_IF_INPUT, 0);
--		if (ret < 0) {
--			media_device_unregister_entity(input);
--			return ret;
--		}
--	}
--#endif
--
--	return 0;
--}
--
- /* ----------------------------------------------------------------------- */
- 
- static const struct v4l2_ctrl_ops tvp5150_ctrl_ops = {
-@@ -1439,10 +1367,6 @@ static const struct v4l2_subdev_ops tvp5150_ops = {
- 	.pad = &tvp5150_pad_ops,
- };
- 
--static const struct v4l2_subdev_internal_ops tvp5150_internal_ops = {
--	.registered = tvp5150_registered,
--};
--
- /****************************************************************************
- 			I2C Client & Driver
-  ****************************************************************************/
-@@ -1595,12 +1519,6 @@ static int tvp5150_parse_dt(struct tvp5150 *decoder, struct device_node *np)
- {
- 	struct v4l2_fwnode_endpoint bus_cfg = { .bus_type = 0 };
- 	struct device_node *ep;
--#ifdef CONFIG_MEDIA_CONTROLLER
--	struct device_node *connectors, *child;
--	struct media_entity *input;
--	const char *name;
--	u32 input_type;
--#endif
- 	unsigned int flags;
- 	int ret = 0;
- 
-@@ -1624,63 +1542,6 @@ static int tvp5150_parse_dt(struct tvp5150 *decoder, struct device_node *np)
- 
- 	decoder->mbus_type = bus_cfg.bus_type;
- 
--#ifdef CONFIG_MEDIA_CONTROLLER
--	connectors = of_get_child_by_name(np, "connectors");
--
--	if (!connectors)
--		goto err;
--
--	for_each_available_child_of_node(connectors, child) {
--		ret = of_property_read_u32(child, "input", &input_type);
--		if (ret) {
--			dev_err(decoder->sd.dev,
--				 "missing type property in node %pOFn\n",
--				 child);
--			goto err_connector;
--		}
--
--		if (input_type >= TVP5150_INPUT_NUM) {
--			ret = -EINVAL;
--			goto err_connector;
--		}
--
--		input = &decoder->input_ent[input_type];
--
--		/* Each input connector can only be defined once */
--		if (input->name) {
--			dev_err(decoder->sd.dev,
--				 "input %s with same type already exists\n",
--				 input->name);
--			ret = -EINVAL;
--			goto err_connector;
--		}
--
--		switch (input_type) {
--		case TVP5150_COMPOSITE0:
--		case TVP5150_COMPOSITE1:
--			input->function = MEDIA_ENT_F_CONN_COMPOSITE;
--			break;
--		case TVP5150_SVIDEO:
--			input->function = MEDIA_ENT_F_CONN_SVIDEO;
--			break;
--		}
--
--		input->flags = MEDIA_ENT_FL_CONNECTOR;
--
--		ret = of_property_read_string(child, "label", &name);
--		if (ret < 0) {
--			dev_err(decoder->sd.dev,
--				 "missing label property in node %pOFn\n",
--				 child);
--			goto err_connector;
--		}
--
--		input->name = name;
--	}
--
--err_connector:
--	of_node_put(connectors);
--#endif
- err:
- 	of_node_put(ep);
- 	return ret;
-@@ -1732,7 +1593,6 @@ static int tvp5150_probe(struct i2c_client *c,
- 	}
- 
- 	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
--	sd->internal_ops = &tvp5150_internal_ops;
- 	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
- 
- #if defined(CONFIG_MEDIA_CONTROLLER)
-@@ -1747,7 +1607,6 @@ static int tvp5150_probe(struct i2c_client *c,
- 	if (res < 0)
- 		return res;
- 
--	sd->entity.ops = &tvp5150_sd_media_ops;
- #endif
- 
- 	res = tvp5150_detect_version(core);
-diff --git a/include/dt-bindings/media/tvp5150.h b/include/dt-bindings/media/tvp5150.h
-index c852a35e916e..8637910aae76 100644
---- a/include/dt-bindings/media/tvp5150.h
-+++ b/include/dt-bindings/media/tvp5150.h
-@@ -26,8 +26,6 @@
- #define TVP5150_COMPOSITE1 1
- #define TVP5150_SVIDEO     2
- 
--#define TVP5150_INPUT_NUM  3
--
- /* TVP5150 HW outputs */
- #define TVP5150_NORMAL       0
- #define TVP5150_BLACK_SCREEN 1
++config ARCH_AGILEX
++	bool "Intel's Agilex SoCFPGA Family"
++	help
++	  This enables support for Intel's Agilex SoCFPGA Family.
++
+ config ARCH_SUNXI
+ 	bool "Allwinner sunxi 64-bit SoC Family"
+ 	select ARCH_HAS_RESET_CONTROLLER
+diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+index 5bc7533a12c7..f19b762c008d 100644
+--- a/arch/arm64/boot/dts/Makefile
++++ b/arch/arm64/boot/dts/Makefile
+@@ -13,6 +13,7 @@ subdir-y += cavium
+ subdir-y += exynos
+ subdir-y += freescale
+ subdir-y += hisilicon
++subdir-y += intel
+ subdir-y += lg
+ subdir-y += marvell
+ subdir-y += mediatek
+diff --git a/arch/arm64/boot/dts/intel/Makefile b/arch/arm64/boot/dts/intel/Makefile
+new file mode 100644
+index 000000000000..9606ac85ac70
+--- /dev/null
++++ b/arch/arm64/boot/dts/intel/Makefile
+@@ -0,0 +1 @@
++dtb-$(CONFIG_ARCH_AGILEX) += socfpga_agilex_socdk.dtb
+diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+new file mode 100644
+index 000000000000..e4ceb3a73c81
+--- /dev/null
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+@@ -0,0 +1,444 @@
++// SPDX-License-Identifier:     GPL-2.0
++/*
++ * Copyright (C) 2019, Intel Corporation
++ */
++
++/dts-v1/;
++#include <dt-bindings/reset/altr,rst-mgr-s10.h>
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	compatible = "intel,socfpga-agilex";
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			compatible = "arm,cortex-a53";
++			device_type = "cpu";
++			enable-method = "psci";
++			reg = <0x0>;
++		};
++
++		cpu1: cpu@1 {
++			compatible = "arm,cortex-a53";
++			device_type = "cpu";
++			enable-method = "psci";
++			reg = <0x1>;
++		};
++
++		cpu2: cpu@2 {
++			compatible = "arm,cortex-a53";
++			device_type = "cpu";
++			enable-method = "psci";
++			reg = <0x2>;
++		};
++
++		cpu3: cpu@3 {
++			compatible = "arm,cortex-a53";
++			device_type = "cpu";
++			enable-method = "psci";
++			reg = <0x3>;
++		};
++	};
++
++	pmu {
++		compatible = "arm,armv8-pmuv3";
++		interrupts = <0 120 8>,
++			     <0 121 8>,
++			     <0 122 8>,
++			     <0 123 8>;
++		interrupt-affinity = <&cpu0>,
++				     <&cpu1>,
++				     <&cpu2>,
++				     <&cpu3>;
++		interrupt-parent = <&intc>;
++	};
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	intc: intc@fffc1000 {
++		compatible = "arm,gic-400", "arm,cortex-a15-gic";
++		#interrupt-cells = <3>;
++		interrupt-controller;
++		reg = <0x0 0xfffc1000 0x0 0x1000>,
++		      <0x0 0xfffc2000 0x0 0x2000>,
++		      <0x0 0xfffc4000 0x0 0x2000>,
++		      <0x0 0xfffc6000 0x0 0x2000>;
++	};
++
++	soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		device_type = "soc";
++		interrupt-parent = <&intc>;
++		ranges = <0 0 0 0xffffffff>;
++
++		gmac0: ethernet@ff800000 {
++			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
++			reg = <0xff800000 0x2000>;
++			interrupts = <0 90 4>;
++			interrupt-names = "macirq";
++			mac-address = [00 00 00 00 00 00];
++			resets = <&rst EMAC0_RESET>, <&rst EMAC0_OCP_RESET>;
++			reset-names = "stmmaceth", "stmmaceth-ocp";
++			tx-fifo-depth = <16384>;
++			rx-fifo-depth = <16384>;
++			snps,multicast-filter-bins = <256>;
++			iommus = <&smmu 1>;
++			status = "disabled";
++		};
++
++		gmac1: ethernet@ff802000 {
++			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
++			reg = <0xff802000 0x2000>;
++			interrupts = <0 91 4>;
++			interrupt-names = "macirq";
++			mac-address = [00 00 00 00 00 00];
++			resets = <&rst EMAC1_RESET>, <&rst EMAC1_OCP_RESET>;
++			reset-names = "stmmaceth", "stmmaceth-ocp";
++			tx-fifo-depth = <16384>;
++			rx-fifo-depth = <16384>;
++			snps,multicast-filter-bins = <256>;
++			iommus = <&smmu 2>;
++			status = "disabled";
++		};
++
++		gmac2: ethernet@ff804000 {
++			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
++			reg = <0xff804000 0x2000>;
++			interrupts = <0 92 4>;
++			interrupt-names = "macirq";
++			mac-address = [00 00 00 00 00 00];
++			resets = <&rst EMAC2_RESET>, <&rst EMAC2_OCP_RESET>;
++			reset-names = "stmmaceth", "stmmaceth-ocp";
++			tx-fifo-depth = <16384>;
++			rx-fifo-depth = <16384>;
++			snps,multicast-filter-bins = <256>;
++			iommus = <&smmu 3>;
++			status = "disabled";
++		};
++
++		gpio0: gpio@ffc03200 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,dw-apb-gpio";
++			reg = <0xffc03200 0x100>;
++			resets = <&rst GPIO0_RESET>;
++			status = "disabled";
++
++			porta: gpio-controller@0 {
++				compatible = "snps,dw-apb-gpio-port";
++				gpio-controller;
++				#gpio-cells = <2>;
++				snps,nr-gpios = <24>;
++				reg = <0>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupts = <0 110 4>;
++			};
++		};
++
++		gpio1: gpio@ffc03300 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,dw-apb-gpio";
++			reg = <0xffc03300 0x100>;
++			resets = <&rst GPIO1_RESET>;
++			status = "disabled";
++
++			portb: gpio-controller@0 {
++				compatible = "snps,dw-apb-gpio-port";
++				gpio-controller;
++				#gpio-cells = <2>;
++				snps,nr-gpios = <24>;
++				reg = <0>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupts = <0 111 4>;
++			};
++		};
++
++		i2c0: i2c@ffc02800 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,designware-i2c";
++			reg = <0xffc02800 0x100>;
++			interrupts = <0 103 4>;
++			resets = <&rst I2C0_RESET>;
++			status = "disabled";
++		};
++
++		i2c1: i2c@ffc02900 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,designware-i2c";
++			reg = <0xffc02900 0x100>;
++			interrupts = <0 104 4>;
++			resets = <&rst I2C1_RESET>;
++			status = "disabled";
++		};
++
++		i2c2: i2c@ffc02a00 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,designware-i2c";
++			reg = <0xffc02a00 0x100>;
++			interrupts = <0 105 4>;
++			resets = <&rst I2C2_RESET>;
++			status = "disabled";
++		};
++
++		i2c3: i2c@ffc02b00 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,designware-i2c";
++			reg = <0xffc02b00 0x100>;
++			interrupts = <0 106 4>;
++			resets = <&rst I2C3_RESET>;
++			status = "disabled";
++		};
++
++		i2c4: i2c@ffc02c00 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,designware-i2c";
++			reg = <0xffc02c00 0x100>;
++			interrupts = <0 107 4>;
++			resets = <&rst I2C4_RESET>;
++			status = "disabled";
++		};
++
++		mmc: dwmmc0@ff808000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "altr,socfpga-dw-mshc";
++			reg = <0xff808000 0x1000>;
++			interrupts = <0 96 4>;
++			fifo-depth = <0x400>;
++			resets = <&rst SDMMC_RESET>;
++			reset-names = "reset";
++			iommus = <&smmu 5>;
++			status = "disabled";
++		};
++
++		ocram: sram@ffe00000 {
++			compatible = "mmio-sram";
++			reg = <0xffe00000 0x40000>;
++		};
++
++		pdma: pdma@ffda0000 {
++			compatible = "arm,pl330", "arm,primecell";
++			reg = <0xffda0000 0x1000>;
++			interrupts = <0 81 4>,
++				     <0 82 4>,
++				     <0 83 4>,
++				     <0 84 4>,
++				     <0 85 4>,
++				     <0 86 4>,
++				     <0 87 4>,
++				     <0 88 4>,
++				     <0 89 4>;
++			#dma-cells = <1>;
++			#dma-channels = <8>;
++			#dma-requests = <32>;
++		};
++
++		rst: rstmgr@ffd11000 {
++			#reset-cells = <1>;
++			compatible = "altr,stratix10-rst-mgr";
++			reg = <0xffd11000 0x100>;
++		};
++
++		smmu: iommu@fa000000 {
++			compatible = "arm,mmu-500", "arm,smmu-v2";
++			reg = <0xfa000000 0x40000>;
++			#global-interrupts = <2>;
++			#iommu-cells = <1>;
++			interrupt-parent = <&intc>;
++			interrupts = <0 128 4>,	/* Global Secure Fault */
++				<0 129 4>, /* Global Non-secure Fault */
++				/* Non-secure Context Interrupts (32) */
++				<0 138 4>, <0 139 4>, <0 140 4>, <0 141 4>,
++				<0 142 4>, <0 143 4>, <0 144 4>, <0 145 4>,
++				<0 146 4>, <0 147 4>, <0 148 4>, <0 149 4>,
++				<0 150 4>, <0 151 4>, <0 152 4>, <0 153 4>,
++				<0 154 4>, <0 155 4>, <0 156 4>, <0 157 4>,
++				<0 158 4>, <0 159 4>, <0 160 4>, <0 161 4>,
++				<0 162 4>, <0 163 4>, <0 164 4>, <0 165 4>,
++				<0 166 4>, <0 167 4>, <0 168 4>, <0 169 4>;
++			stream-match-mask = <0x7ff0>;
++			status = "disabled";
++		};
++
++		spi0: spi@ffda4000 {
++			compatible = "snps,dw-apb-ssi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0xffda4000 0x1000>;
++			interrupts = <0 99 4>;
++			resets = <&rst SPIM0_RESET>;
++			reg-io-width = <4>;
++			num-cs = <4>;
++			status = "disabled";
++		};
++
++		spi1: spi@ffda5000 {
++			compatible = "snps,dw-apb-ssi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0xffda5000 0x1000>;
++			interrupts = <0 100 4>;
++			resets = <&rst SPIM1_RESET>;
++			reg-io-width = <4>;
++			num-cs = <4>;
++			status = "disabled";
++		};
++
++		sysmgr: sysmgr@ffd12000 {
++			compatible = "altr,sys-mgr", "syscon";
++			reg = <0xffd12000 0x500>;
++		};
++
++		/* Local timer */
++		timer {
++			compatible = "arm,armv8-timer";
++			interrupts = <1 13 0xf08>,
++				     <1 14 0xf08>,
++				     <1 11 0xf08>,
++				     <1 10 0xf08>;
++		};
++
++		timer0: timer0@ffc03000 {
++			compatible = "snps,dw-apb-timer";
++			interrupts = <0 113 4>;
++			reg = <0xffc03000 0x100>;
++		};
++
++		timer1: timer1@ffc03100 {
++			compatible = "snps,dw-apb-timer";
++			interrupts = <0 114 4>;
++			reg = <0xffc03100 0x100>;
++		};
++
++		timer2: timer2@ffd00000 {
++			compatible = "snps,dw-apb-timer";
++			interrupts = <0 115 4>;
++			reg = <0xffd00000 0x100>;
++		};
++
++		timer3: timer3@ffd00100 {
++			compatible = "snps,dw-apb-timer";
++			interrupts = <0 116 4>;
++			reg = <0xffd00100 0x100>;
++		};
++
++		uart0: serial0@ffc02000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0xffc02000 0x100>;
++			interrupts = <0 108 4>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			resets = <&rst UART0_RESET>;
++			status = "disabled";
++		};
++
++		uart1: serial1@ffc02100 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0xffc02100 0x100>;
++			interrupts = <0 109 4>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			resets = <&rst UART1_RESET>;
++			status = "disabled";
++		};
++
++		usbphy0: usbphy@0 {
++			#phy-cells = <0>;
++			compatible = "usb-nop-xceiv";
++			status = "okay";
++		};
++
++		usb0: usb@ffb00000 {
++			compatible = "snps,dwc2";
++			reg = <0xffb00000 0x40000>;
++			interrupts = <0 93 4>;
++			phys = <&usbphy0>;
++			phy-names = "usb2-phy";
++			resets = <&rst USB0_RESET>, <&rst USB0_OCP_RESET>;
++			reset-names = "dwc2", "dwc2-ecc";
++			iommus = <&smmu 6>;
++			status = "disabled";
++		};
++
++		usb1: usb@ffb40000 {
++			compatible = "snps,dwc2";
++			reg = <0xffb40000 0x40000>;
++			interrupts = <0 94 4>;
++			phys = <&usbphy0>;
++			phy-names = "usb2-phy";
++			resets = <&rst USB1_RESET>, <&rst USB1_OCP_RESET>;
++			reset-names = "dwc2", "dwc2-ecc";
++			iommus = <&smmu 7>;
++			status = "disabled";
++		};
++
++		watchdog0: watchdog@ffd00200 {
++			compatible = "snps,dw-wdt";
++			reg = <0xffd00200 0x100>;
++			interrupts = <0 117 4>;
++			resets = <&rst WATCHDOG0_RESET>;
++			status = "disabled";
++		};
++
++		watchdog1: watchdog@ffd00300 {
++			compatible = "snps,dw-wdt";
++			reg = <0xffd00300 0x100>;
++			interrupts = <0 118 4>;
++			resets = <&rst WATCHDOG1_RESET>;
++			status = "disabled";
++		};
++
++		watchdog2: watchdog@ffd00400 {
++			compatible = "snps,dw-wdt";
++			reg = <0xffd00400 0x100>;
++			interrupts = <0 125 4>;
++			resets = <&rst WATCHDOG2_RESET>;
++			status = "disabled";
++		};
++
++		watchdog3: watchdog@ffd00500 {
++			compatible = "snps,dw-wdt";
++			reg = <0xffd00500 0x100>;
++			interrupts = <0 126 4>;
++			resets = <&rst WATCHDOG3_RESET>;
++			status = "disabled";
++		};
++
++		sdr: sdr@f8011100 {
++			compatible = "altr,sdr-ctl", "syscon";
++			reg = <0xf8011100 0xc0>;
++		};
++
++		qspi: spi@ff8d2000 {
++			compatible = "cdns,qspi-nor";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0xff8d2000 0x100>,
++			      <0xff900000 0x100000>;
++			interrupts = <0 3 4>;
++			cdns,fifo-depth = <128>;
++			cdns,fifo-width = <4>;
++			cdns,trigger-address = <0x00000000>;
++
++			status = "disabled";
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
+new file mode 100644
+index 000000000000..7814a9e8eb08
+--- /dev/null
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
+@@ -0,0 +1,75 @@
++// SPDX-License-Identifier:     GPL-2.0
++/*
++ * Copyright (C) 2019, Intel Corporation
++ */
++#include "socfpga_agilex.dtsi"
++
++/ {
++	model = "SoCFPGA Agilex SoCDK";
++
++	aliases {
++		serial0 = &uart0;
++		ethernet0 = &gmac0;
++		ethernet1 = &gmac1;
++		ethernet2 = &gmac2;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		device_type = "memory";
++		/* We expect the bootloader to fill in the reg */
++		reg = <0 0 0 0>;
++	};
++};
++
++&gpio1 {
++	status = "okay";
++};
++
++&gmac0 {
++	status = "okay";
++	phy-mode = "rgmii";
++	phy-handle = <&phy0>;
++
++	max-frame-size = <9000>;
++
++	mdio0 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,dwmac-mdio";
++		phy0: ethernet-phy@0 {
++			reg = <4>;
++
++			txd0-skew-ps = <0>; /* -420ps */
++			txd1-skew-ps = <0>; /* -420ps */
++			txd2-skew-ps = <0>; /* -420ps */
++			txd3-skew-ps = <0>; /* -420ps */
++			rxd0-skew-ps = <420>; /* 0ps */
++			rxd1-skew-ps = <420>; /* 0ps */
++			rxd2-skew-ps = <420>; /* 0ps */
++			rxd3-skew-ps = <420>; /* 0ps */
++			txen-skew-ps = <0>; /* -420ps */
++			txc-skew-ps = <900>; /* 0ps */
++			rxdv-skew-ps = <420>; /* 0ps */
++			rxc-skew-ps = <1680>; /* 780ps */
++		};
++	};
++};
++
++&mmc {
++	status = "okay";
++	cap-sd-highspeed;
++	broken-cd;
++	bus-width = <4>;
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&watchdog0 {
++	status = "okay";
++};
 -- 
-2.20.1
+2.20.0
