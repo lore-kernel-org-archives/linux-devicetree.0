@@ -1,13 +1,13 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH 12/12] arm64: dts: allwinner: orange-pi-3:
- Enable WiFi
-Date: Sat,  6 Apr 2019 01:45:14 +0200
-Message-ID: <20190405234514.6183-13-megous@megous.com>
+Subject: [PATCH 05/12] net: stmmac: sun8i: add support for
+ Allwinner H6 EMAC
+Date: Sat,  6 Apr 2019 01:45:07 +0200
+Message-ID: <20190405234514.6183-6-megous@megous.com>
 References: <20190405234514.6183-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBF6RT7SQKGQETIBMF5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBFGRT7SQKGQEKY2OADA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <20190405234514.6183-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -16,114 +16,56 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm802
+Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm80211
 List-Id: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-Orange Pi 3 has AP6256 WiFi/BT module. WiFi part of the module is
-called bcm43356 and can be used with the brcmfmac driver. The module
-is powered by the two always on regulators (not AXP805).
+The EMAC on Allwinner H6 is just like the one on A64. The "internal PHY"
+on H6 is on a co-packaged AC200 chip, and it's not really internal (it's
+connected via RMII at PA GPIO bank).
 
-WiFi uses a PG port with 1.8V voltage level signals. SoC needs to be
-configured so that it sets up an 1.8V input bias on this port. This is
-done by the pio driver by reading the vcc-pg-supply voltage.
+Add support for the Allwinner H6 EMAC in the dwmac-sun8i driver.
 
-You'll need a fw_bcm43456c5_ag.bin firmware file and nvram.txt
-configuration that can be found in the Xulongs's repository for H6:
-
-https://github.com/orangepi-xunlong/OrangePiH6_external/tree/master/ap6256
-
-Mainline brcmfmac driver expects the firmware and nvram at the
-following paths relative to the firmware directory:
-
-  brcm/brcmfmac43456-sdio.bin
-  brcm/brcmfmac43456-sdio.txt
-
-Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c   | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 5270142527f5..6a201829bb62 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -66,6 +66,26 @@
- 		regulator-always-on;
- 	};
- 
-+	reg_vcc33_wifi: vcc33-wifi {
-+		/* Always on 3.3V regulator for WiFi and BT */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc33-wifi";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+                vin-supply = <&reg_vcc5v>;
-+	};
-+
-+	reg_vcc_wifi_io: vcc-wifi-io {
-+		/* Always on 1.8V/300mA regulator for WiFi and BT IO */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc-wifi-io";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+                vin-supply = <&reg_vcc33_wifi>;
-+	};
-+
- 	/*
- 	 * The board uses 2.5V RGMII signalling. Power sequence
- 	 * to enable the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2)
-@@ -86,6 +106,14 @@
-                  */
-                 vin-supply = <&reg_aldo2>; /* GMAC-3V3 */
-         };
-+
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		clocks = <&rtc 1>;
-+		clock-names = "ext_clock";
-+		reset-gpios = <&r_pio 1 3 GPIO_ACTIVE_LOW>; /* PM3 */
-+		post-power-on-delay-ms = <200>;
-+	};
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+index 195669f550f0..e3e3dc44b33b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -147,6 +147,21 @@ static const struct emac_variant emac_variant_a64 = {
+ 	.tx_delay_max = 7,
  };
  
- &cpu0 {
-@@ -146,6 +174,25 @@
- 	status = "okay";
- };
- 
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	vmmc-supply = <&reg_vcc33_wifi>;
-+	vqmmc-supply = <&reg_vcc_wifi_io>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+
-+	brcm: sdio-wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+		interrupt-parent = <&r_pio>;
-+		interrupts = <1 0 IRQ_TYPE_LEVEL_LOW>; /* PM0 */
-+		interrupt-names = "host-wake";
-+	};
++static const struct emac_variant emac_variant_h6 = {
++	.default_syscon_value = 0x50000,
++	.syscon_field = &sun8i_syscon_reg_field,
++	/*
++	 * The "Internal PHY" of H6 is not on the die. It's on the co-packaged
++	 * AC200 chip instead.
++	 */
++	.soc_has_internal_phy = false,
++	.support_mii = true,
++	.support_rmii = true,
++	.support_rgmii = true,
++	.rx_delay_max = 31,
++	.tx_delay_max = 7,
 +};
 +
- &ohci0 {
- 	status = "okay";
+ #define EMAC_BASIC_CTL0 0x00
+ #define EMAC_BASIC_CTL1 0x04
+ #define EMAC_INT_STA    0x08
+@@ -1210,6 +1225,8 @@ static const struct of_device_id sun8i_dwmac_match[] = {
+ 		.data = &emac_variant_r40 },
+ 	{ .compatible = "allwinner,sun50i-a64-emac",
+ 		.data = &emac_variant_a64 },
++	{ .compatible = "allwinner,sun50i-h6-emac",
++		.data = &emac_variant_h6 },
+ 	{ }
  };
-@@ -157,6 +204,7 @@
- &pio {
- 	vcc-pc-supply = <&reg_bldo2>;
- 	vcc-pd-supply = <&reg_cldo1>;
-+	vcc-pg-supply = <&reg_vcc_wifi_io>;
- };
- 
- &r_i2c {
+ MODULE_DEVICE_TABLE(of, sun8i_dwmac_match);
 -- 
 2.21.0
