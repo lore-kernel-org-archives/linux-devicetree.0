@@ -1,11 +1,14 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH 00/12] Add support for Orange Pi 3
-Date: Sat,  6 Apr 2019 01:45:02 +0200
-Message-ID: <20190405234514.6183-1-megous@megous.com>
+Subject: [PATCH 03/12] dt-bindings: display: sun4i-drm: Add DDC
+ power supply
+Date: Sat,  6 Apr 2019 01:45:05 +0200
+Message-ID: <20190405234514.6183-4-megous@megous.com>
+References: <20190405234514.6183-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBEWRT7SQKGQEW66UC4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBE6RT7SQKGQEA2IPR6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20190405234514.6183-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,55 +21,27 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-This series implements support for Xunlong Orange Pi 3 board.
+Some Allwinner SoC using boards need to enable a regulator
+for the DDC bus to be usable.
 
-Unfortunately, this board needs some small driver patches, so I have
-split the boards DT patch into chunks that require patches for drivers
-in various subsystems:
+Add binding documentation for it.
 
-- Basic DT for the board  (patch 1)
-- HDMI support            (patches 2, 3, 4)
-- Ethernet support        (patches 5, 6, 7)
-- WiFi support            (patches 8, 9, 10, 11, 12)
+Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-This patch is also needed to not get segfault on boot: 
-  https://lkml.org/lkml/2019/4/5/856
-
-Please take a look.
-
-regards,
-  Ondrej Jirman
-
-Icenowy Zheng (2):
-  net: stmmac: sun8i: add support for Allwinner H6 EMAC
-  net: stmmac: sun8i: force select external PHY when no internal one
-
-Ondrej Jirman (10):
-  arm64: dts: allwinner: h6: Add Orange Pi 3 DTS
-  drm: sun4i: Add support for enabling DDC I2C bus to dw_hdmi glue
-  dt-bindings: display: sun4i-drm: Add DDC power supply
-  arm64: dts: allwinner: orange-pi-3: Enable HDMI output
-  arm64: dts: allwinner: orange-pi-3: Enable ethernet
-  arm64: dts: allwinner: h6: Add MMC1 pins
-  pinctrl: sunxi: Prepare for alternative bias voltage setting methods
-  pinctrl: sunxi: Support I/O bias voltage setting on H6
-  brcmfmac: Loading the correct firmware for brcm43456
-  arm64: dts: allwinner: orange-pi-3: Enable WiFi
-
- .../bindings/display/sunxi/sun4i-drm.txt      |   1 +
- arch/arm64/boot/dts/allwinner/Makefile        |   1 +
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 339 ++++++++++++++++++
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |   9 +
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         |  17 +-
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |   1 +
- .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c |  22 ++
- .../broadcom/brcm80211/brcmfmac/sdio.c        |   4 +-
- drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c     |   1 +
- drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c     |   2 +-
- drivers/pinctrl/sunxi/pinctrl-sunxi.c         |  50 ++-
- drivers/pinctrl/sunxi/pinctrl-sunxi.h         |   7 +-
- 12 files changed, 433 insertions(+), 21 deletions(-)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+index 31ab72cba3d4..31474fb92313 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+@@ -104,6 +104,7 @@ Required properties:
+     output, usually to an HDMI connector.
+ 
+ Optional properties:
++  - ddc-supply: the VCC power supply for the DDC bus
+   - hvcc-supply: the VCC power supply of the controller
+ 
+ DWC HDMI PHY
 -- 
 2.21.0
