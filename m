@@ -1,78 +1,160 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] ARM: dts: sun50i: h6: Introduce
- Beelink GS1 board
-Date: Fri, 5 Apr 2019 17:11:00 +0200
-Message-ID: <20190405151100.jjjg55z7sg35ijxw@flea>
-References: <20190405122446.2101-1-peron.clem@gmail.com>
- <20190405122446.2101-5-peron.clem@gmail.com>
- <CAJiuCcfbnR+Jfj8Je_4HwgycCBEe92sx6zqwqgXpeiMe2jKL-Q@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH] power: reset: syscon-reboot: add a mask property
+Date: Fri, 5 Apr 2019 17:18:05 +0200
+Message-ID: <20190405151805.fr3ie3q2vspljhr7@earth.universe>
+References: <20190308074930.15270-1-ms@dev.tdt.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vydzdtbzehqip32c"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBBXATXSQKGQE7LQ6PSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4iycinlwha4fbtrm"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJiuCcfbnR+Jfj8Je_4HwgycCBEe92sx6zqwqgXpeiMe2jKL-Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190308074930.15270-1-ms@dev.tdt.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Schiller <ms@dev.tdt.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, fkan@apm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---vydzdtbzehqip32c
-Content-Type: text/plain; charset="UTF-8"
+--4iycinlwha4fbtrm
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 05, 2019 at 02:53:35PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> Hi,
->
-> Adding this r_pio regulators make a new error in the bootlog :
->
-> [    0.346843] sun50i-h6-r-pinctrl 7022000.pinctrl: Couldn't get bank
-> PL regulator
-> [    0.346853] sun50i-h6-r-pinctrl 7022000.pinctrl: request() failed for =
-pin 352
-> [    0.346862] sun50i-h6-r-pinctrl 7022000.pinctrl: pin-352
-> (7081400.i2c) status -517
-> [    0.346871] sun50i-h6-r-pinctrl 7022000.pinctrl: could not request
-> pin 352 (PL0) from group PL0  on device 7022000.pinctrl
-> [    0.346878] mv64xxx_i2c 7081400.i2c: Error applying setting,
-> reverse things back
->
-> PL0 and PL1 are SCK/SDA for the PMIC :(
+Hi,
 
-How was this DT tested then?
+On Fri, Mar 08, 2019 at 08:49:30AM +0100, Martin Schiller wrote:
+> Make the syscon-reboot driver accept value and mask instead of
+> just value.
+>=20
+> Prior to this patch, the property name for the value was 'mask'. If
+> only the mask property is defined on a node, maintain compatibility
+> by using it as the value.
+>=20
+> This patch is based on commit
+> f2c199db477e ("power: reset: syscon-poweroff: add a mask property")
+> and does the same change for the syscon-reboot driver.
+>=20
+> Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+> ---
 
-Maxime
+thanks, queued.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-- Sebastian
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+>  .../devicetree/bindings/power/reset/syscon-reboot.txt | 11 +++++++++--
+>  drivers/power/reset/syscon-reboot.c                   | 19 +++++++++++++=
+++++--
+>  2 files changed, 26 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.=
+txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> index 11906316b43d..e23dea8344f8 100644
+> --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> @@ -3,13 +3,20 @@ Generic SYSCON mapped register reset driver
+>  This is a generic reset driver using syscon to map the reset register.
+>  The reset is generally performed with a write to the reset register
+>  defined by the register map pointed by syscon reference plus the offset
+> -with the mask defined in the reboot node.
+> +with the value and mask defined in the reboot node.
+> =20
+>  Required properties:
+>  - compatible: should contain "syscon-reboot"
+>  - regmap: this is phandle to the register map node
+>  - offset: offset in the register map for the reboot register (in bytes)
+> -- mask: the reset value written to the reboot register (32 bit access)
+> +- value: the reset value written to the reboot register (32 bit access)
+> +
+> +Optional properties:
+> +- mask: update only the register bits defined by the mask (32 bit)
+> +
+> +Legacy usage:
+> +If a node doesn't contain a value property but contains a mask property,=
+ the
+> +mask property is used as the value.
+> =20
+>  Default will be little endian mode, 32 bit access only.
+> =20
+> diff --git a/drivers/power/reset/syscon-reboot.c b/drivers/power/reset/sy=
+scon-reboot.c
+> index 7d0d269a0837..5a6bb638c331 100644
+> --- a/drivers/power/reset/syscon-reboot.c
+> +++ b/drivers/power/reset/syscon-reboot.c
+> @@ -27,6 +27,7 @@
+>  struct syscon_reboot_context {
+>  	struct regmap *map;
+>  	u32 offset;
+> +	u32 value;
+>  	u32 mask;
+>  	struct notifier_block restart_handler;
+>  };
+> @@ -39,7 +40,7 @@ static int syscon_restart_handle(struct notifier_block =
+*this,
+>  					restart_handler);
+> =20
+>  	/* Issue the reboot */
+> -	regmap_write(ctx->map, ctx->offset, ctx->mask);
+> +	regmap_update_bits(ctx->map, ctx->offset, ctx->mask, ctx->value);
+> =20
+>  	mdelay(1000);
+> =20
+> @@ -51,6 +52,7 @@ static int syscon_reboot_probe(struct platform_device *=
+pdev)
+>  {
+>  	struct syscon_reboot_context *ctx;
+>  	struct device *dev =3D &pdev->dev;
+> +	int mask_err, value_err;
+>  	int err;
+> =20
+>  	ctx =3D devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
+> @@ -64,8 +66,21 @@ static int syscon_reboot_probe(struct platform_device =
+*pdev)
+>  	if (of_property_read_u32(pdev->dev.of_node, "offset", &ctx->offset))
+>  		return -EINVAL;
+> =20
+> -	if (of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask))
+> +	value_err =3D of_property_read_u32(pdev->dev.of_node, "value", &ctx->va=
+lue);
+> +	mask_err =3D of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask=
+);
+> +	if (value_err && mask_err) {
+> +		dev_err(dev, "unable to read 'value' and 'mask'");
+>  		return -EINVAL;
+> +	}
+> +
+> +	if (value_err) {
+> +		/* support old binding */
+> +		ctx->value =3D ctx->mask;
+> +		ctx->mask =3D 0xFFFFFFFF;
+> +	} else if (mask_err) {
+> +		/* support value without mask*/
+> +		ctx->mask =3D 0xFFFFFFFF;
+> +	}
+> =20
+>  	ctx->restart_handler.notifier_call =3D syscon_restart_handle;
+>  	ctx->restart_handler.priority =3D 192;
+> --=20
+> 2.11.0
+>=20
 
---vydzdtbzehqip32c
+--4iycinlwha4fbtrm
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKdwBAAKCRDj7w1vZxhR
-xRckAP4wZ46tgKZYKDJhYKIgcd4LHvEUq6BNr/w1FqxiVL6TswEA6p6RUzr55f9c
-tpfmanzizb77MMjF9zA6P9bPohY6EgM=
-=3hKq
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlynca0ACgkQ2O7X88g7
++popCA//dK7Dexr7cJnG6mdmK2NQzYdDB/9PyWQmOBWxP0WgBqKNUyqj0E9TCkNi
+EbrvppE4s4QTKAZ4pc9pUJEqNDqFPhRi82Xaj1NUp2cPAeyPUJr4O/kjM6VmLpbj
+lgTFkjn/d2IvHT5s/HAs+AMDzqVaSrVxRemgFk+7Ccux5dfnZAKGaDLJANYi/dxW
+w/kaiYiw0rQMq3b7sEEaEI7D3OR11qo/BV3SC3154PeqSKohroRE5o6YUsC7zUSJ
+4hA+i+NjNekqfKkQKY6FsgRLoSuKXpWBIf4EhYuLVPxAXEsEWtd/Hs8jjVxoYgpq
+biiPoi3EdgMs364O3kTFrJbfe946F4AiH04rVX4m4wHZ83WIERO3y2DnvQ3Y67td
+Hu7J01uKjMuulrjGF9si3EoUui6ppxW6Lmbof6/GUCt3LdVon+gC517uJjtW7a8t
+EjM+gbSttmOblGWYcVb3RvM/FQrIoslE9V2BXLXbIALXF1bOHi1GTJXWxeHI1FNN
+YrARbBM0Cp1/ESBlF6PtrKLfI4fn8U6XYu5JEN+lTYPuDuSBTs7KhsRbkLAIuYbe
+oYHYh6XCEGQGaRkwNYilda5Uz6iClzdZPOwTlAOixfDDBu1Ne33h7c3CBt1V8nOb
+2tLA9q96c9qGAGt4xP1lFmroHdvFCaq4zr7fzIm2PtqzsmKQ1gY=
+=VyQN
 -----END PGP SIGNATURE-----
 
---vydzdtbzehqip32c--
+--4iycinlwha4fbtrm--
