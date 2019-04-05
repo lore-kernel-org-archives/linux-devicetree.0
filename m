@@ -1,89 +1,59 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: interconnect: Add Qualcomm QCS404 DT
- bindings
-Date: Fri, 5 Apr 2019 21:32:54 +0700
-Message-ID: <20190405143254.GM1843@tuxbook-pro>
-References: <20190405035446.31886-1-georgi.djakov@linaro.org>
- <20190405035446.31886-2-georgi.djakov@linaro.org>
+From: Zhi Li <lznuaa@gmail.com>
+Subject: Re: [PATCH V4 2/4] drivers/perf: imx_ddr: Add ddr performance counter
+ support
+Date: Fri, 5 Apr 2019 09:34:38 -0500
+Message-ID: <CAHrpEqT67OpeGXB7wgYSsTD9ibG_jk7xO5zMFyxcG5PHFP-bJg@mail.gmail.com>
+References: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
+ <1550253761-26841-2-git-send-email-Frank.Li@nxp.com>
+ <20190404111714.GA26392@fuggles.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190405035446.31886-2-georgi.djakov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: robh+dt@kernel.org, vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190404111714.GA26392@fuggles.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Frank Li <frank.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 05 Apr 10:54 +07 2019, Georgi Djakov wrote:
+On Thu, Apr 4, 2019 at 6:17 AM Will Deacon <will.deacon@arm.com> wrote:
+>
+> Hi Frank,
+>
+> On Fri, Feb 15, 2019 at 06:03:11PM +0000, Frank Li wrote:
+> > Add ddr performance monitor support for iMX8QXP
+> >
+> > There are 4 counters for ddr perfomance events.
+> > counter 0 is dedicated for cycles.
+> > you choose any up to 3 no cycles events.
+> >
+> > for example:
+> >
+> > perf stat -a -e ddr0/read-access/,ddr0/write-access/,ddr0/precharge/ ls
+> > perf stat -a -e ddr0/cycles/,ddr0/read-access/,ddr0/write-access/ ls
+>
+> Could you elaborate a bit on DDR_CAP_AXI_ID, please? Specifically, how
+> does the COUNTER_DPCR1 register work and what happens if I specify two
+> simultaneous events with different values in config1? I'm a little wary
+> of taking raw user input and throwing it straight into a device register!
 
-> The Qualcomm QCS404 platform has several buses that could be controlled
-> and tuned according to the bandwidth demand.
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
->  .../bindings/interconnect/qcom,qcs404.txt     | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
-> new file mode 100644
-> index 000000000000..2ea63ea827d7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
-> @@ -0,0 +1,45 @@
-> +Qualcomm QCS404 Network-On-Chip interconnect driver binding
-> +-----------------------------------------------------------
-> +
-> +Required properties :
-> +- compatible : shall contain only one of the following:
-> +			"qcom,qcs404-bimc"
+I have not find better method to do that.
+bit 0-15: AXIID
+bit  16-31: AXID_MASK
 
-As this is a hardware block available in mmio register space I think you
-better represent this on the mmio (soc) bus - and then represent the
-link to rpm as a child node of the rpm.
+Check condition AxID && AXI_MASKING == AXI_ID && AXI_MASKING
 
-Apart from that this looks good.
+best regards
+Frank Li
 
-Regards,
-Bjorn
 
-> +			"qcom,qcs404-pcnoc"
-> +			"qcom,qcs404-snoc"
-> +- #interconnect-cells : should contain 1
-> +
-> +Optional properties :
-> +clocks : list of phandles and specifiers to all interconnect bus clocks
-> +clock-names : clock names should include both "bus_clk" and "bus_a_clk"
-> +
-> +Example:
-> +
-> +rpm-glink {
-> +	...
-> +	rpm_requests: glink-channel {
-> +		...
-> +		bimc: interconnect@0 {
-> +			compatible = "qcom,qcs404-bimc";
-> +			#interconnect-cells = <1>;
-> +			clock-names = "bus_clk", "bus_a_clk";
-> +			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
-> +				<&rpmcc RPM_SMD_BIMC_A_CLK>;
-> +		};
-> +
-> +		pnoc: interconnect@1 {
-> +			compatible = "qcom,qcs404-pcnoc";
-> +			#interconnect-cells = <1>;
-> +			clock-names = "bus_clk", "bus_a_clk";
-> +			clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
-> +				<&rpmcc RPM_SMD_PNOC_A_CLK>;
-> +		};
-> +
-> +		snoc: interconnect@2 {
-> +			compatible = "qcom,qcs404-snoc";
-> +			#interconnect-cells = <1>;
-> +			clock-names = "bus_clk", "bus_a_clk";
-> +			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
-> +				<&rpmcc RPM_SMD_SNOC_A_CLK>;
-> +		};
-> +	};
-> +};
+>
+> Will
