@@ -1,69 +1,48 @@
-Return-Path: <SRS0=O27d=SD=gmail.com=shubhrajyoti.datta@kernel.org>
-From: <shubhrajyoti.datta@gmail.com>
-Subject: [PATCH 2/2] serial: uartps: Add support for nomodem
-Date: Mon, 1 Apr 2019 22:07:20 +0530
-Message-ID: <1554136640-25194-3-git-send-email-shubhrajyoti.datta@gmail.com>
-In-Reply-To: <1554136640-25194-1-git-send-email-shubhrajyoti.datta@gmail.com>
-References: <1554136640-25194-1-git-send-email-shubhrajyoti.datta@gmail.com>
+Return-Path: <SRS0=5T1w=SH=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v5 13/13] media: tvp5150: make debug output more readable
+Date: Fri,  5 Apr 2019 08:03:17 +0200
+Message-Id: <20190405060317.11240-14-m.felsch@pengutronix.de>
+In-Reply-To: <20190405060317.11240-1-m.felsch@pengutronix.de>
+References: <20190405060317.11240-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: devicetree@vger.kernel.org
-Cc: michal.simek@xilinx.com, gregkh@linuxfoundation.org, jslaby@suse.com, robh+dt@kernel.org, linux-serial@vger.kernel.org, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Content-Transfer-Encoding: 8bit
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org
+Cc: p.zabel@pengutronix.de, javierm@redhat.co, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+The debug output for tvp5150_selmux() isn't really intuitive. Register
+values are printed decimal formatted and the input/output driver states
+are printed as enum. Even more the "normal" output enum mapps to zero so
+a active output will printing output=0 and a inactive output=1.
 
-Having modem control is configurable. Add support for the same by
-adding a nomodem property.
+Change this by brinting the register values hex formatted and the states
+as more readable string.
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- drivers/tty/serial/xilinx_uartps.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/media/i2c/tvp5150.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index 9a7f943..3138d7e 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -193,6 +193,7 @@ struct cdns_uart {
- 	int			id;
- 	struct notifier_block	clk_rate_change_nb;
- 	u32			quirks;
-+	bool nomodem;
- };
- struct cdns_platform_data {
- 	u32 quirks;
-@@ -1004,6 +1005,11 @@ static void cdns_uart_config_port(struct uart_port *port, int flags)
-  */
- static unsigned int cdns_uart_get_mctrl(struct uart_port *port)
- {
-+	struct cdns_uart *cdns_uart_data = port->private_data;
-+
-+	if (cdns_uart_data->nomodem)
-+		return 0;
-+
- 	return TIOCM_CTS | TIOCM_DSR | TIOCM_CAR;
- }
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index 6af04db45b7e..469dc7e24ae9 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -302,9 +302,12 @@ static void tvp5150_selmux(struct v4l2_subdev *sd)
+ 		break;
+ 	}
  
-@@ -1011,6 +1017,10 @@ static void cdns_uart_set_mctrl(struct uart_port *port, unsigned int mctrl)
- {
- 	u32 val;
- 	u32 mode_reg;
-+	struct cdns_uart *cdns_uart_data = port->private_data;
-+
-+	if (cdns_uart_data->nomodem)
-+		return;
+-	dev_dbg_lvl(sd->dev, 1, debug, "Selecting video route: route input=%i, output=%i => tvp5150 input=%i, opmode=%i\n",
+-			decoder->input, decoder->output,
+-			input, opmode);
++	dev_dbg_lvl(sd->dev, 1, debug,
++		    "Selecting video route: route input=%s, output=%s => tvp5150 input=0x%02x, opmode=0x%02x\n",
++		    decoder->input == 0 ? "aip1a" :
++		    decoder->input == 2 ? "aip1b" : "svideo",
++		    decoder->output == 0 ? "normal" : "black-frame-gen",
++		    input, opmode);
  
- 	val = readl(port->membase + CDNS_UART_MODEMCR);
- 	mode_reg = readl(port->membase + CDNS_UART_MR);
-@@ -1669,6 +1679,8 @@ static int cdns_uart_probe(struct platform_device *pdev)
- 		console_port = NULL;
- #endif
- 
-+	cdns_uart_data->nomodem = of_property_read_bool(pdev->dev.of_node,
-+							"xlnx,uart-nomodem");
- 	return 0;
- 
- err_out_pm_disable:
+ 	regmap_write(decoder->regmap, TVP5150_OP_MODE_CTL, opmode);
+ 	regmap_write(decoder->regmap, TVP5150_VD_IN_SRC_SEL_1, input);
 -- 
-2.1.1
+2.20.1
