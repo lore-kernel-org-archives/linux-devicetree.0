@@ -1,68 +1,76 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 2/2] arm64: dts: h6: Add watchdog node
-Date: Fri, 5 Apr 2019 16:50:05 +0200
-Message-ID: <20190405145005.jmmwsvbateqssbyq@flea>
-References: <20190404135736.8491-1-peron.clem@gmail.com>
- <20190404135736.8491-2-peron.clem@gmail.com>
- <20190405090236.e7vnyjzxmzfke3d6@flea>
- <CAGb2v65wcEAUTwRhC42iRkPaWXLGX1CJeq+TSzHVTOrT+L=8vA@mail.gmail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 1/1] dt-bindings: power: supply: add missing semi-colon
+ in example
+Date: Fri, 5 Apr 2019 16:54:15 +0200
+Message-ID: <20190405145415.4dthzpqgvww7gv3a@earth.universe>
+References: <20190328203518.12100-1-sebastien.bourdelin@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pkvbogoca7lsguzq"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wepqn5kyeknu4t3h"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v65wcEAUTwRhC42iRkPaWXLGX1CJeq+TSzHVTOrT+L=8vA@mail.gmail.com>
+In-Reply-To: <20190328203518.12100-1-sebastien.bourdelin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, trivial@kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---pkvbogoca7lsguzq
-Content-Type: text/plain; charset=iso-8859-1
+--wepqn5kyeknu4t3h
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 05, 2019 at 10:35:08PM +0800, Chen-Yu Tsai wrote:
-> On Fri, Apr 5, 2019 at 5:02 PM Maxime Ripard <maxime.ripard@bootlin.com> =
-wrote:
-> >
-> > On Thu, Apr 04, 2019 at 03:57:36PM +0200, Cl=E9ment P=E9ron wrote:
-> > > Allwinner H6 has a watchog compatible with A31.
-> > >
-> > > Declare it in the device tree.
-> > >
-> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> >
-> > Applied both, thanks!
-> > Maxime
->
-> IIRC there are 3 watchdogs on the H6. One is the trusted watchdog,
-> which should be reserved for underlying firmware.
->
-> The other two are the normal and R-block watchdog. Although they
-> look the same, the "normal" one can't reset the system. :(
-> That one is actually the one ATF currently uses. So reboot doesn't
-> work on the H6.
+Hi,
 
-So that patch will not do anything then?
+On Thu, Mar 28, 2019 at 04:35:18PM -0400, Sebastien Bourdelin wrote:
+> Fix the example documentation which is missing a semi-colon.
+>=20
+> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/power/supply/gpio-charger.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.=
+txt b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+> index adbb5dc5b6e9..ddf7b7b971e1 100644
+> --- a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+> @@ -20,7 +20,7 @@ Example:
+>  		compatible =3D "gpio-charger";
+>  		charger-type =3D "usb-sdp";
+>  		gpios =3D <&gpf0 2 0 0 0>;
+> -	}
+> +	};
+> =20
+>  	battery {
+>  		power-supplies =3D <&usb_charger>;
+> --=20
+> 2.20.1
+>=20
 
-Maxime
+Thanks, queued.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-- Sebastian
 
---pkvbogoca7lsguzq
+--wepqn5kyeknu4t3h
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKdrHQAKCRDj7w1vZxhR
-xbAHAQDEUVZRqYJcVX7yu9AeSwY+8lqN0DYIYtAlCkdi4hLzKQD/bOWbNi9pgTc7
-Q2pSP7FYsD7gv+HpuJabgN0ds6D2/gQ=
-=sg6Y
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlynbBMACgkQ2O7X88g7
++pqViRAAo72q+SntauFv4VqYQR6nq1rukGbCNCYWqdn1DW8iSGQQNWJbtq+jJ7lC
+eWcrAMYx64tGioMfW0WRhJLPjXC393h7XRG4LvCUJDXBxzl6Yx7gDA0DkyEZpJMH
+OLxgTK7NNmS3fSdtPkwi90C+QOKV013Ci/HBpoEX35b1Jrx/Z58q3mHrxCstFW5j
+qgHvnUslid4LTpHnbLF3UfdG2a9cmXLrpdooUxaJ3khIbo1KKcU56UR1raXuwQvZ
+bJUZx3SkDUowr/FhaoyWNEFWYwWG0fHgXtoi5aUu4TMGu7xgZz23gsXOh+y3UD48
+UIq1qwhMBe6X+f3JenzGwdZcL0qw/jlwtFZGST/qhb2aLTxbsyfw86JNm8ogUgBN
+b3FrH81iMPTzHEVJP5oLSSYHqHoq+iOXB6vuu8FtpwUxR1Mw6ULESV2qyBKv5lDC
+43cT+UAwAYGrMg7tMA5RqXMQH4CjTA4zWUNvY8jL7oADFrZkFtGNHWsCQwwm/RnU
+dHuc6Frn5JL9DJxXxsVXtLlKfVgrUr6wjoNWkG19p8i9GhRimFN67IH/nYViJLpU
+LMskOjETonKzy6+ubpEclSpJGtW1LyS+dAiNaCWlbwaRGa0+FDkW62Uwiyz0+Bgn
+Px/ZR6dYskChIQAJEGx47BwJ2/OVGrdSx3N7bbnWWtF+z9igHsU=
+=uV8j
 -----END PGP SIGNATURE-----
 
---pkvbogoca7lsguzq--
+--wepqn5kyeknu4t3h--
