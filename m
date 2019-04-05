@@ -1,80 +1,56 @@
-From: Philippe CORNU <philippe.cornu@st.com>
-Subject: Re: [PATCH v1 2/5] drm/stm: dw_mipi_dsi-stm: add support of an
- optional regulator
-Date: Fri, 5 Apr 2019 16:34:35 +0000
-Message-ID: <f66fe75c-c288-82ef-71d7-5d15b9b8e4b3@st.com>
-References: <1554279389-27377-1-git-send-email-yannick.fertre@st.com>
- <1554279389-27377-3-git-send-email-yannick.fertre@st.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v2 5/5] ARM: dts: sun50i: h6: Introduce Beelink GS1 board
+Date: Fri, 5 Apr 2019 18:40:23 +0200
+Message-ID: <CAJiuCcdVsiKRxLFKnmAPnApi2EJANbuQf9WUESGE+LBP8zpD+A@mail.gmail.com>
+References: <20190405122446.2101-1-peron.clem@gmail.com> <20190405122446.2101-5-peron.clem@gmail.com>
+ <CAJiuCcfbnR+Jfj8Je_4HwgycCBEe92sx6zqwqgXpeiMe2jKL-Q@mail.gmail.com> <20190405151100.jjjg55z7sg35ijxw@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1554279389-27377-3-git-send-email-yannick.fertre@st.com>
-Content-Language: en-US
-Content-ID: <1ED47A6DDFC244478BDD886D005658FD@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yannick FERTRE <yannick.fertre@st.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, David
- Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190405151100.jjjg55z7sg35ijxw@flea>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDQvMy8xOSAxMDoxNiBBTSwgWWFubmljayBGZXJ0csOpIHdyb3RlOg0KPiBBZGQgc3Vw
-cG9ydCBvZiBhbiBvcHRpb25hbCByZWd1bGF0b3IgZm9yIHRoZSBwaHkgcGFydCBvZiB0aGUgRFNJ
-DQo+IGNvbnRyb2xsZXIuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBZYW5uaWNrIEZlcnRyw6kgPHlh
-bm5pY2suZmVydHJlQHN0LmNvbT4NCj4gLS0tDQo+ICAgZHJpdmVycy9ncHUvZHJtL3N0bS9kd19t
-aXBpX2RzaS1zdG0uYyB8IDIwICsrKysrKysrKysrKysrKysrKysrDQo+ICAgMSBmaWxlIGNoYW5n
-ZWQsIDIwIGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
-c3RtL2R3X21pcGlfZHNpLXN0bS5jIGIvZHJpdmVycy9ncHUvZHJtL3N0bS9kd19taXBpX2RzaS1z
-dG0uYw0KPiBpbmRleCBhNjcyYjU5Li44NDcwM2QwIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vc3RtL2R3X21pcGlfZHNpLXN0bS5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdG0v
-ZHdfbWlwaV9kc2ktc3RtLmMNCj4gQEAgLTksNiArOSw3IEBADQo+ICAgI2luY2x1ZGUgPGxpbnV4
-L2Nsay5oPg0KPiAgICNpbmNsdWRlIDxsaW51eC9pb3BvbGwuaD4NCj4gICAjaW5jbHVkZSA8bGlu
-dXgvbW9kdWxlLmg+DQo+ICsjaW5jbHVkZSA8bGludXgvcmVndWxhdG9yL2NvbnN1bWVyLmg+DQo+
-ICAgI2luY2x1ZGUgPGRybS9kcm1QLmg+DQo+ICAgI2luY2x1ZGUgPGRybS9kcm1fbWlwaV9kc2ku
-aD4NCj4gICAjaW5jbHVkZSA8ZHJtL2JyaWRnZS9kd19taXBpX2RzaS5oPg0KPiBAQCAtNzYsNiAr
-NzcsNyBAQCBzdHJ1Y3QgZHdfbWlwaV9kc2lfc3RtIHsNCj4gICAJdTMyIGh3X3ZlcnNpb247DQo+
-ICAgCWludCBsYW5lX21pbl9rYnBzOw0KPiAgIAlpbnQgbGFuZV9tYXhfa2JwczsNCj4gKwlzdHJ1
-Y3QgcmVndWxhdG9yICp2ZGRfc3VwcGx5Ow0KPiAgIH07DQo+ICAgDQo+ICAgc3RhdGljIGlubGlu
-ZSB2b2lkIGRzaV93cml0ZShzdHJ1Y3QgZHdfbWlwaV9kc2lfc3RtICpkc2ksIHUzMiByZWcsIHUz
-MiB2YWwpDQo+IEBAIC0zMTgsMTYgKzMyMCwzMiBAQCBzdGF0aWMgaW50IGR3X21pcGlfZHNpX3N0
-bV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgIAkJcmV0dXJuIFBUUl9F
-UlIoZHNpLT5iYXNlKTsNCj4gICAJfQ0KPiAgIA0KPiArCWRzaS0+dmRkX3N1cHBseSA9IGRldm1f
-cmVndWxhdG9yX2dldF9vcHRpb25hbChkZXYsICJwaHktZHNpIik7DQo+ICsJaWYgKElTX0VSUihk
-c2ktPnZkZF9zdXBwbHkpKSB7DQo+ICsJCXJldCA9IFBUUl9FUlIoZHNpLT52ZGRfc3VwcGx5KTsN
-Cj4gKwkJaWYgKHJldCAhPSAtRVBST0JFX0RFRkVSKQ0KPiArCQkJZGV2X2VycihkZXYsICJmYWls
-ZWQgdG8gcmVxdWVzdCByZWd1bGF0b3I6ICVkXG4iLCByZXQpOw0KPiArCQlyZXR1cm4gcmV0Ow0K
-PiArCX0NCj4gKw0KPiArCXJldCA9IHJlZ3VsYXRvcl9lbmFibGUoZHNpLT52ZGRfc3VwcGx5KTsN
-Cj4gKwlpZiAocmV0KSB7DQo+ICsJCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSByZWd1
-bGF0b3I6ICVkXG4iLCByZXQpOw0KPiArCQlyZXR1cm4gcmV0Ow0KPiArCX0NCj4gKw0KPiAgIAlk
-c2ktPnBsbHJlZl9jbGsgPSBkZXZtX2Nsa19nZXQoZGV2LCAicmVmIik7DQo+ICAgCWlmIChJU19F
-UlIoZHNpLT5wbGxyZWZfY2xrKSkgew0KPiAgIAkJcmV0ID0gUFRSX0VSUihkc2ktPnBsbHJlZl9j
-bGspOw0KPiAgIAkJZGV2X2VycihkZXYsICJVbmFibGUgdG8gZ2V0IHBsbCByZWZlcmVuY2UgY2xv
-Y2s6ICVkXG4iLCByZXQpOw0KPiArCQlyZWd1bGF0b3JfZGlzYWJsZShkc2ktPnZkZF9zdXBwbHkp
-Ow0KPiAgIAkJcmV0dXJuIHJldDsNCj4gICAJfQ0KPiAgIA0KPiAgIAlyZXQgPSBjbGtfcHJlcGFy
-ZV9lbmFibGUoZHNpLT5wbGxyZWZfY2xrKTsNCj4gICAJaWYgKHJldCkgew0KPiAgIAkJZGV2X2Vy
-cihkZXYsICIlczogRmFpbGVkIHRvIGVuYWJsZSBwbGxyZWZfY2xrXG4iLCBfX2Z1bmNfXyk7DQo+
-ICsJCXJlZ3VsYXRvcl9kaXNhYmxlKGRzaS0+dmRkX3N1cHBseSk7DQo+ICAgCQlyZXR1cm4gcmV0
-Ow0KPiAgIAl9DQo+ICAgDQo+IEBAIC0zMzksNiArMzU3LDcgQEAgc3RhdGljIGludCBkd19taXBp
-X2RzaV9zdG1fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gICAJZHNpLT5k
-c2kgPSBkd19taXBpX2RzaV9wcm9iZShwZGV2LCAmZHdfbWlwaV9kc2lfc3RtX3BsYXRfZGF0YSk7
-DQo+ICAgCWlmIChJU19FUlIoZHNpLT5kc2kpKSB7DQo+ICAgCQlEUk1fRVJST1IoIkZhaWxlZCB0
-byBpbml0aWFsaXplIG1pcGkgZHNpIGhvc3RcbiIpOw0KPiArCQlyZWd1bGF0b3JfZGlzYWJsZShk
-c2ktPnZkZF9zdXBwbHkpOw0KPiAgIAkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRzaS0+cGxscmVm
-X2Nsayk7DQo+ICAgCQlyZXR1cm4gUFRSX0VSUihkc2ktPmRzaSk7DQo+ICAgCX0NCj4gQEAgLTM1
-MSw2ICszNzAsNyBAQCBzdGF0aWMgaW50IGR3X21pcGlfZHNpX3N0bV9yZW1vdmUoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqcGRldikNCj4gICAJc3RydWN0IGR3X21pcGlfZHNpX3N0bSAqZHNpID0g
-cGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7DQo+ICAgDQo+ICAgCWNsa19kaXNhYmxlX3VucHJl
-cGFyZShkc2ktPnBsbHJlZl9jbGspOw0KPiArCXJlZ3VsYXRvcl9kaXNhYmxlKGRzaS0+dmRkX3N1
-cHBseSk7DQoNCkRlYXIgWWFubmljaywNCg0KQWNrZWQtYnk6IFBoaWxpcHBlIENvcm51IDxwaGls
-aXBwZS5jb3JudUBzdC5jb20+DQoNClBoaWxpcHBlDQoNCj4gICAJZHdfbWlwaV9kc2lfcmVtb3Zl
-KGRzaS0+ZHNpKTsNCj4gICANCj4gICAJcmV0dXJuIDA7DQo+IApfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Hi,
+
+On Fri, 5 Apr 2019 at 17:11, Maxime Ripard <maxime.ripard@bootlin.com> wrot=
+e:
+>
+> On Fri, Apr 05, 2019 at 02:53:35PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Hi,
+> >
+> > Adding this r_pio regulators make a new error in the bootlog :
+> >
+> > [    0.346843] sun50i-h6-r-pinctrl 7022000.pinctrl: Couldn't get bank
+> > PL regulator
+> > [    0.346853] sun50i-h6-r-pinctrl 7022000.pinctrl: request() failed fo=
+r pin 352
+> > [    0.346862] sun50i-h6-r-pinctrl 7022000.pinctrl: pin-352
+> > (7081400.i2c) status -517
+> > [    0.346871] sun50i-h6-r-pinctrl 7022000.pinctrl: could not request
+> > pin 352 (PL0) from group PL0  on device 7022000.pinctrl
+> > [    0.346878] mv64xxx_i2c 7081400.i2c: Error applying setting,
+> > reverse things back
+> >
+> > PL0 and PL1 are SCK/SDA for the PMIC :(
+>
+> How was this DT tested then?
+
+There was a mistake when I tested the patch v2 and only saw this after
+posting the patch.
+
+Can I submit a V3 without pio / r_pio regulators ? (+ the yaml patch separa=
+ted)
+
+Thanks,
+
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
