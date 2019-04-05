@@ -1,88 +1,70 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH V4 2/4] drivers/perf: imx_ddr: Add ddr performance
- counter support
-Date: Fri, 5 Apr 2019 16:03:19 +0100
-Message-ID: <20190405150319.GA7704@fuggles.cambridge.arm.com>
-References: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
- <1550253761-26841-2-git-send-email-Frank.Li@nxp.com>
- <20190404111714.GA26392@fuggles.cambridge.arm.com>
- <CAHrpEqT67OpeGXB7wgYSsTD9ibG_jk7xO5zMFyxcG5PHFP-bJg@mail.gmail.com>
- <20190405143846.GB7313@fuggles.cambridge.arm.com>
- <CAHrpEqSerorArZwSgj5qkFQQgwit5mqPWp5DD6PmYJiLejPJfw@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] ARM: dts: sun8i: tbs-a711: Enable
+ UART2 (for NEO-6M GPS module)
+Date: Fri, 5 Apr 2019 17:07:06 +0200
+Message-ID: <20190405150706.jyeght2bbw7xgxf7@flea>
+References: <20190401115616.21337-1-megous@megous.com>
+ <20190401115616.21337-6-megous@megous.com>
+ <20190404124322.aejij7qomgoco37u@core.my.home>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="uwakmiup36vvgwaj"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBHO6TXSQKGQEANUKKHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CAHrpEqSerorArZwSgj5qkFQQgwit5mqPWp5DD6PmYJiLejPJfw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zhi Li <lznuaa@gmail.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Frank Li <frank.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20190404124322.aejij7qomgoco37u-9v8tmBix7cb9zxVx7UNMDg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: wens-jdAy2FN1RRM@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 09:58:38AM -0500, Zhi Li wrote:
-> On Fri, Apr 5, 2019 at 9:38 AM Will Deacon <will.deacon@arm.com> wrote:
-> > On Fri, Apr 05, 2019 at 09:34:38AM -0500, Zhi Li wrote:
-> > > On Thu, Apr 4, 2019 at 6:17 AM Will Deacon <will.deacon@arm.com> wrote:
-> > > > On Fri, Feb 15, 2019 at 06:03:11PM +0000, Frank Li wrote:
-> > > > > Add ddr performance monitor support for iMX8QXP
-> > > > >
-> > > > > There are 4 counters for ddr perfomance events.
-> > > > > counter 0 is dedicated for cycles.
-> > > > > you choose any up to 3 no cycles events.
-> > > > >
-> > > > > for example:
-> > > > >
-> > > > > perf stat -a -e ddr0/read-access/,ddr0/write-access/,ddr0/precharge/ ls
-> > > > > perf stat -a -e ddr0/cycles/,ddr0/read-access/,ddr0/write-access/ ls
-> > > >
-> > > > Could you elaborate a bit on DDR_CAP_AXI_ID, please? Specifically, how
-> 
-> Only imx845 have AXID filter capability now.
-> 
-> > > > does the COUNTER_DPCR1 register work and what happens if I specify two
-> > > > simultaneous events with different values in config1? I'm a little wary
-> 
-> There are difference match register for each event.
-> 1. Read event with config 1 A
-> 2. Read event with config 1 B
-> 
-> 1 will show read count with filter A
-> 2 will show read count with filter B.
 
-Thanks, that makes sense, but I can't see how that corresponds to the code
-in the patch:
+--uwakmiup36vvgwaj
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-+static void ddr_perf_event_start(struct perf_event *event, int flags)
-+{
-+	struct ddr_pmu *pmu = to_ddr_pmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	int counter = hwc->idx;
-+
-+	if (pmu->flags & DDR_CAP_AXI_ID) {
-+		if (event->attr.config == EVENT_AXI_READ ||
-+		    event->attr.config == EVENT_AXI_WRITE) {
-+			int val = event->attr.config1;
-+
-+			writel(val, pmu->base + COUNTER_DPCR1);
-+		}
-+	}
-+
-+	local64_set(&hwc->prev_count, 0);
-+
-+	ddr_perf_event_enable(pmu, event->attr.config, counter, true);
+On Thu, Apr 04, 2019 at 02:43:22PM +0200, Ond=C5=99ej Jirman wrote:
+> Hello Maxime,
+>
+> On Mon, Apr 01, 2019 at 01:56:16PM +0200, megous via linux-sunxi wrote:
+> > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> >
+> > TBS A711 tablet contains u-blox NEO-6M module connected to UART2.
+> > Enable UART2 to gain access to the module from userspace.
+>
+> Other GPS bits are now applied (thank you, Johan), so if this last bit
+> can go in too via a sunxi tree, the series will be complete.
 
-ddr_perf_event_enable() does what you'd expect, and uses hwc->idx to
-allocate a counter, but the code before it just always writes to DPCR1.
+Applied, thanks!
+Maxime
 
-What am I missing?
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Will
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--uwakmiup36vvgwaj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKdvGgAKCRDj7w1vZxhR
+xRxXAQC03Gta5to+qN1+5WtOWtjTcudQ9DDHqL2MXyLIF7+XngEAmb8woERoUW7A
+2uUvjtVRFN+dv8zaqPe/H1grGjLfPQY=
+=DaMZ
+-----END PGP SIGNATURE-----
+
+--uwakmiup36vvgwaj--
