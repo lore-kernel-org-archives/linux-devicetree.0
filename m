@@ -1,148 +1,107 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 2/2] ARM: dts: sun50i: h6: Introduce Beelink GS1 board
-Date: Fri, 5 Apr 2019 11:08:36 +0200
-Message-ID: <20190405090836.cyz2eabxpqjgesig@flea>
-References: <20190404124504.11137-1-peron.clem@gmail.com>
- <20190404124504.11137-2-peron.clem@gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: mtd: sunxi: Add new compatible
+Date: Fri, 5 Apr 2019 11:13:02 +0200
+Message-ID: <20190405091302.mz3gox5jvoy3ygjr@flea>
+References: <20190404162111.22618-1-miquel.raynal@bootlin.com>
+ <20190404162111.22618-2-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6yy35wrlg3teogrf"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190404124504.11137-2-peron.clem@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============2867152221007077147=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190404162111.22618-2-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---6yy35wrlg3teogrf
-Content-Type: text/plain; charset=iso-8859-1
+--===============2867152221007077147==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="n5ypdkjqsjaubm4k"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+
+
+--n5ypdkjqsjaubm4k
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 Hi,
 
-On Thu, Apr 04, 2019 at 02:45:04PM +0200, Cl=E9ment P=E9ron wrote:
-> Beelink GS1 is an Allwinner H6 based TV box,
-> which support:
-> - Allwinner H6 Quad-core 64-bit ARM Cortex-A53
-> - GPU Mali-T720
-> - 2GB LPDDR3 RAM
-> - AXP805 PMIC
-> - 1Gbps GMAC via RTL8211E
-> - FN-Link 6222B-SRB Wifi/BT
-> - 1x USB 2.0 Host and 1x USB 3.0 Host
-> - HDMI port
-> - S/PDIF Tx
-> - IR receiver
-> - 5V/2A DC power supply
+On Thu, Apr 04, 2019 at 06:21:09PM +0200, Miquel Raynal wrote:
+> The A33 NAND controller is slightly different than the A10+ ones,
+> eg. DMA handling is a bit different and a few register offsets
+> changed.
 >
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> Introduce a new compatible to represent this version of the IP.
+>
+> Also append '-controller' to the new compatible (which is required for
+> new compatibles) as this is describing a NAND controller and not a
+> NAND chip.
+
+Out of curiosity, why are you requiring that suffix now?
+
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > ---
+>  Documentation/devicetree/bindings/mtd/sunxi-nand.txt | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 >
-> Thanks to Jagan and Icenowy, most of this devicetree is taken from their =
-works on
-> the OrangePi One Plus and Pine H64.
+> diff --git a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+> index dcd5a5d80dc0..6128d41d8c59 100644
+> --- a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+> @@ -1,7 +1,12 @@
+>  Allwinner NAND Flash Controller (NFC)
 >
->  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
->  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   | 252 ++++++++++++++++++
->  2 files changed, 253 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.d=
-ts
->
-> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts=
-/allwinner/Makefile
-> index e4dce2f6fa3a..2dd806a3d5c9 100644
-> --- a/arch/arm64/boot/dts/allwinner/Makefile
-> +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> @@ -20,6 +20,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-pc2.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-prime.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus2.dtb
-> +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-beelink-gs1.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-lite2.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-one-plus.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-pine-h64.dtb
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/ar=
-ch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> new file mode 100644
-> index 000000000000..d927e7d33bf3
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> @@ -0,0 +1,252 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> +/*
-> + * Copyright (C) 2019 Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sun50i-h6.dtsi"
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +
-> +/ {
-> +	model =3D "Beelink GS1";
-> +	compatible =3D "azw,beelink-gs1", "allwinner,sun50i-h6";
+>  Required properties:
+> -- compatible : "allwinner,sun4i-a10-nand".
+> +- compatible : Must be one of:
+> +	       - "allwinner,sun4i-a10-nand"
+> +	       - "allwinner,sun8i-a33-nand-controller"
+> +	       The former may be used by all IPs, however sun8i family
+> +	       will need the second one in order to make use of the
+> +	       internal DMA capabilities.
 
-Please add that board to
-Documentation/devicetree/bindings/arm/sunxi.yaml, it's new and in
-linux-next.
+I'm not sure we should have that statement. We have no idea whether or
+not this can be used by all IPs *today*, and we surely don't know
+about the one that are going to come out.
 
-> +&mmc0 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&mmc0_pins>;
-> +	vmmc-supply =3D <&reg_cldo1>;
-> +	cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>;
-> +	bus-width =3D <4>;
-> +	status =3D "okay";
-> +};
-> +
-> +&mmc2 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&mmc2_pins>;
-
-If those (mmc0 and mmc2_pins) are the only muxing options as their
-names suggests, it should be set in the DTSI.
-
-If not, the name of the pin group should be changed.
-
-> +			reg_cldo2: cldo2 {
-> +				regulator-always-on;
-> +				regulator-min-microvolt =3D <3300000>;
-> +				regulator-max-microvolt =3D <3300000>;
-> +				regulator-name =3D "vcc-wifi-1";
-> +			};
-> +
-> +			reg_cldo3: cldo3 {
-> +				regulator-always-on;
-> +				regulator-min-microvolt =3D <3300000>;
-> +				regulator-max-microvolt =3D <3300000>;
-> +				regulator-name =3D "vcc-wifi-2";
-> +			};
-
-I don't see any SDIO bus declared, why do you need those regulators on?
-
-Can you also declare the PIO regulators?
-
-Thanks!
-Maxmie
+Maxime
 
 --
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---6yy35wrlg3teogrf
+--n5ypdkjqsjaubm4k
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKcbFAAKCRDj7w1vZxhR
-xUWRAQDMdLGDuUZ7lVOmzhAdMIIdH16CRE63HKc/jJml0U0W9QEA6CdLF9RgAEbw
-uyi6nnpeKJthCHYeLGifRcIUYTqpiQM=
-=PhuJ
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKccHgAKCRDj7w1vZxhR
+xa80AQCcHxhF219b8x6s7hM0Ssg6zRuiugU4hDaSXzomyl/k1gD9EAt1ela1CmX7
+bglrHBGB+HKxRtLtyx5bUWp7SecAoA4=
+=c303
 -----END PGP SIGNATURE-----
 
---6yy35wrlg3teogrf--
+--n5ypdkjqsjaubm4k--
+
+
+--===============2867152221007077147==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2867152221007077147==--
