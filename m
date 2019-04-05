@@ -1,119 +1,72 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v3 2/2] driver: clocksource: Add nxp system counter timer
- driver support
-Date: Sat, 6 Apr 2019 00:12:16 +0200 (CEST)
-Message-ID: <alpine.DEB.2.21.1904060003140.1802@nanos.tec.linutronix.de>
-References: <1554287101-16189-1-git-send-email-ping.bai@nxp.com> <1554287101-16189-2-git-send-email-ping.bai@nxp.com>
+From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: [PATCH 00/12] Add support for Orange Pi 3
+Date: Sat,  6 Apr 2019 01:45:02 +0200
+Message-ID: <20190405234514.6183-1-megous@megous.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554287101-16189-2-git-send-email-ping.bai@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacky Bai <ping.bai@nxp.com>
-Cc: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBEWRT7SQKGQEW66UC4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm802
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 3 Apr 2019, Jacky Bai wrote:
+From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-> From: Bai Ping <ping.bai@nxp.com>
-> 
-> The system counter (sys_ctr) is a programmable system counter
-> which provides a shared time base to the Cortex A15, A7, A53 etc cores.
-> It is intended for use in applications where the counter is always
-> powered on and supports multiple, unrelated clocks. The sys_ctr hardware
-> supports:
->  - 56-bit counter width (roll-over time greater than 40 years)
->  - compare frame(64-bit compare value) contains programmable interrupt
->    generation
+This series implements support for Xunlong Orange Pi 3 board.
 
-I hope that's a <= compare and not a == ....
+Unfortunately, this board needs some small driver patches, so I have
+split the boards DT patch into chunks that require patches for drivers
+in various subsystems:
 
-> +static void sysctr_timer_enable(bool enable)
-> +{
-> +	u32 val;
-> +
-> +	val = readl(sys_ctr_base + CMPCR);
-> +	val &= ~SYS_CTR_EN;
-> +	if (enable)
-> +		val |= SYS_CTR_EN;
-> +
-> +	writel(val, sys_ctr_base + CMPCR);
+- Basic DT for the board  (patch 1)
+- HDMI support            (patches 2, 3, 4)
+- Ethernet support        (patches 5, 6, 7)
+- WiFi support            (patches 8, 9, 10, 11, 12)
 
-This read is really just overhead. Why aren't you caching the control
-register value? It's not a self modifying register and I don't see
-concurrency here either.
+This patch is also needed to not get segfault on boot: 
+  https://lkml.org/lkml/2019/4/5/856
 
-> +}
-> +
-> +static void sysctr_irq_acknowledge(void)
-> +{
-> +	/*
-> +	 * clear the enable bit(EN =0) will clear
-> +	 * the status bit(ISTAT = 0), then the interrupt
-> +	 * signal will be negated(acknowledged).
-> +	 */
-> +	sysctr_timer_enable(false);
-> +}
-> +
-> +static inline u64 sysctr_read_counter(void)
-> +{
-> +	u32 cnt_hi, tmp_hi, cnt_lo;
-> +
-> +	do {
-> +		cnt_hi = readl_relaxed(sys_ctr_base + CNTCV_HI);
-> +		cnt_lo = readl_relaxed(sys_ctr_base + CNTCV_LO);
-> +		tmp_hi = readl_relaxed(sys_ctr_base + CNTCV_HI);
-> +	} while (tmp_hi != cnt_hi);
+Please take a look.
 
-When will hardware people finally get it? Is it so damned hard to make the
-readout do:
+regards,
+  Ondrej Jirman
 
-	lo = read_lo()		-> internally latches HI in hardware
-	hi = read_hi()		-> reads the latched value
+Icenowy Zheng (2):
+  net: stmmac: sun8i: add support for Allwinner H6 EMAC
+  net: stmmac: sun8i: force select external PHY when no internal one
 
-It's not rocket science, but it would spare these horrible read loops. But
-sure, performance happens in whitepapers and marketing slides ....
+Ondrej Jirman (10):
+  arm64: dts: allwinner: h6: Add Orange Pi 3 DTS
+  drm: sun4i: Add support for enabling DDC I2C bus to dw_hdmi glue
+  dt-bindings: display: sun4i-drm: Add DDC power supply
+  arm64: dts: allwinner: orange-pi-3: Enable HDMI output
+  arm64: dts: allwinner: orange-pi-3: Enable ethernet
+  arm64: dts: allwinner: h6: Add MMC1 pins
+  pinctrl: sunxi: Prepare for alternative bias voltage setting methods
+  pinctrl: sunxi: Support I/O bias voltage setting on H6
+  brcmfmac: Loading the correct firmware for brcm43456
+  arm64: dts: allwinner: orange-pi-3: Enable WiFi
 
-> +
-> +	return  ((u64) cnt_hi << 32) | cnt_lo;
-> +}
-> +
-> +static int sysctr_set_next_event(unsigned long delta,
-> +				 struct clock_event_device *evt)
-> +{
-> +	u32 cmp_hi, cmp_lo;
-> +	u64 next;
-> +
-> +	sysctr_timer_enable(false);
-> +
-> +	next = sysctr_read_counter();
-> +
-> +	next += delta;
-> +
-> +	cmp_hi = (next >> 32) & 0x00fffff;
-> +	cmp_lo = next & 0xffffffff;
-> +
-> +	writel_relaxed(cmp_hi, sys_ctr_base + CMPCV_HI);
-> +	writel_relaxed(cmp_lo, sys_ctr_base + CMPCV_LO);
+ .../bindings/display/sunxi/sun4i-drm.txt      |   1 +
+ arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 339 ++++++++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |   9 +
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         |  17 +-
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |   1 +
+ .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c |  22 ++
+ .../broadcom/brcm80211/brcmfmac/sdio.c        |   4 +-
+ drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c     |   1 +
+ drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c     |   2 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c         |  50 ++-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h         |   7 +-
+ 12 files changed, 433 insertions(+), 21 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
 
-Please document that this is a <= comparator. If that's not true then this
-function is broken for small deltas and delays between read_counter() and
-enable.
-
-> +
-> +	sysctr_timer_enable(true);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sysctr_set_state_oneshot(struct clock_event_device *evt)
-> +{
-> +	sysctr_timer_enable(true);
-
-That's wrong. Why do you want to enable the timer here? When the state is
-set to one shot then the next operation is set_next_event() but before that
-nothing should ever come out of the timer.
-
-Thanks,
-
-	tglx
+-- 
+2.21.0
