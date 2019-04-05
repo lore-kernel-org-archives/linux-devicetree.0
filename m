@@ -1,62 +1,219 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v3 03/25] dt-bindings: leds: Add LED_COLOR_ID definitions
-Date: Thu, 4 Apr 2019 20:12:03 -0500
-Message-ID: <440de7d8-6acd-fb5a-3607-ba3c0a99f894@ti.com>
-References: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
- <20190331175501.23471-4-jacek.anaszewski@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: meson: axg-tdm-formatter: rework quirks settings" to the asoc tree
+Date: Fri,  5 Apr 2019 09:43:08 +0700 (+07)
+Message-ID: <20190405024308.E0EA0441D3C@finisterre.ee.mobilebroadband>
+References: <20190404111733.28705-6-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190331175501.23471-4-jacek.anaszewski@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190404111733.28705-6-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Maxime Jourdan <mjourdan@baylibre.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.orgalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Jacek
+The patch
 
-On 3/31/19 12:54 PM, Jacek Anaszewski wrote:
-> Add common LED color identifiers for use in Device Tree.
-> 
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Baolin Wang <baolin.wang@linaro.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Cc: Daniel Mack <daniel@zonque.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Cc: Simon Shields <simon@lineageos.org>
-> ---
->  include/dt-bindings/leds/common.h | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
-> index 0325db5b4208..c95f39b3a254 100644
-> --- a/include/dt-bindings/leds/common.h
-> +++ b/include/dt-bindings/leds/common.h
-> @@ -55,4 +55,15 @@
->  #define LED_FUNCTION_WLAN "wlan"
->  #define LED_FUNCTION_WPS "wps"
->  
-> +/* Standard LED colors */
-> +#define LED_COLOR_ID_WHITE	0
-> +#define LED_COLOR_ID_RED	1
-> +#define LED_COLOR_ID_GREEN	2
-> +#define LED_COLOR_ID_BLUE	3
-> +#define LED_COLOR_ID_AMBER	4
-> +#define LED_COLOR_ID_VIOLET	5
-> +#define LED_COLOR_ID_YELLOW	6
-> +#define LED_COLOR_ID_IR		7
-> +#define LED_COLOR_ID_COUNT	8
-> +
->  #endif /* __DT_BINDINGS_LEDS_H */
-> 
+   ASoC: meson: axg-tdm-formatter: rework quirks settings
 
-Reviewed-by: Dan Murphy <dmurphy@ti.com>
+has been applied to the asoc tree at
 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From f01bc67f58fde599b48d2dde5d0f48dccd84c4f1 Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Thu, 4 Apr 2019 13:17:32 +0200
+Subject: [PATCH] ASoC: meson: axg-tdm-formatter: rework quirks settings
+
+The g12a tdmout requires a different signal skew offset than the axg.
+With this change, the skew offset is added as a parameter of the tdm
+formatters to prepare the addition of the g12a support.
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/meson/axg-tdm-formatter.c |  6 ++++--
+ sound/soc/meson/axg-tdm-formatter.h | 11 +++++++++--
+ sound/soc/meson/axg-tdmin.c         | 16 +++++++++++-----
+ sound/soc/meson/axg-tdmout.c        | 16 +++++++++++-----
+ 4 files changed, 35 insertions(+), 14 deletions(-)
+
+diff --git a/sound/soc/meson/axg-tdm-formatter.c b/sound/soc/meson/axg-tdm-formatter.c
+index 43e390f9358a..0c6cce5c5773 100644
+--- a/sound/soc/meson/axg-tdm-formatter.c
++++ b/sound/soc/meson/axg-tdm-formatter.c
+@@ -68,7 +68,7 @@ EXPORT_SYMBOL_GPL(axg_tdm_formatter_set_channel_masks);
+ static int axg_tdm_formatter_enable(struct axg_tdm_formatter *formatter)
+ {
+ 	struct axg_tdm_stream *ts = formatter->stream;
+-	bool invert = formatter->drv->invert_sclk;
++	bool invert = formatter->drv->quirks->invert_sclk;
+ 	int ret;
+ 
+ 	/* Do nothing if the formatter is already enabled */
+@@ -85,7 +85,9 @@ static int axg_tdm_formatter_enable(struct axg_tdm_formatter *formatter)
+ 		return ret;
+ 
+ 	/* Setup the stream parameter in the formatter */
+-	ret = formatter->drv->ops->prepare(formatter->map, formatter->stream);
++	ret = formatter->drv->ops->prepare(formatter->map,
++					   formatter->drv->quirks,
++					   formatter->stream);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/sound/soc/meson/axg-tdm-formatter.h b/sound/soc/meson/axg-tdm-formatter.h
+index cf947caf3cb1..9ef98e955cb2 100644
+--- a/sound/soc/meson/axg-tdm-formatter.h
++++ b/sound/soc/meson/axg-tdm-formatter.h
+@@ -14,18 +14,25 @@ struct regmap;
+ struct snd_soc_dapm_widget;
+ struct snd_kcontrol;
+ 
++struct axg_tdm_formatter_hw {
++	unsigned int skew_offset;
++	bool invert_sclk;
++};
++
+ struct axg_tdm_formatter_ops {
+ 	struct axg_tdm_stream *(*get_stream)(struct snd_soc_dapm_widget *w);
+ 	void (*enable)(struct regmap *map);
+ 	void (*disable)(struct regmap *map);
+-	int (*prepare)(struct regmap *map, struct axg_tdm_stream *ts);
++	int (*prepare)(struct regmap *map,
++		       const struct axg_tdm_formatter_hw *quirks,
++		       struct axg_tdm_stream *ts);
+ };
+ 
+ struct axg_tdm_formatter_driver {
+ 	const struct snd_soc_component_driver *component_drv;
+ 	const struct regmap_config *regmap_cfg;
+ 	const struct axg_tdm_formatter_ops *ops;
+-	bool invert_sclk;
++	const struct axg_tdm_formatter_hw *quirks;
+ };
+ 
+ int axg_tdm_formatter_set_channel_masks(struct regmap *map,
+diff --git a/sound/soc/meson/axg-tdmin.c b/sound/soc/meson/axg-tdmin.c
+index bbac44c81688..a790f925a4ef 100644
+--- a/sound/soc/meson/axg-tdmin.c
++++ b/sound/soc/meson/axg-tdmin.c
+@@ -107,21 +107,22 @@ static void axg_tdmin_disable(struct regmap *map)
+ 	regmap_update_bits(map, TDMIN_CTRL, TDMIN_CTRL_ENABLE, 0);
+ }
+ 
+-static int axg_tdmin_prepare(struct regmap *map, struct axg_tdm_stream *ts)
++static int axg_tdmin_prepare(struct regmap *map,
++			     const struct axg_tdm_formatter_hw *quirks,
++			     struct axg_tdm_stream *ts)
+ {
+-	unsigned int val = 0;
++	unsigned int val, skew = quirks->skew_offset;
+ 
+ 	/* Set stream skew */
+ 	switch (ts->iface->fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+ 	case SND_SOC_DAIFMT_I2S:
+ 	case SND_SOC_DAIFMT_DSP_A:
+-		val |= TDMIN_CTRL_IN_BIT_SKEW(3);
++		skew += 1;
+ 		break;
+ 
+ 	case SND_SOC_DAIFMT_LEFT_J:
+ 	case SND_SOC_DAIFMT_RIGHT_J:
+ 	case SND_SOC_DAIFMT_DSP_B:
+-		val = TDMIN_CTRL_IN_BIT_SKEW(2);
+ 		break;
+ 
+ 	default:
+@@ -130,6 +131,8 @@ static int axg_tdmin_prepare(struct regmap *map, struct axg_tdm_stream *ts)
+ 		return -EINVAL;
+ 	}
+ 
++	val = TDMIN_CTRL_IN_BIT_SKEW(skew);
++
+ 	/* Set stream format mode */
+ 	switch (ts->iface->fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+ 	case SND_SOC_DAIFMT_I2S:
+@@ -204,7 +207,10 @@ static const struct axg_tdm_formatter_driver axg_tdmin_drv = {
+ 	.component_drv	= &axg_tdmin_component_drv,
+ 	.regmap_cfg	= &axg_tdmin_regmap_cfg,
+ 	.ops		= &axg_tdmin_ops,
+-	.invert_sclk	= false,
++	.quirks		= &(const struct axg_tdm_formatter_hw) {
++		.invert_sclk	= false,
++		.skew_offset	= 2,
++	},
+ };
+ 
+ static const struct of_device_id axg_tdmin_of_match[] = {
+diff --git a/sound/soc/meson/axg-tdmout.c b/sound/soc/meson/axg-tdmout.c
+index f73368ee1088..3984818e2a7c 100644
+--- a/sound/soc/meson/axg-tdmout.c
++++ b/sound/soc/meson/axg-tdmout.c
+@@ -124,21 +124,22 @@ static void axg_tdmout_disable(struct regmap *map)
+ 	regmap_update_bits(map, TDMOUT_CTRL0, TDMOUT_CTRL0_ENABLE, 0);
+ }
+ 
+-static int axg_tdmout_prepare(struct regmap *map, struct axg_tdm_stream *ts)
++static int axg_tdmout_prepare(struct regmap *map,
++			      const struct axg_tdm_formatter_hw *quirks,
++			      struct axg_tdm_stream *ts)
+ {
+-	unsigned int val = 0;
++	unsigned int val, skew = quirks->skew_offset;
+ 
+ 	/* Set the stream skew */
+ 	switch (ts->iface->fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+ 	case SND_SOC_DAIFMT_I2S:
+ 	case SND_SOC_DAIFMT_DSP_A:
+-		val |= TDMOUT_CTRL0_INIT_BITNUM(1);
+ 		break;
+ 
+ 	case SND_SOC_DAIFMT_LEFT_J:
+ 	case SND_SOC_DAIFMT_RIGHT_J:
+ 	case SND_SOC_DAIFMT_DSP_B:
+-		val |= TDMOUT_CTRL0_INIT_BITNUM(2);
++		skew += 1;
+ 		break;
+ 
+ 	default:
+@@ -147,6 +148,8 @@ static int axg_tdmout_prepare(struct regmap *map, struct axg_tdm_stream *ts)
+ 		return -EINVAL;
+ 	}
+ 
++	val = TDMOUT_CTRL0_INIT_BITNUM(skew);
++
+ 	/* Set the slot width */
+ 	val |= TDMOUT_CTRL0_BITNUM(ts->iface->slot_width - 1);
+ 
+@@ -234,7 +237,10 @@ static const struct axg_tdm_formatter_driver axg_tdmout_drv = {
+ 	.component_drv	= &axg_tdmout_component_drv,
+ 	.regmap_cfg	= &axg_tdmout_regmap_cfg,
+ 	.ops		= &axg_tdmout_ops,
+-	.invert_sclk	= true,
++	.quirks		= &(const struct axg_tdm_formatter_hw) {
++		.invert_sclk = true,
++		.skew_offset = 1,
++	},
+ };
+ 
+ static const struct of_device_id axg_tdmout_of_match[] = {
 -- 
-------------------
-Dan Murphy
+2.20.1
