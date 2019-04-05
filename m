@@ -1,8 +1,8 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH 10/12] pinctrl: sunxi: Support I/O bias voltage
- setting on H6
-Date: Sat,  6 Apr 2019 01:45:12 +0200
-Message-ID: <20190405234514.6183-11-megous@megous.com>
+Subject: [PATCH 12/12] arm64: dts: allwinner: orange-pi-3:
+ Enable WiFi
+Date: Sat,  6 Apr 2019 01:45:14 +0200
+Message-ID: <20190405234514.6183-13-megous@megous.com>
 References: <20190405234514.6183-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
@@ -21,83 +21,109 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-H6 SoC has a "pio group withstand voltage mode" register (datasheet
-description), that needs to be used to select either 1.8V or 3.3V
-I/O mode, based on what voltage is powering the respective pin
-banks and is thus used for I/O signals.
+Orange Pi 3 has AP6256 WiFi/BT module. WiFi part of the module is
+called bcm43356 and can be used with the brcmfmac driver. The module
+is powered by the two always on regulators (not AXP805).
 
-Add support for configuring this register according to the voltage
-of the pin bank regulator (if enabled).
+WiFi uses a PG port with 1.8V voltage level signals. SoC needs to be
+configured so that it sets up an 1.8V input bias on this port. This is
+done by the pio driver by reading the vcc-pg-supply voltage.
 
-This is similar to the support for I/O bias voltage setting patch
-for A80 and the same concerns apply. (see commit 402bfb3c135213dc
-Support I/O bias voltage setting on A80).
+You'll need a fw_bcm43456c5_ag.bin firmware file and nvram.txt
+configuration that can be found in the Xulongs's repository for H6:
+
+https://github.com/orangepi-xunlong/OrangePiH6_external/tree/master/ap6256
+
+Mainline brcmfmac driver expects the firmware and nvram at the
+following paths relative to the firmware directory:
+
+  brcm/brcmfmac43456-sdio.bin
+  brcm/brcmfmac43456-sdio.txt
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c |  1 +
- drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 14 ++++++++++++++
- drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  3 +++
- 3 files changed, 18 insertions(+)
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-index ef4268cc6227..30b1befa8ed8 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-@@ -591,6 +591,7 @@ static const struct sunxi_pinctrl_desc h6_pinctrl_data = {
- 	.irq_banks = 4,
- 	.irq_bank_map = h6_irq_bank_map,
- 	.irq_read_needs_mux = true,
-+	.io_bias_cfg_variant = IO_BIAS_CFG_V2,
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index 5270142527f5..6a201829bb62 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -66,6 +66,26 @@
+ 		regulator-always-on;
+ 	};
+ 
++	reg_vcc33_wifi: vcc33-wifi {
++		/* Always on 3.3V regulator for WiFi and BT */
++		compatible = "regulator-fixed";
++		regulator-name = "vcc33-wifi";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++                vin-supply = <&reg_vcc5v>;
++	};
++
++	reg_vcc_wifi_io: vcc-wifi-io {
++		/* Always on 1.8V/300mA regulator for WiFi and BT IO */
++		compatible = "regulator-fixed";
++		regulator-name = "vcc-wifi-io";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++                vin-supply = <&reg_vcc33_wifi>;
++	};
++
+ 	/*
+ 	 * The board uses 2.5V RGMII signalling. Power sequence
+ 	 * to enable the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2)
+@@ -86,6 +106,14 @@
+                  */
+                 vin-supply = <&reg_aldo2>; /* GMAC-3V3 */
+         };
++
++	wifi_pwrseq: wifi_pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		clocks = <&rtc 1>;
++		clock-names = "ext_clock";
++		reset-gpios = <&r_pio 1 3 GPIO_ACTIVE_LOW>; /* PM3 */
++		post-power-on-delay-ms = <200>;
++	};
  };
  
- static int h6_pinctrl_probe(struct platform_device *pdev)
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 9f329fec77cf..59a4ed396d92 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -607,6 +607,8 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
- 					 unsigned pin,
- 					 struct regulator *supply)
- {
-+	unsigned short bank = pin / PINS_PER_BANK;
-+	unsigned long flags;
- 	u32 val, reg;
- 	int uV;
+ &cpu0 {
+@@ -146,6 +174,25 @@
+ 	status = "okay";
+ };
  
-@@ -639,6 +641,18 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
- 		reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
- 		reg &= ~IO_BIAS_MASK;
- 		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
-+	} else if (pctl->desc->io_bias_cfg_variant == IO_BIAS_CFG_V2) {
-+		val = uV <= 1800000 ? 1 : 0;
++&mmc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pins>;
++	vmmc-supply = <&reg_vcc33_wifi>;
++	vqmmc-supply = <&reg_vcc_wifi_io>;
++	mmc-pwrseq = <&wifi_pwrseq>;
++	bus-width = <4>;
++	non-removable;
++	status = "okay";
 +
-+		dev_info(pctl->dev,
-+			 "Setting voltage bias to %sV on bank P%c\n",
-+			 val ? "1.8" : "3.3", 'A' + bank);
++	brcm: sdio-wifi@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++		interrupt-parent = <&r_pio>;
++		interrupts = <1 0 IRQ_TYPE_LEVEL_LOW>; /* PM0 */
++		interrupt-names = "host-wake";
++	};
++};
 +
-+		raw_spin_lock_irqsave(&pctl->lock, flags);
-+		reg = readl(pctl->membase + PIO_POW_MOD_SEL_REG);
-+		reg &= ~(1 << bank);
-+		writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL_REG);
-+		raw_spin_unlock_irqrestore(&pctl->lock, flags);
- 	}
+ &ohci0 {
+ 	status = "okay";
+ };
+@@ -157,6 +204,7 @@
+ &pio {
+ 	vcc-pc-supply = <&reg_bldo2>;
+ 	vcc-pd-supply = <&reg_cldo1>;
++	vcc-pg-supply = <&reg_vcc_wifi_io>;
+ };
  
- 	return 0;
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-index 476772f91dba..3a66376f141b 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-@@ -95,7 +95,10 @@
- #define PINCTRL_SUN7I_A20	BIT(7)
- #define PINCTRL_SUN8I_R40	BIT(8)
- 
-+#define PIO_POW_MOD_SEL_REG	0x340
-+
- #define IO_BIAS_CFG_V1		1
-+#define IO_BIAS_CFG_V2		2
- 
- struct sunxi_desc_function {
- 	unsigned long	variant;
+ &r_i2c {
 -- 
 2.21.0
