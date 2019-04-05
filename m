@@ -1,160 +1,82 @@
 From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH] power: reset: syscon-reboot: add a mask property
-Date: Fri, 5 Apr 2019 17:18:05 +0200
-Message-ID: <20190405151805.fr3ie3q2vspljhr7@earth.universe>
-References: <20190308074930.15270-1-ms@dev.tdt.de>
+Subject: Re: [PATCH v2 1/2] dt-bindings: power: supply: gpio-charger: Add
+ status-gpios property
+Date: Fri, 5 Apr 2019 17:43:17 +0200
+Message-ID: <20190405154317.suqovb4u2bgceqf7@earth.universe>
+References: <20190226150437.3704-1-contact@artur-rojek.eu>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4iycinlwha4fbtrm"
+        protocol="application/pgp-signature"; boundary="lgrrqna5ih6dueed"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190308074930.15270-1-ms@dev.tdt.de>
+In-Reply-To: <20190226150437.3704-1-contact@artur-rojek.eu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Schiller <ms@dev.tdt.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, fkan@apm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Artur Rojek <contact@artur-rojek.eu>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
 
---4iycinlwha4fbtrm
+--lgrrqna5ih6dueed
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Fri, Mar 08, 2019 at 08:49:30AM +0100, Martin Schiller wrote:
-> Make the syscon-reboot driver accept value and mask instead of
-> just value.
+On Tue, Feb 26, 2019 at 04:04:36PM +0100, Artur Rojek wrote:
+> Add documentation for the "status-gpios" property.
+> Update the "gpios" property with a valid example.
 >=20
-> Prior to this patch, the property name for the value was 'mask'. If
-> only the mask property is defined on a node, maintain compatibility
-> by using it as the value.
->=20
-> This patch is based on commit
-> f2c199db477e ("power: reset: syscon-poweroff: add a mask property")
-> and does the same change for the syscon-reboot driver.
->=20
-> Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
 > ---
+>=20
+> Changes:
+>=20
+> v2: - add a better description for the "status-gpios" property,
+>     - add valid examples for the "gpios" and "status-gpios" properties
+>=20
+>  .../devicetree/bindings/power/supply/gpio-charger.txt       | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.=
+txt b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+> index adbb5dc5b6e9..999cc245543c 100644
+> --- a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+> @@ -14,12 +14,16 @@ Required properties :
+>       usb-cdp (USB charging downstream port)
+>       usb-aca (USB accessory charger adapter)
+> =20
+> +Optional properties:
+> + - status-gpios: GPIO indicating whether a battery is charging.
 
-thanks, queued.
+I think it's better to name this charge-status-gpios, since charger
+may provide all kind of status GPIOs. For example the existing
+gpios property (also bad name, but cannot be changed easily now),
+which provides AC online status.
+
+Otherwise the binding and the driver patch looks good to me.
 
 -- Sebastian
 
->  .../devicetree/bindings/power/reset/syscon-reboot.txt | 11 +++++++++--
->  drivers/power/reset/syscon-reboot.c                   | 19 +++++++++++++=
-++++--
->  2 files changed, 26 insertions(+), 4 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.=
-txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
-> index 11906316b43d..e23dea8344f8 100644
-> --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
-> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
-> @@ -3,13 +3,20 @@ Generic SYSCON mapped register reset driver
->  This is a generic reset driver using syscon to map the reset register.
->  The reset is generally performed with a write to the reset register
->  defined by the register map pointed by syscon reference plus the offset
-> -with the mask defined in the reboot node.
-> +with the value and mask defined in the reboot node.
-> =20
->  Required properties:
->  - compatible: should contain "syscon-reboot"
->  - regmap: this is phandle to the register map node
->  - offset: offset in the register map for the reboot register (in bytes)
-> -- mask: the reset value written to the reboot register (32 bit access)
-> +- value: the reset value written to the reboot register (32 bit access)
-> +
-> +Optional properties:
-> +- mask: update only the register bits defined by the mask (32 bit)
-> +
-> +Legacy usage:
-> +If a node doesn't contain a value property but contains a mask property,=
- the
-> +mask property is used as the value.
-> =20
->  Default will be little endian mode, 32 bit access only.
-> =20
-> diff --git a/drivers/power/reset/syscon-reboot.c b/drivers/power/reset/sy=
-scon-reboot.c
-> index 7d0d269a0837..5a6bb638c331 100644
-> --- a/drivers/power/reset/syscon-reboot.c
-> +++ b/drivers/power/reset/syscon-reboot.c
-> @@ -27,6 +27,7 @@
->  struct syscon_reboot_context {
->  	struct regmap *map;
->  	u32 offset;
-> +	u32 value;
->  	u32 mask;
->  	struct notifier_block restart_handler;
->  };
-> @@ -39,7 +40,7 @@ static int syscon_restart_handle(struct notifier_block =
-*this,
->  					restart_handler);
-> =20
->  	/* Issue the reboot */
-> -	regmap_write(ctx->map, ctx->offset, ctx->mask);
-> +	regmap_update_bits(ctx->map, ctx->offset, ctx->mask, ctx->value);
-> =20
->  	mdelay(1000);
-> =20
-> @@ -51,6 +52,7 @@ static int syscon_reboot_probe(struct platform_device *=
-pdev)
->  {
->  	struct syscon_reboot_context *ctx;
->  	struct device *dev =3D &pdev->dev;
-> +	int mask_err, value_err;
->  	int err;
-> =20
->  	ctx =3D devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
-> @@ -64,8 +66,21 @@ static int syscon_reboot_probe(struct platform_device =
-*pdev)
->  	if (of_property_read_u32(pdev->dev.of_node, "offset", &ctx->offset))
->  		return -EINVAL;
-> =20
-> -	if (of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask))
-> +	value_err =3D of_property_read_u32(pdev->dev.of_node, "value", &ctx->va=
-lue);
-> +	mask_err =3D of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask=
-);
-> +	if (value_err && mask_err) {
-> +		dev_err(dev, "unable to read 'value' and 'mask'");
->  		return -EINVAL;
-> +	}
-> +
-> +	if (value_err) {
-> +		/* support old binding */
-> +		ctx->value =3D ctx->mask;
-> +		ctx->mask =3D 0xFFFFFFFF;
-> +	} else if (mask_err) {
-> +		/* support value without mask*/
-> +		ctx->mask =3D 0xFFFFFFFF;
-> +	}
-> =20
->  	ctx->restart_handler.notifier_call =3D syscon_restart_handle;
->  	ctx->restart_handler.priority =3D 192;
-> --=20
-> 2.11.0
->=20
-
---4iycinlwha4fbtrm
+--lgrrqna5ih6dueed
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlynca0ACgkQ2O7X88g7
-+popCA//dK7Dexr7cJnG6mdmK2NQzYdDB/9PyWQmOBWxP0WgBqKNUyqj0E9TCkNi
-EbrvppE4s4QTKAZ4pc9pUJEqNDqFPhRi82Xaj1NUp2cPAeyPUJr4O/kjM6VmLpbj
-lgTFkjn/d2IvHT5s/HAs+AMDzqVaSrVxRemgFk+7Ccux5dfnZAKGaDLJANYi/dxW
-w/kaiYiw0rQMq3b7sEEaEI7D3OR11qo/BV3SC3154PeqSKohroRE5o6YUsC7zUSJ
-4hA+i+NjNekqfKkQKY6FsgRLoSuKXpWBIf4EhYuLVPxAXEsEWtd/Hs8jjVxoYgpq
-biiPoi3EdgMs364O3kTFrJbfe946F4AiH04rVX4m4wHZ83WIERO3y2DnvQ3Y67td
-Hu7J01uKjMuulrjGF9si3EoUui6ppxW6Lmbof6/GUCt3LdVon+gC517uJjtW7a8t
-EjM+gbSttmOblGWYcVb3RvM/FQrIoslE9V2BXLXbIALXF1bOHi1GTJXWxeHI1FNN
-YrARbBM0Cp1/ESBlF6PtrKLfI4fn8U6XYu5JEN+lTYPuDuSBTs7KhsRbkLAIuYbe
-oYHYh6XCEGQGaRkwNYilda5Uz6iClzdZPOwTlAOixfDDBu1Ne33h7c3CBt1V8nOb
-2tLA9q96c9qGAGt4xP1lFmroHdvFCaq4zr7fzIm2PtqzsmKQ1gY=
-=VyQN
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlynd44ACgkQ2O7X88g7
++prPzw//XO6mDUEhOYJsXTr2FPrYOHrHWEs0rLyj3x+5rOaOuVTb5LXAPtE2iCNZ
+8J5/tZ48z9gAm4K16h5N6LIyMewU29E43ouzDDVZ60/k28gOFsZ/tSDT/lgUZiQg
+irKv/yjn1txoQcQbb+aHRdHpXp/SBKFcU4T1iDT8EsU7bN4a3GW4WZQJPpSvAQhh
+eQCWBiPAadNIyfJcQjmnUPtG8YQT3TCVDV8cXjMwV9nfc+3FKkMtZXW7rrsqdrVC
+pukRRokwok4ogfJ5UF8UPJ/KkDO7aerKJ1vu2Ms8u+Mkz7k+OJAlUffTevlUXJX8
+agi+XJHumq0OelOvgr4jowJ+Yh0Y2jcGX2iaw4DomNC7UPVXkzwhdMzIsdUKfULE
+vxaznLsAOjRODTCJ+Dnd6te3qFNmMIP3v2K/8dmrQinfUEJheuxGrxVyRalSRVtX
+B1yO1c6aHdiRAuxxIx+UlDOgHv4xzhbL4lzCxCFVXz5jj9H4jwPpwyI/YblLpu/p
+njCBTlwpffeDwzWubkbxm3qyvqJcQgab3Wr7B0Y182djl8URipKqzeCGHc55V1In
+7s2SE7ViXp4dUe2BeO963FpFDL0HKmFDq/wDpy2ix3yPPZyISmnRBwcFPPO50/ue
+Mn5VCHi50BMIZegBPUQsGoKh03TbrmPa+0XmdW8qeOiIYi+M9t4=
+=SUiH
 -----END PGP SIGNATURE-----
 
---4iycinlwha4fbtrm--
+--lgrrqna5ih6dueed--
