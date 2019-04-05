@@ -1,7 +1,7 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v4 1/5] phy: core: Add *release* phy_ops invoked when the consumer relinquishes PHY
-Date: Fri, 5 Apr 2019 16:38:30 +0530
-Message-ID: <20190405110834.13083-2-kishon@ti.com>
+Subject: [PATCH v4 2/5] phy: core: Invoke pm_runtime_get_*/pm_runtime_put_* before invoking reset callback
+Date: Fri, 5 Apr 2019 16:38:31 +0530
+Message-ID: <20190405110834.13083-3-kishon@ti.com>
 References: <20190405110834.13083-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,51 +12,36 @@ To: Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, ro
 Cc: Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a new phy_ops *release* invoked when the consumer relinquishes the
-PHY using phy_put/devm_phy_put. The initializations done by the PHY
-driver in of_xlate call back can be can be cleaned up here.
+PHY drivers may try to access PHY registers in the ->reset() callback.
+Invoke phy_pm_runtime_get_sync() before invoking the ->reset() callback
+so that the PHY drivers don't have to enable clocks by themselves before
+accessing PHY registers.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/phy/phy-core.c  | 5 +++++
- include/linux/phy/phy.h | 2 ++
- 2 files changed, 7 insertions(+)
+ drivers/phy/phy-core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index cb38f6e8614c..b9a4ebf35dd3 100644
+index b9a4ebf35dd3..c147ba843f0b 100644
 --- a/drivers/phy/phy-core.c
 +++ b/drivers/phy/phy-core.c
-@@ -564,6 +564,11 @@ void phy_put(struct phy *phy)
- 	if (!phy || IS_ERR(phy))
- 		return;
+@@ -384,10 +384,16 @@ int phy_reset(struct phy *phy)
+ 	if (!phy || !phy->ops->reset)
+ 		return 0;
  
-+	mutex_lock(&phy->mutex);
-+	if (phy->ops->release)
-+		phy->ops->release(phy);
-+	mutex_unlock(&phy->mutex);
++	ret = phy_pm_runtime_get_sync(phy);
++	if (ret < 0 && ret != -ENOTSUPP)
++		return ret;
 +
- 	module_put(phy->ops->owner);
- 	put_device(&phy->dev);
- }
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 3f350e2749fe..ef13aea1d370 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -64,6 +64,7 @@ union phy_configure_opts {
-  * @set_mode: set the mode of the phy
-  * @reset: resetting the phy
-  * @calibrate: calibrate the phy
-+ * @release: ops to be performed while the consumer relinquishes the PHY
-  * @owner: the module owner containing the ops
-  */
- struct phy_ops {
-@@ -105,6 +106,7 @@ struct phy_ops {
- 			    union phy_configure_opts *opts);
- 	int	(*reset)(struct phy *phy);
- 	int	(*calibrate)(struct phy *phy);
-+	void	(*release)(struct phy *phy);
- 	struct module *owner;
- };
+ 	mutex_lock(&phy->mutex);
+ 	ret = phy->ops->reset(phy);
+ 	mutex_unlock(&phy->mutex);
  
++	phy_pm_runtime_put(phy);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(phy_reset);
 -- 
 2.17.1
