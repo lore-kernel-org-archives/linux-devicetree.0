@@ -1,97 +1,119 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: Add external-facing PCIe port property
-Date: Fri, 5 Apr 2019 22:39:30 +0100
-Message-ID: <e81910c5-2cb9-a05c-dc32-cd407cf3029d@arm.com>
-References: <20190402131548.41949-1-jean-philippe.brucker@arm.com>
- <20190402131548.41949-2-jean-philippe.brucker@arm.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v3 2/2] driver: clocksource: Add nxp system counter timer
+ driver support
+Date: Sat, 6 Apr 2019 00:12:16 +0200 (CEST)
+Message-ID: <alpine.DEB.2.21.1904060003140.1802@nanos.tec.linutronix.de>
+References: <1554287101-16189-1-git-send-email-ping.bai@nxp.com> <1554287101-16189-2-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190402131548.41949-2-jean-philippe.brucker@arm.com>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-pci@vger.kernel.org, Grant.Likely@arm.com, Jeremy.Linton@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1554287101-16189-2-git-send-email-ping.bai@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacky Bai <ping.bai@nxp.com>
+Cc: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-04-02 2:15 pm, Jean-Philippe Brucker wrote:
-> Provide a way for the firmware to tell the OS which devices are external
-> to the machine and therefore untrusted. The property can describe for
-> example Thunderbolt and other user-accessible ports, which should always
-> have the strongest IOMMU protection.
+On Wed, 3 Apr 2019, Jacky Bai wrote:
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+> From: Bai Ping <ping.bai@nxp.com>
+> 
+> The system counter (sys_ctr) is a programmable system counter
+> which provides a shared time base to the Cortex A15, A7, A53 etc cores.
+> It is intended for use in applications where the counter is always
+> powered on and supports multiple, unrelated clocks. The sys_ctr hardware
+> supports:
+>  - 56-bit counter width (roll-over time greater than 40 years)
+>  - compare frame(64-bit compare value) contains programmable interrupt
+>    generation
 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> ---
->   Documentation/devicetree/bindings/pci/pci.txt | 50 +++++++++++++++++++
->   1 file changed, 50 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-> index c77981c5dd18..92c01db610df 100644
-> --- a/Documentation/devicetree/bindings/pci/pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci.txt
-> @@ -24,3 +24,53 @@ driver implementation may support the following properties:
->      unsupported link speed, for instance, trying to do training for
->      unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
->      for gen2, and '1' for gen1. Any other values are invalid.
+I hope that's a <= compare and not a == ....
+
+> +static void sysctr_timer_enable(bool enable)
+> +{
+> +	u32 val;
 > +
-> +PCI-PCI Bridge properties
-> +-------------------------
+> +	val = readl(sys_ctr_base + CMPCR);
+> +	val &= ~SYS_CTR_EN;
+> +	if (enable)
+> +		val |= SYS_CTR_EN;
 > +
-> +PCIe root ports and switch ports may be described explicitly in the device
-> +tree, as children of the host bridge node. Even though those devices are
-> +discoverable by probing, it might be necessary to describe properties that
-> +aren't provided by standard PCIe capabilities.
+> +	writel(val, sys_ctr_base + CMPCR);
+
+This read is really just overhead. Why aren't you caching the control
+register value? It's not a self modifying register and I don't see
+concurrency here either.
+
+> +}
 > +
-> +Required properties:
+> +static void sysctr_irq_acknowledge(void)
+> +{
+> +	/*
+> +	 * clear the enable bit(EN =0) will clear
+> +	 * the status bit(ISTAT = 0), then the interrupt
+> +	 * signal will be negated(acknowledged).
+> +	 */
+> +	sysctr_timer_enable(false);
+> +}
 > +
-> +- reg:
-> +   Identifies the PCI-PCI bridge. As defined in the IEEE Std 1275-1994
-> +   document, it is a five-cell address encoded as (phys.hi phys.mid
-> +   phys.lo size.hi size.lo). phys.hi should contain the device's BDF as
-> +   0b00000000 bbbbbbbb dddddfff 00000000. The other cells should be zero.
+> +static inline u64 sysctr_read_counter(void)
+> +{
+> +	u32 cnt_hi, tmp_hi, cnt_lo;
 > +
-> +   The bus number is defined by firmware, through the standard bridge
-> +   configuration mechanism. If this port is a switch port, then firmware
-> +   allocates the bus number and writes it into the Secondary Bus Number
-> +   register of the bridge directly above this port. Otherwise, the bus
-> +   number of a root port is the first number in the bus-range property,
-> +   defaulting to zero.
+> +	do {
+> +		cnt_hi = readl_relaxed(sys_ctr_base + CNTCV_HI);
+> +		cnt_lo = readl_relaxed(sys_ctr_base + CNTCV_LO);
+> +		tmp_hi = readl_relaxed(sys_ctr_base + CNTCV_HI);
+> +	} while (tmp_hi != cnt_hi);
+
+When will hardware people finally get it? Is it so damned hard to make the
+readout do:
+
+	lo = read_lo()		-> internally latches HI in hardware
+	hi = read_hi()		-> reads the latched value
+
+It's not rocket science, but it would spare these horrible read loops. But
+sure, performance happens in whitepapers and marketing slides ....
+
 > +
-> +   If firmware leaves the ARI Forwarding Enable bit set in the bridge
-> +   above this port, then phys.hi contains the 8-bit function number as
-> +   0b00000000 bbbbbbbb ffffffff 00000000. Note that the PCIe specification
-> +   recommends that firmware only leaves ARI enabled when it knows that the
-> +   OS is ARI-aware.
+> +	return  ((u64) cnt_hi << 32) | cnt_lo;
+> +}
 > +
-> +Optional properties:
+> +static int sysctr_set_next_event(unsigned long delta,
+> +				 struct clock_event_device *evt)
+> +{
+> +	u32 cmp_hi, cmp_lo;
+> +	u64 next;
 > +
-> +- external-facing:
-> +   When present, the port is external-facing. All bridges and endpoints
-> +   downstream of this port are external to the machine. The OS can, for
-> +   example, use this information to identify devices that cannot be
-> +   trusted with relaxed DMA protection, as users could easily attach
-> +   malicious devices to this port.
+> +	sysctr_timer_enable(false);
 > +
-> +Example:
+> +	next = sysctr_read_counter();
 > +
-> +pcie@10000000 {
-> +	compatible = "pci-host-ecam-generic";
-> +	...
-> +	pcie@0008 {
-> +		/* Root port 00:01.0 is external-facing */
-> +		reg = <0x00000800 0 0 0 0>;
-> +		external-facing;
-> +	};
-> +};
-> 
+> +	next += delta;
+> +
+> +	cmp_hi = (next >> 32) & 0x00fffff;
+> +	cmp_lo = next & 0xffffffff;
+> +
+> +	writel_relaxed(cmp_hi, sys_ctr_base + CMPCV_HI);
+> +	writel_relaxed(cmp_lo, sys_ctr_base + CMPCV_LO);
+
+Please document that this is a <= comparator. If that's not true then this
+function is broken for small deltas and delays between read_counter() and
+enable.
+
+> +
+> +	sysctr_timer_enable(true);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sysctr_set_state_oneshot(struct clock_event_device *evt)
+> +{
+> +	sysctr_timer_enable(true);
+
+That's wrong. Why do you want to enable the timer here? When the state is
+set to one shot then the next operation is set_next_event() but before that
+nothing should ever come out of the timer.
+
+Thanks,
+
+	tglx
