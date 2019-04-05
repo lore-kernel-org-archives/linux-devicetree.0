@@ -1,470 +1,335 @@
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
-Subject: [PATCH 1/2] clk: stm32: Introduce clocks of STM32F769 board
-Date: Fri, 5 Apr 2019 09:53:31 +0200
-Message-ID: <20190405075332.28530-2-gabriel.fernandez@st.com>
-References: <20190405075332.28530-1-gabriel.fernandez@st.com>
+From: "Harsha Manjula Mallikarjun (RBEI/ECF3)"
+        <Harsha.ManjulaMallikarjun@in.bosch.com>
+Subject: RE: [PATCH 5/8] drm: rcar-du: Implement interfaces to set clu and lut
+ using drm data structures
+Date: Fri, 5 Apr 2019 08:39:42 +0000
+Message-ID: <38922e58fd924afabce5f27a4c1144ec@in.bosch.com>
+References: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
+ <1554297284-14009-6-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
+ <20190404075047.GP2665@phenom.ffwll.local> <20190404154017.GG3888@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190405075332.28530-1-gabriel.fernandez@st.com>
+In-Reply-To: <20190404154017.GG3888@intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: michael turquette <mturquette@baylibre.com>, stephen boyd <sboyd@kernel.org>, rob herring <robh+dt@kernel.org>, mark rutland <mark.rutland@arm.com>, maxime coquelin <mcoquelin.stm32@gmail.com>, alexandre torgue <alexandre.torgue@st.com>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Gabriel Fernandez <gabriel.fernandez@st.com>
+To: =?iso-8859-1?Q?Ville_Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>, "Kalakodima Venkata Rajesh (RBEI/ECF3)" <VenkataRajesh.Kalakodima@in.bosch.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Cc: "Friedrich Eugen (ADITG/ESB)" <EFriedrich@de.adit-jv.com>, "Ucan Ahmet Emre (ADITG/ESB)" <eucan@de.adit-jv.com>
 List-Id: devicetree@vger.kernel.org
 
-STM32F769 clocks are derived from STM32746 clocks.
-main differences are:
-- new source clock for SAI1 and SAI2 (HSI or HSE)
-- Add DFSDM & DSI clocks
+>=20
+> On Thu, Apr 04, 2019 at 09:50:47AM +0200, Daniel Vetter wrote:
+> > On Wed, Apr 03, 2019 at 06:44:41PM +0530,
+> VenkataRajesh.Kalakodima@in.bosch.com wrote:
+> > > From: kalakodima venkata rajesh
+> > > <venkatarajesh.kalakodima@in.bosch.com>
+> > >
+> > > Impelement interfaces in cmm to set clu and lut tables using
+> > > standard drm data structures as input.
+> > >
+> > > Signed-off-by: Harsha M M <harsha.manjulamallikarjun@in.bosch.com>
+> > >
+> > >       - Resolved checkpatch errors
+> > >       - Resolved merge conflicts according to latest version
+> > >
+> > > Signed-off-by: kalakodima venkata rajesh
+> > > <venkatarajesh.kalakodima@in.bosch.com>
+> > > ---
+> > >  drivers/gpu/drm/rcar-du/rcar_du_cmm.c  | 256
+> > > +++++++++++++++++++++++++++++++--
+> > > drivers/gpu/drm/rcar-du/rcar_du_crtc.h |  11 ++
+> > >  2 files changed, 254 insertions(+), 13 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_cmm.c
+> > > b/drivers/gpu/drm/rcar-du/rcar_du_cmm.c
+> > > index 7983039..af4668f 100644
+> > > --- a/drivers/gpu/drm/rcar-du/rcar_du_cmm.c
+> > > +++ b/drivers/gpu/drm/rcar-du/rcar_du_cmm.c
+> > > @@ -114,6 +114,8 @@ struct rcar_du_cmm_pending_event {
+> > >  	struct drm_gem_object *gem_obj;
+> > >  	struct rcar_du_cmm *du_cmm;
+> > >  	struct rcar_du_cmm_file_priv *fpriv;
+> > > +	unsigned int *lut_buf;
+> > > +	unsigned int *clu_buf;
+> > >  };
+> > >
+> > >  struct cmm_module_t {
+> > > @@ -238,14 +240,6 @@ static long long diff_timevals(struct timeval
+> > > *start, struct timeval *end)  }  #endif
+> > >
+> > > -static void du_cmm_clk(struct rcar_du_cmm *du_cmm, bool on) -{
+> > > -	if (on)
+> > > -		clk_prepare_enable(du_cmm->clock);
+> > > -	else
+> > > -		clk_disable_unprepare(du_cmm->clock);
+> > > -}
+> > > -
+> > >  static void rcar_du_cmm_queue_lut_update(struct
+> > > rcar_du_cmm_pending_event *p)  {
+> > >  	mutex_lock(&cmm_event_lock);
+> > > @@ -284,6 +278,223 @@ static void rcar_du_cmm_queue_clu_update(struct
+> rcar_du_cmm_pending_event *p)
+> > >  	drm_crtc_vblank_get(&p->du_cmm->rcrtc->crtc);
+> > >  }
+> > >
+> > > +static s64 rcar_du_cmm_multiply_coeff(unsigned int color, s64
+> > > +coeff) {
+> > > +	s64 r_val;
+> > > +	bool is_neg =3D false;
+> > > +
+> > > +	if (coeff & BIT_ULL(63)) {
+> > > +		is_neg =3D true;
+> > > +		coeff &=3D ~BIT_ULL(63);
+> > > +	}
+> > > +
+> > > +	r_val =3D DIV_ROUND_CLOSEST(((s64)(color * coeff)), BIT_ULL(32));
+> > > +
+> > > +	if (is_neg)
+> > > +		return -r_val;
+> > > +
+> > > +	return r_val;
+> > > +}
+> > > +
+> > > +static unsigned int rcar_du_cmm_scalar_product(unsigned int r, unsig=
+ned int
+> g,
+> > > +					       unsigned int b, s64 coeff1,
+> > > +					       s64 coeff2, s64 coeff3) {
+> > > +	s64 product;
+> > > +
+> > > +	product =3D rcar_du_cmm_multiply_coeff(r, coeff1)
+> > > +			+ rcar_du_cmm_multiply_coeff(g, coeff2)
+> > > +			+ rcar_du_cmm_multiply_coeff(b, coeff3);
+> > > +
+> > > +	return (unsigned int)clamp_val(product, 0, U8_MAX); }
+> > > +
+> > > +#ifdef DEBUG_PROCE_TIME
+> > > +static long long diff_timevals(struct timeval *start, struct
+> > > +timeval *end) {
+> > > +	return (end->tv_sec * 1000000LL + end->tv_usec) -
+> > > +		(start->tv_sec * 1000000LL + start->tv_usec); } #endif
+> > > +
+> > > +void *rcar_du_cmm_alloc_lut(void *cmm_handle) {
+> > > +	struct rcar_du_cmm_pending_event *p;
+> > > +
+> > > +	if (!cmm_handle)
+> > > +		return NULL;
+> > > +
+> > > +	p =3D kzalloc(sizeof(*p), GFP_KERNEL);
+> > > +	if (!p)
+> > > +		return NULL;
+> > > +
+> > > +	p->gem_obj =3D NULL;
+> > > +	p->event =3D CMM_EVENT_LUT_DONE;
+> > > +	p->stat =3D QUE_STAT_PENDING;
+> > > +	p->callback_data =3D 0;
+> > > +	p->du_cmm =3D cmm_handle;
+> > > +	p->fpriv =3D NULL;
+> > > +	p->lut_buf =3D kmalloc(CMM_LUT_NUM * 4, GFP_KERNEL);
+> > > +	if (!p->lut_buf) {
+> > > +		kfree(p);
+> > > +		return NULL;
+> > > +	}
+> > > +
+> > > +	return p;
+> > > +}
+> > > +
+> > > +void rcar_du_cmm_free_lut(void *lut_handle) {
+> > > +	struct rcar_du_cmm_pending_event *p =3D
+> > > +			(struct rcar_du_cmm_pending_event *)lut_handle;
+> > > +
+> > > +	kfree(p->lut_buf);
+> > > +	kfree(p);
+> > > +}
+> > > +
+> > > +int rcar_du_cmm_lut_valid(unsigned int lut_length) {
+> > > +	return (lut_length =3D=3D CMM_LUT_NUM) ? 0 : -EINVAL; }
+> > > +
+> > > +void rcar_du_cmm_update_lut_and_free(void *lut_handle,
+> > > +				     struct drm_color_lut *lut,
+> > > +				     unsigned int lut_length)
+> > > +{
+> > > +	struct rcar_du_cmm_pending_event *p =3D
+> > > +			(struct rcar_du_cmm_pending_event *)lut_handle;
+> > > +	unsigned int color;
+> > > +
+> > > +	if (!p)
+> > > +		return;
+> > > +
+> > > +	if (rcar_du_cmm_lut_valid(lut_length))
+> > > +		return;
+> > > +
+> > > +	/* Convert drm_color_lut to the format handled by hardware */
+> > > +	for (color =3D 0; color < lut_length; color++) {
+> > > +		p->lut_buf[color] =3D 0;
+> > > +		p->lut_buf[color] |=3D drm_color_lut_extract(lut[color].red, 8)
+> > > +					<< 16;
+> > > +		p->lut_buf[color] |=3D drm_color_lut_extract(lut[color].green, 8)
+> > > +					<< 8;
+> > > +		p->lut_buf[color] |=3D drm_color_lut_extract(lut[color].blue, 8);
+> > > +	}
+> > > +	rcar_du_cmm_queue_lut_update(p);
+> > > +}
+> > > +
+> > > +void *rcar_du_cmm_alloc_clu(void *cmm_handle) {
+> > > +	struct rcar_du_cmm_pending_event *p;
+> > > +
+> > > +	if (!cmm_handle)
+> > > +		return NULL;
+> > > +
+> > > +	p =3D kzalloc(sizeof(*p), GFP_KERNEL);
+> > > +	if (!p)
+> > > +		return NULL;
+> > > +
+> > > +	p->gem_obj =3D NULL;
+> > > +	p->event =3D CMM_EVENT_CLU_DONE;
+> > > +	p->stat =3D QUE_STAT_PENDING;
+> > > +	p->callback_data =3D 0;
+> > > +	p->du_cmm =3D cmm_handle;
+> > > +	p->fpriv =3D NULL;
+> > > +	p->clu_buf =3D kmalloc(CMM_CLU_NUM * 4, GFP_KERNEL);
+> > > +	if (!p->clu_buf) {
+> > > +		kfree(p);
+> > > +		return NULL;
+> > > +	}
+> > > +
+> > > +	return p;
+> > > +}
+> > > +
+> > > +void rcar_du_cmm_free_clu(void *clu_handle) {
+> > > +	struct rcar_du_cmm_pending_event *p =3D
+> > > +			(struct rcar_du_cmm_pending_event *)clu_handle;
+> > > +
+> > > +	kfree(p->clu_buf);
+> > > +	kfree(p);
+> > > +}
+> > > +
+> > > +void rcar_du_cmm_update_clu_and_free(void *clu_handle,
+> > > +				     struct drm_color_ctm *ctm) {
+> > > +	struct rcar_du_cmm_pending_event *p =3D
+> > > +			(struct rcar_du_cmm_pending_event *)clu_handle;
+> > > +	unsigned int r_loop;
+> > > +	unsigned int g_loop;
+> > > +	unsigned int b_loop;
+> > > +	unsigned int step_size;
+> > > +	unsigned int step_fraction;
+> > > +	unsigned int clu_index =3D 0;
+> > > +
+> > > +	if (!p)
+> > > +		return;
+> > > +
+> > > +	step_size =3D U8_MAX / (CMM_CLU_SAMPLES - 1);
+> > > +	step_fraction =3D U8_MAX % (CMM_CLU_SAMPLES - 1);
+> > > +
+> > > +	/*Update clu table*/
+> > > +	for (b_loop =3D 0; b_loop < CMM_CLU_SAMPLES; b_loop++) {
+> > > +		unsigned int b;
+> > > +
+> > > +		b =3D (b_loop * step_size) +
+> > > +		    DIV_ROUND_CLOSEST((b_loop * step_fraction),
+> > > +				      (CMM_CLU_SAMPLES - 1));
+> > > +
+> > > +		for (g_loop =3D 0; g_loop < CMM_CLU_SAMPLES; g_loop++) {
+> > > +			unsigned int g;
+> > > +
+> > > +			g =3D (g_loop * step_size) +
+> > > +			    DIV_ROUND_CLOSEST((g_loop * step_fraction),
+> > > +					      (CMM_CLU_SAMPLES - 1));
+> > > +
+> > > +			for (r_loop =3D 0; r_loop < CMM_CLU_SAMPLES; r_loop++)
+> {
+> > > +				unsigned int r;
+> > > +				unsigned int r_val;
+> > > +				unsigned int g_val;
+> > > +				unsigned int b_val;
+> > > +
+> > > +				r =3D (r_loop * step_size) +
+> > > +				    DIV_ROUND_CLOSEST((r_loop *
+> step_fraction),
+> > > +						      (CMM_CLU_SAMPLES - 1));
+> > > +
+> > > +				p->clu_buf[clu_index] =3D 0;
+> > > +
+> > > +				r_val =3D	rcar_du_cmm_scalar_product
+> > > +						(r, g, b,
+> > > +						 ctm->matrix[0], ctm->matrix[1],
+> > > +						 ctm->matrix[2]);
+> > > +
+> > > +				g_val =3D	rcar_du_cmm_scalar_product
+> > > +						(r, g, b,
+> > > +						 ctm->matrix[3], ctm->matrix[4],
+> > > +						 ctm->matrix[5]);
+> > > +
+> > > +				b_val =3D	rcar_du_cmm_scalar_product
+> > > +						(r, g, b,
+> > > +						 ctm->matrix[6], ctm->matrix[7],
+> > > +						 ctm->matrix[8]);
+> > > +
+> > > +				p->clu_buf[clu_index++] =3D (r_val << 16) |
+> > > +							  (g_val << 8) | b_val;
+> > > +			}
+> > > +		}
+> > > +	}
+> > > +
+> > > +	rcar_du_cmm_queue_clu_update(p);
+> > > +}
+> >
+> > Just quick drive-by: I think there's some interested (definitely from
+> > intel, I pinged the relevant people from our team) to expose a 3D LUT
+> > directly to userspace.=20
+[Harsha Manjula Mallikarjun (RBEI/ECF3)]=20
+Thanks Daniel for mentioning this.
+>> I'm not sure whether we can do both 3D-LUT and
+> > color matrix, and I'm also not sure whether remapping the ctm to a
+> > 3d-lut is the best thing to do.
+[Harsha Manjula Mallikarjun (RBEI/ECF3)] :=20
+It is not the best thing to do compared to the HW (e.g. i.Mx6) which readil=
+y supports CTM matrix.
+Also remapping limits the flexibility with which user space can make use of=
+ 3D LUT.
+Our use case was to apply hue, saturation and brightness properties to disp=
+lay out.
+Conversion between RGB and HSV color space is non-linear. However, a close =
+linear approximation
+can be done and this can be applied via CTM. I do not know about other use =
+cases where
+3D LUT can be made use of.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
----
- .../bindings/clock/st,stm32-rcc.txt           |   6 +
- drivers/clk/clk-stm32f4.c                     | 307 +++++++++++++++++-
- include/dt-bindings/clock/stm32fx-clock.h     |   7 +-
- 3 files changed, 310 insertions(+), 10 deletions(-)
+>> Otoh adding new uapi is always a bunch more
+[Harsha Manjula Mallikarjun (RBEI/ECF3)]=20
+I think adding a 3D LUT property blob, is better than re-mapping. Then user=
+ space can make full use of it.
 
-diff --git a/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
-index b240121d2ac9..cfa04b614d8a 100644
---- a/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
-+++ b/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
-@@ -11,6 +11,8 @@ Required properties:
-   "st,stm32f42xx-rcc"
-   "st,stm32f469-rcc"
-   "st,stm32f746-rcc"
-+  "st,stm32f769-rcc"
-+
- - reg: should be register base and length as documented in the
-   datasheet
- - #reset-cells: 1, see below
-@@ -102,6 +104,10 @@ The secondary index is bound with the following magic numbers:
- 	28	CLK_I2C3
- 	29	CLK_I2C4
- 	30	CLK_LPTIMER	(LPTimer1 clock)
-+	31	CLK_PLL_SRC
-+	32	CLK_DFSDM1
-+	33	CLK_ADFSDM1
-+	34	CLK_F769_DSI
- )
- 
- Example:
-diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
-index cdaa567c8042..fdac33a9be2f 100644
---- a/drivers/clk/clk-stm32f4.c
-+++ b/drivers/clk/clk-stm32f4.c
-@@ -300,6 +300,85 @@ static const struct stm32f4_gate_data stm32f746_gates[] __initconst = {
- 	{ STM32F4_RCC_APB2ENR, 26,	"ltdc",		"apb2_div" },
- };
- 
-+static const struct stm32f4_gate_data stm32f769_gates[] __initconst = {
-+	{ STM32F4_RCC_AHB1ENR,  0,	"gpioa",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  1,	"gpiob",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  2,	"gpioc",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  3,	"gpiod",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  4,	"gpioe",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  5,	"gpiof",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  6,	"gpiog",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  7,	"gpioh",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  8,	"gpioi",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR,  9,	"gpioj",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 10,	"gpiok",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 12,	"crc",		"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 18,	"bkpsra",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 20,	"dtcmram",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 21,	"dma1",		"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 22,	"dma2",		"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 23,	"dma2d",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 25,	"ethmac",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 26,	"ethmactx",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 27,	"ethmacrx",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 28,	"ethmacptp",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 29,	"otghs",	"ahb_div" },
-+	{ STM32F4_RCC_AHB1ENR, 30,	"otghsulpi",	"ahb_div" },
-+
-+	{ STM32F4_RCC_AHB2ENR,  0,	"dcmi",		"ahb_div" },
-+	{ STM32F4_RCC_AHB2ENR,  1,	"jpeg",		"ahb_div" },
-+	{ STM32F4_RCC_AHB2ENR,  4,	"cryp",		"ahb_div" },
-+	{ STM32F4_RCC_AHB2ENR,  5,	"hash",		"ahb_div" },
-+	{ STM32F4_RCC_AHB2ENR,  6,	"rng",		"pll48"   },
-+	{ STM32F4_RCC_AHB2ENR,  7,	"otgfs",	"pll48"   },
-+
-+	{ STM32F4_RCC_AHB3ENR,  0,	"fmc",		"ahb_div",
-+		CLK_IGNORE_UNUSED },
-+	{ STM32F4_RCC_AHB3ENR,  1,	"qspi",		"ahb_div",
-+		CLK_IGNORE_UNUSED },
-+
-+	{ STM32F4_RCC_APB1ENR,  0,	"tim2",		"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR,  1,	"tim3",		"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR,  2,	"tim4",		"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR,  3,	"tim5",		"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR,  4,	"tim6",		"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR,  5,	"tim7",		"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR,  6,	"tim12",	"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR,  7,	"tim13",	"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR,  8,	"tim14",	"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR, 10,	"rtcapb",	"apb1_mul" },
-+	{ STM32F4_RCC_APB1ENR, 11,	"wwdg",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 13,	"can3",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 14,	"spi2",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 15,	"spi3",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 16,	"spdifrx",	"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 25,	"can1",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 26,	"can2",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 27,	"cec",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 28,	"pwr",		"apb1_div" },
-+	{ STM32F4_RCC_APB1ENR, 29,	"dac",		"apb1_div" },
-+
-+	{ STM32F4_RCC_APB2ENR,  0,	"tim1",		"apb2_mul" },
-+	{ STM32F4_RCC_APB2ENR,  1,	"tim8",		"apb2_mul" },
-+	{ STM32F4_RCC_APB2ENR,  7,	"sdmmc2",	"sdmux2" },
-+	{ STM32F4_RCC_APB2ENR,  8,	"adc1",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR,  9,	"adc2",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 10,	"adc3",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 11,	"sdmmc1",	"sdmux1" },
-+	{ STM32F4_RCC_APB2ENR, 12,	"spi1",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 13,	"spi4",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 14,	"syscfg",	"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 16,	"tim9",		"apb2_mul" },
-+	{ STM32F4_RCC_APB2ENR, 17,	"tim10",	"apb2_mul" },
-+	{ STM32F4_RCC_APB2ENR, 18,	"tim11",	"apb2_mul" },
-+	{ STM32F4_RCC_APB2ENR, 20,	"spi5",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 21,	"spi6",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 22,	"sai1",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 23,	"sai2",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 26,	"ltdc",		"apb2_div" },
-+	{ STM32F4_RCC_APB2ENR, 30,	"mdio",		"apb2_div" },
-+};
-+
- /*
-  * This bitmask tells us which bit offsets (0..192) on STM32F4[23]xxx
-  * have gate bits associated with them. Its combined hweight is 71.
-@@ -318,6 +397,10 @@ static const u64 stm32f746_gate_map[MAX_GATE_MAP] = { 0x000000f17ef417ffull,
- 						      0x0000000000000003ull,
- 						      0x04f77f833e01c9ffull };
- 
-+static const u64 stm32f769_gate_map[MAX_GATE_MAP] = { 0x000000f37ef417ffull,
-+						      0x0000000000000003ull,
-+						      0x44F77F833E01EDFFull };
-+
- static const u64 *stm32f4_gate_map;
- 
- static struct clk_hw **clks;
-@@ -1048,6 +1131,10 @@ static const char *rtc_parents[4] = {
- 	"no-clock", "lse", "lsi", "hse-rtc"
- };
- 
-+static const char *pll_src = "pll-src";
-+
-+static const char *pllsrc_parent[2] = { "hsi", NULL };
-+
- static const char *dsi_parent[2] = { NULL, "pll-r" };
- 
- static const char *lcd_parent[1] = { "pllsai-r-div" };
-@@ -1072,6 +1159,9 @@ static const char *uart_parents2[4] = { "apb1_div", "sys", "hsi", "lse" };
- 
- static const char *i2c_parents[4] = { "apb1_div", "sys", "hsi", "no-clock" };
- 
-+static const char * const dfsdm1_src[] = { "apb2_div", "sys" };
-+static const char * const adsfdm1_parent[] = { "sai1_clk", "sai2_clk" };
-+
- struct stm32_aux_clk {
- 	int idx;
- 	const char *name;
-@@ -1313,6 +1403,177 @@ static const struct stm32_aux_clk stm32f746_aux_clk[] = {
- 	},
- };
- 
-+static const struct stm32_aux_clk stm32f769_aux_clk[] = {
-+	{
-+		CLK_LCD, "lcd-tft", lcd_parent, ARRAY_SIZE(lcd_parent),
-+		NO_MUX, 0, 0,
-+		STM32F4_RCC_APB2ENR, 26,
-+		CLK_SET_RATE_PARENT
-+	},
-+	{
-+		CLK_I2S, "i2s", i2s_parents, ARRAY_SIZE(i2s_parents),
-+		STM32F4_RCC_CFGR, 23, 1,
-+		NO_GATE, 0,
-+		CLK_SET_RATE_PARENT
-+	},
-+	{
-+		CLK_SAI1, "sai1_clk", sai_parents, ARRAY_SIZE(sai_parents),
-+		STM32F4_RCC_DCKCFGR, 20, 3,
-+		STM32F4_RCC_APB2ENR, 22,
-+		CLK_SET_RATE_PARENT
-+	},
-+	{
-+		CLK_SAI2, "sai2_clk", sai_parents, ARRAY_SIZE(sai_parents),
-+		STM32F4_RCC_DCKCFGR, 22, 3,
-+		STM32F4_RCC_APB2ENR, 23,
-+		CLK_SET_RATE_PARENT
-+	},
-+	{
-+		NO_IDX, "pll48", pll48_parents, ARRAY_SIZE(pll48_parents),
-+		STM32F7_RCC_DCKCFGR2, 27, 1,
-+		NO_GATE, 0,
-+		0
-+	},
-+	{
-+		NO_IDX, "sdmux1", sdmux_parents, ARRAY_SIZE(sdmux_parents),
-+		STM32F7_RCC_DCKCFGR2, 28, 1,
-+		NO_GATE, 0,
-+		0
-+	},
-+	{
-+		NO_IDX, "sdmux2", sdmux_parents, ARRAY_SIZE(sdmux_parents),
-+		STM32F7_RCC_DCKCFGR2, 29, 1,
-+		NO_GATE, 0,
-+		0
-+	},
-+	{
-+		CLK_HDMI_CEC, "hdmi-cec",
-+		hdmi_parents, ARRAY_SIZE(hdmi_parents),
-+		STM32F7_RCC_DCKCFGR2, 26, 1,
-+		NO_GATE, 0,
-+		0
-+	},
-+	{
-+		CLK_SPDIF, "spdif-rx",
-+		spdif_parent, ARRAY_SIZE(spdif_parent),
-+		STM32F7_RCC_DCKCFGR2, 22, 3,
-+		STM32F4_RCC_APB2ENR, 23,
-+		CLK_SET_RATE_PARENT
-+	},
-+	{
-+		CLK_USART1, "usart1",
-+		uart_parents1, ARRAY_SIZE(uart_parents1),
-+		STM32F7_RCC_DCKCFGR2, 0, 3,
-+		STM32F4_RCC_APB2ENR, 4,
-+		CLK_SET_RATE_PARENT,
-+	},
-+	{
-+		CLK_USART2, "usart2",
-+		uart_parents2, ARRAY_SIZE(uart_parents1),
-+		STM32F7_RCC_DCKCFGR2, 2, 3,
-+		STM32F4_RCC_APB1ENR, 17,
-+		CLK_SET_RATE_PARENT,
-+	},
-+	{
-+		CLK_USART3, "usart3",
-+		uart_parents2, ARRAY_SIZE(uart_parents1),
-+		STM32F7_RCC_DCKCFGR2, 4, 3,
-+		STM32F4_RCC_APB1ENR, 18,
-+		CLK_SET_RATE_PARENT,
-+	},
-+	{
-+		CLK_UART4, "uart4",
-+		uart_parents2, ARRAY_SIZE(uart_parents1),
-+		STM32F7_RCC_DCKCFGR2, 6, 3,
-+		STM32F4_RCC_APB1ENR, 19,
-+		CLK_SET_RATE_PARENT,
-+	},
-+	{
-+		CLK_UART5, "uart5",
-+		uart_parents2, ARRAY_SIZE(uart_parents1),
-+		STM32F7_RCC_DCKCFGR2, 8, 3,
-+		STM32F4_RCC_APB1ENR, 20,
-+		CLK_SET_RATE_PARENT,
-+	},
-+	{
-+		CLK_USART6, "usart6",
-+		uart_parents1, ARRAY_SIZE(uart_parents1),
-+		STM32F7_RCC_DCKCFGR2, 10, 3,
-+		STM32F4_RCC_APB2ENR, 5,
-+		CLK_SET_RATE_PARENT,
-+	},
-+	{
-+		CLK_UART7, "uart7",
-+		uart_parents2, ARRAY_SIZE(uart_parents1),
-+		STM32F7_RCC_DCKCFGR2, 12, 3,
-+		STM32F4_RCC_APB1ENR, 30,
-+		CLK_SET_RATE_PARENT,
-+	},
-+	{
-+		CLK_UART8, "uart8",
-+		uart_parents2, ARRAY_SIZE(uart_parents1),
-+		STM32F7_RCC_DCKCFGR2, 14, 3,
-+		STM32F4_RCC_APB1ENR, 31,
-+		CLK_SET_RATE_PARENT,
-+	},
-+	{
-+		CLK_I2C1, "i2c1",
-+		i2c_parents, ARRAY_SIZE(i2c_parents),
-+		STM32F7_RCC_DCKCFGR2, 16, 3,
-+		STM32F4_RCC_APB1ENR, 21,
-+		CLK_SET_RATE_PARENT,
-+	},
-+	{
-+		CLK_I2C2, "i2c2",
-+		i2c_parents, ARRAY_SIZE(i2c_parents),
-+		STM32F7_RCC_DCKCFGR2, 18, 3,
-+		STM32F4_RCC_APB1ENR, 22,
-+		CLK_SET_RATE_PARENT,
-+	},
-+	{
-+		CLK_I2C3, "i2c3",
-+		i2c_parents, ARRAY_SIZE(i2c_parents),
-+		STM32F7_RCC_DCKCFGR2, 20, 3,
-+		STM32F4_RCC_APB1ENR, 23,
-+		CLK_SET_RATE_PARENT,
-+	},
-+	{
-+		CLK_I2C4, "i2c4",
-+		i2c_parents, ARRAY_SIZE(i2c_parents),
-+		STM32F7_RCC_DCKCFGR2, 22, 3,
-+		STM32F4_RCC_APB1ENR, 24,
-+		CLK_SET_RATE_PARENT,
-+	},
-+	{
-+		CLK_LPTIMER, "lptim1",
-+		lptim_parent, ARRAY_SIZE(lptim_parent),
-+		STM32F7_RCC_DCKCFGR2, 24, 3,
-+		STM32F4_RCC_APB1ENR, 9,
-+		CLK_SET_RATE_PARENT
-+	},
-+	{
-+		CLK_F769_DSI, "dsi",
-+		dsi_parent, ARRAY_SIZE(dsi_parent),
-+		STM32F7_RCC_DCKCFGR2, 0, 1,
-+		STM32F4_RCC_APB2ENR, 27,
-+		CLK_SET_RATE_PARENT
-+	},
-+	{
-+		CLK_DFSDM1, "dfsdm1",
-+		dfsdm1_src, ARRAY_SIZE(dfsdm1_src),
-+		STM32F4_RCC_DCKCFGR, 25, 1,
-+		STM32F4_RCC_APB2ENR, 29,
-+		CLK_SET_RATE_PARENT
-+	},
-+	{
-+		CLK_ADFSDM1, "adfsdm1",
-+		adsfdm1_parent, ARRAY_SIZE(adsfdm1_parent),
-+		STM32F4_RCC_DCKCFGR, 26, 1,
-+		STM32F4_RCC_APB2ENR, 29,
-+		CLK_SET_RATE_PARENT
-+	},
-+};
-+
- static const struct stm32f4_clk_data stm32f429_clk_data = {
- 	.end_primary	= END_PRIMARY_CLK,
- 	.gates_data	= stm32f429_gates,
-@@ -1343,6 +1604,16 @@ static const struct stm32f4_clk_data stm32f746_clk_data = {
- 	.aux_clk_num	= ARRAY_SIZE(stm32f746_aux_clk),
- };
- 
-+static const struct stm32f4_clk_data stm32f769_clk_data = {
-+	.end_primary	= END_PRIMARY_CLK_F7,
-+	.gates_data	= stm32f769_gates,
-+	.gates_map	= stm32f769_gate_map,
-+	.gates_num	= ARRAY_SIZE(stm32f769_gates),
-+	.pll_data	= stm32f469_pll,
-+	.aux_clk	= stm32f769_aux_clk,
-+	.aux_clk_num	= ARRAY_SIZE(stm32f769_aux_clk),
-+};
-+
- static const struct of_device_id stm32f4_of_match[] = {
- 	{
- 		.compatible = "st,stm32f42xx-rcc",
-@@ -1356,6 +1627,10 @@ static const struct of_device_id stm32f4_of_match[] = {
- 		.compatible = "st,stm32f746-rcc",
- 		.data = &stm32f746_clk_data
- 	},
-+	{
-+		.compatible = "st,stm32f769-rcc",
-+		.data = &stm32f769_clk_data
-+	},
- 	{}
- };
- 
-@@ -1427,9 +1702,8 @@ static void __init stm32f4_rcc_init(struct device_node *np)
- 	int n;
- 	const struct of_device_id *match;
- 	const struct stm32f4_clk_data *data;
--	unsigned long pllcfgr;
--	const char *pllsrc;
- 	unsigned long pllm;
-+	struct clk_hw *pll_src_hw;
- 
- 	base = of_iomap(np, 0);
- 	if (!base) {
-@@ -1460,21 +1734,33 @@ static void __init stm32f4_rcc_init(struct device_node *np)
- 
- 	hse_clk = of_clk_get_parent_name(np, 0);
- 	dsi_parent[0] = hse_clk;
-+	pllsrc_parent[1] = hse_clk;
- 
- 	i2s_in_clk = of_clk_get_parent_name(np, 1);
- 
- 	i2s_parents[1] = i2s_in_clk;
- 	sai_parents[2] = i2s_in_clk;
- 
-+	if (of_device_is_compatible(np, "st,stm32f769-rcc")) {
-+		clk_hw_register_gate(NULL, "dfsdm1_apb", "apb2_div", 0,
-+				     base + STM32F4_RCC_APB2ENR, 29,
-+				     CLK_IGNORE_UNUSED, &stm32f4_clk_lock);
-+		dsi_parent[0] = pll_src;
-+		sai_parents[3] = pll_src;
-+	}
-+
- 	clks[CLK_HSI] = clk_hw_register_fixed_rate_with_accuracy(NULL, "hsi",
- 			NULL, 0, 16000000, 160000);
- 
--	pllcfgr = readl(base + STM32F4_RCC_PLLCFGR);
--	pllsrc = pllcfgr & BIT(22) ? hse_clk : "hsi";
--	pllm = pllcfgr & 0x3f;
-+	pll_src_hw = clk_hw_register_mux(NULL, pll_src, pllsrc_parent,
-+					 ARRAY_SIZE(pllsrc_parent), 0,
-+					 base + STM32F4_RCC_PLLCFGR, 22, 1, 0,
-+					 &stm32f4_clk_lock);
-+
-+	pllm = readl(base + STM32F4_RCC_PLLCFGR) & 0x3f;
- 
--	clk_hw_register_fixed_factor(NULL, "vco_in", pllsrc,
--					       0, 1, pllm);
-+	clk_hw_register_fixed_factor(NULL, "vco_in", pll_src,
-+				     0, 1, pllm);
- 
- 	stm32f4_rcc_register_pll("vco_in", &data->pll_data[0],
- 			&stm32f4_clk_lock);
-@@ -1612,12 +1898,16 @@ static void __init stm32f4_rcc_init(struct device_node *np)
- 			clks[aux_clk->idx] = hw;
- 	}
- 
--	if (of_device_is_compatible(np, "st,stm32f746-rcc"))
-+	if (of_device_is_compatible(np, "st,stm32f746-rcc")) {
- 
- 		clk_hw_register_fixed_factor(NULL, "hsi_div488", "hsi", 0,
- 				1, 488);
- 
-+		clks[CLK_PLL_SRC] = pll_src_hw;
-+	}
-+
- 	of_clk_add_hw_provider(np, stm32f4_rcc_lookup_clk, NULL);
-+
- 	return;
- fail:
- 	kfree(clks);
-@@ -1626,3 +1916,4 @@ static void __init stm32f4_rcc_init(struct device_node *np)
- CLK_OF_DECLARE_DRIVER(stm32f42xx_rcc, "st,stm32f42xx-rcc", stm32f4_rcc_init);
- CLK_OF_DECLARE_DRIVER(stm32f46xx_rcc, "st,stm32f469-rcc", stm32f4_rcc_init);
- CLK_OF_DECLARE_DRIVER(stm32f746_rcc, "st,stm32f746-rcc", stm32f4_rcc_init);
-+CLK_OF_DECLARE_DRIVER(stm32f769_rcc, "st,stm32f769-rcc", stm32f4_rcc_init);
-diff --git a/include/dt-bindings/clock/stm32fx-clock.h b/include/dt-bindings/clock/stm32fx-clock.h
-index 58d8b515be55..7d34e297049c 100644
---- a/include/dt-bindings/clock/stm32fx-clock.h
-+++ b/include/dt-bindings/clock/stm32fx-clock.h
-@@ -54,7 +54,10 @@
- #define CLK_I2C3		28
- #define CLK_I2C4		29
- #define CLK_LPTIMER		30
--
--#define END_PRIMARY_CLK_F7	31
-+#define CLK_PLL_SRC		31
-+#define CLK_DFSDM1		32
-+#define CLK_ADFSDM1		33
-+#define CLK_F769_DSI		34
-+#define END_PRIMARY_CLK_F7	35
- 
- #endif
--- 
-2.17.1
+> work.
+>=20
+> We're already thinking about extending the uapi a bit, so I don't think i=
+ncluding a
+> 3D LUT in there would be too hard.
+>=20
+> Couple of things we'd need to figure out:
+> - is a single 3D LUT attachment point sufficient? On our hw I
+>   believe the 3D LUT sits after the gamma LUT in the pipeline
+> - is a cube sufficient or would some hardware have different
+>   number of entries for each dimension (not sure why that would be)?
+> - need to agree in which order the entries would be stored in the
+>   blob
+> - and of course the big question: is anyone going to work on
+>   userspace that would make use of this?
+>=20
+[Harsha Manjula Mallikarjun (RBEI/ECF3)]=20
+Following patch adds CTM support to Weston. I am planning to fix review com=
+ments.=20
+https://patchwork.freedesktop.org/patch/233391/
+If 3D LUT interface is available, similar support can be added in Weston. I=
+f CTM is not supported,
+Instead 3D LUT is supported, similar functionality can be realized using 3D=
+ LUT. User space can
+decide this.
+
+> --
+> Ville Syrj=E4l=E4
+> Intel
+
+Regards,
+Harsha
