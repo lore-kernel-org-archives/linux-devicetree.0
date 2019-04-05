@@ -1,123 +1,61 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 2/3] mtd: rawnand: sunxi: Add DMA support for sun8i
-Date: Fri, 5 Apr 2019 12:55:59 +0200
-Message-ID: <20190405105559.sqdhoa54ne7l4svj@flea>
-References: <20190404162111.22618-1-miquel.raynal@bootlin.com>
- <20190404162111.22618-3-miquel.raynal@bootlin.com>
- <20190405091607.2dzckvyqibs7xmew@flea>
- <20190405113742.184234ca@xps13>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v4 0/5] PHY: Add support for SERDES in TI's AM654 platform
+Date: Fri, 5 Apr 2019 16:38:29 +0530
+Message-ID: <20190405110834.13083-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7629681438652547007=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190405113742.184234ca@xps13>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, rogerq@ti.com
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This patch series
+  *) adds support for SERDES module in am654
+  *) modifies phy_reset API to invoke pm_runtime_get/pm_runtime_put since
+the reset callback can access registers.
+  *) Add *release* phy_ops to be invoked when the consumer relinquishes
+PHY
 
---===============7629681438652547007==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yfur7fxwepooyuj5"
-Content-Disposition: inline
+Changes from v3:
+  *) Moved SERDES driver to use regfield
+  *) Removed reg-names binding and updated Documentation for
+     power-domains
 
+Changes from v2:
+  *) Fix typos pointed out by Roger
+  *) Add dt-binding Documentation in a new file ti,phy-am654-serdes.txt
+  *) Add Roger's patch to support all CLKSEL values.
 
---yfur7fxwepooyuj5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Changes from v1:
+  *) Add *release* phy ops
+  *) Populate release phy_ops in phy-am654-serdes to cleanup
+initializations done in of_xlate
 
-On Fri, Apr 05, 2019 at 11:37:42AM +0200, Miquel Raynal wrote:
-> Hi Maxime,
->
-> Maxime Ripard <maxime.ripard@bootlin.com> wrote on Fri, 5 Apr 2019
-> 11:16:07 +0200:
->
-> > On Thu, Apr 04, 2019 at 06:21:10PM +0200, Miquel Raynal wrote:
-> > > Allwinner NAND controllers can make use of DMA to enhance the I/O
-> > > throughput thanks to ECC pipelining. DMA handling with sun8i NAND IP
-> > > is a bit different than with the older SoCs, hence the introduction of
-> > > a new compatible to handle:
-> > > * the differences between register offsets,
-> > > * the burst length change from 4 to minimum 8,
-> > > * drive SRAM accesses through the AHB bus instead of the MBUS.
-> > >
-> > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > > ---
-> > >  drivers/mtd/nand/raw/sunxi_nand.c | 75 ++++++++++++++++++++++++++++---
-> > >  1 file changed, 68 insertions(+), 7 deletions(-)
-> > >
-> > > diff --git a/drivers/mtd/nand/raw/sunxi_nand.c b/drivers/mtd/nand/raw/sunxi_nand.c
-> > > index 4282bc477761..49cd5067adaa 100644
-> > > --- a/drivers/mtd/nand/raw/sunxi_nand.c
-> > > +++ b/drivers/mtd/nand/raw/sunxi_nand.c
-> > > @@ -42,7 +42,8 @@
-> > >  #define NFC_REG_CMD		0x0024
-> > >  #define NFC_REG_RCMD_SET	0x0028
-> > >  #define NFC_REG_WCMD_SET	0x002C
-> > > -#define NFC_REG_IO_DATA		0x0030
-> > > +#define NFC_REG_A10_IO_DATA	0x0030
-> > > +#define NFC_REG_A33_IO_DATA	0x0300
-> > >  #define NFC_REG_ECC_CTL		0x0034
-> > >  #define NFC_REG_ECC_ST		0x0038
-> > >  #define NFC_REG_DEBUG		0x003C
-> > > @@ -200,6 +201,22 @@ static inline struct sunxi_nand_chip *to_sunxi_nand(struct nand_chip *nand)
-> > >  	return container_of(nand, struct sunxi_nand_chip, nand);
-> > >  }
-> > >
-> > > +/*
-> > > + * NAND Controller capabilities structure: stores NAND controller capabilities
-> > > + * for distinction between compatible strings.
-> > > + *
-> > > + * @sram_through_ahb:	On A33, we choose to access the internal RAM through AHB
-> > > + *                      instead of MBUS (less configuration). A10+ use the MBUS
-> >
-> > What do you mean by A10+ ?
->
-> I meant A1x, A2x SoCs. Not sure it matches a product line for you, so
-> please suggest something to mean "SoCs which are not A33" (so far I
-> think all worked without this).
+Kishon Vijay Abraham I (4):
+  phy: core: Add *release* phy_ops invoked when the consumer
+    relinquishes PHY
+  phy: core: Invoke pm_runtime_get_*/pm_runtime_put_* before invoking
+    reset callback
+  dt-bindings: phy: ti: Add dt binding documentation for SERDES in
+    AM654x SoC
+  phy: ti: Add a new SERDES driver for TI's AM654x SoC
 
-The list is pretty small, so we can just name them. That would be the
-A10, A10s A13 and A20.
+Roger Quadros (1):
+  phy: ti: am654-serdes: Support all clksel values
 
-Maxime
+ .../bindings/phy/ti,phy-am654-serdes.txt      |  82 +++
+ drivers/phy/phy-core.c                        |  11 +
+ drivers/phy/ti/Kconfig                        |  12 +
+ drivers/phy/ti/Makefile                       |   1 +
+ drivers/phy/ti/phy-am654-serdes.c             | 658 ++++++++++++++++++
+ include/dt-bindings/phy/phy-am654-serdes.h    |  13 +
+ include/linux/phy/phy.h                       |   2 +
+ 7 files changed, 779 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt
+ create mode 100644 drivers/phy/ti/phy-am654-serdes.c
+ create mode 100644 include/dt-bindings/phy/phy-am654-serdes.h
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---yfur7fxwepooyuj5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKc0PwAKCRDj7w1vZxhR
-xUIkAPsHjjcpWcz3SEiKc81Acr2w9YZPgxUkjws0K+WDTYn6cgEA+x8itrphUkN9
-VvATo4mA2v5yHHel0t3VX3zWHf2HUg4=
-=HOQK
------END PGP SIGNATURE-----
-
---yfur7fxwepooyuj5--
-
-
---===============7629681438652547007==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7629681438652547007==--
+-- 
+2.17.1
