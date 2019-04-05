@@ -1,83 +1,85 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: [PATCH V2 03/20] spi: tegra114: de-assert CS before SPI mode change
-Date: Thu, 4 Apr 2019 17:14:02 -0700
-Message-ID: <1554423259-26056-3-git-send-email-skomatineni@nvidia.com>
-References: <1554423259-26056-1-git-send-email-skomatineni@nvidia.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v3 02/25] dt-bindings: leds: Add LED_FUNCTION definitions
+Date: Thu, 4 Apr 2019 20:11:21 -0500
+Message-ID: <c7c92db0-55e5-afba-c8ab-66e221b48b82@ti.com>
+References: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
+ <20190331175501.23471-3-jacek.anaszewski@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554423259-26056-1-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <20190331175501.23471-3-jacek.anaszewski@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com, skomatineni@nvidia.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kyarlagadda@nvidia.com
-Cc: ldewangan@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-With SW CS, during the transfer completion CS is de-asserted by writing
-default command1 register value to SPI_COMMAND1 register. With this both
-mode and CS state are set at the same time and if current transfer mode
-is different to default SPI mode and if mode change happens prior to CS
-de-assert, clock polarity can change while CS is active before transfer
-finishes.
+On 3/31/19 12:54 PM, Jacek Anaszewski wrote:
+> Add initial set of common LED function definitions for use in Device Tree.
+> 
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Baolin Wang <baolin.wang@linaro.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Cc: Daniel Mack <daniel@zonque.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Simon Shields <simon@lineageos.org>
+> ---
+>  include/dt-bindings/leds/common.h | 36 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+> index e171d0a6beb2..0325db5b4208 100644
+> --- a/include/dt-bindings/leds/common.h
+> +++ b/include/dt-bindings/leds/common.h
+> @@ -19,4 +19,40 @@
+>  #define LEDS_BOOST_ADAPTIVE	1
+>  #define LEDS_BOOST_FIXED	2
+>  
+> +/* Standard LED functions */
+> +#define LED_FUNCTION_ACTIVITY "activity"
+> +#define LED_FUNCTION_ALARM "alarm"
+> +#define LED_FUNCTION_BACKLIGHT "backlight"
+> +#define LED_FUNCTION_BLUETOOTH "bluetooth"
+> +#define LED_FUNCTION_BOOT "boot"
+> +#define LED_FUNCTION_CHARGE "charge"
+> +#define LED_FUNCTION_DEBUG "debug"
+> +#define LED_FUNCTION_DISK "disk"
+> +#define LED_FUNCTION_DISK_ERR "disk-err"
+> +#define LED_FUNCTION_DISK_READ "disk-read"
+> +#define LED_FUNCTION_DISK_WRITE "disk-write"
+> +#define LED_FUNCTION_FAULT "fault"
+> +#define LED_FUNCTION_FLASH "flash"
+> +#define LED_FUNCTION_HEARTBEAT "heartbeat"
+> +#define LED_FUNCTION_INDICATOR "indicator"
+> +#define LED_FUNCTION_KEYBOARD "keyboard"
+> +#define LED_FUNCTION_KEYPAD "keypad"
+> +#define LED_FUNCTION_LAN "lan"
+> +#define LED_FUNCTION_MMC "mmc"
+> +#define LED_FUNCTION_NAND "nand"
+> +#define LED_FUNCTION_ON "on"
+> +#define LED_FUNCTION_PROGRAMMING "programming"
+> +#define LED_FUNCTION_POWER "power"
+> +#define LED_FUNCTION_RX "rx"
+> +#define LED_FUNCTION_SD "sd"
+> +#define LED_FUNCTION_STANDBY "standby"
+> +#define LED_FUNCTION_STATUS "status"
+> +#define LED_FUNCTION_TORCH "torch"
+> +#define LED_FUNCTION_TV "tv"
+> +#define LED_FUNCTION_TX "tx"
+> +#define LED_FUNCTION_USB "usb"
+> +#define LED_FUNCTION_WAN "wan"
+> +#define LED_FUNCTION_WLAN "wlan"
+> +#define LED_FUNCTION_WPS "wps"
+> +
+>  #endif /* __DT_BINDINGS_LEDS_H */
+> 
 
-This causes Slave to see spurious clock edges resulting in data mismatch.
+Reviewed-by: Dan Murphy <dmurphy@ti.com>
 
-This patch fixes this by de-asserting CS before writing SPI_COMMAND1 to
-its default value so through out the transfer it will be in same SPI mode.
-
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/spi/spi-tegra114.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index 3042521c3785..c60e40cab0a0 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -863,6 +863,19 @@ static void tegra_spi_transfer_delay(int delay)
- 	udelay(delay % 1000);
- }
- 
-+static void tegra_spi_transfer_end(struct spi_device *spi)
-+{
-+	struct tegra_spi_data *tspi = spi_master_get_devdata(spi->master);
-+	int cs_val = (spi->mode & SPI_CS_HIGH) ? 0 : 1;
-+
-+	if (cs_val)
-+		tspi->command1_reg |= SPI_CS_SW_VAL;
-+	else
-+		tspi->command1_reg &= ~SPI_CS_SW_VAL;
-+	tegra_spi_writel(tspi, tspi->command1_reg, SPI_COMMAND1);
-+	tegra_spi_writel(tspi, tspi->def_command1_reg, SPI_COMMAND1);
-+}
-+
- static int tegra_spi_transfer_one_message(struct spi_master *master,
- 			struct spi_message *msg)
- {
-@@ -925,8 +938,7 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
- 
- complete_xfer:
- 		if (ret < 0 || skip) {
--			tegra_spi_writel(tspi, tspi->def_command1_reg,
--					SPI_COMMAND1);
-+			tegra_spi_transfer_end(spi);
- 			tegra_spi_transfer_delay(xfer->delay_usecs);
- 			goto exit;
- 		} else if (list_is_last(&xfer->transfer_list,
-@@ -934,13 +946,11 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
- 			if (xfer->cs_change)
- 				tspi->cs_control = spi;
- 			else {
--				tegra_spi_writel(tspi, tspi->def_command1_reg,
--						SPI_COMMAND1);
-+				tegra_spi_transfer_end(spi);
- 				tegra_spi_transfer_delay(xfer->delay_usecs);
- 			}
- 		} else if (xfer->cs_change) {
--			tegra_spi_writel(tspi, tspi->def_command1_reg,
--					SPI_COMMAND1);
-+			tegra_spi_transfer_end(spi);
- 			tegra_spi_transfer_delay(xfer->delay_usecs);
- 		}
- 
 -- 
-2.7.4
+------------------
+Dan Murphy
