@@ -1,49 +1,31 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [RESEND 1/2] nvmem: sunxi_sid: Support SID on H6
-Date: Fri, 5 Apr 2019 09:23:20 +0200
-Message-ID: <20190405072320.zsc47vm63vuqqfvs@flea>
-References: <20190404165726.13149-1-tiny.windzz@gmail.com>
- <20190404165726.13149-2-tiny.windzz@gmail.com>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
+Subject: [PATCH 0/2] clk: stm32: STM32F769 clocks
+Date: Fri, 5 Apr 2019 09:53:30 +0200
+Message-ID: <20190405075332.28530-1-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="aq5wvmbs24fucis4"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190404165726.13149-2-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yangtao Li <tiny.windzz@gmail.com>
-Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, srinivas.kandagatla@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: michael turquette <mturquette@baylibre.com>, stephen boyd <sboyd@kernel.org>, rob herring <robh+dt@kernel.org>, mark rutland <mark.rutland@arm.com>, maxime coquelin <mcoquelin.stm32@gmail.com>, alexandre torgue <alexandre.torgue@st.com>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Gabriel Fernandez <gabriel.fernandez@st.com>
 List-Id: devicetree@vger.kernel.org
 
+STM32F769 board is a derived of STM32F746 board.
+Concerning clocks, main differences are:
+- new source clock for SAI1 and SAI2 (HSI or HSE)
+- Add DFSDM & DSI clock
 
---aq5wvmbs24fucis4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Thu, Apr 04, 2019 at 12:57:25PM -0400, Yangtao Li wrote:
-> Add support for H6's SID controller. It supports 4K-bit
-> EFUSE, bigger than before.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Gabriel Fernandez (2):
+  clk: stm32: Introduce clocks of STM32F769 board
+  ARM: dts: stm32: Enable STM32F769 clock driver
 
-Maxime
+ .../bindings/clock/st,stm32-rcc.txt           |   6 +
+ arch/arm/boot/dts/stm32f769-disco.dts         |   4 +
+ drivers/clk/clk-stm32f4.c                     | 307 +++++++++++++++++-
+ include/dt-bindings/clock/stm32fx-clock.h     |   7 +-
+ 4 files changed, 314 insertions(+), 10 deletions(-)
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---aq5wvmbs24fucis4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKcCYgAKCRDj7w1vZxhR
-xTEpAP9jAs8q5adn+cpvO9WEQltaIPj5zWvr9qEoC8emmFE3vwEA0zKMnVuElJba
-tUUEh7tu5L+TpJut68CspAG274F+Kwc=
-=0od3
------END PGP SIGNATURE-----
-
---aq5wvmbs24fucis4--
+-- 
+2.17.1
