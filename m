@@ -1,50 +1,54 @@
-Return-Path: <SRS0=bLyw=SN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:50053 "EHLO
-        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbfDKHzI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Apr 2019 03:55:08 -0400
-From: Cao Van Dong <cv-dong@jinso.co.jp>
-Subject: [PATCH v2 14/20] dt-bindings: display: renesas: lvds: Add r8a77470 support
-Date: Thu, 11 Apr 2019 16:54:16 +0900
-Message-Id: <1554969262-15028-15-git-send-email-cv-dong@jinso.co.jp>
-In-Reply-To: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
-References: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org, biju.das@bp.renesas.com
-Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp, cv-dong@jinso.co.jp
+Return-Path: <SRS0=5T1w=SH=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v5 08/13] media: tvp5150: initialize subdev before parsing device tree
+Date: Fri,  5 Apr 2019 08:03:12 +0200
+Message-Id: <20190405060317.11240-9-m.felsch@pengutronix.de>
+In-Reply-To: <20190405060317.11240-1-m.felsch@pengutronix.de>
+References: <20190405060317.11240-1-m.felsch@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org
+Cc: p.zabel@pengutronix.de, javierm@redhat.co, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Michael Tretter <m.tretter@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-Add lvds support and document SoC specific bindings for R-Car RZ/G1C(r8a77470) SoC.
+From: Michael Tretter <m.tretter@pengutronix.de>
 
-Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
+There are several debug prints in the tvp5150_parse_dt() function, which
+do not print the prefix, because the v4l2_subdev is not initialized, yet.
+
+Initialize the v4l2_subdev before parsing the device tree to fix the
+debug messages.
+
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt | 1 +
- drivers/gpu/drm/rcar-du/rcar_lvds.c                               | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/media/i2c/tvp5150.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-index a720dbb..f720883 100644
---- a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-+++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-@@ -9,6 +9,7 @@ Required properties:
- - compatible : Shall contain one of
-   - "renesas,r8a7743-lvds" for R8A7743 (RZ/G1M) compatible LVDS encoders
-   - "renesas,r8a7744-lvds" for R8A7744 (RZ/G1N) compatible LVDS encoders
-+  - "renesas,r8a77470-lvds" for R8A77470 (RZ/G1C) compatible LVDS encoders
-   - "renesas,r8a774c0-lvds" for R8A774C0 (RZ/G2E) compatible LVDS encoders
-   - "renesas,r8a7790-lvds" for R8A7790 (R-Car H2) compatible LVDS encoders
-   - "renesas,r8a7791-lvds" for R8A7791 (R-Car M2-W) compatible LVDS encoders
-diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-index f7e4710..61a536f 100644
---- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-@@ -925,6 +925,7 @@ static const struct rcar_lvds_device_info rcar_lvds_r8a77995_info = {
- static const struct of_device_id rcar_lvds_of_table[] = {
- 	{ .compatible = "renesas,r8a7743-lvds", .data = &rcar_lvds_gen2_info },
- 	{ .compatible = "renesas,r8a7744-lvds", .data = &rcar_lvds_gen2_info },
-+	{ .compatible = "renesas,r8a77470-lvds", .data = &rcar_lvds_gen2_info },
- 	{ .compatible = "renesas,r8a774c0-lvds", .data = &rcar_lvds_r8a77990_info },
- 	{ .compatible = "renesas,r8a7790-lvds", .data = &rcar_lvds_r8a7790_info },
- 	{ .compatible = "renesas,r8a7791-lvds", .data = &rcar_lvds_gen2_info },
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index d126127628c5..82a9cb9bf736 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -1974,6 +1974,9 @@ static int tvp5150_probe(struct i2c_client *c,
+ 
+ 	core->regmap = map;
+ 	sd = &core->sd;
++	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
++	sd->internal_ops = &tvp5150_internal_ops;
++	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+ 
+ 	if (IS_ENABLED(CONFIG_OF) && np) {
+ 		res = tvp5150_parse_dt(core, np);
+@@ -1986,10 +1989,6 @@ static int tvp5150_probe(struct i2c_client *c,
+ 		core->mbus_type = V4L2_MBUS_BT656;
+ 	}
+ 
+-	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
+-	sd->internal_ops = &tvp5150_internal_ops;
+-	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+-
+ 	res = tvp5150_mc_init(sd);
+ 	if (res)
+ 		goto err_cleanup_dt;
 -- 
-2.7.4
+2.20.1
