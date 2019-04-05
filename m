@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v5 2/5] media: sunxi: Refactor the Makefile and Kconfig
-Date: Fri,  5 Apr 2019 16:38:20 +0200
-Message-ID: <f5692d7e553c7242f0206b2f241e659097843c1d.1554475081.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v5 4/5] ARM: dts: sun7i: Add CSI0 controller
+Date: Fri,  5 Apr 2019 16:38:22 +0200
+Message-ID: <1d90cffeb44f5cafe312cbf61146c18a76db41b8.1554475081.git-series.maxime.ripard@bootlin.com>
 References: <cover.75d1c91ecddbc451d0e0e961f7ea7f045afd3a79.1554475081.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,57 +12,35 @@ To: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.inte
 Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-The Makefile and Kconfig for the sun6i CSI driver are included in the main
-Makefile / KConfig file. Since we're going to add a new CSI driver for an
-older chip, and the Cedrus driver eventually, it makes more sense to put
-those in our directory.
+The CSI controller embedded in the A20 can be supported by our new driver.
+Let's add it to our DT.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- drivers/media/platform/Kconfig        | 2 +-
- drivers/media/platform/Makefile       | 2 +-
- drivers/media/platform/sunxi/Kconfig  | 1 +
- drivers/media/platform/sunxi/Makefile | 1 +
- 4 files changed, 4 insertions(+), 2 deletions(-)
- create mode 100644 drivers/media/platform/sunxi/Kconfig
- create mode 100644 drivers/media/platform/sunxi/Makefile
+ arch/arm/boot/dts/sun7i-a20.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 4acbed189644..9533fcd33410 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -146,7 +146,7 @@ source "drivers/media/platform/am437x/Kconfig"
- source "drivers/media/platform/xilinx/Kconfig"
- source "drivers/media/platform/rcar-vin/Kconfig"
- source "drivers/media/platform/atmel/Kconfig"
--source "drivers/media/platform/sunxi/sun6i-csi/Kconfig"
-+source "drivers/media/platform/sunxi/Kconfig"
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 641a8fa6d428..0eade0805fb0 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -376,6 +376,17 @@
+ 			num-cs = <1>;
+ 		};
  
- config VIDEO_TI_CAL
- 	tristate "TI CAL (Camera Adaptation Layer) driver"
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index 7cbbd925124c..6ee7eb0d36f4 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -100,4 +100,4 @@ obj-y					+= meson/
- 
- obj-y					+= cros-ec-cec/
- 
--obj-$(CONFIG_VIDEO_SUN6I_CSI)		+= sunxi/sun6i-csi/
-+obj-y					+= sunxi/
-diff --git a/drivers/media/platform/sunxi/Kconfig b/drivers/media/platform/sunxi/Kconfig
-new file mode 100644
-index 000000000000..1b6e89cb78b2
---- /dev/null
-+++ b/drivers/media/platform/sunxi/Kconfig
-@@ -0,0 +1 @@
-+source "drivers/media/platform/sunxi/sun6i-csi/Kconfig"
-diff --git a/drivers/media/platform/sunxi/Makefile b/drivers/media/platform/sunxi/Makefile
-new file mode 100644
-index 000000000000..8d06f98500ee
---- /dev/null
-+++ b/drivers/media/platform/sunxi/Makefile
-@@ -0,0 +1 @@
-+obj-y		+= sun6i-csi/
++		csi0: csi@1c09000 {
++			compatible = "allwinner,sun7i-a20-csi0",
++				     "allwinner,sun4i-a10-csi0";
++			reg = <0x01c09000 0x1000>;
++			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI0>,
++				 <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
++			clock-names = "bus", "mod", "isp", "ram";
++			resets = <&ccu RST_CSI0>;
++		};
++
+ 		emac: ethernet@1c0b000 {
+ 			compatible = "allwinner,sun4i-a10-emac";
+ 			reg = <0x01c0b000 0x1000>;
 -- 
 git-series 0.9.1
