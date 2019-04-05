@@ -1,59 +1,37 @@
-From: Zhi Li <lznuaa@gmail.com>
-Subject: Re: [PATCH V4 2/4] drivers/perf: imx_ddr: Add ddr performance counter
- support
-Date: Fri, 5 Apr 2019 09:34:38 -0500
-Message-ID: <CAHrpEqT67OpeGXB7wgYSsTD9ibG_jk7xO5zMFyxcG5PHFP-bJg@mail.gmail.com>
-References: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
- <1550253761-26841-2-git-send-email-Frank.Li@nxp.com>
- <20190404111714.GA26392@fuggles.cambridge.arm.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 2/2] arm64: dts: h6: Add watchdog node
+Date: Fri, 5 Apr 2019 22:35:08 +0800
+Message-ID: <CAGb2v65wcEAUTwRhC42iRkPaWXLGX1CJeq+TSzHVTOrT+L=8vA@mail.gmail.com>
+References: <20190404135736.8491-1-peron.clem@gmail.com> <20190404135736.8491-2-peron.clem@gmail.com>
+ <20190405090236.e7vnyjzxmzfke3d6@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190404111714.GA26392@fuggles.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Frank Li <frank.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190405090236.e7vnyjzxmzfke3d6@flea>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 4, 2019 at 6:17 AM Will Deacon <will.deacon@arm.com> wrote:
+On Fri, Apr 5, 2019 at 5:02 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> Hi Frank,
->
-> On Fri, Feb 15, 2019 at 06:03:11PM +0000, Frank Li wrote:
-> > Add ddr performance monitor support for iMX8QXP
+> On Thu, Apr 04, 2019 at 03:57:36PM +0200, Clément Péron wrote:
+> > Allwinner H6 has a watchog compatible with A31.
 > >
-> > There are 4 counters for ddr perfomance events.
-> > counter 0 is dedicated for cycles.
-> > you choose any up to 3 no cycles events.
+> > Declare it in the device tree.
 > >
-> > for example:
-> >
-> > perf stat -a -e ddr0/read-access/,ddr0/write-access/,ddr0/precharge/ ls
-> > perf stat -a -e ddr0/cycles/,ddr0/read-access/,ddr0/write-access/ ls
+> > Signed-off-by: Clément Péron <peron.clem@gmail.com>
 >
-> Could you elaborate a bit on DDR_CAP_AXI_ID, please? Specifically, how
-> does the COUNTER_DPCR1 register work and what happens if I specify two
-> simultaneous events with different values in config1? I'm a little wary
-> of taking raw user input and throwing it straight into a device register!
+> Applied both, thanks!
+> Maxime
 
-I have not find better method to do that.
-bit 0-15: AXIID
-bit  16-31: AXID_MASK
+IIRC there are 3 watchdogs on the H6. One is the trusted watchdog,
+which should be reserved for underlying firmware.
 
-Check condition AxID && AXI_MASKING == AXI_ID && AXI_MASKING
+The other two are the normal and R-block watchdog. Although they
+look the same, the "normal" one can't reset the system. :(
+That one is actually the one ATF currently uses. So reboot doesn't
+work on the H6.
 
-best regards
-Frank Li
-
-
->
-> Will
+ChenYu
