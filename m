@@ -1,128 +1,90 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 1/3] dt-bindings: mtd: sunxi: Add new compatible
-Date: Fri, 5 Apr 2019 11:56:24 +0200
-Message-ID: <20190405095624.hv6mfxj7h2dt6mqt@flea>
-References: <20190404162111.22618-1-miquel.raynal@bootlin.com>
- <20190404162111.22618-2-miquel.raynal@bootlin.com>
- <20190405091302.mz3gox5jvoy3ygjr@flea>
- <20190405112813.07d89534@xps13>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH RFC 2/8] soc: samsung: Exynos chipid driver update
+Date: Fri, 5 Apr 2019 12:04:18 +0200
+Message-ID: <5d80718b-57ad-33cd-80ff-03c01266a143@samsung.com>
+References: <CGME20190404172229epcas2p25a819e37035b26ccf53613e880bdcacf@epcas2p2.samsung.com>
+        <20190404171735.12815-1-s.nawrocki@samsung.com>
+        <20190404171735.12815-3-s.nawrocki@samsung.com>
+        <CAJKOXPcJrctz5E8GX2ke804FBifpfYm5D_=H4MguTg_Cq2CPng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5588042925485601306=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190405112813.07d89534@xps13>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPcJrctz5E8GX2ke804FBifpfYm5D_=H4MguTg_Cq2CPng@mail.gmail.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, pankaj.dubey@samsung.com, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On 4/5/19 11:22, Krzysztof Kozlowski wrote:
+> On Thu, 4 Apr 2019 at 19:22, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
+>>
+>> This patch adds definition of selected CHIP ID register offsets
+>> and register bit field definitions for Exynos5422 SoC.
+>>
+>> exynos_chipid_read() helper function is added to allow reading
+>> the CHIP ID block registers.
+>>
+>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> ---
+>>  drivers/soc/samsung/exynos-chipid.c | 16 +++++-----
+>>  drivers/soc/samsung/exynos-chipid.h | 48 +++++++++++++++++++++++++++++
+>>  2 files changed, 57 insertions(+), 7 deletions(-)
+>>  create mode 100644 drivers/soc/samsung/exynos-chipid.h
+>>
+>> diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
+>> index 5cb018807817..4920f0ef2c55 100644
+>> --- a/drivers/soc/samsung/exynos-chipid.c
+>> +++ b/drivers/soc/samsung/exynos-chipid.c
+>> @@ -16,10 +16,7 @@
 
---===============5588042925485601306==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="g5oibzqcggl7e6i7"
-Content-Disposition: inline
+>> -#define EXYNOS_SUBREV_MASK     (0xF << 4)
+>> -#define EXYNOS_MAINREV_MASK    (0xF << 0)
+>> -#define EXYNOS_REV_MASK                (EXYNOS_SUBREV_MASK | EXYNOS_MAINREV_MASK)
+>> -#define EXYNOS_MASK            0xFFFFF000
+> 
+> Create hex-addresses in first commit in lower case.
 
+>> +static void __iomem *exynos_chipid_base;
+> 
+> No, this was removed in Pankaj's version v6 -> v7 and I do not want it
+> to be file-scope. Having it file-scope is error prone and prevents
+> having multiple instances (I do not expect having more than one but
+> still code should be rather nicely generic).
 
---g5oibzqcggl7e6i7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I'm going to switch to using regmap so that will not be needed any 
+more, together with exynos_chipid_read() helper. Then the header
+file would be moved to include/linux/soc/samsung.
+ 
+>> +unsigned int exynos_chipid_read(unsigned int offset)
+>> +{
+>> +       return readl_relaxed(exynos_chipid_base + offset);
+>> +}
 
-On Fri, Apr 05, 2019 at 11:28:13AM +0200, Miquel Raynal wrote:
-> Hi Maxime,
->
-> Maxime Ripard <maxime.ripard@bootlin.com> wrote on Fri, 5 Apr 2019
-> 11:13:02 +0200:
->
-> > Hi,
-> >
-> > On Thu, Apr 04, 2019 at 06:21:09PM +0200, Miquel Raynal wrote:
-> > > The A33 NAND controller is slightly different than the A10+ ones,
-> > > eg. DMA handling is a bit different and a few register offsets
-> > > changed.
-> > >
-> > > Introduce a new compatible to represent this version of the IP.
-> > >
-> > > Also append '-controller' to the new compatible (which is required for
-> > > new compatibles) as this is describing a NAND controller and not a
-> > > NAND chip.
-> >
-> > Out of curiosity, why are you requiring that suffix now?
->
-> Because people are confused with the terminology and we see people
-> mixing all the terms very often: NAND controller, NAND bus, NAND
-> chip, ECC engine, etc. This node only describes a NAND controller, so
-> let be more precise and stop naming everything just "NAND".
+>> diff --git a/drivers/soc/samsung/exynos-chipid.h b/drivers/soc/samsung/exynos-chipid.h
+>> new file mode 100644
+>> index 000000000000..826a12c25fa2
+>> --- /dev/null
+>> +++ b/drivers/soc/samsung/exynos-chipid.h
+>> @@ -0,0 +1,48 @@
 
-Sounds reasonable :)
+>> +#define EXYNOS_CHIPID_REG_PRO_ID       0x00
+>> + #define EXYNOS_SUBREV_MASK            (0xf << 4)
+>> + #define EXYNOS_MAINREV_MASK           (0xf << 0)
+>> + #define EXYNOS_REV_MASK               (EXYNOS_SUBREV_MASK | \
+>> +                                        EXYNOS_MAINREV_MASK)
+>> + #define EXYNOS_MASK                   0xfffff000
+>> +
+>> +#define EXYNOS_CHIPID_REG_PKG_ID       0x04
+> 
+> Can you comment that these are fields from this register?
+> The same in second one.
 
-> >
-> > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/mtd/sunxi-nand.txt | 7 ++++++-
-> > >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-> > > index dcd5a5d80dc0..6128d41d8c59 100644
-> > > --- a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-> > > +++ b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-> > > @@ -1,7 +1,12 @@
-> > >  Allwinner NAND Flash Controller (NFC)
-> > >
-> > >  Required properties:
-> > > -- compatible : "allwinner,sun4i-a10-nand".
-> > > +- compatible : Must be one of:
-> > > +	       - "allwinner,sun4i-a10-nand"
-> > > +	       - "allwinner,sun8i-a33-nand-controller"
-> > > +	       The former may be used by all IPs, however sun8i family
-> > > +	       will need the second one in order to make use of the
-> > > +	       internal DMA capabilities.
-> >
-> > I'm not sure we should have that statement. We have no idea whether or
-> > not this can be used by all IPs *today*, and we surely don't know
-> > about the one that are going to come out.
->
-> Shall I just drop the whole comment ("The former" ... "capabilities.")?
-
-Yep.
-
-Thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---g5oibzqcggl7e6i7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKcmRwAKCRDj7w1vZxhR
-xW8MAQD4BNi7kYSu+KRgYjwK8X/4FeibzytfB2OaOveyw50krgEA20LHaPoBPDMS
-VDZMN/6E/C3dpHAh9/06187+1GltOwY=
-=DvlF
------END PGP SIGNATURE-----
-
---g5oibzqcggl7e6i7--
-
-
---===============5588042925485601306==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5588042925485601306==--
+OK, I will add some comment here.
+ 
+>> + #define EXYNOS5422_IDS_OFFSET         24
+>> + #define EXYNOS5422_IDS_MASK           0xff
+-- 
+Regards,
+Sylwester
