@@ -1,35 +1,106 @@
-Return-Path: <SRS0=NzLh=TA=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:35138 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbfD3O0P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Apr 2019 10:26:15 -0400
-MIME-Version: 1.0
-References: <1554443049-25127-1-git-send-email-cv-dong@jinso.co.jp> <1554443049-25127-4-git-send-email-cv-dong@jinso.co.jp>
-In-Reply-To: <1554443049-25127-4-git-send-email-cv-dong@jinso.co.jp>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 30 Apr 2019 16:26:01 +0200
-Message-ID: <CAMuHMdW4sJK-3s87RTfCjt_ioRBnpp=O6FEO30uF1Fh7CMgG5g@mail.gmail.com>
-Subject: Re: [PATCH 3/4] arm64: dts: renesas: r8a77990: Add CMT device nodes
-Content-Type: text/plain; charset="UTF-8"
+Return-Path: <SRS0=qoK5=SH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from www3345.sakura.ne.jp ([49.212.235.55]:45961 "EHLO
+        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbfDEGUU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Apr 2019 02:20:20 -0400
+From: Cao Van Dong <cv-dong@jinso.co.jp>
+Subject: [PATCH 3/4] arm64: dts: renesas: r8a77990: Add CMT device nodes
+Date: Fri,  5 Apr 2019 14:44:08 +0900
+Message-Id: <1554443049-25127-4-git-send-email-cv-dong@jinso.co.jp>
+In-Reply-To: <1554443049-25127-1-git-send-email-cv-dong@jinso.co.jp>
+References: <1554443049-25127-1-git-send-email-cv-dong@jinso.co.jp>
 Sender: devicetree-owner@vger.kernel.org
-To: Cao Van Dong <cv-dong@jinso.co.jp>
-Cc: Mark Brown <broonie@kernel.org>, Simon Horman <horms+renesas@verge.net.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, =?UTF-8?B?56iy5ZCJ?= <h-inayoshi@jinso.co.jp>, =?UTF-8?B?RHVuZ++8muS6uuOCvQ==?= <nv-dung@jinso.co.jp>, Hoan Nguyen An <na-hoan@jinso.co.jp>
+To: broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org
+Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, linux-renesas-soc@vger.kernel.org, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Apr 5, 2019 at 7:44 AM Cao Van Dong <cv-dong@jinso.co.jp> wrote:
-> This patch adds CMT{0|1|2|3} device nodes for r8a77990 SoC.
->
-> Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
+This patch adds CMT{0|1|2|3} device nodes for r8a77990 SoC.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
+---
+ arch/arm64/boot/dts/renesas/r8a77990.dtsi | 70 +++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a77990.dtsi b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
+index 960eb13..7cf5963 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77990.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
+@@ -284,6 +284,76 @@
+ 			status = "disabled";
+ 		};
+ 
++		cmt0: timer@e60f0000 {
++			compatible = "renesas,r8a77990-cmt0",
++				     "renesas,rcar-gen3-cmt0";
++			reg = <0 0xe60f0000 0 0x1004>;
++			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 303>;
++			clock-names = "fck";
++			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
++			resets = <&cpg 303>;
++			status = "disabled";
++		};
++
++		cmt1: timer@e6130000 {
++			compatible = "renesas,r8a77990-cmt1",
++				     "renesas,rcar-gen3-cmt1";
++			reg = <0 0xe6130000 0 0x1004>;
++			interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 302>;
++			clock-names = "fck";
++			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
++			resets = <&cpg 302>;
++			status = "disabled";
++		};
++
++		cmt2: timer@e6140000 {
++			compatible = "renesas,r8a77990-cmt1",
++				     "renesas,rcar-gen3-cmt1";
++			reg = <0 0xe6140000 0 0x1004>;
++			interrupts = <GIC_SPI 398 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 399 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 301>;
++			clock-names = "fck";
++			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
++			resets = <&cpg 301>;
++			status = "disabled";
++		};
++
++		cmt3: timer@e6148000 {
++			compatible = "renesas,r8a77990-cmt1",
++				     "renesas,rcar-gen3-cmt1";
++			reg = <0 0xe6148000 0 0x1004>;
++			interrupts = <GIC_SPI 470 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 471 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 472 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 473 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 474 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 475 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 476 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 477 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 300>;
++			clock-names = "fck";
++			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
++			resets = <&cpg 300>;
++			status = "disabled";
++		};
++
+ 		cpg: clock-controller@e6150000 {
+ 			compatible = "renesas,r8a77990-cpg-mssr";
+ 			reg = <0 0xe6150000 0 0x1000>;
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.7.4
