@@ -1,7 +1,8 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH 08/12] arm64: dts: allwinner: h6: Add MMC1 pins
-Date: Sat,  6 Apr 2019 01:45:10 +0200
-Message-ID: <20190405234514.6183-9-megous@megous.com>
+Subject: [PATCH 07/12] arm64: dts: allwinner: orange-pi-3:
+ Enable ethernet
+Date: Sat,  6 Apr 2019 01:45:09 +0200
+Message-ID: <20190405234514.6183-8-megous@megous.com>
 References: <20190405234514.6183-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
@@ -20,29 +21,98 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
----
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Orange Pi 3 has two regulators that power the Realtek RTL8211E.
+According to the phy datasheet, both regulators need to be enabled
+at the same time, but we can only specify a single phy-supply in
+the DT.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 91fecab58836..dccad79da90c 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -238,6 +238,15 @@
- 				bias-pull-up;
- 			};
+This can be achieved by making one regulator depedning on the
+other via vin-supply. While it's not a technically correct
+description of the hardware, it achieves the purpose.
+
+All values of RX/TX delay were tested exhaustively and a middle
+one of the working values was chosen.
+
+Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+---
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index 644946749088..5270142527f5 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -15,6 +15,7 @@
  
+ 	aliases {
+ 		serial0 = &uart0;
++		ethernet0 = &emac;
+ 	};
+ 
+ 	chosen {
+@@ -64,6 +65,27 @@
+ 		regulator-max-microvolt = <5000000>;
+ 		regulator-always-on;
+ 	};
 +
-+			mmc1_pins: mmc1-pins {
-+				pins = "PG0", "PG1", "PG2", "PG3",
-+				       "PG4", "PG5";
-+				function = "mmc1";
-+				drive-strength = <30>;
-+				bias-pull-up;
-+			};
++	/*
++	 * The board uses 2.5V RGMII signalling. Power sequence
++	 * to enable the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2)
++	 * power rails at the same time and to wait 100ms.
++	 */
++	reg_gmac_2v5: gmac-2v5 {
++                compatible = "regulator-fixed";
++                regulator-name = "gmac-2v5";
++                regulator-min-microvolt = <2500000>;
++                regulator-max-microvolt = <2500000>;
++                startup-delay-us = <100000>;
++                enable-active-high;
++                gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
 +
- 			mmc2_pins: mmc2-pins {
- 				pins = "PC1", "PC4", "PC5", "PC6",
- 				       "PC7", "PC8", "PC9", "PC10",
++                /* The real parent of gmac-2v5 is reg_vcc5v, but we need
++                 * to enable two regulators to power the phy. This is one
++                 * way to achieve that.
++                 */
++                vin-supply = <&reg_aldo2>; /* GMAC-3V3 */
++        };
+ };
+ 
+ &cpu0 {
+@@ -82,6 +104,17 @@
+ 	status = "okay";
+ };
+ 
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ext_rgmii_pins>;
++	phy-mode = "rgmii";
++	phy-handle = <&ext_rgmii_phy>;
++	phy-supply = <&reg_gmac_2v5>;
++	allwinner,rx-delay-ps = <1500>;
++	allwinner,tx-delay-ps = <700>;
++	status = "okay";
++};
++
+ &hdmi {
+ 	ddc-supply = <&reg_ddc>;
+ 	status = "okay";
+@@ -93,6 +126,17 @@
+ 	};
+ };
+ 
++&mdio {
++	ext_rgmii_phy: ethernet-phy@1 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <1>;
++
++		reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
++		reset-assert-us = <15000>;
++		reset-deassert-us = <40000>;
++	};
++};
++
+ &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins>;
 -- 
 2.21.0
