@@ -1,120 +1,50 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 2/2] dt-bindings: cpufreq: Document
- operating-points-v2-sunxi-cpu
-Date: Fri, 5 Apr 2019 16:55:32 +0200
-Message-ID: <20190405145532.cstvbv3mxbzrmpxp@flea>
-References: <20190405102455.15311-1-tiny.windzz@gmail.com>
- <20190405102455.15311-3-tiny.windzz@gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH 0/6] LM36274 LMU Introduction
+Date: Fri, 5 Apr 2019 09:55:34 -0500
+Message-ID: <20190405145540.27703-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="oc2gi2ozpuz2hvkv"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190405102455.15311-3-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yangtao Li <tiny.windzz@gmail.com>
-Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello
 
---oc2gi2ozpuz2hvkv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This patch series adds the LM36274 to the TI LMU MFD driver as well as leverages
+the TI LMU framework.
 
-Hi,
+This work was done on top of v2 of the TI LMU rework series
+https://lore.kernel.org/patchwork/project/lkml/list/?series=389483
 
-On Fri, Apr 05, 2019 at 06:24:55AM -0400, Yangtao Li wrote:
-> Allwinner Process Voltage Scaling Tables defines the voltage and
-> frequency value  based on the speedbin blown in the efuse combination.
-> The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-> provide the OPP framework with required information.
-> This is used to determine the voltage and frequency value for each
-> OPP of operating-points-v2 table when it is parsed by the OPP framework.
->
-> This change adds documentation for the DT bindings.
-> The "operating-points-v2-sunxi-cpu" DT extends the "operating-points-v2"
-> with following parameters:
-> - nvmem-cells (NVMEM area containig the speedbin information)
-> - opp-supported-hw: A single 32 bit bitmap value,
->   representing compatible HW:
-> 			0:      speedbin 0
-> 			1:      speedbin 1
-> 			2:      speedbin 2
-> 			3-31:   unused
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 235 ++++++++++++++++++
->  1 file changed, 235 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
->
-> diff --git a/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-> new file mode 100644
-> index 000000000000..80201d4e5147
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-> @@ -0,0 +1,235 @@
-> +Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
-> +===================================
-> +
-> +For some SoCs, the CPU frequency subset and voltage value of each OPP
-> +varies based on the silicon variant in use. Allwinner Process Voltage
-> +Scaling Tables defines the voltage and frequency value  based on the
-> +speedbin blown in the efuse combination. The sunxi-cpufreq-nvmem driver
-> +reads the efuse value from the SoC to provide the OPP framework with
-> +required information.
-> +
-> +Required properties:
-> +--------------------
-> +In 'cpus' nodes:
-> +- operating-points-v2: Phandle to the operating-points-v2 table to use.
-> +
-> +In 'operating-points-v2' table:
-> +- compatible: Should be
-> +	- 'operating-points-v2-sunxi-cpu'.
-> +- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
-> +		efuse registers that has information about the
-> +		speedbin that is used to select the right frequency/voltage
-> +		value pair.
-> +		Please refer the for nvmem-cells
-> +		bindings Documentation/devicetree/bindings/nvmem/nvmem.txt
-> +		and also examples below.
-> +
-> +In every OPP node:
-> +- opp-supported-hw: A single 32 bit bitmap value, representing compatible HW.
-> +		    Bitmap:
-> +			0:	speedbin 0
-> +			1:	speedbin 1
-> +			2:	speedbin 2
-> +			3-31:	unused
+I reused the lm363x regulator driver as I did not see it to be feasible to
+rewrite a driver that kinda already exists.
 
-I'm wondering if that's the right approach.
+Dan
 
-I guess we could also have three different OPP tables, and pass them
-all three through a phandle array, and have the kernel code select
-which one is relevant based on the SID content
+Dan Murphy (6):
+  regulator: lm363x: Make the gpio register enable flexible
+  dt-bindings: mfd: Add lm36274 bindings to ti-lmu
+  mfd: ti-lmu: Add LM36274 support to the ti-lmu
+  regulator: lm363x: Add support for LM36274
+  dt-bindings: leds: Add LED bindings for the LM36274
+  leds: lm36274: Introduce the TI LM36274 LED driver
 
-Another option would be to use the OF_DYNAMIC code to fill
-operating-points-v2 at kernel boot, before (or when) cpufreq kicks in.
+ .../devicetree/bindings/leds/leds-lm36274.txt |  82 +++++++++
+ .../devicetree/bindings/mfd/ti-lmu.txt        |  54 ++++++
+ drivers/leds/Kconfig                          |   9 +-
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-lm36274.c                   | 174 ++++++++++++++++++
+ drivers/mfd/Kconfig                           |   5 +-
+ drivers/mfd/ti-lmu.c                          |  14 ++
+ drivers/regulator/Kconfig                     |   2 +-
+ drivers/regulator/lm363x-regulator.c          |  56 +++++-
+ include/linux/mfd/ti-lmu-register.h           |  23 +++
+ include/linux/mfd/ti-lmu.h                    |   4 +
+ 11 files changed, 417 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.txt
+ create mode 100644 drivers/leds/leds-lm36274.c
 
-ATF could also do that work.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---oc2gi2ozpuz2hvkv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKdsZAAKCRDj7w1vZxhR
-xVEsAQCXg2FeX4Go02z6Dxj2tdoeCR2wkl5QACmJ0aFB02r/vQEA5pPZGmheX74N
-k69PxJJ0pP8WhjoBRd4QLyifeKPolQE=
-=Q1iD
------END PGP SIGNATURE-----
-
---oc2gi2ozpuz2hvkv--
+-- 
+2.19.0
