@@ -1,62 +1,68 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH V4 2/4] drivers/perf: imx_ddr: Add ddr performance
- counter support
-Date: Fri, 5 Apr 2019 15:38:46 +0100
-Message-ID: <20190405143846.GB7313@fuggles.cambridge.arm.com>
-References: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
- <1550253761-26841-2-git-send-email-Frank.Li@nxp.com>
- <20190404111714.GA26392@fuggles.cambridge.arm.com>
- <CAHrpEqT67OpeGXB7wgYSsTD9ibG_jk7xO5zMFyxcG5PHFP-bJg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 2/2] arm64: dts: h6: Add watchdog node
+Date: Fri, 5 Apr 2019 16:50:05 +0200
+Message-ID: <20190405145005.jmmwsvbateqssbyq@flea>
+References: <20190404135736.8491-1-peron.clem@gmail.com>
+ <20190404135736.8491-2-peron.clem@gmail.com>
+ <20190405090236.e7vnyjzxmzfke3d6@flea>
+ <CAGb2v65wcEAUTwRhC42iRkPaWXLGX1CJeq+TSzHVTOrT+L=8vA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pkvbogoca7lsguzq"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHrpEqT67OpeGXB7wgYSsTD9ibG_jk7xO5zMFyxcG5PHFP-bJg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zhi Li <lznuaa@gmail.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Frank Li <frank.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <CAGb2v65wcEAUTwRhC42iRkPaWXLGX1CJeq+TSzHVTOrT+L=8vA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 09:34:38AM -0500, Zhi Li wrote:
-> On Thu, Apr 4, 2019 at 6:17 AM Will Deacon <will.deacon@arm.com> wrote:
-> >
-> > Hi Frank,
-> >
-> > On Fri, Feb 15, 2019 at 06:03:11PM +0000, Frank Li wrote:
-> > > Add ddr performance monitor support for iMX8QXP
-> > >
-> > > There are 4 counters for ddr perfomance events.
-> > > counter 0 is dedicated for cycles.
-> > > you choose any up to 3 no cycles events.
-> > >
-> > > for example:
-> > >
-> > > perf stat -a -e ddr0/read-access/,ddr0/write-access/,ddr0/precharge/ ls
-> > > perf stat -a -e ddr0/cycles/,ddr0/read-access/,ddr0/write-access/ ls
-> >
-> > Could you elaborate a bit on DDR_CAP_AXI_ID, please? Specifically, how
-> > does the COUNTER_DPCR1 register work and what happens if I specify two
-> > simultaneous events with different values in config1? I'm a little wary
-> > of taking raw user input and throwing it straight into a device register!
-> 
-> I have not find better method to do that.
-> bit 0-15: AXIID
-> bit  16-31: AXID_MASK
-> 
-> Check condition AxID && AXI_MASKING == AXI_ID && AXI_MASKING
 
-Hmm, that doesn't really answer my second question :(
+--pkvbogoca7lsguzq
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  What happens if I specify two simultaneous events with different values
-  in config1?
+On Fri, Apr 05, 2019 at 10:35:08PM +0800, Chen-Yu Tsai wrote:
+> On Fri, Apr 5, 2019 at 5:02 PM Maxime Ripard <maxime.ripard@bootlin.com> =
+wrote:
+> >
+> > On Thu, Apr 04, 2019 at 03:57:36PM +0200, Cl=E9ment P=E9ron wrote:
+> > > Allwinner H6 has a watchog compatible with A31.
+> > >
+> > > Declare it in the device tree.
+> > >
+> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> >
+> > Applied both, thanks!
+> > Maxime
+>
+> IIRC there are 3 watchdogs on the H6. One is the trusted watchdog,
+> which should be reserved for underlying firmware.
+>
+> The other two are the normal and R-block watchdog. Although they
+> look the same, the "normal" one can't reset the system. :(
+> That one is actually the one ATF currently uses. So reboot doesn't
+> work on the H6.
 
-Will
+So that patch will not do anything then?
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--pkvbogoca7lsguzq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKdrHQAKCRDj7w1vZxhR
+xbAHAQDEUVZRqYJcVX7yu9AeSwY+8lqN0DYIYtAlCkdi4hLzKQD/bOWbNi9pgTc7
+Q2pSP7FYsD7gv+HpuJabgN0ds6D2/gQ=
+=sg6Y
+-----END PGP SIGNATURE-----
+
+--pkvbogoca7lsguzq--
