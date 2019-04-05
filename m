@@ -1,284 +1,79 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 2/3] interconnect: qcom: Add QCS404 interconnect provider
- driver
-Date: Fri, 5 Apr 2019 21:57:56 +0700
-Message-ID: <20190405145756.GN1843@tuxbook-pro>
-References: <20190405035446.31886-1-georgi.djakov@linaro.org>
- <20190405035446.31886-3-georgi.djakov@linaro.org>
+From: Zhi Li <lznuaa@gmail.com>
+Subject: Re: [PATCH V4 2/4] drivers/perf: imx_ddr: Add ddr performance counter
+ support
+Date: Fri, 5 Apr 2019 09:58:38 -0500
+Message-ID: <CAHrpEqSerorArZwSgj5qkFQQgwit5mqPWp5DD6PmYJiLejPJfw@mail.gmail.com>
+References: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
+ <1550253761-26841-2-git-send-email-Frank.Li@nxp.com>
+ <20190404111714.GA26392@fuggles.cambridge.arm.com>
+ <CAHrpEqT67OpeGXB7wgYSsTD9ibG_jk7xO5zMFyxcG5PHFP-bJg@mail.gmail.com>
+ <20190405143846.GB7313@fuggles.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190405035446.31886-3-georgi.djakov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: robh+dt@kernel.org, vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190405143846.GB7313@fuggles.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Frank Li <frank.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 05 Apr 10:54 +07 2019, Georgi Djakov wrote:
-[..]
-> diff --git a/drivers/interconnect/qcom/qcs404.c b/drivers/interconnect/qcom/qcs404.c
-> new file mode 100644
-> index 000000000000..42d36db13ec0
-> --- /dev/null
-> +++ b/drivers/interconnect/qcom/qcs404.c
-> @@ -0,0 +1,488 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 Linaro Ltd
-> + */
-> +
-> +#include <dt-bindings/interconnect/qcom,qcs404.h>
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/interconnect-provider.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/soc/qcom/smd-rpm.h>
-> +
-> +#include "qcs404_ids.h"
-> +
-> +#define RPM_BUS_MASTER_REQ	0x73616d62
-> +#define RPM_BUS_SLAVE_REQ	0x766c7362
-> +#define RPM_KEY_BW		0x00007762
-> +
-> +#define to_qcom_provider(_provider) \
-> +	container_of(_provider, struct qcom_icc_provider, provider)
-> +
-> +struct qcom_smd_rpm *qcs404_rpm;
+On Fri, Apr 5, 2019 at 9:38 AM Will Deacon <will.deacon@arm.com> wrote:
+>
+> On Fri, Apr 05, 2019 at 09:34:38AM -0500, Zhi Li wrote:
+> > On Thu, Apr 4, 2019 at 6:17 AM Will Deacon <will.deacon@arm.com> wrote:
+> > >
+> > > Hi Frank,
+> > >
+> > > On Fri, Feb 15, 2019 at 06:03:11PM +0000, Frank Li wrote:
+> > > > Add ddr performance monitor support for iMX8QXP
+> > > >
+> > > > There are 4 counters for ddr perfomance events.
+> > > > counter 0 is dedicated for cycles.
+> > > > you choose any up to 3 no cycles events.
+> > > >
+> > > > for example:
+> > > >
+> > > > perf stat -a -e ddr0/read-access/,ddr0/write-access/,ddr0/precharge/ ls
+> > > > perf stat -a -e ddr0/cycles/,ddr0/read-access/,ddr0/write-access/ ls
+> > >
+> > > Could you elaborate a bit on DDR_CAP_AXI_ID, please? Specifically, how
 
-static
+Only imx845 have AXID filter capability now.
 
-> +
-[..]
-> +#define DEFINE_QNODE(_name, _id, _buswidth, _mas_rpm_id, _slv_rpm_id,	\
-> +		     _numlinks, ...)					\
-> +		static struct qcom_icc_node _name = {			\
-> +		.name = #_name,						\
-> +		.id = _id,						\
-> +		.buswidth = _buswidth,					\
-> +		.mas_rpm_id = _mas_rpm_id,				\
-> +		.slv_rpm_id = _slv_rpm_id,				\
-> +		.num_links = _numlinks,					\
+> > > does the COUNTER_DPCR1 register work and what happens if I specify two
+> > > simultaneous events with different values in config1? I'm a little wary
 
-If you write this as ARRAY_SIZE(((int[]){ __VA_ARGS__ })), you don't
-need the manually entered _numlinks number.
+There are difference match register for each event.
+1. Read event with config 1 A
+2. Read event with config 1 B
 
-> +		.links = { __VA_ARGS__ },				\
-> +	}
-> +
-[..]
-> +static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
-> +{
-> +	struct qcom_icc_provider *qp;
-> +	struct qcom_icc_node *qn;
-> +	struct icc_provider *provider;
-> +	struct icc_node *n;
-> +	u64 sum_bw;
-> +	u64 max_peak_bw;
-> +	u64 rate;
-> +	u32 agg_avg = 0;
-> +	u32 agg_peak = 0;
-> +	int ret = 0;
-> +
-> +	qn = src->data;
-> +	provider = src->provider;
-> +	qp = to_qcom_provider(provider);
-> +
-> +	list_for_each_entry(n, &provider->nodes, node_list)
-> +		qcom_icc_aggregate(n, n->avg_bw, n->peak_bw,
-> +				   &agg_avg, &agg_peak);
-> +
-> +	sum_bw = icc_units_to_bps(agg_avg);
-> +	max_peak_bw = icc_units_to_bps(agg_peak);
-> +
-> +	/* send message to the RPM processor */
-> +	if (qn->mas_rpm_id != -1) {
-> +		ret = qcom_icc_rpm_smd_send(QCOM_SMD_RPM_ACTIVE_STATE,
-> +					    RPM_BUS_MASTER_REQ,
-> +					    qn->mas_rpm_id,
-> +					    sum_bw);
-> +		if (ret) {
-> +			pr_err("qcom_icc_rpm_smd_send mas %d error %d\n",
-> +			       qn->mas_rpm_id, ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (qn->slv_rpm_id != -1) {
-> +		ret = qcom_icc_rpm_smd_send(QCOM_SMD_RPM_ACTIVE_STATE,
-> +					    RPM_BUS_SLAVE_REQ,
-> +					    qn->slv_rpm_id,
-> +					    sum_bw);
-> +		if (ret) {
-> +			pr_err("qcom_icc_rpm_smd_send slv error %d\n",
-> +			       ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	rate = max(sum_bw, max_peak_bw);
-> +
-> +	do_div(rate, qn->buswidth);
-> +
-> +	if (qn->rate != rate) {
-> +		ret = clk_set_rate(qp->bus_clk, rate);
-> +		if (ret) {
-> +			pr_err("set clk rate %lld error %d\n", rate, ret);
-> +			return ret;
-> +		}
-> +
-> +		ret = clk_set_rate(qp->bus_a_clk, rate);
-> +		if (ret) {
-> +			pr_err("set clk rate %lld error %d\n", rate, ret);
-> +			return ret;
-> +		}
-> +
-> +		qn->rate = rate;
-> +	}
-> +
-> +	return ret;
+1 will show read count with filter A
+2 will show read count with filter B.
 
-ret is 0, return 0; and you can skip setting ret = 0 above.
 
-> +}
-> +
-> +static int qnoc_probe(struct platform_device *pdev)
-> +{
-> +	const struct qcom_icc_desc *desc;
-> +	struct icc_onecell_data *data;
-> +	struct icc_provider *provider;
-> +	struct qcom_icc_node **qnodes;
-> +	struct qcom_icc_provider *qp;
-> +	struct icc_node *node;
-> +	size_t num_nodes, i;
-> +	int ret;
-> +
-> +	/* wait for RPM */
+> > > of taking raw user input and throwing it straight into a device register!
+> >
+> > I have not find better method to do that.
+> > bit 0-15: AXIID
+> > bit  16-31: AXID_MASK
+> >
+> > Check condition AxID && AXI_MASKING == AXI_ID && AXI_MASKING
+>
+> Hmm, that doesn't really answer my second question :(
+>
+>   What happens if I specify two simultaneous events with different values
+>   in config1?
 
-This isn't waiting, it's getting the reference. That said if you make
-these sit on mmio bus you would need to EPROBE_DEFER on the rpm-child
-not being probed yet (and by that it would be a wait).
+Sorry, see above answer.
 
-> +	qcs404_rpm = dev_get_drvdata(pdev->dev.parent);
-> +	if (!qcs404_rpm) {
-> +		dev_err(&pdev->dev, "unable to retrieve handle to RPM\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	desc = of_device_get_match_data(&pdev->dev);
-> +	if (!desc)
-> +		return -EINVAL;
-> +
-> +	qnodes = desc->nodes;
-> +	num_nodes = desc->num_nodes;
-> +
-> +	qp = devm_kzalloc(&pdev->dev, sizeof(*qp), GFP_KERNEL);
-> +	if (!qp)
-> +		return -ENOMEM;
-> +
-> +	data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	qp->bus_clk = devm_clk_get(&pdev->dev, "bus_clk");
-
-Please use the clk_bulk interface instead.
-
-> +	if (IS_ERR(qp->bus_clk))
-> +		return PTR_ERR(qp->bus_clk);
-> +
-> +	ret = clk_prepare_enable(qp->bus_clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "error enabling bus_clk: %d\n", ret);
-
-clk_prepare_enable() will complain if it fails to enable the clock, so
-no need to add another print.
-
-> +		return ret;
-> +	}
-> +
-> +	qp->bus_a_clk = devm_clk_get(&pdev->dev, "bus_a_clk");
-> +	if (IS_ERR(qp->bus_a_clk))
-> +		return PTR_ERR(qp->bus_a_clk);
-> +
-> +	ret = clk_prepare_enable(qp->bus_a_clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "error enabling bus_a_clk: %d\n", ret);
-> +		clk_disable_unprepare(qp->bus_clk);
-> +		return ret;
-> +	}
-> +
-> +	provider = &qp->provider;
-> +	INIT_LIST_HEAD(&provider->nodes);
-> +	provider->dev = &pdev->dev;
-> +	provider->set = qcom_icc_set;
-> +	provider->aggregate = qcom_icc_aggregate;
-> +	provider->xlate = of_icc_xlate_onecell;
-> +	provider->data = data;
-> +
-> +	ret = icc_provider_add(provider);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "error adding interconnect provider\n");
-> +		clk_disable_unprepare(qp->bus_clk);
-> +		clk_disable_unprepare(qp->bus_a_clk);
-> +		return ret;
-> +	}
-> +
-> +	for (i = 0; i < num_nodes; i++) {
-> +		size_t j;
-> +
-> +		node = icc_node_create(qnodes[i]->id);
-> +		if (IS_ERR(node)) {
-> +			ret = PTR_ERR(node);
-> +			goto err;
-> +		}
-> +
-> +		node->name = qnodes[i]->name;
-> +		node->data = qnodes[i];
-> +		icc_node_add(node, provider);
-> +
-> +		dev_dbg(&pdev->dev, "registered node %s\n", node->name);
-> +
-> +		/* populate links */
-> +		for (j = 0; j < qnodes[i]->num_links; j++)
-> +			icc_link_create(node, qnodes[i]->links[j]);
-> +
-> +		data->nodes[i] = node;
-> +	}
-> +	data->num_nodes = num_nodes;
-> +
-> +	platform_set_drvdata(pdev, qp);
-> +
-> +	return ret;
-
-ret is 0 here, so just return 0;
-
-> +err:
-> +	list_for_each_entry(node, &provider->nodes, node_list) {
-> +		icc_node_del(node);
-> +		icc_node_destroy(node->id);
-> +	}
-> +	clk_disable_unprepare(qp->bus_clk);
-> +	clk_disable_unprepare(qp->bus_a_clk);
-> +	icc_provider_del(provider);
-> +
-> +	return ret;
-> +}
-[..]
-> diff --git a/drivers/interconnect/qcom/qcs404_ids.h b/drivers/interconnect/qcom/qcs404_ids.h
-
-You use these defines in the driver, so I think this file should be the
-one in include/dt-bindings...
-
-[..]
-> diff --git a/include/dt-bindings/interconnect/qcom,qcs404.h b/include/dt-bindings/interconnect/qcom,qcs404.h
-
-...and that this is an accidental include(?)
-
-Regards,
-Bjorn
+>
+> Will
