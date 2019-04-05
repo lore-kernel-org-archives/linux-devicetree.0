@@ -1,108 +1,56 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 04/10] x86, olpc: Use a correct version when making up a
- battery node
-Date: Fri, 5 Apr 2019 15:59:48 +0200
-Message-ID: <20190405135948.wnwv2qq3wz7bzsog@earth.universe>
-References: <20190310162419.11861-1-lkundrak@v3.sk>
- <20190310162419.11861-5-lkundrak@v3.sk>
- <alpine.DEB.2.21.1903230020270.2157@nanos.tec.linutronix.de>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] arm64: dts: imx: add Zii Ultra board support
+Date: Fri, 5 Apr 2019 11:08:34 -0300
+Message-ID: <CAOMZO5CNi_Jd3Cah7poxAt8PuRdP=QT7cfkQUPqS1U9+j7tPMw@mail.gmail.com>
+References: <20190403164555.13941-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cicfdoeib2e7lfta"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1903230020270.2157@nanos.tec.linutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Lubomir Rintel <lkundrak@v3.sk>, Darren Hart <dvhart@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, x86@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190403164555.13941-1-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>, Shawn Guo <shawnguo@kernel.org>, patchwork-lst@pengutronix.de, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Chris Healy <cphealy@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Lucas,
 
---cicfdoeib2e7lfta
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 3, 2019 at 1:45 PM Lucas Stach <l.stach@pengutronix.de> wrote:
+>
+> The Zii Ultra design, also known as RDU3, is the i.MX8M based successor
+> to the the i.MX6 based RDU2. This adds the basic board support for all
+> components which are supported by the upstream kernel at this time.
+>
+> The board comes in 2 different versions, called RMB3 and Zest, which
+> are derived from the same design, but have different layouts and a
+> few small differences in the populated components.
+>
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 
-Hi,
+I got the following build error after applying this patch against linux-next:
 
-On Sat, Mar 23, 2019 at 12:25:58AM +0100, Thomas Gleixner wrote:
-> On Sun, 10 Mar 2019, Lubomir Rintel wrote:
->=20
-> Subject prefix ...
->=20
-> > The XO-1 and XO-1.5 batteries apparently differ in an ability to report
-> > ambient temperature. We need to use a different compatible string for t=
-he
-> > XO-1.5 battery.
-> >=20
-> > Previously olpc_dt_fixup() used the presence od the battery node's
->=20
-> s/od/of/
->=20
-> > =20
-> > +int olpc_dt_compatible_match(phandle node, const char *compat)
-> > +{
-> > +	char buf[64];
-> > +	int plen;
-> > +	char *p;
-> > +	int len;
->=20
-> Please coalesce variables of the same type. No point in wasting space.
->=20
-> 	char buf[64], *p;
-> 	int plen, len;
->=20
-> Hmm?
->=20
-> > +
-> > +		if (olpc_dt_compatible_match(node, "olpc,xo1-battery")) {
-> > +			/* If we have a olpc,xo1-battery compatible, then we're
-> > +			 * running a new enough firmware that already has
-> > +			 * the dcon node.
-> > +			 */
->=20
-> Comment style:
->=20
->        		 	 /*
-> 			  * This is a proper multi line comment even
-> 			  * if networking people use that horrible style
-> 			  * above.
-> 			  */
->=20
-> With those nitpicks fixed:
->=20
-> Acked-by: Thomas Gleixner <tglx@linutronix.de>
+  DTC     arch/arm64/boot/dts/freescale/imx8mq-zii-ultra-rmb3.dtb
+Error: arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi:438.1-7
+Label or path pcie0 not found
+Error: arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi:445.1-7
+Label or path pcie1 not found
+FATAL ERROR: Syntax error parsing input tree
 
-Looks like this is the last required change before this can be
-merged. Assuming Lubomir sends a fixed series soon, how should
-it be merged?
+We need Andrey's "[PATCH v4 4/5] arm64: dts: imx8mq: Add nodes for
+PCIe IP blocks" applied first.
 
-a) I get a pull-request with a immutable branch for patch 2-4
-b) Complete patchset goes in via x86
-c) Complete patchset goes in via power-supply
+> +       eeti_touch: eeti_i2c@2a {
 
-I'm fine with all variants.
+touchscreen@2a
 
--- Sebastian
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
---cicfdoeib2e7lfta
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlynX1QACgkQ2O7X88g7
-+ppT6hAAnwa8NzJM9yXdDEp4T6Ci3Aiq3Nus2/3mrQwSI66pYQkangJzm0S1wy8u
-p9Y/SUD1PXtAKPtcnfh6uKp78gsqig+SmKaVC6CU415NuewyjzXDh0jnDAYGjR71
-QfofvUZc/l2X5Dl0AzpiUHp3uGb90pkAGqbo3hLdLGRfM6ZQUMs56uC2qyhYBj/U
-P2hi6sDnpCFGzk+5JkL2oR/XSuq4EUeJXoRfUsvMyFfmwKewbZCi9yONn6HVy9tF
-DfI6ATIbicDQ8RqaLFAcSFukIL/z0B1KTrc8W49b3XPMLbsmF5jm4iEYJem99k2p
-MD8pp0JSJudbDwD/rw2GseyAI1JS7qcAysdMQ8AvXqk8zjG3h+qtcopeCM9IZJmJ
-sK1UPEwY9uIuzrAylGw0HyqRPrPvDU3GUNC49+N7M2GA2Se0GSatkwc+FmAnhaUV
-6BvGQSkVPU2sANVYdy9bRgPGXscJcCZ5Bodmd/70tYlFfKQgUY5Cs6R1YWSs4CSd
-nInDgYrUnG8zggqWbFnVt+XIg+6Gzrf6w4d3AABBxin7x+beno98pLx/nUeVa1Wh
-jvYzTn1cfq52ZmayrkwLTHnnljCqoYhuAXK8JLsijO5PNJyfPbRH2ptADTBtbW+W
-UlfEol9hp7SGMwBFJKZ06ksvpl+JqQJuDrhHeOfBlQdfOeKG0II=
-=Fcpl
------END PGP SIGNATURE-----
-
---cicfdoeib2e7lfta--
+Thanks
