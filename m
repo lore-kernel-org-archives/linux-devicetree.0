@@ -1,47 +1,65 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] ARM: dts: sun8i: tbs-a711: Enable
- UART2 (for NEO-6M GPS module)
-Date: Fri, 5 Apr 2019 17:07:06 +0200
-Message-ID: <20190405150706.jyeght2bbw7xgxf7@flea>
-References: <20190401115616.21337-1-megous@megous.com>
- <20190401115616.21337-6-megous@megous.com>
- <20190404124322.aejij7qomgoco37u@core.my.home>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 2/2] arm64: dts: h6: Add watchdog node
+Date: Fri, 5 Apr 2019 17:08:10 +0200
+Message-ID: <20190405150810.zjwtu6crzaz6ufhx@flea>
+References: <20190404135736.8491-1-peron.clem@gmail.com>
+ <20190404135736.8491-2-peron.clem@gmail.com>
+ <20190405090236.e7vnyjzxmzfke3d6@flea>
+ <CAGb2v65wcEAUTwRhC42iRkPaWXLGX1CJeq+TSzHVTOrT+L=8vA@mail.gmail.com>
+ <20190405145005.jmmwsvbateqssbyq@flea>
+ <CAGb2v66cv7dVwj7oyRaHT5Q2XCbNqzuS-Uk9hdNJbVv57QOmUg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="uwakmiup36vvgwaj"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBHO6TXSQKGQEANUKKHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="acvugxf46aqmch7g"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190404124322.aejij7qomgoco37u-9v8tmBix7cb9zxVx7UNMDg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: wens-jdAy2FN1RRM@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v66cv7dVwj7oyRaHT5Q2XCbNqzuS-Uk9hdNJbVv57QOmUg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Samuel Holland <samuel@sholland.org>
 List-Id: devicetree@vger.kernel.org
 
 
---uwakmiup36vvgwaj
-Content-Type: text/plain; charset="UTF-8"
+--acvugxf46aqmch7g
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 04, 2019 at 02:43:22PM +0200, Ond=C5=99ej Jirman wrote:
-> Hello Maxime,
->
-> On Mon, Apr 01, 2019 at 01:56:16PM +0200, megous via linux-sunxi wrote:
-> > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+On Fri, Apr 05, 2019 at 10:59:35PM +0800, Chen-Yu Tsai wrote:
+> On Fri, Apr 5, 2019 at 10:50 PM Maxime Ripard <maxime.ripard@bootlin.com>=
+ wrote:
 > >
-> > TBS A711 tablet contains u-blox NEO-6M module connected to UART2.
-> > Enable UART2 to gain access to the module from userspace.
+> > On Fri, Apr 05, 2019 at 10:35:08PM +0800, Chen-Yu Tsai wrote:
+> > > On Fri, Apr 5, 2019 at 5:02 PM Maxime Ripard <maxime.ripard@bootlin.c=
+om> wrote:
+> > > >
+> > > > On Thu, Apr 04, 2019 at 03:57:36PM +0200, Cl=E9ment P=E9ron wrote:
+> > > > > Allwinner H6 has a watchog compatible with A31.
+> > > > >
+> > > > > Declare it in the device tree.
+> > > > >
+> > > > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> > > >
+> > > > Applied both, thanks!
+> > > > Maxime
+> > >
+> > > IIRC there are 3 watchdogs on the H6. One is the trusted watchdog,
+> > > which should be reserved for underlying firmware.
+> > >
+> > > The other two are the normal and R-block watchdog. Although they
+> > > look the same, the "normal" one can't reset the system. :(
+> > > That one is actually the one ATF currently uses. So reboot doesn't
+> > > work on the H6.
+> >
+> > So that patch will not do anything then?
 >
-> Other GPS bits are now applied (thank you, Johan), so if this last bit
-> can go in too via a sunxi tree, the series will be complete.
+> I'm still on vacation, so I haven't checked the address of the new device.
+> If it's the normal one, then yeah, it won't do anything. I've tried that.
+> IIRC Samuel (or someone else) on IRC also mentioned this.
 
-Applied, thanks!
+It's the one in the timer that we've used since pretty much day 1 on
+older SoCs, so I guess it qualifies as the normal one :)
+
 Maxime
 
 --
@@ -49,22 +67,15 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---uwakmiup36vvgwaj
+--acvugxf46aqmch7g
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKdvGgAKCRDj7w1vZxhR
-xRxXAQC03Gta5to+qN1+5WtOWtjTcudQ9DDHqL2MXyLIF7+XngEAmb8woERoUW7A
-2uUvjtVRFN+dv8zaqPe/H1grGjLfPQY=
-=DaMZ
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKdvWgAKCRDj7w1vZxhR
+xSteAQC9KPLiAJnkmPbI1WMuAw4jfQMmP2k2Xg5T0yI3MD6RYwEA0aEu0pn9e9hh
+UaO80PdE7zbCruvBaw3TH5Fhb9dv+AI=
+=jbMR
 -----END PGP SIGNATURE-----
 
---uwakmiup36vvgwaj--
+--acvugxf46aqmch7g--
