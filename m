@@ -1,14 +1,14 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 1/3] dt-bindings: mtd: sunxi: Add new compatible
-Date: Fri, 5 Apr 2019 11:28:13 +0200
-Message-ID: <20190405112813.07d89534@xps13>
+Subject: Re: [PATCH 2/3] mtd: rawnand: sunxi: Add DMA support for sun8i
+Date: Fri, 5 Apr 2019 11:37:42 +0200
+Message-ID: <20190405113742.184234ca@xps13>
 References: <20190404162111.22618-1-miquel.raynal@bootlin.com>
- <20190404162111.22618-2-miquel.raynal@bootlin.com>
- <20190405091302.mz3gox5jvoy3ygjr@flea>
+ <20190404162111.22618-3-miquel.raynal@bootlin.com>
+ <20190405091607.2dzckvyqibs7xmew@flea>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4435939595436430829=="
+Content-Type: multipart/mixed; boundary="===============6646406635027866202=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190405091302.mz3gox5jvoy3ygjr@flea>
+In-Reply-To: <20190405091607.2dzckvyqibs7xmew@flea>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,92 +22,136 @@ To: Maxime Ripard <maxime.ripard@bootlin.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============4435939595436430829==
+--===============6646406635027866202==
 Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/Mt2zQUa2GT7rjMNkmTVG+Na"; protocol="application/pgp-signature"
+ boundary="Sig_/vd++0sxM_TLpDiWu=l8Dxew"; protocol="application/pgp-signature"
 
---Sig_/Mt2zQUa2GT7rjMNkmTVG+Na
+--Sig_/vd++0sxM_TLpDiWu=l8Dxew
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
 Hi Maxime,
 
 Maxime Ripard <maxime.ripard@bootlin.com> wrote on Fri, 5 Apr 2019
-11:13:02 +0200:
+11:16:07 +0200:
 
-> Hi,
->=20
-> On Thu, Apr 04, 2019 at 06:21:09PM +0200, Miquel Raynal wrote:
-> > The A33 NAND controller is slightly different than the A10+ ones,
-> > eg. DMA handling is a bit different and a few register offsets
-> > changed.
+> On Thu, Apr 04, 2019 at 06:21:10PM +0200, Miquel Raynal wrote:
+> > Allwinner NAND controllers can make use of DMA to enhance the I/O
+> > throughput thanks to ECC pipelining. DMA handling with sun8i NAND IP
+> > is a bit different than with the older SoCs, hence the introduction of
+> > a new compatible to handle:
+> > * the differences between register offsets,
+> > * the burst length change from 4 to minimum 8,
+> > * drive SRAM accesses through the AHB bus instead of the MBUS.
 > >
-> > Introduce a new compatible to represent this version of the IP.
-> >
-> > Also append '-controller' to the new compatible (which is required for
-> > new compatibles) as this is describing a NAND controller and not a
-> > NAND chip. =20
->=20
-> Out of curiosity, why are you requiring that suffix now?
-
-Because people are confused with the terminology and we see people
-mixing all the terms very often: NAND controller, NAND bus, NAND
-chip, ECC engine, etc. This node only describes a NAND controller, so
-let be more precise and stop naming everything just "NAND".
-
->=20
 > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > > ---
-> >  Documentation/devicetree/bindings/mtd/sunxi-nand.txt | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
+> >  drivers/mtd/nand/raw/sunxi_nand.c | 75 ++++++++++++++++++++++++++++---
+> >  1 file changed, 68 insertions(+), 7 deletions(-)
 > >
-> > diff --git a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt b/Doc=
-umentation/devicetree/bindings/mtd/sunxi-nand.txt
-> > index dcd5a5d80dc0..6128d41d8c59 100644
-> > --- a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-> > +++ b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-> > @@ -1,7 +1,12 @@
-> >  Allwinner NAND Flash Controller (NFC)
+> > diff --git a/drivers/mtd/nand/raw/sunxi_nand.c b/drivers/mtd/nand/raw/s=
+unxi_nand.c
+> > index 4282bc477761..49cd5067adaa 100644
+> > --- a/drivers/mtd/nand/raw/sunxi_nand.c
+> > +++ b/drivers/mtd/nand/raw/sunxi_nand.c
+> > @@ -42,7 +42,8 @@
+> >  #define NFC_REG_CMD		0x0024
+> >  #define NFC_REG_RCMD_SET	0x0028
+> >  #define NFC_REG_WCMD_SET	0x002C
+> > -#define NFC_REG_IO_DATA		0x0030
+> > +#define NFC_REG_A10_IO_DATA	0x0030
+> > +#define NFC_REG_A33_IO_DATA	0x0300
+> >  #define NFC_REG_ECC_CTL		0x0034
+> >  #define NFC_REG_ECC_ST		0x0038
+> >  #define NFC_REG_DEBUG		0x003C
+> > @@ -200,6 +201,22 @@ static inline struct sunxi_nand_chip *to_sunxi_nan=
+d(struct nand_chip *nand)
+> >  	return container_of(nand, struct sunxi_nand_chip, nand);
+> >  }
 > >
-> >  Required properties:
-> > -- compatible : "allwinner,sun4i-a10-nand".
-> > +- compatible : Must be one of:
-> > +	       - "allwinner,sun4i-a10-nand"
-> > +	       - "allwinner,sun8i-a33-nand-controller"
-> > +	       The former may be used by all IPs, however sun8i family
-> > +	       will need the second one in order to make use of the
-> > +	       internal DMA capabilities. =20
+> > +/*
+> > + * NAND Controller capabilities structure: stores NAND controller capa=
+bilities
+> > + * for distinction between compatible strings.
+> > + *
+> > + * @sram_through_ahb:	On A33, we choose to access the internal RAM thr=
+ough AHB
+> > + *                      instead of MBUS (less configuration). A10+ use=
+ the MBUS =20
 >=20
-> I'm not sure we should have that statement. We have no idea whether or
-> not this can be used by all IPs *today*, and we surely don't know
-> about the one that are going to come out.
+> What do you mean by A10+ ?
 
-Shall I just drop the whole comment ("The former" ... "capabilities.")?
+I meant A1x, A2x SoCs. Not sure it matches a product line for you, so
+please suggest something to mean "SoCs which are not A33" (so far I
+think all worked without this).
+
+>=20
+> > + *                      but no extra configuration is needed.
+> > + * @reg_io_data:	I/O data register
+> > + * @dma_maxburst:	DMA maxburst
+> > + */
+> > +struct sunxi_nfc_caps {
+> > +	bool sram_through_ahb;
+> > +	unsigned int reg_io_data;
+> > +	unsigned int dma_maxburst;
+> > +}; =20
+>=20
+> Ideally, the introduction of that structure and the introduction of
+> the A33 support should be separate patches.
+
+Sure, I can split it up.
+
+>=20
+> >  /**
+> >   * struct sunxi_nfc - stores sunxi NAND controller information
+> >   *
+> > @@ -228,6 +245,7 @@ struct sunxi_nfc {
+> >  	struct list_head chips;
+> >  	struct completion complete;
+> >  	struct dma_chan *dmac;
+> > +	const struct sunxi_nfc_caps *caps;
+> >  };
+> >
+> >  static inline struct sunxi_nfc *to_sunxi_nfc(struct nand_controller *c=
+trl)
+> > @@ -350,10 +368,29 @@ static int sunxi_nfc_dma_op_prepare(struct sunxi_=
+nfc *nfc, const void *buf,
+> >  		goto err_unmap_buf;
+> >  	}
+> >
+> > -	writel(readl(nfc->regs + NFC_REG_CTL) | NFC_RAM_METHOD,
+> > -	       nfc->regs + NFC_REG_CTL);
+> > +	/*
+> > +	 * On A33, we suppose the "internal RAM" (p.12 of the user manual) =20
+>=20
+> Which user manual? It certainly isn't the A33 user manual :)
+
+You are right it is the A33 NAND flash controller spec.
 
 
 Thanks,
 Miqu=C3=A8l
 
---Sig_/Mt2zQUa2GT7rjMNkmTVG+Na
+--Sig_/vd++0sxM_TLpDiWu=l8Dxew
 Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCgAdFiEE9HuaYnbmDhq/XIDIJWrqGEe9VoQFAlynH60ACgkQJWrqGEe9
-VoQdwAgAtbI64ZDpawZ2HLgjTSLevz/kBR4Lu21liULYWueW5kEtaPmOPt2kBsdz
-vgL+ZQvAWEDy+dq64Sx0RYOwP4F5D6xSkvPIbZPRtGuhIa5Zn+5vuu7BQQpXZrwD
-Ca5LGh8UNUM4xkF/XQcJogymFrwG3MVjUW0T1Kes9vT5q7IML+4qDszShB/mIJ5t
-HlSsAVYNicOxRlMZfCogFgp5CvlHESX9IMZa0HJd9z8LMBJK7roXq3Lh2bui8D+e
-ilomXghjGuoxQeMJu+i3vPeCNE5XAxwZbTDjFUUyvKaEK7kPzXSEqCSOyIlBqk/2
-vl0n+rDQffi/njJjxfB708IYEvWgdw==
-=BJHf
+iQEzBAEBCgAdFiEE9HuaYnbmDhq/XIDIJWrqGEe9VoQFAlynIeYACgkQJWrqGEe9
+VoT7JQgAnbw20yLfhshSpFrv+WX4hRMTD6hkwgSeuQQqjet8FEBQ8n03wLHS19cr
+Pv3V3rrMuWVXw2BAjgs1i4hSn6oRxCZHAuKh2JAnSmMsHOCcliZ07w+kYuxtFncv
+lLmWdrotkw/z6QdT0LSNevJCfmlFCe5Jy3XlxaTXgooREkuatOQCawU3q6bLFt4m
+cRLBE6WXHuySpXmlj0p0MqkFOmIQz1EeSP+pYAgXK+557BnRrmY68wBUuS/zNY48
+0RFytZsNvYHMgqLpqZxao23Lmv2Rg3S0b5DsEovVsvsbxVR6Nlcc96jMeSKTYxnF
+qXs0fdqNNHBSXI6poDHlJA3Y4IJR/g==
+=ph20
 -----END PGP SIGNATURE-----
 
---Sig_/Mt2zQUa2GT7rjMNkmTVG+Na--
+--Sig_/vd++0sxM_TLpDiWu=l8Dxew--
 
 
---===============4435939595436430829==
+--===============6646406635027866202==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -118,4 +162,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============4435939595436430829==--
+--===============6646406635027866202==--
