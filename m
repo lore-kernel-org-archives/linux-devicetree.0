@@ -1,71 +1,29 @@
-Return-Path: <SRS0=akoX=SD=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 07/12] ARM: dts: r8a77470: Add USB PHY DT support
-Date: Mon,  1 Apr 2019 13:53:47 +0100
-Message-Id: <1554123232-58942-8-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
-References: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <robherring2@gmail.com>
+Date: Sat, 6 Apr 2019 02:09:27 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 10/13] media: dt-bindings: tvp5150: cleanup bindings
+ stlye
+Message-ID: <20190406070927.GA3106@bogus>
+References: <20190405060317.11240-1-m.felsch@pengutronix.de>
+ <20190405060317.11240-11-m.felsch@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190405060317.11240-11-m.felsch@pengutronix.de>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, p.zabel@pengutronix.de, javierm@redhat.co, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Define the r8a77470 generic part of the USB PHY device node.
+On Fri,  5 Apr 2019 08:03:14 +0200, Marco Felsch wrote:
+> Use underlines to highlight optional and required properties. This is
+> quite common for all bindings. Align descriptions and start sentence
+> with uppercase letter. Also reword the usage of the required
+> endpoint properties for the output port in case BT.656 should be used.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+>  .../devicetree/bindings/media/i2c/tvp5150.txt | 30 +++++++++++--------
+>  1 file changed, 17 insertions(+), 13 deletions(-)
+> 
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
-V1-->V2
- * New patch
----
- arch/arm/boot/dts/r8a77470.dtsi | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index 493cf2b..d6438fb 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -325,6 +325,42 @@
- 			status = "disabled";
- 		};
- 
-+		usbphy0: usb-phy@e6590100 {
-+			compatible = "renesas,usb-phy-r8a77470",
-+				     "renesas,rcar-gen2-usb-phy";
-+			reg = <0 0xe6590100 0 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&cpg CPG_MOD 704>;
-+			clock-names = "usbhs";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 704>;
-+			status = "disabled";
-+
-+			usb0: usb-channel@0 {
-+				reg = <0>;
-+				#phy-cells = <1>;
-+			};
-+		};
-+
-+		usbphy1: usb-phy@e6598100 {
-+			compatible = "renesas,usb-phy-r8a77470",
-+				     "renesas,rcar-gen2-usb-phy";
-+			reg = <0 0xe6598100 0 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&cpg CPG_MOD 706>;
-+			clock-names = "usbhs";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 706>;
-+			status = "disabled";
-+
-+			usb1: usb-channel@0 {
-+				reg = <0>;
-+				#phy-cells = <1>;
-+			};
-+		};
-+
- 		usb_dmac00: dma-controller@e65a0000 {
- 			compatible = "renesas,r8a77470-usb-dmac",
- 				     "renesas,usb-dmac";
--- 
-2.7.4
+Reviewed-by: Rob Herring <robh@kernel.org>
