@@ -1,51 +1,51 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 1/2] dt-bindings: phy: Add documentation for mixel dphy
-Date: Sat, 06 Apr 2019 01:06:15 -0500
-Message-ID: <5ca841db.1c69fb81.42eb2.891d@mx.google.com>
-References: <cover.1554113192.git.agx@sigxcpu.org>
- <15b5adaeae3d5ab9020f98d067394a581522f6f4.1554113192.git.agx@sigxcpu.org>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0417000108=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <15b5adaeae3d5ab9020f98d067394a581522f6f4.1554113192.git.agx@sigxcpu.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-Cc: devicetree@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kishon Vijay Abraham I <kishon@ti.com>, Robert Chiras <robert.chiras@nxp.com>, Li Jun <jun.li@nxp.com>, Sam Ravnborg <sam@ravnborg.org>, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 1/7] dt-bindings: Add panel-timing subnode to simple-panel
+Date: Sat, 06 Apr 2019 01:06:30 -0500
+Message-ID: <5ca841e8.1c69fb81.fc058.3930@mx.google.com>
+References: <20190401171724.215780-1-dianders@chromium.org> <20190401171724.215780-2-dianders@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190401171724.215780-2-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Sean Paul <seanpaul@chromium.org>, linux-rockchip@lists.infradead.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, =?UTF-8?q?Enric=20Balletb=C3=B2?= <enric.balletbo@collabora.com>, mka@chromium.org, Eric Anholt <eric@anholt.net>, Jeffy Chen <jeffy.chen@rock-chips.com>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Daniel Vetter <daniel@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
---===============0417000108==
-Content-Type: text/plain
-
-On Mon,  1 Apr 2019 12:13:35 +0200, =?UTF-8?q?Guido=20G=C3=BCnther?= wrote:
-> Add support for the MIXEL DPHY IP as found on NXP's i.MX8MQ SoCs.
+On Mon,  1 Apr 2019 10:17:18 -0700, Douglas Anderson wrote:
+> From: Sean Paul <seanpaul@chromium.org>
 > 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> This patch adds a new subnode to simple-panel allowing us to override
+> the typical timing expressed in the panel's display_timing.
+> 
+> Changes in v2:
+>  - Split out the binding into a new patch (Rob)
+>  - display-timings is a new section (Rob)
+>  - Use the full display-timings subnode instead of picking the timing
+>    out (Rob/Thierry)
+> Changes in v3:
+>  - Go back to using the timing subnode directly, but rename to
+>    panel-timing (Rob)
+> Changes in v4:
+>  - Simplify desc. for when override should be used (Thierry/Laurent)
+>  - Removed Rob H review since it's been a year and wording changed
+> Changes in v5:
+>  - Removed bit about OS may ignore (Rob/Ezequiel)
+> 
+> Cc: Doug Anderson <dianders@chromium.org>
+> Cc: Eric Anholt <eric@anholt.net>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Stéphane Marchesin <marcheu@chromium.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-rockchip@lists.infradead.org
+> Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
->  .../bindings/phy/mixel,mipi-dsi-phy.txt       | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
+> 
+>  .../bindings/display/panel/simple-panel.txt   | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
-
-
---===============0417000108==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============0417000108==--
