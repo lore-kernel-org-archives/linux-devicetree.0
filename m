@@ -1,98 +1,106 @@
-From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH 02/12] drm: sun4i: Add support for enabling DDC
- I2C bus to dw_hdmi glue
-Date: Sat,  6 Apr 2019 01:45:04 +0200
-Message-ID: <20190405234514.6183-3-megous@megous.com>
-References: <20190405234514.6183-1-megous@megous.com>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Samuel Holland <samuel@sholland.org>
+Subject: Re: [PATCH 2/2] dt-bindings: cpufreq: Document
+ operating-points-v2-sunxi-cpu
+Date: Fri, 5 Apr 2019 22:26:20 -0500
+Message-ID: <5721bddc-4995-c38f-3f45-7a4589a1ccb5@sholland.org>
+References: <20190405102455.15311-1-tiny.windzz@gmail.com>
+ <20190405102455.15311-3-tiny.windzz@gmail.com>
+ <20190405145532.cstvbv3mxbzrmpxp@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBEWRT7SQKGQEW66UC4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20190405234514.6183-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm802
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190405145532.cstvbv3mxbzrmpxp@flea>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Yangtao Li <tiny.windzz@gmail.com>
+Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+On 4/5/19 9:55 AM, Maxime Ripard wrote:
+> Hi,
+> 
+> On Fri, Apr 05, 2019 at 06:24:55AM -0400, Yangtao Li wrote:
+>> Allwinner Process Voltage Scaling Tables defines the voltage and
+>> frequency value  based on the speedbin blown in the efuse combination.
+>> The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
+>> provide the OPP framework with required information.
+>> This is used to determine the voltage and frequency value for each
+>> OPP of operating-points-v2 table when it is parsed by the OPP framework.
+>>
+>> This change adds documentation for the DT bindings.
+>> The "operating-points-v2-sunxi-cpu" DT extends the "operating-points-v2"
+>> with following parameters:
+>> - nvmem-cells (NVMEM area containig the speedbin information)
+>> - opp-supported-hw: A single 32 bit bitmap value,
+>>   representing compatible HW:
+>> 			0:      speedbin 0
+>> 			1:      speedbin 1
+>> 			2:      speedbin 2
+>> 			3-31:   unused
+>>
+>> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+>> ---
+>>  .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 235 ++++++++++++++++++
+>>  1 file changed, 235 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+>> new file mode 100644
+>> index 000000000000..80201d4e5147
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+>> @@ -0,0 +1,235 @@
+>> +Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
+>> +===================================
+>> +
+>> +For some SoCs, the CPU frequency subset and voltage value of each OPP
+>> +varies based on the silicon variant in use. Allwinner Process Voltage
+>> +Scaling Tables defines the voltage and frequency value  based on the
+>> +speedbin blown in the efuse combination. The sunxi-cpufreq-nvmem driver
+>> +reads the efuse value from the SoC to provide the OPP framework with
+>> +required information.
+>> +
+>> +Required properties:
+>> +--------------------
+>> +In 'cpus' nodes:
+>> +- operating-points-v2: Phandle to the operating-points-v2 table to use.
+>> +
+>> +In 'operating-points-v2' table:
+>> +- compatible: Should be
+>> +	- 'operating-points-v2-sunxi-cpu'.
+>> +- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
+>> +		efuse registers that has information about the
+>> +		speedbin that is used to select the right frequency/voltage
+>> +		value pair.
+>> +		Please refer the for nvmem-cells
+>> +		bindings Documentation/devicetree/bindings/nvmem/nvmem.txt
+>> +		and also examples below.
+>> +
+>> +In every OPP node:
+>> +- opp-supported-hw: A single 32 bit bitmap value, representing compatible HW.
+>> +		    Bitmap:
+>> +			0:	speedbin 0
+>> +			1:	speedbin 1
+>> +			2:	speedbin 2
+>> +			3-31:	unused
+> 
+> I'm wondering if that's the right approach.
+> 
+> I guess we could also have three different OPP tables, and pass them
+> all three through a phandle array, and have the kernel code select
+> which one is relevant based on the SID content
+> 
+> Another option would be to use the OF_DYNAMIC code to fill
+> operating-points-v2 at kernel boot, before (or when) cpufreq kicks in.
+> 
+> ATF could also do that work.
 
-Orange Pi 3 board requires enabling DDC I2C bus via some GPIO connected
-transistors, before it can be used. Model this as a power supply for DDC
-(via regulator framework).
+While ATF has code to read and parse the DTB (which it uses to set up the PMIC),
+it's not really in a position to modify the DTB. For one thing, it only has
+access to the DTB appended to u-boot, not any DTB loaded from disk. And for two,
+that would add a significant amount of code, when ATF is already reaching its
+size limits.
 
-Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
----
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 17 ++++++++++++++++-
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  1 +
- 2 files changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-index dc47720c99ba..a1518525fa2f 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-@@ -146,16 +146,28 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 		return PTR_ERR(hdmi->regulator);
- 	}
- 
-+	hdmi->ddc_regulator = devm_regulator_get(dev, "ddc");
-+	if (IS_ERR(hdmi->ddc_regulator)) {
-+		dev_err(dev, "Couldn't get ddc regulator\n");
-+		return PTR_ERR(hdmi->ddc_regulator);
-+	}
-+
- 	ret = regulator_enable(hdmi->regulator);
- 	if (ret) {
- 		dev_err(dev, "Failed to enable regulator\n");
- 		return ret;
- 	}
- 
-+	ret = regulator_enable(hdmi->ddc_regulator);
-+	if (ret) {
-+		dev_err(dev, "Failed to enable ddc regulator\n");
-+		goto err_disable_regulator;
-+	}
-+
- 	ret = reset_control_deassert(hdmi->rst_ctrl);
- 	if (ret) {
- 		dev_err(dev, "Could not deassert ctrl reset control\n");
--		goto err_disable_regulator;
-+		goto err_disable_ddc_regulator;
- 	}
- 
- 	ret = clk_prepare_enable(hdmi->clk_tmds);
-@@ -208,6 +220,8 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 	clk_disable_unprepare(hdmi->clk_tmds);
- err_assert_ctrl_reset:
- 	reset_control_assert(hdmi->rst_ctrl);
-+err_disable_ddc_regulator:
-+	regulator_disable(hdmi->ddc_regulator);
- err_disable_regulator:
- 	regulator_disable(hdmi->regulator);
- 
-@@ -223,6 +237,7 @@ static void sun8i_dw_hdmi_unbind(struct device *dev, struct device *master,
- 	sun8i_hdmi_phy_remove(hdmi);
- 	clk_disable_unprepare(hdmi->clk_tmds);
- 	reset_control_assert(hdmi->rst_ctrl);
-+	regulator_disable(hdmi->ddc_regulator);
- 	regulator_disable(hdmi->regulator);
- }
- 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-index 720c5aa8adc1..6e93d55560b6 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-@@ -188,6 +188,7 @@ struct sun8i_dw_hdmi {
- 	struct sun8i_hdmi_phy		*phy;
- 	struct dw_hdmi_plat_data	plat_data;
- 	struct regulator		*regulator;
-+	struct regulator		*ddc_regulator;
- 	const struct sun8i_dw_hdmi_quirks *quirks;
- 	struct reset_control		*rst_ctrl;
- };
--- 
-2.21.0
+Cheers,
+Samuel
