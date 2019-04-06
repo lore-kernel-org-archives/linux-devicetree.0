@@ -1,51 +1,22 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/7] dt-bindings: Add panel-timing subnode to simple-panel
-Date: Sat, 06 Apr 2019 01:06:30 -0500
-Message-ID: <5ca841e8.1c69fb81.fc058.3930@mx.google.com>
-References: <20190401171724.215780-1-dianders@chromium.org> <20190401171724.215780-2-dianders@chromium.org>
+Subject: Re: [PATCH 3/3] dt-bindings: iio: adc: Add AD7616 ADC documentation
+Date: Sat, 06 Apr 2019 01:06:39 -0500
+Message-ID: <5ca841f0.1c69fb81.3c62c.c015@mx.google.com>
+References: <20190402131841.8430-1-beniamin.bia@analog.com> <20190402131841.8430-3-beniamin.bia@analog.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190401171724.215780-2-dianders@chromium.org>
+In-Reply-To: <20190402131841.8430-3-beniamin.bia@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Sean Paul <seanpaul@chromium.org>, linux-rockchip@lists.infradead.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, =?UTF-8?q?Enric=20Balletb=C3=B2?= <enric.balletbo@collabora.com>, mka@chromium.org, Eric Anholt <eric@anholt.net>, Jeffy Chen <jeffy.chen@rock-chips.com>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Daniel Vetter <daniel@ffwll.ch>
+To: Beniamin Bia <beniamin.bia@analog.com>
+Cc: jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, biabeniamin@outlook.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  1 Apr 2019 10:17:18 -0700, Douglas Anderson wrote:
-> From: Sean Paul <seanpaul@chromium.org>
+On Tue, 2 Apr 2019 16:18:41 +0300, Beniamin Bia wrote:
+> Document support for AD7616 Analog to Digital Converter.
 > 
-> This patch adds a new subnode to simple-panel allowing us to override
-> the typical timing expressed in the panel's display_timing.
-> 
-> Changes in v2:
->  - Split out the binding into a new patch (Rob)
->  - display-timings is a new section (Rob)
->  - Use the full display-timings subnode instead of picking the timing
->    out (Rob/Thierry)
-> Changes in v3:
->  - Go back to using the timing subnode directly, but rename to
->    panel-timing (Rob)
-> Changes in v4:
->  - Simplify desc. for when override should be used (Thierry/Laurent)
->  - Removed Rob H review since it's been a year and wording changed
-> Changes in v5:
->  - Removed bit about OS may ignore (Rob/Ezequiel)
-> 
-> Cc: Doug Anderson <dianders@chromium.org>
-> Cc: Eric Anholt <eric@anholt.net>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Stéphane Marchesin <marcheu@chromium.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-rockchip@lists.infradead.org
-> Signed-off-by: Sean Paul <seanpaul@chromium.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
 > ---
-> 
->  .../bindings/display/panel/simple-panel.txt   | 22 +++++++++++++++++++
->  1 file changed, 22 insertions(+)
+>  Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
