@@ -1,22 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/5] dt-bindings: display: stm32: add supply property to DSI controller
-Date: Sat, 06 Apr 2019 01:06:58 -0500
-Message-ID: <5ca84204.1c69fb81.1c8ee.7f46@mx.google.com>
-References: <1554279389-27377-1-git-send-email-yannick.fertre@st.com> <1554279389-27377-2-git-send-email-yannick.fertre@st.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: timer: Add binding doc for nxp system  counter timer
+Date: Sat, 06 Apr 2019 01:07:01 -0500
+Message-ID: <5ca84207.1c69fb81.eee15.9249@mx.google.com>
+References: <1554287101-16189-1-git-send-email-ping.bai@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554279389-27377-2-git-send-email-yannick.fertre@st.com>
+In-Reply-To: <1554287101-16189-1-git-send-email-ping.bai@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Yannick Fertre <yannick.fertre@st.com>, Philippe Cornu <philippe.cornu@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>, Vincent Abriou <vincent.abriou@st.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Jacky Bai <ping.bai@nxp.com>
+Cc: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 3 Apr 2019 10:16:25 +0200, =?UTF-8?q?Yannick=20Fertr=C3=A9?= wrote:
-> This patch adds documentation of a new property phy-dsi-supply to the
-> STM32 DSI controller.
+On Wed, 3 Apr 2019 10:20:25 +0000, Jacky Bai wrote:
+> From: Bai Ping <ping.bai@nxp.com>
 > 
-> Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+> Add the binding doc for nxp system counter timer module.
+> 
+> Signed-off-by: Bai Ping <ping.bai@nxp.com>
 > ---
->  Documentation/devicetree/bindings/display/st,stm32-ltdc.txt | 3 +++
->  1 file changed, 3 insertions(+)
+> change v1->v2
+>  - remove the blank line at EOF
+> change v2->v3
+>  - update the binding example based on the driver change
+> ---
+>  .../devicetree/bindings/timer/nxp,sysctr-timer.txt | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
