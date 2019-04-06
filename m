@@ -1,67 +1,43 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v4 0/4] CoreSight: Support static funnel with DT binding consolidation
-Date: Sat,  6 Apr 2019 19:21:41 +0800
-Message-ID: <20190406112145.15184-1-leo.yan@linaro.org>
+Subject: [PATCH v4 2/4] coresight: replicator: Add new device id for static replicator
+Date: Sat,  6 Apr 2019 19:21:43 +0800
+Message-ID: <20190406112145.15184-3-leo.yan@linaro.org>
+References: <20190406112145.15184-1-leo.yan@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190406112145.15184-1-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Wanglai Shi <shiwanglai@hisilicon.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Since before there have no platforms use static funnel in mainline
-kernel (though maybe some in-house SoC has used it but didn't upstream
-for mainline kernel yet so we don't be aware for it), when enable
-CoreSight DT binding for hikey960, we found the SoC uses the static
-funnel in the link path and but it's not supported in CoreSight funnel
-driver.
+This patch adds a device id for the new static replicator compatible
+string; it changes the driver name from "coresight-replicator" to
+"coresight-static-replicator" as well.
 
-When support static funnel it's found the DT binding compatible string
-doesn't follow the same fashion between replicator and funnel; so the
-first two patches are firstly to refine the replicator DT binding and
-correspondingly, change the replicator driver to support new DT binding
-compatible.
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ drivers/hwtracing/coresight/coresight-replicator.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Patch 0003 is to update DT documentation to support static funnel (we
-call it as non-configurable funnel in documentation) and unify the
-compatible string with the same fashion for replicator and funnel.
-
-Patch 0004 is to support the static funnel in the CoreSight funnel
-driver.
-
-This patch set has been rebased on CoreSight next branch [1] with
-latest commit d5d246a56af0 ("coresight: Merge the static and dynamic
-replicator drivers") and tested on Hikey960/Hikey with perf commands:
-
-  Hikey960:
-
-  # perf record -e cs_etm/@ec033000.etr/ --per-thread ./main
-  # perf report --tui
-
-  Hikey:
-  # perf record -e cs_etm/@f6404000.etr/ --per-thread uname
-  # perf report --tui
-
-P.s. in this version, Hikey960 CoreSight DT binding has not been
-included and will be sent out separately.
-
-[1] https://git.linaro.org/kernel/coresight.git/log/?h=next
-
-== Changes for v4 ==
-* Consolidate the DT binding compatible strings for replicator and
-  funnel (Mathieu).
-* Changed replicator driver to support new compatible string.
-
-
-Leo Yan (4):
-  dt-bindings: arm: coresight: Add new compatible for static replicator
-  coresight: replicator: Add new device id for static replicator
-  dt-bindings: arm: coresight: Unify funnel DT binding
-  coresight: funnel: Support static funnel
-
- .../devicetree/bindings/arm/coresight.txt     |  60 +++++++++-
- .../hwtracing/coresight/coresight-funnel.c    | 112 +++++++++++++-----
- .../coresight/coresight-replicator.c          |   3 +-
- 3 files changed, 141 insertions(+), 34 deletions(-)
-
+diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+index 4e0da85efd2d..e6a03642bbdb 100644
+--- a/drivers/hwtracing/coresight/coresight-replicator.c
++++ b/drivers/hwtracing/coresight/coresight-replicator.c
+@@ -285,13 +285,14 @@ static const struct dev_pm_ops replicator_dev_pm_ops = {
+ 
+ static const struct of_device_id static_replicator_match[] = {
+ 	{.compatible = "arm,coresight-replicator"},
++	{.compatible = "arm,coresight-static-replicator"},
+ 	{}
+ };
+ 
+ static struct platform_driver static_replicator_driver = {
+ 	.probe          = static_replicator_probe,
+ 	.driver         = {
+-		.name   = "coresight-replicator",
++		.name   = "coresight-static-replicator",
+ 		.of_match_table = static_replicator_match,
+ 		.pm	= &replicator_dev_pm_ops,
+ 		.suppress_bind_attrs = true,
 -- 
 2.17.1
