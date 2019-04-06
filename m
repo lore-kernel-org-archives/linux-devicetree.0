@@ -1,22 +1,65 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/5] media: dt-bindings: aspeed-video: Add missing memory-region property
-Date: Sat, 06 Apr 2019 01:06:46 -0500
-Message-ID: <5ca841f9.1c69fb81.70acb.c159@mx.google.com>
-References: <1554229504-5661-1-git-send-email-eajames@linux.ibm.com> <1554229504-5661-4-git-send-email-eajames@linux.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554229504-5661-4-git-send-email-eajames@linux.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.ibm.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, joel@jms.id.au, andrew@aj.id.au, mchehab@kernel.org, linux-clk@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
+Subject: Re: [PATCH v3 1/3] dt-bindings: gpu: Add ASPEED GFX bindings document
+Date: Sat, 06 Apr 2019 01:06:49 -0500
+Message-ID: <5ca841fb.1c69fb81.58fe6.fabd@mx.google.com>
+References: <20190403001909.31637-1-joel@jms.id.au>
+ <20190403001909.31637-2-joel@jms.id.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190403001909.31637-2-joel@jms.id.au>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Joel Stanley <joel@jms.id.au>
+Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Andrew Jeffery <andrew@aj.id.au>, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  2 Apr 2019 18:25:02 +0000, Eddie James wrote:
-> Missed documenting this property in the initial commit.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> ---
->  Documentation/devicetree/bindings/media/aspeed-video.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+T24gV2VkLCBBcHIgMDMsIDIwMTkgYXQgMTA6NDk6MDdBTSArMTAzMCwgSm9lbCBTdGFubGV5IHdy
+b3RlOgo+IFRoaXMgZGVzY3JpYmVzIHRoZSBBU1BFRUQgQk1DIFNvQydzIGRpc3BsYXkgY29udHJv
+bGxlci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKb2VsIFN0YW5sZXkgPGpvZWxAam1zLmlkLmF1Pgo+
+IFJldmlld2VkLWJ5OiBBbmRyZXcgSmVmZmVyeSA8YW5kcmV3QGFqLmlkLmF1Pgo+IC0tLQo+IHYz
+Ogo+ICBBZGQgQW5kcmV3J3MgcmV2aWV3ZWQtYnkKPiAKPiAgLi4uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZ3B1L2FzcGVlZC1nZngudHh0ICAgIHwgNDEgKysrKysrKysrKysrKysrKysrKwo+ICAxIGZp
+bGUgY2hhbmdlZCwgNDEgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hc3BlZWQtZ2Z4LnR4dAo+IAo+IGRpZmYg
+LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FzcGVlZC1nZngu
+dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hc3BlZWQtZ2Z4LnR4
+dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi5hNzQwMzMzMzI2
+NjgKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2dwdS9hc3BlZWQtZ2Z4LnR4dAo+IEBAIC0wLDAgKzEsNDEgQEAKPiArRGV2aWNlIHRyZWUg
+Y29uZmlndXJhdGlvbiBmb3IgdGhlIEdGWCBkaXNwbGF5IGRlaXZjZSBvbiB0aGUgQVNUMjUwMCBT
+b0NzLgo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArICAtIGNvbXBhdGlibGUKPiArICAg
+ICogTXVzdCBiZSBvbmUgb2YgdGhlIGZvbGxvd2luZzoKPiArICAgICAgKyBhc3BlZWQsYXN0MjUw
+MC1nZngKPiArICAgICAgKyBhc3BlZWQsYXN0MjQwMC1nZngKPiArICAgICogSW4gYWRkaXRpb24s
+IHRoZSBBU1BFRUQgcGluY3RybCBiaW5kaW5ncyByZXF1aXJlIHRoZSAnc3lzY29uJyBwcm9wZXJ0
+eSB0bwo+ICsgICAgICBiZSBwcmVzZW50Cj4gKwo+ICsgIC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFk
+ZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgR0ZYIHJlZ2lzdGVycwo+ICsKPiArICAtIGludGVycnVw
+dHM6IGludGVycnVwdCBudW1iZXIgZm9yIHRoZSBHRlggZGV2aWNlCj4gKwo+ICsgIC0gY2xvY2tz
+OiBjbG9jayBudW1iZXIgdXNlZCB0byBnZW5lcmF0ZSB0aGUgcGl4ZWwgY2xvY2sKPiArCj4gKyAg
+LSByZXNldHM6IHJlc2V0IGxpbmUgdGhhdCBtdXN0IGJlIHJlbGVhc2VkIHRvIHVzZSB0aGUgR0ZY
+IGRldmljZQo+ICsKPiArICAtIG1lbW9yeS1yZWdpb246Cj4gKyAgICBQaGFuZGxlIHRvIGEgbWVt
+b3J5IHJlZ2lvbiB0byBhbGxvY2F0ZSBmcm9tLCBhcyBkZWZpbmVkIGluCj4gKyAgICBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3Jlc2VydmVkLW1lbW9y
+eS50eHQKCklmIHJlcXVpcmVkLCBkb2VzIHRoYXQgbWVhbiB0aGUgaC93IGNhbiBvbmx5IHVzZSBj
+ZXJ0YWluIG1lbW9yeT8gV2h5PwoKPiArCj4gKwo+ICtFeGFtcGxlOgo+ICsKPiArZ2Z4OiBkaXNw
+bGF5QDFlNmU2MDAwIHsKPiArCWNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI1MDAtZ2Z4IiwgInN5
+c2NvbiI7Cj4gKwlyZWcgPSA8MHgxZTZlNjAwMCAweDEwMDA+Owo+ICsJcmVnLWlvLXdpZHRoID0g
+PDQ+OwoKTm90IGRvY3VtZW50ZWQgYXMgdXNlZC4gVGhpcyBzaG91bGQgYmUgaW1wbGllZCBieSB0
+aGUgY29tcGF0aWJsZSB0aG91Z2guCgo+ICsJY2xvY2tzID0gPCZzeXNjb24gQVNQRUVEX0NMS19H
+QVRFX0QxQ0xLPjsKPiArCXJlc2V0cyA9IDwmc3lzY29uIEFTUEVFRF9SRVNFVF9DUlQxPjsKPiAr
+CWludGVycnVwdHMgPSA8MHgxOT47Cj4gKwltZW1vcnktcmVnaW9uID0gPCZnZnhfbWVtb3J5PjsK
+PiArfTsKPiArCj4gK2dmeF9tZW1vcnk6IGZyYW1lYnVmZmVyIHsKPiArCXNpemUgPSA8MHgwMTAw
+MDAwMD47Cj4gKwlhbGlnbm1lbnQgPSA8MHgwMTAwMDAwMD47Cj4gKwljb21wYXRpYmxlID0gInNo
+YXJlZC1kbWEtcG9vbCI7Cj4gKwlyZXVzYWJsZTsKPiArfTsKPiAtLSAKPiAyLjIwLjEKPiAKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
