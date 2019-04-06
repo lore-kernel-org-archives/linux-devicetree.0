@@ -1,106 +1,74 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [PATCH v5 2/5] dt-bindings: phy: add binding for Allwinner USB3 PHY
-Date: Sat, 06 Apr 2019 15:24:14 +0800
-Message-ID: <B954438A-73B2-4156-81CD-197C08D0E3F5@aosc.io>
-References: <20190405205736.55177-1-icenowy@aosc.io> <20190405205736.55177-3-icenowy@aosc.io> <20190406071402.GA6006@bogus>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 00/25] Add generic support for composing LED class
+ device name
+Date: Sat, 6 Apr 2019 11:46:32 +0200
+Message-ID: <20190406094632.GA7546@amd>
+References: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
+ <20190404132157.GB6124@xo-6d-61-c0.localdomain>
+ <c1ebb90a-2474-d279-0600-0f6707a7b1a6@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190406071402.GA6006@bogus>
+Content-Disposition: inline
+In-Reply-To: <c1ebb90a-2474-d279-0600-0f6707a7b1a6@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Chen-Yu Tsai <wens@csie.org>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--MGYHOYXEY6WxJCY8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-于 2019年4月6日 GMT+08:00 下午3:14:02, Rob Herring <robh@kernel.org> 写到:
->On Sat, Apr 06, 2019 at 04:57:33AM +0800, Icenowy Zheng wrote:
->> The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
->> external USB3 pins of the SoC.
->> 
->> Add a device tree binding for the PHY.
->> 
->> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
->> ---
->> Changes in v5:
->> - Dropped Vbus regulator and added connector subnode.
->> 
->> Changes in v4:
->> - Changed Vbus regulator property to vbus-supply.
->> 
->> Changes in v3:
->> - Added Chen-Yu's Review tag.
->> 
->> No changes in v2, v1.
->> 
->>  .../bindings/phy/sun50i-usb3-phy.txt          | 28
->+++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>  create mode 100644
->Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
->> 
->> diff --git
->a/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
->b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
->> new file mode 100644
->> index 000000000000..eeedc53e6360
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
->> @@ -0,0 +1,28 @@
->> +Allwinner sun50i USB3 PHY
->> +-----------------------
->> +
->> +Required properties:
->> +- compatible : should be one of
->> +  * allwinner,sun60i-h6-usb3-phy
->> +- reg : a list of offset + length pairs
->> +- #phy-cells : from the generic phy bindings, must be 0
->> +- clocks : phandle + clock specifier for the phy clock
->> +- resets : phandle + reset specifier for the phy reset
->> +
->> +Optional nodes:
->> +- connector : A sub-node required for representing the connector
->connected
->> +	      to the USB PHY. See ../connector/usb-connector.txt for
->details.
->> +
->> +Example:
->> +	usb3phy: phy@5210000 {
->> +		compatible = "allwinner,sun50i-h6-usb3-phy";
->> +		reg = <0x5210000 0x10000>;
->> +		clocks = <&ccu CLK_USB_PHY1>;
->> +		resets = <&ccu RST_USB_PHY1>;
->> +		#phy-cells = <0>;
->> +
->> +		connector {
->> +			compatible = "usb-a-connector";
->> +			label = "USB3";
->
->The binding defines that a connector is a child of USB controller or 
+Hi!
 
-Please note that the word used is not "USB controller", but "USB interface
-controller".
+> >I have not yet gone through the series in great detail.
+> >
+> >This will change the userland ABI, right? Now, I understand that old ABI=
+ is bad, but
+> >will it break someone's code?
+>=20
+> It will not break anyone since the generic support for composing
+> LED names is used only if struct init_data is provided. Otherwise
+> led_cdev->name property is taken as is for the LED class device name.
+>=20
+> Moreover, it is safe to switch many of existing DT (or fwnode in
+> general) based drivers to using generic mechanism.
+> If the DT provides label property it will be concatenated with the
+> led_hw_name provided by the driver. The problem would be only with
+> the drivers whose bindings erroneously require devicename section
+> in the label. They will need to be left intact.
 
-A USB controller is something that deal with USB protocol, and connect to a USB
-PHY with ULPI/UTMI/PIPE interface. It's not connected to the connector
-directly at all. Then the PHY is connected to the interface controller (if present), or
-the connector, with D+, D- and SS pins.
+Ok. Plus it seems series causes some compile issues:
 
->some port controller (such as USB-C ctrlr) with OF graph to USB 
->controller. So either way, this is wrong unless this is more than just
->a 
->phy.
->
->Rob
->
->_______________________________________________
->linux-arm-kernel mailing list
->linux-arm-kernel@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+ 924     kbuild tes [j.anaszewski-leds:led_naming_v3 13/37]
+ drivers/leds/leds-pwm.c:117:8: error:
+  925 N   kbuild tes [j.anaszewski-leds:led_naming_v3 17/37]
+ drivers/leds/led-core.o:undefined ref
+  926 N   kbuild tes [j.anaszewski-leds:led_naming_v3 13/37]
+ drivers/leds/leds-pwm.c:117:44: spars
+  927 N   kbuild tes [j.anaszewski-leds:led_naming_v3 13/37]
+ drivers/leds/leds-pwm.c:117:8: error:
 
--- 
-使用 K-9 Mail 发送自我的Android设备。
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--MGYHOYXEY6WxJCY8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyodXgACgkQMOfwapXb+vLduACZAUC3jlCyOGd4yZnVufp2RXu7
+FZ0AniSe5nX+hTDEIQHu4oIEZUN6iCSu
+=26MZ
+-----END PGP SIGNATURE-----
+
+--MGYHOYXEY6WxJCY8--
