@@ -1,70 +1,67 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v4 1/4] dt-bindings: arm: coresight: Add new compatible for static replicator
-Date: Sat,  6 Apr 2019 19:21:42 +0800
-Message-ID: <20190406112145.15184-2-leo.yan@linaro.org>
-References: <20190406112145.15184-1-leo.yan@linaro.org>
+Subject: [PATCH v4 0/4] CoreSight: Support static funnel with DT binding consolidation
+Date: Sat,  6 Apr 2019 19:21:41 +0800
+Message-ID: <20190406112145.15184-1-leo.yan@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190406112145.15184-1-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Wanglai Shi <shiwanglai@hisilicon.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-CoreSight uses below bindings for replicator:
+Since before there have no platforms use static funnel in mainline
+kernel (though maybe some in-house SoC has used it but didn't upstream
+for mainline kernel yet so we don't be aware for it), when enable
+CoreSight DT binding for hikey960, we found the SoC uses the static
+funnel in the link path and but it's not supported in CoreSight funnel
+driver.
 
-  Static replicator, aka. non-configurable replicator:
-    "arm,coresight-replicator";
+When support static funnel it's found the DT binding compatible string
+doesn't follow the same fashion between replicator and funnel; so the
+first two patches are firstly to refine the replicator DT binding and
+correspondingly, change the replicator driver to support new DT binding
+compatible.
 
-  Dynamic replicator, aka. configurable replicator:
-    "arm,coresight-dynamic-replicator", "arm,primecell";
+Patch 0003 is to update DT documentation to support static funnel (we
+call it as non-configurable funnel in documentation) and unify the
+compatible string with the same fashion for replicator and funnel.
 
-The compatible string "arm,coresight-replicator" is not an explicit
-naming to express the replicator is 'static'.  To unify the naming
-convention, this patch introduces a new compatible string
-"arm,coresight-static-replicator" for the static replicator; the
-compatible string "arm,coresight-replicator" is still kept thus we
-can support the old DT binding, but tag it as obsolete and suggest
-to use the new compatible string.
+Patch 0004 is to support the static funnel in the CoreSight funnel
+driver.
 
-As result CoreSight replicator have below bindings:
+This patch set has been rebased on CoreSight next branch [1] with
+latest commit d5d246a56af0 ("coresight: Merge the static and dynamic
+replicator drivers") and tested on Hikey960/Hikey with perf commands:
 
-  Static replicator:
-    "arm,coresight-replicator"; (obsolete)
-    "arm,coresight-static-replicator";
+  Hikey960:
 
-  Dynamic replicator:
-    "arm,coresight-dynamic-replicator", "arm,primecell";
+  # perf record -e cs_etm/@ec033000.etr/ --per-thread ./main
+  # perf report --tui
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- Documentation/devicetree/bindings/arm/coresight.txt | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+  Hikey:
+  # perf record -e cs_etm/@f6404000.etr/ --per-thread uname
+  # perf report --tui
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index f8aff65ab921..f8f794869af2 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -69,7 +69,11 @@ its hardware characteristcs.
- 
- 	* compatible: Currently supported value is (note the absence of the
- 	  AMBA markee):
--		- "arm,coresight-replicator"
-+		- Coresight Non-configurable Replicator, the compatible string
-+		  "arm,coresight-replicator" is obsolete, keep it to support
-+		  the old DT bindings:
-+			"arm,coresight-replicator";
-+			"arm,coresight-static-replicator";
- 
- 	* port or ports: see "Graph bindings for Coresight" below.
- 
-@@ -169,7 +173,7 @@ Example:
- 		/* non-configurable replicators don't show up on the
- 		 * AMBA bus.  As such no need to add "arm,primecell".
- 		 */
--		compatible = "arm,coresight-replicator";
-+		compatible = "arm,coresight-static-replicator";
- 
- 		out-ports {
- 			#address-cells = <1>;
+P.s. in this version, Hikey960 CoreSight DT binding has not been
+included and will be sent out separately.
+
+[1] https://git.linaro.org/kernel/coresight.git/log/?h=next
+
+== Changes for v4 ==
+* Consolidate the DT binding compatible strings for replicator and
+  funnel (Mathieu).
+* Changed replicator driver to support new compatible string.
+
+
+Leo Yan (4):
+  dt-bindings: arm: coresight: Add new compatible for static replicator
+  coresight: replicator: Add new device id for static replicator
+  dt-bindings: arm: coresight: Unify funnel DT binding
+  coresight: funnel: Support static funnel
+
+ .../devicetree/bindings/arm/coresight.txt     |  60 +++++++++-
+ .../hwtracing/coresight/coresight-funnel.c    | 112 +++++++++++++-----
+ .../coresight/coresight-replicator.c          |   3 +-
+ 3 files changed, 141 insertions(+), 34 deletions(-)
+
 -- 
 2.17.1
