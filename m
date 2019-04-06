@@ -1,97 +1,41 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 2/9] cpufreq: qcom: Re-organise kryo cpufreq to use
- it for other nvmem based qcom socs
-Date: Sat, 06 Apr 2019 01:07:23 -0500
-Message-ID: <5ca8421e.1c69fb81.42211.e57b@mx.google.com>
-References: <20190404050931.9812-1-niklas.cassel@linaro.org>
- <20190404050931.9812-3-niklas.cassel@linaro.org>
+Subject: Re: [PATCH v2 2/5] dt-bindings: arm: add TQ boards
+Date: Sat, 06 Apr 2019 01:06:55 -0500
+Message-ID: <5ca84201.1c69fb81.28eb1.32e8@mx.google.com>
+References: <20190304165630.18225-1-bruno.thomsen@gmail.com>
+ <20190403064427.30041-1-bruno.thomsen@gmail.com>
+ <20190403064427.30041-3-bruno.thomsen@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190404050931.9812-3-niklas.cassel@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@linaro.org>
-Cc: Ilia Lin <ilia.lin@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, Sricharan R <sricharan@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190403064427.30041-3-bruno.thomsen@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: markus.niebel@tq-group.com, devicetree@vger.kernel.org, laa@kamstrup.com, festevam@gmail.com, s.hauer@pengutronix.de, clemens.ml@gmx.net, bruno.thomsen@gmail.com, bth@kamstrup.com, ksc@kamstrup.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 07:09:23AM +0200, Niklas Cassel wrote:
-> From: Sricharan R <sricharan@codeaurora.org>
+On Wed,  3 Apr 2019 08:44:24 +0200, Bruno Thomsen wrote:
+> MBa is a series of Carrier Boards / Single Board Computers (SBC) for
+> evaluation of TQMa SoMs.
+> The MBa7 carrier board can only interface with TQMa7 modules.
+> The TQMa7 module can only be mounted with NXP i.MX7 Solo or Dual SoCs.
+> Primary compatible strings are of the form "tq,<SoC>-<SBC>".
 > 
-> The kryo cpufreq driver reads the nvmem cell and uses that data to
-> populate the opps. There are other qcom cpufreq socs like krait which
-> does similar thing. Except for the interpretation of the read data,
-> rest of the driver is same for both the cases. So pull the common things
-> out for reuse.
-> 
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
 > ---
->  ...ryo-cpufreq.txt => qcom-nvmem-cpufreq.txt} |  16 +--
-
-Please make DT bindings a separate patch.
-
->  drivers/cpufreq/Kconfig.arm                   |   4 +-
->  drivers/cpufreq/Makefile                      |   2 +-
->  ...om-cpufreq-kryo.c => qcom-cpufreq-nvmem.c} | 124 +++++++++++-------
->  4 files changed, 85 insertions(+), 61 deletions(-)
->  rename Documentation/devicetree/bindings/opp/{kryo-cpufreq.txt => qcom-nvmem-cpufreq.txt} (97%)
->  rename drivers/cpufreq/{qcom-cpufreq-kryo.c => qcom-cpufreq-nvmem.c} (69%)
+> v2:
+> - Patch v1 2/6 and 3/6 has been merged as they both modify the new fsl.yaml.
 > 
-> diff --git a/Documentation/devicetree/bindings/opp/kryo-cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-> similarity index 97%
-> rename from Documentation/devicetree/bindings/opp/kryo-cpufreq.txt
-> rename to Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-> index c2127b96805a..f4a7123730c3 100644
-> --- a/Documentation/devicetree/bindings/opp/kryo-cpufreq.txt
-> +++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-> @@ -1,13 +1,13 @@
-> -Qualcomm Technologies, Inc. KRYO CPUFreq and OPP bindings
-> +Qualcomm Technologies, Inc. NVMEM CPUFreq and OPP bindings
->  ===================================
->  
-> -In Certain Qualcomm Technologies, Inc. SoCs like apq8096 and msm8996
-> -that have KRYO processors, the CPU ferequencies subset and voltage value
-> -of each OPP varies based on the silicon variant in use.
-> +In Certain Qualcomm Technologies, Inc. SoCs like apq8096 and msm8996,
-> +the CPU frequencies subset and voltage value of each OPP varies based on
-> +the silicon variant in use.
->  Qualcomm Technologies, Inc. Process Voltage Scaling Tables
->  defines the voltage and frequency value based on the msm-id in SMEM
->  and speedbin blown in the efuse combination.
-> -The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
-> +The qcom-cpufreq-nvmem driver reads the msm-id and efuse value from the SoC
->  to provide the OPP framework with required information (existing HW bitmap).
->  This is used to determine the voltage and frequency value for each OPP of
->  operating-points-v2 table when it is parsed by the OPP framework.
-> @@ -19,7 +19,7 @@ In 'cpus' nodes:
->  
->  In 'operating-points-v2' table:
->  - compatible: Should be
-> -	- 'operating-points-v2-kryo-cpu' for apq8096 and msm8996.
-> +	- 'operating-points-v2-qcom-cpu' for apq8096 and msm8996.
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
 
-You can't just change this. In any case, it's just a string. Use it even 
-if it applies to more than just kryo cpus.
-
->  - nvmem-cells: A phandle pointing to a nvmem-cells node representing the
->  		efuse registers that has information about the
->  		speedbin that is used to select the right frequency/voltage
-> @@ -127,7 +127,7 @@ Example 1:
->  	};
->  
->  	cluster0_opp: opp_table0 {
-> -		compatible = "operating-points-v2-kryo-cpu";
-> +		compatible = "operating-points-v2-qcom-cpu";
->  		nvmem-cells = <&speedbin_efuse>;
->  		opp-shared;
->  
-> @@ -338,7 +338,7 @@ Example 1:
->  	};
->  
->  	cluster1_opp: opp_table1 {
-> -		compatible = "operating-points-v2-kryo-cpu";
-> +		compatible = "operating-points-v2-qcom-cpu";
->  		nvmem-cells = <&speedbin_efuse>;
->  		opp-shared;
->  
+Reviewed-by: Rob Herring <robh@kernel.org>
