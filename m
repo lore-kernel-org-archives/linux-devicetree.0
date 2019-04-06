@@ -1,37 +1,40 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: Add external-facing PCIe port property
-Date: Sat, 06 Apr 2019 01:06:36 -0500
-Message-ID: <5ca841ee.1c69fb81.1ba7b.707f@mx.google.com>
-References: <20190402131548.41949-1-jean-philippe.brucker@arm.com>
- <20190402131548.41949-2-jean-philippe.brucker@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190402131548.41949-2-jean-philippe.brucker@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Grant.Likely@arm.com, linux-pci@vger.kernel.org, Jeremy.Linton@arm.com, robh+dt@kernel.org, bhelgaas@google.com, Robin.Murphy@arm.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: clock: sifive: add FU540-C000 PRCI clock constants
+Date: Sat, 06 Apr 2019 01:07:19 -0500
+Message-ID: <5ca8421a.1c69fb81.a620b.5a7f@mx.google.com>
+References: <20190404003820.10679-1-paul.walmsley@sifive.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190404003820.10679-1-paul.walmsley@sifive.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: mark.rutland@arm.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, wesley@sifive.com, palmer@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  2 Apr 2019 14:15:47 +0100, Jean-Philippe Brucker wrote:
-> Provide a way for the firmware to tell the OS which devices are external
-> to the machine and therefore untrusted. The property can describe for
-> example Thunderbolt and other user-accessible ports, which should always
-> have the strongest IOMMU protection.
+On Wed,  3 Apr 2019 17:38:20 -0700, Paul Walmsley wrote:
+> Add preprocessor macros for the important PRCI output clocks
+> that are needed by both the FU540 PRCI driver and DT data.
+> Details are available in the FU540 manual in Chapter 7 of
 > 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+>     https://static.dev.sifive.com/FU540-C000-v1.0.pdf
+> 
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Wesley Terpstra <wesley@sifive.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Palmer Dabbelt <palmer@sifive.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-riscv@lists.infradead.org
 > ---
->  Documentation/devicetree/bindings/pci/pci.txt | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
+> Rob, Mark: this patch is a prerequisite for both the FU540 DT data
+> and for the FU540 PRCI clock driver patch series.  To prevent one
+> of those patch series from depending on the other, I'd like to ask
+> Palmer to merge this patch in one of his -rc pull requests.  Could
+> I get an ack from one or both of you for this purpose?  Thanks.
+> 
+> include/dt-bindings/clock/sifive-fu540-prci.h | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/sifive-fu540-prci.h
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
