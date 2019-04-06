@@ -1,30 +1,47 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: timer: Add binding doc for nxp system  counter timer
-Date: Sat, 06 Apr 2019 01:07:01 -0500
-Message-ID: <5ca84207.1c69fb81.eee15.9249@mx.google.com>
-References: <1554287101-16189-1-git-send-email-ping.bai@nxp.com>
+Subject: Re: [PATCH 1/2] dt-bindings: rtc: add battery-low-hw-alarm property
+Date: Sat, 06 Apr 2019 01:07:13 -0500
+Message-ID: <5ca84214.1c69fb81.e3ace.21e5@mx.google.com>
+References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554287101-16189-1-git-send-email-ping.bai@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacky Bai <ping.bai@nxp.com>
-Cc: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Flavio Suligoi <f.suligoi@asem.it>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 3 Apr 2019 10:20:25 +0000, Jacky Bai wrote:
-> From: Bai Ping <ping.bai@nxp.com>
+On Wed, Apr 03, 2019 at 04:52:44PM +0200, Flavio Suligoi wrote:
+> Some RTC devices have a battery-low automatic detection circuit.
+> The battery-low event is usually reported with:
 > 
-> Add the binding doc for nxp system counter timer module.
+> - a bit change in a RTC status register
+> - a hw signaling (generally using an interrupt generation), changing
+>   the hw level of a specific pin;
 > 
-> Signed-off-by: Bai Ping <ping.bai@nxp.com>
+> The new property "battery-low-hw-alarm" enable the RTC to generate the
+> hw signaling in case of battery-low event.
+> 
+> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
 > ---
-> change v1->v2
->  - remove the blank line at EOF
-> change v2->v3
->  - update the binding example based on the driver change
-> ---
->  .../devicetree/bindings/timer/nxp,sysctr-timer.txt | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
+>  Documentation/devicetree/bindings/rtc/rtc.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt b/Documentation/devicetree/bindings/rtc/rtc.txt
+> index a97fc6a..f93a44d 100644
+> --- a/Documentation/devicetree/bindings/rtc/rtc.txt
+> +++ b/Documentation/devicetree/bindings/rtc/rtc.txt
+> @@ -31,6 +31,9 @@ below.
+>                              expressed in femto Farad (fF).
+>                              The default value shall be listed (if optional),
+>                              and likewise all valid values.
+> +- battery-low-hw-alarm :    Enable the "battery-low" output pin. This function
+> +                            is available on the following devices:
+> +                            - pcf2127 - pin used for alarm: INTn
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Boolean? If there's cases where which pin is selectable, then we'd need 
+this to take a value. Not sure how likely that is?
+
+Rob
