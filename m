@@ -1,70 +1,52 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 2/2] ftpm: firmware TPM running in TEE
-Date: Sat, 6 Apr 2019 11:30:47 -0400
-Message-ID: <20190406153047.GF2935@sasha-vm>
-References: <20190402193316.15144-1-sashal@kernel.org>
- <20190402193316.15144-2-sashal@kernel.org>
- <20190403181827.GB17006@linux.intel.com>
- <20190403182728.GA17451@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+From: Markus Kueffner <kueffner.markus@gmail.com>
+Subject: [PATCH] ARM: dts: imx6qdl-udoo: Add Pincfgs for OTG
+Date: Sat,  6 Apr 2019 18:00:20 +0200
+Message-ID: <1554566420-1008-1-git-send-email-kueffner.markus@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190403182728.GA17451@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca, linux-kernel@microsoft.com, bryankel@microsoft.com, thiruan@microsoft.com, suredd@microsoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc: Markus Kueffner <kueffner.markus@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 09:27:28PM +0300, Jarkko Sakkinen wrote:
->On Wed, Apr 03, 2019 at 09:18:27PM +0300, Jarkko Sakkinen wrote:
->> On Tue, Apr 02, 2019 at 03:33:16PM -0400, Sasha Levin wrote:
->> > This patch adds support for a software-only implementation of a TPM
->> > running in TEE.
->> >
->> > There is extensive documentation of the design here:
->> > https://www.microsoft.com/en-us/research/publication/ftpm-software-implementation-tpm-chip/ .
->> >
->> > As well as reference code for the firmware available here:
->> > https://github.com/Microsoft/ms-tpm-20-ref/tree/master/Samples/ARM32-FirmwareTPM
->> >
->> > Signed-off-by: Thirupathaiah Annapureddy <thiruan@microsoft.com>
->> > Signed-off-by: Sasha Levin <sashal@kernel.org>
->>
->> What is the context anyway? I mean tpm_crb already supports fTPM running
->> in TZ.
->
->Might take 2-3 weeks before I have time to go through ftpm1.pdf with
->full concentration. I did search through the PDF for CRB and found
->zero hits.
+Add Pincfgs to enable the i.MX6's OTG feature for UDOO
 
-The fTPM as described in that paper and implemented in practice does not
-use the CRB interface, thus we can't use tpm_crb to interface with the
-firmware TPM.
+Signed-off-by: Markus Kueffner <kueffner.markus@gmail.com>
+---
+ arch/arm/boot/dts/imx6qdl-udoo.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
->The commit message should absolutely better explain what is going on
->and preferably there should be some more broad documentation in
->Documentation/security/tpm.
-
-The code itself is just a small shim between the firmware TPM and the
-kernel's TPM interface. There's really not much else to expand on in the
-commit log.
-
-I'll add some background to Documentation/security/tpm.
-
->Now this is just a random code dump and nothing else.
-
-It pretty much is, but that's because this is just a "stupid" shim,
-there heavy lifting is done outside of the kernel.
-
->Also, I have zero idea how to test this. Any recommendations on ARM
->board that can be easily used to test custom TZ applications would be
->nice.
-
-We are testing this on a Broadcom's Stingray SST100 board, and if you
-have one we can help out with setting up a test environment. Otherwise,
-we haven't really tried it on other boards.
-
---
-Thanks,
-Sasha
+diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+index 776bfc7..42954ee 100644
+--- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+@@ -221,6 +221,14 @@
+ 			>;
+ 		};
+ 
++		pinctrl_usbotg: usbotg {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
++				MX6QDL_PAD_EIM_D22__USB_OTG_PWR 0x17059
++				MX6QDL_PAD_EIM_D21__USB_OTG_OC 0x17059
++			>;
++		};
++
+ 		pinctrl_ac97_running: ac97running {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_DI0_PIN2__AUD6_TXD		0x1b0b0
+@@ -294,6 +302,14 @@
+ 	status = "okay";
+ };
+ 
++&usbotg {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg>;
++	fsl,power-line-polarity-active-high;
++	fsl,over-current-polarity-active-low;
++	status = "okay";
++};
++
+ &audmux {
+ 	status = "okay";
+ };
+-- 
+2.1.4
