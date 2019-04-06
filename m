@@ -1,57 +1,70 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 1/2] dt-bindings: rtc: add battery-low-hw-alarm property
-Date: Sat, 6 Apr 2019 14:55:50 +0200
-Message-ID: <20190406125550.GA7480@piout.net>
-References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
- <5ca84214.1c69fb81.e3ace.21e5@mx.google.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 2/2] ftpm: firmware TPM running in TEE
+Date: Sat, 6 Apr 2019 11:30:47 -0400
+Message-ID: <20190406153047.GF2935@sasha-vm>
+References: <20190402193316.15144-1-sashal@kernel.org>
+ <20190402193316.15144-2-sashal@kernel.org>
+ <20190403181827.GB17006@linux.intel.com>
+ <20190403182728.GA17451@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5ca84214.1c69fb81.e3ace.21e5@mx.google.com>
+In-Reply-To: <20190403182728.GA17451@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Flavio Suligoi <f.suligoi@asem.it>, Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca, linux-kernel@microsoft.com, bryankel@microsoft.com, thiruan@microsoft.com, suredd@microsoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/04/2019 01:07:13-0500, Rob Herring wrote:
-> On Wed, Apr 03, 2019 at 04:52:44PM +0200, Flavio Suligoi wrote:
-> > Some RTC devices have a battery-low automatic detection circuit.
-> > The battery-low event is usually reported with:
-> > 
-> > - a bit change in a RTC status register
-> > - a hw signaling (generally using an interrupt generation), changing
-> >   the hw level of a specific pin;
-> > 
-> > The new property "battery-low-hw-alarm" enable the RTC to generate the
-> > hw signaling in case of battery-low event.
-> > 
-> > Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> > ---
-> >  Documentation/devicetree/bindings/rtc/rtc.txt | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt b/Documentation/devicetree/bindings/rtc/rtc.txt
-> > index a97fc6a..f93a44d 100644
-> > --- a/Documentation/devicetree/bindings/rtc/rtc.txt
-> > +++ b/Documentation/devicetree/bindings/rtc/rtc.txt
-> > @@ -31,6 +31,9 @@ below.
-> >                              expressed in femto Farad (fF).
-> >                              The default value shall be listed (if optional),
-> >                              and likewise all valid values.
-> > +- battery-low-hw-alarm :    Enable the "battery-low" output pin. This function
-> > +                            is available on the following devices:
-> > +                            - pcf2127 - pin used for alarm: INTn
-> 
-> Boolean? If there's cases where which pin is selectable, then we'd need 
-> this to take a value. Not sure how likely that is?
-> 
+On Wed, Apr 03, 2019 at 09:27:28PM +0300, Jarkko Sakkinen wrote:
+>On Wed, Apr 03, 2019 at 09:18:27PM +0300, Jarkko Sakkinen wrote:
+>> On Tue, Apr 02, 2019 at 03:33:16PM -0400, Sasha Levin wrote:
+>> > This patch adds support for a software-only implementation of a TPM
+>> > running in TEE.
+>> >
+>> > There is extensive documentation of the design here:
+>> > https://www.microsoft.com/en-us/research/publication/ftpm-software-implementation-tpm-chip/ .
+>> >
+>> > As well as reference code for the firmware available here:
+>> > https://github.com/Microsoft/ms-tpm-20-ref/tree/master/Samples/ARM32-FirmwareTPM
+>> >
+>> > Signed-off-by: Thirupathaiah Annapureddy <thiruan@microsoft.com>
+>> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+>>
+>> What is the context anyway? I mean tpm_crb already supports fTPM running
+>> in TZ.
+>
+>Might take 2-3 weeks before I have time to go through ftpm1.pdf with
+>full concentration. I did search through the PDF for CRB and found
+>zero hits.
 
-Indeed, there is at least the pcf85363 that has two possible pins for
-that interrupt. How would you select the pin then? a zero based index? a
-string?
+The fTPM as described in that paper and implemented in practice does not
+use the CRB interface, thus we can't use tpm_crb to interface with the
+firmware TPM.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+>The commit message should absolutely better explain what is going on
+>and preferably there should be some more broad documentation in
+>Documentation/security/tpm.
+
+The code itself is just a small shim between the firmware TPM and the
+kernel's TPM interface. There's really not much else to expand on in the
+commit log.
+
+I'll add some background to Documentation/security/tpm.
+
+>Now this is just a random code dump and nothing else.
+
+It pretty much is, but that's because this is just a "stupid" shim,
+there heavy lifting is done outside of the kernel.
+
+>Also, I have zero idea how to test this. Any recommendations on ARM
+>board that can be easily used to test custom TZ applications would be
+>nice.
+
+We are testing this on a Broadcom's Stingray SST100 board, and if you
+have one we can help out with setting up a test environment. Otherwise,
+we haven't really tried it on other boards.
+
+--
+Thanks,
+Sasha
