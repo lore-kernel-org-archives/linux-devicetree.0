@@ -1,55 +1,22 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: arm: fsl: Add i.MX50 based boards
-Date: Sat, 06 Apr 2019 01:05:57 -0500
-Message-ID: <5ca841c8.1c69fb81.86770.52db@mx.google.com>
-References: <20190331191602.3921-1-j.neuschaefer@gmx.net>
- <20190331191602.3921-3-j.neuschaefer@gmx.net>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8245882938478571030=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190331191602.3921-3-j.neuschaefer@gmx.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?=3D=3FUTF=2D8=3Fq=3FJonathan=20Ne?=
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] dt: bindings: add dt entry for XO calibration support
+Date: Sat, 06 Apr 2019 01:06:10 -0500
+Message-ID: <5ca841d3.1c69fb81.7ec38.ae4e@mx.google.com>
+References: <20190401091926.19119-1-govinds@codeaurora.org> <20190401091926.19119-2-govinds@codeaurora.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20190401091926.19119-2-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============8245882938478571030==
-Content-Type: text/plain
-
-On Sun, 31 Mar 2019 21:16:01 +0200, =?UTF-8?q?Jonathan Neuschäfer?= wrote:
-> fsl,imx50-evk has been used in a devicetree for a while. kobo,aura will
-> be used soon.
+On Mon,  1 Apr 2019 14:49:25 +0530, Govind Singh wrote:
+> Add dt binding to get xo calibration data support for wifi rf clock.
 > 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 > ---
-> 
-> v2: New patch, as suggested by Shawn Guo
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-
-
---===============8245882938478571030==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8245882938478571030==--
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
