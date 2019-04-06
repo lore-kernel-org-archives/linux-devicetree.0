@@ -1,402 +1,52 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v5 3/5] phy: allwinner: add phy driver for
- USB3 PHY on Allwinner H6 SoC
-Date: Sun, 07 Apr 2019 01:24:46 +0800
-Message-ID: <2C6FE353-61BC-4193-915D-8D731077004A@aosc.io>
-References: <20190405205736.55177-1-icenowy@aosc.io> <20190405205736.55177-4-icenowy@aosc.io> <20190406172113.p4hyperrtzv6ultq@core.my.home>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Grant Likely <Grant.Likely@arm.com>
+Subject: Re: [PATCH v2 0/2] PCI: Describe external-facing ports in device tree
+Date: Sat, 6 Apr 2019 19:42:27 +0000
+Message-ID: <31d32816-be43-3507-ac7c-b31481e80e55@arm.com>
+References: <20190402131548.41949-1-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB3GBUPSQKGQEWLCGJNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190406172113.p4hyperrtzv6ultq-9v8tmBix7cb9zxVx7UNMDg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190402131548.41949-1-jean-philippe.brucker@arm.com>
+Content-Language: en-US
+Content-ID: <E8E442CF2580E84E82747BEF91D4B7BC@eurprd08.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jean-Philippe Brucker <Jean-Philippe.Brucker@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Jeremy Linton <Jeremy.Linton@arm.com>, nd <nd@arm.com>, Robin Murphy <Robin.Murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 02/04/2019 20:15, Jean-Philippe Brucker wrote:
+> Since v1 [1], I improved the wording of patch 1/2 as suggested by Bjorn.
+> 
+> Add an "external-facing" property to PCI ports in device-tree, to help
+> identify untrusted devices. The notion of untrusted PCI devices was
+> added to the v5.0 kernel to describe devices that should have strict
+> IOMMU protection [2], for example devices that are plugged in a
+> Thunderbolt port. ACPI systems use the ExternalFacingPort property [3].
+> Add an equivalent mechanism to device tree.
+> 
+> [1] https://lore.kernel.org/linux-pci/20190318182124.53859-1-jean-philippe.brucker@arm.com/
+> [2] https://lkml.org/lkml/2018/11/26/631
+> [3] https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-externally-exposed-pcie-root-ports
 
+For both:
 
-=E4=BA=8E 2019=E5=B9=B44=E6=9C=887=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881:2=
-1:13, "Ond=C5=99ej Jirman" <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> =E5=86=99=E5=88=B0:
->Hello Icenowy,
->
->On Sat, Apr 06, 2019 at 04:57:34AM +0800, Icenowy Zheng wrote:
->> Allwinner H6 SoC contains a USB3 PHY (with USB2 DP/DM lines also
->> controlled).
->>=20
->> Add a driver for it.
->>=20
->> The register operations in this driver is mainly extracted from the
->BSP
->> USB3 driver.
->>=20
->> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->> Changes in v5:
->> - Dropped support for vbus-supply property in the device node itself
->and
->>   added support for vbus-supply property in the connector subnode.
->>=20
->> Changes in v4:
->> - Added support for vbus-supply property.
->>=20
->> Changes in v3:
->> - Dropped USB_SUPPORT dependency.
->> - Added Chen-Yu's Review tag.
->>=20
->> No changes in v2, v1. drivers/phy/allwinner/Kconfig           |  12
->++
->>  drivers/phy/allwinner/Makefile          |   1 +
->>  drivers/phy/allwinner/phy-sun50i-usb3.c | 260
->++++++++++++++++++++++++
->>  3 files changed, 273 insertions(+)
->>  create mode 100644 drivers/phy/allwinner/phy-sun50i-usb3.c
->>=20
->> diff --git a/drivers/phy/allwinner/Kconfig
->b/drivers/phy/allwinner/Kconfig
->> index fb1204bcc454..2c363db177f2 100644
->> --- a/drivers/phy/allwinner/Kconfig
->> +++ b/drivers/phy/allwinner/Kconfig
->> @@ -41,3 +41,15 @@ config PHY_SUN9I_USB
->>  	  sun9i SoCs.
->> =20
->>  	  This driver controls each individual USB 2 host PHY.
->> +
->> +config PHY_SUN50I_USB3
->> +	tristate "Allwinner sun50i SoC USB3 PHY driver"
->> +	depends on ARCH_SUNXI && HAS_IOMEM && OF
->> +	depends on RESET_CONTROLLER
->> +	select USB_COMMON
->> +	select GENERIC_PHY
->> +	help
->> +	  Enable this to support the USB3.0-capable transceiver that is
->> +	  part of some Allwinner sun50i SoCs.
->> +
->> +	  This driver controls each individual USB 2+3 host PHY combo.
->> diff --git a/drivers/phy/allwinner/Makefile
->b/drivers/phy/allwinner/Makefile
->> index 7d0053efbfaa..59575a895779 100644
->> --- a/drivers/phy/allwinner/Makefile
->> +++ b/drivers/phy/allwinner/Makefile
->> @@ -1,3 +1,4 @@
->>  obj-$(CONFIG_PHY_SUN4I_USB)		+=3D phy-sun4i-usb.o
->>  obj-$(CONFIG_PHY_SUN6I_MIPI_DPHY)	+=3D phy-sun6i-mipi-dphy.o
->>  obj-$(CONFIG_PHY_SUN9I_USB)		+=3D phy-sun9i-usb.o
->> +obj-$(CONFIG_PHY_SUN50I_USB3)		+=3D phy-sun50i-usb3.o
->> diff --git a/drivers/phy/allwinner/phy-sun50i-usb3.c
->b/drivers/phy/allwinner/phy-sun50i-usb3.c
->> new file mode 100644
->> index 000000000000..5299aef98668
->> --- /dev/null
->> +++ b/drivers/phy/allwinner/phy-sun50i-usb3.c
->> @@ -0,0 +1,260 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * Allwinner sun50i(H6) USB 3.0 phy driver
->> + *
->> + * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> + *
->> + * Based on phy-sun9i-usb.c, which is:
->> + *
->> + * Copyright (C) 2014-2015 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> + *
->> + * Based on code from Allwinner BSP, which is:
->> + *
->> + * Copyright (c) 2010-2015 Allwinner Technology Co., Ltd.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/module.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/usb/of.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regulator/consumer.h>
->> +#include <linux/reset.h>
->> +
->> +/* Interface Status and Control Registers */
->> +#define SUNXI_ISCR			0x00
->> +#define SUNXI_PIPE_CLOCK_CONTROL	0x14
->> +#define SUNXI_PHY_TUNE_LOW		0x18
->> +#define SUNXI_PHY_TUNE_HIGH		0x1c
->> +#define SUNXI_PHY_EXTERNAL_CONTROL	0x20
->> +
->> +/* USB2.0 Interface Status and Control Register */
->> +#define SUNXI_ISCR_FORCE_VBUS		(3 << 12)
->> +
->> +/* PIPE Clock Control Register */
->> +#define SUNXI_PCC_PIPE_CLK_OPEN		(1 << 6)
->> +
->> +/* PHY External Control Register */
->> +#define SUNXI_PEC_EXTERN_VBUS		(3 << 1)
->> +#define SUNXI_PEC_SSC_EN		(1 << 24)
->> +#define SUNXI_PEC_REF_SSP_EN		(1 << 26)
->> +
->> +/* PHY Tune High Register */
->> +#define SUNXI_TX_DEEMPH_3P5DB(n)	((n) << 19)
->> +#define SUNXI_TX_DEEMPH_3P5DB_MASK	GENMASK(24, 19)
->> +#define SUNXI_TX_DEEMPH_6DB(n)		((n) << 13)
->> +#define SUNXI_TX_DEEMPH_6GB_MASK	GENMASK(18, 13)
->> +#define SUNXI_TX_SWING_FULL(n)		((n) << 6)
->> +#define SUNXI_TX_SWING_FULL_MASK	GENMASK(12, 6)
->> +#define SUNXI_LOS_BIAS(n)		((n) << 3)
->> +#define SUNXI_LOS_BIAS_MASK		GENMASK(5, 3)
->> +#define SUNXI_TXVBOOSTLVL(n)		((n) << 0)
->> +#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(0, 2)
->> +
->> +struct sun50i_usb3_phy {
->> +	struct phy *phy;
->> +	void __iomem *regs;
->> +	struct reset_control *reset;
->> +	struct clk *clk;
->> +	struct platform_device *connector_dev;
->> +	struct regulator *vbus;
->> +};
->> +
->> +static void sun50i_usb3_phy_open(struct sun50i_usb3_phy *phy)
->> +{
->> +	u32 val;
->> +
->> +	val =3D readl(phy->regs + SUNXI_PHY_EXTERNAL_CONTROL);
->> +	val |=3D SUNXI_PEC_EXTERN_VBUS;
->> +	val |=3D SUNXI_PEC_SSC_EN | SUNXI_PEC_REF_SSP_EN;
->> +	writel(val, phy->regs + SUNXI_PHY_EXTERNAL_CONTROL);
->> +
->> +	val =3D readl(phy->regs + SUNXI_PIPE_CLOCK_CONTROL);
->> +	val |=3D SUNXI_PCC_PIPE_CLK_OPEN;
->> +	writel(val, phy->regs + SUNXI_PIPE_CLOCK_CONTROL);
->> +
->> +	val =3D readl(phy->regs + SUNXI_ISCR);
->> +	val |=3D SUNXI_ISCR_FORCE_VBUS;
->> +	writel(val, phy->regs + SUNXI_ISCR);
->> +
->> +	/*
->> +	 * All the magic numbers written to the PHY_TUNE_{LOW_HIGH}
->> +	 * registers are directly taken from the BSP USB3 driver from
->> +	 * Allwiner.
->> +	 */
->> +	writel(0x0047fc87, phy->regs + SUNXI_PHY_TUNE_LOW);
->> +
->> +	val =3D readl(phy->regs + SUNXI_PHY_TUNE_HIGH);
->> +	val &=3D ~(SUNXI_TXVBOOSTLVL_MASK | SUNXI_LOS_BIAS_MASK |
->> +		 SUNXI_TX_SWING_FULL_MASK | SUNXI_TX_DEEMPH_6GB_MASK |
->> +		 SUNXI_TX_DEEMPH_3P5DB_MASK);
->> +	val |=3D SUNXI_TXVBOOSTLVL(0x7);
->> +	val |=3D SUNXI_LOS_BIAS(0x7);
->> +	val |=3D SUNXI_TX_SWING_FULL(0x55);
->> +	val |=3D SUNXI_TX_DEEMPH_6DB(0x20);
->> +	val |=3D SUNXI_TX_DEEMPH_3P5DB(0x15);
->> +	writel(val, phy->regs + SUNXI_PHY_TUNE_HIGH);
->> +}
->> +
->> +static int sun50i_usb3_phy_init(struct phy *_phy)
->> +{
->> +	struct sun50i_usb3_phy *phy =3D phy_get_drvdata(_phy);
->> +	int ret;
->> +
->> +	ret =3D clk_prepare_enable(phy->clk);
->> +	if (ret)
->> +		goto err_clk;
->> +
->> +	ret =3D reset_control_deassert(phy->reset);
->> +	if (ret)
->> +		goto err_reset;
->> +
->> +	sun50i_usb3_phy_open(phy);
->> +	return 0;
->> +
->> +err_reset:
->> +	clk_disable_unprepare(phy->clk);
->> +
->> +err_clk:
->> +	return ret;
->> +}
->> +
->> +static int sun50i_usb3_phy_exit(struct phy *_phy)
->> +{
->> +	struct sun50i_usb3_phy *phy =3D phy_get_drvdata(_phy);
->> +
->> +	reset_control_assert(phy->reset);
->> +	clk_disable_unprepare(phy->clk);
->> +
->> +	return 0;
->> +}
->> +
->> +static int sun50i_usb3_phy_power_on(struct phy *_phy)
->> +{
->> +	struct sun50i_usb3_phy *phy =3D phy_get_drvdata(_phy);
->> +
->> +	if (phy->vbus)
->> +		return regulator_enable(phy->vbus);
->> +	else
->> +		return 0;
->> +}
->> +
->> +static int sun50i_usb3_phy_power_off(struct phy *_phy)
->> +{
->> +	struct sun50i_usb3_phy *phy =3D phy_get_drvdata(_phy);
->> +
->> +	if (phy->vbus)
->> +		return regulator_disable(phy->vbus);
->> +	else
->> +		return 0;
->> +}
->> +
->> +static const struct phy_ops sun50i_usb3_phy_ops =3D {
->> +	.init		=3D sun50i_usb3_phy_init,
->> +	.exit		=3D sun50i_usb3_phy_exit,
->> +	.power_on	=3D sun50i_usb3_phy_power_on,
->> +	.power_off	=3D sun50i_usb3_phy_power_off,
->> +	.owner		=3D THIS_MODULE,
->> +};
->> +
->> +static int sun50i_usb3_phy_probe(struct platform_device *pdev)
->> +{
->> +	struct sun50i_usb3_phy *phy;
->> +	struct device *dev =3D &pdev->dev;
->> +	struct phy_provider *phy_provider;
->> +	struct resource *res;
->> +	struct device_node *connector_node;
->> +	int ret;
->> +
->> +	phy =3D devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
->> +	if (!phy)
->> +		return -ENOMEM;
->> +
->> +	dev_set_drvdata(dev, phy);
->> +
->> +	phy->clk =3D devm_clk_get(dev, NULL);
->> +	if (IS_ERR(phy->clk)) {
->> +		dev_err(dev, "failed to get phy clock\n");
->> +		return PTR_ERR(phy->clk);
->> +	}
->> +
->> +	phy->reset =3D devm_reset_control_get(dev, NULL);
->> +	if (IS_ERR(phy->reset)) {
->> +		dev_err(dev, "failed to get reset control\n");
->> +		return PTR_ERR(phy->reset);
->> +	}
->> +
->> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	phy->regs =3D devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(phy->regs))
->> +		return PTR_ERR(phy->regs);
->> +
->> +	/* Populate the connector as platform device */
->> +	ret =3D of_platform_populate(pdev->dev.of_node, NULL, NULL,
->&pdev->dev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/*
->> +	 * Currently the Allwinner USB3 PHY contains only one port, so we
->> +	 * only process one connector now.
->> +	 */
->> +	connector_node =3D of_get_next_child(pdev->dev.of_node, NULL);
->> +
->> +	if (connector_node) {
->> +		/* Get the platform device */
->> +		phy->connector_dev =3D of_find_device_by_node(connector_node);
->> +		if (!phy->connector_dev) {
->> +			dev_err(dev, "no device for connector\n");
->> +			return -ENODEV;
->> +		}
->> +
->> +		phy->vbus =3D regulator_get(&phy->connector_dev->dev, "vbus");
->> +		if (IS_ERR(phy->vbus))
->> +			return PTR_ERR(phy->vbus);
->> +	}
->> +
->> +	phy->phy =3D devm_phy_create(dev, NULL, &sun50i_usb3_phy_ops);
->> +	if (IS_ERR(phy->phy)) {
->
->You're possibly leaking phy->vbus here.
+Reviewed-by: Grant Likely <grant.likely@arm.com>
 
-Thanks.
-
->
->> +		dev_err(dev, "failed to create PHY\n");
->> +		return PTR_ERR(phy->phy);
->> +	}
->> +
->> +	phy_set_drvdata(phy->phy, phy);
->> +	phy_provider =3D devm_of_phy_provider_register(dev,
->of_phy_simple_xlate);
->> +
->
->... and also here:
->
->> +	return PTR_ERR_OR_ZERO(phy_provider);
->> +}
->> +
->> +static int sun50i_usb3_phy_remove(struct platform_device *pdev)
->> +{
->> +	struct device *dev =3D &pdev->dev;
->> +	struct sun50i_usb3_phy *phy =3D dev_get_drvdata(dev);
->> +
->> +	if (phy->vbus)
->> +		regulator_put(phy->vbus);
->
->Perhaps just use devm_regulator_get, and drop he sun50i_usb3_phy_remove
->entirely?
-
-No. We're borrowing another device's regulator, so devm function won't
-work here -- it will clean up when the connector gets removed, not the phy,
-but the connector has no driver.
-
->
->thank you and regards,
->	Ondrej
->
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id sun50i_usb3_phy_of_match[] =3D {
->> +	{ .compatible =3D "allwinner,sun50i-h6-usb3-phy" },
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(of, sun50i_usb3_phy_of_match);
->> +
->> +static struct platform_driver sun50i_usb3_phy_driver =3D {
->> +	.probe	=3D sun50i_usb3_phy_probe,
->> +	.remove	=3D sun50i_usb3_phy_remove,
->> +	.driver =3D {
->> +		.of_match_table	=3D sun50i_usb3_phy_of_match,
->> +		.name  =3D "sun50i-usb3-phy",
->> +	}
->> +};
->> +module_platform_driver(sun50i_usb3_phy_driver);
->> +
->> +MODULE_DESCRIPTION("Allwinner sun50i USB 3.0 phy driver");
->> +MODULE_AUTHOR("Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>");
->> +MODULE_LICENSE("GPL");
->> --=20
->> 2.18.1
->>=20
->> --=20
->> You received this message because you are subscribed to the Google
->Groups "linux-sunxi" group.
->> To unsubscribe from this group and stop receiving emails from it,
->send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
->> For more options, visit https://groups.google.com/d/optout.
-
---=20
-=E4=BD=BF=E7=94=A8 K-9 Mail =E5=8F=91=E9=80=81=E8=87=AA=E6=88=91=E7=9A=84An=
-droid=E8=AE=BE=E5=A4=87=E3=80=82
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> 
+> Jean-Philippe Brucker (2):
+>    dt-bindings: Add external-facing PCIe port property
+>    PCI: OF: Support external-facing property
+> 
+>   Documentation/devicetree/bindings/pci/pci.txt | 50 +++++++++++++++++++
+>   drivers/pci/of.c                              |  3 ++
+>   2 files changed, 53 insertions(+)
+> 
