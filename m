@@ -1,57 +1,24 @@
-Return-Path: <SRS0=vr9i=SS=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr150088.outbound.protection.outlook.com ([40.107.15.88]:48462
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727938AbfDPCRf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 15 Apr 2019 22:17:35 -0400
-From: Wen He <wen.he_1@nxp.com>
-Subject: [v3] arm64: dts: ls1028a: Add properties for Mali DP500 node
-Date: Tue, 16 Apr 2019 02:17:31 +0000
-Message-ID: <20190416021906.40443-1-wen.he_1@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: Leo Li <leoyang.li@nxp.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>, Wen He <wen.he_1@nxp.com>
+Return-Path: <robherring2@gmail.com>
+Message-ID: <5ca841f6.1c69fb81.4e9ad.d718@mx.google.com>
+Date: Sat, 06 Apr 2019 01:06:44 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/6] ARM: dts: am33xx: Added AM33XX_PADCONF macro
+References: <20190314150524.GB19425@atomide.com>  <20190402160949.14190-1-cquast@hanoverdisplays.com> <20190402160949.14190-3-cquast@hanoverdisplays.com>
+In-Reply-To: <20190402160949.14190-3-cquast@hanoverdisplays.com>
+Cc: Christina Quast <cquast@hanoverdisplays.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, Russell King <linux@armlinux.org.uk>
 List-ID: <devicetree@vger.kernel.org>
 
-VGhlIExTMTAyOEEgaGFzIGEgTENEIGNvbnRyb2xsZXIgYW5kIERpc3BsYXlwb3J0IGludGVyZmFj
-ZSB0aGF0DQpjb25uZWN0cyB0byBlRFAgYW5kIERpc3BsYXlwb3J0IGNvbm5lY3RvcnMgb24gdGhl
-IExTMTAyOEEgYm9hcmQuDQoNClRoaXMgcGF0Y2ggZW5hYmxlcyB0aGUgTENEIGNvbnRyb2xsZXIg
-ZHJpdmVyIG9uIHRoZSBMUzEwMjhBLg0KDQpTaWduZWQtb2ZmLWJ5OiBBbGlzb24gV2FuZyA8YWxp
-c29uLndhbmdAbnhwLmNvbT4NClNpZ25lZC1vZmYtYnk6IFdlbiBIZSA8d2VuLmhlXzFAbnhwLmNv
-bT4NClJldmlld2VkLWJ5OiBMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4NCi0tLQ0K
-Y2hhbmdlIGluIHYzOg0KICAgICAgICAtIHVzaW5nICdkaXNwbGF5MCcgaW5zdGVhZCBvZiBub2Rl
-IG5hbWUgJ2Rpc3BsYXktMCcgdG8NCiAgICAgICAgZml4ZWQgc3ludGF4IGVycm9yLg0KDQpjaGFu
-Z2UgaW4gdjI6DQogICAgICAgIC0gcmVuYW1lZCBub2RlIG5hbWUgJ2RwMCcgdG8gYmUgZ2VuZXJp
-YyBuYW1lICdkaXNwbGF5LTAnLg0KICAgICAgICAtIHJlcGxhY2UgY2xrIG5hbWUgJ3h4Y2xrJyB0
-byAnY2xvY2steHgnLg0KICAgICAgICAtIGFkZCBuZXdsaW5lIGJldHdlZW4gcHJvcGVydGllcyBh
-bmQgY2hpbGQgbm9kZS4NCg0KIC4uLi9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAy
-OGEuZHRzaSB8IDM4ICsrKysrKysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgMzggaW5z
-ZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
-ZnNsLWxzMTAyOGEuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEw
-MjhhLmR0c2kNCmluZGV4IDhkZDM1MDFiMTMzMy4uM2M3MjRlYjhjYjIwIDEwMDY0NA0KLS0tIGEv
-YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KKysrIGIvYXJj
-aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KQEAgLTcwLDYgKzcw
-LDI3IEBADQogCQljbG9jay1vdXRwdXQtbmFtZXMgPSAic3lzY2xrIjsNCiAJfTsNCiANCisJZHBj
-bGs6IGNsb2NrLWRwIHsNCisJCWNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOw0KKwkJI2Nsb2Nr
-LWNlbGxzID0gPDA+Ow0KKwkJY2xvY2stZnJlcXVlbmN5ID0gPDI3MDAwMDAwPjsNCisJCWNsb2Nr
-LW91dHB1dC1uYW1lcz0gImRwY2xrIjsNCisJfTsNCisNCisJYWNsazogY2xvY2stYXhpIHsNCisJ
-CWNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOw0KKwkJI2Nsb2NrLWNlbGxzID0gPDA+Ow0KKwkJ
-Y2xvY2stZnJlcXVlbmN5ID0gPDY1MDAwMDAwMD47DQorCQljbG9jay1vdXRwdXQtbmFtZXM9ICJh
-Y2xrIjsNCisJfTsNCisNCisJcGNsazogY2xvY2stYXBiIHsNCisJCWNvbXBhdGlibGUgPSAiZml4
-ZWQtY2xvY2siOw0KKwkJI2Nsb2NrLWNlbGxzID0gPDA+Ow0KKwkJY2xvY2stZnJlcXVlbmN5ID0g
-PDY1MDAwMDAwMD47DQorCQljbG9jay1vdXRwdXQtbmFtZXM9ICJwY2xrIjsNCisJfTsNCisNCiAJ
-cmVib290IHsNCiAJCWNvbXBhdGlibGUgPSJzeXNjb24tcmVib290IjsNCiAJCXJlZ21hcCA9IDwm
-ZGNmZz47DQpAQCAtNDMzLDQgKzQ1NCwyMSBAQA0KIAkJCX07DQogCQl9Ow0KIAl9Ow0KKw0KKwlk
-aXNwbGF5MDogbWFsaWRwQGYwODAwMDAgew0KKwkJY29tcGF0aWJsZSA9ICJhcm0sbWFsaS1kcDUw
-MCI7DQorCQlyZWcgPSA8MHgwIDB4ZjA4MDAwMCAweDAgMHgxMDAwMD47DQorCQlpbnRlcnJ1cHRz
-ID0gPDAgMjIyIElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KKwkJCSAgICAgPDAgMjIzIElSUV9UWVBF
-X0xFVkVMX0hJR0g+Ow0KKwkJaW50ZXJydXB0LW5hbWVzID0gIkRFIiwgIlNFIjsNCisJCWNsb2Nr
-cyA9IDwmZHBjbGs+LCA8JmFjbGs+LCA8JmFjbGs+LCA8JnBjbGs+Ow0KKwkJY2xvY2stbmFtZXMg
-PSAicHhsY2xrIiwgIm1jbGsiLCAiYWNsayIsICJwY2xrIjsNCisJCWFybSxtYWxpZHAtb3V0cHV0
-LXBvcnQtbGluZXMgPSAvYml0cy8gOCA8OCA4IDg+Ow0KKw0KKwkJcG9ydCB7DQorCQkJZHAwX291
-dDogZW5kcG9pbnQgew0KKw0KKwkJCX07DQorCQl9Ow0KKwl9Ow0KIH07DQotLSANCjIuMTcuMQ0K
-DQo=
+On Tue,  2 Apr 2019 18:09:47 +0200, Christina Quast wrote:
+> AM33XX_PADCONF takes three instead of two parameters, to make
+> future changes to #pinctrl-cells easier.
+> 
+> For old boards which are not mainlined, we left the AM33XX_IOPAD
+> macro.
+> 
+> Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
+> ---
+>  include/dt-bindings/pinctrl/omap.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
