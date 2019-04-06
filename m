@@ -1,55 +1,66 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 06/12] net: stmmac: sun8i: force select external PHY when
- no internal one
-Date: Sat, 6 Apr 2019 13:24:26 +0300
-Message-ID: <36e1e65b-5a8f-f8ae-6c33-07c30beada17@cogentembedded.com>
-References: <20190405234514.6183-1-megous@megous.com>
- <20190405234514.6183-7-megous@megous.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v4 1/2] dt-bindings: Document MIPID02 bindings
+Date: Sat, 6 Apr 2019 13:35:25 +0300
+Message-ID: <20190406103525.amfsljsz4twi3xq2@valkosipuli.retiisi.org.uk>
+References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
+ <1553680545-73278-1-git-send-email-mickael.guene@st.com>
+ <1553680545-73278-2-git-send-email-mickael.guene@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190405234514.6183-7-megous@megous.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: megous@megous.com, linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Chi-Hsien Lin <chi-hsien.lin@cypress.com>, dri-devel@lists.freedesktop.org, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-stm32@st-md-mailman.stormreply.com, brcm80211-dev-list@cypress.com, Jose Abreu <joabreu@synopsys.com>, Naveen Gupta <naveen.gupta@cypress.com>, Icenowy Zheng <icenowy@aosc.io>, devicetree@vger.kernel.org, Arend van Spriel <arend.vanspriel@broadcom.com>, Alexandre Torgue <alexandre.torgue@st.com>, Hante Meuleman <hante.meuleman@broadcom.com>, linux-gpio@vger.kernel.org, Wright Feng <wright.feng@cypress.com>, linux-arm-kernel@lists.infradead.org, Franky Lin <franky.lin@broadcom.com>, brcm80211-dev-list.pdl@broadcom.com, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>, Maxime Coquelin <mcoquelin.stm32@gmail.co>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1553680545-73278-2-git-send-email-mickael.guene@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mickael Guene <mickael.guene@st.com>
+Cc: linux-media@vger.kernel.org, hugues.fruchet@st.com, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8hCgpPbiAwNi4wNC4yMDE5IDI6NDUsIG1lZ291c0BtZWdvdXMuY29tIHdyb3RlOgoKPiBG
-cm9tOiBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MuaW8+Cj4gCj4gVGhlIFBIWSBzZWxlY3Rp
-b24gYml0IGFsc28gZXhpc3RzIG9uIFNvQ3Mgd2l0aG91dCBhbiBpbnRlcm5hbCBQSFk7IGlmCj4g
-aXQncyBzZXQgdG8gMSAoaW50ZXJuYWwgUEhZKSB0aGVuIHRoZSBNQUMgd2lsbCBub3QgbWFrZSB1
-c2Ugb2YgYW55IFBIWS4KPiAKPiBUaGlzIHByb2JsZW0gYXBwZWFycyB3aGVuIGFkYXB0aW5nIGZv
-ciBINiwgd2hpY2ggaGFzIG5vIHJlYWwgaW50ZXJuYWwKPiBQSFkgKHRoZSAiaW50ZXJuYWwgUEhZ
-IiBvbiBINiBpcyBub3Qgb24tZGllLCBidXQgb24gYSBjby1wYWNrYWdlZCBBQzIwMAo+IGNoaXAs
-IHZpYSBSTUlJIGludGVyZmFjZSBhdCBHUElPIGJhbmsgQSksIGJ1dCB0aGUgUEhZIHNlbGVjdGlv
-biBiaXQgaXMKPiBzZXQuCj4gCj4gRm9yY2UgdGhlIFBIWSBzZWxlY3Rpb24gYml0IHRvIDAgd2hl
-biBubyBleHRlcm5hbCBQSFkgdG8gc2VsZWN0IHRoaXMKPiBwcm9ibGVtLgoKICAgICJTZWxlY3Qg
-dGhpcyBwcm9ibGVtIiBzb3VuZCB3ZWlyZC4uLgoKPiBTaWduZWQtb2ZmLWJ5OiBJY2Vub3d5IFpo
-ZW5nIDxpY2Vub3d5QGFvc2MuaW8+Cj4gLS0tCj4gICBkcml2ZXJzL25ldC9ldGhlcm5ldC9zdG1p
-Y3JvL3N0bW1hYy9kd21hYy1zdW44aS5jIHwgNSArKysrKwo+ICAgMSBmaWxlIGNoYW5nZWQsIDUg
-aW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9zdG1p
-Y3JvL3N0bW1hYy9kd21hYy1zdW44aS5jIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvc3RtaWNyby9z
-dG1tYWMvZHdtYWMtc3VuOGkuYwo+IGluZGV4IGUzZTNkYzQ0YjMzYi4uYmQzNDBlNzdiMmVhIDEw
-MDY0NAo+IC0tLSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L3N0bWljcm8vc3RtbWFjL2R3bWFjLXN1
-bjhpLmMKPiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9zdG1pY3JvL3N0bW1hYy9kd21hYy1z
-dW44aS5jCj4gQEAgLTkwOCw2ICs5MDgsMTEgQEAgc3RhdGljIGludCBzdW44aV9kd21hY19zZXRf
-c3lzY29uKHN0cnVjdCBzdG1tYWNfcHJpdiAqcHJpdikKPiAgIAkJICogYWRkcmVzcy4gTm8gbmVl
-ZCB0byBtYXNrIGl0IGFnYWluLgo+ICAgCQkgKi8KPiAgIAkJcmVnIHw9IDEgPDwgSDNfRVBIWV9B
-RERSX1NISUZUOwo+ICsJfSBlbHNlIHsKPiArCQkvKiBGb3IgU29DcyB3aXRob3V0IGludGVybmFs
-IFBIWSB0aGUgUEhZIHNlbGVjdGlvbiBiaXQgc2hvdWxkIGJlCj4gKwkJICogc2V0IHRvIDAgKGV4
-dGVybmFsIFBIWSkuCj4gKwkJICovCj4gKwkJcmVnICY9IH4oSDNfRVBIWV9TRUxFQ1QpOwogICAg
-Tm8gKCkgc2hvdWxkIGJlIG5lZWRlZCBoZXJlLCBhZGQgKCkgYXJvdW5kIHRoZSBtYWNybyBib2R5
-IGlmIHN0aWxsIG5lZWRlZC4KClsuLi5dCgpNQlIsIFNlcmdlaQpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Hi Mickael,
+
+On Wed, Mar 27, 2019 at 10:55:43AM +0100, Mickael Guene wrote:
+> This adds documentation of device tree for MIPID02 CSI-2 to PARALLEL
+> bridge.
+> 
+> Signed-off-by: Mickael Guene <mickael.guene@st.com>
+> ---
+> 
+> Changes in v4:
+> - Fix and clarify endpoints properties documentation
+> 
+> Changes in v3: None
+> Changes in v2:
+> - Add precision about first CSI-2 port data rate
+> - Document endpoints supported properties
+> - Rename 'mipid02@14' into generic 'csi2rx@14' in example
+> 
+>  .../bindings/media/i2c/st,st-mipid02.txt           | 82 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  7 ++
+>  2 files changed, 89 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+> new file mode 100644
+> index 0000000..754a175
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+> @@ -0,0 +1,82 @@
+> +STMicroelectronics MIPID02 CSI-2 to PARALLEL bridge
+> +
+> +MIPID02 has two CSI-2 input ports, only one of those ports can be active at a
+> +time. Active port input stream will be de-serialized and its content outputted
+> +through PARALLEL output port.
+> +CSI-2 first input port is a dual lane 800Mbps per lane whereas CSI-2 second
+> +input port is a single lane 800Mbps. Both ports support clock and data lane
+> +polarity swap. First port also supports data lane swap.
+> +PARALLEL output port has a maximum width of 12 bits.
+> +Supported formats are RAW6, RAW7, RAW8, RAW10, RAW12, RGB565, RGB888, RGB444,
+> +YUV420 8-bit, YUV422 8-bit and YUV420 10-bit.
+> +
+> +Required Properties:
+> +- compatible: should be "st,st-mipid02"
+
+s/should/shall/ overall; other values aren't really valid in any of the
+cases.
+
+-- 
+Sakari Ailus
