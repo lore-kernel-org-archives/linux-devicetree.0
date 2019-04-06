@@ -1,40 +1,171 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: clock: sifive: add FU540-C000 PRCI clock constants
-Date: Sat, 06 Apr 2019 01:07:19 -0500
-Message-ID: <5ca8421a.1c69fb81.a620b.5a7f@mx.google.com>
-References: <20190404003820.10679-1-paul.walmsley@sifive.com>
+Subject: Re: [RFC PATCH 7/9] dt-bindings: power: avs: Add support for CPR
+ (Core Power Reduction)
+Date: Sat, 06 Apr 2019 01:07:26 -0500
+Message-ID: <5ca84220.1c69fb81.2daad.3164@mx.google.com>
+References: <20190404050931.9812-1-niklas.cassel@linaro.org>
+ <20190404050931.9812-8-niklas.cassel@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190404003820.10679-1-paul.walmsley@sifive.com>
+Content-Disposition: inline
+In-Reply-To: <20190404050931.9812-8-niklas.cassel@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: mark.rutland@arm.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, wesley@sifive.com, palmer@sifive.com
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  3 Apr 2019 17:38:20 -0700, Paul Walmsley wrote:
-> Add preprocessor macros for the important PRCI output clocks
-> that are needed by both the FU540 PRCI driver and DT data.
-> Details are available in the FU540 manual in Chapter 7 of
+On Thu, Apr 04, 2019 at 07:09:28AM +0200, Niklas Cassel wrote:
+> Add DT bindings to describe the CPR HW found on certain Qualcomm SoCs.
 > 
->     https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-> 
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Wesley Terpstra <wesley@sifive.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
+> Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 > ---
-> Rob, Mark: this patch is a prerequisite for both the FU540 DT data
-> and for the FU540 PRCI clock driver patch series.  To prevent one
-> of those patch series from depending on the other, I'd like to ask
-> Palmer to merge this patch in one of his -rc pull requests.  Could
-> I get an ack from one or both of you for this purpose?  Thanks.
+>  .../bindings/power/avs/qcom,cpr.txt           | 119 ++++++++++++++++++
+>  1 file changed, 119 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
 > 
-> include/dt-bindings/clock/sifive-fu540-prci.h | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 include/dt-bindings/clock/sifive-fu540-prci.h
-> 
+> diff --git a/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
+> new file mode 100644
+> index 000000000000..541c9b31cd3b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
+> @@ -0,0 +1,119 @@
+> +QCOM CPR (Core Power Reduction)
+> +
+> +CPR (Core Power Reduction) is a technology to reduce core power on a CPU
+> +or other device. Each OPP of a device corresponds to a "corner" that has
+> +a range of valid voltages for a particular frequency. While the device is
+> +running at a particular frequency, CPR monitors dynamic factors such as
+> +temperature, etc. and suggests adjustments to the voltage to save power
+> +and meet silicon characteristic requirements.
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be "qcom,cpr"
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Needs to be SoC specific.
+
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: base address and size of the rbcpr register region
+> +
+> +- interrupts:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: list of three interrupts in order of irq0, irq1, irq2
+
+Does each irq have some defined meaning/function?
+
+> +
+> +- acc-syscon:
+> +	Usage: optional
+> +	Value type: <phandle>
+> +	Definition: phandle to syscon for writing ACC settings
+> +
+> +- nvmem:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: phandle to nvmem provider containing efuse settings
+> +
+> +- nvmem-names:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be "qfprom"
+> +
+> +vdd-mx-supply = <&pm8916_l3>;
+> +
+> +- qcom,cpr-ref-clk:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: rate of reference clock in kHz
+
+Can't you use the clock binding for this?
+
+> +
+> +- qcom,cpr-timer-delay-us:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: delay in uS for the timer interval
+> +
+> +- qcom,cpr-timer-cons-up:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Consecutive number of timer intervals, or units of
+> +		    qcom,cpr-timer-delay-us, that occur before issuing an up
+> +		    interrupt
+> +
+> +- qcom,cpr-timer-cons-down:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Consecutive number of timer intervals, or units of
+> +		    qcom,cpr-timer-delay-us, that occur before issuing a down
+> +		    interrupt
+> +
+> +- qcom,cpr-up-threshold:
+> +	Usage: optional
+> +	Value type: <u32>
+> +	Definition: The threshold for CPR to issue interrupt when error_steps
+> +		    is greater than it when stepping up
+> +
+> +- qcom,cpr-down-threshold:
+> +	Usage: optional
+> +	Value type: <u32>
+> +	Definition: The threshold for CPR to issue interrdownt when error_steps
+
+typo
+
+> +		    is greater than it when stepping down
+> +
+> +- qcom,cpr-down-threshold:
+> +	Usage: optional
+> +	Value type: <u32>
+> +	Definition: Idle clock cycles ring oscillator can be in
+> +
+> +- qcom,cpr-gcnt-us:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: The time for gate count in uS
+> +
+> +- qcom,vdd-apc-step-up-limit:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Limit of vdd-apc-supply steps for scaling up
+
+# of steps or a voltage?
+
+> +
+> +- qcom,vdd-apc-step-down-limit:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Limit of vdd-apc-supply steps for scaling down
+> +
+> +Example:
+> +
+> +	avs@b018000 {
+> +		compatible = "qcom,cpr";
+> +		reg = <0xb018000 0x1000>;
+> +		interrupts = <0 15 1>, <0 16 1>, <0 17 1>;
+> +		vdd-mx-supply = <&pm8916_l3>;
+> +		acc-syscon = <&tcsr>;
+> +		nvmem = <&qfprom>;
+> +		nvmem-names = "qfprom";
+> +
+> +		qcom,cpr-ref-clk = <19200>;
+> +		qcom,cpr-timer-delay-us = <5000>;
+> +		qcom,cpr-timer-cons-up = <0>;
+> +		qcom,cpr-timer-cons-down = <2>;
+> +		qcom,cpr-up-threshold = <0>;
+> +		qcom,cpr-down-threshold = <2>;
+> +		qcom,cpr-idle-clocks = <15>;
+> +		qcom,cpr-gcnt-us = <1>;
+> +		qcom,vdd-apc-step-up-limit = <1>;
+> +		qcom,vdd-apc-step-down-limit = <1>;
+> +	};
+> -- 
+> 2.20.1
+> 
