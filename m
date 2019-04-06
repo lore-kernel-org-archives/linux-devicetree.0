@@ -1,27 +1,22 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] dt-binding: mtd: physmap: Add example using addr-gpios property
-Date: Sat, 06 Apr 2019 01:05:49 -0500
-Message-ID: <5ca841be.1c69fb81.9bbef.2ef4@mx.google.com>
-References: <20190329021322.6833-1-chris.packham@alliedtelesis.co.nz> <20190329021322.6833-3-chris.packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH v1 2/3] dt-bindings: rockchip-thermal: Support the PX30 SoC compatible
+Date: Sat, 06 Apr 2019 01:06:01 -0500
+Message-ID: <5ca841cb.1c69fb81.d3339.9abd@mx.google.com>
+References: <1554100985-11385-1-git-send-email-zhangqing@rock-chips.com> <1554100985-11385-3-git-send-email-zhangqing@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190329021322.6833-3-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <1554100985-11385-3-git-send-email-zhangqing@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: bbrezillon@kernel.org, computersforpeace@gmail.com, dwmw2@infradead.org, marek.vasut@gmail.com, richard@nod.at, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 29 Mar 2019 15:13:22 +1300, Chris Packham wrote:
-> Add an example showing how to use the addr-gpios property to deal with a
-> system with limited IO space.
+On Mon,  1 Apr 2019 14:43:04 +0800, Elaine Zhang wrote:
+> Add a new compatible for thermal founding on PX30 SoCs.
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
 > ---
-> Changes in v2:
-> - None
-> 
->  .../devicetree/bindings/mtd/mtd-physmap.txt      | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
