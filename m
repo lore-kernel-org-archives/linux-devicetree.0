@@ -1,24 +1,23 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: clk: axg-audio: add g12a support
-Date: Sat, 06 Apr 2019 01:05:51 -0500
-Message-ID: <5ca841c1.1c69fb81.44d14.3a88@mx.google.com>
-References: <20190329160649.31603-1-jbrunet@baylibre.com> <20190329160649.31603-2-jbrunet@baylibre.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: phy: Add binding for Mediatek MT7621 PCIe PHY
+Date: Sat, 06 Apr 2019 01:05:54 -0500
+Message-ID: <5ca841c4.1c69fb81.f74fb.c7e1@mx.google.com>
+References: <20190330055038.18958-1-sergio.paracuellos@gmail.com> <20190330055038.18958-2-sergio.paracuellos@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190329160649.31603-2-jbrunet@baylibre.com>
+In-Reply-To: <20190330055038.18958-2-sergio.paracuellos@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Maxime Jourdan <mjourdan@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc: kishon@ti.com, linux-kernel@vger.kernel.org, driverdev-devel@linuxdriverproject.org, devicetree@vger.kernel.org, john@phrozen.org, linux-mips@vger.kernel.org, robh+dt@kernel.org, neil@brown.name
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 29 Mar 2019 17:06:46 +0100, Jerome Brunet wrote:
-> Add a new compatible string and additional clock ids for audio clock
-> controller of the g12a SoC family.
+On Sat, 30 Mar 2019 06:50:37 +0100, Sergio Paracuellos wrote:
+> Add bindings to describe Mediatek MT7621 PCIe PHY.
 > 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 > ---
->  .../bindings/clock/amlogic,axg-audio-clkc.txt          |  3 ++-
->  include/dt-bindings/clock/axg-audio-clkc.h             | 10 ++++++++++
->  2 files changed, 12 insertions(+), 1 deletion(-)
+>  .../bindings/phy/mediatek,mt7621-pci-phy.txt  | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
