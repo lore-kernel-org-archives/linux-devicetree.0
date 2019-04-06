@@ -1,47 +1,82 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: rtc: add battery-low-hw-alarm property
-Date: Sat, 06 Apr 2019 01:07:13 -0500
-Message-ID: <5ca84214.1c69fb81.e3ace.21e5@mx.google.com>
-References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
+Subject: Re: Using device tree overlays in Linux
+Date: Sat, 06 Apr 2019 01:07:16 -0500
+Message-ID: <5ca84216.1c69fb81.3205c.592c@mx.google.com>
+References: <71fb0ff289e84c55bd92ecd96bc9aa76@svr-chch-ex1.atlnz.lc>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
+In-Reply-To: <71fb0ff289e84c55bd92ecd96bc9aa76@svr-chch-ex1.atlnz.lc>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Flavio Suligoi <f.suligoi@asem.it>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc: "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 04:52:44PM +0200, Flavio Suligoi wrote:
-> Some RTC devices have a battery-low automatic detection circuit.
-> The battery-low event is usually reported with:
+On Thu, Apr 04, 2019 at 01:50:20AM +0000, Chris Packham wrote:
+> Hi,
 > 
-> - a bit change in a RTC status register
-> - a hw signaling (generally using an interrupt generation), changing
->   the hw level of a specific pin;
+> I'm implementing support for some modular Linux based systems using 
+> device tree overlays. The code is working but it seems a little more 
+> fiddly that than it should be so I'm wondering if I'm doing it right.
 > 
-> The new property "battery-low-hw-alarm" enable the RTC to generate the
-> hw signaling in case of battery-low event.
+> An example of what I'm doing is
 > 
-> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> ---
->  Documentation/devicetree/bindings/rtc/rtc.txt | 3 +++
->  1 file changed, 3 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt b/Documentation/devicetree/bindings/rtc/rtc.txt
-> index a97fc6a..f93a44d 100644
-> --- a/Documentation/devicetree/bindings/rtc/rtc.txt
-> +++ b/Documentation/devicetree/bindings/rtc/rtc.txt
-> @@ -31,6 +31,9 @@ below.
->                              expressed in femto Farad (fF).
->                              The default value shall be listed (if optional),
->                              and likewise all valid values.
-> +- battery-low-hw-alarm :    Enable the "battery-low" output pin. This function
-> +                            is available on the following devices:
-> +                            - pcf2127 - pin used for alarm: INTn
+> arch/arm/boot/dts/Makefile:
+> DTC_FLAGS_myboard += -@
+> 
+> drivers/foo/Makefile:
+> obj-y += myplugin.dtb.o
+> obj-y += mydriver.o
+> 
+> drivers/foo/myplugin.dts:
+> /dts-v1/;
+> /plugin/;
+> /{
+> 	fragment@0 {
+> 		target = <&i2c0>;
+> 		__overlay__ {
+> 			gpio@74 {
+> 				compatible = "nxp,pca9539";
+> 				reg = <0x74>
+> 			};
+> 		};
+> 	};
+> };
+> 
+> drivers/foo/mydriver.c:
+> extern uint8_t __dtb_myplugin_begin[];
+> extern uint8_t __dtb_myplugin_end[];
+> 
+> int mydriver_probe(struct platform_device *pdev)
+> {
+> 	u32 size = __dtb_myplugin_end - __dtb_myplugin_begin;
+> 	int overlay_id;
+> 	int ret;
+> 	
+> 	ret = of_overlay_fdt_apply(__dtb_myplugin_begin,
+> 				   size, &overlay_id);
+> 	return ret;
+> }
+> 
+> 
+> The first issue is that I need to add -@ to the DTC_FLAGS for my board 
+> dtb. I kind of understand that I only need -@ if my overlay targets 
+> something symbolic so I might not need it but I was surprised that there 
+> wasn't a Kconfig option that makes this happen automatically.
 
-Boolean? If there's cases where which pin is selectable, then we'd need 
-this to take a value. Not sure how likely that is?
+Whether overlays make sense or are needed are per board.
+
+You could add a kconfig entry that drivers which depend on overlays 
+select, but turning on '-@' has to be per board (or SoC family if the 
+SoC maintainer is okay with that).
+
+> externing things in C files makes checkpatch.pl complain. I see the 
+> of/unittests.c and rcar_du_of.c hide this with a macro. I was again 
+> surprised that there wasn't a common macro to declare these.
+
+Feel free to propose something. There just aren't that many cases that 
+anyone has cared what checkpatch says.
 
 Rob
