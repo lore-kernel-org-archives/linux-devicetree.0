@@ -1,53 +1,366 @@
 From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: Re: [PATCH RESEND v4 1/4] input:
- sun4i-a10-lradc-keys: Add support for A83T
-Date: Sat, 6 Apr 2019 18:57:39 +0200
-Message-ID: <20190406165739.bati4leqghmehi2l@core.my.home>
-References: <20190327023339.25975-1-megous@megous.com>
- <20190327023339.25975-2-megous@megous.com>
- <20190404184915.GB116898@dtor-ws>
+Subject: Re: [PATCH v5 3/5] phy: allwinner: add phy driver for
+ USB3 PHY on Allwinner H6 SoC
+Date: Sat, 6 Apr 2019 19:21:13 +0200
+Message-ID: <20190406172113.p4hyperrtzv6ultq@core.my.home>
+References: <20190405205736.55177-1-icenowy@aosc.io>
+ <20190405205736.55177-4-icenowy@aosc.io>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBBVVUPSQKGQETRBAINY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBC6AUPSQKGQEOEJ4N7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20190404184915.GB116898@dtor-ws>
+In-Reply-To: <20190405205736.55177-4-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hello Icenowy,
 
-On Thu, Apr 04, 2019 at 11:49:15AM -0700, Dmitry Torokhov wrote:
-> On Wed, Mar 27, 2019 at 03:33:36AM +0100, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
-> > From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > 
-> > Allwinner A83T SoC has a low res adc like the one in Allwinner A10 SoC,
-> > however, the A10 SoC's vref of lradc internally is divided by 2/3 and
-> > the A83T SoC's vref of lradc internally is divided by 3/4, thus add
-> > a hardware variant for it to be compatible with various devices.
-> > 
-> > Signed-off-by: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Sat, Apr 06, 2019 at 04:57:34AM +0800, Icenowy Zheng wrote:
+> Allwinner H6 SoC contains a USB3 PHY (with USB2 DP/DM lines also
+> controlled).
 > 
-> Applied, this and binding patch; the dts changes should go through other
-> relevant trees I believe.
-
-Thank you very much. Yes, the rest should go through the sunxi tree.
-
-regards,
-   Ondrej
-
-> Thanks.
+> Add a driver for it.
 > 
+> The register operations in this driver is mainly extracted from the BSP
+> USB3 driver.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+> Changes in v5:
+> - Dropped support for vbus-supply property in the device node itself and
+>   added support for vbus-supply property in the connector subnode.
+> 
+> Changes in v4:
+> - Added support for vbus-supply property.
+> 
+> Changes in v3:
+> - Dropped USB_SUPPORT dependency.
+> - Added Chen-Yu's Review tag.
+> 
+> No changes in v2, v1. drivers/phy/allwinner/Kconfig           |  12 ++
+>  drivers/phy/allwinner/Makefile          |   1 +
+>  drivers/phy/allwinner/phy-sun50i-usb3.c | 260 ++++++++++++++++++++++++
+>  3 files changed, 273 insertions(+)
+>  create mode 100644 drivers/phy/allwinner/phy-sun50i-usb3.c
+> 
+> diff --git a/drivers/phy/allwinner/Kconfig b/drivers/phy/allwinner/Kconfig
+> index fb1204bcc454..2c363db177f2 100644
+> --- a/drivers/phy/allwinner/Kconfig
+> +++ b/drivers/phy/allwinner/Kconfig
+> @@ -41,3 +41,15 @@ config PHY_SUN9I_USB
+>  	  sun9i SoCs.
+>  
+>  	  This driver controls each individual USB 2 host PHY.
+> +
+> +config PHY_SUN50I_USB3
+> +	tristate "Allwinner sun50i SoC USB3 PHY driver"
+> +	depends on ARCH_SUNXI && HAS_IOMEM && OF
+> +	depends on RESET_CONTROLLER
+> +	select USB_COMMON
+> +	select GENERIC_PHY
+> +	help
+> +	  Enable this to support the USB3.0-capable transceiver that is
+> +	  part of some Allwinner sun50i SoCs.
+> +
+> +	  This driver controls each individual USB 2+3 host PHY combo.
+> diff --git a/drivers/phy/allwinner/Makefile b/drivers/phy/allwinner/Makefile
+> index 7d0053efbfaa..59575a895779 100644
+> --- a/drivers/phy/allwinner/Makefile
+> +++ b/drivers/phy/allwinner/Makefile
+> @@ -1,3 +1,4 @@
+>  obj-$(CONFIG_PHY_SUN4I_USB)		+= phy-sun4i-usb.o
+>  obj-$(CONFIG_PHY_SUN6I_MIPI_DPHY)	+= phy-sun6i-mipi-dphy.o
+>  obj-$(CONFIG_PHY_SUN9I_USB)		+= phy-sun9i-usb.o
+> +obj-$(CONFIG_PHY_SUN50I_USB3)		+= phy-sun50i-usb3.o
+> diff --git a/drivers/phy/allwinner/phy-sun50i-usb3.c b/drivers/phy/allwinner/phy-sun50i-usb3.c
+> new file mode 100644
+> index 000000000000..5299aef98668
+> --- /dev/null
+> +++ b/drivers/phy/allwinner/phy-sun50i-usb3.c
+> @@ -0,0 +1,260 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Allwinner sun50i(H6) USB 3.0 phy driver
+> + *
+> + * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> + *
+> + * Based on phy-sun9i-usb.c, which is:
+> + *
+> + * Copyright (C) 2014-2015 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> + *
+> + * Based on code from Allwinner BSP, which is:
+> + *
+> + * Copyright (c) 2010-2015 Allwinner Technology Co., Ltd.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/usb/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/reset.h>
+> +
+> +/* Interface Status and Control Registers */
+> +#define SUNXI_ISCR			0x00
+> +#define SUNXI_PIPE_CLOCK_CONTROL	0x14
+> +#define SUNXI_PHY_TUNE_LOW		0x18
+> +#define SUNXI_PHY_TUNE_HIGH		0x1c
+> +#define SUNXI_PHY_EXTERNAL_CONTROL	0x20
+> +
+> +/* USB2.0 Interface Status and Control Register */
+> +#define SUNXI_ISCR_FORCE_VBUS		(3 << 12)
+> +
+> +/* PIPE Clock Control Register */
+> +#define SUNXI_PCC_PIPE_CLK_OPEN		(1 << 6)
+> +
+> +/* PHY External Control Register */
+> +#define SUNXI_PEC_EXTERN_VBUS		(3 << 1)
+> +#define SUNXI_PEC_SSC_EN		(1 << 24)
+> +#define SUNXI_PEC_REF_SSP_EN		(1 << 26)
+> +
+> +/* PHY Tune High Register */
+> +#define SUNXI_TX_DEEMPH_3P5DB(n)	((n) << 19)
+> +#define SUNXI_TX_DEEMPH_3P5DB_MASK	GENMASK(24, 19)
+> +#define SUNXI_TX_DEEMPH_6DB(n)		((n) << 13)
+> +#define SUNXI_TX_DEEMPH_6GB_MASK	GENMASK(18, 13)
+> +#define SUNXI_TX_SWING_FULL(n)		((n) << 6)
+> +#define SUNXI_TX_SWING_FULL_MASK	GENMASK(12, 6)
+> +#define SUNXI_LOS_BIAS(n)		((n) << 3)
+> +#define SUNXI_LOS_BIAS_MASK		GENMASK(5, 3)
+> +#define SUNXI_TXVBOOSTLVL(n)		((n) << 0)
+> +#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(0, 2)
+> +
+> +struct sun50i_usb3_phy {
+> +	struct phy *phy;
+> +	void __iomem *regs;
+> +	struct reset_control *reset;
+> +	struct clk *clk;
+> +	struct platform_device *connector_dev;
+> +	struct regulator *vbus;
+> +};
+> +
+> +static void sun50i_usb3_phy_open(struct sun50i_usb3_phy *phy)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(phy->regs + SUNXI_PHY_EXTERNAL_CONTROL);
+> +	val |= SUNXI_PEC_EXTERN_VBUS;
+> +	val |= SUNXI_PEC_SSC_EN | SUNXI_PEC_REF_SSP_EN;
+> +	writel(val, phy->regs + SUNXI_PHY_EXTERNAL_CONTROL);
+> +
+> +	val = readl(phy->regs + SUNXI_PIPE_CLOCK_CONTROL);
+> +	val |= SUNXI_PCC_PIPE_CLK_OPEN;
+> +	writel(val, phy->regs + SUNXI_PIPE_CLOCK_CONTROL);
+> +
+> +	val = readl(phy->regs + SUNXI_ISCR);
+> +	val |= SUNXI_ISCR_FORCE_VBUS;
+> +	writel(val, phy->regs + SUNXI_ISCR);
+> +
+> +	/*
+> +	 * All the magic numbers written to the PHY_TUNE_{LOW_HIGH}
+> +	 * registers are directly taken from the BSP USB3 driver from
+> +	 * Allwiner.
+> +	 */
+> +	writel(0x0047fc87, phy->regs + SUNXI_PHY_TUNE_LOW);
+> +
+> +	val = readl(phy->regs + SUNXI_PHY_TUNE_HIGH);
+> +	val &= ~(SUNXI_TXVBOOSTLVL_MASK | SUNXI_LOS_BIAS_MASK |
+> +		 SUNXI_TX_SWING_FULL_MASK | SUNXI_TX_DEEMPH_6GB_MASK |
+> +		 SUNXI_TX_DEEMPH_3P5DB_MASK);
+> +	val |= SUNXI_TXVBOOSTLVL(0x7);
+> +	val |= SUNXI_LOS_BIAS(0x7);
+> +	val |= SUNXI_TX_SWING_FULL(0x55);
+> +	val |= SUNXI_TX_DEEMPH_6DB(0x20);
+> +	val |= SUNXI_TX_DEEMPH_3P5DB(0x15);
+> +	writel(val, phy->regs + SUNXI_PHY_TUNE_HIGH);
+> +}
+> +
+> +static int sun50i_usb3_phy_init(struct phy *_phy)
+> +{
+> +	struct sun50i_usb3_phy *phy = phy_get_drvdata(_phy);
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(phy->clk);
+> +	if (ret)
+> +		goto err_clk;
+> +
+> +	ret = reset_control_deassert(phy->reset);
+> +	if (ret)
+> +		goto err_reset;
+> +
+> +	sun50i_usb3_phy_open(phy);
+> +	return 0;
+> +
+> +err_reset:
+> +	clk_disable_unprepare(phy->clk);
+> +
+> +err_clk:
+> +	return ret;
+> +}
+> +
+> +static int sun50i_usb3_phy_exit(struct phy *_phy)
+> +{
+> +	struct sun50i_usb3_phy *phy = phy_get_drvdata(_phy);
+> +
+> +	reset_control_assert(phy->reset);
+> +	clk_disable_unprepare(phy->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sun50i_usb3_phy_power_on(struct phy *_phy)
+> +{
+> +	struct sun50i_usb3_phy *phy = phy_get_drvdata(_phy);
+> +
+> +	if (phy->vbus)
+> +		return regulator_enable(phy->vbus);
+> +	else
+> +		return 0;
+> +}
+> +
+> +static int sun50i_usb3_phy_power_off(struct phy *_phy)
+> +{
+> +	struct sun50i_usb3_phy *phy = phy_get_drvdata(_phy);
+> +
+> +	if (phy->vbus)
+> +		return regulator_disable(phy->vbus);
+> +	else
+> +		return 0;
+> +}
+> +
+> +static const struct phy_ops sun50i_usb3_phy_ops = {
+> +	.init		= sun50i_usb3_phy_init,
+> +	.exit		= sun50i_usb3_phy_exit,
+> +	.power_on	= sun50i_usb3_phy_power_on,
+> +	.power_off	= sun50i_usb3_phy_power_off,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static int sun50i_usb3_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct sun50i_usb3_phy *phy;
+> +	struct device *dev = &pdev->dev;
+> +	struct phy_provider *phy_provider;
+> +	struct resource *res;
+> +	struct device_node *connector_node;
+> +	int ret;
+> +
+> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+> +	if (!phy)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(dev, phy);
+> +
+> +	phy->clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(phy->clk)) {
+> +		dev_err(dev, "failed to get phy clock\n");
+> +		return PTR_ERR(phy->clk);
+> +	}
+> +
+> +	phy->reset = devm_reset_control_get(dev, NULL);
+> +	if (IS_ERR(phy->reset)) {
+> +		dev_err(dev, "failed to get reset control\n");
+> +		return PTR_ERR(phy->reset);
+> +	}
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	phy->regs = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(phy->regs))
+> +		return PTR_ERR(phy->regs);
+> +
+> +	/* Populate the connector as platform device */
+> +	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * Currently the Allwinner USB3 PHY contains only one port, so we
+> +	 * only process one connector now.
+> +	 */
+> +	connector_node = of_get_next_child(pdev->dev.of_node, NULL);
+> +
+> +	if (connector_node) {
+> +		/* Get the platform device */
+> +		phy->connector_dev = of_find_device_by_node(connector_node);
+> +		if (!phy->connector_dev) {
+> +			dev_err(dev, "no device for connector\n");
+> +			return -ENODEV;
+> +		}
+> +
+> +		phy->vbus = regulator_get(&phy->connector_dev->dev, "vbus");
+> +		if (IS_ERR(phy->vbus))
+> +			return PTR_ERR(phy->vbus);
+> +	}
+> +
+> +	phy->phy = devm_phy_create(dev, NULL, &sun50i_usb3_phy_ops);
+> +	if (IS_ERR(phy->phy)) {
+
+You're possibly leaking phy->vbus here.
+
+> +		dev_err(dev, "failed to create PHY\n");
+> +		return PTR_ERR(phy->phy);
+> +	}
+> +
+> +	phy_set_drvdata(phy->phy, phy);
+> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> +
+
+... and also here:
+
+> +	return PTR_ERR_OR_ZERO(phy_provider);
+> +}
+> +
+> +static int sun50i_usb3_phy_remove(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct sun50i_usb3_phy *phy = dev_get_drvdata(dev);
+> +
+> +	if (phy->vbus)
+> +		regulator_put(phy->vbus);
+
+Perhaps just use devm_regulator_get, and drop he sun50i_usb3_phy_remove
+entirely?
+
+thank you and regards,
+	Ondrej
+
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id sun50i_usb3_phy_of_match[] = {
+> +	{ .compatible = "allwinner,sun50i-h6-usb3-phy" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, sun50i_usb3_phy_of_match);
+> +
+> +static struct platform_driver sun50i_usb3_phy_driver = {
+> +	.probe	= sun50i_usb3_phy_probe,
+> +	.remove	= sun50i_usb3_phy_remove,
+> +	.driver = {
+> +		.of_match_table	= sun50i_usb3_phy_of_match,
+> +		.name  = "sun50i-usb3-phy",
+> +	}
+> +};
+> +module_platform_driver(sun50i_usb3_phy_driver);
+> +
+> +MODULE_DESCRIPTION("Allwinner sun50i USB 3.0 phy driver");
+> +MODULE_AUTHOR("Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>");
+> +MODULE_LICENSE("GPL");
 > -- 
-> Dmitry
+> 2.18.1
 > 
 > -- 
 > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
