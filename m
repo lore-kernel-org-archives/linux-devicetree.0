@@ -1,49 +1,37 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 1/4] dt: lm3532: Add lm3532 dt doc and update ti_lmu doc
-Date: Sun, 7 Apr 2019 21:11:05 +0200
-Message-ID: <4d00cf1b-8863-1650-52e3-d1566f715a44@gmail.com>
-References: <20190321142838.22985-1-dmurphy@ti.com>
+From: Otavio Salvador <otavio@ossystems.com.br>
+Subject: [PATCH 1/2] dt-bindings: arm: fsl: Add support for imx6ul-pico-dwarf
+Date: Sun,  7 Apr 2019 16:37:22 -0300
+Message-ID: <20190407193723.3351-1-otavio@ossystems.com.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190321142838.22985-1-dmurphy@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, pavel@ucw.cz, tony@atomide.com, lee.jones@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Fabio Estevam <festevam@gmail.com>, Otavio Salvador <otavio@ossystems.com.br>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Vok=C3=A1=C4=8D=20Michal?= <Michal.Vokac@ysoft.com>, Rob Herring <robh+dt@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jacky Bai <ping.bai@nxp.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
+From: Fabio Estevam <festevam@gmail.com>
 
-On 3/21/19 3:28 PM, Dan Murphy wrote:
-> Add the lm3532 device tree documentation.
-> Remove lm3532 device tree reference from the ti_lmu devicetree
-> documentation.
-> 
-> With the addition of the dedicated lm3532 documentation the device
-> can be removed from the ti_lmu.txt.
-> 
-> The reason for this is that the lm3532 dt documentation now defines
-> the ability to control LED output strings against different control
-> banks or groups multiple strings to be controlled by a single control
-> bank.
-> 
-> Another addition was for ALS lighting control and configuration.  The
-> LM3532 has a feature that can take in the ALS reading from 2 separate
-> ALS devices and adjust the brightness on the strings that are configured
-> to support this feature.
-> 
-> Finally the device specific properties were moved to the parent node as these
-> properties are not control bank configurable.  These include the runtime ramp
-> and the ALS configuration.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
+Add support for TechNexion's imx6ul-pico-dwarf board.
 
-Thank you for your work on this set. Applied.
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+---
 
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 3c7ad36ebd35..944687df45b8 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -123,6 +123,7 @@ properties:
+         items:
+           - enum:
+               - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
++              - technexion,imx6ul-pico-dwarf # i.MX6 UltraLite Pico Dwarf Board
+           - const: fsl,imx6ul
+ 
+       - description: i.MX6ULL based Boards
 -- 
-Best regards,
-Jacek Anaszewski
+2.21.0
