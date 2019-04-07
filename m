@@ -1,44 +1,46 @@
-From: Urja Rannikko <urjaman@gmail.com>
-Subject: Re: [PATCH v5 6/7] ARM: dts: rockchip: Specify rk3288-veyron-chromebook's
- display timings
-Date: Sun, 7 Apr 2019 01:15:51 +0000
-Message-ID: <CAPCnQJmWfnBwxj8gScNzmZTGV6eU5B1vk76sQ56A2FvpSiYRaw@mail.gmail.com>
-References: <20190401171724.215780-1-dianders@chromium.org> <20190401171724.215780-7-dianders@chromium.org>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next v3 0/4] net: phy: add Amlogic g12a support
+Date: Sat, 06 Apr 2019 18:17:12 -0700 (PDT)
+Message-ID: <20190406.181712.1121608163259706596.davem@davemloft.net>
+References: <20190404131147.31156-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190401171724.215780-7-dianders@chromium.org>
+In-Reply-To: <20190404131147.31156-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Sean Paul <seanpaul@chromium.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Boris Brezillon <boris.brezillon@collabora.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, mka@chromium.org, linux-arm-kernel@lists.infradead.org
+To: jbrunet@baylibre.com
+Cc: andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com, khilman@baylibre.com, netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Thu,  4 Apr 2019 15:11:43 +0200
 
-On Mon, Apr 1, 2019 at 5:18 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> Let's document the display timings that most veyron chromebooks (like
-> jaq, jerry, mighty, speedy) have been using out in the field.  This
-> uses the standard blankings but a slightly slower clock rate, thus
-> getting a refresh rate 58.3 Hz.
->
-> NOTE: this won't really do anything except cause DRM to properly
-> report the refresh rate since vop_crtc_mode_fixup() was rounding the
-> pixel clock to 74.25 MHz anyway.  Apparently the adjusted rate isn't
-> exposed to userspace so it's important that the rate we're trying to
-> achieve is mostly right.
+> This patchset adds the necessary bits to support network on the Amlogic
+> g12a SoC family.
+> 
+> Only the internal PHY and related MDIO mux needed to be addressed.
+> The GMAC remains compatible with axg SoC family
+> 
+> This series has been tested on the u200 (S905D2) with both the internal
+> and external (Realtek) PHYs.
+> 
+> Change since v2 [1]:
+> * Change 'clk part' Reviewed-by as suggested
+> * Remove default callback from phy drivers
+> * Use exact match PHY macros
+> * Default MDIO g12a as module if ARCH_MESON is enabled
+> * Don't print error on probe defer in the g12a mdio mux
+> 
+> Change since v1 [0]:
+> * drop '_' from function name unrelated to locking
+> * fix peripheral clock disable on error
+> * fix variable declaration reverse Xmas trees
+> * fix Kconfig dependency on CCF
+>   (Actually needed for 'struct clk_hw', Thx Andrew !)
+> * Minor fix in the DT exemple as reported by Rob
+> 
+> [0] https://lkml.kernel.org/r/20190314140135.19184-1-jbrunet@baylibre.com
+> [1] https://lkml.kernel.org/r/20190329141512.29867-1-jbrunet@baylibre.com
 
-I just thought it would be worth mentioning that I have picked &
-tested a close to 60Hz mode on two veyron speedys of mine, but thought
-it too much effort to try and upstream, especially as it was done as a
-change to the actual panel info:
-https://github.com/urjaman/linux/commit/23d46278911e18df138b7adde1bebc23f606baae
-
-The difference would be in this format just setting hfront-porch = 87
-and vback-porch = 14.
-Anyways the point is: I support moving this mode info into the dts,
-and I'd like to know how if at all should i go about getting a
-60Hz(ish) mode upstreamed?
-
--- 
-Urja Rannikko
+Series applied, thanks.
