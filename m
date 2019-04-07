@@ -1,82 +1,44 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH 7/7] riscv: dts: add initial board data for the SiFive
- HiFive Unleashed
-Date: Sat, 6 Apr 2019 16:14:32 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1904061612310.18279@viisi.sifive.com>
-References: <20181215052154.24347-1-paul.walmsley@sifive.com>
- <20181215052154.24347-8-paul.walmsley@sifive.com>
- <20181220212618.GA27359@bogus>
+From: Urja Rannikko <urjaman@gmail.com>
+Subject: Re: [PATCH v5 6/7] ARM: dts: rockchip: Specify rk3288-veyron-chromebook's
+ display timings
+Date: Sun, 7 Apr 2019 01:15:51 +0000
+Message-ID: <CAPCnQJmWfnBwxj8gScNzmZTGV6eU5B1vk76sQ56A2FvpSiYRaw@mail.gmail.com>
+References: <20190401171724.215780-1-dianders@chromium.org> <20190401171724.215780-7-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181220212618.GA27359@bogus>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, linux-kernel@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190401171724.215780-7-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Sean Paul <seanpaul@chromium.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Boris Brezillon <boris.brezillon@collabora.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, mka@chromium.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 20 Dec 2018, Rob Herring wrote:
+Hi,
 
-> On Fri, Dec 14, 2018 at 09:21:54PM -0800, Paul Walmsley wrote:
-> > Add initial board data for the SiFive HiFive Unleashed A00.
-> > 
-> > Currently the data populated in this DT file describes the board
-> > DRAM configuration and the external clock sources that supply the
-> > PRCI.
+On Mon, Apr 1, 2019 at 5:18 PM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> Let's document the display timings that most veyron chromebooks (like
+> jaq, jerry, mighty, speedy) have been using out in the field.  This
+> uses the standard blankings but a slightly slower clock rate, thus
+> getting a refresh rate 58.3 Hz.
+>
+> NOTE: this won't really do anything except cause DRM to properly
+> report the refresh rate since vop_crtc_mode_fixup() was rounding the
+> pixel clock to 74.25 MHz anyway.  Apparently the adjusted rate isn't
+> exposed to userspace so it's important that the rate we're trying to
+> achieve is mostly right.
 
-...
+I just thought it would be worth mentioning that I have picked &
+tested a close to 60Hz mode on two veyron speedys of mine, but thought
+it too much effort to try and upstream, especially as it was done as a
+change to the actual panel info:
+https://github.com/urjaman/linux/commit/23d46278911e18df138b7adde1bebc23f606baae
 
-> > diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
-> > new file mode 100644
-> > index 000000000000..0c6afabe69e3
-> > --- /dev/null
-> > +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
-> > @@ -0,0 +1,39 @@
-> > +// SPDX-License-Identifier: Apache-2.0
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> 
-> This should be a single line with: (Apache-2.0 OR GPL-2.0+)
+The difference would be in this format just setting hfront-porch = 87
+and vback-porch = 14.
+Anyways the point is: I support moving this mode info into the dts,
+and I'd like to know how if at all should i go about getting a
+60Hz(ish) mode upstreamed?
 
-Done.
-
-> > +	model = "SiFive HiFive Unleashed A00 (FU540-C000)"
-> > +	compatible = "sifive,hifive-unleashed-a00-fu540",
-> > +		"sifive,hifive-unleashed-fu540";
-> 
-> SoC compatible should be here too.
-
-Done.
-
-> > +	soc {
-> > +		hfclk: hfclk {
-> > +			#clock-cells = <0>;
-> > +			compatible = "fixed-clock";
-> > +			clock-frequency = <33333333>;
-> > +			clock-output-names = "hfclk";
-> > +		};
-> > +		rtcclk: rtcclk {
-> > +			#clock-cells = <0>;
-> > +			compatible = "fixed-clock";
-> > +			clock-frequency = <1000000>;
-> > +			clock-output-names = "rtcclk";
-> > +		};
-> 
-> Are these the clock inputs to the SoC or dummy clocks until you write a 
-> proper clock driver? If the former, they should be at the top level. 
-
-Done.
-
-
-Thanks for your comments; Will send an updated patch set.
-
-
-- Paul
+-- 
+Urja Rannikko
