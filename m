@@ -1,116 +1,283 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v4] dt-bindings: gpu: add bindings for the ARM Mali Bifrost
- GPU
-Date: Sun, 07 Apr 2019 12:16:58 +0200
-Message-ID: <5CA9CE1A.6060109@baylibre.com>
-References: <20190401080949.14550-1-narmstrong@baylibre.com>
- <1640dd7b-3576-d9ce-0641-6b6a64a87275@arm.com>
- <d26f1ce9-c56c-5e51-37f5-0689aa198dc0@baylibre.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/3] iio: adc: ad7606: Move oversampling options in chip
+ info and rework *_avail attributes
+Date: Sun, 7 Apr 2019 11:53:38 +0100
+Message-ID: <20190407115338.69b865f9@archlinux>
+References: <20190402131841.8430-1-beniamin.bia@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <d26f1ce9-c56c-5e51-37f5-0689aa198dc0@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Steven Price <steven.price@arm.com>, daniel@ffwll.ch, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20190402131841.8430-1-beniamin.bia@analog.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Beniamin Bia <beniamin.bia@analog.com>
+Cc: devel@driverdev.osuosl.org, mark.rutland@arm.com, lars@metafoo.de, biabeniamin@outlook.com, Stefan Popa <stefan.popa@analog.com>, Michael.Hennerich@analog.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKTGUgMDEvMDQvMjAxOSAxMzoyNCwgTmVpbCBBcm1zdHJvbmcgYSDDqWNyaXQgOgo+
-IE9uIDAxLzA0LzIwMTkgMTI6MDAsIFN0ZXZlbiBQcmljZSB3cm90ZToKPj4gT24gMDEvMDQvMjAx
-OSAwOTowOSwgTmVpbCBBcm1zdHJvbmcgd3JvdGU6Cj4+PiBBZGQgdGhlIGJpbmRpbmdzIGZvciB0
-aGUgQmlmcm9zdCBmYW1pbHkgb2YgQVJNIE1hbGkgR1BVcy4KPj4+Cj4+PiBUaGUgQmlmcm9zdCBH
-UFUgYXJjaGl0ZWN0dXJlIGlzIHNpbWlsYXIgdG8gdGhlIE1pZGdhcmQgZmFtaWx5LAo+Pj4gYnV0
-IHdpdGggYSBkaWZmZXJlbnQgU2hhZGVyIENvcmUgJiBFeGVjdXRpb24gRW5naW5lIHN0cnVjdHVy
-ZXMuCj4+Pgo+Pj4gQmluZGluZ3MgYXJlIGJhc2VkIG9uIHRoZSBNaWRnYXJkIGZhbWlseSBiaW5k
-aW5ncywgYnV0IHRoZSBpbm5lcgo+Pj4gYXJjaGl0ZWN0dXJhbCBjaGFuZ2VzIG1ha2VzIGl0IGEg
-c2VwYXJhdGUgZmFtaWx5IG5lZWRpbmcgc2VwYXJhdGUKPj4+IGJpbmRpbmdzLgo+Pj4KPj4+IFRo
-ZSBCaWZyb3N0IEdQVXMgYXJlIHByZXNlbnQgaW4gYSBudW1iZXIgb2YgcmVjZW50IFNvQ3MsIGxp
-a2UgdGhlCj4+PiBBbWxvZ2ljIEcxMkEgRmFtaWx5LCBhbmQgbWFueSBvdGhlciB2ZW5kb3JzLgo+
-Pj4gVGhlIEFtbG9naWMgdmVuZG9yIHNwZWNpZmljIGNvbXBhdGlibGUgaXMgYWRkZWQgdG8gaGFu
-ZGxlIHRoZQo+Pj4gc3BlY2lmaWMgSVAgaW50ZWdyYXRpb24gZGlmZmVyZW5jZXMgYW5kIGRlcGVu
-ZGVuY2llcy4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBOZWlsIEFybXN0cm9uZyA8bmFybXN0cm9u
-Z0BiYXlsaWJyZS5jb20+Cj4+PiAtLS0KPj4+ICAuLi4vYmluZGluZ3MvZ3B1L2FybSxtYWxpLWJp
-ZnJvc3QudHh0ICAgICAgICAgfCA5MiArKysrKysrKysrKysrKysrKysrCj4+PiAgMSBmaWxlIGNo
-YW5nZWQsIDkyIGluc2VydGlvbnMoKykKPj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1iaWZyb3N0LnR4dAo+Pj4KPj4+
-IENoYW5nZXMgc2luY2UgdjM6Cj4+PiAtIEFkZGVkIG5vdGUgYWJvdXQgZGlzY292ZXJhYmxlIG1v
-ZGVsL3JldmlzaW9uCj4+PiAtIEVuZm9yY2VkIGZpeGVkIGRlZmluZWQgaXJxIG9yZGVyCj4+PiAt
-IEZpeGVkIHR5cG8gaW4gYWNjb21tb2RhdGUKPj4+Cj4+PiBDaGFuZ2VzIHNpbmNlIHYyOgo+Pj4g
-LSBtb3ZlZCB0byBhIHNpbmdsZSBjb21wYXRpYmxlIHNpbmNlIEhXIGlzIGZ1bGx5IGRpc2NvdmVy
-YWJsZQo+Pj4KPj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZ3B1L2FybSxtYWxpLWJpZnJvc3QudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2dwdS9hcm0sbWFsaS1iaWZyb3N0LnR4dAo+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQK
-Pj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uNzExYzllYWQxN2EyCj4+PiAtLS0gL2Rldi9udWxsCj4+
-PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxtYWxpLWJp
-ZnJvc3QudHh0Cj4+PiBAQCAtMCwwICsxLDkyIEBACj4+PiArQVJNIE1hbGkgQmlmcm9zdCBHUFUK
-Pj4+ICs9PT09PT09PT09PT09PT09PT09PQo+Pj4gKwo+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6
-Cj4+PiArCj4+PiArLSBjb21wYXRpYmxlIDoKPj4+ICsgICogU2luY2UgTWFsaSBCaWZyb3N0IEdQ
-VSBtb2RlbC9yZXZpc2lvbiBpZiBmdWxseSBkaXNjb3ZlcmFibGUgYnkgcmVhZGluZwo+PiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBeXgo+PiBzL2lmL2lzLwoK
-U2hvdWxkIEkgc3RpbGwgc2VuZCBhIHY1IHRvIGZpeGluZyB0aGlzIHR5cG8gPyBJIGNhbiBmaXgg
-aXQgd2hpbGUgYXBwbHlpbmcgaXQuCgpOZWlsCgo+IAo+IFRoYW5rcyBmb3IgcG9pbnRpbmcgdGhp
-cy4KPiAKPj4KPj4+ICsgICAgc29tZSBkZXRlcm1pbmVkIHJlZ2lzdGVycywgbXVzdCBjb250YWlu
-IHRoZSBmb2xsb3dpbmc6Cj4+PiArICAgICsgImFybSxtYWxpLWJpZnJvc3QiCj4+PiArICAqIHdo
-aWNoIG11c3QgYmUgcHJlY2VkZWQgYnkgb25lIG9mIHRoZSBmb2xsb3dpbmcgdmVuZG9yIHNwZWNp
-ZmljczoKPj4+ICsgICAgKyAiYW1sb2dpYyxtZXNvbi1nMTJhLW1hbGkiCj4+PiArCj4+PiArLSBy
-ZWcgOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhlIGRldmljZSBhbmQgbGVuZ3RoIG9mIHRo
-ZSByZWdpc3RlciBhcmVhLgo+Pj4gKwo+Pj4gKy0gaW50ZXJydXB0cyA6IENvbnRhaW5zIHRoZSB0
-aHJlZSBJUlEgbGluZXMgcmVxdWlyZWQgYnkgTWFsaSBCaWZyb3N0IGRldmljZXMsCj4+PiArICBp
-biB0aGUgZm9sbG93aW5nIGRlZmluZWQgb3JkZXIuCj4+PiArCj4+PiArLSBpbnRlcnJ1cHQtbmFt
-ZXMgOiBDb250YWlucyB0aGUgbmFtZXMgb2YgSVJRIHJlc291cmNlcyBpbiB0aGlzIGV4YWN0IGRl
-ZmluZWQKPj4+ICsgIG9yZGVyOiAiam9iIiwgIm1tdSIsICJncHUiLgo+Pgo+PiBJcyB0aGVyZSBh
-bnkgcG9pbnQgaW4gaGF2aW5nICJpbnRlcnJ1cHQtbmFtZXMiIGlmIHdlJ3JlIGZpeGluZyB0aGUK
-Pj4gb3JkZXI/IEFsdGhvdWdoIEkgZ3Vlc3MgaXQgaGVscHMgbWF0Y2ggdGhlIE1pZGdhcmQgYmlu
-ZGluZ3MuCj4gCj4gRXhhY3QuCj4gCj4gTmVpbAo+IAo+Pgo+PiBTdGV2ZQo+Pgo+Pj4gKwo+Pj4g
-K09wdGlvbmFsIHByb3BlcnRpZXM6Cj4+PiArCj4+PiArLSBjbG9ja3MgOiBQaGFuZGxlIHRvIGNs
-b2NrIGZvciB0aGUgTWFsaSBCaWZyb3N0IGRldmljZS4KPj4+ICsKPj4+ICstIG1hbGktc3VwcGx5
-IDogUGhhbmRsZSB0byByZWd1bGF0b3IgZm9yIHRoZSBNYWxpIGRldmljZS4gUmVmZXIgdG8KPj4+
-ICsgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvcmVndWxhdG9y
-LnR4dCBmb3IgZGV0YWlscy4KPj4+ICsKPj4+ICstIG9wZXJhdGluZy1wb2ludHMtdjIgOiBSZWZl
-ciB0byBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvb3BwL29wcC50eHQKPj4+ICsg
-IGZvciBkZXRhaWxzLgo+Pj4gKwo+Pj4gKy0gcmVzZXRzIDogUGhhbmRsZSBvZiB0aGUgR1BVIHJl
-c2V0IGxpbmUuCj4+PiArCj4+PiArVmVuZG9yLXNwZWNpZmljIGJpbmRpbmdzCj4+PiArLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tCj4+PiArCj4+PiArVGhlIE1hbGkgR1BVIGlzIGludGVncmF0ZWQg
-dmVyeSBkaWZmZXJlbnRseSBmcm9tIG9uZSBTb0MgdG8KPj4+ICthbm90aGVyLiBJbiBvcmRlciB0
-byBhY2NvbW1vZGF0ZSB0aG9zZSBkaWZmZXJlbmNlcywgeW91IGhhdmUgdGhlIG9wdGlvbgo+Pj4g
-K3RvIHNwZWNpZnkgb25lIG1vcmUgdmVuZG9yLXNwZWNpZmljIGNvbXBhdGlibGUsIGFtb25nOgo+
-Pj4gKwo+Pj4gKy0gImFtbG9naWMsbWVzb24tZzEyYS1tYWxpIgo+Pj4gKyAgUmVxdWlyZWQgcHJv
-cGVydGllczoKPj4+ICsgIC0gcmVzZXRzIDogU2hvdWxkIGNvbnRhaW4gcGhhbmRsZXMgb2YgOgo+
-Pj4gKyAgICArIEdQVSByZXNldCBsaW5lCj4+PiArICAgICsgR1BVIEFQQiBnbHVlIHJlc2V0IGxp
-bmUKPj4+ICsKPj4+ICtFeGFtcGxlIGZvciBhIE1hbGktRzMxOgo+Pj4gKwo+Pj4gK2dwdUBmZmEz
-MDAwMCB7Cj4+PiArCWNvbXBhdGlibGUgPSAiYW1sb2dpYyxtZXNvbi1nMTJhLW1hbGkiLCAiYXJt
-LG1hbGktYmlmcm9zdCI7Cj4+PiArCXJlZyA9IDwweGZmZTQwMDAwIDB4MTAwMDA+Owo+Pj4gKwlp
-bnRlcnJ1cHRzID0gPEdJQ19TUEkgMTYwIElSUV9UWVBFX0xFVkVMX0hJR0g+LAo+Pj4gKwkJICAg
-ICA8R0lDX1NQSSAxNjEgSVJRX1RZUEVfTEVWRUxfSElHSD4sCj4+PiArCQkgICAgIDxHSUNfU1BJ
-IDE2MiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPj4+ICsJaW50ZXJydXB0LW5hbWVzID0gImpvYiIs
-ICJtbXUiLCAiZ3B1IjsKPj4+ICsJY2xvY2tzID0gPCZjbGsgQ0xLSURfTUFMST47Cj4+PiArCW1h
-bGktc3VwcGx5ID0gPCZ2ZGRfZ3B1PjsKPj4+ICsJb3BlcmF0aW5nLXBvaW50cy12MiA9IDwmZ3B1
-X29wcF90YWJsZT47Cj4+PiArCXJlc2V0cyA9IDwmcmVzZXQgUkVTRVRfRFZBTElOX0NBUEIzPiwg
-PCZyZXNldCBSRVNFVF9EVkFMSU4+Owo+Pj4gK307Cj4+PiArCj4+PiArZ3B1X29wcF90YWJsZTog
-b3BwX3RhYmxlMCB7Cj4+PiArCWNvbXBhdGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12MiI7Cj4+
-PiArCj4+PiArCW9wcEA1MzMwMDAwMDAgewo+Pj4gKwkJb3BwLWh6ID0gL2JpdHMvIDY0IDw1MzMw
-MDAwMDA+Owo+Pj4gKwkJb3BwLW1pY3Jvdm9sdCA9IDwxMjUwMDAwPjsKPj4+ICsJfTsKPj4+ICsJ
-b3BwQDQ1MDAwMDAwMCB7Cj4+PiArCQlvcHAtaHogPSAvYml0cy8gNjQgPDQ1MDAwMDAwMD47Cj4+
-PiArCQlvcHAtbWljcm92b2x0ID0gPDExNTAwMDA+Owo+Pj4gKwl9Owo+Pj4gKwlvcHBANDAwMDAw
-MDAwIHsKPj4+ICsJCW9wcC1oeiA9IC9iaXRzLyA2NCA8NDAwMDAwMDAwPjsKPj4+ICsJCW9wcC1t
-aWNyb3ZvbHQgPSA8MTEyNTAwMD47Cj4+PiArCX07Cj4+PiArCW9wcEAzNTAwMDAwMDAgewo+Pj4g
-KwkJb3BwLWh6ID0gL2JpdHMvIDY0IDwzNTAwMDAwMDA+Owo+Pj4gKwkJb3BwLW1pY3Jvdm9sdCA9
-IDwxMDc1MDAwPjsKPj4+ICsJfTsKPj4+ICsJb3BwQDI2NjAwMDAwMCB7Cj4+PiArCQlvcHAtaHog
-PSAvYml0cy8gNjQgPDI2NjAwMDAwMD47Cj4+PiArCQlvcHAtbWljcm92b2x0ID0gPDEwMjUwMDA+
-Owo+Pj4gKwl9Owo+Pj4gKwlvcHBAMTYwMDAwMDAwIHsKPj4+ICsJCW9wcC1oeiA9IC9iaXRzLyA2
-NCA8MTYwMDAwMDAwPjsKPj4+ICsJCW9wcC1taWNyb3ZvbHQgPSA8OTI1MDAwPjsKPj4+ICsJfTsK
-Pj4+ICsJb3BwQDEwMDAwMDAwMCB7Cj4+PiArCQlvcHAtaHogPSAvYml0cy8gNjQgPDEwMDAwMDAw
-MD47Cj4+PiArCQlvcHAtbWljcm92b2x0ID0gPDkxMjUwMD47Cj4+PiArCX07Cj4+PiArfTsKPj4+
-Cj4+Cj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsCg==
+On Tue, 2 Apr 2019 16:18:39 +0300
+Beniamin Bia <beniamin.bia@analog.com> wrote:
+
+> From: Stefan Popa <stefan.popa@analog.com>
+> 
+> Available oversampling ratios and scales can be shown by calling a
+> common ad7606_show_avail function which takes as parameters the array
+> which stores the values, together with the size of the array.
+> 
+> Oversampling options are now defined in chip info
+> structure and they are loaded at probe.
+> 
+> Has_Oversampling attribute was removed because oversampling_num was added
+> and it is not needed anymore.
+> 
+> The purpose of this patch is to deal with the scale_avail and
+> oversampling_avail arrays in a generic way. This makes it easier to add
+> support for new devices which will work with different scales and
+> oversampling ratios. It is also an intermediate step for adding support
+> for ad7616 which has different oversampling sampling ratios available.
+> 
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/adc/ad7606.c | 74 ++++++++++++++++++++++++++++------------
+>  drivers/iio/adc/ad7606.h | 16 +++++++--
+>  2 files changed, 67 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+> index ebb8de03bbce..6b87ed410c93 100644
+> --- a/drivers/iio/adc/ad7606.c
+> +++ b/drivers/iio/adc/ad7606.c
+> @@ -31,7 +31,7 @@
+>   * Scales are computed as 5000/32768 and 10000/32768 respectively,
+>   * so that when applied to the raw values they provide mV values
+>   */
+> -static const unsigned int scale_avail[2] = {
+> +static const unsigned int ad7606_scale_avail[2] = {
+>  	152588, 305176
+>  };
+>  
+> @@ -154,7 +154,7 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
+>  		return IIO_VAL_INT;
+>  	case IIO_CHAN_INFO_SCALE:
+>  		*val = 0;
+> -		*val2 = scale_avail[st->range];
+> +		*val2 = st->scale_avail[st->range];
+>  		return IIO_VAL_INT_PLUS_MICRO;
+>  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+>  		*val = st->oversampling;
+> @@ -163,21 +163,31 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
+>  	return -EINVAL;
+>  }
+>  
+> -static ssize_t in_voltage_scale_available_show(struct device *dev,
+> -					       struct device_attribute *attr,
+> -					       char *buf)
+> +static ssize_t ad7606_show_avail(char *buf, const unsigned int *vals,
+> +				 unsigned int n, bool micros)
+>  {
+> -	int i, len = 0;
+> -
+> -	for (i = 0; i < ARRAY_SIZE(scale_avail); i++)
+> -		len += scnprintf(buf + len, PAGE_SIZE - len, "0.%06u ",
+> -				 scale_avail[i]);
+> +	size_t len = 0;
+> +	int i;
+>  
+> +	for (i = 0; i < n; i++) {
+> +		len += scnprintf(buf + len, PAGE_SIZE - len,
+> +			micros ? "0.%06u " : "%u ", vals[i]);
+> +	}
+>  	buf[len - 1] = '\n';
+>  
+>  	return len;
+>  }
+>  
+> +static ssize_t in_voltage_scale_available_show(struct device *dev,
+> +					       struct device_attribute *attr,
+> +					       char *buf)
+> +{
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct ad7606_state *st = iio_priv(indio_dev);
+> +
+> +	return ad7606_show_avail(buf, st->scale_avail, st->num_scales, true);
+> +}
+> +
+>  static IIO_DEVICE_ATTR_RO(in_voltage_scale_available, 0);
+>  
+>  static int ad7606_write_raw(struct iio_dev *indio_dev,
+> @@ -193,7 +203,7 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
+>  	switch (mask) {
+>  	case IIO_CHAN_INFO_SCALE:
+>  		mutex_lock(&st->lock);
+> -		i = find_closest(val2, scale_avail, ARRAY_SIZE(scale_avail));
+> +		i = find_closest(val2, st->scale_avail, st->num_scales);
+>  		gpiod_set_value(st->gpio_range, i);
+>  		st->range = i;
+>  		mutex_unlock(&st->lock);
+> @@ -202,15 +212,15 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
+>  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+>  		if (val2)
+>  			return -EINVAL;
+> -		i = find_closest(val, ad7606_oversampling_avail,
+> -				 ARRAY_SIZE(ad7606_oversampling_avail));
+> +		i = find_closest(val, st->oversampling_avail,
+> +				 st->num_os_ratios);
+>  
+>  		values[0] = i;
+>  
+>  		mutex_lock(&st->lock);
+>  		gpiod_set_array_value(ARRAY_SIZE(values), st->gpio_os->desc,
+>  				      st->gpio_os->info, values);
+> -		st->oversampling = ad7606_oversampling_avail[i];
+> +		st->oversampling = st->oversampling_avail[i];
+>  		mutex_unlock(&st->lock);
+>  
+>  		return 0;
+> @@ -219,11 +229,23 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
+>  	}
+>  }
+>  
+> -static IIO_CONST_ATTR(oversampling_ratio_available, "1 2 4 8 16 32 64");
+> +static ssize_t ad7606_oversampling_ratio_avail(struct device *dev,
+> +					       struct device_attribute *attr,
+> +					       char *buf)
+> +{
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct ad7606_state *st = iio_priv(indio_dev);
+> +
+> +	return ad7606_show_avail(buf, st->oversampling_avail,
+> +				 st->num_os_ratios, false);
+> +}
+> +
+> +static IIO_DEVICE_ATTR(oversampling_ratio_available, 0444,
+> +		       ad7606_oversampling_ratio_avail, NULL, 0);
+>  
+>  static struct attribute *ad7606_attributes_os_and_range[] = {
+>  	&iio_dev_attr_in_voltage_scale_available.dev_attr.attr,
+> -	&iio_const_attr_oversampling_ratio_available.dev_attr.attr,
+> +	&iio_dev_attr_oversampling_ratio_available.dev_attr.attr,
+>  	NULL,
+>  };
+>  
+> @@ -232,7 +254,7 @@ static const struct attribute_group ad7606_attribute_group_os_and_range = {
+>  };
+>  
+>  static struct attribute *ad7606_attributes_os[] = {
+> -	&iio_const_attr_oversampling_ratio_available.dev_attr.attr,
+> +	&iio_dev_attr_oversampling_ratio_available.dev_attr.attr,
+>  	NULL,
+>  };
+>  
+> @@ -301,17 +323,20 @@ static const struct ad7606_chip_info ad7606_chip_info_tbl[] = {
+>  	[ID_AD7606_8] = {
+>  		.channels = ad7606_channels,
+>  		.num_channels = 9,
+> -		.has_oversampling = true,
+> +		.oversampling_avail = ad7606_oversampling_avail,
+> +		.oversampling_num = ARRAY_SIZE(ad7606_oversampling_avail),
+>  	},
+>  	[ID_AD7606_6] = {
+>  		.channels = ad7606_channels,
+>  		.num_channels = 7,
+> -		.has_oversampling = true,
+> +		.oversampling_avail = ad7606_oversampling_avail,
+> +		.oversampling_num = ARRAY_SIZE(ad7606_oversampling_avail),
+>  	},
+>  	[ID_AD7606_4] = {
+>  		.channels = ad7606_channels,
+>  		.num_channels = 5,
+> -		.has_oversampling = true,
+> +		.oversampling_avail = ad7606_oversampling_avail,
+> +		.oversampling_num = ARRAY_SIZE(ad7606_oversampling_avail),
+>  	},
+>  };
+>  
+> @@ -343,7 +368,7 @@ static int ad7606_request_gpios(struct ad7606_state *st)
+>  	if (IS_ERR(st->gpio_frstdata))
+>  		return PTR_ERR(st->gpio_frstdata);
+>  
+> -	if (!st->chip_info->has_oversampling)
+> +	if (!st->chip_info->oversampling_num)
+>  		return 0;
+>  
+>  	st->gpio_os = devm_gpiod_get_array_optional(dev,
+> @@ -467,6 +492,8 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
+>  	/* tied to logic low, analog input range is +/- 5V */
+>  	st->range = 0;
+>  	st->oversampling = 1;
+> +	st->scale_avail = ad7606_scale_avail;
+> +	st->num_scales = ARRAY_SIZE(ad7606_scale_avail);
+>  
+>  	st->reg = devm_regulator_get(dev, "avcc");
+>  	if (IS_ERR(st->reg))
+> @@ -484,6 +511,11 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
+>  
+>  	st->chip_info = &ad7606_chip_info_tbl[id];
+>  
+> +	if (st->chip_info->oversampling_num) {
+> +		st->oversampling_avail = st->chip_info->oversampling_avail;
+> +		st->num_os_ratios = st->chip_info->oversampling_num;
+> +	}
+> +
+>  	ret = ad7606_request_gpios(st);
+>  	if (ret)
+>  		return ret;
+> diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
+> index 5d12410f68e1..8c91bd427c4e 100644
+> --- a/drivers/iio/adc/ad7606.h
+> +++ b/drivers/iio/adc/ad7606.h
+> @@ -12,12 +12,15 @@
+>   * struct ad7606_chip_info - chip specific information
+>   * @channels:		channel specification
+>   * @num_channels:	number of channels
+> - * @has_oversampling:   whether the device has oversampling support
+> + * @oversampling_avail	pointer to the array which stores the available
+> + *			oversampling ratios.
+> + * @oversampling_num	number of elements stored in oversampling_avail array
+>   */
+>  struct ad7606_chip_info {
+>  	const struct iio_chan_spec	*channels;
+>  	unsigned int			num_channels;
+> -	bool				has_oversampling;
+> +	const unsigned int		*oversampling_avail;
+> +	unsigned int			oversampling_num;
+>  };
+>  
+>  /**
+> @@ -29,6 +32,11 @@ struct ad7606_chip_info {
+>   * @range		voltage range selection, selects which scale to apply
+>   * @oversampling	oversampling selection
+>   * @base_address	address from where to read data in parallel operation
+> + * @scale_avail		pointer to the array which stores the available scales
+> + * @num_scales		number of elements stored in the scale_avail array
+> + * @oversampling_avail	pointer to the array which stores the available
+> + *			oversampling ratios.
+> + * @num_os_ratios	number of elements stored in oversampling_avail array
+>   * @lock		protect sensor state from concurrent accesses to GPIOs
+>   * @gpio_convst	GPIO descriptor for conversion start signal (CONVST)
+>   * @gpio_reset		GPIO descriptor for device hard-reset
+> @@ -50,6 +58,10 @@ struct ad7606_state {
+>  	unsigned int			range;
+>  	unsigned int			oversampling;
+>  	void __iomem			*base_address;
+> +	const unsigned int		*scale_avail;
+> +	unsigned int			num_scales;
+> +	const unsigned int		*oversampling_avail;
+> +	unsigned int			num_os_ratios;
+>  
+>  	struct mutex			lock; /* protect sensor state */
+>  	struct gpio_desc		*gpio_convst;
