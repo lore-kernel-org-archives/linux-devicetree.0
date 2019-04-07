@@ -1,96 +1,308 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH v2] ARM: sun8i: h3: bluetooth for Banana Pi M2 Zero
- board
-Date: Sun, 7 Apr 2019 22:23:21 +0200
-Message-ID: <20190407222321.11ec297d@kemnade.info>
-References: <20190301185212.26837-1-andreas@kemnade.info>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 2/3] Input: add a driver for GPIO controllable
+ vibrators
+Date: Sun, 7 Apr 2019 15:18:57 -0700
+Message-ID: <20190407221857.GB162359@dtor-ws>
+References: <20190407155841.27354-1-luca@z3ntu.xyz>
+ <20190407155841.27354-2-luca@z3ntu.xyz>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/1UsG1.G7V3JcR7JXg8+bK4C"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190301185212.26837-1-andreas@kemnade.info>
+Content-Disposition: inline
+In-Reply-To: <20190407155841.27354-2-luca@z3ntu.xyz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
+To: Luca Weiss <luca@z3ntu.xyz>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Pascal PAILLET-LME <p.paillet@st.com>, Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>, Brian Masney <masneyb@onstation.org>, Rob Herring <robh@kernel.org>, Baolin Wang <baolin.wang@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/1UsG1.G7V3JcR7JXg8+bK4C
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Luca,
 
-ping
-
-On Fri,  1 Mar 2019 19:52:12 +0100
-Andreas Kemnade <andreas@kemnade.info> wrote:
-
-> The Banana Pi M2 Zero board has an AP6212 BT+Wifi combo chip
-> with broadcom internals attached to UART1 and some gpios.
-> This addition is in line with similar boards
->=20
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+On Sun, Apr 07, 2019 at 05:58:41PM +0200, Luca Weiss wrote:
+> Provide a simple driver for GPIO controllable vibrators.
+> It will be used by the Fairphone 2.
+> 
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 > ---
-> changes in v2: remove pinctrl things
->  arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/=
-arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> index 1db2541135a7..57432d0500b1 100644
-> --- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> @@ -69,6 +69,8 @@
->  		compatible =3D "mmc-pwrseq-simple";
->  		pinctrl-names =3D "default";
->  		reset-gpios =3D <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-> +		clocks =3D <&rtc 1>;
-> +		clock-names =3D "ext_clock";
->  	};
->  };
-> =20
-> @@ -122,7 +124,20 @@
->  &uart1 {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&uart1_pins>, <&uart1_rts_cts_pins>;
-> +	uart-has-rtscts;
->  	status =3D "okay";
+>  drivers/input/misc/Kconfig      |  12 ++
+>  drivers/input/misc/Makefile     |   1 +
+>  drivers/input/misc/gpio-vibra.c | 214 ++++++++++++++++++++++++++++++++
+>  3 files changed, 227 insertions(+)
+>  create mode 100644 drivers/input/misc/gpio-vibra.c
+> 
+> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> index e15ed1bb8558..6dfe9e2fe5b1 100644
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -290,6 +290,18 @@ config INPUT_GPIO_DECODER
+>  	 To compile this driver as a module, choose M here: the module
+>  	 will be called gpio_decoder.
+>  
+> +config INPUT_GPIO_VIBRA
+> +	tristate "GPIO vibrator support"
+> +	depends on GPIOLIB || COMPILE_TEST
+> +	select INPUT_FF_MEMLESS
+> +	help
+> +	  Say Y here to get support for GPIO based vibrator devices.
 > +
-> +	bluetooth {
-> +		compatible =3D "brcm,bcm43438-bt";
-> +		clocks =3D <&rtc 1>;
-> +		clock-names =3D "lpo";
-> +		vbat-supply =3D <&reg_vcc3v3>;
-> +		vddio-supply =3D <&reg_vcc3v3>;
-> +		device-wakeup-gpios =3D <&pio 6 13 GPIO_ACTIVE_HIGH>; /* PG13 */
-> +		host-wakeup-gpios =3D <&pio 6 11 GPIO_ACTIVE_HIGH>; /* PG11 */
-> +		shutdown-gpios =3D <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
-> +	};
+> +	  If unsure, say N.
 > +
->  };
-> =20
->  &usb_otg {
-> --=20
-> 2.11.0
->=20
->=20
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called gpio-vibra.
+> +
+>  config INPUT_IXP4XX_BEEPER
+>  	tristate "IXP4XX Beeper support"
+>  	depends on ARCH_IXP4XX
+> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+> index b936c5b1d4ac..f38ebbdb05e2 100644
+> --- a/drivers/input/misc/Makefile
+> +++ b/drivers/input/misc/Makefile
+> @@ -36,6 +36,7 @@ obj-$(CONFIG_INPUT_DRV2667_HAPTICS)	+= drv2667.o
+>  obj-$(CONFIG_INPUT_GP2A)		+= gp2ap002a00f.o
+>  obj-$(CONFIG_INPUT_GPIO_BEEPER)		+= gpio-beeper.o
+>  obj-$(CONFIG_INPUT_GPIO_DECODER)	+= gpio_decoder.o
+> +obj-$(CONFIG_INPUT_GPIO_VIBRA)		+= gpio-vibra.o
+>  obj-$(CONFIG_INPUT_HISI_POWERKEY)	+= hisi_powerkey.o
+>  obj-$(CONFIG_HP_SDC_RTC)		+= hp_sdc_rtc.o
+>  obj-$(CONFIG_INPUT_IMS_PCU)		+= ims-pcu.o
+> diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
+> new file mode 100644
+> index 000000000000..14f9534668c8
+> --- /dev/null
+> +++ b/drivers/input/misc/gpio-vibra.c
+> @@ -0,0 +1,214 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + *  GPIO vibrator driver
+> + *
+> + *  Copyright (C) 2019 Luca Weiss <luca@z3ntu.xyz>
+> + *
+> + *  Based on PWM vibrator driver:
+> + *  Copyright (C) 2017 Collabora Ltd.
+> + *
+> + *  Based on previous work from:
+> + *  Copyright (C) 2012 Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> + *
+> + *  Based on PWM beeper driver:
+> + *  Copyright (C) 2010, Lars-Peter Clausen <lars@metafoo.de>
+> + */
+> +
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/input.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/slab.h>
+> +
+> +enum vibrator_state {
+> +	VIBRATOR_OFF,
+> +	VIBRATOR_ON
+> +};
 
---Sig_/1UsG1.G7V3JcR7JXg8+bK4C
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+I'd probably go with simple "bool running".
 
------BEGIN PGP SIGNATURE-----
+> +
+> +struct gpio_vibrator {
+> +	struct input_dev *input;
+> +	struct gpio_desc *gpio;
+> +	struct regulator *vcc;
+> +
+> +	struct work_struct play_work;
+> +	enum vibrator_state state;
+> +	bool vcc_on;
+> +};
+> +
+> +static int gpio_vibrator_start(struct gpio_vibrator *vibrator)
+> +{
+> +	struct device *pdev = vibrator->input->dev.parent;
+> +	int err;
+> +
+> +	if (!vibrator->vcc_on) {
+> +		err = regulator_enable(vibrator->vcc);
+> +		if (err) {
+> +			dev_err(pdev, "failed to enable regulator: %d", err);
+> +			return err;
+> +		}
+> +		vibrator->vcc_on = true;
+> +	}
+> +
+> +	gpiod_set_value(vibrator->gpio, 1);
 
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAlyqXDkACgkQl4jFM1s/
-ye/6QA/9F7JlHYlAs4ezxtgZ5wAWgUEB8VkmuKORtYctV3gF3wChZJ0PESl15yis
-dgVX2SpOGCu1V3SFBc3tg+0o8Cspbku/cXJgRnTX3C5I128S693f/C4aVYmc3NSj
-QxA7ZYhWigr4SNzophqhMTJXQwXDzUOR+YLW1QVdRD51uHezuKpHWFPlqHbBBCe6
-PTmkAk39NBxIUY+4Oa0t7x3RG5WgKfpf1lrs6f7lEICX9b1swps0YfcL777b5YF/
-AuuQ/W/iB8LBBU1i8HkiCRUf1izpV/o5RKg8Lqg7V24Vb4GXQIafk52IQpJlvpZ/
-9kbq3QrEj4uBEImuZRG87/hPTYaUlV8arZKUWsxP7/bu9xtV2o3GBHjAbjY6we6E
-OVWr4ywdVxtj/L25C2FoID8Zm67bW2zp2JSqUyVX/XKsG5nFI5T1fWo8+hrj+8eJ
-EQqG6JTx54ezsLt28+5XsDBGrVsVwcEC1oxMaGrkzrySr3tAg1k/OBFI+SMwWpfC
-K3konOdYdZOOZQNDo5wia6U4YeVDeBXgfv7iecN4C/Y2/dv6fpfswrGZlcMyAFMc
-69PzbyYx1SJbD7tvgACybboLJ9cTwbEl4tO/vWNIhVJt2prgXTZuKyyXpnPw28hK
-5pB1jBHmIDuzZ/YnWsH2JFTv6ANxn8eVjVhCdJaaoaBy2agAuPU=
-=6gcg
------END PGP SIGNATURE-----
+Since this is called by work item and thus from context that can sleep,
+we can use gpiod_set_value_cansleep() so that "slow" GPIOs can be used
+with the driver.
 
---Sig_/1UsG1.G7V3JcR7JXg8+bK4C--
+> +
+> +	return 0;
+> +}
+> +
+> +static void gpio_vibrator_stop(struct gpio_vibrator *vibrator)
+> +{
+> +	gpiod_set_value(vibrator->gpio, 0);
+> +
+> +	if (vibrator->vcc_on) {
+> +		regulator_disable(vibrator->vcc);
+> +		vibrator->vcc_on = false;
+> +	}
+> +}
+> +
+> +static void gpio_vibrator_play_work(struct work_struct *work)
+> +{
+> +	struct gpio_vibrator *vibrator = container_of(work,
+> +					struct gpio_vibrator, play_work);
+> +
+> +	if (vibrator->state == VIBRATOR_ON)
+> +		gpio_vibrator_start(vibrator);
+> +	else
+> +		gpio_vibrator_stop(vibrator);
+> +}
+> +
+> +static int gpio_vibrator_play_effect(struct input_dev *dev, void *data,
+> +				    struct ff_effect *effect)
+> +{
+> +	struct gpio_vibrator *vibrator = input_get_drvdata(dev);
+> +
+> +	int level = effect->u.rumble.strong_magnitude;
+> +
+> +	if (!level)
+> +		level = effect->u.rumble.weak_magnitude;
+> +
+> +	if (level)
+> +		vibrator->state = VIBRATOR_ON;
+> +	else
+> +		vibrator->state = VIBRATOR_OFF;
+> +
+> +	schedule_work(&vibrator->play_work);
+> +
+> +	return 0;
+> +}
+> +
+> +static void gpio_vibrator_close(struct input_dev *input)
+> +{
+> +	struct gpio_vibrator *vibrator = input_get_drvdata(input);
+> +
+> +	cancel_work_sync(&vibrator->play_work);
+> +	gpio_vibrator_stop(vibrator);
+
+Do you want to update vibrator->state here?
+
+> +}
+> +
+> +static int gpio_vibrator_probe(struct platform_device *pdev)
+> +{
+> +	struct gpio_vibrator *vibrator;
+> +	int err;
+> +
+> +	vibrator = devm_kzalloc(&pdev->dev, sizeof(*vibrator), GFP_KERNEL);
+> +	if (!vibrator)
+> +		return -ENOMEM;
+> +
+> +	vibrator->input = devm_input_allocate_device(&pdev->dev);
+> +	if (!vibrator->input)
+> +		return -ENOMEM;
+> +
+> +	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
+> +	err = PTR_ERR_OR_ZERO(vibrator->vcc);
+> +	if (err) {
+> +		if (err != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "Failed to request regulator: %d",
+> +				err);
+> +		return err;
+> +	}
+> +
+> +	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
+> +	err = PTR_ERR_OR_ZERO(vibrator->gpio);
+> +	if (err) {
+> +		if (err != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "Failed to request main gpio: %d",
+> +				err);
+> +		return err;
+> +	}
+> +
+> +	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
+> +
+> +	vibrator->input->name = "gpio-vibrator";
+> +	vibrator->input->id.bustype = BUS_HOST;
+> +	vibrator->input->dev.parent = &pdev->dev;
+
+No need to set as you used devm_input_device_alloc().
+
+> +	vibrator->input->close = gpio_vibrator_close;
+> +
+> +	input_set_drvdata(vibrator->input, vibrator);
+> +	input_set_capability(vibrator->input, EV_FF, FF_RUMBLE);
+> +
+> +	err = input_ff_create_memless(vibrator->input, NULL,
+> +				      gpio_vibrator_play_effect);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "Couldn't create FF dev: %d", err);
+> +		return err;
+> +	}
+> +
+> +	err = input_register_device(vibrator->input);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "Couldn't register input dev: %d", err);
+> +		return err;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, vibrator);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused gpio_vibrator_suspend(struct device *dev)
+> +{
+> +	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
+> +
+> +	cancel_work_sync(&vibrator->play_work);
+> +	if (vibrator->state == VIBRATOR_ON)
+> +		gpio_vibrator_stop(vibrator);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused gpio_vibrator_resume(struct device *dev)
+> +{
+> +	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
+> +
+> +	if (vibrator->state == VIBRATOR_ON)
+> +		gpio_vibrator_start(vibrator);
+> +
+> +	return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(gpio_vibrator_pm_ops,
+> +			 gpio_vibrator_suspend, gpio_vibrator_resume);
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id gpio_vibra_dt_match_table[] = {
+> +	{ .compatible = "gpio-vibrator" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, gpio_vibra_dt_match_table);
+> +#endif
+> +
+> +static struct platform_driver gpio_vibrator_driver = {
+> +	.probe	= gpio_vibrator_probe,
+> +	.driver	= {
+> +		.name	= "gpio-vibrator",
+> +		.pm	= &gpio_vibrator_pm_ops,
+> +		.of_match_table = of_match_ptr(gpio_vibra_dt_match_table),
+> +	},
+> +};
+> +module_platform_driver(gpio_vibrator_driver);
+> +
+> +MODULE_AUTHOR("Luca Weiss <luca@z3ntu.xy>");
+> +MODULE_DESCRIPTION("GPIO vibrator driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:gpio-vibrator");
+> -- 
+> 2.21.0
+> 
+
+Thanks.
+
+-- 
+Dmitry
