@@ -1,71 +1,53 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: backlight: add lm3630a bindings
-Date: Sun, 7 Apr 2019 07:28:21 -0400
-Message-ID: <20190407112821.GA6922@basecamp>
-References: <20190401103034.21062-1-masneyb@onstation.org>
- <20190401103034.21062-3-masneyb@onstation.org>
- <68229e7f-4749-cde5-f541-793ab614084d@ti.com>
- <20190402132440.GA10359@basecamp>
- <c88d954a-ce37-35dc-414b-df28d6095d89@ti.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 00/10] iio mount matrix - revitalize missing bindings
+ documentation and provide code for bmc150, bmg160, bma180, itg3200, hmc584x
+Date: Sun, 7 Apr 2019 12:41:57 +0100
+Message-ID: <20190407124157.1b3f1cd3@archlinux>
+References: <cover.1550768574.git.hns@goldelico.com>
+        <CAHp75VeMTd32S+bTgU2f1AS-NB67iuM+erT8qNJgPS7O0E1Cjg@mail.gmail.com>
+        <20190303153201.440ac325@archlinux>
+        <3A50A918-61AB-4710-B9DA-DF041A898944@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c88d954a-ce37-35dc-414b-df28d6095d89@ti.com>
+In-Reply-To: <3A50A918-61AB-4710-B9DA-DF041A898944@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, jonathan@marek.ca
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Martin Kelly <mkelly@xevo.com>, Jonathan Marek <jonathan@marek.ca>, Brian Masney <masneyb@onstation.org>, Stephan Gerhold <stephan@gerhold.net>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio <linux-iio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
+On Thu, 4 Apr 2019 08:29:12 +0200
+"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
 
-On Tue, Apr 02, 2019 at 08:44:22AM -0500, Dan Murphy wrote:
-> Also one other comment I noticed when reviewing the code that there is no definition to
-> which child led properties are optional and which are required?
-
-With the new YAML bindings, there is a separate toplevel 'required' tag in
-the schema. Here is a snippet from my last submission that illustrates
-this:
-
-    properties:
-      compatible:
-        const: ti,lm3630a
-    
-      reg:
-        maxItems: 1
-    
-      ti,linear-mapping-mode:
-        description: |
-          Enable linear mapping mode. If disabled, then it will use exponential
-          mapping mode in which the ramp up/down appears to have a more uniform
-          transition to the human eye.
-        type: boolean
-    
-    required:
-      - compatible
-      - reg
-
-So 'ti,linear-mapping-mode' is optional in this example.
-
-> > +      led-sources:
-> > +        description: |
-> > +          List of device current outputs the LED is connected to.
-> > +        allOf:
-> > +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +          - minItems: 1
-> > +            maxItems: 2
-> > +            items:
-> > +              minimum: 0
-> > +              maximum: 1
-> > +
+> Hi Jonathan,
 > 
-> label and led-sources are already defined in the common.txt no need to redefine them here.
+> > Am 03.03.2019 um 16:32 schrieb Jonathan Cameron <jic23@kernel.org>:
+> > 
+> > Thanks to Linus and Andy for reviews.
+> > I've picked up all but they documentation patch.  I think
+> > it is 'very nearly there', but would like a few really minor
+> > tweaks.  Seemed silly to stall the other patches on that though!  
+> 
+> Seems they have stalled elsewhere since they did not yet arrive in linux-next.
+The iio tree is not directly pulled into linux-next.  Hence IIO patches
+only turn up there once I've sent a pull request to Greg and they have
+entered the staging-next tree.
 
-We'll still need to define the led-sources and label in this binding
-with the new format even though it will also be in the LED common
-bindings. We won't have to put the common things like the description
-since that information will come from the common binding. We only need
-to specify the additional constraints like the min/max number of items
-and the min/max value for each item for this particular example.
+They still haven't quite made it into linux-next, but I'd imagine they
+will tomorrow.
 
-Brian
+Jonathan
+
+> 
+> The documentation patch is still on my todo list and will need a little more time
+> but that should not block the others.
+Absolutely, this was just tree handling delays and me messing up a pull
+request to slow things down even more.
+
+Jonathan
+
+> 
+> BR and thanks,
+> Nikolaus
+> 
