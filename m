@@ -1,160 +1,131 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v10 00/18] Introduce the Counter subsystem
-Date: Sun, 7 Apr 2019 15:25:50 +0100
-Message-ID: <20190407152550.451a7f63@archlinux>
-References: <cover.1554184734.git.vilhelm.gray@gmail.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: h6: Add watchdog node
+Date: Sun, 7 Apr 2019 16:27:36 +0200
+Message-ID: <CAJiuCcc5_tkmSM8sV2enG7t5=eU21ZrzcCVLUzF+c=8MiZhdFA@mail.gmail.com>
+References: <20190404135736.8491-1-peron.clem@gmail.com> <20190404135736.8491-2-peron.clem@gmail.com>
+ <20190405090236.e7vnyjzxmzfke3d6@flea> <CAGb2v65wcEAUTwRhC42iRkPaWXLGX1CJeq+TSzHVTOrT+L=8vA@mail.gmail.com>
+ <20190405145005.jmmwsvbateqssbyq@flea> <CAGb2v66cv7dVwj7oyRaHT5Q2XCbNqzuS-Uk9hdNJbVv57QOmUg@mail.gmail.com>
+ <20190405150810.zjwtu6crzaz6ufhx@flea> <CAJiuCccfmwxAqK1mTJ3eLO0RggV8sZTTKRy=fxFFenxn1hATvQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1554184734.git.vilhelm.gray@gmail.com>
+In-Reply-To: <CAJiuCccfmwxAqK1mTJ3eLO0RggV8sZTTKRy=fxFFenxn1hATvQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc: gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, akpm@linux-foundation.org, david@lechnology.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, daniel.lezcano@linaro.org, tglx@linutronix.de, thierry.reding@gmail.com, esben@haabendal.dk, linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, patrick.havelange@essensium.com, linux-api@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Samuel Holland <samuel@sholland.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  2 Apr 2019 15:30:35 +0900
-William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+Hi,
 
-> Changes in v10:
->   - Fix minor typographical errors in documentation
->   - Merge the FlexTimer Module Quadrature decoder counter driver patches
-> 
-> This revision is functionally identical to the last; changes in this
-> version were made to fix minor typos in the documentation files and also
-> to pull in the new FTM quadrature decoder counter driver.
-> 
-> The Generic Counter API has been and is still in a feature freeze until
-> it is merged into the mainline. The following features will be
-> investigated after the merge: interrupt support for counter devices, and
-> a character device interface for low-latency applications.
+On Fri, 5 Apr 2019 at 18:24, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>=
+ wrote:
+>
+> Hi,
+>
+> On Fri, 5 Apr 2019 at 17:08, Maxime Ripard <maxime.ripard@bootlin.com> wr=
+ote:
+> >
+> > On Fri, Apr 05, 2019 at 10:59:35PM +0800, Chen-Yu Tsai wrote:
+> > > On Fri, Apr 5, 2019 at 10:50 PM Maxime Ripard <maxime.ripard@bootlin.=
+com> wrote:
+> > > >
+> > > > On Fri, Apr 05, 2019 at 10:35:08PM +0800, Chen-Yu Tsai wrote:
+> > > > > On Fri, Apr 5, 2019 at 5:02 PM Maxime Ripard <maxime.ripard@bootl=
+in.com> wrote:
+> > > > > >
+> > > > > > On Thu, Apr 04, 2019 at 03:57:36PM +0200, Cl=C3=A9ment P=C3=A9r=
+on wrote:
+> > > > > > > Allwinner H6 has a watchog compatible with A31.
+> > > > > > >
+> > > > > > > Declare it in the device tree.
+> > > > > > >
+> > > > > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > > > > >
+> > > > > > Applied both, thanks!
+> > > > > > Maxime
+> > > > >
+> > > > > IIRC there are 3 watchdogs on the H6. One is the trusted watchdog=
+,
+> > > > > which should be reserved for underlying firmware.
+> > > > >
+> > > > > The other two are the normal and R-block watchdog. Although they
+> > > > > look the same, the "normal" one can't reset the system. :(
+> > > > > That one is actually the one ATF currently uses. So reboot doesn'=
+t
+> > > > > work on the H6.
+>
+> Some users report that the reboot on the PineH64 actually works.
+>
+> Clement
+>
+> > > >
+> > > > So that patch will not do anything then?
 
-Hi William / al,
+Did some test and only interrupts are working right now. If the WDOG
+is configured to make the board reboot the system will be stuck :S
+Maybe better to disabled it for now and leave a comment.
+I will try to ask some Pine H64 users to do the same tests.
 
-So the question is how to move this forwards?  I'm happy with how it turned
-out and the existing drivers we had in IIO are a lot cleaner under
-the counter subsystem (other than the backwards compatibility for those that
-ever existed in IIO).  For those  not following closely the situation is:
+Test done on my Beelink GS1 :
+/* This should reset the system after 0.5s */
+# devmem $((0x030090a0 + 0x0014))
+0x00000001
+# devmem $((0x030090a0 + 0x0018))
+0x00000000
+# devmem $((0x030090a0 + 0x0018)) 32 0x1
+#
+/* System is Stuck*/
 
-1. Counter drivers never really fitted that well in IIO, because IIO is
-focused on an abstraction of individual channels that just doesn't match
-to these devices.  It's just the wrong model. 
+/* This should reset the system after 1s */
+# devmem $((0x030090a0 + 0x0014))
+0x00000001
+# devmem $((0x030090a0 + 0x0018))
+0x00000000
+# devmem $((0x030090a0 + 0x0018)) 32 $((0x1 << 4 | 0x1))
+#
+/* System is Stuck*/
 
-2. William tried hard in earlier proposals to extend IIO to support these
-devices well, but it became so convoluted and involved I advised him that
-we were better off with a separate subsystem.  The amount of code overlap
-between the core IIO support for counters and the reset of IIO was
-become very small and it would have been a maintenance problem for both.
-https://lwn.net/Articles/729363/ gives some of the history
+/* This should reset the system after 1s (as recommended in the User Manual=
+) */
+# devmem $((0x030090a0 + 0x0014))
+0x00000001
+# devmem $((0x030090a0 + 0x0018))
+0x00000000
+# devmem $((0x030090a0 + 0x0018)) 32 $((0x1 << 4))
+# devmem $((0x030090a0 + 0x0018))
+0x00000010
+# devmem $((0x030090a0 + 0x0018)) 32 $((0x1 << 4 | 0x1))
+#
+/* System is Stuck*/
 
-3. The new subsystem introduced by this series is fairly simple, clean
-and well aligned with the way these devices work. There are (I think)
-4 initial drivers in this series from 4 different authors so it's got
-some practical review that way!
-There are a couple more drivers under development.  Right now, not
-everyone is aware of this work and so we have had a few developers potentially
-waste their time writing IIO drivers (which are then ported to this) rather
-that starting with the counter subsystem.
+/* This should trig an interrupt after 0.5s */
+# devmem $((0x030090a0 + 0x0014)) 32 0x32
+# devmem $((0x030090a0 + 0x0014))
+0x00000002
+# devmem $((0x030090a0 + 0x0018))
+0x00000000
+# devmem $((0x030090a0 + 0x0018)) 32 $((0x1 << 4 | 0x1))
+# devmem $((0x030090a0 + 0x0004))
+0x00000001
+/* INT is triggered */
 
-So what we are after is more review, or agreement that we can move this
-series forwards.  For now the intent is that the counter subsystem will
-share the linux-iio mailing list etc but I don't think either William
-or I have any particularly strong views on how we actually handle the
-patches.  I'm more than happy to take them through the IIO tree, if that
-works for everyone, particularly Greg as IIO goes through him after me.
-Once it is in a release, the cross dependency is broken and we can think
-about longer term approaches.
+Regards,
+Clement
 
-So Greg and others, how do we make progress here?  If there are any obvious
-reviewers not on the CC list, please do draw their attention to this.
-
-Thanks,
-
-Jonathan
-
-+CC linux-api as obviously one of the biggest areas for review is the new
-userspace ABI.
-
-> 
-> Benjamin Gaignard (2):
->   counter: Add STM32 Timer quadrature encoder
->   dt-bindings: counter: Document stm32 quadrature encoder
-> 
-> Fabrice Gasnier (2):
->   counter: stm32-lptimer: add counter device
->   dt-bindings: counter: Adjust dt-bindings for STM32 lptimer move
-> 
-> Patrick Havelange (7):
->   include/fsl: add common FlexTimer #defines in a separate header.
->   drivers/pwm: pwm-fsl-ftm: use common header for FlexTimer #defines
->   drivers/clocksource: timer-fsl-ftm: use common header for FlexTimer
->     #defines
->   dt-bindings: counter: ftm-quaddec
->   counter: add FlexTimer Module Quadrature decoder counter driver
->   counter: ftm-quaddec: Documentation: Add specific counter sysfs
->     documentation
->   LS1021A: dtsi: add ftm quad decoder entries
-> 
-> William Breathitt Gray (7):
->   counter: Introduce the Generic Counter interface
->   counter: Documentation: Add Generic Counter sysfs documentation
->   docs: Add Generic Counter interface documentation
->   iio: 104-quad-8: Update license boilerplate
->   counter: 104-quad-8: Add Generic Counter interface support
->   counter: 104-quad-8: Documentation: Add Generic Counter sysfs
->     documentation
->   iio: counter: Add deprecation markings for IIO Counter attributes
-> 
->  Documentation/ABI/testing/sysfs-bus-counter   |  230 +++
->  .../ABI/testing/sysfs-bus-counter-104-quad-8  |   36 +
->  .../ABI/testing/sysfs-bus-counter-ftm-quaddec |   16 +
->  Documentation/ABI/testing/sysfs-bus-iio       |    8 +
->  .../testing/sysfs-bus-iio-counter-104-quad-8  |   16 +
->  .../bindings/counter/ftm-quaddec.txt          |   18 +
->  .../{iio => }/counter/stm32-lptimer-cnt.txt   |    0
->  .../bindings/counter/stm32-timer-cnt.txt      |   31 +
->  .../devicetree/bindings/mfd/stm32-lptimer.txt |    2 +-
->  .../devicetree/bindings/mfd/stm32-timers.txt  |    7 +
->  Documentation/driver-api/generic-counter.rst  |  342 ++++
->  Documentation/driver-api/index.rst            |    1 +
->  MAINTAINERS                                   |   15 +-
->  arch/arm/boot/dts/ls1021a.dtsi                |   28 +
->  drivers/Kconfig                               |    2 +
->  drivers/Makefile                              |    1 +
->  drivers/clocksource/timer-fsl-ftm.c           |   15 +-
->  drivers/{iio => }/counter/104-quad-8.c        |  782 +++++++-
->  drivers/counter/Kconfig                       |   60 +
->  drivers/counter/Makefile                      |   10 +
->  drivers/counter/counter.c                     | 1567 +++++++++++++++++
->  drivers/counter/ftm-quaddec.c                 |  356 ++++
->  drivers/{iio => }/counter/stm32-lptimer-cnt.c |  361 +++-
->  drivers/counter/stm32-timer-cnt.c             |  390 ++++
->  drivers/iio/Kconfig                           |    1 -
->  drivers/iio/Makefile                          |    1 -
->  drivers/iio/counter/Kconfig                   |   34 -
->  drivers/iio/counter/Makefile                  |    8 -
->  drivers/pwm/pwm-fsl-ftm.c                     |   44 +-
->  include/linux/counter.h                       |  510 ++++++
->  include/linux/counter_enum.h                  |   45 +
->  include/linux/fsl/ftm.h                       |   88 +
->  32 files changed, 4877 insertions(+), 148 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-counter
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-counter-ftm-quaddec
->  create mode 100644 Documentation/devicetree/bindings/counter/ftm-quaddec.txt
->  rename Documentation/devicetree/bindings/{iio => }/counter/stm32-lptimer-cnt.txt (100%)
->  create mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
->  create mode 100644 Documentation/driver-api/generic-counter.rst
->  rename drivers/{iio => }/counter/104-quad-8.c (44%)
->  create mode 100644 drivers/counter/Kconfig
->  create mode 100644 drivers/counter/Makefile
->  create mode 100644 drivers/counter/counter.c
->  create mode 100644 drivers/counter/ftm-quaddec.c
->  rename drivers/{iio => }/counter/stm32-lptimer-cnt.c (51%)
->  create mode 100644 drivers/counter/stm32-timer-cnt.c
->  delete mode 100644 drivers/iio/counter/Kconfig
->  delete mode 100644 drivers/iio/counter/Makefile
->  create mode 100644 include/linux/counter.h
->  create mode 100644 include/linux/counter_enum.h
->  create mode 100644 include/linux/fsl/ftm.h
-> 
+> > >
+> > > I'm still on vacation, so I haven't checked the address of the new de=
+vice.
+> > > If it's the normal one, then yeah, it won't do anything. I've tried t=
+hat.
+> > > IIRC Samuel (or someone else) on IRC also mentioned this.
+> >
+> > It's the one in the timer that we've used since pretty much day 1 on
+> > older SoCs, so I guess it qualifies as the normal one :)
+> >
+> > Maxime
+> >
+> > --
+> > Maxime Ripard, Bootlin
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com
