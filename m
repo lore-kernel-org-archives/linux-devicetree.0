@@ -1,40 +1,71 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2] bmp085.yaml: transform DT documentation of iio
- sensor into YAML
-Date: Sun, 7 Apr 2019 12:23:09 +0100
-Message-ID: <20190407122309.53806329@archlinux>
-References: <20190401173142.cunj5iwz2ox454qx@arbad>
-        <CAL_JsqKY2Sh=L7OZVHjovAq9YK0qubGKpRMezA+7H0b1Gq2oXA@mail.gmail.com>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: backlight: add lm3630a bindings
+Date: Sun, 7 Apr 2019 07:28:21 -0400
+Message-ID: <20190407112821.GA6922@basecamp>
+References: <20190401103034.21062-1-masneyb@onstation.org>
+ <20190401103034.21062-3-masneyb@onstation.org>
+ <68229e7f-4749-cde5-f541-793ab614084d@ti.com>
+ <20190402132440.GA10359@basecamp>
+ <c88d954a-ce37-35dc-414b-df28d6095d89@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKY2Sh=L7OZVHjovAq9YK0qubGKpRMezA+7H0b1Gq2oXA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <c88d954a-ce37-35dc-414b-df28d6095d89@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Andreas Klinger <ak@it-klinger.de>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Brian Masney <masneyb@onstation.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Dan Murphy <dmurphy@ti.com>
+Cc: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, jonathan@marek.ca
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 1 Apr 2019 20:46:54 -0500
-Rob Herring <robh+dt@kernel.org> wrote:
+Hi Dan,
 
-> On Mon, Apr 1, 2019 at 12:32 PM Andreas Klinger <ak@it-klinger.de> wrote:
-> >
-> > use bmp085.txt and change it into yaml format
-> >
-> > fix links to datasheets in replaced documentation
-> >
-> > Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> > ---
-> >  .../devicetree/bindings/iio/pressure/bmp085.txt    | 27 ---------
-> >  .../devicetree/bindings/iio/pressure/bmp085.yaml   | 70 ++++++++++++++++++++++
-> >  2 files changed, 70 insertions(+), 27 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/pressure/bmp085.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/pressure/bmp085.yaml  
+On Tue, Apr 02, 2019 at 08:44:22AM -0500, Dan Murphy wrote:
+> Also one other comment I noticed when reviewing the code that there is no definition to
+> which child led properties are optional and which are required?
+
+With the new YAML bindings, there is a separate toplevel 'required' tag in
+the schema. Here is a snippet from my last submission that illustrates
+this:
+
+    properties:
+      compatible:
+        const: ti,lm3630a
+    
+      reg:
+        maxItems: 1
+    
+      ti,linear-mapping-mode:
+        description: |
+          Enable linear mapping mode. If disabled, then it will use exponential
+          mapping mode in which the ramp up/down appears to have a more uniform
+          transition to the human eye.
+        type: boolean
+    
+    required:
+      - compatible
+      - reg
+
+So 'ti,linear-mapping-mode' is optional in this example.
+
+> > +      led-sources:
+> > +        description: |
+> > +          List of device current outputs the LED is connected to.
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint32-array
+> > +          - minItems: 1
+> > +            maxItems: 2
+> > +            items:
+> > +              minimum: 0
+> > +              maximum: 1
+> > +
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Applied,
+> label and led-sources are already defined in the common.txt no need to redefine them here.
 
-Thanks,
+We'll still need to define the led-sources and label in this binding
+with the new format even though it will also be in the LED common
+bindings. We won't have to put the common things like the description
+since that information will come from the common binding. We only need
+to specify the additional constraints like the min/max number of items
+and the min/max value for each item for this particular example.
 
-Jonathan
+Brian
