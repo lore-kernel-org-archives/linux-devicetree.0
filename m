@@ -1,46 +1,116 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next v3 0/4] net: phy: add Amlogic g12a support
-Date: Sat, 06 Apr 2019 18:17:12 -0700 (PDT)
-Message-ID: <20190406.181712.1121608163259706596.davem@davemloft.net>
-References: <20190404131147.31156-1-jbrunet@baylibre.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v4] dt-bindings: gpu: add bindings for the ARM Mali Bifrost
+ GPU
+Date: Sun, 07 Apr 2019 12:16:58 +0200
+Message-ID: <5CA9CE1A.6060109@baylibre.com>
+References: <20190401080949.14550-1-narmstrong@baylibre.com>
+ <1640dd7b-3576-d9ce-0641-6b6a64a87275@arm.com>
+ <d26f1ce9-c56c-5e51-37f5-0689aa198dc0@baylibre.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190404131147.31156-1-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jbrunet@baylibre.com
-Cc: andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com, khilman@baylibre.com, netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <d26f1ce9-c56c-5e51-37f5-0689aa198dc0@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Steven Price <steven.price@arm.com>, daniel@ffwll.ch, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Thu,  4 Apr 2019 15:11:43 +0200
-
-> This patchset adds the necessary bits to support network on the Amlogic
-> g12a SoC family.
-> 
-> Only the internal PHY and related MDIO mux needed to be addressed.
-> The GMAC remains compatible with axg SoC family
-> 
-> This series has been tested on the u200 (S905D2) with both the internal
-> and external (Realtek) PHYs.
-> 
-> Change since v2 [1]:
-> * Change 'clk part' Reviewed-by as suggested
-> * Remove default callback from phy drivers
-> * Use exact match PHY macros
-> * Default MDIO g12a as module if ARCH_MESON is enabled
-> * Don't print error on probe defer in the g12a mdio mux
-> 
-> Change since v1 [0]:
-> * drop '_' from function name unrelated to locking
-> * fix peripheral clock disable on error
-> * fix variable declaration reverse Xmas trees
-> * fix Kconfig dependency on CCF
->   (Actually needed for 'struct clk_hw', Thx Andrew !)
-> * Minor fix in the DT exemple as reported by Rob
-> 
-> [0] https://lkml.kernel.org/r/20190314140135.19184-1-jbrunet@baylibre.com
-> [1] https://lkml.kernel.org/r/20190329141512.29867-1-jbrunet@baylibre.com
-
-Series applied, thanks.
+SGkgUm9iLAoKTGUgMDEvMDQvMjAxOSAxMzoyNCwgTmVpbCBBcm1zdHJvbmcgYSDDqWNyaXQgOgo+
+IE9uIDAxLzA0LzIwMTkgMTI6MDAsIFN0ZXZlbiBQcmljZSB3cm90ZToKPj4gT24gMDEvMDQvMjAx
+OSAwOTowOSwgTmVpbCBBcm1zdHJvbmcgd3JvdGU6Cj4+PiBBZGQgdGhlIGJpbmRpbmdzIGZvciB0
+aGUgQmlmcm9zdCBmYW1pbHkgb2YgQVJNIE1hbGkgR1BVcy4KPj4+Cj4+PiBUaGUgQmlmcm9zdCBH
+UFUgYXJjaGl0ZWN0dXJlIGlzIHNpbWlsYXIgdG8gdGhlIE1pZGdhcmQgZmFtaWx5LAo+Pj4gYnV0
+IHdpdGggYSBkaWZmZXJlbnQgU2hhZGVyIENvcmUgJiBFeGVjdXRpb24gRW5naW5lIHN0cnVjdHVy
+ZXMuCj4+Pgo+Pj4gQmluZGluZ3MgYXJlIGJhc2VkIG9uIHRoZSBNaWRnYXJkIGZhbWlseSBiaW5k
+aW5ncywgYnV0IHRoZSBpbm5lcgo+Pj4gYXJjaGl0ZWN0dXJhbCBjaGFuZ2VzIG1ha2VzIGl0IGEg
+c2VwYXJhdGUgZmFtaWx5IG5lZWRpbmcgc2VwYXJhdGUKPj4+IGJpbmRpbmdzLgo+Pj4KPj4+IFRo
+ZSBCaWZyb3N0IEdQVXMgYXJlIHByZXNlbnQgaW4gYSBudW1iZXIgb2YgcmVjZW50IFNvQ3MsIGxp
+a2UgdGhlCj4+PiBBbWxvZ2ljIEcxMkEgRmFtaWx5LCBhbmQgbWFueSBvdGhlciB2ZW5kb3JzLgo+
+Pj4gVGhlIEFtbG9naWMgdmVuZG9yIHNwZWNpZmljIGNvbXBhdGlibGUgaXMgYWRkZWQgdG8gaGFu
+ZGxlIHRoZQo+Pj4gc3BlY2lmaWMgSVAgaW50ZWdyYXRpb24gZGlmZmVyZW5jZXMgYW5kIGRlcGVu
+ZGVuY2llcy4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBOZWlsIEFybXN0cm9uZyA8bmFybXN0cm9u
+Z0BiYXlsaWJyZS5jb20+Cj4+PiAtLS0KPj4+ICAuLi4vYmluZGluZ3MvZ3B1L2FybSxtYWxpLWJp
+ZnJvc3QudHh0ICAgICAgICAgfCA5MiArKysrKysrKysrKysrKysrKysrCj4+PiAgMSBmaWxlIGNo
+YW5nZWQsIDkyIGluc2VydGlvbnMoKykKPj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1iaWZyb3N0LnR4dAo+Pj4KPj4+
+IENoYW5nZXMgc2luY2UgdjM6Cj4+PiAtIEFkZGVkIG5vdGUgYWJvdXQgZGlzY292ZXJhYmxlIG1v
+ZGVsL3JldmlzaW9uCj4+PiAtIEVuZm9yY2VkIGZpeGVkIGRlZmluZWQgaXJxIG9yZGVyCj4+PiAt
+IEZpeGVkIHR5cG8gaW4gYWNjb21tb2RhdGUKPj4+Cj4+PiBDaGFuZ2VzIHNpbmNlIHYyOgo+Pj4g
+LSBtb3ZlZCB0byBhIHNpbmdsZSBjb21wYXRpYmxlIHNpbmNlIEhXIGlzIGZ1bGx5IGRpc2NvdmVy
+YWJsZQo+Pj4KPj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZ3B1L2FybSxtYWxpLWJpZnJvc3QudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2dwdS9hcm0sbWFsaS1iaWZyb3N0LnR4dAo+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQK
+Pj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uNzExYzllYWQxN2EyCj4+PiAtLS0gL2Rldi9udWxsCj4+
+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxtYWxpLWJp
+ZnJvc3QudHh0Cj4+PiBAQCAtMCwwICsxLDkyIEBACj4+PiArQVJNIE1hbGkgQmlmcm9zdCBHUFUK
+Pj4+ICs9PT09PT09PT09PT09PT09PT09PQo+Pj4gKwo+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6
+Cj4+PiArCj4+PiArLSBjb21wYXRpYmxlIDoKPj4+ICsgICogU2luY2UgTWFsaSBCaWZyb3N0IEdQ
+VSBtb2RlbC9yZXZpc2lvbiBpZiBmdWxseSBkaXNjb3ZlcmFibGUgYnkgcmVhZGluZwo+PiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBeXgo+PiBzL2lmL2lzLwoK
+U2hvdWxkIEkgc3RpbGwgc2VuZCBhIHY1IHRvIGZpeGluZyB0aGlzIHR5cG8gPyBJIGNhbiBmaXgg
+aXQgd2hpbGUgYXBwbHlpbmcgaXQuCgpOZWlsCgo+IAo+IFRoYW5rcyBmb3IgcG9pbnRpbmcgdGhp
+cy4KPiAKPj4KPj4+ICsgICAgc29tZSBkZXRlcm1pbmVkIHJlZ2lzdGVycywgbXVzdCBjb250YWlu
+IHRoZSBmb2xsb3dpbmc6Cj4+PiArICAgICsgImFybSxtYWxpLWJpZnJvc3QiCj4+PiArICAqIHdo
+aWNoIG11c3QgYmUgcHJlY2VkZWQgYnkgb25lIG9mIHRoZSBmb2xsb3dpbmcgdmVuZG9yIHNwZWNp
+ZmljczoKPj4+ICsgICAgKyAiYW1sb2dpYyxtZXNvbi1nMTJhLW1hbGkiCj4+PiArCj4+PiArLSBy
+ZWcgOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhlIGRldmljZSBhbmQgbGVuZ3RoIG9mIHRo
+ZSByZWdpc3RlciBhcmVhLgo+Pj4gKwo+Pj4gKy0gaW50ZXJydXB0cyA6IENvbnRhaW5zIHRoZSB0
+aHJlZSBJUlEgbGluZXMgcmVxdWlyZWQgYnkgTWFsaSBCaWZyb3N0IGRldmljZXMsCj4+PiArICBp
+biB0aGUgZm9sbG93aW5nIGRlZmluZWQgb3JkZXIuCj4+PiArCj4+PiArLSBpbnRlcnJ1cHQtbmFt
+ZXMgOiBDb250YWlucyB0aGUgbmFtZXMgb2YgSVJRIHJlc291cmNlcyBpbiB0aGlzIGV4YWN0IGRl
+ZmluZWQKPj4+ICsgIG9yZGVyOiAiam9iIiwgIm1tdSIsICJncHUiLgo+Pgo+PiBJcyB0aGVyZSBh
+bnkgcG9pbnQgaW4gaGF2aW5nICJpbnRlcnJ1cHQtbmFtZXMiIGlmIHdlJ3JlIGZpeGluZyB0aGUK
+Pj4gb3JkZXI/IEFsdGhvdWdoIEkgZ3Vlc3MgaXQgaGVscHMgbWF0Y2ggdGhlIE1pZGdhcmQgYmlu
+ZGluZ3MuCj4gCj4gRXhhY3QuCj4gCj4gTmVpbAo+IAo+Pgo+PiBTdGV2ZQo+Pgo+Pj4gKwo+Pj4g
+K09wdGlvbmFsIHByb3BlcnRpZXM6Cj4+PiArCj4+PiArLSBjbG9ja3MgOiBQaGFuZGxlIHRvIGNs
+b2NrIGZvciB0aGUgTWFsaSBCaWZyb3N0IGRldmljZS4KPj4+ICsKPj4+ICstIG1hbGktc3VwcGx5
+IDogUGhhbmRsZSB0byByZWd1bGF0b3IgZm9yIHRoZSBNYWxpIGRldmljZS4gUmVmZXIgdG8KPj4+
+ICsgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvcmVndWxhdG9y
+LnR4dCBmb3IgZGV0YWlscy4KPj4+ICsKPj4+ICstIG9wZXJhdGluZy1wb2ludHMtdjIgOiBSZWZl
+ciB0byBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvb3BwL29wcC50eHQKPj4+ICsg
+IGZvciBkZXRhaWxzLgo+Pj4gKwo+Pj4gKy0gcmVzZXRzIDogUGhhbmRsZSBvZiB0aGUgR1BVIHJl
+c2V0IGxpbmUuCj4+PiArCj4+PiArVmVuZG9yLXNwZWNpZmljIGJpbmRpbmdzCj4+PiArLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tCj4+PiArCj4+PiArVGhlIE1hbGkgR1BVIGlzIGludGVncmF0ZWQg
+dmVyeSBkaWZmZXJlbnRseSBmcm9tIG9uZSBTb0MgdG8KPj4+ICthbm90aGVyLiBJbiBvcmRlciB0
+byBhY2NvbW1vZGF0ZSB0aG9zZSBkaWZmZXJlbmNlcywgeW91IGhhdmUgdGhlIG9wdGlvbgo+Pj4g
+K3RvIHNwZWNpZnkgb25lIG1vcmUgdmVuZG9yLXNwZWNpZmljIGNvbXBhdGlibGUsIGFtb25nOgo+
+Pj4gKwo+Pj4gKy0gImFtbG9naWMsbWVzb24tZzEyYS1tYWxpIgo+Pj4gKyAgUmVxdWlyZWQgcHJv
+cGVydGllczoKPj4+ICsgIC0gcmVzZXRzIDogU2hvdWxkIGNvbnRhaW4gcGhhbmRsZXMgb2YgOgo+
+Pj4gKyAgICArIEdQVSByZXNldCBsaW5lCj4+PiArICAgICsgR1BVIEFQQiBnbHVlIHJlc2V0IGxp
+bmUKPj4+ICsKPj4+ICtFeGFtcGxlIGZvciBhIE1hbGktRzMxOgo+Pj4gKwo+Pj4gK2dwdUBmZmEz
+MDAwMCB7Cj4+PiArCWNvbXBhdGlibGUgPSAiYW1sb2dpYyxtZXNvbi1nMTJhLW1hbGkiLCAiYXJt
+LG1hbGktYmlmcm9zdCI7Cj4+PiArCXJlZyA9IDwweGZmZTQwMDAwIDB4MTAwMDA+Owo+Pj4gKwlp
+bnRlcnJ1cHRzID0gPEdJQ19TUEkgMTYwIElSUV9UWVBFX0xFVkVMX0hJR0g+LAo+Pj4gKwkJICAg
+ICA8R0lDX1NQSSAxNjEgSVJRX1RZUEVfTEVWRUxfSElHSD4sCj4+PiArCQkgICAgIDxHSUNfU1BJ
+IDE2MiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPj4+ICsJaW50ZXJydXB0LW5hbWVzID0gImpvYiIs
+ICJtbXUiLCAiZ3B1IjsKPj4+ICsJY2xvY2tzID0gPCZjbGsgQ0xLSURfTUFMST47Cj4+PiArCW1h
+bGktc3VwcGx5ID0gPCZ2ZGRfZ3B1PjsKPj4+ICsJb3BlcmF0aW5nLXBvaW50cy12MiA9IDwmZ3B1
+X29wcF90YWJsZT47Cj4+PiArCXJlc2V0cyA9IDwmcmVzZXQgUkVTRVRfRFZBTElOX0NBUEIzPiwg
+PCZyZXNldCBSRVNFVF9EVkFMSU4+Owo+Pj4gK307Cj4+PiArCj4+PiArZ3B1X29wcF90YWJsZTog
+b3BwX3RhYmxlMCB7Cj4+PiArCWNvbXBhdGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12MiI7Cj4+
+PiArCj4+PiArCW9wcEA1MzMwMDAwMDAgewo+Pj4gKwkJb3BwLWh6ID0gL2JpdHMvIDY0IDw1MzMw
+MDAwMDA+Owo+Pj4gKwkJb3BwLW1pY3Jvdm9sdCA9IDwxMjUwMDAwPjsKPj4+ICsJfTsKPj4+ICsJ
+b3BwQDQ1MDAwMDAwMCB7Cj4+PiArCQlvcHAtaHogPSAvYml0cy8gNjQgPDQ1MDAwMDAwMD47Cj4+
+PiArCQlvcHAtbWljcm92b2x0ID0gPDExNTAwMDA+Owo+Pj4gKwl9Owo+Pj4gKwlvcHBANDAwMDAw
+MDAwIHsKPj4+ICsJCW9wcC1oeiA9IC9iaXRzLyA2NCA8NDAwMDAwMDAwPjsKPj4+ICsJCW9wcC1t
+aWNyb3ZvbHQgPSA8MTEyNTAwMD47Cj4+PiArCX07Cj4+PiArCW9wcEAzNTAwMDAwMDAgewo+Pj4g
+KwkJb3BwLWh6ID0gL2JpdHMvIDY0IDwzNTAwMDAwMDA+Owo+Pj4gKwkJb3BwLW1pY3Jvdm9sdCA9
+IDwxMDc1MDAwPjsKPj4+ICsJfTsKPj4+ICsJb3BwQDI2NjAwMDAwMCB7Cj4+PiArCQlvcHAtaHog
+PSAvYml0cy8gNjQgPDI2NjAwMDAwMD47Cj4+PiArCQlvcHAtbWljcm92b2x0ID0gPDEwMjUwMDA+
+Owo+Pj4gKwl9Owo+Pj4gKwlvcHBAMTYwMDAwMDAwIHsKPj4+ICsJCW9wcC1oeiA9IC9iaXRzLyA2
+NCA8MTYwMDAwMDAwPjsKPj4+ICsJCW9wcC1taWNyb3ZvbHQgPSA8OTI1MDAwPjsKPj4+ICsJfTsK
+Pj4+ICsJb3BwQDEwMDAwMDAwMCB7Cj4+PiArCQlvcHAtaHogPSAvYml0cy8gNjQgPDEwMDAwMDAw
+MD47Cj4+PiArCQlvcHAtbWljcm92b2x0ID0gPDkxMjUwMD47Cj4+PiArCX07Cj4+PiArfTsKPj4+
+Cj4+Cj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
+aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1hcm0ta2VybmVsCg==
