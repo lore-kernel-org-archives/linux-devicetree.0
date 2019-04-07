@@ -1,50 +1,149 @@
-Return-Path: <SRS0=MvHc=SL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:30038 "EHLO
-        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfDIIwo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Apr 2019 04:52:44 -0400
-From: Cao Van Dong <cv-dong@jinso.co.jp>
-Subject: [PATCH 08/11] ARM: dts: r8a77470: Add Ether support
-Date: Tue,  9 Apr 2019 17:51:49 +0900
-Message-Id: <1554799912-24764-9-git-send-email-cv-dong@jinso.co.jp>
-In-Reply-To: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
-References: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org
-Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
+Return-Path: <SRS0=W701=SJ=labundy.com=jeff@kernel.org>
+From: Jeff LaBundy <jeff@labundy.com>
+Subject: [PATCH v8 1/2] dt-bindings: input: touchscreen: iqs5xx: Add bindings
+Date: Sun,  7 Apr 2019 00:01:11 -0500
+Message-Id: <1554613272-10757-1-git-send-email-jeff@labundy.com>
+To: dmitry.torokhov@gmail.com, devicetree@vger.kernel.org
+Cc: linux-input@vger.kernel.org, rydberg@bitmath.org, robh+dt@kernel.org, mark.rutland@arm.com, Jeff LaBundy <jeff@labundy.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add ether node to dtsi for Ether support on the RZ/G1C (r8a77470) SoC.
+This patch adds binding documentation for the Azoteq IQS550/572/525
+family of trackpad/touchscreen controllers.
 
-Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
+Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/r8a77470.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Changes in v8:
+  - Added Reviewed-by trailer
 
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index f2349a0..c66a3c4 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -1013,6 +1013,20 @@
- 			dma-channels = <13>;
- 		};
- 
-+		ether: ethernet@ee700000 {
-+			compatible = "renesas,ether-r8a77470",
-+				     "renesas,rcar-gen2-ether";
-+			reg = <0 0xee700000 0 0x400>;
-+			interrupts = <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 813>;
-+			power-domains = <&sysc r8a77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 813>;
-+			phy-mode = "rmii";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
+Changes in v7:
+  - Removed the azoteq,exp-ver-major and azoteq,exp-ver-minor properties to
+    match the driver's updated device identification scheme
+  - Updated the example node to use a level-sensitive interrupt rather than
+    an edge-sensitive interrupt
+  - Removed previous Reviewed-by trailer as this file has since changed
+
+Changes in v6:
+  - None
+
+Changes in v5:
+  - None
+
+Changes in v4:
+  - None
+
+Changes in v3:
+  - Added Reviewed-by trailer
+
+Changes in v2:
+  - Separated each valid "compatible" property with a line break
+  - Specified the polarity of the RDY and NRST pins
+  - Replaced duplicate definitions of common touchscreen properties with a
+    reference to touchscreen.txt
+  - Specified the example node as "touchscreen@74"
+
+ .../bindings/input/touchscreen/iqs5xx.txt          | 80 ++++++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ 2 files changed, 81 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt
+
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt b/Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt
+new file mode 100644
+index 0000000..36f1f97
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt
+@@ -0,0 +1,80 @@
++Azoteq IQS550/572/525 Trackpad/Touchscreen Controller
++
++Required properties:
++
++- compatible			: Must be equal to one of the following:
++				  "azoteq,iqs550"
++				  "azoteq,iqs572"
++				  "azoteq,iqs525"
++
++- reg				: I2C slave address for the device.
++
++- interrupts			: GPIO to which the device's active-high RDY
++				  output is connected (see [0]).
++
++- reset-gpios			: GPIO to which the device's active-low NRST
++				  input is connected (see [1]).
++
++Optional properties:
++
++- touchscreen-min-x		: See [2].
++
++- touchscreen-min-y		: See [2].
++
++- touchscreen-size-x		: See [2]. If this property is omitted, the
++				  maximum x-coordinate is specified by the
++				  device's "X Resolution" register.
++
++- touchscreen-size-y		: See [2]. If this property is omitted, the
++				  maximum y-coordinate is specified by the
++				  device's "Y Resolution" register.
++
++- touchscreen-max-pressure	: See [2]. Pressure is expressed as the sum of
++				  the deltas across all channels impacted by a
++				  touch event. A channel's delta is calculated
++				  as its count value minus a reference, where
++				  the count value is inversely proportional to
++				  the channel's capacitance.
++
++- touchscreen-fuzz-x		: See [2].
++
++- touchscreen-fuzz-y		: See [2].
++
++- touchscreen-fuzz-pressure	: See [2].
++
++- touchscreen-inverted-x	: See [2]. Inversion is applied relative to that
++				  which may already be specified by the device's
++				  FLIP_X and FLIP_Y register fields.
++
++- touchscreen-inverted-y	: See [2]. Inversion is applied relative to that
++				  which may already be specified by the device's
++				  FLIP_X and FLIP_Y register fields.
++
++- touchscreen-swapped-x-y	: See [2]. Swapping is applied relative to that
++				  which may already be specified by the device's
++				  SWITCH_XY_AXIS register field.
++
++[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++[1]: Documentation/devicetree/bindings/gpio/gpio.txt
++[2]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
++
++Example:
++
++	&i2c1 {
++		/* ... */
++
++		touchscreen@74 {
++			compatible = "azoteq,iqs550";
++			reg = <0x74>;
++			interrupt-parent = <&gpio>;
++			interrupts = <17 4>;
++			reset-gpios = <&gpio 27 0>;
++
++			touchscreen-size-x = <640>;
++			touchscreen-size-y = <480>;
++
++			touchscreen-max-pressure = <16000>;
 +		};
 +
- 		sdhi0: sd@ee100000 {
- 			compatible = "renesas,sdhi-r8a77470",
- 				     "renesas,rcar-gen2-sdhi";
--- 
++		/* ... */
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 4b1a2a8..51f9954 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -53,6 +53,7 @@ avic	Shanghai AVIC Optoelectronics Co., Ltd.
+ avnet	Avnet, Inc.
+ axentia	Axentia Technologies AB
+ axis	Axis Communications AB
++azoteq	Azoteq (Pty) Ltd
+ bananapi BIPAI KEJI LIMITED
+ bhf	Beckhoff Automation GmbH & Co. KG
+ bitmain	Bitmain Technologies
+--
 2.7.4
