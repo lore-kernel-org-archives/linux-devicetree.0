@@ -1,93 +1,104 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v5 0/7] sunxi: Add DT representation for the MBUS
- controller
-Date: Mon, 8 Apr 2019 10:11:26 +0200
-Message-ID: <20190408081126.t3blyvtcqslzvki2@flea>
-References: <cover.f8909884585996f28d97f4ef95efbcab19527dc4.1554108995.git-series.maxime.ripard@bootlin.com>
- <5ca841d1.1c69fb81.f4702.b85d@mx.google.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v3 9/9] arm64: dts: qcom: msm8998: Add rpmpd node
+Date: Mon, 08 Apr 2019 13:42:49 +0530
+Message-ID: <deadb7d1da072e4c351605c653181099@codeaurora.org>
+References: <20190327123832.11566-1-sibis@codeaurora.org>
+ <20190327123832.11566-10-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1758319257=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <5ca841d1.1c69fb81.f4702.b85d@mx.google.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Yong Deng <yong.deng@magewell.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190327123832.11566-10-sibis@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, rnayak@codeaurora.org
+Cc: david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 2019-03-27 18:08, Sibi Sankar wrote:
+> Add the rpmpd node on the msm8998 and define the available levels.
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8998.dtsi | 51 +++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> index 3fd0769fe648..b7e3e0646b9b 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> @@ -4,6 +4,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/clock/qcom,gcc-msm8998.h>
+>  #include <dt-bindings/clock/qcom,rpmcc.h>
+> +#include <dt-bindings/power/qcom-rpmpd.h>
+>  #include <dt-bindings/gpio/gpio.h>
+> 
+>  / {
+> @@ -272,6 +273,56 @@
+>  				compatible = "qcom,rpmcc-msm8998", "qcom,rpmcc";
+>  				#clock-cells = <1>;
+>  			};
+> +
+> +			rpmpd: power-controller {
+> +				compatible = "qcom,msm8998-rpmpd";
+> +				#power-domain-cells = <1>;
+> +				operating-points-v2 = <&rpmpd_opp_table>;
+> +
+> +				rpmpd_opp_table: opp-table {
+> +					compatible = "operating-points-v2";
+> +
+> +					rpmpd_opp_ret: opp1 {
+> +						opp-level = <RPM_SMD_LEVEL_RETENTION>;
+> +					};
+> +
+> +					rpmpd_opp_ret_plus: opp2 {
+> +						opp-level = <RPM_SMD_LEVEL_RETENTION_PLUS>;
+> +					};
+> +
+> +					rpmpd_opp_min_svs: opp3 {
+> +						opp-level = <RPM_SMD_LEVEL_MIN_SVS>;
+> +					};
+> +
+> +					rpmpd_opp_low_svs: opp4 {
+> +						opp-level = <RPM_SMD_LEVEL_LOW_SVS>;
+> +					};
+> +
 
---===============1758319257==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="c76vyty33d6z4egg"
-Content-Disposition: inline
 
+typo in opp5 - opp10 rpmhpd/rpmpd
+will fix it in the next re-spin
 
---c76vyty33d6z4egg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> +					rpmhpd_opp_svs: opp5 {
+> +						opp-level = <RPM_SMD_LEVEL_SVS>;
+> +					};
+> +
+> +					rpmhpd_opp_svs_plus: opp6 {
+> +						opp-level = <RPM_SMD_LEVEL_SVS_PLUS>;
+> +					};
+> +
+> +					rpmhpd_opp_nom: opp7 {
+> +						opp-level = <RPM_SMD_LEVEL_NOM>;
+> +					};
+> +
+> +					rpmhpd_opp_nom_plus: opp8 {
+> +						opp-level = <RPM_SMD_LEVEL_NOM_PLUS>;
+> +					};
+> +
+> +					rpmhpd_opp_turbo: opp9 {
+> +						opp-level = <RPM_SMD_LEVEL_TURBO>;
+> +					};
+> +
+> +					rpmhpd_opp_turbo_plus: opp10 {
+> +						opp-level = <RPM_SMD_LEVEL_BINNING>;
+> +					};
+> +				};
+> +			};
+>  		};
+>  	};
 
-On Sat, Apr 06, 2019 at 01:06:07AM -0500, Rob Herring wrote:
-> On Mon, Apr 01, 2019 at 10:56:40AM +0200, Maxime Ripard wrote:
-> > Hi,
-> >
-> > We've had for quite some time to hack around in our drivers to take into
-> > account the fact that our DMA accesses are not done through the parent
-> > node, but through another bus with a different mapping than the CPU for the
-> > RAM (0 instead of 0x40000000 for most SoCs).
-> >
-> > After some discussion after the submission of a camera device suffering of
-> > the same hacks, I've decided to put together a serie that introduce a
-> > special interconnect name called "dma" that that allows to express the DMA
-> > relationship between a master and its bus, even if they are not direct
-> > parents in the DT.
-> >
-> > Let me know what you think,
-> > Maxime
->
-> LGTM.
->
-> How do you propose merging this? I can take 1-5, and 6 and 7 thru
-> arm-soc?
-
-You can merge 1-4, and I'll merge 5 through drm-misc and 6-7 through
-arm-soc
-
-Thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---c76vyty33d6z4egg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKsCLQAKCRDj7w1vZxhR
-xZKLAQCbmk2yvswmO0TPvIl1FazUwQaAxU0HI2xgbCi3thP+qAEAznWmHNrvUygL
-JgGoQT8Qqzr7ef+Iv5p73RhVRqufaQI=
-=iiRP
------END PGP SIGNATURE-----
-
---c76vyty33d6z4egg--
-
---===============1758319257==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============1758319257==--
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
