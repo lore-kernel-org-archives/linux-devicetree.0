@@ -1,84 +1,51 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v8 02/11] dt-bindings: power: supply: add DT bindings for max77650
-Date: Mon, 8 Apr 2019 14:25:45 +0200
-Message-ID: <CAMRc=Mc+cTVrzywTydp-10Hj=-m=qCmtK1+4NRiOFHZ855fnDw@mail.gmail.com>
-References: <20190403090108.24788-1-brgl@bgdev.pl> <20190403090108.24788-3-brgl@bgdev.pl>
- <20190406070746.GA29624@bogus>
+From: Pascal PAILLET-LME <p.paillet@st.com>
+Subject: Re: [PATCH 1/3] ARM: dts: stm32: add stpmic1 support on stm32mp157c
+ ed1 board
+Date: Mon, 8 Apr 2019 12:26:33 +0000
+Message-ID: <5CAB3DF8.7020505@st.com>
+References: <1554298852-9955-1-git-send-email-p.paillet@st.com>
+ <1554298852-9955-2-git-send-email-p.paillet@st.com>
+ <CACRpkdZ9evBnvnmidQ2VW=dPUdGBM4Pkzo1VyMfDdQZFe6U7TA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190406070746.GA29624@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdZ9evBnvnmidQ2VW=dPUdGBM4Pkzo1VyMfDdQZFe6U7TA@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <149534930B54F74E978E209E1753A909@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "arnd@arndb.de" <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "biju.das@bp.renesas.com" <biju.das@bp.renesas.com>, Yannick FERTRE <yannick.fertre@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "olof@lixom.net" <olof@lixom.net>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-sob., 6 kwi 2019 o 09:07 Rob Herring <robh@kernel.org> napisa=C5=82(a):
->
-> On Wed, Apr 03, 2019 at 11:00:59AM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Add the DT binding document for the battery charger module of max77650.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> >  .../power/supply/max77650-charger.txt         | 27 +++++++++++++++++++
-> >  1 file changed, 27 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/power/supply/max7=
-7650-charger.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/power/supply/max77650-ch=
-arger.txt b/Documentation/devicetree/bindings/power/supply/max77650-charger=
-.txt
-> > new file mode 100644
-> > index 000000000000..fef188144386
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/power/supply/max77650-charger.t=
-xt
-> > @@ -0,0 +1,27 @@
-> > +Battery charger driver for MAX77650 PMIC from Maxim Integrated.
-> > +
-> > +This module is part of the MAX77650 MFD device. For more details
-> > +see Documentation/devicetree/bindings/mfd/max77650.txt.
-> > +
-> > +The charger is represented as a sub-node of the PMIC node on the devic=
-e tree.
-> > +
-> > +Required properties:
-> > +--------------------
-> > +- compatible:                Must be "maxim,max77650-charger"
-> > +
-> > +Optional properties:
-> > +--------------------
-> > +- min-microvolt:     Minimum CHGIN regulation voltage (in microvolts).=
- Must be
-> > +                     one of: 4000000, 4100000, 4200000, 4300000, 44000=
-00,
-> > +                     4500000, 4600000, 4700000.
-> > +- current-limit-microamp:    CHGIN input current limit (in microamps).=
- Must
-> > +                             be one of: 95000, 190000, 285000, 380000,=
- 475000.
->
-> To repeat what I said on v6, these should be common properties IMO (and
-> therefore documented as such).
->
-
-Do you mean a separate "charger.txt" document in
-Documentation/devicetree/bindings/power/supply/?
-
-Bart
-
-> > +
-> > +Example:
-> > +--------
-> > +
-> > +     charger {
-> > +             compatible =3D "maxim,max77650-charger";
-> > +             min-microvolt =3D <4200000>;
-> > +             curr-lim-microamp =3D <285000>;
-> > +     };
-> > --
-> > 2.21.0
-> >
+SGVsbG8hDQoNCkxlIDA0LzA4LzIwMTkgMDI6MDUgUE0sIExpbnVzIFdhbGxlaWogYSDDqWNyaXQg
+Og0KPiBPbiBXZWQsIEFwciAzLCAyMDE5IGF0IDM6NDEgUE0gUGFzY2FsIFBBSUxMRVQtTE1FIDxw
+LnBhaWxsZXRAc3QuY29tPiB3cm90ZToNCj4NCj4+IFRoaXMgcGF0Y2ggYWRkcyBzdHBtaWMxIHN1
+cHBvcnQgb24gc3RtMzJtcDE1N2MgZWQxIGJvYXJkLg0KPj4gVGhlIFNUUE1JQzEgaXMgYSBQTUlD
+IGZyb20gU1RNaWNyb2VsZWN0cm9uaWNzLiBUaGUgU1RQTUlDMSBpbnRlZ3JhdGVzIDEwDQo+PiBy
+ZWd1bGF0b3JzLCAzIHBvd2VyIHN3aXRjaGVzLCBhIHdhdGNoZG9nIGFuZCBhbiBpbnB1dCBmb3Ig
+YSBwb3dlciBvbiBrZXkuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogUGFzY2FsIFBhaWxsZXQgPHAu
+cGFpbGxldEBzdC5jb20+DQo+IE9LDQo+DQo+PiArICAgICAgIC9kZWxldGUtcHJvcGVydHkvZG1h
+czsNCj4+ICsgICAgICAgL2RlbGV0ZS1wcm9wZXJ0eS9kbWEtbmFtZXM7DQo+IE1heWJlIHlvdSBj
+YW4gYWRkIGEgY29tbWVudCBib3RoIHRvIHRoZSBjb21taXQgbWVzc2FnZSBhbmQgdGhlDQo+IERU
+UyBmaWxlIGFzIHRvIHdoeSB5b3UgYXJlIGRvaW5nIHRoaXM/DQo+DQo+IEkgaG9wZSB5b3UgYXJl
+IG5vdCB0cnlpbmcgdG8gd29yayBhcm91bmQgYSBidWcgaW4gdGhlIGRyaXZlciBieQ0KPiBzdHJp
+cHBpbmcgb3V0IERNQSBjb25maWd1cmF0aW9uIGZyb20gdGhlIGRldmljZSB0cmVlLCBiZWNhdXNl
+IHRoZW4NCj4gaXQgaXMgcHJvYmFibHkgYSBiZXR0ZXIgaWRlYSB0byBmaXggdGhlIGJ1Zy4NClRo
+aXMgaXMgbm90IGEgd29ya2Fyb3VuZC4gVGhlIFBNSUMgY2FuIHVzZSB0aGUgRE1BIG92ZXIgSTJD
+IGJ1cy4NCk91ciBnb2FsIGlzIHRvIGF2b2lkIHVzaW5nIGEgRE1BIGNoYW5uZWwgZm9yIGEgY29u
+c3VtZXIgdGhhdCBnZW5lcmF0ZXMgYQ0KdmVyeSBmZXcgdHJhZmZpYy4gRG1hIGNoYW5uZWxzIG1h
+eSBsYWNrIGZvciBvdGhlciB1c2UgY2FzZXMuDQoNCklmIHlvdSBhZ3JlZSwgeW91IGNhbiBhZGQg
+dGhlIHRvIHRoZSBjb21taXQgbWVzc2FnZS4NCj4gWW91cnMsDQo+IExpbnVzIFdhbGxlaWoNCj4N
+Cg0KdGhhbmsgeW91LA0KQmVzdCBSZWdhcmRzLA0KUGFzY2FsDQpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
+dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
