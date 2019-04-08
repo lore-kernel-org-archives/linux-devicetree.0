@@ -1,288 +1,112 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v2 1/1] ARM: dts: dra7: Separate AM57 dtsi files
-Date: Mon, 8 Apr 2019 12:42:49 +0300
-Message-ID: <20190408094249.29894-1-rogerq@ti.com>
-References: <20190405132806.20772-1-rogerq@ti.com>
+From: Peng Ma <peng.ma@nxp.com>
+Subject: RE: [v7 3/3] ahci: qoriq: add lx2160 platforms support
+Date: Mon, 8 Apr 2019 10:06:15 +0000
+Message-ID: <VI1PR04MB44310DDDF2D981F0BC0D7381ED2C0@VI1PR04MB4431.eurprd04.prod.outlook.com>
+References: <20190312015019.30628-1-peng.ma@nxp.com>
+ <20190312015019.30628-3-peng.ma@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190405132806.20772-1-rogerq@ti.com>
+In-Reply-To: <20190312015019.30628-3-peng.ma@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: robh+dt@kernel.org, s-anna@ti.com, nm@ti.com, lokeshvutla@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+To: "axboe@kernel.dk" <axboe@kernel.dk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
+Cc: "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Andy Tang <andy.tang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-AM5 and DRA7 SoC families have different set of modules
-in them so the SoC sepecific dtsi files need to be separated.
-
-e.g. Some of the major differences between AM576 and DRA76
-
-		DRA76x	AM576x
-
-USB3		x
-USB4		x
-ATL		x
-VCP		x
-MLB		x
-ISS		x
-PRU-ICSS1		x
-PRU-ICSS2		x
-
-This patch only deals with disabling USB3, USB4 and ATL for
-AM57 variants.
-
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
----
-
-Changelog:
-
-v2:
-- fix am57xx-beagle-x15-common.dtsi
-
- arch/arm/boot/dts/am5718.dtsi                 | 32 ++++++++++++++++++
- arch/arm/boot/dts/am571x-idk.dts              |  2 +-
- arch/arm/boot/dts/am5728.dtsi                 | 33 +++++++++++++++++++
- arch/arm/boot/dts/am572x-idk.dts              |  5 ++-
- arch/arm/boot/dts/am5748.dtsi                 | 33 +++++++++++++++++++
- arch/arm/boot/dts/am574x-idk.dts              |  4 +--
- .../boot/dts/am57xx-beagle-x15-common.dtsi    |  2 +-
- arch/arm/boot/dts/am57xx-cl-som-am57x.dts     |  2 +-
- arch/arm/boot/dts/dra7-l4.dtsi                |  6 ++--
- 9 files changed, 108 insertions(+), 11 deletions(-)
- create mode 100644 arch/arm/boot/dts/am5718.dtsi
- create mode 100644 arch/arm/boot/dts/am5728.dtsi
- create mode 100644 arch/arm/boot/dts/am5748.dtsi
-
-diff --git a/arch/arm/boot/dts/am5718.dtsi b/arch/arm/boot/dts/am5718.dtsi
-new file mode 100644
-index 000000000000..d51007c3e8c4
---- /dev/null
-+++ b/arch/arm/boot/dts/am5718.dtsi
-@@ -0,0 +1,32 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+ */
-+
-+#include "dra72x.dtsi"
-+
-+/ {
-+	compatible = "ti,am5718", "ti,dra7";
-+};
-+
-+/*
-+ * These modules are not present on AM5718
-+ *
-+ * ATL
-+ * VCP1, VCP2
-+ * MLB
-+ * ISS
-+ * USB3, USB4
-+ */
-+
-+&usb3_tm {
-+	status = "disabled";
-+};
-+
-+&usb4_tm {
-+	status = "disabled";
-+};
-+
-+&atl_tm {
-+	status = "disabled";
-+};
-diff --git a/arch/arm/boot/dts/am571x-idk.dts b/arch/arm/boot/dts/am571x-idk.dts
-index 6432309b39e3..66116ad3f9f4 100644
---- a/arch/arm/boot/dts/am571x-idk.dts
-+++ b/arch/arm/boot/dts/am571x-idk.dts
-@@ -7,7 +7,7 @@
-  */
- /dts-v1/;
- 
--#include "dra72x.dtsi"
-+#include "am5718.dtsi"
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include "dra7-mmc-iodelay.dtsi"
-diff --git a/arch/arm/boot/dts/am5728.dtsi b/arch/arm/boot/dts/am5728.dtsi
-new file mode 100644
-index 000000000000..82e5427ef6a9
---- /dev/null
-+++ b/arch/arm/boot/dts/am5728.dtsi
-@@ -0,0 +1,33 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+ */
-+
-+#include "dra74x.dtsi"
-+
-+/ {
-+	compatible = "ti,am5728", "ti,dra7";
-+};
-+
-+/*
-+ * These modules are not present on AM5728
-+ *
-+ * EVE1, EVE2
-+ * ATL
-+ * VCP1, VCP2
-+ * MLB
-+ * ISS
-+ * USB3, USB4
-+ */
-+
-+&usb3_tm {
-+	status = "disabled";
-+};
-+
-+&usb4_tm {
-+	status = "disabled";
-+};
-+
-+&atl_tm {
-+	status = "disabled";
-+};
-diff --git a/arch/arm/boot/dts/am572x-idk.dts b/arch/arm/boot/dts/am572x-idk.dts
-index b2fb6e097be7..4f835222c266 100644
---- a/arch/arm/boot/dts/am572x-idk.dts
-+++ b/arch/arm/boot/dts/am572x-idk.dts
-@@ -8,15 +8,14 @@
- 
- /dts-v1/;
- 
--#include "dra74x.dtsi"
-+#include "am5728.dtsi"
- #include "dra7-mmc-iodelay.dtsi"
- #include "dra74x-mmc-iodelay.dtsi"
- #include "am572x-idk-common.dtsi"
- 
- / {
- 	model = "TI AM5728 IDK";
--	compatible = "ti,am5728-idk", "ti,am5728", "ti,dra742", "ti,dra74",
--		     "ti,dra7";
-+	compatible = "ti,am5728-idk", "ti,am5728", "ti,dra7";
- };
- 
- &mmc1 {
-diff --git a/arch/arm/boot/dts/am5748.dtsi b/arch/arm/boot/dts/am5748.dtsi
-new file mode 100644
-index 000000000000..5e129759d04a
---- /dev/null
-+++ b/arch/arm/boot/dts/am5748.dtsi
-@@ -0,0 +1,33 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+ */
-+
-+#include "dra76x.dtsi"
-+
-+/ {
-+	compatible = "ti,am5748", "ti,dra762", "ti,dra7";
-+};
-+
-+/*
-+ * These modules are not present on AM5748
-+ *
-+ * EVE1, EVE2
-+ * ATL
-+ * VCP1, VCP2
-+ * MLB
-+ * ISS
-+ * USB3, USB4
-+ */
-+
-+&usb3_tm {
-+	status = "disabled";
-+};
-+
-+&usb4_tm {
-+	status = "disabled";
-+};
-+
-+&atl_tm {
-+	status = "disabled";
-+};
-diff --git a/arch/arm/boot/dts/am574x-idk.dts b/arch/arm/boot/dts/am574x-idk.dts
-index 378dfa780ac1..dc5141c35610 100644
---- a/arch/arm/boot/dts/am574x-idk.dts
-+++ b/arch/arm/boot/dts/am574x-idk.dts
-@@ -6,14 +6,14 @@
- 
- /dts-v1/;
- 
--#include "dra76x.dtsi"
-+#include "am5748.dtsi"
- #include "dra7-mmc-iodelay.dtsi"
- #include "dra76x-mmc-iodelay.dtsi"
- #include "am572x-idk-common.dtsi"
- 
- / {
- 	model = "TI AM5748 IDK";
--	compatible = "ti,am5728-idk", "ti,dra762", "ti,dra7";
-+	compatible = "ti,am5748-idk", "ti,am5748", "ti,dra762", "ti,dra7";
- };
- 
- &qspi {
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-index 1e6620f139dd..2341a56ebab9 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-@@ -7,7 +7,7 @@
-  */
- /dts-v1/;
- 
--#include "dra74x.dtsi"
-+#include "am5728.dtsi"
- #include "am57xx-commercial-grade.dtsi"
- #include "dra74x-mmc-iodelay.dtsi"
- #include <dt-bindings/gpio/gpio.h>
-diff --git a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-index 4748ce8747ad..0460de0da2bf 100644
---- a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-+++ b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-@@ -13,7 +13,7 @@
- 
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
--#include "dra74x.dtsi"
-+#include "am5728.dtsi"
- 
- / {
- 	model = "CompuLab CL-SOM-AM57x";
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
-index 414f1cd68733..fe9f0bc29fec 100644
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -2499,7 +2499,7 @@
- 			ranges = <0x0 0x3a000 0x1000>;
- 		};
- 
--		target-module@3c000 {			/* 0x4843c000, ap 23 08.0 */
-+		atl_tm: target-module@3c000 {		/* 0x4843c000, ap 23 08.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
- 			reg = <0x3c000 0x4>;
- 			reg-names = "rev";
-@@ -4099,7 +4099,7 @@
- 			};
- 		};
- 
--		target-module@100000 {			/* 0x48900000, ap 85 04.0 */
-+		usb3_tm: target-module@100000 {		/* 0x48900000, ap 85 04.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
- 			ti,hwmods = "usb_otg_ss3";
- 			reg = <0x100000 0x4>,
-@@ -4148,7 +4148,7 @@
- 			};
- 		};
- 
--		target-module@140000 {			/* 0x48940000, ap 75 3c.0 */
-+		usb4_tm: target-module@140000 {		/* 0x48940000, ap 75 3c.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
- 			ti,hwmods = "usb_otg_ss4";
- 			reg = <0x140000 0x4>,
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+SGkgYXhib2UsDQoNCklmIHlvdSBoYXZlIG5vIGNvbW1lbnRzIG9uIHRoZXNlIHBhdGhzLCBwbGVh
+c2UgbWVyZ2UuDQpUaGFuayB5b3UgdmVyeSBtdWNoLg0KUGF0Y2ggbGluazoNCmh0dHA6Ly9wYXRj
+aHdvcmsub3psYWJzLm9yZy9wYXRjaC8xMDU1MDI4Lw0KaHR0cDovL3BhdGNod29yay5vemxhYnMu
+b3JnL3BhdGNoLzEwNTQxODkvDQoNCkJlc3QgUmVnYXJkcywNClBlbmcNCj4tLS0tLU9yaWdpbmFs
+IE1lc3NhZ2UtLS0tLQ0KPkZyb206IFBlbmcgTWEgPHBlbmcubWFAbnhwLmNvbT4NCj5TZW50OiAy
+MDE5xOoz1MIxMsjVIDk6NTANCj5UbzogYXhib2VAa2VybmVsLmRrOyByb2JoK2R0QGtlcm5lbC5v
+cmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPnNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaSA8
+bGVveWFuZy5saUBueHAuY29tPg0KPkNjOiBsaW51eC1pZGVAdmdlci5rZXJuZWwub3JnOyBkZXZp
+Y2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj5saW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBs
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IFBlbmcgTWENCj48cGVuZy5tYUBu
+eHAuY29tPg0KPlN1YmplY3Q6IFt2NyAzLzNdIGFoY2k6IHFvcmlxOiBhZGQgbHgyMTYwIHBsYXRm
+b3JtcyBzdXBwb3J0DQo+DQo+THgyMTYwYSBpcyBhIG5ldyBpbnRyb2R1Y2VkIHNvYyB3aGljaCBz
+dXBwb3J0cyBBVEEzLjANCj4NCj5TaWduZWQtb2ZmLWJ5OiBQZW5nIE1hIDxwZW5nLm1hQG54cC5j
+b20+DQo+LS0tDQo+Y2hhbmdlZCBmb3IgVjc6DQo+CS0gbm8gY2hhbmdlZC4NCj4NCj4gZHJpdmVy
+cy9hdGEvYWhjaV9xb3JpcS5jIHwgICA1Mg0KPisrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KystLS0tLS0tLS0tLS0tLS0NCj4gMSBmaWxlcyBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspLCAx
+NyBkZWxldGlvbnMoLSkNCj4NCj5kaWZmIC0tZ2l0IGEvZHJpdmVycy9hdGEvYWhjaV9xb3JpcS5j
+IGIvZHJpdmVycy9hdGEvYWhjaV9xb3JpcS5jIGluZGV4DQo+Y2U1OTI1My4uMDhkYmI4NiAxMDA2
+NDQNCj4tLS0gYS9kcml2ZXJzL2F0YS9haGNpX3FvcmlxLmMNCj4rKysgYi9kcml2ZXJzL2F0YS9h
+aGNpX3FvcmlxLmMNCj5AQCAtNTgsNiArNTgsNyBAQCBlbnVtIGFoY2lfcW9yaXFfdHlwZSB7DQo+
+IAlBSENJX0xTMTA0NkEsDQo+IAlBSENJX0xTMTA4OEEsDQo+IAlBSENJX0xTMjA4OEEsDQo+KwlB
+SENJX0xYMjE2MEEsDQo+IH07DQo+DQo+IHN0cnVjdCBhaGNpX3FvcmlxX3ByaXYgew0KPkBAIC02
+Nyw2ICs2OCw4IEBAIHN0cnVjdCBhaGNpX3FvcmlxX3ByaXYgew0KPiAJYm9vbCBpc19kbWFjb2hl
+cmVudDsNCj4gfTsNCj4NCj4rc3RhdGljIGJvb2wgZWNjX2luaXRpYWxpemVkOw0KPisNCj4gc3Rh
+dGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYWhjaV9xb3JpcV9vZl9tYXRjaFtdID0gew0K
+PiAJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1haGNpIiwgLmRhdGEgPSAodm9pZCAqKUFI
+Q0lfTFMxMDIxQX0sDQo+IAl7IC5jb21wYXRpYmxlID0gImZzbCxsczEwNDNhLWFoY2kiLCAuZGF0
+YSA9ICh2b2lkICopQUhDSV9MUzEwNDNBfSwgQEANCj4tNzQsNiArNzcsNyBAQCBzdHJ1Y3QgYWhj
+aV9xb3JpcV9wcml2IHsNCj4gCXsgLmNvbXBhdGlibGUgPSAiZnNsLGxzMTA0NmEtYWhjaSIsIC5k
+YXRhID0gKHZvaWQgKilBSENJX0xTMTA0NkF9LA0KPiAJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMx
+MDg4YS1haGNpIiwgLmRhdGEgPSAodm9pZCAqKUFIQ0lfTFMxMDg4QX0sDQo+IAl7IC5jb21wYXRp
+YmxlID0gImZzbCxsczIwODhhLWFoY2kiLCAuZGF0YSA9ICh2b2lkICopQUhDSV9MUzIwODhBfSwN
+Cj4rCXsgLmNvbXBhdGlibGUgPSAiZnNsLGx4MjE2MGEtYWhjaSIsIC5kYXRhID0gKHZvaWQgKilB
+SENJX0xYMjE2MEF9LA0KPiAJe30sDQo+IH07DQo+IE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGFo
+Y2lfcW9yaXFfb2ZfbWF0Y2gpOyBAQCAtMTY1LDkgKzE2OSwxMCBAQA0KPnN0YXRpYyBpbnQgYWhj
+aV9xb3JpcV9waHlfaW5pdChzdHJ1Y3QgYWhjaV9ob3N0X3ByaXYgKmhwcml2KQ0KPg0KPiAJc3dp
+dGNoIChxcHJpdi0+dHlwZSkgew0KPiAJY2FzZSBBSENJX0xTMTAyMUE6DQo+LQkJaWYgKCFxcHJp
+di0+ZWNjX2FkZHIpDQo+KwkJaWYgKCEocXByaXYtPmVjY19hZGRyIHx8IGVjY19pbml0aWFsaXpl
+ZCkpDQo+IAkJCXJldHVybiAtRUlOVkFMOw0KPi0JCXdyaXRlbChTQVRBX0VDQ19ESVNBQkxFLCBx
+cHJpdi0+ZWNjX2FkZHIpOw0KPisJCWVsc2UgaWYgKHFwcml2LT5lY2NfYWRkciAmJiAhZWNjX2lu
+aXRpYWxpemVkKQ0KPisJCQl3cml0ZWwoU0FUQV9FQ0NfRElTQUJMRSwgcXByaXYtPmVjY19hZGRy
+KTsNCj4gCQl3cml0ZWwoQUhDSV9QT1JUX1BIWV8xX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1BIWTEp
+Ow0KPiAJCXdyaXRlbChMUzEwMjFBX1BPUlRfUEhZMiwgcmVnX2Jhc2UgKyBQT1JUX1BIWTIpOw0K
+PiAJCXdyaXRlbChMUzEwMjFBX1BPUlRfUEhZMywgcmVnX2Jhc2UgKyBQT1JUX1BIWTMpOyBAQCAt
+MTgwLDEwDQo+KzE4NSwxMiBAQCBzdGF0aWMgaW50IGFoY2lfcW9yaXFfcGh5X2luaXQoc3RydWN0
+IGFoY2lfaG9zdF9wcml2ICpocHJpdikNCj4gCQlicmVhazsNCj4NCj4gCWNhc2UgQUhDSV9MUzEw
+NDNBOg0KPi0JCWlmICghcXByaXYtPmVjY19hZGRyKQ0KPisJCWlmICghKHFwcml2LT5lY2NfYWRk
+ciB8fCBlY2NfaW5pdGlhbGl6ZWQpKQ0KPiAJCQlyZXR1cm4gLUVJTlZBTDsNCj4tCQl3cml0ZWwo
+cmVhZGwocXByaXYtPmVjY19hZGRyKSB8IEVDQ19ESVNfQVJNVjhfQ0gyLA0KPi0JCQkJcXByaXYt
+PmVjY19hZGRyKTsNCj4rCQllbHNlIGlmIChxcHJpdi0+ZWNjX2FkZHIgJiYgIWVjY19pbml0aWFs
+aXplZCkNCj4rCQkJd3JpdGVsKHJlYWRsKHFwcml2LT5lY2NfYWRkcikgfA0KPisJCQkgICAgICAg
+RUNDX0RJU19BUk1WOF9DSDIsDQo+KwkJCSAgICAgICBxcHJpdi0+ZWNjX2FkZHIpOw0KPiAJCXdy
+aXRlbChBSENJX1BPUlRfUEhZXzFfQ0ZHLCByZWdfYmFzZSArIFBPUlRfUEhZMSk7DQo+IAkJd3Jp
+dGVsKEFIQ0lfUE9SVF9QSFkyX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1BIWTIpOw0KPiAJCXdyaXRl
+bChBSENJX1BPUlRfUEhZM19DRkcsIHJlZ19iYXNlICsgUE9SVF9QSFkzKTsgQEANCj4tMjAyLDEw
+ICsyMDksMTIgQEAgc3RhdGljIGludCBhaGNpX3FvcmlxX3BoeV9pbml0KHN0cnVjdCBhaGNpX2hv
+c3RfcHJpdg0KPipocHJpdikNCj4gCQlicmVhazsNCj4NCj4gCWNhc2UgQUhDSV9MUzEwNDZBOg0K
+Pi0JCWlmICghcXByaXYtPmVjY19hZGRyKQ0KPisJCWlmICghKHFwcml2LT5lY2NfYWRkciB8fCBl
+Y2NfaW5pdGlhbGl6ZWQpKQ0KPiAJCQlyZXR1cm4gLUVJTlZBTDsNCj4tCQl3cml0ZWwocmVhZGwo
+cXByaXYtPmVjY19hZGRyKSB8IEVDQ19ESVNfQVJNVjhfQ0gyLA0KPi0JCQkJcXByaXYtPmVjY19h
+ZGRyKTsNCj4rCQllbHNlIGlmIChxcHJpdi0+ZWNjX2FkZHIgJiYgIWVjY19pbml0aWFsaXplZCkN
+Cj4rCQkJd3JpdGVsKHJlYWRsKHFwcml2LT5lY2NfYWRkcikgfA0KPisJCQkgICAgICAgRUNDX0RJ
+U19BUk1WOF9DSDIsDQo+KwkJCSAgICAgICBxcHJpdi0+ZWNjX2FkZHIpOw0KPiAJCXdyaXRlbChB
+SENJX1BPUlRfUEhZXzFfQ0ZHLCByZWdfYmFzZSArIFBPUlRfUEhZMSk7DQo+IAkJd3JpdGVsKEFI
+Q0lfUE9SVF9QSFkyX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1BIWTIpOw0KPiAJCXdyaXRlbChBSENJ
+X1BPUlRfUEhZM19DRkcsIHJlZ19iYXNlICsgUE9SVF9QSFkzKTsgQEANCj4tMjE1LDEwICsyMjQs
+MTMgQEAgc3RhdGljIGludCBhaGNpX3FvcmlxX3BoeV9pbml0KHN0cnVjdCBhaGNpX2hvc3RfcHJp
+dg0KPipocHJpdikNCj4gCQlicmVhazsNCj4NCj4gCWNhc2UgQUhDSV9MUzEwODhBOg0KPi0JCWlm
+ICghcXByaXYtPmVjY19hZGRyKQ0KPisJY2FzZSBBSENJX0xYMjE2MEE6DQo+KwkJaWYgKCEocXBy
+aXYtPmVjY19hZGRyIHx8IGVjY19pbml0aWFsaXplZCkpDQo+IAkJCXJldHVybiAtRUlOVkFMOw0K
+Pi0JCXdyaXRlbChyZWFkbChxcHJpdi0+ZWNjX2FkZHIpIHwgRUNDX0RJU19MUzEwODhBLA0KPi0J
+CSAgICAgICBxcHJpdi0+ZWNjX2FkZHIpOw0KPisJCWVsc2UgaWYgKHFwcml2LT5lY2NfYWRkciAm
+JiAhZWNjX2luaXRpYWxpemVkKQ0KPisJCQl3cml0ZWwocmVhZGwocXByaXYtPmVjY19hZGRyKSB8
+DQo+KwkJCSAgICAgICBFQ0NfRElTX0xTMTA4OEEsDQo+KwkJCSAgICAgICBxcHJpdi0+ZWNjX2Fk
+ZHIpOw0KPiAJCXdyaXRlbChBSENJX1BPUlRfUEhZXzFfQ0ZHLCByZWdfYmFzZSArIFBPUlRfUEhZ
+MSk7DQo+IAkJd3JpdGVsKEFIQ0lfUE9SVF9QSFkyX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1BIWTIp
+Ow0KPiAJCXdyaXRlbChBSENJX1BPUlRfUEhZM19DRkcsIHJlZ19iYXNlICsgUE9SVF9QSFkzKTsg
+QEAgLTIzNyw2DQo+KzI0OSw3IEBAIHN0YXRpYyBpbnQgYWhjaV9xb3JpcV9waHlfaW5pdChzdHJ1
+Y3QgYWhjaV9ob3N0X3ByaXYgKmhwcml2KQ0KPiAJCWJyZWFrOw0KPiAJfQ0KPg0KPisJZWNjX2lu
+aXRpYWxpemVkID0gdHJ1ZTsNCj4gCXJldHVybiAwOw0KPiB9DQo+DQo+QEAgLTI2NCwxMyArMjc3
+LDE4IEBAIHN0YXRpYyBpbnQgYWhjaV9xb3JpcV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
+DQo+KnBkZXYpDQo+DQo+IAlxb3JpcV9wcml2LT50eXBlID0gKGVudW0gYWhjaV9xb3JpcV90eXBl
+KW9mX2lkLT5kYXRhOw0KPg0KPi0JcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlX2J5bmFtZShw
+ZGV2LCBJT1JFU09VUkNFX01FTSwNCj4tCQkJInNhdGEtZWNjIik7DQo+LQlpZiAocmVzKSB7DQo+
+LQkJcW9yaXFfcHJpdi0+ZWNjX2FkZHIgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoZGV2LCByZXMp
+Ow0KPi0JCWlmIChJU19FUlIocW9yaXFfcHJpdi0+ZWNjX2FkZHIpKQ0KPi0JCQlyZXR1cm4gUFRS
+X0VSUihxb3JpcV9wcml2LT5lY2NfYWRkcik7DQo+KwlpZiAodW5saWtlbHkoIWVjY19pbml0aWFs
+aXplZCkpIHsNCj4rCQlyZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2VfYnluYW1lKHBkZXYsDQo+
+KwkJCQkJCSAgIElPUkVTT1VSQ0VfTUVNLA0KPisJCQkJCQkgICAic2F0YS1lY2MiKTsNCj4rCQlp
+ZiAocmVzKSB7DQo+KwkJCXFvcmlxX3ByaXYtPmVjY19hZGRyID0NCj4rCQkJCWRldm1faW9yZW1h
+cF9yZXNvdXJjZShkZXYsIHJlcyk7DQo+KwkJCWlmIChJU19FUlIocW9yaXFfcHJpdi0+ZWNjX2Fk
+ZHIpKQ0KPisJCQkJcmV0dXJuIFBUUl9FUlIocW9yaXFfcHJpdi0+ZWNjX2FkZHIpOw0KPisJCX0N
+Cj4gCX0NCj4rDQo+IAlxb3JpcV9wcml2LT5pc19kbWFjb2hlcmVudCA9IG9mX2RtYV9pc19jb2hl
+cmVudChucCk7DQo+DQo+IAlyYyA9IGFoY2lfcGxhdGZvcm1fZW5hYmxlX3Jlc291cmNlcyhocHJp
+dik7DQo+LS0NCj4xLjcuMQ0KDQo=
