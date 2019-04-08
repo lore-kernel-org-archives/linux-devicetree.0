@@ -1,17 +1,20 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 15/15] arm64: dts: marvell: Convert 7k/8k usb-phy
- properties to phy-supply
-Date: Mon, 8 Apr 2019 21:07:06 +0200
-Message-ID: <CAFBinCCCemN_xFkeE8GxBYpX-YhLokW1S=tJNtkTS14nbrWyEg@mail.gmail.com>
-References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
- <20190401165131.23370-16-miquel.raynal@bootlin.com>
- <CAFBinCDG5vpSpvq=1XUZzu7RA-pDEcEqgrPr65BZ5esuGyGPjA@mail.gmail.com>
- <20190403100642.24648945@xps13> <20190408105128.6e36be55@xps13>
+From: Zhi Li <lznuaa@gmail.com>
+Subject: Re: [PATCH V4 2/4] drivers/perf: imx_ddr: Add ddr performance counter
+ support
+Date: Mon, 8 Apr 2019 14:10:28 -0500
+Message-ID: <CAHrpEqQnJAdUeKLUFE0r6DxnCtitEumvgd5xOzKmJmYXy3mQ4w@mail.gmail.com>
+References: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
+ <1550253761-26841-2-git-send-email-Frank.Li@nxp.com>
+ <20190404111714.GA26392@fuggles.cambridge.arm.com>
+ <CAHrpEqT67OpeGXB7wgYSsTD9ibG_jk7xO5zMFyxcG5PHFP-bJg@mail.gmail.com>
+ <20190405143846.GB7313@fuggles.cambridge.arm.com>
+ <CAHrpEqSerorArZwSgj5qkFQQgwit5mqPWp5DD6PmYJiLejPJfw@mail.gmail.com>
+ <20190405150319.GA7704@fuggles.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190408105128.6e36be55@xps13>
+In-Reply-To: <20190405150319.GA7704@fuggles.cambridge.arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,89 +24,76 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.io>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Will Deacon <will.deacon@arm.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Frank Li <frank.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWlxdWVsLAoKT24gTW9uLCBBcHIgOCwgMjAxOSBhdCAxMDo1MSBBTSBNaXF1ZWwgUmF5bmFs
-IDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPiB3cm90ZToKPgo+IEhpIFJvYiwKPgo+IEdlbnRs
-ZSBwaW5nIG9uIHRoZSBxdWVzdGlvbnMgYmVsb3csIGlmIHlvdSBoYXZlIHNvbWUgdGltZSB0byBj
-aGVjay4KPgo+IFRoYW5rIHlvdSB2ZXJ5IG11Y2gsCj4gTWlxdcOobAo+Cj4gTWlxdWVsIFJheW5h
-bCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4gd3JvdGUgb24gV2VkLCAzIEFwciAyMDE5Cj4g
-MTA6MDY6NDIgKzAyMDA6Cj4KPiA+IEhpIE1hcnRpbiwKPiA+Cj4gPiBSb2IsIGEgZmV3IHF1ZXN0
-aW9ucyBmb3IgeW91IGJlbG93IDopCj4gPgo+ID4gTWFydGluIEJsdW1lbnN0aW5nbCA8bWFydGlu
-LmJsdW1lbnN0aW5nbEBnb29nbGVtYWlsLmNvbT4gd3JvdGUgb24gVHVlLAo+ID4gMiBBcHIgMjAx
-OSAyMTozNToyNiArMDIwMDoKPiA+Cj4gPiA+IEhpIE1pcXVlbCwKPiA+ID4KPiA+ID4gdGhhbmsg
-eW91IGZvciBrZWVwaW5nIG1lIGluIHRoZSBsb29wIQo+ID4gPgo+ID4gPiBPbiBNb24sIEFwciAx
-LCAyMDE5IGF0IDY6NTIgUE0gTWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNv
-bT4gd3JvdGU6Cj4gPiA+ID4KPiA+ID4gPiBVcGRhdGUgQXJhbWRhIDdrLzhrIERUcyB0byB1c2Ug
-dGhlIHBoeS1zdXBwbHkgcHJvcGVydHkgb2YgdGhlIChyZWNlbnQpCj4gPiA+ID4gZ2VuZXJpYyBQ
-SFkgZnJhbWV3b3JrIGluc3RlYWQgb2YgdGhlIChsZWdhY3kpIHVzYi1waHkgcHJlcGVydHkuIEJv
-dGgKPiA+ID4gPiBlbmFibGUgdGhlIHN1cHBseSB3aGVuIHRoZSBQSFkgaXMgZW5hYmxlZC4KPiA+
-ID4gPgo+ID4gPiA+IFRoZSBDT01QSFkgbm9kZXMgb25seSBwcm92aWRlIFNFUkRFUyBsYW5lcyBj
-b25maWd1cmF0aW9uLiBUaGUgcG93ZXIKPiA+ID4gPiBzdXBwbHkgdGhhdCBpcyByZXByZXNlbnRl
-ZCBieSB0aGUgcGh5LXN1cHBseSBwcm9wZXJ0eSBpcyBqdXN0IGEKPiA+ID4gPiByZWd1bGF0b3Ig
-d2lyZWQgdG8gdGhlIFVTQiBjb25uZWN0b3IsIGhlbmNlIHRoZSBjcmVhdGlvbiBvZiBjb25uZWN0
-b3IKPiA+ID4gPiBub2RlcyBhcyBjaGlsZCBvZiB0aGUgQ09NUEhZIG5vZGVzIGFuZCB0aGUgc3Vw
-cGx5IGF0dGFjaGVkIHRvIGl0Lgo+ID4gPiBzaG91bGRuJ3QgdGhpcyBhbHNvIGJlIHJlZmxlY3Rl
-ZCBpbiB0aGUgZHQtYmluZGluZ3M/Cj4gPgo+ID4gSSBkb24ndCB0aGluayBpdCBkZXNlcnZlcyBh
-biB1cGRhdGUgaW4gdGhlIGJpbmRpbmdzIGFzIHRoaXMgaXMganVzdCBhbgo+ID4gdXBkYXRlIGZv
-ciBhIGJldHRlciBoYXJkd2FyZSByZXByZXNlbnRhdGlvbi4gVGhlIENPTVBIWSBibG9jayBpcwo+
-ID4gYWxyZWFkeSBkb2N1bWVudGVkLCB0aGUgY29ubmVjdG9yIG9uZSB0b28uIEkgdGhvdWdodCBh
-ZGRpbmcgYSBjb25uZWN0b3IKPiA+IG5vZGUgaW4gdGhlIENPTVBIWSBub2RlIHdhcyBva2F5IHdo
-ZW4gSSByZWFkIFJvYidzIGFuc3dlciB0byB5b3VyCj4gPiBzZXJpZXMgYXMgdGhpcyBoYXMgbm90
-aGluZyB0byBkbyB3aXRoIHRoZSBJUCBpdHNlbGYgYnV0IGlzIGp1c3QKPiA+IGRlc2NyaWJpbmcg
-aG93IHRoZSBib2FyZCBpcyBidWlsdC4gTWF5YmUgUm9iIGNhbiBjb25maXJtIHRoaXM/Cj4gPgo+
-ID4gPgo+ID4gPiA+IENjOiBNYXJ0aW4gQmx1bWVuc3RpbmdsIDxtYXJ0aW4uYmx1bWVuc3Rpbmds
-QGdvb2dsZW1haWwuY29tPgo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IE1pcXVlbCBSYXluYWwgPG1p
-cXVlbC5yYXluYWxAYm9vdGxpbi5jb20+Cj4gPiA+ID4gLS0tCj4gPiA+ID4gIC4uLi9hcm02NC9i
-b290L2R0cy9tYXJ2ZWxsL2FybWFkYS03MDQwLWRiLmR0cyB8IDI2ICsrKysrKysrKystLS0tLS0t
-LS0KPiA+ID4gPiAgLi4uL21hcnZlbGwvYXJtYWRhLTgwNDAtY2xlYXJmb2ctZ3QtOGsuZHRzICAg
-IHwgMTMgKysrKystLS0tLQo+ID4gPiA+ICAuLi4vYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1h
-ZGEtODA0MC1kYi5kdHMgfCAxMyArKysrKy0tLS0tCj4gPiA+ID4gIC4uLi9ib290L2R0cy9tYXJ2
-ZWxsL2FybWFkYS04MDQwLW1jYmluLmR0c2kgICB8IDEzICsrKysrLS0tLS0KPiA+ID4gPiAgNCBm
-aWxlcyBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspLCAzMCBkZWxldGlvbnMoLSkKPiA+ID4gPgo+
-ID4gPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTcw
-NDAtZGIuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS03MDQwLWRiLmR0
-cwo+ID4gPiA+IGluZGV4IDEzMWNlNDIyOWRiMC4uNGI4ZGYzNTliMWNjIDEwMDY0NAo+ID4gPiA+
-IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtNzA0MC1kYi5kdHMKPiA+
-ID4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTcwNDAtZGIuZHRz
-Cj4gPiA+ID4gQEAgLTQ1LDE2ICs0NSw2IEBACj4gPiA+ID4gICAgICAgICAgICAgICAgIGVuYWJs
-ZS1hY3RpdmUtaGlnaDsKPiA+ID4gPiAgICAgICAgICAgICAgICAgZ3BpbyA9IDwmZXhwYW5kZXIw
-IDEgR1BJT19BQ1RJVkVfSElHSD47Cj4gPiA+ID4gICAgICAgICB9Owo+ID4gPiA+IC0KPiA+ID4g
-PiAtICAgICAgIGNwMF91c2IzXzBfcGh5OiBjcDAtdXNiMy0wLXBoeSB7Cj4gPiA+ID4gLSAgICAg
-ICAgICAgICAgIGNvbXBhdGlibGUgPSAidXNiLW5vcC14Y2VpdiI7Cj4gPiA+ID4gLSAgICAgICAg
-ICAgICAgIHZjYy1zdXBwbHkgPSA8JmNwMF9yZWdfdXNiM18wX3ZidXM+Owo+ID4gPiA+IC0gICAg
-ICAgfTsKPiA+ID4gPiAtCj4gPiA+ID4gLSAgICAgICBjcDBfdXNiM18xX3BoeTogY3AwLXVzYjMt
-MS1waHkgewo+ID4gPiA+IC0gICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInVzYi1ub3AteGNl
-aXYiOwo+ID4gPiA+IC0gICAgICAgICAgICAgICB2Y2Mtc3VwcGx5ID0gPCZjcDBfcmVnX3VzYjNf
-MV92YnVzPjsKPiA+ID4gPiAtICAgICAgIH07Cj4gPiA+ID4gIH07Cj4gPiA+ID4KPiA+ID4gPiAg
-JmkyYzAgewo+ID4gPiA+IEBAIC0yMDAsMTUgKzE5MCwyNyBAQAo+ID4gPiA+ICAgICAgICAgfTsK
-PiA+ID4gPiAgfTsKPiA+ID4gPgo+ID4gPiA+ICsmY3AwX2NvbXBoeTEgewo+ID4gPiA+ICsgICAg
-ICAgY3AwX3VzYmgwX2NvbjogY29ubmVjdG9yIHsKPiA+ID4gPiArICAgICAgICAgICAgICAgY29t
-cGF0aWJsZSA9ICJ1c2ItYS1jb25uZWN0b3IiOwo+ID4gPiA+ICsgICAgICAgICAgICAgICBwaHkt
-c3VwcGx5ID0gPCZjcDBfcmVnX3VzYjNfMF92YnVzPjsKPiA+ID4gPiArICAgICAgIH07Cj4gPiA+
-ID4gK307Cj4gPiA+IChkaXNjbGFpbWVyOiBJIGRvbid0IGhhdmUgYW55IGJvYXJkIHdpdGggYSBt
-YXJ2ZWxsIFNvQywgc28gSSBkb24ndAo+ID4gPiB1bmRlcnN0YW5kIGhvdyBpdCB3b3JrcyBhbmQg
-SSBjYW4ndCBkZWJ1ZyBpdCkKPiA+ID4gSSBrbm93IGFib3V0IHRoZSAicGh5LXN1cHBseSIgcHJv
-cGVydHkgaW5zaWRlIHRoZSBQSFkgbm9kZSBpdHNlbGYKPiA+ID4gKHRoYXQgd291bGQgYmUgY3Aw
-X2NvbXBoeTEgaW4gdGhpcyBjYXNlKS4KPiA+ID4gVGhlIGNvbm5lY3RvciBiaW5kaW5nIGRvZXMg
-bm90IG1lbnRpb24gYSBwaHktc3VwcGx5IHByb3BlcnR5Ogo+ID4gPiBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvY29ubmVjdG9yL3VzYi1jb25uZWN0b3IudHh0Cj4gPgo+ID4gVGhh
-dCdzIHJpZ2h0LCBjYW4gUm9iIGNvbmZpcm0gdGhhdCB0aGlzIGlzIHZhbGlkPyBJZiB5ZXMgSSBj
-YW4gYWRkIGFuCj4gPiBvcHRpb25hbCAicGh5LXN1cHBseSIgcHJvcGVydHkgdGhlcmUuCkljZW5v
-d3kgKGhlcmU6IFswXSkgYW5kIENodW5mZW5nIChoZXJlOiBbMV0pIGFyZSB3b3JraW5nIG9uIHRo
-aXMgYXMKZmFyIGFzIEkgY2FuIHRlbGwKSWNlbm93eSBpcyBwYXJzaW5nIHRoZSAidmJ1cy1zdXBw
-bHkiIHJlZ3VsYXRvciBtYW51YWxseSBmcm9tIHdpdGhpbgp0aGUgUEhZIGRyaXZlciwgc2VlIFsy
-XQoKdGhlIGFkZGl0aW9uYWwgaW5mbyBmcm9tIHRoZWlyIHBhdGNoZXMgZG9lc24ndCBmdWxseSBh
-bnN3ZXIgbXkgcXVlc3Rpb25zIHlldC4KSSBDQydlZCBib3RoIHRvIHRoaXMgbWFpbCBob3Bpbmcg
-dGhhdCB0aGV5IGNhbiBwcm92aWRlIGFkZGl0aW9uYWwKaW5zaWdodCB3aGF0IHRoZSBncmVhdGVy
-IHBpY3R1cmUgaXMgKGF0IGxlYXN0IGluIHRlcm1zIG9mIHdoaWNoIGRyaXZlcgppcyBjb250cm9s
-bGluZyB0aGUgVVNCIFZCVVMgc2lnbmFsKSBvbiBBbGx3aW5uZXIgYW5kIE1lZGlhdGVrIFNvQ3Mu
-CgoKUmVnYXJkcwpNYXJ0aW4KCgpbMF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRj
-aC8xMDg4NzgzOS8KWzFdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA4NDQy
-NTEvClsyXSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwODg3ODQxLwoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
-cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
-bAo=
+On Fri, Apr 5, 2019 at 10:03 AM Will Deacon <will.deacon@arm.com> wrote:
+>
+> On Fri, Apr 05, 2019 at 09:58:38AM -0500, Zhi Li wrote:
+> > On Fri, Apr 5, 2019 at 9:38 AM Will Deacon <will.deacon@arm.com> wrote:
+> > > On Fri, Apr 05, 2019 at 09:34:38AM -0500, Zhi Li wrote:
+> > > > On Thu, Apr 4, 2019 at 6:17 AM Will Deacon <will.deacon@arm.com> wrote:
+> > > > > On Fri, Feb 15, 2019 at 06:03:11PM +0000, Frank Li wrote:
+> > > > > > Add ddr performance monitor support for iMX8QXP
+> > > > > >
+> > > > > > There are 4 counters for ddr perfomance events.
+> > > > > > counter 0 is dedicated for cycles.
+> > > > > > you choose any up to 3 no cycles events.
+> > > > > >
+> > > > > > for example:
+> > > > > >
+> > > > > > perf stat -a -e ddr0/read-access/,ddr0/write-access/,ddr0/precharge/ ls
+> > > > > > perf stat -a -e ddr0/cycles/,ddr0/read-access/,ddr0/write-access/ ls
+> > > > >
+> > > > > Could you elaborate a bit on DDR_CAP_AXI_ID, please? Specifically, how
+> >
+> > Only imx845 have AXID filter capability now.
+> >
+> > > > > does the COUNTER_DPCR1 register work and what happens if I specify two
+> > > > > simultaneous events with different values in config1? I'm a little wary
+> >
+> > There are difference match register for each event.
+> > 1. Read event with config 1 A
+> > 2. Read event with config 1 B
+> >
+> > 1 will show read count with filter A
+> > 2 will show read count with filter B.
+>
+> Thanks, that makes sense, but I can't see how that corresponds to the code
+> in the patch:
+>
+> +static void ddr_perf_event_start(struct perf_event *event, int flags)
+> +{
+> +       struct ddr_pmu *pmu = to_ddr_pmu(event->pmu);
+> +       struct hw_perf_event *hwc = &event->hw;
+> +       int counter = hwc->idx;
+> +
+> +       if (pmu->flags & DDR_CAP_AXI_ID) {
+> +               if (event->attr.config == EVENT_AXI_READ ||
+> +                   event->attr.config == EVENT_AXI_WRITE) {
+> +                       int val = event->attr.config1;
+> +
+> +                       writel(val, pmu->base + COUNTER_DPCR1);
+> +               }
+> +       }
+> +
+> +       local64_set(&hwc->prev_count, 0);
+> +
+> +       ddr_perf_event_enable(pmu, event->attr.config, counter, true);
+>
+> ddr_perf_event_enable() does what you'd expect, and uses hwc->idx to
+> allocate a counter, but the code before it just always writes to DPCR1.
+>
+> What am I missing?
+
+I double check with our IC design team. My previous answer is wrong.
+Only one DPCR1. It will impact all event EVENT_AXI_READ and  EVENT_AXI_WRITE.
+
+Thank means just choose one config1 for event EVENT_AXI_READ or EVENT_AXI_WRITE
+
+best regards
+Frank Li
+
+>
+> Will
