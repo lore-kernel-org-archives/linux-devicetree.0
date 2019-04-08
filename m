@@ -1,54 +1,25 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-nitrogen6_max: Disable LVDS channels
-Date: Mon, 8 Apr 2019 17:37:47 -0300
-Message-ID: <CAOMZO5DAvaibi5r9CXzk8qbE7XHiHJHHvi9rcq_BJdx7aRVgoQ@mail.gmail.com>
-References: <20190408175319.9106-1-robert.foss@collabora.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 15/24] dt-bindings: pinctrl: pinctrl-mt65xx: add support
+ for MT8516
+Date: Mon, 8 Apr 2019 22:44:59 +0200
+Message-ID: <CACRpkdZZ6-+MVdK4bOP4SHxQ8uQ8zENcir7DSteHy4g+B5uySQ@mail.gmail.com>
+References: <20190323211612.860-1-fparent@baylibre.com> <20190323211612.860-16-fparent@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190408175319.9106-1-robert.foss@collabora.com>
+In-Reply-To: <20190323211612.860-16-fparent@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Foss <robert.foss@collabora.com>, Gary Bisson <gary.bisson@boundarydevices.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Fabien Parent <fparent@baylibre.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sean Wang <sean.wang@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>, hsin-hsiung.wang@mediatek.com, wenzhen.yu@mediatek.com, Chaotian Jing <chaotian.jing@mediatek.com>, Yong Mao <yong.mao@mediatek.com>, jjian.zhou@mediatek.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-mmc <linux-mmc@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-se
 List-Id: devicetree@vger.kernel.org
 
-Hi Robert,
+On Sat, Mar 23, 2019 at 10:17 PM Fabien Parent <fparent@baylibre.com> wrote:
 
-[Adding Gary]
+> Add binding documentation of pinctrl-mt65xx for MT8516 SoC.
+>
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
 
-On Mon, Apr 8, 2019 at 2:54 PM Robert Foss <robert.foss@collabora.com> wrote:
->
-> If a LVDS device is not connected, having the LVDS channels
-> enabled will prevent imx-ldb from probing correctly even
-> if other CRTCs are connected.
->
-> Signed-off-by: Robert Foss <robert.foss@collabora.com>
-> ---
->  arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
-> index 39200e5dc896..5b413cf4c250 100644
-> --- a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
-> @@ -703,7 +703,7 @@
->         status = "okay";
->
->         lvds-channel@0 {
-> -               status = "okay";
-> +               status = "disabled";
->
->                 port@4 {
->                         reg = <4>;
-> @@ -715,7 +715,7 @@
->         };
->
->         lvds-channel@1 {
-> -               status = "okay";
-> +               status = "disabled";
+Patch applied with Rob's ACK.
 
-I am not sure I understood what you are trying to fix.
-
-Could you please share some logs when imx-ldb fails to probe correctly?
-
-Is this a regression?
+Yours,
+Linus Walleij
