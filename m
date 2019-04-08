@@ -1,98 +1,97 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 15/15] arm64: dts: marvell: Convert 7k/8k usb-phy
- properties to phy-supply
-Date: Mon, 8 Apr 2019 10:51:28 +0200
-Message-ID: <20190408105128.6e36be55@xps13>
-References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
- <20190401165131.23370-16-miquel.raynal@bootlin.com>
- <CAFBinCDG5vpSpvq=1XUZzu7RA-pDEcEqgrPr65BZ5esuGyGPjA@mail.gmail.com>
- <20190403100642.24648945@xps13>
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH v5 1/7] dt-bindings: Add panel-timing subnode to
+ simple-panel
+Date: Mon, 8 Apr 2019 11:10:06 +0200
+Message-ID: <20190408111006.6b8fe312@collabora.com>
+References: <20190401171724.215780-1-dianders@chromium.org>
+        <20190401171724.215780-2-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190403100642.24648945@xps13>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190401171724.215780-2-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Sean Paul <seanpaul@chromium.org>, linux-rockchip@lists.infradead.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, Ezequiel Garcia <ezequiel@collabora.com>, Enric =?UTF-8?B?QmFsbGV0YsOy?= <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, mka@chromium.org, Eric Anholt <eric@anholt.net>, Jeffy Chen <jeffy.chen@rock-chips.com>, =?UTF-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Daniel Vetter <daniel@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKR2VudGxlIHBpbmcgb24gdGhlIHF1ZXN0aW9ucyBiZWxvdywgaWYgeW91IGhhdmUg
-c29tZSB0aW1lIHRvIGNoZWNrLgoKVGhhbmsgeW91IHZlcnkgbXVjaCwKTWlxdcOobAoKTWlxdWVs
-IFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4gd3JvdGUgb24gV2VkLCAzIEFwciAy
-MDE5CjEwOjA2OjQyICswMjAwOgoKPiBIaSBNYXJ0aW4sCj4gCj4gUm9iLCBhIGZldyBxdWVzdGlv
-bnMgZm9yIHlvdSBiZWxvdyA6KQo+IAo+IE1hcnRpbiBCbHVtZW5zdGluZ2wgPG1hcnRpbi5ibHVt
-ZW5zdGluZ2xAZ29vZ2xlbWFpbC5jb20+IHdyb3RlIG9uIFR1ZSwKPiAyIEFwciAyMDE5IDIxOjM1
-OjI2ICswMjAwOgo+IAo+ID4gSGkgTWlxdWVsLAo+ID4gCj4gPiB0aGFuayB5b3UgZm9yIGtlZXBp
-bmcgbWUgaW4gdGhlIGxvb3AhCj4gPiAKPiA+IE9uIE1vbiwgQXByIDEsIDIwMTkgYXQgNjo1MiBQ
-TSBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPiB3cm90ZTogIAo+ID4g
-Pgo+ID4gPiBVcGRhdGUgQXJhbWRhIDdrLzhrIERUcyB0byB1c2UgdGhlIHBoeS1zdXBwbHkgcHJv
-cGVydHkgb2YgdGhlIChyZWNlbnQpCj4gPiA+IGdlbmVyaWMgUEhZIGZyYW1ld29yayBpbnN0ZWFk
-IG9mIHRoZSAobGVnYWN5KSB1c2ItcGh5IHByZXBlcnR5LiBCb3RoCj4gPiA+IGVuYWJsZSB0aGUg
-c3VwcGx5IHdoZW4gdGhlIFBIWSBpcyBlbmFibGVkLgo+ID4gPgo+ID4gPiBUaGUgQ09NUEhZIG5v
-ZGVzIG9ubHkgcHJvdmlkZSBTRVJERVMgbGFuZXMgY29uZmlndXJhdGlvbi4gVGhlIHBvd2VyCj4g
-PiA+IHN1cHBseSB0aGF0IGlzIHJlcHJlc2VudGVkIGJ5IHRoZSBwaHktc3VwcGx5IHByb3BlcnR5
-IGlzIGp1c3QgYQo+ID4gPiByZWd1bGF0b3Igd2lyZWQgdG8gdGhlIFVTQiBjb25uZWN0b3IsIGhl
-bmNlIHRoZSBjcmVhdGlvbiBvZiBjb25uZWN0b3IKPiA+ID4gbm9kZXMgYXMgY2hpbGQgb2YgdGhl
-IENPTVBIWSBub2RlcyBhbmQgdGhlIHN1cHBseSBhdHRhY2hlZCB0byBpdC4gICAgCj4gPiBzaG91
-bGRuJ3QgdGhpcyBhbHNvIGJlIHJlZmxlY3RlZCBpbiB0aGUgZHQtYmluZGluZ3M/ICAKPiAKPiBJ
-IGRvbid0IHRoaW5rIGl0IGRlc2VydmVzIGFuIHVwZGF0ZSBpbiB0aGUgYmluZGluZ3MgYXMgdGhp
-cyBpcyBqdXN0IGFuCj4gdXBkYXRlIGZvciBhIGJldHRlciBoYXJkd2FyZSByZXByZXNlbnRhdGlv
-bi4gVGhlIENPTVBIWSBibG9jayBpcwo+IGFscmVhZHkgZG9jdW1lbnRlZCwgdGhlIGNvbm5lY3Rv
-ciBvbmUgdG9vLiBJIHRob3VnaHQgYWRkaW5nIGEgY29ubmVjdG9yCj4gbm9kZSBpbiB0aGUgQ09N
-UEhZIG5vZGUgd2FzIG9rYXkgd2hlbiBJIHJlYWQgUm9iJ3MgYW5zd2VyIHRvIHlvdXIKPiBzZXJp
-ZXMgYXMgdGhpcyBoYXMgbm90aGluZyB0byBkbyB3aXRoIHRoZSBJUCBpdHNlbGYgYnV0IGlzIGp1
-c3QKPiBkZXNjcmliaW5nIGhvdyB0aGUgYm9hcmQgaXMgYnVpbHQuIE1heWJlIFJvYiBjYW4gY29u
-ZmlybSB0aGlzPwo+IAo+ID4gICAKPiA+ID4gQ2M6IE1hcnRpbiBCbHVtZW5zdGluZ2wgPG1hcnRp
-bi5ibHVtZW5zdGluZ2xAZ29vZ2xlbWFpbC5jb20+Cj4gPiA+IFNpZ25lZC1vZmYtYnk6IE1pcXVl
-bCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9vdGxpbi5jb20+Cj4gPiA+IC0tLQo+ID4gPiAgLi4u
-L2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTcwNDAtZGIuZHRzIHwgMjYgKysrKysrKysr
-Ky0tLS0tLS0tLQo+ID4gPiAgLi4uL21hcnZlbGwvYXJtYWRhLTgwNDAtY2xlYXJmb2ctZ3QtOGsu
-ZHRzICAgIHwgMTMgKysrKystLS0tLQo+ID4gPiAgLi4uL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwv
-YXJtYWRhLTgwNDAtZGIuZHRzIHwgMTMgKysrKystLS0tLQo+ID4gPiAgLi4uL2Jvb3QvZHRzL21h
-cnZlbGwvYXJtYWRhLTgwNDAtbWNiaW4uZHRzaSAgIHwgMTMgKysrKystLS0tLQo+ID4gPiAgNCBm
-aWxlcyBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspLCAzMCBkZWxldGlvbnMoLSkKPiA+ID4KPiA+
-ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtNzA0MC1k
-Yi5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTcwNDAtZGIuZHRzCj4g
-PiA+IGluZGV4IDEzMWNlNDIyOWRiMC4uNGI4ZGYzNTliMWNjIDEwMDY0NAo+ID4gPiAtLS0gYS9h
-cmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTcwNDAtZGIuZHRzCj4gPiA+ICsrKyBi
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtNzA0MC1kYi5kdHMKPiA+ID4gQEAg
-LTQ1LDE2ICs0NSw2IEBACj4gPiA+ICAgICAgICAgICAgICAgICBlbmFibGUtYWN0aXZlLWhpZ2g7
-Cj4gPiA+ICAgICAgICAgICAgICAgICBncGlvID0gPCZleHBhbmRlcjAgMSBHUElPX0FDVElWRV9I
-SUdIPjsKPiA+ID4gICAgICAgICB9Owo+ID4gPiAtCj4gPiA+IC0gICAgICAgY3AwX3VzYjNfMF9w
-aHk6IGNwMC11c2IzLTAtcGh5IHsKPiA+ID4gLSAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAi
-dXNiLW5vcC14Y2VpdiI7Cj4gPiA+IC0gICAgICAgICAgICAgICB2Y2Mtc3VwcGx5ID0gPCZjcDBf
-cmVnX3VzYjNfMF92YnVzPjsKPiA+ID4gLSAgICAgICB9Owo+ID4gPiAtCj4gPiA+IC0gICAgICAg
-Y3AwX3VzYjNfMV9waHk6IGNwMC11c2IzLTEtcGh5IHsKPiA+ID4gLSAgICAgICAgICAgICAgIGNv
-bXBhdGlibGUgPSAidXNiLW5vcC14Y2VpdiI7Cj4gPiA+IC0gICAgICAgICAgICAgICB2Y2Mtc3Vw
-cGx5ID0gPCZjcDBfcmVnX3VzYjNfMV92YnVzPjsKPiA+ID4gLSAgICAgICB9Owo+ID4gPiAgfTsK
-PiA+ID4KPiA+ID4gICZpMmMwIHsKPiA+ID4gQEAgLTIwMCwxNSArMTkwLDI3IEBACj4gPiA+ICAg
-ICAgICAgfTsKPiA+ID4gIH07Cj4gPiA+Cj4gPiA+ICsmY3AwX2NvbXBoeTEgewo+ID4gPiArICAg
-ICAgIGNwMF91c2JoMF9jb246IGNvbm5lY3RvciB7Cj4gPiA+ICsgICAgICAgICAgICAgICBjb21w
-YXRpYmxlID0gInVzYi1hLWNvbm5lY3RvciI7Cj4gPiA+ICsgICAgICAgICAgICAgICBwaHktc3Vw
-cGx5ID0gPCZjcDBfcmVnX3VzYjNfMF92YnVzPjsKPiA+ID4gKyAgICAgICB9Owo+ID4gPiArfTsg
-ICAgCj4gPiAoZGlzY2xhaW1lcjogSSBkb24ndCBoYXZlIGFueSBib2FyZCB3aXRoIGEgbWFydmVs
-bCBTb0MsIHNvIEkgZG9uJ3QKPiA+IHVuZGVyc3RhbmQgaG93IGl0IHdvcmtzIGFuZCBJIGNhbid0
-IGRlYnVnIGl0KQo+ID4gSSBrbm93IGFib3V0IHRoZSAicGh5LXN1cHBseSIgcHJvcGVydHkgaW5z
-aWRlIHRoZSBQSFkgbm9kZSBpdHNlbGYKPiA+ICh0aGF0IHdvdWxkIGJlIGNwMF9jb21waHkxIGlu
-IHRoaXMgY2FzZSkuCj4gPiBUaGUgY29ubmVjdG9yIGJpbmRpbmcgZG9lcyBub3QgbWVudGlvbiBh
-IHBoeS1zdXBwbHkgcHJvcGVydHk6Cj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvY29ubmVjdG9yL3VzYi1jb25uZWN0b3IudHh0ICAKPiAKPiBUaGF0J3MgcmlnaHQsIGNhbiBS
-b2IgY29uZmlybSB0aGF0IHRoaXMgaXMgdmFsaWQ/IElmIHllcyBJIGNhbiBhZGQgYW4KPiBvcHRp
-b25hbCAicGh5LXN1cHBseSIgcHJvcGVydHkgdGhlcmUuCj4gCj4gPiBJIGRvbid0IHVuZGVyc3Rh
-bmQgd2hpY2ggZHJpdmVyIGVuYWJsZXMgdGhlIHBoeS1zdXBwbHkgd2hlbiBpdCdzIHBhcnQKPiA+
-IG9mIGEgImNvbm5lY3RvciIgY2hpbGQtbm9kZS4KPiA+IGRvIHlvdSBoYXZlIGEgaGludCB3aGVy
-ZSBJIHNob3VsZCBzdGFydCBsb29raW5nPyAgCj4gCj4gSSBob25lc3RseSBoYXZlIG5vIGlkZWEs
-IGJ1dCBhcHBhcmVudGx5IGl0IHdvcmtzLgo+IAo+IAo+IFRoYW5rcywKPiBNaXF1w6hsCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
-bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
-Cg==
+On Mon,  1 Apr 2019 10:17:18 -0700
+Douglas Anderson <dianders@chromium.org> wrote:
+
+> From: Sean Paul <seanpaul@chromium.org>
+> 
+> This patch adds a new subnode to simple-panel allowing us to override
+> the typical timing expressed in the panel's display_timing.
+> 
+> Changes in v2:
+>  - Split out the binding into a new patch (Rob)
+>  - display-timings is a new section (Rob)
+>  - Use the full display-timings subnode instead of picking the timing
+>    out (Rob/Thierry)
+> Changes in v3:
+>  - Go back to using the timing subnode directly, but rename to
+>    panel-timing (Rob)
+> Changes in v4:
+>  - Simplify desc. for when override should be used (Thierry/Laurent)
+>  - Removed Rob H review since it's been a year and wording changed
+> Changes in v5:
+>  - Removed bit about OS may ignore (Rob/Ezequiel)
+> 
+> Cc: Doug Anderson <dianders@chromium.org>
+> Cc: Eric Anholt <eric@anholt.net>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Stéphane Marchesin <marcheu@chromium.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-rockchip@lists.infradead.org
+> Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+
+> ---
+> 
+>  .../bindings/display/panel/simple-panel.txt   | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/simple-panel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> index b2b872c710f2..93882268c0b9 100644
+> --- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> @@ -15,6 +15,16 @@ Optional properties:
+>    (hot plug detect) signal, but the signal isn't hooked up so we should
+>    hardcode the max delay from the panel spec when powering up the panel.
+>  
+> +panel-timing subnode
+> +--------------------
+> +
+> +This optional subnode is for devices which require a mode differing
+> +from the panel's "typical" display timing.
+> +
+> +Format information on the panel-timing subnode can be found in
+> +display-timing.txt.
+> +
+> +
+>  Example:
+>  
+>  	panel: panel {
+> @@ -25,4 +35,16 @@ Example:
+>  		enable-gpios = <&gpio 90 0>;
+>  
+>  		backlight = <&backlight>;
+> +
+> +		panel-timing {
+> +			clock-frequency = <266604720>;
+> +			hactive = <2400>;
+> +			hfront-porch = <48>;
+> +			hback-porch = <84>;
+> +			hsync-len = <32>;
+> +			vactive = <1600>;
+> +			vfront-porch = <3>;
+> +			vback-porch = <120>;
+> +			vsync-len = <10>;
+> +		};
+>  	};
