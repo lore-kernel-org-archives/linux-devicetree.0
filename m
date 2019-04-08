@@ -1,130 +1,98 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v2 1/4] ARM: davinci: fix cpufreq registration on
- da850-evm
-Date: Mon, 8 Apr 2019 14:18:14 +0530
-Message-ID: <3a31a498-232c-5f8f-5f4c-9dfaee0ad15a@ti.com>
-References: <20190322133105.5945-1-brgl@bgdev.pl>
- <20190322133105.5945-2-brgl@bgdev.pl>
- <CAHCN7xJj_aA8XFR6=ZxO-WrfkJRY5fS6NgjHbeqpdfhUnn1apA@mail.gmail.com>
- <CAMpxmJVBTny7kzADSZHQXk_ZUjnRaNWu0Ly3WC8v+zPmR8Dizg@mail.gmail.com>
- <bb734e20-d2c7-73f4-e2c5-3b810ccf4c81@ti.com>
- <CAMRc=MdYhaED30Xu8oJiJD7F9z=SPu6u+1p32mQnX0tEL=iOiA@mail.gmail.com>
- <CAHCN7x+-GRBygMt9APi9sf19PQksfmXk9sOZUo-1YY40RhUmng@mail.gmail.com>
- <CAMRc=Md-XtFYP_c4afNDHdYDUV77tGpvau8AsG1KGwQ6Hm+FhQ@mail.gmail.com>
- <CAHCN7x+kAPYgFJ9iZQTPm2Vypni4CgmWmBw96fgbQr0ch456bw@mail.gmail.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 15/15] arm64: dts: marvell: Convert 7k/8k usb-phy
+ properties to phy-supply
+Date: Mon, 8 Apr 2019 10:51:28 +0200
+Message-ID: <20190408105128.6e36be55@xps13>
+References: <20190401165131.23370-1-miquel.raynal@bootlin.com>
+ <20190401165131.23370-16-miquel.raynal@bootlin.com>
+ <CAFBinCDG5vpSpvq=1XUZzu7RA-pDEcEqgrPr65BZ5esuGyGPjA@mail.gmail.com>
+ <20190403100642.24648945@xps13>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHCN7x+kAPYgFJ9iZQTPm2Vypni4CgmWmBw96fgbQr0ch456bw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190403100642.24648945@xps13>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/04/19 4:44 PM, Adam Ford wrote:
-> On Thu, Apr 4, 2019 at 5:01 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->>
->> śr., 3 kwi 2019 o 17:49 Adam Ford <aford173@gmail.com> napisał(a):
->>>
->>> On Wed, Apr 3, 2019 at 7:50 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->>>>
->>>> śr., 27 mar 2019 o 12:14 Sekhar Nori <nsekhar@ti.com> napisał(a):
->>>>>
->>>>> Hi Bart,
->>>>>
->>>>> On 26/03/19 11:21 PM, Bartosz Golaszewski wrote:
->>>>>> wt., 26 mar 2019 o 15:00 Adam Ford <aford173@gmail.com> napisał(a):
->>>>>>>
->>>>>>> On Fri, Mar 22, 2019 at 8:31 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->>>>>>>>
->>>>>>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>>>>>>
->>>>>>>> The system_rev variable is never set on davinci and is always 0, so
->>>>>>>> we're using the default max operating point of 300MHz. The cvdd supply
->>>>>>>> comes from the tps6507 pmic and the voltage can go all the way to 1.3V
->>>>>>>> so the maximum supported rate should be 456MHz.
->>>>>>>
->>>>>>> My understanding is that only certain revisions of the silicon can go
->>>>>>> to 456MHz.   The L138's Datasheet lists both a 456 and 375 version.  I
->>>>>>> cannot find a way to read a register to determine which version of the
->>>>>>> silicon is available. Maybe Sekhar can confirm.
->>>>>>>
->>>>>>
->>>>>> Commit 28bd2c341120 ("davinci: am18x/da850/omap-l138 evm: add support
->>>>>> for higher speed grades") mentions the following:
->>>>>>
->>>>>> ---
->>>>>> U-Boot on the EVM sets up ATAG_REVISION to inform the OS
->>>>>> regarding the speed grade supported by the silicon. We use
->>>>>> this information to pass on the speed grade information to
->>>>>> the SoC code.
->>>>>> ---
->>>>>>
->>>>>> Should the system_rev somehow reflect that revision? Any way I can check it?
->>>>>
->>>>> Can you check if the procedure in doc/README.davinci in U-Boot sources
->>>>> still works?
->>>>>
->>>>> Environment Variables
->>>>> =====================
->>>>>
->>>>> The DA850 EVM allows the user to specify the maximum cpu clock allowed by the
->>>>> silicon, in Hz, via an environment variable "maxcpuclk".
->>>>>
->>>>> The maximum clock rate allowed depends on the silicon populated on the EVM.
->>>>> Please make sure you understand the restrictions placed on this clock in the
->>>>> device specific datasheet before setting up this variable. This information is
->>>>> passed to the Linux kernel using the ATAG_REVISION atag.
->>>>>
->>>>> If "maxcpuclk" is not defined, the configuration CONFIG_DA850_EVM_MAX_CPU_CLK
->>>>> is used to obtain this information.
->>>>>
->>>>> Thanks,
->>>>> Sekhar
->>>>
->>>> Hi Sekhar,
->>>>
->>>> I built the current upstream u-boot and the get_board_rev() function
->>>> for da850-evm doesn't seem to be called at all. For instance the
->>>> lego-ev3 platform does this:
->>>>
->>>> ./lego/ev3/legoev3.c:108: board_rev = get_board_rev();
->>>>
->>>> but in davinci this function seems to be unused and I don't see it
->>>> called from any other core u-boot component. I don't see any commit
->>>> that would mention this function but there are a lot of commits
->>>> removing get_board_rev() for other boards in git log. Is it possible
->>>> it stopped being used at some point?
->>>
->>> Look for setup_revision_tag in arch/arm/lib/bootm.c
->>>
->>> The function appears to be called from there.
->>>
->>> There is a __weak reference in the header file which I think allows
->>> people to remove them without breaking bootm.
->>>
->>> adam
->>>>
->>>> Bart
->>
->> Thanks, now verified that this still works in board file mode for
->> da850-evm. Now the questions is - what about DT mode? Should we only
->> enable the lowest possible mode (300MHz) and leave it to the user to
->> enable any higher frequencies?
-> 
-> From everything that I can find in Logic PD's database, the standard
-> da850-evm kits and SOM's are 375MHz, so I think it's safe to run up to
-> that speed.  I would disable the speed options for 408 and 456, but
-> leave them shown for anyone who may have purchased a custom version
-> with the 456MHz variant which I can also see there are some.  At least
-> for the L138 and AM1808 SOM's, those customers who who they are, so
-> making it obvious how to enable it would be a good thing.
-> 
-> Just my two cents.
-
-Sounds good to me.
-
-Thanks,
-Sekhar
+SGkgUm9iLAoKR2VudGxlIHBpbmcgb24gdGhlIHF1ZXN0aW9ucyBiZWxvdywgaWYgeW91IGhhdmUg
+c29tZSB0aW1lIHRvIGNoZWNrLgoKVGhhbmsgeW91IHZlcnkgbXVjaCwKTWlxdcOobAoKTWlxdWVs
+IFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4gd3JvdGUgb24gV2VkLCAzIEFwciAy
+MDE5CjEwOjA2OjQyICswMjAwOgoKPiBIaSBNYXJ0aW4sCj4gCj4gUm9iLCBhIGZldyBxdWVzdGlv
+bnMgZm9yIHlvdSBiZWxvdyA6KQo+IAo+IE1hcnRpbiBCbHVtZW5zdGluZ2wgPG1hcnRpbi5ibHVt
+ZW5zdGluZ2xAZ29vZ2xlbWFpbC5jb20+IHdyb3RlIG9uIFR1ZSwKPiAyIEFwciAyMDE5IDIxOjM1
+OjI2ICswMjAwOgo+IAo+ID4gSGkgTWlxdWVsLAo+ID4gCj4gPiB0aGFuayB5b3UgZm9yIGtlZXBp
+bmcgbWUgaW4gdGhlIGxvb3AhCj4gPiAKPiA+IE9uIE1vbiwgQXByIDEsIDIwMTkgYXQgNjo1MiBQ
+TSBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPiB3cm90ZTogIAo+ID4g
+Pgo+ID4gPiBVcGRhdGUgQXJhbWRhIDdrLzhrIERUcyB0byB1c2UgdGhlIHBoeS1zdXBwbHkgcHJv
+cGVydHkgb2YgdGhlIChyZWNlbnQpCj4gPiA+IGdlbmVyaWMgUEhZIGZyYW1ld29yayBpbnN0ZWFk
+IG9mIHRoZSAobGVnYWN5KSB1c2ItcGh5IHByZXBlcnR5LiBCb3RoCj4gPiA+IGVuYWJsZSB0aGUg
+c3VwcGx5IHdoZW4gdGhlIFBIWSBpcyBlbmFibGVkLgo+ID4gPgo+ID4gPiBUaGUgQ09NUEhZIG5v
+ZGVzIG9ubHkgcHJvdmlkZSBTRVJERVMgbGFuZXMgY29uZmlndXJhdGlvbi4gVGhlIHBvd2VyCj4g
+PiA+IHN1cHBseSB0aGF0IGlzIHJlcHJlc2VudGVkIGJ5IHRoZSBwaHktc3VwcGx5IHByb3BlcnR5
+IGlzIGp1c3QgYQo+ID4gPiByZWd1bGF0b3Igd2lyZWQgdG8gdGhlIFVTQiBjb25uZWN0b3IsIGhl
+bmNlIHRoZSBjcmVhdGlvbiBvZiBjb25uZWN0b3IKPiA+ID4gbm9kZXMgYXMgY2hpbGQgb2YgdGhl
+IENPTVBIWSBub2RlcyBhbmQgdGhlIHN1cHBseSBhdHRhY2hlZCB0byBpdC4gICAgCj4gPiBzaG91
+bGRuJ3QgdGhpcyBhbHNvIGJlIHJlZmxlY3RlZCBpbiB0aGUgZHQtYmluZGluZ3M/ICAKPiAKPiBJ
+IGRvbid0IHRoaW5rIGl0IGRlc2VydmVzIGFuIHVwZGF0ZSBpbiB0aGUgYmluZGluZ3MgYXMgdGhp
+cyBpcyBqdXN0IGFuCj4gdXBkYXRlIGZvciBhIGJldHRlciBoYXJkd2FyZSByZXByZXNlbnRhdGlv
+bi4gVGhlIENPTVBIWSBibG9jayBpcwo+IGFscmVhZHkgZG9jdW1lbnRlZCwgdGhlIGNvbm5lY3Rv
+ciBvbmUgdG9vLiBJIHRob3VnaHQgYWRkaW5nIGEgY29ubmVjdG9yCj4gbm9kZSBpbiB0aGUgQ09N
+UEhZIG5vZGUgd2FzIG9rYXkgd2hlbiBJIHJlYWQgUm9iJ3MgYW5zd2VyIHRvIHlvdXIKPiBzZXJp
+ZXMgYXMgdGhpcyBoYXMgbm90aGluZyB0byBkbyB3aXRoIHRoZSBJUCBpdHNlbGYgYnV0IGlzIGp1
+c3QKPiBkZXNjcmliaW5nIGhvdyB0aGUgYm9hcmQgaXMgYnVpbHQuIE1heWJlIFJvYiBjYW4gY29u
+ZmlybSB0aGlzPwo+IAo+ID4gICAKPiA+ID4gQ2M6IE1hcnRpbiBCbHVtZW5zdGluZ2wgPG1hcnRp
+bi5ibHVtZW5zdGluZ2xAZ29vZ2xlbWFpbC5jb20+Cj4gPiA+IFNpZ25lZC1vZmYtYnk6IE1pcXVl
+bCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9vdGxpbi5jb20+Cj4gPiA+IC0tLQo+ID4gPiAgLi4u
+L2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTcwNDAtZGIuZHRzIHwgMjYgKysrKysrKysr
+Ky0tLS0tLS0tLQo+ID4gPiAgLi4uL21hcnZlbGwvYXJtYWRhLTgwNDAtY2xlYXJmb2ctZ3QtOGsu
+ZHRzICAgIHwgMTMgKysrKystLS0tLQo+ID4gPiAgLi4uL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwv
+YXJtYWRhLTgwNDAtZGIuZHRzIHwgMTMgKysrKystLS0tLQo+ID4gPiAgLi4uL2Jvb3QvZHRzL21h
+cnZlbGwvYXJtYWRhLTgwNDAtbWNiaW4uZHRzaSAgIHwgMTMgKysrKystLS0tLQo+ID4gPiAgNCBm
+aWxlcyBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspLCAzMCBkZWxldGlvbnMoLSkKPiA+ID4KPiA+
+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtNzA0MC1k
+Yi5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTcwNDAtZGIuZHRzCj4g
+PiA+IGluZGV4IDEzMWNlNDIyOWRiMC4uNGI4ZGYzNTliMWNjIDEwMDY0NAo+ID4gPiAtLS0gYS9h
+cmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTcwNDAtZGIuZHRzCj4gPiA+ICsrKyBi
+L2FyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtNzA0MC1kYi5kdHMKPiA+ID4gQEAg
+LTQ1LDE2ICs0NSw2IEBACj4gPiA+ICAgICAgICAgICAgICAgICBlbmFibGUtYWN0aXZlLWhpZ2g7
+Cj4gPiA+ICAgICAgICAgICAgICAgICBncGlvID0gPCZleHBhbmRlcjAgMSBHUElPX0FDVElWRV9I
+SUdIPjsKPiA+ID4gICAgICAgICB9Owo+ID4gPiAtCj4gPiA+IC0gICAgICAgY3AwX3VzYjNfMF9w
+aHk6IGNwMC11c2IzLTAtcGh5IHsKPiA+ID4gLSAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAi
+dXNiLW5vcC14Y2VpdiI7Cj4gPiA+IC0gICAgICAgICAgICAgICB2Y2Mtc3VwcGx5ID0gPCZjcDBf
+cmVnX3VzYjNfMF92YnVzPjsKPiA+ID4gLSAgICAgICB9Owo+ID4gPiAtCj4gPiA+IC0gICAgICAg
+Y3AwX3VzYjNfMV9waHk6IGNwMC11c2IzLTEtcGh5IHsKPiA+ID4gLSAgICAgICAgICAgICAgIGNv
+bXBhdGlibGUgPSAidXNiLW5vcC14Y2VpdiI7Cj4gPiA+IC0gICAgICAgICAgICAgICB2Y2Mtc3Vw
+cGx5ID0gPCZjcDBfcmVnX3VzYjNfMV92YnVzPjsKPiA+ID4gLSAgICAgICB9Owo+ID4gPiAgfTsK
+PiA+ID4KPiA+ID4gICZpMmMwIHsKPiA+ID4gQEAgLTIwMCwxNSArMTkwLDI3IEBACj4gPiA+ICAg
+ICAgICAgfTsKPiA+ID4gIH07Cj4gPiA+Cj4gPiA+ICsmY3AwX2NvbXBoeTEgewo+ID4gPiArICAg
+ICAgIGNwMF91c2JoMF9jb246IGNvbm5lY3RvciB7Cj4gPiA+ICsgICAgICAgICAgICAgICBjb21w
+YXRpYmxlID0gInVzYi1hLWNvbm5lY3RvciI7Cj4gPiA+ICsgICAgICAgICAgICAgICBwaHktc3Vw
+cGx5ID0gPCZjcDBfcmVnX3VzYjNfMF92YnVzPjsKPiA+ID4gKyAgICAgICB9Owo+ID4gPiArfTsg
+ICAgCj4gPiAoZGlzY2xhaW1lcjogSSBkb24ndCBoYXZlIGFueSBib2FyZCB3aXRoIGEgbWFydmVs
+bCBTb0MsIHNvIEkgZG9uJ3QKPiA+IHVuZGVyc3RhbmQgaG93IGl0IHdvcmtzIGFuZCBJIGNhbid0
+IGRlYnVnIGl0KQo+ID4gSSBrbm93IGFib3V0IHRoZSAicGh5LXN1cHBseSIgcHJvcGVydHkgaW5z
+aWRlIHRoZSBQSFkgbm9kZSBpdHNlbGYKPiA+ICh0aGF0IHdvdWxkIGJlIGNwMF9jb21waHkxIGlu
+IHRoaXMgY2FzZSkuCj4gPiBUaGUgY29ubmVjdG9yIGJpbmRpbmcgZG9lcyBub3QgbWVudGlvbiBh
+IHBoeS1zdXBwbHkgcHJvcGVydHk6Cj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvY29ubmVjdG9yL3VzYi1jb25uZWN0b3IudHh0ICAKPiAKPiBUaGF0J3MgcmlnaHQsIGNhbiBS
+b2IgY29uZmlybSB0aGF0IHRoaXMgaXMgdmFsaWQ/IElmIHllcyBJIGNhbiBhZGQgYW4KPiBvcHRp
+b25hbCAicGh5LXN1cHBseSIgcHJvcGVydHkgdGhlcmUuCj4gCj4gPiBJIGRvbid0IHVuZGVyc3Rh
+bmQgd2hpY2ggZHJpdmVyIGVuYWJsZXMgdGhlIHBoeS1zdXBwbHkgd2hlbiBpdCdzIHBhcnQKPiA+
+IG9mIGEgImNvbm5lY3RvciIgY2hpbGQtbm9kZS4KPiA+IGRvIHlvdSBoYXZlIGEgaGludCB3aGVy
+ZSBJIHNob3VsZCBzdGFydCBsb29raW5nPyAgCj4gCj4gSSBob25lc3RseSBoYXZlIG5vIGlkZWEs
+IGJ1dCBhcHBhcmVudGx5IGl0IHdvcmtzLgo+IAo+IAo+IFRoYW5rcywKPiBNaXF1w6hsCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
+bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
+Cg==
