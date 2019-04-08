@@ -1,282 +1,92 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 2/2] ARM: dts: dra7: Separate AM57 dtsi files
-Date: Mon, 8 Apr 2019 12:28:14 +0300
-Message-ID: <bb519926-9d2e-2c04-4fc0-8500a45bac8f@ti.com>
-References: <20190405132806.20772-1-rogerq@ti.com>
- <20190405132806.20772-3-rogerq@ti.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v2 4/4] power: supply: add Ingenic JZ47xx battery driver.
+Date: Mon, 8 Apr 2019 11:38:24 +0200
+Message-ID: <20190408093824.yzpd7mve6df7lpka@earth.universe>
+References: <20190323172809.14407-1-contact@artur-rojek.eu>
+ <20190323172809.14407-4-contact@artur-rojek.eu>
+ <20190324153137.04857cdf@archlinux>
+ <20190407165234.is66vmnjfc35jnho@earth.universe>
+ <1554664077.4322.0@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kxv5ige2aqijufid"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190405132806.20772-3-rogerq@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1554664077.4322.0@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: robh+dt@kernel.org, s-anna@ti.com, nm@ti.com, lokeshvutla@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Jonathan Cameron <jic23@kernel.org>, Artur Rojek <contact@artur-rojek.eu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--kxv5ige2aqijufid
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 05/04/2019 16:28, Roger Quadros wrote:
-> AM5 and DRA7 SoC families have different set of modules
-> in them so the SoC sepecific dtsi files need to be separated.
-> 
-> e.g. Some of the major differences between AM576 and DRA76
-> 
-> 		DRA76x	AM576x
-> 
-> USB3		x
-> USB4		x
-> ATL		x
-> VCP		x
-> MLB		x
-> ISS		x
-> PRU-ICSS1		x
-> PRU-ICSS2		x
-> 
-> This patch only deals with disabling USB3, USB4 and ATL for
-> AM57 variants.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  arch/arm/boot/dts/am5718.dtsi             | 32 ++++++++++++++++++++++
->  arch/arm/boot/dts/am571x-idk.dts          |  2 +-
->  arch/arm/boot/dts/am5728.dtsi             | 33 +++++++++++++++++++++++
->  arch/arm/boot/dts/am572x-idk.dts          |  5 ++--
->  arch/arm/boot/dts/am5748.dtsi             | 33 +++++++++++++++++++++++
->  arch/arm/boot/dts/am574x-idk.dts          |  4 +--
->  arch/arm/boot/dts/am57xx-cl-som-am57x.dts |  2 +-
->  arch/arm/boot/dts/dra7-l4.dtsi            |  6 ++---
+Hi Paul,
 
-I think I need to update am57xx-beagle-x15-common.dtsi to include am5728.
-I'll send an updated patch.
+On Sun, Apr 07, 2019 at 09:07:57PM +0200, Paul Cercueil wrote:
+> Hi Sebastian,
+>=20
+> Le dim. 7 avril 2019 =E0 18:52, Sebastian Reichel <sre@kernel.org> a =E9c=
+rit :
+> > Hi,
+> >=20
+> > On Sun, Mar 24, 2019 at 03:31:37PM +0000, Jonathan Cameron wrote:
+> > >  On Sat, 23 Mar 2019 18:28:09 +0100
+> > >  Artur Rojek <contact@artur-rojek.eu> wrote:
+> > >=20
+> > >  > Add a driver for battery present on Ingenic JZ47xx SoCs.
+> > >  >
+> > >  > Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> > >  The IIO parts look fine to me.
+> > >  Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > >=20
+> > >  Sebastian, assuming you are happy with this version,
+> >=20
+> > The driver itself looks ok. I'm a bit unhappy, that we already have
+> > jz4740-battery. This driver is much cleaner, but does not yet seem
+> > to be ready to replace it. Artur Rojek what are your plans regarding
+> > to the existing driver? Is there currently work going on migrating
+> > JZ47xx to DT?
+>=20
+> Why do you think it's not ready? Feature-wise, it has everything we
+> need to replace jz4740-battery, which will be trashed as soon as the
+> LB60 board code is updated to use the new driver.
 
-cheers,
--roger
+jz4740-battery has a few features not provided by your driver.
+For example the gpio providing the charging status. Assuming
+you plan to trash the old driver soon:
 
->  8 files changed, 107 insertions(+), 10 deletions(-)
->  create mode 100644 arch/arm/boot/dts/am5718.dtsi
->  create mode 100644 arch/arm/boot/dts/am5728.dtsi
->  create mode 100644 arch/arm/boot/dts/am5748.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/am5718.dtsi b/arch/arm/boot/dts/am5718.dtsi
-> new file mode 100644
-> index 000000000000..d51007c3e8c4
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/am5718.dtsi
-> @@ -0,0 +1,32 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-> + */
-> +
-> +#include "dra72x.dtsi"
-> +
-> +/ {
-> +	compatible = "ti,am5718", "ti,dra7";
-> +};
-> +
-> +/*
-> + * These modules are not present on AM5718
-> + *
-> + * ATL
-> + * VCP1, VCP2
-> + * MLB
-> + * ISS
-> + * USB3, USB4
-> + */
-> +
-> +&usb3_tm {
-> +	status = "disabled";
-> +};
-> +
-> +&usb4_tm {
-> +	status = "disabled";
-> +};
-> +
-> +&atl_tm {
-> +	status = "disabled";
-> +};
-> diff --git a/arch/arm/boot/dts/am571x-idk.dts b/arch/arm/boot/dts/am571x-idk.dts
-> index 6432309b39e3..66116ad3f9f4 100644
-> --- a/arch/arm/boot/dts/am571x-idk.dts
-> +++ b/arch/arm/boot/dts/am571x-idk.dts
-> @@ -7,7 +7,7 @@
->   */
->  /dts-v1/;
->  
-> -#include "dra72x.dtsi"
-> +#include "am5718.dtsi"
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include "dra7-mmc-iodelay.dtsi"
-> diff --git a/arch/arm/boot/dts/am5728.dtsi b/arch/arm/boot/dts/am5728.dtsi
-> new file mode 100644
-> index 000000000000..82e5427ef6a9
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/am5728.dtsi
-> @@ -0,0 +1,33 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-> + */
-> +
-> +#include "dra74x.dtsi"
-> +
-> +/ {
-> +	compatible = "ti,am5728", "ti,dra7";
-> +};
-> +
-> +/*
-> + * These modules are not present on AM5728
-> + *
-> + * EVE1, EVE2
-> + * ATL
-> + * VCP1, VCP2
-> + * MLB
-> + * ISS
-> + * USB3, USB4
-> + */
-> +
-> +&usb3_tm {
-> +	status = "disabled";
-> +};
-> +
-> +&usb4_tm {
-> +	status = "disabled";
-> +};
-> +
-> +&atl_tm {
-> +	status = "disabled";
-> +};
-> diff --git a/arch/arm/boot/dts/am572x-idk.dts b/arch/arm/boot/dts/am572x-idk.dts
-> index b2fb6e097be7..4f835222c266 100644
-> --- a/arch/arm/boot/dts/am572x-idk.dts
-> +++ b/arch/arm/boot/dts/am572x-idk.dts
-> @@ -8,15 +8,14 @@
->  
->  /dts-v1/;
->  
-> -#include "dra74x.dtsi"
-> +#include "am5728.dtsi"
->  #include "dra7-mmc-iodelay.dtsi"
->  #include "dra74x-mmc-iodelay.dtsi"
->  #include "am572x-idk-common.dtsi"
->  
->  / {
->  	model = "TI AM5728 IDK";
-> -	compatible = "ti,am5728-idk", "ti,am5728", "ti,dra742", "ti,dra74",
-> -		     "ti,dra7";
-> +	compatible = "ti,am5728-idk", "ti,am5728", "ti,dra7";
->  };
->  
->  &mmc1 {
-> diff --git a/arch/arm/boot/dts/am5748.dtsi b/arch/arm/boot/dts/am5748.dtsi
-> new file mode 100644
-> index 000000000000..5e129759d04a
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/am5748.dtsi
-> @@ -0,0 +1,33 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-> + */
-> +
-> +#include "dra76x.dtsi"
-> +
-> +/ {
-> +	compatible = "ti,am5748", "ti,dra762", "ti,dra7";
-> +};
-> +
-> +/*
-> + * These modules are not present on AM5748
-> + *
-> + * EVE1, EVE2
-> + * ATL
-> + * VCP1, VCP2
-> + * MLB
-> + * ISS
-> + * USB3, USB4
-> + */
-> +
-> +&usb3_tm {
-> +	status = "disabled";
-> +};
-> +
-> +&usb4_tm {
-> +	status = "disabled";
-> +};
-> +
-> +&atl_tm {
-> +	status = "disabled";
-> +};
-> diff --git a/arch/arm/boot/dts/am574x-idk.dts b/arch/arm/boot/dts/am574x-idk.dts
-> index 378dfa780ac1..dc5141c35610 100644
-> --- a/arch/arm/boot/dts/am574x-idk.dts
-> +++ b/arch/arm/boot/dts/am574x-idk.dts
-> @@ -6,14 +6,14 @@
->  
->  /dts-v1/;
->  
-> -#include "dra76x.dtsi"
-> +#include "am5748.dtsi"
->  #include "dra7-mmc-iodelay.dtsi"
->  #include "dra76x-mmc-iodelay.dtsi"
->  #include "am572x-idk-common.dtsi"
->  
->  / {
->  	model = "TI AM5748 IDK";
-> -	compatible = "ti,am5728-idk", "ti,dra762", "ti,dra7";
-> +	compatible = "ti,am5748-idk", "ti,am5748", "ti,dra762", "ti,dra7";
->  };
->  
->  &qspi {
-> diff --git a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-> index 4748ce8747ad..0460de0da2bf 100644
-> --- a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-> +++ b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-> @@ -13,7 +13,7 @@
->  
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
-> -#include "dra74x.dtsi"
-> +#include "am5728.dtsi"
->  
->  / {
->  	model = "CompuLab CL-SOM-AM57x";
-> diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
-> index 414f1cd68733..fe9f0bc29fec 100644
-> --- a/arch/arm/boot/dts/dra7-l4.dtsi
-> +++ b/arch/arm/boot/dts/dra7-l4.dtsi
-> @@ -2499,7 +2499,7 @@
->  			ranges = <0x0 0x3a000 0x1000>;
->  		};
->  
-> -		target-module@3c000 {			/* 0x4843c000, ap 23 08.0 */
-> +		atl_tm: target-module@3c000 {		/* 0x4843c000, ap 23 08.0 */
->  			compatible = "ti,sysc-omap4", "ti,sysc";
->  			reg = <0x3c000 0x4>;
->  			reg-names = "rev";
-> @@ -4099,7 +4099,7 @@
->  			};
->  		};
->  
-> -		target-module@100000 {			/* 0x48900000, ap 85 04.0 */
-> +		usb3_tm: target-module@100000 {		/* 0x48900000, ap 85 04.0 */
->  			compatible = "ti,sysc-omap4", "ti,sysc";
->  			ti,hwmods = "usb_otg_ss3";
->  			reg = <0x100000 0x4>,
-> @@ -4148,7 +4148,7 @@
->  			};
->  		};
->  
-> -		target-module@140000 {			/* 0x48940000, ap 75 3c.0 */
-> +		usb4_tm: target-module@140000 {		/* 0x48940000, ap 75 3c.0 */
->  			compatible = "ti,sysc-omap4", "ti,sysc";
->  			ti,hwmods = "usb_otg_ss4";
->  			reg = <0x140000 0x4>,
-> 
+Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> We are working on porting the JZ47xx code to devicetree, yes. The
+> ultimate goal is to completely get rid of
+> arch/mips/jz4740/board-qi_lb60.c and arch/mips/jz4740/platform.c.
+
+Ok, sounds good.
+
+-- Sebastian
+
+--kxv5ige2aqijufid
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlyrFowACgkQ2O7X88g7
++pqAVw/+NKyxFp5GIWuXBnG+OV0ezhW5bAYrBsST5OtDqg8x4aACWv6BjwNwLQJN
+TREW2Rda/Jqyy0fxhwUDdcGJ0deWMqWbFi0+OPQXBZ4Xd8kpTLjs1uwcHRag8mkN
+Sre9c6FIsCytrd73CYFgJjz7PMmB4FBaRr/Z7qhWhdgTh66i+m+Ql5GjVI0sl2nL
+m9fxTCpJgh7zmVuLepEosq7YgwrOTP8ZZaMCJSD/Bo8ejDIW9ox9IMjbdUFEqWC1
+sxzpDvBhZT6rcvuwVx57/F0XtGIcsJEMruB3YFKCOS5XJhk7GExs1c1zos9xBap6
+N0WBllMu4PhLpZphW/7zWWDxeco/whNupy682YPh3r9hg7u5npCfaxu9z+h5Kp53
+YCW/dClq8WId9IG1nxI2Pl4M7pXiieiMR3ms9Bq/VMLYRLT08QWRopsA2QVZ/dyt
+wle6YdFZtgvt+yFfKNOHF0ogmhApuA4J01PP9T65KAEcV4RDH3ZgLNlZuEZeYFCq
+YcKPp5e2dQGv66qqRNnMPLyhUAOY3s6UG8YCSkSGtRZZjZheb/nqHaw/w7CjitrR
+JbDcw+iBLeoDxgYRLSQKGFpkvxSt1x8rd8xBHKmVailT/9IAUgrejm0CL+MS3fZm
+te+QRKM+DvDMGvKXnuF6WjTqw6yTNngyd/aM2yQQ4XQ604fXBNo=
+=/UP4
+-----END PGP SIGNATURE-----
+
+--kxv5ige2aqijufid--
