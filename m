@@ -1,49 +1,111 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH RESEND v4 3/4] ARM: dts: sunxi: Add R_LRADC
- support for A83T
-Date: Mon, 8 Apr 2019 10:00:56 +0200
-Message-ID: <20190408080056.lfzjxfkvs65oabuu@flea>
-References: <20190327023339.25975-1-megous@megous.com>
- <20190327023339.25975-4-megous@megous.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v3 6/9] arm64: dts: qcom: qcs404: Add rpmpd node
+Date: Mon, 08 Apr 2019 13:40:49 +0530
+Message-ID: <3686ccecbbf8c13ad6b2aa12167f8510@codeaurora.org>
+References: <20190327123832.11566-1-sibis@codeaurora.org>
+ <20190327123832.11566-7-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="h4pyodfm67kr7ci6"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBPP7VPSQKGQEUCOLJ6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190327023339.25975-4-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190327123832.11566-7-sibis@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, rnayak@codeaurora.org
+Cc: david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 2019-03-27 18:08, Sibi Sankar wrote:
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> 
+> Add the rpmpd node on the qcs404 and define the available levels.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> [sibis: fixup available levels]
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs404.dtsi | 55 ++++++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> index e8fd26633d57..a7d46647c416 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> @@ -4,6 +4,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/clock/qcom,gcc-qcs404.h>
+>  #include <dt-bindings/clock/qcom,rpmcc.h>
+> +#include <dt-bindings/power/qcom-rpmpd.h>
+> 
+>  / {
+>  	interrupt-parent = <&intc>;
+> @@ -230,6 +231,60 @@
+>  				compatible = "qcom,rpmcc-qcs404";
+>  				#clock-cells = <1>;
+>  			};
+> +
+> +			rpmpd: power-controller {
+> +				compatible = "qcom,qcs404-rpmpd";
+> +				#power-domain-cells = <1>;
+> +				operating-points-v2 = <&rpmpd_opp_table>;
+> +
+> +				rpmpd_opp_table: opp-table {
+> +					compatible = "operating-points-v2";
+> +
+> +					rpmpd_opp_ret: opp1 {
+> +						opp-level = <RPM_SMD_LEVEL_RETENTION>;
+> +					};
+> +
+> +					rpmpd_opp_ret_plus: opp2 {
+> +						opp-level = <RPM_SMD_LEVEL_RETENTION_PLUS>;
+> +					};
+> +
+> +					rpmpd_opp_min_svs: opp3 {
+> +						opp-level = <RPM_SMD_LEVEL_MIN_SVS>;
+> +					};
+> +
+> +					rpmpd_opp_low_svs: opp4 {
+> +						opp-level = <RPM_SMD_LEVEL_LOW_SVS>;
+> +					};
+> +
 
---h4pyodfm67kr7ci6
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+typo in opp5 - opp11 rpmhpd/rpmpd
+will fix it in the next re-spin
 
-On Wed, Mar 27, 2019 at 03:33:38AM +0100, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
-> From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> Allwinner A83T SoC has a low res adc like the one in Allwinner A10 SoC.
-> Now the driver has been modified to support it.
->
-> Add support for it.
->
-> Signed-off-by: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> +					rpmhpd_opp_svs: opp5 {
+> +						opp-level = <RPM_SMD_LEVEL_SVS>;
+> +					};
+> +
+> +					rpmhpd_opp_svs_plus: opp6 {
+> +						opp-level = <RPM_SMD_LEVEL_SVS_PLUS>;
+> +					};
+> +
+> +					rpmhpd_opp_nom: opp7 {
+> +						opp-level = <RPM_SMD_LEVEL_NOM>;
+> +					};
+> +
+> +					rpmhpd_opp_nom_plus: opp8 {
+> +						opp-level = <RPM_SMD_LEVEL_NOM_PLUS>;
+> +					};
+> +
+> +					rpmhpd_opp_turbo: opp9 {
+> +						opp-level = <RPM_SMD_LEVEL_TURBO>;
+> +					};
+> +
+> +					rpmhpd_opp_turbo_no_cpr: opp10 {
+> +						opp-level = <RPM_SMD_LEVEL_TURBO_NO_CPR>;
+> +					};
+> +
+> +					rpmhpd_opp_turbo_plus: opp11 {
+> +						opp-level = <RPM_SMD_LEVEL_BINNING>;
+> +					};
+> +				};
+> +			};
+>  		};
+>  	};
 
-It's missing your SoB.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---h4pyodfm67kr7ci6--
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
