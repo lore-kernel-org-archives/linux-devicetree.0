@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 6/6] arm64: dts: allwinner: h6: pine64: Add PIO regulators
-Date: Mon,  8 Apr 2019 11:26:19 +0200
-Message-ID: <20190408092619.23152-7-peron.clem@gmail.com>
+Subject: [PATCH v3 5/6] arm64: allwinner: h6: orangepi: Add PIO regulators
+Date: Mon,  8 Apr 2019 11:26:18 +0200
+Message-ID: <20190408092619.23152-6-peron.clem@gmail.com>
 References: <20190408092619.23152-1-peron.clem@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,31 +13,33 @@ To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>,
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add PIO regulators for Pine64 board.
+OrangePi One Plus and OrangePi Lite2 use the same PIO regulators.
+
+Add this in the common device tree.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- .../boot/dts/allwinner/sun50i-h6-pine-h64.dts   | 17 +++++++++++++++++
+ .../boot/dts/allwinner/sun50i-h6-orangepi.dtsi  | 17 +++++++++++++++++
  1 file changed, 17 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 4802902e128f..6f2d9adf4f10 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -127,6 +127,12 @@
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+index 62e27948a3fa..16280525fd5a 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+@@ -70,6 +70,12 @@
  	status = "okay";
  };
  
 +&pio {
-+	vcc-pc-supply = <&reg_bldo2>;
-+	vcc-pd-supply = <&reg_cldo1>;
-+	vcc-pg-supply = <&reg_bldo2>;
++        vcc-pc-supply = <&reg_bldo2>;
++        vcc-pd-supply = <&reg_cldo1>;
++        vcc-pg-supply = <&reg_bldo3>;
 +};
 +
  &r_i2c {
  	status = "okay";
  
-@@ -247,6 +253,17 @@
+@@ -189,6 +195,17 @@
  	};
  };
  
@@ -49,7 +51,7 @@ index 4802902e128f..6f2d9adf4f10 100644
 +	 *
 +	 * vcc-pl-supply = <&reg_aldo1>;
 +	 */
-+	vcc-pm-supply = <&reg_bldo2>;
++        vcc-pm-supply = <&reg_bldo3>;
 +};
 +
  &uart0 {
