@@ -1,173 +1,188 @@
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH v5 2/7] drm/panel: simple: Add ability to override
- typical timing
-Date: Mon, 8 Apr 2019 11:10:58 +0200
-Message-ID: <20190408111058.5f0a4a3b@collabora.com>
-References: <20190401171724.215780-1-dianders@chromium.org>
- <20190401171724.215780-3-dianders@chromium.org>
+From: Joseph Lo <josephl@nvidia.com>
+Subject: Re: [PATCH 2/8] clk: tegra: clock changes for emc scaling support on
+ Tegra210
+Date: Mon, 8 Apr 2019 15:52:37 +0800
+Message-ID: <104f44ba-cd61-44a5-6c31-2b0af91c7b44@nvidia.com>
+References: <20190325074523.26456-1-josephl@nvidia.com>
+ <20190325074523.26456-3-josephl@nvidia.com> <20190403092250.GG5238@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190401171724.215780-3-dianders@chromium.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Douglas Anderson <dianders@chromium.org>
-Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Jeffy Chen <jeffy.chen@rock-chips.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@chromium.org>, Enric =?UTF-8?B?QmFsbGV0YsOy?= <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel@collabora.com>, mka@chromium.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190403092250.GG5238@ulmo>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAgMSBBcHIgMjAxOSAxMDoxNzoxOSAtMDcwMApEb3VnbGFzIEFuZGVyc29uIDxkaWFu
-ZGVyc0BjaHJvbWl1bS5vcmc+IHdyb3RlOgoKPiBGcm9tOiBTZWFuIFBhdWwgPHNlYW5wYXVsQGNo
-cm9taXVtLm9yZz4KPiAKPiBUaGlzIHBhdGNoIGFkZHMgdGhlIGFiaWxpdHkgdG8gb3ZlcnJpZGUg
-dGhlIHR5cGljYWwgZGlzcGxheSB0aW1pbmcgZm9yIGEKPiBnaXZlbiBwYW5lbC4gVGhpcyBpcyB1
-c2VmdWwgZm9yIGRldmljZXMgd2hpY2ggaGF2ZSB0aW1pbmcgY29uc3RyYWludHMKPiB0aGF0IGRv
-IG5vdCBhcHBseSBhY3Jvc3MgdGhlIGVudGlyZSBkaXNwbGF5IGRyaXZlciAoZWc6IHRvIGF2b2lk
-Cj4gY3Jvc3N0YWxrIGJldHdlZW4gcGFuZWwgYW5kIGRpZ2l0aXplciBvbiBjZXJ0YWluIGxhcHRv
-cHMpLiBUaGUgcnVsZXMgYXJlCj4gYXMgZm9sbG93czoKPiAKPiAtIHBhbmVsIG11c3Qgbm90IHNw
-ZWNpZnkgZml4ZWQgbW9kZSAoc2luY2UgdGhlIG92ZXJyaWRlIG1vZGUgd2lsbAo+ICAgZWl0aGVy
-IGJlIHRoZSBzYW1lIGFzIHRoZSBmaXhlZCBtb2RlLCBvciB3ZSdsbCBiZSB1bmFibGUgdG8KPiAg
-IGNoZWNrIHRoZSBib3VuZHMgb2YgdGhlIG92ZXJyaWVkKQo+IC0gcGFuZWwgbXVzdCBzcGVjaWZ5
-IGF0IGxlYXN0IG9uZSBkaXNwbGF5X3RpbWluZyByYW5nZSB3aGljaCB3aWxsIGJlCj4gICB1c2Vk
-IHRvIGVuc3VyZSB0aGUgb3ZlcnJpZGUgbW9kZSBmaXRzIHdpdGhpbiBpdHMgYm91bmRzCj4gCj4g
-Q2hhbmdlcyBpbiB2MjoKPiAgLSBQYXJzZSB0aGUgZnVsbCBkaXNwbGF5LXRpbWluZ3Mgbm9kZSAo
-dXNpbmcgdGhlIG5hdGl2ZS1tb2RlKSAoUm9iKQo+IENoYW5nZXMgaW4gdjM6Cj4gIC0gTm8gbG9u
-Z2VyIHBhcnNlIGRpc3BsYXktdGltaW5ncyBzdWJub2RlLCB1c2UgcGFuZWwtdGltaW5nIChSb2Ip
-Cj4gQ2hhbmdlcyBpbiB2NDoKPiAgLSBEb24ndCBhZGQgbW9kZSBmcm9tIHRpbWluZyBpZiBvdmVy
-cmlkZSB3YXMgc3BlY2lmaWVkIChUaGllcnJ5KQo+ICAtIEFkZCB3YXJuaW5nIGlmIHRpbWluZyBh
-bmQgZml4ZWQgbW9kZSB3YXMgc3BlY2lmaWVkIChUaGllcnJ5KQo+ICAtIERvbid0IGFkZCBmaXhl
-ZCBtb2RlIGlmIHRpbWluZyB3YXMgc3BlY2lmaWVkIChUaGllcnJ5KQo+ICAtIFJlZmFjdG9yL3Jl
-bmFtZSBhIGJpdCB0byBhdm9pZCBleHRyYSBpbmRlbnRhdGlvbiBmcm9tICJpZiIgdGVzdHMKPiAg
-LSBpIHNob3VsZCBiZSB1bnNpZ25lZCAoVGhpZXJyeSkKPiAgLSBBZGQgYW5ub3lpbmcgV0FSTl9P
-TnMgZm9yIHNvbWUgY2FzZXMgKFRoaWVycnkpCj4gIC0gU2ltcGxpZnkgJ05vIGRpc3BsYXlfdGlt
-aW5nIGZvdW5kJyBoYW5kbGluZyAoVGhpZXJyeSkKPiAgLSBSZW5hbWUgdG8gcGFuZWxfc2ltcGxl
-X3BhcnNlX292ZXJyaWRlX21vZGUoKSAoVGhpZXJyeSkKPiBDaGFuZ2VzIGluIHY1Ogo+ICAtIEFk
-ZGVkIEhlaWtvJ3MgVGVzdGVkLWJ5Cj4gCj4gQ2M6IERvdWcgQW5kZXJzb24gPGRpYW5kZXJzQGNo
-cm9taXVtLm9yZz4KPiBDYzogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KPiBDYzogSGVp
-a28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiBDYzogSmVmZnkgQ2hlbiA8amVmZnkuY2hl
-bkByb2NrLWNoaXBzLmNvbT4KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4K
-PiBDYzogU3TDqXBoYW5lIE1hcmNoZXNpbiA8bWFyY2hldUBjaHJvbWl1bS5vcmc+Cj4gQ2M6IFRo
-aWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+Cj4gQ2M6IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnCj4gQ2M6IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBT
-aWduZWQtb2ZmLWJ5OiBTZWFuIFBhdWwgPHNlYW5wYXVsQGNocm9taXVtLm9yZz4KPiBUZXN0ZWQt
-Ynk6IEVucmljIEJhbGxldGJvIGkgU2VycmEgPGVucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb20+
-Cj4gU2lnbmVkLW9mZi1ieTogRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3Jn
-Pgo+IFRlc3RlZC1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KClJldmlld2Vk
-LWJ5OiBCb3JpcyBCcmV6aWxsb24gPGJvcmlzLmJyZXppbGxvbkBjb2xsYWJvcmEuY29tPgoKPiAt
-LS0KPiAKPiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIHwgMTA5ICsrKysr
-KysrKysrKysrKysrKysrKysrKystLQo+ICAxIGZpbGUgY2hhbmdlZCwgMTA0IGluc2VydGlvbnMo
-KyksIDUgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5l
-bC9wYW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwo+
-IGluZGV4IDllODIxOGY2YTNmMi4uYWQ0ZjRhYWMyZDQ0IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMv
-Z3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5l
-bC9wYW5lbC1zaW1wbGUuYwo+IEBAIC0zNCw2ICszNCw3IEBACj4gICNpbmNsdWRlIDxkcm0vZHJt
-X3BhbmVsLmg+Cj4gIAo+ICAjaW5jbHVkZSA8dmlkZW8vZGlzcGxheV90aW1pbmcuaD4KPiArI2lu
-Y2x1ZGUgPHZpZGVvL29mX2Rpc3BsYXlfdGltaW5nLmg+Cj4gICNpbmNsdWRlIDx2aWRlby92aWRl
-b21vZGUuaD4KPiAgCj4gIHN0cnVjdCBwYW5lbF9kZXNjIHsKPiBAQCAtOTEsNiArOTIsOCBAQCBz
-dHJ1Y3QgcGFuZWxfc2ltcGxlIHsKPiAgCXN0cnVjdCBpMmNfYWRhcHRlciAqZGRjOwo+ICAKPiAg
-CXN0cnVjdCBncGlvX2Rlc2MgKmVuYWJsZV9ncGlvOwo+ICsKPiArCXN0cnVjdCBkcm1fZGlzcGxh
-eV9tb2RlIG92ZXJyaWRlX21vZGU7Cj4gIH07Cj4gIAo+ICBzdGF0aWMgaW5saW5lIHN0cnVjdCBw
-YW5lbF9zaW1wbGUgKnRvX3BhbmVsX3NpbXBsZShzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCkKPiBA
-QCAtOTgsMTYgKzEwMSwxMyBAQCBzdGF0aWMgaW5saW5lIHN0cnVjdCBwYW5lbF9zaW1wbGUgKnRv
-X3BhbmVsX3NpbXBsZShzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCkKPiAgCXJldHVybiBjb250YWlu
-ZXJfb2YocGFuZWwsIHN0cnVjdCBwYW5lbF9zaW1wbGUsIGJhc2UpOwo+ICB9Cj4gIAo+IC1zdGF0
-aWMgaW50IHBhbmVsX3NpbXBsZV9nZXRfZml4ZWRfbW9kZXMoc3RydWN0IHBhbmVsX3NpbXBsZSAq
-cGFuZWwpCj4gK3N0YXRpYyB1bnNpZ25lZCBpbnQgcGFuZWxfc2ltcGxlX2dldF90aW1pbmdzX21v
-ZGVzKHN0cnVjdCBwYW5lbF9zaW1wbGUgKnBhbmVsKQo+ICB7Cj4gIAlzdHJ1Y3QgZHJtX2Nvbm5l
-Y3RvciAqY29ubmVjdG9yID0gcGFuZWwtPmJhc2UuY29ubmVjdG9yOwo+ICAJc3RydWN0IGRybV9k
-ZXZpY2UgKmRybSA9IHBhbmVsLT5iYXNlLmRybTsKPiAgCXN0cnVjdCBkcm1fZGlzcGxheV9tb2Rl
-ICptb2RlOwo+ICAJdW5zaWduZWQgaW50IGksIG51bSA9IDA7Cj4gIAo+IC0JaWYgKCFwYW5lbC0+
-ZGVzYykKPiAtCQlyZXR1cm4gMDsKPiAtCj4gIAlmb3IgKGkgPSAwOyBpIDwgcGFuZWwtPmRlc2Mt
-Pm51bV90aW1pbmdzOyBpKyspIHsKPiAgCQljb25zdCBzdHJ1Y3QgZGlzcGxheV90aW1pbmcgKmR0
-ID0gJnBhbmVsLT5kZXNjLT50aW1pbmdzW2ldOwo+ICAJCXN0cnVjdCB2aWRlb21vZGUgdm07Cj4g
-QEAgLTEzMSw2ICsxMzEsMTYgQEAgc3RhdGljIGludCBwYW5lbF9zaW1wbGVfZ2V0X2ZpeGVkX21v
-ZGVzKHN0cnVjdCBwYW5lbF9zaW1wbGUgKnBhbmVsKQo+ICAJCW51bSsrOwo+ICAJfQo+ICAKPiAr
-CXJldHVybiBudW07Cj4gK30KPiArCj4gK3N0YXRpYyB1bnNpZ25lZCBpbnQgcGFuZWxfc2ltcGxl
-X2dldF9maXhlZF9tb2RlcyhzdHJ1Y3QgcGFuZWxfc2ltcGxlICpwYW5lbCkKPiArewo+ICsJc3Ry
-dWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciA9IHBhbmVsLT5iYXNlLmNvbm5lY3RvcjsKPiAr
-CXN0cnVjdCBkcm1fZGV2aWNlICpkcm0gPSBwYW5lbC0+YmFzZS5kcm07Cj4gKwlzdHJ1Y3QgZHJt
-X2Rpc3BsYXlfbW9kZSAqbW9kZTsKPiArCXVuc2lnbmVkIGludCBpLCBudW0gPSAwOwo+ICsKPiAg
-CWZvciAoaSA9IDA7IGkgPCBwYW5lbC0+ZGVzYy0+bnVtX21vZGVzOyBpKyspIHsKPiAgCQljb25z
-dCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbSA9ICZwYW5lbC0+ZGVzYy0+bW9kZXNbaV07Cj4g
-IAo+IEBAIC0xNTIsNiArMTYyLDQ0IEBAIHN0YXRpYyBpbnQgcGFuZWxfc2ltcGxlX2dldF9maXhl
-ZF9tb2RlcyhzdHJ1Y3QgcGFuZWxfc2ltcGxlICpwYW5lbCkKPiAgCQludW0rKzsKPiAgCX0KPiAg
-Cj4gKwlyZXR1cm4gbnVtOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IHBhbmVsX3NpbXBsZV9nZXRf
-bm9uX2VkaWRfbW9kZXMoc3RydWN0IHBhbmVsX3NpbXBsZSAqcGFuZWwpCj4gK3sKPiArCXN0cnVj
-dCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IgPSBwYW5lbC0+YmFzZS5jb25uZWN0b3I7Cj4gKwlz
-dHJ1Y3QgZHJtX2RldmljZSAqZHJtID0gcGFuZWwtPmJhc2UuZHJtOwo+ICsJc3RydWN0IGRybV9k
-aXNwbGF5X21vZGUgKm1vZGU7Cj4gKwlib29sIGhhc19vdmVycmlkZSA9IHBhbmVsLT5vdmVycmlk
-ZV9tb2RlLnR5cGU7Cj4gKwl1bnNpZ25lZCBpbnQgbnVtID0gMDsKPiArCj4gKwlpZiAoIXBhbmVs
-LT5kZXNjKQo+ICsJCXJldHVybiAwOwo+ICsKPiArCWlmIChoYXNfb3ZlcnJpZGUpIHsKPiArCQlt
-b2RlID0gZHJtX21vZGVfZHVwbGljYXRlKGRybSwgJnBhbmVsLT5vdmVycmlkZV9tb2RlKTsKPiAr
-CQlpZiAobW9kZSkgewo+ICsJCQlkcm1fbW9kZV9wcm9iZWRfYWRkKGNvbm5lY3RvciwgbW9kZSk7
-Cj4gKwkJCW51bSA9IDE7Cj4gKwkJfSBlbHNlIHsKPiArCQkJZGV2X2Vycihkcm0tPmRldiwgImZh
-aWxlZCB0byBhZGQgb3ZlcnJpZGUgbW9kZVxuIik7Cj4gKwkJfQo+ICsJfQo+ICsKPiArCS8qIE9u
-bHkgYWRkIHRpbWluZ3MgaWYgb3ZlcnJpZGUgd2FzIG5vdCB0aGVyZSBvciBmYWlsZWQgdG8gdmFs
-aWRhdGUgKi8KPiArCWlmIChudW0gPT0gMCAmJiBwYW5lbC0+ZGVzYy0+bnVtX3RpbWluZ3MpCj4g
-KwkJbnVtID0gcGFuZWxfc2ltcGxlX2dldF90aW1pbmdzX21vZGVzKHBhbmVsKTsKPiArCj4gKwkv
-Kgo+ICsJICogT25seSBhZGQgZml4ZWQgbW9kZXMgaWYgdGltaW5ncy9vdmVycmlkZSBhZGRlZCBu
-byBtb2RlLgo+ICsJICoKPiArCSAqIFdlIHNob3VsZCBvbmx5IGV2ZXIgaGF2ZSBlaXRoZXIgdGhl
-IGRpc3BsYXkgdGltaW5ncyBzcGVjaWZpZWQKPiArCSAqIG9yIGEgZml4ZWQgbW9kZS4gQW55dGhp
-bmcgZWxzZSBpcyByYXRoZXIgYm9ndXMuCj4gKwkgKi8KPiArCVdBUk5fT04ocGFuZWwtPmRlc2Mt
-Pm51bV90aW1pbmdzICYmIHBhbmVsLT5kZXNjLT5udW1fbW9kZXMpOwo+ICsJaWYgKG51bSA9PSAw
-KQo+ICsJCW51bSA9IHBhbmVsX3NpbXBsZV9nZXRfZml4ZWRfbW9kZXMocGFuZWwpOwo+ICsKPiAg
-CWNvbm5lY3Rvci0+ZGlzcGxheV9pbmZvLmJwYyA9IHBhbmVsLT5kZXNjLT5icGM7Cj4gIAljb25u
-ZWN0b3ItPmRpc3BsYXlfaW5mby53aWR0aF9tbSA9IHBhbmVsLT5kZXNjLT5zaXplLndpZHRoOwo+
-ICAJY29ubmVjdG9yLT5kaXNwbGF5X2luZm8uaGVpZ2h0X21tID0gcGFuZWwtPmRlc2MtPnNpemUu
-aGVpZ2h0Owo+IEBAIC0yNjgsNyArMzE2LDcgQEAgc3RhdGljIGludCBwYW5lbF9zaW1wbGVfZ2V0
-X21vZGVzKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQo+ICAJfQo+ICAKPiAgCS8qIGFkZCBoYXJk
-LWNvZGVkIHBhbmVsIG1vZGVzICovCj4gLQludW0gKz0gcGFuZWxfc2ltcGxlX2dldF9maXhlZF9t
-b2RlcyhwKTsKPiArCW51bSArPSBwYW5lbF9zaW1wbGVfZ2V0X25vbl9lZGlkX21vZGVzKHApOwo+
-ICAKPiAgCXJldHVybiBudW07Cj4gIH0KPiBAQCAtMjk5LDEwICszNDcsNTggQEAgc3RhdGljIGNv
-bnN0IHN0cnVjdCBkcm1fcGFuZWxfZnVuY3MgcGFuZWxfc2ltcGxlX2Z1bmNzID0gewo+ICAJLmdl
-dF90aW1pbmdzID0gcGFuZWxfc2ltcGxlX2dldF90aW1pbmdzLAo+ICB9Owo+ICAKPiArI2RlZmlu
-ZSBQQU5FTF9TSU1QTEVfQk9VTkRTX0NIRUNLKHRvX2NoZWNrLCBib3VuZHMsIGZpZWxkKSBcCj4g
-KwkodG9fY2hlY2stPmZpZWxkLnR5cCA+PSBib3VuZHMtPmZpZWxkLm1pbiAmJiBcCj4gKwkgdG9f
-Y2hlY2stPmZpZWxkLnR5cCA8PSBib3VuZHMtPmZpZWxkLm1heCkKPiArc3RhdGljIHZvaWQgcGFu
-ZWxfc2ltcGxlX3BhcnNlX292ZXJyaWRlX21vZGUoc3RydWN0IGRldmljZSAqZGV2LAo+ICsJCQkJ
-CSAgICAgc3RydWN0IHBhbmVsX3NpbXBsZSAqcGFuZWwsCj4gKwkJCQkJICAgICBjb25zdCBzdHJ1
-Y3QgZGlzcGxheV90aW1pbmcgKm90KQo+ICt7Cj4gKwljb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyAq
-ZGVzYyA9IHBhbmVsLT5kZXNjOwo+ICsJc3RydWN0IHZpZGVvbW9kZSB2bTsKPiArCXVuc2lnbmVk
-IGludCBpOwo+ICsKPiArCWlmIChXQVJOX09OKGRlc2MtPm51bV9tb2RlcykpIHsKPiArCQlkZXZf
-ZXJyKGRldiwgIlJlamVjdCBvdmVycmlkZSBtb2RlOiBwYW5lbCBoYXMgYSBmaXhlZCBtb2RlXG4i
-KTsKPiArCQlyZXR1cm47Cj4gKwl9Cj4gKwlpZiAoV0FSTl9PTighZGVzYy0+bnVtX3RpbWluZ3Mp
-KSB7Cj4gKwkJZGV2X2VycihkZXYsICJSZWplY3Qgb3ZlcnJpZGUgbW9kZTogbm8gdGltaW5ncyBz
-cGVjaWZpZWRcbiIpOwo+ICsJCXJldHVybjsKPiArCX0KPiArCj4gKwlmb3IgKGkgPSAwOyBpIDwg
-cGFuZWwtPmRlc2MtPm51bV90aW1pbmdzOyBpKyspIHsKPiArCQljb25zdCBzdHJ1Y3QgZGlzcGxh
-eV90aW1pbmcgKmR0ID0gJnBhbmVsLT5kZXNjLT50aW1pbmdzW2ldOwo+ICsKPiArCQlpZiAoIVBB
-TkVMX1NJTVBMRV9CT1VORFNfQ0hFQ0sob3QsIGR0LCBoYWN0aXZlKSB8fAo+ICsJCSAgICAhUEFO
-RUxfU0lNUExFX0JPVU5EU19DSEVDSyhvdCwgZHQsIGhmcm9udF9wb3JjaCkgfHwKPiArCQkgICAg
-IVBBTkVMX1NJTVBMRV9CT1VORFNfQ0hFQ0sob3QsIGR0LCBoYmFja19wb3JjaCkgfHwKPiArCQkg
-ICAgIVBBTkVMX1NJTVBMRV9CT1VORFNfQ0hFQ0sob3QsIGR0LCBoc3luY19sZW4pIHx8Cj4gKwkJ
-ICAgICFQQU5FTF9TSU1QTEVfQk9VTkRTX0NIRUNLKG90LCBkdCwgdmFjdGl2ZSkgfHwKPiArCQkg
-ICAgIVBBTkVMX1NJTVBMRV9CT1VORFNfQ0hFQ0sob3QsIGR0LCB2ZnJvbnRfcG9yY2gpIHx8Cj4g
-KwkJICAgICFQQU5FTF9TSU1QTEVfQk9VTkRTX0NIRUNLKG90LCBkdCwgdmJhY2tfcG9yY2gpIHx8
-Cj4gKwkJICAgICFQQU5FTF9TSU1QTEVfQk9VTkRTX0NIRUNLKG90LCBkdCwgdnN5bmNfbGVuKSkK
-PiArCQkJY29udGludWU7Cj4gKwo+ICsJCWlmIChvdC0+ZmxhZ3MgIT0gZHQtPmZsYWdzKQo+ICsJ
-CQljb250aW51ZTsKPiArCj4gKwkJdmlkZW9tb2RlX2Zyb21fdGltaW5nKG90LCAmdm0pOwo+ICsJ
-CWRybV9kaXNwbGF5X21vZGVfZnJvbV92aWRlb21vZGUoJnZtLCAmcGFuZWwtPm92ZXJyaWRlX21v
-ZGUpOwo+ICsJCXBhbmVsLT5vdmVycmlkZV9tb2RlLnR5cGUgfD0gRFJNX01PREVfVFlQRV9EUklW
-RVIgfAo+ICsJCQkJCSAgICAgRFJNX01PREVfVFlQRV9QUkVGRVJSRUQ7Cj4gKwkJYnJlYWs7Cj4g
-Kwl9Cj4gKwo+ICsJaWYgKFdBUk5fT04oIXBhbmVsLT5vdmVycmlkZV9tb2RlLnR5cGUpKQo+ICsJ
-CWRldl9lcnIoZGV2LCAiUmVqZWN0IG92ZXJyaWRlIG1vZGU6IE5vIGRpc3BsYXlfdGltaW5nIGZv
-dW5kXG4iKTsKPiArfQo+ICsKPiAgc3RhdGljIGludCBwYW5lbF9zaW1wbGVfcHJvYmUoc3RydWN0
-IGRldmljZSAqZGV2LCBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyAqZGVzYykKPiAgewo+ICAJc3Ry
-dWN0IGRldmljZV9ub2RlICpiYWNrbGlnaHQsICpkZGM7Cj4gIAlzdHJ1Y3QgcGFuZWxfc2ltcGxl
-ICpwYW5lbDsKPiArCXN0cnVjdCBkaXNwbGF5X3RpbWluZyBkdDsKPiAgCWludCBlcnI7Cj4gIAo+
-ICAJcGFuZWwgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKnBhbmVsKSwgR0ZQX0tFUk5FTCk7
-Cj4gQEAgLTM0OCw2ICs0NDQsOSBAQCBzdGF0aWMgaW50IHBhbmVsX3NpbXBsZV9wcm9iZShzdHJ1
-Y3QgZGV2aWNlICpkZXYsIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjICpkZXNjKQo+ICAJCX0KPiAg
-CX0KPiAgCj4gKwlpZiAoIW9mX2dldF9kaXNwbGF5X3RpbWluZyhkZXYtPm9mX25vZGUsICJwYW5l
-bC10aW1pbmciLCAmZHQpKQo+ICsJCXBhbmVsX3NpbXBsZV9wYXJzZV9vdmVycmlkZV9tb2RlKGRl
-diwgcGFuZWwsICZkdCk7Cj4gKwo+ICAJZHJtX3BhbmVsX2luaXQoJnBhbmVsLT5iYXNlKTsKPiAg
-CXBhbmVsLT5iYXNlLmRldiA9IGRldjsKPiAgCXBhbmVsLT5iYXNlLmZ1bmNzID0gJnBhbmVsX3Np
-bXBsZV9mdW5jczsKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bA==
+On 4/3/19 5:22 PM, Thierry Reding wrote:
+> On Mon, Mar 25, 2019 at 03:45:17PM +0800, Joseph Lo wrote:
+>> 1) Introduce low jitter paths for pllp and pll_mb used by the EMC driver.
+>> 2) Remove the old emc_mux clock and don't use the common EMC clock
+>>     definition. This will be replaced by a new clock defined in the EMC
+>>     driver.
+>> 3) Export functions to allow accessing the CAR register required for EMC
+>>     clock scaling. These functions will be used to access the CAR register
+>>     as part of the scaling sequence.
+> 
+> The fact that you can enumerate 3 logical changes made by this commit
+> indicates that it should be split up into smaller patches.
+
+Okay, will do.
+
+> 
+>> Based on the work of Peter De Schrijver <pdeschrijver@nvidia.com>.
+>>
+>> Signed-off-by: Joseph Lo <josephl@nvidia.com>
+>> ---
+>>   drivers/clk/tegra/clk-tegra210.c         | 112 +++++++++++++++++++----
+>>   include/dt-bindings/clock/tegra210-car.h |   4 +-
+>>   include/linux/clk/tegra.h                |   5 +
+>>   3 files changed, 103 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+>> index 7545af763d7a..e17b5279ea69 100644
+>> --- a/drivers/clk/tegra/clk-tegra210.c
+>> +++ b/drivers/clk/tegra/clk-tegra210.c
+>> @@ -47,6 +47,7 @@
+>>   #define CLK_SOURCE_LA 0x1f8
+>>   #define CLK_SOURCE_SDMMC2 0x154
+>>   #define CLK_SOURCE_SDMMC4 0x164
+>> +#define CLK_SOURCE_EMC_DLL 0x664
+>>   
+>>   #define PLLC_BASE 0x80
+>>   #define PLLC_OUT 0x84
+>> @@ -234,6 +235,10 @@
+>>   #define RST_DFLL_DVCO 0x2f4
+>>   #define DVFS_DFLL_RESET_SHIFT 0
+>>   
+>> +#define CLK_RST_CONTROLLER_CLK_OUT_ENB_X_SET	0x284
+>> +#define CLK_RST_CONTROLLER_CLK_OUT_ENB_X_CLR	0x288
+>> +#define CLK_OUT_ENB_X_CLK_ENB_EMC_DLL		BIT(14)
+>> +
+>>   #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
+>>   #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
+>>   
+>> @@ -319,12 +324,6 @@ static unsigned long tegra210_input_freq[] = {
+>>   	[8] = 12000000,
+>>   };
+>>   
+>> -static const char *mux_pllmcp_clkm[] = {
+>> -	"pll_m", "pll_c", "pll_p", "clk_m", "pll_m_ud", "pll_mb", "pll_mb",
+>> -	"pll_p",
+>> -};
+>> -#define mux_pllmcp_clkm_idx NULL
+>> -
+>>   #define PLL_ENABLE			(1 << 30)
+>>   
+>>   #define PLLCX_MISC1_IDDQ		(1 << 27)
+>> @@ -2310,7 +2309,7 @@ static struct tegra_clk tegra210_clks[tegra_clk_max] __initdata = {
+>>   	[tegra_clk_i2c2] = { .dt_id = TEGRA210_CLK_I2C2, .present = true },
+>>   	[tegra_clk_uartc_8] = { .dt_id = TEGRA210_CLK_UARTC, .present = true },
+>>   	[tegra_clk_mipi_cal] = { .dt_id = TEGRA210_CLK_MIPI_CAL, .present = true },
+>> -	[tegra_clk_emc] = { .dt_id = TEGRA210_CLK_EMC, .present = true },
+>> +	[tegra_clk_emc] = { .dt_id = TEGRA210_CLK_EMC, .present = false },
+>>   	[tegra_clk_usb2] = { .dt_id = TEGRA210_CLK_USB2, .present = true },
+>>   	[tegra_clk_bsev] = { .dt_id = TEGRA210_CLK_BSEV, .present = true },
+>>   	[tegra_clk_uartd_8] = { .dt_id = TEGRA210_CLK_UARTD, .present = true },
+>> @@ -2921,6 +2920,82 @@ static int tegra210_init_pllu(void)
+>>   	return 0;
+>>   }
+>>   
+>> +void tegra210_clk_emc_dll_enable(bool flag)
+>> +{
+>> +	unsigned long flags = 0;
+>> +	u32 offset = flag ? CLK_RST_CONTROLLER_CLK_OUT_ENB_X_SET :
+>> +		     CLK_RST_CONTROLLER_CLK_OUT_ENB_X_CLR;
+>> +
+>> +	spin_lock_irqsave(&emc_lock, flags);
+>> +
+>> +	writel_relaxed(CLK_OUT_ENB_X_CLK_ENB_EMC_DLL, clk_base + offset);
+>> +	readl(clk_base + offset);
+>> +
+>> +	spin_unlock_irqrestore(&emc_lock, flags);
+>> +}
+>> +EXPORT_SYMBOL_GPL(tegra210_clk_emc_dll_enable);
+>> +
+>> +void tegra210_clk_emc_dll_update_setting(u32 emc_dll_src_value)
+> 
+> Do we really want to pass the whole register value through this
+> function? The register has three fields, so perhaps it's safer to pass
+> the fields individually? Or perhaps we only need to modify a subset of
+> the fields and can reduce the number of parameters we pass? Letting a
+> different driver pass any arbitrary value here takes away any means of
+> checking for validity.
+
+The emc table has a property for this register. So the scaling sequence 
+will update the register with the value in the table.
+
+> 
+>> +{
+>> +	unsigned long flags = 0;
+>> +
+>> +	spin_lock_irqsave(&emc_lock, flags);
+>> +
+>> +	writel_relaxed(emc_dll_src_value, clk_base + CLK_SOURCE_EMC_DLL);
+>> +	readl(clk_base + CLK_SOURCE_EMC_DLL);
+> 
+> Could we not just use a writel() here and do away with the flushing
+> readl()?
+Will try that.
+
+> 
+> Also, it doesn't look like that spinlock actually protects anything.
+> You're just writing a value. If anyone else is holding that lock they
+> will either overwrite our value after we release the lock, or we
+> overwrite their value when they release the lock.
+
+Yeah, agreed. Will remove.
+
+Thanks,
+Joseph
+
+> 
+>> +
+>> +	spin_unlock_irqrestore(&emc_lock, flags);
+>> +}
+>> +EXPORT_SYMBOL_GPL(tegra210_clk_emc_dll_update_setting);
+>> +
+>> +void tegra210_clk_emc_update_setting(u32 emc_src_value)
+>> +{
+>> +	unsigned long flags = 0;
+>> +
+>> +	spin_lock_irqsave(&emc_lock, flags);
+>> +
+>> +	writel_relaxed(emc_src_value, clk_base + CLK_SOURCE_EMC);
+>> +	readl(clk_base + CLK_SOURCE_EMC);
+>> +
+>> +	spin_unlock_irqrestore(&emc_lock, flags);
+>> +}
+>> +EXPORT_SYMBOL_GPL(tegra210_clk_emc_update_setting);
+> 
+> Same comments as above.
+> 
+>> +
+>> +u32 tegra210_clk_emc_get_setting(void)
+>> +{
+>> +	unsigned long flags = 0;
+>> +	u32 val;
+>> +
+>> +	spin_lock_irqsave(&emc_lock, flags);
+>> +
+>> +	val = readl_relaxed(clk_base + CLK_SOURCE_EMC);
+>> +
+>> +	spin_unlock_irqrestore(&emc_lock, flags);
+> 
+> Similar to the above, the spinlock doesn't protect anything here.
+> 
+> Thierry
+> 
