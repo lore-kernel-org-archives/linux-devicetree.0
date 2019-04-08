@@ -1,45 +1,37 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v4 2/4] coresight: replicator: Add new device id for
- static replicator
-Date: Mon, 8 Apr 2019 11:46:52 +0100
-Message-ID: <6b862aa8-1b50-61bf-6894-978ecd1a964b@arm.com>
-References: <20190406112145.15184-1-leo.yan@linaro.org>
- <20190406112145.15184-3-leo.yan@linaro.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RFC PATCH 2/9] cpufreq: qcom: Re-organise kryo cpufreq to use
+ it for other nvmem based qcom socs
+Date: Mon, 8 Apr 2019 16:14:49 +0530
+Message-ID: <20190408104449.zqbamhcrjheanlgt@vireshk-i7>
+References: <20190404050931.9812-1-niklas.cassel@linaro.org>
+ <20190404050931.9812-3-niklas.cassel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190406112145.15184-3-leo.yan@linaro.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190404050931.9812-3-niklas.cassel@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: leo.yan@linaro.org, mathieu.poirier@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, shiwanglai@hisilicon.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Ilia Lin <ilia.lin@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, Sricharan R <sricharan@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/06/2019 12:21 PM, Leo Yan wrote:
-> This patch adds a device id for the new static replicator compatible
-> string; it changes the driver name from "coresight-replicator" to
-> "coresight-static-replicator" as well.
+On 04-04-19, 07:09, Niklas Cassel wrote:
+> From: Sricharan R <sricharan@codeaurora.org>
 > 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->   drivers/hwtracing/coresight/coresight-replicator.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-> index 4e0da85efd2d..e6a03642bbdb 100644
-> --- a/drivers/hwtracing/coresight/coresight-replicator.c
-> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
-> @@ -285,13 +285,14 @@ static const struct dev_pm_ops replicator_dev_pm_ops = {
->   
->   static const struct of_device_id static_replicator_match[] = {
->   	{.compatible = "arm,coresight-replicator"},
-> +	{.compatible = "arm,coresight-static-replicator"},
->   	{}
+> The kryo cpufreq driver reads the nvmem cell and uses that data to
+> populate the opps. There are other qcom cpufreq socs like krait which
+> does similar thing. Except for the interpretation of the read data,
+> rest of the driver is same for both the cases. So pull the common things
+> out for reuse.
 
-As mentioned in the previous patch, please could you add a warning if
-you encounter the old binding, mentioning that it is OBSOLETE.
-pr_warn_once() is sufficient.
+This is really sad for me. The driver was added in May last year and I am quite
+sure it would have been known at that time itself that there are more hardware
+platforms which will end up using this driver because of the similarity in
+hardware. Not that you (personally) could have done anything about it as you
+weren't there then, but it should have been taken care of by the then
+developers.
 
-Otherwise, looks good.
+Anyway, its okay now, can't do anything but rename things.
 
-Suzuki
+-- 
+viresh
