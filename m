@@ -1,50 +1,102 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v5 0/7] sunxi: Add DT representation for the MBUS
- controller
-Date: Mon, 8 Apr 2019 16:14:53 +0800
-Message-ID: <CAGb2v66cc-y0c98yaggFpnuWGwdWa5HpG0uapidreSqmc_maAQ@mail.gmail.com>
-References: <cover.f8909884585996f28d97f4ef95efbcab19527dc4.1554108995.git-series.maxime.ripard@bootlin.com>
- <5ca841d1.1c69fb81.f4702.b85d@mx.google.com>
- <20190408081126.t3blyvtcqslzvki2@flea>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 2/2] arm64: dts: h6: Add watchdog node
+Date: Mon, 8 Apr 2019 10:16:35 +0200
+Message-ID: <20190408081635.dlcppclakavwip6v@flea>
+References: <20190404135736.8491-1-peron.clem@gmail.com>
+ <20190404135736.8491-2-peron.clem@gmail.com>
+ <20190405090236.e7vnyjzxmzfke3d6@flea>
+ <CAGb2v65wcEAUTwRhC42iRkPaWXLGX1CJeq+TSzHVTOrT+L=8vA@mail.gmail.com>
+ <20190405145005.jmmwsvbateqssbyq@flea>
+ <CAGb2v66cv7dVwj7oyRaHT5Q2XCbNqzuS-Uk9hdNJbVv57QOmUg@mail.gmail.com>
+ <20190405150810.zjwtu6crzaz6ufhx@flea>
+ <CAJiuCccfmwxAqK1mTJ3eLO0RggV8sZTTKRy=fxFFenxn1hATvQ@mail.gmail.com>
+ <CAJiuCcc5_tkmSM8sV2enG7t5=eU21ZrzcCVLUzF+c=8MiZhdFA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190408081126.t3blyvtcqslzvki2@flea>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, devicetree <devicetree@vger.kernel.org>, Robin Murphy <robin.murphy@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="edi4atnhmhlgs5sc"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJiuCcc5_tkmSM8sV2enG7t5=eU21ZrzcCVLUzF+c=8MiZhdFA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Samuel Holland <samuel@sholland.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBcHIgOCwgMjAxOSBhdCA0OjExIFBNIE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBh
-cmRAYm9vdGxpbi5jb20+IHdyb3RlOgo+Cj4gT24gU2F0LCBBcHIgMDYsIDIwMTkgYXQgMDE6MDY6
-MDdBTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPiBPbiBNb24sIEFwciAwMSwgMjAxOSBh
-dCAxMDo1Njo0MEFNICswMjAwLCBNYXhpbWUgUmlwYXJkIHdyb3RlOgo+ID4gPiBIaSwKPiA+ID4K
-PiA+ID4gV2UndmUgaGFkIGZvciBxdWl0ZSBzb21lIHRpbWUgdG8gaGFjayBhcm91bmQgaW4gb3Vy
-IGRyaXZlcnMgdG8gdGFrZSBpbnRvCj4gPiA+IGFjY291bnQgdGhlIGZhY3QgdGhhdCBvdXIgRE1B
-IGFjY2Vzc2VzIGFyZSBub3QgZG9uZSB0aHJvdWdoIHRoZSBwYXJlbnQKPiA+ID4gbm9kZSwgYnV0
-IHRocm91Z2ggYW5vdGhlciBidXMgd2l0aCBhIGRpZmZlcmVudCBtYXBwaW5nIHRoYW4gdGhlIENQ
-VSBmb3IgdGhlCj4gPiA+IFJBTSAoMCBpbnN0ZWFkIG9mIDB4NDAwMDAwMDAgZm9yIG1vc3QgU29D
-cykuCj4gPiA+Cj4gPiA+IEFmdGVyIHNvbWUgZGlzY3Vzc2lvbiBhZnRlciB0aGUgc3VibWlzc2lv
-biBvZiBhIGNhbWVyYSBkZXZpY2Ugc3VmZmVyaW5nIG9mCj4gPiA+IHRoZSBzYW1lIGhhY2tzLCBJ
-J3ZlIGRlY2lkZWQgdG8gcHV0IHRvZ2V0aGVyIGEgc2VyaWUgdGhhdCBpbnRyb2R1Y2UgYQo+ID4g
-PiBzcGVjaWFsIGludGVyY29ubmVjdCBuYW1lIGNhbGxlZCAiZG1hIiB0aGF0IHRoYXQgYWxsb3dz
-IHRvIGV4cHJlc3MgdGhlIERNQQo+ID4gPiByZWxhdGlvbnNoaXAgYmV0d2VlbiBhIG1hc3RlciBh
-bmQgaXRzIGJ1cywgZXZlbiBpZiB0aGV5IGFyZSBub3QgZGlyZWN0Cj4gPiA+IHBhcmVudHMgaW4g
-dGhlIERULgo+ID4gPgo+ID4gPiBMZXQgbWUga25vdyB3aGF0IHlvdSB0aGluaywKPiA+ID4gTWF4
-aW1lCj4gPgo+ID4gTEdUTS4KPiA+Cj4gPiBIb3cgZG8geW91IHByb3Bvc2UgbWVyZ2luZyB0aGlz
-PyBJIGNhbiB0YWtlIDEtNSwgYW5kIDYgYW5kIDcgdGhydQo+ID4gYXJtLXNvYz8KPgo+IFlvdSBj
-YW4gbWVyZ2UgMS00LCBhbmQgSSdsbCBtZXJnZSA1IHRocm91Z2ggZHJtLW1pc2MgYW5kIDYtNyB0
-aHJvdWdoCj4gYXJtLXNvYwoKV291bGRuJ3QgdGhlcmUgYmUgc29tZSBydW50aW1lIGRlcGVuZGVu
-Y3kgYmV0d2VlbiAzLCA0LCBhbmQgNT8KCkNoZW5ZdQpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWw=
+
+--edi4atnhmhlgs5sc
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Apr 07, 2019 at 04:27:36PM +0200, Cl=E9ment P=E9ron wrote:
+> Hi,
+>
+> On Fri, 5 Apr 2019 at 18:24, Cl=E9ment P=E9ron <peron.clem@gmail.com> wro=
+te:
+> >
+> > Hi,
+> >
+> > On Fri, 5 Apr 2019 at 17:08, Maxime Ripard <maxime.ripard@bootlin.com> =
+wrote:
+> > >
+> > > On Fri, Apr 05, 2019 at 10:59:35PM +0800, Chen-Yu Tsai wrote:
+> > > > On Fri, Apr 5, 2019 at 10:50 PM Maxime Ripard <maxime.ripard@bootli=
+n.com> wrote:
+> > > > >
+> > > > > On Fri, Apr 05, 2019 at 10:35:08PM +0800, Chen-Yu Tsai wrote:
+> > > > > > On Fri, Apr 5, 2019 at 5:02 PM Maxime Ripard <maxime.ripard@boo=
+tlin.com> wrote:
+> > > > > > >
+> > > > > > > On Thu, Apr 04, 2019 at 03:57:36PM +0200, Cl=E9ment P=E9ron w=
+rote:
+> > > > > > > > Allwinner H6 has a watchog compatible with A31.
+> > > > > > > >
+> > > > > > > > Declare it in the device tree.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> > > > > > >
+> > > > > > > Applied both, thanks!
+> > > > > > > Maxime
+> > > > > >
+> > > > > > IIRC there are 3 watchdogs on the H6. One is the trusted watchd=
+og,
+> > > > > > which should be reserved for underlying firmware.
+> > > > > >
+> > > > > > The other two are the normal and R-block watchdog. Although they
+> > > > > > look the same, the "normal" one can't reset the system. :(
+> > > > > > That one is actually the one ATF currently uses. So reboot does=
+n't
+> > > > > > work on the H6.
+> >
+> > Some users report that the reboot on the PineH64 actually works.
+> >
+> > Clement
+> >
+> > > > >
+> > > > > So that patch will not do anything then?
+>
+> Did some test and only interrupts are working right now. If the WDOG
+> is configured to make the board reboot the system will be stuck :S
+> Maybe better to disabled it for now and leave a comment.
+
+I dropped the two patches
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--edi4atnhmhlgs5sc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKsDYwAKCRDj7w1vZxhR
+xWp5AQDPPs8u0wNZkJigQ+lPhxDH918JqpCrMxBvWG6ts1pmYwD8D16hBPr1+iyd
+OeB2s+TEuu/V+1JNW9S552JpkoKWTAs=
+=t3fp
+-----END PGP SIGNATURE-----
+
+--edi4atnhmhlgs5sc--
