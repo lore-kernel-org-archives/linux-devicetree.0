@@ -1,63 +1,44 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 4/4] ARM: dts: sunxi: Improve A33 NAND transfers by using
- DMA
-Date: Mon,  8 Apr 2019 09:41:47 +0200
-Message-ID: <20190408074147.26797-4-miquel.raynal@bootlin.com>
-References: <20190408074147.26797-1-miquel.raynal@bootlin.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v3 0/3] ARM: da850: enable cpufreq in DT mode
+Date: Mon,  8 Apr 2019 09:59:21 +0200
+Message-ID: <20190408075924.2284-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190408074147.26797-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Vignesh Raghavendra <vigneshr@ti.com>, linux-mtd@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Adam Ford <aford173@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-In the current state, A33 NAND controllers use PIO during
-transfers. Throughput can be increased thanks to the use of DMA
-(mostly during reads, because of the ECC pipelining feature).
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Besides the usual addition of DMA DT properties, because the A33
-NAND DMA handling is different than for older SoCs, we must also
-update the compatible which has recently been introduced for this
-purpose.
+This series adds cpufreq-dt operating points for da850 boards supported
+with device tree (da850-lcdk, da850-lego-ev3, da850-evm).
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
+Last patch enables CPUFREQ_DT in davinci_all_defconfig.
 
-Changes in v2:
-* Use 'A33' in the commit log instead of sun8i.
+v1 -> v2:
+- use the VDCDC3_1.2V regulator as cpu-supply on da850-evm
 
- arch/arm/boot/dts/sun8i-a23-a33.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+v2 -> v3:
+- drop patch 1, as the revision tag is in fact correctly passed to the kernel
+  by u-boot
+- only enable the 375 operating point for da850-evm as this is the standard
+  frequency for this board
 
-diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-index 14a7d0288b45..f928b4bceb22 100644
---- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-@@ -162,11 +162,13 @@
- 		};
- 
- 		nfc: nand@1c03000 {
--			compatible = "allwinner,sun4i-a10-nand";
-+			compatible = "allwinner,sun8i-a33-nand-controller";
- 			reg = <0x01c03000 0x1000>;
- 			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_NAND>, <&ccu CLK_NAND>;
- 			clock-names = "ahb", "mod";
-+			dmas = <&dma 5>;
-+			dma-names = "rxtx";
- 			resets = <&ccu RST_BUS_NAND>;
- 			reset-names = "ahb";
- 			pinctrl-names = "default";
+Bartosz Golaszewski (1):
+  ARM: dts: da850-evm: enable cpufreq
+
+David Lechner (2):
+  ARM: dts: da850: add cpu node and operating points to DT
+  ARM: davinci_all_defconfig: Enable CPUFREQ_DT
+
+ arch/arm/boot/dts/da850-evm.dts        | 13 ++++++
+ arch/arm/boot/dts/da850-lcdk.dts       | 31 ++++++++++++++
+ arch/arm/boot/dts/da850-lego-ev3.dts   | 30 ++++++++++++++
+ arch/arm/boot/dts/da850.dtsi           | 56 ++++++++++++++++++++++++++
+ arch/arm/configs/davinci_all_defconfig |  1 +
+ 5 files changed, 131 insertions(+)
+
 -- 
-2.19.1
+2.21.0
