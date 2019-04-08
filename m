@@ -1,32 +1,29 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/3] ARM: dts: stm32: add stpmic1 support on stm32mp157a
- dk1 board
-Date: Mon, 8 Apr 2019 14:06:14 +0200
-Message-ID: <CACRpkdb-ePddcJJLiFfOrP2QbxsNG2xQ17b5etrMHNGE3sFBmA@mail.gmail.com>
-References: <1554298852-9955-1-git-send-email-p.paillet@st.com> <1554298852-9955-3-git-send-email-p.paillet@st.com>
+Subject: Re: [PATCH v2] dt-bindings: pinctrl: imx7d: Fix PAD_CTL_DSE_X*
+Date: Mon, 8 Apr 2019 14:08:43 +0200
+Message-ID: <CACRpkdYqJxeFLJw+eG4YoA-MPrYFSwxkgPuq-3AAXiVRaiUsQg@mail.gmail.com>
+References: <20190313142040.26694-1-cquast@hanoverdisplays.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554298852-9955-3-git-send-email-p.paillet@st.com>
+In-Reply-To: <20190313142040.26694-1-cquast@hanoverdisplays.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pascal PAILLET-LME <p.paillet@st.com>
-Cc: "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "biju.das@bp.renesas.com" <biju.das@bp.renesas.com>, Yannick FERTRE <yannick.fertre@st.com>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree>
+To: VI1PR04MB42227AA158BA1FCBF314AA27807B0@vi1pr04mb4222.eurprd04.prod.outlook.com
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Christina Quast <cquast@hanoverdisplays.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 3:41 PM Pascal PAILLET-LME <p.paillet@st.com> wrote:
+On Wed, Mar 13, 2019 at 3:20 PM Christina Quast
+<cquast@hanoverdisplays.com> wrote:
 
-> This patch adds stpmic1 support on stm32mp157a dk1 board.
-> The STPMIC1 is a PMIC from STMicroelectronics. The STPMIC1 integrates 10
-> regulators, 3 power switches, a watchdog and an input for a power on key.
+> In the iMX7d datasheet, the PAD_CTL_DSE_X* values are different from
+> the documentation.
 >
-> Signed-off-by: Pascal Paillet <p.paillet@st.com>
-(...)
-> +       status = "okay";
-> +       /delete-property/dmas;
-> +       /delete-property/dma-names;
+> Changes since v2:
+> * Changed patch title to 'dt-bindings: pinctrl: imx7d:'
+>
+> Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
 
-Same comment here. Is the I2C DMA not working?
-Why?
+Patch applied with the ACKs.
 
 Yours,
 Linus Walleij
