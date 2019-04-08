@@ -1,85 +1,128 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH] dt-bindings: cpu: Fix JSON schema
-Date: Sun, 7 Apr 2019 15:13:29 -0700
-Message-ID: <20190407221329.skbjjsjvqpnxwime@localhost>
-References: <20190318100521.29109-1-maxime.ripard@bootlin.com>
- <CAL_JsqJ_LYycXazkdP2Q=e-jynKiX+z5En0bz0AWpDjsevwQTg@mail.gmail.com>
- <20190401091050.cwph7xlpv3pmkwnq@flea>
- <78bb248e-56b8-b825-e763-583f75148eb3@socionext.com>
- <20190401113546.d6p2mg2y47abhumz@flea>
- <b6cb709b-7b1a-6bab-6f93-bcb565be18fb@socionext.com>
- <b3ecf5c5-9b1a-eb8b-95c2-c30a94c8bdd8@socionext.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: Using device tree overlays in Linux
+Date: Sun, 7 Apr 2019 18:05:15 -0700
+Message-ID: <61185ee9-4bee-eec3-f0d0-6d6760595845@gmail.com>
+References: <71fb0ff289e84c55bd92ecd96bc9aa76@svr-chch-ex1.atlnz.lc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b3ecf5c5-9b1a-eb8b-95c2-c30a94c8bdd8@socionext.com>
+In-Reply-To: <71fb0ff289e84c55bd92ecd96bc9aa76@svr-chch-ex1.atlnz.lc>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>, "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 08:42:02PM +0900, Sugaya, Taichi wrote:
+Hi Chris,
+
+On 4/3/19 6:50 PM, Chris Packham wrote:
 > Hi,
 > 
-> On 2019/04/01 22:02, Sugaya, Taichi wrote:
-> > Hi,
-> > 
-> > On 2019/04/01 20:35, Maxime Ripard wrote:
-> > > Hi,
-> > > 
-> > > On Mon, Apr 01, 2019 at 07:52:06PM +0900, Sugaya, Taichi wrote:
-> > > > On 2019/04/01 18:10, Maxime Ripard wrote:
-> > > > > Hi Sugaya, Arnd, Olof,
-> > > > > 
-> > > > > On Thu, Mar 28, 2019 at 02:35:54PM -0500, Rob Herring wrote:
-> > > > > > +arm-soc
-> > > > > > 
-> > > > > > On Mon, Mar 18, 2019 at 5:05 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > > > 
-> > > > > > > Commit fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for
-> > > > > > > Milbeaut") added support for a new cpu enable-method, but did so using
-> > > > > > > tabulations to ident. This is however invalid in the syntax, and resulted
-> > > > > > > in a failure when trying to use that schemas for validation.
-> > > > > > > 
-> > > > > > > Use spaces instead of tabs to indent to fix this.
-> > > > > > > 
-> > > > > > > Fixes: fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
-> > > > > > > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > > > > > > ---
-> > > > > > >    Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
-> > > > > > >    1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > > 
-> > > > > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > > > > 
-> > > > > > This should be applied to arm-soc tree having the commit.
-> > > > > 
-> > > > > Could you pick up that patch?
-> > > > 
-> > > > I got it.
-> > > > My mission is to resubmit your fix-patch added my singned-off tag and
-> > > > Rob's reviewed tag...right?
-> > > 
-> > > If you are part of arm-soc and send your pull requests to Arnd and
-> > > Olof, simply pick it up in the same branch than the initial patch was
-> > > in. And when you apply that patch, you indeed need to add your
-> > > Signed-off-by (note that most commands to commit have an option to do
-> > > that automatically: -s and that includes git am) and the Rob's
-> > > reviewed-by.
-> > > 
-> > > Then, send a new pull request to arm-soc.
-> > > 
-> > 
-> > Okay, thanks for your suggestion.
-> > I try to make pull request!
-> > 
+> I'm implementing support for some modular Linux based systems using 
+> device tree overlays. The code is working but it seems a little more 
+> fiddly that than it should be so I'm wondering if I'm doing it right.
+
+Let me start by saying that I strongly discourage using device tree
+overlays in the Linux kernel until the support is more baked.  For
+some info on how unbaked overlays are, see:
+
+   https://elinux.org/Frank%27s_Evolving_Overlay_Thoughts
+
+You should consider applying overlays in the Linux kernel to be
+fragile at best.
+
+If you can not figure out how to solve your needs without using
+overlays, then having the boot loader apply the overlay instead
+of the kernel applying the overlay avoids most of the issues.
+
+
+> An example of what I'm doing is
 > 
-> Sorry I realized that I couldn't make a private repository, so I'll send my Ack instead.
 > 
-> Acked-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+> arch/arm/boot/dts/Makefile:
+> DTC_FLAGS_myboard += -@
+> 
+> drivers/foo/Makefile:
+> obj-y += myplugin.dtb.o
+> obj-y += mydriver.o
+> 
+> drivers/foo/myplugin.dts:
+> /dts-v1/;
+> /plugin/;
+> /{
+> 	fragment@0 {
+> 		target = <&i2c0>;
+> 		__overlay__ {
+> 			gpio@74 {
+> 				compatible = "nxp,pca9539";
+> 				reg = <0x74>
+> 			};
+> 		};
+> 	};
+> };
 
-Applied to arm/fixes now. Thanks!
+The fragment and __overlay__ nodes are implementation, subject to
+change, and should not be hand coded.  The dtc compiler has added
+features to allow a more generic source code.  The above should be:
+
+// SPDX-License-Identifier: GPL-2.0
+/dts-v1/;
+/plugin/;
+
+&i2c0 {
+	gpio@74 {
+		compatible = "nxp,pca9539";
+		reg = <0x74>;
+	};
+};
+
+(Not compiled, not tested.)
+
+The rcar overlay sources were merged before dtc was updated to
+handle this new syntax, so they are not a good example for
+how to write an overlay.
 
 
--Olof
+> drivers/foo/mydriver.c:
+> extern uint8_t __dtb_myplugin_begin[];
+> extern uint8_t __dtb_myplugin_end[];
+> 
+> int mydriver_probe(struct platform_device *pdev)
+> {
+> 	u32 size = __dtb_myplugin_end - __dtb_myplugin_begin;
+> 	int overlay_id;
+> 	int ret;
+> 	
+> 	ret = of_overlay_fdt_apply(__dtb_myplugin_begin,
+> 				   size, &overlay_id);
+> 	return ret;
+> }
+
+I'm guessing that you have simplified your use case to make it easier to
+describe (thank you for that).  But that also makes it harder to understand
+the use case, and whether this is a good solution.  Can you describe your
+use case in some more detail?
+
+
+> The first issue is that I need to add -@ to the DTC_FLAGS for my board 
+> dtb. I kind of understand that I only need -@ if my overlay targets 
+> something symbolic so I might not need it but I was surprised that there 
+> wasn't a Kconfig option that makes this happen automatically.
+> 
+> externing things in C files makes checkpatch.pl complain. I see the 
+> of/unittests.c and rcar_du_of.c hide this with a macro. I was again 
+> surprised that there wasn't a common macro to declare these.
+
+unittests.c should not be used as a model of how to code for devicetree.
+There are some hacks that are needed to be able to test, but should not
+be used by normal drivers.
+
+The rcar use of overlays is a temporary hack to provide backward
+compatibility.  The intent is to drop this code once the backward
+compatibility window ends.
+
+The long-term intent (once enough of the overlay code is in place) is
+to provide an overlay loader than can apply an overlay .dtb from a file.
+
+-Frank
