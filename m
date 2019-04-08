@@ -1,70 +1,76 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 5/6] dt-bindings: leds: Add LED bindings for the LM36274
-Date: Mon, 8 Apr 2019 12:10:40 +0200
-Message-ID: <20190408101039.GC30958@amd>
-References: <20190405145540.27703-1-dmurphy@ti.com>
- <20190405145540.27703-6-dmurphy@ti.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 4/4] power: supply: add Ingenic JZ47xx battery driver.
+Date: Mon, 08 Apr 2019 12:23:03 +0200
+Message-ID: <1554718983.1893.0@crapouillou.net>
+References: <20190323172809.14407-1-contact@artur-rojek.eu>
+        <20190323172809.14407-4-contact@artur-rojek.eu>
+        <20190324153137.04857cdf@archlinux>
+        <20190407165234.is66vmnjfc35jnho@earth.universe>
+        <1554664077.4322.0@crapouillou.net>
+        <20190408093824.yzpd7mve6df7lpka@earth.universe>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Fig2xvG2VGoz8o/s"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190405145540.27703-6-dmurphy@ti.com>
+In-Reply-To: <20190408093824.yzpd7mve6df7lpka@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, Artur Rojek <contact@artur-rojek.eu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---Fig2xvG2VGoz8o/s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri 2019-04-05 09:55:39, Dan Murphy wrote:
-> Add the LM36274 LED specific bindings.
+Le lun. 8 avril 2019 =E0 11:38, Sebastian Reichel <sre@kernel.org> a=20
+=E9crit :
+> Hi Paul,
 >=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../devicetree/bindings/leds/leds-lm36274.txt | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.t=
-xt
+> On Sun, Apr 07, 2019 at 09:07:57PM +0200, Paul Cercueil wrote:
+>>  Hi Sebastian,
+>>=20
+>>  Le dim. 7 avril 2019 =E0 18:52, Sebastian Reichel <sre@kernel.org> a=20
+>> =E9crit :
+>>  > Hi,
+>>  >
+>>  > On Sun, Mar 24, 2019 at 03:31:37PM +0000, Jonathan Cameron wrote:
+>>  > >  On Sat, 23 Mar 2019 18:28:09 +0100
+>>  > >  Artur Rojek <contact@artur-rojek.eu> wrote:
+>>  > >
+>>  > >  > Add a driver for battery present on Ingenic JZ47xx SoCs.
+>>  > >  >
+>>  > >  > Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+>>  > >  The IIO parts look fine to me.
+>>  > >  Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>  > >
+>>  > >  Sebastian, assuming you are happy with this version,
+>>  >
+>>  > The driver itself looks ok. I'm a bit unhappy, that we already=20
+>> have
+>>  > jz4740-battery. This driver is much cleaner, but does not yet seem
+>>  > to be ready to replace it. Artur Rojek what are your plans=20
+>> regarding
+>>  > to the existing driver? Is there currently work going on migrating
+>>  > JZ47xx to DT?
+>>=20
+>>  Why do you think it's not ready? Feature-wise, it has everything we
+>>  need to replace jz4740-battery, which will be trashed as soon as the
+>>  LB60 board code is updated to use the new driver.
 >=20
-> diff --git a/Documentation/devicetree/bindings/leds/leds-lm36274.txt b/Do=
-cumentation/devicetree/bindings/leds/leds-lm36274.txt
-> new file mode 100644
-> index 000000000000..359990d85b28
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
-> @@ -0,0 +1,82 @@
-> +* Texas Instruments LM36274 4-Channel LCD Backlight Driver w/Integrated =
-Bias
-> +
-> +The LM36274 is an integrated four-channel WLED driver and LCD bias suppl=
-y.
-> +The backlight boost provides the power to bias four parallel LED strings=
- with
-> +up to 29-V total output voltage. The 11-bit LED current is rogrammable v=
-ia
+> jz4740-battery has a few features not provided by your driver.
+> For example the gpio providing the charging status.
 
-29V
+Artur sumitted a separate patchset for this functionality:
+https://lkml.org/lkml/2019/2/26/501
 
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+> Assuming you plan to trash the old driver soon:
+>=20
+> Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+>=20
+>>  We are working on porting the JZ47xx code to devicetree, yes. The
+>>  ultimate goal is to completely get rid of
+>>  arch/mips/jz4740/board-qi_lb60.c and arch/mips/jz4740/platform.c.
+>=20
+> Ok, sounds good.
+>=20
+> -- Sebastian
 
---Fig2xvG2VGoz8o/s
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlyrHh8ACgkQMOfwapXb+vItWQCbBx2RPdPw60W1yLJxHH47DSW5
-W1sAniGLQF1mjllOFEkUE/rvSou1fL5A
-=pXGZ
------END PGP SIGNATURE-----
-
---Fig2xvG2VGoz8o/s--
+=
