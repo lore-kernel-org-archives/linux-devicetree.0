@@ -1,35 +1,89 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/3] ARM: dts: stm32: add stpmic1 support on stm32mp157c
- ed1 board
-Date: Mon, 8 Apr 2019 15:06:52 +0200
-Message-ID: <CACRpkdY1Vd_xDgoF8NaJ85Dy+ub0-GPTdU9sttB5uzmJnRXw2g@mail.gmail.com>
-References: <1554298852-9955-1-git-send-email-p.paillet@st.com>
- <1554298852-9955-2-git-send-email-p.paillet@st.com> <CACRpkdZ9evBnvnmidQ2VW=dPUdGBM4Pkzo1VyMfDdQZFe6U7TA@mail.gmail.com>
- <5CAB3DF8.7020505@st.com>
+From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Subject: Re: [PATCH] arm64: dts: imx8mq: add GPU node
+Date: Mon, 8 Apr 2019 15:07:29 +0200
+Message-ID: <20190408130729.GA31666@bogon.m.sigxcpu.org>
+References: <20190404165211.29297-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5CAB3DF8.7020505@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pascal PAILLET-LME <p.paillet@st.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "biju.das@bp.renesas.com" <biju.das@bp.renesas.com>, Yannick FERTRE <yannick.fertre@st.com>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lis>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190404165211.29297-1-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 8, 2019 at 2:26 PM Pascal PAILLET-LME <p.paillet@st.com> wrote:
+Hi Lucas,
+On Thu, Apr 04, 2019 at 06:52:11PM +0200, Lucas Stach wrote:
+> This enables the Vivante GC7000L GPU on the i.MX8MQ SoC.
+> =
 
-> > I hope you are not trying to work around a bug in the driver by
-> > stripping out DMA configuration from the device tree, because then
-> > it is probably a better idea to fix the bug.
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> =
 
-> This is not a workaround. The PMIC can use the DMA over I2C bus.
-> Our goal is to avoid using a DMA channel for a consumer that generates a
-> very few traffic. Dma channels may lack for other use cases.
->
-> If you agree, you can add the to the commit message.
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/=
+dts/freescale/imx8mq.dtsi
+> index 4300781558f6..79d418b4f585 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -792,6 +792,28 @@
+>  			};
+>  		};
+>  =
 
-OK I understand, then also write it directly in the dts as a comment,
-so people understand why it is being removed when they just look
-in the device tree.
+> +		gpu: gpu@38000000 {
+> +			compatible =3D "vivante,gc";
+> +			reg =3D <0x38000000 0x40000>;
+> +			interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks =3D <&clk IMX8MQ_CLK_GPU_ROOT>,
+> +			         <&clk IMX8MQ_CLK_GPU_SHADER_DIV>,
+> +			         <&clk IMX8MQ_CLK_GPU_AXI>,
+> +			         <&clk IMX8MQ_CLK_GPU_AHB>;
+> +			clock-names =3D "core", "shader", "bus", "reg";
+> +			assigned-clocks =3D <&clk IMX8MQ_CLK_GPU_CORE_SRC>,
+> +			                  <&clk IMX8MQ_CLK_GPU_SHADER_SRC>,
+> +			                  <&clk IMX8MQ_CLK_GPU_AXI>,
+> +			                  <&clk IMX8MQ_CLK_GPU_AHB>;
+> +			assigned-clock-parents =3D <&clk IMX8MQ_GPU_PLL_OUT>,
+> +			                         <&clk IMX8MQ_GPU_PLL_OUT>,
+> +			                         <&clk IMX8MQ_GPU_PLL_OUT>,
+> +			                         <&clk IMX8MQ_GPU_PLL_OUT>;
+> +			assigned-clock-rates =3D <800000000>, <800000000>,
+> +			                       <800000000>, <800000000>;
+> +			power-domains =3D <&pgc_gpu>;
+> +		};
 
-Yours,
-Linus Walleij
+Reviewed-by: Guido G=FCnther <agx@sigxcpu.org>
+
+Cheers,
+ -- Guido
+
+
+> +
+>  		usb_dwc3_0: usb@38100000 {
+>  			compatible =3D "fsl,imx8mq-dwc3", "snps,dwc3";
+>  			reg =3D <0x38100000 0x10000>;
+> -- =
+
+> 2.20.1
+> =
+
+> =
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> =
