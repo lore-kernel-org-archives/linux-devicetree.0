@@ -1,51 +1,38 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v3 2/3] ARM: dts: da850-evm: enable cpufreq
-Date: Mon,  8 Apr 2019 09:59:23 +0200
-Message-ID: <20190408075924.2284-3-brgl@bgdev.pl>
-References: <20190408075924.2284-1-brgl@bgdev.pl>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 0/4] clk: meson: g12a audio clock controller support
+Date: Mon, 8 Apr 2019 10:00:43 +0200
+Message-ID: <be07a005-acd6-c002-1ac1-e5c47dbb181d@baylibre.com>
+References: <20190329160649.31603-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190408075924.2284-1-brgl@bgdev.pl>
+In-Reply-To: <20190329160649.31603-1-jbrunet@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Adam Ford <aford173@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Jerome Brunet <jbrunet@baylibre.com>, Maxime Jourdan <mjourdan@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On 29/03/2019 17:06, Jerome Brunet wrote:
+> This patchset updates the axg audio controller to support the audio
+> controller of the g12a SoC family.
+> 
+> Jerome Brunet (3):
+>   dt-bindings: clk: axg-audio: add g12a support
+>   clk: meson: axg_audio: replace prefix axg by aud
+>   clk: meson: axg-audio: don't register inputs in the onecell data
+> 
+> Maxime Jourdan (1):
+>   clk: meson: axg-audio: add g12a support
+> 
+>  .../bindings/clock/amlogic,axg-audio-clkc.txt |    3 +-
+>  drivers/clk/meson/axg-audio.c                 | 1219 ++++++++++-------
+>  drivers/clk/meson/axg-audio.h                 |   36 +-
+>  include/dt-bindings/clock/axg-audio-clkc.h    |   10 +
+>  4 files changed, 736 insertions(+), 532 deletions(-)
+> 
 
-Enable cpufreq-dt support for da850-evm. The cvdd is supplied by the
-tps6507 pmic with configurable output voltage, so all operating points
-can be enabled.
+Applied patch 1 to next/headers and patch [2, 3, 4] to next/drivers for Linux 5.2-rc1
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- arch/arm/boot/dts/da850-evm.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index f04bc3e15332..f94bb38fdad9 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -191,6 +191,19 @@
- 	};
- };
- 
-+&cpu {
-+	cpu-supply = <&vdcdc3_reg>;
-+};
-+
-+/*
-+ * The standard da850-evm kits and SOM's are 375MHz so enable this operating
-+ * point by default. Higher frequencies must be enabled for custom boards with
-+ * other variants of the SoC.
-+ */
-+&opp_375 {
-+	status = "okay";
-+};
-+
- &sata {
- 	status = "okay";
- };
--- 
-2.21.0
+Neil
