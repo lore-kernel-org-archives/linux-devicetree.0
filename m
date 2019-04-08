@@ -1,81 +1,45 @@
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v4 1/4] dt-bindings: arm: coresight: Add new compatible
- for static replicator
-Date: Mon, 8 Apr 2019 11:44:56 +0100
-Message-ID: <b661edd2-5b99-f8f7-b5a5-8e4497043087@arm.com>
+Subject: Re: [PATCH v4 2/4] coresight: replicator: Add new device id for
+ static replicator
+Date: Mon, 8 Apr 2019 11:46:52 +0100
+Message-ID: <6b862aa8-1b50-61bf-6894-978ecd1a964b@arm.com>
 References: <20190406112145.15184-1-leo.yan@linaro.org>
- <20190406112145.15184-2-leo.yan@linaro.org>
+ <20190406112145.15184-3-leo.yan@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190406112145.15184-2-leo.yan@linaro.org>
+In-Reply-To: <20190406112145.15184-3-leo.yan@linaro.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: leo.yan@linaro.org, mathieu.poirier@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, shiwanglai@hisilicon.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 04/06/2019 12:21 PM, Leo Yan wrote:
-> CoreSight uses below bindings for replicator:
-> 
->    Static replicator, aka. non-configurable replicator:
->      "arm,coresight-replicator";
-> 
->    Dynamic replicator, aka. configurable replicator:
->      "arm,coresight-dynamic-replicator", "arm,primecell";
-> 
-> The compatible string "arm,coresight-replicator" is not an explicit
-> naming to express the replicator is 'static'.  To unify the naming
-> convention, this patch introduces a new compatible string
-> "arm,coresight-static-replicator" for the static replicator; the
-> compatible string "arm,coresight-replicator" is still kept thus we
-> can support the old DT binding, but tag it as obsolete and suggest
-> to use the new compatible string.
-> 
-> As result CoreSight replicator have below bindings:
-> 
->    Static replicator:
->      "arm,coresight-replicator"; (obsolete)
->      "arm,coresight-static-replicator";
-> 
->    Dynamic replicator:
->      "arm,coresight-dynamic-replicator", "arm,primecell";
+> This patch adds a device id for the new static replicator compatible
+> string; it changes the driver name from "coresight-replicator" to
+> "coresight-static-replicator" as well.
 > 
 > Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > ---
->   Documentation/devicetree/bindings/arm/coresight.txt | 8 ++++++--
->   1 file changed, 6 insertions(+), 2 deletions(-)
+>   drivers/hwtracing/coresight/coresight-replicator.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> index f8aff65ab921..f8f794869af2 100644
-> --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> @@ -69,7 +69,11 @@ its hardware characteristcs.
+> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+> index 4e0da85efd2d..e6a03642bbdb 100644
+> --- a/drivers/hwtracing/coresight/coresight-replicator.c
+> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
+> @@ -285,13 +285,14 @@ static const struct dev_pm_ops replicator_dev_pm_ops = {
 >   
->   	* compatible: Currently supported value is (note the absence of the
->   	  AMBA markee):
-> -		- "arm,coresight-replicator"
-> +		- Coresight Non-configurable Replicator, the compatible string
-> +		  "arm,coresight-replicator" is obsolete, keep it to support
+>   static const struct of_device_id static_replicator_match[] = {
+>   	{.compatible = "arm,coresight-replicator"},
+> +	{.compatible = "arm,coresight-static-replicator"},
+>   	{}
 
-To make it more obvious : s/obsolete/OBSOLETE/
+As mentioned in the previous patch, please could you add a warning if
+you encounter the old binding, mentioning that it is OBSOLETE.
+pr_warn_once() is sufficient.
 
-> +		  the old DT bindings:
-> +			"arm,coresight-replicator";
-> +			"arm,coresight-static-replicator";
+Otherwise, looks good.
 
-nit: I would re-order the compatible strings to show the precedence of
-choice.
-
-e.g,
-	- CoreSight non-configurable Replicator
-		"arm,coresight-static-replicator";
-		"arm,coresight-replicator"; (OBSOLETE. For
-			backward compatibility. Will be removed )
-
-
-Also, please could we put a warning in the driver when we encounter it
-and request to update it ?
-
-Cheers
 Suzuki
