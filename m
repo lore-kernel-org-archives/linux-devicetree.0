@@ -1,117 +1,77 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/2] ARM: dts: exynos: Remove console argument from bootargs
-Date: Mon,  8 Apr 2019 07:19:26 +0200
-Message-ID: <20190408051926.462-2-krzk@kernel.org>
-References: <20190408051926.462-1-krzk@kernel.org>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH 1/2] arm64: dts: allwinner: a64-amarula-relic: Add GT5663 CTP node
+Date: Mon,  8 Apr 2019 11:24:14 +0530
+Message-ID: <20190408055415.1374-1-jagan@amarulasolutions.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190408051926.462-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: notify@kernel.org, Sylwester Nawrocki <snawrocki@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Remove the "console=ttySAC..." argument from DTSes having a proper
-stdout-path property.  To make the code functionally equivalent, add the
-serial port baud rate and parity.
+Add Goodix GT5663 capacitive touch controller node on
+Amarula A64-Relic board.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+The CTP connected to board with,
+- SDA, SCK from i2c1
+- GPIO-LD0 as AVDD28 supply
+- PH4 gpio as interrupt pin
+- PH8 gpio as reset pin
+- X axis is inverted
+- Y axis is inverted
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- arch/arm/boot/dts/exynos4210-origen.dts         | 4 ++--
- arch/arm/boot/dts/exynos4210-smdkv310.dts       | 4 ++--
- arch/arm/boot/dts/exynos4210-trats.dts          | 4 ++--
- arch/arm/boot/dts/exynos4210-universal_c210.dts | 4 ++--
- arch/arm/boot/dts/exynos4412-origen.dts         | 3 +--
- arch/arm/boot/dts/exynos4412-smdk4412.dts       | 4 ++--
- 6 files changed, 11 insertions(+), 12 deletions(-)
+ .../allwinner/sun50i-a64-amarula-relic.dts    | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos4210-origen.dts b/arch/arm/boot/dts/exynos4210-origen.dts
-index dd9ec05eb0f7..36b1edea254a 100644
---- a/arch/arm/boot/dts/exynos4210-origen.dts
-+++ b/arch/arm/boot/dts/exynos4210-origen.dts
-@@ -30,8 +30,8 @@
- 	};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+index 3575db216016..a76353d59aaa 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+@@ -49,6 +49,28 @@
+ 	bias-pull-up;
+ };
  
- 	chosen {
--		bootargs ="root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC2,115200 init=/linuxrc";
--		stdout-path = &serial_2;
-+		bootargs = "root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M init=/linuxrc";
-+		stdout-path = "serial2:115200n8";
- 	};
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
++	status = "okay";
++
++	touchscreen@5d {
++		compatible = "goodix,gt5663";
++		reg = <0x5d>;
++		AVDD28-supply = <&reg_ldo_io0>;			/* VCC-CTP: GPIO0-LDO */
++		interrupt-parent = <&pio>;
++		interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
++		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;	/* CTP-INT: PH4 */
++		reset-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH8 */
++		touchscreen-inverted-x;
++		touchscreen-inverted-y;
++	};
++};
++
++&i2c1_pins {
++	bias-pull-up;
++};
++
+ &mmc1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+@@ -212,6 +234,13 @@
+ 	regulator-name = "vdd-cpus";
+ };
  
- 	mmc_reg: voltage-regulator {
-diff --git a/arch/arm/boot/dts/exynos4210-smdkv310.dts b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-index 7a3e621edede..77fc11e593ad 100644
---- a/arch/arm/boot/dts/exynos4210-smdkv310.dts
-+++ b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-@@ -26,8 +26,8 @@
- 	};
- 
- 	chosen {
--		bootargs = "root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC1,115200 init=/linuxrc";
--		stdout-path = &serial_1;
-+		bootargs = "root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M init=/linuxrc";
-+		stdout-path = "serial1:115200n8";
- 	};
- 
- 	fixed-rate-clocks {
-diff --git a/arch/arm/boot/dts/exynos4210-trats.dts b/arch/arm/boot/dts/exynos4210-trats.dts
-index 8dbc47d627a5..6882480dbaf7 100644
---- a/arch/arm/boot/dts/exynos4210-trats.dts
-+++ b/arch/arm/boot/dts/exynos4210-trats.dts
-@@ -26,8 +26,8 @@
- 	};
- 
- 	chosen {
--		bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5 rootwait earlyprintk panic=5";
--		stdout-path = &serial_2;
-+		bootargs = "root=/dev/mmcblk0p5 rootwait earlyprintk panic=5";
-+		stdout-path = "serial2:115200n8";
- 	};
- 
- 	regulators {
-diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-index 5c3d98654f13..07d64a8f82e3 100644
---- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
-+++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-@@ -24,8 +24,8 @@
- 	};
- 
- 	chosen {
--		bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5 rw rootwait earlyprintk panic=5 maxcpus=1";
--		stdout-path = &serial_2;
-+		bootargs = "root=/dev/mmcblk0p5 rw rootwait earlyprintk panic=5 maxcpus=1";
-+		stdout-path = "serial2:115200n8";
- 	};
- 
- 
-diff --git a/arch/arm/boot/dts/exynos4412-origen.dts b/arch/arm/boot/dts/exynos4412-origen.dts
-index 346f71932457..698de4345d16 100644
---- a/arch/arm/boot/dts/exynos4412-origen.dts
-+++ b/arch/arm/boot/dts/exynos4412-origen.dts
-@@ -25,8 +25,7 @@
- 	};
- 
- 	chosen {
--		bootargs ="console=ttySAC2,115200";
--		stdout-path = &serial_2;
-+		stdout-path = "serial2:115200n8";
- 	};
- 
- 	firmware@203f000 {
-diff --git a/arch/arm/boot/dts/exynos4412-smdk4412.dts b/arch/arm/boot/dts/exynos4412-smdk4412.dts
-index 5c5c2887c14f..e70fb6e601f0 100644
---- a/arch/arm/boot/dts/exynos4412-smdk4412.dts
-+++ b/arch/arm/boot/dts/exynos4412-smdk4412.dts
-@@ -23,8 +23,8 @@
- 	};
- 
- 	chosen {
--		bootargs ="root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC1,115200 init=/linuxrc";
--		stdout-path = &serial_1;
-+		bootargs = "root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M init=/linuxrc";
-+		stdout-path = "serial1:115200n8";
- 	};
- 
- 	fixed-rate-clocks {
++&reg_ldo_io0 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-ctp";
++	status = "okay";
++};
++
+ &reg_rtc_ldo {
+ 	regulator-name = "vcc-rtc";
+ };
 -- 
-2.17.1
+2.18.0.321.gffc6fa0e3
