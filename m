@@ -1,127 +1,159 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v4 3/4] dt-bindings: arm: coresight: Unify funnel DT
- binding
-Date: Mon, 8 Apr 2019 11:51:16 +0100
-Message-ID: <7f63abef-76fc-a767-723d-caacc8da29ae@arm.com>
-References: <20190406112145.15184-1-leo.yan@linaro.org>
- <20190406112145.15184-4-leo.yan@linaro.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 3/6] ARM: dts: sun50i: h6: Introduce Beelink GS1 board
+Date: Mon, 8 Apr 2019 12:51:15 +0200
+Message-ID: <20190408105115.akqzbs54x4xpof5b@flea>
+References: <20190408092619.23152-1-peron.clem@gmail.com>
+ <20190408092619.23152-4-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="frrkbpd7vjm33wr6"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190406112145.15184-4-leo.yan@linaro.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190408092619.23152-4-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: leo.yan@linaro.org, mathieu.poirier@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, shiwanglai@hisilicon.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/06/2019 12:21 PM, Leo Yan wrote:
-> Following the same fashion with replicator DT binding, this patch is to
-> unify the DT binding for funnel to support static and dynamic modes;
-> finally we get the funnel DT binding as below:
-> 
-> Before patch:
-> 
->    Static funnel, aka. non-configurable funnel:
->      Not supported;
-> 
->    Dynamic funnel, aka. configurable funnel:
->      "arm,coresight-funnel", "arm,primecell";
-> 
-> After patch:
-> 
->    Static funnel:
->      "arm,coresight-static-funnel";
-> 
->    Dynamic funnel:
->      "arm,coresight-funnel", "arm,primecell"; (obsolete)
->      "arm,coresight-dynamic-funnel", "arm,primecell";
-> 
-> At the end of this patch, it gives an example for static funnel DT
-> binding, and updates the dynamic funnel example.
-> 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Wanglai Shi <shiwanglai@hisilicon.com>
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+
+--frrkbpd7vjm33wr6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Apr 08, 2019 at 11:26:16AM +0200, Cl=E9ment P=E9ron wrote:
+> Beelink GS1 is an Allwinner H6 based TV box,
+> which support:
+> - Allwinner H6 Quad-core 64-bit ARM Cortex-A53
+> - GPU Mali-T720
+> - 2GB LPDDR3 RAM
+> - AXP805 PMIC
+> - 1Gbps GMAC via RTL8211E
+> - FN-Link 6222B-SRB Wifi/BT
+> - 1x USB 2.0 Host and 1x USB 3.0 Host
+> - HDMI port
+> - S/PDIF Tx
+> - IR receiver
+> - 5V/2A DC power supply
+>
+> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
 > ---
->   .../devicetree/bindings/arm/coresight.txt     | 52 +++++++++++++++++--
->   1 file changed, 48 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> index f8f794869af2..f8ad11a17cd5 100644
-> --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> @@ -8,7 +8,8 @@ through the intermediate links connecting the source to the currently selected
->   sink. Each CoreSight component device should use these properties to describe
->   its hardware characteristcs.
->   
-> -* Required properties for all components *except* non-configurable replicators:
-> +* Required properties for all components *except* non-configurable replicators
-> +  and non-configurable funnels:
->   
->   	* compatible: These have to be supplemented with "arm,primecell" as
->   	  drivers are using the AMBA bus interface.  Possible values include:
-> @@ -24,8 +25,11 @@ its hardware characteristcs.
->   		  discovered at boot time when the device is probed.
->   			"arm,coresight-tmc", "arm,primecell";
->   
-> -		- Trace Funnel:
-> +		- Trace Programmable Funnel, the compatible string
-> +		  "arm,coresight-funnel" is obsolete, keep it to support
-> +		  the old DT bindings:
->   			"arm,coresight-funnel", "arm,primecell";
-> +			"arm,coresight-dynamic-funnel", "arm,primecell";
-
-Same comments as the first patch here.
-
-
-> +	funnel {
-> +		/*
-> +		 * non-configurable funnel don't show up on the AMBA
-> +		 * bus.  As such no need to add "arm,primecell".
-> +		 */
-> +		compatible = "arm,coresight-static-funnel";
-> +		clocks = <&crg_ctrl HI3660_PCLK>;
-> +		clock-names = "apb_pclk";
+>  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+>  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   | 262 ++++++++++++++++++
+>  2 files changed, 263 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.d=
+ts
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts=
+/allwinner/Makefile
+> index e4dce2f6fa3a..2dd806a3d5c9 100644
+> --- a/arch/arm64/boot/dts/allwinner/Makefile
+> +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> @@ -20,6 +20,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-pc2.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-prime.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus2.dtb
+> +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-beelink-gs1.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-lite2.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-one-plus.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-pine-h64.dtb
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/ar=
+ch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+> new file mode 100644
+> index 000000000000..3087e56727e1
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+> @@ -0,0 +1,262 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+> +/*
+> + * Copyright (C) 2019 Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> + */
 > +
-> +		out-ports {
-> +			port {
-> +				combo_funnel_out: endpoint {
-> +					remote-endpoint = <&top_funnel_in>;
-> +				};
-> +			};
-> +		};
+> +/dts-v1/;
 > +
-> +		in-ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
+> +#include "sun50i-h6.dtsi"
 > +
-> +			port@0 {
-> +				reg = <0>;
-> +				combo_funnel_in0: endpoint {
-> +					remote-endpoint = <&cluster0_etf_out>;
-> +				};
-> +			};
+> +#include <dt-bindings/gpio/gpio.h>
 > +
-> +			port@1 {
-> +				reg = <1>;
-> +				combo_funnel_in1: endpoint {
-> +					remote-endpoint = <&cluster1_etf_out>;
-> +				};
+> +/ {
+> +	model =3D "Beelink GS1";
+> +	compatible =3D "azw,beelink-gs1", "allwinner,sun50i-h6";
+> +
+> +	aliases {
+> +		ethernet0 =3D &emac;
+> +		serial0 =3D &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path =3D "serial0:115200n8";
+> +	};
+> +
+> +	connector {
+> +		compatible =3D "hdmi-connector";
+> +		type =3D "a";
+> +
+> +		port {
+> +			hdmi_con_in: endpoint {
+> +				remote-endpoint =3D <&hdmi_out_con>;
 > +			};
 > +		};
 > +	};
 > +
->   	funnel@20040000 {
+> +	leds {
+> +		compatible =3D "gpio-leds";
+> +
+> +		power {
+> +			label =3D "beelink:white:power";
+> +			gpios =3D <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
+> +			default-state =3D "on";
+> +		};
+> +	};
+> +
+> +	reg_vcc5v: vcc5v {
+> +		/* board wide 5V supply directly from the DC jack */
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "vcc-5v";
+> +		regulator-min-microvolt =3D <5000000>;
+> +		regulator-max-microvolt =3D <5000000>;
+> +		regulator-always-on;
+> +	};
+> +};
+> +
+> +&de {
+> +	status =3D "okay";
+> +};
+> +
+> +&ehci0 {
+> +	status =3D "okay";
+> +};
+> +
+> +&emac {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&ext_rgmii_pins>;
+> +	phy-mode =3D "rgmii";
+> +	phy-handle =3D <&ext_rgmii_phy>;
+> +	phy-supply =3D <&reg_aldo2>;
+> +	allwinner,rx-delay-ps =3D <0>;
+> +	allwinner,tx-delay-ps =3D <0>;
 
-Should we rename this to say dynamic_funnel@2004000 { ?
+These two are at their default values
 
-> -		compatible = "arm,coresight-funnel", "arm,primecell";
-> +		compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
->   		reg = <0 0x20040000 0 0x1000>;
+Maxime
 
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Rest looks fine to me.
+--frrkbpd7vjm33wr6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Suzuki
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKsnowAKCRDj7w1vZxhR
+xUs3AP9ecF9JxUjHuUkyPJV7+cTKxLyWGZA5H+2a3APCyQKnIgEA5xI8Yb1t56Py
+egnVkisTa1GnCZGnoY3osdAJBud57Aw=
+=VCI3
+-----END PGP SIGNATURE-----
+
+--frrkbpd7vjm33wr6--
