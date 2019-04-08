@@ -1,114 +1,79 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Subject: Re: [PATCH v3 1/6] arm64: dts: allwinner: h6: move MMC pinctrl to dtsi
-Date: Mon, 8 Apr 2019 16:40:17 +0200
-Message-ID: <CAJiuCcfpM0nC3W8+kLE+di-H5ph+u5kGRbCd31orax68A3iA4g@mail.gmail.com>
-References: <20190408092619.23152-1-peron.clem@gmail.com> <20190408092619.23152-2-peron.clem@gmail.com>
- <20190408104157.tdxg2al3fpanhqqu@flea>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v5 1/7] dt-bindings: Add panel-timing subnode to
+ simple-panel
+Date: Mon, 8 Apr 2019 07:39:37 -0700
+Message-ID: <CAD=FV=UJXLeEDPRAHY5-f2D4qJ4rq0LmKUDf4MANrb5KOm_x=g@mail.gmail.com>
+References: <20190401171724.215780-1-dianders@chromium.org>
+ <20190401171724.215780-2-dianders@chromium.org> <20190408103240.GF6644@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190408104157.tdxg2al3fpanhqqu@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190408103240.GF6644@ulmo>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Jeffy Chen <jeffy.chen@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Boris Brezillon <boris.brezillon@collabora.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel@collabora.com>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, 8 Apr 2019 at 12:42, Maxime Ripard <maxime.ripard@bootlin.com> wrot=
-e:
->
-> On Mon, Apr 08, 2019 at 11:26:14AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > There is only one pinmuxing available for each MMC controller.
-> >
-> > Move the pinctrl to the SOC
-> >
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi | 2 --
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts  | 4 ----
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi          | 4 ++++
-> >  3 files changed, 4 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/ar=
-ch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-> > index b2526dac2fcf..62e27948a3fa 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-> > @@ -56,8 +56,6 @@
-> >  };
-> >
-> >  &mmc0 {
-> > -     pinctrl-names =3D "default";
-> > -     pinctrl-0 =3D <&mmc0_pins>;
-> >       vmmc-supply =3D <&reg_cldo1>;
-> >       cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>;
-> >       bus-width =3D <4>;
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arc=
-h/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> > index bdb8470fc8dc..4802902e128f 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> > @@ -104,8 +104,6 @@
-> >  };
-> >
-> >  &mmc0 {
-> > -     pinctrl-names =3D "default";
-> > -     pinctrl-0 =3D <&mmc0_pins>;
-> >       vmmc-supply =3D <&reg_cldo1>;
-> >       cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>;
-> >       bus-width =3D <4>;
-> > @@ -113,8 +111,6 @@
-> >  };
-> >
-> >  &mmc2 {
-> > -     pinctrl-names =3D "default";
-> > -     pinctrl-0 =3D <&mmc2_pins>;
-> >       vmmc-supply =3D <&reg_cldo1>;
-> >       vqmmc-supply =3D <&reg_bldo2>;
-> >       non-removable;
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
-boot/dts/allwinner/sun50i-h6.dtsi
-> > index 3e4bb0b0de69..006d3b6418af 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > @@ -278,6 +278,8 @@
-> >                       resets =3D <&ccu RST_BUS_MMC0>;
-> >                       reset-names =3D "ahb";
-> >                       interrupts =3D <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-> > +                     pinctrl-names =3D "default";
->
-> This is indented with spaces and not tabulations. This error is
-> reported by checkpatch.
->
-> > +                     pinctrl-0 =3D <&mmc0_pins>;
-> >                       status =3D "disabled";
-> >                       #address-cells =3D <1>;
-> >                       #size-cells =3D <0>;
-> > @@ -306,6 +308,8 @@
-> >                       resets =3D <&ccu RST_BUS_MMC2>;
-> >                       reset-names =3D "ahb";
-> >                       interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-> > +                     pinctrl-names =3D "default";
-> > +                     pinctrl-0 =3D <&mmc0_pins>;
->
-> I guess you meant mmc2?
-Yes
-
->
-> Can you test your patches before sending them please?
-I made a test before posting the patch but I think my U-boot correctly
-mux the pins before linux.
-That's why I didn't catch it.
-Anyway it's really trival and I should have seen it.
-My apologizes for this,
-Cl=C3=A9ment
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+VGhpZXJyeSwKCk9uIE1vbiwgQXByIDgsIDIwMTkgYXQgMzozMiBBTSBUaGllcnJ5IFJlZGluZyA8
+dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPiB3cm90ZToKPgo+IE9uIE1vbiwgQXByIDAxLCAyMDE5
+IGF0IDEwOjE3OjE4QU0gLTA3MDAsIERvdWdsYXMgQW5kZXJzb24gd3JvdGU6Cj4gPiBGcm9tOiBT
+ZWFuIFBhdWwgPHNlYW5wYXVsQGNocm9taXVtLm9yZz4KPiA+Cj4gPiBUaGlzIHBhdGNoIGFkZHMg
+YSBuZXcgc3Vibm9kZSB0byBzaW1wbGUtcGFuZWwgYWxsb3dpbmcgdXMgdG8gb3ZlcnJpZGUKPiA+
+IHRoZSB0eXBpY2FsIHRpbWluZyBleHByZXNzZWQgaW4gdGhlIHBhbmVsJ3MgZGlzcGxheV90aW1p
+bmcuCj4gPgo+ID4gQ2hhbmdlcyBpbiB2MjoKPiA+ICAtIFNwbGl0IG91dCB0aGUgYmluZGluZyBp
+bnRvIGEgbmV3IHBhdGNoIChSb2IpCj4gPiAgLSBkaXNwbGF5LXRpbWluZ3MgaXMgYSBuZXcgc2Vj
+dGlvbiAoUm9iKQo+ID4gIC0gVXNlIHRoZSBmdWxsIGRpc3BsYXktdGltaW5ncyBzdWJub2RlIGlu
+c3RlYWQgb2YgcGlja2luZyB0aGUgdGltaW5nCj4gPiAgICBvdXQgKFJvYi9UaGllcnJ5KQo+ID4g
+Q2hhbmdlcyBpbiB2MzoKPiA+ICAtIEdvIGJhY2sgdG8gdXNpbmcgdGhlIHRpbWluZyBzdWJub2Rl
+IGRpcmVjdGx5LCBidXQgcmVuYW1lIHRvCj4gPiAgICBwYW5lbC10aW1pbmcgKFJvYikKPiA+IENo
+YW5nZXMgaW4gdjQ6Cj4gPiAgLSBTaW1wbGlmeSBkZXNjLiBmb3Igd2hlbiBvdmVycmlkZSBzaG91
+bGQgYmUgdXNlZCAoVGhpZXJyeS9MYXVyZW50KQo+ID4gIC0gUmVtb3ZlZCBSb2IgSCByZXZpZXcg
+c2luY2UgaXQncyBiZWVuIGEgeWVhciBhbmQgd29yZGluZyBjaGFuZ2VkCj4gPiBDaGFuZ2VzIGlu
+IHY1Ogo+ID4gIC0gUmVtb3ZlZCBiaXQgYWJvdXQgT1MgbWF5IGlnbm9yZSAoUm9iL0V6ZXF1aWVs
+KQo+ID4KPiA+IENjOiBEb3VnIEFuZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+Cj4gPiBD
+YzogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KPiA+IENjOiBIZWlrbyBTdHVlYm5lciA8
+aGVpa29Ac250ZWNoLmRlPgo+ID4gQ2M6IEplZmZ5IENoZW4gPGplZmZ5LmNoZW5Acm9jay1jaGlw
+cy5jb20+Cj4gPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4KPiA+IENjOiBT
+dMOpcGhhbmUgTWFyY2hlc2luIDxtYXJjaGV1QGNocm9taXVtLm9yZz4KPiA+IENjOiBUaGllcnJ5
+IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPgo+ID4gQ2M6IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnCj4gPiBDYzogZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+ID4g
+Q2M6IGxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKPiA+IFNpZ25lZC1vZmYtYnk6
+IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hyb21pdW0ub3JnPgo+ID4gU2lnbmVkLW9mZi1ieTogRG91
+Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgo+ID4gLS0tCj4gPgo+ID4gIC4u
+Li9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQgICB8IDIyICsrKysrKysr
+KysrKysrKysrKysKPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjIgaW5zZXJ0aW9ucygrKQo+ID4KPiA+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
+YW5lbC9zaW1wbGUtcGFuZWwudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvcGFuZWwvc2ltcGxlLXBhbmVsLnR4dAo+ID4gaW5kZXggYjJiODcyYzcxMGYyLi45
+Mzg4MjI2OGMwYjkgMTAwNjQ0Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0Cj4gPiArKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0Cj4g
+PiBAQCAtMTUsNiArMTUsMTYgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKPiA+ICAgIChob3QgcGx1
+ZyBkZXRlY3QpIHNpZ25hbCwgYnV0IHRoZSBzaWduYWwgaXNuJ3QgaG9va2VkIHVwIHNvIHdlIHNo
+b3VsZAo+ID4gICAgaGFyZGNvZGUgdGhlIG1heCBkZWxheSBmcm9tIHRoZSBwYW5lbCBzcGVjIHdo
+ZW4gcG93ZXJpbmcgdXAgdGhlIHBhbmVsLgo+ID4KPiA+ICtwYW5lbC10aW1pbmcgc3Vibm9kZQo+
+Cj4gSXMgdGhlcmUgYW55IHJlYXNvbiB3aHkgd2UgbmVlZCB0aGUgcGFuZWwtIHByZWZpeD8gVGhp
+cyBpcyBhbHJlYWR5IHBhcnQKPiBvZiBhIHBhbmVsIGRlZmluaXRpb24sIHNvIGl0J3MgY29tcGxl
+dGVseSByZWR1bmRhbnQuIFdoeSBub3QganVzdCBuYW1lCj4gdGhlIHN1Ym5vZGUgInRpbWluZyI/
+CgpJdCB3YXMgYSByZWFsbHkgbG9uZyB0aW1lIGFnbyBzaW5jZSB0aGlzIHBhdGNoIHNlcmllcyB3
+YXMgaWRsZSBmb3IgYQp3aGlsZSwgYnV0IHlvdSBwcmV2aW91cyBoYWQgc2ltaWxhciBmZWVkYmFj
+ayBpbiB2MyBidXQgZW5kZWQgdXAgT0sKd2l0aCBpdC4gIFNlZToKCmh0dHBzOi8vcGF0Y2h3b3Jr
+Lmtlcm5lbC5vcmcvcGF0Y2gvMTAyMDc1ODMvCgpJIGJlbGlldmUgdGhlIG9yaWdpbmFsIG5vZGUg
+bmFtZSBjYW1lIG91dCBvZiBzb21lIGJhY2sgYW5kIGZvcnRoCmJldHdlZW4gUm9iIGFuZCBTZWFu
+LiAgQXMgZmFyIGFzIEkgY2FuIHRlbGwsIHRoZSBjb250ZXh0IGlzIGJhY2sgaW4KPGh0dHBzOi8v
+cGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAyMDM0ODMvPi4gIEkgdGhpbmsgUm9iIHdhbnRl
+ZCBpdAp0byBmb2xsb3cgb3RoZXIgc2ltaWxhciBub2RlIG5hbWVzLgoKClRoYXQgYWxsIGJlaW5n
+IHNhaWQsIGlmIHlvdSBmZWVsIHN0cm9uZ2x5IGFib3V0IGl0IGJlaW5nIGNhbGxlZAoidGltaW5n
+IiBhbmQgUm9iJ3MgT0sgdy8gdGhhdCB0b28gdGhlbiBJJ2xsIHJlLXNwaW4gdGhlIHNlcmllcy4K
+Ci1Eb3VnCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
