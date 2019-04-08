@@ -1,124 +1,66 @@
-Return-Path: <SRS0=akoX=SD=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 01/12] dt-bindings: phy: rcar-gen2: Add r8a77470 support
-Date: Mon,  1 Apr 2019 13:53:41 +0100
-Message-Id: <1554123232-58942-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
-References: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+MIME-Version: 1.0
+Date: Mon, 8 Apr 2019 13:36:07 -0500
+References: <1554181578-13362-1-git-send-email-shubhrajyoti.datta@gmail.com>
+	<1554181578-13362-2-git-send-email-shubhrajyoti.datta@gmail.com>
+	<5ca841e5.1c69fb81.87c5.289f@mx.google.com>
+	<CAKfKVtH8Y9fdNTBYbTJ8dTvbk9kmNf_Fd=GeAXCrSeE46jBgHQ@mail.gmail.com>
+In-Reply-To: <CAKfKVtH8Y9fdNTBYbTJ8dTvbk9kmNf_Fd=GeAXCrSeE46jBgHQ@mail.gmail.com>
+Message-ID: <CAL_JsqJ8+akzB7EuUVBsqZ-aqZ9bNGjEtQf+2PwTdZk2TAMz7w@mail.gmail.com>
+Subject: Re: [PATCHv2 1/2] dt-bindings: xilinx-uartps: Add support for noctsrts
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add USB PHY support for r8a77470 SoC. Renesas RZ/G1C (R8A77470)
-USB PHY is similar to the R-Car Gen2 family, but has the below
-feature compared to other RZ/G1 and R-Car Gen2/3 SoCs
+On Sun, Apr 7, 2019 at 10:26 PM Shubhrajyoti Datta
+<shubhrajyoti.datta@gmail.com> wrote:
+>
+> Hi Rob,
+> Thanks for  the review.
+>
+> On Sat, Apr 6, 2019 at 11:36 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Tue, Apr 02, 2019 at 10:36:17AM +0530, shubhrajyoti.datta@gmail.com wrote:
+> > > From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> > >
+> > > Vivado has a configurationo for selecting the flow control.
+> >
+> > Vivado is ?
+> >
+> > > Add a dt binding to check for the same.
+> > >
+> > > Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/serial/cdns,uart.txt | 4 ++++
+> > >  1 file changed, 4 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/serial/cdns,uart.txt b/Documentation/devicetree/bindings/serial/cdns,uart.txt
+> > > index 227bb77..5161a05 100644
+> > > --- a/Documentation/devicetree/bindings/serial/cdns,uart.txt
+> > > +++ b/Documentation/devicetree/bindings/serial/cdns,uart.txt
+> > > @@ -12,6 +12,10 @@ Required properties:
+> > >    See ../clocks/clock-bindings.txt for details.
+> > >
+> > >
+> > > +Optional properties:
+> > > +- xlnx,nortscts: The presence of this property indicates that the
+> > > +    UART does not support modem lines for RTS/CTS hardware flow control.
+> >
+> > We already have 'uart-has-rtscts'. Please use that. Maybe you need a new
+> > compatible as I'd guess current users assume RTS/CTS is present.
+>
+> the setting in vivado (tool helps configure the board) which says no
+> flowcontrol.
+> this just keeps the lines in a unknown state.
+>
+> this issue  with 'uart-has-rtscts'  is  backward compatibility
+> current code assumes rts / cts is
+> present. If not preset then it  will return false. So I  thought of
+> having a property with the inverse.
 
-It has a shared pll reset for usbphy0/usbphy1 and this register
-reside in usbphy0 block.
+Searching more, we also have 'cts-override' (in snps-dw-apb-uart.txt).
+How about using that? You don't really need to care about RTS as
+setting it will just have no effect.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-V1-->V2
-  * Incorporated Rob's review comment
-    https://patchwork.kernel.org/patch/10655853/
----
- .../devicetree/bindings/phy/rcar-gen2-phy.txt      | 57 ++++++++++++++++++++--
- 1 file changed, 53 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt b/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
-index 4f0879a..ac96d64 100644
---- a/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
-@@ -7,6 +7,7 @@ Required properties:
- - compatible: "renesas,usb-phy-r8a7743" if the device is a part of R8A7743 SoC.
- 	      "renesas,usb-phy-r8a7744" if the device is a part of R8A7744 SoC.
- 	      "renesas,usb-phy-r8a7745" if the device is a part of R8A7745 SoC.
-+	      "renesas,usb-phy-r8a77470" if the device is a part of R8A77470 SoC.
- 	      "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
- 	      "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
- 	      "renesas,usb-phy-r8a7794" if the device is a part of R8A7794 SoC.
-@@ -30,7 +31,7 @@ channels. These subnodes must contain the following properties:
- - #phy-cells: see phy-bindings.txt in the same directory, must be <1>.
- 
- The phandle's argument in the PHY specifier is the USB controller selector for
--the USB channel; see the selector meanings below:
-+the USB channel other than r8a77470 SoC; see the selector meanings below:
- 
- +-----------+---------------+---------------+
- |\ Selector |               |               |
-@@ -41,6 +42,16 @@ the USB channel; see the selector meanings below:
- | 2         | PCI EHCI/OHCI | xHCI          |
- +-----------+---------------+---------------+
- 
-+For r8a77470 SoC;see the selector meaning below:
-+
-++-----------+---------------+---------------+
-+|\ Selector |               |               |
-++ --------- +       0       |       1       |
-+| Channel  \|               |               |
-++-----------+---------------+---------------+
-+| 0         | EHCI/OHCI     | HS-USB        |
-++-----------+---------------+---------------+
-+
- Example (Lager board):
- 
- 	usb-phy@e6590100 {
-@@ -48,15 +59,53 @@ Example (Lager board):
- 		reg = <0 0xe6590100 0 0x100>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
-+		clocks = <&cpg CPG_MOD 704>;
- 		clock-names = "usbhs";
-+		power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
-+		resets = <&cpg 704>;
- 
--		usb-channel@0 {
-+		usb0: usb-channel@0 {
- 			reg = <0>;
- 			#phy-cells = <1>;
- 		};
--		usb-channel@2 {
-+		usb2: usb-channel@2 {
- 			reg = <2>;
- 			#phy-cells = <1>;
- 		};
- 	};
-+
-+Example (iWave RZ/G1C sbc):
-+
-+	usbphy0: usb-phy0@e6590100 {
-+		compatible = "renesas,usb-phy-r8a77470",
-+			     "renesas,rcar-gen2-usb-phy";
-+		reg = <0 0xe6590100 0 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&cpg CPG_MOD 704>;
-+		clock-names = "usbhs";
-+		power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+		resets = <&cpg 704>;
-+
-+		usb0: usb-channel@0 {
-+			reg = <0>;
-+			#phy-cells = <1>;
-+		};
-+	};
-+
-+	usbphy1: usb-phy@e6598100 {
-+		compatible = "renesas,usb-phy-r8a77470",
-+			     "renesas,rcar-gen2-usb-phy";
-+		reg = <0 0xe6598100 0 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&cpg CPG_MOD 706>;
-+		clock-names = "usbhs";
-+		power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+		resets = <&cpg 706>;
-+
-+		usb1: usb-channel@0 {
-+			reg = <0>;
-+			#phy-cells = <1>;
-+		};
-+	};
--- 
-2.7.4
+Rob
