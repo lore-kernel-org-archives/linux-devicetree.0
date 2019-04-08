@@ -1,56 +1,61 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 0/6] Add Beelink GS1
-Date: Mon,  8 Apr 2019 17:27:49 +0200
-Message-ID: <20190408152755.17405-1-peron.clem@gmail.com>
+Subject: [PATCH v4 5/6] arm64: dts: allwinner: h6: orangepi: Add PIO regulators
+Date: Mon,  8 Apr 2019 17:27:54 +0200
+Message-ID: <20190408152755.17405-6-peron.clem@gmail.com>
+References: <20190408152755.17405-1-peron.clem@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190408152755.17405-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Thanks to Jagan and Icenowy, most of this device-tree is taken from their works
-on the Orange Pi One Plus and Pine H64.
+OrangePi One Plus and OrangePi Lite2 use the same PIO regulators.
 
-PLEASE NOTE that I don't own an OrangePi nor a Pine H64 and PIO regulators for
-these board has not been tested !
-Please add a tested-by on these commits 5 and 6 before merging it.
+Add this in the common device tree.
 
-Changes in v4 (Thanks to Maxime Ripard):
- - fix incorrect mmc_pins label
- - remove default rx/tr timing in emac
- - consistency in commit titles
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ .../boot/dts/allwinner/sun50i-h6-orangepi.dtsi  | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Changes in v3 (Thanks to Maxime Ripard):
- - remove PL regulator
- - separate patch for sunxi.yaml
- - collect reviewed-by
-
-Changes in v2 (Thanks to Maxime Ripard):
- - move MMC pinctrl to SOC dtsi
- - add board to Sunxi YAML file
- - add PIO/R_PIO regulators
- - remove always_on from SDIO regulators
-
-Clément Péron (6):
-  arm64: dts: allwinner: h6: move MMC pinctrl to dtsi
-  dt-bindings: vendor-prefixes: add AZW
-  arm64: dts: allwinner: h6: Introduce Beelink GS1 board
-  dt-bindings: arm: sunxi: Add Beelink GS1 board
-  arm64: dts: allwinner: h6: orangepi: Add PIO regulators
-  arm64: dts: allwinner: h6: pine64: Add PIO regulators
-
- .../devicetree/bindings/arm/sunxi.yaml        |   5 +
- .../devicetree/bindings/vendor-prefixes.txt   |   1 +
- arch/arm64/boot/dts/allwinner/Makefile        |   1 +
- .../dts/allwinner/sun50i-h6-beelink-gs1.dts   | 260 ++++++++++++++++++
- .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  19 +-
- .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  21 +-
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |   4 +
- 7 files changed, 305 insertions(+), 6 deletions(-)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+index 62e27948a3fa..4044f2dc66ac 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+@@ -70,6 +70,12 @@
+ 	status = "okay";
+ };
+ 
++&pio {
++	vcc-pc-supply = <&reg_bldo2>;
++	vcc-pd-supply = <&reg_cldo1>;
++	vcc-pg-supply = <&reg_bldo3>;
++};
++
+ &r_i2c {
+ 	status = "okay";
+ 
+@@ -189,6 +195,17 @@
+ 	};
+ };
+ 
++&r_pio {
++	/*
++	 * PL0 and PL1 are used for PMIC I2C
++	 * don't enable the pl-supply else
++	 * it will fail at boot
++	 *
++	 * vcc-pl-supply = <&reg_aldo1>;
++	 */
++	vcc-pm-supply = <&reg_bldo3>;
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_ph_pins>;
 -- 
 2.17.1
