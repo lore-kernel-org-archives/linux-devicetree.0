@@ -1,52 +1,46 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 2/5] dt-bindings: phy: add binding for
- Allwinner USB3 PHY
-Date: Mon, 8 Apr 2019 09:14:04 +0200
-Message-ID: <20190408071404.v3qjtivfqc2uz5le@flea>
-References: <20190405205736.55177-1-icenowy@aosc.io>
- <20190405205736.55177-3-icenowy@aosc.io>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2 19/20] DT bindings: spi: document tx/rx clock delay
+ properties
+Date: Mon, 8 Apr 2019 14:22:11 +0700
+Message-ID: <20190408072211.GL2803@sirena.org.uk>
+References: <1554423259-26056-1-git-send-email-skomatineni@nvidia.com>
+ <1554423259-26056-19-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="prlrlu4r6usqt5ir"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBP7JVPSQKGQEPQCLYGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Bzq2cJcN05fcPrs+"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190405205736.55177-3-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1554423259-26056-19-git-send-email-skomatineni@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com, robh+dt@kernel.org, mark.rutland@arm.com, kyarlagadda@nvidia.com, ldewangan@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---prlrlu4r6usqt5ir
-Content-Type: text/plain; charset="UTF-8"
+--Bzq2cJcN05fcPrs+
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Hi,
+On Thu, Apr 04, 2019 at 05:14:18PM -0700, Sowjanya Komatineni wrote:
+> Tegra SPI controller has TX and RX trimmers to tuning the delay of
+> SPI master clock with respect to the data.
 
-On Sat, Apr 06, 2019 at 04:57:33AM +0800, Icenowy Zheng wrote:
-> The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
-> external USB3 pins of the SoC.
->
-> Add a device tree binding for the PHY.
->
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Please use subject lines matching the style for the subsystem.  This
+makes it easier for people to identify relevant patches.
 
-I know that this isn't the first iteration, and sorry if this comes
-out a bit late, but could you make a YAML schemas for this instead?
+--Bzq2cJcN05fcPrs+
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks!
-Maxime
+-----BEGIN PGP SIGNATURE-----
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---prlrlu4r6usqt5ir--
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyq9qIACgkQJNaLcl1U
+h9CL1Qf+Jzho0wXetIigWcaXeklQTCcQGD/HvADTvRefQVzgKGRbdbYM7XofM95W
+d6UkqYM3UZokgjeqckpNZ0YsvlMkUJDXcTAldSA91XHo/rPfnM6VEAtIHLYNZ60K
+DyHx7b+AETu8NGFx916xDLSnkzibjXM66JSR/P9IQANLHBiU8xIYWIJ5pHTO2j1h
+5Hq9gjGcLRvldhmwpk8OlNSak7MlOb+EYwmKMMvFvLWaivr9w+gyNbtwELL6GaUx
+XP9wCV1ZFJs3cKxSg7IL1etBKbvVny/1suM08+0IlniqYDQdlA3LRqQuk4+unkRd
+OePcmB7Ut740XUhSQH6ZmV6CykWsQw==
+=trro
+-----END PGP SIGNATURE-----
+
+--Bzq2cJcN05fcPrs+--
