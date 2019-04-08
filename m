@@ -1,92 +1,92 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH] dt-bindings: cpu: Fix JSON schema
-Date: Mon, 8 Apr 2019 12:35:54 +0900
-Message-ID: <2e4b09ae-968c-614b-4e20-b29d17db7a3e@socionext.com>
-References: <20190318100521.29109-1-maxime.ripard@bootlin.com>
- <CAL_JsqJ_LYycXazkdP2Q=e-jynKiX+z5En0bz0AWpDjsevwQTg@mail.gmail.com>
- <20190401091050.cwph7xlpv3pmkwnq@flea>
- <78bb248e-56b8-b825-e763-583f75148eb3@socionext.com>
- <20190401113546.d6p2mg2y47abhumz@flea>
- <b6cb709b-7b1a-6bab-6f93-bcb565be18fb@socionext.com>
- <b3ecf5c5-9b1a-eb8b-95c2-c30a94c8bdd8@socionext.com>
- <20190407221329.skbjjsjvqpnxwime@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 1/2] ARM: dts: exynos: Use stdout-path property instead of console in bootargs
+Date: Mon,  8 Apr 2019 07:19:25 +0200
+Message-ID: <20190408051926.462-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190407221329.skbjjsjvqpnxwime@localhost>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: notify@kernel.org, Sylwester Nawrocki <snawrocki@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Replacing bootargs with stdout-path property in chosen node allows using
+early console by adding just 'earlycon' parameter to the kernel command
+line.
 
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/boot/dts/exynos4412-trats2.dts    | 3 ++-
+ arch/arm/boot/dts/exynos5250-smdk5250.dts  | 3 ++-
+ arch/arm/boot/dts/exynos5260-xyref5260.dts | 2 +-
+ arch/arm/boot/dts/exynos5410-smdk5410.dts  | 2 +-
+ arch/arm/boot/dts/exynos5420-smdk5420.dts  | 3 ++-
+ 5 files changed, 8 insertions(+), 5 deletions(-)
 
-On 2019/04/08 7:13, Olof Johansson wrote:
-> On Tue, Apr 02, 2019 at 08:42:02PM +0900, Sugaya, Taichi wrote:
->> Hi,
->>
->> On 2019/04/01 22:02, Sugaya, Taichi wrote:
->>> Hi,
->>>
->>> On 2019/04/01 20:35, Maxime Ripard wrote:
->>>> Hi,
->>>>
->>>> On Mon, Apr 01, 2019 at 07:52:06PM +0900, Sugaya, Taichi wrote:
->>>>> On 2019/04/01 18:10, Maxime Ripard wrote:
->>>>>> Hi Sugaya, Arnd, Olof,
->>>>>>
->>>>>> On Thu, Mar 28, 2019 at 02:35:54PM -0500, Rob Herring wrote:
->>>>>>> +arm-soc
->>>>>>>
->>>>>>> On Mon, Mar 18, 2019 at 5:05 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->>>>>>>>
->>>>>>>> Commit fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for
->>>>>>>> Milbeaut") added support for a new cpu enable-method, but did so using
->>>>>>>> tabulations to ident. This is however invalid in the syntax, and resulted
->>>>>>>> in a failure when trying to use that schemas for validation.
->>>>>>>>
->>>>>>>> Use spaces instead of tabs to indent to fix this.
->>>>>>>>
->>>>>>>> Fixes: fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
->>>>>>>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->>>>>>>> ---
->>>>>>>>     Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
->>>>>>>>     1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>>
->>>>>>> Reviewed-by: Rob Herring <robh@kernel.org>
->>>>>>>
->>>>>>> This should be applied to arm-soc tree having the commit.
->>>>>>
->>>>>> Could you pick up that patch?
->>>>>
->>>>> I got it.
->>>>> My mission is to resubmit your fix-patch added my singned-off tag and
->>>>> Rob's reviewed tag...right?
->>>>
->>>> If you are part of arm-soc and send your pull requests to Arnd and
->>>> Olof, simply pick it up in the same branch than the initial patch was
->>>> in. And when you apply that patch, you indeed need to add your
->>>> Signed-off-by (note that most commands to commit have an option to do
->>>> that automatically: -s and that includes git am) and the Rob's
->>>> reviewed-by.
->>>>
->>>> Then, send a new pull request to arm-soc.
->>>>
->>>
->>> Okay, thanks for your suggestion.
->>> I try to make pull request!
->>>
->>
->> Sorry I realized that I couldn't make a private repository, so I'll send my Ack instead.
->>
->> Acked-by: Sugaya Taichi <sugaya.taichi@socionext.com>
-> 
-> Applied to arm/fixes now. Thanks!
-> 
-> 
-> -Olof
-> 
-
-Thank you for appling!
+diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+index 327ee980d3a5..aac533933c61 100644
+--- a/arch/arm/boot/dts/exynos4412-trats2.dts
++++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+@@ -22,6 +22,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5 rootwait earlyprintk panic=5";
++		bootargs = "root=/dev/mmcblk0p5 rootwait earlyprintk panic=5";
++		stdout-path = "serial2:115200n8";
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+index d5e66189ed2a..6dc96948a9cc 100644
+--- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
++++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+@@ -24,7 +24,8 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC2,115200 init=/linuxrc";
++		bootargs = "root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M init=/linuxrc";
++		stdout-path = "serial2:115200n8";
+ 	};
+ 
+ 	vdd: fixed-regulator-vdd {
+diff --git a/arch/arm/boot/dts/exynos5260-xyref5260.dts b/arch/arm/boot/dts/exynos5260-xyref5260.dts
+index fa19c59b2fb6..36a2b77eeb9d 100644
+--- a/arch/arm/boot/dts/exynos5260-xyref5260.dts
++++ b/arch/arm/boot/dts/exynos5260-xyref5260.dts
+@@ -19,7 +19,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "console=ttySAC2,115200";
++		stdout-path = "serial2:115200n8";
+ 	};
+ 
+ 	fin_pll: xxti {
+diff --git a/arch/arm/boot/dts/exynos5410-smdk5410.dts b/arch/arm/boot/dts/exynos5410-smdk5410.dts
+index 8fc8c841d34b..dffa5e3ed90c 100644
+--- a/arch/arm/boot/dts/exynos5410-smdk5410.dts
++++ b/arch/arm/boot/dts/exynos5410-smdk5410.dts
+@@ -19,7 +19,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "console=ttySAC2,115200";
++		stdout-path = "serial2:115200n8";
+ 	};
+ 
+ 	fin_pll: xxti {
+diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+index 3cf905047893..8240e5186972 100644
+--- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
++++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+@@ -21,7 +21,8 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "console=ttySAC2,115200 init=/linuxrc";
++		bootargs = "init=/linuxrc";
++		stdout-path = "serial2:115200n8";
+ 	};
+ 
+ 	fixed-rate-clocks {
+-- 
+2.17.1
