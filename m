@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 02/12] drm: sun4i: Add support for enabling
- DDC I2C bus to dw_hdmi glue
-Date: Mon, 8 Apr 2019 09:23:38 +0200
-Message-ID: <20190408072338.3urcotemju3qi2un@flea>
+Subject: Re: [PATCH 04/12] arm64: dts: allwinner: orange-pi-3:
+ Enable HDMI output
+Date: Mon, 8 Apr 2019 09:24:24 +0200
+Message-ID: <20190408072424.ilahvtykat5rnzqw@flea>
 References: <20190405234514.6183-1-megous@megous.com>
- <20190405234514.6183-3-megous@megous.com>
+ <20190405234514.6183-5-megous@megous.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="g4sjhwitnevemn7z"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBAXOVPSQKGQEIN3AWOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="ixdxe6i76c5lk3w5"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBL7OVPSQKGQE4EDWM5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190405234514.6183-3-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20190405234514.6183-5-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,21 +24,58 @@ Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy
 List-Id: devicetree@vger.kernel.org
 
 
---g4sjhwitnevemn7z
+--ixdxe6i76c5lk3w5
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Sat, Apr 06, 2019 at 01:45:04AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
+On Sat, Apr 06, 2019 at 01:45:06AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
 > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 >
-> Orange Pi 3 board requires enabling DDC I2C bus via some GPIO connected
-> transistors, before it can be used. Model this as a power supply for DDC
-> (via regulator framework).
+> Orange Pi 3 has a DDC_CEC_EN signal connected to PH2, that enables
+> the DDC I2C bus. Before EDID can be read, we need to pull PH2 high.
 >
 > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> index 7a2424fcaed7..644946749088 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> @@ -21,6 +21,17 @@
+>  		stdout-path = "serial0:115200n8";
+>  	};
+>
+> +	connector {
+> +		compatible = "hdmi-connector";
+> +		type = "a";
+> +
+> +		port {
+> +			hdmi_con_in: endpoint {
+> +				remote-endpoint = <&hdmi_out_con>;
+> +			};
+> +		};
+> +	};
+> +
+>  	leds {
+>  		compatible = "gpio-leds";
+>
+> @@ -36,6 +47,15 @@
+>  		};
+>  	};
+>
+> +	reg_ddc: ddc-io {
+> +                compatible = "regulator-fixed";
+> +                regulator-name = "ddc-io";
+> +                regulator-min-microvolt = <5000000>;
+> +                regulator-max-microvolt = <5000000>;
+> +                enable-active-high;
+> +                gpio = <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
+> +        };
+> +
 
-The DDC bus itself is usually attached to the HDMI connector, so it
-would make sense to make the supply also a property of the connector.
+This is indented with spaces and generates checkpatch warnings.
 
 Maxime
 
@@ -46,4 +83,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---g4sjhwitnevemn7z--
+--ixdxe6i76c5lk3w5--
