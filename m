@@ -1,149 +1,134 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: arm: coresight: Unify funnel DT
- binding
-Date: Mon, 8 Apr 2019 22:07:21 +0800
-Message-ID: <20190408140720.GB6541@leoy-ThinkPad-X240s>
-References: <20190406112145.15184-1-leo.yan@linaro.org>
- <20190406112145.15184-4-leo.yan@linaro.org>
- <7f63abef-76fc-a767-723d-caacc8da29ae@arm.com>
+From: Patrick Venture <venture@google.com>
+Subject: Re: [PATCH v9 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Date: Mon, 8 Apr 2019 07:12:07 -0700
+Message-ID: <CAO=notwTSPCg6AfTEftNE09agZyG-F_2BdY9aZNZm_Rv2uyZsg@mail.gmail.com>
+References: <20190404152544.214988-1-venture@google.com> <8c412bc4-6528-4496-a912-f098604e707b@www.fastmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <7f63abef-76fc-a767-723d-caacc8da29ae@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, shiwanglai@hisilicon.com, mathieu.poirier@linaro.org, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8c412bc4-6528-4496-a912-f098604e707b@www.fastmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 11:51:16AM +0100, Suzuki K Poulose wrote:
-> On 04/06/2019 12:21 PM, Leo Yan wrote:
-> > Following the same fashion with replicator DT binding, this patch is to
-> > unify the DT binding for funnel to support static and dynamic modes;
-> > finally we get the funnel DT binding as below:
-> > 
-> > Before patch:
-> > 
-> >    Static funnel, aka. non-configurable funnel:
-> >      Not supported;
-> > 
-> >    Dynamic funnel, aka. configurable funnel:
-> >      "arm,coresight-funnel", "arm,primecell";
-> > 
-> > After patch:
-> > 
-> >    Static funnel:
-> >      "arm,coresight-static-funnel";
-> > 
-> >    Dynamic funnel:
-> >      "arm,coresight-funnel", "arm,primecell"; (obsolete)
-> >      "arm,coresight-dynamic-funnel", "arm,primecell";
-> > 
-> > At the end of this patch, it gives an example for static funnel DT
-> > binding, and updates the dynamic funnel example.
-> > 
-> > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > Cc: Wanglai Shi <shiwanglai@hisilicon.com>
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+On Sun, Apr 7, 2019 at 7:03 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+>
+>
+> On Fri, 5 Apr 2019, at 01:55, Patrick Venture wrote:
+> > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+> >
+> > Signed-off-by: Patrick Venture <venture@google.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
 > > ---
-> >   .../devicetree/bindings/arm/coresight.txt     | 52 +++++++++++++++++--
-> >   1 file changed, 48 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> > index f8f794869af2..f8ad11a17cd5 100644
-> > --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> > +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> > @@ -8,7 +8,8 @@ through the intermediate links connecting the source to the currently selected
-> >   sink. Each CoreSight component device should use these properties to describe
-> >   its hardware characteristcs.
-> > -* Required properties for all components *except* non-configurable replicators:
-> > +* Required properties for all components *except* non-configurable replicators
-> > +  and non-configurable funnels:
-> >   	* compatible: These have to be supplemented with "arm,primecell" as
-> >   	  drivers are using the AMBA bus interface.  Possible values include:
-> > @@ -24,8 +25,11 @@ its hardware characteristcs.
-> >   		  discovered at boot time when the device is probed.
-> >   			"arm,coresight-tmc", "arm,primecell";
-> > -		- Trace Funnel:
-> > +		- Trace Programmable Funnel, the compatible string
-> > +		  "arm,coresight-funnel" is obsolete, keep it to support
-> > +		  the old DT bindings:
-> >   			"arm,coresight-funnel", "arm,primecell";
-> > +			"arm,coresight-dynamic-funnel", "arm,primecell";
-> 
-> Same comments as the first patch here.
-
-Will do it.
-
-> > +	funnel {
-> > +		/*
-> > +		 * non-configurable funnel don't show up on the AMBA
-> > +		 * bus.  As such no need to add "arm,primecell".
-> > +		 */
-> > +		compatible = "arm,coresight-static-funnel";
-> > +		clocks = <&crg_ctrl HI3660_PCLK>;
-> > +		clock-names = "apb_pclk";
+> > Changes for v9:
+> >  - Added missing details about syscon parent
+> > Changes for v8:
+> > - None
+> > Changes for v7:
+> > - Moved node under the syscon node it requires
+> > Changes for v6:
+> > - None
+> > Changes for v5:
+> > - None
+> > Changes for v4:
+> > - None
+> > Changes for v3:
+> > - None
+> > Changes for v2:
+> > - Added comment about syscon required parameter.
+> > ---
+> >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 56 +++++++++++++++++++
+> >  1 file changed, 56 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> > b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> > new file mode 100644
+> > index 0000000000000..05ed654848b60
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> > @@ -0,0 +1,56 @@
+> > +======================================================================
+> > +Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge
+> > Control Driver
+> > +======================================================================
 > > +
-> > +		out-ports {
-> > +			port {
-> > +				combo_funnel_out: endpoint {
-> > +					remote-endpoint = <&top_funnel_in>;
-> > +				};
-> > +			};
-> > +		};
+> > +The bridge is available on platforms with the VGA enabled on the
+> > Aspeed device.
+> > +In this case, the host has access to a 64KiB window into all of the
+> > BMC's
+> > +memory.  The BMC can disable this bridge.  If the bridge is enabled,
+> > the host
+> > +has read access to all the regions of memory, however the host only
+> > has read
+> > +and write access depending on a register controlled by the BMC.
 > > +
-> > +		in-ports {
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
+> > +Required properties:
+> > +===================
 > > +
-> > +			port@0 {
-> > +				reg = <0>;
-> > +				combo_funnel_in0: endpoint {
-> > +					remote-endpoint = <&cluster0_etf_out>;
-> > +				};
-> > +			};
+> > + - compatible: must be one of:
+> > +     - "aspeed,ast2400-p2a-ctrl"
+> > +     - "aspeed,ast2500-p2a-ctrl"
 > > +
-> > +			port@1 {
-> > +				reg = <1>;
-> > +				combo_funnel_in1: endpoint {
-> > +					remote-endpoint = <&cluster1_etf_out>;
-> > +				};
-> > +			};
-> > +		};
-> > +	};
+> > +Optional properties:
+> > +===================
 > > +
-> >   	funnel@20040000 {
-> 
-> Should we rename this to say dynamic_funnel@2004000 { ?
+> > +- memory-region: A phandle to a reserved_memory region to be used for
+> > the PCI
+> > +             to AHB mapping
+> > +
+> > +The p2a-control node should be the child of a syscon node with the
+> > required
+> > +property:
+> > +
+> > +- compatible : Should be one of the following:
+> > +             "aspeed,ast2400-scu", "syscon", "simple-mfd"
+> > +             "aspeed,g4-scu", "syscon", "simple-mfd"
+> > +             "aspeed,ast2500-scu", "syscon", "simple-mfd"
+> > +             "aspeed,g5-scu", "syscon", "simple-mfd"
+> > +
+> > +The aspeed-p2a-ctrl node should be the child of a syscon node with the
+> > required
+> > +property:
+> > +
+> > +- compatible : Should be one of the following:
+> > +             "aspeed,ast2400-scu", "syscon", "simple-mfd"
+> > +             "aspeed,g4-scu", "syscon", "simple-mfd"
+> > +             "aspeed,ast2500-scu", "syscon", "simple-mfd"
+> > +             "aspeed,g5-scu", "syscon", "simple-mfd"
+>
+> Agh, now the info's here twice!
 
-I read ePAPR and it suggests "The name of a node should be somewhat
-generic, reflecting the function of the device and not its precise
-programming model".
+Agh!  I don't even know how that happened.  Perhaps I was overzealous
+in my pasting!  I can fix it.
 
-So seems to me it's good to keep using generic naming 'funnel'.  If I
-misunderstand anything, just let me know.
-
-Will spin patch set for following other suggestions.
-
-Thanks,
-Leo Yan
-
-> 
-> > -		compatible = "arm,coresight-funnel", "arm,primecell";
-> > +		compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-> >   		reg = <0 0x20040000 0 0x1000>;
-> 
-> 
-> Rest looks fine to me.
-> 
-> Suzuki
+>
+> Next time, surely :D
+>
+> Unless Greg or Rob want to chop one out as they apply it? It looks good to
+> me otherwise.
+>
+> Andrew
+>
+> > +
+> > +Example
+> > +===================
+> > +
+> > +g4 Example
+> > +----------
+> > +
+> > +syscon: scu@1e6e2000 {
+> > +     compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
+> > +     reg = <0x1e6e2000 0x1a8>;
+> > +
+> > +     p2a: p2a-control {
+> > +             compatible = "aspeed,ast2400-p2a-ctrl";
+> > +             memory-region = <&reserved_memory>;
+> > +     };
+> > +};
+> > --
+> > 2.21.0.392.gf8f6787159e-goog
+> >
+> >
