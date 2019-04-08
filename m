@@ -1,57 +1,54 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH v4 3/3] fpga manager: Adding FPGA Manager support for
- Xilinx zynqmp
-Date: Mon, 8 Apr 2019 15:27:02 -0500
-Message-ID: <CANk1AXQ5mHr0ZTuRoby3GomKbbQxv8z-O=o83VV=mXTh1aUZZA@mail.gmail.com>
-References: <20190402123123.915-1-nava.manne@xilinx.com> <20190402123123.915-4-nava.manne@xilinx.com>
- <CANk1AXQEMLt5Vk9LhsmBg9U0Twknr1oy-myoL_0vZ4pqSu3DwQ@mail.gmail.com>
- <BYAPR02MB47101CD56BDF0B314BA37062C22C0@BYAPR02MB4710.namprd02.prod.outlook.com>
- <CANk1AXSXAfNky3adaWOrU3qn=JiEX=a25MFg6fimVjXPKvwOMg@mail.gmail.com>
- <d425bd61-238b-f085-f450-d052349878a8@xilinx.com> <20190408165109.GA6459@archbook>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-nitrogen6_max: Disable LVDS channels
+Date: Mon, 8 Apr 2019 17:37:47 -0300
+Message-ID: <CAOMZO5DAvaibi5r9CXzk8qbE7XHiHJHHvi9rcq_BJdx7aRVgoQ@mail.gmail.com>
+References: <20190408175319.9106-1-robert.foss@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190408165109.GA6459@archbook>
+In-Reply-To: <20190408175319.9106-1-robert.foss@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <mdf@kernel.org>
-Cc: Michal Simek <michal.simek@xilinx.com>, Nava kishore Manne <navam@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, kishore m <chinnikishore369@gmail.com>
+To: Robert Foss <robert.foss@collabora.com>, Gary Bisson <gary.bisson@boundarydevices.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 8, 2019 at 11:51 AM Moritz Fischer <mdf@kernel.org> wrote:
->
-> Hi Michal,
->
-> On Mon, Apr 08, 2019 at 04:36:15PM +0200, Michal Simek wrote:
-> > On 08. 04. 19 16:17, Alan Tull wrote:
-> > > On Mon, Apr 8, 2019 at 7:39 AM Nava kishore Manne <navam@xilinx.com> =
-wrote:
-> > >>
-> > >> Hi Alan,
-> > >>
-> > >> Thanks for look into it and providing the ACK.
-> > >> I got one minor comments from Moritz Fischer do you want me fix that=
- issue now or I can fix it later as it=E2=80=99s a minor comment?
-> > >
-> > > Please fix for Moritz comment.
-> > >
-> > >> In which kernel version i can expect this driver changes??
-> > >
-> > > Patch 2/3 and 3/3 are dependent on 1/3 which isn't a drivers/fpga
-> > > thing, it's drivers/firmware.
-> >
-> > I can take it via arm-soc guys if you are ok with that.
-> > Just need to have your ack in commits.
-> > We have done it like this several times, IIRC reset, nvmem.
->
-> I'm fine with you taking it through arm-soc. Alan?
+Hi Robert,
 
-Fine with me!
+[Adding Gary]
 
-Alan
-
-> I'll look at the other
-> patches.
+On Mon, Apr 8, 2019 at 2:54 PM Robert Foss <robert.foss@collabora.com> wrote:
 >
-> Thanks,
-> Moritz
+> If a LVDS device is not connected, having the LVDS channels
+> enabled will prevent imx-ldb from probing correctly even
+> if other CRTCs are connected.
+>
+> Signed-off-by: Robert Foss <robert.foss@collabora.com>
+> ---
+>  arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
+> index 39200e5dc896..5b413cf4c250 100644
+> --- a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
+> @@ -703,7 +703,7 @@
+>         status = "okay";
+>
+>         lvds-channel@0 {
+> -               status = "okay";
+> +               status = "disabled";
+>
+>                 port@4 {
+>                         reg = <4>;
+> @@ -715,7 +715,7 @@
+>         };
+>
+>         lvds-channel@1 {
+> -               status = "okay";
+> +               status = "disabled";
+
+I am not sure I understood what you are trying to fix.
+
+Could you please share some logs when imx-ldb fails to probe correctly?
+
+Is this a regression?
