@@ -1,42 +1,114 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v4 3/3] fpga manager: Adding FPGA Manager support for
- Xilinx zynqmp
-Date: Mon, 8 Apr 2019 16:36:15 +0200
-Message-ID: <d425bd61-238b-f085-f450-d052349878a8@xilinx.com>
-References: <20190402123123.915-1-nava.manne@xilinx.com>
- <20190402123123.915-4-nava.manne@xilinx.com>
- <CANk1AXQEMLt5Vk9LhsmBg9U0Twknr1oy-myoL_0vZ4pqSu3DwQ@mail.gmail.com>
- <BYAPR02MB47101CD56BDF0B314BA37062C22C0@BYAPR02MB4710.namprd02.prod.outlook.com>
- <CANk1AXSXAfNky3adaWOrU3qn=JiEX=a25MFg6fimVjXPKvwOMg@mail.gmail.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v3 1/6] arm64: dts: allwinner: h6: move MMC pinctrl to dtsi
+Date: Mon, 8 Apr 2019 16:40:17 +0200
+Message-ID: <CAJiuCcfpM0nC3W8+kLE+di-H5ph+u5kGRbCd31orax68A3iA4g@mail.gmail.com>
+References: <20190408092619.23152-1-peron.clem@gmail.com> <20190408092619.23152-2-peron.clem@gmail.com>
+ <20190408104157.tdxg2al3fpanhqqu@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANk1AXSXAfNky3adaWOrU3qn=JiEX=a25MFg6fimVjXPKvwOMg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190408104157.tdxg2al3fpanhqqu@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>, Nava kishore Manne <navam@xilinx.com>
-Cc: Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, kishore m <chinnikishore369@gmail.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08. 04. 19 16:17, Alan Tull wrote:
-> On Mon, Apr 8, 2019 at 7:39 AM Nava kishore Manne <navam@xilinx.com> wrote:
->>
->> Hi Alan,
->>
->> Thanks for look into it and providing the ACK.
->> I got one minor comments from Moritz Fischer do you want me fix that issue now or I can fix it later as it’s a minor comment?
-> 
-> Please fix for Moritz comment.
-> 
->> In which kernel version i can expect this driver changes??
-> 
-> Patch 2/3 and 3/3 are dependent on 1/3 which isn't a drivers/fpga
-> thing, it's drivers/firmware.
+Hi,
 
-I can take it via arm-soc guys if you are ok with that.
-Just need to have your ack in commits.
-We have done it like this several times, IIRC reset, nvmem.
+On Mon, 8 Apr 2019 at 12:42, Maxime Ripard <maxime.ripard@bootlin.com> wrot=
+e:
+>
+> On Mon, Apr 08, 2019 at 11:26:14AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > There is only one pinmuxing available for each MMC controller.
+> >
+> > Move the pinctrl to the SOC
+> >
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi | 2 --
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts  | 4 ----
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi          | 4 ++++
+> >  3 files changed, 4 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/ar=
+ch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+> > index b2526dac2fcf..62e27948a3fa 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+> > @@ -56,8 +56,6 @@
+> >  };
+> >
+> >  &mmc0 {
+> > -     pinctrl-names =3D "default";
+> > -     pinctrl-0 =3D <&mmc0_pins>;
+> >       vmmc-supply =3D <&reg_cldo1>;
+> >       cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>;
+> >       bus-width =3D <4>;
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arc=
+h/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+> > index bdb8470fc8dc..4802902e128f 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+> > @@ -104,8 +104,6 @@
+> >  };
+> >
+> >  &mmc0 {
+> > -     pinctrl-names =3D "default";
+> > -     pinctrl-0 =3D <&mmc0_pins>;
+> >       vmmc-supply =3D <&reg_cldo1>;
+> >       cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>;
+> >       bus-width =3D <4>;
+> > @@ -113,8 +111,6 @@
+> >  };
+> >
+> >  &mmc2 {
+> > -     pinctrl-names =3D "default";
+> > -     pinctrl-0 =3D <&mmc2_pins>;
+> >       vmmc-supply =3D <&reg_cldo1>;
+> >       vqmmc-supply =3D <&reg_bldo2>;
+> >       non-removable;
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
+boot/dts/allwinner/sun50i-h6.dtsi
+> > index 3e4bb0b0de69..006d3b6418af 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > @@ -278,6 +278,8 @@
+> >                       resets =3D <&ccu RST_BUS_MMC0>;
+> >                       reset-names =3D "ahb";
+> >                       interrupts =3D <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> > +                     pinctrl-names =3D "default";
+>
+> This is indented with spaces and not tabulations. This error is
+> reported by checkpatch.
+>
+> > +                     pinctrl-0 =3D <&mmc0_pins>;
+> >                       status =3D "disabled";
+> >                       #address-cells =3D <1>;
+> >                       #size-cells =3D <0>;
+> > @@ -306,6 +308,8 @@
+> >                       resets =3D <&ccu RST_BUS_MMC2>;
+> >                       reset-names =3D "ahb";
+> >                       interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+> > +                     pinctrl-names =3D "default";
+> > +                     pinctrl-0 =3D <&mmc0_pins>;
+>
+> I guess you meant mmc2?
+Yes
 
-Thanks,
-Michal
+>
+> Can you test your patches before sending them please?
+I made a test before posting the patch but I think my U-boot correctly
+mux the pins before linux.
+That's why I didn't catch it.
+Anyway it's really trival and I should have seen it.
+My apologizes for this,
+Cl=C3=A9ment
+
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
