@@ -1,85 +1,76 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 2/2] arm64: dts: h6: Add watchdog node
-Date: Mon, 8 Apr 2019 10:16:35 +0200
-Message-ID: <20190408081635.dlcppclakavwip6v@flea>
-References: <20190404135736.8491-1-peron.clem@gmail.com>
- <20190404135736.8491-2-peron.clem@gmail.com>
- <20190405090236.e7vnyjzxmzfke3d6@flea>
- <CAGb2v65wcEAUTwRhC42iRkPaWXLGX1CJeq+TSzHVTOrT+L=8vA@mail.gmail.com>
- <20190405145005.jmmwsvbateqssbyq@flea>
- <CAGb2v66cv7dVwj7oyRaHT5Q2XCbNqzuS-Uk9hdNJbVv57QOmUg@mail.gmail.com>
- <20190405150810.zjwtu6crzaz6ufhx@flea>
- <CAJiuCccfmwxAqK1mTJ3eLO0RggV8sZTTKRy=fxFFenxn1hATvQ@mail.gmail.com>
- <CAJiuCcc5_tkmSM8sV2enG7t5=eU21ZrzcCVLUzF+c=8MiZhdFA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] sunxi: Add DT representation for the MBUS
+ controller
+Date: Mon, 8 Apr 2019 10:21:16 +0200
+Message-ID: <20190408082116.ndh3qnbgw4p6j75c@flea>
+References: <cover.f8909884585996f28d97f4ef95efbcab19527dc4.1554108995.git-series.maxime.ripard@bootlin.com>
+ <5ca841d1.1c69fb81.f4702.b85d@mx.google.com>
+ <20190408081126.t3blyvtcqslzvki2@flea>
+ <CAGb2v66cc-y0c98yaggFpnuWGwdWa5HpG0uapidreSqmc_maAQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="edi4atnhmhlgs5sc"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJiuCcc5_tkmSM8sV2enG7t5=eU21ZrzcCVLUzF+c=8MiZhdFA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Samuel Holland <samuel@sholland.org>
+Content-Type: multipart/mixed; boundary="===============1789475610=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAGb2v66cc-y0c98yaggFpnuWGwdWa5HpG0uapidreSqmc_maAQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, devicetree <devicetree@vger.kernel.org>, Robin Murphy <robin.murphy@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
---edi4atnhmhlgs5sc
-Content-Type: text/plain; charset=iso-8859-1
+--===============1789475610==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="icwy4xww433vtde7"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 07, 2019 at 04:27:36PM +0200, Cl=E9ment P=E9ron wrote:
-> Hi,
->
-> On Fri, 5 Apr 2019 at 18:24, Cl=E9ment P=E9ron <peron.clem@gmail.com> wro=
-te:
+
+--icwy4xww433vtde7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Apr 08, 2019 at 04:14:53PM +0800, Chen-Yu Tsai wrote:
+> On Mon, Apr 8, 2019 at 4:11 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 > >
-> > Hi,
-> >
-> > On Fri, 5 Apr 2019 at 17:08, Maxime Ripard <maxime.ripard@bootlin.com> =
-wrote:
+> > On Sat, Apr 06, 2019 at 01:06:07AM -0500, Rob Herring wrote:
+> > > On Mon, Apr 01, 2019 at 10:56:40AM +0200, Maxime Ripard wrote:
+> > > > Hi,
+> > > >
+> > > > We've had for quite some time to hack around in our drivers to take into
+> > > > account the fact that our DMA accesses are not done through the parent
+> > > > node, but through another bus with a different mapping than the CPU for the
+> > > > RAM (0 instead of 0x40000000 for most SoCs).
+> > > >
+> > > > After some discussion after the submission of a camera device suffering of
+> > > > the same hacks, I've decided to put together a serie that introduce a
+> > > > special interconnect name called "dma" that that allows to express the DMA
+> > > > relationship between a master and its bus, even if they are not direct
+> > > > parents in the DT.
+> > > >
+> > > > Let me know what you think,
+> > > > Maxime
 > > >
-> > > On Fri, Apr 05, 2019 at 10:59:35PM +0800, Chen-Yu Tsai wrote:
-> > > > On Fri, Apr 5, 2019 at 10:50 PM Maxime Ripard <maxime.ripard@bootli=
-n.com> wrote:
-> > > > >
-> > > > > On Fri, Apr 05, 2019 at 10:35:08PM +0800, Chen-Yu Tsai wrote:
-> > > > > > On Fri, Apr 5, 2019 at 5:02 PM Maxime Ripard <maxime.ripard@boo=
-tlin.com> wrote:
-> > > > > > >
-> > > > > > > On Thu, Apr 04, 2019 at 03:57:36PM +0200, Cl=E9ment P=E9ron w=
-rote:
-> > > > > > > > Allwinner H6 has a watchog compatible with A31.
-> > > > > > > >
-> > > > > > > > Declare it in the device tree.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> > > > > > >
-> > > > > > > Applied both, thanks!
-> > > > > > > Maxime
-> > > > > >
-> > > > > > IIRC there are 3 watchdogs on the H6. One is the trusted watchd=
-og,
-> > > > > > which should be reserved for underlying firmware.
-> > > > > >
-> > > > > > The other two are the normal and R-block watchdog. Although they
-> > > > > > look the same, the "normal" one can't reset the system. :(
-> > > > > > That one is actually the one ATF currently uses. So reboot does=
-n't
-> > > > > > work on the H6.
+> > > LGTM.
+> > >
+> > > How do you propose merging this? I can take 1-5, and 6 and 7 thru
+> > > arm-soc?
 > >
-> > Some users report that the reboot on the PineH64 actually works.
-> >
-> > Clement
-> >
-> > > > >
-> > > > > So that patch will not do anything then?
+> > You can merge 1-4, and I'll merge 5 through drm-misc and 6-7 through
+> > arm-soc
 >
-> Did some test and only interrupts are working right now. If the WDOG
-> is configured to make the board reboot the system will be stuck :S
-> Maybe better to disabled it for now and leave a comment.
+> Wouldn't there be some runtime dependency between 3, 4, and 5?
 
-I dropped the two patches
+What issue did you have in mind?
+
+I guess the only issue would be if we have the new DT properties, but
+not the new core code. But that seems pretty unlikely, since each of
+the trees will work independently, and next should have all of them.
 
 Maxime
 
@@ -88,15 +79,27 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---edi4atnhmhlgs5sc
+--icwy4xww433vtde7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKsDYwAKCRDj7w1vZxhR
-xWp5AQDPPs8u0wNZkJigQ+lPhxDH918JqpCrMxBvWG6ts1pmYwD8D16hBPr1+iyd
-OeB2s+TEuu/V+1JNW9S552JpkoKWTAs=
-=t3fp
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKsEfAAKCRDj7w1vZxhR
+xQaEAQCjhg8hQs5SWWaTx+cGymxQRADr9EokhV0aemSp75TUGgEAztIDyNTTXeqS
+92Vu+ICKEwRJOUeC09HDWwR8oPJtHgw=
+=KVwc
 -----END PGP SIGNATURE-----
 
---edi4atnhmhlgs5sc--
+--icwy4xww433vtde7--
+
+--===============1789475610==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+
+--===============1789475610==--
