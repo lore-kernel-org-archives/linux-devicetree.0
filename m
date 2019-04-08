@@ -1,79 +1,95 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v5 1/7] dt-bindings: Add panel-timing subnode to
- simple-panel
-Date: Mon, 8 Apr 2019 07:39:37 -0700
-Message-ID: <CAD=FV=UJXLeEDPRAHY5-f2D4qJ4rq0LmKUDf4MANrb5KOm_x=g@mail.gmail.com>
-References: <20190401171724.215780-1-dianders@chromium.org>
- <20190401171724.215780-2-dianders@chromium.org> <20190408103240.GF6644@ulmo>
+From: Patrick Venture <venture@google.com>
+Subject: [PATCH v10 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Date: Mon,  8 Apr 2019 07:42:16 -0700
+Message-ID: <20190408144216.160082-1-venture@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190408103240.GF6644@ulmo>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Jeffy Chen <jeffy.chen@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Boris Brezillon <boris.brezillon@collabora.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel@collabora.com>, Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, gregkh@linuxfoundation.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpZXJyeSwKCk9uIE1vbiwgQXByIDgsIDIwMTkgYXQgMzozMiBBTSBUaGllcnJ5IFJlZGluZyA8
-dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPiB3cm90ZToKPgo+IE9uIE1vbiwgQXByIDAxLCAyMDE5
-IGF0IDEwOjE3OjE4QU0gLTA3MDAsIERvdWdsYXMgQW5kZXJzb24gd3JvdGU6Cj4gPiBGcm9tOiBT
-ZWFuIFBhdWwgPHNlYW5wYXVsQGNocm9taXVtLm9yZz4KPiA+Cj4gPiBUaGlzIHBhdGNoIGFkZHMg
-YSBuZXcgc3Vibm9kZSB0byBzaW1wbGUtcGFuZWwgYWxsb3dpbmcgdXMgdG8gb3ZlcnJpZGUKPiA+
-IHRoZSB0eXBpY2FsIHRpbWluZyBleHByZXNzZWQgaW4gdGhlIHBhbmVsJ3MgZGlzcGxheV90aW1p
-bmcuCj4gPgo+ID4gQ2hhbmdlcyBpbiB2MjoKPiA+ICAtIFNwbGl0IG91dCB0aGUgYmluZGluZyBp
-bnRvIGEgbmV3IHBhdGNoIChSb2IpCj4gPiAgLSBkaXNwbGF5LXRpbWluZ3MgaXMgYSBuZXcgc2Vj
-dGlvbiAoUm9iKQo+ID4gIC0gVXNlIHRoZSBmdWxsIGRpc3BsYXktdGltaW5ncyBzdWJub2RlIGlu
-c3RlYWQgb2YgcGlja2luZyB0aGUgdGltaW5nCj4gPiAgICBvdXQgKFJvYi9UaGllcnJ5KQo+ID4g
-Q2hhbmdlcyBpbiB2MzoKPiA+ICAtIEdvIGJhY2sgdG8gdXNpbmcgdGhlIHRpbWluZyBzdWJub2Rl
-IGRpcmVjdGx5LCBidXQgcmVuYW1lIHRvCj4gPiAgICBwYW5lbC10aW1pbmcgKFJvYikKPiA+IENo
-YW5nZXMgaW4gdjQ6Cj4gPiAgLSBTaW1wbGlmeSBkZXNjLiBmb3Igd2hlbiBvdmVycmlkZSBzaG91
-bGQgYmUgdXNlZCAoVGhpZXJyeS9MYXVyZW50KQo+ID4gIC0gUmVtb3ZlZCBSb2IgSCByZXZpZXcg
-c2luY2UgaXQncyBiZWVuIGEgeWVhciBhbmQgd29yZGluZyBjaGFuZ2VkCj4gPiBDaGFuZ2VzIGlu
-IHY1Ogo+ID4gIC0gUmVtb3ZlZCBiaXQgYWJvdXQgT1MgbWF5IGlnbm9yZSAoUm9iL0V6ZXF1aWVs
-KQo+ID4KPiA+IENjOiBEb3VnIEFuZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+Cj4gPiBD
-YzogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KPiA+IENjOiBIZWlrbyBTdHVlYm5lciA8
-aGVpa29Ac250ZWNoLmRlPgo+ID4gQ2M6IEplZmZ5IENoZW4gPGplZmZ5LmNoZW5Acm9jay1jaGlw
-cy5jb20+Cj4gPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4KPiA+IENjOiBT
-dMOpcGhhbmUgTWFyY2hlc2luIDxtYXJjaGV1QGNocm9taXVtLm9yZz4KPiA+IENjOiBUaGllcnJ5
-IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPgo+ID4gQ2M6IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnCj4gPiBDYzogZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+ID4g
-Q2M6IGxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKPiA+IFNpZ25lZC1vZmYtYnk6
-IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hyb21pdW0ub3JnPgo+ID4gU2lnbmVkLW9mZi1ieTogRG91
-Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgo+ID4gLS0tCj4gPgo+ID4gIC4u
-Li9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQgICB8IDIyICsrKysrKysr
-KysrKysrKysrKysKPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjIgaW5zZXJ0aW9ucygrKQo+ID4KPiA+
-IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
-YW5lbC9zaW1wbGUtcGFuZWwudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcGFuZWwvc2ltcGxlLXBhbmVsLnR4dAo+ID4gaW5kZXggYjJiODcyYzcxMGYyLi45
-Mzg4MjI2OGMwYjkgMTAwNjQ0Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0Cj4gPiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0Cj4g
-PiBAQCAtMTUsNiArMTUsMTYgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKPiA+ICAgIChob3QgcGx1
-ZyBkZXRlY3QpIHNpZ25hbCwgYnV0IHRoZSBzaWduYWwgaXNuJ3QgaG9va2VkIHVwIHNvIHdlIHNo
-b3VsZAo+ID4gICAgaGFyZGNvZGUgdGhlIG1heCBkZWxheSBmcm9tIHRoZSBwYW5lbCBzcGVjIHdo
-ZW4gcG93ZXJpbmcgdXAgdGhlIHBhbmVsLgo+ID4KPiA+ICtwYW5lbC10aW1pbmcgc3Vibm9kZQo+
-Cj4gSXMgdGhlcmUgYW55IHJlYXNvbiB3aHkgd2UgbmVlZCB0aGUgcGFuZWwtIHByZWZpeD8gVGhp
-cyBpcyBhbHJlYWR5IHBhcnQKPiBvZiBhIHBhbmVsIGRlZmluaXRpb24sIHNvIGl0J3MgY29tcGxl
-dGVseSByZWR1bmRhbnQuIFdoeSBub3QganVzdCBuYW1lCj4gdGhlIHN1Ym5vZGUgInRpbWluZyI/
-CgpJdCB3YXMgYSByZWFsbHkgbG9uZyB0aW1lIGFnbyBzaW5jZSB0aGlzIHBhdGNoIHNlcmllcyB3
-YXMgaWRsZSBmb3IgYQp3aGlsZSwgYnV0IHlvdSBwcmV2aW91cyBoYWQgc2ltaWxhciBmZWVkYmFj
-ayBpbiB2MyBidXQgZW5kZWQgdXAgT0sKd2l0aCBpdC4gIFNlZToKCmh0dHBzOi8vcGF0Y2h3b3Jr
-Lmtlcm5lbC5vcmcvcGF0Y2gvMTAyMDc1ODMvCgpJIGJlbGlldmUgdGhlIG9yaWdpbmFsIG5vZGUg
-bmFtZSBjYW1lIG91dCBvZiBzb21lIGJhY2sgYW5kIGZvcnRoCmJldHdlZW4gUm9iIGFuZCBTZWFu
-LiAgQXMgZmFyIGFzIEkgY2FuIHRlbGwsIHRoZSBjb250ZXh0IGlzIGJhY2sgaW4KPGh0dHBzOi8v
-cGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAyMDM0ODMvPi4gIEkgdGhpbmsgUm9iIHdhbnRl
-ZCBpdAp0byBmb2xsb3cgb3RoZXIgc2ltaWxhciBub2RlIG5hbWVzLgoKClRoYXQgYWxsIGJlaW5n
-IHNhaWQsIGlmIHlvdSBmZWVsIHN0cm9uZ2x5IGFib3V0IGl0IGJlaW5nIGNhbGxlZAoidGltaW5n
-IiBhbmQgUm9iJ3MgT0sgdy8gdGhhdCB0b28gdGhlbiBJJ2xsIHJlLXNwaW4gdGhlIHNlcmllcy4K
-Ci1Eb3VnCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+
+Signed-off-by: Patrick Venture <venture@google.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes for v10:
+ - Chopped out nearly identical information.
+Changes for v9:
+ - Added missing details about syscon parent
+Changes for v8:
+- None
+Changes for v7:
+- Moved node under the syscon node it requires
+Changes for v6:
+- None
+Changes for v5:
+- None
+Changes for v4:
+- None
+Changes for v3:
+- None
+Changes for v2:
+- Added comment about syscon required parameter.
+---
+ .../bindings/misc/aspeed-p2a-ctrl.txt         | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+
+diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+new file mode 100644
+index 0000000000000..854bd67ffec68
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+@@ -0,0 +1,47 @@
++======================================================================
++Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
++======================================================================
++
++The bridge is available on platforms with the VGA enabled on the Aspeed device.
++In this case, the host has access to a 64KiB window into all of the BMC's
++memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
++has read access to all the regions of memory, however the host only has read
++and write access depending on a register controlled by the BMC.
++
++Required properties:
++===================
++
++ - compatible: must be one of:
++	- "aspeed,ast2400-p2a-ctrl"
++	- "aspeed,ast2500-p2a-ctrl"
++
++Optional properties:
++===================
++
++- memory-region: A phandle to a reserved_memory region to be used for the PCI
++		to AHB mapping
++
++The p2a-control node should be the child of a syscon node with the required
++property:
++
++- compatible : Should be one of the following:
++		"aspeed,ast2400-scu", "syscon", "simple-mfd"
++		"aspeed,g4-scu", "syscon", "simple-mfd"
++		"aspeed,ast2500-scu", "syscon", "simple-mfd"
++		"aspeed,g5-scu", "syscon", "simple-mfd"
++
++Example
++===================
++
++g4 Example
++----------
++
++syscon: scu@1e6e2000 {
++	compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
++	reg = <0x1e6e2000 0x1a8>;
++
++	p2a: p2a-control {
++		compatible = "aspeed,ast2400-p2a-ctrl";
++		memory-region = <&reserved_memory>;
++	};
++};
+-- 
+2.21.0.392.gf8f6787159e-goog
