@@ -1,62 +1,57 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 4/4] ARM: dts: sunxi: Improve A33 NAND transfers by
- using DMA
-Date: Mon, 8 Apr 2019 10:44:07 +0200
-Message-ID: <20190408084407.7wauneg3wzjsqg4l@flea>
-References: <20190408074147.26797-1-miquel.raynal@bootlin.com>
- <20190408074147.26797-4-miquel.raynal@bootlin.com>
- <20190408084015.6iw74ub5ay6q73v2@flea>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Re: [PATCH 02/12] drm: sun4i: Add support for
+ enabling DDC I2C bus to dw_hdmi glue
+Date: Mon, 8 Apr 2019 10:47:14 +0200
+Message-ID: <20190408084714.b6xdi2pxbjvzwsnu@flea>
+References: <20190405234514.6183-1-megous@megous.com>
+ <20190405234514.6183-3-megous@megous.com>
+ <20190408072338.3urcotemju3qi2un@flea>
+ <CAGb2v65W_H5HrnY9+DuW-noshXLHgErJhEpHHhzcG15n1u=8iw@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1110615940704874896=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190408084015.6iw74ub5ay6q73v2@flea>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hnppvtnr77cffabd"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBGUVVTSQKGQEILQHL5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v65W_H5HrnY9+DuW-noshXLHgErJhEpHHhzcG15n1u=8iw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kern
 List-Id: devicetree@vger.kernel.org
 
 
---===============1110615940704874896==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nrzlspwk2lkrapo4"
+--hnppvtnr77cffabd
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-
---nrzlspwk2lkrapo4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Apr 08, 2019 at 10:40:15AM +0200, Maxime Ripard wrote:
-> On Mon, Apr 08, 2019 at 09:41:47AM +0200, Miquel Raynal wrote:
-> > In the current state, A33 NAND controllers use PIO during
-> > transfers. Throughput can be increased thanks to the use of DMA
-> > (mostly during reads, because of the ECC pipelining feature).
+On Mon, Apr 08, 2019 at 03:28:24PM +0800, Chen-Yu Tsai wrote:
+> On Mon, Apr 8, 2019 at 3:23 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
 > >
-> > Besides the usual addition of DMA DT properties, because the A33
-> > NAND DMA handling is different than for older SoCs, we must also
-> > update the compatible which has recently been introduced for this
-> > purpose.
+> > On Sat, Apr 06, 2019 at 01:45:04AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
+> > > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> > >
+> > > Orange Pi 3 board requires enabling DDC I2C bus via some GPIO connected
+> > > transistors, before it can be used. Model this as a power supply for DDC
+> > > (via regulator framework).
+> > >
+> > > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 > >
-> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > The DDC bus itself is usually attached to the HDMI connector, so it
+> > would make sense to make the supply also a property of the connector.
 >
-> Applied, thanks!
->
-> The rest is
-> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> I believe these are separate things. What this patch covers is power for
+> a voltage shifter between the SoC and HDMI DDC pins. The HDMI connector's
+> 5V supply to power the remote DDC chip is something else. And on the
+> Orange Pi 3 they are indeed separate supplies.
 
-Actually, the A23 was introduced before the A33, so we want to use
-that in the compatible.
-
-I've updated the patch while applying it, you might want to do the
-same.
+Then maybe the endpoint link between the two would be the best place
+to put this?
 
 Maxime
 
@@ -64,30 +59,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
-
---nrzlspwk2lkrapo4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKsJ1gAKCRDj7w1vZxhR
-xb6tAQCFytNO1wQYB2mMklz+JlqcgAGC0MQGJZNsg63QE75RUAD/WI8SmGt2IZbh
-N9SXJSTVexPP7u9sovNL6dP9D3/BLAA=
-=whwQ
------END PGP SIGNATURE-----
-
---nrzlspwk2lkrapo4--
-
-
---===============1110615940704874896==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1110615940704874896==--
+--hnppvtnr77cffabd--
