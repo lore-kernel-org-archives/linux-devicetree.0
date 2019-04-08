@@ -1,126 +1,69 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 3/4] mtd: rawnand: sunxi: Add A33 DMA support
-Date: Mon,  8 Apr 2019 09:41:46 +0200
-Message-ID: <20190408074147.26797-3-miquel.raynal@bootlin.com>
-References: <20190408074147.26797-1-miquel.raynal@bootlin.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 08/12] arm64: dts: allwinner: h6: Add MMC1 pins
+Date: Mon, 8 Apr 2019 09:43:27 +0200
+Message-ID: <20190408074327.vvubj2sbkvfkwscv@flea>
+References: <20190405234514.6183-1-megous@megous.com>
+ <20190405234514.6183-9-megous@megous.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190408074147.26797-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Vignesh Raghavendra <vigneshr@ti.com>, linux-mtd@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="uu57uts7ricxgi6i"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBJHXVPSQKGQEGAIJB4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190405234514.6183-9-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev@v
 List-Id: devicetree@vger.kernel.org
 
-Allwinner NAND controllers can make use of DMA to enhance the I/O
-throughput thanks to ECC pipelining. DMA handling with A33 NAND IP
-is a bit different than with the older SoCs, hence the introduction of
-a new compatible to handle:
-* the differences between register offsets,
-* the burst length change from 4 to minimum 8,
-* drive SRAM accesses through the AHB bus instead of the MBUS.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
+--uu57uts7ricxgi6i
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Changes in v2:
-* Enumerate the SoCs already supported (A10, A10s, A13 and A20)
-  instead of using the inaccurate acronym 'A10+'.
-* s/p.12 of the user manual/p.12 of the *NFC* user manual/
-* s/sun8i/A33/
+On Sat, Apr 06, 2019 at 01:45:10AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
+> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> index 91fecab58836..dccad79da90c 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> @@ -238,6 +238,15 @@
+>  				bias-pull-up;
+>  			};
+>
+> +
 
- drivers/mtd/nand/raw/sunxi_nand.c | 38 +++++++++++++++++++++++++++++--
- 1 file changed, 36 insertions(+), 2 deletions(-)
+Extra line
 
-diff --git a/drivers/mtd/nand/raw/sunxi_nand.c b/drivers/mtd/nand/raw/sunxi_nand.c
-index 7b824c245083..18fa30175d67 100644
---- a/drivers/mtd/nand/raw/sunxi_nand.c
-+++ b/drivers/mtd/nand/raw/sunxi_nand.c
-@@ -43,6 +43,7 @@
- #define NFC_REG_RCMD_SET	0x0028
- #define NFC_REG_WCMD_SET	0x002C
- #define NFC_REG_A10_IO_DATA	0x0030
-+#define NFC_REG_A33_IO_DATA	0x0300
- #define NFC_REG_ECC_CTL		0x0034
- #define NFC_REG_ECC_ST		0x0038
- #define NFC_REG_DEBUG		0x003C
-@@ -204,10 +205,14 @@ static inline struct sunxi_nand_chip *to_sunxi_nand(struct nand_chip *nand)
-  * NAND Controller capabilities structure: stores NAND controller capabilities
-  * for distinction between compatible strings.
-  *
-+ * @sram_through_ahb:	On A33, we choose to access the internal RAM through AHB
-+ *                      instead of MBUS (less configuration). A10, A10s, A13 and
-+ *                      A20 use the MBUS but no extra configuration is needed.
-  * @reg_io_data:	I/O data register
-  * @dma_maxburst:	DMA maxburst
-  */
- struct sunxi_nfc_caps {
-+	bool sram_through_ahb;
- 	unsigned int reg_io_data;
- 	unsigned int dma_maxburst;
- };
-@@ -363,10 +368,29 @@ static int sunxi_nfc_dma_op_prepare(struct sunxi_nfc *nfc, const void *buf,
- 		goto err_unmap_buf;
- 	}
- 
--	writel(readl(nfc->regs + NFC_REG_CTL) | NFC_RAM_METHOD,
--	       nfc->regs + NFC_REG_CTL);
-+	/*
-+	 * On A33, we suppose the "internal RAM" (p.12 of the NFC user manual)
-+	 * refers to the NAND controller's internal SRAM. This memory is mapped
-+	 * and so is accessible from the AHB. It seems that it can also be
-+	 * accessed by the MBUS. MBUS accesses are mandatory when using the
-+	 * internal DMA instead of the external DMA engine.
-+	 *
-+	 * During DMA I/O operation, either we access this memory from the AHB
-+	 * by clearing the NFC_RAM_METHOD bit, or we set the bit and use the
-+	 * MBUS. In this case, we should also configure the MBUS DMA length
-+	 * NFC_REG_MDMA_CNT(0xC4) to be chunksize * nchunks. NAND I/O over MBUS
-+	 * are also limited to 32kiB pages.
-+	 */
-+	if (nfc->caps->sram_through_ahb)
-+		writel(readl(nfc->regs + NFC_REG_CTL) & ~NFC_RAM_METHOD,
-+		       nfc->regs + NFC_REG_CTL);
-+	else
-+		writel(readl(nfc->regs + NFC_REG_CTL) | NFC_RAM_METHOD,
-+		       nfc->regs + NFC_REG_CTL);
-+
- 	writel(nchunks, nfc->regs + NFC_REG_SECTOR_NUM);
- 	writel(chunksize, nfc->regs + NFC_REG_CNT);
-+
- 	dmat = dmaengine_submit(dmad);
- 
- 	ret = dma_submit_error(dmat);
-@@ -2176,11 +2200,21 @@ static const struct sunxi_nfc_caps sunxi_nfc_a10_caps = {
- 	.dma_maxburst = 4,
- };
- 
-+static const struct sunxi_nfc_caps sunxi_nfc_a33_caps = {
-+	.sram_through_ahb = true,
-+	.reg_io_data = NFC_REG_A33_IO_DATA,
-+	.dma_maxburst = 8,
-+};
-+
- static const struct of_device_id sunxi_nfc_ids[] = {
- 	{
- 		.compatible = "allwinner,sun4i-a10-nand",
- 		.data = &sunxi_nfc_a10_caps,
- 	},
-+	{
-+		.compatible = "allwinner,sun8i-a33-nand-controller",
-+		.data = &sunxi_nfc_a33_caps,
-+	},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, sunxi_nfc_ids);
--- 
-2.19.1
+> +			mmc1_pins: mmc1-pins {
+> +				pins = "PG0", "PG1", "PG2", "PG3",
+> +				       "PG4", "PG5";
+> +				function = "mmc1";
+> +				drive-strength = <30>;
+> +				bias-pull-up;
+> +			};
+> +
+
+Is that the only muxing option?
+
+If so, then it should be assigned by default to mmc1
+
+Thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--uu57uts7ricxgi6i--
