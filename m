@@ -1,57 +1,122 @@
-From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: [PATCH 07/12] arm64: dts: allwinner: orange-pi-3:
- Enable ethernet
-Date: Tue, 9 Apr 2019 00:26:02 +0200
-Message-ID: <20190408222602.jh3mjun5shdpbsnx@core.my.home>
-References: <20190405234514.6183-1-megous@megous.com>
- <20190405234514.6183-8-megous@megous.com>
- <CAMty3ZCo53qHW4e+p=toWxLPrUua6XtaZX0YBuPfmDuW1V+e0w@mail.gmail.com>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/3] dt-bindings: interconnect: Add Qualcomm QCS404 DT
+ bindings
+Date: Mon, 8 Apr 2019 15:38:17 -0700
+Message-ID: <20190408223817.GS1843@tuxbook-pro>
+References: <20190405035446.31886-1-georgi.djakov@linaro.org>
+ <20190405035446.31886-2-georgi.djakov@linaro.org>
+ <20190405143254.GM1843@tuxbook-pro>
+ <9ee2c9b2-f201-abfb-be60-180befa9dc6d@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBB7EUV7SQKGQEQA4BP6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMty3ZCo53qHW4e+p=toWxLPrUua6XtaZX0YBuPfmDuW1V+e0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TZUIDd8j+nm9g@public.gmane.org>
+In-Reply-To: <9ee2c9b2-f201-abfb-be60-180befa9dc6d@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: robh+dt@kernel.org, vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 11:41:38AM +0530, Jagan Teki wrote:
-> On Sat, Apr 6, 2019 at 5:15 AM <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
-> >
-> > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> >
-> > Orange Pi 3 has two regulators that power the Realtek RTL8211E.
-> > According to the phy datasheet, both regulators need to be enabled
-> > at the same time, but we can only specify a single phy-supply in
-> > the DT.
-> >
-> > This can be achieved by making one regulator depedning on the
-> > other via vin-supply. While it's not a technically correct
-> > description of the hardware, it achieves the purpose.
-> >
-> > All values of RX/TX delay were tested exhaustively and a middle
-> > one of the working values was chosen.
-> >
-> > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
-> >  1 file changed, 44 insertions(+)
-> 
-> This was in ML[1], I thought this change would already merged. I
-> remember Chen-Yu applied and revert due to emac node not mainlined at
-> that time.
-> 
-> [1] https://patchwork.kernel.org/patch/10558281/
+On Fri 05 Apr 08:46 PDT 2019, Georgi Djakov wrote:
 
-The patch was not merged at the time, and bitrotted a bit. Armbian folks
-were applying the bitortted patch out-of-the mainline and were experiencing
-NPEs. I fixed the patch, and it is also part of this series. It's patch 5.
+> Hi Bjorn,
+> 
+> On 4/5/19 21:32, Bjorn Andersson wrote:
+> > On Fri 05 Apr 10:54 +07 2019, Georgi Djakov wrote:
+> > 
+> >> The Qualcomm QCS404 platform has several buses that could be controlled
+> >> and tuned according to the bandwidth demand.
+> >>
+> >> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> >> ---
+> >>  .../bindings/interconnect/qcom,qcs404.txt     | 45 +++++++++++++++++++
+> >>  1 file changed, 45 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+> >> new file mode 100644
+> >> index 000000000000..2ea63ea827d7
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+> >> @@ -0,0 +1,45 @@
+> >> +Qualcomm QCS404 Network-On-Chip interconnect driver binding
+> >> +-----------------------------------------------------------
+> >> +
+> >> +Required properties :
+> >> +- compatible : shall contain only one of the following:
+> >> +			"qcom,qcs404-bimc"
+> > 
+> > As this is a hardware block available in mmio register space I think you
+> > better represent this on the mmio (soc) bus - and then represent the
+> > link to rpm as a child node of the rpm.
+> 
+> The mmio register space is not used for expressing bandwidth needs, but
+> contains mostly QoS related stuff. We do not support QoS for now and
+> that's why i haven't included it. When we decide to support QoS, we can
+> add the nodes for the QoS registers and then reference them with some DT
+> property like qcom,qos = <&bimc_qos>;
+> 
 
-	o.
+The fact that QoS support is not implemented today is an implementation
+detail, it does not relate to how we're describing the hardware in
+DeviceTree. Adding three new nodes under soc{} and referencing these
+(and potentially duplicating the clocks properties in the two sets of
+nodes?) in the future, rather than just describing the hardware
+appropriately today seems odd to me.
+
+Further more, as I shared a while back the aggregation code related to
+the RPM would better be shared between 404, 410, 820 and 835. So to me
+it makes sense to even on the implementation side split this is NoC part
+and RPM part, from the beginning.
+
+Regards,
+Bjorn
+
+> Thanks,
+> Georgi
+> 
+> > 
+> > Apart from that this looks good.
+> > 
+> > Regards,
+> > Bjorn
+> > 
+> >> +			"qcom,qcs404-pcnoc"
+> >> +			"qcom,qcs404-snoc"
+> >> +- #interconnect-cells : should contain 1
+> >> +
+> >> +Optional properties :
+> >> +clocks : list of phandles and specifiers to all interconnect bus clocks
+> >> +clock-names : clock names should include both "bus_clk" and "bus_a_clk"
+> >> +
+> >> +Example:
+> >> +
+> >> +rpm-glink {
+> >> +	...
+> >> +	rpm_requests: glink-channel {
+> >> +		...
+> >> +		bimc: interconnect@0 {
+> >> +			compatible = "qcom,qcs404-bimc";
+> >> +			#interconnect-cells = <1>;
+> >> +			clock-names = "bus_clk", "bus_a_clk";
+> >> +			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
+> >> +				<&rpmcc RPM_SMD_BIMC_A_CLK>;
+> >> +		};
+> >> +
+> >> +		pnoc: interconnect@1 {
+> >> +			compatible = "qcom,qcs404-pcnoc";
+> >> +			#interconnect-cells = <1>;
+> >> +			clock-names = "bus_clk", "bus_a_clk";
+> >> +			clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
+> >> +				<&rpmcc RPM_SMD_PNOC_A_CLK>;
+> >> +		};
+> >> +
+> >> +		snoc: interconnect@2 {
+> >> +			compatible = "qcom,qcs404-snoc";
+> >> +			#interconnect-cells = <1>;
+> >> +			clock-names = "bus_clk", "bus_a_clk";
+> >> +			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
+> >> +				<&rpmcc RPM_SMD_SNOC_A_CLK>;
+> >> +		};
+> >> +	};
+> >> +};
