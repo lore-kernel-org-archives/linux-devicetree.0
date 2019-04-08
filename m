@@ -1,196 +1,128 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v3 1/3] ARM: dts: da850: add cpu node and operating points to DT
-Date: Mon,  8 Apr 2019 09:59:22 +0200
-Message-ID: <20190408075924.2284-2-brgl@bgdev.pl>
-References: <20190408075924.2284-1-brgl@bgdev.pl>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v2 2/4] mtd: rawnand: sunxi: Add a platform data structure
+Date: Mon,  8 Apr 2019 09:41:45 +0200
+Message-ID: <20190408074147.26797-2-miquel.raynal@bootlin.com>
+References: <20190408074147.26797-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190408075924.2284-1-brgl@bgdev.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Adam Ford <aford173@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190408074147.26797-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Vignesh Raghavendra <vigneshr@ti.com>, linux-mtd@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-From: David Lechner <david@lechnology.com>
+Before the introduction of A33 NAND DMA support, let's use a platform
+data structure for parameters that will differ. Right now, there is
+only one compatible with one data structure.
 
-This adds a cpu node and operating points to the common da850.dtsi file.
-
-Additionally, a regulator is added to the LEGO EV3 board along with
-some board-specific CPU configuration.
-
-Regulators need to be hooked up on other boards to get them working.
-
-Signed-off-by: David Lechner <david@lechnology.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- arch/arm/boot/dts/da850-lcdk.dts     | 31 +++++++++++++++
- arch/arm/boot/dts/da850-lego-ev3.dts | 30 +++++++++++++++
- arch/arm/boot/dts/da850.dtsi         | 56 ++++++++++++++++++++++++++++
- 3 files changed, 117 insertions(+)
 
-diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-index 26f453dc8370..f29ed9010812 100644
---- a/arch/arm/boot/dts/da850-lcdk.dts
-+++ b/arch/arm/boot/dts/da850-lcdk.dts
-@@ -155,12 +155,43 @@
- 			};
- 		};
- 	};
-+
-+	cvdd: regulator0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "cvdd";
-+		regulator-min-microvolt = <1300000>;
-+		regulator-max-microvolt = <1300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
- };
+Changes in v2:
+* New patch: splitting the introduction of the A33 NAND DMA support:
+  first let's introduce the platform data ("capabilities")
+  structure. Then, in a second time, A33 NAND DMA support will be
+  introduced.
+
+ drivers/mtd/nand/raw/sunxi_nand.c | 37 ++++++++++++++++++++++++++-----
+ 1 file changed, 32 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/mtd/nand/raw/sunxi_nand.c b/drivers/mtd/nand/raw/sunxi_nand.c
+index 4282bc477761..7b824c245083 100644
+--- a/drivers/mtd/nand/raw/sunxi_nand.c
++++ b/drivers/mtd/nand/raw/sunxi_nand.c
+@@ -42,7 +42,7 @@
+ #define NFC_REG_CMD		0x0024
+ #define NFC_REG_RCMD_SET	0x0028
+ #define NFC_REG_WCMD_SET	0x002C
+-#define NFC_REG_IO_DATA		0x0030
++#define NFC_REG_A10_IO_DATA	0x0030
+ #define NFC_REG_ECC_CTL		0x0034
+ #define NFC_REG_ECC_ST		0x0038
+ #define NFC_REG_DEBUG		0x003C
+@@ -200,6 +200,18 @@ static inline struct sunxi_nand_chip *to_sunxi_nand(struct nand_chip *nand)
+ 	return container_of(nand, struct sunxi_nand_chip, nand);
+ }
  
- &ref_clk {
- 	clock-frequency = <24000000>;
- };
- 
-+&cpu {
-+	cpu-supply = <&cvdd>;
-+};
-+
-+/* LCDK has a fixed CVDD of 1.3V, so only op points >= 300MHz are valid */
-+
-+&opp_100 {
-+	status = "disabled";
-+};
-+
-+&opp_200 {
-+	status = "disabled";
-+};
-+
-+&opp_375 {
-+	status = "okay";
-+};
-+
-+&opp_456 {
-+	status = "okay";
-+};
-+
- &pmx_core {
- 	status = "okay";
- 
-diff --git a/arch/arm/boot/dts/da850-lego-ev3.dts b/arch/arm/boot/dts/da850-lego-ev3.dts
-index 66fcadf0ba91..553717f84483 100644
---- a/arch/arm/boot/dts/da850-lego-ev3.dts
-+++ b/arch/arm/boot/dts/da850-lego-ev3.dts
-@@ -125,6 +125,15 @@
- 		amp-supply = <&amp>;
- 	};
- 
-+	cvdd: regulator0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "cvdd";
-+		regulator-min-microvolt = <1200000>;
-+		regulator-max-microvolt = <1200000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
- 	/*
- 	 * This is a 5V current limiting regulator that is shared by USB,
- 	 * the sensor (input) ports, the motor (output) ports and the A/DC.
-@@ -204,6 +213,27 @@
- 	clock-frequency = <24000000>;
- };
- 
-+&cpu {
-+	cpu-supply = <&cvdd>;
-+};
-+
-+/* since we have a fixed regulator, we can't run at these points */
-+&opp_100 {
-+	status = "disabled";
-+};
-+
-+&opp_200 {
-+	status = "disabled";
-+};
-+
 +/*
-+ * The SoC is actually the 456MHz version, but because of the fixed regulator
-+ * This is the fastest we can go.
++ * NAND Controller capabilities structure: stores NAND controller capabilities
++ * for distinction between compatible strings.
++ *
++ * @reg_io_data:	I/O data register
++ * @dma_maxburst:	DMA maxburst
 + */
-+&opp_375 {
-+	status = "okay";
++struct sunxi_nfc_caps {
++	unsigned int reg_io_data;
++	unsigned int dma_maxburst;
 +};
 +
- &pmx_core {
- 	status = "okay";
+ /**
+  * struct sunxi_nfc - stores sunxi NAND controller information
+  *
+@@ -228,6 +240,7 @@ struct sunxi_nfc {
+ 	struct list_head chips;
+ 	struct completion complete;
+ 	struct dma_chan *dmac;
++	const struct sunxi_nfc_caps *caps;
+ };
  
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index 559659b399d0..ee61d1253b58 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -20,6 +20,62 @@
- 		reg = <0xc0000000 0x0>;
- 	};
+ static inline struct sunxi_nfc *to_sunxi_nfc(struct nand_controller *ctrl)
+@@ -2088,6 +2101,12 @@ static int sunxi_nfc_probe(struct platform_device *pdev)
+ 		goto out_mod_clk_unprepare;
+ 	}
  
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++	nfc->caps = of_device_get_match_data(&pdev->dev);
++	if (!nfc->caps) {
++		ret = -EINVAL;
++		goto out_ahb_reset_reassert;
++	}
 +
-+		cpu: cpu@0 {
-+			compatible = "arm,arm926ej-s";
-+			device_type = "cpu";
-+			reg = <0>;
-+			clocks = <&psc0 14>;
-+			operating-points-v2 = <&opp_table>;
-+		};
-+	};
+ 	ret = sunxi_nfc_rst(nfc);
+ 	if (ret)
+ 		goto out_ahb_reset_reassert;
+@@ -2102,12 +2121,12 @@ static int sunxi_nfc_probe(struct platform_device *pdev)
+ 	if (nfc->dmac) {
+ 		struct dma_slave_config dmac_cfg = { };
+ 
+-		dmac_cfg.src_addr = r->start + NFC_REG_IO_DATA;
++		dmac_cfg.src_addr = r->start + nfc->caps->reg_io_data;
+ 		dmac_cfg.dst_addr = dmac_cfg.src_addr;
+ 		dmac_cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+ 		dmac_cfg.dst_addr_width = dmac_cfg.src_addr_width;
+-		dmac_cfg.src_maxburst = 4;
+-		dmac_cfg.dst_maxburst = 4;
++		dmac_cfg.src_maxburst = nfc->caps->dma_maxburst;
++		dmac_cfg.dst_maxburst = nfc->caps->dma_maxburst;
+ 		dmaengine_slave_config(nfc->dmac, &dmac_cfg);
+ 	} else {
+ 		dev_warn(dev, "failed to request rxtx DMA channel\n");
+@@ -2152,8 +2171,16 @@ static int sunxi_nfc_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct sunxi_nfc_caps sunxi_nfc_a10_caps = {
++	.reg_io_data = NFC_REG_A10_IO_DATA,
++	.dma_maxburst = 4,
++};
 +
-+	opp_table: opp-table {
-+		compatible = "operating-points-v2";
-+
-+		opp_100: opp100-100000000 {
-+			opp-hz = /bits/ 64 <100000000>;
-+			opp-microvolt = <1000000 950000 1050000>;
-+		};
-+
-+		opp_200: opp110-200000000 {
-+			opp-hz = /bits/ 64 <200000000>;
-+			opp-microvolt = <1100000 1050000 1160000>;
-+		};
-+
-+		opp_300: opp120-300000000 {
-+			opp-hz = /bits/ 64 <300000000>;
-+			opp-microvolt = <1200000 1140000 1320000>;
-+		};
-+
-+		/*
-+		 * Original silicon was 300MHz max, so higher frequencies
-+		 * need to be enabled on a per-board basis if the chip is
-+		 * capable.
-+		 */
-+
-+		opp_375: opp120-375000000 {
-+			status = "disabled";
-+			opp-hz = /bits/ 64 <375000000>;
-+			opp-microvolt = <1200000 1140000 1320000>;
-+		};
-+
-+		opp_415: opp130-415000000 {
-+			status = "disabled";
-+			opp-hz = /bits/ 64 <415000000>;
-+			opp-microvolt = <1300000 1250000 1350000>;
-+		};
-+
-+		opp_456: opp130-456000000 {
-+			status = "disabled";
-+			opp-hz = /bits/ 64 <456000000>;
-+			opp-microvolt = <1300000 1250000 1350000>;
-+		};
-+	};
-+
- 	arm {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
+ static const struct of_device_id sunxi_nfc_ids[] = {
+-	{ .compatible = "allwinner,sun4i-a10-nand" },
++	{
++		.compatible = "allwinner,sun4i-a10-nand",
++		.data = &sunxi_nfc_a10_caps,
++	},
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, sunxi_nfc_ids);
 -- 
-2.21.0
+2.19.1
