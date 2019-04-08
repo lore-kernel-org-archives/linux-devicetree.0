@@ -1,165 +1,116 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: Using device tree overlays in Linux
-Date: Mon, 8 Apr 2019 01:27:40 +0000
-Message-ID: <224942bd629e41eaa23ab327b015134e@svr-chch-ex1.atlnz.lc>
-References: <71fb0ff289e84c55bd92ecd96bc9aa76@svr-chch-ex1.atlnz.lc>
- <61185ee9-4bee-eec3-f0d0-6d6760595845@gmail.com>
+From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [PATCH 10/12] pinctrl: sunxi: Support I/O bias
+ voltage setting on H6
+Date: Mon, 8 Apr 2019 03:31:24 +0200
+Message-ID: <20190408013124.y7rvhmmwsqw3i2mz@core.my.home>
+References: <20190405234514.6183-1-megous@megous.com>
+ <20190405234514.6183-11-megous@megous.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDXLF6FR5INBB3WIVLSQKGQE4VVWT5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20190405234514.6183-11-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, brcm80211-dev-list-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, brcm80211-dev-list.pdl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Vetter <daniel@ffwl>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,=0A=
-=0A=
-On 8/04/19 1:05 PM, Frank Rowand wrote:=0A=
-> Hi Chris,=0A=
-> =0A=
-> On 4/3/19 6:50 PM, Chris Packham wrote:=0A=
->> Hi,=0A=
->>=0A=
->> I'm implementing support for some modular Linux based systems using=0A=
->> device tree overlays. The code is working but it seems a little more=0A=
->> fiddly that than it should be so I'm wondering if I'm doing it right.=0A=
-> =0A=
-> Let me start by saying that I strongly discourage using device tree=0A=
-> overlays in the Linux kernel until the support is more baked.  For=0A=
-> some info on how unbaked overlays are, see:=0A=
-> =0A=
->     https://elinux.org/Frank%27s_Evolving_Overlay_Thoughts=0A=
-> =0A=
-> You should consider applying overlays in the Linux kernel to be=0A=
-> fragile at best.=0A=
-> =0A=
-> If you can not figure out how to solve your needs without using=0A=
-> overlays, then having the boot loader apply the overlay instead=0A=
-> of the kernel applying the overlay avoids most of the issues.=0A=
-> =0A=
-=0A=
-Consider us beta-testers :).=0A=
-=0A=
-We've got a few modular systems that have miscellaneous devices that we =0A=
-want to be hot-swapping at run time. For the most part the devices in =0A=
-question are i2c based. We want to use overlays as it saves manually =0A=
-instantiating devices and avoids needing specific knowledge of the base =0A=
-platform.=0A=
-=0A=
->> An example of what I'm doing is=0A=
->>=0A=
->>=0A=
->> arch/arm/boot/dts/Makefile:=0A=
->> DTC_FLAGS_myboard +=3D -@=0A=
->>=0A=
->> drivers/foo/Makefile:=0A=
->> obj-y +=3D myplugin.dtb.o=0A=
->> obj-y +=3D mydriver.o=0A=
->>=0A=
->> drivers/foo/myplugin.dts:=0A=
->> /dts-v1/;=0A=
->> /plugin/;=0A=
->> /{=0A=
->> 	fragment@0 {=0A=
->> 		target =3D <&i2c0>;=0A=
->> 		__overlay__ {=0A=
->> 			gpio@74 {=0A=
->> 				compatible =3D "nxp,pca9539";=0A=
->> 				reg =3D <0x74>=0A=
->> 			};=0A=
->> 		};=0A=
->> 	};=0A=
->> };=0A=
-> =0A=
-> The fragment and __overlay__ nodes are implementation, subject to=0A=
-> change, and should not be hand coded.  The dtc compiler has added=0A=
-> features to allow a more generic source code.  The above should be:=0A=
-> =0A=
-> // SPDX-License-Identifier: GPL-2.0=0A=
-> /dts-v1/;=0A=
-> /plugin/;=0A=
-> =0A=
-> &i2c0 {=0A=
-> 	gpio@74 {=0A=
-> 		compatible =3D "nxp,pca9539";=0A=
-> 		reg =3D <0x74>;=0A=
-> 	};=0A=
-> };=0A=
-> =0A=
-> (Not compiled, not tested.)=0A=
-> =0A=
-> The rcar overlay sources were merged before dtc was updated to=0A=
-> handle this new syntax, so they are not a good example for=0A=
-> how to write an overlay.=0A=
-=0A=
-OK thanks. I suspected as much. I'll update my code based on your example.=
-=0A=
-=0A=
->> drivers/foo/mydriver.c:=0A=
->> extern uint8_t __dtb_myplugin_begin[];=0A=
->> extern uint8_t __dtb_myplugin_end[];=0A=
->>=0A=
->> int mydriver_probe(struct platform_device *pdev)=0A=
->> {=0A=
->> 	u32 size =3D __dtb_myplugin_end - __dtb_myplugin_begin;=0A=
->> 	int overlay_id;=0A=
->> 	int ret;=0A=
->> 	=0A=
->> 	ret =3D of_overlay_fdt_apply(__dtb_myplugin_begin,=0A=
->> 				   size, &overlay_id);=0A=
->> 	return ret;=0A=
->> }=0A=
-> =0A=
-> I'm guessing that you have simplified your use case to make it easier to=
-=0A=
-> describe (thank you for that).  But that also makes it harder to understa=
-nd=0A=
-> the use case, and whether this is a good solution.  Can you describe your=
-=0A=
-> use case in some more detail?=0A=
-=0A=
-As I said above we have a few different modular systems we're trying to =0A=
-support. But they all do basically the same thing.=0A=
-=0A=
-The insertion of a module is detected based on a gpio line being asserted.=
-=0A=
-=0A=
-Then we identify what was just inserted, the details vary a little per =0A=
-platform but in one instance we load an overlay that has instantiates an =
-=0A=
-i2c eeprom identifying the module.=0A=
-=0A=
-Once we know which specific module has been inserted based on the data =0A=
-in the eeprom we load another overlay that instantiates the rest of the =0A=
-devices on that module.=0A=
-=0A=
->> The first issue is that I need to add -@ to the DTC_FLAGS for my board=
-=0A=
->> dtb. I kind of understand that I only need -@ if my overlay targets=0A=
->> something symbolic so I might not need it but I was surprised that there=
-=0A=
->> wasn't a Kconfig option that makes this happen automatically.=0A=
->>=0A=
->> externing things in C files makes checkpatch.pl complain. I see the=0A=
->> of/unittests.c and rcar_du_of.c hide this with a macro. I was again=0A=
->> surprised that there wasn't a common macro to declare these.=0A=
-> =0A=
-> unittests.c should not be used as a model of how to code for devicetree.=
-=0A=
-> There are some hacks that are needed to be able to test, but should not=
-=0A=
-> be used by normal drivers.=0A=
-> =0A=
-> The rcar use of overlays is a temporary hack to provide backward=0A=
-> compatibility.  The intent is to drop this code once the backward=0A=
-> compatibility window ends.=0A=
-=0A=
-Yes I suspected as much.=0A=
-=0A=
-> The long-term intent (once enough of the overlay code is in place) is=0A=
-> to provide an overlay loader than can apply an overlay .dtb from a file.=
-=0A=
-=0A=
-Would that be a kernel helper or driven via udev?=0A=
+On Sat, Apr 06, 2019 at 01:45:12AM +0200, verejna wrote:
+> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> 
+> H6 SoC has a "pio group withstand voltage mode" register (datasheet
+> description), that needs to be used to select either 1.8V or 3.3V
+> I/O mode, based on what voltage is powering the respective pin
+> banks and is thus used for I/O signals.
+> 
+> Add support for configuring this register according to the voltage
+> of the pin bank regulator (if enabled).
+> 
+> This is similar to the support for I/O bias voltage setting patch
+> for A80 and the same concerns apply. (see commit 402bfb3c135213dc
+> Support I/O bias voltage setting on A80).
+> 
+> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c |  1 +
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 14 ++++++++++++++
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  3 +++
+>  3 files changed, 18 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
+> index ef4268cc6227..30b1befa8ed8 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
+> @@ -591,6 +591,7 @@ static const struct sunxi_pinctrl_desc h6_pinctrl_data = {
+>  	.irq_banks = 4,
+>  	.irq_bank_map = h6_irq_bank_map,
+>  	.irq_read_needs_mux = true,
+> +	.io_bias_cfg_variant = IO_BIAS_CFG_V2,
+>  };
+>  
+>  static int h6_pinctrl_probe(struct platform_device *pdev)
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> index 9f329fec77cf..59a4ed396d92 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> @@ -607,6 +607,8 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+>  					 unsigned pin,
+>  					 struct regulator *supply)
+>  {
+> +	unsigned short bank = pin / PINS_PER_BANK;
+> +	unsigned long flags;
+>  	u32 val, reg;
+>  	int uV;
+>  
+> @@ -639,6 +641,18 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+>  		reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
+>  		reg &= ~IO_BIAS_MASK;
+>  		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
+> +	} else if (pctl->desc->io_bias_cfg_variant == IO_BIAS_CFG_V2) {
+> +		val = uV <= 1800000 ? 1 : 0;
+> +
+> +		dev_info(pctl->dev,
+> +			 "Setting voltage bias to %sV on bank P%c\n",
+> +			 val ? "1.8" : "3.3", 'A' + bank);
+
+I'll drop this logging in v2. I forgot it here, after testing the patch.
+
+	o.
+
+> +		raw_spin_lock_irqsave(&pctl->lock, flags);
+> +		reg = readl(pctl->membase + PIO_POW_MOD_SEL_REG);
+> +		reg &= ~(1 << bank);
+> +		writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL_REG);
+> +		raw_spin_unlock_irqrestore(&pctl->lock, flags);
+>  	}
+>  
+>  	return 0;
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> index 476772f91dba..3a66376f141b 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> @@ -95,7 +95,10 @@
+>  #define PINCTRL_SUN7I_A20	BIT(7)
+>  #define PINCTRL_SUN8I_R40	BIT(8)
+>  
+> +#define PIO_POW_MOD_SEL_REG	0x340
+> +
+>  #define IO_BIAS_CFG_V1		1
+> +#define IO_BIAS_CFG_V2		2
+>  
+>  struct sunxi_desc_function {
+>  	unsigned long	variant;
+> -- 
+> 2.21.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
