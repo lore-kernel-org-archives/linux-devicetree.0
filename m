@@ -1,70 +1,49 @@
-From: Flavio Suligoi <f.suligoi@asem.it>
-Subject: RE: [PATCH 1/2] dt-bindings: rtc: add battery-low-hw-alarm property
-Date: Mon, 8 Apr 2019 07:22:44 +0000
-Message-ID: <58b8e1bc2b064abcb67db04369cf9c6e@asem.it>
-References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
- <5ca84214.1c69fb81.e3ace.21e5@mx.google.com>
- <20190406125550.GA7480@piout.net>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 02/12] drm: sun4i: Add support for enabling
+ DDC I2C bus to dw_hdmi glue
+Date: Mon, 8 Apr 2019 09:23:38 +0200
+Message-ID: <20190408072338.3urcotemju3qi2un@flea>
+References: <20190405234514.6183-1-megous@megous.com>
+ <20190405234514.6183-3-megous@megous.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190406125550.GA7480@piout.net>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh@kernel.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="g4sjhwitnevemn7z"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBAXOVPSQKGQEIN3AWOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190405234514.6183-3-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev@v
 List-Id: devicetree@vger.kernel.org
 
-HI,
 
-> On 06/04/2019 01:07:13-0500, Rob Herring wrote:
-> > On Wed, Apr 03, 2019 at 04:52:44PM +0200, Flavio Suligoi wrote:
-> > > Some RTC devices have a battery-low automatic detection circuit.
-> > > The battery-low event is usually reported with:
-> > >
-> > > - a bit change in a RTC status register
-> > > - a hw signaling (generally using an interrupt generation), changing
-> > >   the hw level of a specific pin;
-> > >
-> > > The new property "battery-low-hw-alarm" enable the RTC to generate the
-> > > hw signaling in case of battery-low event.
-> > >
-> > > Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> > > ---
-> > >  Documentation/devicetree/bindings/rtc/rtc.txt | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt
-> b/Documentation/devicetree/bindings/rtc/rtc.txt
-> > > index a97fc6a..f93a44d 100644
-> > > --- a/Documentation/devicetree/bindings/rtc/rtc.txt
-> > > +++ b/Documentation/devicetree/bindings/rtc/rtc.txt
-> > > @@ -31,6 +31,9 @@ below.
-> > >                              expressed in femto Farad (fF).
-> > >                              The default value shall be listed (if
-> optional),
-> > >                              and likewise all valid values.
-> > > +- battery-low-hw-alarm :    Enable the "battery-low" output pin. This
-> function
-> > > +                            is available on the following devices:
-> > > +                            - pcf2127 - pin used for alarm: INTn
-> >
-> > Boolean? If there's cases where which pin is selectable, then we'd need
-> > this to take a value. Not sure how likely that is?
-> >
-> 
-> Indeed, there is at least the pcf85363 that has two possible pins for
-> that interrupt. How would you select the pin then? a zero based index? a
-> string?
+--g4sjhwitnevemn7z
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-I think the string could be clearer for the final user and would give
-more freedom for future changes.
-For example, we can call this property, instead of "battery-low-alarm" or 
-"low-voltage-alarm", simply: "alarm-pin_1" and then the string argument 
-can describe the function used; for example:
+On Sat, Apr 06, 2019 at 01:45:04AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
+> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>
+> Orange Pi 3 board requires enabling DDC I2C bus via some GPIO connected
+> transistors, before it can be used. Model this as a power supply for DDC
+> (via regulator framework).
+>
+> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-alarm-pin_1 = "backup-supply-low-voltage-alarm";
-alarm-pin_2 = "......";
+The DDC bus itself is usually attached to the HDMI connector, so it
+would make sense to make the supply also a property of the connector.
 
-Flavio Suligoi
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--g4sjhwitnevemn7z--
