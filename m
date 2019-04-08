@@ -1,7 +1,7 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 14/31 v3] gpio: ixp4xx: Add DT bindings
-Date: Mon,  8 Apr 2019 08:28:14 +0200
-Message-ID: <20190408062831.16422-15-linus.walleij@linaro.org>
+Subject: [PATCH 27/31 v3] soc: ixp4xx: Add DT bindings for IXP4xx NPE
+Date: Mon,  8 Apr 2019 08:28:27 +0200
+Message-ID: <20190408062831.16422-28-linus.walleij@linaro.org>
 References: <20190408062831.16422-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,35 +18,72 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org, Imre Kaloz <kaloz@openwrt.org>, Krzysztof Halasa <khalasa@piap.pl>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds DT bindings for the IXP4xx GPIO controller.
+This adds DT bindings for the Intel IXP4xx Network Processing
+Engine (NPE). These are three firmware-executing units found in
+the IXP4xx SoC. These bindings use YAML.
 
 Cc: devicetree@vger.kernel.org
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
 ChangeLog v2->v3:
-- Rebase on v5.1-rc1
-ChangeLog v1->v2:
-- Collect Bartosz and Rob's review tags.
+- Rebased on v5.1-rc1
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ ...ntel,ixp4xx-network-processing-engine.yaml | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 78f50505a313..0a8999c09764 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1690,6 +1690,7 @@ M:	Imre Kaloz <kaloz@openwrt.org>
- M:	Krzysztof Halasa <khalasa@piap.pl>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
-+F:	Documentation/devicetree/bindings/gpio/intel,ixp4xx-gpio.txt
- F:	Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml
- F:	Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml
- F:	arch/arm/mach-ixp4xx/
+diff --git a/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml b/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml
+new file mode 100644
+index 000000000000..8cb136c376fb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 Linaro Ltd.
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/firmware/intel-ixp4xx-network-processing-engine.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Intel IXP4xx Network Processing Engine
++
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
++
++description: |
++  On the IXP4xx SoCs, the Network Processing Engine (NPE) is a small
++  processor that can load a firmware to perform offloading of networking
++  and crypto tasks. It also manages the MDIO bus to the ethernet PHYs
++  on the IXP4xx platform. All IXP4xx platforms have three NPEs at
++  consecutive memory locations. They are all included in the same
++  device node since they are not independent of each other.
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - const: intel,ixp4xx-network-processing-engine
++
++  reg:
++    minItems: 3
++    maxItems: 3
++    items:
++      - description: NPE0 register range
++      - description: NPE1 register range
++      - description: NPE2 register range
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    npe@c8006000 {
++         compatible = "intel,ixp4xx-network-processing-engine";
++         reg = <0xc8006000 0x1000>, <0xc8007000 0x1000>, <0xc8008000 0x1000>;
++    };
 -- 
 2.20.1
