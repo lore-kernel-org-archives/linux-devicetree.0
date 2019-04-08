@@ -1,56 +1,28 @@
-From: Nava kishore Manne <navam@xilinx.com>
-Subject: RE: [PATCH v4 3/3] fpga manager: Adding FPGA Manager support for
- Xilinx zynqmp
-Date: Mon, 8 Apr 2019 12:39:11 +0000
-Message-ID: <BYAPR02MB47101CD56BDF0B314BA37062C22C0@BYAPR02MB4710.namprd02.prod.outlook.com>
-References: <20190402123123.915-1-nava.manne@xilinx.com>
- <20190402123123.915-4-nava.manne@xilinx.com>
- <CANk1AXQEMLt5Vk9LhsmBg9U0Twknr1oy-myoL_0vZ4pqSu3DwQ@mail.gmail.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [EXT] Re: [PATCH v2] dt-bindings: pinctrl: imx7d: Fix
+ PAD_CTL_DSE_X*
+Date: Mon, 8 Apr 2019 12:41:04 +0000
+Message-ID: <AM0PR04MB421197A4ADC0D726617EBF76802C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190313142040.26694-1-cquast@hanoverdisplays.com>
+ <20190403084341.GA4636@X250>
+ <CACRpkdbfSp0xANWU9Jc0=qrFUN9fJntADxH1J4jZpP=e0NbXaQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANk1AXQEMLt5Vk9LhsmBg9U0Twknr1oy-myoL_0vZ4pqSu3DwQ@mail.gmail.com>
+In-Reply-To: <CACRpkdbfSp0xANWU9Jc0=qrFUN9fJntADxH1J4jZpP=e0NbXaQ@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>
-Cc: Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, kishore m <chinnikishore369@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>, Shawn Guo <shawnguo@kernel.org>
+Cc: "VI1PR04MB42227AA158BA1FCBF314AA27807B0@vi1pr04mb4222.eurprd04.prod.outlook.com" <VI1PR04MB42227AA158BA1FCBF314AA27807B0@vi1pr04mb4222.eurprd04.prod.outlook.com>, Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan@agner.ch>, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Christina Quast <cquast@hanoverdisplays.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQWxhbiwNCg0KVGhhbmtzIGZvciBsb29rIGludG8gaXQgYW5kIHByb3ZpZGluZyB0aGUgQUNL
-LiAgDQpJIGdvdCBvbmUgbWlub3IgY29tbWVudHMgZnJvbSBNb3JpdHogRmlzY2hlciBkbyB5b3Ug
-d2FudCBtZSBmaXggdGhhdCBpc3N1ZSBub3cgb3IgSSBjYW4gZml4IGl0IGxhdGVyIGFzIGl04oCZ
-cyBhIG1pbm9yIGNvbW1lbnQ/DQpJbiB3aGljaCBrZXJuZWwgdmVyc2lvbiBpIGNhbiBleHBlY3Qg
-dGhpcyBkcml2ZXIgY2hhbmdlcz8/DQoNCg0KUmVnYXJkcywNCk5hdmFraXNob3JlLg0KDQo+IC0t
-LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFsYW4gVHVsbCBbbWFpbHRvOmF0dWxs
-QGtlcm5lbC5vcmddDQo+IFNlbnQ6IFR1ZXNkYXksIEFwcmlsIDIsIDIwMTkgMTE6NTcgUE0NCj4g
-VG86IE5hdmEga2lzaG9yZSBNYW5uZSA8bmF2YW1AeGlsaW54LmNvbT4NCj4gQ2M6IE1vcml0eiBG
-aXNjaGVyIDxtZGZAa2VybmVsLm9yZz47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+
-OyBNYXJrDQo+IFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgTWljaGFsIFNpbWVrIDxt
-aWNoYWxzQHhpbGlueC5jb20+OyBSYWphbg0KPiBWYWphIDxSQUpBTlZAeGlsaW54LmNvbT47IEpv
-bGx5IFNoYWggPEpPTExZU0B4aWxpbnguY29tPjsgbGludXgtDQo+IGZwZ2FAdmdlci5rZXJuZWwu
-b3JnOyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQgRkxBVFRFTkVEIERFVklDRQ0KPiBUUkVF
-IEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IG1vZGVyYXRlZCBsaXN0OkFS
-TS9GUkVFU0NBTEUNCj4gSU1YIC8gTVhDIEFSTSBBUkNISVRFQ1RVUkUgPGxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47IGxpbnV4LQ0KPiBrZXJuZWwgPGxpbnV4LWtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmc+OyBraXNob3JlIG0NCj4gPGNoaW5uaWtpc2hvcmUzNjlAZ21haWwuY29t
-Pg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0IDMvM10gZnBnYSBtYW5hZ2VyOiBBZGRpbmcgRlBH
-QSBNYW5hZ2VyIHN1cHBvcnQgZm9yDQo+IFhpbGlueCB6eW5xbXANCj4gDQo+IE9uIFR1ZSwgQXBy
-IDIsIDIwMTkgYXQgNzozMiBBTSBOYXZhIGtpc2hvcmUgTWFubmUgPG5hdmEubWFubmVAeGlsaW54
-LmNvbT4NCj4gd3JvdGU6DQo+IA0KPiBIaSBOYXZhLA0KPiANCj4gTG9va3MgZ29vZC4NCj4gDQo+
-ID4NCj4gPiBUaGlzIHBhdGNoIGFkZHMgRlBHQSBNYW5hZ2VyIHN1cHBvcnQgZm9yIHRoZSBYaWxp
-bnggWnlucU1QIGNoaXAuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBOYXZhIGtpc2hvcmUgTWFu
-bmUgPG5hdmEubWFubmVAeGlsaW54LmNvbT4NCj4gQWNrZWQtYnk6IEFsYW4gVHVsbCA8YXR1bGxA
-a2VybmVsLm9yZz4NCj4gDQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBmb3IgdjQ6DQo+ID4gICAgICAg
-ICAgICAgICAgIC1VcGRhdGVkIHRoZSBGcGdhIE1nciByZWdpc3RyYXRpb25zIGNhbGwncw0KPiA+
-ICAgICAgICAgICAgICAgICAgdG8gNS4wDQo+ID4gICAgICAgICAgICAgICAgIC1SZW1vdmVkIGRt
-YV9zZXRfbWFza19hbmRfY29oZXJlbnQoKSBBcyB0aGUgRlcNCj4gPiAgICAgICAgICAgICAgICAg
-IHN1cHBvcnRzIG9ubHkgMzItYml0IGFkZHJlc3Mgb3BlcmF0aW9ucy4NCj4gPg0KPiA+IENoYW5n
-ZXMgZm9yIHYzOg0KPiA+ICAgICAgICAgICAgICAgICAtQ3JlYXRlZCBwYXRjaGVzIG9uIHRvcCBv
-ZiA1LjAtcmM1Lg0KPiA+ICAgICAgICAgICAgICAgICAgTm8gZnVuY3Rpb25hbCBjaGFuZ2VzLg0K
-PiA+DQo+ID4gQ2hhbmdlcyBmb3IgdjI6DQo+ID4gICAgICAgICAgICAgICAgIC1GaXhlZCBzb21l
-IG1pbm9yIGNvZGluZyBpc3N1ZXMgYXMgc3VnZ2VzdGVkIGJ5DQo+ID4gICAgICAgICAgICAgICAg
-ICBNb3JpdHoNCj4gPg0KPiA+IENoYW5nZXMgZm9yIHYxOg0KPiA+ICAgICAgICAgICAgICAgICAt
-Tm9uZS4NCj4gPg0KPiA+IENoYW5nZXMgZm9yIFJGQy1WMjoNCj4gPiAgICAgICAgICAgICAgICAg
-LVVwZGF0ZWQgdGhlIEZwZ2EgTWdyIHJlZ2lzdHJhdGlvbnMgY2FsbCdzDQo+ID4gICAgICAgICAg
-ICAgICAgICB0byA0LjE4DQo+IA0KPiBUaGFua3MsDQo+IEFsYW4NCg==
+PiBGcm9tOiBMaW51cyBXYWxsZWlqIFttYWlsdG86bGludXMud2FsbGVpakBsaW5hcm8ub3JnXQ0K
+PiBTZW50OiBNb25kYXksIEFwcmlsIDgsIDIwMTkgODoxMCBQTQ0KPiBPbiBXZWQsIEFwciAzLCAy
+MDE5IGF0IDEwOjQzIEFNIFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4gd3JvdGU6DQo+
+DQo+ID4gSSBhc3N1bWUgdGhpcyB3aWxsIGdvIHZpYSB5b3VyIHRyZWUuICBMZXQgbWUga25vdyBp
+ZiB5b3UgdGhpbmsNCj4gPiBkaWZmZXJlbnRseS4NCj4gDQo+IE9LIEkgYXBwbGllZCBpdCwgaWYg
+eW91J3JlIG5vdCBtZXJnaW5nIGFueSBkZXZpY2UgdHJlZXMgdXNpbmcgdGhlc2UgZGVmaW5lcyB0
+aGlzDQo+IGN5Y2xlIGl0J3MgZmluZSBJIHN1cHBvc2UuDQo+IA0KDQpJTVggZGV2aWNlIHRyZWUg
+ZG9lcyBub3QgdXNlIGl0Lg0KU28gaXQncyBzYWZlLg0KDQpSZWdhcmRzDQpEb25nIEFpc2hlbmcN
+Cg0KPiBZb3VycywNCj4gTGludXMgV2FsbGVpag0K
