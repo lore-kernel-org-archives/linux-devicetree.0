@@ -1,148 +1,57 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v10 02/18] counter: Documentation: Add Generic Counter
- sysfs documentation
-Date: Mon, 8 Apr 2019 23:55:31 +0200
-Message-ID: <20190408215531.GB27592@amd>
-References: <cover.1554184734.git.vilhelm.gray@gmail.com>
- <bd8362f23b99af938c7bced2104eca29888253b3.1554184734.git.vilhelm.gray@gmail.com>
+From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [PATCH 07/12] arm64: dts: allwinner: orange-pi-3:
+ Enable ethernet
+Date: Tue, 9 Apr 2019 00:26:02 +0200
+Message-ID: <20190408222602.jh3mjun5shdpbsnx@core.my.home>
+References: <20190405234514.6183-1-megous@megous.com>
+ <20190405234514.6183-8-megous@megous.com>
+ <CAMty3ZCo53qHW4e+p=toWxLPrUua6XtaZX0YBuPfmDuW1V+e0w@mail.gmail.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="JP+T4n/bALQSJXh8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDXLF6FR5INBB7EUV7SQKGQEQA4BP6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <bd8362f23b99af938c7bced2104eca29888253b3.1554184734.git.vilhelm.gray@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc: gregkh@linuxfoundation.org, jic23@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, akpm@linux-foundation.org, david@lechnology.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, daniel.lezcano@linaro.org, tglx@linutronix.de, thierry.reding@gmail.com, esben@haabendal.dk, linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, patrick.havelange@essensium.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+In-Reply-To: <CAMty3ZCo53qHW4e+p=toWxLPrUua6XtaZX0YBuPfmDuW1V+e0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TZUIDd8j+nm9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Apr 08, 2019 at 11:41:38AM +0530, Jagan Teki wrote:
+> On Sat, Apr 6, 2019 at 5:15 AM <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
+> >
+> > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> >
+> > Orange Pi 3 has two regulators that power the Realtek RTL8211E.
+> > According to the phy datasheet, both regulators need to be enabled
+> > at the same time, but we can only specify a single phy-supply in
+> > the DT.
+> >
+> > This can be achieved by making one regulator depedning on the
+> > other via vin-supply. While it's not a technically correct
+> > description of the hardware, it achieves the purpose.
+> >
+> > All values of RX/TX delay were tested exhaustively and a middle
+> > one of the working values was chosen.
+> >
+> > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
+> >  1 file changed, 44 insertions(+)
+> 
+> This was in ML[1], I thought this change would already merged. I
+> remember Chen-Yu applied and revert due to emac node not mainlined at
+> that time.
+> 
+> [1] https://patchwork.kernel.org/patch/10558281/
 
---JP+T4n/bALQSJXh8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The patch was not merged at the time, and bitrotted a bit. Armbian folks
+were applying the bitortted patch out-of-the mainline and were experiencing
+NPEs. I fixed the patch, and it is also part of this series. It's patch 5.
 
-On Tue 2019-04-02 15:30:37, William Breathitt Gray wrote:
-> This patch adds standard documentation for the userspace sysfs
-> attributes of the Generic Counter interface.
->=20
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-counter | 230 ++++++++++++++++++++
->  MAINTAINERS                                 |   1 +
->  2 files changed, 231 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-counter
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-bus-counter b/Documentation/=
-ABI/testing/sysfs-bus-counter
-> new file mode 100644
-> index 000000000000..566bd99fe0a5
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-counter
-> @@ -0,0 +1,230 @@
-> +What:		/sys/bus/counter/devices/counterX/countY/count
-> +KernelVersion:	5.2
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Count data of Count Y represented as a string.
-> +
-> +What:		/sys/bus/counter/devices/counterX/countY/ceiling
-> +KernelVersion:	5.2
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Count value ceiling for Count Y. This is the upper limit for the
-> +		respective counter.
-> +
-> +What:		/sys/bus/counter/devices/counterX/countY/floor
-> +KernelVersion:	5.2
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Count value floor for Count Y. This is the lower limit for the
-> +		respective counter.
-> +
-> +What:		/sys/bus/counter/devices/counterX/countY/count_mode
-> +KernelVersion:	5.2
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Count mode for channel Y. The ceiling and floor values for
-> +		Count Y are used by the count mode where required. The following
-> +		count modes are available:
-> +
-> +		normal:
-> +			Counting is continuous in either direction.
-> +
-> +		range limit:
-> +			An upper or lower limit is set, mimicking limit switches
-> +			in the mechanical counterpart. The upper limit is set to
-> +			the Count Y ceiling value, while the lower limit is set
-> +			to the Count Y floor value. The counter freezes at
-> +			count =3D ceiling when counting up, and at count =3D floor
-> +			when counting down. At either of these limits, the
-> +			counting is resumed only when the count direction is
-> +			reversed.
-> +
-> +		non-recycle:
-> +			The counter is disabled whenever a counter overflow or
-> +			underflow takes place. The counter is re-enabled when a
-> +			new count value is loaded to the counter via a preset
-> +			operation or direct write.
-> +
-> +		modulo-n:
-> +			A count value boundary is set between the Count Y floor
-> +			value and the Count Y ceiling value. The counter is
-> +			reset to the Count Y floor value at count =3D ceiling when
-> +			counting up, while the counter is set to the Count Y
-> +			ceiling value at count =3D floor when counting down; the
-> +			counter does not freeze at the boundary points, but
-> +			counts continuously throughout.
-> +
-> +What:		/sys/bus/counter/devices/counterX/countY/count_mode_available
-> +What:		/sys/bus/counter/devices/counterX/countY/error_noise_available
-> +What:		/sys/bus/counter/devices/counterX/countY/function_available
-> +What:		/sys/bus/counter/devices/counterX/countY/signalZ_action_available
-> +KernelVersion:	5.2
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Discrete set of available values for the respective Count Y
-> +		configuration are listed in this file. Values are delimited by
-> +		newline characters.
-
-Elsewhere in sysfs we do space-separated:
-
-pavel@amd:~$ cat /sys/power/state
-freeze mem disk
-
-And we use [] to mark current selection:
-
-pavel@amd:~$ cat /sys/class/leds/tpacpi\:\:thinkvantage/trigger
-[none] bluetooth-power rfkill-any rfkill-none kbd-scrolllock
-kbd-numlock kbd-capslock kbd-kanalock kbd-shiftlock kbd-altgrlock
-kbd-ctrllock kbd-altlock kbd-shiftllock kbd-shiftrlock kbd-ctrlllock
-kbd-ctrlrlock AC-online BAT0-charging-or-full BAT0-charging BAT0-full
-BAT0-charging-blink-full-solid rfkill0 phy0rx phy0tx phy0assoc
-phy0radio phy0tpt mmc0 timer heartbeat audio-mute audio-micmute
-rfkill1
-
-Note this only works if you have less than PAGE_SIZE of entries... and
-will never have more.
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---JP+T4n/bALQSJXh8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlyrw1MACgkQMOfwapXb+vIrJACdGzny2kYErlj2vHsj5g0+nisf
-vFUAn2r0eo4ejc8ifXJmGFrOjikVszOA
-=36BY
------END PGP SIGNATURE-----
-
---JP+T4n/bALQSJXh8--
+	o.
