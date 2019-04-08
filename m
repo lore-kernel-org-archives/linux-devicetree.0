@@ -1,99 +1,57 @@
-From: Zhi Li <lznuaa@gmail.com>
-Subject: Re: [PATCH V4 2/4] drivers/perf: imx_ddr: Add ddr performance counter
- support
-Date: Mon, 8 Apr 2019 14:10:28 -0500
-Message-ID: <CAHrpEqQnJAdUeKLUFE0r6DxnCtitEumvgd5xOzKmJmYXy3mQ4w@mail.gmail.com>
-References: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
- <1550253761-26841-2-git-send-email-Frank.Li@nxp.com>
- <20190404111714.GA26392@fuggles.cambridge.arm.com>
- <CAHrpEqT67OpeGXB7wgYSsTD9ibG_jk7xO5zMFyxcG5PHFP-bJg@mail.gmail.com>
- <20190405143846.GB7313@fuggles.cambridge.arm.com>
- <CAHrpEqSerorArZwSgj5qkFQQgwit5mqPWp5DD6PmYJiLejPJfw@mail.gmail.com>
- <20190405150319.GA7704@fuggles.cambridge.arm.com>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH v4 3/3] fpga manager: Adding FPGA Manager support for
+ Xilinx zynqmp
+Date: Mon, 8 Apr 2019 15:27:02 -0500
+Message-ID: <CANk1AXQ5mHr0ZTuRoby3GomKbbQxv8z-O=o83VV=mXTh1aUZZA@mail.gmail.com>
+References: <20190402123123.915-1-nava.manne@xilinx.com> <20190402123123.915-4-nava.manne@xilinx.com>
+ <CANk1AXQEMLt5Vk9LhsmBg9U0Twknr1oy-myoL_0vZ4pqSu3DwQ@mail.gmail.com>
+ <BYAPR02MB47101CD56BDF0B314BA37062C22C0@BYAPR02MB4710.namprd02.prod.outlook.com>
+ <CANk1AXSXAfNky3adaWOrU3qn=JiEX=a25MFg6fimVjXPKvwOMg@mail.gmail.com>
+ <d425bd61-238b-f085-f450-d052349878a8@xilinx.com> <20190408165109.GA6459@archbook>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190405150319.GA7704@fuggles.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Frank Li <frank.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190408165109.GA6459@archbook>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Moritz Fischer <mdf@kernel.org>
+Cc: Michal Simek <michal.simek@xilinx.com>, Nava kishore Manne <navam@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, kishore m <chinnikishore369@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 5, 2019 at 10:03 AM Will Deacon <will.deacon@arm.com> wrote:
+On Mon, Apr 8, 2019 at 11:51 AM Moritz Fischer <mdf@kernel.org> wrote:
 >
-> On Fri, Apr 05, 2019 at 09:58:38AM -0500, Zhi Li wrote:
-> > On Fri, Apr 5, 2019 at 9:38 AM Will Deacon <will.deacon@arm.com> wrote:
-> > > On Fri, Apr 05, 2019 at 09:34:38AM -0500, Zhi Li wrote:
-> > > > On Thu, Apr 4, 2019 at 6:17 AM Will Deacon <will.deacon@arm.com> wrote:
-> > > > > On Fri, Feb 15, 2019 at 06:03:11PM +0000, Frank Li wrote:
-> > > > > > Add ddr performance monitor support for iMX8QXP
-> > > > > >
-> > > > > > There are 4 counters for ddr perfomance events.
-> > > > > > counter 0 is dedicated for cycles.
-> > > > > > you choose any up to 3 no cycles events.
-> > > > > >
-> > > > > > for example:
-> > > > > >
-> > > > > > perf stat -a -e ddr0/read-access/,ddr0/write-access/,ddr0/precharge/ ls
-> > > > > > perf stat -a -e ddr0/cycles/,ddr0/read-access/,ddr0/write-access/ ls
-> > > > >
-> > > > > Could you elaborate a bit on DDR_CAP_AXI_ID, please? Specifically, how
+> Hi Michal,
+>
+> On Mon, Apr 08, 2019 at 04:36:15PM +0200, Michal Simek wrote:
+> > On 08. 04. 19 16:17, Alan Tull wrote:
+> > > On Mon, Apr 8, 2019 at 7:39 AM Nava kishore Manne <navam@xilinx.com> =
+wrote:
+> > >>
+> > >> Hi Alan,
+> > >>
+> > >> Thanks for look into it and providing the ACK.
+> > >> I got one minor comments from Moritz Fischer do you want me fix that=
+ issue now or I can fix it later as it=E2=80=99s a minor comment?
+> > >
+> > > Please fix for Moritz comment.
+> > >
+> > >> In which kernel version i can expect this driver changes??
+> > >
+> > > Patch 2/3 and 3/3 are dependent on 1/3 which isn't a drivers/fpga
+> > > thing, it's drivers/firmware.
 > >
-> > Only imx845 have AXID filter capability now.
-> >
-> > > > > does the COUNTER_DPCR1 register work and what happens if I specify two
-> > > > > simultaneous events with different values in config1? I'm a little wary
-> >
-> > There are difference match register for each event.
-> > 1. Read event with config 1 A
-> > 2. Read event with config 1 B
-> >
-> > 1 will show read count with filter A
-> > 2 will show read count with filter B.
+> > I can take it via arm-soc guys if you are ok with that.
+> > Just need to have your ack in commits.
+> > We have done it like this several times, IIRC reset, nvmem.
 >
-> Thanks, that makes sense, but I can't see how that corresponds to the code
-> in the patch:
->
-> +static void ddr_perf_event_start(struct perf_event *event, int flags)
-> +{
-> +       struct ddr_pmu *pmu = to_ddr_pmu(event->pmu);
-> +       struct hw_perf_event *hwc = &event->hw;
-> +       int counter = hwc->idx;
-> +
-> +       if (pmu->flags & DDR_CAP_AXI_ID) {
-> +               if (event->attr.config == EVENT_AXI_READ ||
-> +                   event->attr.config == EVENT_AXI_WRITE) {
-> +                       int val = event->attr.config1;
-> +
-> +                       writel(val, pmu->base + COUNTER_DPCR1);
-> +               }
-> +       }
-> +
-> +       local64_set(&hwc->prev_count, 0);
-> +
-> +       ddr_perf_event_enable(pmu, event->attr.config, counter, true);
->
-> ddr_perf_event_enable() does what you'd expect, and uses hwc->idx to
-> allocate a counter, but the code before it just always writes to DPCR1.
->
-> What am I missing?
+> I'm fine with you taking it through arm-soc. Alan?
 
-I double check with our IC design team. My previous answer is wrong.
-Only one DPCR1. It will impact all event EVENT_AXI_READ and  EVENT_AXI_WRITE.
+Fine with me!
 
-Thank means just choose one config1 for event EVENT_AXI_READ or EVENT_AXI_WRITE
+Alan
 
-best regards
-Frank Li
-
+> I'll look at the other
+> patches.
 >
-> Will
+> Thanks,
+> Moritz
