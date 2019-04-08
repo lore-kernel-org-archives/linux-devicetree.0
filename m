@@ -1,62 +1,130 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Re: [PATCH 02/12] drm: sun4i: Add support for
- enabling DDC I2C bus to dw_hdmi glue
-Date: Mon, 8 Apr 2019 10:47:14 +0200
-Message-ID: <20190408084714.b6xdi2pxbjvzwsnu@flea>
-References: <20190405234514.6183-1-megous@megous.com>
- <20190405234514.6183-3-megous@megous.com>
- <20190408072338.3urcotemju3qi2un@flea>
- <CAGb2v65W_H5HrnY9+DuW-noshXLHgErJhEpHHhzcG15n1u=8iw@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 1/4] ARM: davinci: fix cpufreq registration on
+ da850-evm
+Date: Mon, 8 Apr 2019 14:18:14 +0530
+Message-ID: <3a31a498-232c-5f8f-5f4c-9dfaee0ad15a@ti.com>
+References: <20190322133105.5945-1-brgl@bgdev.pl>
+ <20190322133105.5945-2-brgl@bgdev.pl>
+ <CAHCN7xJj_aA8XFR6=ZxO-WrfkJRY5fS6NgjHbeqpdfhUnn1apA@mail.gmail.com>
+ <CAMpxmJVBTny7kzADSZHQXk_ZUjnRaNWu0Ly3WC8v+zPmR8Dizg@mail.gmail.com>
+ <bb734e20-d2c7-73f4-e2c5-3b810ccf4c81@ti.com>
+ <CAMRc=MdYhaED30Xu8oJiJD7F9z=SPu6u+1p32mQnX0tEL=iOiA@mail.gmail.com>
+ <CAHCN7x+-GRBygMt9APi9sf19PQksfmXk9sOZUo-1YY40RhUmng@mail.gmail.com>
+ <CAMRc=Md-XtFYP_c4afNDHdYDUV77tGpvau8AsG1KGwQ6Hm+FhQ@mail.gmail.com>
+ <CAHCN7x+kAPYgFJ9iZQTPm2Vypni4CgmWmBw96fgbQr0ch456bw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hnppvtnr77cffabd"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBGUVVTSQKGQEILQHL5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAGb2v65W_H5HrnY9+DuW-noshXLHgErJhEpHHhzcG15n1u=8iw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kern
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHCN7x+kAPYgFJ9iZQTPm2Vypni4CgmWmBw96fgbQr0ch456bw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Adam Ford <aford173@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 04/04/19 4:44 PM, Adam Ford wrote:
+> On Thu, Apr 4, 2019 at 5:01 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>
+>> śr., 3 kwi 2019 o 17:49 Adam Ford <aford173@gmail.com> napisał(a):
+>>>
+>>> On Wed, Apr 3, 2019 at 7:50 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>>>
+>>>> śr., 27 mar 2019 o 12:14 Sekhar Nori <nsekhar@ti.com> napisał(a):
+>>>>>
+>>>>> Hi Bart,
+>>>>>
+>>>>> On 26/03/19 11:21 PM, Bartosz Golaszewski wrote:
+>>>>>> wt., 26 mar 2019 o 15:00 Adam Ford <aford173@gmail.com> napisał(a):
+>>>>>>>
+>>>>>>> On Fri, Mar 22, 2019 at 8:31 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>>>>>>>
+>>>>>>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>>>>>>>
+>>>>>>>> The system_rev variable is never set on davinci and is always 0, so
+>>>>>>>> we're using the default max operating point of 300MHz. The cvdd supply
+>>>>>>>> comes from the tps6507 pmic and the voltage can go all the way to 1.3V
+>>>>>>>> so the maximum supported rate should be 456MHz.
+>>>>>>>
+>>>>>>> My understanding is that only certain revisions of the silicon can go
+>>>>>>> to 456MHz.   The L138's Datasheet lists both a 456 and 375 version.  I
+>>>>>>> cannot find a way to read a register to determine which version of the
+>>>>>>> silicon is available. Maybe Sekhar can confirm.
+>>>>>>>
+>>>>>>
+>>>>>> Commit 28bd2c341120 ("davinci: am18x/da850/omap-l138 evm: add support
+>>>>>> for higher speed grades") mentions the following:
+>>>>>>
+>>>>>> ---
+>>>>>> U-Boot on the EVM sets up ATAG_REVISION to inform the OS
+>>>>>> regarding the speed grade supported by the silicon. We use
+>>>>>> this information to pass on the speed grade information to
+>>>>>> the SoC code.
+>>>>>> ---
+>>>>>>
+>>>>>> Should the system_rev somehow reflect that revision? Any way I can check it?
+>>>>>
+>>>>> Can you check if the procedure in doc/README.davinci in U-Boot sources
+>>>>> still works?
+>>>>>
+>>>>> Environment Variables
+>>>>> =====================
+>>>>>
+>>>>> The DA850 EVM allows the user to specify the maximum cpu clock allowed by the
+>>>>> silicon, in Hz, via an environment variable "maxcpuclk".
+>>>>>
+>>>>> The maximum clock rate allowed depends on the silicon populated on the EVM.
+>>>>> Please make sure you understand the restrictions placed on this clock in the
+>>>>> device specific datasheet before setting up this variable. This information is
+>>>>> passed to the Linux kernel using the ATAG_REVISION atag.
+>>>>>
+>>>>> If "maxcpuclk" is not defined, the configuration CONFIG_DA850_EVM_MAX_CPU_CLK
+>>>>> is used to obtain this information.
+>>>>>
+>>>>> Thanks,
+>>>>> Sekhar
+>>>>
+>>>> Hi Sekhar,
+>>>>
+>>>> I built the current upstream u-boot and the get_board_rev() function
+>>>> for da850-evm doesn't seem to be called at all. For instance the
+>>>> lego-ev3 platform does this:
+>>>>
+>>>> ./lego/ev3/legoev3.c:108: board_rev = get_board_rev();
+>>>>
+>>>> but in davinci this function seems to be unused and I don't see it
+>>>> called from any other core u-boot component. I don't see any commit
+>>>> that would mention this function but there are a lot of commits
+>>>> removing get_board_rev() for other boards in git log. Is it possible
+>>>> it stopped being used at some point?
+>>>
+>>> Look for setup_revision_tag in arch/arm/lib/bootm.c
+>>>
+>>> The function appears to be called from there.
+>>>
+>>> There is a __weak reference in the header file which I think allows
+>>> people to remove them without breaking bootm.
+>>>
+>>> adam
+>>>>
+>>>> Bart
+>>
+>> Thanks, now verified that this still works in board file mode for
+>> da850-evm. Now the questions is - what about DT mode? Should we only
+>> enable the lowest possible mode (300MHz) and leave it to the user to
+>> enable any higher frequencies?
+> 
+> From everything that I can find in Logic PD's database, the standard
+> da850-evm kits and SOM's are 375MHz, so I think it's safe to run up to
+> that speed.  I would disable the speed options for 408 and 456, but
+> leave them shown for anyone who may have purchased a custom version
+> with the 456MHz variant which I can also see there are some.  At least
+> for the L138 and AM1808 SOM's, those customers who who they are, so
+> making it obvious how to enable it would be a good thing.
+> 
+> Just my two cents.
 
---hnppvtnr77cffabd
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Sounds good to me.
 
-On Mon, Apr 08, 2019 at 03:28:24PM +0800, Chen-Yu Tsai wrote:
-> On Mon, Apr 8, 2019 at 3:23 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> >
-> > On Sat, Apr 06, 2019 at 01:45:04AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
-> > > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> > >
-> > > Orange Pi 3 board requires enabling DDC I2C bus via some GPIO connected
-> > > transistors, before it can be used. Model this as a power supply for DDC
-> > > (via regulator framework).
-> > >
-> > > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> >
-> > The DDC bus itself is usually attached to the HDMI connector, so it
-> > would make sense to make the supply also a property of the connector.
->
-> I believe these are separate things. What this patch covers is power for
-> a voltage shifter between the SoC and HDMI DDC pins. The HDMI connector's
-> 5V supply to power the remote DDC chip is something else. And on the
-> Orange Pi 3 they are indeed separate supplies.
-
-Then maybe the endpoint link between the two would be the best place
-to put this?
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---hnppvtnr77cffabd--
+Thanks,
+Sekhar
