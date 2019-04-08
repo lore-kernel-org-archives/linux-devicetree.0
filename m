@@ -1,61 +1,83 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2 11/20] spi: expand mode support and add LSBYTE_FIRST
- mode
-Date: Mon, 8 Apr 2019 13:28:19 +0700
-Message-ID: <20190408062819.GJ2803@sirena.org.uk>
-References: <1554423259-26056-1-git-send-email-skomatineni@nvidia.com>
- <1554423259-26056-11-git-send-email-skomatineni@nvidia.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 16/31 v3] ARM: ixp4xx: Add DT bindings
+Date: Mon,  8 Apr 2019 08:28:16 +0200
+Message-ID: <20190408062831.16422-17-linus.walleij@linaro.org>
+References: <20190408062831.16422-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="F4+N/OgRSdC8YnqX"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1554423259-26056-11-git-send-email-skomatineni@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com, robh+dt@kernel.org, mark.rutland@arm.com, kyarlagadda@nvidia.com, ldewangan@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190408062831.16422-1-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, Imre Kaloz <kaloz@openwrt.org>, Krzysztof Halasa <khalasa@piap.pl>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+This adds initial device tree bindings for the IXP4xx machines.
+This time I tried something wild and crazy and try to make proper
+JSON-style YAML bindings for the top level.
 
---F4+N/OgRSdC8YnqX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v2->v3:
+- Rebased on v5.1-rc1
+ChangeLog v1->v2:
+- Fix up the GW2358 compatible string.
+---
+ .../devicetree/bindings/arm/intel-ixp4xx.yaml | 22 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml
 
-On Thu, Apr 04, 2019 at 05:14:10PM -0700, Sowjanya Komatineni wrote:
-> Some SPI Master controllers support configuring Least significant byte
-> first or Most significant byte first order for transfers. Also some SPI
-> slave devices expect bytes to be in Least significant first order and
-> some devices expect Most significant first order.
->=20
-> SPI driver declares mode and mode_bits as u16 and all bits are used.
->=20
-> This patch changes mode and mode_bits to be u32 to allow for more mode
-> configurations.
->=20
-> This patch also creates SPI_LSBYTE_FIRST mode to allow SPI clients to
-> choose LSByte order or MSByte order through the device tree property
-> spi-lsbyte-first.
-
-Please submit one patch per change, each with a clear changelog, as
-covered in SubmittingPatches.  This makes it much easier to review
-things since it's easier to tell if the patch does what it was intended
-to do and means that if one part of the patch casues problems it won't
-hold up the other parts.
-
---F4+N/OgRSdC8YnqX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyq6gIACgkQJNaLcl1U
-h9DuHwf/ZtMyHrfW3WzW3cRTFF1ocpo6CZNO/MsgbS9BbngjgkNeCST7eNBKSUIx
-PRhkYretkGShqbxWzCcImUTUuMcJfD4ssKG9DGWiYAtAs8kK0YRsPgrmWEjKNwDm
-tUf5RsjgebZukSQo/Ba53PNmWosGCg1STb2gs8ZWE8HO/zxCGH6DFPSgMuRZk/iB
-bTwVJGKKXuNW2UMMCRwvv6b5+Zm8E/HWGwlfXBOeI1X9WXKNhWUQfl0bIv0qps59
-ViMc+YMFcSD1JRE1471cWONSKbcMWPx7TQFUaQBBszdRn+asko27l0hHcvH7chDt
-K7/zgtAI3QFNjfN3Oc1UPzMrfk4c3Q==
-=XP4S
------END PGP SIGNATURE-----
-
---F4+N/OgRSdC8YnqX--
+diff --git a/Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml b/Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml
+new file mode 100644
+index 000000000000..f4f7451e5e8a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml
+@@ -0,0 +1,22 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/intel-ixp4xx.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Intel IXP4xx Device Tree Bindings
++
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - linksys,nslu2
++          - const: intel,ixp42x
++      - items:
++          - enum:
++              - gateworks,gw2358
++          - const: intel,ixp43x
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0a8999c09764..49052de0567b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1690,6 +1690,7 @@ M:	Imre Kaloz <kaloz@openwrt.org>
+ M:	Krzysztof Halasa <khalasa@piap.pl>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
++F:	Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml
+ F:	Documentation/devicetree/bindings/gpio/intel,ixp4xx-gpio.txt
+ F:	Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml
+ F:	Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml
+-- 
+2.20.1
