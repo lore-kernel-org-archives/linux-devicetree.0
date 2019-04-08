@@ -1,128 +1,92 @@
-From: "Andrew Jeffery" <andrew@aj.id.au>
-Subject: Re: [PATCH v9 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
-Date: Sun, 07 Apr 2019 22:03:16 -0400
-Message-ID: <8c412bc4-6528-4496-a912-f098604e707b@www.fastmail.com>
-References: <20190404152544.214988-1-venture@google.com>
+From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
+Subject: Re: [PATCH] dt-bindings: cpu: Fix JSON schema
+Date: Mon, 8 Apr 2019 12:35:54 +0900
+Message-ID: <2e4b09ae-968c-614b-4e20-b29d17db7a3e@socionext.com>
+References: <20190318100521.29109-1-maxime.ripard@bootlin.com>
+ <CAL_JsqJ_LYycXazkdP2Q=e-jynKiX+z5En0bz0AWpDjsevwQTg@mail.gmail.com>
+ <20190401091050.cwph7xlpv3pmkwnq@flea>
+ <78bb248e-56b8-b825-e763-583f75148eb3@socionext.com>
+ <20190401113546.d6p2mg2y47abhumz@flea>
+ <b6cb709b-7b1a-6bab-6f93-bcb565be18fb@socionext.com>
+ <b3ecf5c5-9b1a-eb8b-95c2-c30a94c8bdd8@socionext.com>
+ <20190407221329.skbjjsjvqpnxwime@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190404152544.214988-1-venture@google.com>
+In-Reply-To: <20190407221329.skbjjsjvqpnxwime@localhost>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick Venture <venture@google.com>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, Joel Stanley <joel@jms.id.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: Olof Johansson <olof@lixom.net>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On Fri, 5 Apr 2019, at 01:55, Patrick Venture wrote:
-> Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+On 2019/04/08 7:13, Olof Johansson wrote:
+> On Tue, Apr 02, 2019 at 08:42:02PM +0900, Sugaya, Taichi wrote:
+>> Hi,
+>>
+>> On 2019/04/01 22:02, Sugaya, Taichi wrote:
+>>> Hi,
+>>>
+>>> On 2019/04/01 20:35, Maxime Ripard wrote:
+>>>> Hi,
+>>>>
+>>>> On Mon, Apr 01, 2019 at 07:52:06PM +0900, Sugaya, Taichi wrote:
+>>>>> On 2019/04/01 18:10, Maxime Ripard wrote:
+>>>>>> Hi Sugaya, Arnd, Olof,
+>>>>>>
+>>>>>> On Thu, Mar 28, 2019 at 02:35:54PM -0500, Rob Herring wrote:
+>>>>>>> +arm-soc
+>>>>>>>
+>>>>>>> On Mon, Mar 18, 2019 at 5:05 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>>>>>>>>
+>>>>>>>> Commit fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for
+>>>>>>>> Milbeaut") added support for a new cpu enable-method, but did so using
+>>>>>>>> tabulations to ident. This is however invalid in the syntax, and resulted
+>>>>>>>> in a failure when trying to use that schemas for validation.
+>>>>>>>>
+>>>>>>>> Use spaces instead of tabs to indent to fix this.
+>>>>>>>>
+>>>>>>>> Fixes: fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
+>>>>>>>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>>>>>>>> ---
+>>>>>>>>     Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
+>>>>>>>>     1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>>>>>>
+>>>>>>> This should be applied to arm-soc tree having the commit.
+>>>>>>
+>>>>>> Could you pick up that patch?
+>>>>>
+>>>>> I got it.
+>>>>> My mission is to resubmit your fix-patch added my singned-off tag and
+>>>>> Rob's reviewed tag...right?
+>>>>
+>>>> If you are part of arm-soc and send your pull requests to Arnd and
+>>>> Olof, simply pick it up in the same branch than the initial patch was
+>>>> in. And when you apply that patch, you indeed need to add your
+>>>> Signed-off-by (note that most commands to commit have an option to do
+>>>> that automatically: -s and that includes git am) and the Rob's
+>>>> reviewed-by.
+>>>>
+>>>> Then, send a new pull request to arm-soc.
+>>>>
+>>>
+>>> Okay, thanks for your suggestion.
+>>> I try to make pull request!
+>>>
+>>
+>> Sorry I realized that I couldn't make a private repository, so I'll send my Ack instead.
+>>
+>> Acked-by: Sugaya Taichi <sugaya.taichi@socionext.com>
 > 
-> Signed-off-by: Patrick Venture <venture@google.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes for v9:
->  - Added missing details about syscon parent
-> Changes for v8:
-> - None
-> Changes for v7:
-> - Moved node under the syscon node it requires
-> Changes for v6:
-> - None
-> Changes for v5:
-> - None
-> Changes for v4:
-> - None
-> Changes for v3:
-> - None
-> Changes for v2:
-> - Added comment about syscon required parameter.
-> ---
->  .../bindings/misc/aspeed-p2a-ctrl.txt         | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> Applied to arm/fixes now. Thanks!
 > 
-> diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt 
-> b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> new file mode 100644
-> index 0000000000000..05ed654848b60
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> @@ -0,0 +1,56 @@
-> +======================================================================
-> +Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge 
-> Control Driver
-> +======================================================================
-> +
-> +The bridge is available on platforms with the VGA enabled on the 
-> Aspeed device.
-> +In this case, the host has access to a 64KiB window into all of the 
-> BMC's
-> +memory.  The BMC can disable this bridge.  If the bridge is enabled, 
-> the host
-> +has read access to all the regions of memory, however the host only 
-> has read
-> +and write access depending on a register controlled by the BMC.
-> +
-> +Required properties:
-> +===================
-> +
-> + - compatible: must be one of:
-> +	- "aspeed,ast2400-p2a-ctrl"
-> +	- "aspeed,ast2500-p2a-ctrl"
-> +
-> +Optional properties:
-> +===================
-> +
-> +- memory-region: A phandle to a reserved_memory region to be used for 
-> the PCI
-> +		to AHB mapping
-> +
-> +The p2a-control node should be the child of a syscon node with the 
-> required
-> +property:
-> +
-> +- compatible : Should be one of the following:
-> +		"aspeed,ast2400-scu", "syscon", "simple-mfd"
-> +		"aspeed,g4-scu", "syscon", "simple-mfd"
-> +		"aspeed,ast2500-scu", "syscon", "simple-mfd"
-> +		"aspeed,g5-scu", "syscon", "simple-mfd"
-> +
-> +The aspeed-p2a-ctrl node should be the child of a syscon node with the 
-> required
-> +property:
-> +
-> +- compatible : Should be one of the following:
-> +		"aspeed,ast2400-scu", "syscon", "simple-mfd"
-> +		"aspeed,g4-scu", "syscon", "simple-mfd"
-> +		"aspeed,ast2500-scu", "syscon", "simple-mfd"
-> +		"aspeed,g5-scu", "syscon", "simple-mfd"
-
-Agh, now the info's here twice!
-
-Next time, surely :D
-
-Unless Greg or Rob want to chop one out as they apply it? It looks good to
-me otherwise.
-
-Andrew
-
-> +
-> +Example
-> +===================
-> +
-> +g4 Example
-> +----------
-> +
-> +syscon: scu@1e6e2000 {
-> +	compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
-> +	reg = <0x1e6e2000 0x1a8>;
-> +
-> +	p2a: p2a-control {
-> +		compatible = "aspeed,ast2400-p2a-ctrl";
-> +		memory-region = <&reserved_memory>;
-> +	};
-> +};
-> -- 
-> 2.21.0.392.gf8f6787159e-goog
 > 
->
+> -Olof
+> 
+
+Thank you for appling!
