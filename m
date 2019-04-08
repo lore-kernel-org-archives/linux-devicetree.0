@@ -1,87 +1,95 @@
-From: Mickael GUENE <mickael.guene@st.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: Document MIPID02 bindings
-Date: Mon, 8 Apr 2019 06:20:35 +0000
-Message-ID: <9361076f-9007-fba8-302d-c32cdb8f5c87@st.com>
-References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
- <1553680545-73278-1-git-send-email-mickael.guene@st.com>
- <1553680545-73278-2-git-send-email-mickael.guene@st.com>
- <20190406103525.amfsljsz4twi3xq2@valkosipuli.retiisi.org.uk>
- <20190406103826.cniksvg7xuog3gti@valkosipuli.retiisi.org.uk>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH 1/3] dt-bindings: phy: rcar-gen3-phy-usb2: Revise
+ #phy-cells property
+Date: Mon, 8 Apr 2019 06:22:14 +0000
+Message-ID: <TYAPR01MB4271FBDF12890817243F3FABD82C0@TYAPR01MB4271.jpnprd01.prod.outlook.com>
+References: <1554120083-29990-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1554120083-29990-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <TY1PR01MB17708AF072E039D362FDE659C0570@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190406103826.cniksvg7xuog3gti@valkosipuli.retiisi.org.uk>
-Content-Language: en-US
-Content-ID: <89241381E136EC43A4987D746E920DB5@st.com>
+In-Reply-To: <TY1PR01MB17708AF072E039D362FDE659C0570@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+Content-Language: ja-JP
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Hugues FRUCHET <hugues.fruchet@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+Hi Fabrizio-san,
 
-On 4/6/19 12:38, Sakari Ailus wrote:
-> On Sat, Apr 06, 2019 at 01:35:25PM +0300, Sakari Ailus wrote:
->> Hi Mickael,
->>
->> On Wed, Mar 27, 2019 at 10:55:43AM +0100, Mickael Guene wrote:
->>> This adds documentation of device tree for MIPID02 CSI-2 to PARALLEL
->>> bridge.
->>>
->>> Signed-off-by: Mickael Guene <mickael.guene@st.com>
->>> ---
->>>
->>> Changes in v4:
->>> - Fix and clarify endpoints properties documentation
->>>
->>> Changes in v3: None
->>> Changes in v2:
->>> - Add precision about first CSI-2 port data rate
->>> - Document endpoints supported properties
->>> - Rename 'mipid02@14' into generic 'csi2rx@14' in example
->>>
->>>  .../bindings/media/i2c/st,st-mipid02.txt           | 82 ++++++++++++++=
-++++++++
->>>  MAINTAINERS                                        |  7 ++
->>>  2 files changed, 89 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-m=
-ipid02.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.=
-txt b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
->>> new file mode 100644
->>> index 0000000..754a175
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
->>> @@ -0,0 +1,82 @@
->>> +STMicroelectronics MIPID02 CSI-2 to PARALLEL bridge
->>> +
->>> +MIPID02 has two CSI-2 input ports, only one of those ports can be acti=
-ve at a
->>> +time. Active port input stream will be de-serialized and its content o=
-utputted
->>> +through PARALLEL output port.
->>> +CSI-2 first input port is a dual lane 800Mbps per lane whereas CSI-2 s=
-econd
->>> +input port is a single lane 800Mbps. Both ports support clock and data=
- lane
->>> +polarity swap. First port also supports data lane swap.
->>> +PARALLEL output port has a maximum width of 12 bits.
->>> +Supported formats are RAW6, RAW7, RAW8, RAW10, RAW12, RGB565, RGB888, =
-RGB444,
->>> +YUV420 8-bit, YUV422 8-bit and YUV420 10-bit.
->>> +
->>> +Required Properties:
->>> +- compatible: should be "st,st-mipid02"
->>
->> s/should/shall/ overall; other values aren't really valid in any of the
->> cases.
->=20
-> As this is the only change and it's trivial, I can do that as well. Let m=
-e
-> know if that works for you.
->=20
- I prefer to keep it with my patch serie if you are ok ?
+Thank you for your review!
 
-Mickael=
+> From: Fabrizio Castro, Sent: Wednesday, April 3, 2019 7:35 PM
+>=20
+> Hello Yoshihiro-san,
+>=20
+> Thank you for your patch!
+>=20
+> > From: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kerne=
+l.org> On Behalf Of Yoshihiro Shimoda
+> > Sent: 01 April 2019 13:01
+> > Subject: [PATCH 1/3] dt-bindings: phy: rcar-gen3-phy-usb2: Revise #phy-=
+cells property
+> >
+> > To have the detailed property on each PHY specifier, this patch revices
+>=20
+> s/revices/revises/g
+
+Oops! I'll fix it in v2.
+
+> > the #phy-cells property.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 7 +++++=
++-
+> >  1 file changed, 6 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.t=
+xt
+> b/Documentation/devicetree/bindings/phy/rcar-gen3-
+> > phy-usb2.txt
+> > index ad9c290..7f0d4bf 100644
+> > --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> > +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> > @@ -27,7 +27,12 @@ Required properties:
+> >
+> >  - reg: offset and length of the partial USB 2.0 Host register block.
+> >  - clocks: clock phandle and specifier pair(s).
+> > -- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
+> > +- #phy-cells: see phy-bindings.txt in the same directory, must be <1>.
+> > +
+> > +The phandle's argument in the PHY specifier is the INT_STATUS bit of c=
+ontroller:
+>=20
+> From the driver we are also looking for value 0, as in rcar_gen3_get_dr_m=
+ode we
+> have a for loop that starts from 0, and we call of_usb_get_dr_mode_by_phy=
+ with
+> arg0 =3D=3D 0
+
+This is backward compatibility for old DTS file (phy-cells =3D 0).
+
+> why are we leaving this out from this list?
+
+This is because I don't assume any device nodes doesn't have such a propert=
+y
+(the bit 0 of INT_STATUS).
+
+Best regards,
+Yoshihiro Shimoda
+
+> Thanks,
+> Fab
+>=20
+> > +- 1 =3D USBH_INTA (OHCI)
+> > +- 2 =3D USBH_INTB (EHCI)
+> > +- 3 =3D UCOM_INT (OTG and BC)
+> >
+> >  Optional properties:
+> >  To use a USB channel where USB 2.0 Host and HSUSB (USB 2.0 Peripheral)=
+ are
+> > --
+> > 2.7.4
