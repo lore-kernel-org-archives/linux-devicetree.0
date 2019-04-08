@@ -1,89 +1,46 @@
-From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: Re: [PATCH] arm64: dts: imx8mq: add GPU node
-Date: Mon, 8 Apr 2019 15:07:29 +0200
-Message-ID: <20190408130729.GA31666@bogon.m.sigxcpu.org>
-References: <20190404165211.29297-1-l.stach@pengutronix.de>
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+Subject: Re: [PATCH 09/12] pinctrl: sunxi: Prepare for alternative bias
+ voltage setting methods
+Date: Mon, 8 Apr 2019 15:08:21 +0200
+Message-ID: <20190408130821.minpds2ygqdv6yir@core.my.home>
+References: <20190405234514.6183-1-megous@megous.com>
+ <20190405234514.6183-10-megous@megous.com>
+ <CACRpkdY=G0rpxVZL8TKJOQcf+Na8o5_FwG0EyBfb-ZCYXi=_oA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190404165211.29297-1-l.stach@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CACRpkdY=G0rpxVZL8TKJOQcf+Na8o5_FwG0EyBfb-ZCYXi=_oA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-sunxi <linux-sunxi@googlegroups.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Arend van Spriel <arend.vanspriel@broadcom.com>, Franky Lin <franky.lin@broadcom.com>, Hante Meuleman <hante.meuleman@broadcom.com>, Chi-Hsien Lin <chi-hsien.lin@cypress.com>, Wright Feng <wright.feng@cypress.com>, Kalle Valo <kvalo@codeaurora.org>, Naveen Gupta <naveen.gupta@cypress.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lucas,
-On Thu, Apr 04, 2019 at 06:52:11PM +0200, Lucas Stach wrote:
-> This enables the Vivante GC7000L GPU on the i.MX8MQ SoC.
-> =
+Hi Linus,
 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> =
+On Mon, Apr 08, 2019 at 02:53:58PM +0200, Linus Walleij wrote:
+> On Sat, Apr 6, 2019 at 1:45 AM <megous@megous.com> wrote:
+> 
+> > From: Ondrej Jirman <megous@megous.com>
+> >
+> > H6 has a different I/O voltage bias setting method than A80. Prepare
+> > existing code for using alternative bias voltage setting methods.
+> >
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > ---
+> >  drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c |  2 +-
+> >  drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 38 ++++++++++++-----------
+> >  drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  4 ++-
+> 
+> I need Maxime's ACK on these patches to merge.
+> 
+> Can the pinctrl parts be applied independently of the rest
+> of the changes when Maxime is happy with the patches?
 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/=
-dts/freescale/imx8mq.dtsi
-> index 4300781558f6..79d418b4f585 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -792,6 +792,28 @@
->  			};
->  		};
->  =
+Yes, the two pinctrl patches are independent of the rest of the series.
 
-> +		gpu: gpu@38000000 {
-> +			compatible =3D "vivante,gc";
-> +			reg =3D <0x38000000 0x40000>;
-> +			interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks =3D <&clk IMX8MQ_CLK_GPU_ROOT>,
-> +			         <&clk IMX8MQ_CLK_GPU_SHADER_DIV>,
-> +			         <&clk IMX8MQ_CLK_GPU_AXI>,
-> +			         <&clk IMX8MQ_CLK_GPU_AHB>;
-> +			clock-names =3D "core", "shader", "bus", "reg";
-> +			assigned-clocks =3D <&clk IMX8MQ_CLK_GPU_CORE_SRC>,
-> +			                  <&clk IMX8MQ_CLK_GPU_SHADER_SRC>,
-> +			                  <&clk IMX8MQ_CLK_GPU_AXI>,
-> +			                  <&clk IMX8MQ_CLK_GPU_AHB>;
-> +			assigned-clock-parents =3D <&clk IMX8MQ_GPU_PLL_OUT>,
-> +			                         <&clk IMX8MQ_GPU_PLL_OUT>,
-> +			                         <&clk IMX8MQ_GPU_PLL_OUT>,
-> +			                         <&clk IMX8MQ_GPU_PLL_OUT>;
-> +			assigned-clock-rates =3D <800000000>, <800000000>,
-> +			                       <800000000>, <800000000>;
-> +			power-domains =3D <&pgc_gpu>;
-> +		};
+thank you,
+	Ondrej
 
-Reviewed-by: Guido G=FCnther <agx@sigxcpu.org>
-
-Cheers,
- -- Guido
-
-
-> +
->  		usb_dwc3_0: usb@38100000 {
->  			compatible =3D "fsl,imx8mq-dwc3", "snps,dwc3";
->  			reg =3D <0x38100000 0x10000>;
-> -- =
-
-> 2.20.1
-> =
-
-> =
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> =
+> Yours,
+> Linus Walleij
