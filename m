@@ -1,8 +1,7 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 1/6] arm64: dts: allwinner: h6: move MMC
- pinctrl to dtsi
-Date: Mon,  8 Apr 2019 17:27:50 +0200
-Message-ID: <20190408152755.17405-2-peron.clem@gmail.com>
+Subject: [PATCH v4 2/6] dt-bindings: vendor-prefixes: add AZW
+Date: Mon,  8 Apr 2019 17:27:51 +0200
+Message-ID: <20190408152755.17405-3-peron.clem@gmail.com>
 References: <20190408152755.17405-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
@@ -21,77 +20,30 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There is only one pinmuxing available for each MMC controller.
+Shenzhen AZW Technology Co. Ltd. is a manufacturer specialized in Android
+smart TV boxes, Intel mini PCs and home cloud TV boxes with NAS.
 
-Move the pinctrl to the SOC
+Add the vendor prefix for AZW.
 
 Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi | 2 --
- arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts  | 4 ----
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi          | 4 ++++
- 3 files changed, 4 insertions(+), 6 deletions(-)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/a=
-rm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-index b2526dac2fcf..62e27948a3fa 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-@@ -56,8 +56,6 @@
- };
-=20
- &mmc0 {
--	pinctrl-names =3D "default";
--	pinctrl-0 =3D <&mmc0_pins>;
- 	vmmc-supply =3D <&reg_cldo1>;
- 	cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>;
- 	bus-width =3D <4>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/ar=
-m64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index bdb8470fc8dc..4802902e128f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -104,8 +104,6 @@
- };
-=20
- &mmc0 {
--	pinctrl-names =3D "default";
--	pinctrl-0 =3D <&mmc0_pins>;
- 	vmmc-supply =3D <&reg_cldo1>;
- 	cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>;
- 	bus-width =3D <4>;
-@@ -113,8 +111,6 @@
- };
-=20
- &mmc2 {
--	pinctrl-names =3D "default";
--	pinctrl-0 =3D <&mmc2_pins>;
- 	vmmc-supply =3D <&reg_cldo1>;
- 	vqmmc-supply =3D <&reg_bldo2>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot=
-/dts/allwinner/sun50i-h6.dtsi
-index 3e4bb0b0de69..e0dc4a05c1ba 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -278,6 +278,8 @@
- 			resets =3D <&ccu RST_BUS_MMC0>;
- 			reset-names =3D "ahb";
- 			interrupts =3D <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+			pinctrl-names =3D "default";
-+			pinctrl-0 =3D <&mmc0_pins>;
- 			status =3D "disabled";
- 			#address-cells =3D <1>;
- 			#size-cells =3D <0>;
-@@ -306,6 +308,8 @@
- 			resets =3D <&ccu RST_BUS_MMC2>;
- 			reset-names =3D "ahb";
- 			interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+			pinctrl-names =3D "default";
-+			pinctrl-0 =3D <&mmc2_pins>;
- 			status =3D "disabled";
- 			#address-cells =3D <1>;
- 			#size-cells =3D <0>;
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Docume=
+ntation/devicetree/bindings/vendor-prefixes.txt
+index 208889476a38..4933403c4b57 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -54,6 +54,7 @@ avic	Shanghai AVIC Optoelectronics Co., Ltd.
+ avnet	Avnet, Inc.
+ axentia	Axentia Technologies AB
+ axis	Axis Communications AB
++azw     Shenzhen AZW Technology Co., Ltd.
+ bananapi BIPAI KEJI LIMITED
+ bhf	Beckhoff Automation GmbH & Co. KG
+ bitmain	Bitmain Technologies
 --=20
 2.17.1
 
