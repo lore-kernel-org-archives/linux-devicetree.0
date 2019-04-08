@@ -1,159 +1,51 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 3/6] ARM: dts: sun50i: h6: Introduce Beelink GS1 board
-Date: Mon, 8 Apr 2019 12:51:15 +0200
-Message-ID: <20190408105115.akqzbs54x4xpof5b@flea>
-References: <20190408092619.23152-1-peron.clem@gmail.com>
- <20190408092619.23152-4-peron.clem@gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] arm64: dts: qcom: Add Lenovo Miix 630
+Date: Mon, 8 Apr 2019 12:03:49 +0100
+Message-ID: <20190408110348.GF6139@lakrids.cambridge.arm.com>
+References: <20190326185525.20781-1-jeffrey.l.hugo@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="frrkbpd7vjm33wr6"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190408092619.23152-4-peron.clem@gmail.com>
+In-Reply-To: <20190326185525.20781-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, lee.jones@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Mar 26, 2019 at 11:55:25AM -0700, Jeffrey Hugo wrote:
+> This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
+> functionality includes USB (host), microSD-card, keyboard, and trackpad.
 
---frrkbpd7vjm33wr6
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I was under the impression that the Miix 630 came with Windows, and the
+firmware therefore provided (as least a simulacrum of) ACPI. Why do we
+need a DT?
 
-On Mon, Apr 08, 2019 at 11:26:16AM +0200, Cl=E9ment P=E9ron wrote:
-> Beelink GS1 is an Allwinner H6 based TV box,
-> which support:
-> - Allwinner H6 Quad-core 64-bit ARM Cortex-A53
-> - GPU Mali-T720
-> - 2GB LPDDR3 RAM
-> - AXP805 PMIC
-> - 1Gbps GMAC via RTL8211E
-> - FN-Link 6222B-SRB Wifi/BT
-> - 1x USB 2.0 Host and 1x USB 3.0 Host
-> - HDMI port
-> - S/PDIF Tx
-> - IR receiver
-> - 5V/2A DC power supply
->
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> ---
->  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
->  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   | 262 ++++++++++++++++++
->  2 files changed, 263 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.d=
-ts
->
-> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts=
-/allwinner/Makefile
-> index e4dce2f6fa3a..2dd806a3d5c9 100644
-> --- a/arch/arm64/boot/dts/allwinner/Makefile
-> +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> @@ -20,6 +20,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-pc2.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-prime.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus2.dtb
-> +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-beelink-gs1.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-lite2.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-one-plus.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-pine-h64.dtb
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/ar=
-ch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> new file mode 100644
-> index 000000000000..3087e56727e1
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> @@ -0,0 +1,262 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+[...]
+
+> +++ b/arch/arm64/boot/dts/qcom/msm8998-cls.dtsi
+> @@ -0,0 +1,278 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
+> +
 > +/*
-> + * Copyright (C) 2019 Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> + * Common include for MSM8998 clamshell (cls) devices, ie the Lenovo Miix 630,
+> + * Asus NovaGo TP370QL, and HP Envy x2.  All three devices are basically the
+> + * same, with differences in peripherals.
 > + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sun50i-h6.dtsi"
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +
-> +/ {
-> +	model =3D "Beelink GS1";
-> +	compatible =3D "azw,beelink-gs1", "allwinner,sun50i-h6";
-> +
-> +	aliases {
-> +		ethernet0 =3D &emac;
-> +		serial0 =3D &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path =3D "serial0:115200n8";
-> +	};
-> +
-> +	connector {
-> +		compatible =3D "hdmi-connector";
-> +		type =3D "a";
-> +
-> +		port {
-> +			hdmi_con_in: endpoint {
-> +				remote-endpoint =3D <&hdmi_out_con>;
-> +			};
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +
-> +		power {
-> +			label =3D "beelink:white:power";
-> +			gpios =3D <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
-> +			default-state =3D "on";
-> +		};
-> +	};
-> +
-> +	reg_vcc5v: vcc5v {
-> +		/* board wide 5V supply directly from the DC jack */
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "vcc-5v";
-> +		regulator-min-microvolt =3D <5000000>;
-> +		regulator-max-microvolt =3D <5000000>;
-> +		regulator-always-on;
-> +	};
-> +};
-> +
-> +&de {
-> +	status =3D "okay";
-> +};
-> +
-> +&ehci0 {
-> +	status =3D "okay";
-> +};
-> +
-> +&emac {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&ext_rgmii_pins>;
-> +	phy-mode =3D "rgmii";
-> +	phy-handle =3D <&ext_rgmii_phy>;
-> +	phy-supply =3D <&reg_aldo2>;
-> +	allwinner,rx-delay-ps =3D <0>;
-> +	allwinner,tx-delay-ps =3D <0>;
 
-These two are at their default values
+I think it would be better to consistently use "clamshell" (e.g. rename
+this to msm8998-clamshell.dtsi), and mention the "cls" terminology in
+the comment if that's necessary.
 
-Maxime
+[...]
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> +	keyboard@3a {
+> +		/* QTEC0001 is the ACPI HID, which could be used for quirks */
+> +		compatible = "QTEC0001", "hid-over-i2c";
 
---frrkbpd7vjm33wr6
-Content-Type: application/pgp-signature; name="signature.asc"
+Please give this a real compatible string rather than forcing the ACPI
+HID in.
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKsnowAKCRDj7w1vZxhR
-xUs3AP9ecF9JxUjHuUkyPJV7+cTKxLyWGZA5H+2a3APCyQKnIgEA5xI8Yb1t56Py
-egnVkisTa1GnCZGnoY3osdAJBud57Aw=
-=VCI3
------END PGP SIGNATURE-----
-
---frrkbpd7vjm33wr6--
+Thanks,
+Mark.
