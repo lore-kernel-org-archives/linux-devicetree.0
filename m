@@ -1,95 +1,122 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 1/3] dt-bindings: phy: rcar-gen3-phy-usb2: Revise
- #phy-cells property
-Date: Mon, 8 Apr 2019 06:22:14 +0000
-Message-ID: <TYAPR01MB4271FBDF12890817243F3FABD82C0@TYAPR01MB4271.jpnprd01.prod.outlook.com>
-References: <1554120083-29990-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1554120083-29990-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <TY1PR01MB17708AF072E039D362FDE659C0570@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 10/31 v3] irqchip: ixp4xx: Add DT bindings
+Date: Mon,  8 Apr 2019 08:28:10 +0200
+Message-ID: <20190408062831.16422-11-linus.walleij@linaro.org>
+References: <20190408062831.16422-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <TY1PR01MB17708AF072E039D362FDE659C0570@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-Content-Language: ja-JP
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190408062831.16422-1-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, Imre Kaloz <kaloz@openwrt.org>, Krzysztof Halasa <khalasa@piap.pl>
+Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio-san,
+This adds device tree bindings for the IXP4xx interrupt
+controller. It's a standard 2-cell controller.
 
-Thank you for your review!
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v2->v3:
+- Dropped oneOf on compatible
+- Dropped description on reg, set maxItems 1
+- Drop the description on interrupt-cells
+- Collect Rob's review tag
+ChangeLog v1->v2:
+- Converted to use JSON yaml schema, why not.
+- Not keeping Rob's ACK because I think he wants to take
+  a second look.
+---
+ .../intel,ixp4xx-interrupt.yaml               | 54 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml
 
-> From: Fabrizio Castro, Sent: Wednesday, April 3, 2019 7:35 PM
->=20
-> Hello Yoshihiro-san,
->=20
-> Thank you for your patch!
->=20
-> > From: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kerne=
-l.org> On Behalf Of Yoshihiro Shimoda
-> > Sent: 01 April 2019 13:01
-> > Subject: [PATCH 1/3] dt-bindings: phy: rcar-gen3-phy-usb2: Revise #phy-=
-cells property
-> >
-> > To have the detailed property on each PHY specifier, this patch revices
->=20
-> s/revices/revises/g
-
-Oops! I'll fix it in v2.
-
-> > the #phy-cells property.
-> >
-> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > ---
-> >  Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 7 +++++=
-+-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.t=
-xt
-> b/Documentation/devicetree/bindings/phy/rcar-gen3-
-> > phy-usb2.txt
-> > index ad9c290..7f0d4bf 100644
-> > --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> > +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> > @@ -27,7 +27,12 @@ Required properties:
-> >
-> >  - reg: offset and length of the partial USB 2.0 Host register block.
-> >  - clocks: clock phandle and specifier pair(s).
-> > -- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
-> > +- #phy-cells: see phy-bindings.txt in the same directory, must be <1>.
-> > +
-> > +The phandle's argument in the PHY specifier is the INT_STATUS bit of c=
-ontroller:
->=20
-> From the driver we are also looking for value 0, as in rcar_gen3_get_dr_m=
-ode we
-> have a for loop that starts from 0, and we call of_usb_get_dr_mode_by_phy=
- with
-> arg0 =3D=3D 0
-
-This is backward compatibility for old DTS file (phy-cells =3D 0).
-
-> why are we leaving this out from this list?
-
-This is because I don't assume any device nodes doesn't have such a propert=
-y
-(the bit 0 of INT_STATUS).
-
-Best regards,
-Yoshihiro Shimoda
-
-> Thanks,
-> Fab
->=20
-> > +- 1 =3D USBH_INTA (OHCI)
-> > +- 2 =3D USBH_INTB (EHCI)
-> > +- 3 =3D UCOM_INT (OTG and BC)
-> >
-> >  Optional properties:
-> >  To use a USB channel where USB 2.0 Host and HSUSB (USB 2.0 Peripheral)=
- are
-> > --
-> > 2.7.4
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml b/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml
+new file mode 100644
+index 000000000000..bae10e261fa9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2018 Linaro Ltd.
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/interrupt/intel-ixp4xx-interrupt.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Intel IXP4xx XScale Networking Processors Interrupt Controller
++
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
++
++description: |
++  This interrupt controller is found in the Intel IXP4xx processors.
++  Some processors have 32 interrupts, some have up to 64 interrupts.
++  The exact number of interrupts is determined from the compatible
++  string.
++
++  The distinct IXP4xx families with different interrupt controller
++  variations are IXP42x, IXP43x, IXP45x and IXP46x. Those four
++  families were the only ones to reach the developer and consumer
++  market.
++
++properties:
++  compatible:
++    items:
++      - enum:
++        - intel,ixp42x-interrupt
++        - intel,ixp43x-interrupt
++        - intel,ixp45x-interrupt
++        - intel,ixp46x-interrupt
++
++  reg:
++    maxItems: 1
++
++  interrupt-controller: true
++
++  '#interrupt-cells':
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - interrupt-controller
++  - '#interrupt-cells'
++
++examples:
++  - |
++    intcon: interrupt-controller@c8003000 {
++        compatible = "intel,ixp43x-interrupt";
++        reg = <0xc8003000 0x100>;
++        interrupt-controller;
++        #interrupt-cells = <2>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bc918f318797..ad05704fbd68 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1690,6 +1690,7 @@ M:	Imre Kaloz <kaloz@openwrt.org>
+ M:	Krzysztof Halasa <khalasa@piap.pl>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
++F:	Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml
+ F:	arch/arm/mach-ixp4xx/
+ F:	drivers/clocksource/timer-ixp4xx.c
+ F:	drivers/gpio/gpio-ixp4xx.c
+-- 
+2.20.1
