@@ -1,92 +1,156 @@
-From: Chen-Yu Tsai <wens@kernel.org>
-Subject: [PATCH 4/6] ARM: dts: sun8i: a83t: Add device node for CSI (Camera
- Sensor Interface)
-Date: Tue,  9 Apr 2019 00:57:42 +0800
-Message-ID: <20190408165744.11672-5-wens@kernel.org>
-References: <20190408165744.11672-1-wens@kernel.org>
+From: Moritz Fischer <mdf@kernel.org>
+Subject: Re: [PATCH v4 1/3] firmware: xilinx: Add fpga API's
+Date: Mon, 8 Apr 2019 10:14:56 -0700
+Message-ID: <20190408171456.GA4293@archbook>
+References: <20190402123123.915-1-nava.manne@xilinx.com>
+ <20190402123123.915-2-nava.manne@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190408165744.11672-1-wens@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190402123123.915-2-nava.manne@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nava kishore Manne <nava.manne@xilinx.com>
+Cc: atull@kernel.org, mdf@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, rajanv@xilinx.com, jollys@xilinx.com, linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+Hi Nava,
 
-The A83T SoC has a camera sensor interface (known as CSI in Allwinner
-lingo), which is similar to the one found on the A64 and H3. The only
-difference seems to be that support of MIPI CSI through a connected
-MIPI CSI-2 bridge.
+On Tue, Apr 02, 2019 at 06:01:21PM +0530, Nava kishore Manne wrote:
+> This Patch Adds fpga API's to support the Bitstream loading
+> by using firmware interface.
+> 
+> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+> ---
+> Changes for v4:
+> 		-None.
+> 
+> Chnages for v3:
+> 		-Created patches on top of 5.0-rc5.
+> 		 No functional changes.
+> 
+> Changes for v2:
+> 		-Added Firmware FPGA Manager flags As suggested by
+> 		 Moritz.
+> 
+> Changes for v1:
+> 		-None.
+> 
+> Changes for RFC-V2:
+> 		-New Patch
+> 
+>  drivers/firmware/xilinx/zynqmp.c     | 46 ++++++++++++++++++++++++++++
+>  include/linux/firmware/xlnx-zynqmp.h | 10 ++++++
+>  2 files changed, 56 insertions(+)
+> 
+> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+> index 98f936125643..7159a90abc44 100644
+> --- a/drivers/firmware/xilinx/zynqmp.c
+> +++ b/drivers/firmware/xilinx/zynqmp.c
+> @@ -537,6 +537,50 @@ static int zynqmp_pm_reset_get_status(const enum zynqmp_pm_reset reset,
+>  	return ret;
+>  }
+>  
+> +/*
+> + * zynqmp_pm_fpga_load - Perform the fpga load
+> + * @address:	Address to write to
+> + * @size:	pl bitstream size
+> + * @flags:
+> + *	BIT(0) - Bit-stream type.
+> + *		 0 - Full Bitstream.
+> + *		 1 - Partial Bitstream.
+> + *
+> + * This function provides access to pmufw. To transfer
+> + * the required bitstream into PL.
+> + *
+> + * Return: Returns status, either success or error+reason
+> + */
+> +static int zynqmp_pm_fpga_load(const u64 address, const u32 size,
+> +			       const u32 flags)
+> +{
+> +	return zynqmp_pm_invoke_fn(PM_FPGA_LOAD, lower_32_bits(address),
+> +				   upper_32_bits(address), size, flags, NULL);
+> +}
+> +
+> +/**
+> + * zynqmp_pm_fpga_get_status - Read value from PCAP status register
+> + * @value: Value to read
+> + *
+> + * This function provides access to the xilfpga library to get
 
-Add a device node for it, and pinctrl nodes for the commonly used MCLK
-and 8-bit parallel interface. The property /omit-if-no-ref/ is added to
-the pinctrl nodes to keep the device tree blob size down if they are
-unused.
+xilfpga? Is that PMU firmware you're talking about?
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- arch/arm/boot/dts/sun8i-a83t.dtsi | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+> + * the PCAP status
+> + *
+> + * Return: Returns status, either success or error+reason
+> + */
+> +static int zynqmp_pm_fpga_get_status(u32 *value)
+> +{
+> +	u32 ret_payload[PAYLOAD_ARG_CNT];
+> +	int ret;
+> +
+> +	if (!value)
+> +		return -EINVAL;
+> +
+> +	ret = zynqmp_pm_invoke_fn(PM_FPGA_GET_STATUS, 0, 0, 0, 0, ret_payload);
+> +	*value = ret_payload[1];
+> +
+> +	return ret;
+> +}
+> +
+>  /**
+>   * zynqmp_pm_init_finalize() - PM call to inform firmware that the caller
+>   *			       master has initialized its own power management
+> @@ -640,6 +684,8 @@ static const struct zynqmp_eemi_ops eemi_ops = {
+>  	.request_node = zynqmp_pm_request_node,
+>  	.release_node = zynqmp_pm_release_node,
+>  	.set_requirement = zynqmp_pm_set_requirement,
+> +	.fpga_load = zynqmp_pm_fpga_load,
+> +	.fpga_get_status = zynqmp_pm_fpga_get_status,
+>  };
+>  
+>  /**
+> diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+> index 642dab10f65d..4df226b6ab0f 100644
+> --- a/include/linux/firmware/xlnx-zynqmp.h
+> +++ b/include/linux/firmware/xlnx-zynqmp.h
+> @@ -48,6 +48,12 @@
+>  #define	ZYNQMP_PM_CAPABILITY_WAKEUP	0x4U
+>  #define	ZYNQMP_PM_CAPABILITY_POWER	0x8U
+>  
+> +/*
+> + * Firmware FPGA Manager flags
+> + * XILINX_ZYNQMP_PM_FPGA_PARTIAL: FPGA partial reconfiguration
+> + */
+> +#define XILINX_ZYNQMP_PM_FPGA_PARTIAL	BIT(0)
+> +
+>  enum pm_api_id {
+>  	PM_GET_API_VERSION = 1,
+>  	PM_REQUEST_NODE = 13,
+> @@ -56,6 +62,8 @@ enum pm_api_id {
+>  	PM_RESET_ASSERT = 17,
+>  	PM_RESET_GET_STATUS,
+>  	PM_PM_INIT_FINALIZE = 21,
+> +	PM_FPGA_LOAD = 22,
+> +	PM_FPGA_GET_STATUS,
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index f739b88efb53..0c52f945fd5f 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -682,6 +682,20 @@
- 			#interrupt-cells = <3>;
- 			#gpio-cells = <3>;
- 
-+			/omit-if-no-ref/
-+			csi_8bit_parallel_pins: csi-8bit-parallel-pins {
-+				pins = "PE0", "PE2", "PE3", "PE6", "PE7",
-+				       "PE8", "PE9", "PE10", "PE11",
-+				       "PE12", "PE13";
-+				function = "csi";
-+			};
-+
-+			/omit-if-no-ref/
-+			csi_mclk_pin: csi-mclk-pin {
-+				pins = "PE1";
-+				function = "csi";
-+			};
-+
- 			emac_rgmii_pins: emac-rgmii-pins {
- 				pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
- 				       "PD11", "PD12", "PD13", "PD14", "PD18",
-@@ -994,6 +1008,23 @@
- 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
- 		};
- 
-+		csi: camera@1cb0000 {
-+			compatible = "allwinner,sun8i-a83t-csi";
-+			reg = <0x01cb0000 0x1000>;
-+			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_CSI>,
-+				 <&ccu CLK_CSI_SCLK>,
-+				 <&ccu CLK_DRAM_CSI>;
-+			clock-names = "bus", "mod", "ram";
-+			resets = <&ccu RST_BUS_CSI>;
-+			status = "disabled";
-+
-+			csi_in: port {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+		};
-+
- 		hdmi: hdmi@1ee0000 {
- 			compatible = "allwinner,sun8i-a83t-dw-hdmi";
- 			reg = <0x01ee0000 0x10000>;
--- 
-2.20.1
+Any reason you can't do 'PM_FPGA_GET_STATUS = 23' here? Trying to
+understand your reasoning. Are you planning to move them around?
+>  	PM_GET_CHIPID = 24,
+>  	PM_IOCTL = 34,
+>  	PM_QUERY_DATA,
+> @@ -258,6 +266,8 @@ struct zynqmp_pm_query_data {
+>  struct zynqmp_eemi_ops {
+>  	int (*get_api_version)(u32 *version);
+>  	int (*get_chipid)(u32 *idcode, u32 *version);
+> +	int (*fpga_load)(const u64 address, const u32 size, const u32 flags);
+> +	int (*fpga_get_status)(u32 *value);
+>  	int (*query_data)(struct zynqmp_pm_query_data qdata, u32 *out);
+>  	int (*clock_enable)(u32 clock_id);
+>  	int (*clock_disable)(u32 clock_id);
+> -- 
+> 2.18.0
+> 
+
+Thanks,
+Moritz
