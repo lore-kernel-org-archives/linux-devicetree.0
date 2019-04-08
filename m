@@ -1,66 +1,92 @@
 From: Chen-Yu Tsai <wens@kernel.org>
-Subject: [PATCH 0/6] ARM: sun8i: a83t: Support Camera Sensor Interface controller
-Date: Tue,  9 Apr 2019 00:57:38 +0800
-Message-ID: <20190408165744.11672-1-wens@kernel.org>
+Subject: [PATCH 4/6] ARM: dts: sun8i: a83t: Add device node for CSI (Camera
+ Sensor Interface)
+Date: Tue,  9 Apr 2019 00:57:42 +0800
+Message-ID: <20190408165744.11672-5-wens@kernel.org>
+References: <20190408165744.11672-1-wens@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190408165744.11672-1-wens@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-Hi everyone,
+The A83T SoC has a camera sensor interface (known as CSI in Allwinner
+lingo), which is similar to the one found on the A64 and H3. The only
+difference seems to be that support of MIPI CSI through a connected
+MIPI CSI-2 bridge.
 
-This series adds support for the camera sensor interface controller
-found on the Allwinner A83T SoC. The controller is similar to the one
-found on  the H3, with the addition of a MIPI CSI-2 interface. However,
-this series only supports parallel and BT.656 interfaces, based on the
-existing driver.
+Add a device node for it, and pinctrl nodes for the commonly used MCLK
+and 8-bit parallel interface. The property /omit-if-no-ref/ is added to
+the pinctrl nodes to keep the device tree blob size down if they are
+unused.
 
-Patch 1 adds an undocumented clock parent of the CSI MCLK. This was
-found after finding the default value to sometimes work and sometimes
-not, and then comparing against BSP code.
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-Patch 2 adds a compatible string for the A83T variant.
-
-Patch 3 adds support for the A83T variant to the existing sun6i-csi
-driver.
-
-Patch 4 adds a device node for the controller, as well as commonly
-used pin muxing options.
-
-Patch 5 adds a pin muxing option for I2C1 on the PE pins, used in
-conjunction with the CSI pins.
-
-Patch 6 provides an example usage of the CSI controller: the Bananapi M3
-with its camera module attached.
-
-Please have a look.
-
-
-Regards
-ChenYu
-
-
-Chen-Yu Tsai (6):
-  clk: sunxi-ng: a83t: Add pll-video0 as parent of csi-mclk
-  dt-bindings: media: sun6i-csi: Add compatible string for A83T variant
-  media: sun6i: Support A83T variant
-  ARM: dts: sun8i: a83t: Add device node for CSI (Camera Sensor
-    Interface)
-  ARM: dts: sun8i: a83t: Add I2C2 pinmux setting for PE pins
-  [DO NOT MERGE] ARM: dts: sun8i: a83t: bananapi-m3: Enable BPI OV5640
-    camera
-
- .../devicetree/bindings/media/sun6i-csi.txt   |   1 +
- arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts  | 101 ++++++++++++++++++
- arch/arm/boot/dts/sun8i-a83t.dtsi             |  37 +++++++
- drivers/clk/sunxi-ng/ccu-sun8i-a83t.c         |   5 +-
- .../platform/sunxi/sun6i-csi/sun6i_csi.c      |   1 +
- 5 files changed, 143 insertions(+), 2 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index f739b88efb53..0c52f945fd5f 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -682,6 +682,20 @@
+ 			#interrupt-cells = <3>;
+ 			#gpio-cells = <3>;
+ 
++			/omit-if-no-ref/
++			csi_8bit_parallel_pins: csi-8bit-parallel-pins {
++				pins = "PE0", "PE2", "PE3", "PE6", "PE7",
++				       "PE8", "PE9", "PE10", "PE11",
++				       "PE12", "PE13";
++				function = "csi";
++			};
++
++			/omit-if-no-ref/
++			csi_mclk_pin: csi-mclk-pin {
++				pins = "PE1";
++				function = "csi";
++			};
++
+ 			emac_rgmii_pins: emac-rgmii-pins {
+ 				pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
+ 				       "PD11", "PD12", "PD13", "PD14", "PD18",
+@@ -994,6 +1008,23 @@
+ 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
+ 
++		csi: camera@1cb0000 {
++			compatible = "allwinner,sun8i-a83t-csi";
++			reg = <0x01cb0000 0x1000>;
++			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_CSI>,
++				 <&ccu CLK_CSI_SCLK>,
++				 <&ccu CLK_DRAM_CSI>;
++			clock-names = "bus", "mod", "ram";
++			resets = <&ccu RST_BUS_CSI>;
++			status = "disabled";
++
++			csi_in: port {
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++
+ 		hdmi: hdmi@1ee0000 {
+ 			compatible = "allwinner,sun8i-a83t-dw-hdmi";
+ 			reg = <0x01ee0000 0x10000>;
 -- 
 2.20.1
