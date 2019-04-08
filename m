@@ -1,259 +1,74 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V5 2/4] firmware: imx: enable imx scu general irq function
-Date: Mon, 8 Apr 2019 10:35:26 +0000
-Message-ID: <AM0PR04MB42115BC951C501A5886B0C6B802C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1552878291-22866-1-git-send-email-Anson.Huang@nxp.com>
- <1552878291-22866-2-git-send-email-Anson.Huang@nxp.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 3/5] media: uapi: Add RGB bus formats for the GiantPlus
+ GPM940B0 panel
+Date: Mon, 08 Apr 2019 12:40:34 +0200
+Message-ID: <1554720034.1893.1@crapouillou.net>
+References: <20190314122622.7597-1-paul@crapouillou.net>
+        <20190314122622.7597-3-paul@crapouillou.net> <20190403163259.GS5238@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552878291-22866-2-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20190403163259.GS5238@ulmo>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, od@zcrc.me, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> From: Anson Huang
-> Sent: Monday, March 18, 2019 11:10 AM
->=20
-> The System Controller Firmware (SCFW) controls RTC, thermal and WDOG etc.=
-,
-> these resources' interrupt function are managed by SCU. When any IRQ
-> pending, SCU will notify Linux via MU general interrupt channel #3, and L=
-inux
-> kernel needs to call SCU APIs to get IRQ status and notify each module to
-> handle the interrupt.
->=20
-> Since there is no data transmission for SCU IRQ notification, so doorbell=
- mode
-> is used for this MU channel, and SCU driver will use notifier mechanism t=
-o
-> broadcast to every module which registers the SCU block notifier.
->=20
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Hi Thierry,
 
-This patch mostly looks good me, except a few minor comments.
-Otherwise, you can add my tag.
-
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-
-> ---
-> Changes since V4:
-> 	- move scu irq support to a new file imx-scu-irq.c;
-> 	- improve the function name with "imx_scu_irq_" as prefix for irq relate=
-d
-> functions;
-> 	- move MU IRQ sources id out of sc ipc struct;
-> 	- add IRQ group info message print when get irq status fail;
-> 	- move MU ID parse into imx_scu_enable_general_irq_channel() function
-> and ONLY do it
-> 	  when irq channel enable successfully.
-> 	- change max IRQ group supported to 4, ONLY support for those kernel
-> features.
-> ---
->  drivers/firmware/imx/Makefile      |   2 +-
->  drivers/firmware/imx/imx-scu-irq.c | 133
-> +++++++++++++++++++++++++++++++++++++
->  drivers/firmware/imx/imx-scu.c     |   6 ++
->  include/linux/firmware/imx/sci.h   |   4 ++
->  4 files changed, 144 insertions(+), 1 deletion(-)  create mode 100644
-> drivers/firmware/imx/imx-scu-irq.c
+Le mer. 3 avril 2019 =E0 18:32, Thierry Reding=20
+<thierry.reding@gmail.com> a =E9crit :
+> On Thu, Mar 14, 2019 at 01:26:20PM +0100, Paul Cercueil wrote:
+>>  The GiantPlus GPM940B0 is a 24-bit TFT panel where the RGB=20
+>> components
+>>  are transferred sequentially on a 8-bit bus.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>=20
+>>  Notes:
+>>      v2: New patch
+>>=20
+>>   include/uapi/linux/media-bus-format.h | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/drivers/firmware/imx/Makefile b/drivers/firmware/imx/Makefil=
-e
-> index 1b2e15b..802c4ad 100644
-> --- a/drivers/firmware/imx/Makefile
-> +++ b/drivers/firmware/imx/Makefile
-> @@ -1,3 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -obj-$(CONFIG_IMX_SCU)		+=3D imx-scu.o misc.o
-> +obj-$(CONFIG_IMX_SCU)		+=3D imx-scu.o misc.o imx-scu-irq.o
->  obj-$(CONFIG_IMX_SCU_PD)	+=3D scu-pd.o
-> diff --git a/drivers/firmware/imx/imx-scu-irq.c
-> b/drivers/firmware/imx/imx-scu-irq.c
-> new file mode 100644
-> index 0000000..0e20aa7
-> --- /dev/null
-> +++ b/drivers/firmware/imx/imx-scu-irq.c
-> @@ -0,0 +1,133 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright 2019 NXP
-> + *
-> + * Implementation of the SCU IRQ functions using MU.
-> + *
-> + */
-> +
-> +#include <dt-bindings/firmware/imx/rsrc.h> #include
-> +<linux/firmware/imx/ipc.h> #include <linux/mailbox_client.h>
-> +
-> +#define IMX_SC_IRQ_FUNC_STATUS	2
-> +#define IMX_SC_IRQ_NUM_GROUP	4
-> +
-> +static u32 mu_resource_id;
-> +
-> +struct imx_sc_msg_irq_get_status {
-> +	struct imx_sc_rpc_msg hdr;
-> +	union {
-> +		struct {
-> +			u16 resource;
-> +			u8 group;
-> +			u8 reserved;
-> +		} __packed req;
-> +		struct {
-> +			u32 status;
-> +		} resp;
-> +	} data;
-> +};
-> +
-> +static struct imx_sc_ipc *imx_sc_irq_ipc_handle; static struct
-> +work_struct imx_sc_irq_work; static
-> +BLOCKING_NOTIFIER_HEAD(imx_scu_irq_notifier_chain);
-> +
-> +int imx_scu_irq_register_notifier(struct notifier_block *nb) {
-> +	return blocking_notifier_chain_register(
+> Please make sure you Cc the media maintainers on this one when you=20
+> send
+> the next version. Adding them now.
 
-We probably can use atomic_notifier_call_chain as it's used for irq functio=
-n.
+Oops. Will do.
 
-> +		&imx_scu_irq_notifier_chain, nb);
-> +}
-> +EXPORT_SYMBOL(imx_scu_irq_register_notifier);
-> +
-> +int imx_scu_irq_unregister_notifier(struct notifier_block *nb) {
-> +	return blocking_notifier_chain_unregister(
-> +		&imx_scu_irq_notifier_chain, nb);
-> +}
-> +EXPORT_SYMBOL(imx_scu_irq_unregister_notifier);
-> +
-> +static int imx_scu_irq_notifier_call_chain(unsigned long status, u8
-> +*group) {
-> +	return blocking_notifier_call_chain(&imx_scu_irq_notifier_chain,
-> +		status, (void *)group);
-> +}
-> +
-> +static void imx_scu_irq_work_handler(struct work_struct *work) {
-> +	struct imx_sc_msg_irq_get_status msg;
-> +	struct imx_sc_rpc_msg *hdr =3D &msg.hdr;
-> +	u32 irq_status;
-> +	int ret;
-> +	u8 i;
-> +
-> +	for (i =3D 0; i < IMX_SC_IRQ_NUM_GROUP; i++) {
-> +		hdr->ver =3D IMX_SC_RPC_VERSION;
-> +		hdr->svc =3D IMX_SC_RPC_SVC_IRQ;
-> +		hdr->func =3D IMX_SC_IRQ_FUNC_STATUS;
-> +		hdr->size =3D 2;
-> +
-> +		msg.data.req.resource =3D mu_resource_id;
-> +		msg.data.req.group =3D i;
-> +
-> +		ret =3D imx_scu_call_rpc(imx_sc_irq_ipc_handle, &msg, true);
-> +		if (ret) {
-> +			pr_err("get irq group %d status failed, ret %d\n",
-> +			       i, ret);
-> +			return;
-> +		}
-> +
-> +		irq_status =3D msg.data.resp.status;
-> +		if (!irq_status)
-> +			continue;
-> +
-> +		imx_scu_irq_notifier_call_chain(irq_status, &i);
-> +	}
-> +}
-> +
-> +static void imx_scu_irq_callback(struct mbox_client *c, void *msg) {
-> +	schedule_work(&imx_sc_irq_work);
-> +}
-> +
-> +int imx_scu_enable_general_irq_channel(struct device *dev) {
-> +	struct of_phandle_args spec;
-> +	struct mbox_client *cl;
-> +	struct mbox_chan *ch;
-> +	int ret =3D 0, i =3D 0;
-> +
-> +	cl =3D devm_kzalloc(dev, sizeof(*cl), GFP_KERNEL);
-> +	if (!cl)
-> +		return -ENOMEM;
-> +
-> +	cl->dev =3D dev;
-> +	cl->rx_callback =3D imx_scu_irq_callback;
-> +
-> +	/* SCU general IRQ uses general interrupt channel 3 */
-> +	ch =3D mbox_request_channel_byname(cl, "gip3");
-> +	if (IS_ERR(ch)) {
-> +		ret =3D PTR_ERR(ch);
-> +		dev_err(dev, "failed to request mbox chan gip3, ret %d\n", ret);
-
-There may be memory leak as this function is optional in imx-scu.c.
-So here seems to miss a devm_kfree
-
-Regards
-Dong Aisheng
-
-> +		return ret;
-> +	}
-> +
-> +	ret =3D imx_scu_get_handle(&imx_sc_irq_ipc_handle);
-> +	if (ret)
-> +		return ret;
-> +
-> +	INIT_WORK(&imx_sc_irq_work, imx_scu_irq_work_handler);
-> +
-> +	if (!of_parse_phandle_with_args(dev->of_node, "mboxes",
-> +				       "#mbox-cells", 0, &spec))
-> +		i =3D of_alias_get_id(spec.np, "mu");
-> +
-> +	/* use mu1 as general mu irq channel if failed */
-> +	if (i < 0)
-> +		i =3D 1;
-> +
-> +	mu_resource_id =3D IMX_SC_R_MU_0A + i;
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(imx_scu_enable_general_irq_channel);
-> diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-sc=
-u.c
-> index 2bb1a19..04a24a8 100644
-> --- a/drivers/firmware/imx/imx-scu.c
-> +++ b/drivers/firmware/imx/imx-scu.c
-> @@ -10,6 +10,7 @@
->  #include <linux/err.h>
->  #include <linux/firmware/imx/types.h>
->  #include <linux/firmware/imx/ipc.h>
-> +#include <linux/firmware/imx/sci.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
->  #include <linux/kernel.h>
-> @@ -246,6 +247,11 @@ static int imx_scu_probe(struct platform_device
-> *pdev)
+>>=20
+>>  diff --git a/include/uapi/linux/media-bus-format.h=20
+>> b/include/uapi/linux/media-bus-format.h
+>>  index d6a5a3bfe6c4..f31724d6cd40 100644
+>>  --- a/include/uapi/linux/media-bus-format.h
+>>  +++ b/include/uapi/linux/media-bus-format.h
+>>  @@ -34,7 +34,7 @@
+>>=20
+>>   #define MEDIA_BUS_FMT_FIXED			0x0001
+>>=20
+>>  -/* RGB - next is	0x101b */
+>>  +/* RGB - next is	0x101d */
+>>   #define MEDIA_BUS_FMT_RGB444_1X12		0x1016
+>>   #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_BE	0x1001
+>>   #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE	0x1002
+>>  @@ -54,6 +54,8 @@
+>>   #define MEDIA_BUS_FMT_RGB888_1X24		0x100a
+>>   #define MEDIA_BUS_FMT_RGB888_2X12_BE		0x100b
+>>   #define MEDIA_BUS_FMT_RGB888_2X12_LE		0x100c
+>>  +#define MEDIA_BUS_FMT_RGB888_3X8_BE		0x101b
+>>  +#define MEDIA_BUS_FMT_RGB888_3X8_LE		0x101c
 >=20
->  	imx_sc_ipc_handle =3D sc_ipc;
+> The list looks roughly sorted, but these are not. That said, there are
+> others that don't seem like they are sorted either.
+
+To me it looks like it's sorted alphabetically, that's why I
+put the two new macros there.
+
+> All the more important to get feedback from the media maintainers.
 >=20
-> +	ret =3D imx_scu_enable_general_irq_channel(dev);
-> +	if (ret)
-> +		dev_warn(dev,
-> +			"failed to enable general irq channel: %d\n", ret);
-> +
->  	dev_info(dev, "NXP i.MX SCU Initialized\n");
->=20
->  	return devm_of_platform_populate(dev); diff --git
-> a/include/linux/firmware/imx/sci.h b/include/linux/firmware/imx/sci.h
-> index ebc5509..918fa16 100644
-> --- a/include/linux/firmware/imx/sci.h
-> +++ b/include/linux/firmware/imx/sci.h
-> @@ -15,4 +15,8 @@
->=20
->  #include <linux/firmware/imx/svc/misc.h>  #include
-> <linux/firmware/imx/svc/pm.h>
-> +
-> +int imx_scu_enable_general_irq_channel(struct device *dev); int
-> +imx_scu_irq_register_notifier(struct notifier_block *nb); int
-> +imx_scu_irq_unregister_notifier(struct notifier_block *nb);
->  #endif /* _SC_SCI_H */
-> --
-> 2.7.4
+> Thierry
+
+=
