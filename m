@@ -1,116 +1,128 @@
-From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: [PATCH 10/12] pinctrl: sunxi: Support I/O bias
- voltage setting on H6
-Date: Mon, 8 Apr 2019 03:31:24 +0200
-Message-ID: <20190408013124.y7rvhmmwsqw3i2mz@core.my.home>
-References: <20190405234514.6183-1-megous@megous.com>
- <20190405234514.6183-11-megous@megous.com>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: Re: [PATCH v9 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Date: Sun, 07 Apr 2019 22:03:16 -0400
+Message-ID: <8c412bc4-6528-4496-a912-f098604e707b@www.fastmail.com>
+References: <20190404152544.214988-1-venture@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBB3WIVLSQKGQE4VVWT5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20190405234514.6183-11-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, brcm80211-dev-list-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, brcm80211-dev-list.pdl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Vetter <daniel@ffwl>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190404152544.214988-1-venture@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Patrick Venture <venture@google.com>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, Joel Stanley <joel@jms.id.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 06, 2019 at 01:45:12AM +0200, verejna wrote:
-> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+
+
+On Fri, 5 Apr 2019, at 01:55, Patrick Venture wrote:
+> Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
 > 
-> H6 SoC has a "pio group withstand voltage mode" register (datasheet
-> description), that needs to be used to select either 1.8V or 3.3V
-> I/O mode, based on what voltage is powering the respective pin
-> banks and is thus used for I/O signals.
-> 
-> Add support for configuring this register according to the voltage
-> of the pin bank regulator (if enabled).
-> 
-> This is similar to the support for I/O bias voltage setting patch
-> for A80 and the same concerns apply. (see commit 402bfb3c135213dc
-> Support I/O bias voltage setting on A80).
-> 
-> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Patrick Venture <venture@google.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
->  drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c |  1 +
->  drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 14 ++++++++++++++
->  drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  3 +++
->  3 files changed, 18 insertions(+)
+> Changes for v9:
+>  - Added missing details about syscon parent
+> Changes for v8:
+> - None
+> Changes for v7:
+> - Moved node under the syscon node it requires
+> Changes for v6:
+> - None
+> Changes for v5:
+> - None
+> Changes for v4:
+> - None
+> Changes for v3:
+> - None
+> Changes for v2:
+> - Added comment about syscon required parameter.
+> ---
+>  .../bindings/misc/aspeed-p2a-ctrl.txt         | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
 > 
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-> index ef4268cc6227..30b1befa8ed8 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-> @@ -591,6 +591,7 @@ static const struct sunxi_pinctrl_desc h6_pinctrl_data = {
->  	.irq_banks = 4,
->  	.irq_bank_map = h6_irq_bank_map,
->  	.irq_read_needs_mux = true,
-> +	.io_bias_cfg_variant = IO_BIAS_CFG_V2,
->  };
->  
->  static int h6_pinctrl_probe(struct platform_device *pdev)
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> index 9f329fec77cf..59a4ed396d92 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> @@ -607,6 +607,8 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
->  					 unsigned pin,
->  					 struct regulator *supply)
->  {
-> +	unsigned short bank = pin / PINS_PER_BANK;
-> +	unsigned long flags;
->  	u32 val, reg;
->  	int uV;
->  
-> @@ -639,6 +641,18 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
->  		reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
->  		reg &= ~IO_BIAS_MASK;
->  		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
-> +	} else if (pctl->desc->io_bias_cfg_variant == IO_BIAS_CFG_V2) {
-> +		val = uV <= 1800000 ? 1 : 0;
+> diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt 
+> b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> new file mode 100644
+> index 0000000000000..05ed654848b60
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> @@ -0,0 +1,56 @@
+> +======================================================================
+> +Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge 
+> Control Driver
+> +======================================================================
 > +
-> +		dev_info(pctl->dev,
-> +			 "Setting voltage bias to %sV on bank P%c\n",
-> +			 val ? "1.8" : "3.3", 'A' + bank);
-
-I'll drop this logging in v2. I forgot it here, after testing the patch.
-
-	o.
-
-> +		raw_spin_lock_irqsave(&pctl->lock, flags);
-> +		reg = readl(pctl->membase + PIO_POW_MOD_SEL_REG);
-> +		reg &= ~(1 << bank);
-> +		writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL_REG);
-> +		raw_spin_unlock_irqrestore(&pctl->lock, flags);
->  	}
->  
->  	return 0;
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> index 476772f91dba..3a66376f141b 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> @@ -95,7 +95,10 @@
->  #define PINCTRL_SUN7I_A20	BIT(7)
->  #define PINCTRL_SUN8I_R40	BIT(8)
->  
-> +#define PIO_POW_MOD_SEL_REG	0x340
+> +The bridge is available on platforms with the VGA enabled on the 
+> Aspeed device.
+> +In this case, the host has access to a 64KiB window into all of the 
+> BMC's
+> +memory.  The BMC can disable this bridge.  If the bridge is enabled, 
+> the host
+> +has read access to all the regions of memory, however the host only 
+> has read
+> +and write access depending on a register controlled by the BMC.
 > +
->  #define IO_BIAS_CFG_V1		1
-> +#define IO_BIAS_CFG_V2		2
->  
->  struct sunxi_desc_function {
->  	unsigned long	variant;
+> +Required properties:
+> +===================
+> +
+> + - compatible: must be one of:
+> +	- "aspeed,ast2400-p2a-ctrl"
+> +	- "aspeed,ast2500-p2a-ctrl"
+> +
+> +Optional properties:
+> +===================
+> +
+> +- memory-region: A phandle to a reserved_memory region to be used for 
+> the PCI
+> +		to AHB mapping
+> +
+> +The p2a-control node should be the child of a syscon node with the 
+> required
+> +property:
+> +
+> +- compatible : Should be one of the following:
+> +		"aspeed,ast2400-scu", "syscon", "simple-mfd"
+> +		"aspeed,g4-scu", "syscon", "simple-mfd"
+> +		"aspeed,ast2500-scu", "syscon", "simple-mfd"
+> +		"aspeed,g5-scu", "syscon", "simple-mfd"
+> +
+> +The aspeed-p2a-ctrl node should be the child of a syscon node with the 
+> required
+> +property:
+> +
+> +- compatible : Should be one of the following:
+> +		"aspeed,ast2400-scu", "syscon", "simple-mfd"
+> +		"aspeed,g4-scu", "syscon", "simple-mfd"
+> +		"aspeed,ast2500-scu", "syscon", "simple-mfd"
+> +		"aspeed,g5-scu", "syscon", "simple-mfd"
+
+Agh, now the info's here twice!
+
+Next time, surely :D
+
+Unless Greg or Rob want to chop one out as they apply it? It looks good to
+me otherwise.
+
+Andrew
+
+> +
+> +Example
+> +===================
+> +
+> +g4 Example
+> +----------
+> +
+> +syscon: scu@1e6e2000 {
+> +	compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
+> +	reg = <0x1e6e2000 0x1a8>;
+> +
+> +	p2a: p2a-control {
+> +		compatible = "aspeed,ast2400-p2a-ctrl";
+> +		memory-region = <&reserved_memory>;
+> +	};
+> +};
 > -- 
-> 2.21.0
+> 2.21.0.392.gf8f6787159e-goog
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
