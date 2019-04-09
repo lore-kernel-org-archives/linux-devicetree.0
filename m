@@ -1,72 +1,185 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC PATCH 6/9] dt-bindings: opp: Add qcom-opp bindings with
- properties needed for CPR
-Date: Tue, 9 Apr 2019 14:53:52 +0530
-Message-ID: <20190409092352.joayvxyo77e6lehl@vireshk-i7>
-References: <20190404050931.9812-1-niklas.cassel@linaro.org>
- <20190404050931.9812-7-niklas.cassel@linaro.org>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [EXT] Re: [PATCH V10 2/5] pwm: Add i.MX TPM PWM driver support
+Date: Tue, 9 Apr 2019 11:28:59 +0200
+Message-ID: <20190409092859.qj4rgpljokdsokes@pengutronix.de>
+References: <1553582817-29519-1-git-send-email-Anson.Huang@nxp.com>
+ <1553582817-29519-3-git-send-email-Anson.Huang@nxp.com>
+ <20190409064750.qnjcddlf5gktipah@pengutronix.de>
+ <DB3PR0402MB391632F693646A5D600B74F9F52D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190404050931.9812-7-niklas.cassel@linaro.org>
+In-Reply-To: <DB3PR0402MB391632F693646A5D600B74F9F52D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Robin Gong <yibin.gong@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "stefan@agner.ch" <stefan@agner.ch>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.or>
 List-Id: devicetree@vger.kernel.org
 
-On 04-04-19, 07:09, Niklas Cassel wrote:
-> Add qcom-opp bindings with properties needed for Core Power Reduction (CPR).
-> 
-> CPR is included in a great variety of Qualcomm SoC, e.g. msm8916 and msm8996,
-> and was first introduced in msm8974.
-> 
-> Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> ---
->  .../devicetree/bindings/opp/qcom-opp.txt      | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/opp/qcom-opp.txt b/Documentation/devicetree/bindings/opp/qcom-opp.txt
-> new file mode 100644
-> index 000000000000..d24280467db7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/opp/qcom-opp.txt
-> @@ -0,0 +1,24 @@
-> +Qualcomm OPP bindings to describe OPP nodes
-> +
-> +The bindings are based on top of the operating-points-v2 bindings
-> +described in Documentation/devicetree/bindings/opp/opp.txt
-> +Additional properties are described below.
-> +
-> +* OPP Table Node
-> +
-> +Required properties:
-> +- compatible: Allow OPPs to express their compatibility. It should be:
-> +  "operating-points-v2-qcom-level"
-> +
-> +* OPP Node
-> +
-> +Optional properties:
-> +- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. Even
-> +  though a power domain doesn't need a opp-hz, there can be devices in the
-> +  power domain that need to know the highest supported frequency for each
-> +  corner/level (e.g. CPR), in order to properly initialize the hardware.
-> +
-> +- qcom,opp-fuse-level: A positive value representing the fuse corner/level
-> +  associated with this OPP node. Sometimes several corners/levels shares
-> +  a certain fuse corner/level. A fuse corner/level contains e.g. ref uV,
-> +  min uV, and max uV.
+Hello,
 
-I know we discussed this sometime back and so you implemented it this way.
+On Tue, Apr 09, 2019 at 08:51:48AM +0000, Anson Huang wrote:
+> > On Tue, Mar 26, 2019 at 06:52:33AM +0000, Anson Huang wrote:
+> > > +     /* get polarity */
+> > > +     if (chan) {
+> > > +             state->polarity = chan->polarity;
+> > > +     } else {
+> > > +             /* in case no channel requested yet, return HW status */
+> > > +             val = readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
+> > > +             if (FIELD_GET(PWM_IMX_TPM_CnSC_ELS, val) ==
+> > > +                 PWM_IMX_TPM_CnSC_ELS_POLARITY_INVERSED)
+> > > +                     state->polarity = PWM_POLARITY_INVERSED;
+> > > +             else
+> > > +                     /*
+> > > +                      * Assume reserved values (2b00 and 2b11) to yield
+> > > +                      * normal polarity.
+> > > +                      */
+> > > +                     state->polarity = PWM_POLARITY_NORMAL;
+> > > +     }
+> > 
+> > What is the good reason to prefer chan->polarity over reading out the
+> > hardware state?
+> 
+> Reading it from DDR is faster than accessing HW register as per
+> previous comment?
 
-Looking at the implementation of the CPR driver, I now wonder if that was a good
-choice. Technically a single domain can manage many devices, a big and a little
-CPU for example and then we will have different highest frequencies for both of
-them. How will we configure the CPR hardware in such a case ? Isn't the
-programming per-device ?
+How much time do you save here? Is it worth to complicate the function
+for that?
+
+> > > +     /* get channel status */
+> > > +     state->enabled = FIELD_GET(PWM_IMX_TPM_CnSC_ELS, val) ? true :
+> > > +false; }
+> > > +
+> > > +/* this function is supposed to be called with mutex hold */ static
+> > > +int pwm_imx_tpm_apply_hw(struct pwm_chip *chip,
+> > > +                             struct pwm_device *pwm,
+> > > +                             struct pwm_state *state,
+> > > +                             struct imx_tpm_pwm_param *p) {
+> > > +     struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
+> > > +     struct imx_tpm_pwm_channel *chan = pwm_get_chip_data(pwm);
+> > > +     bool period_update = false;
+> > > +     bool duty_update = false;
+> > > +     u32 val, cmod, cur_prescale;
+> > > +     unsigned long timeout;
+> > > +     struct pwm_state c;
+> > > +
+> > > +     if (state->period != tpm->real_period) {
+> > > +             /*
+> > > +              * TPM counter is shared by multiple channels, so
+> > > +              * prescale and period can NOT be modified when
+> > > +              * there are multiple channels in use with different
+> > > +              * period settings.
+> > > +              */
+> > > +             if (tpm->user_count > 1)
+> > > +                     return -EBUSY;
+> > > +
+> > > +             val = readl(tpm->base + PWM_IMX_TPM_SC);
+> > > +             cmod = FIELD_GET(PWM_IMX_TPM_SC_CMOD, val);
+> > > +             cur_prescale = FIELD_GET(PWM_IMX_TPM_SC_PS, val);
+> > > +             if (cmod && cur_prescale != p->prescale)
+> > > +                     return -EBUSY;
+> > > +
+> > > +             /* set TPM counter prescale */
+> > > +             val &= ~PWM_IMX_TPM_SC_PS;
+> > > +             val |= FIELD_PREP(PWM_IMX_TPM_SC_PS, p->prescale);
+> > > +             writel(val, tpm->base + PWM_IMX_TPM_SC);
+> > > +
+> > > +             /*
+> > > +              * set period count:
+> > > +              * if the PWM is disabled (CMOD[1:0] = 2b00), then MOD register
+> > > +              * is updated when MOD register is written.
+> > > +              *
+> > > +              * if the PWM is enabled (CMOD[1:0] ≠ 2b00), the period length
+> > > +              * is latched into hardware when the next period starts.
+> > > +              */
+> > > +             writel(p->mod, tpm->base + PWM_IMX_TPM_MOD);
+> > > +             tpm->real_period = state->period;
+> > > +             period_update = true;
+> > > +     }
+> > > +
+> > > +     pwm_imx_tpm_get_state(chip, pwm, &c);
+> > 
+> > If you move this call above the previous if block you can use c.period instead
+> > of tpm->real_period which is easier to follow.
+> 
+> I think the period could be changed by the if block, so duty also be changed, need
+> to put the .get_state here, am I right?
+
+As you don't use c.period below this shouldn't matter. Where does duty
+change?
+
+> > > +     if (state->duty_cycle != c.duty_cycle) {
+> > > +             /*
+> > > +              * set channel value:
+> > > +              * if the PWM is disabled (CMOD[1:0] = 2b00), then CnV register
+> > > +              * is updated when CnV register is written.
+> > > +              *
+> > > +              * if the PWM is enabled (CMOD[1:0] ≠ 2b00), the duty length
+> > > +              * is latched into hardware when the next period starts.
+> > > +              */
+> > > +             writel(p->val, tpm->base + PWM_IMX_TPM_CnV(pwm->hwpwm));
+> > > +             duty_update = true;
+> > > +     }
+> > > +
+> > > +     /* make sure MOD & CnV registers are updated */
+> > > +     if (period_update || duty_update) {
+> > > +             timeout = jiffies + msecs_to_jiffies(tpm->real_period /
+> > > +                                                  NSEC_PER_MSEC + 1);
+> > > +             while (readl(tpm->base + PWM_IMX_TPM_MOD) != p->mod
+> > > +                    || readl(tpm->base + PWM_IMX_TPM_CnV(pwm->hwpwm))
+> > > +                    != p->val) {
+> > > +                     if (time_after(jiffies, timeout))
+> > > +                             return -ETIME;
+> > > +                     cpu_relax();
+> > > +             }
+> > > +     }
+> > 
+> > If the PWM is running you wait in the above loop until the new values are
+> > active but before you configure the period. I think in the case where the
+> > PWM is active and a change of polarity is requested it would be more correct
+> > to refuse the change.
+> 
+> Not very understand, the period is changed at the beginning, and most of the time,
+> period should be fixed, changing polarity should be allowed even PWM is active?
+
+Changing polarity should be atomic (that is, get active with the next
+period's start). As the hardware doesn't support that, claiming it does
+is a bad idea.
+
+> That does NOT introduce too many trouble, is it a common case that dynamic changing
+> polarity is NOT good? 
+> 
+> 
+> > 
+> > > +     val = readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
+> > > +     val &= ~(PWM_IMX_TPM_CnSC_ELS | PWM_IMX_TPM_CnSC_MSA |
+> > > +              PWM_IMX_TPM_CnSC_MSB);
+> > > +     if (state->enabled) {
+> > > +             /*
+> > > +              * set polarity (for edge-aligned PWM modes)
+> > > +              *
+> > > +              * ELS[1:0] = 2b10 yields normal polarity behaviour,
+> > > +              * ELS[1:0] = 2b01 yields inversed polarity.
+> > > +              * The other values are reserved.
+> > > +              *
+> > > +              * polarity settings will enabled/disable output status
+> > > +              * immediately, so if the channel is disabled, need to
+> > > +              * make sure MSA/MSB/ELS are set to 0 which means channel
+> > > +              * disabled.
+> > 
+> > I don't understand this comment. Either ELS = 0 is reserved or it can be used.
+> > What is an output status?
+> 
+> The reference manual ONLY states it as reserved, so how to add comments here?
+
+The problem might just be, that I don't get what you intend to say in
+the last paragraph.
+
+Best regards
+Uwe
 
 -- 
-viresh
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
