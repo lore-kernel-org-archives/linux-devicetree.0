@@ -1,13 +1,13 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v2 08/13] drm: sun4i: Add support for enabling
- DDC I2C bus to dw_hdmi glue
-Date: Tue,  9 Apr 2019 02:24:47 +0200
-Message-ID: <20190409002452.14551-9-megous@megous.com>
+Subject: [PATCH v2 05/13] pinctrl: sunxi: Prepare for
+ alternative bias voltage setting methods
+Date: Tue,  9 Apr 2019 02:24:44 +0200
+Message-ID: <20190409002452.14551-6-megous@megous.com>
 References: <20190409002452.14551-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBXWMV7SQKGQEJO2C2QI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBXGMV7SQKGQE5KK26RQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <20190409002452.14551-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,78 +21,110 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-Orange Pi 3 board requires enabling DDC I2C bus via some GPIO connected
-transistors, before it can be used. Model this as a power supply for DDC
-(via regulator framework).
+H6 has a different I/O voltage bias setting method than A80. Prepare
+existing code for using alternative bias voltage setting methods.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 17 ++++++++++++++++-
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  1 +
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c |  2 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 41 +++++++++++++----------
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  5 ++-
+ 3 files changed, 28 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-index dc47720c99ba..a1518525fa2f 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-@@ -146,16 +146,28 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 		return PTR_ERR(hdmi->regulator);
- 	}
- 
-+	hdmi->ddc_regulator = devm_regulator_get(dev, "ddc");
-+	if (IS_ERR(hdmi->ddc_regulator)) {
-+		dev_err(dev, "Couldn't get ddc regulator\n");
-+		return PTR_ERR(hdmi->ddc_regulator);
-+	}
-+
- 	ret = regulator_enable(hdmi->regulator);
- 	if (ret) {
- 		dev_err(dev, "Failed to enable regulator\n");
- 		return ret;
- 	}
- 
-+	ret = regulator_enable(hdmi->ddc_regulator);
-+	if (ret) {
-+		dev_err(dev, "Failed to enable ddc regulator\n");
-+		goto err_disable_regulator;
-+	}
-+
- 	ret = reset_control_deassert(hdmi->rst_ctrl);
- 	if (ret) {
- 		dev_err(dev, "Could not deassert ctrl reset control\n");
--		goto err_disable_regulator;
-+		goto err_disable_ddc_regulator;
- 	}
- 
- 	ret = clk_prepare_enable(hdmi->clk_tmds);
-@@ -208,6 +220,8 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 	clk_disable_unprepare(hdmi->clk_tmds);
- err_assert_ctrl_reset:
- 	reset_control_assert(hdmi->rst_ctrl);
-+err_disable_ddc_regulator:
-+	regulator_disable(hdmi->ddc_regulator);
- err_disable_regulator:
- 	regulator_disable(hdmi->regulator);
- 
-@@ -223,6 +237,7 @@ static void sun8i_dw_hdmi_unbind(struct device *dev, struct device *master,
- 	sun8i_hdmi_phy_remove(hdmi);
- 	clk_disable_unprepare(hdmi->clk_tmds);
- 	reset_control_assert(hdmi->rst_ctrl);
-+	regulator_disable(hdmi->ddc_regulator);
- 	regulator_disable(hdmi->regulator);
- }
- 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-index 720c5aa8adc1..6e93d55560b6 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-@@ -188,6 +188,7 @@ struct sun8i_dw_hdmi {
- 	struct sun8i_hdmi_phy		*phy;
- 	struct dw_hdmi_plat_data	plat_data;
- 	struct regulator		*regulator;
-+	struct regulator		*ddc_regulator;
- 	const struct sun8i_dw_hdmi_quirks *quirks;
- 	struct reset_control		*rst_ctrl;
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
+index da37d594a13d..3aa210079b18 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
+@@ -722,7 +722,7 @@ static const struct sunxi_pinctrl_desc sun9i_a80_pinctrl_data = {
+ 	.npins = ARRAY_SIZE(sun9i_a80_pins),
+ 	.irq_banks = 5,
+ 	.disable_strict_mode = true,
+-	.has_io_bias_cfg = true,
++	.io_bias_cfg_variant = IO_BIAS_CFG_V1,
  };
+ 
+ static int sun9i_a80_pinctrl_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index 8dd25caea2cf..b8dd58ef33b7 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -610,7 +610,7 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+ 	u32 val, reg;
+ 	int uV;
+ 
+-	if (!pctl->desc->has_io_bias_cfg)
++	if (!pctl->desc->io_bias_cfg_variant)
+ 		return 0;
+ 
+ 	uV = regulator_get_voltage(supply);
+@@ -621,23 +621,28 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+ 	if (uV == 0)
+ 		return 0;
+ 
+-	/* Configured value must be equal or greater to actual voltage */
+-	if (uV <= 1800000)
+-		val = 0x0; /* 1.8V */
+-	else if (uV <= 2500000)
+-		val = 0x6; /* 2.5V */
+-	else if (uV <= 2800000)
+-		val = 0x9; /* 2.8V */
+-	else if (uV <= 3000000)
+-		val = 0xA; /* 3.0V */
+-	else
+-		val = 0xD; /* 3.3V */
+-
+-	pin -= pctl->desc->pin_base;
+-
+-	reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
+-	reg &= ~IO_BIAS_MASK;
+-	writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
++	if (pctl->desc->io_bias_cfg_variant == IO_BIAS_CFG_V1) {
++		/*
++		 * Configured value must be equal or greater to actual
++		 * voltage.
++		 */
++		if (uV <= 1800000)
++			val = 0x0; /* 1.8V */
++		else if (uV <= 2500000)
++			val = 0x6; /* 2.5V */
++		else if (uV <= 2800000)
++			val = 0x9; /* 2.8V */
++		else if (uV <= 3000000)
++			val = 0xA; /* 3.0V */
++		else
++			val = 0xD; /* 3.3V */
++
++		pin -= pctl->desc->pin_base;
++
++		reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
++		reg &= ~IO_BIAS_MASK;
++		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
++	}
+ 
+ 	return 0;
+ }
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+index ee15ab067b5f..642f667e99d2 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+@@ -95,6 +95,9 @@
+ #define PINCTRL_SUN7I_A20	BIT(7)
+ #define PINCTRL_SUN8I_R40	BIT(8)
+ 
++/* Bias voltage configuration done via Pn_GRP_CONFIG registers. */
++#define IO_BIAS_CFG_V1		1
++
+ struct sunxi_desc_function {
+ 	unsigned long	variant;
+ 	const char	*name;
+@@ -117,7 +120,7 @@ struct sunxi_pinctrl_desc {
+ 	const unsigned int		*irq_bank_map;
+ 	bool				irq_read_needs_mux;
+ 	bool				disable_strict_mode;
+-	bool				has_io_bias_cfg;
++	int				io_bias_cfg_variant;
+ };
+ 
+ struct sunxi_pinctrl_function {
 -- 
 2.21.0
