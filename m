@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/6] arm64: dts: allwinner: h6: Introduce
- Beelink GS1 board
-Date: Tue, 9 Apr 2019 09:54:56 +0200
-Message-ID: <20190409075456.3nnxjycrb43ngqlt@flea>
+Subject: Re: [PATCH v4 4/6] dt-bindings: arm: sunxi: Add Beelink
+ GS1 board
+Date: Tue, 9 Apr 2019 09:55:39 +0200
+Message-ID: <20190409075539.td5c6utktqsnxknn@flea>
 References: <20190408152755.17405-1-peron.clem@gmail.com>
- <20190408152755.17405-4-peron.clem@gmail.com>
+ <20190408152755.17405-5-peron.clem@gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3vfle6nyotxje3bd"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBU47WHSQKGQEUW27F4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="4f3icf7t5cp44c7g"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB7M7WHSQKGQEMVUUIHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190408152755.17405-4-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20190408152755.17405-5-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,30 +24,19 @@ Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai 
 List-Id: devicetree@vger.kernel.org
 
 
---3vfle6nyotxje3bd
+--4f3icf7t5cp44c7g
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 08, 2019 at 05:27:52PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> Beelink GS1 is an Allwinner H6 based TV box,
-> which support:
-> - Allwinner H6 Quad-core 64-bit ARM Cortex-A53
-> - GPU Mali-T720
-> - 2GB LPDDR3 RAM
-> - AXP805 PMIC
-> - 1Gbps GMAC via RTL8211E
-> - FN-Link 6222B-SRB Wifi/BT
-> - 1x USB 2.0 Host and 1x USB 3.0 Host
-> - HDMI port
-> - S/PDIF Tx
-> - IR receiver
-> - 5V/2A DC power supply
+On Mon, Apr 08, 2019 at 05:27:53PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> Beelink GS1 device-tree has been introduced.
+>
+> Add it to the sunxi yaml documentation.
 >
 > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Applied, thanks
-
+Applied, thanks!
 Maxime
 
 --
@@ -62,15 +51,15 @@ To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 For more options, visit https://groups.google.com/d/optout.
 
---3vfle6nyotxje3bd
+--4f3icf7t5cp44c7g
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKxP0AAKCRDj7w1vZxhR
-xfd0AP9h7c4tuoUPJwyFRo07J0Tp5gh7bH2WuAf1bmY7P2rxTQD+JbqfAXImZzjc
-si9fXW5bD1fVOIdyV6o3+WVvwDGEswQ=
-=eRJr
+iHQEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKxP+wAKCRDj7w1vZxhR
+xSjEAQC3jlcFMiZqldSMXOIrZnldWbM/6HnVF5qag2xWn1QshAD0Dfkn82KRQI1j
+xKaFdy6AWx+BTI3RFM+n0GfoWMsiCA==
+=Zesj
 -----END PGP SIGNATURE-----
 
---3vfle6nyotxje3bd--
+--4f3icf7t5cp44c7g--
