@@ -1,57 +1,53 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2 0/2] PCI: Describe external-facing ports in device tree
-Date: Tue, 9 Apr 2019 18:11:11 -0500
-Message-ID: <20190409231111.GE256045@google.com>
-References: <20190402131548.41949-1-jean-philippe.brucker@arm.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH] ARM: dts: rockchip: Add BT_EN to the power sequence for veyron
+Date: Tue,  9 Apr 2019 16:14:05 -0700
+Message-ID: <20190409231405.189335-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190402131548.41949-1-jean-philippe.brucker@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Grant.Likely@arm.com, linux-pci@vger.kernel.org, Jeremy.Linton@arm.com, robh+dt@kernel.org, Robin.Murphy@arm.com, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 02:15:46PM +0100, Jean-Philippe Brucker wrote:
-> Since v1 [1], I improved the wording of patch 1/2 as suggested by Bjorn.
-> 
-> Add an "external-facing" property to PCI ports in device-tree, to help
-> identify untrusted devices. The notion of untrusted PCI devices was
-> added to the v5.0 kernel to describe devices that should have strict
-> IOMMU protection [2], for example devices that are plugged in a
-> Thunderbolt port. ACPI systems use the ExternalFacingPort property [3].
-> Add an equivalent mechanism to device tree.
-> 
-> [1] https://lore.kernel.org/linux-pci/20190318182124.53859-1-jean-philippe.brucker@arm.com/
-> [2] https://lkml.org/lkml/2018/11/26/631
-> [3] https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-externally-exposed-pcie-root-ports
-> 
-> Jean-Philippe Brucker (2):
->   dt-bindings: Add external-facing PCIe port property
->   PCI: OF: Support external-facing property
+Add GPIO D5 (BT_ENABLE_L) as reset-GPIO to the power sequence for the
+Bluetooth/WiFi module. On devices with a Broadcom module the signal
+needs to be asserted to use Bluetooth.
 
-Applied to pci/enumeration for v5.2, with reviewed-by from Robin and Grant
-and from Rob (patch 2 only), thanks!
+Note that BT_ENABLE_L is a misnomer in the schematics, the signal
+actually is active-high.
 
->  Documentation/devicetree/bindings/pci/pci.txt | 50 +++++++++++++++++++
->  drivers/pci/of.c                              |  3 ++
->  2 files changed, 53 insertions(+)
-> 
-> -- 
-> 2.21.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+ arch/arm/boot/dts/rk3288-veyron.dtsi | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
+index 0bc2409f6903..a4cd851dc313 100644
+--- a/arch/arm/boot/dts/rk3288-veyron.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
+@@ -62,12 +62,19 @@
+ 		pinctrl-0 = <&bt_enable_l>, <&wifi_enable_h>;
+ 
+ 		/*
+-		 * On the module itself this is one of these (depending
+-		 * on the actual card populated):
++		 * Depending on the actual card populated GPIO4 D4 and D5
++		 * correspond to one of these signals on the module:
++		 *
++		 * D4:
+ 		 * - SDIO_RESET_L_WL_REG_ON
+ 		 * - PDN (power down when low)
++		 *
++		 * D5:
++		 * - BT_I2S_WS_BT_RFDISABLE_L
++		 * - No connect
+ 		 */
+-		reset-gpios = <&gpio4 RK_PD4 GPIO_ACTIVE_LOW>;
++		reset-gpios = <&gpio4 RK_PD4 GPIO_ACTIVE_LOW>,
++			      <&gpio4 RK_PD5 GPIO_ACTIVE_LOW>;
+ 	};
+ 
+ 	vcc_5v: vcc-5v {
+-- 
+2.21.0.392.gf8f6787159e-goog
