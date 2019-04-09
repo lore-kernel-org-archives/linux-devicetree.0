@@ -1,97 +1,135 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V7 4/4] rtc: imx-sc: add rtc alarm support
-Date: Tue, 9 Apr 2019 05:00:07 +0000
-Message-ID: <1554785675-8090-4-git-send-email-Anson.Huang@nxp.com>
-References: <1554785675-8090-1-git-send-email-Anson.Huang@nxp.com>
+From: William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: Re: [PATCH v10 02/18] counter: Documentation: Add Generic Counter
+ sysfs documentation
+Date: Tue, 9 Apr 2019 14:07:08 +0900
+Message-ID: <20190409050708.GB2842@icarus>
+References: <cover.1554184734.git.vilhelm.gray@gmail.com>
+ <bd8362f23b99af938c7bced2104eca29888253b3.1554184734.git.vilhelm.gray@gmail.com>
+ <20190408215531.GB27592@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554785675-8090-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190408215531.GB27592@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infra>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: gregkh@linuxfoundation.org, jic23@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, akpm@linux-foundation.org, david@lechnology.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, daniel.lezcano@linaro.org, tglx@linutronix.de, thierry.reding@gmail.com, esben@haabendal.dk, linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, patrick.havelange@essensium.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGkuTVggc3lzdGVtIGNvbnRyb2xsZXIgUlRDIGFsYXJtIHN1cHBvcnQsIHRoZSBSVEMgYWxh
-cm0NCmlzIGltcGxlbWVudGVkIHZpYSBTSVAoc2lsaWNvbiBwcm92aWRlcikgcnVudGltZSBzZXJ2
-aWNlIGNhbGwNCmFuZCBBUk0tVHJ1c3RlZC1GaXJtd2FyZSB3aWxsIGNvbW11bmljYXRlIHdpdGgg
-c3lzdGVtIGNvbnRyb2xsZXINCnZpYSBNVShtZXNzYWdlIHVuaXQpIElQQyB0byBzZXQgUlRDIGFs
-YXJtLiBXaGVuIFJUQyBhbGFybSBmaXJlcywNCnN5c3RlbSBjb250cm9sbGVyIHdpbGwgZ2VuZXJh
-dGUgYSBjb21tb24gTVUgaXJxIGV2ZW50IGFuZCBub3RpZnkNCnN5c3RlbSBjb250cm9sbGVyIFJU
-QyBkcml2ZXIgdG8gaGFuZGxlIHRoZSBpcnEgZXZlbnQuDQoNClNpZ25lZC1vZmYtYnk6IEFuc29u
-IEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KUmV2aWV3ZWQtYnk6IERvbmcgQWlzaGVuZyA8
-YWlzaGVuZy5kb25nQG54cC5jb20+DQotLS0NCkNoYW5nZXMgc2luY2UgVjY6DQoJLSBhZGQgY29t
-bWVudHMgdG8gLnJlYWRfYWxhcm0gY2FsbGJhY2sgZnVuY3Rpb24gdG8gZXhwbGFpbiB3aHkgaXQg
-aXMgYW4gZW1wdHkgZnVuY3Rpb247DQoJLSBpbXByb3ZlIGlycSBub3RpZnkgY2FsbGJhY2sgZnVu
-Y3Rpb24gbmFtZS4NCi0tDQogZHJpdmVycy9ydGMvcnRjLWlteC1zYy5jIHwgODcgKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQs
-IDg3IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcnRjL3J0Yy1pbXgtc2Mu
-YyBiL2RyaXZlcnMvcnRjL3J0Yy1pbXgtc2MuYw0KaW5kZXggMTk2NDJiZi4uYzkzMzA0NSAxMDA2
-NDQNCi0tLSBhL2RyaXZlcnMvcnRjL3J0Yy1pbXgtc2MuYw0KKysrIGIvZHJpdmVycy9ydGMvcnRj
-LWlteC1zYy5jDQpAQCAtMyw2ICszLDcgQEANCiAgKiBDb3B5cmlnaHQgMjAxOCBOWFAuDQogICov
-DQogDQorI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2Zpcm13YXJlL2lteC9yc3JjLmg+DQogI2luY2x1
-ZGUgPGxpbnV4L2FybS1zbWNjYy5oPg0KICNpbmNsdWRlIDxsaW51eC9maXJtd2FyZS9pbXgvc2Np
-Lmg+DQogI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KQEAgLTExLDExICsxMiwxNSBAQA0KICNp
-bmNsdWRlIDxsaW51eC9ydGMuaD4NCiANCiAjZGVmaW5lIElNWF9TQ19USU1FUl9GVU5DX0dFVF9S
-VENfU0VDMTk3MAk5DQorI2RlZmluZSBJTVhfU0NfVElNRVJfRlVOQ19TRVRfUlRDX0FMQVJNCQk4
-DQogI2RlZmluZSBJTVhfU0NfVElNRVJfRlVOQ19TRVRfUlRDX1RJTUUJCTYNCiANCiAjZGVmaW5l
-IElNWF9TSVBfU1JUQwkJCTB4QzIwMDAwMDINCiAjZGVmaW5lIElNWF9TSVBfU1JUQ19TRVRfVElN
-RQkJMHgwDQogDQorI2RlZmluZSBTQ19JUlFfR1JPVVBfUlRDICAgIDINCisjZGVmaW5lIFNDX0lS
-UV9SVEMgICAgICAgICAgMQ0KKw0KIHN0YXRpYyBzdHJ1Y3QgaW14X3NjX2lwYyAqcnRjX2lwY19o
-YW5kbGU7DQogc3RhdGljIHN0cnVjdCBydGNfZGV2aWNlICppbXhfc2NfcnRjOw0KIA0KQEAgLTI0
-LDYgKzI5LDE2IEBAIHN0cnVjdCBpbXhfc2NfbXNnX3RpbWVyX2dldF9ydGNfdGltZSB7DQogCXUz
-MiB0aW1lOw0KIH0gX19wYWNrZWQ7DQogDQorc3RydWN0IGlteF9zY19tc2dfdGltZXJfcnRjX3Nl
-dF9hbGFybSB7DQorCXN0cnVjdCBpbXhfc2NfcnBjX21zZyBoZHI7DQorCXUxNiB5ZWFyOw0KKwl1
-OCBtb247DQorCXU4IGRheTsNCisJdTggaG91cjsNCisJdTggbWluOw0KKwl1OCBzZWM7DQorfSBf
-X3BhY2tlZDsNCisNCiBzdGF0aWMgaW50IGlteF9zY19ydGNfcmVhZF90aW1lKHN0cnVjdCBkZXZp
-Y2UgKmRldiwgc3RydWN0IHJ0Y190aW1lICp0bSkNCiB7DQogCXN0cnVjdCBpbXhfc2NfbXNnX3Rp
-bWVyX2dldF9ydGNfdGltZSBtc2c7DQpAQCAtNjAsOSArNzUsNzcgQEAgc3RhdGljIGludCBpbXhf
-c2NfcnRjX3NldF90aW1lKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IHJ0Y190aW1lICp0bSkN
-CiAJcmV0dXJuIHJlcy5hMDsNCiB9DQogDQorc3RhdGljIGludCBpbXhfc2NfcnRjX2FsYXJtX2ly
-cV9lbmFibGUoc3RydWN0IGRldmljZSAqZGV2LCB1bnNpZ25lZCBpbnQgZW5hYmxlKQ0KK3sNCisJ
-cmV0dXJuIGlteF9zY3VfaXJxX2dyb3VwX2VuYWJsZShTQ19JUlFfR1JPVVBfUlRDLCBTQ19JUlFf
-UlRDLCBlbmFibGUpOw0KK30NCisNCitzdGF0aWMgaW50IGlteF9zY19ydGNfcmVhZF9hbGFybShz
-dHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBydGNfd2thbHJtICphbHJtKQ0KK3sNCisJLyoNCisJ
-ICogU0NVIGZpcm13YXJlIGRvZXMgTk9UIHByb3ZpZGUgcmVhZCBhbGFybSBBUEksIGJ1dCAucmVh
-ZF9hbGFybQ0KKwkgKiBjYWxsYmFjayBpcyByZXF1aXJlZCBieSBSVEMgZnJhbWV3b3JrIHRvIHN1
-cHBvcnQgYWxhcm0gZnVuY3Rpb24sDQorCSAqIHNvIGp1c3QgcmV0dXJuIGhlcmUuDQorCSAqLw0K
-KwlyZXR1cm4gMDsNCit9DQorDQorc3RhdGljIGludCBpbXhfc2NfcnRjX3NldF9hbGFybShzdHJ1
-Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBydGNfd2thbHJtICphbHJtKQ0KK3sNCisJc3RydWN0IGlt
-eF9zY19tc2dfdGltZXJfcnRjX3NldF9hbGFybSBtc2c7DQorCXN0cnVjdCBpbXhfc2NfcnBjX21z
-ZyAqaGRyID0gJm1zZy5oZHI7DQorCWludCByZXQ7DQorCXN0cnVjdCBydGNfdGltZSAqYWxybV90
-bSA9ICZhbHJtLT50aW1lOw0KKw0KKwloZHItPnZlciA9IElNWF9TQ19SUENfVkVSU0lPTjsNCisJ
-aGRyLT5zdmMgPSBJTVhfU0NfUlBDX1NWQ19USU1FUjsNCisJaGRyLT5mdW5jID0gSU1YX1NDX1RJ
-TUVSX0ZVTkNfU0VUX1JUQ19BTEFSTTsNCisJaGRyLT5zaXplID0gMzsNCisNCisJbXNnLnllYXIg
-PSBhbHJtX3RtLT50bV95ZWFyICsgMTkwMDsNCisJbXNnLm1vbiA9IGFscm1fdG0tPnRtX21vbiAr
-IDE7DQorCW1zZy5kYXkgPSBhbHJtX3RtLT50bV9tZGF5Ow0KKwltc2cuaG91ciA9IGFscm1fdG0t
-PnRtX2hvdXI7DQorCW1zZy5taW4gPSBhbHJtX3RtLT50bV9taW47DQorCW1zZy5zZWMgPSBhbHJt
-X3RtLT50bV9zZWM7DQorDQorCXJldCA9IGlteF9zY3VfY2FsbF9ycGMocnRjX2lwY19oYW5kbGUs
-ICZtc2csIHRydWUpOw0KKwlpZiAocmV0KSB7DQorCQlkZXZfZXJyKGRldiwgInNldCBydGMgYWxh
-cm0gZmFpbGVkLCByZXQgJWRcbiIsIHJldCk7DQorCQlyZXR1cm4gcmV0Ow0KKwl9DQorDQorCXJl
-dCA9IGlteF9zY19ydGNfYWxhcm1faXJxX2VuYWJsZShkZXYsIGFscm0tPmVuYWJsZWQpOw0KKwlp
-ZiAocmV0KSB7DQorCQlkZXZfZXJyKGRldiwgImVuYWJsZSBydGMgYWxhcm0gZmFpbGVkLCByZXQg
-JWRcbiIsIHJldCk7DQorCQlyZXR1cm4gcmV0Ow0KKwl9DQorDQorCXJldHVybiAwOw0KK30NCisN
-CiBzdGF0aWMgY29uc3Qgc3RydWN0IHJ0Y19jbGFzc19vcHMgaW14X3NjX3J0Y19vcHMgPSB7DQog
-CS5yZWFkX3RpbWUgPSBpbXhfc2NfcnRjX3JlYWRfdGltZSwNCiAJLnNldF90aW1lID0gaW14X3Nj
-X3J0Y19zZXRfdGltZSwNCisJLnJlYWRfYWxhcm0gPSBpbXhfc2NfcnRjX3JlYWRfYWxhcm0sDQor
-CS5zZXRfYWxhcm0gPSBpbXhfc2NfcnRjX3NldF9hbGFybSwNCisJLmFsYXJtX2lycV9lbmFibGUg
-PSBpbXhfc2NfcnRjX2FsYXJtX2lycV9lbmFibGUsDQorfTsNCisNCitzdGF0aWMgaW50IGlteF9z
-Y19ydGNfYWxhcm1fbm90aWZ5KHN0cnVjdCBub3RpZmllcl9ibG9jayAqbmIsDQorCQkJCQl1bnNp
-Z25lZCBsb25nIGV2ZW50LCB2b2lkICpncm91cCkNCit7DQorCS8qIGlnbm9yZSBub24tcnRjIGly
-cSAqLw0KKwlpZiAoISgoZXZlbnQgJiBTQ19JUlFfUlRDKSAmJiAoKih1OCAqKWdyb3VwID09IFND
-X0lSUV9HUk9VUF9SVEMpKSkNCisJCXJldHVybiAwOw0KKw0KKwlydGNfdXBkYXRlX2lycShpbXhf
-c2NfcnRjLCAxLCBSVENfSVJRRiB8IFJUQ19BRik7DQorDQorCXJldHVybiAwOw0KK30NCisNCitz
-dGF0aWMgc3RydWN0IG5vdGlmaWVyX2Jsb2NrIGlteF9zY19ydGNfYWxhcm1fc2Nfbm90aWZpZXIg
-PSB7DQorCS5ub3RpZmllcl9jYWxsID0gaW14X3NjX3J0Y19hbGFybV9ub3RpZnksDQogfTsNCiAN
-CiBzdGF0aWMgaW50IGlteF9zY19ydGNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-dikNCkBAIC03Myw2ICsxNTYsOCBAQCBzdGF0aWMgaW50IGlteF9zY19ydGNfcHJvYmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiAJaWYgKHJldCkNCiAJCXJldHVybiByZXQ7DQogDQor
-CWRldmljZV9pbml0X3dha2V1cCgmcGRldi0+ZGV2LCB0cnVlKTsNCisNCiAJaW14X3NjX3J0YyA9
-IGRldm1fcnRjX2FsbG9jYXRlX2RldmljZSgmcGRldi0+ZGV2KTsNCiAJaWYgKElTX0VSUihpbXhf
-c2NfcnRjKSkNCiAJCXJldHVybiBQVFJfRVJSKGlteF9zY19ydGMpOw0KQEAgLTg3LDYgKzE3Miw4
-IEBAIHN0YXRpYyBpbnQgaW14X3NjX3J0Y19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpw
-ZGV2KQ0KIAkJcmV0dXJuIHJldDsNCiAJfQ0KIA0KKwlpbXhfc2N1X2lycV9yZWdpc3Rlcl9ub3Rp
-ZmllcigmaW14X3NjX3J0Y19hbGFybV9zY19ub3RpZmllcik7DQorDQogCXJldHVybiAwOw0KIH0N
-CiANCi0tIA0KMi43LjQNCg0K
+On Mon, Apr 08, 2019 at 11:55:31PM +0200, Pavel Machek wrote:
+> On Tue 2019-04-02 15:30:37, William Breathitt Gray wrote:
+> > This patch adds standard documentation for the userspace sysfs
+> > attributes of the Generic Counter interface.
+> > 
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-counter | 230 ++++++++++++++++++++
+> >  MAINTAINERS                                 |   1 +
+> >  2 files changed, 231 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-counter
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-counter b/Documentation/ABI/testing/sysfs-bus-counter
+> > new file mode 100644
+> > index 000000000000..566bd99fe0a5
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-bus-counter
+> > @@ -0,0 +1,230 @@
+> > +What:		/sys/bus/counter/devices/counterX/countY/count
+> > +KernelVersion:	5.2
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Count data of Count Y represented as a string.
+> > +
+> > +What:		/sys/bus/counter/devices/counterX/countY/ceiling
+> > +KernelVersion:	5.2
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Count value ceiling for Count Y. This is the upper limit for the
+> > +		respective counter.
+> > +
+> > +What:		/sys/bus/counter/devices/counterX/countY/floor
+> > +KernelVersion:	5.2
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Count value floor for Count Y. This is the lower limit for the
+> > +		respective counter.
+> > +
+> > +What:		/sys/bus/counter/devices/counterX/countY/count_mode
+> > +KernelVersion:	5.2
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Count mode for channel Y. The ceiling and floor values for
+> > +		Count Y are used by the count mode where required. The following
+> > +		count modes are available:
+> > +
+> > +		normal:
+> > +			Counting is continuous in either direction.
+> > +
+> > +		range limit:
+> > +			An upper or lower limit is set, mimicking limit switches
+> > +			in the mechanical counterpart. The upper limit is set to
+> > +			the Count Y ceiling value, while the lower limit is set
+> > +			to the Count Y floor value. The counter freezes at
+> > +			count = ceiling when counting up, and at count = floor
+> > +			when counting down. At either of these limits, the
+> > +			counting is resumed only when the count direction is
+> > +			reversed.
+> > +
+> > +		non-recycle:
+> > +			The counter is disabled whenever a counter overflow or
+> > +			underflow takes place. The counter is re-enabled when a
+> > +			new count value is loaded to the counter via a preset
+> > +			operation or direct write.
+> > +
+> > +		modulo-n:
+> > +			A count value boundary is set between the Count Y floor
+> > +			value and the Count Y ceiling value. The counter is
+> > +			reset to the Count Y floor value at count = ceiling when
+> > +			counting up, while the counter is set to the Count Y
+> > +			ceiling value at count = floor when counting down; the
+> > +			counter does not freeze at the boundary points, but
+> > +			counts continuously throughout.
+> > +
+> > +What:		/sys/bus/counter/devices/counterX/countY/count_mode_available
+> > +What:		/sys/bus/counter/devices/counterX/countY/error_noise_available
+> > +What:		/sys/bus/counter/devices/counterX/countY/function_available
+> > +What:		/sys/bus/counter/devices/counterX/countY/signalZ_action_available
+> > +KernelVersion:	5.2
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Discrete set of available values for the respective Count Y
+> > +		configuration are listed in this file. Values are delimited by
+> > +		newline characters.
+> 
+> Elsewhere in sysfs we do space-separated:
+> 
+> pavel@amd:~$ cat /sys/power/state
+> freeze mem disk
+> 
+> And we use [] to mark current selection:
+> 
+> pavel@amd:~$ cat /sys/class/leds/tpacpi\:\:thinkvantage/trigger
+> [none] bluetooth-power rfkill-any rfkill-none kbd-scrolllock
+> kbd-numlock kbd-capslock kbd-kanalock kbd-shiftlock kbd-altgrlock
+> kbd-ctrllock kbd-altlock kbd-shiftllock kbd-shiftrlock kbd-ctrlllock
+> kbd-ctrlrlock AC-online BAT0-charging-or-full BAT0-charging BAT0-full
+> BAT0-charging-blink-full-solid rfkill0 phy0rx phy0tx phy0assoc
+> phy0radio phy0tpt mmc0 timer heartbeat audio-mute audio-micmute
+> rfkill1
+> 
+> Note this only works if you have less than PAGE_SIZE of entries... and
+> will never have more.
+> 
+> 									Pavel
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+
+Marking the current selection with [] or similar does seem useful. But
+delimiting by space does seem to cause confusion in cases where the
+values also include spaces (e.g. "quadrature x1 a"). I see that in these
+cases a "-" is used in place of a space, but that wouldn't work very
+well when values can also contain hyphens (e.g. "pulse-direction").
+
+William Breathitt Gray
