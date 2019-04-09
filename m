@@ -1,30 +1,113 @@
-From: pierre kuo <vichy.kuo@gmail.com>
-Subject: Re: [PATCH 1/1] of: reserved_mem: fix reserve memory leak
-Date: Tue, 9 Apr 2019 10:13:00 +0800
-Message-ID: <CAOVJa8F2eXE4yjj3OM0J3nd4GnW6brXuNLvF7h5Sdr1YSpQWAA@mail.gmail.com>
-References: <20190219074500.16454-1-vichy.kuo@gmail.com> <CAL_Jsq+wUGxeQUMJd0eu52QadvLvkkT=36q9e1Qbru2gEsUGCw@mail.gmail.com>
- <CAOVJa8HUx-8Ok8yMm91UmXpo39KAipt6C1BsfOL1c0Q_kqs1Vg@mail.gmail.com> <CAOVJa8FROiP7e=p_4Bs=QxiwcdqD5ydrrO=6G2GX2TJkQh9U8A@mail.gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V6 1/4] dt-bindings: fsl: scu: add general interrupt support
+Date: Tue, 9 Apr 2019 02:43:08 +0000
+Message-ID: <1554777487-31075-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOVJa8FROiP7e=p_4Bs=QxiwcdqD5ydrrO=6G2GX2TJkQh9U8A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-hi Rob, Marek and Frank:
+Add scu general interrupt function support.
 
-> >
-> > In this patch, we un-reserving memory ONLY if explicit compatible matching fail.
-> > That mean driver found something wrong while matching and let OS know.
-> > (But reserved-memory without compatible property will not be affected.)
-> >
-> > So per ur explaination, there would be cases that driver reported
-> > matching memory fail,
-> > but the memory is still needed by another processor?
->
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+No changes.
+---
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 29 +++++++++++++++++-----
+ 1 file changed, 23 insertions(+), 6 deletions(-)
 
-Would you mind to give some comment and suggestion for this patch?
-
-Sincerely appreciate ur kind help.
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index 72d481c..5d7dbab 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -22,9 +22,11 @@ Required properties:
+ -------------------
+ - compatible:	should be "fsl,imx-scu".
+ - mbox-names:	should include "tx0", "tx1", "tx2", "tx3",
+-			       "rx0", "rx1", "rx2", "rx3".
+-- mboxes:	List of phandle of 4 MU channels for tx and 4 MU channels
+-		for rx. All 8 MU channels must be in the same MU instance.
++			       "rx0", "rx1", "rx2", "rx3";
++		include "gip3" if want to support general MU interrupt.
++- mboxes:	List of phandle of 4 MU channels for tx, 4 MU channels for
++		rx, and 1 optional MU channel for general interrupt.
++		All MU channels must be in the same MU instance.
+ 		Cross instances are not allowed. The MU instance can only
+ 		be one of LSIO MU0~M4 for imx8qxp and imx8qm. Users need
+ 		to make sure use the one which is not conflict with other
+@@ -34,6 +36,7 @@ Required properties:
+ 		Channel 1 must be "tx1" or "rx1".
+ 		Channel 2 must be "tx2" or "rx2".
+ 		Channel 3 must be "tx3" or "rx3".
++		General interrupt rx channel must be "gip3".
+ 		e.g.
+ 		mboxes = <&lsio_mu1 0 0
+ 			  &lsio_mu1 0 1
+@@ -42,10 +45,18 @@ Required properties:
+ 			  &lsio_mu1 1 0
+ 			  &lsio_mu1 1 1
+ 			  &lsio_mu1 1 2
+-			  &lsio_mu1 1 3>;
++			  &lsio_mu1 1 3
++			  &lsio_mu1 3 3>;
+ 		See Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+ 		for detailed mailbox binding.
+ 
++Note: Each mu which supports general interrupt should have an alias correctly
++numbered in "aliases" node.
++e.g.
++aliases {
++	mu1 = &lsio_mu1;
++};
++
+ i.MX SCU Client Device Node:
+ ============================================================
+ 
+@@ -124,6 +135,10 @@ Required properties:
+ 
+ Example (imx8qxp):
+ -------------
++aliases {
++	mu1 = &lsio_mu1;
++};
++
+ lsio_mu1: mailbox@5d1c0000 {
+ 	...
+ 	#mbox-cells = <2>;
+@@ -133,7 +148,8 @@ firmware {
+ 	scu {
+ 		compatible = "fsl,imx-scu";
+ 		mbox-names = "tx0", "tx1", "tx2", "tx3",
+-			     "rx0", "rx1", "rx2", "rx3";
++			     "rx0", "rx1", "rx2", "rx3",
++			     "gip3";
+ 		mboxes = <&lsio_mu1 0 0
+ 			  &lsio_mu1 0 1
+ 			  &lsio_mu1 0 2
+@@ -141,7 +157,8 @@ firmware {
+ 			  &lsio_mu1 1 0
+ 			  &lsio_mu1 1 1
+ 			  &lsio_mu1 1 2
+-			  &lsio_mu1 1 3>;
++			  &lsio_mu1 1 3
++			  &lsio_mu1 3 3>;
+ 
+ 		clk: clk {
+ 			compatible = "fsl,imx8qxp-clk", "fsl,scu-clk";
+-- 
+2.7.4
