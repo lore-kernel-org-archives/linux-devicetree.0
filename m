@@ -1,52 +1,59 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 1/6] regulator: lm363x: Make the gpio register enable
- flexible
-Date: Tue, 9 Apr 2019 20:44:47 +0200
-Message-ID: <1dcaa34b-cce6-63fc-5866-242c1757a4cb@gmail.com>
-References: <20190405145540.27703-1-dmurphy@ti.com>
- <20190405145540.27703-2-dmurphy@ti.com>
+From: Thor Thayer <thor.thayer@linux.intel.com>
+Subject: Re: [RESEND PATCHv3 0/3] Update Stratix10 EDAC Bindings
+Date: Tue, 9 Apr 2019 14:11:58 -0500
+Message-ID: <fa5b2837-9cb0-517c-c491-9b5d3ae0a3a5@linux.intel.com>
+References: <1554388597-28019-1-git-send-email-thor.thayer@linux.intel.com>
+Reply-To: thor.thayer@linux.intel.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190405145540.27703-2-dmurphy@ti.com>
+In-Reply-To: <1554388597-28019-1-git-send-email-thor.thayer@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, pavel@ucw.cz, lee.jones@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: bp@alien8.de, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: mchehab@kernel.org, james.morse@arm.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
+Hi Boris,
 
-Regulator maintainers should be added too.
+On 4/4/19 9:36 AM, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
+> 
+> This patch series makes the Stratix10 EDAC Bindings
+> specific to the Stratix10 ARM64 architecture.
+> 
+> Instead of using the Arria10 (ARM32) EDAC bindings for
+> Stratix10 (ARM64), create Stratix10 specific EDAC bindings
+> to capture architecture differences between ARM32 and ARM64.
+> This requires fixing the previous Stratix10 bindings.
+> Also add the peripheral bindings for the Stratix10.
+> 
+> V2: Remove Stratix10 compatible check.
+> 
+> V3: Remove patches not related to EDAC bindings so that
+>      this patchset is targeted toward the bindings.
+>      Improve the Stratix10 specific binding description by
+>      adding in descriptions of ARM64 differences.
+> 
+> Resend: Add Reviewed-by and Acked-by from bindings and
+>      socfpga device tree maintainers. I'd like this to go
+>      through the EDAC tree since future patches will have
+>      a dependency on these bindings and device tree.
+> 
+> Thor Thayer (3):
+>    Documentation: dt: edac: Fix Stratix10 IRQ bindings
+>    Documentation: dt: edac: Add Stratix10 Peripheral bindings
+>    arm64: dts: stratix10: Use new Stratix10 EDAC bindings
+> 
+>   .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 135 +++++++++++++++++++--
+>   arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |  25 ++--
+>   2 files changed, 138 insertions(+), 22 deletions(-)
+> 
 
-On 4/5/19 4:55 PM, Dan Murphy wrote:
-> The use of and enablement of the GPIO can be used across devices.
-> Use the enable_reg in the regulator descriptor for the register to
-> write.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->   drivers/regulator/lm363x-regulator.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
-> index c876e161052a..382b1cecdd93 100644
-> --- a/drivers/regulator/lm363x-regulator.c
-> +++ b/drivers/regulator/lm363x-regulator.c
-> @@ -263,8 +263,8 @@ static int lm363x_regulator_probe(struct platform_device *pdev)
->   
->   	if (gpiod) {
->   		cfg.ena_gpiod = gpiod;
-> -
-> -		ret = regmap_update_bits(regmap, LM3632_REG_BIAS_CONFIG,
-> +		ret = regmap_update_bits(regmap,
-> +					 lm363x_regulator_desc[id].enable_reg,
->   					 LM3632_EXT_EN_MASK,
->   					 LM3632_EXT_EN_MASK);
->   		if (ret) {
-> 
+If possible, I'd like this series to go through the EDAC tree since 
+future patches will follow this format.
 
--- 
-Best regards,
-Jacek Anaszewski
+Regards,
+
+Thor
