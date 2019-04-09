@@ -1,136 +1,79 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 07/12] arm64: dts: allwinner: orange-pi-3:
- Enable ethernet
-Date: Tue, 9 Apr 2019 09:23:40 +0200
-Message-ID: <20190409072340.lndjtgy7o7y2b76z@flea>
-References: <20190405234514.6183-1-megous@megous.com>
- <20190405234514.6183-8-megous@megous.com>
- <20190408074042.74s5qckukcpore3e@flea>
- <20190408232232.fsl2ddthwo2rr4ql@core.my.home>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH v5 0/9] Introduce STMFX I2C Multi-Function eXpander
+Date: Tue, 9 Apr 2019 09:24:02 +0200
+Message-ID: <1554794651-6874-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cti4uw5canfn7foj"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBAURWHSQKGQEF5OBG6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190408232232.fsl2ddthwo2rr4ql-9v8tmBix7cb9zxVx7UNMDg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev@v
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, Amelie Delaunay <amelie.delaunay@st.com>
 List-Id: devicetree@vger.kernel.org
 
+This series adds support for STMicroelectronics Multi-Function eXpander
+(STMFX), used on some STM32 discovery and evaluation boards.
 
---cti4uw5canfn7foj
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+STMFX is an STM32L152 slave controller whose firmware embeds the following
+features:
+- I/O expander (16 GPIOs + 8 extra if the other features are not enabled),
+- resistive touchscreen controller,
+- IDD measurement.
 
-On Tue, Apr 09, 2019 at 01:22:32AM +0200, Ond=C5=99ej Jirman wrote:
-> On Mon, Apr 08, 2019 at 09:40:42AM +0200, Maxime Ripard wrote:
-> > On Sat, Apr 06, 2019 at 01:45:09AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
-> > > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> > >
-> > > Orange Pi 3 has two regulators that power the Realtek RTL8211E.
-> > > According to the phy datasheet, both regulators need to be enabled
-> > > at the same time, but we can only specify a single phy-supply in
-> > > the DT.
-> > >
-> > > This can be achieved by making one regulator depedning on the
-> > > other via vin-supply. While it's not a technically correct
-> > > description of the hardware, it achieves the purpose.
-> > >
-> > > All values of RX/TX delay were tested exhaustively and a middle
-> > > one of the working values was chosen.
-> > >
-> > > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> > > ---
-> > >  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++=
-++
-> > >  1 file changed, 44 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b=
-/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> > > index 644946749088..5270142527f5 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> > > @@ -15,6 +15,7 @@
-> > >
-> > >  	aliases {
-> > >  		serial0 =3D &uart0;
-> > > +		ethernet0 =3D &emac;
-> > >  	};
-> > >
-> > >  	chosen {
-> > > @@ -64,6 +65,27 @@
-> > >  		regulator-max-microvolt =3D <5000000>;
-> > >  		regulator-always-on;
-> > >  	};
-> > > +
-> > > +	/*
-> > > +	 * The board uses 2.5V RGMII signalling. Power sequence
-> > > +	 * to enable the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2)
-> > > +	 * power rails at the same time and to wait 100ms.
-> > > +	 */
-> > > +	reg_gmac_2v5: gmac-2v5 {
-> > > +                compatible =3D "regulator-fixed";
-> > > +                regulator-name =3D "gmac-2v5";
-> > > +                regulator-min-microvolt =3D <2500000>;
-> > > +                regulator-max-microvolt =3D <2500000>;
-> > > +                startup-delay-us =3D <100000>;
-> > > +                enable-active-high;
-> > > +                gpio =3D <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
-> >
-> > Is enable-active-high still needed? It's redundant with the
-> > GPIO_ACTIVE_HIGH flag.
->
-> Looking at the code, use/non-use of enable-active-high inhibits
-> flags specified in gpio property. So the GPIO_ACTIVE_HIGH flag
-> is ignored here (had GPIO_ACTIVE_LOW been used, the kernel would
-> ignore it too and print a warning).
->
-> So enable-active-high is still necessary here.
+I2C stuff and chip initialization is based on an MFD parent driver, which
+registers STMFX features MFD children.
 
-Too bad :/
+---
+Changes in v5:
+- mfd: fix Lee's comments (reorder struct declaration, drop mfd cells
+  platform data initialization, typos)
+- pinctrl: get stmfx struct through dev_get_drvdata(pdev->dev.parent)
+  instead of dev_get_platdata(&pdev->dev);
+Changes in v4:
+- mfd: move registers #define into the header
+- mfd: merge stmfx and stmfx_ddata structures into one stmfx structure
+- mfd: change stmfx_chip_init/exit and stmfx_irq_init/exit args: use
+  i2c_client struct and i2c_get_clientdata
+- mfd: fix typos
+- mfd: add MFD cells for IDD and TS features
+- pinctrl: rework registers #define
+- dts: add STMFX support on stm32mp157c-ev1
+Changes in v3:
+- fix MFD interrupt bindings
+- fix drivers/mfd/stmfx.c:103:8: warning: 'mask' may be used uninitialized
+  in this function
+Changes in v2:
+- move to MFD parent driver for i2c stuff and chip initialization
+- improve regmap configuration
+- take advantage of the use of gpio-ranges
 
-> See comment in gpiolib-of.c where this is handled:
->
-> /*
->  * The regulator GPIO handles are specified such that the
->  * presence or absence of "enable-active-high" solely controls
->  * the polarity of the GPIO line. Any phandle flags must
->  * be actively ignored.
->  */
+Amelie Delaunay (9):
+  dt-bindings: mfd: Add ST Multi-Function eXpander (STMFX) core bindings
+  mfd: Add ST Multi-Function eXpander (STMFX) core driver
+  dt-bindings: pinctrl: document the STMFX pinctrl bindings
+  pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver
+  ARM: dts: stm32: add STMFX support on stm32746g-eval
+  ARM: dts: stm32: add joystick support on stm32746g-eval
+  ARM: dts: stm32: add orange and blue leds on stm32746g-eval
+  ARM: dts: stm32: add STMFX support on stm32mp157c-ev1
+  ARM: dts: stm32: add joystick support on stm32mp157c-ev1
 
-Thanks for digging this out
+ Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 +
+ .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 +++
+ arch/arm/boot/dts/stm32746g-eval.dts               |  66 ++
+ arch/arm/boot/dts/stm32mp157c-ev1.dts              |  60 ++
+ drivers/mfd/Kconfig                                |  13 +
+ drivers/mfd/Makefile                               |   2 +-
+ drivers/mfd/stmfx.c                                | 566 ++++++++++++++
+ drivers/pinctrl/Kconfig                            |  12 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-stmfx.c                    | 820 +++++++++++++++++++++
+ include/linux/mfd/stmfx.h                          | 123 ++++
+ 11 files changed, 1806 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
+ create mode 100644 drivers/mfd/stmfx.c
+ create mode 100644 drivers/pinctrl/pinctrl-stmfx.c
+ create mode 100644 include/linux/mfd/stmfx.h
 
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---cti4uw5canfn7foj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKxIfAAKCRDj7w1vZxhR
-xW/CAQCrJqoV6FLDqDM5IP7NCK4txMyjvVpL9TidL1s65icMtgEA8w8/LBe0fC/i
-0vW0YKPvx+onrCje430iF2jdywhGjgk=
-=Jz+2
------END PGP SIGNATURE-----
-
---cti4uw5canfn7foj--
+-- 
+2.7.4
