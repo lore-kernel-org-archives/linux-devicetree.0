@@ -1,77 +1,51 @@
-Return-Path: <SRS0=MvHc=SL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr680078.outbound.protection.outlook.com ([40.107.68.78]:8869
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726112AbfDIHpr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 9 Apr 2019 03:45:47 -0400
-From: <shubhrajyoti.datta@gmail.com>
-Subject: [PATCHv3 2/2] serial: uartps: Add support for cts-override
-Date: Tue, 9 Apr 2019 13:15:24 +0530
-Message-ID: <1554795924-12053-3-git-send-email-shubhrajyoti.datta@gmail.com>
-In-Reply-To: <1554795924-12053-1-git-send-email-shubhrajyoti.datta@gmail.com>
-References: <1554795924-12053-1-git-send-email-shubhrajyoti.datta@gmail.com>
+Return-Path: <SRS0=srtC=SL=linaro.org=linus.walleij@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: michal.simek@xilinx.com, gregkh@linuxfoundation.org, jslaby@suse.com, robh+dt@kernel.org, linux-serial@vger.kernel.org, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+References: <20190405234514.6183-1-megous@megous.com> <20190405234514.6183-8-megous@megous.com>
+ <20190408074042.74s5qckukcpore3e@flea> <20190408232232.fsl2ddthwo2rr4ql@core.my.home>
+In-Reply-To: <20190408232232.fsl2ddthwo2rr4ql@core.my.home>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 9 Apr 2019 09:35:02 +0200
+Message-ID: <CACRpkdYGdLEeX8aBJfPQg=8OHcQR_uTJoA1FaO5p1od+VX2Nzg@mail.gmail.com>
+Subject: Re: [PATCH 07/12] arm64: dts: allwinner: orange-pi-3: Enable ethernet
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To: Maxime Ripard <maxime.ripard@bootlin.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Arend van Spriel <arend.vanspriel@broadcom.com>, Franky Lin <franky.lin@broadcom.com>, Hante Meuleman <hante.meuleman@broadcom.com>, Chi-Hsien Lin <chi-hsien.lin@cypress.com>, Wright Feng <wright.feng@cypress.com>, Kalle Valo <kvalo@codeaurora.org>, Naveen Gupta <naveen.gupta@cypress.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, linux-wireless <linux-wireless@vger.kernel.org>, brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+On Tue, Apr 9, 2019 at 1:22 AM Ond=C5=99ej Jirman <megous@megous.com> wrote=
+:
 
-Having flow is configurable. Add support for the same by
-checking for cts-override.
+> > > +                enable-active-high;
+> > > +                gpio =3D <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
+> >
+> > Is enable-active-high still needed? It's redundant with the
+> > GPIO_ACTIVE_HIGH flag.
+>
+> Looking at the code, use/non-use of enable-active-high inhibits
+> flags specified in gpio property. So the GPIO_ACTIVE_HIGH flag
+> is ignored here (had GPIO_ACTIVE_LOW been used, the kernel would
+> ignore it too and print a warning).
+>
+> So enable-active-high is still necessary here.
+>
+> See comment in gpiolib-of.c where this is handled:
+>
+> /*
+>  * The regulator GPIO handles are specified such that the
+>  * presence or absence of "enable-active-high" solely controls
+>  * the polarity of the GPIO line. Any phandle flags must
+>  * be actively ignored.
+>  */
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
-v3:
-Update the name to cts-override.
- drivers/tty/serial/xilinx_uartps.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Yeah this caused me special headache in the current merge
+window because of buggy code on my part.
 
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index 9a7f943..75e1027 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -193,6 +193,7 @@ struct cdns_uart {
- 	int			id;
- 	struct notifier_block	clk_rate_change_nb;
- 	u32			quirks;
-+	bool cts_override;
- };
- struct cdns_platform_data {
- 	u32 quirks;
-@@ -1004,6 +1005,11 @@ static void cdns_uart_config_port(struct uart_port *port, int flags)
-  */
- static unsigned int cdns_uart_get_mctrl(struct uart_port *port)
- {
-+	struct cdns_uart *cdns_uart_data = port->private_data;
-+
-+	if (cdns_uart_data->cts_override)
-+		return 0;
-+
- 	return TIOCM_CTS | TIOCM_DSR | TIOCM_CAR;
- }
- 
-@@ -1011,6 +1017,10 @@ static void cdns_uart_set_mctrl(struct uart_port *port, unsigned int mctrl)
- {
- 	u32 val;
- 	u32 mode_reg;
-+	struct cdns_uart *cdns_uart_data = port->private_data;
-+
-+	if (cdns_uart_data->cts_override)
-+		return;
- 
- 	val = readl(port->membase + CDNS_UART_MODEMCR);
- 	mode_reg = readl(port->membase + CDNS_UART_MR);
-@@ -1669,6 +1679,8 @@ static int cdns_uart_probe(struct platform_device *pdev)
- 		console_port = NULL;
- #endif
- 
-+	cdns_uart_data->cts_override = of_property_read_bool(pdev->dev.of_node,
-+							     "cts-override");
- 	return 0;
- 
- err_out_pm_disable:
--- 
-2.1.1
+This is an effect of this flag being defined for powerpc
+ages before we properly implemented generic GPIO
+bindings. We just have to respect it.
+
+See:
+https://marc.info/?l=3Dlinux-gpio&m=3D155417774822532&w=3D2
+
+Yours,
+Linus Walleij
