@@ -1,17 +1,14 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [linux-sunxi] [PATCH v2 02/13] arm64: dts: allwinner: h6: Add
- Orange Pi 3 DTS
-Date: Tue, 9 Apr 2019 18:57:47 +0530
-Message-ID: <CAMty3ZAivyE922rpJ_FgnL=3hk1jR2eJsnuiQHqXd+NcmhQ+SQ__38209.59987804$1554816498$gmane$org@mail.gmail.com>
-References: <20190409002452.14551-1-megous@megous.com>
- <20190409002452.14551-3-megous@megous.com>
- <CAMty3ZBK2jPHTP4Y+hiy8Gq+Nx9iWYoUgke+BvopyzR8T6=0Xw@mail.gmail.com>
- <20190409113157.e4vrzesbgmyslomb@core.my.home>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 27/31 v3] soc: ixp4xx: Add DT bindings for IXP4xx NPE
+Date: Tue, 9 Apr 2019 08:44:02 -0500
+Message-ID: <CAL_JsqJ95+nivX+nKjgwHjxFOL12xMqaj0YET+tkr+JAx=DgHA@mail.gmail.com>
+References: <20190408062831.16422-1-linus.walleij@linaro.org>
+ <20190408062831.16422-28-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190409113157.e4vrzesbgmyslomb@core.my.home>
+In-Reply-To: <20190408062831.16422-28-linus.walleij@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,81 +18,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jagan Teki <jagan@amarulasolutions.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Arend van Spriel <arend.vanspriel@broadcom.com>, Franky Lin <franky.lin@broadcom.com>, Hante Meuleman <hante.meuleman@broadcom.com>, Chi-Hsien Lin <chi-hsien.lin@cypress.com>, Wright Feng <wright.feng@cypress.com>, Kalle Valo <kvalo@codeaurora.org>, Naveen Gupta <naveen.gupta@cypress.com>, dri-devel <dri-devel@lists.freed>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, Imre Kaloz <kaloz@openwrt.org>, Krzysztof Halasa <khalasa@piap.pl>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgT25kxZllaiBKaXJtYW4sCgpPbiBUdWUsIEFwciA5LCAyMDE5IGF0IDU6MDEgUE0gT25kxZll
-aiBKaXJtYW4gPG1lZ291c0BtZWdvdXMuY29tPiB3cm90ZToKPgo+IEhpIEphZ2FuLAo+Cj4gT24g
-VHVlLCBBcHIgMDksIDIwMTkgYXQgMDI6MDg6MThQTSArMDUzMCwgSmFnYW4gVGVraSB3cm90ZToK
-PiA+IEJhc2VkIG9uIHRoZSBjb252ZXJzYXRpb24gYWJvdXQgdXNpbmcgY29tbW9uIGR0c2kgZnJv
-bSB0aGlzIHRocmVhZFsxXSwKPiA+IEknbSBjb21tZW50aW5nIGhlcmUgdG8gbWFrZSBzaG93IHRo
-ZSBkaWZmIGRpcmVjdGx5IG9uIHRoZSBub2RlcywKPiA+IGdpdmluZyBjb21tZW50cyBvbiBlYWNo
-IG5vZGUgc28tdGhhdCB3ZSBjYW4gc2VlIHRoZSBkaWZmIGdsb2JhbGx5Lgo+Cj4gVGhhbmtzIGZv
-ciB0aGUgc3VnZ2VzdGlvbnMgYmVsb3cuIEl0IG1vc3RseSByZXBlYXRzIHRoZSBkaWZmZXJlbmNl
-cyBhbmQKPiBjb21tb25hbGl0aWVzIEkgYWxyZWFkeSBzdGF0ZWQgaW4gdGhlIHByZXZpb3VzIGRp
-c2N1c3Npb24uCj4KPiBJIGRvbid0IGhhdmUgbXVjaCB0byBhZGQgdG8gd2hhdCBJIGFscmVhZHkg
-c2FpZCBwcmV2aW91c2x5LCB0aG91Z2gsIGJlY2F1c2UgeW91Cj4gZGlkbid0IGFkZHJlc3MgbXkg
-Y29uY2VybnMgdGhlcmUuIEJ1dCBJIGNhbiByZXN0YXRlIGFuZCBleHBhbmQgb24gdGhvc2UKPiBj
-b25jZXJucy4KPgo+IFByZXZpb3VzbHkgSSBhbHJlYWR5IGFncmVlZCBpdCdzIHBvc3NpYmxlIHRv
-IGJhc2Ugb3JhbmdlcGktMy5kdHMgb24KPiBvcmFuZ2VwaS5kdHNpLCBhbmQgcHJvcG9zZWQgYSBt
-YWludGFpbmFibGUgd2F5IGZvcndhcmQsIGFuZCB3aHkgdG8gZm9sbG93IGl0ICh0bwo+IHF1b3Rl
-IG15c2VsZik6Cj4KPiAgIFNjaGVtYXRpY3MgYWxsb3cgZm9yIGhpZ2ggYW1vdW50IG9mIHZhcmlh
-YmlsaXR5IGluIHRoZSBwb3dlciB0cmVlIChzZWUgYWxsIHRoZQo+ICAgTkMgKG5vdCBjb25uZWN0
-ZWQpIC8gMFIgcmVzaXN0b3JzKSBpbiB0aGUgc2NoZW1hdGljIGFyb3VuZCBBWFA4MDUuIEV2ZXJ5
-IGJvYXJkCj4gICBiYXNlZCBvbiB0aGlzIFh1bmxvbmcgZGVzaWduIGNhbiBiZSBzdWJ0bHkgZGlm
-ZmVyZW50LgoKV2VsbCwgaG93IGFib3V0IGRlZmluaW5nIHRoZW0gaW4gcmVxdWlyZWQgZHRzIGZp
-bGUgYW5kIGdyb3VwIGl0IGNvbW1vbgpyZWd1bGF0b3JzIGluIGR0c2k/IFRoZSBpZGVhIG9mIGFs
-bCB0aGVzZSAzIEg2IE9QSSBib2FyZHMgYXJlCmV2YWx1YXRlZCBpbiB0aGUgc2FtZSBkZXNpZ24g
-Y29uc2lkZXJhdGlvbiBieSBhZGRpbmcgbmV3IElQJ3MgaW4gbmV3CmJvYXJkcyBkZXNpZ24gYnkg
-a2VlcGluZyB0aGUgY29yZSB0aGluZ3MgY29tbW9uIGxpa2UgbGl0ZTIgaGFzIHdpZmksCm9uZSBw
-bHVzIGhhcyBlbWFjIGFuZCAzIGhhcyBQQ0llIGV0Yy4gVGhpcyBpcyB3aGF0IEkgZ290IGZyb20K
-U3RldmVuKE9yYW5nZVBJKS4KCj4KPiAgIEkgYWxyZWFkeSBzdWdnZXN0ZWQgYSBtYWludGFpbmFi
-bGUgc29sdXRpb24sIGJlbG93LiBXaGVyZSBiYXNlIGR0c2kgaGFzIGVtcHR5Cj4gICBjb25maWcg
-Zm9yIHJlZ3VsYXRvcnMgYW5kIGV2ZXJ5IGJvYXJkIGJhc2VkIG9uIHRoYXQganVzdCBkZWZpbmVz
-IGl0IGNvbXBsZXRlbHkKPiAgIGZvciBpdHNlbGYuCj4KPiAgIEEgZmV3IHJlZ3VsYXRvcnMgKGZv
-ciBDUFUvR1BVKSB3aWxsIG1vc3QgcHJvYmFibHkgaGF2ZSB0aGUgc2FtZSBtZWFuaW5nIG9uCj4g
-ICBldmVyeSBkZXJpdmVkIGJvYXJkLCBzbyB0aGVzZSBjYW4gcHJvYmFibHkgYmUga2VwdCBpbiBk
-dHNpIHdpdGhvdXQgY2F1c2luZyB0b28KPiAgIG11Y2ggYW5ub3lhbmNlLgo+Cj4gICBJdCdzIHVu
-cGxlYXNhbnQgdG8gaGF2ZSB3cm9uZyByZWd1bGF0b3Igc2V0dXAgZGVmaW5lZCBpbiBhbiB1bmRl
-cmx5aW5nIGR0c2ksCj4gICBhbmQgdGhlbiB0cnlpbmcgdG8gb3ZlcnJpZGUgaXQgYnkgcmVtb3Zp
-bmcvYWRkaW5nIHJhbmRvbSBwcm9wZXJ0aWVzIGluIHRoZQo+ICAgYm9hcmQgZHRzIGZvciB0aGUg
-bmV3IGJvYXJkcyBiYXNlZCBvbiB0aGF0LCBzbyB0aGF0IGl0IGZpdHMuCgpJZiB3ZSBtYW5hZ2Ug
-dGhlbSBwcm9wZXJseSBieSBtb3ZpbmcgY29tbW9uIHRoaW5ncyBpbiBkdHNpIGFuZCByZXN0IGlu
-CmR0cywgd2UgbWF5IGF2b2lkIHRoZXNlIHVuZGVybHlpbmcgaXNzdWVzLgoKPgo+ICAgVGhlIHJl
-c3Qgb2YgdGhlIGN1cnJlbnQgSFcgZGVzY3JpcHRpb25zIGluIHRoZSBzdW41MGktaDYtb3Jhbmdl
-cGkuZHRzaSBjYW4gYmUKPiAgIHNoYXJlZCAoYXMgb2Ygbm93KS4KPgo+IE15IHN1Z2dlc3Rpb24g
-d2FzIHRoaXM6Cj4KPiAgIFNvIHRvIGJhc2UgT3JhbmdlIFBpIDMgZHRzIG9uIHRvcCBvZiBleGlz
-dGluZyBzdW41MGktaDYtb3JhbmdlcGkuZHRzaSBJJ2QgaGF2ZQo+ICAgdG8gZmlyc3QgbW92ZSBz
-b21lIHRoaW5ncyBvdXQgb2YgdGhlIGJhc2UgZHRzaSB0byB0aGUgT3JhbmdlUGkgTGl0ZTIgYW5k
-IE9uZQo+ICAgUGx1cyBib2FyZCBkdHMgZmlsZXMsIGluIG9yZGVyIHRvIGhhdmUgc3VuNTBpLWg2
-LW9yYW5nZXBpLmR0c2kgb25seSBkZXNjcmliZQo+ICAgSFcgdGhhdCBpcyAqcmVhbGx5KiBzaGFy
-ZWQgYnkgdGhlc2UgMiBib2FyZHMgYW5kIE9yYW5nZSBQaSAzLgo+Cj4gICBJZiBJIGRvIHRoYXQs
-IEknZCB1bmRlZmluZSBhbGwgdGhlIGF4cDgwNSByZWd1bGF0b3Igbm9kZXMgYW5kIG1vdmUgdGhl
-Cj4gICBjb25maWd1cmF0aW9ucyB0byBlYWNoIG9mIHRoZSAzIGJvYXJkIGZpbGVzLiBUaGF0IHdp
-bGwgcHJvYmFibHkgZW5kIHVwIGJlaW5nCj4gICB0aGUgbGVhc3QgY29uZnVzaW5nIGFuZCBtb3N0
-IG1haW50YWluYWJsZS4gU2VlIGF4cDgxeC5kdHNpIGxpbmVzIDg2LTE0NCBmb3IKPiAgIHdoYXQg
-SSBtZWFuLgo+Cj4gWW91IHNlZW0gdG8gYmUgc3VnZ2VzdGluZyBhIHNvbHV0aW9uIHdoZXJlIGV2
-ZXJ5IHRpbWUgd2UgYWRkIGFuIE9yYW5nZVBpIEg2Cj4gYmFzZWQgYm9hcmQsIHRoZSBwZXJzb24g
-YWRkaW5nIGl0IHdpbGwgaGF2ZSB0byBnbyB0aHJvdWdoIHRoZSBiYXNlIGR0c2kgYW5kIGFsbAo+
-IHRoZSBvdGhlciBib2FyZHMgYmFzZWQgb24gaXQsIHN0YXR1cyBkaXNhYmxlIG9yIG90aGVyd2lz
-ZSBjaGFuZ2UgcmVndWxhdG9ycyBpbgo+IHRoZSBiYXNlIGR0c2ksIHBhdGNoIGFsbCB0aGUgb3Ro
-ZXIgYm9hcmRzIHRvIHJlLWVuYWJsZSBpdC4KPgo+IEl0IHdvdWxkIGJlIGFscmVhZHkgdW5wbGVh
-c2FudCBqdXN0IGFkZGluZyBhIHRoaXJkIGJvYXJkIGJhc2VkIG9uIHRoaXMgYXBwcm9hY2guCj4g
-QW5kIHdoZW4gdGhlIGZvdXJ0aCBib2FyZCBpcyBhZGRlZCwgd2l0aCBhbm90aGVyIHNtYWxsIGRp
-ZmZlcmVuY2VzIGluIHRoZQo+IHJlZ3VsYXRvciB1c2UvbWVhbmluZ3MsIHRoZSBwZXJzb24gd2ls
-bCBiZSBsb29raW5nIGF0IHBhdGNoaW5nIDQgZHRzIGZpbGVzCj4gKyBhZGRpbmcgb25lIGZvciBo
-aXMgb3duIGJvYXJkLiBGb3Igd2hhdCBiZW5lZml0LCB0byBzYXZlIHNvbWUgYnl0ZXMgcmlnaHQg
-bm93Pwo+Cj4gSSB0aGluayBtYWludGFpbmFiaWxpdHksIGVhc2Ugb2YgYWRkaW5nIG5ldyBib2Fy
-ZHMgaXMgbW9yZSBpbXBvcnRhbnQsIHRoYW4KPiBoYXZpbmcgYSBkdHNpIHRoYXQgdHJpZXMgdG8g
-bWF4aW1hbGx5IGNvdmVyIGFsbCB0aGUgY29tbW9uYWxpdGllcyBiZXR3ZWVuIHRoZQo+IGV4aXN0
-aW5nIGJvYXJkcyByaWdodCBub3csIHdpdGhvdXQgcmVnYXJkcyBmb3IgdGhlIGZ1dHVyZS4gVGhh
-dCdzIHdoeQo+IEkgc3VnZ2VzdGVkIGFuIGFwcHJvYWNoIGxpa2UgaW4gYXhwODF4LmR0c2kgbGlu
-ZXMgODYtMTQ0LgoKVHJ1ZSwgaWYgdGhlIGJvYXJkcyBpbmRlZWQgYXJlIGRpZmZlcmVudCBidXQg
-d2UgY2FuIG1haW50YWluIGVhc2lseSBpZgp0aGUgYm9hcmRzIGFyZSBmcm9tIHNhbWUgZmFtaWx5
-IG9mIGRlc2lnbiBiYXNlZCBteSBleHBlcmllbmNlIGFuZCBmZXcKYm9hcmRzIGRvIHNoYXJlIGNv
-bW1vbiB0aGluZ3MgaW4gZHRzaSBhbHJlYWR5LgoKQW55d2F5LCB0aGFua3MgZm9yIGlucHV0cy4g
-U2VlbXMgbGlrZSBwYXRjaCBpcyBhcHBsaWVkIGFscmVhZHkgbWF5IGJlCndlIGNhbiBtb3ZlIGlu
-dG8gZHRzaSBpZiByZXF1aXJlIGluIGZ1dHVyZS4KClRoYW5rcywKSmFnYW4uCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Mon, Apr 8, 2019 at 1:29 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> This adds DT bindings for the Intel IXP4xx Network Processing
+> Engine (NPE). These are three firmware-executing units found in
+> the IXP4xx SoC. These bindings use YAML.
+>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> ChangeLog v2->v3:
+> - Rebased on v5.1-rc1
+> ---
+>  ...ntel,ixp4xx-network-processing-engine.yaml | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml
+
+Reviewed-by: Rob Herring <robh@kernel.org>
