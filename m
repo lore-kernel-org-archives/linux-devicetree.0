@@ -1,60 +1,73 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 02/13] arm64: dts: allwinner: h6: Add
- Orange Pi 3 DTS
-Date: Tue, 9 Apr 2019 10:12:30 +0200
-Message-ID: <20190409081230.pz55uwyq33x5tfgz@flea>
-References: <20190409002452.14551-1-megous@megous.com>
- <20190409002452.14551-3-megous@megous.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v4] dt-bindings: gpu: add bindings for the ARM Mali
+ Bifrost GPU
+Date: Tue, 9 Apr 2019 10:20:39 +0200
+Message-ID: <86843e8b-1dda-f7f3-c2ad-02b7b47743dc@baylibre.com>
+References: <20190401080949.14550-1-narmstrong@baylibre.com>
+ <1640dd7b-3576-d9ce-0641-6b6a64a87275@arm.com>
+ <d26f1ce9-c56c-5e51-37f5-0689aa198dc0@baylibre.com>
+ <5CA9CE1A.6060109@baylibre.com>
+ <CAL_JsqJj4pae6AuK=HGU5GuZogFKyAbU_y7Ls_CyTcV6qXH_rg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="fgjv5fzwmh3drajl"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB5NHWHSQKGQEMSQMADQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190409002452.14551-3-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev@v
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqJj4pae6AuK=HGU5GuZogFKyAbU_y7Ls_CyTcV6qXH_rg@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Steven Price <steven.price@arm.com>, linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---fgjv5fzwmh3drajl
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-Hi,
-
-On Tue, Apr 09, 2019 at 02:24:41AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
-> +&mmc0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc0_pins>;
-
-Since 5 minutes ago, that's now the default.
-
-> +&usb2otg {
-> +	/*
-> +	 * Beware that this board will not automatically disconnect
-> +	 * VBUS from DCIN, when self-powered and used as a peripheral.
-> +	 */
-> +	dr_mode = "otg";
-> +	status = "okay";
-> +};
-
-As we were discussing, I guess leaving it as host is the safest
-option.
-
-I can fix both issues while applying if that's ok for you.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---fgjv5fzwmh3drajl--
+T24gMDgvMDQvMjAxOSAyMTowNywgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gU3VuLCBBcHIgNywg
+MjAxOSBhdCA1OjE3IEFNIE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT4g
+d3JvdGU6Cj4+Cj4+IEhpIFJvYiwKPj4KPj4gTGUgMDEvMDQvMjAxOSAxMzoyNCwgTmVpbCBBcm1z
+dHJvbmcgYSDDqWNyaXQgOgo+Pj4gT24gMDEvMDQvMjAxOSAxMjowMCwgU3RldmVuIFByaWNlIHdy
+b3RlOgo+Pj4+IE9uIDAxLzA0LzIwMTkgMDk6MDksIE5laWwgQXJtc3Ryb25nIHdyb3RlOgo+Pj4+
+PiBBZGQgdGhlIGJpbmRpbmdzIGZvciB0aGUgQmlmcm9zdCBmYW1pbHkgb2YgQVJNIE1hbGkgR1BV
+cy4KPj4+Pj4KPj4+Pj4gVGhlIEJpZnJvc3QgR1BVIGFyY2hpdGVjdHVyZSBpcyBzaW1pbGFyIHRv
+IHRoZSBNaWRnYXJkIGZhbWlseSwKPj4+Pj4gYnV0IHdpdGggYSBkaWZmZXJlbnQgU2hhZGVyIENv
+cmUgJiBFeGVjdXRpb24gRW5naW5lIHN0cnVjdHVyZXMuCj4+Pj4+Cj4+Pj4+IEJpbmRpbmdzIGFy
+ZSBiYXNlZCBvbiB0aGUgTWlkZ2FyZCBmYW1pbHkgYmluZGluZ3MsIGJ1dCB0aGUgaW5uZXIKPj4+
+Pj4gYXJjaGl0ZWN0dXJhbCBjaGFuZ2VzIG1ha2VzIGl0IGEgc2VwYXJhdGUgZmFtaWx5IG5lZWRp
+bmcgc2VwYXJhdGUKPj4+Pj4gYmluZGluZ3MuCj4+Pj4+Cj4+Pj4+IFRoZSBCaWZyb3N0IEdQVXMg
+YXJlIHByZXNlbnQgaW4gYSBudW1iZXIgb2YgcmVjZW50IFNvQ3MsIGxpa2UgdGhlCj4+Pj4+IEFt
+bG9naWMgRzEyQSBGYW1pbHksIGFuZCBtYW55IG90aGVyIHZlbmRvcnMuCj4+Pj4+IFRoZSBBbWxv
+Z2ljIHZlbmRvciBzcGVjaWZpYyBjb21wYXRpYmxlIGlzIGFkZGVkIHRvIGhhbmRsZSB0aGUKPj4+
+Pj4gc3BlY2lmaWMgSVAgaW50ZWdyYXRpb24gZGlmZmVyZW5jZXMgYW5kIGRlcGVuZGVuY2llcy4K
+Pj4+Pj4KPj4+Pj4gU2lnbmVkLW9mZi1ieTogTmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5
+bGlicmUuY29tPgo+Pj4+PiAtLS0KPj4+Pj4gIC4uLi9iaW5kaW5ncy9ncHUvYXJtLG1hbGktYmlm
+cm9zdC50eHQgICAgICAgICB8IDkyICsrKysrKysrKysrKysrKysrKysKPj4+Pj4gIDEgZmlsZSBj
+aGFuZ2VkLCA5MiBpbnNlcnRpb25zKCspCj4+Pj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1iaWZyb3N0LnR4dAo+Pj4+
+Pgo+Pj4+PiBDaGFuZ2VzIHNpbmNlIHYzOgo+Pj4+PiAtIEFkZGVkIG5vdGUgYWJvdXQgZGlzY292
+ZXJhYmxlIG1vZGVsL3JldmlzaW9uCj4+Pj4+IC0gRW5mb3JjZWQgZml4ZWQgZGVmaW5lZCBpcnEg
+b3JkZXIKPj4+Pj4gLSBGaXhlZCB0eXBvIGluIGFjY29tbW9kYXRlCj4+Pj4+Cj4+Pj4+IENoYW5n
+ZXMgc2luY2UgdjI6Cj4+Pj4+IC0gbW92ZWQgdG8gYSBzaW5nbGUgY29tcGF0aWJsZSBzaW5jZSBI
+VyBpcyBmdWxseSBkaXNjb3ZlcmFibGUKPj4+Pj4KPj4+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGktYmlmcm9zdC50eHQgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxtYWxpLWJpZnJvc3QudHh0Cj4+
+Pj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+Pj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uNzExYzll
+YWQxN2EyCj4+Pj4+IC0tLSAvZGV2L251bGwKPj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1iaWZyb3N0LnR4dAo+Pj4+PiBAQCAtMCwwICsx
+LDkyIEBACj4+Pj4+ICtBUk0gTWFsaSBCaWZyb3N0IEdQVQo+Pj4+PiArPT09PT09PT09PT09PT09
+PT09PT0KPj4+Pj4gKwo+Pj4+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4+Pj4gKwo+Pj4+PiAr
+LSBjb21wYXRpYmxlIDoKPj4+Pj4gKyAgKiBTaW5jZSBNYWxpIEJpZnJvc3QgR1BVIG1vZGVsL3Jl
+dmlzaW9uIGlmIGZ1bGx5IGRpc2NvdmVyYWJsZSBieSByZWFkaW5nCj4+Pj4gICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXl4KPj4+PiBzL2lmL2lzLwo+Pgo+PiBT
+aG91bGQgSSBzdGlsbCBzZW5kIGEgdjUgdG8gZml4aW5nIHRoaXMgdHlwbyA/IEkgY2FuIGZpeCBp
+dCB3aGlsZSBhcHBseWluZyBpdC4KPiAKPiBObyBuZWVkIHRvIHJlc2VuZC4gSSBwbGFubmVkIHRv
+IGFwcGx5IGl0LCBidXQgaWYgeW91IGFyZSBnb2luZyB0bzoKPiAKPiBSZXZpZXdlZC1ieTogUm9i
+IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPiAKClRoYW5rcywKCkZpeGVkIGFuZCBhcHBsaWVk
+IG9uIGRybS1taXNjLW5leHQKCk5laWwKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVs
