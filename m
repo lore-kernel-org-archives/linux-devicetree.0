@@ -1,20 +1,20 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 01/12] arm64: dts: allwinner: h6: Add Orange
- Pi 3 DTS
-Date: Tue, 9 Apr 2019 09:22:37 +0200
-Message-ID: <20190409072237.fn2pe7ugtukdlnm2@flea>
+Subject: Re: [PATCH 07/12] arm64: dts: allwinner: orange-pi-3:
+ Enable ethernet
+Date: Tue, 9 Apr 2019 09:23:40 +0200
+Message-ID: <20190409072340.lndjtgy7o7y2b76z@flea>
 References: <20190405234514.6183-1-megous@megous.com>
- <20190405234514.6183-2-megous@megous.com>
- <20190408074628.e5ers4gzlqz4coyk@flea>
- <20190408225851.svelyf7h3fiw4wjw@core.my.home>
+ <20190405234514.6183-8-megous@megous.com>
+ <20190408074042.74s5qckukcpore3e@flea>
+ <20190408232232.fsl2ddthwo2rr4ql@core.my.home>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vazlaal22ii7l2e2"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBRMQWHSQKGQE6C3NFPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="cti4uw5canfn7foj"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBAURWHSQKGQEF5OBG6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190408225851.svelyf7h3fiw4wjw-9v8tmBix7cb9zxVx7UNMDg@public.gmane.org>
+In-Reply-To: <20190408232232.fsl2ddthwo2rr4ql-9v8tmBix7cb9zxVx7UNMDg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -25,48 +25,88 @@ To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy
 List-Id: devicetree@vger.kernel.org
 
 
---vazlaal22ii7l2e2
+--cti4uw5canfn7foj
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 09, 2019 at 12:58:51AM +0200, Ond=C5=99ej Jirman wrote:
-> > > +&usb2otg {
-> > > +	dr_mode =3D "host";
-> > > +	status =3D "okay";
-> > > +};
+On Tue, Apr 09, 2019 at 01:22:32AM +0200, Ond=C5=99ej Jirman wrote:
+> On Mon, Apr 08, 2019 at 09:40:42AM +0200, Maxime Ripard wrote:
+> > On Sat, Apr 06, 2019 at 01:45:09AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
+> > > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> > >
+> > > Orange Pi 3 has two regulators that power the Realtek RTL8211E.
+> > > According to the phy datasheet, both regulators need to be enabled
+> > > at the same time, but we can only specify a single phy-supply in
+> > > the DT.
+> > >
+> > > This can be achieved by making one regulator depedning on the
+> > > other via vin-supply. While it's not a technically correct
+> > > description of the hardware, it achieves the purpose.
+> > >
+> > > All values of RX/TX delay were tested exhaustively and a middle
+> > > one of the working values was chosen.
+> > >
+> > > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> > > ---
+> > >  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++=
+++
+> > >  1 file changed, 44 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b=
+/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> > > index 644946749088..5270142527f5 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> > > @@ -15,6 +15,7 @@
+> > >
+> > >  	aliases {
+> > >  		serial0 =3D &uart0;
+> > > +		ethernet0 =3D &emac;
+> > >  	};
+> > >
+> > >  	chosen {
+> > > @@ -64,6 +65,27 @@
+> > >  		regulator-max-microvolt =3D <5000000>;
+> > >  		regulator-always-on;
+> > >  	};
 > > > +
-> > > +&usb2phy {
-> > > +	usb0_id_det-gpios =3D <&pio 2 15 GPIO_ACTIVE_HIGH>; /* PC15 */
-> > > +	usb0_vbus-supply =3D <&reg_vcc5v>;
-> > > +	usb3_vbus-supply =3D <&reg_vcc5v>;
-> > > +	status =3D "okay";
+> > > +	/*
+> > > +	 * The board uses 2.5V RGMII signalling. Power sequence
+> > > +	 * to enable the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2)
+> > > +	 * power rails at the same time and to wait 100ms.
+> > > +	 */
+> > > +	reg_gmac_2v5: gmac-2v5 {
+> > > +                compatible =3D "regulator-fixed";
+> > > +                regulator-name =3D "gmac-2v5";
+> > > +                regulator-min-microvolt =3D <2500000>;
+> > > +                regulator-max-microvolt =3D <2500000>;
+> > > +                startup-delay-us =3D <100000>;
+> > > +                enable-active-high;
+> > > +                gpio =3D <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
 > >
-> > If we have an ID pin, then why is the OTG controller set to host?
+> > Is enable-active-high still needed? It's redundant with the
+> > GPIO_ACTIVE_HIGH flag.
 >
-> This board has fixed conenction between VBUS and DCIN, so if it is powere=
-d
-> from DCIN and someone will try to connect it to the PC as a peripheral,
-> they'll get PC's VBUS shorted to the power supply connected to DCIN.
+> Looking at the code, use/non-use of enable-active-high inhibits
+> flags specified in gpio property. So the GPIO_ACTIVE_HIGH flag
+> is ignored here (had GPIO_ACTIVE_LOW been used, the kernel would
+> ignore it too and print a warning).
 >
-> Depending on voltage difference between DCIN and PC's VBUS, you can get
-> overcurrent condidion and PC's port shutdown.
->
-> The board is not entirely foolproof in this regard.
->
-> - It can be host powered when connected via microUSB
-> - It can be self-powered and host an device on microUSB
-> - It can be self-powered and serve as a peripheral if you modify
->   a cable (cut VBUS) or the host is expecting this and has some
->   VBUS detection logic (most hosts will not have this)
->
-> I just didn't want to encourage use as a peripheral, because it's not
-> very foolproof. But I guess, DTS file will not stop anyone anyway.
->
-> I'll change it to otg, and maybe leave a small note.
+> So enable-active-high is still necessary here.
 
-Your solution was great actually. I guess making a comment explaining
-what you just did would be better though, so that no one is confused.
+Too bad :/
+
+> See comment in gpiolib-of.c where this is handled:
+>
+> /*
+>  * The regulator GPIO handles are specified such that the
+>  * presence or absence of "enable-active-high" solely controls
+>  * the polarity of the GPIO line. Any phandle flags must
+>  * be actively ignored.
+>  */
+
+Thanks for digging this out
 
 Maxime
 
@@ -82,15 +122,15 @@ To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 For more options, visit https://groups.google.com/d/optout.
 
---vazlaal22ii7l2e2
+--cti4uw5canfn7foj
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKxIPQAKCRDj7w1vZxhR
-xQcXAQDol3REexlF7y84fFUCcIEyEMiedbnGpFQLj6gLdmA1LQD6AnjKbKwNsJqo
-Is/r3wfDkq5t5cMb3FvH7ld60Tv3rA0=
-=d1oR
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKxIfAAKCRDj7w1vZxhR
+xW/CAQCrJqoV6FLDqDM5IP7NCK4txMyjvVpL9TidL1s65icMtgEA8w8/LBe0fC/i
+0vW0YKPvx+onrCje430iF2jdywhGjgk=
+=Jz+2
 -----END PGP SIGNATURE-----
 
---vazlaal22ii7l2e2--
+--cti4uw5canfn7foj--
