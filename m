@@ -1,40 +1,36 @@
-Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH 01/30] soc/tegra: pmc: Export tegra_powergate_power_on()
-Date: Thu, 11 Apr 2019 22:33:26 +0530
-Message-ID: <20190411170355.6882-2-mmaddireddy@nvidia.com>
-In-Reply-To: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=ScCE=SL=verge.net.au=horms@kernel.org>
+Date: Tue, 9 Apr 2019 13:17:28 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH V3 12/13] ARM: dts: r8a77470: Add HSUSB device nodes
+Message-ID: <20190409111728.nevn3cyltymba4ac@verge.net.au>
+References: <1554287324-22312-1-git-send-email-biju.das@bp.renesas.com>
+ <1554287324-22312-13-git-send-email-biju.das@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554287324-22312-13-git-send-email-biju.das@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-tegra_powergate_sequence_power_up() powers up partition and also enables
-clock & reset. However if a controller like PCIe have multiple clocks
-& resets and they need to be enabled in a sequence, driver has to use
-standalone function tegra_powergate_power_on() to power up partition.
+On Wed, Apr 03, 2019 at 11:28:43AM +0100, Biju Das wrote:
+> Define the r8a77470 generic part of the HSUSB0/1 device nodes.
+> 
+> Currently the renesas_usbhs driver doesn't handle multiple phys and we
+> don't have a proper hardware to validate such driver changes.
+> 
+> So for hsusb1 it is assumed that usbphy0 will be enabled by either
+> channel0 host or device.
+> 
+> In future, if any boards support hsusb1, we will need to add multiple phy
+> support in the renesas_usbhs driver and override the board dts to enable
+> the same.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-Export tegra_powergate_power_on() to allow Tegra controller drivers to
-unpower gate partition independent to clock & reset.
+Thanks,
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
----
- drivers/soc/tegra/pmc.c | 1 +
- 1 file changed, 1 insertion(+)
+This looks fine to me but I will wait to see if there are other reviews
+before applying.
 
-diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index 0c5f79528e5f..cb3de81348bd 100644
---- a/drivers/soc/tegra/pmc.c
-+++ b/drivers/soc/tegra/pmc.c
-@@ -701,6 +701,7 @@ int tegra_powergate_power_on(unsigned int id)
- 
- 	return tegra_powergate_set(pmc, id, true);
- }
-+EXPORT_SYMBOL(tegra_powergate_power_on);
- 
- /**
-  * tegra_powergate_power_off() - power off partition
--- 
-2.17.1
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
