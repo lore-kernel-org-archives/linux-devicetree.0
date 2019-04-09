@@ -1,62 +1,47 @@
-Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH 08/30] PCI: tegra: Disable AFI dynamic clock gating
-Date: Thu, 11 Apr 2019 22:33:33 +0530
-Message-ID: <20190411170355.6882-9-mmaddireddy@nvidia.com>
-In-Reply-To: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=ScCE=SL=verge.net.au=horms@kernel.org>
+Date: Tue, 9 Apr 2019 13:02:04 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH V3 06/13] dt-bindings: usb: renesas_usbhs: Add support
+ for r8a77470
+Message-ID: <20190409110203.6faiquud4v7flhxh@verge.net.au>
+References: <1554287324-22312-1-git-send-email-biju.das@bp.renesas.com>
+ <1554287324-22312-7-git-send-email-biju.das@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554287324-22312-7-git-send-email-biju.das@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Outstanding write counter in AFI is used to generate idle signal to
-dynamically gate the AFI clock. When there are 32 outstanding writes
-from AFI to memory, the outstanding write counter overflows and
-indicates that there are "0" outstanding write transactions.
+On Wed, Apr 03, 2019 at 11:28:37AM +0100, Biju Das wrote:
+> Document support for RZ/G1C (R8A77470) SoC.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-When memory controller is under heavy load, write completions to AFI
-gets delayed and AFI write counter overflows. This causes AFI clock gating
-even when there are outstanding transactions towards memory controller
-resutling in system hang.
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Disable dynamic clock gating of AFI clock to avoid system hang.
-
-CLKEN_OVERRIDE bit is not defined in Tegra20 and Tegra30, however
-programming this bit doesn't cause any side effects. Program this
-bit for all Tegra SoCs to avoid conditional check.
-
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
----
- drivers/pci/controller/pci-tegra.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index fc4369674884..ce0282819370 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -95,7 +95,8 @@
- #define AFI_MSI_EN_VEC7		0xa8
- 
- #define AFI_CONFIGURATION		0xac
--#define  AFI_CONFIGURATION_EN_FPCI	(1 << 0)
-+#define  AFI_CONFIGURATION_EN_FPCI		(1 << 0)
-+#define  AFI_CONFIGURATION_CLKEN_OVERRIDE	(1 << 31)
- 
- #define AFI_FPCI_ERROR_MASKS	0xb0
- 
-@@ -1071,9 +1072,10 @@ static int tegra_pcie_enable_controller(struct tegra_pcie *pcie)
- 		}
- 	}
- 
--	/* finally enable PCIe */
-+	/* Disable AFI dynamic clock gating and enable PCIe */
- 	value = afi_readl(pcie, AFI_CONFIGURATION);
- 	value |= AFI_CONFIGURATION_EN_FPCI;
-+	value |= AFI_CONFIGURATION_CLKEN_OVERRIDE;
- 	afi_writel(pcie, value, AFI_CONFIGURATION);
- 
- 	value = AFI_INTR_EN_INI_SLVERR | AFI_INTR_EN_INI_DECERR |
--- 
-2.17.1
+> ---
+> V2-->V3
+>   * No change
+> V1-->V2
+>   * New patch
+> ---
+>  Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> index d93b6a1..b8acc2a 100644
+> --- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> +++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> @@ -6,6 +6,7 @@ Required properties:
+>  	- "renesas,usbhs-r8a7743" for r8a7743 (RZ/G1M) compatible device
+>  	- "renesas,usbhs-r8a7744" for r8a7744 (RZ/G1N) compatible device
+>  	- "renesas,usbhs-r8a7745" for r8a7745 (RZ/G1E) compatible device
+> +	- "renesas,usbhs-r8a77470" for r8a77470 (RZ/G1C) compatible device
+>  	- "renesas,usbhs-r8a774a1" for r8a774a1 (RZ/G2M) compatible device
+>  	- "renesas,usbhs-r8a774c0" for r8a774c0 (RZ/G2E) compatible device
+>  	- "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
+> -- 
+> 2.7.4
+> 
