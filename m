@@ -1,7 +1,7 @@
 From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH v5 5/9] ARM: dts: stm32: add STMFX support on stm32746g-eval
-Date: Tue, 9 Apr 2019 09:24:07 +0200
-Message-ID: <1554794651-6874-6-git-send-email-amelie.delaunay@st.com>
+Subject: [PATCH v5 1/9] dt-bindings: mfd: Add ST Multi-Function eXpander (STMFX) core bindings
+Date: Tue, 9 Apr 2019 09:24:03 +0200
+Message-ID: <1554794651-6874-2-git-send-email-amelie.delaunay@st.com>
 References: <1554794651-6874-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,49 +12,51 @@ To: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, Amelie Delaunay <amelie.delaunay@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for STMicroelectronics Multi-Function eXpander
-(STMFX) on stm32746g-eval. It is connected on i2c1.
+This patch adds documentation of device tree bindings for the
+STMicroelectronics Multi-Function eXpander (STMFX) MFD core.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/arm/boot/dts/stm32746g-eval.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ Documentation/devicetree/bindings/mfd/stmfx.txt | 28 +++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
 
-diff --git a/arch/arm/boot/dts/stm32746g-eval.dts b/arch/arm/boot/dts/stm32746g-eval.dts
-index d90b0d1..58e0457 100644
---- a/arch/arm/boot/dts/stm32746g-eval.dts
-+++ b/arch/arm/boot/dts/stm32746g-eval.dts
-@@ -44,6 +44,7 @@
- #include "stm32f746.dtsi"
- #include "stm32f746-pinctrl.dtsi"
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
- 	model = "STMicroelectronics STM32746g-EVAL board";
-@@ -115,6 +116,22 @@
- 	i2c-scl-rising-time-ns = <185>;
- 	i2c-scl-falling-time-ns = <20>;
- 	status = "okay";
+diff --git a/Documentation/devicetree/bindings/mfd/stmfx.txt b/Documentation/devicetree/bindings/mfd/stmfx.txt
+new file mode 100644
+index 0000000..f0c2f7f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/stmfx.txt
+@@ -0,0 +1,28 @@
++STMicroelectonics Multi-Function eXpander (STMFX) Core bindings
++
++ST Multi-Function eXpander (STMFX) is a slave controller using I2C for
++communication with the main MCU. Its main features are GPIO expansion, main
++MCU IDD measurement (IDD is the amount of current that flows through VDD) and
++resistive touchscreen controller.
++
++Required properties:
++- compatible: should be "st,stmfx-0300".
++- reg: I2C slave address of the device.
++- interrupts: interrupt specifier triggered by MFX_IRQ_OUT signal.
++  Please refer to ../interrupt-controller/interrupt.txt
++
++Optional properties:
++- drive-open-drain: configure MFX_IRQ_OUT as open drain.
++- vdd-supply: phandle of the regulator supplying STMFX.
++
++Example:
 +
 +	stmfx: stmfx@42 {
 +		compatible = "st,stmfx-0300";
 +		reg = <0x42>;
 +		interrupts = <8 IRQ_TYPE_EDGE_RISING>;
 +		interrupt-parent = <&gpioi>;
-+
-+		stmfx_pinctrl: stmfx-pin-controller {
-+			compatible = "st,stmfx-0300-pinctrl";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			gpio-ranges = <&stmfx_pinctrl 0 0 24>;
-+		};
++		vdd-supply = <&v3v3>;
 +	};
- };
- 
- &rtc {
++
++Please refer to ../pinctrl/pinctrl-stmfx.txt for STMFX GPIO expander function bindings.
 -- 
 2.7.4
