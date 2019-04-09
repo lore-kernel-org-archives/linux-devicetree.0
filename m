@@ -1,15 +1,11 @@
-From: Nava kishore Manne <navam@xilinx.com>
-Subject: RE: [PATCH v4 1/3] firmware: xilinx: Add fpga API's
-Date: Tue, 9 Apr 2019 08:54:34 +0000
-Message-ID: <BYAPR02MB471005801CE9F16523516611C22D0@BYAPR02MB4710.namprd02.prod.outlook.com>
-References: <20190402123123.915-1-nava.manne@xilinx.com>
- <20190402123123.915-2-nava.manne@xilinx.com> <20190408171456.GA4293@archbook>
- <9ab8f7fb-0936-3635-60fe-164402780429@xilinx.com>
+From: Pascal PAILLET-LME <p.paillet@st.com>
+Subject: [PATCH v2 0/3] Add support for STPMIC1
+Date: Tue, 9 Apr 2019 09:07:02 +0000
+Message-ID: <1554800820-5412-1-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9ab8f7fb-0936-3635-60fe-164402780429@xilinx.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -20,106 +16,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Moritz Fischer <mdf@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "atull@kernel.org" <atull@kernel.org>, "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jolly Shah <JOLLYS@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>
+To: "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "biju.das@bp.renesas.com" <biju.das@bp.renesas.com>, Yannick FERTRE <yannick.fertre@st.com>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Pascal PAILLET-LME <p.paillet@st.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTW9yaXR6LA0KDQpUaGFua3MgZm9yIHRoZSBxdWljayByZXNwb25zZS4NClBsZWFzZSBmaW5k
-IG15IHJlc3BvbnNlIGlubGluZQ0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZy
-b206IE1pY2hhbCBTaW1layBbbWFpbHRvOm1pY2hhbC5zaW1la0B4aWxpbnguY29tXQ0KPiBTZW50
-OiBUdWVzZGF5LCBBcHJpbCA5LCAyMDE5IDEyOjA0IFBNDQo+IFRvOiBNb3JpdHogRmlzY2hlciA8
-bWRmQGtlcm5lbC5vcmc+OyBOYXZhIGtpc2hvcmUgTWFubmUNCj4gPG5hdmFtQHhpbGlueC5jb20+
-DQo+IENjOiBhdHVsbEBrZXJuZWwub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFu
-ZEBhcm0uY29tOyBNaWNoYWwNCj4gU2ltZWsgPG1pY2hhbHNAeGlsaW54LmNvbT47IFJhamFuIFZh
-amEgPFJBSkFOVkB4aWxpbnguY29tPjsgSm9sbHkgU2hhaA0KPiA8Sk9MTFlTQHhpbGlueC5jb20+
-OyBsaW51eC1mcGdhQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
-DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZzsNCj4gY2hpbm5pa2lzaG9yZTM2OUBnbWFpbC5jb20NCj4gU3ViamVjdDog
-UmU6IFtQQVRDSCB2NCAxLzNdIGZpcm13YXJlOiB4aWxpbng6IEFkZCBmcGdhIEFQSSdzDQo+IA0K
-PiBPbiAwOC4gMDQuIDE5IDE5OjE0LCBNb3JpdHogRmlzY2hlciB3cm90ZToNCj4gPiBIaSBOYXZh
-LA0KPiA+DQo+ID4gT24gVHVlLCBBcHIgMDIsIDIwMTkgYXQgMDY6MDE6MjFQTSArMDUzMCwgTmF2
-YSBraXNob3JlIE1hbm5lIHdyb3RlOg0KPiA+PiBUaGlzIFBhdGNoIEFkZHMgZnBnYSBBUEkncyB0
-byBzdXBwb3J0IHRoZSBCaXRzdHJlYW0gbG9hZGluZyBieSB1c2luZw0KPiA+PiBmaXJtd2FyZSBp
-bnRlcmZhY2UuDQo+ID4+DQo+ID4+IFNpZ25lZC1vZmYtYnk6IE5hdmEga2lzaG9yZSBNYW5uZSA8
-bmF2YS5tYW5uZUB4aWxpbnguY29tPg0KPiA+PiAtLS0NCj4gPj4gQ2hhbmdlcyBmb3IgdjQ6DQo+
-ID4+IAkJLU5vbmUuDQo+ID4+DQo+ID4+IENobmFnZXMgZm9yIHYzOg0KPiA+PiAJCS1DcmVhdGVk
-IHBhdGNoZXMgb24gdG9wIG9mIDUuMC1yYzUuDQo+ID4+IAkJIE5vIGZ1bmN0aW9uYWwgY2hhbmdl
-cy4NCj4gPj4NCj4gPj4gQ2hhbmdlcyBmb3IgdjI6DQo+ID4+IAkJLUFkZGVkIEZpcm13YXJlIEZQ
-R0EgTWFuYWdlciBmbGFncyBBcyBzdWdnZXN0ZWQgYnkNCj4gPj4gCQkgTW9yaXR6Lg0KPiA+Pg0K
-PiA+PiBDaGFuZ2VzIGZvciB2MToNCj4gPj4gCQktTm9uZS4NCj4gPj4NCj4gPj4gQ2hhbmdlcyBm
-b3IgUkZDLVYyOg0KPiA+PiAJCS1OZXcgUGF0Y2gNCj4gPj4NCj4gPj4gIGRyaXZlcnMvZmlybXdh
-cmUveGlsaW54L3p5bnFtcC5jICAgICB8IDQ2ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysN
-Cj4gPj4gIGluY2x1ZGUvbGludXgvZmlybXdhcmUveGxueC16eW5xbXAuaCB8IDEwICsrKysrKw0K
-PiA+PiAgMiBmaWxlcyBjaGFuZ2VkLCA1NiBpbnNlcnRpb25zKCspDQo+ID4+DQo+ID4+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL2Zpcm13YXJlL3hpbGlueC96eW5xbXAuYw0KPiA+PiBiL2RyaXZlcnMv
-ZmlybXdhcmUveGlsaW54L3p5bnFtcC5jDQo+ID4+IGluZGV4IDk4ZjkzNjEyNTY0My4uNzE1OWE5
-MGFiYzQ0IDEwMDY0NA0KPiA+PiAtLS0gYS9kcml2ZXJzL2Zpcm13YXJlL3hpbGlueC96eW5xbXAu
-Yw0KPiA+PiArKysgYi9kcml2ZXJzL2Zpcm13YXJlL3hpbGlueC96eW5xbXAuYw0KPiA+PiBAQCAt
-NTM3LDYgKzUzNyw1MCBAQCBzdGF0aWMgaW50IHp5bnFtcF9wbV9yZXNldF9nZXRfc3RhdHVzKGNv
-bnN0IGVudW0NCj4genlucW1wX3BtX3Jlc2V0IHJlc2V0LA0KPiA+PiAgCXJldHVybiByZXQ7DQo+
-ID4+ICB9DQo+ID4+DQo+ID4+ICsvKg0KPiA+PiArICogenlucW1wX3BtX2ZwZ2FfbG9hZCAtIFBl
-cmZvcm0gdGhlIGZwZ2EgbG9hZA0KPiA+PiArICogQGFkZHJlc3M6CUFkZHJlc3MgdG8gd3JpdGUg
-dG8NCj4gPj4gKyAqIEBzaXplOglwbCBiaXRzdHJlYW0gc2l6ZQ0KPiA+PiArICogQGZsYWdzOg0K
-PiA+PiArICoJQklUKDApIC0gQml0LXN0cmVhbSB0eXBlLg0KPiA+PiArICoJCSAwIC0gRnVsbCBC
-aXRzdHJlYW0uDQo+ID4+ICsgKgkJIDEgLSBQYXJ0aWFsIEJpdHN0cmVhbS4NCj4gPj4gKyAqDQo+
-ID4+ICsgKiBUaGlzIGZ1bmN0aW9uIHByb3ZpZGVzIGFjY2VzcyB0byBwbXVmdy4gVG8gdHJhbnNm
-ZXINCj4gPj4gKyAqIHRoZSByZXF1aXJlZCBiaXRzdHJlYW0gaW50byBQTC4NCj4gPj4gKyAqDQo+
-ID4+ICsgKiBSZXR1cm46IFJldHVybnMgc3RhdHVzLCBlaXRoZXIgc3VjY2VzcyBvciBlcnJvcity
-ZWFzb24gICovIHN0YXRpYw0KPiA+PiAraW50IHp5bnFtcF9wbV9mcGdhX2xvYWQoY29uc3QgdTY0
-IGFkZHJlc3MsIGNvbnN0IHUzMiBzaXplLA0KPiA+PiArCQkJICAgICAgIGNvbnN0IHUzMiBmbGFn
-cykNCj4gPj4gK3sNCj4gPj4gKwlyZXR1cm4genlucW1wX3BtX2ludm9rZV9mbihQTV9GUEdBX0xP
-QUQsIGxvd2VyXzMyX2JpdHMoYWRkcmVzcyksDQo+ID4+ICsJCQkJICAgdXBwZXJfMzJfYml0cyhh
-ZGRyZXNzKSwgc2l6ZSwgZmxhZ3MsIE5VTEwpOyB9DQo+ID4+ICsNCj4gPj4gKy8qKg0KPiA+PiAr
-ICogenlucW1wX3BtX2ZwZ2FfZ2V0X3N0YXR1cyAtIFJlYWQgdmFsdWUgZnJvbSBQQ0FQIHN0YXR1
-cyByZWdpc3Rlcg0KPiA+PiArICogQHZhbHVlOiBWYWx1ZSB0byByZWFkDQo+ID4+ICsgKg0KPiA+
-PiArICogVGhpcyBmdW5jdGlvbiBwcm92aWRlcyBhY2Nlc3MgdG8gdGhlIHhpbGZwZ2EgbGlicmFy
-eSB0byBnZXQNCj4gPg0KPiA+IHhpbGZwZ2E/IElzIHRoYXQgUE1VIGZpcm13YXJlIHlvdSdyZSB0
-YWxraW5nIGFib3V0Pw0KDQpYaWxmcGdhIGlzIGEgbGlicmFyeSBhbmQgaXTigJlzIGEgcGFydCBv
-ZiBQTVVGVyBCU1AuDQpJdCB3aWxsIGZvbGxvdyB0aGUgYmVsb3cgZmxvdyB0byBjb25maWd1cmUg
-dGhlIFBMIGZyb20gTGludXggZW52aXJvbm1lbnQuDQpMaW51eCAtRnBnYSBNYW5hZ2VyIGZyYW1l
-d29yayA8LS0+IExpbnV4LUZpcm13YXJlIERyaXZlciA8LSAtc21jIGNhbGwtLT5BVEYgPC0tSVBJ
-IGNhbGwtLT4gUE1VRlc8LS0+IFhpbGZwZ2EgbGlicmFyeS4NCg0KPiA+DQo+ID4+ICsgKiB0aGUg
-UENBUCBzdGF0dXMNCj4gPj4gKyAqDQo+ID4+ICsgKiBSZXR1cm46IFJldHVybnMgc3RhdHVzLCBl
-aXRoZXIgc3VjY2VzcyBvciBlcnJvcityZWFzb24gICovIHN0YXRpYw0KPiA+PiAraW50IHp5bnFt
-cF9wbV9mcGdhX2dldF9zdGF0dXModTMyICp2YWx1ZSkgew0KPiA+PiArCXUzMiByZXRfcGF5bG9h
-ZFtQQVlMT0FEX0FSR19DTlRdOw0KPiA+PiArCWludCByZXQ7DQo+ID4+ICsNCj4gPj4gKwlpZiAo
-IXZhbHVlKQ0KPiA+PiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gPj4gKw0KPiA+PiArCXJldCA9IHp5
-bnFtcF9wbV9pbnZva2VfZm4oUE1fRlBHQV9HRVRfU1RBVFVTLCAwLCAwLCAwLCAwLA0KPiByZXRf
-cGF5bG9hZCk7DQo+ID4+ICsJKnZhbHVlID0gcmV0X3BheWxvYWRbMV07DQo+ID4+ICsNCj4gPj4g
-KwlyZXR1cm4gcmV0Ow0KPiA+PiArfQ0KPiA+PiArDQo+ID4+ICAvKioNCj4gPj4gICAqIHp5bnFt
-cF9wbV9pbml0X2ZpbmFsaXplKCkgLSBQTSBjYWxsIHRvIGluZm9ybSBmaXJtd2FyZSB0aGF0IHRo
-ZSBjYWxsZXINCj4gPj4gICAqCQkJICAgICAgIG1hc3RlciBoYXMgaW5pdGlhbGl6ZWQgaXRzIG93
-biBwb3dlciBtYW5hZ2VtZW50DQo+ID4+IEBAIC02NDAsNiArNjg0LDggQEAgc3RhdGljIGNvbnN0
-IHN0cnVjdCB6eW5xbXBfZWVtaV9vcHMgZWVtaV9vcHMgPSB7DQo+ID4+ICAJLnJlcXVlc3Rfbm9k
-ZSA9IHp5bnFtcF9wbV9yZXF1ZXN0X25vZGUsDQo+ID4+ICAJLnJlbGVhc2Vfbm9kZSA9IHp5bnFt
-cF9wbV9yZWxlYXNlX25vZGUsDQo+ID4+ICAJLnNldF9yZXF1aXJlbWVudCA9IHp5bnFtcF9wbV9z
-ZXRfcmVxdWlyZW1lbnQsDQo+ID4+ICsJLmZwZ2FfbG9hZCA9IHp5bnFtcF9wbV9mcGdhX2xvYWQs
-DQo+ID4+ICsJLmZwZ2FfZ2V0X3N0YXR1cyA9IHp5bnFtcF9wbV9mcGdhX2dldF9zdGF0dXMsDQo+
-ID4+ICB9Ow0KPiA+Pg0KPiA+PiAgLyoqDQo+ID4+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4
-L2Zpcm13YXJlL3hsbngtenlucW1wLmgNCj4gPj4gYi9pbmNsdWRlL2xpbnV4L2Zpcm13YXJlL3hs
-bngtenlucW1wLmgNCj4gPj4gaW5kZXggNjQyZGFiMTBmNjVkLi40ZGYyMjZiNmFiMGYgMTAwNjQ0
-DQo+ID4+IC0tLSBhL2luY2x1ZGUvbGludXgvZmlybXdhcmUveGxueC16eW5xbXAuaA0KPiA+PiAr
-KysgYi9pbmNsdWRlL2xpbnV4L2Zpcm13YXJlL3hsbngtenlucW1wLmgNCj4gPj4gQEAgLTQ4LDYg
-KzQ4LDEyIEBADQo+ID4+ICAjZGVmaW5lCVpZTlFNUF9QTV9DQVBBQklMSVRZX1dBS0VVUAkweDRV
-DQo+ID4+ICAjZGVmaW5lCVpZTlFNUF9QTV9DQVBBQklMSVRZX1BPV0VSCTB4OFUNCj4gPj4NCj4g
-Pj4gKy8qDQo+ID4+ICsgKiBGaXJtd2FyZSBGUEdBIE1hbmFnZXIgZmxhZ3MNCj4gPj4gKyAqIFhJ
-TElOWF9aWU5RTVBfUE1fRlBHQV9QQVJUSUFMOiBGUEdBIHBhcnRpYWwgcmVjb25maWd1cmF0aW9u
-ICAqLw0KPiA+PiArI2RlZmluZSBYSUxJTlhfWllOUU1QX1BNX0ZQR0FfUEFSVElBTAlCSVQoMCkN
-Cj4gPj4gKw0KPiA+PiAgZW51bSBwbV9hcGlfaWQgew0KPiA+PiAgCVBNX0dFVF9BUElfVkVSU0lP
-TiA9IDEsDQo+ID4+ICAJUE1fUkVRVUVTVF9OT0RFID0gMTMsDQo+ID4+IEBAIC01Niw2ICs2Miw4
-IEBAIGVudW0gcG1fYXBpX2lkIHsNCj4gPj4gIAlQTV9SRVNFVF9BU1NFUlQgPSAxNywNCj4gPj4g
-IAlQTV9SRVNFVF9HRVRfU1RBVFVTLA0KPiA+PiAgCVBNX1BNX0lOSVRfRklOQUxJWkUgPSAyMSwN
-Cj4gPj4gKwlQTV9GUEdBX0xPQUQgPSAyMiwNCj4gPj4gKwlQTV9GUEdBX0dFVF9TVEFUVVMsDQo+
-ID4NCj4gPiBBbnkgcmVhc29uIHlvdSBjYW4ndCBkbyAnUE1fRlBHQV9HRVRfU1RBVFVTID0gMjMn
-IGhlcmU/IFRyeWluZyB0bw0KPiA+IHVuZGVyc3RhbmQgeW91ciByZWFzb25pbmcuIEFyZSB5b3Ug
-cGxhbm5pbmcgdG8gbW92ZSB0aGVtIGFyb3VuZD8NCj4gDQo+IEl0IGlzIDIzIGJ5IGRlc2lnbi4g
-SW4geGlsaW54IHJlcG8gdGhlcmUgd2FzIG9ubHkgdGhlIGZpcnN0IHZhbHVlIHdoaWNoIGlzDQo+
-IHJlY29tbWVuZGVkIHByYWN0aWNlLiBCdXQgdXBzdHJlYW1pbmcgaXMgbm90IGRvbmUgaW4gdGhl
-IHNhbWUgb3JkZXIgdGhhdCdzDQo+IHdoeSBpZiB0aGVyZSBpcyBhIGdhcCB5b3UgbmVlZCB0byBh
-c3NpZ24gdmFsdWVzIHRoZXJlLg0KPiBFdmVuIHRoYXQgMjIgY2FuIGJlIHJlbW92ZWQgaW4gdGhp
-cyBjYXNlIGJ1dCBpdCBpcyBqdXN0IG5pdC4NCj4gDQogQXMgTWljaGFsIHNhaWQgaGVyZSBBc3Np
-Z25pbmcgdmFsdWUgb2YgMjIgaXMgbm90IG5lZWRlZC4gV2lsbCBmaXggdGhpcyBpc3N1ZSBpbiB0
-aGUgbmV4dCB2ZXJzaW9uLg0KDQpSZWdhcmRzLA0KTmF2YWtpc2hvcmUuDQpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Add support for STPMIC1 on:
+- stm32mp157c ed1 board
+- stm32mp157a dk1 board
+- arm multi_v7_defconfig
+
+Pascal Paillet (3):
+
+changes in v2:
+* Describe why we disable the DMAs for PMIC
+
+  ARM: dts: stm32: add stpmic1 support on stm32mp157c ed1 board
+  ARM: dts: stm32: add stpmic1 support on stm32mp157a dk1 board
+  ARM: multi_v7_defconfig: Enable support for STPMIC1
+
+ arch/arm/boot/dts/stm32mp157a-dk1.dts | 158 ++++++++++++++++++++++++++++++++--
+ arch/arm/boot/dts/stm32mp157c-ed1.dts | 156 +++++++++++++++++++++++++++++----
+ arch/arm/configs/multi_v7_defconfig   |   4 +
+ 3 files changed, 294 insertions(+), 24 deletions(-)
+
+-- 
+1.9.1
