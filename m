@@ -1,149 +1,335 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 02/13] arm64: dts: allwinner: h6: Add
- Orange Pi 3 DTS
-Date: Tue, 9 Apr 2019 13:47:56 +0200
-Message-ID: <20190409114756.v6v33nsdtiitglee@flea>
-References: <20190409002452.14551-1-megous@megous.com>
- <20190409002452.14551-3-megous@megous.com>
- <CAMty3ZBK2jPHTP4Y+hiy8Gq+Nx9iWYoUgke+BvopyzR8T6=0Xw@mail.gmail.com>
- <20190409113157.e4vrzesbgmyslomb@core.my.home>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Luca Weiss <luca@z3ntu.xyz>
+Subject: Re: [PATCH v2 2/3] Input: add a driver for GPIO controllable vibrators
+Date: Tue, 09 Apr 2019 13:48:35 +0200
+Message-ID: <2691889.jnjB3NjM6o@g550jk>
+References: <20190407155841.27354-1-luca@z3ntu.xyz> <20190407155841.27354-2-luca@z3ntu.xyz> <20190407221857.GB162359@dtor-ws>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="aa6vze47q2e2azio"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB5EMWLSQKGQEDS5UVIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190409113157.e4vrzesbgmyslomb-9v8tmBix7cb9zxVx7UNMDg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TaqPxH82wqD4g@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190407221857.GB162359@dtor-ws>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Pascal PAILLET-LME <p.paillet@st.com>, Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>, Brian Masney <masneyb@onstation.org>, Rob Herring <robh@kernel.org>, Baolin Wang <baolin.wang@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Dmitry,
 
---aa6vze47q2e2azio
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+see inline comments - and:
+your last two comments should probably be also applied to the pwm-vibra.c 
+driver, as that's where these code blocks come from.
 
-On Tue, Apr 09, 2019 at 01:31:57PM +0200, Ond=C5=99ej Jirman wrote:
-> Hi Jagan,
->
-> On Tue, Apr 09, 2019 at 02:08:18PM +0530, Jagan Teki wrote:
-> > Based on the conversation about using common dtsi from this thread[1],
-> > I'm commenting here to make show the diff directly on the nodes,
-> > giving comments on each node so-that we can see the diff globally.
->
-> Thanks for the suggestions below. It mostly repeats the differences and
-> commonalities I already stated in the previous discussion.
->
-> I don't have much to add to what I already said previously, though, becau=
-se you
-> didn't address my concerns there. But I can restate and expand on those
-> concerns.
->
-> Previously I already agreed it's possible to base orangepi-3.dts on
-> orangepi.dtsi, and proposed a maintainable way forward, and why to follow=
- it (to
-> quote myself):
->
->   Schematics allow for high amount of variability in the power tree (see =
-all the
->   NC (not connected) / 0R resistors) in the schematic around AXP805. Ever=
-y board
->   based on this Xunlong design can be subtly different.
->
->   I already suggested a maintainable solution, below. Where base dtsi has=
- empty
->   config for regulators and every board based on that just defines it com=
-pletely
->   for itself.
->
->   A few regulators (for CPU/GPU) will most probably have the same meaning=
- on
->   every derived board, so these can probably be kept in dtsi without caus=
-ing too
->   much annoyance.
->
->   It's unpleasant to have wrong regulator setup defined in an underlying =
-dtsi,
->   and then trying to override it by removing/adding random properties in =
-the
->   board dts for the new boards based on that, so that it fits.
->
->   The rest of the current HW descriptions in the sun50i-h6-orangepi.dtsi =
-can be
->   shared (as of now).
->
-> My suggestion was this:
->
->   So to base Orange Pi 3 dts on top of existing sun50i-h6-orangepi.dtsi I=
-'d have
->   to first move some things out of the base dtsi to the OrangePi Lite2 an=
-d One
->   Plus board dts files, in order to have sun50i-h6-orangepi.dtsi only des=
-cribe
->   HW that is *really* shared by these 2 boards and Orange Pi 3.
->
->   If I do that, I'd undefine all the axp805 regulator nodes and move the
->   configurations to each of the 3 board files. That will probably end up =
-being
->   the least confusing and most maintainable. See axp81x.dtsi lines 86-144=
- for
->   what I mean.
->
-> You seem to be suggesting a solution where every time we add an OrangePi =
-H6
-> based board, the person adding it will have to go through the base dtsi a=
-nd all
-> the other boards based on it, status disable or otherwise change regulato=
-rs in
-> the base dtsi, patch all the other boards to re-enable it.
->
-> It would be already unpleasant just adding a third board based on this ap=
-proach.
-> And when the fourth board is added, with another small differences in the
-> regulator use/meanings, the person will be looking at patching 4 dts file=
-s
-> + adding one for his own board. For what benefit, to save some bytes righ=
-t now?
->
-> I think maintainability, ease of adding new boards is more important, tha=
-n
-> having a dtsi that tries to maximally cover all the commonalities between=
- the
-> existing boards right now, without regards for the future. That's why
-> I suggested an approach like in axp81x.dtsi lines 86-144.
+On Montag, 8. April 2019 00:18:57 CEST Dmitry Torokhov wrote:
+> Hi Luca,
+> 
+> On Sun, Apr 07, 2019 at 05:58:41PM +0200, Luca Weiss wrote:
+> > Provide a simple driver for GPIO controllable vibrators.
+> > It will be used by the Fairphone 2.
+> > 
+> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> > ---
+> > 
+> >  drivers/input/misc/Kconfig      |  12 ++
+> >  drivers/input/misc/Makefile     |   1 +
+> >  drivers/input/misc/gpio-vibra.c | 214 ++++++++++++++++++++++++++++++++
+> >  3 files changed, 227 insertions(+)
+> >  create mode 100644 drivers/input/misc/gpio-vibra.c
+> > 
+> > diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> > index e15ed1bb8558..6dfe9e2fe5b1 100644
+> > --- a/drivers/input/misc/Kconfig
+> > +++ b/drivers/input/misc/Kconfig
+> > @@ -290,6 +290,18 @@ config INPUT_GPIO_DECODER
+> > 
+> >  	 To compile this driver as a module, choose M here: the module
+> >  	 will be called gpio_decoder.
+> > 
+> > +config INPUT_GPIO_VIBRA
+> > +	tristate "GPIO vibrator support"
+> > +	depends on GPIOLIB || COMPILE_TEST
+> > +	select INPUT_FF_MEMLESS
+> > +	help
+> > +	  Say Y here to get support for GPIO based vibrator devices.
+> > +
+> > +	  If unsure, say N.
+> > +
+> > +	  To compile this driver as a module, choose M here: the module 
+will be
+> > +	  called gpio-vibra.
+> > +
+> > 
+> >  config INPUT_IXP4XX_BEEPER
+> >  
+> >  	tristate "IXP4XX Beeper support"
+> >  	depends on ARCH_IXP4XX
+> > 
+> > diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+> > index b936c5b1d4ac..f38ebbdb05e2 100644
+> > --- a/drivers/input/misc/Makefile
+> > +++ b/drivers/input/misc/Makefile
+> > @@ -36,6 +36,7 @@ obj-$(CONFIG_INPUT_DRV2667_HAPTICS)	+= drv2667.o
+> > 
+> >  obj-$(CONFIG_INPUT_GP2A)		+= gp2ap002a00f.o
+> >  obj-$(CONFIG_INPUT_GPIO_BEEPER)		+= gpio-beeper.o
+> >  obj-$(CONFIG_INPUT_GPIO_DECODER)	+= gpio_decoder.o
+> > 
+> > +obj-$(CONFIG_INPUT_GPIO_VIBRA)		+= gpio-vibra.o
+> > 
+> >  obj-$(CONFIG_INPUT_HISI_POWERKEY)	+= hisi_powerkey.o
+> >  obj-$(CONFIG_HP_SDC_RTC)		+= hp_sdc_rtc.o
+> >  obj-$(CONFIG_INPUT_IMS_PCU)		+= ims-pcu.o
+> > 
+> > diff --git a/drivers/input/misc/gpio-vibra.c
+> > b/drivers/input/misc/gpio-vibra.c new file mode 100644
+> > index 000000000000..14f9534668c8
+> > --- /dev/null
+> > +++ b/drivers/input/misc/gpio-vibra.c
+> > @@ -0,0 +1,214 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + *  GPIO vibrator driver
+> > + *
+> > + *  Copyright (C) 2019 Luca Weiss <luca@z3ntu.xyz>
+> > + *
+> > + *  Based on PWM vibrator driver:
+> > + *  Copyright (C) 2017 Collabora Ltd.
+> > + *
+> > + *  Based on previous work from:
+> > + *  Copyright (C) 2012 Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > + *
+> > + *  Based on PWM beeper driver:
+> > + *  Copyright (C) 2010, Lars-Peter Clausen <lars@metafoo.de>
+> > + */
+> > +
+> > +#include <linux/gpio/consumer.h>
+> > +#include <linux/input.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/property.h>
+> > +#include <linux/regulator/consumer.h>
+> > +#include <linux/slab.h>
+> > +
+> > +enum vibrator_state {
+> > +	VIBRATOR_OFF,
+> > +	VIBRATOR_ON
+> > +};
+> 
+> I'd probably go with simple "bool running".
+Changed.
+> 
+> > +
+> > +struct gpio_vibrator {
+> > +	struct input_dev *input;
+> > +	struct gpio_desc *gpio;
+> > +	struct regulator *vcc;
+> > +
+> > +	struct work_struct play_work;
+> > +	enum vibrator_state state;
+> > +	bool vcc_on;
+> > +};
+> > +
+> > +static int gpio_vibrator_start(struct gpio_vibrator *vibrator)
+> > +{
+> > +	struct device *pdev = vibrator->input->dev.parent;
+> > +	int err;
+> > +
+> > +	if (!vibrator->vcc_on) {
+> > +		err = regulator_enable(vibrator->vcc);
+> > +		if (err) {
+> > +			dev_err(pdev, "failed to enable regulator: 
+%d", err);
+> > +			return err;
+> > +		}
+> > +		vibrator->vcc_on = true;
+> > +	}
+> > +
+> > +	gpiod_set_value(vibrator->gpio, 1);
+> 
+> Since this is called by work item and thus from context that can sleep,
+> we can use gpiod_set_value_cansleep() so that "slow" GPIOs can be used
+> with the driver.
+Changed.
+> 
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void gpio_vibrator_stop(struct gpio_vibrator *vibrator)
+> > +{
+> > +	gpiod_set_value(vibrator->gpio, 0);
+> > +
+> > +	if (vibrator->vcc_on) {
+> > +		regulator_disable(vibrator->vcc);
+> > +		vibrator->vcc_on = false;
+> > +	}
+> > +}
+> > +
+> > +static void gpio_vibrator_play_work(struct work_struct *work)
+> > +{
+> > +	struct gpio_vibrator *vibrator = container_of(work,
+> > +					struct gpio_vibrator, 
+play_work);
+> > +
+> > +	if (vibrator->state == VIBRATOR_ON)
+> > +		gpio_vibrator_start(vibrator);
+> > +	else
+> > +		gpio_vibrator_stop(vibrator);
+> > +}
+> > +
+> > +static int gpio_vibrator_play_effect(struct input_dev *dev, void *data,
+> > +				    struct ff_effect *effect)
+> > +{
+> > +	struct gpio_vibrator *vibrator = input_get_drvdata(dev);
+> > +
+> > +	int level = effect->u.rumble.strong_magnitude;
+> > +
+> > +	if (!level)
+> > +		level = effect->u.rumble.weak_magnitude;
+> > +
+> > +	if (level)
+> > +		vibrator->state = VIBRATOR_ON;
+> > +	else
+> > +		vibrator->state = VIBRATOR_OFF;
+> > +
+> > +	schedule_work(&vibrator->play_work);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void gpio_vibrator_close(struct input_dev *input)
+> > +{
+> > +	struct gpio_vibrator *vibrator = input_get_drvdata(input);
+> > +
+> > +	cancel_work_sync(&vibrator->play_work);
+> > +	gpio_vibrator_stop(vibrator);
+> 
+> Do you want to update vibrator->state here?
+I've looked at that a bit and it makes sense when the vibrator is on, the 
+input it closed (and the vibrator stopped but the variable is still 'on'), 
+then the device is suspended and resumed, the vibrator will be turned on 
+again, so I'll change that.
+> 
+> > +}
+> > +
+> > +static int gpio_vibrator_probe(struct platform_device *pdev)
+> > +{
+> > +	struct gpio_vibrator *vibrator;
+> > +	int err;
+> > +
+> > +	vibrator = devm_kzalloc(&pdev->dev, sizeof(*vibrator), 
+GFP_KERNEL);
+> > +	if (!vibrator)
+> > +		return -ENOMEM;
+> > +
+> > +	vibrator->input = devm_input_allocate_device(&pdev->dev);
+> > +	if (!vibrator->input)
+> > +		return -ENOMEM;
+> > +
+> > +	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
+> > +	err = PTR_ERR_OR_ZERO(vibrator->vcc);
+> > +	if (err) {
+> > +		if (err != -EPROBE_DEFER)
+> > +			dev_err(&pdev->dev, "Failed to request 
+regulator: %d",
+> > +				err);
+> > +		return err;
+> > +	}
+> > +
+> > +	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", 
+GPIOD_OUT_LOW);
+> > +	err = PTR_ERR_OR_ZERO(vibrator->gpio);
+> > +	if (err) {
+> > +		if (err != -EPROBE_DEFER)
+> > +			dev_err(&pdev->dev, "Failed to request main 
+gpio: %d",
+> > +				err);
+> > +		return err;
+> > +	}
+> > +
+> > +	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
+> > +
+> > +	vibrator->input->name = "gpio-vibrator";
+> > +	vibrator->input->id.bustype = BUS_HOST;
+> > +	vibrator->input->dev.parent = &pdev->dev;
+> 
+> No need to set as you used devm_input_device_alloc().
+Changed.
+> > +	vibrator->input->close = gpio_vibrator_close;
+> > +
+> > +	input_set_drvdata(vibrator->input, vibrator);
+> > +	input_set_capability(vibrator->input, EV_FF, FF_RUMBLE);
+> > +
+> > +	err = input_ff_create_memless(vibrator->input, NULL,
+> > +				      gpio_vibrator_play_effect);
+> > +	if (err) {
+> > +		dev_err(&pdev->dev, "Couldn't create FF dev: %d", err);
+> > +		return err;
+> > +	}
+> > +
+> > +	err = input_register_device(vibrator->input);
+> > +	if (err) {
+> > +		dev_err(&pdev->dev, "Couldn't register input dev: %d", 
+err);
+> > +		return err;
+> > +	}
+> > +
+> > +	platform_set_drvdata(pdev, vibrator);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int __maybe_unused gpio_vibrator_suspend(struct device *dev)
+> > +{
+> > +	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
+> > +
+> > +	cancel_work_sync(&vibrator->play_work);
+> > +	if (vibrator->state == VIBRATOR_ON)
+> > +		gpio_vibrator_stop(vibrator);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int __maybe_unused gpio_vibrator_resume(struct device *dev)
+> > +{
+> > +	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
+> > +
+> > +	if (vibrator->state == VIBRATOR_ON)
+> > +		gpio_vibrator_start(vibrator);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static SIMPLE_DEV_PM_OPS(gpio_vibrator_pm_ops,
+> > +			 gpio_vibrator_suspend, 
+gpio_vibrator_resume);
+> > +
+> > +#ifdef CONFIG_OF
+> > +static const struct of_device_id gpio_vibra_dt_match_table[] = {
+> > +	{ .compatible = "gpio-vibrator" },
+> > +	{},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, gpio_vibra_dt_match_table);
+> > +#endif
+> > +
+> > +static struct platform_driver gpio_vibrator_driver = {
+> > +	.probe	= gpio_vibrator_probe,
+> > +	.driver	= {
+> > +		.name	= "gpio-vibrator",
+> > +		.pm	= &gpio_vibrator_pm_ops,
+> > +		.of_match_table = 
+of_match_ptr(gpio_vibra_dt_match_table),
+> > +	},
+> > +};
+> > +module_platform_driver(gpio_vibrator_driver);
+> > +
+> > +MODULE_AUTHOR("Luca Weiss <luca@z3ntu.xy>");
+> > +MODULE_DESCRIPTION("GPIO vibrator driver");
+> > +MODULE_LICENSE("GPL");
+> > +MODULE_ALIAS("platform:gpio-vibrator");
+> 
+> Thanks.
 
-I agree.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---aa6vze47q2e2azio
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKyGbAAKCRDj7w1vZxhR
-xZTAAQCOzqr6NWU8ZLOC72DWyNDWvVDoMHEH5977Yq/x03pA3wEAwsPhQ1kQG3mb
-mRjfuU5xD+jCyn066cuvMBk6bRHgQgA=
-=ef/T
------END PGP SIGNATURE-----
-
---aa6vze47q2e2azio--
+Thank you for the review, will send a v3 soon!
+Luca
